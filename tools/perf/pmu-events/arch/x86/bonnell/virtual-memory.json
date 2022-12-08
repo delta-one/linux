@@ -1,6 +1,10 @@
 [
     {
         "BriefDescription": "Memory accesses that missed the DTLB.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x8",
         "EventName": "DATA_TLB_MISSES.DTLB_MISS",
         "SampleAfterValue": "200000",
@@ -8,6 +12,10 @@
     },
     {
         "BriefDescription": "DTLB misses due to load operations.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x8",
         "EventName": "DATA_TLB_MISSES.DTLB_MISS_LD",
         "SampleAfterValue": "200000",
@@ -15,6 +23,10 @@
     },
     {
         "BriefDescription": "DTLB misses due to store operations.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x8",
         "EventName": "DATA_TLB_MISSES.DTLB_MISS_ST",
         "SampleAfterValue": "200000",
@@ -22,6 +34,10 @@
     },
     {
         "BriefDescription": "L0 DTLB misses due to load operations.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x8",
         "EventName": "DATA_TLB_MISSES.L0_DTLB_MISS_LD",
         "SampleAfterValue": "200000",
@@ -29,6 +45,10 @@
     },
     {
         "BriefDescription": "L0 DTLB misses due to store operations",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x8",
         "EventName": "DATA_TLB_MISSES.L0_DTLB_MISS_ST",
         "SampleAfterValue": "200000",
@@ -36,6 +56,10 @@
     },
     {
         "BriefDescription": "ITLB flushes.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x82",
         "EventName": "ITLB.FLUSH",
         "SampleAfterValue": "200000",
@@ -43,6 +67,10 @@
     },
     {
         "BriefDescription": "ITLB hits.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x82",
         "EventName": "ITLB.HIT",
         "SampleAfterValue": "200000",
@@ -50,6 +78,10 @@
     },
     {
         "BriefDescription": "ITLB misses.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x82",
         "EventName": "ITLB.MISSES",
         "PEBS": "2",
@@ -58,6 +90,10 @@
     },
     {
         "BriefDescription": "Retired loads that miss the DTLB (precise event).",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xCB",
         "EventName": "MEM_LOAD_RETIRED.DTLB_MISS",
         "PEBS": "1",
@@ -66,6 +102,10 @@
     },
     {
         "BriefDescription": "Duration of page-walks in core cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC",
         "EventName": "PAGE_WALKS.CYCLES",
         "SampleAfterValue": "2000000",
@@ -73,6 +113,10 @@
     },
     {
         "BriefDescription": "Duration of D-side only page walks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC",
         "EventName": "PAGE_WALKS.D_SIDE_CYCLES",
         "SampleAfterValue": "2000000",
@@ -80,6 +124,10 @@
     },
     {
         "BriefDescription": "Number of D-side only page walks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC",
         "EventName": "PAGE_WALKS.D_SIDE_WALKS",
         "SampleAfterValue": "200000",
@@ -87,6 +135,10 @@
     },
     {
         "BriefDescription": "Duration of I-Side page walks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC",
         "EventName": "PAGE_WALKS.I_SIDE_CYCLES",
         "SampleAfterValue": "2000000",
@@ -94,6 +146,10 @@
     },
     {
         "BriefDescription": "Number of I-Side page walks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC",
         "EventName": "PAGE_WALKS.I_SIDE_WALKS",
         "SampleAfterValue": "200000",
@@ -101,6 +157,10 @@
     },
     {
         "BriefDescription": "Number of page-walks executed.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC",
         "EventName": "PAGE_WALKS.WALKS",
         "SampleAfterValue": "200000",

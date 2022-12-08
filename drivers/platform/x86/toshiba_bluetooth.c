@@ -36,7 +36,11 @@ struct toshiba_bluetooth_dev {
 };
 
 static int toshiba_bt_rfkill_add(struct acpi_device *device);
+<<<<<<< HEAD
 static void toshiba_bt_rfkill_remove(struct acpi_device *device);
+=======
+static int toshiba_bt_rfkill_remove(struct acpi_device *device);
+>>>>>>> b7ba80a49124 (Commit)
 static void toshiba_bt_rfkill_notify(struct acpi_device *device, u32 event);
 
 static const struct acpi_device_id bt_device_ids[] = {
@@ -279,7 +283,11 @@ static int toshiba_bt_rfkill_add(struct acpi_device *device)
 	return result;
 }
 
+<<<<<<< HEAD
 static void toshiba_bt_rfkill_remove(struct acpi_device *device)
+=======
+static int toshiba_bt_rfkill_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct toshiba_bluetooth_dev *bt_dev = acpi_driver_data(device);
 
@@ -291,7 +299,11 @@ static void toshiba_bt_rfkill_remove(struct acpi_device *device)
 
 	kfree(bt_dev);
 
+<<<<<<< HEAD
 	toshiba_bluetooth_disable(device->handle);
+=======
+	return toshiba_bluetooth_disable(device->handle);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 module_acpi_driver(toshiba_bt_rfkill_driver);

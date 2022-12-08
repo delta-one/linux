@@ -68,6 +68,7 @@ stesso.
 Strumenti PGP
 =============
 
+<<<<<<< HEAD
 Usare GnuPG 2.2 o successivo
 ----------------------------
 
@@ -80,12 +81,48 @@ usate::
 Se state utilizzando la version 2.2 o successiva, allora siete pronti a partire.
 Se invece state usando una versione precedente, allora alcuni comandi elencati
 in questa guida potrebbero non funzionare.
+=======
+Usare GnuPG v2
+--------------
+
+La vostra distribuzione potrebbe avere già installato GnuPG, dovete solo
+verificare che stia utilizzando la versione 2.x e non la serie 1.4 --
+molte distribuzioni forniscono entrambe, di base il comando ''gpg''
+invoca GnuPG v.1. Per controllate usate::
+
+    $ gpg --version | head -n1
+
+Se visualizzate ``gpg (GnuPG) 1.4.x``, allora state usando GnuPG v.1.
+Provate il comando ``gpg2`` (se non lo avete, potreste aver bisogno
+di installare il pacchetto gnupg2)::
+
+    $ gpg2 --version | head -n1
+
+Se visualizzate  ``gpg (GnuPG) 2.x.x``, allora siete pronti a partire.
+Questa guida assume che abbiate la versione 2.2.(o successiva) di GnuPG.
+Se state usando la versione 2.0, alcuni dei comandi indicati qui non
+funzioneranno, in questo caso considerate un aggiornamento all'ultima versione,
+la 2.2. Versioni di gnupg-2.1.11 e successive dovrebbero essere compatibili
+per gli obiettivi di questa guida.
+
+Se avete entrambi i comandi: ``gpg`` e ``gpg2``, assicuratevi di utilizzare
+sempre la versione V2, e non quella vecchia. Per evitare errori potreste creare
+un alias::
+
+    $ alias gpg=gpg2
+
+Potete mettere questa opzione nel vostro  ``.bashrc`` in modo da essere sicuri.
+>>>>>>> b7ba80a49124 (Commit)
 
 Configurare le opzioni di gpg-agent
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 L'agente GnuPG è uno strumento di aiuto che partirà automaticamente ogni volta
+<<<<<<< HEAD
 che userete il comando ``gpg`` e funzionerà in *background* con l'obiettivo di
+=======
+che userete il comando ``gpg`` e funzionerà in background con l'obiettivo di
+>>>>>>> b7ba80a49124 (Commit)
 individuare la passphrase. Ci sono due opzioni che dovreste conoscere
 per personalizzare la scadenza della passphrase nella cache:
 
@@ -113,7 +150,23 @@ valori::
     riguarda vecchie le versioni di GnuPG, poiché potrebbero non svolgere più
     bene il loro compito.
 
+<<<<<<< HEAD
 .. _it_protect_your_key:
+=======
+Impostare un *refresh* con cronjob
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Potreste aver bisogno di rinfrescare regolarmente il vostro portachiavi in
+modo aggiornare le chiavi pubbliche di altre persone, lavoro che è svolto
+al meglio con un cronjob giornaliero::
+
+    @daily /usr/bin/gpg2 --refresh >/dev/null 2>&1
+
+Controllate il percorso assoluto del vostro comando ``gpg`` o ``gpg2`` e usate
+il comando ``gpg2`` se per voi ``gpg`` corrisponde alla versione GnuPG v.1.
+
+.. _it_master_key:
+>>>>>>> b7ba80a49124 (Commit)
 
 Proteggere la vostra chiave PGP primaria
 ========================================
@@ -125,6 +178,7 @@ al documento "`Protecting Code Integrity`_" che abbiamo menzionato prima.
 Dovreste inoltre creare una nuova chiave se quella attuale è inferiore a 2048
 bit (RSA).
 
+<<<<<<< HEAD
 Le sottochiavi PGP
 ------------------
 
@@ -181,6 +235,57 @@ per esempio::
           000000000000000000000000AAAABBBBCCCCDDDD
     uid           [ultimate] Alice Dev <adev@kernel.org>
     ssb   cv25519 2022-12-20 [E] [expires: 2024-12-19]
+=======
+Chiave principale o sottochiavi
+-------------------------------
+
+Le sottochiavi sono chiavi PGP totalmente indipendenti, e sono collegate alla
+chiave principale attraverso firme certificate. È quindi importante
+comprendere i seguenti punti:
+
+1. Non ci sono differenze tecniche tra la chiave principale e la sottochiave.
+2. In fesa di creazione, assegniamo limitazioni funzionali ad ogni chiave
+   assegnando capacità specifiche.
+3. Una chiave PGP può avere 4 capacità:
+
+   - **[S]** può essere usata per firmare
+   - **[E]** può essere usata per criptare
+   - **[A]** può essere usata per autenticare
+   - **[C]** può essere usata per certificare altre chiavi
+
+4. Una singola chiave può avere più capacità
+5. Una sottochiave è completamente indipendente dalla chiave principale.
+   Un messaggio criptato con la sottochiave non può essere decrittato con
+   quella principale. Se perdete la vostra sottochiave privata, non può
+   essere rigenerata in nessun modo da quella principale.
+
+La chiave con capacità **[C]** (certify) è identificata come la chiave
+principale perché è l'unica che può essere usata per indicare la relazione
+con altre chiavi. Solo la chiave **[C]** può essere usata per:
+
+- Aggiungere o revocare altre chiavi (sottochiavi) che hanno capacità S/E/A
+- Aggiungere, modificare o eliminare le identità (unids) associate alla chiave
+- Aggiungere o modificare la data di termine di sé stessa o di ogni sottochiave
+- Firmare le chiavi di altre persone a scopo di creare una rete di fiducia
+
+Di base, alla creazione di nuove chiavi, GnuPG genera quanto segue:
+
+- Una chiave madre che porta sia la capacità di certificazione che quella
+  di firma (**[SC]**)
+- Una sottochiave separata con capacità di criptaggio (**[E]**)
+
+Se avete usato i parametri di base per generare la vostra chiave, quello
+sarà il risultato. Potete verificarlo utilizzando ``gpg --list-secret-keys``,
+per esempio::
+
+    sec   rsa2048 2018-01-23 [SC] [expires: 2020-01-23]
+          000000000000000000000000AAAABBBBCCCCDDDD
+    uid           [ultimate] Alice Dev <adev@kernel.org>
+    ssb   rsa2048 2018-01-23 [E] [expires: 2020-01-23]
+
+Qualsiasi chiave che abbia la capacità **[C]** è la vostra chiave madre,
+indipendentemente da quali altre capacità potreste averle assegnato.
+>>>>>>> b7ba80a49124 (Commit)
 
 La lunga riga sotto la voce ``sec`` è la vostra impronta digitale --
 negli esempi che seguono, quando vedere ``[fpr]`` ci si riferisce a questa
@@ -215,10 +320,27 @@ possano ricevere la vostra nuova sottochiave::
     $ gpg --send-key [fpr]
 
 .. note:: Supporto ECC in GnuPG
+<<<<<<< HEAD
 
    Tenete presente che se avete intenzione di usare un dispositivo che non
    supporta chiavi ED25519 ECC, allora dovreste usare "nistp256" al posto di
    "ed25519". Più avanti ci sono alcune raccomandazioni per i dispositivi.
+=======
+    GnuPG 2.1 e successivi supportano pienamente *Elliptic Curve Cryptography*,
+    con la possibilità di combinare sottochiavi ECC con le tradizionali chiavi
+    primarie RSA. Il principale vantaggio della crittografia ECC è che è molto
+    più veloce da calcolare e crea firme più piccole se confrontate byte per
+    byte con le chiavi RSA a più di 2048 bit. A meno che non pensiate di
+    utilizzare un dispositivo smartcard che non supporta le operazioni ECC, vi
+    raccomandiamo ti creare sottochiavi di firma ECC per il vostro lavoro col
+    kernel.
+
+    Se per qualche ragione preferite rimanere con sottochiavi RSA, nel comando
+    precedente, sostituite "ed25519" con "rsa2048". In aggiunta, se avete
+    intenzione di usare un dispositivo hardware che non supporta le chiavi
+    ED25519 ECC, come la Nitrokey Pro o la Yubikey, allora dovreste usare
+    "nistp256" al posto di "ed25519".
+>>>>>>> b7ba80a49124 (Commit)
 
 Copia di riserva della chiave primaria per gestire il recupero da disastro
 --------------------------------------------------------------------------
@@ -253,7 +375,13 @@ magari in una cassetta di sicurezza in banca.
     Probabilmente la vostra stampante non è più quello stupido dispositivo
     connesso alla porta parallela, ma dato che il suo output è comunque
     criptato con la passphrase, eseguire la stampa in un sistema "cloud"
+<<<<<<< HEAD
     moderno dovrebbe essere comunque relativamente sicuro.
+=======
+    moderno dovrebbe essere comunque relativamente sicuro. Un'opzione potrebbe
+    essere quella di cambiare la passphrase della vostra chiave primaria
+    subito dopo aver finito con paperkey.
+>>>>>>> b7ba80a49124 (Commit)
 
 Copia di riserva di tutta la cartella GnuPG
 -------------------------------------------
@@ -327,6 +455,7 @@ Per prima cosa, identificate il keygrip della vostra chiave primaria::
 
 L'output assomiglierà a questo::
 
+<<<<<<< HEAD
     pub   ed25519 2022-12-20 [SC] [expires: 2022-12-19]
           000000000000000000000000AAAABBBBCCCCDDDD
           Keygrip = 1111000000000000000000000000000000000000
@@ -334,6 +463,15 @@ L'output assomiglierà a questo::
     sub   cv25519 2022-12-20 [E] [expires: 2022-12-19]
           Keygrip = 2222000000000000000000000000000000000000
     sub   ed25519 2022-12-20 [S]
+=======
+    pub   rsa2048 2018-01-24 [SC] [expires: 2020-01-24]
+          000000000000000000000000AAAABBBBCCCCDDDD
+          Keygrip = 1111000000000000000000000000000000000000
+    uid           [ultimate] Alice Dev <adev@kernel.org>
+    sub   rsa2048 2018-01-24 [E] [expires: 2020-01-24]
+          Keygrip = 2222000000000000000000000000000000000000
+    sub   ed25519 2018-01-24 [S]
+>>>>>>> b7ba80a49124 (Commit)
           Keygrip = 3333000000000000000000000000000000000000
 
 Trovate la voce keygrid che si trova sotto alla riga ``pub`` (appena sotto
@@ -356,11 +494,19 @@ Ora, se eseguite il comando ``--list-secret-keys``, vedrete che la chiave
 primaria non compare più (il simbolo ``#`` indica che non è disponibile)::
 
     $ gpg --list-secret-keys
+<<<<<<< HEAD
     sec#  ed25519 2022-12-20 [SC] [expires: 2024-12-19]
           000000000000000000000000AAAABBBBCCCCDDDD
     uid           [ultimate] Alice Dev <adev@kernel.org>
     ssb   cv25519 2022-12-20 [E] [expires: 2024-12-19]
     ssb   ed25519 2022-12-20 [S]
+=======
+    sec#  rsa2048 2018-01-24 [SC] [expires: 2020-01-24]
+          000000000000000000000000AAAABBBBCCCCDDDD
+    uid           [ultimate] Alice Dev <adev@kernel.org>
+    ssb   rsa2048 2018-01-24 [E] [expires: 2020-01-24]
+    ssb   ed25519 2018-01-24 [S]
+>>>>>>> b7ba80a49124 (Commit)
 
 Dovreste rimuovere anche i file ``secring.gpg`` che si trovano nella cartella
 ``~/.gnupg``, in quanto rimasugli delle versioni precedenti di GnuPG.
@@ -428,6 +574,7 @@ soluzioni disponibili:
   computer portatili più recenti. In aggiunta, offre altre funzionalità di
   sicurezza come FIDO, U2F, e ora supporta anche le chiavi ECC (NISTP)
 
+<<<<<<< HEAD
 La vostra scelta dipenderà dal costo, la disponibilità nella vostra regione, e
 sulla scelta fra dispositivi aperti e proprietari.
 
@@ -436,12 +583,24 @@ sulla scelta fra dispositivi aperti e proprietari.
     Se siete nella lista MAINTAINERS o avete un profilo su kernel.org, allora
     `potrete avere gratuitamente una Nitrokey Start`_ grazie alla fondazione
     Linux.
+=======
+`Su LWN c'è una buona recensione`_ dei modelli elencati qui sopra e altri.
+La scelta dipenderà dal costo, dalla disponibilità nella vostra area
+geografica e vostre considerazioni sull'hardware aperto/proprietario.
+
+Se volete usare chiavi ECC, la vostra migliore scelta sul mercato è la
+Nitrokey Start.
+>>>>>>> b7ba80a49124 (Commit)
 
 .. _`Nitrokey Start`: https://shop.nitrokey.com/shop/product/nitrokey-start-6
 .. _`Nitrokey Pro 2`: https://shop.nitrokey.com/shop/product/nitrokey-pro-2-3
 .. _`Yubikey 5`: https://www.yubico.com/product/yubikey-5-overview/
 .. _Gnuk: http://www.fsij.org/doc-gnuk/
+<<<<<<< HEAD
 .. _`potrete avere gratuitamente una Nitrokey Start`: https://www.kernel.org/nitrokey-digital-tokens-for-kernel-developers.html
+=======
+.. _`Su LWN c'è una buona recensione`: https://lwn.net/Articles/736231/
+>>>>>>> b7ba80a49124 (Commit)
 
 Configurare il vostro dispositivo smartcard
 -------------------------------------------
@@ -482,12 +641,15 @@ altre informazioni sulla carta che potrebbero trapelare in caso di smarrimento.
     A dispetto del nome "PIN", né il PIN utente né quello dell'amministratore
     devono essere esclusivamente numerici.
 
+<<<<<<< HEAD
 .. warning::
 
     Alcuni dispositivi richiedono la presenza delle sottochiavi nel dispositivo
     stesso prima che possiate cambiare la passphare. Verificate la
     documentazione del produttore.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Spostare le sottochiavi sulla smartcard
 ---------------------------------------
 
@@ -500,11 +662,19 @@ dell'amministratore::
 
     Secret subkeys are available.
 
+<<<<<<< HEAD
     pub  ed25519/AAAABBBBCCCCDDDD
          created: 2022-12-20  expires: 2024-12-19  usage: SC
          trust: ultimate      validity: ultimate
     ssb  cv25519/1111222233334444
          created: 2022-12-20  expires: never       usage: E
+=======
+    pub  rsa2048/AAAABBBBCCCCDDDD
+         created: 2018-01-23  expires: 2020-01-23  usage: SC
+         trust: ultimate      validity: ultimate
+    ssb  rsa2048/1111222233334444
+         created: 2018-01-23  expires: never       usage: E
+>>>>>>> b7ba80a49124 (Commit)
     ssb  ed25519/5555666677778888
          created: 2017-12-07  expires: never       usage: S
     [ultimate] (1). Alice Dev <adev@kernel.org>
@@ -569,11 +739,19 @@ Ora, se doveste usare l'opzione ``--list-secret-keys``, vedrete una
 sottile differenza nell'output::
 
     $ gpg --list-secret-keys
+<<<<<<< HEAD
     sec#  ed25519 2022-12-20 [SC] [expires: 2024-12-19]
           000000000000000000000000AAAABBBBCCCCDDDD
     uid           [ultimate] Alice Dev <adev@kernel.org>
     ssb>  cv25519 2022-12-20 [E] [expires: 2024-12-19]
     ssb>  ed25519 2022-12-20 [S]
+=======
+    sec#  rsa2048 2018-01-24 [SC] [expires: 2020-01-24]
+          000000000000000000000000AAAABBBBCCCCDDDD
+    uid           [ultimate] Alice Dev <adev@kernel.org>
+    ssb>  rsa2048 2018-01-24 [E] [expires: 2020-01-24]
+    ssb>  ed25519 2018-01-24 [S]
+>>>>>>> b7ba80a49124 (Commit)
 
 Il simbolo ``>`` in ``ssb>`` indica che la sottochiave è disponibile solo
 nella smartcard. Se tornate nella vostra cartella delle chiavi segrete e
@@ -636,7 +814,11 @@ eseguite::
 Se per voi è più facile da memorizzare, potete anche utilizzare una data
 specifica (per esempio, il vostro compleanno o capodanno)::
 
+<<<<<<< HEAD
     $ gpg --quick-set-expire [fpr] 2025-07-01
+=======
+    $ gpg --quick-set-expire [fpr] 2020-07-01
+>>>>>>> b7ba80a49124 (Commit)
 
 Ricordatevi di inviare l'aggiornamento ai keyserver::
 
@@ -651,6 +833,7 @@ dovreste importarle nella vostra cartella di lavoro abituale::
     $ gpg --export | gpg --homedir ~/.gnupg --import
     $ unset GNUPGHOME
 
+<<<<<<< HEAD
 Usare gpg-agent con ssh
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -666,6 +849,8 @@ impostazioni di sshd sul sistema remoto.
 .. _`Agent Forwarding over SSH`: https://wiki.gnupg.org/AgentForwarding
 
 .. _it_pgp_with_git:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 Usare PGP con Git
 =================
@@ -699,6 +884,14 @@ avere più chiavi segrete, potete dire a git quale dovrebbe usare (``[fpg]``
 
     $ git config --global user.signingKey [fpr]
 
+<<<<<<< HEAD
+=======
+**IMPORTANTE**: se avete una comando dedicato per ``gpg2``, allora dovreste
+dire a git di usare sempre quello piuttosto che il vecchio comando ``gpg``::
+
+    $ git config --global gpg.program gpg2
+
+>>>>>>> b7ba80a49124 (Commit)
 Come firmare i tag
 ------------------
 
@@ -797,6 +990,7 @@ Potete dire a git di firmare sempre i commit::
 
 .. _it_verify_identities:
 
+<<<<<<< HEAD
 Come lavorare con patch firmate
 -------------------------------
 
@@ -852,6 +1046,8 @@ esempio::
 
 .. _it_kernel_identities:
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Come verificare l'identità degli sviluppatori del kernel
 ========================================================
 
@@ -924,6 +1120,7 @@ di base di GnuPG v2). Per farlo, aggiungete (o modificate) l'impostazione
 
     trust-model tofu+pgp
 
+<<<<<<< HEAD
 Usare il repositorio kernel.org per il web of trust
 ---------------------------------------------------
 
@@ -939,3 +1136,66 @@ If you are a kernel developer, please consider submitting your key for
 inclusion into that keyring.
 
 .. _`Kernel developer PGP Keyring`: https://korg.docs.kernel.org/pgpkeys.html
+=======
+Come usare i keyserver in sicurezza
+-----------------------------------
+Se ottenete l'errore "No public key" quando cercate di validate il tag di
+qualcuno, allora dovreste cercare quella chiave usando un keyserver. È
+importante tenere bene a mente che non c'è alcuna garanzia che la chiave
+che avete recuperato da un keyserver PGP appartenga davvero alla persona
+reale -- è progettato così. Dovreste usare il Web of Trust per assicurarvi
+che la chiave sia valida.
+
+Come mantenere il Web of Trust va oltre gli scopi di questo documento,
+semplicemente perché farlo come si deve richiede sia sforzi che perseveranza
+che tendono ad andare oltre al livello di interesse della maggior parte degli
+esseri umani. Qui di seguito alcuni rapidi suggerimenti per aiutarvi a ridurre
+il rischio di importare chiavi maligne.
+
+Primo, diciamo che avete provato ad eseguire ``git verify-tag`` ma restituisce
+un errore dicendo che la chiave non è stata trovata::
+
+    $ git verify-tag sunxi-fixes-for-4.15-2
+    gpg: Signature made Sun 07 Jan 2018 10:51:55 PM EST
+    gpg:                using RSA key DA73759BF8619E484E5A3B47389A54219C0F2430
+    gpg:                issuer "wens@...org"
+    gpg: Can't check signature: No public key
+
+Cerchiamo nel keyserver per maggiori informazioni sull'impronta digitale
+della chiave (l'impronta digitale, probabilmente, appartiene ad una
+sottochiave, dunque non possiamo usarla direttamente senza trovare prima
+l'ID della chiave primaria associata ad essa)::
+
+    $ gpg --search DA73759BF8619E484E5A3B47389A54219C0F2430
+    gpg: data source: hkp://keys.gnupg.net
+    (1) Chen-Yu Tsai <wens@...org>
+          4096 bit RSA key C94035C21B4F2AEB, created: 2017-03-14, expires: 2019-03-15
+    Keys 1-1 of 1 for "DA73759BF8619E484E5A3B47389A54219C0F2430".  Enter number(s), N)ext, or Q)uit > q
+
+Localizzate l'ID della chiave primaria, nel nostro esempio
+``C94035C21B4F2AEB``. Ora visualizzate le chiavi di Linus Torvalds
+che avete nel vostro portachiavi::
+
+    $ gpg --list-key torvalds@kernel.org
+    pub   rsa2048 2011-09-20 [SC]
+          ABAF11C65A2970B130ABE3C479BE3E4300411886
+    uid           [ unknown] Linus Torvalds <torvalds@kernel.org>
+    sub   rsa2048 2011-09-20 [E]
+
+Poi, cercate un percorso affidabile da Linux Torvalds alla chiave che avete
+trovato con ``gpg --search`` usando la chiave sconosciuta.Per farlo potete usare
+diversi strumenti come https://github.com/mricon/wotmate,
+https://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git/tree/graphs, e
+https://the.earth.li/~noodles/pathfind.html.
+
+Se trovate un paio di percorsi affidabili è un buon segno circa la validità
+della chiave. Ora, potete aggiungerla al vostro portachiavi dal keyserver::
+
+    $ gpg --recv-key C94035C21B4F2AEB
+
+Questa procedura non è perfetta, e ovviamente state riponendo la vostra
+fiducia nell'amministratore del servizio *PGP Pathfinder* sperando che non
+sia malintenzionato (infatti, questo va contro :ref:`it_devs_not_infra`).
+Tuttavia, se mantenete con cura la vostra rete di fiducia sarà un deciso
+miglioramento rispetto alla cieca fiducia nei keyserver.
+>>>>>>> b7ba80a49124 (Commit)

@@ -6,13 +6,21 @@
 /* This file may be included multiple times.  */
 
 #if IO_CONCAT(__IO_PREFIX,trivial_io_bw)
+<<<<<<< HEAD
 __EXTERN_INLINE u8
+=======
+__EXTERN_INLINE unsigned int
+>>>>>>> b7ba80a49124 (Commit)
 IO_CONCAT(__IO_PREFIX,ioread8)(const void __iomem *a)
 {
 	return __kernel_ldbu(*(const volatile u8 __force *)a);
 }
 
+<<<<<<< HEAD
 __EXTERN_INLINE u16
+=======
+__EXTERN_INLINE unsigned int
+>>>>>>> b7ba80a49124 (Commit)
 IO_CONCAT(__IO_PREFIX,ioread16)(const void __iomem *a)
 {
 	return __kernel_ldwu(*(const volatile u16 __force *)a);
@@ -32,7 +40,11 @@ IO_CONCAT(__IO_PREFIX,iowrite16)(u16 b, void __iomem *a)
 #endif
 
 #if IO_CONCAT(__IO_PREFIX,trivial_io_lq)
+<<<<<<< HEAD
 __EXTERN_INLINE u32
+=======
+__EXTERN_INLINE unsigned int
+>>>>>>> b7ba80a49124 (Commit)
 IO_CONCAT(__IO_PREFIX,ioread32)(const void __iomem *a)
 {
 	return *(const volatile u32 __force *)a;
@@ -43,6 +55,7 @@ IO_CONCAT(__IO_PREFIX,iowrite32)(u32 b, void __iomem *a)
 {
 	*(volatile u32 __force *)a = b;
 }
+<<<<<<< HEAD
 
 __EXTERN_INLINE u64
 IO_CONCAT(__IO_PREFIX,ioread64)(const void __iomem *a)
@@ -55,6 +68,8 @@ IO_CONCAT(__IO_PREFIX,iowrite64)(u64 b, void __iomem *a)
 {
 	*(volatile u64 __force *)a = b;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #if IO_CONCAT(__IO_PREFIX,trivial_rw_bw) == 1

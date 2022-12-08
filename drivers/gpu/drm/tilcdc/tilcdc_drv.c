@@ -16,7 +16,11 @@
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_debugfs.h>
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_dma.h>
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_fourcc.h>
 #include <drm/drm_gem_dma_helper.h>
 #include <drm/drm_gem_framebuffer_helper.h>
@@ -384,7 +388,11 @@ static int tilcdc_init(const struct drm_driver *ddrv, struct device *dev)
 		goto init_failed;
 	priv->is_registered = true;
 
+<<<<<<< HEAD
 	drm_fbdev_dma_setup(ddev, bpp);
+=======
+	drm_fbdev_generic_setup(ddev, bpp);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 init_failed:
@@ -496,6 +504,10 @@ static const struct drm_driver tilcdc_driver = {
  * Power management:
  */
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int tilcdc_pm_suspend(struct device *dev)
 {
 	struct drm_device *ddev = dev_get_drvdata(dev);
@@ -517,9 +529,17 @@ static int tilcdc_pm_resume(struct device *dev)
 	pinctrl_pm_select_default_state(dev);
 	return  drm_mode_config_helper_resume(ddev);
 }
+<<<<<<< HEAD
 
 static DEFINE_SIMPLE_DEV_PM_OPS(tilcdc_pm_ops,
 				tilcdc_pm_suspend, tilcdc_pm_resume);
+=======
+#endif
+
+static const struct dev_pm_ops tilcdc_pm_ops = {
+	SET_SYSTEM_SLEEP_PM_OPS(tilcdc_pm_suspend, tilcdc_pm_resume)
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Platform driver:
@@ -594,7 +614,11 @@ static struct platform_driver tilcdc_platform_driver = {
 	.remove     = tilcdc_pdev_remove,
 	.driver     = {
 		.name   = "tilcdc",
+<<<<<<< HEAD
 		.pm     = pm_sleep_ptr(&tilcdc_pm_ops),
+=======
+		.pm     = &tilcdc_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = tilcdc_of_match,
 	},
 };

@@ -128,7 +128,10 @@
 #define TX_FIFOEMPTY		BIT(24)
 #define TX_SENTSTALL		BIT(22)
 #define TX_SENDSTALL		BIT(21)
+<<<<<<< HEAD
 #define TX_FLUSHFIFO		BIT(20)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define TX_TXPKTRDY		BIT(16)
 #define TX_TXMAXPKTSZ_MSK	GENMASK(10, 0)
 #define TX_TXMAXPKTSZ(x)	((x) & TX_TXMAXPKTSZ_MSK)

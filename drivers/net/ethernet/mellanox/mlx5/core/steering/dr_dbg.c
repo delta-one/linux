@@ -49,8 +49,12 @@ enum dr_dump_rec_type {
 	DR_DUMP_REC_TYPE_ACTION_POP_VLAN = 3413,
 	DR_DUMP_REC_TYPE_ACTION_SAMPLER = 3415,
 	DR_DUMP_REC_TYPE_ACTION_INSERT_HDR = 3420,
+<<<<<<< HEAD
 	DR_DUMP_REC_TYPE_ACTION_REMOVE_HDR = 3421,
 	DR_DUMP_REC_TYPE_ACTION_MATCH_RANGE = 3425,
+=======
+	DR_DUMP_REC_TYPE_ACTION_REMOVE_HDR = 3421
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void mlx5dr_dbg_tbl_add(struct mlx5dr_table *tbl)
@@ -108,8 +112,11 @@ dr_dump_rule_action_mem(struct seq_file *file, const u64 rule_id,
 {
 	struct mlx5dr_action *action = action_mem->action;
 	const u64 action_id = DR_DBG_PTR_TO_ID(action);
+<<<<<<< HEAD
 	u64 hit_tbl_ptr, miss_tbl_ptr;
 	u32 hit_tbl_id, miss_tbl_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (action->action_type) {
 	case DR_ACTION_TYP_DROP:
@@ -201,6 +208,7 @@ dr_dump_rule_action_mem(struct seq_file *file, const u64 rule_id,
 			   action->sampler->rx_icm_addr,
 			   action->sampler->tx_icm_addr);
 		break;
+<<<<<<< HEAD
 	case DR_ACTION_TYP_RANGE:
 		if (action->range->hit_tbl_action->dest_tbl->is_fw_tbl) {
 			hit_tbl_id = action->range->hit_tbl_action->dest_tbl->fw_tbl.id;
@@ -225,6 +233,8 @@ dr_dump_rule_action_mem(struct seq_file *file, const u64 rule_id,
 			   hit_tbl_id, hit_tbl_ptr, miss_tbl_id, miss_tbl_ptr,
 			   action->range->definer_id);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return 0;
 	}

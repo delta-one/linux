@@ -12,7 +12,10 @@
  *
  * Purpose : obtain information about current aborted instruction.
  */
+<<<<<<< HEAD
 	.arch	armv7-a
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.align	5
 ENTRY(v7_early_abort)
 	mrc	p15, 0, r1, c5, c0, 0		@ get FSR

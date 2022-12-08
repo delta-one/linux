@@ -9,7 +9,10 @@
 #include <linux/mod_devicetable.h>
 #include <linux/regmap.h>
 #include <linux/spi/spi.h>
+<<<<<<< HEAD
 #include <linux/property.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "adxl355.h"
 
@@ -25,6 +28,7 @@ static const struct regmap_config adxl355_spi_regmap_config = {
 
 static int adxl355_spi_probe(struct spi_device *spi)
 {
+<<<<<<< HEAD
 	const struct adxl355_chip_info *chip_data;
 	struct regmap *regmap;
 
@@ -36,6 +40,11 @@ static int adxl355_spi_probe(struct spi_device *spi)
 			return -EINVAL;
 	}
 
+=======
+	const struct spi_device_id *id = spi_get_device_id(spi);
+	struct regmap *regmap;
+
+>>>>>>> b7ba80a49124 (Commit)
 	regmap = devm_regmap_init_spi(spi, &adxl355_spi_regmap_config);
 	if (IS_ERR(regmap)) {
 		dev_err(&spi->dev, "Error initializing spi regmap: %ld\n",
@@ -44,19 +53,31 @@ static int adxl355_spi_probe(struct spi_device *spi)
 		return PTR_ERR(regmap);
 	}
 
+<<<<<<< HEAD
 	return adxl355_core_probe(&spi->dev, regmap, chip_data);
 }
 
 static const struct spi_device_id adxl355_spi_id[] = {
 	{ "adxl355", (kernel_ulong_t)&adxl35x_chip_info[ADXL355] },
 	{ "adxl359", (kernel_ulong_t)&adxl35x_chip_info[ADXL359] },
+=======
+	return adxl355_core_probe(&spi->dev, regmap, id->name);
+}
+
+static const struct spi_device_id adxl355_spi_id[] = {
+	{ "adxl355", 0 },
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(spi, adxl355_spi_id);
 
 static const struct of_device_id adxl355_of_match[] = {
+<<<<<<< HEAD
 	{ .compatible = "adi,adxl355", .data = &adxl35x_chip_info[ADXL355] },
 	{ .compatible = "adi,adxl359", .data = &adxl35x_chip_info[ADXL359] },
+=======
+	{ .compatible = "adi,adxl355" },
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(of, adxl355_of_match);

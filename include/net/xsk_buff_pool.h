@@ -19,11 +19,16 @@ struct xdp_sock;
 struct device;
 struct page;
 
+<<<<<<< HEAD
 #define XSK_PRIV_MAX 24
 
 struct xdp_buff_xsk {
 	struct xdp_buff xdp;
 	u8 cb[XSK_PRIV_MAX];
+=======
+struct xdp_buff_xsk {
+	struct xdp_buff xdp;
+>>>>>>> b7ba80a49124 (Commit)
 	dma_addr_t dma;
 	dma_addr_t frame_dma;
 	struct xsk_buff_pool *pool;
@@ -31,8 +36,11 @@ struct xdp_buff_xsk {
 	struct list_head free_list_node;
 };
 
+<<<<<<< HEAD
 #define XSK_CHECK_PRIV_TYPE(t) BUILD_BUG_ON(sizeof(t) > offsetofend(struct xdp_buff_xsk, cb))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct xsk_dma_map {
 	dma_addr_t *dma_pages;
 	struct device *dev;

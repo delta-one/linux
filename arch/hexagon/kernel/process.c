@@ -44,6 +44,10 @@ void arch_cpu_idle(void)
 {
 	__vmwait();
 	/*  interrupts wake us up, but irqs are still disabled */
+<<<<<<< HEAD
+=======
+	raw_local_irq_enable();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*

@@ -86,8 +86,11 @@
 
 #define IMX8QXP_ADC_TIMEOUT		msecs_to_jiffies(100)
 
+<<<<<<< HEAD
 #define IMX8QXP_ADC_MAX_FIFO_SIZE		16
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct imx8qxp_adc {
 	struct device *dev;
 	void __iomem *regs;
@@ -97,7 +100,10 @@ struct imx8qxp_adc {
 	/* Serialise ADC channel reads */
 	struct mutex lock;
 	struct completion completion;
+<<<<<<< HEAD
 	u32 fifo[IMX8QXP_ADC_MAX_FIFO_SIZE];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define IMX8QXP_ADC_CHAN(_idx) {				\
@@ -241,7 +247,12 @@ static int imx8qxp_adc_read_raw(struct iio_dev *indio_dev,
 			return ret;
 		}
 
+<<<<<<< HEAD
 		*val = adc->fifo[0];
+=======
+		*val = FIELD_GET(IMX8QXP_ADC_RESFIFO_VAL_MASK,
+				 readl(adc->regs + IMX8QXP_ADR_ADC_RESFIFO));
+>>>>>>> b7ba80a49124 (Commit)
 
 		mutex_unlock(&adc->lock);
 		return IIO_VAL_INT;
@@ -267,15 +278,21 @@ static irqreturn_t imx8qxp_adc_isr(int irq, void *dev_id)
 {
 	struct imx8qxp_adc *adc = dev_id;
 	u32 fifo_count;
+<<<<<<< HEAD
 	int i;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	fifo_count = FIELD_GET(IMX8QXP_ADC_FCTRL_FCOUNT_MASK,
 			       readl(adc->regs + IMX8QXP_ADR_ADC_FCTRL));
 
+<<<<<<< HEAD
 	for (i = 0; i < fifo_count; i++)
 		adc->fifo[i] = FIELD_GET(IMX8QXP_ADC_RESFIFO_VAL_MASK,
 				readl_relaxed(adc->regs + IMX8QXP_ADR_ADC_RESFIFO));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (fifo_count)
 		complete(&adc->completion);
 

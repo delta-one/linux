@@ -88,12 +88,20 @@
 			interrupts = <8>;
 		};
 
+<<<<<<< HEAD
 		serial@16000000 {
+=======
+		uart@16000000 {
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0x16000000 0x1000>;
 			interrupts = <1>;
 		};
 
+<<<<<<< HEAD
 		serial@17000000 {
+=======
+		uart@17000000 {
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0x17000000 0x1000>;
 			interrupts = <2>;
 		};

@@ -20,7 +20,11 @@
 
 	leds {
 		compatible = "gpio-leds";
+<<<<<<< HEAD
 		led-user0 {
+=======
+		user0 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "user0";
 			gpios = <&twl_gpio 18 GPIO_ACTIVE_LOW>;	/* LEDA */
 			linux,default-trigger = "none";

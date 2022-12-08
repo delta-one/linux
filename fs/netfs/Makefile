@@ -3,7 +3,10 @@
 netfs-y := \
 	buffered_read.o \
 	io.o \
+<<<<<<< HEAD
 	iterator.o \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	main.o \
 	objects.o
 

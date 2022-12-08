@@ -13,7 +13,10 @@
 #include <linux/err.h>
 #include <linux/sysfs.h>
 #include <linux/kobject.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 
 #include <video/omapfb_dss.h>
@@ -211,7 +214,11 @@ static ssize_t overlay_enabled_store(struct omap_overlay *ovl, const char *buf,
 	int r;
 	bool enable;
 
+<<<<<<< HEAD
 	r = kstrtobool(buf, &enable);
+=======
+	r = strtobool(buf, &enable);
+>>>>>>> b7ba80a49124 (Commit)
 	if (r)
 		return r;
 

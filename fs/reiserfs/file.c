@@ -256,11 +256,16 @@ const struct inode_operations reiserfs_file_inode_operations = {
 	.setattr = reiserfs_setattr,
 	.listxattr = reiserfs_listxattr,
 	.permission = reiserfs_permission,
+<<<<<<< HEAD
 	.get_inode_acl = reiserfs_get_acl,
+=======
+	.get_acl = reiserfs_get_acl,
+>>>>>>> b7ba80a49124 (Commit)
 	.set_acl = reiserfs_set_acl,
 	.fileattr_get = reiserfs_fileattr_get,
 	.fileattr_set = reiserfs_fileattr_set,
 };
+<<<<<<< HEAD
 
 const struct inode_operations reiserfs_priv_file_inode_operations = {
 	.setattr = reiserfs_setattr,
@@ -268,3 +273,5 @@ const struct inode_operations reiserfs_priv_file_inode_operations = {
 	.fileattr_get = reiserfs_fileattr_get,
 	.fileattr_set = reiserfs_fileattr_set,
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

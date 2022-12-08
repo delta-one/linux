@@ -1051,8 +1051,12 @@ struct net_device_context {
 	u32 vf_alloc;
 	/* Serial number of the VF to team with */
 	u32 vf_serial;
+<<<<<<< HEAD
 	/* completion variable to confirm vf association */
 	struct completion vf_add;
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Is the current data path through the VF NIC? */
 	bool  data_path_is_vf;
 

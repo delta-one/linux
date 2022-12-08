@@ -24,8 +24,11 @@
 #include "proc-v7-2level.S"
 #endif
 
+<<<<<<< HEAD
 .arch armv7-a
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ENTRY(cpu_v7_proc_init)
 	ret	lr
 ENDPROC(cpu_v7_proc_init)

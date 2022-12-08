@@ -14,7 +14,11 @@ description:
   used to communicate with the gmac phy connected.
 
 allOf:
+<<<<<<< HEAD
   - $ref: mdio.yaml#
+=======
+  - $ref: "mdio.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

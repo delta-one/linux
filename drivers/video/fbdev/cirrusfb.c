@@ -2359,12 +2359,16 @@ static int __init cirrusfb_init(void)
 
 #ifndef MODULE
 	char *option = NULL;
+<<<<<<< HEAD
 #endif
 
 	if (fb_modesetting_disabled("cirrusfb"))
 		return -ENODEV;
 
 #ifndef MODULE
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (fb_get_options("cirrusfb", &option))
 		return -ENODEV;
 	cirrusfb_setup(option);

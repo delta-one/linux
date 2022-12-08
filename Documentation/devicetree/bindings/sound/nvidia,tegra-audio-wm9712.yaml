@@ -31,9 +31,15 @@ properties:
     items:
       enum:
         # Board Connectors
+<<<<<<< HEAD
         - Headphone
         - LineIn
         - Mic
+=======
+        - "Headphone"
+        - "LineIn"
+        - "Mic"
+>>>>>>> b7ba80a49124 (Commit)
 
         # CODEC Pins
         - MONOOUT
@@ -48,7 +54,11 @@ properties:
         - PCBEEP
         - MIC1
         - MIC2
+<<<<<<< HEAD
         - Mic Bias
+=======
+        - "Mic Bias"
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - nvidia,ac97-controller

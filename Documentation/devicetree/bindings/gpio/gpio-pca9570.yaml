@@ -12,7 +12,10 @@ maintainers:
 properties:
   compatible:
     enum:
+<<<<<<< HEAD
       - dlg,slg7xl45106
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - nxp,pca9570
       - nxp,pca9571
 
@@ -34,7 +37,11 @@ additionalProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     i2c {
+=======
+    i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 

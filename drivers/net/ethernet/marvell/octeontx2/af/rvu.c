@@ -16,7 +16,10 @@
 #include "rvu.h"
 #include "rvu_reg.h"
 #include "ptp.h"
+<<<<<<< HEAD
 #include "mcs.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "rvu_trace.h"
 #include "rvu_npc_hash.h"
@@ -24,6 +27,11 @@
 #define DRV_NAME	"rvu_af"
 #define DRV_STRING      "Marvell OcteonTX2 RVU Admin Function Driver"
 
+<<<<<<< HEAD
+=======
+static int rvu_get_hwvf(struct rvu *rvu, int pcifunc);
+
+>>>>>>> b7ba80a49124 (Commit)
 static void rvu_set_msix_offset(struct rvu *rvu, struct rvu_pfvf *pfvf,
 				struct rvu_block *block, int lf);
 static void rvu_clear_msix_offset(struct rvu *rvu, struct rvu_pfvf *pfvf,
@@ -417,7 +425,11 @@ void rvu_get_pf_numvfs(struct rvu *rvu, int pf, int *numvfs, int *hwvf)
 		*hwvf = cfg & 0xFFF;
 }
 
+<<<<<<< HEAD
 int rvu_get_hwvf(struct rvu *rvu, int pcifunc)
+=======
+static int rvu_get_hwvf(struct rvu *rvu, int pcifunc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int pf, func;
 	u64 cfg;
@@ -1158,6 +1170,7 @@ cpt:
 
 	rvu_program_channels(rvu);
 
+<<<<<<< HEAD
 	err = rvu_mcs_init(rvu);
 	if (err) {
 		dev_err(rvu->dev, "%s: Failed to initialize mcs\n", __func__);
@@ -1174,6 +1187,10 @@ cpt:
 
 mcs_err:
 	rvu_mcs_exit(rvu);
+=======
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 nix_err:
 	rvu_nix_freemem(rvu);
 npa_err:
@@ -3306,7 +3323,10 @@ err_mbox:
 err_hwsetup:
 	rvu_cgx_exit(rvu);
 	rvu_fwdata_exit(rvu);
+<<<<<<< HEAD
 	rvu_mcs_exit(rvu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rvu_reset_all_blocks(rvu);
 	rvu_free_hw_resources(rvu);
 	rvu_clear_rvum_blk_revid(rvu);
@@ -3333,7 +3353,10 @@ static void rvu_remove(struct pci_dev *pdev)
 	rvu_flr_wq_destroy(rvu);
 	rvu_cgx_exit(rvu);
 	rvu_fwdata_exit(rvu);
+<<<<<<< HEAD
 	rvu_mcs_exit(rvu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rvu_mbox_destroy(&rvu->afpf_wq_info);
 	rvu_disable_sriov(rvu);
 	rvu_reset_all_blocks(rvu);
@@ -3369,18 +3392,24 @@ static int __init rvu_init_module(void)
 	if (err < 0)
 		goto ptp_err;
 
+<<<<<<< HEAD
 	err = pci_register_driver(&mcs_driver);
 	if (err < 0)
 		goto mcs_err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err =  pci_register_driver(&rvu_driver);
 	if (err < 0)
 		goto rvu_err;
 
 	return 0;
 rvu_err:
+<<<<<<< HEAD
 	pci_unregister_driver(&mcs_driver);
 mcs_err:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pci_unregister_driver(&ptp_driver);
 ptp_err:
 	pci_unregister_driver(&cgx_driver);
@@ -3391,7 +3420,10 @@ ptp_err:
 static void __exit rvu_cleanup_module(void)
 {
 	pci_unregister_driver(&rvu_driver);
+<<<<<<< HEAD
 	pci_unregister_driver(&mcs_driver);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pci_unregister_driver(&ptp_driver);
 	pci_unregister_driver(&cgx_driver);
 }

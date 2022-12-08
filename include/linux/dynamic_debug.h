@@ -128,6 +128,7 @@ struct ddebug_class_param {
 	const struct ddebug_class_map *map;
 };
 
+<<<<<<< HEAD
 /*
  * pr_debug() and friends are globally enabled or modules have selectively
  * enabled them.
@@ -138,6 +139,19 @@ struct ddebug_class_param {
 extern __printf(2, 3)
 void __dynamic_pr_debug(struct _ddebug *descriptor, const char *fmt, ...);
 
+=======
+#if defined(CONFIG_DYNAMIC_DEBUG_CORE)
+
+int ddebug_add_module(struct _ddebug_info *dyndbg, const char *modname);
+
+extern int ddebug_remove_module(const char *mod_name);
+extern __printf(2, 3)
+void __dynamic_pr_debug(struct _ddebug *descriptor, const char *fmt, ...);
+
+extern int ddebug_dyndbg_module_param_cb(char *param, char *val,
+					const char *modname);
+
+>>>>>>> b7ba80a49124 (Commit)
 struct device;
 
 extern __printf(3, 4)
@@ -286,6 +300,13 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
 				   KERN_DEBUG, prefix_str, prefix_type,	\
 				   rowsize, groupsize, buf, len, ascii)
 
+<<<<<<< HEAD
+=======
+struct kernel_param;
+int param_set_dyndbg_classes(const char *instr, const struct kernel_param *kp);
+int param_get_dyndbg_classes(char *buffer, const struct kernel_param *kp);
+
+>>>>>>> b7ba80a49124 (Commit)
 /* for test only, generally expect drm.debug style macro wrappers */
 #define __pr_debug_cls(cls, fmt, ...) do {			\
 	BUILD_BUG_ON_MSG(!__builtin_constant_p(cls),		\
@@ -293,12 +314,17 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
 	dynamic_pr_debug_cls(cls, fmt, ##__VA_ARGS__);		\
 	} while (0)
 
+<<<<<<< HEAD
 #else /* !(CONFIG_DYNAMIC_DEBUG || (CONFIG_DYNAMIC_DEBUG_CORE && DYNAMIC_DEBUG_MODULE)) */
+=======
+#else /* !CONFIG_DYNAMIC_DEBUG_CORE */
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/string.h>
 #include <linux/errno.h>
 #include <linux/printk.h>
 
+<<<<<<< HEAD
 #define DEFINE_DYNAMIC_DEBUG_METADATA(name, fmt)
 #define DYNAMIC_DEBUG_BRANCH(descriptor) false
 
@@ -325,6 +351,17 @@ int param_set_dyndbg_classes(const char *instr, const struct kernel_param *kp);
 int param_get_dyndbg_classes(char *buffer, const struct kernel_param *kp);
 
 #else
+=======
+static inline int ddebug_add_module(struct _ddebug_info *dinfo, const char *modname)
+{
+	return 0;
+}
+
+static inline int ddebug_remove_module(const char *mod)
+{
+	return 0;
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline int ddebug_dyndbg_module_param_cb(char *param, char *val,
 						const char *modname)
@@ -338,15 +375,37 @@ static inline int ddebug_dyndbg_module_param_cb(char *param, char *val,
 	return -EINVAL;
 }
 
+<<<<<<< HEAD
+=======
+#define dynamic_pr_debug(fmt, ...)					\
+	do { if (0) printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__); } while (0)
+#define dynamic_dev_dbg(dev, fmt, ...)					\
+	do { if (0) dev_printk(KERN_DEBUG, dev, fmt, ##__VA_ARGS__); } while (0)
+#define dynamic_hex_dump(prefix_str, prefix_type, rowsize,		\
+			 groupsize, buf, len, ascii)			\
+	do { if (0)							\
+		print_hex_dump(KERN_DEBUG, prefix_str, prefix_type,	\
+				rowsize, groupsize, buf, len, ascii);	\
+	} while (0)
+
+>>>>>>> b7ba80a49124 (Commit)
 struct kernel_param;
 static inline int param_set_dyndbg_classes(const char *instr, const struct kernel_param *kp)
 { return 0; }
 static inline int param_get_dyndbg_classes(char *buffer, const struct kernel_param *kp)
 { return 0; }
 
+<<<<<<< HEAD
 #endif
 
 
 extern const struct kernel_param_ops param_ops_dyndbg_classes;
 
 #endif /* _DYNAMIC_DEBUG_H */
+=======
+#endif /* !CONFIG_DYNAMIC_DEBUG_CORE */
+
+extern const struct kernel_param_ops param_ops_dyndbg_classes;
+
+#endif
+>>>>>>> b7ba80a49124 (Commit)

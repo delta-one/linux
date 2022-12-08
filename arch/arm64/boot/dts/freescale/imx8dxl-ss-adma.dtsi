@@ -11,10 +11,13 @@
 	clock-frequency = <160000000>;
 };
 
+<<<<<<< HEAD
 &adc0 {
 	interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &i2c0 {
 	compatible = "fsl,imx8dxl-lpi2c", "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
 	interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
@@ -54,6 +57,7 @@
 	compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
 	interrupts = <GIC_SPI 231 IRQ_TYPE_LEVEL_HIGH>;
 };
+<<<<<<< HEAD
 
 &lpspi0 {
 	interrupts = <GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH>;
@@ -70,3 +74,5 @@
 &lpspi3 {
 	interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

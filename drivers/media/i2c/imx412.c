@@ -1172,7 +1172,10 @@ static int imx412_init_controls(struct imx412 *imx412)
 static int imx412_probe(struct i2c_client *client)
 {
 	struct imx412 *imx412;
+<<<<<<< HEAD
 	const char *name;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	imx412 = devm_kzalloc(&client->dev, sizeof(*imx412), GFP_KERNEL);
@@ -1180,9 +1183,12 @@ static int imx412_probe(struct i2c_client *client)
 		return -ENOMEM;
 
 	imx412->dev = &client->dev;
+<<<<<<< HEAD
 	name = device_get_match_data(&client->dev);
 	if (!name)
 		return -ENODEV;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Initialize subdev */
 	v4l2_i2c_subdev_init(&imx412->sd, client, &imx412_subdev_ops);
@@ -1222,8 +1228,11 @@ static int imx412_probe(struct i2c_client *client)
 	imx412->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
 	imx412->sd.entity.function = MEDIA_ENT_F_CAM_SENSOR;
 
+<<<<<<< HEAD
 	v4l2_i2c_subdev_set_name(&imx412->sd, client, name, NULL);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Initialize source pad */
 	imx412->pad.flags = MEDIA_PAD_FL_SOURCE;
 	ret = media_entity_pads_init(&imx412->sd.entity, 1, &imx412->pad);
@@ -1285,8 +1294,12 @@ static const struct dev_pm_ops imx412_pm_ops = {
 };
 
 static const struct of_device_id imx412_of_match[] = {
+<<<<<<< HEAD
 	{ .compatible = "sony,imx412", .data = "imx412" },
 	{ .compatible = "sony,imx577", .data = "imx577" },
+=======
+	{ .compatible = "sony,imx412" },
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 

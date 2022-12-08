@@ -44,6 +44,7 @@ static bool ovl_must_copy_xattr(const char *name)
 	       !strncmp(name, XATTR_SECURITY_PREFIX, XATTR_SECURITY_PREFIX_LEN);
 }
 
+<<<<<<< HEAD
 static int ovl_copy_acl(struct ovl_fs *ofs, const struct path *path,
 			struct dentry *dentry, const char *acl_name)
 {
@@ -73,6 +74,8 @@ static int ovl_copy_acl(struct ovl_fs *ofs, const struct path *path,
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ovl_copy_xattr(struct super_block *sb, const struct path *oldpath, struct dentry *new)
 {
 	struct dentry *old = oldpath->dentry;
@@ -81,7 +84,12 @@ int ovl_copy_xattr(struct super_block *sb, const struct path *oldpath, struct de
 	int error = 0;
 	size_t slen;
 
+<<<<<<< HEAD
 	if (!old->d_inode->i_op->listxattr || !new->d_inode->i_op->listxattr)
+=======
+	if (!(old->d_inode->i_opflags & IOP_XATTR) ||
+	    !(new->d_inode->i_opflags & IOP_XATTR))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	list_size = vfs_listxattr(old, NULL, 0);
@@ -121,6 +129,7 @@ int ovl_copy_xattr(struct super_block *sb, const struct path *oldpath, struct de
 			error = 0;
 			continue; /* Discard */
 		}
+<<<<<<< HEAD
 
 		if (is_posix_acl_xattr(name)) {
 			error = ovl_copy_acl(OVL_FS(sb), oldpath, new, name);
@@ -130,6 +139,8 @@ int ovl_copy_xattr(struct super_block *sb, const struct path *oldpath, struct de
 			break;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 retry:
 		size = ovl_do_getxattr(oldpath, name, value, value_size);
 		if (size == -ERANGE)
@@ -230,11 +241,19 @@ static int ovl_copy_fileattr(struct inode *inode, const struct path *old,
 	return ovl_real_fileattr_set(new, &newfa);
 }
 
+<<<<<<< HEAD
 static int ovl_copy_up_file(struct ovl_fs *ofs, struct dentry *dentry,
 			    struct file *new_file, loff_t len)
 {
 	struct path datapath;
 	struct file *old_file;
+=======
+static int ovl_copy_up_data(struct ovl_fs *ofs, const struct path *old,
+			    const struct path *new, loff_t len)
+{
+	struct file *old_file;
+	struct file *new_file;
+>>>>>>> b7ba80a49124 (Commit)
 	loff_t old_pos = 0;
 	loff_t new_pos = 0;
 	loff_t cloned;
@@ -243,6 +262,7 @@ static int ovl_copy_up_file(struct ovl_fs *ofs, struct dentry *dentry,
 	bool skip_hole = false;
 	int error = 0;
 
+<<<<<<< HEAD
 	ovl_path_lowerdata(dentry, &datapath);
 	if (WARN_ON(datapath.dentry == NULL))
 		return -EIO;
@@ -255,6 +275,25 @@ static int ovl_copy_up_file(struct ovl_fs *ofs, struct dentry *dentry,
 	cloned = do_clone_file_range(old_file, 0, new_file, 0, len, 0);
 	if (cloned == len)
 		goto out_fput;
+=======
+	if (len == 0)
+		return 0;
+
+	old_file = ovl_path_open(old, O_LARGEFILE | O_RDONLY);
+	if (IS_ERR(old_file))
+		return PTR_ERR(old_file);
+
+	new_file = ovl_path_open(new, O_LARGEFILE | O_WRONLY);
+	if (IS_ERR(new_file)) {
+		error = PTR_ERR(new_file);
+		goto out_fput;
+	}
+
+	/* Try to use clone_file_range to clone up within the same fs */
+	cloned = do_clone_file_range(old_file, 0, new_file, 0, len, 0);
+	if (cloned == len)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	/* Couldn't clone, so now we try to copy the data */
 
 	/* Check if lower fs supports seek operation */
@@ -314,8 +353,15 @@ static int ovl_copy_up_file(struct ovl_fs *ofs, struct dentry *dentry,
 
 		len -= bytes;
 	}
+<<<<<<< HEAD
 	if (!error && ovl_should_sync(ofs))
 		error = vfs_fsync(new_file, 0);
+=======
+out:
+	if (!error && ovl_should_sync(ofs))
+		error = vfs_fsync(new_file, 0);
+	fput(new_file);
+>>>>>>> b7ba80a49124 (Commit)
 out_fput:
 	fput(old_file);
 	return error;
@@ -586,6 +632,7 @@ static int ovl_link_up(struct ovl_copy_up_ctx *c)
 	return err;
 }
 
+<<<<<<< HEAD
 static int ovl_copy_up_data(struct ovl_copy_up_ctx *c, const struct path *temp)
 {
 	struct ovl_fs *ofs = OVL_FS(c->dentry->d_sb);
@@ -612,6 +659,33 @@ static int ovl_copy_up_metadata(struct ovl_copy_up_ctx *c, struct dentry *temp)
 	struct path upperpath = { .mnt = ovl_upper_mnt(ofs), .dentry = temp };
 	int err;
 
+=======
+static int ovl_copy_up_inode(struct ovl_copy_up_ctx *c, struct dentry *temp)
+{
+	struct ovl_fs *ofs = OVL_FS(c->dentry->d_sb);
+	struct inode *inode = d_inode(c->dentry);
+	struct path upperpath, datapath;
+	int err;
+
+	ovl_path_upper(c->dentry, &upperpath);
+	if (WARN_ON(upperpath.dentry != NULL))
+		return -EIO;
+
+	upperpath.dentry = temp;
+
+	/*
+	 * Copy up data first and then xattrs. Writing data after
+	 * xattrs will remove security.capability xattr automatically.
+	 */
+	if (S_ISREG(c->stat.mode) && !c->metacopy) {
+		ovl_path_lowerdata(c->dentry, &datapath);
+		err = ovl_copy_up_data(ofs, &datapath, &upperpath,
+				       c->stat.size);
+		if (err)
+			return err;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = ovl_copy_xattr(c->dentry->d_sb, &c->lowerpath, temp);
 	if (err)
 		return err;
@@ -693,7 +767,10 @@ static int ovl_copy_up_workdir(struct ovl_copy_up_ctx *c)
 	struct ovl_fs *ofs = OVL_FS(c->dentry->d_sb);
 	struct inode *inode;
 	struct inode *udir = d_inode(c->destdir), *wdir = d_inode(c->workdir);
+<<<<<<< HEAD
 	struct path path = { .mnt = ovl_upper_mnt(ofs) };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct dentry *temp, *upper;
 	struct ovl_cu_creds cc;
 	int err;
@@ -720,6 +797,7 @@ static int ovl_copy_up_workdir(struct ovl_copy_up_ctx *c)
 	if (IS_ERR(temp))
 		goto unlock;
 
+<<<<<<< HEAD
 	/*
 	 * Copy up data first and then xattrs. Writing data after
 	 * xattrs will remove security.capability xattr automatically.
@@ -730,6 +808,9 @@ static int ovl_copy_up_workdir(struct ovl_copy_up_ctx *c)
 		goto cleanup;
 
 	err = ovl_copy_up_metadata(c, temp);
+=======
+	err = ovl_copy_up_inode(c, temp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto cleanup;
 
@@ -773,7 +854,10 @@ static int ovl_copy_up_tmpfile(struct ovl_copy_up_ctx *c)
 	struct ovl_fs *ofs = OVL_FS(c->dentry->d_sb);
 	struct inode *udir = d_inode(c->destdir);
 	struct dentry *temp, *upper;
+<<<<<<< HEAD
 	struct file *tmpfile;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct ovl_cu_creds cc;
 	int err;
 
@@ -781,6 +865,7 @@ static int ovl_copy_up_tmpfile(struct ovl_copy_up_ctx *c)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	tmpfile = ovl_do_tmpfile(ofs, c->workdir, c->stat.mode);
 	ovl_revert_cu_creds(&cc);
 
@@ -797,6 +882,17 @@ static int ovl_copy_up_tmpfile(struct ovl_copy_up_ctx *c)
 	err = ovl_copy_up_metadata(c, temp);
 	if (err)
 		goto out_fput;
+=======
+	temp = ovl_do_tmpfile(ofs, c->workdir, c->stat.mode);
+	ovl_revert_cu_creds(&cc);
+
+	if (IS_ERR(temp))
+		return PTR_ERR(temp);
+
+	err = ovl_copy_up_inode(c, temp);
+	if (err)
+		goto out_dput;
+>>>>>>> b7ba80a49124 (Commit)
 
 	inode_lock_nested(udir, I_MUTEX_PARENT);
 
@@ -810,6 +906,7 @@ static int ovl_copy_up_tmpfile(struct ovl_copy_up_ctx *c)
 	inode_unlock(udir);
 
 	if (err)
+<<<<<<< HEAD
 		goto out_fput;
 
 	if (!c->metacopy)
@@ -818,6 +915,18 @@ static int ovl_copy_up_tmpfile(struct ovl_copy_up_ctx *c)
 
 out_fput:
 	fput(tmpfile);
+=======
+		goto out_dput;
+
+	if (!c->metacopy)
+		ovl_set_upperdata(d_inode(c->dentry));
+	ovl_inode_update(d_inode(c->dentry), temp);
+
+	return 0;
+
+out_dput:
+	dput(temp);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -946,7 +1055,11 @@ static ssize_t ovl_getxattr_value(const struct path *path, char *name, char **va
 static int ovl_copy_up_meta_inode_data(struct ovl_copy_up_ctx *c)
 {
 	struct ovl_fs *ofs = OVL_FS(c->dentry->d_sb);
+<<<<<<< HEAD
 	struct path upperpath;
+=======
+	struct path upperpath, datapath;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 	char *capability = NULL;
 	ssize_t cap_size;
@@ -955,6 +1068,13 @@ static int ovl_copy_up_meta_inode_data(struct ovl_copy_up_ctx *c)
 	if (WARN_ON(upperpath.dentry == NULL))
 		return -EIO;
 
+<<<<<<< HEAD
+=======
+	ovl_path_lowerdata(c->dentry, &datapath);
+	if (WARN_ON(datapath.dentry == NULL))
+		return -EIO;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (c->stat.size) {
 		err = cap_size = ovl_getxattr_value(&upperpath, XATTR_NAME_CAPS,
 						    &capability);
@@ -962,7 +1082,11 @@ static int ovl_copy_up_meta_inode_data(struct ovl_copy_up_ctx *c)
 			goto out;
 	}
 
+<<<<<<< HEAD
 	err = ovl_copy_up_data(c, &upperpath);
+=======
+	err = ovl_copy_up_data(ofs, &datapath, &upperpath, c->stat.size);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out_free;
 
@@ -1010,10 +1134,13 @@ static int ovl_copy_up_one(struct dentry *parent, struct dentry *dentry,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	if (!kuid_has_mapping(current_user_ns(), ctx.stat.uid) ||
 	    !kgid_has_mapping(current_user_ns(), ctx.stat.gid))
 		return -EOVERFLOW;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ctx.metacopy = ovl_need_meta_copy_up(dentry, ctx.stat.mode, flags);
 
 	if (parent) {

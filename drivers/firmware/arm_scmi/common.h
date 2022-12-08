@@ -27,6 +27,7 @@
 #include "protocols.h"
 #include "notify.h"
 
+<<<<<<< HEAD
 #define SCMI_MAX_CHANNELS		256
 
 #define SCMI_MAX_RESPONSE_TIMEOUT	(2 * MSEC_PER_SEC)
@@ -69,6 +70,8 @@ static inline int scmi_to_linux_errno(int errno)
 	return -EIO;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MSG_ID_MASK		GENMASK(7, 0)
 #define MSG_XTRACT_ID(hdr)	FIELD_GET(MSG_ID_MASK, (hdr))
 #define MSG_TYPE_MASK		GENMASK(9, 8)
@@ -138,6 +141,7 @@ static inline void unpack_scmi_header(u32 msg_hdr, struct scmi_msg_hdr *hdr)
 
 struct scmi_revision_info *
 scmi_revision_area_get(const struct scmi_protocol_handle *ph);
+<<<<<<< HEAD
 void scmi_setup_protocol_implemented(const struct scmi_protocol_handle *ph,
 				     u8 *prot_imp);
 
@@ -151,6 +155,19 @@ struct scmi_device *scmi_device_create(struct device_node *np,
 				       struct device *parent, int protocol,
 				       const char *name);
 void scmi_device_destroy(struct device *parent, int protocol, const char *name);
+=======
+int scmi_handle_put(const struct scmi_handle *handle);
+struct scmi_handle *scmi_handle_get(struct device *dev);
+void scmi_set_handle(struct scmi_device *scmi_dev);
+void scmi_setup_protocol_implemented(const struct scmi_protocol_handle *ph,
+				     u8 *prot_imp);
+
+int __init scmi_bus_init(void);
+void __exit scmi_bus_exit(void);
+
+const struct scmi_protocol *scmi_protocol_get(int protocol_id);
+void scmi_protocol_put(int protocol_id);
+>>>>>>> b7ba80a49124 (Commit)
 
 int scmi_protocol_acquire(const struct scmi_handle *handle, u8 protocol_id);
 void scmi_protocol_release(const struct scmi_handle *handle, u8 protocol_id);
@@ -159,11 +176,16 @@ void scmi_protocol_release(const struct scmi_handle *handle, u8 protocol_id);
 /**
  * struct scmi_chan_info - Structure representing a SCMI channel information
  *
+<<<<<<< HEAD
  * @id: An identifier for this channel: this matches the protocol number
  *      used to initialize this channel
  * @dev: Reference to device in the SCMI hierarchy corresponding to this
  *	 channel
  * @rx_timeout_ms: The configured RX timeout in milliseconds.
+=======
+ * @dev: Reference to device in the SCMI hierarchy corresponding to this
+ *	 channel
+>>>>>>> b7ba80a49124 (Commit)
  * @handle: Pointer to SCMI entity handle
  * @no_completion_irq: Flag to indicate that this channel has no completion
  *		       interrupt mechanism for synchronous commands.
@@ -172,9 +194,13 @@ void scmi_protocol_release(const struct scmi_handle *handle, u8 protocol_id);
  * @transport_info: Transport layer related information
  */
 struct scmi_chan_info {
+<<<<<<< HEAD
 	int id;
 	struct device *dev;
 	unsigned int rx_timeout_ms;
+=======
+	struct device *dev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct scmi_handle *handle;
 	bool no_completion_irq;
 	void *transport_info;
@@ -199,7 +225,11 @@ struct scmi_chan_info {
  */
 struct scmi_transport_ops {
 	int (*link_supplier)(struct device *dev);
+<<<<<<< HEAD
 	bool (*chan_available)(struct device_node *of_node, int idx);
+=======
+	bool (*chan_available)(struct device *dev, int idx);
+>>>>>>> b7ba80a49124 (Commit)
 	int (*chan_setup)(struct scmi_chan_info *cinfo, struct device *dev,
 			  bool tx);
 	int (*chan_free)(int id, void *p, void *data);
@@ -216,6 +246,14 @@ struct scmi_transport_ops {
 	bool (*poll_done)(struct scmi_chan_info *cinfo, struct scmi_xfer *xfer);
 };
 
+<<<<<<< HEAD
+=======
+int scmi_protocol_device_request(const struct scmi_device_id *id_table);
+void scmi_protocol_device_unrequest(const struct scmi_device_id *id_table);
+struct scmi_device *scmi_child_dev_find(struct device *parent,
+					int prot_id, const char *name);
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct scmi_desc - Description of SoC integration
  *
@@ -256,6 +294,7 @@ struct scmi_desc {
 	const bool atomic_enabled;
 };
 
+<<<<<<< HEAD
 static inline bool is_polling_required(struct scmi_chan_info *cinfo,
 				       const struct scmi_desc *desc)
 {
@@ -286,6 +325,8 @@ int scmi_xfer_raw_inflight_register(const struct scmi_handle *handle,
 int scmi_xfer_raw_wait_for_message_response(struct scmi_chan_info *cinfo,
 					    struct scmi_xfer *xfer,
 					    unsigned int timeout_ms);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_ARM_SCMI_TRANSPORT_MAILBOX
 extern const struct scmi_desc scmi_mailbox_desc;
 #endif
@@ -300,12 +341,20 @@ extern const struct scmi_desc scmi_optee_desc;
 #endif
 
 void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr, void *priv);
+<<<<<<< HEAD
+=======
+void scmi_free_channel(struct scmi_chan_info *cinfo, struct idr *idr, int id);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* shmem related declarations */
 struct scmi_shared_mem;
 
 void shmem_tx_prepare(struct scmi_shared_mem __iomem *shmem,
+<<<<<<< HEAD
 		      struct scmi_xfer *xfer, struct scmi_chan_info *cinfo);
+=======
+		      struct scmi_xfer *xfer);
+>>>>>>> b7ba80a49124 (Commit)
 u32 shmem_read_header(struct scmi_shared_mem __iomem *shmem);
 void shmem_fetch_response(struct scmi_shared_mem __iomem *shmem,
 			  struct scmi_xfer *xfer);

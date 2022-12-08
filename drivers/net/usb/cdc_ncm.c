@@ -43,7 +43,10 @@
 #include <linux/ctype.h>
 #include <linux/etherdevice.h>
 #include <linux/ethtool.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/workqueue.h>
 #include <linux/mii.h>
 #include <linux/crc32.h>
@@ -319,7 +322,11 @@ static ssize_t ndp_to_end_store(struct device *d,  struct device_attribute *attr
 	struct cdc_ncm_ctx *ctx = (struct cdc_ncm_ctx *)dev->data[0];
 	bool enable;
 
+<<<<<<< HEAD
 	if (kstrtobool(buf, &enable))
+=======
+	if (strtobool(buf, &enable))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	/* no change? */
@@ -1916,7 +1923,10 @@ static const struct driver_info cdc_ncm_zlp_info = {
 	.status = cdc_ncm_status,
 	.rx_fixup = cdc_ncm_rx_fixup,
 	.tx_fixup = cdc_ncm_tx_fixup,
+<<<<<<< HEAD
 	.set_rx_mode = usbnet_cdc_update_filter,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Same as cdc_ncm_info, but with FLAG_WWAN */

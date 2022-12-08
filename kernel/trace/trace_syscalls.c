@@ -201,6 +201,11 @@ print_syscall_exit(struct trace_iterator *iter, int flags,
 	return trace_handle_return(s);
 }
 
+<<<<<<< HEAD
+=======
+extern char *__bad_type_size(void);
+
+>>>>>>> b7ba80a49124 (Commit)
 #define SYSCALL_FIELD(_type, _name) {					\
 	.type = #_type, .name = #_name,					\
 	.size = sizeof(_type), .align = __alignof__(_type),		\

@@ -4,7 +4,11 @@
 
 extern const struct dma_map_ops alpha_pci_ops;
 
+<<<<<<< HEAD
 static inline const struct dma_map_ops *get_arch_dma_ops(void)
+=======
+static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
+>>>>>>> b7ba80a49124 (Commit)
 {
 #ifdef CONFIG_ALPHA_JENSEN
 	return NULL;

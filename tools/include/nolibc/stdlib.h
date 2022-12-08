@@ -12,7 +12,10 @@
 #include "types.h"
 #include "sys.h"
 #include "string.h"
+<<<<<<< HEAD
 #include <linux/auxvec.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct nolibc_heap {
 	size_t	len;
@@ -110,6 +113,7 @@ char *getenv(const char *name)
 }
 
 static __attribute__((unused))
+<<<<<<< HEAD
 unsigned long getauxval(unsigned long type)
 {
 	const unsigned long *auxv = _auxv;
@@ -136,6 +140,8 @@ unsigned long getauxval(unsigned long type)
 }
 
 static __attribute__((unused))
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void *malloc(size_t len)
 {
 	struct nolibc_heap *heap;
@@ -446,7 +452,10 @@ char *u64toa(uint64_t in)
 	return itoa_buffer;
 }
 
+<<<<<<< HEAD
 /* make sure to include all global symbols */
 #include "nolibc.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _NOLIBC_STDLIB_H */

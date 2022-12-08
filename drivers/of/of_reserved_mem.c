@@ -48,10 +48,16 @@ static int __init early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
 		err = memblock_mark_nomap(base, size);
 		if (err)
 			memblock_phys_free(base, size);
+<<<<<<< HEAD
 	}
 
 	kmemleak_ignore_phys(base);
 
+=======
+		kmemleak_ignore_phys(base);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -285,6 +291,7 @@ void __init fdt_init_reserved_mem(void)
 				else
 					memblock_phys_free(rmem->base,
 							   rmem->size);
+<<<<<<< HEAD
 			} else {
 				phys_addr_t end = rmem->base + rmem->size - 1;
 				bool reusable =
@@ -295,6 +302,8 @@ void __init fdt_init_reserved_mem(void)
 					nomap ? "nomap" : "map",
 					reusable ? "reusable" : "non-reusable",
 					rmem->name ? rmem->name : "unknown");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 	}

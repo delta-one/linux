@@ -15,15 +15,24 @@
 #include <linux/device.h>
 #include <linux/module.h>
 #include <linux/cdev.h>
+<<<<<<< HEAD
 #include <linux/rwsem.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define GPIOCHIP_NAME	"gpiochip"
 
 /**
  * struct gpio_device - internal state container for GPIO devices
+<<<<<<< HEAD
  * @dev: the GPIO device struct
  * @chrdev: character device for the GPIO device
  * @id: numerical ID number for the GPIO chip
+=======
+ * @id: numerical ID number for the GPIO chip
+ * @dev: the GPIO device struct
+ * @chrdev: character device for the GPIO device
+>>>>>>> b7ba80a49124 (Commit)
  * @mockdev: class device used by the deprecated sysfs interface (may be
  * NULL)
  * @owner: helps prevent removal of modules exporting active GPIOs
@@ -40,9 +49,12 @@
  * @list: links gpio_device:s together for traversal
  * @notifier: used to notify subscribers about lines being requested, released
  *            or reconfigured
+<<<<<<< HEAD
  * @sem: protects the structure from a NULL-pointer dereference of @chip by
  *       user-space operations when the device gets unregistered during
  *       a hot-unplug event
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @pin_ranges: range of pins served by the GPIO driver
  *
  * This state container holds most of the runtime variable data
@@ -51,9 +63,15 @@
  * userspace.
  */
 struct gpio_device {
+<<<<<<< HEAD
 	struct device		dev;
 	struct cdev		chrdev;
 	int			id;
+=======
+	int			id;
+	struct device		dev;
+	struct cdev		chrdev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct device		*mockdev;
 	struct module		*owner;
 	struct gpio_chip	*chip;
@@ -64,7 +82,10 @@ struct gpio_device {
 	void			*data;
 	struct list_head        list;
 	struct blocking_notifier_head notifier;
+<<<<<<< HEAD
 	struct rw_semaphore	sem;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_PINCTRL
 	/*
@@ -77,6 +98,7 @@ struct gpio_device {
 #endif
 };
 
+<<<<<<< HEAD
 static inline struct gpio_device *to_gpio_device(struct device *dev)
 {
 	return container_of(dev, struct gpio_device, dev);
@@ -92,6 +114,8 @@ static inline void gpio_device_put(struct gpio_device *gdev)
 	put_device(&gdev->dev);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* gpio suffixes used for ACPI and device tree lookup */
 static __maybe_unused const char * const gpio_suffixes[] = { "gpios", "gpio" };
 

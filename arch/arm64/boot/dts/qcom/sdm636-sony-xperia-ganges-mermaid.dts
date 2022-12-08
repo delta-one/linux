@@ -19,7 +19,11 @@
 };
 
 &sdc2_state_on {
+<<<<<<< HEAD
 	clk-pins {
+=======
+	clk {
+>>>>>>> b7ba80a49124 (Commit)
 		drive-strength = <14>;
 	};
 };

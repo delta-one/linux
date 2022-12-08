@@ -230,8 +230,13 @@ with :c:macro:`MSR_AMD_CPPC_ENABLE` or ``cppc_set_enable``, it will respond
 to the request from AMD P-States.
 
 
+<<<<<<< HEAD
 User Space Interface in ``sysfs`` - Per-policy control
 ======================================================
+=======
+User Space Interface in ``sysfs``
+==================================
+>>>>>>> b7ba80a49124 (Commit)
 
 ``amd-pstate`` exposes several global attributes (files) in ``sysfs`` to
 control its functionality at the system level. They are located in the
@@ -262,6 +267,7 @@ lowest non-linear performance in `AMD CPPC Performance Capability
 <perf_cap_>`_.)
 This attribute is read-only.
 
+<<<<<<< HEAD
 ``energy_performance_available_preferences``
 
 A list of all the supported EPP preferences that could be used for
@@ -281,6 +287,8 @@ integer values defined between 0 to 255 when EPP feature is enabled by platform
 firmware, if EPP feature is disabled, driver will ignore the written value
 This attribute is read-write.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Other performance and frequency values can be read back from
 ``/sys/devices/system/cpu/cpuX/acpi_cppc/``, see :ref:`cppc_sysfs`.
 
@@ -299,6 +307,7 @@ module which supports the new AMD P-States mechanism on most of the future AMD
 platforms. The AMD P-States mechanism is the more performance and energy
 efficiency frequency management method on AMD processors.
 
+<<<<<<< HEAD
 
 AMD Pstate Driver Operation Modes
 =================================
@@ -384,6 +393,29 @@ control its functionality at the system level.  They are located in the
         these values to the sysfs file will cause the driver to switch over
         to the operation mode represented by that string - or to be
         unregistered in the "disable" case.
+=======
+Kernel Module Options for ``amd-pstate``
+=========================================
+
+.. _shared_mem:
+
+``shared_mem``
+Use a module param (shared_mem) to enable related processors manually with
+**amd_pstate.shared_mem=1**.
+Due to the performance issue on the processors with `Shared Memory Support
+<perf_cap_>`_, we disable it presently and will re-enable this by default
+once we address performance issue with this solution.
+
+To check whether the current processor is using `Full MSR Support <perf_cap_>`_
+or `Shared Memory Support <perf_cap_>`_ : ::
+
+  ray@hr-test1:~$ lscpu | grep cppc
+  Flags:                           fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb cat_l3 cdp_l3 hw_pstate ssbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local clzero irperf xsaveerptr rdpru wbnoinvd cppc arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif v_spec_ctrl umip pku ospke vaes vpclmulqdq rdpid overflow_recov succor smca fsrm
+
+If the CPU flags have ``cppc``, then this processor supports `Full MSR Support
+<perf_cap_>`_. Otherwise, it supports `Shared Memory Support <perf_cap_>`_.
+
+>>>>>>> b7ba80a49124 (Commit)
 
 ``cpupower`` tool support for ``amd-pstate``
 ===============================================
@@ -490,36 +522,56 @@ Unit Tests for amd-pstate
 
  * We can introduce more functional or performance tests to align the result together, it will benefit power and performance scale optimization.
 
+<<<<<<< HEAD
 1. Test case descriptions
 
     1). Basic tests
 
         Test prerequisite and basic functions for the ``amd-pstate`` driver.
+=======
+1. Test case decriptions
+>>>>>>> b7ba80a49124 (Commit)
 
         +---------+--------------------------------+------------------------------------------------------------------------------------+
         | Index   | Functions                      | Description                                                                        |
         +=========+================================+====================================================================================+
+<<<<<<< HEAD
         | 1       | amd_pstate_ut_acpi_cpc_valid   || Check whether the _CPC object is present in SBIOS.                                |
         |         |                                ||                                                                                   |
         |         |                                || The detail refer to `Processor Support <processor_support_>`_.                    |
         +---------+--------------------------------+------------------------------------------------------------------------------------+
         | 2       | amd_pstate_ut_check_enabled    || Check whether AMD P-State is enabled.                                             |
+=======
+        | 0       | amd_pstate_ut_acpi_cpc_valid   || Check whether the _CPC object is present in SBIOS.                                |
+        |         |                                ||                                                                                   |
+        |         |                                || The detail refer to `Processor Support <processor_support_>`_.                    |
+        +---------+--------------------------------+------------------------------------------------------------------------------------+
+        | 1       | amd_pstate_ut_check_enabled    || Check whether AMD P-State is enabled.                                             |
+>>>>>>> b7ba80a49124 (Commit)
         |         |                                ||                                                                                   |
         |         |                                || AMD P-States and ACPI hardware P-States always can be supported in one processor. |
         |         |                                | But AMD P-States has the higher priority and if it is enabled with                 |
         |         |                                | :c:macro:`MSR_AMD_CPPC_ENABLE` or ``cppc_set_enable``, it will respond to the      |
         |         |                                | request from AMD P-States.                                                         |
         +---------+--------------------------------+------------------------------------------------------------------------------------+
+<<<<<<< HEAD
         | 3       | amd_pstate_ut_check_perf       || Check if the each performance values are reasonable.                              |
         |         |                                || highest_perf >= nominal_perf > lowest_nonlinear_perf > lowest_perf > 0.           |
         +---------+--------------------------------+------------------------------------------------------------------------------------+
         | 4       | amd_pstate_ut_check_freq       || Check if the each frequency values and max freq when set support boost mode       |
+=======
+        | 2       | amd_pstate_ut_check_perf       || Check if the each performance values are reasonable.                              |
+        |         |                                || highest_perf >= nominal_perf > lowest_nonlinear_perf > lowest_perf > 0.           |
+        +---------+--------------------------------+------------------------------------------------------------------------------------+
+        | 3       | amd_pstate_ut_check_freq       || Check if the each frequency values and max freq when set support boost mode       |
+>>>>>>> b7ba80a49124 (Commit)
         |         |                                | are reasonable.                                                                    |
         |         |                                || max_freq >= nominal_freq > lowest_nonlinear_freq > min_freq > 0                   |
         |         |                                || If boost is not active but supported, this maximum frequency will be larger than  |
         |         |                                | the one in ``cpuinfo``.                                                            |
         +---------+--------------------------------+------------------------------------------------------------------------------------+
 
+<<<<<<< HEAD
     2). Tbench test
 
         Test and monitor the cpu changes when running tbench benchmark under the specified governor.
@@ -541,6 +593,15 @@ Unit Tests for amd-pstate
    details refer to Linux Kernel Selftests [4]_).
 
     1). Build
+=======
+#. How to execute the tests
+
+   We use test module in the kselftest frameworks to implement it.
+   We create amd-pstate-ut module and tie it into kselftest.(for
+   details refer to Linux Kernel Selftests [4]_).
+
+    1. Build
+>>>>>>> b7ba80a49124 (Commit)
 
         + open the :c:macro:`CONFIG_X86_AMD_PSTATE` configuration option.
         + set the :c:macro:`CONFIG_X86_AMD_PSTATE_UT` configuration option to M.
@@ -550,6 +611,7 @@ Unit Tests for amd-pstate
             $ cd linux
             $ make -C tools/testing/selftests
 
+<<<<<<< HEAD
         + make perf ::
 
             $ cd tools/perf/
@@ -703,6 +765,25 @@ Unit Tests for amd-pstate
          +-------------------------------------------------+--------------+----------+----------+----------+-------------+---------+----------------------+
          + acpi-cpufreq-schedutil VS amd-pstate-schedutil  | Comprison(%) |          |          |          | 2.1115      | 4.2873  | -4.1110              |
          +-------------------------------------------------+--------------+----------+----------+----------+-------------+---------+----------------------+
+=======
+    #. Installation & Steps ::
+
+        $ make -C tools/testing/selftests install INSTALL_PATH=~/kselftest
+        $ sudo ./kselftest/run_kselftest.sh -c amd-pstate
+        TAP version 13
+        1..1
+        # selftests: amd-pstate: amd-pstate-ut.sh
+        # amd-pstate-ut: ok
+        ok 1 selftests: amd-pstate: amd-pstate-ut.sh
+
+    #. Results ::
+
+         $ dmesg | grep "amd_pstate_ut" | tee log.txt
+         [12977.570663] amd_pstate_ut: 1    amd_pstate_ut_acpi_cpc_valid  success!
+         [12977.570673] amd_pstate_ut: 2    amd_pstate_ut_check_enabled   success!
+         [12977.571207] amd_pstate_ut: 3    amd_pstate_ut_check_perf      success!
+         [12977.571212] amd_pstate_ut: 4    amd_pstate_ut_check_freq      success!
+>>>>>>> b7ba80a49124 (Commit)
 
 Reference
 ===========

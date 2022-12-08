@@ -7,7 +7,10 @@
 #define __LINUX_NET_XDP_H__
 
 #include <linux/skbuff.h> /* skb_shared_info */
+<<<<<<< HEAD
 #include <uapi/linux/netdev.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * DOC: XDP RX-queue information
@@ -44,8 +47,11 @@ enum xdp_mem_type {
 	MEM_TYPE_MAX,
 };
 
+<<<<<<< HEAD
 typedef u32 xdp_features_t;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* XDP flags for ndo_xdp_xmit */
 #define XDP_XMIT_FLUSH		(1U << 0)	/* doorbell signal consumer */
 #define XDP_XMIT_FLAGS_MASK	XDP_XMIT_FLUSH
@@ -167,13 +173,21 @@ struct xdp_frame {
 	void *data;
 	u16 len;
 	u16 headroom;
+<<<<<<< HEAD
 	u32 metasize; /* uses lower 8-bits */
+=======
+	u32 metasize:8;
+	u32 frame_sz:24;
+>>>>>>> b7ba80a49124 (Commit)
 	/* Lifetime of xdp_rxq_info is limited to NAPI/enqueue time,
 	 * while mem info is valid on remote CPU.
 	 */
 	struct xdp_mem_info mem;
 	struct net_device *dev_rx; /* used by cpumap */
+<<<<<<< HEAD
 	u32 frame_sz;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 flags; /* supported values defined in xdp_buff_flags */
 };
 
@@ -317,6 +331,38 @@ void xdp_flush_frame_bulk(struct xdp_frame_bulk *bq);
 void xdp_return_frame_bulk(struct xdp_frame *xdpf,
 			   struct xdp_frame_bulk *bq);
 
+<<<<<<< HEAD
+=======
+/* When sending xdp_frame into the network stack, then there is no
+ * return point callback, which is needed to release e.g. DMA-mapping
+ * resources with page_pool.  Thus, have explicit function to release
+ * frame resources.
+ */
+void __xdp_release_frame(void *data, struct xdp_mem_info *mem);
+static inline void xdp_release_frame(struct xdp_frame *xdpf)
+{
+	struct xdp_mem_info *mem = &xdpf->mem;
+	struct skb_shared_info *sinfo;
+	int i;
+
+	/* Curr only page_pool needs this */
+	if (mem->type != MEM_TYPE_PAGE_POOL)
+		return;
+
+	if (likely(!xdp_frame_has_frags(xdpf)))
+		goto out;
+
+	sinfo = xdp_get_shared_info_from_frame(xdpf);
+	for (i = 0; i < sinfo->nr_frags; i++) {
+		struct page *page = skb_frag_page(&sinfo->frags[i]);
+
+		__xdp_release_frame(page_address(page), mem);
+	}
+out:
+	__xdp_release_frame(xdpf->data, mem);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static __always_inline unsigned int xdp_get_frame_len(struct xdp_frame *xdpf)
 {
 	struct skb_shared_info *sinfo;
@@ -383,6 +429,7 @@ void xdp_attachment_setup(struct xdp_attachment_info *info,
 
 #define DEV_MAP_BULK_SIZE XDP_BULK_QUEUE_SIZE
 
+<<<<<<< HEAD
 #define XDP_METADATA_KFUNC_xxx	\
 	XDP_METADATA_KFUNC(XDP_METADATA_KFUNC_RX_TIMESTAMP, \
 			   bpf_xdp_metadata_rx_timestamp) \
@@ -427,4 +474,6 @@ static inline void xdp_clear_features_flag(struct net_device *dev)
 	xdp_set_features_flag(dev, 0);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __LINUX_NET_XDP_H__ */

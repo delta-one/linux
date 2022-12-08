@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/media/video-interfaces.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Common Properties for Video Receiver and Transmitter Interface Endpoints
+=======
+title: Common bindings for video receiver and transmitter interface endpoints
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Sakari Ailus <sakari.ailus@linux.intel.com>
@@ -145,10 +149,16 @@ properties:
 
   pclk-sample:
     $ref: /schemas/types.yaml#/definitions/uint32
+<<<<<<< HEAD
     enum: [ 0, 1, 2 ]
     description:
       Sample data on falling (0), rising (1) or both (2) edges of the pixel
       clock signal.
+=======
+    enum: [ 0, 1 ]
+    description:
+      Sample data on rising (1) or falling (0) edge of the pixel clock signal.
+>>>>>>> b7ba80a49124 (Commit)
 
   sync-on-green-active:
     $ref: /schemas/types.yaml#/definitions/uint32

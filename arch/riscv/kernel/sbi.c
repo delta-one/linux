@@ -627,19 +627,28 @@ long sbi_get_mvendorid(void)
 {
 	return __sbi_base_ecall(SBI_EXT_BASE_GET_MVENDORID);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(sbi_get_mvendorid);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 long sbi_get_marchid(void)
 {
 	return __sbi_base_ecall(SBI_EXT_BASE_GET_MARCHID);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(sbi_get_marchid);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 long sbi_get_mimpid(void)
 {
 	return __sbi_base_ecall(SBI_EXT_BASE_GET_MIMPID);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(sbi_get_mimpid);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void sbi_send_cpumask_ipi(const struct cpumask *target)
 {

@@ -173,7 +173,12 @@ static const struct dvb_tuner_ops tda18212_tuner_ops = {
 	.get_if_frequency = tda18212_get_if_frequency,
 };
 
+<<<<<<< HEAD
 static int tda18212_probe(struct i2c_client *client)
+=======
+static int tda18212_probe(struct i2c_client *client,
+		const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tda18212_config *cfg = client->dev.platform_data;
 	struct dvb_frontend *fe = cfg->fe;
@@ -263,7 +268,11 @@ static struct i2c_driver tda18212_driver = {
 	.driver = {
 		.name	= "tda18212",
 	},
+<<<<<<< HEAD
 	.probe_new	= tda18212_probe,
+=======
+	.probe		= tda18212_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= tda18212_remove,
 	.id_table	= tda18212_id,
 };

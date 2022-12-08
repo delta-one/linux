@@ -651,6 +651,25 @@ int efivar_entry_set_get_size(struct efivar_entry *entry, u32 attributes,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Ensure that the available space hasn't shrunk below the safe level
+	 */
+	status = check_var_size(attributes, *size + ucs2_strsize(name, 1024));
+	if (status != EFI_SUCCESS) {
+		if (status != EFI_UNSUPPORTED) {
+			err = efi_status_to_err(status);
+			goto out;
+		}
+
+		if (*size > 65536) {
+			err = -ENOSPC;
+			goto out;
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	status = efivar_set_variable_locked(name, vendor, attributes, *size,
 					    data, false);
 	if (status != EFI_SUCCESS) {

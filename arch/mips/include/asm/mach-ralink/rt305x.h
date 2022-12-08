@@ -43,8 +43,12 @@ static inline int soc_is_rt5350(void)
 	return ralink_soc == RT305X_SOC_RT5350;
 }
 
+<<<<<<< HEAD
 #define IOMEM(x)			((void __iomem *)(KSEG1ADDR(x)))
 #define RT305X_SYSC_BASE		IOMEM(0x10000000)
+=======
+#define RT305X_SYSC_BASE		0x10000000
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SYSC_REG_CHIP_NAME0		0x00
 #define SYSC_REG_CHIP_NAME1		0x04

@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 config DRM_CDNS_DSI
 	tristate "Cadence DPI/DSI bridge"
 	select DRM_KMS_HELPER
@@ -20,6 +21,8 @@ config DRM_CDNS_DSI_J721E
 	  the routing of the DSS DPI signal to the Cadence DSI.
 endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config DRM_CDNS_MHDP8546
 	tristate "Cadence DPI/DP bridge"
 	select DRM_DISPLAY_DP_HELPER

@@ -158,8 +158,11 @@ int proc_pid_arch_status(struct seq_file *m, struct pid_namespace *ns,
 			struct pid *pid, struct task_struct *task);
 #endif /* CONFIG_PROC_PID_ARCH_STATUS */
 
+<<<<<<< HEAD
 void arch_proc_pid_thread_features(struct seq_file *m, struct task_struct *task);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else /* CONFIG_PROC_FS */
 
 static inline void proc_root_init(void)
@@ -210,10 +213,15 @@ static inline void proc_remove(struct proc_dir_entry *de) {}
 static inline int remove_proc_subtree(const char *name, struct proc_dir_entry *parent) { return 0; }
 
 #define proc_create_net_data(name, mode, parent, ops, state_size, data) ({NULL;})
+<<<<<<< HEAD
 #define proc_create_net_data_write(name, mode, parent, ops, write, state_size, data) ({NULL;})
 #define proc_create_net(name, mode, parent, state_size, ops) ({NULL;})
 #define proc_create_net_single(name, mode, parent, show, data) ({NULL;})
 #define proc_create_net_single_write(name, mode, parent, show, write, data) ({NULL;})
+=======
+#define proc_create_net(name, mode, parent, state_size, ops) ({NULL;})
+#define proc_create_net_single(name, mode, parent, show, data) ({NULL;})
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline struct pid *tgid_pidfd_to_pid(const struct file *file)
 {

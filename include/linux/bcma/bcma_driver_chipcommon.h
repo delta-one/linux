@@ -4,7 +4,11 @@
 
 #include <linux/platform_device.h>
 #include <linux/platform_data/brcmnand.h>
+<<<<<<< HEAD
 #include <linux/gpio/driver.h>
+=======
+#include <linux/gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 /** ChipCommon core registers. **/
 #define BCMA_CC_ID			0x0000

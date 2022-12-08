@@ -5,7 +5,11 @@ DSA switch configuration from userspace
 =======================================
 
 The DSA switch configuration is not integrated into the main userspace
+<<<<<<< HEAD
 network configuration suites by now and has to be performed manually.
+=======
+network configuration suites by now and has to be performed manualy.
+>>>>>>> b7ba80a49124 (Commit)
 
 .. _dsa-config-showcases:
 

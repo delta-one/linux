@@ -293,10 +293,15 @@ static int dw_spi_bt1_probe(struct platform_device *pdev)
 	pm_runtime_enable(&pdev->dev);
 
 	ret = dw_spi_add_host(&pdev->dev, dws);
+<<<<<<< HEAD
 	if (ret) {
 		pm_runtime_disable(&pdev->dev);
 		goto err_disable_clk;
 	}
+=======
+	if (ret)
+		goto err_disable_clk;
+>>>>>>> b7ba80a49124 (Commit)
 
 	platform_set_drvdata(pdev, dwsbt1);
 
@@ -308,7 +313,11 @@ err_disable_clk:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void dw_spi_bt1_remove(struct platform_device *pdev)
+=======
+static int dw_spi_bt1_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dw_spi_bt1 *dwsbt1 = platform_get_drvdata(pdev);
 
@@ -317,6 +326,11 @@ static void dw_spi_bt1_remove(struct platform_device *pdev)
 	pm_runtime_disable(&pdev->dev);
 
 	clk_disable_unprepare(dwsbt1->clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id dw_spi_bt1_of_match[] = {
@@ -328,7 +342,11 @@ MODULE_DEVICE_TABLE(of, dw_spi_bt1_of_match);
 
 static struct platform_driver dw_spi_bt1_driver = {
 	.probe	= dw_spi_bt1_probe,
+<<<<<<< HEAD
 	.remove_new = dw_spi_bt1_remove,
+=======
+	.remove	= dw_spi_bt1_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name		= "bt1-sys-ssi",
 		.of_match_table	= dw_spi_bt1_of_match,

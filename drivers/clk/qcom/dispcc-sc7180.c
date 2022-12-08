@@ -351,8 +351,13 @@ static struct clk_regmap_div disp_cc_mdss_byte0_div_clk_src = {
 	.width = 2,
 	.clkr.hw.init = &(struct clk_init_data) {
 		.name = "disp_cc_mdss_byte0_div_clk_src",
+<<<<<<< HEAD
 		.parent_hws = (const struct clk_hw*[]) {
 			&disp_cc_mdss_byte0_clk_src.clkr.hw,
+=======
+		.parent_data = &(const struct clk_parent_data){
+			.hw = &disp_cc_mdss_byte0_clk_src.clkr.hw
+>>>>>>> b7ba80a49124 (Commit)
 		},
 		.num_parents = 1,
 		.ops = &clk_regmap_div_ops,
@@ -365,8 +370,13 @@ static struct clk_regmap_div disp_cc_mdss_dp_link_div_clk_src = {
 	.width = 2,
 	.clkr.hw.init = &(struct clk_init_data) {
 		.name = "disp_cc_mdss_dp_link_div_clk_src",
+<<<<<<< HEAD
 		.parent_hws = (const struct clk_hw*[]) {
 			&disp_cc_mdss_dp_link_clk_src.clkr.hw,
+=======
+		.parent_data = &(const struct clk_parent_data){
+			.hw = &disp_cc_mdss_dp_link_clk_src.clkr.hw
+>>>>>>> b7ba80a49124 (Commit)
 		},
 		.num_parents = 1,
 		.ops = &clk_regmap_div_ops,

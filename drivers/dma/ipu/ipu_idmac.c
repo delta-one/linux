@@ -1797,5 +1797,9 @@ static int __init ipu_init(void)
 subsys_initcall(ipu_init);
 
 MODULE_DESCRIPTION("IPU core driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("Guennadi Liakhovetski <lg@denx.de>");
 MODULE_ALIAS("platform:ipu-core");

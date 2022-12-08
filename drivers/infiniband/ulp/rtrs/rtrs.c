@@ -557,6 +557,10 @@ EXPORT_SYMBOL(rtrs_addr_to_sockaddr);
 void rtrs_rdma_dev_pd_init(enum ib_pd_flags pd_flags,
 			    struct rtrs_rdma_dev_pd *pool)
 {
+<<<<<<< HEAD
+=======
+	WARN_ON(pool->ops && (!pool->ops->alloc ^ !pool->ops->free));
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_LIST_HEAD(&pool->list);
 	mutex_init(&pool->mutex);
 	pool->pd_flags = pd_flags;
@@ -582,8 +586,20 @@ static void dev_free(struct kref *ref)
 	list_del(&dev->entry);
 	mutex_unlock(&pool->mutex);
 
+<<<<<<< HEAD
 	ib_dealloc_pd(dev->ib_pd);
 	kfree(dev);
+=======
+	if (pool->ops && pool->ops->deinit)
+		pool->ops->deinit(dev);
+
+	ib_dealloc_pd(dev->ib_pd);
+
+	if (pool->ops && pool->ops->free)
+		pool->ops->free(dev);
+	else
+		kfree(dev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int rtrs_ib_dev_put(struct rtrs_ib_dev *dev)
@@ -610,8 +626,16 @@ rtrs_ib_dev_find_or_add(struct ib_device *ib_dev,
 			goto out_unlock;
 	}
 	mutex_unlock(&pool->mutex);
+<<<<<<< HEAD
 	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
 	if (!dev)
+=======
+	if (pool->ops && pool->ops->alloc)
+		dev = pool->ops->alloc();
+	else
+		dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+	if (IS_ERR_OR_NULL(dev))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_err;
 
 	kref_init(&dev->ref);
@@ -633,7 +657,14 @@ out_unlock:
 out_free_pd:
 	ib_dealloc_pd(dev->ib_pd);
 out_free_dev:
+<<<<<<< HEAD
 	kfree(dev);
+=======
+	if (pool->ops && pool->ops->free)
+		pool->ops->free(dev);
+	else
+		kfree(dev);
+>>>>>>> b7ba80a49124 (Commit)
 out_err:
 	return NULL;
 }

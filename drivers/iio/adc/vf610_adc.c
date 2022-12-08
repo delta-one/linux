@@ -7,7 +7,10 @@
 
 #include <linux/mod_devicetable.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/mutex.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/property.h>
 #include <linux/platform_device.h>
 #include <linux/interrupt.h>
@@ -157,9 +160,12 @@ struct vf610_adc {
 	void __iomem *regs;
 	struct clk *clk;
 
+<<<<<<< HEAD
 	/* lock to protect against multiple access to the device */
 	struct mutex lock;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 vref_uv;
 	u32 value;
 	struct regulator *vref;
@@ -471,11 +477,19 @@ static int vf610_set_conversion_mode(struct iio_dev *indio_dev,
 {
 	struct vf610_adc *info = iio_priv(indio_dev);
 
+<<<<<<< HEAD
 	mutex_lock(&info->lock);
 	info->adc_feature.conv_mode = mode;
 	vf610_adc_calculate_rates(info);
 	vf610_adc_hw_init(info);
 	mutex_unlock(&info->lock);
+=======
+	mutex_lock(&indio_dev->mlock);
+	info->adc_feature.conv_mode = mode;
+	vf610_adc_calculate_rates(info);
+	vf610_adc_hw_init(info);
+	mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -626,6 +640,7 @@ static const struct attribute_group vf610_attribute_group = {
 	.attrs = vf610_attributes,
 };
 
+<<<<<<< HEAD
 static int vf610_read_sample(struct iio_dev *indio_dev,
 			     struct iio_chan_spec const *chan, int *val)
 {
@@ -678,6 +693,8 @@ out_unlock:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int vf610_read_raw(struct iio_dev *indio_dev,
 			struct iio_chan_spec const *chan,
 			int *val,
@@ -685,15 +702,63 @@ static int vf610_read_raw(struct iio_dev *indio_dev,
 			long mask)
 {
 	struct vf610_adc *info = iio_priv(indio_dev);
+<<<<<<< HEAD
+=======
+	unsigned int hc_cfg;
+>>>>>>> b7ba80a49124 (Commit)
 	long ret;
 
 	switch (mask) {
 	case IIO_CHAN_INFO_RAW:
 	case IIO_CHAN_INFO_PROCESSED:
+<<<<<<< HEAD
 		ret = vf610_read_sample(indio_dev, chan, val);
 		if (ret < 0)
 			return ret;
 
+=======
+		mutex_lock(&indio_dev->mlock);
+		if (iio_buffer_enabled(indio_dev)) {
+			mutex_unlock(&indio_dev->mlock);
+			return -EBUSY;
+		}
+
+		reinit_completion(&info->completion);
+		hc_cfg = VF610_ADC_ADCHC(chan->channel);
+		hc_cfg |= VF610_ADC_AIEN;
+		writel(hc_cfg, info->regs + VF610_REG_ADC_HC0);
+		ret = wait_for_completion_interruptible_timeout
+				(&info->completion, VF610_ADC_TIMEOUT);
+		if (ret == 0) {
+			mutex_unlock(&indio_dev->mlock);
+			return -ETIMEDOUT;
+		}
+		if (ret < 0) {
+			mutex_unlock(&indio_dev->mlock);
+			return ret;
+		}
+
+		switch (chan->type) {
+		case IIO_VOLTAGE:
+			*val = info->value;
+			break;
+		case IIO_TEMP:
+			/*
+			 * Calculate in degree Celsius times 1000
+			 * Using the typical sensor slope of 1.84 mV/°C
+			 * and VREFH_ADC at 3.3V, V at 25°C of 699 mV
+			 */
+			*val = 25000 - ((int)info->value - VF610_VTEMP25_3V3) *
+					1000000 / VF610_TEMP_SLOPE_COEFF;
+
+			break;
+		default:
+			mutex_unlock(&indio_dev->mlock);
+			return -EINVAL;
+		}
+
+		mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 		return IIO_VAL_INT;
 
 	case IIO_CHAN_INFO_SCALE:
@@ -896,8 +961,11 @@ static int vf610_adc_probe(struct platform_device *pdev)
 		goto error_iio_device_register;
 	}
 
+<<<<<<< HEAD
 	mutex_init(&info->lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = iio_device_register(indio_dev);
 	if (ret) {
 		dev_err(&pdev->dev, "Couldn't register the device.\n");

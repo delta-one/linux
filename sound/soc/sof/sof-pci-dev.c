@@ -28,10 +28,13 @@ static char *fw_filename;
 module_param(fw_filename, charp, 0444);
 MODULE_PARM_DESC(fw_filename, "alternate filename for SOF firmware.");
 
+<<<<<<< HEAD
 static char *lib_path;
 module_param(lib_path, charp, 0444);
 MODULE_PARM_DESC(lib_path, "alternate path for SOF firmware libraries.");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static char *tplg_path;
 module_param(tplg_path, charp, 0444);
 MODULE_PARM_DESC(tplg_path, "alternate path for SOF topology.");
@@ -276,6 +279,7 @@ int sof_pci_probe(struct pci_dev *pci, const struct pci_device_id *pci_id)
 			sof_pdata->desc->default_fw_path[sof_pdata->ipc_type];
 	}
 
+<<<<<<< HEAD
 	if (lib_path) {
 		sof_pdata->fw_lib_prefix = lib_path;
 
@@ -298,6 +302,8 @@ int sof_pci_probe(struct pci_dev *pci, const struct pci_device_id *pci_id)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (tplg_path)
 		sof_pdata->tplg_filename_prefix = tplg_path;
 	else

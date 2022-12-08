@@ -585,7 +585,11 @@ static int __init pyra_init(void)
 	int retval;
 
 	/* class name has to be same as driver name */
+<<<<<<< HEAD
 	pyra_class = class_create("pyra");
+=======
+	pyra_class = class_create(THIS_MODULE, "pyra");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(pyra_class))
 		return PTR_ERR(pyra_class);
 	pyra_class->dev_groups = pyra_groups;

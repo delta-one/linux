@@ -39,7 +39,11 @@ static void i2c_dw_configure_fifo_master(struct dw_i2c_dev *dev)
 
 static int i2c_dw_set_timings_master(struct dw_i2c_dev *dev)
 {
+<<<<<<< HEAD
 	unsigned int comp_param1;
+=======
+	u32 comp_param1;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 sda_falling_time, scl_falling_time;
 	struct i2c_timings *t = &dev->timings;
 	const char *fp_str = "";
@@ -211,7 +215,11 @@ static void i2c_dw_xfer_init(struct dw_i2c_dev *dev)
 {
 	struct i2c_msg *msgs = dev->msgs;
 	u32 ic_con = 0, ic_tar = 0;
+<<<<<<< HEAD
 	unsigned int dummy;
+=======
+	u32 dummy;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Disable the adapter */
 	__i2c_dw_disable(dev);
@@ -239,7 +247,11 @@ static void i2c_dw_xfer_init(struct dw_i2c_dev *dev)
 		     msgs[dev->msg_write_idx].addr | ic_tar);
 
 	/* Enforce disabled interrupts (due to HW issues) */
+<<<<<<< HEAD
 	regmap_write(dev->map, DW_IC_INTR_MASK, 0);
+=======
+	i2c_dw_disable_int(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Enable the adapter */
 	__i2c_dw_enable(dev);
@@ -287,7 +299,11 @@ static int amd_i2c_dw_xfer_quirk(struct i2c_adapter *adap, struct i2c_msg *msgs,
 	int msg_wrt_idx, msg_itr_lmt, buf_len, data_idx;
 	int cmd = 0, status;
 	u8 *tx_buf;
+<<<<<<< HEAD
 	unsigned int val;
+=======
+	u32 val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * In order to enable the interrupt for UCSI i.e. AMD NAVI GPU card,
@@ -299,7 +315,11 @@ static int amd_i2c_dw_xfer_quirk(struct i2c_adapter *adap, struct i2c_msg *msgs,
 	dev->msgs = msgs;
 	dev->msgs_num = num_msgs;
 	i2c_dw_xfer_init(dev);
+<<<<<<< HEAD
 	regmap_write(dev->map, DW_IC_INTR_MASK, 0);
+=======
+	i2c_dw_disable_int(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Initiate messages read/write transaction */
 	for (msg_wrt_idx = 0; msg_wrt_idx < num_msgs; msg_wrt_idx++) {
@@ -505,8 +525,12 @@ i2c_dw_read(struct dw_i2c_dev *dev)
 	unsigned int rx_valid;
 
 	for (; dev->msg_read_idx < dev->msgs_num; dev->msg_read_idx++) {
+<<<<<<< HEAD
 		unsigned int tmp;
 		u32 len;
+=======
+		u32 len, tmp;
+>>>>>>> b7ba80a49124 (Commit)
 		u8 *buf;
 
 		if (!(msgs[dev->msg_read_idx].flags & I2C_M_RD))
@@ -575,7 +599,11 @@ i2c_dw_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
 	dev->msg_write_idx = 0;
 	dev->msg_read_idx = 0;
 	dev->msg_err = 0;
+<<<<<<< HEAD
 	dev->status = 0;
+=======
+	dev->status = STATUS_IDLE;
+>>>>>>> b7ba80a49124 (Commit)
 	dev->abort_source = 0;
 	dev->rx_outstanding = 0;
 
@@ -654,7 +682,11 @@ static const struct i2c_adapter_quirks i2c_dw_quirks = {
 
 static u32 i2c_dw_read_clear_intrbits(struct dw_i2c_dev *dev)
 {
+<<<<<<< HEAD
 	unsigned int stat, dummy;
+=======
+	u32 stat, dummy;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * The IC_INTR_STAT register just indicates "enabled" interrupts.
@@ -712,6 +744,7 @@ static u32 i2c_dw_read_clear_intrbits(struct dw_i2c_dev *dev)
  * Interrupt service routine. This gets called whenever an I2C master interrupt
  * occurs.
  */
+<<<<<<< HEAD
 static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
 {
 	struct dw_i2c_dev *dev = dev_id;
@@ -742,6 +775,16 @@ static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
 	if (stat & DW_IC_INTR_TX_ABRT) {
 		dev->cmd_err |= DW_IC_ERR_TX_ABRT;
 		dev->status &= ~STATUS_MASK;
+=======
+static int i2c_dw_irq_handler_master(struct dw_i2c_dev *dev)
+{
+	u32 stat;
+
+	stat = i2c_dw_read_clear_intrbits(dev);
+	if (stat & DW_IC_INTR_TX_ABRT) {
+		dev->cmd_err |= DW_IC_ERR_TX_ABRT;
+		dev->status = STATUS_IDLE;
+>>>>>>> b7ba80a49124 (Commit)
 		dev->rx_outstanding = 0;
 
 		/*
@@ -771,10 +814,33 @@ tx_aborted:
 	else if (unlikely(dev->flags & ACCESS_INTR_MASK)) {
 		/* Workaround to trigger pending interrupt */
 		regmap_read(dev->map, DW_IC_INTR_MASK, &stat);
+<<<<<<< HEAD
 		regmap_write(dev->map, DW_IC_INTR_MASK, 0);
 		regmap_write(dev->map, DW_IC_INTR_MASK, stat);
 	}
 
+=======
+		i2c_dw_disable_int(dev);
+		regmap_write(dev->map, DW_IC_INTR_MASK, stat);
+	}
+
+	return 0;
+}
+
+static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
+{
+	struct dw_i2c_dev *dev = dev_id;
+	u32 stat, enabled;
+
+	regmap_read(dev->map, DW_IC_ENABLE, &enabled);
+	regmap_read(dev->map, DW_IC_RAW_INTR_STAT, &stat);
+	dev_dbg(dev->dev, "enabled=%#x stat=%#x\n", enabled, stat);
+	if (!enabled || !(stat & ~DW_IC_INTR_ACTIVITY))
+		return IRQ_NONE;
+
+	i2c_dw_irq_handler_master(dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return IRQ_HANDLED;
 }
 
@@ -866,13 +932,20 @@ int i2c_dw_probe_master(struct dw_i2c_dev *dev)
 {
 	struct i2c_adapter *adap = &dev->adapter;
 	unsigned long irq_flags;
+<<<<<<< HEAD
 	unsigned int ic_con;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	init_completion(&dev->cmd_complete);
 
 	dev->init = i2c_dw_init_master;
 	dev->disable = i2c_dw_disable;
+<<<<<<< HEAD
+=======
+	dev->disable_int = i2c_dw_disable_int;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = i2c_dw_init_regmap(dev);
 	if (ret)
@@ -886,6 +959,7 @@ int i2c_dw_probe_master(struct dw_i2c_dev *dev)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	/* Lock the bus for accessing DW_IC_CON */
 	ret = i2c_dw_acquire_lock(dev);
 	if (ret)
@@ -905,6 +979,8 @@ int i2c_dw_probe_master(struct dw_i2c_dev *dev)
 	if (ic_con & DW_IC_CON_BUS_CLEAR_CTRL)
 		dev->master_cfg |= DW_IC_CON_BUS_CLEAR_CTRL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = dev->init(dev);
 	if (ret)
 		return ret;
@@ -930,7 +1006,11 @@ int i2c_dw_probe_master(struct dw_i2c_dev *dev)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	regmap_write(dev->map, DW_IC_INTR_MASK, 0);
+=======
+	i2c_dw_disable_int(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	i2c_dw_release_lock(dev);
 
 	ret = devm_request_irq(dev->dev, dev->irq, i2c_dw_isr, irq_flags,

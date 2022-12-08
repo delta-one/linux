@@ -221,6 +221,10 @@ int mt7603_mcu_init(struct mt7603_dev *dev)
 		.headroom = sizeof(struct mt7603_mcu_txd),
 		.mcu_skb_send_msg = mt7603_mcu_skb_send_msg,
 		.mcu_parse_response = mt7603_mcu_parse_response,
+<<<<<<< HEAD
+=======
+		.mcu_restart = mt7603_mcu_restart,
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	dev->mt76.mcu_ops = &mt7603_mcu_ops;
@@ -229,7 +233,11 @@ int mt7603_mcu_init(struct mt7603_dev *dev)
 
 void mt7603_mcu_exit(struct mt7603_dev *dev)
 {
+<<<<<<< HEAD
 	mt7603_mcu_restart(&dev->mt76);
+=======
+	__mt76_mcu_restart(&dev->mt76);
+>>>>>>> b7ba80a49124 (Commit)
 	skb_queue_purge(&dev->mt76.mcu.res_q);
 }
 

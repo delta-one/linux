@@ -37,5 +37,9 @@ static void __exit unregister_react_printk(void)
 module_init(register_react_printk);
 module_exit(unregister_react_printk);
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("Daniel Bristot de Oliveira");
 MODULE_DESCRIPTION("printk rv reactor: printk if an exception is hit.");

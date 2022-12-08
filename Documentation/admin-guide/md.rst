@@ -317,7 +317,11 @@ All md devices contain:
      suspended (not supported yet)
          All IO requests will block. The array can be reconfigured.
 
+<<<<<<< HEAD
          Writing this, if accepted, will block until array is quiescent
+=======
+         Writing this, if accepted, will block until array is quiessent
+>>>>>>> b7ba80a49124 (Commit)
 
      readonly
          no resync can happen.  no superblocks get written.

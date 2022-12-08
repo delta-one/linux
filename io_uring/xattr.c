@@ -75,7 +75,10 @@ static int __io_getxattr_prep(struct io_kiocb *req,
 	}
 
 	req->flags |= REQ_F_NEED_CLEANUP;
+<<<<<<< HEAD
 	req->flags |= REQ_F_FORCE_ASYNC;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -110,9 +113,16 @@ int io_fgetxattr(struct io_kiocb *req, unsigned int issue_flags)
 	struct io_xattr *ix = io_kiocb_to_cmd(req, struct io_xattr);
 	int ret;
 
+<<<<<<< HEAD
 	WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK);
 
 	ret = do_getxattr(mnt_idmap(req->file->f_path.mnt),
+=======
+	if (issue_flags & IO_URING_F_NONBLOCK)
+		return -EAGAIN;
+
+	ret = do_getxattr(mnt_user_ns(req->file->f_path.mnt),
+>>>>>>> b7ba80a49124 (Commit)
 			req->file->f_path.dentry,
 			&ix->ctx);
 
@@ -127,12 +137,23 @@ int io_getxattr(struct io_kiocb *req, unsigned int issue_flags)
 	struct path path;
 	int ret;
 
+<<<<<<< HEAD
 	WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK);
+=======
+	if (issue_flags & IO_URING_F_NONBLOCK)
+		return -EAGAIN;
+>>>>>>> b7ba80a49124 (Commit)
 
 retry:
 	ret = filename_lookup(AT_FDCWD, ix->filename, lookup_flags, &path, NULL);
 	if (!ret) {
+<<<<<<< HEAD
 		ret = do_getxattr(mnt_idmap(path.mnt), path.dentry, &ix->ctx);
+=======
+		ret = do_getxattr(mnt_user_ns(path.mnt),
+				path.dentry,
+				&ix->ctx);
+>>>>>>> b7ba80a49124 (Commit)
 
 		path_put(&path);
 		if (retry_estale(ret, lookup_flags)) {
@@ -173,7 +194,10 @@ static int __io_setxattr_prep(struct io_kiocb *req,
 	}
 
 	req->flags |= REQ_F_NEED_CLEANUP;
+<<<<<<< HEAD
 	req->flags |= REQ_F_FORCE_ASYNC;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -211,7 +235,11 @@ static int __io_setxattr(struct io_kiocb *req, unsigned int issue_flags,
 
 	ret = mnt_want_write(path->mnt);
 	if (!ret) {
+<<<<<<< HEAD
 		ret = do_setxattr(mnt_idmap(path->mnt), path->dentry, &ix->ctx);
+=======
+		ret = do_setxattr(mnt_user_ns(path->mnt), path->dentry, &ix->ctx);
+>>>>>>> b7ba80a49124 (Commit)
 		mnt_drop_write(path->mnt);
 	}
 
@@ -222,7 +250,12 @@ int io_fsetxattr(struct io_kiocb *req, unsigned int issue_flags)
 {
 	int ret;
 
+<<<<<<< HEAD
 	WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK);
+=======
+	if (issue_flags & IO_URING_F_NONBLOCK)
+		return -EAGAIN;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = __io_setxattr(req, issue_flags, &req->file->f_path);
 	io_xattr_finish(req, ret);
@@ -236,7 +269,12 @@ int io_setxattr(struct io_kiocb *req, unsigned int issue_flags)
 	struct path path;
 	int ret;
 
+<<<<<<< HEAD
 	WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK);
+=======
+	if (issue_flags & IO_URING_F_NONBLOCK)
+		return -EAGAIN;
+>>>>>>> b7ba80a49124 (Commit)
 
 retry:
 	ret = filename_lookup(AT_FDCWD, ix->filename, lookup_flags, &path, NULL);

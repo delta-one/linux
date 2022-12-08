@@ -988,7 +988,11 @@ xhci_alloc_dbc(struct device *dev, void __iomem *base, const struct dbc_driver *
 	dbc->driver = driver;
 
 	if (readl(&dbc->regs->control) & DBC_CTRL_DBC_ENABLE)
+<<<<<<< HEAD
 		goto err;
+=======
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	INIT_DELAYED_WORK(&dbc->event_work, xhci_dbc_handle_events);
 	spin_lock_init(&dbc->lock);

@@ -61,6 +61,7 @@ static DEFINE_MUTEX(misc_mtx);
  * Assigned numbers, used for dynamic minors
  */
 #define DYNAMIC_MINORS 128 /* like dynamic majors */
+<<<<<<< HEAD
 static DEFINE_IDA(misc_minors_ida);
 
 static int misc_minor_alloc(void)
@@ -84,6 +85,9 @@ static void misc_minor_free(int minor)
 	else if (minor > MISC_DYNAMIC_MINOR)
 		ida_free(&misc_minors_ida, minor);
 }
+=======
+static DECLARE_BITMAP(misc_minors, DYNAMIC_MINORS);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_PROC_FS
 static void *misc_seq_start(struct seq_file *seq, loff_t *pos)
@@ -205,6 +209,7 @@ int misc_register(struct miscdevice *misc)
 	mutex_lock(&misc_mtx);
 
 	if (is_dynamic) {
+<<<<<<< HEAD
 		int i = misc_minor_alloc();
 
 		if (i < 0) {
@@ -212,6 +217,16 @@ int misc_register(struct miscdevice *misc)
 			goto out;
 		}
 		misc->minor = i;
+=======
+		int i = find_first_zero_bit(misc_minors, DYNAMIC_MINORS);
+
+		if (i >= DYNAMIC_MINORS) {
+			err = -EBUSY;
+			goto out;
+		}
+		misc->minor = DYNAMIC_MINORS - i - 1;
+		set_bit(i, misc_minors);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		struct miscdevice *c;
 
@@ -230,7 +245,14 @@ int misc_register(struct miscdevice *misc)
 					  misc, misc->groups, "%s", misc->name);
 	if (IS_ERR(misc->this_device)) {
 		if (is_dynamic) {
+<<<<<<< HEAD
 			misc_minor_free(misc->minor);
+=======
+			int i = DYNAMIC_MINORS - misc->minor - 1;
+
+			if (i < DYNAMIC_MINORS && i >= 0)
+				clear_bit(i, misc_minors);
+>>>>>>> b7ba80a49124 (Commit)
 			misc->minor = MISC_DYNAMIC_MINOR;
 		}
 		err = PTR_ERR(misc->this_device);
@@ -258,20 +280,36 @@ EXPORT_SYMBOL(misc_register);
 
 void misc_deregister(struct miscdevice *misc)
 {
+<<<<<<< HEAD
+=======
+	int i = DYNAMIC_MINORS - misc->minor - 1;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (WARN_ON(list_empty(&misc->list)))
 		return;
 
 	mutex_lock(&misc_mtx);
 	list_del(&misc->list);
 	device_destroy(misc_class, MKDEV(MISC_MAJOR, misc->minor));
+<<<<<<< HEAD
 	misc_minor_free(misc->minor);
+=======
+	if (i < DYNAMIC_MINORS && i >= 0)
+		clear_bit(i, misc_minors);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&misc_mtx);
 }
 EXPORT_SYMBOL(misc_deregister);
 
+<<<<<<< HEAD
 static char *misc_devnode(const struct device *dev, umode_t *mode)
 {
 	const struct miscdevice *c = dev_get_drvdata(dev);
+=======
+static char *misc_devnode(struct device *dev, umode_t *mode)
+{
+	struct miscdevice *c = dev_get_drvdata(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (mode && c->mode)
 		*mode = c->mode;
@@ -286,7 +324,11 @@ static int __init misc_init(void)
 	struct proc_dir_entry *ret;
 
 	ret = proc_create_seq("misc", 0, NULL, &misc_seq_ops);
+<<<<<<< HEAD
 	misc_class = class_create("misc");
+=======
+	misc_class = class_create(THIS_MODULE, "misc");
+>>>>>>> b7ba80a49124 (Commit)
 	err = PTR_ERR(misc_class);
 	if (IS_ERR(misc_class))
 		goto fail_remove;

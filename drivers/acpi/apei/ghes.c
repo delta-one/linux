@@ -94,8 +94,11 @@
 #define FIX_APEI_GHES_SDEI_CRITICAL	__end_of_fixed_addresses
 #endif
 
+<<<<<<< HEAD
 static ATOMIC_NOTIFIER_HEAD(ghes_report_chain);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool is_hest_type_generic_v2(struct ghes *ghes)
 {
 	return ghes->generic->header.type == ACPI_HEST_TYPE_GENERIC_ERROR_V2;
@@ -110,6 +113,7 @@ bool ghes_disable;
 module_param_named(disable, ghes_disable, bool, 0);
 
 /*
+<<<<<<< HEAD
  * "ghes.edac_force_enable" forcibly enables ghes_edac and skips the platform
  * check.
  */
@@ -117,6 +121,8 @@ static bool ghes_edac_force_enable;
 module_param_named(edac_force_enable, ghes_edac_force_enable, bool, 0);
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * All error sources notified with HED (Hardware Error Device) share a
  * single notifier callback, so they need to be linked and checked one
  * by one. This holds true for NMI too.
@@ -128,6 +134,7 @@ static LIST_HEAD(ghes_hed);
 static DEFINE_MUTEX(ghes_list_mutex);
 
 /*
+<<<<<<< HEAD
  * A list of GHES devices which are given to the corresponding EDAC driver
  * ghes_edac for further use.
  */
@@ -135,6 +142,8 @@ static LIST_HEAD(ghes_devs);
 static DEFINE_MUTEX(ghes_devs_mutex);
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Because the memory area used to transfer hardware error information
  * from BIOS to Linux can be determined only in NMI, IRQ or timer
  * handler, but general ioremap can not be used in atomic context, so
@@ -154,7 +163,11 @@ struct ghes_vendor_record_entry {
 static struct gen_pool *ghes_estatus_pool;
 static unsigned long ghes_estatus_pool_size_request;
 
+<<<<<<< HEAD
 static struct ghes_estatus_cache __rcu *ghes_estatus_caches[GHES_ESTATUS_CACHES_SIZE];
+=======
+static struct ghes_estatus_cache *ghes_estatus_caches[GHES_ESTATUS_CACHES_SIZE];
+>>>>>>> b7ba80a49124 (Commit)
 static atomic_t ghes_estatus_cache_alloced;
 
 static int ghes_panic_timeout __read_mostly = 30;
@@ -179,7 +192,11 @@ static void ghes_unmap(void __iomem *vaddr, enum fixed_addresses fixmap_idx)
 	clear_fixmap(fixmap_idx);
 }
 
+<<<<<<< HEAD
 int ghes_estatus_pool_init(unsigned int num_ghes)
+=======
+int ghes_estatus_pool_init(int num_ghes)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long addr, len;
 	int rc;
@@ -661,7 +678,11 @@ static bool ghes_do_proc(struct ghes *ghes,
 		if (guid_equal(sec_type, &CPER_SEC_PLATFORM_MEM)) {
 			struct cper_sec_mem_err *mem_err = acpi_hest_get_payload(gdata);
 
+<<<<<<< HEAD
 			atomic_notifier_call_chain(&ghes_report_chain, sev, mem_err);
+=======
+			ghes_edac_report_mem_error(sev, mem_err);
+>>>>>>> b7ba80a49124 (Commit)
 
 			arch_apei_report_mem_error(sev, mem_err);
 			queued = ghes_handle_memory_failure(gdata, sev);
@@ -789,18 +810,26 @@ static struct ghes_estatus_cache *ghes_estatus_cache_alloc(
 	return cache;
 }
 
+<<<<<<< HEAD
 static void ghes_estatus_cache_rcu_free(struct rcu_head *head)
 {
 	struct ghes_estatus_cache *cache;
 	u32 len;
 
 	cache = container_of(head, struct ghes_estatus_cache, rcu);
+=======
+static void ghes_estatus_cache_free(struct ghes_estatus_cache *cache)
+{
+	u32 len;
+
+>>>>>>> b7ba80a49124 (Commit)
 	len = cper_estatus_len(GHES_ESTATUS_FROM_CACHE(cache));
 	len = GHES_ESTATUS_CACHE_LEN(len);
 	gen_pool_free(ghes_estatus_pool, (unsigned long)cache, len);
 	atomic_dec(&ghes_estatus_cache_alloced);
 }
 
+<<<<<<< HEAD
 static void
 ghes_estatus_cache_add(struct acpi_hest_generic *generic,
 		       struct acpi_hest_generic_status *estatus)
@@ -814,17 +843,46 @@ ghes_estatus_cache_add(struct acpi_hest_generic *generic,
 	if (!new_cache)
 		return;
 
+=======
+static void ghes_estatus_cache_rcu_free(struct rcu_head *head)
+{
+	struct ghes_estatus_cache *cache;
+
+	cache = container_of(head, struct ghes_estatus_cache, rcu);
+	ghes_estatus_cache_free(cache);
+}
+
+static void ghes_estatus_cache_add(
+	struct acpi_hest_generic *generic,
+	struct acpi_hest_generic_status *estatus)
+{
+	int i, slot = -1, count;
+	unsigned long long now, duration, period, max_period = 0;
+	struct ghes_estatus_cache *cache, *slot_cache = NULL, *new_cache;
+
+	new_cache = ghes_estatus_cache_alloc(generic, estatus);
+	if (new_cache == NULL)
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_read_lock();
 	now = sched_clock();
 	for (i = 0; i < GHES_ESTATUS_CACHES_SIZE; i++) {
 		cache = rcu_dereference(ghes_estatus_caches[i]);
 		if (cache == NULL) {
 			slot = i;
+<<<<<<< HEAD
+=======
+			slot_cache = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 		duration = now - cache->time_in;
 		if (duration >= GHES_ESTATUS_IN_CACHE_MAX_NSEC) {
 			slot = i;
+<<<<<<< HEAD
+=======
+			slot_cache = cache;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 		count = atomic_read(&cache->count);
@@ -833,6 +891,7 @@ ghes_estatus_cache_add(struct acpi_hest_generic *generic,
 		if (period > max_period) {
 			max_period = period;
 			slot = i;
+<<<<<<< HEAD
 		}
 	}
 	rcu_read_unlock();
@@ -857,6 +916,20 @@ ghes_estatus_cache_add(struct acpi_hest_generic *generic,
 			call_rcu(&unrcu_pointer(victim)->rcu,
 				 ghes_estatus_cache_rcu_free);
 	}
+=======
+			slot_cache = cache;
+		}
+	}
+	/* new_cache must be put into array after its contents are written */
+	smp_wmb();
+	if (slot != -1 && cmpxchg(ghes_estatus_caches + slot,
+				  slot_cache, new_cache) == slot_cache) {
+		if (slot_cache)
+			call_rcu(&slot_cache->rcu, ghes_estatus_cache_rcu_free);
+	} else
+		ghes_estatus_cache_free(new_cache);
+	rcu_read_unlock();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __ghes_panic(struct ghes *ghes,
@@ -1007,7 +1080,11 @@ static void ghes_proc_in_irq(struct irq_work *irq_work)
 				ghes_estatus_cache_add(generic, estatus);
 		}
 
+<<<<<<< HEAD
 		if (task_work_pending && current->mm) {
+=======
+		if (task_work_pending && current->mm != &init_mm) {
+>>>>>>> b7ba80a49124 (Commit)
 			estatus_node->task_work.func = ghes_kick_task_work;
 			estatus_node->task_work_cpu = smp_processor_id();
 			ret = task_work_add(current, &estatus_node->task_work,
@@ -1398,11 +1475,15 @@ static int ghes_probe(struct platform_device *ghes_dev)
 
 	platform_set_drvdata(ghes_dev, ghes);
 
+<<<<<<< HEAD
 	ghes->dev = &ghes_dev->dev;
 
 	mutex_lock(&ghes_devs_mutex);
 	list_add_tail(&ghes->elist, &ghes_devs);
 	mutex_unlock(&ghes_devs_mutex);
+=======
+	ghes_edac_register(ghes, &ghes_dev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Handle any pending errors right away */
 	spin_lock_irqsave(&ghes_notify_lock_irq, flags);
@@ -1431,7 +1512,11 @@ static int ghes_remove(struct platform_device *ghes_dev)
 	ghes->flags |= GHES_EXITING;
 	switch (generic->notify.type) {
 	case ACPI_HEST_NOTIFY_POLLED:
+<<<<<<< HEAD
 		timer_shutdown_sync(&ghes->timer);
+=======
+		del_timer_sync(&ghes->timer);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case ACPI_HEST_NOTIFY_EXTERNAL:
 		free_irq(ghes->irq, ghes);
@@ -1466,12 +1551,21 @@ static int ghes_remove(struct platform_device *ghes_dev)
 
 	ghes_fini(ghes);
 
+<<<<<<< HEAD
 	mutex_lock(&ghes_devs_mutex);
 	list_del(&ghes->elist);
 	mutex_unlock(&ghes_devs_mutex);
 
 	kfree(ghes);
 
+=======
+	ghes_edac_unregister(ghes);
+
+	kfree(ghes);
+
+	platform_set_drvdata(ghes_dev, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1523,6 +1617,7 @@ void __init acpi_ghes_init(void)
 	else
 		pr_info(GHES_PFX "Failed to enable APEI firmware first mode.\n");
 }
+<<<<<<< HEAD
 
 /*
  * Known x86 systems that prefer GHES error reporting:
@@ -1561,3 +1656,5 @@ void ghes_unregister_report_chain(struct notifier_block *nb)
 	atomic_notifier_chain_unregister(&ghes_report_chain, nb);
 }
 EXPORT_SYMBOL_GPL(ghes_unregister_report_chain);
+=======
+>>>>>>> b7ba80a49124 (Commit)

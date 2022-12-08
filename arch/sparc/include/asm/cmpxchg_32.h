@@ -15,7 +15,11 @@
 unsigned long __xchg_u32(volatile u32 *m, u32 new);
 void __xchg_called_with_bad_pointer(void);
 
+<<<<<<< HEAD
 static inline unsigned long __arch_xchg(unsigned long x, __volatile__ void * ptr, int size)
+=======
+static inline unsigned long __xchg(unsigned long x, __volatile__ void * ptr, int size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (size) {
 	case 4:
@@ -25,7 +29,11 @@ static inline unsigned long __arch_xchg(unsigned long x, __volatile__ void * ptr
 	return x;
 }
 
+<<<<<<< HEAD
 #define arch_xchg(ptr,x) ({(__typeof__(*(ptr)))__arch_xchg((unsigned long)(x),(ptr),sizeof(*(ptr)));})
+=======
+#define arch_xchg(ptr,x) ({(__typeof__(*(ptr)))__xchg((unsigned long)(x),(ptr),sizeof(*(ptr)));})
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Emulate cmpxchg() the same way we emulate atomics,
  * by hashing the object address and indexing into an array

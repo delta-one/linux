@@ -25,6 +25,7 @@ properties:
       - description: v2 of CPUFREQ HW (EPSS)
         items:
           - enum:
+<<<<<<< HEAD
               - qcom,qdu1000-cpufreq-epss
               - qcom,sa8775p-cpufreq-epss
               - qcom,sc7280-cpufreq-epss
@@ -34,6 +35,10 @@ properties:
               - qcom,sm8350-cpufreq-epss
               - qcom,sm8450-cpufreq-epss
               - qcom,sm8550-cpufreq-epss
+=======
+              - qcom,sm6375-cpufreq-epss
+              - qcom,sm8250-cpufreq-epss
+>>>>>>> b7ba80a49124 (Commit)
           - const: qcom,cpufreq-epss
 
   reg:
@@ -60,6 +65,7 @@ properties:
       - const: xo
       - const: alternate
 
+<<<<<<< HEAD
   interrupts:
     minItems: 1
     maxItems: 3
@@ -77,6 +83,11 @@ properties:
   '#clock-cells':
     const: 1
 
+=======
+  '#freq-domain-cells':
+    const: 1
+
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg
@@ -104,6 +115,7 @@ examples:
         enable-method = "psci";
         next-level-cache = <&L2_0>;
         qcom,freq-domain = <&cpufreq_hw 0>;
+<<<<<<< HEAD
         clocks = <&cpufreq_hw 0>;
         L2_0: l2-cache {
           compatible = "cache";
@@ -114,6 +126,13 @@ examples:
             compatible = "cache";
             cache-unified;
             cache-level = <3>;
+=======
+        L2_0: l2-cache {
+          compatible = "cache";
+          next-level-cache = <&L3_0>;
+          L3_0: l3-cache {
+            compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
           };
         };
       };
@@ -125,11 +144,16 @@ examples:
         enable-method = "psci";
         next-level-cache = <&L2_100>;
         qcom,freq-domain = <&cpufreq_hw 0>;
+<<<<<<< HEAD
         clocks = <&cpufreq_hw 0>;
         L2_100: l2-cache {
           compatible = "cache";
           cache-unified;
           cache-level = <2>;
+=======
+        L2_100: l2-cache {
+          compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
           next-level-cache = <&L3_0>;
         };
       };
@@ -141,11 +165,16 @@ examples:
         enable-method = "psci";
         next-level-cache = <&L2_200>;
         qcom,freq-domain = <&cpufreq_hw 0>;
+<<<<<<< HEAD
         clocks = <&cpufreq_hw 0>;
         L2_200: l2-cache {
           compatible = "cache";
           cache-unified;
           cache-level = <2>;
+=======
+        L2_200: l2-cache {
+          compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
           next-level-cache = <&L3_0>;
         };
       };
@@ -157,11 +186,16 @@ examples:
         enable-method = "psci";
         next-level-cache = <&L2_300>;
         qcom,freq-domain = <&cpufreq_hw 0>;
+<<<<<<< HEAD
         clocks = <&cpufreq_hw 0>;
         L2_300: l2-cache {
           compatible = "cache";
           cache-unified;
           cache-level = <2>;
+=======
+        L2_300: l2-cache {
+          compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
           next-level-cache = <&L3_0>;
         };
       };
@@ -173,11 +207,16 @@ examples:
         enable-method = "psci";
         next-level-cache = <&L2_400>;
         qcom,freq-domain = <&cpufreq_hw 1>;
+<<<<<<< HEAD
         clocks = <&cpufreq_hw 1>;
         L2_400: l2-cache {
           compatible = "cache";
           cache-unified;
           cache-level = <2>;
+=======
+        L2_400: l2-cache {
+          compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
           next-level-cache = <&L3_0>;
         };
       };
@@ -189,11 +228,16 @@ examples:
         enable-method = "psci";
         next-level-cache = <&L2_500>;
         qcom,freq-domain = <&cpufreq_hw 1>;
+<<<<<<< HEAD
         clocks = <&cpufreq_hw 1>;
         L2_500: l2-cache {
           compatible = "cache";
           cache-unified;
           cache-level = <2>;
+=======
+        L2_500: l2-cache {
+          compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
           next-level-cache = <&L3_0>;
         };
       };
@@ -205,11 +249,16 @@ examples:
         enable-method = "psci";
         next-level-cache = <&L2_600>;
         qcom,freq-domain = <&cpufreq_hw 1>;
+<<<<<<< HEAD
         clocks = <&cpufreq_hw 1>;
         L2_600: l2-cache {
           compatible = "cache";
           cache-unified;
           cache-level = <2>;
+=======
+        L2_600: l2-cache {
+          compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
           next-level-cache = <&L3_0>;
         };
       };
@@ -221,11 +270,16 @@ examples:
         enable-method = "psci";
         next-level-cache = <&L2_700>;
         qcom,freq-domain = <&cpufreq_hw 1>;
+<<<<<<< HEAD
         clocks = <&cpufreq_hw 1>;
         L2_700: l2-cache {
           compatible = "cache";
           cache-unified;
           cache-level = <2>;
+=======
+        L2_700: l2-cache {
+          compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
           next-level-cache = <&L3_0>;
         };
       };
@@ -244,7 +298,10 @@ examples:
         clock-names = "xo", "alternate";
 
         #freq-domain-cells = <1>;
+<<<<<<< HEAD
         #clock-cells = <1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
       };
     };
 ...

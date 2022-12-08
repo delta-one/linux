@@ -20,7 +20,11 @@
 #include <drm/drm_bridge.h>
 #include <drm/drm_connector.h>
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_dma.h>
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_fourcc.h>
 #include <drm/drm_gem_dma_helper.h>
 #include <drm/drm_gem_framebuffer_helper.h>
@@ -78,12 +82,22 @@ static const struct mxsfb_devdata mxsfb_devdata[] = {
 
 void mxsfb_enable_axi_clk(struct mxsfb_drm_private *mxsfb)
 {
+<<<<<<< HEAD
 	clk_prepare_enable(mxsfb->clk_axi);
+=======
+	if (mxsfb->clk_axi)
+		clk_prepare_enable(mxsfb->clk_axi);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb)
 {
+<<<<<<< HEAD
 	clk_disable_unprepare(mxsfb->clk_axi);
+=======
+	if (mxsfb->clk_axi)
+		clk_disable_unprepare(mxsfb->clk_axi);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct drm_framebuffer *
@@ -233,9 +247,15 @@ static int mxsfb_load(struct drm_device *drm,
 	if (IS_ERR(mxsfb->clk))
 		return PTR_ERR(mxsfb->clk);
 
+<<<<<<< HEAD
 	mxsfb->clk_axi = devm_clk_get_optional(drm->dev, "axi");
 	if (IS_ERR(mxsfb->clk_axi))
 		return PTR_ERR(mxsfb->clk_axi);
+=======
+	mxsfb->clk_axi = devm_clk_get(drm->dev, "axi");
+	if (IS_ERR(mxsfb->clk_axi))
+		mxsfb->clk_axi = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mxsfb->clk_disp_axi = devm_clk_get(drm->dev, "disp_axi");
 	if (IS_ERR(mxsfb->clk_disp_axi))
@@ -365,7 +385,11 @@ static int mxsfb_probe(struct platform_device *pdev)
 	if (ret)
 		goto err_unload;
 
+<<<<<<< HEAD
 	drm_fbdev_dma_setup(drm, 32);
+=======
+	drm_fbdev_generic_setup(drm, 32);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 

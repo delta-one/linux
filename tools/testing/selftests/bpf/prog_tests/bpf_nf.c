@@ -49,14 +49,22 @@ out:
 
 static void test_bpf_nf_ct(int mode)
 {
+<<<<<<< HEAD
 	const char *iptables = "iptables-legacy -t raw %s PREROUTING -j CONNMARK --set-mark 42/0";
+=======
+	const char *iptables = "iptables -t raw %s PREROUTING -j CONNMARK --set-mark 42/0";
+>>>>>>> b7ba80a49124 (Commit)
 	int srv_fd = -1, client_fd = -1, srv_client_fd = -1;
 	struct sockaddr_in peer_addr = {};
 	struct test_bpf_nf *skel;
 	int prog_fd, err;
 	socklen_t len;
 	u16 srv_port;
+<<<<<<< HEAD
 	char cmd[128];
+=======
+	char cmd[64];
+>>>>>>> b7ba80a49124 (Commit)
 	LIBBPF_OPTS(bpf_test_run_opts, topts,
 		.data_in = &pkt_v4,
 		.data_size_in = sizeof(pkt_v4),
@@ -69,7 +77,11 @@ static void test_bpf_nf_ct(int mode)
 
 	/* Enable connection tracking */
 	snprintf(cmd, sizeof(cmd), iptables, "-A");
+<<<<<<< HEAD
 	if (!ASSERT_OK(system(cmd), cmd))
+=======
+	if (!ASSERT_OK(system(cmd), "iptables"))
+>>>>>>> b7ba80a49124 (Commit)
 		goto end;
 
 	srv_port = (mode == TEST_XDP) ? 5005 : 5006;

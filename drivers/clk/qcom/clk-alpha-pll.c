@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
  * Copyright (c) 2015, 2018, The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (c) 2021, 2023, Qualcomm Innovation Center, Inc. All rights reserved.
+=======
+ * Copyright (c) 2021, Qualcomm Innovation Center, Inc. All rights reserved.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/kernel.h>
@@ -27,7 +31,10 @@
 # define PLL_VOTE_FSM_RESET	BIT(21)
 # define PLL_UPDATE		BIT(22)
 # define PLL_UPDATE_BYPASS	BIT(23)
+<<<<<<< HEAD
 # define PLL_FSM_LEGACY_MODE	BIT(24)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # define PLL_OFFLINE_ACK	BIT(28)
 # define ALPHA_PLL_ACK_LATCH	BIT(29)
 # define PLL_ACTIVE_FLAG	BIT(30)
@@ -155,6 +162,7 @@ const u8 clk_alpha_pll_regs[][PLL_OFF_MAX_REGS] = {
 		[PLL_OFF_TEST_CTL_U] = 0x30,
 		[PLL_OFF_TEST_CTL_U1] = 0x34,
 	},
+<<<<<<< HEAD
 	[CLK_ALPHA_PLL_TYPE_LUCID_OLE] = {
 		[PLL_OFF_OPMODE] = 0x04,
 		[PLL_OFF_STATE] = 0x08,
@@ -171,6 +179,8 @@ const u8 clk_alpha_pll_regs[][PLL_OFF_MAX_REGS] = {
 		[PLL_OFF_TEST_CTL_U1] = 0x34,
 		[PLL_OFF_TEST_CTL_U2] = 0x38,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	[CLK_ALPHA_PLL_TYPE_RIVIAN_EVO] = {
 		[PLL_OFF_OPMODE] = 0x04,
 		[PLL_OFF_STATUS] = 0x0c,
@@ -183,6 +193,7 @@ const u8 clk_alpha_pll_regs[][PLL_OFF_MAX_REGS] = {
 		[PLL_OFF_TEST_CTL] = 0x28,
 		[PLL_OFF_TEST_CTL_U] = 0x2c,
 	},
+<<<<<<< HEAD
 	[CLK_ALPHA_PLL_TYPE_DEFAULT_EVO] =  {
 		[PLL_OFF_L_VAL] = 0x04,
 		[PLL_OFF_ALPHA_VAL] = 0x08,
@@ -227,6 +238,8 @@ const u8 clk_alpha_pll_regs[][PLL_OFF_MAX_REGS] = {
 		[PLL_OFF_ALPHA_VAL] = 0x24,
 		[PLL_OFF_ALPHA_VAL_U] = 0x28,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 EXPORT_SYMBOL_GPL(clk_alpha_pll_regs);
 
@@ -238,8 +251,11 @@ EXPORT_SYMBOL_GPL(clk_alpha_pll_regs);
 #define ALPHA_BITWIDTH		32U
 #define ALPHA_SHIFT(w)		min(w, ALPHA_BITWIDTH)
 
+<<<<<<< HEAD
 #define	ALPHA_PLL_STATUS_REG_SHIFT	8
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PLL_HUAYRA_M_WIDTH		8
 #define PLL_HUAYRA_M_SHIFT		8
 #define PLL_HUAYRA_M_MASK		0xff
@@ -383,11 +399,14 @@ void clk_alpha_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
 
 	regmap_update_bits(regmap, PLL_USER_CTL(pll), mask, val);
 
+<<<<<<< HEAD
 	clk_alpha_pll_write_config(regmap, PLL_TEST_CTL(pll),
 						config->test_ctl_val);
 	clk_alpha_pll_write_config(regmap, PLL_TEST_CTL_U(pll),
 						config->test_ctl_hi_val);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (pll->flags & SUPPORTS_FSM_MODE)
 		qcom_pll_set_fsm_mode(regmap, PLL_MODE(pll), 6, 0);
 }
@@ -1170,10 +1189,13 @@ void clk_fabia_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
 		regmap_update_bits(regmap, PLL_USER_CTL(pll), mask, val);
 	}
 
+<<<<<<< HEAD
 	if (pll->flags & SUPPORTS_FSM_LEGACY_MODE)
 		regmap_update_bits(regmap, PLL_MODE(pll), PLL_FSM_LEGACY_MODE,
 							PLL_FSM_LEGACY_MODE);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	regmap_update_bits(regmap, PLL_MODE(pll), PLL_UPDATE_BYPASS,
 							PLL_UPDATE_BYPASS);
 
@@ -2160,7 +2182,11 @@ static int alpha_pll_lucid_evo_enable(struct clk_hw *hw)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void _alpha_pll_lucid_evo_disable(struct clk_hw *hw, bool reset)
+=======
+static void alpha_pll_lucid_evo_disable(struct clk_hw *hw)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
 	struct regmap *regmap = pll->clkr.regmap;
@@ -2189,12 +2215,18 @@ static void _alpha_pll_lucid_evo_disable(struct clk_hw *hw, bool reset)
 
 	/* Place the PLL mode in STANDBY */
 	regmap_write(regmap, PLL_OPMODE(pll), PLL_STANDBY);
+<<<<<<< HEAD
 
 	if (reset)
 		regmap_update_bits(regmap, PLL_MODE(pll), PLL_RESET_N, 0);
 }
 
 static int _alpha_pll_lucid_evo_prepare(struct clk_hw *hw, bool reset)
+=======
+}
+
+static int alpha_pll_lucid_evo_prepare(struct clk_hw *hw)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
 	struct clk_hw *p;
@@ -2214,11 +2246,16 @@ static int _alpha_pll_lucid_evo_prepare(struct clk_hw *hw, bool reset)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	_alpha_pll_lucid_evo_disable(hw, reset);
+=======
+	alpha_pll_lucid_evo_disable(hw);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static void alpha_pll_lucid_evo_disable(struct clk_hw *hw)
 {
 	_alpha_pll_lucid_evo_disable(hw, false);
@@ -2239,6 +2276,8 @@ static int alpha_pll_reset_lucid_evo_prepare(struct clk_hw *hw)
 	return _alpha_pll_lucid_evo_prepare(hw, true);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned long alpha_pll_lucid_evo_recalc_rate(struct clk_hw *hw,
 						     unsigned long parent_rate)
 {
@@ -2286,6 +2325,7 @@ const struct clk_ops clk_alpha_pll_lucid_evo_ops = {
 };
 EXPORT_SYMBOL_GPL(clk_alpha_pll_lucid_evo_ops);
 
+<<<<<<< HEAD
 const struct clk_ops clk_alpha_pll_reset_lucid_evo_ops = {
 	.prepare = alpha_pll_reset_lucid_evo_prepare,
 	.enable = alpha_pll_lucid_evo_enable,
@@ -2297,6 +2337,8 @@ const struct clk_ops clk_alpha_pll_reset_lucid_evo_ops = {
 };
 EXPORT_SYMBOL_GPL(clk_alpha_pll_reset_lucid_evo_ops);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void clk_rivian_evo_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
 				  const struct alpha_pll_config *config)
 {
@@ -2354,6 +2396,7 @@ const struct clk_ops clk_alpha_pll_rivian_evo_ops = {
 	.round_rate = clk_rivian_evo_pll_round_rate,
 };
 EXPORT_SYMBOL_GPL(clk_alpha_pll_rivian_evo_ops);
+<<<<<<< HEAD
 
 void clk_stromer_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
 			       const struct alpha_pll_config *config)
@@ -2466,3 +2509,5 @@ const struct clk_ops clk_alpha_pll_stromer_ops = {
 	.set_rate = clk_alpha_pll_stromer_set_rate,
 };
 EXPORT_SYMBOL_GPL(clk_alpha_pll_stromer_ops);
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -94,7 +94,11 @@ int tc_dst(struct __sk_buff *skb)
 		redirect = is_remote_ep_v4(skb, __bpf_constant_htonl(ip4_src));
 		break;
 	case __bpf_constant_htons(ETH_P_IPV6):
+<<<<<<< HEAD
 		redirect = is_remote_ep_v6(skb, (struct in6_addr){{ip6_src}});
+=======
+		redirect = is_remote_ep_v6(skb, (struct in6_addr)ip6_src);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -119,7 +123,11 @@ int tc_src(struct __sk_buff *skb)
 		redirect = is_remote_ep_v4(skb, __bpf_constant_htonl(ip4_dst));
 		break;
 	case __bpf_constant_htons(ETH_P_IPV6):
+<<<<<<< HEAD
 		redirect = is_remote_ep_v6(skb, (struct in6_addr){{ip6_dst}});
+=======
+		redirect = is_remote_ep_v6(skb, (struct in6_addr)ip6_dst);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 

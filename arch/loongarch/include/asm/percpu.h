@@ -8,6 +8,7 @@
 #include <asm/cmpxchg.h>
 #include <asm/loongarch.h>
 
+<<<<<<< HEAD
 /*
  * The "address" (in fact, offset from $r21) of a per-CPU variable is close to
  * the loading address of main kernel image, but far from where the modules are
@@ -17,6 +18,8 @@
 #define PER_CPU_ATTRIBUTES    __attribute__((model("extreme")))
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Use r21 for fast access */
 register unsigned long __my_cpu_offset __asm__("$r21");
 
@@ -150,6 +153,7 @@ static inline unsigned long __percpu_xchg(void *ptr, unsigned long val,
 }
 
 /* this_cpu_cmpxchg */
+<<<<<<< HEAD
 #define _protect_cmpxchg(pcp, o, n)				\
 ({								\
 	typeof(*raw_cpu_ptr(&(pcp))) __ret;			\
@@ -160,6 +164,8 @@ static inline unsigned long __percpu_xchg(void *ptr, unsigned long val,
 })
 
 /* this_cpu_cmpxchg_local */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define _protect_cmpxchg_local(pcp, o, n)			\
 ({								\
 	typeof(*raw_cpu_ptr(&(pcp))) __ret;			\
@@ -232,6 +238,7 @@ do {									\
 #define this_cpu_xchg_4(pcp, val) _percpu_xchg(pcp, val)
 #define this_cpu_xchg_8(pcp, val) _percpu_xchg(pcp, val)
 
+<<<<<<< HEAD
 #define this_cpu_cmpxchg_local_1(ptr, o, n) _protect_cmpxchg_local(ptr, o, n)
 #define this_cpu_cmpxchg_local_2(ptr, o, n) _protect_cmpxchg_local(ptr, o, n)
 #define this_cpu_cmpxchg_local_4(ptr, o, n) _protect_cmpxchg_local(ptr, o, n)
@@ -241,6 +248,12 @@ do {									\
 #define this_cpu_cmpxchg_2(ptr, o, n) _protect_cmpxchg(ptr, o, n)
 #define this_cpu_cmpxchg_4(ptr, o, n) _protect_cmpxchg(ptr, o, n)
 #define this_cpu_cmpxchg_8(ptr, o, n) _protect_cmpxchg(ptr, o, n)
+=======
+#define this_cpu_cmpxchg_1(ptr, o, n) _protect_cmpxchg_local(ptr, o, n)
+#define this_cpu_cmpxchg_2(ptr, o, n) _protect_cmpxchg_local(ptr, o, n)
+#define this_cpu_cmpxchg_4(ptr, o, n) _protect_cmpxchg_local(ptr, o, n)
+#define this_cpu_cmpxchg_8(ptr, o, n) _protect_cmpxchg_local(ptr, o, n)
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm-generic/percpu.h>
 

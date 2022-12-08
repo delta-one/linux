@@ -552,14 +552,21 @@ static int ep93xxfb_probe(struct platform_device *pdev)
 
 	err = register_framebuffer(info);
 	if (err)
+<<<<<<< HEAD
 		goto failed_framebuffer;
+=======
+		goto failed_check;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_info(info->dev, "registered. Mode = %dx%d-%d\n",
 		 info->var.xres, info->var.yres, info->var.bits_per_pixel);
 	return 0;
 
+<<<<<<< HEAD
 failed_framebuffer:
 	clk_disable_unprepare(fbi->clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 failed_check:
 	if (fbi->mach_info->teardown)
 		fbi->mach_info->teardown(pdev);
@@ -573,7 +580,11 @@ failed_cmap:
 	return err;
 }
 
+<<<<<<< HEAD
 static void ep93xxfb_remove(struct platform_device *pdev)
+=======
+static int ep93xxfb_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = platform_get_drvdata(pdev);
 	struct ep93xx_fbi *fbi = info->par;
@@ -587,11 +598,20 @@ static void ep93xxfb_remove(struct platform_device *pdev)
 		fbi->mach_info->teardown(pdev);
 
 	kfree(info);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver ep93xxfb_driver = {
 	.probe		= ep93xxfb_probe,
+<<<<<<< HEAD
 	.remove_new	= ep93xxfb_remove,
+=======
+	.remove		= ep93xxfb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name	= "ep93xx-fb",
 	},

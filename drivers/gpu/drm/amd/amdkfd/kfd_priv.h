@@ -206,8 +206,11 @@ enum cache_policy {
 
 #define KFD_GC_VERSION(dev) ((dev)->adev->ip_versions[GC_HWIP][0])
 #define KFD_IS_SOC15(dev)   ((KFD_GC_VERSION(dev)) >= (IP_VERSION(9, 0, 1)))
+<<<<<<< HEAD
 #define KFD_SUPPORT_XNACK_PER_PROCESS(dev)\
 		(KFD_GC_VERSION(dev) == IP_VERSION(9, 4, 2))
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct kfd_event_interrupt_class {
 	bool (*interrupt_isr)(struct kfd_dev *dev,
@@ -256,6 +259,11 @@ struct kfd_dev {
 	struct amdgpu_device *adev;
 
 	struct kfd_device_info device_info;
+<<<<<<< HEAD
+=======
+	struct pci_dev *pdev;
+	struct drm_device *ddev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	unsigned int id;		/* topology stub index */
 
@@ -928,7 +936,10 @@ bool kfd_dev_is_large_bar(struct kfd_dev *dev);
 
 int kfd_process_create_wq(void);
 void kfd_process_destroy_wq(void);
+<<<<<<< HEAD
 void kfd_cleanup_processes(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct kfd_process *kfd_create_process(struct file *filep);
 struct kfd_process *kfd_get_process(const struct task_struct *task);
 struct kfd_process *kfd_lookup_process_by_pasid(u32 pasid);
@@ -1366,7 +1377,11 @@ void kfd_dec_compute_active(struct kfd_dev *dev);
 static inline int kfd_devcgroup_check_permission(struct kfd_dev *kfd)
 {
 #if defined(CONFIG_CGROUP_DEVICE) || defined(CONFIG_CGROUP_BPF)
+<<<<<<< HEAD
 	struct drm_device *ddev = adev_to_drm(kfd->adev);
+=======
+	struct drm_device *ddev = kfd->ddev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return devcgroup_check_permission(DEVCG_DEV_CHAR, DRM_MAJOR,
 					  ddev->render->index,

@@ -122,7 +122,13 @@ struct fw_ri_dsgl {
 	__be16	nsge;
 	__be32	len0;
 	__be64	addr0;
+<<<<<<< HEAD
 	struct fw_ri_dsge_pair sge[];
+=======
+#ifndef C99_NOT_SUPPORTED
+	struct fw_ri_dsge_pair sge[];
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct fw_ri_sge {
@@ -136,7 +142,13 @@ struct fw_ri_isgl {
 	__u8	r1;
 	__be16	nsge;
 	__be32	r2;
+<<<<<<< HEAD
 	struct fw_ri_sge sge[];
+=======
+#ifndef C99_NOT_SUPPORTED
+	struct fw_ri_sge sge[];
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct fw_ri_immd {
@@ -144,7 +156,13 @@ struct fw_ri_immd {
 	__u8	r1;
 	__be16	r2;
 	__be32	immdlen;
+<<<<<<< HEAD
 	__u8	data[];
+=======
+#ifndef C99_NOT_SUPPORTED
+	__u8	data[];
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct fw_ri_tpte {
@@ -314,7 +332,13 @@ struct fw_ri_res_wr {
 	__be32 op_nres;
 	__be32 len16_pkd;
 	__u64  cookie;
+<<<<<<< HEAD
 	struct fw_ri_res res[];
+=======
+#ifndef C99_NOT_SUPPORTED
+	struct fw_ri_res res[];
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define FW_RI_RES_WR_NRES_S	0
@@ -554,10 +578,19 @@ struct fw_ri_rdma_write_wr {
 	__be32 plen;
 	__be32 stag_sink;
 	__be64 to_sink;
+<<<<<<< HEAD
 	union {
 		DECLARE_FLEX_ARRAY(struct fw_ri_immd, immd_src);
 		DECLARE_FLEX_ARRAY(struct fw_ri_isgl, isgl_src);
 	} u;
+=======
+#ifndef C99_NOT_SUPPORTED
+	union {
+		struct fw_ri_immd immd_src[0];
+		struct fw_ri_isgl isgl_src[0];
+	} u;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct fw_ri_send_wr {
@@ -571,10 +604,19 @@ struct fw_ri_send_wr {
 	__be32 plen;
 	__be32 r3;
 	__be64 r4;
+<<<<<<< HEAD
 	union {
 		DECLARE_FLEX_ARRAY(struct fw_ri_immd, immd_src);
 		DECLARE_FLEX_ARRAY(struct fw_ri_isgl, isgl_src);
 	} u;
+=======
+#ifndef C99_NOT_SUPPORTED
+	union {
+		struct fw_ri_immd immd_src[0];
+		struct fw_ri_isgl isgl_src[0];
+	} u;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define FW_RI_SEND_WR_SENDOP_S		0
@@ -606,10 +648,19 @@ struct fw_ri_rdma_write_cmpl_wr {
 		struct fw_ri_isgl isgl_src;
 	} u_cmpl;
 	__be64 r3;
+<<<<<<< HEAD
 	union fw_ri_write {
 		DECLARE_FLEX_ARRAY(struct fw_ri_immd, immd_src);
 		DECLARE_FLEX_ARRAY(struct fw_ri_isgl, isgl_src);
 	} u;
+=======
+#ifndef C99_NOT_SUPPORTED
+	union fw_ri_write {
+		struct fw_ri_immd immd_src[0];
+		struct fw_ri_isgl isgl_src[0];
+	} u;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct fw_ri_rdma_read_wr {

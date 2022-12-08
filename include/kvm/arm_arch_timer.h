@@ -23,6 +23,7 @@ enum kvm_arch_timer_regs {
 	TIMER_REG_CTL,
 };
 
+<<<<<<< HEAD
 struct arch_timer_offset {
 	/*
 	 * If set, pointer to one of the offsets in the kvm's offset
@@ -36,6 +37,8 @@ struct arch_timer_vm_data {
 	u64	voffset;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct arch_timer_context {
 	struct kvm_vcpu			*vcpu;
 
@@ -45,8 +48,11 @@ struct arch_timer_context {
 	/* Emulated Timer (may be unused) */
 	struct hrtimer			hrtimer;
 
+<<<<<<< HEAD
 	/* Offset for this counter/timer */
 	struct arch_timer_offset	offset;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * We have multiple paths which can save/restore the timer state onto
 	 * the hardware, so we need some way of keeping track of where the
@@ -75,7 +81,11 @@ struct arch_timer_cpu {
 	bool			enabled;
 };
 
+<<<<<<< HEAD
 int __init kvm_timer_hyp_init(bool has_gic);
+=======
+int kvm_timer_hyp_init(bool);
+>>>>>>> b7ba80a49124 (Commit)
 int kvm_timer_enable(struct kvm_vcpu *vcpu);
 int kvm_timer_vcpu_reset(struct kvm_vcpu *vcpu);
 void kvm_timer_vcpu_init(struct kvm_vcpu *vcpu);
@@ -119,8 +129,11 @@ void kvm_arm_timer_write_sysreg(struct kvm_vcpu *vcpu,
 u32 timer_get_ctl(struct arch_timer_context *ctxt);
 u64 timer_get_cval(struct arch_timer_context *ctxt);
 
+<<<<<<< HEAD
 /* CPU HP callbacks */
 void kvm_timer_cpu_up(void);
 void kvm_timer_cpu_down(void);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

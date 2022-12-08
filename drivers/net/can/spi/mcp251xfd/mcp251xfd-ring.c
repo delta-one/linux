@@ -30,6 +30,7 @@ mcp251xfd_cmd_prepare_write_reg(const struct mcp251xfd_priv *priv,
 	last_byte = mcp251xfd_last_byte_set(mask);
 	len = last_byte - first_byte + 1;
 
+<<<<<<< HEAD
 	data = mcp251xfd_spi_cmd_write(priv, write_reg_buf, reg + first_byte, len);
 	val_le32 = cpu_to_le32(val >> BITS_PER_BYTE * first_byte);
 	memcpy(data, &val_le32, len);
@@ -47,6 +48,13 @@ mcp251xfd_cmd_prepare_write_reg(const struct mcp251xfd_priv *priv,
 		/* Total length */
 		len += sizeof(write_reg_buf->safe.crc);
 	} else {
+=======
+	data = mcp251xfd_spi_cmd_write(priv, write_reg_buf, reg + first_byte);
+	val_le32 = cpu_to_le32(val >> BITS_PER_BYTE * first_byte);
+	memcpy(data, &val_le32, len);
+
+	if (priv->devtype_data.quirks & MCP251XFD_QUIRK_CRC_REG) {
+>>>>>>> b7ba80a49124 (Commit)
 		u16 crc;
 
 		mcp251xfd_spi_cmd_crc_set_len_in_reg(&write_reg_buf->crc.cmd,
@@ -58,6 +66,11 @@ mcp251xfd_cmd_prepare_write_reg(const struct mcp251xfd_priv *priv,
 
 		/* Total length */
 		len += sizeof(write_reg_buf->crc.crc);
+<<<<<<< HEAD
+=======
+	} else {
+		len += sizeof(write_reg_buf->nocrc.cmd);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return len;

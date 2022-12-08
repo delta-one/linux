@@ -455,13 +455,22 @@ static int imx8qxp_pxl2dpi_bridge_probe(struct platform_device *pdev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void imx8qxp_pxl2dpi_bridge_remove(struct platform_device *pdev)
+=======
+static int imx8qxp_pxl2dpi_bridge_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct imx8qxp_pxl2dpi *p2d = platform_get_drvdata(pdev);
 
 	drm_bridge_remove(&p2d->bridge);
 
 	pm_runtime_disable(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id imx8qxp_pxl2dpi_dt_ids[] = {
@@ -472,7 +481,11 @@ MODULE_DEVICE_TABLE(of, imx8qxp_pxl2dpi_dt_ids);
 
 static struct platform_driver imx8qxp_pxl2dpi_bridge_driver = {
 	.probe	= imx8qxp_pxl2dpi_bridge_probe,
+<<<<<<< HEAD
 	.remove_new = imx8qxp_pxl2dpi_bridge_remove,
+=======
+	.remove = imx8qxp_pxl2dpi_bridge_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.of_match_table = imx8qxp_pxl2dpi_dt_ids,
 		.name = DRIVER_NAME,

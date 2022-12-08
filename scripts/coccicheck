@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #!/usr/bin/env bash
+=======
+#!/bin/bash
+>>>>>>> b7ba80a49124 (Commit)
 # SPDX-License-Identifier: GPL-2.0
 # Linux kernel coccicheck
 #
@@ -18,7 +22,11 @@ fi
 SPATCH_VERSION=$($SPATCH --version | head -1 | awk '{print $3}')
 
 USE_JOBS="no"
+<<<<<<< HEAD
 $SPATCH --help | grep -e "--jobs" > /dev/null && USE_JOBS="yes"
+=======
+$SPATCH --help | grep "\-\-jobs" > /dev/null && USE_JOBS="yes"
+>>>>>>> b7ba80a49124 (Commit)
 
 # The verbosity may be set by the environmental parameter V=
 # as for example with 'make V=1 coccicheck'
@@ -47,7 +55,11 @@ FLAGS="--very-quiet"
 # inspected there.
 #
 # --profile will not output if --very-quiet is used, so avoid it.
+<<<<<<< HEAD
 echo $SPFLAGS | grep -E -e "--profile|--show-trying" 2>&1 > /dev/null
+=======
+echo $SPFLAGS | egrep -e "--profile|--show-trying" 2>&1 > /dev/null
+>>>>>>> b7ba80a49124 (Commit)
 if [ $? -eq 0 ]; then
 	FLAGS="--quiet"
 fi

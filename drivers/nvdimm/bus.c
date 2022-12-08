@@ -28,7 +28,11 @@ static int nvdimm_bus_major;
 struct class *nd_class;
 static DEFINE_IDA(nd_ida);
 
+<<<<<<< HEAD
 static int to_nd_device_type(const struct device *dev)
+=======
+static int to_nd_device_type(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (is_nvdimm(dev))
 		return ND_DEVICE_DIMM;
@@ -42,7 +46,11 @@ static int to_nd_device_type(const struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int nvdimm_bus_uevent(const struct device *dev, struct kobj_uevent_env *env)
+=======
+static int nvdimm_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return add_uevent_var(env, "MODALIAS=" ND_DEVICE_MODALIAS_FMT,
 			to_nd_device_type(dev));
@@ -508,7 +516,11 @@ static void nd_async_device_unregister(void *d, async_cookie_t cookie)
 	put_device(dev);
 }
 
+<<<<<<< HEAD
 static void __nd_device_register(struct device *dev, bool sync)
+=======
+void nd_device_register(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!dev)
 		return;
@@ -531,6 +543,7 @@ static void __nd_device_register(struct device *dev, bool sync)
 	}
 	get_device(dev);
 
+<<<<<<< HEAD
 	if (sync)
 		nd_async_device_register(dev, 0);
 	else
@@ -549,6 +562,13 @@ void nd_device_register_sync(struct device *dev)
 	__nd_device_register(dev, true);
 }
 
+=======
+	async_schedule_dev_domain(nd_async_device_register, dev,
+				  &nd_async_domain);
+}
+EXPORT_SYMBOL(nd_device_register);
+
+>>>>>>> b7ba80a49124 (Commit)
 void nd_device_unregister(struct device *dev, enum nd_async_mode mode)
 {
 	bool killed;
@@ -1320,7 +1340,11 @@ int __init nvdimm_bus_init(void)
 		goto err_dimm_chrdev;
 	nvdimm_major = rc;
 
+<<<<<<< HEAD
 	nd_class = class_create("nd");
+=======
+	nd_class = class_create(THIS_MODULE, "nd");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(nd_class)) {
 		rc = PTR_ERR(nd_class);
 		goto err_class;

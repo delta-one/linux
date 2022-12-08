@@ -36,6 +36,13 @@ extern const struct file_operations v9fs_dir_operations;
 extern const struct file_operations v9fs_dir_operations_dotl;
 extern const struct dentry_operations v9fs_dentry_operations;
 extern const struct dentry_operations v9fs_cached_dentry_operations;
+<<<<<<< HEAD
+=======
+extern const struct file_operations v9fs_cached_file_operations;
+extern const struct file_operations v9fs_cached_file_operations_dotl;
+extern const struct file_operations v9fs_mmap_file_operations;
+extern const struct file_operations v9fs_mmap_file_operations_dotl;
+>>>>>>> b7ba80a49124 (Commit)
 extern struct kmem_cache *v9fs_inode_cache;
 
 struct inode *v9fs_alloc_inode(struct super_block *sb);
@@ -56,7 +63,11 @@ void v9fs_inode2stat(struct inode *inode, struct p9_wstat *stat);
 int v9fs_uflags2omode(int uflags, int extended);
 
 void v9fs_blank_wstat(struct p9_wstat *wstat);
+<<<<<<< HEAD
 int v9fs_vfs_setattr_dotl(struct mnt_idmap *idmap,
+=======
+int v9fs_vfs_setattr_dotl(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			  struct dentry *dentry, struct iattr *iattr);
 int v9fs_file_fsync_dotl(struct file *filp, loff_t start, loff_t end,
 			 int datasync);

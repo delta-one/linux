@@ -6,7 +6,10 @@
 #include <asm/unaligned.h>
 #include <linux/delay.h>
 #include <linux/fpga/fpga-mgr.h>
+<<<<<<< HEAD
 #include <linux/iopoll.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/of_device.h>
 #include <linux/spi/spi.h>
@@ -34,7 +37,11 @@
 
 #define	MPF_BITS_PER_COMPONENT_SIZE	22
 
+<<<<<<< HEAD
 #define	MPF_STATUS_POLL_TIMEOUT		(2 * USEC_PER_SEC)
+=======
+#define	MPF_STATUS_POLL_RETRIES		10000
+>>>>>>> b7ba80a49124 (Commit)
 #define	MPF_STATUS_BUSY			BIT(0)
 #define	MPF_STATUS_READY		BIT(1)
 #define	MPF_STATUS_SPI_VIOLATION	BIT(2)
@@ -43,17 +50,29 @@
 struct mpf_priv {
 	struct spi_device *spi;
 	bool program_mode;
+<<<<<<< HEAD
 	u8 tx __aligned(ARCH_KMALLOC_MINALIGN);
 	u8 rx;
 };
 
 static int mpf_read_status(struct mpf_priv *priv)
 {
+=======
+};
+
+static int mpf_read_status(struct spi_device *spi)
+{
+	u8 status = 0, status_command = MPF_SPI_READ_STATUS;
+	struct spi_transfer xfers[2] = { 0 };
+	int ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * HW status is returned on MISO in the first byte after CS went
 	 * active. However, first reading can be inadequate, so we submit
 	 * two identical SPI transfers and use result of the later one.
 	 */
+<<<<<<< HEAD
 	struct spi_transfer xfers[2] = {
 		{
 			.tx_buf = &priv->tx,
@@ -82,16 +101,43 @@ static int mpf_read_status(struct mpf_priv *priv)
 		return -EIO;
 
 	return status;
+=======
+	xfers[0].tx_buf = &status_command;
+	xfers[1].tx_buf = &status_command;
+	xfers[0].rx_buf = &status;
+	xfers[1].rx_buf = &status;
+	xfers[0].len = 1;
+	xfers[1].len = 1;
+	xfers[0].cs_change = 1;
+
+	ret = spi_sync_transfer(spi, xfers, 2);
+
+	if ((status & MPF_STATUS_SPI_VIOLATION) ||
+	    (status & MPF_STATUS_SPI_ERROR))
+		ret = -EIO;
+
+	return ret ? : status;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static enum fpga_mgr_states mpf_ops_state(struct fpga_manager *mgr)
 {
 	struct mpf_priv *priv = mgr->priv;
+<<<<<<< HEAD
 	bool program_mode;
 	int status;
 
 	program_mode = priv->program_mode;
 	status = mpf_read_status(priv);
+=======
+	struct spi_device *spi;
+	bool program_mode;
+	int status;
+
+	spi = priv->spi;
+	program_mode = priv->program_mode;
+	status = mpf_read_status(spi);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!program_mode && !status)
 		return FPGA_MGR_STATE_OPERATING;
@@ -195,6 +241,7 @@ static int mpf_ops_parse_header(struct fpga_manager *mgr,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mpf_poll_status(struct mpf_priv *priv, u8 mask)
 {
 	int ret, status;
@@ -219,20 +266,53 @@ static int mpf_poll_status(struct mpf_priv *priv, u8 mask)
 static int mpf_spi_write(struct mpf_priv *priv, const void *buf, size_t buf_size)
 {
 	int status = mpf_poll_status(priv, 0);
+=======
+/* Poll HW status until busy bit is cleared and mask bits are set. */
+static int mpf_poll_status(struct spi_device *spi, u8 mask)
+{
+	int status, retries = MPF_STATUS_POLL_RETRIES;
+
+	while (retries--) {
+		status = mpf_read_status(spi);
+		if (status < 0)
+			return status;
+
+		if (status & MPF_STATUS_BUSY)
+			continue;
+
+		if (!mask || (status & mask))
+			return status;
+	}
+
+	return -EBUSY;
+}
+
+static int mpf_spi_write(struct spi_device *spi, const void *buf, size_t buf_size)
+{
+	int status = mpf_poll_status(spi, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (status < 0)
 		return status;
 
+<<<<<<< HEAD
 	return spi_write_then_read(priv->spi, buf, buf_size, NULL, 0);
 }
 
 static int mpf_spi_write_then_read(struct mpf_priv *priv,
+=======
+	return spi_write(spi, buf, buf_size);
+}
+
+static int mpf_spi_write_then_read(struct spi_device *spi,
+>>>>>>> b7ba80a49124 (Commit)
 				   const void *txbuf, size_t txbuf_size,
 				   void *rxbuf, size_t rxbuf_size)
 {
 	const u8 read_command[] = { MPF_SPI_READ_DATA };
 	int ret;
 
+<<<<<<< HEAD
 	ret = mpf_spi_write(priv, txbuf, txbuf_size);
 	if (ret)
 		return ret;
@@ -242,6 +322,17 @@ static int mpf_spi_write_then_read(struct mpf_priv *priv,
 		return ret;
 
 	return spi_write_then_read(priv->spi, read_command, sizeof(read_command),
+=======
+	ret = mpf_spi_write(spi, txbuf, txbuf_size);
+	if (ret)
+		return ret;
+
+	ret = mpf_poll_status(spi, MPF_STATUS_READY);
+	if (ret < 0)
+		return ret;
+
+	return spi_write_then_read(spi, read_command, sizeof(read_command),
+>>>>>>> b7ba80a49124 (Commit)
 				   rxbuf, rxbuf_size);
 }
 
@@ -253,6 +344,10 @@ static int mpf_ops_write_init(struct fpga_manager *mgr,
 	const u8 isc_en_command[] = { MPF_SPI_ISC_ENABLE };
 	struct mpf_priv *priv = mgr->priv;
 	struct device *dev = &mgr->dev;
+<<<<<<< HEAD
+=======
+	struct spi_device *spi;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 isc_ret = 0;
 	int ret;
 
@@ -261,7 +356,13 @@ static int mpf_ops_write_init(struct fpga_manager *mgr,
 		return -EOPNOTSUPP;
 	}
 
+<<<<<<< HEAD
 	ret = mpf_spi_write_then_read(priv, isc_en_command, sizeof(isc_en_command),
+=======
+	spi = priv->spi;
+
+	ret = mpf_spi_write_then_read(spi, isc_en_command, sizeof(isc_en_command),
+>>>>>>> b7ba80a49124 (Commit)
 				      &isc_ret, sizeof(isc_ret));
 	if (ret || isc_ret) {
 		dev_err(dev, "Failed to enable ISC: spi_ret %d, isc_ret %u\n",
@@ -269,7 +370,11 @@ static int mpf_ops_write_init(struct fpga_manager *mgr,
 		return -EFAULT;
 	}
 
+<<<<<<< HEAD
 	ret = mpf_spi_write(priv, program_mode, sizeof(program_mode));
+=======
+	ret = mpf_spi_write(spi, program_mode, sizeof(program_mode));
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(dev, "Failed to enter program mode: %d\n", ret);
 		return ret;
@@ -280,6 +385,7 @@ static int mpf_ops_write_init(struct fpga_manager *mgr,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mpf_spi_frame_write(struct mpf_priv *priv, const char *buf)
 {
 	struct spi_transfer xfers[2] = {
@@ -306,6 +412,15 @@ static int mpf_ops_write(struct fpga_manager *mgr, const char *buf, size_t count
 {
 	struct mpf_priv *priv = mgr->priv;
 	struct device *dev = &mgr->dev;
+=======
+static int mpf_ops_write(struct fpga_manager *mgr, const char *buf, size_t count)
+{
+	u8 spi_frame_command[] = { MPF_SPI_FRAME };
+	struct spi_transfer xfers[2] = { 0 };
+	struct mpf_priv *priv = mgr->priv;
+	struct device *dev = &mgr->dev;
+	struct spi_device *spi;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret, i;
 
 	if (count % MPF_SPI_FRAME_SIZE) {
@@ -314,8 +429,24 @@ static int mpf_ops_write(struct fpga_manager *mgr, const char *buf, size_t count
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	for (i = 0; i < count / MPF_SPI_FRAME_SIZE; i++) {
 		ret = mpf_spi_frame_write(priv, buf + i * MPF_SPI_FRAME_SIZE);
+=======
+	spi = priv->spi;
+
+	xfers[0].tx_buf = spi_frame_command;
+	xfers[0].len = sizeof(spi_frame_command);
+
+	for (i = 0; i < count / MPF_SPI_FRAME_SIZE; i++) {
+		xfers[1].tx_buf = buf + i * MPF_SPI_FRAME_SIZE;
+		xfers[1].len = MPF_SPI_FRAME_SIZE;
+
+		ret = mpf_poll_status(spi, 0);
+		if (ret >= 0)
+			ret = spi_sync_transfer(spi, xfers, ARRAY_SIZE(xfers));
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret) {
 			dev_err(dev, "Failed to write bitstream frame %d/%zu\n",
 				i, count / MPF_SPI_FRAME_SIZE);
@@ -333,9 +464,18 @@ static int mpf_ops_write_complete(struct fpga_manager *mgr,
 	const u8 release_command[] = { MPF_SPI_RELEASE };
 	struct mpf_priv *priv = mgr->priv;
 	struct device *dev = &mgr->dev;
+<<<<<<< HEAD
 	int ret;
 
 	ret = mpf_spi_write(priv, isc_dis_command, sizeof(isc_dis_command));
+=======
+	struct spi_device *spi;
+	int ret;
+
+	spi = priv->spi;
+
+	ret = mpf_spi_write(spi, isc_dis_command, sizeof(isc_dis_command));
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(dev, "Failed to disable ISC: %d\n", ret);
 		return ret;
@@ -343,7 +483,11 @@ static int mpf_ops_write_complete(struct fpga_manager *mgr,
 
 	usleep_range(1000, 2000);
 
+<<<<<<< HEAD
 	ret = mpf_spi_write(priv, release_command, sizeof(release_command));
+=======
+	ret = mpf_spi_write(spi, release_command, sizeof(release_command));
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(dev, "Failed to exit program mode: %d\n", ret);
 		return ret;

@@ -121,7 +121,11 @@ static void ionic_vf_dealloc_locked(struct ionic *ionic)
 
 		if (v->stats_pa) {
 			vfc.stats_pa = 0;
+<<<<<<< HEAD
 			ionic_set_vf_config(ionic, i, &vfc);
+=======
+			(void)ionic_set_vf_config(ionic, i, &vfc);
+>>>>>>> b7ba80a49124 (Commit)
 			dma_unmap_single(ionic->dev, v->stats_pa,
 					 sizeof(v->stats), DMA_FROM_DEVICE);
 			v->stats_pa = 0;
@@ -169,7 +173,11 @@ static int ionic_vf_alloc(struct ionic *ionic, int num_vfs)
 
 		/* ignore failures from older FW, we just won't get stats */
 		vfc.stats_pa = cpu_to_le64(v->stats_pa);
+<<<<<<< HEAD
 		ionic_set_vf_config(ionic, i, &vfc);
+=======
+		(void)ionic_set_vf_config(ionic, i, &vfc);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 out:
@@ -320,6 +328,7 @@ static int ionic_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 			dev_err(dev, "Cannot enable existing VFs: %d\n", err);
 	}
 
+<<<<<<< HEAD
 	err = ionic_devlink_register(ionic);
 	if (err) {
 		dev_err(dev, "Cannot register devlink: %d\n", err);
@@ -330,6 +339,18 @@ static int ionic_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	if (err) {
 		dev_err(dev, "Cannot register LIF: %d, aborting\n", err);
 		goto err_out_deregister_devlink;
+=======
+	err = ionic_lif_register(ionic->lif);
+	if (err) {
+		dev_err(dev, "Cannot register LIF: %d, aborting\n", err);
+		goto err_out_deinit_lifs;
+	}
+
+	err = ionic_devlink_register(ionic);
+	if (err) {
+		dev_err(dev, "Cannot register devlink: %d\n", err);
+		goto err_out_deregister_lifs;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	mod_timer(&ionic->watchdog_timer,
@@ -337,8 +358,13 @@ static int ionic_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 
 	return 0;
 
+<<<<<<< HEAD
 err_out_deregister_devlink:
 	ionic_devlink_unregister(ionic);
+=======
+err_out_deregister_lifs:
+	ionic_lif_unregister(ionic->lif);
+>>>>>>> b7ba80a49124 (Commit)
 err_out_deinit_lifs:
 	ionic_vf_dealloc(ionic);
 	ionic_lif_deinit(ionic->lif);
@@ -352,7 +378,10 @@ err_out_port_reset:
 err_out_reset:
 	ionic_reset(ionic);
 err_out_teardown:
+<<<<<<< HEAD
 	ionic_dev_teardown(ionic);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pci_clear_master(pdev);
 	/* Don't fail the probe for these errors, keep
 	 * the hw interface around for inspection
@@ -381,8 +410,13 @@ static void ionic_remove(struct pci_dev *pdev)
 	del_timer_sync(&ionic->watchdog_timer);
 
 	if (ionic->lif) {
+<<<<<<< HEAD
 		ionic_lif_unregister(ionic->lif);
 		ionic_devlink_unregister(ionic);
+=======
+		ionic_devlink_unregister(ionic);
+		ionic_lif_unregister(ionic->lif);
+>>>>>>> b7ba80a49124 (Commit)
 		ionic_lif_deinit(ionic->lif);
 		ionic_lif_free(ionic->lif);
 		ionic->lif = NULL;
@@ -391,7 +425,10 @@ static void ionic_remove(struct pci_dev *pdev)
 
 	ionic_port_reset(ionic);
 	ionic_reset(ionic);
+<<<<<<< HEAD
 	ionic_dev_teardown(ionic);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pci_clear_master(pdev);
 	ionic_unmap_bars(ionic);
 	pci_release_regions(pdev);

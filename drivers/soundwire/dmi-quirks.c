@@ -73,6 +73,7 @@ static const struct adr_remap hp_omen_16[] = {
 	{}
 };
 
+<<<<<<< HEAD
 /*
  * Intel NUC M15 LAPRC510 and LAPRC710
  */
@@ -90,6 +91,8 @@ static const struct adr_remap intel_rooks_county[] = {
 	{}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct dmi_system_id adr_remap_quirk_table[] = {
 	/* TGL devices */
 	{
@@ -108,6 +111,7 @@ static const struct dmi_system_id adr_remap_quirk_table[] = {
 		.driver_data = (void *)intel_tgl_bios,
 	},
 	{
+<<<<<<< HEAD
 		/* quirk used for NUC15 LAPBC710 skew */
 		.matches = {
 			DMI_MATCH(DMI_BOARD_VENDOR, "Intel Corporation"),
@@ -124,6 +128,8 @@ static const struct dmi_system_id adr_remap_quirk_table[] = {
 		.driver_data = (void *)intel_rooks_county,
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.matches = {
 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc"),
 			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "0A3E")

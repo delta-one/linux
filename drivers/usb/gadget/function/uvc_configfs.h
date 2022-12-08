@@ -37,6 +37,7 @@ static inline struct uvcg_control_header *to_uvcg_control_header(struct config_i
 	return container_of(item, struct uvcg_control_header, item);
 }
 
+<<<<<<< HEAD
 struct uvcg_color_matching {
 	struct config_group group;
 	struct uvc_color_matching_descriptor desc;
@@ -46,12 +47,15 @@ struct uvcg_color_matching {
 #define to_uvcg_color_matching(group_ptr) \
 container_of(group_ptr, struct uvcg_color_matching, group)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum uvcg_format_type {
 	UVCG_UNCOMPRESSED = 0,
 	UVCG_MJPEG,
 };
 
 struct uvcg_format {
+<<<<<<< HEAD
 	struct config_group		group;
 	enum uvcg_format_type		type;
 	unsigned			linked;
@@ -59,6 +63,14 @@ struct uvcg_format {
 	unsigned			num_frames;
 	__u8				bmaControls[UVCG_STREAMING_CONTROL_SIZE];
 	struct uvcg_color_matching	*color_matching;
+=======
+	struct config_group	group;
+	enum uvcg_format_type	type;
+	unsigned		linked;
+	struct list_head	frames;
+	unsigned		num_frames;
+	__u8			bmaControls[UVCG_STREAMING_CONTROL_SIZE];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct uvcg_format_ptr {
@@ -142,6 +154,7 @@ static inline struct uvcg_mjpeg *to_uvcg_mjpeg(struct config_item *item)
 	return container_of(to_uvcg_format(item), struct uvcg_mjpeg, fmt);
 }
 
+<<<<<<< HEAD
 /* -----------------------------------------------------------------------------
  * control/extensions/<NAME>
  */
@@ -172,6 +185,8 @@ static inline struct uvcg_extension *to_uvcg_extension(struct config_item *item)
 	return container_of(item, struct uvcg_extension, item);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int uvcg_attach_configfs(struct f_uvc_opts *opts);
 
 #endif /* UVC_CONFIGFS_H */

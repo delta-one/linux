@@ -522,7 +522,11 @@ acpi_tb_verify_temp_table(struct acpi_table_desc *table_desc,
 		/* Verify the checksum */
 
 		status =
+<<<<<<< HEAD
 		    acpi_ut_verify_checksum(table_desc->pointer,
+=======
+		    acpi_tb_verify_checksum(table_desc->pointer,
+>>>>>>> b7ba80a49124 (Commit)
 					    table_desc->length);
 		if (ACPI_FAILURE(status)) {
 			ACPI_EXCEPTION((AE_INFO, AE_NO_MEMORY,

@@ -387,9 +387,15 @@ static void apr_device_remove(struct device *dev)
 	spin_unlock(&apr->svcs_lock);
 }
 
+<<<<<<< HEAD
 static int apr_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct apr_device *adev = to_apr_device(dev);
+=======
+static int apr_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct apr_device *adev = to_apr_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	ret = of_device_uevent_modalias(dev, env);
@@ -454,6 +460,7 @@ static int apr_add_device(struct device *dev, struct device_node *np,
 	adev->dev.driver = NULL;
 
 	spin_lock(&apr->svcs_lock);
+<<<<<<< HEAD
 	ret = idr_alloc(&apr->svcs_idr, svc, svc_id, svc_id + 1, GFP_ATOMIC);
 	spin_unlock(&apr->svcs_lock);
 	if (ret < 0) {
@@ -468,6 +475,13 @@ static int apr_add_device(struct device *dev, struct device_node *np,
 		dev_err(dev, "Failed to read second value of qcom,protection-domain\n");
 		goto out;
 	}
+=======
+	idr_alloc(&apr->svcs_idr, svc, svc_id, svc_id + 1, GFP_ATOMIC);
+	spin_unlock(&apr->svcs_lock);
+
+	of_property_read_string_index(np, "qcom,protection-domain",
+				      1, &adev->service_path);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_info(dev, "Adding APR/GPR dev: %s\n", dev_name(&adev->dev));
 
@@ -477,7 +491,10 @@ static int apr_add_device(struct device *dev, struct device_node *np,
 		put_device(&adev->dev);
 	}
 
+<<<<<<< HEAD
 out:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

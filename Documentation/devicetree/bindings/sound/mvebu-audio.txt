@@ -6,6 +6,7 @@ Required properties:
   "marvell,kirkwood-audio" for Kirkwood platforms
   "marvell,dove-audio" for Dove platforms
   "marvell,armada370-audio" for Armada 370 platforms
+<<<<<<< HEAD
   "marvell,armada-380-audio" for Armada 38x platforms
 
 - reg: physical base address of the controller and length of memory mapped
@@ -14,6 +15,11 @@ Required properties:
   first of those is dedicated for Audio PLL Configuration registers
   (named "pll_regs") and the second one ("soc_ctrl") - for register
   where one of exceptive I/O types (I2S or S/PDIF) is set.
+=======
+
+- reg: physical base address of the controller and length of memory mapped
+  region.
+>>>>>>> b7ba80a49124 (Commit)
 
 - interrupts:
   with "marvell,kirkwood-audio", the audio interrupt
@@ -28,6 +34,7 @@ Required properties:
 	"internal" for the internal clock
 	"extclk" for the external clock
 
+<<<<<<< HEAD
 Optional properties:
 
 - spdif-mode:
@@ -35,6 +42,8 @@ Optional properties:
   disables standard I2S I/O. Valid only with "marvell,armada-380-audio"
   compatible string.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Example:
 
 i2s1: audio-controller@b4000 {

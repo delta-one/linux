@@ -406,8 +406,12 @@ static int init_locking(struct gfs2_sbd *sdp, struct gfs2_holder *mount_gh,
 
 	error = gfs2_glock_nq_num(sdp,
 				  GFS2_MOUNT_LOCK, &gfs2_nondisk_glops,
+<<<<<<< HEAD
 				  LM_ST_EXCLUSIVE,
 				  LM_FLAG_NOEXP | GL_NOCACHE | GL_NOPID,
+=======
+				  LM_ST_EXCLUSIVE, LM_FLAG_NOEXP | GL_NOCACHE,
+>>>>>>> b7ba80a49124 (Commit)
 				  mount_gh);
 	if (error) {
 		fs_err(sdp, "can't acquire mount glock: %d\n", error);
@@ -417,7 +421,11 @@ static int init_locking(struct gfs2_sbd *sdp, struct gfs2_holder *mount_gh,
 	error = gfs2_glock_nq_num(sdp,
 				  GFS2_LIVE_LOCK, &gfs2_nondisk_glops,
 				  LM_ST_SHARED,
+<<<<<<< HEAD
 				  LM_FLAG_NOEXP | GL_EXACT | GL_NOPID,
+=======
+				  LM_FLAG_NOEXP | GL_EXACT,
+>>>>>>> b7ba80a49124 (Commit)
 				  &sdp->sd_live_gh);
 	if (error) {
 		fs_err(sdp, "can't acquire live glock: %d\n", error);
@@ -693,7 +701,11 @@ static int init_statfs(struct gfs2_sbd *sdp)
 	iput(pn);
 	pn = NULL;
 	ip = GFS2_I(sdp->sd_sc_inode);
+<<<<<<< HEAD
 	error = gfs2_glock_nq_init(ip->i_gl, LM_ST_EXCLUSIVE, GL_NOPID,
+=======
+	error = gfs2_glock_nq_init(ip->i_gl, LM_ST_EXCLUSIVE, 0,
+>>>>>>> b7ba80a49124 (Commit)
 				   &sdp->sd_sc_gh);
 	if (error) {
 		fs_err(sdp, "can't lock local \"sc\" file: %d\n", error);
@@ -782,7 +794,11 @@ static int init_journal(struct gfs2_sbd *sdp, int undo)
 		error = gfs2_glock_nq_num(sdp, sdp->sd_lockstruct.ls_jid,
 					  &gfs2_journal_glops,
 					  LM_ST_EXCLUSIVE,
+<<<<<<< HEAD
 					  LM_FLAG_NOEXP | GL_NOCACHE | GL_NOPID,
+=======
+					  LM_FLAG_NOEXP | GL_NOCACHE,
+>>>>>>> b7ba80a49124 (Commit)
 					  &sdp->sd_journal_gh);
 		if (error) {
 			fs_err(sdp, "can't acquire journal glock: %d\n", error);
@@ -792,8 +808,12 @@ static int init_journal(struct gfs2_sbd *sdp, int undo)
 		ip = GFS2_I(sdp->sd_jdesc->jd_inode);
 		sdp->sd_jinode_gl = ip->i_gl;
 		error = gfs2_glock_nq_init(ip->i_gl, LM_ST_SHARED,
+<<<<<<< HEAD
 					   LM_FLAG_NOEXP | GL_EXACT |
 					   GL_NOCACHE | GL_NOPID,
+=======
+					   LM_FLAG_NOEXP | GL_EXACT | GL_NOCACHE,
+>>>>>>> b7ba80a49124 (Commit)
 					   &sdp->sd_jinode_gh);
 		if (error) {
 			fs_err(sdp, "can't acquire journal inode glock: %d\n",
@@ -964,7 +984,11 @@ static int init_per_node(struct gfs2_sbd *sdp, int undo)
 	pn = NULL;
 
 	ip = GFS2_I(sdp->sd_qc_inode);
+<<<<<<< HEAD
 	error = gfs2_glock_nq_init(ip->i_gl, LM_ST_EXCLUSIVE, GL_NOPID,
+=======
+	error = gfs2_glock_nq_init(ip->i_gl, LM_ST_EXCLUSIVE, 0,
+>>>>>>> b7ba80a49124 (Commit)
 				   &sdp->sd_qc_gh);
 	if (error) {
 		fs_err(sdp, "can't lock local \"qc\" file: %d\n", error);
@@ -1197,6 +1221,7 @@ static int gfs2_fill_super(struct super_block *sb, struct fs_context *fc)
 
 	snprintf(sdp->sd_fsname, sizeof(sdp->sd_fsname), "%s", sdp->sd_table_name);
 
+<<<<<<< HEAD
 	sdp->sd_delete_wq = alloc_workqueue("gfs2-delete/%s",
 			WQ_MEM_RECLAIM | WQ_FREEZABLE, 0, sdp->sd_fsname);
 	error = -ENOMEM;
@@ -1206,6 +1231,11 @@ static int gfs2_fill_super(struct super_block *sb, struct fs_context *fc)
 	error = gfs2_sys_fs_add(sdp);
 	if (error)
 		goto fail_delete_wq;
+=======
+	error = gfs2_sys_fs_add(sdp);
+	if (error)
+		goto fail_free;
+>>>>>>> b7ba80a49124 (Commit)
 
 	gfs2_create_debugfs_file(sdp);
 
@@ -1315,8 +1345,11 @@ fail_lm:
 fail_debug:
 	gfs2_delete_debugfs_file(sdp);
 	gfs2_sys_fs_del(sdp);
+<<<<<<< HEAD
 fail_delete_wq:
 	destroy_workqueue(sdp->sd_delete_wq);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 fail_free:
 	free_sbd(sdp);
 	sb->s_fs_info = NULL;
@@ -1728,6 +1761,7 @@ static int gfs2_meta_init_fs_context(struct fs_context *fc)
 	return 0;
 }
 
+<<<<<<< HEAD
 /**
  * gfs2_evict_inodes - evict inodes cooperatively
  * @sb: the superblock
@@ -1777,6 +1811,8 @@ static void gfs2_evict_inodes(struct super_block *sb)
 	iput(toput_inode);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void gfs2_kill_sb(struct super_block *sb)
 {
 	struct gfs2_sbd *sdp = sb->s_fs_info;
@@ -1792,6 +1828,7 @@ static void gfs2_kill_sb(struct super_block *sb)
 	sdp->sd_root_dir = NULL;
 	sdp->sd_master_dir = NULL;
 	shrink_dcache_sb(sb);
+<<<<<<< HEAD
 
 	gfs2_evict_inodes(sb);
 
@@ -1804,6 +1841,8 @@ static void gfs2_kill_sb(struct super_block *sb)
 	gfs2_flush_delete_work(sdp);
 	destroy_workqueue(sdp->sd_delete_wq);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kill_block_super(sb);
 }
 

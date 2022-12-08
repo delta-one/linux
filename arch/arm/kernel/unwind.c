@@ -28,7 +28,11 @@
 #include <linux/slab.h>
 #include <linux/spinlock.h>
 #include <linux/list.h>
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+#include <linux/kprobes.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/stacktrace.h>
 #include <asm/traps.h>
@@ -396,6 +400,7 @@ int unwind_frame(struct stackframe *frame)
 
 	idx = unwind_find_idx(frame->pc);
 	if (!idx) {
+<<<<<<< HEAD
 		if (frame->pc && kernel_text_address(frame->pc)) {
 			if (in_module_plt(frame->pc) && frame->pc != frame->lr) {
 				/*
@@ -408,6 +413,10 @@ int unwind_frame(struct stackframe *frame)
 			}
 			pr_warn("unwind: Index not found %08lx\n", frame->pc);
 		}
+=======
+		if (frame->pc && kernel_text_address(frame->pc))
+			pr_warn("unwind: Index not found %08lx\n", frame->pc);
+>>>>>>> b7ba80a49124 (Commit)
 		return -URC_FAILURE;
 	}
 
@@ -493,6 +502,15 @@ int unwind_frame(struct stackframe *frame)
 	frame->pc = ctrl.vrs[PC];
 	frame->lr_addr = ctrl.lr_addr;
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_KRETPROBES
+	if (is_kretprobe_trampoline(frame->pc))
+		frame->pc = kretprobe_find_ret_addr(frame->tsk,
+					(void *)frame->sp, &frame->kr_cur);
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 	return URC_OK;
 }
 
@@ -533,6 +551,14 @@ here:
 		frame.pc = thread_saved_pc(tsk);
 	}
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_KRETPROBES
+	frame.kr_cur = NULL;
+	frame.tsk = tsk;
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 	while (1) {
 		int urc;
 		unsigned long where = frame.pc;

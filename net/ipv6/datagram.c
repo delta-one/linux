@@ -42,12 +42,16 @@ static void ip6_datagram_flow_key_init(struct flowi6 *fl6, struct sock *sk)
 {
 	struct inet_sock *inet = inet_sk(sk);
 	struct ipv6_pinfo *np = inet6_sk(sk);
+<<<<<<< HEAD
 	int oif = sk->sk_bound_dev_if;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(fl6, 0, sizeof(*fl6));
 	fl6->flowi6_proto = sk->sk_protocol;
 	fl6->daddr = sk->sk_v6_daddr;
 	fl6->saddr = np->saddr;
+<<<<<<< HEAD
 	fl6->flowi6_mark = sk->sk_mark;
 	fl6->fl6_dport = inet->inet_dport;
 	fl6->fl6_sport = inet->inet_sport;
@@ -65,6 +69,21 @@ static void ip6_datagram_flow_key_init(struct flowi6 *fl6, struct sock *sk)
 	}
 
 	fl6->flowi6_oif = oif;
+=======
+	fl6->flowi6_oif = sk->sk_bound_dev_if;
+	fl6->flowi6_mark = sk->sk_mark;
+	fl6->fl6_dport = inet->inet_dport;
+	fl6->fl6_sport = inet->inet_sport;
+	fl6->flowlabel = np->flow_label;
+	fl6->flowi6_uid = sk->sk_uid;
+
+	if (!fl6->flowi6_oif)
+		fl6->flowi6_oif = np->sticky_pktinfo.ipi6_ifindex;
+
+	if (!fl6->flowi6_oif && ipv6_addr_is_multicast(&fl6->daddr))
+		fl6->flowi6_oif = np->mcast_oif;
+
+>>>>>>> b7ba80a49124 (Commit)
 	security_sk_classify_flow(sk, flowi6_to_flowi_common(fl6));
 }
 
@@ -261,7 +280,11 @@ ipv4_connected:
 		goto out;
 	}
 
+<<<<<<< HEAD
 	reuseport_has_conns_set(sk);
+=======
+	reuseport_has_conns(sk, true);
+>>>>>>> b7ba80a49124 (Commit)
 	sk->sk_state = TCP_ESTABLISHED;
 	sk_set_txhash(sk);
 out:
@@ -339,7 +362,10 @@ void ipv6_icmp_error(struct sock *sk, struct sk_buff *skb, int err,
 	if (sock_queue_err_skb(sk, skb))
 		kfree_skb(skb);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(ipv6_icmp_error);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void ipv6_local_error(struct sock *sk, int err, struct flowi6 *fl6, u32 info)
 {
@@ -777,7 +803,11 @@ int ip6_datagram_send_ctl(struct net *net, struct sock *sk,
 		}
 
 		if (cmsg->cmsg_level == SOL_SOCKET) {
+<<<<<<< HEAD
 			err = __sock_cmsg_send(sk, cmsg, &ipc6->sockc);
+=======
+			err = __sock_cmsg_send(sk, msg, cmsg, &ipc6->sockc);
+>>>>>>> b7ba80a49124 (Commit)
 			if (err)
 				return err;
 			continue;

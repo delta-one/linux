@@ -1710,10 +1710,16 @@ void handle_irq_for_port(evtchn_port_t port, struct evtchn_loop_ctrl *ctrl)
 	generic_handle_irq(irq);
 }
 
+<<<<<<< HEAD
 static int __xen_evtchn_do_upcall(void)
 {
 	struct vcpu_info *vcpu_info = __this_cpu_read(xen_vcpu);
 	int ret = vcpu_info->evtchn_upcall_pending ? IRQ_HANDLED : IRQ_NONE;
+=======
+static void __xen_evtchn_do_upcall(void)
+{
+	struct vcpu_info *vcpu_info = __this_cpu_read(xen_vcpu);
+>>>>>>> b7ba80a49124 (Commit)
 	int cpu = smp_processor_id();
 	struct evtchn_loop_ctrl ctrl = { 0 };
 
@@ -1738,8 +1744,11 @@ static int __xen_evtchn_do_upcall(void)
 	 * above.
 	 */
 	__this_cpu_inc(irq_epoch);
+<<<<<<< HEAD
 
 	return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void xen_evtchn_do_upcall(struct pt_regs *regs)
@@ -1754,9 +1763,15 @@ void xen_evtchn_do_upcall(struct pt_regs *regs)
 	set_irq_regs(old_regs);
 }
 
+<<<<<<< HEAD
 int xen_hvm_evtchn_do_upcall(void)
 {
 	return __xen_evtchn_do_upcall();
+=======
+void xen_hvm_evtchn_do_upcall(void)
+{
+	__xen_evtchn_do_upcall();
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(xen_hvm_evtchn_do_upcall);
 

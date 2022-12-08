@@ -217,7 +217,12 @@ static void da311_disable(void *client)
 	da311_enable(client, false);
 }
 
+<<<<<<< HEAD
 static int da311_probe(struct i2c_client *client)
+=======
+static int da311_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 	struct iio_dev *indio_dev;
@@ -278,7 +283,11 @@ static struct i2c_driver da311_driver = {
 		.name = "da311",
 		.pm = pm_sleep_ptr(&da311_pm_ops),
 	},
+<<<<<<< HEAD
 	.probe_new	= da311_probe,
+=======
+	.probe		= da311_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= da311_i2c_id,
 };
 

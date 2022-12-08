@@ -55,11 +55,20 @@
  * Flow:
  * -----
  * - Single process spawns two threads: Tx and Rx
+<<<<<<< HEAD
  * - Each of these two threads attach to a veth interface
  * - Each thread creates one AF_XDP socket connected to a unique umem for each
  *   veth interface
  * - Tx thread Transmits a number of packets from veth<xxxx> to veth<yyyy>
  * - Rx thread verifies if all packets were received and delivered in-order,
+=======
+ * - Each of these two threads attach to a veth interface within their assigned
+ *   namespaces
+ * - Each thread Creates one AF_XDP socket connected to a unique umem for each
+ *   veth interface
+ * - Tx thread Transmits 10k packets from veth<xxxx> to veth<yyyy>
+ * - Rx thread verifies if all 10k packets were received and delivered in-order,
+>>>>>>> b7ba80a49124 (Commit)
  *   and have the right content
  *
  * Enable/disable packet dump mode:
@@ -96,14 +105,26 @@
 #include <time.h>
 #include <unistd.h>
 #include <stdatomic.h>
+<<<<<<< HEAD
 
 #include "xsk_xdp_progs.skel.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "xsk.h"
 #include "xskxceiver.h"
 #include <bpf/bpf.h>
 #include <linux/filter.h>
 #include "../kselftest.h"
+<<<<<<< HEAD
 #include "xsk_xdp_metadata.h"
+=======
+
+/* AF_XDP APIs were moved into libxdp and marked as deprecated in libbpf.
+ * Until xskxceiver is either moved or re-writed into libxdp, suppress
+ * deprecation warnings in this file
+ */
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+>>>>>>> b7ba80a49124 (Commit)
 
 static const char *MAC1 = "\x00\x0A\x56\x9E\xEE\x62";
 static const char *MAC2 = "\x00\x0A\x56\x9E\xEE\x61";
@@ -265,11 +286,14 @@ static void gen_udp_csum(struct udphdr *udp_hdr, struct iphdr *ip_hdr)
 	    udp_csum(ip_hdr->saddr, ip_hdr->daddr, UDP_PKT_SIZE, IPPROTO_UDP, (u16 *)udp_hdr);
 }
 
+<<<<<<< HEAD
 static u32 mode_to_xdp_flags(enum test_mode mode)
 {
 	return (mode == TEST_MODE_SKB) ? XDP_FLAGS_SKB_MODE : XDP_FLAGS_DRV_MODE;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int xsk_configure_umem(struct xsk_umem_info *umem, void *buffer, u64 size)
 {
 	struct xsk_umem_config cfg = {
@@ -323,13 +347,22 @@ static int __xsk_configure_socket(struct xsk_socket_info *xsk, struct xsk_umem_i
 	xsk->umem = umem;
 	cfg.rx_size = xsk->rxqsize;
 	cfg.tx_size = XSK_RING_PROD__DEFAULT_NUM_DESCS;
+<<<<<<< HEAD
+=======
+	cfg.libbpf_flags = XSK_LIBBPF_FLAGS__INHIBIT_PROG_LOAD;
+	cfg.xdp_flags = ifobject->xdp_flags;
+>>>>>>> b7ba80a49124 (Commit)
 	cfg.bind_flags = ifobject->bind_flags;
 	if (shared)
 		cfg.bind_flags |= XDP_SHARED_UMEM;
 
 	txr = ifobject->tx_on ? &xsk->tx : NULL;
 	rxr = ifobject->rx_on ? &xsk->rx : NULL;
+<<<<<<< HEAD
 	return xsk_socket__create(&xsk->xsk, ifobject->ifindex, 0, umem->umem, rxr, txr, &cfg);
+=======
+	return xsk_socket__create(&xsk->xsk, ifobject->ifname, 0, umem->umem, rxr, txr, &cfg);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool ifobj_zc_avail(struct ifobject *ifobject)
@@ -349,7 +382,11 @@ static bool ifobj_zc_avail(struct ifobject *ifobject)
 	umem = calloc(1, sizeof(struct xsk_umem_info));
 	if (!umem) {
 		munmap(bufs, umem_sz);
+<<<<<<< HEAD
 		exit_with_error(ENOMEM);
+=======
+		exit_with_error(-ENOMEM);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	umem->frame_size = XSK_UMEM__DEFAULT_FRAME_SIZE;
 	ret = xsk_configure_umem(umem, bufs, umem_sz);
@@ -359,6 +396,11 @@ static bool ifobj_zc_avail(struct ifobject *ifobject)
 	xsk = calloc(1, sizeof(struct xsk_socket_info));
 	if (!xsk)
 		goto out;
+<<<<<<< HEAD
+=======
+	ifobject->xdp_flags = XDP_FLAGS_UPDATE_IF_NOEXIST;
+	ifobject->xdp_flags |= XDP_FLAGS_DRV_MODE;
+>>>>>>> b7ba80a49124 (Commit)
 	ifobject->bind_flags = XDP_USE_NEED_WAKEUP | XDP_ZEROCOPY;
 	ifobject->rx_on = true;
 	xsk->rxqsize = XSK_RING_CONS__DEFAULT_NUM_DESCS;
@@ -396,6 +438,31 @@ static void usage(const char *prog)
 	ksft_print_msg(str, prog);
 }
 
+<<<<<<< HEAD
+=======
+static int switch_namespace(const char *nsname)
+{
+	char fqns[26] = "/var/run/netns/";
+	int nsfd;
+
+	if (!nsname || strlen(nsname) == 0)
+		return -1;
+
+	strncat(fqns, nsname, sizeof(fqns) - strlen(fqns) - 1);
+	nsfd = open(fqns, O_RDONLY);
+
+	if (nsfd == -1)
+		exit_with_error(errno);
+
+	if (setns(nsfd, 0) == -1)
+		exit_with_error(errno);
+
+	print_verbose("NS switched: %s\n", nsname);
+
+	return nsfd;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static bool validate_interface(struct ifobject *ifobj)
 {
 	if (!strcmp(ifobj->ifname, ""))
@@ -413,6 +480,11 @@ static void parse_command_line(struct ifobject *ifobj_tx, struct ifobject *ifobj
 	opterr = 0;
 
 	for (;;) {
+<<<<<<< HEAD
+=======
+		char *sptr, *token;
+
+>>>>>>> b7ba80a49124 (Commit)
 		c = getopt_long(argc, argv, "i:Dvb", long_options, &option_index);
 		if (c == -1)
 			break;
@@ -426,6 +498,7 @@ static void parse_command_line(struct ifobject *ifobj_tx, struct ifobject *ifobj
 			else
 				break;
 
+<<<<<<< HEAD
 			memcpy(ifobj->ifname, optarg,
 			       min_t(size_t, MAX_INTERFACE_NAME_CHARS, strlen(optarg)));
 
@@ -433,6 +506,13 @@ static void parse_command_line(struct ifobject *ifobj_tx, struct ifobject *ifobj
 			if (!ifobj->ifindex)
 				exit_with_error(errno);
 
+=======
+			sptr = strndupa(optarg, strlen(optarg));
+			memcpy(ifobj->ifname, strsep(&sptr, ","), MAX_INTERFACE_NAME_CHARS);
+			token = strsep(&sptr, ",");
+			if (token)
+				memcpy(ifobj->nsname, token, MAX_INTERFACES_NAMESPACE_CHARS);
+>>>>>>> b7ba80a49124 (Commit)
 			interface_nb++;
 			break;
 		case 'D':
@@ -465,7 +545,10 @@ static void __test_spec_init(struct test_spec *test, struct ifobject *ifobj_tx,
 		ifobj->use_fill_ring = true;
 		ifobj->release_rx = true;
 		ifobj->validation_func = NULL;
+<<<<<<< HEAD
 		ifobj->use_metadata = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (i == 0) {
 			ifobj->rx_on = false;
@@ -496,10 +579,13 @@ static void __test_spec_init(struct test_spec *test, struct ifobject *ifobj_tx,
 	test->total_steps = 1;
 	test->nb_sockets = 1;
 	test->fail = false;
+<<<<<<< HEAD
 	test->xdp_prog_rx = ifobj_rx->xdp_progs->progs.xsk_def_prog;
 	test->xskmap_rx = ifobj_rx->xdp_progs->maps.xsk;
 	test->xdp_prog_tx = ifobj_tx->xdp_progs->progs.xsk_def_prog;
 	test->xskmap_tx = ifobj_tx->xdp_progs->maps.xsk;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void test_spec_init(struct test_spec *test, struct ifobject *ifobj_tx,
@@ -518,6 +604,15 @@ static void test_spec_init(struct test_spec *test, struct ifobject *ifobj_tx,
 	for (i = 0; i < MAX_INTERFACES; i++) {
 		struct ifobject *ifobj = i ? ifobj_rx : ifobj_tx;
 
+<<<<<<< HEAD
+=======
+		ifobj->xdp_flags = XDP_FLAGS_UPDATE_IF_NOEXIST;
+		if (mode == TEST_MODE_SKB)
+			ifobj->xdp_flags |= XDP_FLAGS_SKB_MODE;
+		else
+			ifobj->xdp_flags |= XDP_FLAGS_DRV_MODE;
+
+>>>>>>> b7ba80a49124 (Commit)
 		ifobj->bind_flags = XDP_USE_NEED_WAKEUP;
 		if (mode == TEST_MODE_ZC)
 			ifobj->bind_flags |= XDP_ZEROCOPY;
@@ -539,6 +634,7 @@ static void test_spec_set_name(struct test_spec *test, const char *name)
 	strncpy(test->name, name, MAX_TEST_NAME_SIZE);
 }
 
+<<<<<<< HEAD
 static void test_spec_set_xdp_prog(struct test_spec *test, struct bpf_program *xdp_prog_rx,
 				   struct bpf_program *xdp_prog_tx, struct bpf_map *xskmap_rx,
 				   struct bpf_map *xskmap_tx)
@@ -549,6 +645,8 @@ static void test_spec_set_xdp_prog(struct test_spec *test, struct bpf_program *x
 	test->xskmap_tx = xskmap_tx;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void pkt_stream_reset(struct pkt_stream *pkt_stream)
 {
 	if (pkt_stream)
@@ -751,7 +849,11 @@ static void pkt_dump(void *pkt, u32 len)
 	struct ethhdr *ethhdr;
 	struct udphdr *udphdr;
 	struct iphdr *iphdr;
+<<<<<<< HEAD
 	u32 payload, i;
+=======
+	int payload, i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ethhdr = pkt;
 	iphdr = pkt + sizeof(*ethhdr);
@@ -776,7 +878,11 @@ static void pkt_dump(void *pkt, u32 len)
 	fprintf(stdout, "DEBUG>> L4: udp_hdr->src: %d\n", ntohs(udphdr->source));
 	fprintf(stdout, "DEBUG>> L4: udp_hdr->dst: %d\n", ntohs(udphdr->dest));
 	/*extract L5 frame */
+<<<<<<< HEAD
 	payload = ntohl(*((u32 *)(pkt + PKT_HDR_SIZE)));
+=======
+	payload = *((uint32_t *)(pkt + PKT_HDR_SIZE));
+>>>>>>> b7ba80a49124 (Commit)
 
 	fprintf(stdout, "DEBUG>> L5: payload: %d\n", payload);
 	fprintf(stdout, "---------------------------------------\n");
@@ -800,6 +906,7 @@ static bool is_offset_correct(struct xsk_umem_info *umem, struct pkt_stream *pkt
 	return false;
 }
 
+<<<<<<< HEAD
 static bool is_metadata_correct(struct pkt *pkt, void *buffer, u64 addr)
 {
 	void *data = xsk_umem__get_data(buffer, addr);
@@ -814,6 +921,8 @@ static bool is_metadata_correct(struct pkt *pkt, void *buffer, u64 addr)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool is_pkt_valid(struct pkt *pkt, void *buffer, u64 addr, u32 len)
 {
 	void *data = xsk_umem__get_data(buffer, addr);
@@ -934,7 +1043,11 @@ static int receive_pkts(struct test_spec *test, struct pollfd *fds)
 		if (ifobj->use_poll) {
 			ret = poll(fds, 1, POLL_TMOUT);
 			if (ret < 0)
+<<<<<<< HEAD
 				exit_with_error(errno);
+=======
+				exit_with_error(-ret);
+>>>>>>> b7ba80a49124 (Commit)
 
 			if (!ret) {
 				if (!is_umem_valid(test->ifobj_tx))
@@ -961,7 +1074,11 @@ static int receive_pkts(struct test_spec *test, struct pollfd *fds)
 				if (xsk_ring_prod__needs_wakeup(&umem->fq)) {
 					ret = poll(fds, 1, POLL_TMOUT);
 					if (ret < 0)
+<<<<<<< HEAD
 						exit_with_error(errno);
+=======
+						exit_with_error(-ret);
+>>>>>>> b7ba80a49124 (Commit)
 				}
 				ret = xsk_ring_prod__reserve(&umem->fq, rcvd, &idx_fq);
 			}
@@ -975,8 +1092,12 @@ static int receive_pkts(struct test_spec *test, struct pollfd *fds)
 			addr = xsk_umem__add_offset_to_addr(addr);
 
 			if (!is_pkt_valid(pkt, umem->buffer, addr, desc->len) ||
+<<<<<<< HEAD
 			    !is_offset_correct(umem, pkt_stream, addr, pkt->addr) ||
 			    (ifobj->use_metadata && !is_metadata_correct(pkt, umem->buffer, addr)))
+=======
+			    !is_offset_correct(umem, pkt_stream, addr, pkt->addr))
+>>>>>>> b7ba80a49124 (Commit)
 				return TEST_FAILURE;
 
 			if (ifobj->use_fill_ring)
@@ -1005,8 +1126,12 @@ static int __send_pkts(struct ifobject *ifobject, u32 *pkt_nb, struct pollfd *fd
 {
 	struct xsk_socket_info *xsk = ifobject->xsk;
 	bool use_poll = ifobject->use_poll;
+<<<<<<< HEAD
 	u32 i, idx = 0, valid_pkts = 0;
 	int ret;
+=======
+	u32 i, idx = 0, ret, valid_pkts = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (xsk_ring_prod__reserve(&xsk->tx, BATCH_SIZE, &idx) < BATCH_SIZE) {
 		if (use_poll) {
@@ -1014,7 +1139,11 @@ static int __send_pkts(struct ifobject *ifobject, u32 *pkt_nb, struct pollfd *fd
 			if (timeout) {
 				if (ret < 0) {
 					ksft_print_msg("ERROR: [%s] Poll error %d\n",
+<<<<<<< HEAD
 						       __func__, errno);
+=======
+						       __func__, ret);
+>>>>>>> b7ba80a49124 (Commit)
 					return TEST_FAILURE;
 				}
 				if (ret == 0)
@@ -1023,7 +1152,11 @@ static int __send_pkts(struct ifobject *ifobject, u32 *pkt_nb, struct pollfd *fd
 			}
 			if (ret <= 0) {
 				ksft_print_msg("ERROR: [%s] Poll error %d\n",
+<<<<<<< HEAD
 					       __func__, errno);
+=======
+					       __func__, ret);
+>>>>>>> b7ba80a49124 (Commit)
 				return TEST_FAILURE;
 			}
 		}
@@ -1239,7 +1372,11 @@ static void thread_common_ops_tx(struct test_spec *test, struct ifobject *ifobje
 {
 	xsk_configure_socket(test, ifobject, test->ifobj_rx->umem, true);
 	ifobject->xsk = &ifobject->xsk_arr[0];
+<<<<<<< HEAD
 	ifobject->xskmap = test->ifobj_rx->xskmap;
+=======
+	ifobject->xsk_map_fd = test->ifobj_rx->xsk_map_fd;
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(ifobject->umem, test->ifobj_rx->umem, sizeof(struct xsk_umem_info));
 }
 
@@ -1271,7 +1408,11 @@ static void xsk_populate_fill_ring(struct xsk_umem_info *umem, struct pkt_stream
 
 		*xsk_ring_prod__fill_addr(&umem->fq, idx++) = addr;
 	}
+<<<<<<< HEAD
 	xsk_ring_prod__submit(&umem->fq, i);
+=======
+	xsk_ring_prod__submit(&umem->fq, buffers_to_fill);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void thread_common_ops(struct test_spec *test, struct ifobject *ifobject)
@@ -1279,8 +1420,15 @@ static void thread_common_ops(struct test_spec *test, struct ifobject *ifobject)
 	u64 umem_sz = ifobject->umem->num_frames * ifobject->umem->frame_size;
 	int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE;
 	LIBBPF_OPTS(bpf_xdp_query_opts, opts);
+<<<<<<< HEAD
 	void *bufs;
 	int ret;
+=======
+	int ret, ifindex;
+	void *bufs;
+
+	ifobject->ns_fd = switch_namespace(ifobject->nsname);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ifobject->umem->unaligned_mode)
 		mmap_flags |= MAP_HUGETLB;
@@ -1305,9 +1453,39 @@ static void thread_common_ops(struct test_spec *test, struct ifobject *ifobject)
 	if (!ifobject->rx_on)
 		return;
 
+<<<<<<< HEAD
 	ret = xsk_update_xskmap(ifobject->xskmap, ifobject->xsk->xsk);
 	if (ret)
 		exit_with_error(errno);
+=======
+	ifindex = if_nametoindex(ifobject->ifname);
+	if (!ifindex)
+		exit_with_error(errno);
+
+	ret = xsk_setup_xdp_prog_xsk(ifobject->xsk->xsk, &ifobject->xsk_map_fd);
+	if (ret)
+		exit_with_error(-ret);
+
+	ret = bpf_xdp_query(ifindex, ifobject->xdp_flags, &opts);
+	if (ret)
+		exit_with_error(-ret);
+
+	if (ifobject->xdp_flags & XDP_FLAGS_SKB_MODE) {
+		if (opts.attach_mode != XDP_ATTACHED_SKB) {
+			ksft_print_msg("ERROR: [%s] XDP prog not in SKB mode\n");
+			exit_with_error(-EINVAL);
+		}
+	} else if (ifobject->xdp_flags & XDP_FLAGS_DRV_MODE) {
+		if (opts.attach_mode != XDP_ATTACHED_DRV) {
+			ksft_print_msg("ERROR: [%s] XDP prog not in DRV mode\n");
+			exit_with_error(-EINVAL);
+		}
+	}
+
+	ret = xsk_socket__update_xskmap(ifobject->xsk->xsk, ifobject->xsk_map_fd);
+	if (ret)
+		exit_with_error(-ret);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void *worker_testapp_validate_tx(void *arg)
@@ -1340,17 +1518,26 @@ static void *worker_testapp_validate_rx(void *arg)
 	struct test_spec *test = (struct test_spec *)arg;
 	struct ifobject *ifobject = test->ifobj_rx;
 	struct pollfd fds = { };
+<<<<<<< HEAD
+=======
+	int id = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	if (test->current_step == 1) {
 		thread_common_ops(test, ifobject);
 	} else {
+<<<<<<< HEAD
 		xsk_clear_xskmap(ifobject->xskmap);
 		err = xsk_update_xskmap(ifobject->xskmap, ifobject->xsk->xsk);
 		if (err) {
 			printf("Error: Failed to update xskmap, error %s\n", strerror(-err));
 			exit_with_error(-err);
 		}
+=======
+		bpf_map_delete_elem(ifobject->xsk_map_fd, &id);
+		xsk_socket__update_xskmap(ifobject->xsk->xsk, ifobject->xsk_map_fd);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	fds.fd = xsk_socket__fd(ifobject->xsk->xsk);
@@ -1388,6 +1575,7 @@ static void handler(int signum)
 	pthread_exit(NULL);
 }
 
+<<<<<<< HEAD
 static bool xdp_prog_changed(struct test_spec *test, struct ifobject *ifobj)
 {
 	return ifobj->xdp_prog != test->xdp_prog_rx || ifobj->mode != test->mode;
@@ -1471,11 +1659,52 @@ static int __testapp_validate_traffic(struct test_spec *test, struct ifobject *i
 			testapp_clean_xsk_umem(ifobj2);
 	}
 
+=======
+static int testapp_validate_traffic_single_thread(struct test_spec *test, struct ifobject *ifobj,
+						  enum test_type type)
+{
+	bool old_shared_umem = ifobj->shared_umem;
+	pthread_t t0;
+
+	if (pthread_barrier_init(&barr, NULL, 2))
+		exit_with_error(errno);
+
+	test->current_step++;
+	if (type == TEST_TYPE_POLL_RXQ_TMOUT)
+		pkt_stream_reset(ifobj->pkt_stream);
+	pkts_in_flight = 0;
+
+	test->ifobj_rx->shared_umem = false;
+	test->ifobj_tx->shared_umem = false;
+
+	signal(SIGUSR1, handler);
+	/* Spawn thread */
+	pthread_create(&t0, NULL, ifobj->func_ptr, test);
+
+	if (type != TEST_TYPE_POLL_TXQ_TMOUT)
+		pthread_barrier_wait(&barr);
+
+	if (pthread_barrier_destroy(&barr))
+		exit_with_error(errno);
+
+	pthread_kill(t0, SIGUSR1);
+	pthread_join(t0, NULL);
+
+	if (test->total_steps == test->current_step || test->fail) {
+		xsk_socket__delete(ifobj->xsk->xsk);
+		testapp_clean_xsk_umem(ifobj);
+	}
+
+	test->ifobj_rx->shared_umem = old_shared_umem;
+	test->ifobj_tx->shared_umem = old_shared_umem;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return !!test->fail;
 }
 
 static int testapp_validate_traffic(struct test_spec *test)
 {
+<<<<<<< HEAD
 	struct ifobject *ifobj_rx = test->ifobj_rx;
 	struct ifobject *ifobj_tx = test->ifobj_tx;
 
@@ -1486,6 +1715,41 @@ static int testapp_validate_traffic(struct test_spec *test)
 static int testapp_validate_traffic_single_thread(struct test_spec *test, struct ifobject *ifobj)
 {
 	return __testapp_validate_traffic(test, ifobj, NULL);
+=======
+	struct ifobject *ifobj_tx = test->ifobj_tx;
+	struct ifobject *ifobj_rx = test->ifobj_rx;
+	pthread_t t0, t1;
+
+	if (pthread_barrier_init(&barr, NULL, 2))
+		exit_with_error(errno);
+
+	test->current_step++;
+	pkt_stream_reset(ifobj_rx->pkt_stream);
+	pkts_in_flight = 0;
+
+	/*Spawn RX thread */
+	pthread_create(&t0, NULL, ifobj_rx->func_ptr, test);
+
+	pthread_barrier_wait(&barr);
+	if (pthread_barrier_destroy(&barr))
+		exit_with_error(errno);
+
+	/*Spawn TX thread */
+	pthread_create(&t1, NULL, ifobj_tx->func_ptr, test);
+
+	pthread_join(t1, NULL);
+	pthread_join(t0, NULL);
+
+	if (test->total_steps == test->current_step || test->fail) {
+		xsk_socket__delete(ifobj_tx->xsk->xsk);
+		xsk_socket__delete(ifobj_rx->xsk->xsk);
+		testapp_clean_xsk_umem(ifobj_rx);
+		if (!ifobj_tx->shared_umem)
+			testapp_clean_xsk_umem(ifobj_tx);
+	}
+
+	return !!test->fail;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void testapp_teardown(struct test_spec *test)
@@ -1523,7 +1787,11 @@ static void testapp_bidi(struct test_spec *test)
 
 	print_verbose("Switching Tx/Rx vectors\n");
 	swap_directions(&test->ifobj_rx, &test->ifobj_tx);
+<<<<<<< HEAD
 	__testapp_validate_traffic(test, test->ifobj_rx, test->ifobj_tx);
+=======
+	testapp_validate_traffic(test);
+>>>>>>> b7ba80a49124 (Commit)
 
 	swap_directions(&test->ifobj_rx, &test->ifobj_tx);
 }
@@ -1537,9 +1805,15 @@ static void swap_xsk_resources(struct ifobject *ifobj_tx, struct ifobject *ifobj
 	ifobj_tx->xsk = &ifobj_tx->xsk_arr[1];
 	ifobj_rx->xsk = &ifobj_rx->xsk_arr[1];
 
+<<<<<<< HEAD
 	ret = xsk_update_xskmap(ifobj_rx->xskmap, ifobj_rx->xsk->xsk);
 	if (ret)
 		exit_with_error(errno);
+=======
+	ret = xsk_socket__update_xskmap(ifobj_rx->xsk->xsk, ifobj_rx->xsk_map_fd);
+	if (ret)
+		exit_with_error(-ret);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void testapp_bpf_res(struct test_spec *test)
@@ -1578,6 +1852,11 @@ static void testapp_stats_tx_invalid_descs(struct test_spec *test)
 	pkt_stream_replace_half(test, XSK_UMEM__INVALID_FRAME_SIZE, 0);
 	test->ifobj_tx->validation_func = validate_tx_invalid_descs;
 	testapp_validate_traffic(test);
+<<<<<<< HEAD
+=======
+
+	pkt_stream_restore_default(test);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void testapp_stats_rx_full(struct test_spec *test)
@@ -1593,6 +1872,11 @@ static void testapp_stats_rx_full(struct test_spec *test)
 	test->ifobj_rx->release_rx = false;
 	test->ifobj_rx->validation_func = validate_rx_full;
 	testapp_validate_traffic(test);
+<<<<<<< HEAD
+=======
+
+	pkt_stream_restore_default(test);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void testapp_stats_fill_empty(struct test_spec *test)
@@ -1607,6 +1891,11 @@ static void testapp_stats_fill_empty(struct test_spec *test)
 	test->ifobj_rx->use_fill_ring = false;
 	test->ifobj_rx->validation_func = validate_fill_empty;
 	testapp_validate_traffic(test);
+<<<<<<< HEAD
+=======
+
+	pkt_stream_restore_default(test);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Simple test */
@@ -1639,6 +1928,10 @@ static bool testapp_unaligned(struct test_spec *test)
 	test->ifobj_rx->pkt_stream->use_addr_for_fill = true;
 	testapp_validate_traffic(test);
 
+<<<<<<< HEAD
+=======
+	pkt_stream_restore_default(test);
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -1648,6 +1941,10 @@ static void testapp_single_pkt(struct test_spec *test)
 
 	pkt_stream_generate_custom(test, pkts, ARRAY_SIZE(pkts));
 	testapp_validate_traffic(test);
+<<<<<<< HEAD
+=======
+	pkt_stream_restore_default(test);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void testapp_invalid_desc(struct test_spec *test)
@@ -1688,6 +1985,7 @@ static void testapp_invalid_desc(struct test_spec *test)
 
 	pkt_stream_generate_custom(test, pkts, ARRAY_SIZE(pkts));
 	testapp_validate_traffic(test);
+<<<<<<< HEAD
 }
 
 static void testapp_xdp_drop(struct test_spec *test)
@@ -1757,6 +2055,9 @@ static int xsk_load_xdp_programs(struct ifobject *ifobj)
 static void xsk_unload_xdp_programs(struct ifobject *ifobj)
 {
 	xsk_xdp_progs__destroy(ifobj->xdp_progs);
+=======
+	pkt_stream_restore_default(test);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void init_iface(struct ifobject *ifobj, const char *dst_mac, const char *src_mac,
@@ -1764,7 +2065,10 @@ static void init_iface(struct ifobject *ifobj, const char *dst_mac, const char *
 		       const u16 src_port, thread_func_t func_ptr)
 {
 	struct in_addr ip;
+<<<<<<< HEAD
 	int err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	memcpy(ifobj->dst_mac, dst_mac, ETH_ALEN);
 	memcpy(ifobj->src_mac, src_mac, ETH_ALEN);
@@ -1779,12 +2083,15 @@ static void init_iface(struct ifobject *ifobj, const char *dst_mac, const char *
 	ifobj->src_port = src_port;
 
 	ifobj->func_ptr = func_ptr;
+<<<<<<< HEAD
 
 	err = xsk_load_xdp_programs(ifobj);
 	if (err) {
 		printf("Error loading XDP program\n");
 		exit_with_error(err);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void run_pkt_test(struct test_spec *test, enum test_mode mode, enum test_type type)
@@ -1829,6 +2136,11 @@ static void run_pkt_test(struct test_spec *test, enum test_mode mode, enum test_
 		test->ifobj_rx->umem->frame_size = 2048;
 		pkt_stream_replace(test, DEFAULT_PKT_CNT, PKT_SIZE);
 		testapp_validate_traffic(test);
+<<<<<<< HEAD
+=======
+
+		pkt_stream_restore_default(test);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case TEST_TYPE_RX_POLL:
 		test->ifobj_rx->use_poll = true;
@@ -1841,10 +2153,25 @@ static void run_pkt_test(struct test_spec *test, enum test_mode mode, enum test_
 		testapp_validate_traffic(test);
 		break;
 	case TEST_TYPE_POLL_TXQ_TMOUT:
+<<<<<<< HEAD
 		testapp_poll_txq_tmout(test);
 		break;
 	case TEST_TYPE_POLL_RXQ_TMOUT:
 		testapp_poll_rxq_tmout(test);
+=======
+		test_spec_set_name(test, "POLL_TXQ_FULL");
+		test->ifobj_tx->use_poll = true;
+		/* create invalid frame by set umem frame_size and pkt length equal to 2048 */
+		test->ifobj_tx->umem->frame_size = 2048;
+		pkt_stream_replace(test, 2 * DEFAULT_PKT_CNT, 2048);
+		testapp_validate_traffic_single_thread(test, test->ifobj_tx, type);
+		pkt_stream_restore_default(test);
+		break;
+	case TEST_TYPE_POLL_RXQ_TMOUT:
+		test_spec_set_name(test, "POLL_RXQ_EMPTY");
+		test->ifobj_rx->use_poll = true;
+		testapp_validate_traffic_single_thread(test, test->ifobj_rx, type);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case TEST_TYPE_ALIGNED_INV_DESC:
 		test_spec_set_name(test, "ALIGNED_INV_DESC");
@@ -1873,12 +2200,15 @@ static void run_pkt_test(struct test_spec *test, enum test_mode mode, enum test_
 	case TEST_TYPE_HEADROOM:
 		testapp_headroom(test);
 		break;
+<<<<<<< HEAD
 	case TEST_TYPE_XDP_DROP_HALF:
 		testapp_xdp_drop(test);
 		break;
 	case TEST_TYPE_XDP_METADATA_COUNT:
 		testapp_xdp_metadata_count(test);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		break;
 	}
@@ -1886,7 +2216,10 @@ static void run_pkt_test(struct test_spec *test, enum test_mode mode, enum test_
 	if (!test->fail)
 		ksft_test_result_pass("PASS: %s %s%s\n", mode_string(test), busy_poll_string(test),
 				      test->name);
+<<<<<<< HEAD
 	pkt_stream_restore_default(test);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct ifobject *ifobject_create(void)
@@ -1905,6 +2238,11 @@ static struct ifobject *ifobject_create(void)
 	if (!ifobj->umem)
 		goto out_umem;
 
+<<<<<<< HEAD
+=======
+	ifobj->ns_fd = -1;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ifobj;
 
 out_umem:
@@ -1916,12 +2254,21 @@ out_xsk_arr:
 
 static void ifobject_delete(struct ifobject *ifobj)
 {
+<<<<<<< HEAD
+=======
+	if (ifobj->ns_fd != -1)
+		close(ifobj->ns_fd);
+>>>>>>> b7ba80a49124 (Commit)
 	free(ifobj->umem);
 	free(ifobj->xsk_arr);
 	free(ifobj);
 }
 
+<<<<<<< HEAD
 static bool is_xdp_supported(int ifindex)
+=======
+static bool is_xdp_supported(struct ifobject *ifobject)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int flags = XDP_FLAGS_DRV_MODE;
 
@@ -1930,6 +2277,10 @@ static bool is_xdp_supported(int ifindex)
 		BPF_MOV64_IMM(BPF_REG_0, XDP_PASS),
 		BPF_EXIT_INSN()
 	};
+<<<<<<< HEAD
+=======
+	int ifindex = if_nametoindex(ifobject->ifname);
+>>>>>>> b7ba80a49124 (Commit)
 	int prog_fd, insn_cnt = ARRAY_SIZE(insns);
 	int err;
 
@@ -1957,7 +2308,11 @@ int main(int argc, char **argv)
 	int modes = TEST_MODE_SKB + 1;
 	u32 i, j, failed_tests = 0;
 	struct test_spec test;
+<<<<<<< HEAD
 	bool shared_netdev;
+=======
+	bool shared_umem;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Use libbpf 1.0 API mode */
 	libbpf_set_strict_mode(LIBBPF_STRICT_ALL);
@@ -1972,27 +2327,46 @@ int main(int argc, char **argv)
 	setlocale(LC_ALL, "");
 
 	parse_command_line(ifobj_tx, ifobj_rx, argc, argv);
+<<<<<<< HEAD
 
 	shared_netdev = (ifobj_tx->ifindex == ifobj_rx->ifindex);
 	ifobj_tx->shared_umem = shared_netdev;
 	ifobj_rx->shared_umem = shared_netdev;
+=======
+	shared_umem = !strcmp(ifobj_tx->ifname, ifobj_rx->ifname);
+
+	ifobj_tx->shared_umem = shared_umem;
+	ifobj_rx->shared_umem = shared_umem;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!validate_interface(ifobj_tx) || !validate_interface(ifobj_rx)) {
 		usage(basename(argv[0]));
 		ksft_exit_xfail();
 	}
 
+<<<<<<< HEAD
 	if (is_xdp_supported(ifobj_tx->ifindex)) {
+=======
+	init_iface(ifobj_tx, MAC1, MAC2, IP1, IP2, UDP_PORT1, UDP_PORT2,
+		   worker_testapp_validate_tx);
+	init_iface(ifobj_rx, MAC2, MAC1, IP2, IP1, UDP_PORT2, UDP_PORT1,
+		   worker_testapp_validate_rx);
+
+	if (is_xdp_supported(ifobj_tx)) {
+>>>>>>> b7ba80a49124 (Commit)
 		modes++;
 		if (ifobj_zc_avail(ifobj_tx))
 			modes++;
 	}
 
+<<<<<<< HEAD
 	init_iface(ifobj_rx, MAC1, MAC2, IP1, IP2, UDP_PORT1, UDP_PORT2,
 		   worker_testapp_validate_rx);
 	init_iface(ifobj_tx, MAC2, MAC1, IP2, IP1, UDP_PORT2, UDP_PORT1,
 		   worker_testapp_validate_tx);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	test_spec_init(&test, ifobj_tx, ifobj_rx, 0);
 	tx_pkt_stream_default = pkt_stream_generate(ifobj_tx->umem, DEFAULT_PKT_CNT, PKT_SIZE);
 	rx_pkt_stream_default = pkt_stream_generate(ifobj_rx->umem, DEFAULT_PKT_CNT, PKT_SIZE);
@@ -2003,7 +2377,11 @@ int main(int argc, char **argv)
 
 	ksft_set_plan(modes * TEST_TYPE_MAX);
 
+<<<<<<< HEAD
 	for (i = 0; i < modes; i++) {
+=======
+	for (i = 0; i < modes; i++)
+>>>>>>> b7ba80a49124 (Commit)
 		for (j = 0; j < TEST_TYPE_MAX; j++) {
 			test_spec_init(&test, ifobj_tx, ifobj_rx, i);
 			run_pkt_test(&test, i, j);
@@ -2012,12 +2390,21 @@ int main(int argc, char **argv)
 			if (test.fail)
 				failed_tests++;
 		}
+<<<<<<< HEAD
 	}
 
 	pkt_stream_delete(tx_pkt_stream_default);
 	pkt_stream_delete(rx_pkt_stream_default);
 	xsk_unload_xdp_programs(ifobj_tx);
 	xsk_unload_xdp_programs(ifobj_rx);
+=======
+
+	pkt_stream_delete(tx_pkt_stream_default);
+	pkt_stream_delete(rx_pkt_stream_default);
+	free(ifobj_rx->umem);
+	if (!ifobj_tx->shared_umem)
+		free(ifobj_tx->umem);
+>>>>>>> b7ba80a49124 (Commit)
 	ifobject_delete(ifobj_tx);
 	ifobject_delete(ifobj_rx);
 

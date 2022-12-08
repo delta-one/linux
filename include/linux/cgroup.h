@@ -68,7 +68,10 @@ struct css_task_iter {
 	struct list_head		iters_node;	/* css_set->task_iters */
 };
 
+<<<<<<< HEAD
 extern struct file_system_type cgroup_fs_type;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern struct cgroup_root cgrp_dfl_root;
 extern struct css_set init_css_set;
 
@@ -107,7 +110,10 @@ struct cgroup_subsys_state *css_tryget_online_from_dir(struct dentry *dentry,
 
 struct cgroup *cgroup_get_from_path(const char *path);
 struct cgroup *cgroup_get_from_fd(int fd);
+<<<<<<< HEAD
 struct cgroup *cgroup_v1v2_get_from_fd(int fd);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int cgroup_attach_task_all(struct task_struct *from, struct task_struct *);
 int cgroup_transfer_tasks(struct cgroup *to, struct cgroup *from);
@@ -310,6 +316,7 @@ void css_task_iter_end(struct css_task_iter *it);
  * Inline functions.
  */
 
+<<<<<<< HEAD
 #ifdef CONFIG_DEBUG_CGROUP_REF
 void css_get(struct cgroup_subsys_state *css);
 void css_get_many(struct cgroup_subsys_state *css, unsigned int n);
@@ -323,12 +330,77 @@ void css_put_many(struct cgroup_subsys_state *css, unsigned int n);
 #include <linux/cgroup_refcnt.h>
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline u64 cgroup_id(const struct cgroup *cgrp)
 {
 	return cgrp->kn->id;
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * css_get - obtain a reference on the specified css
+ * @css: target css
+ *
+ * The caller must already have a reference.
+ */
+static inline void css_get(struct cgroup_subsys_state *css)
+{
+	if (!(css->flags & CSS_NO_REF))
+		percpu_ref_get(&css->refcnt);
+}
+
+/**
+ * css_get_many - obtain references on the specified css
+ * @css: target css
+ * @n: number of references to get
+ *
+ * The caller must already have a reference.
+ */
+static inline void css_get_many(struct cgroup_subsys_state *css, unsigned int n)
+{
+	if (!(css->flags & CSS_NO_REF))
+		percpu_ref_get_many(&css->refcnt, n);
+}
+
+/**
+ * css_tryget - try to obtain a reference on the specified css
+ * @css: target css
+ *
+ * Obtain a reference on @css unless it already has reached zero and is
+ * being released.  This function doesn't care whether @css is on or
+ * offline.  The caller naturally needs to ensure that @css is accessible
+ * but doesn't have to be holding a reference on it - IOW, RCU protected
+ * access is good enough for this function.  Returns %true if a reference
+ * count was successfully obtained; %false otherwise.
+ */
+static inline bool css_tryget(struct cgroup_subsys_state *css)
+{
+	if (!(css->flags & CSS_NO_REF))
+		return percpu_ref_tryget(&css->refcnt);
+	return true;
+}
+
+/**
+ * css_tryget_online - try to obtain a reference on the specified css if online
+ * @css: target css
+ *
+ * Obtain a reference on @css if it's online.  The caller naturally needs
+ * to ensure that @css is accessible but doesn't have to be holding a
+ * reference on it - IOW, RCU protected access is good enough for this
+ * function.  Returns %true if a reference count was successfully obtained;
+ * %false otherwise.
+ */
+static inline bool css_tryget_online(struct cgroup_subsys_state *css)
+{
+	if (!(css->flags & CSS_NO_REF))
+		return percpu_ref_tryget_live(&css->refcnt);
+	return true;
+}
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * css_is_dying - test whether the specified css is dying
  * @css: target css
  *
@@ -348,6 +420,34 @@ static inline bool css_is_dying(struct cgroup_subsys_state *css)
 	return !(css->flags & CSS_NO_REF) && percpu_ref_is_dying(&css->refcnt);
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * css_put - put a css reference
+ * @css: target css
+ *
+ * Put a reference obtained via css_get() and css_tryget_online().
+ */
+static inline void css_put(struct cgroup_subsys_state *css)
+{
+	if (!(css->flags & CSS_NO_REF))
+		percpu_ref_put(&css->refcnt);
+}
+
+/**
+ * css_put_many - put css references
+ * @css: target css
+ * @n: number of references to put
+ *
+ * Put references obtained via css_get() and css_tryget_online().
+ */
+static inline void css_put_many(struct cgroup_subsys_state *css, unsigned int n)
+{
+	if (!(css->flags & CSS_NO_REF))
+		percpu_ref_put_many(&css->refcnt, n);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void cgroup_get(struct cgroup *cgrp)
 {
 	css_get(&cgrp->self);

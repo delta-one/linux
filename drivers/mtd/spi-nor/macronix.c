@@ -22,7 +22,11 @@ mx25l25635_post_bfpt_fixups(struct spi_nor *nor,
 	 * seems that the F version advertises support for Fast Read 4-4-4 in
 	 * its BFPT table.
 	 */
+<<<<<<< HEAD
 	if (bfpt->dwords[SFDP_DWORD(5)] & BFPT_DWORD5_FAST_READ_4_4_4)
+=======
+	if (bfpt->dwords[BFPT_DWORD(5)] & BFPT_DWORD5_FAST_READ_4_4_4)
+>>>>>>> b7ba80a49124 (Commit)
 		nor->flags |= SNOR_F_4B_OPCODES;
 
 	return 0;

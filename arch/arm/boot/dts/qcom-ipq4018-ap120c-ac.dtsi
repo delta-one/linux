@@ -6,6 +6,7 @@
 
 / {
 	model = "ALFA Network AP120C-AC";
+<<<<<<< HEAD
 	compatible = "alfa-network,ap120c-ac", "qcom,ipq4018";
 
 	aliases {
@@ -15,6 +16,9 @@
 	chosen {
 		stdout-path = "serial0:115200n8";
 	};
+=======
+	compatible = "alfa-network,ap120c-ac";
+>>>>>>> b7ba80a49124 (Commit)
 
 	keys {
 		compatible = "gpio-keys";
@@ -76,7 +80,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	usb-power-hog {
+=======
+	usb-power {
+>>>>>>> b7ba80a49124 (Commit)
 		line-name = "USB-power";
 		gpios = <1 GPIO_ACTIVE_HIGH>;
 		gpio-hog;
@@ -170,6 +178,7 @@
 				label = "ART";
 				reg = <0x00170000 0x00010000>;
 				read-only;
+<<<<<<< HEAD
 				compatible = "nvmem-cells";
 				#address-cells = <1>;
 				#size-cells = <1>;
@@ -181,6 +190,8 @@
 				precal_art_5000: precal@5000 {
 					reg = <0x5000 0x2f20>;
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			partition@180000 {
@@ -197,7 +208,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	flash@1 {
+=======
+	nand@1 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "spi-nand";
 		reg = <1>;
 		spi-max-frequency = <40000000>;
@@ -244,14 +259,20 @@
 
 &wifi0 {
 	status = "okay";
+<<<<<<< HEAD
 	nvmem-cell-names = "pre-calibration";
 	nvmem-cells = <&precal_art_1000>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &wifi1 {
 	status = "okay";
+<<<<<<< HEAD
 	nvmem-cell-names = "pre-calibration";
 	nvmem-cells = <&precal_art_5000>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	qcom,ath10k-calibration-variant = "ALFA-Network-AP120C-AC";
 };
 

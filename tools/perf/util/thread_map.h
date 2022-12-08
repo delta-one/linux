@@ -4,6 +4,11 @@
 
 #include <sys/types.h>
 #include <stdio.h>
+<<<<<<< HEAD
+=======
+#include <linux/refcount.h>
+#include <internal/threadmap.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <perf/threadmap.h>
 
 struct perf_record_thread_map;

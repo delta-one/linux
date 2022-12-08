@@ -35,6 +35,10 @@
 #include <net/ip6_checksum.h>
 #include <linux/bitops.h>
 #include <linux/vmalloc.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include "qede.h"
 #include "qede_ptp.h"
 
@@ -891,9 +895,12 @@ static void qede_init_ndev(struct qede_dev *edev)
 
 	ndev->hw_features = hw_features;
 
+<<<<<<< HEAD
 	ndev->xdp_features = NETDEV_XDP_ACT_BASIC | NETDEV_XDP_ACT_REDIRECT |
 			     NETDEV_XDP_ACT_NDO_XMIT;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* MTU range: 46 - 9600 */
 	ndev->min_mtu = ETH_ZLEN - ETH_HLEN;
 	ndev->max_mtu = QEDE_MAX_JUMBO_PACKET_SIZE;
@@ -962,6 +969,10 @@ static int qede_alloc_fp_array(struct qede_dev *edev)
 {
 	u8 fp_combined, fp_rx = edev->fp_num_rx;
 	struct qede_fastpath *fp;
+<<<<<<< HEAD
+=======
+	void *mem;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	edev->fp_array = kcalloc(QEDE_QUEUE_CNT(edev),
@@ -971,6 +982,7 @@ static int qede_alloc_fp_array(struct qede_dev *edev)
 		goto err;
 	}
 
+<<<<<<< HEAD
 	if (!edev->coal_entry) {
 		edev->coal_entry = kcalloc(QEDE_MAX_RSS_CNT(edev),
 					   sizeof(*edev->coal_entry),
@@ -980,6 +992,16 @@ static int qede_alloc_fp_array(struct qede_dev *edev)
 			goto err;
 		}
 	}
+=======
+	mem = krealloc(edev->coal_entry, QEDE_QUEUE_CNT(edev) *
+		       sizeof(*edev->coal_entry), GFP_KERNEL);
+	if (!mem) {
+		DP_ERR(edev, "coalesce entry allocation failed\n");
+		kfree(edev->coal_entry);
+		goto err;
+	}
+	edev->coal_entry = mem;
+>>>>>>> b7ba80a49124 (Commit)
 
 	fp_combined = QEDE_QUEUE_CNT(edev) - fp_rx - edev->fp_num_tx;
 
@@ -1906,7 +1928,12 @@ static void qede_napi_add_enable(struct qede_dev *edev)
 
 	/* Add NAPI objects */
 	for_each_queue(i) {
+<<<<<<< HEAD
 		netif_napi_add(edev->ndev, &edev->fp_array[i].napi, qede_poll);
+=======
+		netif_napi_add(edev->ndev, &edev->fp_array[i].napi,
+			       qede_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 		napi_enable(&edev->fp_array[i].napi);
 	}
 }

@@ -139,8 +139,11 @@ Highest valid capability of the running kernel.  Exports
 ``CAP_LAST_CAP`` from the kernel.
 
 
+<<<<<<< HEAD
 .. _core_pattern:
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 core_pattern
 ============
 
@@ -436,8 +439,13 @@ ignore-unaligned-usertrap
 
 On architectures where unaligned accesses cause traps, and where this
 feature is supported (``CONFIG_SYSCTL_ARCH_UNALIGN_NO_WARN``;
+<<<<<<< HEAD
 currently, ``arc``, ``ia64`` and ``loongarch``), controls whether all
 unaligned traps are logged.
+=======
+currently, ``arc`` and ``ia64``), controls whether all unaligned traps
+are logged.
+>>>>>>> b7ba80a49124 (Commit)
 
 = =============================================================
 0 Log all unaligned accesses.
@@ -453,10 +461,16 @@ this allows system administrators to override the
 kexec_load_disabled
 ===================
 
+<<<<<<< HEAD
 A toggle indicating if the syscalls ``kexec_load`` and
 ``kexec_file_load`` have been disabled.
 This value defaults to 0 (false: ``kexec_*load`` enabled), but can be
 set to 1 (true: ``kexec_*load`` disabled).
+=======
+A toggle indicating if the ``kexec_load`` syscall has been disabled.
+This value defaults to 0 (false: ``kexec_load`` enabled), but can be
+set to 1 (true: ``kexec_load`` disabled).
+>>>>>>> b7ba80a49124 (Commit)
 Once true, kexec can no longer be used, and the toggle cannot be set
 back to false.
 This allows a kexec image to be loaded before disabling the syscall,
@@ -464,6 +478,7 @@ allowing a system to set up (and later use) an image without it being
 altered.
 Generally used together with the `modules_disabled`_ sysctl.
 
+<<<<<<< HEAD
 kexec_load_limit_panic
 ======================
 
@@ -482,6 +497,8 @@ kexec_load_limit_reboot
 
 Similar functionality as ``kexec_load_limit_panic``, but for a normal
 image.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 kptr_restrict
 =============
@@ -568,9 +585,12 @@ default (``MSGMNB``).
 ``msgmni`` is the maximum number of IPC queues. 32000 by default
 (``MSGMNI``).
 
+<<<<<<< HEAD
 All of these parameters are set per ipc namespace. The maximum number of bytes
 in POSIX message queues is limited by ``RLIMIT_MSGQUEUE``. This limit is
 respected hierarchically in the each user namespace.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 msg_next_id, sem_next_id, and shm_next_id (System V IPC)
 ========================================================
@@ -692,6 +712,7 @@ This is the default behavior.
 an oops event is detected.
 
 
+<<<<<<< HEAD
 oops_limit
 ==========
 
@@ -701,6 +722,8 @@ the count. Setting this to  1 has the same effect as setting
 ``panic_on_oops=1``. The default value is 10000.
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 osrelease, ostype & version
 ===========================
 
@@ -1231,20 +1254,29 @@ are doing anyway :)
 shmall
 ======
 
+<<<<<<< HEAD
 This parameter sets the total amount of shared memory pages that can be used
 inside ipc namespace. The shared memory pages counting occurs for each ipc
 namespace separately and is not inherited. Hence, ``shmall`` should always be at
 least ``ceil(shmmax/PAGE_SIZE)``.
+=======
+This parameter sets the total amount of shared memory pages that
+can be used system wide. Hence, ``shmall`` should always be at least
+``ceil(shmmax/PAGE_SIZE)``.
+>>>>>>> b7ba80a49124 (Commit)
 
 If you are not sure what the default ``PAGE_SIZE`` is on your Linux
 system, you can run the following command::
 
 	# getconf PAGE_SIZE
 
+<<<<<<< HEAD
 To reduce or disable the ability to allocate shared memory, you must create a
 new ipc namespace, set this parameter to the required value and prohibit the
 creation of a new ipc namespace in the current user namespace or cgroups can
 be used.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 shmmax
 ======
@@ -1353,6 +1385,7 @@ watchdog work to be queued by the watchdog timer function, otherwise the NMI
 watchdog — if enabled — can detect a hard lockup condition.
 
 
+<<<<<<< HEAD
 split_lock_mitigate (x86 only)
 ==============================
 
@@ -1376,6 +1409,8 @@ increase system exposure to denial of service attacks from split lock users.
 = ===================================================================
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 stack_erasing
 =============
 
@@ -1519,8 +1554,13 @@ unaligned-trap
 
 On architectures where unaligned accesses cause traps, and where this
 feature is supported (``CONFIG_SYSCTL_ARCH_UNALIGN_ALLOW``; currently,
+<<<<<<< HEAD
 ``arc``, ``parisc`` and ``loongarch``), controls whether unaligned traps
 are caught and emulated (instead of failing).
+=======
+``arc`` and ``parisc``), controls whether unaligned traps are caught
+and emulated (instead of failing).
+>>>>>>> b7ba80a49124 (Commit)
 
 = ========================================================
 0 Do not emulate unaligned accesses.
@@ -1562,6 +1602,7 @@ entry will default to 2 instead of 0.
 2 Unprivileged calls to ``bpf()`` are disabled
 = =============================================================
 
+<<<<<<< HEAD
 
 warn_limit
 ==========
@@ -1572,6 +1613,8 @@ the warning count. Setting this to 1 has the same effect as setting
 ``panic_on_warn=1``. The default value is 0.
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 watchdog
 ========
 

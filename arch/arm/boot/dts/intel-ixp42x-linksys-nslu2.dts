@@ -116,7 +116,11 @@
 		};
 
 		pci@c0000000 {
+<<<<<<< HEAD
 			status = "okay";
+=======
+			status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 
 			/*
 			 * Taken from NSLU2 PCI boardfile, INT A, B, C swizzled D constant
@@ -143,7 +147,11 @@
 		};
 
 		ethernet@c8009000 {
+<<<<<<< HEAD
 			status = "okay";
+=======
+			status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 			queue-rx = <&qmgr 3>;
 			queue-txready = <&qmgr 20>;
 			phy-mode = "rgmii";

@@ -5420,7 +5420,11 @@ ice_add_adv_recipe(struct ice_hw *hw, struct ice_adv_lkup_elem *lkups,
 	 */
 	status = ice_add_special_words(rinfo, lkup_exts, ice_is_dvm_ena(hw));
 	if (status)
+<<<<<<< HEAD
 		goto err_unroll;
+=======
+		goto err_free_lkup_exts;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Group match words into recipes using preferred recipe grouping
 	 * criteria.

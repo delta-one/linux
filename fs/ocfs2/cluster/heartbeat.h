@@ -59,7 +59,11 @@ int o2hb_register_callback(const char *region_uuid,
 void o2hb_unregister_callback(const char *region_uuid,
 			      struct o2hb_callback_func *hc);
 void o2hb_fill_node_map(unsigned long *map,
+<<<<<<< HEAD
 			unsigned int bits);
+=======
+			unsigned bytes);
+>>>>>>> b7ba80a49124 (Commit)
 void o2hb_exit(void);
 void o2hb_init(void);
 int o2hb_check_node_heartbeating_no_sem(u8 node_num);

@@ -14,7 +14,10 @@
 #include <linux/net_tstamp.h>
 #include <linux/timekeeping.h>
 #include <linux/ptp_classify.h>
+<<<<<<< HEAD
 #include <linux/clocksource.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "bnxt_hsi.h"
 #include "bnxt.h"
 #include "bnxt_hwrm.h"
@@ -63,7 +66,11 @@ static int bnxt_ptp_settime(struct ptp_clock_info *ptp_info,
 						ptp_info);
 	u64 ns = timespec64_to_ns(ts);
 
+<<<<<<< HEAD
 	if (BNXT_PTP_USE_RTC(ptp->bp))
+=======
+	if (ptp->bp->fw_cap & BNXT_FW_CAP_PTP_RTC)
+>>>>>>> b7ba80a49124 (Commit)
 		return bnxt_ptp_cfg_settime(ptp->bp, ns);
 
 	spin_lock_bh(&ptp->ptp_lock);
@@ -196,7 +203,11 @@ static int bnxt_ptp_adjtime(struct ptp_clock_info *ptp_info, s64 delta)
 	struct bnxt_ptp_cfg *ptp = container_of(ptp_info, struct bnxt_ptp_cfg,
 						ptp_info);
 
+<<<<<<< HEAD
 	if (BNXT_PTP_USE_RTC(ptp->bp))
+=======
+	if (ptp->bp->fw_cap & BNXT_FW_CAP_PTP_RTC)
+>>>>>>> b7ba80a49124 (Commit)
 		return bnxt_ptp_adjphc(ptp, delta);
 
 	spin_lock_bh(&ptp->ptp_lock);
@@ -205,10 +216,19 @@ static int bnxt_ptp_adjtime(struct ptp_clock_info *ptp_info, s64 delta)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int bnxt_ptp_adjfine_rtc(struct bnxt *bp, long scaled_ppm)
 {
 	s32 ppb = scaled_ppm_to_ppb(scaled_ppm);
 	struct hwrm_port_mac_cfg_input *req;
+=======
+static int bnxt_ptp_adjfreq(struct ptp_clock_info *ptp_info, s32 ppb)
+{
+	struct bnxt_ptp_cfg *ptp = container_of(ptp_info, struct bnxt_ptp_cfg,
+						ptp_info);
+	struct hwrm_port_mac_cfg_input *req;
+	struct bnxt *bp = ptp->bp;
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	rc = hwrm_req_init(bp, req, HWRM_PORT_MAC_CFG);
@@ -217,6 +237,7 @@ static int bnxt_ptp_adjfine_rtc(struct bnxt *bp, long scaled_ppm)
 
 	req->ptp_freq_adj_ppb = cpu_to_le32(ppb);
 	req->enables = cpu_to_le32(PORT_MAC_CFG_REQ_ENABLES_PTP_FREQ_ADJ_PPB);
+<<<<<<< HEAD
 	rc = hwrm_req_send(bp, req);
 	if (rc)
 		netdev_err(bp->dev,
@@ -240,6 +261,15 @@ static int bnxt_ptp_adjfine(struct ptp_clock_info *ptp_info, long scaled_ppm)
 	return 0;
 }
 
+=======
+	rc = hwrm_req_send(ptp->bp, req);
+	if (rc)
+		netdev_err(ptp->bp->dev,
+			   "ptp adjfreq failed. rc = %d\n", rc);
+	return rc;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 void bnxt_ptp_pps_event(struct bnxt *bp, u32 data1, u32 data2)
 {
 	struct bnxt_ptp_cfg *ptp = bp->ptp_cfg;
@@ -520,6 +550,7 @@ static int bnxt_hwrm_ptp_cfg(struct bnxt *bp)
 	ptp->tstamp_filters = flags;
 
 	if (netif_running(bp->dev)) {
+<<<<<<< HEAD
 		if (ptp->rx_filter == HWTSTAMP_FILTER_ALL) {
 			rc = bnxt_close_nic(bp, false, false);
 			if (!rc)
@@ -527,6 +558,11 @@ static int bnxt_hwrm_ptp_cfg(struct bnxt *bp)
 		} else {
 			bnxt_ptp_cfg_tstamp_filters(bp);
 		}
+=======
+		rc = bnxt_close_nic(bp, false, false);
+		if (!rc)
+			rc = bnxt_open_nic(bp, false, false);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!rc && !ptp->tstamp_filters)
 			rc = -EIO;
 	}
@@ -764,7 +800,11 @@ static const struct ptp_clock_info bnxt_ptp_caps = {
 	.n_per_out	= 0,
 	.n_pins		= 0,
 	.pps		= 0,
+<<<<<<< HEAD
 	.adjfine	= bnxt_ptp_adjfine,
+=======
+	.adjfreq	= bnxt_ptp_adjfreq,
+>>>>>>> b7ba80a49124 (Commit)
 	.adjtime	= bnxt_ptp_adjtime,
 	.do_aux_work	= bnxt_ptp_ts_aux_work,
 	.gettimex64	= bnxt_ptp_gettimex,
@@ -861,6 +901,7 @@ static void bnxt_ptp_timecounter_init(struct bnxt *bp, bool init_tc)
 		memset(&ptp->cc, 0, sizeof(ptp->cc));
 		ptp->cc.read = bnxt_cc_read;
 		ptp->cc.mask = CYCLECOUNTER_MASK(48);
+<<<<<<< HEAD
 		if (BNXT_MH(bp)) {
 			/* Use timecounter based non-real time mode */
 			ptp->cc.shift = BNXT_CYCLES_SHIFT;
@@ -870,6 +911,10 @@ static void bnxt_ptp_timecounter_init(struct bnxt *bp, bool init_tc)
 			ptp->cc.shift = 0;
 			ptp->cc.mult = 1;
 		}
+=======
+		ptp->cc.shift = 0;
+		ptp->cc.mult = 1;
+>>>>>>> b7ba80a49124 (Commit)
 		ptp->next_overflow_check = jiffies + BNXT_PHC_OVERFLOW_PERIOD;
 	}
 	if (init_tc)
@@ -890,7 +935,11 @@ int bnxt_ptp_init_rtc(struct bnxt *bp, bool phc_cfg)
 	u64 ns;
 	int rc;
 
+<<<<<<< HEAD
 	if (!bp->ptp_cfg || !BNXT_PTP_USE_RTC(bp))
+=======
+	if (!bp->ptp_cfg || !(bp->fw_cap & BNXT_FW_CAP_PTP_RTC))
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODEV;
 
 	if (!phc_cfg) {
@@ -943,14 +992,21 @@ int bnxt_ptp_init(struct bnxt *bp, bool phc_cfg)
 	atomic_set(&ptp->tx_avail, BNXT_MAX_TX_TS);
 	spin_lock_init(&ptp->ptp_lock);
 
+<<<<<<< HEAD
 	if (BNXT_PTP_USE_RTC(bp)) {
+=======
+	if (bp->fw_cap & BNXT_FW_CAP_PTP_RTC) {
+>>>>>>> b7ba80a49124 (Commit)
 		bnxt_ptp_timecounter_init(bp, false);
 		rc = bnxt_ptp_init_rtc(bp, phc_cfg);
 		if (rc)
 			goto out;
 	} else {
 		bnxt_ptp_timecounter_init(bp, true);
+<<<<<<< HEAD
 		bnxt_ptp_adjfine_rtc(bp, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ptp->ptp_info = bnxt_ptp_caps;

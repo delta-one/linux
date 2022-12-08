@@ -58,9 +58,12 @@ properties:
         1 = If intr supports edge triggered interrupts.
         4 = If intr supports level triggered interrupts.
 
+<<<<<<< HEAD
   reg:
     maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   interrupt-controller: true
 
   '#interrupt-cells':

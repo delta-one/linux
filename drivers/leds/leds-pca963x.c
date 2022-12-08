@@ -101,7 +101,10 @@ struct pca963x_led {
 	struct pca963x *chip;
 	struct led_classdev led_cdev;
 	int led_num; /* 0 .. 15 potentially */
+<<<<<<< HEAD
 	bool blinking;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8 gdc;
 	u8 gfrq;
 };
@@ -130,6 +133,7 @@ static int pca963x_brightness(struct pca963x_led *led,
 
 	switch (brightness) {
 	case LED_FULL:
+<<<<<<< HEAD
 		if (led->blinking) {
 			val = (ledout & ~mask) | (PCA963X_LED_GRP_PWM << shift);
 			ret = i2c_smbus_write_byte_data(client,
@@ -139,12 +143,18 @@ static int pca963x_brightness(struct pca963x_led *led,
 		} else {
 			val = (ledout & ~mask) | (PCA963X_LED_ON << shift);
 		}
+=======
+		val = (ledout & ~mask) | (PCA963X_LED_ON << shift);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = i2c_smbus_write_byte_data(client, ledout_addr, val);
 		break;
 	case LED_OFF:
 		val = ledout & ~mask;
 		ret = i2c_smbus_write_byte_data(client, ledout_addr, val);
+<<<<<<< HEAD
 		led->blinking = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		ret = i2c_smbus_write_byte_data(client,
@@ -154,11 +164,15 @@ static int pca963x_brightness(struct pca963x_led *led,
 		if (ret < 0)
 			return ret;
 
+<<<<<<< HEAD
 		if (led->blinking)
 			val = (ledout & ~mask) | (PCA963X_LED_GRP_PWM << shift);
 		else
 			val = (ledout & ~mask) | (PCA963X_LED_PWM << shift);
 
+=======
+		val = (ledout & ~mask) | (PCA963X_LED_PWM << shift);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = i2c_smbus_write_byte_data(client, ledout_addr, val);
 		break;
 	}
@@ -195,7 +209,10 @@ static void pca963x_blink(struct pca963x_led *led)
 	}
 
 	mutex_unlock(&led->chip->mutex);
+<<<<<<< HEAD
 	led->blinking = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int pca963x_power_state(struct pca963x_led *led)
@@ -290,8 +307,11 @@ static int pca963x_blink_set(struct led_classdev *led_cdev,
 	led->gfrq = gfrq;
 
 	pca963x_blink(led);
+<<<<<<< HEAD
 	led->led_cdev.brightness = LED_FULL;
 	pca963x_led_set(led_cdev, LED_FULL);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	*delay_on = time_on;
 	*delay_off = time_off;
@@ -354,7 +374,10 @@ static int pca963x_register_leds(struct i2c_client *client,
 		led->led_cdev.brightness_set_blocking = pca963x_led_set;
 		if (hw_blink)
 			led->led_cdev.blink_set = pca963x_blink_set;
+<<<<<<< HEAD
 		led->blinking = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		init_data.fwnode = child;
 		/* for backwards compatibility */
@@ -389,9 +412,15 @@ static const struct of_device_id of_pca963x_match[] = {
 };
 MODULE_DEVICE_TABLE(of, of_pca963x_match);
 
+<<<<<<< HEAD
 static int pca963x_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int pca963x_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = &client->dev;
 	struct pca963x_chipdef *chipdef;
 	struct pca963x *chip;
@@ -431,7 +460,11 @@ static struct i2c_driver pca963x_driver = {
 		.name	= "leds-pca963x",
 		.of_match_table = of_pca963x_match,
 	},
+<<<<<<< HEAD
 	.probe_new = pca963x_probe,
+=======
+	.probe	= pca963x_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = pca963x_id,
 };
 

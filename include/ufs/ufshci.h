@@ -22,7 +22,10 @@ enum {
 /* UFSHCI Registers */
 enum {
 	REG_CONTROLLER_CAPABILITIES		= 0x00,
+<<<<<<< HEAD
 	REG_MCQCAP				= 0x04,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	REG_UFS_VERSION				= 0x08,
 	REG_CONTROLLER_DEV_ID			= 0x10,
 	REG_CONTROLLER_PROD_ID			= 0x14,
@@ -57,10 +60,13 @@ enum {
 	REG_UFS_CCAP				= 0x100,
 	REG_UFS_CRYPTOCAP			= 0x104,
 
+<<<<<<< HEAD
 	REG_UFS_MEM_CFG				= 0x300,
 	REG_UFS_MCQ_CFG				= 0x380,
 	REG_UFS_ESILBA				= 0x384,
 	REG_UFS_ESIUBA				= 0x388,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	UFSHCI_CRYPTO_REG_SPACE_SIZE		= 0x400,
 };
 
@@ -68,12 +74,16 @@ enum {
 enum {
 	MASK_TRANSFER_REQUESTS_SLOTS		= 0x0000001F,
 	MASK_TASK_MANAGEMENT_REQUEST_SLOTS	= 0x00070000,
+<<<<<<< HEAD
 	MASK_EHSLUTRD_SUPPORTED			= 0x00400000,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	MASK_AUTO_HIBERN8_SUPPORT		= 0x00800000,
 	MASK_64_ADDRESSING_SUPPORT		= 0x01000000,
 	MASK_OUT_OF_ORDER_DATA_DELIVERY_SUPPORT	= 0x02000000,
 	MASK_UIC_DME_TEST_MODE_SUPPORT		= 0x04000000,
 	MASK_CRYPTO_SUPPORT			= 0x10000000,
+<<<<<<< HEAD
 	MASK_MCQ_SUPPORT			= 0x40000000,
 };
 
@@ -109,6 +119,8 @@ enum {
 enum {
 	REG_CQIS		= 0x0,
 	REG_CQIE		= 0x4,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define UFS_MASK(mask, offset)		((mask) << (offset))
@@ -167,7 +179,10 @@ static inline u32 ufshci_version(u32 major, u32 minor)
 #define CONTROLLER_FATAL_ERROR			0x10000
 #define SYSTEM_BUS_FATAL_ERROR			0x20000
 #define CRYPTO_ENGINE_FATAL_ERROR		0x40000
+<<<<<<< HEAD
 #define MCQ_CQ_EVENT_STATUS			0x100000
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define UFSHCD_UIC_HIBERN8_MASK	(UIC_HIBERNATE_ENTER |\
 				UIC_HIBERNATE_EXIT)
@@ -265,9 +280,12 @@ enum {
 /* UTMRLRSR - UTP Task Management Request Run-Stop Register 80h */
 #define UTP_TASK_REQ_LIST_RUN_STOP_BIT		0x1
 
+<<<<<<< HEAD
 /* CQISy - CQ y Interrupt Status Register  */
 #define UFSHCD_MCQ_CQIS_TAIL_ENT_PUSH_STS	0x1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* UICCMD - UIC Command */
 #define COMMAND_OPCODE_MASK		0xFF
 #define GEN_SELECTOR_INDEX_MASK		0xFFFF
@@ -467,23 +485,34 @@ struct ufshcd_sg_entry {
 	__le64    addr;
 	__le32    reserved;
 	__le32    size;
+<<<<<<< HEAD
 	/*
 	 * followed by variant-specific fields if
 	 * CONFIG_SCSI_UFS_VARIABLE_SG_ENTRY_SIZE has been defined.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
  * struct utp_transfer_cmd_desc - UTP Command Descriptor (UCD)
  * @command_upiu: Command UPIU Frame address
  * @response_upiu: Response UPIU Frame address
+<<<<<<< HEAD
  * @prd_table: Physical Region Descriptor: an array of SG_ALL struct
  *	ufshcd_sg_entry's.  Variant-specific fields may be present after each.
+=======
+ * @prd_table: Physical Region Descriptor
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct utp_transfer_cmd_desc {
 	u8 command_upiu[ALIGNED_UPIU_SIZE];
 	u8 response_upiu[ALIGNED_UPIU_SIZE];
+<<<<<<< HEAD
 	u8 prd_table[];
+=======
+	struct ufshcd_sg_entry    prd_table[SG_ALL];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -528,6 +557,7 @@ struct utp_transfer_req_desc {
 	__le16  prd_table_offset;
 };
 
+<<<<<<< HEAD
 /* MCQ Completion Queue Entry */
 struct cq_entry {
 	/* DW 0-1 */
@@ -550,6 +580,8 @@ struct cq_entry {
 
 static_assert(sizeof(struct cq_entry) == 32);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * UTMRD structure.
  */

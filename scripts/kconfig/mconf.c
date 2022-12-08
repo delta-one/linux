@@ -161,12 +161,15 @@ static const char mconf_readme[] =
 "(especially with a larger number of unrolled categories) than the\n"
 "default mode.\n"
 "\n"
+<<<<<<< HEAD
 
 "Search\n"
 "-------\n"
 "Pressing the forward-slash (/) anywhere brings up a search dialog box.\n"
 "\n"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 "Different color themes available\n"
 "--------------------------------\n"
 "It is possible to select different color themes using the variable\n"
@@ -446,8 +449,14 @@ again:
 
 		res = get_relations_str(sym_arr, &head);
 		set_subtitle();
+<<<<<<< HEAD
 		dres = show_textbox_ext("Search Results", str_get(&res), 0, 0,
 					keys, &vscroll, &hscroll, &update_text,
+=======
+		dres = show_textbox_ext("Search Results", (char *)
+					str_get(&res), 0, 0, keys, &vscroll,
+					&hscroll, &update_text, (void *)
+>>>>>>> b7ba80a49124 (Commit)
 					&data);
 		again = false;
 		for (i = 0; i < JUMP_NB && keys[i]; i++)

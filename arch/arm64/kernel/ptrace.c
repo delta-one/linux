@@ -514,7 +514,13 @@ static int hw_break_set(struct task_struct *target,
 
 	/* Resource info and pad */
 	offset = offsetof(struct user_hwdebug_state, dbg_regs);
+<<<<<<< HEAD
 	user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, 0, offset);
+=======
+	ret = user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, 0, offset);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* (address, ctrl) registers */
 	limit = regset->n * regset->size;
@@ -541,8 +547,16 @@ static int hw_break_set(struct task_struct *target,
 			return ret;
 		offset += PTRACE_HBP_CTRL_SZ;
 
+<<<<<<< HEAD
 		user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
 					  offset, offset + PTRACE_HBP_PAD_SZ);
+=======
+		ret = user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+						offset,
+						offset + PTRACE_HBP_PAD_SZ);
+		if (ret)
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 		offset += PTRACE_HBP_PAD_SZ;
 		idx++;
 	}
@@ -683,7 +697,11 @@ static int tls_set(struct task_struct *target, const struct user_regset *regset,
 	unsigned long tls[2];
 
 	tls[0] = target->thread.uw.tp_value;
+<<<<<<< HEAD
 	if (system_supports_tpidr2())
+=======
+	if (system_supports_sme())
+>>>>>>> b7ba80a49124 (Commit)
 		tls[1] = target->thread.tpidr2_el0;
 
 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, tls, 0, count);
@@ -691,7 +709,11 @@ static int tls_set(struct task_struct *target, const struct user_regset *regset,
 		return ret;
 
 	target->thread.uw.tp_value = tls[0];
+<<<<<<< HEAD
 	if (system_supports_tpidr2())
+=======
+	if (system_supports_sme())
+>>>>>>> b7ba80a49124 (Commit)
 		target->thread.tpidr2_el0 = tls[1];
 
 	return ret;
@@ -902,7 +924,12 @@ static int sve_set_common(struct task_struct *target,
 		ret = __fpr_set(target, regset, pos, count, kbuf, ubuf,
 				SVE_PT_FPSIMD_OFFSET);
 		clear_tsk_thread_flag(target, TIF_SVE);
+<<<<<<< HEAD
 		target->thread.fp_type = FP_STATE_FPSIMD;
+=======
+		if (type == ARM64_VEC_SME)
+			fpsimd_force_sync_to_sve(target);
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -925,7 +952,10 @@ static int sve_set_common(struct task_struct *target,
 	if (!target->thread.sve_state) {
 		ret = -ENOMEM;
 		clear_tsk_thread_flag(target, TIF_SVE);
+<<<<<<< HEAD
 		target->thread.fp_type = FP_STATE_FPSIMD;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -937,7 +967,10 @@ static int sve_set_common(struct task_struct *target,
 	 */
 	fpsimd_sync_to_sve(target);
 	set_tsk_thread_flag(target, TIF_SVE);
+<<<<<<< HEAD
 	target->thread.fp_type = FP_STATE_SVE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	BUILD_BUG_ON(SVE_PT_SVE_OFFSET != sizeof(header));
 	start = SVE_PT_SVE_OFFSET;
@@ -950,7 +983,14 @@ static int sve_set_common(struct task_struct *target,
 
 	start = end;
 	end = SVE_PT_SVE_FPSR_OFFSET(vq);
+<<<<<<< HEAD
 	user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, start, end);
+=======
+	ret = user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+					start, end);
+	if (ret)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Copy fpsr, and fpcr which must follow contiguously in
@@ -1045,7 +1085,11 @@ static int za_get(struct task_struct *target,
 	if (thread_za_enabled(&target->thread)) {
 		start = end;
 		end = ZA_PT_SIZE(vq);
+<<<<<<< HEAD
 		membuf_write(&to, target->thread.sme_state, end - start);
+=======
+		membuf_write(&to, target->thread.za_state, end - start);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Zero any trailing padding */
@@ -1099,7 +1143,11 @@ static int za_set(struct task_struct *target,
 
 	/* Allocate/reinit ZA storage */
 	sme_alloc(target);
+<<<<<<< HEAD
 	if (!target->thread.sme_state) {
+=======
+	if (!target->thread.za_state) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -ENOMEM;
 		goto out;
 	}
@@ -1124,7 +1172,11 @@ static int za_set(struct task_struct *target,
 	start = ZA_PT_ZA_OFFSET;
 	end = ZA_PT_SIZE(vq);
 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+<<<<<<< HEAD
 				 target->thread.sme_state,
+=======
+				 target->thread.za_state,
+>>>>>>> b7ba80a49124 (Commit)
 				 start, end);
 	if (ret)
 		goto out;
@@ -1138,6 +1190,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int zt_get(struct task_struct *target,
 		  const struct user_regset *regset,
 		  struct membuf to)
@@ -1183,6 +1236,8 @@ static int zt_set(struct task_struct *target,
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_ARM64_SME */
 
 #ifdef CONFIG_ARM64_PTR_AUTH
@@ -1402,10 +1457,16 @@ enum aarch64_regset {
 #ifdef CONFIG_ARM64_SVE
 	REGSET_SVE,
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_ARM64_SME
 	REGSET_SSVE,
 	REGSET_ZA,
 	REGSET_ZT,
+=======
+#ifdef CONFIG_ARM64_SVE
+	REGSET_SSVE,
+	REGSET_ZA,
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 #ifdef CONFIG_ARM64_PTR_AUTH
 	REGSET_PAC_MASK,
@@ -1513,6 +1574,7 @@ static const struct user_regset aarch64_regsets[] = {
 		.regset_get = za_get,
 		.set = za_set,
 	},
+<<<<<<< HEAD
 	[REGSET_ZT] = { /* SME ZT */
 		.core_note_type = NT_ARM_ZT,
 		.n = 1,
@@ -1521,6 +1583,8 @@ static const struct user_regset aarch64_regsets[] = {
 		.regset_get = zt_get,
 		.set = zt_set,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 #ifdef CONFIG_ARM64_PTR_AUTH
 	[REGSET_PAC_MASK] = {

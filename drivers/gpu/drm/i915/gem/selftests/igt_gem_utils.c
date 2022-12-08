@@ -62,8 +62,13 @@ igt_emit_store_dw(struct i915_vma *vma,
 		goto err;
 	}
 
+<<<<<<< HEAD
 	GEM_BUG_ON(offset + (count - 1) * PAGE_SIZE > i915_vma_size(vma));
 	offset += i915_vma_offset(vma);
+=======
+	GEM_BUG_ON(offset + (count - 1) * PAGE_SIZE > vma->node.size);
+	offset += vma->node.start;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (n = 0; n < count; n++) {
 		if (ver >= 8) {
@@ -130,11 +135,27 @@ int igt_gpu_fill_dw(struct intel_context *ce,
 		goto err_batch;
 	}
 
+<<<<<<< HEAD
 	err = igt_vma_move_to_active_unlocked(batch, rq, 0);
 	if (err)
 		goto skip_request;
 
 	err = igt_vma_move_to_active_unlocked(vma, rq, EXEC_OBJECT_WRITE);
+=======
+	i915_vma_lock(batch);
+	err = i915_request_await_object(rq, batch->obj, false);
+	if (err == 0)
+		err = i915_vma_move_to_active(batch, rq, 0);
+	i915_vma_unlock(batch);
+	if (err)
+		goto skip_request;
+
+	i915_vma_lock(vma);
+	err = i915_request_await_object(rq, vma->obj, true);
+	if (err == 0)
+		err = i915_vma_move_to_active(vma, rq, EXEC_OBJECT_WRITE);
+	i915_vma_unlock(vma);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto skip_request;
 
@@ -143,8 +164,12 @@ int igt_gpu_fill_dw(struct intel_context *ce,
 		flags |= I915_DISPATCH_SECURE;
 
 	err = rq->engine->emit_bb_start(rq,
+<<<<<<< HEAD
 					i915_vma_offset(batch),
 					i915_vma_size(batch),
+=======
+					batch->node.start, batch->node.size,
+>>>>>>> b7ba80a49124 (Commit)
 					flags);
 
 skip_request:

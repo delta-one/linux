@@ -33,7 +33,11 @@ struct bcm2711_thermal_priv {
 
 static int bcm2711_get_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	struct bcm2711_thermal_priv *priv = thermal_zone_device_priv(tz);
+=======
+	struct bcm2711_thermal_priv *priv = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	int slope = thermal_zone_get_slope(tz);
 	int offset = thermal_zone_get_offset(tz);
 	u32 val;
@@ -98,6 +102,10 @@ static int bcm2711_thermal_probe(struct platform_device *pdev)
 
 	priv->thermal = thermal;
 
+<<<<<<< HEAD
+=======
+	thermal->tzp->no_hwmon = false;
+>>>>>>> b7ba80a49124 (Commit)
 	return thermal_add_hwmon_sysfs(thermal);
 }
 

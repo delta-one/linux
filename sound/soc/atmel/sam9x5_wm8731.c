@@ -176,12 +176,21 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void sam9x5_wm8731_driver_remove(struct platform_device *pdev)
+=======
+static int sam9x5_wm8731_driver_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 	struct sam9x5_drvdata *priv = card->drvdata;
 
 	atmel_ssc_put_audio(priv->ssc_id);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id sam9x5_wm8731_of_match[] = {
@@ -196,7 +205,11 @@ static struct platform_driver sam9x5_wm8731_driver = {
 		.of_match_table = of_match_ptr(sam9x5_wm8731_of_match),
 	},
 	.probe = sam9x5_wm8731_driver_probe,
+<<<<<<< HEAD
 	.remove_new = sam9x5_wm8731_driver_remove,
+=======
+	.remove = sam9x5_wm8731_driver_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(sam9x5_wm8731_driver);
 

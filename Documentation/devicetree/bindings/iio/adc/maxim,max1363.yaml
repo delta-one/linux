@@ -10,7 +10,11 @@ maintainers:
   - Jonathan Cameron <jic23@kernel.org>
 
 description: |
+<<<<<<< HEAD
    Family of ADCs with i2c interface, internal references and threshold
+=======
+   Family of ADCs with i2c inteface, internal references and threshold
+>>>>>>> b7ba80a49124 (Commit)
    monitoring.
 
 properties:

@@ -549,6 +549,7 @@ config HW_RANDOM_CN10K
 	 To compile this driver as a module, choose M here.
 	 The module will be called cn10k_rng. If unsure, say Y.
 
+<<<<<<< HEAD
 config HW_RANDOM_JH7110
 	tristate "StarFive JH7110 Random Number Generator support"
 	depends on SOC_STARFIVE || COMPILE_TEST
@@ -559,6 +560,8 @@ config HW_RANDOM_JH7110
 	  To compile this driver as a module, choose M here.
 	  The module will be called jh7110-trng.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endif # HW_RANDOM
 
 config UML_RANDOM

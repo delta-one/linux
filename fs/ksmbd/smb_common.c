@@ -4,8 +4,11 @@
  *   Copyright (C) 2018 Namjae Jeon <linkinjeon@kernel.org>
  */
 
+<<<<<<< HEAD
 #include <linux/user_namespace.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "smb_common.h"
 #include "server.h"
 #include "misc.h"
@@ -307,7 +310,11 @@ int ksmbd_populate_dot_dotdot_entries(struct ksmbd_work *work, int info_level,
 {
 	int i, rc = 0;
 	struct ksmbd_conn *conn = work->conn;
+<<<<<<< HEAD
 	struct mnt_idmap *idmap = file_mnt_idmap(dir->filp);
+=======
+	struct user_namespace *user_ns = file_mnt_user_ns(dir->filp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < 2; i++) {
 		struct kstat kstat;
@@ -333,7 +340,11 @@ int ksmbd_populate_dot_dotdot_entries(struct ksmbd_work *work, int info_level,
 
 			ksmbd_kstat.kstat = &kstat;
 			ksmbd_vfs_fill_dentry_attrs(work,
+<<<<<<< HEAD
 						    idmap,
+=======
+						    user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 						    dentry,
 						    &ksmbd_kstat);
 			rc = fn(conn, info_level, d_info, &ksmbd_kstat);
@@ -434,7 +445,11 @@ int ksmbd_extract_shortname(struct ksmbd_conn *conn, const char *longname,
 
 static int __smb2_negotiate(struct ksmbd_conn *conn)
 {
+<<<<<<< HEAD
 	return (conn->dialect >= SMB20_PROT_ID &&
+=======
+	return (conn->dialect >= SMB21_PROT_ID &&
+>>>>>>> b7ba80a49124 (Commit)
 		conn->dialect <= SMB311_PROT_ID);
 }
 
@@ -442,6 +457,7 @@ static int smb_handle_negotiate(struct ksmbd_work *work)
 {
 	struct smb_negotiate_rsp *neg_rsp = work->response_buf;
 
+<<<<<<< HEAD
 	ksmbd_debug(SMB, "Unsupported SMB1 protocol\n");
 
 	/*
@@ -462,6 +478,11 @@ static int smb_handle_negotiate(struct ksmbd_work *work)
 	neg_rsp->DialectIndex = cpu_to_le16(work->conn->dialect);
 	neg_rsp->ByteCount = 0;
 	return 0;
+=======
+	ksmbd_debug(SMB, "Unsupported SMB protocol\n");
+	neg_rsp->hdr.Status.CifsError = STATUS_INVALID_LOGON_TYPE;
+	return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int ksmbd_smb_negotiate_common(struct ksmbd_work *work, unsigned int command)
@@ -482,7 +503,11 @@ int ksmbd_smb_negotiate_common(struct ksmbd_work *work, unsigned int command)
 		}
 	}
 
+<<<<<<< HEAD
 	if (command == SMB2_NEGOTIATE_HE) {
+=======
+	if (command == SMB2_NEGOTIATE_HE && __smb2_negotiate(conn)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = smb2_handle_negotiate(work);
 		init_smb2_neg_rsp(work);
 		return ret;
@@ -640,12 +665,21 @@ int ksmbd_override_fsids(struct ksmbd_work *work)
 	if (share->force_gid != KSMBD_SHARE_INVALID_GID)
 		gid = share->force_gid;
 
+<<<<<<< HEAD
 	cred = prepare_kernel_cred(&init_task);
 	if (!cred)
 		return -ENOMEM;
 
 	cred->fsuid = make_kuid(&init_user_ns, uid);
 	cred->fsgid = make_kgid(&init_user_ns, gid);
+=======
+	cred = prepare_kernel_cred(NULL);
+	if (!cred)
+		return -ENOMEM;
+
+	cred->fsuid = make_kuid(current_user_ns(), uid);
+	cred->fsgid = make_kgid(current_user_ns(), gid);
+>>>>>>> b7ba80a49124 (Commit)
 
 	gi = groups_alloc(0);
 	if (!gi) {

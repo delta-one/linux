@@ -10,7 +10,10 @@
 #include <linux/kernel.h>
 #include <linux/mfd/mt6323/registers.h>
 #include <linux/mfd/mt6331/registers.h>
+<<<<<<< HEAD
 #include <linux/mfd/mt6357/registers.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mfd/mt6358/registers.h>
 #include <linux/mfd/mt6397/core.h>
 #include <linux/mfd/mt6397/registers.h>
@@ -91,6 +94,7 @@ static const struct mtk_pmic_regs mt6331_regs = {
 	.rst_lprst_mask = MTK_PMIC_MT6331_RST_DU_MASK,
 };
 
+<<<<<<< HEAD
 static const struct mtk_pmic_regs mt6357_regs = {
 	.keys_regs[MTK_PMIC_PWRKEY_INDEX] =
 		MTK_PMIC_KEYS_REGS(MT6357_TOPSTATUS,
@@ -104,6 +108,8 @@ static const struct mtk_pmic_regs mt6357_regs = {
 	.rst_lprst_mask = MTK_PMIC_RST_DU_MASK,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct mtk_pmic_regs mt6358_regs = {
 	.keys_regs[MTK_PMIC_PWRKEY_INDEX] =
 		MTK_PMIC_KEYS_REGS(MT6358_TOPSTATUS,
@@ -245,7 +251,11 @@ static int mtk_pmic_key_setup(struct mtk_pmic_keys *keys,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mtk_pmic_keys_suspend(struct device *dev)
+=======
+static int __maybe_unused mtk_pmic_keys_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mtk_pmic_keys *keys = dev_get_drvdata(dev);
 	int index;
@@ -261,7 +271,11 @@ static int mtk_pmic_keys_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mtk_pmic_keys_resume(struct device *dev)
+=======
+static int __maybe_unused mtk_pmic_keys_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mtk_pmic_keys *keys = dev_get_drvdata(dev);
 	int index;
@@ -277,8 +291,13 @@ static int mtk_pmic_keys_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(mtk_pmic_keys_pm_ops, mtk_pmic_keys_suspend,
 				mtk_pmic_keys_resume);
+=======
+static SIMPLE_DEV_PM_OPS(mtk_pmic_keys_pm_ops, mtk_pmic_keys_suspend,
+			mtk_pmic_keys_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct of_device_id of_mtk_pmic_keys_match_tbl[] = {
 	{
@@ -291,9 +310,12 @@ static const struct of_device_id of_mtk_pmic_keys_match_tbl[] = {
 		.compatible = "mediatek,mt6331-keys",
 		.data = &mt6331_regs,
 	}, {
+<<<<<<< HEAD
 		.compatible = "mediatek,mt6357-keys",
 		.data = &mt6357_regs,
 	}, {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.compatible = "mediatek,mt6358-keys",
 		.data = &mt6358_regs,
 	}, {
@@ -404,7 +426,11 @@ static struct platform_driver pmic_keys_pdrv = {
 	.driver = {
 		   .name = "mtk-pmic-keys",
 		   .of_match_table = of_mtk_pmic_keys_match_tbl,
+<<<<<<< HEAD
 		   .pm = pm_sleep_ptr(&mtk_pmic_keys_pm_ops),
+=======
+		   .pm = &mtk_pmic_keys_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

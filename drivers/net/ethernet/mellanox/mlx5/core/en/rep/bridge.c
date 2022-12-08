@@ -164,6 +164,7 @@ static int mlx5_esw_bridge_port_changeupper(struct notifier_block *nb, void *ptr
 	return err;
 }
 
+<<<<<<< HEAD
 static int
 mlx5_esw_bridge_changeupper_validate_netdev(void *ptr)
 {
@@ -194,6 +195,8 @@ mlx5_esw_bridge_changeupper_validate_netdev(void *ptr)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mlx5_esw_bridge_switchdev_port_event(struct notifier_block *nb,
 						unsigned long event, void *ptr)
 {
@@ -201,7 +204,10 @@ static int mlx5_esw_bridge_switchdev_port_event(struct notifier_block *nb,
 
 	switch (event) {
 	case NETDEV_PRECHANGEUPPER:
+<<<<<<< HEAD
 		err = mlx5_esw_bridge_changeupper_validate_netdev(ptr);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case NETDEV_CHANGEUPPER:
@@ -438,6 +444,13 @@ static int mlx5_esw_bridge_switchdev_event(struct notifier_block *nb,
 
 	switch (event) {
 	case SWITCHDEV_FDB_ADD_TO_BRIDGE:
+<<<<<<< HEAD
+=======
+		/* only handle the event on native eswtich of representor */
+		if (!mlx5_esw_bridge_is_local(dev, rep, esw))
+			break;
+
+>>>>>>> b7ba80a49124 (Commit)
 		fdb_info = container_of(info,
 					struct switchdev_notifier_fdb_info,
 					info);

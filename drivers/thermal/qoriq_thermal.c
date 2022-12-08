@@ -13,6 +13,10 @@
 #include <linux/thermal.h>
 #include <linux/units.h>
 
+<<<<<<< HEAD
+=======
+#include "thermal_core.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "thermal_hwmon.h"
 
 #define SITES_MAX		16
@@ -83,7 +87,11 @@ static struct qoriq_tmu_data *qoriq_sensor_to_data(struct qoriq_sensor *s)
 
 static int tmu_get_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	struct qoriq_sensor *qsensor = thermal_zone_device_priv(tz);
+=======
+	struct qoriq_sensor *qsensor = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct qoriq_tmu_data *qdata = qoriq_sensor_to_data(qsensor);
 	u32 val;
 	/*
@@ -157,7 +165,11 @@ static int qoriq_tmu_register_tmu_zone(struct device *dev,
 			return ret;
 		}
 
+<<<<<<< HEAD
 		if (devm_thermal_add_hwmon_sysfs(dev, tzd))
+=======
+		if (devm_thermal_add_hwmon_sysfs(tzd))
+>>>>>>> b7ba80a49124 (Commit)
 			dev_warn(dev,
 				 "Failed to add hwmon sysfs attributes\n");
 

@@ -191,7 +191,11 @@ err_disable_pclk:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void ftrtc010_rtc_remove(struct platform_device *pdev)
+=======
+static int ftrtc010_rtc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ftrtc010_rtc *rtc = platform_get_drvdata(pdev);
 
@@ -199,6 +203,11 @@ static void ftrtc010_rtc_remove(struct platform_device *pdev)
 		clk_disable_unprepare(rtc->extclk);
 	if (!IS_ERR(rtc->pclk))
 		clk_disable_unprepare(rtc->pclk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id ftrtc010_rtc_dt_match[] = {
@@ -214,7 +223,11 @@ static struct platform_driver ftrtc010_rtc_driver = {
 		.of_match_table = ftrtc010_rtc_dt_match,
 	},
 	.probe		= ftrtc010_rtc_probe,
+<<<<<<< HEAD
 	.remove_new	= ftrtc010_rtc_remove,
+=======
+	.remove		= ftrtc010_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver_probe(ftrtc010_rtc_driver, ftrtc010_rtc_probe);

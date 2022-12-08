@@ -16,6 +16,10 @@
 #include "be.h"
 #include "be_cmds.h"
 #include <asm/div64.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/if_bridge.h>
 #include <net/busy_poll.h>
 #include <net/vxlan.h>
@@ -664,10 +668,17 @@ static void be_get_stats64(struct net_device *netdev,
 		const struct be_rx_stats *rx_stats = rx_stats(rxo);
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&rx_stats->sync);
 			pkts = rx_stats(rxo)->rx_pkts;
 			bytes = rx_stats(rxo)->rx_bytes;
 		} while (u64_stats_fetch_retry(&rx_stats->sync, start));
+=======
+			start = u64_stats_fetch_begin_irq(&rx_stats->sync);
+			pkts = rx_stats(rxo)->rx_pkts;
+			bytes = rx_stats(rxo)->rx_bytes;
+		} while (u64_stats_fetch_retry_irq(&rx_stats->sync, start));
+>>>>>>> b7ba80a49124 (Commit)
 		stats->rx_packets += pkts;
 		stats->rx_bytes += bytes;
 		stats->multicast += rx_stats(rxo)->rx_mcast_pkts;
@@ -679,10 +690,17 @@ static void be_get_stats64(struct net_device *netdev,
 		const struct be_tx_stats *tx_stats = tx_stats(txo);
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&tx_stats->sync);
 			pkts = tx_stats(txo)->tx_pkts;
 			bytes = tx_stats(txo)->tx_bytes;
 		} while (u64_stats_fetch_retry(&tx_stats->sync, start));
+=======
+			start = u64_stats_fetch_begin_irq(&tx_stats->sync);
+			pkts = tx_stats(txo)->tx_pkts;
+			bytes = tx_stats(txo)->tx_bytes;
+		} while (u64_stats_fetch_retry_irq(&tx_stats->sync, start));
+>>>>>>> b7ba80a49124 (Commit)
 		stats->tx_packets += pkts;
 		stats->tx_bytes += bytes;
 	}
@@ -2154,16 +2172,28 @@ static int be_get_new_eqd(struct be_eq_obj *eqo)
 
 	for_all_rx_queues_on_eq(adapter, eqo, rxo, i) {
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&rxo->stats.sync);
 			rx_pkts += rxo->stats.rx_pkts;
 		} while (u64_stats_fetch_retry(&rxo->stats.sync, start));
+=======
+			start = u64_stats_fetch_begin_irq(&rxo->stats.sync);
+			rx_pkts += rxo->stats.rx_pkts;
+		} while (u64_stats_fetch_retry_irq(&rxo->stats.sync, start));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for_all_tx_queues_on_eq(adapter, eqo, txo, i) {
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&txo->stats.sync);
 			tx_pkts += txo->stats.tx_reqs;
 		} while (u64_stats_fetch_retry(&txo->stats.sync, start));
+=======
+			start = u64_stats_fetch_begin_irq(&txo->stats.sync);
+			tx_pkts += txo->stats.tx_reqs;
+		} while (u64_stats_fetch_retry_irq(&txo->stats.sync, start));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Skip, if wrapped around or first calculation */
@@ -2981,7 +3011,12 @@ static int be_evt_queues_create(struct be_adapter *adapter)
 			return -ENOMEM;
 		cpumask_set_cpu(cpumask_local_spread(i, numa_node),
 				eqo->affinity_mask);
+<<<<<<< HEAD
 		netif_napi_add(adapter->netdev, &eqo->napi, be_poll);
+=======
+		netif_napi_add(adapter->netdev, &eqo->napi, be_poll,
+			       NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return 0;
 }
@@ -5725,6 +5760,11 @@ static void be_remove(struct pci_dev *pdev)
 	be_unmap_pci_bars(adapter);
 	be_drv_cleanup(adapter);
 
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	pci_release_regions(pdev);
 	pci_disable_device(pdev);
 
@@ -5842,6 +5882,13 @@ static int be_probe(struct pci_dev *pdev, const struct pci_device_id *pdev_id)
 		goto free_netdev;
 	}
 
+<<<<<<< HEAD
+=======
+	status = pci_enable_pcie_error_reporting(pdev);
+	if (!status)
+		dev_info(&pdev->dev, "PCIe error reporting enabled\n");
+
+>>>>>>> b7ba80a49124 (Commit)
 	status = be_map_pci_bars(adapter);
 	if (status)
 		goto free_netdev;
@@ -5886,6 +5933,10 @@ drv_cleanup:
 unmap_bars:
 	be_unmap_pci_bars(adapter);
 free_netdev:
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	free_netdev(netdev);
 rel_reg:
 	pci_release_regions(pdev);

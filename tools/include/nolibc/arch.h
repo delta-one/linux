@@ -27,10 +27,13 @@
 #include "arch-mips.h"
 #elif defined(__riscv)
 #include "arch-riscv.h"
+<<<<<<< HEAD
 #elif defined(__s390x__)
 #include "arch-s390.h"
 #elif defined(__loongarch__)
 #include "arch-loongarch.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #endif /* _NOLIBC_ARCH_H */

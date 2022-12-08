@@ -47,12 +47,20 @@
 		pinctrl-0 = <&pinctrl_leds>;
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led_green: led-green {
+=======
+		led_green: green {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "phyflex:green";
 			gpios = <&gpio1 30 0>;
 		};
 
+<<<<<<< HEAD
 		led_red: led-red {
+=======
+		led_red: red {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "phyflex:red";
 			gpios = <&gpio2 31 0>;
 		};

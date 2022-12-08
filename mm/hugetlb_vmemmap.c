@@ -11,7 +11,10 @@
 #define pr_fmt(fmt)	"HugeTLB: " fmt
 
 #include <linux/pgtable.h>
+<<<<<<< HEAD
 #include <linux/moduleparam.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/bootmem_info.h>
 #include <asm/pgalloc.h>
 #include <asm/tlbflush.h>
@@ -203,7 +206,16 @@ static int vmemmap_remap_range(unsigned long start, unsigned long end,
 			return ret;
 	} while (pgd++, addr = next, addr != end);
 
+<<<<<<< HEAD
 	flush_tlb_kernel_range(start, end);
+=======
+	/*
+	 * We only change the mapping of the vmemmap virtual address range
+	 * [@start + PAGE_SIZE, end), so we only need to flush the TLB which
+	 * belongs to the range.
+	 */
+	flush_tlb_kernel_range(start + PAGE_SIZE, end);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -227,8 +239,15 @@ static void free_vmemmap_page_list(struct list_head *list)
 {
 	struct page *page, *next;
 
+<<<<<<< HEAD
 	list_for_each_entry_safe(page, next, list, lru)
 		free_vmemmap_page(page);
+=======
+	list_for_each_entry_safe(page, next, list, lru) {
+		list_del(&page->lru);
+		free_vmemmap_page(page);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void vmemmap_remap_pte(pte_t *pte, unsigned long addr,
@@ -239,6 +258,7 @@ static void vmemmap_remap_pte(pte_t *pte, unsigned long addr,
 	 * to the tail pages.
 	 */
 	pgprot_t pgprot = PAGE_KERNEL_RO;
+<<<<<<< HEAD
 	struct page *page = pte_page(*pte);
 	pte_t entry;
 
@@ -256,6 +276,11 @@ static void vmemmap_remap_pte(pte_t *pte, unsigned long addr,
 	}
 
 	entry = mk_pte(walk->reuse_page, pgprot);
+=======
+	pte_t entry = mk_pte(walk->reuse_page, pgprot);
+	struct page *page = pte_page(*pte);
+
+>>>>>>> b7ba80a49124 (Commit)
 	list_add_tail(&page->lru, walk->vmemmap_pages);
 	set_pte_at(&init_mm, addr, pte, entry);
 }
@@ -324,6 +349,7 @@ static int vmemmap_remap_free(unsigned long start, unsigned long end,
 		.reuse_addr	= reuse,
 		.vmemmap_pages	= &vmemmap_pages,
 	};
+<<<<<<< HEAD
 	int nid = page_to_nid((struct page *)start);
 	gfp_t gfp_mask = GFP_KERNEL | __GFP_THISNODE | __GFP_NORETRY |
 			__GFP_NOWARN;
@@ -342,6 +368,8 @@ static int vmemmap_remap_free(unsigned long start, unsigned long end,
 			  (void *)walk.reuse_addr);
 		list_add(&walk.reuse_page->lru, &vmemmap_pages);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * In order to make remapping routine most efficient for the huge pages,
@@ -400,7 +428,11 @@ static int alloc_vmemmap_page_list(unsigned long start, unsigned long end,
 	return 0;
 out:
 	list_for_each_entry_safe(page, next, list, lru)
+<<<<<<< HEAD
 		__free_page(page);
+=======
+		__free_pages(page, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	return -ENOMEM;
 }
 
@@ -581,7 +613,11 @@ static struct ctl_table hugetlb_vmemmap_sysctls[] = {
 	{
 		.procname	= "hugetlb_optimize_vmemmap",
 		.data		= &vmemmap_optimize_enabled,
+<<<<<<< HEAD
 		.maxlen		= sizeof(vmemmap_optimize_enabled),
+=======
+		.maxlen		= sizeof(int),
+>>>>>>> b7ba80a49124 (Commit)
 		.mode		= 0644,
 		.proc_handler	= proc_dobool,
 	},
@@ -590,6 +626,7 @@ static struct ctl_table hugetlb_vmemmap_sysctls[] = {
 
 static int __init hugetlb_vmemmap_init(void)
 {
+<<<<<<< HEAD
 	const struct hstate *h;
 
 	/* HUGETLB_VMEMMAP_RESERVE_SIZE should cover all used struct pages */
@@ -599,6 +636,19 @@ static int __init hugetlb_vmemmap_init(void)
 		if (hugetlb_vmemmap_optimizable(h)) {
 			register_sysctl_init("vm", hugetlb_vmemmap_sysctls);
 			break;
+=======
+	/* HUGETLB_VMEMMAP_RESERVE_SIZE should cover all used struct pages */
+	BUILD_BUG_ON(__NR_USED_SUBPAGE * sizeof(struct page) > HUGETLB_VMEMMAP_RESERVE_SIZE);
+
+	if (IS_ENABLED(CONFIG_PROC_SYSCTL)) {
+		const struct hstate *h;
+
+		for_each_hstate(h) {
+			if (hugetlb_vmemmap_optimizable(h)) {
+				register_sysctl_init("vm", hugetlb_vmemmap_sysctls);
+				break;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 	return 0;

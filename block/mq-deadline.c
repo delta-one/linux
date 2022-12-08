@@ -131,6 +131,7 @@ static u8 dd_rq_ioclass(struct request *rq)
 }
 
 /*
+<<<<<<< HEAD
  * get the request before `rq' in sector-sorted order
  */
 static inline struct request *
@@ -145,6 +146,8 @@ deadline_earlier_request(struct request *rq)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * get the request after `rq' in sector-sorted order
  */
 static inline struct request *
@@ -292,6 +295,7 @@ static inline int deadline_check_fifo(struct dd_per_prio *per_prio,
 }
 
 /*
+<<<<<<< HEAD
  * Check if rq has a sequential request preceding it.
  */
 static bool deadline_is_seq_write(struct deadline_data *dd, struct request *rq)
@@ -325,6 +329,8 @@ static struct request *deadline_skip_seq_writes(struct deadline_data *dd,
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * For the specified data direction, return the next request to
  * dispatch using arrival ordered lists.
  */
@@ -344,6 +350,7 @@ deadline_fifo_request(struct deadline_data *dd, struct dd_per_prio *per_prio,
 
 	/*
 	 * Look for a write request that can be dispatched, that is one with
+<<<<<<< HEAD
 	 * an unlocked target zone. For some HDDs, breaking a sequential
 	 * write stream can lead to lower throughput, so make sure to preserve
 	 * sequential write streams, even if that stream crosses into the next
@@ -354,6 +361,13 @@ deadline_fifo_request(struct deadline_data *dd, struct dd_per_prio *per_prio,
 		if (blk_req_can_dispatch_to_zone(rq) &&
 		    (blk_queue_nonrot(rq->q) ||
 		     !deadline_is_seq_write(dd, rq)))
+=======
+	 * an unlocked target zone.
+	 */
+	spin_lock_irqsave(&dd->zone_lock, flags);
+	list_for_each_entry(rq, &per_prio->fifo_list[DD_WRITE], queuelist) {
+		if (blk_req_can_dispatch_to_zone(rq))
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 	}
 	rq = NULL;
@@ -383,19 +397,27 @@ deadline_next_request(struct deadline_data *dd, struct dd_per_prio *per_prio,
 
 	/*
 	 * Look for a write request that can be dispatched, that is one with
+<<<<<<< HEAD
 	 * an unlocked target zone. For some HDDs, breaking a sequential
 	 * write stream can lead to lower throughput, so make sure to preserve
 	 * sequential write streams, even if that stream crosses into the next
 	 * zones and these zones are unlocked.
+=======
+	 * an unlocked target zone.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	spin_lock_irqsave(&dd->zone_lock, flags);
 	while (rq) {
 		if (blk_req_can_dispatch_to_zone(rq))
 			break;
+<<<<<<< HEAD
 		if (blk_queue_nonrot(rq->q))
 			rq = deadline_latter_request(rq);
 		else
 			rq = deadline_skip_seq_writes(dd, rq);
+=======
+		rq = deadline_latter_request(rq);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	spin_unlock_irqrestore(&dd->zone_lock, flags);
 
@@ -847,6 +869,7 @@ static void dd_prepare_request(struct request *rq)
 	rq->elv.priv[0] = NULL;
 }
 
+<<<<<<< HEAD
 static bool dd_has_write_work(struct blk_mq_hw_ctx *hctx)
 {
 	struct deadline_data *dd = hctx->queue->elevator->elevator_data;
@@ -859,6 +882,8 @@ static bool dd_has_write_work(struct blk_mq_hw_ctx *hctx)
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Callback from inside blk_mq_free_request().
  *
@@ -898,10 +923,16 @@ static void dd_finish_request(struct request *rq)
 
 		spin_lock_irqsave(&dd->zone_lock, flags);
 		blk_req_zone_write_unlock(rq);
+<<<<<<< HEAD
 		spin_unlock_irqrestore(&dd->zone_lock, flags);
 
 		if (dd_has_write_work(rq->mq_hctx))
 			blk_mq_sched_mark_restart_hctx(rq->mq_hctx);
+=======
+		if (!list_empty(&per_prio->fifo_list[DD_WRITE]))
+			blk_mq_sched_mark_restart_hctx(rq->mq_hctx);
+		spin_unlock_irqrestore(&dd->zone_lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

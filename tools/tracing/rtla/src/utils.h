@@ -56,6 +56,9 @@ struct sched_attr {
 int parse_prio(char *arg, struct sched_attr *sched_param);
 int set_comm_sched_attr(const char *comm_prefix, struct sched_attr *attr);
 int set_cpu_dma_latency(int32_t latency);
+<<<<<<< HEAD
 
 #define ns_to_usf(x) (((double)x/1000))
 #define ns_to_per(total, part) ((part * 100) / (double)total)
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -14,7 +14,11 @@
 
 /**
  * struct altera_spi_platform_data - Platform data of the Altera SPI driver
+<<<<<<< HEAD
  * @mode_bits:		Mode bits of SPI host.
+=======
+ * @mode_bits:		Mode bits of SPI master.
+>>>>>>> b7ba80a49124 (Commit)
  * @num_chipselect:	Number of chipselects.
  * @bits_per_word_mask:	bitmask of supported bits_per_word for transfers.
  * @num_devices:	Number of devices that shall be added when the driver
@@ -46,5 +50,9 @@ struct altera_spi {
 };
 
 extern irqreturn_t altera_spi_irq(int irq, void *dev);
+<<<<<<< HEAD
 extern void altera_spi_init_host(struct spi_controller *host);
+=======
+extern void altera_spi_init_master(struct spi_master *master);
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __LINUX_SPI_ALTERA_H */

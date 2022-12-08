@@ -56,11 +56,19 @@ static struct sk_buff *esp6_gro_receive(struct list_head *head,
 	__be32 seq;
 	__be32 spi;
 	int nhoff;
+<<<<<<< HEAD
+=======
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!pskb_pull(skb, offset))
 		return NULL;
 
+<<<<<<< HEAD
 	if (xfrm_parse_spi(skb, IPPROTO_ESP, &spi, &seq) != 0)
+=======
+	if ((err = xfrm_parse_spi(skb, IPPROTO_ESP, &spi, &seq)) != 0)
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	xo = xfrm_offload(skb);
@@ -345,9 +353,12 @@ static int esp6_xmit(struct xfrm_state *x, struct sk_buff *skb,  netdev_features
 			xo->seq.low += skb_shinfo(skb)->gso_segs;
 	}
 
+<<<<<<< HEAD
 	if (xo->seq.low < seq)
 		xo->seq.hi++;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	esp.seqno = cpu_to_be64(xo->seq.low + ((u64)xo->seq.hi << 32));
 
 	len = skb->len - sizeof(struct ipv6hdr);

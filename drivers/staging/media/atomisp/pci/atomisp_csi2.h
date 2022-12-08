@@ -25,6 +25,12 @@
 #define CSI2_PAD_SOURCE		1
 #define CSI2_PADS_NUM		2
 
+<<<<<<< HEAD
+=======
+#define CSI2_OUTPUT_ISP_SUBDEV	BIT(0)
+#define CSI2_OUTPUT_MEMORY	BIT(1)
+
+>>>>>>> b7ba80a49124 (Commit)
 struct atomisp_device;
 struct v4l2_device;
 struct atomisp_sub_device;
@@ -36,6 +42,11 @@ struct atomisp_mipi_csi2_device {
 
 	struct v4l2_ctrl_handler ctrls;
 	struct atomisp_device *isp;
+<<<<<<< HEAD
+=======
+
+	u32 output; /* output direction */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int atomisp_csi2_set_ffmt(struct v4l2_subdev *sd,

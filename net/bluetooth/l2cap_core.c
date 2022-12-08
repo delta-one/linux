@@ -45,7 +45,11 @@
 #define LE_FLOWCTL_MAX_CREDITS 65535
 
 bool disable_ertm;
+<<<<<<< HEAD
 bool enable_ecred = IS_ENABLED(CONFIG_BT_LE_L2CAP_ECRED);
+=======
+bool enable_ecred;
+>>>>>>> b7ba80a49124 (Commit)
 
 static u32 l2cap_feat_mask = L2CAP_FEAT_FIXED_CHAN | L2CAP_FEAT_UCD;
 
@@ -708,6 +712,7 @@ void l2cap_chan_del(struct l2cap_chan *chan, int err)
 }
 EXPORT_SYMBOL_GPL(l2cap_chan_del);
 
+<<<<<<< HEAD
 static void __l2cap_chan_list_id(struct l2cap_conn *conn, u16 id,
 				 l2cap_chan_func_t func, void *data)
 {
@@ -719,6 +724,8 @@ static void __l2cap_chan_list_id(struct l2cap_conn *conn, u16 id,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void __l2cap_chan_list(struct l2cap_conn *conn, l2cap_chan_func_t func,
 			      void *data)
 {
@@ -745,7 +752,11 @@ EXPORT_SYMBOL_GPL(l2cap_chan_list);
 static void l2cap_conn_update_id_addr(struct work_struct *work)
 {
 	struct l2cap_conn *conn = container_of(work, struct l2cap_conn,
+<<<<<<< HEAD
 					       id_addr_timer.work);
+=======
+					       id_addr_update_work);
+>>>>>>> b7ba80a49124 (Commit)
 	struct hci_conn *hcon = conn->hcon;
 	struct l2cap_chan *chan;
 
@@ -786,9 +797,29 @@ static void l2cap_chan_le_connect_reject(struct l2cap_chan *chan)
 
 static void l2cap_chan_ecred_connect_reject(struct l2cap_chan *chan)
 {
+<<<<<<< HEAD
 	l2cap_state_change(chan, BT_DISCONN);
 
 	__l2cap_ecred_conn_rsp_defer(chan);
+=======
+	struct l2cap_conn *conn = chan->conn;
+	struct l2cap_ecred_conn_rsp rsp;
+	u16 result;
+
+	if (test_bit(FLAG_DEFER_SETUP, &chan->flags))
+		result = L2CAP_CR_LE_AUTHORIZATION;
+	else
+		result = L2CAP_CR_LE_BAD_PSM;
+
+	l2cap_state_change(chan, BT_DISCONN);
+
+	memset(&rsp, 0, sizeof(rsp));
+
+	rsp.result  = cpu_to_le16(result);
+
+	l2cap_send_cmd(conn, chan->ident, L2CAP_LE_CONN_RSP, sizeof(rsp),
+		       &rsp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void l2cap_chan_connect_reject(struct l2cap_chan *chan)
@@ -843,7 +874,11 @@ void l2cap_chan_close(struct l2cap_chan *chan, int reason)
 					break;
 				case L2CAP_MODE_EXT_FLOWCTL:
 					l2cap_chan_ecred_connect_reject(chan);
+<<<<<<< HEAD
 					return;
+=======
+					break;
+>>>>>>> b7ba80a49124 (Commit)
 				}
 			}
 		}
@@ -1907,7 +1942,12 @@ static void l2cap_conn_del(struct hci_conn *hcon, int err)
 	if (work_pending(&conn->pending_rx_work))
 		cancel_work_sync(&conn->pending_rx_work);
 
+<<<<<<< HEAD
 	cancel_delayed_work_sync(&conn->id_addr_timer);
+=======
+	if (work_pending(&conn->id_addr_update_work))
+		cancel_work_sync(&conn->id_addr_update_work);
+>>>>>>> b7ba80a49124 (Commit)
 
 	l2cap_unregister_all_users(conn);
 
@@ -1986,7 +2026,11 @@ static struct l2cap_chan *l2cap_global_chan_by_psm(int state, __le16 psm,
 		if (link_type == LE_LINK && c->src_type == BDADDR_BREDR)
 			continue;
 
+<<<<<<< HEAD
 		if (c->chan_type != L2CAP_CHAN_FIXED && c->psm == psm) {
+=======
+		if (c->psm == psm) {
+>>>>>>> b7ba80a49124 (Commit)
 			int src_match, dst_match;
 			int src_any, dst_any;
 
@@ -2679,6 +2723,17 @@ int l2cap_chan_send(struct l2cap_chan *chan, struct msghdr *msg, size_t len)
 		if (IS_ERR(skb))
 			return PTR_ERR(skb);
 
+<<<<<<< HEAD
+=======
+		/* Channel lock is released before requesting new skb and then
+		 * reacquired thus we need to recheck channel state.
+		 */
+		if (chan->state != BT_CONNECTED) {
+			kfree_skb(skb);
+			return -ENOTCONN;
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		l2cap_do_send(chan, skb);
 		return len;
 	}
@@ -2723,6 +2778,17 @@ int l2cap_chan_send(struct l2cap_chan *chan, struct msghdr *msg, size_t len)
 		if (IS_ERR(skb))
 			return PTR_ERR(skb);
 
+<<<<<<< HEAD
+=======
+		/* Channel lock is released before requesting new skb and then
+		 * reacquired thus we need to recheck channel state.
+		 */
+		if (chan->state != BT_CONNECTED) {
+			kfree_skb(skb);
+			return -ENOTCONN;
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		l2cap_do_send(chan, skb);
 		err = len;
 		break;
@@ -2743,6 +2809,17 @@ int l2cap_chan_send(struct l2cap_chan *chan, struct msghdr *msg, size_t len)
 		 */
 		err = l2cap_segment_sdu(chan, &seg_queue, msg, len);
 
+<<<<<<< HEAD
+=======
+		/* The channel could have been closed while segmenting,
+		 * check that it is still connected.
+		 */
+		if (chan->state != BT_CONNECTED) {
+			__skb_queue_purge(&seg_queue);
+			err = -ENOTCONN;
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			break;
 
@@ -3736,8 +3813,12 @@ done:
 			l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC,
 					   sizeof(rfc), (unsigned long) &rfc, endptr - ptr);
 
+<<<<<<< HEAD
 			if (remote_efs &&
 			    test_bit(FLAG_EFS_ENABLE, &chan->flags)) {
+=======
+			if (test_bit(FLAG_EFS_ENABLE, &chan->flags)) {
+>>>>>>> b7ba80a49124 (Commit)
 				chan->remote_id = efs.id;
 				chan->remote_stype = efs.stype;
 				chan->remote_msdu = le16_to_cpu(efs.msdu);
@@ -3934,6 +4015,7 @@ void __l2cap_le_connect_rsp_defer(struct l2cap_chan *chan)
 		       &rsp);
 }
 
+<<<<<<< HEAD
 static void l2cap_ecred_list_defer(struct l2cap_chan *chan, void *data)
 {
 	int *result = data;
@@ -4014,6 +4096,45 @@ void __l2cap_ecred_conn_rsp_defer(struct l2cap_chan *chan)
 	l2cap_send_cmd(conn, id, L2CAP_ECRED_CONN_RSP,
 		       sizeof(data.pdu.rsp) + (data.count * sizeof(__le16)),
 		       &data.pdu);
+=======
+void __l2cap_ecred_conn_rsp_defer(struct l2cap_chan *chan)
+{
+	struct {
+		struct l2cap_ecred_conn_rsp rsp;
+		__le16 dcid[5];
+	} __packed pdu;
+	struct l2cap_conn *conn = chan->conn;
+	u16 ident = chan->ident;
+	int i = 0;
+
+	if (!ident)
+		return;
+
+	BT_DBG("chan %p ident %d", chan, ident);
+
+	pdu.rsp.mtu     = cpu_to_le16(chan->imtu);
+	pdu.rsp.mps     = cpu_to_le16(chan->mps);
+	pdu.rsp.credits = cpu_to_le16(chan->rx_credits);
+	pdu.rsp.result  = cpu_to_le16(L2CAP_CR_LE_SUCCESS);
+
+	mutex_lock(&conn->chan_lock);
+
+	list_for_each_entry(chan, &conn->chan_l, list) {
+		if (chan->ident != ident)
+			continue;
+
+		/* Reset ident so only one response is sent */
+		chan->ident = 0;
+
+		/* Include all channels pending with the same ident */
+		pdu.dcid[i++] = cpu_to_le16(chan->scid);
+	}
+
+	mutex_unlock(&conn->chan_lock);
+
+	l2cap_send_cmd(conn, ident, L2CAP_ECRED_CONN_RSP,
+			sizeof(pdu.rsp) + i * sizeof(__le16), &pdu);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void __l2cap_connect_rsp_defer(struct l2cap_chan *chan)
@@ -4325,12 +4446,15 @@ static int l2cap_connect_create_rsp(struct l2cap_conn *conn,
 		}
 	}
 
+<<<<<<< HEAD
 	chan = l2cap_chan_hold_unless_zero(chan);
 	if (!chan) {
 		err = -EBADSLT;
 		goto unlock;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = 0;
 
 	l2cap_chan_lock(chan);
@@ -4360,7 +4484,10 @@ static int l2cap_connect_create_rsp(struct l2cap_conn *conn,
 	}
 
 	l2cap_chan_unlock(chan);
+<<<<<<< HEAD
 	l2cap_chan_put(chan);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 unlock:
 	mutex_unlock(&conn->chan_lock);
@@ -4468,8 +4595,12 @@ static inline int l2cap_config_req(struct l2cap_conn *conn,
 
 	chan->ident = cmd->ident;
 	l2cap_send_cmd(conn, cmd->ident, L2CAP_CONF_RSP, len, rsp);
+<<<<<<< HEAD
 	if (chan->num_conf_rsp < L2CAP_CONF_MAX_CONF_RSP)
 		chan->num_conf_rsp++;
+=======
+	chan->num_conf_rsp++;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Reset config buffer. */
 	chan->conf_len = 0;
@@ -5830,6 +5961,7 @@ static int l2cap_le_connect_req(struct l2cap_conn *conn,
 	BT_DBG("psm 0x%2.2x scid 0x%4.4x mtu %u mps %u", __le16_to_cpu(psm),
 	       scid, mtu, mps);
 
+<<<<<<< HEAD
 	/* BLUETOOTH CORE SPECIFICATION Version 5.3 | Vol 3, Part A
 	 * page 1059:
 	 *
@@ -5843,6 +5975,8 @@ static int l2cap_le_connect_req(struct l2cap_conn *conn,
 		goto response;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Check if we have socket listening on psm */
 	pchan = l2cap_global_chan_by_psm(BT_LISTEN, psm, &conn->hcon->src,
 					 &conn->hcon->dst, LE_LINK);
@@ -6031,6 +6165,7 @@ static inline int l2cap_ecred_conn_req(struct l2cap_conn *conn,
 
 	psm  = req->psm;
 
+<<<<<<< HEAD
 	/* BLUETOOTH CORE SPECIFICATION Version 5.3 | Vol 3, Part A
 	 * page 1059:
 	 *
@@ -6043,6 +6178,8 @@ static inline int l2cap_ecred_conn_req(struct l2cap_conn *conn,
 		goto response;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BT_DBG("psm 0x%2.2x mtu %u mps %u", __le16_to_cpu(psm), mtu, mps);
 
 	memset(&pdu, 0, sizeof(pdu));
@@ -6117,7 +6254,10 @@ static inline int l2cap_ecred_conn_req(struct l2cap_conn *conn,
 		__set_chan_timer(chan, chan->ops->get_sndtimeo(chan));
 
 		chan->ident = cmd->ident;
+<<<<<<< HEAD
 		chan->mode = L2CAP_MODE_EXT_FLOWCTL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (test_bit(FLAG_DEFER_SETUP, &chan->flags)) {
 			l2cap_state_change(chan, BT_CONNECT2);
@@ -6928,7 +7068,10 @@ static int l2cap_rx_state_recv(struct l2cap_chan *chan,
 			       struct l2cap_ctrl *control,
 			       struct sk_buff *skb, u8 event)
 {
+<<<<<<< HEAD
 	struct l2cap_ctrl local_control;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err = 0;
 	bool skb_in_use = false;
 
@@ -6953,6 +7096,7 @@ static int l2cap_rx_state_recv(struct l2cap_chan *chan,
 			chan->buffer_seq = chan->expected_tx_seq;
 			skb_in_use = true;
 
+<<<<<<< HEAD
 			/* l2cap_reassemble_sdu may free skb, hence invalidate
 			 * control, so make a copy in advance to use it after
 			 * l2cap_reassemble_sdu returns and to avoid the race
@@ -6970,15 +7114,25 @@ static int l2cap_rx_state_recv(struct l2cap_chan *chan,
 			 * it was freed by skb_free_datagram.
 			 */
 			local_control = *control;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			err = l2cap_reassemble_sdu(chan, skb, control);
 			if (err)
 				break;
 
+<<<<<<< HEAD
 			if (local_control.final) {
 				if (!test_and_clear_bit(CONN_REJ_ACT,
 							&chan->conn_state)) {
 					local_control.final = 0;
 					l2cap_retransmit_all(chan, &local_control);
+=======
+			if (control->final) {
+				if (!test_and_clear_bit(CONN_REJ_ACT,
+							&chan->conn_state)) {
+					control->final = 0;
+					l2cap_retransmit_all(chan, control);
+>>>>>>> b7ba80a49124 (Commit)
 					l2cap_ertm_send(chan);
 				}
 			}
@@ -7358,6 +7512,7 @@ static int l2cap_rx(struct l2cap_chan *chan, struct l2cap_ctrl *control,
 static int l2cap_stream_rx(struct l2cap_chan *chan, struct l2cap_ctrl *control,
 			   struct sk_buff *skb)
 {
+<<<<<<< HEAD
 	/* l2cap_reassemble_sdu may free skb, hence invalidate control, so store
 	 * the txseq field in advance to use it after l2cap_reassemble_sdu
 	 * returns and to avoid the race condition, for example:
@@ -7379,6 +7534,13 @@ static int l2cap_stream_rx(struct l2cap_chan *chan, struct l2cap_ctrl *control,
 	       chan->rx_state);
 
 	if (l2cap_classify_txseq(chan, txseq) == L2CAP_TXSEQ_EXPECTED) {
+=======
+	BT_DBG("chan %p, control %p, skb %p, state %d", chan, control, skb,
+	       chan->rx_state);
+
+	if (l2cap_classify_txseq(chan, control->txseq) ==
+	    L2CAP_TXSEQ_EXPECTED) {
+>>>>>>> b7ba80a49124 (Commit)
 		l2cap_pass_to_tx(chan, control);
 
 		BT_DBG("buffer_seq %u->%u", chan->buffer_seq,
@@ -7401,8 +7563,13 @@ static int l2cap_stream_rx(struct l2cap_chan *chan, struct l2cap_ctrl *control,
 		}
 	}
 
+<<<<<<< HEAD
 	chan->last_acked_seq = txseq;
 	chan->expected_tx_seq = __next_seq(chan, txseq);
+=======
+	chan->last_acked_seq = control->txseq;
+	chan->expected_tx_seq = __next_seq(chan, control->txseq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -7658,7 +7825,10 @@ static void l2cap_data_channel(struct l2cap_conn *conn, u16 cid,
 				return;
 			}
 
+<<<<<<< HEAD
 			l2cap_chan_hold(chan);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			l2cap_chan_lock(chan);
 		} else {
 			BT_DBG("unknown cid 0x%4.4x", cid);
@@ -7885,7 +8055,11 @@ static struct l2cap_conn *l2cap_conn_add(struct hci_conn *hcon)
 
 	skb_queue_head_init(&conn->pending_rx);
 	INIT_WORK(&conn->pending_rx_work, process_pending_rx);
+<<<<<<< HEAD
 	INIT_DELAYED_WORK(&conn->id_addr_timer, l2cap_conn_update_id_addr);
+=======
+	INIT_WORK(&conn->id_addr_update_work, l2cap_conn_update_id_addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	conn->disc_reason = HCI_ERROR_REMOTE_USER_TERM;
 
@@ -8504,8 +8678,14 @@ void l2cap_recv_acldata(struct hci_conn *hcon, struct sk_buff *skb, u16 flags)
 		 * expected length.
 		 */
 		if (skb->len < L2CAP_LEN_SIZE) {
+<<<<<<< HEAD
 			l2cap_recv_frag(conn, skb, conn->mtu);
 			break;
+=======
+			if (l2cap_recv_frag(conn, skb, conn->mtu) < 0)
+				goto drop;
+			return;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		len = get_unaligned_le16(skb->data) + L2CAP_HDR_SIZE;
@@ -8549,7 +8729,11 @@ void l2cap_recv_acldata(struct hci_conn *hcon, struct sk_buff *skb, u16 flags)
 
 			/* Header still could not be read just continue */
 			if (conn->rx_skb->len < L2CAP_LEN_SIZE)
+<<<<<<< HEAD
 				break;
+=======
+				return;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (skb->len > conn->rx_len) {

@@ -105,8 +105,11 @@ static const struct wmi_tlv_policy wmi_tlv_policies[] = {
 		= { .min_len = sizeof(struct wmi_vdev_stopped_event) },
 	[WMI_TAG_REG_CHAN_LIST_CC_EVENT]
 		= { .min_len = sizeof(struct wmi_reg_chan_list_cc_event) },
+<<<<<<< HEAD
 	[WMI_TAG_REG_CHAN_LIST_CC_EXT_EVENT]
 		= { .min_len = sizeof(struct wmi_reg_chan_list_cc_ext_event) },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	[WMI_TAG_MGMT_RX_HDR]
 		= { .min_len = sizeof(struct wmi_mgmt_rx_hdr) },
 	[WMI_TAG_MGMT_TX_COMPL_EVENT]
@@ -418,7 +421,11 @@ ath11k_pull_mac_phy_cap_svc_ready_ext(struct ath11k_pdev_wmi *wmi_handle,
 
 	/* tx/rx chainmask reported from fw depends on the actual hw chains used,
 	 * For example, for 4x4 capable macphys, first 4 chains can be used for first
+<<<<<<< HEAD
 	 * mac and the remaining 4 chains can be used for the second mac or vice-versa.
+=======
+	 * mac and the remaing 4 chains can be used for the second mac or vice-versa.
+>>>>>>> b7ba80a49124 (Commit)
 	 * In this case, tx/rx chainmask 0xf will be advertised for first mac and 0xf0
 	 * will be advertised for second mac or vice-versa. Compute the shift value
 	 * for tx/rx chainmask which will be used to advertise supported ht/vht rates to
@@ -993,6 +1000,7 @@ int ath11k_wmi_vdev_up(struct ath11k *ar, u32 vdev_id, u32 aid, const u8 *bssid)
 {
 	struct ath11k_pdev_wmi *wmi = ar->wmi;
 	struct wmi_vdev_up_cmd *cmd;
+<<<<<<< HEAD
 	struct ieee80211_bss_conf *bss_conf;
 	struct ath11k_vif *arvif;
 	struct sk_buff *skb;
@@ -1000,6 +1008,11 @@ int ath11k_wmi_vdev_up(struct ath11k *ar, u32 vdev_id, u32 aid, const u8 *bssid)
 
 	arvif = ath11k_mac_get_arvif(ar, vdev_id);
 
+=======
+	struct sk_buff *skb;
+	int ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	skb = ath11k_wmi_alloc_skb(wmi->wmi_ab, sizeof(*cmd));
 	if (!skb)
 		return -ENOMEM;
@@ -1013,6 +1026,7 @@ int ath11k_wmi_vdev_up(struct ath11k *ar, u32 vdev_id, u32 aid, const u8 *bssid)
 
 	ether_addr_copy(cmd->vdev_bssid.addr, bssid);
 
+<<<<<<< HEAD
 	if (arvif && arvif->vif->type == NL80211_IFTYPE_STATION) {
 		bss_conf = &arvif->vif->bss_conf;
 
@@ -1024,6 +1038,8 @@ int ath11k_wmi_vdev_up(struct ath11k *ar, u32 vdev_id, u32 aid, const u8 *bssid)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ath11k_wmi_cmd_send(wmi, skb, WMI_VDEV_UP_CMDID);
 	if (ret) {
 		ath11k_warn(ar->ab, "failed to submit WMI_VDEV_UP cmd\n");
@@ -2070,12 +2086,15 @@ void ath11k_wmi_start_scan_init(struct ath11k *ar,
 				  WMI_SCAN_EVENT_FOREIGN_CHAN |
 				  WMI_SCAN_EVENT_DEQUEUED;
 	arg->scan_flags |= WMI_SCAN_CHAN_STAT_EVENT;
+<<<<<<< HEAD
 
 	if (test_bit(WMI_TLV_SERVICE_PASSIVE_SCAN_START_TIME_ENHANCE,
 		     ar->ab->wmi_ab.svc_map))
 		arg->scan_ctrl_flags_ext |=
 			WMI_SCAN_FLAG_EXT_PASSIVE_SCAN_START_TIME_ENHANCE;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	arg->num_bssid = 1;
 
 	/* fill bssid_list[0] with 0xff, otherwise bssid and RA will be
@@ -2157,8 +2176,11 @@ ath11k_wmi_copy_scan_event_cntrl_flags(struct wmi_start_scan_cmd *cmd,
 	/* for adaptive scan mode using 3 bits (21 - 23 bits) */
 	WMI_SCAN_SET_DWELL_MODE(cmd->scan_ctrl_flags,
 				param->adaptive_dwell_time_mode);
+<<<<<<< HEAD
 
 	cmd->scan_ctrl_flags_ext = param->scan_ctrl_flags_ext;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int ath11k_wmi_send_scan_start_cmd(struct ath11k *ar,
@@ -3089,6 +3111,7 @@ int ath11k_wmi_pdev_pktlog_disable(struct ath11k *ar)
 	return ret;
 }
 
+<<<<<<< HEAD
 void ath11k_wmi_fill_default_twt_params(struct wmi_twt_enable_params *twt_params)
 {
 	twt_params->sta_cong_timer_ms = ATH11K_TWT_DEF_STA_CONG_TIMER_MS;
@@ -3117,6 +3140,10 @@ void ath11k_wmi_fill_default_twt_params(struct wmi_twt_enable_params *twt_params
 
 int ath11k_wmi_send_twt_enable_cmd(struct ath11k *ar, u32 pdev_id,
 				   struct wmi_twt_enable_params *params)
+=======
+int
+ath11k_wmi_send_twt_enable_cmd(struct ath11k *ar, u32 pdev_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ath11k_pdev_wmi *wmi = ar->wmi;
 	struct ath11k_base *ab = wmi->wmi_ab->ab;
@@ -3134,6 +3161,7 @@ int ath11k_wmi_send_twt_enable_cmd(struct ath11k *ar, u32 pdev_id,
 	cmd->tlv_header = FIELD_PREP(WMI_TLV_TAG, WMI_TAG_TWT_ENABLE_CMD) |
 			  FIELD_PREP(WMI_TLV_LEN, len - TLV_HDR_SIZE);
 	cmd->pdev_id = pdev_id;
+<<<<<<< HEAD
 	cmd->sta_cong_timer_ms = params->sta_cong_timer_ms;
 	cmd->default_slot_size = params->default_slot_size;
 	cmd->congestion_thresh_setup = params->congestion_thresh_setup;
@@ -3150,6 +3178,30 @@ int ath11k_wmi_send_twt_enable_cmd(struct ath11k *ar, u32 pdev_id,
 	cmd->add_sta_slot_interval = params->add_sta_slot_interval;
 	cmd->remove_sta_slot_interval = params->remove_sta_slot_interval;
 	cmd->mbss_support = params->mbss_support;
+=======
+	cmd->sta_cong_timer_ms = ATH11K_TWT_DEF_STA_CONG_TIMER_MS;
+	cmd->default_slot_size = ATH11K_TWT_DEF_DEFAULT_SLOT_SIZE;
+	cmd->congestion_thresh_setup = ATH11K_TWT_DEF_CONGESTION_THRESH_SETUP;
+	cmd->congestion_thresh_teardown =
+		ATH11K_TWT_DEF_CONGESTION_THRESH_TEARDOWN;
+	cmd->congestion_thresh_critical =
+		ATH11K_TWT_DEF_CONGESTION_THRESH_CRITICAL;
+	cmd->interference_thresh_teardown =
+		ATH11K_TWT_DEF_INTERFERENCE_THRESH_TEARDOWN;
+	cmd->interference_thresh_setup =
+		ATH11K_TWT_DEF_INTERFERENCE_THRESH_SETUP;
+	cmd->min_no_sta_setup = ATH11K_TWT_DEF_MIN_NO_STA_SETUP;
+	cmd->min_no_sta_teardown = ATH11K_TWT_DEF_MIN_NO_STA_TEARDOWN;
+	cmd->no_of_bcast_mcast_slots = ATH11K_TWT_DEF_NO_OF_BCAST_MCAST_SLOTS;
+	cmd->min_no_twt_slots = ATH11K_TWT_DEF_MIN_NO_TWT_SLOTS;
+	cmd->max_no_sta_twt = ATH11K_TWT_DEF_MAX_NO_STA_TWT;
+	cmd->mode_check_interval = ATH11K_TWT_DEF_MODE_CHECK_INTERVAL;
+	cmd->add_sta_slot_interval = ATH11K_TWT_DEF_ADD_STA_SLOT_INTERVAL;
+	cmd->remove_sta_slot_interval =
+		ATH11K_TWT_DEF_REMOVE_STA_SLOT_INTERVAL;
+	/* TODO add MBSSID support */
+	cmd->mbss_support = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = ath11k_wmi_cmd_send(wmi, skb, WMI_TWT_ENABLE_CMDID);
 	if (ret) {
@@ -3863,8 +3915,13 @@ ath11k_wmi_obss_color_collision_event(struct ath11k_base *ab, struct sk_buff *sk
 
 	switch (ev->evt_type) {
 	case WMI_BSS_COLOR_COLLISION_DETECTION:
+<<<<<<< HEAD
 		ieee80211_obss_color_collision_notify(arvif->vif, ev->obss_color_bitmap,
 						      GFP_KERNEL);
+=======
+		ieeee80211_obss_color_collision_notify(arvif->vif, ev->obss_color_bitmap,
+						       GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 		ath11k_dbg(ab, ATH11K_DBG_WMI,
 			   "OBSS color collision detected vdev:%d, event:%d, bitmap:%08llx\n",
 			   ev->vdev_id, ev->evt_type, ev->obss_color_bitmap);
@@ -3976,10 +4033,13 @@ ath11k_wmi_copy_resource_config(struct wmi_resource_config *wmi_cfg,
 	wmi_cfg->sched_params = tg_cfg->sched_params;
 	wmi_cfg->twt_ap_pdev_count = tg_cfg->twt_ap_pdev_count;
 	wmi_cfg->twt_ap_sta_count = tg_cfg->twt_ap_sta_count;
+<<<<<<< HEAD
 	wmi_cfg->host_service_flags &=
 		~(1 << WMI_CFG_HOST_SERVICE_FLAG_REG_CC_EXT);
 	wmi_cfg->host_service_flags |= (tg_cfg->is_reg_cc_ext_event_supported <<
 					WMI_CFG_HOST_SERVICE_FLAG_REG_CC_EXT);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ath11k_init_cmd_send(struct ath11k_pdev_wmi *wmi,
@@ -4198,10 +4258,13 @@ int ath11k_wmi_cmd_init(struct ath11k_base *ab)
 
 	ab->hw_params.hw_ops->wmi_init_config(ab, &config);
 
+<<<<<<< HEAD
 	if (test_bit(WMI_TLV_SERVICE_REG_CC_EXT_EVENT_SUPPORT,
 		     ab->wmi_ab.svc_map))
 		config.is_reg_cc_ext_event_supported = 1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(&wmi_sc->wlan_resource_config, &config, sizeof(config));
 
 	init_param.res_cfg = &wmi_sc->wlan_resource_config;
@@ -4925,6 +4988,7 @@ static int ath11k_pull_vdev_start_resp_tlv(struct ath11k_base *ab, struct sk_buf
 	return 0;
 }
 
+<<<<<<< HEAD
 static void ath11k_print_reg_rule(struct ath11k_base *ab, const char *band,
 				  u32 num_reg_rules,
 				  struct cur_reg_rule *reg_rule_ptr)
@@ -4945,6 +5009,8 @@ static void ath11k_print_reg_rule(struct ath11k_base *ab, const char *band,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct cur_reg_rule
 *create_reg_rules_from_wmi(u32 num_reg_rules,
 			   struct wmi_regulatory_rule_struct *wmi_reg_rule)
@@ -4989,7 +5055,11 @@ static int ath11k_pull_reg_chan_list_update_ev(struct ath11k_base *ab,
 	const void **tb;
 	const struct wmi_reg_chan_list_cc_event *chan_list_event_hdr;
 	struct wmi_regulatory_rule_struct *wmi_reg_rule;
+<<<<<<< HEAD
 	u32 num_2ghz_reg_rules, num_5ghz_reg_rules;
+=======
+	u32 num_2g_reg_rules, num_5g_reg_rules;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	ath11k_dbg(ab, ATH11K_DBG_WMI, "processing regulatory channel list\n");
@@ -5008,10 +5078,17 @@ static int ath11k_pull_reg_chan_list_update_ev(struct ath11k_base *ab,
 		return -EPROTO;
 	}
 
+<<<<<<< HEAD
 	reg_info->num_2ghz_reg_rules = chan_list_event_hdr->num_2ghz_reg_rules;
 	reg_info->num_5ghz_reg_rules = chan_list_event_hdr->num_5ghz_reg_rules;
 
 	if (!(reg_info->num_2ghz_reg_rules + reg_info->num_5ghz_reg_rules)) {
+=======
+	reg_info->num_2g_reg_rules = chan_list_event_hdr->num_2g_reg_rules;
+	reg_info->num_5g_reg_rules = chan_list_event_hdr->num_5g_reg_rules;
+
+	if (!(reg_info->num_2g_reg_rules + reg_info->num_5g_reg_rules)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ath11k_warn(ab, "No regulatory rules available in the event info\n");
 		kfree(tb);
 		return -EINVAL;
@@ -5025,6 +5102,7 @@ static int ath11k_pull_reg_chan_list_update_ev(struct ath11k_base *ab,
 	reg_info->phy_id = chan_list_event_hdr->phy_id;
 	reg_info->ctry_code = chan_list_event_hdr->country_id;
 	reg_info->reg_dmn_pair = chan_list_event_hdr->domain_code;
+<<<<<<< HEAD
 
 	ath11k_dbg(ab, ATH11K_DBG_WMI,
 		   "status_code %s",
@@ -5052,12 +5130,45 @@ static int ath11k_pull_reg_chan_list_update_ev(struct ath11k_base *ab,
 	ath11k_dbg(ab, ATH11K_DBG_WMI,
 		   "num_2ghz_reg_rules %d num_5ghz_reg_rules %d",
 		   num_2ghz_reg_rules, num_5ghz_reg_rules);
+=======
+	if (chan_list_event_hdr->status_code == WMI_REG_SET_CC_STATUS_PASS)
+		reg_info->status_code = REG_SET_CC_STATUS_PASS;
+	else if (chan_list_event_hdr->status_code == WMI_REG_CURRENT_ALPHA2_NOT_FOUND)
+		reg_info->status_code = REG_CURRENT_ALPHA2_NOT_FOUND;
+	else if (chan_list_event_hdr->status_code == WMI_REG_INIT_ALPHA2_NOT_FOUND)
+		reg_info->status_code = REG_INIT_ALPHA2_NOT_FOUND;
+	else if (chan_list_event_hdr->status_code == WMI_REG_SET_CC_CHANGE_NOT_ALLOWED)
+		reg_info->status_code = REG_SET_CC_CHANGE_NOT_ALLOWED;
+	else if (chan_list_event_hdr->status_code == WMI_REG_SET_CC_STATUS_NO_MEMORY)
+		reg_info->status_code = REG_SET_CC_STATUS_NO_MEMORY;
+	else if (chan_list_event_hdr->status_code == WMI_REG_SET_CC_STATUS_FAIL)
+		reg_info->status_code = REG_SET_CC_STATUS_FAIL;
+
+	reg_info->min_bw_2g = chan_list_event_hdr->min_bw_2g;
+	reg_info->max_bw_2g = chan_list_event_hdr->max_bw_2g;
+	reg_info->min_bw_5g = chan_list_event_hdr->min_bw_5g;
+	reg_info->max_bw_5g = chan_list_event_hdr->max_bw_5g;
+
+	num_2g_reg_rules = reg_info->num_2g_reg_rules;
+	num_5g_reg_rules = reg_info->num_5g_reg_rules;
+
+	ath11k_dbg(ab, ATH11K_DBG_WMI,
+		   "%s:cc %s dsf %d BW: min_2g %d max_2g %d min_5g %d max_5g %d",
+		   __func__, reg_info->alpha2, reg_info->dfs_region,
+		   reg_info->min_bw_2g, reg_info->max_bw_2g,
+		   reg_info->min_bw_5g, reg_info->max_bw_5g);
+
+	ath11k_dbg(ab, ATH11K_DBG_WMI,
+		   "%s: num_2g_reg_rules %d num_5g_reg_rules %d", __func__,
+		   num_2g_reg_rules, num_5g_reg_rules);
+>>>>>>> b7ba80a49124 (Commit)
 
 	wmi_reg_rule =
 		(struct wmi_regulatory_rule_struct *)((u8 *)chan_list_event_hdr
 						+ sizeof(*chan_list_event_hdr)
 						+ sizeof(struct wmi_tlv));
 
+<<<<<<< HEAD
 	if (num_2ghz_reg_rules) {
 		reg_info->reg_rules_2ghz_ptr =
 				create_reg_rules_from_wmi(num_2ghz_reg_rules,
@@ -5087,6 +5198,27 @@ static int ath11k_pull_reg_chan_list_update_ev(struct ath11k_base *ab,
 		ath11k_print_reg_rule(ab, "5 GHz",
 				      num_5ghz_reg_rules,
 				      reg_info->reg_rules_5ghz_ptr);
+=======
+	if (num_2g_reg_rules) {
+		reg_info->reg_rules_2g_ptr = create_reg_rules_from_wmi(num_2g_reg_rules,
+								       wmi_reg_rule);
+		if (!reg_info->reg_rules_2g_ptr) {
+			kfree(tb);
+			ath11k_warn(ab, "Unable to Allocate memory for 2g rules\n");
+			return -ENOMEM;
+		}
+	}
+
+	if (num_5g_reg_rules) {
+		wmi_reg_rule += num_2g_reg_rules;
+		reg_info->reg_rules_5g_ptr = create_reg_rules_from_wmi(num_5g_reg_rules,
+								       wmi_reg_rule);
+		if (!reg_info->reg_rules_5g_ptr) {
+			kfree(tb);
+			ath11k_warn(ab, "Unable to Allocate memory for 5g rules\n");
+			return -ENOMEM;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ath11k_dbg(ab, ATH11K_DBG_WMI, "processed regulatory channel list\n");
@@ -5095,6 +5227,7 @@ static int ath11k_pull_reg_chan_list_update_ev(struct ath11k_base *ab,
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct cur_reg_rule
 *create_ext_reg_rules_from_wmi(u32 num_reg_rules,
 			       struct wmi_regulatory_ext_rule *wmi_reg_rule)
@@ -5518,6 +5651,8 @@ static int ath11k_pull_reg_chan_list_ext_update_ev(struct ath11k_base *ab,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ath11k_pull_peer_del_resp_ev(struct ath11k_base *ab, struct sk_buff *skb,
 					struct wmi_peer_delete_resp_event *peer_del_resp)
 {
@@ -5689,8 +5824,13 @@ static int ath11k_pull_mgmt_rx_params_tlv(struct ath11k_base *ab,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int wmi_process_mgmt_tx_comp(struct ath11k *ar,
 				    struct wmi_mgmt_tx_compl_event *tx_compl_param)
+=======
+static int wmi_process_mgmt_tx_comp(struct ath11k *ar, u32 desc_id,
+				    u32 status)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sk_buff *msdu;
 	struct ieee80211_tx_info *info;
@@ -5698,22 +5838,35 @@ static int wmi_process_mgmt_tx_comp(struct ath11k *ar,
 	int num_mgmt;
 
 	spin_lock_bh(&ar->txmgmt_idr_lock);
+<<<<<<< HEAD
 	msdu = idr_find(&ar->txmgmt_idr, tx_compl_param->desc_id);
 
 	if (!msdu) {
 		ath11k_warn(ar->ab, "received mgmt tx compl for invalid msdu_id: %d\n",
 			    tx_compl_param->desc_id);
+=======
+	msdu = idr_find(&ar->txmgmt_idr, desc_id);
+
+	if (!msdu) {
+		ath11k_warn(ar->ab, "received mgmt tx compl for invalid msdu_id: %d\n",
+			    desc_id);
+>>>>>>> b7ba80a49124 (Commit)
 		spin_unlock_bh(&ar->txmgmt_idr_lock);
 		return -ENOENT;
 	}
 
+<<<<<<< HEAD
 	idr_remove(&ar->txmgmt_idr, tx_compl_param->desc_id);
+=======
+	idr_remove(&ar->txmgmt_idr, desc_id);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_bh(&ar->txmgmt_idr_lock);
 
 	skb_cb = ATH11K_SKB_CB(msdu);
 	dma_unmap_single(ar->ab->dev, skb_cb->paddr, msdu->len, DMA_TO_DEVICE);
 
 	info = IEEE80211_SKB_CB(msdu);
+<<<<<<< HEAD
 	if ((!(info->flags & IEEE80211_TX_CTL_NO_ACK)) &&
 	    !tx_compl_param->status) {
 		info->flags |= IEEE80211_TX_STAT_ACK;
@@ -5721,6 +5874,10 @@ static int wmi_process_mgmt_tx_comp(struct ath11k *ar,
 			     ar->ab->wmi_ab.svc_map))
 			info->status.ack_signal = tx_compl_param->ack_rssi;
 	}
+=======
+	if ((!(info->flags & IEEE80211_TX_CTL_NO_ACK)) && !status)
+		info->flags |= IEEE80211_TX_STAT_ACK;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ieee80211_tx_status_irqsafe(ar->hw, msdu);
 
@@ -5732,7 +5889,11 @@ static int wmi_process_mgmt_tx_comp(struct ath11k *ar,
 
 	ath11k_dbg(ar->ab, ATH11K_DBG_WMI,
 		   "wmi mgmt tx comp pending %d desc id %d\n",
+<<<<<<< HEAD
 		   num_mgmt, tx_compl_param->desc_id);
+=======
+		   num_mgmt, desc_id);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!num_mgmt)
 		wake_up(&ar->txmgmt_empty_waitq);
@@ -5765,7 +5926,10 @@ static int ath11k_pull_mgmt_tx_compl_param_tlv(struct ath11k_base *ab,
 	param->pdev_id = ev->pdev_id;
 	param->desc_id = ev->desc_id;
 	param->status = ev->status;
+<<<<<<< HEAD
 	param->ack_rssi = ev->ack_rssi;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(tb);
 	return 0;
@@ -6965,14 +7129,22 @@ static bool ath11k_reg_is_world_alpha(char *alpha)
 	return false;
 }
 
+<<<<<<< HEAD
 static int ath11k_reg_chan_list_event(struct ath11k_base *ab,
 				      struct sk_buff *skb,
 				      enum wmi_reg_chan_list_cmd_type id)
+=======
+static int ath11k_reg_chan_list_event(struct ath11k_base *ab, struct sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cur_regulatory_info *reg_info = NULL;
 	struct ieee80211_regdomain *regd = NULL;
 	bool intersect = false;
+<<<<<<< HEAD
 	int ret = 0, pdev_idx, i, j;
+=======
+	int ret = 0, pdev_idx;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ath11k *ar;
 
 	reg_info = kzalloc(sizeof(*reg_info), GFP_ATOMIC);
@@ -6981,11 +7153,15 @@ static int ath11k_reg_chan_list_event(struct ath11k_base *ab,
 		goto fallback;
 	}
 
+<<<<<<< HEAD
 	if (id == WMI_REG_CHAN_LIST_CC_ID)
 		ret = ath11k_pull_reg_chan_list_update_ev(ab, skb, reg_info);
 	else
 		ret = ath11k_pull_reg_chan_list_ext_update_ev(ab, skb, reg_info);
 
+=======
+	ret = ath11k_pull_reg_chan_list_update_ev(ab, skb, reg_info);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		ath11k_warn(ab, "failed to extract regulatory info from received event\n");
 		goto fallback;
@@ -7085,6 +7261,7 @@ fallback:
 	WARN_ON(1);
 mem_free:
 	if (reg_info) {
+<<<<<<< HEAD
 		kfree(reg_info->reg_rules_2ghz_ptr);
 		kfree(reg_info->reg_rules_5ghz_ptr);
 		if (reg_info->is_ext_reg_event) {
@@ -7095,6 +7272,10 @@ mem_free:
 				for (i = 0; i < WMI_REG_MAX_CLIENT_TYPE; i++)
 					kfree(reg_info->reg_rules_6ghz_client_ptr[j][i]);
 		}
+=======
+		kfree(reg_info->reg_rules_2g_ptr);
+		kfree(reg_info->reg_rules_5g_ptr);
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(reg_info);
 	}
 	return ret;
@@ -7290,6 +7471,7 @@ static void ath11k_bcn_tx_status_event(struct ath11k_base *ab, struct sk_buff *s
 	rcu_read_unlock();
 }
 
+<<<<<<< HEAD
 static void ath11k_wmi_event_peer_sta_ps_state_chg(struct ath11k_base *ab,
 						   struct sk_buff *skb)
 {
@@ -7391,6 +7573,8 @@ exit:
 	kfree(tb);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void ath11k_vdev_stopped_event(struct ath11k_base *ab, struct sk_buff *skb)
 {
 	struct ath11k *ar;
@@ -7550,12 +7734,22 @@ static void ath11k_mgmt_tx_compl_event(struct ath11k_base *ab, struct sk_buff *s
 		goto exit;
 	}
 
+<<<<<<< HEAD
 	wmi_process_mgmt_tx_comp(ar, &tx_compl_param);
 
 	ath11k_dbg(ab, ATH11K_DBG_MGMT,
 		   "mgmt tx compl ev pdev_id %d, desc_id %d, status %d ack_rssi %d",
 		   tx_compl_param.pdev_id, tx_compl_param.desc_id,
 		   tx_compl_param.status, tx_compl_param.ack_rssi);
+=======
+	wmi_process_mgmt_tx_comp(ar, tx_compl_param.desc_id,
+				 tx_compl_param.status);
+
+	ath11k_dbg(ab, ATH11K_DBG_MGMT,
+		   "mgmt tx compl ev pdev_id %d, desc_id %d, status %d",
+		   tx_compl_param.pdev_id, tx_compl_param.desc_id,
+		   tx_compl_param.status);
+>>>>>>> b7ba80a49124 (Commit)
 
 exit:
 	rcu_read_unlock();
@@ -8032,6 +8226,7 @@ static void ath11k_peer_assoc_conf_event(struct ath11k_base *ab, struct sk_buff 
 
 static void ath11k_update_stats_event(struct ath11k_base *ab, struct sk_buff *skb)
 {
+<<<<<<< HEAD
 	struct ath11k_fw_stats stats = {};
 	struct ath11k *ar;
 	int ret;
@@ -8079,6 +8274,9 @@ complete:
 
 free:
 	ath11k_fw_stats_free(&stats);
+=======
+	ath11k_debugfs_fw_stats_process(ab, skb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* PDEV_CTL_FAILSAFE_CHECK_EVENT is received from FW when the frequency scanned
@@ -8526,10 +8724,14 @@ static void ath11k_wmi_tlv_op_rx(struct ath11k_base *ab, struct sk_buff *skb)
 		ath11k_service_ready_ext2_event(ab, skb);
 		break;
 	case WMI_REG_CHAN_LIST_CC_EVENTID:
+<<<<<<< HEAD
 		ath11k_reg_chan_list_event(ab, skb, WMI_REG_CHAN_LIST_CC_ID);
 		break;
 	case WMI_REG_CHAN_LIST_CC_EXT_EVENTID:
 		ath11k_reg_chan_list_event(ab, skb, WMI_REG_CHAN_LIST_CC_EXT_ID);
+=======
+		ath11k_reg_chan_list_event(ab, skb);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case WMI_READY_EVENTID:
 		ath11k_ready_event(ab, skb);
@@ -8632,9 +8834,12 @@ static void ath11k_wmi_tlv_op_rx(struct ath11k_base *ab, struct sk_buff *skb)
 	case WMI_DIAG_EVENTID:
 		ath11k_wmi_diag_event(ab, skb);
 		break;
+<<<<<<< HEAD
 	case WMI_PEER_STA_PS_STATECHG_EVENTID:
 		ath11k_wmi_event_peer_sta_ps_state_chg(ab, skb);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case WMI_GTK_OFFLOAD_STATUS_EVENTID:
 		ath11k_wmi_gtk_offload_status_event(ab, skb);
 		break;
@@ -9637,6 +9842,7 @@ int ath11k_wmi_sta_keepalive(struct ath11k *ar,
 	cmd->interval = arg->interval;
 	cmd->method = arg->method;
 
+<<<<<<< HEAD
 	arp = (struct wmi_sta_keepalive_arp_resp *)(cmd + 1);
 	arp->tlv_header = FIELD_PREP(WMI_TLV_TAG,
 				     WMI_TAG_STA_KEEPALIVE_ARP_RESPONSE) |
@@ -9644,6 +9850,14 @@ int ath11k_wmi_sta_keepalive(struct ath11k *ar,
 
 	if (arg->method == WMI_STA_KEEPALIVE_METHOD_UNSOLICITED_ARP_RESPONSE ||
 	    arg->method == WMI_STA_KEEPALIVE_METHOD_GRATUITOUS_ARP_REQUEST) {
+=======
+	if (arg->method == WMI_STA_KEEPALIVE_METHOD_UNSOLICITED_ARP_RESPONSE ||
+	    arg->method == WMI_STA_KEEPALIVE_METHOD_GRATUITOUS_ARP_REQUEST) {
+		arp = (struct wmi_sta_keepalive_arp_resp *)(cmd + 1);
+		arp->tlv_header = FIELD_PREP(WMI_TLV_TAG,
+					     WMI_TAG_STA_KEEPALVE_ARP_RESPONSE) |
+				 FIELD_PREP(WMI_TLV_LEN, sizeof(*arp) - TLV_HDR_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 		arp->src_ip4_addr = arg->src_ip4_addr;
 		arp->dest_ip4_addr = arg->dest_ip4_addr;
 		ether_addr_copy(arp->dest_mac_addr.addr, arg->dest_mac_addr);

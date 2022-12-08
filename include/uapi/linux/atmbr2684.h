@@ -38,7 +38,11 @@
  */
 #define BR2684_ENCAPS_VC	(0)	/* VC-mux */
 #define BR2684_ENCAPS_LLC	(1)
+<<<<<<< HEAD
 #define BR2684_ENCAPS_AUTODETECT (2)	/* Unsupported */
+=======
+#define BR2684_ENCAPS_AUTODETECT (2)	/* Unsuported */
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Is this VC bridged or routed?

@@ -67,8 +67,11 @@ struct wwan_device {
  * @rxq: Buffer inbound queue
  * @waitqueue: The waitqueue for port fops (read/write/poll)
  * @data_lock: Port specific data access serialization
+<<<<<<< HEAD
  * @headroom_len: SKB reserved headroom size
  * @frag_len: Length to fragment packet
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @at_data: AT port specific data
  */
 struct wwan_port {
@@ -81,8 +84,11 @@ struct wwan_port {
 	struct sk_buff_head rxq;
 	wait_queue_head_t waitqueue;
 	struct mutex data_lock;	/* Port specific data access serialization */
+<<<<<<< HEAD
 	size_t headroom_len;
 	size_t frag_len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	union {
 		struct {
 			struct ktermios termios;
@@ -323,10 +329,13 @@ static const struct {
 		.name = "FIREHOSE",
 		.devsuf = "firehose",
 	},
+<<<<<<< HEAD
 	[WWAN_PORT_XMMRPC] = {
 		.name = "XMMRPC",
 		.devsuf = "xmmrpc",
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static ssize_t type_show(struct device *dev, struct device_attribute *attr,
@@ -430,7 +439,10 @@ static int __wwan_port_dev_assign_name(struct wwan_port *port, const char *fmt)
 struct wwan_port *wwan_create_port(struct device *parent,
 				   enum wwan_port_type type,
 				   const struct wwan_port_ops *ops,
+<<<<<<< HEAD
 				   struct wwan_port_caps *caps,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				   void *drvdata)
 {
 	struct wwan_device *wwandev;
@@ -464,8 +476,11 @@ struct wwan_port *wwan_create_port(struct device *parent,
 
 	port->type = type;
 	port->ops = ops;
+<<<<<<< HEAD
 	port->frag_len = caps ? caps->frag_len : SIZE_MAX;
 	port->headroom_len = caps ? caps->headroom_len : 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&port->ops_lock);
 	skb_queue_head_init(&port->rxq);
 	init_waitqueue_head(&port->waitqueue);
@@ -709,15 +724,21 @@ static ssize_t wwan_port_fops_read(struct file *filp, char __user *buf,
 static ssize_t wwan_port_fops_write(struct file *filp, const char __user *buf,
 				    size_t count, loff_t *offp)
 {
+<<<<<<< HEAD
 	struct sk_buff *skb, *head = NULL, *tail = NULL;
 	struct wwan_port *port = filp->private_data;
 	size_t frag_len, remain = count;
+=======
+	struct wwan_port *port = filp->private_data;
+	struct sk_buff *skb;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	ret = wwan_wait_tx(port, !!(filp->f_flags & O_NONBLOCK));
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	do {
 		frag_len = min(remain, port->frag_len);
 		skb = alloc_skb(frag_len + port->headroom_len, GFP_KERNEL);
@@ -756,6 +777,24 @@ static ssize_t wwan_port_fops_write(struct file *filp, const char __user *buf,
 freeskb:
 	kfree_skb(head);
 	return ret;
+=======
+	skb = alloc_skb(count, GFP_KERNEL);
+	if (!skb)
+		return -ENOMEM;
+
+	if (copy_from_user(skb_put(skb, count), buf, count)) {
+		kfree_skb(skb);
+		return -EFAULT;
+	}
+
+	ret = wwan_port_op_tx(port, skb, !!(filp->f_flags & O_NONBLOCK));
+	if (ret) {
+		kfree_skb(skb);
+		return ret;
+	}
+
+	return count;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static __poll_t wwan_port_fops_poll(struct file *filp, poll_table *wait)
@@ -1092,7 +1131,11 @@ static void wwan_create_default_link(struct wwan_device *wwandev,
 		goto unlock;
 	}
 
+<<<<<<< HEAD
 	rtnl_configure_link(dev, NULL, 0, NULL); /* Link initialized, notify new link */
+=======
+	rtnl_configure_link(dev, NULL); /* Link initialized, notify new link */
+>>>>>>> b7ba80a49124 (Commit)
 
 unlock:
 	rtnl_unlock();
@@ -1204,7 +1247,11 @@ static int __init wwan_init(void)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	wwan_class = class_create("wwan");
+=======
+	wwan_class = class_create(THIS_MODULE, "wwan");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(wwan_class)) {
 		err = PTR_ERR(wwan_class);
 		goto unregister;

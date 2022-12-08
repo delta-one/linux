@@ -58,7 +58,10 @@ perché non si è trovato un posto migliore.
    adding-syscalls
    magic-number
    volatile-considered-harmful
+<<<<<<< HEAD
    botching-up-ioctls
+=======
+>>>>>>> b7ba80a49124 (Commit)
    clang-format
    ../riscv/patch-acceptance
 

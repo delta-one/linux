@@ -10,11 +10,14 @@
 #include <sound/soc-acpi-intel-match.h>
 #include "../skylake/skl.h"
 
+<<<<<<< HEAD
 static const struct snd_soc_acpi_codecs essx_83x6 = {
 	.num_codecs = 3,
 	.codecs = { "ESSX8316", "ESSX8326", "ESSX8336"},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct skl_machine_pdata icl_pdata = {
 	.use_tplg_pcm = true,
 };
@@ -32,6 +35,7 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_icl_machines[] = {
 		.drv_name = "sof_rt5682",
 		.sof_tplg_filename = "sof-icl-rt5682.tplg",
 	},
+<<<<<<< HEAD
 	{
 		.comp_ids = &essx_83x6,
 		.drv_name = "sof-essx8336",
@@ -40,6 +44,8 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_icl_machines[] = {
 					SND_SOC_ACPI_TPLG_INTEL_SSP_MSB |
 					SND_SOC_ACPI_TPLG_INTEL_DMIC_NUMBER,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 EXPORT_SYMBOL_GPL(snd_soc_acpi_intel_icl_machines);

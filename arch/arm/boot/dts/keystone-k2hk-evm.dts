@@ -28,22 +28,38 @@
 
 	leds {
 		compatible = "gpio-leds";
+<<<<<<< HEAD
 		led-debug-1-1 {
+=======
+		debug1_1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "keystone:green:debug1";
 			gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>; /* 12 */
 		};
 
+<<<<<<< HEAD
 		led-debug-1-2 {
+=======
+		debug1_2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "keystone:red:debug1";
 			gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>; /* 13 */
 		};
 
+<<<<<<< HEAD
 		led-debug-2 {
+=======
+		debug2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "keystone:blue:debug2";
 			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>; /* 14 */
 		};
 
+<<<<<<< HEAD
 		led-debug-3 {
+=======
+		debug3 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "keystone:blue:debug3";
 			gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>; /* 15 */
 		};
@@ -183,7 +199,11 @@
 };
 
 &mdio {
+<<<<<<< HEAD
 	status = "okay";
+=======
+	status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 	ethphy0: ethernet-phy@0 {
 		compatible = "marvell,88E1111", "ethernet-phy-ieee802.3-c22";
 		reg = <0>;

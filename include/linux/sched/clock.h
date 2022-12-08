@@ -45,7 +45,11 @@ static inline u64 cpu_clock(int cpu)
 	return sched_clock();
 }
 
+<<<<<<< HEAD
 static __always_inline u64 local_clock(void)
+=======
+static inline u64 local_clock(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return sched_clock();
 }
@@ -79,8 +83,15 @@ static inline u64 cpu_clock(int cpu)
 	return sched_clock_cpu(cpu);
 }
 
+<<<<<<< HEAD
 extern u64 local_clock(void);
 
+=======
+static inline u64 local_clock(void)
+{
+	return sched_clock_cpu(raw_smp_processor_id());
+}
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #ifdef CONFIG_IRQ_TIME_ACCOUNTING

@@ -266,9 +266,13 @@ static void ath_mci_set_concur_txprio(struct ath_softc *sc)
 			stomp_txprio[ATH_BTCOEX_STOMP_NONE] =
 				ATH_MCI_INQUIRY_PRIO;
 	} else {
+<<<<<<< HEAD
 		static const u8 prof_prio[] = {
 			50, 90, 94, 52
 		}; /* RFCOMM, A2DP, HID, PAN */
+=======
+		u8 prof_prio[] = { 50, 90, 94, 52 };/* RFCOMM, A2DP, HID, PAN */
+>>>>>>> b7ba80a49124 (Commit)
 
 		stomp_txprio[ATH_BTCOEX_STOMP_LOW] =
 		stomp_txprio[ATH_BTCOEX_STOMP_NONE] = 0xff;
@@ -646,9 +650,13 @@ void ath9k_mci_update_wlan_channels(struct ath_softc *sc, bool allow_all)
 	struct ath_hw *ah = sc->sc_ah;
 	struct ath9k_hw_mci *mci = &ah->btcoex_hw.mci;
 	struct ath9k_channel *chan = ah->curchan;
+<<<<<<< HEAD
 	static const u32 channelmap[] = {
 		0x00000000, 0xffff0000, 0xffffffff, 0x7fffffff
 	};
+=======
+	u32 channelmap[] = {0x00000000, 0xffff0000, 0xffffffff, 0x7fffffff};
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 	s16 chan_start, chan_end;
 	u16 wlan_chan;

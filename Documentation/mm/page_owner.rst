@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _page_owner:
+
+>>>>>>> b7ba80a49124 (Commit)
 ==================================================
 page owner: Tracking about who allocated each page
 ==================================================
@@ -36,10 +41,29 @@ not affect to allocation performance, especially if the static keys jump
 label patching functionality is available. Following is the kernel's code
 size change due to this facility.
 
+<<<<<<< HEAD
 Although enabling page owner increases kernel size by several kilobytes,
 most of this code is outside page allocator and its hot path. Building
 the kernel with page owner and turning it on if needed would be great
 option to debug kernel memory problem.
+=======
+- Without page owner::
+
+   text    data     bss     dec     hex filename
+   48392   2333     644   51369    c8a9 mm/page_alloc.o
+
+- With page owner::
+
+   text    data     bss     dec     hex filename
+   48800   2445     644   51889    cab1 mm/page_alloc.o
+   6662     108      29    6799    1a8f mm/page_owner.o
+   1025       8       8    1041     411 mm/page_ext.o
+
+Although, roughly, 8 KB code is added in total, page_alloc.o increase by
+520 bytes and less than half of it is in hotpath. Building the kernel with
+page owner and turning it on if needed would be great option to debug
+kernel memory problem.
+>>>>>>> b7ba80a49124 (Commit)
 
 There is one notice that is caused by implementation detail. page owner
 stores information into the memory from struct page extension. This memory
@@ -50,7 +74,11 @@ pages are investigated and marked as allocated in initialization phase.
 Although it doesn't mean that they have the right owner information,
 at least, we can tell whether the page is allocated or not,
 more accurately. On 2GB memory x86-64 VM box, 13343 early allocated pages
+<<<<<<< HEAD
 are caught and marked, although they are mostly allocated from struct
+=======
+are catched and marked, although they are mostly allocated from struct
+>>>>>>> b7ba80a49124 (Commit)
 page extension feature. Anyway, after that, no page is left in
 un-tracking state.
 
@@ -59,7 +87,11 @@ Usage
 
 1) Build user-space helper::
 
+<<<<<<< HEAD
 	cd tools/mm
+=======
+	cd tools/vm
+>>>>>>> b7ba80a49124 (Commit)
 	make page_owner_sort
 
 2) Enable page owner: add "page_owner=on" to boot cmdline.
@@ -176,7 +208,11 @@ STANDARD FORMAT SPECIFIERS
 	at		alloc_ts	timestamp of the page when it was allocated
 	ator		allocator	memory allocator for pages
 
+<<<<<<< HEAD
   For --cull option:
+=======
+  For --curl option:
+>>>>>>> b7ba80a49124 (Commit)
 
 	KEY		LONG		DESCRIPTION
 	p		pid		process ID

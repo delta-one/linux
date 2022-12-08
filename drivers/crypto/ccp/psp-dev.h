@@ -17,6 +17,12 @@
 
 #include "sp-dev.h"
 
+<<<<<<< HEAD
+=======
+#define PSP_CMDRESP_RESP		BIT(31)
+#define PSP_CMDRESP_ERR_MASK		0xffff
+
+>>>>>>> b7ba80a49124 (Commit)
 #define MAX_PSP_NAME_LEN		16
 
 extern struct psp_device *psp_master;
@@ -37,9 +43,17 @@ struct psp_device {
 	psp_irq_handler_t sev_irq_handler;
 	void *sev_irq_data;
 
+<<<<<<< HEAD
 	void *sev_data;
 	void *tee_data;
 	void *platform_access_data;
+=======
+	psp_irq_handler_t tee_irq_handler;
+	void *tee_irq_data;
+
+	void *sev_data;
+	void *tee_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	unsigned int capability;
 };
@@ -48,6 +62,13 @@ void psp_set_sev_irq_handler(struct psp_device *psp, psp_irq_handler_t handler,
 			     void *data);
 void psp_clear_sev_irq_handler(struct psp_device *psp);
 
+<<<<<<< HEAD
+=======
+void psp_set_tee_irq_handler(struct psp_device *psp, psp_irq_handler_t handler,
+			     void *data);
+void psp_clear_tee_irq_handler(struct psp_device *psp);
+
+>>>>>>> b7ba80a49124 (Commit)
 struct psp_device *psp_get_master_device(void);
 
 #define PSP_CAPABILITY_SEV			BIT(0)

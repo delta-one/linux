@@ -65,12 +65,21 @@ static void ftm_clear_write_protection(struct fsl_pwm_chip *fpc)
 
 	regmap_read(fpc->regmap, FTM_FMS, &val);
 	if (val & FTM_FMS_WPEN)
+<<<<<<< HEAD
 		regmap_set_bits(fpc->regmap, FTM_MODE, FTM_MODE_WPDIS);
+=======
+		regmap_update_bits(fpc->regmap, FTM_MODE, FTM_MODE_WPDIS,
+				   FTM_MODE_WPDIS);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ftm_set_write_protection(struct fsl_pwm_chip *fpc)
 {
+<<<<<<< HEAD
 	regmap_set_bits(fpc->regmap, FTM_FMS, FTM_FMS_WPEN);
+=======
+	regmap_update_bits(fpc->regmap, FTM_FMS, FTM_FMS_WPEN, FTM_FMS_WPEN);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool fsl_pwm_periodcfg_are_equal(const struct fsl_pwm_periodcfg *a,
@@ -93,7 +102,12 @@ static int fsl_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
 	ret = clk_prepare_enable(fpc->ipg_clk);
 	if (!ret && fpc->soc->has_enable_bits) {
 		mutex_lock(&fpc->lock);
+<<<<<<< HEAD
 		regmap_set_bits(fpc->regmap, FTM_SC, BIT(pwm->hwpwm + 16));
+=======
+		regmap_update_bits(fpc->regmap, FTM_SC, BIT(pwm->hwpwm + 16),
+				   BIT(pwm->hwpwm + 16));
+>>>>>>> b7ba80a49124 (Commit)
 		mutex_unlock(&fpc->lock);
 	}
 
@@ -106,7 +120,12 @@ static void fsl_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
 
 	if (fpc->soc->has_enable_bits) {
 		mutex_lock(&fpc->lock);
+<<<<<<< HEAD
 		regmap_clear_bits(fpc->regmap, FTM_SC, BIT(pwm->hwpwm + 16));
+=======
+		regmap_update_bits(fpc->regmap, FTM_SC, BIT(pwm->hwpwm + 16),
+				   0);
+>>>>>>> b7ba80a49124 (Commit)
 		mutex_unlock(&fpc->lock);
 	}
 
@@ -314,8 +333,13 @@ static int fsl_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 
 	if (!newstate->enabled) {
 		if (oldstate->enabled) {
+<<<<<<< HEAD
 			regmap_set_bits(fpc->regmap, FTM_OUTMASK,
 					BIT(pwm->hwpwm));
+=======
+			regmap_update_bits(fpc->regmap, FTM_OUTMASK,
+					   BIT(pwm->hwpwm), BIT(pwm->hwpwm));
+>>>>>>> b7ba80a49124 (Commit)
 			clk_disable_unprepare(fpc->clk[FSL_PWM_CLK_CNTEN]);
 			clk_disable_unprepare(fpc->clk[fpc->period.clk_select]);
 		}
@@ -339,7 +363,12 @@ static int fsl_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 			goto end_mutex;
 		}
 
+<<<<<<< HEAD
 		regmap_clear_bits(fpc->regmap, FTM_OUTMASK, BIT(pwm->hwpwm));
+=======
+		regmap_update_bits(fpc->regmap, FTM_OUTMASK, BIT(pwm->hwpwm),
+				   0);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 end_mutex:

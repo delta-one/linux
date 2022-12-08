@@ -42,7 +42,11 @@ properties:
   reset-names: true
 
 allOf:
+<<<<<<< HEAD
   - $ref: regulator.yaml#
+=======
+  - $ref: "regulator.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -89,6 +93,7 @@ required:
 
 examples:
   - |
+<<<<<<< HEAD
     usb_vbus0: regulators@100 {
         compatible = "socionext,uniphier-ld20-usb3-regulator";
         reg = <0x100 0x10>;
@@ -96,4 +101,20 @@ examples:
         clocks = <&sys_clk 14>;
         reset-names = "link";
         resets = <&sys_rst 14>;
+=======
+    usb-glue@65b00000 {
+        compatible = "simple-mfd";
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges = <0 0x65b00000 0x400>;
+
+        usb_vbus0: regulators@100 {
+            compatible = "socionext,uniphier-ld20-usb3-regulator";
+            reg = <0x100 0x10>;
+            clock-names = "link";
+            clocks = <&sys_clk 14>;
+            reset-names = "link";
+            resets = <&sys_rst 14>;
+        };
+>>>>>>> b7ba80a49124 (Commit)
     };

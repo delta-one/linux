@@ -187,7 +187,11 @@ int omap_prcm_event_to_irq(const char *name)
  *
  * No return value.
  */
+<<<<<<< HEAD
 static void omap_prcm_irq_cleanup(void)
+=======
+void omap_prcm_irq_cleanup(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int irq;
 	int i;
@@ -345,6 +349,44 @@ err:
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * omap2_set_globals_prm - set the PRM base address (for early use)
+ * @prm: PRM base virtual address
+ *
+ * XXX Will be replaced when the PRM/CM drivers are completed.
+ */
+void __init omap2_set_globals_prm(void __iomem *prm)
+{
+	prm_base.va = prm;
+}
+
+/**
+ * prm_read_reset_sources - return the sources of the SoC's last reset
+ *
+ * Return a u32 bitmask representing the reset sources that caused the
+ * SoC to reset.  The low-level per-SoC functions called by this
+ * function remap the SoC-specific reset source bits into an
+ * OMAP-common set of reset source bits, defined in
+ * arch/arm/mach-omap2/prm.h.  Returns the standardized reset source
+ * u32 bitmask from the hardware upon success, or returns (1 <<
+ * OMAP_UNKNOWN_RST_SRC_ID_SHIFT) if no low-level read_reset_sources()
+ * function was registered.
+ */
+u32 prm_read_reset_sources(void)
+{
+	u32 ret = 1 << OMAP_UNKNOWN_RST_SRC_ID_SHIFT;
+
+	if (prm_ll_data->read_reset_sources)
+		ret = prm_ll_data->read_reset_sources();
+	else
+		WARN_ONCE(1, "prm: %s: no mapping function defined for reset sources\n", __func__);
+
+	return ret;
+}
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * prm_was_any_context_lost_old - was device context lost? (old API)
  * @part: PRM partition ID (e.g., OMAP4430_PRM_PARTITION)
  * @inst: PRM instance offset (e.g., OMAP4430_PRM_MPU_INST)
@@ -454,6 +496,25 @@ int omap_prm_is_hardreset_asserted(u8 shift, u8 part, s16 prm_mod, u16 offset)
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * omap_prm_reconfigure_io_chain - clear latches and reconfigure I/O chain
+ *
+ * Clear any previously-latched I/O wakeup events and ensure that the
+ * I/O wakeup gates are aligned with the current mux settings.
+ * Calls SoC specific I/O chain reconfigure function if available,
+ * otherwise does nothing.
+ */
+void omap_prm_reconfigure_io_chain(void)
+{
+	if (!prcm_irq_setup || !prcm_irq_setup->reconfigure_io_chain)
+		return;
+
+	prcm_irq_setup->reconfigure_io_chain();
+}
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * omap_prm_reset_system - trigger global SW reset
  *
  * Triggers SoC specific global warm reset to reboot the device.
@@ -689,7 +750,11 @@ static const struct of_device_id omap_prcm_dt_match_table[] __initconst = {
  * on the DT data. Returns 0 in success, negative error value
  * otherwise.
  */
+<<<<<<< HEAD
 static int __init omap2_prm_base_init(void)
+=======
+int __init omap2_prm_base_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device_node *np;
 	const struct of_device_id *match;

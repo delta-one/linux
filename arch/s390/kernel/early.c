@@ -18,7 +18,10 @@
 #include <linux/uaccess.h>
 #include <linux/kernel.h>
 #include <asm/asm-extable.h>
+<<<<<<< HEAD
 #include <linux/memblock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/diag.h>
 #include <asm/ebcdic.h>
 #include <asm/ipl.h>
@@ -34,6 +37,7 @@
 #include <asm/switch_to.h>
 #include "entry.h"
 
+<<<<<<< HEAD
 #define decompressor_handled_param(param)			\
 static int __init ignore_decompressor_param_##param(char *s)	\
 {								\
@@ -58,6 +62,9 @@ static void __init kasan_early_init(void)
 	sclp_early_printk("KernelAddressSanitizer initialized\n");
 #endif
 }
+=======
+int __bootdata(is_full_image);
+>>>>>>> b7ba80a49124 (Commit)
 
 static void __init reset_tod_clock(void)
 {
@@ -184,7 +191,13 @@ static noinline __init void setup_lowcore_early(void)
 	psw_t psw;
 
 	psw.addr = (unsigned long)early_pgm_check_handler;
+<<<<<<< HEAD
 	psw.mask = PSW_KERNEL_BITS;
+=======
+	psw.mask = PSW_MASK_BASE | PSW_DEFAULT_KEY | PSW_MASK_EA | PSW_MASK_BA;
+	if (IS_ENABLED(CONFIG_KASAN))
+		psw.mask |= PSW_MASK_DAT;
+>>>>>>> b7ba80a49124 (Commit)
 	S390_lowcore.program_new_psw = psw;
 	S390_lowcore.preempt_count = INIT_PREEMPT_COUNT;
 }
@@ -249,8 +262,11 @@ static __init void detect_machine_facilities(void)
 		S390_lowcore.machine_flags |= MACHINE_FLAG_PCI_MIO;
 		/* the control bit is set during PCI initialization */
 	}
+<<<<<<< HEAD
 	if (test_facility(194))
 		S390_lowcore.machine_flags |= MACHINE_FLAG_RDP;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void save_vector_registers(void)
@@ -294,6 +310,20 @@ static void __init setup_boot_command_line(void)
 	strscpy(boot_command_line, early_command_line, COMMAND_LINE_SIZE);
 }
 
+<<<<<<< HEAD
+=======
+static void __init check_image_bootable(void)
+{
+	if (is_full_image)
+		return;
+
+	sclp_early_printk("Linux kernel boot failure: An attempt to boot a vmlinux ELF image failed.\n");
+	sclp_early_printk("This image does not contain all parts necessary for starting up. Use\n");
+	sclp_early_printk("bzImage or arch/s390/boot/compressed/vmlinux instead.\n");
+	disabled_wait();
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void __init sort_amode31_extable(void)
 {
 	sort_extable(__start_amode31_ex_table, __stop_amode31_ex_table);
@@ -301,8 +331,14 @@ static void __init sort_amode31_extable(void)
 
 void __init startup_init(void)
 {
+<<<<<<< HEAD
 	kasan_early_init();
 	reset_tod_clock();
+=======
+	sclp_early_adjust_va();
+	reset_tod_clock();
+	check_image_bootable();
+>>>>>>> b7ba80a49124 (Commit)
 	time_early_init();
 	init_kernel_storage_key();
 	lockdep_off();

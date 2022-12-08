@@ -20,14 +20,21 @@ ACPI_MODULE_NAME("evxfregn")
 
 /*******************************************************************************
  *
+<<<<<<< HEAD
  * FUNCTION:    acpi_install_address_space_handler_internal
+=======
+ * FUNCTION:    acpi_install_address_space_handler
+>>>>>>> b7ba80a49124 (Commit)
  *
  * PARAMETERS:  device          - Handle for the device
  *              space_id        - The address space ID
  *              handler         - Address of the handler
  *              setup           - Address of the setup function
  *              context         - Value passed to the handler on each access
+<<<<<<< HEAD
  *              Run_reg         - Run _REG methods for this address space?
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * RETURN:      Status
  *
@@ -38,6 +45,7 @@ ACPI_MODULE_NAME("evxfregn")
  * are executed here, and these methods can only be safely executed after
  * the default handlers have been installed and the hardware has been
  * initialized (via acpi_enable_subsystem.)
+<<<<<<< HEAD
  * To avoid this problem pass FALSE for Run_Reg and later on call
  * acpi_execute_reg_methods() to execute _REG.
  *
@@ -48,6 +56,15 @@ acpi_install_address_space_handler_internal(acpi_handle device,
 					    acpi_adr_space_handler handler,
 					    acpi_adr_space_setup setup,
 					    void *context, u8 run_reg)
+=======
+ *
+ ******************************************************************************/
+acpi_status
+acpi_install_address_space_handler(acpi_handle device,
+				   acpi_adr_space_type space_id,
+				   acpi_adr_space_handler handler,
+				   acpi_adr_space_setup setup, void *context)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct acpi_namespace_node *node;
 	acpi_status status;
@@ -84,15 +101,20 @@ acpi_install_address_space_handler_internal(acpi_handle device,
 
 	/* Run all _REG methods for this address space */
 
+<<<<<<< HEAD
 	if (run_reg) {
 		acpi_ev_execute_reg_methods(node, space_id, ACPI_REG_CONNECT);
 	}
+=======
+	acpi_ev_execute_reg_methods(node, space_id, ACPI_REG_CONNECT);
+>>>>>>> b7ba80a49124 (Commit)
 
 unlock_and_exit:
 	(void)acpi_ut_release_mutex(ACPI_MTX_NAMESPACE);
 	return_ACPI_STATUS(status);
 }
 
+<<<<<<< HEAD
 acpi_status
 acpi_install_address_space_handler(acpi_handle device,
 				   acpi_adr_space_type space_id,
@@ -118,6 +140,9 @@ acpi_install_address_space_handler_no_reg(acpi_handle device,
 }
 
 ACPI_EXPORT_SYMBOL(acpi_install_address_space_handler_no_reg)
+=======
+ACPI_EXPORT_SYMBOL(acpi_install_address_space_handler)
+>>>>>>> b7ba80a49124 (Commit)
 
 /*******************************************************************************
  *
@@ -258,6 +283,7 @@ unlock_and_exit:
 }
 
 ACPI_EXPORT_SYMBOL(acpi_remove_address_space_handler)
+<<<<<<< HEAD
 /*******************************************************************************
  *
  * FUNCTION:    acpi_execute_reg_methods
@@ -306,3 +332,5 @@ acpi_execute_reg_methods(acpi_handle device, acpi_adr_space_type space_id)
 }
 
 ACPI_EXPORT_SYMBOL(acpi_execute_reg_methods)
+=======
+>>>>>>> b7ba80a49124 (Commit)

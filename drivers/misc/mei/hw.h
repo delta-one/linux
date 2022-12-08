@@ -93,12 +93,15 @@
 #define HBM_MAJOR_VERSION_VT               2
 
 /*
+<<<<<<< HEAD
  * MEI version with GSC support
  */
 #define HBM_MINOR_VERSION_GSC              2
 #define HBM_MAJOR_VERSION_GSC              2
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * MEI version with capabilities message support
  */
 #define HBM_MINOR_VERSION_CAP              2
@@ -235,19 +238,30 @@ enum mei_cl_disconnect_status {
  *
  * @MEI_EXT_HDR_NONE: sentinel
  * @MEI_EXT_HDR_VTAG: vtag header
+<<<<<<< HEAD
  * @MEI_EXT_HDR_GSC: gsc header
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum mei_ext_hdr_type {
 	MEI_EXT_HDR_NONE = 0,
 	MEI_EXT_HDR_VTAG = 1,
+<<<<<<< HEAD
 	MEI_EXT_HDR_GSC = 2,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
  * struct mei_ext_hdr - extend header descriptor (TLV)
  * @type: enum mei_ext_hdr_type
  * @length: length excluding descriptor
+<<<<<<< HEAD
  * @data: the extended header payload
+=======
+ * @ext_payload: payload of the specific extended header
+ * @hdr: place holder for actual header
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct mei_ext_hdr {
 	u8 type;
@@ -286,11 +300,20 @@ struct mei_ext_hdr_vtag {
  * Extended header iterator functions
  */
 /**
+<<<<<<< HEAD
  * mei_ext_begin - extended header iterator begin
  *
  * @meta: meta header of the extended header list
  *
  * Return: The first extended header
+=======
+ * mei_ext_hdr - extended header iterator begin
+ *
+ * @meta: meta header of the extended header list
+ *
+ * Return:
+ *     The first extended header
+>>>>>>> b7ba80a49124 (Commit)
  */
 static inline struct mei_ext_hdr *mei_ext_begin(struct mei_ext_meta_hdr *meta)
 {
@@ -311,6 +334,7 @@ static inline bool mei_ext_last(struct mei_ext_meta_hdr *meta,
 	return (u8 *)ext >= (u8 *)meta + sizeof(*meta) + (meta->size * 4);
 }
 
+<<<<<<< HEAD
 struct mei_gsc_sgl {
 	u32 low;
 	u32 high;
@@ -365,6 +389,8 @@ struct mei_ext_hdr_gsc_f2h {
 	u32                written;
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * mei_ext_next - following extended header on the TLV list
  *
@@ -381,6 +407,7 @@ static inline struct mei_ext_hdr *mei_ext_next(struct mei_ext_hdr *ext)
 }
 
 /**
+<<<<<<< HEAD
  * mei_ext_hdr_len - get ext header length in bytes
  *
  * @ext: extend header
@@ -396,6 +423,8 @@ static inline u32 mei_ext_hdr_len(const struct mei_ext_hdr *ext)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct mei_msg_hdr - MEI BUS Interface Section
  *
  * @me_addr: device address
@@ -757,10 +786,13 @@ struct hbm_dma_ring_ctrl {
 
 /* virtual tag supported */
 #define HBM_CAP_VT BIT(0)
+<<<<<<< HEAD
 
 /* gsc extended header support */
 #define HBM_CAP_GSC BIT(1)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* client dma supported */
 #define HBM_CAP_CD BIT(2)
 

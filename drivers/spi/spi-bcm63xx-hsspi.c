@@ -20,8 +20,11 @@
 #include <linux/spi/spi.h>
 #include <linux/mutex.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/spi/spi-mem.h>
 #include <linux/mtd/spi-nor.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/reset.h>
 #include <linux/pm_runtime.h>
 
@@ -59,7 +62,10 @@
 #define PINGPONG_CMD_SS_SHIFT			12
 
 #define HSSPI_PINGPONG_STATUS_REG(x)		(0x84 + (x) * 0x40)
+<<<<<<< HEAD
 #define HSSPI_PINGPONG_STATUS_SRC_BUSY		BIT(1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define HSSPI_PROFILE_CLK_CTRL_REG(x)		(0x100 + (x) * 0x20)
 #define CLK_CTRL_FREQ_CTRL_MASK			0x0000ffff
@@ -95,6 +101,7 @@
 
 #define HSSPI_MAX_PREPEND_LEN			15
 
+<<<<<<< HEAD
 /*
  * Some chip require 30MHz but other require 25MHz. Use smaller value to cover
  * both cases.
@@ -126,11 +133,21 @@ do {										\
 	else if (bs->xfer_mode == HSSPI_XFER_MODE_PREPEND)		\
 		dev_err(&bs->pdev->dev, fmt, ##__VA_ARGS__);		\
 } while (0)
+=======
+#define HSSPI_MAX_SYNC_CLOCK			30000000
+
+#define HSSPI_SPI_MAX_CS			8
+#define HSSPI_BUS_NUM				1 /* 0 is legacy SPI */
+>>>>>>> b7ba80a49124 (Commit)
 
 struct bcm63xx_hsspi {
 	struct completion done;
 	struct mutex bus_mutex;
+<<<<<<< HEAD
 	struct mutex msg_mutex;
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	struct platform_device *pdev;
 	struct clk *clk;
 	struct clk *pll_clk;
@@ -139,6 +156,7 @@ struct bcm63xx_hsspi {
 
 	u32 speed_hz;
 	u8 cs_polarity;
+<<<<<<< HEAD
 	u32 wait_mode;
 	u32 xfer_mode;
 	u32 prepend_cnt;
@@ -422,6 +440,10 @@ static int bcm63xx_hsspi_do_prepend_txrx(struct spi_device *spi,
 	return 0;
 }
 
+=======
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static void bcm63xx_hsspi_set_cs(struct bcm63xx_hsspi *bs, unsigned int cs,
 				 bool active)
 {
@@ -441,7 +463,11 @@ static void bcm63xx_hsspi_set_cs(struct bcm63xx_hsspi *bs, unsigned int cs,
 static void bcm63xx_hsspi_set_clk(struct bcm63xx_hsspi *bs,
 				  struct spi_device *spi, int hz)
 {
+<<<<<<< HEAD
 	unsigned int profile = spi_get_chipselect(spi, 0);
+=======
+	unsigned int profile = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 reg;
 
 	reg = DIV_ROUND_UP(2048, DIV_ROUND_UP(bs->speed_hz, hz));
@@ -468,17 +494,28 @@ static void bcm63xx_hsspi_set_clk(struct bcm63xx_hsspi *bs,
 static int bcm63xx_hsspi_do_txrx(struct spi_device *spi, struct spi_transfer *t)
 {
 	struct bcm63xx_hsspi *bs = spi_master_get_devdata(spi->master);
+<<<<<<< HEAD
 	unsigned int chip_select = spi_get_chipselect(spi, 0);
 	u16 opcode = 0, val;
+=======
+	unsigned int chip_select = spi->chip_select;
+	u16 opcode = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int pending = t->len;
 	int step_size = HSSPI_BUFFER_LEN;
 	const u8 *tx = t->tx_buf;
 	u8 *rx = t->rx_buf;
+<<<<<<< HEAD
 	u32 reg = 0;
 
 	bcm63xx_hsspi_set_clk(bs, spi, t->speed_hz);
 	if (!t->cs_off)
 		bcm63xx_hsspi_set_cs(bs, spi_get_chipselect(spi, 0), true);
+=======
+
+	bcm63xx_hsspi_set_clk(bs, spi, t->speed_hz);
+	bcm63xx_hsspi_set_cs(bs, spi->chip_select, true);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (tx && rx)
 		opcode = HSSPI_OP_READ_WRITE;
@@ -491,6 +528,7 @@ static int bcm63xx_hsspi_do_txrx(struct spi_device *spi, struct spi_transfer *t)
 		step_size -= HSSPI_OPCODE_LEN;
 
 	if ((opcode == HSSPI_OP_READ && t->rx_nbits == SPI_NBITS_DUAL) ||
+<<<<<<< HEAD
 	    (opcode == HSSPI_OP_WRITE && t->tx_nbits == SPI_NBITS_DUAL)) {
 		opcode |= HSSPI_OP_MULTIBIT;
 
@@ -501,6 +539,13 @@ static int bcm63xx_hsspi_do_txrx(struct spi_device *spi, struct spi_transfer *t)
 	}
 
 	__raw_writel(reg | 0xff,
+=======
+	    (opcode == HSSPI_OP_WRITE && t->tx_nbits == SPI_NBITS_DUAL))
+		opcode |= HSSPI_OP_MULTIBIT;
+
+	__raw_writel(1 << MODE_CTRL_MULTIDATA_WR_SIZE_SHIFT |
+		     1 << MODE_CTRL_MULTIDATA_RD_SIZE_SHIFT | 0xff,
+>>>>>>> b7ba80a49124 (Commit)
 		     bs->regs + HSSPI_PROFILE_MODE_CTRL_REG(chip_select));
 
 	while (pending > 0) {
@@ -512,6 +557,7 @@ static int bcm63xx_hsspi_do_txrx(struct spi_device *spi, struct spi_transfer *t)
 			tx += curr_step;
 		}
 
+<<<<<<< HEAD
 		*(__be16 *)(&val) = cpu_to_be16(opcode | curr_step);
 		__raw_writew(val, bs->fifo);
 
@@ -527,6 +573,24 @@ static int bcm63xx_hsspi_do_txrx(struct spi_device *spi, struct spi_transfer *t)
 
 		if (bcm63xx_hsspi_wait_cmd(bs))
 			return -ETIMEDOUT;
+=======
+		__raw_writew(opcode | curr_step, bs->fifo);
+
+		/* enable interrupt */
+		__raw_writel(HSSPI_PINGx_CMD_DONE(0),
+			     bs->regs + HSSPI_INT_MASK_REG);
+
+		/* start the transfer */
+		__raw_writel(!chip_select << PINGPONG_CMD_SS_SHIFT |
+			     chip_select << PINGPONG_CMD_PROFILE_SHIFT |
+			     PINGPONG_COMMAND_START_NOW,
+			     bs->regs + HSSPI_PINGPONG_COMMAND_REG(0));
+
+		if (wait_for_completion_timeout(&bs->done, HZ) == 0) {
+			dev_err(&bs->pdev->dev, "transfer timed out!\n");
+			return -ETIMEDOUT;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (rx) {
 			memcpy_fromio(rx, bs->fifo, curr_step);
@@ -545,14 +609,22 @@ static int bcm63xx_hsspi_setup(struct spi_device *spi)
 	u32 reg;
 
 	reg = __raw_readl(bs->regs +
+<<<<<<< HEAD
 			  HSSPI_PROFILE_SIGNAL_CTRL_REG(spi_get_chipselect(spi, 0)));
+=======
+			  HSSPI_PROFILE_SIGNAL_CTRL_REG(spi->chip_select));
+>>>>>>> b7ba80a49124 (Commit)
 	reg &= ~(SIGNAL_CTRL_LAUNCH_RISING | SIGNAL_CTRL_LATCH_RISING);
 	if (spi->mode & SPI_CPHA)
 		reg |= SIGNAL_CTRL_LAUNCH_RISING;
 	else
 		reg |= SIGNAL_CTRL_LATCH_RISING;
 	__raw_writel(reg, bs->regs +
+<<<<<<< HEAD
 		     HSSPI_PROFILE_SIGNAL_CTRL_REG(spi_get_chipselect(spi, 0)));
+=======
+		     HSSPI_PROFILE_SIGNAL_CTRL_REG(spi->chip_select));
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&bs->bus_mutex);
 	reg = __raw_readl(bs->regs + HSSPI_GLOBAL_CTRL_REG);
@@ -560,22 +632,35 @@ static int bcm63xx_hsspi_setup(struct spi_device *spi)
 	/* only change actual polarities if there is no transfer */
 	if ((reg & GLOBAL_CTRL_CS_POLARITY_MASK) == bs->cs_polarity) {
 		if (spi->mode & SPI_CS_HIGH)
+<<<<<<< HEAD
 			reg |= BIT(spi_get_chipselect(spi, 0));
 		else
 			reg &= ~BIT(spi_get_chipselect(spi, 0));
+=======
+			reg |= BIT(spi->chip_select);
+		else
+			reg &= ~BIT(spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 		__raw_writel(reg, bs->regs + HSSPI_GLOBAL_CTRL_REG);
 	}
 
 	if (spi->mode & SPI_CS_HIGH)
+<<<<<<< HEAD
 		bs->cs_polarity |= BIT(spi_get_chipselect(spi, 0));
 	else
 		bs->cs_polarity &= ~BIT(spi_get_chipselect(spi, 0));
+=======
+		bs->cs_polarity |= BIT(spi->chip_select);
+	else
+		bs->cs_polarity &= ~BIT(spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&bs->bus_mutex);
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int bcm63xx_hsspi_do_dummy_cs_txrx(struct spi_device *spi,
 				      struct spi_message *msg)
 {
@@ -587,6 +672,19 @@ static int bcm63xx_hsspi_do_dummy_cs_txrx(struct spi_device *spi,
 
 	/*
 	 * This controller does not support keeping CS active during idle.
+=======
+static int bcm63xx_hsspi_transfer_one(struct spi_master *master,
+				      struct spi_message *msg)
+{
+	struct bcm63xx_hsspi *bs = spi_master_get_devdata(master);
+	struct spi_transfer *t;
+	struct spi_device *spi = msg->spi;
+	int status = -EINVAL;
+	int dummy_cs;
+	u32 reg;
+
+	/* This controller does not support keeping CS active during idle.
+>>>>>>> b7ba80a49124 (Commit)
 	 * To work around this, we use the following ugly hack:
 	 *
 	 * a. Invert the target chip select's polarity so it will be active.
@@ -600,6 +698,7 @@ static int bcm63xx_hsspi_do_dummy_cs_txrx(struct spi_device *spi,
 	 * e. At the end restore the polarities again to their default values.
 	 */
 
+<<<<<<< HEAD
 	dummy_cs = !spi_get_chipselect(spi, 0);
 	bcm63xx_hsspi_set_cs(bs, dummy_cs, true);
 
@@ -619,6 +718,12 @@ static int bcm63xx_hsspi_do_dummy_cs_txrx(struct spi_device *spi,
 			}
 		}
 
+=======
+	dummy_cs = !spi->chip_select;
+	bcm63xx_hsspi_set_cs(bs, dummy_cs, true);
+
+	list_for_each_entry(t, &msg->transfers, transfer_list) {
+>>>>>>> b7ba80a49124 (Commit)
 		status = bcm63xx_hsspi_do_txrx(spi, t);
 		if (status)
 			break;
@@ -627,6 +732,7 @@ static int bcm63xx_hsspi_do_dummy_cs_txrx(struct spi_device *spi,
 
 		spi_transfer_delay_exec(t);
 
+<<<<<<< HEAD
 		/* use existing cs change logic from spi_transfer_one_message */
 		if (t->cs_change) {
 			if (list_is_last(&t->transfer_list, &msg->transfers)) {
@@ -680,12 +786,26 @@ static int bcm63xx_hsspi_transfer_one(struct spi_master *master,
 	}
 
 	mutex_unlock(&bs->msg_mutex);
+=======
+		if (t->cs_change)
+			bcm63xx_hsspi_set_cs(bs, spi->chip_select, false);
+	}
+
+	mutex_lock(&bs->bus_mutex);
+	reg = __raw_readl(bs->regs + HSSPI_GLOBAL_CTRL_REG);
+	reg &= ~GLOBAL_CTRL_CS_POLARITY_MASK;
+	reg |= bs->cs_polarity;
+	__raw_writel(reg, bs->regs + HSSPI_GLOBAL_CTRL_REG);
+	mutex_unlock(&bs->bus_mutex);
+
+>>>>>>> b7ba80a49124 (Commit)
 	msg->status = status;
 	spi_finalize_current_message(master);
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool bcm63xx_hsspi_mem_supports_op(struct spi_mem *mem,
 			    const struct spi_mem_op *op)
 {
@@ -706,6 +826,8 @@ static const struct spi_controller_mem_ops bcm63xx_hsspi_mem_ops = {
 	.supports_op = bcm63xx_hsspi_mem_supports_op,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static irqreturn_t bcm63xx_hsspi_interrupt(int irq, void *dev_id)
 {
 	struct bcm63xx_hsspi *bs = (struct bcm63xx_hsspi *)dev_id;
@@ -792,6 +914,7 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
 	bs->regs = regs;
 	bs->speed_hz = rate;
 	bs->fifo = (u8 __iomem *)(bs->regs + HSSPI_FIFO_REG(0));
+<<<<<<< HEAD
 	bs->wait_mode = HSSPI_WAIT_MODE_POLLING;
 	bs->prepend_buf = devm_kzalloc(dev, HSSPI_BUFFER_LEN, GFP_KERNEL);
 	if (!bs->prepend_buf) {
@@ -804,6 +927,12 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
 	init_completion(&bs->done);
 
 	master->mem_ops = &bcm63xx_hsspi_mem_ops;
+=======
+
+	mutex_init(&bs->bus_mutex);
+	init_completion(&bs->done);
+
+>>>>>>> b7ba80a49124 (Commit)
 	master->dev.of_node = dev->of_node;
 	if (!dev->of_node)
 		master->bus_num = HSSPI_BUS_NUM;
@@ -817,9 +946,12 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
 	master->num_chipselect = num_cs;
 	master->setup = bcm63xx_hsspi_setup;
 	master->transfer_one_message = bcm63xx_hsspi_transfer_one;
+<<<<<<< HEAD
 	master->max_transfer_size = bcm63xx_hsspi_max_message_size;
 	master->max_message_size = bcm63xx_hsspi_max_message_size;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH |
 			    SPI_RX_DUAL | SPI_TX_DUAL;
 	master->bits_per_word_mask = SPI_BPW_MASK(8);
@@ -839,6 +971,7 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
 	__raw_writel(reg | GLOBAL_CTRL_CLK_GATE_SSOFF,
 		     bs->regs + HSSPI_GLOBAL_CTRL_REG);
 
+<<<<<<< HEAD
 	if (irq > 0) {
 		ret = devm_request_irq(dev, irq, bcm63xx_hsspi_interrupt, IRQF_SHARED,
 				       pdev->name, bs);
@@ -866,6 +999,23 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
 
 out_sysgroup_disable:
 	sysfs_remove_group(&pdev->dev.kobj, &bcm63xx_hsspi_group);
+=======
+	ret = devm_request_irq(dev, irq, bcm63xx_hsspi_interrupt, IRQF_SHARED,
+			       pdev->name, bs);
+
+	if (ret)
+		goto out_put_master;
+
+	pm_runtime_enable(&pdev->dev);
+
+	/* register and we are done */
+	ret = devm_spi_register_master(dev, master);
+	if (ret)
+		goto out_pm_disable;
+
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 out_pm_disable:
 	pm_runtime_disable(&pdev->dev);
 out_put_master:
@@ -878,7 +1028,11 @@ out_disable_clk:
 }
 
 
+<<<<<<< HEAD
 static void bcm63xx_hsspi_remove(struct platform_device *pdev)
+=======
+static int bcm63xx_hsspi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct bcm63xx_hsspi *bs = spi_master_get_devdata(master);
@@ -887,7 +1041,12 @@ static void bcm63xx_hsspi_remove(struct platform_device *pdev)
 	__raw_writel(0, bs->regs + HSSPI_INT_MASK_REG);
 	clk_disable_unprepare(bs->pll_clk);
 	clk_disable_unprepare(bs->clk);
+<<<<<<< HEAD
 	sysfs_remove_group(&pdev->dev.kobj, &bcm63xx_hsspi_group);
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -932,7 +1091,10 @@ static SIMPLE_DEV_PM_OPS(bcm63xx_hsspi_pm_ops, bcm63xx_hsspi_suspend,
 
 static const struct of_device_id bcm63xx_hsspi_of_match[] = {
 	{ .compatible = "brcm,bcm6328-hsspi", },
+<<<<<<< HEAD
 	{ .compatible = "brcm,bcmbca-hsspi-v1.0", },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ },
 };
 MODULE_DEVICE_TABLE(of, bcm63xx_hsspi_of_match);
@@ -944,7 +1106,11 @@ static struct platform_driver bcm63xx_hsspi_driver = {
 		.of_match_table = bcm63xx_hsspi_of_match,
 	},
 	.probe		= bcm63xx_hsspi_probe,
+<<<<<<< HEAD
 	.remove_new	= bcm63xx_hsspi_remove,
+=======
+	.remove		= bcm63xx_hsspi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(bcm63xx_hsspi_driver);

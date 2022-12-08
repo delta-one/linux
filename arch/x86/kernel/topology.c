@@ -106,7 +106,11 @@ int arch_register_cpu(int num)
 	 * Xen PV guests don't support CPU0 hotplug at all.
 	 */
 	if (c->x86_vendor != X86_VENDOR_INTEL ||
+<<<<<<< HEAD
 	    cpu_feature_enabled(X86_FEATURE_XENPV))
+=======
+	    boot_cpu_has(X86_FEATURE_XENPV))
+>>>>>>> b7ba80a49124 (Commit)
 		cpu0_hotpluggable = 0;
 
 	/*

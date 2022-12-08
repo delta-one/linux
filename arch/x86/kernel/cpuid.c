@@ -139,7 +139,11 @@ static int cpuid_device_destroy(unsigned int cpu)
 	return 0;
 }
 
+<<<<<<< HEAD
 static char *cpuid_devnode(const struct device *dev, umode_t *mode)
+=======
+static char *cpuid_devnode(struct device *dev, umode_t *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return kasprintf(GFP_KERNEL, "cpu/%u/cpuid", MINOR(dev->devt));
 }
@@ -154,7 +158,11 @@ static int __init cpuid_init(void)
 		       CPUID_MAJOR);
 		return -EBUSY;
 	}
+<<<<<<< HEAD
 	cpuid_class = class_create("cpuid");
+=======
+	cpuid_class = class_create(THIS_MODULE, "cpuid");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(cpuid_class)) {
 		err = PTR_ERR(cpuid_class);
 		goto out_chrdev;

@@ -165,7 +165,11 @@ static int vxfs_try_sb_magic(struct super_block *sbp, int silent,
 }
 
 /**
+<<<<<<< HEAD
  * vxfs_fill_super - read superblock into memory and initialize filesystem
+=======
+ * vxfs_read_super - read superblock into memory and initialize filesystem
+>>>>>>> b7ba80a49124 (Commit)
  * @sbp:		VFS superblock (to fill)
  * @dp:			fs private mount data
  * @silent:		do not complain loudly when sth is wrong

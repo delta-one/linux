@@ -264,6 +264,7 @@ static const struct ts_dmi_data connect_tablet9_data = {
 	.properties     = connect_tablet9_props,
 };
 
+<<<<<<< HEAD
 static const struct property_entry csl_panther_tab_hd_props[] = {
 	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
 	PROPERTY_ENTRY_U32("touchscreen-min-y", 20),
@@ -281,6 +282,8 @@ static const struct ts_dmi_data csl_panther_tab_hd_data = {
 	.properties     = csl_panther_tab_hd_props,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct property_entry cube_iwork8_air_props[] = {
 	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
 	PROPERTY_ENTRY_U32("touchscreen-min-y", 3),
@@ -787,6 +790,7 @@ static const struct ts_dmi_data predia_basic_data = {
 	.properties	= predia_basic_props,
 };
 
+<<<<<<< HEAD
 static const struct property_entry rca_cambio_w101_v2_props[] = {
 	PROPERTY_ENTRY_U32("touchscreen-min-x", 4),
 	PROPERTY_ENTRY_U32("touchscreen-min-y", 20),
@@ -803,6 +807,8 @@ static const struct ts_dmi_data rca_cambio_w101_v2_data = {
 	.properties = rca_cambio_w101_v2_props,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct property_entry rwc_nanote_p8_props[] = {
 	PROPERTY_ENTRY_U32("touchscreen-min-y", 46),
 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
@@ -1098,6 +1104,7 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
 		},
 	},
 	{
+<<<<<<< HEAD
 		/* Chuwi Vi8 (CWI501) */
 		.driver_data = (void *)&chuwi_vi8_data,
 		.matches = {
@@ -1107,6 +1114,8 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
 		},
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Chuwi Vi8 (CWI506) */
 		.driver_data = (void *)&chuwi_vi8_data,
 		.matches = {
@@ -1151,6 +1160,7 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
 		},
 	},
 	{
+<<<<<<< HEAD
 		/* CSL Panther Tab HD */
 		.driver_data = (void *)&csl_panther_tab_hd_data,
 		.matches = {
@@ -1159,6 +1169,8 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
 		},
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* CUBE iwork8 Air */
 		.driver_data = (void *)&cube_iwork8_air_data,
 		.matches = {
@@ -1460,6 +1472,7 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
 		},
 	},
 	{
+<<<<<<< HEAD
 		/* RCA Cambio W101 v2 */
 		/* https://github.com/onitake/gsl-firmware/discussions/193 */
 		.driver_data = (void *)&rca_cambio_w101_v2_data,
@@ -1469,6 +1482,8 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
 		},
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* RWC NANOTE P8 */
 		.driver_data = (void *)&rwc_nanote_p8_data,
 		.matches = {

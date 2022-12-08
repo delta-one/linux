@@ -9,8 +9,11 @@
 #include <linux/bits.h>
 #include <cxlmem.h>
 
+<<<<<<< HEAD
 #include "trace.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define LSA_SIZE SZ_128K
 #define DEV_SIZE SZ_2G
 #define EFFECT(x) (1U << x)
@@ -67,6 +70,7 @@ static struct {
 	},
 };
 
+<<<<<<< HEAD
 #define PASS_TRY_LIMIT 3
 
 #define CXL_TEST_EVENT_CNT_MAX 15
@@ -407,6 +411,8 @@ static void cxl_mock_add_event_logs(struct mock_event_store *mes)
 	mes->ev_status |= CXLDEV_EVENT_STATUS_FATAL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mock_gsl(struct cxl_mbox_cmd *cmd)
 {
 	if (cmd->size_out < sizeof(mock_gsl_payload))
@@ -442,6 +448,7 @@ static int mock_get_log(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mock_rcd_id(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
 {
 	struct cxl_mbox_identify id = {
@@ -460,6 +467,8 @@ static int mock_rcd_id(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mock_id(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
 {
 	struct cxl_mbox_identify id = {
@@ -497,6 +506,7 @@ static int mock_partition_info(struct cxl_dev_state *cxlds,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mock_get_security_state(struct cxl_dev_state *cxlds,
 				   struct cxl_mbox_cmd *cmd)
 {
@@ -825,6 +835,12 @@ static int mock_get_lsa(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
 	struct cxl_mbox_get_lsa *get_lsa = cmd->payload_in;
 	struct cxl_mockmem_data *mdata = dev_get_drvdata(cxlds->dev);
 	void *lsa = mdata->lsa;
+=======
+static int mock_get_lsa(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
+{
+	struct cxl_mbox_get_lsa *get_lsa = cmd->payload_in;
+	void *lsa = dev_get_drvdata(cxlds->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	u32 offset, length;
 
 	if (sizeof(*get_lsa) > cmd->size_in)
@@ -843,8 +859,12 @@ static int mock_get_lsa(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
 static int mock_set_lsa(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
 {
 	struct cxl_mbox_set_lsa *set_lsa = cmd->payload_in;
+<<<<<<< HEAD
 	struct cxl_mockmem_data *mdata = dev_get_drvdata(cxlds->dev);
 	void *lsa = mdata->lsa;
+=======
+	void *lsa = dev_get_drvdata(cxlds->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	u32 offset, length;
 
 	if (sizeof(*set_lsa) > cmd->size_in)
@@ -901,10 +921,14 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
 		rc = mock_get_log(cxlds, cmd);
 		break;
 	case CXL_MBOX_OP_IDENTIFY:
+<<<<<<< HEAD
 		if (cxlds->rcd)
 			rc = mock_rcd_id(cxlds, cmd);
 		else
 			rc = mock_id(cxlds, cmd);
+=======
+		rc = mock_id(cxlds, cmd);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case CXL_MBOX_OP_GET_LSA:
 		rc = mock_get_lsa(cxlds, cmd);
@@ -912,18 +936,22 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
 	case CXL_MBOX_OP_GET_PARTITION_INFO:
 		rc = mock_partition_info(cxlds, cmd);
 		break;
+<<<<<<< HEAD
 	case CXL_MBOX_OP_GET_EVENT_RECORD:
 		rc = mock_get_event(cxlds, cmd);
 		break;
 	case CXL_MBOX_OP_CLEAR_EVENT_RECORD:
 		rc = mock_clear_event(cxlds, cmd);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case CXL_MBOX_OP_SET_LSA:
 		rc = mock_set_lsa(cxlds, cmd);
 		break;
 	case CXL_MBOX_OP_GET_HEALTH_INFO:
 		rc = mock_health_info(cxlds, cmd);
 		break;
+<<<<<<< HEAD
 	case CXL_MBOX_OP_GET_SECURITY_STATE:
 		rc = mock_get_security_state(cxlds, cmd);
 		break;
@@ -942,6 +970,8 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
 	case CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE:
 		rc = mock_passphrase_secure_erase(cxlds, cmd);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		break;
 	}
@@ -957,6 +987,7 @@ static void label_area_release(void *lsa)
 	vfree(lsa);
 }
 
+<<<<<<< HEAD
 static bool is_rcd(struct platform_device *pdev)
 {
 	const struct platform_device_id *id = platform_get_device_id(pdev);
@@ -973,11 +1004,14 @@ static ssize_t event_trigger_store(struct device *dev,
 }
 static DEVICE_ATTR_WO(event_trigger);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int cxl_mock_mem_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 	struct cxl_memdev *cxlmd;
 	struct cxl_dev_state *cxlds;
+<<<<<<< HEAD
 	struct cxl_mockmem_data *mdata;
 	int rc;
 
@@ -992,6 +1026,18 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
 	rc = devm_add_action_or_reset(dev, label_area_release, mdata->lsa);
 	if (rc)
 		return rc;
+=======
+	void *lsa;
+	int rc;
+
+	lsa = vmalloc(LSA_SIZE);
+	if (!lsa)
+		return -ENOMEM;
+	rc = devm_add_action_or_reset(dev, label_area_release, lsa);
+	if (rc)
+		return rc;
+	dev_set_drvdata(dev, lsa);
+>>>>>>> b7ba80a49124 (Commit)
 
 	cxlds = cxl_dev_state_create(dev);
 	if (IS_ERR(cxlds))
@@ -1000,11 +1046,14 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
 	cxlds->serial = pdev->id;
 	cxlds->mbox_send = cxl_mock_mbox_send;
 	cxlds->payload_size = SZ_4K;
+<<<<<<< HEAD
 	cxlds->event.buf = (struct cxl_get_event_payload *) mdata->event_buf;
 	if (is_rcd(pdev)) {
 		cxlds->rcd = true;
 		cxlds->component_reg_phys = CXL_RESOURCE_NONE;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = cxl_enumerate_cmds(cxlds);
 	if (rc)
@@ -1018,18 +1067,27 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
 	mdata->mes.cxlds = cxlds;
 	cxl_mock_add_event_logs(&mdata->mes);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cxlmd = devm_cxl_add_memdev(cxlds);
 	if (IS_ERR(cxlmd))
 		return PTR_ERR(cxlmd);
 
+<<<<<<< HEAD
 	cxl_mem_get_event_records(cxlds, CXLDEV_EVENT_STATUS_ALL);
+=======
+	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM))
+		rc = devm_cxl_add_nvdimm(dev, cxlmd);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static ssize_t security_lock_show(struct device *dev,
 				  struct device_attribute *attr, char *buf)
 {
@@ -1073,6 +1131,10 @@ ATTRIBUTE_GROUPS(cxl_mock_mem);
 static const struct platform_device_id cxl_mock_mem_ids[] = {
 	{ .name = "cxl_mem", 0 },
 	{ .name = "cxl_rcd", 1 },
+=======
+static const struct platform_device_id cxl_mock_mem_ids[] = {
+	{ .name = "cxl_mem", },
+>>>>>>> b7ba80a49124 (Commit)
 	{ },
 };
 MODULE_DEVICE_TABLE(platform, cxl_mock_mem_ids);
@@ -1082,7 +1144,10 @@ static struct platform_driver cxl_mock_mem_driver = {
 	.id_table = cxl_mock_mem_ids,
 	.driver = {
 		.name = KBUILD_MODNAME,
+<<<<<<< HEAD
 		.dev_groups = cxl_mock_mem_groups,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

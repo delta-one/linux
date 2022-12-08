@@ -21,7 +21,10 @@
 #include <linux/ip.h>
 #include <linux/udp.h>
 #include <net/pkt_cls.h>
+<<<<<<< HEAD
 #include <net/pkt_sched.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/filter.h>
 
 MODULE_LICENSE("GPL v2");
@@ -59,7 +62,11 @@ struct net_device *aq_ndev_alloc(void)
 	return ndev;
 }
 
+<<<<<<< HEAD
 int aq_ndev_open(struct net_device *ndev)
+=======
+static int aq_ndev_open(struct net_device *ndev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct aq_nic_s *aq_nic = netdev_priv(ndev);
 	int err = 0;
@@ -89,7 +96,11 @@ err_exit:
 	return err;
 }
 
+<<<<<<< HEAD
 int aq_ndev_close(struct net_device *ndev)
+=======
+static int aq_ndev_close(struct net_device *ndev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct aq_nic_s *aq_nic = netdev_priv(ndev);
 	int err = 0;

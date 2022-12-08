@@ -518,6 +518,7 @@ static int hym8563_probe(struct i2c_client *client)
 	}
 
 	if (client->irq > 0) {
+<<<<<<< HEAD
 		unsigned long irqflags = IRQF_TRIGGER_LOW;
 
 		if (dev_fwnode(&client->dev))
@@ -526,6 +527,11 @@ static int hym8563_probe(struct i2c_client *client)
 		ret = devm_request_threaded_irq(&client->dev, client->irq,
 						NULL, hym8563_irq,
 						irqflags | IRQF_ONESHOT,
+=======
+		ret = devm_request_threaded_irq(&client->dev, client->irq,
+						NULL, hym8563_irq,
+						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+>>>>>>> b7ba80a49124 (Commit)
 						client->name, hym8563);
 		if (ret < 0) {
 			dev_err(&client->dev, "irq %d request failed, %d\n",

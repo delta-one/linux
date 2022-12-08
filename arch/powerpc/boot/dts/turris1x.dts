@@ -69,6 +69,7 @@
 				interrupt-parent = <&gpio>;
 				interrupts = <12 IRQ_TYPE_LEVEL_LOW>, /* GPIO12 - ALERT pin */
 					     <13 IRQ_TYPE_LEVEL_LOW>; /* GPIO13 - CRIT pin */
+<<<<<<< HEAD
 				#address-cells = <1>;
 				#size-cells = <0>;
 
@@ -83,6 +84,8 @@
 					reg = <1>;
 					label = "cpu";
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			/* DDR3 SPD/EEPROM */
@@ -161,7 +164,11 @@
 
 					port@0 {
 						reg = <0>;
+<<<<<<< HEAD
 						label = "cpu";
+=======
+						label = "cpu1";
+>>>>>>> b7ba80a49124 (Commit)
 						ethernet = <&enet1>;
 						phy-mode = "rgmii-id";
 
@@ -198,7 +205,11 @@
 
 					port@6 {
 						reg = <6>;
+<<<<<<< HEAD
 						label = "cpu";
+=======
+						label = "cpu0";
+>>>>>>> b7ba80a49124 (Commit)
 						ethernet = <&enet0>;
 						phy-mode = "rgmii-id";
 
@@ -277,14 +288,21 @@
 				};
 
 				partition@20000 {
+<<<<<<< HEAD
 					/* 1.7 MB for Linux Kernel Image */
 					reg = <0x00020000 0x001a0000>;
 					label = "kernel";
+=======
+					/* 1.7 MB for Rescue Linux Kernel Image */
+					reg = <0x00020000 0x001a0000>;
+					label = "rescue-kernel";
+>>>>>>> b7ba80a49124 (Commit)
 				};
 
 				partition@1c0000 {
 					/* 1.5 MB for Rescue JFFS2 Root File System */
 					reg = <0x001c0000 0x00180000>;
+<<<<<<< HEAD
 					label = "rescue";
 				};
 
@@ -292,6 +310,15 @@
 					/* 11 MB for TAR.XZ Archive with Factory content of NAND Root File System */
 					reg = <0x00340000 0x00b00000>;
 					label = "factory";
+=======
+					label = "rescue-rootfs";
+				};
+
+				partition@340000 {
+					/* 11 MB for TAR.XZ Backup with content of NAND Root File System */
+					reg = <0x00340000 0x00b00000>;
+					label = "backup-rootfs";
+>>>>>>> b7ba80a49124 (Commit)
 				};
 
 				partition@e40000 {
@@ -367,6 +394,7 @@
 			};
 
 			reboot@d {
+<<<<<<< HEAD
 				/*
 				 * CPLD firmware which manages system reset and
 				 * watchdog registers has bugs. It does not
@@ -389,12 +417,17 @@
 				 * method and reset via watchdog is more broken
 				 * than system reset via syscon.
 				 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "syscon-reboot";
 				reg = <0x0d 0x01>;
 				offset = <0x0d>;
 				mask = <0x01>;
 				value = <0x01>;
+<<<<<<< HEAD
 				priority = <64>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			led-controller@13 {

@@ -64,7 +64,11 @@ ___EOF___
 # build using nolibc on supported archs (smaller executable) and fall
 # back to regular glibc on other ones.
 if echo -e "#if __x86_64__||__i386__||__i486__||__i586__||__i686__" \
+<<<<<<< HEAD
            "||__ARM_EABI__||__aarch64__||__s390x__\nyes\n#endif" \
+=======
+           "||__ARM_EABI__||__aarch64__\nyes\n#endif" \
+>>>>>>> b7ba80a49124 (Commit)
    | ${CROSS_COMPILE}gcc -E -nostdlib -xc - \
    | grep -q '^yes'; then
 	# architecture supported by nolibc

@@ -167,12 +167,20 @@ static int rt715_sdca_read_prop(struct sdw_slave *slave)
 	}
 
 	/* set the timeout values */
+<<<<<<< HEAD
 	prop->clk_stop_timeout = 200;
+=======
+	prop->clk_stop_timeout = 20;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct sdw_slave_ops rt715_sdca_slave_ops = {
+=======
+static struct sdw_slave_ops rt715_sdca_slave_ops = {
+>>>>>>> b7ba80a49124 (Commit)
 	.read_prop = rt715_sdca_read_prop,
 	.update_status = rt715_sdca_update_status,
 };

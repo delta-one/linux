@@ -122,6 +122,10 @@ bool PageMovable(struct page *page)
 
 	return false;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL(PageMovable);
+>>>>>>> b7ba80a49124 (Commit)
 
 void __SetPageMovable(struct page *page, const struct movable_operations *mops)
 {
@@ -583,10 +587,16 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
 		if (PageCompound(page)) {
 			const unsigned int order = compound_order(page);
 
+<<<<<<< HEAD
 			if (likely(order <= MAX_ORDER)) {
 				blockpfn += (1UL << order) - 1;
 				cursor += (1UL << order) - 1;
 				nr_scanned += (1UL << order) - 1;
+=======
+			if (likely(order < MAX_ORDER)) {
+				blockpfn += (1UL << order) - 1;
+				cursor += (1UL << order) - 1;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			goto isolate_fail;
 		}
@@ -894,11 +904,14 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
 		}
 
 		if (PageHuge(page) && cc->alloc_contig) {
+<<<<<<< HEAD
 			if (locked) {
 				unlock_page_lruvec_irqrestore(locked, flags);
 				locked = NULL;
 			}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			ret = isolate_or_dissolve_huge_page(page, &cc->migratepages);
 
 			/*
@@ -910,7 +923,10 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
 				if (ret == -EBUSY)
 					ret = 0;
 				low_pfn += compound_nr(page) - 1;
+<<<<<<< HEAD
 				nr_scanned += compound_nr(page) - 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				goto isolate_fail;
 			}
 
@@ -945,10 +961,15 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
 			 * a valid page order. Consider only values in the
 			 * valid order range to prevent low_pfn overflow.
 			 */
+<<<<<<< HEAD
 			if (freepage_order > 0 && freepage_order <= MAX_ORDER) {
 				low_pfn += (1UL << freepage_order) - 1;
 				nr_scanned += (1UL << freepage_order) - 1;
 			}
+=======
+			if (freepage_order > 0 && freepage_order < MAX_ORDER)
+				low_pfn += (1UL << freepage_order) - 1;
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		}
 
@@ -963,10 +984,15 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
 		if (PageCompound(page) && !cc->alloc_contig) {
 			const unsigned int order = compound_order(page);
 
+<<<<<<< HEAD
 			if (likely(order <= MAX_ORDER)) {
 				low_pfn += (1UL << order) - 1;
 				nr_scanned += (1UL << order) - 1;
 			}
+=======
+			if (likely(order < MAX_ORDER))
+				low_pfn += (1UL << order) - 1;
+>>>>>>> b7ba80a49124 (Commit)
 			goto isolate_fail;
 		}
 
@@ -987,7 +1013,11 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
 					locked = NULL;
 				}
 
+<<<<<<< HEAD
 				if (isolate_movable_page(page, mode))
+=======
+				if (!isolate_movable_page(page, mode))
+>>>>>>> b7ba80a49124 (Commit)
 					goto isolate_success;
 			}
 
@@ -995,6 +1025,25 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
 		}
 
 		/*
+<<<<<<< HEAD
+=======
+		 * Migration will fail if an anonymous page is pinned in memory,
+		 * so avoid taking lru_lock and isolating it unnecessarily in an
+		 * admittedly racy check.
+		 */
+		mapping = page_mapping(page);
+		if (!mapping && page_count(page) > page_mapcount(page))
+			goto isolate_fail;
+
+		/*
+		 * Only allow to migrate anonymous pages in GFP_NOFS context
+		 * because those do not depend on fs locks.
+		 */
+		if (!(cc->gfp_mask & __GFP_FS) && mapping)
+			goto isolate_fail;
+
+		/*
+>>>>>>> b7ba80a49124 (Commit)
 		 * Be careful not to clear PageLRU until after we're
 		 * sure the page is not being freed elsewhere -- the
 		 * page release code relies on it.
@@ -1002,6 +1051,7 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
 		if (unlikely(!get_page_unless_zero(page)))
 			goto isolate_fail;
 
+<<<<<<< HEAD
 		/*
 		 * Migration will fail if an anonymous page is pinned in memory,
 		 * so avoid taking lru_lock and isolating it unnecessarily in an
@@ -1018,6 +1068,8 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
 		if (!(cc->gfp_mask & __GFP_FS) && mapping)
 			goto isolate_fail_put;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Only take pages on LRU: a check now makes later tests safe */
 		if (!PageLRU(page))
 			goto isolate_fail_put;
@@ -1088,7 +1140,10 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
 			 */
 			if (unlikely(PageCompound(page) && !cc->alloc_contig)) {
 				low_pfn += compound_nr(page) - 1;
+<<<<<<< HEAD
 				nr_scanned += compound_nr(page) - 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				SetPageLRU(page);
 				goto isolate_fail_put;
 			}
@@ -1113,12 +1168,20 @@ isolate_success_no_list:
 
 		/*
 		 * Avoid isolating too much unless this block is being
+<<<<<<< HEAD
 		 * fully scanned (e.g. dirty/writeback pages, parallel allocation)
+=======
+		 * rescanned (e.g. dirty/writeback pages, parallel allocation)
+>>>>>>> b7ba80a49124 (Commit)
 		 * or a lock is contended. For contention, isolate quickly to
 		 * potentially remove one source of contention.
 		 */
 		if (cc->nr_migratepages >= COMPACT_CLUSTER_MAX &&
+<<<<<<< HEAD
 		    !cc->finish_pageblock && !cc->contended) {
+=======
+		    !cc->rescan && !cc->contended) {
+>>>>>>> b7ba80a49124 (Commit)
 			++low_pfn;
 			break;
 		}
@@ -1183,14 +1246,22 @@ isolate_abort:
 	}
 
 	/*
+<<<<<<< HEAD
 	 * Update the cached scanner pfn once the pageblock has been scanned.
+=======
+	 * Updated the cached scanner pfn once the pageblock has been scanned
+>>>>>>> b7ba80a49124 (Commit)
 	 * Pages will either be migrated in which case there is no point
 	 * scanning in the near future or migration failed in which case the
 	 * failure reason may persist. The block is marked for skipping if
 	 * there were no pages isolated in the block or if the block is
 	 * rescanned twice in a row.
 	 */
+<<<<<<< HEAD
 	if (low_pfn == end_pfn && (!nr_isolated || cc->finish_pageblock)) {
+=======
+	if (low_pfn == end_pfn && (!nr_isolated || cc->rescan)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (valid_page && !skip_updated)
 			set_pageblock_skip(valid_page);
 		update_cached_migrate(cc, low_pfn);
@@ -1355,7 +1426,11 @@ move_freelist_tail(struct list_head *freelist, struct page *freepage)
 }
 
 static void
+<<<<<<< HEAD
 fast_isolate_around(struct compact_control *cc, unsigned long pfn)
+=======
+fast_isolate_around(struct compact_control *cc, unsigned long pfn, unsigned long nr_isolated)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long start_pfn, end_pfn;
 	struct page *page;
@@ -1376,13 +1451,30 @@ fast_isolate_around(struct compact_control *cc, unsigned long pfn)
 	if (!page)
 		return;
 
+<<<<<<< HEAD
 	isolate_freepages_block(cc, &start_pfn, end_pfn, &cc->freepages, 1, false);
+=======
+	/* Scan before */
+	if (start_pfn != pfn) {
+		isolate_freepages_block(cc, &start_pfn, pfn, &cc->freepages, 1, false);
+		if (cc->nr_freepages >= cc->nr_migratepages)
+			return;
+	}
+
+	/* Scan after */
+	start_pfn = pfn + nr_isolated;
+	if (start_pfn < end_pfn)
+		isolate_freepages_block(cc, &start_pfn, end_pfn, &cc->freepages, 1, false);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Skip this pageblock in the future as it's full or nearly full */
 	if (cc->nr_freepages < cc->nr_migratepages)
 		set_pageblock_skip(page);
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Search orders in round-robin fashion */
@@ -1559,7 +1651,11 @@ fast_isolate_freepages(struct compact_control *cc)
 		return cc->free_pfn;
 
 	low_pfn = page_to_pfn(page);
+<<<<<<< HEAD
 	fast_isolate_around(cc, low_pfn);
+=======
+	fast_isolate_around(cc, low_pfn, nr_isolated);
+>>>>>>> b7ba80a49124 (Commit)
 	return low_pfn;
 }
 
@@ -1774,6 +1870,7 @@ static unsigned long fast_find_migrateblock(struct compact_control *cc)
 		return pfn;
 
 	/*
+<<<<<<< HEAD
 	 * If the pageblock should be finished then do not select a different
 	 * pageblock.
 	 */
@@ -1781,6 +1878,8 @@ static unsigned long fast_find_migrateblock(struct compact_control *cc)
 		return pfn;
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * If the migrate_pfn is not at the start of a zone or the start
 	 * of a pageblock then assume this is a continuation of a previous
 	 * scan restarted due to COMPACT_CLUSTER_MAX.
@@ -1857,7 +1956,10 @@ static unsigned long fast_find_migrateblock(struct compact_control *cc)
 					pfn = cc->zone->zone_start_pfn;
 				cc->fast_search_fail = 0;
 				found_block = true;
+<<<<<<< HEAD
 				set_pageblock_skip(freepage);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				break;
 			}
 		}
@@ -2045,8 +2147,11 @@ static unsigned int fragmentation_score_node(pg_data_t *pgdat)
 		struct zone *zone;
 
 		zone = &pgdat->node_zones[zoneid];
+<<<<<<< HEAD
 		if (!populated_zone(zone))
 			continue;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		score += fragmentation_score_zone_weighted(zone);
 	}
 
@@ -2136,7 +2241,11 @@ static enum compact_result __compact_finished(struct compact_control *cc)
 
 	/* Direct compactor: Is a suitable page free? */
 	ret = COMPACT_NO_SUITABLE_PAGE;
+<<<<<<< HEAD
 	for (order = cc->order; order <= MAX_ORDER; order++) {
+=======
+	for (order = cc->order; order < MAX_ORDER; order++) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct free_area *area = &cc->zone->free_area[order];
 		bool can_steal;
 
@@ -2335,6 +2444,12 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
 	if (ret == COMPACT_SUCCESS || ret == COMPACT_SKIPPED)
 		return ret;
 
+<<<<<<< HEAD
+=======
+	/* huh, compaction_suitable is returning something unexpected */
+	VM_BUG_ON(ret != COMPACT_CONTINUE);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Clear pageblock skip if there were failures recently and compaction
 	 * is about to be retried after being deferred.
@@ -2392,6 +2507,7 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
 		unsigned long iteration_start_pfn = cc->migrate_pfn;
 
 		/*
+<<<<<<< HEAD
 		 * Avoid multiple rescans of the same pageblock which can
 		 * happen if a page cannot be isolated (dirty/writeback in
 		 * async mode) or if the migrated pages are being allocated
@@ -2406,6 +2522,21 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
 		}
 
 rescan:
+=======
+		 * Avoid multiple rescans which can happen if a page cannot be
+		 * isolated (dirty/writeback in async mode) or if the migrated
+		 * pages are being allocated before the pageblock is cleared.
+		 * The first rescan will capture the entire pageblock for
+		 * migration. If it fails, it'll be marked skip and scanning
+		 * will proceed as normal.
+		 */
+		cc->rescan = false;
+		if (pageblock_start_pfn(last_migrated_pfn) ==
+		    pageblock_start_pfn(iteration_start_pfn)) {
+			cc->rescan = true;
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		switch (isolate_migratepages(cc)) {
 		case ISOLATE_ABORT:
 			ret = COMPACT_CONTENDED;
@@ -2448,6 +2579,7 @@ rescan:
 				goto out;
 			}
 			/*
+<<<<<<< HEAD
 			 * If an ASYNC or SYNC_LIGHT fails to migrate a page
 			 * within the current order-aligned block, scan the
 			 * remainder of the pageblock. This will mark the
@@ -2479,6 +2611,20 @@ rescan:
 			break;
 		}
 
+=======
+			 * We failed to migrate at least one page in the current
+			 * order-aligned block, so skip the rest of it.
+			 */
+			if (cc->direct_compaction &&
+						(cc->mode == MIGRATE_ASYNC)) {
+				cc->migrate_pfn = block_end_pfn(
+						cc->migrate_pfn - 1, cc->order);
+				/* Draining pcplists is useless in this case */
+				last_migrated_pfn = 0;
+			}
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 check_drain:
 		/*
 		 * Has the migration scanner moved away from the previous
@@ -2497,6 +2643,15 @@ check_drain:
 				last_migrated_pfn = 0;
 			}
 		}
+<<<<<<< HEAD
+=======
+
+		/* Stop if a page has been captured */
+		if (capc && capc->page) {
+			ret = COMPACT_SUCCESS;
+			break;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 out:
@@ -2524,9 +2679,12 @@ out:
 
 	trace_mm_compaction_end(cc, start_pfn, end_pfn, sync, ret);
 
+<<<<<<< HEAD
 	VM_BUG_ON(!list_empty(&cc->freepages));
 	VM_BUG_ON(!list_empty(&cc->migratepages));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -2565,6 +2723,12 @@ static enum compact_result compact_zone_order(struct zone *zone, int order,
 
 	ret = compact_zone(&cc, &capc);
 
+<<<<<<< HEAD
+=======
+	VM_BUG_ON(!list_empty(&cc.freepages));
+	VM_BUG_ON(!list_empty(&cc.migratepages));
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Make sure we hide capture control first before we read the captured
 	 * page pointer, otherwise an interrupt could free and capture a page
@@ -2696,10 +2860,15 @@ static void proactive_compact_node(pg_data_t *pgdat)
 
 		compact_zone(&cc, NULL);
 
+<<<<<<< HEAD
 		count_compact_events(KCOMPACTD_MIGRATE_SCANNED,
 				     cc.total_migrate_scanned);
 		count_compact_events(KCOMPACTD_FREE_SCANNED,
 				     cc.total_free_scanned);
+=======
+		VM_BUG_ON(!list_empty(&cc.freepages));
+		VM_BUG_ON(!list_empty(&cc.migratepages));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -2727,6 +2896,12 @@ static void compact_node(int nid)
 		cc.zone = zone;
 
 		compact_zone(&cc, NULL);
+<<<<<<< HEAD
+=======
+
+		VM_BUG_ON(!list_empty(&cc.freepages));
+		VM_BUG_ON(!list_empty(&cc.migratepages));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -2766,8 +2941,11 @@ int compaction_proactiveness_sysctl_handler(struct ctl_table *table, int write,
 				continue;
 
 			pgdat->proactive_compact_trigger = true;
+<<<<<<< HEAD
 			trace_mm_compaction_wakeup_kcompactd(pgdat->node_id, -1,
 							     pgdat->nr_zones - 1);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			wake_up_interruptible(&pgdat->kcompactd_wait);
 		}
 	}
@@ -2905,6 +3083,12 @@ static void kcompactd_do_work(pg_data_t *pgdat)
 				     cc.total_migrate_scanned);
 		count_compact_events(KCOMPACTD_FREE_SCANNED,
 				     cc.total_free_scanned);
+<<<<<<< HEAD
+=======
+
+		VM_BUG_ON(!list_empty(&cc.freepages));
+		VM_BUG_ON(!list_empty(&cc.migratepages));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*

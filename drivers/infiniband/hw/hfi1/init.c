@@ -464,7 +464,11 @@ bail:
  *
  * This wrapper is the free function that matches hfi1_create_ctxtdata().
  * When a context is done being used (kernel or user), this function is called
+<<<<<<< HEAD
  * for the "final" put to match the kref init from hfi1_create_ctxtdata().
+=======
+ * for the "final" put to match the kref init from hf1i_create_ctxtdata().
+>>>>>>> b7ba80a49124 (Commit)
  * Other users of the context do a get/put sequence to make sure that the
  * structure isn't removed while in use.
  */
@@ -1761,11 +1765,25 @@ int hfi1_create_rcvhdrq(struct hfi1_devdata *dd, struct hfi1_ctxtdata *rcd)
 	unsigned amt;
 
 	if (!rcd->rcvhdrq) {
+<<<<<<< HEAD
 		amt = rcvhdrq_size(rcd);
 
 		rcd->rcvhdrq = dma_alloc_coherent(&dd->pcidev->dev, amt,
 						  &rcd->rcvhdrq_dma,
 						  GFP_KERNEL);
+=======
+		gfp_t gfp_flags;
+
+		amt = rcvhdrq_size(rcd);
+
+		if (rcd->ctxt < dd->first_dyn_alloc_ctxt || rcd->is_vnic)
+			gfp_flags = GFP_KERNEL;
+		else
+			gfp_flags = GFP_USER;
+		rcd->rcvhdrq = dma_alloc_coherent(&dd->pcidev->dev, amt,
+						  &rcd->rcvhdrq_dma,
+						  gfp_flags | __GFP_COMP);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!rcd->rcvhdrq) {
 			dd_dev_err(dd,
@@ -1779,7 +1797,11 @@ int hfi1_create_rcvhdrq(struct hfi1_devdata *dd, struct hfi1_ctxtdata *rcd)
 			rcd->rcvhdrtail_kvaddr = dma_alloc_coherent(&dd->pcidev->dev,
 								    PAGE_SIZE,
 								    &rcd->rcvhdrqtailaddr_dma,
+<<<<<<< HEAD
 								    GFP_KERNEL);
+=======
+								    gfp_flags);
+>>>>>>> b7ba80a49124 (Commit)
 			if (!rcd->rcvhdrtail_kvaddr)
 				goto bail_free;
 		}
@@ -1815,11 +1837,26 @@ int hfi1_setup_eagerbufs(struct hfi1_ctxtdata *rcd)
 {
 	struct hfi1_devdata *dd = rcd->dd;
 	u32 max_entries, egrtop, alloced_bytes = 0;
+<<<<<<< HEAD
+=======
+	gfp_t gfp_flags;
+>>>>>>> b7ba80a49124 (Commit)
 	u16 order, idx = 0;
 	int ret = 0;
 	u16 round_mtu = roundup_pow_of_two(hfi1_max_mtu);
 
 	/*
+<<<<<<< HEAD
+=======
+	 * GFP_USER, but without GFP_FS, so buffer cache can be
+	 * coalesced (we hope); otherwise, even at order 4,
+	 * heavy filesystem activity makes these fail, and we can
+	 * use compound pages.
+	 */
+	gfp_flags = __GFP_RECLAIM | __GFP_IO | __GFP_COMP;
+
+	/*
+>>>>>>> b7ba80a49124 (Commit)
 	 * The minimum size of the eager buffers is a groups of MTU-sized
 	 * buffers.
 	 * The global eager_buffer_size parameter is checked against the
@@ -1849,7 +1886,11 @@ int hfi1_setup_eagerbufs(struct hfi1_ctxtdata *rcd)
 			dma_alloc_coherent(&dd->pcidev->dev,
 					   rcd->egrbufs.rcvtid_size,
 					   &rcd->egrbufs.buffers[idx].dma,
+<<<<<<< HEAD
 					   GFP_KERNEL);
+=======
+					   gfp_flags);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rcd->egrbufs.buffers[idx].addr) {
 			rcd->egrbufs.buffers[idx].len =
 				rcd->egrbufs.rcvtid_size;

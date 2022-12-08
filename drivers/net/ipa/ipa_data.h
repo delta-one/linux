@@ -1,7 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 
 /* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (C) 2019-2023 Linaro Ltd.
+=======
+ * Copyright (C) 2019-2021 Linaro Ltd.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #ifndef _IPA_DATA_H_
 #define _IPA_DATA_H_
@@ -31,7 +35,11 @@
  * communication path between the IPA and a particular execution environment
  * (EE), such as the AP or Modem.  Each EE has a set of channels associated
  * with it, and each channel has an ID unique for that EE.  For the most part
+<<<<<<< HEAD
  * the only GSI channels of concern to this driver belong to the AP.
+=======
+ * the only GSI channels of concern to this driver belong to the AP
+>>>>>>> b7ba80a49124 (Commit)
  *
  * An endpoint is an IPA construct representing a single channel anywhere
  * in the system.  An IPA endpoint ID maps directly to an (EE, channel_id)
@@ -222,7 +230,10 @@ struct ipa_power_data {
  * @backward_compat:	BCR register value (prior to IPA v4.5 only)
  * @qsb_count:		number of entries in the qsb_data array
  * @qsb_data:		Qualcomm System Bus configuration data
+<<<<<<< HEAD
  * @modem_route_count:	number of modem entries in a routing table
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @endpoint_count:	number of entries in the endpoint_data array
  * @endpoint_data:	IPA endpoint/GSI channel data
  * @resource_data:	IPA resource configuration data
@@ -234,7 +245,10 @@ struct ipa_data {
 	u32 backward_compat;
 	u32 qsb_count;		/* number of entries in qsb_data[] */
 	const struct ipa_qsb_data *qsb_data;
+<<<<<<< HEAD
 	u32 modem_route_count;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 endpoint_count;	/* number of entries in endpoint_data[] */
 	const struct ipa_gsi_endpoint_data *endpoint_data;
 	const struct ipa_resource_data *resource_data;
@@ -246,9 +260,14 @@ extern const struct ipa_data ipa_data_v3_1;
 extern const struct ipa_data ipa_data_v3_5_1;
 extern const struct ipa_data ipa_data_v4_2;
 extern const struct ipa_data ipa_data_v4_5;
+<<<<<<< HEAD
 extern const struct ipa_data ipa_data_v4_7;
 extern const struct ipa_data ipa_data_v4_9;
 extern const struct ipa_data ipa_data_v4_11;
 extern const struct ipa_data ipa_data_v5_0;
+=======
+extern const struct ipa_data ipa_data_v4_9;
+extern const struct ipa_data ipa_data_v4_11;
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _IPA_DATA_H_ */

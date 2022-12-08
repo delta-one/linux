@@ -5,7 +5,10 @@
  */
 
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/device.h>
 #include <linux/init.h>
 #include <linux/mutex.h>
@@ -24,7 +27,10 @@ static const struct soc_device_attribute k3_soc_devices[] = {
 	{ .family = "AM64X", .data = &am64_ep_map },
 	{ .family = "J721S2", .data = &j721s2_ep_map },
 	{ .family = "AM62X", .data = &am62_ep_map },
+<<<<<<< HEAD
 	{ .family = "AM62AX", .data = &am62a_ep_map },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ /* sentinel */ }
 };
 
@@ -103,4 +109,7 @@ int psil_set_new_ep_config(struct device *dev, const char *name,
 	return 0;
 }
 EXPORT_SYMBOL_GPL(psil_set_new_ep_config);
+<<<<<<< HEAD
 MODULE_LICENSE("GPL v2");
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -1,5 +1,9 @@
 # SPDX-License-Identifier: GPL-2.0-only
 /asn1_compiler
+<<<<<<< HEAD
+=======
+/bin2c
+>>>>>>> b7ba80a49124 (Commit)
 /generate_rust_target
 /insert-sys-cert
 /kallsyms
@@ -7,5 +11,8 @@
 /recordmcount
 /sign-file
 /sorttable
+<<<<<<< HEAD
 /target.json
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /unifdef

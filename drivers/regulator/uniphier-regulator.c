@@ -212,7 +212,10 @@ static struct platform_driver uniphier_regulator_driver = {
 	.remove = uniphier_regulator_remove,
 	.driver = {
 		.name  = "uniphier-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = uniphier_regulator_match,
 	},
 };

@@ -7,7 +7,11 @@
 #include <asm/elf.h>
 
 
+<<<<<<< HEAD
 Elf32_Half elf_core_extra_phdrs(struct coredump_params *cprm)
+=======
+Elf32_Half elf_core_extra_phdrs(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return vsyscall_ehdr ? (((struct elfhdr *)vsyscall_ehdr)->e_phnum) : 0;
 }
@@ -60,7 +64,11 @@ int elf_core_write_extra_data(struct coredump_params *cprm)
 	return 1;
 }
 
+<<<<<<< HEAD
 size_t elf_core_extra_data_size(struct coredump_params *cprm)
+=======
+size_t elf_core_extra_data_size(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if ( vsyscall_ehdr ) {
 		const struct elfhdr *const ehdrp =

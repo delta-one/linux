@@ -15,7 +15,10 @@
 #include <linux/list.h>
 #include <linux/io.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/of_irq.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <linux/dma-mapping.h>
 #include <linux/pm_runtime.h>
@@ -311,7 +314,10 @@ static int omap2430_probe(struct platform_device *pdev)
 	struct device_node		*control_node;
 	struct platform_device		*control_pdev;
 	int				ret = -ENOMEM, val;
+<<<<<<< HEAD
 	bool				populate_irqs = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!np)
 		return -ENODEV;
@@ -330,6 +336,7 @@ static int omap2430_probe(struct platform_device *pdev)
 	musb->dev.dma_mask		= &omap2430_dmamask;
 	musb->dev.coherent_dma_mask	= omap2430_dmamask;
 
+<<<<<<< HEAD
 	/*
 	 * Legacy SoCs using omap_device get confused if node is moved
 	 * because of interconnect properties mixed into the node.
@@ -342,6 +349,8 @@ static int omap2430_probe(struct platform_device *pdev)
 	}
 	of_node_put(np);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	glue->dev			= &pdev->dev;
 	glue->musb			= musb;
 	glue->status			= MUSB_UNKNOWN;
@@ -403,6 +412,7 @@ static int omap2430_probe(struct platform_device *pdev)
 		goto err2;
 	}
 
+<<<<<<< HEAD
 	if (populate_irqs) {
 		struct resource musb_res[3];
 		struct resource *res;
@@ -445,6 +455,8 @@ static int omap2430_probe(struct platform_device *pdev)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = platform_device_add_data(musb, pdata, sizeof(*pdata));
 	if (ret) {
 		dev_err(&pdev->dev, "failed to add platform_data\n");

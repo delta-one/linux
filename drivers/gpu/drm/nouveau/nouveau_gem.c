@@ -645,7 +645,11 @@ nouveau_gem_pushbuf_reloc_apply(struct nouveau_cli *cli,
 				struct drm_nouveau_gem_pushbuf_reloc *reloc,
 				struct drm_nouveau_gem_pushbuf_bo *bo)
 {
+<<<<<<< HEAD
 	long ret = 0;
+=======
+	int ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned i;
 
 	for (i = 0; i < req->nr_relocs; i++) {
@@ -679,7 +683,11 @@ nouveau_gem_pushbuf_reloc_apply(struct nouveau_cli *cli,
 		}
 
 		if (!nvbo->kmap.virtual) {
+<<<<<<< HEAD
 			ret = ttm_bo_kmap(&nvbo->bo, 0, PFN_UP(nvbo->bo.base.size),
+=======
+			ret = ttm_bo_kmap(&nvbo->bo, 0, nvbo->bo.resource->num_pages,
+>>>>>>> b7ba80a49124 (Commit)
 					  &nvbo->kmap);
 			if (ret) {
 				NV_PRINTK(err, cli, "failed kmap for reloc\n");
@@ -703,6 +711,7 @@ nouveau_gem_pushbuf_reloc_apply(struct nouveau_cli *cli,
 				data |= r->vor;
 		}
 
+<<<<<<< HEAD
 		ret = dma_resv_wait_timeout(nvbo->bo.base.resv,
 					    DMA_RESV_USAGE_BOOKKEEP,
 					    false, 15 * HZ);
@@ -711,6 +720,11 @@ nouveau_gem_pushbuf_reloc_apply(struct nouveau_cli *cli,
 		if (ret) {
 			NV_PRINTK(err, cli, "reloc wait_idle failed: %ld\n",
 				  ret);
+=======
+		ret = ttm_bo_wait(&nvbo->bo, false, false);
+		if (ret) {
+			NV_PRINTK(err, cli, "reloc wait_idle failed: %d\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 
@@ -873,7 +887,12 @@ revalidate:
 			if (unlikely(cmd != req->suffix0)) {
 				if (!nvbo->kmap.virtual) {
 					ret = ttm_bo_kmap(&nvbo->bo, 0,
+<<<<<<< HEAD
 							  PFN_UP(nvbo->bo.base.size),
+=======
+							  nvbo->bo.resource->
+							  num_pages,
+>>>>>>> b7ba80a49124 (Commit)
 							  &nvbo->kmap);
 					if (ret) {
 						WIND_RING(chan);

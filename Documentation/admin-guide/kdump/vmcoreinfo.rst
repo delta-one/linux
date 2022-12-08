@@ -172,7 +172,11 @@ variables.
 Offset of the free_list's member. This value is used to compute the number
 of free pages.
 
+<<<<<<< HEAD
 Each zone has a free_area structure array called free_area[MAX_ORDER + 1].
+=======
+Each zone has a free_area structure array called free_area[MAX_ORDER].
+>>>>>>> b7ba80a49124 (Commit)
 The free_list represents a linked list of free page blocks.
 
 (list_head, next|prev)
@@ -189,8 +193,13 @@ Offsets of the vmap_area's members. They carry vmalloc-specific
 information. Makedumpfile gets the start address of the vmalloc region
 from this.
 
+<<<<<<< HEAD
 (zone.free_area, MAX_ORDER + 1)
 -------------------------------
+=======
+(zone.free_area, MAX_ORDER)
+---------------------------
+>>>>>>> b7ba80a49124 (Commit)
 
 Free areas descriptor. User-space tools use this value to iterate the
 free_area ranges. MAX_ORDER is used by the zone buddy allocator.
@@ -595,6 +604,7 @@ X2TLB
 -----
 
 Indicates whether the crashed kernel enabled SH extended mode.
+<<<<<<< HEAD
 
 RISCV64
 =======
@@ -624,3 +634,5 @@ Used to get the correct ranges:
   * VMALLOC_START ~ VMALLOC_END : vmalloc() / ioremap() space.
   * VMEMMAP_START ~ VMEMMAP_END : vmemmap space, used for struct page array.
   * KERNEL_LINK_ADDR : start address of Kernel link and BPF
+=======
+>>>>>>> b7ba80a49124 (Commit)

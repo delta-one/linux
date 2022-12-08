@@ -103,8 +103,13 @@ static int visconti_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int visconti_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 				  struct pwm_state *state)
+=======
+static void visconti_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+				   struct pwm_state *state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct visconti_pwm_chip *priv = visconti_pwm_from_chip(chip);
 	u32 period, duty, pwmc0, pwmc0_clk;
@@ -122,8 +127,11 @@ static int visconti_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 		state->polarity = PWM_POLARITY_NORMAL;
 
 	state->enabled = true;
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct pwm_ops visconti_pwm_ops = {

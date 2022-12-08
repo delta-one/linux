@@ -1023,7 +1023,11 @@ out_err:
 	return err;
 }
 
+<<<<<<< HEAD
 static void ffb_remove(struct platform_device *op)
+=======
+static int ffb_remove(struct platform_device *op)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = dev_get_drvdata(&op->dev);
 	struct ffb_par *par = info->par;
@@ -1035,6 +1039,11 @@ static void ffb_remove(struct platform_device *op)
 	of_iounmap(&op->resource[1], par->dac, sizeof(struct ffb_dac));
 
 	framebuffer_release(info);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id ffb_match[] = {
@@ -1054,7 +1063,11 @@ static struct platform_driver ffb_driver = {
 		.of_match_table = ffb_match,
 	},
 	.probe		= ffb_probe,
+<<<<<<< HEAD
 	.remove_new	= ffb_remove,
+=======
+	.remove		= ffb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init ffb_init(void)

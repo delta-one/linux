@@ -196,13 +196,18 @@ static int mdp_probe(struct platform_device *pdev)
 	mm_pdev = __get_pdev_by_id(pdev, MDP_INFRA_MMSYS);
 	if (!mm_pdev) {
 		ret = -ENODEV;
+<<<<<<< HEAD
 		goto err_destroy_device;
+=======
+		goto err_return;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	mdp->mdp_mmsys = &mm_pdev->dev;
 
 	mm_pdev = __get_pdev_by_id(pdev, MDP_INFRA_MUTEX);
 	if (WARN_ON(!mm_pdev)) {
 		ret = -ENODEV;
+<<<<<<< HEAD
 		goto err_destroy_device;
 	}
 	for (i = 0; i < MDP_PIPE_MAX; i++) {
@@ -210,13 +215,26 @@ static int mdp_probe(struct platform_device *pdev)
 		if (IS_ERR(mdp->mdp_mutex[i])) {
 			ret = PTR_ERR(mdp->mdp_mutex[i]);
 			goto err_free_mutex;
+=======
+		goto err_return;
+	}
+	for (i = 0; i < MDP_PIPE_MAX; i++) {
+		mdp->mdp_mutex[i] = mtk_mutex_get(&mm_pdev->dev);
+		if (!mdp->mdp_mutex[i]) {
+			ret = -ENODEV;
+			goto err_return;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
 	ret = mdp_comp_config(mdp);
 	if (ret) {
 		dev_err(dev, "Failed to config mdp components\n");
+<<<<<<< HEAD
 		goto err_free_mutex;
+=======
+		goto err_return;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	mdp->job_wq = alloc_workqueue(MDP_MODULE_NAME, WQ_FREEZABLE, 0);
@@ -287,6 +305,7 @@ err_destroy_job_wq:
 	destroy_workqueue(mdp->job_wq);
 err_deinit_comp:
 	mdp_comp_destroy(mdp);
+<<<<<<< HEAD
 err_free_mutex:
 	for (i = 0; i < MDP_PIPE_MAX; i++)
 		if (!IS_ERR_OR_NULL(mdp->mdp_mutex[i]))
@@ -294,6 +313,12 @@ err_free_mutex:
 err_destroy_device:
 	kfree(mdp);
 err_return:
+=======
+err_return:
+	for (i = 0; i < MDP_PIPE_MAX; i++)
+		mtk_mutex_put(mdp->mdp_mutex[i]);
+	kfree(mdp);
+>>>>>>> b7ba80a49124 (Commit)
 	dev_dbg(dev, "Errno %d\n", ret);
 	return ret;
 }

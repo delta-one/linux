@@ -12,6 +12,7 @@ unsigned long _find_next_bit(const unsigned long *addr1, unsigned long nbits,
 				unsigned long start);
 unsigned long _find_next_and_bit(const unsigned long *addr1, const unsigned long *addr2,
 					unsigned long nbits, unsigned long start);
+<<<<<<< HEAD
 unsigned long _find_next_andnot_bit(const unsigned long *addr1, const unsigned long *addr2,
 					unsigned long nbits, unsigned long start);
 unsigned long _find_next_or_bit(const unsigned long *addr1, const unsigned long *addr2,
@@ -27,6 +28,11 @@ unsigned long __find_nth_andnot_bit(const unsigned long *addr1, const unsigned l
 unsigned long __find_nth_and_andnot_bit(const unsigned long *addr1, const unsigned long *addr2,
 					const unsigned long *addr3, unsigned long size,
 					unsigned long n);
+=======
+unsigned long _find_next_zero_bit(const unsigned long *addr, unsigned long nbits,
+					 unsigned long start);
+extern unsigned long _find_first_bit(const unsigned long *addr, unsigned long size);
+>>>>>>> b7ba80a49124 (Commit)
 extern unsigned long _find_first_and_bit(const unsigned long *addr1,
 					 const unsigned long *addr2, unsigned long size);
 extern unsigned long _find_first_zero_bit(const unsigned long *addr, unsigned long size);
@@ -50,7 +56,11 @@ unsigned long _find_next_bit_le(const unsigned long *addr, unsigned
  * Returns the bit number for the next set bit
  * If no bits are set, returns @size.
  */
+<<<<<<< HEAD
 static __always_inline
+=======
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long find_next_bit(const unsigned long *addr, unsigned long size,
 			    unsigned long offset)
 {
@@ -79,7 +89,11 @@ unsigned long find_next_bit(const unsigned long *addr, unsigned long size,
  * Returns the bit number for the next set bit
  * If no bits are set, returns @size.
  */
+<<<<<<< HEAD
 static __always_inline
+=======
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long find_next_and_bit(const unsigned long *addr1,
 		const unsigned long *addr2, unsigned long size,
 		unsigned long offset)
@@ -98,6 +112,7 @@ unsigned long find_next_and_bit(const unsigned long *addr1,
 }
 #endif
 
+<<<<<<< HEAD
 #ifndef find_next_andnot_bit
 /**
  * find_next_andnot_bit - find the next set bit in *addr1 excluding all the bits
@@ -159,6 +174,8 @@ unsigned long find_next_or_bit(const unsigned long *addr1,
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef find_next_zero_bit
 /**
  * find_next_zero_bit - find the next cleared bit in a memory region
@@ -169,7 +186,11 @@ unsigned long find_next_or_bit(const unsigned long *addr1,
  * Returns the bit number of the next zero bit
  * If no bits are zero, returns @size.
  */
+<<<<<<< HEAD
 static __always_inline
+=======
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long find_next_zero_bit(const unsigned long *addr, unsigned long size,
 				 unsigned long offset)
 {
@@ -196,7 +217,11 @@ unsigned long find_next_zero_bit(const unsigned long *addr, unsigned long size,
  * Returns the bit number of the first set bit.
  * If no bits are set, returns @size.
  */
+<<<<<<< HEAD
 static __always_inline
+=======
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long find_first_bit(const unsigned long *addr, unsigned long size)
 {
 	if (small_const_nbits(size)) {
@@ -209,6 +234,7 @@ unsigned long find_first_bit(const unsigned long *addr, unsigned long size)
 }
 #endif
 
+<<<<<<< HEAD
 /**
  * find_nth_bit - find N'th set bit in a memory region
  * @addr: The address to start the search at
@@ -320,6 +346,8 @@ unsigned long find_nth_and_andnot_bit(const unsigned long *addr1,
 	return __find_nth_and_andnot_bit(addr1, addr2, addr3, size, n);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef find_first_and_bit
 /**
  * find_first_and_bit - find the first set bit in both memory regions
@@ -330,7 +358,11 @@ unsigned long find_nth_and_andnot_bit(const unsigned long *addr1,
  * Returns the bit number for the next set bit
  * If no bits are set, returns @size.
  */
+<<<<<<< HEAD
 static __always_inline
+=======
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long find_first_and_bit(const unsigned long *addr1,
 				 const unsigned long *addr2,
 				 unsigned long size)
@@ -354,7 +386,11 @@ unsigned long find_first_and_bit(const unsigned long *addr1,
  * Returns the bit number of the first cleared bit.
  * If no bits are zero, returns @size.
  */
+<<<<<<< HEAD
 static __always_inline
+=======
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long find_first_zero_bit(const unsigned long *addr, unsigned long size)
 {
 	if (small_const_nbits(size)) {
@@ -375,7 +411,11 @@ unsigned long find_first_zero_bit(const unsigned long *addr, unsigned long size)
  *
  * Returns the bit number of the last set bit, or size.
  */
+<<<<<<< HEAD
 static __always_inline
+=======
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long find_last_bit(const unsigned long *addr, unsigned long size)
 {
 	if (small_const_nbits(size)) {
@@ -389,6 +429,7 @@ unsigned long find_last_bit(const unsigned long *addr, unsigned long size)
 #endif
 
 /**
+<<<<<<< HEAD
  * find_next_and_bit_wrap - find the next set bit in both memory regions
  * @addr1: The first address to base the search on
  * @addr2: The second address to base the search on
@@ -461,6 +502,8 @@ unsigned long __for_each_wrap(const unsigned long *bitmap, unsigned long size,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * find_next_clump8 - find next 8-bit clump with set bits in a memory region
  * @clump: location to store copy of found clump
  * @addr: address to base the search on
@@ -479,19 +522,31 @@ extern unsigned long find_next_clump8(unsigned long *clump,
 
 #if defined(__LITTLE_ENDIAN)
 
+<<<<<<< HEAD
 static __always_inline unsigned long find_next_zero_bit_le(const void *addr,
+=======
+static inline unsigned long find_next_zero_bit_le(const void *addr,
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned long size, unsigned long offset)
 {
 	return find_next_zero_bit(addr, size, offset);
 }
 
+<<<<<<< HEAD
 static __always_inline unsigned long find_next_bit_le(const void *addr,
+=======
+static inline unsigned long find_next_bit_le(const void *addr,
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned long size, unsigned long offset)
 {
 	return find_next_bit(addr, size, offset);
 }
 
+<<<<<<< HEAD
 static __always_inline unsigned long find_first_zero_bit_le(const void *addr,
+=======
+static inline unsigned long find_first_zero_bit_le(const void *addr,
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned long size)
 {
 	return find_first_zero_bit(addr, size);
@@ -500,7 +555,11 @@ static __always_inline unsigned long find_first_zero_bit_le(const void *addr,
 #elif defined(__BIG_ENDIAN)
 
 #ifndef find_next_zero_bit_le
+<<<<<<< HEAD
 static __always_inline
+=======
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long find_next_zero_bit_le(const void *addr, unsigned
 		long size, unsigned long offset)
 {
@@ -519,7 +578,11 @@ unsigned long find_next_zero_bit_le(const void *addr, unsigned
 #endif
 
 #ifndef find_first_zero_bit_le
+<<<<<<< HEAD
 static __always_inline
+=======
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long find_first_zero_bit_le(const void *addr, unsigned long size)
 {
 	if (small_const_nbits(size)) {
@@ -533,7 +596,11 @@ unsigned long find_first_zero_bit_le(const void *addr, unsigned long size)
 #endif
 
 #ifndef find_next_bit_le
+<<<<<<< HEAD
 static __always_inline
+=======
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long find_next_bit_le(const void *addr, unsigned
 		long size, unsigned long offset)
 {
@@ -556,6 +623,7 @@ unsigned long find_next_bit_le(const void *addr, unsigned
 #endif
 
 #define for_each_set_bit(bit, addr, size) \
+<<<<<<< HEAD
 	for ((bit) = 0; (bit) = find_next_bit((addr), (size), (bit)), (bit) < (size); (bit)++)
 
 #define for_each_and_bit(bit, addr1, addr2, size) \
@@ -585,6 +653,28 @@ unsigned long find_next_bit_le(const void *addr, unsigned
 /* same as for_each_clear_bit() but use bit as value to start with */
 #define for_each_clear_bit_from(bit, addr, size) \
 	for (; (bit) = find_next_zero_bit((addr), (size), (bit)), (bit) < (size); (bit)++)
+=======
+	for ((bit) = find_next_bit((addr), (size), 0);		\
+	     (bit) < (size);					\
+	     (bit) = find_next_bit((addr), (size), (bit) + 1))
+
+/* same as for_each_set_bit() but use bit as value to start with */
+#define for_each_set_bit_from(bit, addr, size) \
+	for ((bit) = find_next_bit((addr), (size), (bit));	\
+	     (bit) < (size);					\
+	     (bit) = find_next_bit((addr), (size), (bit) + 1))
+
+#define for_each_clear_bit(bit, addr, size) \
+	for ((bit) = find_next_zero_bit((addr), (size), 0);	\
+	     (bit) < (size);					\
+	     (bit) = find_next_zero_bit((addr), (size), (bit) + 1))
+
+/* same as for_each_clear_bit() but use bit as value to start with */
+#define for_each_clear_bit_from(bit, addr, size) \
+	for ((bit) = find_next_zero_bit((addr), (size), (bit));	\
+	     (bit) < (size);					\
+	     (bit) = find_next_zero_bit((addr), (size), (bit) + 1))
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * for_each_set_bitrange - iterate over all set bit ranges [b; e)
@@ -594,11 +684,19 @@ unsigned long find_next_bit_le(const void *addr, unsigned
  * @size: bitmap size in number of bits
  */
 #define for_each_set_bitrange(b, e, addr, size)			\
+<<<<<<< HEAD
 	for ((b) = 0;						\
 	     (b) = find_next_bit((addr), (size), b),		\
 	     (e) = find_next_zero_bit((addr), (size), (b) + 1),	\
 	     (b) < (size);					\
 	     (b) = (e) + 1)
+=======
+	for ((b) = find_next_bit((addr), (size), 0),		\
+	     (e) = find_next_zero_bit((addr), (size), (b) + 1);	\
+	     (b) < (size);					\
+	     (b) = find_next_bit((addr), (size), (e) + 1),	\
+	     (e) = find_next_zero_bit((addr), (size), (b) + 1))
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * for_each_set_bitrange_from - iterate over all set bit ranges [b; e)
@@ -608,11 +706,19 @@ unsigned long find_next_bit_le(const void *addr, unsigned
  * @size: bitmap size in number of bits
  */
 #define for_each_set_bitrange_from(b, e, addr, size)		\
+<<<<<<< HEAD
 	for (;							\
 	     (b) = find_next_bit((addr), (size), (b)),		\
 	     (e) = find_next_zero_bit((addr), (size), (b) + 1),	\
 	     (b) < (size);					\
 	     (b) = (e) + 1)
+=======
+	for ((b) = find_next_bit((addr), (size), (b)),		\
+	     (e) = find_next_zero_bit((addr), (size), (b) + 1);	\
+	     (b) < (size);					\
+	     (b) = find_next_bit((addr), (size), (e) + 1),	\
+	     (e) = find_next_zero_bit((addr), (size), (b) + 1))
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * for_each_clear_bitrange - iterate over all unset bit ranges [b; e)
@@ -622,11 +728,19 @@ unsigned long find_next_bit_le(const void *addr, unsigned
  * @size: bitmap size in number of bits
  */
 #define for_each_clear_bitrange(b, e, addr, size)		\
+<<<<<<< HEAD
 	for ((b) = 0;						\
 	     (b) = find_next_zero_bit((addr), (size), (b)),	\
 	     (e) = find_next_bit((addr), (size), (b) + 1),	\
 	     (b) < (size);					\
 	     (b) = (e) + 1)
+=======
+	for ((b) = find_next_zero_bit((addr), (size), 0),	\
+	     (e) = find_next_bit((addr), (size), (b) + 1);	\
+	     (b) < (size);					\
+	     (b) = find_next_zero_bit((addr), (size), (e) + 1),	\
+	     (e) = find_next_bit((addr), (size), (b) + 1))
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * for_each_clear_bitrange_from - iterate over all unset bit ranges [b; e)
@@ -636,6 +750,7 @@ unsigned long find_next_bit_le(const void *addr, unsigned
  * @size: bitmap size in number of bits
  */
 #define for_each_clear_bitrange_from(b, e, addr, size)		\
+<<<<<<< HEAD
 	for (;							\
 	     (b) = find_next_zero_bit((addr), (size), (b)),	\
 	     (e) = find_next_bit((addr), (size), (b) + 1),	\
@@ -654,6 +769,13 @@ unsigned long find_next_bit_le(const void *addr, unsigned
 	for ((bit) = find_next_bit_wrap((addr), (size), (start));		\
 	     (bit) < (size);							\
 	     (bit) = __for_each_wrap((addr), (size), (start), (bit) + 1))
+=======
+	for ((b) = find_next_zero_bit((addr), (size), (b)),	\
+	     (e) = find_next_bit((addr), (size), (b) + 1);	\
+	     (b) < (size);					\
+	     (b) = find_next_zero_bit((addr), (size), (e) + 1),	\
+	     (e) = find_next_bit((addr), (size), (b) + 1))
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * for_each_set_clump8 - iterate over bitmap for each 8-bit clump with set bits

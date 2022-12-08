@@ -437,7 +437,10 @@ static void ip6addrlbl_putmsg(struct nlmsghdr *nlh,
 {
 	struct ifaddrlblmsg *ifal = nlmsg_data(nlh);
 	ifal->ifal_family = AF_INET6;
+<<<<<<< HEAD
 	ifal->__ifal_reserved = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ifal->ifal_prefixlen = prefixlen;
 	ifal->ifal_flags = 0;
 	ifal->ifal_index = ifindex;

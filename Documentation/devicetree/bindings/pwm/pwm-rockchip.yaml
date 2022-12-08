@@ -21,7 +21,10 @@ properties:
           - const: rockchip,rk2928-pwm
       - items:
           - enum:
+<<<<<<< HEAD
               - rockchip,rk3128-pwm
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - rockchip,rk3368-pwm
               - rockchip,rk3399-pwm
               - rockchip,rv1108-pwm
@@ -31,7 +34,10 @@ properties:
               - rockchip,px30-pwm
               - rockchip,rk3308-pwm
               - rockchip,rk3568-pwm
+<<<<<<< HEAD
               - rockchip,rk3588-pwm
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - const: rockchip,rk3328-pwm
 
   reg:

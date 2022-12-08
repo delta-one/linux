@@ -10,7 +10,10 @@
  * Author:
  *   Xiao Guangrong <guangrong.xiao@linux.intel.com>
  */
+<<<<<<< HEAD
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/kvm_host.h>
 #include <linux/rculist.h>

@@ -301,7 +301,11 @@ void dwb2_set_scaler(struct dwbc *dwbc, struct dc_dwb_params *params)
 
 }
 
+<<<<<<< HEAD
 static const struct dwbc_funcs dcn20_dwbc_funcs = {
+=======
+const struct dwbc_funcs dcn20_dwbc_funcs = {
+>>>>>>> b7ba80a49124 (Commit)
 	.get_caps		= dwb2_get_caps,
 	.enable			= dwb2_enable,
 	.disable		= dwb2_disable,

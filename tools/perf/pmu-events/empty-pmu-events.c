@@ -11,7 +11,11 @@
 #include <string.h>
 #include <stddef.h>
 
+<<<<<<< HEAD
 static const struct pmu_event pmu_events__test_soc_cpu[] = {
+=======
+static const struct pmu_event pme_test_soc_cpu[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.name = "l3_cache_rd",
 		.event = "event=0x40",
@@ -106,6 +110,7 @@ static const struct pmu_event pmu_events__test_soc_cpu[] = {
 		.topic = "branch",
 	},
 	{
+<<<<<<< HEAD
 		.name = 0,
 		.event = 0,
 		.desc = 0,
@@ -114,6 +119,8 @@ static const struct pmu_event pmu_events__test_soc_cpu[] = {
 
 static const struct pmu_metric pmu_metrics__test_soc_cpu[] = {
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.metric_expr	= "1 / IPC",
 		.metric_name	= "CPI",
 	},
@@ -150,6 +157,7 @@ static const struct pmu_metric pmu_metrics__test_soc_cpu[] = {
 		.metric_name	= "DCache_L2_All_Miss",
 	},
 	{
+<<<<<<< HEAD
 		.metric_expr	= "DCache_L2_All_Hits + DCache_L2_All_Miss",
 		.metric_name	= "DCache_L2_All",
 	},
@@ -159,6 +167,17 @@ static const struct pmu_metric pmu_metrics__test_soc_cpu[] = {
 	},
 	{
 		.metric_expr	= "d_ratio(DCache_L2_All_Miss, DCache_L2_All)",
+=======
+		.metric_expr	= "dcache_l2_all_hits + dcache_l2_all_miss",
+		.metric_name	= "DCache_L2_All",
+	},
+	{
+		.metric_expr	= "d_ratio(dcache_l2_all_hits, dcache_l2_all)",
+		.metric_name	= "DCache_L2_Hits",
+	},
+	{
+		.metric_expr	= "d_ratio(dcache_l2_all_miss, dcache_l2_all)",
+>>>>>>> b7ba80a49124 (Commit)
 		.metric_name	= "DCache_L2_Misses",
 	},
 	{
@@ -178,8 +197,14 @@ static const struct pmu_metric pmu_metrics__test_soc_cpu[] = {
 		.metric_name	= "L1D_Cache_Fill_BW",
 	},
 	{
+<<<<<<< HEAD
 		.metric_expr = 0,
 		.metric_name = 0,
+=======
+		.name = 0,
+		.event = 0,
+		.desc = 0,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 
@@ -188,11 +213,14 @@ struct pmu_events_table {
 	const struct pmu_event *entries;
 };
 
+<<<<<<< HEAD
 /* Struct used to make the PMU metric table implementation opaque to callers. */
 struct pmu_metrics_table {
 	const struct pmu_metric *entries;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Map a CPU to its table of PMU events. The CPU is identified by the
  * cpuid field, which is an arch-specific identifier for the CPU.
@@ -204,8 +232,12 @@ struct pmu_metrics_table {
 struct pmu_events_map {
 	const char *arch;
 	const char *cpuid;
+<<<<<<< HEAD
 	const struct pmu_events_table event_table;
 	const struct pmu_metrics_table metric_table;
+=======
+	const struct pmu_events_table table;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -216,18 +248,30 @@ static const struct pmu_events_map pmu_events_map[] = {
 	{
 		.arch = "testarch",
 		.cpuid = "testcpu",
+<<<<<<< HEAD
 		.event_table = { pmu_events__test_soc_cpu },
 		.metric_table = { pmu_metrics__test_soc_cpu },
+=======
+		.table = { pme_test_soc_cpu },
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.arch = 0,
 		.cpuid = 0,
+<<<<<<< HEAD
 		.event_table = { 0 },
 		.metric_table = { 0 },
 	},
 };
 
 static const struct pmu_event pmu_events__test_soc_sys[] = {
+=======
+		.table = { 0 },
+	},
+};
+
+static const struct pmu_event pme_test_soc_sys[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.name = "sys_ddr_pmu.write_cycles",
 		.event = "event=0x2b",
@@ -258,8 +302,13 @@ struct pmu_sys_events {
 
 static const struct pmu_sys_events pmu_sys_event_tables[] = {
 	{
+<<<<<<< HEAD
 		.table = { pmu_events__test_soc_sys },
 		.name = "pmu_events__test_soc_sys",
+=======
+		.table = { pme_test_soc_sys },
+		.name = "pme_test_soc_sys",
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.table = { 0 }
@@ -269,7 +318,13 @@ static const struct pmu_sys_events pmu_sys_event_tables[] = {
 int pmu_events_table_for_each_event(const struct pmu_events_table *table, pmu_event_iter_fn fn,
 				    void *data)
 {
+<<<<<<< HEAD
 	for (const struct pmu_event *pe = &table->entries[0]; pe->name; pe++) {
+=======
+	for (const struct pmu_event *pe = &table->entries[0];
+	     pe->name || pe->metric_group || pe->metric_name;
+	     pe++) {
+>>>>>>> b7ba80a49124 (Commit)
 		int ret = fn(pe, table, data);
 
 		if (ret)
@@ -278,6 +333,7 @@ int pmu_events_table_for_each_event(const struct pmu_events_table *table, pmu_ev
 	return 0;
 }
 
+<<<<<<< HEAD
 int pmu_metrics_table_for_each_metric(const struct pmu_metrics_table *table, pmu_metric_iter_fn fn,
 				      void *data)
 {
@@ -291,6 +347,9 @@ int pmu_metrics_table_for_each_metric(const struct pmu_metrics_table *table, pmu
 }
 
 const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
+=======
+const struct pmu_events_table *perf_pmu__find_table(struct perf_pmu *pmu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct pmu_events_table *table = NULL;
 	char *cpuid = perf_pmu__getcpuid(pmu);
@@ -310,6 +369,7 @@ const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
 			break;
 
 		if (!strcmp_cpuid_str(map->cpuid, cpuid)) {
+<<<<<<< HEAD
 			table = &map->event_table;
 			break;
 		}
@@ -339,6 +399,9 @@ const struct pmu_metrics_table *perf_pmu__find_metrics_table(struct perf_pmu *pm
 
 		if (!strcmp_cpuid_str(map->cpuid, cpuid)) {
 			table = &map->metric_table;
+=======
+			table = &map->table;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 	}
@@ -352,6 +415,7 @@ const struct pmu_events_table *find_core_events_table(const char *arch, const ch
 	     tables->arch;
 	     tables++) {
 		if (!strcmp(tables->arch, arch) && !strcmp_cpuid_str(tables->cpuid, cpuid))
+<<<<<<< HEAD
 			return &tables->event_table;
 	}
 	return NULL;
@@ -364,12 +428,16 @@ const struct pmu_metrics_table *find_core_metrics_table(const char *arch, const 
 	     tables++) {
 		if (!strcmp(tables->arch, arch) && !strcmp_cpuid_str(tables->cpuid, cpuid))
 			return &tables->metric_table;
+=======
+			return &tables->table;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return NULL;
 }
 
 int pmu_for_each_core_event(pmu_event_iter_fn fn, void *data)
 {
+<<<<<<< HEAD
 	for (const struct pmu_events_map *tables = &pmu_events_map[0]; tables->arch; tables++) {
 		int ret = pmu_events_table_for_each_event(&tables->event_table, fn, data);
 
@@ -385,6 +453,12 @@ int pmu_for_each_core_metric(pmu_metric_iter_fn fn, void *data)
 	     tables->arch;
 	     tables++) {
 		int ret = pmu_metrics_table_for_each_metric(&tables->metric_table, fn, data);
+=======
+	for (const struct pmu_events_map *tables = &pmu_events_map[0];
+	     tables->arch;
+	     tables++) {
+		int ret = pmu_events_table_for_each_event(&tables->table, fn, data);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (ret)
 			return ret;
@@ -415,8 +489,11 @@ int pmu_for_each_sys_event(pmu_event_iter_fn fn, void *data)
 	}
 	return 0;
 }
+<<<<<<< HEAD
 
 int pmu_for_each_sys_metric(pmu_metric_iter_fn fn __maybe_unused, void *data __maybe_unused)
 {
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

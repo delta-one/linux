@@ -63,7 +63,11 @@
 		status = "okay";
 		m25p,fast-read;
 		label = "bmc";
+<<<<<<< HEAD
 		spi-max-frequency = <50000000>; /* 50 MHz */
+=======
+		spi-max-frequency = <100000000>; /* 100 MHz */
+>>>>>>> b7ba80a49124 (Commit)
 #include "openbmc-flash-layout.dtsi"
 	};
 };
@@ -202,7 +206,10 @@
 	status = "okay";
 	aspeed,lpc-io-reg = <0xca2>;
 };
+<<<<<<< HEAD
 
 &peci0 {
 	status = "okay";
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

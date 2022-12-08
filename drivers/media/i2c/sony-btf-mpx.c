@@ -331,7 +331,12 @@ static const struct v4l2_subdev_ops sony_btf_mpx_ops = {
 
 /* --------------------------------------------------------------------------*/
 
+<<<<<<< HEAD
 static int sony_btf_mpx_probe(struct i2c_client *client)
+=======
+static int sony_btf_mpx_probe(struct i2c_client *client,
+				const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sony_btf_mpx *t;
 	struct v4l2_subdev *sd;
@@ -375,7 +380,11 @@ static struct i2c_driver sony_btf_mpx_driver = {
 	.driver = {
 		.name	= "sony-btf-mpx",
 	},
+<<<<<<< HEAD
 	.probe_new = sony_btf_mpx_probe,
+=======
+	.probe = sony_btf_mpx_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = sony_btf_mpx_remove,
 	.id_table = sony_btf_mpx_id,
 };

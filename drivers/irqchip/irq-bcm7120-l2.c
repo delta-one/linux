@@ -279,8 +279,12 @@ static int __init bcm7120_l2_intc_probe(struct device_node *dn,
 		flags |= IRQ_GC_BE_IO;
 
 	ret = irq_alloc_domain_generic_chips(data->domain, IRQS_PER_WORD, 1,
+<<<<<<< HEAD
 				dn->full_name, handle_level_irq, clr,
 				IRQ_LEVEL, flags);
+=======
+				dn->full_name, handle_level_irq, clr, 0, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		pr_err("failed to allocate generic irq chip\n");
 		goto out_free_domain;

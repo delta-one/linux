@@ -334,6 +334,10 @@ config NETCONSOLE_DYNAMIC
 
 config NETPOLL
 	def_bool NETCONSOLE
+<<<<<<< HEAD
+=======
+	select SRCU
+>>>>>>> b7ba80a49124 (Commit)
 
 config NET_POLL_CONTROLLER
 	def_bool NETPOLL
@@ -498,8 +502,11 @@ config NET_SB1000
 
 source "drivers/net/phy/Kconfig"
 
+<<<<<<< HEAD
 source "drivers/net/pse-pd/Kconfig"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 source "drivers/net/can/Kconfig"
 
 source "drivers/net/mctp/Kconfig"
@@ -582,7 +589,22 @@ config FUJITSU_ES
 	  This driver provides support for Extended Socket network device
 	  on Extended Partitioning of FUJITSU PRIMEQUEST 2000 E2 series.
 
+<<<<<<< HEAD
 source "drivers/net/thunderbolt/Kconfig"
+=======
+config USB4_NET
+	tristate "Networking over USB4 and Thunderbolt cables"
+	depends on USB4 && INET
+	help
+	  Select this if you want to create network between two computers
+	  over a USB4 and Thunderbolt cables. The driver supports Apple
+	  ThunderboltIP protocol and allows communication with any host
+	  supporting the same protocol including Windows and macOS.
+
+	  To compile this driver a module, choose M here. The module will be
+	  called thunderbolt-net.
+
+>>>>>>> b7ba80a49124 (Commit)
 source "drivers/net/hyperv/Kconfig"
 
 config NETDEVSIM

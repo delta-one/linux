@@ -12,8 +12,11 @@
 
 #define BIO_MAX_VECS		256U
 
+<<<<<<< HEAD
 struct queue_limits;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline unsigned int bio_max_segs(unsigned int nr_segs)
 {
 	return min(nr_segs, BIO_MAX_VECS);
@@ -229,7 +232,11 @@ static inline void bio_cnt_set(struct bio *bio, unsigned int count)
 
 static inline bool bio_flagged(struct bio *bio, unsigned int bit)
 {
+<<<<<<< HEAD
 	return bio->bi_flags & (1U << bit);
+=======
+	return (bio->bi_flags & (1U << bit)) != 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void bio_set_flag(struct bio *bio, unsigned int bit)
@@ -377,8 +384,11 @@ static inline void bip_set_seed(struct bio_integrity_payload *bip,
 void bio_trim(struct bio *bio, sector_t offset, sector_t size);
 extern struct bio *bio_split(struct bio *bio, int sectors,
 			     gfp_t gfp, struct bio_set *bs);
+<<<<<<< HEAD
 struct bio *bio_split_rw(struct bio *bio, const struct queue_limits *lim,
 		unsigned *segs, struct bio_set *bs, unsigned max_bytes);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * bio_next_split - get next @sectors from a bio, splitting if necessary
@@ -488,8 +498,12 @@ void zero_fill_bio(struct bio *bio);
 
 static inline void bio_release_pages(struct bio *bio, bool mark_dirty)
 {
+<<<<<<< HEAD
 	if (bio_flagged(bio, BIO_PAGE_REFFED) ||
 	    bio_flagged(bio, BIO_PAGE_PINNED))
+=======
+	if (!bio_flagged(bio, BIO_NO_PAGE_REF))
+>>>>>>> b7ba80a49124 (Commit)
 		__bio_release_pages(bio, mark_dirty);
 }
 
@@ -789,7 +803,12 @@ static inline void bio_set_polled(struct bio *bio, struct kiocb *kiocb)
 
 static inline void bio_clear_polled(struct bio *bio)
 {
+<<<<<<< HEAD
 	bio->bi_opf &= ~REQ_POLLED;
+=======
+	/* can't support alloc cache if we turn off polling */
+	bio->bi_opf &= ~(REQ_POLLED | REQ_ALLOC_CACHE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct bio *blk_next_bio(struct bio *bio, struct block_device *bdev,

@@ -24,7 +24,10 @@
 #include <linux/interrupt.h>
 #include <linux/rhashtable.h>
 #include <linux/crash_dump.h>
+<<<<<<< HEAD
 #include <linux/auxiliary_bus.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/devlink.h>
 #include <net/dst_metadata.h>
 #include <net/xdp.h>
@@ -592,6 +595,7 @@ struct nqe_cn {
 #define BNXT_RX_PAGE_SIZE (1 << BNXT_RX_PAGE_SHIFT)
 
 #define BNXT_MAX_MTU		9500
+<<<<<<< HEAD
 
 /* First RX buffer page in XDP multi-buf mode
  *
@@ -606,6 +610,14 @@ struct nqe_cn {
 #define BNXT_MAX_PAGE_MODE_MTU	\
 	(BNXT_MAX_PAGE_MODE_MTU_SBUF - \
 	 SKB_DATA_ALIGN((unsigned int)sizeof(struct skb_shared_info)))
+=======
+#define BNXT_PAGE_MODE_BUF_SIZE \
+	((unsigned int)PAGE_SIZE - VLAN_ETH_HLEN - NET_IP_ALIGN -	\
+	 XDP_PACKET_HEADROOM)
+#define BNXT_MAX_PAGE_MODE_MTU	\
+	BNXT_PAGE_MODE_BUF_SIZE - \
+	SKB_DATA_ALIGN((unsigned int)sizeof(struct skb_shared_info))
+>>>>>>> b7ba80a49124 (Commit)
 
 #define BNXT_MIN_PKT_SIZE	52
 
@@ -1630,6 +1642,7 @@ struct bnxt_fw_health {
 
 #define BNXT_FW_RETRY			5
 #define BNXT_FW_IF_RETRY		10
+<<<<<<< HEAD
 #define BNXT_FW_SLOT_RESET_RETRY	4
 
 struct bnxt_aux_priv {
@@ -1637,6 +1650,8 @@ struct bnxt_aux_priv {
 	struct bnxt_en_dev *edev;
 	int id;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum board_idx {
 	BCM57301,
@@ -1859,7 +1874,10 @@ struct bnxt {
 #define BNXT_CHIP_P4_PLUS(bp)			\
 	(BNXT_CHIP_P4(bp) || BNXT_CHIP_P5(bp))
 
+<<<<<<< HEAD
 	struct bnxt_aux_priv	*aux_priv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct bnxt_en_dev	*edev;
 
 	struct bnxt_napi	**bnapi;
@@ -1917,7 +1935,10 @@ struct bnxt {
 	u16			*rss_indir_tbl;
 	u16			rss_indir_tbl_entries;
 	u32			rss_hash_cfg;
+<<<<<<< HEAD
 	u32			rss_hash_delta;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	u16			max_mtu;
 	u8			max_tc;
@@ -1968,6 +1989,7 @@ struct bnxt {
 
 	u32			msg_enable;
 
+<<<<<<< HEAD
 	u64			fw_cap;
 	#define BNXT_FW_CAP_SHORT_CMD			BIT_ULL(0)
 	#define BNXT_FW_CAP_LLDP_AGENT			BIT_ULL(1)
@@ -1997,12 +2019,44 @@ struct bnxt {
 	#define BNXT_FW_CAP_RING_MONITOR		BIT_ULL(30)
 	#define BNXT_FW_CAP_DBG_QCAPS			BIT_ULL(31)
 	#define BNXT_FW_CAP_PTP				BIT_ULL(32)
+=======
+	u32			fw_cap;
+	#define BNXT_FW_CAP_SHORT_CMD			0x00000001
+	#define BNXT_FW_CAP_LLDP_AGENT			0x00000002
+	#define BNXT_FW_CAP_DCBX_AGENT			0x00000004
+	#define BNXT_FW_CAP_NEW_RM			0x00000008
+	#define BNXT_FW_CAP_IF_CHANGE			0x00000010
+	#define BNXT_FW_CAP_KONG_MB_CHNL		0x00000080
+	#define BNXT_FW_CAP_OVS_64BIT_HANDLE		0x00000400
+	#define BNXT_FW_CAP_TRUSTED_VF			0x00000800
+	#define BNXT_FW_CAP_ERROR_RECOVERY		0x00002000
+	#define BNXT_FW_CAP_PKG_VER			0x00004000
+	#define BNXT_FW_CAP_CFA_ADV_FLOW		0x00008000
+	#define BNXT_FW_CAP_CFA_RFS_RING_TBL_IDX_V2	0x00010000
+	#define BNXT_FW_CAP_PCIE_STATS_SUPPORTED	0x00020000
+	#define BNXT_FW_CAP_EXT_STATS_SUPPORTED		0x00040000
+	#define BNXT_FW_CAP_ERR_RECOVER_RELOAD		0x00100000
+	#define BNXT_FW_CAP_HOT_RESET			0x00200000
+	#define BNXT_FW_CAP_PTP_RTC			0x00400000
+	#define BNXT_FW_CAP_RX_ALL_PKT_TS		0x00800000
+	#define BNXT_FW_CAP_VLAN_RX_STRIP		0x01000000
+	#define BNXT_FW_CAP_VLAN_TX_INSERT		0x02000000
+	#define BNXT_FW_CAP_EXT_HW_STATS_SUPPORTED	0x04000000
+	#define BNXT_FW_CAP_LIVEPATCH			0x08000000
+	#define BNXT_FW_CAP_PTP_PPS			0x10000000
+	#define BNXT_FW_CAP_HOT_RESET_IF		0x20000000
+	#define BNXT_FW_CAP_RING_MONITOR		0x40000000
+	#define BNXT_FW_CAP_DBG_QCAPS			0x80000000
+>>>>>>> b7ba80a49124 (Commit)
 
 	u32			fw_dbg_cap;
 
 #define BNXT_NEW_RM(bp)		((bp)->fw_cap & BNXT_FW_CAP_NEW_RM)
+<<<<<<< HEAD
 #define BNXT_PTP_USE_RTC(bp)	(!BNXT_MH(bp) && \
 				 ((bp)->fw_cap & BNXT_FW_CAP_PTP_RTC))
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32			hwrm_spec_code;
 	u16			hwrm_cmd_seq;
 	u16                     hwrm_cmd_kong_seq;
@@ -2138,7 +2192,10 @@ struct bnxt {
 #define BNXT_PHY_FL_NO_FCS		PORT_PHY_QCAPS_RESP_FLAGS_NO_FCS
 #define BNXT_PHY_FL_NO_PAUSE		(PORT_PHY_QCAPS_RESP_FLAGS2_PAUSE_UNSUPPORTED << 8)
 #define BNXT_PHY_FL_NO_PFC		(PORT_PHY_QCAPS_RESP_FLAGS2_PFC_UNSUPPORTED << 8)
+<<<<<<< HEAD
 #define BNXT_PHY_FL_BANK_SEL		(PORT_PHY_QCAPS_RESP_FLAGS2_BANK_ADDR_SUPPORTED << 8)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	u8			num_tests;
 	struct bnxt_test_info	*test_info;
@@ -2153,6 +2210,10 @@ struct bnxt {
 #define BNXT_DUMP_CRASH		1
 
 	struct bpf_prog		*xdp_prog;
+<<<<<<< HEAD
+=======
+	u8			xdp_has_frags;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct bnxt_ptp_cfg	*ptp_cfg;
 	u8			ptp_all_rx_tstamp;

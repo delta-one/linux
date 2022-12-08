@@ -13,8 +13,11 @@
 
 #define FW_FILENAME	"idt82p33xxx.bin"
 #define MAX_PHC_PLL	(2)
+<<<<<<< HEAD
 #define MAX_TRIG_CLK	(3)
 #define MAX_PER_OUT	(11)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define TOD_BYTE_COUNT	(10)
 #define DCO_MAX_PPB     (92000)
 #define MAX_MEASURMENT_COUNT	(5)
@@ -22,6 +25,10 @@
 #define IMMEDIATE_SNAP_THRESHOLD_NS (50000)
 #define DDCO_THRESHOLD_NS	(5)
 #define IDT82P33_MAX_WRITE_COUNT	(512)
+<<<<<<< HEAD
+=======
+#define PEROUT_ENABLE_OUTPUT_MASK	(0xdeadbeef)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define PLLMASK_ADDR_HI	0xFF
 #define PLLMASK_ADDR_LO	0xA5
@@ -61,6 +68,7 @@ struct idt82p33_channel {
 	struct ptp_clock	*ptp_clock;
 	struct idt82p33		*idt82p33;
 	enum pll_mode		pll_mode;
+<<<<<<< HEAD
 	/* Workaround for TOD-to-output alignment issue */
 	struct delayed_work	adjtime_work;
 	s32			current_freq;
@@ -73,6 +81,10 @@ struct idt82p33_channel {
 	u8			plln;
 	/* remember last tod_sts for extts */
 	u8			extts_tod_sts[TOD_BYTE_COUNT];
+=======
+	s32			current_freq_ppb;
+	u8			output_mask;
+>>>>>>> b7ba80a49124 (Commit)
 	u16			dpll_tod_cnfg;
 	u16			dpll_tod_trigger;
 	u16			dpll_tod_sts;
@@ -87,12 +99,15 @@ struct idt82p33 {
 	struct idt82p33_channel	channel[MAX_PHC_PLL];
 	struct device		*dev;
 	u8			pll_mask;
+<<<<<<< HEAD
 	/* Polls for external time stamps */
 	u8			extts_mask;
 	bool			extts_single_shot;
 	struct delayed_work	extts_work;
 	/* Remember the ptp channel to report extts */
 	struct idt82p33_channel	*event_channel[MAX_PHC_PLL];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Mutex to protect operations from being interrupted */
 	struct mutex		*lock;
 	struct regmap		*regmap;

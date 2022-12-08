@@ -682,7 +682,12 @@ static const struct v4l2_subdev_ops ov9640_subdev_ops = {
 /*
  * i2c_driver function
  */
+<<<<<<< HEAD
 static int ov9640_probe(struct i2c_client *client)
+=======
+static int ov9640_probe(struct i2c_client *client,
+			const struct i2c_device_id *did)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ov9640_priv *priv;
 	int ret;
@@ -762,7 +767,11 @@ static struct i2c_driver ov9640_i2c_driver = {
 	.driver = {
 		.name = "ov9640",
 	},
+<<<<<<< HEAD
 	.probe_new = ov9640_probe,
+=======
+	.probe    = ov9640_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove   = ov9640_remove,
 	.id_table = ov9640_id,
 };

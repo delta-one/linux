@@ -10,9 +10,12 @@
 #define GUP_BASIC_TEST		_IOWR('g', 4, struct gup_test)
 #define PIN_BASIC_TEST		_IOWR('g', 5, struct gup_test)
 #define DUMP_USER_PAGES_TEST	_IOWR('g', 6, struct gup_test)
+<<<<<<< HEAD
 #define PIN_LONGTERM_TEST_START	_IOW('g', 7, struct pin_longterm_test)
 #define PIN_LONGTERM_TEST_STOP	_IO('g', 8)
 #define PIN_LONGTERM_TEST_READ	_IOW('g', 9, __u64)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define GUP_TEST_MAX_PAGES_TO_DUMP		8
 
@@ -33,6 +36,7 @@ struct gup_test {
 	__u32 which_pages[GUP_TEST_MAX_PAGES_TO_DUMP];
 };
 
+<<<<<<< HEAD
 #define PIN_LONGTERM_TEST_FLAG_USE_WRITE	1
 #define PIN_LONGTERM_TEST_FLAG_USE_FAST		2
 
@@ -42,4 +46,6 @@ struct pin_longterm_test {
 	__u32 flags;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif	/* __GUP_TEST_H */

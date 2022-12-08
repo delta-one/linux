@@ -83,7 +83,10 @@ ALL_TESTS="
 	ptp_general_test
 	flow_action_sample_test
 	flow_action_trap_test
+<<<<<<< HEAD
 	eapol_test
+=======
+>>>>>>> b7ba80a49124 (Commit)
 "
 NUM_NETIFS=4
 source $lib_dir/lib.sh
@@ -678,6 +681,7 @@ flow_action_trap_test()
 	tc qdisc del dev $rp1 clsact
 }
 
+<<<<<<< HEAD
 eapol_payload_get()
 {
 	local source_mac=$1; shift
@@ -699,6 +703,8 @@ eapol_test()
 		$(eapol_payload_get $h1mac) -p 100 -q
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 trap cleanup EXIT
 
 setup_prepare

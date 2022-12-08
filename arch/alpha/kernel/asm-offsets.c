@@ -17,8 +17,11 @@ void foo(void)
 	DEFINE(TI_TASK, offsetof(struct thread_info, task));
 	DEFINE(TI_FLAGS, offsetof(struct thread_info, flags));
 	DEFINE(TI_CPU, offsetof(struct thread_info, cpu));
+<<<<<<< HEAD
 	DEFINE(TI_FP, offsetof(struct thread_info, fp));
 	DEFINE(TI_STATUS, offsetof(struct thread_info, status));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BLANK();
 
         DEFINE(TASK_BLOCKED, offsetof(struct task_struct, blocked));

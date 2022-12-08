@@ -39,10 +39,13 @@ properties:
   reg:
     maxItems: 1
 
+<<<<<<< HEAD
   gpio-line-names:
     minItems: 1
     maxItems: 16
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   gpio-controller: true
 
   '#gpio-cells':

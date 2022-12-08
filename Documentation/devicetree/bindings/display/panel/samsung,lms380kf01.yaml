@@ -9,13 +9,21 @@ title: Samsung LMS380KF01 display panel
 description: The LMS380KF01 is a 480x800 DPI display panel from Samsung Mobile
   Displays (SMD) utilizing the WideChips WS2401 display controller. It can be
   used with internal or external backlight control.
+<<<<<<< HEAD
+=======
+  The panel must obey the rules for a SPI slave device as specified in
+  spi/spi-controller.yaml
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Linus Walleij <linus.walleij@linaro.org>
 
 allOf:
   - $ref: panel-common.yaml#
+<<<<<<< HEAD
   - $ref: /schemas/spi/spi-peripheral-props.yaml#
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -58,7 +66,11 @@ required:
   - spi-cpol
   - port
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

@@ -494,7 +494,11 @@ static int ctcm_transmit_skb(struct channel *ch, struct sk_buff *skb)
 			ch->collect_len += l;
 		}
 		spin_unlock_irqrestore(&ch->collect_lock, saveflags);
+<<<<<<< HEAD
 		goto done;
+=======
+				goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	spin_unlock_irqrestore(&ch->collect_lock, saveflags);
 	/*
@@ -685,7 +689,11 @@ static int ctcmpc_transmit_skb(struct channel *ch, struct sk_buff *skb)
 		ch->collect_len += skb->len;
 
 		spin_unlock_irqrestore(&ch->collect_lock, saveflags);
+<<<<<<< HEAD
 		goto done;
+=======
+			goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -825,9 +833,22 @@ done:
 /*
  * Start transmission of a packet.
  * Called from generic network device layer.
+<<<<<<< HEAD
  */
 /* first merge version - leaving both functions separated */
 static netdev_tx_t ctcm_tx(struct sk_buff *skb, struct net_device *dev)
+=======
+ *
+ *  skb		Pointer to buffer containing the packet.
+ *  dev		Pointer to interface struct.
+ *
+ * returns 0 if packet consumed, !0 if packet rejected.
+ *         Note: If we return !0, then the packet is free'd by
+ *               the generic network layer.
+ */
+/* first merge version - leaving both functions separated */
+static int ctcm_tx(struct sk_buff *skb, struct net_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ctcm_priv *priv = dev->ml_priv;
 
@@ -870,7 +891,11 @@ static netdev_tx_t ctcm_tx(struct sk_buff *skb, struct net_device *dev)
 }
 
 /* unmerged MPC variant of ctcm_tx */
+<<<<<<< HEAD
 static netdev_tx_t ctcmpc_tx(struct sk_buff *skb, struct net_device *dev)
+=======
+static int ctcmpc_tx(struct sk_buff *skb, struct net_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int len = 0;
 	struct ctcm_priv *priv = dev->ml_priv;
@@ -885,7 +910,11 @@ static netdev_tx_t ctcmpc_tx(struct sk_buff *skb, struct net_device *dev)
 			"%s(%s): NULL sk_buff passed",
 					CTCM_FUNTAIL, dev->name);
 		priv->stats.tx_dropped++;
+<<<<<<< HEAD
 		goto done;
+=======
+					goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (skb_headroom(skb) < (TH_HEADER_LENGTH + PDU_HEADER_LENGTH)) {
 		CTCM_DBF_TEXT_(MPC_TRACE, CTC_DBF_ERROR,
@@ -908,7 +937,11 @@ static netdev_tx_t ctcmpc_tx(struct sk_buff *skb, struct net_device *dev)
 			priv->stats.tx_errors++;
 			priv->stats.tx_carrier_errors++;
 			fsm_event(grp->fsm, MPCG_EVENT_INOP, dev);
+<<<<<<< HEAD
 			goto done;
+=======
+					goto done;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		newskb->protocol = skb->protocol;
 		skb_reserve(newskb, TH_HEADER_LENGTH + PDU_HEADER_LENGTH);
@@ -931,7 +964,11 @@ static netdev_tx_t ctcmpc_tx(struct sk_buff *skb, struct net_device *dev)
 		priv->stats.tx_dropped++;
 		priv->stats.tx_errors++;
 		priv->stats.tx_carrier_errors++;
+<<<<<<< HEAD
 		goto done;
+=======
+					goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (ctcm_test_and_set_busy(dev)) {
@@ -943,7 +980,11 @@ static netdev_tx_t ctcmpc_tx(struct sk_buff *skb, struct net_device *dev)
 		priv->stats.tx_errors++;
 		priv->stats.tx_carrier_errors++;
 		fsm_event(grp->fsm, MPCG_EVENT_INOP, dev);
+<<<<<<< HEAD
 		goto done;
+=======
+					goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	netif_trans_update(dev);
@@ -957,7 +998,11 @@ static netdev_tx_t ctcmpc_tx(struct sk_buff *skb, struct net_device *dev)
 		priv->stats.tx_carrier_errors++;
 		ctcm_clear_busy(dev);
 		fsm_event(grp->fsm, MPCG_EVENT_INOP, dev);
+<<<<<<< HEAD
 		goto done;
+=======
+					goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	ctcm_clear_busy(dev);
 done:
@@ -1421,7 +1466,11 @@ static int add_channel(struct ccw_device *cdev, enum ctcm_channel_types type,
 				"%s (%s) already in list, using old entry",
 				__func__, (*c)->id);
 
+<<<<<<< HEAD
 		goto free_return;
+=======
+				goto free_return;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	spin_lock_init(&ch->collect_lock);

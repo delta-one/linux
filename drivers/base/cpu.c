@@ -125,6 +125,20 @@ static DEVICE_ATTR(release, S_IWUSR, NULL, cpu_release_store);
 #endif /* CONFIG_ARCH_CPU_PROBE_RELEASE */
 #endif /* CONFIG_HOTPLUG_CPU */
 
+<<<<<<< HEAD
+=======
+struct bus_type cpu_subsys = {
+	.name = "cpu",
+	.dev_name = "cpu",
+	.match = cpu_subsys_match,
+#ifdef CONFIG_HOTPLUG_CPU
+	.online = cpu_subsys_online,
+	.offline = cpu_subsys_offline,
+#endif
+};
+EXPORT_SYMBOL_GPL(cpu_subsys);
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_KEXEC
 #include <linux/kexec.h>
 
@@ -325,7 +339,11 @@ static ssize_t print_cpu_modalias(struct device *dev,
 	return len;
 }
 
+<<<<<<< HEAD
 static int cpu_uevent(const struct device *dev, struct kobj_uevent_env *env)
+=======
+static int cpu_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	char *buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
 	if (buf) {
@@ -337,6 +355,7 @@ static int cpu_uevent(const struct device *dev, struct kobj_uevent_env *env)
 }
 #endif
 
+<<<<<<< HEAD
 struct bus_type cpu_subsys = {
 	.name = "cpu",
 	.dev_name = "cpu",
@@ -351,6 +370,8 @@ struct bus_type cpu_subsys = {
 };
 EXPORT_SYMBOL_GPL(cpu_subsys);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * register_cpu - Setup a sysfs device for a CPU.
  * @cpu - cpu->hotpluggable field set to 1 will generate a control file in
@@ -371,6 +392,12 @@ int register_cpu(struct cpu *cpu, int num)
 	cpu->dev.offline_disabled = !cpu->hotpluggable;
 	cpu->dev.offline = !cpu_online(num);
 	cpu->dev.of_node = of_get_cpu_node(num, NULL);
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_GENERIC_CPU_AUTOPROBE
+	cpu->dev.bus->uevent = cpu_uevent;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	cpu->dev.groups = common_cpu_attr_groups;
 	if (cpu->hotpluggable)
 		cpu->dev.groups = hotplugable_cpu_attr_groups;
@@ -487,8 +514,12 @@ static const struct attribute_group *cpu_root_attr_groups[] = {
 bool cpu_is_hotpluggable(unsigned int cpu)
 {
 	struct device *dev = get_cpu_device(cpu);
+<<<<<<< HEAD
 	return dev && container_of(dev, struct cpu, dev)->hotpluggable
 		&& tick_nohz_cpu_hotpluggable(cpu);
+=======
+	return dev && container_of(dev, struct cpu, dev)->hotpluggable;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(cpu_is_hotpluggable);
 
@@ -611,6 +642,7 @@ static const struct attribute_group cpu_root_vulnerabilities_group = {
 
 static void __init cpu_register_vulnerabilities(void)
 {
+<<<<<<< HEAD
 	struct device *dev = bus_get_dev_root(&cpu_subsys);
 
 	if (dev) {
@@ -618,6 +650,11 @@ static void __init cpu_register_vulnerabilities(void)
 			pr_err("Unable to register CPU vulnerabilities\n");
 		put_device(dev);
 	}
+=======
+	if (sysfs_create_group(&cpu_subsys.dev_root->kobj,
+			       &cpu_root_vulnerabilities_group))
+		pr_err("Unable to register CPU vulnerabilities\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #else

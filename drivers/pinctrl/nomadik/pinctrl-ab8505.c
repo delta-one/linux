@@ -6,10 +6,16 @@
  */
 
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/pinctrl/pinctrl.h>
 
 #include <linux/mfd/abx500/ab8500.h>
 
+=======
+#include <linux/gpio/driver.h>
+#include <linux/pinctrl/pinctrl.h>
+#include <linux/mfd/abx500/ab8500.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include "pinctrl-abx500.h"
 
 /* All the pins that can be used for GPIO and some other functions */

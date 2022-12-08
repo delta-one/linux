@@ -367,7 +367,11 @@ static void tty_port_shutdown(struct tty_port *port, struct tty_struct *tty)
 		goto out;
 
 	if (tty_port_initialized(port)) {
+<<<<<<< HEAD
 		tty_port_set_initialized(port, false);
+=======
+		tty_port_set_initialized(port, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Drop DTR/RTS if HUPCL is set. This causes any attached
 		 * modem to hang up the line.
@@ -403,7 +407,11 @@ void tty_port_hangup(struct tty_port *port)
 		set_bit(TTY_IO_ERROR, &tty->flags);
 	port->tty = NULL;
 	spin_unlock_irqrestore(&port->lock, flags);
+<<<<<<< HEAD
 	tty_port_set_active(port, false);
+=======
+	tty_port_set_active(port, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	tty_port_shutdown(port, tty);
 	tty_kref_put(tty);
 	wake_up_interruptible(&port->open_wait);
@@ -444,10 +452,17 @@ EXPORT_SYMBOL_GPL(tty_port_tty_wakeup);
  * to hide some internal details. This will eventually become entirely
  * internal to the tty port.
  */
+<<<<<<< HEAD
 bool tty_port_carrier_raised(struct tty_port *port)
 {
 	if (port->ops->carrier_raised == NULL)
 		return true;
+=======
+int tty_port_carrier_raised(struct tty_port *port)
+{
+	if (port->ops->carrier_raised == NULL)
+		return 1;
+>>>>>>> b7ba80a49124 (Commit)
 	return port->ops->carrier_raised(port);
 }
 EXPORT_SYMBOL(tty_port_carrier_raised);
@@ -463,7 +478,11 @@ EXPORT_SYMBOL(tty_port_carrier_raised);
 void tty_port_raise_dtr_rts(struct tty_port *port)
 {
 	if (port->ops->dtr_rts)
+<<<<<<< HEAD
 		port->ops->dtr_rts(port, true);
+=======
+		port->ops->dtr_rts(port, 1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(tty_port_raise_dtr_rts);
 
@@ -478,7 +497,11 @@ EXPORT_SYMBOL(tty_port_raise_dtr_rts);
 void tty_port_lower_dtr_rts(struct tty_port *port)
 {
 	if (port->ops->dtr_rts)
+<<<<<<< HEAD
 		port->ops->dtr_rts(port, false);
+=======
+		port->ops->dtr_rts(port, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(tty_port_lower_dtr_rts);
 
@@ -518,14 +541,22 @@ int tty_port_block_til_ready(struct tty_port *port,
 	 * the port has just hung up or is in another error state.
 	 */
 	if (tty_io_error(tty)) {
+<<<<<<< HEAD
 		tty_port_set_active(port, true);
+=======
+		tty_port_set_active(port, 1);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 	if (filp == NULL || (filp->f_flags & O_NONBLOCK)) {
 		/* Indicate we are open */
 		if (C_BAUD(tty))
 			tty_port_raise_dtr_rts(port);
+<<<<<<< HEAD
 		tty_port_set_active(port, true);
+=======
+		tty_port_set_active(port, 1);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
@@ -588,7 +619,11 @@ int tty_port_block_til_ready(struct tty_port *port,
 	port->blocked_open--;
 	spin_unlock_irqrestore(&port->lock, flags);
 	if (retval == 0)
+<<<<<<< HEAD
 		tty_port_set_active(port, true);
+=======
+		tty_port_set_active(port, 1);
+>>>>>>> b7ba80a49124 (Commit)
 	return retval;
 }
 EXPORT_SYMBOL(tty_port_block_til_ready);
@@ -695,7 +730,11 @@ void tty_port_close_end(struct tty_port *port, struct tty_struct *tty)
 		wake_up_interruptible(&port->open_wait);
 	}
 	spin_unlock_irqrestore(&port->lock, flags);
+<<<<<<< HEAD
 	tty_port_set_active(port, false);
+=======
+	tty_port_set_active(port, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(tty_port_close_end);
 
@@ -788,7 +827,11 @@ int tty_port_open(struct tty_port *port, struct tty_struct *tty,
 				return retval;
 			}
 		}
+<<<<<<< HEAD
 		tty_port_set_initialized(port, true);
+=======
+		tty_port_set_initialized(port, 1);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	mutex_unlock(&port->mutex);
 	return tty_port_block_til_ready(port, tty, filp);

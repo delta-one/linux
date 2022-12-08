@@ -257,7 +257,11 @@ void hpfs_write_inode_nolock(struct inode *i)
 	brelse(bh);
 }
 
+<<<<<<< HEAD
 int hpfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+int hpfs_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		 struct iattr *attr)
 {
 	struct inode *inode = d_inode(dentry);
@@ -275,7 +279,11 @@ int hpfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 	if ((attr->ia_valid & ATTR_SIZE) && attr->ia_size > inode->i_size)
 		goto out_unlock;
 
+<<<<<<< HEAD
 	error = setattr_prepare(&nop_mnt_idmap, dentry, attr);
+=======
+	error = setattr_prepare(&init_user_ns, dentry, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		goto out_unlock;
 
@@ -289,7 +297,11 @@ int hpfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 		hpfs_truncate(inode);
 	}
 
+<<<<<<< HEAD
 	setattr_copy(&nop_mnt_idmap, inode, attr);
+=======
+	setattr_copy(&init_user_ns, inode, attr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	hpfs_write_inode(inode);
 

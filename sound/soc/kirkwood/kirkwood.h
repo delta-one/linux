@@ -131,8 +131,11 @@
 
 struct kirkwood_dma_data {
 	void __iomem *io;
+<<<<<<< HEAD
 	void __iomem *pll_config;
 	void __iomem *soc_control;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct clk *clk;
 	struct clk *extclk;
 	uint32_t ctl_play;

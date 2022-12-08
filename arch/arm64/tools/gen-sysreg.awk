@@ -33,7 +33,11 @@ function expect_fields(nf) {
 # Print a CPP macro definition, padded with spaces so that the macro bodies
 # line up in a column
 function define(name, val) {
+<<<<<<< HEAD
 	printf "%-56s%s\n", "#define " name, val
+=======
+	printf "%-48s%s\n", "#define " name, val
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 # Print standard BITMASK/SHIFT/WIDTH CPP definitions for a field
@@ -44,11 +48,14 @@ function define_field(reg, field, msb, lsb) {
 	define(reg "_" field "_WIDTH", msb - lsb + 1)
 }
 
+<<<<<<< HEAD
 # Print a field _SIGNED definition for a field
 function define_field_sign(reg, field, sign) {
 	define(reg "_" field "_SIGNED", sign)
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # Parse a "<msb>[:<lsb>]" string into the global variables @msb and @lsb
 function parse_bitdef(reg, field, bitdef, _bits)
 {
@@ -103,7 +110,10 @@ END {
 
 	res0 = "UL(0)"
 	res1 = "UL(0)"
+<<<<<<< HEAD
 	unkn = "UL(0)"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	next_bit = 63
 
@@ -118,13 +128,19 @@ END {
 
 	define(reg "_RES0", "(" res0 ")")
 	define(reg "_RES1", "(" res1 ")")
+<<<<<<< HEAD
 	define(reg "_UNKN", "(" unkn ")")
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	print ""
 
 	reg = null
 	res0 = null
 	res1 = null
+<<<<<<< HEAD
 	unkn = null
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	next
 }
@@ -142,7 +158,10 @@ END {
 
 	res0 = "UL(0)"
 	res1 = "UL(0)"
+<<<<<<< HEAD
 	unkn = "UL(0)"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	define("REG_" reg, "S" op0 "_" op1 "_C" crn "_C" crm "_" op2)
 	define("SYS_" reg, "sys_reg(" op0 ", " op1 ", " crn ", " crm ", " op2 ")")
@@ -170,9 +189,13 @@ END {
 		define(reg "_RES0", "(" res0 ")")
 	if (res1 != null)
 		define(reg "_RES1", "(" res1 ")")
+<<<<<<< HEAD
 	if (unkn != null)
 		define(reg "_UNKN", "(" unkn ")")
 	if (res0 != null || res1 != null || unkn != null)
+=======
+	if (res0 != null || res1 != null)
+>>>>>>> b7ba80a49124 (Commit)
 		print ""
 
 	reg = null
@@ -183,7 +206,10 @@ END {
 	op2 = null
 	res0 = null
 	res1 = null
+<<<<<<< HEAD
 	unkn = null
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	next
 }
@@ -202,7 +228,10 @@ END {
         next_bit = 0
 	res0 = null
 	res1 = null
+<<<<<<< HEAD
 	unkn = null
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	next
 }
@@ -228,6 +257,7 @@ END {
 	next
 }
 
+<<<<<<< HEAD
 /^Unkn/ && (block == "Sysreg" || block == "SysregFields") {
 	expect_fields(2)
 	parse_bitdef(reg, "UNKN", $2)
@@ -238,6 +268,8 @@ END {
 	next
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /^Field/ && (block == "Sysreg" || block == "SysregFields") {
 	expect_fields(3)
 	field = $3
@@ -256,6 +288,7 @@ END {
 	next
 }
 
+<<<<<<< HEAD
 /^SignedEnum/ {
 	change_block("Enum<", "Sysreg", "Enum")
 	expect_fields(3)
@@ -280,6 +313,8 @@ END {
 	next
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /^Enum/ {
 	change_block("Enum", "Sysreg", "Enum")
 	expect_fields(3)

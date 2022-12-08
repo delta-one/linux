@@ -49,6 +49,14 @@ enum {
 	NUM_VMX_PAGES,
 };
 
+<<<<<<< HEAD
+=======
+struct kvm_single_msr {
+	struct kvm_msrs header;
+	struct kvm_msr_entry entry;
+} __attribute__((packed));
+
+>>>>>>> b7ba80a49124 (Commit)
 /* The virtual machine object. */
 static struct kvm_vm *vm;
 
@@ -131,10 +139,21 @@ int main(int argc, char *argv[])
 	vcpu_args_set(vcpu, 1, vmx_pages_gva);
 
 	for (;;) {
+<<<<<<< HEAD
 		struct ucall uc;
 
 		vcpu_run(vcpu);
 		TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+=======
+		volatile struct kvm_run *run = vcpu->run;
+		struct ucall uc;
+
+		vcpu_run(vcpu);
+		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+			    "Got exit_reason other than KVM_EXIT_IO: %u (%s)\n",
+			    run->exit_reason,
+			    exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 
 		switch (get_ucall(vcpu, &uc)) {
 		case UCALL_ABORT:

@@ -3832,7 +3832,11 @@ static struct net_device *skge_devinit(struct skge_hw *hw, int port,
 		dev->features |= NETIF_F_HIGHDMA;
 
 	skge = netdev_priv(dev);
+<<<<<<< HEAD
 	netif_napi_add(dev, &skge->napi, skge_poll);
+=======
+	netif_napi_add(dev, &skge->napi, skge_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 	skge->netdev = dev;
 	skge->hw = hw;
 	skge->msg_enable = netif_msg_init(debug, default_msg);

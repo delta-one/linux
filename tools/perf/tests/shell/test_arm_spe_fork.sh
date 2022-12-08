@@ -5,13 +5,28 @@
 # German Gomez <german.gomez@arm.com>, 2022
 
 skip_if_no_arm_spe_event() {
+<<<<<<< HEAD
 	perf list | grep -E -q 'arm_spe_[0-9]+//' && return 0
+=======
+	perf list | egrep -q 'arm_spe_[0-9]+//' && return 0
+>>>>>>> b7ba80a49124 (Commit)
 	return 2
 }
 
 skip_if_no_arm_spe_event || exit 2
 
+<<<<<<< HEAD
 TEST_PROGRAM="perf test -w sqrtloop 10"
+=======
+# skip if there's no compiler
+if ! [ -x "$(command -v cc)" ]; then
+	echo "failed: no compiler, install gcc"
+	exit 2
+fi
+
+TEST_PROGRAM_SOURCE=$(mktemp /tmp/__perf_test.program.XXXXX.c)
+TEST_PROGRAM=$(mktemp /tmp/__perf_test.program.XXXXX)
+>>>>>>> b7ba80a49124 (Commit)
 PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
 PERF_RECORD_LOG=$(mktemp /tmp/__perf_test.log.XXXXX)
 
@@ -20,10 +35,49 @@ cleanup_files()
 	echo "Cleaning up files..."
 	rm -f ${PERF_RECORD_LOG}
 	rm -f ${PERF_DATA}
+<<<<<<< HEAD
+=======
+	rm -f ${TEST_PROGRAM_SOURCE}
+	rm -f ${TEST_PROGRAM}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 trap cleanup_files exit term int
 
+<<<<<<< HEAD
+=======
+# compile test program
+cat << EOF > $TEST_PROGRAM_SOURCE
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int workload() {
+  while (1)
+    sqrt(rand());
+  return 0;
+}
+
+int main() {
+  switch (fork()) {
+    case 0:
+      return workload();
+    case -1:
+      return 1;
+    default:
+      wait(NULL);
+  }
+  return 0;
+}
+EOF
+
+echo "Compiling test program..."
+CFLAGS="-lm"
+cc $TEST_PROGRAM_SOURCE $CFLAGS -o $TEST_PROGRAM || exit 1
+
+>>>>>>> b7ba80a49124 (Commit)
 echo "Recording workload..."
 perf record -o ${PERF_DATA} -e arm_spe/period=65536/ -vvv -- $TEST_PROGRAM > ${PERF_RECORD_LOG} 2>&1 &
 PERFPID=$!
@@ -38,6 +92,11 @@ echo Log lines after 1 second = $log1
 
 kill $PERFPID
 wait $PERFPID
+<<<<<<< HEAD
+=======
+# test program may leave an orphan process running the workload
+killall $(basename $TEST_PROGRAM)
+>>>>>>> b7ba80a49124 (Commit)
 
 if [ "$log0" = "$log1" ];
 then

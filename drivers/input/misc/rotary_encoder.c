@@ -317,7 +317,11 @@ static int rotary_encoder_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int rotary_encoder_suspend(struct device *dev)
+=======
+static int __maybe_unused rotary_encoder_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rotary_encoder *encoder = dev_get_drvdata(dev);
 	unsigned int i;
@@ -330,7 +334,11 @@ static int rotary_encoder_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int rotary_encoder_resume(struct device *dev)
+=======
+static int __maybe_unused rotary_encoder_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rotary_encoder *encoder = dev_get_drvdata(dev);
 	unsigned int i;
@@ -343,8 +351,13 @@ static int rotary_encoder_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(rotary_encoder_pm_ops,
 				rotary_encoder_suspend, rotary_encoder_resume);
+=======
+static SIMPLE_DEV_PM_OPS(rotary_encoder_pm_ops,
+			 rotary_encoder_suspend, rotary_encoder_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_OF
 static const struct of_device_id rotary_encoder_of_match[] = {
@@ -358,7 +371,11 @@ static struct platform_driver rotary_encoder_driver = {
 	.probe		= rotary_encoder_probe,
 	.driver		= {
 		.name	= DRV_NAME,
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&rotary_encoder_pm_ops),
+=======
+		.pm	= &rotary_encoder_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = of_match_ptr(rotary_encoder_of_match),
 	}
 };

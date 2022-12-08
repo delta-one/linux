@@ -10,19 +10,28 @@
 #include <linux/printk.h>
 #include <../selftests/kselftest.h>
 
+<<<<<<< HEAD
 #define MEM_SIZE		SZ_32K
 #define NUMA_NODES		8
 
 #define INIT_MEMBLOCK_REGIONS			128
 #define INIT_MEMBLOCK_RESERVED_REGIONS		INIT_MEMBLOCK_REGIONS
 
+=======
+#define MEM_SIZE		SZ_16K
+#define NUMA_NODES		8
+
+>>>>>>> b7ba80a49124 (Commit)
 enum test_flags {
 	/* No special request. */
 	TEST_F_NONE = 0x0,
 	/* Perform raw allocations (no zeroing of memory). */
 	TEST_F_RAW = 0x1,
+<<<<<<< HEAD
 	/* Perform allocations on the exact node specified. */
 	TEST_F_EXACT = 0x2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -129,7 +138,10 @@ void setup_memblock(void);
 void setup_numa_memblock(const unsigned int node_fracs[]);
 void dummy_physical_memory_init(void);
 void dummy_physical_memory_cleanup(void);
+<<<<<<< HEAD
 phys_addr_t dummy_physical_memory_base(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void parse_args(int argc, char **argv);
 
 void test_fail(void);

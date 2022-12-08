@@ -9,7 +9,10 @@
 struct ucode_patch {
 	struct list_head plist;
 	void *data;		/* Intel uses only this one */
+<<<<<<< HEAD
 	unsigned int size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 patch_id;
 	u16 equiv_cpu;
 };
@@ -33,7 +36,12 @@ enum ucode_state {
 };
 
 struct microcode_ops {
+<<<<<<< HEAD
 	enum ucode_state (*request_microcode_fw) (int cpu, struct device *);
+=======
+	enum ucode_state (*request_microcode_fw) (int cpu, struct device *,
+						  bool refresh_fw);
+>>>>>>> b7ba80a49124 (Commit)
 
 	void (*microcode_fini_cpu) (int cpu);
 
@@ -49,6 +57,10 @@ struct microcode_ops {
 
 struct ucode_cpu_info {
 	struct cpu_signature	cpu_sig;
+<<<<<<< HEAD
+=======
+	int			valid;
+>>>>>>> b7ba80a49124 (Commit)
 	void			*mc;
 };
 extern struct ucode_cpu_info ucode_cpu_info[];
@@ -125,13 +137,21 @@ static inline unsigned int x86_cpuid_family(void)
 #ifdef CONFIG_MICROCODE
 extern void __init load_ucode_bsp(void);
 extern void load_ucode_ap(void);
+<<<<<<< HEAD
 void reload_early_microcode(unsigned int cpu);
+=======
+void reload_early_microcode(void);
+>>>>>>> b7ba80a49124 (Commit)
 extern bool initrd_gone;
 void microcode_bsp_resume(void);
 #else
 static inline void __init load_ucode_bsp(void)			{ }
 static inline void load_ucode_ap(void)				{ }
+<<<<<<< HEAD
 static inline void reload_early_microcode(unsigned int cpu)	{ }
+=======
+static inline void reload_early_microcode(void)			{ }
+>>>>>>> b7ba80a49124 (Commit)
 static inline void microcode_bsp_resume(void)			{ }
 #endif
 

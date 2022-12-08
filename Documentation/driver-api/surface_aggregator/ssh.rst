@@ -13,7 +13,10 @@
 .. |DATA_NSQ| replace:: ``DATA_NSQ``
 .. |TC| replace:: ``TC``
 .. |TID| replace:: ``TID``
+<<<<<<< HEAD
 .. |SID| replace:: ``SID``
+=======
+>>>>>>> b7ba80a49124 (Commit)
 .. |IID| replace:: ``IID``
 .. |RQID| replace:: ``RQID``
 .. |CID| replace:: ``CID``
@@ -77,7 +80,11 @@ after the frame structure and before the payload. The payload is followed by
 its own CRC (over all payload bytes). If the payload is not present (i.e.
 the frame has ``LEN=0``), the CRC of the payload is still present and will
 evaluate to ``0xffff``. The |LEN| field does not include any of the CRCs, it
+<<<<<<< HEAD
 equals the number of bytes between the CRC of the frame and the CRC of the
+=======
+equals the number of bytes inbetween the CRC of the frame and the CRC of the
+>>>>>>> b7ba80a49124 (Commit)
 payload.
 
 Additionally, the following fixed two-byte sequences are used:
@@ -220,6 +227,7 @@ following fields, packed together and in order:
      - |u8|
      - Target category.
 
+<<<<<<< HEAD
    * - |TID|
      - |u8|
      - Target ID for commands/messages.
@@ -227,6 +235,15 @@ following fields, packed together and in order:
    * - |SID|
      - |u8|
      - Source ID for commands/messages.
+=======
+   * - |TID| (out)
+     - |u8|
+     - Target ID for outgoing (host to EC) commands.
+
+   * - |TID| (in)
+     - |u8|
+     - Target ID for incoming (EC to host) commands.
+>>>>>>> b7ba80a49124 (Commit)
 
    * - |IID|
      - |u8|
@@ -287,6 +304,7 @@ general, however, a single target category should map to a single reserved
 event request ID.
 
 Furthermore, requests, responses, and events have an associated target ID
+<<<<<<< HEAD
 (``TID``) and source ID (``SID``). These two fields indicate where a message
 originates from (``SID``) and what the intended target of the message is
 (``TID``). Note that a response to a specific request therefore has the source
@@ -301,6 +319,21 @@ instance ID values to accept a command. A command that is accepted for
 ``TID=1``, for example, may not be accepted for ``TID=2`` and vice versa. While
 this may not always hold in reality, you can think of different target/source
 IDs indicating different physical ECs with potentially different feature sets.
+=======
+(``TID``). This target ID is split into output (host to EC) and input (EC to
+host) fields, with the respecting other field (e.g. output field on incoming
+messages) set to zero. Two ``TID`` values are known: Primary (``0x01``) and
+secondary (``0x02``). In general, the response to a request should have the
+same ``TID`` value, however, the field (output vs. input) should be used in
+accordance to the direction in which the response is sent (i.e. on the input
+field, as responses are generally sent from the EC to the host).
+
+Note that, even though requests and events should be uniquely identifiable
+by target category and command ID alone, the EC may require specific
+target ID and instance ID values to accept a command. A command that is
+accepted for ``TID=1``, for example, may not be accepted for ``TID=2``
+and vice versa.
+>>>>>>> b7ba80a49124 (Commit)
 
 
 Limitations and Observations

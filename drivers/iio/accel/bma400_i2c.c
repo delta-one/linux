@@ -13,9 +13,15 @@
 
 #include "bma400.h"
 
+<<<<<<< HEAD
 static int bma400_i2c_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int bma400_i2c_probe(struct i2c_client *client,
+			    const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct regmap *regmap;
 
 	regmap = devm_regmap_init_i2c(client, &bma400_regmap_config);
@@ -44,7 +50,11 @@ static struct i2c_driver bma400_i2c_driver = {
 		.name = "bma400",
 		.of_match_table = bma400_of_i2c_match,
 	},
+<<<<<<< HEAD
 	.probe_new = bma400_i2c_probe,
+=======
+	.probe    = bma400_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = bma400_i2c_ids,
 };
 

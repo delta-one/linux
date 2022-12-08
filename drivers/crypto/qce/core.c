@@ -5,7 +5,10 @@
 
 #include <linux/clk.h>
 #include <linux/dma-mapping.h>
+<<<<<<< HEAD
 #include <linux/interconnect.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/interrupt.h>
 #include <linux/module.h>
 #include <linux/mod_devicetable.h>
@@ -23,8 +26,11 @@
 #define QCE_MAJOR_VERSION5	0x05
 #define QCE_QUEUE_LENGTH	1
 
+<<<<<<< HEAD
 #define QCE_DEFAULT_MEM_BANDWIDTH	393600
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct qce_algo_ops *qce_ops[] = {
 #ifdef CONFIG_CRYPTO_DEV_QCE_SKCIPHER
 	&skcipher_ops,
@@ -110,7 +116,11 @@ static int qce_handle_queue(struct qce_device *qce,
 
 	if (backlog) {
 		spin_lock_bh(&qce->lock);
+<<<<<<< HEAD
 		crypto_request_complete(backlog, -EINPROGRESS);
+=======
+		backlog->complete(backlog, -EINPROGRESS);
+>>>>>>> b7ba80a49124 (Commit)
 		spin_unlock_bh(&qce->lock);
 	}
 
@@ -135,7 +145,11 @@ static void qce_tasklet_req_done(unsigned long data)
 	spin_unlock_irqrestore(&qce->lock, flags);
 
 	if (req)
+<<<<<<< HEAD
 		crypto_request_complete(req, qce->result);
+=======
+		req->complete(req, qce->result);
+>>>>>>> b7ba80a49124 (Commit)
 
 	qce_handle_queue(qce, NULL);
 }
@@ -209,6 +223,7 @@ static int qce_crypto_probe(struct platform_device *pdev)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	qce->core = devm_clk_get_optional(qce->dev, "core");
 	if (IS_ERR(qce->core))
 		return PTR_ERR(qce->core);
@@ -232,6 +247,23 @@ static int qce_crypto_probe(struct platform_device *pdev)
 	ret = clk_prepare_enable(qce->core);
 	if (ret)
 		goto err_mem_path_disable;
+=======
+	qce->core = devm_clk_get(qce->dev, "core");
+	if (IS_ERR(qce->core))
+		return PTR_ERR(qce->core);
+
+	qce->iface = devm_clk_get(qce->dev, "iface");
+	if (IS_ERR(qce->iface))
+		return PTR_ERR(qce->iface);
+
+	qce->bus = devm_clk_get(qce->dev, "bus");
+	if (IS_ERR(qce->bus))
+		return PTR_ERR(qce->bus);
+
+	ret = clk_prepare_enable(qce->core);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = clk_prepare_enable(qce->iface);
 	if (ret)
@@ -271,9 +303,12 @@ err_clks_iface:
 	clk_disable_unprepare(qce->iface);
 err_clks_core:
 	clk_disable_unprepare(qce->core);
+<<<<<<< HEAD
 err_mem_path_disable:
 	icc_set_bw(qce->mem_path, 0, 0);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -293,7 +328,10 @@ static int qce_crypto_remove(struct platform_device *pdev)
 static const struct of_device_id qce_crypto_of_match[] = {
 	{ .compatible = "qcom,crypto-v5.1", },
 	{ .compatible = "qcom,crypto-v5.4", },
+<<<<<<< HEAD
 	{ .compatible = "qcom,qce", },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 MODULE_DEVICE_TABLE(of, qce_crypto_of_match);

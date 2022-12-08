@@ -153,6 +153,7 @@ properties:
       - description: Boards with the Amlogic Meson G12B A311D SoC
         items:
           - enum:
+<<<<<<< HEAD
               - bananapi,bpi-m2s
               - khadas,vim3
               - radxa,zero2
@@ -164,6 +165,9 @@ properties:
           - enum:
               - bananapi,bpi-cm4io
           - const: bananapi,bpi-cm4
+=======
+              - khadas,vim3
+>>>>>>> b7ba80a49124 (Commit)
           - const: amlogic,a311d
           - const: amlogic,g12b
 
@@ -173,10 +177,14 @@ properties:
               - azw,gsking-x
               - azw,gtking
               - azw,gtking-pro
+<<<<<<< HEAD
               - bananapi,bpi-m2s
               - hardkernel,odroid-go-ultra
               - hardkernel,odroid-n2
               - hardkernel,odroid-n2l
+=======
+              - hardkernel,odroid-n2
+>>>>>>> b7ba80a49124 (Commit)
               - hardkernel,odroid-n2-plus
               - khadas,vim3
               - ugoos,am6
@@ -188,7 +196,10 @@ properties:
           - enum:
               - amediatech,x96-air
               - amediatech,x96-air-gbit
+<<<<<<< HEAD
               - bananapi,bpi-m2-pro
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - bananapi,bpi-m5
               - cyx,a95xf3-air
               - cyx,a95xf3-air-gbit

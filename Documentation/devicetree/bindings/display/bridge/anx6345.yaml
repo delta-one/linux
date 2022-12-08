@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/display/bridge/anx6345.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Analogix ANX6345 eDP Transmitter
+=======
+title: Analogix ANX6345 eDP Transmitter Device Tree Bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Torsten Duwe <duwe@lst.de>
@@ -61,7 +65,11 @@ additionalProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     i2c {
+=======
+    i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
       #address-cells = <1>;
       #size-cells = <0>;
 

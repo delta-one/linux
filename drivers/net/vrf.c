@@ -159,13 +159,21 @@ static void vrf_get_stats64(struct net_device *dev,
 
 		dstats = per_cpu_ptr(dev->dstats, i);
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&dstats->syncp);
+=======
+			start = u64_stats_fetch_begin_irq(&dstats->syncp);
+>>>>>>> b7ba80a49124 (Commit)
 			tbytes = dstats->tx_bytes;
 			tpkts = dstats->tx_pkts;
 			tdrops = dstats->tx_drps;
 			rbytes = dstats->rx_bytes;
 			rpkts = dstats->rx_pkts;
+<<<<<<< HEAD
 		} while (u64_stats_fetch_retry(&dstats->syncp, start));
+=======
+		} while (u64_stats_fetch_retry_irq(&dstats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 		stats->tx_bytes += tbytes;
 		stats->tx_packets += tpkts;
 		stats->tx_dropped += tdrops;
@@ -1385,8 +1393,13 @@ static struct sk_buff *vrf_ip6_rcv(struct net_device *vrf_dev,
 
 	/* loopback, multicast & non-ND link-local traffic; do not push through
 	 * packet taps again. Reset pkt_type for upper layers to process skb.
+<<<<<<< HEAD
 	 * For non-loopback strict packets, determine the dst using the original
 	 * ifindex.
+=======
+	 * For strict packets with a source LLA, determine the dst using the
+	 * original ifindex.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	if (skb->pkt_type == PACKET_LOOPBACK || (need_strict && !is_ndisc)) {
 		skb->dev = vrf_dev;
@@ -1395,7 +1408,11 @@ static struct sk_buff *vrf_ip6_rcv(struct net_device *vrf_dev,
 
 		if (skb->pkt_type == PACKET_LOOPBACK)
 			skb->pkt_type = PACKET_HOST;
+<<<<<<< HEAD
 		else
+=======
+		else if (ipv6_addr_type(&ipv6_hdr(skb)->saddr) & IPV6_ADDR_LINKLOCAL)
+>>>>>>> b7ba80a49124 (Commit)
 			vrf_ip6_input_dst(skb, vrf_dev, orig_iif);
 
 		goto out;

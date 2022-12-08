@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0
 /* Copyright (C) 2019 ARM Limited */
+<<<<<<< HEAD
 
 #include <ctype.h>
 #include <string.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "testcases.h"
 
 struct _aarch64_ctx *get_header(struct _aarch64_ctx *head, uint32_t magic,
@@ -108,6 +111,7 @@ bool validate_za_context(struct za_context *za, char **err)
 	return true;
 }
 
+<<<<<<< HEAD
 bool validate_zt_context(struct zt_context *zt, char **err)
 {
 	if (!zt || !err)
@@ -128,21 +132,33 @@ bool validate_zt_context(struct zt_context *zt, char **err)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool validate_reserved(ucontext_t *uc, size_t resv_sz, char **err)
 {
 	bool terminated = false;
 	size_t offs = 0;
 	int flags = 0;
+<<<<<<< HEAD
 	int new_flags, i;
 	struct extra_context *extra = NULL;
 	struct sve_context *sve = NULL;
 	struct za_context *za = NULL;
 	struct zt_context *zt = NULL;
+=======
+	int new_flags;
+	struct extra_context *extra = NULL;
+	struct sve_context *sve = NULL;
+	struct za_context *za = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	struct _aarch64_ctx *head =
 		(struct _aarch64_ctx *)uc->uc_mcontext.__reserved;
 	void *extra_data = NULL;
 	size_t extra_sz = 0;
+<<<<<<< HEAD
 	char magic[4];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!err)
 		return false;
@@ -184,10 +200,13 @@ bool validate_reserved(ucontext_t *uc, size_t resv_sz, char **err)
 			if (head->size != sizeof(struct esr_context))
 				*err = "Bad size for esr_context";
 			break;
+<<<<<<< HEAD
 		case TPIDR2_MAGIC:
 			if (head->size != sizeof(struct tpidr2_context))
 				*err = "Bad size for tpidr2_context";
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		case SVE_MAGIC:
 			if (flags & SVE_CTX)
 				*err = "Multiple SVE_MAGIC";
@@ -202,6 +221,7 @@ bool validate_reserved(ucontext_t *uc, size_t resv_sz, char **err)
 			za = (struct za_context *)head;
 			new_flags |= ZA_CTX;
 			break;
+<<<<<<< HEAD
 		case ZT_MAGIC:
 			if (flags & ZT_CTX)
 				*err = "Multiple ZT_MAGIC";
@@ -209,6 +229,8 @@ bool validate_reserved(ucontext_t *uc, size_t resv_sz, char **err)
 			zt = (struct zt_context *)head;
 			new_flags |= ZT_CTX;
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		case EXTRA_MAGIC:
 			if (flags & EXTRA_CTX)
 				*err = "Multiple EXTRA_MAGIC";
@@ -231,6 +253,7 @@ bool validate_reserved(ucontext_t *uc, size_t resv_sz, char **err)
 			/*
 			 * A still unknown Magic: potentially freshly added
 			 * to the Kernel code and still unknown to the
+<<<<<<< HEAD
 			 * tests.  Magic numbers are supposed to be allocated
 			 * as somewhat meaningful ASCII strings so try to
 			 * print as such as well as the raw number.
@@ -244,6 +267,13 @@ bool validate_reserved(ucontext_t *uc, size_t resv_sz, char **err)
 				"SKIP Unknown MAGIC: 0x%X (%c%c%c%c) - Is KSFT arm64/signal up to date ?\n",
 				head->magic,
 				magic[3], magic[2], magic[1], magic[0]);
+=======
+			 * tests.
+			 */
+			fprintf(stdout,
+				"SKIP Unknown MAGIC: 0x%X - Is KSFT arm64/signal up to date ?\n",
+				head->magic);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 
@@ -266,9 +296,12 @@ bool validate_reserved(ucontext_t *uc, size_t resv_sz, char **err)
 		if (new_flags & ZA_CTX)
 			if (!validate_za_context(za, err))
 				return false;
+<<<<<<< HEAD
 		if (new_flags & ZT_CTX)
 			if (!validate_zt_context(zt, err))
 				return false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		flags |= new_flags;
 
@@ -280,11 +313,14 @@ bool validate_reserved(ucontext_t *uc, size_t resv_sz, char **err)
 		return false;
 	}
 
+<<<<<<< HEAD
 	if (terminated && (flags & ZT_CTX) && !(flags & ZA_CTX)) {
 		*err = "ZT context but no ZA context";
 		return false;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 

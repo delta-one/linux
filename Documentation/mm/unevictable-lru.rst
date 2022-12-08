@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _unevictable_lru:
+
+>>>>>>> b7ba80a49124 (Commit)
 ==============================
 Unevictable LRU Infrastructure
 ==============================
@@ -10,7 +15,11 @@ Introduction
 
 This document describes the Linux memory manager's "Unevictable LRU"
 infrastructure and the use of this to manage several types of "unevictable"
+<<<<<<< HEAD
 folios.
+=======
+pages.
+>>>>>>> b7ba80a49124 (Commit)
 
 The document attempts to provide the overall rationale behind this mechanism
 and the rationale for some of the design decisions that drove the
@@ -25,8 +34,13 @@ The Unevictable LRU
 ===================
 
 The Unevictable LRU facility adds an additional LRU list to track unevictable
+<<<<<<< HEAD
 folios and to hide these folios from vmscan.  This mechanism is based on a patch
 by Larry Woodman of Red Hat to address several scalability problems with folio
+=======
+pages and to hide these pages from vmscan.  This mechanism is based on a patch
+by Larry Woodman of Red Hat to address several scalability problems with page
+>>>>>>> b7ba80a49124 (Commit)
 reclaim in Linux.  The problems have been observed at customer sites on large
 memory x86_64 systems.
 
@@ -42,8 +56,11 @@ The unevictable list addresses the following classes of unevictable pages:
 
  * Those owned by ramfs.
 
+<<<<<<< HEAD
  * Those owned by tmpfs with the noswap mount option.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Those mapped into SHM_LOCK'd shared memory regions.
 
  * Those mapped into VM_LOCKED [mlock()ed] VMAs.
@@ -52,6 +69,7 @@ The infrastructure may also be able to handle other conditions that make pages
 unevictable, either by definition or by circumstance, in the future.
 
 
+<<<<<<< HEAD
 The Unevictable LRU Folio List
 ------------------------------
 
@@ -73,10 +91,33 @@ The Unevictable LRU infrastructure maintains unevictable folios as if they were
 on an additional LRU list for a few reasons:
 
  (1) We get to "treat unevictable folios just like we treat other folios in the
+=======
+The Unevictable LRU Page List
+-----------------------------
+
+The Unevictable LRU page list is a lie.  It was never an LRU-ordered list, but a
+companion to the LRU-ordered anonymous and file, active and inactive page lists;
+and now it is not even a page list.  But following familiar convention, here in
+this document and in the source, we often imagine it as a fifth LRU page list.
+
+The Unevictable LRU infrastructure consists of an additional, per-node, LRU list
+called the "unevictable" list and an associated page flag, PG_unevictable, to
+indicate that the page is being managed on the unevictable list.
+
+The PG_unevictable flag is analogous to, and mutually exclusive with, the
+PG_active flag in that it indicates on which LRU list a page resides when
+PG_lru is set.
+
+The Unevictable LRU infrastructure maintains unevictable pages as if they were
+on an additional LRU list for a few reasons:
+
+ (1) We get to "treat unevictable pages just like we treat other pages in the
+>>>>>>> b7ba80a49124 (Commit)
      system - which means we get to use the same code to manipulate them, the
      same code to isolate them (for migrate, etc.), the same code to keep track
      of the statistics, etc..." [Rik van Riel]
 
+<<<<<<< HEAD
  (2) We want to be able to migrate unevictable folios between nodes for memory
      defragmentation, workload management and memory hotplug.  The Linux kernel
      can only migrate folios that it can successfully isolate from the LRU
@@ -87,6 +128,18 @@ on an additional LRU list for a few reasons:
 The unevictable list does not differentiate between file-backed and
 anonymous, swap-backed folios.  This differentiation is only important
 while the folios are, in fact, evictable.
+=======
+ (2) We want to be able to migrate unevictable pages between nodes for memory
+     defragmentation, workload management and memory hotplug.  The Linux kernel
+     can only migrate pages that it can successfully isolate from the LRU
+     lists (or "Movable" pages: outside of consideration here).  If we were to
+     maintain pages elsewhere than on an LRU-like list, where they can be
+     detected by isolate_lru_page(), we would prevent their migration.
+
+The unevictable list does not differentiate between file-backed and anonymous,
+swap-backed pages.  This differentiation is only important while the pages are,
+in fact, evictable.
+>>>>>>> b7ba80a49124 (Commit)
 
 The unevictable list benefits from the "arrayification" of the per-node LRU
 lists and statistics originally proposed and posted by Christoph Lameter.
@@ -159,7 +212,11 @@ These are currently used in three places in the kernel:
 Detecting Unevictable Pages
 ---------------------------
 
+<<<<<<< HEAD
 The function folio_evictable() in mm/internal.h determines whether a folio is
+=======
+The function page_evictable() in mm/internal.h determines whether a page is
+>>>>>>> b7ba80a49124 (Commit)
 evictable or not using the query function outlined above [see section
 :ref:`Marking address spaces unevictable <mark_addr_space_unevict>`]
 to check the AS_UNEVICTABLE flag.
@@ -168,7 +225,11 @@ For address spaces that are so marked after being populated (as SHM regions
 might be), the lock action (e.g. SHM_LOCK) can be lazy, and need not populate
 the page tables for the region as does, for example, mlock(), nor need it make
 any special effort to push any pages in the SHM_LOCK'd area to the unevictable
+<<<<<<< HEAD
 list.  Instead, vmscan will do this if and when it encounters the folios during
+=======
+list.  Instead, vmscan will do this if and when it encounters the pages during
+>>>>>>> b7ba80a49124 (Commit)
 a reclamation scan.
 
 On an unlock action (such as SHM_UNLOCK), the unlocker (e.g. shmctl()) must scan
@@ -177,6 +238,7 @@ condition is keeping them unevictable.  If an unevictable region is destroyed,
 the pages are also "rescued" from the unevictable list in the process of
 freeing them.
 
+<<<<<<< HEAD
 folio_evictable() also checks for mlocked folios by calling
 folio_test_mlocked(), which is set when a folio is faulted into a
 VM_LOCKED VMA, or found in a VMA being VM_LOCKED.
@@ -208,12 +270,47 @@ folio_isolate_lru() - after dropping the folio lock.  Because the
 condition which makes the folio unevictable may change once the folio
 is unlocked, __pagevec_lru_add_fn() will recheck the unevictable state
 of a folio before placing it on the unevictable list.
+=======
+page_evictable() also checks for mlocked pages by testing an additional page
+flag, PG_mlocked (as wrapped by PageMlocked()), which is set when a page is
+faulted into a VM_LOCKED VMA, or found in a VMA being VM_LOCKED.
+
+
+Vmscan's Handling of Unevictable Pages
+--------------------------------------
+
+If unevictable pages are culled in the fault path, or moved to the unevictable
+list at mlock() or mmap() time, vmscan will not encounter the pages until they
+have become evictable again (via munlock() for example) and have been "rescued"
+from the unevictable list.  However, there may be situations where we decide,
+for the sake of expediency, to leave an unevictable page on one of the regular
+active/inactive LRU lists for vmscan to deal with.  vmscan checks for such
+pages in all of the shrink_{active|inactive|page}_list() functions and will
+"cull" such pages that it encounters: that is, it diverts those pages to the
+unevictable list for the memory cgroup and node being scanned.
+
+There may be situations where a page is mapped into a VM_LOCKED VMA, but the
+page is not marked as PG_mlocked.  Such pages will make it all the way to
+shrink_active_list() or shrink_page_list() where they will be detected when
+vmscan walks the reverse map in page_referenced() or try_to_unmap().  The page
+is culled to the unevictable list when it is released by the shrinker.
+
+To "cull" an unevictable page, vmscan simply puts the page back on the LRU list
+using putback_lru_page() - the inverse operation to isolate_lru_page() - after
+dropping the page lock.  Because the condition which makes the page unevictable
+may change once the page is unlocked, __pagevec_lru_add_fn() will recheck the
+unevictable state of a page before placing it on the unevictable list.
+>>>>>>> b7ba80a49124 (Commit)
 
 
 MLOCKED Pages
 =============
 
+<<<<<<< HEAD
 The unevictable folio list is also useful for mlock(), in addition to ramfs and
+=======
+The unevictable page list is also useful for mlock(), in addition to ramfs and
+>>>>>>> b7ba80a49124 (Commit)
 SYSV SHM.  Note that mlock() is only available in CONFIG_MMU=y situations; in
 NOMMU situations, all mappings are effectively mlocked.
 
@@ -270,7 +367,11 @@ the LRU.  Such pages can be "noticed" by memory management in several places:
  (4) in the fault path and when a VM_LOCKED stack segment is expanded; or
 
  (5) as mentioned above, in vmscan:shrink_page_list() when attempting to
+<<<<<<< HEAD
      reclaim a page in a VM_LOCKED VMA by folio_referenced() or try_to_unmap().
+=======
+     reclaim a page in a VM_LOCKED VMA by page_referenced() or try_to_unmap().
+>>>>>>> b7ba80a49124 (Commit)
 
 mlocked pages become unlocked and rescued from the unevictable list when:
 
@@ -298,7 +399,11 @@ treated as a no-op and mlock_fixup() simply returns.
 If the VMA passes some filtering as described in "Filtering Special VMAs"
 below, mlock_fixup() will attempt to merge the VMA with its neighbors or split
 off a subset of the VMA if the range does not cover the entire VMA.  Any pages
+<<<<<<< HEAD
 already present in the VMA are then marked as mlocked by mlock_folio() via
+=======
+already present in the VMA are then marked as mlocked by mlock_page() via
+>>>>>>> b7ba80a49124 (Commit)
 mlock_pte_range() via walk_page_range() via mlock_vma_pages_range().
 
 Before returning from the system call, do_mlock() or mlockall() will call
@@ -311,6 +416,7 @@ do end up getting faulted into this VM_LOCKED VMA, they will be handled in the
 fault path - which is also how mlock2()'s MLOCK_ONFAULT areas are handled.
 
 For each PTE (or PMD) being faulted into a VMA, the page add rmap function
+<<<<<<< HEAD
 calls mlock_vma_folio(), which calls mlock_folio() when the VMA is VM_LOCKED
 (unless it is a PTE mapping of a part of a transparent huge page).  Or when
 it is a newly allocated anonymous page, folio_add_lru_vma() calls
@@ -327,6 +433,24 @@ and PG_unevictable and PG_mlocked, it simply increments the mlock_count.
 But in practice that may not work ideally: the page may not yet be on an LRU, or
 it may have been temporarily isolated from LRU.  In such cases the mlock_count
 field cannot be touched, but will be set to 0 later when __munlock_folio()
+=======
+calls mlock_vma_page(), which calls mlock_page() when the VMA is VM_LOCKED
+(unless it is a PTE mapping of a part of a transparent huge page).  Or when
+it is a newly allocated anonymous page, lru_cache_add_inactive_or_unevictable()
+calls mlock_new_page() instead: similar to mlock_page(), but can make better
+judgments, since this page is held exclusively and known not to be on LRU yet.
+
+mlock_page() sets PageMlocked immediately, then places the page on the CPU's
+mlock pagevec, to batch up the rest of the work to be done under lru_lock by
+__mlock_page().  __mlock_page() sets PageUnevictable, initializes mlock_count
+and moves the page to unevictable state ("the unevictable LRU", but with
+mlock_count in place of LRU threading).  Or if the page was already PageLRU
+and PageUnevictable and PageMlocked, it simply increments the mlock_count.
+
+But in practice that may not work ideally: the page may not yet be on an LRU, or
+it may have been temporarily isolated from LRU.  In such cases the mlock_count
+field cannot be touched, but will be set to 0 later when __pagevec_lru_add_fn()
+>>>>>>> b7ba80a49124 (Commit)
 returns the page to "LRU".  Races prohibit mlock_count from being set to 1 then:
 rather than risk stranding a page indefinitely as unevictable, always err with
 mlock_count on the low side, so that when munlocked the page will be rescued to
@@ -373,11 +497,16 @@ Because of the VMA filtering discussed above, VM_LOCKED will not be set in
 any "special" VMAs.  So, those VMAs will be ignored for munlock.
 
 If the VMA is VM_LOCKED, mlock_fixup() again attempts to merge or split off the
+<<<<<<< HEAD
 specified range.  All pages in the VMA are then munlocked by munlock_folio() via
+=======
+specified range.  All pages in the VMA are then munlocked by munlock_page() via
+>>>>>>> b7ba80a49124 (Commit)
 mlock_pte_range() via walk_page_range() via mlock_vma_pages_range() - the same
 function used when mlocking a VMA range, with new flags for the VMA indicating
 that it is munlock() being performed.
 
+<<<<<<< HEAD
 munlock_folio() uses the mlock pagevec to batch up work to be done
 under lru_lock by  __munlock_folio().  __munlock_folio() decrements the
 folio's mlock_count, and when that reaches 0 it clears the mlocked flag
@@ -388,6 +517,17 @@ But in practice that may not work ideally: the folio may not yet have reached
 "the unevictable LRU", or it may have been temporarily isolated from it.  In
 those cases its mlock_count field is unusable and must be assumed to be 0: so
 that the folio will be rescued to an evictable LRU, then perhaps be mlocked
+=======
+munlock_page() uses the mlock pagevec to batch up work to be done under
+lru_lock by  __munlock_page().  __munlock_page() decrements the page's
+mlock_count, and when that reaches 0 it clears PageMlocked and clears
+PageUnevictable, moving the page from unevictable state to inactive LRU.
+
+But in practice that may not work ideally: the page may not yet have reached
+"the unevictable LRU", or it may have been temporarily isolated from it.  In
+those cases its mlock_count field is unusable and must be assumed to be 0: so
+that the page will be rescued to an evictable LRU, then perhaps be mlocked
+>>>>>>> b7ba80a49124 (Commit)
 again later if vmscan finds it in a VM_LOCKED VMA.
 
 
@@ -414,7 +554,11 @@ However, since mlock_vma_pages_range() starts by setting VM_LOCKED on a VMA,
 before mlocking any pages already present, if one of those pages were migrated
 before mlock_pte_range() reached it, it would get counted twice in mlock_count.
 To prevent that, mlock_vma_pages_range() temporarily marks the VMA as VM_IO,
+<<<<<<< HEAD
 so that mlock_vma_folio() will skip it.
+=======
+so that mlock_vma_page() will skip it.
+>>>>>>> b7ba80a49124 (Commit)
 
 To complete page migration, we place the old and new pages back onto the LRU
 afterwards.  The "unneeded" page - old page on success, new page on failure -
@@ -487,6 +631,7 @@ Before the unevictable/mlock changes, mlocking did not mark the pages in any
 way, so unmapping them required no processing.
 
 For each PTE (or PMD) being unmapped from a VMA, page_remove_rmap() calls
+<<<<<<< HEAD
 munlock_vma_folio(), which calls munlock_folio() when the VMA is VM_LOCKED
 (unless it was a PTE mapping of a part of a transparent huge page).
 
@@ -500,6 +645,20 @@ But in practice that may not work ideally: the folio may not yet have reached
 "the unevictable LRU", or it may have been temporarily isolated from it.  In
 those cases its mlock_count field is unusable and must be assumed to be 0: so
 that the folio will be rescued to an evictable LRU, then perhaps be mlocked
+=======
+munlock_vma_page(), which calls munlock_page() when the VMA is VM_LOCKED
+(unless it was a PTE mapping of a part of a transparent huge page).
+
+munlock_page() uses the mlock pagevec to batch up work to be done under
+lru_lock by  __munlock_page().  __munlock_page() decrements the page's
+mlock_count, and when that reaches 0 it clears PageMlocked and clears
+PageUnevictable, moving the page from unevictable state to inactive LRU.
+
+But in practice that may not work ideally: the page may not yet have reached
+"the unevictable LRU", or it may have been temporarily isolated from it.  In
+those cases its mlock_count field is unusable and must be assumed to be 0: so
+that the page will be rescued to an evictable LRU, then perhaps be mlocked
+>>>>>>> b7ba80a49124 (Commit)
 again later if vmscan finds it in a VM_LOCKED VMA.
 
 
@@ -512,7 +671,11 @@ which had been Copied-On-Write from the file pages now being truncated.
 
 Mlocked pages can be munlocked and deleted in this way: like with munmap(),
 for each PTE (or PMD) being unmapped from a VMA, page_remove_rmap() calls
+<<<<<<< HEAD
 munlock_vma_folio(), which calls munlock_folio() when the VMA is VM_LOCKED
+=======
+munlock_vma_page(), which calls munlock_page() when the VMA is VM_LOCKED
+>>>>>>> b7ba80a49124 (Commit)
 (unless it was a PTE mapping of a part of a transparent huge page).
 
 However, if there is a racing munlock(), since mlock_vma_pages_range() starts
@@ -520,7 +683,11 @@ munlocking by clearing VM_LOCKED from a VMA, before munlocking all the pages
 present, if one of those pages were unmapped by truncation or hole punch before
 mlock_pte_range() reached it, it would not be recognized as mlocked by this VMA,
 and would not be counted out of mlock_count.  In this rare case, a page may
+<<<<<<< HEAD
 still appear as PG_mlocked after it has been fully unmapped: and it is left to
+=======
+still appear as PageMlocked after it has been fully unmapped: and it is left to
+>>>>>>> b7ba80a49124 (Commit)
 release_pages() (or __page_cache_release()) to clear it and update statistics
 before freeing (this event is counted in /proc/vmstat unevictable_pgs_cleared,
 which is usually 0).
@@ -532,7 +699,11 @@ Page Reclaim in shrink_*_list()
 vmscan's shrink_active_list() culls any obviously unevictable pages -
 i.e. !page_evictable(page) pages - diverting those to the unevictable list.
 However, shrink_active_list() only sees unevictable pages that made it onto the
+<<<<<<< HEAD
 active/inactive LRU lists.  Note that these pages do not have PG_unevictable
+=======
+active/inactive LRU lists.  Note that these pages do not have PageUnevictable
+>>>>>>> b7ba80a49124 (Commit)
 set - otherwise they would be on the unevictable list and shrink_active_list()
 would never see them.
 
@@ -552,8 +723,14 @@ vmscan's shrink_inactive_list() and shrink_page_list() also divert obviously
 unevictable pages found on the inactive lists to the appropriate memory cgroup
 and node unevictable list.
 
+<<<<<<< HEAD
 rmap's folio_referenced_one(), called via vmscan's shrink_active_list() or
 shrink_page_list(), and rmap's try_to_unmap_one() called via shrink_page_list(),
 check for (3) pages still mapped into VM_LOCKED VMAs, and call mlock_vma_folio()
+=======
+rmap's page_referenced_one(), called via vmscan's shrink_active_list() or
+shrink_page_list(), and rmap's try_to_unmap_one() called via shrink_page_list(),
+check for (3) pages still mapped into VM_LOCKED VMAs, and call mlock_vma_page()
+>>>>>>> b7ba80a49124 (Commit)
 to correct them.  Such pages are culled to the unevictable list when released
 by the shrinker.

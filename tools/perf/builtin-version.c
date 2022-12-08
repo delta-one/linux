@@ -59,6 +59,10 @@ static void library_status(void)
 {
 	STATUS(HAVE_DWARF_SUPPORT, dwarf);
 	STATUS(HAVE_DWARF_GETLOCATIONS_SUPPORT, dwarf_getlocations);
+<<<<<<< HEAD
+=======
+	STATUS(HAVE_GLIBC_SUPPORT, glibc);
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef HAVE_SYSCALL_TABLE_SUPPORT
 	STATUS(HAVE_LIBAUDIT_SUPPORT, libaudit);
 #endif
@@ -81,8 +85,11 @@ static void library_status(void)
 	STATUS(HAVE_AIO_SUPPORT, aio);
 	STATUS(HAVE_ZSTD_SUPPORT, zstd);
 	STATUS(HAVE_LIBPFM, libpfm4);
+<<<<<<< HEAD
 	STATUS(HAVE_LIBTRACEEVENT, libtraceevent);
 	STATUS(HAVE_BPF_SKEL, BPF skeletons);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int cmd_version(int argc, const char **argv)

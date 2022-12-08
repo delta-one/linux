@@ -12,6 +12,7 @@
 # In addition this script also checks if forcing a specific field in the
 # outer header is working.
 
+<<<<<<< HEAD
 # Return 4 by default (Kselftest SKIP code)
 ERR=4
 
@@ -22,17 +23,29 @@ fi
 if ! which tcpdump > /dev/null 2>&1; then
 	echo "No tcpdump found. Required for this test."
 	exit $ERR
+=======
+if [ "$(id -u)" != "0" ]; then
+	echo "Please run as root."
+	exit 0
+fi
+if ! which tcpdump > /dev/null 2>&1; then
+	echo "No tcpdump found. Required for this test."
+	exit 0
+>>>>>>> b7ba80a49124 (Commit)
 fi
 
 expected_tos="0x00"
 expected_ttl="0"
 failed=false
 
+<<<<<<< HEAD
 readonly NS0=$(mktemp -u ns0-XXXXXXXX)
 readonly NS1=$(mktemp -u ns1-XXXXXXXX)
 
 RUN_NS0="ip netns exec ${NS0}"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 get_random_tos() {
 	# Get a random hex tos value between 0x00 and 0xfc, a multiple of 4
 	echo "0x$(tr -dc '0-9a-f' < /dev/urandom | head -c 1)\
@@ -69,6 +82,10 @@ setup() {
 	local vlan="$5"
 	local test_tos="0x00"
 	local test_ttl="0"
+<<<<<<< HEAD
+=======
+	local ns="ip netns exec testing"
+>>>>>>> b7ba80a49124 (Commit)
 
 	# We don't want a test-tos of 0x00,
 	# because this is the value that we get when no tos is set.
@@ -101,6 +118,7 @@ setup() {
 	printf "│%7s │%6s │%6s │%13s │%13s │%6s │" \
 	"$type" "$outer" "$inner" "$tos" "$ttl" "$vlan"
 
+<<<<<<< HEAD
 	# Create netns NS0 and NS1 and connect them with a veth pair
 	ip netns add "${NS0}"
 	ip netns add "${NS1}"
@@ -110,6 +128,16 @@ setup() {
 	ip -netns "${NS1}" link set dev veth1 up
 	ip -netns "${NS0}" address flush dev veth0
 	ip -netns "${NS1}" address flush dev veth1
+=======
+	# Create 'testing' netns, veth pair and connect main ns with testing ns
+	ip netns add testing
+	ip link add type veth
+	ip link set veth1 netns testing
+	ip link set veth0 up
+	$ns ip link set veth1 up
+	ip addr flush dev veth0
+	$ns ip addr flush dev veth1
+>>>>>>> b7ba80a49124 (Commit)
 
 	local local_addr1=""
 	local local_addr2=""
@@ -135,6 +163,7 @@ setup() {
 		if [ "$type" = "gre" ]; then
 			type="gretap"
 		fi
+<<<<<<< HEAD
 		ip -netns "${NS0}" address add 198.18.0.1/24 dev veth0
 		ip -netns "${NS1}" address add 198.18.0.2/24 dev veth1
 		ip -netns "${NS0}" link add name tep0 type $type $local_addr1 \
@@ -143,10 +172,19 @@ setup() {
 		ip -netns "${NS1}" link add name tep1 type $type $local_addr2 \
 			remote 198.18.0.1 tos $test_tos ttl $test_ttl         \
 			$vxlan $geneve
+=======
+		ip addr add 198.18.0.1/24 dev veth0
+		$ns ip addr add 198.18.0.2/24 dev veth1
+		ip link add name tep0 type $type $local_addr1 remote \
+		198.18.0.2 tos $test_tos ttl $test_ttl $vxlan $geneve
+		$ns ip link add name tep1 type $type $local_addr2 remote \
+		198.18.0.1 tos $test_tos ttl $test_ttl $vxlan $geneve
+>>>>>>> b7ba80a49124 (Commit)
 	elif [ "$outer" = "6" ]; then
 		if [ "$type" = "gre" ]; then
 			type="ip6gretap"
 		fi
+<<<<<<< HEAD
 		ip -netns "${NS0}" address add fdd1:ced0:5d88:3fce::1/64 \
 			dev veth0 nodad
 		ip -netns "${NS1}" address add fdd1:ced0:5d88:3fce::2/64 \
@@ -175,12 +213,39 @@ setup() {
 		ip -netns "${NS1}" link set dev ${parent}1 up
 		ip -netns "${NS0}" address flush dev ${parent}0
 		ip -netns "${NS1}" address flush dev ${parent}1
+=======
+		ip addr add fdd1:ced0:5d88:3fce::1/64 dev veth0
+		$ns ip addr add fdd1:ced0:5d88:3fce::2/64 dev veth1
+		ip link add name tep0 type $type $local_addr1 \
+		remote fdd1:ced0:5d88:3fce::2 tos $test_tos ttl $test_ttl \
+		$vxlan $geneve
+		$ns ip link add name tep1 type $type $local_addr2 \
+		remote fdd1:ced0:5d88:3fce::1 tos $test_tos ttl $test_ttl \
+		$vxlan $geneve
+	fi
+
+	# Bring L2-tunnel link up and create VLAN on top
+	ip link set tep0 up
+	$ns ip link set tep1 up
+	ip addr flush dev tep0
+	$ns ip addr flush dev tep1
+	local parent
+	if $vlan; then
+		parent="vlan99-"
+		ip link add link tep0 name ${parent}0 type vlan id 99
+		$ns ip link add link tep1 name ${parent}1 type vlan id 99
+		ip link set ${parent}0 up
+		$ns ip link set ${parent}1 up
+		ip addr flush dev ${parent}0
+		$ns ip addr flush dev ${parent}1
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		parent="tep"
 	fi
 
 	# Assign inner IPv4/IPv6 addresses
 	if [ "$inner" = "4" ] || [ "$inner" = "other" ]; then
+<<<<<<< HEAD
 		ip -netns "${NS0}" address add 198.19.0.1/24 brd + dev ${parent}0
 		ip -netns "${NS1}" address add 198.19.0.2/24 brd + dev ${parent}1
 	elif [ "$inner" = "6" ]; then
@@ -188,6 +253,13 @@ setup() {
 			dev ${parent}0 nodad
 		ip -netns "${NS1}" address add fdd4:96cf:4eae:443b::2/64 \
 			dev ${parent}1 nodad
+=======
+		ip addr add 198.19.0.1/24 brd + dev ${parent}0
+		$ns ip addr add 198.19.0.2/24 brd + dev ${parent}1
+	elif [ "$inner" = "6" ]; then
+		ip addr add fdd4:96cf:4eae:443b::1/64 dev ${parent}0
+		$ns ip addr add fdd4:96cf:4eae:443b::2/64 dev ${parent}1
+>>>>>>> b7ba80a49124 (Commit)
 	fi
 }
 
@@ -208,10 +280,17 @@ verify() {
 		ping_dst="198.19.0.3" # Generates ARPs which are not IPv4/IPv6
 	fi
 	if [ "$tos_ttl" = "inherit" ]; then
+<<<<<<< HEAD
 		${RUN_NS0} ping -i 0.1 $ping_dst -Q "$expected_tos"          \
 			 -t "$expected_ttl" 2>/dev/null 1>&2 & ping_pid="$!"
 	else
 		${RUN_NS0} ping -i 0.1 $ping_dst 2>/dev/null 1>&2 & ping_pid="$!"
+=======
+		ping -i 0.1 $ping_dst -Q "$expected_tos" -t "$expected_ttl" \
+		2>/dev/null 1>&2 & ping_pid="$!"
+	else
+		ping -i 0.1 $ping_dst 2>/dev/null 1>&2 & ping_pid="$!"
+>>>>>>> b7ba80a49124 (Commit)
 	fi
 	local tunnel_type_offset tunnel_type_proto req_proto_offset req_offset
 	if [ "$type" = "gre" ]; then
@@ -232,12 +311,19 @@ verify() {
 				req_proto_offset="$((req_proto_offset + 4))"
 				req_offset="$((req_offset + 4))"
 			fi
+<<<<<<< HEAD
 			out="$(${RUN_NS0} tcpdump --immediate-mode -p -c 1 -v \
 				-i veth0 -n                                   \
 				ip[$tunnel_type_offset] = $tunnel_type_proto and \
 				ip[$req_proto_offset] = 0x01 and              \
 				ip[$req_offset] = 0x08 2>/dev/null            \
 				| head -n 1)"
+=======
+			out="$(tcpdump --immediate-mode -p -c 1 -v -i veth0 -n \
+			ip[$tunnel_type_offset] = $tunnel_type_proto and \
+			ip[$req_proto_offset] = 0x01 and \
+			ip[$req_offset] = 0x08 2>/dev/null | head -n 1)"
+>>>>>>> b7ba80a49124 (Commit)
 		elif [ "$inner" = "6" ]; then
 			req_proto_offset="44"
 			req_offset="78"
@@ -249,12 +335,19 @@ verify() {
 				req_proto_offset="$((req_proto_offset + 4))"
 				req_offset="$((req_offset + 4))"
 			fi
+<<<<<<< HEAD
 			out="$(${RUN_NS0} tcpdump --immediate-mode -p -c 1 -v \
 				-i veth0 -n                                   \
 				ip[$tunnel_type_offset] = $tunnel_type_proto and \
 				ip[$req_proto_offset] = 0x3a and              \
 				ip[$req_offset] = 0x80 2>/dev/null            \
 				| head -n 1)"
+=======
+			out="$(tcpdump --immediate-mode -p -c 1 -v -i veth0 -n \
+			ip[$tunnel_type_offset] = $tunnel_type_proto and \
+			ip[$req_proto_offset] = 0x3a and \
+			ip[$req_offset] = 0x80 2>/dev/null | head -n 1)"
+>>>>>>> b7ba80a49124 (Commit)
 		elif [ "$inner" = "other" ]; then
 			req_proto_offset="36"
 			req_offset="45"
@@ -270,6 +363,7 @@ verify() {
 				expected_tos="0x00"
 				expected_ttl="64"
 			fi
+<<<<<<< HEAD
 			out="$(${RUN_NS0} tcpdump --immediate-mode -p -c 1 -v \
 				-i veth0 -n                                   \
 				ip[$tunnel_type_offset] = $tunnel_type_proto and \
@@ -277,6 +371,13 @@ verify() {
 				ip[$((req_proto_offset + 1))] = 0x06 and      \
 				ip[$req_offset] = 0x01 2>/dev/null            \
 				| head -n 1)"
+=======
+			out="$(tcpdump --immediate-mode -p -c 1 -v -i veth0 -n \
+			ip[$tunnel_type_offset] = $tunnel_type_proto and \
+			ip[$req_proto_offset] = 0x08 and \
+			ip[$((req_proto_offset + 1))] = 0x06 and \
+			ip[$req_offset] = 0x01 2>/dev/null | head -n 1)"
+>>>>>>> b7ba80a49124 (Commit)
 		fi
 	elif [ "$outer" = "6" ]; then
 		if [ "$type" = "gre" ]; then
@@ -295,12 +396,19 @@ verify() {
 				req_proto_offset="$((req_proto_offset + 4))"
 				req_offset="$((req_offset + 4))"
 			fi
+<<<<<<< HEAD
 			out="$(${RUN_NS0} tcpdump --immediate-mode -p -c 1 -v \
 				-i veth0 -n                                   \
 				ip6[$tunnel_type_offset] = $tunnel_type_proto and \
 				ip6[$req_proto_offset] = 0x01 and             \
 				ip6[$req_offset] = 0x08 2>/dev/null           \
 				| head -n 1)"
+=======
+			out="$(tcpdump --immediate-mode -p -c 1 -v -i veth0 -n \
+			ip6[$tunnel_type_offset] = $tunnel_type_proto and \
+			ip6[$req_proto_offset] = 0x01 and \
+			ip6[$req_offset] = 0x08 2>/dev/null | head -n 1)"
+>>>>>>> b7ba80a49124 (Commit)
 		elif [ "$inner" = "6" ]; then
 			local req_proto_offset="72"
 			local req_offset="106"
@@ -312,12 +420,19 @@ verify() {
 				req_proto_offset="$((req_proto_offset + 4))"
 				req_offset="$((req_offset + 4))"
 			fi
+<<<<<<< HEAD
 			out="$(${RUN_NS0} tcpdump --immediate-mode -p -c 1 -v \
 				-i veth0 -n                                   \
 				ip6[$tunnel_type_offset] = $tunnel_type_proto and \
 				ip6[$req_proto_offset] = 0x3a and             \
 				ip6[$req_offset] = 0x80 2>/dev/null           \
 				| head -n 1)"
+=======
+			out="$(tcpdump --immediate-mode -p -c 1 -v -i veth0 -n \
+			ip6[$tunnel_type_offset] = $tunnel_type_proto and \
+			ip6[$req_proto_offset] = 0x3a and \
+			ip6[$req_offset] = 0x80 2>/dev/null | head -n 1)"
+>>>>>>> b7ba80a49124 (Commit)
 		elif [ "$inner" = "other" ]; then
 			local req_proto_offset="64"
 			local req_offset="73"
@@ -333,6 +448,7 @@ verify() {
 				expected_tos="0x00"
 				expected_ttl="64"
 			fi
+<<<<<<< HEAD
 			out="$(${RUN_NS0} tcpdump --immediate-mode -p -c 1 -v \
 				-i veth0 -n                                   \
 				ip6[$tunnel_type_offset] = $tunnel_type_proto and \
@@ -344,6 +460,17 @@ verify() {
 	fi
 	kill -9 $ping_pid
 	wait $ping_pid 2>/dev/null || true
+=======
+			out="$(tcpdump --immediate-mode -p -c 1 -v -i veth0 -n \
+			ip6[$tunnel_type_offset] = $tunnel_type_proto and \
+			ip6[$req_proto_offset] = 0x08 and \
+			ip6[$((req_proto_offset + 1))] = 0x06 and \
+			ip6[$req_offset] = 0x01 2>/dev/null | head -n 1)"
+		fi
+	fi
+	kill -9 $ping_pid
+	wait $ping_pid 2>/dev/null
+>>>>>>> b7ba80a49124 (Commit)
 	result="FAIL"
 	if [ "$outer" = "4" ]; then
 		captured_ttl="$(get_field "ttl" "$out")"
@@ -379,6 +506,7 @@ verify() {
 }
 
 cleanup() {
+<<<<<<< HEAD
 	ip netns del "${NS0}" 2>/dev/null
 	ip netns del "${NS1}" 2>/dev/null
 }
@@ -408,6 +536,13 @@ set -e
 trap exit_handler EXIT
 trap interrupted INT
 
+=======
+	ip link del veth0 2>/dev/null
+	ip netns del testing 2>/dev/null
+	ip link del tep0 2>/dev/null
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 printf "┌────────┬───────┬───────┬──────────────┬"
 printf "──────────────┬───────┬────────┐\n"
 for type in gre vxlan geneve; do
@@ -437,10 +572,15 @@ done
 printf "└────────┴───────┴───────┴──────────────┴"
 printf "──────────────┴───────┴────────┘\n"
 
+<<<<<<< HEAD
 # All tests done.
 # Set ERR appropriately: it will be returned by the exit handler.
 if $failed; then
 	ERR=1
 else
 	ERR=0
+=======
+if $failed; then
+	exit 1
+>>>>>>> b7ba80a49124 (Commit)
 fi

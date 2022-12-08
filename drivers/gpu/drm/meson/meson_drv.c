@@ -18,7 +18,11 @@
 #include <drm/drm_aperture.h>
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_dma.h>
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_gem_dma_helper.h>
 #include <drm/drm_gem_framebuffer_helper.h>
 #include <drm/drm_modeset_helper_vtables.h>
@@ -325,6 +329,7 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
 
 	ret = meson_encoder_hdmi_init(priv);
 	if (ret)
+<<<<<<< HEAD
 		goto unbind_all;
 
 	ret = meson_plane_create(priv);
@@ -342,6 +347,25 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
 	ret = request_irq(priv->vsync_irq, meson_irq, 0, drm->driver->name, drm);
 	if (ret)
 		goto unbind_all;
+=======
+		goto exit_afbcd;
+
+	ret = meson_plane_create(priv);
+	if (ret)
+		goto exit_afbcd;
+
+	ret = meson_overlay_create(priv);
+	if (ret)
+		goto exit_afbcd;
+
+	ret = meson_crtc_create(priv);
+	if (ret)
+		goto exit_afbcd;
+
+	ret = request_irq(priv->vsync_irq, meson_irq, 0, drm->driver->name, drm);
+	if (ret)
+		goto exit_afbcd;
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_mode_config_reset(drm);
 
@@ -353,15 +377,22 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
 	if (ret)
 		goto uninstall_irq;
 
+<<<<<<< HEAD
 	drm_fbdev_dma_setup(drm, 32);
+=======
+	drm_fbdev_generic_setup(drm, 32);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
 uninstall_irq:
 	free_irq(priv->vsync_irq, drm);
+<<<<<<< HEAD
 unbind_all:
 	if (has_components)
 		component_unbind_all(drm->dev, drm);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 exit_afbcd:
 	if (priv->afbcd.ops)
 		priv->afbcd.ops->exit(priv);
@@ -391,6 +422,7 @@ static void meson_drv_unbind(struct device *dev)
 	drm_dev_unregister(drm);
 	drm_kms_helper_poll_fini(drm);
 	drm_atomic_helper_shutdown(drm);
+<<<<<<< HEAD
 	free_irq(priv->vsync_irq, drm);
 	drm_dev_put(drm);
 
@@ -399,6 +431,12 @@ static void meson_drv_unbind(struct device *dev)
 
 	component_unbind_all(dev, drm);
 
+=======
+	component_unbind_all(dev, drm);
+	free_irq(priv->vsync_irq, drm);
+	drm_dev_put(drm);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (priv->afbcd.ops)
 		priv->afbcd.ops->exit(priv);
 }
@@ -500,6 +538,7 @@ static int meson_drv_probe(struct platform_device *pdev)
 	return 0;
 };
 
+<<<<<<< HEAD
 static int meson_drv_remove(struct platform_device *pdev)
 {
 	component_master_del(&pdev->dev, &meson_drv_master_ops);
@@ -507,6 +546,8 @@ static int meson_drv_remove(struct platform_device *pdev)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct meson_drm_match_data meson_drm_gxbb_data = {
 	.compat = VPU_COMPATIBLE_GXBB,
 };
@@ -544,7 +585,10 @@ static const struct dev_pm_ops meson_drv_pm_ops = {
 
 static struct platform_driver meson_drm_platform_driver = {
 	.probe      = meson_drv_probe,
+<<<<<<< HEAD
 	.remove     = meson_drv_remove,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.shutdown   = meson_drv_shutdown,
 	.driver     = {
 		.name	= "meson-drm",

@@ -11,7 +11,10 @@
 
 #include <linux/bitfield.h>
 #include <linux/bsearch.h>
+<<<<<<< HEAD
 #include <linux/cacheinfo.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kvm_host.h>
 #include <linux/mm.h>
 #include <linux/printk.h>
@@ -25,7 +28,10 @@
 #include <asm/kvm_emulate.h>
 #include <asm/kvm_hyp.h>
 #include <asm/kvm_mmu.h>
+<<<<<<< HEAD
 #include <asm/kvm_nested.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/perf_event.h>
 #include <asm/sysreg.h>
 
@@ -80,6 +86,7 @@ void vcpu_write_sys_reg(struct kvm_vcpu *vcpu, u64 val, int reg)
 	    __vcpu_write_sys_reg_to_cpu(val, reg))
 		return;
 
+<<<<<<< HEAD
 	__vcpu_sys_reg(vcpu, reg) = val;
 }
 
@@ -186,6 +193,30 @@ static bool access_rw(struct kvm_vcpu *vcpu,
 		p->regval = vcpu_read_sys_reg(vcpu, r->reg);
 
 	return true;
+=======
+	 __vcpu_sys_reg(vcpu, reg) = val;
+}
+
+/* 3 bits per cache level, as per CLIDR, but non-existent caches always 0 */
+static u32 cache_levels;
+
+/* CSSELR values; used to index KVM_REG_ARM_DEMUX_ID_CCSIDR */
+#define CSSELR_MAX 14
+
+/* Which cache CCSIDR represents depends on CSSELR value. */
+static u32 get_ccsidr(u32 csselr)
+{
+	u32 ccsidr;
+
+	/* Make sure noone else changes CSSELR during this! */
+	local_irq_disable();
+	write_sysreg(csselr, csselr_el1);
+	isb();
+	ccsidr = read_sysreg(ccsidr_el1);
+	local_irq_enable();
+
+	return ccsidr;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -346,6 +377,7 @@ static bool trap_raz_wi(struct kvm_vcpu *vcpu,
 		return read_zero(vcpu, p);
 }
 
+<<<<<<< HEAD
 static bool trap_undef(struct kvm_vcpu *vcpu,
 		       struct sys_reg_params *p,
 		       const struct sys_reg_desc *r)
@@ -354,6 +386,8 @@ static bool trap_undef(struct kvm_vcpu *vcpu,
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * ARMv8.1 mandates at least a trivial LORegion implementation, where all the
  * RW registers are RES0 (which we can implement as RAZ/WI). On an ARMv8.0
@@ -464,9 +498,18 @@ static bool trap_debug_regs(struct kvm_vcpu *vcpu,
 			    struct sys_reg_params *p,
 			    const struct sys_reg_desc *r)
 {
+<<<<<<< HEAD
 	access_rw(vcpu, p, r);
 	if (p->is_write)
 		vcpu_set_flag(vcpu, DEBUG_DIRTY);
+=======
+	if (p->is_write) {
+		vcpu_write_sys_reg(vcpu, p->regval, r->reg);
+		vcpu_set_flag(vcpu, DEBUG_DIRTY);
+	} else {
+		p->regval = vcpu_read_sys_reg(vcpu, r->reg);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	trace_trap_reg(__func__, r->reg, p->is_write, p->regval);
 
@@ -730,18 +773,35 @@ static void reset_pmselr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r)
 
 static void reset_pmcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r)
 {
+<<<<<<< HEAD
 	u64 pmcr;
+=======
+	u64 pmcr, val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* No PMU available, PMCR_EL0 may UNDEF... */
 	if (!kvm_arm_support_pmu_v3())
 		return;
 
+<<<<<<< HEAD
 	/* Only preserve PMCR_EL0.N, and reset the rest to 0 */
 	pmcr = read_sysreg(pmcr_el0) & (ARMV8_PMU_PMCR_N_MASK << ARMV8_PMU_PMCR_N_SHIFT);
 	if (!kvm_supports_32bit_el0())
 		pmcr |= ARMV8_PMU_PMCR_LC;
 
 	__vcpu_sys_reg(vcpu, r->reg) = pmcr;
+=======
+	pmcr = read_sysreg(pmcr_el0);
+	/*
+	 * Writable bits of PMCR_EL0 (ARMV8_PMU_PMCR_MASK) are reset to UNKNOWN
+	 * except PMCR.E resetting to zero.
+	 */
+	val = ((pmcr & ~ARMV8_PMU_PMCR_MASK)
+	       | (ARMV8_PMU_PMCR_MASK & 0xdecafbad)) & (~ARMV8_PMU_PMCR_E);
+	if (!kvm_supports_32bit_el0())
+		val |= ARMV8_PMU_PMCR_LC;
+	__vcpu_sys_reg(vcpu, r->reg) = val;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool check_pmu_access_disabled(struct kvm_vcpu *vcpu, u64 flags)
@@ -784,15 +844,23 @@ static bool access_pmcr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
 		return false;
 
 	if (p->is_write) {
+<<<<<<< HEAD
 		/*
 		 * Only update writeable bits of PMCR (continuing into
 		 * kvm_pmu_handle_pmcr() as well)
 		 */
+=======
+		/* Only update writeable bits of PMCR */
+>>>>>>> b7ba80a49124 (Commit)
 		val = __vcpu_sys_reg(vcpu, PMCR_EL0);
 		val &= ~ARMV8_PMU_PMCR_MASK;
 		val |= p->regval & ARMV8_PMU_PMCR_MASK;
 		if (!kvm_supports_32bit_el0())
 			val |= ARMV8_PMU_PMCR_LC;
+<<<<<<< HEAD
+=======
+		__vcpu_sys_reg(vcpu, PMCR_EL0) = val;
+>>>>>>> b7ba80a49124 (Commit)
 		kvm_pmu_handle_pmcr(vcpu, val);
 		kvm_vcpu_pmu_restore_guest(vcpu);
 	} else {
@@ -1140,9 +1208,13 @@ static bool access_arch_timer(struct kvm_vcpu *vcpu,
 		treg = TIMER_REG_CVAL;
 		break;
 	default:
+<<<<<<< HEAD
 		print_sys_reg_msg(p, "%s", "Unhandled trapped timer register");
 		kvm_inject_undefined(vcpu);
 		return false;
+=======
+		BUG();
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (p->is_write)
@@ -1153,6 +1225,7 @@ static bool access_arch_timer(struct kvm_vcpu *vcpu,
 	return true;
 }
 
+<<<<<<< HEAD
 static u8 vcpu_pmuver(const struct kvm_vcpu *vcpu)
 {
 	if (kvm_vcpu_has_pmu(vcpu))
@@ -1187,6 +1260,8 @@ static u8 pmuver_to_perfmon(u8 pmuver)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Read a sanitised cpufeature ID register by sys_reg_desc */
 static u64 read_id_reg(const struct kvm_vcpu *vcpu, struct sys_reg_desc const *r)
 {
@@ -1236,14 +1311,22 @@ static u64 read_id_reg(const struct kvm_vcpu *vcpu, struct sys_reg_desc const *r
 		/* Limit debug to ARMv8.0 */
 		val &= ~ARM64_FEATURE_MASK(ID_AA64DFR0_EL1_DebugVer);
 		val |= FIELD_PREP(ARM64_FEATURE_MASK(ID_AA64DFR0_EL1_DebugVer), 6);
+<<<<<<< HEAD
 		/* Set PMUver to the required version */
 		val &= ~ARM64_FEATURE_MASK(ID_AA64DFR0_EL1_PMUVer);
 		val |= FIELD_PREP(ARM64_FEATURE_MASK(ID_AA64DFR0_EL1_PMUVer),
 				  vcpu_pmuver(vcpu));
+=======
+		/* Limit guests to PMUv3 for ARMv8.4 */
+		val = cpuid_feature_cap_perfmon_field(val,
+						      ID_AA64DFR0_EL1_PMUVer_SHIFT,
+						      kvm_vcpu_has_pmu(vcpu) ? ID_AA64DFR0_EL1_PMUVer_V3P4 : 0);
+>>>>>>> b7ba80a49124 (Commit)
 		/* Hide SPE from guests */
 		val &= ~ARM64_FEATURE_MASK(ID_AA64DFR0_EL1_PMSVer);
 		break;
 	case SYS_ID_DFR0_EL1:
+<<<<<<< HEAD
 		val &= ~ARM64_FEATURE_MASK(ID_DFR0_EL1_PerfMon);
 		val |= FIELD_PREP(ARM64_FEATURE_MASK(ID_DFR0_EL1_PerfMon),
 				  pmuver_to_perfmon(vcpu_pmuver(vcpu)));
@@ -1253,6 +1336,12 @@ static u64 read_id_reg(const struct kvm_vcpu *vcpu, struct sys_reg_desc const *r
 		break;
 	case SYS_ID_MMFR4_EL1:
 		val &= ~ARM64_FEATURE_MASK(ID_MMFR4_EL1_CCIDX);
+=======
+		/* Limit guests to PMUv3 for ARMv8.4 */
+		val = cpuid_feature_cap_perfmon_field(val,
+						      ID_DFR0_PERFMON_SHIFT,
+						      kvm_vcpu_has_pmu(vcpu) ? ID_DFR0_PERFMON_8_4 : 0);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -1304,9 +1393,12 @@ static bool access_id_reg(struct kvm_vcpu *vcpu,
 		return write_to_read_only(vcpu, p, r);
 
 	p->regval = read_id_reg(vcpu, r);
+<<<<<<< HEAD
 	if (vcpu_has_nv(vcpu))
 		access_nested_id_reg(vcpu, p, r);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -1355,6 +1447,7 @@ static int set_id_aa64pfr0_el1(struct kvm_vcpu *vcpu,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int set_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
 			       const struct sys_reg_desc *rd,
 			       u64 val)
@@ -1434,6 +1527,8 @@ static int set_id_dfr0_el1(struct kvm_vcpu *vcpu,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * cpufeature ID register user accessors
  *
@@ -1487,6 +1582,7 @@ static bool access_clidr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
 	if (p->is_write)
 		return write_to_read_only(vcpu, p, r);
 
+<<<<<<< HEAD
 	p->regval = __vcpu_sys_reg(vcpu, r->reg);
 	return true;
 }
@@ -1559,6 +1655,12 @@ static int set_clidr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 	return 0;
 }
 
+=======
+	p->regval = read_sysreg(clidr_el1);
+	return true;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static bool access_csselr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
 			  const struct sys_reg_desc *r)
 {
@@ -1580,10 +1682,29 @@ static bool access_ccsidr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
 		return write_to_read_only(vcpu, p, r);
 
 	csselr = vcpu_read_sys_reg(vcpu, CSSELR_EL1);
+<<<<<<< HEAD
 	csselr &= CSSELR_EL1_Level | CSSELR_EL1_InD;
 	if (csselr < CSSELR_MAX)
 		p->regval = get_ccsidr(vcpu, csselr);
 
+=======
+	p->regval = get_ccsidr(csselr);
+
+	/*
+	 * Guests should not be doing cache operations by set/way at all, and
+	 * for this reason, we trap them and attempt to infer the intent, so
+	 * that we can flush the entire guest's address space at the appropriate
+	 * time.
+	 * To prevent this trapping from causing performance problems, let's
+	 * expose the geometry of all data and unified caches (which are
+	 * guaranteed to be PIPT and thus non-aliasing) as 1 set and 1 way.
+	 * [If guests should attempt to infer aliasing properties from the
+	 * geometry (which is not permitted by the architecture), they would
+	 * only do so for virtually indexed caches.]
+	 */
+	if (!(csselr & 1)) // data or unified cache
+		p->regval &= ~GENMASK(27, 3);
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -1604,6 +1725,7 @@ static unsigned int mte_visibility(const struct kvm_vcpu *vcpu,
 	.visibility = mte_visibility,		\
 }
 
+<<<<<<< HEAD
 static unsigned int el2_visibility(const struct kvm_vcpu *vcpu,
 				   const struct sys_reg_desc *rd)
 {
@@ -1642,6 +1764,8 @@ static unsigned int elx2_visibility(const struct kvm_vcpu *vcpu,
 	.visibility = elx2_visibility,		\
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* sys_reg_desc initialiser for known cpufeature ID registers */
 #define ID_SANITISED(name) {			\
 	SYS_DESC(SYS_##name),			\
@@ -1686,6 +1810,7 @@ static unsigned int elx2_visibility(const struct kvm_vcpu *vcpu,
 	.visibility = raz_visibility,		\
 }
 
+<<<<<<< HEAD
 static bool access_sp_el1(struct kvm_vcpu *vcpu,
 			  struct sys_reg_params *p,
 			  const struct sys_reg_desc *r)
@@ -1722,6 +1847,8 @@ static bool access_spsr(struct kvm_vcpu *vcpu,
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Architected system registers.
  * Important: Must be sorted ascending by Op0, Op1, CRn, CRm, Op2
@@ -1785,9 +1912,13 @@ static const struct sys_reg_desc sys_reg_descs[] = {
 	/* CRm=1 */
 	AA32_ID_SANITISED(ID_PFR0_EL1),
 	AA32_ID_SANITISED(ID_PFR1_EL1),
+<<<<<<< HEAD
 	{ SYS_DESC(SYS_ID_DFR0_EL1), .access = access_id_reg,
 	  .get_user = get_id_reg, .set_user = set_id_dfr0_el1,
 	  .visibility = aa32_id_visibility, },
+=======
+	AA32_ID_SANITISED(ID_DFR0_EL1),
+>>>>>>> b7ba80a49124 (Commit)
 	ID_HIDDEN(ID_AFR0_EL1),
 	AA32_ID_SANITISED(ID_MMFR0_EL1),
 	AA32_ID_SANITISED(ID_MMFR1_EL1),
@@ -1827,8 +1958,12 @@ static const struct sys_reg_desc sys_reg_descs[] = {
 	ID_UNALLOCATED(4,7),
 
 	/* CRm=5 */
+<<<<<<< HEAD
 	{ SYS_DESC(SYS_ID_AA64DFR0_EL1), .access = access_id_reg,
 	  .get_user = get_id_reg, .set_user = set_id_aa64dfr0_el1, },
+=======
+	ID_SANITISED(ID_AA64DFR0_EL1),
+>>>>>>> b7ba80a49124 (Commit)
 	ID_SANITISED(ID_AA64DFR1_EL1),
 	ID_UNALLOCATED(5,2),
 	ID_UNALLOCATED(5,3),
@@ -1878,9 +2013,12 @@ static const struct sys_reg_desc sys_reg_descs[] = {
 	PTRAUTH_KEY(APDB),
 	PTRAUTH_KEY(APGA),
 
+<<<<<<< HEAD
 	{ SYS_DESC(SYS_SPSR_EL1), access_spsr},
 	{ SYS_DESC(SYS_ELR_EL1), access_elr},
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ SYS_DESC(SYS_AFSR0_EL1), access_vm_reg, reset_unknown, AFSR0_EL1 },
 	{ SYS_DESC(SYS_AFSR1_EL1), access_vm_reg, reset_unknown, AFSR1_EL1 },
 	{ SYS_DESC(SYS_ESR_EL1), access_vm_reg, reset_unknown, ESR_EL1 },
@@ -1928,7 +2066,11 @@ static const struct sys_reg_desc sys_reg_descs[] = {
 	{ SYS_DESC(SYS_LORC_EL1), trap_loregion },
 	{ SYS_DESC(SYS_LORID_EL1), trap_loregion },
 
+<<<<<<< HEAD
 	{ SYS_DESC(SYS_VBAR_EL1), access_rw, reset_val, VBAR_EL1, 0 },
+=======
+	{ SYS_DESC(SYS_VBAR_EL1), NULL, reset_val, VBAR_EL1, 0 },
+>>>>>>> b7ba80a49124 (Commit)
 	{ SYS_DESC(SYS_DISR_EL1), NULL, reset_val, DISR_EL1, 0 },
 
 	{ SYS_DESC(SYS_ICC_IAR0_EL1), write_to_read_only },
@@ -1952,9 +2094,13 @@ static const struct sys_reg_desc sys_reg_descs[] = {
 	{ SYS_DESC(SYS_CNTKCTL_EL1), NULL, reset_val, CNTKCTL_EL1, 0},
 
 	{ SYS_DESC(SYS_CCSIDR_EL1), access_ccsidr },
+<<<<<<< HEAD
 	{ SYS_DESC(SYS_CLIDR_EL1), access_clidr, reset_clidr, CLIDR_EL1,
 	  .set_user = set_clidr },
 	{ SYS_DESC(SYS_CCSIDR2_EL1), undef_access },
+=======
+	{ SYS_DESC(SYS_CLIDR_EL1), access_clidr },
+>>>>>>> b7ba80a49124 (Commit)
 	{ SYS_DESC(SYS_SMIDR_EL1), undef_access },
 	{ SYS_DESC(SYS_CSSELR_EL1), access_csselr, reset_unknown, CSSELR_EL1 },
 	{ SYS_DESC(SYS_CTR_EL0), access_ctr },
@@ -2150,6 +2296,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
 	{ PMU_SYS_REG(SYS_PMCCFILTR_EL0), .access = access_pmu_evtyper,
 	  .reset = reset_val, .reg = PMCCFILTR_EL0, .val = 0 },
 
+<<<<<<< HEAD
 	EL2_REG(VPIDR_EL2, access_rw, reset_unknown, 0),
 	EL2_REG(VMPIDR_EL2, access_rw, reset_unknown, 0),
 	EL2_REG(SCTLR_EL2, access_rw, reset_val, SCTLR_EL2_RES1),
@@ -2211,6 +2358,11 @@ static const struct sys_reg_desc sys_reg_descs[] = {
 	EL12_REG(CNTKCTL, access_rw, reset_val, 0),
 
 	EL2_REG(SP_EL2, NULL, reset_unknown, 0),
+=======
+	{ SYS_DESC(SYS_DACR32_EL2), NULL, reset_unknown, DACR32_EL2 },
+	{ SYS_DESC(SYS_IFSR32_EL2), NULL, reset_unknown, IFSR32_EL2 },
+	{ SYS_DESC(SYS_FPEXC32_EL2), NULL, reset_val, FPEXC32_EL2, 0x700 },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static bool trap_dbgdidr(struct kvm_vcpu *vcpu,
@@ -2514,10 +2666,13 @@ static const struct sys_reg_desc cp15_regs[] = {
 
 	{ Op1(1), CRn( 0), CRm( 0), Op2(0), access_ccsidr },
 	{ Op1(1), CRn( 0), CRm( 0), Op2(1), access_clidr },
+<<<<<<< HEAD
 
 	/* CCSIDR2 */
 	{ Op1(1), CRn( 0), CRm( 0),  Op2(2), undef_access },
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ Op1(2), CRn( 0), CRm( 0), Op2(0), access_csselr, NULL, CSSELR_EL1 },
 };
 
@@ -3023,6 +3178,10 @@ id_to_sys_reg_desc(struct kvm_vcpu *vcpu, u64 id,
 
 FUNCTION_INVARIANT(midr_el1)
 FUNCTION_INVARIANT(revidr_el1)
+<<<<<<< HEAD
+=======
+FUNCTION_INVARIANT(clidr_el1)
+>>>>>>> b7ba80a49124 (Commit)
 FUNCTION_INVARIANT(aidr_el1)
 
 static void get_ctr_el0(struct kvm_vcpu *v, const struct sys_reg_desc *r)
@@ -3031,9 +3190,16 @@ static void get_ctr_el0(struct kvm_vcpu *v, const struct sys_reg_desc *r)
 }
 
 /* ->val is filled in by kvm_sys_reg_table_init() */
+<<<<<<< HEAD
 static struct sys_reg_desc invariant_sys_regs[] __ro_after_init = {
 	{ SYS_DESC(SYS_MIDR_EL1), NULL, get_midr_el1 },
 	{ SYS_DESC(SYS_REVIDR_EL1), NULL, get_revidr_el1 },
+=======
+static struct sys_reg_desc invariant_sys_regs[] = {
+	{ SYS_DESC(SYS_MIDR_EL1), NULL, get_midr_el1 },
+	{ SYS_DESC(SYS_REVIDR_EL1), NULL, get_revidr_el1 },
+	{ SYS_DESC(SYS_CLIDR_EL1), NULL, get_clidr_el1 },
+>>>>>>> b7ba80a49124 (Commit)
 	{ SYS_DESC(SYS_AIDR_EL1), NULL, get_aidr_el1 },
 	{ SYS_DESC(SYS_CTR_EL0), NULL, get_ctr_el0 },
 };
@@ -3070,7 +3236,37 @@ static int set_invariant_sys_reg(u64 id, u64 __user *uaddr)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int demux_c15_get(struct kvm_vcpu *vcpu, u64 id, void __user *uaddr)
+=======
+static bool is_valid_cache(u32 val)
+{
+	u32 level, ctype;
+
+	if (val >= CSSELR_MAX)
+		return false;
+
+	/* Bottom bit is Instruction or Data bit.  Next 3 bits are level. */
+	level = (val >> 1);
+	ctype = (cache_levels >> (level * 3)) & 7;
+
+	switch (ctype) {
+	case 0: /* No cache */
+		return false;
+	case 1: /* Instruction cache only */
+		return (val & 1);
+	case 2: /* Data cache only */
+	case 4: /* Unified cache */
+		return !(val & 1);
+	case 3: /* Separate instruction and data caches */
+		return true;
+	default: /* Reserved: we can't know instruction or data. */
+		return false;
+	}
+}
+
+static int demux_c15_get(u64 id, void __user *uaddr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 val;
 	u32 __user *uval = uaddr;
@@ -3086,16 +3282,27 @@ static int demux_c15_get(struct kvm_vcpu *vcpu, u64 id, void __user *uaddr)
 			return -ENOENT;
 		val = (id & KVM_REG_ARM_DEMUX_VAL_MASK)
 			>> KVM_REG_ARM_DEMUX_VAL_SHIFT;
+<<<<<<< HEAD
 		if (val >= CSSELR_MAX)
 			return -ENOENT;
 
 		return put_user(get_ccsidr(vcpu, val), uval);
+=======
+		if (!is_valid_cache(val))
+			return -ENOENT;
+
+		return put_user(get_ccsidr(val), uval);
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -ENOENT;
 	}
 }
 
+<<<<<<< HEAD
 static int demux_c15_set(struct kvm_vcpu *vcpu, u64 id, void __user *uaddr)
+=======
+static int demux_c15_set(u64 id, void __user *uaddr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 val, newval;
 	u32 __user *uval = uaddr;
@@ -3111,13 +3318,24 @@ static int demux_c15_set(struct kvm_vcpu *vcpu, u64 id, void __user *uaddr)
 			return -ENOENT;
 		val = (id & KVM_REG_ARM_DEMUX_VAL_MASK)
 			>> KVM_REG_ARM_DEMUX_VAL_SHIFT;
+<<<<<<< HEAD
 		if (val >= CSSELR_MAX)
+=======
+		if (!is_valid_cache(val))
+>>>>>>> b7ba80a49124 (Commit)
 			return -ENOENT;
 
 		if (get_user(newval, uval))
 			return -EFAULT;
 
+<<<<<<< HEAD
 		return set_ccsidr(vcpu, val, newval);
+=======
+		/* This is also invariant: you can't change it. */
+		if (newval != get_ccsidr(val))
+			return -EINVAL;
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -ENOENT;
 	}
@@ -3132,7 +3350,11 @@ int kvm_sys_reg_get_user(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg,
 	int ret;
 
 	r = id_to_sys_reg_desc(vcpu, reg->id, table, num);
+<<<<<<< HEAD
 	if (!r || sysreg_hidden_user(vcpu, r))
+=======
+	if (!r)
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOENT;
 
 	if (r->get_user) {
@@ -3154,7 +3376,11 @@ int kvm_arm_sys_reg_get_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg
 	int err;
 
 	if ((reg->id & KVM_REG_ARM_COPROC_MASK) == KVM_REG_ARM_DEMUX)
+<<<<<<< HEAD
 		return demux_c15_get(vcpu, reg->id, uaddr);
+=======
+		return demux_c15_get(reg->id, uaddr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = get_invariant_sys_reg(reg->id, uaddr);
 	if (err != -ENOENT)
@@ -3176,7 +3402,11 @@ int kvm_sys_reg_set_user(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg,
 		return -EFAULT;
 
 	r = id_to_sys_reg_desc(vcpu, reg->id, table, num);
+<<<<<<< HEAD
 	if (!r || sysreg_hidden_user(vcpu, r))
+=======
+	if (!r)
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOENT;
 
 	if (sysreg_user_write_ignore(vcpu, r))
@@ -3198,7 +3428,11 @@ int kvm_arm_sys_reg_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg
 	int err;
 
 	if ((reg->id & KVM_REG_ARM_COPROC_MASK) == KVM_REG_ARM_DEMUX)
+<<<<<<< HEAD
 		return demux_c15_set(vcpu, reg->id, uaddr);
+=======
+		return demux_c15_set(reg->id, uaddr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = set_invariant_sys_reg(reg->id, uaddr);
 	if (err != -ENOENT)
@@ -3210,7 +3444,17 @@ int kvm_arm_sys_reg_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg
 
 static unsigned int num_demux_regs(void)
 {
+<<<<<<< HEAD
 	return CSSELR_MAX;
+=======
+	unsigned int i, count = 0;
+
+	for (i = 0; i < CSSELR_MAX; i++)
+		if (is_valid_cache(i))
+			count++;
+
+	return count;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int write_demux_regids(u64 __user *uindices)
@@ -3220,6 +3464,11 @@ static int write_demux_regids(u64 __user *uindices)
 
 	val |= KVM_REG_ARM_DEMUX_ID_CCSIDR;
 	for (i = 0; i < CSSELR_MAX; i++) {
+<<<<<<< HEAD
+=======
+		if (!is_valid_cache(i))
+			continue;
+>>>>>>> b7ba80a49124 (Commit)
 		if (put_user(val | i, uindices))
 			return -EFAULT;
 		uindices++;
@@ -3262,7 +3511,11 @@ static int walk_one_sys_reg(const struct kvm_vcpu *vcpu,
 	if (!(rd->reg || rd->get_user))
 		return 0;
 
+<<<<<<< HEAD
 	if (sysreg_hidden_user(vcpu, rd))
+=======
+	if (sysreg_hidden(vcpu, rd))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	if (!copy_reg_to_user(rd, uind))
@@ -3317,10 +3570,18 @@ int kvm_arm_copy_sys_reg_indices(struct kvm_vcpu *vcpu, u64 __user *uindices)
 	return write_demux_regids(uindices);
 }
 
+<<<<<<< HEAD
 int __init kvm_sys_reg_table_init(void)
 {
 	bool valid = true;
 	unsigned int i;
+=======
+int kvm_sys_reg_table_init(void)
+{
+	bool valid = true;
+	unsigned int i;
+	struct sys_reg_desc clidr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Make sure tables are unique and in order. */
 	valid &= check_sysreg_table(sys_reg_descs, ARRAY_SIZE(sys_reg_descs), false);
@@ -3337,5 +3598,26 @@ int __init kvm_sys_reg_table_init(void)
 	for (i = 0; i < ARRAY_SIZE(invariant_sys_regs); i++)
 		invariant_sys_regs[i].reset(NULL, &invariant_sys_regs[i]);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * CLIDR format is awkward, so clean it up.  See ARM B4.1.20:
+	 *
+	 *   If software reads the Cache Type fields from Ctype1
+	 *   upwards, once it has seen a value of 0b000, no caches
+	 *   exist at further-out levels of the hierarchy. So, for
+	 *   example, if Ctype3 is the first Cache Type field with a
+	 *   value of 0b000, the values of Ctype4 to Ctype7 must be
+	 *   ignored.
+	 */
+	get_clidr_el1(NULL, &clidr); /* Ugly... */
+	cache_levels = clidr.val;
+	for (i = 0; i < 7; i++)
+		if (((cache_levels >> (i*3)) & 7) == 0)
+			break;
+	/* Clear all higher bits. */
+	cache_levels &= (1 << (i*3))-1;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }

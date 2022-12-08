@@ -22,6 +22,7 @@ static inline void ionic_rxq_post(struct ionic_queue *q, bool ring_dbell,
 	ionic_q_post(q, ring_dbell, cb_func, cb_arg);
 }
 
+<<<<<<< HEAD
 bool ionic_txq_poke_doorbell(struct ionic_queue *q)
 {
 	unsigned long now, then, dif;
@@ -83,6 +84,8 @@ bool ionic_rxq_poke_doorbell(struct ionic_queue *q)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct netdev_queue *q_to_ndq(struct ionic_queue *q)
 {
 	return netdev_get_tx_queue(q->lif->netdev, q->index);
@@ -402,6 +405,7 @@ bool ionic_rx_service(struct ionic_cq *cq, struct ionic_cq_info *cq_info)
 	return true;
 }
 
+<<<<<<< HEAD
 static inline void ionic_write_cmb_desc(struct ionic_queue *q,
 					void __iomem *cmb_desc,
 					void *desc)
@@ -410,6 +414,8 @@ static inline void ionic_write_cmb_desc(struct ionic_queue *q,
 		memcpy_toio(cmb_desc, desc, q->desc_size);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void ionic_rx_fill(struct ionic_queue *q)
 {
 	struct net_device *netdev = q->lif->netdev;
@@ -417,11 +423,15 @@ void ionic_rx_fill(struct ionic_queue *q)
 	struct ionic_rxq_sg_desc *sg_desc;
 	struct ionic_rxq_sg_elem *sg_elem;
 	struct ionic_buf_info *buf_info;
+<<<<<<< HEAD
 	unsigned int fill_threshold;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct ionic_rxq_desc *desc;
 	unsigned int remain_len;
 	unsigned int frag_len;
 	unsigned int nfrags;
+<<<<<<< HEAD
 	unsigned int n_fill;
 	unsigned int i, j;
 	unsigned int len;
@@ -436,6 +446,14 @@ void ionic_rx_fill(struct ionic_queue *q)
 	len = netdev->mtu + ETH_HLEN + VLAN_HLEN;
 
 	for (i = n_fill; i; i--) {
+=======
+	unsigned int i, j;
+	unsigned int len;
+
+	len = netdev->mtu + ETH_HLEN + VLAN_HLEN;
+
+	for (i = ionic_q_space_avail(q); i; i--) {
+>>>>>>> b7ba80a49124 (Commit)
 		nfrags = 0;
 		remain_len = len;
 		desc_info = &q->info[q->head_idx];
@@ -488,19 +506,25 @@ void ionic_rx_fill(struct ionic_queue *q)
 					      IONIC_RXQ_DESC_OPCODE_SIMPLE;
 		desc_info->nbufs = nfrags;
 
+<<<<<<< HEAD
 		ionic_write_cmb_desc(q, desc_info->cmb_desc, desc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ionic_rxq_post(q, false, ionic_rx_clean, NULL);
 	}
 
 	ionic_dbell_ring(q->lif->kern_dbpage, q->hw_type,
 			 q->dbval | q->head_idx);
+<<<<<<< HEAD
 
 	q->dbell_deadline = IONIC_RX_MIN_DOORBELL_DEADLINE;
 	q->dbell_jiffies = jiffies;
 
 	mod_timer(&q_to_qcq(q)->napi_qcq->napi_deadline,
 		  jiffies + IONIC_NAPI_DEADLINE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void ionic_rx_empty(struct ionic_queue *q)
@@ -588,9 +612,12 @@ int ionic_tx_napi(struct napi_struct *napi, int budget)
 				   work_done, flags);
 	}
 
+<<<<<<< HEAD
 	if (!work_done && ionic_txq_poke_doorbell(&qcq->q))
 		mod_timer(&qcq->napi_deadline, jiffies + IONIC_NAPI_DEADLINE);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return work_done;
 }
 
@@ -600,6 +627,10 @@ int ionic_rx_napi(struct napi_struct *napi, int budget)
 	struct ionic_cq *cq = napi_to_cq(napi);
 	struct ionic_dev *idev;
 	struct ionic_lif *lif;
+<<<<<<< HEAD
+=======
+	u16 rx_fill_threshold;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 work_done = 0;
 	u32 flags = 0;
 
@@ -609,7 +640,14 @@ int ionic_rx_napi(struct napi_struct *napi, int budget)
 	work_done = ionic_cq_service(cq, budget,
 				     ionic_rx_service, NULL, NULL);
 
+<<<<<<< HEAD
 	ionic_rx_fill(cq->bound_q);
+=======
+	rx_fill_threshold = min_t(u16, IONIC_RX_FILL_THRESHOLD,
+				  cq->num_descs / IONIC_RX_FILL_DIV);
+	if (work_done && ionic_q_space_avail(cq->bound_q) >= rx_fill_threshold)
+		ionic_rx_fill(cq->bound_q);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (work_done < budget && napi_complete_done(napi, work_done)) {
 		ionic_dim_update(qcq, IONIC_LIF_F_RX_DIM_INTR);
@@ -624,14 +662,18 @@ int ionic_rx_napi(struct napi_struct *napi, int budget)
 				   work_done, flags);
 	}
 
+<<<<<<< HEAD
 	if (!work_done && ionic_rxq_poke_doorbell(&qcq->q))
 		mod_timer(&qcq->napi_deadline, jiffies + IONIC_NAPI_DEADLINE);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return work_done;
 }
 
 int ionic_txrx_napi(struct napi_struct *napi, int budget)
 {
+<<<<<<< HEAD
 	struct ionic_qcq *rxqcq = napi_to_qcq(napi);
 	struct ionic_cq *rxcq = napi_to_cq(napi);
 	unsigned int qi = rxcq->bound_q->index;
@@ -640,13 +682,25 @@ int ionic_txrx_napi(struct napi_struct *napi, int budget)
 	struct ionic_lif *lif;
 	struct ionic_cq *txcq;
 	bool resched = false;
+=======
+	struct ionic_qcq *qcq = napi_to_qcq(napi);
+	struct ionic_cq *rxcq = napi_to_cq(napi);
+	unsigned int qi = rxcq->bound_q->index;
+	struct ionic_dev *idev;
+	struct ionic_lif *lif;
+	struct ionic_cq *txcq;
+	u16 rx_fill_threshold;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 rx_work_done = 0;
 	u32 tx_work_done = 0;
 	u32 flags = 0;
 
 	lif = rxcq->bound_q->lif;
 	idev = &lif->ionic->idev;
+<<<<<<< HEAD
 	txqcq = lif->txqcqs[qi];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	txcq = &lif->txqcqs[qi]->cq;
 
 	tx_work_done = ionic_cq_service(txcq, IONIC_TX_BUDGET_DEFAULT,
@@ -655,10 +709,20 @@ int ionic_txrx_napi(struct napi_struct *napi, int budget)
 	rx_work_done = ionic_cq_service(rxcq, budget,
 					ionic_rx_service, NULL, NULL);
 
+<<<<<<< HEAD
 	ionic_rx_fill(rxcq->bound_q);
 
 	if (rx_work_done < budget && napi_complete_done(napi, rx_work_done)) {
 		ionic_dim_update(rxqcq, 0);
+=======
+	rx_fill_threshold = min_t(u16, IONIC_RX_FILL_THRESHOLD,
+				  rxcq->num_descs / IONIC_RX_FILL_DIV);
+	if (rx_work_done && ionic_q_space_avail(rxcq->bound_q) >= rx_fill_threshold)
+		ionic_rx_fill(rxcq->bound_q);
+
+	if (rx_work_done < budget && napi_complete_done(napi, rx_work_done)) {
+		ionic_dim_update(qcq, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		flags |= IONIC_INTR_CRED_UNMASK;
 		rxcq->bound_intr->rearm_count++;
 	}
@@ -669,6 +733,7 @@ int ionic_txrx_napi(struct napi_struct *napi, int budget)
 				   tx_work_done + rx_work_done, flags);
 	}
 
+<<<<<<< HEAD
 	if (!rx_work_done && ionic_rxq_poke_doorbell(&rxqcq->q))
 		resched = true;
 	if (!tx_work_done && ionic_txq_poke_doorbell(&txqcq->q))
@@ -676,6 +741,8 @@ int ionic_txrx_napi(struct napi_struct *napi, int budget)
 	if (resched)
 		mod_timer(&rxqcq->napi_deadline, jiffies + IONIC_NAPI_DEADLINE);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return rx_work_done;
 }
 
@@ -953,8 +1020,12 @@ static int ionic_tx_tcp_pseudo_csum(struct sk_buff *skb)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void ionic_tx_tso_post(struct ionic_queue *q,
 			      struct ionic_desc_info *desc_info,
+=======
+static void ionic_tx_tso_post(struct ionic_queue *q, struct ionic_txq_desc *desc,
+>>>>>>> b7ba80a49124 (Commit)
 			      struct sk_buff *skb,
 			      dma_addr_t addr, u8 nsge, u16 len,
 			      unsigned int hdrlen, unsigned int mss,
@@ -962,7 +1033,10 @@ static void ionic_tx_tso_post(struct ionic_queue *q,
 			      u16 vlan_tci, bool has_vlan,
 			      bool start, bool done)
 {
+<<<<<<< HEAD
 	struct ionic_txq_desc *desc = desc_info->desc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8 flags = 0;
 	u64 cmd;
 
@@ -978,8 +1052,11 @@ static void ionic_tx_tso_post(struct ionic_queue *q,
 	desc->hdr_len = cpu_to_le16(hdrlen);
 	desc->mss = cpu_to_le16(mss);
 
+<<<<<<< HEAD
 	ionic_write_cmb_desc(q, desc_info->cmb_desc, desc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (start) {
 		skb_tx_timestamp(skb);
 		if (!unlikely(q->features & IONIC_TXQ_F_HWSTAMP))
@@ -1023,12 +1100,17 @@ static int ionic_tx_tso(struct ionic_queue *q, struct sk_buff *skb)
 
 	len = skb->len;
 	mss = skb_shinfo(skb)->gso_size;
+<<<<<<< HEAD
 	outer_csum = (skb_shinfo(skb)->gso_type & (SKB_GSO_GRE |
 						   SKB_GSO_GRE_CSUM |
 						   SKB_GSO_IPXIP4 |
 						   SKB_GSO_IPXIP6 |
 						   SKB_GSO_UDP_TUNNEL |
 						   SKB_GSO_UDP_TUNNEL_CSUM));
+=======
+	outer_csum = (skb_shinfo(skb)->gso_type & SKB_GSO_GRE_CSUM) ||
+		     (skb_shinfo(skb)->gso_type & SKB_GSO_UDP_TUNNEL_CSUM);
+>>>>>>> b7ba80a49124 (Commit)
 	has_vlan = !!skb_vlan_tag_present(skb);
 	vlan_tci = skb_vlan_tag_get(skb);
 	encap = skb->encapsulation;
@@ -1098,7 +1180,11 @@ static int ionic_tx_tso(struct ionic_queue *q, struct sk_buff *skb)
 		seg_rem = min(tso_rem, mss);
 		done = (tso_rem == 0);
 		/* post descriptor */
+<<<<<<< HEAD
 		ionic_tx_tso_post(q, desc_info, skb,
+=======
+		ionic_tx_tso_post(q, desc, skb,
+>>>>>>> b7ba80a49124 (Commit)
 				  desc_addr, desc_nsge, desc_len,
 				  hdrlen, mss, outer_csum, vlan_tci, has_vlan,
 				  start, done);
@@ -1147,8 +1233,11 @@ static void ionic_tx_calc_csum(struct ionic_queue *q, struct sk_buff *skb,
 	desc->csum_start = cpu_to_le16(skb_checksum_start_offset(skb));
 	desc->csum_offset = cpu_to_le16(skb->csum_offset);
 
+<<<<<<< HEAD
 	ionic_write_cmb_desc(q, desc_info->cmb_desc, desc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (skb_csum_is_sctp(skb))
 		stats->crc32_csum++;
 	else
@@ -1186,8 +1275,11 @@ static void ionic_tx_calc_no_csum(struct ionic_queue *q, struct sk_buff *skb,
 	desc->csum_start = 0;
 	desc->csum_offset = 0;
 
+<<<<<<< HEAD
 	ionic_write_cmb_desc(q, desc_info->cmb_desc, desc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	stats->csum_none++;
 }
 

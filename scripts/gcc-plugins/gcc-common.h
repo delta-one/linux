@@ -71,9 +71,13 @@
 #include "varasm.h"
 #include "stor-layout.h"
 #include "internal-fn.h"
+<<<<<<< HEAD
 #include "gimple.h"
 #include "gimple-expr.h"
 #include "gimple-iterator.h"
+=======
+#include "gimple-expr.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "gimple-fold.h"
 #include "context.h"
 #include "tree-ssa-alias.h"
@@ -87,8 +91,15 @@
 #include "tree-eh.h"
 #include "stmt.h"
 #include "gimplify.h"
+<<<<<<< HEAD
 #include "tree-phinodes.h"
 #include "tree-cfg.h"
+=======
+#include "gimple.h"
+#include "tree-phinodes.h"
+#include "tree-cfg.h"
+#include "gimple-iterator.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "gimple-ssa.h"
 #include "ssa-iterators.h"
 

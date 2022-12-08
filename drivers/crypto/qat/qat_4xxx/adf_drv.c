@@ -9,18 +9,25 @@
 #include <adf_common_drv.h>
 
 #include "adf_4xxx_hw_data.h"
+<<<<<<< HEAD
 #include "qat_compression.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "qat_crypto.h"
 #include "adf_transport_access_macros.h"
 
 static const struct pci_device_id adf_pci_tbl[] = {
 	{ PCI_VDEVICE(INTEL, ADF_4XXX_PCI_DEVICE_ID), },
 	{ PCI_VDEVICE(INTEL, ADF_401XX_PCI_DEVICE_ID), },
+<<<<<<< HEAD
 	{ PCI_VDEVICE(INTEL, ADF_402XX_PCI_DEVICE_ID), },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
 
+<<<<<<< HEAD
 enum configs {
 	DEV_CFG_CY = 0,
 	DEV_CFG_DC,
@@ -31,6 +38,8 @@ static const char * const services_operations[] = {
 	ADF_CFG_DC,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void adf_cleanup_accel(struct adf_accel_dev *accel_dev)
 {
 	if (accel_dev->hw_device) {
@@ -65,7 +74,11 @@ static int adf_cfg_dev_init(struct adf_accel_dev *accel_dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int adf_crypto_dev_config(struct adf_accel_dev *accel_dev)
+=======
+int adf_crypto_dev_config(struct adf_accel_dev *accel_dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	char key[ADF_CFG_MAX_KEY_LEN_IN_BYTES];
 	int banks = GET_MAX_BANKS(accel_dev);
@@ -80,6 +93,17 @@ static int adf_crypto_dev_config(struct adf_accel_dev *accel_dev)
 	else
 		instances = 0;
 
+<<<<<<< HEAD
+=======
+	ret = adf_cfg_section_add(accel_dev, ADF_KERNEL_SEC);
+	if (ret)
+		goto err;
+
+	ret = adf_cfg_section_add(accel_dev, "Accelerator0");
+	if (ret)
+		goto err;
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < instances; i++) {
 		val = i;
 		bank = i * 2;
@@ -159,6 +183,7 @@ static int adf_crypto_dev_config(struct adf_accel_dev *accel_dev)
 	if (ret)
 		goto err;
 
+<<<<<<< HEAD
 	val = 0;
 	ret = adf_cfg_add_key_value_param(accel_dev, ADF_KERNEL_SEC, ADF_NUM_DC,
 					  &val, ADF_DEC);
@@ -281,6 +306,12 @@ int adf_gen4_dev_config(struct adf_accel_dev *accel_dev)
 
 err:
 	dev_err(&GET_DEV(accel_dev), "Failed to configure QAT driver\n");
+=======
+	set_bit(ADF_STATUS_CONFIGURED, &accel_dev->status);
+	return 0;
+err:
+	dev_err(&GET_DEV(accel_dev), "Failed to start QAT accel dev\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -331,7 +362,11 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	}
 
 	accel_dev->hw_device = hw_data;
+<<<<<<< HEAD
 	adf_init_hw_data_4xxx(accel_dev->hw_device, ent->device);
+=======
+	adf_init_hw_data_4xxx(accel_dev->hw_device);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pci_read_config_byte(pdev, PCI_REVISION_ID, &accel_pci_dev->revid);
 	pci_read_config_dword(pdev, ADF_4XXX_FUSECTL4_OFFSET, &hw_data->fuses);
@@ -383,7 +418,10 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	hw_data->accel_capabilities_mask = hw_data->get_accel_cap(accel_dev);
 	if (!hw_data->accel_capabilities_mask) {
 		dev_err(&pdev->dev, "Failed to get capabilities mask.\n");
+<<<<<<< HEAD
 		ret = -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_err;
 	}
 
@@ -404,6 +442,7 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 
 	pci_set_master(pdev);
 
+<<<<<<< HEAD
 	if (pci_save_state(pdev)) {
 		dev_err(&pdev->dev, "Failed to save pci state.\n");
 		ret = -ENOMEM;
@@ -416,12 +455,44 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 
 	ret = adf_sysfs_init(accel_dev);
 	if (ret)
+=======
+	adf_enable_aer(accel_dev);
+
+	if (pci_save_state(pdev)) {
+		dev_err(&pdev->dev, "Failed to save pci state.\n");
+		ret = -ENOMEM;
+		goto out_err_disable_aer;
+	}
+
+	ret = adf_sysfs_init(accel_dev);
+	if (ret)
+		goto out_err_disable_aer;
+
+	ret = adf_crypto_dev_config(accel_dev);
+	if (ret)
+		goto out_err_disable_aer;
+
+	ret = adf_dev_init(accel_dev);
+	if (ret)
+		goto out_err_dev_shutdown;
+
+	ret = adf_dev_start(accel_dev);
+	if (ret)
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_err_dev_stop;
 
 	return ret;
 
 out_err_dev_stop:
+<<<<<<< HEAD
 	adf_dev_down(accel_dev, false);
+=======
+	adf_dev_stop(accel_dev);
+out_err_dev_shutdown:
+	adf_dev_shutdown(accel_dev);
+out_err_disable_aer:
+	adf_disable_aer(accel_dev);
+>>>>>>> b7ba80a49124 (Commit)
 out_err:
 	adf_cleanup_accel(accel_dev);
 	return ret;
@@ -435,7 +506,13 @@ static void adf_remove(struct pci_dev *pdev)
 		pr_err("QAT: Driver removal failed\n");
 		return;
 	}
+<<<<<<< HEAD
 	adf_dev_down(accel_dev, false);
+=======
+	adf_dev_stop(accel_dev);
+	adf_dev_shutdown(accel_dev);
+	adf_disable_aer(accel_dev);
+>>>>>>> b7ba80a49124 (Commit)
 	adf_cleanup_accel(accel_dev);
 }
 

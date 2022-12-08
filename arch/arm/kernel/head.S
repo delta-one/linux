@@ -344,7 +344,11 @@ __create_page_tables:
 	ldr	r7, [r10, #PROCINFO_IO_MMUFLAGS] @ io_mmuflags
 #endif
 
+<<<<<<< HEAD
 #if defined(CONFIG_ARCH_NETWINDER)
+=======
+#if defined(CONFIG_ARCH_NETWINDER) || defined(CONFIG_ARCH_CATS)
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * If we're using the NetWinder or CATS, we also need to map
 	 * in the 16550-type serial port for the debug messages

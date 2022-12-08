@@ -201,9 +201,15 @@ static const struct of_device_id atlas_ezo_dt_ids[] = {
 };
 MODULE_DEVICE_TABLE(of, atlas_ezo_dt_ids);
 
+<<<<<<< HEAD
 static int atlas_ezo_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int atlas_ezo_probe(struct i2c_client *client,
+		       const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	const struct atlas_ezo_device *chip;
 	struct atlas_ezo_data *data;
 	struct iio_dev *indio_dev;
@@ -238,7 +244,11 @@ static struct i2c_driver atlas_ezo_driver = {
 		.name	= ATLAS_EZO_DRV_NAME,
 		.of_match_table	= atlas_ezo_dt_ids,
 	},
+<<<<<<< HEAD
 	.probe_new	= atlas_ezo_probe,
+=======
+	.probe		= atlas_ezo_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= atlas_ezo_id,
 };
 module_i2c_driver(atlas_ezo_driver);

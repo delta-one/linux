@@ -38,7 +38,11 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
 		}
 
 		if (atomic_read(&mm->mm_count) > 1 ||
+<<<<<<< HEAD
 		    is_nommu_shared_mapping(vma->vm_flags)) {
+=======
+		    vma->vm_flags & VM_MAYSHARE) {
+>>>>>>> b7ba80a49124 (Commit)
 			sbytes += size;
 		} else {
 			bytes += size;

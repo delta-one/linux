@@ -93,7 +93,12 @@ void kvmppc_xive_native_cleanup_vcpu(struct kvm_vcpu *vcpu)
 		/* Free the escalation irq */
 		if (xc->esc_virq[i]) {
 			if (kvmppc_xive_has_single_escalation(xc->xive))
+<<<<<<< HEAD
 				xive_cleanup_single_escalation(vcpu, xc->esc_virq[i]);
+=======
+				xive_cleanup_single_escalation(vcpu, xc,
+							xc->esc_virq[i]);
+>>>>>>> b7ba80a49124 (Commit)
 			free_irq(xc->esc_virq[i], vcpu);
 			irq_dispose_mapping(xc->esc_virq[i]);
 			kfree(xc->esc_virq_names[i]);
@@ -324,7 +329,11 @@ static int kvmppc_xive_native_mmap(struct kvm_device *dev,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_IO | VM_PFNMAP);
+=======
+	vma->vm_flags |= VM_IO | VM_PFNMAP;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_page_prot = pgprot_noncached_wc(vma->vm_page_prot);
 
 	/*

@@ -21,7 +21,15 @@ static void is_signed_type_test(struct kunit *test)
 	KUNIT_EXPECT_EQ(test, is_signed_type(bool), false);
 	KUNIT_EXPECT_EQ(test, is_signed_type(signed char), true);
 	KUNIT_EXPECT_EQ(test, is_signed_type(unsigned char), false);
+<<<<<<< HEAD
 	KUNIT_EXPECT_EQ(test, is_signed_type(char), false);
+=======
+#ifdef __CHAR_UNSIGNED__
+	KUNIT_EXPECT_EQ(test, is_signed_type(char), false);
+#else
+	KUNIT_EXPECT_EQ(test, is_signed_type(char), true);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	KUNIT_EXPECT_EQ(test, is_signed_type(int), true);
 	KUNIT_EXPECT_EQ(test, is_signed_type(unsigned int), false);
 	KUNIT_EXPECT_EQ(test, is_signed_type(long), true);

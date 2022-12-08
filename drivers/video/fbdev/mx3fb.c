@@ -283,7 +283,16 @@ static int mx3fb_bl_get_brightness(struct backlight_device *bl)
 static int mx3fb_bl_update_status(struct backlight_device *bl)
 {
 	struct mx3fb_data *fbd = bl_get_data(bl);
+<<<<<<< HEAD
 	int brightness = backlight_get_brightness(bl);
+=======
+	int brightness = bl->props.brightness;
+
+	if (bl->props.power != FB_BLANK_UNBLANK)
+		brightness = 0;
+	if (bl->props.fb_blank != FB_BLANK_UNBLANK)
+		brightness = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	fbd->backlight_level = (fbd->backlight_level & ~0xFF) | brightness;
 
@@ -1616,7 +1625,11 @@ eremap:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void mx3fb_remove(struct platform_device *dev)
+=======
+static int mx3fb_remove(struct platform_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mx3fb_data *mx3fb = platform_get_drvdata(dev);
 	struct fb_info *fbi = mx3fb->fbi;
@@ -1632,6 +1645,10 @@ static void mx3fb_remove(struct platform_device *dev)
 	dmaengine_put();
 
 	iounmap(mx3fb->reg_base);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver mx3fb_driver = {
@@ -1639,7 +1656,11 @@ static struct platform_driver mx3fb_driver = {
 		.name = MX3FB_NAME,
 	},
 	.probe = mx3fb_probe,
+<<<<<<< HEAD
 	.remove_new = mx3fb_remove,
+=======
+	.remove = mx3fb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.suspend = mx3fb_suspend,
 	.resume = mx3fb_resume,
 };

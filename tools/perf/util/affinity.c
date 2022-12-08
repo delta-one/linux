@@ -58,14 +58,22 @@ void affinity__set(struct affinity *a, int cpu)
 		return;
 
 	a->changed = true;
+<<<<<<< HEAD
 	__set_bit(cpu, a->sched_cpus);
+=======
+	set_bit(cpu, a->sched_cpus);
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * We ignore errors because affinity is just an optimization.
 	 * This could happen for example with isolated CPUs or cpusets.
 	 * In this case the IPIs inside the kernel's perf API still work.
 	 */
 	sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->sched_cpus);
+<<<<<<< HEAD
 	__clear_bit(cpu, a->sched_cpus);
+=======
+	clear_bit(cpu, a->sched_cpus);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __affinity__cleanup(struct affinity *a)

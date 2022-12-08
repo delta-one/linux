@@ -464,6 +464,11 @@ void rvt_qp_exit(struct rvt_dev_info *rdi)
 	if (qps_inuse)
 		rvt_pr_err(rdi, "QP memory leak! %u still in use\n",
 			   qps_inuse);
+<<<<<<< HEAD
+=======
+	if (!rdi->qp_dev)
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(rdi->qp_dev->qp_table);
 	free_qpn_table(&rdi->qp_dev->qpn_table);
@@ -2038,7 +2043,11 @@ static int rvt_post_one_wr(struct rvt_qp *qp,
 	wqe = rvt_get_swqe_ptr(qp, qp->s_head);
 
 	/* cplen has length from above */
+<<<<<<< HEAD
 	memcpy(&wqe->ud_wr, wr, cplen);
+=======
+	memcpy(&wqe->wr, wr, cplen);
+>>>>>>> b7ba80a49124 (Commit)
 
 	wqe->length = 0;
 	j = 0;

@@ -57,11 +57,16 @@ properties:
       - items:
           - enum:
               - brcm,bcm3384-switch
+<<<<<<< HEAD
               - brcm,bcm6318-switch
               - brcm,bcm6328-switch
               - brcm,bcm6362-switch
               - brcm,bcm6368-switch
               - brcm,bcm63268-switch
+=======
+              - brcm,bcm6328-switch
+              - brcm,bcm6368-switch
+>>>>>>> b7ba80a49124 (Commit)
           - const: brcm,bcm63xx-switch
 
 required:
@@ -69,7 +74,11 @@ required:
   - reg
 
 allOf:
+<<<<<<< HEAD
   - $ref: dsa.yaml#/$defs/ethernet-ports
+=======
+  - $ref: dsa.yaml#
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:

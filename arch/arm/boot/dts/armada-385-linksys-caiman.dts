@@ -62,11 +62,19 @@
 };
 
 &gpio_leds {
+<<<<<<< HEAD
 	led-power {
 		label = "caiman:white:power";
 	};
 
 	led-sata {
+=======
+	power {
+		label = "caiman:white:power";
+	};
+
+	sata {
+>>>>>>> b7ba80a49124 (Commit)
 		label = "caiman:white:sata";
 	};
 };

@@ -10,7 +10,10 @@
 #include <errno.h>
 #include <linux/landlock.h>
 #include <sys/capability.h>
+<<<<<<< HEAD
 #include <sys/socket.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -18,10 +21,13 @@
 
 #include "../kselftest_harness.h"
 
+<<<<<<< HEAD
 #ifndef __maybe_unused
 #define __maybe_unused __attribute__((__unused__))
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * TEST_F_FORK() is useful when a test drop privileges but the corresponding
  * FIXTURE_TEARDOWN() requires them (e.g. to remove files from a directory
@@ -145,12 +151,22 @@ static void _init_caps(struct __test_metadata *const _metadata, bool drop_all)
 }
 
 /* We cannot put such helpers in a library because of kselftest_harness.h . */
+<<<<<<< HEAD
 static void __maybe_unused disable_caps(struct __test_metadata *const _metadata)
+=======
+__attribute__((__unused__)) static void
+disable_caps(struct __test_metadata *const _metadata)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	_init_caps(_metadata, false);
 }
 
+<<<<<<< HEAD
 static void __maybe_unused drop_caps(struct __test_metadata *const _metadata)
+=======
+__attribute__((__unused__)) static void
+drop_caps(struct __test_metadata *const _metadata)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	_init_caps(_metadata, true);
 }
@@ -179,12 +195,18 @@ static void _effective_cap(struct __test_metadata *const _metadata,
 	}
 }
 
+<<<<<<< HEAD
 static void __maybe_unused set_cap(struct __test_metadata *const _metadata,
 				   const cap_value_t caps)
+=======
+__attribute__((__unused__)) static void
+set_cap(struct __test_metadata *const _metadata, const cap_value_t caps)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	_effective_cap(_metadata, caps, CAP_SET);
 }
 
+<<<<<<< HEAD
 static void __maybe_unused clear_cap(struct __test_metadata *const _metadata,
 				     const cap_value_t caps)
 {
@@ -256,3 +278,10 @@ static int __maybe_unused send_fd(int usock, int fd_tx)
 		return -errno;
 	return 0;
 }
+=======
+__attribute__((__unused__)) static void
+clear_cap(struct __test_metadata *const _metadata, const cap_value_t caps)
+{
+	_effective_cap(_metadata, caps, CAP_CLEAR);
+}
+>>>>>>> b7ba80a49124 (Commit)

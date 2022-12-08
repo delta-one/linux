@@ -1166,7 +1166,11 @@ static ssize_t sm501fb_crtsrc_show(struct device *dev,
 	ctrl = smc501_readl(info->regs + SM501_DC_CRT_CONTROL);
 	ctrl &= SM501_DC_CRT_CONTROL_SEL;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", ctrl ? "crt" : "panel");
+=======
+	return snprintf(buf, PAGE_SIZE, "%s\n", ctrl ? "crt" : "panel");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* sm501fb_crtsrc_show
@@ -1737,10 +1741,17 @@ static int sm501fb_init_fb(struct fb_info *fb, enum sm501_controller head,
 
 #if defined(CONFIG_OF)
 #ifdef __BIG_ENDIAN
+<<<<<<< HEAD
 	if (of_property_read_bool(info->dev->parent->of_node, "little-endian"))
 		fb->flags |= FBINFO_FOREIGN_ENDIAN;
 #else
 	if (of_property_read_bool(info->dev->parent->of_node, "big-endian"))
+=======
+	if (of_get_property(info->dev->parent->of_node, "little-endian", NULL))
+		fb->flags |= FBINFO_FOREIGN_ENDIAN;
+#else
+	if (of_get_property(info->dev->parent->of_node, "big-endian", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		fb->flags |= FBINFO_FOREIGN_ENDIAN;
 #endif
 #endif
@@ -2045,7 +2056,11 @@ err_alloc:
 /*
  *  Cleanup
  */
+<<<<<<< HEAD
 static void sm501fb_remove(struct platform_device *pdev)
+=======
+static int sm501fb_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sm501fb_info *info = platform_get_drvdata(pdev);
 	struct fb_info	   *fbinfo_crt = info->fb[0];
@@ -2064,6 +2079,11 @@ static void sm501fb_remove(struct platform_device *pdev)
 
 	framebuffer_release(fbinfo_pnl);
 	framebuffer_release(fbinfo_crt);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM
@@ -2207,7 +2227,11 @@ static int sm501fb_resume(struct platform_device *pdev)
 
 static struct platform_driver sm501fb_driver = {
 	.probe		= sm501fb_probe,
+<<<<<<< HEAD
 	.remove_new	= sm501fb_remove,
+=======
+	.remove		= sm501fb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.suspend	= sm501fb_suspend,
 	.resume		= sm501fb_resume,
 	.driver		= {

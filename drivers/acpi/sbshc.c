@@ -30,7 +30,11 @@ struct acpi_smb_hc {
 };
 
 static int acpi_smbus_hc_add(struct acpi_device *device);
+<<<<<<< HEAD
 static void acpi_smbus_hc_remove(struct acpi_device *device);
+=======
+static int acpi_smbus_hc_remove(struct acpi_device *device);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct acpi_device_id sbs_device_ids[] = {
 	{"ACPI0001", 0},
@@ -280,18 +284,30 @@ static int acpi_smbus_hc_add(struct acpi_device *device)
 
 extern void acpi_ec_remove_query_handler(struct acpi_ec *ec, u8 query_bit);
 
+<<<<<<< HEAD
 static void acpi_smbus_hc_remove(struct acpi_device *device)
+=======
+static int acpi_smbus_hc_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct acpi_smb_hc *hc;
 
 	if (!device)
+<<<<<<< HEAD
 		return;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	hc = acpi_driver_data(device);
 	acpi_ec_remove_query_handler(hc->ec, hc->query_bit);
 	acpi_os_wait_events_complete();
 	kfree(hc);
 	device->driver_data = NULL;
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 module_acpi_driver(acpi_smb_hc_driver);

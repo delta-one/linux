@@ -406,7 +406,12 @@ static struct stv6110x_devctl *stv6110x_get_devctl(struct i2c_client *client)
 	return stv6110x->devctl;
 }
 
+<<<<<<< HEAD
 static int stv6110x_probe(struct i2c_client *client)
+=======
+static int stv6110x_probe(struct i2c_client *client,
+			  const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct stv6110x_config *config = client->dev.platform_data;
 
@@ -480,7 +485,11 @@ static struct i2c_driver stv6110x_driver = {
 		.name	= "stv6110x",
 		.suppress_bind_attrs = true,
 	},
+<<<<<<< HEAD
 	.probe_new	= stv6110x_probe,
+=======
+	.probe		= stv6110x_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= stv6110x_remove,
 	.id_table	= stv6110x_id_table,
 };

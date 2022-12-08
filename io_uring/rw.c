@@ -234,11 +234,15 @@ static void kiocb_end_write(struct io_kiocb *req)
 	}
 }
 
+<<<<<<< HEAD
 /*
  * Trigger the notifications after having done some IO, and finish the write
  * accounting, if any.
  */
 static void io_req_io_end(struct io_kiocb *req)
+=======
+static bool __io_complete_rw_common(struct io_kiocb *req, long res)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct io_rw *rw = io_kiocb_to_cmd(req, struct io_rw);
 
@@ -248,6 +252,7 @@ static void io_req_io_end(struct io_kiocb *req)
 	} else {
 		fsnotify_access(req->file);
 	}
+<<<<<<< HEAD
 }
 
 static bool __io_complete_rw_common(struct io_kiocb *req, long res)
@@ -260,6 +265,11 @@ static bool __io_complete_rw_common(struct io_kiocb *req, long res)
 			 * current cycle.
 			 */
 			io_req_io_end(req);
+=======
+	if (unlikely(res != req->cqe.res)) {
+		if ((res == -EAGAIN || res == -EOPNOTSUPP) &&
+		    io_rw_should_reissue(req)) {
+>>>>>>> b7ba80a49124 (Commit)
 			req->flags |= REQ_F_REISSUE | REQ_F_PARTIAL_IO;
 			return true;
 		}
@@ -283,6 +293,7 @@ static inline int io_fixup_rw_res(struct io_kiocb *req, long res)
 	return res;
 }
 
+<<<<<<< HEAD
 static void io_req_rw_complete(struct io_kiocb *req, bool *locked)
 {
 	io_req_io_end(req);
@@ -295,6 +306,8 @@ static void io_req_rw_complete(struct io_kiocb *req, bool *locked)
 	io_req_task_complete(req, locked);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void io_complete_rw(struct kiocb *kiocb, long res)
 {
 	struct io_rw *rw = container_of(kiocb, struct io_rw, kiocb);
@@ -303,7 +316,11 @@ static void io_complete_rw(struct kiocb *kiocb, long res)
 	if (__io_complete_rw_common(req, res))
 		return;
 	io_req_set_res(req, io_fixup_rw_res(req, res), 0);
+<<<<<<< HEAD
 	req->io_task_work.func = io_req_rw_complete;
+=======
+	req->io_task_work.func = io_req_task_complete;
+>>>>>>> b7ba80a49124 (Commit)
 	io_req_task_work_add(req);
 }
 
@@ -336,11 +353,14 @@ static int kiocb_done(struct io_kiocb *req, ssize_t ret,
 		req->file->f_pos = rw->kiocb.ki_pos;
 	if (ret >= 0 && (rw->kiocb.ki_complete == io_complete_rw)) {
 		if (!__io_complete_rw_common(req, ret)) {
+<<<<<<< HEAD
 			/*
 			 * Safe to call io_end from here as we're inline
 			 * from the submission path.
 			 */
 			io_req_io_end(req);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			io_req_set_res(req, final_ret,
 				       io_put_kbuf(req, issue_flags));
 			return IOU_OK;
@@ -391,7 +411,11 @@ static struct iovec *__io_import_iovec(int ddir, struct io_kiocb *req,
 			rw->len = sqe_len;
 		}
 
+<<<<<<< HEAD
 		ret = import_ubuf(ddir, buf, sqe_len, iter);
+=======
+		ret = import_single_range(ddir, buf, sqe_len, s->fast_iov, iter);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			return ERR_PTR(ret);
 		return NULL;
@@ -410,7 +434,11 @@ static inline int io_import_iovec(int rw, struct io_kiocb *req,
 				  unsigned int issue_flags)
 {
 	*iovec = __io_import_iovec(rw, req, s, issue_flags);
+<<<<<<< HEAD
 	if (IS_ERR(*iovec))
+=======
+	if (unlikely(IS_ERR(*iovec)))
+>>>>>>> b7ba80a49124 (Commit)
 		return PTR_ERR(*iovec);
 
 	iov_iter_save_state(&s->iter, &s->iter_state);
@@ -450,10 +478,14 @@ static ssize_t loop_rw_iter(int ddir, struct io_rw *rw, struct iov_iter *iter)
 		struct iovec iovec;
 		ssize_t nr;
 
+<<<<<<< HEAD
 		if (iter_is_ubuf(iter)) {
 			iovec.iov_base = iter->ubuf + iter->iov_offset;
 			iovec.iov_len = iov_iter_count(iter);
 		} else if (!iov_iter_is_bvec(iter)) {
+=======
+		if (!iov_iter_is_bvec(iter)) {
+>>>>>>> b7ba80a49124 (Commit)
 			iovec = iov_iter_iovec(iter);
 		} else {
 			iovec.iov_base = u64_to_user_ptr(rw->addr);
@@ -498,7 +530,11 @@ static void io_req_map_rw(struct io_kiocb *req, const struct iovec *iovec,
 	io->free_iovec = iovec;
 	io->bytes_done = 0;
 	/* can only be fixed buffers, no need to do anything */
+<<<<<<< HEAD
 	if (iov_iter_is_bvec(iter) || iter_is_ubuf(iter))
+=======
+	if (iov_iter_is_bvec(iter))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	if (!iovec) {
 		unsigned iov_off = 0;
@@ -519,7 +555,11 @@ static void io_req_map_rw(struct io_kiocb *req, const struct iovec *iovec,
 static int io_setup_async_rw(struct io_kiocb *req, const struct iovec *iovec,
 			     struct io_rw_state *s, bool force)
 {
+<<<<<<< HEAD
 	if (!force && !io_cold_defs[req->opcode].prep_async)
+=======
+	if (!force && !io_op_defs[req->opcode].prep_async)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	if (!req_has_async_data(req)) {
 		struct io_async_rw *iorw;
@@ -557,12 +597,20 @@ static inline int io_rw_prep_async(struct io_kiocb *req, int rw)
 
 int io_readv_prep_async(struct io_kiocb *req)
 {
+<<<<<<< HEAD
 	return io_rw_prep_async(req, ITER_DEST);
+=======
+	return io_rw_prep_async(req, READ);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int io_writev_prep_async(struct io_kiocb *req)
 {
+<<<<<<< HEAD
 	return io_rw_prep_async(req, ITER_SOURCE);
+=======
+	return io_rw_prep_async(req, WRITE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -674,7 +722,10 @@ static int io_rw_init_file(struct io_kiocb *req, fmode_t mode)
 	ret = kiocb_set_rw_flags(kiocb, rw->flags);
 	if (unlikely(ret))
 		return ret;
+<<<<<<< HEAD
 	kiocb->ki_flags |= IOCB_ALLOC_CACHE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * If the file is marked O_NONBLOCK, still allow retry for it if it
@@ -690,7 +741,11 @@ static int io_rw_init_file(struct io_kiocb *req, fmode_t mode)
 			return -EOPNOTSUPP;
 
 		kiocb->private = NULL;
+<<<<<<< HEAD
 		kiocb->ki_flags |= IOCB_HIPRI;
+=======
+		kiocb->ki_flags |= IOCB_HIPRI | IOCB_ALLOC_CACHE;
+>>>>>>> b7ba80a49124 (Commit)
 		kiocb->ki_complete = io_complete_rw_iopoll;
 		req->iopoll_completed = 0;
 	} else {
@@ -714,7 +769,11 @@ int io_read(struct io_kiocb *req, unsigned int issue_flags)
 	loff_t *ppos;
 
 	if (!req_has_async_data(req)) {
+<<<<<<< HEAD
 		ret = io_import_iovec(ITER_DEST, req, &iovec, s, issue_flags);
+=======
+		ret = io_import_iovec(READ, req, &iovec, s, issue_flags);
+>>>>>>> b7ba80a49124 (Commit)
 		if (unlikely(ret < 0))
 			return ret;
 	} else {
@@ -726,7 +785,11 @@ int io_read(struct io_kiocb *req, unsigned int issue_flags)
 		 * buffers, as we dropped the selected one before retry.
 		 */
 		if (io_do_buffer_select(req)) {
+<<<<<<< HEAD
 			ret = io_import_iovec(ITER_DEST, req, &iovec, s, issue_flags);
+=======
+			ret = io_import_iovec(READ, req, &iovec, s, issue_flags);
+>>>>>>> b7ba80a49124 (Commit)
 			if (unlikely(ret < 0))
 				return ret;
 		}
@@ -798,12 +861,19 @@ int io_read(struct io_kiocb *req, unsigned int issue_flags)
 	iov_iter_restore(&s->iter, &s->iter_state);
 
 	ret2 = io_setup_async_rw(req, iovec, s, true);
+<<<<<<< HEAD
 	iovec = NULL;
 	if (ret2) {
 		ret = ret > 0 ? ret : ret2;
 		goto done;
 	}
 
+=======
+	if (ret2)
+		return ret2;
+
+	iovec = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	io = req->async_data;
 	s = &io->s;
 	/*
@@ -829,7 +899,10 @@ int io_read(struct io_kiocb *req, unsigned int issue_flags)
 			return -EAGAIN;
 		}
 
+<<<<<<< HEAD
 		req->cqe.res = iov_iter_count(&s->iter);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Now retry read with the IOCB_WAITQ parts set in the iocb. If
 		 * we get -EIOCBQUEUED, then we'll get a notification when the
@@ -861,7 +934,11 @@ int io_write(struct io_kiocb *req, unsigned int issue_flags)
 	loff_t *ppos;
 
 	if (!req_has_async_data(req)) {
+<<<<<<< HEAD
 		ret = io_import_iovec(ITER_SOURCE, req, &iovec, s, issue_flags);
+=======
+		ret = io_import_iovec(WRITE, req, &iovec, s, issue_flags);
+>>>>>>> b7ba80a49124 (Commit)
 		if (unlikely(ret < 0))
 			return ret;
 	} else {
@@ -944,7 +1021,11 @@ int io_write(struct io_kiocb *req, unsigned int issue_flags)
 			goto copy_iov;
 
 		if (ret2 != req->cqe.res && ret2 >= 0 && need_complete_io(req)) {
+<<<<<<< HEAD
 			struct io_async_rw *io;
+=======
+			struct io_async_rw *rw;
+>>>>>>> b7ba80a49124 (Commit)
 
 			trace_io_uring_short_write(req->ctx, kiocb->ki_pos - ret2,
 						req->cqe.res, ret2);
@@ -957,9 +1038,15 @@ int io_write(struct io_kiocb *req, unsigned int issue_flags)
 			iov_iter_save_state(&s->iter, &s->iter_state);
 			ret = io_setup_async_rw(req, iovec, s, true);
 
+<<<<<<< HEAD
 			io = req->async_data;
 			if (io)
 				io->bytes_done += ret2;
+=======
+			rw = req->async_data;
+			if (rw)
+				rw->bytes_done += ret2;
+>>>>>>> b7ba80a49124 (Commit)
 
 			if (kiocb->ki_flags & IOCB_WRITE)
 				kiocb_end_write(req);
@@ -1002,7 +1089,11 @@ void io_rw_fail(struct io_kiocb *req)
 int io_do_iopoll(struct io_ring_ctx *ctx, bool force_nonspin)
 {
 	struct io_wq_work_node *pos, *start, *prev;
+<<<<<<< HEAD
 	unsigned int poll_flags = 0;
+=======
+	unsigned int poll_flags = BLK_POLL_NOSLEEP;
+>>>>>>> b7ba80a49124 (Commit)
 	DEFINE_IO_COMP_BATCH(iob);
 	int nr_events = 0;
 
@@ -1065,11 +1156,15 @@ int io_do_iopoll(struct io_ring_ctx *ctx, bool force_nonspin)
 			continue;
 
 		req->cqe.flags = io_put_kbuf(req, 0);
+<<<<<<< HEAD
 		if (unlikely(!__io_fill_cqe_req(ctx, req))) {
 			spin_lock(&ctx->completion_lock);
 			io_req_cqe_overflow(req);
 			spin_unlock(&ctx->completion_lock);
 		}
+=======
+		__io_fill_cqe_req(req->ctx, req);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (unlikely(!nr_events))

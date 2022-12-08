@@ -49,6 +49,7 @@
 #define FSL_XCVR_RX_DPTH_CTRL_CLR	0x188
 #define FSL_XCVR_RX_DPTH_CTRL_TOG	0x18c
 
+<<<<<<< HEAD
 #define FSL_XCVR_RX_CS_DATA_0		0x190
 #define FSL_XCVR_RX_CS_DATA_1		0x194
 #define FSL_XCVR_RX_CS_DATA_2		0x198
@@ -66,6 +67,8 @@
 #define FSL_XCVR_RX_DPTH_BCTR		0x1D8
 #define FSL_XCVR_RX_DPTH_BCRR		0x1DC
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define FSL_XCVR_TX_DPTH_CTRL		0x220 /* TX datapath ctrl reg */
 #define FSL_XCVR_TX_DPTH_CTRL_SET	0x224
 #define FSL_XCVR_TX_DPTH_CTRL_CLR	0x228
@@ -76,6 +79,7 @@
 #define FSL_XCVR_TX_CS_DATA_3		0x23C
 #define FSL_XCVR_TX_CS_DATA_4		0x240
 #define FSL_XCVR_TX_CS_DATA_5		0x244
+<<<<<<< HEAD
 
 #define FSL_XCVR_TX_DPTH_CNTR_CTRL	0x260
 #define FSL_XCVR_TX_DPTH_CNTR_CTRL_SET	0x264
@@ -87,6 +91,8 @@
 #define FSL_XCVR_TX_DPTH_BCTR		0x278
 #define FSL_XCVR_TX_DPTH_BCRR		0x27C
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define FSL_XCVR_DEBUG_REG_0		0x2E0
 #define FSL_XCVR_DEBUG_REG_1		0x2F0
 

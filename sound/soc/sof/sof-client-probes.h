@@ -28,6 +28,7 @@ struct sof_probes_host_ops {
 		       struct snd_soc_dai *dai);
 };
 
+<<<<<<< HEAD
 struct sof_probe_point_desc {
 	unsigned int buffer_id;
 	unsigned int purpose;
@@ -62,4 +63,6 @@ struct sof_probes_priv {
 	const struct sof_probes_ipc_ops *ipc_ops;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

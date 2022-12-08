@@ -512,7 +512,11 @@ xfs_readdir(
 {
 	struct xfs_da_args	args = { NULL };
 	unsigned int		lock_mode;
+<<<<<<< HEAD
 	bool			isblock;
+=======
+	int			isblock;
+>>>>>>> b7ba80a49124 (Commit)
 	int			error;
 
 	trace_xfs_readdir(dp);

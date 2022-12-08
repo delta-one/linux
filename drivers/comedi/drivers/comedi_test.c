@@ -795,7 +795,11 @@ static int __init comedi_test_init(void)
 	}
 
 	if (!config_mode) {
+<<<<<<< HEAD
 		ctcls = class_create(CLASS_NAME);
+=======
+		ctcls = class_create(THIS_MODULE, CLASS_NAME);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(ctcls)) {
 			pr_warn("comedi_test: unable to create class\n");
 			goto clean3;

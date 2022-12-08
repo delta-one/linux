@@ -20,6 +20,11 @@ SEC("cgroup/recvmsg6")
 int recvmsg6_prog(struct bpf_sock_addr *ctx)
 {
 	struct bpf_sock *sk;
+<<<<<<< HEAD
+=======
+	__u32 user_ip4;
+	__u16 user_port;
+>>>>>>> b7ba80a49124 (Commit)
 
 	sk = ctx->sk;
 	if (!sk)

@@ -48,7 +48,11 @@ static struct {
 	{ "R_AARCH64_PREL16",		relative_data16, (u64)&sym64_rel },
 };
 
+<<<<<<< HEAD
 static int __init reloc_test_init(void)
+=======
+static int reloc_test_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 
@@ -67,7 +71,11 @@ static int __init reloc_test_init(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void __exit reloc_test_exit(void)
+=======
+static void reloc_test_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 

@@ -263,7 +263,10 @@ struct vgic_dist {
 	struct vgic_io_device	dist_iodev;
 
 	bool			has_its;
+<<<<<<< HEAD
 	bool			table_write_in_progress;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Contains the attributes and gpa of the LPI configuration table.
@@ -432,8 +435,11 @@ int vgic_v4_load(struct kvm_vcpu *vcpu);
 void vgic_v4_commit(struct kvm_vcpu *vcpu);
 int vgic_v4_put(struct kvm_vcpu *vcpu, bool need_db);
 
+<<<<<<< HEAD
 /* CPU HP callbacks */
 void kvm_vgic_cpu_up(void);
 void kvm_vgic_cpu_down(void);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __KVM_ARM_VGIC_H */

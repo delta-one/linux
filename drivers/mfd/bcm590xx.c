@@ -38,7 +38,12 @@ static const struct regmap_config bcm590xx_regmap_config_sec = {
 	.cache_type	= REGCACHE_RBTREE,
 };
 
+<<<<<<< HEAD
 static int bcm590xx_i2c_probe(struct i2c_client *i2c_pri)
+=======
+static int bcm590xx_i2c_probe(struct i2c_client *i2c_pri,
+			      const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bcm590xx *bcm590xx;
 	int ret;
@@ -108,7 +113,11 @@ static struct i2c_driver bcm590xx_i2c_driver = {
 		   .name = "bcm590xx",
 		   .of_match_table = bcm590xx_of_match,
 	},
+<<<<<<< HEAD
 	.probe_new = bcm590xx_i2c_probe,
+=======
+	.probe = bcm590xx_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = bcm590xx_i2c_id,
 };
 module_i2c_driver(bcm590xx_i2c_driver);

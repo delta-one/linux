@@ -412,6 +412,10 @@ static void tmio_mmc_pio_irq(struct tmio_mmc_host *host)
 	void *sg_virt;
 	unsigned short *buf;
 	unsigned int count;
+<<<<<<< HEAD
+=======
+	unsigned long flags;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (host->dma_on) {
 		pr_err("PIO IRQ in DMA mode!\n");
@@ -421,8 +425,13 @@ static void tmio_mmc_pio_irq(struct tmio_mmc_host *host)
 		return;
 	}
 
+<<<<<<< HEAD
 	sg_virt = kmap_local_page(sg_page(host->sg_ptr));
 	buf = (unsigned short *)(sg_virt + host->sg_ptr->offset + host->sg_off);
+=======
+	sg_virt = tmio_mmc_kmap_atomic(host->sg_ptr, &flags);
+	buf = (unsigned short *)(sg_virt + host->sg_off);
+>>>>>>> b7ba80a49124 (Commit)
 
 	count = host->sg_ptr->length - host->sg_off;
 	if (count > data->blksz)
@@ -436,7 +445,11 @@ static void tmio_mmc_pio_irq(struct tmio_mmc_host *host)
 
 	host->sg_off += count;
 
+<<<<<<< HEAD
 	kunmap_local(sg_virt);
+=======
+	tmio_mmc_kunmap_atomic(host->sg_ptr, &flags, sg_virt);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (host->sg_off == host->sg_ptr->length)
 		tmio_mmc_next_sg(host);
@@ -445,11 +458,19 @@ static void tmio_mmc_pio_irq(struct tmio_mmc_host *host)
 static void tmio_mmc_check_bounce_buffer(struct tmio_mmc_host *host)
 {
 	if (host->sg_ptr == &host->bounce_sg) {
+<<<<<<< HEAD
 		void *sg_virt = kmap_local_page(sg_page(host->sg_orig));
 
 		memcpy(sg_virt + host->sg_orig->offset, host->bounce_buf,
 		       host->bounce_sg.length);
 		kunmap_local(sg_virt);
+=======
+		unsigned long flags;
+		void *sg_vaddr = tmio_mmc_kmap_atomic(host->sg_orig, &flags);
+
+		memcpy(sg_vaddr, host->bounce_buf, host->bounce_sg.length);
+		tmio_mmc_kunmap_atomic(host->sg_orig, &flags, sg_vaddr);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -669,9 +690,12 @@ static bool __tmio_mmc_sdcard_irq(struct tmio_mmc_host *host, int ireg,
 		return true;
 	}
 
+<<<<<<< HEAD
 	if (host->dma_ops && host->dma_ops->dma_irq && host->dma_ops->dma_irq(host))
 		return true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return false;
 }
 
@@ -1084,7 +1108,11 @@ static void tmio_mmc_of_parse(struct platform_device *pdev,
 	 * For new platforms, please use "disable-wp" instead of
 	 * "toshiba,mmc-wrprotect-disable"
 	 */
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "toshiba,mmc-wrprotect-disable"))
+=======
+	if (of_get_property(np, "toshiba,mmc-wrprotect-disable", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		mmc->caps2 |= MMC_CAP2_NO_WRITE_PROTECT;
 }
 

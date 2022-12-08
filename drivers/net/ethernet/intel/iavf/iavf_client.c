@@ -127,7 +127,11 @@ void iavf_notify_client_open(struct iavf_vsi *vsi)
 }
 
 /**
+<<<<<<< HEAD
  * iavf_client_release_qvlist - send a message to the PF to release rdma qv map
+=======
+ * iavf_client_release_qvlist - send a message to the PF to release iwarp qv map
+>>>>>>> b7ba80a49124 (Commit)
  * @ldev: pointer to L2 context.
  *
  * Return 0 on success or < 0 on error
@@ -141,12 +145,20 @@ static int iavf_client_release_qvlist(struct iavf_info *ldev)
 		return -EAGAIN;
 
 	err = iavf_aq_send_msg_to_pf(&adapter->hw,
+<<<<<<< HEAD
 				     VIRTCHNL_OP_RELEASE_RDMA_IRQ_MAP,
+=======
+				     VIRTCHNL_OP_RELEASE_IWARP_IRQ_MAP,
+>>>>>>> b7ba80a49124 (Commit)
 				     IAVF_SUCCESS, NULL, 0, NULL);
 
 	if (err)
 		dev_err(&adapter->pdev->dev,
+<<<<<<< HEAD
 			"Unable to send RDMA vector release message to PF, error %d, aq status %d\n",
+=======
+			"Unable to send iWarp vector release message to PF, error %d, aq status %d\n",
+>>>>>>> b7ba80a49124 (Commit)
 			err, adapter->hw.aq.asq_last_status);
 
 	return err;
@@ -215,9 +227,15 @@ iavf_client_add_instance(struct iavf_adapter *adapter)
 	cinst->lan_info.params = params;
 	set_bit(__IAVF_CLIENT_INSTANCE_NONE, &cinst->state);
 
+<<<<<<< HEAD
 	cinst->lan_info.msix_count = adapter->num_rdma_msix;
 	cinst->lan_info.msix_entries =
 			&adapter->msix_entries[adapter->rdma_base_vector];
+=======
+	cinst->lan_info.msix_count = adapter->num_iwarp_msix;
+	cinst->lan_info.msix_entries =
+			&adapter->msix_entries[adapter->iwarp_base_vector];
+>>>>>>> b7ba80a49124 (Commit)
 
 	mac = list_first_entry(&cinst->lan_info.netdev->dev_addrs.list,
 			       struct netdev_hw_addr, list);
@@ -425,17 +443,28 @@ static u32 iavf_client_virtchnl_send(struct iavf_info *ldev,
 	if (adapter->aq_required)
 		return -EAGAIN;
 
+<<<<<<< HEAD
 	err = iavf_aq_send_msg_to_pf(&adapter->hw, VIRTCHNL_OP_RDMA,
 				     IAVF_SUCCESS, msg, len, NULL);
 	if (err)
 		dev_err(&adapter->pdev->dev, "Unable to send RDMA message to PF, error %d, aq status %d\n",
+=======
+	err = iavf_aq_send_msg_to_pf(&adapter->hw, VIRTCHNL_OP_IWARP,
+				     IAVF_SUCCESS, msg, len, NULL);
+	if (err)
+		dev_err(&adapter->pdev->dev, "Unable to send iWarp message to PF, error %d, aq status %d\n",
+>>>>>>> b7ba80a49124 (Commit)
 			err, adapter->hw.aq.asq_last_status);
 
 	return err;
 }
 
 /**
+<<<<<<< HEAD
  * iavf_client_setup_qvlist - send a message to the PF to setup rdma qv map
+=======
+ * iavf_client_setup_qvlist - send a message to the PF to setup iwarp qv map
+>>>>>>> b7ba80a49124 (Commit)
  * @ldev: pointer to L2 context.
  * @client: Client pointer.
  * @qvlist_info: queue and vector list
@@ -446,7 +475,11 @@ static int iavf_client_setup_qvlist(struct iavf_info *ldev,
 				    struct iavf_client *client,
 				    struct iavf_qvlist_info *qvlist_info)
 {
+<<<<<<< HEAD
 	struct virtchnl_rdma_qvlist_info *v_qvlist_info;
+=======
+	struct virtchnl_iwarp_qvlist_info *v_qvlist_info;
+>>>>>>> b7ba80a49124 (Commit)
 	struct iavf_adapter *adapter = ldev->vf;
 	struct iavf_qv_info *qv_info;
 	enum iavf_status err;
@@ -463,6 +496,7 @@ static int iavf_client_setup_qvlist(struct iavf_info *ldev,
 			continue;
 		v_idx = qv_info->v_idx;
 		if ((v_idx >=
+<<<<<<< HEAD
 		    (adapter->rdma_base_vector + adapter->num_rdma_msix)) ||
 		    (v_idx < adapter->rdma_base_vector))
 			return -EINVAL;
@@ -475,11 +509,29 @@ static int iavf_client_setup_qvlist(struct iavf_info *ldev,
 	adapter->client_pending |= BIT(VIRTCHNL_OP_CONFIG_RDMA_IRQ_MAP);
 	err = iavf_aq_send_msg_to_pf(&adapter->hw,
 				VIRTCHNL_OP_CONFIG_RDMA_IRQ_MAP, IAVF_SUCCESS,
+=======
+		    (adapter->iwarp_base_vector + adapter->num_iwarp_msix)) ||
+		    (v_idx < adapter->iwarp_base_vector))
+			return -EINVAL;
+	}
+
+	v_qvlist_info = (struct virtchnl_iwarp_qvlist_info *)qvlist_info;
+	msg_size = struct_size(v_qvlist_info, qv_info,
+			       v_qvlist_info->num_vectors - 1);
+
+	adapter->client_pending |= BIT(VIRTCHNL_OP_CONFIG_IWARP_IRQ_MAP);
+	err = iavf_aq_send_msg_to_pf(&adapter->hw,
+				VIRTCHNL_OP_CONFIG_IWARP_IRQ_MAP, IAVF_SUCCESS,
+>>>>>>> b7ba80a49124 (Commit)
 				(u8 *)v_qvlist_info, msg_size, NULL);
 
 	if (err) {
 		dev_err(&adapter->pdev->dev,
+<<<<<<< HEAD
 			"Unable to send RDMA vector config message to PF, error %d, aq status %d\n",
+=======
+			"Unable to send iWarp vector config message to PF, error %d, aq status %d\n",
+>>>>>>> b7ba80a49124 (Commit)
 			err, adapter->hw.aq.asq_last_status);
 		goto out;
 	}
@@ -488,7 +540,11 @@ static int iavf_client_setup_qvlist(struct iavf_info *ldev,
 	for (i = 0; i < 5; i++) {
 		msleep(100);
 		if (!(adapter->client_pending &
+<<<<<<< HEAD
 		      BIT(VIRTCHNL_OP_CONFIG_RDMA_IRQ_MAP))) {
+=======
+		      BIT(VIRTCHNL_OP_CONFIG_IWARP_IRQ_MAP))) {
+>>>>>>> b7ba80a49124 (Commit)
 			err = 0;
 			break;
 		}

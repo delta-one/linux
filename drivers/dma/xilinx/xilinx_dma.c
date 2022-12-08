@@ -1659,8 +1659,11 @@ static void xilinx_dma_issue_pending(struct dma_chan *dchan)
  * xilinx_dma_device_config - Configure the DMA channel
  * @dchan: DMA channel
  * @config: channel configuration
+<<<<<<< HEAD
  *
  * Return: 0 always.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int xilinx_dma_device_config(struct dma_chan *dchan,
 				    struct dma_slave_config *config)
@@ -2926,7 +2929,11 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
  * @xdev: Driver specific device structure
  * @node: Device node
  *
+<<<<<<< HEAD
  * Return: '0' on success and failure value on error.
+=======
+ * Return: 0 always.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int xilinx_dma_child_probe(struct xilinx_dma_device *xdev,
 				    struct device_node *node)
@@ -3143,10 +3150,15 @@ static int xilinx_dma_probe(struct platform_device *pdev)
 	/* Initialize the channels */
 	for_each_child_of_node(node, child) {
 		err = xilinx_dma_child_probe(xdev, child);
+<<<<<<< HEAD
 		if (err < 0) {
 			of_node_put(child);
 			goto error;
 		}
+=======
+		if (err < 0)
+			goto error;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (xdev->dma_config->dmatype == XDMA_TYPE_VDMA) {

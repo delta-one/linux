@@ -498,6 +498,15 @@
 		};
 	};
 
+<<<<<<< HEAD
+=======
+	sdhci0_pwrseq: sdhci0_pwrseq {
+		compatible = "mmc-pwrseq-simple";
+
+		reset-gpios = <&gpio TEGRA_GPIO(X, 7) GPIO_ACTIVE_LOW>;
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	mmc@700b0000 { /* WiFi/BT on this bus */
 		status = "okay";
 		bus-width = <4>;
@@ -589,6 +598,7 @@
 	};
 
 	cpus {
+<<<<<<< HEAD
 		cpu0: cpu@0 {
 			#cooling-cells = <2>;
 			vdd-cpu-supply = <&vdd_cpu>;
@@ -605,11 +615,17 @@
 		cpu3: cpu@3 {
 			#cooling-cells = <2>;
 		};
+=======
+		cpu@0 {
+			vdd-cpu-supply = <&vdd_cpu>;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	gpio-keys {
 		compatible = "gpio-keys";
 
+<<<<<<< HEAD
 		key-power {
 			label = "Power";
 			gpios = <&gpio TEGRA_GPIO(Q, 0) GPIO_ACTIVE_LOW>;
@@ -618,6 +634,8 @@
 			wakeup-source;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		switch-lid {
 			label = "Lid";
 			gpios = <&gpio TEGRA_GPIO(R, 4) GPIO_ACTIVE_LOW>;
@@ -626,6 +644,7 @@
 			debounce-interval = <1>;
 			wakeup-source;
 		};
+<<<<<<< HEAD
 	};
 
 	gpio-restart {
@@ -638,6 +657,16 @@
 		compatible = "mmc-pwrseq-simple";
 
 		reset-gpios = <&gpio TEGRA_GPIO(X, 7) GPIO_ACTIVE_LOW>;
+=======
+
+		key-power {
+			label = "Power";
+			gpios = <&gpio TEGRA_GPIO(Q, 0) GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_POWER>;
+			debounce-interval = <30>;
+			wakeup-source;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	vdd_mux: regulator-mux {
@@ -804,6 +833,33 @@
 				<&gpio TEGRA_GPIO(R, 7) GPIO_ACTIVE_HIGH>;
 	};
 
+<<<<<<< HEAD
+=======
+	gpio-restart {
+		compatible = "gpio-restart";
+		gpios = <&gpio TEGRA_GPIO(I, 5) GPIO_ACTIVE_LOW>;
+		priority = <200>;
+	};
+
+	cpus {
+		cpu0: cpu@0 {
+			#cooling-cells = <2>;
+		};
+
+		cpu1: cpu@1 {
+			#cooling-cells = <2>;
+		};
+
+		cpu2: cpu@2 {
+			#cooling-cells = <2>;
+		};
+
+		cpu3: cpu@3 {
+			#cooling-cells = <2>;
+		};
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	thermal-zones {
 		cpu-skin-thermal {
 			polling-delay-passive = <1000>; /* milliseconds */

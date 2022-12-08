@@ -23,12 +23,15 @@ extern void yyerror(char const *s);
 
 extern struct dt_info *parser_output;
 extern bool treesource_error;
+<<<<<<< HEAD
 
 static bool is_ref_relative(const char *ref)
 {
 	return ref[0] != '/' && strchr(&ref[1], '/');
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 %}
 
 %union {
@@ -175,8 +178,11 @@ devicetree:
 			 */
 			if (!($<flags>-1 & DTSF_PLUGIN))
 				ERROR(&@2, "Label or path %s not found", $1);
+<<<<<<< HEAD
 			else if (is_ref_relative($1))
 				ERROR(&@2, "Label-relative reference %s not supported in plugin", $1);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			$$ = add_orphan_node(
 					name_node(build_node(NULL, NULL, NULL),
 						  ""),
@@ -186,9 +192,12 @@ devicetree:
 		{
 			struct node *target = get_node_by_ref($1, $3);
 
+<<<<<<< HEAD
 			if (($<flags>-1 & DTSF_PLUGIN) && is_ref_relative($3))
 				ERROR(&@2, "Label-relative reference %s not supported in plugin", $3);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			if (target) {
 				add_label(&target->labels, $2);
 				merge_nodes(target, $4);
@@ -204,8 +213,11 @@ devicetree:
 			 * so $-1 is what we want (plugindecl)
 			 */
 			if ($<flags>-1 & DTSF_PLUGIN) {
+<<<<<<< HEAD
 				if (is_ref_relative($2))
 					ERROR(&@2, "Label-relative reference %s not supported in plugin", $2);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				add_orphan_node($1, $3, $2);
 			} else {
 				struct node *target = get_node_by_ref($1, $2);
@@ -404,6 +416,7 @@ arrayprefix:
 				 * within the mask to one (i.e. | in the
 				 * mask), all bits are one.
 				 */
+<<<<<<< HEAD
 				if (($2 > mask) && (($2 | mask) != -1ULL)) {
 					char *loc = srcpos_string(&@2);
 					fprintf(stderr,
@@ -412,6 +425,11 @@ arrayprefix:
 						loc, $2, $1.bits / 4, ($2 & mask));
 					free(loc);
 				}
+=======
+				if (($2 > mask) && (($2 | mask) != -1ULL))
+					ERROR(&@2, "Value out of range for"
+					      " %d-bit array element", $1.bits);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 
 			$$.data = data_append_integer($1.data, $2, $1.bits);

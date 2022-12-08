@@ -253,6 +253,10 @@ static __always_inline void arch_exit_to_user_mode(void) { }
 /**
  * arch_do_signal_or_restart -  Architecture specific signal delivery function
  * @regs:	Pointer to currents pt_regs
+<<<<<<< HEAD
+=======
+ * @has_signal:	actual signal to handle
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Invoked from exit_to_user_mode_loop().
  */

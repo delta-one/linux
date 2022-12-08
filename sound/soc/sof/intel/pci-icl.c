@@ -34,9 +34,12 @@ static const struct sof_dev_desc icl_desc = {
 		[SOF_IPC] = "intel/sof",
 		[SOF_INTEL_IPC4] = "intel/avs/icl",
 	},
+<<<<<<< HEAD
 	.default_lib_path = {
 		[SOF_INTEL_IPC4] = "intel/avs-lib/icl",
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.default_tplg_path = {
 		[SOF_IPC] = "intel/sof-tplg",
 		[SOF_INTEL_IPC4] = "intel/avs-tplg",
@@ -65,9 +68,12 @@ static const struct sof_dev_desc jsl_desc = {
 		[SOF_IPC] = "intel/sof",
 		[SOF_INTEL_IPC4] = "intel/avs/jsl",
 	},
+<<<<<<< HEAD
 	.default_lib_path = {
 		[SOF_INTEL_IPC4] = "intel/avs-lib/jsl",
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.default_tplg_path = {
 		[SOF_IPC] = "intel/sof-tplg",
 		[SOF_INTEL_IPC4] = "intel/avs-tplg",
@@ -79,7 +85,10 @@ static const struct sof_dev_desc jsl_desc = {
 	.nocodec_tplg_filename = "sof-jsl-nocodec.tplg",
 	.ops = &sof_cnl_ops,
 	.ops_init = sof_cnl_ops_init,
+<<<<<<< HEAD
 	.ops_free = hda_ops_free,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* PCI IDs */

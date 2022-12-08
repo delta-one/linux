@@ -501,7 +501,12 @@ static const struct iio_info zopt2201_info = {
 	.attrs = &zopt2201_attribute_group,
 };
 
+<<<<<<< HEAD
 static int zopt2201_probe(struct i2c_client *client)
+=======
+static int zopt2201_probe(struct i2c_client *client,
+			  const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct zopt2201_data *data;
 	struct iio_dev *indio_dev;
@@ -554,7 +559,11 @@ static struct i2c_driver zopt2201_driver = {
 	.driver = {
 		.name   = ZOPT2201_DRV_NAME,
 	},
+<<<<<<< HEAD
 	.probe_new = zopt2201_probe,
+=======
+	.probe  = zopt2201_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = zopt2201_id,
 };
 

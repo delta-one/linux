@@ -2,8 +2,11 @@
 #ifndef _LINUX_HELPER_MACROS_H_
 #define _LINUX_HELPER_MACROS_H_
 
+<<<<<<< HEAD
 #include <linux/math.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define __find_closest(x, a, as, op)					\
 ({									\
 	typeof(as) __fc_i, __fc_as = (as) - 1;				\
@@ -40,6 +43,7 @@
  */
 #define find_closest_descending(x, a, as) __find_closest(x, a, as, >=)
 
+<<<<<<< HEAD
 /**
  * is_insidevar - check if the @ptr points inside the @var memory range.
  * @ptr:	the pointer to a memory address.
@@ -52,4 +56,6 @@
 	((uintptr_t)(ptr) >= (uintptr_t)(var) &&			\
 	 (uintptr_t)(ptr) <  (uintptr_t)(var) + sizeof(var))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

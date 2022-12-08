@@ -16,7 +16,12 @@
 #include <linux/platform_device.h>
 #include <linux/io.h>
 #include <linux/of_device.h>
+<<<<<<< HEAD
 #include <linux/thermal.h>
+=======
+
+#include "thermal_core.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define HI6220_TEMP0_LAG			(0x0)
 #define HI6220_TEMP0_TH				(0x4)
@@ -426,16 +431,33 @@ static int hi3660_thermal_probe(struct hisi_thermal_data *data)
 	data->sensor[0].irq_name = "tsensor_a73";
 	data->sensor[0].data = data;
 
+<<<<<<< HEAD
+=======
+	data->sensor[1].id = HI3660_LITTLE_SENSOR;
+	data->sensor[1].irq_name = "tsensor_a53";
+	data->sensor[1].data = data;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static int hisi_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	struct hisi_thermal_sensor *sensor = thermal_zone_device_priv(tz);
+=======
+	struct hisi_thermal_sensor *sensor = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct hisi_thermal_data *data = sensor->data;
 
 	*temp = data->ops->get_temp(sensor);
 
+<<<<<<< HEAD
+=======
+	dev_dbg(&data->pdev->dev, "tzd=%p, id=%d, temp=%d, thres=%d\n",
+		sensor->tzd, sensor->id, *temp, sensor->thres_temp);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

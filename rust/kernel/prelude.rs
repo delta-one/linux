@@ -11,6 +11,7 @@
 //! use kernel::prelude::*;
 //! ```
 
+<<<<<<< HEAD
 #[doc(no_inline)]
 pub use core::pin::Pin;
 
@@ -32,3 +33,12 @@ pub use super::static_assert;
 pub use super::error::{code::*, Error, Result};
 
 pub use super::{str::CStr, ThisModule};
+=======
+pub use super::{
+    error::{Error, Result},
+    pr_emerg, pr_info, ThisModule,
+};
+pub use alloc::{boxed::Box, vec::Vec};
+pub use core::pin::Pin;
+pub use macros::module;
+>>>>>>> b7ba80a49124 (Commit)

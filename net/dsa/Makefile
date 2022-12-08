@@ -2,14 +2,22 @@
 # the core
 obj-$(CONFIG_NET_DSA) += dsa_core.o
 dsa_core-y += \
+<<<<<<< HEAD
 	devlink.o \
 	dsa.o \
+=======
+	dsa.o \
+	dsa2.o \
+>>>>>>> b7ba80a49124 (Commit)
 	master.o \
 	netlink.o \
 	port.o \
 	slave.o \
 	switch.o \
+<<<<<<< HEAD
 	tag.o \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tag_8021q.o
 
 # tagging formats
@@ -21,7 +29,10 @@ obj-$(CONFIG_NET_DSA_TAG_HELLCREEK) += tag_hellcreek.o
 obj-$(CONFIG_NET_DSA_TAG_KSZ) += tag_ksz.o
 obj-$(CONFIG_NET_DSA_TAG_LAN9303) += tag_lan9303.o
 obj-$(CONFIG_NET_DSA_TAG_MTK) += tag_mtk.o
+<<<<<<< HEAD
 obj-$(CONFIG_NET_DSA_TAG_NONE) += tag_none.o
+=======
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_NET_DSA_TAG_OCELOT) += tag_ocelot.o
 obj-$(CONFIG_NET_DSA_TAG_OCELOT_8021Q) += tag_ocelot_8021q.o
 obj-$(CONFIG_NET_DSA_TAG_QCA) += tag_qca.o

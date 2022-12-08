@@ -740,6 +740,10 @@ static int st_i2c_xfer(struct i2c_adapter *i2c_adap,
 	return (ret < 0) ? ret : i;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int st_i2c_suspend(struct device *dev)
 {
 	struct st_i2c_dev *i2c_dev = dev_get_drvdata(dev);
@@ -761,7 +765,15 @@ static int st_i2c_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(st_i2c_pm, st_i2c_suspend, st_i2c_resume);
+=======
+static SIMPLE_DEV_PM_OPS(st_i2c_pm, st_i2c_suspend, st_i2c_resume);
+#define ST_I2C_PM	(&st_i2c_pm)
+#else
+#define ST_I2C_PM	NULL
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static u32 st_i2c_func(struct i2c_adapter *adap)
 {
@@ -896,7 +908,11 @@ static struct platform_driver st_i2c_driver = {
 	.driver = {
 		.name = "st-i2c",
 		.of_match_table = st_i2c_match,
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&st_i2c_pm),
+=======
+		.pm = ST_I2C_PM,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = st_i2c_probe,
 	.remove = st_i2c_remove,

@@ -449,7 +449,11 @@ void iostat_print_metric(struct perf_stat_config *config, struct evsel *evsel,
 
 void iostat_print_counters(struct evlist *evlist,
 			   struct perf_stat_config *config, struct timespec *ts,
+<<<<<<< HEAD
 			   char *prefix, iostat_print_counter_t print_cnt_cb, void *arg)
+=======
+			   char *prefix, iostat_print_counter_t print_cnt_cb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	void *perf_device = NULL;
 	struct evsel *counter = evlist__first(evlist);
@@ -464,7 +468,11 @@ void iostat_print_counters(struct evlist *evlist,
 			iostat_prefix(evlist, config, prefix, ts);
 			fprintf(config->output, "\n%s", prefix);
 		}
+<<<<<<< HEAD
 		print_cnt_cb(config, counter, arg);
+=======
+		print_cnt_cb(config, counter, prefix);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	fputc('\n', config->output);
 }

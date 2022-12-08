@@ -42,7 +42,11 @@ examples:
         #address-cells = <1>;
         #size-cells = <0>;
 
+<<<<<<< HEAD
         heart-mon@0 {
+=======
+        heart_mon@0 {
+>>>>>>> b7ba80a49124 (Commit)
             compatible = "ti,afe4403";
             reg = <0>;
             spi-max-frequency = <10000000>;

@@ -45,7 +45,11 @@ static const char *audit_signal_mask(u32 mask)
 }
 
 /**
+<<<<<<< HEAD
  * audit_signal_cb() - call back for signal specific audit fields
+=======
+ * audit_cb - call back for signal specific audit fields
+>>>>>>> b7ba80a49124 (Commit)
  * @ab: audit_buffer  (NOT NULL)
  * @va: audit struct to audit values of  (NOT NULL)
  */
@@ -78,6 +82,7 @@ static int profile_signal_perm(struct aa_profile *profile,
 			       struct aa_label *peer, u32 request,
 			       struct common_audit_data *sa)
 {
+<<<<<<< HEAD
 	struct aa_ruleset *rules = list_first_entry(&profile->rules,
 						    typeof(*rules), list);
 	struct aa_perms perms;
@@ -85,14 +90,28 @@ static int profile_signal_perm(struct aa_profile *profile,
 
 	if (profile_unconfined(profile) ||
 	    !ANY_RULE_MEDIATES(&profile->rules, AA_CLASS_SIGNAL))
+=======
+	struct aa_perms perms;
+	unsigned int state;
+
+	if (profile_unconfined(profile) ||
+	    !PROFILE_MEDIATES(profile, AA_CLASS_SIGNAL))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	aad(sa)->peer = peer;
 	/* TODO: secondary cache check <profile, profile, perm> */
+<<<<<<< HEAD
 	state = aa_dfa_next(rules->policy.dfa,
 			    rules->policy.start[AA_CLASS_SIGNAL],
 			    aad(sa)->signal);
 	aa_label_match(profile, rules, peer, state, false, request, &perms);
+=======
+	state = aa_dfa_next(profile->policy.dfa,
+			    profile->policy.start[AA_CLASS_SIGNAL],
+			    aad(sa)->signal);
+	aa_label_match(profile, peer, state, false, request, &perms);
+>>>>>>> b7ba80a49124 (Commit)
 	aa_apply_modes_to_perms(profile, &perms);
 	return aa_check_perms(profile, &perms, request, sa, audit_signal_cb);
 }
@@ -100,7 +119,11 @@ static int profile_signal_perm(struct aa_profile *profile,
 int aa_may_signal(struct aa_label *sender, struct aa_label *target, int sig)
 {
 	struct aa_profile *profile;
+<<<<<<< HEAD
 	DEFINE_AUDIT_DATA(sa, LSM_AUDIT_DATA_NONE, AA_CLASS_SIGNAL, OP_SIGNAL);
+=======
+	DEFINE_AUDIT_DATA(sa, LSM_AUDIT_DATA_NONE, OP_SIGNAL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	aad(&sa)->signal = map_signal_num(sig);
 	aad(&sa)->unmappedsig = sig;

@@ -156,7 +156,11 @@ IEC958 Output
     S/PDIF should output the same signal as channel 3+4. [untested!]
 
 
+<<<<<<< HEAD
 Digital output selectors
+=======
+Digitial output selectors
+>>>>>>> b7ba80a49124 (Commit)
     These switches allow a direct digital routing from the ADCs to the DACs.
     Each switch determines where the digital input data to one of the DACs comes from.
     They are not supported by the ESI windows driver.

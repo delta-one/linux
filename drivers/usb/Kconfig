@@ -111,12 +111,17 @@ source "drivers/usb/usbip/Kconfig"
 
 endif
 
+<<<<<<< HEAD
 comment "USB dual-mode controller drivers"
 
 source "drivers/usb/cdns3/Kconfig"
 
 source "drivers/usb/fotg210/Kconfig"
 
+=======
+source "drivers/usb/cdns3/Kconfig"
+
+>>>>>>> b7ba80a49124 (Commit)
 source "drivers/usb/mtu3/Kconfig"
 
 source "drivers/usb/musb/Kconfig"

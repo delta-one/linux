@@ -1,10 +1,13 @@
 #ifndef __GPIO_ASPEED_H
 #define __GPIO_ASPEED_H
 
+<<<<<<< HEAD
 #include <linux/types.h>
 
 struct gpio_desc;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct aspeed_gpio_copro_ops {
 	int (*request_access)(void *data);
 	int (*release_access)(void *data);

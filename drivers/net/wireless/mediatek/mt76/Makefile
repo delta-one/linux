@@ -35,4 +35,7 @@ obj-$(CONFIG_MT7603E) += mt7603/
 obj-$(CONFIG_MT7615_COMMON) += mt7615/
 obj-$(CONFIG_MT7915E) += mt7915/
 obj-$(CONFIG_MT7921_COMMON) += mt7921/
+<<<<<<< HEAD
 obj-$(CONFIG_MT7996E) += mt7996/
+=======
+>>>>>>> b7ba80a49124 (Commit)

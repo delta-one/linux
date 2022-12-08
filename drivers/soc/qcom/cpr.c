@@ -1708,16 +1708,23 @@ static int cpr_probe(struct platform_device *pdev)
 
 	ret = of_genpd_add_provider_simple(dev->of_node, &drv->pd);
 	if (ret)
+<<<<<<< HEAD
 		goto err_remove_genpd;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	platform_set_drvdata(pdev, drv);
 	cpr_debugfs_init(drv);
 
 	return 0;
+<<<<<<< HEAD
 
 err_remove_genpd:
 	pm_genpd_remove(&drv->pd);
 	return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cpr_remove(struct platform_device *pdev)

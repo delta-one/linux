@@ -158,6 +158,7 @@ static const struct of_device_id ir_spi_of_match[] = {
 };
 MODULE_DEVICE_TABLE(of, ir_spi_of_match);
 
+<<<<<<< HEAD
 static const struct spi_device_id ir_spi_ids[] = {
 	{ "ir-spi-led" },
 	{},
@@ -167,6 +168,10 @@ MODULE_DEVICE_TABLE(spi, ir_spi_ids);
 static struct spi_driver ir_spi_driver = {
 	.probe = ir_spi_probe,
 	.id_table = ir_spi_ids,
+=======
+static struct spi_driver ir_spi_driver = {
+	.probe = ir_spi_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = IR_SPI_DRIVER_NAME,
 		.of_match_table = ir_spi_of_match,

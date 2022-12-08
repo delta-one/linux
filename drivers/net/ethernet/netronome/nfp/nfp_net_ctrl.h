@@ -14,9 +14,12 @@
 
 #include <linux/types.h>
 
+<<<<<<< HEAD
 /* 64-bit per app capabilities */
 #define NFP_NET_APP_CAP_SP_INDIFF	BIT_ULL(0) /* indifferent to port speed */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Configuration BAR size.
  *
  * The configuration BAR is 8K in size, but due to
@@ -48,7 +51,10 @@
 #define NFP_NET_META_CSUM		6 /* checksum complete type */
 #define NFP_NET_META_CONN_HANDLE	7
 #define NFP_NET_META_RESYNC_INFO	8 /* RX resync info request */
+<<<<<<< HEAD
 #define NFP_NET_META_IPSEC		9 /* IPsec SA index for tx and rx */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define NFP_META_PORT_ID_CTRL		~0U
 
@@ -56,8 +62,11 @@
 #define NFP_NET_META_VLAN_SIZE			4
 #define NFP_NET_META_PORTID_SIZE		4
 #define NFP_NET_META_CONN_HANDLE_SIZE		8
+<<<<<<< HEAD
 #define NFP_NET_META_IPSEC_SIZE			4
 #define NFP_NET_META_IPSEC_FIELD_SIZE		12
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Hash type pre-pended when a RSS hash was computed */
 #define NFP_NET_RSS_NONE		0
 #define NFP_NET_RSS_IPV4		1
@@ -260,6 +269,7 @@
 #define   NFP_NET_CFG_BPF_CFG_MASK	7ULL
 #define   NFP_NET_CFG_BPF_ADDR_MASK	(~NFP_NET_CFG_BPF_CFG_MASK)
 
+<<<<<<< HEAD
 /* 3 words reserved for extended ctrl words (0x0098 - 0x00a4)
  * 3 words reserved for extended cap words (0x00a4 - 0x00b0)
  * Currently only one word is used, can be extended in future.
@@ -274,6 +284,12 @@
 /* 16B reserved for future use (0x00b0 - 0x00c0) */
 #define NFP_NET_CFG_RESERVED		0x00b0
 #define NFP_NET_CFG_RESERVED_SZ		0x0010
+=======
+/* 40B reserved for future use (0x0098 - 0x00c0)
+ */
+#define NFP_NET_CFG_RESERVED		0x0098
+#define NFP_NET_CFG_RESERVED_SZ		0x0028
+>>>>>>> b7ba80a49124 (Commit)
 
 /* RSS configuration (0x0100 - 0x01ac):
  * Used only when NFP_NET_CFG_CTRL_RSS is enabled
@@ -403,12 +419,17 @@
  */
 #define NFP_NET_CFG_MBOX_BASE		0x1800
 #define NFP_NET_CFG_MBOX_VAL_MAX_SZ	0x1F8
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 #define NFP_NET_CFG_MBOX_SIMPLE_CMD	0x0
 #define NFP_NET_CFG_MBOX_SIMPLE_RET	0x4
 #define NFP_NET_CFG_MBOX_SIMPLE_VAL	0x8
 
 #define NFP_NET_CFG_MBOX_CMD_CTAG_FILTER_ADD 1
 #define NFP_NET_CFG_MBOX_CMD_CTAG_FILTER_KILL 2
+<<<<<<< HEAD
 #define NFP_NET_CFG_MBOX_CMD_IPSEC 3
 #define NFP_NET_CFG_MBOX_CMD_PCI_DSCP_PRIOMAP_SET	5
 #define NFP_NET_CFG_MBOX_CMD_TLV_CMSG			6
@@ -416,6 +437,11 @@
 
 #define NFP_NET_CFG_MBOX_CMD_MULTICAST_ADD		8
 #define NFP_NET_CFG_MBOX_CMD_MULTICAST_DEL		9
+=======
+
+#define NFP_NET_CFG_MBOX_CMD_PCI_DSCP_PRIOMAP_SET	5
+#define NFP_NET_CFG_MBOX_CMD_TLV_CMSG			6
+>>>>>>> b7ba80a49124 (Commit)
 
 /* VLAN filtering using general use mailbox
  * %NFP_NET_CFG_VLAN_FILTER:		Base address of VLAN filter mailbox
@@ -428,6 +454,7 @@
 #define  NFP_NET_CFG_VLAN_FILTER_PROTO	 (NFP_NET_CFG_VLAN_FILTER + 2)
 #define NFP_NET_CFG_VLAN_FILTER_SZ	 0x0004
 
+<<<<<<< HEAD
 /* Multicast filtering using general use mailbox
  * %NFP_NET_CFG_MULTICAST:		Base address of Multicast filter mailbox
  * %NFP_NET_CFG_MULTICAST_MAC_HI:	High 32-bits of Multicast MAC address
@@ -439,6 +466,8 @@
 #define NFP_NET_CFG_MULTICAST_MAC_LO	(NFP_NET_CFG_MULTICAST + 6)
 #define NFP_NET_CFG_MULTICAST_SZ	0x0006
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* TLV capabilities
  * %NFP_NET_CFG_TLV_TYPE:	Offset of type within the TLV
  * %NFP_NET_CFG_TLV_TYPE_REQUIRED: Driver must be able to parse the TLV
@@ -522,6 +551,13 @@
  * %NFP_NET_CFG_TLV_TYPE_CRYPTO_OPS_RX_SCAN:
  * Same as %NFP_NET_CFG_TLV_TYPE_CRYPTO_OPS, but crypto TLS does stream scan
  * RX sync, rather than kernel-assisted sync.
+<<<<<<< HEAD
+=======
+ *
+ * %NFP_NET_CFG_TLV_TYPE_SP_INDIFF:
+ * Empty, indicate the firmware is indifferent to port speed. Then no need to
+ * reload driver and firmware when port speed is changed.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #define NFP_NET_CFG_TLV_TYPE_UNKNOWN		0
 #define NFP_NET_CFG_TLV_TYPE_RESERVED		1
@@ -535,6 +571,10 @@
 #define NFP_NET_CFG_TLV_TYPE_CRYPTO_OPS		11 /* see crypto/fw.h */
 #define NFP_NET_CFG_TLV_TYPE_VNIC_STATS		12
 #define NFP_NET_CFG_TLV_TYPE_CRYPTO_OPS_RX_SCAN	13
+<<<<<<< HEAD
+=======
+#define NFP_NET_CFG_TLV_TYPE_SP_INDIFF		14
+>>>>>>> b7ba80a49124 (Commit)
 
 struct device;
 
@@ -549,6 +589,10 @@ struct device;
  * @vnic_stats_off:	offset of vNIC stats area
  * @vnic_stats_cnt:	number of vNIC stats
  * @tls_resync_ss:	TLS resync will be performed via stream scan
+<<<<<<< HEAD
+=======
+ * @sp_indiff:		Firmware is indifferent to port speed
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct nfp_net_tlv_caps {
 	u32 me_freq_mhz;
@@ -561,6 +605,10 @@ struct nfp_net_tlv_caps {
 	unsigned int vnic_stats_off;
 	unsigned int vnic_stats_cnt;
 	unsigned int tls_resync_ss:1;
+<<<<<<< HEAD
+=======
+	unsigned int sp_indiff:1;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int nfp_net_tlv_caps_parse(struct device *dev, u8 __iomem *ctrl_mem,

@@ -12,7 +12,10 @@
 #include <linux/clk-provider.h>
 #include <linux/err.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/of.h>
 #include <linux/of_address.h>
 #include <linux/of_irq.h>
@@ -116,10 +119,13 @@ static struct clk_div_table video_div_table[] = {
 	{ /* sentinel */ }
 };
 
+<<<<<<< HEAD
 static const char * enet_ref_sels[] = { "enet_ref", "enet_ref_pad", };
 static const u32 enet_ref_sels_table[] = { IMX6Q_GPR1_ENET_CLK_SEL_ANATOP, IMX6Q_GPR1_ENET_CLK_SEL_PAD };
 static const u32 enet_ref_sels_table_mask = IMX6Q_GPR1_ENET_CLK_SEL_ANATOP;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned int share_count_esai;
 static unsigned int share_count_asrc;
 static unsigned int share_count_ssi1;
@@ -913,12 +919,15 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
 	if (clk_on_imx6q() && imx_get_soc_revision() == IMX_CHIP_REVISION_1_0)
 		hws[IMX6QDL_CLK_GPT_3M] = hws[IMX6QDL_CLK_GPT_IPG_PER];
 
+<<<<<<< HEAD
 	hws[IMX6QDL_CLK_ENET_REF_PAD] = imx6q_obtain_fixed_clk_hw(ccm_node, "enet_ref_pad", 0);
 
 	hws[IMX6QDL_CLK_ENET_REF_SEL] = imx_clk_gpr_mux("enet_ref_sel", "fsl,imx6q-iomuxc-gpr",
 				IOMUXC_GPR1, enet_ref_sels, ARRAY_SIZE(enet_ref_sels),
 				enet_ref_sels_table, enet_ref_sels_table_mask);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	imx_check_clk_hws(hws, IMX6QDL_CLK_END);
 
 	of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_hw_data);
@@ -985,8 +994,12 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
 			       hws[IMX6QDL_CLK_PLL3_USB_OTG]->clk);
 	}
 
+<<<<<<< HEAD
 	clk_set_parent(hws[IMX6QDL_CLK_ENET_REF_SEL]->clk, hws[IMX6QDL_CLK_ENET_REF]->clk);
 
 	imx_register_uart_clocks();
+=======
+	imx_register_uart_clocks(2);
+>>>>>>> b7ba80a49124 (Commit)
 }
 CLK_OF_DECLARE(imx6q, "fsl,imx6q-ccm", imx6q_clocks_init);

@@ -166,7 +166,11 @@ static void kunit_exec_run_tests(struct suite_set *suite_set)
 {
 	size_t num_suites = suite_set->end - suite_set->start;
 
+<<<<<<< HEAD
 	pr_info("KTAP version 1\n");
+=======
+	pr_info("TAP version 14\n");
+>>>>>>> b7ba80a49124 (Commit)
 	pr_info("1..%zu\n", num_suites);
 
 	__kunit_test_suites_init(suite_set->start, num_suites);
@@ -177,8 +181,13 @@ static void kunit_exec_list_tests(struct suite_set *suite_set)
 	struct kunit_suite * const *suites;
 	struct kunit_case *test_case;
 
+<<<<<<< HEAD
 	/* Hack: print a ktap header so kunit.py can find the start of KUnit output. */
 	pr_info("KTAP version 1\n");
+=======
+	/* Hack: print a tap header so kunit.py can find the start of KUnit output. */
+	pr_info("TAP version 14\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (suites = suite_set->start; suites < suite_set->end; suites++)
 		kunit_suite_for_each_test_case((*suites), test_case) {
@@ -190,10 +199,13 @@ int kunit_run_all_tests(void)
 {
 	struct suite_set suite_set = {__kunit_suites_start, __kunit_suites_end};
 	int err = 0;
+<<<<<<< HEAD
 	if (!kunit_enabled()) {
 		pr_info("kunit: disabled\n");
 		goto out;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (filter_glob_param) {
 		suite_set = kunit_filter_suites(&suite_set, filter_glob_param, &err);

@@ -16,6 +16,7 @@
  * Copyright (C) 2001 PPC 64 Team, IBM Corp
  */
 
+<<<<<<< HEAD
 enum rtas_function_index {
 	RTAS_FNIDX__CHECK_EXCEPTION,
 	RTAS_FNIDX__DISPLAY_CHARACTER,
@@ -195,6 +196,8 @@ typedef struct {
 #define RTAS_FN_THAW_TIME_BASE                    rtas_fn_handle(RTAS_FNIDX__THAW_TIME_BASE)
 #define RTAS_FN_WRITE_PCI_CONFIG                  rtas_fn_handle(RTAS_FNIDX__WRITE_PCI_CONFIG)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RTAS_UNKNOWN_SERVICE (-1)
 #define RTAS_INSTANTIATE_MAX (1ULL<<30) /* Don't instantiate rtas at/above this value */
 
@@ -212,6 +215,24 @@ typedef struct {
 #define RTAS_THREADS_ACTIVE     -9005 /* Multiple processor threads active */
 #define RTAS_OUTSTANDING_COPROC -9006 /* Outstanding coprocessor operations */
 
+<<<<<<< HEAD
+=======
+/*
+ * In general to call RTAS use rtas_token("string") to lookup
+ * an RTAS token for the given string (e.g. "event-scan").
+ * To actually perform the call use
+ *    ret = rtas_call(token, n_in, n_out, ...)
+ * Where n_in is the number of input parameters and
+ *       n_out is the number of output parameters
+ *
+ * If the "string" is invalid on this system, RTAS_UNKNOWN_SERVICE
+ * will be returned as a token.  rtas_call() does look for this
+ * token and error out gracefully so rtas_call(rtas_token("str"), ...)
+ * may be safely used for one-shot calls to RTAS.
+ *
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 /* RTAS event classes */
 #define RTAS_INTERNAL_ERROR		0x80000000 /* set bit 0 */
 #define RTAS_EPOW_WARNING		0x40000000 /* set bit 1 */
@@ -401,11 +422,14 @@ extern void (*rtas_flash_term_hook)(int);
 
 extern struct rtas_t rtas;
 
+<<<<<<< HEAD
 s32 rtas_function_token(const rtas_fn_handle_t handle);
 static inline bool rtas_function_implemented(const rtas_fn_handle_t handle)
 {
 	return rtas_function_token(handle) != RTAS_UNKNOWN_SERVICE;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern int rtas_token(const char *service);
 extern int rtas_service_present(const char *service);
 extern int rtas_call(int token, int, int, int *, ...);

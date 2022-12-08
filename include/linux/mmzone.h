@@ -7,7 +7,10 @@
 
 #include <linux/spinlock.h>
 #include <linux/list.h>
+<<<<<<< HEAD
 #include <linux/list_nulls.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/wait.h>
 #include <linux/bitops.h>
 #include <linux/cache.h>
@@ -26,6 +29,7 @@
 
 /* Free memory management - zoned buddy allocator.  */
 #ifndef CONFIG_ARCH_FORCE_MAX_ORDER
+<<<<<<< HEAD
 #define MAX_ORDER 10
 #else
 #define MAX_ORDER CONFIG_ARCH_FORCE_MAX_ORDER
@@ -33,6 +37,13 @@
 #define MAX_ORDER_NR_PAGES (1 << MAX_ORDER)
 
 #define IS_MAX_ORDER_ALIGNED(pfn) IS_ALIGNED(pfn, MAX_ORDER_NR_PAGES)
+=======
+#define MAX_ORDER 11
+#else
+#define MAX_ORDER CONFIG_ARCH_FORCE_MAX_ORDER
+#endif
+#define MAX_ORDER_NR_PAGES (1 << (MAX_ORDER - 1))
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * PAGE_ALLOC_COSTLY_ORDER is the order at which allocations are deemed
@@ -95,7 +106,11 @@ static inline bool migratetype_is_mergeable(int mt)
 }
 
 #define for_each_migratetype_order(order, type) \
+<<<<<<< HEAD
 	for (order = 0; order <= MAX_ORDER; order++) \
+=======
+	for (order = 0; order < MAX_ORDER; order++) \
+>>>>>>> b7ba80a49124 (Commit)
 		for (type = 0; type < MIGRATE_TYPES; type++)
 
 extern int page_group_by_mobility_disabled;
@@ -110,6 +125,16 @@ struct free_area {
 	unsigned long		nr_free;
 };
 
+<<<<<<< HEAD
+=======
+static inline struct page *get_page_from_free_area(struct free_area *area,
+					    int migratetype)
+{
+	return list_first_entry_or_null(&area->free_list[migratetype],
+					struct page, lru);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool free_area_empty(struct free_area *area, int migratetype)
 {
 	return list_empty(&area->free_list[migratetype]);
@@ -198,7 +223,10 @@ enum node_stat_item {
 	NR_KERNEL_SCS_KB,	/* measured in KiB */
 #endif
 	NR_PAGETABLE,		/* used for pagetables */
+<<<<<<< HEAD
 	NR_SECONDARY_PAGETABLE, /* secondary pagetables, e.g. KVM pagetables */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SWAP
 	NR_SWAPCACHE,
 #endif
@@ -308,7 +336,11 @@ enum lruvec_flags {
  * They form a sliding window of a variable size [MIN_NR_GENS, MAX_NR_GENS]. An
  * offset within MAX_NR_GENS, i.e., gen, indexes the LRU list of the
  * corresponding generation. The gen counter in folio->flags stores gen+1 while
+<<<<<<< HEAD
  * a page is on one of lrugen->folios[]. Otherwise it stores 0.
+=======
+ * a page is on one of lrugen->lists[]. Otherwise it stores 0.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * A page is added to the youngest generation on faulting. The aging needs to
  * check the accessed bit at least twice before handing this page over to the
@@ -320,8 +352,13 @@ enum lruvec_flags {
  * rest of generations, if they exist, are considered inactive. See
  * lru_gen_is_active().
  *
+<<<<<<< HEAD
  * PG_active is always cleared while a page is on one of lrugen->folios[] so
  * that the aging needs not to worry about it. And it's set again when a page
+=======
+ * PG_active is always cleared while a page is on one of lrugen->lists[] so that
+ * the aging needs not to worry about it. And it's set again when a page
+>>>>>>> b7ba80a49124 (Commit)
  * considered active is isolated for non-reclaiming purposes, e.g., migration.
  * See lru_gen_add_folio() and lru_gen_del_folio().
  *
@@ -400,7 +437,11 @@ enum {
  * The number of pages in each generation is eventually consistent and therefore
  * can be transiently negative when reset_batch_size() is pending.
  */
+<<<<<<< HEAD
 struct lru_gen_folio {
+=======
+struct lru_gen_struct {
+>>>>>>> b7ba80a49124 (Commit)
 	/* the aging increments the youngest generation number */
 	unsigned long max_seq;
 	/* the eviction increments the oldest generation numbers */
@@ -408,7 +449,11 @@ struct lru_gen_folio {
 	/* the birth time of each generation in jiffies */
 	unsigned long timestamps[MAX_NR_GENS];
 	/* the multi-gen LRU lists, lazily sorted on eviction */
+<<<<<<< HEAD
 	struct list_head folios[MAX_NR_GENS][ANON_AND_FILE][MAX_NR_ZONES];
+=======
+	struct list_head lists[MAX_NR_GENS][ANON_AND_FILE][MAX_NR_ZONES];
+>>>>>>> b7ba80a49124 (Commit)
 	/* the multi-gen LRU sizes, eventually consistent */
 	long nr_pages[MAX_NR_GENS][ANON_AND_FILE][MAX_NR_ZONES];
 	/* the exponential moving average of refaulted */
@@ -422,6 +467,7 @@ struct lru_gen_folio {
 	atomic_long_t refaulted[NR_HIST_GENS][ANON_AND_FILE][MAX_NR_TIERS];
 	/* whether the multi-gen LRU is enabled */
 	bool enabled;
+<<<<<<< HEAD
 #ifdef CONFIG_MEMCG
 	/* the memcg generation this lru_gen_folio belongs to */
 	u8 gen;
@@ -430,6 +476,8 @@ struct lru_gen_folio {
 	/* per-node lru_gen_folio list for global reclaim */
 	struct hlist_nulls_node list;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum {
@@ -465,7 +513,11 @@ struct lru_gen_mm_state {
 struct lru_gen_mm_walk {
 	/* the lruvec under reclaim */
 	struct lruvec *lruvec;
+<<<<<<< HEAD
 	/* unstable max_seq from lru_gen_folio */
+=======
+	/* unstable max_seq from lru_gen_struct */
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long max_seq;
 	/* the next address within an mm to scan */
 	unsigned long next_addr;
@@ -483,6 +535,7 @@ void lru_gen_init_lruvec(struct lruvec *lruvec);
 void lru_gen_look_around(struct page_vma_mapped_walk *pvmw);
 
 #ifdef CONFIG_MEMCG
+<<<<<<< HEAD
 
 /*
  * For each node, memcgs are divided into two generations: the old and the
@@ -564,6 +617,14 @@ static inline void lru_gen_init_pgdat(struct pglist_data *pgdat)
 {
 }
 
+=======
+void lru_gen_init_memcg(struct mem_cgroup *memcg);
+void lru_gen_exit_memcg(struct mem_cgroup *memcg);
+#endif
+
+#else /* !CONFIG_LRU_GEN */
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void lru_gen_init_lruvec(struct lruvec *lruvec)
 {
 }
@@ -573,7 +634,10 @@ static inline void lru_gen_look_around(struct page_vma_mapped_walk *pvmw)
 }
 
 #ifdef CONFIG_MEMCG
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void lru_gen_init_memcg(struct mem_cgroup *memcg)
 {
 }
@@ -581,6 +645,7 @@ static inline void lru_gen_init_memcg(struct mem_cgroup *memcg)
 static inline void lru_gen_exit_memcg(struct mem_cgroup *memcg)
 {
 }
+<<<<<<< HEAD
 
 static inline void lru_gen_online_memcg(struct mem_cgroup *memcg)
 {
@@ -599,6 +664,9 @@ static inline void lru_gen_soft_reclaim(struct lruvec *lruvec)
 }
 
 #endif /* CONFIG_MEMCG */
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* CONFIG_LRU_GEN */
 
@@ -621,7 +689,11 @@ struct lruvec {
 	unsigned long			flags;
 #ifdef CONFIG_LRU_GEN
 	/* evictable pages divided into generations */
+<<<<<<< HEAD
 	struct lru_gen_folio		lrugen;
+=======
+	struct lru_gen_struct		lrugen;
+>>>>>>> b7ba80a49124 (Commit)
 	/* to concurrently iterate lru_gen_mm_list */
 	struct lru_gen_mm_state		mm_state;
 #endif
@@ -684,8 +756,13 @@ struct per_cpu_pages {
 
 struct per_cpu_zonestat {
 #ifdef CONFIG_SMP
+<<<<<<< HEAD
 	s32 vm_stat_diff[NR_VM_ZONE_STAT_ITEMS];
 	s32 stat_threshold;
+=======
+	s8 vm_stat_diff[NR_VM_ZONE_STAT_ITEMS];
+	s8 stat_threshold;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 #ifdef CONFIG_NUMA
 	/*
@@ -698,8 +775,13 @@ struct per_cpu_zonestat {
 };
 
 struct per_cpu_nodestat {
+<<<<<<< HEAD
 	s32 stat_threshold;
 	s32 vm_node_stat_diff[NR_VM_NODE_STAT_ITEMS];
+=======
+	s8 stat_threshold;
+	s8 vm_node_stat_diff[NR_VM_NODE_STAT_ITEMS];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #endif /* !__GENERATING_BOUNDS.H */
@@ -917,7 +999,11 @@ struct zone {
 	CACHELINE_PADDING(_pad1_);
 
 	/* free areas of different sizes */
+<<<<<<< HEAD
 	struct free_area	free_area[MAX_ORDER + 1];
+=======
+	struct free_area	free_area[MAX_ORDER];
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* zone flags, see below */
 	unsigned long		flags;
@@ -1083,6 +1169,7 @@ static inline bool is_zone_device_page(const struct page *page)
 {
 	return page_zonenum(page) == ZONE_DEVICE;
 }
+<<<<<<< HEAD
 
 /*
  * Consecutive zone device pages should not be merged into the same sgl
@@ -1102,6 +1189,8 @@ static inline bool zone_device_pages_have_same_pgmap(const struct page *a,
 	return a->pgmap == b->pgmap;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern void memmap_init_zone_device(struct zone *, unsigned long,
 				    unsigned long, struct dev_pagemap *);
 #else
@@ -1109,11 +1198,14 @@ static inline bool is_zone_device_page(const struct page *page)
 {
 	return false;
 }
+<<<<<<< HEAD
 static inline bool zone_device_pages_have_same_pgmap(const struct page *a,
 						     const struct page *b)
 {
 	return true;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 static inline bool folio_is_zone_device(const struct folio *folio)
@@ -1207,6 +1299,7 @@ struct deferred_split {
 };
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_MEMORY_FAILURE
 /*
  * Per NUMA node memory failure handling statistics.
@@ -1232,6 +1325,8 @@ struct memory_failure_stats {
 };
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * On NUMA machines, each NUMA node would have a pg_data_t to describe
  * it's memory layout. On UMA machines there is a single pglist_data which
@@ -1346,7 +1441,11 @@ typedef struct pglist_data {
 	/* start time in ms of current promote threshold adjustment period */
 	unsigned int nbp_th_start;
 	/*
+<<<<<<< HEAD
 	 * number of promote candidate pages at start time of current promote
+=======
+	 * number of promote candidate pages at stat time of current promote
+>>>>>>> b7ba80a49124 (Commit)
 	 * threshold adjustment period
 	 */
 	unsigned long nbp_th_nr_cand;
@@ -1364,9 +1463,13 @@ typedef struct pglist_data {
 
 #ifdef CONFIG_LRU_GEN
 	/* kswap mm walk data */
+<<<<<<< HEAD
 	struct lru_gen_mm_walk mm_walk;
 	/* lru_gen_folio list */
 	struct lru_gen_memcg memcg_lru;
+=======
+	struct lru_gen_mm_walk	mm_walk;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	CACHELINE_PADDING(_pad2_);
@@ -1377,9 +1480,12 @@ typedef struct pglist_data {
 #ifdef CONFIG_NUMA
 	struct memory_tier __rcu *memtier;
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_MEMORY_FAILURE
 	struct memory_failure_stats mf_stats;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } pg_data_t;
 
 #define node_present_pages(nid)	(NODE_DATA(nid)->node_present_pages)
@@ -1740,7 +1846,11 @@ static inline bool movable_only_nodes(nodemask_t *nodes)
 #define SECTION_BLOCKFLAGS_BITS \
 	((1UL << (PFN_SECTION_SHIFT - pageblock_order)) * NR_PAGEBLOCK_BITS)
 
+<<<<<<< HEAD
 #if (MAX_ORDER + PAGE_SHIFT) > SECTION_SIZE_BITS
+=======
+#if (MAX_ORDER - 1 + PAGE_SHIFT) > SECTION_SIZE_BITS
+>>>>>>> b7ba80a49124 (Commit)
 #error Allocator MAX_ORDER exceeds SECTION_SIZE
 #endif
 

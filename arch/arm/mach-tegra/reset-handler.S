@@ -19,8 +19,11 @@
 
 #define PMC_SCRATCH41	0x140
 
+<<<<<<< HEAD
 .arch armv7-a
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PM_SLEEP
 /*
  *	tegra_resume

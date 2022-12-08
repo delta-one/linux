@@ -7,10 +7,17 @@
 #ifndef __XFS_SYSFS_H__
 #define __XFS_SYSFS_H__
 
+<<<<<<< HEAD
 extern const struct kobj_type xfs_mp_ktype;	/* xfs_mount */
 extern const struct kobj_type xfs_dbg_ktype;	/* debug */
 extern const struct kobj_type xfs_log_ktype;	/* xlog */
 extern const struct kobj_type xfs_stats_ktype;	/* stats */
+=======
+extern struct kobj_type xfs_mp_ktype;	/* xfs_mount */
+extern struct kobj_type xfs_dbg_ktype;	/* debug */
+extern struct kobj_type xfs_log_ktype;	/* xlog */
+extern struct kobj_type xfs_stats_ktype;	/* stats */
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline struct xfs_kobj *
 to_kobj(struct kobject *kobject)
@@ -28,11 +35,16 @@ xfs_sysfs_release(struct kobject *kobject)
 static inline int
 xfs_sysfs_init(
 	struct xfs_kobj		*kobj,
+<<<<<<< HEAD
 	const struct kobj_type	*ktype,
+=======
+	struct kobj_type	*ktype,
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfs_kobj		*parent_kobj,
 	const char		*name)
 {
 	struct kobject		*parent;
+<<<<<<< HEAD
 	int err;
 
 	parent = parent_kobj ? &parent_kobj->kobject : NULL;
@@ -42,6 +54,12 @@ xfs_sysfs_init(
 		kobject_put(&kobj->kobject);
 
 	return err;
+=======
+
+	parent = parent_kobj ? &parent_kobj->kobject : NULL;
+	init_completion(&kobj->complete);
+	return kobject_init_and_add(&kobj->kobject, ktype, parent, "%s", name);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void

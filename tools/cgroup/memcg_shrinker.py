@@ -5,6 +5,10 @@
 
 import os
 import argparse
+<<<<<<< HEAD
+=======
+import sys
+>>>>>>> b7ba80a49124 (Commit)
 
 
 def scan_cgroups(cgroup_root):
@@ -43,7 +47,11 @@ def main():
 
     cgroups = scan_cgroups("/sys/fs/cgroup/")
     shrinkers = scan_shrinkers("/sys/kernel/debug/shrinker/")
+<<<<<<< HEAD
     shrinkers.sort(reverse = True, key = lambda x: x[0])
+=======
+    shrinkers = sorted(shrinkers, reverse = True, key = lambda x: x[0])
+>>>>>>> b7ba80a49124 (Commit)
 
     n = 0
     for s in shrinkers:

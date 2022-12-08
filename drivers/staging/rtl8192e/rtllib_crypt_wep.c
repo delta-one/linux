@@ -27,6 +27,10 @@ struct prism2_wep_data {
 	struct arc4_ctx tx_ctx_arc4;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static void *prism2_wep_init(int keyidx)
 {
 	struct prism2_wep_data *priv;
@@ -45,6 +49,10 @@ static void *prism2_wep_init(int keyidx)
 	return priv;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static void prism2_wep_deinit(void *priv)
 {
 	kfree_sensitive(priv);
@@ -118,6 +126,10 @@ static int prism2_wep_encrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Perform WEP decryption on given struct buffer. Buffer includes whole WEP
  * part of the frame: IV (4 bytes), encrypted payload (including SNAP header),
  * ICV (4 bytes). len includes both IV and ICV.
@@ -177,6 +189,10 @@ static int prism2_wep_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static int prism2_wep_set_key(void *key, int len, u8 *seq, void *priv)
 {
 	struct prism2_wep_data *wep = priv;
@@ -190,6 +206,10 @@ static int prism2_wep_set_key(void *key, int len, u8 *seq, void *priv)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static int prism2_wep_get_key(void *key, int len, u8 *seq, void *priv)
 {
 	struct prism2_wep_data *wep = priv;
@@ -202,6 +222,10 @@ static int prism2_wep_get_key(void *key, int len, u8 *seq, void *priv)
 	return wep->key_len;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static void prism2_wep_print_stats(struct seq_file *m, void *priv)
 {
 	struct prism2_wep_data *wep = priv;
@@ -225,11 +249,19 @@ static struct lib80211_crypto_ops rtllib_crypt_wep = {
 	.owner			= THIS_MODULE,
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __init rtllib_crypto_wep_init(void)
 {
 	return lib80211_register_crypto_ops(&rtllib_crypt_wep);
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static void __exit rtllib_crypto_wep_exit(void)
 {
 	lib80211_unregister_crypto_ops(&rtllib_crypt_wep);

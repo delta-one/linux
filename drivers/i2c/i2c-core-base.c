@@ -34,7 +34,10 @@
 #include <linux/of.h>
 #include <linux/of_irq.h>
 #include <linux/pinctrl/consumer.h>
+<<<<<<< HEAD
 #include <linux/pinctrl/devinfo.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pm_domain.h>
 #include <linux/pm_runtime.h>
 #include <linux/pm_wakeirq.h>
@@ -137,9 +140,15 @@ static int i2c_device_match(struct device *dev, struct device_driver *drv)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int i2c_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct i2c_client *client = to_i2c_client(dev);
+=======
+static int i2c_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct i2c_client *client = to_i2c_client(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	rc = of_device_uevent_modalias(dev, env);
@@ -283,9 +292,13 @@ static void i2c_gpio_init_pinctrl_recovery(struct i2c_adapter *adap)
 {
 	struct i2c_bus_recovery_info *bri = adap->bus_recovery_info;
 	struct device *dev = &adap->dev;
+<<<<<<< HEAD
 	struct pinctrl *p = bri->pinctrl ?: dev_pinctrl(dev->parent);
 
 	bri->pinctrl = p;
+=======
+	struct pinctrl *p = bri->pinctrl;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * we can't change states without pinctrl, so remove the states if
@@ -470,7 +483,10 @@ static int i2c_device_probe(struct device *dev)
 {
 	struct i2c_client	*client = i2c_verify_client(dev);
 	struct i2c_driver	*driver;
+<<<<<<< HEAD
 	bool do_power_on;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int status;
 
 	if (!client)
@@ -491,11 +507,15 @@ static int i2c_device_probe(struct device *dev)
 			if (irq == -EINVAL || irq == -ENODATA)
 				irq = of_irq_get(dev->of_node, 0);
 		} else if (ACPI_COMPANION(dev)) {
+<<<<<<< HEAD
 			bool wake_capable;
 
 			irq = i2c_acpi_get_irq(client, &wake_capable);
 			if (irq > 0 && wake_capable)
 				client->flags |= I2C_CLIENT_WAKE;
+=======
+			irq = i2c_acpi_get_irq(client);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		if (irq == -EPROBE_DEFER) {
 			status = irq;
@@ -549,8 +569,13 @@ static int i2c_device_probe(struct device *dev)
 	if (status < 0)
 		goto err_clear_wakeup_irq;
 
+<<<<<<< HEAD
 	do_power_on = !i2c_acpi_waive_d0_probe(dev);
 	status = dev_pm_domain_attach(&client->dev, do_power_on);
+=======
+	status = dev_pm_domain_attach(&client->dev,
+				      !i2c_acpi_waive_d0_probe(dev));
+>>>>>>> b7ba80a49124 (Commit)
 	if (status)
 		goto err_clear_wakeup_irq;
 
@@ -561,8 +586,20 @@ static int i2c_device_probe(struct device *dev)
 		goto err_detach_pm_domain;
 	}
 
+<<<<<<< HEAD
 	if (driver->probe)
 		status = driver->probe(client);
+=======
+	/*
+	 * When there are no more users of probe(),
+	 * rename probe_new to probe.
+	 */
+	if (driver->probe_new)
+		status = driver->probe_new(client);
+	else if (driver->probe)
+		status = driver->probe(client,
+				       i2c_match_id(driver->id_table, client));
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		status = -EINVAL;
 
@@ -582,7 +619,11 @@ static int i2c_device_probe(struct device *dev)
 err_release_driver_resources:
 	devres_release_group(&client->dev, client->devres_group_id);
 err_detach_pm_domain:
+<<<<<<< HEAD
 	dev_pm_domain_detach(&client->dev, do_power_on);
+=======
+	dev_pm_domain_detach(&client->dev, !i2c_acpi_waive_d0_probe(dev));
+>>>>>>> b7ba80a49124 (Commit)
 err_clear_wakeup_irq:
 	dev_pm_clear_wake_irq(&client->dev);
 	device_init_wakeup(&client->dev, false);
@@ -607,7 +648,11 @@ static void i2c_device_remove(struct device *dev)
 
 	devres_release_group(&client->dev, client->devres_group_id);
 
+<<<<<<< HEAD
 	dev_pm_domain_detach(&client->dev, true);
+=======
+	dev_pm_domain_detach(&client->dev, !i2c_acpi_waive_d0_probe(dev));
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_pm_clear_wake_irq(&client->dev);
 	device_init_wakeup(&client->dev, false);
@@ -1008,6 +1053,7 @@ void i2c_unregister_device(struct i2c_client *client)
 }
 EXPORT_SYMBOL_GPL(i2c_unregister_device);
 
+<<<<<<< HEAD
 /**
  * i2c_find_device_by_fwnode() - find an i2c_client for the fwnode
  * @fwnode: &struct fwnode_handle corresponding to the &struct i2c_client
@@ -1037,13 +1083,20 @@ struct i2c_client *i2c_find_device_by_fwnode(struct fwnode_handle *fwnode)
 }
 EXPORT_SYMBOL(i2c_find_device_by_fwnode);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id dummy_id[] = {
 	{ "dummy", 0 },
 	{ },
 };
 
+<<<<<<< HEAD
 static int dummy_probe(struct i2c_client *client)
+=======
+static int dummy_probe(struct i2c_client *client,
+		       const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return 0;
 }
@@ -1786,6 +1839,7 @@ int devm_i2c_add_adapter(struct device *dev, struct i2c_adapter *adapter)
 }
 EXPORT_SYMBOL_GPL(devm_i2c_add_adapter);
 
+<<<<<<< HEAD
 static int i2c_dev_or_parent_fwnode_match(struct device *dev, const void *data)
 {
 	if (dev_fwnode(dev) == data)
@@ -1855,6 +1909,8 @@ struct i2c_adapter *i2c_get_adapter_by_fwnode(struct fwnode_handle *fwnode)
 }
 EXPORT_SYMBOL(i2c_get_adapter_by_fwnode);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void i2c_parse_timing(struct device *dev, char *prop_name, u32 *cur_val_p,
 			    u32 def_val, bool use_def)
 {
@@ -2330,6 +2386,7 @@ int i2c_get_device_id(const struct i2c_client *client,
 }
 EXPORT_SYMBOL_GPL(i2c_get_device_id);
 
+<<<<<<< HEAD
 /**
  * i2c_client_get_device_id - get the driver match table entry of a device
  * @client: the device to query. The device must be bound to a driver
@@ -2344,6 +2401,8 @@ const struct i2c_device_id *i2c_client_get_device_id(const struct i2c_client *cl
 }
 EXPORT_SYMBOL_GPL(i2c_client_get_device_id);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* ----------------------------------------------------
  * the i2c address scanning function
  * Will not work for 10-bit addresses!

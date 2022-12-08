@@ -97,7 +97,10 @@ class HeaderParser(object):
         self.desc_unique_helpers = set()
         self.define_unique_helpers = []
         self.helper_enum_vals = {}
+<<<<<<< HEAD
         self.helper_enum_pos = {}
+=======
+>>>>>>> b7ba80a49124 (Commit)
         self.desc_syscalls = []
         self.enum_syscalls = []
 
@@ -254,6 +257,7 @@ class HeaderParser(object):
                 break
 
     def parse_define_helpers(self):
+<<<<<<< HEAD
         # Parse FN(...) in #define ___BPF_FUNC_MAPPER to compare later with the
         # number of unique function names present in description and use the
         # correct enumeration value.
@@ -266,18 +270,36 @@ class HeaderParser(object):
         p = re.compile('\s*FN\((\w+), (\d+), ##ctx\)|\\\\')
         fn_defines_str = ''
         i = 0
+=======
+        # Parse FN(...) in #define __BPF_FUNC_MAPPER to compare later with the
+        # number of unique function names present in description and use the
+        # correct enumeration value.
+        # Note: seek_to(..) discards the first line below the target search text,
+        # resulting in FN(unspec) being skipped and not added to self.define_unique_helpers.
+        self.seek_to('#define __BPF_FUNC_MAPPER(FN)',
+                     'Could not find start of eBPF helper definition list')
+        # Searches for one FN(\w+) define or a backslash for newline
+        p = re.compile('\s*FN\((\w+)\)|\\\\')
+        fn_defines_str = ''
+        i = 1  # 'unspec' is skipped as mentioned above
+>>>>>>> b7ba80a49124 (Commit)
         while True:
             capture = p.match(self.line)
             if capture:
                 fn_defines_str += self.line
+<<<<<<< HEAD
                 helper_name = capture.expand(r'bpf_\1')
                 self.helper_enum_vals[helper_name] = int(capture.group(2))
                 self.helper_enum_pos[helper_name] = i
+=======
+                self.helper_enum_vals[capture.expand(r'bpf_\1')] = i
+>>>>>>> b7ba80a49124 (Commit)
                 i += 1
             else:
                 break
             self.line = self.reader.readline()
         # Find the number of occurences of FN(\w+)
+<<<<<<< HEAD
         self.define_unique_helpers = re.findall('FN\(\w+, \d+, ##ctx\)', fn_defines_str)
 
     def validate_helpers(self):
@@ -285,11 +307,18 @@ class HeaderParser(object):
         seen_helpers = set()
         seen_enum_vals = set()
         i = 0
+=======
+        self.define_unique_helpers = re.findall('FN\(\w+\)', fn_defines_str)
+
+    def assign_helper_values(self):
+        seen_helpers = set()
+>>>>>>> b7ba80a49124 (Commit)
         for helper in self.helpers:
             proto = helper.proto_break_down()
             name = proto['name']
             try:
                 enum_val = self.helper_enum_vals[name]
+<<<<<<< HEAD
                 enum_pos = self.helper_enum_pos[name]
             except KeyError:
                 raise Exception("Helper %s is missing from enum bpf_func_id" % name)
@@ -312,13 +341,30 @@ class HeaderParser(object):
 
             helper.enum_val = enum_val
             i += 1
+=======
+            except KeyError:
+                raise Exception("Helper %s is missing from enum bpf_func_id" % name)
+
+            # Enforce current practice of having the descriptions ordered
+            # by enum value.
+            seen_helpers.add(name)
+            desc_val = len(seen_helpers)
+            if desc_val != enum_val:
+                raise Exception("Helper %s comment order (#%d) must be aligned with its position (#%d) in enum bpf_func_id" % (name, desc_val, enum_val))
+
+            helper.enum_val = enum_val
+>>>>>>> b7ba80a49124 (Commit)
 
     def run(self):
         self.parse_desc_syscall()
         self.parse_enum_syscall()
         self.parse_desc_helpers()
         self.parse_define_helpers()
+<<<<<<< HEAD
         self.validate_helpers()
+=======
+        self.assign_helper_values()
+>>>>>>> b7ba80a49124 (Commit)
         self.reader.close()
 
 ###############################################################################
@@ -441,7 +487,11 @@ class PrinterHelpersRST(PrinterRST):
     """
     def __init__(self, parser):
         self.elements = parser.helpers
+<<<<<<< HEAD
         self.elem_number_check(parser.desc_unique_helpers, parser.define_unique_helpers, 'helper', '___BPF_FUNC_MAPPER')
+=======
+        self.elem_number_check(parser.desc_unique_helpers, parser.define_unique_helpers, 'helper', '__BPF_FUNC_MAPPER')
+>>>>>>> b7ba80a49124 (Commit)
 
     def print_header(self):
         header = '''\
@@ -654,7 +704,11 @@ class PrinterHelpers(Printer):
     """
     def __init__(self, parser):
         self.elements = parser.helpers
+<<<<<<< HEAD
         self.elem_number_check(parser.desc_unique_helpers, parser.define_unique_helpers, 'helper', '___BPF_FUNC_MAPPER')
+=======
+        self.elem_number_check(parser.desc_unique_helpers, parser.define_unique_helpers, 'helper', '__BPF_FUNC_MAPPER')
+>>>>>>> b7ba80a49124 (Commit)
 
     type_fwds = [
             'struct bpf_fib_lookup',
@@ -685,7 +739,10 @@ class PrinterHelpers(Printer):
             'struct udp6_sock',
             'struct unix_sock',
             'struct task_struct',
+<<<<<<< HEAD
             'struct cgroup',
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
             'struct __sk_buff',
             'struct sk_msg_md',
@@ -743,7 +800,10 @@ class PrinterHelpers(Printer):
             'struct udp6_sock',
             'struct unix_sock',
             'struct task_struct',
+<<<<<<< HEAD
             'struct cgroup',
+=======
+>>>>>>> b7ba80a49124 (Commit)
             'struct path',
             'struct btf_ptr',
             'struct inode',
@@ -752,7 +812,10 @@ class PrinterHelpers(Printer):
             'struct bpf_timer',
             'struct mptcp_sock',
             'struct bpf_dynptr',
+<<<<<<< HEAD
             'const struct bpf_dynptr',
+=======
+>>>>>>> b7ba80a49124 (Commit)
             'struct iphdr',
             'struct ipv6hdr',
     }

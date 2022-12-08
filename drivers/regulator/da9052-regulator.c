@@ -438,7 +438,10 @@ static struct platform_driver da9052_regulator_driver = {
 	.probe = da9052_regulator_probe,
 	.driver = {
 		.name = "da9052-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

@@ -8,7 +8,10 @@
 #include "ice_devlink.h"
 #include "ice_eswitch.h"
 #include "ice_fw_update.h"
+<<<<<<< HEAD
 #include "ice_dcb_lib.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int ice_active_port_option = -1;
 
@@ -311,6 +314,15 @@ static int ice_devlink_info_get(struct devlink *devlink,
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	err = devlink_info_driver_name_put(req, KBUILD_MODNAME);
+	if (err) {
+		NL_SET_ERR_MSG_MOD(extack, "Unable to set driver name");
+		goto out_free_ctx;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	ice_info_get_dsn(pf, ctx);
 
 	err = devlink_info_serial_number_put(req, ctx->buf);
@@ -371,7 +383,14 @@ out_free_ctx:
 
 /**
  * ice_devlink_reload_empr_start - Start EMP reset to activate new firmware
+<<<<<<< HEAD
  * @pf: pointer to the pf instance
+=======
+ * @devlink: pointer to the devlink instance to reload
+ * @netns_change: if true, the network namespace is changing
+ * @action: the action to perform. Must be DEVLINK_RELOAD_ACTION_FW_ACTIVATE
+ * @limit: limits on what reload should do, such as not resetting
+>>>>>>> b7ba80a49124 (Commit)
  * @extack: netlink extended ACK structure
  *
  * Allow user to activate new Embedded Management Processor firmware by
@@ -384,9 +403,18 @@ out_free_ctx:
  * any source.
  */
 static int
+<<<<<<< HEAD
 ice_devlink_reload_empr_start(struct ice_pf *pf,
 			      struct netlink_ext_ack *extack)
 {
+=======
+ice_devlink_reload_empr_start(struct devlink *devlink, bool netns_change,
+			      enum devlink_reload_action action,
+			      enum devlink_reload_limit limit,
+			      struct netlink_ext_ack *extack)
+{
+	struct ice_pf *pf = devlink_priv(devlink);
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = ice_pf_to_dev(pf);
 	struct ice_hw *hw = &pf->hw;
 	u8 pending;
@@ -425,6 +453,7 @@ ice_devlink_reload_empr_start(struct ice_pf *pf,
 }
 
 /**
+<<<<<<< HEAD
  * ice_devlink_reload_down - prepare for reload
  * @devlink: pointer to the devlink instance to reload
  * @netns_change: if true, the network namespace is changing
@@ -470,6 +499,13 @@ ice_devlink_reload_down(struct devlink *devlink, bool netns_change,
 /**
  * ice_devlink_reload_empr_finish - Wait for EMP reset to finish
  * @pf: pointer to the pf instance
+=======
+ * ice_devlink_reload_empr_finish - Wait for EMP reset to finish
+ * @devlink: pointer to the devlink instance reloading
+ * @action: the action requested
+ * @limit: limits imposed by userspace, such as not resetting
+ * @actions_performed: on return, indicate what actions actually performed
+>>>>>>> b7ba80a49124 (Commit)
  * @extack: netlink extended ACK structure
  *
  * Wait for driver to finish rebuilding after EMP reset is completed. This
@@ -477,11 +513,25 @@ ice_devlink_reload_down(struct devlink *devlink, bool netns_change,
  * for the driver's rebuild to complete.
  */
 static int
+<<<<<<< HEAD
 ice_devlink_reload_empr_finish(struct ice_pf *pf,
 			       struct netlink_ext_ack *extack)
 {
 	int err;
 
+=======
+ice_devlink_reload_empr_finish(struct devlink *devlink,
+			       enum devlink_reload_action action,
+			       enum devlink_reload_limit limit,
+			       u32 *actions_performed,
+			       struct netlink_ext_ack *extack)
+{
+	struct ice_pf *pf = devlink_priv(devlink);
+	int err;
+
+	*actions_performed = BIT(DEVLINK_RELOAD_ACTION_FW_ACTIVATE);
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = ice_wait_for_reset(pf, 60 * HZ);
 	if (err) {
 		NL_SET_ERR_MSG_MOD(extack, "Device still resetting after 1 minute");
@@ -736,6 +786,7 @@ ice_devlink_port_unsplit(struct devlink *devlink, struct devlink_port *port,
 	return ice_devlink_port_split(devlink, port, 1, extack);
 }
 
+<<<<<<< HEAD
 /**
  * ice_tear_down_devlink_rate_tree - removes devlink-rate exported tree
  * @pf: pf struct
@@ -1257,12 +1308,21 @@ static const struct devlink_ops ice_devlink_ops = {
 	/* The ice driver currently does not support driver reinit */
 	.reload_down = ice_devlink_reload_down,
 	.reload_up = ice_devlink_reload_up,
+=======
+static const struct devlink_ops ice_devlink_ops = {
+	.supported_flash_update_params = DEVLINK_SUPPORT_FLASH_UPDATE_OVERWRITE_MASK,
+	.reload_actions = BIT(DEVLINK_RELOAD_ACTION_FW_ACTIVATE),
+	/* The ice driver currently does not support driver reinit */
+	.reload_down = ice_devlink_reload_empr_start,
+	.reload_up = ice_devlink_reload_empr_finish,
+>>>>>>> b7ba80a49124 (Commit)
 	.port_split = ice_devlink_port_split,
 	.port_unsplit = ice_devlink_port_unsplit,
 	.eswitch_mode_get = ice_eswitch_mode_get,
 	.eswitch_mode_set = ice_eswitch_mode_set,
 	.info_get = ice_devlink_info_get,
 	.flash_update = ice_devlink_flash_update,
+<<<<<<< HEAD
 
 	.rate_node_new = ice_devlink_rate_node_new,
 	.rate_node_del = ice_devlink_rate_node_del,
@@ -1279,6 +1339,8 @@ static const struct devlink_ops ice_devlink_ops = {
 
 	.rate_leaf_parent_set = ice_devlink_set_parent,
 	.rate_node_parent_set = ice_devlink_set_parent,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int
@@ -1435,6 +1497,10 @@ void ice_devlink_register(struct ice_pf *pf)
 {
 	struct devlink *devlink = priv_to_devlink(pf);
 
+<<<<<<< HEAD
+=======
+	devlink_set_features(devlink, DEVLINK_F_RELOAD);
+>>>>>>> b7ba80a49124 (Commit)
 	devlink_register(devlink);
 }
 
@@ -1469,9 +1535,31 @@ ice_devlink_set_switch_id(struct ice_pf *pf, struct netdev_phys_item_id *ppid)
 int ice_devlink_register_params(struct ice_pf *pf)
 {
 	struct devlink *devlink = priv_to_devlink(pf);
+<<<<<<< HEAD
 
 	return devlink_params_register(devlink, ice_devlink_params,
 				       ARRAY_SIZE(ice_devlink_params));
+=======
+	union devlink_param_value value;
+	int err;
+
+	err = devlink_params_register(devlink, ice_devlink_params,
+				      ARRAY_SIZE(ice_devlink_params));
+	if (err)
+		return err;
+
+	value.vbool = false;
+	devlink_param_driverinit_value_set(devlink,
+					   DEVLINK_PARAM_GENERIC_ID_ENABLE_IWARP,
+					   value);
+
+	value.vbool = test_bit(ICE_FLAG_RDMA_ENA, pf->flags) ? true : false;
+	devlink_param_driverinit_value_set(devlink,
+					   DEVLINK_PARAM_GENERIC_ID_ENABLE_ROCE,
+					   value);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void ice_devlink_unregister_params(struct ice_pf *pf)
@@ -1570,7 +1658,16 @@ int ice_devlink_create_pf_port(struct ice_pf *pf)
  */
 void ice_devlink_destroy_pf_port(struct ice_pf *pf)
 {
+<<<<<<< HEAD
 	devlink_port_unregister(&pf->devlink_port);
+=======
+	struct devlink_port *devlink_port;
+
+	devlink_port = &pf->devlink_port;
+
+	devlink_port_type_clear(devlink_port);
+	devlink_port_unregister(devlink_port);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1626,12 +1723,22 @@ int ice_devlink_create_vf_port(struct ice_vf *vf)
  */
 void ice_devlink_destroy_vf_port(struct ice_vf *vf)
 {
+<<<<<<< HEAD
 	devl_rate_leaf_destroy(&vf->devlink_port);
 	devlink_port_unregister(&vf->devlink_port);
+=======
+	struct devlink_port *devlink_port;
+
+	devlink_port = &vf->devlink_port;
+
+	devlink_port_type_clear(devlink_port);
+	devlink_port_unregister(devlink_port);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define ICE_DEVLINK_READ_BLK_SIZE (1024 * 1024)
 
+<<<<<<< HEAD
 static const struct devlink_region_ops ice_nvm_region_ops;
 static const struct devlink_region_ops ice_sram_region_ops;
 
@@ -1648,6 +1755,23 @@ static const struct devlink_region_ops ice_sram_region_ops;
  * It captures a snapshot of the NVM or Shadow RAM flash contents. This
  * snapshot can then later be viewed via the DEVLINK_CMD_REGION_READ netlink
  * interface.
+=======
+/**
+ * ice_devlink_nvm_snapshot - Capture a snapshot of the NVM flash contents
+ * @devlink: the devlink instance
+ * @ops: the devlink region being snapshotted
+ * @extack: extended ACK response structure
+ * @data: on exit points to snapshot data buffer
+ *
+ * This function is called in response to the DEVLINK_CMD_REGION_TRIGGER for
+ * the nvm-flash devlink region. It captures a snapshot of the full NVM flash
+ * contents, including both banks of flash. This snapshot can later be viewed
+ * via the devlink-region interface.
+ *
+ * It captures the flash using the FLASH_ONLY bit set when reading via
+ * firmware, so it does not read the current Shadow RAM contents. For that,
+ * use the shadow-ram region.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @returns zero on success, and updates the data pointer. Returns a non-zero
  * error code on failure.
@@ -1659,12 +1783,16 @@ static int ice_devlink_nvm_snapshot(struct devlink *devlink,
 	struct ice_pf *pf = devlink_priv(devlink);
 	struct device *dev = ice_pf_to_dev(pf);
 	struct ice_hw *hw = &pf->hw;
+<<<<<<< HEAD
 	bool read_shadow_ram;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8 *nvm_data, *tmp, i;
 	u32 nvm_size, left;
 	s8 num_blks;
 	int status;
 
+<<<<<<< HEAD
 	if (ops == &ice_nvm_region_ops) {
 		read_shadow_ram = false;
 		nvm_size = hw->flash.flash_size;
@@ -1676,10 +1804,17 @@ static int ice_devlink_nvm_snapshot(struct devlink *devlink,
 		return -EOPNOTSUPP;
 	}
 
+=======
+	nvm_size = hw->flash.flash_size;
+>>>>>>> b7ba80a49124 (Commit)
 	nvm_data = vzalloc(nvm_size);
 	if (!nvm_data)
 		return -ENOMEM;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	num_blks = DIV_ROUND_UP(nvm_size, ICE_DEVLINK_READ_BLK_SIZE);
 	tmp = nvm_data;
 	left = nvm_size;
@@ -1703,7 +1838,11 @@ static int ice_devlink_nvm_snapshot(struct devlink *devlink,
 		}
 
 		status = ice_read_flat_nvm(hw, i * ICE_DEVLINK_READ_BLK_SIZE,
+<<<<<<< HEAD
 					   &read_sz, tmp, read_shadow_ram);
+=======
+					   &read_sz, tmp, false);
+>>>>>>> b7ba80a49124 (Commit)
 		if (status) {
 			dev_dbg(dev, "ice_read_flat_nvm failed after reading %u bytes, err %d aq_err %d\n",
 				read_sz, status, hw->adminq.sq_last_status);
@@ -1724,6 +1863,7 @@ static int ice_devlink_nvm_snapshot(struct devlink *devlink,
 }
 
 /**
+<<<<<<< HEAD
  * ice_devlink_nvm_read - Read a portion of NVM flash contents
  * @devlink: the devlink instance
  * @ops: the devlink region to snapshot
@@ -1736,18 +1876,38 @@ static int ice_devlink_nvm_snapshot(struct devlink *devlink,
  * read a section of the NVM contents.
  *
  * It reads from either the nvm-flash or shadow-ram region contents.
+=======
+ * ice_devlink_sram_snapshot - Capture a snapshot of the Shadow RAM contents
+ * @devlink: the devlink instance
+ * @ops: the devlink region being snapshotted
+ * @extack: extended ACK response structure
+ * @data: on exit points to snapshot data buffer
+ *
+ * This function is called in response to the DEVLINK_CMD_REGION_TRIGGER for
+ * the shadow-ram devlink region. It captures a snapshot of the shadow ram
+ * contents. This snapshot can later be viewed via the devlink-region
+ * interface.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @returns zero on success, and updates the data pointer. Returns a non-zero
  * error code on failure.
  */
+<<<<<<< HEAD
 static int ice_devlink_nvm_read(struct devlink *devlink,
 				const struct devlink_region_ops *ops,
 				struct netlink_ext_ack *extack,
 				u64 offset, u32 size, u8 *data)
+=======
+static int
+ice_devlink_sram_snapshot(struct devlink *devlink,
+			  const struct devlink_region_ops __always_unused *ops,
+			  struct netlink_ext_ack *extack, u8 **data)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ice_pf *pf = devlink_priv(devlink);
 	struct device *dev = ice_pf_to_dev(pf);
 	struct ice_hw *hw = &pf->hw;
+<<<<<<< HEAD
 	bool read_shadow_ram;
 	u64 nvm_size;
 	int status;
@@ -1787,6 +1947,42 @@ static int ice_devlink_nvm_read(struct devlink *devlink,
 	}
 	ice_release_nvm(hw);
 
+=======
+	u8 *sram_data;
+	u32 sram_size;
+	int err;
+
+	sram_size = hw->flash.sr_words * 2u;
+	sram_data = vzalloc(sram_size);
+	if (!sram_data)
+		return -ENOMEM;
+
+	err = ice_acquire_nvm(hw, ICE_RES_READ);
+	if (err) {
+		dev_dbg(dev, "ice_acquire_nvm failed, err %d aq_err %d\n",
+			err, hw->adminq.sq_last_status);
+		NL_SET_ERR_MSG_MOD(extack, "Failed to acquire NVM semaphore");
+		vfree(sram_data);
+		return err;
+	}
+
+	/* Read from the Shadow RAM, rather than directly from NVM */
+	err = ice_read_flat_nvm(hw, 0, &sram_size, sram_data, true);
+	if (err) {
+		dev_dbg(dev, "ice_read_flat_nvm failed after reading %u bytes, err %d aq_err %d\n",
+			sram_size, err, hw->adminq.sq_last_status);
+		NL_SET_ERR_MSG_MOD(extack,
+				   "Failed to read Shadow RAM contents");
+		ice_release_nvm(hw);
+		vfree(sram_data);
+		return err;
+	}
+
+	ice_release_nvm(hw);
+
+	*data = sram_data;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1838,14 +2034,21 @@ static const struct devlink_region_ops ice_nvm_region_ops = {
 	.name = "nvm-flash",
 	.destructor = vfree,
 	.snapshot = ice_devlink_nvm_snapshot,
+<<<<<<< HEAD
 	.read = ice_devlink_nvm_read,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct devlink_region_ops ice_sram_region_ops = {
 	.name = "shadow-ram",
 	.destructor = vfree,
+<<<<<<< HEAD
 	.snapshot = ice_devlink_nvm_snapshot,
 	.read = ice_devlink_nvm_read,
+=======
+	.snapshot = ice_devlink_sram_snapshot,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct devlink_region_ops ice_devcaps_region_ops = {

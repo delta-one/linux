@@ -556,7 +556,11 @@
 	pinctrl-0 = <&pinctrl_uart3>;
 	status = "okay";
 
+<<<<<<< HEAD
 	mcu {
+=======
+	rave-sp {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "zii,rave-sp-rdu1";
 		current-speed = <38400>;
 		#address-cells = <1>;

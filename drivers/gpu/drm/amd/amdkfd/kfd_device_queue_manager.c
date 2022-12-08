@@ -200,13 +200,20 @@ static int add_queue_mes(struct device_queue_manager *dqm, struct queue *q,
 	queue_input.wptr_addr = (uint64_t)q->properties.write_ptr;
 
 	if (q->wptr_bo) {
+<<<<<<< HEAD
 		wptr_addr_off = (uint64_t)q->properties.write_ptr & (PAGE_SIZE - 1);
+=======
+		wptr_addr_off = (uint64_t)q->properties.write_ptr - (uint64_t)q->wptr_bo->kfd_bo->va;
+>>>>>>> b7ba80a49124 (Commit)
 		queue_input.wptr_mc_addr = ((uint64_t)q->wptr_bo->tbo.resource->start << PAGE_SHIFT) + wptr_addr_off;
 	}
 
 	queue_input.is_kfd_process = 1;
+<<<<<<< HEAD
 	queue_input.is_aql_queue = (q->properties.format == KFD_QUEUE_FORMAT_AQL);
 	queue_input.queue_size = q->properties.queue_size >> 2;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	queue_input.paging = false;
 	queue_input.tba_addr = qpd->tba_addr;
@@ -1242,6 +1249,7 @@ static void init_interrupts(struct device_queue_manager *dqm)
 			dqm->dev->kfd2kgd->init_interrupts(dqm->dev->adev, i);
 }
 
+<<<<<<< HEAD
 static void init_sdma_bitmaps(struct device_queue_manager *dqm)
 {
 	unsigned int num_sdma_queues =
@@ -1260,6 +1268,8 @@ static void init_sdma_bitmaps(struct device_queue_manager *dqm)
 	pr_info("sdma_bitmap: %llx\n", dqm->sdma_bitmap);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int initialize_nocpsch(struct device_queue_manager *dqm)
 {
 	int pipe, queue;
@@ -1288,7 +1298,15 @@ static int initialize_nocpsch(struct device_queue_manager *dqm)
 
 	memset(dqm->vmid_pasid, 0, sizeof(dqm->vmid_pasid));
 
+<<<<<<< HEAD
 	init_sdma_bitmaps(dqm);
+=======
+	dqm->sdma_bitmap = ~0ULL >> (64 - get_num_sdma_queues(dqm));
+	dqm->sdma_bitmap &= ~(get_reserved_sdma_queues_bitmap(dqm));
+	pr_info("sdma_bitmap: %llx\n", dqm->sdma_bitmap);
+
+	dqm->xgmi_sdma_bitmap = ~0ULL >> (64 - get_num_xgmi_sdma_queues(dqm));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1466,6 +1484,12 @@ static int set_sched_resources(struct device_queue_manager *dqm)
 
 static int initialize_cpsch(struct device_queue_manager *dqm)
 {
+<<<<<<< HEAD
+=======
+	uint64_t num_sdma_queues;
+	uint64_t num_xgmi_sdma_queues;
+
+>>>>>>> b7ba80a49124 (Commit)
 	pr_debug("num of pipes: %d\n", get_pipes_per_mec(dqm));
 
 	mutex_init(&dqm->lock_hidden);
@@ -1474,9 +1498,29 @@ static int initialize_cpsch(struct device_queue_manager *dqm)
 	dqm->active_cp_queue_count = 0;
 	dqm->gws_queue_count = 0;
 	dqm->active_runlist = false;
+<<<<<<< HEAD
 	INIT_WORK(&dqm->hw_exception_work, kfd_process_hw_exception);
 
 	init_sdma_bitmaps(dqm);
+=======
+
+	num_sdma_queues = get_num_sdma_queues(dqm);
+	if (num_sdma_queues >= BITS_PER_TYPE(dqm->sdma_bitmap))
+		dqm->sdma_bitmap = ULLONG_MAX;
+	else
+		dqm->sdma_bitmap = (BIT_ULL(num_sdma_queues) - 1);
+
+	dqm->sdma_bitmap &= ~(get_reserved_sdma_queues_bitmap(dqm));
+	pr_info("sdma_bitmap: %llx\n", dqm->sdma_bitmap);
+
+	num_xgmi_sdma_queues = get_num_xgmi_sdma_queues(dqm);
+	if (num_xgmi_sdma_queues >= BITS_PER_TYPE(dqm->xgmi_sdma_bitmap))
+		dqm->xgmi_sdma_bitmap = ULLONG_MAX;
+	else
+		dqm->xgmi_sdma_bitmap = (BIT_ULL(num_xgmi_sdma_queues) - 1);
+
+	INIT_WORK(&dqm->hw_exception_work, kfd_process_hw_exception);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -2373,7 +2417,11 @@ struct device_queue_manager *device_queue_manager_init(struct kfd_dev *dev)
 	if (init_mqd_managers(dqm))
 		goto out_free;
 
+<<<<<<< HEAD
 	if (!dev->shared_resources.enable_mes && allocate_hiq_sdma_mqd(dqm)) {
+=======
+	if (allocate_hiq_sdma_mqd(dqm)) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_err("Failed to allocate hiq sdma mqd trunk buffer\n");
 		goto out_free;
 	}
@@ -2397,8 +2445,12 @@ static void deallocate_hiq_sdma_mqd(struct kfd_dev *dev,
 void device_queue_manager_uninit(struct device_queue_manager *dqm)
 {
 	dqm->ops.uninitialize(dqm);
+<<<<<<< HEAD
 	if (!dqm->dev->shared_resources.enable_mes)
 		deallocate_hiq_sdma_mqd(dqm->dev, &dqm->hiq_sdma_mqd);
+=======
+	deallocate_hiq_sdma_mqd(dqm->dev, &dqm->hiq_sdma_mqd);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(dqm);
 }
 

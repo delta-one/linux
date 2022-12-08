@@ -81,7 +81,12 @@ g84_cipher_intr(struct nvkm_engine *cipher)
 {
 	struct nvkm_subdev *subdev = &cipher->subdev;
 	struct nvkm_device *device = subdev->device;
+<<<<<<< HEAD
 	struct nvkm_chan *chan;
+=======
+	struct nvkm_fifo *fifo = device->fifo;
+	struct nvkm_fifo_chan *chan;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 stat = nvkm_rd32(device, 0x102130);
 	u32 mthd = nvkm_rd32(device, 0x102190);
 	u32 data = nvkm_rd32(device, 0x102194);
@@ -89,16 +94,28 @@ g84_cipher_intr(struct nvkm_engine *cipher)
 	unsigned long flags;
 	char msg[128];
 
+<<<<<<< HEAD
 	chan = nvkm_chan_get_inst(cipher, (u64)inst << 12, &flags);
+=======
+	chan = nvkm_fifo_chan_inst(fifo, (u64)inst << 12, &flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (stat) {
 		nvkm_snprintbf(msg, sizeof(msg), g84_cipher_intr_mask, stat);
 		nvkm_error(subdev,  "%08x [%s] ch %d [%010llx %s] "
 				    "mthd %04x data %08x\n", stat, msg,
+<<<<<<< HEAD
 			   chan ? chan->id : -1, (u64)inst << 12,
 			   chan ? chan->name : "unknown",
 			   mthd, data);
 	}
 	nvkm_chan_put(&chan, flags);
+=======
+			   chan ? chan->chid : -1, (u64)inst << 12,
+			   chan ? chan->object.client->name : "unknown",
+			   mthd, data);
+	}
+	nvkm_fifo_chan_put(fifo, flags, &chan);
+>>>>>>> b7ba80a49124 (Commit)
 
 	nvkm_wr32(device, 0x102130, stat);
 	nvkm_wr32(device, 0x10200c, 0x10);

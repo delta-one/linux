@@ -352,7 +352,11 @@ static int ip5xxx_battery_get_property(struct power_supply *psy,
 		ret = ip5xxx_battery_read_adc(ip5xxx, IP5XXX_BATIADC_DAT0,
 					      IP5XXX_BATIADC_DAT1, &raw);
 
+<<<<<<< HEAD
 		val->intval = DIV_ROUND_CLOSEST(raw * 149197, 200);
+=======
+		val->intval = DIV_ROUND_CLOSEST(raw * 745985, 1000);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:

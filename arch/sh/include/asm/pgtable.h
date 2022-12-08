@@ -92,6 +92,11 @@ static inline unsigned long phys_addr_mask(void)
 
 typedef pte_t *pte_addr_t;
 
+<<<<<<< HEAD
+=======
+#define kern_addr_valid(addr)	(1)
+
+>>>>>>> b7ba80a49124 (Commit)
 #define pte_pfn(x)		((unsigned long)(((x).pte_low >> PAGE_SHIFT)))
 
 struct vm_area_struct;

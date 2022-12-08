@@ -24,9 +24,14 @@
 
 #define SMB21_DEFAULT_IOSIZE	(1024 * 1024)
 #define SMB3_DEFAULT_TRANS_SIZE	(1024 * 1024)
+<<<<<<< HEAD
 #define SMB3_MIN_IOSIZE		(64 * 1024)
 #define SMB3_MAX_IOSIZE		(8 * 1024 * 1024)
 #define SMB3_MAX_MSGSIZE	(4 * 4096)
+=======
+#define SMB3_MIN_IOSIZE	(64 * 1024)
+#define SMB3_MAX_IOSIZE	(8 * 1024 * 1024)
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  *	Definitions for SMB2 Protocol Data Units (network frames)
@@ -159,8 +164,12 @@ struct create_posix_rsp {
 	__le32 nlink;
 	__le32 reparse_tag;
 	__le32 mode;
+<<<<<<< HEAD
 	/* SidBuffer contain two sids(Domain sid(28), UNIX group sid(16)) */
 	u8 SidBuffer[44];
+=======
+	u8 SidBuffer[40];
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 struct smb2_buffer_desc_v1 {
@@ -441,10 +450,16 @@ struct smb2_posix_info {
 	__le32 HardLinks;
 	__le32 ReparseTag;
 	__le32 Mode;
+<<<<<<< HEAD
 	/* SidBuffer contain two sids (UNIX user sid(16), UNIX group sid(16)) */
 	u8 SidBuffer[32];
 	__le32 name_len;
 	u8 name[];
+=======
+	u8 SidBuffer[40];
+	__le32 name_len;
+	u8 name[1];
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * var sized owner SID
 	 * var sized group SID
@@ -495,7 +510,10 @@ int smb3_decrypt_req(struct ksmbd_work *work);
 int smb3_encrypt_resp(struct ksmbd_work *work);
 bool smb3_11_final_sess_setup_resp(struct ksmbd_work *work);
 int smb2_set_rsp_credits(struct ksmbd_work *work);
+<<<<<<< HEAD
 bool smb3_encryption_negotiated(struct ksmbd_conn *conn);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* smb2 misc functions */
 int ksmbd_smb2_check_message(struct ksmbd_work *work);

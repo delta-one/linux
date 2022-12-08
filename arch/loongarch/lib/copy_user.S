@@ -3,6 +3,7 @@
  * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
  */
 
+<<<<<<< HEAD
 #include <asm/alternative-asm.h>
 #include <asm/asm.h>
 #include <asm/asmmacro.h>
@@ -29,12 +30,37 @@ EXPORT_SYMBOL(__copy_user)
 
 /*
  * unsigned long __copy_user_generic(void *to, const void *from, size_t n)
+=======
+#include <asm/asm.h>
+#include <asm/asmmacro.h>
+#include <asm/export.h>
+#include <asm/regdef.h>
+
+.macro fixup_ex from, to, offset, fix
+.if \fix
+	.section .fixup, "ax"
+\to:	addi.d	a0, a2, \offset
+	jr	ra
+	.previous
+.endif
+	.section __ex_table, "a"
+	PTR	\from\()b, \to\()b
+	.previous
+.endm
+
+/*
+ * unsigned long __copy_user(void *to, const void *from, size_t n)
+>>>>>>> b7ba80a49124 (Commit)
  *
  * a0: to
  * a1: from
  * a2: n
  */
+<<<<<<< HEAD
 SYM_FUNC_START(__copy_user_generic)
+=======
+SYM_FUNC_START(__copy_user)
+>>>>>>> b7ba80a49124 (Commit)
 	beqz	a2, 3f
 
 1:	ld.b	t0, a1, 0
@@ -47,6 +73,7 @@ SYM_FUNC_START(__copy_user_generic)
 3:	move	a0, a2
 	jr	ra
 
+<<<<<<< HEAD
 	_asm_extable 1b, .L_fixup_handle_0
 	_asm_extable 2b, .L_fixup_handle_0
 SYM_FUNC_END(__copy_user_generic)
@@ -121,3 +148,10 @@ SYM_FUNC_START(__copy_user_fast)
 	_asm_extable 17b, .L_fixup_handle_0
 	_asm_extable 18b, .L_fixup_handle_0
 SYM_FUNC_END(__copy_user_fast)
+=======
+	fixup_ex 1, 4, 0, 1
+	fixup_ex 2, 4, 0, 0
+SYM_FUNC_END(__copy_user)
+
+EXPORT_SYMBOL(__copy_user)
+>>>>>>> b7ba80a49124 (Commit)

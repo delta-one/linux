@@ -792,7 +792,11 @@ static int lan743x_mac_mii_wait_till_not_busy(struct lan743x_adapter *adapter)
 				  !(data & MAC_MII_ACC_MII_BUSY_), 0, 1000000);
 }
 
+<<<<<<< HEAD
 static int lan743x_mdiobus_read_c22(struct mii_bus *bus, int phy_id, int index)
+=======
+static int lan743x_mdiobus_read(struct mii_bus *bus, int phy_id, int index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lan743x_adapter *adapter = bus->priv;
 	u32 val, mii_access;
@@ -814,8 +818,13 @@ static int lan743x_mdiobus_read_c22(struct mii_bus *bus, int phy_id, int index)
 	return (int)(val & 0xFFFF);
 }
 
+<<<<<<< HEAD
 static int lan743x_mdiobus_write_c22(struct mii_bus *bus,
 				     int phy_id, int index, u16 regval)
+=======
+static int lan743x_mdiobus_write(struct mii_bus *bus,
+				 int phy_id, int index, u16 regval)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lan743x_adapter *adapter = bus->priv;
 	u32 val, mii_access;
@@ -835,10 +844,19 @@ static int lan743x_mdiobus_write_c22(struct mii_bus *bus,
 	return ret;
 }
 
+<<<<<<< HEAD
 static u32 lan743x_mac_mmd_access(int id, int dev_addr, int op)
 {
 	u32 ret;
 
+=======
+static u32 lan743x_mac_mmd_access(int id, int index, int op)
+{
+	u16 dev_addr;
+	u32 ret;
+
+	dev_addr = (index >> 16) & 0x1f;
+>>>>>>> b7ba80a49124 (Commit)
 	ret = (id << MAC_MII_ACC_PHY_ADDR_SHIFT_) &
 		MAC_MII_ACC_PHY_ADDR_MASK_;
 	ret |= (dev_addr << MAC_MII_ACC_MIIMMD_SHIFT_) &
@@ -856,8 +874,12 @@ static u32 lan743x_mac_mmd_access(int id, int dev_addr, int op)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int lan743x_mdiobus_read_c45(struct mii_bus *bus, int phy_id,
 				    int dev_addr, int index)
+=======
+static int lan743x_mdiobus_c45_read(struct mii_bus *bus, int phy_id, int index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lan743x_adapter *adapter = bus->priv;
 	u32 mmd_access;
@@ -867,6 +889,7 @@ static int lan743x_mdiobus_read_c45(struct mii_bus *bus, int phy_id,
 	ret = lan743x_mac_mii_wait_till_not_busy(adapter);
 	if (ret < 0)
 		return ret;
+<<<<<<< HEAD
 
 	/* Load Register Address */
 	lan743x_csr_write(adapter, MAC_MII_DATA, index);
@@ -891,6 +914,34 @@ static int lan743x_mdiobus_read_c45(struct mii_bus *bus, int phy_id,
 
 static int lan743x_mdiobus_write_c45(struct mii_bus *bus, int phy_id,
 				     int dev_addr, int index, u16 regval)
+=======
+	if (index & MII_ADDR_C45) {
+		/* Load Register Address */
+		lan743x_csr_write(adapter, MAC_MII_DATA, (u32)(index & 0xffff));
+		mmd_access = lan743x_mac_mmd_access(phy_id, index,
+						    MMD_ACCESS_ADDRESS);
+		lan743x_csr_write(adapter, MAC_MII_ACC, mmd_access);
+		ret = lan743x_mac_mii_wait_till_not_busy(adapter);
+		if (ret < 0)
+			return ret;
+		/* Read Data */
+		mmd_access = lan743x_mac_mmd_access(phy_id, index,
+						    MMD_ACCESS_READ);
+		lan743x_csr_write(adapter, MAC_MII_ACC, mmd_access);
+		ret = lan743x_mac_mii_wait_till_not_busy(adapter);
+		if (ret < 0)
+			return ret;
+		ret = lan743x_csr_read(adapter, MAC_MII_DATA);
+		return (int)(ret & 0xFFFF);
+	}
+
+	ret = lan743x_mdiobus_read(bus, phy_id, index);
+	return ret;
+}
+
+static int lan743x_mdiobus_c45_write(struct mii_bus *bus,
+				     int phy_id, int index, u16 regval)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lan743x_adapter *adapter = bus->priv;
 	u32 mmd_access;
@@ -900,6 +951,7 @@ static int lan743x_mdiobus_write_c45(struct mii_bus *bus, int phy_id,
 	ret = lan743x_mac_mii_wait_till_not_busy(adapter);
 	if (ret < 0)
 		return ret;
+<<<<<<< HEAD
 
 	/* Load Register Address */
 	lan743x_csr_write(adapter, MAC_MII_DATA, (u32)index);
@@ -917,6 +969,28 @@ static int lan743x_mdiobus_write_c45(struct mii_bus *bus, int phy_id,
 	lan743x_csr_write(adapter, MAC_MII_ACC, mmd_access);
 
 	return lan743x_mac_mii_wait_till_not_busy(adapter);
+=======
+	if (index & MII_ADDR_C45) {
+		/* Load Register Address */
+		lan743x_csr_write(adapter, MAC_MII_DATA, (u32)(index & 0xffff));
+		mmd_access = lan743x_mac_mmd_access(phy_id, index,
+						    MMD_ACCESS_ADDRESS);
+		lan743x_csr_write(adapter, MAC_MII_ACC, mmd_access);
+		ret = lan743x_mac_mii_wait_till_not_busy(adapter);
+		if (ret < 0)
+			return ret;
+		/* Write Data */
+		lan743x_csr_write(adapter, MAC_MII_DATA, (u32)regval);
+		mmd_access = lan743x_mac_mmd_access(phy_id, index,
+						    MMD_ACCESS_WRITE);
+		lan743x_csr_write(adapter, MAC_MII_ACC, mmd_access);
+		ret = lan743x_mac_mii_wait_till_not_busy(adapter);
+	} else {
+		ret = lan743x_mdiobus_write(bus, phy_id, index, regval);
+	}
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int lan743x_sgmii_wait_till_not_busy(struct lan743x_adapter *adapter)
@@ -933,7 +1007,11 @@ static int lan743x_sgmii_wait_till_not_busy(struct lan743x_adapter *adapter)
 	return ret;
 }
 
+<<<<<<< HEAD
 int lan743x_sgmii_read(struct lan743x_adapter *adapter, u8 mmd, u16 addr)
+=======
+static int lan743x_sgmii_read(struct lan743x_adapter *adapter, u8 mmd, u16 addr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 mmd_access;
 	int ret;
@@ -1320,8 +1398,13 @@ static void lan743x_mac_close(struct lan743x_adapter *adapter)
 				 1, 1000, 20000, 100);
 }
 
+<<<<<<< HEAD
 void lan743x_mac_flow_ctrl_set_enables(struct lan743x_adapter *adapter,
 				       bool tx_enable, bool rx_enable)
+=======
+static void lan743x_mac_flow_ctrl_set_enables(struct lan743x_adapter *adapter,
+					      bool tx_enable, bool rx_enable)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 flow_setting = 0;
 
@@ -1418,6 +1501,17 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
 
 		data = lan743x_csr_read(adapter, MAC_CR);
 
+<<<<<<< HEAD
+=======
+		/* set interface mode */
+		if (phy_interface_is_rgmii(phydev))
+			/* RGMII */
+			data &= ~MAC_CR_MII_EN_;
+		else
+			/* GMII */
+			data |= MAC_CR_MII_EN_;
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* set duplex mode */
 		if (phydev->duplex)
 			data |= MAC_CR_DPX_;
@@ -1466,6 +1560,7 @@ static void lan743x_phy_close(struct lan743x_adapter *adapter)
 
 	phy_stop(netdev->phydev);
 	phy_disconnect(netdev->phydev);
+<<<<<<< HEAD
 }
 
 static void lan743x_phy_interface_select(struct lan743x_adapter *adapter)
@@ -1484,17 +1579,23 @@ static void lan743x_phy_interface_select(struct lan743x_adapter *adapter)
 		adapter->phy_interface = PHY_INTERFACE_MODE_MII;
 	else
 		adapter->phy_interface = PHY_INTERFACE_MODE_RGMII;
+=======
+	netdev->phydev = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int lan743x_phy_open(struct lan743x_adapter *adapter)
 {
 	struct net_device *netdev = adapter->netdev;
 	struct lan743x_phy *phy = &adapter->phy;
+<<<<<<< HEAD
 	struct fixed_phy_status fphy_status = {
 		.link = 1,
 		.speed = SPEED_1000,
 		.duplex = DUPLEX_FULL,
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct phy_device *phydev;
 	int ret = -EIO;
 
@@ -1505,6 +1606,7 @@ static int lan743x_phy_open(struct lan743x_adapter *adapter)
 	if (!phydev) {
 		/* try internal phy */
 		phydev = phy_find_first(adapter->mdiobus);
+<<<<<<< HEAD
 		if (!phydev)	{
 			if ((adapter->csr.id_rev & ID_REV_ID_MASK_) ==
 					ID_REV_ID_LAN7431_) {
@@ -1524,6 +1626,19 @@ static int lan743x_phy_open(struct lan743x_adapter *adapter)
 		ret = phy_connect_direct(netdev, phydev,
 					 lan743x_phy_link_status_change,
 					 adapter->phy_interface);
+=======
+		if (!phydev)
+			goto return_error;
+
+		if (adapter->is_pci11x1x)
+			ret = phy_connect_direct(netdev, phydev,
+						 lan743x_phy_link_status_change,
+						 PHY_INTERFACE_MODE_RGMII);
+		else
+			ret = phy_connect_direct(netdev, phydev,
+						 lan743x_phy_link_status_change,
+						 PHY_INTERFACE_MODE_GMII);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			goto return_error;
 	}
@@ -2891,7 +3006,13 @@ static int lan743x_rx_open(struct lan743x_rx *rx)
 	if (ret)
 		goto return_error;
 
+<<<<<<< HEAD
 	netif_napi_add(adapter->netdev, &rx->napi, lan743x_rx_napi_poll);
+=======
+	netif_napi_add(adapter->netdev,
+		       &rx->napi, lan743x_rx_napi_poll,
+		       NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	lan743x_csr_write(adapter, DMAC_CMD,
 			  DMAC_CMD_RX_SWR_(rx->channel_number));
@@ -3301,10 +3422,16 @@ static int lan743x_mdiobus_init(struct lan743x_adapter *adapter)
 			lan743x_csr_write(adapter, SGMII_CTL, sgmii_ctl);
 			netif_dbg(adapter, drv, adapter->netdev,
 				  "SGMII operation\n");
+<<<<<<< HEAD
 			adapter->mdiobus->read = lan743x_mdiobus_read_c22;
 			adapter->mdiobus->write = lan743x_mdiobus_write_c22;
 			adapter->mdiobus->read_c45 = lan743x_mdiobus_read_c45;
 			adapter->mdiobus->write_c45 = lan743x_mdiobus_write_c45;
+=======
+			adapter->mdiobus->probe_capabilities = MDIOBUS_C22_C45;
+			adapter->mdiobus->read = lan743x_mdiobus_c45_read;
+			adapter->mdiobus->write = lan743x_mdiobus_c45_write;
+>>>>>>> b7ba80a49124 (Commit)
 			adapter->mdiobus->name = "lan743x-mdiobus-c45";
 			netif_dbg(adapter, drv, adapter->netdev,
 				  "lan743x-mdiobus-c45\n");
@@ -3316,15 +3443,26 @@ static int lan743x_mdiobus_init(struct lan743x_adapter *adapter)
 			netif_dbg(adapter, drv, adapter->netdev,
 				  "RGMII operation\n");
 			// Only C22 support when RGMII I/F
+<<<<<<< HEAD
 			adapter->mdiobus->read = lan743x_mdiobus_read_c22;
 			adapter->mdiobus->write = lan743x_mdiobus_write_c22;
+=======
+			adapter->mdiobus->probe_capabilities = MDIOBUS_C22;
+			adapter->mdiobus->read = lan743x_mdiobus_read;
+			adapter->mdiobus->write = lan743x_mdiobus_write;
+>>>>>>> b7ba80a49124 (Commit)
 			adapter->mdiobus->name = "lan743x-mdiobus";
 			netif_dbg(adapter, drv, adapter->netdev,
 				  "lan743x-mdiobus\n");
 		}
 	} else {
+<<<<<<< HEAD
 		adapter->mdiobus->read = lan743x_mdiobus_read_c22;
 		adapter->mdiobus->write = lan743x_mdiobus_write_c22;
+=======
+		adapter->mdiobus->read = lan743x_mdiobus_read;
+		adapter->mdiobus->write = lan743x_mdiobus_write;
+>>>>>>> b7ba80a49124 (Commit)
 		adapter->mdiobus->name = "lan743x-mdiobus";
 		netif_dbg(adapter, drv, adapter->netdev, "lan743x-mdiobus\n");
 	}

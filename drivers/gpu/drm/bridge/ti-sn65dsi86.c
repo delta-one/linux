@@ -931,9 +931,15 @@ static void ti_sn_bridge_set_video_timings(struct ti_sn65dsi86 *pdata)
 		&pdata->bridge.encoder->crtc->state->adjusted_mode;
 	u8 hsync_polarity = 0, vsync_polarity = 0;
 
+<<<<<<< HEAD
 	if (mode->flags & DRM_MODE_FLAG_NHSYNC)
 		hsync_polarity = CHA_HSYNC_POLARITY;
 	if (mode->flags & DRM_MODE_FLAG_NVSYNC)
+=======
+	if (mode->flags & DRM_MODE_FLAG_PHSYNC)
+		hsync_polarity = CHA_HSYNC_POLARITY;
+	if (mode->flags & DRM_MODE_FLAG_PVSYNC)
+>>>>>>> b7ba80a49124 (Commit)
 		vsync_polarity = CHA_VSYNC_POLARITY;
 
 	ti_sn65dsi86_write_u16(pdata, SN_CHA_ACTIVE_LINE_LENGTH_LOW_REG,
@@ -1500,8 +1506,13 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int ti_sn_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 			       struct pwm_state *state)
+=======
+static void ti_sn_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+				struct pwm_state *state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ti_sn65dsi86 *pdata = pwm_chip_to_ti_sn_bridge(chip);
 	unsigned int pwm_en_inv;
@@ -1512,6 +1523,7 @@ static int ti_sn_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 
 	ret = regmap_read(pdata->regmap, SN_PWM_EN_INV_REG, &pwm_en_inv);
 	if (ret)
+<<<<<<< HEAD
 		return ret;
 
 	ret = ti_sn65dsi86_read_u16(pdata, SN_BACKLIGHT_SCALE_REG, &scale);
@@ -1525,6 +1537,21 @@ static int ti_sn_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 	ret = regmap_read(pdata->regmap, SN_PWM_PRE_DIV_REG, &pre_div);
 	if (ret)
 		return ret;
+=======
+		return;
+
+	ret = ti_sn65dsi86_read_u16(pdata, SN_BACKLIGHT_SCALE_REG, &scale);
+	if (ret)
+		return;
+
+	ret = ti_sn65dsi86_read_u16(pdata, SN_BACKLIGHT_REG, &backlight);
+	if (ret)
+		return;
+
+	ret = regmap_read(pdata->regmap, SN_PWM_PRE_DIV_REG, &pre_div);
+	if (ret)
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	state->enabled = FIELD_GET(SN_PWM_EN_MASK, pwm_en_inv);
 	if (FIELD_GET(SN_PWM_INV_MASK, pwm_en_inv))
@@ -1539,8 +1566,11 @@ static int ti_sn_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 
 	if (state->duty_cycle > state->period)
 		state->duty_cycle = state->period;
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct pwm_ops ti_sn_pwm_ops = {
@@ -1852,7 +1882,12 @@ static int ti_sn65dsi86_parse_regulators(struct ti_sn65dsi86 *pdata)
 				       pdata->supplies);
 }
 
+<<<<<<< HEAD
 static int ti_sn65dsi86_probe(struct i2c_client *client)
+=======
+static int ti_sn65dsi86_probe(struct i2c_client *client,
+			      const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &client->dev;
 	struct ti_sn65dsi86 *pdata;
@@ -1951,7 +1986,11 @@ static struct i2c_driver ti_sn65dsi86_driver = {
 		.of_match_table = ti_sn65dsi86_match_table,
 		.pm = &ti_sn65dsi86_pm_ops,
 	},
+<<<<<<< HEAD
 	.probe_new = ti_sn65dsi86_probe,
+=======
+	.probe = ti_sn65dsi86_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = ti_sn65dsi86_id,
 };
 

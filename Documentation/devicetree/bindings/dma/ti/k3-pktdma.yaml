@@ -6,7 +6,11 @@
 $id: http://devicetree.org/schemas/dma/ti/k3-pktdma.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Texas Instruments K3 DMSS PKTDMA
+=======
+title: Texas Instruments K3 DMSS PKTDMA Device Tree Bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Peter Ujfalusi <peter.ujfalusi@gmail.com>

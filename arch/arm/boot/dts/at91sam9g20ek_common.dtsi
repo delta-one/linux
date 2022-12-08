@@ -39,6 +39,7 @@
 
 				};
 
+<<<<<<< HEAD
 				usb1 {
 					pinctrl_usb1_vbus_gpio: usb1_vbus_gpio {
 						atmel,pins =
@@ -46,6 +47,8 @@
 					};
 				};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				mmc0_slot1 {
 					pinctrl_board_mmc0_slot1: mmc0_slot1-board {
 						atmel,pins =
@@ -91,8 +94,11 @@
 			};
 
 			usb1: gadget@fffa4000 {
+<<<<<<< HEAD
 				pinctrl-0 = <&pinctrl_usb1_vbus_gpio>;
 				pinctrl-names = "default";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				atmel,vbus-gpio = <&pioC 5 GPIO_ACTIVE_HIGH>;
 				status = "okay";
 			};

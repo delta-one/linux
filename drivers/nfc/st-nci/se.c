@@ -312,8 +312,11 @@ static int st_nci_hci_connectivity_event_received(struct nci_dev *ndev,
 	int r = 0;
 	struct device *dev = &ndev->nfc_dev->dev;
 	struct nfc_evt_transaction *transaction;
+<<<<<<< HEAD
 	u32 aid_len;
 	u8 params_len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_debug("connectivity gate event: %x\n", event);
 
@@ -327,6 +330,7 @@ static int st_nci_hci_connectivity_event_received(struct nci_dev *ndev,
 		 * Description  Tag     Length
 		 * AID          81      5 to 16
 		 * PARAMETERS   82      0 to 255
+<<<<<<< HEAD
 		 *
 		 * The key differences are aid storage length is variably sized
 		 * in the packet, but fixed in nfc_evt_transaction, and that
@@ -368,6 +372,28 @@ static int st_nci_hci_connectivity_event_received(struct nci_dev *ndev,
 		memcpy(transaction->aid, &skb->data[2], aid_len);
 		memcpy(transaction->params, &skb->data[aid_len + 4],
 		       params_len);
+=======
+		 */
+		if (skb->len < NFC_MIN_AID_LENGTH + 2 &&
+		    skb->data[0] != NFC_EVT_TRANSACTION_AID_TAG)
+			return -EPROTO;
+
+		transaction = devm_kzalloc(dev, skb->len - 2, GFP_KERNEL);
+		if (!transaction)
+			return -ENOMEM;
+
+		transaction->aid_len = skb->data[1];
+		memcpy(transaction->aid, &skb->data[2], transaction->aid_len);
+
+		/* Check next byte is PARAMETERS tag (82) */
+		if (skb->data[transaction->aid_len + 2] !=
+		    NFC_EVT_TRANSACTION_PARAMS_TAG)
+			return -EPROTO;
+
+		transaction->params_len = skb->data[transaction->aid_len + 3];
+		memcpy(transaction->params, skb->data +
+		       transaction->aid_len + 4, transaction->params_len);
+>>>>>>> b7ba80a49124 (Commit)
 
 		r = nfc_se_transaction(ndev->nfc_dev, host, transaction);
 		break;
@@ -672,12 +698,15 @@ int st_nci_se_io(struct nci_dev *ndev, u32 se_idx,
 					ST_NCI_EVT_TRANSMIT_DATA, apdu,
 					apdu_length);
 	default:
+<<<<<<< HEAD
 		/* Need to free cb_context here as at the moment we can't
 		 * clearly indicate to the caller if the callback function
 		 * would be called (and free it) or not. In both cases a
 		 * negative value may be returned to the caller.
 		 */
 		kfree(cb_context);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODEV;
 	}
 }

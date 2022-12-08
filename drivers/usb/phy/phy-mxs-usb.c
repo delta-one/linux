@@ -733,7 +733,11 @@ static int mxs_phy_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	/* Some SoCs don't have anatop registers */
+<<<<<<< HEAD
 	if (of_property_present(np, "fsl,anatop")) {
+=======
+	if (of_get_property(np, "fsl,anatop", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		mxs_phy->regmap_anatop = syscon_regmap_lookup_by_phandle
 			(np, "fsl,anatop");
 		if (IS_ERR(mxs_phy->regmap_anatop)) {

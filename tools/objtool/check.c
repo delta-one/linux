@@ -23,7 +23,11 @@
 #include <linux/static_call_types.h>
 
 struct alternative {
+<<<<<<< HEAD
 	struct alternative *next;
+=======
+	struct list_head list;
+>>>>>>> b7ba80a49124 (Commit)
 	struct instruction *insn;
 	bool skip_orig;
 };
@@ -47,6 +51,7 @@ struct instruction *find_insn(struct objtool_file *file,
 	return NULL;
 }
 
+<<<<<<< HEAD
 struct instruction *next_insn_same_sec(struct objtool_file *file,
 				       struct instruction *insn)
 {
@@ -58,18 +63,38 @@ struct instruction *next_insn_same_sec(struct objtool_file *file,
 		return NULL;
 
 	return insn;
+=======
+static struct instruction *next_insn_same_sec(struct objtool_file *file,
+					      struct instruction *insn)
+{
+	struct instruction *next = list_next_entry(insn, list);
+
+	if (!next || &next->list == &file->insn_list || next->sec != insn->sec)
+		return NULL;
+
+	return next;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct instruction *next_insn_same_func(struct objtool_file *file,
 					       struct instruction *insn)
 {
+<<<<<<< HEAD
 	struct instruction *next = next_insn_same_sec(file, insn);
 	struct symbol *func = insn_func(insn);
+=======
+	struct instruction *next = list_next_entry(insn, list);
+	struct symbol *func = insn->func;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!func)
 		return NULL;
 
+<<<<<<< HEAD
 	if (next && insn_func(next) == func)
+=======
+	if (&next->list != &file->insn_list && next->func == func)
+>>>>>>> b7ba80a49124 (Commit)
 		return next;
 
 	/* Check if we're already in the subfunction: */
@@ -80,6 +105,7 @@ static struct instruction *next_insn_same_func(struct objtool_file *file,
 	return find_insn(file, func->cfunc->sec, func->cfunc->offset);
 }
 
+<<<<<<< HEAD
 static struct instruction *prev_insn_same_sec(struct objtool_file *file,
 					      struct instruction *insn)
 {
@@ -98,17 +124,28 @@ static struct instruction *prev_insn_same_sym(struct objtool_file *file,
 	struct instruction *prev = prev_insn_same_sec(file, insn);
 
 	if (prev && insn_func(prev) == insn_func(insn))
+=======
+static struct instruction *prev_insn_same_sym(struct objtool_file *file,
+					       struct instruction *insn)
+{
+	struct instruction *prev = list_prev_entry(insn, list);
+
+	if (&prev->list != &file->insn_list && prev->func == insn->func)
+>>>>>>> b7ba80a49124 (Commit)
 		return prev;
 
 	return NULL;
 }
 
+<<<<<<< HEAD
 #define for_each_insn(file, insn)					\
 	for (struct section *__sec, *__fake = (struct section *)1;	\
 	     __fake; __fake = NULL)					\
 		for_each_sec(file, __sec)				\
 			sec_for_each_insn(file, __sec, insn)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define func_for_each_insn(file, func, insn)				\
 	for (insn = find_insn(file, func->sec, func->offset);		\
 	     insn;							\
@@ -116,6 +153,7 @@ static struct instruction *prev_insn_same_sym(struct objtool_file *file,
 
 #define sym_for_each_insn(file, sym, insn)				\
 	for (insn = find_insn(file, sym->sec, sym->offset);		\
+<<<<<<< HEAD
 	     insn && insn->offset < sym->offset + sym->len;		\
 	     insn = next_insn_same_sec(file, insn))
 
@@ -123,6 +161,18 @@ static struct instruction *prev_insn_same_sym(struct objtool_file *file,
 	for (insn = prev_insn_same_sec(file, insn);			\
 	     insn && insn->offset >= sym->offset;			\
 	     insn = prev_insn_same_sec(file, insn))
+=======
+	     insn && &insn->list != &file->insn_list &&			\
+		insn->sec == sym->sec &&				\
+		insn->offset < sym->offset + sym->len;			\
+	     insn = list_next_entry(insn, list))
+
+#define sym_for_each_insn_continue_reverse(file, sym, insn)		\
+	for (insn = list_prev_entry(insn, list);			\
+	     &insn->list != &file->insn_list &&				\
+		insn->sec == sym->sec && insn->offset >= sym->offset;	\
+	     insn = list_prev_entry(insn, list))
+>>>>>>> b7ba80a49124 (Commit)
 
 #define sec_for_each_insn_from(file, insn)				\
 	for (; insn; insn = next_insn_same_sec(file, insn))
@@ -131,6 +181,7 @@ static struct instruction *prev_insn_same_sym(struct objtool_file *file,
 	for (insn = next_insn_same_sec(file, insn); insn;		\
 	     insn = next_insn_same_sec(file, insn))
 
+<<<<<<< HEAD
 static inline struct symbol *insn_call_dest(struct instruction *insn)
 {
 	if (insn->type == INSN_JUMP_DYNAMIC ||
@@ -149,21 +200,32 @@ static inline struct reloc *insn_jump_table(struct instruction *insn)
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool is_jump_table_jump(struct instruction *insn)
 {
 	struct alt_group *alt_group = insn->alt_group;
 
+<<<<<<< HEAD
 	if (insn_jump_table(insn))
+=======
+	if (insn->jump_table)
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 
 	/* Retpoline alternative for a jump table? */
 	return alt_group && alt_group->orig_group &&
+<<<<<<< HEAD
 	       insn_jump_table(alt_group->orig_group->first_insn);
+=======
+	       alt_group->orig_group->first_insn->jump_table;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool is_sibling_call(struct instruction *insn)
 {
 	/*
+<<<<<<< HEAD
 	 * Assume only STT_FUNC calls have jump-tables.
 	 */
 	if (insn_func(insn)) {
@@ -174,6 +236,21 @@ static bool is_sibling_call(struct instruction *insn)
 
 	/* add_jump_destinations() sets insn_call_dest(insn) for sibling calls. */
 	return (is_static_jump(insn) && insn_call_dest(insn));
+=======
+	 * Assume only ELF functions can make sibling calls.  This ensures
+	 * sibling call detection consistency between vmlinux.o and individual
+	 * objects.
+	 */
+	if (!insn->func)
+		return false;
+
+	/* An indirect jump is either a sibling call or a jump to a table. */
+	if (insn->type == INSN_JUMP_DYNAMIC)
+		return !is_jump_table_jump(insn);
+
+	/* add_jump_destinations() sets insn->call_dest for sibling calls. */
+	return (is_static_jump(insn) && insn->call_dest);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -202,7 +279,10 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
 		"__reiserfs_panic",
 		"__stack_chk_fail",
 		"__ubsan_handle_builtin_unreachable",
+<<<<<<< HEAD
 		"arch_cpu_idle_dead",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		"cpu_bringup_and_idle",
 		"cpu_startup_entry",
 		"do_exit",
@@ -222,7 +302,10 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
 		"snp_abort",
 		"stop_this_cpu",
 		"usercopy_abort",
+<<<<<<< HEAD
 		"xen_cpu_bringup_again",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		"xen_start_kernel",
 	};
 
@@ -241,7 +324,11 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
 		return false;
 
 	insn = find_insn(file, func->sec, func->offset);
+<<<<<<< HEAD
 	if (!insn || !insn_func(insn))
+=======
+	if (!insn->func)
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	func_for_each_insn(file, func, insn) {
@@ -277,7 +364,11 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
 				return false;
 			}
 
+<<<<<<< HEAD
 			return __dead_end_function(file, insn_func(dest), recursion+1);
+=======
+			return __dead_end_function(file, dest->func, recursion+1);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -310,8 +401,13 @@ static void init_insn_state(struct objtool_file *file, struct insn_state *state,
 
 	/*
 	 * We need the full vmlinux for noinstr validation, otherwise we can
+<<<<<<< HEAD
 	 * not correctly determine insn_call_dest(insn)->sec (external symbols
 	 * do not have a section).
+=======
+	 * not correctly determine insn->call_dest->sec (external symbols do
+	 * not have a section).
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	if (opts.link && opts.noinstr && sec)
 		state->noinstr = sec->noinstr;
@@ -402,9 +498,12 @@ static int decode_instructions(struct objtool_file *file)
 	int ret;
 
 	for_each_sec(file, sec) {
+<<<<<<< HEAD
 		struct instruction *insns = NULL;
 		u8 prev_len = 0;
 		u8 idx = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!(sec->sh.sh_flags & SHF_EXECINSTR))
 			continue;
@@ -416,6 +515,7 @@ static int decode_instructions(struct objtool_file *file)
 
 		if (!strcmp(sec->name, ".noinstr.text") ||
 		    !strcmp(sec->name, ".entry.text") ||
+<<<<<<< HEAD
 		    !strcmp(sec->name, ".cpuidle.text") ||
 		    !strncmp(sec->name, ".text.__x86.", 12))
 			sec->noinstr = true;
@@ -455,6 +555,32 @@ static int decode_instructions(struct objtool_file *file)
 				return ret;
 
 			prev_len = insn->len;
+=======
+		    !strncmp(sec->name, ".text.__x86.", 12))
+			sec->noinstr = true;
+
+		for (offset = 0; offset < sec->sh.sh_size; offset += insn->len) {
+			insn = malloc(sizeof(*insn));
+			if (!insn) {
+				WARN("malloc failed");
+				return -1;
+			}
+			memset(insn, 0, sizeof(*insn));
+			INIT_LIST_HEAD(&insn->alts);
+			INIT_LIST_HEAD(&insn->stack_ops);
+			INIT_LIST_HEAD(&insn->call_node);
+
+			insn->sec = sec;
+			insn->offset = offset;
+
+			ret = arch_decode_instruction(file, sec, offset,
+						      sec->sh.sh_size - offset,
+						      &insn->len, &insn->type,
+						      &insn->immediate,
+						      &insn->stack_ops);
+			if (ret)
+				goto err;
+>>>>>>> b7ba80a49124 (Commit)
 
 			/*
 			 * By default, "ud2" is a dead end unless otherwise
@@ -465,6 +591,7 @@ static int decode_instructions(struct objtool_file *file)
 				insn->dead_end = true;
 
 			hash_add(file->insn_hash, &insn->hash, sec_offset_hash(sec, insn->offset));
+<<<<<<< HEAD
 			nr_insns++;
 		}
 
@@ -484,6 +611,14 @@ static int decode_instructions(struct objtool_file *file)
 			}
 
 			if (func->return_thunk || func->alias != func)
+=======
+			list_add_tail(&insn->list, &file->insn_list);
+			nr_insns++;
+		}
+
+		list_for_each_entry(func, &sec->symbol_list, list) {
+			if (func->type != STT_FUNC || func->alias != func)
+>>>>>>> b7ba80a49124 (Commit)
 				continue;
 
 			if (!find_insn(file, sec, func->offset)) {
@@ -493,11 +628,17 @@ static int decode_instructions(struct objtool_file *file)
 			}
 
 			sym_for_each_insn(file, func, insn) {
+<<<<<<< HEAD
 				insn->sym = func;
 				if (func->type == STT_FUNC &&
 				    insn->type == INSN_ENDBR &&
 				    list_empty(&insn->call_node)) {
 					if (insn->offset == func->offset) {
+=======
+				insn->func = func;
+				if (insn->type == INSN_ENDBR && list_empty(&insn->call_node)) {
+					if (insn->offset == insn->func->offset) {
+>>>>>>> b7ba80a49124 (Commit)
 						list_add_tail(&insn->call_node, &file->endbr_list);
 						file->nr_endbr++;
 					} else {
@@ -512,6 +653,13 @@ static int decode_instructions(struct objtool_file *file)
 		printf("nr_insns: %lu\n", nr_insns);
 
 	return 0;
+<<<<<<< HEAD
+=======
+
+err:
+	free(insn);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -626,7 +774,11 @@ static int add_dead_ends(struct objtool_file *file)
 		}
 		insn = find_insn(file, reloc->sym->sec, reloc->addend);
 		if (insn)
+<<<<<<< HEAD
 			insn = prev_insn_same_sec(file, insn);
+=======
+			insn = list_prev_entry(insn, list);
+>>>>>>> b7ba80a49124 (Commit)
 		else if (reloc->addend == reloc->sym->sec->sh.sh_size) {
 			insn = find_last_insn(file, reloc->sym->sec);
 			if (!insn) {
@@ -661,7 +813,11 @@ reachable:
 		}
 		insn = find_insn(file, reloc->sym->sec, reloc->addend);
 		if (insn)
+<<<<<<< HEAD
 			insn = prev_insn_same_sec(file, insn);
+=======
+			insn = list_prev_entry(insn, list);
+>>>>>>> b7ba80a49124 (Commit)
 		else if (reloc->addend == reloc->sym->sec->sh.sh_size) {
 			insn = find_last_insn(file, reloc->sym->sec);
 			if (!insn) {
@@ -723,7 +879,11 @@ static int create_static_call_sections(struct objtool_file *file)
 			return -1;
 
 		/* find key symbol */
+<<<<<<< HEAD
 		key_name = strdup(insn_call_dest(insn)->name);
+=======
+		key_name = strdup(insn->call_dest->name);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!key_name) {
 			perror("strdup");
 			return -1;
@@ -731,7 +891,10 @@ static int create_static_call_sections(struct objtool_file *file)
 		if (strncmp(key_name, STATIC_CALL_TRAMP_PREFIX_STR,
 			    STATIC_CALL_TRAMP_PREFIX_LEN)) {
 			WARN("static_call: trampoline name malformed: %s", key_name);
+<<<<<<< HEAD
 			free(key_name);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			return -1;
 		}
 		tmp = key_name + STATIC_CALL_TRAMP_PREFIX_LEN - STATIC_CALL_KEY_PREFIX_LEN;
@@ -741,7 +904,10 @@ static int create_static_call_sections(struct objtool_file *file)
 		if (!key_sym) {
 			if (!opts.module) {
 				WARN("static_call: can't find static_call_key symbol: %s", tmp);
+<<<<<<< HEAD
 				free(key_name);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				return -1;
 			}
 
@@ -754,7 +920,11 @@ static int create_static_call_sections(struct objtool_file *file)
 			 * trampoline address.  This is fixed up in
 			 * static_call_add_module().
 			 */
+<<<<<<< HEAD
 			key_sym = insn_call_dest(insn);
+=======
+			key_sym = insn->call_dest;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		free(key_name);
 
@@ -899,6 +1069,7 @@ static int create_ibt_endbr_seal_sections(struct objtool_file *file)
 	list_for_each_entry(insn, &file->endbr_list, call_node) {
 
 		int *site = (int *)sec->data->d_buf + idx;
+<<<<<<< HEAD
 		struct symbol *sym = insn->sym;
 		*site = 0;
 
@@ -908,6 +1079,10 @@ static int create_ibt_endbr_seal_sections(struct objtool_file *file)
 		     !strcmp(sym->name, "cleanup_module")))
 			WARN("%s(): not an indirect call target", sym->name);
 
+=======
+		*site = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (elf_add_reloc_to_insn(file->elf, sec,
 					  idx * sizeof(int),
 					  R_X86_64_PC32,
@@ -922,6 +1097,7 @@ static int create_ibt_endbr_seal_sections(struct objtool_file *file)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int create_cfi_sections(struct objtool_file *file)
 {
 	struct section *sec, *s;
@@ -989,6 +1165,13 @@ static int create_mcount_loc_sections(struct objtool_file *file)
 	int addrsize = elf_class_addrsize(file->elf);
 	struct instruction *insn;
 	struct section *sec;
+=======
+static int create_mcount_loc_sections(struct objtool_file *file)
+{
+	struct section *sec;
+	unsigned long *loc;
+	struct instruction *insn;
+>>>>>>> b7ba80a49124 (Commit)
 	int idx;
 
 	sec = find_section_by_name(file->elf, "__mcount_loc");
@@ -1005,6 +1188,7 @@ static int create_mcount_loc_sections(struct objtool_file *file)
 	list_for_each_entry(insn, &file->mcount_loc_list, call_node)
 		idx++;
 
+<<<<<<< HEAD
 	sec = elf_create_section(file->elf, "__mcount_loc", 0, addrsize, idx);
 	if (!sec)
 		return -1;
@@ -1063,6 +1247,21 @@ static int create_direct_call_sections(struct objtool_file *file)
 		if (elf_add_reloc_to_insn(file->elf, sec,
 					  idx * sizeof(unsigned int),
 					  R_X86_64_PC32,
+=======
+	sec = elf_create_section(file->elf, "__mcount_loc", 0, sizeof(unsigned long), idx);
+	if (!sec)
+		return -1;
+
+	idx = 0;
+	list_for_each_entry(insn, &file->mcount_loc_list, call_node) {
+
+		loc = (unsigned long *)sec->data->d_buf + idx;
+		memset(loc, 0, sizeof(unsigned long));
+
+		if (elf_add_reloc_to_insn(file->elf, sec,
+					  idx * sizeof(unsigned long),
+					  R_X86_64_64,
+>>>>>>> b7ba80a49124 (Commit)
 					  insn->sec, insn->offset))
 			return -1;
 
@@ -1238,8 +1437,11 @@ static const char *uaccess_safe_builtin[] = {
 	"__tsan_atomic64_compare_exchange_val",
 	"__tsan_atomic_thread_fence",
 	"__tsan_atomic_signal_fence",
+<<<<<<< HEAD
 	"__tsan_unaligned_read16",
 	"__tsan_unaligned_write16",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* KCOV */
 	"write_comp_data",
 	"check_kcov_mode",
@@ -1278,7 +1480,10 @@ static const char *uaccess_safe_builtin[] = {
 	"__ubsan_handle_type_mismatch",
 	"__ubsan_handle_type_mismatch_v1",
 	"__ubsan_handle_shift_out_of_bounds",
+<<<<<<< HEAD
 	"__ubsan_handle_load_invalid_value",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* misc */
 	"csum_partial_copy_generic",
 	"copy_mc_fragile",
@@ -1352,6 +1557,7 @@ __weak bool arch_is_rethunk(struct symbol *sym)
 	return false;
 }
 
+<<<<<<< HEAD
 static struct reloc *insn_reloc(struct objtool_file *file, struct instruction *insn)
 {
 	struct reloc *reloc;
@@ -1370,10 +1576,33 @@ static struct reloc *insn_reloc(struct objtool_file *file, struct instruction *i
 	}
 
 	return reloc;
+=======
+#define NEGATIVE_RELOC	((void *)-1L)
+
+static struct reloc *insn_reloc(struct objtool_file *file, struct instruction *insn)
+{
+	if (insn->reloc == NEGATIVE_RELOC)
+		return NULL;
+
+	if (!insn->reloc) {
+		if (!file)
+			return NULL;
+
+		insn->reloc = find_reloc_by_dest_range(file->elf, insn->sec,
+						       insn->offset, insn->len);
+		if (!insn->reloc) {
+			insn->reloc = NEGATIVE_RELOC;
+			return NULL;
+		}
+	}
+
+	return insn->reloc;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void remove_insn_ops(struct instruction *insn)
 {
+<<<<<<< HEAD
 	struct stack_op *op, *next;
 
 	for (op = insn->stack_ops; op; op = next) {
@@ -1381,13 +1610,25 @@ static void remove_insn_ops(struct instruction *insn)
 		free(op);
 	}
 	insn->stack_ops = NULL;
+=======
+	struct stack_op *op, *tmp;
+
+	list_for_each_entry_safe(op, tmp, &insn->stack_ops, list) {
+		list_del(&op->list);
+		free(op);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void annotate_call_site(struct objtool_file *file,
 			       struct instruction *insn, bool sibling)
 {
 	struct reloc *reloc = insn_reloc(file, insn);
+<<<<<<< HEAD
 	struct symbol *sym = insn_call_dest(insn);
+=======
+	struct symbol *sym = insn->call_dest;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!sym)
 		sym = reloc->sym;
@@ -1445,6 +1686,7 @@ static void annotate_call_site(struct objtool_file *file,
 	if (opts.mcount && sym->fentry) {
 		if (sibling)
 			WARN_FUNC("Tail call to __fentry__ !?!?", insn->sec, insn->offset);
+<<<<<<< HEAD
 		if (opts.mnop) {
 			if (reloc) {
 				reloc->type = R_NONE;
@@ -1458,13 +1700,30 @@ static void annotate_call_site(struct objtool_file *file,
 			insn->type = INSN_NOP;
 		}
 
+=======
+
+		if (reloc) {
+			reloc->type = R_NONE;
+			elf_write_reloc(file->elf, reloc);
+		}
+
+		elf_write_insn(file->elf, insn->sec,
+			       insn->offset, insn->len,
+			       arch_nop_insn(insn->len));
+
+		insn->type = INSN_NOP;
+
+>>>>>>> b7ba80a49124 (Commit)
 		list_add_tail(&insn->call_node, &file->mcount_loc_list);
 		return;
 	}
 
+<<<<<<< HEAD
 	if (insn->type == INSN_CALL && !insn->sec->init)
 		list_add_tail(&insn->call_node, &file->call_list);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!sibling && dead_end_function(file, sym))
 		insn->dead_end = true;
 }
@@ -1472,7 +1731,11 @@ static void annotate_call_site(struct objtool_file *file,
 static void add_call_dest(struct objtool_file *file, struct instruction *insn,
 			  struct symbol *dest, bool sibling)
 {
+<<<<<<< HEAD
 	insn->_call_dest = dest;
+=======
+	insn->call_dest = dest;
+>>>>>>> b7ba80a49124 (Commit)
 	if (!dest)
 		return;
 
@@ -1535,6 +1798,7 @@ static void add_return_call(struct objtool_file *file, struct instruction *insn,
 		list_add_tail(&insn->call_node, &file->return_thunk_list);
 }
 
+<<<<<<< HEAD
 static bool is_first_func_insn(struct objtool_file *file,
 			       struct instruction *insn, struct symbol *sym)
 {
@@ -1542,11 +1806,27 @@ static bool is_first_func_insn(struct objtool_file *file,
 		return true;
 
 	/* Allow direct CALL/JMP past ENDBR */
+=======
+static bool same_function(struct instruction *insn1, struct instruction *insn2)
+{
+	return insn1->func->pfunc == insn2->func->pfunc;
+}
+
+static bool is_first_func_insn(struct objtool_file *file, struct instruction *insn)
+{
+	if (insn->offset == insn->func->offset)
+		return true;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (opts.ibt) {
 		struct instruction *prev = prev_insn_same_sym(file, insn);
 
 		if (prev && prev->type == INSN_ENDBR &&
+<<<<<<< HEAD
 		    insn->offset == sym->offset + prev->len)
+=======
+		    insn->offset == insn->func->offset + prev->len)
+>>>>>>> b7ba80a49124 (Commit)
 			return true;
 	}
 
@@ -1554,6 +1834,7 @@ static bool is_first_func_insn(struct objtool_file *file,
 }
 
 /*
+<<<<<<< HEAD
  * A sibling call is a tail-call to another symbol -- to differentiate from a
  * recursive tail-call which is to the same symbol.
  */
@@ -1580,6 +1861,8 @@ static bool jump_is_sibling_call(struct objtool_file *file,
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Find the destination instructions for all jumps.
  */
 static int add_jump_destinations(struct objtool_file *file)
@@ -1613,7 +1896,11 @@ static int add_jump_destinations(struct objtool_file *file)
 		} else if (reloc->sym->return_thunk) {
 			add_return_call(file, insn, true);
 			continue;
+<<<<<<< HEAD
 		} else if (insn_func(insn)) {
+=======
+		} else if (insn->func) {
+>>>>>>> b7ba80a49124 (Commit)
 			/*
 			 * External sibling call or internal sibling call with
 			 * STT_FUNC reloc.
@@ -1655,8 +1942,13 @@ static int add_jump_destinations(struct objtool_file *file)
 		/*
 		 * Cross-function jump.
 		 */
+<<<<<<< HEAD
 		if (insn_func(insn) && insn_func(jump_dest) &&
 		    insn_func(insn) != insn_func(jump_dest)) {
+=======
+		if (insn->func && jump_dest->func &&
+		    insn->func != jump_dest->func) {
+>>>>>>> b7ba80a49124 (Commit)
 
 			/*
 			 * For GCC 8+, create parent/child links for any cold
@@ -1673,6 +1965,7 @@ static int add_jump_destinations(struct objtool_file *file)
 			 * case where the parent function's only reference to a
 			 * subfunction is through a jump table.
 			 */
+<<<<<<< HEAD
 			if (!strstr(insn_func(insn)->name, ".cold") &&
 			    strstr(insn_func(jump_dest)->name, ".cold")) {
 				insn_func(insn)->cfunc = insn_func(jump_dest);
@@ -1687,6 +1980,22 @@ static int add_jump_destinations(struct objtool_file *file)
 			 */
 			add_call_dest(file, insn, insn_func(jump_dest), true);
 			continue;
+=======
+			if (!strstr(insn->func->name, ".cold") &&
+			    strstr(jump_dest->func->name, ".cold")) {
+				insn->func->cfunc = jump_dest->func;
+				jump_dest->func->pfunc = insn->func;
+
+			} else if (!same_function(insn, jump_dest) &&
+				   is_first_func_insn(file, jump_dest)) {
+				/*
+				 * Internal sibling call without reloc or with
+				 * STT_SECTION reloc.
+				 */
+				add_call_dest(file, insn, jump_dest->func, true);
+				continue;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		insn->jump_dest = jump_dest;
@@ -1730,12 +2039,20 @@ static int add_call_destinations(struct objtool_file *file)
 			if (insn->ignore)
 				continue;
 
+<<<<<<< HEAD
 			if (!insn_call_dest(insn)) {
+=======
+			if (!insn->call_dest) {
+>>>>>>> b7ba80a49124 (Commit)
 				WARN_FUNC("unannotated intra-function call", insn->sec, insn->offset);
 				return -1;
 			}
 
+<<<<<<< HEAD
 			if (insn_func(insn) && insn_call_dest(insn)->type != STT_FUNC) {
+=======
+			if (insn->func && insn->call_dest->type != STT_FUNC) {
+>>>>>>> b7ba80a49124 (Commit)
 				WARN_FUNC("unsupported call to non-function",
 					  insn->sec, insn->offset);
 				return -1;
@@ -1773,6 +2090,7 @@ static int handle_group_alt(struct objtool_file *file,
 			    struct instruction *orig_insn,
 			    struct instruction **new_insn)
 {
+<<<<<<< HEAD
 	struct instruction *last_new_insn = NULL, *insn, *nop = NULL;
 	struct alt_group *orig_alt_group, *new_alt_group;
 	unsigned long dest_off;
@@ -1817,6 +2135,38 @@ static int handle_group_alt(struct objtool_file *file,
 			return -1;
 		}
 	}
+=======
+	struct instruction *last_orig_insn, *last_new_insn = NULL, *insn, *nop = NULL;
+	struct alt_group *orig_alt_group, *new_alt_group;
+	unsigned long dest_off;
+
+
+	orig_alt_group = malloc(sizeof(*orig_alt_group));
+	if (!orig_alt_group) {
+		WARN("malloc failed");
+		return -1;
+	}
+	orig_alt_group->cfi = calloc(special_alt->orig_len,
+				     sizeof(struct cfi_state *));
+	if (!orig_alt_group->cfi) {
+		WARN("calloc failed");
+		return -1;
+	}
+
+	last_orig_insn = NULL;
+	insn = orig_insn;
+	sec_for_each_insn_from(file, insn) {
+		if (insn->offset >= special_alt->orig_off + special_alt->orig_len)
+			break;
+
+		insn->alt_group = orig_alt_group;
+		last_orig_insn = insn;
+	}
+	orig_alt_group->orig_group = NULL;
+	orig_alt_group->first_insn = orig_insn;
+	orig_alt_group->last_insn = last_orig_insn;
+
+>>>>>>> b7ba80a49124 (Commit)
 
 	new_alt_group = malloc(sizeof(*new_alt_group));
 	if (!new_alt_group) {
@@ -1838,12 +2188,21 @@ static int handle_group_alt(struct objtool_file *file,
 			return -1;
 		}
 		memset(nop, 0, sizeof(*nop));
+<<<<<<< HEAD
+=======
+		INIT_LIST_HEAD(&nop->alts);
+		INIT_LIST_HEAD(&nop->stack_ops);
+>>>>>>> b7ba80a49124 (Commit)
 
 		nop->sec = special_alt->new_sec;
 		nop->offset = special_alt->new_off + special_alt->new_len;
 		nop->len = special_alt->orig_len - special_alt->new_len;
 		nop->type = INSN_NOP;
+<<<<<<< HEAD
 		nop->sym = orig_insn->sym;
+=======
+		nop->func = orig_insn->func;
+>>>>>>> b7ba80a49124 (Commit)
 		nop->alt_group = new_alt_group;
 		nop->ignore = orig_insn->ignore_alts;
 	}
@@ -1863,7 +2222,11 @@ static int handle_group_alt(struct objtool_file *file,
 		last_new_insn = insn;
 
 		insn->ignore = orig_insn->ignore_alts;
+<<<<<<< HEAD
 		insn->sym = orig_insn->sym;
+=======
+		insn->func = orig_insn->func;
+>>>>>>> b7ba80a49124 (Commit)
 		insn->alt_group = new_alt_group;
 
 		/*
@@ -1875,7 +2238,11 @@ static int handle_group_alt(struct objtool_file *file,
 		 * accordingly.
 		 */
 		alt_reloc = insn_reloc(file, insn);
+<<<<<<< HEAD
 		if (alt_reloc && arch_pc_relative_reloc(alt_reloc) &&
+=======
+		if (alt_reloc &&
+>>>>>>> b7ba80a49124 (Commit)
 		    !arch_support_alt_relocation(special_alt, insn, alt_reloc)) {
 
 			WARN_FUNC("unsupported relocation in alternatives section",
@@ -1891,7 +2258,11 @@ static int handle_group_alt(struct objtool_file *file,
 
 		dest_off = arch_jump_destination(insn);
 		if (dest_off == special_alt->new_off + special_alt->new_len) {
+<<<<<<< HEAD
 			insn->jump_dest = next_insn_same_sec(file, orig_alt_group->last_insn);
+=======
+			insn->jump_dest = next_insn_same_sec(file, last_orig_insn);
+>>>>>>> b7ba80a49124 (Commit)
 			if (!insn->jump_dest) {
 				WARN_FUNC("can't find alternative jump destination",
 					  insn->sec, insn->offset);
@@ -1906,11 +2277,20 @@ static int handle_group_alt(struct objtool_file *file,
 		return -1;
 	}
 
+<<<<<<< HEAD
 end:
 	new_alt_group->orig_group = orig_alt_group;
 	new_alt_group->first_insn = *new_insn;
 	new_alt_group->last_insn = last_new_insn;
 	new_alt_group->nop = nop;
+=======
+	if (nop)
+		list_add(&nop->list, &last_new_insn->list);
+end:
+	new_alt_group->orig_group = orig_alt_group;
+	new_alt_group->first_insn = *new_insn;
+	new_alt_group->last_insn = nop ? : last_new_insn;
+>>>>>>> b7ba80a49124 (Commit)
 	new_alt_group->cfi = orig_alt_group->cfi;
 	return 0;
 }
@@ -1960,7 +2340,11 @@ static int handle_jump_alt(struct objtool_file *file,
 	else
 		file->jl_long++;
 
+<<<<<<< HEAD
 	*new_insn = next_insn_same_sec(file, orig_insn);
+=======
+	*new_insn = list_next_entry(orig_insn, list);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -2034,8 +2418,12 @@ static int add_special_section_alts(struct objtool_file *file)
 		alt->insn = new_insn;
 		alt->skip_orig = special_alt->skip_orig;
 		orig_insn->ignore_alts |= special_alt->skip_alt;
+<<<<<<< HEAD
 		alt->next = orig_insn->alts;
 		orig_insn->alts = alt;
+=======
+		list_add_tail(&alt->list, &orig_insn->alts);
+>>>>>>> b7ba80a49124 (Commit)
 
 		list_del(&special_alt->list);
 		free(special_alt);
@@ -2057,7 +2445,11 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
 	struct reloc *reloc = table;
 	struct instruction *dest_insn;
 	struct alternative *alt;
+<<<<<<< HEAD
 	struct symbol *pfunc = insn_func(insn)->pfunc;
+=======
+	struct symbol *pfunc = insn->func->pfunc;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int prev_offset = 0;
 
 	/*
@@ -2084,7 +2476,11 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
 			break;
 
 		/* Make sure the destination is in the same function: */
+<<<<<<< HEAD
 		if (!insn_func(dest_insn) || insn_func(dest_insn)->pfunc != pfunc)
+=======
+		if (!dest_insn->func || dest_insn->func->pfunc != pfunc)
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		alt = malloc(sizeof(*alt));
@@ -2094,8 +2490,12 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
 		}
 
 		alt->insn = dest_insn;
+<<<<<<< HEAD
 		alt->next = insn->alts;
 		insn->alts = alt;
+=======
+		list_add_tail(&alt->list, &insn->alts);
+>>>>>>> b7ba80a49124 (Commit)
 		prev_offset = reloc->offset;
 	}
 
@@ -2125,7 +2525,11 @@ static struct reloc *find_jump_table(struct objtool_file *file,
 	 * it.
 	 */
 	for (;
+<<<<<<< HEAD
 	     insn && insn_func(insn) && insn_func(insn)->pfunc == func;
+=======
+	     insn && insn->func && insn->func->pfunc == func;
+>>>>>>> b7ba80a49124 (Commit)
 	     insn = insn->first_jump_src ?: prev_insn_same_sym(file, insn)) {
 
 		if (insn != orig_insn && insn->type == INSN_JUMP_DYNAMIC)
@@ -2142,7 +2546,11 @@ static struct reloc *find_jump_table(struct objtool_file *file,
 		if (!table_reloc)
 			continue;
 		dest_insn = find_insn(file, table_reloc->sym->sec, table_reloc->addend);
+<<<<<<< HEAD
 		if (!dest_insn || !insn_func(dest_insn) || insn_func(dest_insn)->pfunc != func)
+=======
+		if (!dest_insn || !dest_insn->func || dest_insn->func->pfunc != func)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		return table_reloc;
@@ -2185,7 +2593,11 @@ static void mark_func_jump_tables(struct objtool_file *file,
 		reloc = find_jump_table(file, func, insn);
 		if (reloc) {
 			reloc->jump_table_start = true;
+<<<<<<< HEAD
 			insn->_jump_table = reloc;
+=======
+			insn->jump_table = reloc;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }
@@ -2197,10 +2609,17 @@ static int add_func_jump_tables(struct objtool_file *file,
 	int ret;
 
 	func_for_each_insn(file, func, insn) {
+<<<<<<< HEAD
 		if (!insn_jump_table(insn))
 			continue;
 
 		ret = add_jump_table(file, insn, insn_jump_table(insn));
+=======
+		if (!insn->jump_table)
+			continue;
+
+		ret = add_jump_table(file, insn, insn->jump_table);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			return ret;
 	}
@@ -2331,9 +2750,14 @@ static int read_unwind_hints(struct objtool_file *file)
 			return -1;
 		}
 
+<<<<<<< HEAD
 		cfi.cfa.offset = bswap_if_needed(file->elf, hint->sp_offset);
 		cfi.type = hint->type;
 		cfi.signal = hint->signal;
+=======
+		cfi.cfa.offset = bswap_if_needed(hint->sp_offset);
+		cfi.type = hint->type;
+>>>>>>> b7ba80a49124 (Commit)
 		cfi.end = hint->end;
 
 		insn->cfi = cfi_hash_find_or_add(&cfi);
@@ -2545,7 +2969,11 @@ static int classify_symbols(struct objtool_file *file)
 			if (arch_is_rethunk(func))
 				func->return_thunk = true;
 
+<<<<<<< HEAD
 			if (arch_ftrace_match(func->name))
+=======
+			if (!strcmp(func->name, "__fentry__"))
+>>>>>>> b7ba80a49124 (Commit)
 				func->fentry = true;
 
 			if (is_profiling_func(func->name))
@@ -2592,6 +3020,7 @@ static int decode_sections(struct objtool_file *file)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	/*
 	 * Must be before add_{jump_call}_destination.
 	 */
@@ -2599,6 +3028,8 @@ static int decode_sections(struct objtool_file *file)
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = decode_instructions(file);
 	if (ret)
 		return ret;
@@ -2618,6 +3049,7 @@ static int decode_sections(struct objtool_file *file)
 		return ret;
 
 	/*
+<<<<<<< HEAD
 	 * Must be before add_jump_destinations(), which depends on 'func'
 	 * being set for alternatives, to enable proper sibling call detection.
 	 */
@@ -2626,6 +3058,21 @@ static int decode_sections(struct objtool_file *file)
 		if (ret)
 			return ret;
 	}
+=======
+	 * Must be before add_{jump_call}_destination.
+	 */
+	ret = classify_symbols(file);
+	if (ret)
+		return ret;
+
+	/*
+	 * Must be before add_jump_destinations(), which depends on 'func'
+	 * being set for alternatives, to enable proper sibling call detection.
+	 */
+	ret = add_special_section_alts(file);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = add_jump_destinations(file);
 	if (ret)
@@ -2673,8 +3120,13 @@ static int decode_sections(struct objtool_file *file)
 static bool is_fentry_call(struct instruction *insn)
 {
 	if (insn->type == INSN_CALL &&
+<<<<<<< HEAD
 	    insn_call_dest(insn) &&
 	    insn_call_dest(insn)->fentry)
+=======
+	    insn->call_dest &&
+	    insn->call_dest->fentry)
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 
 	return false;
@@ -2827,7 +3279,11 @@ static int update_cfi_state(struct instruction *insn,
 
 	/* stack operations don't make sense with an undefined CFA */
 	if (cfa->base == CFI_UNDEFINED) {
+<<<<<<< HEAD
 		if (insn_func(insn)) {
+=======
+		if (insn->func) {
+>>>>>>> b7ba80a49124 (Commit)
 			WARN_FUNC("undefined stack state", insn->sec, insn->offset);
 			return -1;
 		}
@@ -3173,7 +3629,11 @@ static int update_cfi_state(struct instruction *insn,
 		}
 
 		/* detect when asm code uses rbp as a scratch register */
+<<<<<<< HEAD
 		if (opts.stackval && insn_func(insn) && op->src.reg == CFI_BP &&
+=======
+		if (opts.stackval && insn->func && op->src.reg == CFI_BP &&
+>>>>>>> b7ba80a49124 (Commit)
 		    cfa->base != CFI_BP)
 			cfi->bp_scratch = true;
 		break;
@@ -3269,12 +3729,17 @@ static int propagate_alt_cfi(struct objtool_file *file, struct instruction *insn
 		alt_cfi[group_off] = insn->cfi;
 	} else {
 		if (cficmp(alt_cfi[group_off], insn->cfi)) {
+<<<<<<< HEAD
 			struct alt_group *orig_group = insn->alt_group->orig_group ?: insn->alt_group;
 			struct instruction *orig = orig_group->first_insn;
 			char *where = offstr(insn->sec, insn->offset);
 			WARN_FUNC("stack layout conflict in alternatives: %s",
 				  orig->sec, orig->offset, where);
 			free(where);
+=======
+			WARN_FUNC("stack layout conflict in alternatives",
+				  insn->sec, insn->offset);
+>>>>>>> b7ba80a49124 (Commit)
 			return -1;
 		}
 	}
@@ -3288,7 +3753,11 @@ static int handle_insn_ops(struct instruction *insn,
 {
 	struct stack_op *op;
 
+<<<<<<< HEAD
 	for (op = insn->stack_ops; op; op = op->next) {
+=======
+	list_for_each_entry(op, &insn->stack_ops, list) {
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (update_cfi_state(insn, next_insn, &state->cfi, op))
 			return 1;
@@ -3385,8 +3854,13 @@ static inline const char *call_dest_name(struct instruction *insn)
 	struct reloc *rel;
 	int idx;
 
+<<<<<<< HEAD
 	if (insn_call_dest(insn))
 		return insn_call_dest(insn)->name;
+=======
+	if (insn->call_dest)
+		return insn->call_dest->name;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rel = insn_reloc(NULL, insn);
 	if (rel && !strcmp(rel->sym->name, "pv_ops")) {
@@ -3447,12 +3921,15 @@ static inline bool noinstr_call_dest(struct objtool_file *file,
 		return true;
 
 	/*
+<<<<<<< HEAD
 	 * If the symbol is a static_call trampoline, we can't tell.
 	 */
 	if (func->static_call_tramp)
 		return true;
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * The __ubsan_handle_*() calls are like WARN(), they only happen when
 	 * something 'BAD' happened. At the risk of taking the machine down,
 	 * let them proceed to get the message out.
@@ -3468,13 +3945,21 @@ static int validate_call(struct objtool_file *file,
 			 struct insn_state *state)
 {
 	if (state->noinstr && state->instr <= 0 &&
+<<<<<<< HEAD
 	    !noinstr_call_dest(file, insn, insn_call_dest(insn))) {
+=======
+	    !noinstr_call_dest(file, insn, insn->call_dest)) {
+>>>>>>> b7ba80a49124 (Commit)
 		WARN_FUNC("call to %s() leaves .noinstr.text section",
 				insn->sec, insn->offset, call_dest_name(insn));
 		return 1;
 	}
 
+<<<<<<< HEAD
 	if (state->uaccess && !func_uaccess_safe(insn_call_dest(insn))) {
+=======
+	if (state->uaccess && !func_uaccess_safe(insn->call_dest)) {
+>>>>>>> b7ba80a49124 (Commit)
 		WARN_FUNC("call to %s() with UACCESS enabled",
 				insn->sec, insn->offset, call_dest_name(insn));
 		return 1;
@@ -3493,7 +3978,11 @@ static int validate_sibling_call(struct objtool_file *file,
 				 struct instruction *insn,
 				 struct insn_state *state)
 {
+<<<<<<< HEAD
 	if (insn_func(insn) && has_modified_stack_frame(insn, state)) {
+=======
+	if (has_modified_stack_frame(insn, state)) {
+>>>>>>> b7ba80a49124 (Commit)
 		WARN_FUNC("sibling call from callable instruction with modified stack frame",
 				insn->sec, insn->offset);
 		return 1;
@@ -3552,6 +4041,7 @@ static struct instruction *next_insn_to_validate(struct objtool_file *file,
 	 * Simulate the fact that alternatives are patched in-place.  When the
 	 * end of a replacement alt_group is reached, redirect objtool flow to
 	 * the end of the original alt_group.
+<<<<<<< HEAD
 	 *
 	 * insn->alts->insn -> alt_group->first_insn
 	 *		       ...
@@ -3574,6 +4064,13 @@ static struct instruction *next_insn_to_validate(struct objtool_file *file,
 
 next_orig:
 	return next_insn_same_sec(file, alt_group->orig_group->last_insn);
+=======
+	 */
+	if (alt_group && insn == alt_group->last_insn && alt_group->orig_group)
+		return next_insn_same_sec(file, alt_group->orig_group->last_insn);
+
+	return next_insn_same_sec(file, insn);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -3596,6 +4093,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
 	while (1) {
 		next_insn = next_insn_to_validate(file, insn);
 
+<<<<<<< HEAD
 		if (func && insn_func(insn) && func != insn_func(insn)->pfunc) {
 			/* Ignore KCFI type preambles, which always fall through */
 			if (!strncmp(func->name, "__cfi_", 6) ||
@@ -3604,6 +4102,11 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
 
 			WARN("%s() falls through to next function %s()",
 			     func->name, insn_func(insn)->name);
+=======
+		if (func && insn->func && func != insn->func->pfunc) {
+			WARN("%s() falls through to next function %s()",
+			     func->name, insn->func->name);
+>>>>>>> b7ba80a49124 (Commit)
 			return 1;
 		}
 
@@ -3674,10 +4177,17 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
 		if (propagate_alt_cfi(file, insn))
 			return 1;
 
+<<<<<<< HEAD
 		if (!insn->ignore_alts && insn->alts) {
 			bool skip_orig = false;
 
 			for (alt = insn->alts; alt; alt = alt->next) {
+=======
+		if (!insn->ignore_alts && !list_empty(&insn->alts)) {
+			bool skip_orig = false;
+
+			list_for_each_entry(alt, &insn->alts, list) {
+>>>>>>> b7ba80a49124 (Commit)
 				if (alt->skip_orig)
 					skip_orig = true;
 
@@ -3824,6 +4334,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int validate_unwind_hint(struct objtool_file *file,
 				  struct instruction *insn,
 				  struct insn_state *state)
@@ -3838,11 +4349,17 @@ static int validate_unwind_hint(struct objtool_file *file,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int validate_unwind_hints(struct objtool_file *file, struct section *sec)
 {
 	struct instruction *insn;
 	struct insn_state state;
+<<<<<<< HEAD
 	int warnings = 0;
+=======
+	int ret, warnings = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!file->hints)
 		return 0;
@@ -3850,11 +4367,30 @@ static int validate_unwind_hints(struct objtool_file *file, struct section *sec)
 	init_insn_state(file, &state, sec);
 
 	if (sec) {
+<<<<<<< HEAD
 		sec_for_each_insn(file, sec, insn)
 			warnings += validate_unwind_hint(file, insn, &state);
 	} else {
 		for_each_insn(file, insn)
 			warnings += validate_unwind_hint(file, insn, &state);
+=======
+		insn = find_insn(file, sec, 0);
+		if (!insn)
+			return 0;
+	} else {
+		insn = list_first_entry(&file->insn_list, typeof(*insn), list);
+	}
+
+	while (&insn->list != &file->insn_list && (!sec || insn->sec == sec)) {
+		if (insn->hint && !insn->visited && !insn->ignore) {
+			ret = validate_branch(file, insn->func, insn, state);
+			if (ret && opts.backtrace)
+				BT_FUNC("<=== (hint)", insn);
+			warnings += ret;
+		}
+
+		insn = list_next_entry(insn, list);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return warnings;
@@ -3879,11 +4415,19 @@ static int validate_entry(struct objtool_file *file, struct instruction *insn)
 
 		insn->visited |= VISITED_ENTRY;
 
+<<<<<<< HEAD
 		if (!insn->ignore_alts && insn->alts) {
 			struct alternative *alt;
 			bool skip_orig = false;
 
 			for (alt = insn->alts; alt; alt = alt->next) {
+=======
+		if (!insn->ignore_alts && !list_empty(&insn->alts)) {
+			struct alternative *alt;
+			bool skip_orig = false;
+
+			list_for_each_entry(alt, &insn->alts, list) {
+>>>>>>> b7ba80a49124 (Commit)
 				if (alt->skip_orig)
 					skip_orig = true;
 
@@ -3932,11 +4476,19 @@ static int validate_entry(struct objtool_file *file, struct instruction *insn)
 
 			/* fallthrough */
 		case INSN_CALL:
+<<<<<<< HEAD
 			dest = find_insn(file, insn_call_dest(insn)->sec,
 					 insn_call_dest(insn)->offset);
 			if (!dest) {
 				WARN("Unresolved function after linking!?: %s",
 				     insn_call_dest(insn)->name);
+=======
+			dest = find_insn(file, insn->call_dest->sec,
+					 insn->call_dest->offset);
+			if (!dest) {
+				WARN("Unresolved function after linking!?: %s",
+				     insn->call_dest->name);
+>>>>>>> b7ba80a49124 (Commit)
 				return -1;
 			}
 
@@ -4013,7 +4565,17 @@ static int validate_retpoline(struct objtool_file *file)
 		if (insn->retpoline_safe)
 			continue;
 
+<<<<<<< HEAD
 		if (insn->sec->init)
+=======
+		/*
+		 * .init.text code is ran before userspace and thus doesn't
+		 * strictly need retpolines, except for modules which are
+		 * loaded late, they very much do need retpoline in their
+		 * .init.text
+		 */
+		if (!strcmp(insn->sec->name, ".init.text") && !opts.module)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		if (insn->type == INSN_RETURN) {
@@ -4037,13 +4599,21 @@ static int validate_retpoline(struct objtool_file *file)
 static bool is_kasan_insn(struct instruction *insn)
 {
 	return (insn->type == INSN_CALL &&
+<<<<<<< HEAD
 		!strcmp(insn_call_dest(insn)->name, "__asan_handle_no_return"));
+=======
+		!strcmp(insn->call_dest->name, "__asan_handle_no_return"));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool is_ubsan_insn(struct instruction *insn)
 {
 	return (insn->type == INSN_CALL &&
+<<<<<<< HEAD
 		!strcmp(insn_call_dest(insn)->name,
+=======
+		!strcmp(insn->call_dest->name,
+>>>>>>> b7ba80a49124 (Commit)
 			"__ubsan_handle_builtin_unreachable"));
 }
 
@@ -4071,7 +4641,11 @@ static bool ignore_unreachable_insn(struct objtool_file *file, struct instructio
 	 * In this case we'll find a piece of code (whole function) that is not
 	 * covered by a !section symbol. Ignore them.
 	 */
+<<<<<<< HEAD
 	if (opts.link && !insn_func(insn)) {
+=======
+	if (opts.link && !insn->func) {
+>>>>>>> b7ba80a49124 (Commit)
 		int size = find_symbol_hole_containing(insn->sec, insn->offset);
 		unsigned long end = insn->offset + size;
 
@@ -4095,10 +4669,17 @@ static bool ignore_unreachable_insn(struct objtool_file *file, struct instructio
 			/*
 			 * If this hole jumps to a .cold function, mark it ignore too.
 			 */
+<<<<<<< HEAD
 			if (insn->jump_dest && insn_func(insn->jump_dest) &&
 			    strstr(insn_func(insn->jump_dest)->name, ".cold")) {
 				struct instruction *dest = insn->jump_dest;
 				func_for_each_insn(file, insn_func(dest), dest)
+=======
+			if (insn->jump_dest && insn->jump_dest->func &&
+			    strstr(insn->jump_dest->func->name, ".cold")) {
+				struct instruction *dest = insn->jump_dest;
+				func_for_each_insn(file, dest->func, dest)
+>>>>>>> b7ba80a49124 (Commit)
 					dest->ignore = true;
 			}
 		}
@@ -4106,10 +4687,17 @@ static bool ignore_unreachable_insn(struct objtool_file *file, struct instructio
 		return false;
 	}
 
+<<<<<<< HEAD
 	if (!insn_func(insn))
 		return false;
 
 	if (insn_func(insn)->static_call_tramp)
+=======
+	if (!insn->func)
+		return false;
+
+	if (insn->func->static_call_tramp)
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 
 	/*
@@ -4120,9 +4708,14 @@ static bool ignore_unreachable_insn(struct objtool_file *file, struct instructio
 	 *
 	 * It may also insert a UD2 after calling a __noreturn function.
 	 */
+<<<<<<< HEAD
 	prev_insn = prev_insn_same_sec(file, insn);
 	if ((prev_insn->dead_end ||
 	     dead_end_function(file, insn_call_dest(prev_insn))) &&
+=======
+	prev_insn = list_prev_entry(insn, list);
+	if ((prev_insn->dead_end || dead_end_function(file, prev_insn->call_dest)) &&
+>>>>>>> b7ba80a49124 (Commit)
 	    (insn->type == INSN_BUG ||
 	     (insn->type == INSN_JUMP_UNCONDITIONAL &&
 	      insn->jump_dest && insn->jump_dest->type == INSN_BUG)))
@@ -4141,7 +4734,11 @@ static bool ignore_unreachable_insn(struct objtool_file *file, struct instructio
 
 		if (insn->type == INSN_JUMP_UNCONDITIONAL) {
 			if (insn->jump_dest &&
+<<<<<<< HEAD
 			    insn_func(insn->jump_dest) == insn_func(insn)) {
+=======
+			    insn->jump_dest->func == insn->func) {
+>>>>>>> b7ba80a49124 (Commit)
 				insn = insn->jump_dest;
 				continue;
 			}
@@ -4149,15 +4746,23 @@ static bool ignore_unreachable_insn(struct objtool_file *file, struct instructio
 			break;
 		}
 
+<<<<<<< HEAD
 		if (insn->offset + insn->len >= insn_func(insn)->offset + insn_func(insn)->len)
 			break;
 
 		insn = next_insn_same_sec(file, insn);
+=======
+		if (insn->offset + insn->len >= insn->func->offset + insn->func->len)
+			break;
+
+		insn = list_next_entry(insn, list);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return false;
 }
 
+<<<<<<< HEAD
 static int add_prefix_symbol(struct objtool_file *file, struct symbol *func,
 			     struct instruction *insn)
 {
@@ -4206,6 +4811,8 @@ static int add_prefix_symbol(struct objtool_file *file, struct symbol *func,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int validate_symbol(struct objtool_file *file, struct section *sec,
 			   struct symbol *sym, struct insn_state *state)
 {
@@ -4224,11 +4831,17 @@ static int validate_symbol(struct objtool_file *file, struct section *sec,
 	if (!insn || insn->ignore || insn->visited)
 		return 0;
 
+<<<<<<< HEAD
 	add_prefix_symbol(file, sym, insn);
 
 	state->uaccess = sym->uaccess_safe;
 
 	ret = validate_branch(file, insn_func(insn), insn, *state);
+=======
+	state->uaccess = sym->uaccess_safe;
+
+	ret = validate_branch(file, insn->func, insn, *state);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret && opts.backtrace)
 		BT_FUNC("<=== (sym)", insn);
 	return ret;
@@ -4270,12 +4883,15 @@ static int validate_noinstr_sections(struct objtool_file *file)
 		warnings += validate_unwind_hints(file, sec);
 	}
 
+<<<<<<< HEAD
 	sec = find_section_by_name(file->elf, ".cpuidle.text");
 	if (sec) {
 		warnings += validate_section(file, sec);
 		warnings += validate_unwind_hints(file, sec);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return warnings;
 }
 
@@ -4300,6 +4916,7 @@ static void mark_endbr_used(struct instruction *insn)
 		list_del_init(&insn->call_node);
 }
 
+<<<<<<< HEAD
 static bool noendbr_range(struct objtool_file *file, struct instruction *insn)
 {
 	struct symbol *sym = find_symbol_containing(insn->sec, insn->offset-1);
@@ -4318,6 +4935,8 @@ static bool noendbr_range(struct objtool_file *file, struct instruction *insn)
 	return insn->offset == sym->offset + sym->len;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int validate_ibt_insn(struct objtool_file *file, struct instruction *insn)
 {
 	struct instruction *dest;
@@ -4371,7 +4990,11 @@ static int validate_ibt_insn(struct objtool_file *file, struct instruction *insn
 			continue;
 		}
 
+<<<<<<< HEAD
 		if (insn_func(dest) && insn_func(dest) == insn_func(insn)) {
+=======
+		if (dest->func && dest->func == insn->func) {
+>>>>>>> b7ba80a49124 (Commit)
 			/*
 			 * Anything from->to self is either _THIS_IP_ or
 			 * IRET-to-self.
@@ -4390,6 +5013,7 @@ static int validate_ibt_insn(struct objtool_file *file, struct instruction *insn
 			continue;
 		}
 
+<<<<<<< HEAD
 		/*
 		 * Accept anything ANNOTATE_NOENDBR.
 		 */
@@ -4403,6 +5027,11 @@ static int validate_ibt_insn(struct objtool_file *file, struct instruction *insn
 		if (noendbr_range(file, dest))
 			continue;
 
+=======
+		if (dest->noendbr)
+			continue;
+
+>>>>>>> b7ba80a49124 (Commit)
 		WARN_FUNC("relocation to !ENDBR: %s",
 			  insn->sec, insn->offset,
 			  offstr(dest->sec, dest->offset));
@@ -4482,7 +5111,10 @@ static int validate_ibt(struct objtool_file *file)
 		    !strcmp(sec->name, "__ex_table")			||
 		    !strcmp(sec->name, "__jump_table")			||
 		    !strcmp(sec->name, "__mcount_loc")			||
+<<<<<<< HEAD
 		    !strcmp(sec->name, ".kcfi_traps")			||
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		    strstr(sec->name, "__patchable_function_entries"))
 			continue;
 
@@ -4567,7 +5199,11 @@ int check(struct objtool_file *file)
 
 	warnings += ret;
 
+<<<<<<< HEAD
 	if (!nr_insns)
+=======
+	if (list_empty(&file->insn_list))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	if (opts.retpoline) {
@@ -4641,6 +5277,7 @@ int check(struct objtool_file *file)
 		warnings += ret;
 	}
 
+<<<<<<< HEAD
 	if (opts.cfi) {
 		ret = create_cfi_sections(file);
 		if (ret < 0)
@@ -4648,11 +5285,14 @@ int check(struct objtool_file *file)
 		warnings += ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (opts.rethunk) {
 		ret = create_return_sites_sections(file);
 		if (ret < 0)
 			goto out;
 		warnings += ret;
+<<<<<<< HEAD
 
 		if (opts.hack_skylake) {
 			ret = create_direct_call_sections(file);
@@ -4660,6 +5300,8 @@ int check(struct objtool_file *file)
 				goto out;
 			warnings += ret;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (opts.mcount) {
@@ -4676,7 +5318,11 @@ int check(struct objtool_file *file)
 		warnings += ret;
 	}
 
+<<<<<<< HEAD
 	if (opts.orc && nr_insns) {
+=======
+	if (opts.orc && !list_empty(&file->insn_list)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = orc_create(file);
 		if (ret < 0)
 			goto out;

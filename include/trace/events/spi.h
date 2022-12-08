@@ -57,7 +57,11 @@ TRACE_EVENT(spi_setup,
 
 	TP_fast_assign(
 		__entry->bus_num = spi->controller->bus_num;
+<<<<<<< HEAD
 		__entry->chip_select =  spi_get_chipselect(spi, 0);
+=======
+		__entry->chip_select = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->mode = spi->mode;
 		__entry->bits_per_word = spi->bits_per_word;
 		__entry->max_speed_hz = spi->max_speed_hz;
@@ -88,7 +92,11 @@ TRACE_EVENT(spi_set_cs,
 
 	TP_fast_assign(
 		__entry->bus_num = spi->controller->bus_num;
+<<<<<<< HEAD
 		__entry->chip_select = spi_get_chipselect(spi, 0);
+=======
+		__entry->chip_select = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->mode = spi->mode;
 		__entry->enable = enable;
 	),
@@ -113,7 +121,11 @@ DECLARE_EVENT_CLASS(spi_message,
 
 	TP_fast_assign(
 		__entry->bus_num = msg->spi->controller->bus_num;
+<<<<<<< HEAD
 		__entry->chip_select = spi_get_chipselect(msg->spi, 0);
+=======
+		__entry->chip_select = msg->spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->msg = msg;
 	),
 
@@ -154,7 +166,11 @@ TRACE_EVENT(spi_message_done,
 
 	TP_fast_assign(
 		__entry->bus_num = msg->spi->controller->bus_num;
+<<<<<<< HEAD
 		__entry->chip_select = spi_get_chipselect(msg->spi, 0);
+=======
+		__entry->chip_select = msg->spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->msg = msg;
 		__entry->frame = msg->frame_length;
 		__entry->actual = msg->actual_length;
@@ -197,7 +213,11 @@ DECLARE_EVENT_CLASS(spi_transfer,
 
 	TP_fast_assign(
 		__entry->bus_num = msg->spi->controller->bus_num;
+<<<<<<< HEAD
 		__entry->chip_select = spi_get_chipselect(msg->spi, 0);
+=======
+		__entry->chip_select = msg->spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->xfer = xfer;
 		__entry->len = xfer->len;
 

@@ -11,7 +11,10 @@
 #include <linux/clk.h>
 #include <linux/debugfs.h>
 #include <linux/hwmon.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/mod_devicetable.h>
 #include <linux/mutex.h>
@@ -611,6 +614,27 @@ static int pvt_get_regmap(struct platform_device *pdev, char *reg_name,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void pvt_clk_disable(void *data)
+{
+	struct pvt_device *pvt = data;
+
+	clk_disable_unprepare(pvt->clk);
+}
+
+static int pvt_clk_enable(struct device *dev, struct pvt_device *pvt)
+{
+	int ret;
+
+	ret = clk_prepare_enable(pvt->clk);
+	if (ret)
+		return ret;
+
+	return devm_add_action_or_reset(dev, pvt_clk_disable, pvt);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void pvt_reset_control_assert(void *data)
 {
 	struct pvt_device *pvt = data;
@@ -782,10 +806,23 @@ static int mr75203_probe(struct platform_device *pdev)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	pvt->clk = devm_clk_get_enabled(dev, NULL);
 	if (IS_ERR(pvt->clk))
 		return dev_err_probe(dev, PTR_ERR(pvt->clk), "failed to get clock\n");
 
+=======
+	pvt->clk = devm_clk_get(dev, NULL);
+	if (IS_ERR(pvt->clk))
+		return dev_err_probe(dev, PTR_ERR(pvt->clk), "failed to get clock\n");
+
+	ret = pvt_clk_enable(dev, pvt);
+	if (ret) {
+		dev_err(dev, "failed to enable clock\n");
+		return ret;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	pvt->rst = devm_reset_control_get_optional_exclusive(dev, NULL);
 	if (IS_ERR(pvt->rst))
 		return dev_err_probe(dev, PTR_ERR(pvt->rst),

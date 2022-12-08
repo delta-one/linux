@@ -1138,6 +1138,7 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
 
 	/* allocate service controller and supporting channel */
 	controller = devm_kzalloc(dev, sizeof(*controller), GFP_KERNEL);
+<<<<<<< HEAD
 	if (!controller) {
 		ret = -ENOMEM;
 		goto err_destroy_pool;
@@ -1149,6 +1150,15 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
 		ret = -ENOMEM;
 		goto err_destroy_pool;
 	}
+=======
+	if (!controller)
+		return -ENOMEM;
+
+	chans = devm_kmalloc_array(dev, SVC_NUM_CHANNEL,
+				   sizeof(*chans), GFP_KERNEL | __GFP_ZERO);
+	if (!chans)
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	controller->dev = dev;
 	controller->num_chans = SVC_NUM_CHANNEL;
@@ -1163,7 +1173,11 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
 	ret = kfifo_alloc(&controller->svc_fifo, fifo_size, GFP_KERNEL);
 	if (ret) {
 		dev_err(dev, "failed to allocate FIFO\n");
+<<<<<<< HEAD
 		goto err_destroy_pool;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	spin_lock_init(&controller->svc_fifo_lock);
 
@@ -1202,20 +1216,32 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
 	ret = platform_device_add(svc->stratix10_svc_rsu);
 	if (ret) {
 		platform_device_put(svc->stratix10_svc_rsu);
+<<<<<<< HEAD
 		goto err_free_kfifo;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	svc->intel_svc_fcs = platform_device_alloc(INTEL_FCS, 1);
 	if (!svc->intel_svc_fcs) {
 		dev_err(dev, "failed to allocate %s device\n", INTEL_FCS);
+<<<<<<< HEAD
 		ret = -ENOMEM;
 		goto err_unregister_dev;
+=======
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = platform_device_add(svc->intel_svc_fcs);
 	if (ret) {
 		platform_device_put(svc->intel_svc_fcs);
+<<<<<<< HEAD
 		goto err_unregister_dev;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	dev_set_drvdata(dev, svc);
@@ -1224,12 +1250,17 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
 
 	return 0;
 
+<<<<<<< HEAD
 err_unregister_dev:
 	platform_device_unregister(svc->stratix10_svc_rsu);
 err_free_kfifo:
 	kfifo_free(&controller->svc_fifo);
 err_destroy_pool:
 	gen_pool_destroy(genpool);
+=======
+err_free_kfifo:
+	kfifo_free(&controller->svc_fifo);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

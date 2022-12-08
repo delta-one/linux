@@ -330,7 +330,11 @@ Examples
 
   // boot-args example, with newlines and comments for readability
   Kernel command line: ...
+<<<<<<< HEAD
     // see what's going on in dyndbg=value processing
+=======
+    // see whats going on in dyndbg=value processing
+>>>>>>> b7ba80a49124 (Commit)
     dynamic_debug.verbose=3
     // enable pr_debugs in the btrfs module (can be builtin or loadable)
     btrfs.dyndbg="+p"

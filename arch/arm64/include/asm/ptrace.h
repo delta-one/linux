@@ -194,7 +194,11 @@ struct pt_regs {
 	u32 unused2;
 #endif
 	u64 sdei_ttbr1;
+<<<<<<< HEAD
 	/* Only valid when ARM64_HAS_GIC_PRIO_MASKING is enabled. */
+=======
+	/* Only valid when ARM64_HAS_IRQ_PRIO_MASKING is enabled. */
+>>>>>>> b7ba80a49124 (Commit)
 	u64 pmr_save;
 	u64 stackframe[2];
 

@@ -17,10 +17,17 @@ description: |
   Datasheet is available at
   https://www.nxp.com/docs/en/data-sheet/PCA9450DS.pdf
 
+<<<<<<< HEAD
 # The valid names for PCA9450 regulator nodes are:
 # BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6,
 # LDO1, LDO2, LDO3, LDO4, LDO5
 # Note: Buck3 removed on PCA9450B and connect with Buck1 on PCA9450C.
+=======
+#The valid names for PCA9450 regulator nodes are:
+#BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6,
+#LDO1, LDO2, LDO3, LDO4, LDO5
+#Note: Buck3 removed on PCA9450B and connect with Buck1 on PCA9450C.
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -57,7 +64,11 @@ properties:
 
         properties:
           nxp,dvs-run-voltage:
+<<<<<<< HEAD
             $ref: /schemas/types.yaml#/definitions/uint32
+=======
+            $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
             minimum: 600000
             maximum: 2187500
             description:
@@ -65,7 +76,11 @@ properties:
               dvs(dynamic voltage scaling) property.
 
           nxp,dvs-standby-voltage:
+<<<<<<< HEAD
             $ref: /schemas/types.yaml#/definitions/uint32
+=======
+            $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
             minimum: 600000
             maximum: 2187500
             description:

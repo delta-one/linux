@@ -13,11 +13,17 @@
 #include <linux/clk-provider.h>
 #include <linux/platform_device.h>
 #include <linux/platform_data/i2c-xiic.h>
+<<<<<<< HEAD
 #include <linux/platform_data/i2c-ocores.h>
 #include <linux/ptp_clock_kernel.h>
 #include <linux/spi/spi.h>
 #include <linux/spi/xilinx_spi.h>
 #include <linux/spi/altera.h>
+=======
+#include <linux/ptp_clock_kernel.h>
+#include <linux/spi/spi.h>
+#include <linux/spi/xilinx_spi.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/devlink.h>
 #include <linux/i2c.h>
 #include <linux/mtd/mtd.h>
@@ -30,10 +36,15 @@
 #define PCI_VENDOR_ID_CELESTICA			0x18d4
 #define PCI_DEVICE_ID_CELESTICA_TIMECARD	0x1008
 
+<<<<<<< HEAD
 #define PCI_VENDOR_ID_OROLIA			0x1ad7
 #define PCI_DEVICE_ID_OROLIA_ARTCARD		0xa000
 
 static struct class timecard_class = {
+=======
+static struct class timecard_class = {
+	.owner		= THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.name		= "timecard",
 };
 
@@ -207,11 +218,14 @@ struct frequency_reg {
 	u32	ctrl;
 	u32	status;
 };
+<<<<<<< HEAD
 
 struct board_config_reg {
 	u32 mro50_serial_activate;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define FREQ_STATUS_VALID	BIT(31)
 #define FREQ_STATUS_ERROR	BIT(30)
 #define FREQ_STATUS_OVERRUN	BIT(29)
@@ -287,11 +301,14 @@ struct ptp_ocp_signal {
 	bool		running;
 };
 
+<<<<<<< HEAD
 struct ptp_ocp_serial_port {
 	int line;
 	int baud;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define OCP_BOARD_ID_LEN		13
 #define OCP_SERIAL_LEN			6
 
@@ -303,7 +320,10 @@ struct ptp_ocp {
 	struct tod_reg __iomem	*tod;
 	struct pps_reg __iomem	*pps_to_ext;
 	struct pps_reg __iomem	*pps_to_clk;
+<<<<<<< HEAD
 	struct board_config_reg __iomem	*board_config;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct gpio_reg __iomem	*pps_select;
 	struct gpio_reg __iomem	*sma_map1;
 	struct gpio_reg __iomem	*sma_map2;
@@ -320,7 +340,10 @@ struct ptp_ocp {
 	struct ptp_ocp_ext_src	*ts2;
 	struct ptp_ocp_ext_src	*ts3;
 	struct ptp_ocp_ext_src	*ts4;
+<<<<<<< HEAD
 	struct ocp_art_gpio_reg __iomem *art_sma;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct img_reg __iomem	*image;
 	struct ptp_clock	*ptp;
 	struct ptp_clock_info	ptp_info;
@@ -334,10 +357,17 @@ struct ptp_ocp {
 	time64_t		gnss_lost;
 	int			id;
 	int			n_irqs;
+<<<<<<< HEAD
 	struct ptp_ocp_serial_port	gnss_port;
 	struct ptp_ocp_serial_port	gnss2_port;
 	struct ptp_ocp_serial_port	mac_port;   /* miniature atomic clock */
 	struct ptp_ocp_serial_port	nmea_port;
+=======
+	int			gnss_port;
+	int			gnss2_port;
+	int			mac_port;	/* miniature atomic clock */
+	int			nmea_port;
+>>>>>>> b7ba80a49124 (Commit)
 	bool			fw_loader;
 	u8			fw_tag;
 	u16			fw_version;
@@ -381,12 +411,17 @@ static int ptp_ocp_signal_from_perout(struct ptp_ocp *bp, int gen,
 static int ptp_ocp_signal_enable(void *priv, u32 req, bool enable);
 static int ptp_ocp_sma_store(struct ptp_ocp *bp, const char *buf, int sma_nr);
 
+<<<<<<< HEAD
 static int ptp_ocp_art_board_init(struct ptp_ocp *bp, struct ocp_resource *r);
 
 static const struct ocp_attr_group fb_timecard_groups[];
 
 static const struct ocp_attr_group art_timecard_groups[];
 
+=======
+static const struct ocp_attr_group fb_timecard_groups[];
+
+>>>>>>> b7ba80a49124 (Commit)
 struct ptp_ocp_eeprom_map {
 	u16	off;
 	u16	len;
@@ -409,12 +444,15 @@ static struct ptp_ocp_eeprom_map fb_eeprom_map[] = {
 	{ }
 };
 
+<<<<<<< HEAD
 static struct ptp_ocp_eeprom_map art_eeprom_map[] = {
 	{ EEPROM_ENTRY(0x200 + 0x43, board_id) },
 	{ EEPROM_ENTRY(0x200 + 0x63, serial) },
 	{ }
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define bp_assign_entry(bp, res, val) ({				\
 	uintptr_t addr = (uintptr_t)(bp) + (res)->bp_offset;		\
 	*(typeof(val) *)addr = val;					\
@@ -456,6 +494,7 @@ static struct ptp_ocp_eeprom_map art_eeprom_map[] = {
  * 14: Signal Generator 4
  * 15: TS3
  * 16: TS4
+<<<<<<< HEAD
  --
  * 8: Orolia TS1
  * 10: Orolia TS2
@@ -463,6 +502,8 @@ static struct ptp_ocp_eeprom_map art_eeprom_map[] = {
  * 12: Orolia PPS
  * 14: Orolia TS3
  * 15: Orolia TS4
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 static struct ocp_resource ocp_fb_resource[] = {
@@ -629,23 +670,32 @@ static struct ocp_resource ocp_fb_resource[] = {
 	{
 		OCP_SERIAL_RESOURCE(gnss_port),
 		.offset = 0x00160000 + 0x1000, .irq_vec = 3,
+<<<<<<< HEAD
 		.extra = &(struct ptp_ocp_serial_port) {
 			.baud = 115200,
 		},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		OCP_SERIAL_RESOURCE(gnss2_port),
 		.offset = 0x00170000 + 0x1000, .irq_vec = 4,
+<<<<<<< HEAD
 		.extra = &(struct ptp_ocp_serial_port) {
 			.baud = 115200,
 		},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		OCP_SERIAL_RESOURCE(mac_port),
 		.offset = 0x00180000 + 0x1000, .irq_vec = 5,
+<<<<<<< HEAD
 		.extra = &(struct ptp_ocp_serial_port) {
 			.baud = 57600,
 		},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		OCP_SERIAL_RESOURCE(nmea_port),
@@ -661,7 +711,10 @@ static struct ocp_resource ocp_fb_resource[] = {
 				.num_chipselect = 1,
 				.bits_per_word = 8,
 				.num_devices = 1,
+<<<<<<< HEAD
 				.force_irq = true,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				.devices = &(struct spi_board_info) {
 					.modalias = "spi-nor",
 				},
@@ -690,6 +743,7 @@ static struct ocp_resource ocp_fb_resource[] = {
 	{ }
 };
 
+<<<<<<< HEAD
 #define OCP_ART_CONFIG_SIZE		144
 #define OCP_ART_TEMP_TABLE_SIZE		368
 
@@ -825,6 +879,11 @@ static const struct pci_device_id ptp_ocp_pcidev_id[] = {
 	{ PCI_DEVICE_DATA(FACEBOOK, TIMECARD, &ocp_fb_resource) },
 	{ PCI_DEVICE_DATA(CELESTICA, TIMECARD, &ocp_fb_resource) },
 	{ PCI_DEVICE_DATA(OROLIA, ARTCARD, &ocp_art_resource) },
+=======
+static const struct pci_device_id ptp_ocp_pcidev_id[] = {
+	{ PCI_DEVICE_DATA(FACEBOOK, TIMECARD, &ocp_fb_resource) },
+	{ PCI_DEVICE_DATA(CELESTICA, TIMECARD, &ocp_fb_resource) },
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(pci, ptp_ocp_pcidev_id);
@@ -889,6 +948,7 @@ static const struct ocp_selector ptp_ocp_sma_out[] = {
 	{ }
 };
 
+<<<<<<< HEAD
 static const struct ocp_selector ptp_ocp_art_sma_in[] = {
 	{ .name = "PPS1",	.value = 0x0001 },
 	{ .name = "10Mhz",	.value = 0x0008 },
@@ -902,6 +962,8 @@ static const struct ocp_selector ptp_ocp_art_sma_out[] = {
 	{ }
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ocp_sma_op {
 	const struct ocp_selector *tbl[2];
 	void (*init)(struct ptp_ocp *bp);
@@ -1499,6 +1561,15 @@ fail:
 	goto out;
 }
 
+<<<<<<< HEAD
+=======
+static int
+ptp_ocp_firstchild(struct device *dev, void *data)
+{
+	return 1;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct device *
 ptp_ocp_find_flash(struct ptp_ocp *bp)
 {
@@ -1507,7 +1578,11 @@ ptp_ocp_find_flash(struct ptp_ocp *bp)
 	last = NULL;
 	dev = &bp->spi_flash->dev;
 
+<<<<<<< HEAD
 	while ((dev = device_find_any_child(dev))) {
+=======
+	while ((dev = device_find_child(dev, NULL, ptp_ocp_firstchild))) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!strcmp("mtd", dev_bus_name(dev)))
 			break;
 		put_device(last);
@@ -1530,9 +1605,17 @@ ptp_ocp_devlink_fw_image(struct devlink *devlink, const struct firmware *fw,
 	hdr = (const struct ptp_ocp_firmware_header *)fw->data;
 	if (memcmp(hdr->magic, OCP_FIRMWARE_MAGIC_HEADER, 4)) {
 		devlink_flash_update_status_notify(devlink,
+<<<<<<< HEAD
 			"No firmware header found, cancel firmware upgrade",
 			NULL, 0, 0);
 		return -EINVAL;
+=======
+			"No firmware header found, flashing raw image",
+			NULL, 0, 0);
+		offset = 0;
+		length = fw->size;
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (be16_to_cpu(hdr->pci_vendor_id) != bp->pdev->vendor ||
@@ -1560,6 +1643,10 @@ ptp_ocp_devlink_fw_image(struct devlink *devlink, const struct firmware *fw,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	*data = &fw->data[offset];
 	*size = length;
 
@@ -1647,6 +1734,13 @@ ptp_ocp_devlink_info_get(struct devlink *devlink, struct devlink_info_req *req,
 	char buf[32];
 	int err;
 
+<<<<<<< HEAD
+=======
+	err = devlink_info_driver_name_put(req, KBUILD_MODNAME);
+	if (err)
+		return err;
+
+>>>>>>> b7ba80a49124 (Commit)
 	fw_image = bp->fw_loader ? "loader" : "fw";
 	sprintf(buf, "%d.%d", bp->fw_tag, bp->fw_version);
 	err = devlink_info_version_running_put(req, fw_image, buf);
@@ -2053,6 +2147,7 @@ ptp_ocp_serial_line(struct ptp_ocp *bp, struct ocp_resource *r)
 static int
 ptp_ocp_register_serial(struct ptp_ocp *bp, struct ocp_resource *r)
 {
+<<<<<<< HEAD
 	struct ptp_ocp_serial_port *p = (struct ptp_ocp_serial_port *)r->extra;
 	struct ptp_ocp_serial_port port = {};
 
@@ -2062,6 +2157,13 @@ ptp_ocp_register_serial(struct ptp_ocp *bp, struct ocp_resource *r)
 
 	if (p)
 		port.baud = p->baud;
+=======
+	int port;
+
+	port = ptp_ocp_serial_line(bp, r);
+	if (port < 0)
+		return port;
+>>>>>>> b7ba80a49124 (Commit)
 
 	bp_assign_entry(bp, r, port);
 
@@ -2442,6 +2544,7 @@ ptp_ocp_register_resources(struct ptp_ocp *bp, kernel_ulong_t driver_data)
 	return err;
 }
 
+<<<<<<< HEAD
 static void
 ptp_ocp_art_sma_init(struct ptp_ocp *bp)
 {
@@ -2557,6 +2660,8 @@ ptp_ocp_art_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
 	return ptp_ocp_init_clock(bp);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t
 ptp_ocp_show_output(const struct ocp_selector *tbl, u32 val, char *buf,
 		    int def_val)
@@ -3330,6 +3435,7 @@ DEVICE_FREQ_GROUP(freq2, 1);
 DEVICE_FREQ_GROUP(freq3, 2);
 DEVICE_FREQ_GROUP(freq4, 3);
 
+<<<<<<< HEAD
 static ssize_t
 disciplining_config_read(struct file *filp, struct kobject *kobj,
 			 struct bin_attribute *bin_attr, char *buf,
@@ -3454,6 +3560,8 @@ temperature_table_write(struct file *filp, struct kobject *kobj,
 }
 static BIN_ATTR_RW(temperature_table, OCP_ART_TEMP_TABLE_SIZE);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct attribute *fb_timecard_attrs[] = {
 	&dev_attr_serialnum.attr,
 	&dev_attr_gnss_sync.attr,
@@ -3473,11 +3581,17 @@ static struct attribute *fb_timecard_attrs[] = {
 	&dev_attr_tod_correction.attr,
 	NULL,
 };
+<<<<<<< HEAD
 
 static const struct attribute_group fb_timecard_group = {
 	.attrs = fb_timecard_attrs,
 };
 
+=======
+static const struct attribute_group fb_timecard_group = {
+	.attrs = fb_timecard_attrs,
+};
+>>>>>>> b7ba80a49124 (Commit)
 static const struct ocp_attr_group fb_timecard_groups[] = {
 	{ .cap = OCP_CAP_BASIC,	    .group = &fb_timecard_group },
 	{ .cap = OCP_CAP_SIGNAL,    .group = &fb_timecard_signal0_group },
@@ -3491,6 +3605,7 @@ static const struct ocp_attr_group fb_timecard_groups[] = {
 	{ },
 };
 
+<<<<<<< HEAD
 static struct attribute *art_timecard_attrs[] = {
 	&dev_attr_serialnum.attr,
 	&dev_attr_clock_source.attr,
@@ -3522,6 +3637,8 @@ static const struct ocp_attr_group art_timecard_groups[] = {
 	{ },
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void
 gpio_input_map(char *buf, struct ptp_ocp *bp, u16 map[][2], u16 bit,
 	       const char *def)
@@ -3634,6 +3751,7 @@ ptp_ocp_summary_show(struct seq_file *s, void *data)
 	bp = dev_get_drvdata(dev);
 
 	seq_printf(s, "%7s: /dev/ptp%d\n", "PTP", ptp_clock_index(bp->ptp));
+<<<<<<< HEAD
 	if (bp->gnss_port.line != -1)
 		seq_printf(s, "%7s: /dev/ttyS%d\n", "GNSS1",
 			   bp->gnss_port.line);
@@ -3644,6 +3762,16 @@ ptp_ocp_summary_show(struct seq_file *s, void *data)
 		seq_printf(s, "%7s: /dev/ttyS%d\n", "MAC", bp->mac_port.line);
 	if (bp->nmea_port.line != -1)
 		seq_printf(s, "%7s: /dev/ttyS%d\n", "NMEA", bp->nmea_port.line);
+=======
+	if (bp->gnss_port != -1)
+		seq_printf(s, "%7s: /dev/ttyS%d\n", "GNSS1", bp->gnss_port);
+	if (bp->gnss2_port != -1)
+		seq_printf(s, "%7s: /dev/ttyS%d\n", "GNSS2", bp->gnss2_port);
+	if (bp->mac_port != -1)
+		seq_printf(s, "%7s: /dev/ttyS%d\n", "MAC", bp->mac_port);
+	if (bp->nmea_port != -1)
+		seq_printf(s, "%7s: /dev/ttyS%d\n", "NMEA", bp->nmea_port);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(sma_val, 0xff, sizeof(sma_val));
 	if (bp->sma_map1) {
@@ -3967,10 +4095,17 @@ ptp_ocp_device_init(struct ptp_ocp *bp, struct pci_dev *pdev)
 
 	bp->ptp_info = ptp_ocp_clock_info;
 	spin_lock_init(&bp->lock);
+<<<<<<< HEAD
 	bp->gnss_port.line = -1;
 	bp->gnss2_port.line = -1;
 	bp->mac_port.line = -1;
 	bp->nmea_port.line = -1;
+=======
+	bp->gnss_port = -1;
+	bp->gnss2_port = -1;
+	bp->mac_port = -1;
+	bp->nmea_port = -1;
+>>>>>>> b7ba80a49124 (Commit)
 	bp->pdev = pdev;
 
 	device_initialize(&bp->dev);
@@ -4028,6 +4163,7 @@ ptp_ocp_complete(struct ptp_ocp *bp)
 	struct pps_device *pps;
 	char buf[32];
 
+<<<<<<< HEAD
 	if (bp->gnss_port.line != -1) {
 		sprintf(buf, "ttyS%d", bp->gnss_port.line);
 		ptp_ocp_link_child(bp, buf, "ttyGNSS");
@@ -4042,6 +4178,22 @@ ptp_ocp_complete(struct ptp_ocp *bp)
 	}
 	if (bp->nmea_port.line != -1) {
 		sprintf(buf, "ttyS%d", bp->nmea_port.line);
+=======
+	if (bp->gnss_port != -1) {
+		sprintf(buf, "ttyS%d", bp->gnss_port);
+		ptp_ocp_link_child(bp, buf, "ttyGNSS");
+	}
+	if (bp->gnss2_port != -1) {
+		sprintf(buf, "ttyS%d", bp->gnss2_port);
+		ptp_ocp_link_child(bp, buf, "ttyGNSS2");
+	}
+	if (bp->mac_port != -1) {
+		sprintf(buf, "ttyS%d", bp->mac_port);
+		ptp_ocp_link_child(bp, buf, "ttyMAC");
+	}
+	if (bp->nmea_port != -1) {
+		sprintf(buf, "ttyS%d", bp->nmea_port);
+>>>>>>> b7ba80a49124 (Commit)
 		ptp_ocp_link_child(bp, buf, "ttyNMEA");
 	}
 	sprintf(buf, "ptp%d", ptp_clock_index(bp->ptp));
@@ -4097,6 +4249,7 @@ ptp_ocp_info(struct ptp_ocp *bp)
 
 	ptp_ocp_phc_info(bp);
 
+<<<<<<< HEAD
 	ptp_ocp_serial_info(dev, "GNSS", bp->gnss_port.line,
 			    bp->gnss_port.baud);
 	ptp_ocp_serial_info(dev, "GNSS2", bp->gnss2_port.line,
@@ -4111,6 +4264,18 @@ ptp_ocp_info(struct ptp_ocp *bp)
 
 		ptp_ocp_serial_info(dev, "NMEA", bp->nmea_port.line,
 				    bp->nmea_port.baud);
+=======
+	ptp_ocp_serial_info(dev, "GNSS", bp->gnss_port, 115200);
+	ptp_ocp_serial_info(dev, "GNSS2", bp->gnss2_port, 115200);
+	ptp_ocp_serial_info(dev, "MAC", bp->mac_port, 57600);
+	if (bp->nmea_out && bp->nmea_port != -1) {
+		int baud = -1;
+
+		reg = ioread32(&bp->nmea_out->uart_baud);
+		if (reg < ARRAY_SIZE(nmea_baud))
+			baud = nmea_baud[reg];
+		ptp_ocp_serial_info(dev, "NMEA", bp->nmea_port, baud);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -4120,7 +4285,10 @@ ptp_ocp_detach_sysfs(struct ptp_ocp *bp)
 	struct device *dev = &bp->dev;
 
 	sysfs_remove_link(&dev->kobj, "ttyGNSS");
+<<<<<<< HEAD
 	sysfs_remove_link(&dev->kobj, "ttyGNSS2");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sysfs_remove_link(&dev->kobj, "ttyMAC");
 	sysfs_remove_link(&dev->kobj, "ptp");
 	sysfs_remove_link(&dev->kobj, "pps");
@@ -4151,6 +4319,7 @@ ptp_ocp_detach(struct ptp_ocp *bp)
 	for (i = 0; i < 4; i++)
 		if (bp->signal_out[i])
 			ptp_ocp_unregister_ext(bp->signal_out[i]);
+<<<<<<< HEAD
 	if (bp->gnss_port.line != -1)
 		serial8250_unregister_port(bp->gnss_port.line);
 	if (bp->gnss2_port.line != -1)
@@ -4159,6 +4328,16 @@ ptp_ocp_detach(struct ptp_ocp *bp)
 		serial8250_unregister_port(bp->mac_port.line);
 	if (bp->nmea_port.line != -1)
 		serial8250_unregister_port(bp->nmea_port.line);
+=======
+	if (bp->gnss_port != -1)
+		serial8250_unregister_port(bp->gnss_port);
+	if (bp->gnss2_port != -1)
+		serial8250_unregister_port(bp->gnss2_port);
+	if (bp->mac_port != -1)
+		serial8250_unregister_port(bp->mac_port);
+	if (bp->nmea_port != -1)
+		serial8250_unregister_port(bp->nmea_port);
+>>>>>>> b7ba80a49124 (Commit)
 	platform_device_unregister(bp->spi_flash);
 	platform_device_unregister(bp->i2c_ctrl);
 	if (bp->i2c_clk)

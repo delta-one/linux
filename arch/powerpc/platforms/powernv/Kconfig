@@ -16,7 +16,10 @@ config PPC_POWERNV
 	select PPC_DOORBELL
 	select MMU_NOTIFIER
 	select FORCE_SMP
+<<<<<<< HEAD
 	select ARCH_SUPPORTS_PER_VMA_LOCK
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default y
 
 config OPAL_PRD

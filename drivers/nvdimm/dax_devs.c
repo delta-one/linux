@@ -38,7 +38,11 @@ static const struct device_type nd_dax_device_type = {
 	.groups = nd_pfn_attribute_groups,
 };
 
+<<<<<<< HEAD
 bool is_nd_dax(const struct device *dev)
+=======
+bool is_nd_dax(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return dev ? dev->type == &nd_dax_device_type : false;
 }

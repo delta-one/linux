@@ -18,7 +18,10 @@
 #include <linux/cgroup.h>
 #include <linux/kthread.h>
 #include <linux/blk-mq.h>
+<<<<<<< HEAD
 #include <linux/llist.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct blkcg_gq;
 struct blkg_policy_data;
@@ -44,9 +47,12 @@ struct blkg_iostat {
 
 struct blkg_iostat_set {
 	struct u64_stats_sync		sync;
+<<<<<<< HEAD
 	struct blkcg_gq		       *blkg;
 	struct llist_node		lnode;
 	int				lqueued;	/* queued in llist */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct blkg_iostat		cur;
 	struct blkg_iostat		last;
 };
@@ -101,12 +107,15 @@ struct blkcg {
 	struct blkcg_policy_data	*cpd[BLKCG_MAX_POLS];
 
 	struct list_head		all_blkcgs_node;
+<<<<<<< HEAD
 
 	/*
 	 * List of updated percpu blkg_iostat_set's since the last flush.
 	 */
 	struct llist_head __percpu	*lhead;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_BLK_CGROUP_FC_APPID
 	char                            fc_app_id[FC_APPID_LEN];
 #endif
@@ -135,7 +144,10 @@ struct blkg_policy_data {
 	/* the blkg and policy id this per-policy data belongs to */
 	struct blkcg_gq			*blkg;
 	int				plid;
+<<<<<<< HEAD
 	bool				online;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -155,8 +167,13 @@ typedef struct blkcg_policy_data *(blkcg_pol_alloc_cpd_fn)(gfp_t gfp);
 typedef void (blkcg_pol_init_cpd_fn)(struct blkcg_policy_data *cpd);
 typedef void (blkcg_pol_free_cpd_fn)(struct blkcg_policy_data *cpd);
 typedef void (blkcg_pol_bind_cpd_fn)(struct blkcg_policy_data *cpd);
+<<<<<<< HEAD
 typedef struct blkg_policy_data *(blkcg_pol_alloc_pd_fn)(struct gendisk *disk,
 		struct blkcg *blkcg, gfp_t gfp);
+=======
+typedef struct blkg_policy_data *(blkcg_pol_alloc_pd_fn)(gfp_t gfp,
+				struct request_queue *q, struct blkcg *blkcg);
+>>>>>>> b7ba80a49124 (Commit)
 typedef void (blkcg_pol_init_pd_fn)(struct blkg_policy_data *pd);
 typedef void (blkcg_pol_online_pd_fn)(struct blkg_policy_data *pd);
 typedef void (blkcg_pol_offline_pd_fn)(struct blkg_policy_data *pd);
@@ -189,14 +206,27 @@ struct blkcg_policy {
 extern struct blkcg blkcg_root;
 extern bool blkcg_debug_stats;
 
+<<<<<<< HEAD
 int blkcg_init_disk(struct gendisk *disk);
 void blkcg_exit_disk(struct gendisk *disk);
+=======
+struct blkcg_gq *blkg_lookup_slowpath(struct blkcg *blkcg,
+				      struct request_queue *q, bool update_hint);
+int blkcg_init_queue(struct request_queue *q);
+void blkcg_exit_queue(struct request_queue *q);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Blkio controller policy registration */
 int blkcg_policy_register(struct blkcg_policy *pol);
 void blkcg_policy_unregister(struct blkcg_policy *pol);
+<<<<<<< HEAD
 int blkcg_activate_policy(struct gendisk *disk, const struct blkcg_policy *pol);
 void blkcg_deactivate_policy(struct gendisk *disk,
+=======
+int blkcg_activate_policy(struct request_queue *q,
+			  const struct blkcg_policy *pol);
+void blkcg_deactivate_policy(struct request_queue *q,
+>>>>>>> b7ba80a49124 (Commit)
 			     const struct blkcg_policy *pol);
 
 const char *blkg_dev_name(struct blkcg_gq *blkg);
@@ -235,6 +265,7 @@ static inline bool bio_issue_as_root_blkg(struct bio *bio)
 }
 
 /**
+<<<<<<< HEAD
  * blkg_lookup - lookup blkg for the specified blkcg - q pair
  * @blkcg: blkcg of interest
  * @q: request_queue of interest
@@ -250,6 +281,24 @@ static inline struct blkcg_gq *blkg_lookup(struct blkcg *blkcg,
 
 	WARN_ON_ONCE(!rcu_read_lock_held());
 
+=======
+ * __blkg_lookup - internal version of blkg_lookup()
+ * @blkcg: blkcg of interest
+ * @q: request_queue of interest
+ * @update_hint: whether to update lookup hint with the result or not
+ *
+ * This is internal version and shouldn't be used by policy
+ * implementations.  Looks up blkgs for the @blkcg - @q pair regardless of
+ * @q's bypass state.  If @update_hint is %true, the caller should be
+ * holding @q->queue_lock and lookup hint is updated on success.
+ */
+static inline struct blkcg_gq *__blkg_lookup(struct blkcg *blkcg,
+					     struct request_queue *q,
+					     bool update_hint)
+{
+	struct blkcg_gq *blkg;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (blkcg == &blkcg_root)
 		return q->root_blkg;
 
@@ -257,10 +306,40 @@ static inline struct blkcg_gq *blkg_lookup(struct blkcg *blkcg,
 	if (blkg && blkg->q == q)
 		return blkg;
 
+<<<<<<< HEAD
 	blkg = radix_tree_lookup(&blkcg->blkg_tree, q->id);
 	if (blkg && blkg->q != q)
 		blkg = NULL;
 	return blkg;
+=======
+	return blkg_lookup_slowpath(blkcg, q, update_hint);
+}
+
+/**
+ * blkg_lookup - lookup blkg for the specified blkcg - q pair
+ * @blkcg: blkcg of interest
+ * @q: request_queue of interest
+ *
+ * Lookup blkg for the @blkcg - @q pair.  This function should be called
+ * under RCU read lock.
+ */
+static inline struct blkcg_gq *blkg_lookup(struct blkcg *blkcg,
+					   struct request_queue *q)
+{
+	WARN_ON_ONCE(!rcu_read_lock_held());
+	return __blkg_lookup(blkcg, q, false);
+}
+
+/**
+ * blk_queue_root_blkg - return blkg for the (blkcg_root, @q) pair
+ * @q: request_queue of interest
+ *
+ * Lookup blkg for @q at the root level. See also blkg_lookup().
+ */
+static inline struct blkcg_gq *blk_queue_root_blkg(struct request_queue *q)
+{
+	return q->root_blkg;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -357,8 +436,13 @@ static inline void blkg_put(struct blkcg_gq *blkg)
  */
 #define blkg_for_each_descendant_pre(d_blkg, pos_css, p_blkg)		\
 	css_for_each_descendant_pre((pos_css), &(p_blkg)->blkcg->css)	\
+<<<<<<< HEAD
 		if (((d_blkg) = blkg_lookup(css_to_blkcg(pos_css),	\
 					    (p_blkg)->q)))
+=======
+		if (((d_blkg) = __blkg_lookup(css_to_blkcg(pos_css),	\
+					      (p_blkg)->q, false)))
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * blkg_for_each_descendant_post - post-order walk of a blkg's descendants
@@ -372,8 +456,13 @@ static inline void blkg_put(struct blkcg_gq *blkg)
  */
 #define blkg_for_each_descendant_post(d_blkg, pos_css, p_blkg)		\
 	css_for_each_descendant_post((pos_css), &(p_blkg)->blkcg->css)	\
+<<<<<<< HEAD
 		if (((d_blkg) = blkg_lookup(css_to_blkcg(pos_css),	\
 					    (p_blkg)->q)))
+=======
+		if (((d_blkg) = __blkg_lookup(css_to_blkcg(pos_css),	\
+					      (p_blkg)->q, false)))
+>>>>>>> b7ba80a49124 (Commit)
 
 bool __blkcg_punt_bio_submit(struct bio *bio);
 
@@ -491,6 +580,7 @@ struct blkcg {
 };
 
 static inline struct blkcg_gq *blkg_lookup(struct blkcg *blkcg, void *key) { return NULL; }
+<<<<<<< HEAD
 static inline int blkcg_init_disk(struct gendisk *disk) { return 0; }
 static inline void blkcg_exit_disk(struct gendisk *disk) { }
 static inline int blkcg_policy_register(struct blkcg_policy *pol) { return 0; }
@@ -498,6 +588,17 @@ static inline void blkcg_policy_unregister(struct blkcg_policy *pol) { }
 static inline int blkcg_activate_policy(struct gendisk *disk,
 					const struct blkcg_policy *pol) { return 0; }
 static inline void blkcg_deactivate_policy(struct gendisk *disk,
+=======
+static inline struct blkcg_gq *blk_queue_root_blkg(struct request_queue *q)
+{ return NULL; }
+static inline int blkcg_init_queue(struct request_queue *q) { return 0; }
+static inline void blkcg_exit_queue(struct request_queue *q) { }
+static inline int blkcg_policy_register(struct blkcg_policy *pol) { return 0; }
+static inline void blkcg_policy_unregister(struct blkcg_policy *pol) { }
+static inline int blkcg_activate_policy(struct request_queue *q,
+					const struct blkcg_policy *pol) { return 0; }
+static inline void blkcg_deactivate_policy(struct request_queue *q,
+>>>>>>> b7ba80a49124 (Commit)
 					   const struct blkcg_policy *pol) { }
 
 static inline struct blkg_policy_data *blkg_to_pd(struct blkcg_gq *blkg,

@@ -9,7 +9,10 @@
 
 #include <dt-bindings/leds/common.h>
 #include <dt-bindings/gpio/gpio.h>
+<<<<<<< HEAD
 #include <dt-bindings/net/ti-dp83867.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "k3-am62a7.dtsi"
 
 / {
@@ -27,9 +30,14 @@
 
 	memory@80000000 {
 		device_type = "memory";
+<<<<<<< HEAD
 		/* 4G RAM */
 		reg = <0x00000000 0x80000000 0x00000000 0x80000000>,
 		      <0x00000008 0x80000000 0x00000000 0x80000000>;
+=======
+		/* 2G RAM */
+		reg = <0x00000000 0x80000000 0x00000000 0x80000000>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	reserved-memory {
@@ -160,6 +168,7 @@
 			AM62AX_IOPAD(0x244, PIN_OUTPUT, 7) /* (D18) MMC1_SDWP.GPIO1_49 */
 		>;
 	};
+<<<<<<< HEAD
 
 	main_usb1_pins_default: main-usb1-pins-default {
 		pinctrl-single,pins = <
@@ -190,6 +199,8 @@
 			AM62AX_IOPAD(0x12c, PIN_INPUT, 0) /* (W16) RGMII1_TX_CTL */
 		>;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &main_i2c0 {
@@ -253,6 +264,7 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_uart0_pins_default>;
 };
+<<<<<<< HEAD
 
 &usbss1 {
 	status = "okay";
@@ -292,3 +304,5 @@
 		ti,min-output-impedance;
 	};
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

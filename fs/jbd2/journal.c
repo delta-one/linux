@@ -89,6 +89,10 @@ EXPORT_SYMBOL(jbd2_journal_try_to_free_buffers);
 EXPORT_SYMBOL(jbd2_journal_force_commit);
 EXPORT_SYMBOL(jbd2_journal_inode_ranged_write);
 EXPORT_SYMBOL(jbd2_journal_inode_ranged_wait);
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL(jbd2_journal_submit_inode_data_buffers);
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL(jbd2_journal_finish_inode_data_buffers);
 EXPORT_SYMBOL(jbd2_journal_init_jbd_inode);
 EXPORT_SYMBOL(jbd2_journal_release_jbd_inode);
@@ -922,6 +926,7 @@ int jbd2_fc_wait_bufs(journal_t *journal, int num_blks)
 	for (i = j_fc_off - 1; i >= j_fc_off - num_blks; i--) {
 		bh = journal->j_fc_wbuf[i];
 		wait_on_buffer(bh);
+<<<<<<< HEAD
 		/*
 		 * Update j_fc_off so jbd2_fc_release_bufs can release remain
 		 * buffer head.
@@ -932,6 +937,12 @@ int jbd2_fc_wait_bufs(journal_t *journal, int num_blks)
 		}
 		put_bh(bh);
 		journal->j_fc_wbuf[i] = NULL;
+=======
+		put_bh(bh);
+		journal->j_fc_wbuf[i] = NULL;
+		if (unlikely(!buffer_uptodate(bh)))
+			return -EIO;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -969,6 +980,7 @@ int jbd2_journal_bmap(journal_t *journal, unsigned long blocknr,
 {
 	int err = 0;
 	unsigned long long ret;
+<<<<<<< HEAD
 	sector_t block = blocknr;
 
 	if (journal->j_bmap) {
@@ -976,6 +988,12 @@ int jbd2_journal_bmap(journal_t *journal, unsigned long blocknr,
 		if (err == 0)
 			*retp = block;
 	} else if (journal->j_inode) {
+=======
+	sector_t block = 0;
+
+	if (journal->j_inode) {
+		block = blocknr;
+>>>>>>> b7ba80a49124 (Commit)
 		ret = bmap(journal->j_inode, &block);
 
 		if (ret || !block) {
@@ -1614,7 +1632,11 @@ static int jbd2_write_superblock(journal_t *journal, blk_opf_t write_flags)
 {
 	struct buffer_head *bh = journal->j_sb_buffer;
 	journal_superblock_t *sb = journal->j_superblock;
+<<<<<<< HEAD
 	int ret = 0;
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Buffer got discarded which means block device got invalidated */
 	if (!buffer_mapped(bh)) {
@@ -1644,7 +1666,11 @@ static int jbd2_write_superblock(journal_t *journal, blk_opf_t write_flags)
 		sb->s_checksum = jbd2_superblock_csum(journal, sb);
 	get_bh(bh);
 	bh->b_end_io = end_buffer_write_sync;
+<<<<<<< HEAD
 	submit_bh(REQ_OP_WRITE | write_flags, bh);
+=======
+	ret = submit_bh(REQ_OP_WRITE | write_flags, bh);
+>>>>>>> b7ba80a49124 (Commit)
 	wait_on_buffer(bh);
 	if (buffer_write_io_error(bh)) {
 		clear_buffer_write_io_error(bh);
@@ -1652,8 +1678,14 @@ static int jbd2_write_superblock(journal_t *journal, blk_opf_t write_flags)
 		ret = -EIO;
 	}
 	if (ret) {
+<<<<<<< HEAD
 		printk(KERN_ERR "JBD2: I/O error when updating journal superblock for %s.\n",
 				journal->j_devname);
+=======
+		printk(KERN_ERR "JBD2: Error %d detected when updating "
+		       "journal superblock for %s.\n", ret,
+		       journal->j_devname);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!is_journal_aborted(journal))
 			jbd2_journal_abort(journal, ret);
 	}
@@ -2940,7 +2972,11 @@ repeat:
 	} else {
 		J_ASSERT_BH(bh,
 			(atomic_read(&bh->b_count) > 0) ||
+<<<<<<< HEAD
 			(bh->b_folio && bh->b_folio->mapping));
+=======
+			(bh->b_page && bh->b_page->mapping));
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!new_jh) {
 			jbd_unlock_bh_journal_head(bh);

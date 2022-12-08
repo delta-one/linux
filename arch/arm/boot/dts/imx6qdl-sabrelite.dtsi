@@ -14,11 +14,14 @@
 		stdout-path = &uart2;
 	};
 
+<<<<<<< HEAD
 	aliases {
 		mmc0 = &usdhc3;
 		mmc1 = &usdhc4;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memory@10000000 {
 		device_type = "memory";
 		reg = <0x10000000 0x40000000>;

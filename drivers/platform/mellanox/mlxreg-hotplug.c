@@ -239,6 +239,7 @@ static ssize_t mlxreg_hotplug_attr_show(struct device *dev,
 #define PRIV_ATTR(i) priv->mlxreg_hotplug_attr[i]
 #define PRIV_DEV_ATTR(i) priv->mlxreg_hotplug_dev_attr[i]
 
+<<<<<<< HEAD
 static int mlxreg_hotplug_item_label_index_get(u32 mask, u32 bit)
 {
 	int i, j;
@@ -250,6 +251,8 @@ static int mlxreg_hotplug_item_label_index_get(u32 mask, u32 bit)
 	return j;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mlxreg_hotplug_attr_init(struct mlxreg_hotplug_priv_data *priv)
 {
 	struct mlxreg_core_hotplug_platform_data *pdata;
@@ -257,7 +260,11 @@ static int mlxreg_hotplug_attr_init(struct mlxreg_hotplug_priv_data *priv)
 	struct mlxreg_core_data *data;
 	unsigned long mask;
 	u32 regval;
+<<<<<<< HEAD
 	int num_attrs = 0, id = 0, i, j, k, count, ret;
+=======
+	int num_attrs = 0, id = 0, i, j, k, ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pdata = dev_get_platdata(&priv->pdev->dev);
 	item = pdata->items;
@@ -283,8 +290,12 @@ static int mlxreg_hotplug_attr_init(struct mlxreg_hotplug_priv_data *priv)
 		/* Go over all unmasked units within item. */
 		mask = item->mask;
 		k = 0;
+<<<<<<< HEAD
 		count = item->ind ? item->ind : item->count;
 		for_each_set_bit(j, &mask, count) {
+=======
+		for_each_set_bit(j, &mask, item->count) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (data->capability) {
 				/*
 				 * Read capability register and skip non
@@ -294,17 +305,27 @@ static int mlxreg_hotplug_attr_init(struct mlxreg_hotplug_priv_data *priv)
 						  data->capability, &regval);
 				if (ret)
 					return ret;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				if (!(regval & data->bit)) {
 					data++;
 					continue;
 				}
 			}
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			PRIV_ATTR(id) = &PRIV_DEV_ATTR(id).dev_attr.attr;
 			PRIV_ATTR(id)->name = devm_kasprintf(&priv->pdev->dev,
 							     GFP_KERNEL,
 							     data->label);
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 			if (!PRIV_ATTR(id)->name) {
 				dev_err(priv->dev, "Memory allocation failed for attr %d.\n",
 					id);
@@ -378,6 +399,7 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
 	regval &= item->mask;
 	asserted = item->cache ^ regval;
 	item->cache = regval;
+<<<<<<< HEAD
 	for_each_set_bit(bit, &asserted, 8) {
 		int pos;
 
@@ -386,6 +408,11 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
 			goto out;
 
 		data = item->data + pos;
+=======
+
+	for_each_set_bit(bit, &asserted, 8) {
+		data = item->data + bit;
+>>>>>>> b7ba80a49124 (Commit)
 		if (regval & BIT(bit)) {
 			if (item->inversed)
 				mlxreg_hotplug_device_destroy(priv, data, item->kind);

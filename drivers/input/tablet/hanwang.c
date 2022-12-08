@@ -5,6 +5,12 @@
  *  Copyright (c) 2010 Xing Wei <weixing@hanwang.com.cn>
  */
 
+<<<<<<< HEAD
+=======
+/*
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/types.h>
 #include <linux/kernel.h>
 #include <linux/slab.h>

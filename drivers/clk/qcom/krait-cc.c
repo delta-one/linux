@@ -15,6 +15,7 @@
 
 #include "clk-krait.h"
 
+<<<<<<< HEAD
 enum {
 	cpu0_mux = 0,
 	cpu1_mux,
@@ -25,6 +26,8 @@ enum {
 	clks_max,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned int sec_mux_map[] = {
 	2,
 	0,
@@ -72,13 +75,18 @@ static int krait_notifier_register(struct device *dev, struct clk *clk,
 	int ret = 0;
 
 	mux->clk_nb.notifier_call = krait_notifier_cb;
+<<<<<<< HEAD
 	ret = devm_clk_notifier_register(dev, clk, &mux->clk_nb);
+=======
+	ret = clk_notifier_register(clk, &mux->clk_nb);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		dev_err(dev, "failed to register clock notifier: %d\n", ret);
 
 	return ret;
 }
 
+<<<<<<< HEAD
 static struct clk_hw *
 krait_add_div(struct device *dev, int id, const char *s, unsigned int offset)
 {
@@ -96,6 +104,23 @@ krait_add_div(struct device *dev, int id, const char *s, unsigned int offset)
 	div = devm_kzalloc(dev, sizeof(*div), GFP_KERNEL);
 	if (!div)
 		return ERR_PTR(-ENOMEM);
+=======
+static int
+krait_add_div(struct device *dev, int id, const char *s, unsigned int offset)
+{
+	struct krait_div2_clk *div;
+	struct clk_init_data init = {
+		.num_parents = 1,
+		.ops = &krait_div2_clk_ops,
+		.flags = CLK_SET_RATE_PARENT,
+	};
+	const char *p_names[1];
+	struct clk *clk;
+
+	div = devm_kzalloc(dev, sizeof(*div), GFP_KERNEL);
+	if (!div)
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	div->width = 2;
 	div->shift = 6;
@@ -105,6 +130,7 @@ krait_add_div(struct device *dev, int id, const char *s, unsigned int offset)
 
 	init.name = kasprintf(GFP_KERNEL, "hfpll%s_div", s);
 	if (!init.name)
+<<<<<<< HEAD
 		return ERR_PTR(-ENOMEM);
 
 	init.parent_data = p_data;
@@ -152,16 +178,54 @@ krait_add_sec_mux(struct device *dev, int id, const char *s,
 	};
 	struct clk_init_data init = {
 		.parent_data = sec_mux_list,
+=======
+		return -ENOMEM;
+
+	init.parent_names = p_names;
+	p_names[0] = kasprintf(GFP_KERNEL, "hfpll%s", s);
+	if (!p_names[0]) {
+		kfree(init.name);
+		return -ENOMEM;
+	}
+
+	clk = devm_clk_register(dev, &div->hw);
+	kfree(p_names[0]);
+	kfree(init.name);
+
+	return PTR_ERR_OR_ZERO(clk);
+}
+
+static int
+krait_add_sec_mux(struct device *dev, int id, const char *s,
+		  unsigned int offset, bool unique_aux)
+{
+	int ret;
+	struct krait_mux_clk *mux;
+	static const char *sec_mux_list[] = {
+		"acpu_aux",
+		"qsb",
+	};
+	struct clk_init_data init = {
+		.parent_names = sec_mux_list,
+>>>>>>> b7ba80a49124 (Commit)
 		.num_parents = ARRAY_SIZE(sec_mux_list),
 		.ops = &krait_mux_clk_ops,
 		.flags = CLK_SET_RATE_PARENT,
 	};
+<<<<<<< HEAD
 	struct clk_hw *clk;
 	char *parent_name;
 
 	mux = devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
 	if (!mux)
 		return ERR_PTR(-ENOMEM);
+=======
+	struct clk *clk;
+
+	mux = devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
+	if (!mux)
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mux->offset = offset;
 	mux->lpl = id >= 0;
@@ -181,6 +245,7 @@ krait_add_sec_mux(struct device *dev, int id, const char *s,
 
 	init.name = kasprintf(GFP_KERNEL, "krait%s_sec_mux", s);
 	if (!init.name)
+<<<<<<< HEAD
 		return ERR_PTR(-ENOMEM);
 
 	if (unique_aux) {
@@ -239,6 +304,46 @@ krait_add_pri_mux(struct device *dev, struct clk_hw *hfpll_div, struct clk_hw *s
 	};
 	struct clk_hw *clk;
 	char *hfpll_name;
+=======
+		return -ENOMEM;
+
+	if (unique_aux) {
+		sec_mux_list[0] = kasprintf(GFP_KERNEL, "acpu%s_aux", s);
+		if (!sec_mux_list[0]) {
+			clk = ERR_PTR(-ENOMEM);
+			goto err_aux;
+		}
+	}
+
+	clk = devm_clk_register(dev, &mux->hw);
+
+	ret = krait_notifier_register(dev, clk, mux);
+	if (ret)
+		goto unique_aux;
+
+unique_aux:
+	if (unique_aux)
+		kfree(sec_mux_list[0]);
+err_aux:
+	kfree(init.name);
+	return PTR_ERR_OR_ZERO(clk);
+}
+
+static struct clk *
+krait_add_pri_mux(struct device *dev, int id, const char *s,
+		  unsigned int offset)
+{
+	int ret;
+	struct krait_mux_clk *mux;
+	const char *p_names[3];
+	struct clk_init_data init = {
+		.parent_names = p_names,
+		.num_parents = ARRAY_SIZE(p_names),
+		.ops = &krait_mux_clk_ops,
+		.flags = CLK_SET_RATE_PARENT,
+	};
+	struct clk *clk;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mux = devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
 	if (!mux)
@@ -256,6 +361,7 @@ krait_add_pri_mux(struct device *dev, struct clk_hw *hfpll_div, struct clk_hw *s
 	if (!init.name)
 		return ERR_PTR(-ENOMEM);
 
+<<<<<<< HEAD
 	hfpll_name = kasprintf(GFP_KERNEL, "hfpll%s", s);
 	if (!hfpll_name) {
 		clk = ERR_PTR(-ENOMEM);
@@ -283,17 +389,59 @@ krait_add_pri_mux(struct device *dev, struct clk_hw *hfpll_div, struct clk_hw *s
 err_clk:
 	kfree(hfpll_name);
 err_hfpll:
+=======
+	p_names[0] = kasprintf(GFP_KERNEL, "hfpll%s", s);
+	if (!p_names[0]) {
+		clk = ERR_PTR(-ENOMEM);
+		goto err_p0;
+	}
+
+	p_names[1] = kasprintf(GFP_KERNEL, "hfpll%s_div", s);
+	if (!p_names[1]) {
+		clk = ERR_PTR(-ENOMEM);
+		goto err_p1;
+	}
+
+	p_names[2] = kasprintf(GFP_KERNEL, "krait%s_sec_mux", s);
+	if (!p_names[2]) {
+		clk = ERR_PTR(-ENOMEM);
+		goto err_p2;
+	}
+
+	clk = devm_clk_register(dev, &mux->hw);
+
+	ret = krait_notifier_register(dev, clk, mux);
+	if (ret)
+		goto err_p3;
+err_p3:
+	kfree(p_names[2]);
+err_p2:
+	kfree(p_names[1]);
+err_p1:
+	kfree(p_names[0]);
+err_p0:
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(init.name);
 	return clk;
 }
 
 /* id < 0 for L2, otherwise id == physical CPU number */
+<<<<<<< HEAD
 static struct clk_hw *krait_add_clks(struct device *dev, int id, bool unique_aux)
 {
 	struct clk_hw *hfpll_div, *sec_mux, *pri_mux;
 	unsigned int offset;
 	void *p = NULL;
 	const char *s;
+=======
+static struct clk *krait_add_clks(struct device *dev, int id, bool unique_aux)
+{
+	int ret;
+	unsigned int offset;
+	void *p = NULL;
+	const char *s;
+	struct clk *clk;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (id >= 0) {
 		offset = 0x4501 + (0x1000 * id);
@@ -305,6 +453,7 @@ static struct clk_hw *krait_add_clks(struct device *dev, int id, bool unique_aux
 		s = "_l2";
 	}
 
+<<<<<<< HEAD
 	hfpll_div = krait_add_div(dev, id, s, offset);
 	if (IS_ERR(hfpll_div)) {
 		pri_mux = hfpll_div;
@@ -322,6 +471,24 @@ static struct clk_hw *krait_add_clks(struct device *dev, int id, bool unique_aux
 err:
 	kfree(p);
 	return pri_mux;
+=======
+	ret = krait_add_div(dev, id, s, offset);
+	if (ret) {
+		clk = ERR_PTR(ret);
+		goto err;
+	}
+
+	ret = krait_add_sec_mux(dev, id, s, offset, unique_aux);
+	if (ret) {
+		clk = ERR_PTR(ret);
+		goto err;
+	}
+
+	clk = krait_add_pri_mux(dev, id, s, offset);
+err:
+	kfree(p);
+	return clk;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct clk *krait_of_get(struct of_phandle_args *clkspec, void *data)
@@ -329,7 +496,11 @@ static struct clk *krait_of_get(struct of_phandle_args *clkspec, void *data)
 	unsigned int idx = clkspec->args[0];
 	struct clk **clks = data;
 
+<<<<<<< HEAD
 	if (idx >= clks_max) {
+=======
+	if (idx >= 5) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_err("%s: invalid clock index %d\n", __func__, idx);
 		return ERR_PTR(-EINVAL);
 	}
@@ -350,8 +521,14 @@ static int krait_cc_probe(struct platform_device *pdev)
 	const struct of_device_id *id;
 	unsigned long cur_rate, aux_rate;
 	int cpu;
+<<<<<<< HEAD
 	struct clk_hw *mux, *l2_pri_mux;
 	struct clk *clk, **clks;
+=======
+	struct clk *clk;
+	struct clk **clks;
+	struct clk *l2_pri_mux_clk;
+>>>>>>> b7ba80a49124 (Commit)
 
 	id = of_match_device(krait_cc_match_table, dev);
 	if (!id)
@@ -370,11 +547,16 @@ static int krait_cc_probe(struct platform_device *pdev)
 	}
 
 	/* Krait configurations have at most 4 CPUs and one L2 */
+<<<<<<< HEAD
 	clks = devm_kcalloc(dev, clks_max, sizeof(*clks), GFP_KERNEL);
+=======
+	clks = devm_kcalloc(dev, 5, sizeof(*clks), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!clks)
 		return -ENOMEM;
 
 	for_each_possible_cpu(cpu) {
+<<<<<<< HEAD
 		mux = krait_add_clks(dev, cpu, id->data);
 		if (IS_ERR(mux))
 			return PTR_ERR(mux);
@@ -385,6 +567,18 @@ static int krait_cc_probe(struct platform_device *pdev)
 	if (IS_ERR(l2_pri_mux))
 		return PTR_ERR(l2_pri_mux);
 	clks[l2_mux] = l2_pri_mux->clk;
+=======
+		clk = krait_add_clks(dev, cpu, id->data);
+		if (IS_ERR(clk))
+			return PTR_ERR(clk);
+		clks[cpu] = clk;
+	}
+
+	l2_pri_mux_clk = krait_add_clks(dev, -1, id->data);
+	if (IS_ERR(l2_pri_mux_clk))
+		return PTR_ERR(l2_pri_mux_clk);
+	clks[4] = l2_pri_mux_clk;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * We don't want the CPU or L2 clocks to be turned off at late init
@@ -394,7 +588,11 @@ static int krait_cc_probe(struct platform_device *pdev)
 	 * they take over.
 	 */
 	for_each_online_cpu(cpu) {
+<<<<<<< HEAD
 		clk_prepare_enable(clks[l2_mux]);
+=======
+		clk_prepare_enable(l2_pri_mux_clk);
+>>>>>>> b7ba80a49124 (Commit)
 		WARN(clk_prepare_enable(clks[cpu]),
 		     "Unable to turn on CPU%d clock", cpu);
 	}
@@ -410,6 +608,7 @@ static int krait_cc_probe(struct platform_device *pdev)
 	 * two different rates to force a HFPLL reinit under all
 	 * circumstances.
 	 */
+<<<<<<< HEAD
 	cur_rate = clk_get_rate(clks[l2_mux]);
 	aux_rate = 384000000;
 	if (cur_rate < aux_rate) {
@@ -425,6 +624,23 @@ static int krait_cc_probe(struct platform_device *pdev)
 		cur_rate = clk_get_rate(clk);
 		if (cur_rate < aux_rate) {
 			pr_info("CPU%d @ Undefined rate. Forcing new rate.\n", cpu);
+=======
+	cur_rate = clk_get_rate(l2_pri_mux_clk);
+	aux_rate = 384000000;
+	if (cur_rate == 1) {
+		pr_info("L2 @ QSB rate. Forcing new rate.\n");
+		cur_rate = aux_rate;
+	}
+	clk_set_rate(l2_pri_mux_clk, aux_rate);
+	clk_set_rate(l2_pri_mux_clk, 2);
+	clk_set_rate(l2_pri_mux_clk, cur_rate);
+	pr_info("L2 @ %lu KHz\n", clk_get_rate(l2_pri_mux_clk) / 1000);
+	for_each_possible_cpu(cpu) {
+		clk = clks[cpu];
+		cur_rate = clk_get_rate(clk);
+		if (cur_rate == 1) {
+			pr_info("CPU%d @ QSB rate. Forcing new rate.\n", cpu);
+>>>>>>> b7ba80a49124 (Commit)
 			cur_rate = aux_rate;
 		}
 

@@ -2,10 +2,18 @@
 #include <linux/vgaarb.h>
 #include <linux/vga_switcheroo.h>
 
+<<<<<<< HEAD
+=======
+#include <drm/drm_crtc_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_fb_helper.h>
 
 #include "nouveau_drv.h"
 #include "nouveau_acpi.h"
+<<<<<<< HEAD
+=======
+#include "nouveau_fbcon.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "nouveau_vga.h"
 
 static unsigned int

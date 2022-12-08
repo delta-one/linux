@@ -248,7 +248,10 @@ struct switchdev_notifier_fdb_info {
 	u16 vid;
 	u8 added_by_user:1,
 	   is_local:1,
+<<<<<<< HEAD
 	   locked:1,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	   offloaded:1;
 };
 

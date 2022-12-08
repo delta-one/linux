@@ -9,8 +9,11 @@
 #include <asm/assembler.h>
 #include <asm/virt.h>
 
+<<<<<<< HEAD
 .arch armv7-a
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef ZIMAGE
 /*
  * For the kernel proper, we need to find out the CPU boot mode long after

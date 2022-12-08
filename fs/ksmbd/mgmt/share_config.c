@@ -16,7 +16,10 @@
 #include "user_config.h"
 #include "user_session.h"
 #include "../transport_ipc.h"
+<<<<<<< HEAD
 #include "../misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SHARE_HASH_BITS		3
 static DEFINE_HASHTABLE(shares_table, SHARE_HASH_BITS);
@@ -120,8 +123,12 @@ static int parse_veto_list(struct ksmbd_share_config *share,
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct ksmbd_share_config *share_config_request(struct unicode_map *um,
 						       const char *name)
+=======
+static struct ksmbd_share_config *share_config_request(const char *name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ksmbd_share_config_response *resp;
 	struct ksmbd_share_config *share = NULL;
@@ -135,6 +142,7 @@ static struct ksmbd_share_config *share_config_request(struct unicode_map *um,
 	if (resp->flags == KSMBD_SHARE_FLAG_INVALID)
 		goto out;
 
+<<<<<<< HEAD
 	if (*resp->share_name) {
 		char *cf_resp_name;
 		bool equal;
@@ -148,6 +156,8 @@ static struct ksmbd_share_config *share_config_request(struct unicode_map *um,
 			goto out;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	share = kzalloc(sizeof(struct ksmbd_share_config), GFP_KERNEL);
 	if (!share)
 		goto out;
@@ -205,8 +215,12 @@ out:
 	return share;
 }
 
+<<<<<<< HEAD
 struct ksmbd_share_config *ksmbd_share_config_get(struct unicode_map *um,
 						  const char *name)
+=======
+struct ksmbd_share_config *ksmbd_share_config_get(const char *name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ksmbd_share_config *share;
 
@@ -218,7 +232,11 @@ struct ksmbd_share_config *ksmbd_share_config_get(struct unicode_map *um,
 
 	if (share)
 		return share;
+<<<<<<< HEAD
 	return share_config_request(um, name);
+=======
+	return share_config_request(name);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 bool ksmbd_share_veto_filename(struct ksmbd_share_config *share,

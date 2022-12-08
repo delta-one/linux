@@ -91,6 +91,10 @@ enum sprd_eic_type {
 
 struct sprd_eic {
 	struct gpio_chip chip;
+<<<<<<< HEAD
+=======
+	struct irq_chip intc;
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem *base[SPRD_EIC_MAX_BANK];
 	enum sprd_eic_type type;
 	spinlock_t lock;
@@ -254,8 +258,11 @@ static void sprd_eic_irq_mask(struct irq_data *data)
 	default:
 		dev_err(chip->parent, "Unsupported EIC type.\n");
 	}
+<<<<<<< HEAD
 
 	gpiochip_disable_irq(chip, offset);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void sprd_eic_irq_unmask(struct irq_data *data)
@@ -264,8 +271,11 @@ static void sprd_eic_irq_unmask(struct irq_data *data)
 	struct sprd_eic *sprd_eic = gpiochip_get_data(chip);
 	u32 offset = irqd_to_hwirq(data);
 
+<<<<<<< HEAD
 	gpiochip_enable_irq(chip, offset);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	switch (sprd_eic->type) {
 	case SPRD_EIC_DEBOUNCE:
 		sprd_eic_update(chip, offset, SPRD_EIC_DBNC_IE, 1);
@@ -567,6 +577,7 @@ static void sprd_eic_irq_handler(struct irq_desc *desc)
 	chained_irq_exit(ic, desc);
 }
 
+<<<<<<< HEAD
 static const struct irq_chip sprd_eic_irq = {
 	.name		= "sprd-eic",
 	.irq_ack	= sprd_eic_irq_ack,
@@ -576,6 +587,8 @@ static const struct irq_chip sprd_eic_irq = {
 	.flags		= IRQCHIP_SKIP_SET_WAKE | IRQCHIP_IMMUTABLE,
 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int sprd_eic_probe(struct platform_device *pdev)
 {
 	const struct sprd_eic_variant_data *pdata;
@@ -638,8 +651,20 @@ static int sprd_eic_probe(struct platform_device *pdev)
 		break;
 	}
 
+<<<<<<< HEAD
 	irq = &sprd_eic->chip.irq;
 	gpio_irq_chip_set_chip(irq, &sprd_eic_irq);
+=======
+	sprd_eic->intc.name = dev_name(&pdev->dev);
+	sprd_eic->intc.irq_ack = sprd_eic_irq_ack;
+	sprd_eic->intc.irq_mask = sprd_eic_irq_mask;
+	sprd_eic->intc.irq_unmask = sprd_eic_irq_unmask;
+	sprd_eic->intc.irq_set_type = sprd_eic_irq_set_type;
+	sprd_eic->intc.flags = IRQCHIP_SKIP_SET_WAKE;
+
+	irq = &sprd_eic->chip.irq;
+	irq->chip = &sprd_eic->intc;
+>>>>>>> b7ba80a49124 (Commit)
 	irq->handler = handle_bad_irq;
 	irq->default_type = IRQ_TYPE_NONE;
 	irq->parent_handler = sprd_eic_irq_handler;

@@ -8,6 +8,7 @@
  *	    Sakari Ailus <sakari.ailus@iki.fi>
  */
 
+<<<<<<< HEAD
 #include <linux/export.h>
 #include <linux/ioctl.h>
 #include <linux/leds.h>
@@ -45,6 +46,22 @@ static bool v4l2_subdev_enable_streams_api;
 #define V4L2_SUBDEV_MAX_STREAM_ID 63
 
 #include "v4l2-subdev-priv.h"
+=======
+#include <linux/ioctl.h>
+#include <linux/mm.h>
+#include <linux/module.h>
+#include <linux/slab.h>
+#include <linux/types.h>
+#include <linux/videodev2.h>
+#include <linux/export.h>
+#include <linux/version.h>
+
+#include <media/v4l2-ctrls.h>
+#include <media/v4l2-device.h>
+#include <media/v4l2-ioctl.h>
+#include <media/v4l2-fh.h>
+#include <media/v4l2-event.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
 static int subdev_fh_init(struct v4l2_subdev_fh *fh, struct v4l2_subdev *sd)
@@ -171,6 +188,7 @@ static inline int check_pad(struct v4l2_subdev *sd, u32 pad)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int check_state(struct v4l2_subdev *sd, struct v4l2_subdev_state *state,
 		       u32 which, u32 pad, u32 stream)
 {
@@ -187,6 +205,10 @@ static int check_state(struct v4l2_subdev *sd, struct v4l2_subdev_state *state,
 	if (stream != 0)
 		return -EINVAL;
 
+=======
+static int check_state_pads(u32 which, struct v4l2_subdev_state *state)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	if (which == V4L2_SUBDEV_FORMAT_TRY && (!state || !state->pads))
 		return -EINVAL;
 
@@ -200,11 +222,16 @@ static inline int check_format(struct v4l2_subdev *sd,
 	if (!format)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (!(sd->flags & V4L2_SUBDEV_FL_STREAMS))
 		format->stream = 0;
 
 	return check_which(format->which) ? : check_pad(sd, format->pad) ? :
 	       check_state(sd, state, format->which, format->pad, format->stream);
+=======
+	return check_which(format->which) ? : check_pad(sd, format->pad) ? :
+	       check_state_pads(format->which, state);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int call_get_fmt(struct v4l2_subdev *sd,
@@ -230,11 +257,16 @@ static int call_enum_mbus_code(struct v4l2_subdev *sd,
 	if (!code)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (!(sd->flags & V4L2_SUBDEV_FL_STREAMS))
 		code->stream = 0;
 
 	return check_which(code->which) ? : check_pad(sd, code->pad) ? :
 	       check_state(sd, state, code->which, code->pad, code->stream) ? :
+=======
+	return check_which(code->which) ? : check_pad(sd, code->pad) ? :
+	       check_state_pads(code->which, state) ? :
+>>>>>>> b7ba80a49124 (Commit)
 	       sd->ops->pad->enum_mbus_code(sd, state, code);
 }
 
@@ -245,11 +277,16 @@ static int call_enum_frame_size(struct v4l2_subdev *sd,
 	if (!fse)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (!(sd->flags & V4L2_SUBDEV_FL_STREAMS))
 		fse->stream = 0;
 
 	return check_which(fse->which) ? : check_pad(sd, fse->pad) ? :
 	       check_state(sd, state, fse->which, fse->pad, fse->stream) ? :
+=======
+	return check_which(fse->which) ? : check_pad(sd, fse->pad) ? :
+	       check_state_pads(fse->which, state) ? :
+>>>>>>> b7ba80a49124 (Commit)
 	       sd->ops->pad->enum_frame_size(sd, state, fse);
 }
 
@@ -283,11 +320,16 @@ static int call_enum_frame_interval(struct v4l2_subdev *sd,
 	if (!fie)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (!(sd->flags & V4L2_SUBDEV_FL_STREAMS))
 		fie->stream = 0;
 
 	return check_which(fie->which) ? : check_pad(sd, fie->pad) ? :
 	       check_state(sd, state, fie->which, fie->pad, fie->stream) ? :
+=======
+	return check_which(fie->which) ? : check_pad(sd, fie->pad) ? :
+	       check_state_pads(fie->which, state) ? :
+>>>>>>> b7ba80a49124 (Commit)
 	       sd->ops->pad->enum_frame_interval(sd, state, fie);
 }
 
@@ -298,11 +340,16 @@ static inline int check_selection(struct v4l2_subdev *sd,
 	if (!sel)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (!(sd->flags & V4L2_SUBDEV_FL_STREAMS))
 		sel->stream = 0;
 
 	return check_which(sel->which) ? : check_pad(sd, sel->pad) ? :
 	       check_state(sd, state, sel->which, sel->pad, sel->stream);
+=======
+	return check_which(sel->which) ? : check_pad(sd, sel->pad) ? :
+	       check_state_pads(sel->which, state);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int call_get_selection(struct v4l2_subdev *sd,
@@ -370,6 +417,7 @@ static int call_get_mbus_config(struct v4l2_subdev *sd, unsigned int pad,
 	       sd->ops->pad->get_mbus_config(sd, pad, config);
 }
 
+<<<<<<< HEAD
 static int call_s_stream(struct v4l2_subdev *sd, int enable)
 {
 	int ret;
@@ -393,6 +441,8 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_MEDIA_CONTROLLER
 /*
  * Create state-management wrapper for pad ops dealing with subdev state. The
@@ -452,7 +502,10 @@ static const struct v4l2_subdev_pad_ops v4l2_subdev_call_pad_wrappers = {
 static const struct v4l2_subdev_video_ops v4l2_subdev_call_video_wrappers = {
 	.g_frame_interval	= call_g_frame_interval,
 	.s_frame_interval	= call_s_frame_interval,
+<<<<<<< HEAD
 	.s_stream		= call_s_stream,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 const struct v4l2_subdev_ops v4l2_subdev_call_wrappers = {
@@ -493,10 +546,13 @@ subdev_ioctl_get_state(struct v4l2_subdev *sd, struct v4l2_subdev_fh *subdev_fh,
 	case VIDIOC_SUBDEV_S_SELECTION:
 		which = ((struct v4l2_subdev_selection *)arg)->which;
 		break;
+<<<<<<< HEAD
 	case VIDIOC_SUBDEV_G_ROUTING:
 	case VIDIOC_SUBDEV_S_ROUTING:
 		which = ((struct v4l2_subdev_routing *)arg)->which;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return which == V4L2_SUBDEV_FORMAT_TRY ?
@@ -511,7 +567,10 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg,
 	struct v4l2_subdev *sd = vdev_to_v4l2_subdev(vdev);
 	struct v4l2_fh *vfh = file->private_data;
 	bool ro_subdev = test_bit(V4L2_FL_SUBDEV_RO_DEVNODE, &vdev->flags);
+<<<<<<< HEAD
 	bool streams_subdev = sd->flags & V4L2_SUBDEV_FL_STREAMS;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int rval;
 
 	switch (cmd) {
@@ -520,9 +579,13 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg,
 
 		memset(cap->reserved, 0, sizeof(cap->reserved));
 		cap->version = LINUX_VERSION_CODE;
+<<<<<<< HEAD
 		cap->capabilities =
 			(ro_subdev ? V4L2_SUBDEV_CAP_RO_SUBDEV : 0) |
 			(streams_subdev ? V4L2_SUBDEV_CAP_STREAMS : 0);
+=======
+		cap->capabilities = ro_subdev ? V4L2_SUBDEV_CAP_RO_SUBDEV : 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 		return 0;
 	}
@@ -813,6 +876,7 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg,
 	case VIDIOC_SUBDEV_QUERYSTD:
 		return v4l2_subdev_call(sd, video, querystd, arg);
 
+<<<<<<< HEAD
 	case VIDIOC_SUBDEV_G_ROUTING: {
 		struct v4l2_subdev_routing *routing = arg;
 		struct v4l2_subdev_krouting *krouting;
@@ -888,6 +952,8 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg,
 					routing->which, &krouting);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return v4l2_subdev_call(sd, core, ioctl, cmd, arg);
 	}
@@ -1003,7 +1069,11 @@ int v4l2_subdev_get_fwnode_pad_1_to_1(struct media_entity *entity,
 	fwnode = fwnode_graph_get_port_parent(endpoint->local_fwnode);
 	fwnode_handle_put(fwnode);
 
+<<<<<<< HEAD
 	if (device_match_fwnode(sd->dev, fwnode))
+=======
+	if (dev_fwnode(sd->dev) == fwnode)
+>>>>>>> b7ba80a49124 (Commit)
 		return endpoint->port;
 
 	return -ENXIO;
@@ -1068,6 +1138,7 @@ int v4l2_subdev_link_validate_default(struct v4l2_subdev *sd,
 EXPORT_SYMBOL_GPL(v4l2_subdev_link_validate_default);
 
 static int
+<<<<<<< HEAD
 v4l2_subdev_link_validate_get_format(struct media_pad *pad, u32 stream,
 				     struct v4l2_subdev_format *fmt,
 				     bool states_locked)
@@ -1249,10 +1320,30 @@ static int v4l2_subdev_link_validate_locked(struct media_link *link, bool states
 	}
 
 	return 0;
+=======
+v4l2_subdev_link_validate_get_format(struct media_pad *pad,
+				     struct v4l2_subdev_format *fmt)
+{
+	if (is_media_entity_v4l2_subdev(pad->entity)) {
+		struct v4l2_subdev *sd =
+			media_entity_to_v4l2_subdev(pad->entity);
+
+		fmt->which = V4L2_SUBDEV_FORMAT_ACTIVE;
+		fmt->pad = pad->index;
+		return v4l2_subdev_call_state_active(sd, pad, get_fmt, fmt);
+	}
+
+	WARN(pad->entity->function != MEDIA_ENT_F_IO_V4L,
+	     "Driver bug! Wrong media entity type 0x%08x, entity %s\n",
+	     pad->entity->function, pad->entity->name);
+
+	return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int v4l2_subdev_link_validate(struct media_link *link)
 {
+<<<<<<< HEAD
 	struct v4l2_subdev *source_sd, *sink_sd;
 	struct v4l2_subdev_state *source_state, *sink_state;
 	bool states_locked;
@@ -1323,6 +1414,34 @@ bool v4l2_subdev_has_pad_interdep(struct media_entity *entity,
 }
 EXPORT_SYMBOL_GPL(v4l2_subdev_has_pad_interdep);
 
+=======
+	struct v4l2_subdev *sink;
+	struct v4l2_subdev_format sink_fmt, source_fmt;
+	int rval;
+
+	rval = v4l2_subdev_link_validate_get_format(
+		link->source, &source_fmt);
+	if (rval < 0)
+		return 0;
+
+	rval = v4l2_subdev_link_validate_get_format(
+		link->sink, &sink_fmt);
+	if (rval < 0)
+		return 0;
+
+	sink = media_entity_to_v4l2_subdev(link->sink->entity);
+
+	rval = v4l2_subdev_call(sink, pad, link_validate, link,
+				&source_fmt, &sink_fmt);
+	if (rval != -ENOIOCTLCMD)
+		return rval;
+
+	return v4l2_subdev_link_validate_default(
+		sink, link, &source_fmt, &sink_fmt);
+}
+EXPORT_SYMBOL_GPL(v4l2_subdev_link_validate);
+
+>>>>>>> b7ba80a49124 (Commit)
 struct v4l2_subdev_state *
 __v4l2_subdev_state_alloc(struct v4l2_subdev *sd, const char *lock_name,
 			  struct lock_class_key *lock_key)
@@ -1340,8 +1459,12 @@ __v4l2_subdev_state_alloc(struct v4l2_subdev *sd, const char *lock_name,
 	else
 		state->lock = &state->_lock;
 
+<<<<<<< HEAD
 	/* Drivers that support streams do not need the legacy pad config */
 	if (!(sd->flags & V4L2_SUBDEV_FL_STREAMS) && sd->entity.num_pads) {
+=======
+	if (sd->entity.num_pads) {
+>>>>>>> b7ba80a49124 (Commit)
 		state->pads = kvcalloc(sd->entity.num_pads,
 				       sizeof(*state->pads), GFP_KERNEL);
 		if (!state->pads) {
@@ -1380,8 +1503,11 @@ void __v4l2_subdev_state_free(struct v4l2_subdev_state *state)
 
 	mutex_destroy(&state->_lock);
 
+<<<<<<< HEAD
 	kfree(state->routing.routes);
 	kvfree(state->stream_configs.configs);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kvfree(state->pads);
 	kfree(state);
 }
@@ -1411,6 +1537,7 @@ EXPORT_SYMBOL_GPL(v4l2_subdev_cleanup);
 
 #if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
 
+<<<<<<< HEAD
 static int
 v4l2_subdev_init_stream_configs(struct v4l2_subdev_stream_configs *stream_configs,
 				const struct v4l2_subdev_krouting *routing)
@@ -1460,11 +1587,14 @@ v4l2_subdev_init_stream_configs(struct v4l2_subdev_stream_configs *stream_config
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int v4l2_subdev_get_fmt(struct v4l2_subdev *sd, struct v4l2_subdev_state *state,
 			struct v4l2_subdev_format *format)
 {
 	struct v4l2_mbus_framefmt *fmt;
 
+<<<<<<< HEAD
 	if (sd->flags & V4L2_SUBDEV_FL_STREAMS)
 		fmt = v4l2_subdev_state_get_stream_format(state, format->pad,
 							  format->stream);
@@ -1473,6 +1603,12 @@ int v4l2_subdev_get_fmt(struct v4l2_subdev *sd, struct v4l2_subdev_state *state,
 	else
 		fmt = NULL;
 
+=======
+	if (format->pad >= sd->entity.num_pads)
+		return -EINVAL;
+
+	fmt = v4l2_subdev_get_pad_format(sd, state, format->pad);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!fmt)
 		return -EINVAL;
 
@@ -1482,6 +1618,7 @@ int v4l2_subdev_get_fmt(struct v4l2_subdev *sd, struct v4l2_subdev_state *state,
 }
 EXPORT_SYMBOL_GPL(v4l2_subdev_get_fmt);
 
+<<<<<<< HEAD
 int v4l2_subdev_set_routing(struct v4l2_subdev *sd,
 			    struct v4l2_subdev_state *state,
 			    const struct v4l2_subdev_krouting *routing)
@@ -2103,6 +2240,8 @@ int v4l2_subdev_s_stream_helper(struct v4l2_subdev *sd, int enable)
 }
 EXPORT_SYMBOL_GPL(v4l2_subdev_s_stream_helper);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_VIDEO_V4L2_SUBDEV_API */
 
 #endif /* CONFIG_MEDIA_CONTROLLER */
@@ -2118,7 +2257,10 @@ void v4l2_subdev_init(struct v4l2_subdev *sd, const struct v4l2_subdev_ops *ops)
 	sd->grp_id = 0;
 	sd->dev_priv = NULL;
 	sd->host_priv = NULL;
+<<<<<<< HEAD
 	sd->privacy_led = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if defined(CONFIG_MEDIA_CONTROLLER)
 	sd->entity.name = sd->name;
 	sd->entity.obj_type = MEDIA_ENTITY_TYPE_V4L2_SUBDEV;
@@ -2134,6 +2276,7 @@ void v4l2_subdev_notify_event(struct v4l2_subdev *sd,
 	v4l2_subdev_notify(sd, V4L2_DEVICE_NOTIFY_EVENT, (void *)ev);
 }
 EXPORT_SYMBOL_GPL(v4l2_subdev_notify_event);
+<<<<<<< HEAD
 
 int v4l2_subdev_get_privacy_led(struct v4l2_subdev *sd)
 {
@@ -2167,3 +2310,5 @@ void v4l2_subdev_put_privacy_led(struct v4l2_subdev *sd)
 #endif
 }
 EXPORT_SYMBOL_GPL(v4l2_subdev_put_privacy_led);
+=======
+>>>>>>> b7ba80a49124 (Commit)

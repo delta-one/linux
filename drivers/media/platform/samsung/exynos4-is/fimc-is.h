@@ -14,6 +14,10 @@
 #include <linux/clk.h>
 #include <linux/device.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/pinctrl/consumer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <linux/sizes.h>
 #include <linux/spinlock.h>
@@ -230,6 +234,10 @@ struct chain_config {
 /**
  * struct fimc_is - fimc-is data structure
  * @pdev: pointer to FIMC-IS platform device
+<<<<<<< HEAD
+=======
+ * @pctrl: pointer to pinctrl structure for this device
+>>>>>>> b7ba80a49124 (Commit)
  * @v4l2_dev: pointer to the top level v4l2_device
  * @fw: data structure describing the FIMC-IS firmware binary
  * @memory: memory region assigned for the FIMC-IS (firmware)
@@ -260,6 +268,10 @@ struct chain_config {
  */
 struct fimc_is {
 	struct platform_device		*pdev;
+<<<<<<< HEAD
+=======
+	struct pinctrl			*pctrl;
+>>>>>>> b7ba80a49124 (Commit)
 	struct v4l2_device		*v4l2_dev;
 
 	struct fimc_is_firmware		fw;

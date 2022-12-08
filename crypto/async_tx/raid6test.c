@@ -37,7 +37,11 @@ static void makedata(int disks)
 	int i;
 
 	for (i = 0; i < disks; i++) {
+<<<<<<< HEAD
 		get_random_bytes(page_address(data[i]), PAGE_SIZE);
+=======
+		prandom_bytes(page_address(data[i]), PAGE_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 		dataptrs[i] = data[i];
 		dataoffs[i] = 0;
 	}
@@ -189,7 +193,11 @@ static int test(int disks, int *tests)
 }
 
 
+<<<<<<< HEAD
 static int __init raid6_test(void)
+=======
+static int raid6_test(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err = 0;
 	int tests = 0;
@@ -236,7 +244,11 @@ static int __init raid6_test(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void __exit raid6_test_exit(void)
+=======
+static void raid6_test_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 

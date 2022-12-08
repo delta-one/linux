@@ -49,27 +49,45 @@ examples:
   - |
     #include <dt-bindings/gpio/gpio.h>
     #include <dt-bindings/interrupt-controller/irq.h>
+<<<<<<< HEAD
     i2c {
+=======
+    i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 
         fxos8700@1e {
+<<<<<<< HEAD
             compatible = "nxp,fxos8700";
             reg = <0x1e>;
 
             interrupt-parent = <&gpio2>;
             interrupts = <7 IRQ_TYPE_EDGE_RISING>;
             interrupt-names = "INT1";
+=======
+          compatible = "nxp,fxos8700";
+          reg = <0x1e>;
+
+          interrupt-parent = <&gpio2>;
+          interrupts = <7 IRQ_TYPE_EDGE_RISING>;
+          interrupt-names = "INT1";
+>>>>>>> b7ba80a49124 (Commit)
         };
     };
   - |
     #include <dt-bindings/gpio/gpio.h>
     #include <dt-bindings/interrupt-controller/irq.h>
+<<<<<<< HEAD
     spi {
+=======
+    spi0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 
         fxos8700@0 {
+<<<<<<< HEAD
             compatible = "nxp,fxos8700";
             reg = <0>;
 
@@ -77,5 +95,14 @@ examples:
             interrupt-parent = <&gpio1>;
             interrupts = <7 IRQ_TYPE_EDGE_RISING>;
             interrupt-names = "INT2";
+=======
+          compatible = "nxp,fxos8700";
+          reg = <0>;
+
+          spi-max-frequency = <1000000>;
+          interrupt-parent = <&gpio1>;
+          interrupts = <7 IRQ_TYPE_EDGE_RISING>;
+          interrupt-names = "INT2";
+>>>>>>> b7ba80a49124 (Commit)
         };
     };

@@ -6,7 +6,10 @@
 config AMD_PMF
 	tristate "AMD Platform Management Framework"
 	depends on ACPI && PCI
+<<<<<<< HEAD
 	depends on POWER_SUPPLY
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select ACPI_PLATFORM_PROFILE
 	help
 	  This driver provides support for the AMD Platform Management Framework.

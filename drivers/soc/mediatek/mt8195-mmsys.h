@@ -75,6 +75,7 @@
 #define MT8195_SOUT_DSC_WRAP1_OUT_TO_SINA_VIRTUAL0		(2 << 16)
 #define MT8195_SOUT_DSC_WRAP1_OUT_TO_VPP_MERGE			(3 << 16)
 
+<<<<<<< HEAD
 #define MT8195_VDO1_SW0_RST_B					0x1d0
 #define MT8195_VDO1_MERGE0_ASYNC_CFG_WD				0xe30
 #define MT8195_VDO1_HDRBE_ASYNC_CFG_WD				0xe70
@@ -159,6 +160,8 @@
 #define MT8195_SVPP2_MDP_RSZ					BIT(4)
 #define MT8195_SVPP3_MDP_RSZ					BIT(5)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct mtk_mmsys_routes mmsys_mt8195_routing_table[] = {
 	{
 		DDP_COMPONENT_OVL0, DDP_COMPONENT_RDMA0,
@@ -451,6 +454,7 @@ static const struct mtk_mmsys_routes mmsys_mt8195_routing_table[] = {
 	}
 };
 
+<<<<<<< HEAD
 static const struct mtk_mmsys_routes mmsys_mt8195_vdo1_routing_table[] = {
 	{
 		DDP_COMPONENT_MDP_RDMA0, DDP_COMPONENT_MERGE1,
@@ -526,4 +530,6 @@ static const struct mtk_mmsys_routes mmsys_mt8195_vdo1_routing_table[] = {
 		MT8195_MERGE4_SOUT_TO_DP_INTF0_SEL
 	}
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __SOC_MEDIATEK_MT8195_MMSYS_H */

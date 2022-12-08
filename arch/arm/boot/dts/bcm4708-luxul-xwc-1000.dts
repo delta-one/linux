@@ -42,7 +42,11 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-status {
+=======
+		status {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:status";
 			gpios = <&chipcommon 0 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "timer";

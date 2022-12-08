@@ -2309,7 +2309,11 @@ static struct sw_flow_actions *nla_alloc_flow_actions(int size)
 
 	WARN_ON_ONCE(size > MAX_ACTIONS_BUFSIZE);
 
+<<<<<<< HEAD
 	sfa = kmalloc(kmalloc_size_roundup(sizeof(*sfa) + size), GFP_KERNEL);
+=======
+	sfa = kmalloc(sizeof(*sfa) + size, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!sfa)
 		return ERR_PTR(-ENOMEM);
 

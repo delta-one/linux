@@ -116,9 +116,15 @@ config SERIAL_8250_CONSOLE
 
 	  If unsure, say N.
 
+<<<<<<< HEAD
 config SERIAL_8250_PARISC
 	tristate
 	depends on SERIAL_8250 && PARISC
+=======
+config SERIAL_8250_GSC
+	tristate
+	depends on SERIAL_8250 && GSC
+>>>>>>> b7ba80a49124 (Commit)
 	default SERIAL_8250
 
 config SERIAL_8250_DMA
@@ -129,6 +135,7 @@ config SERIAL_8250_DMA
 	  This builds DMA support that can be used with 8250/16650
 	  compatible UART controllers that support DMA signaling.
 
+<<<<<<< HEAD
 config SERIAL_8250_PCILIB
 	bool
 
@@ -136,6 +143,11 @@ config SERIAL_8250_PCI
 	tristate "8250/16550 PCI device support"
 	depends on SERIAL_8250 && PCI
 	select SERIAL_8250_PCILIB
+=======
+config SERIAL_8250_PCI
+	tristate "8250/16550 PCI device support"
+	depends on SERIAL_8250 && PCI
+>>>>>>> b7ba80a49124 (Commit)
 	default SERIAL_8250
 	help
 	  This builds standard PCI serial support. You may be able to
@@ -257,9 +269,14 @@ config SERIAL_8250_ASPEED_VUART
 	tristate "Aspeed Virtual UART"
 	depends on SERIAL_8250
 	depends on OF
+<<<<<<< HEAD
 	depends on MFD_SYSCON
 	depends on ARCH_ASPEED || COMPILE_TEST
 	select REGMAP
+=======
+	depends on REGMAP && MFD_SYSCON
+	depends on ARCH_ASPEED || COMPILE_TEST
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  If you want to use the virtual UART (VUART) device on Aspeed
 	  BMC platforms, enable this option. This enables the 16550A-
@@ -296,6 +313,7 @@ config SERIAL_8250_HUB6
 	  To compile this driver as a module, choose M here: the module
 	  will be called 8250_hub6.
 
+<<<<<<< HEAD
 config SERIAL_8250_PCI1XXXX
 	tristate "Microchip 8250 based serial port"
 	depends on SERIAL_8250 && PCI
@@ -306,6 +324,8 @@ config SERIAL_8250_PCI1XXXX
 	 serial driver for the serial interface. This driver support
 	 will ensure to support baud rates upto 1.5Mpbs.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #
 # Misc. options/drivers.
 #
@@ -385,6 +405,7 @@ config SERIAL_8250_FSL
 	  erratum for Freescale 16550 UARTs in the 8250 driver. It also
 	  enables support for ACPI enumeration.
 
+<<<<<<< HEAD
 config SERIAL_8250_DFL
 	tristate "DFL bus driver for Altera 16550 UART"
 	depends on SERIAL_8250 && FPGA_DFL
@@ -397,6 +418,8 @@ config SERIAL_8250_DFL
 	  To compile this driver as a module, chose M here: the
 	  module will be called 8250_dfl.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SERIAL_8250_DW
 	tristate "Support for Synopsys DesignWare 8250 quirks"
 	depends on SERIAL_8250

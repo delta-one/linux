@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
 #include <internal/cpumap.h>
 #include "../../../util/cpumap.h"
 #include "../../../util/pmu.h"
@@ -7,6 +8,12 @@
 #include <math.h>
 
 static struct perf_pmu *pmu__find_core_pmu(void)
+=======
+#include "../../../util/cpumap.h"
+#include "../../../util/pmu.h"
+
+const struct pmu_events_table *pmu_events_table__find(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct perf_pmu *pmu = NULL;
 
@@ -21,6 +28,7 @@ static struct perf_pmu *pmu__find_core_pmu(void)
 		if (pmu->cpus->nr != cpu__max_cpu().cpu)
 			return NULL;
 
+<<<<<<< HEAD
 		return pmu;
 	}
 	return NULL;
@@ -63,4 +71,10 @@ double perf_pmu__cpu_slots_per_cycle(void)
 	}
 
 	return slots ? (double)slots : NAN;
+=======
+		return perf_pmu__find_table(pmu);
+	}
+
+	return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }

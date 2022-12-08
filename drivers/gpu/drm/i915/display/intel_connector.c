@@ -54,7 +54,11 @@ int intel_connector_init(struct intel_connector *connector)
 	__drm_atomic_helper_connector_reset(&connector->base,
 					    &conn_state->base);
 
+<<<<<<< HEAD
 	intel_panel_init_alloc(connector);
+=======
+	INIT_LIST_HEAD(&connector->panel.fixed_modes);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -95,10 +99,20 @@ void intel_connector_destroy(struct drm_connector *connector)
 {
 	struct intel_connector *intel_connector = to_intel_connector(connector);
 
+<<<<<<< HEAD
 	drm_edid_free(intel_connector->detect_edid);
 
 	intel_hdcp_cleanup(intel_connector);
 
+=======
+	kfree(intel_connector->detect_edid);
+
+	intel_hdcp_cleanup(intel_connector);
+
+	if (!IS_ERR_OR_NULL(intel_connector->edid))
+		kfree(intel_connector->edid);
+
+>>>>>>> b7ba80a49124 (Commit)
 	intel_panel_fini(intel_connector);
 
 	drm_connector_cleanup(connector);
@@ -290,6 +304,7 @@ intel_attach_dp_colorspace_property(struct drm_connector *connector)
 	if (!drm_mode_create_dp_colorspace_property(connector))
 		drm_connector_attach_colorspace_property(connector);
 }
+<<<<<<< HEAD
 
 void
 intel_attach_scaling_mode_property(struct drm_connector *connector)
@@ -308,3 +323,5 @@ intel_attach_scaling_mode_property(struct drm_connector *connector)
 
 	connector->state->scaling_mode = DRM_MODE_SCALE_ASPECT;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

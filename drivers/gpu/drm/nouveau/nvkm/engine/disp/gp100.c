@@ -37,7 +37,14 @@ gp100_sor = {
 	.state = gf119_sor_state,
 	.power = nv50_sor_power,
 	.clock = gf119_sor_clock,
+<<<<<<< HEAD
 	.hdmi = &gm200_sor_hdmi,
+=======
+	.hdmi = {
+		.ctrl = gk104_sor_hdmi_ctrl,
+		.scdc = gm200_sor_hdmi_scdc,
+	},
+>>>>>>> b7ba80a49124 (Commit)
 	.dp = &gm200_sor_dp,
 	.hda = &gf119_sor_hda,
 };

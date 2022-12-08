@@ -54,8 +54,11 @@ int drm_modeset_register_all(struct drm_device *dev)
 	if (ret)
 		goto err_connector;
 
+<<<<<<< HEAD
 	drm_debugfs_late_register(dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_connector:
@@ -153,6 +156,12 @@ int drm_mode_getresources(struct drm_device *dev, void *data,
 	count = 0;
 	connector_id = u64_to_user_ptr(card_res->connector_id_ptr);
 	drm_for_each_connector_iter(connector, &conn_iter) {
+<<<<<<< HEAD
+=======
+		if (connector->registration_state != DRM_CONNECTOR_REGISTERED)
+			continue;
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* only expose writeback connectors if userspace understands them */
 		if (!file_priv->writeback_connectors &&
 		    (connector->connector_type == DRM_MODE_CONNECTOR_WRITEBACK))
@@ -401,8 +410,11 @@ static void drm_mode_config_init_release(struct drm_device *dev, void *ptr)
  */
 int drmm_mode_config_init(struct drm_device *dev)
 {
+<<<<<<< HEAD
 	int ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&dev->mode_config.mutex);
 	drm_modeset_lock_init(&dev->mode_config.connection_mutex);
 	mutex_init(&dev->mode_config.idr_mutex);
@@ -424,11 +436,15 @@ int drmm_mode_config_init(struct drm_device *dev)
 	init_llist_head(&dev->mode_config.connector_free_list);
 	INIT_WORK(&dev->mode_config.connector_free_work, drm_connector_free_work_fn);
 
+<<<<<<< HEAD
 	ret = drm_mode_create_standard_properties(dev);
 	if (ret) {
 		drm_mode_config_cleanup(dev);
 		return ret;
 	}
+=======
+	drm_mode_create_standard_properties(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Just to be sure */
 	dev->mode_config.num_fb = 0;

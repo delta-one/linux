@@ -28,7 +28,11 @@ properties:
   mps,fb-voltage-divider:
     description: An array of two integers containing the resistor
       values R1 and R2 of the feedback voltage divider in kilo ohms.
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/uint32-array
+=======
+    $ref: "/schemas/types.yaml#/definitions/uint32-array"
+>>>>>>> b7ba80a49124 (Commit)
     maxItems: 2
 
   mps,switch-frequency-hz:

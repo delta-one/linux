@@ -105,8 +105,11 @@ static void memcpy_test(struct kunit *test)
 #undef TEST_OP
 }
 
+<<<<<<< HEAD
 static unsigned char larger_array [2048];
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void memmove_test(struct kunit *test)
 {
 #define TEST_OP "memmove"
@@ -181,6 +184,7 @@ static void memmove_test(struct kunit *test)
 	ptr = &overlap.data[2];
 	memmove(ptr, overlap.data, 5);
 	compare("overlapping write", overlap, overlap_expected);
+<<<<<<< HEAD
 
 	/* Verify larger overlapping moves. */
 	larger_array[256] = 0xAAu;
@@ -201,6 +205,8 @@ static void memmove_test(struct kunit *test)
 	KUNIT_ASSERT_NULL(test, memchr(larger_array + 1, 0xBBu, 256 - 1));
 	KUNIT_ASSERT_NULL(test,
 		memchr(larger_array + 257, 0xBBu, ARRAY_SIZE(larger_array) - 257));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #undef TEST_OP
 }
 
@@ -292,6 +298,7 @@ static void memset_test(struct kunit *test)
 #undef TEST_OP
 }
 
+<<<<<<< HEAD
 static u8 large_src[1024];
 static u8 large_dst[2048];
 static const u8 large_zero[2048];
@@ -496,6 +503,8 @@ static void memmove_overlap_test(struct kunit *test)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void strtomem_test(struct kunit *test)
 {
 	static const char input[sizeof(unsigned long)] = "hi";
@@ -551,10 +560,14 @@ static void strtomem_test(struct kunit *test)
 static struct kunit_case memcpy_test_cases[] = {
 	KUNIT_CASE(memset_test),
 	KUNIT_CASE(memcpy_test),
+<<<<<<< HEAD
 	KUNIT_CASE(memcpy_large_test),
 	KUNIT_CASE(memmove_test),
 	KUNIT_CASE(memmove_large_test),
 	KUNIT_CASE(memmove_overlap_test),
+=======
+	KUNIT_CASE(memmove_test),
+>>>>>>> b7ba80a49124 (Commit)
 	KUNIT_CASE(strtomem_test),
 	{}
 };

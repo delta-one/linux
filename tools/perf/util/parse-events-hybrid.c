@@ -33,8 +33,12 @@ static void config_hybrid_attr(struct perf_event_attr *attr,
 	 * If the PMU type ID is 0, the PERF_TYPE_RAW will be applied.
 	 */
 	attr->type = type;
+<<<<<<< HEAD
 	attr->config = (attr->config & PERF_HW_EVENT_MASK) |
 			((__u64)pmu_type << PERF_PMU_TYPE_SHIFT);
+=======
+	attr->config = attr->config | ((__u64)pmu_type << PERF_PMU_TYPE_SHIFT);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int create_event_hybrid(__u32 config_type, int *idx,
@@ -49,6 +53,7 @@ static int create_event_hybrid(__u32 config_type, int *idx,
 	__u64 config = attr->config;
 
 	config_hybrid_attr(attr, config_type, pmu->type);
+<<<<<<< HEAD
 
 	/*
 	 * Some hybrid hardware cache events are only available on one CPU
@@ -68,6 +73,15 @@ static int create_event_hybrid(__u32 config_type, int *idx,
 			return -ENOMEM;
 	} else
 		return -ENOMEM;
+=======
+	evsel = parse_events__add_event_hybrid(list, idx, attr, name, metric_id,
+					       pmu, config_terms);
+	if (evsel)
+		evsel->pmu_name = strdup(pmu->name);
+	else
+		return -ENOMEM;
+
+>>>>>>> b7ba80a49124 (Commit)
 	attr->type = type;
 	attr->config = config;
 	return 0;

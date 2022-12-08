@@ -1977,6 +1977,7 @@ int ocfs2_write_end_nolock(struct address_space *mapping,
 	}
 
 	if (unlikely(copied < len) && wc->w_target_page) {
+<<<<<<< HEAD
 		loff_t new_isize;
 
 		if (!PageUptodate(wc->w_target_page))
@@ -1997,6 +1998,13 @@ int ocfs2_write_end_nolock(struct address_space *mapping,
 			block_invalidate_folio(page_folio(wc->w_target_page),
 						0, PAGE_SIZE);
 		}
+=======
+		if (!PageUptodate(wc->w_target_page))
+			copied = 0;
+
+		ocfs2_zero_new_buffers(wc->w_target_page, start+copied,
+				       start+len);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (wc->w_target_page)
 		flush_dcache_page(wc->w_target_page);
@@ -2463,7 +2471,11 @@ static ssize_t ocfs2_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
 
 	return __blockdev_direct_IO(iocb, inode, inode->i_sb->s_bdev,
 				    iter, get_block,
+<<<<<<< HEAD
 				    ocfs2_dio_end_io, 0);
+=======
+				    ocfs2_dio_end_io, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 const struct address_space_operations ocfs2_aops = {

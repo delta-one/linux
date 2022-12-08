@@ -38,6 +38,10 @@
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/pci.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mm.h>
 #include <linux/notifier.h>
 #include <linux/kdebug.h>

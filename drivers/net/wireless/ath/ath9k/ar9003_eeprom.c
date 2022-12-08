@@ -3084,6 +3084,7 @@ error:
 
 static bool ar9300_otp_read_word(struct ath_hw *ah, int addr, u32 *data)
 {
+<<<<<<< HEAD
 	REG_READ(ah, AR9300_OTP_BASE(ah) + (4 * addr));
 
 	if (!ath9k_hw_wait(ah, AR9300_OTP_STATUS(ah), AR9300_OTP_STATUS_TYPE,
@@ -3091,6 +3092,15 @@ static bool ar9300_otp_read_word(struct ath_hw *ah, int addr, u32 *data)
 		return false;
 
 	*data = REG_READ(ah, AR9300_OTP_READ_DATA(ah));
+=======
+	REG_READ(ah, AR9300_OTP_BASE + (4 * addr));
+
+	if (!ath9k_hw_wait(ah, AR9300_OTP_STATUS, AR9300_OTP_STATUS_TYPE,
+			   AR9300_OTP_STATUS_VALID, 1000))
+		return false;
+
+	*data = REG_READ(ah, AR9300_OTP_READ_DATA);
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -3607,6 +3617,7 @@ static void ar9003_hw_xpa_bias_level_apply(struct ath_hw *ah, bool is2ghz)
 
 	if (AR_SREV_9485(ah) || AR_SREV_9330(ah) || AR_SREV_9340(ah) ||
 	    AR_SREV_9531(ah) || AR_SREV_9561(ah))
+<<<<<<< HEAD
 		REG_RMW_FIELD(ah, AR_CH0_TOP2(ah), AR_CH0_TOP2_XPABIASLVL, bias);
 	else if (AR_SREV_9462(ah) || AR_SREV_9550(ah) || AR_SREV_9565(ah))
 		REG_RMW_FIELD(ah, AR_CH0_TOP(ah), AR_CH0_TOP_XPABIASLVL, bias);
@@ -3616,6 +3627,17 @@ static void ar9003_hw_xpa_bias_level_apply(struct ath_hw *ah, bool is2ghz)
 				AR_CH0_THERM_XPABIASLVL_MSB,
 				bias >> 2);
 		REG_RMW_FIELD(ah, AR_CH0_THERM(ah),
+=======
+		REG_RMW_FIELD(ah, AR_CH0_TOP2, AR_CH0_TOP2_XPABIASLVL, bias);
+	else if (AR_SREV_9462(ah) || AR_SREV_9550(ah) || AR_SREV_9565(ah))
+		REG_RMW_FIELD(ah, AR_CH0_TOP, AR_CH0_TOP_XPABIASLVL, bias);
+	else {
+		REG_RMW_FIELD(ah, AR_CH0_TOP, AR_CH0_TOP_XPABIASLVL, bias);
+		REG_RMW_FIELD(ah, AR_CH0_THERM,
+				AR_CH0_THERM_XPABIASLVL_MSB,
+				bias >> 2);
+		REG_RMW_FIELD(ah, AR_CH0_THERM,
+>>>>>>> b7ba80a49124 (Commit)
 				AR_CH0_THERM_XPASHORT2GND, 1);
 	}
 }
@@ -3960,9 +3982,15 @@ void ar9003_hw_internal_regulator_apply(struct ath_hw *ah)
 		if (AR_SREV_9330(ah) || AR_SREV_9485(ah)) {
 			int reg_pmu_set;
 
+<<<<<<< HEAD
 			reg_pmu_set = REG_READ(ah, AR_PHY_PMU2(ah)) & ~AR_PHY_PMU2_PGM;
 			REG_WRITE(ah, AR_PHY_PMU2(ah), reg_pmu_set);
 			if (!is_pmu_set(ah, AR_PHY_PMU2(ah), reg_pmu_set))
+=======
+			reg_pmu_set = REG_READ(ah, AR_PHY_PMU2) & ~AR_PHY_PMU2_PGM;
+			REG_WRITE(ah, AR_PHY_PMU2, reg_pmu_set);
+			if (!is_pmu_set(ah, AR_PHY_PMU2, reg_pmu_set))
+>>>>>>> b7ba80a49124 (Commit)
 				return;
 
 			if (AR_SREV_9330(ah)) {
@@ -3984,6 +4012,7 @@ void ar9003_hw_internal_regulator_apply(struct ath_hw *ah)
 					      (3 << 24) | (1 << 28);
 			}
 
+<<<<<<< HEAD
 			REG_WRITE(ah, AR_PHY_PMU1(ah), reg_pmu_set);
 			if (!is_pmu_set(ah, AR_PHY_PMU1(ah), reg_pmu_set))
 				return;
@@ -3998,14 +4027,37 @@ void ar9003_hw_internal_regulator_apply(struct ath_hw *ah)
 					| (1 << 21);
 			REG_WRITE(ah, AR_PHY_PMU2(ah), reg_pmu_set);
 			if (!is_pmu_set(ah, AR_PHY_PMU2(ah), reg_pmu_set))
+=======
+			REG_WRITE(ah, AR_PHY_PMU1, reg_pmu_set);
+			if (!is_pmu_set(ah, AR_PHY_PMU1, reg_pmu_set))
+				return;
+
+			reg_pmu_set = (REG_READ(ah, AR_PHY_PMU2) & ~0xFFC00000)
+					| (4 << 26);
+			REG_WRITE(ah, AR_PHY_PMU2, reg_pmu_set);
+			if (!is_pmu_set(ah, AR_PHY_PMU2, reg_pmu_set))
+				return;
+
+			reg_pmu_set = (REG_READ(ah, AR_PHY_PMU2) & ~0x00200000)
+					| (1 << 21);
+			REG_WRITE(ah, AR_PHY_PMU2, reg_pmu_set);
+			if (!is_pmu_set(ah, AR_PHY_PMU2, reg_pmu_set))
+>>>>>>> b7ba80a49124 (Commit)
 				return;
 		} else if (AR_SREV_9462(ah) || AR_SREV_9565(ah) ||
 			   AR_SREV_9561(ah)) {
 			reg_val = le32_to_cpu(pBase->swreg);
+<<<<<<< HEAD
 			REG_WRITE(ah, AR_PHY_PMU1(ah), reg_val);
 
 			if (AR_SREV_9561(ah))
 				REG_WRITE(ah, AR_PHY_PMU2(ah), 0x10200000);
+=======
+			REG_WRITE(ah, AR_PHY_PMU1, reg_val);
+
+			if (AR_SREV_9561(ah))
+				REG_WRITE(ah, AR_PHY_PMU2, 0x10200000);
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			/* Internal regulator is ON. Write swreg register. */
 			reg_val = le32_to_cpu(pBase->swreg);
@@ -4021,6 +4073,7 @@ void ar9003_hw_internal_regulator_apply(struct ath_hw *ah)
 		}
 	} else {
 		if (AR_SREV_9330(ah) || AR_SREV_9485(ah)) {
+<<<<<<< HEAD
 			REG_RMW_FIELD(ah, AR_PHY_PMU2(ah), AR_PHY_PMU2_PGM, 0);
 			while (REG_READ_FIELD(ah, AR_PHY_PMU2(ah),
 						AR_PHY_PMU2_PGM))
@@ -4040,6 +4093,27 @@ void ar9003_hw_internal_regulator_apply(struct ath_hw *ah)
 			reg_val = REG_READ(ah, AR_RTC_SLEEP_CLK(ah)) |
 				AR_RTC_FORCE_SWREG_PRD;
 			REG_WRITE(ah, AR_RTC_SLEEP_CLK(ah), reg_val);
+=======
+			REG_RMW_FIELD(ah, AR_PHY_PMU2, AR_PHY_PMU2_PGM, 0);
+			while (REG_READ_FIELD(ah, AR_PHY_PMU2,
+						AR_PHY_PMU2_PGM))
+				udelay(10);
+
+			REG_RMW_FIELD(ah, AR_PHY_PMU1, AR_PHY_PMU1_PWD, 0x1);
+			while (!REG_READ_FIELD(ah, AR_PHY_PMU1,
+						AR_PHY_PMU1_PWD))
+				udelay(10);
+			REG_RMW_FIELD(ah, AR_PHY_PMU2, AR_PHY_PMU2_PGM, 0x1);
+			while (!REG_READ_FIELD(ah, AR_PHY_PMU2,
+						AR_PHY_PMU2_PGM))
+				udelay(10);
+		} else if (AR_SREV_9462(ah) || AR_SREV_9565(ah))
+			REG_RMW_FIELD(ah, AR_PHY_PMU1, AR_PHY_PMU1_PWD, 0x1);
+		else {
+			reg_val = REG_READ(ah, AR_RTC_SLEEP_CLK) |
+				AR_RTC_FORCE_SWREG_PRD;
+			REG_WRITE(ah, AR_RTC_SLEEP_CLK, reg_val);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -4055,9 +4129,15 @@ static void ar9003_hw_apply_tuning_caps(struct ath_hw *ah)
 
 	if (eep->baseEepHeader.featureEnable & 0x40) {
 		tuning_caps_param &= 0x7f;
+<<<<<<< HEAD
 		REG_RMW_FIELD(ah, AR_CH0_XTAL(ah), AR_CH0_XTAL_CAPINDAC,
 			      tuning_caps_param);
 		REG_RMW_FIELD(ah, AR_CH0_XTAL(ah), AR_CH0_XTAL_CAPOUTDAC,
+=======
+		REG_RMW_FIELD(ah, AR_CH0_XTAL, AR_CH0_XTAL_CAPINDAC,
+			      tuning_caps_param);
+		REG_RMW_FIELD(ah, AR_CH0_XTAL, AR_CH0_XTAL_CAPOUTDAC,
+>>>>>>> b7ba80a49124 (Commit)
 			      tuning_caps_param);
 	}
 }

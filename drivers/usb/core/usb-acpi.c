@@ -37,6 +37,7 @@ bool usb_acpi_power_manageable(struct usb_device *hdev, int index)
 }
 EXPORT_SYMBOL_GPL(usb_acpi_power_manageable);
 
+<<<<<<< HEAD
 #define UUID_USB_CONTROLLER_DSM "ce2ee385-00e6-48cb-9f05-2edb927c4899"
 #define USB_DSM_DISABLE_U1_U2_FOR_PORT	5
 
@@ -98,6 +99,8 @@ int usb_acpi_port_lpm_incapable(struct usb_device *hdev, int index)
 }
 EXPORT_SYMBOL_GPL(usb_acpi_port_lpm_incapable);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * usb_acpi_set_power_state - control usb port's power via acpi power
  * resource

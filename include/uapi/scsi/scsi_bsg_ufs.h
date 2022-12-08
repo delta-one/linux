@@ -14,6 +14,7 @@
  */
 
 #define UFS_CDB_SIZE	16
+<<<<<<< HEAD
 /* uic commands are 4DW long, per UFSHCI V2.1 paragraph 5.6.1 */
 #define UIC_CMD_SIZE (sizeof(__u32) * 4)
 
@@ -35,6 +36,12 @@ enum ufs_rpmb_op_type {
 	UFS_RPMB_PURGE_STATUS_READ	= 0x09,
 };
 
+=======
+#define UPIU_TRANSACTION_UIC_CMD 0x1F
+/* uic commands are 4DW long, per UFSHCI V2.1 paragraph 5.6.1 */
+#define UIC_CMD_SIZE (sizeof(__u32) * 4)
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct utp_upiu_header - UPIU header structure
  * @dword_0: UPIU header DW-0
@@ -96,6 +103,7 @@ struct utp_upiu_req {
 	};
 };
 
+<<<<<<< HEAD
 struct ufs_arpmb_meta {
 	__be16	req_resp_type;
 	__u8	nonce[16];
@@ -113,6 +121,8 @@ struct ufs_ehs {
 	__u8	mac_key[32];
 } __attribute__((__packed__));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* request (CDB) structure of the sg_io_v4 */
 struct ufs_bsg_request {
 	__u32 msgcode;
@@ -129,13 +139,18 @@ struct ufs_bsg_reply {
 	 * msg and status fields. The per-msgcode reply structure
 	 * will contain valid data.
 	 */
+<<<<<<< HEAD
 	int result;
+=======
+	__u32 result;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* If there was reply_payload, how much was received? */
 	__u32 reply_payload_rcv_len;
 
 	struct utp_upiu_req upiu_rsp;
 };
+<<<<<<< HEAD
 
 struct ufs_rpmb_request {
 	struct ufs_bsg_request bsg_request;
@@ -146,4 +161,6 @@ struct ufs_rpmb_reply {
 	struct ufs_bsg_reply bsg_reply;
 	struct ufs_ehs ehs_rsp;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* UFS_BSG_H */

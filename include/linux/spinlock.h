@@ -476,6 +476,7 @@ extern int _atomic_dec_and_lock_irqsave(atomic_t *atomic, spinlock_t *lock,
 #define atomic_dec_and_lock_irqsave(atomic, lock, flags) \
 		__cond_lock(lock, _atomic_dec_and_lock_irqsave(atomic, lock, &(flags)))
 
+<<<<<<< HEAD
 extern int _atomic_dec_and_raw_lock(atomic_t *atomic, raw_spinlock_t *lock);
 #define atomic_dec_and_raw_lock(atomic, lock) \
 		__cond_lock(lock, _atomic_dec_and_raw_lock(atomic, lock))
@@ -485,6 +486,8 @@ extern int _atomic_dec_and_raw_lock_irqsave(atomic_t *atomic, raw_spinlock_t *lo
 #define atomic_dec_and_raw_lock_irqsave(atomic, lock, flags) \
 		__cond_lock(lock, _atomic_dec_and_raw_lock_irqsave(atomic, lock, &(flags)))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int __alloc_bucket_spinlocks(spinlock_t **locks, unsigned int *lock_mask,
 			     size_t max_size, unsigned int cpu_mult,
 			     gfp_t gfp, const char *name,

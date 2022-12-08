@@ -232,6 +232,7 @@ static int sc7280_lpass_exit(struct platform_device *pdev)
 	struct lpass_data *drvdata = platform_get_drvdata(pdev);
 
 	clk_bulk_disable_unprepare(drvdata->num_clks, drvdata->clks);
+<<<<<<< HEAD
 	return 0;
 }
 
@@ -254,6 +255,12 @@ static const struct dev_pm_ops sc7280_lpass_pm_ops = {
 	SET_SYSTEM_SLEEP_PM_OPS(sc7280_lpass_dev_suspend, sc7280_lpass_dev_resume)
 };
 
+=======
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct lpass_variant sc7280_data = {
 	.i2sctrl_reg_base		= 0x1000,
 	.i2sctrl_reg_stride		= 0x1000,
@@ -444,7 +451,10 @@ static struct platform_driver sc7280_lpass_cpu_platform_driver = {
 	.driver = {
 		.name = "sc7280-lpass-cpu",
 		.of_match_table = of_match_ptr(sc7280_lpass_cpu_device_id),
+<<<<<<< HEAD
 		.pm = &sc7280_lpass_pm_ops,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = asoc_qcom_lpass_cpu_platform_probe,
 	.remove = asoc_qcom_lpass_cpu_platform_remove,

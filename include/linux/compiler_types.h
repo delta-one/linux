@@ -49,8 +49,12 @@ static inline void __chk_io_ptr(const volatile void __iomem *ptr) { }
 # endif
 # define __iomem
 # define __percpu	BTF_TYPE_TAG(percpu)
+<<<<<<< HEAD
 # define __rcu		BTF_TYPE_TAG(rcu)
 
+=======
+# define __rcu
+>>>>>>> b7ba80a49124 (Commit)
 # define __chk_user_ptr(x)	(void)0
 # define __chk_io_ptr(x)	(void)0
 /* context/locking */
@@ -79,6 +83,7 @@ static inline void __chk_io_ptr(const volatile void __iomem *ptr) { }
 /* Attributes */
 #include <linux/compiler_attributes.h>
 
+<<<<<<< HEAD
 #if CONFIG_FUNCTION_ALIGNMENT > 0
 #define __function_aligned		__aligned(CONFIG_FUNCTION_ALIGNMENT)
 #else
@@ -106,6 +111,8 @@ static inline void __chk_io_ptr(const volatile void __iomem *ptr) { }
 #define __cold
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Builtins */
 
 /*
@@ -120,6 +127,11 @@ static inline void __chk_io_ptr(const volatile void __iomem *ptr) { }
 /* Compiler specific macros. */
 #ifdef __clang__
 #include <linux/compiler-clang.h>
+<<<<<<< HEAD
+=======
+#elif defined(__INTEL_COMPILER)
+#include <linux/compiler-intel.h>
+>>>>>>> b7ba80a49124 (Commit)
 #elif defined(__GNUC__)
 /* The above compilers also define __GNUC__, so order is important here. */
 #include <linux/compiler-gcc.h>
@@ -257,6 +269,7 @@ struct ftrace_likely_data {
 #endif
 
 /* Section for code which can't be instrumented at all */
+<<<<<<< HEAD
 #define __noinstr_section(section)					\
 	noinline notrace __attribute((__section__(section)))		\
 	__no_kcsan __no_sanitize_address __no_profile __no_sanitize_coverage \
@@ -276,6 +289,13 @@ struct ftrace_likely_data {
  */
 #define __cpuidle __noinstr_section(".cpuidle.text")
 
+=======
+#define noinstr								\
+	noinline notrace __attribute((__section__(".noinstr.text")))	\
+	__no_kcsan __no_sanitize_address __no_profile __no_sanitize_coverage \
+	__no_sanitize_memory
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __KERNEL__ */
 
 #endif /* __ASSEMBLY__ */
@@ -310,6 +330,7 @@ struct ftrace_likely_data {
 # define __nocfi
 #endif
 
+<<<<<<< HEAD
 /*
  * Any place that could be marked with the "alloc_size" attribute is also
  * a place to be marked with the "malloc" attribute, except those that may
@@ -322,6 +343,22 @@ struct ftrace_likely_data {
 #else
 # define __alloc_size(x, ...)	__malloc
 # define __realloc_size(x, ...)
+=======
+#ifndef __cficanonical
+# define __cficanonical
+#endif
+
+/*
+ * Any place that could be marked with the "alloc_size" attribute is also
+ * a place to be marked with the "malloc" attribute. Do this as part of the
+ * __alloc_size macro to avoid redundant attributes and to avoid missing a
+ * __malloc marking.
+ */
+#ifdef __alloc_size__
+# define __alloc_size(x, ...)	__alloc_size__(x, ## __VA_ARGS__) __malloc
+#else
+# define __alloc_size(x, ...)	__malloc
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #ifndef asm_volatile_goto

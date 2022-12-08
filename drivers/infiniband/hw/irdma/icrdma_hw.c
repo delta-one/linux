@@ -111,6 +111,7 @@ static const struct irdma_irq_ops icrdma_irq_ops = {
 	.irdma_en_irq = icrdma_ena_irq,
 };
 
+<<<<<<< HEAD
 static const struct irdma_hw_stat_map icrdma_hw_stat_map[] = {
 	[IRDMA_HW_STAT_INDEX_RXVLANERR]	=	{   0, 32, IRDMA_MAX_STATS_24 },
 	[IRDMA_HW_STAT_INDEX_IP4RXOCTS] =	{   8,  0, IRDMA_MAX_STATS_48 },
@@ -160,6 +161,8 @@ static const struct irdma_hw_stat_map icrdma_hw_stat_map[] = {
 	[IRDMA_HW_STAT_INDEX_TXNPCNPSENT] =	{ 320,  0, IRDMA_MAX_STATS_32 },
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void icrdma_init_hw(struct irdma_sc_dev *dev)
 {
 	int i;
@@ -189,11 +192,17 @@ void icrdma_init_hw(struct irdma_sc_dev *dev)
 	dev->cq_ack_db = dev->hw_regs[IRDMA_CQACK];
 	dev->irq_ops = &icrdma_irq_ops;
 	dev->hw_attrs.page_size_cap = SZ_4K | SZ_2M | SZ_1G;
+<<<<<<< HEAD
 	dev->hw_stats_map = icrdma_hw_stat_map;
 	dev->hw_attrs.max_hw_ird = ICRDMA_MAX_IRD_SIZE;
 	dev->hw_attrs.max_hw_ord = ICRDMA_MAX_ORD_SIZE;
 	dev->hw_attrs.max_stat_inst = ICRDMA_MAX_STATS_COUNT;
 	dev->hw_attrs.max_stat_idx = IRDMA_HW_STAT_INDEX_MAX_GEN_2;
+=======
+	dev->hw_attrs.max_hw_ird = ICRDMA_MAX_IRD_SIZE;
+	dev->hw_attrs.max_hw_ord = ICRDMA_MAX_ORD_SIZE;
+	dev->hw_attrs.max_stat_inst = ICRDMA_MAX_STATS_COUNT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev->hw_attrs.uk_attrs.max_hw_sq_chunk = IRDMA_MAX_QUANTA_PER_WR;
 	dev->hw_attrs.uk_attrs.feature_flags |= IRDMA_FEATURE_RTS_AE |

@@ -402,7 +402,12 @@ int ath11k_mhi_register(struct ath11k_pci *ab_pci)
 	ret = ath11k_mhi_get_msi(ab_pci);
 	if (ret) {
 		ath11k_err(ab, "failed to get msi for mhi\n");
+<<<<<<< HEAD
 		goto free_controller;
+=======
+		mhi_free_controller(mhi_ctrl);
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (!test_bit(ATH11K_FLAG_MULTI_MSI_VECTORS, &ab->dev_flags))
@@ -411,7 +416,11 @@ int ath11k_mhi_register(struct ath11k_pci *ab_pci)
 	if (test_bit(ATH11K_FLAG_FIXED_MEM_RGN, &ab->dev_flags)) {
 		ret = ath11k_mhi_read_addr_from_dt(mhi_ctrl);
 		if (ret < 0)
+<<<<<<< HEAD
 			goto free_controller;
+=======
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		mhi_ctrl->iova_start = 0;
 		mhi_ctrl->iova_stop = 0xFFFFFFFF;
@@ -439,13 +448,19 @@ int ath11k_mhi_register(struct ath11k_pci *ab_pci)
 	default:
 		ath11k_err(ab, "failed assign mhi_config for unknown hw rev %d\n",
 			   ab->hw_rev);
+<<<<<<< HEAD
 		ret = -EINVAL;
 		goto free_controller;
+=======
+		mhi_free_controller(mhi_ctrl);
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = mhi_register_controller(mhi_ctrl, ath11k_mhi_config);
 	if (ret) {
 		ath11k_err(ab, "failed to register to mhi bus, err = %d\n", ret);
+<<<<<<< HEAD
 		goto free_controller;
 	}
 
@@ -455,6 +470,13 @@ free_controller:
 	mhi_free_controller(mhi_ctrl);
 	ab_pci->mhi_ctrl = NULL;
 	return ret;
+=======
+		mhi_free_controller(mhi_ctrl);
+		return ret;
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void ath11k_mhi_unregister(struct ath11k_pci *ab_pci)

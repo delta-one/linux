@@ -227,7 +227,11 @@ static struct generic_pm_domain *zynqmp_gpd_xlate
 			goto done;
 	}
 
+<<<<<<< HEAD
 	/*
+=======
+	/**
+>>>>>>> b7ba80a49124 (Commit)
 	 * Add index in empty node_id of power domain list as no existing
 	 * power domain found for current index.
 	 */

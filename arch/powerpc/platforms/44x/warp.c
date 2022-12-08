@@ -5,17 +5,27 @@
  * Copyright (c) 2008-2009 PIKA Technologies
  *   Sean MacLennan <smaclennan@pikatech.com>
  */
+<<<<<<< HEAD
 #include <linux/err.h>
 #include <linux/init.h>
 #include <linux/of_platform.h>
 #include <linux/kthread.h>
 #include <linux/leds.h>
+=======
+#include <linux/init.h>
+#include <linux/of_platform.h>
+#include <linux/kthread.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/i2c.h>
 #include <linux/interrupt.h>
 #include <linux/delay.h>
 #include <linux/of_address.h>
 #include <linux/of_irq.h>
+<<<<<<< HEAD
 #include <linux/gpio/consumer.h>
+=======
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/export.h>
 
@@ -41,13 +51,31 @@ static int __init warp_device_probe(void)
 }
 machine_device_initcall(warp, warp_device_probe);
 
+<<<<<<< HEAD
 define_machine(warp) {
 	.name		= "Warp",
 	.compatible	= "pika,warp",
+=======
+static int __init warp_probe(void)
+{
+	if (!of_machine_is_compatible("pika,warp"))
+		return 0;
+
+	return 1;
+}
+
+define_machine(warp) {
+	.name		= "Warp",
+	.probe 		= warp_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.progress 	= udbg_progress,
 	.init_IRQ 	= uic_init_tree,
 	.get_irq 	= uic_get_irq,
 	.restart	= ppc4xx_reset_system,
+<<<<<<< HEAD
+=======
+	.calibrate_decr = generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 
@@ -85,6 +113,11 @@ static int __init warp_post_info(void)
 
 static LIST_HEAD(dtm_shutdown_list);
 static void __iomem *dtm_fpga;
+<<<<<<< HEAD
+=======
+static unsigned green_led, red_led;
+
+>>>>>>> b7ba80a49124 (Commit)
 
 struct dtm_shutdown {
 	struct list_head list;
@@ -92,6 +125,10 @@ struct dtm_shutdown {
 	void *arg;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 int pika_dtm_register_shutdown(void (*func)(void *arg), void *arg)
 {
 	struct dtm_shutdown *shutdown;
@@ -122,6 +159,7 @@ int pika_dtm_unregister_shutdown(void (*func)(void *arg), void *arg)
 	return -EINVAL;
 }
 
+<<<<<<< HEAD
 #define WARP_GREEN_LED	0
 #define WARP_RED_LED	1
 
@@ -151,6 +189,8 @@ static struct platform_device warp_gpio_leds = {
 	},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static irqreturn_t temp_isr(int irq, void *context)
 {
 	struct dtm_shutdown *shutdown;
@@ -158,7 +198,11 @@ static irqreturn_t temp_isr(int irq, void *context)
 
 	local_irq_disable();
 
+<<<<<<< HEAD
 	gpiod_set_value(warp_gpio_led_pins[WARP_GREEN_LED].gpiod, 0);
+=======
+	gpio_set_value(green_led, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Run through the shutdown list. */
 	list_for_each_entry(shutdown, &dtm_shutdown_list, list)
@@ -172,7 +216,11 @@ static irqreturn_t temp_isr(int irq, void *context)
 			out_be32(dtm_fpga + 0x14, reset);
 		}
 
+<<<<<<< HEAD
 		gpiod_set_value(warp_gpio_led_pins[WARP_RED_LED].gpiod, value);
+=======
+		gpio_set_value(red_led, value);
+>>>>>>> b7ba80a49124 (Commit)
 		value ^= 1;
 		mdelay(500);
 	}
@@ -181,6 +229,7 @@ static irqreturn_t temp_isr(int irq, void *context)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 /*
  * Because green and red power LEDs are normally driven by leds-gpio driver,
  * but in case of critical temperature shutdown we want to drive them
@@ -198,11 +247,19 @@ static int pika_setup_leds(void)
 	int i;
 
 	np = of_find_compatible_node(NULL, NULL, "warp-power-leds");
+=======
+static int pika_setup_leds(void)
+{
+	struct device_node *np, *child;
+
+	np = of_find_compatible_node(NULL, NULL, "gpio-leds");
+>>>>>>> b7ba80a49124 (Commit)
 	if (!np) {
 		printk(KERN_ERR __FILE__ ": Unable to find leds\n");
 		return -ENOENT;
 	}
 
+<<<<<<< HEAD
 	for_each_child_of_node(np, child) {
 		for (i = 0; i < ARRAY_SIZE(warp_gpio_led_pins); i++) {
 			led = &warp_gpio_led_pins[i];
@@ -253,6 +310,17 @@ err_cleanup_pins:
 		led->gpiod = NULL;
 	}
 	return error;
+=======
+	for_each_child_of_node(np, child)
+		if (of_node_name_eq(child, "green"))
+			green_led = of_get_gpio(child, 0);
+		else if (of_node_name_eq(child, "red"))
+			red_led = of_get_gpio(child, 0);
+
+	of_node_put(np);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void pika_setup_critical_temp(struct device_node *np,

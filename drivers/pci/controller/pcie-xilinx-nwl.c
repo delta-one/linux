@@ -17,6 +17,10 @@
 #include <linux/of_address.h>
 #include <linux/of_pci.h>
 #include <linux/of_platform.h>
+<<<<<<< HEAD
+=======
+#include <linux/of_irq.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pci.h>
 #include <linux/pci-ecam.h>
 #include <linux/platform_device.h>
@@ -473,15 +477,24 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
 
 	for (i = 0; i < nr_irqs; i++) {
 		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
+<<<<<<< HEAD
 				    domain->host_data, handle_simple_irq,
 				    NULL, NULL);
+=======
+				domain->host_data, handle_simple_irq,
+				NULL, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	mutex_unlock(&msi->lock);
 	return 0;
 }
 
 static void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+<<<<<<< HEAD
 				unsigned int nr_irqs)
+=======
+					unsigned int nr_irqs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct irq_data *data = irq_domain_get_irq_data(domain, virq);
 	struct nwl_pcie *pcie = irq_data_get_irq_chip_data(data);
@@ -721,6 +734,10 @@ static int nwl_pcie_bridge_init(struct nwl_pcie *pcie)
 	/* Enable all misc interrupts */
 	nwl_bridge_writel(pcie, MSGF_MISC_SR_MASKALL, MSGF_MISC_MASK);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Disable all legacy interrupts */
 	nwl_bridge_writel(pcie, (u32)~MSGF_LEG_SR_MASKALL, MSGF_LEG_MASK);
 

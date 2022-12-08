@@ -581,3 +581,7 @@ static struct platform_driver m1_pmu_driver = {
 };
 
 module_platform_driver(m1_pmu_driver);
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

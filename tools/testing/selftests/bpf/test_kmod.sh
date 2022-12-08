@@ -29,7 +29,10 @@ test_run()
 	sysctl -w net.core.bpf_jit_harden=$2 2>&1 > /dev/null
 
 	echo "[ JIT enabled:$1 hardened:$2 ]"
+<<<<<<< HEAD
 	shift 2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dmesg -C
 	if [ -f ${OUTPUT}/lib/test_bpf.ko ]; then
 		insmod ${OUTPUT}/lib/test_bpf.ko "$@" 2> /dev/null
@@ -65,9 +68,16 @@ test_restore()
 
 rc=0
 test_save
+<<<<<<< HEAD
 test_run 0 0 "$@"
 test_run 1 0 "$@"
 test_run 1 1 "$@"
 test_run 1 2 "$@"
+=======
+test_run 0 0
+test_run 1 0
+test_run 1 1
+test_run 1 2
+>>>>>>> b7ba80a49124 (Commit)
 test_restore
 exit $rc

@@ -990,7 +990,12 @@ static void onyx_exit_codec(struct aoa_codec *codec)
 	onyx->codec.soundbus_dev->detach_codec(onyx->codec.soundbus_dev, onyx);
 }
 
+<<<<<<< HEAD
 static int onyx_i2c_probe(struct i2c_client *client)
+=======
+static int onyx_i2c_probe(struct i2c_client *client,
+			  const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device_node *node = client->dev.of_node;
 	struct onyx *onyx;
@@ -1048,7 +1053,11 @@ static struct i2c_driver onyx_driver = {
 	.driver = {
 		.name = "aoa_codec_onyx",
 	},
+<<<<<<< HEAD
 	.probe_new = onyx_i2c_probe,
+=======
+	.probe = onyx_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = onyx_i2c_remove,
 	.id_table = onyx_i2c_id,
 };

@@ -730,7 +730,11 @@ err_clk_disable:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void dw_i2s_remove(struct platform_device *pdev)
+=======
+static int dw_i2s_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dw_i2s_dev *dev = dev_get_drvdata(&pdev->dev);
 
@@ -738,6 +742,10 @@ static void dw_i2s_remove(struct platform_device *pdev)
 		clk_disable_unprepare(dev->clk);
 
 	pm_runtime_disable(&pdev->dev);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_OF
@@ -755,7 +763,11 @@ static const struct dev_pm_ops dwc_pm_ops = {
 
 static struct platform_driver dw_i2s_driver = {
 	.probe		= dw_i2s_probe,
+<<<<<<< HEAD
 	.remove_new	= dw_i2s_remove,
+=======
+	.remove		= dw_i2s_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "designware-i2s",
 		.of_match_table = of_match_ptr(dw_i2s_of_match),

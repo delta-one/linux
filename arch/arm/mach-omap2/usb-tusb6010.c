@@ -97,7 +97,11 @@ static int tusb_set_sync_mode(unsigned sysclk_ps)
 }
 
 /* tusb driver calls this when it changes the chip's clocking */
+<<<<<<< HEAD
 static int tusb6010_platform_retime(unsigned is_refclk)
+=======
+int tusb6010_platform_retime(unsigned is_refclk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	static const char	error[] =
 		KERN_ERR "tusb6010 %s retime error %d\n";
@@ -121,6 +125,10 @@ static int tusb6010_platform_retime(unsigned is_refclk)
 done:
 	return status;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(tusb6010_platform_retime);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct resource tusb_resources[] = {
 	/* Order is significant!  The start/end fields
@@ -153,7 +161,12 @@ static struct platform_device tusb_device = {
 
 
 /* this may be called only from board-*.c setup code */
+<<<<<<< HEAD
 int __init tusb6010_setup_interface(struct musb_hdrc_platform_data *data,
+=======
+int __init
+tusb6010_setup_interface(struct musb_hdrc_platform_data *data,
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned ps_refclk, unsigned waitpin,
 		unsigned async, unsigned sync,
 		unsigned irq, unsigned dmachan)

@@ -384,10 +384,15 @@ static blk_status_t null_zone_write(struct nullb_cmd *cmd, sector_t sector,
 
 	null_lock_zone(dev, zone);
 
+<<<<<<< HEAD
 	if (zone->cond == BLK_ZONE_COND_FULL ||
 	    zone->cond == BLK_ZONE_COND_READONLY ||
 	    zone->cond == BLK_ZONE_COND_OFFLINE) {
 		/* Cannot write to the zone */
+=======
+	if (zone->cond == BLK_ZONE_COND_FULL) {
+		/* Cannot write to a full zone */
+>>>>>>> b7ba80a49124 (Commit)
 		ret = BLK_STS_IOERR;
 		goto unlock;
 	}
@@ -615,9 +620,13 @@ static blk_status_t null_zone_mgmt(struct nullb_cmd *cmd, enum req_op op,
 		for (i = dev->zone_nr_conv; i < dev->nr_zones; i++) {
 			zone = &dev->zones[i];
 			null_lock_zone(dev, zone);
+<<<<<<< HEAD
 			if (zone->cond != BLK_ZONE_COND_EMPTY &&
 			    zone->cond != BLK_ZONE_COND_READONLY &&
 			    zone->cond != BLK_ZONE_COND_OFFLINE) {
+=======
+			if (zone->cond != BLK_ZONE_COND_EMPTY) {
+>>>>>>> b7ba80a49124 (Commit)
 				null_reset_zone(dev, zone);
 				trace_nullb_zone_op(cmd, i, zone->cond);
 			}
@@ -631,12 +640,15 @@ static blk_status_t null_zone_mgmt(struct nullb_cmd *cmd, enum req_op op,
 
 	null_lock_zone(dev, zone);
 
+<<<<<<< HEAD
 	if (zone->cond == BLK_ZONE_COND_READONLY ||
 	    zone->cond == BLK_ZONE_COND_OFFLINE) {
 		ret = BLK_STS_IOERR;
 		goto unlock;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	switch (op) {
 	case REQ_OP_ZONE_RESET:
 		ret = null_reset_zone(dev, zone);
@@ -658,7 +670,10 @@ static blk_status_t null_zone_mgmt(struct nullb_cmd *cmd, enum req_op op,
 	if (ret == BLK_STS_OK)
 		trace_nullb_zone_op(cmd, zone_no, zone->cond);
 
+<<<<<<< HEAD
 unlock:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	null_unlock_zone(dev, zone);
 
 	return ret;
@@ -685,8 +700,11 @@ blk_status_t null_process_zoned_cmd(struct nullb_cmd *cmd, enum req_op op,
 	default:
 		dev = cmd->nq->dev;
 		zone = &dev->zones[null_zone_no(dev, sector)];
+<<<<<<< HEAD
 		if (zone->cond == BLK_ZONE_COND_OFFLINE)
 			return BLK_STS_IOERR;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		null_lock_zone(dev, zone);
 		sts = null_process_cmd(cmd, op, sector, nr_sectors);
@@ -694,6 +712,7 @@ blk_status_t null_process_zoned_cmd(struct nullb_cmd *cmd, enum req_op op,
 		return sts;
 	}
 }
+<<<<<<< HEAD
 
 /*
  * Set a zone in the read-only or offline condition.
@@ -770,3 +789,5 @@ ssize_t zone_cond_store(struct nullb_device *dev, const char *page,
 
 	return count;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

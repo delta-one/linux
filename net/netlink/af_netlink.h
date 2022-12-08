@@ -64,6 +64,10 @@ struct netlink_table {
 	struct module		*module;
 	int			(*bind)(struct net *net, int group);
 	void			(*unbind)(struct net *net, int group);
+<<<<<<< HEAD
+=======
+	bool			(*compare)(struct net *net, struct sock *sock);
+>>>>>>> b7ba80a49124 (Commit)
 	int			registered;
 };
 

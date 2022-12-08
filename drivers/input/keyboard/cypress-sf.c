@@ -168,7 +168,11 @@ static int cypress_sf_probe(struct i2c_client *client)
 	return 0;
 };
 
+<<<<<<< HEAD
 static int cypress_sf_suspend(struct device *dev)
+=======
+static int __maybe_unused cypress_sf_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct cypress_sf_data *touchkey = i2c_get_clientdata(client);
@@ -187,7 +191,11 @@ static int cypress_sf_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int cypress_sf_resume(struct device *dev)
+=======
+static int __maybe_unused cypress_sf_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct cypress_sf_data *touchkey = i2c_get_clientdata(client);
@@ -205,8 +213,13 @@ static int cypress_sf_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(cypress_sf_pm_ops,
 				cypress_sf_suspend, cypress_sf_resume);
+=======
+static SIMPLE_DEV_PM_OPS(cypress_sf_pm_ops,
+			 cypress_sf_suspend, cypress_sf_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct i2c_device_id cypress_sf_id_table[] = {
 	{ CYPRESS_SF_DEV_NAME, 0 },
@@ -225,7 +238,11 @@ MODULE_DEVICE_TABLE(of, cypress_sf_of_match);
 static struct i2c_driver cypress_sf_driver = {
 	.driver = {
 		.name = CYPRESS_SF_DEV_NAME,
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&cypress_sf_pm_ops),
+=======
+		.pm = &cypress_sf_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = of_match_ptr(cypress_sf_of_match),
 	},
 	.id_table = cypress_sf_id_table,

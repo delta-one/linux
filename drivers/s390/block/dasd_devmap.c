@@ -1578,6 +1578,10 @@ dasd_timeout_store(struct device *dev, struct device_attribute *attr,
 		   const char *buf, size_t count)
 {
 	struct dasd_device *device;
+<<<<<<< HEAD
+=======
+	struct request_queue *q;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long val;
 
 	device = dasd_device_from_cdev(to_ccwdev(dev));
@@ -1589,13 +1593,23 @@ dasd_timeout_store(struct device *dev, struct device_attribute *attr,
 		dasd_put_device(device);
 		return -EINVAL;
 	}
+<<<<<<< HEAD
 	if (!device->block->gdp) {
+=======
+	q = device->block->request_queue;
+	if (!q) {
+>>>>>>> b7ba80a49124 (Commit)
 		dasd_put_device(device);
 		return -ENODEV;
 	}
 
 	device->blk_timeout = val;
+<<<<<<< HEAD
 	blk_queue_rq_timeout(device->block->gdp->queue, val * HZ);
+=======
+
+	blk_queue_rq_timeout(q, device->blk_timeout * HZ);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dasd_put_device(device);
 	return count;
@@ -1954,7 +1968,11 @@ dasd_copy_pair_show(struct device *dev,
 			break;
 		}
 	}
+<<<<<<< HEAD
 	if (i == DASD_CP_ENTRIES)
+=======
+	if (!copy->entry[i].primary)
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	/* print all secondary */

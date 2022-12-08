@@ -1654,6 +1654,7 @@ static int stmmac_test_arpoffload(struct stmmac_priv *priv)
 	}
 
 	ret = stmmac_set_arp_offload(priv, priv->hw, true, ip_addr);
+<<<<<<< HEAD
 	if (ret) {
 		kfree_skb(skb);
 		goto cleanup;
@@ -1664,6 +1665,14 @@ static int stmmac_test_arpoffload(struct stmmac_priv *priv)
 		kfree_skb(skb);
 		goto cleanup;
 	}
+=======
+	if (ret)
+		goto cleanup;
+
+	ret = dev_set_promiscuity(priv->dev, 1);
+	if (ret)
+		goto cleanup;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = dev_direct_xmit(skb, 0);
 	if (ret)

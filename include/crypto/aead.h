@@ -8,7 +8,10 @@
 #ifndef _CRYPTO_AEAD_H
 #define _CRYPTO_AEAD_H
 
+<<<<<<< HEAD
 #include <linux/atomic.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/container_of.h>
 #include <linux/crypto.h>
 #include <linux/slab.h>
@@ -28,12 +31,24 @@
  *
  * For example: authenc(hmac(sha256), cbc(aes))
  *
+<<<<<<< HEAD
  * The example code provided for the symmetric key cipher operation applies
  * here as well. Naturally all *skcipher* symbols must be exchanged the *aead*
  * pendants discussed in the following. In addition, for the AEAD operation,
  * the aead_request_set_ad function must be used to set the pointer to the
  * associated data memory location before performing the encryption or
  * decryption operation. Another deviation from the asynchronous block cipher
+=======
+ * The example code provided for the symmetric key cipher operation
+ * applies here as well. Naturally all *skcipher* symbols must be exchanged
+ * the *aead* pendants discussed in the following. In addition, for the AEAD
+ * operation, the aead_request_set_ad function must be used to set the
+ * pointer to the associated data memory location before performing the
+ * encryption or decryption operation. In case of an encryption, the associated
+ * data memory is filled during the encryption operation. For decryption, the
+ * associated data memory must contain data that is used to verify the integrity
+ * of the decrypted data. Another deviation from the asynchronous block cipher
+>>>>>>> b7ba80a49124 (Commit)
  * operation is that the caller should explicitly check for -EBADMSG of the
  * crypto_aead_decrypt. That error indicates an authentication error, i.e.
  * a breach in the integrity of the message. In essence, that -EBADMSG error
@@ -47,10 +62,14 @@
  *
  * The destination scatterlist has the same layout, except that the plaintext
  * (resp. ciphertext) will grow (resp. shrink) by the authentication tag size
+<<<<<<< HEAD
  * during encryption (resp. decryption). The authentication tag is generated
  * during the encryption operation and appended to the ciphertext. During
  * decryption, the authentication tag is consumed along with the ciphertext and
  * used to verify the integrity of the plaintext and the associated data.
+=======
+ * during encryption (resp. decryption).
+>>>>>>> b7ba80a49124 (Commit)
  *
  * In-place encryption/decryption is enabled by using the same scatterlist
  * pointer for both the source and destination.
@@ -101,6 +120,7 @@ struct aead_request {
 	void *__ctx[] CRYPTO_MINALIGN_ATTR;
 };
 
+<<<<<<< HEAD
 /*
  * struct crypto_istat_aead - statistics for AEAD algorithm
  * @encrypt_cnt:	number of encrypt requests
@@ -117,6 +137,8 @@ struct crypto_istat_aead {
 	atomic64_t err_cnt;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct aead_alg - AEAD cipher definition
  * @maxauthsize: Set the maximum authentication tag size supported by the
@@ -135,7 +157,10 @@ struct crypto_istat_aead {
  * @setkey: see struct skcipher_alg
  * @encrypt: see struct skcipher_alg
  * @decrypt: see struct skcipher_alg
+<<<<<<< HEAD
  * @stat: statistics for AEAD algorithm
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @ivsize: see struct skcipher_alg
  * @chunksize: see struct skcipher_alg
  * @init: Initialize the cryptographic transformation object. This function
@@ -162,10 +187,13 @@ struct aead_alg {
 	int (*init)(struct crypto_aead *tfm);
 	void (*exit)(struct crypto_aead *tfm);
 
+<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_STATS
 	struct crypto_istat_aead stat;
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int ivsize;
 	unsigned int maxauthsize;
 	unsigned int chunksize;

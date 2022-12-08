@@ -8,7 +8,10 @@
 #define __PHY_TEGRA_XUSB_H
 
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/iopoll.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mutex.h>
 #include <linux/workqueue.h>
 
@@ -360,6 +363,10 @@ void tegra_xusb_hsic_port_release(struct tegra_xusb_port *port);
 
 struct tegra_xusb_usb3_port {
 	struct tegra_xusb_port base;
+<<<<<<< HEAD
+=======
+	struct regulator *supply;
+>>>>>>> b7ba80a49124 (Commit)
 	bool context_saved;
 	unsigned int port;
 	bool internal;
@@ -381,6 +388,10 @@ struct tegra_xusb_usb3_port *
 tegra_xusb_find_usb3_port(struct tegra_xusb_padctl *padctl,
 			  unsigned int index);
 void tegra_xusb_usb3_port_release(struct tegra_xusb_port *port);
+<<<<<<< HEAD
+=======
+void tegra_xusb_usb3_port_remove(struct tegra_xusb_port *port);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct tegra_xusb_port_ops {
 	void (*release)(struct tegra_xusb_port *port);
@@ -432,9 +443,12 @@ struct tegra_xusb_padctl_soc {
 	unsigned int num_supplies;
 	bool supports_gen2;
 	bool need_fake_usb3_port;
+<<<<<<< HEAD
 	bool poll_trk_completed;
 	bool trk_hw_mode;
 	bool supports_lp_cfg_en;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct tegra_xusb_padctl {
@@ -477,6 +491,7 @@ static inline u32 padctl_readl(struct tegra_xusb_padctl *padctl,
 	return value;
 }
 
+<<<<<<< HEAD
 static inline u32 padctl_readl_poll(struct tegra_xusb_padctl *padctl,
 				    unsigned long offset, u32 val, u32 mask,
 				    int us)
@@ -494,6 +509,8 @@ static inline u32 padctl_readl_poll(struct tegra_xusb_padctl *padctl,
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct tegra_xusb_lane *tegra_xusb_find_lane(struct tegra_xusb_padctl *padctl,
 					     const char *name,
 					     unsigned int index);
@@ -510,8 +527,11 @@ extern const struct tegra_xusb_padctl_soc tegra186_xusb_padctl_soc;
 #if defined(CONFIG_ARCH_TEGRA_194_SOC)
 extern const struct tegra_xusb_padctl_soc tegra194_xusb_padctl_soc;
 #endif
+<<<<<<< HEAD
 #if defined(CONFIG_ARCH_TEGRA_234_SOC)
 extern const struct tegra_xusb_padctl_soc tegra234_xusb_padctl_soc;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __PHY_TEGRA_XUSB_H */

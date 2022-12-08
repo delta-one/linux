@@ -9,7 +9,11 @@
 #define mcfgpio_h
 
 #ifdef CONFIG_GPIOLIB
+<<<<<<< HEAD
 #include <linux/gpio.h>
+=======
+#include <asm-generic/gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #else
 
 int __mcfgpio_get_value(unsigned gpio);

@@ -21,8 +21,11 @@
 #define ADF_4XXXIOV_PCI_DEVICE_ID 0x4941
 #define ADF_401XX_PCI_DEVICE_ID 0x4942
 #define ADF_401XXIOV_PCI_DEVICE_ID 0x4943
+<<<<<<< HEAD
 #define ADF_402XX_PCI_DEVICE_ID 0x4944
 #define ADF_402XXIOV_PCI_DEVICE_ID 0x4945
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ADF_DEVICE_FUSECTL_OFFSET 0x40
 #define ADF_DEVICE_LEGFUSE_OFFSET 0x4C
 #define ADF_DEVICE_FUSECTL_MASK 0x80000000
@@ -165,10 +168,13 @@ struct adf_pfvf_ops {
 					u32 pfvf_offset, u8 compat_ver);
 };
 
+<<<<<<< HEAD
 struct adf_dc_ops {
 	void (*build_deflate_ctx)(void *ctx);
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct adf_hw_device_data {
 	struct adf_hw_device_class *dev_class;
 	u32 (*get_accel_mask)(struct adf_hw_device_data *self);
@@ -190,7 +196,11 @@ struct adf_hw_device_data {
 	int (*send_admin_init)(struct adf_accel_dev *accel_dev);
 	int (*init_arb)(struct adf_accel_dev *accel_dev);
 	void (*exit_arb)(struct adf_accel_dev *accel_dev);
+<<<<<<< HEAD
 	const u32 *(*get_arb_mapping)(struct adf_accel_dev *accel_dev);
+=======
+	const u32 *(*get_arb_mapping)(void);
+>>>>>>> b7ba80a49124 (Commit)
 	int (*init_device)(struct adf_accel_dev *accel_dev);
 	int (*enable_pm)(struct adf_accel_dev *accel_dev);
 	bool (*handle_pm_interrupt)(struct adf_accel_dev *accel_dev);
@@ -208,7 +218,10 @@ struct adf_hw_device_data {
 	int (*dev_config)(struct adf_accel_dev *accel_dev);
 	struct adf_pfvf_ops pfvf_ops;
 	struct adf_hw_csr_ops csr_ops;
+<<<<<<< HEAD
 	struct adf_dc_ops dc_ops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const char *fw_name;
 	const char *fw_mmp_name;
 	u32 fuses;
@@ -254,7 +267,10 @@ struct adf_hw_device_data {
 #define GET_MAX_ACCELENGINES(accel_dev) (GET_HW_DATA(accel_dev)->num_engines)
 #define GET_CSR_OPS(accel_dev) (&(accel_dev)->hw_device->csr_ops)
 #define GET_PFVF_OPS(accel_dev) (&(accel_dev)->hw_device->pfvf_ops)
+<<<<<<< HEAD
 #define GET_DC_OPS(accel_dev) (&(accel_dev)->hw_device->dc_ops)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define accel_to_pci_dev(accel_ptr) accel_ptr->accel_pci_dev.pci_dev
 
 struct adf_admin_comms;
@@ -274,21 +290,28 @@ struct adf_accel_vf_info {
 	u8 vf_compat_ver;
 };
 
+<<<<<<< HEAD
 struct adf_dc_data {
 	u8 *ovf_buff;
 	size_t ovf_buff_sz;
 	dma_addr_t ovf_buff_p;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct adf_accel_dev {
 	struct adf_etr_data *transport;
 	struct adf_hw_device_data *hw_device;
 	struct adf_cfg_device_data *cfg;
 	struct adf_fw_loader_data *fw_loader;
 	struct adf_admin_comms *admin;
+<<<<<<< HEAD
 	struct adf_dc_data *dc_data;
 	struct list_head crypto_list;
 	struct list_head compression_list;
+=======
+	struct list_head crypto_list;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long status;
 	atomic_t ref_count;
 	struct dentry *debugfs_dir;
@@ -312,7 +335,10 @@ struct adf_accel_dev {
 			u8 pf_compat_ver;
 		} vf;
 	};
+<<<<<<< HEAD
 	struct mutex state_lock; /* protect state of the device */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool is_vf;
 	u32 accel_id;
 };

@@ -106,10 +106,17 @@ void dev_lstats_read(struct net_device *dev, u64 *packets, u64 *bytes)
 
 		lb_stats = per_cpu_ptr(dev->lstats, i);
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&lb_stats->syncp);
 			tpackets = u64_stats_read(&lb_stats->packets);
 			tbytes = u64_stats_read(&lb_stats->bytes);
 		} while (u64_stats_fetch_retry(&lb_stats->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&lb_stats->syncp);
+			tpackets = u64_stats_read(&lb_stats->packets);
+			tbytes = u64_stats_read(&lb_stats->bytes);
+		} while (u64_stats_fetch_retry_irq(&lb_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 		*bytes   += tbytes;
 		*packets += tpackets;
 	}
@@ -211,7 +218,11 @@ static __net_init int loopback_net_init(struct net *net)
 	int err;
 
 	err = -ENOMEM;
+<<<<<<< HEAD
 	dev = alloc_netdev(0, "lo", NET_NAME_PREDICTABLE, loopback_setup);
+=======
+	dev = alloc_netdev(0, "lo", NET_NAME_UNKNOWN, loopback_setup);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!dev)
 		goto out;
 

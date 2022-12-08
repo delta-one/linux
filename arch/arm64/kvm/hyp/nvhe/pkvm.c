@@ -7,6 +7,7 @@
 #include <linux/kvm_host.h>
 #include <linux/mm.h>
 #include <nvhe/fixed_config.h>
+<<<<<<< HEAD
 #include <nvhe/mem_protect.h>
 #include <nvhe/memory.h>
 #include <nvhe/pkvm.h>
@@ -18,6 +19,10 @@ unsigned long __icache_flags;
 /* Used by kvm_get_vttbr(). */
 unsigned int kvm_arm_vmid_bits;
 
+=======
+#include <nvhe/trap_handler.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Set trap register values based on features in ID_AA64PFR0.
  */
@@ -192,6 +197,7 @@ void __pkvm_vcpu_init_traps(struct kvm_vcpu *vcpu)
 	pvm_init_traps_aa64mmfr0(vcpu);
 	pvm_init_traps_aa64mmfr1(vcpu);
 }
+<<<<<<< HEAD
 
 /*
  * Start the VM table handle at the offset defined instead of at 0.
@@ -619,3 +625,5 @@ err_unlock:
 	hyp_spin_unlock(&vm_table_lock);
 	return err;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

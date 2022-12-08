@@ -30,8 +30,11 @@
 #include <linux/list.h>
 #include <linux/irqreturn.h>
 
+<<<<<<< HEAD
 #include <video/nomodeset.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_device.h>
 
 struct drm_file;
@@ -96,6 +99,7 @@ enum drm_driver_feature {
 	 * synchronization of command submission.
 	 */
 	DRIVER_SYNCOBJ_TIMELINE         = BIT(6),
+<<<<<<< HEAD
 	/**
 	 * @DRIVER_COMPUTE_ACCEL:
 	 *
@@ -104,6 +108,8 @@ enum drm_driver_feature {
 	 * acceleration should be handled by two drivers that are connected using auxiliary bus.
 	 */
 	DRIVER_COMPUTE_ACCEL            = BIT(7),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* IMPORTANT: Below are all the legacy flags, add new ones above. */
 
@@ -149,6 +155,16 @@ enum drm_driver_feature {
 	 * Legacy irq support. Only for legacy drivers. Do not use.
 	 */
 	DRIVER_HAVE_IRQ			= BIT(30),
+<<<<<<< HEAD
+=======
+	/**
+	 * @DRIVER_KMS_LEGACY_CONTEXT:
+	 *
+	 * Used only by nouveau for backwards compatibility with existing
+	 * userspace.  Do not use.
+	 */
+	DRIVER_KMS_LEGACY_CONTEXT	= BIT(31),
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -400,6 +416,28 @@ struct drm_driver {
 	int (*dumb_map_offset)(struct drm_file *file_priv,
 			       struct drm_device *dev, uint32_t handle,
 			       uint64_t *offset);
+<<<<<<< HEAD
+=======
+	/**
+	 * @dumb_destroy:
+	 *
+	 * This destroys the userspace handle for the given dumb backing storage buffer.
+	 * Since buffer objects must be reference counted in the kernel a buffer object
+	 * won't be immediately freed if a framebuffer modeset object still uses it.
+	 *
+	 * Called by the user via ioctl.
+	 *
+	 * The default implementation is drm_gem_dumb_destroy(). GEM based drivers
+	 * must not overwrite this.
+	 *
+	 * Returns:
+	 *
+	 * Zero on success, negative errno on failure.
+	 */
+	int (*dumb_destroy)(struct drm_file *file_priv,
+			    struct drm_device *dev,
+			    uint32_t handle);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/** @major: driver major number */
 	int major;
@@ -584,10 +622,16 @@ static inline bool drm_drv_uses_atomic_modeset(struct drm_device *dev)
 }
 
 
+<<<<<<< HEAD
 /* TODO: Inline drm_firmware_drivers_only() in all its callers. */
 static inline bool drm_firmware_drivers_only(void)
 {
 	return video_firmware_drivers_only();
 }
+=======
+int drm_dev_set_unique(struct drm_device *dev, const char *name);
+
+extern bool drm_firmware_drivers_only(void);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

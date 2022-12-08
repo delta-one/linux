@@ -85,6 +85,11 @@ static int wait_for_reset(struct intel_engine_cs *engine,
 			break;
 	} while (time_before(jiffies, timeout));
 
+<<<<<<< HEAD
+=======
+	flush_scheduled_work();
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (rq->fence.error != -EIO) {
 		pr_err("%s: hanging request %llx:%lld not reset\n",
 		       engine->name,
@@ -2737,11 +2742,19 @@ static int create_gang(struct intel_engine_cs *engine,
 		MI_SEMAPHORE_POLL |
 		MI_SEMAPHORE_SAD_EQ_SDD;
 	*cs++ = 0;
+<<<<<<< HEAD
 	*cs++ = lower_32_bits(i915_vma_offset(vma));
 	*cs++ = upper_32_bits(i915_vma_offset(vma));
 
 	if (*prev) {
 		u64 offset = i915_vma_offset((*prev)->batch);
+=======
+	*cs++ = lower_32_bits(vma->node.start);
+	*cs++ = upper_32_bits(vma->node.start);
+
+	if (*prev) {
+		u64 offset = (*prev)->batch->node.start;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Terminate the spinner in the next lower priority batch. */
 		*cs++ = MI_STORE_DWORD_IMM_GEN4;
@@ -2763,11 +2776,23 @@ static int create_gang(struct intel_engine_cs *engine,
 	rq->batch = i915_vma_get(vma);
 	i915_request_get(rq);
 
+<<<<<<< HEAD
 	err = igt_vma_move_to_active_unlocked(vma, rq, 0);
 	if (!err)
 		err = rq->engine->emit_bb_start(rq,
 						i915_vma_offset(vma),
 						PAGE_SIZE, 0);
+=======
+	i915_vma_lock(vma);
+	err = i915_request_await_object(rq, vma->obj, false);
+	if (!err)
+		err = i915_vma_move_to_active(vma, rq, 0);
+	if (!err)
+		err = rq->engine->emit_bb_start(rq,
+						vma->node.start,
+						PAGE_SIZE, 0);
+	i915_vma_unlock(vma);
+>>>>>>> b7ba80a49124 (Commit)
 	i915_request_add(rq);
 	if (err)
 		goto err_rq;
@@ -3093,7 +3118,11 @@ create_gpr_user(struct intel_engine_cs *engine,
 		*cs++ = MI_MATH_ADD;
 		*cs++ = MI_MATH_STORE(MI_MATH_REG(i), MI_MATH_REG_ACCU);
 
+<<<<<<< HEAD
 		addr = i915_vma_offset(result) + offset + i * sizeof(*cs);
+=======
+		addr = result->node.start + offset + i * sizeof(*cs);
+>>>>>>> b7ba80a49124 (Commit)
 		*cs++ = MI_STORE_REGISTER_MEM_GEN8;
 		*cs++ = CS_GPR(engine, 2 * i);
 		*cs++ = lower_32_bits(addr);
@@ -3103,8 +3132,13 @@ create_gpr_user(struct intel_engine_cs *engine,
 			MI_SEMAPHORE_POLL |
 			MI_SEMAPHORE_SAD_GTE_SDD;
 		*cs++ = i;
+<<<<<<< HEAD
 		*cs++ = lower_32_bits(i915_vma_offset(result));
 		*cs++ = upper_32_bits(i915_vma_offset(result));
+=======
+		*cs++ = lower_32_bits(result->node.start);
+		*cs++ = upper_32_bits(result->node.start);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	*cs++ = MI_BATCH_BUFFER_END;
@@ -3175,6 +3209,7 @@ create_gpr_client(struct intel_engine_cs *engine,
 		goto out_batch;
 	}
 
+<<<<<<< HEAD
 	err = igt_vma_move_to_active_unlocked(vma, rq, 0);
 
 	i915_vma_lock(batch);
@@ -3183,6 +3218,22 @@ create_gpr_client(struct intel_engine_cs *engine,
 	if (!err)
 		err = rq->engine->emit_bb_start(rq,
 						i915_vma_offset(batch),
+=======
+	i915_vma_lock(vma);
+	err = i915_request_await_object(rq, vma->obj, false);
+	if (!err)
+		err = i915_vma_move_to_active(vma, rq, 0);
+	i915_vma_unlock(vma);
+
+	i915_vma_lock(batch);
+	if (!err)
+		err = i915_request_await_object(rq, batch->obj, false);
+	if (!err)
+		err = i915_vma_move_to_active(batch, rq, 0);
+	if (!err)
+		err = rq->engine->emit_bb_start(rq,
+						batch->node.start,
+>>>>>>> b7ba80a49124 (Commit)
 						PAGE_SIZE, 0);
 	i915_vma_unlock(batch);
 	i915_vma_unpin(batch);
@@ -3463,14 +3514,20 @@ static int random_priority(struct rnd_state *rnd)
 
 struct preempt_smoke {
 	struct intel_gt *gt;
+<<<<<<< HEAD
 	struct kthread_work work;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct i915_gem_context **contexts;
 	struct intel_engine_cs *engine;
 	struct drm_i915_gem_object *batch;
 	unsigned int ncontext;
 	struct rnd_state prng;
 	unsigned long count;
+<<<<<<< HEAD
 	int result;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct i915_gem_context *smoke_context(struct preempt_smoke *smoke)
@@ -3510,11 +3567,23 @@ static int smoke_submit(struct preempt_smoke *smoke,
 	}
 
 	if (vma) {
+<<<<<<< HEAD
 		err = igt_vma_move_to_active_unlocked(vma, rq, 0);
 		if (!err)
 			err = rq->engine->emit_bb_start(rq,
 							i915_vma_offset(vma),
 							PAGE_SIZE, 0);
+=======
+		i915_vma_lock(vma);
+		err = i915_request_await_object(rq, vma->obj, false);
+		if (!err)
+			err = i915_vma_move_to_active(vma, rq, 0);
+		if (!err)
+			err = rq->engine->emit_bb_start(rq,
+							vma->node.start,
+							PAGE_SIZE, 0);
+		i915_vma_unlock(vma);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	i915_request_add(rq);
@@ -3526,15 +3595,22 @@ unpin:
 	return err;
 }
 
+<<<<<<< HEAD
 static void smoke_crescendo_work(struct kthread_work *work)
 {
 	struct preempt_smoke *smoke = container_of(work, typeof(*smoke), work);
+=======
+static int smoke_crescendo_thread(void *arg)
+{
+	struct preempt_smoke *smoke = arg;
+>>>>>>> b7ba80a49124 (Commit)
 	IGT_TIMEOUT(end_time);
 	unsigned long count;
 
 	count = 0;
 	do {
 		struct i915_gem_context *ctx = smoke_context(smoke);
+<<<<<<< HEAD
 
 		smoke->result = smoke_submit(smoke, ctx,
 					     count % I915_PRIORITY_MAX,
@@ -3545,12 +3621,31 @@ static void smoke_crescendo_work(struct kthread_work *work)
 		 !__igt_timeout(end_time, NULL));
 
 	smoke->count = count;
+=======
+		int err;
+
+		err = smoke_submit(smoke,
+				   ctx, count % I915_PRIORITY_MAX,
+				   smoke->batch);
+		if (err)
+			return err;
+
+		count++;
+	} while (count < smoke->ncontext && !__igt_timeout(end_time, NULL));
+
+	smoke->count = count;
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int smoke_crescendo(struct preempt_smoke *smoke, unsigned int flags)
 #define BATCH BIT(0)
 {
+<<<<<<< HEAD
 	struct kthread_worker *worker[I915_NUM_ENGINES] = {};
+=======
+	struct task_struct *tsk[I915_NUM_ENGINES] = {};
+>>>>>>> b7ba80a49124 (Commit)
 	struct preempt_smoke *arg;
 	struct intel_engine_cs *engine;
 	enum intel_engine_id id;
@@ -3561,8 +3656,11 @@ static int smoke_crescendo(struct preempt_smoke *smoke, unsigned int flags)
 	if (!arg)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	memset(arg, 0, I915_NUM_ENGINES * sizeof(*arg));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for_each_engine(engine, smoke->gt, id) {
 		arg[id] = *smoke;
 		arg[id].engine = engine;
@@ -3570,6 +3668,7 @@ static int smoke_crescendo(struct preempt_smoke *smoke, unsigned int flags)
 			arg[id].batch = NULL;
 		arg[id].count = 0;
 
+<<<<<<< HEAD
 		worker[id] = kthread_create_worker(0, "igt/smoke:%d", id);
 		if (IS_ERR(worker[id])) {
 			err = PTR_ERR(worker[id]);
@@ -3592,6 +3691,33 @@ static int smoke_crescendo(struct preempt_smoke *smoke, unsigned int flags)
 		count += arg[id].count;
 
 		kthread_destroy_worker(worker[id]);
+=======
+		tsk[id] = kthread_run(smoke_crescendo_thread, arg,
+				      "igt/smoke:%d", id);
+		if (IS_ERR(tsk[id])) {
+			err = PTR_ERR(tsk[id]);
+			break;
+		}
+		get_task_struct(tsk[id]);
+	}
+
+	yield(); /* start all threads before we kthread_stop() */
+
+	count = 0;
+	for_each_engine(engine, smoke->gt, id) {
+		int status;
+
+		if (IS_ERR_OR_NULL(tsk[id]))
+			continue;
+
+		status = kthread_stop(tsk[id]);
+		if (status && !err)
+			err = status;
+
+		count += arg[id].count;
+
+		put_task_struct(tsk[id]);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	pr_info("Submitted %lu crescendo:%x requests across %d engines and %d contexts\n",

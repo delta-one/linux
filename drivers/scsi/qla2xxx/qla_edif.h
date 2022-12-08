@@ -145,6 +145,9 @@ struct enode {
 	(qla_ini_mode_enabled(_s->vha) && (_s->disc_state == DSC_DELETE_PEND || \
 	 _s->disc_state == DSC_DELETED))
 
+<<<<<<< HEAD
 #define EDIF_CAP(_ha) (ql2xsecenable && IS_QLA28XX(_ha))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif	/* __QLA_EDIF_H */

@@ -561,11 +561,17 @@ static int map_cont_bufs(struct rtrs_srv_path *srv_path)
 {
 	struct rtrs_srv_sess *srv = srv_path->srv;
 	struct rtrs_path *ss = &srv_path->s;
+<<<<<<< HEAD
 	int i, err, mrs_num;
 	unsigned int chunk_bits;
 	int chunks_per_mr = 1;
 	struct ib_mr *mr;
 	struct sg_table *sgt;
+=======
+	int i, mri, err, mrs_num;
+	unsigned int chunk_bits;
+	int chunks_per_mr = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Here we map queue_depth chunks to MR.  Firstly we have to
@@ -588,6 +594,7 @@ static int map_cont_bufs(struct rtrs_srv_path *srv_path)
 	if (!srv_path->mrs)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	for (srv_path->mrs_num = 0; srv_path->mrs_num < mrs_num;
 	     srv_path->mrs_num++) {
 		struct rtrs_srv_mr *srv_mr = &srv_path->mrs[srv_path->mrs_num];
@@ -596,6 +603,18 @@ static int map_cont_bufs(struct rtrs_srv_path *srv_path)
 
 		sgt = &srv_mr->sgt;
 		chunks = chunks_per_mr * srv_path->mrs_num;
+=======
+	srv_path->mrs_num = mrs_num;
+
+	for (mri = 0; mri < mrs_num; mri++) {
+		struct rtrs_srv_mr *srv_mr = &srv_path->mrs[mri];
+		struct sg_table *sgt = &srv_mr->sgt;
+		struct scatterlist *s;
+		struct ib_mr *mr;
+		int nr, nr_sgt, chunks;
+
+		chunks = chunks_per_mr * mri;
+>>>>>>> b7ba80a49124 (Commit)
 		if (!always_invalidate)
 			chunks_per_mr = min_t(int, chunks_per_mr,
 					      srv->queue_depth - chunks);
@@ -622,7 +641,11 @@ static int map_cont_bufs(struct rtrs_srv_path *srv_path)
 		}
 		nr = ib_map_mr_sg(mr, sgt->sgl, nr_sgt,
 				  NULL, max_chunk_size);
+<<<<<<< HEAD
 		if (nr != nr_sgt) {
+=======
+		if (nr < 0 || nr < sgt->nents) {
+>>>>>>> b7ba80a49124 (Commit)
 			err = nr < 0 ? nr : -EINVAL;
 			goto dereg_mr;
 		}
@@ -644,12 +667,35 @@ static int map_cont_bufs(struct rtrs_srv_path *srv_path)
 
 		ib_update_fast_reg_key(mr, ib_inc_rkey(mr->rkey));
 		srv_mr->mr = mr;
+<<<<<<< HEAD
+=======
+
+		continue;
+err:
+		while (mri--) {
+			srv_mr = &srv_path->mrs[mri];
+			sgt = &srv_mr->sgt;
+			mr = srv_mr->mr;
+			rtrs_iu_free(srv_mr->iu, srv_path->s.dev->ib_dev, 1);
+dereg_mr:
+			ib_dereg_mr(mr);
+unmap_sg:
+			ib_dma_unmap_sg(srv_path->s.dev->ib_dev, sgt->sgl,
+					sgt->nents, DMA_BIDIRECTIONAL);
+free_sg:
+			sg_free_table(sgt);
+		}
+		kfree(srv_path->mrs);
+
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	chunk_bits = ilog2(srv->queue_depth - 1) + 1;
 	srv_path->mem_bits = (MAX_IMM_PAYL_BITS - chunk_bits);
 
 	return 0;
+<<<<<<< HEAD
 
 dereg_mr:
 	ib_dereg_mr(mr);
@@ -662,6 +708,8 @@ err:
 	unmap_cont_bufs(srv_path);
 
 	return err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void rtrs_srv_hb_err_handler(struct rtrs_con *c)
@@ -1671,6 +1719,15 @@ static int create_con(struct rtrs_srv_path *srv_path,
 				      srv->queue_depth * (1 + 2) + 1);
 
 		max_recv_wr = srv->queue_depth + 1;
+<<<<<<< HEAD
+=======
+		/*
+		 * If we have all receive requests posted and
+		 * all write requests posted and each read request
+		 * requires an invalidate request + drain
+		 * and qp gets into error state.
+		 */
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	cq_num = max_send_wr + max_recv_wr;
 	atomic_set(&con->c.sq_wr_avail, max_send_wr);
@@ -1937,21 +1994,37 @@ static int rtrs_srv_rdma_cm_handler(struct rdma_cm_id *cm_id,
 {
 	struct rtrs_srv_path *srv_path = NULL;
 	struct rtrs_path *s = NULL;
+<<<<<<< HEAD
 	struct rtrs_con *c = NULL;
 
 	if (ev->event == RDMA_CM_EVENT_CONNECT_REQUEST)
+=======
+
+	if (ev->event != RDMA_CM_EVENT_CONNECT_REQUEST) {
+		struct rtrs_con *c = cm_id->context;
+
+		s = c->path;
+		srv_path = to_srv_path(s);
+	}
+
+	switch (ev->event) {
+	case RDMA_CM_EVENT_CONNECT_REQUEST:
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * In case of error cma.c will destroy cm_id,
 		 * see cma_process_remove()
 		 */
 		return rtrs_rdma_connect(cm_id, ev->param.conn.private_data,
 					  ev->param.conn.private_data_len);
+<<<<<<< HEAD
 
 	c = cm_id->context;
 	s = c->path;
 	srv_path = to_srv_path(s);
 
 	switch (ev->event) {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case RDMA_CM_EVENT_ESTABLISHED:
 		/* Nothing here */
 		break;
@@ -2253,7 +2326,11 @@ static int __init rtrs_server_init(void)
 		       err);
 		return err;
 	}
+<<<<<<< HEAD
 	rtrs_dev_class = class_create("rtrs-server");
+=======
+	rtrs_dev_class = class_create(THIS_MODULE, "rtrs-server");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(rtrs_dev_class)) {
 		err = PTR_ERR(rtrs_dev_class);
 		goto out_err;

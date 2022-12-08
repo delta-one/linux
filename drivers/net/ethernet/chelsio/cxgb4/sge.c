@@ -4467,7 +4467,11 @@ int t4_sge_alloc_rxq(struct adapter *adap, struct sge_rspq *iq, bool fwevtq,
 	if (ret)
 		goto err;
 
+<<<<<<< HEAD
 	netif_napi_add(dev, &iq->napi, napi_rx_handler);
+=======
+	netif_napi_add(dev, &iq->napi, napi_rx_handler, 64);
+>>>>>>> b7ba80a49124 (Commit)
 	iq->cur_desc = iq->desc;
 	iq->cidx = 0;
 	iq->gen = 1;

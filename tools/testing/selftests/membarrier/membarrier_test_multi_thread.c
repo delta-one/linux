@@ -62,7 +62,11 @@ static int test_mt_membarrier(void)
 int main(int argc, char **argv)
 {
 	ksft_print_header();
+<<<<<<< HEAD
 	ksft_set_plan(16);
+=======
+	ksft_set_plan(13);
+>>>>>>> b7ba80a49124 (Commit)
 
 	test_membarrier_query();
 

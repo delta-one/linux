@@ -370,7 +370,11 @@ err_leds:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void p50_gpio_remove(struct platform_device *pdev)
+=======
+static int p50_gpio_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct p50_gpio *p50 = platform_get_drvdata(pdev);
 
@@ -378,6 +382,11 @@ static void p50_gpio_remove(struct platform_device *pdev)
 	platform_device_unregister(p50->leds_pdev);
 
 	gpiod_remove_lookup_table(&p50_gpio_led_table);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver p50_gpio_driver = {
@@ -385,7 +394,11 @@ static struct platform_driver p50_gpio_driver = {
 		.name = DRIVER_NAME,
 	},
 	.probe = p50_gpio_probe,
+<<<<<<< HEAD
 	.remove_new = p50_gpio_remove,
+=======
+	.remove = p50_gpio_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Board setup */

@@ -80,6 +80,13 @@ static inline void __init omap2_sdrc_init(struct omap_sdrc_params *sdrc_cs0,
 					  struct omap_sdrc_params *sdrc_cs1) {};
 #endif
 
+<<<<<<< HEAD
+=======
+int omap2_sdrc_get_params(unsigned long r,
+			  struct omap_sdrc_params **sdrc_cs0,
+			  struct omap_sdrc_params **sdrc_cs1);
+void omap2_sms_save_context(void);
+>>>>>>> b7ba80a49124 (Commit)
 void omap2_sms_restore_context(void);
 
 struct memory_timings {
@@ -91,6 +98,10 @@ struct memory_timings {
 };
 
 extern void omap2xxx_sdrc_init_params(u32 force_lock_to_unlock_mode);
+<<<<<<< HEAD
+=======
+struct omap_sdrc_params *rx51_get_sdram_timings(void);
+>>>>>>> b7ba80a49124 (Commit)
 
 u32 omap2xxx_sdrc_dll_is_unlocked(void);
 u32 omap2xxx_sdrc_reprogram(u32 level, u32 force);

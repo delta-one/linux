@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "vmcs12.h"
 

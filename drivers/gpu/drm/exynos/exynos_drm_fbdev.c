@@ -49,8 +49,11 @@ static const struct fb_ops exynos_drm_fb_ops = {
 	.owner		= THIS_MODULE,
 	DRM_FB_HELPER_DEFAULT_OPS,
 	.fb_mmap        = exynos_drm_fb_mmap,
+<<<<<<< HEAD
 	.fb_read	= drm_fb_helper_cfb_read,
 	.fb_write	= drm_fb_helper_cfb_write,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.fb_fillrect	= drm_fb_helper_cfb_fillrect,
 	.fb_copyarea	= drm_fb_helper_cfb_copyarea,
 	.fb_imageblit	= drm_fb_helper_cfb_imageblit,
@@ -65,7 +68,11 @@ static int exynos_drm_fbdev_update(struct drm_fb_helper *helper,
 	unsigned int size = fb->width * fb->height * fb->format->cpp[0];
 	unsigned long offset;
 
+<<<<<<< HEAD
 	fbi = drm_fb_helper_alloc_info(helper);
+=======
+	fbi = drm_fb_helper_alloc_fbi(helper);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(fbi)) {
 		DRM_DEV_ERROR(to_dma_dev(helper->dev),
 			      "failed to allocate fb info.\n");
@@ -163,7 +170,11 @@ int exynos_drm_fbdev_init(struct drm_device *dev)
 
 	private->fb_helper = helper = &fbdev->drm_fb_helper;
 
+<<<<<<< HEAD
 	drm_fb_helper_prepare(dev, helper, PREFERRED_BPP, &exynos_drm_fb_helper_funcs);
+=======
+	drm_fb_helper_prepare(dev, helper, &exynos_drm_fb_helper_funcs);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = drm_fb_helper_init(dev, helper);
 	if (ret < 0) {
@@ -172,7 +183,11 @@ int exynos_drm_fbdev_init(struct drm_device *dev)
 		goto err_init;
 	}
 
+<<<<<<< HEAD
 	ret = drm_fb_helper_initial_config(helper);
+=======
+	ret = drm_fb_helper_initial_config(helper, PREFERRED_BPP);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0) {
 		DRM_DEV_ERROR(dev->dev,
 			      "failed to set up hw configuration.\n");
@@ -183,8 +198,13 @@ int exynos_drm_fbdev_init(struct drm_device *dev)
 
 err_setup:
 	drm_fb_helper_fini(helper);
+<<<<<<< HEAD
 err_init:
 	drm_fb_helper_unprepare(helper);
+=======
+
+err_init:
+>>>>>>> b7ba80a49124 (Commit)
 	private->fb_helper = NULL;
 	kfree(fbdev);
 
@@ -203,7 +223,11 @@ static void exynos_drm_fbdev_destroy(struct drm_device *dev,
 			drm_framebuffer_remove(fb);
 	}
 
+<<<<<<< HEAD
 	drm_fb_helper_unregister_info(fb_helper);
+=======
+	drm_fb_helper_unregister_fbi(fb_helper);
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_fb_helper_fini(fb_helper);
 }
@@ -219,7 +243,10 @@ void exynos_drm_fbdev_fini(struct drm_device *dev)
 	fbdev = to_exynos_fbdev(private->fb_helper);
 
 	exynos_drm_fbdev_destroy(dev, private->fb_helper);
+<<<<<<< HEAD
 	drm_fb_helper_unprepare(private->fb_helper);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(fbdev);
 	private->fb_helper = NULL;
 }

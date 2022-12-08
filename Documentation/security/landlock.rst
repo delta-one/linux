@@ -7,7 +7,11 @@ Landlock LSM: kernel documentation
 ==================================
 
 :Author: Mickaël Salaün
+<<<<<<< HEAD
 :Date: December 2022
+=======
+:Date: May 2022
+>>>>>>> b7ba80a49124 (Commit)
 
 Landlock's goal is to create scoped access-control (i.e. sandboxing).  To
 harden a whole system, this feature should be available to any process,
@@ -41,23 +45,35 @@ Guiding principles for safe access controls
   processes.
 * Computation related to Landlock operations (e.g. enforcing a ruleset) shall
   only impact the processes requesting them.
+<<<<<<< HEAD
 * Resources (e.g. file descriptors) directly obtained from the kernel by a
   sandboxed process shall retain their scoped accesses (at the time of resource
   acquisition) whatever process use them.
   Cf. `File descriptor access rights`_.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 Design choices
 ==============
 
+<<<<<<< HEAD
 Inode access rights
 -------------------
 
 All access rights are tied to an inode and what can be accessed through it.
 Reading the content of a directory does not imply to be allowed to read the
+=======
+Filesystem access rights
+------------------------
+
+All access rights are tied to an inode and what can be accessed through it.
+Reading the content of a directory doesn't imply to be allowed to read the
+>>>>>>> b7ba80a49124 (Commit)
 content of a listed inode.  Indeed, a file name is local to its parent
 directory, and an inode can be referenced by multiple file names thanks to
 (hard) links.  Being able to unlink a file only has a direct impact on the
 directory, not the unlinked inode.  This is the reason why
+<<<<<<< HEAD
 ``LANDLOCK_ACCESS_FS_REMOVE_FILE`` or ``LANDLOCK_ACCESS_FS_REFER`` are not
 allowed to be tied to files but only to directories.
 
@@ -84,6 +100,10 @@ enforced even if the receiving process is not sandboxed by Landlock.  Indeed,
 this is required to keep a consistent access control over the whole system, and
 this avoids unattended bypasses through file descriptor passing (i.e. confused
 deputy attack).
+=======
+`LANDLOCK_ACCESS_FS_REMOVE_FILE` or `LANDLOCK_ACCESS_FS_REFER` are not allowed
+to be tied to files but only to directories.
+>>>>>>> b7ba80a49124 (Commit)
 
 Tests
 =====

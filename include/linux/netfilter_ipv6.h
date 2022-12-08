@@ -197,8 +197,11 @@ static inline int nf_cookie_v6_check(const struct ipv6hdr *iph,
 __sum16 nf_ip6_checksum(struct sk_buff *skb, unsigned int hook,
 			unsigned int dataoff, u_int8_t protocol);
 
+<<<<<<< HEAD
 int nf_ip6_check_hbh_len(struct sk_buff *skb, u32 *plen);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ipv6_netfilter_init(void);
 void ipv6_netfilter_fini(void);
 

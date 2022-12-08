@@ -368,7 +368,10 @@ enum {
 #define CNVR_AUX_MISC_CHIP				0xA2B800
 #define CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM		0xA29890
 #define CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR	0xA29938
+<<<<<<< HEAD
 #define CNVI_SCU_SEQ_DATA_DW9				0xA27488
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define PREG_AUX_BUS_WPROT_0		0xA04CC0
 
@@ -378,7 +381,10 @@ enum {
 #define PREG_PRPH_WPROT_22000		0xA04D00
 
 #define SB_MODIFY_CFG_FLAG		0xA03088
+<<<<<<< HEAD
 #define SB_CFG_RESIDES_IN_OTP_MASK	0x10
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define SB_CPU_1_STATUS			0xA01E30
 #define SB_CPU_2_STATUS			0xA01E34
 #define UMAG_SB_CPU_1_STATUS		0xA038C0
@@ -502,7 +508,10 @@ enum {
 
 #define REG_OTP_MINOR 0xA0333C
 
+<<<<<<< HEAD
 #define WFPM_LMAC2_PD_NOTIFICATION 0xA033CC
 #define WFPM_LMAC2_PD_RE_READ BIT(31)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif				/* __iwl_prph_h__ */

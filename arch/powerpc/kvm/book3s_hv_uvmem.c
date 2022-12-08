@@ -393,7 +393,10 @@ static int kvmppc_memslot_page_merge(struct kvm *kvm,
 {
 	unsigned long gfn = memslot->base_gfn;
 	unsigned long end, start = gfn_to_hva(kvm, gfn);
+<<<<<<< HEAD
 	unsigned long vm_flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 	struct vm_area_struct *vma;
 	int merge_flag = (merge) ? MADV_MERGEABLE : MADV_UNMERGEABLE;
@@ -410,15 +413,23 @@ static int kvmppc_memslot_page_merge(struct kvm *kvm,
 			ret = H_STATE;
 			break;
 		}
+<<<<<<< HEAD
 		/* Copy vm_flags to avoid partial modifications in ksm_madvise */
 		vm_flags = vma->vm_flags;
 		ret = ksm_madvise(vma, vma->vm_start, vma->vm_end,
 			  merge_flag, &vm_flags);
+=======
+		ret = ksm_madvise(vma, vma->vm_start, vma->vm_end,
+			  merge_flag, &vma->vm_flags);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret) {
 			ret = H_STATE;
 			break;
 		}
+<<<<<<< HEAD
 		vm_flags_reset(vma, vm_flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		start = vma->vm_end;
 	} while (end > vma->vm_end);
 
@@ -512,10 +523,17 @@ unsigned long kvmppc_h_svm_init_start(struct kvm *kvm)
 static int __kvmppc_svm_page_out(struct vm_area_struct *vma,
 		unsigned long start,
 		unsigned long end, unsigned long page_shift,
+<<<<<<< HEAD
 		struct kvm *kvm, unsigned long gpa, struct page *fault_page)
 {
 	unsigned long src_pfn, dst_pfn = 0;
 	struct migrate_vma mig = { 0 };
+=======
+		struct kvm *kvm, unsigned long gpa)
+{
+	unsigned long src_pfn, dst_pfn = 0;
+	struct migrate_vma mig;
+>>>>>>> b7ba80a49124 (Commit)
 	struct page *dpage, *spage;
 	struct kvmppc_uvmem_page_pvt *pvt;
 	unsigned long pfn;
@@ -529,7 +547,10 @@ static int __kvmppc_svm_page_out(struct vm_area_struct *vma,
 	mig.dst = &dst_pfn;
 	mig.pgmap_owner = &kvmppc_uvmem_pgmap;
 	mig.flags = MIGRATE_VMA_SELECT_DEVICE_PRIVATE;
+<<<<<<< HEAD
 	mig.fault_page = fault_page;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* The requested page is already paged-out, nothing to do */
 	if (!kvmppc_gfn_is_uvmem_pfn(gpa >> page_shift, kvm, NULL))
@@ -585,14 +606,22 @@ out_finalize:
 static inline int kvmppc_svm_page_out(struct vm_area_struct *vma,
 				      unsigned long start, unsigned long end,
 				      unsigned long page_shift,
+<<<<<<< HEAD
 				      struct kvm *kvm, unsigned long gpa,
 				      struct page *fault_page)
+=======
+				      struct kvm *kvm, unsigned long gpa)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
 	mutex_lock(&kvm->arch.uvmem_lock);
+<<<<<<< HEAD
 	ret = __kvmppc_svm_page_out(vma, start, end, page_shift, kvm, gpa,
 				fault_page);
+=======
+	ret = __kvmppc_svm_page_out(vma, start, end, page_shift, kvm, gpa);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&kvm->arch.uvmem_lock);
 
 	return ret;
@@ -641,7 +670,11 @@ void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *slot,
 			pvt->remove_gfn = true;
 
 			if (__kvmppc_svm_page_out(vma, addr, addr + PAGE_SIZE,
+<<<<<<< HEAD
 						  PAGE_SHIFT, kvm, pvt->gpa, NULL))
+=======
+						  PAGE_SHIFT, kvm, pvt->gpa))
+>>>>>>> b7ba80a49124 (Commit)
 				pr_err("Can't page out gpa:0x%lx addr:0x%lx\n",
 				       pvt->gpa, addr);
 		} else {
@@ -722,7 +755,11 @@ static struct page *kvmppc_uvmem_get_page(unsigned long gpa, struct kvm *kvm)
 
 	dpage = pfn_to_page(uvmem_pfn);
 	dpage->zone_device_data = pvt;
+<<<<<<< HEAD
 	zone_device_page_init(dpage);
+=======
+	lock_page(dpage);
+>>>>>>> b7ba80a49124 (Commit)
 	return dpage;
 out_clear:
 	spin_lock(&kvmppc_uvmem_bitmap_lock);
@@ -743,7 +780,11 @@ static int kvmppc_svm_page_in(struct vm_area_struct *vma,
 		bool pagein)
 {
 	unsigned long src_pfn, dst_pfn = 0;
+<<<<<<< HEAD
 	struct migrate_vma mig = { 0 };
+=======
+	struct migrate_vma mig;
+>>>>>>> b7ba80a49124 (Commit)
 	struct page *spage;
 	unsigned long pfn;
 	struct page *dpage;
@@ -1001,7 +1042,11 @@ static vm_fault_t kvmppc_uvmem_migrate_to_ram(struct vm_fault *vmf)
 
 	if (kvmppc_svm_page_out(vmf->vma, vmf->address,
 				vmf->address + PAGE_SIZE, PAGE_SHIFT,
+<<<<<<< HEAD
 				pvt->kvm, pvt->gpa, vmf->page))
+=======
+				pvt->kvm, pvt->gpa))
+>>>>>>> b7ba80a49124 (Commit)
 		return VM_FAULT_SIGBUS;
 	else
 		return 0;
@@ -1072,7 +1117,11 @@ kvmppc_h_svm_page_out(struct kvm *kvm, unsigned long gpa,
 	if (!vma || vma->vm_start > start || vma->vm_end < end)
 		goto out;
 
+<<<<<<< HEAD
 	if (!kvmppc_svm_page_out(vma, start, end, page_shift, kvm, gpa, NULL))
+=======
+	if (!kvmppc_svm_page_out(vma, start, end, page_shift, kvm, gpa))
+>>>>>>> b7ba80a49124 (Commit)
 		ret = H_SUCCESS;
 out:
 	mmap_read_unlock(kvm->mm);
@@ -1194,7 +1243,12 @@ int kvmppc_uvmem_init(void)
 
 	pfn_first = res->start >> PAGE_SHIFT;
 	pfn_last = pfn_first + (resource_size(res) >> PAGE_SHIFT);
+<<<<<<< HEAD
 	kvmppc_uvmem_bitmap = bitmap_zalloc(pfn_last - pfn_first, GFP_KERNEL);
+=======
+	kvmppc_uvmem_bitmap = kcalloc(BITS_TO_LONGS(pfn_last - pfn_first),
+				      sizeof(unsigned long), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!kvmppc_uvmem_bitmap) {
 		ret = -ENOMEM;
 		goto out_unmap;
@@ -1218,5 +1272,9 @@ void kvmppc_uvmem_free(void)
 	memunmap_pages(&kvmppc_uvmem_pgmap);
 	release_mem_region(kvmppc_uvmem_pgmap.range.start,
 			   range_len(&kvmppc_uvmem_pgmap.range));
+<<<<<<< HEAD
 	bitmap_free(kvmppc_uvmem_bitmap);
+=======
+	kfree(kvmppc_uvmem_bitmap);
+>>>>>>> b7ba80a49124 (Commit)
 }

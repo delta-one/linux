@@ -7,12 +7,16 @@
  */
 
 #include <dt-bindings/pinctrl/rzn1-pinctrl.h>
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/clk.h>
 #include <linux/device.h>
 #include <linux/io.h>
 #include <linux/module.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/platform_device.h>
 #include <linux/slab.h>
 
@@ -21,6 +25,13 @@
 #include <linux/pinctrl/pinctrl.h>
 #include <linux/pinctrl/pinmux.h>
 
+=======
+#include <linux/pinctrl/pinconf-generic.h>
+#include <linux/pinctrl/pinctrl.h>
+#include <linux/pinctrl/pinmux.h>
+#include <linux/platform_device.h>
+#include <linux/slab.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include "../core.h"
 #include "../pinconf.h"
 #include "../pinctrl-utils.h"
@@ -952,3 +963,7 @@ subsys_initcall(_pinctrl_drv_register);
 
 MODULE_AUTHOR("Phil Edworthy <phil.edworthy@renesas.com>");
 MODULE_DESCRIPTION("Renesas RZ/N1 pinctrl driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

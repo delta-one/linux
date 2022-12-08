@@ -150,6 +150,7 @@ struct sk_buff *hsr_get_untagged_frame(struct hsr_frame_info *frame,
 				       struct hsr_port *port)
 {
 	if (!frame->skb_std) {
+<<<<<<< HEAD
 		if (frame->skb_hsr)
 			frame->skb_std =
 				create_stripped_skb_hsr(frame->skb_hsr, frame);
@@ -159,6 +160,17 @@ struct sk_buff *hsr_get_untagged_frame(struct hsr_frame_info *frame,
 
 		if (!frame->skb_std)
 			return NULL;
+=======
+		if (frame->skb_hsr) {
+			frame->skb_std =
+				create_stripped_skb_hsr(frame->skb_hsr, frame);
+		} else {
+			/* Unexpected */
+			WARN_ONCE(1, "%s:%d: Unexpected frame received (port_src %s)\n",
+				  __FILE__, __LINE__, port->dev->name);
+			return NULL;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return skb_clone(frame->skb_std, GFP_ATOMIC);
@@ -351,18 +363,29 @@ static void hsr_deliver_master(struct sk_buff *skb, struct net_device *dev,
 			       struct hsr_node *node_src)
 {
 	bool was_multicast_frame;
+<<<<<<< HEAD
 	int res, recv_len;
+=======
+	int res;
+>>>>>>> b7ba80a49124 (Commit)
 
 	was_multicast_frame = (skb->pkt_type == PACKET_MULTICAST);
 	hsr_addr_subst_source(node_src, skb);
 	skb_pull(skb, ETH_HLEN);
+<<<<<<< HEAD
 	recv_len = skb->len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	res = netif_rx(skb);
 	if (res == NET_RX_DROP) {
 		dev->stats.rx_dropped++;
 	} else {
 		dev->stats.rx_packets++;
+<<<<<<< HEAD
 		dev->stats.rx_bytes += recv_len;
+=======
+		dev->stats.rx_bytes += skb->len;
+>>>>>>> b7ba80a49124 (Commit)
 		if (was_multicast_frame)
 			dev->stats.multicast++;
 	}
@@ -500,6 +523,10 @@ static void handle_std_frame(struct sk_buff *skb,
 {
 	struct hsr_port *port = frame->port_rcv;
 	struct hsr_priv *hsr = port->hsr;
+<<<<<<< HEAD
+=======
+	unsigned long irqflags;
+>>>>>>> b7ba80a49124 (Commit)
 
 	frame->skb_hsr = NULL;
 	frame->skb_prp = NULL;
@@ -509,9 +536,16 @@ static void handle_std_frame(struct sk_buff *skb,
 		frame->is_from_san = true;
 	} else {
 		/* Sequence nr for the master node */
+<<<<<<< HEAD
 		lockdep_assert_held(&hsr->seqnr_lock);
 		frame->sequence_nr = hsr->sequence_nr;
 		hsr->sequence_nr++;
+=======
+		spin_lock_irqsave(&hsr->seqnr_lock, irqflags);
+		frame->sequence_nr = hsr->sequence_nr;
+		hsr->sequence_nr++;
+		spin_unlock_irqrestore(&hsr->seqnr_lock, irqflags);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -569,20 +603,35 @@ static int fill_frame_info(struct hsr_frame_info *frame,
 	struct ethhdr *ethhdr;
 	__be16 proto;
 	int ret;
+<<<<<<< HEAD
+=======
+	u32 hash;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Check if skb contains ethhdr */
 	if (skb->mac_len < sizeof(struct ethhdr))
 		return -EINVAL;
 
 	memset(frame, 0, sizeof(*frame));
+<<<<<<< HEAD
 	frame->is_supervision = is_supervision_frame(port->hsr, skb);
 	frame->node_src = hsr_get_node(port, &hsr->node_db, skb,
+=======
+
+	ethhdr = (struct ethhdr *)skb_mac_header(skb);
+	hash = hsr_mac_hash(port->hsr, ethhdr->h_source);
+	frame->is_supervision = is_supervision_frame(port->hsr, skb);
+	frame->node_src = hsr_get_node(port, &hsr->node_db[hash], skb,
+>>>>>>> b7ba80a49124 (Commit)
 				       frame->is_supervision,
 				       port->type);
 	if (!frame->node_src)
 		return -1; /* Unknown node and !is_supervision, or no mem */
 
+<<<<<<< HEAD
 	ethhdr = (struct ethhdr *)skb_mac_header(skb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	frame->is_vlan = false;
 	proto = ethhdr->h_proto;
 
@@ -612,13 +661,19 @@ void hsr_forward_skb(struct sk_buff *skb, struct hsr_port *port)
 {
 	struct hsr_frame_info frame;
 
+<<<<<<< HEAD
 	rcu_read_lock();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (fill_frame_info(&frame, skb, port) < 0)
 		goto out_drop;
 
 	hsr_register_frame_in(frame.node_src, port, frame.sequence_nr);
 	hsr_forward_do(&frame);
+<<<<<<< HEAD
 	rcu_read_unlock();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Gets called for ingress frames as well as egress from master port.
 	 * So check and increment stats for master port only here.
 	 */
@@ -633,7 +688,10 @@ void hsr_forward_skb(struct sk_buff *skb, struct hsr_port *port)
 	return;
 
 out_drop:
+<<<<<<< HEAD
 	rcu_read_unlock();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	port->dev->stats.tx_dropped++;
 	kfree_skb(skb);
 }

@@ -858,7 +858,11 @@ static int cxgb4vf_open(struct net_device *dev)
 	 */
 	err = t4vf_update_port_info(pi);
 	if (err < 0)
+<<<<<<< HEAD
 		goto err_unwind;
+=======
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Note that this interface is up and start everything up ...

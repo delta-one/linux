@@ -193,6 +193,7 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	}
 	pci_set_master(pdev);
 
+<<<<<<< HEAD
 	if (pci_save_state(pdev)) {
 		dev_err(&pdev->dev, "Failed to save pci state\n");
 		ret = -ENOMEM;
@@ -200,13 +201,40 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	}
 
 	ret = adf_dev_up(accel_dev, true);
+=======
+	adf_enable_aer(accel_dev);
+
+	if (pci_save_state(pdev)) {
+		dev_err(&pdev->dev, "Failed to save pci state\n");
+		ret = -ENOMEM;
+		goto out_err_disable_aer;
+	}
+
+	ret = qat_crypto_dev_config(accel_dev);
+	if (ret)
+		goto out_err_disable_aer;
+
+	ret = adf_dev_init(accel_dev);
+	if (ret)
+		goto out_err_dev_shutdown;
+
+	ret = adf_dev_start(accel_dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto out_err_dev_stop;
 
 	return ret;
 
 out_err_dev_stop:
+<<<<<<< HEAD
 	adf_dev_down(accel_dev, false);
+=======
+	adf_dev_stop(accel_dev);
+out_err_dev_shutdown:
+	adf_dev_shutdown(accel_dev);
+out_err_disable_aer:
+	adf_disable_aer(accel_dev);
+>>>>>>> b7ba80a49124 (Commit)
 out_err_free_reg:
 	pci_release_regions(accel_pci_dev->pci_dev);
 out_err_disable:
@@ -225,7 +253,13 @@ static void adf_remove(struct pci_dev *pdev)
 		pr_err("QAT: Driver removal failed\n");
 		return;
 	}
+<<<<<<< HEAD
 	adf_dev_down(accel_dev, false);
+=======
+	adf_dev_stop(accel_dev);
+	adf_dev_shutdown(accel_dev);
+	adf_disable_aer(accel_dev);
+>>>>>>> b7ba80a49124 (Commit)
 	adf_cleanup_accel(accel_dev);
 	adf_cleanup_pci_dev(accel_dev);
 	kfree(accel_dev);

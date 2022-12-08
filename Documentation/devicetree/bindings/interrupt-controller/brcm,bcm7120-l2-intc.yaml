@@ -109,8 +109,12 @@ properties:
       for system suspend/resume.
 
   brcm,int-fwd-mask:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/uint32-array
     maxItems: 1
+=======
+    $ref: /schemas/types.yaml#/definitions/uint32
+>>>>>>> b7ba80a49124 (Commit)
     description: >
       if present, a bit mask to configure the interrupts which have a mux gate,
       typically UARTs. Setting these bits will make their respective interrupt

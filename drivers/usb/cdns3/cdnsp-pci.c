@@ -29,12 +29,17 @@
 #define PLAT_DRIVER_NAME	"cdns-usbssp"
 
 #define CDNS_VENDOR_ID		0x17cd
+<<<<<<< HEAD
 #define CDNS_DEVICE_ID		0x0200
 #define CDNS_DRD_ID		0x0100
+=======
+#define CDNS_DEVICE_ID		0x0100
+>>>>>>> b7ba80a49124 (Commit)
 #define CDNS_DRD_IF		(PCI_CLASS_SERIAL_USB << 8 | 0x80)
 
 static struct pci_dev *cdnsp_get_second_fun(struct pci_dev *pdev)
 {
+<<<<<<< HEAD
 	/*
 	 * Gets the second function.
 	 * Platform has two function. The fist keeps resources for
@@ -46,6 +51,27 @@ static struct pci_dev *cdnsp_get_second_fun(struct pci_dev *pdev)
 		return pci_get_device(pdev->vendor, CDNS_DEVICE_ID, NULL);
 
 	return NULL;
+=======
+	struct pci_dev *func;
+
+	/*
+	 * Gets the second function.
+	 * It's little tricky, but this platform has two function.
+	 * The fist keeps resources for Host/Device while the second
+	 * keeps resources for DRD/OTG.
+	 */
+	func = pci_get_device(pdev->vendor, pdev->device, NULL);
+	if (!func)
+		return NULL;
+
+	if (func->devfn == pdev->devfn) {
+		func = pci_get_device(pdev->vendor, pdev->device, func);
+		if (!func)
+			return NULL;
+	}
+
+	return func;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cdnsp_pci_probe(struct pci_dev *pdev,
@@ -185,12 +211,23 @@ static void cdnsp_pci_remove(struct pci_dev *pdev)
 	if (pci_dev_run_wake(pdev))
 		pm_runtime_get_noresume(&pdev->dev);
 
+<<<<<<< HEAD
 	if (pci_is_enabled(func)) {
 		cdns_remove(cdnsp);
 	} else {
 		kfree(cdnsp);
 	}
 
+=======
+	if (!pci_is_enabled(func)) {
+		kfree(cdnsp);
+		goto pci_put;
+	}
+
+	cdns_remove(cdnsp);
+
+pci_put:
+>>>>>>> b7ba80a49124 (Commit)
 	pci_dev_put(func);
 }
 
@@ -223,8 +260,11 @@ static const struct pci_device_id cdnsp_pci_ids[] = {
 	  PCI_CLASS_SERIAL_USB_DEVICE, PCI_ANY_ID },
 	{ PCI_VENDOR_ID_CDNS, CDNS_DEVICE_ID, PCI_ANY_ID, PCI_ANY_ID,
 	  CDNS_DRD_IF, PCI_ANY_ID },
+<<<<<<< HEAD
 	{ PCI_VENDOR_ID_CDNS, CDNS_DRD_ID, PCI_ANY_ID, PCI_ANY_ID,
 	  CDNS_DRD_IF, PCI_ANY_ID },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ 0, }
 };
 

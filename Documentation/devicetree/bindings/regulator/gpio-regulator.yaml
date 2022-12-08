@@ -15,7 +15,11 @@ description:
   regulator.txt, can also be used.
 
 allOf:
+<<<<<<< HEAD
   - $ref: regulator.yaml#
+=======
+  - $ref: "regulator.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -85,9 +89,12 @@ properties:
       - current
     default: voltage
 
+<<<<<<< HEAD
   vin-supply:
     description: Input supply phandle.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - regulator-name

@@ -105,6 +105,7 @@ static inline void scm_passec(struct socket *sock, struct msghdr *msg, struct sc
 		}
 	}
 }
+<<<<<<< HEAD
 
 static inline bool scm_has_secdata(struct socket *sock)
 {
@@ -118,14 +119,23 @@ static inline bool scm_has_secdata(struct socket *sock)
 {
 	return false;
 }
+=======
+#else
+static inline void scm_passec(struct socket *sock, struct msghdr *msg, struct scm_cookie *scm)
+{ }
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_SECURITY_NETWORK */
 
 static __inline__ void scm_recv(struct socket *sock, struct msghdr *msg,
 				struct scm_cookie *scm, int flags)
 {
 	if (!msg->msg_control) {
+<<<<<<< HEAD
 		if (test_bit(SOCK_PASSCRED, &sock->flags) || scm->fp ||
 		    scm_has_secdata(sock))
+=======
+		if (test_bit(SOCK_PASSCRED, &sock->flags) || scm->fp)
+>>>>>>> b7ba80a49124 (Commit)
 			msg->msg_flags |= MSG_CTRUNC;
 		scm_destroy(scm);
 		return;

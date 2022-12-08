@@ -324,7 +324,11 @@ static int cobalt_lcdfb_probe(struct platform_device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void cobalt_lcdfb_remove(struct platform_device *dev)
+=======
+static int cobalt_lcdfb_remove(struct platform_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info;
 
@@ -333,11 +337,20 @@ static void cobalt_lcdfb_remove(struct platform_device *dev)
 		unregister_framebuffer(info);
 		framebuffer_release(info);
 	}
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver cobalt_lcdfb_driver = {
 	.probe	= cobalt_lcdfb_probe,
+<<<<<<< HEAD
 	.remove_new = cobalt_lcdfb_remove,
+=======
+	.remove	= cobalt_lcdfb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name	= "cobalt-lcd",
 	},

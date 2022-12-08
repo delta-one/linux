@@ -76,6 +76,11 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+<<<<<<< HEAD
+=======
+#define HDLC_MAGIC 0x239e
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
@@ -121,6 +126,10 @@ struct n_hdlc_buf_list {
 
 /**
  * struct n_hdlc - per device instance data structure
+<<<<<<< HEAD
+=======
+ * @magic: magic value for structure
+>>>>>>> b7ba80a49124 (Commit)
  * @tbusy: reentrancy flag for tx wakeup code
  * @woke_up: tx wakeup needs to be run again as it was called while @tbusy
  * @tx_buf_list: list of pending transmit frame buffers
@@ -129,6 +138,10 @@ struct n_hdlc_buf_list {
  * @rx_free_buf_list: list unused received frame buffers
  */
 struct n_hdlc {
+<<<<<<< HEAD
+=======
+	int			magic;
+>>>>>>> b7ba80a49124 (Commit)
 	bool			tbusy;
 	bool			woke_up;
 	struct n_hdlc_buf_list	tx_buf_list;
@@ -195,6 +208,13 @@ static void n_hdlc_tty_close(struct tty_struct *tty)
 {
 	struct n_hdlc *n_hdlc = tty->disc_data;
 
+<<<<<<< HEAD
+=======
+	if (n_hdlc->magic != HDLC_MAGIC) {
+		pr_warn("n_hdlc: trying to close unopened tty!\n");
+		return;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 #if defined(TTY_NO_WRITE_SPLIT)
 	clear_bit(TTY_NO_WRITE_SPLIT, &tty->flags);
 #endif
@@ -377,6 +397,15 @@ static void n_hdlc_tty_receive(struct tty_struct *tty, const __u8 *data,
 
 	pr_debug("%s() called count=%d\n", __func__, count);
 
+<<<<<<< HEAD
+=======
+	/* verify line is using HDLC discipline */
+	if (n_hdlc->magic != HDLC_MAGIC) {
+		pr_err("line not using HDLC discipline\n");
+		return;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (count > maxframe) {
 		pr_debug("rx count>maxframesize, data discarded\n");
 		return;
@@ -527,6 +556,12 @@ static ssize_t n_hdlc_tty_write(struct tty_struct *tty, struct file *file,
 
 	pr_debug("%s() called count=%zd\n", __func__, count);
 
+<<<<<<< HEAD
+=======
+	if (n_hdlc->magic != HDLC_MAGIC)
+		return -EIO;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* verify frame size */
 	if (count > maxframe) {
 		pr_debug("%s: truncating user packet from %zu to %d\n",
@@ -591,6 +626,13 @@ static int n_hdlc_tty_ioctl(struct tty_struct *tty, unsigned int cmd,
 
 	pr_debug("%s() called %d\n", __func__, cmd);
 
+<<<<<<< HEAD
+=======
+	/* Verify the status of the device */
+	if (n_hdlc->magic != HDLC_MAGIC)
+		return -EBADF;
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (cmd) {
 	case FIONREAD:
 		/* report count of read data available */
@@ -651,6 +693,12 @@ static __poll_t n_hdlc_tty_poll(struct tty_struct *tty, struct file *filp,
 	struct n_hdlc *n_hdlc = tty->disc_data;
 	__poll_t mask = 0;
 
+<<<<<<< HEAD
+=======
+	if (n_hdlc->magic != HDLC_MAGIC)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * queue the current process into any wait queue that may awaken in the
 	 * future (read and write)
@@ -714,6 +762,12 @@ static struct n_hdlc *n_hdlc_alloc(void)
 	n_hdlc_alloc_buf(&n_hdlc->rx_free_buf_list, DEFAULT_RX_BUF_COUNT, "rx");
 	n_hdlc_alloc_buf(&n_hdlc->tx_free_buf_list, DEFAULT_TX_BUF_COUNT, "tx");
 
+<<<<<<< HEAD
+=======
+	/* Initialize the control block */
+	n_hdlc->magic  = HDLC_MAGIC;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return n_hdlc;
 
 }	/* end of n_hdlc_alloc() */

@@ -36,6 +36,10 @@
 #include <drm/drm_client.h>
 #include <drm/drm_crtc.h>
 #include <drm/drm_edid.h>
+<<<<<<< HEAD
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_fourcc.h>
 #include <drm/drm_modeset_helper_vtables.h>
 #include <drm/drm_print.h>
@@ -222,6 +226,7 @@ drm_connector_mode_valid(struct drm_connector *connector,
 	return ret;
 }
 
+<<<<<<< HEAD
 static void drm_kms_helper_disable_hpd(struct drm_device *dev)
 {
 	struct drm_connector *connector;
@@ -261,6 +266,8 @@ static bool drm_kms_helper_enable_hpd(struct drm_device *dev)
 	return poll;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DRM_OUTPUT_POLL_PERIOD (10*HZ)
 /**
  * drm_kms_helper_poll_enable - re-enable output polling.
@@ -280,6 +287,7 @@ static bool drm_kms_helper_enable_hpd(struct drm_device *dev)
 void drm_kms_helper_poll_enable(struct drm_device *dev)
 {
 	bool poll = false;
+<<<<<<< HEAD
 	unsigned long delay = DRM_OUTPUT_POLL_PERIOD;
 
 	if (!dev->mode_config.poll_enabled || !drm_kms_helper_poll ||
@@ -287,6 +295,22 @@ void drm_kms_helper_poll_enable(struct drm_device *dev)
 		return;
 
 	poll = drm_kms_helper_enable_hpd(dev);
+=======
+	struct drm_connector *connector;
+	struct drm_connector_list_iter conn_iter;
+	unsigned long delay = DRM_OUTPUT_POLL_PERIOD;
+
+	if (!dev->mode_config.poll_enabled || !drm_kms_helper_poll)
+		return;
+
+	drm_connector_list_iter_begin(dev, &conn_iter);
+	drm_for_each_connector_iter(connector, &conn_iter) {
+		if (connector->polled & (DRM_CONNECTOR_POLL_CONNECT |
+					 DRM_CONNECTOR_POLL_DISCONNECT))
+			poll = true;
+	}
+	drm_connector_list_iter_end(&conn_iter);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dev->mode_config.delayed_event) {
 		/*
@@ -305,8 +329,11 @@ void drm_kms_helper_poll_enable(struct drm_device *dev)
 
 	if (poll)
 		schedule_delayed_work(&dev->mode_config.output_poll_work, delay);
+<<<<<<< HEAD
 
 	dev->mode_config.poll_running = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(drm_kms_helper_poll_enable);
 
@@ -400,7 +427,11 @@ static int drm_helper_probe_get_modes(struct drm_connector *connector)
 	 * override/firmware EDID.
 	 */
 	if (count == 0 && connector->status == connector_status_connected)
+<<<<<<< HEAD
 		count = drm_edid_override_connector_update(connector);
+=======
+		count = drm_add_override_edid_modes(connector);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return count;
 }
@@ -590,6 +621,7 @@ retry:
 		 */
 		dev->mode_config.delayed_event = true;
 		if (dev->mode_config.poll_enabled)
+<<<<<<< HEAD
 			mod_delayed_work(system_wq,
 					 &dev->mode_config.output_poll_work,
 					 0);
@@ -597,6 +629,17 @@ retry:
 
 	/* Re-enable polling in case the global poll config changed. */
 	drm_kms_helper_poll_enable(dev);
+=======
+			schedule_delayed_work(&dev->mode_config.output_poll_work,
+					      0);
+	}
+
+	/* Re-enable polling in case the global poll config changed. */
+	if (drm_kms_helper_poll != dev->mode_config.poll_running)
+		drm_kms_helper_poll_enable(dev);
+
+	dev->mode_config.poll_running = drm_kms_helper_poll;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (connector->status == connector_status_disconnected) {
 		DRM_DEBUG_KMS("[CONNECTOR:%d:%s] disconnected\n",
@@ -736,11 +779,16 @@ static void output_poll_execute(struct work_struct *work)
 	changed = dev->mode_config.delayed_event;
 	dev->mode_config.delayed_event = false;
 
+<<<<<<< HEAD
 	if (!drm_kms_helper_poll && dev->mode_config.poll_running) {
 		drm_kms_helper_disable_hpd(dev);
 		dev->mode_config.poll_running = false;
 		goto out;
 	}
+=======
+	if (!drm_kms_helper_poll)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!mutex_trylock(&dev->mode_config.mutex)) {
 		repoll = true;
@@ -853,12 +901,18 @@ EXPORT_SYMBOL(drm_kms_helper_is_poll_worker);
  */
 void drm_kms_helper_poll_disable(struct drm_device *dev)
 {
+<<<<<<< HEAD
 	if (dev->mode_config.poll_running)
 		drm_kms_helper_disable_hpd(dev);
 
 	cancel_delayed_work_sync(&dev->mode_config.output_poll_work);
 
 	dev->mode_config.poll_running = false;
+=======
+	if (!dev->mode_config.poll_enabled)
+		return;
+	cancel_delayed_work_sync(&dev->mode_config.output_poll_work);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(drm_kms_helper_poll_disable);
 
@@ -899,9 +953,14 @@ void drm_kms_helper_poll_fini(struct drm_device *dev)
 	if (!dev->mode_config.poll_enabled)
 		return;
 
+<<<<<<< HEAD
 	drm_kms_helper_poll_disable(dev);
 
 	dev->mode_config.poll_enabled = false;
+=======
+	dev->mode_config.poll_enabled = false;
+	cancel_delayed_work_sync(&dev->mode_config.output_poll_work);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(drm_kms_helper_poll_fini);
 
@@ -1178,15 +1237,20 @@ int drm_connector_helper_get_modes(struct drm_connector *connector)
 	 * EDID. Otherwise, if the EDID is NULL, clear the connector
 	 * information.
 	 */
+<<<<<<< HEAD
 	drm_edid_connector_update(connector, drm_edid);
 
 	count = drm_edid_connector_add_modes(connector);
+=======
+	count = drm_edid_connector_update(connector, drm_edid);
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_edid_free(drm_edid);
 
 	return count;
 }
 EXPORT_SYMBOL(drm_connector_helper_get_modes);
+<<<<<<< HEAD
 
 /**
  * drm_connector_helper_tv_get_modes - Fills the modes availables to a TV connector
@@ -1269,3 +1333,5 @@ int drm_connector_helper_tv_get_modes(struct drm_connector *connector)
 	return i;
 }
 EXPORT_SYMBOL(drm_connector_helper_tv_get_modes);
+=======
+>>>>>>> b7ba80a49124 (Commit)

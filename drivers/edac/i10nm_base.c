@@ -13,7 +13,11 @@
 #include "edac_module.h"
 #include "skx_common.h"
 
+<<<<<<< HEAD
 #define I10NM_REVISION	"v0.0.6"
+=======
+#define I10NM_REVISION	"v0.0.5"
+>>>>>>> b7ba80a49124 (Commit)
 #define EDAC_MOD_STR	"i10nm_edac"
 
 /* Debug macros */
@@ -22,6 +26,7 @@
 
 #define I10NM_GET_SCK_BAR(d, reg)	\
 	pci_read_config_dword((d)->uracu, 0xd0, &(reg))
+<<<<<<< HEAD
 #define I10NM_GET_IMC_BAR(d, i, reg)		\
 	pci_read_config_dword((d)->uracu,	\
 	(res_cfg->type == GNR ? 0xd4 : 0xd8) + (i) * 4, &(reg))
@@ -39,17 +44,36 @@
 #define I10NM_GET_DIMMMTR(m, i, j)	\
 	readl((m)->mbase + ((m)->hbm_mc ? 0x80c :	\
 	(res_cfg->type == GNR ? 0xc0c : 0x2080c)) +	\
+=======
+#define I10NM_GET_IMC_BAR(d, i, reg)	\
+	pci_read_config_dword((d)->uracu, 0xd8 + (i) * 4, &(reg))
+#define I10NM_GET_SAD(d, offset, i, reg)\
+	pci_read_config_dword((d)->sad_all, (offset) + (i) * 8, &(reg))
+#define I10NM_GET_HBM_IMC_BAR(d, reg)	\
+	pci_read_config_dword((d)->uracu, 0xd4, &(reg))
+#define I10NM_GET_CAPID3_CFG(d, reg)	\
+	pci_read_config_dword((d)->pcu_cr3, 0x90, &(reg))
+#define I10NM_GET_DIMMMTR(m, i, j)	\
+	readl((m)->mbase + ((m)->hbm_mc ? 0x80c : 0x2080c) + \
+>>>>>>> b7ba80a49124 (Commit)
 	(i) * (m)->chan_mmio_sz + (j) * 4)
 #define I10NM_GET_MCDDRTCFG(m, i)	\
 	readl((m)->mbase + ((m)->hbm_mc ? 0x970 : 0x20970) + \
 	(i) * (m)->chan_mmio_sz)
 #define I10NM_GET_MCMTR(m, i)		\
+<<<<<<< HEAD
 	readl((m)->mbase + ((m)->hbm_mc ? 0xef8 :	\
 	(res_cfg->type == GNR ? 0xaf8 : 0x20ef8)) +	\
 	(i) * (m)->chan_mmio_sz)
 #define I10NM_GET_AMAP(m, i)		\
 	readl((m)->mbase + ((m)->hbm_mc ? 0x814 :	\
 	(res_cfg->type == GNR ? 0xc14 : 0x20814)) +	\
+=======
+	readl((m)->mbase + ((m)->hbm_mc ? 0xef8 : 0x20ef8) + \
+	(i) * (m)->chan_mmio_sz)
+#define I10NM_GET_AMAP(m, i)		\
+	readl((m)->mbase + ((m)->hbm_mc ? 0x814 : 0x20814) + \
+>>>>>>> b7ba80a49124 (Commit)
 	(i) * (m)->chan_mmio_sz)
 #define I10NM_GET_REG32(m, i, offset)	\
 	readl((m)->mbase + (i) * (m)->chan_mmio_sz + (offset))
@@ -65,10 +89,14 @@
 #define I10NM_GET_HBM_IMC_MMIO_OFFSET(reg)	\
 	((GET_BITFIELD(reg, 0, 10) << 12) + 0x140000)
 
+<<<<<<< HEAD
 #define I10NM_GNR_IMC_MMIO_OFFSET	0x24c000
 #define I10NM_GNR_IMC_MMIO_SIZE		0x4000
 #define I10NM_HBM_IMC_MMIO_SIZE		0x9000
 #define I10NM_DDR_IMC_CH_CNT(reg)	GET_BITFIELD(reg, 21, 24)
+=======
+#define I10NM_HBM_IMC_MMIO_SIZE		0x9000
+>>>>>>> b7ba80a49124 (Commit)
 #define I10NM_IS_HBM_PRESENT(reg)	GET_BITFIELD(reg, 27, 30)
 #define I10NM_IS_HBM_IMC(reg)		GET_BITFIELD(reg, 29, 29)
 
@@ -91,6 +119,7 @@ static bool mem_cfg_2lm;
 
 static u32 offsets_scrub_icx[]  = {0x22c60, 0x22c54, 0x22c5c, 0x22c58, 0x22c28, 0x20ed8};
 static u32 offsets_scrub_spr[]  = {0x22c60, 0x22c54, 0x22f08, 0x22c58, 0x22c28, 0x20ed8};
+<<<<<<< HEAD
 static u32 offsets_scrub_spr_hbm0[]  = {0x2860, 0x2854, 0x2b08, 0x2858, 0x2828, 0x0ed8};
 static u32 offsets_scrub_spr_hbm1[]  = {0x2c60, 0x2c54, 0x2f08, 0x2c58, 0x2c28, 0x0fa8};
 static u32 offsets_demand_icx[] = {0x22e54, 0x22e60, 0x22e64, 0x22e58, 0x22e5c, 0x20ee0};
@@ -109,24 +138,44 @@ static void __enable_retry_rd_err_log(struct skx_imc *imc, int chan, bool enable
 	d = I10NM_GET_REG32(imc, chan, offsets_demand[0]);
 	if (offsets_demand2)
 		d2 = I10NM_GET_REG32(imc, chan, offsets_demand2[0]);
+=======
+static u32 offsets_demand_icx[] = {0x22e54, 0x22e60, 0x22e64, 0x22e58, 0x22e5c, 0x20ee0};
+static u32 offsets_demand_spr[] = {0x22e54, 0x22e60, 0x22f10, 0x22e58, 0x22e5c, 0x20ee0};
+
+static void __enable_retry_rd_err_log(struct skx_imc *imc, int chan, bool enable)
+{
+	u32 s, d;
+
+	if (!imc->mbase)
+		return;
+
+	s = I10NM_GET_REG32(imc, chan, res_cfg->offsets_scrub[0]);
+	d = I10NM_GET_REG32(imc, chan, res_cfg->offsets_demand[0]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (enable) {
 		/* Save default configurations */
 		imc->chan[chan].retry_rd_err_log_s = s;
 		imc->chan[chan].retry_rd_err_log_d = d;
+<<<<<<< HEAD
 		if (offsets_demand2)
 			imc->chan[chan].retry_rd_err_log_d2 = d2;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		s &= ~RETRY_RD_ERR_LOG_NOOVER_UC;
 		s |=  RETRY_RD_ERR_LOG_EN;
 		d &= ~RETRY_RD_ERR_LOG_NOOVER_UC;
 		d |=  RETRY_RD_ERR_LOG_EN;
+<<<<<<< HEAD
 
 		if (offsets_demand2) {
 			d2 &= ~RETRY_RD_ERR_LOG_UC;
 			d2 |=  RETRY_RD_ERR_LOG_NOOVER;
 			d2 |=  RETRY_RD_ERR_LOG_EN;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		/* Restore default configurations */
 		if (imc->chan[chan].retry_rd_err_log_s & RETRY_RD_ERR_LOG_UC)
@@ -141,6 +190,7 @@ static void __enable_retry_rd_err_log(struct skx_imc *imc, int chan, bool enable
 			d |=  RETRY_RD_ERR_LOG_NOOVER;
 		if (!(imc->chan[chan].retry_rd_err_log_d & RETRY_RD_ERR_LOG_EN))
 			d &= ~RETRY_RD_ERR_LOG_EN;
+<<<<<<< HEAD
 
 		if (offsets_demand2) {
 			if (imc->chan[chan].retry_rd_err_log_d2 & RETRY_RD_ERR_LOG_UC)
@@ -156,10 +206,17 @@ static void __enable_retry_rd_err_log(struct skx_imc *imc, int chan, bool enable
 	I10NM_SET_REG32(imc, chan, offsets_demand[0], d);
 	if (offsets_demand2)
 		I10NM_SET_REG32(imc, chan, offsets_demand2[0], d2);
+=======
+	}
+
+	I10NM_SET_REG32(imc, chan, res_cfg->offsets_scrub[0], s);
+	I10NM_SET_REG32(imc, chan, res_cfg->offsets_demand[0], d);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void enable_retry_rd_err_log(bool enable)
 {
+<<<<<<< HEAD
 	int i, j, imc_num, chan_num;
 	struct skx_imc *imc;
 	struct skx_dev *d;
@@ -202,6 +259,17 @@ static void enable_retry_rd_err_log(bool enable)
 			}
 		}
 	}
+=======
+	struct skx_dev *d;
+	int i, j;
+
+	edac_dbg(2, "\n");
+
+	list_for_each_entry(d, i10nm_edac_list, list)
+		for (i = 0; i < I10NM_NUM_IMC; i++)
+			for (j = 0; j < I10NM_NUM_CHANNELS; j++)
+				__enable_retry_rd_err_log(&d->imc[i], j, enable);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void show_retry_rd_err_log(struct decoded_addr *res, char *msg,
@@ -210,16 +278,23 @@ static void show_retry_rd_err_log(struct decoded_addr *res, char *msg,
 	struct skx_imc *imc = &res->dev->imc[res->imc];
 	u32 log0, log1, log2, log3, log4;
 	u32 corr0, corr1, corr2, corr3;
+<<<<<<< HEAD
 	u32 lxg0, lxg1, lxg3, lxg4;
 	u32 *xffsets = NULL;
 	u64 log2a, log5;
 	u64 lxg2a, lxg5;
 	u32 *offsets;
 	int n, pch;
+=======
+	u64 log2a, log5;
+	u32 *offsets;
+	int n;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!imc->mbase)
 		return;
 
+<<<<<<< HEAD
 	if (imc->hbm_mc) {
 		pch = res->cs & 1;
 
@@ -237,6 +312,9 @@ static void show_retry_rd_err_log(struct decoded_addr *res, char *msg,
 			xffsets = res_cfg->offsets_demand2;
 		}
 	}
+=======
+	offsets = scrub_err ? res_cfg->offsets_scrub : res_cfg->offsets_demand;
+>>>>>>> b7ba80a49124 (Commit)
 
 	log0 = I10NM_GET_REG32(imc, res->channel, offsets[0]);
 	log1 = I10NM_GET_REG32(imc, res->channel, offsets[1]);
@@ -244,6 +322,7 @@ static void show_retry_rd_err_log(struct decoded_addr *res, char *msg,
 	log4 = I10NM_GET_REG32(imc, res->channel, offsets[4]);
 	log5 = I10NM_GET_REG64(imc, res->channel, offsets[5]);
 
+<<<<<<< HEAD
 	if (xffsets) {
 		lxg0 = I10NM_GET_REG32(imc, res->channel, xffsets[0]);
 		lxg1 = I10NM_GET_REG32(imc, res->channel, xffsets[1]);
@@ -266,12 +345,19 @@ static void show_retry_rd_err_log(struct decoded_addr *res, char *msg,
 				n += snprintf(msg + n, len - n, "]");
 			}
 		}
+=======
+	if (res_cfg->type == SPR) {
+		log2a = I10NM_GET_REG64(imc, res->channel, offsets[2]);
+		n = snprintf(msg, len, " retry_rd_err_log[%.8x %.8x %.16llx %.8x %.8x %.16llx]",
+			     log0, log1, log2a, log3, log4, log5);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		log2 = I10NM_GET_REG32(imc, res->channel, offsets[2]);
 		n = snprintf(msg, len, " retry_rd_err_log[%.8x %.8x %.8x %.8x %.8x %.16llx]",
 			     log0, log1, log2, log3, log4, log5);
 	}
 
+<<<<<<< HEAD
 	if (imc->hbm_mc) {
 		if (pch) {
 			corr0 = I10NM_GET_REG32(imc, res->channel, 0x2c18);
@@ -290,6 +376,12 @@ static void show_retry_rd_err_log(struct decoded_addr *res, char *msg,
 		corr2 = I10NM_GET_REG32(imc, res->channel, 0x22c20);
 		corr3 = I10NM_GET_REG32(imc, res->channel, 0x22c24);
 	}
+=======
+	corr0 = I10NM_GET_REG32(imc, res->channel, 0x22c18);
+	corr1 = I10NM_GET_REG32(imc, res->channel, 0x22c1c);
+	corr2 = I10NM_GET_REG32(imc, res->channel, 0x22c20);
+	corr3 = I10NM_GET_REG32(imc, res->channel, 0x22c24);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (len - n > 0)
 		snprintf(msg + n, len - n,
@@ -300,6 +392,7 @@ static void show_retry_rd_err_log(struct decoded_addr *res, char *msg,
 			 corr3 & 0xffff, corr3 >> 16);
 
 	/* Clear status bits */
+<<<<<<< HEAD
 	if (retry_rd_err_log == 2) {
 		if (log0 & RETRY_RD_ERR_LOG_OVER_UC_V) {
 			log0 &= ~RETRY_RD_ERR_LOG_OVER_UC_V;
@@ -310,6 +403,11 @@ static void show_retry_rd_err_log(struct decoded_addr *res, char *msg,
 			lxg0 &= ~RETRY_RD_ERR_LOG_OVER_UC_V;
 			I10NM_SET_REG32(imc, res->channel, xffsets[0], lxg0);
 		}
+=======
+	if (retry_rd_err_log == 2 && (log0 & RETRY_RD_ERR_LOG_OVER_UC_V)) {
+		log0 &= ~RETRY_RD_ERR_LOG_OVER_UC_V;
+		I10NM_SET_REG32(imc, res->channel, offsets[0], log0);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -328,6 +426,7 @@ static struct pci_dev *pci_get_dev_wrapper(int dom, unsigned int bus,
 	if (unlikely(pci_enable_device(pdev) < 0)) {
 		edac_dbg(2, "Failed to enable device %02x:%02x.%x\n",
 			 bus, dev, fun);
+<<<<<<< HEAD
 		pci_dev_put(pdev);
 		return NULL;
 	}
@@ -408,6 +507,16 @@ static int i10nm_get_imc_num(struct res_config *cfg)
 	}
 }
 
+=======
+		return NULL;
+	}
+
+	pci_dev_get(pdev);
+
+	return pdev;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static bool i10nm_check_2lm(struct res_config *cfg)
 {
 	struct skx_dev *d;
@@ -415,9 +524,15 @@ static bool i10nm_check_2lm(struct res_config *cfg)
 	int i;
 
 	list_for_each_entry(d, i10nm_edac_list, list) {
+<<<<<<< HEAD
 		d->sad_all = pci_get_dev_wrapper(d->seg, d->bus[res_cfg->sad_all_bdf.bus],
 						 res_cfg->sad_all_bdf.dev,
 						 res_cfg->sad_all_bdf.fun);
+=======
+		d->sad_all = pci_get_dev_wrapper(d->seg, d->bus[1],
+						 PCI_SLOT(cfg->sad_all_devfn),
+						 PCI_FUNC(cfg->sad_all_devfn));
+>>>>>>> b7ba80a49124 (Commit)
 		if (!d->sad_all)
 			continue;
 
@@ -434,6 +549,7 @@ static bool i10nm_check_2lm(struct res_config *cfg)
 }
 
 /*
+<<<<<<< HEAD
  * Check whether the error comes from DDRT by ICX/Tremont/SPR model specific error code.
  * Refer to SDM vol3B 17.11.3/17.13.2 Intel IMC MC error codes for IA32_MCi_STATUS.
  */
@@ -467,6 +583,22 @@ static bool i10nm_mscod_is_ddrt(u32 mscod)
 		break;
 	default:
 		return false;
+=======
+ * Check whether the error comes from DDRT by ICX/Tremont model specific error code.
+ * Refer to SDM vol3B 16.11.3 Intel IMC MC error codes for IA32_MCi_STATUS.
+ */
+static bool i10nm_mscod_is_ddrt(u32 mscod)
+{
+	switch (mscod) {
+	case 0x0106: case 0x0107:
+	case 0x0800: case 0x0804:
+	case 0x0806 ... 0x0808:
+	case 0x080a ... 0x080e:
+	case 0x0810: case 0x0811:
+	case 0x0816: case 0x081e:
+	case 0x081f:
+		return true;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return false;
@@ -474,7 +606,10 @@ static bool i10nm_mscod_is_ddrt(u32 mscod)
 
 static bool i10nm_mc_decode_available(struct mce *mce)
 {
+<<<<<<< HEAD
 #define ICX_IMCx_CHy		0x06666000
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8 bank;
 
 	if (!decoding_via_mca || mem_cfg_2lm)
@@ -488,6 +623,7 @@ static bool i10nm_mc_decode_available(struct mce *mce)
 
 	switch (res_cfg->type) {
 	case I10NM:
+<<<<<<< HEAD
 		/* Check whether the bank is one of {13,14,17,18,21,22,25,26} */
 		if (!(ICX_IMCx_CHy & (1 << bank)))
 			return false;
@@ -508,6 +644,23 @@ static bool i10nm_mc_decode_available(struct mce *mce)
 		return false;
 
 	return true;
+=======
+		if (bank < 13 || bank > 26)
+			return false;
+
+		/* DDRT errors can't be decoded from MCA bank registers */
+		if (MCI_MISC_ECC_MODE(mce->misc) == MCI_MISC_ECC_DDRT)
+			return false;
+
+		if (i10nm_mscod_is_ddrt(MCI_STATUS_MSCOD(mce->status)))
+			return false;
+
+		/* Check whether one of {13,14,17,18,21,22,25,26} */
+		return ((bank - 13) & BIT(1)) == 0;
+	default:
+		return false;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool i10nm_mc_decode(struct decoded_addr *res)
@@ -529,6 +682,7 @@ static bool i10nm_mc_decode(struct decoded_addr *res)
 
 	switch (res_cfg->type) {
 	case I10NM:
+<<<<<<< HEAD
 		bank              = m->bank - 13;
 		res->imc          = bank / 4;
 		res->channel      = bank % 2;
@@ -552,6 +706,11 @@ static bool i10nm_mc_decode(struct decoded_addr *res)
 		res->bank_group  |= GET_BITFIELD(m->misc, 41, 41) << 2;
 		res->rank         = GET_BITFIELD(m->misc, 57, 57);
 		res->dimm         = GET_BITFIELD(m->misc, 58, 58);
+=======
+		bank = m->bank - 13;
+		res->imc = bank / 4;
+		res->channel = bank % 2;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		return false;
@@ -563,6 +722,7 @@ static bool i10nm_mc_decode(struct decoded_addr *res)
 		return false;
 	}
 
+<<<<<<< HEAD
 	return true;
 }
 
@@ -658,6 +818,20 @@ static struct pci_dev *get_ddr_munit(struct skx_dev *d, int i, u32 *offset, unsi
 	return mdev;
 }
 
+=======
+	res->column       = GET_BITFIELD(m->misc, 9, 18) << 2;
+	res->row          = GET_BITFIELD(m->misc, 19, 39);
+	res->bank_group   = GET_BITFIELD(m->misc, 40, 41);
+	res->bank_address = GET_BITFIELD(m->misc, 42, 43);
+	res->bank_group  |= GET_BITFIELD(m->misc, 44, 44) << 2;
+	res->rank         = GET_BITFIELD(m->misc, 56, 58);
+	res->dimm         = res->rank >> 2;
+	res->rank         = res->rank % 4;
+
+	return true;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int i10nm_get_ddr_munits(void)
 {
 	struct pci_dev *mdev;
@@ -669,6 +843,7 @@ static int i10nm_get_ddr_munits(void)
 	u64 base;
 
 	list_for_each_entry(d, i10nm_edac_list, list) {
+<<<<<<< HEAD
 		d->util_all = pci_get_dev_wrapper(d->seg, d->bus[res_cfg->util_all_bdf.bus],
 						  res_cfg->util_all_bdf.dev,
 						  res_cfg->util_all_bdf.fun);
@@ -678,6 +853,13 @@ static int i10nm_get_ddr_munits(void)
 		d->uracu = pci_get_dev_wrapper(d->seg, d->bus[res_cfg->uracu_bdf.bus],
 					       res_cfg->uracu_bdf.dev,
 					       res_cfg->uracu_bdf.fun);
+=======
+		d->util_all = pci_get_dev_wrapper(d->seg, d->bus[1], 29, 1);
+		if (!d->util_all)
+			return -ENODEV;
+
+		d->uracu = pci_get_dev_wrapper(d->seg, d->bus[0], 0, 1);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!d->uracu)
 			return -ENODEV;
 
@@ -690,9 +872,15 @@ static int i10nm_get_ddr_munits(void)
 		edac_dbg(2, "socket%d mmio base 0x%llx (reg 0x%x)\n",
 			 j++, base, reg);
 
+<<<<<<< HEAD
 		for (i = 0; i < res_cfg->ddr_imc_num; i++) {
 			mdev = get_ddr_munit(d, i, &off, &size);
 
+=======
+		for (i = 0; i < I10NM_NUM_DDR_IMC; i++) {
+			mdev = pci_get_dev_wrapper(d->seg, d->bus[0],
+						   12 + i, 0);
+>>>>>>> b7ba80a49124 (Commit)
 			if (i == 0 && !mdev) {
 				i10nm_printk(KERN_ERR, "No IMC found\n");
 				return -ENODEV;
@@ -702,6 +890,16 @@ static int i10nm_get_ddr_munits(void)
 
 			d->imc[i].mdev = mdev;
 
+<<<<<<< HEAD
+=======
+			if (I10NM_GET_IMC_BAR(d, i, reg)) {
+				i10nm_printk(KERN_ERR, "Failed to get mc bar\n");
+				return -ENODEV;
+			}
+
+			off  = I10NM_GET_IMC_MMIO_OFFSET(reg);
+			size = I10NM_GET_IMC_MMIO_SIZE(reg);
+>>>>>>> b7ba80a49124 (Commit)
 			edac_dbg(2, "mc%d mmio base 0x%llx size 0x%lx (reg 0x%x)\n",
 				 i, base + off, size, reg);
 
@@ -741,6 +939,10 @@ static int i10nm_get_hbm_munits(void)
 	u64 base;
 
 	list_for_each_entry(d, i10nm_edac_list, list) {
+<<<<<<< HEAD
+=======
+		d->pcu_cr3 = pci_get_dev_wrapper(d->seg, d->bus[1], 30, 3);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!d->pcu_cr3)
 			return -ENODEV;
 
@@ -761,6 +963,7 @@ static int i10nm_get_hbm_munits(void)
 		}
 		base += I10NM_GET_HBM_IMC_MMIO_OFFSET(reg);
 
+<<<<<<< HEAD
 		lmc = res_cfg->ddr_imc_num;
 
 		for (i = 0; i < res_cfg->hbm_imc_num; i++) {
@@ -768,6 +971,13 @@ static int i10nm_get_hbm_munits(void)
 						   res_cfg->hbm_mdev_bdf.dev + i / 4,
 						   res_cfg->hbm_mdev_bdf.fun + i % 4);
 
+=======
+		lmc = I10NM_NUM_DDR_IMC;
+
+		for (i = 0; i < I10NM_NUM_HBM_IMC; i++) {
+			mdev = pci_get_dev_wrapper(d->seg, d->bus[0],
+						   12 + i / 4, 1 + i % 4);
+>>>>>>> b7ba80a49124 (Commit)
 			if (i == 0 && !mdev) {
 				i10nm_printk(KERN_ERR, "No hbm mc found\n");
 				return -ENODEV;
@@ -817,6 +1027,7 @@ static struct res_config i10nm_cfg0 = {
 	.type			= I10NM,
 	.decs_did		= 0x3452,
 	.busno_cfg_offset	= 0xcc,
+<<<<<<< HEAD
 	.ddr_imc_num		= 4,
 	.ddr_chan_num		= 2,
 	.ddr_dimm_num		= 2,
@@ -827,6 +1038,10 @@ static struct res_config i10nm_cfg0 = {
 	.uracu_bdf		= {0, 0, 1},
 	.ddr_mdev_bdf		= {0, 12, 0},
 	.hbm_mdev_bdf		= {0, 12, 1},
+=======
+	.ddr_chan_mmio_sz	= 0x4000,
+	.sad_all_devfn		= PCI_DEVFN(29, 0),
+>>>>>>> b7ba80a49124 (Commit)
 	.sad_all_offset		= 0x108,
 	.offsets_scrub		= offsets_scrub_icx,
 	.offsets_demand		= offsets_demand_icx,
@@ -836,6 +1051,7 @@ static struct res_config i10nm_cfg1 = {
 	.type			= I10NM,
 	.decs_did		= 0x3452,
 	.busno_cfg_offset	= 0xd0,
+<<<<<<< HEAD
 	.ddr_imc_num		= 4,
 	.ddr_chan_num		= 2,
 	.ddr_dimm_num		= 2,
@@ -846,6 +1062,10 @@ static struct res_config i10nm_cfg1 = {
 	.uracu_bdf		= {0, 0, 1},
 	.ddr_mdev_bdf		= {0, 12, 0},
 	.hbm_mdev_bdf		= {0, 12, 1},
+=======
+	.ddr_chan_mmio_sz	= 0x4000,
+	.sad_all_devfn		= PCI_DEVFN(29, 0),
+>>>>>>> b7ba80a49124 (Commit)
 	.sad_all_offset		= 0x108,
 	.offsets_scrub		= offsets_scrub_icx,
 	.offsets_demand		= offsets_demand_icx,
@@ -855,6 +1075,7 @@ static struct res_config spr_cfg = {
 	.type			= SPR,
 	.decs_did		= 0x3252,
 	.busno_cfg_offset	= 0xd0,
+<<<<<<< HEAD
 	.ddr_imc_num		= 4,
 	.ddr_chan_num		= 2,
 	.ddr_dimm_num		= 2,
@@ -895,6 +1116,15 @@ static struct res_config gnr_cfg = {
 	.uracu_bdf		= {0, 0, 1},
 	.ddr_mdev_bdf		= {0, 5, 1},
 	.sad_all_offset		= 0x300,
+=======
+	.ddr_chan_mmio_sz	= 0x8000,
+	.hbm_chan_mmio_sz	= 0x4000,
+	.support_ddr5		= true,
+	.sad_all_devfn		= PCI_DEVFN(10, 0),
+	.sad_all_offset		= 0x300,
+	.offsets_scrub		= offsets_scrub_spr,
+	.offsets_demand		= offsets_demand_spr,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct x86_cpu_id i10nm_cpuids[] = {
@@ -904,8 +1134,11 @@ static const struct x86_cpu_id i10nm_cpuids[] = {
 	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(ICELAKE_X,		X86_STEPPINGS(0x4, 0xf), &i10nm_cfg1),
 	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(ICELAKE_D,		X86_STEPPINGS(0x0, 0xf), &i10nm_cfg1),
 	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(SAPPHIRERAPIDS_X,	X86_STEPPINGS(0x0, 0xf), &spr_cfg),
+<<<<<<< HEAD
 	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(EMERALDRAPIDS_X,	X86_STEPPINGS(0x0, 0xf), &spr_cfg),
 	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(GRANITERAPIDS_X,	X86_STEPPINGS(0x0, 0xf), &gnr_cfg),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 MODULE_DEVICE_TABLE(x86cpu, i10nm_cpuids);
@@ -925,7 +1158,11 @@ static int i10nm_get_dimm_config(struct mem_ctl_info *mci,
 {
 	struct skx_pvt *pvt = mci->pvt_info;
 	struct skx_imc *imc = pvt->imc;
+<<<<<<< HEAD
 	u32 mtr, amap, mcddrtcfg = 0;
+=======
+	u32 mtr, amap, mcddrtcfg;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dimm_info *dimm;
 	int i, j, ndimms;
 
@@ -935,10 +1172,14 @@ static int i10nm_get_dimm_config(struct mem_ctl_info *mci,
 
 		ndimms = 0;
 		amap = I10NM_GET_AMAP(imc, i);
+<<<<<<< HEAD
 
 		if (res_cfg->type != GNR)
 			mcddrtcfg = I10NM_GET_MCDDRTCFG(imc, i);
 
+=======
+		mcddrtcfg = I10NM_GET_MCDDRTCFG(imc, i);
+>>>>>>> b7ba80a49124 (Commit)
 		for (j = 0; j < imc->num_dimms; j++) {
 			dimm = edac_get_dimm(mci, i, j, 0);
 			mtr = I10NM_GET_DIMMMTR(imc, i, j);
@@ -1024,6 +1265,7 @@ static int __init i10nm_init(void)
 	struct skx_dev *d;
 	int rc, i, off[3] = {0xd0, 0xc8, 0xcc};
 	u64 tolm, tohm;
+<<<<<<< HEAD
 	int imc_num;
 
 	edac_dbg(2, "\n");
@@ -1031,6 +1273,11 @@ static int __init i10nm_init(void)
 	if (ghes_get_devices())
 		return -EBUSY;
 
+=======
+
+	edac_dbg(2, "\n");
+
+>>>>>>> b7ba80a49124 (Commit)
 	owner = edac_get_owner();
 	if (owner && strncmp(owner, EDAC_MOD_STR, sizeof(EDAC_MOD_STR)))
 		return -EBUSY;
@@ -1057,10 +1304,13 @@ static int __init i10nm_init(void)
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
 	rc = i10nm_get_imc_num(cfg);
 	if (rc < 0)
 		goto fail;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mem_cfg_2lm = i10nm_check_2lm(cfg);
 	skx_set_mem_cfg(mem_cfg_2lm);
 
@@ -1069,8 +1319,11 @@ static int __init i10nm_init(void)
 	if (i10nm_get_hbm_munits() && rc)
 		goto fail;
 
+<<<<<<< HEAD
 	imc_num = res_cfg->ddr_imc_num + res_cfg->hbm_imc_num;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry(d, i10nm_edac_list, list) {
 		rc = skx_get_src_id(d, 0xf8, &src_id);
 		if (rc < 0)
@@ -1081,7 +1334,11 @@ static int __init i10nm_init(void)
 			goto fail;
 
 		edac_dbg(2, "src_id = %d node_id = %d\n", src_id, node_id);
+<<<<<<< HEAD
 		for (i = 0; i < imc_num; i++) {
+=======
+		for (i = 0; i < I10NM_NUM_IMC; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (!d->imc[i].mdev)
 				continue;
 
@@ -1091,12 +1348,21 @@ static int __init i10nm_init(void)
 			d->imc[i].node_id = node_id;
 			if (d->imc[i].hbm_mc) {
 				d->imc[i].chan_mmio_sz = cfg->hbm_chan_mmio_sz;
+<<<<<<< HEAD
 				d->imc[i].num_channels = cfg->hbm_chan_num;
 				d->imc[i].num_dimms    = cfg->hbm_dimm_num;
 			} else {
 				d->imc[i].chan_mmio_sz = cfg->ddr_chan_mmio_sz;
 				d->imc[i].num_channels = cfg->ddr_chan_num;
 				d->imc[i].num_dimms    = cfg->ddr_dimm_num;
+=======
+				d->imc[i].num_channels = I10NM_NUM_HBM_CHANNELS;
+				d->imc[i].num_dimms    = I10NM_NUM_HBM_DIMMS;
+			} else {
+				d->imc[i].chan_mmio_sz = cfg->ddr_chan_mmio_sz;
+				d->imc[i].num_channels = I10NM_NUM_DDR_CHANNELS;
+				d->imc[i].num_dimms    = I10NM_NUM_DDR_DIMMS;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 
 			rc = skx_register_mci(&d->imc[i], d->imc[i].mdev,

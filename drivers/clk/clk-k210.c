@@ -495,7 +495,11 @@ static unsigned long k210_pll_get_rate(struct clk_hw *hw,
 	f = FIELD_GET(K210_PLL_CLKF, reg) + 1;
 	od = FIELD_GET(K210_PLL_CLKOD, reg) + 1;
 
+<<<<<<< HEAD
 	return div_u64((u64)parent_rate * f, r * od);
+=======
+	return (u64)parent_rate * f / (r * od);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct clk_ops k210_pll_ops = {

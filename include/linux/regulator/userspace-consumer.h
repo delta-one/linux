@@ -21,7 +21,10 @@ struct regulator_userspace_consumer_data {
 	struct regulator_bulk_data *supplies;
 
 	bool init_on;
+<<<<<<< HEAD
 	bool no_autoswitch;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #endif /* __REGULATOR_PLATFORM_CONSUMER_H_ */

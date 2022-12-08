@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2014 Facebook. All rights reserved.
  *
@@ -232,13 +235,21 @@ static int write_metadata(struct log_writes_c *lc, void *entry,
 		goto error;
 	}
 
+<<<<<<< HEAD
 	ptr = kmap_local_page(page);
+=======
+	ptr = kmap_atomic(page);
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(ptr, entry, entrylen);
 	if (datalen)
 		memcpy(ptr + entrylen, data, datalen);
 	memset(ptr + entrylen + datalen, 0,
 	       lc->sectorsize - entrylen - datalen);
+<<<<<<< HEAD
 	kunmap_local(ptr);
+=======
+	kunmap_atomic(ptr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = bio_add_page(bio, page, lc->sectorsize, 0);
 	if (ret != lc->sectorsize) {
@@ -287,11 +298,19 @@ static int write_inline_data(struct log_writes_c *lc, void *entry,
 				goto error_bio;
 			}
 
+<<<<<<< HEAD
 			ptr = kmap_local_page(page);
 			memcpy(ptr, data, pg_datalen);
 			if (pg_sectorlen > pg_datalen)
 				memset(ptr + pg_datalen, 0, pg_sectorlen - pg_datalen);
 			kunmap_local(ptr);
+=======
+			ptr = kmap_atomic(page);
+			memcpy(ptr, data, pg_datalen);
+			if (pg_sectorlen > pg_datalen)
+				memset(ptr + pg_datalen, 0, pg_sectorlen - pg_datalen);
+			kunmap_atomic(ptr);
+>>>>>>> b7ba80a49124 (Commit)
 
 			ret = bio_add_page(bio, page, pg_sectorlen, 0);
 			if (ret != pg_sectorlen) {
@@ -743,9 +762,15 @@ static int log_writes_map(struct dm_target *ti, struct bio *bio)
 			return DM_MAPIO_KILL;
 		}
 
+<<<<<<< HEAD
 		dst = kmap_local_page(page);
 		memcpy_from_bvec(dst, &bv);
 		kunmap_local(dst);
+=======
+		dst = kmap_atomic(page);
+		memcpy_from_bvec(dst, &bv);
+		kunmap_atomic(dst);
+>>>>>>> b7ba80a49124 (Commit)
 		block->vecs[i].bv_page = page;
 		block->vecs[i].bv_len = bv.bv_len;
 		block->vec_cnt++;
@@ -793,10 +818,17 @@ static int normal_end_io(struct dm_target *ti, struct bio *bio,
  * INFO format: <logged entries> <highest allocated sector>
  */
 static void log_writes_status(struct dm_target *ti, status_type_t type,
+<<<<<<< HEAD
 			      unsigned int status_flags, char *result,
 			      unsigned int maxlen)
 {
 	unsigned int sz = 0;
+=======
+			      unsigned status_flags, char *result,
+			      unsigned maxlen)
+{
+	unsigned sz = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct log_writes_c *lc = ti->private;
 
 	switch (type) {
@@ -845,8 +877,13 @@ static int log_writes_iterate_devices(struct dm_target *ti,
  * Messages supported:
  *   mark <mark data> - specify the marked data.
  */
+<<<<<<< HEAD
 static int log_writes_message(struct dm_target *ti, unsigned int argc, char **argv,
 			      char *result, unsigned int maxlen)
+=======
+static int log_writes_message(struct dm_target *ti, unsigned argc, char **argv,
+			      char *result, unsigned maxlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r = -EINVAL;
 	struct log_writes_c *lc = ti->private;
@@ -876,7 +913,10 @@ static void log_writes_io_hints(struct dm_target *ti, struct queue_limits *limit
 	limits->logical_block_size = bdev_logical_block_size(lc->dev->bdev);
 	limits->physical_block_size = bdev_physical_block_size(lc->dev->bdev);
 	limits->io_min = limits->physical_block_size;
+<<<<<<< HEAD
 	limits->dma_alignment = limits->logical_block_size - 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #if IS_ENABLED(CONFIG_FS_DAX)

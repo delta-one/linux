@@ -76,7 +76,12 @@ static void rpcrdma_mrs_destroy(struct rpcrdma_xprt *r_xprt);
 static void rpcrdma_ep_get(struct rpcrdma_ep *ep);
 static int rpcrdma_ep_put(struct rpcrdma_ep *ep);
 static struct rpcrdma_regbuf *
+<<<<<<< HEAD
 rpcrdma_regbuf_alloc(size_t size, enum dma_data_direction direction);
+=======
+rpcrdma_regbuf_alloc(size_t size, enum dma_data_direction direction,
+		     gfp_t flags);
+>>>>>>> b7ba80a49124 (Commit)
 static void rpcrdma_regbuf_dma_unmap(struct rpcrdma_regbuf *rb);
 static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb);
 
@@ -372,7 +377,11 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
 	struct rpcrdma_ep *ep;
 	int rc;
 
+<<<<<<< HEAD
 	ep = kzalloc(sizeof(*ep), XPRTRDMA_GFP_FLAGS);
+=======
+	ep = kzalloc(sizeof(*ep), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ep)
 		return -ENOTCONN;
 	ep->re_xprt = &r_xprt->rx_xprt;
@@ -605,7 +614,11 @@ static struct rpcrdma_sendctx *rpcrdma_sendctx_create(struct rpcrdma_ep *ep)
 	struct rpcrdma_sendctx *sc;
 
 	sc = kzalloc(struct_size(sc, sc_sges, ep->re_attr.cap.max_send_sge),
+<<<<<<< HEAD
 		     XPRTRDMA_GFP_FLAGS);
+=======
+		     GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!sc)
 		return NULL;
 
@@ -628,7 +641,11 @@ static int rpcrdma_sendctxs_create(struct rpcrdma_xprt *r_xprt)
 	 * Sends are posted.
 	 */
 	i = r_xprt->rx_ep->re_max_requests + RPCRDMA_MAX_BC_REQUESTS;
+<<<<<<< HEAD
 	buf->rb_sc_ctxs = kcalloc(i, sizeof(sc), XPRTRDMA_GFP_FLAGS);
+=======
+	buf->rb_sc_ctxs = kcalloc(i, sizeof(sc), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!buf->rb_sc_ctxs)
 		return -ENOMEM;
 
@@ -739,16 +756,25 @@ rpcrdma_mrs_create(struct rpcrdma_xprt *r_xprt)
 {
 	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
 	struct rpcrdma_ep *ep = r_xprt->rx_ep;
+<<<<<<< HEAD
 	struct ib_device *device = ep->re_id->device;
 	unsigned int count;
 
 	/* Try to allocate enough to perform one full-sized I/O */
+=======
+	unsigned int count;
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (count = 0; count < ep->re_max_rdma_segs; count++) {
 		struct rpcrdma_mr *mr;
 		int rc;
 
+<<<<<<< HEAD
 		mr = kzalloc_node(sizeof(*mr), XPRTRDMA_GFP_FLAGS,
 				  ibdev_to_node(device));
+=======
+		mr = kzalloc(sizeof(*mr), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!mr)
 			break;
 
@@ -793,24 +819,44 @@ void rpcrdma_mrs_refresh(struct rpcrdma_xprt *r_xprt)
 	/* If there is no underlying connection, it's no use
 	 * to wake the refresh worker.
 	 */
+<<<<<<< HEAD
 	if (ep->re_connect_status != 1)
 		return;
 	queue_work(system_highpri_wq, &buf->rb_refresh_worker);
+=======
+	if (ep->re_connect_status == 1) {
+		/* The work is scheduled on a WQ_MEM_RECLAIM
+		 * workqueue in order to prevent MR allocation
+		 * from recursing into NFS during direct reclaim.
+		 */
+		queue_work(xprtiod_workqueue, &buf->rb_refresh_worker);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
  * rpcrdma_req_create - Allocate an rpcrdma_req object
  * @r_xprt: controlling r_xprt
  * @size: initial size, in bytes, of send and receive buffers
+<<<<<<< HEAD
  *
  * Returns an allocated and fully initialized rpcrdma_req or NULL.
  */
 struct rpcrdma_req *rpcrdma_req_create(struct rpcrdma_xprt *r_xprt,
 				       size_t size)
+=======
+ * @flags: GFP flags passed to memory allocators
+ *
+ * Returns an allocated and fully initialized rpcrdma_req or NULL.
+ */
+struct rpcrdma_req *rpcrdma_req_create(struct rpcrdma_xprt *r_xprt, size_t size,
+				       gfp_t flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rpcrdma_buffer *buffer = &r_xprt->rx_buf;
 	struct rpcrdma_req *req;
 
+<<<<<<< HEAD
 	req = kzalloc(sizeof(*req), XPRTRDMA_GFP_FLAGS);
 	if (req == NULL)
 		goto out1;
@@ -820,6 +866,17 @@ struct rpcrdma_req *rpcrdma_req_create(struct rpcrdma_xprt *r_xprt,
 		goto out2;
 
 	req->rl_recvbuf = rpcrdma_regbuf_alloc(size, DMA_NONE);
+=======
+	req = kzalloc(sizeof(*req), flags);
+	if (req == NULL)
+		goto out1;
+
+	req->rl_sendbuf = rpcrdma_regbuf_alloc(size, DMA_TO_DEVICE, flags);
+	if (!req->rl_sendbuf)
+		goto out2;
+
+	req->rl_recvbuf = rpcrdma_regbuf_alloc(size, DMA_NONE, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!req->rl_recvbuf)
 		goto out3;
 
@@ -831,7 +888,11 @@ struct rpcrdma_req *rpcrdma_req_create(struct rpcrdma_xprt *r_xprt,
 	return req;
 
 out3:
+<<<<<<< HEAD
 	rpcrdma_regbuf_free(req->rl_sendbuf);
+=======
+	kfree(req->rl_sendbuf);
+>>>>>>> b7ba80a49124 (Commit)
 out2:
 	kfree(req);
 out1:
@@ -855,7 +916,11 @@ int rpcrdma_req_setup(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
 		     r_xprt->rx_ep->re_max_rdma_segs * rpcrdma_readchunk_maxsz;
 	maxhdrsize *= sizeof(__be32);
 	rb = rpcrdma_regbuf_alloc(__roundup_pow_of_two(maxhdrsize),
+<<<<<<< HEAD
 				  DMA_TO_DEVICE);
+=======
+				  DMA_TO_DEVICE, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!rb)
 		goto out;
 
@@ -926,12 +991,20 @@ struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt,
 	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
 	struct rpcrdma_rep *rep;
 
+<<<<<<< HEAD
 	rep = kzalloc(sizeof(*rep), XPRTRDMA_GFP_FLAGS);
+=======
+	rep = kzalloc(sizeof(*rep), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rep == NULL)
 		goto out;
 
 	rep->rr_rdmabuf = rpcrdma_regbuf_alloc(r_xprt->rx_ep->re_inline_recv,
+<<<<<<< HEAD
 					       DMA_FROM_DEVICE);
+=======
+					       DMA_FROM_DEVICE, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!rep->rr_rdmabuf)
 		goto out_free;
 
@@ -1061,8 +1134,13 @@ int rpcrdma_buffer_create(struct rpcrdma_xprt *r_xprt)
 	for (i = 0; i < r_xprt->rx_xprt.max_reqs; i++) {
 		struct rpcrdma_req *req;
 
+<<<<<<< HEAD
 		req = rpcrdma_req_create(r_xprt,
 					 RPCRDMA_V1_DEF_INLINE_SIZE * 2);
+=======
+		req = rpcrdma_req_create(r_xprt, RPCRDMA_V1_DEF_INLINE_SIZE * 2,
+					 GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!req)
 			goto out;
 		list_add(&req->rl_list, &buf->rb_send_bufs);
@@ -1232,6 +1310,7 @@ void rpcrdma_buffer_put(struct rpcrdma_buffer *buffers, struct rpcrdma_req *req)
  * or Replies they may be registered externally via frwr_map.
  */
 static struct rpcrdma_regbuf *
+<<<<<<< HEAD
 rpcrdma_regbuf_alloc(size_t size, enum dma_data_direction direction)
 {
 	struct rpcrdma_regbuf *rb;
@@ -1240,6 +1319,17 @@ rpcrdma_regbuf_alloc(size_t size, enum dma_data_direction direction)
 	if (!rb)
 		return NULL;
 	rb->rg_data = kmalloc(size, XPRTRDMA_GFP_FLAGS);
+=======
+rpcrdma_regbuf_alloc(size_t size, enum dma_data_direction direction,
+		     gfp_t flags)
+{
+	struct rpcrdma_regbuf *rb;
+
+	rb = kmalloc(sizeof(*rb), flags);
+	if (!rb)
+		return NULL;
+	rb->rg_data = kmalloc(size, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!rb->rg_data) {
 		kfree(rb);
 		return NULL;

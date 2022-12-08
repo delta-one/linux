@@ -104,7 +104,10 @@ required:
 
 allOf:
   - $ref: /schemas/spi/spi-peripheral-props.yaml#
+<<<<<<< HEAD
   - $ref: /schemas/nvmem/nvmem.yaml
+=======
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -122,7 +125,11 @@ unevaluatedProperties: false
 examples:
   - |
     #include <dt-bindings/gpio/gpio.h>
+<<<<<<< HEAD
     spi {
+=======
+    spi0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 

@@ -93,8 +93,11 @@ SECTIONS
 		_decompressor_syms_end = .;
 	}
 
+<<<<<<< HEAD
 	_decompressor_end = .;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_KERNEL_UNCOMPRESSED
 	. = 0x100000;
 #else
@@ -104,6 +107,7 @@ SECTIONS
 		_compressed_start = .;
 		*(.vmlinux.bin.compressed)
 		_compressed_end = .;
+<<<<<<< HEAD
 	}
 
 #define SB_TRAILER_SIZE 32
@@ -115,6 +119,10 @@ SECTIONS
 		QUAD(0)
 		QUAD(0)
 		QUAD(0x000000207a49504c)
+=======
+		FILL(0xff);
+		. = ALIGN(4096);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	_end = .;
 

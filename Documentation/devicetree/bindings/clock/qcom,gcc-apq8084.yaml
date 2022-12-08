@@ -4,19 +4,32 @@
 $id: http://devicetree.org/schemas/clock/qcom,gcc-apq8084.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Qualcomm Global Clock & Reset Controller on APQ8084
+=======
+title: Qualcomm Global Clock & Reset Controller Binding for APQ8084
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Stephen Boyd <sboyd@kernel.org>
   - Taniya Das <quic_tdas@quicinc.com>
 
 description: |
+<<<<<<< HEAD
   Qualcomm global clock control module provides the clocks, resets and power
   domains on APQ8084.
 
   See also::
     include/dt-bindings/clock/qcom,gcc-apq8084.h
     include/dt-bindings/reset/qcom,gcc-apq8084.h
+=======
+  Qualcomm global clock control module which supports the clocks, resets and
+  power domains on APQ8084.
+
+  See also::
+  - dt-bindings/clock/qcom,gcc-apq8084.h
+  - dt-bindings/reset/qcom,gcc-apq8084.h
+>>>>>>> b7ba80a49124 (Commit)
 
 allOf:
   - $ref: qcom,gcc.yaml#
@@ -25,6 +38,7 @@ properties:
   compatible:
     const: qcom,gcc-apq8084
 
+<<<<<<< HEAD
   clocks:
     items:
       - description: XO source
@@ -49,6 +63,8 @@ properties:
       - const: sata_rx_clk
       - const: pcie_pipe
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
 
@@ -56,13 +72,17 @@ unevaluatedProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     /* UFS PHY on APQ8084 is not supported (yet), so these bindings just serve an example */
+=======
+>>>>>>> b7ba80a49124 (Commit)
     clock-controller@fc400000 {
         compatible = "qcom,gcc-apq8084";
         reg = <0xfc400000 0x4000>;
         #clock-cells = <1>;
         #reset-cells = <1>;
         #power-domain-cells = <1>;
+<<<<<<< HEAD
 
         clocks = <&xo_board>,
                  <&sleep_clk>,
@@ -82,5 +102,7 @@ examples:
                       "sata_asic0_clk",
                       "sata_rx_clk",
                       "pcie_pipe";
+=======
+>>>>>>> b7ba80a49124 (Commit)
     };
 ...

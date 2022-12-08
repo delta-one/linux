@@ -11,15 +11,22 @@
 
 #include <linux/ieee802154.h>
 #include <linux/netdevice.h>
+<<<<<<< HEAD
 #include <linux/spinlock.h>
+=======
+#include <linux/mutex.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/bug.h>
 
 #include <net/nl802154.h>
 
 struct wpan_phy;
 struct wpan_phy_cca;
+<<<<<<< HEAD
 struct cfg802154_scan_request;
 struct cfg802154_beacon_request;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_IEEE802154_NL802154_EXPERIMENTAL
 struct ieee802154_llsec_device_key;
@@ -69,6 +76,7 @@ struct cfg802154_ops {
 				struct wpan_dev *wpan_dev, bool mode);
 	int	(*set_ackreq_default)(struct wpan_phy *wpan_phy,
 				      struct wpan_dev *wpan_dev, bool ackreq);
+<<<<<<< HEAD
 	int	(*trigger_scan)(struct wpan_phy *wpan_phy,
 				struct cfg802154_scan_request *request);
 	int	(*abort_scan)(struct wpan_phy *wpan_phy,
@@ -77,6 +85,8 @@ struct cfg802154_ops {
 				struct cfg802154_beacon_request *request);
 	int	(*stop_beacons)(struct wpan_phy *wpan_phy,
 				struct wpan_dev *wpan_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_IEEE802154_NL802154_EXPERIMENTAL
 	void	(*get_llsec_table)(struct wpan_phy *wpan_phy,
 				   struct wpan_dev *wpan_dev,
@@ -176,14 +186,20 @@ wpan_phy_cca_cmp(const struct wpan_phy_cca *a, const struct wpan_phy_cca *b)
  *	level setting.
  * @WPAN_PHY_FLAG_CCA_MODE: Indicates that transceiver will support cca mode
  *	setting.
+<<<<<<< HEAD
  * @WPAN_PHY_FLAG_STATE_QUEUE_STOPPED: Indicates that the transmit queue was
  *	temporarily stopped.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum wpan_phy_flags {
 	WPAN_PHY_FLAG_TXPOWER		= BIT(1),
 	WPAN_PHY_FLAG_CCA_ED_LEVEL	= BIT(2),
 	WPAN_PHY_FLAG_CCA_MODE		= BIT(3),
+<<<<<<< HEAD
 	WPAN_PHY_FLAG_STATE_QUEUE_STOPPED = BIT(4),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct wpan_phy {
@@ -195,7 +211,11 @@ struct wpan_phy {
 	 */
 	const void *privid;
 
+<<<<<<< HEAD
 	unsigned long flags;
+=======
+	u32 flags;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * This is a PIB according to 802.15.4-2011.
@@ -227,6 +247,7 @@ struct wpan_phy {
 	/* the network namespace this phy lives in currently */
 	possible_net_t _net;
 
+<<<<<<< HEAD
 	/* Transmission monitoring and control */
 	spinlock_t queue_lock;
 	atomic_t ongoing_txs;
@@ -238,6 +259,8 @@ struct wpan_phy {
 	 */
 	enum ieee802154_filtering_level filtering;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	char priv[] __aligned(NETDEV_ALIGN);
 };
 
@@ -251,6 +274,7 @@ static inline void wpan_phy_net_set(struct wpan_phy *wpan_phy, struct net *net)
 	write_pnet(&wpan_phy->_net, net);
 }
 
+<<<<<<< HEAD
 static inline bool ieee802154_chan_is_valid(struct wpan_phy *phy,
 					    u8 page, u8 channel)
 {
@@ -262,6 +286,8 @@ static inline bool ieee802154_chan_is_valid(struct wpan_phy *phy,
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct ieee802154_addr - IEEE802.15.4 device address
  * @mode: Address mode from frame header. Can be one of:
@@ -281,6 +307,7 @@ struct ieee802154_addr {
 	};
 };
 
+<<<<<<< HEAD
 /**
  * struct ieee802154_coord_desc - Coordinator descriptor
  * @addr: PAN ID and coordinator address
@@ -353,6 +380,8 @@ struct cfg802154_mac_pkt {
 	u8 channel;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ieee802154_llsec_key_id {
 	u8 mode;
 	u8 id;
@@ -472,6 +501,11 @@ struct wpan_dev {
 
 	bool lbt;
 
+<<<<<<< HEAD
+=======
+	bool promiscuous_mode;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* fallback for acknowledgment bit setting */
 	bool ackreq;
 };
@@ -522,7 +556,11 @@ static inline const char *wpan_phy_name(struct wpan_phy *phy)
 	return dev_name(&phy->dev);
 }
 
+<<<<<<< HEAD
 void ieee802154_configure_durations(struct wpan_phy *phy,
 				    unsigned int page, unsigned int channel);
+=======
+void ieee802154_configure_durations(struct wpan_phy *phy);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __NET_CFG802154_H */

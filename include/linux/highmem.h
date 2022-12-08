@@ -86,8 +86,13 @@ static inline void kmap_flush_unused(void);
  * virtual address of the direct mapping. Only real highmem pages are
  * temporarily mapped.
  *
+<<<<<<< HEAD
  * While kmap_local_page() is significantly faster than kmap() for the highmem
  * case it comes with restrictions about the pointer validity.
+=======
+ * While it is significantly faster than kmap() for the higmem case it
+ * comes with restrictions about the pointer validity.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * On HIGHMEM enabled systems mapping a highmem page has the side effect of
  * disabling migration in order to keep the virtual address stable across
@@ -119,8 +124,14 @@ static inline void *kmap_local_page(struct page *page);
  * virtual address of the direct mapping. Only real highmem pages are
  * temporarily mapped.
  *
+<<<<<<< HEAD
  * While it is significantly faster than kmap() for the highmem case it
  * comes with restrictions about the pointer validity.
+=======
+ * While it is significantly faster than kmap() for the higmem case it
+ * comes with restrictions about the pointer validity. Only use when really
+ * necessary.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * On HIGHMEM enabled systems mapping a highmem page has the side effect of
  * disabling migration in order to keep the virtual address stable across
@@ -207,6 +218,7 @@ static inline void clear_user_highpage(struct page *page, unsigned long vaddr)
 }
 #endif
 
+<<<<<<< HEAD
 #ifndef vma_alloc_zeroed_movable_folio
 /**
  * vma_alloc_zeroed_movable_folio - Allocate a zeroed page for a VMA.
@@ -231,6 +243,33 @@ struct folio *vma_alloc_zeroed_movable_folio(struct vm_area_struct *vma,
 		clear_user_highpage(&folio->page, vaddr);
 
 	return folio;
+=======
+#ifndef __HAVE_ARCH_ALLOC_ZEROED_USER_HIGHPAGE_MOVABLE
+/**
+ * alloc_zeroed_user_highpage_movable - Allocate a zeroed HIGHMEM page for a VMA that the caller knows can move
+ * @vma: The VMA the page is to be allocated for
+ * @vaddr: The virtual address the page will be inserted into
+ *
+ * Returns: The allocated and zeroed HIGHMEM page
+ *
+ * This function will allocate a page for a VMA that the caller knows will
+ * be able to migrate in the future using move_pages() or reclaimed
+ *
+ * An architecture may override this function by defining
+ * __HAVE_ARCH_ALLOC_ZEROED_USER_HIGHPAGE_MOVABLE and providing their own
+ * implementation.
+ */
+static inline struct page *
+alloc_zeroed_user_highpage_movable(struct vm_area_struct *vma,
+				   unsigned long vaddr)
+{
+	struct page *page = alloc_page_vma(GFP_HIGHUSER_MOVABLE, vma, vaddr);
+
+	if (page)
+		clear_user_highpage(page, vaddr);
+
+	return page;
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif
 
@@ -243,10 +282,19 @@ static inline void clear_highpage(struct page *page)
 
 static inline void clear_highpage_kasan_tagged(struct page *page)
 {
+<<<<<<< HEAD
 	void *kaddr = kmap_local_page(page);
 
 	clear_page(kasan_reset_tag(kaddr));
 	kunmap_local(kaddr);
+=======
+	u8 tag;
+
+	tag = page_kasan_tag(page);
+	page_kasan_tag_reset(page);
+	clear_highpage(page);
+	page_kasan_tag_set(page, tag);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifndef __HAVE_ARCH_TAG_CLEAR_HIGHPAGE
@@ -331,6 +379,7 @@ static inline void copy_highpage(struct page *to, struct page *from)
 
 #endif
 
+<<<<<<< HEAD
 #ifdef copy_mc_to_kernel
 /*
  * If architecture supports machine check exception handling, define the
@@ -385,6 +434,8 @@ static inline int copy_mc_highpage(struct page *to, struct page *from)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void memcpy_page(struct page *dst_page, size_t dst_off,
 			       struct page *src_page, size_t src_off,
 			       size_t len)
@@ -440,6 +491,7 @@ static inline void memzero_page(struct page *page, size_t offset, size_t len)
 }
 
 /**
+<<<<<<< HEAD
  * memcpy_from_file_folio - Copy some bytes from a file folio.
  * @to: The destination buffer.
  * @folio: The folio to copy from.
@@ -470,6 +522,8 @@ static inline size_t memcpy_from_file_folio(char *to, struct folio *folio,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * folio_zero_segments() - Zero two byte ranges in a folio.
  * @folio: The folio to write to.
  * @start1: The first byte to zero.
@@ -507,10 +561,13 @@ static inline void folio_zero_range(struct folio *folio,
 	zero_user_segments(&folio->page, start, start + length, 0, 0);
 }
 
+<<<<<<< HEAD
 static inline void put_and_unmap_page(struct page *page, void *addr)
 {
 	kunmap_local(addr);
 	put_page(page);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _LINUX_HIGHMEM_H */

@@ -2545,7 +2545,10 @@ fst_remove_one(struct pci_dev *pdev)
 		struct net_device *dev = port_to_dev(&card->ports[i]);
 
 		unregister_hdlc_device(dev);
+<<<<<<< HEAD
 		free_netdev(dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	fst_disable_intr(card);
@@ -2565,7 +2568,10 @@ fst_remove_one(struct pci_dev *pdev)
 				  card->tx_dma_handle_card);
 	}
 	fst_card_array[card->card_no] = NULL;
+<<<<<<< HEAD
 	kfree(card);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct pci_driver fst_driver = {

@@ -278,7 +278,10 @@ MODULE_DEVICE_TABLE(of, rtq6752_device_table);
 static struct i2c_driver rtq6752_driver = {
 	.driver = {
 		.name = "rtq6752",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = rtq6752_device_table,
 	},
 	.probe_new = rtq6752_probe,

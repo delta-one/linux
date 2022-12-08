@@ -405,6 +405,7 @@ static void pe_test_move_inline_str(struct kunit *test)
 /* Handling of reference properties */
 static void pe_test_reference(struct kunit *test)
 {
+<<<<<<< HEAD
 	static const struct software_node node1 = { .name = "1" };
 	static const struct software_node node2 = { .name = "2" };
 	static const struct software_node *group[] = { &node1, &node2, NULL };
@@ -417,6 +418,22 @@ static void pe_test_reference(struct kunit *test)
 	const struct property_entry entries[] = {
 		PROPERTY_ENTRY_REF("ref-1", &node1),
 		PROPERTY_ENTRY_REF("ref-2", &node2, 1, 2),
+=======
+	static const struct software_node nodes[] = {
+		{ .name = "1", },
+		{ .name = "2", },
+		{ }
+	};
+
+	static const struct software_node_ref_args refs[] = {
+		SOFTWARE_NODE_REFERENCE(&nodes[0]),
+		SOFTWARE_NODE_REFERENCE(&nodes[1], 3, 4),
+	};
+
+	const struct property_entry entries[] = {
+		PROPERTY_ENTRY_REF("ref-1", &nodes[0]),
+		PROPERTY_ENTRY_REF("ref-2", &nodes[1], 1, 2),
+>>>>>>> b7ba80a49124 (Commit)
 		PROPERTY_ENTRY_REF_ARRAY("ref-3", refs),
 		{ }
 	};
@@ -425,7 +442,11 @@ static void pe_test_reference(struct kunit *test)
 	struct fwnode_reference_args ref;
 	int error;
 
+<<<<<<< HEAD
 	error = software_node_register_node_group(group);
+=======
+	error = software_node_register_nodes(nodes);
+>>>>>>> b7ba80a49124 (Commit)
 	KUNIT_ASSERT_EQ(test, error, 0);
 
 	node = fwnode_create_software_node(entries, NULL);
@@ -434,7 +455,11 @@ static void pe_test_reference(struct kunit *test)
 	error = fwnode_property_get_reference_args(node, "ref-1", NULL,
 						   0, 0, &ref);
 	KUNIT_ASSERT_EQ(test, error, 0);
+<<<<<<< HEAD
 	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &node1);
+=======
+	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &nodes[0]);
+>>>>>>> b7ba80a49124 (Commit)
 	KUNIT_EXPECT_EQ(test, ref.nargs, 0U);
 
 	/* wrong index */
@@ -445,7 +470,11 @@ static void pe_test_reference(struct kunit *test)
 	error = fwnode_property_get_reference_args(node, "ref-2", NULL,
 						   1, 0, &ref);
 	KUNIT_ASSERT_EQ(test, error, 0);
+<<<<<<< HEAD
 	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &node2);
+=======
+	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &nodes[1]);
+>>>>>>> b7ba80a49124 (Commit)
 	KUNIT_EXPECT_EQ(test, ref.nargs, 1U);
 	KUNIT_EXPECT_EQ(test, ref.args[0], 1LLU);
 
@@ -453,7 +482,11 @@ static void pe_test_reference(struct kunit *test)
 	error = fwnode_property_get_reference_args(node, "ref-2", NULL,
 						   3, 0, &ref);
 	KUNIT_ASSERT_EQ(test, error, 0);
+<<<<<<< HEAD
 	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &node2);
+=======
+	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &nodes[1]);
+>>>>>>> b7ba80a49124 (Commit)
 	KUNIT_EXPECT_EQ(test, ref.nargs, 3U);
 	KUNIT_EXPECT_EQ(test, ref.args[0], 1LLU);
 	KUNIT_EXPECT_EQ(test, ref.args[1], 2LLU);
@@ -468,14 +501,22 @@ static void pe_test_reference(struct kunit *test)
 	error = fwnode_property_get_reference_args(node, "ref-3", NULL,
 						   0, 0, &ref);
 	KUNIT_ASSERT_EQ(test, error, 0);
+<<<<<<< HEAD
 	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &node1);
+=======
+	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &nodes[0]);
+>>>>>>> b7ba80a49124 (Commit)
 	KUNIT_EXPECT_EQ(test, ref.nargs, 0U);
 
 	/* second reference in the array */
 	error = fwnode_property_get_reference_args(node, "ref-3", NULL,
 						   2, 1, &ref);
 	KUNIT_ASSERT_EQ(test, error, 0);
+<<<<<<< HEAD
 	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &node2);
+=======
+	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &nodes[1]);
+>>>>>>> b7ba80a49124 (Commit)
 	KUNIT_EXPECT_EQ(test, ref.nargs, 2U);
 	KUNIT_EXPECT_EQ(test, ref.args[0], 3LLU);
 	KUNIT_EXPECT_EQ(test, ref.args[1], 4LLU);
@@ -486,7 +527,11 @@ static void pe_test_reference(struct kunit *test)
 	KUNIT_EXPECT_NE(test, error, 0);
 
 	fwnode_remove_software_node(node);
+<<<<<<< HEAD
 	software_node_unregister_node_group(group);
+=======
+	software_node_unregister_nodes(nodes);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct kunit_case property_entry_test_cases[] = {

@@ -95,6 +95,10 @@ struct page;
 /* Default vm area behavior is non-executable.  */
 #define VM_DATA_DEFAULT_FLAGS	VM_DATA_FLAGS_NON_EXEC
 
+<<<<<<< HEAD
+=======
+#define pfn_valid(pfn) ((pfn) < max_mapnr)
+>>>>>>> b7ba80a49124 (Commit)
 #define virt_addr_valid(kaddr) pfn_valid(__pa(kaddr) >> PAGE_SHIFT)
 
 /*  Need to not use a define for linesize; may move this to another file.  */
@@ -130,6 +134,16 @@ static inline void clear_page(void *page)
 
 #define page_to_virt(page)	__va(page_to_phys(page))
 
+<<<<<<< HEAD
+=======
+/*
+ * For port to Hexagon Virtual Machine, MAYBE we check for attempts
+ * to reference reserved HVM space, but in any case, the VM will be
+ * protected.
+ */
+#define kern_addr_valid(addr)   (1)
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/mem-layout.h>
 #include <asm-generic/memory_model.h>
 /* XXX Todo: implement assembly-optimized version of getorder. */

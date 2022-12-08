@@ -986,7 +986,11 @@ static int write_to_hw(struct bcm_qspi *qspi, struct spi_device *spi)
 		if (has_bspi(qspi))
 			mspi_cdram &= ~1;
 		else
+<<<<<<< HEAD
 			mspi_cdram |= (~(1 << spi_get_chipselect(spi, 0)) &
+=======
+			mspi_cdram |= (~(1 << spi->chip_select) &
+>>>>>>> b7ba80a49124 (Commit)
 				       MSPI_CDRAM_PCS);
 
 		write_cdram_slot(qspi, slot, mspi_cdram);
@@ -1046,8 +1050,13 @@ static int bcm_qspi_bspi_exec_mem_op(struct spi_device *spi,
 			return -EIO;
 
 	from = op->addr.val;
+<<<<<<< HEAD
 	if (!spi_get_csgpiod(spi, 0))
 		bcm_qspi_chip_select(qspi, spi_get_chipselect(spi, 0));
+=======
+	if (!spi->cs_gpiod)
+		bcm_qspi_chip_select(qspi, spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 	bcm_qspi_write(qspi, MSPI, MSPI_WRITE_LOCK, 0);
 
 	/*
@@ -1126,8 +1135,13 @@ static int bcm_qspi_transfer_one(struct spi_master *master,
 	int slots;
 	unsigned long timeo = msecs_to_jiffies(100);
 
+<<<<<<< HEAD
 	if (!spi_get_csgpiod(spi, 0))
 		bcm_qspi_chip_select(qspi, spi_get_chipselect(spi, 0));
+=======
+	if (!spi->cs_gpiod)
+		bcm_qspi_chip_select(qspi, spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 	qspi->trans_pos.trans = trans;
 	qspi->trans_pos.byte = 0;
 
@@ -1457,7 +1471,11 @@ static const struct bcm_qspi_data bcm_qspi_spcr3_data = {
 	.has_spcr3_sysclk = true,
 };
 
+<<<<<<< HEAD
 static const struct of_device_id bcm_qspi_of_match[] __maybe_unused = {
+=======
+static const struct of_device_id bcm_qspi_of_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.compatible = "brcm,spi-bcm7445-qspi",
 		.data = &bcm_qspi_rev_data,
@@ -1682,7 +1700,11 @@ qspi_probe_err:
 /* probe function to be called by SoC specific platform driver probe */
 EXPORT_SYMBOL_GPL(bcm_qspi_probe);
 
+<<<<<<< HEAD
 void bcm_qspi_remove(struct platform_device *pdev)
+=======
+int bcm_qspi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bcm_qspi *qspi = platform_get_drvdata(pdev);
 
@@ -1690,8 +1712,14 @@ void bcm_qspi_remove(struct platform_device *pdev)
 	bcm_qspi_hw_uninit(qspi);
 	clk_disable_unprepare(qspi->clk);
 	kfree(qspi->dev_ids);
+<<<<<<< HEAD
 }
 
+=======
+
+	return 0;
+}
+>>>>>>> b7ba80a49124 (Commit)
 /* function to be called by SoC specific platform driver remove() */
 EXPORT_SYMBOL_GPL(bcm_qspi_remove);
 

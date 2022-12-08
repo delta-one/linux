@@ -238,7 +238,11 @@ This is implemented in the following way in the Linux kernel:
 * I2C bus drivers trigger SMBus Host Notify by a call to
   i2c_handle_smbus_host_notify().
 * I2C drivers for devices which can trigger SMBus Host Notify will have
+<<<<<<< HEAD
   client->irq assigned to a Host Notify IRQ if no one else specified another.
+=======
+  client->irq assigned to a Host Notify IRQ if noone else specified an other.
+>>>>>>> b7ba80a49124 (Commit)
 
 There is currently no way to retrieve the data parameter from the client.
 

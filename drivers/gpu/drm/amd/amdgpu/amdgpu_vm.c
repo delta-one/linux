@@ -33,7 +33,10 @@
 
 #include <drm/amdgpu_drm.h>
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
 #include <drm/ttm/ttm_tt.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "amdgpu.h"
 #include "amdgpu_trace.h"
 #include "amdgpu_amdkfd.h"
@@ -46,6 +49,7 @@
 /**
  * DOC: GPUVM
  *
+<<<<<<< HEAD
  * GPUVM is the MMU functionality provided on the GPU.
  * GPUVM is similar to the legacy GART on older asics, however
  * rather than there being a single global GART table
@@ -58,10 +62,23 @@
  * Each active GPUVM has an ID associated with it and there is a page table
  * linked with each VMID.  When executing a command buffer,
  * the kernel tells the engine what VMID to use for that command
+=======
+ * GPUVM is similar to the legacy gart on older asics, however
+ * rather than there being a single global gart table
+ * for the entire GPU, there are multiple VM page tables active
+ * at any given time.  The VM page tables can contain a mix
+ * vram pages and system memory pages and system memory pages
+ * can be mapped as snooped (cached system pages) or unsnooped
+ * (uncached system pages).
+ * Each VM has an ID associated with it and there is a page table
+ * associated with each VMID.  When executing a command buffer,
+ * the kernel tells the ring what VMID to use for that command
+>>>>>>> b7ba80a49124 (Commit)
  * buffer.  VMIDs are allocated dynamically as commands are submitted.
  * The userspace drivers maintain their own address space and the kernel
  * sets up their pages tables accordingly when they submit their
  * command buffers and a VMID is assigned.
+<<<<<<< HEAD
  * The hardware supports up to 16 active GPUVMs at any given time.
  *
  * Each GPUVM is represented by a 1-2 or 1-5 level page table, depending
@@ -83,6 +100,10 @@
  * driver manages the GPUVM page tables for each process.  If an GPU client
  * accesses an invalid page, it will generate a GPU page fault, similar to
  * accessing an invalid page on a CPU.
+=======
+ * Cayman/Trinity support up to 8 active VMs at any given time;
+ * SI supports 16.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #define START(node) ((node)->start)
@@ -165,6 +186,35 @@ int amdgpu_vm_set_pasid(struct amdgpu_device *adev, struct amdgpu_vm *vm,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * vm eviction_lock can be taken in MMU notifiers. Make sure no reclaim-FS
+ * happens while holding this lock anywhere to prevent deadlocks when
+ * an MMU notifier runs in reclaim-FS context.
+ */
+static inline void amdgpu_vm_eviction_lock(struct amdgpu_vm *vm)
+{
+	mutex_lock(&vm->eviction_lock);
+	vm->saved_flags = memalloc_noreclaim_save();
+}
+
+static inline int amdgpu_vm_eviction_trylock(struct amdgpu_vm *vm)
+{
+	if (mutex_trylock(&vm->eviction_lock)) {
+		vm->saved_flags = memalloc_noreclaim_save();
+		return 1;
+	}
+	return 0;
+}
+
+static inline void amdgpu_vm_eviction_unlock(struct amdgpu_vm *vm)
+{
+	memalloc_noreclaim_restore(vm->saved_flags);
+	mutex_unlock(&vm->eviction_lock);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * amdgpu_vm_bo_evicted - vm_bo is evicted
  *
@@ -485,6 +535,7 @@ bool amdgpu_vm_need_pipeline_sync(struct amdgpu_ring *ring,
 	struct amdgpu_device *adev = ring->adev;
 	unsigned vmhub = ring->funcs->vmhub;
 	struct amdgpu_vmid_mgr *id_mgr = &adev->vm_manager.id_mgr[vmhub];
+<<<<<<< HEAD
 
 	if (job->vmid == 0)
 		return false;
@@ -499,6 +550,27 @@ bool amdgpu_vm_need_pipeline_sync(struct amdgpu_ring *ring,
 		return true;
 
 	return false;
+=======
+	struct amdgpu_vmid *id;
+	bool gds_switch_needed;
+	bool vm_flush_needed = job->vm_needs_flush || ring->has_compute_vm_bug;
+
+	if (job->vmid == 0)
+		return false;
+	id = &id_mgr->ids[job->vmid];
+	gds_switch_needed = ring->funcs->emit_gds_switch && (
+		id->gds_base != job->gds_base ||
+		id->gds_size != job->gds_size ||
+		id->gws_base != job->gws_base ||
+		id->gws_size != job->gws_size ||
+		id->oa_base != job->oa_base ||
+		id->oa_size != job->oa_size);
+
+	if (amdgpu_vmid_had_gpu_reset(adev, id))
+		return true;
+
+	return vm_flush_needed || gds_switch_needed;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -520,20 +592,42 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job,
 	unsigned vmhub = ring->funcs->vmhub;
 	struct amdgpu_vmid_mgr *id_mgr = &adev->vm_manager.id_mgr[vmhub];
 	struct amdgpu_vmid *id = &id_mgr->ids[job->vmid];
+<<<<<<< HEAD
 	bool spm_update_needed = job->spm_update_needed;
 	bool gds_switch_needed = ring->funcs->emit_gds_switch &&
 		job->gds_switch_needed;
+=======
+	bool gds_switch_needed = ring->funcs->emit_gds_switch && (
+		id->gds_base != job->gds_base ||
+		id->gds_size != job->gds_size ||
+		id->gws_base != job->gws_base ||
+		id->gws_size != job->gws_size ||
+		id->oa_base != job->oa_base ||
+		id->oa_size != job->oa_size);
+>>>>>>> b7ba80a49124 (Commit)
 	bool vm_flush_needed = job->vm_needs_flush;
 	struct dma_fence *fence = NULL;
 	bool pasid_mapping_needed = false;
 	unsigned patch_offset = 0;
+<<<<<<< HEAD
 	int r;
 
+=======
+	bool update_spm_vmid_needed = (job->vm && (job->vm->reserved_vmid[vmhub] != NULL));
+	int r;
+
+	if (update_spm_vmid_needed && adev->gfx.rlc.funcs->update_spm_vmid)
+		adev->gfx.rlc.funcs->update_spm_vmid(adev, job->vmid);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (amdgpu_vmid_had_gpu_reset(adev, id)) {
 		gds_switch_needed = true;
 		vm_flush_needed = true;
 		pasid_mapping_needed = true;
+<<<<<<< HEAD
 		spm_update_needed = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	mutex_lock(&id_mgr->lock);
@@ -551,7 +645,10 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job,
 	if (!vm_flush_needed && !gds_switch_needed && !need_pipe_sync)
 		return 0;
 
+<<<<<<< HEAD
 	amdgpu_ring_ib_begin(ring);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (ring->funcs->init_cond_exec)
 		patch_offset = amdgpu_ring_init_cond_exec(ring);
 
@@ -566,6 +663,7 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job,
 	if (pasid_mapping_needed)
 		amdgpu_gmc_emit_pasid_mapping(ring, job->vmid, job->pasid);
 
+<<<<<<< HEAD
 	if (spm_update_needed && adev->gfx.rlc.funcs->update_spm_vmid)
 		adev->gfx.rlc.funcs->update_spm_vmid(adev, job->vmid);
 
@@ -577,6 +675,8 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job,
 					    job->oa_size);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (vm_flush_needed || pasid_mapping_needed) {
 		r = amdgpu_fence_emit(ring, &fence, NULL, 0);
 		if (r)
@@ -601,6 +701,23 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job,
 	}
 	dma_fence_put(fence);
 
+<<<<<<< HEAD
+=======
+	if (!ring->is_mes_queue && ring->funcs->emit_gds_switch &&
+	    gds_switch_needed) {
+		id->gds_base = job->gds_base;
+		id->gds_size = job->gds_size;
+		id->gws_base = job->gws_base;
+		id->gws_size = job->gws_size;
+		id->oa_base = job->oa_base;
+		id->oa_size = job->oa_size;
+		amdgpu_ring_emit_gds_switch(ring, job->vmid, job->gds_base,
+					    job->gds_size, job->gws_base,
+					    job->gws_size, job->oa_base,
+					    job->oa_size);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (ring->funcs->patch_cond_exec)
 		amdgpu_ring_patch_cond_exec(ring, patch_offset);
 
@@ -609,7 +726,10 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job,
 		amdgpu_ring_emit_switch_buffer(ring);
 		amdgpu_ring_emit_switch_buffer(ring);
 	}
+<<<<<<< HEAD
 	amdgpu_ring_ib_end(ring);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -867,8 +987,11 @@ int amdgpu_vm_update_range(struct amdgpu_device *adev, struct amdgpu_vm *vm,
 					    pages_addr[idx - 1] + PAGE_SIZE))
 						break;
 				}
+<<<<<<< HEAD
 				if (!contiguous)
 					count--;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				num_entries = count *
 					AMDGPU_GPU_PAGES_IN_CPU_PAGE;
 			}
@@ -920,8 +1043,13 @@ error_unlock:
 	return r;
 }
 
+<<<<<<< HEAD
 void amdgpu_vm_get_memory(struct amdgpu_vm *vm,
 			  struct amdgpu_mem_stats *stats)
+=======
+void amdgpu_vm_get_memory(struct amdgpu_vm *vm, uint64_t *vram_mem,
+				uint64_t *gtt_mem, uint64_t *cpu_mem)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct amdgpu_bo_va *bo_va, *tmp;
 
@@ -929,36 +1057,69 @@ void amdgpu_vm_get_memory(struct amdgpu_vm *vm,
 	list_for_each_entry_safe(bo_va, tmp, &vm->idle, base.vm_status) {
 		if (!bo_va->base.bo)
 			continue;
+<<<<<<< HEAD
 		amdgpu_bo_get_memory(bo_va->base.bo, stats);
+=======
+		amdgpu_bo_get_memory(bo_va->base.bo, vram_mem,
+				gtt_mem, cpu_mem);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	list_for_each_entry_safe(bo_va, tmp, &vm->evicted, base.vm_status) {
 		if (!bo_va->base.bo)
 			continue;
+<<<<<<< HEAD
 		amdgpu_bo_get_memory(bo_va->base.bo, stats);
+=======
+		amdgpu_bo_get_memory(bo_va->base.bo, vram_mem,
+				gtt_mem, cpu_mem);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	list_for_each_entry_safe(bo_va, tmp, &vm->relocated, base.vm_status) {
 		if (!bo_va->base.bo)
 			continue;
+<<<<<<< HEAD
 		amdgpu_bo_get_memory(bo_va->base.bo, stats);
+=======
+		amdgpu_bo_get_memory(bo_va->base.bo, vram_mem,
+				gtt_mem, cpu_mem);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	list_for_each_entry_safe(bo_va, tmp, &vm->moved, base.vm_status) {
 		if (!bo_va->base.bo)
 			continue;
+<<<<<<< HEAD
 		amdgpu_bo_get_memory(bo_va->base.bo, stats);
+=======
+		amdgpu_bo_get_memory(bo_va->base.bo, vram_mem,
+				gtt_mem, cpu_mem);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	list_for_each_entry_safe(bo_va, tmp, &vm->invalidated, base.vm_status) {
 		if (!bo_va->base.bo)
 			continue;
+<<<<<<< HEAD
 		amdgpu_bo_get_memory(bo_va->base.bo, stats);
+=======
+		amdgpu_bo_get_memory(bo_va->base.bo, vram_mem,
+				gtt_mem, cpu_mem);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	list_for_each_entry_safe(bo_va, tmp, &vm->done, base.vm_status) {
 		if (!bo_va->base.bo)
 			continue;
+<<<<<<< HEAD
 		amdgpu_bo_get_memory(bo_va->base.bo, stats);
 	}
 	spin_unlock(&vm->status_lock);
 }
 
+=======
+		amdgpu_bo_get_memory(bo_va->base.bo, vram_mem,
+				gtt_mem, cpu_mem);
+	}
+	spin_unlock(&vm->status_lock);
+}
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * amdgpu_vm_bo_update - update all BO mappings in the vm page table
  *
@@ -2318,11 +2479,15 @@ void amdgpu_vm_manager_init(struct amdgpu_device *adev)
 	 */
 #ifdef CONFIG_X86_64
 	if (amdgpu_vm_update_mode == -1) {
+<<<<<<< HEAD
 		/* For asic with VF MMIO access protection
 		 * avoid using CPU for VM table updates
 		 */
 		if (amdgpu_gmc_vram_full_visible(&adev->gmc) &&
 		    !amdgpu_sriov_vf_mmio_access_protection(adev))
+=======
+		if (amdgpu_gmc_vram_full_visible(&adev->gmc))
+>>>>>>> b7ba80a49124 (Commit)
 			adev->vm_manager.vm_update_mode =
 				AMDGPU_VM_USE_CPU_FOR_COMPUTE;
 		else
@@ -2366,6 +2531,10 @@ int amdgpu_vm_ioctl(struct drm_device *dev, void *data, struct drm_file *filp)
 	union drm_amdgpu_vm *args = data;
 	struct amdgpu_device *adev = drm_to_adev(dev);
 	struct amdgpu_fpriv *fpriv = filp->driver_priv;
+<<<<<<< HEAD
+=======
+	long timeout = msecs_to_jiffies(2000);
+>>>>>>> b7ba80a49124 (Commit)
 	int r;
 
 	switch (args->in.op) {
@@ -2377,6 +2546,24 @@ int amdgpu_vm_ioctl(struct drm_device *dev, void *data, struct drm_file *filp)
 			return r;
 		break;
 	case AMDGPU_VM_OP_UNRESERVE_VMID:
+<<<<<<< HEAD
+=======
+		if (amdgpu_sriov_runtime(adev))
+			timeout = 8 * timeout;
+
+		/* Wait vm idle to make sure the vmid set in SPM_VMID is
+		 * not referenced anymore.
+		 */
+		r = amdgpu_bo_reserve(fpriv->vm.root.bo, true);
+		if (r)
+			return r;
+
+		r = amdgpu_vm_wait_idle(&fpriv->vm, timeout);
+		if (r < 0)
+			return r;
+
+		amdgpu_bo_unreserve(fpriv->vm.root.bo);
+>>>>>>> b7ba80a49124 (Commit)
 		amdgpu_vmid_free_reserved(adev, &fpriv->vm, AMDGPU_GFXHUB_0);
 		break;
 	default:

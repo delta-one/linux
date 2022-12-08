@@ -661,6 +661,7 @@ static int check_csum(struct mlx4_cqe *cqe, struct sk_buff *skb, void *va,
 #define MLX4_CQE_STATUS_IP_ANY (MLX4_CQE_STATUS_IPV4)
 #endif
 
+<<<<<<< HEAD
 struct mlx4_en_xdp_buff {
 	struct xdp_buff xdp;
 	struct mlx4_cqe *cqe;
@@ -696,6 +697,11 @@ int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int bud
 {
 	struct mlx4_en_priv *priv = netdev_priv(dev);
 	struct mlx4_en_xdp_buff mxbuf = {};
+=======
+int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int budget)
+{
+	struct mlx4_en_priv *priv = netdev_priv(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	int factor = priv->cqe_factor;
 	struct mlx4_en_rx_ring *ring;
 	struct bpf_prog *xdp_prog;
@@ -703,6 +709,10 @@ int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int bud
 	bool doorbell_pending;
 	bool xdp_redir_flush;
 	struct mlx4_cqe *cqe;
+<<<<<<< HEAD
+=======
+	struct xdp_buff xdp;
+>>>>>>> b7ba80a49124 (Commit)
 	int polled = 0;
 	int index;
 
@@ -712,7 +722,11 @@ int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int bud
 	ring = priv->rx_ring[cq_ring];
 
 	xdp_prog = rcu_dereference_bh(ring->xdp_prog);
+<<<<<<< HEAD
 	xdp_init_buff(&mxbuf.xdp, priv->frag_info[0].frag_stride, &ring->xdp_rxq);
+=======
+	xdp_init_buff(&xdp, priv->frag_info[0].frag_stride, &ring->xdp_rxq);
+>>>>>>> b7ba80a49124 (Commit)
 	doorbell_pending = false;
 	xdp_redir_flush = false;
 
@@ -807,6 +821,7 @@ int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int bud
 						priv->frag_info[0].frag_size,
 						DMA_FROM_DEVICE);
 
+<<<<<<< HEAD
 			xdp_prepare_buff(&mxbuf.xdp, va - frags[0].page_offset,
 					 frags[0].page_offset, length, true);
 			orig_data = mxbuf.xdp.data;
@@ -822,13 +837,30 @@ int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int bud
 				frags[0].page_offset = mxbuf.xdp.data -
 					mxbuf.xdp.data_hard_start;
 				va = mxbuf.xdp.data;
+=======
+			xdp_prepare_buff(&xdp, va - frags[0].page_offset,
+					 frags[0].page_offset, length, false);
+			orig_data = xdp.data;
+
+			act = bpf_prog_run_xdp(xdp_prog, &xdp);
+
+			length = xdp.data_end - xdp.data;
+			if (xdp.data != orig_data) {
+				frags[0].page_offset = xdp.data -
+					xdp.data_hard_start;
+				va = xdp.data;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 
 			switch (act) {
 			case XDP_PASS:
 				break;
 			case XDP_REDIRECT:
+<<<<<<< HEAD
 				if (likely(!xdp_do_redirect(dev, &mxbuf.xdp, xdp_prog))) {
+=======
+				if (likely(!xdp_do_redirect(dev, &xdp, xdp_prog))) {
+>>>>>>> b7ba80a49124 (Commit)
 					ring->xdp_redirect++;
 					xdp_redir_flush = true;
 					frags[0].page = NULL;

@@ -289,17 +289,26 @@ segment_overlaps_others (struct dcss_segment *seg)
 
 /*
  * real segment loading function, called from segment_load
+<<<<<<< HEAD
  * Must return either an error code < 0, or the segment type code >= 0
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int
 __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long *end)
 {
 	unsigned long start_addr, end_addr, dummy;
 	struct dcss_segment *seg;
+<<<<<<< HEAD
 	int rc, diag_cc, segtype;
 
 	start_addr = end_addr = 0;
 	segtype = -1;
+=======
+	int rc, diag_cc;
+
+	start_addr = end_addr = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	seg = kmalloc(sizeof(*seg), GFP_KERNEL | GFP_DMA);
 	if (seg == NULL) {
 		rc = -ENOMEM;
@@ -328,9 +337,15 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
 	seg->res_name[8] = '\0';
 	strlcat(seg->res_name, " (DCSS)", sizeof(seg->res_name));
 	seg->res->name = seg->res_name;
+<<<<<<< HEAD
 	segtype = seg->vm_segtype;
 	if (segtype == SEG_TYPE_SC ||
 	    ((segtype == SEG_TYPE_SR || segtype == SEG_TYPE_ER) && !do_nonshared))
+=======
+	rc = seg->vm_segtype;
+	if (rc == SEG_TYPE_SC ||
+	    ((rc == SEG_TYPE_SR || rc == SEG_TYPE_ER) && !do_nonshared))
+>>>>>>> b7ba80a49124 (Commit)
 		seg->res->flags |= IORESOURCE_READONLY;
 
 	/* Check for overlapping resources before adding the mapping. */
@@ -388,7 +403,11 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
  out_free:
 	kfree(seg);
  out:
+<<<<<<< HEAD
 	return rc < 0 ? rc : segtype;
+=======
+	return rc;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*

@@ -46,7 +46,10 @@
 #define VEC_CONFIG0_YDEL(x)		((x) << 26)
 #define VEC_CONFIG0_CDEL_MASK		GENMASK(25, 24)
 #define VEC_CONFIG0_CDEL(x)		((x) << 24)
+<<<<<<< HEAD
 #define VEC_CONFIG0_SECAM_STD		BIT(21)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define VEC_CONFIG0_PBPR_FIL		BIT(18)
 #define VEC_CONFIG0_CHROMA_GAIN_MASK	GENMASK(17, 16)
 #define VEC_CONFIG0_CHROMA_GAIN_UNITY	(0 << 16)
@@ -70,13 +73,17 @@
 #define VEC_CONFIG0_STD_MASK		GENMASK(1, 0)
 #define VEC_CONFIG0_NTSC_STD		0
 #define VEC_CONFIG0_PAL_BDGHI_STD	1
+<<<<<<< HEAD
 #define VEC_CONFIG0_PAL_M_STD		2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define VEC_CONFIG0_PAL_N_STD		3
 
 #define VEC_SCHPH			0x108
 #define VEC_SOFT_RESET			0x10c
 #define VEC_CLMP0_START			0x144
 #define VEC_CLMP0_END			0x148
+<<<<<<< HEAD
 
 /*
  * These set the color subcarrier frequency
@@ -98,6 +105,8 @@
  * regardless of whether VEC_CONFIG1_CUSTOM_FREQ is enabled or not;
  * that is specified as 4406250 Hz, which corresponds to 0x29C71C72.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define VEC_FREQ3_2			0x180
 #define VEC_FREQ1_0			0x184
 
@@ -140,6 +149,7 @@
 
 #define VEC_INTERRUPT_CONTROL		0x190
 #define VEC_INTERRUPT_STATUS		0x194
+<<<<<<< HEAD
 
 /*
  * Db center frequency for SECAM; the clock for this is the same as for
@@ -148,6 +158,8 @@
  * This is specified as 4250000 Hz, which corresponds to 0x284BDA13.
  * That is also the default value, so no need to set it explicitly.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define VEC_FCW_SECAM_B			0x198
 #define VEC_SECAM_GAIN_VAL		0x19c
 
@@ -202,6 +214,7 @@ struct vc4_vec {
 
 	struct clk *clock;
 
+<<<<<<< HEAD
 	struct drm_property *legacy_tv_mode_property;
 
 	struct debugfs_regset32 regset;
@@ -218,6 +231,13 @@ struct vc4_vec {
 		kunit_fail_current_test("Accessing a register in a unit test!\n");	\
 		writel(val, vec->regs + (offset));					\
 	} while (0)
+=======
+	struct debugfs_regset32 regset;
+};
+
+#define VEC_READ(offset) readl(vec->regs + (offset))
+#define VEC_WRITE(offset, val) writel(val, vec->regs + (offset))
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline struct vc4_vec *
 encoder_to_vc4_vec(struct drm_encoder *encoder)
@@ -225,17 +245,21 @@ encoder_to_vc4_vec(struct drm_encoder *encoder)
 	return container_of(encoder, struct vc4_vec, encoder.base);
 }
 
+<<<<<<< HEAD
 static inline struct vc4_vec *
 connector_to_vc4_vec(struct drm_connector *connector)
 {
 	return container_of(connector, struct vc4_vec, connector);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum vc4_vec_tv_mode_id {
 	VC4_VEC_TV_MODE_NTSC,
 	VC4_VEC_TV_MODE_NTSC_J,
 	VC4_VEC_TV_MODE_PAL,
 	VC4_VEC_TV_MODE_PAL_M,
+<<<<<<< HEAD
 	VC4_VEC_TV_MODE_NTSC_443,
 	VC4_VEC_TV_MODE_PAL_60,
 	VC4_VEC_TV_MODE_PAL_N,
@@ -245,6 +269,12 @@ enum vc4_vec_tv_mode_id {
 struct vc4_vec_tv_mode {
 	unsigned int mode;
 	u16 expected_htotal;
+=======
+};
+
+struct vc4_vec_tv_mode {
+	const struct drm_display_mode *mode;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 config0;
 	u32 config1;
 	u32 custom_freq;
@@ -277,6 +307,7 @@ static const struct debugfs_reg32 vec_regs[] = {
 	VC4_REG32(VEC_DAC_MISC),
 };
 
+<<<<<<< HEAD
 static const struct vc4_vec_tv_mode vc4_vec_tv_modes[] = {
 	{
 		.mode = DRM_MODE_TV_MODE_NTSC,
@@ -357,6 +388,44 @@ static const struct drm_prop_enum_list legacy_tv_mode_names[] = {
 	{ VC4_VEC_TV_MODE_PAL_M, "PAL-M", },
 	{ VC4_VEC_TV_MODE_PAL_N, "PAL-N", },
 	{ VC4_VEC_TV_MODE_SECAM, "SECAM", },
+=======
+static const struct drm_display_mode ntsc_mode = {
+	DRM_MODE("720x480", DRM_MODE_TYPE_DRIVER, 13500,
+		 720, 720 + 14, 720 + 14 + 64, 720 + 14 + 64 + 60, 0,
+		 480, 480 + 7, 480 + 7 + 6, 525, 0,
+		 DRM_MODE_FLAG_INTERLACE)
+};
+
+static const struct drm_display_mode pal_mode = {
+	DRM_MODE("720x576", DRM_MODE_TYPE_DRIVER, 13500,
+		 720, 720 + 20, 720 + 20 + 64, 720 + 20 + 64 + 60, 0,
+		 576, 576 + 4, 576 + 4 + 6, 625, 0,
+		 DRM_MODE_FLAG_INTERLACE)
+};
+
+static const struct vc4_vec_tv_mode vc4_vec_tv_modes[] = {
+	[VC4_VEC_TV_MODE_NTSC] = {
+		.mode = &ntsc_mode,
+		.config0 = VEC_CONFIG0_NTSC_STD | VEC_CONFIG0_PDEN,
+		.config1 = VEC_CONFIG1_C_CVBS_CVBS,
+	},
+	[VC4_VEC_TV_MODE_NTSC_J] = {
+		.mode = &ntsc_mode,
+		.config0 = VEC_CONFIG0_NTSC_STD,
+		.config1 = VEC_CONFIG1_C_CVBS_CVBS,
+	},
+	[VC4_VEC_TV_MODE_PAL] = {
+		.mode = &pal_mode,
+		.config0 = VEC_CONFIG0_PAL_BDGHI_STD,
+		.config1 = VEC_CONFIG1_C_CVBS_CVBS,
+	},
+	[VC4_VEC_TV_MODE_PAL_M] = {
+		.mode = &pal_mode,
+		.config0 = VEC_CONFIG0_PAL_BDGHI_STD,
+		.config1 = VEC_CONFIG1_C_CVBS_CVBS | VEC_CONFIG1_CUSTOM_FREQ,
+		.custom_freq = 0x223b61d1,
+	},
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static enum drm_connector_status
@@ -365,6 +434,7 @@ vc4_vec_connector_detect(struct drm_connector *connector, bool force)
 	return connector_status_unknown;
 }
 
+<<<<<<< HEAD
 static void vc4_vec_connector_reset(struct drm_connector *connector)
 {
 	drm_atomic_helper_connector_reset(connector);
@@ -464,11 +534,29 @@ vc4_vec_connector_get_property(struct drm_connector *connector,
 	}
 
 	return 0;
+=======
+static int vc4_vec_connector_get_modes(struct drm_connector *connector)
+{
+	struct drm_connector_state *state = connector->state;
+	struct drm_display_mode *mode;
+
+	mode = drm_mode_duplicate(connector->dev,
+				  vc4_vec_tv_modes[state->tv.mode].mode);
+	if (!mode) {
+		DRM_ERROR("Failed to create a new display mode\n");
+		return -ENOMEM;
+	}
+
+	drm_mode_probed_add(connector, mode);
+
+	return 1;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct drm_connector_funcs vc4_vec_connector_funcs = {
 	.detect = vc4_vec_connector_detect,
 	.fill_modes = drm_helper_probe_single_connector_modes,
+<<<<<<< HEAD
 	.reset = vc4_vec_connector_reset,
 	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
 	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
@@ -479,12 +567,24 @@ static const struct drm_connector_funcs vc4_vec_connector_funcs = {
 static const struct drm_connector_helper_funcs vc4_vec_connector_helper_funcs = {
 	.atomic_check = drm_atomic_helper_connector_tv_check,
 	.get_modes = drm_connector_helper_tv_get_modes,
+=======
+	.reset = drm_atomic_helper_connector_reset,
+	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+};
+
+static const struct drm_connector_helper_funcs vc4_vec_connector_helper_funcs = {
+	.get_modes = vc4_vec_connector_get_modes,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int vc4_vec_connector_init(struct drm_device *dev, struct vc4_vec *vec)
 {
 	struct drm_connector *connector = &vec->connector;
+<<<<<<< HEAD
 	struct drm_property *prop;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	connector->interlace_allowed = true;
@@ -498,6 +598,7 @@ static int vc4_vec_connector_init(struct drm_device *dev, struct vc4_vec *vec)
 
 	drm_object_attach_property(&connector->base,
 				   dev->mode_config.tv_mode_property,
+<<<<<<< HEAD
 				   DRM_MODE_TV_MODE_NTSC);
 
 	prop = drm_property_create_enum(dev, 0, "mode",
@@ -508,6 +609,9 @@ static int vc4_vec_connector_init(struct drm_device *dev, struct vc4_vec *vec)
 	vec->legacy_tv_mode_property = prop;
 
 	drm_object_attach_property(&connector->base, prop, VC4_VEC_TV_MODE_NTSC);
+=======
+				   VC4_VEC_TV_MODE_NTSC);
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_connector_attach_encoder(connector, &vec->encoder.base);
 
@@ -554,20 +658,29 @@ static void vc4_vec_encoder_enable(struct drm_encoder *encoder,
 	struct drm_connector *connector = &vec->connector;
 	struct drm_connector_state *conn_state =
 		drm_atomic_get_new_connector_state(state, connector);
+<<<<<<< HEAD
 	struct drm_display_mode *adjusted_mode =
 		&encoder->crtc->state->adjusted_mode;
 	const struct vc4_vec_tv_mode *tv_mode;
+=======
+	const struct vc4_vec_tv_mode *tv_mode =
+		&vc4_vec_tv_modes[conn_state->tv.mode];
+>>>>>>> b7ba80a49124 (Commit)
 	int idx, ret;
 
 	if (!drm_dev_enter(drm, &idx))
 		return;
 
+<<<<<<< HEAD
 	tv_mode = vc4_vec_tv_mode_lookup(conn_state->tv.mode,
 					 adjusted_mode->htotal);
 	if (!tv_mode)
 		goto err_dev_exit;
 
 	ret = pm_runtime_resume_and_get(&vec->pdev->dev);
+=======
+	ret = pm_runtime_get_sync(&vec->pdev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0) {
 		DRM_ERROR("Failed to retain power domain: %d\n", ret);
 		goto err_dev_exit;
@@ -613,9 +726,13 @@ static void vc4_vec_encoder_enable(struct drm_encoder *encoder,
 	VEC_WRITE(VEC_CLMP0_START, 0xac);
 	VEC_WRITE(VEC_CLMP0_END, 0xec);
 	VEC_WRITE(VEC_CONFIG2,
+<<<<<<< HEAD
 		  VEC_CONFIG2_UV_DIG_DIS |
 		  VEC_CONFIG2_RGB_DIG_DIS |
 		  ((adjusted_mode->flags & DRM_MODE_FLAG_INTERLACE) ? 0 : VEC_CONFIG2_PROG_SCAN));
+=======
+		  VEC_CONFIG2_UV_DIG_DIS | VEC_CONFIG2_RGB_DIG_DIS);
+>>>>>>> b7ba80a49124 (Commit)
 	VEC_WRITE(VEC_CONFIG3, VEC_CONFIG3_HORIZ_LEN_STD);
 	VEC_WRITE(VEC_DAC_CONFIG, vec->variant->dac_config);
 
@@ -649,6 +766,7 @@ static int vc4_vec_encoder_atomic_check(struct drm_encoder *encoder,
 					struct drm_crtc_state *crtc_state,
 					struct drm_connector_state *conn_state)
 {
+<<<<<<< HEAD
 	const struct drm_display_mode *mode = &crtc_state->adjusted_mode;
 	const struct vc4_vec_tv_mode *tv_mode;
 
@@ -705,6 +823,16 @@ static int vc4_vec_encoder_atomic_check(struct drm_encoder *encoder,
 		return -EINVAL;
 	}
 
+=======
+	const struct vc4_vec_tv_mode *vec_mode;
+
+	vec_mode = &vc4_vec_tv_modes[conn_state->tv.mode];
+
+	if (conn_state->crtc &&
+	    !drm_mode_equal(vec_mode->mode, &crtc_state->adjusted_mode))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -718,8 +846,17 @@ static int vc4_vec_late_register(struct drm_encoder *encoder)
 {
 	struct drm_device *drm = encoder->dev;
 	struct vc4_vec *vec = encoder_to_vc4_vec(encoder);
+<<<<<<< HEAD
 
 	vc4_debugfs_add_regset32(drm, "vec_regs", &vec->regset);
+=======
+	int ret;
+
+	ret = vc4_debugfs_add_regset32(drm->primary, "vec_regs",
+				       &vec->regset);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -746,6 +883,16 @@ static const struct of_device_id vc4_vec_dt_match[] = {
 	{ /* sentinel */ },
 };
 
+<<<<<<< HEAD
+=======
+static const char * const tv_mode_names[] = {
+	[VC4_VEC_TV_MODE_NTSC] = "NTSC",
+	[VC4_VEC_TV_MODE_NTSC_J] = "NTSC-J",
+	[VC4_VEC_TV_MODE_PAL] = "PAL",
+	[VC4_VEC_TV_MODE_PAL_M] = "PAL-M",
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static int vc4_vec_bind(struct device *dev, struct device *master, void *data)
 {
 	struct platform_device *pdev = to_platform_device(dev);
@@ -753,6 +900,7 @@ static int vc4_vec_bind(struct device *dev, struct device *master, void *data)
 	struct vc4_vec *vec;
 	int ret;
 
+<<<<<<< HEAD
 	ret = drm_mode_create_tv_properties(drm,
 					    BIT(DRM_MODE_TV_MODE_NTSC) |
 					    BIT(DRM_MODE_TV_MODE_NTSC_443) |
@@ -761,6 +909,10 @@ static int vc4_vec_bind(struct device *dev, struct device *master, void *data)
 					    BIT(DRM_MODE_TV_MODE_PAL_M) |
 					    BIT(DRM_MODE_TV_MODE_PAL_N) |
 					    BIT(DRM_MODE_TV_MODE_SECAM));
+=======
+	ret = drm_mode_create_tv_properties(drm, ARRAY_SIZE(tv_mode_names),
+					    tv_mode_names);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 

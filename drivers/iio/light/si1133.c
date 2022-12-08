@@ -990,9 +990,15 @@ static int si1133_validate_ids(struct iio_dev *iio_dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int si1133_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int si1133_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct si1133_data *data;
 	struct iio_dev *iio_dev;
 	int err;
@@ -1064,7 +1070,11 @@ static struct i2c_driver si1133_driver = {
 	.driver = {
 	    .name   = "si1133",
 	},
+<<<<<<< HEAD
 	.probe_new = si1133_probe,
+=======
+	.probe  = si1133_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = si1133_ids,
 };
 

@@ -19,6 +19,10 @@
 #include <sound/soc-acpi.h>
 #include "../../codecs/hdac_hdmi.h"
 #include "../../codecs/da7219.h"
+<<<<<<< HEAD
+=======
+#include "../../codecs/da7219-aad.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "../common/soc-intel-quirks.h"
 #include "hda_dsp_common.h"
 
@@ -258,7 +262,11 @@ static int broxton_da7219_codec_init(struct snd_soc_pcm_runtime *rtd)
 	snd_jack_set_key(broxton_headset.jack, SND_JACK_BTN_3,
 			 KEY_VOICECOMMAND);
 
+<<<<<<< HEAD
 	snd_soc_component_set_jack(component, &broxton_headset, NULL);
+=======
+	da7219_aad_jack_det(component, &broxton_headset);
+>>>>>>> b7ba80a49124 (Commit)
 
 	snd_soc_dapm_ignore_suspend(&rtd->card->dapm, "SoC DMIC");
 

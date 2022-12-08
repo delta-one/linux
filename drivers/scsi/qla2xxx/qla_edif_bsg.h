@@ -89,6 +89,7 @@ struct app_plogi_reply {
 struct app_pinfo_req {
 	struct app_id app_info;
 	uint8_t	 num_ports;
+<<<<<<< HEAD
 	struct {
 #ifdef __BIG_ENDIAN
 		uint8_t domain;
@@ -103,6 +104,9 @@ struct app_pinfo_req {
 #endif
 		uint8_t rsvd_1;
 	} remote_pid;
+=======
+	port_id_t remote_pid;
+>>>>>>> b7ba80a49124 (Commit)
 	uint8_t		version;
 	uint8_t		pad[VND_CMD_PAD_SIZE];
 	uint8_t		reserved[VND_CMD_APP_RESERVED_SIZE];

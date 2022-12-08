@@ -26,17 +26,23 @@ intel_pin_fb_obj_dpt(struct drm_framebuffer *fb,
 	struct drm_device *dev = fb->dev;
 	struct drm_i915_private *dev_priv = to_i915(dev);
 	struct drm_i915_gem_object *obj = intel_fb_obj(fb);
+<<<<<<< HEAD
 	struct i915_gem_ww_ctx ww;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct i915_vma *vma;
 	u32 alignment;
 	int ret;
 
+<<<<<<< HEAD
 	/*
 	 * We are not syncing against the binding (and potential migrations)
 	 * below, so this vm must never be async.
 	 */
 	GEM_WARN_ON(vm->bind_async_flags);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (WARN_ON(!i915_gem_object_is_framebuffer(obj)))
 		return ERR_PTR(-EINVAL);
 
@@ -44,6 +50,7 @@ intel_pin_fb_obj_dpt(struct drm_framebuffer *fb,
 
 	atomic_inc(&dev_priv->gpu_error.pending_fb_pin);
 
+<<<<<<< HEAD
 	for_i915_gem_ww(&ww, ret, true) {
 		ret = i915_gem_object_lock(obj, &ww);
 		if (ret)
@@ -85,13 +92,41 @@ intel_pin_fb_obj_dpt(struct drm_framebuffer *fb,
 		ret = i915_vma_pin_ww(vma, &ww, 0, alignment, PIN_GLOBAL);
 		if (ret)
 			continue;
+=======
+	ret = i915_gem_object_lock_interruptible(obj, NULL);
+	if (!ret) {
+		ret = i915_gem_object_set_cache_level(obj, I915_CACHE_NONE);
+		i915_gem_object_unlock(obj);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (ret) {
 		vma = ERR_PTR(ret);
 		goto err;
 	}
 
+<<<<<<< HEAD
 	vma->display_alignment = max(vma->display_alignment, alignment);
+=======
+	vma = i915_vma_instance(obj, vm, view);
+	if (IS_ERR(vma))
+		goto err;
+
+	if (i915_vma_misplaced(vma, 0, alignment, 0)) {
+		ret = i915_vma_unbind_unlocked(vma);
+		if (ret) {
+			vma = ERR_PTR(ret);
+			goto err;
+		}
+	}
+
+	ret = i915_vma_pin(vma, 0, alignment, PIN_GLOBAL);
+	if (ret) {
+		vma = ERR_PTR(ret);
+		goto err;
+	}
+
+	vma->display_alignment = max_t(u64, vma->display_alignment, alignment);
+>>>>>>> b7ba80a49124 (Commit)
 
 	i915_gem_object_flush_if_display(obj);
 
@@ -167,6 +202,10 @@ retry:
 		ret = i915_gem_object_attach_phys(obj, alignment);
 	else if (!ret && HAS_LMEM(dev_priv))
 		ret = i915_gem_object_migrate(obj, &ww, INTEL_REGION_LMEM_0);
+<<<<<<< HEAD
+=======
+	/* TODO: Do we need to sync when migration becomes async? */
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ret)
 		ret = i915_gem_object_pin_pages(obj);
 	if (ret)

@@ -26,7 +26,10 @@
 #include <asm/percpu.h>
 
 extern int boot_cpuid;
+<<<<<<< HEAD
 extern int boot_cpu_hwid; /* PPC64 only */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern int spinning_secondaries;
 extern u32 *cpu_to_phys_id;
 extern bool coregroup_enabled;
@@ -67,7 +70,11 @@ void start_secondary(void *unused);
 extern int smp_send_nmi_ipi(int cpu, void (*fn)(struct pt_regs *), u64 delay_us);
 extern int smp_send_safe_nmi_ipi(int cpu, void (*fn)(struct pt_regs *), u64 delay_us);
 extern void smp_send_debugger_break(void);
+<<<<<<< HEAD
 extern void __noreturn start_secondary_resume(void);
+=======
+extern void start_secondary_resume(void);
+>>>>>>> b7ba80a49124 (Commit)
 extern void smp_generic_give_timebase(void);
 extern void smp_generic_take_timebase(void);
 

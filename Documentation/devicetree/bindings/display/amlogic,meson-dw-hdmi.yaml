@@ -11,7 +11,11 @@ maintainers:
   - Neil Armstrong <neil.armstrong@linaro.org>
 
 allOf:
+<<<<<<< HEAD
   - $ref: /schemas/sound/dai-common.yaml#
+=======
+  - $ref: /schemas/sound/name-prefix.yaml#
+>>>>>>> b7ba80a49124 (Commit)
 
 description: |
   The Amlogic Meson Synopsys Designware Integration is composed of

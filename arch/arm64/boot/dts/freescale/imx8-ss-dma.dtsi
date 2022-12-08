@@ -20,6 +20,7 @@ dma_subsys: bus@5a000000 {
 		clock-output-names = "dma_ipg_clk";
 	};
 
+<<<<<<< HEAD
 	lpspi0: spi@5a000000 {
 		compatible = "fsl,imx7ulp-spi";
 		reg = <0x5a000000 0x10000>;
@@ -84,6 +85,8 @@ dma_subsys: bus@5a000000 {
 		status = "disabled";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	lpuart0: serial@5a060000 {
 		reg = <0x5a060000 0x1000>;
 		interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
@@ -124,6 +127,7 @@ dma_subsys: bus@5a000000 {
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
 	spi0_lpcg: clock-controller@5a400000 {
 		compatible = "fsl,imx8qxp-lpcg";
 		reg = <0x5a400000 0x10000>;
@@ -172,6 +176,8 @@ dma_subsys: bus@5a000000 {
 		power-domains = <&pd IMX_SC_R_SPI_3>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	uart0_lpcg: clock-controller@5a460000 {
 		compatible = "fsl,imx8qxp-lpcg";
 		reg = <0x5a460000 0x10000>;
@@ -268,6 +274,7 @@ dma_subsys: bus@5a000000 {
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
 	adc0: adc@5a880000 {
 		compatible = "nxp,imx8qxp-adc";
 		#io-channel-cells = <1>;
@@ -357,6 +364,8 @@ dma_subsys: bus@5a000000 {
 		status = "disabled";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	i2c0_lpcg: clock-controller@5ac00000 {
 		compatible = "fsl,imx8qxp-lpcg";
 		reg = <0x5ac00000 0x10000>;
@@ -404,6 +413,7 @@ dma_subsys: bus@5a000000 {
 				     "i2c3_lpcg_ipg_clk";
 		power-domains = <&pd IMX_SC_R_I2C_3>;
 	};
+<<<<<<< HEAD
 
 	adc0_lpcg: clock-controller@5ac80000 {
 		compatible = "fsl,imx8qxp-lpcg";
@@ -441,4 +451,6 @@ dma_subsys: bus@5a000000 {
 				     "can0_lpcg_chi_clk";
 		power-domains = <&pd IMX_SC_R_CAN_0>;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

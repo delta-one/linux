@@ -19,15 +19,22 @@
 #include <linux/sunrpc/auth.h>
 #include <linux/sunrpc/gss_krb5.h>
 #include <linux/sunrpc/xdr.h>
+<<<<<<< HEAD
 #include <kunit/visibility.h>
 
 #include "auth_gss_internal.h"
 #include "gss_krb5_internal.h"
+=======
+#include <linux/sunrpc/gss_krb5_enctypes.h>
+
+#include "auth_gss_internal.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
 # define RPCDBG_FACILITY	RPCDBG_AUTH
 #endif
 
+<<<<<<< HEAD
 static struct gss_api_mech gss_kerberos_mech;
 
 #if defined(CONFIG_RPCSEC_GSS_KRB5_SIMPLIFIED)
@@ -40,6 +47,12 @@ static int gss_krb5_import_ctx_v2(struct krb5_ctx *ctx, gfp_t gfp_mask);
 
 static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
 #if defined(CONFIG_RPCSEC_GSS_KRB5_ENCTYPES_DES)
+=======
+static struct gss_api_mech gss_kerberos_mech;	/* forward declaration */
+
+static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+#ifndef CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * DES (All DES enctypes are mapped to the same gss functionality)
 	 */
@@ -49,18 +62,33 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
 	  .name = "des-cbc-crc",
 	  .encrypt_name = "cbc(des)",
 	  .cksum_name = "md5",
+<<<<<<< HEAD
 	  .import_ctx = gss_krb5_import_ctx_des,
 	  .get_mic = gss_krb5_get_mic_v1,
 	  .verify_mic = gss_krb5_verify_mic_v1,
 	  .wrap = gss_krb5_wrap_v1,
 	  .unwrap = gss_krb5_unwrap_v1,
+=======
+	  .encrypt = krb5_encrypt,
+	  .decrypt = krb5_decrypt,
+	  .mk_key = NULL,
+>>>>>>> b7ba80a49124 (Commit)
 	  .signalg = SGN_ALG_DES_MAC_MD5,
 	  .sealalg = SEAL_ALG_DES,
 	  .keybytes = 7,
 	  .keylength = 8,
+<<<<<<< HEAD
 	  .cksumlength = 8,
 	  .keyed_cksum = 0,
 	},
+=======
+	  .blocksize = 8,
+	  .conflen = 8,
+	  .cksumlength = 8,
+	  .keyed_cksum = 0,
+	},
+#endif	/* CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES */
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * 3DES
 	 */
@@ -70,16 +98,23 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
 	  .name = "des3-hmac-sha1",
 	  .encrypt_name = "cbc(des3_ede)",
 	  .cksum_name = "hmac(sha1)",
+<<<<<<< HEAD
 	  .import_ctx = gss_krb5_import_ctx_v1,
 	  .derive_key = krb5_derive_key_v1,
 	  .get_mic = gss_krb5_get_mic_v1,
 	  .verify_mic = gss_krb5_verify_mic_v1,
 	  .wrap = gss_krb5_wrap_v1,
 	  .unwrap = gss_krb5_unwrap_v1,
+=======
+	  .encrypt = krb5_encrypt,
+	  .decrypt = krb5_decrypt,
+	  .mk_key = gss_krb5_des3_make_key,
+>>>>>>> b7ba80a49124 (Commit)
 	  .signalg = SGN_ALG_HMAC_SHA1_DES3_KD,
 	  .sealalg = SEAL_ALG_DES3KD,
 	  .keybytes = 21,
 	  .keylength = 24,
+<<<<<<< HEAD
 	  .cksumlength = 20,
 	  .keyed_cksum = 1,
 	},
@@ -88,12 +123,22 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
 #if defined(CONFIG_RPCSEC_GSS_KRB5_ENCTYPES_AES_SHA1)
 	/*
 	 * AES-128 with SHA-1 (RFC 3962)
+=======
+	  .blocksize = 8,
+	  .conflen = 8,
+	  .cksumlength = 20,
+	  .keyed_cksum = 1,
+	},
+	/*
+	 * AES128
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	{
 	  .etype = ENCTYPE_AES128_CTS_HMAC_SHA1_96,
 	  .ctype = CKSUMTYPE_HMAC_SHA1_96_AES128,
 	  .name = "aes128-cts",
 	  .encrypt_name = "cts(cbc(aes))",
+<<<<<<< HEAD
 	  .aux_cipher = "cbc(aes)",
 	  .cksum_name = "hmac(sha1)",
 	  .import_ctx = gss_krb5_import_ctx_v2,
@@ -118,12 +163,32 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
 	},
 	/*
 	 * AES-256 with SHA-1 (RFC 3962)
+=======
+	  .cksum_name = "hmac(sha1)",
+	  .encrypt = krb5_encrypt,
+	  .decrypt = krb5_decrypt,
+	  .mk_key = gss_krb5_aes_make_key,
+	  .encrypt_v2 = gss_krb5_aes_encrypt,
+	  .decrypt_v2 = gss_krb5_aes_decrypt,
+	  .signalg = -1,
+	  .sealalg = -1,
+	  .keybytes = 16,
+	  .keylength = 16,
+	  .blocksize = 16,
+	  .conflen = 16,
+	  .cksumlength = 12,
+	  .keyed_cksum = 1,
+	},
+	/*
+	 * AES256
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	{
 	  .etype = ENCTYPE_AES256_CTS_HMAC_SHA1_96,
 	  .ctype = CKSUMTYPE_HMAC_SHA1_96_AES256,
 	  .name = "aes256-cts",
 	  .encrypt_name = "cts(cbc(aes))",
+<<<<<<< HEAD
 	  .aux_cipher = "cbc(aes)",
 	  .cksum_name = "hmac(sha1)",
 	  .import_ctx = gss_krb5_import_ctx_v2,
@@ -323,10 +388,48 @@ const struct gss_krb5_enctype *gss_krb5_lookup_enctype(u32 etype)
 	size_t i;
 
 	for (i = 0; i < ARRAY_SIZE(supported_gss_krb5_enctypes); i++)
+=======
+	  .cksum_name = "hmac(sha1)",
+	  .encrypt = krb5_encrypt,
+	  .decrypt = krb5_decrypt,
+	  .mk_key = gss_krb5_aes_make_key,
+	  .encrypt_v2 = gss_krb5_aes_encrypt,
+	  .decrypt_v2 = gss_krb5_aes_decrypt,
+	  .signalg = -1,
+	  .sealalg = -1,
+	  .keybytes = 32,
+	  .keylength = 32,
+	  .blocksize = 16,
+	  .conflen = 16,
+	  .cksumlength = 12,
+	  .keyed_cksum = 1,
+	},
+};
+
+static const int num_supported_enctypes =
+	ARRAY_SIZE(supported_gss_krb5_enctypes);
+
+static int
+supported_gss_krb5_enctype(int etype)
+{
+	int i;
+	for (i = 0; i < num_supported_enctypes; i++)
+		if (supported_gss_krb5_enctypes[i].etype == etype)
+			return 1;
+	return 0;
+}
+
+static const struct gss_krb5_enctype *
+get_gss_krb5_enctype(int etype)
+{
+	int i;
+	for (i = 0; i < num_supported_enctypes; i++)
+>>>>>>> b7ba80a49124 (Commit)
 		if (supported_gss_krb5_enctypes[i].etype == etype)
 			return &supported_gss_krb5_enctypes[i];
 	return NULL;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_IF_KUNIT(gss_krb5_lookup_enctype);
 
 static struct crypto_sync_skcipher *
@@ -343,18 +446,27 @@ gss_krb5_alloc_cipher_v1(struct krb5_ctx *ctx, struct xdr_netobj *key)
 	}
 	return tfm;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline const void *
 get_key(const void *p, const void *end,
 	struct krb5_ctx *ctx, struct crypto_sync_skcipher **res)
 {
+<<<<<<< HEAD
 	struct crypto_sync_skcipher *tfm;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_netobj	key;
 	int			alg;
 
 	p = simple_get_bytes(p, end, &alg, sizeof(alg));
 	if (IS_ERR(p))
 		goto out_err;
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (alg) {
 	case ENCTYPE_DES_CBC_CRC:
 	case ENCTYPE_DES_CBC_MD4:
@@ -363,6 +475,7 @@ get_key(const void *p, const void *end,
 		alg = ENCTYPE_DES_CBC_RAW;
 		break;
 	}
+<<<<<<< HEAD
 	if (!gss_krb5_lookup_enctype(alg)) {
 		pr_warn("gss_krb5: unsupported enctype: %d\n", alg);
 		goto out_err_inval;
@@ -383,6 +496,39 @@ get_key(const void *p, const void *end,
 	return p;
 
 out_err_inval:
+=======
+
+	if (!supported_gss_krb5_enctype(alg)) {
+		printk(KERN_WARNING "gss_kerberos_mech: unsupported "
+			"encryption key algorithm %d\n", alg);
+		p = ERR_PTR(-EINVAL);
+		goto out_err;
+	}
+	p = simple_get_netobj(p, end, &key);
+	if (IS_ERR(p))
+		goto out_err;
+
+	*res = crypto_alloc_sync_skcipher(ctx->gk5e->encrypt_name, 0, 0);
+	if (IS_ERR(*res)) {
+		printk(KERN_WARNING "gss_kerberos_mech: unable to initialize "
+			"crypto algorithm %s\n", ctx->gk5e->encrypt_name);
+		*res = NULL;
+		goto out_err_free_key;
+	}
+	if (crypto_sync_skcipher_setkey(*res, key.data, key.len)) {
+		printk(KERN_WARNING "gss_kerberos_mech: error setting key for "
+			"crypto algorithm %s\n", ctx->gk5e->encrypt_name);
+		goto out_err_free_tfm;
+	}
+
+	kfree(key.data);
+	return p;
+
+out_err_free_tfm:
+	crypto_free_sync_skcipher(*res);
+out_err_free_key:
+	kfree(key.data);
+>>>>>>> b7ba80a49124 (Commit)
 	p = ERR_PTR(-EINVAL);
 out_err:
 	return p;
@@ -402,7 +548,11 @@ gss_import_v1_context(const void *p, const void *end, struct krb5_ctx *ctx)
 	/* Old format supports only DES!  Any other enctype uses new format */
 	ctx->enctype = ENCTYPE_DES_CBC_RAW;
 
+<<<<<<< HEAD
 	ctx->gk5e = gss_krb5_lookup_enctype(ctx->enctype);
+=======
+	ctx->gk5e = get_gss_krb5_enctype(ctx->enctype);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ctx->gk5e == NULL) {
 		p = ERR_PTR(-EINVAL);
 		goto out_err;
@@ -466,6 +616,7 @@ out_err:
 	return PTR_ERR(p);
 }
 
+<<<<<<< HEAD
 #if defined(CONFIG_RPCSEC_GSS_KRB5_SIMPLIFIED)
 static int
 gss_krb5_import_ctx_des(struct krb5_ctx *ctx, gfp_t gfp_mask)
@@ -485,15 +636,80 @@ gss_krb5_import_ctx_v1(struct krb5_ctx *ctx, gfp_t gfp_mask)
 	if (ctx->seq == NULL)
 		goto out_err;
 	ctx->enc = gss_krb5_alloc_cipher_v1(ctx, &keyin);
+=======
+static struct crypto_sync_skcipher *
+context_v2_alloc_cipher(struct krb5_ctx *ctx, const char *cname, u8 *key)
+{
+	struct crypto_sync_skcipher *cp;
+
+	cp = crypto_alloc_sync_skcipher(cname, 0, 0);
+	if (IS_ERR(cp)) {
+		dprintk("gss_kerberos_mech: unable to initialize "
+			"crypto algorithm %s\n", cname);
+		return NULL;
+	}
+	if (crypto_sync_skcipher_setkey(cp, key, ctx->gk5e->keylength)) {
+		dprintk("gss_kerberos_mech: error setting key for "
+			"crypto algorithm %s\n", cname);
+		crypto_free_sync_skcipher(cp);
+		return NULL;
+	}
+	return cp;
+}
+
+static inline void
+set_cdata(u8 cdata[GSS_KRB5_K5CLENGTH], u32 usage, u8 seed)
+{
+	cdata[0] = (usage>>24)&0xff;
+	cdata[1] = (usage>>16)&0xff;
+	cdata[2] = (usage>>8)&0xff;
+	cdata[3] = usage&0xff;
+	cdata[4] = seed;
+}
+
+static int
+context_derive_keys_des3(struct krb5_ctx *ctx, gfp_t gfp_mask)
+{
+	struct xdr_netobj c, keyin, keyout;
+	u8 cdata[GSS_KRB5_K5CLENGTH];
+	u32 err;
+
+	c.len = GSS_KRB5_K5CLENGTH;
+	c.data = cdata;
+
+	keyin.data = ctx->Ksess;
+	keyin.len = ctx->gk5e->keylength;
+	keyout.len = ctx->gk5e->keylength;
+
+	/* seq uses the raw key */
+	ctx->seq = context_v2_alloc_cipher(ctx, ctx->gk5e->encrypt_name,
+					   ctx->Ksess);
+	if (ctx->seq == NULL)
+		goto out_err;
+
+	ctx->enc = context_v2_alloc_cipher(ctx, ctx->gk5e->encrypt_name,
+					   ctx->Ksess);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ctx->enc == NULL)
 		goto out_free_seq;
 
 	/* derive cksum */
+<<<<<<< HEAD
 	keyout.data = ctx->cksum;
 	keyout.len = ctx->gk5e->keylength;
 	if (krb5_derive_key(ctx, &keyin, &keyout, KG_USAGE_SIGN,
 			    KEY_USAGE_SEED_CHECKSUM, gfp_mask))
 		goto out_free_enc;
+=======
+	set_cdata(cdata, KG_USAGE_SIGN, KEY_USAGE_SEED_CHECKSUM);
+	keyout.data = ctx->cksum;
+	err = krb5_derive_key(ctx->gk5e, &keyin, &keyout, &c, gfp_mask);
+	if (err) {
+		dprintk("%s: Error %d deriving cksum key\n",
+			__func__, err);
+		goto out_free_enc;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -504,6 +720,7 @@ out_free_seq:
 out_err:
 	return -EINVAL;
 }
+<<<<<<< HEAD
 #endif
 
 #if defined(CONFIG_RPCSEC_GSS_KRB5_CRYPTOSYSTEM)
@@ -638,6 +855,120 @@ out_free:
 
 #endif
 
+=======
+
+static int
+context_derive_keys_new(struct krb5_ctx *ctx, gfp_t gfp_mask)
+{
+	struct xdr_netobj c, keyin, keyout;
+	u8 cdata[GSS_KRB5_K5CLENGTH];
+	u32 err;
+
+	c.len = GSS_KRB5_K5CLENGTH;
+	c.data = cdata;
+
+	keyin.data = ctx->Ksess;
+	keyin.len = ctx->gk5e->keylength;
+	keyout.len = ctx->gk5e->keylength;
+
+	/* initiator seal encryption */
+	set_cdata(cdata, KG_USAGE_INITIATOR_SEAL, KEY_USAGE_SEED_ENCRYPTION);
+	keyout.data = ctx->initiator_seal;
+	err = krb5_derive_key(ctx->gk5e, &keyin, &keyout, &c, gfp_mask);
+	if (err) {
+		dprintk("%s: Error %d deriving initiator_seal key\n",
+			__func__, err);
+		goto out_err;
+	}
+	ctx->initiator_enc = context_v2_alloc_cipher(ctx,
+						     ctx->gk5e->encrypt_name,
+						     ctx->initiator_seal);
+	if (ctx->initiator_enc == NULL)
+		goto out_err;
+
+	/* acceptor seal encryption */
+	set_cdata(cdata, KG_USAGE_ACCEPTOR_SEAL, KEY_USAGE_SEED_ENCRYPTION);
+	keyout.data = ctx->acceptor_seal;
+	err = krb5_derive_key(ctx->gk5e, &keyin, &keyout, &c, gfp_mask);
+	if (err) {
+		dprintk("%s: Error %d deriving acceptor_seal key\n",
+			__func__, err);
+		goto out_free_initiator_enc;
+	}
+	ctx->acceptor_enc = context_v2_alloc_cipher(ctx,
+						    ctx->gk5e->encrypt_name,
+						    ctx->acceptor_seal);
+	if (ctx->acceptor_enc == NULL)
+		goto out_free_initiator_enc;
+
+	/* initiator sign checksum */
+	set_cdata(cdata, KG_USAGE_INITIATOR_SIGN, KEY_USAGE_SEED_CHECKSUM);
+	keyout.data = ctx->initiator_sign;
+	err = krb5_derive_key(ctx->gk5e, &keyin, &keyout, &c, gfp_mask);
+	if (err) {
+		dprintk("%s: Error %d deriving initiator_sign key\n",
+			__func__, err);
+		goto out_free_acceptor_enc;
+	}
+
+	/* acceptor sign checksum */
+	set_cdata(cdata, KG_USAGE_ACCEPTOR_SIGN, KEY_USAGE_SEED_CHECKSUM);
+	keyout.data = ctx->acceptor_sign;
+	err = krb5_derive_key(ctx->gk5e, &keyin, &keyout, &c, gfp_mask);
+	if (err) {
+		dprintk("%s: Error %d deriving acceptor_sign key\n",
+			__func__, err);
+		goto out_free_acceptor_enc;
+	}
+
+	/* initiator seal integrity */
+	set_cdata(cdata, KG_USAGE_INITIATOR_SEAL, KEY_USAGE_SEED_INTEGRITY);
+	keyout.data = ctx->initiator_integ;
+	err = krb5_derive_key(ctx->gk5e, &keyin, &keyout, &c, gfp_mask);
+	if (err) {
+		dprintk("%s: Error %d deriving initiator_integ key\n",
+			__func__, err);
+		goto out_free_acceptor_enc;
+	}
+
+	/* acceptor seal integrity */
+	set_cdata(cdata, KG_USAGE_ACCEPTOR_SEAL, KEY_USAGE_SEED_INTEGRITY);
+	keyout.data = ctx->acceptor_integ;
+	err = krb5_derive_key(ctx->gk5e, &keyin, &keyout, &c, gfp_mask);
+	if (err) {
+		dprintk("%s: Error %d deriving acceptor_integ key\n",
+			__func__, err);
+		goto out_free_acceptor_enc;
+	}
+
+	switch (ctx->enctype) {
+	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
+	case ENCTYPE_AES256_CTS_HMAC_SHA1_96:
+		ctx->initiator_enc_aux =
+			context_v2_alloc_cipher(ctx, "cbc(aes)",
+						ctx->initiator_seal);
+		if (ctx->initiator_enc_aux == NULL)
+			goto out_free_acceptor_enc;
+		ctx->acceptor_enc_aux =
+			context_v2_alloc_cipher(ctx, "cbc(aes)",
+						ctx->acceptor_seal);
+		if (ctx->acceptor_enc_aux == NULL) {
+			crypto_free_sync_skcipher(ctx->initiator_enc_aux);
+			goto out_free_acceptor_enc;
+		}
+	}
+
+	return 0;
+
+out_free_acceptor_enc:
+	crypto_free_sync_skcipher(ctx->acceptor_enc);
+out_free_initiator_enc:
+	crypto_free_sync_skcipher(ctx->initiator_enc);
+out_err:
+	return -EINVAL;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int
 gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
 		gfp_t gfp_mask)
@@ -674,7 +1005,11 @@ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
 	/* Map ENCTYPE_DES3_CBC_SHA1 to ENCTYPE_DES3_CBC_RAW */
 	if (ctx->enctype == ENCTYPE_DES3_CBC_SHA1)
 		ctx->enctype = ENCTYPE_DES3_CBC_RAW;
+<<<<<<< HEAD
 	ctx->gk5e = gss_krb5_lookup_enctype(ctx->enctype);
+=======
+	ctx->gk5e = get_gss_krb5_enctype(ctx->enctype);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ctx->gk5e == NULL) {
 		dprintk("gss_kerberos_mech: unsupported krb5 enctype %u\n",
 			ctx->enctype);
@@ -700,15 +1035,34 @@ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
 	}
 	ctx->mech_used.len = gss_kerberos_mech.gm_oid.len;
 
+<<<<<<< HEAD
 	return ctx->gk5e->import_ctx(ctx, gfp_mask);
+=======
+	switch (ctx->enctype) {
+	case ENCTYPE_DES3_CBC_RAW:
+		return context_derive_keys_des3(ctx, gfp_mask);
+	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
+	case ENCTYPE_AES256_CTS_HMAC_SHA1_96:
+		return context_derive_keys_new(ctx, gfp_mask);
+	default:
+		return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 out_err:
 	return PTR_ERR(p);
 }
 
 static int
+<<<<<<< HEAD
 gss_krb5_import_sec_context(const void *p, size_t len, struct gss_ctx *ctx_id,
 			    time64_t *endtime, gfp_t gfp_mask)
+=======
+gss_import_sec_context_kerberos(const void *p, size_t len,
+				struct gss_ctx *ctx_id,
+				time64_t *endtime,
+				gfp_t gfp_mask)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const void *end = (const void *)((const char *)p + len);
 	struct  krb5_ctx *ctx;
@@ -722,6 +1076,7 @@ gss_krb5_import_sec_context(const void *p, size_t len, struct gss_ctx *ctx_id,
 		ret = gss_import_v1_context(p, end, ctx);
 	else
 		ret = gss_import_v2_context(p, end, ctx, gfp_mask);
+<<<<<<< HEAD
 	memzero_explicit(&ctx->Ksess, sizeof(ctx->Ksess));
 	if (ret) {
 		kfree(ctx);
@@ -737,6 +1092,22 @@ gss_krb5_import_sec_context(const void *p, size_t len, struct gss_ctx *ctx_id,
 static void
 gss_krb5_delete_sec_context(void *internal_ctx)
 {
+=======
+
+	if (ret == 0) {
+		ctx_id->internal_ctx_id = ctx;
+		if (endtime)
+			*endtime = ctx->endtime;
+	} else
+		kfree(ctx);
+
+	dprintk("RPC:       %s: returning %d\n", __func__, ret);
+	return ret;
+}
+
+static void
+gss_delete_sec_context_kerberos(void *internal_ctx) {
+>>>>>>> b7ba80a49124 (Commit)
 	struct krb5_ctx *kctx = internal_ctx;
 
 	crypto_free_sync_skcipher(kctx->seq);
@@ -745,14 +1116,18 @@ gss_krb5_delete_sec_context(void *internal_ctx)
 	crypto_free_sync_skcipher(kctx->initiator_enc);
 	crypto_free_sync_skcipher(kctx->acceptor_enc_aux);
 	crypto_free_sync_skcipher(kctx->initiator_enc_aux);
+<<<<<<< HEAD
 	crypto_free_ahash(kctx->acceptor_sign);
 	crypto_free_ahash(kctx->initiator_sign);
 	crypto_free_ahash(kctx->acceptor_integ);
 	crypto_free_ahash(kctx->initiator_integ);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(kctx->mech_used.data);
 	kfree(kctx);
 }
 
+<<<<<<< HEAD
 /**
  * gss_krb5_get_mic - get_mic for the Kerberos GSS mechanism
  * @gctx: GSS context
@@ -844,6 +1219,15 @@ static const struct gss_api_ops gss_kerberos_ops = {
 	.gss_wrap		= gss_krb5_wrap,
 	.gss_unwrap		= gss_krb5_unwrap,
 	.gss_delete_sec_context	= gss_krb5_delete_sec_context,
+=======
+static const struct gss_api_ops gss_kerberos_ops = {
+	.gss_import_sec_context	= gss_import_sec_context_kerberos,
+	.gss_get_mic		= gss_get_mic_kerberos,
+	.gss_verify_mic		= gss_verify_mic_kerberos,
+	.gss_wrap		= gss_wrap_kerberos,
+	.gss_unwrap		= gss_unwrap_kerberos,
+	.gss_delete_sec_context	= gss_delete_sec_context_kerberos,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct pf_desc gss_kerberos_pfs[] = {
@@ -884,14 +1268,21 @@ static struct gss_api_mech gss_kerberos_mech = {
 	.gm_ops		= &gss_kerberos_ops,
 	.gm_pf_num	= ARRAY_SIZE(gss_kerberos_pfs),
 	.gm_pfs		= gss_kerberos_pfs,
+<<<<<<< HEAD
 	.gm_upcall_enctypes = gss_krb5_enctype_priority_list,
+=======
+	.gm_upcall_enctypes = KRB5_SUPPORTED_ENCTYPES,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init init_kerberos_module(void)
 {
 	int status;
 
+<<<<<<< HEAD
 	gss_krb5_prepare_enctype_priority_list();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	status = gss_mech_register(&gss_kerberos_mech);
 	if (status)
 		printk("Failed to register kerberos gss mechanism!\n");

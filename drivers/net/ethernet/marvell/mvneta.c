@@ -38,7 +38,11 @@
 #include <net/ipv6.h>
 #include <net/tso.h>
 #include <net/page_pool.h>
+<<<<<<< HEAD
 #include <net/pkt_sched.h>
+=======
+#include <net/pkt_cls.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/bpf_trace.h>
 
 /* Registers */
@@ -813,14 +817,22 @@ mvneta_get_stats64(struct net_device *dev,
 
 		cpu_stats = per_cpu_ptr(pp->stats, cpu);
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&cpu_stats->syncp);
+=======
+			start = u64_stats_fetch_begin_irq(&cpu_stats->syncp);
+>>>>>>> b7ba80a49124 (Commit)
 			rx_packets = cpu_stats->es.ps.rx_packets;
 			rx_bytes   = cpu_stats->es.ps.rx_bytes;
 			rx_dropped = cpu_stats->rx_dropped;
 			rx_errors  = cpu_stats->rx_errors;
 			tx_packets = cpu_stats->es.ps.tx_packets;
 			tx_bytes   = cpu_stats->es.ps.tx_bytes;
+<<<<<<< HEAD
 		} while (u64_stats_fetch_retry(&cpu_stats->syncp, start));
+=======
+		} while (u64_stats_fetch_retry_irq(&cpu_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		stats->rx_packets += rx_packets;
 		stats->rx_bytes   += rx_bytes;
@@ -4228,6 +4240,10 @@ static void mvneta_mac_link_up(struct phylink_config *config,
 }
 
 static const struct phylink_mac_ops mvneta_phylink_ops = {
+<<<<<<< HEAD
+=======
+	.validate = phylink_generic_validate,
+>>>>>>> b7ba80a49124 (Commit)
 	.mac_select_pcs = mvneta_mac_select_pcs,
 	.mac_prepare = mvneta_mac_prepare,
 	.mac_config = mvneta_mac_config,
@@ -4265,12 +4281,20 @@ static void mvneta_mdio_remove(struct mvneta_port *pp)
  */
 static void mvneta_percpu_elect(struct mvneta_port *pp)
 {
+<<<<<<< HEAD
 	int elected_cpu = 0, max_cpu, cpu;
+=======
+	int elected_cpu = 0, max_cpu, cpu, i = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Use the cpu associated to the rxq when it is online, in all
 	 * the other cases, use the cpu 0 which can't be offline.
 	 */
+<<<<<<< HEAD
 	if (pp->rxq_def < nr_cpu_ids && cpu_online(pp->rxq_def))
+=======
+	if (cpu_online(pp->rxq_def))
+>>>>>>> b7ba80a49124 (Commit)
 		elected_cpu = pp->rxq_def;
 
 	max_cpu = num_present_cpus();
@@ -4305,6 +4329,11 @@ static void mvneta_percpu_elect(struct mvneta_port *pp)
 		 */
 		smp_call_function_single(cpu, mvneta_percpu_unmask_interrupt,
 					 pp, true);
+<<<<<<< HEAD
+=======
+		i++;
+
+>>>>>>> b7ba80a49124 (Commit)
 	}
 };
 
@@ -4759,7 +4788,11 @@ mvneta_ethtool_update_pcpu_stats(struct mvneta_port *pp,
 
 		stats = per_cpu_ptr(pp->stats, cpu);
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&stats->syncp);
+=======
+			start = u64_stats_fetch_begin_irq(&stats->syncp);
+>>>>>>> b7ba80a49124 (Commit)
 			skb_alloc_error = stats->es.skb_alloc_error;
 			refill_error = stats->es.refill_error;
 			xdp_redirect = stats->es.ps.xdp_redirect;
@@ -4769,7 +4802,11 @@ mvneta_ethtool_update_pcpu_stats(struct mvneta_port *pp,
 			xdp_xmit_err = stats->es.ps.xdp_xmit_err;
 			xdp_tx = stats->es.ps.xdp_tx;
 			xdp_tx_err = stats->es.ps.xdp_tx_err;
+<<<<<<< HEAD
 		} while (u64_stats_fetch_retry(&stats->syncp, start));
+=======
+		} while (u64_stats_fetch_retry_irq(&stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		es->skb_alloc_error += skb_alloc_error;
 		es->refill_error += refill_error;
@@ -5597,13 +5634,22 @@ static int mvneta_probe(struct platform_device *pdev)
 	 * operation, so only single NAPI should be initialized.
 	 */
 	if (pp->neta_armada3700) {
+<<<<<<< HEAD
 		netif_napi_add(dev, &pp->napi, mvneta_poll);
+=======
+		netif_napi_add(dev, &pp->napi, mvneta_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		for_each_present_cpu(cpu) {
 			struct mvneta_pcpu_port *port =
 				per_cpu_ptr(pp->ports, cpu);
 
+<<<<<<< HEAD
 			netif_napi_add(dev, &port->napi, mvneta_poll);
+=======
+			netif_napi_add(dev, &port->napi, mvneta_poll,
+				       NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 			port->pp = pp;
 		}
 	}
@@ -5612,12 +5658,15 @@ static int mvneta_probe(struct platform_device *pdev)
 			NETIF_F_TSO | NETIF_F_RXCSUM;
 	dev->hw_features |= dev->features;
 	dev->vlan_features |= dev->features;
+<<<<<<< HEAD
 	if (!pp->bm_priv)
 		dev->xdp_features = NETDEV_XDP_ACT_BASIC |
 				    NETDEV_XDP_ACT_REDIRECT |
 				    NETDEV_XDP_ACT_NDO_XMIT |
 				    NETDEV_XDP_ACT_RX_SG |
 				    NETDEV_XDP_ACT_NDO_XMIT_SG;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
 	netif_set_tso_max_segs(dev, MVNETA_MAX_TSO_SEGS);
 

@@ -64,8 +64,12 @@ u8 pvclock_read_flags(struct pvclock_vcpu_time_info *src)
 	return flags & valid_flags;
 }
 
+<<<<<<< HEAD
 static __always_inline
 u64 __pvclock_clocksource_read(struct pvclock_vcpu_time_info *src, bool dowd)
+=======
+u64 pvclock_clocksource_read(struct pvclock_vcpu_time_info *src)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned version;
 	u64 ret;
@@ -78,7 +82,11 @@ u64 __pvclock_clocksource_read(struct pvclock_vcpu_time_info *src, bool dowd)
 		flags = src->flags;
 	} while (pvclock_read_retry(src, version));
 
+<<<<<<< HEAD
 	if (dowd && unlikely((flags & PVCLOCK_GUEST_STOPPED) != 0)) {
+=======
+	if (unlikely((flags & PVCLOCK_GUEST_STOPPED) != 0)) {
+>>>>>>> b7ba80a49124 (Commit)
 		src->flags &= ~PVCLOCK_GUEST_STOPPED;
 		pvclock_touch_watchdogs();
 	}
@@ -101,15 +109,25 @@ u64 __pvclock_clocksource_read(struct pvclock_vcpu_time_info *src, bool dowd)
 	 * updating at the same time, and one of them could be slightly behind,
 	 * making the assumption that last_value always go forward fail to hold.
 	 */
+<<<<<<< HEAD
 	last = arch_atomic64_read(&last_value);
 	do {
 		if (ret <= last)
 			return last;
 	} while (!arch_atomic64_try_cmpxchg(&last_value, &last, ret));
+=======
+	last = atomic64_read(&last_value);
+	do {
+		if (ret < last)
+			return last;
+		last = atomic64_cmpxchg(&last_value, last, ret);
+	} while (unlikely(last != ret));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
 
+<<<<<<< HEAD
 u64 pvclock_clocksource_read(struct pvclock_vcpu_time_info *src)
 {
 	return __pvclock_clocksource_read(src, true);
@@ -120,6 +138,8 @@ noinstr u64 pvclock_clocksource_read_nowd(struct pvclock_vcpu_time_info *src)
 	return __pvclock_clocksource_read(src, false);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void pvclock_read_wallclock(struct pvclock_wall_clock *wall_clock,
 			    struct pvclock_vcpu_time_info *vcpu_time,
 			    struct timespec64 *ts)

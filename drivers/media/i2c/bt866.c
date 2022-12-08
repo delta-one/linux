@@ -173,7 +173,12 @@ static const struct v4l2_subdev_ops bt866_ops = {
 	.video = &bt866_video_ops,
 };
 
+<<<<<<< HEAD
 static int bt866_probe(struct i2c_client *client)
+=======
+static int bt866_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bt866 *encoder;
 	struct v4l2_subdev *sd;
@@ -206,7 +211,11 @@ static struct i2c_driver bt866_driver = {
 	.driver = {
 		.name	= "bt866",
 	},
+<<<<<<< HEAD
 	.probe_new	= bt866_probe,
+=======
+	.probe		= bt866_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= bt866_remove,
 	.id_table	= bt866_id,
 };

@@ -22,7 +22,11 @@
 #include <linux/pfn.h>
 #include <linux/hardirq.h>
 #include <linux/gfp.h>
+<<<<<<< HEAD
 #include <linux/hugetlb.h>
+=======
+#include <linux/initrd.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mmzone.h>
 
 #include <asm/asm-offsets.h>
@@ -152,6 +156,7 @@ EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
 #endif
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_SPARSEMEM_VMEMMAP
 void __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
 			       unsigned long addr, unsigned long next)
@@ -255,6 +260,8 @@ void __init __set_fixmap(enum fixed_addresses idx,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Align swapper_pg_dir in to 64K, allows its address to be loaded
  * with a single LUI instruction in the TLB handlers.  If we used

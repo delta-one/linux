@@ -56,10 +56,15 @@
 #include <linux/numa.h>
 #include <linux/pgtable.h>
 #include <linux/overflow.h>
+<<<<<<< HEAD
 #include <linux/stackprotector.h>
 
 #include <asm/acpi.h>
 #include <asm/cacheinfo.h>
+=======
+
+#include <asm/acpi.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/desc.h>
 #include <asm/nmi.h>
 #include <asm/irq.h>
@@ -121,20 +126,32 @@ int arch_update_cpu_topology(void)
 	return retval;
 }
 
+<<<<<<< HEAD
 
 static unsigned int smpboot_warm_reset_vector_count;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void smpboot_setup_warm_reset_vector(unsigned long start_eip)
 {
 	unsigned long flags;
 
 	spin_lock_irqsave(&rtc_lock, flags);
+<<<<<<< HEAD
 	if (!smpboot_warm_reset_vector_count++) {
 		CMOS_WRITE(0xa, 0xf);
 		*((volatile unsigned short *)phys_to_virt(TRAMPOLINE_PHYS_HIGH)) = start_eip >> 4;
 		*((volatile unsigned short *)phys_to_virt(TRAMPOLINE_PHYS_LOW)) = start_eip & 0xf;
 	}
 	spin_unlock_irqrestore(&rtc_lock, flags);
+=======
+	CMOS_WRITE(0xa, 0xf);
+	spin_unlock_irqrestore(&rtc_lock, flags);
+	*((volatile unsigned short *)phys_to_virt(TRAMPOLINE_PHYS_HIGH)) =
+							start_eip >> 4;
+	*((volatile unsigned short *)phys_to_virt(TRAMPOLINE_PHYS_LOW)) =
+							start_eip & 0xf;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void smpboot_restore_warm_reset_vector(void)
@@ -146,12 +163,19 @@ static inline void smpboot_restore_warm_reset_vector(void)
 	 * to default values.
 	 */
 	spin_lock_irqsave(&rtc_lock, flags);
+<<<<<<< HEAD
 	if (!--smpboot_warm_reset_vector_count) {
 		CMOS_WRITE(0, 0xf);
 		*((volatile u32 *)phys_to_virt(TRAMPOLINE_PHYS_LOW)) = 0;
 	}
 	spin_unlock_irqrestore(&rtc_lock, flags);
 
+=======
+	CMOS_WRITE(0, 0xf);
+	spin_unlock_irqrestore(&rtc_lock, flags);
+
+	*((volatile u32 *)phys_to_virt(TRAMPOLINE_PHYS_LOW)) = 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1053,7 +1077,11 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
 	/* Just in case we booted with a single CPU. */
 	alternatives_enable_smp();
 
+<<<<<<< HEAD
 	per_cpu(pcpu_hot.current_task, cpu) = idle;
+=======
+	per_cpu(current_task, cpu) = idle;
+>>>>>>> b7ba80a49124 (Commit)
 	cpu_init_stack_canary(cpu, idle);
 
 	/* Initialize the interrupt stack(s) */
@@ -1063,7 +1091,13 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
 
 #ifdef CONFIG_X86_32
 	/* Stack for startup_32 can be just as for start_secondary onwards */
+<<<<<<< HEAD
 	per_cpu(pcpu_hot.top_of_stack, cpu) = task_top_of_stack(idle);
+=======
+	per_cpu(cpu_current_top_of_stack, cpu) = task_top_of_stack(idle);
+#else
+	initial_gs = per_cpu_offset(cpu);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	return 0;
 }
@@ -1089,6 +1123,7 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
 		start_ip = real_mode_header->trampoline_start64;
 #endif
 	idle->thread.sp = (unsigned long)task_pt_regs(idle);
+<<<<<<< HEAD
 	initial_code = (unsigned long)start_secondary;
 
 	if (IS_ENABLED(CONFIG_X86_32)) {
@@ -1097,6 +1132,11 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
 	} else {
 		smpboot_control = cpu;
 	}
+=======
+	early_gdt_descr.address = (unsigned long)get_cpu_gdt_rw(cpu);
+	initial_code = (unsigned long)start_secondary;
+	initial_stack  = idle->thread.sp;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Enable the espfix hack for this CPU */
 	init_espfix_ap(cpu);
@@ -1438,6 +1478,11 @@ void __init native_smp_prepare_cpus(unsigned int max_cpus)
 
 	uv_system_init();
 
+<<<<<<< HEAD
+=======
+	set_mtrr_aps_delayed_init();
+
+>>>>>>> b7ba80a49124 (Commit)
 	smp_quirk_init_udelay();
 
 	speculative_store_bypass_ht_init();
@@ -1447,12 +1492,20 @@ void __init native_smp_prepare_cpus(unsigned int max_cpus)
 
 void arch_thaw_secondary_cpus_begin(void)
 {
+<<<<<<< HEAD
 	set_cache_aps_delayed_init(true);
+=======
+	set_mtrr_aps_delayed_init();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void arch_thaw_secondary_cpus_end(void)
 {
+<<<<<<< HEAD
 	cache_aps_init();
+=======
+	mtrr_aps_init();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1461,11 +1514,15 @@ void arch_thaw_secondary_cpus_end(void)
 void __init native_smp_prepare_boot_cpu(void)
 {
 	int me = smp_processor_id();
+<<<<<<< HEAD
 
 	/* SMP handles this from setup_per_cpu_areas() */
 	if (!IS_ENABLED(CONFIG_SMP))
 		switch_gdt_and_percpu_base(me);
 
+=======
+	switch_to_new_gdt(me);
+>>>>>>> b7ba80a49124 (Commit)
 	/* already set me in cpu_online_mask in boot_cpu_init() */
 	cpumask_set_cpu(me, cpu_callout_mask);
 	cpu_set_state_online(me);
@@ -1499,7 +1556,11 @@ void __init native_smp_cpus_done(unsigned int max_cpus)
 
 	nmi_selftest();
 	impress_friends();
+<<<<<<< HEAD
 	cache_aps_init();
+=======
+	mtrr_aps_init();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __initdata setup_possible_cpus = -1;
@@ -1841,7 +1902,11 @@ void native_play_dead(void)
 	play_dead_common();
 	tboot_shutdown(TB_SHUTDOWN_WFS);
 
+<<<<<<< HEAD
 	mwait_play_dead();
+=======
+	mwait_play_dead();	/* Only returns on failure */
+>>>>>>> b7ba80a49124 (Commit)
 	if (cpuidle_play_dead())
 		hlt_play_dead();
 }

@@ -64,8 +64,12 @@ bool dcn30_internal_validate_bw(
 		display_e2e_pipe_params_st *pipes,
 		int *pipe_cnt_out,
 		int *vlevel_out,
+<<<<<<< HEAD
 		bool fast_validate,
 		bool allow_self_refresh_only);
+=======
+		bool fast_validate);
+>>>>>>> b7ba80a49124 (Commit)
 void dcn30_calculate_wm_and_dlg(
 		struct dc *dc, struct dc_state *context,
 		display_e2e_pipe_params_st *pipes,

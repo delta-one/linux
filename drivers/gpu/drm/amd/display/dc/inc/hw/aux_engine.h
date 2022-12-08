@@ -27,6 +27,10 @@
 #define __DAL_AUX_ENGINE_H__
 
 #include "dc_ddc_types.h"
+<<<<<<< HEAD
+=======
+#include "include/i2caux_interface.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 enum aux_return_code_type;
 
@@ -80,12 +84,16 @@ enum i2c_default_speed {
 	I2CAUX_DEFAULT_I2C_SW_SPEED = 50
 };
 
+<<<<<<< HEAD
 union aux_config {
 	struct {
 		uint32_t ALLOW_AUX_WHEN_HPD_LOW:1;
 	} bits;
 	uint32_t raw;
 };
+=======
+union aux_config;
+>>>>>>> b7ba80a49124 (Commit)
 
 struct aux_engine {
 	uint32_t inst;

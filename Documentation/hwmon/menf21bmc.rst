@@ -7,7 +7,11 @@ Supported chips:
 
 	  Prefix: 'menf21bmc_hwmon'
 
+<<<<<<< HEAD
 	  Addresses scanned: -
+=======
+	  Adresses scanned: -
+>>>>>>> b7ba80a49124 (Commit)
 
 Author: Andreas Werner <andreas.werner@men.de>
 

@@ -309,10 +309,15 @@ static int nsim_dev_debugfs_init(struct nsim_dev *nsim_dev)
 	if (IS_ERR(nsim_dev->ddir))
 		return PTR_ERR(nsim_dev->ddir);
 	nsim_dev->ports_ddir = debugfs_create_dir("ports", nsim_dev->ddir);
+<<<<<<< HEAD
 	if (IS_ERR(nsim_dev->ports_ddir)) {
 		err = PTR_ERR(nsim_dev->ports_ddir);
 		goto err_ddir;
 	}
+=======
+	if (IS_ERR(nsim_dev->ports_ddir))
+		return PTR_ERR(nsim_dev->ports_ddir);
+>>>>>>> b7ba80a49124 (Commit)
 	debugfs_create_bool("fw_update_status", 0600, nsim_dev->ddir,
 			    &nsim_dev->fw_update_status);
 	debugfs_create_u32("fw_update_overwrite_mask", 0600, nsim_dev->ddir,
@@ -348,7 +353,11 @@ static int nsim_dev_debugfs_init(struct nsim_dev *nsim_dev)
 	nsim_dev->nodes_ddir = debugfs_create_dir("rate_nodes", nsim_dev->ddir);
 	if (IS_ERR(nsim_dev->nodes_ddir)) {
 		err = PTR_ERR(nsim_dev->nodes_ddir);
+<<<<<<< HEAD
 		goto err_ports_ddir;
+=======
+		goto err_out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	debugfs_create_bool("fail_trap_drop_counter_get", 0600,
 			    nsim_dev->ddir,
@@ -356,9 +365,14 @@ static int nsim_dev_debugfs_init(struct nsim_dev *nsim_dev)
 	nsim_udp_tunnels_debugfs_create(nsim_dev);
 	return 0;
 
+<<<<<<< HEAD
 err_ports_ddir:
 	debugfs_remove_recursive(nsim_dev->ports_ddir);
 err_ddir:
+=======
+err_out:
+	debugfs_remove_recursive(nsim_dev->ports_ddir);
+>>>>>>> b7ba80a49124 (Commit)
 	debugfs_remove_recursive(nsim_dev->ddir);
 	return err;
 }
@@ -445,7 +459,11 @@ static int nsim_dev_resources_register(struct devlink *devlink)
 				     &params);
 	if (err) {
 		pr_err("Failed to register IPv4 top resource\n");
+<<<<<<< HEAD
 		goto err_out;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	err = devl_resource_register(devlink, "fib", (u64)-1,
@@ -453,7 +471,11 @@ static int nsim_dev_resources_register(struct devlink *devlink)
 				     NSIM_RESOURCE_IPV4, &params);
 	if (err) {
 		pr_err("Failed to register IPv4 FIB resource\n");
+<<<<<<< HEAD
 		goto err_out;
+=======
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	err = devl_resource_register(devlink, "fib-rules", (u64)-1,
@@ -461,7 +483,11 @@ static int nsim_dev_resources_register(struct devlink *devlink)
 				     NSIM_RESOURCE_IPV4, &params);
 	if (err) {
 		pr_err("Failed to register IPv4 FIB rules resource\n");
+<<<<<<< HEAD
 		goto err_out;
+=======
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Resources for IPv6 */
@@ -471,7 +497,11 @@ static int nsim_dev_resources_register(struct devlink *devlink)
 				     &params);
 	if (err) {
 		pr_err("Failed to register IPv6 top resource\n");
+<<<<<<< HEAD
 		goto err_out;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	err = devl_resource_register(devlink, "fib", (u64)-1,
@@ -479,7 +509,11 @@ static int nsim_dev_resources_register(struct devlink *devlink)
 				     NSIM_RESOURCE_IPV6, &params);
 	if (err) {
 		pr_err("Failed to register IPv6 FIB resource\n");
+<<<<<<< HEAD
 		goto err_out;
+=======
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	err = devl_resource_register(devlink, "fib-rules", (u64)-1,
@@ -487,7 +521,11 @@ static int nsim_dev_resources_register(struct devlink *devlink)
 				     NSIM_RESOURCE_IPV6, &params);
 	if (err) {
 		pr_err("Failed to register IPv6 FIB rules resource\n");
+<<<<<<< HEAD
 		goto err_out;
+=======
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Resources for nexthops */
@@ -495,6 +533,7 @@ static int nsim_dev_resources_register(struct devlink *devlink)
 				     NSIM_RESOURCE_NEXTHOPS,
 				     DEVLINK_RESOURCE_ID_PARENT_TOP,
 				     &params);
+<<<<<<< HEAD
 	if (err) {
 		pr_err("Failed to register NEXTHOPS resource\n");
 		goto err_out;
@@ -503,6 +542,10 @@ static int nsim_dev_resources_register(struct devlink *devlink)
 
 err_out:
 	devl_resources_unregister(devlink);
+=======
+
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -527,6 +570,7 @@ static void nsim_devlink_set_params_init_values(struct nsim_dev *nsim_dev,
 	union devlink_param_value value;
 
 	value.vu32 = nsim_dev->max_macs;
+<<<<<<< HEAD
 	devl_param_driverinit_value_set(devlink,
 					DEVLINK_PARAM_GENERIC_ID_MAX_MACS,
 					value);
@@ -534,6 +578,15 @@ static void nsim_devlink_set_params_init_values(struct nsim_dev *nsim_dev,
 	devl_param_driverinit_value_set(devlink,
 					NSIM_DEVLINK_PARAM_ID_TEST1,
 					value);
+=======
+	devlink_param_driverinit_value_set(devlink,
+					   DEVLINK_PARAM_GENERIC_ID_MAX_MACS,
+					   value);
+	value.vbool = nsim_dev->test1;
+	devlink_param_driverinit_value_set(devlink,
+					   NSIM_DEVLINK_PARAM_ID_TEST1,
+					   value);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void nsim_devlink_param_load_driverinit_values(struct devlink *devlink)
@@ -542,6 +595,7 @@ static void nsim_devlink_param_load_driverinit_values(struct devlink *devlink)
 	union devlink_param_value saved_value;
 	int err;
 
+<<<<<<< HEAD
 	err = devl_param_driverinit_value_get(devlink,
 					      DEVLINK_PARAM_GENERIC_ID_MAX_MACS,
 					      &saved_value);
@@ -550,6 +604,16 @@ static void nsim_devlink_param_load_driverinit_values(struct devlink *devlink)
 	err = devl_param_driverinit_value_get(devlink,
 					      NSIM_DEVLINK_PARAM_ID_TEST1,
 					      &saved_value);
+=======
+	err = devlink_param_driverinit_value_get(devlink,
+						 DEVLINK_PARAM_GENERIC_ID_MAX_MACS,
+						 &saved_value);
+	if (!err)
+		nsim_dev->max_macs = saved_value.vu32;
+	err = devlink_param_driverinit_value_get(devlink,
+						 NSIM_DEVLINK_PARAM_ID_TEST1,
+						 &saved_value);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!err)
 		nsim_dev->test1 = saved_value.vbool;
 }
@@ -994,6 +1058,12 @@ static int nsim_dev_info_get(struct devlink *devlink,
 {
 	int err;
 
+<<<<<<< HEAD
+=======
+	err = devlink_info_driver_name_put(req, DRV_NAME);
+	if (err)
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 	err = devlink_info_version_stored_put_ext(req, "fw.mgmt", "10.20.30",
 						  DEVLINK_INFO_VERSION_TYPE_COMPONENT);
 	if (err)
@@ -1398,11 +1468,19 @@ static int __nsim_dev_port_add(struct nsim_dev *nsim_dev, enum nsim_dev_port_typ
 
 	if (nsim_dev_port_is_vf(nsim_dev_port)) {
 		err = devl_rate_leaf_create(&nsim_dev_port->devlink_port,
+<<<<<<< HEAD
 					    nsim_dev_port, NULL);
+=======
+					    nsim_dev_port);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			goto err_nsim_destroy;
 	}
 
+<<<<<<< HEAD
+=======
+	devlink_port_type_eth_set(devlink_port, nsim_dev_port->ns->netdev);
+>>>>>>> b7ba80a49124 (Commit)
 	list_add(&nsim_dev_port->list, &nsim_dev->port_list);
 
 	return 0;
@@ -1425,6 +1503,10 @@ static void __nsim_dev_port_del(struct nsim_dev_port *nsim_dev_port)
 	list_del(&nsim_dev_port->list);
 	if (nsim_dev_port_is_vf(nsim_dev_port))
 		devl_rate_leaf_destroy(&nsim_dev_port->devlink_port);
+<<<<<<< HEAD
+=======
+	devlink_port_type_clear(devlink_port);
+>>>>>>> b7ba80a49124 (Commit)
 	nsim_destroy(nsim_dev_port->ns);
 	nsim_dev_port_debugfs_exit(nsim_dev_port);
 	devl_port_unregister(devlink_port);
@@ -1556,6 +1638,7 @@ int nsim_drv_probe(struct nsim_bus_dev *nsim_bus_dev)
 		goto err_devlink_unlock;
 	}
 
+<<<<<<< HEAD
 	err = devl_register(devlink);
 	if (err)
 		goto err_vfc_free;
@@ -1568,6 +1651,16 @@ int nsim_drv_probe(struct nsim_bus_dev *nsim_bus_dev)
 				   ARRAY_SIZE(nsim_devlink_params));
 	if (err)
 		goto err_resource_unregister;
+=======
+	err = nsim_dev_resources_register(devlink);
+	if (err)
+		goto err_vfc_free;
+
+	err = devlink_params_register(devlink, nsim_devlink_params,
+				      ARRAY_SIZE(nsim_devlink_params));
+	if (err)
+		goto err_dl_unregister;
+>>>>>>> b7ba80a49124 (Commit)
 	nsim_devlink_set_params_init_values(nsim_dev, devlink);
 
 	err = nsim_dev_dummy_region_init(nsim_dev, devlink);
@@ -1609,7 +1702,13 @@ int nsim_drv_probe(struct nsim_bus_dev *nsim_bus_dev)
 		goto err_hwstats_exit;
 
 	nsim_dev->esw_mode = DEVLINK_ESWITCH_MODE_LEGACY;
+<<<<<<< HEAD
 	devl_unlock(devlink);
+=======
+	devlink_set_features(devlink, DEVLINK_F_RELOAD);
+	devl_unlock(devlink);
+	devlink_register(devlink);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_hwstats_exit:
@@ -1629,12 +1728,19 @@ err_traps_exit:
 err_dummy_region_exit:
 	nsim_dev_dummy_region_exit(nsim_dev);
 err_params_unregister:
+<<<<<<< HEAD
 	devl_params_unregister(devlink, nsim_devlink_params,
 			       ARRAY_SIZE(nsim_devlink_params));
 err_resource_unregister:
 	devl_resources_unregister(devlink);
 err_dl_unregister:
 	devl_unregister(devlink);
+=======
+	devlink_params_unregister(devlink, nsim_devlink_params,
+				  ARRAY_SIZE(nsim_devlink_params));
+err_dl_unregister:
+	devl_resources_unregister(devlink);
+>>>>>>> b7ba80a49124 (Commit)
 err_vfc_free:
 	kfree(nsim_dev->vfconfigs);
 err_devlink_unlock:
@@ -1672,17 +1778,28 @@ void nsim_drv_remove(struct nsim_bus_dev *nsim_bus_dev)
 	struct nsim_dev *nsim_dev = dev_get_drvdata(&nsim_bus_dev->dev);
 	struct devlink *devlink = priv_to_devlink(nsim_dev);
 
+<<<<<<< HEAD
+=======
+	devlink_unregister(devlink);
+>>>>>>> b7ba80a49124 (Commit)
 	devl_lock(devlink);
 	nsim_dev_reload_destroy(nsim_dev);
 
 	nsim_bpf_dev_exit(nsim_dev);
 	nsim_dev_debugfs_exit(nsim_dev);
+<<<<<<< HEAD
 	devl_params_unregister(devlink, nsim_devlink_params,
 			       ARRAY_SIZE(nsim_devlink_params));
 	devl_resources_unregister(devlink);
 	devl_unregister(devlink);
 	kfree(nsim_dev->vfconfigs);
 	kfree(nsim_dev->fa_cookie);
+=======
+	devlink_params_unregister(devlink, nsim_devlink_params,
+				  ARRAY_SIZE(nsim_devlink_params));
+	devl_resources_unregister(devlink);
+	kfree(nsim_dev->vfconfigs);
+>>>>>>> b7ba80a49124 (Commit)
 	devl_unlock(devlink);
 	devlink_free(devlink);
 	dev_set_drvdata(&nsim_bus_dev->dev, NULL);

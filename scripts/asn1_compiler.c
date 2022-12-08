@@ -567,8 +567,13 @@ int main(int argc, char **argv)
 	int fd;
 
 	kbuild_verbose = getenv("KBUILD_VERBOSE");
+<<<<<<< HEAD
 	if (kbuild_verbose && strchr(kbuild_verbose, '1'))
 		verbose_opt = true;
+=======
+	if (kbuild_verbose)
+		verbose_opt = atoi(kbuild_verbose);
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (argc > 4) {
 		if (strcmp(argv[1], "-v") == 0)

@@ -43,6 +43,10 @@ void da7219_aad_jack_det(struct snd_soc_component *component, struct snd_soc_jac
 			    DA7219_ACCDET_EN_MASK,
 			    (jack ? DA7219_ACCDET_EN_MASK : 0));
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(da7219_aad_jack_det);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Button/HPTest work
@@ -339,6 +343,7 @@ static void da7219_aad_hptest_work(struct work_struct *work)
 				    SND_JACK_HEADSET | SND_JACK_LINEOUT);
 }
 
+<<<<<<< HEAD
 static void da7219_aad_jack_det_work(struct work_struct *work)
 {
 	struct da7219_aad_priv *da7219_aad =
@@ -356,11 +361,14 @@ static void da7219_aad_jack_det_work(struct work_struct *work)
 	mutex_unlock(&da7219_aad->jack_det_mutex);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * IRQ
  */
 
+<<<<<<< HEAD
 static irqreturn_t da7219_aad_pre_irq_thread(int irq, void *data)
 {
 
@@ -372,6 +380,8 @@ static irqreturn_t da7219_aad_pre_irq_thread(int irq, void *data)
 	return IRQ_WAKE_THREAD;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static irqreturn_t da7219_aad_irq_thread(int irq, void *data)
 {
 	struct da7219_aad_priv *da7219_aad = data;
@@ -400,9 +410,12 @@ static irqreturn_t da7219_aad_irq_thread(int irq, void *data)
 		events[DA7219_AAD_IRQ_REG_A], events[DA7219_AAD_IRQ_REG_B],
 		statusa);
 
+<<<<<<< HEAD
 	if (!da7219_aad->jack_inserted)
 		cancel_work_sync(&da7219_aad->jack_det_work);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (statusa & DA7219_JACK_INSERTION_STS_MASK) {
 		/* Jack Insertion */
 		if (events[DA7219_AAD_IRQ_REG_A] &
@@ -484,8 +497,13 @@ static irqreturn_t da7219_aad_irq_thread(int irq, void *data)
 			snd_soc_dapm_disable_pin(dapm, "Mic Bias");
 			snd_soc_dapm_sync(dapm);
 
+<<<<<<< HEAD
 			/* Disable ground switch */
 			snd_soc_component_update_bits(component, 0xFB, 0x01, 0x00);
+=======
+			/* Enable ground switch */
+			snd_soc_component_update_bits(component, 0xFB, 0x01, 0x01);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -861,6 +879,7 @@ static void da7219_aad_handle_pdata(struct snd_soc_component *component)
 	}
 }
 
+<<<<<<< HEAD
 static void da7219_aad_handle_gnd_switch_time(struct snd_soc_component *component)
 {
 	struct da7219_priv *da7219 = snd_soc_component_get_drvdata(component);
@@ -887,6 +906,8 @@ static void da7219_aad_handle_gnd_switch_time(struct snd_soc_component *componen
 		break;
 	}
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Suspend/Resume
@@ -964,6 +985,7 @@ int da7219_aad_init(struct snd_soc_component *component)
 	snd_soc_component_update_bits(component, DA7219_ACCDET_CONFIG_1,
 			    DA7219_BUTTON_CONFIG_MASK, 0);
 
+<<<<<<< HEAD
 	INIT_WORK(&da7219_aad->btn_det_work, da7219_aad_btn_det_work);
 	INIT_WORK(&da7219_aad->hptest_work, da7219_aad_hptest_work);
 	INIT_WORK(&da7219_aad->jack_det_work, da7219_aad_jack_det_work);
@@ -971,6 +993,15 @@ int da7219_aad_init(struct snd_soc_component *component)
 	mutex_init(&da7219_aad->jack_det_mutex);
 
 	ret = request_threaded_irq(da7219_aad->irq, da7219_aad_pre_irq_thread,
+=======
+	/* Enable ground switch */
+	snd_soc_component_update_bits(component, 0xFB, 0x01, 0x01);
+
+	INIT_WORK(&da7219_aad->btn_det_work, da7219_aad_btn_det_work);
+	INIT_WORK(&da7219_aad->hptest_work, da7219_aad_hptest_work);
+
+	ret = request_threaded_irq(da7219_aad->irq, NULL,
+>>>>>>> b7ba80a49124 (Commit)
 				   da7219_aad_irq_thread,
 				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
 				   "da7219-aad", da7219_aad);
@@ -984,10 +1015,16 @@ int da7219_aad_init(struct snd_soc_component *component)
 	regmap_bulk_write(da7219->regmap, DA7219_ACCDET_IRQ_MASK_A,
 			  &mask, DA7219_AAD_IRQ_REG_MAX);
 
+<<<<<<< HEAD
 	da7219_aad_handle_gnd_switch_time(component);
 
 	return 0;
 }
+=======
+	return 0;
+}
+EXPORT_SYMBOL_GPL(da7219_aad_init);
+>>>>>>> b7ba80a49124 (Commit)
 
 void da7219_aad_exit(struct snd_soc_component *component)
 {
@@ -1005,6 +1042,10 @@ void da7219_aad_exit(struct snd_soc_component *component)
 	cancel_work_sync(&da7219_aad->btn_det_work);
 	cancel_work_sync(&da7219_aad->hptest_work);
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(da7219_aad_exit);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * AAD related I2C probe handling
@@ -1028,6 +1069,10 @@ int da7219_aad_probe(struct i2c_client *i2c)
 
 	return 0;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(da7219_aad_probe);
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_DESCRIPTION("ASoC DA7219 AAD Driver");
 MODULE_AUTHOR("Adam Thomson <Adam.Thomson.Opensource@diasemi.com>");

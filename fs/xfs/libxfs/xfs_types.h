@@ -166,6 +166,7 @@ typedef struct xfs_bmbt_irec
 	xfs_exntst_t	br_state;	/* extent state */
 } xfs_bmbt_irec_t;
 
+<<<<<<< HEAD
 enum xfs_refc_domain {
 	XFS_REFC_DOMAIN_SHARED = 0,
 	XFS_REFC_DOMAIN_COW,
@@ -196,6 +197,8 @@ struct xfs_rmap_irec {
 	unsigned int	rm_flags;	/* state flags */
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* per-AG block reservation types */
 enum xfs_ag_resv_type {
 	XFS_AG_RESV_NONE = 0,

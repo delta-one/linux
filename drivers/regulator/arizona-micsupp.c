@@ -34,7 +34,11 @@ struct arizona_micsupp {
 	struct regulator_dev *regulator;
 	struct regmap *regmap;
 	struct snd_soc_dapm_context **dapm;
+<<<<<<< HEAD
 	const struct regulator_desc *desc;
+=======
+	unsigned int enable_reg;
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev;
 
 	struct regulator_consumer_supply supply;
@@ -49,11 +53,18 @@ static void arizona_micsupp_check_cp(struct work_struct *work)
 		container_of(work, struct arizona_micsupp, check_cp_work);
 	struct snd_soc_dapm_context *dapm = *micsupp->dapm;
 	struct snd_soc_component *component;
+<<<<<<< HEAD
 	const struct regulator_desc *desc = micsupp->desc;
 	unsigned int val;
 	int ret;
 
 	ret = regmap_read(micsupp->regmap, desc->enable_reg, &val);
+=======
+	unsigned int val;
+	int ret;
+
+	ret = regmap_read(micsupp->regmap, micsupp->enable_reg, &val);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret != 0) {
 		dev_err(micsupp->dev,
 			"Failed to read CP state: %d\n", ret);
@@ -63,8 +74,13 @@ static void arizona_micsupp_check_cp(struct work_struct *work)
 	if (dapm) {
 		component = snd_soc_dapm_to_component(dapm);
 
+<<<<<<< HEAD
 		if ((val & (desc->enable_mask | desc->bypass_mask)) ==
 		    desc->enable_mask)
+=======
+		if ((val & (ARIZONA_CPMIC_ENA | ARIZONA_CPMIC_BYPASS)) ==
+		    ARIZONA_CPMIC_ENA)
+>>>>>>> b7ba80a49124 (Commit)
 			snd_soc_component_force_enable_pin(component,
 							   "MICSUPP");
 		else
@@ -210,6 +226,10 @@ static const struct regulator_desc madera_micsupp = {
 	.type = REGULATOR_VOLTAGE,
 	.n_voltages = 40,
 	.ops = &arizona_micsupp_ops,
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	.vsel_reg = MADERA_LDO2_CONTROL_1,
 	.vsel_mask = MADERA_LDO2_VSEL_MASK,
 	.enable_reg = MADERA_MIC_CHARGE_PUMP_1,
@@ -262,8 +282,14 @@ static int arizona_micsupp_common_init(struct platform_device *pdev,
 	INIT_WORK(&micsupp->check_cp_work, arizona_micsupp_check_cp);
 
 	micsupp->init_data.consumer_supplies = &micsupp->supply;
+<<<<<<< HEAD
 	micsupp->supply.dev_name = dev_name(micsupp->dev);
 	micsupp->desc = desc;
+=======
+	micsupp->supply.supply = "MICVDD";
+	micsupp->supply.dev_name = dev_name(micsupp->dev);
+	micsupp->enable_reg = desc->enable_reg;
+>>>>>>> b7ba80a49124 (Commit)
 
 	config.dev = micsupp->dev;
 	config.driver_data = micsupp;
@@ -284,7 +310,12 @@ static int arizona_micsupp_common_init(struct platform_device *pdev,
 		config.init_data = &micsupp->init_data;
 
 	/* Default to regulated mode */
+<<<<<<< HEAD
 	regmap_update_bits(micsupp->regmap, desc->enable_reg, desc->bypass_mask, 0);
+=======
+	regmap_update_bits(micsupp->regmap, micsupp->enable_reg,
+			   ARIZONA_CPMIC_BYPASS, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	micsupp->regulator = devm_regulator_register(&pdev->dev,
 						     desc,
@@ -318,8 +349,11 @@ static int arizona_micsupp_probe(struct platform_device *pdev)
 	micsupp->dapm = &arizona->dapm;
 	micsupp->dev = arizona->dev;
 
+<<<<<<< HEAD
 	micsupp->supply.supply = "MICVDD";
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Since the chip usually supplies itself we provide some
 	 * default init_data for it.  This will be overridden with
@@ -355,8 +389,11 @@ static int madera_micsupp_probe(struct platform_device *pdev)
 	micsupp->dev = madera->dev;
 	micsupp->init_data = arizona_micsupp_ext_default;
 
+<<<<<<< HEAD
 	micsupp->supply.supply = "MICVDD";
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return arizona_micsupp_common_init(pdev, micsupp, &madera_micsupp,
 					   &madera->pdata.micvdd);
 }
@@ -365,7 +402,10 @@ static struct platform_driver arizona_micsupp_driver = {
 	.probe = arizona_micsupp_probe,
 	.driver		= {
 		.name	= "arizona-micsupp",
+<<<<<<< HEAD
 		.probe_type = PROBE_FORCE_SYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 
@@ -373,7 +413,10 @@ static struct platform_driver madera_micsupp_driver = {
 	.probe = madera_micsupp_probe,
 	.driver		= {
 		.name	= "madera-micsupp",
+<<<<<<< HEAD
 		.probe_type = PROBE_FORCE_SYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

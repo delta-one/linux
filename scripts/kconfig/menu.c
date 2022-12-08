@@ -722,16 +722,38 @@ static void get_prompt_str(struct gstr *r, struct property *prop,
 	if (!expr_eq(prop->menu->dep, prop->visible.expr))
 		get_dep_str(r, prop->visible.expr, "  Visible if: ");
 
+<<<<<<< HEAD
 	menu = prop->menu;
 	for (i = 0; menu != &rootmenu && i < 8; menu = menu->parent) {
 		submenu[i++] = menu;
 		if (location == NULL && menu_is_visible(menu))
+=======
+	menu = prop->menu->parent;
+	for (i = 0; menu && i < 8; menu = menu->parent) {
+		bool accessible = menu_is_visible(menu);
+
+		submenu[i++] = menu;
+		if (location == NULL && accessible)
+>>>>>>> b7ba80a49124 (Commit)
 			location = menu;
 	}
 	if (head && location) {
 		jump = xmalloc(sizeof(struct jump_key));
 
+<<<<<<< HEAD
 		jump->target = location;
+=======
+		if (menu_is_visible(prop->menu)) {
+			/*
+			 * There is not enough room to put the hint at the
+			 * beginning of the "Prompt" line. Put the hint on the
+			 * last "Location" line even when it would belong on
+			 * the former.
+			 */
+			jump->target = prop->menu;
+		} else
+			jump->target = location;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (list_empty(head))
 			jump->index = 0;
@@ -747,7 +769,17 @@ static void get_prompt_str(struct gstr *r, struct property *prop,
 		menu = submenu[i];
 		if (jump && menu == location)
 			jump->offset = strlen(r->s);
+<<<<<<< HEAD
 		str_printf(r, "%*c-> %s", j, ' ', menu_get_prompt(menu));
+=======
+
+		if (menu == &rootmenu)
+			/* The real rootmenu prompt is ugly */
+			str_printf(r, "%*cMain menu", j, ' ');
+		else
+			str_printf(r, "%*c-> %s", j, ' ', menu_get_prompt(menu));
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (menu->sym) {
 			str_printf(r, " (%s [=%s])", menu->sym->name ?
 				menu->sym->name : "<choice>",

@@ -7,7 +7,10 @@
  */
 
 #include <linux/debugfs.h>
+<<<<<<< HEAD
 #include <linux/delay.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/of_device.h>
@@ -17,7 +20,10 @@
 #include <linux/i2c.h>
 #include <linux/pmbus.h>
 #include <linux/gpio/driver.h>
+<<<<<<< HEAD
 #include <linux/timekeeping.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "pmbus.h"
 
 enum chips { ucd9000, ucd90120, ucd90124, ucd90160, ucd90320, ucd9090,
@@ -67,7 +73,10 @@ struct ucd9000_data {
 	struct gpio_chip gpio;
 #endif
 	struct dentry *debugfs;
+<<<<<<< HEAD
 	ktime_t write_time;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 #define to_ucd9000_data(_info) container_of(_info, struct ucd9000_data, info)
 
@@ -76,6 +85,7 @@ struct ucd9000_debugfs_entry {
 	u8 index;
 };
 
+<<<<<<< HEAD
 /*
  * It has been observed that the UCD90320 randomly fails register access when
  * doing another access right on the back of a register write. To mitigate this
@@ -143,6 +153,8 @@ static int ucd90320_write_byte(struct i2c_client *client, int page, u8 value)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ucd9000_get_fan_config(struct i2c_client *client, int fan)
 {
 	int fan_config = 0;
@@ -668,11 +680,14 @@ static int ucd9000_probe(struct i2c_client *client)
 		info->read_byte_data = ucd9000_read_byte_data;
 		info->func[0] |= PMBUS_HAVE_FAN12 | PMBUS_HAVE_STATUS_FAN12
 		  | PMBUS_HAVE_FAN34 | PMBUS_HAVE_STATUS_FAN34;
+<<<<<<< HEAD
 	} else if (mid->driver_data == ucd90320) {
 		info->read_byte_data = ucd90320_read_byte_data;
 		info->read_word_data = ucd90320_read_word_data;
 		info->write_byte = ucd90320_write_byte;
 		info->write_word_data = ucd90320_write_word_data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ucd9000_probe_gpio(client, mid, data);

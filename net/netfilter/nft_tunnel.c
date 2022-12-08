@@ -108,7 +108,11 @@ static int nft_tunnel_get_init(const struct nft_ctx *ctx,
 }
 
 static int nft_tunnel_get_dump(struct sk_buff *skb,
+<<<<<<< HEAD
 			       const struct nft_expr *expr, bool reset)
+=======
+			       const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_tunnel *priv = nft_expr_priv(expr);
 

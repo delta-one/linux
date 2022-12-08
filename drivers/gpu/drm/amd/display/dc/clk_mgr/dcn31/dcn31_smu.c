@@ -333,8 +333,13 @@ void dcn31_smu_set_zstate_support(struct clk_mgr_internal *clk_mgr, enum dcn_zst
 			(support == DCN_ZSTATE_SUPPORT_ALLOW_Z10_ONLY))
 		support = DCN_ZSTATE_SUPPORT_DISALLOW;
 
+<<<<<<< HEAD
 	if (support == DCN_ZSTATE_SUPPORT_ALLOW_Z10_ONLY ||
 	    support == DCN_ZSTATE_SUPPORT_ALLOW_Z8_Z10_ONLY)
+=======
+
+	if (support == DCN_ZSTATE_SUPPORT_ALLOW_Z10_ONLY)
+>>>>>>> b7ba80a49124 (Commit)
 		param = 1;
 	else
 		param = 0;

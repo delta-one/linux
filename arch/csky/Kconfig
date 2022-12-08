@@ -9,7 +9,10 @@ config CSKY
 	select ARCH_USE_BUILTIN_BSWAP
 	select ARCH_USE_QUEUED_RWLOCKS
 	select ARCH_USE_QUEUED_SPINLOCKS
+<<<<<<< HEAD
 	select ARCH_HAS_CURRENT_STACK_POINTER
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_INLINE_READ_LOCK if !PREEMPTION
 	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
 	select ARCH_INLINE_READ_LOCK_IRQ if !PREEMPTION
@@ -94,6 +97,10 @@ config CSKY
 	select HAVE_PERF_USER_STACK_DUMP
 	select HAVE_DMA_CONTIGUOUS
 	select HAVE_REGS_AND_STACK_ACCESS_API
+<<<<<<< HEAD
+=======
+	select HAVE_RSEQ
+>>>>>>> b7ba80a49124 (Commit)
 	select HAVE_STACKPROTECTOR
 	select HAVE_SYSCALL_TRACEPOINTS
 	select MAY_HAVE_SPARSE_IRQ
@@ -269,7 +276,11 @@ menuconfig HAVE_TCM
 	bool "Tightly-Coupled/Sram Memory"
 	depends on !COMPILE_TEST
 	help
+<<<<<<< HEAD
 	  The implementation are not only used by TCM (Tightly-Coupled Memory)
+=======
+	  The implementation are not only used by TCM (Tightly-Coupled Meory)
+>>>>>>> b7ba80a49124 (Commit)
 	  but also used by sram on SOC bus. It follow existed linux tcm
 	  software interface, so that old tcm application codes could be
 	  re-used directly.
@@ -334,7 +345,11 @@ config HIGHMEM
 
 config ARCH_FORCE_MAX_ORDER
 	int "Maximum zone order"
+<<<<<<< HEAD
 	default "10"
+=======
+	default "11"
+>>>>>>> b7ba80a49124 (Commit)
 
 config DRAM_BASE
 	hex "DRAM start addr (the same with memory-section in dts)"

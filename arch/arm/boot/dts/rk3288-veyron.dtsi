@@ -10,10 +10,13 @@
 #include "rk3288.dtsi"
 
 / {
+<<<<<<< HEAD
 	aliases {
 		mmc0 = &emmc;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	chosen {
 		stdout-path = "serial2:115200n8";
 	};

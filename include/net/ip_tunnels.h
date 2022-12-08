@@ -67,12 +67,15 @@ struct ip_tunnel_key {
 	GENMASK((sizeof_field(struct ip_tunnel_info,		\
 			      options_len) * BITS_PER_BYTE) - 1, 0)
 
+<<<<<<< HEAD
 #define ip_tunnel_info_opts(info)				\
 	_Generic(info,						\
 		 const struct ip_tunnel_info * : ((const void *)((info) + 1)),\
 		 struct ip_tunnel_info * : ((void *)((info) + 1))\
 	)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ip_tunnel_info {
 	struct ip_tunnel_key	key;
 #ifdef CONFIG_DST_CACHE
@@ -308,12 +311,15 @@ int ip_tunnel_newlink(struct net_device *dev, struct nlattr *tb[],
 		      struct ip_tunnel_parm *p, __u32 fwmark);
 void ip_tunnel_setup(struct net_device *dev, unsigned int net_id);
 
+<<<<<<< HEAD
 bool ip_tunnel_netlink_encap_parms(struct nlattr *data[],
 				   struct ip_tunnel_encap *encap);
 
 void ip_tunnel_netlink_parms(struct nlattr *data[],
 			     struct ip_tunnel_parm *parms);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern const struct header_ops ip_tunnel_header_ops;
 __be16 ip_tunnel_parse_protocol(const struct sk_buff *skb);
 
@@ -491,6 +497,14 @@ static inline void iptunnel_xmit_stats(struct net_device *dev, int pkt_len)
 	}
 }
 
+<<<<<<< HEAD
+=======
+static inline void *ip_tunnel_info_opts(struct ip_tunnel_info *info)
+{
+	return info + 1;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void ip_tunnel_info_opts_get(void *to,
 					   const struct ip_tunnel_info *info)
 {

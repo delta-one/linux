@@ -22,7 +22,11 @@ properties:
     required:
       - qcom,glink-channels
     description:
+<<<<<<< HEAD
       Qualcomm APR (Asynchronous Packet Router)
+=======
+      Qualcomm APR/GPR (Asynchronous/Generic Packet Router)
+>>>>>>> b7ba80a49124 (Commit)
 
   fastrpc:
     $ref: /schemas/misc/qcom,fastrpc.yaml#
@@ -31,6 +35,7 @@ properties:
     description:
       Qualcomm FastRPC
 
+<<<<<<< HEAD
   gpr:
     $ref: /schemas/soc/qcom/qcom,apr.yaml#
     required:
@@ -38,13 +43,19 @@ properties:
     description:
       Qualcomm GPR (Generic Packet Router)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   interrupts:
     maxItems: 1
 
   label:
+<<<<<<< HEAD
     description:
       Name of the edge, used for debugging and identification purposes. The
       node name will be used if this is not present.
+=======
+    description: The names of the state bits used for SMP2P output
+>>>>>>> b7ba80a49124 (Commit)
 
   mboxes:
     maxItems: 1
@@ -61,6 +72,7 @@ required:
   - mboxes
   - qcom,remote-pid
 
+<<<<<<< HEAD
 allOf:
   - if:
       required:
@@ -76,6 +88,8 @@ allOf:
       properties:
         apr: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 additionalProperties: false
 
 examples:

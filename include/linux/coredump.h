@@ -18,6 +18,10 @@ struct core_vma_metadata {
 
 struct coredump_params {
 	const kernel_siginfo_t *siginfo;
+<<<<<<< HEAD
+=======
+	struct pt_regs *regs;
+>>>>>>> b7ba80a49124 (Commit)
 	struct file *file;
 	unsigned long limit;
 	unsigned long mm_flags;

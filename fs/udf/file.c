@@ -38,6 +38,7 @@
 #include "udf_i.h"
 #include "udf_sb.h"
 
+<<<<<<< HEAD
 static vm_fault_t udf_page_mkwrite(struct vm_fault *vmf)
 {
 	struct vm_area_struct *vma = vmf->vma;
@@ -87,6 +88,102 @@ static const struct vm_operations_struct udf_file_vm_ops = {
 	.fault		= filemap_fault,
 	.map_pages	= filemap_map_pages,
 	.page_mkwrite	= udf_page_mkwrite,
+=======
+static void __udf_adinicb_readpage(struct page *page)
+{
+	struct inode *inode = page->mapping->host;
+	char *kaddr;
+	struct udf_inode_info *iinfo = UDF_I(inode);
+	loff_t isize = i_size_read(inode);
+
+	/*
+	 * We have to be careful here as truncate can change i_size under us.
+	 * So just sample it once and use the same value everywhere.
+	 */
+	kaddr = kmap_atomic(page);
+	memcpy(kaddr, iinfo->i_data + iinfo->i_lenEAttr, isize);
+	memset(kaddr + isize, 0, PAGE_SIZE - isize);
+	flush_dcache_page(page);
+	SetPageUptodate(page);
+	kunmap_atomic(kaddr);
+}
+
+static int udf_adinicb_read_folio(struct file *file, struct folio *folio)
+{
+	BUG_ON(!folio_test_locked(folio));
+	__udf_adinicb_readpage(&folio->page);
+	folio_unlock(folio);
+
+	return 0;
+}
+
+static int udf_adinicb_writepage(struct page *page,
+				 struct writeback_control *wbc)
+{
+	struct inode *inode = page->mapping->host;
+	char *kaddr;
+	struct udf_inode_info *iinfo = UDF_I(inode);
+
+	BUG_ON(!PageLocked(page));
+
+	kaddr = kmap_atomic(page);
+	memcpy(iinfo->i_data + iinfo->i_lenEAttr, kaddr, i_size_read(inode));
+	SetPageUptodate(page);
+	kunmap_atomic(kaddr);
+	mark_inode_dirty(inode);
+	unlock_page(page);
+
+	return 0;
+}
+
+static int udf_adinicb_write_begin(struct file *file,
+			struct address_space *mapping, loff_t pos,
+			unsigned len, struct page **pagep,
+			void **fsdata)
+{
+	struct page *page;
+
+	if (WARN_ON_ONCE(pos >= PAGE_SIZE))
+		return -EIO;
+	page = grab_cache_page_write_begin(mapping, 0);
+	if (!page)
+		return -ENOMEM;
+	*pagep = page;
+
+	if (!PageUptodate(page))
+		__udf_adinicb_readpage(page);
+	return 0;
+}
+
+static ssize_t udf_adinicb_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
+{
+	/* Fallback to buffered I/O. */
+	return 0;
+}
+
+static int udf_adinicb_write_end(struct file *file, struct address_space *mapping,
+				 loff_t pos, unsigned len, unsigned copied,
+				 struct page *page, void *fsdata)
+{
+	struct inode *inode = page->mapping->host;
+	loff_t last_pos = pos + copied;
+	if (last_pos > inode->i_size)
+		i_size_write(inode, last_pos);
+	set_page_dirty(page);
+	unlock_page(page);
+	put_page(page);
+	return copied;
+}
+
+const struct address_space_operations udf_adinicb_aops = {
+	.dirty_folio	= block_dirty_folio,
+	.invalidate_folio = block_invalidate_folio,
+	.read_folio	= udf_adinicb_read_folio,
+	.writepage	= udf_adinicb_writepage,
+	.write_begin	= udf_adinicb_write_begin,
+	.write_end	= udf_adinicb_write_end,
+	.direct_IO	= udf_adinicb_direct_IO,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static ssize_t udf_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
@@ -95,6 +192,10 @@ static ssize_t udf_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
 	struct file *file = iocb->ki_filp;
 	struct inode *inode = file_inode(file);
 	struct udf_inode_info *iinfo = UDF_I(inode);
+<<<<<<< HEAD
+=======
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	inode_lock(inode);
 
@@ -102,6 +203,7 @@ static ssize_t udf_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
 	if (retval <= 0)
 		goto out;
 
+<<<<<<< HEAD
 	if (iinfo->i_alloc_type == ICBTAG_FLAG_AD_IN_ICB &&
 	    inode->i_sb->s_blocksize < (udf_file_entry_alloc_offset(inode) +
 				 iocb->ki_pos + iov_iter_count(from))) {
@@ -119,6 +221,29 @@ out:
 		iinfo->i_lenAlloc = inode->i_size;
 		up_write(&iinfo->i_data_sem);
 	}
+=======
+	down_write(&iinfo->i_data_sem);
+	if (iinfo->i_alloc_type == ICBTAG_FLAG_AD_IN_ICB) {
+		loff_t end = iocb->ki_pos + iov_iter_count(from);
+
+		if (inode->i_sb->s_blocksize <
+				(udf_file_entry_alloc_offset(inode) + end)) {
+			err = udf_expand_file_adinicb(inode);
+			if (err) {
+				inode_unlock(inode);
+				udf_debug("udf_expand_adinicb: err=%d\n", err);
+				return err;
+			}
+		} else {
+			iinfo->i_lenAlloc = max(end, inode->i_size);
+			up_write(&iinfo->i_data_sem);
+		}
+	} else
+		up_write(&iinfo->i_data_sem);
+
+	retval = __generic_file_write_iter(iocb, from);
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	inode_unlock(inode);
 
 	if (retval > 0) {
@@ -193,6 +318,7 @@ static int udf_release_file(struct inode *inode, struct file *filp)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int udf_file_mmap(struct file *file, struct vm_area_struct *vma)
 {
 	file_accessed(file);
@@ -201,11 +327,17 @@ static int udf_file_mmap(struct file *file, struct vm_area_struct *vma)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct file_operations udf_file_operations = {
 	.read_iter		= generic_file_read_iter,
 	.unlocked_ioctl		= udf_ioctl,
 	.open			= generic_file_open,
+<<<<<<< HEAD
 	.mmap			= udf_file_mmap,
+=======
+	.mmap			= generic_file_mmap,
+>>>>>>> b7ba80a49124 (Commit)
 	.write_iter		= udf_file_write_iter,
 	.release		= udf_release_file,
 	.fsync			= generic_file_fsync,
@@ -214,14 +346,22 @@ const struct file_operations udf_file_operations = {
 	.llseek			= generic_file_llseek,
 };
 
+<<<<<<< HEAD
 static int udf_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+static int udf_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct iattr *attr)
 {
 	struct inode *inode = d_inode(dentry);
 	struct super_block *sb = inode->i_sb;
 	int error;
 
+<<<<<<< HEAD
 	error = setattr_prepare(&nop_mnt_idmap, dentry, attr);
+=======
+	error = setattr_prepare(&init_user_ns, dentry, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		return error;
 
@@ -244,7 +384,11 @@ static int udf_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 	if (attr->ia_valid & ATTR_MODE)
 		udf_update_extra_perms(inode, attr->ia_mode);
 
+<<<<<<< HEAD
 	setattr_copy(&nop_mnt_idmap, inode, attr);
+=======
+	setattr_copy(&init_user_ns, inode, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	mark_inode_dirty(inode);
 	return 0;
 }

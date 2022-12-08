@@ -27,11 +27,17 @@
 
 #include <asm/page.h>
 #include <asm/unistd.h>
+<<<<<<< HEAD
 #include <asm/xilinx_mb_manager.h>
 
 #include <linux/errno.h>
 #include <asm/signal.h>
 #include <asm/mmu.h>
+=======
+
+#include <linux/errno.h>
+#include <asm/signal.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #undef DEBUG
 
@@ -289,6 +295,7 @@ syscall_debug_table:
 
 .text
 
+<<<<<<< HEAD
 .extern cpuinfo
 
 C_ENTRY(mb_flush_dcache):
@@ -327,6 +334,8 @@ C_ENTRY(mb_invalidate_icache):
 	rtsd	r15, 8
 	nop
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * User trap.
  *
@@ -793,6 +802,7 @@ IRQ_return: /* MS: Make global symbol for debugging */
 	rtid	r14, 0
 	nop
 
+<<<<<<< HEAD
 #ifdef CONFIG_MB_MANAGER
 
 #define	PT_PID		PT_SIZE
@@ -947,6 +957,8 @@ ret_from_break:
 	nop
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Debug trap for KGDB. Enter to _debug_exception by brki r16, 0x18
  * and call handling function with saved pt_regs
@@ -1151,6 +1163,7 @@ ENTRY(_switch_to)
 	rtsd	r15, 8
 	nop
 
+<<<<<<< HEAD
 #ifdef CONFIG_MB_MANAGER
 .global xmb_inject_err
 .section .text
@@ -1233,6 +1246,8 @@ xmb_manager_register:
 .end xmb_manager_register
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ENTRY(_reset)
 	VM_OFF
 	brai	0; /* Jump to reset vector */
@@ -1240,17 +1255,24 @@ ENTRY(_reset)
 	/* These are compiled and loaded into high memory, then
 	 * copied into place in mach_early_setup */
 	.section	.init.ivt, "ax"
+<<<<<<< HEAD
 #if CONFIG_MANUAL_RESET_VECTOR && !defined(CONFIG_MB_MANAGER)
 	.org	0x0
 	brai	CONFIG_MANUAL_RESET_VECTOR
 #elif defined(CONFIG_MB_MANAGER)
 	.org	0x0
 	brai	TOPHYS(_xtmr_manager_reset);
+=======
+#if CONFIG_MANUAL_RESET_VECTOR
+	.org	0x0
+	brai	CONFIG_MANUAL_RESET_VECTOR
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	.org	0x8
 	brai	TOPHYS(_user_exception); /* syscall handler */
 	.org	0x10
 	brai	TOPHYS(_interrupt);	/* Interrupt handler */
+<<<<<<< HEAD
 #ifdef CONFIG_MB_MANAGER
 	.org	0x18
 	brai	TOPHYS(_xmb_manager_break);	/* microblaze manager break handler */
@@ -1277,6 +1299,13 @@ xmb_inject_error:
 	nop
 #endif
 
+=======
+	.org	0x18
+	brai	TOPHYS(_debug_exception);	/* debug trap handler */
+	.org	0x20
+	brai	TOPHYS(_hw_exception_handler);	/* HW exception handler */
+
+>>>>>>> b7ba80a49124 (Commit)
 .section .rodata,"a"
 #include "syscall_table.S"
 

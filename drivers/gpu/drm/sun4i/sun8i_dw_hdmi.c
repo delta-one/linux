@@ -8,7 +8,11 @@
 #include <linux/of_device.h>
 #include <linux/platform_device.h>
 
+<<<<<<< HEAD
 #include <drm/drm_modeset_helper_vtables.h>
+=======
+#include <drm/drm_crtc_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_of.h>
 #include <drm/drm_simple_kms_helper.h>
 

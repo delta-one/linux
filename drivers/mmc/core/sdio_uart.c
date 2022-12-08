@@ -478,13 +478,21 @@ static void sdio_uart_check_modem_status(struct sdio_uart_port *port)
 			int cts = (status & UART_MSR_CTS);
 			if (tty->hw_stopped) {
 				if (cts) {
+<<<<<<< HEAD
 					tty->hw_stopped = false;
+=======
+					tty->hw_stopped = 0;
+>>>>>>> b7ba80a49124 (Commit)
 					sdio_uart_start_tx(port);
 					tty_wakeup(tty);
 				}
 			} else {
 				if (!cts) {
+<<<<<<< HEAD
 					tty->hw_stopped = true;
+=======
+					tty->hw_stopped = 1;
+>>>>>>> b7ba80a49124 (Commit)
 					sdio_uart_stop_tx(port);
 				}
 			}
@@ -526,7 +534,11 @@ static void sdio_uart_irq(struct sdio_func *func)
 	port->in_sdio_uart_irq = NULL;
 }
 
+<<<<<<< HEAD
 static bool uart_carrier_raised(struct tty_port *tport)
+=======
+static int uart_carrier_raised(struct tty_port *tport)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sdio_uart_port *port =
 			container_of(tport, struct sdio_uart_port, port);
@@ -535,27 +547,45 @@ static bool uart_carrier_raised(struct tty_port *tport)
 		return 1;
 	ret = sdio_uart_get_mctrl(port);
 	sdio_uart_release_func(port);
+<<<<<<< HEAD
 
 	return ret & TIOCM_CAR;
+=======
+	if (ret & TIOCM_CAR)
+		return 1;
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
  *	uart_dtr_rts		-	 port helper to set uart signals
  *	@tport: tty port to be updated
+<<<<<<< HEAD
  *	@active: set to turn on DTR/RTS
+=======
+ *	@onoff: set to turn on DTR/RTS
+>>>>>>> b7ba80a49124 (Commit)
  *
  *	Called by the tty port helpers when the modem signals need to be
  *	adjusted during an open, close and hangup.
  */
 
+<<<<<<< HEAD
 static void uart_dtr_rts(struct tty_port *tport, bool active)
+=======
+static void uart_dtr_rts(struct tty_port *tport, int onoff)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sdio_uart_port *port =
 			container_of(tport, struct sdio_uart_port, port);
 	int ret = sdio_uart_claim_func(port);
 	if (ret)
 		return;
+<<<<<<< HEAD
 	if (!active)
+=======
+	if (onoff == 0)
+>>>>>>> b7ba80a49124 (Commit)
 		sdio_uart_clear_mctrl(port, TIOCM_DTR | TIOCM_RTS);
 	else
 		sdio_uart_set_mctrl(port, TIOCM_DTR | TIOCM_RTS);
@@ -633,7 +663,11 @@ static int sdio_uart_activate(struct tty_port *tport, struct tty_struct *tty)
 
 	if (C_CRTSCTS(tty))
 		if (!(sdio_uart_get_mctrl(port) & TIOCM_CTS))
+<<<<<<< HEAD
 			tty->hw_stopped = true;
+=======
+			tty->hw_stopped = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	clear_bit(TTY_IO_ERROR, &tty->flags);
 
@@ -882,14 +916,22 @@ static void sdio_uart_set_termios(struct tty_struct *tty,
 
 	/* Handle turning off CRTSCTS */
 	if ((old_termios->c_cflag & CRTSCTS) && !(cflag & CRTSCTS)) {
+<<<<<<< HEAD
 		tty->hw_stopped = false;
+=======
+		tty->hw_stopped = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		sdio_uart_start_tx(port);
 	}
 
 	/* Handle turning on CRTSCTS */
 	if (!(old_termios->c_cflag & CRTSCTS) && (cflag & CRTSCTS)) {
 		if (!(sdio_uart_get_mctrl(port) & TIOCM_CTS)) {
+<<<<<<< HEAD
 			tty->hw_stopped = true;
+=======
+			tty->hw_stopped = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			sdio_uart_stop_tx(port);
 		}
 	}

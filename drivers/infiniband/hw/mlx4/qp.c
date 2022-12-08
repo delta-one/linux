@@ -102,6 +102,7 @@ enum mlx4_ib_source_type {
 	MLX4_IB_RWQ_SRC	= 1,
 };
 
+<<<<<<< HEAD
 struct mlx4_ib_qp_event_work {
 	struct work_struct work;
 	struct mlx4_qp *qp;
@@ -110,6 +111,8 @@ struct mlx4_ib_qp_event_work {
 
 static struct workqueue_struct *mlx4_ib_qp_event_wq;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int is_tunnel_qp(struct mlx4_ib_dev *dev, struct mlx4_ib_qp *qp)
 {
 	if (!mlx4_is_master(dev->dev))
@@ -208,6 +211,7 @@ static void stamp_send_wqe(struct mlx4_ib_qp *qp, int n)
 	}
 }
 
+<<<<<<< HEAD
 static void mlx4_ib_handle_qp_event(struct work_struct *_work)
 {
 	struct mlx4_ib_qp_event_work *qpe_work =
@@ -260,10 +264,17 @@ static void mlx4_ib_qp_event(struct mlx4_qp *qp, enum mlx4_event type)
 {
 	struct ib_qp *ibqp = &to_mibqp(qp)->ibqp;
 	struct mlx4_ib_qp_event_work *qpe_work;
+=======
+static void mlx4_ib_qp_event(struct mlx4_qp *qp, enum mlx4_event type)
+{
+	struct ib_event event;
+	struct ib_qp *ibqp = &to_mibqp(qp)->ibqp;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (type == MLX4_EVENT_TYPE_PATH_MIG)
 		to_mibqp(qp)->port = to_mibqp(qp)->alt_port;
 
+<<<<<<< HEAD
 	if (!ibqp->event_handler)
 		goto out_no_handler;
 
@@ -279,6 +290,44 @@ static void mlx4_ib_qp_event(struct mlx4_qp *qp, enum mlx4_event type)
 
 out_no_handler:
 	mlx4_put_qp(qp);
+=======
+	if (ibqp->event_handler) {
+		event.device     = ibqp->device;
+		event.element.qp = ibqp;
+		switch (type) {
+		case MLX4_EVENT_TYPE_PATH_MIG:
+			event.event = IB_EVENT_PATH_MIG;
+			break;
+		case MLX4_EVENT_TYPE_COMM_EST:
+			event.event = IB_EVENT_COMM_EST;
+			break;
+		case MLX4_EVENT_TYPE_SQ_DRAINED:
+			event.event = IB_EVENT_SQ_DRAINED;
+			break;
+		case MLX4_EVENT_TYPE_SRQ_QP_LAST_WQE:
+			event.event = IB_EVENT_QP_LAST_WQE_REACHED;
+			break;
+		case MLX4_EVENT_TYPE_WQ_CATAS_ERROR:
+			event.event = IB_EVENT_QP_FATAL;
+			break;
+		case MLX4_EVENT_TYPE_PATH_MIG_FAILED:
+			event.event = IB_EVENT_PATH_MIG_ERR;
+			break;
+		case MLX4_EVENT_TYPE_WQ_INVAL_REQ_ERROR:
+			event.event = IB_EVENT_QP_REQ_ERR;
+			break;
+		case MLX4_EVENT_TYPE_WQ_ACCESS_ERROR:
+			event.event = IB_EVENT_QP_ACCESS_ERR;
+			break;
+		default:
+			pr_warn("Unexpected event type %d "
+			       "on QP %06x\n", type, qp->qpn);
+			return;
+		}
+
+		ibqp->event_handler(&event, ibqp->qp_context);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mlx4_ib_wq_event(struct mlx4_qp *qp, enum mlx4_event type)
@@ -447,6 +496,7 @@ static int set_user_sq_size(struct mlx4_ib_dev *dev,
 			    struct mlx4_ib_qp *qp,
 			    struct mlx4_ib_create_qp *ucmd)
 {
+<<<<<<< HEAD
 	u32 cnt;
 
 	/* Sanity check SQ size before proceeding */
@@ -454,6 +504,11 @@ static int set_user_sq_size(struct mlx4_ib_dev *dev,
 	    cnt > dev->dev->caps.max_wqes)
 		return -EINVAL;
 	if (ucmd->log_sq_stride >
+=======
+	/* Sanity check SQ size before proceeding */
+	if ((1 << ucmd->log_sq_bb_count) > dev->dev->caps.max_wqes	 ||
+	    ucmd->log_sq_stride >
+>>>>>>> b7ba80a49124 (Commit)
 		ilog2(roundup_pow_of_two(dev->dev->caps.max_sq_desc_sz)) ||
 	    ucmd->log_sq_stride < MLX4_IB_MIN_SQ_STRIDE)
 		return -EINVAL;
@@ -4507,6 +4562,7 @@ void mlx4_ib_drain_rq(struct ib_qp *qp)
 
 	handle_drain_completion(cq, &rdrain, dev);
 }
+<<<<<<< HEAD
 
 int mlx4_ib_qp_event_init(void)
 {
@@ -4521,3 +4577,5 @@ void mlx4_ib_qp_event_cleanup(void)
 {
 	destroy_workqueue(mlx4_ib_qp_event_wq);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

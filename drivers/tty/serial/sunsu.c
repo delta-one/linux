@@ -417,7 +417,12 @@ static void transmit_chars(struct uart_sunsu_port *up)
 	count = up->port.fifosize;
 	do {
 		serial_out(up, UART_TX, xmit->buf[xmit->tail]);
+<<<<<<< HEAD
 		uart_xmit_advance(&up->port, 1);
+=======
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+		up->port.icount.tx++;
+>>>>>>> b7ba80a49124 (Commit)
 		if (uart_circ_empty(xmit))
 			break;
 	} while (--count > 0);

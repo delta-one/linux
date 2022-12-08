@@ -4,7 +4,10 @@
 #include <linux/bpf_trace.h>
 #include <linux/netdevice.h>
 #include <linux/bitfield.h>
+<<<<<<< HEAD
 #include <net/xfrm.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "../nfp_app.h"
 #include "../nfp_net.h"
@@ -168,16 +171,23 @@ nfp_nfd3_tx_csum(struct nfp_net_dp *dp, struct nfp_net_r_vector *r_vec,
 	u64_stats_update_end(&r_vec->tx_sync);
 }
 
+<<<<<<< HEAD
 static int nfp_nfd3_prep_tx_meta(struct nfp_net_dp *dp, struct sk_buff *skb,
 				 u64 tls_handle, bool *ipsec)
 {
 	struct metadata_dst *md_dst = skb_metadata_dst(skb);
 	struct nfp_ipsec_offload offload_info;
+=======
+static int nfp_nfd3_prep_tx_meta(struct nfp_net_dp *dp, struct sk_buff *skb, u64 tls_handle)
+{
+	struct metadata_dst *md_dst = skb_metadata_dst(skb);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned char *data;
 	bool vlan_insert;
 	u32 meta_id = 0;
 	int md_bytes;
 
+<<<<<<< HEAD
 #ifdef CONFIG_NFP_NET_IPSEC
 	if (xfrm_offload(skb))
 		*ipsec = nfp_net_ipsec_tx_prep(dp, skb, &offload_info);
@@ -196,6 +206,22 @@ static int nfp_nfd3_prep_tx_meta(struct nfp_net_dp *dp, struct sk_buff *skb,
 		   (!!tls_handle ? NFP_NET_META_CONN_HANDLE_SIZE : 0) +
 		   (vlan_insert ? NFP_NET_META_VLAN_SIZE : 0) +
 		   (*ipsec ? NFP_NET_META_IPSEC_FIELD_SIZE : 0);
+=======
+	if (unlikely(md_dst || tls_handle)) {
+		if (unlikely(md_dst && md_dst->type != METADATA_HW_PORT_MUX))
+			md_dst = NULL;
+	}
+
+	vlan_insert = skb_vlan_tag_present(skb) && (dp->ctrl & NFP_NET_CFG_CTRL_TXVLAN_V2);
+
+	if (!(md_dst || tls_handle || vlan_insert))
+		return 0;
+
+	md_bytes = sizeof(meta_id) +
+		   !!md_dst * NFP_NET_META_PORTID_SIZE +
+		   !!tls_handle * NFP_NET_META_CONN_HANDLE_SIZE +
+		   vlan_insert * NFP_NET_META_VLAN_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unlikely(skb_cow_head(skb, md_bytes)))
 		return -ENOMEM;
@@ -225,6 +251,7 @@ static int nfp_nfd3_prep_tx_meta(struct nfp_net_dp *dp, struct sk_buff *skb,
 		meta_id <<= NFP_NET_META_FIELD_SIZE;
 		meta_id |= NFP_NET_META_VLAN;
 	}
+<<<<<<< HEAD
 	if (*ipsec) {
 		data -= NFP_NET_META_IPSEC_SIZE;
 		put_unaligned_be32(offload_info.seq_hi, data);
@@ -235,6 +262,8 @@ static int nfp_nfd3_prep_tx_meta(struct nfp_net_dp *dp, struct sk_buff *skb,
 		meta_id <<= NFP_NET_META_IPSEC_FIELD_SIZE;
 		meta_id |= NFP_NET_META_IPSEC << 8 | NFP_NET_META_IPSEC << 4 | NFP_NET_META_IPSEC;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	data -= sizeof(meta_id);
 	put_unaligned_be32(meta_id, data);
@@ -263,7 +292,10 @@ netdev_tx_t nfp_nfd3_tx(struct sk_buff *skb, struct net_device *netdev)
 	dma_addr_t dma_addr;
 	unsigned int fsize;
 	u64 tls_handle = 0;
+<<<<<<< HEAD
 	bool ipsec = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 qidx;
 
 	dp = &nn->dp;
@@ -291,7 +323,11 @@ netdev_tx_t nfp_nfd3_tx(struct sk_buff *skb, struct net_device *netdev)
 		return NETDEV_TX_OK;
 	}
 
+<<<<<<< HEAD
 	md_bytes = nfp_nfd3_prep_tx_meta(dp, skb, tls_handle, &ipsec);
+=======
+	md_bytes = nfp_nfd3_prep_tx_meta(dp, skb, tls_handle);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(md_bytes < 0))
 		goto err_flush;
 
@@ -324,10 +360,14 @@ netdev_tx_t nfp_nfd3_tx(struct sk_buff *skb, struct net_device *netdev)
 
 	/* Do not reorder - tso may adjust pkt cnt, vlan may override fields */
 	nfp_nfd3_tx_tso(r_vec, txbuf, txd, skb, md_bytes);
+<<<<<<< HEAD
 	if (ipsec)
 		nfp_nfd3_ipsec_tx(txd, skb);
 	else
 		nfp_nfd3_tx_csum(dp, r_vec, txbuf, txd, skb);
+=======
+	nfp_nfd3_tx_csum(dp, r_vec, txbuf, txd, skb);
+>>>>>>> b7ba80a49124 (Commit)
 	if (skb_vlan_tag_present(skb) && dp->ctrl & NFP_NET_CFG_CTRL_TXVLAN) {
 		txd->flags |= NFD3_DESC_TX_VLAN;
 		txd->vlan = cpu_to_le16(skb_vlan_tag_get(skb));
@@ -785,6 +825,7 @@ nfp_nfd3_parse_meta(struct net_device *netdev, struct nfp_meta_parsed *meta,
 				return false;
 			data += sizeof(struct nfp_net_tls_resync_req);
 			break;
+<<<<<<< HEAD
 #ifdef CONFIG_NFP_NET_IPSEC
 		case NFP_NET_META_IPSEC:
 			/* Note: IPsec packet will have zero saidx, so need add 1
@@ -794,6 +835,8 @@ nfp_nfd3_parse_meta(struct net_device *netdev, struct nfp_meta_parsed *meta,
 			data += 4;
 			break;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		default:
 			return true;
 		}
@@ -906,11 +949,20 @@ static int nfp_nfd3_rx(struct nfp_net_rx_ring *rx_ring, int budget)
 	struct nfp_net_dp *dp = &r_vec->nfp_net->dp;
 	struct nfp_net_tx_ring *tx_ring;
 	struct bpf_prog *xdp_prog;
+<<<<<<< HEAD
 	int idx, pkts_polled = 0;
 	bool xdp_tx_cmpl = false;
 	unsigned int true_bufsz;
 	struct sk_buff *skb;
 	struct xdp_buff xdp;
+=======
+	bool xdp_tx_cmpl = false;
+	unsigned int true_bufsz;
+	struct sk_buff *skb;
+	int pkts_polled = 0;
+	struct xdp_buff xdp;
+	int idx;
+>>>>>>> b7ba80a49124 (Commit)
 
 	xdp_prog = READ_ONCE(dp->xdp_prog);
 	true_bufsz = xdp_prog ? PAGE_SIZE : dp->fl_bufsz;
@@ -1110,6 +1162,7 @@ static int nfp_nfd3_rx(struct nfp_net_rx_ring *rx_ring, int budget)
 			continue;
 		}
 
+<<<<<<< HEAD
 #ifdef CONFIG_NFP_NET_IPSEC
 		if (meta.ipsec_saidx != 0 && unlikely(nfp_net_ipsec_rx(&meta, skb))) {
 			nfp_nfd3_rx_drop(dp, r_vec, rx_ring, NULL, skb);
@@ -1117,6 +1170,8 @@ static int nfp_nfd3_rx(struct nfp_net_rx_ring *rx_ring, int budget)
 		}
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (meta_len_xdp)
 			skb_metadata_set(skb, meta_len_xdp);
 

@@ -92,7 +92,10 @@ struct trace_iterator {
 	unsigned int		temp_size;
 	char			*fmt;	/* modified format holder */
 	unsigned int		fmt_size;
+<<<<<<< HEAD
 	long			wait_index;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* trace_seq for __print_flags() and __print_symbolic() etc. */
 	struct trace_seq	tmp_seq;
@@ -136,6 +139,10 @@ struct trace_event_functions {
 
 struct trace_event {
 	struct hlist_node		node;
+<<<<<<< HEAD
+=======
+	struct list_head		list;
+>>>>>>> b7ba80a49124 (Commit)
 	int				type;
 	struct trace_event_functions	*funcs;
 };
@@ -234,8 +241,12 @@ void tracing_record_taskinfo_sched_switch(struct task_struct *prev,
 void tracing_record_cmdline(struct task_struct *task);
 void tracing_record_tgid(struct task_struct *task);
 
+<<<<<<< HEAD
 int trace_output_call(struct trace_iterator *iter, char *name, char *fmt, ...)
 	 __printf(3, 4);
+=======
+int trace_output_call(struct trace_iterator *iter, char *name, char *fmt, ...);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct event_filter;
 
@@ -270,7 +281,10 @@ struct trace_event_fields {
 			const int  align;
 			const int  is_signed;
 			const int  filter_type;
+<<<<<<< HEAD
 			const int  len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 		int (*define_fields)(struct trace_event_call *);
 	};

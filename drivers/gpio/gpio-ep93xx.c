@@ -17,7 +17,10 @@
 #include <linux/slab.h>
 #include <linux/gpio/driver.h>
 #include <linux/bitops.h>
+<<<<<<< HEAD
 #include <linux/seq_file.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define EP93XX_GPIO_F_INT_STATUS 0x5c
 #define EP93XX_GPIO_A_INT_STATUS 0xa0
@@ -41,6 +44,10 @@
 #define EP93XX_GPIO_F_IRQ_BASE 80
 
 struct ep93xx_gpio_irq_chip {
+<<<<<<< HEAD
+=======
+	struct irq_chip ic;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 irq_offset;
 	u8 int_unmasked;
 	u8 int_enabled;
@@ -148,7 +155,11 @@ static void ep93xx_gpio_f_irq_handler(struct irq_desc *desc)
 	 */
 	struct irq_chip *irqchip = irq_desc_get_chip(desc);
 	unsigned int irq = irq_desc_get_irq(desc);
+<<<<<<< HEAD
 	int port_f_idx = (irq & 7) ^ 4; /* {20..23,48..51} -> {0..7} */
+=======
+	int port_f_idx = ((irq + 1) & 7) ^ 4; /* {19..22,47..50} -> {0..7} */
+>>>>>>> b7ba80a49124 (Commit)
 	int gpio_irq = EP93XX_GPIO_F_IRQ_BASE + port_f_idx;
 
 	chained_irq_enter(irqchip, desc);
@@ -185,7 +196,10 @@ static void ep93xx_gpio_irq_mask_ack(struct irq_data *d)
 	ep93xx_gpio_update_int_params(epg, eic);
 
 	writeb(port_mask, epg->base + eic->irq_offset + EP93XX_INT_EOI_OFFSET);
+<<<<<<< HEAD
 	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ep93xx_gpio_irq_mask(struct irq_data *d)
@@ -196,7 +210,10 @@ static void ep93xx_gpio_irq_mask(struct irq_data *d)
 
 	eic->int_unmasked &= ~BIT(d->irq & 7);
 	ep93xx_gpio_update_int_params(epg, eic);
+<<<<<<< HEAD
 	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ep93xx_gpio_irq_unmask(struct irq_data *d)
@@ -205,7 +222,10 @@ static void ep93xx_gpio_irq_unmask(struct irq_data *d)
 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
 	struct ep93xx_gpio *epg = gpiochip_get_data(gc);
 
+<<<<<<< HEAD
 	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	eic->int_unmasked |= BIT(d->irq & 7);
 	ep93xx_gpio_update_int_params(epg, eic);
 }
@@ -323,6 +343,7 @@ static int ep93xx_gpio_set_config(struct gpio_chip *gc, unsigned offset,
 	return 0;
 }
 
+<<<<<<< HEAD
 static void ep93xx_irq_print_chip(struct irq_data *data, struct seq_file *p)
 {
 	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
@@ -342,6 +363,17 @@ static const struct irq_chip gpio_eic_irq_chip = {
 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
 };
 
+=======
+static void ep93xx_init_irq_chip(struct device *dev, struct irq_chip *ic)
+{
+	ic->irq_ack = ep93xx_gpio_irq_ack;
+	ic->irq_mask_ack = ep93xx_gpio_irq_mask_ack;
+	ic->irq_mask = ep93xx_gpio_irq_mask;
+	ic->irq_unmask = ep93xx_gpio_irq_unmask;
+	ic->irq_set_type = ep93xx_gpio_irq_type;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int ep93xx_gpio_add_bank(struct ep93xx_gpio_chip *egc,
 				struct platform_device *pdev,
 				struct ep93xx_gpio *epg,
@@ -363,6 +395,11 @@ static int ep93xx_gpio_add_bank(struct ep93xx_gpio_chip *egc,
 
 	girq = &gc->irq;
 	if (bank->has_irq || bank->has_hierarchical_irq) {
+<<<<<<< HEAD
+=======
+		struct irq_chip *ic;
+
+>>>>>>> b7ba80a49124 (Commit)
 		gc->set_config = ep93xx_gpio_set_config;
 		egc->eic = devm_kcalloc(dev, 1,
 					sizeof(*egc->eic),
@@ -370,7 +407,16 @@ static int ep93xx_gpio_add_bank(struct ep93xx_gpio_chip *egc,
 		if (!egc->eic)
 			return -ENOMEM;
 		egc->eic->irq_offset = bank->irq;
+<<<<<<< HEAD
 		gpio_irq_chip_set_chip(girq, &gpio_eic_irq_chip);
+=======
+		ic = &egc->eic->ic;
+		ic->name = devm_kasprintf(dev, GFP_KERNEL, "gpio-irq-%s", bank->label);
+		if (!ic->name)
+			return -ENOMEM;
+		ep93xx_init_irq_chip(dev, ic);
+		girq->chip = ic;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (bank->has_irq) {

@@ -1,4 +1,8 @@
 # SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_DRM_CHIPONE_ICN6211) += chipone-icn6211.o
 obj-$(CONFIG_DRM_CHRONTEL_CH7033) += chrontel-ch7033.o
 obj-$(CONFIG_DRM_CROS_EC_ANX7688) += cros-ec-anx7688.o

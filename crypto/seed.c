@@ -8,11 +8,18 @@
  * Copyright (C) 2007 Korea Information Security Agency (KISA).
  */
 
+<<<<<<< HEAD
 #include <crypto/algapi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/types.h>
 #include <linux/errno.h>
+<<<<<<< HEAD
+=======
+#include <linux/crypto.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/byteorder.h>
 
 #define SEED_NUM_KCONSTANTS	16

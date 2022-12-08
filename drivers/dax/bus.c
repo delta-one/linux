@@ -18,7 +18,11 @@ struct dax_id {
 	char dev_name[DAX_NAME_LEN];
 };
 
+<<<<<<< HEAD
 static int dax_bus_uevent(const struct device *dev, struct kobj_uevent_env *env)
+=======
+static int dax_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/*
 	 * We only ever expect to handle device-dax instances, i.e. the
@@ -56,6 +60,7 @@ static int dax_match_id(struct dax_device_driver *dax_drv, struct device *dev)
 	return match;
 }
 
+<<<<<<< HEAD
 static int dax_match_type(struct dax_device_driver *dax_drv, struct device *dev)
 {
 	enum dax_driver_type type = DAXDRV_DEVICE_TYPE;
@@ -75,6 +80,8 @@ static int dax_match_type(struct dax_device_driver *dax_drv, struct device *dev)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum id_action {
 	ID_REMOVE,
 	ID_ADD,
@@ -235,9 +242,20 @@ static int dax_bus_match(struct device *dev, struct device_driver *drv)
 {
 	struct dax_device_driver *dax_drv = to_dax_drv(drv);
 
+<<<<<<< HEAD
 	if (dax_match_id(dax_drv, dev))
 		return 1;
 	return dax_match_type(dax_drv, dev);
+=======
+	/*
+	 * All but the 'device-dax' driver, which has 'match_always'
+	 * set, requires an exact id match.
+	 */
+	if (dax_drv->match_always)
+		return 1;
+
+	return dax_match_id(dax_drv, dev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -441,8 +459,13 @@ static void unregister_dev_dax(void *dev)
 	dev_dbg(dev, "%s\n", __func__);
 
 	kill_dev_dax(dev_dax);
+<<<<<<< HEAD
 	device_del(dev);
 	free_dev_dax_ranges(dev_dax);
+=======
+	free_dev_dax_ranges(dev_dax);
+	device_del(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	put_device(dev);
 }
 
@@ -1427,10 +1450,19 @@ err_id:
 }
 EXPORT_SYMBOL_GPL(devm_create_dev_dax);
 
+<<<<<<< HEAD
+=======
+static int match_always_count;
+
+>>>>>>> b7ba80a49124 (Commit)
 int __dax_driver_register(struct dax_device_driver *dax_drv,
 		struct module *module, const char *mod_name)
 {
 	struct device_driver *drv = &dax_drv->drv;
+<<<<<<< HEAD
+=======
+	int rc = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * dax_bus_probe() calls dax_drv->probe() unconditionally.
@@ -1445,7 +1477,30 @@ int __dax_driver_register(struct dax_device_driver *dax_drv,
 	drv->mod_name = mod_name;
 	drv->bus = &dax_bus_type;
 
+<<<<<<< HEAD
 	return driver_register(drv);
+=======
+	/* there can only be one default driver */
+	mutex_lock(&dax_bus_lock);
+	match_always_count += dax_drv->match_always;
+	if (match_always_count > 1) {
+		match_always_count--;
+		WARN_ON(1);
+		rc = -EINVAL;
+	}
+	mutex_unlock(&dax_bus_lock);
+	if (rc)
+		return rc;
+
+	rc = driver_register(drv);
+	if (rc && dax_drv->match_always) {
+		mutex_lock(&dax_bus_lock);
+		match_always_count -= dax_drv->match_always;
+		mutex_unlock(&dax_bus_lock);
+	}
+
+	return rc;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(__dax_driver_register);
 
@@ -1455,6 +1510,10 @@ void dax_driver_unregister(struct dax_device_driver *dax_drv)
 	struct dax_id *dax_id, *_id;
 
 	mutex_lock(&dax_bus_lock);
+<<<<<<< HEAD
+=======
+	match_always_count -= dax_drv->match_always;
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry_safe(dax_id, _id, &dax_drv->ids, list) {
 		list_del(&dax_id->list);
 		kfree(dax_id);

@@ -166,7 +166,11 @@ static void led_tg_destroy(const struct xt_tgdtor_param *par)
 
 	list_del(&ledinternal->list);
 
+<<<<<<< HEAD
 	timer_shutdown_sync(&ledinternal->timer);
+=======
+	del_timer_sync(&ledinternal->timer);
+>>>>>>> b7ba80a49124 (Commit)
 
 	led_trigger_unregister(&ledinternal->netfilter_led_trigger);
 

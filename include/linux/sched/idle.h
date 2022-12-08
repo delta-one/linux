@@ -23,6 +23,7 @@ static inline void wake_up_if_idle(int cpu) { }
  */
 #ifdef TIF_POLLING_NRFLAG
 
+<<<<<<< HEAD
 #ifdef _ASM_GENERIC_BITOPS_INSTRUMENTED_ATOMIC_H
 
 static __always_inline void __current_set_polling(void)
@@ -54,6 +55,14 @@ static __always_inline void __current_clr_polling(void)
 #endif /* _ASM_GENERIC_BITOPS_INSTRUMENTED_ATOMIC_H */
 
 static __always_inline bool __must_check current_set_polling_and_test(void)
+=======
+static inline void __current_set_polling(void)
+{
+	set_thread_flag(TIF_POLLING_NRFLAG);
+}
+
+static inline bool __must_check current_set_polling_and_test(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	__current_set_polling();
 
@@ -66,7 +75,16 @@ static __always_inline bool __must_check current_set_polling_and_test(void)
 	return unlikely(tif_need_resched());
 }
 
+<<<<<<< HEAD
 static __always_inline bool __must_check current_clr_polling_and_test(void)
+=======
+static inline void __current_clr_polling(void)
+{
+	clear_thread_flag(TIF_POLLING_NRFLAG);
+}
+
+static inline bool __must_check current_clr_polling_and_test(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	__current_clr_polling();
 
@@ -93,7 +111,11 @@ static inline bool __must_check current_clr_polling_and_test(void)
 }
 #endif
 
+<<<<<<< HEAD
 static __always_inline void current_clr_polling(void)
+=======
+static inline void current_clr_polling(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	__current_clr_polling();
 

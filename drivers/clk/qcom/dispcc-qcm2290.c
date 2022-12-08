@@ -71,6 +71,10 @@ static const struct parent_map disp_cc_parent_map_0[] = {
 static const struct clk_parent_data disp_cc_parent_data_0[] = {
 	{ .fw_name = "bi_tcxo" },
 	{ .fw_name = "dsi0_phy_pll_out_byteclk" },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map disp_cc_parent_map_1[] = {
@@ -79,6 +83,10 @@ static const struct parent_map disp_cc_parent_map_1[] = {
 
 static const struct clk_parent_data disp_cc_parent_data_1[] = {
 	{ .fw_name = "bi_tcxo" },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map disp_cc_parent_map_2[] = {
@@ -89,6 +97,10 @@ static const struct parent_map disp_cc_parent_map_2[] = {
 static const struct clk_parent_data disp_cc_parent_data_2[] = {
 	{ .fw_name = "bi_tcxo_ao" },
 	{ .fw_name = "gcc_disp_gpll0_div_clk_src" },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map disp_cc_parent_map_3[] = {
@@ -101,6 +113,10 @@ static const struct clk_parent_data disp_cc_parent_data_3[] = {
 	{ .fw_name = "bi_tcxo" },
 	{ .hw = &disp_cc_pll0.clkr.hw },
 	{ .fw_name = "gcc_disp_gpll0_clk_src" },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map disp_cc_parent_map_4[] = {
@@ -113,6 +129,10 @@ static const struct clk_parent_data disp_cc_parent_data_4[] = {
 	{ .fw_name = "bi_tcxo" },
 	{ .fw_name = "dsi0_phy_pll_out_dsiclk" },
 	{ .fw_name = "dsi1_phy_pll_out_dsiclk" },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map disp_cc_parent_map_5[] = {
@@ -121,6 +141,10 @@ static const struct parent_map disp_cc_parent_map_5[] = {
 
 static const struct clk_parent_data disp_cc_parent_data_5[] = {
 	{ .fw_name = "sleep_clk" },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct clk_rcg2 disp_cc_mdss_byte0_clk_src = {

@@ -78,6 +78,7 @@ gmc_v10_0_vm_fault_interrupt_state(struct amdgpu_device *adev,
 		/* MM HUB */
 		amdgpu_gmc_set_vm_fault_masks(adev, AMDGPU_MMHUB_0, false);
 		/* GFX HUB */
+<<<<<<< HEAD
 		/* This works because this interrupt is only
 		 * enabled at init/resume and disabled in
 		 * fini/suspend, so the overall state doesn't
@@ -85,11 +86,15 @@ gmc_v10_0_vm_fault_interrupt_state(struct amdgpu_device *adev,
 		 */
 		if (!adev->in_s0ix)
 			amdgpu_gmc_set_vm_fault_masks(adev, AMDGPU_GFXHUB_0, false);
+=======
+		amdgpu_gmc_set_vm_fault_masks(adev, AMDGPU_GFXHUB_0, false);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case AMDGPU_IRQ_STATE_ENABLE:
 		/* MM HUB */
 		amdgpu_gmc_set_vm_fault_masks(adev, AMDGPU_MMHUB_0, true);
 		/* GFX HUB */
+<<<<<<< HEAD
 		/* This works because this interrupt is only
 		 * enabled at init/resume and disabled in
 		 * fini/suspend, so the overall state doesn't
@@ -97,6 +102,9 @@ gmc_v10_0_vm_fault_interrupt_state(struct amdgpu_device *adev,
 		 */
 		if (!adev->in_s0ix)
 			amdgpu_gmc_set_vm_fault_masks(adev, AMDGPU_GFXHUB_0, true);
+=======
+		amdgpu_gmc_set_vm_fault_masks(adev, AMDGPU_GFXHUB_0, true);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		break;
@@ -383,9 +391,13 @@ static void gmc_v10_0_flush_gpu_tlb(struct amdgpu_device *adev, uint32_t vmid,
 	 * translation. Avoid this by doing the invalidation from the SDMA
 	 * itself.
 	 */
+<<<<<<< HEAD
 	r = amdgpu_job_alloc_with_ib(ring->adev, &adev->mman.entity,
 				     AMDGPU_FENCE_OWNER_UNDEFINED,
 				     16 * 4, AMDGPU_IB_POOL_IMMEDIATE,
+=======
+	r = amdgpu_job_alloc_with_ib(adev, 16 * 4, AMDGPU_IB_POOL_IMMEDIATE,
+>>>>>>> b7ba80a49124 (Commit)
 				     &job);
 	if (r)
 		goto error_alloc;
@@ -394,7 +406,14 @@ static void gmc_v10_0_flush_gpu_tlb(struct amdgpu_device *adev, uint32_t vmid,
 	job->vm_needs_flush = true;
 	job->ibs->ptr[job->ibs->length_dw++] = ring->funcs->nop;
 	amdgpu_ring_pad_ib(ring, &job->ibs[0]);
+<<<<<<< HEAD
 	fence = amdgpu_job_submit(job);
+=======
+	r = amdgpu_job_submit(job, &adev->mman.entity,
+			      AMDGPU_FENCE_OWNER_UNDEFINED, &fence);
+	if (r)
+		goto error_submit;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&adev->mman.gtt_window_lock);
 
@@ -403,6 +422,12 @@ static void gmc_v10_0_flush_gpu_tlb(struct amdgpu_device *adev, uint32_t vmid,
 
 	return;
 
+<<<<<<< HEAD
+=======
+error_submit:
+	amdgpu_job_free(job);
+
+>>>>>>> b7ba80a49124 (Commit)
 error_alloc:
 	mutex_unlock(&adev->mman.gtt_window_lock);
 	DRM_ERROR("Error flushing GPU TLB using the SDMA (%d)!\n", r);
@@ -620,8 +645,11 @@ static void gmc_v10_0_get_vm_pte(struct amdgpu_device *adev,
 				 struct amdgpu_bo_va_mapping *mapping,
 				 uint64_t *flags)
 {
+<<<<<<< HEAD
 	struct amdgpu_bo *bo = mapping->bo_va->base.bo;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	*flags &= ~AMDGPU_PTE_EXECUTABLE;
 	*flags |= mapping->flags & AMDGPU_PTE_EXECUTABLE;
 
@@ -638,11 +666,14 @@ static void gmc_v10_0_get_vm_pte(struct amdgpu_device *adev,
 		*flags |= AMDGPU_PTE_SYSTEM;
 		*flags &= ~AMDGPU_PTE_VALID;
 	}
+<<<<<<< HEAD
 
 	if (bo && bo->flags & (AMDGPU_GEM_CREATE_COHERENT |
 			       AMDGPU_GEM_CREATE_UNCACHED))
 		*flags = (*flags & ~AMDGPU_PTE_MTYPE_NV10_MASK) |
 			 AMDGPU_PTE_MTYPE_NV10(MTYPE_UC);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static unsigned gmc_v10_0_get_vbios_fb_size(struct amdgpu_device *adev)
@@ -692,15 +723,40 @@ static void gmc_v10_0_set_umc_funcs(struct amdgpu_device *adev)
 		adev->umc.channel_inst_num = UMC_V8_7_CHANNEL_INSTANCE_NUM;
 		adev->umc.umc_inst_num = UMC_V8_7_UMC_INSTANCE_NUM;
 		adev->umc.channel_offs = UMC_V8_7_PER_CHANNEL_OFFSET_SIENNA;
+<<<<<<< HEAD
 		adev->umc.retire_unit = 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		adev->umc.channel_idx_tbl = &umc_v8_7_channel_idx_tbl[0][0];
 		adev->umc.ras = &umc_v8_7_ras;
 		break;
 	default:
 		break;
 	}
+<<<<<<< HEAD
 }
 
+=======
+	if (adev->umc.ras) {
+		amdgpu_ras_register_ras_block(adev, &adev->umc.ras->ras_block);
+
+		strcpy(adev->umc.ras->ras_block.ras_comm.name, "umc");
+		adev->umc.ras->ras_block.ras_comm.block = AMDGPU_RAS_BLOCK__UMC;
+		adev->umc.ras->ras_block.ras_comm.type = AMDGPU_RAS_ERROR__MULTI_UNCORRECTABLE;
+		adev->umc.ras_if = &adev->umc.ras->ras_block.ras_comm;
+
+		/* If don't define special ras_late_init function, use default ras_late_init */
+		if (!adev->umc.ras->ras_block.ras_late_init)
+				adev->umc.ras->ras_block.ras_late_init = amdgpu_umc_ras_late_init;
+
+		/* If not defined special ras_cb function, use default ras_cb */
+		if (!adev->umc.ras->ras_block.ras_cb)
+			adev->umc.ras->ras_block.ras_cb = amdgpu_umc_process_ras_data_cb;
+	}
+}
+
+
+>>>>>>> b7ba80a49124 (Commit)
 static void gmc_v10_0_set_mmhub_funcs(struct amdgpu_device *adev)
 {
 	switch (adev->ip_versions[MMHUB_HWIP][0]) {
@@ -737,6 +793,10 @@ static void gmc_v10_0_set_gfxhub_funcs(struct amdgpu_device *adev)
 
 static int gmc_v10_0_early_init(void *handle)
 {
+<<<<<<< HEAD
+=======
+	int r;
+>>>>>>> b7ba80a49124 (Commit)
 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
 
 	gmc_v10_0_set_mmhub_funcs(adev);
@@ -752,6 +812,13 @@ static int gmc_v10_0_early_init(void *handle)
 	adev->gmc.private_aperture_end =
 		adev->gmc.private_aperture_start + (4ULL << 30) - 1;
 
+<<<<<<< HEAD
+=======
+	r = amdgpu_gmc_ras_early_init(adev);
+	if (r)
+		return r;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -826,7 +893,14 @@ static int gmc_v10_0_mc_init(struct amdgpu_device *adev)
 	}
 #endif
 
+<<<<<<< HEAD
 	adev->gmc.visible_vram_size = adev->gmc.aper_size;
+=======
+	/* In case the PCI BAR is larger than the actual amount of vram */
+	adev->gmc.visible_vram_size = adev->gmc.aper_size;
+	if (adev->gmc.visible_vram_size > adev->gmc.real_vram_size)
+		adev->gmc.visible_vram_size = adev->gmc.real_vram_size;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* set the gart size */
 	if (amdgpu_gart_size == -1) {
@@ -1002,10 +1076,13 @@ static int gmc_v10_0_sw_init(void *handle)
 
 	amdgpu_vm_manager_init(adev);
 
+<<<<<<< HEAD
 	r = amdgpu_gmc_ras_sw_init(adev);
 	if (r)
 		return r;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1053,12 +1130,18 @@ static int gmc_v10_0_gart_enable(struct amdgpu_device *adev)
 	}
 
 	amdgpu_gtt_mgr_recover(&adev->mman.gtt_mgr);
+<<<<<<< HEAD
 
 	if (!adev->in_s0ix) {
 		r = adev->gfxhub.funcs->gart_enable(adev);
 		if (r)
 			return r;
 	}
+=======
+	r = adev->gfxhub.funcs->gart_enable(adev);
+	if (r)
+		return r;
+>>>>>>> b7ba80a49124 (Commit)
 
 	r = adev->mmhub.funcs->gart_enable(adev);
 	if (r)
@@ -1072,12 +1155,19 @@ static int gmc_v10_0_gart_enable(struct amdgpu_device *adev)
 	value = (amdgpu_vm_fault_stop == AMDGPU_VM_FAULT_STOP_ALWAYS) ?
 		false : true;
 
+<<<<<<< HEAD
 	if (!adev->in_s0ix)
 		adev->gfxhub.funcs->set_fault_enable_default(adev, value);
 	adev->mmhub.funcs->set_fault_enable_default(adev, value);
 	gmc_v10_0_flush_gpu_tlb(adev, 0, AMDGPU_MMHUB_0, 0);
 	if (!adev->in_s0ix)
 		gmc_v10_0_flush_gpu_tlb(adev, 0, AMDGPU_GFXHUB_0, 0);
+=======
+	adev->gfxhub.funcs->set_fault_enable_default(adev, value);
+	adev->mmhub.funcs->set_fault_enable_default(adev, value);
+	gmc_v10_0_flush_gpu_tlb(adev, 0, AMDGPU_MMHUB_0, 0);
+	gmc_v10_0_flush_gpu_tlb(adev, 0, AMDGPU_GFXHUB_0, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	DRM_INFO("PCIE GART of %uM enabled (table at 0x%016llX).\n",
 		 (unsigned)(adev->gmc.gart_size >> 20),
@@ -1098,7 +1188,11 @@ static int gmc_v10_0_hw_init(void *handle)
 	 * harvestable groups in gc_utcl2 need to be programmed before any GFX block
 	 * register setup within GMC, or else system hang when harvesting SA.
 	 */
+<<<<<<< HEAD
 	if (!adev->in_s0ix && adev->gfxhub.funcs && adev->gfxhub.funcs->utcl2_harvest)
+=======
+	if (adev->gfxhub.funcs && adev->gfxhub.funcs->utcl2_harvest)
+>>>>>>> b7ba80a49124 (Commit)
 		adev->gfxhub.funcs->utcl2_harvest(adev);
 
 	r = gmc_v10_0_gart_enable(adev);
@@ -1126,8 +1220,12 @@ static int gmc_v10_0_hw_init(void *handle)
  */
 static void gmc_v10_0_gart_disable(struct amdgpu_device *adev)
 {
+<<<<<<< HEAD
 	if (!adev->in_s0ix)
 		adev->gfxhub.funcs->gart_disable(adev);
+=======
+	adev->gfxhub.funcs->gart_disable(adev);
+>>>>>>> b7ba80a49124 (Commit)
 	adev->mmhub.funcs->gart_disable(adev);
 }
 

@@ -125,7 +125,11 @@ enum ath10k_mem_region_type {
  * To minimize the size of the array, the list must obey the format:
  * '{start0,stop0},{start1,stop1},{start2,stop2}....' The values below must
  * also obey to 'start0 < stop0 < start1 < stop1 < start2 < ...', otherwise
+<<<<<<< HEAD
  * we may encounter error in the dump processing.
+=======
+ * we may encouter error in the dump processing.
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct ath10k_mem_section {
 	u32 start;

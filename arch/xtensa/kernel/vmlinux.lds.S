@@ -125,6 +125,10 @@ SECTIONS
     ENTRY_TEXT
     TEXT_TEXT
     SCHED_TEXT
+<<<<<<< HEAD
+=======
+    CPUIDLE_TEXT
+>>>>>>> b7ba80a49124 (Commit)
     LOCK_TEXT
     *(.fixup)
   }

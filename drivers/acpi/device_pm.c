@@ -484,6 +484,7 @@ void acpi_dev_power_up_children_with_adr(struct acpi_device *adev)
 	acpi_dev_for_each_child(adev, acpi_power_up_if_adr_present, NULL);
 }
 
+<<<<<<< HEAD
 /**
  * acpi_dev_power_state_for_wake - Deepest power state for wakeup signaling
  * @adev: ACPI companion of the target device.
@@ -503,6 +504,8 @@ u8 acpi_dev_power_state_for_wake(struct acpi_device *adev)
 	return state;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PM
 static DEFINE_MUTEX(acpi_pm_notifier_lock);
 static DEFINE_MUTEX(acpi_pm_notifier_install_lock);
@@ -706,6 +709,7 @@ static int acpi_dev_pm_get_state(struct device *dev, struct acpi_device *adev,
 		d_min = ret;
 		wakeup = device_may_wakeup(dev) && adev->wakeup.flags.valid
 			&& adev->wakeup.sleep_state >= target_state;
+<<<<<<< HEAD
 	} else if (device_may_wakeup(dev) && dev->power.wakeirq) {
 		/*
 		 * The ACPI subsystem doesn't manage the wake bit for IRQs
@@ -722,6 +726,9 @@ static int acpi_dev_pm_get_state(struct device *dev, struct acpi_device *adev,
 		wakeup = true;
 	} else {
 		/* ACPI GPE is specified in _PRW. */
+=======
+	} else {
+>>>>>>> b7ba80a49124 (Commit)
 		wakeup = adev->wakeup.flags.valid;
 	}
 

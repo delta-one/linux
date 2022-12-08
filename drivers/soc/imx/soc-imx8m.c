@@ -11,7 +11,10 @@
 #include <linux/platform_device.h>
 #include <linux/arm-smccc.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/clk.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define REV_B1				0x21
 
@@ -57,7 +60,10 @@ static u32 __init imx8mq_soc_revision(void)
 	void __iomem *ocotp_base;
 	u32 magic;
 	u32 rev;
+<<<<<<< HEAD
 	struct clk *clk;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mq-ocotp");
 	if (!np)
@@ -65,6 +71,7 @@ static u32 __init imx8mq_soc_revision(void)
 
 	ocotp_base = of_iomap(np, 0);
 	WARN_ON(!ocotp_base);
+<<<<<<< HEAD
 	clk = of_clk_get_by_name(np, NULL);
 	if (IS_ERR(clk)) {
 		WARN_ON(IS_ERR(clk));
@@ -72,6 +79,8 @@ static u32 __init imx8mq_soc_revision(void)
 	}
 
 	clk_prepare_enable(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * SOC revision on older imx8mq is not available in fuses so query
@@ -88,8 +97,11 @@ static u32 __init imx8mq_soc_revision(void)
 	soc_uid <<= 32;
 	soc_uid |= readl_relaxed(ocotp_base + OCOTP_UID_LOW);
 
+<<<<<<< HEAD
 	clk_disable_unprepare(clk);
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	iounmap(ocotp_base);
 	of_node_put(np);
 
@@ -242,4 +254,7 @@ free_soc:
 	return ret;
 }
 device_initcall(imx8_soc_init);
+<<<<<<< HEAD
 MODULE_LICENSE("GPL");
+=======
+>>>>>>> b7ba80a49124 (Commit)

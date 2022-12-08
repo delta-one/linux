@@ -9,7 +9,10 @@
 
 #include <linux/dmi.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/mutex.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kernel.h>
 #include <linux/device.h>
 #include <linux/regmap.h>
@@ -51,8 +54,11 @@ enum axp288_adc_id {
 struct axp288_adc_info {
 	int irq;
 	struct regmap *regmap;
+<<<<<<< HEAD
 	/* lock to protect against multiple access to the device */
 	struct mutex lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool ts_enabled;
 };
 
@@ -164,7 +170,11 @@ static int axp288_adc_read_raw(struct iio_dev *indio_dev,
 	int ret;
 	struct axp288_adc_info *info = iio_priv(indio_dev);
 
+<<<<<<< HEAD
 	mutex_lock(&info->lock);
+=======
+	mutex_lock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 	switch (mask) {
 	case IIO_CHAN_INFO_RAW:
 		if (axp288_adc_set_ts(info, AXP288_ADC_TS_CURRENT_ON_ONDEMAND,
@@ -181,7 +191,11 @@ static int axp288_adc_read_raw(struct iio_dev *indio_dev,
 	default:
 		ret = -EINVAL;
 	}
+<<<<<<< HEAD
 	mutex_unlock(&info->lock);
+=======
+	mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -292,8 +306,11 @@ static int axp288_adc_probe(struct platform_device *pdev)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	mutex_init(&info->lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return devm_iio_device_register(&pdev->dev, indio_dev);
 }
 

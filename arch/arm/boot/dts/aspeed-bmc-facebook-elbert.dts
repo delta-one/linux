@@ -44,7 +44,11 @@
 		stdout-path = &uart5;
 	};
 
+<<<<<<< HEAD
 	spi_gpio: spi {
+=======
+	spi_gpio: spi-gpio {
+>>>>>>> b7ba80a49124 (Commit)
 		num-chipselects = <1>;
 		cs-gpios = <&gpio0 ASPEED_GPIO(X, 0) GPIO_ACTIVE_LOW>;
 	};

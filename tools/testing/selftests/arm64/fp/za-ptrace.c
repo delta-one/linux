@@ -25,6 +25,7 @@
 #define NT_ARM_ZA 0x40c
 #endif
 
+<<<<<<< HEAD
 /*
  * The architecture defines the maximum VQ as 16 but for extensibility
  * the kernel specifies the SVE_VQ_MAX as 512 resulting in us running
@@ -36,6 +37,9 @@
 #define TEST_VQ_MAX 17
 
 #define EXPECTED_TESTS (((TEST_VQ_MAX - SVE_VQ_MIN) + 1) * 3)
+=======
+#define EXPECTED_TESTS (((SVE_VQ_MAX - SVE_VQ_MIN) + 1) * 3)
+>>>>>>> b7ba80a49124 (Commit)
 
 static void fill_buf(char *buf, size_t size)
 {
@@ -311,7 +315,11 @@ static int do_parent(pid_t child)
 	ksft_print_msg("Parent is %d, child is %d\n", getpid(), child);
 
 	/* Step through every possible VQ */
+<<<<<<< HEAD
 	for (vq = SVE_VQ_MIN; vq <= TEST_VQ_MAX; vq++) {
+=======
+	for (vq = SVE_VQ_MIN; vq <= SVE_VQ_MAX; vq++) {
+>>>>>>> b7ba80a49124 (Commit)
 		vl = sve_vl_from_vq(vq);
 
 		/* First, try to set this vector length */

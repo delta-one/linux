@@ -396,7 +396,11 @@ error_put:
  *
  * This function is called when the platform device is removed.
  */
+<<<<<<< HEAD
 static void p1022_ds_remove(struct platform_device *pdev)
+=======
+static int p1022_ds_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 	struct machine_data *mdata =
@@ -404,11 +408,20 @@ static void p1022_ds_remove(struct platform_device *pdev)
 
 	snd_soc_unregister_card(card);
 	kfree(mdata);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver p1022_ds_driver = {
 	.probe = p1022_ds_probe,
+<<<<<<< HEAD
 	.remove_new = p1022_ds_remove,
+=======
+	.remove = p1022_ds_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		/*
 		 * The name must match 'compatible' property in the device tree,

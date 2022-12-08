@@ -4,13 +4,18 @@
 $id: http://devicetree.org/schemas/clock/qcom,gcc-ipq8074.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Qualcomm Global Clock & Reset Controller on IPQ8074
+=======
+title: Qualcomm Global Clock & Reset Controller Bindingfor IPQ8074
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Stephen Boyd <sboyd@kernel.org>
   - Taniya Das <tdas@codeaurora.org>
 
 description: |
+<<<<<<< HEAD
   Qualcomm global clock control module provides the clocks, resets and power
   domains on IPQ8074.
 
@@ -18,11 +23,19 @@ description: |
 
 allOf:
   - $ref: qcom,gcc.yaml#
+=======
+  Qualcomm global clock control module which supports the clocks, resets and
+  power domains on IPQ8074.
+
+  See also:
+  - dt-bindings/clock/qcom,gcc-ipq8074.h
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
     const: qcom,gcc-ipq8074
 
+<<<<<<< HEAD
   clocks:
     items:
       - description: board XO clock
@@ -37,6 +50,32 @@ required:
   - compatible
 
 unevaluatedProperties: false
+=======
+  '#clock-cells':
+    const: 1
+
+  '#power-domain-cells':
+    const: 1
+
+  '#reset-cells':
+    const: 1
+
+  reg:
+    maxItems: 1
+
+  protected-clocks:
+    description:
+      Protected clock specifier list as per common clock binding.
+
+required:
+  - compatible
+  - reg
+  - '#clock-cells'
+  - '#power-domain-cells'
+  - '#reset-cells'
+
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

@@ -92,7 +92,11 @@ out:
 }
 
 static int
+<<<<<<< HEAD
 spufs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+spufs_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 	      struct iattr *attr)
 {
 	struct inode *inode = d_inode(dentry);
@@ -100,7 +104,11 @@ spufs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 	if ((attr->ia_valid & ATTR_SIZE) &&
 	    (attr->ia_size != inode->i_size))
 		return -EINVAL;
+<<<<<<< HEAD
 	setattr_copy(&nop_mnt_idmap, inode, attr);
+=======
+	setattr_copy(&init_user_ns, inode, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	mark_inode_dirty(inode);
 	return 0;
 }
@@ -237,7 +245,11 @@ spufs_mkdir(struct inode *dir, struct dentry *dentry, unsigned int flags,
 	if (!inode)
 		return -ENOSPC;
 
+<<<<<<< HEAD
 	inode_init_owner(&nop_mnt_idmap, inode, dir, mode | S_IFDIR);
+=======
+	inode_init_owner(&init_user_ns, inode, dir, mode | S_IFDIR);
+>>>>>>> b7ba80a49124 (Commit)
 	ctx = alloc_spu_context(SPUFS_I(dir)->i_gang); /* XXX gang */
 	SPUFS_I(inode)->i_ctx = ctx;
 	if (!ctx) {
@@ -468,7 +480,11 @@ spufs_mkgang(struct inode *dir, struct dentry *dentry, umode_t mode)
 		goto out;
 
 	ret = 0;
+<<<<<<< HEAD
 	inode_init_owner(&nop_mnt_idmap, inode, dir, mode | S_IFDIR);
+=======
+	inode_init_owner(&init_user_ns, inode, dir, mode | S_IFDIR);
+>>>>>>> b7ba80a49124 (Commit)
 	gang = alloc_spu_gang();
 	SPUFS_I(inode)->i_ctx = NULL;
 	SPUFS_I(inode)->i_gang = gang;

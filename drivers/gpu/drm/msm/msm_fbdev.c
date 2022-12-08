@@ -93,7 +93,11 @@ static int msm_fbdev_create(struct drm_fb_helper *helper,
 		goto fail;
 	}
 
+<<<<<<< HEAD
 	fbi = drm_fb_helper_alloc_info(helper);
+=======
+	fbi = drm_fb_helper_alloc_fbi(helper);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(fbi)) {
 		DRM_DEV_ERROR(dev->dev, "failed to allocate fb info\n");
 		ret = PTR_ERR(fbi);
@@ -109,6 +113,11 @@ static int msm_fbdev_create(struct drm_fb_helper *helper,
 
 	drm_fb_helper_fill_info(fbi, helper, sizes);
 
+<<<<<<< HEAD
+=======
+	dev->mode_config.fb_base = paddr;
+
+>>>>>>> b7ba80a49124 (Commit)
 	fbi->screen_base = msm_gem_get_vaddr(bo);
 	if (IS_ERR(fbi->screen_base)) {
 		ret = PTR_ERR(fbi->screen_base);
@@ -136,17 +145,29 @@ static const struct drm_fb_helper_funcs msm_fb_helper_funcs = {
 struct drm_fb_helper *msm_fbdev_init(struct drm_device *dev)
 {
 	struct msm_drm_private *priv = dev->dev_private;
+<<<<<<< HEAD
 	struct msm_fbdev *fbdev;
+=======
+	struct msm_fbdev *fbdev = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_fb_helper *helper;
 	int ret;
 
 	fbdev = kzalloc(sizeof(*fbdev), GFP_KERNEL);
 	if (!fbdev)
+<<<<<<< HEAD
 		return NULL;
 
 	helper = &fbdev->base;
 
 	drm_fb_helper_prepare(dev, helper, 32, &msm_fb_helper_funcs);
+=======
+		goto fail;
+
+	helper = &fbdev->base;
+
+	drm_fb_helper_prepare(dev, helper, &msm_fb_helper_funcs);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = drm_fb_helper_init(dev, helper);
 	if (ret) {
@@ -159,7 +180,11 @@ struct drm_fb_helper *msm_fbdev_init(struct drm_device *dev)
 	if (ret)
 		goto fini;
 
+<<<<<<< HEAD
 	ret = drm_fb_helper_initial_config(helper);
+=======
+	ret = drm_fb_helper_initial_config(helper, 32);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto fini;
 
@@ -170,7 +195,10 @@ struct drm_fb_helper *msm_fbdev_init(struct drm_device *dev)
 fini:
 	drm_fb_helper_fini(helper);
 fail:
+<<<<<<< HEAD
 	drm_fb_helper_unprepare(helper);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(fbdev);
 	return NULL;
 }
@@ -183,7 +211,11 @@ void msm_fbdev_free(struct drm_device *dev)
 
 	DBG();
 
+<<<<<<< HEAD
 	drm_fb_helper_unregister_info(helper);
+=======
+	drm_fb_helper_unregister_fbi(helper);
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_fb_helper_fini(helper);
 
@@ -197,7 +229,10 @@ void msm_fbdev_free(struct drm_device *dev)
 		drm_framebuffer_remove(fbdev->fb);
 	}
 
+<<<<<<< HEAD
 	drm_fb_helper_unprepare(helper);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(fbdev);
 
 	priv->fbdev = NULL;

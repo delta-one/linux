@@ -1160,6 +1160,7 @@ static const struct iwl_dev_info iwl_dev_info_table[] = {
 		      IWL_CFG_ANY, IWL_CFG_ANY, IWL_CFG_CDB, IWL_CFG_NO_JACKET,
 		      iwl_cfg_bz_a0_fm4_a0, iwl_bz_name),
 	_IWL_DEV_INFO(IWL_CFG_ANY, IWL_CFG_ANY,
+<<<<<<< HEAD
 		      IWL_CFG_MAC_TYPE_BZ, IWL_CFG_ANY,
 		      IWL_CFG_RF_TYPE_FM, IWL_CFG_ANY,
 		      IWL_CFG_ANY, IWL_CFG_ANY, IWL_CFG_NO_CDB, IWL_CFG_IS_JACKET,
@@ -1170,6 +1171,8 @@ static const struct iwl_dev_info iwl_dev_info_table[] = {
 		      IWL_CFG_ANY, IWL_CFG_ANY, IWL_CFG_CDB, IWL_CFG_IS_JACKET,
 		      iwl_cfg_bz_a0_fm4_b0, iwl_bz_name),
 	_IWL_DEV_INFO(IWL_CFG_ANY, IWL_CFG_ANY,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		      IWL_CFG_MAC_TYPE_GL, SILICON_A_STEP,
 		      IWL_CFG_RF_TYPE_FM, IWL_CFG_ANY,
 		      IWL_CFG_ANY, IWL_CFG_ANY, IWL_CFG_NO_CDB, IWL_CFG_NO_JACKET,
@@ -1204,26 +1207,34 @@ static const struct iwl_dev_info iwl_dev_info_table[] = {
 		      IWL_CFG_ANY, IWL_CFG_ANY, IWL_CFG_CDB, IWL_CFG_IS_JACKET,
 		      iwl_cfg_bnj_a0_fm4_a0, iwl_bz_name),
 	_IWL_DEV_INFO(IWL_CFG_ANY, IWL_CFG_ANY,
+<<<<<<< HEAD
 		      IWL_CFG_MAC_TYPE_GL, SILICON_B_STEP,
 		      IWL_CFG_RF_TYPE_FM, IWL_CFG_ANY,
 		      IWL_CFG_ANY, IWL_CFG_ANY, IWL_CFG_CDB, IWL_CFG_IS_JACKET,
 		      iwl_cfg_bnj_b0_fm4_b0, iwl_bz_name),
 	_IWL_DEV_INFO(IWL_CFG_ANY, IWL_CFG_ANY,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		      IWL_CFG_MAC_TYPE_GL, IWL_CFG_ANY,
 		      IWL_CFG_RF_TYPE_GF, IWL_CFG_ANY,
 		      IWL_CFG_ANY, IWL_CFG_ANY, IWL_CFG_NO_CDB, IWL_CFG_IS_JACKET,
 		      iwl_cfg_bnj_a0_gf_a0, iwl_bz_name),
 	_IWL_DEV_INFO(IWL_CFG_ANY, IWL_CFG_ANY,
+<<<<<<< HEAD
 		      IWL_CFG_MAC_TYPE_GL, SILICON_B_STEP,
 		      IWL_CFG_RF_TYPE_GF, IWL_CFG_ANY,
 		      IWL_CFG_ANY, IWL_CFG_ANY, IWL_CFG_NO_CDB, IWL_CFG_IS_JACKET,
 		      iwl_cfg_bnj_b0_gf_a0, iwl_bz_name),
 	_IWL_DEV_INFO(IWL_CFG_ANY, IWL_CFG_ANY,
 		      IWL_CFG_MAC_TYPE_GL, SILICON_A_STEP,
+=======
+		      IWL_CFG_MAC_TYPE_GL, IWL_CFG_ANY,
+>>>>>>> b7ba80a49124 (Commit)
 		      IWL_CFG_RF_TYPE_GF, IWL_CFG_ANY,
 		      IWL_CFG_ANY, IWL_CFG_ANY, IWL_CFG_CDB, IWL_CFG_IS_JACKET,
 		      iwl_cfg_bnj_a0_gf4_a0, iwl_bz_name),
 	_IWL_DEV_INFO(IWL_CFG_ANY, IWL_CFG_ANY,
+<<<<<<< HEAD
 		      IWL_CFG_MAC_TYPE_GL, SILICON_B_STEP,
 		      IWL_CFG_RF_TYPE_GF, IWL_CFG_ANY,
 		      IWL_CFG_ANY, IWL_CFG_ANY, IWL_CFG_CDB, IWL_CFG_IS_JACKET,
@@ -1238,6 +1249,12 @@ static const struct iwl_dev_info iwl_dev_info_table[] = {
 		      IWL_CFG_RF_TYPE_HR1, IWL_CFG_ANY,
 		      IWL_CFG_ANY, IWL_CFG_ANY, IWL_CFG_NO_CDB, IWL_CFG_NO_JACKET,
 		      iwl_cfg_bnj_b0_hr_b0, iwl_bz_name),
+=======
+		      IWL_CFG_MAC_TYPE_GL, IWL_CFG_ANY,
+		      IWL_CFG_RF_TYPE_HR1, IWL_CFG_ANY,
+		      IWL_CFG_ANY, IWL_CFG_ANY, IWL_CFG_NO_CDB, IWL_CFG_IS_JACKET,
+		      iwl_cfg_bnj_a0_hr_b0, iwl_bz_name),
+>>>>>>> b7ba80a49124 (Commit)
 
 /* SoF with JF2 */
 	_IWL_DEV_INFO(IWL_CFG_ANY, IWL_CFG_ANY,
@@ -1380,13 +1397,23 @@ static const struct iwl_dev_info iwl_dev_info_table[] = {
 };
 
 /*
+<<<<<<< HEAD
  * Read rf id and cdb info from prph register and store it
+=======
+ * In case that there is no OTP on the NIC, get the rf id and cdb info
+ * from the prph registers.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int get_crf_id(struct iwl_trans *iwl_trans)
 {
 	int ret = 0;
 	u32 sd_reg_ver_addr;
+<<<<<<< HEAD
 	u32 val = 0;
+=======
+	u32 cdb = 0;
+	u32 val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (iwl_trans->trans_cfg->device_family >= IWL_DEVICE_FAMILY_AX210)
 		sd_reg_ver_addr = SD_REG_VER_GEN2;
@@ -1405,6 +1432,7 @@ static int get_crf_id(struct iwl_trans *iwl_trans)
 	iwl_write_umac_prph_no_grab(iwl_trans, WFPM_CTRL_REG, val);
 
 	/* Read crf info */
+<<<<<<< HEAD
 	iwl_trans->hw_crf_id = iwl_read_prph_no_grab(iwl_trans, sd_reg_ver_addr);
 
 	/* Read cdb info (also contains the jacket info if needed in the future */
@@ -1425,6 +1453,12 @@ static int map_crf_id(struct iwl_trans *iwl_trans)
 	int ret = 0;
 	u32 val = iwl_trans->hw_crf_id;
 	u32 cdb = iwl_trans->hw_cdb_id;
+=======
+	val = iwl_read_prph_no_grab(iwl_trans, sd_reg_ver_addr);
+
+	/* Read cdb info (also contains the jacket info if needed in the future */
+	cdb = iwl_read_umac_prph_no_grab(iwl_trans, WFPM_OTP_CFG1_ADDR);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Map between crf id to rf id */
 	switch (REG_CRF_ID_TYPE(val)) {
@@ -1454,7 +1488,11 @@ static int map_crf_id(struct iwl_trans *iwl_trans)
 		IWL_ERR(iwl_trans,
 			"Can find a correct rfid for crf id 0x%x\n",
 			REG_CRF_ID_TYPE(val));
+<<<<<<< HEAD
 		goto out;
+=======
+		goto out_release;
+>>>>>>> b7ba80a49124 (Commit)
 
 	}
 
@@ -1467,6 +1505,11 @@ static int map_crf_id(struct iwl_trans *iwl_trans)
 	IWL_INFO(iwl_trans, "Detected RF 0x%x from crf id 0x%x\n",
 		 iwl_trans->hw_rf_id, REG_CRF_ID_TYPE(val));
 
+<<<<<<< HEAD
+=======
+out_release:
+	iwl_trans_release_nic_access(iwl_trans);
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	return ret;
@@ -1586,7 +1629,10 @@ static int iwl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	}
 
 	iwl_trans->hw_rf_id = iwl_read32(iwl_trans, CSR_HW_RF_ID);
+<<<<<<< HEAD
 	get_crf_id(iwl_trans);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * The RF_ID is set to zero in blank OTP so read version to
@@ -1595,7 +1641,11 @@ static int iwl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	 */
 	if (iwl_trans->trans_cfg->rf_id &&
 	    iwl_trans->trans_cfg->device_family >= IWL_DEVICE_FAMILY_9000 &&
+<<<<<<< HEAD
 	    !CSR_HW_RFID_TYPE(iwl_trans->hw_rf_id) && map_crf_id(iwl_trans)) {
+=======
+	    !CSR_HW_RFID_TYPE(iwl_trans->hw_rf_id) && get_crf_id(iwl_trans)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EINVAL;
 		goto out_free_trans;
 	}

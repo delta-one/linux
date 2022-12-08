@@ -3054,7 +3054,11 @@ static int qcom_nand_host_parse_boot_partitions(struct qcom_nand_controller *nan
 	struct device *dev = nandc->dev;
 	int partitions_count, i, j, ret;
 
+<<<<<<< HEAD
 	if (!of_property_present(dn, "qcom,boot-partitions"))
+=======
+	if (!of_find_property(dn, "qcom,boot-partitions", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	partitions_count = of_property_count_u32_elems(dn, "qcom,boot-partitions");
@@ -3167,6 +3171,7 @@ static int qcom_nand_host_init_and_register(struct qcom_nand_controller *nandc,
 
 	ret = mtd_device_parse_register(mtd, probes, NULL, NULL, 0);
 	if (ret)
+<<<<<<< HEAD
 		goto err;
 
 	if (nandc->props->use_codeword_fixup) {
@@ -3179,6 +3184,18 @@ static int qcom_nand_host_init_and_register(struct qcom_nand_controller *nandc,
 
 err:
 	nand_cleanup(chip);
+=======
+		nand_cleanup(chip);
+
+	if (nandc->props->use_codeword_fixup) {
+		ret = qcom_nand_host_parse_boot_partitions(nandc, host, dn);
+		if (ret) {
+			nand_cleanup(chip);
+			return ret;
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -3269,7 +3286,12 @@ static int qcom_nandc_probe(struct platform_device *pdev)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	nandc->base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	nandc->base = devm_ioremap_resource(dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(nandc->base))
 		return PTR_ERR(nandc->base);
 

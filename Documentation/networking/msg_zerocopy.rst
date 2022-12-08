@@ -15,7 +15,11 @@ Opportunity and Caveats
 
 Copying large buffers between user process and kernel can be
 expensive. Linux supports various interfaces that eschew copying,
+<<<<<<< HEAD
 such as sendfile and splice. The MSG_ZEROCOPY flag extends the
+=======
+such as sendpage and splice. The MSG_ZEROCOPY flag extends the
+>>>>>>> b7ba80a49124 (Commit)
 underlying copy avoidance mechanism to common socket send calls.
 
 Copy avoidance is not a free lunch. As implemented, with page pinning,
@@ -83,8 +87,13 @@ Pass the new flag.
 	ret = send(fd, buf, sizeof(buf), MSG_ZEROCOPY);
 
 A zerocopy failure will return -1 with errno ENOBUFS. This happens if
+<<<<<<< HEAD
 the socket exceeds its optmem limit or the user exceeds their ulimit on
 locked pages.
+=======
+the socket option was not set, the socket exceeds its optmem limit or
+the user exceeds its ulimit on locked pages.
+>>>>>>> b7ba80a49124 (Commit)
 
 
 Mixing copy avoidance and copying

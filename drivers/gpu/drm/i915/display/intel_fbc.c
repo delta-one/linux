@@ -323,14 +323,22 @@ static void i8xx_fbc_nuke(struct intel_fbc *fbc)
 	enum i9xx_plane_id i9xx_plane = fbc_state->plane->i9xx_plane;
 	struct drm_i915_private *dev_priv = fbc->i915;
 
+<<<<<<< HEAD
 	intel_de_write_fw(dev_priv, DSPADDR(i9xx_plane),
 			  intel_de_read_fw(dev_priv, DSPADDR(i9xx_plane)));
+=======
+	spin_lock_irq(&dev_priv->uncore.lock);
+	intel_de_write_fw(dev_priv, DSPADDR(i9xx_plane),
+			  intel_de_read_fw(dev_priv, DSPADDR(i9xx_plane)));
+	spin_unlock_irq(&dev_priv->uncore.lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void i8xx_fbc_program_cfb(struct intel_fbc *fbc)
 {
 	struct drm_i915_private *i915 = fbc->i915;
 
+<<<<<<< HEAD
 	GEM_BUG_ON(range_overflows_end_t(u64, i915->dsm.stolen.start,
 					 fbc->compressed_fb.start, U32_MAX));
 	GEM_BUG_ON(range_overflows_end_t(u64, i915->dsm.stolen.start,
@@ -340,6 +348,17 @@ static void i8xx_fbc_program_cfb(struct intel_fbc *fbc)
 		       i915->dsm.stolen.start + fbc->compressed_fb.start);
 	intel_de_write(i915, FBC_LL_BASE,
 		       i915->dsm.stolen.start + fbc->compressed_llb.start);
+=======
+	GEM_BUG_ON(range_overflows_end_t(u64, i915->dsm.start,
+					 fbc->compressed_fb.start, U32_MAX));
+	GEM_BUG_ON(range_overflows_end_t(u64, i915->dsm.start,
+					 fbc->compressed_llb.start, U32_MAX));
+
+	intel_de_write(i915, FBC_CFB_BASE,
+		       i915->dsm.start + fbc->compressed_fb.start);
+	intel_de_write(i915, FBC_LL_BASE,
+		       i915->dsm.start + fbc->compressed_llb.start);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct intel_fbc_funcs i8xx_fbc_funcs = {
@@ -357,8 +376,15 @@ static void i965_fbc_nuke(struct intel_fbc *fbc)
 	enum i9xx_plane_id i9xx_plane = fbc_state->plane->i9xx_plane;
 	struct drm_i915_private *dev_priv = fbc->i915;
 
+<<<<<<< HEAD
 	intel_de_write_fw(dev_priv, DSPSURF(i9xx_plane),
 			  intel_de_read_fw(dev_priv, DSPSURF(i9xx_plane)));
+=======
+	spin_lock_irq(&dev_priv->uncore.lock);
+	intel_de_write_fw(dev_priv, DSPSURF(i9xx_plane),
+			  intel_de_read_fw(dev_priv, DSPSURF(i9xx_plane)));
+	spin_unlock_irq(&dev_priv->uncore.lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct intel_fbc_funcs i965_fbc_funcs = {
@@ -712,7 +738,11 @@ static u64 intel_fbc_stolen_end(struct drm_i915_private *i915)
 	 * underruns, even if that range is not reserved by the BIOS. */
 	if (IS_BROADWELL(i915) ||
 	    (DISPLAY_VER(i915) == 9 && !IS_BROXTON(i915)))
+<<<<<<< HEAD
 		end = resource_size(&i915->dsm.stolen) - 8 * 1024 * 1024;
+=======
+		end = resource_size(&i915->dsm) - 8 * 1024 * 1024;
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		end = U64_MAX;
 
@@ -811,7 +841,11 @@ static void intel_fbc_program_cfb(struct intel_fbc *fbc)
 
 static void intel_fbc_program_workarounds(struct intel_fbc *fbc)
 {
+<<<<<<< HEAD
 	/* Wa_22014263786:icl,jsl,tgl,dg1,rkl,adls,adlp,mtl */
+=======
+	/* Wa_22014263786:icl,jsl,tgl,dg1,rkl,adls,adlp */
+>>>>>>> b7ba80a49124 (Commit)
 	if (DISPLAY_VER(fbc->i915) >= 11 && !IS_DG2(fbc->i915))
 		intel_de_rmw(fbc->i915, ILK_DPFC_CHICKEN(fbc->id), 0,
 			     DPFC_CHICKEN_FORCE_SLB_INVALIDATION);
@@ -1006,8 +1040,12 @@ static bool intel_fbc_is_fence_ok(const struct intel_plane_state *plane_state)
 {
 	struct drm_i915_private *i915 = to_i915(plane_state->uapi.plane->dev);
 
+<<<<<<< HEAD
 	/*
 	 * The use of a CPU fence is one of two ways to detect writes by the
+=======
+	/* The use of a CPU fence is one of two ways to detect writes by the
+>>>>>>> b7ba80a49124 (Commit)
 	 * CPU to the scanout and trigger updates to the FBC.
 	 *
 	 * The other method is by software tracking (see
@@ -1017,6 +1055,15 @@ static bool intel_fbc_is_fence_ok(const struct intel_plane_state *plane_state)
 	 * Note that is possible for a tiled surface to be unmappable (and
 	 * so have no fence associated with it) due to aperture constraints
 	 * at the time of pinning.
+<<<<<<< HEAD
+=======
+	 *
+	 * FIXME with 90/270 degree rotation we should use the fence on
+	 * the normal GTT view (the rotated view doesn't even have a
+	 * fence). Would need changes to the FBC fence Y offset as well.
+	 * For now this will effectively disable FBC with 90/270 degree
+	 * rotation.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	return DISPLAY_VER(i915) >= 9 ||
 		(plane_state->flags & PLANE_HAS_FENCE &&
@@ -1091,9 +1138,13 @@ static int intel_fbc_check_plane(struct intel_atomic_state *state,
 	}
 
 	/* Wa_14016291713 */
+<<<<<<< HEAD
 	if ((IS_DISPLAY_VER(i915, 12, 13) ||
 	     IS_MTL_DISPLAY_STEP(i915, STEP_A0, STEP_C0)) &&
 	    crtc_state->has_psr) {
+=======
+	if (IS_DISPLAY_VER(i915, 12, 13) && crtc_state->has_psr) {
+>>>>>>> b7ba80a49124 (Commit)
 		plane_state->no_fbc_reason = "PSR1 enabled (Wa_14016291713)";
 		return 0;
 	}
@@ -1181,7 +1232,11 @@ static bool intel_fbc_can_flip_nuke(struct intel_atomic_state *state,
 	const struct drm_framebuffer *old_fb = old_plane_state->hw.fb;
 	const struct drm_framebuffer *new_fb = new_plane_state->hw.fb;
 
+<<<<<<< HEAD
 	if (intel_crtc_needs_modeset(new_crtc_state))
+=======
+	if (drm_atomic_crtc_needs_modeset(&new_crtc_state->uapi))
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	if (!intel_fbc_is_ok(old_plane_state) ||
@@ -1518,8 +1573,12 @@ void intel_fbc_update(struct intel_atomic_state *state,
 
 		mutex_lock(&fbc->lock);
 
+<<<<<<< HEAD
 		if (intel_crtc_needs_fastset(crtc_state) &&
 		    plane_state->no_fbc_reason) {
+=======
+		if (crtc_state->update_pipe && plane_state->no_fbc_reason) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (fbc->state.plane == plane)
 				__intel_fbc_disable(fbc);
 		} else {
@@ -1807,10 +1866,17 @@ static int intel_fbc_debugfs_false_color_set(void *data, u64 val)
 	return 0;
 }
 
+<<<<<<< HEAD
 DEFINE_DEBUGFS_ATTRIBUTE(intel_fbc_debugfs_false_color_fops,
 			 intel_fbc_debugfs_false_color_get,
 			 intel_fbc_debugfs_false_color_set,
 			 "%llu\n");
+=======
+DEFINE_SIMPLE_ATTRIBUTE(intel_fbc_debugfs_false_color_fops,
+			intel_fbc_debugfs_false_color_get,
+			intel_fbc_debugfs_false_color_set,
+			"%llu\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 static void intel_fbc_debugfs_add(struct intel_fbc *fbc,
 				  struct dentry *parent)
@@ -1819,8 +1885,13 @@ static void intel_fbc_debugfs_add(struct intel_fbc *fbc,
 			    fbc, &intel_fbc_debugfs_status_fops);
 
 	if (fbc->funcs->set_false_color)
+<<<<<<< HEAD
 		debugfs_create_file_unsafe("i915_fbc_false_color", 0644, parent,
 					   fbc, &intel_fbc_debugfs_false_color_fops);
+=======
+		debugfs_create_file("i915_fbc_false_color", 0644, parent,
+				    fbc, &intel_fbc_debugfs_false_color_fops);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void intel_fbc_crtc_debugfs_add(struct intel_crtc *crtc)

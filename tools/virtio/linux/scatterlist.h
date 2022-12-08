@@ -2,7 +2,10 @@
 #ifndef SCATTERLIST_H
 #define SCATTERLIST_H
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/bug.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct scatterlist {
 	unsigned long	page_link;

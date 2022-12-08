@@ -284,11 +284,14 @@ struct tcp_info {
 	__u32	tcpi_snd_wnd;	     /* peer's advertised receive window after
 				      * scaling (bytes)
 				      */
+<<<<<<< HEAD
 	__u32	tcpi_rcv_wnd;	     /* local advertised receive window after
 				      * scaling (bytes)
 				      */
 
 	__u32   tcpi_rehash;         /* PLB or timeout triggered rehash attempts */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* netlink attributes types for SCM_TIMESTAMPING_OPT_STATS */
@@ -320,7 +323,10 @@ enum {
 	TCP_NLA_BYTES_NOTSENT,	/* Bytes in write queue not yet sent */
 	TCP_NLA_EDT,		/* Earliest departure time (CLOCK_MONOTONIC) */
 	TCP_NLA_TTL,		/* TTL or hop limit of a packet received */
+<<<<<<< HEAD
 	TCP_NLA_REHASH,         /* PLB and timeout triggered rehash attempts */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* for TCP_MD5SIG socket option */

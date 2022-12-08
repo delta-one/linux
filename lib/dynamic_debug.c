@@ -1223,7 +1223,12 @@ static void ddebug_attach_module_classes(struct ddebug_table *dt,
  * Allocate a new ddebug_table for the given module
  * and add it to the global list.
  */
+<<<<<<< HEAD
 static int ddebug_add_module(struct _ddebug_info *di, const char *modname)
+=======
+static int __ddebug_add_module(struct _ddebug_info *di, unsigned int base,
+			       const char *modname)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ddebug_table *dt;
 
@@ -1262,6 +1267,14 @@ static int ddebug_add_module(struct _ddebug_info *di, const char *modname)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+int ddebug_add_module(struct _ddebug_info *di, const char *modname)
+{
+	return __ddebug_add_module(di, 0, modname);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* helper for ddebug_dyndbg_(boot|module)_param_cb */
 static int ddebug_dyndbg_param_cb(char *param, char *val,
 				const char *modname, int on_err)
@@ -1308,13 +1321,20 @@ static void ddebug_table_free(struct ddebug_table *dt)
 	kfree(dt);
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_MODULES
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Called in response to a module being unloaded.  Removes
  * any ddebug_table's which point at the module.
  */
+<<<<<<< HEAD
 static int ddebug_remove_module(const char *mod_name)
+=======
+int ddebug_remove_module(const char *mod_name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ddebug_table *dt, *nextdt;
 	int ret = -ENOENT;
@@ -1333,6 +1353,7 @@ static int ddebug_remove_module(const char *mod_name)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int ddebug_module_notify(struct notifier_block *self, unsigned long val,
 				void *data)
 {
@@ -1360,6 +1381,8 @@ static struct notifier_block ddebug_module_nb = {
 
 #endif /* CONFIG_MODULES */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void ddebug_remove_all_tables(void)
 {
 	mutex_lock(&ddebug_lock);
@@ -1411,6 +1434,7 @@ static int __init dynamic_debug_init(void)
 		.num_classes = __stop___dyndbg_classes - __start___dyndbg_classes,
 	};
 
+<<<<<<< HEAD
 #ifdef CONFIG_MODULES
 	ret = register_module_notifier(&ddebug_module_nb);
 	if (ret) {
@@ -1419,6 +1443,8 @@ static int __init dynamic_debug_init(void)
 	}
 #endif /* CONFIG_MODULES */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (&__start___dyndbg == &__stop___dyndbg) {
 		if (IS_ENABLED(CONFIG_DYNAMIC_DEBUG)) {
 			pr_warn("_ddebug table is empty in a CONFIG_DYNAMIC_DEBUG build\n");
@@ -1439,7 +1465,11 @@ static int __init dynamic_debug_init(void)
 			mod_ct++;
 			di.num_descs = mod_sites;
 			di.descs = iter_mod_start;
+<<<<<<< HEAD
 			ret = ddebug_add_module(&di, modname);
+=======
+			ret = __ddebug_add_module(&di, i - mod_sites, modname);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret)
 				goto out_err;
 
@@ -1450,7 +1480,11 @@ static int __init dynamic_debug_init(void)
 	}
 	di.num_descs = mod_sites;
 	di.descs = iter_mod_start;
+<<<<<<< HEAD
 	ret = ddebug_add_module(&di, modname);
+=======
+	ret = __ddebug_add_module(&di, i - mod_sites, modname);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto out_err;
 

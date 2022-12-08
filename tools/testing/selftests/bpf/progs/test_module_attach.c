@@ -110,10 +110,13 @@ int BPF_PROG(handle_fmod_ret,
 	return 0; /* don't override the exit code */
 }
 
+<<<<<<< HEAD
 SEC("kprobe.multi/bpf_testmod_test_read")
 int BPF_PROG(kprobe_multi)
 {
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 char _license[] SEC("license") = "GPL";

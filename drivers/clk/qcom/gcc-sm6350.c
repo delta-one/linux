@@ -2316,7 +2316,11 @@ static struct gdsc usb30_prim_gdsc = {
 	.pd = {
 		.name = "usb30_prim_gdsc",
 	},
+<<<<<<< HEAD
 	.pwrsts = PWRSTS_RET_ON,
+=======
+	.pwrsts = PWRSTS_OFF_ON,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct gdsc ufs_phy_gdsc = {

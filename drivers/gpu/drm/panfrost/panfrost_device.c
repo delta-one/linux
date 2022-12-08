@@ -6,7 +6,10 @@
 #include <linux/reset.h>
 #include <linux/platform_device.h>
 #include <linux/pm_domain.h>
+<<<<<<< HEAD
 #include <linux/pm_runtime.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regulator/consumer.h>
 
 #include "panfrost_device.h"
@@ -401,7 +404,12 @@ void panfrost_device_reset(struct panfrost_device *pfdev)
 	panfrost_job_enable_interrupts(pfdev);
 }
 
+<<<<<<< HEAD
 static int panfrost_device_resume(struct device *dev)
+=======
+#ifdef CONFIG_PM
+int panfrost_device_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct panfrost_device *pfdev = dev_get_drvdata(dev);
 
@@ -411,7 +419,11 @@ static int panfrost_device_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int panfrost_device_suspend(struct device *dev)
+=======
+int panfrost_device_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct panfrost_device *pfdev = dev_get_drvdata(dev);
 
@@ -423,6 +435,10 @@ static int panfrost_device_suspend(struct device *dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 EXPORT_GPL_RUNTIME_DEV_PM_OPS(panfrost_pm_ops, panfrost_device_suspend,
 			      panfrost_device_resume, NULL);
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)

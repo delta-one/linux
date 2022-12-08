@@ -68,6 +68,7 @@ out:										\
 	sz;									\
 })
 
+<<<<<<< HEAD
 #define FIND_NTH_BIT(FETCH, size, num)						\
 ({										\
 	unsigned long sz = (size), nr = (num), idx, w, tmp;			\
@@ -92,6 +93,8 @@ out:										\
 	sz;									\
 })
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef find_first_bit
 /*
  * Find the first set bit in a memory region.
@@ -135,6 +138,7 @@ unsigned long _find_next_bit(const unsigned long *addr, unsigned long nbits, uns
 EXPORT_SYMBOL(_find_next_bit);
 #endif
 
+<<<<<<< HEAD
 unsigned long __find_nth_bit(const unsigned long *addr, unsigned long size, unsigned long n)
 {
 	return FIND_NTH_BIT(addr[idx], size, n);
@@ -164,6 +168,8 @@ unsigned long __find_nth_and_andnot_bit(const unsigned long *addr1,
 }
 EXPORT_SYMBOL(__find_nth_and_andnot_bit);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef find_next_and_bit
 unsigned long _find_next_and_bit(const unsigned long *addr1, const unsigned long *addr2,
 					unsigned long nbits, unsigned long start)
@@ -173,6 +179,7 @@ unsigned long _find_next_and_bit(const unsigned long *addr1, const unsigned long
 EXPORT_SYMBOL(_find_next_and_bit);
 #endif
 
+<<<<<<< HEAD
 #ifndef find_next_andnot_bit
 unsigned long _find_next_andnot_bit(const unsigned long *addr1, const unsigned long *addr2,
 					unsigned long nbits, unsigned long start)
@@ -191,6 +198,8 @@ unsigned long _find_next_or_bit(const unsigned long *addr1, const unsigned long 
 EXPORT_SYMBOL(_find_next_or_bit);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef find_next_zero_bit
 unsigned long _find_next_zero_bit(const unsigned long *addr, unsigned long nbits,
 					 unsigned long start)

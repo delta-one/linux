@@ -15,6 +15,10 @@ static DEFINE_IDA(pd_ida);
 
 static struct class pd_class = {
 	.name = "usb_power_delivery",
+<<<<<<< HEAD
+=======
+	.owner = THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define to_pdo(o) container_of(o, struct pdo, dev)
@@ -48,6 +52,7 @@ usb_suspend_supported_show(struct device *dev, struct device_attribute *attr, ch
 static DEVICE_ATTR_RO(usb_suspend_supported);
 
 static ssize_t
+<<<<<<< HEAD
 higher_capability_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	return sysfs_emit(buf, "%u\n", !!(to_pdo(dev)->pdo & PDO_FIXED_HIGHER_CAP));
@@ -55,6 +60,8 @@ higher_capability_show(struct device *dev, struct device_attribute *attr, char *
 static DEVICE_ATTR_RO(higher_capability);
 
 static ssize_t
+=======
+>>>>>>> b7ba80a49124 (Commit)
 unconstrained_power_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	return sysfs_emit(buf, "%u\n", !!(to_pdo(dev)->pdo & PDO_FIXED_EXTPOWER));
@@ -167,7 +174,11 @@ static struct device_type source_fixed_supply_type = {
 
 static struct attribute *sink_fixed_supply_attrs[] = {
 	&dev_attr_dual_role_power.attr,
+<<<<<<< HEAD
 	&dev_attr_higher_capability.attr,
+=======
+	&dev_attr_usb_suspend_supported.attr,
+>>>>>>> b7ba80a49124 (Commit)
 	&dev_attr_unconstrained_power.attr,
 	&dev_attr_usb_communication_capable.attr,
 	&dev_attr_dual_role_data.attr,

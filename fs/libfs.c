@@ -28,12 +28,20 @@
 
 #include "internal.h"
 
+<<<<<<< HEAD
 int simple_getattr(struct mnt_idmap *idmap, const struct path *path,
+=======
+int simple_getattr(struct user_namespace *mnt_userns, const struct path *path,
+>>>>>>> b7ba80a49124 (Commit)
 		   struct kstat *stat, u32 request_mask,
 		   unsigned int query_flags)
 {
 	struct inode *inode = d_inode(path->dentry);
+<<<<<<< HEAD
 	generic_fillattr(&nop_mnt_idmap, inode, stat);
+=======
+	generic_fillattr(&init_user_ns, inode, stat);
+>>>>>>> b7ba80a49124 (Commit)
 	stat->blocks = inode->i_mapping->nrpages << (PAGE_SHIFT - 9);
 	return 0;
 }
@@ -473,7 +481,11 @@ int simple_rename_exchange(struct inode *old_dir, struct dentry *old_dentry,
 }
 EXPORT_SYMBOL_GPL(simple_rename_exchange);
 
+<<<<<<< HEAD
 int simple_rename(struct mnt_idmap *idmap, struct inode *old_dir,
+=======
+int simple_rename(struct user_namespace *mnt_userns, struct inode *old_dir,
+>>>>>>> b7ba80a49124 (Commit)
 		  struct dentry *old_dentry, struct inode *new_dir,
 		  struct dentry *new_dentry, unsigned int flags)
 {
@@ -509,7 +521,11 @@ EXPORT_SYMBOL(simple_rename);
 
 /**
  * simple_setattr - setattr for simple filesystem
+<<<<<<< HEAD
  * @idmap: idmap of the target mount
+=======
+ * @mnt_userns: user namespace of the target mount
+>>>>>>> b7ba80a49124 (Commit)
  * @dentry: dentry
  * @iattr: iattr structure
  *
@@ -522,19 +538,31 @@ EXPORT_SYMBOL(simple_rename);
  * on simple regular filesystems.  Anything that needs to change on-disk
  * or wire state on size changes needs its own setattr method.
  */
+<<<<<<< HEAD
 int simple_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+int simple_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		   struct iattr *iattr)
 {
 	struct inode *inode = d_inode(dentry);
 	int error;
 
+<<<<<<< HEAD
 	error = setattr_prepare(idmap, dentry, iattr);
+=======
+	error = setattr_prepare(mnt_userns, dentry, iattr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		return error;
 
 	if (iattr->ia_valid & ATTR_SIZE)
 		truncate_setsize(inode, iattr->ia_size);
+<<<<<<< HEAD
 	setattr_copy(idmap, inode, iattr);
+=======
+	setattr_copy(mnt_userns, inode, iattr);
+>>>>>>> b7ba80a49124 (Commit)
 	mark_inode_dirty(inode);
 	return 0;
 }
@@ -1315,16 +1343,28 @@ static struct dentry *empty_dir_lookup(struct inode *dir, struct dentry *dentry,
 	return ERR_PTR(-ENOENT);
 }
 
+<<<<<<< HEAD
 static int empty_dir_getattr(struct mnt_idmap *idmap,
+=======
+static int empty_dir_getattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			     const struct path *path, struct kstat *stat,
 			     u32 request_mask, unsigned int query_flags)
 {
 	struct inode *inode = d_inode(path->dentry);
+<<<<<<< HEAD
 	generic_fillattr(&nop_mnt_idmap, inode, stat);
 	return 0;
 }
 
 static int empty_dir_setattr(struct mnt_idmap *idmap,
+=======
+	generic_fillattr(&init_user_ns, inode, stat);
+	return 0;
+}
+
+static int empty_dir_setattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			     struct dentry *dentry, struct iattr *attr)
 {
 	return -EPERM;
@@ -1582,6 +1622,7 @@ bool inode_maybe_inc_iversion(struct inode *inode, bool force)
 	return true;
 }
 EXPORT_SYMBOL(inode_maybe_inc_iversion);
+<<<<<<< HEAD
 
 /**
  * inode_query_iversion - read i_version for later use
@@ -1618,3 +1659,5 @@ u64 inode_query_iversion(struct inode *inode)
 	return cur >> I_VERSION_QUERIED_SHIFT;
 }
 EXPORT_SYMBOL(inode_query_iversion);
+=======
+>>>>>>> b7ba80a49124 (Commit)

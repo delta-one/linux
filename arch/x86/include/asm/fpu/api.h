@@ -82,6 +82,7 @@ static inline void fpregs_unlock(void)
 		preempt_enable();
 }
 
+<<<<<<< HEAD
 /*
  * FPU state gets lazily restored before returning to userspace. So when in the
  * kernel, the valid FPU state may be kept in the buffer. This function will force
@@ -91,6 +92,8 @@ static inline void fpregs_unlock(void)
  */
 void fpregs_lock_and_load(void);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_X86_DEBUG_FPU
 extern void fpregs_assert_state_consistent(void);
 #else

@@ -215,6 +215,7 @@ int nf_reroute(struct sk_buff *skb, struct nf_queue_entry *entry)
 	}
 	return ret;
 }
+<<<<<<< HEAD
 
 /* Only get and check the lengths, not do any hop-by-hop stuff. */
 int nf_ip6_check_hbh_len(struct sk_buff *skb, u32 *plen)
@@ -267,3 +268,5 @@ int nf_ip6_check_hbh_len(struct sk_buff *skb, u32 *plen)
 	return len ? -EBADMSG : 0;
 }
 EXPORT_SYMBOL_GPL(nf_ip6_check_hbh_len);
+=======
+>>>>>>> b7ba80a49124 (Commit)

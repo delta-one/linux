@@ -212,6 +212,7 @@ int branch_type_str(struct branch_type_stat *st, char *bf, int size)
 
 	return printed;
 }
+<<<<<<< HEAD
 
 const char *branch_spec_desc(int spec)
 {
@@ -227,3 +228,5 @@ const char *branch_spec_desc(int spec)
 
 	return NULL;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

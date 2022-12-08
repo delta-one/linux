@@ -13,6 +13,9 @@ rvu_nicvf-y := otx2_vf.o otx2_devlink.o
 
 rvu_nicpf-$(CONFIG_DCB) += otx2_dcbnl.o
 rvu_nicvf-$(CONFIG_DCB) += otx2_dcbnl.o
+<<<<<<< HEAD
 rvu_nicpf-$(CONFIG_MACSEC) += cn10k_macsec.o
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 ccflags-y += -I$(srctree)/drivers/net/ethernet/marvell/octeontx2/af

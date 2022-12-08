@@ -40,7 +40,11 @@ DECLARE_EVENT_CLASS(jbd2_commit,
 	TP_STRUCT__entry(
 		__field(	dev_t,	dev			)
 		__field(	char,	sync_commit		  )
+<<<<<<< HEAD
 		__field(	tid_t,	transaction		  )
+=======
+		__field(	int,	transaction		  )
+>>>>>>> b7ba80a49124 (Commit)
 	),
 
 	TP_fast_assign(
@@ -49,7 +53,11 @@ DECLARE_EVENT_CLASS(jbd2_commit,
 		__entry->transaction	= commit_transaction->t_tid;
 	),
 
+<<<<<<< HEAD
 	TP_printk("dev %d,%d transaction %u sync %d",
+=======
+	TP_printk("dev %d,%d transaction %d sync %d",
+>>>>>>> b7ba80a49124 (Commit)
 		  MAJOR(__entry->dev), MINOR(__entry->dev),
 		  __entry->transaction, __entry->sync_commit)
 );
@@ -97,8 +105,13 @@ TRACE_EVENT(jbd2_end_commit,
 	TP_STRUCT__entry(
 		__field(	dev_t,	dev			)
 		__field(	char,	sync_commit		  )
+<<<<<<< HEAD
 		__field(	tid_t,	transaction		  )
 		__field(	tid_t,	head		  	  )
+=======
+		__field(	int,	transaction		  )
+		__field(	int,	head		  	  )
+>>>>>>> b7ba80a49124 (Commit)
 	),
 
 	TP_fast_assign(
@@ -108,7 +121,11 @@ TRACE_EVENT(jbd2_end_commit,
 		__entry->head		= journal->j_tail_sequence;
 	),
 
+<<<<<<< HEAD
 	TP_printk("dev %d,%d transaction %u sync %d head %u",
+=======
+	TP_printk("dev %d,%d transaction %d sync %d head %d",
+>>>>>>> b7ba80a49124 (Commit)
 		  MAJOR(__entry->dev), MINOR(__entry->dev),
 		  __entry->transaction, __entry->sync_commit, __entry->head)
 );
@@ -134,14 +151,22 @@ TRACE_EVENT(jbd2_submit_inode_data,
 );
 
 DECLARE_EVENT_CLASS(jbd2_handle_start_class,
+<<<<<<< HEAD
 	TP_PROTO(dev_t dev, tid_t tid, unsigned int type,
+=======
+	TP_PROTO(dev_t dev, unsigned long tid, unsigned int type,
+>>>>>>> b7ba80a49124 (Commit)
 		 unsigned int line_no, int requested_blocks),
 
 	TP_ARGS(dev, tid, type, line_no, requested_blocks),
 
 	TP_STRUCT__entry(
 		__field(		dev_t,	dev		)
+<<<<<<< HEAD
 		__field(		tid_t,	tid		)
+=======
+		__field(	unsigned long,	tid		)
+>>>>>>> b7ba80a49124 (Commit)
 		__field(	 unsigned int,	type		)
 		__field(	 unsigned int,	line_no		)
 		__field(		  int,	requested_blocks)
@@ -155,28 +180,44 @@ DECLARE_EVENT_CLASS(jbd2_handle_start_class,
 		__entry->requested_blocks = requested_blocks;
 	),
 
+<<<<<<< HEAD
 	TP_printk("dev %d,%d tid %u type %u line_no %u "
+=======
+	TP_printk("dev %d,%d tid %lu type %u line_no %u "
+>>>>>>> b7ba80a49124 (Commit)
 		  "requested_blocks %d",
 		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->tid,
 		  __entry->type, __entry->line_no, __entry->requested_blocks)
 );
 
 DEFINE_EVENT(jbd2_handle_start_class, jbd2_handle_start,
+<<<<<<< HEAD
 	TP_PROTO(dev_t dev, tid_t tid, unsigned int type,
+=======
+	TP_PROTO(dev_t dev, unsigned long tid, unsigned int type,
+>>>>>>> b7ba80a49124 (Commit)
 		 unsigned int line_no, int requested_blocks),
 
 	TP_ARGS(dev, tid, type, line_no, requested_blocks)
 );
 
 DEFINE_EVENT(jbd2_handle_start_class, jbd2_handle_restart,
+<<<<<<< HEAD
 	TP_PROTO(dev_t dev, tid_t tid, unsigned int type,
+=======
+	TP_PROTO(dev_t dev, unsigned long tid, unsigned int type,
+>>>>>>> b7ba80a49124 (Commit)
 		 unsigned int line_no, int requested_blocks),
 
 	TP_ARGS(dev, tid, type, line_no, requested_blocks)
 );
 
 TRACE_EVENT(jbd2_handle_extend,
+<<<<<<< HEAD
 	TP_PROTO(dev_t dev, tid_t tid, unsigned int type,
+=======
+	TP_PROTO(dev_t dev, unsigned long tid, unsigned int type,
+>>>>>>> b7ba80a49124 (Commit)
 		 unsigned int line_no, int buffer_credits,
 		 int requested_blocks),
 
@@ -184,7 +225,11 @@ TRACE_EVENT(jbd2_handle_extend,
 
 	TP_STRUCT__entry(
 		__field(		dev_t,	dev		)
+<<<<<<< HEAD
 		__field(		tid_t,	tid		)
+=======
+		__field(	unsigned long,	tid		)
+>>>>>>> b7ba80a49124 (Commit)
 		__field(	 unsigned int,	type		)
 		__field(	 unsigned int,	line_no		)
 		__field(		  int,	buffer_credits  )
@@ -200,7 +245,11 @@ TRACE_EVENT(jbd2_handle_extend,
 		__entry->requested_blocks = requested_blocks;
 	),
 
+<<<<<<< HEAD
 	TP_printk("dev %d,%d tid %u type %u line_no %u "
+=======
+	TP_printk("dev %d,%d tid %lu type %u line_no %u "
+>>>>>>> b7ba80a49124 (Commit)
 		  "buffer_credits %d requested_blocks %d",
 		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->tid,
 		  __entry->type, __entry->line_no, __entry->buffer_credits,
@@ -208,7 +257,11 @@ TRACE_EVENT(jbd2_handle_extend,
 );
 
 TRACE_EVENT(jbd2_handle_stats,
+<<<<<<< HEAD
 	TP_PROTO(dev_t dev, tid_t tid, unsigned int type,
+=======
+	TP_PROTO(dev_t dev, unsigned long tid, unsigned int type,
+>>>>>>> b7ba80a49124 (Commit)
 		 unsigned int line_no, int interval, int sync,
 		 int requested_blocks, int dirtied_blocks),
 
@@ -217,7 +270,11 @@ TRACE_EVENT(jbd2_handle_stats,
 
 	TP_STRUCT__entry(
 		__field(		dev_t,	dev		)
+<<<<<<< HEAD
 		__field(		tid_t,	tid		)
+=======
+		__field(	unsigned long,	tid		)
+>>>>>>> b7ba80a49124 (Commit)
 		__field(	 unsigned int,	type		)
 		__field(	 unsigned int,	line_no		)
 		__field(		  int,	interval	)
@@ -237,7 +294,11 @@ TRACE_EVENT(jbd2_handle_stats,
 		__entry->dirtied_blocks	  = dirtied_blocks;
 	),
 
+<<<<<<< HEAD
 	TP_printk("dev %d,%d tid %u type %u line_no %u interval %d "
+=======
+	TP_printk("dev %d,%d tid %lu type %u line_no %u interval %d "
+>>>>>>> b7ba80a49124 (Commit)
 		  "sync %d requested_blocks %d dirtied_blocks %d",
 		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->tid,
 		  __entry->type, __entry->line_no, __entry->interval,
@@ -246,14 +307,22 @@ TRACE_EVENT(jbd2_handle_stats,
 );
 
 TRACE_EVENT(jbd2_run_stats,
+<<<<<<< HEAD
 	TP_PROTO(dev_t dev, tid_t tid,
+=======
+	TP_PROTO(dev_t dev, unsigned long tid,
+>>>>>>> b7ba80a49124 (Commit)
 		 struct transaction_run_stats_s *stats),
 
 	TP_ARGS(dev, tid, stats),
 
 	TP_STRUCT__entry(
 		__field(		dev_t,	dev		)
+<<<<<<< HEAD
 		__field(		tid_t,	tid		)
+=======
+		__field(	unsigned long,	tid		)
+>>>>>>> b7ba80a49124 (Commit)
 		__field(	unsigned long,	wait		)
 		__field(	unsigned long,	request_delay	)
 		__field(	unsigned long,	running		)
@@ -279,7 +348,11 @@ TRACE_EVENT(jbd2_run_stats,
 		__entry->blocks_logged	= stats->rs_blocks_logged;
 	),
 
+<<<<<<< HEAD
 	TP_printk("dev %d,%d tid %u wait %u request_delay %u running %u "
+=======
+	TP_printk("dev %d,%d tid %lu wait %u request_delay %u running %u "
+>>>>>>> b7ba80a49124 (Commit)
 		  "locked %u flushing %u logging %u handle_count %u "
 		  "blocks %u blocks_logged %u",
 		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->tid,
@@ -294,14 +367,22 @@ TRACE_EVENT(jbd2_run_stats,
 );
 
 TRACE_EVENT(jbd2_checkpoint_stats,
+<<<<<<< HEAD
 	TP_PROTO(dev_t dev, tid_t tid,
+=======
+	TP_PROTO(dev_t dev, unsigned long tid,
+>>>>>>> b7ba80a49124 (Commit)
 		 struct transaction_chp_stats_s *stats),
 
 	TP_ARGS(dev, tid, stats),
 
 	TP_STRUCT__entry(
 		__field(		dev_t,	dev		)
+<<<<<<< HEAD
 		__field(		tid_t,	tid		)
+=======
+		__field(	unsigned long,	tid		)
+>>>>>>> b7ba80a49124 (Commit)
 		__field(	unsigned long,	chp_time	)
 		__field(		__u32,	forced_to_close	)
 		__field(		__u32,	written		)
@@ -317,7 +398,11 @@ TRACE_EVENT(jbd2_checkpoint_stats,
 		__entry->dropped	= stats->cs_dropped;
 	),
 
+<<<<<<< HEAD
 	TP_printk("dev %d,%d tid %u chp_time %u forced_to_close %u "
+=======
+	TP_printk("dev %d,%d tid %lu chp_time %u forced_to_close %u "
+>>>>>>> b7ba80a49124 (Commit)
 		  "written %u dropped %u",
 		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->tid,
 		  jiffies_to_msecs(__entry->chp_time),

@@ -126,6 +126,7 @@ struct amdgpu_bo_vm {
 	struct amdgpu_vm_bo_base        entries[];
 };
 
+<<<<<<< HEAD
 struct amdgpu_mem_stats {
 	/* current VRAM usage, includes visible VRAM */
 	uint64_t vram;
@@ -147,6 +148,8 @@ struct amdgpu_mem_stats {
 	uint64_t requested_gtt;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct amdgpu_bo *ttm_to_amdgpu_bo(struct ttm_buffer_object *tbo)
 {
 	return container_of(tbo, struct amdgpu_bo, tbo);
@@ -305,7 +308,11 @@ int amdgpu_bo_create_kernel(struct amdgpu_device *adev,
 			    u32 domain, struct amdgpu_bo **bo_ptr,
 			    u64 *gpu_addr, void **cpu_addr);
 int amdgpu_bo_create_kernel_at(struct amdgpu_device *adev,
+<<<<<<< HEAD
 			       uint64_t offset, uint64_t size,
+=======
+			       uint64_t offset, uint64_t size, uint32_t domain,
+>>>>>>> b7ba80a49124 (Commit)
 			       struct amdgpu_bo **bo_ptr, void **cpu_addr);
 int amdgpu_bo_create_user(struct amdgpu_device *adev,
 			  struct amdgpu_bo_param *bp,
@@ -346,8 +353,13 @@ int amdgpu_bo_sync_wait_resv(struct amdgpu_device *adev, struct dma_resv *resv,
 int amdgpu_bo_sync_wait(struct amdgpu_bo *bo, void *owner, bool intr);
 u64 amdgpu_bo_gpu_offset(struct amdgpu_bo *bo);
 u64 amdgpu_bo_gpu_offset_no_check(struct amdgpu_bo *bo);
+<<<<<<< HEAD
 void amdgpu_bo_get_memory(struct amdgpu_bo *bo,
 			  struct amdgpu_mem_stats *stats);
+=======
+void amdgpu_bo_get_memory(struct amdgpu_bo *bo, uint64_t *vram_mem,
+				uint64_t *gtt_mem, uint64_t *cpu_mem);
+>>>>>>> b7ba80a49124 (Commit)
 void amdgpu_bo_add_to_shadow_list(struct amdgpu_bo_vm *vmbo);
 int amdgpu_bo_restore_shadow(struct amdgpu_bo *shadow,
 			     struct dma_fence **fence);
@@ -357,6 +369,7 @@ uint32_t amdgpu_bo_get_preferred_domain(struct amdgpu_device *adev,
 /*
  * sub allocation
  */
+<<<<<<< HEAD
 static inline struct amdgpu_sa_manager *
 to_amdgpu_sa_manager(struct drm_suballoc_manager *manager)
 {
@@ -373,6 +386,17 @@ static inline void *amdgpu_sa_bo_cpu_addr(struct drm_suballoc *sa_bo)
 {
 	return to_amdgpu_sa_manager(sa_bo->manager)->cpu_ptr +
 		drm_suballoc_soffset(sa_bo);
+=======
+
+static inline uint64_t amdgpu_sa_bo_gpu_addr(struct amdgpu_sa_bo *sa_bo)
+{
+	return sa_bo->manager->gpu_addr + sa_bo->soffset;
+}
+
+static inline void * amdgpu_sa_bo_cpu_addr(struct amdgpu_sa_bo *sa_bo)
+{
+	return sa_bo->manager->cpu_ptr + sa_bo->soffset;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int amdgpu_sa_bo_manager_init(struct amdgpu_device *adev,
@@ -383,11 +407,19 @@ void amdgpu_sa_bo_manager_fini(struct amdgpu_device *adev,
 int amdgpu_sa_bo_manager_start(struct amdgpu_device *adev,
 				      struct amdgpu_sa_manager *sa_manager);
 int amdgpu_sa_bo_new(struct amdgpu_sa_manager *sa_manager,
+<<<<<<< HEAD
 		     struct drm_suballoc **sa_bo,
 		     unsigned int size);
 void amdgpu_sa_bo_free(struct amdgpu_device *adev,
 		       struct drm_suballoc **sa_bo,
 		       struct dma_fence *fence);
+=======
+		     struct amdgpu_sa_bo **sa_bo,
+		     unsigned size, unsigned align);
+void amdgpu_sa_bo_free(struct amdgpu_device *adev,
+			      struct amdgpu_sa_bo **sa_bo,
+			      struct dma_fence *fence);
+>>>>>>> b7ba80a49124 (Commit)
 #if defined(CONFIG_DEBUG_FS)
 void amdgpu_sa_bo_dump_debug_info(struct amdgpu_sa_manager *sa_manager,
 					 struct seq_file *m);

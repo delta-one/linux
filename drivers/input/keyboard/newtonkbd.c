@@ -7,6 +7,12 @@
  * Newton keyboard driver for Linux
  */
 
+<<<<<<< HEAD
+=======
+/*
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/module.h>
 #include <linux/input.h>

@@ -116,7 +116,11 @@ void mt76x2_phy_set_txpower_regs(struct mt76x02_dev *dev,
 EXPORT_SYMBOL_GPL(mt76x2_phy_set_txpower_regs);
 
 static int
+<<<<<<< HEAD
 mt76x2_get_min_rate_power(struct mt76x02_rate_power *r)
+=======
+mt76x2_get_min_rate_power(struct mt76_rate_power *r)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 	s8 ret = 0;
@@ -140,7 +144,11 @@ void mt76x2_phy_set_txpower(struct mt76x02_dev *dev)
 	struct ieee80211_channel *chan = dev->mphy.chandef.chan;
 	struct mt76x2_tx_power_info txp;
 	int txp_0, txp_1, delta = 0;
+<<<<<<< HEAD
 	struct mt76x02_rate_power t = {};
+=======
+	struct mt76_rate_power t = {};
+>>>>>>> b7ba80a49124 (Commit)
 	int base_power, gain;
 
 	mt76x2_get_power_info(dev, &txp, chan);
@@ -175,7 +183,11 @@ void mt76x2_phy_set_txpower(struct mt76x02_dev *dev)
 	dev->target_power = txp.target_power;
 	dev->target_power_delta[0] = txp_0 - txp.chain[0].target_power;
 	dev->target_power_delta[1] = txp_1 - txp.chain[0].target_power;
+<<<<<<< HEAD
 	dev->rate_power = t;
+=======
+	dev->mt76.rate_power = t;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mt76x02_phy_set_txpower(dev, txp_0, txp_1);
 }

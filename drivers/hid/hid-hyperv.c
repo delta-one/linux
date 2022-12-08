@@ -22,6 +22,12 @@ struct hv_input_dev_info {
 	unsigned short reserved[11];
 };
 
+<<<<<<< HEAD
+=======
+/* The maximum size of a synthetic input message. */
+#define SYNTHHID_MAX_INPUT_REPORT_SIZE 16
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Current version
  *
@@ -56,6 +62,14 @@ struct synthhid_msg_hdr {
 	u32 size;
 };
 
+<<<<<<< HEAD
+=======
+struct synthhid_msg {
+	struct synthhid_msg_hdr header;
+	char data[1]; /* Enclosed message */
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 union synthhid_version {
 	struct {
 		u16 minor_version;
@@ -91,7 +105,11 @@ struct synthhid_device_info_ack {
 
 struct synthhid_input_report {
 	struct synthhid_msg_hdr header;
+<<<<<<< HEAD
 	char buffer[];
+=======
+	char buffer[1];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #pragma pack(pop)
@@ -110,7 +128,11 @@ enum pipe_prot_msg_type {
 struct pipe_prt_msg {
 	enum pipe_prot_msg_type type;
 	u32 size;
+<<<<<<< HEAD
 	char data[];
+=======
+	char data[1];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct  mousevsc_prt_msg {
@@ -224,7 +246,11 @@ static void mousevsc_on_receive_device_info(struct mousevsc_dev *input_device,
 
 	ret = vmbus_sendpacket(input_device->device->channel,
 			&ack,
+<<<<<<< HEAD
 			sizeof(struct pipe_prt_msg) +
+=======
+			sizeof(struct pipe_prt_msg) - sizeof(unsigned char) +
+>>>>>>> b7ba80a49124 (Commit)
 			sizeof(struct synthhid_device_info_ack),
 			(unsigned long)&ack,
 			VM_PKT_DATA_INBAND,
@@ -243,7 +269,11 @@ static void mousevsc_on_receive(struct hv_device *device,
 				struct vmpacket_descriptor *packet)
 {
 	struct pipe_prt_msg *pipe_msg;
+<<<<<<< HEAD
 	struct synthhid_msg_hdr *hid_msg_hdr;
+=======
+	struct synthhid_msg *hid_msg;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mousevsc_dev *input_dev = hv_get_drvdata(device);
 	struct synthhid_input_report *input_report;
 	size_t len;
@@ -254,23 +284,39 @@ static void mousevsc_on_receive(struct hv_device *device,
 	if (pipe_msg->type != PIPE_MESSAGE_DATA)
 		return;
 
+<<<<<<< HEAD
 	hid_msg_hdr = (struct synthhid_msg_hdr *)pipe_msg->data;
 
 	switch (hid_msg_hdr->type) {
+=======
+	hid_msg = (struct synthhid_msg *)pipe_msg->data;
+
+	switch (hid_msg->header.type) {
+>>>>>>> b7ba80a49124 (Commit)
 	case SYNTH_HID_PROTOCOL_RESPONSE:
 		/*
 		 * While it will be impossible for us to protect against
 		 * malicious/buggy hypervisor/host, add a check here to
 		 * ensure we don't corrupt memory.
 		 */
+<<<<<<< HEAD
 		if (struct_size(pipe_msg, data, pipe_msg->size)
+=======
+		if ((pipe_msg->size + sizeof(struct pipe_prt_msg)
+			- sizeof(unsigned char))
+>>>>>>> b7ba80a49124 (Commit)
 			> sizeof(struct mousevsc_prt_msg)) {
 			WARN_ON(1);
 			break;
 		}
 
 		memcpy(&input_dev->protocol_resp, pipe_msg,
+<<<<<<< HEAD
 				struct_size(pipe_msg, data, pipe_msg->size));
+=======
+		       pipe_msg->size + sizeof(struct pipe_prt_msg) -
+		       sizeof(unsigned char));
+>>>>>>> b7ba80a49124 (Commit)
 		complete(&input_dev->wait_event);
 		break;
 
@@ -301,7 +347,11 @@ static void mousevsc_on_receive(struct hv_device *device,
 		break;
 	default:
 		pr_err("unsupported hid msg type - type %d len %d\n",
+<<<<<<< HEAD
 		       hid_msg_hdr->type, hid_msg_hdr->size);
+=======
+		       hid_msg->header.type, hid_msg->header.size);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -349,7 +399,12 @@ static int mousevsc_connect_to_vsp(struct hv_device *device)
 	request->request.version_requested.version = SYNTHHID_INPUT_VERSION;
 
 	ret = vmbus_sendpacket(device->channel, request,
+<<<<<<< HEAD
 				sizeof(struct pipe_prt_msg) +
+=======
+				sizeof(struct pipe_prt_msg) -
+				sizeof(unsigned char) +
+>>>>>>> b7ba80a49124 (Commit)
 				sizeof(struct synthhid_protocol_request),
 				(unsigned long)request,
 				VM_PKT_DATA_INBAND,
@@ -424,7 +479,11 @@ static int mousevsc_hid_raw_request(struct hid_device *hid,
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct hid_ll_driver mousevsc_ll_driver = {
+=======
+static struct hid_ll_driver mousevsc_ll_driver = {
+>>>>>>> b7ba80a49124 (Commit)
 	.parse = mousevsc_hid_parse,
 	.open = mousevsc_hid_open,
 	.close = mousevsc_hid_close,
@@ -488,7 +547,11 @@ static int mousevsc_probe(struct hv_device *device,
 
 	ret = hid_add_device(hid_dev);
 	if (ret)
+<<<<<<< HEAD
 		goto probe_err2;
+=======
+		goto probe_err1;
+>>>>>>> b7ba80a49124 (Commit)
 
 
 	ret = hid_parse(hid_dev);
@@ -524,7 +587,11 @@ probe_err0:
 }
 
 
+<<<<<<< HEAD
 static void mousevsc_remove(struct hv_device *dev)
+=======
+static int mousevsc_remove(struct hv_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mousevsc_dev *input_dev = hv_get_drvdata(dev);
 
@@ -533,6 +600,11 @@ static void mousevsc_remove(struct hv_device *dev)
 	hid_hw_stop(input_dev->hid_device);
 	hid_destroy_device(input_dev->hid_device);
 	mousevsc_free_device(input_dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mousevsc_suspend(struct hv_device *dev)

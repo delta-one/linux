@@ -295,6 +295,7 @@ TRACE_EVENT(802154_rdev_set_ackreq_default,
 		WPAN_DEV_PR_ARG, BOOL_TO_STR(__entry->ackreq))
 );
 
+<<<<<<< HEAD
 TRACE_EVENT(802154_rdev_trigger_scan,
 	TP_PROTO(struct wpan_phy *wpan_phy,
 		 struct cfg802154_scan_request *request),
@@ -356,6 +357,8 @@ DEFINE_EVENT(802154_wdev_template, 802154_rdev_stop_beacons,
 	TP_ARGS(wpan_phy, wpan_dev)
 );
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 TRACE_EVENT(802154_rdev_return_int,
 	TP_PROTO(struct wpan_phy *wpan_phy, int ret),
 	TP_ARGS(wpan_phy, ret),

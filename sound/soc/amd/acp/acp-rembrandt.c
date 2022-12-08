@@ -366,21 +366,43 @@ static int rembrandt_audio_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void rembrandt_audio_remove(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 	struct acp_dev_data *adata = dev_get_drvdata(dev);
 	struct acp_chip_info *chip = dev_get_platdata(dev);
+=======
+static int rembrandt_audio_remove(struct platform_device *pdev)
+{
+	struct device *dev = &pdev->dev;
+	struct acp_dev_data *adata = dev_get_drvdata(dev);
+	struct acp_chip_info *chip;
+
+	chip = dev_get_platdata(&pdev->dev);
+	if (!chip || !chip->base) {
+		dev_err(&pdev->dev, "ACP chip data is NULL\n");
+		return -ENODEV;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	rmb_acp_deinit(chip->base);
 
 	acp6x_disable_interrupts(adata);
 	acp_platform_unregister(dev);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver rembrandt_driver = {
 	.probe = rembrandt_audio_probe,
+<<<<<<< HEAD
 	.remove_new = rembrandt_audio_remove,
+=======
+	.remove = rembrandt_audio_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "acp_asoc_rembrandt",
 	},

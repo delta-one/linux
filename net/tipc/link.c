@@ -2224,9 +2224,13 @@ static int tipc_link_proto_rcv(struct tipc_link *l, struct sk_buff *skb,
 	if (tipc_own_addr(l->net) > msg_prevnode(hdr))
 		l->net_plane = msg_net_plane(hdr);
 
+<<<<<<< HEAD
 	if (skb_linearize(skb))
 		goto exit;
 
+=======
+	skb_linearize(skb);
+>>>>>>> b7ba80a49124 (Commit)
 	hdr = buf_msg(skb);
 	data = msg_data(hdr);
 

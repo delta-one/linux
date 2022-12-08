@@ -83,7 +83,11 @@ int main(void)
 {
 	int n_tasks = 100, i;
 
+<<<<<<< HEAD
 	fprintf(stderr, "[No further output means we're all right]\n");
+=======
+	fprintf(stderr, "[No further output means we're allright]\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i=0; i<n_tasks; i++)
 		if (fork() == 0)

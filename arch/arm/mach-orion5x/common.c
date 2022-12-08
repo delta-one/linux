@@ -18,6 +18,10 @@
 #include <linux/delay.h>
 #include <linux/clk-provider.h>
 #include <linux/cpu.h>
+<<<<<<< HEAD
+=======
+#include <linux/platform_data/dsa.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/page.h>
 #include <asm/setup.h>
 #include <asm/system_misc.h>
@@ -100,6 +104,18 @@ void __init orion5x_eth_init(struct mv643xx_eth_platform_data *eth_data)
 
 
 /*****************************************************************************
+<<<<<<< HEAD
+=======
+ * Ethernet switch
+ ****************************************************************************/
+void __init orion5x_eth_switch_init(struct dsa_chip_data *d)
+{
+	orion_ge00_switch_init(d);
+}
+
+
+/*****************************************************************************
+>>>>>>> b7ba80a49124 (Commit)
  * I2C
  ****************************************************************************/
 void __init orion5x_i2c_init(void)

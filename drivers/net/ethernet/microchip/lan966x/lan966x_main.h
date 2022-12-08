@@ -3,13 +3,17 @@
 #ifndef __LAN966X_MAIN_H__
 #define __LAN966X_MAIN_H__
 
+<<<<<<< HEAD
 #include <linux/debugfs.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/etherdevice.h>
 #include <linux/if_vlan.h>
 #include <linux/jiffies.h>
 #include <linux/phy.h>
 #include <linux/phylink.h>
 #include <linux/ptp_clock_kernel.h>
+<<<<<<< HEAD
 #include <net/page_pool.h>
 #include <net/pkt_cls.h>
 #include <net/pkt_sched.h>
@@ -18,6 +22,10 @@
 #include <vcap_api.h>
 #include <vcap_api_client.h>
 
+=======
+#include <net/switchdev.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #include "lan966x_regs.h"
 #include "lan966x_ifh.h"
 
@@ -31,8 +39,11 @@
 #define LAN966X_BUFFER_MEMORY		(160 * 1024)
 #define LAN966X_BUFFER_MIN_SZ		60
 
+<<<<<<< HEAD
 #define LAN966X_HW_MTU(mtu)		((mtu) + ETH_HLEN + ETH_FCS_LEN)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PGID_AGGR			64
 #define PGID_SRC			80
 #define PGID_ENTRIES			89
@@ -45,7 +56,10 @@
 
 #define NUM_PHYS_PORTS			8
 #define CPU_PORT			8
+<<<<<<< HEAD
 #define NUM_PRIO_QUEUES			8
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Reserved PGIDs */
 #define PGID_CPU			(PGID_AGGR - 6)
@@ -89,6 +103,7 @@
 #define FDMA_INJ_CHANNEL		0
 #define FDMA_DCB_MAX			512
 
+<<<<<<< HEAD
 #define SE_IDX_QUEUE			0  /* 0-79 : Queue scheduler elements */
 #define SE_IDX_PORT			80 /* 80-89 : Port schedular elements */
 
@@ -101,6 +116,8 @@
 #define LAN966X_VCAP_CID_IS2_L1 VCAP_CID_INGRESS_STAGE2_L1 /* IS2 lookup 1 */
 #define LAN966X_VCAP_CID_IS2_MAX (VCAP_CID_INGRESS_STAGE2_L2 - 1) /* IS2 Max */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* MAC table entry types.
  * ENTRYTYPE_NORMAL is subject to aging.
  * ENTRYTYPE_LOCKED is not subject to aging.
@@ -114,6 +131,7 @@ enum macaccess_entry_type {
 	ENTRYTYPE_MACV6,
 };
 
+<<<<<<< HEAD
 /* FDMA return action codes for checking if the frame is valid
  * FDMA_PASS, frame is valid and can be used
  * FDMA_ERROR, something went wrong, stop getting more frames
@@ -177,6 +195,8 @@ enum vcap_is1_port_sel_rt {
 	VCAP_IS1_PS_RT_FOLLOW_OTHER = 7,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct lan966x_port;
 
 struct lan966x_db {
@@ -227,6 +247,7 @@ struct lan966x_rx {
 	 */
 	u8 page_order;
 
+<<<<<<< HEAD
 	/* Represents the max size frame that it can receive to the CPU. This
 	 * includes the IFH + VLAN tags + frame + skb_shared_info
 	 */
@@ -249,6 +270,17 @@ struct lan966x_tx_dcb_buf {
 	u32 ptp : 1;
 	u32 use_skb : 1;
 	u32 xdp_ndo : 1;
+=======
+	u8 channel_id;
+};
+
+struct lan966x_tx_dcb_buf {
+	struct net_device *dev;
+	struct sk_buff *skb;
+	dma_addr_t dma_addr;
+	bool used;
+	bool ptp;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct lan966x_tx {
@@ -356,6 +388,7 @@ struct lan966x {
 	struct lan966x_rx rx;
 	struct lan966x_tx tx;
 	struct napi_struct napi;
+<<<<<<< HEAD
 
 	/* Mirror */
 	struct lan966x_port *mirror_monitor;
@@ -367,6 +400,8 @@ struct lan966x {
 
 	/* debugfs */
 	struct dentry *debugfs_root;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct lan966x_port_config {
@@ -379,6 +414,7 @@ struct lan966x_port_config {
 	bool autoneg;
 };
 
+<<<<<<< HEAD
 struct lan966x_port_tc {
 	bool ingress_shared_block;
 	unsigned long police_id;
@@ -388,6 +424,8 @@ struct lan966x_port_tc {
 	struct flow_stats mirror_stat;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct lan966x_port {
 	struct net_device *dev;
 	struct lan966x *lan966x;
@@ -407,19 +445,26 @@ struct lan966x_port {
 	struct phy *serdes;
 	struct fwnode_handle *fwnode;
 
+<<<<<<< HEAD
 	u8 ptp_tx_cmd;
 	bool ptp_rx_cmd;
+=======
+	u8 ptp_cmd;
+>>>>>>> b7ba80a49124 (Commit)
 	u16 ts_id;
 	struct sk_buff_head tx_skbs;
 
 	struct net_device *bond;
 	bool lag_tx_active;
 	enum netdev_lag_hash hash_type;
+<<<<<<< HEAD
 
 	struct lan966x_port_tc tc;
 
 	struct bpf_prog *xdp_prog;
 	struct xdp_rxq_info xdp_rxq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 extern const struct phylink_mac_ops lan966x_phylink_mac_ops;
@@ -437,8 +482,11 @@ bool lan966x_hw_offload(struct lan966x *lan966x, u32 port, struct sk_buff *skb);
 
 void lan966x_ifh_get_src_port(void *ifh, u64 *src_port);
 void lan966x_ifh_get_timestamp(void *ifh, u64 *timestamp);
+<<<<<<< HEAD
 void lan966x_ifh_set_bypass(void *ifh, u64 bypass);
 void lan966x_ifh_set_port(void *ifh, u64 bypass);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void lan966x_stats_get(struct net_device *dev,
 		       struct rtnl_link_stats64 *stats);
@@ -528,13 +576,18 @@ void lan966x_ptp_deinit(struct lan966x *lan966x);
 int lan966x_ptp_hwtstamp_set(struct lan966x_port *port, struct ifreq *ifr);
 int lan966x_ptp_hwtstamp_get(struct lan966x_port *port, struct ifreq *ifr);
 void lan966x_ptp_rxtstamp(struct lan966x *lan966x, struct sk_buff *skb,
+<<<<<<< HEAD
 			  u64 src_port, u64 timestamp);
+=======
+			  u64 timestamp);
+>>>>>>> b7ba80a49124 (Commit)
 int lan966x_ptp_txtstamp_request(struct lan966x_port *port,
 				 struct sk_buff *skb);
 void lan966x_ptp_txtstamp_release(struct lan966x_port *port,
 				  struct sk_buff *skb);
 irqreturn_t lan966x_ptp_irq_handler(int irq, void *args);
 irqreturn_t lan966x_ptp_ext_irq_handler(int irq, void *args);
+<<<<<<< HEAD
 u32 lan966x_ptp_get_period_ps(void);
 int lan966x_ptp_gettime64(struct ptp_clock_info *ptp, struct timespec64 *ts);
 int lan966x_ptp_setup_traps(struct lan966x_port *port, struct ifreq *ifr);
@@ -545,13 +598,20 @@ int lan966x_fdma_xmit_xdpf(struct lan966x_port *port,
 			   struct xdp_frame *frame,
 			   struct page *page,
 			   bool dma_map);
+=======
+
+int lan966x_fdma_xmit(struct sk_buff *skb, __be32 *ifh, struct net_device *dev);
+>>>>>>> b7ba80a49124 (Commit)
 int lan966x_fdma_change_mtu(struct lan966x *lan966x);
 void lan966x_fdma_netdev_init(struct lan966x *lan966x, struct net_device *dev);
 void lan966x_fdma_netdev_deinit(struct lan966x *lan966x, struct net_device *dev);
 int lan966x_fdma_init(struct lan966x *lan966x);
 void lan966x_fdma_deinit(struct lan966x *lan966x);
 irqreturn_t lan966x_fdma_irq_handler(int irq, void *args);
+<<<<<<< HEAD
 int lan966x_fdma_reload_page_pool(struct lan966x *lan966x);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int lan966x_lag_port_join(struct lan966x_port *port,
 			  struct net_device *brport_dev,
@@ -580,6 +640,7 @@ void lan966x_port_ageing_set(struct lan966x_port *port,
 			     unsigned long ageing_clock_t);
 void lan966x_update_fwd_mask(struct lan966x *lan966x);
 
+<<<<<<< HEAD
 int lan966x_tc_setup(struct net_device *dev, enum tc_setup_type type,
 		     void *type_data);
 
@@ -679,6 +740,8 @@ int lan966x_goto_port_del(struct lan966x_port *port,
 			  unsigned long goto_id,
 			  struct netlink_ext_ack *extack);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void __iomem *lan_addr(void __iomem *base[],
 				     int id, int tinst, int tcnt,
 				     int gbase, int ginst,

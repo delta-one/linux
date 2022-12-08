@@ -12,8 +12,11 @@
 #include <linux/platform_device.h>
 
 #include "mtk_cec.h"
+<<<<<<< HEAD
 #include "mtk_hdmi.h"
 #include "mtk_drm_drv.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define TR_CONFIG		0x00
 #define CLEAR_CEC_IRQ			BIT(15)

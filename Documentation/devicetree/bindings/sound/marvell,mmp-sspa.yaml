@@ -4,14 +4,21 @@
 $id: http://devicetree.org/schemas/sound/marvell,mmp-sspa.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Marvel SSPA Digital Audio Interface
+=======
+title: Marvel SSPA Digital Audio Interface Bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Lubomir Rintel <lkundrak@v3.sk>
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   $nodename:
     pattern: "^audio-controller(@.*)?$"
@@ -76,7 +83,11 @@ required:
   - dma-names
   - port
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

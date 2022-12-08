@@ -22,6 +22,7 @@
 #define REG_DP_INTR_STATUS2			(0x00000024)
 #define REG_DP_INTR_STATUS3			(0x00000028)
 
+<<<<<<< HEAD
 #define REG_DP_INTR_STATUS4			(0x0000002C)
 #define PSR_UPDATE_INT				(0x00000001)
 #define PSR_CAPTURE_INT				(0x00000004)
@@ -36,6 +37,8 @@
 #define PSR_UPDATE_ERROR_MASK			(0x00000008)
 #define PSR_WAKE_ERROR_MASK			(0x00000010)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define REG_DP_DP_HPD_CTRL			(0x00000000)
 #define DP_DP_HPD_CTRL_HPD_EN			(0x00000001)
 
@@ -178,6 +181,7 @@
 #define MMSS_DP_AUDIO_TIMING_RBR_48		(0x00000094)
 #define MMSS_DP_AUDIO_TIMING_HBR_48		(0x00000098)
 
+<<<<<<< HEAD
 #define REG_PSR_CONFIG				(0x00000100)
 #define DISABLE_PSR				(0x00000000)
 #define PSR1_SUPPORTED				(0x00000001)
@@ -188,6 +192,8 @@
 #define PSR_ENTER				(0x00000001)
 #define PSR_EXIT				(0x00000002)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MMSS_DP_PSR_CRC_RG			(0x00000154)
 #define MMSS_DP_PSR_CRC_B			(0x00000158)
 
@@ -208,9 +214,12 @@
 #define MMSS_DP_AUDIO_STREAM_0			(0x00000240)
 #define MMSS_DP_AUDIO_STREAM_1			(0x00000244)
 
+<<<<<<< HEAD
 #define MMSS_DP_SDP_CFG3			(0x0000024c)
 #define UPDATE_SDP				(0x00000001)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MMSS_DP_EXTENSION_0			(0x00000250)
 #define MMSS_DP_EXTENSION_1			(0x00000254)
 #define MMSS_DP_EXTENSION_2			(0x00000258)

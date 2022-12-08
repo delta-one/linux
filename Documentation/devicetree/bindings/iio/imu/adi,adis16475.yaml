@@ -79,7 +79,10 @@ required:
   - spi-cpol
 
 allOf:
+<<<<<<< HEAD
   - $ref: /schemas/spi/spi-peripheral-props.yaml#
+=======
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -108,12 +111,17 @@ allOf:
       dependencies:
         adi,sync-mode: [ clocks ]
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |
     #include <dt-bindings/interrupt-controller/irq.h>
     spi {
+<<<<<<< HEAD
         #address-cells = <1>;
         #size-cells = <0>;
 
@@ -126,5 +134,19 @@ examples:
             interrupts = <4 IRQ_TYPE_EDGE_RISING>;
             interrupt-parent = <&gpio>;
         };
+=======
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            adis16475: adis16475-3@0 {
+                    compatible = "adi,adis16475-3";
+                    reg = <0>;
+                    spi-cpha;
+                    spi-cpol;
+                    spi-max-frequency = <2000000>;
+                    interrupts = <4 IRQ_TYPE_EDGE_RISING>;
+                    interrupt-parent = <&gpio>;
+            };
+>>>>>>> b7ba80a49124 (Commit)
     };
 ...

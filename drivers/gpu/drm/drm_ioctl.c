@@ -440,7 +440,11 @@ done:
 int drm_noop(struct drm_device *dev, void *data,
 	     struct drm_file *file_priv)
 {
+<<<<<<< HEAD
 	drm_dbg_core(dev, "\n");
+=======
+	DRM_DEBUG("\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 EXPORT_SYMBOL(drm_noop);
@@ -856,16 +860,27 @@ long drm_ioctl(struct file *filp,
 		out_size = 0;
 	ksize = max(max(in_size, out_size), drv_size);
 
+<<<<<<< HEAD
 	drm_dbg_core(dev, "comm=\"%s\" pid=%d, dev=0x%lx, auth=%d, %s\n",
 		     current->comm, task_pid_nr(current),
 		     (long)old_encode_dev(file_priv->minor->kdev->devt),
 		     file_priv->authenticated, ioctl->name);
+=======
+	DRM_DEBUG("comm=\"%s\" pid=%d, dev=0x%lx, auth=%d, %s\n",
+		  current->comm, task_pid_nr(current),
+		  (long)old_encode_dev(file_priv->minor->kdev->devt),
+		  file_priv->authenticated, ioctl->name);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Do not trust userspace, use our own definition */
 	func = ioctl->func;
 
 	if (unlikely(!func)) {
+<<<<<<< HEAD
 		drm_dbg_core(dev, "no function\n");
+=======
+		DRM_DEBUG("no function\n");
+>>>>>>> b7ba80a49124 (Commit)
 		retcode = -EINVAL;
 		goto err_i1;
 	}
@@ -894,17 +909,29 @@ long drm_ioctl(struct file *filp,
 
       err_i1:
 	if (!ioctl)
+<<<<<<< HEAD
 		drm_dbg_core(dev,
 			     "invalid ioctl: comm=\"%s\", pid=%d, dev=0x%lx, auth=%d, cmd=0x%02x, nr=0x%02x\n",
 			     current->comm, task_pid_nr(current),
 			     (long)old_encode_dev(file_priv->minor->kdev->devt),
 			     file_priv->authenticated, cmd, nr);
+=======
+		DRM_DEBUG("invalid ioctl: comm=\"%s\", pid=%d, dev=0x%lx, auth=%d, cmd=0x%02x, nr=0x%02x\n",
+			  current->comm, task_pid_nr(current),
+			  (long)old_encode_dev(file_priv->minor->kdev->devt),
+			  file_priv->authenticated, cmd, nr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (kdata != stack_kdata)
 		kfree(kdata);
 	if (retcode)
+<<<<<<< HEAD
 		drm_dbg_core(dev, "comm=\"%s\", pid=%d, ret=%d\n",
 			     current->comm, task_pid_nr(current), retcode);
+=======
+		DRM_DEBUG("comm=\"%s\", pid=%d, ret=%d\n", current->comm,
+			  task_pid_nr(current), retcode);
+>>>>>>> b7ba80a49124 (Commit)
 	return retcode;
 }
 EXPORT_SYMBOL(drm_ioctl);

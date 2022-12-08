@@ -36,6 +36,7 @@ int exit_vmx_usercopy(void)
 {
 	disable_kernel_altivec();
 	pagefault_enable();
+<<<<<<< HEAD
 	preempt_enable_no_resched();
 	/*
 	 * Must never explicitly call schedule (including preempt_enable())
@@ -47,6 +48,9 @@ int exit_vmx_usercopy(void)
 	 */
 	if (IS_ENABLED(CONFIG_PREEMPT) && need_resched())
 		set_dec(1);
+=======
+	preempt_enable();
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

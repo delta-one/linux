@@ -21,6 +21,10 @@
 #include <linux/clk.h>
 #include <linux/usb/gadget.h>
 #include <linux/of.h>
+<<<<<<< HEAD
+=======
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regmap.h>
 #include <linux/dma-mapping.h>
 
@@ -83,7 +87,10 @@ static void ast_vhub_epn_handle_ack(struct ast_vhub_ep *ep)
 {
 	struct ast_vhub_req *req;
 	unsigned int len;
+<<<<<<< HEAD
 	int status = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 stat;
 
 	/* Read EP status */
@@ -119,6 +126,7 @@ static void ast_vhub_epn_handle_ack(struct ast_vhub_ep *ep)
 	len = VHUB_EP_DMA_TX_SIZE(stat);
 
 	/* If not using DMA, copy data out if needed */
+<<<<<<< HEAD
 	if (!req->req.dma && !ep->epn.is_in && len) {
 		if (req->req.actual + len > req->req.length) {
 			req->last_desc = 1;
@@ -128,6 +136,11 @@ static void ast_vhub_epn_handle_ack(struct ast_vhub_ep *ep)
 			memcpy(req->req.buf + req->req.actual, ep->buf, len);
 		}
 	}
+=======
+	if (!req->req.dma && !ep->epn.is_in && len)
+		memcpy(req->req.buf + req->req.actual, ep->buf, len);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Adjust size */
 	req->req.actual += len;
 
@@ -135,10 +148,16 @@ static void ast_vhub_epn_handle_ack(struct ast_vhub_ep *ep)
 	if (len < ep->ep.maxpacket)
 		req->last_desc = 1;
 
+<<<<<<< HEAD
 done:
 	/* That's it ? complete the request and pick a new one */
 	if (req->last_desc >= 0) {
 		ast_vhub_done(ep, req, status);
+=======
+	/* That's it ? complete the request and pick a new one */
+	if (req->last_desc >= 0) {
+		ast_vhub_done(ep, req, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		req = list_first_entry_or_null(&ep->queue, struct ast_vhub_req,
 					       queue);
 

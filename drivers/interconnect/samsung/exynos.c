@@ -96,9 +96,20 @@ static struct icc_node *exynos_generic_icc_xlate(struct of_phandle_args *spec,
 static int exynos_generic_icc_remove(struct platform_device *pdev)
 {
 	struct exynos_icc_priv *priv = platform_get_drvdata(pdev);
+<<<<<<< HEAD
 
 	icc_provider_deregister(&priv->provider);
 	icc_nodes_remove(&priv->provider);
+=======
+	struct icc_node *parent_node, *node = priv->node;
+
+	parent_node = exynos_icc_get_parent(priv->dev->parent->of_node);
+	if (parent_node && !IS_ERR(parent_node))
+		icc_link_destroy(node, parent_node);
+
+	icc_nodes_remove(&priv->provider);
+	icc_provider_del(&priv->provider);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -127,11 +138,23 @@ static int exynos_generic_icc_probe(struct platform_device *pdev)
 	provider->inter_set = true;
 	provider->data = priv;
 
+<<<<<<< HEAD
 	icc_provider_init(provider);
 
 	icc_node = icc_node_create(pdev->id);
 	if (IS_ERR(icc_node))
 		return PTR_ERR(icc_node);
+=======
+	ret = icc_provider_add(provider);
+	if (ret < 0)
+		return ret;
+
+	icc_node = icc_node_create(pdev->id);
+	if (IS_ERR(icc_node)) {
+		ret = PTR_ERR(icc_node);
+		goto err_prov_del;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	priv->node = icc_node;
 	icc_node->name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%pOFn",
@@ -140,9 +163,12 @@ static int exynos_generic_icc_probe(struct platform_device *pdev)
 				 &priv->bus_clk_ratio))
 		priv->bus_clk_ratio = EXYNOS_ICC_DEFAULT_BUS_CLK_RATIO;
 
+<<<<<<< HEAD
 	icc_node->data = priv;
 	icc_node_add(icc_node, provider);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Register a PM QoS request for the parent (devfreq) device.
 	 */
@@ -151,6 +177,12 @@ static int exynos_generic_icc_probe(struct platform_device *pdev)
 	if (ret < 0)
 		goto err_node_del;
 
+<<<<<<< HEAD
+=======
+	icc_node->data = priv;
+	icc_node_add(icc_node, provider);
+
+>>>>>>> b7ba80a49124 (Commit)
 	icc_parent_node = exynos_icc_get_parent(bus_dev->of_node);
 	if (IS_ERR(icc_parent_node)) {
 		ret = PTR_ERR(icc_parent_node);
@@ -162,17 +194,25 @@ static int exynos_generic_icc_probe(struct platform_device *pdev)
 			goto err_pmqos_del;
 	}
 
+<<<<<<< HEAD
 	ret = icc_provider_register(provider);
 	if (ret < 0)
 		goto err_pmqos_del;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_pmqos_del:
 	dev_pm_qos_remove_request(&priv->qos_req);
 err_node_del:
 	icc_nodes_remove(provider);
+<<<<<<< HEAD
 
+=======
+err_prov_del:
+	icc_provider_del(provider);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

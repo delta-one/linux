@@ -2,6 +2,7 @@
 /*
  * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
  */
+<<<<<<< HEAD
 #include <linux/bitfield.h>
 #include <linux/extable.h>
 #include <linux/uaccess.h>
@@ -60,4 +61,23 @@ bool fixup_exception(struct pt_regs *regs)
 	}
 
 	BUG();
+=======
+#include <linux/extable.h>
+#include <linux/spinlock.h>
+#include <asm/branch.h>
+#include <linux/uaccess.h>
+
+int fixup_exception(struct pt_regs *regs)
+{
+	const struct exception_table_entry *fixup;
+
+	fixup = search_exception_tables(exception_era(regs));
+	if (fixup) {
+		regs->csr_era = fixup->fixup;
+
+		return 1;
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }

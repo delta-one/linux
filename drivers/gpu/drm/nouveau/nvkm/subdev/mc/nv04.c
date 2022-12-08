@@ -30,6 +30,7 @@ nv04_mc_reset[] = {
 	{}
 };
 
+<<<<<<< HEAD
 static void
 nv04_mc_device_disable(struct nvkm_mc *mc, u32 mask)
 {
@@ -65,10 +66,20 @@ nv04_mc_intrs[] = {
 	{ NVKM_ENGINE_FIFO , 0, 0, 0x00000100 },
 	{ NVKM_SUBDEV_BUS  , 0, 0, 0x10000000, true },
 	{ NVKM_SUBDEV_TIMER, 0, 0, 0x00100000, true },
+=======
+static const struct nvkm_mc_map
+nv04_mc_intr[] = {
+	{ 0x01010000, NVKM_ENGINE_DISP },
+	{ 0x00001000, NVKM_ENGINE_GR },
+	{ 0x00000100, NVKM_ENGINE_FIFO },
+	{ 0x10000000, NVKM_SUBDEV_BUS },
+	{ 0x00100000, NVKM_SUBDEV_TIMER },
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 
 void
+<<<<<<< HEAD
 nv04_mc_intr_rearm(struct nvkm_intr *intr)
 {
 	struct nvkm_mc *mc = container_of(intr, typeof(*mc), intr);
@@ -113,6 +124,28 @@ nv04_mc_intr = {
 	.rearm = nv04_mc_intr_rearm,
 };
 
+=======
+nv04_mc_intr_unarm(struct nvkm_mc *mc)
+{
+	struct nvkm_device *device = mc->subdev.device;
+	nvkm_wr32(device, 0x000140, 0x00000000);
+	nvkm_rd32(device, 0x000140);
+}
+
+void
+nv04_mc_intr_rearm(struct nvkm_mc *mc)
+{
+	struct nvkm_device *device = mc->subdev.device;
+	nvkm_wr32(device, 0x000140, 0x00000001);
+}
+
+u32
+nv04_mc_intr_stat(struct nvkm_mc *mc)
+{
+	return nvkm_rd32(mc->subdev.device, 0x000100);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 void
 nv04_mc_init(struct nvkm_mc *mc)
 {
@@ -124,9 +157,16 @@ nv04_mc_init(struct nvkm_mc *mc)
 static const struct nvkm_mc_func
 nv04_mc = {
 	.init = nv04_mc_init,
+<<<<<<< HEAD
 	.intr = &nv04_mc_intr,
 	.intrs = nv04_mc_intrs,
 	.device = &nv04_mc_device,
+=======
+	.intr = nv04_mc_intr,
+	.intr_unarm = nv04_mc_intr_unarm,
+	.intr_rearm = nv04_mc_intr_rearm,
+	.intr_stat = nv04_mc_intr_stat,
+>>>>>>> b7ba80a49124 (Commit)
 	.reset = nv04_mc_reset,
 };
 

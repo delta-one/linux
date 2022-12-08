@@ -60,6 +60,10 @@ static int betopff_init(struct hid_device *hid)
 	struct list_head *report_list =
 			&hid->report_enum[HID_OUTPUT_REPORT].report_list;
 	struct input_dev *dev;
+<<<<<<< HEAD
+=======
+	int field_count = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int error;
 	int i, j;
 
@@ -85,6 +89,7 @@ static int betopff_init(struct hid_device *hid)
 	 * -----------------------------------------
 	 * Do init them with default value.
 	 */
+<<<<<<< HEAD
 	if (report->maxfield < 4) {
 		hid_err(hid, "not enough fields in the report: %d\n",
 				report->maxfield);
@@ -100,6 +105,21 @@ static int betopff_init(struct hid_device *hid)
 		}
 	}
 
+=======
+	for (i = 0; i < report->maxfield; i++) {
+		for (j = 0; j < report->field[i]->report_count; j++) {
+			report->field[i]->value[j] = 0x00;
+			field_count++;
+		}
+	}
+
+	if (field_count < 4) {
+		hid_err(hid, "not enough fields in the report: %d\n",
+				field_count);
+		return -ENODEV;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	betopff = kzalloc(sizeof(*betopff), GFP_KERNEL);
 	if (!betopff)
 		return -ENOMEM;

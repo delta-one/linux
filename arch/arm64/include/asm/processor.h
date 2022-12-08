@@ -122,12 +122,15 @@ enum vec_type {
 	ARM64_VEC_MAX,
 };
 
+<<<<<<< HEAD
 enum fp_type {
 	FP_STATE_CURRENT,	/* Save based on current task state. */
 	FP_STATE_FPSIMD,
 	FP_STATE_SVE,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct cpu_context {
 	unsigned long x19;
 	unsigned long x20;
@@ -158,10 +161,16 @@ struct thread_struct {
 		struct user_fpsimd_state fpsimd_state;
 	} uw;
 
+<<<<<<< HEAD
 	enum fp_type		fp_type;	/* registers FPSIMD or SVE? */
 	unsigned int		fpsimd_cpu;
 	void			*sve_state;	/* SVE registers, if any */
 	void			*sme_state;	/* ZA and ZT state, if any */
+=======
+	unsigned int		fpsimd_cpu;
+	void			*sve_state;	/* SVE registers, if any */
+	void			*za_state;	/* ZA register, if any */
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int		vl[ARM64_VEC_MAX];	/* vector length */
 	unsigned int		vl_onexec[ARM64_VEC_MAX]; /* vl after next exec */
 	unsigned long		fault_address;	/* fault info */
@@ -315,13 +324,21 @@ static inline void compat_start_thread(struct pt_regs *regs, unsigned long pc,
 }
 #endif
 
+<<<<<<< HEAD
 static __always_inline bool is_ttbr0_addr(unsigned long addr)
+=======
+static inline bool is_ttbr0_addr(unsigned long addr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* entry assembly clears tags for TTBR0 addrs */
 	return addr < TASK_SIZE;
 }
 
+<<<<<<< HEAD
 static __always_inline bool is_ttbr1_addr(unsigned long addr)
+=======
+static inline bool is_ttbr1_addr(unsigned long addr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* TTBR1 addresses may have a tag if KASAN_SW_TAGS is in use */
 	return arch_kasan_reset_tag(addr) >= PAGE_OFFSET;
@@ -403,5 +420,21 @@ long get_tagged_addr_ctrl(struct task_struct *task);
 #define GET_TAGGED_ADDR_CTRL()		get_tagged_addr_ctrl(current)
 #endif
 
+<<<<<<< HEAD
+=======
+/*
+ * For CONFIG_GCC_PLUGIN_STACKLEAK
+ *
+ * These need to be macros because otherwise we get stuck in a nightmare
+ * of header definitions for the use of task_stack_page.
+ */
+
+/*
+ * The top of the current task's task stack
+ */
+#define current_top_of_stack()	((unsigned long)current->stack + THREAD_SIZE)
+#define on_thread_stack()	(on_task_stack(current, current_stack_pointer, 1))
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __ASSEMBLY__ */
 #endif /* __ASM_PROCESSOR_H */

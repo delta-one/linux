@@ -53,6 +53,7 @@ struct samsung_clk_reg_dump *samsung_clk_alloc_reg_dump(
 	return rd;
 }
 
+<<<<<<< HEAD
 /**
  * samsung_clk_init() - Create and initialize a clock provider object
  * @dev:	CMU device to enable runtime PM, or NULL if RPM is not needed
@@ -65,6 +66,10 @@ struct samsung_clk_reg_dump *samsung_clk_alloc_reg_dump(
  * Return: Allocated and initialized clock provider object.
  */
 struct samsung_clk_provider * __init samsung_clk_init(struct device *dev,
+=======
+/* setup the essentials required to support clock lookup using ccf */
+struct samsung_clk_provider *__init samsung_clk_init(struct device_node *np,
+>>>>>>> b7ba80a49124 (Commit)
 			void __iomem *base, unsigned long nr_clks)
 {
 	struct samsung_clk_provider *ctx;
@@ -77,7 +82,10 @@ struct samsung_clk_provider * __init samsung_clk_init(struct device *dev,
 	for (i = 0; i < nr_clks; ++i)
 		ctx->clk_data.hws[i] = ERR_PTR(-ENOENT);
 
+<<<<<<< HEAD
 	ctx->dev = dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ctx->reg_base = base;
 	ctx->clk_data.num = nr_clks;
 	spin_lock_init(&ctx->lock);
@@ -335,6 +343,7 @@ void samsung_clk_extended_sleep_init(void __iomem *reg_base,
 }
 #endif
 
+<<<<<<< HEAD
 /**
  * samsung_cmu_register_clocks() - Register all clocks provided in CMU object
  * @ctx: Clock provider object
@@ -362,6 +371,8 @@ void __init samsung_cmu_register_clocks(struct samsung_clk_provider *ctx,
 		samsung_clk_register_cpu(ctx, cmu->cpu_clks, cmu->nr_cpu_clks);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Common function which registers plls, muxes, dividers and gates
  * for each CMU. It also add CMU register list to register cache.
@@ -379,13 +390,40 @@ struct samsung_clk_provider * __init samsung_cmu_register_one(
 		return NULL;
 	}
 
+<<<<<<< HEAD
 	ctx = samsung_clk_init(NULL, reg_base, cmu->nr_clk_ids);
 	samsung_cmu_register_clocks(ctx, cmu);
 
+=======
+	ctx = samsung_clk_init(np, reg_base, cmu->nr_clk_ids);
+
+	if (cmu->pll_clks)
+		samsung_clk_register_pll(ctx, cmu->pll_clks, cmu->nr_pll_clks,
+			reg_base);
+	if (cmu->mux_clks)
+		samsung_clk_register_mux(ctx, cmu->mux_clks,
+			cmu->nr_mux_clks);
+	if (cmu->div_clks)
+		samsung_clk_register_div(ctx, cmu->div_clks, cmu->nr_div_clks);
+	if (cmu->gate_clks)
+		samsung_clk_register_gate(ctx, cmu->gate_clks,
+			cmu->nr_gate_clks);
+	if (cmu->fixed_clks)
+		samsung_clk_register_fixed_rate(ctx, cmu->fixed_clks,
+			cmu->nr_fixed_clks);
+	if (cmu->fixed_factor_clks)
+		samsung_clk_register_fixed_factor(ctx, cmu->fixed_factor_clks,
+			cmu->nr_fixed_factor_clks);
+>>>>>>> b7ba80a49124 (Commit)
 	if (cmu->clk_regs)
 		samsung_clk_extended_sleep_init(reg_base,
 			cmu->clk_regs, cmu->nr_clk_regs,
 			cmu->suspend_regs, cmu->nr_suspend_regs);
+<<<<<<< HEAD
+=======
+	if (cmu->cpu_clks)
+		samsung_clk_register_cpu(ctx, cmu->cpu_clks, cmu->nr_cpu_clks);
+>>>>>>> b7ba80a49124 (Commit)
 
 	samsung_clk_of_add_provider(np, ctx);
 

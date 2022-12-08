@@ -69,9 +69,13 @@
 #define RESET_PARSER_FETCH		72
 #define RESET_CTL			73
 #define RESET_PARSER_TOP		74
+<<<<<<< HEAD
 /*					75	*/
 #define RESET_NNA			76
 /*					77	*/
+=======
+/*					75-77	*/
+>>>>>>> b7ba80a49124 (Commit)
 #define RESET_DVALIN			78
 #define RESET_HDMITX			79
 /*					80-95	*/

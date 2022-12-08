@@ -277,7 +277,12 @@ static int find_group_orlov(struct super_block *sb, struct inode *parent)
 		int best_ndir = inodes_per_group;
 		int best_group = -1;
 
+<<<<<<< HEAD
 		parent_group = get_random_u32_below(ngroups);
+=======
+		group = prandom_u32();
+		parent_group = (unsigned)group % ngroups;
+>>>>>>> b7ba80a49124 (Commit)
 		for (i = 0; i < ngroups; i++) {
 			group = (parent_group + i) % ngroups;
 			desc = ext2_get_group_desc (sb, group, NULL);
@@ -545,7 +550,11 @@ got:
 		inode->i_uid = current_fsuid();
 		inode->i_gid = dir->i_gid;
 	} else
+<<<<<<< HEAD
 		inode_init_owner(&nop_mnt_idmap, inode, dir, mode);
+=======
+		inode_init_owner(&init_user_ns, inode, dir, mode);
+>>>>>>> b7ba80a49124 (Commit)
 
 	inode->i_ino = ino;
 	inode->i_blocks = 0;

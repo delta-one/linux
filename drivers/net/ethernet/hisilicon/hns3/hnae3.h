@@ -32,7 +32,10 @@
 #include <linux/pkt_sched.h>
 #include <linux/types.h>
 #include <net/pkt_cls.h>
+<<<<<<< HEAD
 #include <net/pkt_sched.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define HNAE3_MOD_VERSION "1.0"
 
@@ -820,6 +823,10 @@ struct hnae3_knic_private_info {
 	const struct hnae3_dcb_ops *dcb_ops;
 
 	u16 int_rl_setting;
+<<<<<<< HEAD
+=======
+	enum pkt_hash_types rss_type;
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem *io_base;
 };
 

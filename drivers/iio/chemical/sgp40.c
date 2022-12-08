@@ -311,9 +311,15 @@ static const struct iio_info sgp40_info = {
 	.write_raw	= sgp40_write_raw,
 };
 
+<<<<<<< HEAD
 static int sgp40_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int sgp40_probe(struct i2c_client *client,
+		     const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = &client->dev;
 	struct iio_dev *indio_dev;
 	struct sgp40_data *data;
@@ -368,7 +374,11 @@ static struct i2c_driver sgp40_driver = {
 		.name = "sgp40",
 		.of_match_table = sgp40_dt_ids,
 	},
+<<<<<<< HEAD
 	.probe_new = sgp40_probe,
+=======
+	.probe = sgp40_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = sgp40_id,
 };
 module_i2c_driver(sgp40_driver);

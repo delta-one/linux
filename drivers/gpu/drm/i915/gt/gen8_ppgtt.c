@@ -196,10 +196,14 @@ static void gen8_ppgtt_cleanup(struct i915_address_space *vm)
 	if (intel_vgpu_active(vm->i915))
 		gen8_ppgtt_notify_vgt(ppgtt, false);
 
+<<<<<<< HEAD
 	if (ppgtt->pd)
 		__gen8_ppgtt_cleanup(vm, ppgtt->pd,
 				     gen8_pd_top_count(vm), vm->top);
 
+=======
+	__gen8_ppgtt_cleanup(vm, ppgtt->pd, gen8_pd_top_count(vm), vm->top);
+>>>>>>> b7ba80a49124 (Commit)
 	free_scratch(vm);
 }
 
@@ -476,7 +480,10 @@ xehpsdv_ppgtt_insert_huge(struct i915_address_space *vm,
 	const gen8_pte_t pte_encode = vm->pte_encode(0, cache_level, flags);
 	unsigned int rem = sg_dma_len(iter->sg);
 	u64 start = vma_res->start;
+<<<<<<< HEAD
 	u64 end = start + vma_res->vma_size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	GEM_BUG_ON(!i915_vm_is_4lvl(vm));
 
@@ -490,10 +497,16 @@ xehpsdv_ppgtt_insert_huge(struct i915_address_space *vm,
 		gen8_pte_t encode = pte_encode;
 		unsigned int page_size;
 		gen8_pte_t *vaddr;
+<<<<<<< HEAD
 		u16 index, max, nent, i;
 
 		max = I915_PDES;
 		nent = 1;
+=======
+		u16 index, max;
+
+		max = I915_PDES;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (vma_res->bi.page_sizes.sg & I915_GTT_PAGE_SIZE_2M &&
 		    IS_ALIGNED(iter->dma, I915_GTT_PAGE_SIZE_2M) &&
@@ -505,6 +518,7 @@ xehpsdv_ppgtt_insert_huge(struct i915_address_space *vm,
 
 			vaddr = px_vaddr(pd);
 		} else {
+<<<<<<< HEAD
 			index =  __gen8_pte_index(start, 0);
 			page_size = I915_GTT_PAGE_SIZE;
 
@@ -536,6 +550,27 @@ xehpsdv_ppgtt_insert_huge(struct i915_address_space *vm,
 					page_size = I915_GTT_PAGE_SIZE_64K;
 					nent = 16;
 				}
+=======
+			if (encode & GEN12_PPGTT_PTE_LM) {
+				GEM_BUG_ON(__gen8_pte_index(start, 0) % 16);
+				GEM_BUG_ON(rem < I915_GTT_PAGE_SIZE_64K);
+				GEM_BUG_ON(!IS_ALIGNED(iter->dma,
+						       I915_GTT_PAGE_SIZE_64K));
+
+				index = __gen8_pte_index(start, 0) / 16;
+				page_size = I915_GTT_PAGE_SIZE_64K;
+
+				max /= 16;
+
+				vaddr = px_vaddr(pd);
+				vaddr[__gen8_pte_index(start, 1)] |= GEN12_PDE_64K;
+
+				pt->is_compact = true;
+			} else {
+				GEM_BUG_ON(pt->is_compact);
+				index =  __gen8_pte_index(start, 0);
+				page_size = I915_GTT_PAGE_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 
 			vaddr = px_vaddr(pt);
@@ -543,12 +578,16 @@ xehpsdv_ppgtt_insert_huge(struct i915_address_space *vm,
 
 		do {
 			GEM_BUG_ON(rem < page_size);
+<<<<<<< HEAD
 
 			for (i = 0; i < nent; i++) {
 				vaddr[index++] =
 					encode | (iter->dma + i *
 						  I915_GTT_PAGE_SIZE);
 			}
+=======
+			vaddr[index++] = encode | iter->dma;
+>>>>>>> b7ba80a49124 (Commit)
 
 			start += page_size;
 			iter->dma += page_size;
@@ -764,8 +803,11 @@ static void __xehpsdv_ppgtt_insert_entry_lm(struct i915_address_space *vm,
 	GEM_BUG_ON(!IS_ALIGNED(addr, SZ_64K));
 	GEM_BUG_ON(!IS_ALIGNED(offset, SZ_64K));
 
+<<<<<<< HEAD
 	/* XXX: we don't strictly need to use this layout */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!pt->is_compact) {
 		vaddr = px_vaddr(pd);
 		vaddr[gen8_pd_index(idx, 1)] |= GEN12_PDE_64K;
@@ -827,10 +869,15 @@ static int gen8_init_scratch(struct i915_address_space *vm)
 		struct drm_i915_gem_object *obj;
 
 		obj = vm->alloc_pt_dma(vm, I915_GTT_PAGE_SIZE_4K);
+<<<<<<< HEAD
 		if (IS_ERR(obj)) {
 			ret = PTR_ERR(obj);
 			goto free_scratch;
 		}
+=======
+		if (IS_ERR(obj))
+			goto free_scratch;
+>>>>>>> b7ba80a49124 (Commit)
 
 		ret = map_pt_dma(vm, obj);
 		if (ret) {
@@ -849,8 +896,12 @@ static int gen8_init_scratch(struct i915_address_space *vm)
 free_scratch:
 	while (i--)
 		i915_gem_object_put(vm->scratch[i]);
+<<<<<<< HEAD
 	vm->scratch[0] = NULL;
 	return ret;
+=======
+	return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int gen8_preallocate_top_level_pdp(struct i915_ppgtt *ppgtt)
@@ -928,7 +979,10 @@ err_pd:
 struct i915_ppgtt *gen8_ppgtt_create(struct intel_gt *gt,
 				     unsigned long lmem_pt_obj_flags)
 {
+<<<<<<< HEAD
 	struct i915_page_directory *pd;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct i915_ppgtt *ppgtt;
 	int err;
 
@@ -950,6 +1004,7 @@ struct i915_ppgtt *gen8_ppgtt_create(struct intel_gt *gt,
 	 */
 	ppgtt->vm.has_read_only = !IS_GRAPHICS_VER(gt->i915, 11, 12);
 
+<<<<<<< HEAD
 	if (HAS_LMEM(gt->i915))
 		ppgtt->vm.alloc_pt_dma = alloc_pt_lmem;
 	else
@@ -964,6 +1019,47 @@ struct i915_ppgtt *gen8_ppgtt_create(struct intel_gt *gt,
 	ppgtt->vm.alloc_scratch_dma = alloc_pt_dma;
 
 	ppgtt->vm.pte_encode = gen8_pte_encode;
+=======
+	if (HAS_LMEM(gt->i915)) {
+		ppgtt->vm.alloc_pt_dma = alloc_pt_lmem;
+
+		/*
+		 * On some platforms the hw has dropped support for 4K GTT pages
+		 * when dealing with LMEM, and due to the design of 64K GTT
+		 * pages in the hw, we can only mark the *entire* page-table as
+		 * operating in 64K GTT mode, since the enable bit is still on
+		 * the pde, and not the pte. And since we still need to allow
+		 * 4K GTT pages for SMEM objects, we can't have a "normal" 4K
+		 * page-table with scratch pointing to LMEM, since that's
+		 * undefined from the hw pov. The simplest solution is to just
+		 * move the 64K scratch page to SMEM on such platforms and call
+		 * it a day, since that should work for all configurations.
+		 */
+		if (HAS_64K_PAGES(gt->i915))
+			ppgtt->vm.alloc_scratch_dma = alloc_pt_dma;
+		else
+			ppgtt->vm.alloc_scratch_dma = alloc_pt_lmem;
+	} else {
+		ppgtt->vm.alloc_pt_dma = alloc_pt_dma;
+		ppgtt->vm.alloc_scratch_dma = alloc_pt_dma;
+	}
+
+	err = gen8_init_scratch(&ppgtt->vm);
+	if (err)
+		goto err_free;
+
+	ppgtt->pd = gen8_alloc_top_pd(&ppgtt->vm);
+	if (IS_ERR(ppgtt->pd)) {
+		err = PTR_ERR(ppgtt->pd);
+		goto err_free_scratch;
+	}
+
+	if (!i915_vm_is_4lvl(&ppgtt->vm)) {
+		err = gen8_preallocate_top_level_pdp(ppgtt);
+		if (err)
+			goto err_free_pd;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ppgtt->vm.bind_async_flags = I915_VMA_LOCAL_BIND;
 	ppgtt->vm.insert_entries = gen8_ppgtt_insert;
@@ -974,6 +1070,7 @@ struct i915_ppgtt *gen8_ppgtt_create(struct intel_gt *gt,
 	ppgtt->vm.allocate_va_range = gen8_ppgtt_alloc;
 	ppgtt->vm.clear_range = gen8_ppgtt_clear;
 	ppgtt->vm.foreach = gen8_ppgtt_foreach;
+<<<<<<< HEAD
 	ppgtt->vm.cleanup = gen8_ppgtt_cleanup;
 
 	err = gen8_init_scratch(&ppgtt->vm);
@@ -992,13 +1089,31 @@ struct i915_ppgtt *gen8_ppgtt_create(struct intel_gt *gt,
 		if (err)
 			goto err_put;
 	}
+=======
+
+	ppgtt->vm.pte_encode = gen8_pte_encode;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (intel_vgpu_active(gt->i915))
 		gen8_ppgtt_notify_vgt(ppgtt, true);
 
+<<<<<<< HEAD
 	return ppgtt;
 
 err_put:
 	i915_vm_put(&ppgtt->vm);
+=======
+	ppgtt->vm.cleanup = gen8_ppgtt_cleanup;
+
+	return ppgtt;
+
+err_free_pd:
+	__gen8_ppgtt_cleanup(&ppgtt->vm, ppgtt->pd,
+			     gen8_pd_top_count(&ppgtt->vm), ppgtt->vm.top);
+err_free_scratch:
+	free_scratch(&ppgtt->vm);
+err_free:
+	kfree(ppgtt);
+>>>>>>> b7ba80a49124 (Commit)
 	return ERR_PTR(err);
 }

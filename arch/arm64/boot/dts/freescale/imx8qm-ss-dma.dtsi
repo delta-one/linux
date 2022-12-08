@@ -16,6 +16,7 @@
 				     "uart4_lpcg_ipg_clk";
 		power-domains = <&pd IMX_SC_R_UART_4>;
 	};
+<<<<<<< HEAD
 
 	can1_lpcg: clock-controller@5ace0000 {
 		compatible = "fsl,imx8qxp-lpcg";
@@ -60,6 +61,8 @@
 		 <&can2_lpcg 0>;
 	assigned-clocks = <&clk IMX_SC_R_CAN_2 IMX_SC_PM_CLK_PER>;
 	fsl,clk-source = /bits/ 8 <1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lpuart0 {

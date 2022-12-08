@@ -14,7 +14,10 @@
 #include "sar.h"
 #include "ser.h"
 #include "util.h"
+<<<<<<< HEAD
 #include "wow.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void rtw89_ops_tx(struct ieee80211_hw *hw,
 			 struct ieee80211_tx_control *control,
@@ -110,9 +113,12 @@ static int rtw89_ops_add_interface(struct ieee80211_hw *hw,
 	struct rtw89_vif *rtwvif = (struct rtw89_vif *)vif->drv_priv;
 	int ret = 0;
 
+<<<<<<< HEAD
 	rtw89_debug(rtwdev, RTW89_DBG_STATE, "add vif %pM type %d, p2p %d\n",
 		    vif->addr, vif->type, vif->p2p);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&rtwdev->mutex);
 	rtwvif->rtwdev = rtwdev;
 	list_add_tail(&rtwvif->list, &rtwdev->rtwvifs_list);
@@ -125,22 +131,33 @@ static int rtw89_ops_add_interface(struct ieee80211_hw *hw,
 						  RTW89_PORT_NUM);
 	if (rtwvif->port == RTW89_PORT_NUM) {
 		ret = -ENOSPC;
+<<<<<<< HEAD
 		list_del_init(&rtwvif->list);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
 	rtwvif->bcn_hit_cond = 0;
 	rtwvif->mac_idx = RTW89_MAC_0;
 	rtwvif->phy_idx = RTW89_PHY_0;
+<<<<<<< HEAD
 	rtwvif->sub_entity_idx = RTW89_SUB_ENTITY_0;
 	rtwvif->hit_rule = 0;
 	ether_addr_copy(rtwvif->mac_addr, vif->addr);
 	INIT_LIST_HEAD(&rtwvif->general_pkt_list);
+=======
+	rtwvif->hit_rule = 0;
+	ether_addr_copy(rtwvif->mac_addr, vif->addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = rtw89_mac_add_vif(rtwdev, rtwvif);
 	if (ret) {
 		rtw89_core_release_bit_map(rtwdev->hw_port, rtwvif->port);
+<<<<<<< HEAD
 		list_del_init(&rtwvif->list);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -159,9 +176,12 @@ static void rtw89_ops_remove_interface(struct ieee80211_hw *hw,
 	struct rtw89_dev *rtwdev = hw->priv;
 	struct rtw89_vif *rtwvif = (struct rtw89_vif *)vif->drv_priv;
 
+<<<<<<< HEAD
 	rtw89_debug(rtwdev, RTW89_DBG_STATE, "remove vif %pM type %d p2p %d\n",
 		    vif->addr, vif->type, vif->p2p);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cancel_work_sync(&rtwvif->update_beacon_work);
 
 	mutex_lock(&rtwdev->mutex);
@@ -173,6 +193,7 @@ static void rtw89_ops_remove_interface(struct ieee80211_hw *hw,
 	mutex_unlock(&rtwdev->mutex);
 }
 
+<<<<<<< HEAD
 static int rtw89_ops_change_interface(struct ieee80211_hw *hw,
 				      struct ieee80211_vif *vif,
 				      enum nl80211_iftype type, bool p2p)
@@ -199,6 +220,8 @@ static int rtw89_ops_change_interface(struct ieee80211_hw *hw,
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void rtw89_ops_configure_filter(struct ieee80211_hw *hw,
 				       unsigned int changed_flags,
 				       unsigned int *new_flags,
@@ -393,7 +416,10 @@ static void rtw89_ops_bss_info_changed(struct ieee80211_hw *hw,
 			rtw89_phy_set_bss_color(rtwdev, vif);
 			rtw89_chip_cfg_txpwr_ul_tb_offset(rtwdev, vif);
 			rtw89_mac_port_update(rtwdev, rtwvif);
+<<<<<<< HEAD
 			rtw89_mac_set_he_obss_narrow_bw_ru(rtwdev, vif);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			rtw89_store_op_chan(rtwdev, true);
 		} else {
 			/* Abort ongoing scan if cancel_scan isn't issued
@@ -422,9 +448,12 @@ static void rtw89_ops_bss_info_changed(struct ieee80211_hw *hw,
 	if (changed & BSS_CHANGED_MU_GROUPS)
 		rtw89_mac_bf_set_gid_table(rtwdev, vif, conf);
 
+<<<<<<< HEAD
 	if (changed & BSS_CHANGED_P2P_PS)
 		rtw89_process_p2p_ps(rtwdev, vif);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&rtwdev->mutex);
 }
 
@@ -457,7 +486,10 @@ void rtw89_ops_stop_ap(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 	struct rtw89_vif *rtwvif = (struct rtw89_vif *)vif->drv_priv;
 
 	mutex_lock(&rtwdev->mutex);
+<<<<<<< HEAD
 	rtw89_mac_stop_ap(rtwdev, rtwvif);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rtw89_fw_h2c_assoc_cmac_tbl(rtwdev, vif, NULL);
 	rtw89_fw_h2c_join_info(rtwdev, rtwvif, NULL, true);
 	mutex_unlock(&rtwdev->mutex);
@@ -676,7 +708,11 @@ static void rtw89_ops_flush(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 	rtw89_leave_lps(rtwdev);
 	rtw89_hci_flush_queues(rtwdev, queues, drop);
 
+<<<<<<< HEAD
 	if (drop && !RTW89_CHK_FW_FEATURE(NO_PACKET_DROP, &rtwdev->fw))
+=======
+	if (drop && RTW89_CHK_FW_FEATURE(PACKET_DROP, &rtwdev->fw))
+>>>>>>> b7ba80a49124 (Commit)
 		__rtw89_drop_packets(rtwdev, vif);
 	else
 		rtw89_mac_flush_txq(rtwdev, queues, drop);
@@ -696,7 +732,11 @@ static void rtw89_ra_mask_info_update_iter(void *data, struct ieee80211_sta *sta
 	struct rtw89_sta *rtwsta = (struct rtw89_sta *)sta->drv_priv;
 	struct ieee80211_vif *vif = rtwvif_to_vif(rtwsta->rtwvif);
 
+<<<<<<< HEAD
 	if (vif != br_data->vif || vif->p2p)
+=======
+	if (vif != br_data->vif)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	rtwsta->use_cfg_mask = true;
@@ -931,6 +971,7 @@ static int rtw89_ops_set_tid_config(struct ieee80211_hw *hw,
 	return 0;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_PM
 static int rtw89_ops_suspend(struct ieee80211_hw *hw,
 			     struct cfg80211_wowlan *wowlan)
@@ -980,6 +1021,8 @@ static void rtw89_ops_set_wakeup(struct ieee80211_hw *hw, bool enabled)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct ieee80211_ops rtw89_ops = {
 	.tx			= rtw89_ops_tx,
 	.wake_tx_queue		= rtw89_ops_wake_tx_queue,
@@ -987,7 +1030,10 @@ const struct ieee80211_ops rtw89_ops = {
 	.stop			= rtw89_ops_stop,
 	.config			= rtw89_ops_config,
 	.add_interface		= rtw89_ops_add_interface,
+<<<<<<< HEAD
 	.change_interface       = rtw89_ops_change_interface,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.remove_interface	= rtw89_ops_remove_interface,
 	.configure_filter	= rtw89_ops_configure_filter,
 	.bss_info_changed	= rtw89_ops_bss_info_changed,
@@ -1017,10 +1063,13 @@ const struct ieee80211_ops rtw89_ops = {
 	.set_sar_specs		= rtw89_ops_set_sar_specs,
 	.sta_rc_update		= rtw89_ops_sta_rc_update,
 	.set_tid_config		= rtw89_ops_set_tid_config,
+<<<<<<< HEAD
 #ifdef CONFIG_PM
 	.suspend		= rtw89_ops_suspend,
 	.resume			= rtw89_ops_resume,
 	.set_wakeup		= rtw89_ops_set_wakeup,
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 EXPORT_SYMBOL(rtw89_ops);

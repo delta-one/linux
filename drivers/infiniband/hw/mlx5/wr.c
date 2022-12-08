@@ -1252,7 +1252,11 @@ int mlx5_ib_post_recv(struct ib_qp *ibqp, const struct ib_recv_wr *wr,
 
 		if (i < qp->rq.max_gs) {
 			scat[i].byte_count = 0;
+<<<<<<< HEAD
 			scat[i].lkey = dev->mkeys.terminate_scatter_list_mkey;
+=======
+			scat[i].lkey       = cpu_to_be32(MLX5_INVALID_LKEY);
+>>>>>>> b7ba80a49124 (Commit)
 			scat[i].addr       = 0;
 		}
 

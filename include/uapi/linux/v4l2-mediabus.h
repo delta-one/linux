@@ -3,6 +3,13 @@
  * Media Bus API header
  *
  * Copyright (C) 2009, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+<<<<<<< HEAD
+=======
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #ifndef __LINUX_V4L2_MEDIABUS_H

@@ -70,7 +70,11 @@ static int sc18is602_txrx(struct sc18is602 *hw, struct spi_message *msg,
 
 	if (hw->tlen == 0) {
 		/* First byte (I2C command) is chip select */
+<<<<<<< HEAD
 		hw->buffer[0] = 1 << spi_get_chipselect(msg->spi, 0);
+=======
+		hw->buffer[0] = 1 << msg->spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 		hw->tlen = 1;
 		hw->rindex = 0;
 	}
@@ -229,15 +233,25 @@ static int sc18is602_setup(struct spi_device *spi)
 	struct sc18is602 *hw = spi_master_get_devdata(spi->master);
 
 	/* SC18IS602 does not support CS2 */
+<<<<<<< HEAD
 	if (hw->id == sc18is602 && (spi_get_chipselect(spi, 0) == 2))
+=======
+	if (hw->id == sc18is602 && spi->chip_select == 2)
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENXIO;
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int sc18is602_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int sc18is602_probe(struct i2c_client *client,
+			   const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = &client->dev;
 	struct device_node *np = dev->of_node;
 	struct sc18is602_platform_data *pdata = dev_get_platdata(dev);
@@ -315,7 +329,11 @@ static const struct i2c_device_id sc18is602_id[] = {
 };
 MODULE_DEVICE_TABLE(i2c, sc18is602_id);
 
+<<<<<<< HEAD
 static const struct of_device_id sc18is602_of_match[] __maybe_unused = {
+=======
+static const struct of_device_id sc18is602_of_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.compatible = "nxp,sc18is602",
 		.data = (void *)sc18is602
@@ -337,7 +355,11 @@ static struct i2c_driver sc18is602_driver = {
 		.name = "sc18is602",
 		.of_match_table = of_match_ptr(sc18is602_of_match),
 	},
+<<<<<<< HEAD
 	.probe_new = sc18is602_probe,
+=======
+	.probe = sc18is602_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = sc18is602_id,
 };
 

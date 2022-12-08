@@ -5,14 +5,20 @@
 
 #include <linux/memory_hotplug.h>
 #include <linux/memblock.h>
+<<<<<<< HEAD
 #include <linux/kasan.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pfn.h>
 #include <linux/mm.h>
 #include <linux/init.h>
 #include <linux/list.h>
 #include <linux/hugetlb.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/sort.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/cacheflush.h>
 #include <asm/nospec-branch.h>
 #include <asm/pgalloc.h>
@@ -298,7 +304,14 @@ static void try_free_pmd_table(pud_t *pud, unsigned long start)
 	/* Don't mess with any tables not fully in 1:1 mapping & vmemmap area */
 	if (end > VMALLOC_START)
 		return;
+<<<<<<< HEAD
 
+=======
+#ifdef CONFIG_KASAN
+	if (start < KASAN_SHADOW_END && KASAN_SHADOW_START > end)
+		return;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	pmd = pmd_offset(pud, start);
 	for (i = 0; i < PTRS_PER_PMD; i++, pmd++)
 		if (!pmd_none(*pmd))
@@ -370,6 +383,13 @@ static void try_free_pud_table(p4d_t *p4d, unsigned long start)
 	/* Don't mess with any tables not fully in 1:1 mapping & vmemmap area */
 	if (end > VMALLOC_START)
 		return;
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_KASAN
+	if (start < KASAN_SHADOW_END && KASAN_SHADOW_START > end)
+		return;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	pud = pud_offset(p4d, start);
 	for (i = 0; i < PTRS_PER_PUD; i++, pud++) {
@@ -420,6 +440,13 @@ static void try_free_p4d_table(pgd_t *pgd, unsigned long start)
 	/* Don't mess with any tables not fully in 1:1 mapping & vmemmap area */
 	if (end > VMALLOC_START)
 		return;
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_KASAN
+	if (start < KASAN_SHADOW_END && KASAN_SHADOW_START > end)
+		return;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	p4d = p4d_offset(pgd, start);
 	for (i = 0; i < PTRS_PER_P4D; i++, p4d++) {
@@ -648,6 +675,7 @@ void vmem_unmap_4k_page(unsigned long addr)
 	mutex_unlock(&vmem_mutex);
 }
 
+<<<<<<< HEAD
 static int __init memblock_region_cmp(const void *a, const void *b)
 {
 	const struct memblock_region *r1 = a;
@@ -668,6 +696,8 @@ static void __init memblock_region_swap(void *a, void *b, int size)
 #ifdef CONFIG_KASAN
 #define __sha(x)	((unsigned long)kasan_mem_to_shadow((void *)x))
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * map whole physical memory to virtual memory (identity mapping)
  * we reserve enough space in the vmalloc area for vmemmap to hotplug
@@ -675,6 +705,7 @@ static void __init memblock_region_swap(void *a, void *b, int size)
  */
 void __init vmem_map_init(void)
 {
+<<<<<<< HEAD
 	struct memblock_region memory_rwx_regions[] = {
 		{
 			.base	= 0,
@@ -744,6 +775,13 @@ void __init vmem_map_init(void)
 			     SET_MEMORY_RW | SET_MEMORY_NX);
 #endif
 
+=======
+	phys_addr_t base, end;
+	u64 i;
+
+	for_each_mem_range(i, &base, &end)
+		vmem_add_range(base, end - base);
+>>>>>>> b7ba80a49124 (Commit)
 	__set_memory((unsigned long)_stext,
 		     (unsigned long)(_etext - _stext) >> PAGE_SHIFT,
 		     SET_MEMORY_RO | SET_MEMORY_X);
@@ -753,6 +791,7 @@ void __init vmem_map_init(void)
 	__set_memory((unsigned long)_sinittext,
 		     (unsigned long)(_einittext - _sinittext) >> PAGE_SHIFT,
 		     SET_MEMORY_RO | SET_MEMORY_X);
+<<<<<<< HEAD
 	__set_memory(__stext_amode31,
 		     (__etext_amode31 - __stext_amode31) >> PAGE_SHIFT,
 		     SET_MEMORY_RO | SET_MEMORY_X);
@@ -761,6 +800,17 @@ void __init vmem_map_init(void)
 	if (static_key_enabled(&cpu_has_bear))
 		set_memory_nx(0, 1);
 	set_memory_nx(PAGE_SIZE, 1);
+=======
+	__set_memory(__stext_amode31, (__etext_amode31 - __stext_amode31) >> PAGE_SHIFT,
+		     SET_MEMORY_RO | SET_MEMORY_X);
+
+	/* lowcore requires 4k mapping for real addresses / prefixing */
+	set_memory_4k(0, LC_PAGES);
+
+	/* lowcore must be executable for LPSWE */
+	if (!static_key_enabled(&cpu_has_bear))
+		set_memory_x(0, 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_info("Write protected kernel read-only data: %luk\n",
 		(unsigned long)(__end_rodata - _stext) >> 10);

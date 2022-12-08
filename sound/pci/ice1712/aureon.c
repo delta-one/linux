@@ -1892,10 +1892,20 @@ static int aureon_add_controls(struct snd_ice1712 *ice)
 		unsigned char id;
 		snd_ice1712_save_gpio_status(ice);
 		id = aureon_cs8415_get(ice, CS8415_ID);
+<<<<<<< HEAD
 		snd_ice1712_restore_gpio_status(ice);
 		if (id != 0x41)
 			dev_info(ice->card->dev,
 				 "No CS8415 chip. Skipping CS8415 controls.\n");
+=======
+		if (id != 0x41)
+			dev_info(ice->card->dev,
+				 "No CS8415 chip. Skipping CS8415 controls.\n");
+		else if ((id & 0x0F) != 0x01)
+			dev_info(ice->card->dev,
+				 "Detected unsupported CS8415 rev. (%c)\n",
+				 (char)((id & 0x0F) + 'A' - 1));
+>>>>>>> b7ba80a49124 (Commit)
 		else {
 			for (i = 0; i < ARRAY_SIZE(cs8415_controls); i++) {
 				struct snd_kcontrol *kctl;
@@ -1906,6 +1916,10 @@ static int aureon_add_controls(struct snd_ice1712 *ice)
 					kctl->id.device = ice->pcm->device;
 			}
 		}
+<<<<<<< HEAD
+=======
+		snd_ice1712_restore_gpio_status(ice);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;

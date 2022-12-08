@@ -5,18 +5,29 @@
 #define VCHIQ_IOCTLS_H
 
 #include <linux/ioctl.h>
+<<<<<<< HEAD
 
 #include "../../include/linux/raspberrypi/vchiq.h"
+=======
+#include <linux/raspberrypi/vchiq.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define VCHIQ_IOC_MAGIC 0xc4
 #define VCHIQ_INVALID_HANDLE (~0)
 
 struct vchiq_service_params {
 	int fourcc;
+<<<<<<< HEAD
 	int __user (*callback)(enum vchiq_reason reason,
 			       struct vchiq_header *header,
 			       unsigned int handle,
 			       void *bulk_userdata);
+=======
+	enum vchiq_status __user (*callback)(enum vchiq_reason reason,
+				      struct vchiq_header *header,
+				      unsigned int handle,
+				      void *bulk_userdata);
+>>>>>>> b7ba80a49124 (Commit)
 	void __user *userdata;
 	short version;       /* Increment for non-trivial changes */
 	short version_min;   /* Update for incompatible changes */

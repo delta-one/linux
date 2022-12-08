@@ -70,8 +70,11 @@ int dpu_writeback_init(struct drm_device *dev, struct drm_encoder *enc,
 	int rc = 0;
 
 	dpu_wb_conn = devm_kzalloc(dev->dev, sizeof(*dpu_wb_conn), GFP_KERNEL);
+<<<<<<< HEAD
 	if (!dpu_wb_conn)
 		return -ENOMEM;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_connector_helper_add(&dpu_wb_conn->base.base, &dpu_wb_conn_helper_funcs);
 

@@ -231,6 +231,7 @@ proc entries
 	This feature is intended for systematic testing of faults in a single
 	system call. See an example below.
 
+<<<<<<< HEAD
 
 Error Injectable Functions
 --------------------------
@@ -296,6 +297,8 @@ which returns an allocated object, it may cause a problem because the returned
 value is not an object address and the caller can not access to the address.
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 How to add new fault injection capability
 -----------------------------------------
 

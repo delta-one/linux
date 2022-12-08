@@ -294,14 +294,22 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static int vboxsf_dir_mkfile(struct mnt_idmap *idmap,
+=======
+static int vboxsf_dir_mkfile(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			     struct inode *parent, struct dentry *dentry,
 			     umode_t mode, bool excl)
 {
 	return vboxsf_dir_create(parent, dentry, mode, false, excl, NULL);
 }
 
+<<<<<<< HEAD
 static int vboxsf_dir_mkdir(struct mnt_idmap *idmap,
+=======
+static int vboxsf_dir_mkdir(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			    struct inode *parent, struct dentry *dentry,
 			    umode_t mode)
 {
@@ -387,7 +395,11 @@ static int vboxsf_dir_unlink(struct inode *parent, struct dentry *dentry)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int vboxsf_dir_rename(struct mnt_idmap *idmap,
+=======
+static int vboxsf_dir_rename(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			     struct inode *old_parent,
 			     struct dentry *old_dentry,
 			     struct inode *new_parent,
@@ -430,7 +442,11 @@ err_put_old_path:
 	return err;
 }
 
+<<<<<<< HEAD
 static int vboxsf_dir_symlink(struct mnt_idmap *idmap,
+=======
+static int vboxsf_dir_symlink(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			      struct inode *parent, struct dentry *dentry,
 			      const char *symname)
 {

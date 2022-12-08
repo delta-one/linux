@@ -16,6 +16,7 @@ intel_de_read(struct drm_i915_private *i915, i915_reg_t reg)
 	return intel_uncore_read(&i915->uncore, reg);
 }
 
+<<<<<<< HEAD
 static inline u8
 intel_de_read8(struct drm_i915_private *i915, i915_reg_t reg)
 {
@@ -29,6 +30,8 @@ intel_de_read64_2x32(struct drm_i915_private *i915,
 	return intel_uncore_read64_2x32(&i915->uncore, lower_reg, upper_reg);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void
 intel_de_posting_read(struct drm_i915_private *i915, i915_reg_t reg)
 {
@@ -41,10 +44,17 @@ intel_de_write(struct drm_i915_private *i915, i915_reg_t reg, u32 val)
 	intel_uncore_write(&i915->uncore, reg, val);
 }
 
+<<<<<<< HEAD
 static inline u32
 intel_de_rmw(struct drm_i915_private *i915, i915_reg_t reg, u32 clear, u32 set)
 {
 	return intel_uncore_rmw(&i915->uncore, reg, clear, set);
+=======
+static inline void
+intel_de_rmw(struct drm_i915_private *i915, i915_reg_t reg, u32 clear, u32 set)
+{
+	intel_uncore_rmw(&i915->uncore, reg, clear, set);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline int
@@ -55,6 +65,7 @@ intel_de_wait_for_register(struct drm_i915_private *i915, i915_reg_t reg,
 }
 
 static inline int
+<<<<<<< HEAD
 intel_de_wait_for_register_fw(struct drm_i915_private *i915, i915_reg_t reg,
 			      u32 mask, u32 value, unsigned int timeout)
 {
@@ -72,6 +83,8 @@ __intel_de_wait_for_register(struct drm_i915_private *i915, i915_reg_t reg,
 }
 
 static inline int
+=======
+>>>>>>> b7ba80a49124 (Commit)
 intel_de_wait_for_set(struct drm_i915_private *i915, i915_reg_t reg,
 		      u32 mask, unsigned int timeout)
 {
@@ -111,6 +124,7 @@ intel_de_write_fw(struct drm_i915_private *i915, i915_reg_t reg, u32 val)
 	intel_uncore_write_fw(&i915->uncore, reg, val);
 }
 
+<<<<<<< HEAD
 static inline u32
 intel_de_read_notrace(struct drm_i915_private *i915, i915_reg_t reg)
 {
@@ -123,4 +137,6 @@ intel_de_write_notrace(struct drm_i915_private *i915, i915_reg_t reg, u32 val)
 	intel_uncore_write_notrace(&i915->uncore, reg, val);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __INTEL_DE_H__ */

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0-only */
+=======
+/* SPDX-License-Identifier: GPL-2.0-or-later */
+>>>>>>> b7ba80a49124 (Commit)
 /*
 -*- linux-c -*-
    drbd_receiver.c
@@ -327,7 +331,11 @@ static inline int bitstream_get_bits(struct bitstream *bs, u64 *out, int bits)
  */
 static inline int vli_encode_bits(struct bitstream *bs, u64 in)
 {
+<<<<<<< HEAD
 	u64 code;
+=======
+	u64 code = code;
+>>>>>>> b7ba80a49124 (Commit)
 	int bits = __vli_encode_bits(&code, in);
 
 	if (bits <= 0)

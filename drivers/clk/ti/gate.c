@@ -85,7 +85,11 @@ static int omap36xx_gate_clk_enable_with_hsdiv_restore(struct clk_hw *hw)
 	return ret;
 }
 
+<<<<<<< HEAD
 static struct clk *_register_gate(struct device_node *node, const char *name,
+=======
+static struct clk *_register_gate(struct device *dev, const char *name,
+>>>>>>> b7ba80a49124 (Commit)
 				  const char *parent_name, unsigned long flags,
 				  struct clk_omap_reg *reg, u8 bit_idx,
 				  u8 clk_gate_flags, const struct clk_ops *ops,
@@ -115,7 +119,11 @@ static struct clk *_register_gate(struct device_node *node, const char *name,
 
 	init.flags = flags;
 
+<<<<<<< HEAD
 	clk = of_ti_clk_register_omap_hw(node, &clk_hw->hw, name);
+=======
+	clk = ti_clk_register_omap_hw(NULL, &clk_hw->hw, name);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_ERR(clk))
 		kfree(clk_hw);
@@ -158,7 +166,11 @@ static void __init _of_ti_gate_clk_setup(struct device_node *node,
 		clk_gate_flags |= INVERT_ENABLE;
 
 	name = ti_dt_clk_name(node);
+<<<<<<< HEAD
 	clk = _register_gate(node, name, parent_name, flags, &reg,
+=======
+	clk = _register_gate(NULL, name, parent_name, flags, &reg,
+>>>>>>> b7ba80a49124 (Commit)
 			     enable_bit, clk_gate_flags, ops, hw_ops);
 
 	if (!IS_ERR(clk))

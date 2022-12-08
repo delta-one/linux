@@ -31,11 +31,17 @@
 #include <xen/xen.h>
 
 #include <asm/apic.h>
+<<<<<<< HEAD
 #include <asm/efi.h>
 #include <asm/numa.h>
 #include <asm/bios_ebda.h>
 #include <asm/bugs.h>
 #include <asm/cacheinfo.h>
+=======
+#include <asm/numa.h>
+#include <asm/bios_ebda.h>
+#include <asm/bugs.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/cpu.h>
 #include <asm/efi.h>
 #include <asm/gart.h>
@@ -114,6 +120,14 @@ static struct resource bss_resource = {
 #ifdef CONFIG_X86_32
 /* CPU data as detected by the assembly code in head_32.S */
 struct cpuinfo_x86 new_cpu_data;
+<<<<<<< HEAD
+=======
+
+/* Common CPU data for all CPUs */
+struct cpuinfo_x86 boot_cpu_data __read_mostly;
+EXPORT_SYMBOL(boot_cpu_data);
+
+>>>>>>> b7ba80a49124 (Commit)
 unsigned int def_to_bigsmp;
 
 struct apm_info apm_info;
@@ -127,10 +141,18 @@ EXPORT_SYMBOL(ist_info);
 struct ist_info ist_info;
 #endif
 
+<<<<<<< HEAD
 #endif
 
 struct cpuinfo_x86 boot_cpu_data __read_mostly;
 EXPORT_SYMBOL(boot_cpu_data);
+=======
+#else
+struct cpuinfo_x86 boot_cpu_data __read_mostly;
+EXPORT_SYMBOL(boot_cpu_data);
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 
 #if !defined(CONFIG_X86_PAE) || defined(CONFIG_X86_64)
 __visible unsigned long mmu_cr4_features __ro_after_init;
@@ -1070,13 +1092,31 @@ void __init setup_arch(char **cmdline_p)
 	max_pfn = e820__end_of_ram_pfn();
 
 	/* update e820 for memory not covered by WB MTRRs */
+<<<<<<< HEAD
 	cache_bp_init();
+=======
+	if (IS_ENABLED(CONFIG_MTRR))
+		mtrr_bp_init();
+	else
+		pat_disable("PAT support disabled because CONFIG_MTRR is disabled in the kernel.");
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (mtrr_trim_uncached_memory(max_pfn))
 		max_pfn = e820__end_of_ram_pfn();
 
 	max_possible_pfn = max_pfn;
 
 	/*
+<<<<<<< HEAD
+=======
+	 * This call is required when the CPU does not support PAT. If
+	 * mtrr_bp_init() invoked it already via pat_init() the call has no
+	 * effect.
+	 */
+	init_cache_modes();
+
+	/*
+>>>>>>> b7ba80a49124 (Commit)
 	 * Define random base addresses for memory sections after max_pfn is
 	 * defined and before each memory section base is used.
 	 */
@@ -1160,7 +1200,11 @@ void __init setup_arch(char **cmdline_p)
 	 * Moreover, on machines with SandyBridge graphics or in setups that use
 	 * crashkernel the entire 1M is reserved anyway.
 	 */
+<<<<<<< HEAD
 	x86_platform.realmode_reserve();
+=======
+	reserve_real_mode();
+>>>>>>> b7ba80a49124 (Commit)
 
 	init_mem_mapping();
 

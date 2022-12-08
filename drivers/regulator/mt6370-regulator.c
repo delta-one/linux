@@ -379,7 +379,10 @@ MODULE_DEVICE_TABLE(platform, mt6370_devid_table);
 static struct platform_driver mt6370_regulator_driver = {
 	.driver = {
 		.name = "mt6370-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.id_table = mt6370_devid_table,
 	.probe = mt6370_regulator_probe,

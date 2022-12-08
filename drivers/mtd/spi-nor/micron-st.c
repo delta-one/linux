@@ -52,21 +52,32 @@ static int micron_st_nor_octal_dtr_en(struct spi_nor *nor)
 	struct spi_mem_op op;
 	u8 *buf = nor->bouncebuf;
 	int ret;
+<<<<<<< HEAD
 	u8 addr_mode_nbytes = nor->params->addr_mode_nbytes;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Use 20 dummy cycles for memory array reads. */
 	*buf = 20;
 	op = (struct spi_mem_op)
+<<<<<<< HEAD
 		MICRON_ST_NOR_WR_ANY_REG_OP(addr_mode_nbytes,
 					    SPINOR_REG_MT_CFR1V, 1, buf);
+=======
+		MICRON_ST_NOR_WR_ANY_REG_OP(3, SPINOR_REG_MT_CFR1V, 1, buf);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = spi_nor_write_any_volatile_reg(nor, &op, nor->reg_proto);
 	if (ret)
 		return ret;
 
 	buf[0] = SPINOR_MT_OCT_DTR;
 	op = (struct spi_mem_op)
+<<<<<<< HEAD
 		MICRON_ST_NOR_WR_ANY_REG_OP(addr_mode_nbytes,
 					    SPINOR_REG_MT_CFR0V, 1, buf);
+=======
+		MICRON_ST_NOR_WR_ANY_REG_OP(3, SPINOR_REG_MT_CFR0V, 1, buf);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = spi_nor_write_any_volatile_reg(nor, &op, nor->reg_proto);
 	if (ret)
 		return ret;
@@ -101,8 +112,12 @@ static int micron_st_nor_octal_dtr_dis(struct spi_nor *nor)
 	buf[0] = SPINOR_MT_EXSPI;
 	buf[1] = SPINOR_REG_MT_CFR1V_DEF;
 	op = (struct spi_mem_op)
+<<<<<<< HEAD
 		MICRON_ST_NOR_WR_ANY_REG_OP(nor->addr_nbytes,
 					    SPINOR_REG_MT_CFR0V, 2, buf);
+=======
+		MICRON_ST_NOR_WR_ANY_REG_OP(4, SPINOR_REG_MT_CFR0V, 2, buf);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = spi_nor_write_any_volatile_reg(nor, &op, SNOR_PROTO_8_8_8_DTR);
 	if (ret)
 		return ret;
@@ -205,8 +220,11 @@ static const struct flash_info st_nor_parts[] = {
 		MFR_FLAGS(USE_FSR)
 	},
 	{ "mt25qu256a",  INFO6(0x20bb19, 0x104400, 64 * 1024,  512)
+<<<<<<< HEAD
 		FLAGS(SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB | SPI_NOR_4BIT_BP |
 		      SPI_NOR_BP3_SR_BIT6)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		NO_SFDP_FLAGS(SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ)
 		FIXUP_FLAGS(SPI_NOR_4B_OPCODES)
 		MFR_FLAGS(USE_FSR)

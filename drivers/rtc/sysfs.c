@@ -6,7 +6,10 @@
  * Author: Alessandro Zummo <a.zummo@towertech.it>
  */
 
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/rtc.h>
 

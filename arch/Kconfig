@@ -35,7 +35,11 @@ config HOTPLUG_SMT
 	bool
 
 config GENERIC_ENTRY
+<<<<<<< HEAD
 	bool
+=======
+       bool
+>>>>>>> b7ba80a49124 (Commit)
 
 config KPROBES
 	bool "Kprobes"
@@ -55,6 +59,7 @@ config JUMP_LABEL
 	depends on HAVE_ARCH_JUMP_LABEL
 	select OBJTOOL if HAVE_JUMP_LABEL_HACK
 	help
+<<<<<<< HEAD
 	  This option enables a transparent branch optimization that
 	  makes certain almost-always-true or almost-always-false branch
 	  conditions even cheaper to execute within the kernel.
@@ -75,6 +80,28 @@ config JUMP_LABEL
 
 	  ( On 32-bit x86, the necessary options added to the compiler
 	    flags may increase the size of the kernel slightly. )
+=======
+	 This option enables a transparent branch optimization that
+	 makes certain almost-always-true or almost-always-false branch
+	 conditions even cheaper to execute within the kernel.
+
+	 Certain performance-sensitive kernel code, such as trace points,
+	 scheduler functionality, networking code and KVM have such
+	 branches and include support for this optimization technique.
+
+	 If it is detected that the compiler has support for "asm goto",
+	 the kernel will compile such branches with just a nop
+	 instruction. When the condition flag is toggled to true, the
+	 nop will be converted to a jump instruction to execute the
+	 conditional block of instructions.
+
+	 This technique lowers overhead and stress on the branch prediction
+	 of the processor and generally makes the kernel faster. The update
+	 of the condition is slower, but those are always very rare.
+
+	 ( On 32-bit x86, the necessary options added to the compiler
+	   flags may increase the size of the kernel slightly. )
+>>>>>>> b7ba80a49124 (Commit)
 
 config STATIC_KEYS_SELFTEST
 	bool "Static key selftest"
@@ -98,9 +125,15 @@ config KPROBES_ON_FTRACE
 	depends on KPROBES && HAVE_KPROBES_ON_FTRACE
 	depends on DYNAMIC_FTRACE_WITH_REGS
 	help
+<<<<<<< HEAD
 	  If function tracer is enabled and the arch supports full
 	  passing of pt_regs to function tracing, then kprobes can
 	  optimize on top of function tracing.
+=======
+	 If function tracer is enabled and the arch supports full
+	 passing of pt_regs to function tracing, then kprobes can
+	 optimize on top of function tracing.
+>>>>>>> b7ba80a49124 (Commit)
 
 config UPROBES
 	def_bool n
@@ -154,6 +187,7 @@ config HAVE_EFFICIENT_UNALIGNED_ACCESS
 config ARCH_USE_BUILTIN_BSWAP
 	bool
 	help
+<<<<<<< HEAD
 	  Modern versions of GCC (since 4.4) have builtin functions
 	  for handling byte-swapping. Using these, instead of the old
 	  inline assembler that the architecture code provides in the
@@ -169,6 +203,23 @@ config ARCH_USE_BUILTIN_BSWAP
 	  Any architecture with load-and-swap or store-and-swap
 	  instructions should set this. And it shouldn't hurt to set it
 	  on architectures that don't have such instructions.
+=======
+	 Modern versions of GCC (since 4.4) have builtin functions
+	 for handling byte-swapping. Using these, instead of the old
+	 inline assembler that the architecture code provides in the
+	 __arch_bswapXX() macros, allows the compiler to see what's
+	 happening and offers more opportunity for optimisation. In
+	 particular, the compiler will be able to combine the byteswap
+	 with a nearby load or store and use load-and-swap or
+	 store-and-swap instructions if the architecture has them. It
+	 should almost *never* result in code which is worse than the
+	 hand-coded assembler in <asm/swab.h>.  But just in case it
+	 does, the use of the builtins is optional.
+
+	 Any architecture with load-and-swap or store-and-swap
+	 instructions should set this. And it shouldn't hurt to set it
+	 on architectures that don't have such instructions.
+>>>>>>> b7ba80a49124 (Commit)
 
 config KRETPROBES
 	def_bool y
@@ -465,6 +516,7 @@ config ARCH_WANT_IRQS_OFF_ACTIVATE_MM
 	  irqs disabled over activate_mm. Architectures that do IPI based TLB
 	  shootdowns should enable this.
 
+<<<<<<< HEAD
 # Use normal mm refcounting for MMU_LAZY_TLB kernel thread references.
 # MMU_LAZY_TLB_REFCOUNT=n can improve the scalability of context switching
 # to/from kernel threads when the same mm is running on a lot of CPUs (a large
@@ -503,6 +555,11 @@ config ARCH_HAVE_NMI_SAFE_CMPXCHG
 config ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
 	bool
 
+=======
+config ARCH_HAVE_NMI_SAFE_CMPXCHG
+	bool
+
+>>>>>>> b7ba80a49124 (Commit)
 config HAVE_ALIGNED_STRUCT_PAGE
 	bool
 	help
@@ -670,7 +727,11 @@ config ARCH_SUPPORTS_SHADOW_CALL_STACK
 config SHADOW_CALL_STACK
 	bool "Shadow Call Stack"
 	depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
+<<<<<<< HEAD
 	depends on DYNAMIC_FTRACE_WITH_ARGS || DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
+=======
+	depends on DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This option enables the compiler's Shadow Call Stack, which
 	  uses a shadow stack to protect function return addresses from
@@ -686,6 +747,7 @@ config SHADOW_CALL_STACK
 	  reading and writing arbitrary memory may be able to locate them
 	  and hijack control flow by modifying the stacks.
 
+<<<<<<< HEAD
 config DYNAMIC_SCS
 	bool
 	help
@@ -693,6 +755,8 @@ config DYNAMIC_SCS
 	  shadow call stack push and pop instructions rather than on the
 	  compiler.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config LTO
 	bool
 	help
@@ -752,6 +816,7 @@ config LTO_CLANG_FULL
 	depends on !COMPILE_TEST
 	select LTO_CLANG
 	help
+<<<<<<< HEAD
 	  This option enables Clang's full Link Time Optimization (LTO), which
 	  allows the compiler to optimize the kernel globally. If you enable
 	  this option, the compiler generates LLVM bitcode instead of ELF
@@ -759,6 +824,15 @@ config LTO_CLANG_FULL
 	  the LTO link step, which may take several minutes depending on the
 	  kernel configuration. More information can be found from LLVM's
 	  documentation:
+=======
+          This option enables Clang's full Link Time Optimization (LTO), which
+          allows the compiler to optimize the kernel globally. If you enable
+          this option, the compiler generates LLVM bitcode instead of ELF
+          object files, and the actual compilation from bitcode happens at
+          the LTO link step, which may take several minutes depending on the
+          kernel configuration. More information can be found from LLVM's
+          documentation:
+>>>>>>> b7ba80a49124 (Commit)
 
 	    https://llvm.org/docs/LinkTimeOptimization.html
 
@@ -786,6 +860,7 @@ config ARCH_SUPPORTS_CFI_CLANG
 	  An architecture should select this option if it can support Clang's
 	  Control-Flow Integrity (CFI) checking.
 
+<<<<<<< HEAD
 config ARCH_USES_CFI_TRAPS
 	bool
 
@@ -793,6 +868,13 @@ config CFI_CLANG
 	bool "Use Clang's Control Flow Integrity (CFI)"
 	depends on ARCH_SUPPORTS_CFI_CLANG
 	depends on $(cc-option,-fsanitize=kcfi)
+=======
+config CFI_CLANG
+	bool "Use Clang's Control Flow Integrity (CFI)"
+	depends on LTO_CLANG && ARCH_SUPPORTS_CFI_CLANG
+	depends on CLANG_VERSION >= 140000
+	select KALLSYMS
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This option enables Clang’s forward-edge Control Flow Integrity
 	  (CFI) checking, where the compiler injects a runtime check to each
@@ -804,6 +886,19 @@ config CFI_CLANG
 
 	    https://clang.llvm.org/docs/ControlFlowIntegrity.html
 
+<<<<<<< HEAD
+=======
+config CFI_CLANG_SHADOW
+	bool "Use CFI shadow to speed up cross-module checks"
+	default y
+	depends on CFI_CLANG && MODULES
+	help
+	  If you select this option, the kernel builds a fast look-up table of
+	  CFI check functions in loaded modules to reduce performance overhead.
+
+	  If unsure, say Y.
+
+>>>>>>> b7ba80a49124 (Commit)
 config CFI_PERMISSIVE
 	bool "Use CFI in permissive mode"
 	depends on CFI_CLANG
@@ -1362,9 +1457,15 @@ config ARCH_HAS_CC_PLATFORM
 	bool
 
 config HAVE_SPARSE_SYSCALL_NR
+<<<<<<< HEAD
 	bool
 	help
 	  An architecture should select this if its syscall numbering is sparse
+=======
+       bool
+       help
+          An architecture should select this if its syscall numbering is sparse
+>>>>>>> b7ba80a49124 (Commit)
 	  to save space. For example, MIPS architecture has a syscall array with
 	  entries at 4000, 5000 and 6000 locations. This option turns on syscall
 	  related optimizations for a given architecture.
@@ -1388,6 +1489,7 @@ config HAVE_PREEMPT_DYNAMIC_CALL
 	depends on HAVE_STATIC_CALL
 	select HAVE_PREEMPT_DYNAMIC
 	help
+<<<<<<< HEAD
 	  An architecture should select this if it can handle the preemption
 	  model being selected at boot time using static calls.
 
@@ -1400,12 +1502,27 @@ config HAVE_PREEMPT_DYNAMIC_CALL
 
 	  It is strongly advised to support inline static call to avoid any
 	  overhead.
+=======
+	   An architecture should select this if it can handle the preemption
+	   model being selected at boot time using static calls.
+
+	   Where an architecture selects HAVE_STATIC_CALL_INLINE, any call to a
+	   preemption function will be patched directly.
+
+	   Where an architecture does not select HAVE_STATIC_CALL_INLINE, any
+	   call to a preemption function will go through a trampoline, and the
+	   trampoline will be patched.
+
+	   It is strongly advised to support inline static call to avoid any
+	   overhead.
+>>>>>>> b7ba80a49124 (Commit)
 
 config HAVE_PREEMPT_DYNAMIC_KEY
 	bool
 	depends on HAVE_ARCH_JUMP_LABEL
 	select HAVE_PREEMPT_DYNAMIC
 	help
+<<<<<<< HEAD
 	  An architecture should select this if it can handle the preemption
 	  model being selected at boot time using static keys.
 
@@ -1417,6 +1534,19 @@ config HAVE_PREEMPT_DYNAMIC_KEY
 
 	  This will have greater overhead than using inline static calls as
 	  the call to the preemption function cannot be entirely elided.
+=======
+	   An architecture should select this if it can handle the preemption
+	   model being selected at boot time using static keys.
+
+	   Each preemption function will be given an early return based on a
+	   static key. This should have slightly lower overhead than non-inline
+	   static calls, as this effectively inlines each trampoline into the
+	   start of its callee. This may avoid redundant work, and may
+	   integrate better with CFI schemes.
+
+	   This will have greater overhead than using inline static calls as
+	   the call to the preemption function cannot be entirely elided.
+>>>>>>> b7ba80a49124 (Commit)
 
 config ARCH_WANT_LD_ORPHAN_WARN
 	bool
@@ -1439,8 +1569,13 @@ config ARCH_SUPPORTS_PAGE_TABLE_CHECK
 config ARCH_SPLIT_ARG64
 	bool
 	help
+<<<<<<< HEAD
 	  If a 32-bit architecture requires 64-bit arguments to be split into
 	  pairs of 32-bit arguments, select this option.
+=======
+	   If a 32-bit architecture requires 64-bit arguments to be split into
+	   pairs of 32-bit arguments, select this option.
+>>>>>>> b7ba80a49124 (Commit)
 
 config ARCH_HAS_ELFCORE_COMPAT
 	bool
@@ -1470,6 +1605,7 @@ source "kernel/gcov/Kconfig"
 
 source "scripts/gcc-plugins/Kconfig"
 
+<<<<<<< HEAD
 config FUNCTION_ALIGNMENT_4B
 	bool
 
@@ -1494,4 +1630,6 @@ config FUNCTION_ALIGNMENT
 	default 4 if FUNCTION_ALIGNMENT_4B
 	default 0
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endmenu

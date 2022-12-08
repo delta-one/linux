@@ -2,7 +2,10 @@
 config REISERFS_FS
 	tristate "Reiserfs support (deprecated)"
 	select CRC32
+<<<<<<< HEAD
 	select LEGACY_DIRECT_IO
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Reiserfs is deprecated and scheduled to be removed from the kernel
 	  in 2025. If you are still using it, please migrate to another

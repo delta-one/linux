@@ -77,7 +77,10 @@
  * @MCP16502_REG_A: active state register
  * @MCP16502_REG_LPM: low power mode state register
  * @MCP16502_REG_HIB: hibernate state register
+<<<<<<< HEAD
  * @MCP16502_REG_HPM: high-performance mode register
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @MCP16502_REG_SEQ: startup sequence register
  * @MCP16502_REG_CFG: configuration register
  */
@@ -587,7 +590,10 @@ static struct i2c_driver mcp16502_drv = {
 	.probe_new	= mcp16502_probe,
 	.driver		= {
 		.name	= "mcp16502-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table	= of_match_ptr(mcp16502_ids),
 #ifdef CONFIG_PM
 		.pm = &mcp16502_pm_ops,

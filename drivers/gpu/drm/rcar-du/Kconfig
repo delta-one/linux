@@ -25,7 +25,10 @@ config DRM_RCAR_CMM
 config DRM_RCAR_DW_HDMI
 	tristate "R-Car Gen3 and RZ/G2 DU HDMI Encoder Support"
 	depends on DRM && OF
+<<<<<<< HEAD
 	depends on DRM_RCAR_DU || COMPILE_TEST
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select DRM_DW_HDMI
 	help
 	  Enable support for R-Car Gen3 or RZ/G2 internal HDMI encoder.
@@ -33,7 +36,10 @@ config DRM_RCAR_DW_HDMI
 config DRM_RCAR_USE_LVDS
 	bool "R-Car DU LVDS Encoder Support"
 	depends on DRM_BRIDGE && OF
+<<<<<<< HEAD
 	depends on DRM_RCAR_DU || COMPILE_TEST
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default DRM_RCAR_DU
 	help
 	  Enable support for the R-Car Display Unit embedded LVDS encoders.
@@ -41,6 +47,7 @@ config DRM_RCAR_USE_LVDS
 config DRM_RCAR_LVDS
 	def_tristate DRM_RCAR_DU
 	depends on DRM_RCAR_USE_LVDS
+<<<<<<< HEAD
 	depends on PM
 	select DRM_KMS_HELPER
 	select DRM_PANEL
@@ -67,6 +74,19 @@ config DRM_RZG2L_MIPI_DSI
 	select DRM_MIPI_DSI
 	help
 	  Enable support for the RZ/G2L Display Unit embedded MIPI DSI encoders.
+=======
+	select DRM_KMS_HELPER
+	select DRM_PANEL
+	select OF_FLATTREE
+	select OF_OVERLAY
+
+config DRM_RCAR_MIPI_DSI
+	tristate "R-Car DU MIPI DSI Encoder Support"
+	depends on DRM && DRM_BRIDGE && OF
+	select DRM_MIPI_DSI
+	help
+	  Enable support for the R-Car Display Unit embedded MIPI DSI encoders.
+>>>>>>> b7ba80a49124 (Commit)
 
 config DRM_RCAR_VSP
 	bool "R-Car DU VSP Compositor Support" if ARM

@@ -14,8 +14,11 @@
 #include "xfs_health.h"
 #include "xfs_btree.h"
 #include "xfs_ag.h"
+<<<<<<< HEAD
 #include "xfs_rtalloc.h"
 #include "xfs_inode.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "scrub/scrub.h"
 #include "scrub/common.h"
 #include "scrub/trace.h"
@@ -45,6 +48,7 @@
  * our tolerance for mismatch between expected and actual counter values.
  */
 
+<<<<<<< HEAD
 struct xchk_fscounters {
 	struct xfs_scrub	*sc;
 	uint64_t		icount;
@@ -55,6 +59,8 @@ struct xchk_fscounters {
 	unsigned long long	icount_max;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Since the expected value computation is lockless but only browses incore
  * values, the percpu counters should be fairly close to each other.  However,
@@ -86,8 +92,12 @@ xchk_fscount_warmup(
 	for_each_perag(mp, agno, pag) {
 		if (xchk_should_terminate(sc, &error))
 			break;
+<<<<<<< HEAD
 		if (xfs_perag_initialised_agi(pag) &&
 		    xfs_perag_initialised_agf(pag))
+=======
+		if (pag->pagi_init && pag->pagf_init)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		/* Lock both AG headers. */
@@ -102,8 +112,12 @@ xchk_fscount_warmup(
 		 * These are supposed to be initialized by the header read
 		 * function.
 		 */
+<<<<<<< HEAD
 		if (!xfs_perag_initialised_agi(pag) ||
 		    !xfs_perag_initialised_agf(pag)) {
+=======
+		if (!pag->pagi_init || !pag->pagf_init) {
+>>>>>>> b7ba80a49124 (Commit)
 			error = -EFSCORRUPTED;
 			break;
 		}
@@ -119,7 +133,11 @@ xchk_fscount_warmup(
 	if (agi_bp)
 		xfs_buf_relse(agi_bp);
 	if (pag)
+<<<<<<< HEAD
 		xfs_perag_rele(pag);
+=======
+		xfs_perag_put(pag);
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }
 
@@ -130,11 +148,18 @@ xchk_setup_fscounters(
 	struct xchk_fscounters	*fsc;
 	int			error;
 
+<<<<<<< HEAD
 	sc->buf = kzalloc(sizeof(struct xchk_fscounters), XCHK_GFP_FLAGS);
 	if (!sc->buf)
 		return -ENOMEM;
 	fsc = sc->buf;
 	fsc->sc = sc;
+=======
+	sc->buf = kmem_zalloc(sizeof(struct xchk_fscounters), 0);
+	if (!sc->buf)
+		return -ENOMEM;
+	fsc = sc->buf;
+>>>>>>> b7ba80a49124 (Commit)
 
 	xfs_icount_range(sc->mp, &fsc->icount_min, &fsc->icount_max);
 
@@ -153,6 +178,7 @@ xchk_setup_fscounters(
 	return xchk_trans_alloc(sc, 0);
 }
 
+<<<<<<< HEAD
 /*
  * Part 1: Collecting filesystem summary counts.  For each AG, we add its
  * summary counts (total inodes, free inodes, free data blocks) to an incore
@@ -165,6 +191,8 @@ xchk_setup_fscounters(
  * xchk_*_process_error.
  */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Count free space btree blocks manually for pre-lazysbcount filesystems. */
 static int
 xchk_fscount_btreeblks(
@@ -222,8 +250,12 @@ retry:
 			break;
 
 		/* This somehow got unset since the warmup? */
+<<<<<<< HEAD
 		if (!xfs_perag_initialised_agi(pag) ||
 		    !xfs_perag_initialised_agf(pag)) {
+=======
+		if (!pag->pagi_init || !pag->pagf_init) {
+>>>>>>> b7ba80a49124 (Commit)
 			error = -EFSCORRUPTED;
 			break;
 		}
@@ -252,11 +284,17 @@ retry:
 
 	}
 	if (pag)
+<<<<<<< HEAD
 		xfs_perag_rele(pag);
 	if (error) {
 		xchk_set_incomplete(sc);
 		return error;
 	}
+=======
+		xfs_perag_put(pag);
+	if (error)
+		return error;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * The global incore space reservation is taken from the incore
@@ -297,6 +335,7 @@ retry:
 	return 0;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_XFS_RT
 STATIC int
 xchk_fscount_add_frextent(
@@ -355,6 +394,8 @@ xchk_fscount_count_frextents(
  * sum the percpu counters and compare them to what we've observed.
  */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Is the @counter reasonably close to the @expected value?
  *
@@ -421,17 +462,27 @@ xchk_fscounters(
 {
 	struct xfs_mount	*mp = sc->mp;
 	struct xchk_fscounters	*fsc = sc->buf;
+<<<<<<< HEAD
 	int64_t			icount, ifree, fdblocks, frextents;
+=======
+	int64_t			icount, ifree, fdblocks;
+>>>>>>> b7ba80a49124 (Commit)
 	int			error;
 
 	/* Snapshot the percpu counters. */
 	icount = percpu_counter_sum(&mp->m_icount);
 	ifree = percpu_counter_sum(&mp->m_ifree);
 	fdblocks = percpu_counter_sum(&mp->m_fdblocks);
+<<<<<<< HEAD
 	frextents = percpu_counter_sum(&mp->m_frextents);
 
 	/* No negative values, please! */
 	if (icount < 0 || ifree < 0 || fdblocks < 0 || frextents < 0)
+=======
+
+	/* No negative values, please! */
+	if (icount < 0 || ifree < 0 || fdblocks < 0)
+>>>>>>> b7ba80a49124 (Commit)
 		xchk_set_corrupt(sc);
 
 	/* See if icount is obviously wrong. */
@@ -442,10 +493,13 @@ xchk_fscounters(
 	if (fdblocks > mp->m_sb.sb_dblocks)
 		xchk_set_corrupt(sc);
 
+<<<<<<< HEAD
 	/* See if frextents is obviously wrong. */
 	if (frextents > mp->m_sb.sb_rextents)
 		xchk_set_corrupt(sc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * If ifree exceeds icount by more than the minimum variance then
 	 * something's probably wrong with the counters.
@@ -460,6 +514,7 @@ xchk_fscounters(
 	if (sc->sm->sm_flags & XFS_SCRUB_OFLAG_INCOMPLETE)
 		return 0;
 
+<<<<<<< HEAD
 	/* Count the free extents counter for rt volumes. */
 	error = xchk_fscount_count_frextents(sc, fsc);
 	if (!xchk_process_error(sc, 0, XFS_SB_BLOCK(mp), &error))
@@ -467,6 +522,8 @@ xchk_fscounters(
 	if (sc->sm->sm_flags & XFS_SCRUB_OFLAG_INCOMPLETE)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Compare the in-core counters with whatever we counted. */
 	if (!xchk_fscount_within_range(sc, icount, &mp->m_icount, fsc->icount))
 		xchk_set_corrupt(sc);
@@ -478,9 +535,12 @@ xchk_fscounters(
 			fsc->fdblocks))
 		xchk_set_corrupt(sc);
 
+<<<<<<< HEAD
 	if (!xchk_fscount_within_range(sc, frextents, &mp->m_frextents,
 			fsc->frextents))
 		xchk_set_corrupt(sc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }

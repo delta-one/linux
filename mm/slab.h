@@ -4,7 +4,10 @@
 /*
  * Internal slab definitions
  */
+<<<<<<< HEAD
 void __init kmem_cache_init(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Reuses the bits in struct page */
 struct slab {
@@ -15,9 +18,15 @@ struct slab {
 	struct kmem_cache *slab_cache;
 	union {
 		struct {
+<<<<<<< HEAD
 			struct list_head slab_list;
 			void *freelist;	/* array of free object indexes */
 			void *s_mem;	/* first object */
+=======
+			void *freelist;	/* array of free object indexes */
+			void *s_mem;	/* first object */
+			struct list_head slab_list;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 		struct rcu_head rcu_head;
 	};
@@ -28,6 +37,19 @@ struct slab {
 	struct kmem_cache *slab_cache;
 	union {
 		struct {
+<<<<<<< HEAD
+=======
+			/* Double-word boundary */
+			union {
+				unsigned long counters;
+				struct {
+					unsigned inuse:16;
+					unsigned objects:15;
+					unsigned frozen:1;
+				};
+			};
+			void *freelist;		/* first free object */
+>>>>>>> b7ba80a49124 (Commit)
 			union {
 				struct list_head slab_list;
 #ifdef CONFIG_SLUB_CPU_PARTIAL
@@ -37,6 +59,7 @@ struct slab {
 				};
 #endif
 			};
+<<<<<<< HEAD
 			/* Double-word boundary */
 			void *freelist;		/* first free object */
 			union {
@@ -47,11 +70,24 @@ struct slab {
 					unsigned frozen:1;
 				};
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 		struct rcu_head rcu_head;
 	};
 	unsigned int __unused;
 
+<<<<<<< HEAD
+=======
+#elif defined(CONFIG_SLOB)
+
+	struct list_head slab_list;
+	void *__unused_1;
+	void *freelist;		/* first free block */
+	long units;
+	unsigned int __unused_2;
+
+>>>>>>> b7ba80a49124 (Commit)
 #else
 #error "Unexpected slab allocator configured"
 #endif
@@ -65,15 +101,37 @@ struct slab {
 #define SLAB_MATCH(pg, sl)						\
 	static_assert(offsetof(struct page, pg) == offsetof(struct slab, sl))
 SLAB_MATCH(flags, __page_flags);
+<<<<<<< HEAD
 SLAB_MATCH(compound_head, slab_cache);	/* Ensure bit 0 is clear */
+=======
+#ifndef CONFIG_SLOB
+SLAB_MATCH(compound_head, slab_cache);	/* Ensure bit 0 is clear */
+#ifdef CONFIG_SLUB
+SLAB_MATCH(mapping, freelist);		/* PAGE_MAPPING_FLAGS bits clear */
+#else
+SLAB_MATCH(mapping, s_mem);		/* PAGE_MAPPING_FLAGS bits clear */
+#endif
+#else /* CONFIG_SLOB */
+SLAB_MATCH(compound_head, slab_list);	/* Ensure bit 0 is clear */
+SLAB_MATCH(mapping, __unused_1);	/* PAGE_MAPPING_FLAGS bits clear */
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 SLAB_MATCH(_refcount, __page_refcount);
 #ifdef CONFIG_MEMCG
 SLAB_MATCH(memcg_data, memcg_data);
 #endif
+<<<<<<< HEAD
 #undef SLAB_MATCH
 static_assert(sizeof(struct slab) <= sizeof(struct page));
 #if defined(CONFIG_HAVE_CMPXCHG_DOUBLE) && defined(CONFIG_SLUB)
 static_assert(IS_ALIGNED(offsetof(struct slab, freelist), 2*sizeof(void *)));
+=======
+
+#undef SLAB_MATCH
+static_assert(sizeof(struct slab) <= sizeof(struct page));
+#if defined(CONFIG_HAVE_CMPXCHG_DOUBLE) && defined(CONFIG_SLUB)
+static_assert(IS_ALIGNED(offsetof(struct slab, counters), 2*sizeof(void *)));
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 /**
@@ -189,6 +247,36 @@ static inline size_t slab_size(const struct slab *slab)
 	return PAGE_SIZE << slab_order(slab);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_SLOB
+/*
+ * Common fields provided in kmem_cache by all slab allocators
+ * This struct is either used directly by the allocator (SLOB)
+ * or the allocator must include definitions for all fields
+ * provided in kmem_cache_common in their definition of kmem_cache.
+ *
+ * Once we can do anonymous structs (C11 standard) we could put a
+ * anonymous struct definition in these allocators so that the
+ * separate allocations in the kmem_cache structure of SLAB and
+ * SLUB is no longer needed.
+ */
+struct kmem_cache {
+	unsigned int object_size;/* The original size of the object */
+	unsigned int size;	/* The aligned/padded/added on size  */
+	unsigned int align;	/* Alignment as calculated */
+	slab_flags_t flags;	/* Active flags on the slab */
+	unsigned int useroffset;/* Usercopy region offset */
+	unsigned int usersize;	/* Usercopy region size */
+	const char *name;	/* Slab name for sysfs */
+	int refcount;		/* Use counter */
+	void (*ctor)(void *);	/* Called on object slot creation */
+	struct list_head list;	/* List of all slab caches on the system */
+};
+
+#endif /* CONFIG_SLOB */
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SLAB
 #include <linux/slab_def.h>
 #endif
@@ -238,6 +326,10 @@ extern const struct kmalloc_info_struct {
 	unsigned int size;
 } kmalloc_info[];
 
+<<<<<<< HEAD
+=======
+#ifndef CONFIG_SLOB
+>>>>>>> b7ba80a49124 (Commit)
 /* Kmalloc array related functions */
 void setup_kmalloc_cache_index_table(void);
 void create_kmalloc_caches(slab_flags_t);
@@ -249,6 +341,10 @@ void *__kmem_cache_alloc_node(struct kmem_cache *s, gfp_t gfpflags,
 			      int node, size_t orig_size,
 			      unsigned long caller);
 void __kmem_cache_free(struct kmem_cache *s, void *x, unsigned long caller);
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 gfp_t kmalloc_fix_flags(gfp_t flags);
 
@@ -265,17 +361,37 @@ extern void create_boot_cache(struct kmem_cache *, const char *name,
 int slab_unmergeable(struct kmem_cache *s);
 struct kmem_cache *find_mergeable(unsigned size, unsigned align,
 		slab_flags_t flags, const char *name, void (*ctor)(void *));
+<<<<<<< HEAD
+=======
+#ifndef CONFIG_SLOB
+>>>>>>> b7ba80a49124 (Commit)
 struct kmem_cache *
 __kmem_cache_alias(const char *name, unsigned int size, unsigned int align,
 		   slab_flags_t flags, void (*ctor)(void *));
 
 slab_flags_t kmem_cache_flags(unsigned int object_size,
 	slab_flags_t flags, const char *name);
+<<<<<<< HEAD
 
 static inline bool is_kmalloc_cache(struct kmem_cache *s)
 {
 	return (s->flags & SLAB_KMALLOC);
 }
+=======
+#else
+static inline struct kmem_cache *
+__kmem_cache_alias(const char *name, unsigned int size, unsigned int align,
+		   slab_flags_t flags, void (*ctor)(void *))
+{ return NULL; }
+
+static inline slab_flags_t kmem_cache_flags(unsigned int object_size,
+	slab_flags_t flags, const char *name)
+{
+	return flags;
+}
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Legal flag mask for kmem_cache_create(), for various configurations */
 #define SLAB_CORE_FLAGS (SLAB_HWCACHE_ALIGN | SLAB_CACHE_DMA | \
@@ -297,8 +413,12 @@ static inline bool is_kmalloc_cache(struct kmem_cache *s)
 			  SLAB_ACCOUNT)
 #elif defined(CONFIG_SLUB)
 #define SLAB_CACHE_FLAGS (SLAB_NOLEAKTRACE | SLAB_RECLAIM_ACCOUNT | \
+<<<<<<< HEAD
 			  SLAB_TEMPORARY | SLAB_ACCOUNT | \
 			  SLAB_NO_USER_FLAGS | SLAB_KMALLOC)
+=======
+			  SLAB_TEMPORARY | SLAB_ACCOUNT | SLAB_NO_USER_FLAGS)
+>>>>>>> b7ba80a49124 (Commit)
 #else
 #define SLAB_CACHE_FLAGS (SLAB_NOLEAKTRACE)
 #endif
@@ -318,7 +438,10 @@ static inline bool is_kmalloc_cache(struct kmem_cache *s)
 			      SLAB_RECLAIM_ACCOUNT | \
 			      SLAB_TEMPORARY | \
 			      SLAB_ACCOUNT | \
+<<<<<<< HEAD
 			      SLAB_KMALLOC | \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			      SLAB_NO_USER_FLAGS)
 
 bool __kmem_cache_empty(struct kmem_cache *);
@@ -439,7 +562,11 @@ static inline bool memcg_slab_pre_alloc_hook(struct kmem_cache *s,
 {
 	struct obj_cgroup *objcg;
 
+<<<<<<< HEAD
 	if (!memcg_kmem_online())
+=======
+	if (!memcg_kmem_enabled())
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 
 	if (!(flags & __GFP_ACCOUNT) && !(s->flags & SLAB_ACCOUNT))
@@ -480,7 +607,11 @@ static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
 	unsigned long off;
 	size_t i;
 
+<<<<<<< HEAD
 	if (!memcg_kmem_online() || !objcg)
+=======
+	if (!memcg_kmem_enabled() || !objcg)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	for (i = 0; i < size; i++) {
@@ -512,7 +643,11 @@ static inline void memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab,
 	struct obj_cgroup **objcgs;
 	int i;
 
+<<<<<<< HEAD
 	if (!memcg_kmem_online())
+=======
+	if (!memcg_kmem_enabled())
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	objcgs = slab_objcgs(slab);
@@ -579,6 +714,10 @@ static inline void memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab,
 }
 #endif /* CONFIG_MEMCG_KMEM */
 
+<<<<<<< HEAD
+=======
+#ifndef CONFIG_SLOB
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct kmem_cache *virt_to_cache(const void *obj)
 {
 	struct slab *slab;
@@ -593,7 +732,11 @@ static inline struct kmem_cache *virt_to_cache(const void *obj)
 static __always_inline void account_slab(struct slab *slab, int order,
 					 struct kmem_cache *s, gfp_t gfp)
 {
+<<<<<<< HEAD
 	if (memcg_kmem_online() && (s->flags & SLAB_ACCOUNT))
+=======
+	if (memcg_kmem_enabled() && (s->flags & SLAB_ACCOUNT))
+>>>>>>> b7ba80a49124 (Commit)
 		memcg_alloc_slab_cgroups(slab, s, gfp, true);
 
 	mod_node_page_state(slab_pgdat(slab), cache_vmstat_idx(s),
@@ -603,7 +746,11 @@ static __always_inline void account_slab(struct slab *slab, int order,
 static __always_inline void unaccount_slab(struct slab *slab, int order,
 					   struct kmem_cache *s)
 {
+<<<<<<< HEAD
 	if (memcg_kmem_online())
+=======
+	if (memcg_kmem_enabled())
+>>>>>>> b7ba80a49124 (Commit)
 		memcg_free_slab_cgroups(slab);
 
 	mod_node_page_state(slab_pgdat(slab), cache_vmstat_idx(s),
@@ -628,6 +775,11 @@ static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
 
 void free_large_kmalloc(struct folio *folio, void *object);
 
+<<<<<<< HEAD
+=======
+#endif /* CONFIG_SLOB */
+
+>>>>>>> b7ba80a49124 (Commit)
 size_t __ksize(const void *objp);
 
 static inline size_t slab_ksize(const struct kmem_cache *s)
@@ -680,15 +832,21 @@ static inline struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *s,
 
 static inline void slab_post_alloc_hook(struct kmem_cache *s,
 					struct obj_cgroup *objcg, gfp_t flags,
+<<<<<<< HEAD
 					size_t size, void **p, bool init,
 					unsigned int orig_size)
 {
 	unsigned int zero_size = s->object_size;
+=======
+					size_t size, void **p, bool init)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	size_t i;
 
 	flags &= gfp_allowed_mask;
 
 	/*
+<<<<<<< HEAD
 	 * For kmalloc object, the allocated memory size(object_size) is likely
 	 * larger than the requested size(orig_size). If redzone check is
 	 * enabled for the extra space, don't zero it, as it will be redzoned
@@ -701,6 +859,8 @@ static inline void slab_post_alloc_hook(struct kmem_cache *s,
 		zero_size = orig_size;
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * As memory initialization might be integrated into KASAN,
 	 * kasan_slab_alloc and initialization memset must be
 	 * kept together to avoid discrepancies in behavior.
@@ -710,7 +870,11 @@ static inline void slab_post_alloc_hook(struct kmem_cache *s,
 	for (i = 0; i < size; i++) {
 		p[i] = kasan_slab_alloc(s, p[i], flags, init);
 		if (p[i] && init && !kasan_has_integrated_init())
+<<<<<<< HEAD
 			memset(p[i], 0, zero_size);
+=======
+			memset(p[i], 0, s->object_size);
+>>>>>>> b7ba80a49124 (Commit)
 		kmemleak_alloc_recursive(p[i], s->object_size, 1,
 					 s->flags, flags);
 		kmsan_slab_alloc(s, p[i], flags);
@@ -719,12 +883,22 @@ static inline void slab_post_alloc_hook(struct kmem_cache *s,
 	memcg_slab_post_alloc_hook(s, objcg, flags, size, p);
 }
 
+<<<<<<< HEAD
+=======
+#ifndef CONFIG_SLOB
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The slab lists for all objects.
  */
 struct kmem_cache_node {
+<<<<<<< HEAD
 #ifdef CONFIG_SLAB
 	raw_spinlock_t list_lock;
+=======
+	spinlock_t list_lock;
+
+#ifdef CONFIG_SLAB
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head slabs_partial;	/* partial list first, better asm code */
 	struct list_head slabs_full;
 	struct list_head slabs_free;
@@ -740,7 +914,10 @@ struct kmem_cache_node {
 #endif
 
 #ifdef CONFIG_SLUB
+<<<<<<< HEAD
 	spinlock_t list_lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long nr_partial;
 	struct list_head partial;
 #ifdef CONFIG_SLUB_DEBUG
@@ -765,6 +942,10 @@ static inline struct kmem_cache_node *get_node(struct kmem_cache *s, int node)
 	for (__node = 0; __node < nr_node_ids; __node++) \
 		 if ((__n = get_node(__s, __node)))
 
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 #if defined(CONFIG_SLAB) || defined(CONFIG_SLUB_DEBUG)
 void dump_unreclaimable_slab(void);
@@ -843,8 +1024,11 @@ void __check_heap_object(const void *ptr, unsigned long n,
 }
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_SLUB_DEBUG
 void skip_orig_size_check(struct kmem_cache *s, const void *object);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* MM_SLAB_H */

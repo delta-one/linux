@@ -23,9 +23,12 @@
 
 .arch_extension sve
 
+<<<<<<< HEAD
 #define ID_AA64SMFR0_EL1_SMEver_SHIFT           56
 #define ID_AA64SMFR0_EL1_SMEver_WIDTH           4
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * LDR (vector to ZA array):
  *	LDR ZA[\nw, #\offset], [X\nxbase, #\offset, MUL VL]
@@ -48,6 +51,7 @@
 		| ((\offset) & 7)
 .endm
 
+<<<<<<< HEAD
 /*
  * LDR (ZT0)
  *
@@ -68,6 +72,8 @@
 		| (((\nx) & 0x1f) << 5)
 .endm
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 .globl do_syscall
 do_syscall:
 	// Store callee saved registers x19-x29 (80 bytes) plus x0 and x1
@@ -87,7 +93,11 @@ do_syscall:
 	msr	S3_3_C4_C2_2, x2
 1:
 
+<<<<<<< HEAD
 	// Load ZA and ZT0 if enabled - uses x12 as scratch due to SME LDR
+=======
+	// Load ZA if it's enabled - uses x12 as scratch due to SME LDR
+>>>>>>> b7ba80a49124 (Commit)
 	tbz	x2, #SVCR_ZA_SHIFT, 1f
 	mov	w12, #0
 	ldr	x2, =za_in
@@ -96,6 +106,7 @@ do_syscall:
 	add	x12, x12, #1
 	cmp	x1, x12
 	bne	2b
+<<<<<<< HEAD
 
 	// ZT0
 	mrs	x2, S3_0_C0_C4_5	// ID_AA64SMFR0_EL1
@@ -105,6 +116,8 @@ do_syscall:
 	adrp	x2, zt_in
 	add	x2, x2, :lo12:zt_in
 	_ldr_zt 2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 1:
 
 	// Load GPRs x8-x28, and save our SP/FP for later comparison
@@ -124,11 +137,16 @@ do_syscall:
 	str	x29, [x2], #8		// FP
 	str	x30, [x2], #8		// LR
 
+<<<<<<< HEAD
 	// Load FPRs if we're not doing neither SVE nor streaming SVE
 	cbnz	x0, 1f
 	ldr	x2, =svcr_in
 	tbnz	x2, #SVCR_SM_SHIFT, 1f
 
+=======
+	// Load FPRs if we're not doing SVE
+	cbnz	x0, 1f
+>>>>>>> b7ba80a49124 (Commit)
 	ldr	x2, =fpr_in
 	ldp	q0, q1, [x2]
 	ldp	q2, q3, [x2, #16 * 2]
@@ -146,11 +164,18 @@ do_syscall:
 	ldp	q26, q27, [x2, #16 * 26]
 	ldp	q28, q29, [x2, #16 * 28]
 	ldp	q30, q31, [x2, #16 * 30]
+<<<<<<< HEAD
 
 	b	2f
 1:
 
 	// Load the SVE registers if we're doing SVE/SME
+=======
+1:
+
+	// Load the SVE registers if we're doing SVE/SME
+	cbz	x0, 1f
+>>>>>>> b7ba80a49124 (Commit)
 
 	ldr	x2, =z_in
 	ldr	z0, [x2, #0, MUL VL]
@@ -189,11 +214,19 @@ do_syscall:
 	// Only set a non-zero FFR, test patterns must be zero since the
 	// syscall should clear it - this lets us handle FA64.
 	ldr	x2, =ffr_in
+<<<<<<< HEAD
 	ldr	p0, [x2]
 	ldr	x2, [x2, #0]
 	cbz	x2, 1f
 	wrffr	p0.b
 1:
+=======
+	ldr	p0, [x2, #0]
+	ldr	x2, [x2, #0]
+	cbz	x2, 2f
+	wrffr	p0.b
+2:
+>>>>>>> b7ba80a49124 (Commit)
 
 	ldr	x2, =p_in
 	ldr	p0, [x2, #0, MUL VL]
@@ -212,7 +245,11 @@ do_syscall:
 	ldr	p13, [x2, #13, MUL VL]
 	ldr	p14, [x2, #14, MUL VL]
 	ldr	p15, [x2, #15, MUL VL]
+<<<<<<< HEAD
 2:
+=======
+1:
+>>>>>>> b7ba80a49124 (Commit)
 
 	// Do the syscall
 	svc	#0
@@ -271,6 +308,7 @@ do_syscall:
 	add	x12, x12, #1
 	cmp	x1, x12
 	bne	2b
+<<<<<<< HEAD
 
 	// ZT0
 	mrs	x2, S3_0_C0_C4_5	// ID_AA64SMFR0_EL1
@@ -280,6 +318,8 @@ do_syscall:
 	adrp	x2, zt_out
 	add	x2, x2, :lo12:zt_out
 	_str_zt 2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 1:
 
 	// Save the SVE state if we have some
@@ -343,7 +383,11 @@ do_syscall:
 	cbz	x2, 1f
 	ldr	x2, =ffr_out
 	rdffr	p0.b
+<<<<<<< HEAD
 	str	p0, [x2]
+=======
+	str	p0, [x2, #0]
+>>>>>>> b7ba80a49124 (Commit)
 1:
 
 	// Restore callee saved registers x19-x30

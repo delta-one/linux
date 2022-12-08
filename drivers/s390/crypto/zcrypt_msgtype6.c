@@ -342,10 +342,14 @@ static int xcrb_msg_to_type6cprb_msgx(bool userspace, struct ap_message *ap_msg,
 	};
 	struct {
 		struct type6_hdr hdr;
+<<<<<<< HEAD
 		union {
 			struct CPRBX cprbx;
 			DECLARE_FLEX_ARRAY(u8, userdata);
 		};
+=======
+		struct CPRBX cprbx;
+>>>>>>> b7ba80a49124 (Commit)
 	} __packed * msg = ap_msg->msg;
 
 	int rcblen = CEIL4(xcrb->request_control_blk_length);
@@ -406,8 +410,12 @@ static int xcrb_msg_to_type6cprb_msgx(bool userspace, struct ap_message *ap_msg,
 	msg->hdr.fromcardlen2 = xcrb->reply_data_length;
 
 	/* prepare CPRB */
+<<<<<<< HEAD
 	if (z_copy_from_user(userspace, msg->userdata,
 			     xcrb->request_control_blk_addr,
+=======
+	if (z_copy_from_user(userspace, &msg->cprbx, xcrb->request_control_blk_addr,
+>>>>>>> b7ba80a49124 (Commit)
 			     xcrb->request_control_blk_length))
 		return -EFAULT;
 	if (msg->cprbx.cprb_len + sizeof(msg->hdr.function_code) >
@@ -473,6 +481,7 @@ static int xcrb_msg_to_type6_ep11cprb_msgx(bool userspace, struct ap_message *ap
 
 	struct {
 		struct type6_hdr hdr;
+<<<<<<< HEAD
 		union {
 			struct {
 				struct ep11_cprb cprbx;
@@ -481,6 +490,11 @@ static int xcrb_msg_to_type6_ep11cprb_msgx(bool userspace, struct ap_message *ap
 			} __packed;
 			DECLARE_FLEX_ARRAY(u8, userdata);
 		};
+=======
+		struct ep11_cprb cprbx;
+		unsigned char	pld_tag;	/* fixed value 0x30 */
+		unsigned char	pld_lenfmt;	/* payload length format */
+>>>>>>> b7ba80a49124 (Commit)
 	} __packed * msg = ap_msg->msg;
 
 	struct pld_hdr {
@@ -509,7 +523,11 @@ static int xcrb_msg_to_type6_ep11cprb_msgx(bool userspace, struct ap_message *ap
 	msg->hdr.fromcardlen1 = xcrb->resp_len;
 
 	/* Import CPRB data from the ioctl input parameter */
+<<<<<<< HEAD
 	if (z_copy_from_user(userspace, msg->userdata,
+=======
+	if (z_copy_from_user(userspace, &msg->cprbx.cprb_len,
+>>>>>>> b7ba80a49124 (Commit)
 			     (char __force __user *)xcrb->req, xcrb->req_len)) {
 		return -EFAULT;
 	}
@@ -926,7 +944,12 @@ static void zcrypt_msgtype6_receive(struct ap_queue *aq,
 		.type = TYPE82_RSP_CODE,
 		.reply_code = REP82_ERROR_MACHINE_FAILURE,
 	};
+<<<<<<< HEAD
 	struct response_type *resp_type = msg->private;
+=======
+	struct response_type *resp_type =
+		(struct response_type *)msg->private;
+>>>>>>> b7ba80a49124 (Commit)
 	struct type86x_reply *t86r;
 	int len;
 
@@ -938,6 +961,7 @@ static void zcrypt_msgtype6_receive(struct ap_queue *aq,
 	    t86r->cprbx.cprb_ver_id == 0x02) {
 		switch (resp_type->type) {
 		case CEXXC_RESPONSE_TYPE_ICA:
+<<<<<<< HEAD
 			len = sizeof(struct type86x_reply) + t86r->length;
 			if (len > reply->bufsize || len > msg->bufsize ||
 			    len != reply->len) {
@@ -969,6 +993,30 @@ static void zcrypt_msgtype6_receive(struct ap_queue *aq,
 	} else {
 		memcpy(msg->msg, reply->msg, sizeof(error_reply));
 		msg->len = sizeof(error_reply);
+=======
+			len = sizeof(struct type86x_reply) + t86r->length - 2;
+			if (len > reply->bufsize || len > msg->bufsize) {
+				msg->rc = -EMSGSIZE;
+			} else {
+				memcpy(msg->msg, reply->msg, len);
+				msg->len = len;
+			}
+			break;
+		case CEXXC_RESPONSE_TYPE_XCRB:
+			len = t86r->fmt2.offset2 + t86r->fmt2.count2;
+			if (len > reply->bufsize || len > msg->bufsize) {
+				msg->rc = -EMSGSIZE;
+			} else {
+				memcpy(msg->msg, reply->msg, len);
+				msg->len = len;
+			}
+			break;
+		default:
+			memcpy(msg->msg, &error_reply, sizeof(error_reply));
+		}
+	} else {
+		memcpy(msg->msg, reply->msg, sizeof(error_reply));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 out:
 	complete(&resp_type->work);
@@ -990,7 +1038,12 @@ static void zcrypt_msgtype6_receive_ep11(struct ap_queue *aq,
 		.type = TYPE82_RSP_CODE,
 		.reply_code = REP82_ERROR_MACHINE_FAILURE,
 	};
+<<<<<<< HEAD
 	struct response_type *resp_type = msg->private;
+=======
+	struct response_type *resp_type =
+		(struct response_type *)msg->private;
+>>>>>>> b7ba80a49124 (Commit)
 	struct type86_ep11_reply *t86r;
 	int len;
 
@@ -1003,6 +1056,7 @@ static void zcrypt_msgtype6_receive_ep11(struct ap_queue *aq,
 		switch (resp_type->type) {
 		case CEXXC_RESPONSE_TYPE_EP11:
 			len = t86r->fmt2.offset1 + t86r->fmt2.count1;
+<<<<<<< HEAD
 			if (len > reply->bufsize || len > msg->bufsize ||
 			    len != reply->len) {
 				ZCRYPT_DBF_DBG("%s len mismatch => EMSGSIZE\n", __func__);
@@ -1019,6 +1073,20 @@ static void zcrypt_msgtype6_receive_ep11(struct ap_queue *aq,
 	} else {
 		memcpy(msg->msg, reply->msg, sizeof(error_reply));
 		msg->len = sizeof(error_reply);
+=======
+			if (len > reply->bufsize || len > msg->bufsize) {
+				msg->rc = -EMSGSIZE;
+			} else {
+				memcpy(msg->msg, reply->msg, len);
+				msg->len = len;
+			}
+			break;
+		default:
+			memcpy(msg->msg, &error_reply, sizeof(error_reply));
+		}
+	} else {
+		memcpy(msg->msg, reply->msg, sizeof(error_reply));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 out:
 	complete(&resp_type->work);
@@ -1047,7 +1115,11 @@ static long zcrypt_msgtype6_modexpo(struct zcrypt_queue *zq,
 		return -ENOMEM;
 	ap_msg->bufsize = PAGE_SIZE;
 	ap_msg->receive = zcrypt_msgtype6_receive;
+<<<<<<< HEAD
 	ap_msg->psmid = (((unsigned long)current->pid) << 32) +
+=======
+	ap_msg->psmid = (((unsigned long long)current->pid) << 32) +
+>>>>>>> b7ba80a49124 (Commit)
 		atomic_inc_return(&zcrypt_step);
 	ap_msg->private = &resp_type;
 	rc = icamex_msg_to_type6mex_msgx(zq, ap_msg, mex);
@@ -1097,7 +1169,11 @@ static long zcrypt_msgtype6_modexpo_crt(struct zcrypt_queue *zq,
 		return -ENOMEM;
 	ap_msg->bufsize = PAGE_SIZE;
 	ap_msg->receive = zcrypt_msgtype6_receive;
+<<<<<<< HEAD
 	ap_msg->psmid = (((unsigned long)current->pid) << 32) +
+=======
+	ap_msg->psmid = (((unsigned long long)current->pid) << 32) +
+>>>>>>> b7ba80a49124 (Commit)
 		atomic_inc_return(&zcrypt_step);
 	ap_msg->private = &resp_type;
 	rc = icacrt_msg_to_type6crt_msgx(zq, ap_msg, crt);
@@ -1148,7 +1224,11 @@ int prep_cca_ap_msg(bool userspace, struct ica_xcRB *xcrb,
 	if (!ap_msg->msg)
 		return -ENOMEM;
 	ap_msg->receive = zcrypt_msgtype6_receive;
+<<<<<<< HEAD
 	ap_msg->psmid = (((unsigned long)current->pid) << 32) +
+=======
+	ap_msg->psmid = (((unsigned long long)current->pid) << 32) +
+>>>>>>> b7ba80a49124 (Commit)
 				atomic_inc_return(&zcrypt_step);
 	ap_msg->private = kmemdup(&resp_type, sizeof(resp_type), GFP_KERNEL);
 	if (!ap_msg->private)
@@ -1168,7 +1248,11 @@ static long zcrypt_msgtype6_send_cprb(bool userspace, struct zcrypt_queue *zq,
 				      struct ap_message *ap_msg)
 {
 	int rc;
+<<<<<<< HEAD
 	struct response_type *rtype = ap_msg->private;
+=======
+	struct response_type *rtype = (struct response_type *)(ap_msg->private);
+>>>>>>> b7ba80a49124 (Commit)
 	struct {
 		struct type6_hdr hdr;
 		struct CPRBX cprbx;
@@ -1229,7 +1313,11 @@ int prep_ep11_ap_msg(bool userspace, struct ep11_urb *xcrb,
 	if (!ap_msg->msg)
 		return -ENOMEM;
 	ap_msg->receive = zcrypt_msgtype6_receive_ep11;
+<<<<<<< HEAD
 	ap_msg->psmid = (((unsigned long)current->pid) << 32) +
+=======
+	ap_msg->psmid = (((unsigned long long)current->pid) << 32) +
+>>>>>>> b7ba80a49124 (Commit)
 				atomic_inc_return(&zcrypt_step);
 	ap_msg->private = kmemdup(&resp_type, sizeof(resp_type), GFP_KERNEL);
 	if (!ap_msg->private)
@@ -1251,7 +1339,11 @@ static long zcrypt_msgtype6_send_ep11_cprb(bool userspace, struct zcrypt_queue *
 {
 	int rc;
 	unsigned int lfmt;
+<<<<<<< HEAD
 	struct response_type *rtype = ap_msg->private;
+=======
+	struct response_type *rtype = (struct response_type *)(ap_msg->private);
+>>>>>>> b7ba80a49124 (Commit)
 	struct {
 		struct type6_hdr hdr;
 		struct ep11_cprb cprbx;
@@ -1339,7 +1431,11 @@ int prep_rng_ap_msg(struct ap_message *ap_msg, int *func_code,
 	if (!ap_msg->msg)
 		return -ENOMEM;
 	ap_msg->receive = zcrypt_msgtype6_receive;
+<<<<<<< HEAD
 	ap_msg->psmid = (((unsigned long)current->pid) << 32) +
+=======
+	ap_msg->psmid = (((unsigned long long)current->pid) << 32) +
+>>>>>>> b7ba80a49124 (Commit)
 				atomic_inc_return(&zcrypt_step);
 	ap_msg->private = kmemdup(&resp_type, sizeof(resp_type), GFP_KERNEL);
 	if (!ap_msg->private)
@@ -1370,7 +1466,11 @@ static long zcrypt_msgtype6_rng(struct zcrypt_queue *zq,
 		short int verb_length;
 		short int key_length;
 	} __packed * msg = ap_msg->msg;
+<<<<<<< HEAD
 	struct response_type *rtype = ap_msg->private;
+=======
+	struct response_type *rtype = (struct response_type *)(ap_msg->private);
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	msg->cprbx.domain = AP_QID_QUEUE(zq->queue->qid);

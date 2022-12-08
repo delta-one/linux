@@ -29,14 +29,18 @@
 	compatible = "samsung,s6e3fc2x01";
 };
 
+<<<<<<< HEAD
 &i2c4 {
 	/* nxp,tfa9894 @ 0x34 */
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &bq27441_fg {
 	monitored-battery = <&battery>;
 };
 
+<<<<<<< HEAD
 &sound {
 	model = "OnePlus 6T";
 	audio-routing = "RX_BIAS", "MCLK",
@@ -64,3 +68,8 @@
 	qcom,micbias3-microvolt = <2700000>;
 	qcom,micbias4-microvolt = <2700000>;
 };
+=======
+&rmi4_f12 {
+	touchscreen-y-mm = <148>;
+};
+>>>>>>> b7ba80a49124 (Commit)

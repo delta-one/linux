@@ -15,6 +15,7 @@ EXPORT_SYMBOL_GPL(interval_tree_insert);
 EXPORT_SYMBOL_GPL(interval_tree_remove);
 EXPORT_SYMBOL_GPL(interval_tree_iter_first);
 EXPORT_SYMBOL_GPL(interval_tree_iter_next);
+<<<<<<< HEAD
 
 #ifdef CONFIG_INTERVAL_TREE_SPAN_ITER
 /*
@@ -147,3 +148,5 @@ void interval_tree_span_iter_advance(struct interval_tree_span_iter *iter,
 }
 EXPORT_SYMBOL_GPL(interval_tree_span_iter_advance);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)

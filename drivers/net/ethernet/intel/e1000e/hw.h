@@ -114,6 +114,7 @@ struct e1000_hw;
 #define E1000_DEV_ID_PCH_LNP_I219_V20		0x550F
 #define E1000_DEV_ID_PCH_LNP_I219_LM21		0x5510
 #define E1000_DEV_ID_PCH_LNP_I219_V21		0x5511
+<<<<<<< HEAD
 #define E1000_DEV_ID_PCH_ARL_I219_LM24		0x57A0
 #define E1000_DEV_ID_PCH_ARL_I219_V24		0x57A1
 #define E1000_DEV_ID_PCH_PTP_I219_LM25		0x57B3
@@ -122,6 +123,8 @@ struct e1000_hw;
 #define E1000_DEV_ID_PCH_PTP_I219_V26		0x57B6
 #define E1000_DEV_ID_PCH_PTP_I219_LM27		0x57B7
 #define E1000_DEV_ID_PCH_PTP_I219_V27		0x57B8
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define E1000_REVISION_4	4
 
@@ -149,7 +152,10 @@ enum e1000_mac_type {
 	e1000_pch_adp,
 	e1000_pch_mtp,
 	e1000_pch_lnp,
+<<<<<<< HEAD
 	e1000_pch_ptp,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum e1000_media_type {

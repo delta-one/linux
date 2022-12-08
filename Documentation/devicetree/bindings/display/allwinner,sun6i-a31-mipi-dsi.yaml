@@ -12,6 +12,7 @@ maintainers:
 
 properties:
   compatible:
+<<<<<<< HEAD
     oneOf:
       - enum:
           - allwinner,sun6i-a31-mipi-dsi
@@ -20,6 +21,11 @@ properties:
       - items:
           - const: allwinner,sun20i-d1-mipi-dsi
           - const: allwinner,sun50i-a100-mipi-dsi
+=======
+    enum:
+      - allwinner,sun6i-a31-mipi-dsi
+      - allwinner,sun50i-a64-mipi-dsi
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -64,6 +70,10 @@ required:
   - phys
   - phy-names
   - resets
+<<<<<<< HEAD
+=======
+  - vcc-dsi-supply
+>>>>>>> b7ba80a49124 (Commit)
   - port
 
 allOf:
@@ -72,9 +82,13 @@ allOf:
       properties:
         compatible:
           contains:
+<<<<<<< HEAD
             enum:
               - allwinner,sun6i-a31-mipi-dsi
               - allwinner,sun50i-a100-mipi-dsi
+=======
+            const: allwinner,sun6i-a31-mipi-dsi
+>>>>>>> b7ba80a49124 (Commit)
 
     then:
       properties:
@@ -84,15 +98,19 @@ allOf:
       required:
         - clock-names
 
+<<<<<<< HEAD
     else:
       properties:
         clocks:
           maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
           contains:
+<<<<<<< HEAD
             enum:
               - allwinner,sun6i-a31-mipi-dsi
               - allwinner,sun50i-a64-mipi-dsi
@@ -100,6 +118,14 @@ allOf:
     then:
       required:
         - vcc-dsi-supply
+=======
+            const: allwinner,sun50i-a64-mipi-dsi
+
+    then:
+      properties:
+        clocks:
+          minItems: 1
+>>>>>>> b7ba80a49124 (Commit)
 
 unevaluatedProperties: false
 

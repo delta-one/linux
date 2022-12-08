@@ -7,8 +7,11 @@ config DRM_HISI_HIBMC
 	select DRM_VRAM_HELPER
 	select DRM_TTM
 	select DRM_TTM_HELPER
+<<<<<<< HEAD
 	select I2C
 	select I2C_ALGOBIT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Choose this option if you have a Hisilicon Hibmc soc chipset.
 	  If M is selected the module will be called hibmc-drm.

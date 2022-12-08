@@ -12,7 +12,10 @@
 extern u64 cpu_clock_freq;
 extern u64 const_clock_freq;
 
+<<<<<<< HEAD
 extern void save_counter(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern void sync_counter(void);
 
 static inline unsigned int calc_const_freq(void)

@@ -1879,7 +1879,11 @@ static void try_rgrp_unlink(struct gfs2_rgrpd *rgd, u64 *last_unlinked, u64 skip
 		 */
 		ip = gl->gl_object;
 
+<<<<<<< HEAD
 		if (ip || !gfs2_queue_try_to_evict(gl))
+=======
+		if (ip || !gfs2_queue_delete_work(gl, 0))
+>>>>>>> b7ba80a49124 (Commit)
 			gfs2_glock_put(gl);
 		else
 			found++;

@@ -19,7 +19,12 @@ struct gsm_config
 	unsigned int mtu;
 	unsigned int k;
 	unsigned int i;
+<<<<<<< HEAD
 	unsigned int unused[8];	/* Can not be used */
+=======
+	unsigned int unused[8];		/* Padding for expansion without
+					   breaking stuff */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define GSMIOC_GETCONF		_IOR('G', 0, struct gsm_config)
@@ -28,9 +33,15 @@ struct gsm_config
 struct gsm_netconfig {
 	unsigned int adaption;  /* Adaption to use in network mode */
 	unsigned short protocol;/* Protocol to use - only ETH_P_IP supported */
+<<<<<<< HEAD
 	unsigned short unused2;	/* Can not be used */
 	char if_name[IFNAMSIZ];	/* interface name format string */
 	__u8 unused[28];        /* Can not be used */
+=======
+	unsigned short unused2;
+	char if_name[IFNAMSIZ];	/* interface name format string */
+	__u8 unused[28];        /* For future use */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define GSMIOC_ENABLE_NET      _IOW('G', 2, struct gsm_netconfig)
@@ -39,6 +50,7 @@ struct gsm_netconfig {
 /* get the base tty number for a configured gsmmux tty */
 #define GSMIOC_GETFIRST		_IOR('G', 4, __u32)
 
+<<<<<<< HEAD
 struct gsm_config_ext {
 	__u32 keep_alive;	/* Control channel keep-alive in 1/100th of a
 				 * second (0 to disable)
@@ -49,4 +61,6 @@ struct gsm_config_ext {
 #define GSMIOC_GETCONF_EXT	_IOR('G', 5, struct gsm_config_ext)
 #define GSMIOC_SETCONF_EXT	_IOW('G', 6, struct gsm_config_ext)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

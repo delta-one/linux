@@ -635,7 +635,10 @@ enum {
 	TCA_INGRESS_BLOCK,
 	TCA_EGRESS_BLOCK,
 	TCA_DUMP_FLAGS,
+<<<<<<< HEAD
 	TCA_EXT_WARN_MSG,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__TCA_MAX
 };
 
@@ -789,7 +792,10 @@ enum {
 	TCA_ROOT_FLAGS,
 	TCA_ROOT_COUNT,
 	TCA_ROOT_TIME_DELTA, /* in msecs */
+<<<<<<< HEAD
 	TCA_ROOT_EXT_WARN_MSG,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__TCA_ROOT_MAX,
 #define	TCA_ROOT_MAX (__TCA_ROOT_MAX - 1)
 };

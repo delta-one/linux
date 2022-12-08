@@ -54,7 +54,10 @@ properties:
     maxItems: 1
 
 allOf:
+<<<<<<< HEAD
   - $ref: dai-common.yaml#
+=======
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -105,7 +108,11 @@ required:
   - dmas
   - dma-names
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

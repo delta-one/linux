@@ -462,9 +462,17 @@ void svc_xprt_enqueue(struct svc_xprt *xprt)
 
 	pool = svc_pool_for_cpu(xprt->xpt_server);
 
+<<<<<<< HEAD
 	percpu_counter_inc(&pool->sp_sockets_queued);
 	spin_lock_bh(&pool->sp_lock);
 	list_add_tail(&xprt->xpt_ready, &pool->sp_sockets);
+=======
+	atomic_long_inc(&pool->sp_stats.packets);
+
+	spin_lock_bh(&pool->sp_lock);
+	list_add_tail(&xprt->xpt_ready, &pool->sp_sockets);
+	pool->sp_stats.sockets_queued++;
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_bh(&pool->sp_lock);
 
 	/* find a thread for this xprt */
@@ -472,7 +480,11 @@ void svc_xprt_enqueue(struct svc_xprt *xprt)
 	list_for_each_entry_rcu(rqstp, &pool->sp_all_threads, rq_all) {
 		if (test_and_set_bit(RQ_BUSY, &rqstp->rq_flags))
 			continue;
+<<<<<<< HEAD
 		percpu_counter_inc(&pool->sp_threads_woken);
+=======
+		atomic_long_inc(&pool->sp_stats.threads_woken);
+>>>>>>> b7ba80a49124 (Commit)
 		rqstp->rq_qtime = ktime_get();
 		wake_up_process(rqstp->rq_task);
 		goto out_unlock;
@@ -767,7 +779,11 @@ static struct svc_xprt *svc_get_next_xprt(struct svc_rqst *rqstp, long timeout)
 		goto out_found;
 
 	if (!time_left)
+<<<<<<< HEAD
 		percpu_counter_inc(&pool->sp_threads_timedout);
+=======
+		atomic_long_inc(&pool->sp_stats.threads_timedout);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (signalled() || kthread_should_stop())
 		return ERR_PTR(-EINTR);
@@ -886,7 +902,13 @@ int svc_recv(struct svc_rqst *rqstp, long timeout)
 
 	clear_bit(XPT_OLD, &xprt->xpt_flags);
 
+<<<<<<< HEAD
 	rqstp->rq_chandle.defer = svc_defer;
+=======
+	xprt->xpt_ops->xpo_secure_port(rqstp);
+	rqstp->rq_chandle.defer = svc_defer;
+	rqstp->rq_xid = svc_getu32(&rqstp->rq_arg.head[0]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (serv->sv_stats)
 		serv->sv_stats->netcnt++;
@@ -1234,7 +1256,11 @@ static struct cache_deferred_req *svc_defer(struct cache_req *req)
 	trace_svc_defer(rqstp);
 	svc_xprt_get(rqstp->rq_xprt);
 	dr->xprt = rqstp->rq_xprt;
+<<<<<<< HEAD
 	set_bit(RQ_DROPME, &rqstp->rq_flags);
+=======
+	__set_bit(RQ_DROPME, &rqstp->rq_flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dr->handle.revisit = svc_revisit;
 	return &dr->handle;
@@ -1437,12 +1463,21 @@ static int svc_pool_stats_show(struct seq_file *m, void *p)
 		return 0;
 	}
 
+<<<<<<< HEAD
 	seq_printf(m, "%u %llu %llu %llu %llu\n",
 		pool->sp_id,
 		percpu_counter_sum_positive(&pool->sp_sockets_queued),
 		percpu_counter_sum_positive(&pool->sp_sockets_queued),
 		percpu_counter_sum_positive(&pool->sp_threads_woken),
 		percpu_counter_sum_positive(&pool->sp_threads_timedout));
+=======
+	seq_printf(m, "%u %lu %lu %lu %lu\n",
+		pool->sp_id,
+		(unsigned long)atomic_long_read(&pool->sp_stats.packets),
+		pool->sp_stats.sockets_queued,
+		(unsigned long)atomic_long_read(&pool->sp_stats.threads_woken),
+		(unsigned long)atomic_long_read(&pool->sp_stats.threads_timedout));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

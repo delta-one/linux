@@ -76,6 +76,7 @@ static __be32 *xdr_encode_empty_array(__be32 *p)
  * 1 Protocol"
  */
 
+<<<<<<< HEAD
 static void encode_uint32(struct xdr_stream *xdr, u32 n)
 {
 	WARN_ON_ONCE(xdr_stream_encode_u32(xdr, n) < 0);
@@ -87,6 +88,8 @@ static void encode_bitmap4(struct xdr_stream *xdr, const __u32 *bitmap,
 	WARN_ON_ONCE(xdr_stream_encode_uint32_array(xdr, bitmap, len) < 0);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  *	nfs_cb_opnum4
  *
@@ -340,6 +343,7 @@ static void encode_cb_recall4args(struct xdr_stream *xdr,
 }
 
 /*
+<<<<<<< HEAD
  * CB_RECALLANY4args
  *
  *	struct CB_RECALLANY4args {
@@ -358,6 +362,8 @@ encode_cb_recallany4args(struct xdr_stream *xdr,
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * CB_SEQUENCE4args
  *
  *	struct CB_SEQUENCE4args {
@@ -511,6 +517,7 @@ static void nfs4_xdr_enc_cb_recall(struct rpc_rqst *req, struct xdr_stream *xdr,
 	encode_cb_nops(&hdr);
 }
 
+<<<<<<< HEAD
 /*
  * 20.6. Operation 8: CB_RECALL_ANY - Keep Any N Recallable Objects
  */
@@ -531,6 +538,8 @@ nfs4_xdr_enc_cb_recall_any(struct rpc_rqst *req,
 	encode_cb_recallany4args(xdr, &hdr, ra);
 	encode_cb_nops(&hdr);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * NFSv4.0 and NFSv4.1 XDR decode functions
@@ -569,6 +578,7 @@ static int nfs4_xdr_dec_cb_recall(struct rpc_rqst *rqstp,
 	return decode_cb_op_status(xdr, OP_CB_RECALL, &cb->cb_status);
 }
 
+<<<<<<< HEAD
 /*
  * 20.6. Operation 8: CB_RECALL_ANY - Keep Any N Recallable Objects
  */
@@ -591,6 +601,8 @@ nfs4_xdr_dec_cb_recall_any(struct rpc_rqst *rqstp,
 	return status;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_NFSD_PNFS
 /*
  * CB_LAYOUTRECALL4args
@@ -854,7 +866,10 @@ static const struct rpc_procinfo nfs4_cb_procedures[] = {
 #endif
 	PROC(CB_NOTIFY_LOCK,	COMPOUND,	cb_notify_lock,	cb_notify_lock),
 	PROC(CB_OFFLOAD,	COMPOUND,	cb_offload,	cb_offload),
+<<<<<<< HEAD
 	PROC(CB_RECALL_ANY,	COMPOUND,	cb_recall_any,	cb_recall_any),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static unsigned int nfs4_cb_counts[ARRAY_SIZE(nfs4_cb_procedures)];
@@ -942,7 +957,11 @@ static const struct cred *get_backchannel_cred(struct nfs4_client *clp, struct r
 	} else {
 		struct cred *kcred;
 
+<<<<<<< HEAD
 		kcred = prepare_kernel_cred(&init_task);
+=======
+		kcred = prepare_kernel_cred(NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!kcred)
 			return NULL;
 
@@ -988,6 +1007,10 @@ static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb_conn *c
 	} else {
 		if (!conn->cb_xprt)
 			return -EINVAL;
+<<<<<<< HEAD
+=======
+		clp->cl_cb_conn.cb_xprt = conn->cb_xprt;
+>>>>>>> b7ba80a49124 (Commit)
 		clp->cl_cb_session = ses;
 		args.bc_xprt = conn->cb_xprt;
 		args.prognumber = clp->cl_cb_session->se_cb_prog;
@@ -1007,9 +1030,12 @@ static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb_conn *c
 		rpc_shutdown_client(client);
 		return -ENOMEM;
 	}
+<<<<<<< HEAD
 
 	if (clp->cl_minorversion != 0)
 		clp->cl_cb_conn.cb_xprt = conn->cb_xprt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	clp->cl_cb_client = client;
 	clp->cl_cb_cred = cred;
 	rcu_read_lock();
@@ -1445,6 +1471,7 @@ void nfsd4_init_cb(struct nfsd4_callback *cb, struct nfs4_client *clp,
 	cb->cb_holds_slot = false;
 }
 
+<<<<<<< HEAD
 /**
  * nfsd4_run_cb - queue up a callback job to run
  * @cb: callback to queue
@@ -1462,4 +1489,13 @@ bool nfsd4_run_cb(struct nfsd4_callback *cb)
 	if (!queued)
 		nfsd41_cb_inflight_end(clp);
 	return queued;
+=======
+void nfsd4_run_cb(struct nfsd4_callback *cb)
+{
+	struct nfs4_client *clp = cb->cb_clp;
+
+	nfsd41_cb_inflight_begin(clp);
+	if (!nfsd4_queue_cb(cb))
+		nfsd41_cb_inflight_end(clp);
+>>>>>>> b7ba80a49124 (Commit)
 }

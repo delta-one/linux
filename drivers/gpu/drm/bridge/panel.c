@@ -81,8 +81,11 @@ static int panel_bridge_attach(struct drm_bridge *bridge,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	drm_panel_bridge_set_orientation(connector, bridge);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	drm_connector_attach_encoder(&panel_bridge->connector,
 					  bridge->encoder);
 
@@ -111,6 +114,7 @@ static void panel_bridge_detach(struct drm_bridge *bridge)
 		drm_connector_cleanup(connector);
 }
 
+<<<<<<< HEAD
 static void panel_bridge_atomic_pre_enable(struct drm_bridge *bridge,
 				struct drm_bridge_state *old_bridge_state)
 {
@@ -127,10 +131,16 @@ static void panel_bridge_atomic_pre_enable(struct drm_bridge *bridge,
 	old_crtc_state = drm_atomic_get_old_crtc_state(atomic_state, crtc);
 	if (old_crtc_state && old_crtc_state->self_refresh_active)
 		return;
+=======
+static void panel_bridge_pre_enable(struct drm_bridge *bridge)
+{
+	struct panel_bridge *panel_bridge = drm_bridge_to_panel_bridge(bridge);
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_panel_prepare(panel_bridge->panel);
 }
 
+<<<<<<< HEAD
 static void panel_bridge_atomic_enable(struct drm_bridge *bridge,
 				struct drm_bridge_state *old_bridge_state)
 {
@@ -147,10 +157,16 @@ static void panel_bridge_atomic_enable(struct drm_bridge *bridge,
 	old_crtc_state = drm_atomic_get_old_crtc_state(atomic_state, crtc);
 	if (old_crtc_state && old_crtc_state->self_refresh_active)
 		return;
+=======
+static void panel_bridge_enable(struct drm_bridge *bridge)
+{
+	struct panel_bridge *panel_bridge = drm_bridge_to_panel_bridge(bridge);
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_panel_enable(panel_bridge->panel);
 }
 
+<<<<<<< HEAD
 static void panel_bridge_atomic_disable(struct drm_bridge *bridge,
 				struct drm_bridge_state *old_bridge_state)
 {
@@ -167,10 +183,16 @@ static void panel_bridge_atomic_disable(struct drm_bridge *bridge,
 	new_crtc_state = drm_atomic_get_new_crtc_state(atomic_state, crtc);
 	if (new_crtc_state && new_crtc_state->self_refresh_active)
 		return;
+=======
+static void panel_bridge_disable(struct drm_bridge *bridge)
+{
+	struct panel_bridge *panel_bridge = drm_bridge_to_panel_bridge(bridge);
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_panel_disable(panel_bridge->panel);
 }
 
+<<<<<<< HEAD
 static void panel_bridge_atomic_post_disable(struct drm_bridge *bridge,
 				struct drm_bridge_state *old_bridge_state)
 {
@@ -187,6 +209,11 @@ static void panel_bridge_atomic_post_disable(struct drm_bridge *bridge,
 	new_crtc_state = drm_atomic_get_new_crtc_state(atomic_state, crtc);
 	if (new_crtc_state && new_crtc_state->self_refresh_active)
 		return;
+=======
+static void panel_bridge_post_disable(struct drm_bridge *bridge)
+{
+	struct panel_bridge *panel_bridge = drm_bridge_to_panel_bridge(bridge);
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_panel_unprepare(panel_bridge->panel);
 }
@@ -213,10 +240,17 @@ static void panel_bridge_debugfs_init(struct drm_bridge *bridge,
 static const struct drm_bridge_funcs panel_bridge_bridge_funcs = {
 	.attach = panel_bridge_attach,
 	.detach = panel_bridge_detach,
+<<<<<<< HEAD
 	.atomic_pre_enable = panel_bridge_atomic_pre_enable,
 	.atomic_enable = panel_bridge_atomic_enable,
 	.atomic_disable = panel_bridge_atomic_disable,
 	.atomic_post_disable = panel_bridge_atomic_post_disable,
+=======
+	.pre_enable = panel_bridge_pre_enable,
+	.enable = panel_bridge_enable,
+	.disable = panel_bridge_disable,
+	.post_disable = panel_bridge_post_disable,
+>>>>>>> b7ba80a49124 (Commit)
 	.get_modes = panel_bridge_get_modes,
 	.atomic_reset = drm_atomic_helper_bridge_reset,
 	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
@@ -411,6 +445,7 @@ struct drm_bridge *devm_drm_panel_bridge_add_typed(struct device *dev,
 		return ERR_PTR(-ENOMEM);
 
 	bridge = drm_panel_bridge_add_typed(panel, connector_type);
+<<<<<<< HEAD
 	if (IS_ERR(bridge)) {
 		devres_free(ptr);
 		return bridge;
@@ -421,6 +456,15 @@ struct drm_bridge *devm_drm_panel_bridge_add_typed(struct device *dev,
 	*ptr = bridge;
 	devres_add(dev, ptr);
 
+=======
+	if (!IS_ERR(bridge)) {
+		*ptr = bridge;
+		devres_add(dev, ptr);
+	} else {
+		devres_free(ptr);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return bridge;
 }
 EXPORT_SYMBOL(devm_drm_panel_bridge_add_typed);
@@ -459,8 +503,11 @@ struct drm_bridge *drmm_panel_bridge_add(struct drm_device *drm,
 	if (ret)
 		return ERR_PTR(ret);
 
+<<<<<<< HEAD
 	bridge->pre_enable_prev_first = panel->prepare_prev_first;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return bridge;
 }
 EXPORT_SYMBOL(drmm_panel_bridge_add);

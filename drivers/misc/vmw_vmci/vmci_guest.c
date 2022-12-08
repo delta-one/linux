@@ -56,6 +56,11 @@ struct vmci_guest_device {
 
 	bool exclusive_vectors;
 
+<<<<<<< HEAD
+=======
+	struct tasklet_struct datagram_tasklet;
+	struct tasklet_struct bm_tasklet;
+>>>>>>> b7ba80a49124 (Commit)
 	struct wait_queue_head inout_wq;
 
 	void *data_buffer;
@@ -302,8 +307,14 @@ static int vmci_check_host_caps(struct pci_dev *pdev)
  * This function assumes that it has exclusive access to the data
  * in register(s) for the duration of the call.
  */
+<<<<<<< HEAD
 static void vmci_dispatch_dgs(struct vmci_guest_device *vmci_dev)
 {
+=======
+static void vmci_dispatch_dgs(unsigned long data)
+{
+	struct vmci_guest_device *vmci_dev = (struct vmci_guest_device *)data;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 *dg_in_buffer = vmci_dev->data_buffer;
 	struct vmci_datagram *dg;
 	size_t dg_in_buffer_size = VMCI_MAX_DG_SIZE;
@@ -462,8 +473,15 @@ static void vmci_dispatch_dgs(struct vmci_guest_device *vmci_dev)
  * Scans the notification bitmap for raised flags, clears them
  * and handles the notifications.
  */
+<<<<<<< HEAD
 static void vmci_process_bitmap(struct vmci_guest_device *dev)
 {
+=======
+static void vmci_process_bitmap(unsigned long data)
+{
+	struct vmci_guest_device *dev = (struct vmci_guest_device *)data;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!dev->notification_bitmap) {
 		dev_dbg(dev->dev, "No bitmap present in %s\n", __func__);
 		return;
@@ -481,13 +499,22 @@ static irqreturn_t vmci_interrupt(int irq, void *_dev)
 	struct vmci_guest_device *dev = _dev;
 
 	/*
+<<<<<<< HEAD
 	 * If we are using MSI-X with exclusive vectors then we simply call
 	 * vmci_dispatch_dgs(), since we know the interrupt was meant for us.
+=======
+	 * If we are using MSI-X with exclusive vectors then we simply schedule
+	 * the datagram tasklet, since we know the interrupt was meant for us.
+>>>>>>> b7ba80a49124 (Commit)
 	 * Otherwise we must read the ICR to determine what to do.
 	 */
 
 	if (dev->exclusive_vectors) {
+<<<<<<< HEAD
 		vmci_dispatch_dgs(dev);
+=======
+		tasklet_schedule(&dev->datagram_tasklet);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		unsigned int icr;
 
@@ -497,12 +524,20 @@ static irqreturn_t vmci_interrupt(int irq, void *_dev)
 			return IRQ_NONE;
 
 		if (icr & VMCI_ICR_DATAGRAM) {
+<<<<<<< HEAD
 			vmci_dispatch_dgs(dev);
+=======
+			tasklet_schedule(&dev->datagram_tasklet);
+>>>>>>> b7ba80a49124 (Commit)
 			icr &= ~VMCI_ICR_DATAGRAM;
 		}
 
 		if (icr & VMCI_ICR_NOTIFICATION) {
+<<<<<<< HEAD
 			vmci_process_bitmap(dev);
+=======
+			tasklet_schedule(&dev->bm_tasklet);
+>>>>>>> b7ba80a49124 (Commit)
 			icr &= ~VMCI_ICR_NOTIFICATION;
 		}
 
@@ -531,7 +566,11 @@ static irqreturn_t vmci_interrupt_bm(int irq, void *_dev)
 	struct vmci_guest_device *dev = _dev;
 
 	/* For MSI-X we can just assume it was meant for us. */
+<<<<<<< HEAD
 	vmci_process_bitmap(dev);
+=======
+	tasklet_schedule(&dev->bm_tasklet);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return IRQ_HANDLED;
 }
@@ -633,6 +672,13 @@ static int vmci_guest_probe_device(struct pci_dev *pdev,
 	vmci_dev->iobase = iobase;
 	vmci_dev->mmio_base = mmio_base;
 
+<<<<<<< HEAD
+=======
+	tasklet_init(&vmci_dev->datagram_tasklet,
+		     vmci_dispatch_dgs, (unsigned long)vmci_dev);
+	tasklet_init(&vmci_dev->bm_tasklet,
+		     vmci_process_bitmap, (unsigned long)vmci_dev);
+>>>>>>> b7ba80a49124 (Commit)
 	init_waitqueue_head(&vmci_dev->inout_wq);
 
 	if (mmio_base != NULL) {
@@ -799,9 +845,14 @@ static int vmci_guest_probe_device(struct pci_dev *pdev,
 	 * Request IRQ for legacy or MSI interrupts, or for first
 	 * MSI-X vector.
 	 */
+<<<<<<< HEAD
 	error = request_threaded_irq(pci_irq_vector(pdev, 0), NULL,
 				     vmci_interrupt, IRQF_SHARED,
 				     KBUILD_MODNAME, vmci_dev);
+=======
+	error = request_irq(pci_irq_vector(pdev, 0), vmci_interrupt,
+			    IRQF_SHARED, KBUILD_MODNAME, vmci_dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error) {
 		dev_err(&pdev->dev, "Irq %u in use: %d\n",
 			pci_irq_vector(pdev, 0), error);
@@ -815,9 +866,15 @@ static int vmci_guest_probe_device(struct pci_dev *pdev,
 	 * between the vectors.
 	 */
 	if (vmci_dev->exclusive_vectors) {
+<<<<<<< HEAD
 		error = request_threaded_irq(pci_irq_vector(pdev, 1), NULL,
 					     vmci_interrupt_bm, 0,
 					     KBUILD_MODNAME, vmci_dev);
+=======
+		error = request_irq(pci_irq_vector(pdev, 1),
+				    vmci_interrupt_bm, 0, KBUILD_MODNAME,
+				    vmci_dev);
+>>>>>>> b7ba80a49124 (Commit)
 		if (error) {
 			dev_err(&pdev->dev,
 				"Failed to allocate irq %u: %d\n",
@@ -825,11 +882,17 @@ static int vmci_guest_probe_device(struct pci_dev *pdev,
 			goto err_free_irq;
 		}
 		if (caps_in_use & VMCI_CAPS_DMA_DATAGRAM) {
+<<<<<<< HEAD
 			error = request_threaded_irq(pci_irq_vector(pdev, 2),
 						     NULL,
 						    vmci_interrupt_dma_datagram,
 						     0, KBUILD_MODNAME,
 						     vmci_dev);
+=======
+			error = request_irq(pci_irq_vector(pdev, 2),
+					    vmci_interrupt_dma_datagram,
+					    0, KBUILD_MODNAME, vmci_dev);
+>>>>>>> b7ba80a49124 (Commit)
 			if (error) {
 				dev_err(&pdev->dev,
 					"Failed to allocate irq %u: %d\n",
@@ -865,6 +928,11 @@ err_free_bm_irq:
 
 err_free_irq:
 	free_irq(pci_irq_vector(pdev, 0), vmci_dev);
+<<<<<<< HEAD
+=======
+	tasklet_kill(&vmci_dev->datagram_tasklet);
+	tasklet_kill(&vmci_dev->bm_tasklet);
+>>>>>>> b7ba80a49124 (Commit)
 
 err_disable_msi:
 	pci_free_irq_vectors(pdev);
@@ -935,6 +1003,12 @@ static void vmci_guest_remove_device(struct pci_dev *pdev)
 	free_irq(pci_irq_vector(pdev, 0), vmci_dev);
 	pci_free_irq_vectors(pdev);
 
+<<<<<<< HEAD
+=======
+	tasklet_kill(&vmci_dev->datagram_tasklet);
+	tasklet_kill(&vmci_dev->bm_tasklet);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (vmci_dev->notification_bitmap) {
 		/*
 		 * The device reset above cleared the bitmap state of the

@@ -31,37 +31,61 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-ethernet {
+=======
+		ethernet {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "gatwick:yellow:ethernet";
 			gpios = <&pioA 10 GPIO_ACTIVE_LOW>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-wifi {
+=======
+		wifi {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "gatwick:green:wifi";
 			gpios = <&pioA 28 GPIO_ACTIVE_LOW>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-ble {
+=======
+		ble {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "gatwick:blue:ble";
 			gpios = <&pioA 22 GPIO_ACTIVE_LOW>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-lora {
+=======
+		lora {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "gatwick:orange:lora";
 			gpios = <&pioA 26 GPIO_ACTIVE_LOW>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-blank {
+=======
+		blank {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "gatwick:green:blank";
 			gpios = <&pioA 24 GPIO_ACTIVE_LOW>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-user {
+=======
+		user {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "gatwick:yellow:user";
 			gpios = <&pioA 12 GPIO_ACTIVE_LOW>;
 			default-state = "off";

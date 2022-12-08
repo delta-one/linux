@@ -17,6 +17,7 @@ struct nvfw_hs_header {
 
 const struct nvfw_hs_header *nvfw_hs_header(struct nvkm_subdev *, const void *);
 
+<<<<<<< HEAD
 struct nvfw_hs_header_v2 {
 	u32 sig_prod_offset;
 	u32 sig_prod_size;
@@ -31,6 +32,8 @@ struct nvfw_hs_header_v2 {
 
 const struct nvfw_hs_header_v2 *nvfw_hs_header_v2(struct nvkm_subdev *, const void *);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct nvfw_hs_load_header {
 	u32 non_sec_code_off;
 	u32 non_sec_code_size;
@@ -42,6 +45,7 @@ struct nvfw_hs_load_header {
 
 const struct nvfw_hs_load_header *
 nvfw_hs_load_header(struct nvkm_subdev *, const void *);
+<<<<<<< HEAD
 
 struct nvfw_hs_load_header_v2 {
 	u32 os_code_offset;
@@ -56,4 +60,6 @@ struct nvfw_hs_load_header_v2 {
 };
 
 const struct nvfw_hs_load_header_v2 *nvfw_hs_load_header_v2(struct nvkm_subdev *, const void *);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

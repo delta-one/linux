@@ -9,11 +9,16 @@
  * by the Free Software Foundation, incorporated herein by reference.
  */
 
+<<<<<<< HEAD
 #include <linux/rhashtable.h>
 #include "ef100_nic.h"
 #include "mae.h"
 #include "mcdi.h"
 #include "mcdi_pcol.h"
+=======
+#include "mae.h"
+#include "mcdi.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "mcdi_pcol_mae.h"
 
 int efx_mae_allocate_mport(struct efx_nic *efx, u32 *id, u32 *label)
@@ -97,7 +102,11 @@ void efx_mae_mport_mport(struct efx_nic *efx __always_unused, u32 mport_id, u32 
 }
 
 /* id is really only 24 bits wide */
+<<<<<<< HEAD
 int efx_mae_fw_lookup_mport(struct efx_nic *efx, u32 selector, u32 *id)
+=======
+int efx_mae_lookup_mport(struct efx_nic *efx, u32 selector, u32 *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	MCDI_DECLARE_BUF(outbuf, MC_CMD_MAE_MPORT_LOOKUP_OUT_LEN);
 	MCDI_DECLARE_BUF(inbuf, MC_CMD_MAE_MPORT_LOOKUP_IN_LEN);
@@ -115,6 +124,7 @@ int efx_mae_fw_lookup_mport(struct efx_nic *efx, u32 selector, u32 *id)
 	return 0;
 }
 
+<<<<<<< HEAD
 int efx_mae_start_counters(struct efx_nic *efx, struct efx_rx_queue *rx_queue)
 {
 	MCDI_DECLARE_BUF(inbuf, MC_CMD_MAE_COUNTERS_STREAM_START_V2_IN_LEN);
@@ -513,11 +523,14 @@ int efx_mae_lookup_mport(struct efx_nic *efx, u32 vf_idx, u32 *id)
 	return rc;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool efx_mae_asl_id(u32 id)
 {
 	return !!(id & BIT(31));
 }
 
+<<<<<<< HEAD
 /* mport handling */
 static const struct rhashtable_params efx_mae_mports_ht_params = {
 	.key_len	= sizeof(u32),
@@ -675,6 +688,8 @@ fail:
 	return rc;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int efx_mae_alloc_action_set(struct efx_nic *efx, struct efx_tc_action_set *act)
 {
 	MCDI_DECLARE_BUF(outbuf, MC_CMD_MAE_ACTION_SET_ALLOC_OUT_LEN);
@@ -682,14 +697,18 @@ int efx_mae_alloc_action_set(struct efx_nic *efx, struct efx_tc_action_set *act)
 	size_t outlen;
 	int rc;
 
+<<<<<<< HEAD
 	MCDI_POPULATE_DWORD_2(inbuf, MAE_ACTION_SET_ALLOC_IN_FLAGS,
 			      MAE_ACTION_SET_ALLOC_IN_VLAN_PUSH, act->vlan_push,
 			      MAE_ACTION_SET_ALLOC_IN_VLAN_POP, act->vlan_pop);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	MCDI_SET_DWORD(inbuf, MAE_ACTION_SET_ALLOC_IN_SRC_MAC_ID,
 		       MC_CMD_MAE_MAC_ADDR_ALLOC_OUT_MAC_ID_NULL);
 	MCDI_SET_DWORD(inbuf, MAE_ACTION_SET_ALLOC_IN_DST_MAC_ID,
 		       MC_CMD_MAE_MAC_ADDR_ALLOC_OUT_MAC_ID_NULL);
+<<<<<<< HEAD
 	if (act->count && !WARN_ON(!act->count->cnt))
 		MCDI_SET_DWORD(inbuf, MAE_ACTION_SET_ALLOC_IN_COUNTER_ID,
 			       act->count->cnt->fw_id);
@@ -710,6 +729,12 @@ int efx_mae_alloc_action_set(struct efx_nic *efx, struct efx_tc_action_set *act)
 		MCDI_SET_WORD_BE(inbuf, MAE_ACTION_SET_ALLOC_IN_VLAN1_PROTO_BE,
 				 act->vlan_proto[1]);
 	}
+=======
+	MCDI_SET_DWORD(inbuf, MAE_ACTION_SET_ALLOC_IN_COUNTER_ID,
+		       MC_CMD_MAE_COUNTER_ALLOC_OUT_COUNTER_ID_NULL);
+	MCDI_SET_DWORD(inbuf, MAE_ACTION_SET_ALLOC_IN_COUNTER_LIST_ID,
+		       MC_CMD_MAE_COUNTER_LIST_ALLOC_OUT_COUNTER_LIST_ID_NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	MCDI_SET_DWORD(inbuf, MAE_ACTION_SET_ALLOC_IN_ENCAP_HEADER_ID,
 		       MC_CMD_MAE_ENCAP_HEADER_ALLOC_OUT_ENCAP_HEADER_ID_NULL);
 	if (act->deliver)
@@ -857,6 +882,7 @@ static int efx_mae_populate_match_criteria(MCDI_DECLARE_STRUCT_PTR(match_crit),
 	}
 	MCDI_STRUCT_SET_DWORD(match_crit, MAE_FIELD_MASK_VALUE_PAIRS_V2_INGRESS_MPORT_SELECTOR_MASK,
 			      match->mask.ingress_port);
+<<<<<<< HEAD
 	EFX_POPULATE_DWORD_2(*_MCDI_STRUCT_DWORD(match_crit, MAE_FIELD_MASK_VALUE_PAIRS_V2_FLAGS),
 			     MAE_FIELD_MASK_VALUE_PAIRS_V2_IS_IP_FRAG,
 			     match->value.ip_frag,
@@ -941,6 +967,8 @@ static int efx_mae_populate_match_criteria(MCDI_DECLARE_STRUCT_PTR(match_crit),
 				match->value.tcp_flags);
 	MCDI_STRUCT_SET_WORD_BE(match_crit, MAE_FIELD_MASK_VALUE_PAIRS_V2_TCP_FLAGS_BE_MASK,
 				match->mask.tcp_flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1006,6 +1034,7 @@ int efx_mae_delete_rule(struct efx_nic *efx, u32 id)
 		return -EIO;
 	return 0;
 }
+<<<<<<< HEAD
 
 int efx_init_mae(struct efx_nic *efx)
 {
@@ -1037,3 +1066,5 @@ void efx_fini_mae(struct efx_nic *efx)
 	kfree(mae);
 	efx->mae = NULL;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

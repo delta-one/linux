@@ -27,6 +27,9 @@
 #ifndef __DCN10_FPU_H__
 #define __DCN10_FPU_H__
 
+<<<<<<< HEAD
 void dcn10_resource_construct_fp(struct dc *dc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __DCN20_FPU_H__ */

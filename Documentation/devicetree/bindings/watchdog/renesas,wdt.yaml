@@ -26,18 +26,25 @@ properties:
 
       - items:
           - enum:
+<<<<<<< HEAD
               - renesas,r9a07g043-wdt    # RZ/G2UL and RZ/Five
+=======
+              - renesas,r9a07g043-wdt    # RZ/G2UL
+>>>>>>> b7ba80a49124 (Commit)
               - renesas,r9a07g044-wdt    # RZ/G2{L,LC}
               - renesas,r9a07g054-wdt    # RZ/V2L
           - const: renesas,rzg2l-wdt
 
       - items:
           - enum:
+<<<<<<< HEAD
               - renesas,r9a09g011-wdt    # RZ/V2M
           - const: renesas,rzv2m-wdt     # RZ/V2M
 
       - items:
           - enum:
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - renesas,r8a7742-wdt      # RZ/G1H
               - renesas,r8a7743-wdt      # RZ/G1M
               - renesas,r8a7744-wdt      # RZ/G1N
@@ -70,12 +77,16 @@ properties:
           - enum:
               - renesas,r8a779a0-wdt     # R-Car V3U
               - renesas,r8a779f0-wdt     # R-Car S4-8
+<<<<<<< HEAD
               - renesas,r8a779g0-wdt     # R-Car V4H
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - const: renesas,rcar-gen4-wdt # R-Car Gen4
 
   reg:
     maxItems: 1
 
+<<<<<<< HEAD
   interrupts:
     minItems: 1
     items:
@@ -99,6 +110,15 @@ properties:
     items:
       - const: pclk
       - const: oscclk
+=======
+  interrupts: true
+
+  interrupt-names: true
+
+  clocks: true
+
+  clock-names: true
+>>>>>>> b7ba80a49124 (Commit)
 
   power-domains:
     maxItems: 1
@@ -111,7 +131,10 @@ properties:
 required:
   - compatible
   - reg
+<<<<<<< HEAD
   - interrupts
+=======
+>>>>>>> b7ba80a49124 (Commit)
   - clocks
 
 allOf:
@@ -136,6 +159,7 @@ allOf:
           contains:
             enum:
               - renesas,rzg2l-wdt
+<<<<<<< HEAD
               - renesas,rzv2m-wdt
     then:
       properties:
@@ -163,11 +187,36 @@ allOf:
         interrupt-names:
           minItems: 2
       required:
+=======
+    then:
+      properties:
+        interrupts:
+          maxItems: 2
+        interrupt-names:
+          items:
+            - const: wdt
+            - const: perrout
+        clocks:
+          items:
+            - description: Register access clock
+            - description: Main clock
+        clock-names:
+          items:
+            - const: pclk
+            - const: oscclk
+      required:
+        - clock-names
+>>>>>>> b7ba80a49124 (Commit)
         - interrupt-names
     else:
       properties:
         interrupts:
           maxItems: 1
+<<<<<<< HEAD
+=======
+        clocks:
+          maxItems: 1
+>>>>>>> b7ba80a49124 (Commit)
 
 additionalProperties: false
 
@@ -175,11 +224,17 @@ examples:
   - |
     #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
     #include <dt-bindings/power/r8a7795-sysc.h>
+<<<<<<< HEAD
     #include <dt-bindings/interrupt-controller/arm-gic.h>
     wdt0: watchdog@e6020000 {
             compatible = "renesas,r8a7795-wdt", "renesas,rcar-gen3-wdt";
             reg = <0xe6020000 0x0c>;
             interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
+=======
+    wdt0: watchdog@e6020000 {
+            compatible = "renesas,r8a7795-wdt", "renesas,rcar-gen3-wdt";
+            reg = <0xe6020000 0x0c>;
+>>>>>>> b7ba80a49124 (Commit)
             clocks = <&cpg CPG_MOD 402>;
             power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
             resets = <&cpg 402>;

@@ -20,9 +20,12 @@
 #include <linux/slab.h>
 #include <linux/of.h>
 #include <linux/of_device.h>
+<<<<<<< HEAD
 #include <linux/mmc/sdio.h>
 #include <linux/mmc/mmc.h>
 #include <linux/pinctrl/consumer.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "sdhci.h"
 #include "sdhci-pltfm.h"
@@ -44,6 +47,7 @@
 #define MMC_CARD		0x1000
 #define MMC_WIDTH		0x0100
 
+<<<<<<< HEAD
 struct sdhci_pxav2_host {
 	struct mmc_request *sdio_mrq;
 	struct pinctrl *pinctrl;
@@ -51,6 +55,8 @@ struct sdhci_pxav2_host {
 	struct pinctrl_state *pins_cmd_gpio;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void pxav2_reset(struct sdhci_host *host, u8 mask)
 {
 	struct platform_device *pdev = to_platform_device(mmc_dev(host->mmc));
@@ -90,6 +96,7 @@ static void pxav2_reset(struct sdhci_host *host, u8 mask)
 	}
 }
 
+<<<<<<< HEAD
 static u16 pxav1_readw(struct sdhci_host *host, int reg)
 {
 	/* Workaround for data abort exception on SDH2 and SDH4 on PXA168 */
@@ -155,6 +162,8 @@ static void pxav1_request_done(struct sdhci_host *host, struct mmc_request *mrq)
 	mmc_request_done(host->mmc, mrq);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void pxav2_mmc_set_bus_width(struct sdhci_host *host, int width)
 {
 	u8 ctrl;
@@ -176,6 +185,7 @@ static void pxav2_mmc_set_bus_width(struct sdhci_host *host, int width)
 	writeb(ctrl, host->ioaddr + SDHCI_HOST_CONTROL);
 }
 
+<<<<<<< HEAD
 struct sdhci_pxa_variant {
 	const struct sdhci_ops *ops;
 	unsigned int extra_quirks;
@@ -197,6 +207,8 @@ static const struct sdhci_pxa_variant __maybe_unused pxav1_variant = {
 	.extra_quirks = SDHCI_QUIRK_NO_BUSY_IRQ | SDHCI_QUIRK_32BIT_DMA_SIZE,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct sdhci_ops pxav2_sdhci_ops = {
 	.set_clock     = sdhci_set_clock,
 	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
@@ -205,6 +217,7 @@ static const struct sdhci_ops pxav2_sdhci_ops = {
 	.set_uhs_signaling = sdhci_set_uhs_signaling,
 };
 
+<<<<<<< HEAD
 static const struct sdhci_pxa_variant pxav2_variant = {
 	.ops = &pxav2_sdhci_ops,
 };
@@ -213,6 +226,13 @@ static const struct sdhci_pxa_variant pxav2_variant = {
 static const struct of_device_id sdhci_pxav2_of_match[] = {
 	{ .compatible = "mrvl,pxav1-mmc", .data = &pxav1_variant, },
 	{ .compatible = "mrvl,pxav2-mmc", .data = &pxav2_variant, },
+=======
+#ifdef CONFIG_OF
+static const struct of_device_id sdhci_pxav2_of_match[] = {
+	{
+		.compatible = "mrvl,pxav2-mmc",
+	},
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 MODULE_DEVICE_TABLE(of, sdhci_pxav2_of_match);
@@ -228,7 +248,11 @@ static struct sdhci_pxa_platdata *pxav2_get_mmc_pdata(struct device *dev)
 	if (!pdata)
 		return NULL;
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "non-removable"))
+=======
+	if (of_find_property(np, "non-removable", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		pdata->flags |= PXA_FLAG_CARD_PERMANENT;
 
 	of_property_read_u32(np, "bus-width", &bus_width);
@@ -254,6 +278,7 @@ static int sdhci_pxav2_probe(struct platform_device *pdev)
 {
 	struct sdhci_pltfm_host *pltfm_host;
 	struct sdhci_pxa_platdata *pdata = pdev->dev.platform_data;
+<<<<<<< HEAD
 	struct sdhci_pxav2_host *pxav2_host;
 	struct device *dev = &pdev->dev;
 	struct sdhci_host *host = NULL;
@@ -263,10 +288,21 @@ static int sdhci_pxav2_probe(struct platform_device *pdev)
 	struct clk *clk, *clk_core;
 
 	host = sdhci_pltfm_init(pdev, NULL, sizeof(*pxav2_host));
+=======
+	struct device *dev = &pdev->dev;
+	struct sdhci_host *host = NULL;
+	const struct of_device_id *match;
+
+	int ret;
+	struct clk *clk;
+
+	host = sdhci_pltfm_init(pdev, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(host))
 		return PTR_ERR(host);
 
 	pltfm_host = sdhci_priv(host);
+<<<<<<< HEAD
 	pxav2_host = sdhci_pltfm_priv(pltfm_host);
 
 	clk = devm_clk_get(dev, "io");
@@ -275,11 +311,19 @@ static int sdhci_pxav2_probe(struct platform_device *pdev)
 	if (IS_ERR(clk)) {
 		ret = PTR_ERR(clk);
 		dev_err_probe(dev, ret, "failed to get io clock\n");
+=======
+
+	clk = devm_clk_get(dev, "PXA-SDHCLK");
+	if (IS_ERR(clk)) {
+		dev_err(dev, "failed to get io clock\n");
+		ret = PTR_ERR(clk);
+>>>>>>> b7ba80a49124 (Commit)
 		goto free;
 	}
 	pltfm_host->clk = clk;
 	ret = clk_prepare_enable(clk);
 	if (ret) {
+<<<<<<< HEAD
 		dev_err(dev, "failed to enable io clock\n");
 		goto free;
 	}
@@ -291,16 +335,29 @@ static int sdhci_pxav2_probe(struct platform_device *pdev)
 		goto disable_clk;
 	}
 
+=======
+		dev_err(&pdev->dev, "failed to enable io clock\n");
+		goto free;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	host->quirks = SDHCI_QUIRK_BROKEN_ADMA
 		| SDHCI_QUIRK_BROKEN_TIMEOUT_VAL
 		| SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN;
 
+<<<<<<< HEAD
 	variant = of_device_get_match_data(dev);
 	if (variant)
 		pdata = pxav2_get_mmc_pdata(dev);
 	else
 		variant = &pxav2_variant;
 
+=======
+	match = of_match_device(of_match_ptr(sdhci_pxav2_of_match), &pdev->dev);
+	if (match) {
+		pdata = pxav2_get_mmc_pdata(dev);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (pdata) {
 		if (pdata->flags & PXA_FLAG_CARD_PERMANENT) {
 			/* on-chip device */
@@ -320,6 +377,7 @@ static int sdhci_pxav2_probe(struct platform_device *pdev)
 			host->mmc->pm_caps |= pdata->pm_caps;
 	}
 
+<<<<<<< HEAD
 	host->quirks |= variant->extra_quirks;
 	host->ops = variant->ops;
 
@@ -337,6 +395,9 @@ static int sdhci_pxav2_probe(struct platform_device *pdev)
 	} else {
 		pxav2_host->pinctrl = NULL;
 	}
+=======
+	host->ops = &pxav2_sdhci_ops;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = sdhci_add_host(host);
 	if (ret)

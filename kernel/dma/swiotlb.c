@@ -156,6 +156,17 @@ setup_io_tlb_npages(char *str)
 }
 early_param("swiotlb", setup_io_tlb_npages);
 
+<<<<<<< HEAD
+=======
+unsigned int swiotlb_max_segment(void)
+{
+	if (!io_tlb_default_mem.nslabs)
+		return 0;
+	return rounddown(io_tlb_default_mem.nslabs << IO_TLB_SHIFT, PAGE_SIZE);
+}
+EXPORT_SYMBOL_GPL(swiotlb_max_segment);
+
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long swiotlb_size_or_default(void)
 {
 	return default_nslabs << IO_TLB_SHIFT;
@@ -292,6 +303,7 @@ static void swiotlb_init_io_tlb_mem(struct io_tlb_mem *mem, phys_addr_t start,
 	return;
 }
 
+<<<<<<< HEAD
 static void __init *swiotlb_memblock_alloc(unsigned long nslabs,
 		unsigned int flags,
 		int (*remap)(void *tlb, unsigned long nslabs))
@@ -324,6 +336,8 @@ static void __init *swiotlb_memblock_alloc(unsigned long nslabs,
 	return tlb;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Statically reserve bounce buffer space and initialize bounce buffer data
  * structures for the software IO TLB used to implement the DMA API.
@@ -334,6 +348,10 @@ void __init swiotlb_init_remap(bool addressing_limit, unsigned int flags,
 	struct io_tlb_mem *mem = &io_tlb_default_mem;
 	unsigned long nslabs;
 	size_t alloc_size;
+<<<<<<< HEAD
+=======
+	size_t bytes;
+>>>>>>> b7ba80a49124 (Commit)
 	void *tlb;
 
 	if (!addressing_limit && !swiotlb_force_bounce)
@@ -349,6 +367,7 @@ void __init swiotlb_init_remap(bool addressing_limit, unsigned int flags,
 		swiotlb_adjust_nareas(num_possible_cpus());
 
 	nslabs = default_nslabs;
+<<<<<<< HEAD
 	while ((tlb = swiotlb_memblock_alloc(nslabs, flags, remap)) == NULL) {
 		if (nslabs <= IO_TLB_MIN_SLABS)
 			return;
@@ -359,6 +378,33 @@ void __init swiotlb_init_remap(bool addressing_limit, unsigned int flags,
 		pr_info("SWIOTLB bounce buffer size adjusted %lu -> %lu slabs",
 			default_nslabs, nslabs);
 		default_nslabs = nslabs;
+=======
+	/*
+	 * By default allocate the bounce buffer memory from low memory, but
+	 * allow to pick a location everywhere for hypervisors with guest
+	 * memory encryption.
+	 */
+retry:
+	bytes = PAGE_ALIGN(nslabs << IO_TLB_SHIFT);
+	if (flags & SWIOTLB_ANY)
+		tlb = memblock_alloc(bytes, PAGE_SIZE);
+	else
+		tlb = memblock_alloc_low(bytes, PAGE_SIZE);
+	if (!tlb) {
+		pr_warn("%s: failed to allocate tlb structure\n", __func__);
+		return;
+	}
+
+	if (remap && remap(tlb, nslabs) < 0) {
+		memblock_free(tlb, PAGE_ALIGN(bytes));
+
+		nslabs = ALIGN(nslabs >> 1, IO_TLB_SEGSIZE);
+		if (nslabs >= IO_TLB_MIN_SLABS)
+			goto retry;
+
+		pr_warn("%s: Failed to remap %zu bytes\n", __func__, bytes);
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	alloc_size = PAGE_ALIGN(array_size(sizeof(*mem->slots), nslabs));
@@ -625,8 +671,13 @@ static int swiotlb_do_find_slots(struct device *dev, int area_index,
 	unsigned int iotlb_align_mask =
 		dma_get_min_align_mask(dev) & ~(IO_TLB_SIZE - 1);
 	unsigned int nslots = nr_slots(alloc_size), stride;
+<<<<<<< HEAD
 	unsigned int offset = swiotlb_align_offset(dev, orig_addr);
 	unsigned int index, slots_checked, count = 0, i;
+=======
+	unsigned int index, wrap, count = 0, i;
+	unsigned int offset = swiotlb_align_offset(dev, orig_addr);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flags;
 	unsigned int slot_base;
 	unsigned int slot_index;
@@ -635,6 +686,7 @@ static int swiotlb_do_find_slots(struct device *dev, int area_index,
 	BUG_ON(area_index >= mem->nareas);
 
 	/*
+<<<<<<< HEAD
 	 * For allocations of PAGE_SIZE or larger only look for page aligned
 	 * allocations.
 	 */
@@ -647,22 +699,41 @@ static int swiotlb_do_find_slots(struct device *dev, int area_index,
 	 * unaligned slots once we found an aligned one.
 	 */
 	stride = (iotlb_align_mask >> IO_TLB_SHIFT) + 1;
+=======
+	 * For mappings with an alignment requirement don't bother looping to
+	 * unaligned slots once we found an aligned one.  For allocations of
+	 * PAGE_SIZE or larger only look for page aligned allocations.
+	 */
+	stride = (iotlb_align_mask >> IO_TLB_SHIFT) + 1;
+	if (alloc_size >= PAGE_SIZE)
+		stride = max(stride, stride << (PAGE_SHIFT - IO_TLB_SHIFT));
+	stride = max(stride, (alloc_align_mask >> IO_TLB_SHIFT) + 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irqsave(&area->lock, flags);
 	if (unlikely(nslots > mem->area_nslabs - area->used))
 		goto not_found;
 
 	slot_base = area_index * mem->area_nslabs;
+<<<<<<< HEAD
 	index = area->index;
 
 	for (slots_checked = 0; slots_checked < mem->area_nslabs; ) {
+=======
+	index = wrap = wrap_area_index(mem, ALIGN(area->index, stride));
+
+	do {
+>>>>>>> b7ba80a49124 (Commit)
 		slot_index = slot_base + index;
 
 		if (orig_addr &&
 		    (slot_addr(tbl_dma_addr, slot_index) &
 		     iotlb_align_mask) != (orig_addr & iotlb_align_mask)) {
 			index = wrap_area_index(mem, index + 1);
+<<<<<<< HEAD
 			slots_checked++;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		}
 
@@ -678,8 +749,12 @@ static int swiotlb_do_find_slots(struct device *dev, int area_index,
 				goto found;
 		}
 		index = wrap_area_index(mem, index + stride);
+<<<<<<< HEAD
 		slots_checked += stride;
 	}
+=======
+	} while (index != wrap);
+>>>>>>> b7ba80a49124 (Commit)
 
 not_found:
 	spin_unlock_irqrestore(&area->lock, flags);
@@ -699,7 +774,14 @@ found:
 	/*
 	 * Update the indices to avoid searching in the next round.
 	 */
+<<<<<<< HEAD
 	area->index = wrap_area_index(mem, index + nslots);
+=======
+	if (index + nslots < mem->area_nslabs)
+		area->index = index + nslots;
+	else
+		area->index = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	area->used += nslots;
 	spin_unlock_irqrestore(&area->lock, flags);
 	return slot_index;

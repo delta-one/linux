@@ -27,7 +27,10 @@ select:
           - rockchip,rk3399-pmu
           - rockchip,rk3568-pmu
           - rockchip,rk3588-pmu
+<<<<<<< HEAD
           - rockchip,rv1126-pmu
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   required:
     - compatible
@@ -44,7 +47,10 @@ properties:
           - rockchip,rk3399-pmu
           - rockchip,rk3568-pmu
           - rockchip,rk3588-pmu
+<<<<<<< HEAD
           - rockchip,rv1126-pmu
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - const: syscon
       - const: simple-mfd
 

@@ -40,7 +40,11 @@ static const struct nvkm_enum g98_sec_isr_error_name[] = {
 };
 
 static void
+<<<<<<< HEAD
 g98_sec_intr(struct nvkm_falcon *sec, struct nvkm_chan *chan)
+=======
+g98_sec_intr(struct nvkm_falcon *sec, struct nvkm_fifo_chan *chan)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nvkm_subdev *subdev = &sec->engine.subdev;
 	struct nvkm_device *device = subdev->device;
@@ -54,9 +58,15 @@ g98_sec_intr(struct nvkm_falcon *sec, struct nvkm_chan *chan)
 
 	nvkm_error(subdev, "DISPATCH_ERROR %04x [%s] ch %d [%010llx %s] "
 			   "subc %d mthd %04x data %08x\n", ssta,
+<<<<<<< HEAD
 		   en ? en->name : "UNKNOWN", chan ? chan->id : -1,
 		   chan ? chan->inst->addr : 0,
 		   chan ? chan->name : "unknown",
+=======
+		   en ? en->name : "UNKNOWN", chan ? chan->chid : -1,
+		   chan ? chan->inst->addr : 0,
+		   chan ? chan->object.client->name : "unknown",
+>>>>>>> b7ba80a49124 (Commit)
 		   subc, mthd, data);
 }
 

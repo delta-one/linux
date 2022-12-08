@@ -302,6 +302,14 @@ static int intel_punit_ipc_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int intel_punit_ipc_remove(struct platform_device *pdev)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct acpi_device_id punit_ipc_acpi_ids[] = {
 	{ "INT34D4", 0 },
 	{ }
@@ -310,6 +318,10 @@ MODULE_DEVICE_TABLE(acpi, punit_ipc_acpi_ids);
 
 static struct platform_driver intel_punit_ipc_driver = {
 	.probe = intel_punit_ipc_probe,
+<<<<<<< HEAD
+=======
+	.remove = intel_punit_ipc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "intel_punit_ipc",
 		.acpi_match_table = punit_ipc_acpi_ids,

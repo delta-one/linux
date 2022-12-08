@@ -65,6 +65,7 @@ int uncore_die_to_segment(int die)
 	return bus ? pci_domain_nr(bus) : -EINVAL;
 }
 
+<<<<<<< HEAD
 int uncore_device_to_die(struct pci_dev *dev)
 {
 	int node = pcibus_to_node(dev->bus);
@@ -80,6 +81,8 @@ int uncore_device_to_die(struct pci_dev *dev)
 	return -1;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void uncore_free_pcibus_map(void)
 {
 	struct pci2phy_map *map, *tmp;
@@ -857,12 +860,15 @@ static const struct attribute_group uncore_pmu_attr_group = {
 	.attrs = uncore_pmu_attrs,
 };
 
+<<<<<<< HEAD
 static inline int uncore_get_box_id(struct intel_uncore_type *type,
 				    struct intel_uncore_pmu *pmu)
 {
 	return type->box_ids ? type->box_ids[pmu->pmu_idx] : pmu->pmu_idx;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void uncore_get_alias_name(char *pmu_name, struct intel_uncore_pmu *pmu)
 {
 	struct intel_uncore_type *type = pmu->type;
@@ -871,7 +877,11 @@ void uncore_get_alias_name(char *pmu_name, struct intel_uncore_pmu *pmu)
 		sprintf(pmu_name, "uncore_type_%u", type->type_id);
 	else {
 		sprintf(pmu_name, "uncore_type_%u_%d",
+<<<<<<< HEAD
 			type->type_id, uncore_get_box_id(type, pmu));
+=======
+			type->type_id, type->box_ids[pmu->pmu_idx]);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -898,7 +908,11 @@ static void uncore_get_pmu_name(struct intel_uncore_pmu *pmu)
 		 * Use the box ID from the discovery table if applicable.
 		 */
 		sprintf(pmu->name, "uncore_%s_%d", type->name,
+<<<<<<< HEAD
 			uncore_get_box_id(type, pmu));
+=======
+			type->box_ids ? type->box_ids[pmu->pmu_idx] : pmu->pmu_idx);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -1695,10 +1709,14 @@ struct intel_uncore_init_fun {
 	void	(*cpu_init)(void);
 	int	(*pci_init)(void);
 	void	(*mmio_init)(void);
+<<<<<<< HEAD
 	/* Discovery table is required */
 	bool	use_discovery;
 	/* The units in the discovery table should be ignored. */
 	int	*uncore_units_ignore;
+=======
+	bool	use_discovery;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct intel_uncore_init_fun nhm_uncore_init __initconst = {
@@ -1789,11 +1807,14 @@ static const struct intel_uncore_init_fun adl_uncore_init __initconst = {
 	.mmio_init = adl_uncore_mmio_init,
 };
 
+<<<<<<< HEAD
 static const struct intel_uncore_init_fun mtl_uncore_init __initconst = {
 	.cpu_init = mtl_uncore_cpu_init,
 	.mmio_init = adl_uncore_mmio_init,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct intel_uncore_init_fun icx_uncore_init __initconst = {
 	.cpu_init = icx_uncore_cpu_init,
 	.pci_init = icx_uncore_pci_init,
@@ -1811,7 +1832,10 @@ static const struct intel_uncore_init_fun spr_uncore_init __initconst = {
 	.pci_init = spr_uncore_pci_init,
 	.mmio_init = spr_uncore_mmio_init,
 	.use_discovery = true,
+<<<<<<< HEAD
 	.uncore_units_ignore = spr_uncore_units_ignore,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct intel_uncore_init_fun generic_uncore_init __initconst = {
@@ -1861,11 +1885,15 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_N,		&adl_uncore_init),
 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		&adl_uncore_init),
 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,	&adl_uncore_init),
+<<<<<<< HEAD
 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	&adl_uncore_init),
 	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE,		&mtl_uncore_init),
 	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE_L,	&mtl_uncore_init),
 	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,	&spr_uncore_init),
 	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X,	&spr_uncore_init),
+=======
+	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,	&spr_uncore_init),
+>>>>>>> b7ba80a49124 (Commit)
 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	&snr_uncore_init),
 	{},
 };
@@ -1885,7 +1913,11 @@ static int __init intel_uncore_init(void)
 
 	id = x86_match_cpu(intel_uncore_match);
 	if (!id) {
+<<<<<<< HEAD
 		if (!uncore_no_discover && intel_uncore_has_discovery_tables(NULL))
+=======
+		if (!uncore_no_discover && intel_uncore_has_discovery_tables())
+>>>>>>> b7ba80a49124 (Commit)
 			uncore_init = (struct intel_uncore_init_fun *)&generic_uncore_init;
 		else
 			return -ENODEV;
@@ -1893,8 +1925,12 @@ static int __init intel_uncore_init(void)
 		uncore_init = (struct intel_uncore_init_fun *)id->driver_data;
 		if (uncore_no_discover && uncore_init->use_discovery)
 			return -ENODEV;
+<<<<<<< HEAD
 		if (uncore_init->use_discovery &&
 		    !intel_uncore_has_discovery_tables(uncore_init->uncore_units_ignore))
+=======
+		if (uncore_init->use_discovery && !intel_uncore_has_discovery_tables())
+>>>>>>> b7ba80a49124 (Commit)
 			return -ENODEV;
 	}
 

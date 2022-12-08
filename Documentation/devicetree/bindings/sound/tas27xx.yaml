@@ -16,9 +16,12 @@ description: |
   loudspeakers. Integrated speaker voltage and current sense provides
   for real time monitoring of loudspeaker behavior.
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     enum:
@@ -56,12 +59,20 @@ required:
   - compatible
   - reg
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |
    #include <dt-bindings/gpio/gpio.h>
+<<<<<<< HEAD
    i2c {
+=======
+   i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
      #address-cells = <1>;
      #size-cells = <0>;
      codec: codec@38 {

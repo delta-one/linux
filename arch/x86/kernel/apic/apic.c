@@ -1931,6 +1931,7 @@ void __init check_x2apic(void)
 	}
 }
 #else /* CONFIG_X86_X2APIC */
+<<<<<<< HEAD
 void __init check_x2apic(void)
 {
 	if (!apic_is_x2apic_enabled())
@@ -1944,6 +1945,18 @@ void __init check_x2apic(void)
 	disable_apic = 1;
 	setup_clear_cpu_cap(X86_FEATURE_APIC);
 }
+=======
+static int __init validate_x2apic(void)
+{
+	if (!apic_is_x2apic_enabled())
+		return 0;
+	/*
+	 * Checkme: Can we simply turn off x2apic here instead of panic?
+	 */
+	panic("BIOS has enabled x2apic but kernel doesn't support x2apic, please disable x2apic in BIOS.\n");
+}
+early_initcall(validate_x2apic);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void try_to_enable_x2apic(int remap_mode) { }
 static inline void __x2apic_enable(void) { }

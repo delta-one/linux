@@ -917,7 +917,11 @@ static int try_to_find_probe_trace_events(struct perf_probe_event *pev,
 	dinfo = open_debuginfo(pev->target, pev->nsi, !need_dwarf);
 	if (!dinfo) {
 		if (need_dwarf)
+<<<<<<< HEAD
 			return -ENODATA;
+=======
+			return -ENOENT;
+>>>>>>> b7ba80a49124 (Commit)
 		pr_debug("Could not open debuginfo. Try to use symbols.\n");
 		return 0;
 	}
@@ -956,7 +960,11 @@ static int try_to_find_probe_trace_events(struct perf_probe_event *pev,
 	if (ntevs == 0)	{	/* No error but failed to find probe point. */
 		pr_warning("Probe point '%s' not found.\n",
 			   synthesize_perf_probe_point(&pev->point));
+<<<<<<< HEAD
 		return -ENODEV;
+=======
+		return -ENOENT;
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (ntevs < 0) {
 		/* Error path : ntevs < 0 */
 		pr_debug("An error occurred in debuginfo analysis (%d).\n", ntevs);

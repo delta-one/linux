@@ -7,7 +7,10 @@ readonly GREEN='\033[0;92m'
 readonly YELLOW='\033[0;33m'
 readonly RED='\033[0;31m'
 readonly NC='\033[0m' # No Color
+<<<<<<< HEAD
 readonly TESTPORT=8000
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 readonly KSFT_PASS=0
 readonly KSFT_FAIL=1
@@ -57,6 +60,7 @@ trap wake_children EXIT
 
 run_one() {
 	local -r args=$@
+<<<<<<< HEAD
 	local nr_socks=0
 	local i=0
 	local -r timeout=10
@@ -77,6 +81,13 @@ run_one() {
 	fi
 
 	./udpgso_bench_tx -p "$TESTPORT" ${args}
+=======
+
+	./udpgso_bench_rx &
+	./udpgso_bench_rx -t &
+
+	./udpgso_bench_tx ${args}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 run_in_netns() {

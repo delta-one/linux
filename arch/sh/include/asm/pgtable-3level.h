@@ -28,6 +28,7 @@
 #define pmd_ERROR(e) \
 	printk("%s:%d: bad pmd %016llx.\n", __FILE__, __LINE__, pmd_val(e))
 
+<<<<<<< HEAD
 typedef union {
 	struct {
 		unsigned long pmd_low;
@@ -37,6 +38,11 @@ typedef union {
 } pmd_t;
 #define pmd_val(x)	((x).pmd)
 #define __pmd(x)	((pmd_t) { .pmd = (x) } )
+=======
+typedef struct { unsigned long long pmd; } pmd_t;
+#define pmd_val(x)	((x).pmd)
+#define __pmd(x)	((pmd_t) { (x) } )
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline pmd_t *pud_pgtable(pud_t pud)
 {

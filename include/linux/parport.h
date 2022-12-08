@@ -40,6 +40,13 @@ struct amiga_parport_state {
        unsigned char statusdir;/* ciab.ddrb & 7 */
 };
 
+<<<<<<< HEAD
+=======
+struct ax88796_parport_state {
+	unsigned char cpr;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct ip32_parport_state {
 	unsigned int dcr;
 	unsigned int ecr;
@@ -51,6 +58,10 @@ struct parport_state {
 		/* ARC has no state. */
 		struct ax_parport_state ax;
 		struct amiga_parport_state amiga;
+<<<<<<< HEAD
+=======
+		struct ax88796_parport_state ax88796;
+>>>>>>> b7ba80a49124 (Commit)
 		/* Atari has not state. */
 		struct ip32_parport_state ip32;
 		void *misc; 

@@ -545,7 +545,10 @@ static const struct mtk_eint_hw mt8183_eint_hw = {
 	.ports     = 6,
 	.ap_num    = 212,
 	.db_cnt    = 13,
+<<<<<<< HEAD
 	.db_time   = debounce_time_mt6765,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct mtk_pin_soc mt8183_data = {

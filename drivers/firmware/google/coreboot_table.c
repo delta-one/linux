@@ -93,6 +93,7 @@ static int coreboot_table_populate(struct device *dev, void *ptr)
 	for (i = 0; i < header->table_entries; i++) {
 		entry = ptr_entry;
 
+<<<<<<< HEAD
 		if (entry->size < sizeof(*entry)) {
 			dev_warn(dev, "coreboot table entry too small!\n");
 			return -EINVAL;
@@ -116,6 +117,17 @@ static int coreboot_table_populate(struct device *dev, void *ptr)
 			dev_set_name(&device->dev, "coreboot%d", i);
 			break;
 		}
+=======
+		device = kzalloc(sizeof(struct device) + entry->size, GFP_KERNEL);
+		if (!device)
+			return -ENOMEM;
+
+		dev_set_name(&device->dev, "coreboot%d", i);
+		device->dev.parent = dev;
+		device->dev.bus = &coreboot_bus_type;
+		device->dev.release = coreboot_device_release;
+		memcpy(&device->entry, ptr_entry, entry->size);
+>>>>>>> b7ba80a49124 (Commit)
 
 		ret = device_register(&device->dev);
 		if (ret) {
@@ -163,8 +175,17 @@ static int coreboot_table_probe(struct platform_device *pdev)
 	if (!ptr)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	ret = coreboot_table_populate(dev, ptr);
 
+=======
+	ret = bus_register(&coreboot_bus_type);
+	if (!ret) {
+		ret = coreboot_table_populate(dev, ptr);
+		if (ret)
+			bus_unregister(&coreboot_bus_type);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	memunmap(ptr);
 
 	return ret;
@@ -179,6 +200,10 @@ static int __cb_dev_unregister(struct device *dev, void *dummy)
 static int coreboot_table_remove(struct platform_device *pdev)
 {
 	bus_for_each_dev(&coreboot_bus_type, NULL, NULL, __cb_dev_unregister);
+<<<<<<< HEAD
+=======
+	bus_unregister(&coreboot_bus_type);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -208,6 +233,7 @@ static struct platform_driver coreboot_table_driver = {
 		.of_match_table = of_match_ptr(coreboot_of_match),
 	},
 };
+<<<<<<< HEAD
 
 static int __init coreboot_table_driver_init(void)
 {
@@ -235,5 +261,8 @@ static void __exit coreboot_table_driver_exit(void)
 module_init(coreboot_table_driver_init);
 module_exit(coreboot_table_driver_exit);
 
+=======
+module_platform_driver(coreboot_table_driver);
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("Google, Inc.");
 MODULE_LICENSE("GPL");

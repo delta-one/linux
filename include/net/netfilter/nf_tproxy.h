@@ -17,6 +17,7 @@ static inline bool nf_tproxy_sk_is_transparent(struct sock *sk)
 	return false;
 }
 
+<<<<<<< HEAD
 static inline void nf_tproxy_twsk_deschedule_put(struct inet_timewait_sock *tw)
 {
 	local_bh_disable();
@@ -24,6 +25,8 @@ static inline void nf_tproxy_twsk_deschedule_put(struct inet_timewait_sock *tw)
 	local_bh_enable();
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* assign a socket to the skb -- consumes sk */
 static inline void nf_tproxy_assign_sock(struct sk_buff *skb, struct sock *sk)
 {

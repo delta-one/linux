@@ -125,7 +125,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	gpu_opp_table: opp-table-gpu {
+=======
+	gpu_opp_table: gpu-opp-table {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "operating-points-v2";
 
 		opp-255000000 {
@@ -580,8 +584,13 @@
 };
 
 &gpio_intc {
+<<<<<<< HEAD
 	compatible = "amlogic,meson8b-gpio-intc",
 		     "amlogic,meson-gpio-intc";
+=======
+	compatible = "amlogic,meson-gpio-intc",
+		     "amlogic,meson8b-gpio-intc";
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 
@@ -643,9 +652,12 @@
 	arm,filter-ranges = <0x100000 0xc0000000>;
 	prefetch-data = <1>;
 	prefetch-instr = <1>;
+<<<<<<< HEAD
 	arm,prefetch-offset = <7>;
 	arm,double-linefill = <1>;
 	arm,prefetch-drop = <1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	arm,shared-override;
 };
 

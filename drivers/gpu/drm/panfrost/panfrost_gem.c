@@ -235,8 +235,17 @@ struct drm_gem_object *panfrost_gem_create_object(struct drm_device *dev, size_t
 }
 
 struct panfrost_gem_object *
+<<<<<<< HEAD
 panfrost_gem_create(struct drm_device *dev, size_t size, u32 flags)
 {
+=======
+panfrost_gem_create_with_handle(struct drm_file *file_priv,
+				struct drm_device *dev, size_t size,
+				u32 flags,
+				uint32_t *handle)
+{
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_gem_shmem_object *shmem;
 	struct panfrost_gem_object *bo;
 
@@ -252,6 +261,19 @@ panfrost_gem_create(struct drm_device *dev, size_t size, u32 flags)
 	bo->noexec = !!(flags & PANFROST_BO_NOEXEC);
 	bo->is_heap = !!(flags & PANFROST_BO_HEAP);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Allocate an id of idr table where the obj is registered
+	 * and handle has the id what user can see.
+	 */
+	ret = drm_gem_handle_create(file_priv, &shmem->base, handle);
+	/* drop reference from allocate - handle holds it now. */
+	drm_gem_object_put(&shmem->base);
+	if (ret)
+		return ERR_PTR(ret);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return bo;
 }
 

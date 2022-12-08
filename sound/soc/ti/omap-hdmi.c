@@ -398,11 +398,19 @@ static int omap_hdmi_audio_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void omap_hdmi_audio_remove(struct platform_device *pdev)
+=======
+static int omap_hdmi_audio_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hdmi_audio_data *ad = platform_get_drvdata(pdev);
 
 	snd_soc_unregister_card(ad->card);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver hdmi_audio_driver = {
@@ -410,7 +418,11 @@ static struct platform_driver hdmi_audio_driver = {
 		.name = DRV_NAME,
 	},
 	.probe = omap_hdmi_audio_probe,
+<<<<<<< HEAD
 	.remove_new = omap_hdmi_audio_remove,
+=======
+	.remove = omap_hdmi_audio_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(hdmi_audio_driver);

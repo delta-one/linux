@@ -23,7 +23,11 @@
 #include <asm/io.h>
 #include <asm/sibyte/sb1250.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_SIBYTE_BCM1x80
+=======
+#if defined(CONFIG_SIBYTE_BCM1x55) || defined(CONFIG_SIBYTE_BCM1x80)
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/sibyte/bcm1480_regs.h>
 #include <asm/sibyte/bcm1480_scd.h>
 #include <asm/sibyte/bcm1480_int.h>
@@ -35,7 +39,11 @@
 #error invalid SiByte UART configuration
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_SIBYTE_BCM1x80
+=======
+#if defined(CONFIG_SIBYTE_BCM1x55) || defined(CONFIG_SIBYTE_BCM1x80)
+>>>>>>> b7ba80a49124 (Commit)
 #undef K_INT_TRACE_FREEZE
 #define K_INT_TRACE_FREEZE K_BCM1480_INT_TRACE_FREEZE
 #undef K_INT_PERF_CNT
@@ -157,7 +165,11 @@ static void arm_tb(void)
 	 * a previous interrupt request.  This means that bus profiling
 	 * requires ALL of the SCD perf counters.
 	 */
+<<<<<<< HEAD
 #ifdef CONFIG_SIBYTE_BCM1x80
+=======
+#if defined(CONFIG_SIBYTE_BCM1x55) || defined(CONFIG_SIBYTE_BCM1x80)
+>>>>>>> b7ba80a49124 (Commit)
 	__raw_writeq((scdperfcnt & ~M_SPC_CFG_SRC1) |
 						/* keep counters 0,2,3,4,5,6,7 as is */
 		     V_SPC_CFG_SRC1(1),		/* counter 1 counts cycles */
@@ -290,7 +302,11 @@ static int sbprof_zbprof_start(struct file *filp)
 	 *  pass them through.	I am exploiting my knowledge that
 	 *  cp0_status masks out IP[5]. krw
 	 */
+<<<<<<< HEAD
 #ifdef CONFIG_SIBYTE_BCM1x80
+=======
+#if defined(CONFIG_SIBYTE_BCM1x55) || defined(CONFIG_SIBYTE_BCM1x80)
+>>>>>>> b7ba80a49124 (Commit)
 	__raw_writeq(K_BCM1480_INT_MAP_I3,
 		     IOADDR(A_BCM1480_IMR_REGISTER(0, R_BCM1480_IMR_INTERRUPT_MAP_BASE_L) +
 			    ((K_BCM1480_INT_PERF_CNT & 0x3f) << 3)));
@@ -343,7 +359,11 @@ static int sbprof_zbprof_start(struct file *filp)
 	__raw_writeq(0, IOADDR(A_SCD_TRACE_SEQUENCE_7));
 
 	/* Now indicate the PERF_CNT interrupt as a trace-relevant interrupt */
+<<<<<<< HEAD
 #ifdef CONFIG_SIBYTE_BCM1x80
+=======
+#if defined(CONFIG_SIBYTE_BCM1x55) || defined(CONFIG_SIBYTE_BCM1x80)
+>>>>>>> b7ba80a49124 (Commit)
 	__raw_writeq(1ULL << (K_BCM1480_INT_PERF_CNT & 0x3f),
 		     IOADDR(A_BCM1480_IMR_REGISTER(0, R_BCM1480_IMR_INTERRUPT_TRACE_L)));
 #else
@@ -550,7 +570,11 @@ static int __init sbprof_tb_init(void)
 		return -EIO;
 	}
 
+<<<<<<< HEAD
 	tbc = class_create("sb_tracebuffer");
+=======
+	tbc = class_create(THIS_MODULE, "sb_tracebuffer");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(tbc)) {
 		err = PTR_ERR(tbc);
 		goto out_chrdev;

@@ -10,7 +10,10 @@ to non-secure vs secure interrupt line.
 - compatible       : Should be one of:
 
                         "qcom,msm8916-iommu"
+<<<<<<< HEAD
                         "qcom,msm8953-iommu"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
                      Followed by "qcom,msm-iommu-v1".
 

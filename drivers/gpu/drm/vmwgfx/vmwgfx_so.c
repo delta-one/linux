@@ -24,7 +24,10 @@
  *
  **************************************************************************/
 
+<<<<<<< HEAD
 #include "vmwgfx_bo.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "vmwgfx_drv.h"
 #include "vmwgfx_resource_priv.h"
 #include "vmwgfx_so.h"
@@ -71,7 +74,11 @@ struct vmw_view {
 	unsigned view_id;              /* Immutable */
 	u32 cmd_size;                  /* Immutable */
 	bool committed;                /* Protected by binding_mutex */
+<<<<<<< HEAD
 	u32 cmd[];		       /* Immutable */
+=======
+	u32 cmd[1];                    /* Immutable */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int vmw_view_create(struct vmw_resource *res);
@@ -82,11 +89,18 @@ static void vmw_view_commit_notify(struct vmw_resource *res,
 
 static const struct vmw_res_func vmw_view_func = {
 	.res_type = vmw_res_view,
+<<<<<<< HEAD
 	.needs_guest_memory = false,
 	.may_evict = false,
 	.type_name = "DX view",
 	.domain = VMW_BO_DOMAIN_SYS,
 	.busy_domain = VMW_BO_DOMAIN_SYS,
+=======
+	.needs_backup = false,
+	.may_evict = false,
+	.type_name = "DX view",
+	.backup_placement = NULL,
+>>>>>>> b7ba80a49124 (Commit)
 	.create = vmw_view_create,
 	.commit_notify = vmw_view_commit_notify,
 };

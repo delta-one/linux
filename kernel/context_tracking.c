@@ -510,7 +510,11 @@ void noinstr __ct_user_enter(enum ctx_state state)
 			 * In this we case we don't care about any concurrency/ordering.
 			 */
 			if (!IS_ENABLED(CONFIG_CONTEXT_TRACKING_IDLE))
+<<<<<<< HEAD
 				arch_atomic_set(&ct->state, state);
+=======
+				atomic_set(&ct->state, state);
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			/*
 			 * Even if context tracking is disabled on this CPU, because it's outside
@@ -527,7 +531,11 @@ void noinstr __ct_user_enter(enum ctx_state state)
 			 */
 			if (!IS_ENABLED(CONFIG_CONTEXT_TRACKING_IDLE)) {
 				/* Tracking for vtime only, no concurrent RCU EQS accounting */
+<<<<<<< HEAD
 				arch_atomic_set(&ct->state, state);
+=======
+				atomic_set(&ct->state, state);
+>>>>>>> b7ba80a49124 (Commit)
 			} else {
 				/*
 				 * Tracking for vtime and RCU EQS. Make sure we don't race
@@ -535,7 +543,11 @@ void noinstr __ct_user_enter(enum ctx_state state)
 				 * RCU only requires RCU_DYNTICKS_IDX increments to be fully
 				 * ordered.
 				 */
+<<<<<<< HEAD
 				arch_atomic_add(state, &ct->state);
+=======
+				atomic_add(state, &ct->state);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 	}
@@ -630,12 +642,20 @@ void noinstr __ct_user_exit(enum ctx_state state)
 			 * In this we case we don't care about any concurrency/ordering.
 			 */
 			if (!IS_ENABLED(CONFIG_CONTEXT_TRACKING_IDLE))
+<<<<<<< HEAD
 				arch_atomic_set(&ct->state, CONTEXT_KERNEL);
+=======
+				atomic_set(&ct->state, CONTEXT_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 
 		} else {
 			if (!IS_ENABLED(CONFIG_CONTEXT_TRACKING_IDLE)) {
 				/* Tracking for vtime only, no concurrent RCU EQS accounting */
+<<<<<<< HEAD
 				arch_atomic_set(&ct->state, CONTEXT_KERNEL);
+=======
+				atomic_set(&ct->state, CONTEXT_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 			} else {
 				/*
 				 * Tracking for vtime and RCU EQS. Make sure we don't race
@@ -643,7 +663,11 @@ void noinstr __ct_user_exit(enum ctx_state state)
 				 * RCU only requires RCU_DYNTICKS_IDX increments to be fully
 				 * ordered.
 				 */
+<<<<<<< HEAD
 				arch_atomic_sub(state, &ct->state);
+=======
+				atomic_sub(state, &ct->state);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 	}

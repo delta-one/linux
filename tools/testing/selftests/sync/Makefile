@@ -1,6 +1,10 @@
 # SPDX-License-Identifier: GPL-2.0
 CFLAGS += -O2 -g -std=gnu89 -pthread -Wall -Wextra
+<<<<<<< HEAD
 CFLAGS += $(KHDR_INCLUDES)
+=======
+CFLAGS += -I../../../../usr/include/
+>>>>>>> b7ba80a49124 (Commit)
 LDFLAGS += -pthread
 
 .PHONY: all clean

@@ -32,7 +32,11 @@
 
 	firmware@204f000 {
 		compatible = "samsung,secure-firmware";
+<<<<<<< HEAD
 		reg = <0x0204f000 0x1000>;
+=======
+		reg = <0x0204F000 0x1000>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	fixed-rate-clocks {
@@ -132,6 +136,11 @@
 		precharge-current-microamp = <250000>;
 		charge-term-current-microamp = <250000>;
 		constant-charge-voltage-max-microvolt = <4200000>;
+<<<<<<< HEAD
+=======
+
+		power-supplies = <&power_supply>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	i2c-gpio-1 {
@@ -188,15 +197,27 @@
 			pinctrl-names = "default";
 			interrupt-parent = <&gpx0>;
 			interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
+<<<<<<< HEAD
+=======
+			interrupt-controller;
+			irq-trigger = <0x1>;
+>>>>>>> b7ba80a49124 (Commit)
 			st,adc-freq = <3>;
 			st,mod-12b = <1>;
 			st,ref-sel = <0>;
 			st,sample-time = <3>;
 
+<<<<<<< HEAD
 			adc {
 				compatible = "st,stmpe-adc";
 				#io-channel-cells = <1>;
 				st,norequest-mask = <0x2f>;
+=======
+			stmpe_adc {
+				compatible = "st,stmpe-adc";
+				#io-channel-cells = <1>;
+				st,norequest-mask = <0x2F>;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 	};
@@ -243,7 +264,10 @@
 		pinctrl-0 = <&led_bl_reset>;
 		pinctrl-names = "default";
 		enable-gpios = <&gpm0 1 GPIO_ACTIVE_HIGH>;
+<<<<<<< HEAD
 		power-supply = <&panel_vdd>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pwms = <&pwm 1 78770 0>;
 		brightness-levels = <0 48 128 255>;
 		num-interpolated-steps = <8>;

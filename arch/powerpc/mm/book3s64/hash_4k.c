@@ -16,8 +16,11 @@
 #include <asm/machdep.h>
 #include <asm/mmu.h>
 
+<<<<<<< HEAD
 #include "internal.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int __hash_page_4K(unsigned long ea, unsigned long access, unsigned long vsid,
 		   pte_t *ptep, unsigned long trap, unsigned long flags,
 		   int ssize, int subpg_prot)
@@ -120,9 +123,12 @@ repeat:
 		}
 		new_pte = (new_pte & ~_PAGE_HPTEFLAGS) | H_PAGE_HASHPTE;
 		new_pte |= pte_set_hidx(ptep, rpte, 0, slot, PTRS_PER_PTE);
+<<<<<<< HEAD
 
 		if (stress_hpt())
 			hpt_do_stress(ea, hpte_group);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	*ptep = __pte(new_pte & ~H_PAGE_BUSY);
 	return 0;

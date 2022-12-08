@@ -19,9 +19,17 @@ endif
 obj-$(CONFIG_EFI_PARAMS_FROM_FDT)	+= fdtparams.o
 obj-$(CONFIG_EFI_ESRT)			+= esrt.o
 obj-$(CONFIG_EFI_VARS_PSTORE)		+= efi-pstore.o
+<<<<<<< HEAD
 obj-$(CONFIG_UEFI_CPER)			+= cper.o cper_cxl.o
 obj-$(CONFIG_EFI_RUNTIME_WRAPPERS)	+= runtime-wrappers.o
 subdir-$(CONFIG_EFI_STUB)		+= libstub
+=======
+obj-$(CONFIG_UEFI_CPER)			+= cper.o
+obj-$(CONFIG_EFI_RUNTIME_MAP)		+= runtime-map.o
+obj-$(CONFIG_EFI_RUNTIME_WRAPPERS)	+= runtime-wrappers.o
+subdir-$(CONFIG_EFI_STUB)		+= libstub
+obj-$(CONFIG_EFI_FAKE_MEMMAP)		+= fake_map.o
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_EFI_BOOTLOADER_CONTROL)	+= efibc.o
 obj-$(CONFIG_EFI_TEST)			+= test/
 obj-$(CONFIG_EFI_DEV_PATH_PARSER)	+= dev-path-parser.o
@@ -30,6 +38,12 @@ obj-$(CONFIG_EFI_RCI2_TABLE)		+= rci2-table.o
 obj-$(CONFIG_EFI_EMBEDDED_FIRMWARE)	+= embedded-firmware.o
 obj-$(CONFIG_LOAD_UEFI_KEYS)		+= mokvar-table.o
 
+<<<<<<< HEAD
+=======
+fake_map-y				+= fake_mem.o
+fake_map-$(CONFIG_X86)			+= x86_fake_mem.o
+
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_SYSFB)			+= sysfb_efi.o
 
 arm-obj-$(CONFIG_EFI)			:= efi-init.o arm-runtime.o

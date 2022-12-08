@@ -753,12 +753,23 @@
  * TRCDEVARCH	- CoreSight architected register
  *                - Bits[15:12] - Major version
  *                - Bits[19:16] - Minor version
+<<<<<<< HEAD
  *
  * We must rely only on TRCDEVARCH for the version information. Even though,
  * TRCIDR1 also provides the architecture version, it is a "Trace" register
  * and as such must be accessed only with Trace power domain ON. This may
  * not be available at probe time.
  *
+=======
+ * TRCIDR1	- ETM architected register
+ *                - Bits[11:8] - Major version
+ *                - Bits[7:4]  - Minor version
+ * We must rely on TRCDEVARCH for the version information,
+ * however we don't want to break the support for potential
+ * old implementations which might not implement it. Thus
+ * we fall back to TRCIDR1 if TRCDEVARCH is not implemented
+ * for memory mapped components.
+>>>>>>> b7ba80a49124 (Commit)
  * Now to make certain decisions easier based on the version
  * we use an internal representation of the version in the
  * driver, as follows :
@@ -784,6 +795,15 @@ static inline u8 etm_devarch_to_arch(u32 devarch)
 				ETM_DEVARCH_REVISION(devarch));
 }
 
+<<<<<<< HEAD
+=======
+static inline u8 etm_trcidr_to_arch(u32 trcidr1)
+{
+	return ETM_ARCH_VERSION(ETM_TRCIDR1_ARCH_MAJOR(trcidr1),
+				ETM_TRCIDR1_ARCH_MINOR(trcidr1));
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 enum etm_impdef_type {
 	ETM4_IMPDEF_HISI_CORE_COMMIT,
 	ETM4_IMPDEF_FEATURE_MAX,
@@ -1087,7 +1107,10 @@ static inline bool etm4x_is_ete(struct etmv4_drvdata *drvdata)
 {
 	return drvdata->arch >= ETM_ARCH_ETE;
 }
+<<<<<<< HEAD
 
 int etm4_read_alloc_trace_id(struct etmv4_drvdata *drvdata);
 void etm4_release_trace_id(struct etmv4_drvdata *drvdata);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

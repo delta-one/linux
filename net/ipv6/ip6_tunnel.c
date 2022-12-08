@@ -803,8 +803,13 @@ static int __ip6_tnl_rcv(struct ip6_tnl *tunnel, struct sk_buff *skb,
 	     (tunnel->parms.i_flags & TUNNEL_CSUM)) ||
 	    ((tpi->flags & TUNNEL_CSUM) &&
 	     !(tunnel->parms.i_flags & TUNNEL_CSUM))) {
+<<<<<<< HEAD
 		DEV_STATS_INC(tunnel->dev, rx_crc_errors);
 		DEV_STATS_INC(tunnel->dev, rx_errors);
+=======
+		tunnel->dev->stats.rx_crc_errors++;
+		tunnel->dev->stats.rx_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 		goto drop;
 	}
 
@@ -812,8 +817,13 @@ static int __ip6_tnl_rcv(struct ip6_tnl *tunnel, struct sk_buff *skb,
 		if (!(tpi->flags & TUNNEL_SEQ) ||
 		    (tunnel->i_seqno &&
 		     (s32)(ntohl(tpi->seq) - tunnel->i_seqno) < 0)) {
+<<<<<<< HEAD
 			DEV_STATS_INC(tunnel->dev, rx_fifo_errors);
 			DEV_STATS_INC(tunnel->dev, rx_errors);
+=======
+			tunnel->dev->stats.rx_fifo_errors++;
+			tunnel->dev->stats.rx_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 			goto drop;
 		}
 		tunnel->i_seqno = ntohl(tpi->seq) + 1;
@@ -824,8 +834,13 @@ static int __ip6_tnl_rcv(struct ip6_tnl *tunnel, struct sk_buff *skb,
 	/* Warning: All skb pointers will be invalidated! */
 	if (tunnel->dev->type == ARPHRD_ETHER) {
 		if (!pskb_may_pull(skb, ETH_HLEN)) {
+<<<<<<< HEAD
 			DEV_STATS_INC(tunnel->dev, rx_length_errors);
 			DEV_STATS_INC(tunnel->dev, rx_errors);
+=======
+			tunnel->dev->stats.rx_length_errors++;
+			tunnel->dev->stats.rx_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 			goto drop;
 		}
 
@@ -849,8 +864,13 @@ static int __ip6_tnl_rcv(struct ip6_tnl *tunnel, struct sk_buff *skb,
 					     &ipv6h->saddr,
 					     ipv6_get_dsfield(ipv6h));
 		if (err > 1) {
+<<<<<<< HEAD
 			DEV_STATS_INC(tunnel->dev, rx_frame_errors);
 			DEV_STATS_INC(tunnel->dev, rx_errors);
+=======
+			++tunnel->dev->stats.rx_frame_errors;
+			++tunnel->dev->stats.rx_errors;
+>>>>>>> b7ba80a49124 (Commit)
 			goto drop;
 		}
 	}
@@ -1071,6 +1091,10 @@ int ip6_tnl_xmit(struct sk_buff *skb, struct net_device *dev, __u8 dsfield,
 {
 	struct ip6_tnl *t = netdev_priv(dev);
 	struct net *net = t->net;
+<<<<<<< HEAD
+=======
+	struct net_device_stats *stats = &t->dev->stats;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ipv6hdr *ipv6h;
 	struct ipv6_tel_txoption opt;
 	struct dst_entry *dst = NULL, *ndst = NULL;
@@ -1165,7 +1189,11 @@ route_lookup:
 	tdev = dst->dev;
 
 	if (tdev == dev) {
+<<<<<<< HEAD
 		DEV_STATS_INC(dev, collisions);
+=======
+		stats->collisions++;
+>>>>>>> b7ba80a49124 (Commit)
 		net_warn_ratelimited("%s: Local routing loop detected!\n",
 				     t->parms.name);
 		goto tx_err_dst_release;
@@ -1240,8 +1268,13 @@ route_lookup:
 	 */
 	max_headroom = LL_RESERVED_SPACE(dst->dev) + sizeof(struct ipv6hdr)
 			+ dst->header_len + t->hlen;
+<<<<<<< HEAD
 	if (max_headroom > READ_ONCE(dev->needed_headroom))
 		WRITE_ONCE(dev->needed_headroom, max_headroom);
+=======
+	if (max_headroom > dev->needed_headroom)
+		dev->needed_headroom = max_headroom;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = ip6_tnl_encap(skb, t, &proto, fl6);
 	if (err)
@@ -1264,7 +1297,11 @@ route_lookup:
 	ip6tunnel_xmit(NULL, skb, dev);
 	return 0;
 tx_err_link_failure:
+<<<<<<< HEAD
 	DEV_STATS_INC(dev, tx_carrier_errors);
+=======
+	stats->tx_carrier_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 	dst_link_failure(skb);
 tx_err_dst_release:
 	dst_release(dst);
@@ -1407,6 +1444,10 @@ static netdev_tx_t
 ip6_tnl_start_xmit(struct sk_buff *skb, struct net_device *dev)
 {
 	struct ip6_tnl *t = netdev_priv(dev);
+<<<<<<< HEAD
+=======
+	struct net_device_stats *stats = &t->dev->stats;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 ipproto;
 	int ret;
 
@@ -1436,8 +1477,13 @@ ip6_tnl_start_xmit(struct sk_buff *skb, struct net_device *dev)
 	return NETDEV_TX_OK;
 
 tx_err:
+<<<<<<< HEAD
 	DEV_STATS_INC(dev, tx_errors);
 	DEV_STATS_INC(dev, tx_dropped);
+=======
+	stats->tx_errors++;
+	stats->tx_dropped++;
+>>>>>>> b7ba80a49124 (Commit)
 	kfree_skb(skb);
 	return NETDEV_TX_OK;
 }
@@ -1448,8 +1494,13 @@ static void ip6_tnl_link_config(struct ip6_tnl *t)
 	struct net_device *tdev = NULL;
 	struct __ip6_tnl_parm *p = &t->parms;
 	struct flowi6 *fl6 = &t->fl.u.ip6;
+<<<<<<< HEAD
 	int t_hlen;
 	int mtu;
+=======
+	unsigned int mtu;
+	int t_hlen;
+>>>>>>> b7ba80a49124 (Commit)
 
 	__dev_addr_set(dev, &p->laddr, sizeof(struct in6_addr));
 	memcpy(dev->broadcast, &p->raddr, sizeof(struct in6_addr));
@@ -1496,6 +1547,7 @@ static void ip6_tnl_link_config(struct ip6_tnl *t)
 			dev->hard_header_len = tdev->hard_header_len + t_hlen;
 			mtu = min_t(unsigned int, tdev->mtu, IP6_MAX_MTU);
 
+<<<<<<< HEAD
 			mtu = mtu - t_hlen;
 			if (!(t->parms.flags & IP6_TNL_F_IGN_ENCAP_LIMIT))
 				mtu -= 8;
@@ -1503,6 +1555,14 @@ static void ip6_tnl_link_config(struct ip6_tnl *t)
 			if (mtu < IPV6_MIN_MTU)
 				mtu = IPV6_MIN_MTU;
 			WRITE_ONCE(dev->mtu, mtu);
+=======
+			dev->mtu = mtu - t_hlen;
+			if (!(t->parms.flags & IP6_TNL_F_IGN_ENCAP_LIMIT))
+				dev->mtu -= 8;
+
+			if (dev->mtu < IPV6_MIN_MTU)
+				dev->mtu = IPV6_MIN_MTU;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }
@@ -1987,6 +2047,42 @@ static void ip6_tnl_netlink_parms(struct nlattr *data[],
 		parms->fwmark = nla_get_u32(data[IFLA_IPTUN_FWMARK]);
 }
 
+<<<<<<< HEAD
+=======
+static bool ip6_tnl_netlink_encap_parms(struct nlattr *data[],
+					struct ip_tunnel_encap *ipencap)
+{
+	bool ret = false;
+
+	memset(ipencap, 0, sizeof(*ipencap));
+
+	if (!data)
+		return ret;
+
+	if (data[IFLA_IPTUN_ENCAP_TYPE]) {
+		ret = true;
+		ipencap->type = nla_get_u16(data[IFLA_IPTUN_ENCAP_TYPE]);
+	}
+
+	if (data[IFLA_IPTUN_ENCAP_FLAGS]) {
+		ret = true;
+		ipencap->flags = nla_get_u16(data[IFLA_IPTUN_ENCAP_FLAGS]);
+	}
+
+	if (data[IFLA_IPTUN_ENCAP_SPORT]) {
+		ret = true;
+		ipencap->sport = nla_get_be16(data[IFLA_IPTUN_ENCAP_SPORT]);
+	}
+
+	if (data[IFLA_IPTUN_ENCAP_DPORT]) {
+		ret = true;
+		ipencap->dport = nla_get_be16(data[IFLA_IPTUN_ENCAP_DPORT]);
+	}
+
+	return ret;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int ip6_tnl_newlink(struct net *src_net, struct net_device *dev,
 			   struct nlattr *tb[], struct nlattr *data[],
 			   struct netlink_ext_ack *extack)
@@ -1999,7 +2095,11 @@ static int ip6_tnl_newlink(struct net *src_net, struct net_device *dev,
 
 	nt = netdev_priv(dev);
 
+<<<<<<< HEAD
 	if (ip_tunnel_netlink_encap_parms(data, &ipencap)) {
+=======
+	if (ip6_tnl_netlink_encap_parms(data, &ipencap)) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = ip6_tnl_encap_setup(nt, &ipencap);
 		if (err < 0)
 			return err;
@@ -2036,7 +2136,11 @@ static int ip6_tnl_changelink(struct net_device *dev, struct nlattr *tb[],
 	if (dev == ip6n->fb_tnl_dev)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (ip_tunnel_netlink_encap_parms(data, &ipencap)) {
+=======
+	if (ip6_tnl_netlink_encap_parms(data, &ipencap)) {
+>>>>>>> b7ba80a49124 (Commit)
 		int err = ip6_tnl_encap_setup(t, &ipencap);
 
 		if (err < 0)

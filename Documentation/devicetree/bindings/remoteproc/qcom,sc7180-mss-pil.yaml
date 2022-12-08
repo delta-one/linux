@@ -95,7 +95,10 @@ properties:
     items:
       - description: MBA reserved region
       - description: modem reserved region
+<<<<<<< HEAD
       - description: metadata reserved region
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   firmware-name:
     $ref: /schemas/types.yaml#/definitions/string-array
@@ -224,7 +227,11 @@ examples:
                         <&rpmhpd SC7180_MSS>;
         power-domain-names = "cx", "mx", "mss";
 
+<<<<<<< HEAD
         memory-region = <&mba_mem>, <&mpss_mem>, <&mdata_mem>;
+=======
+        memory-region = <&mba_mem>, <&mpss_mem>;
+>>>>>>> b7ba80a49124 (Commit)
 
         qcom,qmp = <&aoss_qmp>;
 

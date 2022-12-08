@@ -178,6 +178,7 @@ static void dump_instr(const char *lvl, struct pt_regs *regs)
 	for (i = -4; i < 1 + !!thumb; i++) {
 		unsigned int val, bad;
 
+<<<<<<< HEAD
 		if (thumb) {
 			u16 tmp;
 
@@ -194,6 +195,28 @@ static void dump_instr(const char *lvl, struct pt_regs *regs)
 				bad = get_kernel_nofault(val, &((u32 *)addr)[i]);
 
 			val = __mem_to_opcode_arm(val);
+=======
+		if (!user_mode(regs)) {
+			if (thumb) {
+				u16 val16;
+				bad = get_kernel_nofault(val16, &((u16 *)addr)[i]);
+				val = val16;
+			} else {
+				bad = get_kernel_nofault(val, &((u32 *)addr)[i]);
+			}
+		} else {
+			if (thumb)
+				bad = get_user(val, &((u16 *)addr)[i]);
+			else
+				bad = get_user(val, &((u32 *)addr)[i]);
+		}
+
+		if (IS_ENABLED(CONFIG_CPU_ENDIAN_BE8)) {
+			if (thumb)
+				val = cpu_to_le16(val);
+			else
+				val = cpu_to_le32(val);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (!bad)

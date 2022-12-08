@@ -569,7 +569,11 @@ out_err:
 	return err;
 }
 
+<<<<<<< HEAD
 static void cg14_remove(struct platform_device *op)
+=======
+static int cg14_remove(struct platform_device *op)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = dev_get_drvdata(&op->dev);
 	struct cg14_par *par = info->par;
@@ -580,6 +584,11 @@ static void cg14_remove(struct platform_device *op)
 	cg14_unmap_regs(op, info, par);
 
 	framebuffer_release(info);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id cg14_match[] = {
@@ -596,7 +605,11 @@ static struct platform_driver cg14_driver = {
 		.of_match_table = cg14_match,
 	},
 	.probe		= cg14_probe,
+<<<<<<< HEAD
 	.remove_new	= cg14_remove,
+=======
+	.remove		= cg14_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init cg14_init(void)

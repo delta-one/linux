@@ -111,7 +111,11 @@ static int qcom_glink_ssr_notifier_call(struct notifier_block *nb,
 	msg.command = cpu_to_le32(GLINK_SSR_DO_CLEANUP);
 	msg.seq_num = cpu_to_le32(ssr->seq_num);
 	msg.name_len = cpu_to_le32(strlen(ssr_name));
+<<<<<<< HEAD
 	strscpy(msg.name, ssr_name, sizeof(msg.name));
+=======
+	strlcpy(msg.name, ssr_name, sizeof(msg.name));
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = rpmsg_send(ssr->ept, &msg, sizeof(msg));
 	if (ret < 0)

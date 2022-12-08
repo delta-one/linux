@@ -149,7 +149,11 @@ static void __init test_hexdump(size_t len, int rowsize, int groupsize,
 static void __init test_hexdump_set(int rowsize, bool ascii)
 {
 	size_t d = min_t(size_t, sizeof(data_b), rowsize);
+<<<<<<< HEAD
 	size_t len = get_random_u32_inclusive(1, d);
+=======
+	size_t len = get_random_int() % d + 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	test_hexdump(len, rowsize, 4, ascii);
 	test_hexdump(len, rowsize, 2, ascii);
@@ -208,11 +212,19 @@ static void __init test_hexdump_overflow(size_t buflen, size_t len,
 static void __init test_hexdump_overflow_set(size_t buflen, bool ascii)
 {
 	unsigned int i = 0;
+<<<<<<< HEAD
 	int rs = get_random_u32_inclusive(1, 2) * 16;
 
 	do {
 		int gs = 1 << i;
 		size_t len = get_random_u32_below(rs) + gs;
+=======
+	int rs = (get_random_int() % 2 + 1) * 16;
+
+	do {
+		int gs = 1 << i;
+		size_t len = get_random_int() % rs + gs;
+>>>>>>> b7ba80a49124 (Commit)
 
 		test_hexdump_overflow(buflen, rounddown(len, gs), rs, gs, ascii);
 	} while (i++ < 3);
@@ -223,11 +235,19 @@ static int __init test_hexdump_init(void)
 	unsigned int i;
 	int rowsize;
 
+<<<<<<< HEAD
 	rowsize = get_random_u32_inclusive(1, 2) * 16;
 	for (i = 0; i < 16; i++)
 		test_hexdump_set(rowsize, false);
 
 	rowsize = get_random_u32_inclusive(1, 2) * 16;
+=======
+	rowsize = (get_random_int() % 2 + 1) * 16;
+	for (i = 0; i < 16; i++)
+		test_hexdump_set(rowsize, false);
+
+	rowsize = (get_random_int() % 2 + 1) * 16;
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < 16; i++)
 		test_hexdump_set(rowsize, true);
 

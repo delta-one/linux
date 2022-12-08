@@ -152,11 +152,16 @@ retry:
 	   the fault.  */
 	fault = handle_mm_fault(vma, address, flags, regs);
 
+<<<<<<< HEAD
 	if (fault_signal_pending(fault, regs)) {
 		if (!user_mode(regs))
 			goto no_context;
 		return;
 	}
+=======
+	if (fault_signal_pending(fault, regs))
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* The fault is fully completed (including releasing mmap lock) */
 	if (fault & VM_FAULT_COMPLETED)

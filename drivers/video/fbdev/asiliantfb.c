@@ -616,9 +616,12 @@ static struct pci_driver asiliantfb_driver = {
 
 static int __init asiliantfb_init(void)
 {
+<<<<<<< HEAD
 	if (fb_modesetting_disabled("asiliantfb"))
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (fb_get_options("asiliantfb", NULL))
 		return -ENODEV;
 
@@ -632,3 +635,7 @@ static void __exit asiliantfb_exit(void)
 	pci_unregister_driver(&asiliantfb_driver);
 }
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

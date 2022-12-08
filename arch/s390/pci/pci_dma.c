@@ -27,11 +27,19 @@ static int zpci_refresh_global(struct zpci_dev *zdev)
 				  zdev->iommu_pages * PAGE_SIZE);
 }
 
+<<<<<<< HEAD
 unsigned long *dma_alloc_cpu_table(gfp_t gfp)
 {
 	unsigned long *table, *entry;
 
 	table = kmem_cache_alloc(dma_region_table_cache, gfp);
+=======
+unsigned long *dma_alloc_cpu_table(void)
+{
+	unsigned long *table, *entry;
+
+	table = kmem_cache_alloc(dma_region_table_cache, GFP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!table)
 		return NULL;
 
@@ -45,11 +53,19 @@ static void dma_free_cpu_table(void *table)
 	kmem_cache_free(dma_region_table_cache, table);
 }
 
+<<<<<<< HEAD
 static unsigned long *dma_alloc_page_table(gfp_t gfp)
 {
 	unsigned long *table, *entry;
 
 	table = kmem_cache_alloc(dma_page_table_cache, gfp);
+=======
+static unsigned long *dma_alloc_page_table(void)
+{
+	unsigned long *table, *entry;
+
+	table = kmem_cache_alloc(dma_page_table_cache, GFP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!table)
 		return NULL;
 
@@ -63,6 +79,7 @@ static void dma_free_page_table(void *table)
 	kmem_cache_free(dma_page_table_cache, table);
 }
 
+<<<<<<< HEAD
 static unsigned long *dma_get_seg_table_origin(unsigned long *rtep, gfp_t gfp)
 {
 	unsigned long old_rte, rte;
@@ -86,10 +103,27 @@ static unsigned long *dma_get_seg_table_origin(unsigned long *rtep, gfp_t gfp)
 			dma_free_cpu_table(sto);
 			sto = get_rt_sto(old_rte);
 		}
+=======
+static unsigned long *dma_get_seg_table_origin(unsigned long *entry)
+{
+	unsigned long *sto;
+
+	if (reg_entry_isvalid(*entry))
+		sto = get_rt_sto(*entry);
+	else {
+		sto = dma_alloc_cpu_table();
+		if (!sto)
+			return NULL;
+
+		set_rt_sto(entry, virt_to_phys(sto));
+		validate_rt_entry(entry);
+		entry_clr_protected(entry);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return sto;
 }
 
+<<<<<<< HEAD
 static unsigned long *dma_get_page_table_origin(unsigned long *step, gfp_t gfp)
 {
 	unsigned long old_ste, ste;
@@ -112,23 +146,50 @@ static unsigned long *dma_get_page_table_origin(unsigned long *step, gfp_t gfp)
 			dma_free_page_table(pto);
 			pto = get_st_pto(old_ste);
 		}
+=======
+static unsigned long *dma_get_page_table_origin(unsigned long *entry)
+{
+	unsigned long *pto;
+
+	if (reg_entry_isvalid(*entry))
+		pto = get_st_pto(*entry);
+	else {
+		pto = dma_alloc_page_table();
+		if (!pto)
+			return NULL;
+		set_st_pto(entry, virt_to_phys(pto));
+		validate_st_entry(entry);
+		entry_clr_protected(entry);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return pto;
 }
 
+<<<<<<< HEAD
 unsigned long *dma_walk_cpu_trans(unsigned long *rto, dma_addr_t dma_addr,
 				  gfp_t gfp)
+=======
+unsigned long *dma_walk_cpu_trans(unsigned long *rto, dma_addr_t dma_addr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long *sto, *pto;
 	unsigned int rtx, sx, px;
 
 	rtx = calc_rtx(dma_addr);
+<<<<<<< HEAD
 	sto = dma_get_seg_table_origin(&rto[rtx], gfp);
+=======
+	sto = dma_get_seg_table_origin(&rto[rtx]);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!sto)
 		return NULL;
 
 	sx = calc_sx(dma_addr);
+<<<<<<< HEAD
 	pto = dma_get_page_table_origin(&sto[sx], gfp);
+=======
+	pto = dma_get_page_table_origin(&sto[sx]);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!pto)
 		return NULL;
 
@@ -136,6 +197,7 @@ unsigned long *dma_walk_cpu_trans(unsigned long *rto, dma_addr_t dma_addr,
 	return &pto[px];
 }
 
+<<<<<<< HEAD
 void dma_update_cpu_trans(unsigned long *ptep, phys_addr_t page_addr, int flags)
 {
 	unsigned long pte;
@@ -154,6 +216,21 @@ void dma_update_cpu_trans(unsigned long *ptep, phys_addr_t page_addr, int flags)
 		entry_clr_protected(&pte);
 
 	xchg(ptep, pte);
+=======
+void dma_update_cpu_trans(unsigned long *entry, phys_addr_t page_addr, int flags)
+{
+	if (flags & ZPCI_PTE_INVALID) {
+		invalidate_pt_entry(entry);
+	} else {
+		set_pt_pfaa(entry, page_addr);
+		validate_pt_entry(entry);
+	}
+
+	if (flags & ZPCI_TABLE_PROTECTED)
+		entry_set_protected(entry);
+	else
+		entry_clr_protected(entry);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __dma_update_trans(struct zpci_dev *zdev, phys_addr_t pa,
@@ -161,18 +238,33 @@ static int __dma_update_trans(struct zpci_dev *zdev, phys_addr_t pa,
 {
 	unsigned int nr_pages = PAGE_ALIGN(size) >> PAGE_SHIFT;
 	phys_addr_t page_addr = (pa & PAGE_MASK);
+<<<<<<< HEAD
+=======
+	unsigned long irq_flags;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long *entry;
 	int i, rc = 0;
 
 	if (!nr_pages)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (!zdev->dma_table)
 		return -EINVAL;
 
 	for (i = 0; i < nr_pages; i++) {
 		entry = dma_walk_cpu_trans(zdev->dma_table, dma_addr,
 					   GFP_ATOMIC);
+=======
+	spin_lock_irqsave(&zdev->dma_table_lock, irq_flags);
+	if (!zdev->dma_table) {
+		rc = -EINVAL;
+		goto out_unlock;
+	}
+
+	for (i = 0; i < nr_pages; i++) {
+		entry = dma_walk_cpu_trans(zdev->dma_table, dma_addr);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!entry) {
 			rc = -ENOMEM;
 			goto undo_cpu_trans;
@@ -188,13 +280,22 @@ undo_cpu_trans:
 		while (i-- > 0) {
 			page_addr -= PAGE_SIZE;
 			dma_addr -= PAGE_SIZE;
+<<<<<<< HEAD
 			entry = dma_walk_cpu_trans(zdev->dma_table, dma_addr,
 						   GFP_ATOMIC);
+=======
+			entry = dma_walk_cpu_trans(zdev->dma_table, dma_addr);
+>>>>>>> b7ba80a49124 (Commit)
 			if (!entry)
 				break;
 			dma_update_cpu_trans(entry, page_addr, flags);
 		}
 	}
+<<<<<<< HEAD
+=======
+out_unlock:
+	spin_unlock_irqrestore(&zdev->dma_table_lock, irq_flags);
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -567,7 +668,10 @@ static void s390_dma_unmap_sg(struct device *dev, struct scatterlist *sg,
 	
 int zpci_dma_init_device(struct zpci_dev *zdev)
 {
+<<<<<<< HEAD
 	u8 status;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	/*
@@ -578,8 +682,14 @@ int zpci_dma_init_device(struct zpci_dev *zdev)
 	WARN_ON(zdev->s390_domain);
 
 	spin_lock_init(&zdev->iommu_bitmap_lock);
+<<<<<<< HEAD
 
 	zdev->dma_table = dma_alloc_cpu_table(GFP_KERNEL);
+=======
+	spin_lock_init(&zdev->dma_table_lock);
+
+	zdev->dma_table = dma_alloc_cpu_table();
+>>>>>>> b7ba80a49124 (Commit)
 	if (!zdev->dma_table) {
 		rc = -ENOMEM;
 		goto out;
@@ -618,7 +728,11 @@ int zpci_dma_init_device(struct zpci_dev *zdev)
 
 	}
 	if (zpci_register_ioat(zdev, 0, zdev->start_dma, zdev->end_dma,
+<<<<<<< HEAD
 			       virt_to_phys(zdev->dma_table), &status)) {
+=======
+			       virt_to_phys(zdev->dma_table))) {
+>>>>>>> b7ba80a49124 (Commit)
 		rc = -EIO;
 		goto free_bitmap;
 	}

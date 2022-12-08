@@ -99,7 +99,18 @@ static const struct net_device_ops dummy_netdev_ops = {
 	.ndo_change_carrier	= dummy_change_carrier,
 };
 
+<<<<<<< HEAD
 static const struct ethtool_ops dummy_ethtool_ops = {
+=======
+static void dummy_get_drvinfo(struct net_device *dev,
+			      struct ethtool_drvinfo *info)
+{
+	strscpy(info->driver, DRV_NAME, sizeof(info->driver));
+}
+
+static const struct ethtool_ops dummy_ethtool_ops = {
+	.get_drvinfo            = dummy_get_drvinfo,
+>>>>>>> b7ba80a49124 (Commit)
 	.get_ts_info		= ethtool_op_get_ts_info,
 };
 

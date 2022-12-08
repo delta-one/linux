@@ -89,6 +89,7 @@ static ssize_t published_show(struct device *dev, struct device_attribute *attr,
 }
 static DEVICE_ATTR_RO(published);
 
+<<<<<<< HEAD
 static int p2pmem_alloc_mmap(struct file *filp, struct kobject *kobj,
 		struct bin_attribute *attr, struct vm_area_struct *vma)
 {
@@ -173,6 +174,8 @@ static struct bin_attribute p2pmem_alloc_attr = {
 	.size = SZ_1T,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct attribute *p2pmem_attrs[] = {
 	&dev_attr_size.attr,
 	&dev_attr_available.attr,
@@ -180,6 +183,7 @@ static struct attribute *p2pmem_attrs[] = {
 	NULL,
 };
 
+<<<<<<< HEAD
 static struct bin_attribute *p2pmem_bin_attrs[] = {
 	&p2pmem_alloc_attr,
 	NULL,
@@ -208,6 +212,13 @@ static const struct dev_pagemap_ops p2pdma_pgmap_ops = {
 	.page_free = p2pdma_page_free,
 };
 
+=======
+static const struct attribute_group p2pmem_group = {
+	.attrs = p2pmem_attrs,
+	.name = "p2pmem",
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static void pci_p2pdma_release(void *data)
 {
 	struct pci_dev *pdev = data;
@@ -259,6 +270,7 @@ out:
 	return error;
 }
 
+<<<<<<< HEAD
 static void pci_p2pdma_unmap_mappings(void *data)
 {
 	struct pci_dev *pdev = data;
@@ -272,6 +284,8 @@ static void pci_p2pdma_unmap_mappings(void *data)
 				     p2pmem_group.name);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * pci_p2pdma_add_resource - add memory for use as p2p memory
  * @pdev: the device to add the memory to
@@ -318,7 +332,10 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
 	pgmap->range.end = pgmap->range.start + size - 1;
 	pgmap->nr_range = 1;
 	pgmap->type = MEMORY_DEVICE_PCI_P2PDMA;
+<<<<<<< HEAD
 	pgmap->ops = &p2pdma_pgmap_ops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	p2p_pgmap->provider = pdev;
 	p2p_pgmap->bus_offset = pci_bus_address(pdev, bar) -
@@ -330,11 +347,14 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
 		goto pgmap_free;
 	}
 
+<<<<<<< HEAD
 	error = devm_add_action_or_reset(&pdev->dev, pci_p2pdma_unmap_mappings,
 					 pdev);
 	if (error)
 		goto pages_free;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	p2pdma = rcu_dereference_protected(pdev->p2pdma, 1);
 	error = gen_pool_add_owner(p2pdma->pool, (unsigned long)addr,
 			pci_bus_address(pdev, bar) + offset,
@@ -775,7 +795,11 @@ struct pci_dev *pci_p2pmem_find_many(struct device **clients, int num_clients)
 	if (!closest_pdevs)
 		return NULL;
 
+<<<<<<< HEAD
 	for_each_pci_dev(pdev) {
+=======
+	while ((pdev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, pdev))) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!pci_has_p2pmem(pdev))
 			continue;
 
@@ -799,7 +823,11 @@ struct pci_dev *pci_p2pmem_find_many(struct device **clients, int num_clients)
 	}
 
 	if (dev_cnt)
+<<<<<<< HEAD
 		pdev = pci_dev_get(closest_pdevs[get_random_u32_below(dev_cnt)]);
+=======
+		pdev = pci_dev_get(closest_pdevs[prandom_u32_max(dev_cnt)]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < dev_cnt; i++)
 		pci_dev_put(closest_pdevs[i]);

@@ -283,6 +283,10 @@ static int sec_bd_send(struct sec_ctx *ctx, struct sec_req *req)
 
 	spin_lock_bh(&qp_ctx->req_lock);
 	ret = hisi_qp_send(qp_ctx->qp, &req->sec_sqe);
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (ctx->fake_req_limit <=
 	    atomic_read(&qp_ctx->qp->qp_status.used) && !ret) {
 		list_add_tail(&req->backlog_head, &qp_ctx->backlog);
@@ -1459,11 +1463,20 @@ static void sec_skcipher_callback(struct sec_ctx *ctx, struct sec_req *req,
 			break;
 
 		backlog_sk_req = backlog_req->c_req.sk_req;
+<<<<<<< HEAD
 		skcipher_request_complete(backlog_sk_req, -EINPROGRESS);
 		atomic64_inc(&ctx->sec->debug.dfx.recv_busy_cnt);
 	}
 
 	skcipher_request_complete(sk_req, err);
+=======
+		backlog_sk_req->base.complete(&backlog_sk_req->base,
+						-EINPROGRESS);
+		atomic64_inc(&ctx->sec->debug.dfx.recv_busy_cnt);
+	}
+
+	sk_req->base.complete(&sk_req->base, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void set_aead_auth_iv(struct sec_ctx *ctx, struct sec_req *req)
@@ -1735,11 +1748,20 @@ static void sec_aead_callback(struct sec_ctx *c, struct sec_req *req, int err)
 			break;
 
 		backlog_aead_req = backlog_req->aead_req.aead_req;
+<<<<<<< HEAD
 		aead_request_complete(backlog_aead_req, -EINPROGRESS);
 		atomic64_inc(&c->sec->debug.dfx.recv_busy_cnt);
 	}
 
 	aead_request_complete(a_req, err);
+=======
+		backlog_aead_req->base.complete(&backlog_aead_req->base,
+						-EINPROGRESS);
+		atomic64_inc(&c->sec->debug.dfx.recv_busy_cnt);
+	}
+
+	a_req->base.complete(&a_req->base, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void sec_request_uninit(struct sec_ctx *ctx, struct sec_req *req)
@@ -2006,7 +2028,11 @@ static int sec_aead_sha512_ctx_init(struct crypto_aead *tfm)
 	return sec_aead_ctx_init(tfm, "sha512");
 }
 
+<<<<<<< HEAD
 static int sec_skcipher_cryptlen_check(struct sec_ctx *ctx,
+=======
+static int sec_skcipher_cryptlen_ckeck(struct sec_ctx *ctx,
+>>>>>>> b7ba80a49124 (Commit)
 	struct sec_req *sreq)
 {
 	u32 cryptlen = sreq->c_req.sk_req->cryptlen;
@@ -2068,7 +2094,11 @@ static int sec_skcipher_param_check(struct sec_ctx *ctx, struct sec_req *sreq)
 		}
 		return 0;
 	} else if (c_alg == SEC_CALG_AES || c_alg == SEC_CALG_SM4) {
+<<<<<<< HEAD
 		return sec_skcipher_cryptlen_check(ctx, sreq);
+=======
+		return sec_skcipher_cryptlen_ckeck(ctx, sreq);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	dev_err(dev, "skcipher algorithm error!\n");

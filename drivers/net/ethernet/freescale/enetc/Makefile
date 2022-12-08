@@ -1,15 +1,26 @@
 # SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
 obj-$(CONFIG_FSL_ENETC_CORE) += fsl-enetc-core.o
 fsl-enetc-core-y := enetc.o enetc_cbdr.o enetc_ethtool.o
 
 obj-$(CONFIG_FSL_ENETC) += fsl-enetc.o
 fsl-enetc-y := enetc_pf.o
+=======
+common-objs := enetc.o enetc_cbdr.o enetc_ethtool.o
+
+obj-$(CONFIG_FSL_ENETC) += fsl-enetc.o
+fsl-enetc-y := enetc_pf.o $(common-objs)
+>>>>>>> b7ba80a49124 (Commit)
 fsl-enetc-$(CONFIG_PCI_IOV) += enetc_msg.o
 fsl-enetc-$(CONFIG_FSL_ENETC_QOS) += enetc_qos.o
 
 obj-$(CONFIG_FSL_ENETC_VF) += fsl-enetc-vf.o
+<<<<<<< HEAD
 fsl-enetc-vf-y := enetc_vf.o
+=======
+fsl-enetc-vf-y := enetc_vf.o $(common-objs)
+>>>>>>> b7ba80a49124 (Commit)
 
 obj-$(CONFIG_FSL_ENETC_IERB) += fsl-enetc-ierb.o
 fsl-enetc-ierb-y := enetc_ierb.o

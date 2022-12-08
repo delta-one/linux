@@ -21,7 +21,10 @@
 #include <linux/module.h>
 #include <linux/mutex.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/of.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * This code could benefit from real HR Timers, but jiffy granularity would
@@ -228,6 +231,7 @@ static int ep93xx_adc_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct of_device_id ep93xx_adc_of_ids[] = {
 	{ .compatible = "cirrus,ep9301-adc" },
 	{}
@@ -238,6 +242,11 @@ static struct platform_driver ep93xx_adc_driver = {
 	.driver = {
 		.name = "ep93xx-adc",
 		.of_match_table = ep93xx_adc_of_ids,
+=======
+static struct platform_driver ep93xx_adc_driver = {
+	.driver = {
+		.name = "ep93xx-adc",
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = ep93xx_adc_probe,
 	.remove = ep93xx_adc_remove,

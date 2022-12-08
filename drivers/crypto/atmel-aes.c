@@ -554,7 +554,11 @@ static inline int atmel_aes_complete(struct atmel_aes_dev *dd, int err)
 	}
 
 	if (dd->is_async)
+<<<<<<< HEAD
 		crypto_request_complete(dd->areq, err);
+=======
+		dd->areq->complete(dd->areq, err);
+>>>>>>> b7ba80a49124 (Commit)
 
 	tasklet_schedule(&dd->queue_task);
 
@@ -955,7 +959,11 @@ static int atmel_aes_handle_queue(struct atmel_aes_dev *dd,
 		return ret;
 
 	if (backlog)
+<<<<<<< HEAD
 		crypto_request_complete(backlog, -EINPROGRESS);
+=======
+		backlog->complete(backlog, -EINPROGRESS);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctx = crypto_tfm_ctx(areq->tfm);
 
@@ -1879,7 +1887,11 @@ static int atmel_aes_xts_setkey(struct crypto_skcipher *tfm, const u8 *key,
 	struct atmel_aes_xts_ctx *ctx = crypto_skcipher_ctx(tfm);
 	int err;
 
+<<<<<<< HEAD
 	err = xts_verify_key(tfm, key, keylen);
+=======
+	err = xts_check_key(crypto_skcipher_tfm(tfm), key, keylen);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 
@@ -2510,7 +2522,10 @@ static void atmel_aes_get_cap(struct atmel_aes_dev *dd)
 	/* keep only major version number */
 	switch (dd->hw_version & 0xff0) {
 	case 0x700:
+<<<<<<< HEAD
 	case 0x600:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case 0x500:
 		dd->caps.has_dualbuff = 1;
 		dd->caps.has_cfb64 = 1;

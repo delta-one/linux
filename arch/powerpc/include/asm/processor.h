@@ -354,6 +354,7 @@ static inline unsigned long __pack_fe01(unsigned int fpmode)
 
 #ifdef CONFIG_PPC64
 
+<<<<<<< HEAD
 #define spin_begin()							\
 	asm volatile(ASM_FTR_IFCLR(					\
 		"or 1,1,1", /* HMT_LOW */				\
@@ -386,6 +387,19 @@ int validate_sp(unsigned long sp, struct task_struct *p);
  */
 int validate_sp_size(unsigned long sp, struct task_struct *p,
 		     unsigned long nbytes);
+=======
+#define spin_begin()	HMT_low()
+
+#define spin_cpu_relax()	barrier()
+
+#define spin_end()	HMT_medium()
+
+#endif
+
+/* Check that a certain kernel stack pointer is valid in task_struct p */
+int validate_sp(unsigned long sp, struct task_struct *p,
+                       unsigned long nbytes);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Prefetch macros.

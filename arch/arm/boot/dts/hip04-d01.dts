@@ -23,7 +23,11 @@
 
 	soc {
 		uart0: serial@4007000 {
+<<<<<<< HEAD
 			status = "okay";
+=======
+			status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };

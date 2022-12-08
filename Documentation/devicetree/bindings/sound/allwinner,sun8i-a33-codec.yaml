@@ -10,9 +10,12 @@ maintainers:
   - Chen-Yu Tsai <wens@csie.org>
   - Maxime Ripard <mripard@kernel.org>
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   "#sound-dai-cells":
     minimum: 0
@@ -52,7 +55,11 @@ required:
   - clocks
   - clock-names
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

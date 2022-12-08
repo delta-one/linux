@@ -30,7 +30,10 @@ connmark_tg_shift(struct sk_buff *skb, const struct xt_connmark_tginfo2 *info)
 	u_int32_t new_targetmark;
 	struct nf_conn *ct;
 	u_int32_t newmark;
+<<<<<<< HEAD
 	u_int32_t oldmark;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ct = nf_ct_get(skb, &ctinfo);
 	if (ct == NULL)
@@ -38,15 +41,24 @@ connmark_tg_shift(struct sk_buff *skb, const struct xt_connmark_tginfo2 *info)
 
 	switch (info->mode) {
 	case XT_CONNMARK_SET:
+<<<<<<< HEAD
 		oldmark = READ_ONCE(ct->mark);
 		newmark = (oldmark & ~info->ctmask) ^ info->ctmark;
+=======
+		newmark = (ct->mark & ~info->ctmask) ^ info->ctmark;
+>>>>>>> b7ba80a49124 (Commit)
 		if (info->shift_dir == D_SHIFT_RIGHT)
 			newmark >>= info->shift_bits;
 		else
 			newmark <<= info->shift_bits;
 
+<<<<<<< HEAD
 		if (READ_ONCE(ct->mark) != newmark) {
 			WRITE_ONCE(ct->mark, newmark);
+=======
+		if (ct->mark != newmark) {
+			ct->mark = newmark;
+>>>>>>> b7ba80a49124 (Commit)
 			nf_conntrack_event_cache(IPCT_MARK, ct);
 		}
 		break;
@@ -57,15 +69,26 @@ connmark_tg_shift(struct sk_buff *skb, const struct xt_connmark_tginfo2 *info)
 		else
 			new_targetmark <<= info->shift_bits;
 
+<<<<<<< HEAD
 		newmark = (READ_ONCE(ct->mark) & ~info->ctmask) ^
 			  new_targetmark;
 		if (READ_ONCE(ct->mark) != newmark) {
 			WRITE_ONCE(ct->mark, newmark);
+=======
+		newmark = (ct->mark & ~info->ctmask) ^
+			  new_targetmark;
+		if (ct->mark != newmark) {
+			ct->mark = newmark;
+>>>>>>> b7ba80a49124 (Commit)
 			nf_conntrack_event_cache(IPCT_MARK, ct);
 		}
 		break;
 	case XT_CONNMARK_RESTORE:
+<<<<<<< HEAD
 		new_targetmark = (READ_ONCE(ct->mark) & info->ctmask);
+=======
+		new_targetmark = (ct->mark & info->ctmask);
+>>>>>>> b7ba80a49124 (Commit)
 		if (info->shift_dir == D_SHIFT_RIGHT)
 			new_targetmark >>= info->shift_bits;
 		else
@@ -128,7 +151,11 @@ connmark_mt(const struct sk_buff *skb, struct xt_action_param *par)
 	if (ct == NULL)
 		return false;
 
+<<<<<<< HEAD
 	return ((READ_ONCE(ct->mark) & info->mask) == info->mark) ^ info->invert;
+=======
+	return ((ct->mark & info->mask) == info->mark) ^ info->invert;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int connmark_mt_check(const struct xt_mtchk_param *par)

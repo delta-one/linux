@@ -1020,10 +1020,16 @@ static void __init st_of_quadfs_setup(struct device_node *np,
 
 	clk = st_clk_register_quadfs_pll(pll_name, clk_parent_name, datac->data,
 			reg, lock);
+<<<<<<< HEAD
 	if (IS_ERR(clk)) {
 		kfree(lock);
 		goto err_exit;
 	} else
+=======
+	if (IS_ERR(clk))
+		goto err_exit;
+	else
+>>>>>>> b7ba80a49124 (Commit)
 		pr_debug("%s: parent %s rate %u\n",
 			__clk_get_name(clk),
 			__clk_get_name(clk_get_parent(clk)),

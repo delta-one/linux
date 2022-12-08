@@ -21,7 +21,10 @@
 #include <drm/drm_fourcc.h>
 #include <drm/drm_framebuffer.h>
 #include <drm/drm_gem.h>
+<<<<<<< HEAD
 #include <drm/drm_gem_atomic_helper.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_gem_framebuffer_helper.h>
 #include <drm/drm_mipi_dbi.h>
 #include <drm/drm_modes.h>
@@ -193,7 +196,10 @@ EXPORT_SYMBOL(mipi_dbi_command_stackbuf);
 /**
  * mipi_dbi_buf_copy - Copy a framebuffer, transforming it if necessary
  * @dst: The destination buffer
+<<<<<<< HEAD
  * @src: The source buffer
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @fb: The source framebuffer
  * @clip: Clipping rectangle of the area to be copied
  * @swap: When true, swap MSB/LSB of 16-bit values
@@ -201,10 +207,19 @@ EXPORT_SYMBOL(mipi_dbi_command_stackbuf);
  * Returns:
  * Zero on success, negative error code on failure.
  */
+<<<<<<< HEAD
 int mipi_dbi_buf_copy(void *dst, struct iosys_map *src, struct drm_framebuffer *fb,
 		      struct drm_rect *clip, bool swap)
 {
 	struct drm_gem_object *gem = drm_gem_fb_get_obj(fb, 0);
+=======
+int mipi_dbi_buf_copy(void *dst, struct drm_framebuffer *fb,
+		      struct drm_rect *clip, bool swap)
+{
+	struct drm_gem_object *gem = drm_gem_fb_get_obj(fb, 0);
+	struct iosys_map map[DRM_FORMAT_MAX_PLANES];
+	struct iosys_map data[DRM_FORMAT_MAX_PLANES];
+>>>>>>> b7ba80a49124 (Commit)
 	struct iosys_map dst_map = IOSYS_MAP_INIT_VADDR(dst);
 	int ret;
 
@@ -212,6 +227,7 @@ int mipi_dbi_buf_copy(void *dst, struct iosys_map *src, struct drm_framebuffer *
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	switch (fb->format->format) {
 	case DRM_FORMAT_RGB565:
 		if (swap)
@@ -221,6 +237,21 @@ int mipi_dbi_buf_copy(void *dst, struct iosys_map *src, struct drm_framebuffer *
 		break;
 	case DRM_FORMAT_XRGB8888:
 		drm_fb_xrgb8888_to_rgb565(&dst_map, NULL, src, fb, clip, swap);
+=======
+	ret = drm_gem_fb_vmap(fb, map, data);
+	if (ret)
+		goto out_drm_gem_fb_end_cpu_access;
+
+	switch (fb->format->format) {
+	case DRM_FORMAT_RGB565:
+		if (swap)
+			drm_fb_swab(&dst_map, NULL, data, fb, clip, !gem->import_attach);
+		else
+			drm_fb_memcpy(&dst_map, NULL, data, fb, clip);
+		break;
+	case DRM_FORMAT_XRGB8888:
+		drm_fb_xrgb8888_to_rgb565(&dst_map, NULL, data, fb, clip, swap);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		drm_err_once(fb->dev, "Format is not supported: %p4cc\n",
@@ -228,6 +259,11 @@ int mipi_dbi_buf_copy(void *dst, struct iosys_map *src, struct drm_framebuffer *
 		ret = -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	drm_gem_fb_vunmap(fb, map);
+out_drm_gem_fb_end_cpu_access:
+>>>>>>> b7ba80a49124 (Commit)
 	drm_gem_fb_end_cpu_access(fb, DMA_FROM_DEVICE);
 
 	return ret;
@@ -251,18 +287,42 @@ static void mipi_dbi_set_window_address(struct mipi_dbi_dev *dbidev,
 			 ys & 0xff, (ye >> 8) & 0xff, ye & 0xff);
 }
 
+<<<<<<< HEAD
 static void mipi_dbi_fb_dirty(struct iosys_map *src, struct drm_framebuffer *fb,
 			      struct drm_rect *rect)
 {
+=======
+static void mipi_dbi_fb_dirty(struct drm_framebuffer *fb, struct drm_rect *rect)
+{
+	struct iosys_map map[DRM_FORMAT_MAX_PLANES];
+	struct iosys_map data[DRM_FORMAT_MAX_PLANES];
+>>>>>>> b7ba80a49124 (Commit)
 	struct mipi_dbi_dev *dbidev = drm_to_mipi_dbi_dev(fb->dev);
 	unsigned int height = rect->y2 - rect->y1;
 	unsigned int width = rect->x2 - rect->x1;
 	struct mipi_dbi *dbi = &dbidev->dbi;
 	bool swap = dbi->swap_bytes;
+<<<<<<< HEAD
 	int ret = 0;
 	bool full;
 	void *tr;
 
+=======
+	int idx, ret = 0;
+	bool full;
+	void *tr;
+
+	if (WARN_ON(!fb))
+		return;
+
+	if (!drm_dev_enter(fb->dev, &idx))
+		return;
+
+	ret = drm_gem_fb_vmap(fb, map, data);
+	if (ret)
+		goto err_drm_dev_exit;
+
+>>>>>>> b7ba80a49124 (Commit)
 	full = width == fb->width && height == fb->height;
 
 	DRM_DEBUG_KMS("Flushing [FB:%d] " DRM_RECT_FMT "\n", fb->base.id, DRM_RECT_ARG(rect));
@@ -270,11 +330,19 @@ static void mipi_dbi_fb_dirty(struct iosys_map *src, struct drm_framebuffer *fb,
 	if (!dbi->dc || !full || swap ||
 	    fb->format->format == DRM_FORMAT_XRGB8888) {
 		tr = dbidev->tx_buf;
+<<<<<<< HEAD
 		ret = mipi_dbi_buf_copy(tr, src, fb, rect, swap);
 		if (ret)
 			goto err_msg;
 	} else {
 		tr = src->vaddr; /* TODO: Use mapping abstraction properly */
+=======
+		ret = mipi_dbi_buf_copy(dbidev->tx_buf, fb, rect, swap);
+		if (ret)
+			goto err_msg;
+	} else {
+		tr = data[0].vaddr; /* TODO: Use mapping abstraction properly */
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	mipi_dbi_set_window_address(dbidev, rect->x1, rect->x2 - 1, rect->y1,
@@ -285,6 +353,14 @@ static void mipi_dbi_fb_dirty(struct iosys_map *src, struct drm_framebuffer *fb,
 err_msg:
 	if (ret)
 		drm_err_once(fb->dev, "Failed to update display %d\n", ret);
+<<<<<<< HEAD
+=======
+
+	drm_gem_fb_vunmap(fb, map);
+
+err_drm_dev_exit:
+	drm_dev_exit(idx);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -317,14 +393,19 @@ void mipi_dbi_pipe_update(struct drm_simple_display_pipe *pipe,
 			  struct drm_plane_state *old_state)
 {
 	struct drm_plane_state *state = pipe->plane.state;
+<<<<<<< HEAD
 	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(state);
 	struct drm_framebuffer *fb = state->fb;
 	struct drm_rect rect;
 	int idx;
+=======
+	struct drm_rect rect;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!pipe->crtc.state->active)
 		return;
 
+<<<<<<< HEAD
 	if (WARN_ON(!fb))
 		return;
 
@@ -335,6 +416,10 @@ void mipi_dbi_pipe_update(struct drm_simple_display_pipe *pipe,
 		mipi_dbi_fb_dirty(&shadow_plane_state->data[0], fb, &rect);
 
 	drm_dev_exit(idx);
+=======
+	if (drm_atomic_helper_damage_merged(old_state, state, &rect))
+		mipi_dbi_fb_dirty(state->fb, &rect);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(mipi_dbi_pipe_update);
 
@@ -355,7 +440,10 @@ void mipi_dbi_enable_flush(struct mipi_dbi_dev *dbidev,
 			   struct drm_crtc_state *crtc_state,
 			   struct drm_plane_state *plane_state)
 {
+<<<<<<< HEAD
 	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_framebuffer *fb = plane_state->fb;
 	struct drm_rect rect = {
 		.x1 = 0,
@@ -368,7 +456,11 @@ void mipi_dbi_enable_flush(struct mipi_dbi_dev *dbidev,
 	if (!drm_dev_enter(&dbidev->drm, &idx))
 		return;
 
+<<<<<<< HEAD
 	mipi_dbi_fb_dirty(&shadow_plane_state->data[0], fb, &rect);
+=======
+	mipi_dbi_fb_dirty(fb, &rect);
+>>>>>>> b7ba80a49124 (Commit)
 	backlight_enable(dbidev->backlight);
 
 	drm_dev_exit(idx);
@@ -417,6 +509,7 @@ void mipi_dbi_pipe_disable(struct drm_simple_display_pipe *pipe)
 
 	if (dbidev->regulator)
 		regulator_disable(dbidev->regulator);
+<<<<<<< HEAD
 	if (dbidev->io_regulator)
 		regulator_disable(dbidev->io_regulator);
 }
@@ -506,6 +599,11 @@ void mipi_dbi_pipe_destroy_plane_state(struct drm_simple_display_pipe *pipe,
 }
 EXPORT_SYMBOL(mipi_dbi_pipe_destroy_plane_state);
 
+=======
+}
+EXPORT_SYMBOL(mipi_dbi_pipe_disable);
+
+>>>>>>> b7ba80a49124 (Commit)
 static int mipi_dbi_connector_get_modes(struct drm_connector *connector)
 {
 	struct mipi_dbi_dev *dbidev = drm_to_mipi_dbi_dev(connector->dev);
@@ -728,6 +826,7 @@ static int mipi_dbi_poweron_reset_conditional(struct mipi_dbi_dev *dbidev, bool 
 		}
 	}
 
+<<<<<<< HEAD
 	if (dbidev->io_regulator) {
 		ret = regulator_enable(dbidev->io_regulator);
 		if (ret) {
@@ -738,6 +837,8 @@ static int mipi_dbi_poweron_reset_conditional(struct mipi_dbi_dev *dbidev, bool 
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (cond && mipi_dbi_display_is_on(dbi))
 		return 1;
 
@@ -747,8 +848,11 @@ static int mipi_dbi_poweron_reset_conditional(struct mipi_dbi_dev *dbidev, bool 
 		DRM_DEV_ERROR(dev, "Failed to send reset command (%d)\n", ret);
 		if (dbidev->regulator)
 			regulator_disable(dbidev->regulator);
+<<<<<<< HEAD
 		if (dbidev->io_regulator)
 			regulator_disable(dbidev->io_regulator);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 

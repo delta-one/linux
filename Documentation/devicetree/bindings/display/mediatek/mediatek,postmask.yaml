@@ -26,7 +26,10 @@ properties:
       - items:
           - enum:
               - mediatek,mt8186-disp-postmask
+<<<<<<< HEAD
               - mediatek,mt8188-disp-postmask
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - const: mediatek,mt8192-disp-postmask
 
   reg:

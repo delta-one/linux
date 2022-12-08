@@ -63,8 +63,12 @@ struct iosm_cdev *ipc_port_init(struct iosm_imem *ipc_imem,
 	ipc_port->ipc_imem = ipc_imem;
 
 	ipc_port->iosm_port = wwan_create_port(ipc_port->dev, port_type,
+<<<<<<< HEAD
 					       &ipc_wwan_ctrl_ops, NULL,
 					       ipc_port);
+=======
+					       &ipc_wwan_ctrl_ops, ipc_port);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ipc_port;
 }

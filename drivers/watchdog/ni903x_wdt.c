@@ -224,12 +224,21 @@ static int ni903x_acpi_add(struct acpi_device *device)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void ni903x_acpi_remove(struct acpi_device *device)
+=======
+static int ni903x_acpi_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ni903x_wdt *wdt = acpi_driver_data(device);
 
 	ni903x_wdd_stop(&wdt->wdd);
 	watchdog_unregister_device(&wdt->wdd);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id ni903x_device_ids[] = {

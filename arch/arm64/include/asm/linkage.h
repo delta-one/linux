@@ -5,8 +5,13 @@
 #include <asm/assembler.h>
 #endif
 
+<<<<<<< HEAD
 #define __ALIGN		.balign CONFIG_FUNCTION_ALIGNMENT
 #define __ALIGN_STR	".balign " #CONFIG_FUNCTION_ALIGNMENT
+=======
+#define __ALIGN		.align 2
+#define __ALIGN_STR	".align 2"
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * When using in-kernel BTI we need to ensure that PCS-conformant
@@ -39,8 +44,11 @@
 	SYM_START(name, SYM_L_WEAK, SYM_A_NONE)		\
 	bti c ;
 
+<<<<<<< HEAD
 #define SYM_TYPED_FUNC_START(name)				\
 	SYM_TYPED_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)	\
 	bti c ;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

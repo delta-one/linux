@@ -1912,7 +1912,10 @@ const struct ieee80211_ops rtl_ops = {
 	.start = rtl_op_start,
 	.stop = rtl_op_stop,
 	.tx = rtl_op_tx,
+<<<<<<< HEAD
 	.wake_tx_queue = ieee80211_handle_wake_tx_queue,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.add_interface = rtl_op_add_interface,
 	.remove_interface = rtl_op_remove_interface,
 	.change_interface = rtl_op_change_interface,

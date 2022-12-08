@@ -220,6 +220,25 @@ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
 # define WARN_ON_SMP(x)			({0;})
 #endif
 
+<<<<<<< HEAD
+=======
+/*
+ * WARN_ON_FUNCTION_MISMATCH() warns if a value doesn't match a
+ * function address, and can be useful for catching issues with
+ * callback functions, for example.
+ *
+ * With CONFIG_CFI_CLANG, the warning is disabled because the
+ * compiler replaces function addresses taken in C code with
+ * local jump table addresses, which breaks cross-module function
+ * address equality.
+ */
+#if defined(CONFIG_CFI_CLANG) && defined(CONFIG_MODULES)
+# define WARN_ON_FUNCTION_MISMATCH(x, fn) ({ 0; })
+#else
+# define WARN_ON_FUNCTION_MISMATCH(x, fn) WARN_ON_ONCE((x) != (fn))
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __ASSEMBLY__ */
 
 #endif

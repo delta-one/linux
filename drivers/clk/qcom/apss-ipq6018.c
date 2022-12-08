@@ -16,7 +16,11 @@
 #include "clk-regmap.h"
 #include "clk-branch.h"
 #include "clk-alpha-pll.h"
+<<<<<<< HEAD
 #include "clk-rcg.h"
+=======
+#include "clk-regmap-mux.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 enum {
 	P_XO,
@@ -33,15 +37,27 @@ static const struct parent_map parents_apcs_alias0_clk_src_map[] = {
 	{ P_APSS_PLL_EARLY, 5 },
 };
 
+<<<<<<< HEAD
 static struct clk_rcg2 apcs_alias0_clk_src = {
 	.cmd_rcgr = 0x0050,
 	.hid_width = 5,
+=======
+static struct clk_regmap_mux apcs_alias0_clk_src = {
+	.reg = 0x0050,
+	.width = 3,
+	.shift = 7,
+>>>>>>> b7ba80a49124 (Commit)
 	.parent_map = parents_apcs_alias0_clk_src_map,
 	.clkr.hw.init = &(struct clk_init_data){
 		.name = "apcs_alias0_clk_src",
 		.parent_data = parents_apcs_alias0_clk_src,
+<<<<<<< HEAD
 		.num_parents = ARRAY_SIZE(parents_apcs_alias0_clk_src),
 		.ops = &clk_rcg2_mux_closest_ops,
+=======
+		.num_parents = 2,
+		.ops = &clk_regmap_mux_closest_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.flags = CLK_SET_RATE_PARENT,
 	},
 };
@@ -56,7 +72,11 @@ static struct clk_branch apcs_alias0_core_clk = {
 			.parent_hws = (const struct clk_hw *[]){
 				&apcs_alias0_clk_src.clkr.hw },
 			.num_parents = 1,
+<<<<<<< HEAD
 			.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
+=======
+			.flags = CLK_SET_RATE_PARENT,
+>>>>>>> b7ba80a49124 (Commit)
 			.ops = &clk_branch2_ops,
 		},
 	},

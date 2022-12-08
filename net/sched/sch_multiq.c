@@ -353,8 +353,20 @@ static void multiq_walk(struct Qdisc *sch, struct qdisc_walker *arg)
 		return;
 
 	for (band = 0; band < q->bands; band++) {
+<<<<<<< HEAD
 		if (!tc_qdisc_stats_dump(sch, band + 1, arg))
 			break;
+=======
+		if (arg->count < arg->skip) {
+			arg->count++;
+			continue;
+		}
+		if (arg->fn(sch, band + 1, arg) < 0) {
+			arg->stop = 1;
+			break;
+		}
+		arg->count++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

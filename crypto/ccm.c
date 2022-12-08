@@ -218,15 +218,25 @@ static int crypto_ccm_auth(struct aead_request *req, struct scatterlist *plain,
 		cryptlen += ilen;
 	}
 
+<<<<<<< HEAD
 	ahash_request_set_crypt(ahreq, plain, odata, cryptlen);
+=======
+	ahash_request_set_crypt(ahreq, plain, pctx->odata, cryptlen);
+>>>>>>> b7ba80a49124 (Commit)
 	err = crypto_ahash_finup(ahreq);
 out:
 	return err;
 }
 
+<<<<<<< HEAD
 static void crypto_ccm_encrypt_done(void *data, int err)
 {
 	struct aead_request *req = data;
+=======
+static void crypto_ccm_encrypt_done(struct crypto_async_request *areq, int err)
+{
+	struct aead_request *req = areq->data;
+>>>>>>> b7ba80a49124 (Commit)
 	struct crypto_aead *aead = crypto_aead_reqtfm(req);
 	struct crypto_ccm_req_priv_ctx *pctx = crypto_ccm_reqctx(req);
 	u8 *odata = pctx->odata;
@@ -320,9 +330,16 @@ static int crypto_ccm_encrypt(struct aead_request *req)
 	return err;
 }
 
+<<<<<<< HEAD
 static void crypto_ccm_decrypt_done(void *data, int err)
 {
 	struct aead_request *req = data;
+=======
+static void crypto_ccm_decrypt_done(struct crypto_async_request *areq,
+				   int err)
+{
+	struct aead_request *req = areq->data;
+>>>>>>> b7ba80a49124 (Commit)
 	struct crypto_ccm_req_priv_ctx *pctx = crypto_ccm_reqctx(req);
 	struct crypto_aead *aead = crypto_aead_reqtfm(req);
 	unsigned int authsize = crypto_aead_authsize(aead);

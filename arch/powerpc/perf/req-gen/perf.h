@@ -139,6 +139,7 @@ PMU_EVENT_ATTR_STRING(							\
 #define REQUEST_(r_name, r_value, r_idx_1, r_fields)			\
 	r_fields
 
+<<<<<<< HEAD
 /* Generate event list for platforms with counter_info_version 0x6 or below */
 static __maybe_unused struct attribute *hv_gpci_event_attrs_v6[] = {
 #include REQUEST_FILE
@@ -159,6 +160,8 @@ static __maybe_unused struct attribute *hv_gpci_event_attrs_v6[] = {
 #undef ENABLE_EVENTS_COUNTERINFO_V6
 
 /* Generate event list for platforms with counter_info_version 0x8 or above*/
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static __maybe_unused struct attribute *hv_gpci_event_attrs[] = {
 #include REQUEST_FILE
 	NULL

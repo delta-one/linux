@@ -5,7 +5,11 @@
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/input/linux-event-codes.h>
 #include <dt-bindings/pinctrl/rockchip.h>
+<<<<<<< HEAD
 #include "rk3566-anbernic-rg353x.dtsi"
+=======
+#include "rk3566-anbernic-rgxx3.dtsi"
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	model = "RG353P";
@@ -18,6 +22,7 @@
 		mmc3 = &sdmmc2;
 	};
 
+<<<<<<< HEAD
 	battery: battery {
 		compatible = "simple-battery";
 		charge-full-design-microamp-hours = <3472000>;
@@ -74,10 +79,31 @@
 		pinctrl-0 = <&spk_amp_enable_h>;
 		pinctrl-names = "default";
 		sound-name-prefix = "Speaker Amp";
+=======
+	backlight: backlight {
+		compatible = "pwm-backlight";
+		power-supply = <&vcc_sys>;
+		pwms = <&pwm4 0 25000 0>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
 &gpio_keys_control {
+<<<<<<< HEAD
+=======
+	button-a {
+		gpios = <&gpio3 RK_PC2 GPIO_ACTIVE_LOW>;
+		label = "EAST";
+		linux,code = <BTN_EAST>;
+	};
+
+	button-left {
+		gpios = <&gpio3 RK_PA6 GPIO_ACTIVE_LOW>;
+		label = "DPAD-LEFT";
+		linux,code = <BTN_DPAD_LEFT>;
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	button-r1 {
 		gpios = <&gpio3 RK_PB4 GPIO_ACTIVE_LOW>;
 		label = "TR";
@@ -89,12 +115,37 @@
 		label = "TR2";
 		linux,code = <BTN_TR2>;
 	};
+<<<<<<< HEAD
+=======
+
+	button-right {
+		gpios = <&gpio3 RK_PA5 GPIO_ACTIVE_LOW>;
+		label = "DPAD-RIGHT";
+		linux,code = <BTN_DPAD_RIGHT>;
+	};
+
+	button-y {
+		gpios = <&gpio3 RK_PC1 GPIO_ACTIVE_LOW>;
+		label = "WEST";
+		linux,code = <BTN_WEST>;
+	};
+};
+
+&i2c0 {
+	/* This hardware is physically present but unused. */
+	power-monitor@62 {
+		compatible = "cellwise,cw2015";
+		reg = <0x62>;
+		status = "disabled";
+	};
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &i2c2 {
 	pintctrl-names = "default";
 	pinctrl-0 = <&i2c2m1_xfer>;
 	status = "okay";
+<<<<<<< HEAD
 
 	touch@1a {
 		compatible = "hynitron,cst340";
@@ -132,6 +183,12 @@
 		rockchip,sleep-enter-current-microamp = <300000>;
 		rockchip,sleep-filter-current-microamp = <100000>;
 	};
+=======
+};
+
+&pwm4 {
+	status = "okay";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &sdhci {

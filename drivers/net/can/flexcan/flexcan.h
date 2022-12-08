@@ -68,8 +68,11 @@
 #define FLEXCAN_QUIRK_SUPPORT_RX_MAILBOX_RTR BIT(15)
 /* Device supports RX via FIFO */
 #define FLEXCAN_QUIRK_SUPPORT_RX_FIFO BIT(16)
+<<<<<<< HEAD
 /* auto enter stop mode to support wakeup */
 #define FLEXCAN_QUIRK_AUTO_STOP_MODE BIT(17)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct flexcan_devtype_data {
 	u32 quirks;		/* quirks needed for different IP cores */

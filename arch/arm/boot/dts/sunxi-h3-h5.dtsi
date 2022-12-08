@@ -302,8 +302,11 @@
 			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&ccu CLK_BUS_EHCI0>, <&ccu CLK_BUS_OHCI0>;
 			resets = <&ccu RST_BUS_EHCI0>, <&ccu RST_BUS_OHCI0>;
+<<<<<<< HEAD
 			phys = <&usbphy 0>;
 			phy-names = "usb";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 		};
 
@@ -314,8 +317,11 @@
 			clocks = <&ccu CLK_BUS_EHCI0>, <&ccu CLK_BUS_OHCI0>,
 				 <&ccu CLK_USB_OHCI0>;
 			resets = <&ccu RST_BUS_EHCI0>, <&ccu RST_BUS_OHCI0>;
+<<<<<<< HEAD
 			phys = <&usbphy 0>;
 			phy-names = "usb";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 		};
 

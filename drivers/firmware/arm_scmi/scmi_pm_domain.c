@@ -8,6 +8,10 @@
 #include <linux/err.h>
 #include <linux/io.h>
 #include <linux/module.h>
+<<<<<<< HEAD
+=======
+#include <linux/pm_clock.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pm_domain.h>
 #include <linux/scmi_protocol.h>
 
@@ -52,6 +56,30 @@ static int scmi_pd_power_off(struct generic_pm_domain *domain)
 	return scmi_pd_power(domain, false);
 }
 
+<<<<<<< HEAD
+=======
+static int scmi_pd_attach_dev(struct generic_pm_domain *pd, struct device *dev)
+{
+	int ret;
+
+	ret = pm_clk_create(dev);
+	if (ret)
+		return ret;
+
+	ret = of_pm_clk_add_clks(dev);
+	if (ret >= 0)
+		return 0;
+
+	pm_clk_destroy(dev);
+	return ret;
+}
+
+static void scmi_pd_detach_dev(struct generic_pm_domain *pd, struct device *dev)
+{
+	pm_clk_destroy(dev);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int scmi_pm_domain_probe(struct scmi_device *sdev)
 {
 	int num_domains, i;
@@ -102,6 +130,13 @@ static int scmi_pm_domain_probe(struct scmi_device *sdev)
 		scmi_pd->genpd.name = scmi_pd->name;
 		scmi_pd->genpd.power_off = scmi_pd_power_off;
 		scmi_pd->genpd.power_on = scmi_pd_power_on;
+<<<<<<< HEAD
+=======
+		scmi_pd->genpd.attach_dev = scmi_pd_attach_dev;
+		scmi_pd->genpd.detach_dev = scmi_pd_detach_dev;
+		scmi_pd->genpd.flags = GENPD_FLAG_PM_CLK |
+				       GENPD_FLAG_ACTIVE_WAKEUP;
+>>>>>>> b7ba80a49124 (Commit)
 
 		pm_genpd_init(&scmi_pd->genpd, NULL,
 			      state == SCMI_POWER_STATE_GENERIC_OFF);

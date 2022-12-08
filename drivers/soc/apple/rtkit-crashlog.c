@@ -13,6 +13,7 @@
 #define APPLE_RTKIT_CRASHLOG_VERSION FOURCC('C', 'v', 'e', 'r')
 #define APPLE_RTKIT_CRASHLOG_MBOX FOURCC('C', 'm', 'b', 'x')
 #define APPLE_RTKIT_CRASHLOG_TIME FOURCC('C', 't', 'i', 'm')
+<<<<<<< HEAD
 #define APPLE_RTKIT_CRASHLOG_REGS FOURCC('C', 'r', 'g', '8')
 
 /* For COMPILE_TEST on non-ARM64 architectures */
@@ -24,6 +25,8 @@
 #define PSR_MODE_EL2h	0x00000009
 #define PSR_MODE_MASK	0x0000000f
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct apple_rtkit_crashlog_header {
 	u32 fourcc;
@@ -42,6 +45,7 @@ struct apple_rtkit_crashlog_mbox_entry {
 };
 static_assert(sizeof(struct apple_rtkit_crashlog_mbox_entry) == 0x18);
 
+<<<<<<< HEAD
 struct apple_rtkit_crashlog_regs {
 	u32 unk_0;
 	u32 unk_4;
@@ -60,6 +64,8 @@ struct apple_rtkit_crashlog_regs {
 } __packed;
 static_assert(sizeof(struct apple_rtkit_crashlog_regs) == 0x350);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void apple_rtkit_crashlog_dump_str(struct apple_rtkit *rtk, u8 *bfr,
 					  size_t size)
 {
@@ -123,6 +129,7 @@ static void apple_rtkit_crashlog_dump_mailbox(struct apple_rtkit *rtk, u8 *bfr,
 	}
 }
 
+<<<<<<< HEAD
 static void apple_rtkit_crashlog_dump_regs(struct apple_rtkit *rtk, u8 *bfr,
 					   size_t size)
 {
@@ -183,6 +190,8 @@ static void apple_rtkit_crashlog_dump_regs(struct apple_rtkit *rtk, u8 *bfr,
 	dev_warn(rtk->dev, "\n");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void apple_rtkit_crashlog_dump(struct apple_rtkit *rtk, u8 *bfr, size_t size)
 {
 	size_t offset;
@@ -229,10 +238,13 @@ void apple_rtkit_crashlog_dump(struct apple_rtkit *rtk, u8 *bfr, size_t size)
 			apple_rtkit_crashlog_dump_time(rtk, bfr + offset + 16,
 						       section_size);
 			break;
+<<<<<<< HEAD
 		case APPLE_RTKIT_CRASHLOG_REGS:
 			apple_rtkit_crashlog_dump_regs(rtk, bfr + offset + 16,
 						       section_size);
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		default:
 			dev_warn(rtk->dev,
 				 "RTKit: Unknown crashlog section: %x",

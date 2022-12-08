@@ -4,17 +4,23 @@
  */
 
 #include <linux/hashtable.h>
+<<<<<<< HEAD
 #include "messages.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "props.h"
 #include "btrfs_inode.h"
 #include "transaction.h"
 #include "ctree.h"
 #include "xattr.h"
 #include "compression.h"
+<<<<<<< HEAD
 #include "space-info.h"
 #include "fs.h"
 #include "accessors.h"
 #include "super.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define BTRFS_PROP_HANDLERS_HT_BITS 8
 static DEFINE_HASHTABLE(prop_handlers_ht, BTRFS_PROP_HANDLERS_HT_BITS);
@@ -458,7 +464,11 @@ int btrfs_inode_inherit_props(struct btrfs_trans_handle *trans,
 	return 0;
 }
 
+<<<<<<< HEAD
 int __init btrfs_props_init(void)
+=======
+void __init btrfs_props_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 
@@ -468,6 +478,9 @@ int __init btrfs_props_init(void)
 
 		hash_add(prop_handlers_ht, &p->node, h);
 	}
+<<<<<<< HEAD
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 

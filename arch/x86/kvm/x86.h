@@ -27,7 +27,10 @@ struct kvm_caps {
 	u64 supported_mce_cap;
 	u64 supported_xcr0;
 	u64 supported_xss;
+<<<<<<< HEAD
 	u64 supported_perf_cap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void kvm_spurious_fault(void);
@@ -83,6 +86,7 @@ static inline unsigned int __shrink_ple_window(unsigned int val,
 void kvm_service_local_tlb_flush_requests(struct kvm_vcpu *vcpu);
 int kvm_check_nested_events(struct kvm_vcpu *vcpu);
 
+<<<<<<< HEAD
 static inline bool kvm_is_exception_pending(struct kvm_vcpu *vcpu)
 {
 	return vcpu->arch.exception.pending ||
@@ -90,11 +94,16 @@ static inline bool kvm_is_exception_pending(struct kvm_vcpu *vcpu)
 	       kvm_test_request(KVM_REQ_TRIPLE_FAULT, vcpu);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void kvm_clear_exception_queue(struct kvm_vcpu *vcpu)
 {
 	vcpu->arch.exception.pending = false;
 	vcpu->arch.exception.injected = false;
+<<<<<<< HEAD
 	vcpu->arch.exception_vmexit.pending = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void kvm_queue_interrupt(struct kvm_vcpu *vcpu, u8 vector,
@@ -123,6 +132,7 @@ static inline bool kvm_exception_is_soft(unsigned int nr)
 
 static inline bool is_protmode(struct kvm_vcpu *vcpu)
 {
+<<<<<<< HEAD
 	return kvm_is_cr0_bit_set(vcpu, X86_CR0_PE);
 }
 
@@ -132,6 +142,17 @@ static inline bool is_long_mode(struct kvm_vcpu *vcpu)
 	return !!(vcpu->arch.efer & EFER_LMA);
 #else
 	return false;
+=======
+	return kvm_read_cr0_bits(vcpu, X86_CR0_PE);
+}
+
+static inline int is_long_mode(struct kvm_vcpu *vcpu)
+{
+#ifdef CONFIG_X86_64
+	return vcpu->arch.efer & EFER_LMA;
+#else
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 }
 
@@ -171,6 +192,7 @@ static inline bool mmu_is_nested(struct kvm_vcpu *vcpu)
 	return vcpu->arch.walk_mmu == &vcpu->arch.nested_mmu;
 }
 
+<<<<<<< HEAD
 static inline bool is_pae(struct kvm_vcpu *vcpu)
 {
 	return kvm_is_cr4_bit_set(vcpu, X86_CR4_PAE);
@@ -184,6 +206,21 @@ static inline bool is_pse(struct kvm_vcpu *vcpu)
 static inline bool is_paging(struct kvm_vcpu *vcpu)
 {
 	return likely(kvm_is_cr0_bit_set(vcpu, X86_CR0_PG));
+=======
+static inline int is_pae(struct kvm_vcpu *vcpu)
+{
+	return kvm_read_cr4_bits(vcpu, X86_CR4_PAE);
+}
+
+static inline int is_pse(struct kvm_vcpu *vcpu)
+{
+	return kvm_read_cr4_bits(vcpu, X86_CR4_PSE);
+}
+
+static inline int is_paging(struct kvm_vcpu *vcpu)
+{
+	return likely(kvm_read_cr0_bits(vcpu, X86_CR0_PG));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool is_pae_paging(struct kvm_vcpu *vcpu)
@@ -193,7 +230,11 @@ static inline bool is_pae_paging(struct kvm_vcpu *vcpu)
 
 static inline u8 vcpu_virt_addr_bits(struct kvm_vcpu *vcpu)
 {
+<<<<<<< HEAD
 	return kvm_is_cr4_bit_set(vcpu, X86_CR4_LA57) ? 57 : 48;
+=======
+	return kvm_read_cr4_bits(vcpu, X86_CR4_LA57) ? 57 : 48;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool is_noncanonical_address(u64 la, struct kvm_vcpu *vcpu)
@@ -276,6 +317,14 @@ static inline bool kvm_check_has_quirk(struct kvm *kvm, u64 quirk)
 	return !(kvm->arch.disabled_quirks & quirk);
 }
 
+<<<<<<< HEAD
+=======
+static inline bool kvm_vcpu_latch_init(struct kvm_vcpu *vcpu)
+{
+	return is_smm(vcpu) || static_call(kvm_x86_apic_init_signal_blocked)(vcpu);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 void kvm_inject_realmode_interrupt(struct kvm_vcpu *vcpu, int irq, int inc_eip);
 
 u64 get_kvmclock_ns(struct kvm *kvm);
@@ -290,8 +339,12 @@ int kvm_write_guest_virt_system(struct kvm_vcpu *vcpu,
 
 int handle_ud(struct kvm_vcpu *vcpu);
 
+<<<<<<< HEAD
 void kvm_deliver_exception_payload(struct kvm_vcpu *vcpu,
 				   struct kvm_queued_exception *ex);
+=======
+void kvm_deliver_exception_payload(struct kvm_vcpu *vcpu);
+>>>>>>> b7ba80a49124 (Commit)
 
 void kvm_vcpu_mtrr_init(struct kvm_vcpu *vcpu);
 u8 kvm_mtrr_get_guest_memory_type(struct kvm_vcpu *vcpu, gfn_t gfn);
@@ -331,6 +384,7 @@ extern bool report_ignored_msrs;
 
 extern bool eager_page_split;
 
+<<<<<<< HEAD
 static inline void kvm_pr_unimpl_wrmsr(struct kvm_vcpu *vcpu, u32 msr, u64 data)
 {
 	if (report_ignored_msrs)
@@ -343,6 +397,8 @@ static inline void kvm_pr_unimpl_rdmsr(struct kvm_vcpu *vcpu, u32 msr)
 		vcpu_unimpl(vcpu, "Unhandled RDMSR(0x%x)\n", msr);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline u64 nsec_to_cycles(struct kvm_vcpu *vcpu, u64 nsec)
 {
 	return pvclock_scale_delta(nsec, vcpu->arch.virtual_tsc_mult,
@@ -394,13 +450,22 @@ enum kvm_intr_type {
 	KVM_HANDLING_NMI,
 };
 
+<<<<<<< HEAD
 static __always_inline void kvm_before_interrupt(struct kvm_vcpu *vcpu,
 						 enum kvm_intr_type intr)
+=======
+static inline void kvm_before_interrupt(struct kvm_vcpu *vcpu,
+					enum kvm_intr_type intr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	WRITE_ONCE(vcpu->arch.handling_intr_from_guest, (u8)intr);
 }
 
+<<<<<<< HEAD
 static __always_inline void kvm_after_interrupt(struct kvm_vcpu *vcpu)
+=======
+static inline void kvm_after_interrupt(struct kvm_vcpu *vcpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	WRITE_ONCE(vcpu->arch.handling_intr_from_guest, 0);
 }

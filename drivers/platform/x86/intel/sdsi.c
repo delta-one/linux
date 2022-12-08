@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
+<<<<<<< HEAD
  * Intel On Demand (Software Defined Silicon) driver
+=======
+ * Intel Software Defined Silicon driver
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Copyright (c) 2022, Intel Corporation.
  * All Rights Reserved.
@@ -27,8 +31,14 @@
 #define ACCESS_TYPE_LOCAL		3
 
 #define SDSI_MIN_SIZE_DWORDS		276
+<<<<<<< HEAD
 #define SDSI_SIZE_MAILBOX		1024
 #define SDSI_SIZE_REGS			80
+=======
+#define SDSI_SIZE_CONTROL		8
+#define SDSI_SIZE_MAILBOX		1024
+#define SDSI_SIZE_REGS			72
+>>>>>>> b7ba80a49124 (Commit)
 #define SDSI_SIZE_CMD			sizeof(u64)
 
 /*
@@ -40,9 +50,13 @@
 #define SDSI_SIZE_READ_MSG		(SDSI_SIZE_MAILBOX * 4)
 
 #define SDSI_ENABLED_FEATURES_OFFSET	16
+<<<<<<< HEAD
 #define SDSI_FEATURE_SDSI		BIT(3)
 #define SDSI_FEATURE_METERING		BIT(26)
 
+=======
+#define SDSI_ENABLED			BIT(3)
+>>>>>>> b7ba80a49124 (Commit)
 #define SDSI_SOCKET_ID_OFFSET		64
 #define SDSI_SOCKET_ID			GENMASK(3, 0)
 
@@ -76,6 +90,7 @@
 #define DT_TBIR				GENMASK(2, 0)
 #define DT_OFFSET(v)			((v) & GENMASK(31, 3))
 
+<<<<<<< HEAD
 #define SDSI_GUID_V1			0x006DD191
 #define GUID_V1_CNTRL_SIZE		8
 #define GUID_V1_REGS_SIZE		72
@@ -88,6 +103,12 @@ enum sdsi_command {
 	SDSI_CMD_PROVISION_CAP		= 0x0008,
 	SDSI_CMD_READ_STATE		= 0x0010,
 	SDSI_CMD_READ_METER		= 0x0014,
+=======
+enum sdsi_command {
+	SDSI_CMD_PROVISION_AKC		= 0x04,
+	SDSI_CMD_PROVISION_CAP		= 0x08,
+	SDSI_CMD_READ_STATE		= 0x10,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct sdsi_mbox_info {
@@ -108,11 +129,16 @@ struct sdsi_priv {
 	void __iomem		*control_addr;
 	void __iomem		*mbox_addr;
 	void __iomem		*regs_addr;
+<<<<<<< HEAD
 	int			control_size;
 	int			maibox_size;
 	int			registers_size;
 	u32			guid;
 	u32			features;
+=======
+	u32			guid;
+	bool			sdsi_enabled;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* SDSi mailbox operations must be performed using 64bit mov instructions */
@@ -344,6 +370,12 @@ static ssize_t sdsi_provision(struct sdsi_priv *priv, char *buf, size_t count,
 	struct sdsi_mbox_info info;
 	int ret;
 
+<<<<<<< HEAD
+=======
+	if (!priv->sdsi_enabled)
+		return -EPERM;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (count > (SDSI_SIZE_WRITE_MSG - SDSI_SIZE_CMD))
 		return -EOVERFLOW;
 
@@ -403,14 +435,30 @@ static ssize_t provision_cap_write(struct file *filp, struct kobject *kobj,
 }
 static BIN_ATTR_WO(provision_cap, SDSI_SIZE_WRITE_MSG);
 
+<<<<<<< HEAD
 static ssize_t
 certificate_read(u64 command, struct sdsi_priv *priv, char *buf, loff_t off,
 		 size_t count)
 {
+=======
+static long state_certificate_read(struct file *filp, struct kobject *kobj,
+				   struct bin_attribute *attr, char *buf, loff_t off,
+				   size_t count)
+{
+	struct device *dev = kobj_to_dev(kobj);
+	struct sdsi_priv *priv = dev_get_drvdata(dev);
+	u64 command = SDSI_CMD_READ_STATE;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sdsi_mbox_info info;
 	size_t size;
 	int ret;
 
+<<<<<<< HEAD
+=======
+	if (!priv->sdsi_enabled)
+		return -EPERM;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (off)
 		return 0;
 
@@ -443,6 +491,7 @@ free_buffer:
 
 	return size;
 }
+<<<<<<< HEAD
 
 static ssize_t
 state_certificate_read(struct file *filp, struct kobject *kobj,
@@ -467,6 +516,9 @@ meter_certificate_read(struct file *filp, struct kobject *kobj,
 	return certificate_read(SDSI_CMD_READ_METER, priv, buf, off, count);
 }
 static BIN_ATTR_ADMIN_RO(meter_certificate, SDSI_SIZE_READ_MSG);
+=======
+static BIN_ATTR(state_certificate, 0400, state_certificate_read, NULL, SDSI_SIZE_READ_MSG);
+>>>>>>> b7ba80a49124 (Commit)
 
 static ssize_t registers_read(struct file *filp, struct kobject *kobj,
 			      struct bin_attribute *attr, char *buf, loff_t off,
@@ -475,6 +527,7 @@ static ssize_t registers_read(struct file *filp, struct kobject *kobj,
 	struct device *dev = kobj_to_dev(kobj);
 	struct sdsi_priv *priv = dev_get_drvdata(dev);
 	void __iomem *addr = priv->regs_addr;
+<<<<<<< HEAD
 	int size =  priv->registers_size;
 
 	/*
@@ -487,22 +540,32 @@ static ssize_t registers_read(struct file *filp, struct kobject *kobj,
 
 	if (off + count > size)
 		count = size - off;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	memcpy_fromio(buf, addr + off, count);
 
 	return count;
 }
+<<<<<<< HEAD
 static BIN_ATTR_ADMIN_RO(registers, SDSI_SIZE_REGS);
+=======
+static BIN_ATTR(registers, 0400, registers_read, NULL, SDSI_SIZE_REGS);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct bin_attribute *sdsi_bin_attrs[] = {
 	&bin_attr_registers,
 	&bin_attr_state_certificate,
+<<<<<<< HEAD
 	&bin_attr_meter_certificate,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	&bin_attr_provision_akc,
 	&bin_attr_provision_cap,
 	NULL
 };
 
+<<<<<<< HEAD
 static umode_t
 sdsi_battr_is_visible(struct kobject *kobj, struct bin_attribute *attr, int n)
 {
@@ -524,6 +587,8 @@ sdsi_battr_is_visible(struct kobject *kobj, struct bin_attribute *attr, int n)
 	return attr->attr.mode;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t guid_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	struct sdsi_priv *priv = dev_get_drvdata(dev);
@@ -540,6 +605,7 @@ static struct attribute *sdsi_attrs[] = {
 static const struct attribute_group sdsi_group = {
 	.attrs = sdsi_attrs,
 	.bin_attrs = sdsi_bin_attrs,
+<<<<<<< HEAD
 	.is_bin_visible = sdsi_battr_is_visible,
 };
 __ATTRIBUTE_GROUPS(sdsi);
@@ -562,6 +628,11 @@ static int sdsi_get_layout(struct sdsi_priv *priv, struct disc_table *table)
 	return 0;
 }
 
+=======
+};
+__ATTRIBUTE_GROUPS(sdsi);
+
+>>>>>>> b7ba80a49124 (Commit)
 static int sdsi_map_mbox_registers(struct sdsi_priv *priv, struct pci_dev *parent,
 				   struct disc_table *disc_table, struct resource *disc_res)
 {
@@ -569,6 +640,10 @@ static int sdsi_map_mbox_registers(struct sdsi_priv *priv, struct pci_dev *paren
 	u32 size = FIELD_GET(DT_SIZE, disc_table->access_info);
 	u32 tbir = FIELD_GET(DT_TBIR, disc_table->offset);
 	u32 offset = DT_OFFSET(disc_table->offset);
+<<<<<<< HEAD
+=======
+	u32 features_offset;
+>>>>>>> b7ba80a49124 (Commit)
 	struct resource res = {};
 
 	/* Starting location of SDSi MMIO region based on access type */
@@ -603,10 +678,18 @@ static int sdsi_map_mbox_registers(struct sdsi_priv *priv, struct pci_dev *paren
 	if (IS_ERR(priv->control_addr))
 		return PTR_ERR(priv->control_addr);
 
+<<<<<<< HEAD
 	priv->mbox_addr = priv->control_addr + priv->control_size;
 	priv->regs_addr = priv->mbox_addr + SDSI_SIZE_MAILBOX;
 
 	priv->features = readq(priv->regs_addr + SDSI_ENABLED_FEATURES_OFFSET);
+=======
+	priv->mbox_addr = priv->control_addr + SDSI_SIZE_CONTROL;
+	priv->regs_addr = priv->mbox_addr + SDSI_SIZE_MAILBOX;
+
+	features_offset = readq(priv->regs_addr + SDSI_ENABLED_FEATURES_OFFSET);
+	priv->sdsi_enabled = !!(features_offset & SDSI_ENABLED);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -638,11 +721,14 @@ static int sdsi_probe(struct auxiliary_device *auxdev, const struct auxiliary_de
 
 	priv->guid = disc_table.guid;
 
+<<<<<<< HEAD
 	/* Get guid based layout info */
 	ret = sdsi_get_layout(priv, &disc_table);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Map the SDSi mailbox registers */
 	ret = sdsi_map_mbox_registers(priv, intel_cap_dev->pcidev, &disc_table, disc_res);
 	if (ret)
@@ -668,5 +754,9 @@ static struct auxiliary_driver sdsi_aux_driver = {
 module_auxiliary_driver(sdsi_aux_driver);
 
 MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
+<<<<<<< HEAD
 MODULE_DESCRIPTION("Intel On Demand (SDSi) driver");
+=======
+MODULE_DESCRIPTION("Intel Software Defined Silicon driver");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_LICENSE("GPL");

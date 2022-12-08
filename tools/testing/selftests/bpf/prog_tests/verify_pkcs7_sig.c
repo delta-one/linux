@@ -61,9 +61,12 @@ static bool kfunc_not_supported;
 static int libbpf_print_cb(enum libbpf_print_level level, const char *fmt,
 			   va_list args)
 {
+<<<<<<< HEAD
 	if (level == LIBBPF_WARN)
 		vprintf(fmt, args);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (strcmp(fmt, "libbpf: extern (func ksym) '%s': not found in kernel or module BTFs\n"))
 		return 0;
 

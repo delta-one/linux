@@ -76,7 +76,11 @@
 	},
 	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
 	.result = REJECT,
+<<<<<<< HEAD
 	.errstr = "R1 must have zero offset when passed to release func or trusted arg to kfunc",
+=======
+	.errstr = "arg#0 expected pointer to ctx, but got PTR",
+>>>>>>> b7ba80a49124 (Commit)
 	.fixup_kfunc_btf_id = {
 		{ "bpf_kfunc_call_test_pass_ctx", 2 },
 	},
@@ -109,7 +113,11 @@
 	},
 	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
 	.result = REJECT,
+<<<<<<< HEAD
 	.errstr = "arg#0 is ptr_or_null_ expected ptr_ or socket",
+=======
+	.errstr = "arg#0 pointer type STRUCT prog_test_ref_kfunc must point",
+>>>>>>> b7ba80a49124 (Commit)
 	.fixup_kfunc_btf_id = {
 		{ "bpf_kfunc_call_test_acquire", 3 },
 		{ "bpf_kfunc_call_test_release", 5 },
@@ -181,7 +189,11 @@
 	},
 	.result_unpriv = REJECT,
 	.result = REJECT,
+<<<<<<< HEAD
 	.errstr = "ptr R1 off=-4 disallowed",
+=======
+	.errstr = "negative offset ptr_ ptr R1 off=-4 disallowed",
+>>>>>>> b7ba80a49124 (Commit)
 },
 {
 	"calls: invalid kfunc call: PTR_TO_BTF_ID with variable offset",
@@ -243,7 +255,11 @@
 	},
 	.result_unpriv = REJECT,
 	.result = REJECT,
+<<<<<<< HEAD
 	.errstr = "R1 must be",
+=======
+	.errstr = "R1 must be referenced",
+>>>>>>> b7ba80a49124 (Commit)
 },
 {
 	"calls: valid kfunc call: referenced arg needs refcounted PTR_TO_BTF_ID",
@@ -284,7 +300,11 @@
 	.result = ACCEPT,
 },
 {
+<<<<<<< HEAD
 	"calls: not on unprivileged",
+=======
+	"calls: not on unpriviledged",
+>>>>>>> b7ba80a49124 (Commit)
 	.insns = {
 	BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 1, 0, 2),
 	BPF_MOV64_IMM(BPF_REG_0, 1),
@@ -2221,14 +2241,19 @@
 	 * that fp-8 stack slot was unused in the fall-through
 	 * branch and will accept the program incorrectly
 	 */
+<<<<<<< HEAD
 	BPF_EMIT_CALL(BPF_FUNC_get_prandom_u32),
 	BPF_JMP_IMM(BPF_JGT, BPF_REG_0, 2, 2),
+=======
+	BPF_JMP_IMM(BPF_JGT, BPF_REG_1, 2, 2),
+>>>>>>> b7ba80a49124 (Commit)
 	BPF_ST_MEM(BPF_DW, BPF_REG_10, -8, 0),
 	BPF_JMP_IMM(BPF_JA, 0, 0, 0),
 	BPF_MOV64_REG(BPF_REG_2, BPF_REG_10),
 	BPF_ALU64_IMM(BPF_ADD, BPF_REG_2, -8),
 	BPF_LD_MAP_FD(BPF_REG_1, 0),
 	BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 0, 0, BPF_FUNC_map_lookup_elem),
+<<<<<<< HEAD
 	BPF_MOV64_IMM(BPF_REG_0, 0),
 	BPF_EXIT_INSN(),
 	},
@@ -2237,6 +2262,14 @@
 	.result_unpriv = REJECT,
 	/* in privileged mode reads from uninitialized stack locations are permitted */
 	.result = ACCEPT,
+=======
+	BPF_EXIT_INSN(),
+	},
+	.fixup_map_hash_48b = { 6 },
+	.errstr = "invalid indirect read from stack R2 off -8+0 size 8",
+	.result = REJECT,
+	.prog_type = BPF_PROG_TYPE_XDP,
+>>>>>>> b7ba80a49124 (Commit)
 },
 {
 	"calls: ctx read at start of subprog",
@@ -2308,6 +2341,7 @@
 	.errstr = "!read_ok",
 	.result = REJECT,
 },
+<<<<<<< HEAD
 /* Make sure that verifier.c:states_equal() considers IDs from all
  * frames when building 'idmap' for check_ids().
  */
@@ -2390,3 +2424,5 @@
 	.errstr_unpriv = "",
 	.prog_type = BPF_PROG_TYPE_CGROUP_SKB,
 },
+=======
+>>>>>>> b7ba80a49124 (Commit)

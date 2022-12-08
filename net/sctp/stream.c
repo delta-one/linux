@@ -52,6 +52,7 @@ static void sctp_stream_shrink_out(struct sctp_stream *stream, __u16 outcnt)
 	}
 }
 
+<<<<<<< HEAD
 static void sctp_stream_free_ext(struct sctp_stream *stream, __u16 sid)
 {
 	struct sctp_sched_ops *sched;
@@ -65,6 +66,8 @@ static void sctp_stream_free_ext(struct sctp_stream *stream, __u16 sid)
 	SCTP_SO(stream, sid)->ext = NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Migrates chunks from stream queues to new stream queues if needed,
  * but not across associations. Also, removes those chunks to streams
  * higher than the new max.
@@ -83,14 +86,25 @@ static void sctp_stream_outq_migrate(struct sctp_stream *stream,
 		 * sctp_stream_update will swap ->out pointers.
 		 */
 		for (i = 0; i < outcnt; i++) {
+<<<<<<< HEAD
 			sctp_stream_free_ext(new, i);
+=======
+			kfree(SCTP_SO(new, i)->ext);
+>>>>>>> b7ba80a49124 (Commit)
 			SCTP_SO(new, i)->ext = SCTP_SO(stream, i)->ext;
 			SCTP_SO(stream, i)->ext = NULL;
 		}
 	}
 
+<<<<<<< HEAD
 	for (i = outcnt; i < stream->outcnt; i++)
 		sctp_stream_free_ext(stream, i);
+=======
+	for (i = outcnt; i < stream->outcnt; i++) {
+		kfree(SCTP_SO(stream, i)->ext);
+		SCTP_SO(stream, i)->ext = NULL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int sctp_stream_alloc_out(struct sctp_stream *stream, __u16 outcnt,
@@ -185,9 +199,15 @@ void sctp_stream_free(struct sctp_stream *stream)
 	struct sctp_sched_ops *sched = sctp_sched_ops_from_stream(stream);
 	int i;
 
+<<<<<<< HEAD
 	sched->unsched_all(stream);
 	for (i = 0; i < stream->outcnt; i++)
 		sctp_stream_free_ext(stream, i);
+=======
+	sched->free(stream);
+	for (i = 0; i < stream->outcnt; i++)
+		kfree(SCTP_SO(stream, i)->ext);
+>>>>>>> b7ba80a49124 (Commit)
 	genradix_free(&stream->out);
 	genradix_free(&stream->in);
 }

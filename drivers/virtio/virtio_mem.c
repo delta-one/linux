@@ -1120,13 +1120,22 @@ static void virtio_mem_clear_fake_offline(unsigned long pfn,
  */
 static void virtio_mem_fake_online(unsigned long pfn, unsigned long nr_pages)
 {
+<<<<<<< HEAD
 	unsigned long order = MAX_ORDER;
+=======
+	unsigned long order = MAX_ORDER - 1;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long i;
 
 	/*
 	 * We might get called for ranges that don't cover properly aligned
+<<<<<<< HEAD
 	 * MAX_ORDER pages; however, we can only online properly aligned
 	 * pages with an order of MAX_ORDER at maximum.
+=======
+	 * MAX_ORDER - 1 pages; however, we can only online properly aligned
+	 * pages with an order of MAX_ORDER - 1 at maximum.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	while (!IS_ALIGNED(pfn | nr_pages, 1 << order))
 		order--;
@@ -1237,9 +1246,15 @@ static void virtio_mem_online_page(struct virtio_mem *vm,
 	bool do_online;
 
 	/*
+<<<<<<< HEAD
 	 * We can get called with any order up to MAX_ORDER. If our subblock
 	 * size is smaller than that and we have a mixture of plugged and
 	 * unplugged subblocks within such a page, we have to process in
+=======
+	 * We can get called with any order up to MAX_ORDER - 1. If our
+	 * subblock size is smaller than that and we have a mixture of plugged
+	 * and unplugged subblocks within such a page, we have to process in
+>>>>>>> b7ba80a49124 (Commit)
 	 * smaller granularity. In that case we'll adjust the order exactly once
 	 * within the loop.
 	 */

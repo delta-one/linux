@@ -567,9 +567,15 @@ static void RxReorderIndicatePacket(struct rtllib_device *ieee,
 				    struct rtllib_rxb *prxb,
 				    struct rx_ts_record *pTS, u16 SeqNum)
 {
+<<<<<<< HEAD
 	struct rt_hi_throughput *ht_info = ieee->ht_info;
 	struct rx_reorder_entry *pReorderEntry = NULL;
 	u8 WinSize = ht_info->rx_reorder_win_size;
+=======
+	struct rt_hi_throughput *pHTInfo = ieee->pHTInfo;
+	struct rx_reorder_entry *pReorderEntry = NULL;
+	u8 WinSize = pHTInfo->RxReorderWinSize;
+>>>>>>> b7ba80a49124 (Commit)
 	u16 WinEnd = 0;
 	u8 index = 0;
 	bool bMatchWinStart = false, bPktInBuf = false;
@@ -591,7 +597,11 @@ static void RxReorderIndicatePacket(struct rtllib_device *ieee,
 		netdev_dbg(ieee->dev,
 			   "Packet Drop! IndicateSeq: %d, NewSeq: %d\n",
 			   pTS->rx_indicate_seq, SeqNum);
+<<<<<<< HEAD
 		ht_info->rx_reorder_drop_counter++;
+=======
+		pHTInfo->RxReorderDropCounter++;
+>>>>>>> b7ba80a49124 (Commit)
 		{
 			int i;
 
@@ -755,7 +765,11 @@ static void RxReorderIndicatePacket(struct rtllib_device *ieee,
 		netdev_dbg(ieee->dev, "%s(): SET rx timeout timer\n", __func__);
 		pTS->rx_timeout_indicate_seq = pTS->rx_indicate_seq;
 		mod_timer(&pTS->rx_pkt_pending_timer, jiffies +
+<<<<<<< HEAD
 			  msecs_to_jiffies(ht_info->rx_reorder_pending_time));
+=======
+			  msecs_to_jiffies(pHTInfo->RxReorderPendingTime));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	spin_unlock_irqrestore(&(ieee->reorder_spinlock), flags);
 }
@@ -924,7 +938,11 @@ static int rtllib_rx_check_duplicate(struct rtllib_device *ieee,
 	sc = le16_to_cpu(hdr->seq_ctl);
 	frag = WLAN_GET_SEQ_FRAG(sc);
 
+<<<<<<< HEAD
 	if (!ieee->ht_info->cur_rx_reorder_enable ||
+=======
+	if (!ieee->pHTInfo->bCurRxReorderEnable ||
+>>>>>>> b7ba80a49124 (Commit)
 		!ieee->current_network.qos_data.active ||
 		!IsDataFrame(skb->data) ||
 		IsLegacyDataFrame(skb->data)) {
@@ -999,8 +1017,13 @@ static int rtllib_rx_data_filter(struct rtllib_device *ieee, u16 fc,
 	}
 
 	/* Filter packets sent by an STA that will be forwarded by AP */
+<<<<<<< HEAD
 	if (ieee->intel_promiscuous_md_info.promiscuous_on  &&
 		ieee->intel_promiscuous_md_info.fltr_src_sta_frame) {
+=======
+	if (ieee->IntelPromiscuousModeInfo.bPromiscuousOn  &&
+		ieee->IntelPromiscuousModeInfo.bFilterSourceStationFrame) {
+>>>>>>> b7ba80a49124 (Commit)
 		if ((fc & RTLLIB_FCTL_TODS) && !(fc & RTLLIB_FCTL_FROMDS) &&
 		    !ether_addr_equal(dst, ieee->current_network.bssid) &&
 		    ether_addr_equal(bssid, ieee->current_network.bssid)) {
@@ -1011,7 +1034,11 @@ static int rtllib_rx_data_filter(struct rtllib_device *ieee, u16 fc,
 	/* Nullfunc frames may have PS-bit set, so they must be passed to
 	 * hostap_handle_sta_rx() before being dropped here.
 	 */
+<<<<<<< HEAD
 	if (!ieee->intel_promiscuous_md_info.promiscuous_on) {
+=======
+	if (!ieee->IntelPromiscuousModeInfo.bPromiscuousOn) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (stype != RTLLIB_STYPE_DATA &&
 		    stype != RTLLIB_STYPE_DATA_CFACK &&
 		    stype != RTLLIB_STYPE_DATA_CFPOLL &&
@@ -1211,10 +1238,18 @@ static void rtllib_rx_check_leave_lps(struct rtllib_device *ieee, u8 unicast,
 	if (unicast) {
 
 		if (ieee->state == RTLLIB_LINKED) {
+<<<<<<< HEAD
 			if (((ieee->link_detect_info.NumRxUnicastOkInPeriod +
 			    ieee->link_detect_info.NumTxOkInPeriod) > 8) ||
 			    (ieee->link_detect_info.NumRxUnicastOkInPeriod > 2)) {
 				ieee->LeisurePSLeave(ieee->dev);
+=======
+			if (((ieee->LinkDetectInfo.NumRxUnicastOkInPeriod +
+			    ieee->LinkDetectInfo.NumTxOkInPeriod) > 8) ||
+			    (ieee->LinkDetectInfo.NumRxUnicastOkInPeriod > 2)) {
+				if (ieee->LeisurePSLeave)
+					ieee->LeisurePSLeave(ieee->dev);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 	}
@@ -1316,7 +1351,11 @@ static int rtllib_rx_InfraAdhoc(struct rtllib_device *ieee, struct sk_buff *skb,
 	multicast = is_multicast_ether_addr(hdr->addr1);
 	unicast = !multicast;
 	if (unicast && !ether_addr_equal(dev->dev_addr, hdr->addr1)) {
+<<<<<<< HEAD
 		if (ieee->net_promiscuous_md)
+=======
+		if (ieee->bNetPromiscuousMode)
+>>>>>>> b7ba80a49124 (Commit)
 			bToOtherSTA = true;
 		else
 			goto rx_dropped;
@@ -1354,8 +1393,13 @@ static int rtllib_rx_InfraAdhoc(struct rtllib_device *ieee, struct sk_buff *skb,
 
 	/* Update statstics for AP roaming */
 	if (!bToOtherSTA) {
+<<<<<<< HEAD
 		ieee->link_detect_info.NumRecvDataInPeriod++;
 		ieee->link_detect_info.NumRxOkInPeriod++;
+=======
+		ieee->LinkDetectInfo.NumRecvDataInPeriod++;
+		ieee->LinkDetectInfo.NumRxOkInPeriod++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Data frame - extract src/dst addresses */
@@ -1436,12 +1480,20 @@ static int rtllib_rx_InfraAdhoc(struct rtllib_device *ieee, struct sk_buff *skb,
 		else
 			nr_subframes = 1;
 		if (unicast)
+<<<<<<< HEAD
 			ieee->link_detect_info.NumRxUnicastOkInPeriod += nr_subframes;
+=======
+			ieee->LinkDetectInfo.NumRxUnicastOkInPeriod += nr_subframes;
+>>>>>>> b7ba80a49124 (Commit)
 		rtllib_rx_check_leave_lps(ieee, unicast, nr_subframes);
 	}
 
 	/* Indicate packets to upper layer or Rx Reorder */
+<<<<<<< HEAD
 	if (!ieee->ht_info->cur_rx_reorder_enable || pTS == NULL || bToOtherSTA)
+=======
+	if (!ieee->pHTInfo->bCurRxReorderEnable || pTS == NULL || bToOtherSTA)
+>>>>>>> b7ba80a49124 (Commit)
 		rtllib_rx_indicate_pkt_legacy(ieee, rx_stats, rxb, dst, src);
 	else
 		RxReorderIndicatePacket(ieee, rxb, pTS, SeqNum);
@@ -1488,9 +1540,15 @@ static int rtllib_rx_Monitor(struct rtllib_device *ieee, struct sk_buff *skb,
 		hdrlen += 4;
 	}
 
+<<<<<<< HEAD
 	ieee->stats.rx_packets++;
 	ieee->stats.rx_bytes += skb->len;
 	rtllib_monitor_rx(ieee, skb, rx_stats, hdrlen);
+=======
+	rtllib_monitor_rx(ieee, skb, rx_stats, hdrlen);
+	ieee->stats.rx_packets++;
+	ieee->stats.rx_bytes += skb->len;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 1;
 }
@@ -1775,7 +1833,11 @@ static inline void rtllib_extract_country_ie(
 				if (rtllib_act_scanning(ieee, false) &&
 				    ieee->FirstIe_InScan)
 					netdev_info(ieee->dev,
+<<<<<<< HEAD
 						    "Received beacon CountryIE, SSID: <%s>\n",
+=======
+						    "Received beacon ContryIE, SSID: <%s>\n",
+>>>>>>> b7ba80a49124 (Commit)
 						    network->ssid);
 				dot11d_update_country(ieee, addr2,
 						       info_element->len,
@@ -2619,7 +2681,11 @@ static inline void rtllib_process_probe_response(
 		}
 		if (is_beacon(frame_ctl)) {
 			if (ieee->state >= RTLLIB_LINKED)
+<<<<<<< HEAD
 				ieee->link_detect_info.NumRecvBcnInPeriod++;
+=======
+				ieee->LinkDetectInfo.NumRecvBcnInPeriod++;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 	list_for_each_entry(target, &ieee->network_list, list) {
@@ -2688,7 +2754,13 @@ static inline void rtllib_process_probe_response(
 	    is_same_network(&ieee->current_network, network,
 	    (network->ssid_len ? 1 : 0)) &&
 	    (ieee->state == RTLLIB_LINKED)) {
+<<<<<<< HEAD
 		ieee->handle_beacon(ieee->dev, beacon, &ieee->current_network);
+=======
+		if (ieee->handle_beacon != NULL)
+			ieee->handle_beacon(ieee->dev, beacon,
+					    &ieee->current_network);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 free_network:
 	kfree(network);

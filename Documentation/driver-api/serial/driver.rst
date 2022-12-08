@@ -24,7 +24,11 @@ console support.
 Console Support
 ---------------
 
+<<<<<<< HEAD
 The serial core provides a few helper functions.  This includes identifying
+=======
+The serial core provides a few helper functions.  This includes identifing
+>>>>>>> b7ba80a49124 (Commit)
 the correct port structure (via uart_get_console()) and decoding command line
 arguments (uart_parse_options()).
 
@@ -78,9 +82,12 @@ Other functions
            uart_get_lsr_info uart_handle_dcd_change uart_handle_cts_change
            uart_try_toggle_sysrq uart_get_console
 
+<<<<<<< HEAD
 .. kernel-doc:: include/linux/serial_core.h
    :identifiers: uart_port_tx_limited uart_port_tx
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Other notes
 -----------
 

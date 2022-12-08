@@ -30,7 +30,11 @@ static const u8 zero_mask[] = { 0xFF, 0xFE, 0xFC, 0xF8, 0xF0,
  *
  * Return: True if all bits [bit, bit+nbits) are zeros "0".
  */
+<<<<<<< HEAD
 bool are_bits_clear(const void *lmap, size_t bit, size_t nbits)
+=======
+bool are_bits_clear(const ulong *lmap, size_t bit, size_t nbits)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	size_t pos = bit & 7;
 	const u8 *map = (u8 *)lmap + (bit >> 3);
@@ -78,7 +82,11 @@ bool are_bits_clear(const void *lmap, size_t bit, size_t nbits)
  *
  * Return: True if all bits [bit, bit+nbits) are ones "1".
  */
+<<<<<<< HEAD
 bool are_bits_set(const void *lmap, size_t bit, size_t nbits)
+=======
+bool are_bits_set(const ulong *lmap, size_t bit, size_t nbits)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u8 mask;
 	size_t pos = bit & 7;

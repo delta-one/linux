@@ -6,7 +6,10 @@
 
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
+<<<<<<< HEAD
 #include <linux/btf.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/capability.h>
 #include <linux/mm.h>
 #include <linux/file.h>
@@ -562,17 +565,35 @@ static int kimage_add_entry(struct kimage *image, kimage_entry_t entry)
 static int kimage_set_destination(struct kimage *image,
 				   unsigned long destination)
 {
+<<<<<<< HEAD
 	destination &= PAGE_MASK;
 
 	return kimage_add_entry(image, destination | IND_DESTINATION);
+=======
+	int result;
+
+	destination &= PAGE_MASK;
+	result = kimage_add_entry(image, destination | IND_DESTINATION);
+
+	return result;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 
 static int kimage_add_page(struct kimage *image, unsigned long page)
 {
+<<<<<<< HEAD
 	page &= PAGE_MASK;
 
 	return kimage_add_entry(image, page | IND_SOURCE);
+=======
+	int result;
+
+	page &= PAGE_MASK;
+	result = kimage_add_entry(image, page | IND_SOURCE);
+
+	return result;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 
@@ -921,6 +942,7 @@ int kimage_load_segment(struct kimage *image,
 	return result;
 }
 
+<<<<<<< HEAD
 struct kexec_load_limit {
 	/* Mutex protects the limit count. */
 	struct mutex mutex;
@@ -979,6 +1001,12 @@ static int kexec_limit_handler(struct ctl_table *table, int write,
 	return proc_dointvec(&tmp, write, buffer, lenp, ppos);
 }
 
+=======
+struct kimage *kexec_image;
+struct kimage *kexec_crash_image;
+int kexec_load_disabled;
+#ifdef CONFIG_SYSCTL
+>>>>>>> b7ba80a49124 (Commit)
 static struct ctl_table kexec_core_sysctls[] = {
 	{
 		.procname	= "kexec_load_disabled",
@@ -990,6 +1018,7 @@ static struct ctl_table kexec_core_sysctls[] = {
 		.extra1		= SYSCTL_ONE,
 		.extra2		= SYSCTL_ONE,
 	},
+<<<<<<< HEAD
 	{
 		.procname	= "kexec_load_limit_panic",
 		.data		= &load_limit_panic,
@@ -1002,6 +1031,8 @@ static struct ctl_table kexec_core_sysctls[] = {
 		.mode		= 0644,
 		.proc_handler	= kexec_limit_handler,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 
@@ -1013,6 +1044,7 @@ static int __init kexec_core_sysctl_init(void)
 late_initcall(kexec_core_sysctl_init);
 #endif
 
+<<<<<<< HEAD
 bool kexec_load_permitted(int kexec_image_type)
 {
 	struct kexec_load_limit *limit;
@@ -1039,6 +1071,8 @@ bool kexec_load_permitted(int kexec_image_type)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * No panic_cpu check version of crash_kexec().  This function is called
  * only when panic_cpu holds the current CPU number; this is the only CPU
@@ -1068,7 +1102,11 @@ void __noclone __crash_kexec(struct pt_regs *regs)
 }
 STACK_FRAME_NON_STANDARD(__crash_kexec);
 
+<<<<<<< HEAD
 __bpf_kfunc void crash_kexec(struct pt_regs *regs)
+=======
+void crash_kexec(struct pt_regs *regs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int old_cpu, this_cpu;
 

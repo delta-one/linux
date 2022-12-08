@@ -210,7 +210,11 @@ void wakeup_source_sysfs_remove(struct wakeup_source *ws)
 
 static int __init wakeup_sources_sysfs_init(void)
 {
+<<<<<<< HEAD
 	wakeup_class = class_create("wakeup");
+=======
+	wakeup_class = class_create(THIS_MODULE, "wakeup");
+>>>>>>> b7ba80a49124 (Commit)
 
 	return PTR_ERR_OR_ZERO(wakeup_class);
 }

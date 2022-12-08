@@ -44,6 +44,19 @@
 #include "hmm/hmm_common.h"
 #include "hmm/hmm_bo.h"
 
+<<<<<<< HEAD
+=======
+static unsigned int order_to_nr(unsigned int order)
+{
+	return 1U << order;
+}
+
+static unsigned int nr_to_order_bottom(unsigned int nr)
+{
+	return fls(nr) - 1;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __bo_init(struct hmm_bo_device *bdev, struct hmm_buffer_object *bo,
 		     unsigned int pgnr)
 {
@@ -615,6 +628,7 @@ found:
 	return bo;
 }
 
+<<<<<<< HEAD
 static void free_pages_bulk_array(unsigned long nr_pages, struct page **page_array)
 {
 	unsigned long i;
@@ -627,11 +641,36 @@ static void free_private_bo_pages(struct hmm_buffer_object *bo)
 {
 	set_pages_array_wb(bo->pages, bo->pgnr);
 	free_pages_bulk_array(bo->pgnr, bo->pages);
+=======
+static void free_private_bo_pages(struct hmm_buffer_object *bo,
+				  int free_pgnr)
+{
+	int i, ret;
+
+	for (i = 0; i < free_pgnr; i++) {
+		ret = set_pages_wb(bo->pages[i], 1);
+		if (ret)
+			dev_err(atomisp_dev,
+				"set page to WB err ...ret = %d\n",
+				ret);
+		/*
+		W/A: set_pages_wb seldom return value = -EFAULT
+		indicate that address of page is not in valid
+		range(0xffff880000000000~0xffffc7ffffffffff)
+		then, _free_pages would panic; Do not know why page
+		address be valid,it maybe memory corruption by lowmemory
+		*/
+		if (!ret) {
+			__free_pages(bo->pages[i], 0);
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*Allocate pages which will be used only by ISP*/
 static int alloc_private_pages(struct hmm_buffer_object *bo)
 {
+<<<<<<< HEAD
 	const gfp_t gfp = __GFP_NOWARN | __GFP_RECLAIM | __GFP_FS;
 	int ret;
 
@@ -667,12 +706,195 @@ static int alloc_vmalloc_pages(struct hmm_buffer_object *bo, void *vmalloc_addr)
 	}
 
 	return 0;
+=======
+	int ret;
+	unsigned int pgnr, order, blk_pgnr, alloc_pgnr;
+	struct page *pages;
+	gfp_t gfp = GFP_NOWAIT | __GFP_NOWARN; /* REVISIT: need __GFP_FS too? */
+	int i, j;
+	int failure_number = 0;
+	bool reduce_order = false;
+	bool lack_mem = true;
+
+	pgnr = bo->pgnr;
+
+	i = 0;
+	alloc_pgnr = 0;
+
+	while (pgnr) {
+		order = nr_to_order_bottom(pgnr);
+		/*
+		 * if be short of memory, we will set order to 0
+		 * everytime.
+		 */
+		if (lack_mem)
+			order = HMM_MIN_ORDER;
+		else if (order > HMM_MAX_ORDER)
+			order = HMM_MAX_ORDER;
+retry:
+		/*
+		 * When order > HMM_MIN_ORDER, for performance reasons we don't
+		 * want alloc_pages() to sleep. In case it fails and fallbacks
+		 * to HMM_MIN_ORDER or in case the requested order is originally
+		 * the minimum value, we can allow alloc_pages() to sleep for
+		 * robustness purpose.
+		 *
+		 * REVISIT: why __GFP_FS is necessary?
+		 */
+		if (order == HMM_MIN_ORDER) {
+			gfp &= ~GFP_NOWAIT;
+			gfp |= __GFP_RECLAIM | __GFP_FS;
+		}
+
+		pages = alloc_pages(gfp, order);
+		if (unlikely(!pages)) {
+			/*
+			 * in low memory case, if allocation page fails,
+			 * we turn to try if order=0 allocation could
+			 * succeed. if order=0 fails too, that means there is
+			 * no memory left.
+			 */
+			if (order == HMM_MIN_ORDER) {
+				dev_err(atomisp_dev,
+					"%s: cannot allocate pages\n",
+					__func__);
+				goto cleanup;
+			}
+			order = HMM_MIN_ORDER;
+			failure_number++;
+			reduce_order = true;
+			/*
+			 * if fail two times continuously, we think be short
+			 * of memory now.
+			 */
+			if (failure_number == 2) {
+				lack_mem = true;
+				failure_number = 0;
+			}
+			goto retry;
+		} else {
+			blk_pgnr = order_to_nr(order);
+
+			/*
+			 * set memory to uncacheable -- UC_MINUS
+			 */
+			ret = set_pages_uc(pages, blk_pgnr);
+			if (ret) {
+				dev_err(atomisp_dev,
+					"set page uncacheablefailed.\n");
+
+				__free_pages(pages, order);
+
+				goto cleanup;
+			}
+
+			for (j = 0; j < blk_pgnr; j++, i++) {
+				bo->pages[i] = pages + j;
+			}
+
+			pgnr -= blk_pgnr;
+
+			/*
+			 * if order is not reduced this time, clear
+			 * failure_number.
+			 */
+			if (reduce_order)
+				reduce_order = false;
+			else
+				failure_number = 0;
+		}
+	}
+
+	return 0;
+cleanup:
+	alloc_pgnr = i;
+	free_private_bo_pages(bo, alloc_pgnr);
+	return -ENOMEM;
+}
+
+static void free_user_pages(struct hmm_buffer_object *bo,
+			    unsigned int page_nr)
+{
+	int i;
+
+	if (bo->mem_type == HMM_BO_MEM_TYPE_PFN) {
+		unpin_user_pages(bo->pages, page_nr);
+	} else {
+		for (i = 0; i < page_nr; i++)
+			put_page(bo->pages[i]);
+	}
+}
+
+/*
+ * Convert user space virtual address into pages list
+ */
+static int alloc_user_pages(struct hmm_buffer_object *bo,
+			    const void __user *userptr)
+{
+	int page_nr;
+	struct vm_area_struct *vma;
+
+	mutex_unlock(&bo->mutex);
+	mmap_read_lock(current->mm);
+	vma = find_vma(current->mm, (unsigned long)userptr);
+	mmap_read_unlock(current->mm);
+	if (!vma) {
+		dev_err(atomisp_dev, "find_vma failed\n");
+		mutex_lock(&bo->mutex);
+		return -EFAULT;
+	}
+	mutex_lock(&bo->mutex);
+	/*
+	 * Handle frame buffer allocated in other kerenl space driver
+	 * and map to user space
+	 */
+
+	userptr = untagged_addr(userptr);
+
+	if (vma->vm_flags & (VM_IO | VM_PFNMAP)) {
+		page_nr = pin_user_pages((unsigned long)userptr, bo->pgnr,
+					 FOLL_LONGTERM | FOLL_WRITE,
+					 bo->pages, NULL);
+		bo->mem_type = HMM_BO_MEM_TYPE_PFN;
+	} else {
+		/*Handle frame buffer allocated in user space*/
+		mutex_unlock(&bo->mutex);
+		page_nr = get_user_pages_fast((unsigned long)userptr,
+					      (int)(bo->pgnr), 1, bo->pages);
+		mutex_lock(&bo->mutex);
+		bo->mem_type = HMM_BO_MEM_TYPE_USER;
+	}
+
+	dev_dbg(atomisp_dev, "%s: %d %s pages were allocated as 0x%08x\n",
+		__func__,
+		bo->pgnr,
+		bo->mem_type == HMM_BO_MEM_TYPE_USER ? "user" : "pfn", page_nr);
+
+	/* can be written by caller, not forced */
+	if (page_nr != bo->pgnr) {
+		dev_err(atomisp_dev,
+			"get_user_pages err: bo->pgnr = %d, pgnr actually pinned = %d.\n",
+			bo->pgnr, page_nr);
+		if (page_nr < 0)
+			page_nr = 0;
+		goto out_of_mem;
+	}
+
+	return 0;
+
+out_of_mem:
+
+	free_user_pages(bo, page_nr);
+
+	return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
  * allocate/free physical pages for the bo.
  *
  * type indicate where are the pages from. currently we have 3 types
+<<<<<<< HEAD
  * of memory: HMM_BO_PRIVATE, HMM_BO_VMALLOC.
  *
  * vmalloc_addr is only valid when type is HMM_BO_VMALLOC.
@@ -680,6 +902,16 @@ static int alloc_vmalloc_pages(struct hmm_buffer_object *bo, void *vmalloc_addr)
 int hmm_bo_alloc_pages(struct hmm_buffer_object *bo,
 		       enum hmm_bo_type type,
 		       void *vmalloc_addr)
+=======
+ * of memory: HMM_BO_PRIVATE, HMM_BO_USER.
+ *
+ * userptr is only valid when type is HMM_BO_USER, it indicates
+ * the start address from user space task.
+ */
+int hmm_bo_alloc_pages(struct hmm_buffer_object *bo,
+		       enum hmm_bo_type type,
+		       const void __user *userptr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret = -EINVAL;
 
@@ -688,16 +920,31 @@ int hmm_bo_alloc_pages(struct hmm_buffer_object *bo,
 	mutex_lock(&bo->mutex);
 	check_bo_status_no_goto(bo, HMM_BO_PAGE_ALLOCED, status_err);
 
+<<<<<<< HEAD
 	bo->pages = kcalloc(bo->pgnr, sizeof(struct page *), GFP_KERNEL);
+=======
+	bo->pages = kmalloc_array(bo->pgnr, sizeof(struct page *), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(!bo->pages)) {
 		ret = -ENOMEM;
 		goto alloc_err;
 	}
 
+<<<<<<< HEAD
 	if (type == HMM_BO_PRIVATE) {
 		ret = alloc_private_pages(bo);
 	} else if (type == HMM_BO_VMALLOC) {
 		ret = alloc_vmalloc_pages(bo, vmalloc_addr);
+=======
+	/*
+	 * TO DO:
+	 * add HMM_BO_USER type
+	 */
+	if (type == HMM_BO_PRIVATE) {
+		ret = alloc_private_pages(bo);
+	} else if (type == HMM_BO_USER) {
+		ret = alloc_user_pages(bo, userptr);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		dev_err(atomisp_dev, "invalid buffer type.\n");
 		ret = -EINVAL;
@@ -740,9 +987,15 @@ void hmm_bo_free_pages(struct hmm_buffer_object *bo)
 	bo->status &= (~HMM_BO_PAGE_ALLOCED);
 
 	if (bo->type == HMM_BO_PRIVATE)
+<<<<<<< HEAD
 		free_private_bo_pages(bo);
 	else if (bo->type == HMM_BO_VMALLOC)
 		; /* No-op, nothing to do */
+=======
+		free_private_bo_pages(bo, bo->pgnr);
+	else if (bo->type == HMM_BO_USER)
+		free_user_pages(bo, bo->pgnr);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		dev_err(atomisp_dev, "invalid buffer type.\n");
 
@@ -1072,7 +1325,11 @@ int hmm_bo_mmap(struct vm_area_struct *vma, struct hmm_buffer_object *bo)
 	vma->vm_private_data = bo;
 
 	vma->vm_ops = &hmm_bo_vm_ops;
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_IO | VM_DONTEXPAND | VM_DONTDUMP);
+=======
+	vma->vm_flags |= VM_IO | VM_DONTEXPAND | VM_DONTDUMP;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * call hmm_bo_vm_open explicitly.

@@ -15,7 +15,11 @@
 MODULE_LICENSE("Dual BSD/GPL");
 MODULE_DESCRIPTION("RDMA Verbs Transport Library");
 
+<<<<<<< HEAD
 static int __init rvt_init(void)
+=======
+static int rvt_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret = rvt_driver_cq_init();
 
@@ -26,7 +30,11 @@ static int __init rvt_init(void)
 }
 module_init(rvt_init);
 
+<<<<<<< HEAD
 static void __exit rvt_cleanup(void)
+=======
+static void rvt_cleanup(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	rvt_cq_exit();
 }

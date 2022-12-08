@@ -26,6 +26,11 @@
 #include "control.h"
 #include "pm.h"
 
+<<<<<<< HEAD
+=======
+static bool sr_enable_on_init;
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Read EFUSE values from control registers for OMAP3430 */
 static void __init sr_set_nvalues(struct omap_volt_data *volt_data,
 				struct omap_sr_data *sr_data)
@@ -142,6 +147,11 @@ static int __init sr_init_by_name(const char *name, const char *voltdm)
 
 	sr_set_nvalues(volt_data, sr_data);
 
+<<<<<<< HEAD
+=======
+	sr_data->enable_on_init = sr_enable_on_init;
+
+>>>>>>> b7ba80a49124 (Commit)
 exit:
 	i++;
 
@@ -169,6 +179,18 @@ static int __init sr_dev_init(struct omap_hwmod *oh, void *user)
 }
 #endif
 
+<<<<<<< HEAD
+=======
+/*
+ * API to be called from board files to enable smartreflex
+ * autocompensation at init.
+ */
+void __init omap_enable_smartreflex_on_init(void)
+{
+	sr_enable_on_init = true;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const char * const omap4_sr_instances[] = {
 	"mpu",
 	"iva",

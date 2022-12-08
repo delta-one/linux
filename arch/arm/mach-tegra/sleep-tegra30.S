@@ -78,8 +78,11 @@
 #define PLLX_STORE_MASK			(1 << 4)
 #define PLLM_PMC_STORE_MASK		(1 << 5)
 
+<<<<<<< HEAD
 .arch armv7-a
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 .macro emc_device_mask, rd, base
 	ldr	\rd, [\base, #EMC_ADR_CFG]
 	tst	\rd, #0x1

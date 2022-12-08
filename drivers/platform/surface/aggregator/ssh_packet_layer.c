@@ -1596,11 +1596,16 @@ static void ssh_ptl_timeout_reap(struct work_struct *work)
 		ssh_ptl_tx_wakeup_packet(ptl);
 }
 
+<<<<<<< HEAD
 static bool ssh_ptl_rx_retransmit_check(struct ssh_ptl *ptl, const struct ssh_frame *frame)
+=======
+static bool ssh_ptl_rx_retransmit_check(struct ssh_ptl *ptl, u8 seq)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 
 	/*
+<<<<<<< HEAD
 	 * Ignore unsequenced packets. On some devices (notably Surface Pro 9),
 	 * unsequenced events will always be sent with SEQ=0x00. Attempting to
 	 * detect retransmission would thus just block all events.
@@ -1617,11 +1622,17 @@ static bool ssh_ptl_rx_retransmit_check(struct ssh_ptl *ptl, const struct ssh_fr
 		return false;
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * Check if SEQ has been seen recently (i.e. packet was
 	 * re-transmitted and we should ignore it).
 	 */
 	for (i = 0; i < ARRAY_SIZE(ptl->rx.blocked.seqs); i++) {
+<<<<<<< HEAD
 		if (likely(ptl->rx.blocked.seqs[i] != frame->seq))
+=======
+		if (likely(ptl->rx.blocked.seqs[i] != seq))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		ptl_dbg(ptl, "ptl: ignoring repeated data packet\n");
@@ -1629,7 +1640,11 @@ static bool ssh_ptl_rx_retransmit_check(struct ssh_ptl *ptl, const struct ssh_fr
 	}
 
 	/* Update list of blocked sequence IDs. */
+<<<<<<< HEAD
 	ptl->rx.blocked.seqs[ptl->rx.blocked.offset] = frame->seq;
+=======
+	ptl->rx.blocked.seqs[ptl->rx.blocked.offset] = seq;
+>>>>>>> b7ba80a49124 (Commit)
 	ptl->rx.blocked.offset = (ptl->rx.blocked.offset + 1)
 				  % ARRAY_SIZE(ptl->rx.blocked.seqs);
 
@@ -1640,7 +1655,11 @@ static void ssh_ptl_rx_dataframe(struct ssh_ptl *ptl,
 				 const struct ssh_frame *frame,
 				 const struct ssam_span *payload)
 {
+<<<<<<< HEAD
 	if (ssh_ptl_rx_retransmit_check(ptl, frame))
+=======
+	if (ssh_ptl_rx_retransmit_check(ptl, frame->seq))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	ptl->ops.data_received(ptl, payload);

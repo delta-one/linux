@@ -96,8 +96,12 @@ static int bcm6358_led(struct device *dev, struct device_node *nc, u32 reg,
 {
 	struct led_init_data init_data = {};
 	struct bcm6358_led *led;
+<<<<<<< HEAD
 	enum led_default_state state;
 	unsigned long val;
+=======
+	const char *state;
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	led = devm_kzalloc(dev, sizeof(*led), GFP_KERNEL);
@@ -111,6 +115,7 @@ static int bcm6358_led(struct device *dev, struct device_node *nc, u32 reg,
 	if (of_property_read_bool(nc, "active-low"))
 		led->active_low = true;
 
+<<<<<<< HEAD
 	init_data.fwnode = of_fwnode_handle(nc);
 
 	state = led_init_default_state_get(init_data.fwnode);
@@ -127,12 +132,34 @@ static int bcm6358_led(struct device *dev, struct device_node *nc, u32 reg,
 			led->cdev.brightness = LED_OFF;
 		break;
 	default:
+=======
+	if (!of_property_read_string(nc, "default-state", &state)) {
+		if (!strcmp(state, "on")) {
+			led->cdev.brightness = LED_FULL;
+		} else if (!strcmp(state, "keep")) {
+			unsigned long val;
+			val = bcm6358_led_read(led->mem + BCM6358_REG_MODE);
+			val &= BIT(led->pin);
+			if ((led->active_low && !val) ||
+			    (!led->active_low && val))
+				led->cdev.brightness = LED_FULL;
+			else
+				led->cdev.brightness = LED_OFF;
+		} else {
+			led->cdev.brightness = LED_OFF;
+		}
+	} else {
+>>>>>>> b7ba80a49124 (Commit)
 		led->cdev.brightness = LED_OFF;
 	}
 
 	bcm6358_led_set(&led->cdev, led->cdev.brightness);
 
 	led->cdev.brightness_set = bcm6358_led_set;
+<<<<<<< HEAD
+=======
+	init_data.fwnode = of_fwnode_handle(nc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = devm_led_classdev_register_ext(dev, &led->cdev, &init_data);
 	if (rc < 0)

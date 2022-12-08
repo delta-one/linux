@@ -19,6 +19,11 @@ typedef int (*hyperv_fill_flush_list_func)(
 		struct hv_guest_mapping_flush_list *flush,
 		void *data);
 
+<<<<<<< HEAD
+=======
+#define hv_get_raw_timer() rdtsc_ordered()
+
+>>>>>>> b7ba80a49124 (Commit)
 void hyperv_vector_handler(struct pt_regs *regs);
 
 #if IS_ENABLED(CONFIG_HYPERV)
@@ -72,6 +77,7 @@ static inline u64 hv_do_hypercall(u64 control, void *input, void *output)
 	return hv_status;
 }
 
+<<<<<<< HEAD
 /* Hypercall to the L0 hypervisor */
 static inline u64 hv_do_nested_hypercall(u64 control, void *input, void *output)
 {
@@ -82,6 +88,12 @@ static inline u64 hv_do_nested_hypercall(u64 control, void *input, void *output)
 static inline u64 _hv_do_fast_hypercall8(u64 control, u64 input1)
 {
 	u64 hv_status;
+=======
+/* Fast hypercall with 8 bytes of input and no output */
+static inline u64 hv_do_fast_hypercall8(u16 code, u64 input1)
+{
+	u64 hv_status, control = (u64)code | HV_HYPERCALL_FAST_BIT;
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_X86_64
 	{
@@ -109,6 +121,7 @@ static inline u64 _hv_do_fast_hypercall8(u64 control, u64 input1)
 		return hv_status;
 }
 
+<<<<<<< HEAD
 static inline u64 hv_do_fast_hypercall8(u16 code, u64 input1)
 {
 	u64 control = (u64)code | HV_HYPERCALL_FAST_BIT;
@@ -127,6 +140,12 @@ static inline u64 hv_do_fast_nested_hypercall8(u16 code, u64 input1)
 static inline u64 _hv_do_fast_hypercall16(u64 control, u64 input1, u64 input2)
 {
 	u64 hv_status;
+=======
+/* Fast hypercall with 16 bytes of input */
+static inline u64 hv_do_fast_hypercall16(u16 code, u64 input1, u64 input2)
+{
+	u64 hv_status, control = (u64)code | HV_HYPERCALL_FAST_BIT;
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_X86_64
 	{
@@ -157,6 +176,7 @@ static inline u64 _hv_do_fast_hypercall16(u64 control, u64 input1, u64 input2)
 	return hv_status;
 }
 
+<<<<<<< HEAD
 static inline u64 hv_do_fast_hypercall16(u16 code, u64 input1, u64 input2)
 {
 	u64 control = (u64)code | HV_HYPERCALL_FAST_BIT;
@@ -171,6 +191,8 @@ static inline u64 hv_do_fast_nested_hypercall16(u16 code, u64 input1, u64 input2
 	return _hv_do_fast_hypercall16(control, input1, input2);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern struct hv_vp_assist_page **hv_vp_assist_page;
 
 static inline struct hv_vp_assist_page *hv_get_vp_assist_page(unsigned int cpu)
@@ -224,6 +246,7 @@ extern bool hv_isolation_type_snp(void);
 
 static inline bool hv_is_synic_reg(unsigned int reg)
 {
+<<<<<<< HEAD
 	return (reg >= HV_REGISTER_SCONTROL) &&
 	       (reg <= HV_REGISTER_SINT15);
 }
@@ -238,6 +261,38 @@ u64 hv_get_register(unsigned int reg);
 void hv_set_register(unsigned int reg, u64 value);
 u64 hv_get_non_nested_register(unsigned int reg);
 void hv_set_non_nested_register(unsigned int reg, u64 value);
+=======
+	if ((reg >= HV_REGISTER_SCONTROL) &&
+	    (reg <= HV_REGISTER_SINT15))
+		return true;
+	return false;
+}
+
+static inline u64 hv_get_register(unsigned int reg)
+{
+	u64 value;
+
+	if (hv_is_synic_reg(reg) && hv_isolation_type_snp())
+		hv_ghcb_msr_read(reg, &value);
+	else
+		rdmsrl(reg, value);
+	return value;
+}
+
+static inline void hv_set_register(unsigned int reg, u64 value)
+{
+	if (hv_is_synic_reg(reg) && hv_isolation_type_snp()) {
+		hv_ghcb_msr_write(reg, value);
+
+		/* Write proxy bit via wrmsl instruction */
+		if (reg >= HV_REGISTER_SINT0 &&
+		    reg <= HV_REGISTER_SINT15)
+			wrmsrl(reg, value | 1 << 20);
+	} else {
+		wrmsrl(reg, value);
+	}
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 #else /* CONFIG_HYPERV */
 static inline void hyperv_init(void) {}
@@ -257,8 +312,11 @@ static inline int hyperv_flush_guest_mapping_range(u64 as,
 }
 static inline void hv_set_register(unsigned int reg, u64 value) { }
 static inline u64 hv_get_register(unsigned int reg) { return 0; }
+<<<<<<< HEAD
 static inline void hv_set_non_nested_register(unsigned int reg, u64 value) { }
 static inline u64 hv_get_non_nested_register(unsigned int reg) { return 0; }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int hv_set_mem_host_visibility(unsigned long addr, int numpages,
 					     bool visible)
 {

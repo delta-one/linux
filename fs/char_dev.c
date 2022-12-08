@@ -483,24 +483,36 @@ int cdev_add(struct cdev *p, dev_t dev, unsigned count)
 	p->dev = dev;
 	p->count = count;
 
+<<<<<<< HEAD
 	if (WARN_ON(dev == WHITEOUT_DEV)) {
 		error = -EBUSY;
 		goto err;
 	}
+=======
+	if (WARN_ON(dev == WHITEOUT_DEV))
+		return -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 
 	error = kobj_map(cdev_map, dev, count, NULL,
 			 exact_match, exact_lock, p);
 	if (error)
+<<<<<<< HEAD
 		goto err;
+=======
+		return error;
+>>>>>>> b7ba80a49124 (Commit)
 
 	kobject_get(p->kobj.parent);
 
 	return 0;
+<<<<<<< HEAD
 
 err:
 	kfree_const(p->kobj.name);
 	p->kobj.name = NULL;
 	return error;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -554,7 +566,11 @@ int cdev_device_add(struct cdev *cdev, struct device *dev)
 	}
 
 	rc = device_add(dev);
+<<<<<<< HEAD
 	if (rc && dev->devt)
+=======
+	if (rc)
+>>>>>>> b7ba80a49124 (Commit)
 		cdev_del(cdev);
 
 	return rc;

@@ -11,7 +11,10 @@ Human Interface Devices (HID)
    hidraw
    hid-sensor
    hid-transport
+<<<<<<< HEAD
    hid-bpf
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
    uhid
 

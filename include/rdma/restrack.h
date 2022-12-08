@@ -162,8 +162,13 @@ struct rdma_restrack_entry *rdma_restrack_get_byid(struct ib_device *dev,
  * rdma_restrack_no_track() - don't add resource to the DB
  * @res: resource entry
  *
+<<<<<<< HEAD
  * Every user of this API should be cross examined.
  * Probably you don't need to use this function.
+=======
+ * Every user of thie API should be cross examined.
+ * Probaby you don't need to use this function.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static inline void rdma_restrack_no_track(struct rdma_restrack_entry *res)
 {

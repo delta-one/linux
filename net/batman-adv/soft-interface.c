@@ -48,6 +48,10 @@
 #include "hard-interface.h"
 #include "multicast.h"
 #include "network-coding.h"
+<<<<<<< HEAD
+=======
+#include "originator.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "send.h"
 #include "translation-table.h"
 
@@ -195,7 +199,12 @@ static netdev_tx_t batadv_interface_tx(struct sk_buff *skb,
 	unsigned short vid;
 	u32 seqno;
 	int gw_mode;
+<<<<<<< HEAD
 	enum batadv_forw_mode forw_mode = BATADV_FORW_BCAST;
+=======
+	enum batadv_forw_mode forw_mode = BATADV_FORW_SINGLE;
+	struct batadv_orig_node *mcast_single_orig = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	int mcast_is_routable = 0;
 	int network_offset = ETH_HLEN;
 	__be16 proto;
@@ -299,6 +308,7 @@ static netdev_tx_t batadv_interface_tx(struct sk_buff *skb,
 send:
 		if (do_bcast && !is_broadcast_ether_addr(ethhdr->h_dest)) {
 			forw_mode = batadv_mcast_forw_mode(bat_priv, skb,
+<<<<<<< HEAD
 							   &mcast_is_routable);
 			switch (forw_mode) {
 			case BATADV_FORW_BCAST:
@@ -311,6 +321,16 @@ send:
 			default:
 				goto dropped;
 			}
+=======
+							   &mcast_single_orig,
+							   &mcast_is_routable);
+			if (forw_mode == BATADV_FORW_NONE)
+				goto dropped;
+
+			if (forw_mode == BATADV_FORW_SINGLE ||
+			    forw_mode == BATADV_FORW_SOME)
+				do_bcast = false;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -359,7 +379,14 @@ send:
 			if (ret)
 				goto dropped;
 			ret = batadv_send_skb_via_gw(bat_priv, skb, vid);
+<<<<<<< HEAD
 		} else if (forw_mode == BATADV_FORW_UCASTS) {
+=======
+		} else if (mcast_single_orig) {
+			ret = batadv_mcast_forw_send_orig(bat_priv, skb, vid,
+							  mcast_single_orig);
+		} else if (forw_mode == BATADV_FORW_SOME) {
+>>>>>>> b7ba80a49124 (Commit)
 			ret = batadv_mcast_forw_send(bat_priv, skb, vid,
 						     mcast_is_routable);
 		} else {
@@ -385,6 +412,10 @@ dropped:
 dropped_freed:
 	batadv_inc_counter(bat_priv, BATADV_CNT_TX_DROPPED);
 end:
+<<<<<<< HEAD
+=======
+	batadv_orig_node_put(mcast_single_orig);
+>>>>>>> b7ba80a49124 (Commit)
 	batadv_hardif_put(primary_if);
 	return NETDEV_TX_OK;
 }

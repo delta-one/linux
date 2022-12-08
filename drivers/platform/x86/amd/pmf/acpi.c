@@ -233,6 +233,7 @@ static int apmf_get_system_params(struct amd_pmf_dev *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 int apmf_get_dyn_slider_def_ac(struct amd_pmf_dev *pdev, struct apmf_dyn_slider_output *data)
 {
 	return apmf_if_call_store_buffer(pdev, APMF_FUNC_DYN_SLIDER_AC, data, sizeof(*data));
@@ -265,6 +266,8 @@ int apmf_install_handler(struct amd_pmf_dev *pmf_dev)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev)
 {
 	acpi_handle ahandle = ACPI_HANDLE(pmf_dev->dev);
@@ -279,6 +282,11 @@ void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev)
 
 int apmf_acpi_init(struct amd_pmf_dev *pmf_dev)
 {
+<<<<<<< HEAD
+=======
+	acpi_handle ahandle = ACPI_HANDLE(pmf_dev->dev);
+	acpi_status status;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	ret = apmf_if_verify_interface(pmf_dev);
@@ -299,6 +307,23 @@ int apmf_acpi_init(struct amd_pmf_dev *pmf_dev)
 		schedule_delayed_work(&pmf_dev->heart_beat, 0);
 	}
 
+<<<<<<< HEAD
+=======
+	/* Install the APMF Notify handler */
+	if (is_apmf_func_supported(pmf_dev, APMF_FUNC_AUTO_MODE) &&
+	    is_apmf_func_supported(pmf_dev, APMF_FUNC_SBIOS_REQUESTS)) {
+		status = acpi_install_notify_handler(ahandle,
+						     ACPI_ALL_NOTIFY,
+						     apmf_event_handler, pmf_dev);
+		if (ACPI_FAILURE(status)) {
+			dev_err(pmf_dev->dev, "failed to install notify handler\n");
+			return -ENODEV;
+		}
+		/* Call the handler once manually to catch up with possibly missed notifies. */
+		apmf_event_handler(ahandle, 0, pmf_dev);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	return ret;
 }

@@ -126,7 +126,11 @@ struct key_vector {
 		/* This list pointer if valid if (pos | bits) == 0 (LEAF) */
 		struct hlist_head leaf;
 		/* This array is valid if (pos | bits) > 0 (TNODE) */
+<<<<<<< HEAD
 		DECLARE_FLEX_ARRAY(struct key_vector __rcu *, tnode);
+=======
+		struct key_vector __rcu *tnode[0];
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -1381,10 +1385,15 @@ int fib_table_insert(struct net *net, struct fib_table *tb,
 
 	/* The alias was already inserted, so the node must exist. */
 	l = l ? l : fib_find_node(t, &tp, key);
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(!l)) {
 		err = -ENOENT;
 		goto out_free_new_fa;
 	}
+=======
+	if (WARN_ON_ONCE(!l))
+		goto out_free_new_fa;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (fib_find_alias(&l->leaf, new_fa->fa_slen, 0, 0, tb->tb_id, true) ==
 	    new_fa) {

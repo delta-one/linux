@@ -32,8 +32,11 @@
 #include <linux/pm_runtime.h>
 
 #define DRIVER_NAME "xiic-i2c"
+<<<<<<< HEAD
 #define DYNAMIC_MODE_READ_BROKEN_BIT	BIT(0)
 #define SMBUS_BLOCK_READ_MIN_LEN	3
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum xilinx_i2c_state {
 	STATE_DONE,
@@ -46,12 +49,15 @@ enum xiic_endian {
 	BIG
 };
 
+<<<<<<< HEAD
 enum i2c_scl_freq {
 	REG_VALUES_100KHZ = 0,
 	REG_VALUES_400KHZ = 1,
 	REG_VALUES_1MHZ = 2
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct xiic_i2c - Internal representation of the XIIC I2C bus
  * @dev: Pointer to device structure
@@ -68,12 +74,15 @@ enum i2c_scl_freq {
  * @clk: Pointer to AXI4-lite input clock
  * @state: See STATE_
  * @singlemaster: Indicates bus is single master
+<<<<<<< HEAD
  * @dynamic: Mode of controller
  * @prev_msg_tx: Previous message is Tx
  * @quirks: To hold platform specific bug info
  * @smbus_block_read: Flag to handle block read
  * @input_clk: Input clock to I2C controller
  * @i2c_clk: I2C SCL frequency
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct xiic_i2c {
 	struct device *dev;
@@ -90,6 +99,7 @@ struct xiic_i2c {
 	struct clk *clk;
 	enum xilinx_i2c_state state;
 	bool singlemaster;
+<<<<<<< HEAD
 	bool dynamic;
 	bool prev_msg_tx;
 	u32 quirks;
@@ -123,6 +133,8 @@ static const struct timing_regs timing_reg_values[] = {
 	{ 5700, 5000, 4300, 550, 5000 }, /* Reg values for 100KHz */
 	{ 900, 900, 900, 400, 1600 },    /* Reg values for 400KHz */
 	{ 380, 380, 380, 170, 620 },     /* Reg values for 1MHz   */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define XIIC_MSB_OFFSET 0
@@ -143,6 +155,7 @@ static const struct timing_regs timing_reg_values[] = {
 #define XIIC_RFD_REG_OFFSET  (0x20 + XIIC_REG_OFFSET)	/* Rx FIFO Depth reg  */
 #define XIIC_GPO_REG_OFFSET  (0x24 + XIIC_REG_OFFSET)	/* Output Register    */
 
+<<<<<<< HEAD
 /*
  * Timing register offsets from RegisterBase. These are used only for
  * setting i2c clock frequency for the line.
@@ -156,6 +169,8 @@ static const struct timing_regs timing_reg_values[] = {
 #define XIIC_TLOW_REG_OFFSET   (0x40 + XIIC_REG_OFFSET) /* TLOW Register */
 #define XIIC_THDDAT_REG_OFFSET (0x44 + XIIC_REG_OFFSET) /* THDDAT Register */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Control Register masks */
 #define XIIC_CR_ENABLE_DEVICE_MASK        0x01	/* Device enable = 1      */
 #define XIIC_CR_TX_FIFO_RESET_MASK        0x02	/* Transmit FIFO reset=1  */
@@ -203,9 +218,12 @@ static const struct timing_regs timing_reg_values[] = {
 #define XIIC_TX_DYN_START_MASK            0x0100 /* 1 = Set dynamic start */
 #define XIIC_TX_DYN_STOP_MASK             0x0200 /* 1 = Set dynamic stop */
 
+<<<<<<< HEAD
 /* Dynamic mode constants */
 #define MAX_READ_LENGTH_DYNAMIC                255 /* Max length for dynamic read */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The following constants define the register offsets for the Interrupt
  * registers. There are some holes in the memory map for reserved addresses
@@ -338,6 +356,7 @@ static int xiic_clear_rx_fifo(struct xiic_i2c *i2c)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int xiic_wait_tx_empty(struct xiic_i2c *i2c)
 {
 	u8 isr;
@@ -442,16 +461,21 @@ static int xiic_setclk(struct xiic_i2c *i2c)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int xiic_reinit(struct xiic_i2c *i2c)
 {
 	int ret;
 
 	xiic_setreg32(i2c, XIIC_RESETR_OFFSET, XIIC_RESET_MASK);
 
+<<<<<<< HEAD
 	ret = xiic_setclk(i2c);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Set receive Fifo depth to maximum (zero based). */
 	xiic_setreg8(i2c, XIIC_RFD_REG_OFFSET, IIC_RX_FIFO_DEPTH - 1);
 
@@ -485,6 +509,7 @@ static void xiic_deinit(struct xiic_i2c *i2c)
 	xiic_setreg8(i2c, XIIC_CR_REG_OFFSET, cr & ~XIIC_CR_ENABLE_DEVICE_MASK);
 }
 
+<<<<<<< HEAD
 static void xiic_smbus_block_read_setup(struct xiic_i2c *i2c)
 {
 	u8 rxmsg_len, rfd_set = 0;
@@ -545,12 +570,21 @@ static void xiic_read_rx(struct xiic_i2c *i2c)
 {
 	u8 bytes_in_fifo, cr = 0, bytes_to_read = 0;
 	u32 bytes_rem = 0;
+=======
+static void xiic_read_rx(struct xiic_i2c *i2c)
+{
+	u8 bytes_in_fifo;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	bytes_in_fifo = xiic_getreg8(i2c, XIIC_RFO_REG_OFFSET) + 1;
 
 	dev_dbg(i2c->adap.dev.parent,
+<<<<<<< HEAD
 		"%s entry, bytes in fifo: %d, rem: %d, SR: 0x%x, CR: 0x%x\n",
+=======
+		"%s entry, bytes in fifo: %d, msg: %d, SR: 0x%x, CR: 0x%x\n",
+>>>>>>> b7ba80a49124 (Commit)
 		__func__, bytes_in_fifo, xiic_rx_space(i2c),
 		xiic_getreg8(i2c, XIIC_SR_REG_OFFSET),
 		xiic_getreg8(i2c, XIIC_CR_REG_OFFSET));
@@ -558,6 +592,7 @@ static void xiic_read_rx(struct xiic_i2c *i2c)
 	if (bytes_in_fifo > xiic_rx_space(i2c))
 		bytes_in_fifo = xiic_rx_space(i2c);
 
+<<<<<<< HEAD
 	bytes_to_read = bytes_in_fifo;
 
 	if (!i2c->dynamic) {
@@ -610,6 +645,15 @@ static void xiic_read_rx(struct xiic_i2c *i2c)
 		bytes--;
 		xiic_setreg8(i2c, XIIC_RFD_REG_OFFSET, bytes);
 	}
+=======
+	for (i = 0; i < bytes_in_fifo; i++)
+		i2c->rx_msg->buf[i2c->rx_pos++] =
+			xiic_getreg8(i2c, XIIC_DRR_REG_OFFSET);
+
+	xiic_setreg8(i2c, XIIC_RFD_REG_OFFSET,
+		(xiic_rx_space(i2c) > IIC_RX_FIFO_DEPTH) ?
+		IIC_RX_FIFO_DEPTH - 1 :  xiic_rx_space(i2c) - 1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int xiic_tx_fifo_space(struct xiic_i2c *i2c)
@@ -633,6 +677,7 @@ static void xiic_fill_tx_fifo(struct xiic_i2c *i2c)
 
 		if (!xiic_tx_space(i2c) && i2c->nmsgs == 1) {
 			/* last message in transfer -> STOP */
+<<<<<<< HEAD
 			if (i2c->dynamic) {
 				data |= XIIC_TX_DYN_STOP_MASK;
 			} else {
@@ -649,6 +694,9 @@ static void xiic_fill_tx_fifo(struct xiic_i2c *i2c)
 				xiic_setreg8(i2c, XIIC_CR_REG_OFFSET, cr &
 					     ~XIIC_CR_MSMS_MASK);
 			}
+=======
+			data |= XIIC_TX_DYN_STOP_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 			dev_dbg(i2c->adap.dev.parent, "%s TX STOP\n", __func__);
 		}
 		xiic_setreg16(i2c, XIIC_DTR_REG_OFFSET, data);
@@ -689,9 +737,13 @@ static irqreturn_t xiic_process(int irq, void *dev_id)
 	dev_dbg(i2c->adap.dev.parent, "%s: SR: 0x%x, msg: %p, nmsgs: %d\n",
 		__func__, xiic_getreg8(i2c, XIIC_SR_REG_OFFSET),
 		i2c->tx_msg, i2c->nmsgs);
+<<<<<<< HEAD
 	dev_dbg(i2c->adap.dev.parent, "%s, ISR: 0x%x, CR: 0x%x\n",
 		__func__, xiic_getreg32(i2c, XIIC_IISR_OFFSET),
 		xiic_getreg8(i2c, XIIC_CR_REG_OFFSET));
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Service requesting interrupt */
 	if ((pend & XIIC_INTR_ARB_LOST_MASK) ||
@@ -802,12 +854,15 @@ static irqreturn_t xiic_process(int irq, void *dev_id)
 		/* The bus is not busy, disable BusNotBusy interrupt */
 		xiic_irq_dis(i2c, XIIC_INTR_BNB_MASK);
 
+<<<<<<< HEAD
 		if (i2c->tx_msg && i2c->smbus_block_read) {
 			i2c->smbus_block_read = false;
 			/* Set requested message len=1 to indicate STATE_DONE */
 			i2c->tx_msg->len = 1;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (!i2c->tx_msg)
 			goto out;
 
@@ -875,6 +930,7 @@ static int xiic_busy(struct xiic_i2c *i2c)
 static void xiic_start_recv(struct xiic_i2c *i2c)
 {
 	u16 rx_watermark;
+<<<<<<< HEAD
 	u8 cr = 0, rfd_set = 0;
 	struct i2c_msg *msg = i2c->rx_msg = i2c->tx_msg;
 
@@ -982,6 +1038,33 @@ static void xiic_start_recv(struct xiic_i2c *i2c)
 			__func__, xiic_getreg32(i2c, XIIC_IISR_OFFSET),
 			xiic_getreg8(i2c, XIIC_CR_REG_OFFSET));
 	}
+=======
+	struct i2c_msg *msg = i2c->rx_msg = i2c->tx_msg;
+
+	/* Clear and enable Rx full interrupt. */
+	xiic_irq_clr_en(i2c, XIIC_INTR_RX_FULL_MASK | XIIC_INTR_TX_ERROR_MASK);
+
+	/* we want to get all but last byte, because the TX_ERROR IRQ is used
+	 * to inidicate error ACK on the address, and negative ack on the last
+	 * received byte, so to not mix them receive all but last.
+	 * In the case where there is only one byte to receive
+	 * we can check if ERROR and RX full is set at the same time
+	 */
+	rx_watermark = msg->len;
+	if (rx_watermark > IIC_RX_FIFO_DEPTH)
+		rx_watermark = IIC_RX_FIFO_DEPTH;
+	xiic_setreg8(i2c, XIIC_RFD_REG_OFFSET, (u8)(rx_watermark - 1));
+
+	if (!(msg->flags & I2C_M_NOSTART))
+		/* write the address */
+		xiic_setreg16(i2c, XIIC_DTR_REG_OFFSET,
+			i2c_8bit_addr_from_msg(msg) | XIIC_TX_DYN_START_MASK);
+
+	xiic_irq_clr_en(i2c, XIIC_INTR_BNB_MASK);
+
+	xiic_setreg16(i2c, XIIC_DTR_REG_OFFSET,
+		msg->len | ((i2c->nmsgs == 1) ? XIIC_TX_DYN_STOP_MASK : 0));
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (i2c->nmsgs == 1)
 		/* very last, enable bus not busy as well */
@@ -989,17 +1072,23 @@ static void xiic_start_recv(struct xiic_i2c *i2c)
 
 	/* the message is tx:ed */
 	i2c->tx_pos = msg->len;
+<<<<<<< HEAD
 
 	/* Enable interrupts */
 	xiic_setreg32(i2c, XIIC_DGIER_OFFSET, XIIC_GINTR_ENABLE_MASK);
 
 	i2c->prev_msg_tx = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void xiic_start_send(struct xiic_i2c *i2c)
 {
+<<<<<<< HEAD
 	u8 cr = 0;
 	u16 data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct i2c_msg *msg = i2c->tx_msg;
 
 	dev_dbg(i2c->adap.dev.parent, "%s entry, msg: %p, len: %d",
@@ -1008,16 +1097,25 @@ static void xiic_start_send(struct xiic_i2c *i2c)
 		__func__, xiic_getreg32(i2c, XIIC_IISR_OFFSET),
 		xiic_getreg8(i2c, XIIC_CR_REG_OFFSET));
 
+<<<<<<< HEAD
 	if (i2c->dynamic) {
 		/* write the address */
 		data = i2c_8bit_addr_from_msg(msg) |
 				XIIC_TX_DYN_START_MASK;
 
 		if (i2c->nmsgs == 1 && msg->len == 0)
+=======
+	if (!(msg->flags & I2C_M_NOSTART)) {
+		/* write the address */
+		u16 data = i2c_8bit_addr_from_msg(msg) |
+			XIIC_TX_DYN_START_MASK;
+		if ((i2c->nmsgs == 1) && msg->len == 0)
+>>>>>>> b7ba80a49124 (Commit)
 			/* no data and last message -> add STOP */
 			data |= XIIC_TX_DYN_STOP_MASK;
 
 		xiic_setreg16(i2c, XIIC_DTR_REG_OFFSET, data);
+<<<<<<< HEAD
 
 		/* Clear any pending Tx empty, Tx Error and then enable them */
 		xiic_irq_clr_en(i2c, XIIC_INTR_TX_EMPTY_MASK |
@@ -1072,6 +1170,17 @@ static void xiic_start_send(struct xiic_i2c *i2c)
 				XIIC_INTR_BNB_MASK);
 	}
 	i2c->prev_msg_tx = true;
+=======
+	}
+
+	/* Clear any pending Tx empty, Tx Error and then enable them. */
+	xiic_irq_clr_en(i2c, XIIC_INTR_TX_EMPTY_MASK | XIIC_INTR_TX_ERROR_MASK |
+		XIIC_INTR_BNB_MASK |
+		((i2c->nmsgs > 1 || xiic_tx_space(i2c)) ?
+			XIIC_INTR_TX_HALF_MASK : 0));
+
+	xiic_fill_tx_fifo(i2c);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __xiic_start_xfer(struct xiic_i2c *i2c)
@@ -1097,8 +1206,12 @@ static void __xiic_start_xfer(struct xiic_i2c *i2c)
 
 static int xiic_start_xfer(struct xiic_i2c *i2c, struct i2c_msg *msgs, int num)
 {
+<<<<<<< HEAD
 	bool broken_read, max_read_len, smbus_blk_read;
 	int ret, count;
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&i2c->lock);
 
@@ -1111,6 +1224,7 @@ static int xiic_start_xfer(struct xiic_i2c *i2c, struct i2c_msg *msgs, int num)
 	i2c->nmsgs = num;
 	init_completion(&i2c->completion);
 
+<<<<<<< HEAD
 	/* Decide standard mode or Dynamic mode */
 	i2c->dynamic = true;
 
@@ -1139,6 +1253,8 @@ static int xiic_start_xfer(struct xiic_i2c *i2c, struct i2c_msg *msgs, int num)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = xiic_reinit(i2c);
 	if (!ret)
 		__xiic_start_xfer(i2c);
@@ -1174,6 +1290,13 @@ static int xiic_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
 		i2c->rx_msg = NULL;
 		i2c->nmsgs = 0;
 		err = -ETIMEDOUT;
+<<<<<<< HEAD
+=======
+	} else if (err < 0) {	/* Completion error */
+		i2c->tx_msg = NULL;
+		i2c->rx_msg = NULL;
+		i2c->nmsgs = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		err = (i2c->state == STATE_DONE) ? num : -EIO;
 	}
@@ -1185,7 +1308,11 @@ static int xiic_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
 
 static u32 xiic_func(struct i2c_adapter *adap)
 {
+<<<<<<< HEAD
 	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL | I2C_FUNC_SMBUS_BLOCK_DATA;
+=======
+	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct i2c_algorithm xiic_algorithm = {
@@ -1193,10 +1320,18 @@ static const struct i2c_algorithm xiic_algorithm = {
 	.functionality = xiic_func,
 };
 
+<<<<<<< HEAD
+=======
+static const struct i2c_adapter_quirks xiic_quirks = {
+	.max_read_len = 255,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct i2c_adapter xiic_adapter = {
 	.owner = THIS_MODULE,
 	.class = I2C_CLASS_DEPRECATED,
 	.algo = &xiic_algorithm,
+<<<<<<< HEAD
 };
 
 static const struct xiic_version_data xiic_2_00 = {
@@ -1212,11 +1347,19 @@ static const struct of_device_id xiic_of_match[] = {
 MODULE_DEVICE_TABLE(of, xiic_of_match);
 #endif
 
+=======
+	.quirks = &xiic_quirks,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static int xiic_i2c_probe(struct platform_device *pdev)
 {
 	struct xiic_i2c *i2c;
 	struct xiic_i2c_platform_data *pdata;
+<<<<<<< HEAD
 	const struct of_device_id *match;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct resource *res;
 	int ret, irq;
 	u8 i;
@@ -1226,6 +1369,7 @@ static int xiic_i2c_probe(struct platform_device *pdev)
 	if (!i2c)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	match = of_match_node(xiic_of_match, pdev->dev.of_node);
 	if (match && match->data) {
 		const struct xiic_version_data *data = match->data;
@@ -1233,6 +1377,8 @@ static int xiic_i2c_probe(struct platform_device *pdev)
 		i2c->quirks = data->quirks;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	i2c->base = devm_ioremap_resource(&pdev->dev, res);
 	if (IS_ERR(i2c->base))
@@ -1270,6 +1416,7 @@ static int xiic_i2c_probe(struct platform_device *pdev)
 	pm_runtime_use_autosuspend(i2c->dev);
 	pm_runtime_set_active(i2c->dev);
 	pm_runtime_enable(i2c->dev);
+<<<<<<< HEAD
 
 	/* SCL frequency configuration */
 	i2c->input_clk = clk_get_rate(i2c->clk);
@@ -1279,6 +1426,8 @@ static int xiic_i2c_probe(struct platform_device *pdev)
 	if (ret || i2c->i2c_clk > I2C_MAX_FAST_MODE_PLUS_FREQ)
 		i2c->i2c_clk = 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
 					xiic_process, IRQF_ONESHOT,
 					pdev->name, i2c);
@@ -1322,9 +1471,12 @@ static int xiic_i2c_probe(struct platform_device *pdev)
 			i2c_new_client_device(&i2c->adap, pdata->devices + i);
 	}
 
+<<<<<<< HEAD
 	dev_dbg(&pdev->dev, "mmio %08lx irq %d scl clock frequency %d\n",
 		(unsigned long)res->start, irq, i2c->i2c_clk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_clk_dis:
@@ -1342,6 +1494,7 @@ static int xiic_i2c_remove(struct platform_device *pdev)
 	/* remove adapter & data */
 	i2c_del_adapter(&i2c->adap);
 
+<<<<<<< HEAD
 	ret = pm_runtime_get_sync(i2c->dev);
 
 	if (ret < 0)
@@ -1350,6 +1503,13 @@ static int xiic_i2c_remove(struct platform_device *pdev)
 	else
 		xiic_deinit(i2c);
 
+=======
+	ret = pm_runtime_resume_and_get(i2c->dev);
+	if (ret < 0)
+		return ret;
+
+	xiic_deinit(i2c);
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_put_sync(i2c->dev);
 	clk_disable_unprepare(i2c->clk);
 	pm_runtime_disable(&pdev->dev);
@@ -1359,6 +1519,17 @@ static int xiic_i2c_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_OF)
+static const struct of_device_id xiic_of_match[] = {
+	{ .compatible = "xlnx,xps-iic-2.00.a", },
+	{},
+};
+MODULE_DEVICE_TABLE(of, xiic_of_match);
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __maybe_unused xiic_i2c_runtime_suspend(struct device *dev)
 {
 	struct xiic_i2c *i2c = dev_get_drvdata(dev);
@@ -1399,7 +1570,10 @@ static struct platform_driver xiic_i2c_driver = {
 
 module_platform_driver(xiic_i2c_driver);
 
+<<<<<<< HEAD
 MODULE_ALIAS("platform:" DRIVER_NAME);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("info@mocean-labs.com");
 MODULE_DESCRIPTION("Xilinx I2C bus driver");
 MODULE_LICENSE("GPL v2");

@@ -17,6 +17,7 @@
 struct udp_table 	udplite_table __read_mostly;
 EXPORT_SYMBOL(udplite_table);
 
+<<<<<<< HEAD
 /* Designate sk as UDP-Lite socket */
 static int udplite_sk_init(struct sock *sk)
 {
@@ -25,6 +26,8 @@ static int udplite_sk_init(struct sock *sk)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int udplite_rcv(struct sk_buff *skb)
 {
 	return __udp4_lib_rcv(skb, &udplite_table, IPPROTO_UDPLITE);

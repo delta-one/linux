@@ -873,16 +873,25 @@ static const struct dwc3_ep_file_map dwc3_ep_file_map[] = {
 	{ "GDBGEPINFO", &dwc3_ep_info_register_fops, },
 };
 
+<<<<<<< HEAD
 void dwc3_debugfs_create_endpoint_dir(struct dwc3_ep *dep)
 {
 	struct dentry		*dir;
 	int			i;
 
 	dir = debugfs_create_dir(dep->name, dep->dwc->debug_root);
+=======
+static void dwc3_debugfs_create_endpoint_files(struct dwc3_ep *dep,
+		struct dentry *parent)
+{
+	int			i;
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < ARRAY_SIZE(dwc3_ep_file_map); i++) {
 		const struct file_operations *fops = dwc3_ep_file_map[i].fops;
 		const char *name = dwc3_ep_file_map[i].name;
 
+<<<<<<< HEAD
 		debugfs_create_file(name, 0444, dir, dep, fops);
 	}
 }
@@ -890,6 +899,20 @@ void dwc3_debugfs_create_endpoint_dir(struct dwc3_ep *dep)
 void dwc3_debugfs_remove_endpoint_dir(struct dwc3_ep *dep)
 {
 	debugfs_lookup_and_remove(dep->name, dep->dwc->debug_root);
+=======
+		debugfs_create_file(name, 0444, parent, dep, fops);
+	}
+}
+
+void dwc3_debugfs_create_endpoint_dir(struct dwc3_ep *dep)
+{
+	struct dentry		*dir;
+	struct dentry		*root;
+
+	root = debugfs_lookup(dev_name(dep->dwc->dev), usb_debug_root);
+	dir = debugfs_create_dir(dep->name, root);
+	dwc3_debugfs_create_endpoint_files(dep, dir);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void dwc3_debugfs_init(struct dwc3 *dwc)
@@ -907,7 +930,10 @@ void dwc3_debugfs_init(struct dwc3 *dwc)
 	dwc->regset->base = dwc->regs - DWC3_GLOBALS_REGS_START;
 
 	root = debugfs_create_dir(dev_name(dwc->dev), usb_debug_root);
+<<<<<<< HEAD
 	dwc->debug_root = root;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	debugfs_create_regset32("regdump", 0444, root, dwc->regset);
 	debugfs_create_file("lsp_dump", 0644, root, dwc, &dwc3_lsp_fops);
 
@@ -926,6 +952,10 @@ void dwc3_debugfs_init(struct dwc3 *dwc)
 
 void dwc3_debugfs_exit(struct dwc3 *dwc)
 {
+<<<<<<< HEAD
 	debugfs_lookup_and_remove(dev_name(dwc->dev), usb_debug_root);
+=======
+	debugfs_remove(debugfs_lookup(dev_name(dwc->dev), usb_debug_root));
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(dwc->regset);
 }

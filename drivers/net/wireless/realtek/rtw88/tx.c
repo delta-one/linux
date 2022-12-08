@@ -682,6 +682,7 @@ void rtw_txq_cleanup(struct rtw_dev *rtwdev, struct ieee80211_txq *txq)
 		list_del_init(&rtwtxq->list);
 	spin_unlock_bh(&rtwdev->txq_lock);
 }
+<<<<<<< HEAD
 
 static const enum rtw_tx_queue_type ac_to_hwq[] = {
 	[IEEE80211_AC_VO] = RTW_TX_QUEUE_VO,
@@ -723,3 +724,5 @@ enum rtw_tx_queue_type rtw_tx_queue_mapping(struct sk_buff *skb)
 	return queue;
 }
 EXPORT_SYMBOL(rtw_tx_queue_mapping);
+=======
+>>>>>>> b7ba80a49124 (Commit)

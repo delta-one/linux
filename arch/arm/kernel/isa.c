@@ -40,11 +40,34 @@ static struct ctl_table ctl_isa_vars[4] = {
 
 static struct ctl_table_header *isa_sysctl_header;
 
+<<<<<<< HEAD
+=======
+static struct ctl_table ctl_isa[2] = {
+	{
+		.procname	= "isa",
+		.mode		= 0555,
+		.child		= ctl_isa_vars,
+	}, {}
+};
+
+static struct ctl_table ctl_bus[2] = {
+	{
+		.procname	= "bus",
+		.mode		= 0555,
+		.child		= ctl_isa,
+	}, {}
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 void __init
 register_isa_ports(unsigned int membase, unsigned int portbase, unsigned int portshift)
 {
 	isa_membase = membase;
 	isa_portbase = portbase;
 	isa_portshift = portshift;
+<<<<<<< HEAD
 	isa_sysctl_header = register_sysctl("bus/isa", ctl_isa_vars);
+=======
+	isa_sysctl_header = register_sysctl_table(ctl_bus);
+>>>>>>> b7ba80a49124 (Commit)
 }

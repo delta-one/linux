@@ -33,6 +33,7 @@
 			bosch,mram-cfg = <0x1400 0 0 32 0 0 2 2>;
 			status = "disabled";
 		};
+<<<<<<< HEAD
 
 		adc_1: adc@48003000 {
 			compatible = "st,stm32mp13-adc-core";
@@ -64,5 +65,7 @@
 				};
 			};
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };

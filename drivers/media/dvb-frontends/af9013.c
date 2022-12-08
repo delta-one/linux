@@ -1430,7 +1430,12 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int af9013_probe(struct i2c_client *client)
+=======
+static int af9013_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct af9013_state *state;
 	struct af9013_platform_data *pdata = client->dev.platform_data;
@@ -1563,7 +1568,11 @@ static struct i2c_driver af9013_driver = {
 		.name	= "af9013",
 		.suppress_bind_attrs = true,
 	},
+<<<<<<< HEAD
 	.probe_new	= af9013_probe,
+=======
+	.probe		= af9013_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= af9013_remove,
 	.id_table	= af9013_id_table,
 };

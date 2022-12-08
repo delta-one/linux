@@ -71,7 +71,11 @@
 		#sound-dai-cells = <0>;
 	};
 
+<<<<<<< HEAD
 	ir_recv: ir-receiver {
+=======
+	ir_recv: gpio-ir-receiver {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "gpio-ir-receiver";
 		gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
 		pinctrl-names = "default";

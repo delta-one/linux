@@ -1224,7 +1224,11 @@ static int ethoc_probe(struct platform_device *pdev)
 	netdev->ethtool_ops = &ethoc_ethtool_ops;
 
 	/* setup NAPI */
+<<<<<<< HEAD
 	netif_napi_add(netdev, &priv->napi, ethoc_poll);
+=======
+	netif_napi_add(netdev, &priv->napi, ethoc_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_init(&priv->lock);
 

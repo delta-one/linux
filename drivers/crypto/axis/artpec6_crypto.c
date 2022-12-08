@@ -1621,7 +1621,11 @@ artpec6_crypto_xts_set_key(struct crypto_skcipher *cipher, const u8 *key,
 		crypto_skcipher_ctx(cipher);
 	int ret;
 
+<<<<<<< HEAD
 	ret = xts_verify_key(cipher, key, keylen);
+=======
+	ret = xts_check_key(&cipher->base, key, keylen);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -1712,7 +1716,11 @@ static int artpec6_crypto_prepare_crypto(struct skcipher_request *areq)
 		cipher_len = regk_crypto_key_256;
 		break;
 	default:
+<<<<<<< HEAD
 		pr_err("%s: Invalid key length %zu!\n",
+=======
+		pr_err("%s: Invalid key length %d!\n",
+>>>>>>> b7ba80a49124 (Commit)
 			MODULE_NAME, ctx->key_length);
 		return -EINVAL;
 	}
@@ -2143,13 +2151,21 @@ static void artpec6_crypto_task(unsigned long data)
 
 	list_for_each_entry_safe(req, n, &complete_in_progress,
 				 complete_in_progress) {
+<<<<<<< HEAD
 		crypto_request_complete(req->req, -EINPROGRESS);
+=======
+		req->req->complete(req->req, -EINPROGRESS);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
 static void artpec6_crypto_complete_crypto(struct crypto_async_request *req)
 {
+<<<<<<< HEAD
 	crypto_request_complete(req, 0);
+=======
+	req->complete(req, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -2161,7 +2177,11 @@ artpec6_crypto_complete_cbc_decrypt(struct crypto_async_request *req)
 	scatterwalk_map_and_copy(cipher_req->iv, cipher_req->src,
 				 cipher_req->cryptlen - AES_BLOCK_SIZE,
 				 AES_BLOCK_SIZE, 0);
+<<<<<<< HEAD
 	skcipher_request_complete(cipher_req, 0);
+=======
+	req->complete(req, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -2173,7 +2193,11 @@ artpec6_crypto_complete_cbc_encrypt(struct crypto_async_request *req)
 	scatterwalk_map_and_copy(cipher_req->iv, cipher_req->dst,
 				 cipher_req->cryptlen - AES_BLOCK_SIZE,
 				 AES_BLOCK_SIZE, 0);
+<<<<<<< HEAD
 	skcipher_request_complete(cipher_req, 0);
+=======
+	req->complete(req, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void artpec6_crypto_complete_aead(struct crypto_async_request *req)
@@ -2211,12 +2235,20 @@ static void artpec6_crypto_complete_aead(struct crypto_async_request *req)
 		}
 	}
 
+<<<<<<< HEAD
 	aead_request_complete(areq, result);
+=======
+	req->complete(req, result);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void artpec6_crypto_complete_hash(struct crypto_async_request *req)
 {
+<<<<<<< HEAD
 	crypto_request_complete(req, 0);
+=======
+	req->complete(req, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 

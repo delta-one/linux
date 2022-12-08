@@ -7,9 +7,12 @@
  */
 
 /dts-v1/;
+<<<<<<< HEAD
 
 #include <dt-bindings/media/video-interfaces.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "r8a7742-iwg21d-q7.dts"
 
 / {
@@ -245,7 +248,11 @@
 		vin0ep: endpoint {
 			remote-endpoint = <&cam0ep>;
 			bus-width = <8>;
+<<<<<<< HEAD
 			bus-type = <MEDIA_BUS_TYPE_BT656>;
+=======
+			bus-type = <6>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };
@@ -276,7 +283,11 @@
 		vin1ep: endpoint {
 			remote-endpoint = <&cam1ep>;
 			bus-width = <8>;
+<<<<<<< HEAD
 			bus-type = <MEDIA_BUS_TYPE_BT656>;
+=======
+			bus-type = <6>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };
@@ -308,7 +319,11 @@
 			remote-endpoint = <&cam2ep>;
 			bus-width = <8>;
 			data-shift = <8>;
+<<<<<<< HEAD
 			bus-type = <MEDIA_BUS_TYPE_BT656>;
+=======
+			bus-type = <6>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };
@@ -338,7 +353,11 @@
 		vin3ep: endpoint {
 			remote-endpoint = <&cam3ep>;
 			bus-width = <8>;
+<<<<<<< HEAD
 			bus-type = <MEDIA_BUS_TYPE_BT656>;
+=======
+			bus-type = <6>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };

@@ -18,6 +18,10 @@
 #include <linux/ethtool.h>
 #include <linux/topology.h>
 #include <linux/gfp.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/interrupt.h>
 #include "net_driver.h"
 #include <net/gre.h>
@@ -891,6 +895,11 @@ static void efx_pci_remove(struct pci_dev *pci_dev)
 	free_netdev(efx->net_dev);
 	probe_data = container_of(efx, struct efx_probe_data, efx);
 	kfree(probe_data);
+<<<<<<< HEAD
+=======
+
+	pci_disable_pcie_error_reporting(pci_dev);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* NIC VPD information
@@ -1000,11 +1009,16 @@ static int efx_pci_probe_post_io(struct efx_nic *efx)
 	/* Determine netdevice features */
 	net_dev->features |= (efx->type->offload_features | NETIF_F_SG |
 			      NETIF_F_TSO | NETIF_F_RXCSUM | NETIF_F_RXALL);
+<<<<<<< HEAD
 	if (efx->type->offload_features & (NETIF_F_IPV6_CSUM | NETIF_F_HW_CSUM)) {
 		net_dev->features |= NETIF_F_TSO6;
 		if (efx_has_cap(efx, TX_TSO_V2_ENCAP))
 			net_dev->hw_enc_features |= NETIF_F_TSO6;
 	}
+=======
+	if (efx->type->offload_features & (NETIF_F_IPV6_CSUM | NETIF_F_HW_CSUM))
+		net_dev->features |= NETIF_F_TSO6;
+>>>>>>> b7ba80a49124 (Commit)
 	/* Check whether device supports TSO */
 	if (!efx->type->tso_versions || !efx->type->tso_versions(efx))
 		net_dev->features &= ~NETIF_F_ALL_TSO;
@@ -1025,10 +1039,13 @@ static int efx_pci_probe_post_io(struct efx_nic *efx)
 	net_dev->features &= ~NETIF_F_HW_VLAN_CTAG_FILTER;
 	net_dev->features |= efx->fixed_features;
 
+<<<<<<< HEAD
 	net_dev->xdp_features = NETDEV_XDP_ACT_BASIC |
 				NETDEV_XDP_ACT_REDIRECT |
 				NETDEV_XDP_ACT_NDO_XMIT;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rc = efx_register_netdev(efx);
 	if (!rc)
 		return 0;
@@ -1063,10 +1080,15 @@ static int efx_pci_probe(struct pci_dev *pci_dev,
 
 	/* Allocate and initialise a struct net_device */
 	net_dev = alloc_etherdev_mq(sizeof(probe_data), EFX_MAX_CORE_TX_QUEUES);
+<<<<<<< HEAD
 	if (!net_dev) {
 		rc = -ENOMEM;
 		goto fail0;
 	}
+=======
+	if (!net_dev)
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 	probe_ptr = netdev_priv(net_dev);
 	*probe_ptr = probe_data;
 	efx->net_dev = net_dev;
@@ -1123,6 +1145,11 @@ static int efx_pci_probe(struct pci_dev *pci_dev,
 		netif_warn(efx, probe, efx->net_dev,
 			   "failed to create MTDs (%d)\n", rc);
 
+<<<<<<< HEAD
+=======
+	(void)pci_enable_pcie_error_reporting(pci_dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (efx->type->udp_tnl_push_ports)
 		efx->type->udp_tnl_push_ports(efx);
 
@@ -1136,8 +1163,11 @@ static int efx_pci_probe(struct pci_dev *pci_dev,
 	WARN_ON(rc > 0);
 	netif_dbg(efx, drv, efx->net_dev, "initialisation failed. rc=%d\n", rc);
 	free_netdev(net_dev);
+<<<<<<< HEAD
  fail0:
 	kfree(probe_data);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 

@@ -1056,7 +1056,10 @@ static const int update_reg[] = {
 static int nau8822_probe(struct snd_soc_component *component)
 {
 	int i;
+<<<<<<< HEAD
 	struct device_node *of_node = component->dev->of_node;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Set the update bit in all registers, that have one. This way all
@@ -1067,6 +1070,7 @@ static int nau8822_probe(struct snd_soc_component *component)
 		snd_soc_component_update_bits(component,
 			update_reg[i], 0x100, 0x100);
 
+<<<<<<< HEAD
 	/* Check property to configure the two loudspeaker outputs as
 	 * a single Bridge Tied Load output
 	 */
@@ -1075,6 +1079,8 @@ static int nau8822_probe(struct snd_soc_component *component)
 					      NAU8822_REG_RIGHT_SPEAKER_CONTROL,
 					      NAU8822_RSUBBYP, NAU8822_RSUBBYP);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

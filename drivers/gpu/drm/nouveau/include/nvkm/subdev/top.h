@@ -21,7 +21,10 @@ struct nvkm_top_device {
 	struct list_head head;
 };
 
+<<<<<<< HEAD
 int nvkm_top_parse(struct nvkm_device *);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 u32 nvkm_top_addr(struct nvkm_device *, enum nvkm_subdev_type, int);
 u32 nvkm_top_reset(struct nvkm_device *, enum nvkm_subdev_type, int);
 u32 nvkm_top_intr_mask(struct nvkm_device *, enum nvkm_subdev_type, int);

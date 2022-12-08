@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: BSD-3-Clause-Clear
 /*
  * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <crypto/hash.h>
@@ -132,11 +135,21 @@ static int ath11k_dp_srng_calculate_msi_group(struct ath11k_base *ab,
 
 	switch (type) {
 	case HAL_WBM2SW_RELEASE:
+<<<<<<< HEAD
 		if (ring_num == DP_RX_RELEASE_RING_NUM) {
 			grp_mask = &ab->hw_params.ring_mask->rx_wbm_rel[0];
 			ring_num = 0;
 		} else {
 			grp_mask = &ab->hw_params.ring_mask->tx[0];
+=======
+		if (ring_num < 3) {
+			grp_mask = &ab->hw_params.ring_mask->tx[0];
+		} else if (ring_num == 3) {
+			grp_mask = &ab->hw_params.ring_mask->rx_wbm_rel[0];
+			ring_num = 0;
+		} else {
+			return -ENOENT;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		break;
 	case HAL_REO_EXCEPTION:
@@ -370,7 +383,10 @@ static int ath11k_dp_srng_common_setup(struct ath11k_base *ab)
 	struct ath11k_dp *dp = &ab->dp;
 	struct hal_srng *srng;
 	int i, ret;
+<<<<<<< HEAD
 	u8 tcl_num, wbm_num;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = ath11k_dp_srng_setup(ab, &dp->wbm_desc_rel_ring,
 				   HAL_SW2WBM_RELEASE, 0, 0,
@@ -396,12 +412,18 @@ static int ath11k_dp_srng_common_setup(struct ath11k_base *ab)
 	}
 
 	for (i = 0; i < ab->hw_params.max_tx_ring; i++) {
+<<<<<<< HEAD
 		tcl_num = ab->hw_params.hal_params->tcl2wbm_rbm_map[i].tcl_ring_num;
 		wbm_num = ab->hw_params.hal_params->tcl2wbm_rbm_map[i].wbm_ring_num;
 
 		ret = ath11k_dp_srng_setup(ab, &dp->tx_ring[i].tcl_data_ring,
 					   HAL_TCL_DATA, tcl_num, 0,
 					   ab->hw_params.tx_ring_size);
+=======
+		ret = ath11k_dp_srng_setup(ab, &dp->tx_ring[i].tcl_data_ring,
+					   HAL_TCL_DATA, i, 0,
+					   DP_TCL_DATA_RING_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret) {
 			ath11k_warn(ab, "failed to set up tcl_data ring (%d) :%d\n",
 				    i, ret);
@@ -409,7 +431,11 @@ static int ath11k_dp_srng_common_setup(struct ath11k_base *ab)
 		}
 
 		ret = ath11k_dp_srng_setup(ab, &dp->tx_ring[i].tcl_comp_ring,
+<<<<<<< HEAD
 					   HAL_WBM2SW_RELEASE, wbm_num, 0,
+=======
+					   HAL_WBM2SW_RELEASE, i, 0,
+>>>>>>> b7ba80a49124 (Commit)
 					   DP_TX_COMP_RING_SIZE);
 		if (ret) {
 			ath11k_warn(ab, "failed to set up tcl_comp ring (%d) :%d\n",
@@ -434,7 +460,11 @@ static int ath11k_dp_srng_common_setup(struct ath11k_base *ab)
 	}
 
 	ret = ath11k_dp_srng_setup(ab, &dp->rx_rel_ring, HAL_WBM2SW_RELEASE,
+<<<<<<< HEAD
 				   DP_RX_RELEASE_RING_NUM, 0, DP_RX_RELEASE_RING_SIZE);
+=======
+				   3, 0, DP_RX_RELEASE_RING_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		ath11k_warn(ab, "failed to set up rx_rel ring :%d\n", ret);
 		goto err;
@@ -777,10 +807,16 @@ int ath11k_dp_service_srng(struct ath11k_base *ab,
 	int i, j;
 	int tot_work_done = 0;
 
+<<<<<<< HEAD
 	for (i = 0; i < ab->hw_params.max_tx_ring; i++) {
 		if (BIT(ab->hw_params.hal_params->tcl2wbm_rbm_map[i].wbm_ring_num) &
 		    ab->hw_params.ring_mask->tx[grp_id])
 			ath11k_dp_tx_completion_handler(ab, i);
+=======
+	if (ab->hw_params.ring_mask->tx[grp_id]) {
+		i = __fls(ab->hw_params.ring_mask->tx[grp_id]);
+		ath11k_dp_tx_completion_handler(ab, i);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (ab->hw_params.ring_mask->rx_err[grp_id]) {
@@ -967,7 +1003,11 @@ static void ath11k_dp_update_vdev_search(struct ath11k_vif *arvif)
 {
 	 /* When v2_map_support is true:for STA mode, enable address
 	  * search index, tcl uses ast_hash value in the descriptor.
+<<<<<<< HEAD
 	  * When v2_map_support is false: for STA mode, don't enable
+=======
+	  * When v2_map_support is false: for STA mode, dont' enable
+>>>>>>> b7ba80a49124 (Commit)
 	  * address search index.
 	  */
 	switch (arvif->vdev_type) {

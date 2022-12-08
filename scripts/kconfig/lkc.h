@@ -76,7 +76,11 @@ struct gstr str_new(void);
 void str_free(struct gstr *gs);
 void str_append(struct gstr *gs, const char *s);
 void str_printf(struct gstr *gs, const char *fmt, ...);
+<<<<<<< HEAD
 char *str_get(struct gstr *gs);
+=======
+const char *str_get(struct gstr *gs);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* menu.c */
 void _menu_init(void);

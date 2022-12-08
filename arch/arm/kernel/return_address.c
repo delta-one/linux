@@ -16,17 +16,30 @@ struct return_address_data {
 	void *addr;
 };
 
+<<<<<<< HEAD
 static bool save_return_addr(void *d, unsigned long pc)
+=======
+static int save_return_addr(struct stackframe *frame, void *d)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct return_address_data *data = d;
 
 	if (!data->level) {
+<<<<<<< HEAD
 		data->addr = (void *)pc;
 
 		return false;
 	} else {
 		--data->level;
 		return true;
+=======
+		data->addr = (void *)frame->pc;
+
+		return 1;
+	} else {
+		--data->level;
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

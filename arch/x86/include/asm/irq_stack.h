@@ -116,7 +116,11 @@
 	ASM_CALL_ARG2
 
 #define call_on_irqstack(func, asm_call, argconstr...)			\
+<<<<<<< HEAD
 	call_on_stack(__this_cpu_read(pcpu_hot.hardirq_stack_ptr),	\
+=======
+	call_on_stack(__this_cpu_read(hardirq_stack_ptr),		\
+>>>>>>> b7ba80a49124 (Commit)
 		      func, asm_call, argconstr)
 
 /* Macros to assert type correctness for run_*_on_irqstack macros */
@@ -135,7 +139,11 @@
 	 * User mode entry and interrupt on the irq stack do not	\
 	 * switch stacks. If from user mode the task stack is empty.	\
 	 */								\
+<<<<<<< HEAD
 	if (user_mode(regs) || __this_cpu_read(pcpu_hot.hardirq_stack_inuse)) { \
+=======
+	if (user_mode(regs) || __this_cpu_read(hardirq_stack_inuse)) {	\
+>>>>>>> b7ba80a49124 (Commit)
 		irq_enter_rcu();					\
 		func(c_args);						\
 		irq_exit_rcu();						\
@@ -146,9 +154,15 @@
 		 * places. Invoke the stack switch macro with the call	\
 		 * sequence which matches the above direct invocation.	\
 		 */							\
+<<<<<<< HEAD
 		__this_cpu_write(pcpu_hot.hardirq_stack_inuse, true);	\
 		call_on_irqstack(func, asm_call, constr);		\
 		__this_cpu_write(pcpu_hot.hardirq_stack_inuse, false);	\
+=======
+		__this_cpu_write(hardirq_stack_inuse, true);		\
+		call_on_irqstack(func, asm_call, constr);		\
+		__this_cpu_write(hardirq_stack_inuse, false);		\
+>>>>>>> b7ba80a49124 (Commit)
 	}								\
 }
 
@@ -212,9 +226,15 @@
  */
 #define do_softirq_own_stack()						\
 {									\
+<<<<<<< HEAD
 	__this_cpu_write(pcpu_hot.hardirq_stack_inuse, true);		\
 	call_on_irqstack(__do_softirq, ASM_CALL_ARG0);			\
 	__this_cpu_write(pcpu_hot.hardirq_stack_inuse, false);		\
+=======
+	__this_cpu_write(hardirq_stack_inuse, true);			\
+	call_on_irqstack(__do_softirq, ASM_CALL_ARG0);			\
+	__this_cpu_write(hardirq_stack_inuse, false);			\
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #endif

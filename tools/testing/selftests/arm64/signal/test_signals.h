@@ -34,7 +34,10 @@ enum {
 	FSVE_BIT,
 	FSME_BIT,
 	FSME_FA64_BIT,
+<<<<<<< HEAD
 	FSME2_BIT,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	FMAX_END
 };
 
@@ -42,7 +45,10 @@ enum {
 #define FEAT_SVE		(1UL << FSVE_BIT)
 #define FEAT_SME		(1UL << FSME_BIT)
 #define FEAT_SME_FA64		(1UL << FSME_FA64_BIT)
+<<<<<<< HEAD
 #define FEAT_SME2		(1UL << FSME2_BIT)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * A descriptor used to describe and configure a test case.

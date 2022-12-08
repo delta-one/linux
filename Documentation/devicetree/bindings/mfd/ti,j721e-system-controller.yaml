@@ -26,9 +26,13 @@ properties:
   compatible:
     items:
       - enum:
+<<<<<<< HEAD
           - ti,j7200-system-controller
           - ti,j721e-system-controller
           - ti,j721s2-system-controller
+=======
+          - ti,j721e-system-controller
+>>>>>>> b7ba80a49124 (Commit)
       - const: syscon
       - const: simple-mfd
 

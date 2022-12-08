@@ -6,11 +6,18 @@
 
 bool mac_pton(const char *s, u8 *mac)
 {
+<<<<<<< HEAD
 	size_t maxlen = 3 * ETH_ALEN - 1;
 	int i;
 
 	/* XX:XX:XX:XX:XX:XX */
 	if (strnlen(s, maxlen) < maxlen)
+=======
+	int i;
+
+	/* XX:XX:XX:XX:XX:XX */
+	if (strlen(s) < 3 * ETH_ALEN - 1)
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	/* Don't dirty result unless string is valid MAC. */

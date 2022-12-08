@@ -11,9 +11,16 @@ C DCL-fixed
 {
 	int flag;
 	int data;
+<<<<<<< HEAD
 }
 
 P0(int *flag, int *data, spinlock_t *lck)
+=======
+	int lck;
+}
+
+P0(int *flag, int *data, int *lck)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r0;
 	int r1;
@@ -32,7 +39,11 @@ P0(int *flag, int *data, spinlock_t *lck)
 	r2 = READ_ONCE(*data);
 }
 
+<<<<<<< HEAD
 P1(int *flag, int *data, spinlock_t *lck)
+=======
+P1(int *flag, int *data, int *lck)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r0;
 	int r1;
@@ -51,5 +62,9 @@ P1(int *flag, int *data, spinlock_t *lck)
 	r2 = READ_ONCE(*data);
 }
 
+<<<<<<< HEAD
 locations [flag;data;0:r0;0:r1;1:r0;1:r1]
+=======
+locations [flag;data;lck;0:r0;0:r1;1:r0;1:r1]
+>>>>>>> b7ba80a49124 (Commit)
 exists (0:r2=0 \/ 1:r2=0)

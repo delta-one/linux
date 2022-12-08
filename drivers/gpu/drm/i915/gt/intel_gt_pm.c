@@ -7,16 +7,25 @@
 #include <linux/suspend.h>
 
 #include "i915_drv.h"
+<<<<<<< HEAD
 #include "i915_irq.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "i915_params.h"
 #include "intel_context.h"
 #include "intel_engine_pm.h"
 #include "intel_gt.h"
 #include "intel_gt_clock_utils.h"
 #include "intel_gt_pm.h"
+<<<<<<< HEAD
 #include "intel_gt_print.h"
 #include "intel_gt_requests.h"
 #include "intel_llc.h"
+=======
+#include "intel_gt_requests.h"
+#include "intel_llc.h"
+#include "intel_pm.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_rc6.h"
 #include "intel_rps.h"
 #include "intel_wakeref.h"
@@ -99,7 +108,11 @@ static int __gt_unpark(struct intel_wakeref *wf)
 static int __gt_park(struct intel_wakeref *wf)
 {
 	struct intel_gt *gt = container_of(wf, typeof(*gt), wakeref);
+<<<<<<< HEAD
 	intel_wakeref_t wakeref = __xchg(&gt->awake, 0);
+=======
+	intel_wakeref_t wakeref = fetch_and_zero(&gt->awake);
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_i915_private *i915 = gt->i915;
 
 	GT_TRACE(gt, "\n");
@@ -248,7 +261,12 @@ int intel_gt_resume(struct intel_gt *gt)
 	/* Only when the HW is re-initialised, can we replay the requests */
 	err = intel_gt_init_hw(gt);
 	if (err) {
+<<<<<<< HEAD
 		gt_probe_error(gt, "Failed to initialize GPU, declaring it wedged!\n");
+=======
+		i915_probe_error(gt->i915,
+				 "Failed to initialize GPU, declaring it wedged!\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_wedged;
 	}
 
@@ -265,8 +283,14 @@ int intel_gt_resume(struct intel_gt *gt)
 
 		intel_engine_pm_put(engine);
 		if (err) {
+<<<<<<< HEAD
 			gt_err(gt, "Failed to restart %s (%d)\n",
 			       engine->name, err);
+=======
+			drm_err(&gt->i915->drm,
+				"Failed to restart %s (%d)\n",
+				engine->name, err);
+>>>>>>> b7ba80a49124 (Commit)
 			goto err_wedged;
 		}
 	}
@@ -275,6 +299,11 @@ int intel_gt_resume(struct intel_gt *gt)
 
 	intel_uc_resume(&gt->uc);
 
+<<<<<<< HEAD
+=======
+	intel_pxp_resume(&gt->pxp);
+
+>>>>>>> b7ba80a49124 (Commit)
 	user_forcewake(gt, false);
 
 out_fw:
@@ -308,6 +337,11 @@ void intel_gt_suspend_prepare(struct intel_gt *gt)
 {
 	user_forcewake(gt, true);
 	wait_for_suspend(gt);
+<<<<<<< HEAD
+=======
+
+	intel_pxp_suspend_prepare(&gt->pxp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static suspend_state_t pm_suspend_target(void)
@@ -332,6 +366,10 @@ void intel_gt_suspend_late(struct intel_gt *gt)
 	GEM_BUG_ON(gt->awake);
 
 	intel_uc_suspend(&gt->uc);
+<<<<<<< HEAD
+=======
+	intel_pxp_suspend(&gt->pxp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * On disabling the device, we want to turn off HW access to memory
@@ -359,6 +397,10 @@ void intel_gt_suspend_late(struct intel_gt *gt)
 
 void intel_gt_runtime_suspend(struct intel_gt *gt)
 {
+<<<<<<< HEAD
+=======
+	intel_pxp_runtime_suspend(&gt->pxp);
+>>>>>>> b7ba80a49124 (Commit)
 	intel_uc_runtime_suspend(&gt->uc);
 
 	GT_TRACE(gt, "\n");
@@ -376,6 +418,11 @@ int intel_gt_runtime_resume(struct intel_gt *gt)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
+=======
+	intel_pxp_runtime_resume(&gt->pxp);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

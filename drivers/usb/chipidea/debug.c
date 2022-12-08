@@ -364,5 +364,9 @@ void dbg_create_files(struct ci_hdrc *ci)
  */
 void dbg_remove_files(struct ci_hdrc *ci)
 {
+<<<<<<< HEAD
 	debugfs_lookup_and_remove(dev_name(ci->dev), usb_debug_root);
+=======
+	debugfs_remove(debugfs_lookup(dev_name(ci->dev), usb_debug_root));
+>>>>>>> b7ba80a49124 (Commit)
 }

@@ -663,12 +663,17 @@ static int sx9360_write_raw(struct iio_dev *indio_dev,
 
 static const struct sx_common_reg_default sx9360_default_regs[] = {
 	{ SX9360_REG_IRQ_MSK, 0x00 },
+<<<<<<< HEAD
 	{ SX9360_REG_IRQ_CFG, 0x00, "irq_cfg" },
+=======
+	{ SX9360_REG_IRQ_CFG, 0x00 },
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * The lower 2 bits should not be set as it enable sensors measurements.
 	 * Turning the detection on before the configuration values are set to
 	 * good values can cause the device to return erroneous readings.
 	 */
+<<<<<<< HEAD
 	{ SX9360_REG_GNRL_CTRL0, 0x00, "gnrl_ctrl0" },
 	{ SX9360_REG_GNRL_CTRL1, 0x00, "gnrl_ctrl1" },
 	{ SX9360_REG_GNRL_CTRL2, SX9360_REG_GNRL_CTRL2_PERIOD_102MS, "gnrl_ctrl2" },
@@ -694,6 +699,33 @@ static const struct sx_common_reg_default sx9360_default_regs[] = {
 		SX9360_REG_PROX_CTRL3_AVGPOS_FILT_256, "prox_ctrl3" },
 	{ SX9360_REG_PROX_CTRL4, 0x00, "prox_ctrl4" },
 	{ SX9360_REG_PROX_CTRL5, SX9360_REG_PROX_CTRL5_PROXTHRESH_32, "prox_ctrl5" },
+=======
+	{ SX9360_REG_GNRL_CTRL0, 0x00 },
+	{ SX9360_REG_GNRL_CTRL1, 0x00 },
+	{ SX9360_REG_GNRL_CTRL2, SX9360_REG_GNRL_CTRL2_PERIOD_102MS },
+
+	{ SX9360_REG_AFE_CTRL1, SX9360_REG_AFE_CTRL1_RESFILTIN_0OHMS },
+	{ SX9360_REG_AFE_PARAM0_PHR, SX9360_REG_AFE_PARAM0_RSVD |
+		SX9360_REG_AFE_PARAM0_RESOLUTION_128 },
+	{ SX9360_REG_AFE_PARAM1_PHR, SX9360_REG_AFE_PARAM1_AGAIN_PHM_6PF |
+		SX9360_REG_AFE_PARAM1_FREQ_83_33HZ },
+	{ SX9360_REG_AFE_PARAM0_PHM, SX9360_REG_AFE_PARAM0_RSVD |
+		SX9360_REG_AFE_PARAM0_RESOLUTION_128 },
+	{ SX9360_REG_AFE_PARAM1_PHM, SX9360_REG_AFE_PARAM1_AGAIN_PHM_6PF |
+		SX9360_REG_AFE_PARAM1_FREQ_83_33HZ },
+
+	{ SX9360_REG_PROX_CTRL0_PHR, SX9360_REG_PROX_CTRL0_GAIN_1 |
+		SX9360_REG_PROX_CTRL0_RAWFILT_1P50 },
+	{ SX9360_REG_PROX_CTRL0_PHM, SX9360_REG_PROX_CTRL0_GAIN_1 |
+		SX9360_REG_PROX_CTRL0_RAWFILT_1P50 },
+	{ SX9360_REG_PROX_CTRL1, SX9360_REG_PROX_CTRL1_AVGNEG_THRESH_16K },
+	{ SX9360_REG_PROX_CTRL2, SX9360_REG_PROX_CTRL2_AVGDEB_2SAMPLES |
+		SX9360_REG_PROX_CTRL2_AVGPOS_THRESH_16K },
+	{ SX9360_REG_PROX_CTRL3, SX9360_REG_PROX_CTRL3_AVGNEG_FILT_2 |
+		SX9360_REG_PROX_CTRL3_AVGPOS_FILT_256 },
+	{ SX9360_REG_PROX_CTRL4, 0x00 },
+	{ SX9360_REG_PROX_CTRL5, SX9360_REG_PROX_CTRL5_PROXTHRESH_32 },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Activate all channels and perform an initial compensation. */
@@ -865,7 +897,10 @@ static DEFINE_SIMPLE_DEV_PM_OPS(sx9360_pm_ops, sx9360_suspend, sx9360_resume);
 
 static const struct acpi_device_id sx9360_acpi_match[] = {
 	{ "STH9360", SX9360_WHOAMI_VALUE },
+<<<<<<< HEAD
 	{ "SAMM0208", SX9360_WHOAMI_VALUE },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(acpi, sx9360_acpi_match);

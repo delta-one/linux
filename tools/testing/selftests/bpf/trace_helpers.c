@@ -12,8 +12,12 @@
 #include <sys/mman.h>
 #include "trace_helpers.h"
 
+<<<<<<< HEAD
 #define TRACEFS_PIPE	"/sys/kernel/tracing/trace_pipe"
 #define DEBUGFS_PIPE	"/sys/kernel/debug/tracing/trace_pipe"
+=======
+#define DEBUGFS "/sys/kernel/debug/tracing/"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MAX_SYMS 300000
 static struct ksym syms[MAX_SYMS];
@@ -24,7 +28,11 @@ static int ksym_cmp(const void *p1, const void *p2)
 	return ((struct ksym *)p1)->addr - ((struct ksym *)p2)->addr;
 }
 
+<<<<<<< HEAD
 int load_kallsyms_refresh(void)
+=======
+int load_kallsyms(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	FILE *f;
 	char func[256], buf[256];
@@ -32,7 +40,16 @@ int load_kallsyms_refresh(void)
 	void *addr;
 	int i = 0;
 
+<<<<<<< HEAD
 	sym_cnt = 0;
+=======
+	/*
+	 * This is called/used from multiplace places,
+	 * load symbols just once.
+	 */
+	if (sym_cnt)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	f = fopen("/proc/kallsyms", "r");
 	if (!f)
@@ -53,6 +70,7 @@ int load_kallsyms_refresh(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 int load_kallsyms(void)
 {
 	/*
@@ -64,6 +82,8 @@ int load_kallsyms(void)
 	return load_kallsyms_refresh();
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ksym *ksym_search(long key)
 {
 	int start = 0, end = sym_cnt;
@@ -137,10 +157,14 @@ void read_trace_pipe(void)
 {
 	int trace_fd;
 
+<<<<<<< HEAD
 	if (access(TRACEFS_PIPE, F_OK) == 0)
 		trace_fd = open(TRACEFS_PIPE, O_RDONLY, 0);
 	else
 		trace_fd = open(DEBUGFS_PIPE, O_RDONLY, 0);
+=======
+	trace_fd = open(DEBUGFS "trace_pipe", O_RDONLY, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (trace_fd < 0)
 		return;
 

@@ -64,6 +64,10 @@ int main(int argc, char *argv[])
 {
 	uint64_t disabled_quirks;
 	struct kvm_vcpu *vcpu;
+<<<<<<< HEAD
+=======
+	struct kvm_run *run;
+>>>>>>> b7ba80a49124 (Commit)
 	struct kvm_vm *vm;
 	struct ucall uc;
 	int testcase;
@@ -73,12 +77,25 @@ int main(int argc, char *argv[])
 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
 	vcpu_clear_cpuid_feature(vcpu, X86_FEATURE_MWAIT);
 
+<<<<<<< HEAD
+=======
+	run = vcpu->run;
+
+>>>>>>> b7ba80a49124 (Commit)
 	vm_init_descriptor_tables(vm);
 	vcpu_init_descriptor_tables(vcpu);
 
 	while (1) {
 		vcpu_run(vcpu);
+<<<<<<< HEAD
 		TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+=======
+
+		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+			    "Unexpected exit reason: %u (%s),\n",
+			    run->exit_reason,
+			    exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 
 		switch (get_ucall(vcpu, &uc)) {
 		case UCALL_SYNC:

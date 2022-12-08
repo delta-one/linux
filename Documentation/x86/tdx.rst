@@ -210,6 +210,7 @@ converted to shared on boot.
 For coherent DMA allocation, the DMA buffer gets converted on the
 allocation. Check force_dma_unencrypted() for details.
 
+<<<<<<< HEAD
 Attestation
 ===========
 
@@ -253,6 +254,8 @@ to QE is implementation specific. Attestation software can choose
 whatever communication channel available (i.e. vsock or TCP/IP) to
 send the TDREPORT to QE and receive the Quote.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 References
 ==========
 

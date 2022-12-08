@@ -108,22 +108,34 @@
 
 		CLUSTER0_L2: l2-cache@0 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		CLUSTER1_L2: l2-cache@100 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		CLUSTER2_L2: l2-cache@200 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		CLUSTER3_L2: l2-cache@300 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -178,7 +190,11 @@
 			      <0x02e00000 0x600000>; /* GICR */
 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
 
+<<<<<<< HEAD
 			gic_its: msi-controller@63c20000 {
+=======
+			gic_its: gic-its@63c20000 {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "arm,gic-v3-its";
 				msi-controller;
 				#msi-cells = <1>;
@@ -186,7 +202,11 @@
 			};
 		};
 
+<<<<<<< HEAD
 		smmu: iommu@3000000 {
+=======
+		smmu: mmu@3000000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "arm,mmu-500";
 			reg = <0x03000000 0x80000>;
 			#global-interrupts = <1>;
@@ -475,6 +495,10 @@
 		};
 
 		uart0: serial@100000 {
+<<<<<<< HEAD
+=======
+			device_type = "serial";
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "snps,dw-apb-uart";
 			reg = <0x00100000 0x1000>;
 			reg-shift = <2>;
@@ -485,6 +509,10 @@
 		};
 
 		uart1: serial@110000 {
+<<<<<<< HEAD
+=======
+			device_type = "serial";
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "snps,dw-apb-uart";
 			reg = <0x00110000 0x1000>;
 			reg-shift = <2>;
@@ -495,6 +523,10 @@
 		};
 
 		uart2: serial@120000 {
+<<<<<<< HEAD
+=======
+			device_type = "serial";
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "snps,dw-apb-uart";
 			reg = <0x00120000 0x1000>;
 			reg-shift = <2>;
@@ -505,6 +537,10 @@
 		};
 
 		uart3: serial@130000 {
+<<<<<<< HEAD
+=======
+			device_type = "serial";
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "snps,dw-apb-uart";
 			reg = <0x00130000 0x1000>;
 			reg-shift = <2>;

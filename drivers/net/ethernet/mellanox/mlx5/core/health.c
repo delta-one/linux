@@ -62,7 +62,11 @@ enum {
 };
 
 enum {
+<<<<<<< HEAD
 	MLX5_DROP_HEALTH_WORK,
+=======
+	MLX5_DROP_NEW_HEALTH_WORK,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum  {
@@ -325,10 +329,13 @@ int mlx5_health_wait_pci_up(struct mlx5_core_dev *dev)
 	while (sensor_pci_not_working(dev)) {
 		if (time_after(jiffies, end))
 			return -ETIMEDOUT;
+<<<<<<< HEAD
 		if (test_bit(MLX5_BREAK_FW_WAIT, &dev->intf_state)) {
 			mlx5_core_warn(dev, "device is being removed, stop waiting for PCI\n");
 			return -ENODEV;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		msleep(100);
 	}
 	return 0;
@@ -605,7 +612,11 @@ static void mlx5_fw_reporter_err_work(struct work_struct *work)
 	fw_reporter_ctx.miss_counter = health->miss_counter;
 	if (fw_reporter_ctx.err_synd) {
 		devlink_health_report(health->fw_reporter,
+<<<<<<< HEAD
 				      "FW syndrome reported", &fw_reporter_ctx);
+=======
+				      "FW syndrom reported", &fw_reporter_ctx);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 	if (fw_reporter_ctx.miss_counter)
@@ -678,6 +689,7 @@ static void mlx5_fw_fatal_reporter_err_work(struct work_struct *work)
 	dev = container_of(priv, struct mlx5_core_dev, priv);
 	devlink = priv_to_devlink(dev);
 
+<<<<<<< HEAD
 	mutex_lock(&dev->intf_state_mutex);
 	if (test_bit(MLX5_DROP_HEALTH_WORK, &health->flags)) {
 		mlx5_core_err(dev, "health works are not permitted at this stage\n");
@@ -685,6 +697,8 @@ static void mlx5_fw_fatal_reporter_err_work(struct work_struct *work)
 		return;
 	}
 	mutex_unlock(&dev->intf_state_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	enter_error_state(dev, false);
 	if (IS_ERR_OR_NULL(health->fw_fatal_reporter)) {
 		devl_lock(devlink);
@@ -703,7 +717,11 @@ static void mlx5_fw_fatal_reporter_err_work(struct work_struct *work)
 		 * requests from the kernel.
 		 */
 		mlx5_core_err(dev, "Driver is in error state. Unloading\n");
+<<<<<<< HEAD
 		mlx5_unload_one(dev, false);
+=======
+		mlx5_unload_one(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -713,15 +731,20 @@ static const struct devlink_health_reporter_ops mlx5_fw_fatal_reporter_ops = {
 		.dump = mlx5_fw_fatal_reporter_dump,
 };
 
+<<<<<<< HEAD
 #define MLX5_FW_REPORTER_ECPF_GRACEFUL_PERIOD 180000
 #define MLX5_FW_REPORTER_PF_GRACEFUL_PERIOD 60000
 #define MLX5_FW_REPORTER_VF_GRACEFUL_PERIOD 30000
 #define MLX5_FW_REPORTER_DEFAULT_GRACEFUL_PERIOD MLX5_FW_REPORTER_VF_GRACEFUL_PERIOD
 
+=======
+#define MLX5_REPORTER_FW_GRACEFUL_PERIOD 1200000
+>>>>>>> b7ba80a49124 (Commit)
 static void mlx5_fw_reporters_create(struct mlx5_core_dev *dev)
 {
 	struct mlx5_core_health *health = &dev->priv.health;
 	struct devlink *devlink = priv_to_devlink(dev);
+<<<<<<< HEAD
 	u64 grace_period;
 
 	if (mlx5_core_is_ecpf(dev)) {
@@ -732,6 +755,8 @@ static void mlx5_fw_reporters_create(struct mlx5_core_dev *dev)
 		/* VF or SF */
 		grace_period = MLX5_FW_REPORTER_DEFAULT_GRACEFUL_PERIOD;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	health->fw_reporter =
 		devlink_health_reporter_create(devlink, &mlx5_fw_reporter_ops,
@@ -743,7 +768,11 @@ static void mlx5_fw_reporters_create(struct mlx5_core_dev *dev)
 	health->fw_fatal_reporter =
 		devlink_health_reporter_create(devlink,
 					       &mlx5_fw_fatal_reporter_ops,
+<<<<<<< HEAD
 					       grace_period,
+=======
+					       MLX5_REPORTER_FW_GRACEFUL_PERIOD,
+>>>>>>> b7ba80a49124 (Commit)
 					       dev);
 	if (IS_ERR(health->fw_fatal_reporter))
 		mlx5_core_warn(dev, "Failed to create fw fatal reporter, err = %ld\n",
@@ -775,8 +804,19 @@ static unsigned long get_next_poll_jiffies(struct mlx5_core_dev *dev)
 void mlx5_trigger_health_work(struct mlx5_core_dev *dev)
 {
 	struct mlx5_core_health *health = &dev->priv.health;
+<<<<<<< HEAD
 
 	queue_work(health->wq, &health->fatal_report_work);
+=======
+	unsigned long flags;
+
+	spin_lock_irqsave(&health->wq_lock, flags);
+	if (!test_bit(MLX5_DROP_NEW_HEALTH_WORK, &health->flags))
+		queue_work(health->wq, &health->fatal_report_work);
+	else
+		mlx5_core_err(dev, "new health works are not permitted at this stage\n");
+	spin_unlock_irqrestore(&health->wq_lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define MLX5_MSEC_PER_HOUR (MSEC_PER_SEC * 60 * 60)
@@ -856,12 +896,17 @@ void mlx5_start_health_poll(struct mlx5_core_dev *dev)
 
 	timer_setup(&health->timer, poll_health, 0);
 	health->fatal_error = MLX5_SENSOR_NO_ERR;
+<<<<<<< HEAD
 	clear_bit(MLX5_DROP_HEALTH_WORK, &health->flags);
+=======
+	clear_bit(MLX5_DROP_NEW_HEALTH_WORK, &health->flags);
+>>>>>>> b7ba80a49124 (Commit)
 	health->health = &dev->iseg->health;
 	health->health_counter = &dev->iseg->health_counter;
 
 	health->timer.expires = jiffies + msecs_to_jiffies(poll_interval_ms);
 	add_timer(&health->timer);
+<<<<<<< HEAD
 }
 
 void mlx5_stop_health_poll(struct mlx5_core_dev *dev, bool disable_health)
@@ -877,16 +922,43 @@ void mlx5_stop_health_poll(struct mlx5_core_dev *dev, bool disable_health)
 void mlx5_start_health_fw_log_up(struct mlx5_core_dev *dev)
 {
 	struct mlx5_core_health *health = &dev->priv.health;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (mlx5_core_is_pf(dev) && MLX5_CAP_MCAM_REG(dev, mrtc))
 		queue_delayed_work(health->wq, &health->update_fw_log_ts_work, 0);
 }
 
+<<<<<<< HEAD
 void mlx5_drain_health_wq(struct mlx5_core_dev *dev)
 {
 	struct mlx5_core_health *health = &dev->priv.health;
 
 	set_bit(MLX5_DROP_HEALTH_WORK, &health->flags);
+=======
+void mlx5_stop_health_poll(struct mlx5_core_dev *dev, bool disable_health)
+{
+	struct mlx5_core_health *health = &dev->priv.health;
+	unsigned long flags;
+
+	if (disable_health) {
+		spin_lock_irqsave(&health->wq_lock, flags);
+		set_bit(MLX5_DROP_NEW_HEALTH_WORK, &health->flags);
+		spin_unlock_irqrestore(&health->wq_lock, flags);
+	}
+
+	del_timer_sync(&health->timer);
+}
+
+void mlx5_drain_health_wq(struct mlx5_core_dev *dev)
+{
+	struct mlx5_core_health *health = &dev->priv.health;
+	unsigned long flags;
+
+	spin_lock_irqsave(&health->wq_lock, flags);
+	set_bit(MLX5_DROP_NEW_HEALTH_WORK, &health->flags);
+	spin_unlock_irqrestore(&health->wq_lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	cancel_delayed_work_sync(&health->update_fw_log_ts_work);
 	cancel_work_sync(&health->report_work);
 	cancel_work_sync(&health->fatal_report_work);
@@ -919,6 +991,10 @@ int mlx5_health_init(struct mlx5_core_dev *dev)
 	kfree(name);
 	if (!health->wq)
 		goto out_err;
+<<<<<<< HEAD
+=======
+	spin_lock_init(&health->wq_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_WORK(&health->fatal_report_work, mlx5_fw_fatal_reporter_err_work);
 	INIT_WORK(&health->report_work, mlx5_fw_reporter_err_work);
 	INIT_DELAYED_WORK(&health->update_fw_log_ts_work, mlx5_health_log_ts_update);

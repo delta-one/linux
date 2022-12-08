@@ -345,7 +345,11 @@ struct sdhci_adma2_64_desc {
  */
 #define SDHCI_MAX_SEGS		128
 
+<<<<<<< HEAD
 /* Allow for a command request and a data request at the same time */
+=======
+/* Allow for a a command request and a data request at the same time */
+>>>>>>> b7ba80a49124 (Commit)
 #define SDHCI_MAX_MRQS		2
 
 /*
@@ -379,6 +383,11 @@ struct sdhci_host {
 #define SDHCI_QUIRK_NO_CARD_NO_RESET			(1<<2)
 /* Controller doesn't like clearing the power reg before a change */
 #define SDHCI_QUIRK_SINGLE_POWER_WRITE			(1<<3)
+<<<<<<< HEAD
+=======
+/* Controller has flaky internal state so reset it on each ios change */
+#define SDHCI_QUIRK_RESET_CMD_DATA_ON_IOS		(1<<4)
+>>>>>>> b7ba80a49124 (Commit)
 /* Controller has an unusable DMA engine */
 #define SDHCI_QUIRK_BROKEN_DMA				(1<<5)
 /* Controller has an unusable ADMA engine */
@@ -423,6 +432,11 @@ struct sdhci_host {
 #define SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN		(1<<25)
 /* Controller cannot support End Attribute in NOP ADMA descriptor */
 #define SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC		(1<<26)
+<<<<<<< HEAD
+=======
+/* Controller is missing device caps. Use caps provided by host */
+#define SDHCI_QUIRK_MISSING_CAPS			(1<<27)
+>>>>>>> b7ba80a49124 (Commit)
 /* Controller uses Auto CMD12 command to stop the transfer */
 #define SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12		(1<<28)
 /* Controller doesn't have HISPD bit field in HI-SPEED SD card */
@@ -476,8 +490,11 @@ struct sdhci_host {
  * block count.
  */
 #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT			(1<<18)
+<<<<<<< HEAD
 /* Issue CMD and DATA reset together */
 #define SDHCI_QUIRK2_ISSUE_CMD_DAT_RESET_TOGETHER	(1<<19)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	int irq;		/* Device IRQ */
 	void __iomem *ioaddr;	/* Mapped address */
@@ -524,8 +541,11 @@ struct sdhci_host {
 
 	unsigned int clock;	/* Current clock (MHz) */
 	u8 pwr;			/* Current voltage */
+<<<<<<< HEAD
 	u8 drv_type;		/* Current UHS-I driver type */
 	bool reinit_uhs;	/* Force UHS-related re-initialization */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	bool runtime_suspended;	/* Host is runtime suspended */
 	bool bus_on;		/* Bus power prevents runtime suspend */

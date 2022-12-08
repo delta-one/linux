@@ -30,8 +30,11 @@
 #include <linux/reset.h>
 #include <linux/sys_soc.h>
 
+<<<<<<< HEAD
 #include "../pci.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* MediaTek-specific configuration registers */
 #define PCIE_FTS_NUM			0x70c
 #define PCIE_FTS_NUM_MASK		GENMASK(15, 8)
@@ -60,7 +63,10 @@
 #define PCIE_PORT_LINKUP		BIT(0)
 #define PCIE_PORT_CNT			3
 
+<<<<<<< HEAD
 #define INIT_PORTS_DELAY_MS		100
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PERST_DELAY_MS			100
 
 /**
@@ -123,12 +129,27 @@ static inline void pcie_port_write(struct mt7621_pcie_port *port,
 	writel_relaxed(val, port->base + reg);
 }
 
+<<<<<<< HEAD
+=======
+static inline u32 mt7621_pcie_get_cfgaddr(unsigned int bus, unsigned int slot,
+					 unsigned int func, unsigned int where)
+{
+	return (((where & 0xf00) >> 8) << 24) | (bus << 16) | (slot << 11) |
+		(func << 8) | (where & 0xfc) | 0x80000000;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void __iomem *mt7621_pcie_map_bus(struct pci_bus *bus,
 					 unsigned int devfn, int where)
 {
 	struct mt7621_pcie *pcie = bus->sysdata;
+<<<<<<< HEAD
 	u32 address = PCI_CONF1_EXT_ADDRESS(bus->number, PCI_SLOT(devfn),
 					    PCI_FUNC(devfn), where);
+=======
+	u32 address = mt7621_pcie_get_cfgaddr(bus->number, PCI_SLOT(devfn),
+					     PCI_FUNC(devfn), where);
+>>>>>>> b7ba80a49124 (Commit)
 
 	writel_relaxed(address, pcie->base + RALINK_PCI_CONFIG_ADDR);
 
@@ -143,7 +164,11 @@ static struct pci_ops mt7621_pcie_ops = {
 
 static u32 read_config(struct mt7621_pcie *pcie, unsigned int dev, u32 reg)
 {
+<<<<<<< HEAD
 	u32 address = PCI_CONF1_EXT_ADDRESS(0, dev, 0, reg);
+=======
+	u32 address = mt7621_pcie_get_cfgaddr(0, dev, 0, reg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pcie_write(pcie, address, RALINK_PCI_CONFIG_ADDR);
 	return pcie_read(pcie, RALINK_PCI_CONFIG_DATA);
@@ -152,7 +177,11 @@ static u32 read_config(struct mt7621_pcie *pcie, unsigned int dev, u32 reg)
 static void write_config(struct mt7621_pcie *pcie, unsigned int dev,
 			 u32 reg, u32 val)
 {
+<<<<<<< HEAD
 	u32 address = PCI_CONF1_EXT_ADDRESS(0, dev, 0, reg);
+=======
+	u32 address = mt7621_pcie_get_cfgaddr(0, dev, 0, reg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pcie_write(pcie, address, RALINK_PCI_CONFIG_ADDR);
 	pcie_write(pcie, val, RALINK_PCI_CONFIG_DATA);
@@ -370,7 +399,10 @@ static int mt7621_pcie_init_ports(struct mt7621_pcie *pcie)
 		}
 	}
 
+<<<<<<< HEAD
 	msleep(INIT_PORTS_DELAY_MS);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mt7621_pcie_reset_ep_deassert(pcie);
 
 	tmp = NULL;
@@ -468,8 +500,12 @@ static int mt7621_pcie_register_host(struct pci_host_bridge *host)
 }
 
 static const struct soc_device_attribute mt7621_pcie_quirks_match[] = {
+<<<<<<< HEAD
 	{ .soc_id = "mt7621", .revision = "E2" },
 	{ /* sentinel */ }
+=======
+	{ .soc_id = "mt7621", .revision = "E2" }
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int mt7621_pcie_probe(struct platform_device *pdev)

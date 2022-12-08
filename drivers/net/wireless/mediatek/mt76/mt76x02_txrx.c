@@ -33,7 +33,11 @@ void mt76x02_tx(struct ieee80211_hw *hw, struct ieee80211_tx_control *control,
 EXPORT_SYMBOL_GPL(mt76x02_tx);
 
 void mt76x02_queue_rx_skb(struct mt76_dev *mdev, enum mt76_rxq_id q,
+<<<<<<< HEAD
 			  struct sk_buff *skb, u32 *info)
+=======
+			  struct sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mt76x02_dev *dev = container_of(mdev, struct mt76x02_dev, mt76);
 	void *rxwi = skb->data;
@@ -62,23 +66,38 @@ s8 mt76x02_tx_get_max_txpwr_adj(struct mt76x02_dev *dev,
 		u8 mcs = ieee80211_rate_get_vht_mcs(rate);
 
 		if (mcs == 8 || mcs == 9) {
+<<<<<<< HEAD
 			max_txpwr = dev->rate_power.vht[0];
+=======
+			max_txpwr = dev->mt76.rate_power.vht[8];
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			u8 nss, idx;
 
 			nss = ieee80211_rate_get_vht_nss(rate);
 			idx = ((nss - 1) << 3) + mcs;
+<<<<<<< HEAD
 			max_txpwr = dev->rate_power.ht[idx & 0xf];
 		}
 	} else if (rate->flags & IEEE80211_TX_RC_MCS) {
 		max_txpwr = dev->rate_power.ht[rate->idx & 0xf];
+=======
+			max_txpwr = dev->mt76.rate_power.ht[idx & 0xf];
+		}
+	} else if (rate->flags & IEEE80211_TX_RC_MCS) {
+		max_txpwr = dev->mt76.rate_power.ht[rate->idx & 0xf];
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		enum nl80211_band band = dev->mphy.chandef.chan->band;
 
 		if (band == NL80211_BAND_2GHZ) {
 			const struct ieee80211_rate *r;
 			struct wiphy *wiphy = dev->mt76.hw->wiphy;
+<<<<<<< HEAD
 			struct mt76x02_rate_power *rp = &dev->rate_power;
+=======
+			struct mt76_rate_power *rp = &dev->mt76.rate_power;
+>>>>>>> b7ba80a49124 (Commit)
 
 			r = &wiphy->bands[band]->bitrates[rate->idx];
 			if (r->flags & IEEE80211_RATE_SHORT_PREAMBLE)
@@ -86,7 +105,11 @@ s8 mt76x02_tx_get_max_txpwr_adj(struct mt76x02_dev *dev,
 			else
 				max_txpwr = rp->ofdm[r->hw_value & 0x7];
 		} else {
+<<<<<<< HEAD
 			max_txpwr = dev->rate_power.ofdm[rate->idx & 0x7];
+=======
+			max_txpwr = dev->mt76.rate_power.ofdm[rate->idx & 0x7];
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -112,7 +135,11 @@ void mt76x02_tx_set_txpwr_auto(struct mt76x02_dev *dev, s8 txpwr)
 	s8 txpwr_adj;
 
 	txpwr_adj = mt76x02_tx_get_txpwr_adj(dev, txpwr,
+<<<<<<< HEAD
 					     dev->rate_power.ofdm[4]);
+=======
+					     dev->mt76.rate_power.ofdm[4]);
+>>>>>>> b7ba80a49124 (Commit)
 	mt76_rmw_field(dev, MT_PROT_AUTO_TX_CFG,
 		       MT_PROT_AUTO_TX_CFG_PROT_PADJ, txpwr_adj);
 	mt76_rmw_field(dev, MT_PROT_AUTO_TX_CFG,

@@ -312,12 +312,21 @@ static int imx8mm_clocks_probe(struct platform_device *pdev)
 	hws = clk_hw_data->hws;
 
 	hws[IMX8MM_CLK_DUMMY] = imx_clk_hw_fixed("dummy", 0);
+<<<<<<< HEAD
 	hws[IMX8MM_CLK_24M] = imx_get_clk_hw_by_name(np, "osc_24m");
 	hws[IMX8MM_CLK_32K] = imx_get_clk_hw_by_name(np, "osc_32k");
 	hws[IMX8MM_CLK_EXT1] = imx_get_clk_hw_by_name(np, "clk_ext1");
 	hws[IMX8MM_CLK_EXT2] = imx_get_clk_hw_by_name(np, "clk_ext2");
 	hws[IMX8MM_CLK_EXT3] = imx_get_clk_hw_by_name(np, "clk_ext3");
 	hws[IMX8MM_CLK_EXT4] = imx_get_clk_hw_by_name(np, "clk_ext4");
+=======
+	hws[IMX8MM_CLK_24M] = imx_obtain_fixed_clk_hw(np, "osc_24m");
+	hws[IMX8MM_CLK_32K] = imx_obtain_fixed_clk_hw(np, "osc_32k");
+	hws[IMX8MM_CLK_EXT1] = imx_obtain_fixed_clk_hw(np, "clk_ext1");
+	hws[IMX8MM_CLK_EXT2] = imx_obtain_fixed_clk_hw(np, "clk_ext2");
+	hws[IMX8MM_CLK_EXT3] = imx_obtain_fixed_clk_hw(np, "clk_ext3");
+	hws[IMX8MM_CLK_EXT4] = imx_obtain_fixed_clk_hw(np, "clk_ext4");
+>>>>>>> b7ba80a49124 (Commit)
 
 	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mm-anatop");
 	base = of_iomap(np, 0);
@@ -609,7 +618,11 @@ static int imx8mm_clocks_probe(struct platform_device *pdev)
 		goto unregister_hws;
 	}
 
+<<<<<<< HEAD
 	imx_register_uart_clocks();
+=======
+	imx_register_uart_clocks(4);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 

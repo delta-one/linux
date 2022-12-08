@@ -396,9 +396,15 @@ static const struct regmap_config lm355x_regmap = {
 };
 
 /* module initialize */
+<<<<<<< HEAD
 static int lm355x_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int lm355x_probe(struct i2c_client *client,
+				  const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct lm355x_platform_data *pdata = dev_get_platdata(&client->dev);
 	struct lm355x_chip_data *chip;
 
@@ -516,7 +522,11 @@ static struct i2c_driver lm355x_i2c_driver = {
 		   .name = LM355x_NAME,
 		   .pm = NULL,
 		   },
+<<<<<<< HEAD
 	.probe_new = lm355x_probe,
+=======
+	.probe = lm355x_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = lm355x_remove,
 	.id_table = lm355x_id,
 };

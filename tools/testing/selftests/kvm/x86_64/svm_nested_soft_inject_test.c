@@ -41,6 +41,7 @@ static void guest_int_handler(struct ex_regs *regs)
 static void l2_guest_code_int(void)
 {
 	GUEST_ASSERT_1(int_fired == 1, int_fired);
+<<<<<<< HEAD
 
 	/*
          * Same as the vmmcall() function, but with a ud2 sneaked after the
@@ -52,6 +53,10 @@ static void l2_guest_code_int(void)
                              : : "a"(0xdeadbeef), "c"(0xbeefdead)
                              : "rbx", "rdx", "rsi", "rdi", "r8", "r9",
                                "r10", "r11", "r12", "r13", "r14", "r15");
+=======
+	vmmcall();
+	ud2();
+>>>>>>> b7ba80a49124 (Commit)
 
 	GUEST_ASSERT_1(bp_fired == 1, bp_fired);
 	hlt();
@@ -176,12 +181,23 @@ static void run_test(bool is_nmi)
 	memset(&debug, 0, sizeof(debug));
 	vcpu_guest_debug_set(vcpu, &debug);
 
+<<<<<<< HEAD
+=======
+	struct kvm_run *run = vcpu->run;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ucall uc;
 
 	alarm(2);
 	vcpu_run(vcpu);
 	alarm(0);
+<<<<<<< HEAD
 	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+=======
+	TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+		    "Got exit_reason other than KVM_EXIT_IO: %u (%s)\n",
+		    run->exit_reason,
+		    exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (get_ucall(vcpu, &uc)) {
 	case UCALL_ABORT:
@@ -199,6 +215,12 @@ done:
 
 int main(int argc, char *argv[])
 {
+<<<<<<< HEAD
+=======
+	/* Tell stdout not to buffer its content */
+	setbuf(stdout, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	TEST_REQUIRE(kvm_cpu_has(X86_FEATURE_SVM));
 
 	TEST_ASSERT(kvm_cpu_has(X86_FEATURE_NRIPS),

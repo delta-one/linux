@@ -109,9 +109,15 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static void authenc_geniv_ahash_done(void *data, int err)
 {
 	struct aead_request *req = data;
+=======
+static void authenc_geniv_ahash_done(struct crypto_async_request *areq, int err)
+{
+	struct aead_request *req = areq->data;
+>>>>>>> b7ba80a49124 (Commit)
 	struct crypto_aead *authenc = crypto_aead_reqtfm(req);
 	struct aead_instance *inst = aead_alg_instance(authenc);
 	struct authenc_instance_ctx *ictx = aead_instance_ctx(inst);
@@ -160,9 +166,16 @@ static int crypto_authenc_genicv(struct aead_request *req, unsigned int flags)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void crypto_authenc_encrypt_done(void *data, int err)
 {
 	struct aead_request *areq = data;
+=======
+static void crypto_authenc_encrypt_done(struct crypto_async_request *req,
+					int err)
+{
+	struct aead_request *areq = req->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (err)
 		goto out;
@@ -260,9 +273,16 @@ static int crypto_authenc_decrypt_tail(struct aead_request *req,
 	return crypto_skcipher_decrypt(skreq);
 }
 
+<<<<<<< HEAD
 static void authenc_verify_ahash_done(void *data, int err)
 {
 	struct aead_request *req = data;
+=======
+static void authenc_verify_ahash_done(struct crypto_async_request *areq,
+				      int err)
+{
+	struct aead_request *req = areq->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (err)
 		goto out;

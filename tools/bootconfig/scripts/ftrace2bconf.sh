@@ -93,7 +93,11 @@ referred_vars() {
 }
 
 event_is_enabled() { # enable-file
+<<<<<<< HEAD
 	test -f $1 && grep -q "1" $1
+=======
+	test -f $1 & grep -q "1" $1
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 per_event_options() { # event-dir

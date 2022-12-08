@@ -163,6 +163,11 @@ extern void omap54xx_voltagedomains_init(void);
 
 struct voltagedomain *voltdm_lookup(const char *name);
 void voltdm_init(struct voltagedomain **voltdm_list);
+<<<<<<< HEAD
+=======
+int voltdm_add_pwrdm(struct voltagedomain *voltdm, struct powerdomain *pwrdm);
+int voltdm_scale(struct voltagedomain *voltdm, unsigned long target_volt);
+>>>>>>> b7ba80a49124 (Commit)
 void voltdm_reset(struct voltagedomain *voltdm);
 unsigned long voltdm_get_voltage(struct voltagedomain *voltdm);
 #endif

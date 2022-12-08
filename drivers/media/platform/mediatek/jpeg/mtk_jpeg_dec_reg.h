@@ -45,6 +45,9 @@
 #define JPGDEC_REG_QT_ID		0x0270
 #define JPGDEC_REG_INTERRUPT_STATUS	0x0274
 #define JPGDEC_REG_STATUS		0x0278
+<<<<<<< HEAD
 #define JPGDEC_REG_BIT_STREAM_SIZE	0x0344
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _MTK_JPEG_REG_H */

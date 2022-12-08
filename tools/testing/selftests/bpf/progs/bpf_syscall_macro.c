@@ -81,6 +81,7 @@ int BPF_KSYSCALL(prctl_enter, int option, unsigned long arg2,
 	return 0;
 }
 
+<<<<<<< HEAD
 __u64 splice_fd_in;
 __u64 splice_off_in;
 __u64 splice_fd_out;
@@ -107,4 +108,6 @@ int BPF_KSYSCALL(splice_enter, int fd_in, loff_t *off_in, int fd_out,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 char _license[] SEC("license") = "GPL";

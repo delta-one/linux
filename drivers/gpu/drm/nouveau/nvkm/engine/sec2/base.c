@@ -22,6 +22,7 @@
 #include "priv.h"
 
 #include <core/firmware.h>
+<<<<<<< HEAD
 #include <subdev/mc.h>
 #include <subdev/timer.h>
 
@@ -34,12 +35,41 @@ nvkm_sec2_finimsg(void *priv, struct nvfw_falcon_msg *hdr)
 
 	atomic_set(&sec2->running, 0);
 	return 0;
+=======
+#include <subdev/top.h>
+
+static void
+nvkm_sec2_recv(struct work_struct *work)
+{
+	struct nvkm_sec2 *sec2 = container_of(work, typeof(*sec2), work);
+
+	if (!sec2->initmsg_received) {
+		int ret = sec2->func->initmsg(sec2);
+		if (ret) {
+			nvkm_error(&sec2->engine.subdev,
+				   "error parsing init message: %d\n", ret);
+			return;
+		}
+
+		sec2->initmsg_received = true;
+	}
+
+	nvkm_falcon_msgq_recv(sec2->msgq);
+}
+
+static void
+nvkm_sec2_intr(struct nvkm_engine *engine)
+{
+	struct nvkm_sec2 *sec2 = nvkm_sec2(engine);
+	sec2->func->intr(sec2);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int
 nvkm_sec2_fini(struct nvkm_engine *engine, bool suspend)
 {
 	struct nvkm_sec2 *sec2 = nvkm_sec2(engine);
+<<<<<<< HEAD
 	struct nvkm_subdev *subdev = &sec2->engine.subdev;
 	struct nvkm_falcon *falcon = &sec2->falcon;
 	struct nvkm_falcon_cmdq *cmdq = sec2->cmdq;
@@ -110,11 +140,27 @@ nvkm_sec2_oneinit(struct nvkm_engine *engine)
 			     &subdev->inth);
 }
 
+=======
+
+	flush_work(&sec2->work);
+
+	if (suspend) {
+		nvkm_falcon_cmdq_fini(sec2->cmdq);
+		sec2->initmsg_received = false;
+	}
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void *
 nvkm_sec2_dtor(struct nvkm_engine *engine)
 {
 	struct nvkm_sec2 *sec2 = nvkm_sec2(engine);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_falcon_msgq_del(&sec2->msgq);
 	nvkm_falcon_cmdq_del(&sec2->cmdq);
 	nvkm_falcon_qmgr_del(&sec2->qmgr);
@@ -125,9 +171,14 @@ nvkm_sec2_dtor(struct nvkm_engine *engine)
 static const struct nvkm_engine_func
 nvkm_sec2 = {
 	.dtor = nvkm_sec2_dtor,
+<<<<<<< HEAD
 	.oneinit = nvkm_sec2_oneinit,
 	.init = nvkm_sec2_init,
 	.fini = nvkm_sec2_fini,
+=======
+	.fini = nvkm_sec2_fini,
+	.intr = nvkm_sec2_intr,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int
@@ -160,5 +211,9 @@ nvkm_sec2_new_(const struct nvkm_sec2_fwif *fwif, struct nvkm_device *device,
 	    (ret = nvkm_falcon_msgq_new(sec2->qmgr, "msgq", &sec2->msgq)))
 		return ret;
 
+<<<<<<< HEAD
+=======
+	INIT_WORK(&sec2->work, nvkm_sec2_recv);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 };

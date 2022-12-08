@@ -1011,7 +1011,11 @@ nv10_gr_chan_new(struct nvkm_gr *base, struct nvkm_fifo_chan *fifoch,
 		return -ENOMEM;
 	nvkm_object_ctor(&nv10_gr_chan, oclass, &chan->object);
 	chan->gr = gr;
+<<<<<<< HEAD
 	chan->chid = fifoch->id;
+=======
+	chan->chid = fifoch->chid;
+>>>>>>> b7ba80a49124 (Commit)
 	*pobject = &chan->object;
 
 	NV_WRITE_CTX(0x00400e88, 0x08000000);

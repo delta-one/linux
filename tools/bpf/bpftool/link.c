@@ -106,6 +106,7 @@ static const char *cgroup_order_string(__u32 order)
 	}
 }
 
+<<<<<<< HEAD
 static bool is_iter_task_target(const char *target_name)
 {
 	return strcmp(target_name, "task") == 0 ||
@@ -113,6 +114,8 @@ static bool is_iter_task_target(const char *target_name)
 		strcmp(target_name, "task_vma") == 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void show_iter_json(struct bpf_link_info *info, json_writer_t *wtr)
 {
 	const char *target_name = u64_to_ptr(info->iter.target_name);
@@ -121,12 +124,15 @@ static void show_iter_json(struct bpf_link_info *info, json_writer_t *wtr)
 
 	if (is_iter_map_target(target_name))
 		jsonw_uint_field(wtr, "map_id", info->iter.map.map_id);
+<<<<<<< HEAD
 	else if (is_iter_task_target(target_name)) {
 		if (info->iter.task.tid)
 			jsonw_uint_field(wtr, "tid", info->iter.task.tid);
 		else if (info->iter.task.pid)
 			jsonw_uint_field(wtr, "pid", info->iter.task.pid);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (is_iter_cgroup_target(target_name)) {
 		jsonw_lluint_field(wtr, "cgroup_id", info->iter.cgroup.cgroup_id);
@@ -145,7 +151,11 @@ static int get_prog_info(int prog_id, struct bpf_prog_info *info)
 		return prog_fd;
 
 	memset(info, 0, sizeof(*info));
+<<<<<<< HEAD
 	err = bpf_prog_get_info_by_fd(prog_fd, info, &len);
+=======
+	err = bpf_obj_get_info_by_fd(prog_fd, info, &len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		p_err("can't get prog info: %s", strerror(errno));
 	close(prog_fd);
@@ -204,8 +214,14 @@ static int show_link_close_json(int fd, struct bpf_link_info *info)
 
 		jsonw_name(json_wtr, "pinned");
 		jsonw_start_array(json_wtr);
+<<<<<<< HEAD
 		hashmap__for_each_key_entry(link_table, entry, info->id)
 			jsonw_string(json_wtr, entry->pvalue);
+=======
+		hashmap__for_each_key_entry(link_table, entry,
+					    u32_as_hash_field(info->id))
+			jsonw_string(json_wtr, entry->value);
+>>>>>>> b7ba80a49124 (Commit)
 		jsonw_end_array(json_wtr);
 	}
 
@@ -249,12 +265,15 @@ static void show_iter_plain(struct bpf_link_info *info)
 
 	if (is_iter_map_target(target_name))
 		printf("map_id %u  ", info->iter.map.map_id);
+<<<<<<< HEAD
 	else if (is_iter_task_target(target_name)) {
 		if (info->iter.task.tid)
 			printf("tid %u ", info->iter.task.tid);
 		else if (info->iter.task.pid)
 			printf("pid %u ", info->iter.task.pid);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (is_iter_cgroup_target(target_name)) {
 		printf("cgroup_id %llu  ", info->iter.cgroup.cgroup_id);
@@ -308,8 +327,14 @@ static int show_link_close_plain(int fd, struct bpf_link_info *info)
 	if (!hashmap__empty(link_table)) {
 		struct hashmap_entry *entry;
 
+<<<<<<< HEAD
 		hashmap__for_each_key_entry(link_table, entry, info->id)
 			printf("\n\tpinned %s", (char *)entry->pvalue);
+=======
+		hashmap__for_each_key_entry(link_table, entry,
+					    u32_as_hash_field(info->id))
+			printf("\n\tpinned %s", (char *)entry->value);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	emit_obj_refs_plain(refs_table, info->id, "\n\tpids ");
 
@@ -327,7 +352,11 @@ static int do_show_link(int fd)
 
 	memset(&info, 0, sizeof(info));
 again:
+<<<<<<< HEAD
 	err = bpf_link_get_info_by_fd(fd, &info, &len);
+=======
+	err = bpf_obj_get_info_by_fd(fd, &info, &len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		p_err("can't get link info: %s",
 		      strerror(errno));

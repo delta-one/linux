@@ -63,7 +63,11 @@
 			gpios = <&pm8150_gpios 1 GPIO_ACTIVE_LOW>;
 			debounce-interval = <15>;
 			linux,can-disable;
+<<<<<<< HEAD
 			wakeup-source;
+=======
+			gpio-key,wakeup;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -123,7 +127,11 @@
 };
 
 &apps_rsc {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pm8150-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8150-rpmh-regulators";
 		qcom,pmic-id = "a";
 
@@ -247,7 +255,11 @@
 	 * ab: 4600000-6100000
 	 * ibb: 800000-5400000
 	 */
+<<<<<<< HEAD
 	regulators-1 {
+=======
+	pm8150l-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8150l-rpmh-regulators";
 		qcom,pmic-id = "c";
 
@@ -317,8 +329,11 @@
 			regulator-max-microvolt = <2960000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 			regulator-allow-set-load;
+<<<<<<< HEAD
 			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
 						   RPMH_REGULATOR_MODE_HPM>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		vreg_l7c_2p85: ldo7 {
@@ -341,8 +356,11 @@
 			regulator-max-microvolt = <2960000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 			regulator-allow-set-load;
+<<<<<<< HEAD
 			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
 						   RPMH_REGULATOR_MODE_HPM>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		vreg_l10c_3p3: ldo10 {
@@ -360,7 +378,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-2 {
+=======
+	pm8009-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8009-rpmh-regulators";
 		qcom,pmic-id = "f";
 
@@ -438,6 +460,7 @@
 	status = "okay";
 	clock-frequency = <400000>;
 
+<<<<<<< HEAD
 	nfc@28 {
 		compatible = "nxp,nxp-nci-i2c";
 		reg = <0x28>;
@@ -448,13 +471,20 @@
 		enable-gpios = <&tlmm 6 GPIO_ACTIVE_HIGH>;
 		firmware-gpios = <&tlmm 110 GPIO_ACTIVE_HIGH>;
 	};
+=======
+	/* NXP PN553 NFC @ 28 */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &i2c2 {
 	status = "okay";
 	clock-frequency = <1000000>;
 
+<<<<<<< HEAD
 	cs35l41_l: speaker-amp@40 {
+=======
+	cs35l41_l: cs35l41@40 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "cirrus,cs35l41";
 		reg = <0x40>;
 		interrupt-parent = <&tlmm>;
@@ -469,7 +499,11 @@
 		#sound-dai-cells = <1>;
 	};
 
+<<<<<<< HEAD
 	cs35l41_r: speaker-amp@41 {
+=======
+	cs35l41_r: cs35l41@41 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "cirrus,cs35l41";
 		reg = <0x41>;
 		interrupt-parent = <&tlmm>;
@@ -522,8 +556,15 @@
 	clock-frequency = <400000>;
 
 	/* Qcom SMB1390 @ 10 */
+<<<<<<< HEAD
 	/* Qcom SMB1390_slave @ 18 */
 	/* HALO HL6111R Qi charger @ 25 */
+=======
+	/* Silicon Labs SI4704 FM Radio Receiver @ 11 */
+	/* Qcom SMB1390_slave @ 18 */
+	/* HALO HL6111R Qi charger @ 25 */
+	/* Richwave RTC6226 FM Radio Receiver @ 64 */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &pcie0 {
@@ -583,7 +624,11 @@
 	vqmmc-supply = <&vreg_l6c_2p9>;
 	bus-width = <4>;
 	no-sdio;
+<<<<<<< HEAD
 	no-mmc;
+=======
+	no-emmc;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &slpi {
@@ -593,33 +638,51 @@
 &tlmm {
 	gpio-reserved-ranges = <40 4>, <52 4>;
 
+<<<<<<< HEAD
 	sdc2_default_state: sdc2-default-state {
 		clk-pins {
+=======
+	sdc2_default_state: sdc2-default {
+		clk {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_clk";
 			drive-strength = <16>;
 			bias-disable;
 		};
 
+<<<<<<< HEAD
 		cmd-pins {
+=======
+		cmd {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_cmd";
 			drive-strength = <16>;
 			bias-pull-up;
 		};
 
+<<<<<<< HEAD
 		data-pins {
+=======
+		data {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_data";
 			drive-strength = <16>;
 			bias-pull-up;
 		};
 	};
 
+<<<<<<< HEAD
 	mdm2ap_default: mdm2ap-default-state {
+=======
+	mdm2ap_default: mdm2ap-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio1", "gpio3";
 		function = "gpio";
 		drive-strength = <8>;
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	ts_int_default: ts-int-default-state {
 		pins = "gpio39";
 		function = "gpio";
@@ -629,13 +692,28 @@
 	};
 
 	ap2mdm_default: ap2mdm-default-state {
+=======
+	ts_int_default: ts-int-default {
+		pins = "gpio39";
+		function = "gpio";
+		drive-strength = <2>;
+		bias-disabled;
+		input-enable;
+	};
+
+	ap2mdm_default: ap2mdm-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio56", "gpio57";
 		function = "gpio";
 		drive-strength = <16>;
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	sdc2_card_det_n: sd-card-det-n-state {
+=======
+	sdc2_card_det_n: sd-card-det-n {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio77";
 		function = "gpio";
 		bias-pull-up;

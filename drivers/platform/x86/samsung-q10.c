@@ -65,12 +65,21 @@ static int samsungq10_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void samsungq10_remove(struct platform_device *pdev)
+=======
+static int samsungq10_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 
 	struct backlight_device *bd = platform_get_drvdata(pdev);
 
 	backlight_device_unregister(bd);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver samsungq10_driver = {
@@ -78,7 +87,11 @@ static struct platform_driver samsungq10_driver = {
 		.name	= KBUILD_MODNAME,
 	},
 	.probe		= samsungq10_probe,
+<<<<<<< HEAD
 	.remove_new	= samsungq10_remove,
+=======
+	.remove		= samsungq10_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct platform_device *samsungq10_device;

@@ -397,8 +397,12 @@ int sensor_hub_input_get_attribute_info(struct hid_sensor_hub_device *hsdev,
 		for (i = 0; i < report->maxfield; ++i) {
 			field = report->field[i];
 			if (field->maxusage) {
+<<<<<<< HEAD
 				if ((field->physical == usage_id ||
 				     field->application == usage_id) &&
+=======
+				if (field->physical == usage_id &&
+>>>>>>> b7ba80a49124 (Commit)
 					(field->logical == attr_usage_id ||
 					field->usage[0].hid ==
 							attr_usage_id) &&
@@ -507,8 +511,12 @@ static int sensor_hub_raw_event(struct hid_device *hdev,
 					collection->usage);
 
 		callback = sensor_hub_get_callback(hdev,
+<<<<<<< HEAD
 				report->field[i]->physical ? report->field[i]->physical :
 							     report->field[i]->application,
+=======
+				report->field[i]->physical,
+>>>>>>> b7ba80a49124 (Commit)
 				report->field[i]->usage[0].collection_index,
 				&hsdev, &priv);
 		if (!callback) {

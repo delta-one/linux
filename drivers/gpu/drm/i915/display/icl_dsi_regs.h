@@ -6,7 +6,11 @@
 #ifndef __ICL_DSI_REGS_H__
 #define __ICL_DSI_REGS_H__
 
+<<<<<<< HEAD
 #include "intel_display_reg_defs.h"
+=======
+#include "i915_reg_defs.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Gen11 DSI */
 #define _MMIO_DSI(tc, dsi0, dsi1)	_MMIO_TRANS((tc) - TRANSCODER_DSI_0, \

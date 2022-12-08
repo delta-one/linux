@@ -377,6 +377,10 @@ out_err:
 	return err;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_OF
+>>>>>>> b7ba80a49124 (Commit)
 static void usb251xb_get_ports_field(struct usb251xb *hub,
 				    const char *prop_name, u8 port_cnt,
 				    bool ds_only, u8 *fld)
@@ -399,7 +403,11 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
 {
 	struct device *dev = hub->dev;
 	struct device_node *np = dev->of_node;
+<<<<<<< HEAD
 	int len;
+=======
+	int len, err;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 property_u32 = 0;
 	const char *cproperty_char;
 	char str[USB251XB_STRING_BUFSIZE / 2];
@@ -409,12 +417,28 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
 	hub->skip_config = of_property_read_bool(np, "skip-config");
 
 	hub->gpio_reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
 	if (IS_ERR(hub->gpio_reset))
 		return dev_err_probe(dev, PTR_ERR(hub->gpio_reset),
 				     "unable to request GPIO reset pin\n");
+=======
+	if (of_get_property(np, "skip-config", NULL))
+		hub->skip_config = 1;
+	else
+		hub->skip_config = 0;
+
+	hub->gpio_reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+	if (PTR_ERR(hub->gpio_reset) == -EPROBE_DEFER) {
+		return -EPROBE_DEFER;
+	} else if (IS_ERR(hub->gpio_reset)) {
+		err = PTR_ERR(hub->gpio_reset);
+		dev_err(dev, "unable to request GPIO reset pin (%d)\n", err);
+		return err;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (of_property_read_u16_array(np, "vendor-id", &hub->vendor_id, 1))
 		hub->vendor_id = USB251XB_DEF_VENDOR_ID;
@@ -427,22 +451,35 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
 		hub->device_id = USB251XB_DEF_DEVICE_ID;
 
 	hub->conf_data1 = USB251XB_DEF_CONFIG_DATA_1;
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "self-powered")) {
+=======
+	if (of_get_property(np, "self-powered", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		hub->conf_data1 |= BIT(7);
 
 		/* Configure Over-Current sens when self-powered */
 		hub->conf_data1 &= ~BIT(2);
+<<<<<<< HEAD
 		if (of_property_read_bool(np, "ganged-sensing"))
 			hub->conf_data1 &= ~BIT(1);
 		else if (of_property_read_bool(np, "individual-sensing"))
 			hub->conf_data1 |= BIT(1);
 	} else if (of_property_read_bool(np, "bus-powered")) {
+=======
+		if (of_get_property(np, "ganged-sensing", NULL))
+			hub->conf_data1 &= ~BIT(1);
+		else if (of_get_property(np, "individual-sensing", NULL))
+			hub->conf_data1 |= BIT(1);
+	} else if (of_get_property(np, "bus-powered", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		hub->conf_data1 &= ~BIT(7);
 
 		/* Disable Over-Current sense when bus-powered */
 		hub->conf_data1 |= BIT(2);
 	}
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "disable-hi-speed"))
 		hub->conf_data1 |= BIT(5);
 
@@ -461,6 +498,26 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
 
 	hub->conf_data2 = USB251XB_DEF_CONFIG_DATA_2;
 	if (of_property_read_bool(np, "dynamic-power-switching"))
+=======
+	if (of_get_property(np, "disable-hi-speed", NULL))
+		hub->conf_data1 |= BIT(5);
+
+	if (of_get_property(np, "multi-tt", NULL))
+		hub->conf_data1 |= BIT(4);
+	else if (of_get_property(np, "single-tt", NULL))
+		hub->conf_data1 &= ~BIT(4);
+
+	if (of_get_property(np, "disable-eop", NULL))
+		hub->conf_data1 |= BIT(3);
+
+	if (of_get_property(np, "individual-port-switching", NULL))
+		hub->conf_data1 |= BIT(0);
+	else if (of_get_property(np, "ganged-port-switching", NULL))
+		hub->conf_data1 &= ~BIT(0);
+
+	hub->conf_data2 = USB251XB_DEF_CONFIG_DATA_2;
+	if (of_get_property(np, "dynamic-power-switching", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		hub->conf_data2 |= BIT(7);
 
 	if (!of_property_read_u32(np, "oc-delay-us", &property_u32)) {
@@ -483,17 +540,29 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
 		}
 	}
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "compound-device"))
 		hub->conf_data2 |= BIT(3);
 
 	hub->conf_data3 = USB251XB_DEF_CONFIG_DATA_3;
 	if (of_property_read_bool(np, "port-mapping-mode"))
+=======
+	if (of_get_property(np, "compound-device", NULL))
+		hub->conf_data2 |= BIT(3);
+
+	hub->conf_data3 = USB251XB_DEF_CONFIG_DATA_3;
+	if (of_get_property(np, "port-mapping-mode", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		hub->conf_data3 |= BIT(3);
 
 	if (data->led_support && of_get_property(np, "led-usb-mode", NULL))
 		hub->conf_data3 &= ~BIT(1);
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "string-support"))
+=======
+	if (of_get_property(np, "string-support", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		hub->conf_data3 |= BIT(0);
 
 	hub->non_rem_dev = USB251XB_DEF_NON_REMOVABLE_DEVICES;
@@ -622,6 +691,16 @@ static const struct of_device_id usb251xb_of_match[] = {
 	}
 };
 MODULE_DEVICE_TABLE(of, usb251xb_of_match);
+<<<<<<< HEAD
+=======
+#else /* CONFIG_OF */
+static int usb251xb_get_ofdata(struct usb251xb *hub,
+			       const struct usb251xb_data *data)
+{
+	return 0;
+}
+#endif /* CONFIG_OF */
+>>>>>>> b7ba80a49124 (Commit)
 
 static void usb251xb_regulator_disable_action(void *data)
 {
@@ -688,7 +767,12 @@ static int usb251xb_probe(struct usb251xb *hub)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int usb251xb_i2c_probe(struct i2c_client *i2c)
+=======
+static int usb251xb_i2c_probe(struct i2c_client *i2c,
+			      const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct usb251xb *hub;
 
@@ -743,10 +827,17 @@ MODULE_DEVICE_TABLE(i2c, usb251xb_id);
 static struct i2c_driver usb251xb_i2c_driver = {
 	.driver = {
 		.name = DRIVER_NAME,
+<<<<<<< HEAD
 		.of_match_table = usb251xb_of_match,
 		.pm = &usb251xb_pm_ops,
 	},
 	.probe_new = usb251xb_i2c_probe,
+=======
+		.of_match_table = of_match_ptr(usb251xb_of_match),
+		.pm = &usb251xb_pm_ops,
+	},
+	.probe    = usb251xb_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = usb251xb_id,
 };
 

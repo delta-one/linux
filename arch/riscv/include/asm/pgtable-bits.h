@@ -27,9 +27,12 @@
  */
 #define _PAGE_PROT_NONE _PAGE_GLOBAL
 
+<<<<<<< HEAD
 /* Used for swap PTEs only. */
 #define _PAGE_SWP_EXCLUSIVE _PAGE_ACCESSED
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define _PAGE_PFN_SHIFT 10
 
 /*

@@ -39,7 +39,11 @@ properties:
     maxItems: 1
 
   poc-supply:
+<<<<<<< HEAD
     description: Regulator providing Power over Coax to all the ports
+=======
+    description: Regulator providing Power over Coax to the cameras
+>>>>>>> b7ba80a49124 (Commit)
 
   enable-gpios:
     description: GPIO connected to the \#PWDN pin with inverted polarity
@@ -50,6 +54,7 @@ properties:
   '#gpio-cells':
     const: 2
 
+<<<<<<< HEAD
   maxim,bus-width:
     $ref: /schemas/types.yaml#/definitions/uint32
     enum: [ 24, 27, 32 ]
@@ -65,6 +70,8 @@ properties:
       The I2C clock frequency for the remote I2C buses. The value must match
       the configuration of the remote serializers.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   maxim,reverse-channel-microvolt:
     minimum: 30000
     maximum: 200000
@@ -197,16 +204,20 @@ properties:
 
             additionalProperties: false
 
+<<<<<<< HEAD
 patternProperties:
   "^port[0-3]-poc-supply$":
     description: Regulator providing Power over Coax for a particular port
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg
   - ports
   - i2c-mux
 
+<<<<<<< HEAD
 allOf:
   # Only one way of specifying power supplies is allowed: 'maxim,gpio-poc',
   # 'poc-supply' or per-port poc-supply. Additionally, if 'maxim,gpio-poc' is
@@ -227,6 +238,17 @@ allOf:
     then:
       patternProperties:
         "^port[0-3]-poc-supply$": false
+=======
+# If 'maxim,gpio-poc' is present, then 'poc-supply' and 'gpio-controller'
+# are not allowed.
+if:
+  required:
+    - maxim,gpio-poc
+then:
+  properties:
+    poc-supply: false
+    gpio-controller: false
+>>>>>>> b7ba80a49124 (Commit)
 
 additionalProperties: false
 
@@ -249,7 +271,10 @@ examples:
             gpio-controller;
             #gpio-cells = <2>;
 
+<<<<<<< HEAD
             maxim,i2c-remote-bus-hz = <339000>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
             maxim,reverse-channel-microvolt = <170000>;
 
             ports {

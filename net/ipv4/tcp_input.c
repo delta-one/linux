@@ -458,7 +458,11 @@ static void tcp_sndbuf_expand(struct sock *sk)
 static int __tcp_grow_window(const struct sock *sk, const struct sk_buff *skb,
 			     unsigned int skbtruesize)
 {
+<<<<<<< HEAD
 	const struct tcp_sock *tp = tcp_sk(sk);
+=======
+	struct tcp_sock *tp = tcp_sk(sk);
+>>>>>>> b7ba80a49124 (Commit)
 	/* Optimize this! */
 	int truesize = tcp_win_from_space(sk, skbtruesize) >> 1;
 	int window = tcp_win_from_space(sk, READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_rmem[2])) >> 1;
@@ -2192,8 +2196,12 @@ void tcp_enter_loss(struct sock *sk)
  */
 static bool tcp_check_sack_reneging(struct sock *sk, int flag)
 {
+<<<<<<< HEAD
 	if (flag & FLAG_SACK_RENEGING &&
 	    flag & FLAG_SND_UNA_ADVANCED) {
+=======
+	if (flag & FLAG_SACK_RENEGING) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct tcp_sock *tp = tcp_sk(sk);
 		unsigned long delay = max(usecs_to_jiffies(tp->srtt_us >> 4),
 					  msecs_to_jiffies(10));
@@ -3646,8 +3654,12 @@ static void tcp_send_challenge_ack(struct sock *sk)
 		u32 half = (ack_limit + 1) >> 1;
 
 		WRITE_ONCE(net->ipv4.tcp_challenge_timestamp, now);
+<<<<<<< HEAD
 		WRITE_ONCE(net->ipv4.tcp_challenge_count,
 			   get_random_u32_inclusive(half, ack_limit + half - 1));
+=======
+		WRITE_ONCE(net->ipv4.tcp_challenge_count, half + prandom_u32_max(ack_limit));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	count = READ_ONCE(net->ipv4.tcp_challenge_count);
 	if (count > 0) {
@@ -3874,7 +3886,11 @@ static int tcp_ack(struct sock *sk, const struct sk_buff *skb, int flag)
 	/* We passed data and got it acked, remove any soft error
 	 * log. Something worked...
 	 */
+<<<<<<< HEAD
 	WRITE_ONCE(sk->sk_err_soft, 0);
+=======
+	sk->sk_err_soft = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	icsk->icsk_probes_out = 0;
 	tp->rcv_tstamp = tcp_jiffies32;
 	if (!prior_packets)
@@ -4322,15 +4338,26 @@ void tcp_reset(struct sock *sk, struct sk_buff *skb)
 	/* We want the right error as BSD sees it (and indeed as we do). */
 	switch (sk->sk_state) {
 	case TCP_SYN_SENT:
+<<<<<<< HEAD
 		WRITE_ONCE(sk->sk_err, ECONNREFUSED);
 		break;
 	case TCP_CLOSE_WAIT:
 		WRITE_ONCE(sk->sk_err, EPIPE);
+=======
+		sk->sk_err = ECONNREFUSED;
+		break;
+	case TCP_CLOSE_WAIT:
+		sk->sk_err = EPIPE;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case TCP_CLOSE:
 		return;
 	default:
+<<<<<<< HEAD
 		WRITE_ONCE(sk->sk_err, ECONNRESET);
+=======
+		sk->sk_err = ECONNRESET;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	/* This barrier is coupled with smp_rmb() in tcp_poll() */
 	smp_wmb();
@@ -4765,8 +4792,13 @@ static void tcp_ofo_queue(struct sock *sk)
 	}
 }
 
+<<<<<<< HEAD
 static bool tcp_prune_ofo_queue(struct sock *sk, const struct sk_buff *in_skb);
 static int tcp_prune_queue(struct sock *sk, const struct sk_buff *in_skb);
+=======
+static bool tcp_prune_ofo_queue(struct sock *sk);
+static int tcp_prune_queue(struct sock *sk);
+>>>>>>> b7ba80a49124 (Commit)
 
 static int tcp_try_rmem_schedule(struct sock *sk, struct sk_buff *skb,
 				 unsigned int size)
@@ -4774,11 +4806,19 @@ static int tcp_try_rmem_schedule(struct sock *sk, struct sk_buff *skb,
 	if (atomic_read(&sk->sk_rmem_alloc) > sk->sk_rcvbuf ||
 	    !sk_rmem_schedule(sk, skb, size)) {
 
+<<<<<<< HEAD
 		if (tcp_prune_queue(sk, skb) < 0)
 			return -1;
 
 		while (!sk_rmem_schedule(sk, skb, size)) {
 			if (!tcp_prune_ofo_queue(sk, skb))
+=======
+		if (tcp_prune_queue(sk) < 0)
+			return -1;
+
+		while (!sk_rmem_schedule(sk, skb, size)) {
+			if (!tcp_prune_ofo_queue(sk))
+>>>>>>> b7ba80a49124 (Commit)
 				return -1;
 		}
 	}
@@ -5330,8 +5370,11 @@ new_range:
  * Clean the out-of-order queue to make room.
  * We drop high sequences packets to :
  * 1) Let a chance for holes to be filled.
+<<<<<<< HEAD
  *    This means we do not drop packets from ooo queue if their sequence
  *    is before incoming packet sequence.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * 2) not add too big latencies if thousands of packets sit there.
  *    (But if application shrinks SO_RCVBUF, we could still end up
  *     freeing whole queue here)
@@ -5339,16 +5382,24 @@ new_range:
  *
  * Return true if queue has shrunk.
  */
+<<<<<<< HEAD
 static bool tcp_prune_ofo_queue(struct sock *sk, const struct sk_buff *in_skb)
 {
 	struct tcp_sock *tp = tcp_sk(sk);
 	struct rb_node *node, *prev;
 	bool pruned = false;
+=======
+static bool tcp_prune_ofo_queue(struct sock *sk)
+{
+	struct tcp_sock *tp = tcp_sk(sk);
+	struct rb_node *node, *prev;
+>>>>>>> b7ba80a49124 (Commit)
 	int goal;
 
 	if (RB_EMPTY_ROOT(&tp->out_of_order_queue))
 		return false;
 
+<<<<<<< HEAD
 	goal = sk->sk_rcvbuf >> 3;
 	node = &tp->ooo_last_skb->rbnode;
 
@@ -5364,6 +5415,17 @@ static bool tcp_prune_ofo_queue(struct sock *sk, const struct sk_buff *in_skb)
 		goal -= skb->truesize;
 		tcp_drop_reason(sk, skb, SKB_DROP_REASON_TCP_OFO_QUEUE_PRUNE);
 		tp->ooo_last_skb = rb_to_skb(prev);
+=======
+	NET_INC_STATS(sock_net(sk), LINUX_MIB_OFOPRUNED);
+	goal = sk->sk_rcvbuf >> 3;
+	node = &tp->ooo_last_skb->rbnode;
+	do {
+		prev = rb_prev(node);
+		rb_erase(node, &tp->out_of_order_queue);
+		goal -= rb_to_skb(node)->truesize;
+		tcp_drop_reason(sk, rb_to_skb(node),
+				SKB_DROP_REASON_TCP_OFO_QUEUE_PRUNE);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!prev || goal <= 0) {
 			if (atomic_read(&sk->sk_rmem_alloc) <= sk->sk_rcvbuf &&
 			    !tcp_under_memory_pressure(sk))
@@ -5372,6 +5434,7 @@ static bool tcp_prune_ofo_queue(struct sock *sk, const struct sk_buff *in_skb)
 		}
 		node = prev;
 	} while (node);
+<<<<<<< HEAD
 
 	if (pruned) {
 		NET_INC_STATS(sock_net(sk), LINUX_MIB_OFOPRUNED);
@@ -5384,6 +5447,18 @@ static bool tcp_prune_ofo_queue(struct sock *sk, const struct sk_buff *in_skb)
 			tcp_sack_reset(&tp->rx_opt);
 	}
 	return pruned;
+=======
+	tp->ooo_last_skb = rb_to_skb(prev);
+
+	/* Reset SACK state.  A conforming SACK implementation will
+	 * do the same at a timeout based retransmit.  When a connection
+	 * is in a sad state like this, we care only about integrity
+	 * of the connection not performance.
+	 */
+	if (tp->rx_opt.sack_ok)
+		tcp_sack_reset(&tp->rx_opt);
+	return true;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Reduce allocated memory if we can, trying to get
@@ -5393,7 +5468,11 @@ static bool tcp_prune_ofo_queue(struct sock *sk, const struct sk_buff *in_skb)
  * until the socket owning process reads some of the data
  * to stabilize the situation.
  */
+<<<<<<< HEAD
 static int tcp_prune_queue(struct sock *sk, const struct sk_buff *in_skb)
+=======
+static int tcp_prune_queue(struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tcp_sock *tp = tcp_sk(sk);
 
@@ -5420,7 +5499,11 @@ static int tcp_prune_queue(struct sock *sk, const struct sk_buff *in_skb)
 	/* Collapsing did not help, destructive actions follow.
 	 * This must not ever occur. */
 
+<<<<<<< HEAD
 	tcp_prune_ofo_queue(sk, in_skb);
+=======
+	tcp_prune_ofo_queue(sk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (atomic_read(&sk->sk_rmem_alloc) <= sk->sk_rcvbuf)
 		return 0;
@@ -5693,7 +5776,11 @@ static void tcp_urg(struct sock *sk, struct sk_buff *skb, const struct tcphdr *t
  */
 static bool tcp_reset_check(const struct sock *sk, const struct sk_buff *skb)
 {
+<<<<<<< HEAD
 	const struct tcp_sock *tp = tcp_sk(sk);
+=======
+	struct tcp_sock *tp = tcp_sk(sk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return unlikely(TCP_SKB_CB(skb)->seq == (tp->rcv_nxt - 1) &&
 			(1 << sk->sk_state) & (TCPF_CLOSE_WAIT | TCPF_LAST_ACK |
@@ -6842,6 +6929,7 @@ static bool tcp_syn_flood_action(const struct sock *sk, const char *proto)
 #endif
 		__NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPREQQFULLDROP);
 
+<<<<<<< HEAD
 	if (!READ_ONCE(queue->synflood_warned) && syncookies != 2 &&
 	    xchg(&queue->synflood_warned, 1) == 0) {
 		if (IS_ENABLED(CONFIG_IPV6) && sk->sk_family == AF_INET6) {
@@ -6854,6 +6942,12 @@ static bool tcp_syn_flood_action(const struct sock *sk, const char *proto)
 					sk->sk_num, msg);
 		}
 	}
+=======
+	if (!queue->synflood_warned && syncookies != 2 &&
+	    xchg(&queue->synflood_warned, 1) == 0)
+		net_info_ratelimited("%s: Possible SYN flooding on port %d. %s.  Check SNMP counters.\n",
+				     proto, sk->sk_num, msg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return want_cookie;
 }

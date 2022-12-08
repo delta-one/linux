@@ -513,9 +513,12 @@ struct xhci_intr_reg {
 /* Preserve bits 16:31 of erst_size */
 #define	ERST_SIZE_MASK		(0xffff << 16)
 
+<<<<<<< HEAD
 /* erst_base bitmasks */
 #define ERST_BASE_RSVDP		(0x3f)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* erst_dequeue bitmasks */
 /* Dequeue ERST Segment Index (DESI) - Segment number (or alias)
  * where the current dequeue pointer lies.  This is an optional HW hint.
@@ -936,7 +939,10 @@ struct xhci_virt_ep {
 	 * have to restore the device state to the previous state
 	 */
 	struct xhci_ring		*new_ring;
+<<<<<<< HEAD
 	unsigned int			err_count;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int			ep_state;
 #define SET_DEQ_PENDING		(1 << 0)
 #define EP_HALTED		(1 << 1)	/* For stall handling */
@@ -1631,6 +1637,10 @@ struct xhci_ring {
 	 * if we own the TRB (if we are the consumer).  See section 4.9.1.
 	 */
 	u32			cycle_state;
+<<<<<<< HEAD
+=======
+	unsigned int            err_count;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int		stream_id;
 	unsigned int		num_segs;
 	unsigned int		num_trbs_free;
@@ -1687,6 +1697,14 @@ struct s3_save {
 	u32	dev_nt;
 	u64	dcbaa_ptr;
 	u32	config_reg;
+<<<<<<< HEAD
+=======
+	u32	irq_pending;
+	u32	irq_control;
+	u32	erst_size;
+	u64	erst_base;
+	u64	erst_dequeue;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Use for lpm */
@@ -1704,6 +1722,7 @@ struct xhci_bus_state {
 	u32			port_c_suspend;
 	u32			suspended_ports;
 	u32			port_remote_wakeup;
+<<<<<<< HEAD
 	/* which ports have started to resume */
 	unsigned long		resuming_ports;
 };
@@ -1720,6 +1739,18 @@ struct xhci_interrupter {
 	u64	s3_erst_base;
 	u64	s3_erst_dequeue;
 };
+=======
+	unsigned long		resume_done[USB_MAXCHILDREN];
+	/* which ports have started to resume */
+	unsigned long		resuming_ports;
+	/* Which ports are waiting on RExit to U0 transition. */
+	unsigned long		rexit_ports;
+	struct completion	rexit_done[USB_MAXCHILDREN];
+	struct completion	u3exit_done[USB_MAXCHILDREN];
+};
+
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * It can take up to 20 ms to transition from RExit to U0 on the
  * Intel Lynx Point LP xHCI host.
@@ -1739,11 +1770,14 @@ struct xhci_port {
 	int			hcd_portnum;
 	struct xhci_hub		*rhub;
 	struct xhci_port_cap	*port_cap;
+<<<<<<< HEAD
 	unsigned int		lpm_incapable:1;
 	unsigned long		resume_timestamp;
 	bool			rexit_active;
 	struct completion	rexit_done;
 	struct completion	u3exit_done;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct xhci_hub {
@@ -1766,6 +1800,11 @@ struct xhci_hcd {
 	struct xhci_op_regs __iomem *op_regs;
 	struct xhci_run_regs __iomem *run_regs;
 	struct xhci_doorbell_array __iomem *dba;
+<<<<<<< HEAD
+=======
+	/* Our HCD's current interrupter register set */
+	struct	xhci_intr_reg __iomem *ir_set;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Cached register copies of read-only HC data */
 	__u32		hcs_params1;
@@ -1780,7 +1819,11 @@ struct xhci_hcd {
 	u8		sbrn;
 	u16		hci_version;
 	u8		max_slots;
+<<<<<<< HEAD
 	u16		max_interrupters;
+=======
+	u8		max_interrupters;
+>>>>>>> b7ba80a49124 (Commit)
 	u8		max_ports;
 	u8		isoc_threshold;
 	/* imod_interval in ns (I * 250ns) */
@@ -1800,7 +1843,10 @@ struct xhci_hcd {
 	struct reset_control *reset;
 	/* data structures */
 	struct xhci_device_context_array *dcbaa;
+<<<<<<< HEAD
 	struct xhci_interrupter *interrupter;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct xhci_ring	*cmd_ring;
 	unsigned int            cmd_ring_state;
 #define CMD_RING_STATE_RUNNING         (1 << 0)
@@ -1811,9 +1857,18 @@ struct xhci_hcd {
 	struct delayed_work	cmd_timer;
 	struct completion	cmd_ring_stop_completion;
 	struct xhci_command	*current_cmd;
+<<<<<<< HEAD
 
 	/* Scratchpad */
 	struct xhci_scratchpad  *scratchpad;
+=======
+	struct xhci_ring	*event_ring;
+	struct xhci_erst	erst;
+	/* Scratchpad */
+	struct xhci_scratchpad  *scratchpad;
+	/* Store LPM test failed devices' information */
+	struct list_head	lpm_failed_devs;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* slot enabling and address device helpers */
 	/* these are not thread safe so use mutex */
@@ -1832,6 +1887,10 @@ struct xhci_hcd {
 	/* Host controller watchdog timer structures */
 	unsigned int		xhc_state;
 	unsigned long		run_graceperiod;
+<<<<<<< HEAD
+=======
+	u32			command;
+>>>>>>> b7ba80a49124 (Commit)
 	struct s3_save		s3;
 /* Host controller is dying - not responding to commands. "I'm not dead yet!"
  *
@@ -1904,7 +1963,10 @@ struct xhci_hcd {
 #define XHCI_BROKEN_D3COLD	BIT_ULL(41)
 #define XHCI_EP_CTX_BROKEN_DCS	BIT_ULL(42)
 #define XHCI_SUSPEND_RESUME_CLKS	BIT_ULL(43)
+<<<<<<< HEAD
 #define XHCI_RESET_TO_DEFAULT	BIT_ULL(44)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	unsigned int		num_active_eps;
 	unsigned int		limit_active_eps;
@@ -1950,10 +2012,13 @@ struct xhci_driver_overrides {
 			     struct usb_host_endpoint *ep);
 	int (*check_bandwidth)(struct usb_hcd *, struct usb_device *);
 	void (*reset_bandwidth)(struct usb_hcd *, struct usb_device *);
+<<<<<<< HEAD
 	int (*update_hub_device)(struct usb_hcd *hcd, struct usb_device *hdev,
 			    struct usb_tt *tt, gfp_t mem_flags);
 	int (*hub_control)(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
 			   u16 wIndex, char *buf, u16 wLength);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define	XHCI_CFC_DELAY		10
@@ -2133,8 +2198,11 @@ int xhci_drop_endpoint(struct usb_hcd *hcd, struct usb_device *udev,
 		       struct usb_host_endpoint *ep);
 int xhci_check_bandwidth(struct usb_hcd *hcd, struct usb_device *udev);
 void xhci_reset_bandwidth(struct usb_hcd *hcd, struct usb_device *udev);
+<<<<<<< HEAD
 int xhci_update_hub_device(struct usb_hcd *hcd, struct usb_device *hdev,
 			   struct usb_tt *tt, gfp_t mem_flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int xhci_disable_slot(struct xhci_hcd *xhci, u32 slot_id);
 int xhci_ext_cap_init(struct xhci_hcd *xhci);
 

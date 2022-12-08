@@ -11,6 +11,7 @@
 #include <linux/init.h>
 
 #include <asm/efi.h>
+<<<<<<< HEAD
 #include <asm/stacktrace.h>
 
 static bool region_is_misaligned(const efi_memory_desc_t *md)
@@ -20,6 +21,8 @@ static bool region_is_misaligned(const efi_memory_desc_t *md)
 	return !PAGE_ALIGNED(md->phys_addr) ||
 	       !PAGE_ALIGNED(md->num_pages << EFI_PAGE_SHIFT);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Only regions of type EFI_RUNTIME_SERVICES_CODE need to be
@@ -34,6 +37,7 @@ static __init pteval_t create_mapping_protection(efi_memory_desc_t *md)
 	if (type == EFI_MEMORY_MAPPED_IO)
 		return PROT_DEVICE_nGnRE;
 
+<<<<<<< HEAD
 	if (region_is_misaligned(md)) {
 		static bool __initdata code_is_misaligned;
 
@@ -50,6 +54,16 @@ static __init pteval_t create_mapping_protection(efi_memory_desc_t *md)
 		return code_is_misaligned ? pgprot_val(PAGE_KERNEL_EXEC)
 					  : pgprot_val(PAGE_KERNEL);
 	}
+=======
+	if (WARN_ONCE(!PAGE_ALIGNED(md->phys_addr),
+		      "UEFI Runtime regions are not aligned to 64 KB -- buggy firmware?"))
+		/*
+		 * If the region is not aligned to the page size of the OS, we
+		 * can not use strict permissions, since that would also affect
+		 * the mapping attributes of the adjacent regions.
+		 */
+		return pgprot_val(PAGE_KERNEL_EXEC);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* R-- */
 	if ((attr & (EFI_MEMORY_XP | EFI_MEMORY_RO)) ==
@@ -80,6 +94,7 @@ int __init efi_create_mapping(struct mm_struct *mm, efi_memory_desc_t *md)
 	bool page_mappings_only = (md->type == EFI_RUNTIME_SERVICES_CODE ||
 				   md->type == EFI_RUNTIME_SERVICES_DATA);
 
+<<<<<<< HEAD
 	/*
 	 * If this region is not aligned to the page size used by the OS, the
 	 * mapping will be rounded outwards, and may end up sharing a page
@@ -90,6 +105,21 @@ int __init efi_create_mapping(struct mm_struct *mm, efi_memory_desc_t *md)
 	 */
 	if (region_is_misaligned(md))
 		page_mappings_only = true;
+=======
+	if (!PAGE_ALIGNED(md->phys_addr) ||
+	    !PAGE_ALIGNED(md->num_pages << EFI_PAGE_SHIFT)) {
+		/*
+		 * If the end address of this region is not aligned to page
+		 * size, the mapping is rounded up, and may end up sharing a
+		 * page frame with the next UEFI memory region. If we create
+		 * a block entry now, we may need to split it again when mapping
+		 * the next region, and support for that is going to be removed
+		 * from the MMU routines. So avoid block mappings altogether in
+		 * that case.
+		 */
+		page_mappings_only = true;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	create_pgd_mapping(mm, md->phys_addr, md->virt_addr,
 			   md->num_pages << EFI_PAGE_SHIFT,
@@ -97,6 +127,7 @@ int __init efi_create_mapping(struct mm_struct *mm, efi_memory_desc_t *md)
 	return 0;
 }
 
+<<<<<<< HEAD
 struct set_perm_data {
 	const efi_memory_desc_t	*md;
 	bool			has_bti;
@@ -106,20 +137,29 @@ static int __init set_permissions(pte_t *ptep, unsigned long addr, void *data)
 {
 	struct set_perm_data *spd = data;
 	const efi_memory_desc_t *md = spd->md;
+=======
+static int __init set_permissions(pte_t *ptep, unsigned long addr, void *data)
+{
+	efi_memory_desc_t *md = data;
+>>>>>>> b7ba80a49124 (Commit)
 	pte_t pte = READ_ONCE(*ptep);
 
 	if (md->attribute & EFI_MEMORY_RO)
 		pte = set_pte_bit(pte, __pgprot(PTE_RDONLY));
 	if (md->attribute & EFI_MEMORY_XP)
 		pte = set_pte_bit(pte, __pgprot(PTE_PXN));
+<<<<<<< HEAD
 	else if (IS_ENABLED(CONFIG_ARM64_BTI_KERNEL) &&
 		 system_supports_bti() && spd->has_bti)
 		pte = set_pte_bit(pte, __pgprot(PTE_GP));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	set_pte(ptep, pte);
 	return 0;
 }
 
 int __init efi_set_mapping_permissions(struct mm_struct *mm,
+<<<<<<< HEAD
 				       efi_memory_desc_t *md,
 				       bool has_bti)
 {
@@ -131,6 +171,13 @@ int __init efi_set_mapping_permissions(struct mm_struct *mm,
 	if (region_is_misaligned(md))
 		return 0;
 
+=======
+				       efi_memory_desc_t *md)
+{
+	BUG_ON(md->type != EFI_RUNTIME_SERVICES_CODE &&
+	       md->type != EFI_RUNTIME_SERVICES_DATA);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Calling apply_to_page_range() is only safe on regions that are
 	 * guaranteed to be mapped down to pages. Since we are only called
@@ -140,7 +187,11 @@ int __init efi_set_mapping_permissions(struct mm_struct *mm,
 	 */
 	return apply_to_page_range(mm, md->virt_addr,
 				   md->num_pages << EFI_PAGE_SHIFT,
+<<<<<<< HEAD
 				   set_permissions, &data);
+=======
+				   set_permissions, md);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -157,6 +208,7 @@ asmlinkage efi_status_t efi_handle_corrupted_x18(efi_status_t s, const char *f)
 	pr_err_ratelimited(FW_BUG "register x18 corrupted by EFI %s\n", f);
 	return s;
 }
+<<<<<<< HEAD
 
 DEFINE_RAW_SPINLOCK(efi_rt_lock);
 
@@ -206,3 +258,5 @@ l:	if (!p) {
 	return 0;
 }
 core_initcall(arm64_efi_rt_init);
+=======
+>>>>>>> b7ba80a49124 (Commit)

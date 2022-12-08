@@ -10,7 +10,10 @@ maintainers:
   - Rob Herring <robh@kernel.org>
 
 allOf:
+<<<<<<< HEAD
   - $ref: /schemas/arm/primecell.yaml#
+=======
+>>>>>>> b7ba80a49124 (Commit)
   - $ref: serial.yaml#
 
 # Need a custom select here or 'arm,primecell' will match on lots of nodes

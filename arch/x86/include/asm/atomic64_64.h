@@ -17,7 +17,11 @@
  * Atomically reads the value of @v.
  * Doesn't imply a read memory barrier.
  */
+<<<<<<< HEAD
 static __always_inline s64 arch_atomic64_read(const atomic64_t *v)
+=======
+static inline s64 arch_atomic64_read(const atomic64_t *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return __READ_ONCE((v)->counter);
 }
@@ -29,7 +33,11 @@ static __always_inline s64 arch_atomic64_read(const atomic64_t *v)
  *
  * Atomically sets the value of @v to @i.
  */
+<<<<<<< HEAD
 static __always_inline void arch_atomic64_set(atomic64_t *v, s64 i)
+=======
+static inline void arch_atomic64_set(atomic64_t *v, s64 i)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	__WRITE_ONCE(v->counter, i);
 }
@@ -55,7 +63,11 @@ static __always_inline void arch_atomic64_add(s64 i, atomic64_t *v)
  *
  * Atomically subtracts @i from @v.
  */
+<<<<<<< HEAD
 static __always_inline void arch_atomic64_sub(s64 i, atomic64_t *v)
+=======
+static inline void arch_atomic64_sub(s64 i, atomic64_t *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	asm volatile(LOCK_PREFIX "subq %1,%0"
 		     : "=m" (v->counter)
@@ -71,7 +83,11 @@ static __always_inline void arch_atomic64_sub(s64 i, atomic64_t *v)
  * true if the result is zero, or false for all
  * other cases.
  */
+<<<<<<< HEAD
 static __always_inline bool arch_atomic64_sub_and_test(s64 i, atomic64_t *v)
+=======
+static inline bool arch_atomic64_sub_and_test(s64 i, atomic64_t *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return GEN_BINARY_RMWcc(LOCK_PREFIX "subq", v->counter, e, "er", i);
 }
@@ -113,7 +129,11 @@ static __always_inline void arch_atomic64_dec(atomic64_t *v)
  * returns true if the result is 0, or false for all other
  * cases.
  */
+<<<<<<< HEAD
 static __always_inline bool arch_atomic64_dec_and_test(atomic64_t *v)
+=======
+static inline bool arch_atomic64_dec_and_test(atomic64_t *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return GEN_UNARY_RMWcc(LOCK_PREFIX "decq", v->counter, e);
 }
@@ -127,7 +147,11 @@ static __always_inline bool arch_atomic64_dec_and_test(atomic64_t *v)
  * and returns true if the result is zero, or false for all
  * other cases.
  */
+<<<<<<< HEAD
 static __always_inline bool arch_atomic64_inc_and_test(atomic64_t *v)
+=======
+static inline bool arch_atomic64_inc_and_test(atomic64_t *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return GEN_UNARY_RMWcc(LOCK_PREFIX "incq", v->counter, e);
 }
@@ -142,7 +166,11 @@ static __always_inline bool arch_atomic64_inc_and_test(atomic64_t *v)
  * if the result is negative, or false when
  * result is greater than or equal to zero.
  */
+<<<<<<< HEAD
 static __always_inline bool arch_atomic64_add_negative(s64 i, atomic64_t *v)
+=======
+static inline bool arch_atomic64_add_negative(s64 i, atomic64_t *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return GEN_BINARY_RMWcc(LOCK_PREFIX "addq", v->counter, s, "er", i);
 }
@@ -161,25 +189,41 @@ static __always_inline s64 arch_atomic64_add_return(s64 i, atomic64_t *v)
 }
 #define arch_atomic64_add_return arch_atomic64_add_return
 
+<<<<<<< HEAD
 static __always_inline s64 arch_atomic64_sub_return(s64 i, atomic64_t *v)
+=======
+static inline s64 arch_atomic64_sub_return(s64 i, atomic64_t *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return arch_atomic64_add_return(-i, v);
 }
 #define arch_atomic64_sub_return arch_atomic64_sub_return
 
+<<<<<<< HEAD
 static __always_inline s64 arch_atomic64_fetch_add(s64 i, atomic64_t *v)
+=======
+static inline s64 arch_atomic64_fetch_add(s64 i, atomic64_t *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return xadd(&v->counter, i);
 }
 #define arch_atomic64_fetch_add arch_atomic64_fetch_add
 
+<<<<<<< HEAD
 static __always_inline s64 arch_atomic64_fetch_sub(s64 i, atomic64_t *v)
+=======
+static inline s64 arch_atomic64_fetch_sub(s64 i, atomic64_t *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return xadd(&v->counter, -i);
 }
 #define arch_atomic64_fetch_sub arch_atomic64_fetch_sub
 
+<<<<<<< HEAD
 static __always_inline s64 arch_atomic64_cmpxchg(atomic64_t *v, s64 old, s64 new)
+=======
+static inline s64 arch_atomic64_cmpxchg(atomic64_t *v, s64 old, s64 new)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return arch_cmpxchg(&v->counter, old, new);
 }
@@ -191,13 +235,21 @@ static __always_inline bool arch_atomic64_try_cmpxchg(atomic64_t *v, s64 *old, s
 }
 #define arch_atomic64_try_cmpxchg arch_atomic64_try_cmpxchg
 
+<<<<<<< HEAD
 static __always_inline s64 arch_atomic64_xchg(atomic64_t *v, s64 new)
+=======
+static inline s64 arch_atomic64_xchg(atomic64_t *v, s64 new)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return arch_xchg(&v->counter, new);
 }
 #define arch_atomic64_xchg arch_atomic64_xchg
 
+<<<<<<< HEAD
 static __always_inline void arch_atomic64_and(s64 i, atomic64_t *v)
+=======
+static inline void arch_atomic64_and(s64 i, atomic64_t *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	asm volatile(LOCK_PREFIX "andq %1,%0"
 			: "+m" (v->counter)
@@ -205,7 +257,11 @@ static __always_inline void arch_atomic64_and(s64 i, atomic64_t *v)
 			: "memory");
 }
 
+<<<<<<< HEAD
 static __always_inline s64 arch_atomic64_fetch_and(s64 i, atomic64_t *v)
+=======
+static inline s64 arch_atomic64_fetch_and(s64 i, atomic64_t *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	s64 val = arch_atomic64_read(v);
 
@@ -215,7 +271,11 @@ static __always_inline s64 arch_atomic64_fetch_and(s64 i, atomic64_t *v)
 }
 #define arch_atomic64_fetch_and arch_atomic64_fetch_and
 
+<<<<<<< HEAD
 static __always_inline void arch_atomic64_or(s64 i, atomic64_t *v)
+=======
+static inline void arch_atomic64_or(s64 i, atomic64_t *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	asm volatile(LOCK_PREFIX "orq %1,%0"
 			: "+m" (v->counter)
@@ -223,7 +283,11 @@ static __always_inline void arch_atomic64_or(s64 i, atomic64_t *v)
 			: "memory");
 }
 
+<<<<<<< HEAD
 static __always_inline s64 arch_atomic64_fetch_or(s64 i, atomic64_t *v)
+=======
+static inline s64 arch_atomic64_fetch_or(s64 i, atomic64_t *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	s64 val = arch_atomic64_read(v);
 
@@ -233,7 +297,11 @@ static __always_inline s64 arch_atomic64_fetch_or(s64 i, atomic64_t *v)
 }
 #define arch_atomic64_fetch_or arch_atomic64_fetch_or
 
+<<<<<<< HEAD
 static __always_inline void arch_atomic64_xor(s64 i, atomic64_t *v)
+=======
+static inline void arch_atomic64_xor(s64 i, atomic64_t *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	asm volatile(LOCK_PREFIX "xorq %1,%0"
 			: "+m" (v->counter)
@@ -241,7 +309,11 @@ static __always_inline void arch_atomic64_xor(s64 i, atomic64_t *v)
 			: "memory");
 }
 
+<<<<<<< HEAD
 static __always_inline s64 arch_atomic64_fetch_xor(s64 i, atomic64_t *v)
+=======
+static inline s64 arch_atomic64_fetch_xor(s64 i, atomic64_t *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	s64 val = arch_atomic64_read(v);
 

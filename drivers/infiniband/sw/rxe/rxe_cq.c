@@ -14,12 +14,20 @@ int rxe_cq_chk_attr(struct rxe_dev *rxe, struct rxe_cq *cq,
 	int count;
 
 	if (cqe <= 0) {
+<<<<<<< HEAD
 		rxe_dbg(rxe, "cqe(%d) <= 0\n", cqe);
+=======
+		pr_warn("cqe(%d) <= 0\n", cqe);
+>>>>>>> b7ba80a49124 (Commit)
 		goto err1;
 	}
 
 	if (cqe > rxe->attr.max_cqe) {
+<<<<<<< HEAD
 		rxe_dbg(rxe, "cqe(%d) > max_cqe(%d)\n",
+=======
+		pr_debug("cqe(%d) > max_cqe(%d)\n",
+>>>>>>> b7ba80a49124 (Commit)
 				cqe, rxe->attr.max_cqe);
 		goto err1;
 	}
@@ -27,7 +35,11 @@ int rxe_cq_chk_attr(struct rxe_dev *rxe, struct rxe_cq *cq,
 	if (cq) {
 		count = queue_count(cq->queue, QUEUE_TYPE_TO_CLIENT);
 		if (cqe < count) {
+<<<<<<< HEAD
 			rxe_dbg_cq(cq, "cqe(%d) < current # elements in queue (%d)",
+=======
+			pr_debug("cqe(%d) < current # elements in queue (%d)",
+>>>>>>> b7ba80a49124 (Commit)
 					cqe, count);
 			goto err1;
 		}
@@ -65,7 +77,11 @@ int rxe_cq_from_init(struct rxe_dev *rxe, struct rxe_cq *cq, int cqe,
 	cq->queue = rxe_queue_init(rxe, &cqe,
 			sizeof(struct rxe_cqe), type);
 	if (!cq->queue) {
+<<<<<<< HEAD
 		rxe_dbg(rxe, "unable to create cq\n");
+=======
+		pr_warn("unable to create cq\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOMEM;
 	}
 

@@ -10,7 +10,11 @@ maintainers:
   - Michal Simek <michal.simek@xilinx.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: spi-controller.yaml#
+=======
+  - $ref: "spi-controller.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

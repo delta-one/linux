@@ -25,11 +25,14 @@ versions up to 3.1. File system type to use on mount is *ntfs3*.
 	  Note: Applied to empty files, this allows to switch type between
 	  sparse(0x200), compressed(0x800) and normal.
 
+<<<<<<< HEAD
 	- *system.ntfs_attrib_be* gets/sets ntfs file/dir attributes.
 
 	  Same value as system.ntfs_attrib but always represent as big-endian
 	  (endianness of system.ntfs_attrib is the same as of the CPU).
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Mount Options
 =============
 
@@ -61,6 +64,20 @@ this table marked with no it means default is without **no**.
        directories, fmask applies only to files and dmask only to directories.
    * - fmask=
 
+<<<<<<< HEAD
+=======
+   * - noacsrules
+     - "No access rules" mount option sets access rights for files/folders to
+       777 and owner/group to root. This mount option absorbs all other
+       permissions.
+
+       - Permissions change for files/folders will be reported as successful,
+	 but they will remain 777.
+
+       - Owner/group change will be reported as successful, butthey will stay
+	 as root.
+
+>>>>>>> b7ba80a49124 (Commit)
    * - nohidden
      - Files with the Windows-specific HIDDEN (FILE_ATTRIBUTE_HIDDEN) attribute
        will not be shown under Linux.
@@ -69,6 +86,7 @@ this table marked with no it means default is without **no**.
      - Files with the Windows-specific SYSTEM (FILE_ATTRIBUTE_SYSTEM) attribute
        will be marked as system immutable files.
 
+<<<<<<< HEAD
    * - hide_dot_files
      - Updates the Windows-specific HIDDEN (FILE_ATTRIBUTE_HIDDEN) attribute
        when creating and moving or renaming files. Files whose names start
@@ -83,6 +101,8 @@ this table marked with no it means default is without **no**.
        name (CON, AUX, NUL, PRN, LPT1-9, COM1-9) or because the last character
        is a space or a dot. Existing such files can still be read and renamed.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
    * - discard
      - Enable support of the TRIM command for improved performance on delete
        operations, which is recommended for use with the solid-state drives

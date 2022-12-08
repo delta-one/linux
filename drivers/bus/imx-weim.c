@@ -10,7 +10,10 @@
 #include <linux/module.h>
 #include <linux/clk.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/of_address.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/of_device.h>
 #include <linux/mfd/syscon.h>
 #include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
@@ -87,8 +90,13 @@ MODULE_DEVICE_TABLE(of, weim_id_table);
 static int imx_weim_gpr_setup(struct platform_device *pdev)
 {
 	struct device_node *np = pdev->dev.of_node;
+<<<<<<< HEAD
 	struct of_range_parser parser;
 	struct of_range range;
+=======
+	struct property *prop;
+	const __be32 *p;
+>>>>>>> b7ba80a49124 (Commit)
 	struct regmap *gpr;
 	u32 gprvals[4] = {
 		05,	/* CS0(128M) CS1(0M)  CS2(0M)  CS3(0M)  */
@@ -107,6 +115,7 @@ static int imx_weim_gpr_setup(struct platform_device *pdev)
 		return 0;
 	}
 
+<<<<<<< HEAD
 	if (of_range_parser_init(&parser, np))
 		goto err;
 
@@ -114,6 +123,15 @@ static int imx_weim_gpr_setup(struct platform_device *pdev)
 		cs = range.bus_addr >> 32;
 		val = (range.size / SZ_32M) | 1;
 		gprval |= val << cs * 3;
+=======
+	of_property_for_each_u32(np, "ranges", prop, p, val) {
+		if (i % 4 == 0) {
+			cs = val;
+		} else if (i % 4 == 3 && val) {
+			val = (val / SZ_32M) | 1;
+			gprval |= val << cs * 3;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		i++;
 	}
 
@@ -205,8 +223,13 @@ static int weim_parse_dt(struct platform_device *pdev)
 	const struct of_device_id *of_id = of_match_device(weim_id_table,
 							   &pdev->dev);
 	const struct imx_weim_devtype *devtype = of_id->data;
+<<<<<<< HEAD
 	int ret = 0, have_child = 0;
 	struct device_node *child;
+=======
+	struct device_node *child;
+	int ret, have_child = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct weim_priv *priv;
 	void __iomem *base;
 	u32 reg;
@@ -264,6 +287,10 @@ static int weim_parse_dt(struct platform_device *pdev)
 static int weim_probe(struct platform_device *pdev)
 {
 	struct weim_priv *priv;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	struct clk *clk;
 	void __iomem *base;
 	int ret;
@@ -273,7 +300,12 @@ static int weim_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	/* get the resource */
+<<<<<<< HEAD
 	base = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	base = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(base))
 		return PTR_ERR(base);
 
@@ -404,3 +436,7 @@ module_exit(weim_exit);
 
 MODULE_AUTHOR("Freescale Semiconductor Inc.");
 MODULE_DESCRIPTION("i.MX EIM Controller Driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

@@ -15,7 +15,11 @@
 
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_generic.h>
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_gem_atomic_helper.h>
 #include <drm/drm_gem_dma_helper.h>
 #include <drm/drm_managed.h>
@@ -141,7 +145,14 @@ out_exit:
 }
 
 static const struct drm_simple_display_pipe_funcs mi0283qt_pipe_funcs = {
+<<<<<<< HEAD
 	DRM_MIPI_DBI_SIMPLE_DISPLAY_PIPE_FUNCS(mi0283qt_enable),
+=======
+	.mode_valid = mipi_dbi_pipe_mode_valid,
+	.enable = mi0283qt_enable,
+	.disable = mipi_dbi_pipe_disable,
+	.update = mipi_dbi_pipe_update,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct drm_display_mode mi0283qt_mode = {

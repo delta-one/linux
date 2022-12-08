@@ -405,7 +405,11 @@ void __init s3c64xx_clk_init(struct device_node *np, unsigned long xtal_f,
 			panic("%s: failed to map registers\n", __func__);
 	}
 
+<<<<<<< HEAD
 	ctx = samsung_clk_init(NULL, reg_base, NR_CLKS);
+=======
+	ctx = samsung_clk_init(np, reg_base, NR_CLKS);
+>>>>>>> b7ba80a49124 (Commit)
 	hws = ctx->clk_data.hws;
 
 	/* Register external clocks. */
@@ -414,7 +418,11 @@ void __init s3c64xx_clk_init(struct device_node *np, unsigned long xtal_f,
 
 	/* Register PLLs. */
 	samsung_clk_register_pll(ctx, s3c64xx_pll_clks,
+<<<<<<< HEAD
 				ARRAY_SIZE(s3c64xx_pll_clks));
+=======
+				ARRAY_SIZE(s3c64xx_pll_clks), reg_base);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Register common internal clocks. */
 	samsung_clk_register_fixed_rate(ctx, s3c64xx_fixed_rate_clks,

@@ -33,11 +33,16 @@ The format of this option is::
 			9600n8. The maximum baudrate is 115200.
 
 You can specify multiple console= options on the kernel command line.
+<<<<<<< HEAD
 
 The behavior is well defined when each device type is mentioned only once.
 In this case, the output will appear on all requested consoles. And
 the last device will be used when you open ``/dev/console``.
 So, for example::
+=======
+Output will appear on all of them. The last device will be used when
+you open ``/dev/console``. So, for example::
+>>>>>>> b7ba80a49124 (Commit)
 
 	console=ttyS1,9600 console=tty0
 
@@ -45,6 +50,7 @@ defines that opening ``/dev/console`` will get you the current foreground
 virtual console, and kernel messages will appear on both the VGA
 console and the 2nd serial port (ttyS1 or COM2) at 9600 baud.
 
+<<<<<<< HEAD
 The behavior is more complicated when the same device type is defined more
 times. In this case, there are the following two rules:
 
@@ -73,6 +79,9 @@ see below.
 Note that the last ``console=tty1`` parameter still makes a difference.
 The kernel command line is used also by systemd. It would use the last
 defined ``tty1`` as the login console.
+=======
+Note that you can only define one console per device type (serial, video).
+>>>>>>> b7ba80a49124 (Commit)
 
 If no console device is specified, the first device found capable of
 acting as a system console will be used. At this time, the system

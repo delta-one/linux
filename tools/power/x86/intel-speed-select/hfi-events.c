@@ -247,6 +247,10 @@ int hfi_main(void)
 	struct nl_cb *cb;
 	int err = 0;
 	int mcast_id;
+<<<<<<< HEAD
+=======
+	int no_block = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!check_hf_suport()) {
 		fprintf(stderr, "CPU Doesn't support HFI\n");
@@ -286,6 +290,12 @@ int hfi_main(void)
 	nl_cb_set(cb, NL_CB_SEQ_CHECK, NL_CB_CUSTOM, seq_check_handler, 0);
 	nl_cb_set(cb, NL_CB_VALID, NL_CB_CUSTOM, handle_event, NULL);
 
+<<<<<<< HEAD
+=======
+	if (no_block)
+		nl_socket_set_nonblocking(sock);
+
+>>>>>>> b7ba80a49124 (Commit)
 	debug_printf("hfi is initialized\n");
 
 	while (!_hfi_exit && !err) {

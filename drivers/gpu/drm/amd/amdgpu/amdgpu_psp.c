@@ -52,6 +52,7 @@ static int psp_load_smu_fw(struct psp_context *psp);
 static int psp_rap_terminate(struct psp_context *psp);
 static int psp_securedisplay_terminate(struct psp_context *psp);
 
+<<<<<<< HEAD
 static int psp_ring_init(struct psp_context *psp,
 			 enum psp_ring_type ring_type)
 {
@@ -79,6 +80,8 @@ static int psp_ring_init(struct psp_context *psp,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Due to DF Cstate management centralized to PMFW, the firmware
  * loading sequence will be updated as below:
@@ -123,6 +126,7 @@ static void psp_check_pmfw_centralized_cstate_management(struct psp_context *psp
 	}
 }
 
+<<<<<<< HEAD
 static int psp_init_sriov_microcode(struct psp_context *psp)
 {
 	struct amdgpu_device *adev = psp->adev;
@@ -156,6 +160,8 @@ static int psp_init_sriov_microcode(struct psp_context *psp)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int psp_early_init(void *handle)
 {
 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
@@ -192,7 +198,10 @@ static int psp_early_init(void *handle)
 		psp_v12_0_set_psp_funcs(psp);
 		break;
 	case IP_VERSION(13, 0, 2):
+<<<<<<< HEAD
 	case IP_VERSION(13, 0, 6):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		psp_v13_0_set_psp_funcs(psp);
 		break;
 	case IP_VERSION(13, 0, 1):
@@ -200,7 +209,10 @@ static int psp_early_init(void *handle)
 	case IP_VERSION(13, 0, 5):
 	case IP_VERSION(13, 0, 8):
 	case IP_VERSION(13, 0, 10):
+<<<<<<< HEAD
 	case IP_VERSION(13, 0, 11):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		psp_v13_0_set_psp_funcs(psp);
 		psp->autoload_supported = true;
 		break;
@@ -227,17 +239,24 @@ static int psp_early_init(void *handle)
 
 	psp_check_pmfw_centralized_cstate_management(psp);
 
+<<<<<<< HEAD
 	if (amdgpu_sriov_vf(adev))
 		return psp_init_sriov_microcode(psp);
 	else
 		return psp_init_microcode(psp);
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void psp_ta_free_shared_buf(struct ta_mem_context *mem_ctx)
 {
 	amdgpu_bo_free_kernel(&mem_ctx->shared_bo, &mem_ctx->shared_mc_addr,
 			      &mem_ctx->shared_buf);
+<<<<<<< HEAD
 	mem_ctx->shared_bo = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void psp_free_shared_bufs(struct psp_context *psp)
@@ -248,7 +267,10 @@ static void psp_free_shared_bufs(struct psp_context *psp)
 	/* free TMR memory buffer */
 	pptr = amdgpu_sriov_vf(psp->adev) ? &tmr_buf : NULL;
 	amdgpu_bo_free_kernel(&psp->tmr_bo, &psp->tmr_mc_addr, pptr);
+<<<<<<< HEAD
 	psp->tmr_bo = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* free xgmi shared memory */
 	psp_ta_free_shared_buf(&psp->xgmi_context.context.mem_context);
@@ -338,7 +360,11 @@ static bool psp_get_runtime_db_entry(struct amdgpu_device *adev,
 
 	if (db_header.cookie != PSP_RUNTIME_DB_COOKIE_ID) {
 		/* runtime db doesn't exist, exit */
+<<<<<<< HEAD
 		dev_dbg(adev->dev, "PSP runtime database doesn't exist\n");
+=======
+		dev_warn(adev->dev, "PSP runtime database doesn't exist\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 	}
 
@@ -388,6 +414,45 @@ static bool psp_get_runtime_db_entry(struct amdgpu_device *adev,
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static int psp_init_sriov_microcode(struct psp_context *psp)
+{
+	struct amdgpu_device *adev = psp->adev;
+	int ret = 0;
+
+	switch (adev->ip_versions[MP0_HWIP][0]) {
+	case IP_VERSION(9, 0, 0):
+		adev->virt.autoload_ucode_id = AMDGPU_UCODE_ID_CP_MEC2;
+		ret = psp_init_cap_microcode(psp, "vega10");
+		break;
+	case IP_VERSION(11, 0, 9):
+		adev->virt.autoload_ucode_id = AMDGPU_UCODE_ID_CP_MEC2;
+		ret = psp_init_cap_microcode(psp, "navi12");
+		break;
+	case IP_VERSION(11, 0, 7):
+		adev->virt.autoload_ucode_id = AMDGPU_UCODE_ID_CP_MEC2;
+		ret = psp_init_cap_microcode(psp, "sienna_cichlid");
+		break;
+	case IP_VERSION(13, 0, 2):
+		adev->virt.autoload_ucode_id = AMDGPU_UCODE_ID_CP_MEC2;
+		ret = psp_init_cap_microcode(psp, "aldebaran");
+		ret &= psp_init_ta_microcode(psp, "aldebaran");
+		break;
+	case IP_VERSION(13, 0, 0):
+		adev->virt.autoload_ucode_id = 0;
+		break;
+	case IP_VERSION(13, 0, 10):
+		adev->virt.autoload_ucode_id = AMDGPU_UCODE_ID_CP_MES1_DATA;
+		break;
+	default:
+		BUG();
+		break;
+	}
+	return ret;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int psp_sw_init(void *handle)
 {
 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
@@ -403,6 +468,18 @@ static int psp_sw_init(void *handle)
 		ret = -ENOMEM;
 	}
 
+<<<<<<< HEAD
+=======
+	if (amdgpu_sriov_vf(adev))
+		ret = psp_init_sriov_microcode(psp);
+	else
+		ret = psp_init_microcode(psp);
+	if (ret) {
+		DRM_ERROR("Failed to load psp firmware!\n");
+		return ret;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	adev->psp.xgmi_context.supports_extended_data =
 		!adev->gmc.xgmi.connected_to_cpu &&
 			adev->ip_versions[MP0_HWIP][0] == IP_VERSION(13, 0, 2);
@@ -506,6 +583,7 @@ static int psp_sw_fini(void *handle)
 	struct psp_gfx_cmd_resp *cmd = psp->cmd;
 
 	psp_memory_training_fini(psp);
+<<<<<<< HEAD
 
 	amdgpu_ucode_release(&psp->sos_fw);
 	amdgpu_ucode_release(&psp->asd_fw);
@@ -513,6 +591,28 @@ static int psp_sw_fini(void *handle)
 	amdgpu_ucode_release(&psp->cap_fw);
 	amdgpu_ucode_release(&psp->toc_fw);
 
+=======
+	if (psp->sos_fw) {
+		release_firmware(psp->sos_fw);
+		psp->sos_fw = NULL;
+	}
+	if (psp->asd_fw) {
+		release_firmware(psp->asd_fw);
+		psp->asd_fw = NULL;
+	}
+	if (psp->ta_fw) {
+		release_firmware(psp->ta_fw);
+		psp->ta_fw = NULL;
+	}
+	if (psp->cap_fw) {
+		release_firmware(psp->cap_fw);
+		psp->cap_fw = NULL;
+	}
+	if (psp->toc_fw) {
+		release_firmware(psp->toc_fw);
+		psp->toc_fw = NULL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (adev->ip_versions[MP0_HWIP][0] == IP_VERSION(11, 0, 0) ||
 	    adev->ip_versions[MP0_HWIP][0] == IP_VERSION(11, 0, 7))
 		psp_sysfs_fini(adev);
@@ -604,7 +704,11 @@ psp_cmd_submit_buf(struct psp_context *psp,
 		   struct psp_gfx_cmd_resp *cmd, uint64_t fence_mc_addr)
 {
 	int ret;
+<<<<<<< HEAD
 	int index;
+=======
+	int index, idx;
+>>>>>>> b7ba80a49124 (Commit)
 	int timeout = 20000;
 	bool ras_intr = false;
 	bool skip_unsupport = false;
@@ -612,6 +716,12 @@ psp_cmd_submit_buf(struct psp_context *psp,
 	if (psp->adev->no_hw_access)
 		return 0;
 
+<<<<<<< HEAD
+=======
+	if (!drm_dev_enter(adev_to_drm(psp->adev), &idx))
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	memset(psp->cmd_buf_mem, 0, PSP_CMD_BUFFER_SIZE);
 
 	memcpy(psp->cmd_buf_mem, cmd, sizeof(struct psp_gfx_cmd_resp));
@@ -675,6 +785,10 @@ psp_cmd_submit_buf(struct psp_context *psp,
 	}
 
 exit:
+<<<<<<< HEAD
+=======
+	drm_dev_exit(idx);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -748,7 +862,11 @@ static int psp_load_toc(struct psp_context *psp,
 /* Set up Trusted Memory Region */
 static int psp_tmr_init(struct psp_context *psp)
 {
+<<<<<<< HEAD
 	int ret = 0;
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 	int tmr_size;
 	void *tmr_buf;
 	void **pptr;
@@ -775,6 +893,7 @@ static int psp_tmr_init(struct psp_context *psp)
 		}
 	}
 
+<<<<<<< HEAD
 	if (!psp->tmr_bo) {
 		pptr = amdgpu_sriov_vf(psp->adev) ? &tmr_buf : NULL;
 		ret = amdgpu_bo_create_kernel(psp->adev, tmr_size,
@@ -785,6 +904,12 @@ static int psp_tmr_init(struct psp_context *psp)
 					      &psp->tmr_bo, &psp->tmr_mc_addr,
 					      pptr);
 	}
+=======
+	pptr = amdgpu_sriov_vf(psp->adev) ? &tmr_buf : NULL;
+	ret = amdgpu_bo_create_kernel(psp->adev, tmr_size, PSP_TMR_ALIGNMENT,
+				      AMDGPU_GEM_DOMAIN_VRAM,
+				      &psp->tmr_bo, &psp->tmr_mc_addr, pptr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -842,7 +967,11 @@ static int psp_tmr_unload(struct psp_context *psp)
 	struct psp_gfx_cmd_resp *cmd = acquire_psp_cmd_buf(psp);
 
 	psp_prep_tmr_unload_cmd_buf(psp, cmd);
+<<<<<<< HEAD
 	dev_dbg(psp->adev->dev, "free PSP TMR buffer\n");
+=======
+	dev_info(psp->adev->dev, "free PSP TMR buffer\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = psp_cmd_submit_buf(psp, NULL, cmd,
 				 psp->fence_buf_mc_addr);
@@ -999,8 +1128,11 @@ int psp_ta_unload(struct psp_context *psp, struct ta_context *context)
 
 	ret = psp_cmd_submit_buf(psp, NULL, cmd, psp->fence_buf_mc_addr);
 
+<<<<<<< HEAD
 	context->resp_status = cmd->resp.status;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	release_psp_cmd_buf(psp);
 
 	return ret;
@@ -1076,13 +1208,56 @@ int psp_ta_init_shared_buf(struct psp_context *psp,
 	* physical) for ta to host memory
 	*/
 	return amdgpu_bo_create_kernel(psp->adev, mem_ctx->shared_mem_size,
+<<<<<<< HEAD
 				      PAGE_SIZE, AMDGPU_GEM_DOMAIN_VRAM |
 				      AMDGPU_GEM_DOMAIN_GTT,
+=======
+				      PAGE_SIZE, AMDGPU_GEM_DOMAIN_VRAM,
+>>>>>>> b7ba80a49124 (Commit)
 				      &mem_ctx->shared_bo,
 				      &mem_ctx->shared_mc_addr,
 				      &mem_ctx->shared_buf);
 }
 
+<<<<<<< HEAD
+=======
+static void psp_prep_ta_invoke_indirect_cmd_buf(struct psp_gfx_cmd_resp *cmd,
+				       uint32_t ta_cmd_id,
+				       struct ta_context *context)
+{
+	cmd->cmd_id                         = GFX_CMD_ID_INVOKE_CMD;
+	cmd->cmd.cmd_invoke_cmd.session_id  = context->session_id;
+	cmd->cmd.cmd_invoke_cmd.ta_cmd_id   = ta_cmd_id;
+
+	cmd->cmd.cmd_invoke_cmd.buf.num_desc   = 1;
+	cmd->cmd.cmd_invoke_cmd.buf.total_size = context->mem_context.shared_mem_size;
+	cmd->cmd.cmd_invoke_cmd.buf.buf_desc[0].buf_size = context->mem_context.shared_mem_size;
+	cmd->cmd.cmd_invoke_cmd.buf.buf_desc[0].buf_phy_addr_lo =
+				     lower_32_bits(context->mem_context.shared_mc_addr);
+	cmd->cmd.cmd_invoke_cmd.buf.buf_desc[0].buf_phy_addr_hi =
+				     upper_32_bits(context->mem_context.shared_mc_addr);
+}
+
+int psp_ta_invoke_indirect(struct psp_context *psp,
+		  uint32_t ta_cmd_id,
+		  struct ta_context *context)
+{
+	int ret;
+	struct psp_gfx_cmd_resp *cmd = acquire_psp_cmd_buf(psp);
+
+	psp_prep_ta_invoke_indirect_cmd_buf(cmd, ta_cmd_id, context);
+
+	ret = psp_cmd_submit_buf(psp, NULL, cmd,
+				 psp->fence_buf_mc_addr);
+
+	context->resp_status = cmd->resp.status;
+
+	release_psp_cmd_buf(psp);
+
+	return ret;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void psp_prep_ta_invoke_cmd_buf(struct psp_gfx_cmd_resp *cmd,
 				       uint32_t ta_cmd_id,
 				       uint32_t session_id)
@@ -1525,7 +1700,11 @@ int psp_ras_terminate(struct psp_context *psp)
 	return ret;
 }
 
+<<<<<<< HEAD
 int psp_ras_initialize(struct psp_context *psp)
+=======
+static int psp_ras_initialize(struct psp_context *psp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 	uint32_t boot_cfg = 0xFF;
@@ -1588,7 +1767,11 @@ int psp_ras_initialize(struct psp_context *psp)
 	psp->ras_context.context.mem_context.shared_mem_size = PSP_RAS_SHARED_MEM_SIZE;
 	psp->ras_context.context.ta_load_type = GFX_CMD_ID_LOAD_TA;
 
+<<<<<<< HEAD
 	if (!psp->ras_context.context.mem_context.shared_buf) {
+=======
+	if (!psp->ras_context.context.initialized) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = psp_ta_init_shared_buf(psp, &psp->ras_context.context.mem_context);
 		if (ret)
 			return ret;
@@ -1609,9 +1792,13 @@ int psp_ras_initialize(struct psp_context *psp)
 	else {
 		if (ras_cmd->ras_status)
 			dev_warn(psp->adev->dev, "RAS Init Status: 0x%X\n", ras_cmd->ras_status);
+<<<<<<< HEAD
 
 		/* fail to load RAS TA */
 		psp->ras_context.context.initialized = false;
+=======
+		amdgpu_ras_fini(psp->adev);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;
@@ -1670,7 +1857,11 @@ static int psp_hdcp_initialize(struct psp_context *psp)
 	psp->hdcp_context.context.mem_context.shared_mem_size = PSP_HDCP_SHARED_MEM_SIZE;
 	psp->hdcp_context.context.ta_load_type = GFX_CMD_ID_LOAD_TA;
 
+<<<<<<< HEAD
 	if (!psp->hdcp_context.context.mem_context.shared_buf) {
+=======
+	if (!psp->hdcp_context.context.initialized) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = psp_ta_init_shared_buf(psp, &psp->hdcp_context.context.mem_context);
 		if (ret)
 			return ret;
@@ -1737,7 +1928,11 @@ static int psp_dtm_initialize(struct psp_context *psp)
 	psp->dtm_context.context.mem_context.shared_mem_size = PSP_DTM_SHARED_MEM_SIZE;
 	psp->dtm_context.context.ta_load_type = GFX_CMD_ID_LOAD_TA;
 
+<<<<<<< HEAD
 	if (!psp->dtm_context.context.mem_context.shared_buf) {
+=======
+	if (!psp->dtm_context.context.initialized) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = psp_ta_init_shared_buf(psp, &psp->dtm_context.context.mem_context);
 		if (ret)
 			return ret;
@@ -1805,7 +2000,11 @@ static int psp_rap_initialize(struct psp_context *psp)
 	psp->rap_context.context.mem_context.shared_mem_size = PSP_RAP_SHARED_MEM_SIZE;
 	psp->rap_context.context.ta_load_type = GFX_CMD_ID_LOAD_TA;
 
+<<<<<<< HEAD
 	if (!psp->rap_context.context.mem_context.shared_buf) {
+=======
+	if (!psp->rap_context.context.initialized) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = psp_ta_init_shared_buf(psp, &psp->rap_context.context.mem_context);
 		if (ret)
 			return ret;
@@ -1886,7 +2085,11 @@ out_unlock:
 static int psp_securedisplay_initialize(struct psp_context *psp)
 {
 	int ret;
+<<<<<<< HEAD
 	struct ta_securedisplay_cmd *securedisplay_cmd;
+=======
+	struct securedisplay_cmd *securedisplay_cmd;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * TODO: bypass the initialize in sriov for now
@@ -1918,15 +2121,21 @@ static int psp_securedisplay_initialize(struct psp_context *psp)
 	} else
 		return ret;
 
+<<<<<<< HEAD
 	mutex_lock(&psp->securedisplay_context.mutex);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	psp_prep_securedisplay_cmd_buf(psp, &securedisplay_cmd,
 			TA_SECUREDISPLAY_COMMAND__QUERY_TA);
 
 	ret = psp_securedisplay_invoke(psp, TA_SECUREDISPLAY_COMMAND__QUERY_TA);
+<<<<<<< HEAD
 
 	mutex_unlock(&psp->securedisplay_context.mutex);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		psp_securedisplay_terminate(psp);
 		/* free securedisplay shared memory */
@@ -1975,8 +2184,17 @@ int psp_securedisplay_invoke(struct psp_context *psp, uint32_t ta_cmd_id)
 	    ta_cmd_id != TA_SECUREDISPLAY_COMMAND__SEND_ROI_CRC)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	ret = psp_ta_invoke(psp, ta_cmd_id, &psp->securedisplay_context.context);
 
+=======
+	mutex_lock(&psp->securedisplay_context.mutex);
+
+	ret = psp_ta_invoke(psp, ta_cmd_id, &psp->securedisplay_context.context);
+
+	mutex_unlock(&psp->securedisplay_context.mutex);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 /* SECUREDISPLAY end */
@@ -2713,6 +2931,11 @@ static int psp_suspend(void *handle)
 	}
 
 out:
+<<<<<<< HEAD
+=======
+	psp_free_shared_bufs(psp);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -2893,15 +3116,34 @@ int psp_ring_cmd_submit(struct psp_context *psp,
 	return 0;
 }
 
+<<<<<<< HEAD
 int psp_init_asd_microcode(struct psp_context *psp, const char *chip_name)
+=======
+int psp_init_asd_microcode(struct psp_context *psp,
+			   const char *chip_name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct amdgpu_device *adev = psp->adev;
 	char fw_name[PSP_FW_NAME_LEN];
 	const struct psp_firmware_header_v1_0 *asd_hdr;
 	int err = 0;
 
+<<<<<<< HEAD
 	snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_asd.bin", chip_name);
 	err = amdgpu_ucode_request(adev, &adev->psp.asd_fw, fw_name);
+=======
+	if (!chip_name) {
+		dev_err(adev->dev, "invalid chip name for asd microcode\n");
+		return -EINVAL;
+	}
+
+	snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_asd.bin", chip_name);
+	err = request_firmware(&adev->psp.asd_fw, fw_name, adev->dev);
+	if (err)
+		goto out;
+
+	err = amdgpu_ucode_validate(adev->psp.asd_fw);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out;
 
@@ -2913,19 +3155,44 @@ int psp_init_asd_microcode(struct psp_context *psp, const char *chip_name)
 				le32_to_cpu(asd_hdr->header.ucode_array_offset_bytes);
 	return 0;
 out:
+<<<<<<< HEAD
 	amdgpu_ucode_release(&adev->psp.asd_fw);
 	return err;
 }
 
 int psp_init_toc_microcode(struct psp_context *psp, const char *chip_name)
+=======
+	dev_err(adev->dev, "fail to initialize asd microcode\n");
+	release_firmware(adev->psp.asd_fw);
+	adev->psp.asd_fw = NULL;
+	return err;
+}
+
+int psp_init_toc_microcode(struct psp_context *psp,
+			   const char *chip_name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct amdgpu_device *adev = psp->adev;
 	char fw_name[PSP_FW_NAME_LEN];
 	const struct psp_firmware_header_v1_0 *toc_hdr;
 	int err = 0;
 
+<<<<<<< HEAD
 	snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_toc.bin", chip_name);
 	err = amdgpu_ucode_request(adev, &adev->psp.toc_fw, fw_name);
+=======
+	if (!chip_name) {
+		dev_err(adev->dev, "invalid chip name for toc microcode\n");
+		return -EINVAL;
+	}
+
+	snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_toc.bin", chip_name);
+	err = request_firmware(&adev->psp.toc_fw, fw_name, adev->dev);
+	if (err)
+		goto out;
+
+	err = amdgpu_ucode_validate(adev->psp.toc_fw);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out;
 
@@ -2937,7 +3204,13 @@ int psp_init_toc_microcode(struct psp_context *psp, const char *chip_name)
 				le32_to_cpu(toc_hdr->header.ucode_array_offset_bytes);
 	return 0;
 out:
+<<<<<<< HEAD
 	amdgpu_ucode_release(&adev->psp.toc_fw);
+=======
+	dev_err(adev->dev, "fail to request/validate toc microcode\n");
+	release_firmware(adev->psp.toc_fw);
+	adev->psp.toc_fw = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -3068,7 +3341,12 @@ static int psp_init_sos_base_fw(struct amdgpu_device *adev)
 	return 0;
 }
 
+<<<<<<< HEAD
 int psp_init_sos_microcode(struct psp_context *psp, const char *chip_name)
+=======
+int psp_init_sos_microcode(struct psp_context *psp,
+			   const char *chip_name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct amdgpu_device *adev = psp->adev;
 	char fw_name[PSP_FW_NAME_LEN];
@@ -3081,8 +3359,22 @@ int psp_init_sos_microcode(struct psp_context *psp, const char *chip_name)
 	uint8_t *ucode_array_start_addr;
 	int fw_index = 0;
 
+<<<<<<< HEAD
 	snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_sos.bin", chip_name);
 	err = amdgpu_ucode_request(adev, &adev->psp.sos_fw, fw_name);
+=======
+	if (!chip_name) {
+		dev_err(adev->dev, "invalid chip name for sos microcode\n");
+		return -EINVAL;
+	}
+
+	snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_sos.bin", chip_name);
+	err = request_firmware(&adev->psp.sos_fw, fw_name, adev->dev);
+	if (err)
+		goto out;
+
+	err = amdgpu_ucode_validate(adev->psp.sos_fw);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out;
 
@@ -3154,7 +3446,14 @@ int psp_init_sos_microcode(struct psp_context *psp, const char *chip_name)
 
 	return 0;
 out:
+<<<<<<< HEAD
 	amdgpu_ucode_release(&adev->psp.sos_fw);
+=======
+	dev_err(adev->dev,
+		"failed to init sos firmware\n");
+	release_firmware(adev->psp.sos_fw);
+	adev->psp.sos_fw = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return err;
 }
@@ -3220,6 +3519,7 @@ static int parse_ta_bin_descriptor(struct psp_context *psp,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int parse_ta_v1_microcode(struct psp_context *psp)
 {
 	const struct ta_firmware_header_v1_0 *ta_hdr;
@@ -3290,6 +3590,43 @@ static int parse_ta_v2_microcode(struct psp_context *psp)
 	if (le32_to_cpu(ta_hdr->ta_fw_bin_count) >= UCODE_MAX_PSP_PACKAGING) {
 		dev_err(adev->dev, "packed TA count exceeds maximum limit\n");
 		return -EINVAL;
+=======
+int psp_init_ta_microcode(struct psp_context *psp,
+			  const char *chip_name)
+{
+	struct amdgpu_device *adev = psp->adev;
+	char fw_name[PSP_FW_NAME_LEN];
+	const struct ta_firmware_header_v2_0 *ta_hdr;
+	int err = 0;
+	int ta_index = 0;
+
+	if (!chip_name) {
+		dev_err(adev->dev, "invalid chip name for ta microcode\n");
+		return -EINVAL;
+	}
+
+	snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_ta.bin", chip_name);
+	err = request_firmware(&adev->psp.ta_fw, fw_name, adev->dev);
+	if (err)
+		goto out;
+
+	err = amdgpu_ucode_validate(adev->psp.ta_fw);
+	if (err)
+		goto out;
+
+	ta_hdr = (const struct ta_firmware_header_v2_0 *)adev->psp.ta_fw->data;
+
+	if (le16_to_cpu(ta_hdr->header.header_version_major) != 2) {
+		dev_err(adev->dev, "unsupported TA header version\n");
+		err = -EINVAL;
+		goto out;
+	}
+
+	if (le32_to_cpu(ta_hdr->ta_fw_bin_count) >= UCODE_MAX_PSP_PACKAGING) {
+		dev_err(adev->dev, "packed TA count exceeds maximum limit\n");
+		err = -EINVAL;
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (ta_index = 0; ta_index < le32_to_cpu(ta_hdr->ta_fw_bin_count); ta_index++) {
@@ -3297,6 +3634,7 @@ static int parse_ta_v2_microcode(struct psp_context *psp)
 					      &ta_hdr->ta_fw_bin[ta_index],
 					      ta_hdr);
 		if (err)
+<<<<<<< HEAD
 			return err;
 	}
 
@@ -3335,6 +3673,21 @@ int psp_init_ta_microcode(struct psp_context *psp, const char *chip_name)
 }
 
 int psp_init_cap_microcode(struct psp_context *psp, const char *chip_name)
+=======
+			goto out;
+	}
+
+	return 0;
+out:
+	dev_err(adev->dev, "fail to initialize ta microcode\n");
+	release_firmware(adev->psp.ta_fw);
+	adev->psp.ta_fw = NULL;
+	return err;
+}
+
+int psp_init_cap_microcode(struct psp_context *psp,
+			  const char *chip_name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct amdgpu_device *adev = psp->adev;
 	char fw_name[PSP_FW_NAME_LEN];
@@ -3342,12 +3695,21 @@ int psp_init_cap_microcode(struct psp_context *psp, const char *chip_name)
 	struct amdgpu_firmware_info *info = NULL;
 	int err = 0;
 
+<<<<<<< HEAD
+=======
+	if (!chip_name) {
+		dev_err(adev->dev, "invalid chip name for cap microcode\n");
+		return -EINVAL;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!amdgpu_sriov_vf(adev)) {
 		dev_err(adev->dev, "cap microcode should only be loaded under SRIOV\n");
 		return -EINVAL;
 	}
 
 	snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_cap.bin", chip_name);
+<<<<<<< HEAD
 	err = amdgpu_ucode_request(adev, &adev->psp.cap_fw, fw_name);
 	if (err) {
 		if (err == -ENODEV) {
@@ -3356,6 +3718,19 @@ int psp_init_cap_microcode(struct psp_context *psp, const char *chip_name)
 			goto out;
 		}
 		dev_err(adev->dev, "fail to initialize cap microcode\n");
+=======
+	err = request_firmware(&adev->psp.cap_fw, fw_name, adev->dev);
+	if (err) {
+		dev_warn(adev->dev, "cap microcode does not exist, skip\n");
+		err = 0;
+		goto out;
+	}
+
+	err = amdgpu_ucode_validate(adev->psp.cap_fw);
+	if (err) {
+		dev_err(adev->dev, "fail to initialize cap microcode\n");
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	info = &adev->firmware.ucode[AMDGPU_UCODE_ID_CAP];
@@ -3372,7 +3747,12 @@ int psp_init_cap_microcode(struct psp_context *psp, const char *chip_name)
 	return 0;
 
 out:
+<<<<<<< HEAD
 	amdgpu_ucode_release(&adev->psp.cap_fw);
+=======
+	release_firmware(adev->psp.cap_fw);
+	adev->psp.cap_fw = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -3443,10 +3823,17 @@ static ssize_t psp_usbc_pd_fw_sysfs_write(struct device *dev,
 
 	/* LFB address which is aligned to 1MB boundary per PSP request */
 	ret = amdgpu_bo_create_kernel(adev, usbc_pd_fw->size, 0x100000,
+<<<<<<< HEAD
 				      AMDGPU_GEM_DOMAIN_VRAM |
 				      AMDGPU_GEM_DOMAIN_GTT,
 				      &fw_buf_bo, &fw_pri_mc_addr,
 				      &fw_pri_cpu_addr);
+=======
+						AMDGPU_GEM_DOMAIN_VRAM,
+						&fw_buf_bo,
+						&fw_pri_mc_addr,
+						&fw_pri_cpu_addr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto rel_buf;
 

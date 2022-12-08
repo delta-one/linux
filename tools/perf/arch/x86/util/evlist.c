@@ -59,6 +59,7 @@ int arch_evlist__add_default_attrs(struct evlist *evlist,
 				   struct perf_event_attr *attrs,
 				   size_t nr_attrs)
 {
+<<<<<<< HEAD
 	if (!nr_attrs)
 		return 0;
 
@@ -83,4 +84,37 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
 
 	/* Default ordering by insertion index. */
 	return lhs->core.idx - rhs->core.idx;
+=======
+	if (nr_attrs)
+		return ___evlist__add_default_attrs(evlist, attrs, nr_attrs);
+
+	return topdown_parse_events(evlist);
+}
+
+struct evsel *arch_evlist__leader(struct list_head *list)
+{
+	struct evsel *evsel, *first, *slots = NULL;
+	bool has_topdown = false;
+
+	first = list_first_entry(list, struct evsel, core.node);
+
+	if (!topdown_sys_has_perf_metrics())
+		return first;
+
+	/* If there is a slots event and a topdown event then the slots event comes first. */
+	__evlist__for_each_entry(list, evsel) {
+		if (evsel->pmu_name && !strncmp(evsel->pmu_name, "cpu", 3) && evsel->name) {
+			if (strcasestr(evsel->name, "slots")) {
+				slots = evsel;
+				if (slots == first)
+					return first;
+			}
+			if (strcasestr(evsel->name, "topdown"))
+				has_topdown = true;
+			if (slots && has_topdown)
+				return slots;
+		}
+	}
+	return first;
+>>>>>>> b7ba80a49124 (Commit)
 }

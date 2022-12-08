@@ -21,9 +21,12 @@
 #define _PAGE_PROTNONE	0x010	/* if the user mapped it with PROT_NONE;
 				   pte_present gives true */
 
+<<<<<<< HEAD
 /* We borrow bit 10 to store the exclusive marker in swap PTEs. */
 #define _PAGE_SWP_EXCLUSIVE	0x400
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_3_LEVEL_PGTABLES
 #include <asm/pgtable-3level.h>
 #else
@@ -207,7 +210,11 @@ static inline pte_t pte_mkyoung(pte_t pte)
 	return(pte);
 }
 
+<<<<<<< HEAD
 static inline pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
+=======
+static inline pte_t pte_mkwrite(pte_t pte)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (unlikely(pte_get_bits(pte,  _PAGE_RW)))
 		return pte;
@@ -291,6 +298,7 @@ extern pte_t *virt_to_pte(struct mm_struct *mm, unsigned long addr);
 
 #define update_mmu_cache(vma,address,ptep) do {} while (0)
 
+<<<<<<< HEAD
 /*
  * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
  * are !pte_none() && !pte_present().
@@ -304,15 +312,23 @@ extern pte_t *virt_to_pte(struct mm_struct *mm, unsigned long addr);
  *   E is the exclusive marker that is not stored in swap entries.
  *   _PAGE_NEWPAGE (bit 1) is always set to 1 in set_pte().
  */
+=======
+/* Encode and de-code a swap entry */
+>>>>>>> b7ba80a49124 (Commit)
 #define __swp_type(x)			(((x).val >> 5) & 0x1f)
 #define __swp_offset(x)			((x).val >> 11)
 
 #define __swp_entry(type, offset) \
+<<<<<<< HEAD
 	((swp_entry_t) { (((type) & 0x1f) << 5) | ((offset) << 11) })
+=======
+	((swp_entry_t) { ((type) << 5) | ((offset) << 11) })
+>>>>>>> b7ba80a49124 (Commit)
 #define __pte_to_swp_entry(pte) \
 	((swp_entry_t) { pte_val(pte_mkuptodate(pte)) })
 #define __swp_entry_to_pte(x)		((pte_t) { (x).val })
 
+<<<<<<< HEAD
 static inline int pte_swp_exclusive(pte_t pte)
 {
 	return pte_get_bits(pte, _PAGE_SWP_EXCLUSIVE);
@@ -329,6 +345,9 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
 	pte_clear_bits(pte, _PAGE_SWP_EXCLUSIVE);
 	return pte;
 }
+=======
+#define kern_addr_valid(addr) (1)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Clear a kernel PTE and flush it from the TLB */
 #define kpte_clear_flush(ptep, vaddr)		\

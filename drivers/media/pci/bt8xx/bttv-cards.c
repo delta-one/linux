@@ -81,6 +81,10 @@ static int pvr_boot(struct bttv *btv);
 static unsigned int triton1;
 static unsigned int vsfx;
 static unsigned int latency = UNSET;
+<<<<<<< HEAD
+=======
+int no_overlay=-1;
+>>>>>>> b7ba80a49124 (Commit)
 
 static unsigned int card[BTTV_MAX]   = { [ 0 ... (BTTV_MAX-1) ] = UNSET };
 static unsigned int pll[BTTV_MAX]    = { [ 0 ... (BTTV_MAX-1) ] = UNSET };
@@ -98,6 +102,10 @@ static unsigned int audiomux[5] = { [ 0 ... 4 ] = UNSET };
 /* insmod options */
 module_param(triton1,    int, 0444);
 module_param(vsfx,       int, 0444);
+<<<<<<< HEAD
+=======
+module_param(no_overlay, int, 0444);
+>>>>>>> b7ba80a49124 (Commit)
 module_param(latency,    int, 0444);
 module_param(gpiomask,   int, 0444);
 module_param(audioall,   int, 0444);
@@ -125,6 +133,10 @@ MODULE_PARM_DESC(audiodev, "specify audio device:\n"
 		"\t\t 2 = tda7432\n"
 		"\t\t 3 = tvaudio");
 MODULE_PARM_DESC(saa6588, "if 1, then load the saa6588 RDS module, default (0) is to use the card definition.");
+<<<<<<< HEAD
+=======
+MODULE_PARM_DESC(no_overlay, "allow override overlay default (0 disables, 1 enables) [some VIA/SIS chipsets are known to have problem with overlay]");
+>>>>>>> b7ba80a49124 (Commit)
 
 
 /* I2C addresses list */
@@ -4866,8 +4878,16 @@ static void gv800s_init(struct bttv *btv)
 
 void __init bttv_check_chipset(void)
 {
+<<<<<<< HEAD
 	struct pci_dev *dev = NULL;
 
+=======
+	int pcipci_fail = 0;
+	struct pci_dev *dev = NULL;
+
+	if (pci_pci_problems & (PCIPCI_FAIL|PCIAGP_FAIL))	/* should check if target is AGP */
+		pcipci_fail = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	if (pci_pci_problems & (PCIPCI_TRITON|PCIPCI_NATOMA|PCIPCI_VIAETBF))
 		triton1 = 1;
 	if (pci_pci_problems & PCIPCI_VSFX)
@@ -4883,6 +4903,18 @@ void __init bttv_check_chipset(void)
 		pr_info("Host bridge needs ETBF enabled\n");
 	if (vsfx)
 		pr_info("Host bridge needs VSFX enabled\n");
+<<<<<<< HEAD
+=======
+	if (pcipci_fail) {
+		pr_info("bttv and your chipset may not work together\n");
+		if (!no_overlay) {
+			pr_info("overlay will be disabled\n");
+			no_overlay = 1;
+		} else {
+			pr_info("overlay forced. Use this option at your own risk.\n");
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (UNSET != latency)
 		pr_info("pci latency fixup [%d]\n", latency);
 	while ((dev = pci_get_device(PCI_VENDOR_ID_INTEL,

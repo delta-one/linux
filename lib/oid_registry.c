@@ -146,6 +146,10 @@ int sprint_oid(const void *data, size_t datasize, char *buffer, size_t bufsize)
 	bufsize -= count;
 
 	while (v < end) {
+<<<<<<< HEAD
+=======
+		num = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		n = *v++;
 		if (!(n & 0x80)) {
 			num = n;

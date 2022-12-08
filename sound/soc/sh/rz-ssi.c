@@ -109,7 +109,10 @@ struct rz_ssi_priv {
 	int irq_int;
 	int irq_tx;
 	int irq_rx;
+<<<<<<< HEAD
 	int irq_rt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	spinlock_t lock;
 
@@ -566,6 +569,7 @@ static irqreturn_t rz_ssi_interrupt(int irq, void *data)
 		rz_ssi_reg_mask_setl(ssi, SSIFSR, SSIFSR_RDF, 0);
 	}
 
+<<<<<<< HEAD
 	if (irq == ssi->irq_rt) {
 		struct snd_pcm_substream *substream = strm->substream;
 
@@ -577,6 +581,8 @@ static irqreturn_t rz_ssi_interrupt(int irq, void *data)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return IRQ_HANDLED;
 }
 
@@ -610,7 +616,11 @@ static int rz_ssi_dma_transfer(struct rz_ssi_priv *ssi,
 		return -EINVAL;
 
 	runtime = substream->runtime;
+<<<<<<< HEAD
 	if (runtime->state == SNDRV_PCM_STATE_DRAINING)
+=======
+	if (runtime->status->state == SNDRV_PCM_STATE_DRAINING)
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Stream is ending, so do not queue up any more DMA
 		 * transfers otherwise we play partial sound clips
@@ -1005,6 +1015,7 @@ static int rz_ssi_probe(struct platform_device *pdev)
 	if (!rz_ssi_is_dma_enabled(ssi)) {
 		/* Tx and Rx interrupts (pio only) */
 		ssi->irq_tx = platform_get_irq_byname(pdev, "dma_tx");
+<<<<<<< HEAD
 		ssi->irq_rx = platform_get_irq_byname(pdev, "dma_rx");
 		if (ssi->irq_tx == -ENXIO && ssi->irq_rx == -ENXIO) {
 			ssi->irq_rt = platform_get_irq_byname(pdev, "dma_rt");
@@ -1038,6 +1049,28 @@ static int rz_ssi_probe(struct platform_device *pdev)
 				return dev_err_probe(&pdev->dev, ret,
 						"irq request error (dma_rx)\n");
 		}
+=======
+		if (ssi->irq_tx < 0)
+			return ssi->irq_tx;
+
+		ret = devm_request_irq(&pdev->dev, ssi->irq_tx,
+				       &rz_ssi_interrupt, 0,
+				       dev_name(&pdev->dev), ssi);
+		if (ret < 0)
+			return dev_err_probe(&pdev->dev, ret,
+					     "irq request error (dma_tx)\n");
+
+		ssi->irq_rx = platform_get_irq_byname(pdev, "dma_rx");
+		if (ssi->irq_rx < 0)
+			return ssi->irq_rx;
+
+		ret = devm_request_irq(&pdev->dev, ssi->irq_rx,
+				       &rz_ssi_interrupt, 0,
+				       dev_name(&pdev->dev), ssi);
+		if (ret < 0)
+			return dev_err_probe(&pdev->dev, ret,
+					     "irq request error (dma_rx)\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ssi->rstc = devm_reset_control_get_exclusive(&pdev->dev, NULL);
@@ -1075,7 +1108,11 @@ err_reset:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void rz_ssi_remove(struct platform_device *pdev)
+=======
+static int rz_ssi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rz_ssi_priv *ssi = dev_get_drvdata(&pdev->dev);
 
@@ -1084,6 +1121,11 @@ static void rz_ssi_remove(struct platform_device *pdev)
 	pm_runtime_put(ssi->dev);
 	pm_runtime_disable(ssi->dev);
 	reset_control_assert(ssi->rstc);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id rz_ssi_of_match[] = {
@@ -1098,7 +1140,11 @@ static struct platform_driver rz_ssi_driver = {
 		.of_match_table = rz_ssi_of_match,
 	},
 	.probe		= rz_ssi_probe,
+<<<<<<< HEAD
 	.remove_new	= rz_ssi_remove,
+=======
+	.remove		= rz_ssi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(rz_ssi_driver);

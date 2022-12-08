@@ -8,8 +8,11 @@
 #include <linux/init.h>
 #include <asm/assembler.h>
 
+<<<<<<< HEAD
 .arch armv7-a
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 diag_reg_offset:
 	.word	g_diag_reg - .
 

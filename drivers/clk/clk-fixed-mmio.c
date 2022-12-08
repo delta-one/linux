@@ -99,3 +99,7 @@ module_platform_driver(of_fixed_mmio_clk_driver);
 
 MODULE_AUTHOR("Jan Kotas <jank@cadence.com>");
 MODULE_DESCRIPTION("Memory Mapped IO Fixed clock driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

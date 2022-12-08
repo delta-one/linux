@@ -46,6 +46,10 @@ static void blk_mq_hw_sysfs_release(struct kobject *kobj)
 struct blk_mq_hw_ctx_sysfs_entry {
 	struct attribute attr;
 	ssize_t (*show)(struct blk_mq_hw_ctx *, char *);
+<<<<<<< HEAD
+=======
+	ssize_t (*store)(struct blk_mq_hw_ctx *, const char *, size_t);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static ssize_t blk_mq_hw_sysfs_show(struct kobject *kobj,
@@ -69,6 +73,31 @@ static ssize_t blk_mq_hw_sysfs_show(struct kobject *kobj,
 	return res;
 }
 
+<<<<<<< HEAD
+=======
+static ssize_t blk_mq_hw_sysfs_store(struct kobject *kobj,
+				     struct attribute *attr, const char *page,
+				     size_t length)
+{
+	struct blk_mq_hw_ctx_sysfs_entry *entry;
+	struct blk_mq_hw_ctx *hctx;
+	struct request_queue *q;
+	ssize_t res;
+
+	entry = container_of(attr, struct blk_mq_hw_ctx_sysfs_entry, attr);
+	hctx = container_of(kobj, struct blk_mq_hw_ctx, kobj);
+	q = hctx->queue;
+
+	if (!entry->store)
+		return -EIO;
+
+	mutex_lock(&q->sysfs_lock);
+	res = entry->store(hctx, page, length);
+	mutex_unlock(&q->sysfs_lock);
+	return res;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t blk_mq_hw_sysfs_nr_tags_show(struct blk_mq_hw_ctx *hctx,
 					    char *page)
 {
@@ -127,6 +156,7 @@ ATTRIBUTE_GROUPS(default_hw_ctx);
 
 static const struct sysfs_ops blk_mq_hw_sysfs_ops = {
 	.show	= blk_mq_hw_sysfs_show,
+<<<<<<< HEAD
 };
 
 static const struct kobj_type blk_mq_ktype = {
@@ -138,6 +168,20 @@ static const struct kobj_type blk_mq_ctx_ktype = {
 };
 
 static const struct kobj_type blk_mq_hw_ktype = {
+=======
+	.store	= blk_mq_hw_sysfs_store,
+};
+
+static struct kobj_type blk_mq_ktype = {
+	.release	= blk_mq_sysfs_release,
+};
+
+static struct kobj_type blk_mq_ctx_ktype = {
+	.release	= blk_mq_ctx_sysfs_release,
+};
+
+static struct kobj_type blk_mq_hw_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops	= &blk_mq_hw_sysfs_ops,
 	.default_groups = default_hw_ctx_groups,
 	.release	= blk_mq_hw_sysfs_release,
@@ -161,7 +205,11 @@ static int blk_mq_register_hctx(struct blk_mq_hw_ctx *hctx)
 {
 	struct request_queue *q = hctx->queue;
 	struct blk_mq_ctx *ctx;
+<<<<<<< HEAD
 	int i, j, ret;
+=======
+	int i, ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!hctx->nr_ctx)
 		return 0;
@@ -173,6 +221,7 @@ static int blk_mq_register_hctx(struct blk_mq_hw_ctx *hctx)
 	hctx_for_each_ctx(hctx, ctx, i) {
 		ret = kobject_add(&ctx->kobj, &hctx->kobj, "cpu%u", ctx->cpu);
 		if (ret)
+<<<<<<< HEAD
 			goto out;
 	}
 
@@ -183,6 +232,11 @@ out:
 			kobject_del(&ctx->kobj);
 	}
 	kobject_del(&hctx->kobj);
+=======
+			break;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

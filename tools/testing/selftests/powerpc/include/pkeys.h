@@ -24,7 +24,11 @@
 #undef PKEY_DISABLE_EXECUTE
 #define PKEY_DISABLE_EXECUTE	0x4
 
+<<<<<<< HEAD
 /* Older versions of libc do not define this */
+=======
+/* Older versions of libc do not not define this */
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef SEGV_PKUERR
 #define SEGV_PKUERR	4
 #endif

@@ -30,14 +30,24 @@
 static dev_t ipvtap_major;
 static struct cdev ipvtap_cdev;
 
+<<<<<<< HEAD
 static const void *ipvtap_net_namespace(const struct device *d)
 {
 	const struct net_device *dev = to_net_dev(d->parent);
+=======
+static const void *ipvtap_net_namespace(struct device *d)
+{
+	struct net_device *dev = to_net_dev(d->parent);
+>>>>>>> b7ba80a49124 (Commit)
 	return dev_net(dev);
 }
 
 static struct class ipvtap_class = {
 	 .name = "ipvtap",
+<<<<<<< HEAD
+=======
+	 .owner = THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	 .ns_type = &net_ns_type_operations,
 	 .namespace = ipvtap_net_namespace,
 };

@@ -273,7 +273,11 @@ static const struct file_operations aoe_fops = {
 	.llseek = noop_llseek,
 };
 
+<<<<<<< HEAD
 static char *aoe_devnode(const struct device *dev, umode_t *mode)
+=======
+static char *aoe_devnode(struct device *dev, umode_t *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return kasprintf(GFP_KERNEL, "etherd/%s", dev_name(dev));
 }
@@ -290,7 +294,11 @@ aoechr_init(void)
 	}
 	init_completion(&emsgs_comp);
 	spin_lock_init(&emsgs_lock);
+<<<<<<< HEAD
 	aoe_class = class_create("aoe");
+=======
+	aoe_class = class_create(THIS_MODULE, "aoe");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(aoe_class)) {
 		unregister_chrdev(AOE_MAJOR, "aoechr");
 		return PTR_ERR(aoe_class);

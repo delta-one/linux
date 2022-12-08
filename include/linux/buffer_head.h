@@ -61,10 +61,14 @@ typedef void (bh_end_io_t)(struct buffer_head *bh, int uptodate);
 struct buffer_head {
 	unsigned long b_state;		/* buffer state bitmap (see above) */
 	struct buffer_head *b_this_page;/* circular list of page's buffers */
+<<<<<<< HEAD
 	union {
 		struct page *b_page;	/* the page this bh is mapped to */
 		struct folio *b_folio;	/* the folio this bh is mapped to */
 	};
+=======
+	struct page *b_page;		/* the page this bh is mapped to */
+>>>>>>> b7ba80a49124 (Commit)
 
 	sector_t b_blocknr;		/* start block number */
 	size_t b_size;			/* size of mapping */
@@ -240,7 +244,11 @@ void __lock_buffer(struct buffer_head *bh);
 int sync_dirty_buffer(struct buffer_head *bh);
 int __sync_dirty_buffer(struct buffer_head *bh, blk_opf_t op_flags);
 void write_dirty_buffer(struct buffer_head *bh, blk_opf_t op_flags);
+<<<<<<< HEAD
 void submit_bh(blk_opf_t, struct buffer_head *);
+=======
+int submit_bh(blk_opf_t, struct buffer_head *);
+>>>>>>> b7ba80a49124 (Commit)
 void write_boundary_block(struct block_device *bdev,
 			sector_t bblock, unsigned blocksize);
 int bh_uptodate_or_lock(struct buffer_head *bh);

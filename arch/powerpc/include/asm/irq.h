@@ -16,6 +16,12 @@
 
 extern atomic_t ppc_n_lost_interrupts;
 
+<<<<<<< HEAD
+=======
+/* This number is used when no interrupt has been assigned */
+#define NO_IRQ			(0)
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Total number of virq in the platform */
 #define NR_IRQS		CONFIG_NR_IRQS
 

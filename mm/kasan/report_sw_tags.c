@@ -45,6 +45,7 @@ void *kasan_find_first_bad_addr(void *addr, size_t size)
 	return p;
 }
 
+<<<<<<< HEAD
 size_t kasan_get_alloc_size(void *object, struct kmem_cache *cache)
 {
 	size_t size = 0;
@@ -71,6 +72,8 @@ size_t kasan_get_alloc_size(void *object, struct kmem_cache *cache)
 	return cache->object_size;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void kasan_metadata_fetch_row(char *buffer, void *row)
 {
 	memcpy(buffer, kasan_mem_to_shadow(row), META_BYTES_PER_ROW);

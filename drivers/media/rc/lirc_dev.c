@@ -785,7 +785,11 @@ int __init lirc_dev_init(void)
 {
 	int retval;
 
+<<<<<<< HEAD
 	lirc_class = class_create("lirc");
+=======
+	lirc_class = class_create(THIS_MODULE, "lirc");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(lirc_class)) {
 		pr_err("class_create failed\n");
 		return PTR_ERR(lirc_class);

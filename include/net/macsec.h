@@ -271,6 +271,11 @@ struct macsec_context {
 		struct macsec_rx_sa_stats *rx_sa_stats;
 		struct macsec_dev_stats  *dev_stats;
 	} stats;
+<<<<<<< HEAD
+=======
+
+	u8 prepare:1;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**

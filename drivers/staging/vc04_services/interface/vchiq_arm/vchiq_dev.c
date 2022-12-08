@@ -112,7 +112,11 @@ vchiq_ioc_queue_message(struct vchiq_instance *instance, unsigned int handle,
 			struct vchiq_element *elements, unsigned long count)
 {
 	struct vchiq_io_copy_callback_context context;
+<<<<<<< HEAD
 	int status = 0;
+=======
+	enum vchiq_status status = VCHIQ_SUCCESS;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long i;
 	size_t total_size = 0;
 
@@ -130,9 +134,15 @@ vchiq_ioc_queue_message(struct vchiq_instance *instance, unsigned int handle,
 	status = vchiq_queue_message(instance, handle, vchiq_ioc_copy_element_data,
 				     &context, total_size);
 
+<<<<<<< HEAD
 	if (status == -EINVAL)
 		return -EIO;
 	else if (status == -EAGAIN)
+=======
+	if (status == VCHIQ_ERROR)
+		return -EIO;
+	else if (status == VCHIQ_RETRY)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINTR;
 	return 0;
 }
@@ -142,7 +152,11 @@ static int vchiq_ioc_create_service(struct vchiq_instance *instance,
 {
 	struct user_service *user_service = NULL;
 	struct vchiq_service *service;
+<<<<<<< HEAD
 	int status = 0;
+=======
+	enum vchiq_status status = VCHIQ_SUCCESS;
+>>>>>>> b7ba80a49124 (Commit)
 	struct vchiq_service_params_kernel params;
 	int srvstate;
 
@@ -190,9 +204,15 @@ static int vchiq_ioc_create_service(struct vchiq_instance *instance,
 
 	if (args->is_open) {
 		status = vchiq_open_service_internal(service, instance->pid);
+<<<<<<< HEAD
 		if (status) {
 			vchiq_remove_service(instance, service->handle);
 			return (status == -EAGAIN) ?
+=======
+		if (status != VCHIQ_SUCCESS) {
+			vchiq_remove_service(instance, service->handle);
+			return (status == VCHIQ_RETRY) ?
+>>>>>>> b7ba80a49124 (Commit)
 				-EINTR : -EIO;
 		}
 	}
@@ -338,7 +358,11 @@ static int vchiq_irq_queue_bulk_tx_rx(struct vchiq_instance *instance,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if ((status != -EAGAIN) || fatal_signal_pending(current) ||
+=======
+	if ((status != VCHIQ_RETRY) || fatal_signal_pending(current) ||
+>>>>>>> b7ba80a49124 (Commit)
 	    !waiter->bulk_waiter.bulk) {
 		if (waiter->bulk_waiter.bulk) {
 			/* Cancel the signal when the transfer completes. */
@@ -364,9 +388,15 @@ out:
 	vchiq_service_put(service);
 	if (ret)
 		return ret;
+<<<<<<< HEAD
 	else if (status == -EINVAL)
 		return -EIO;
 	else if (status == -EAGAIN)
+=======
+	else if (status == VCHIQ_ERROR)
+		return -EIO;
+	else if (status == VCHIQ_RETRY)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINTR;
 	return 0;
 }
@@ -577,7 +607,11 @@ static long
 vchiq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 {
 	struct vchiq_instance *instance = file->private_data;
+<<<<<<< HEAD
 	int status = 0;
+=======
+	enum vchiq_status status = VCHIQ_SUCCESS;
+>>>>>>> b7ba80a49124 (Commit)
 	struct vchiq_service *service = NULL;
 	long ret = 0;
 	int i, rc;
@@ -598,12 +632,20 @@ vchiq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 							   instance, &i))) {
 			status = vchiq_remove_service(instance, service->handle);
 			vchiq_service_put(service);
+<<<<<<< HEAD
 			if (status)
+=======
+			if (status != VCHIQ_SUCCESS)
+>>>>>>> b7ba80a49124 (Commit)
 				break;
 		}
 		service = NULL;
 
+<<<<<<< HEAD
 		if (!status) {
+=======
+		if (status == VCHIQ_SUCCESS) {
+>>>>>>> b7ba80a49124 (Commit)
 			/* Wake the completion thread and ask it to exit */
 			instance->closing = 1;
 			complete(&instance->insert_event);
@@ -627,7 +669,11 @@ vchiq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		status = vchiq_connect_internal(instance->state, instance);
 		mutex_unlock(&instance->state->mutex);
 
+<<<<<<< HEAD
 		if (!status)
+=======
+		if (status == VCHIQ_SUCCESS)
+>>>>>>> b7ba80a49124 (Commit)
 			instance->connected = 1;
 		else
 			vchiq_log_error(vchiq_arm_log_level,
@@ -675,7 +721,11 @@ vchiq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			status = (cmd == VCHIQ_IOC_CLOSE_SERVICE) ?
 				 vchiq_close_service(instance, service->handle) :
 				 vchiq_remove_service(instance, service->handle);
+<<<<<<< HEAD
 			if (status)
+=======
+			if (status != VCHIQ_SUCCESS)
+>>>>>>> b7ba80a49124 (Commit)
 				break;
 		}
 
@@ -686,7 +736,11 @@ vchiq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		 */
 		if (user_service->close_pending &&
 		    wait_for_completion_interruptible(&user_service->close_event))
+<<<<<<< HEAD
 			status = -EAGAIN;
+=======
+			status = VCHIQ_RETRY;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -862,6 +916,7 @@ vchiq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		vchiq_service_put(service);
 
 	if (ret == 0) {
+<<<<<<< HEAD
 		if (status == -EINVAL)
 			ret = -EIO;
 		else if (status == -EAGAIN)
@@ -869,6 +924,15 @@ vchiq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	}
 
 	if (!status && (ret < 0) && (ret != -EINTR) && (ret != -EWOULDBLOCK))
+=======
+		if (status == VCHIQ_ERROR)
+			ret = -EIO;
+		else if (status == VCHIQ_RETRY)
+			ret = -EINTR;
+	}
+
+	if ((status == VCHIQ_SUCCESS) && (ret < 0) && (ret != -EINTR) && (ret != -EWOULDBLOCK))
+>>>>>>> b7ba80a49124 (Commit)
 		vchiq_log_info(vchiq_arm_log_level,
 			       "  ioctl instance %pK, cmd %s -> status %d, %ld",
 			       instance, (_IOC_NR(cmd) <= VCHIQ_IOC_MAX) ?

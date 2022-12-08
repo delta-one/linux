@@ -39,6 +39,7 @@ struct lb_cbmem_ref {
 	u64 cbmem_addr;
 };
 
+<<<<<<< HEAD
 #define LB_TAG_CBMEM_ENTRY 0x31
 
 /* Corresponds to LB_TAG_CBMEM_ENTRY */
@@ -51,6 +52,8 @@ struct lb_cbmem_entry {
 	u32 id;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Describes framebuffer setup by coreboot */
 struct lb_framebuffer {
 	u32 tag;
@@ -77,6 +80,7 @@ struct coreboot_device {
 	union {
 		struct coreboot_table_entry entry;
 		struct lb_cbmem_ref cbmem_ref;
+<<<<<<< HEAD
 		struct lb_cbmem_entry cbmem_entry;
 		struct lb_framebuffer framebuffer;
 		DECLARE_FLEX_ARRAY(u8, raw);
@@ -88,6 +92,12 @@ static inline struct coreboot_device *dev_to_coreboot_device(struct device *dev)
 	return container_of(dev, struct coreboot_device, dev);
 }
 
+=======
+		struct lb_framebuffer framebuffer;
+	};
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* A driver for handling devices described in coreboot tables. */
 struct coreboot_driver {
 	int (*probe)(struct coreboot_device *);

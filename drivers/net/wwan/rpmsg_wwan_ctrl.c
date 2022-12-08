@@ -129,7 +129,11 @@ static int rpmsg_wwan_ctrl_probe(struct rpmsg_device *rpdev)
 
 	/* Register as a wwan port, id.driver_data contains wwan port type */
 	port = wwan_create_port(parent, rpdev->id.driver_data,
+<<<<<<< HEAD
 				&rpmsg_wwan_pops, NULL, rpwwan);
+=======
+				&rpmsg_wwan_pops, rpwwan);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(port))
 		return PTR_ERR(port);
 

@@ -45,32 +45,47 @@
 
 extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_basic_features) __ro_after_init;
 extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_basic_t1_features) __ro_after_init;
+<<<<<<< HEAD
 extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_basic_t1s_p2mp_features) __ro_after_init;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_gbit_features) __ro_after_init;
 extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_gbit_fibre_features) __ro_after_init;
 extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_gbit_all_ports_features) __ro_after_init;
 extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_10gbit_features) __ro_after_init;
 extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_10gbit_fec_features) __ro_after_init;
 extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_10gbit_full_features) __ro_after_init;
+<<<<<<< HEAD
 extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_eee_cap1_features) __ro_after_init;
 
 #define PHY_BASIC_FEATURES ((unsigned long *)&phy_basic_features)
 #define PHY_BASIC_T1_FEATURES ((unsigned long *)&phy_basic_t1_features)
 #define PHY_BASIC_T1S_P2MP_FEATURES ((unsigned long *)&phy_basic_t1s_p2mp_features)
+=======
+
+#define PHY_BASIC_FEATURES ((unsigned long *)&phy_basic_features)
+#define PHY_BASIC_T1_FEATURES ((unsigned long *)&phy_basic_t1_features)
+>>>>>>> b7ba80a49124 (Commit)
 #define PHY_GBIT_FEATURES ((unsigned long *)&phy_gbit_features)
 #define PHY_GBIT_FIBRE_FEATURES ((unsigned long *)&phy_gbit_fibre_features)
 #define PHY_GBIT_ALL_PORTS_FEATURES ((unsigned long *)&phy_gbit_all_ports_features)
 #define PHY_10GBIT_FEATURES ((unsigned long *)&phy_10gbit_features)
 #define PHY_10GBIT_FEC_FEATURES ((unsigned long *)&phy_10gbit_fec_features)
 #define PHY_10GBIT_FULL_FEATURES ((unsigned long *)&phy_10gbit_full_features)
+<<<<<<< HEAD
 #define PHY_EEE_CAP1_FEATURES ((unsigned long *)&phy_eee_cap1_features)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 extern const int phy_basic_ports_array[3];
 extern const int phy_fibre_port_array[1];
 extern const int phy_all_ports_features_array[7];
 extern const int phy_10_100_features_array[4];
 extern const int phy_basic_t1_features_array[3];
+<<<<<<< HEAD
 extern const int phy_basic_t1s_p2mp_features_array[2];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern const int phy_gbit_features_array[2];
 extern const int phy_10gbit_features_array[1];
 
@@ -285,6 +300,10 @@ static inline const char *phy_modes(phy_interface_t interface)
 	}
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 #define PHY_INIT_TIMEOUT	100000
 #define PHY_FORCE_TIMEOUT	10
 
@@ -369,11 +388,14 @@ struct mii_bus {
 	int (*read)(struct mii_bus *bus, int addr, int regnum);
 	/** @write: Perform a write transfer on the bus */
 	int (*write)(struct mii_bus *bus, int addr, int regnum, u16 val);
+<<<<<<< HEAD
 	/** @read_c45: Perform a C45 read transfer on the bus */
 	int (*read_c45)(struct mii_bus *bus, int addr, int devnum, int regnum);
 	/** @write_c45: Perform a C45 write transfer on the bus */
 	int (*write_c45)(struct mii_bus *bus, int addr, int devnum,
 			 int regnum, u16 val);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/** @reset: Perform a reset of the bus */
 	int (*reset)(struct mii_bus *bus);
 
@@ -421,6 +443,17 @@ struct mii_bus {
 	/** @reset_gpiod: Reset GPIO descriptor pointer */
 	struct gpio_desc *reset_gpiod;
 
+<<<<<<< HEAD
+=======
+	/** @probe_capabilities: bus capabilities, used for probing */
+	enum {
+		MDIOBUS_NO_CAP = 0,
+		MDIOBUS_C22,
+		MDIOBUS_C45,
+		MDIOBUS_C22_C45,
+	} probe_capabilities;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/** @shared_lock: protect access to the shared element */
 	struct mutex shared_lock;
 
@@ -458,7 +491,11 @@ static inline struct mii_bus *devm_mdiobus_alloc(struct device *dev)
 }
 
 struct mii_bus *mdio_find_bus(const char *mdio_name);
+<<<<<<< HEAD
 struct phy_device *mdiobus_scan_c22(struct mii_bus *bus, int addr);
+=======
+struct phy_device *mdiobus_scan(struct mii_bus *bus, int addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define PHY_INTERRUPT_DISABLED	false
 #define PHY_INTERRUPT_ENABLED	true
@@ -531,8 +568,11 @@ struct macsec_ops;
  *
  * @mdio: MDIO bus this PHY is on
  * @drv: Pointer to the driver for this PHY instance
+<<<<<<< HEAD
  * @devlink: Create a link between phy dev and mac dev, if the external phy
  *           used by current mac interface is managed by another mac interface.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @phy_id: UID for this device found during discovery
  * @c45_ids: 802.3-c45 Device Identifiers if is_c45.
  * @is_c45:  Set to true if this PHY uses clause 45 addressing.
@@ -574,6 +614,7 @@ struct macsec_ops;
  * @supported: Combined MAC/PHY supported linkmodes
  * @advertising: Currently advertised linkmodes
  * @adv_old: Saved advertised while power saving for WoL
+<<<<<<< HEAD
  * @supported_eee: supported PHY EEE linkmodes
  * @advertising_eee: Currently advertised EEE linkmodes
  * @eee_enabled: Flag indicating whether the EEE feature is enabled
@@ -582,6 +623,11 @@ struct macsec_ops;
  * @eee_broken_modes: Energy efficient ethernet modes which should be prohibited
  * @autoneg: Flag autoneg being used
  * @rate_matching: Current rate matching mode
+=======
+ * @lp_advertising: Current link partner advertised linkmodes
+ * @eee_broken_modes: Energy efficient ethernet modes which should be prohibited
+ * @autoneg: Flag autoneg being used
+>>>>>>> b7ba80a49124 (Commit)
  * @link: Current link state
  * @autoneg_complete: Flag auto negotiation of the link has completed
  * @mdix: Current crossover
@@ -604,10 +650,15 @@ struct macsec_ops;
  * @master_slave_get: Current master/slave advertisement
  * @master_slave_state: Current master/slave configuration
  * @mii_ts: Pointer to time stamper callbacks
+<<<<<<< HEAD
  * @psec: Pointer to Power Sourcing Equipment control struct
  * @lock:  Mutex for serialization access to PHY
  * @state_queue: Work queue for state machine
  * @link_down_events: Number of times link was lost
+=======
+ * @lock:  Mutex for serialization access to PHY
+ * @state_queue: Work queue for state machine
+>>>>>>> b7ba80a49124 (Commit)
  * @shared: Pointer to private data shared by phys in one package
  * @priv: Pointer to driver private data
  *
@@ -625,8 +676,11 @@ struct phy_device {
 	/* And management functions */
 	struct phy_driver *drv;
 
+<<<<<<< HEAD
 	struct device_link *devlink;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 phy_id;
 
 	struct phy_c45_device_ids c45_ids;
@@ -653,8 +707,11 @@ struct phy_device {
 	unsigned irq_suspended:1;
 	unsigned irq_rerun:1;
 
+<<<<<<< HEAD
 	int rate_matching;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	enum phy_state state;
 
 	u32 dev_flags;
@@ -681,6 +738,7 @@ struct phy_device {
 	__ETHTOOL_DECLARE_LINK_MODE_MASK(lp_advertising);
 	/* used with phy_speed_down */
 	__ETHTOOL_DECLARE_LINK_MODE_MASK(adv_old);
+<<<<<<< HEAD
 	/* used for eee validation */
 	__ETHTOOL_DECLARE_LINK_MODE_MASK(supported_eee);
 	__ETHTOOL_DECLARE_LINK_MODE_MASK(advertising_eee);
@@ -688,6 +746,8 @@ struct phy_device {
 
 	/* Host supported PHY interface types. Should be ignored if empty. */
 	DECLARE_PHY_INTERFACE_MASK(host_interfaces);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Energy efficient ethernet modes which should be prohibited */
 	u32 eee_broken_modes;
@@ -730,15 +790,21 @@ struct phy_device {
 	struct phylink *phylink;
 	struct net_device *attached_dev;
 	struct mii_timestamper *mii_ts;
+<<<<<<< HEAD
 	struct pse_control *psec;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	u8 mdix;
 	u8 mdix_ctrl;
 
 	int pma_extable;
 
+<<<<<<< HEAD
 	unsigned int link_down_events;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void (*phy_link_change)(struct phy_device *phydev, bool up);
 	void (*adjust_link)(struct net_device *dev);
 
@@ -748,9 +814,12 @@ struct phy_device {
 #endif
 };
 
+<<<<<<< HEAD
 /* Generic phy_device::dev_flags */
 #define PHY_F_NO_IRQ		0x80000000
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct phy_device *to_phy_device(const struct device *dev)
 {
 	return container_of(to_mdio_device(dev), struct phy_device, mdio);
@@ -778,6 +847,7 @@ struct phy_tdr_config {
 #define PHY_PAIR_ALL -1
 
 /**
+<<<<<<< HEAD
  * struct phy_plca_cfg - Configuration of the PLCA (Physical Layer Collision
  * Avoidance) Reconciliation Sublayer.
  *
@@ -835,6 +905,8 @@ struct phy_plca_status {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct phy_driver - Driver structure for a particular PHY type
  *
  * @mdiodrv: Data common to all MDIO devices
@@ -889,6 +961,7 @@ struct phy_driver {
 	 */
 	int (*get_features)(struct phy_device *phydev);
 
+<<<<<<< HEAD
 	/**
 	 * @get_rate_matching: Get the supported type of rate matching for a
 	 * particular phy interface. This is used by phy consumers to determine
@@ -901,6 +974,8 @@ struct phy_driver {
 	int (*get_rate_matching)(struct phy_device *phydev,
 				   phy_interface_t iface);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* PHY Power Management */
 	/** @suspend: Suspend the hardware, saving state if needed */
 	int (*suspend)(struct phy_device *phydev);
@@ -1045,6 +1120,7 @@ struct phy_driver {
 	int (*get_sqi)(struct phy_device *dev);
 	/** @get_sqi_max: Get the maximum signal quality indication */
 	int (*get_sqi_max)(struct phy_device *dev);
+<<<<<<< HEAD
 
 	/* PLCA RS interface */
 	/** @get_plca_cfg: Return the current PLCA configuration */
@@ -1056,6 +1132,8 @@ struct phy_driver {
 	/** @get_plca_status: Return the current PLCA status info */
 	int (*get_plca_status)(struct phy_device *dev,
 			       struct phy_plca_status *plca_st);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 #define to_phy_driver(d) container_of(to_mdio_common_driver(d),		\
 				      struct phy_driver, mdiodrv)
@@ -1078,7 +1156,10 @@ struct phy_fixup {
 
 const char *phy_speed_to_str(int speed);
 const char *phy_duplex_to_str(unsigned int duplex);
+<<<<<<< HEAD
 const char *phy_rate_matching_to_str(int rate_matching);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int phy_interface_num_ports(phy_interface_t interface);
 
@@ -1130,15 +1211,25 @@ static inline int phy_read(struct phy_device *phydev, u32 regnum)
 #define phy_read_poll_timeout(phydev, regnum, val, cond, sleep_us, \
 				timeout_us, sleep_before_read) \
 ({ \
+<<<<<<< HEAD
 	int __ret = read_poll_timeout(phy_read, val, val < 0 || (cond), \
 		sleep_us, timeout_us, sleep_before_read, phydev, regnum); \
 	if (val < 0) \
+=======
+	int __ret = read_poll_timeout(phy_read, val, (cond) || val < 0, \
+		sleep_us, timeout_us, sleep_before_read, phydev, regnum); \
+	if (val <  0) \
+>>>>>>> b7ba80a49124 (Commit)
 		__ret = val; \
 	if (__ret) \
 		phydev_err(phydev, "%s failed: %d\n", __func__, __ret); \
 	__ret; \
 })
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * __phy_read - convenience function for reading a given PHY register
  * @phydev: the phy_device struct
@@ -1622,7 +1713,10 @@ int phy_start_aneg(struct phy_device *phydev);
 int phy_aneg_done(struct phy_device *phydev);
 int phy_speed_down(struct phy_device *phydev, bool sync);
 int phy_speed_up(struct phy_device *phydev);
+<<<<<<< HEAD
 bool phy_check_valid(int speed, int duplex, unsigned long *features);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int phy_restart_aneg(struct phy_device *phydev);
 int phy_reset_after_clk_enable(struct phy_device *phydev);
@@ -1746,7 +1840,10 @@ int genphy_c45_an_config_aneg(struct phy_device *phydev);
 int genphy_c45_an_disable_aneg(struct phy_device *phydev);
 int genphy_c45_read_mdix(struct phy_device *phydev);
 int genphy_c45_pma_read_abilities(struct phy_device *phydev);
+<<<<<<< HEAD
 int genphy_c45_read_eee_abilities(struct phy_device *phydev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int genphy_c45_pma_baset1_read_master_slave(struct phy_device *phydev);
 int genphy_c45_read_status(struct phy_device *phydev);
 int genphy_c45_baset1_read_status(struct phy_device *phydev);
@@ -1755,6 +1852,7 @@ int genphy_c45_loopback(struct phy_device *phydev, bool enable);
 int genphy_c45_pma_resume(struct phy_device *phydev);
 int genphy_c45_pma_suspend(struct phy_device *phydev);
 int genphy_c45_fast_retrain(struct phy_device *phydev, bool enable);
+<<<<<<< HEAD
 int genphy_c45_plca_get_cfg(struct phy_device *phydev,
 			    struct phy_plca_cfg *plca_cfg);
 int genphy_c45_plca_set_cfg(struct phy_device *phydev,
@@ -1770,6 +1868,8 @@ int genphy_c45_ethtool_set_eee(struct phy_device *phydev,
 int genphy_c45_write_eee_adv(struct phy_device *phydev, unsigned long *adv);
 int genphy_c45_an_config_eee_aneg(struct phy_device *phydev);
 int genphy_c45_read_eee_adv(struct phy_device *phydev, unsigned long *adv);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Generic C45 PHY driver */
 extern struct phy_driver genphy_c45_driver;
@@ -1811,8 +1911,11 @@ int phy_disable_interrupts(struct phy_device *phydev);
 void phy_request_interrupt(struct phy_device *phydev);
 void phy_free_interrupt(struct phy_device *phydev);
 void phy_print_status(struct phy_device *phydev);
+<<<<<<< HEAD
 int phy_get_rate_matching(struct phy_device *phydev,
 			    phy_interface_t iface);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void phy_set_max_speed(struct phy_device *phydev, u32 max_speed);
 void phy_remove_link_mode(struct phy_device *phydev, u32 link_mode);
 void phy_advertise_supported(struct phy_device *phydev);
@@ -1868,6 +1971,7 @@ int phy_ethtool_get_strings(struct phy_device *phydev, u8 *data);
 int phy_ethtool_get_sset_count(struct phy_device *phydev);
 int phy_ethtool_get_stats(struct phy_device *phydev,
 			  struct ethtool_stats *stats, u64 *data);
+<<<<<<< HEAD
 int phy_ethtool_get_plca_cfg(struct phy_device *phydev,
 			     struct phy_plca_cfg *plca_cfg);
 int phy_ethtool_set_plca_cfg(struct phy_device *phydev,
@@ -1875,6 +1979,8 @@ int phy_ethtool_set_plca_cfg(struct phy_device *phydev,
 			     struct netlink_ext_ack *extack);
 int phy_ethtool_get_plca_status(struct phy_device *phydev,
 				struct phy_plca_status *plca_st);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline int phy_package_read(struct phy_device *phydev, u32 regnum)
 {

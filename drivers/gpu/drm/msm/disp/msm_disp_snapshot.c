@@ -129,9 +129,12 @@ void msm_disp_snapshot_destroy(struct drm_device *drm_dev)
 	}
 
 	priv = drm_dev->dev_private;
+<<<<<<< HEAD
 	if (!priv->kms)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kms = priv->kms;
 
 	if (kms->dump_worker)

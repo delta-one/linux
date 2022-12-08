@@ -163,7 +163,11 @@ static int UVERBS_HANDLER(UVERBS_METHOD_QP_CREATE)(
 					UVERBS_ATTR_CREATE_QP_SRQ_HANDLE))
 				return -EINVAL;
 
+<<<<<<< HEAD
 			/* send_cq is optional */
+=======
+			/* send_cq is optinal */
+>>>>>>> b7ba80a49124 (Commit)
 			if (cap.max_send_wr) {
 				send_cq = uverbs_attr_get_obj(attrs,
 					UVERBS_ATTR_CREATE_QP_SEND_CQ_HANDLE);

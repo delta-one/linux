@@ -12,6 +12,10 @@
 #include <linux/ipv6.h>
 #include <linux/inetdevice.h>
 #include <linux/sysfs.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/log2.h>
 #ifdef CONFIG_QLCNIC_HWMON
 #include <linux/hwmon.h>

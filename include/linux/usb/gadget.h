@@ -15,7 +15,10 @@
 #ifndef __LINUX_USB_GADGET_H
 #define __LINUX_USB_GADGET_H
 
+<<<<<<< HEAD
 #include <linux/configfs.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/device.h>
 #include <linux/errno.h>
 #include <linux/init.h>
@@ -822,6 +825,7 @@ int usb_gadget_get_string(const struct usb_gadget_strings *table, int id, u8 *bu
 /* check if the given language identifier is valid */
 bool usb_validate_langid(u16 langid);
 
+<<<<<<< HEAD
 struct gadget_string {
 	struct config_item item;
 	struct list_head list;
@@ -832,6 +836,8 @@ struct gadget_string {
 #define to_gadget_string(str_item)\
 container_of(str_item, struct gadget_string, item)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*-------------------------------------------------------------------------*/
 
 /* utility to simplify managing config descriptors */

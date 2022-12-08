@@ -12,7 +12,10 @@
 
 #include <linux/mm.h>
 #include <linux/highmem.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/sched.h>
 #include <linux/sched/task.h>
@@ -259,7 +262,11 @@ static bool enable_checks __initdata = true;
 
 static int __init parse_hardened_usercopy(char *str)
 {
+<<<<<<< HEAD
 	if (kstrtobool(str, &enable_checks))
+=======
+	if (strtobool(str, &enable_checks))
+>>>>>>> b7ba80a49124 (Commit)
 		pr_warn("Invalid option string for hardened_usercopy: '%s'\n",
 			str);
 	return 1;

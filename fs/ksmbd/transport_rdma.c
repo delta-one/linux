@@ -32,7 +32,11 @@
 /* SMB_DIRECT negotiation timeout in seconds */
 #define SMB_DIRECT_NEGOTIATE_TIMEOUT		120
 
+<<<<<<< HEAD
 #define SMB_DIRECT_MAX_SEND_SGES		6
+=======
+#define SMB_DIRECT_MAX_SEND_SGES		8
+>>>>>>> b7ba80a49124 (Commit)
 #define SMB_DIRECT_MAX_RECV_SGES		1
 
 /*
@@ -62,13 +66,21 @@ static int smb_direct_receive_credit_max = 255;
 static int smb_direct_send_credit_target = 255;
 
 /* The maximum single message size can be sent to remote peer */
+<<<<<<< HEAD
 static int smb_direct_max_send_size = 1364;
+=======
+static int smb_direct_max_send_size = 8192;
+>>>>>>> b7ba80a49124 (Commit)
 
 /*  The maximum fragmented upper-layer payload receive size supported */
 static int smb_direct_max_fragmented_recv_size = 1024 * 1024;
 
 /*  The maximum single-message size which can be received */
+<<<<<<< HEAD
 static int smb_direct_max_receive_size = 1364;
+=======
+static int smb_direct_max_receive_size = 8192;
+>>>>>>> b7ba80a49124 (Commit)
 
 static int smb_direct_max_read_write_size = SMBD_DEFAULT_IOSIZE;
 
@@ -670,7 +682,11 @@ static int smb_direct_post_recv(struct smb_direct_transport *t,
 }
 
 static int smb_direct_read(struct ksmbd_transport *t, char *buf,
+<<<<<<< HEAD
 			   unsigned int size, int unused)
+=======
+			   unsigned int size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct smb_direct_recvmsg *recvmsg;
 	struct smb_direct_data_transfer *data_transfer;
@@ -1527,8 +1543,11 @@ static int smb_direct_cm_handler(struct rdma_cm_id *cm_id,
 	}
 	case RDMA_CM_EVENT_DEVICE_REMOVAL:
 	case RDMA_CM_EVENT_DISCONNECTED: {
+<<<<<<< HEAD
 		ib_drain_qp(t->qp);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		t->status = SMB_DIRECT_CS_DISCONNECTED;
 		wake_up_interruptible(&t->wait_status);
 		wake_up_interruptible(&t->wait_reassembly_queue);

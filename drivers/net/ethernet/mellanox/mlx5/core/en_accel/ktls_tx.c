@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB
 // Copyright (c) 2019 Mellanox Technologies.
 
+<<<<<<< HEAD
 #include <linux/debugfs.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "en_accel/ktls.h"
 #include "en_accel/ktls_txrx.h"
 #include "en_accel/ktls_utils.h"
@@ -33,7 +36,11 @@ u16 mlx5e_ktls_get_stop_room(struct mlx5_core_dev *mdev, struct mlx5e_params *pa
 
 	num_dumps = mlx5e_ktls_dumps_num_wqes(params, MAX_SKB_FRAGS, TLS_MAX_PAYLOAD_SIZE);
 
+<<<<<<< HEAD
 	stop_room += mlx5e_stop_room_for_wqe(mdev, MLX5E_TLS_SET_STATIC_PARAMS_WQEBBS);
+=======
+	stop_room += mlx5e_stop_room_for_wqe(mdev, MLX5E_TRANSPORT_SET_STATIC_PARAMS_WQEBBS);
+>>>>>>> b7ba80a49124 (Commit)
 	stop_room += mlx5e_stop_room_for_wqe(mdev, MLX5E_TLS_SET_PROGRESS_PARAMS_WQEBBS);
 	stop_room += num_dumps * mlx5e_stop_room_for_wqe(mdev, MLX5E_KTLS_DUMP_WQEBBS);
 	stop_room += 1; /* fence nop */
@@ -94,11 +101,19 @@ struct mlx5e_ktls_offload_context_tx {
 	bool ctx_post_pending;
 	/* control / resync */
 	struct list_head list_node; /* member of the pool */
+<<<<<<< HEAD
 	union mlx5e_crypto_info crypto_info;
 	struct tls_offload_context_tx *tx_ctx;
 	struct mlx5_core_dev *mdev;
 	struct mlx5e_tls_sw_stats *sw_stats;
 	struct mlx5_crypto_dek *dek;
+=======
+	struct tls12_crypto_info_aes_gcm_128 crypto_info;
+	struct tls_offload_context_tx *tx_ctx;
+	struct mlx5_core_dev *mdev;
+	struct mlx5e_tls_sw_stats *sw_stats;
+	u32 key_id;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 create_err : 1;
 };
 
@@ -126,8 +141,15 @@ mlx5e_get_ktls_tx_priv_ctx(struct tls_context *tls_ctx)
 /* struct for callback API management */
 struct mlx5e_async_ctx {
 	struct mlx5_async_work context;
+<<<<<<< HEAD
 	struct mlx5_async_ctx *async_ctx;
 	struct mlx5e_ktls_offload_context_tx *priv_tx;
+=======
+	struct mlx5_async_ctx async_ctx;
+	struct work_struct work;
+	struct mlx5e_ktls_offload_context_tx *priv_tx;
+	struct completion complete;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 	union {
 		u32 out_create[MLX5_ST_SZ_DW(create_tis_out)];
@@ -135,6 +157,7 @@ struct mlx5e_async_ctx {
 	};
 };
 
+<<<<<<< HEAD
 struct mlx5e_bulk_async_ctx {
 	struct mlx5_async_ctx async_ctx;
 	DECLARE_FLEX_ARRAY(struct mlx5e_async_ctx, arr);
@@ -155,13 +178,42 @@ static struct mlx5e_bulk_async_ctx *mlx5e_bulk_async_init(struct mlx5_core_dev *
 
 	for (i = 0; i < n; i++)
 		bulk_async->arr[i].async_ctx = &bulk_async->async_ctx;
+=======
+static struct mlx5e_async_ctx *mlx5e_bulk_async_init(struct mlx5_core_dev *mdev, int n)
+{
+	struct mlx5e_async_ctx *bulk_async;
+	int i;
+
+	bulk_async = kvcalloc(n, sizeof(struct mlx5e_async_ctx), GFP_KERNEL);
+	if (!bulk_async)
+		return NULL;
+
+	for (i = 0; i < n; i++) {
+		struct mlx5e_async_ctx *async = &bulk_async[i];
+
+		mlx5_cmd_init_async_ctx(mdev, &async->async_ctx);
+		init_completion(&async->complete);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return bulk_async;
 }
 
+<<<<<<< HEAD
 static void mlx5e_bulk_async_cleanup(struct mlx5e_bulk_async_ctx *bulk_async)
 {
 	mlx5_cmd_cleanup_async_ctx(&bulk_async->async_ctx);
+=======
+static void mlx5e_bulk_async_cleanup(struct mlx5e_async_ctx *bulk_async, int n)
+{
+	int i;
+
+	for (i = 0; i < n; i++) {
+		struct mlx5e_async_ctx *async = &bulk_async[i];
+
+		mlx5_cmd_cleanup_async_ctx(&async->async_ctx);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	kvfree(bulk_async);
 }
 
@@ -174,10 +226,19 @@ static void create_tis_callback(int status, struct mlx5_async_work *context)
 	if (status) {
 		async->err = status;
 		priv_tx->create_err = 1;
+<<<<<<< HEAD
 		return;
 	}
 
 	priv_tx->tisn = MLX5_GET(create_tis_out, async->out_create, tisn);
+=======
+		goto out;
+	}
+
+	priv_tx->tisn = MLX5_GET(create_tis_out, async->out_create, tisn);
+out:
+	complete(&async->complete);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void destroy_tis_callback(int status, struct mlx5_async_work *context)
@@ -186,6 +247,10 @@ static void destroy_tis_callback(int status, struct mlx5_async_work *context)
 		container_of(context, struct mlx5e_async_ctx, context);
 	struct mlx5e_ktls_offload_context_tx *priv_tx = async->priv_tx;
 
+<<<<<<< HEAD
+=======
+	complete(&async->complete);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(priv_tx);
 }
 
@@ -209,7 +274,11 @@ mlx5e_tls_priv_tx_init(struct mlx5_core_dev *mdev, struct mlx5e_tls_sw_stats *sw
 			goto err_out;
 	} else {
 		async->priv_tx = priv_tx;
+<<<<<<< HEAD
 		err = mlx5e_ktls_create_tis_cb(mdev, async->async_ctx,
+=======
+		err = mlx5e_ktls_create_tis_cb(mdev, &async->async_ctx,
+>>>>>>> b7ba80a49124 (Commit)
 					       async->out_create, sizeof(async->out_create),
 					       create_tis_callback, &async->context);
 		if (err)
@@ -227,12 +296,20 @@ static void mlx5e_tls_priv_tx_cleanup(struct mlx5e_ktls_offload_context_tx *priv
 				      struct mlx5e_async_ctx *async)
 {
 	if (priv_tx->create_err) {
+<<<<<<< HEAD
+=======
+		complete(&async->complete);
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(priv_tx);
 		return;
 	}
 	async->priv_tx = priv_tx;
 	mlx5e_ktls_destroy_tis_cb(priv_tx->mdev, priv_tx->tisn,
+<<<<<<< HEAD
 				  async->async_ctx,
+=======
+				  &async->async_ctx,
+>>>>>>> b7ba80a49124 (Commit)
 				  async->out_destroy, sizeof(async->out_destroy),
 				  destroy_tis_callback, &async->context);
 }
@@ -241,7 +318,11 @@ static void mlx5e_tls_priv_tx_list_cleanup(struct mlx5_core_dev *mdev,
 					   struct list_head *list, int size)
 {
 	struct mlx5e_ktls_offload_context_tx *obj, *n;
+<<<<<<< HEAD
 	struct mlx5e_bulk_async_ctx *bulk_async;
+=======
+	struct mlx5e_async_ctx *bulk_async;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	bulk_async = mlx5e_bulk_async_init(mdev, size);
@@ -250,11 +331,24 @@ static void mlx5e_tls_priv_tx_list_cleanup(struct mlx5_core_dev *mdev,
 
 	i = 0;
 	list_for_each_entry_safe(obj, n, list, list_node) {
+<<<<<<< HEAD
 		mlx5e_tls_priv_tx_cleanup(obj, &bulk_async->arr[i]);
 		i++;
 	}
 
 	mlx5e_bulk_async_cleanup(bulk_async);
+=======
+		mlx5e_tls_priv_tx_cleanup(obj, &bulk_async[i]);
+		i++;
+	}
+
+	for (i = 0; i < size; i++) {
+		struct mlx5e_async_ctx *async = &bulk_async[i];
+
+		wait_for_completion(&async->complete);
+	}
+	mlx5e_bulk_async_cleanup(bulk_async, size);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Recycling pool API */
@@ -280,7 +374,11 @@ static void create_work(struct work_struct *work)
 	struct mlx5e_tls_tx_pool *pool =
 		container_of(work, struct mlx5e_tls_tx_pool, create_work);
 	struct mlx5e_ktls_offload_context_tx *obj;
+<<<<<<< HEAD
 	struct mlx5e_bulk_async_ctx *bulk_async;
+=======
+	struct mlx5e_async_ctx *bulk_async;
+>>>>>>> b7ba80a49124 (Commit)
 	LIST_HEAD(local_list);
 	int i, j, err = 0;
 
@@ -289,7 +387,11 @@ static void create_work(struct work_struct *work)
 		return;
 
 	for (i = 0; i < MLX5E_TLS_TX_POOL_BULK; i++) {
+<<<<<<< HEAD
 		obj = mlx5e_tls_priv_tx_init(pool->mdev, pool->sw_stats, &bulk_async->arr[i]);
+=======
+		obj = mlx5e_tls_priv_tx_init(pool->mdev, pool->sw_stats, &bulk_async[i]);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(obj)) {
 			err = PTR_ERR(obj);
 			break;
@@ -298,13 +400,23 @@ static void create_work(struct work_struct *work)
 	}
 
 	for (j = 0; j < i; j++) {
+<<<<<<< HEAD
 		struct mlx5e_async_ctx *async = &bulk_async->arr[j];
 
+=======
+		struct mlx5e_async_ctx *async = &bulk_async[j];
+
+		wait_for_completion(&async->complete);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!err && async->err)
 			err = async->err;
 	}
 	atomic64_add(i, &pool->sw_stats->tx_tls_pool_alloc);
+<<<<<<< HEAD
 	mlx5e_bulk_async_cleanup(bulk_async);
+=======
+	mlx5e_bulk_async_cleanup(bulk_async, MLX5E_TLS_TX_POOL_BULK);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto err_out;
 
@@ -457,7 +569,10 @@ int mlx5e_ktls_add_tx(struct net_device *netdev, struct sock *sk,
 	struct mlx5e_ktls_offload_context_tx *priv_tx;
 	struct mlx5e_tls_tx_pool *pool;
 	struct tls_context *tls_ctx;
+<<<<<<< HEAD
 	struct mlx5_crypto_dek *dek;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct mlx5e_priv *priv;
 	int err;
 
@@ -469,6 +584,7 @@ int mlx5e_ktls_add_tx(struct net_device *netdev, struct sock *sk,
 	if (IS_ERR(priv_tx))
 		return PTR_ERR(priv_tx);
 
+<<<<<<< HEAD
 	switch (crypto_info->cipher_type) {
 	case TLS_CIPHER_AES_GCM_128:
 		priv_tx->crypto_info.crypto_info_128 =
@@ -493,6 +609,15 @@ int mlx5e_ktls_add_tx(struct net_device *netdev, struct sock *sk,
 
 	priv_tx->dek = dek;
 	priv_tx->expected_seq = start_offload_tcp_sn;
+=======
+	err = mlx5_ktls_create_key(pool->mdev, crypto_info, &priv_tx->key_id);
+	if (err)
+		goto err_create_key;
+
+	priv_tx->expected_seq = start_offload_tcp_sn;
+	priv_tx->crypto_info  =
+		*(struct tls12_crypto_info_aes_gcm_128 *)crypto_info;
+>>>>>>> b7ba80a49124 (Commit)
 	priv_tx->tx_ctx = tls_offload_ctx_tx(tls_ctx);
 
 	mlx5e_set_ktls_tx_priv_ctx(tls_ctx, priv_tx);
@@ -502,7 +627,11 @@ int mlx5e_ktls_add_tx(struct net_device *netdev, struct sock *sk,
 
 	return 0;
 
+<<<<<<< HEAD
 err_pool_push:
+=======
+err_create_key:
+>>>>>>> b7ba80a49124 (Commit)
 	pool_push(pool, priv_tx);
 	return err;
 }
@@ -518,7 +647,11 @@ void mlx5e_ktls_del_tx(struct net_device *netdev, struct tls_context *tls_ctx)
 	pool = priv->tls->tx_pool;
 
 	atomic64_inc(&priv_tx->sw_stats->tx_tls_del);
+<<<<<<< HEAD
 	mlx5_ktls_destroy_key(priv->tls->dek_pool, priv_tx->dek);
+=======
+	mlx5_ktls_destroy_key(priv_tx->mdev, priv_tx->key_id);
+>>>>>>> b7ba80a49124 (Commit)
 	pool_push(pool, priv_tx);
 }
 
@@ -550,6 +683,7 @@ post_static_params(struct mlx5e_txqsq *sq,
 		   struct mlx5e_ktls_offload_context_tx *priv_tx,
 		   bool fence)
 {
+<<<<<<< HEAD
 	struct mlx5e_set_tls_static_params_wqe *wqe;
 	u16 pi, num_wqebbs;
 
@@ -560,6 +694,17 @@ post_static_params(struct mlx5e_txqsq *sq,
 				       priv_tx->tisn,
 				       mlx5_crypto_dek_get_id(priv_tx->dek),
 				       0, fence, TLS_OFFLOAD_CTX_DIR_TX);
+=======
+	struct mlx5e_set_transport_static_params_wqe *wqe;
+	u16 pi, num_wqebbs;
+
+	num_wqebbs = MLX5E_TRANSPORT_SET_STATIC_PARAMS_WQEBBS;
+	pi = mlx5e_txqsq_get_next_pi(sq, num_wqebbs);
+	wqe = MLX5E_TRANSPORT_FETCH_SET_STATIC_PARAMS_WQE(sq, pi);
+	mlx5e_ktls_build_static_params(wqe, sq->pc, sq->sqn, &priv_tx->crypto_info,
+				       priv_tx->tisn, priv_tx->key_id, 0, fence,
+				       TLS_OFFLOAD_CTX_DIR_TX);
+>>>>>>> b7ba80a49124 (Commit)
 	tx_fill_wi(sq, pi, num_wqebbs, 0, NULL);
 	sq->pc += num_wqebbs;
 }
@@ -678,11 +823,16 @@ tx_post_resync_params(struct mlx5e_txqsq *sq,
 		      struct mlx5e_ktls_offload_context_tx *priv_tx,
 		      u64 rcd_sn)
 {
+<<<<<<< HEAD
+=======
+	struct tls12_crypto_info_aes_gcm_128 *info = &priv_tx->crypto_info;
+>>>>>>> b7ba80a49124 (Commit)
 	__be64 rn_be = cpu_to_be64(rcd_sn);
 	bool skip_static_post;
 	u16 rec_seq_sz;
 	char *rec_seq;
 
+<<<<<<< HEAD
 	switch (priv_tx->crypto_info.crypto_info.cipher_type) {
 	case TLS_CIPHER_AES_GCM_128: {
 		struct tls12_crypto_info_aes_gcm_128 *info = &priv_tx->crypto_info.crypto_info_128;
@@ -703,6 +853,10 @@ tx_post_resync_params(struct mlx5e_txqsq *sq,
 			  priv_tx->crypto_info.crypto_info.cipher_type);
 		return;
 	}
+=======
+	rec_seq = info->rec_seq;
+	rec_seq_sz = sizeof(info->rec_seq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	skip_static_post = !memcmp(rec_seq, &rn_be, rec_seq_sz);
 	if (!skip_static_post)
@@ -894,6 +1048,7 @@ err_out:
 	return false;
 }
 
+<<<<<<< HEAD
 static void mlx5e_tls_tx_debugfs_init(struct mlx5e_tls *tls,
 				      struct dentry *dfs_root)
 {
@@ -910,6 +1065,10 @@ int mlx5e_ktls_init_tx(struct mlx5e_priv *priv)
 {
 	struct mlx5e_tls *tls = priv->tls;
 
+=======
+int mlx5e_ktls_init_tx(struct mlx5e_priv *priv)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	if (!mlx5e_is_ktls_tx(priv->mdev))
 		return 0;
 
@@ -917,8 +1076,11 @@ int mlx5e_ktls_init_tx(struct mlx5e_priv *priv)
 	if (!priv->tls->tx_pool)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	mlx5e_tls_tx_debugfs_init(tls, tls->debugfs.dfs);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -927,9 +1089,12 @@ void mlx5e_ktls_cleanup_tx(struct mlx5e_priv *priv)
 	if (!mlx5e_is_ktls_tx(priv->mdev))
 		return;
 
+<<<<<<< HEAD
 	debugfs_remove_recursive(priv->tls->debugfs.dfs_tx);
 	priv->tls->debugfs.dfs_tx = NULL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5e_tls_tx_pool_cleanup(priv->tls->tx_pool);
 	priv->tls->tx_pool = NULL;
 }

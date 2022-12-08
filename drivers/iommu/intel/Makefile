@@ -6,4 +6,7 @@ obj-$(CONFIG_DMAR_PERF) += perf.o
 obj-$(CONFIG_INTEL_IOMMU_DEBUGFS) += debugfs.o
 obj-$(CONFIG_INTEL_IOMMU_SVM) += svm.o
 obj-$(CONFIG_IRQ_REMAP) += irq_remapping.o
+<<<<<<< HEAD
 obj-$(CONFIG_INTEL_IOMMU_PERF_EVENTS) += perfmon.o
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -820,6 +820,14 @@ static int alps_probe(struct hid_device *hdev, const struct hid_device_id *id)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void alps_remove(struct hid_device *hdev)
+{
+	hid_hw_stop(hdev);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct hid_device_id alps_id[] = {
 	{ HID_DEVICE(HID_BUS_ANY, HID_GROUP_ANY,
 		USB_VENDOR_ID_ALPS_JP, HID_DEVICE_ID_ALPS_U1_DUAL) },
@@ -837,6 +845,10 @@ static struct hid_driver alps_driver = {
 	.name = "hid-alps",
 	.id_table		= alps_id,
 	.probe			= alps_probe,
+<<<<<<< HEAD
+=======
+	.remove			= alps_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.raw_event		= alps_raw_event,
 	.input_mapping		= alps_input_mapping,
 	.input_configured	= alps_input_configured,

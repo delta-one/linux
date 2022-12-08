@@ -88,7 +88,10 @@ int nf_conntrack_udp_packet(struct nf_conn *ct,
 			    const struct nf_hook_state *state)
 {
 	unsigned int *timeouts;
+<<<<<<< HEAD
 	unsigned long status;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (udp_error(skb, dataoff, state))
 		return -NF_ACCEPT;
@@ -97,27 +100,43 @@ int nf_conntrack_udp_packet(struct nf_conn *ct,
 	if (!timeouts)
 		timeouts = udp_get_timeouts(nf_ct_net(ct));
 
+<<<<<<< HEAD
 	status = READ_ONCE(ct->status);
 	if ((status & IPS_CONFIRMED) == 0)
+=======
+	if (!nf_ct_is_confirmed(ct))
+>>>>>>> b7ba80a49124 (Commit)
 		ct->proto.udp.stream_ts = 2 * HZ + jiffies;
 
 	/* If we've seen traffic both ways, this is some kind of UDP
 	 * stream. Set Assured.
 	 */
+<<<<<<< HEAD
 	if (status & IPS_SEEN_REPLY) {
+=======
+	if (test_bit(IPS_SEEN_REPLY_BIT, &ct->status)) {
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned long extra = timeouts[UDP_CT_UNREPLIED];
 		bool stream = false;
 
 		/* Still active after two seconds? Extend timeout. */
 		if (time_after(jiffies, ct->proto.udp.stream_ts)) {
 			extra = timeouts[UDP_CT_REPLIED];
+<<<<<<< HEAD
 			stream = (status & IPS_ASSURED) == 0;
+=======
+			stream = true;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		nf_ct_refresh_acct(ct, ctinfo, skb, extra);
 
 		/* never set ASSURED for IPS_NAT_CLASH, they time out soon */
+<<<<<<< HEAD
 		if (unlikely((status & IPS_NAT_CLASH)))
+=======
+		if (unlikely((ct->status & IPS_NAT_CLASH)))
+>>>>>>> b7ba80a49124 (Commit)
 			return NF_ACCEPT;
 
 		/* Also, more likely to be important, and not a probe */

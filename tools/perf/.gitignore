@@ -4,7 +4,10 @@ PERF-GUI-VARS
 PERF-VERSION-FILE
 FEATURE-DUMP
 perf
+<<<<<<< HEAD
 !include/perf/
+=======
+>>>>>>> b7ba80a49124 (Commit)
 perf-read-vdso32
 perf-read-vdsox32
 perf-help
@@ -16,14 +19,22 @@ perf*.1
 perf*.xml
 perf*.html
 common-cmds.h
+<<<<<<< HEAD
 perf*.data
 perf*.data.old
+=======
+perf.data
+perf.data.old
+>>>>>>> b7ba80a49124 (Commit)
 output.svg
 perf-archive
 perf-iostat
 tags
 TAGS
+<<<<<<< HEAD
 stats-*.csv
+=======
+>>>>>>> b7ba80a49124 (Commit)
 cscope*
 config.mak
 config.mak.autogen
@@ -31,13 +42,17 @@ config.mak.autogen
 *-flex.*
 *.pyc
 *.pyo
+<<<<<<< HEAD
 *.stdout
+=======
+>>>>>>> b7ba80a49124 (Commit)
 .config-detected
 util/intel-pt-decoder/inat-tables.c
 arch/*/include/generated/
 trace/beauty/generated/
 pmu-events/pmu-events.c
 pmu-events/jevents
+<<<<<<< HEAD
 pmu-events/metric_test.log
 feature/
 libapi/
@@ -48,4 +63,10 @@ libsymbol/
 libtraceevent/
 libtraceevent_plugins/
 fixdep
+=======
+feature/
+libbpf/
+fixdep
+libtraceevent-dynamic-list
+>>>>>>> b7ba80a49124 (Commit)
 Documentation/doc.dep

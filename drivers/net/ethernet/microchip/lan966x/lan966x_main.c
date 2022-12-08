@@ -7,6 +7,10 @@
 #include <linux/ip.h>
 #include <linux/of_platform.h>
 #include <linux/of_net.h>
+<<<<<<< HEAD
+=======
+#include <linux/packing.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/phy/phy.h>
 #include <linux/reset.h>
 #include <net/addrconf.h>
@@ -46,9 +50,12 @@ static const struct lan966x_main_io_resource lan966x_main_iomap[] =  {
 	{ TARGET_PTP,                    0xc000, 1 }, /* 0xe200c000 */
 	{ TARGET_CHIP_TOP,              0x10000, 1 }, /* 0xe2010000 */
 	{ TARGET_REW,                   0x14000, 1 }, /* 0xe2014000 */
+<<<<<<< HEAD
 	{ TARGET_VCAP,                  0x18000, 1 }, /* 0xe2018000 */
 	{ TARGET_VCAP + 1,              0x20000, 1 }, /* 0xe2020000 */
 	{ TARGET_VCAP + 2,              0x24000, 1 }, /* 0xe2024000 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ TARGET_SYS,                   0x28000, 1 }, /* 0xe2028000 */
 	{ TARGET_DEV,                   0x34000, 1 }, /* 0xe2034000 */
 	{ TARGET_DEV +  1,              0x38000, 1 }, /* 0xe2038000 */
@@ -304,6 +311,7 @@ err:
 	return NETDEV_TX_BUSY;
 }
 
+<<<<<<< HEAD
 static void lan966x_ifh_set(u8 *ifh, size_t val, size_t pos, size_t length)
 {
 	int i = 0;
@@ -340,25 +348,67 @@ static void lan966x_ifh_set_qos_class(void *ifh, u64 qos)
 static void lan966x_ifh_set_ipv(void *ifh, u64 ipv)
 {
 	lan966x_ifh_set(ifh, ipv, IFH_POS_IPV, IFH_WID_IPV);
+=======
+static void lan966x_ifh_set_bypass(void *ifh, u64 bypass)
+{
+	packing(ifh, &bypass, IFH_POS_BYPASS + IFH_WID_BYPASS - 1,
+		IFH_POS_BYPASS, IFH_LEN * 4, PACK, 0);
+}
+
+static void lan966x_ifh_set_port(void *ifh, u64 bypass)
+{
+	packing(ifh, &bypass, IFH_POS_DSTS + IFH_WID_DSTS - 1,
+		IFH_POS_DSTS, IFH_LEN * 4, PACK, 0);
+}
+
+static void lan966x_ifh_set_qos_class(void *ifh, u64 bypass)
+{
+	packing(ifh, &bypass, IFH_POS_QOS_CLASS + IFH_WID_QOS_CLASS - 1,
+		IFH_POS_QOS_CLASS, IFH_LEN * 4, PACK, 0);
+}
+
+static void lan966x_ifh_set_ipv(void *ifh, u64 bypass)
+{
+	packing(ifh, &bypass, IFH_POS_IPV + IFH_WID_IPV - 1,
+		IFH_POS_IPV, IFH_LEN * 4, PACK, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void lan966x_ifh_set_vid(void *ifh, u64 vid)
 {
+<<<<<<< HEAD
 	lan966x_ifh_set(ifh, vid, IFH_POS_TCI, IFH_WID_TCI);
+=======
+	packing(ifh, &vid, IFH_POS_TCI + IFH_WID_TCI - 1,
+		IFH_POS_TCI, IFH_LEN * 4, PACK, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void lan966x_ifh_set_rew_op(void *ifh, u64 rew_op)
 {
+<<<<<<< HEAD
 	lan966x_ifh_set(ifh, rew_op, IFH_POS_REW_CMD, IFH_WID_REW_CMD);
+=======
+	packing(ifh, &rew_op, IFH_POS_REW_CMD + IFH_WID_REW_CMD - 1,
+		IFH_POS_REW_CMD, IFH_LEN * 4, PACK, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void lan966x_ifh_set_timestamp(void *ifh, u64 timestamp)
 {
+<<<<<<< HEAD
 	lan966x_ifh_set(ifh, timestamp, IFH_POS_TIMESTAMP, IFH_WID_TIMESTAMP);
 }
 
 static netdev_tx_t lan966x_port_xmit(struct sk_buff *skb,
 				     struct net_device *dev)
+=======
+	packing(ifh, &timestamp, IFH_POS_TIMESTAMP + IFH_WID_TIMESTAMP - 1,
+		IFH_POS_TIMESTAMP, IFH_LEN * 4, PACK, 0);
+}
+
+static int lan966x_port_xmit(struct sk_buff *skb, struct net_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lan966x_port *port = netdev_priv(dev);
 	struct lan966x *lan966x = port->lan966x;
@@ -399,7 +449,11 @@ static int lan966x_port_change_mtu(struct net_device *dev, int new_mtu)
 	int old_mtu = dev->mtu;
 	int err;
 
+<<<<<<< HEAD
 	lan_wr(DEV_MAC_MAXLEN_CFG_MAX_LEN_SET(LAN966X_HW_MTU(new_mtu)),
+=======
+	lan_wr(DEV_MAC_MAXLEN_CFG_MAX_LEN_SET(new_mtu),
+>>>>>>> b7ba80a49124 (Commit)
 	       lan966x, DEV_MAC_MAXLEN_CFG(port->chip_port));
 	dev->mtu = new_mtu;
 
@@ -408,7 +462,11 @@ static int lan966x_port_change_mtu(struct net_device *dev, int new_mtu)
 
 	err = lan966x_fdma_change_mtu(lan966x);
 	if (err) {
+<<<<<<< HEAD
 		lan_wr(DEV_MAC_MAXLEN_CFG_MAX_LEN_SET(LAN966X_HW_MTU(old_mtu)),
+=======
+		lan_wr(DEV_MAC_MAXLEN_CFG_MAX_LEN_SET(old_mtu),
+>>>>>>> b7ba80a49124 (Commit)
 		       lan966x, DEV_MAC_MAXLEN_CFG(port->chip_port));
 		dev->mtu = old_mtu;
 	}
@@ -453,6 +511,7 @@ static int lan966x_port_ioctl(struct net_device *dev, struct ifreq *ifr,
 			      int cmd)
 {
 	struct lan966x_port *port = netdev_priv(dev);
+<<<<<<< HEAD
 	int err;
 
 	if (cmd == SIOCSHWTSTAMP) {
@@ -460,15 +519,21 @@ static int lan966x_port_ioctl(struct net_device *dev, struct ifreq *ifr,
 		if (err)
 			return err;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!phy_has_hwtstamp(dev->phydev) && port->lan966x->ptp) {
 		switch (cmd) {
 		case SIOCSHWTSTAMP:
+<<<<<<< HEAD
 			err = lan966x_ptp_hwtstamp_set(port, ifr);
 			if (err)
 				lan966x_ptp_del_traps(port);
 
 			return err;
+=======
+			return lan966x_ptp_hwtstamp_set(port, ifr);
+>>>>>>> b7ba80a49124 (Commit)
 		case SIOCGHWTSTAMP:
 			return lan966x_ptp_hwtstamp_get(port, ifr);
 		}
@@ -477,11 +542,15 @@ static int lan966x_port_ioctl(struct net_device *dev, struct ifreq *ifr,
 	if (!dev->phydev)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	err = phy_mii_ioctl(dev->phydev, ifr, cmd);
 	if (err && cmd == SIOCSHWTSTAMP)
 		lan966x_ptp_del_traps(port);
 
 	return err;
+=======
+	return phy_mii_ioctl(dev->phydev, ifr, cmd);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct net_device_ops lan966x_port_netdev_ops = {
@@ -495,9 +564,12 @@ static const struct net_device_ops lan966x_port_netdev_ops = {
 	.ndo_set_mac_address		= lan966x_port_set_mac_address,
 	.ndo_get_port_parent_id		= lan966x_port_get_parent_id,
 	.ndo_eth_ioctl			= lan966x_port_ioctl,
+<<<<<<< HEAD
 	.ndo_setup_tc			= lan966x_tc_setup,
 	.ndo_bpf			= lan966x_xdp,
 	.ndo_xdp_xmit			= lan966x_xdp_xmit,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 bool lan966x_netdevice_check(const struct net_device *dev)
@@ -592,6 +664,7 @@ static int lan966x_rx_frame_word(struct lan966x *lan966x, u8 grp, u32 *rval)
 	}
 }
 
+<<<<<<< HEAD
 static u64 lan966x_ifh_get(u8 *ifh, size_t pos, size_t length)
 {
 	u64 val = 0;
@@ -614,16 +687,32 @@ static u64 lan966x_ifh_get(u8 *ifh, size_t pos, size_t length)
 void lan966x_ifh_get_src_port(void *ifh, u64 *src_port)
 {
 	*src_port = lan966x_ifh_get(ifh, IFH_POS_SRCPORT, IFH_WID_SRCPORT);
+=======
+void lan966x_ifh_get_src_port(void *ifh, u64 *src_port)
+{
+	packing(ifh, src_port, IFH_POS_SRCPORT + IFH_WID_SRCPORT - 1,
+		IFH_POS_SRCPORT, IFH_LEN * 4, UNPACK, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void lan966x_ifh_get_len(void *ifh, u64 *len)
 {
+<<<<<<< HEAD
 	*len = lan966x_ifh_get(ifh, IFH_POS_LEN, IFH_WID_LEN);
+=======
+	packing(ifh, len, IFH_POS_LEN + IFH_WID_LEN - 1,
+		IFH_POS_LEN, IFH_LEN * 4, UNPACK, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void lan966x_ifh_get_timestamp(void *ifh, u64 *timestamp)
 {
+<<<<<<< HEAD
 	*timestamp = lan966x_ifh_get(ifh, IFH_POS_TIMESTAMP, IFH_WID_TIMESTAMP);
+=======
+	packing(ifh, timestamp, IFH_POS_TIMESTAMP + IFH_WID_TIMESTAMP - 1,
+		IFH_POS_TIMESTAMP, IFH_LEN * 4, UNPACK, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static irqreturn_t lan966x_xtr_irq_handler(int irq, void *args)
@@ -694,7 +783,11 @@ static irqreturn_t lan966x_xtr_irq_handler(int irq, void *args)
 			*buf = val;
 		}
 
+<<<<<<< HEAD
 		lan966x_ptp_rxtstamp(lan966x, skb, src_port, timestamp);
+=======
+		lan966x_ptp_rxtstamp(lan966x, skb, timestamp);
+>>>>>>> b7ba80a49124 (Commit)
 		skb->protocol = eth_type_trans(skb, dev);
 
 		if (lan966x->bridge_mask & BIT(src_port)) {
@@ -740,7 +833,10 @@ static void lan966x_cleanup_ports(struct lan966x *lan966x)
 		if (port->dev)
 			unregister_netdev(port->dev);
 
+<<<<<<< HEAD
 		lan966x_xdp_port_deinit(port);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (lan966x->fdma && lan966x->fdma_ndev == port->dev)
 			lan966x_fdma_netdev_deinit(lan966x, port->dev);
 
@@ -787,8 +883,12 @@ static int lan966x_probe_port(struct lan966x *lan966x, u32 p,
 		return -EINVAL;
 
 	dev = devm_alloc_etherdev_mqs(lan966x->dev,
+<<<<<<< HEAD
 				      sizeof(struct lan966x_port),
 				      NUM_PRIO_QUEUES, 1);
+=======
+				      sizeof(struct lan966x_port), 8, 1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!dev)
 		return -ENOMEM;
 
@@ -804,10 +904,15 @@ static int lan966x_probe_port(struct lan966x *lan966x, u32 p,
 	dev->netdev_ops = &lan966x_port_netdev_ops;
 	dev->ethtool_ops = &lan966x_ethtool_ops;
 	dev->features |= NETIF_F_HW_VLAN_CTAG_TX |
+<<<<<<< HEAD
 			 NETIF_F_HW_VLAN_STAG_TX |
 			 NETIF_F_HW_TC;
 	dev->hw_features |= NETIF_F_HW_TC;
 	dev->needed_headroom = IFH_LEN_BYTES;
+=======
+			 NETIF_F_HW_VLAN_STAG_TX;
+	dev->needed_headroom = IFH_LEN * sizeof(u32);
+>>>>>>> b7ba80a49124 (Commit)
 
 	eth_hw_addr_gen(dev, lan966x->base_mac, p + 1);
 
@@ -849,11 +954,14 @@ static int lan966x_probe_port(struct lan966x *lan966x, u32 p,
 
 	port->phylink = phylink;
 
+<<<<<<< HEAD
 	if (lan966x->fdma)
 		dev->xdp_features = NETDEV_XDP_ACT_BASIC |
 				    NETDEV_XDP_ACT_REDIRECT |
 				    NETDEV_XDP_ACT_NDO_XMIT;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = register_netdev(dev);
 	if (err) {
 		dev_err(lan966x->dev, "register_netdev failed\n");
@@ -1016,8 +1124,11 @@ static void lan966x_init(struct lan966x *lan966x)
 		lan966x, ANA_ANAINTR);
 
 	spin_lock_init(&lan966x->tx_lock);
+<<<<<<< HEAD
 
 	lan966x_taprio_init(lan966x);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int lan966x_ram_init(struct lan966x *lan966x)
@@ -1066,8 +1177,11 @@ static int lan966x_probe(struct platform_device *pdev)
 	platform_set_drvdata(pdev, lan966x);
 	lan966x->dev = &pdev->dev;
 
+<<<<<<< HEAD
 	lan966x->debugfs_root = debugfs_create_dir("lan966x", NULL);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!device_get_mac_address(&pdev->dev, mac_addr)) {
 		ether_addr_copy(lan966x->base_mac, mac_addr);
 	} else {
@@ -1076,6 +1190,14 @@ static int lan966x_probe(struct platform_device *pdev)
 		lan966x->base_mac[5] &= 0xf0;
 	}
 
+<<<<<<< HEAD
+=======
+	ports = device_get_named_child_node(&pdev->dev, "ethernet-ports");
+	if (!ports)
+		return dev_err_probe(&pdev->dev, -ENODEV,
+				     "no ethernet-ports child found\n");
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = lan966x_create_targets(pdev, lan966x);
 	if (err)
 		return dev_err_probe(&pdev->dev, err,
@@ -1153,11 +1275,14 @@ static int lan966x_probe(struct platform_device *pdev)
 		}
 	}
 
+<<<<<<< HEAD
 	ports = device_get_named_child_node(&pdev->dev, "ethernet-ports");
 	if (!ports)
 		return dev_err_probe(&pdev->dev, -ENODEV,
 				     "no ethernet-ports child found\n");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* init switch */
 	lan966x_init(lan966x);
 	lan966x_stats_init(lan966x);
@@ -1180,8 +1305,14 @@ static int lan966x_probe(struct platform_device *pdev)
 		lan966x->ports[p]->config.portmode = phy_mode;
 		lan966x->ports[p]->fwnode = fwnode_handle_get(portnp);
 
+<<<<<<< HEAD
 		serdes = devm_of_phy_optional_get(lan966x->dev,
 						  to_of_node(portnp), NULL);
+=======
+		serdes = devm_of_phy_get(lan966x->dev, to_of_node(portnp), NULL);
+		if (PTR_ERR(serdes) == -ENODEV)
+			serdes = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(serdes)) {
 			err = PTR_ERR(serdes);
 			goto cleanup_ports;
@@ -1189,6 +1320,7 @@ static int lan966x_probe(struct platform_device *pdev)
 		lan966x->ports[p]->serdes = serdes;
 
 		lan966x_port_init(lan966x->ports[p]);
+<<<<<<< HEAD
 		err = lan966x_xdp_port_init(lan966x->ports[p]);
 		if (err)
 			goto cleanup_ports;
@@ -1196,6 +1328,10 @@ static int lan966x_probe(struct platform_device *pdev)
 
 	fwnode_handle_put(ports);
 
+=======
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	lan966x_mdb_init(lan966x);
 	err = lan966x_fdb_init(lan966x);
 	if (err)
@@ -1209,6 +1345,7 @@ static int lan966x_probe(struct platform_device *pdev)
 	if (err)
 		goto cleanup_ptp;
 
+<<<<<<< HEAD
 	err = lan966x_vcap_init(lan966x);
 	if (err)
 		goto cleanup_fdma;
@@ -1218,6 +1355,10 @@ static int lan966x_probe(struct platform_device *pdev)
 cleanup_fdma:
 	lan966x_fdma_deinit(lan966x);
 
+=======
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 cleanup_ptp:
 	lan966x_ptp_deinit(lan966x);
 
@@ -1225,7 +1366,10 @@ cleanup_fdb:
 	lan966x_fdb_deinit(lan966x);
 
 cleanup_ports:
+<<<<<<< HEAD
 	fwnode_handle_put(ports);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	fwnode_handle_put(portnp);
 
 	lan966x_cleanup_ports(lan966x);
@@ -1241,8 +1385,11 @@ static int lan966x_remove(struct platform_device *pdev)
 {
 	struct lan966x *lan966x = platform_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	lan966x_taprio_deinit(lan966x);
 	lan966x_vcap_deinit(lan966x);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	lan966x_fdma_deinit(lan966x);
 	lan966x_cleanup_ports(lan966x);
 
@@ -1255,8 +1402,11 @@ static int lan966x_remove(struct platform_device *pdev)
 	lan966x_fdb_deinit(lan966x);
 	lan966x_ptp_deinit(lan966x);
 
+<<<<<<< HEAD
 	debugfs_remove_recursive(lan966x->debugfs_root);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

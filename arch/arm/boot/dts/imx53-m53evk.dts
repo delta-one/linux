@@ -52,13 +52,21 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&led_pin_gpio>;
 
+<<<<<<< HEAD
 		led-user1 {
+=======
+		user1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "user1";
 			gpios = <&gpio2 8 0>;
 			linux,default-trigger = "heartbeat";
 		};
 
+<<<<<<< HEAD
 		led-user2 {
+=======
+		user2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "user2";
 			gpios = <&gpio2 9 0>;
 			linux,default-trigger = "heartbeat";

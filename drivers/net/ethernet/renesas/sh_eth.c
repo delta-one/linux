@@ -2029,6 +2029,11 @@ static int sh_eth_phy_init(struct net_device *ndev)
 	if (mdp->cd->register_type != SH_ETH_REG_GIGABIT)
 		phy_set_max_speed(phydev, SPEED_100);
 
+<<<<<<< HEAD
+=======
+	/* Indicate that the MAC is responsible for managing PHY PM */
+	phydev->mac_managed_pm = true;
+>>>>>>> b7ba80a49124 (Commit)
 	phy_attached_info(phydev);
 
 	return 0;
@@ -2441,6 +2446,11 @@ static int sh_eth_open(struct net_device *ndev)
 
 	netif_start_queue(ndev);
 
+<<<<<<< HEAD
+=======
+	mdp->is_opened = 1;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 
 out_free_irq:
@@ -2563,7 +2573,11 @@ static struct net_device_stats *sh_eth_get_stats(struct net_device *ndev)
 	if (mdp->cd->no_tx_cntrs)
 		return &ndev->stats;
 
+<<<<<<< HEAD
 	if (!netif_running(ndev))
+=======
+	if (!mdp->is_opened)
+>>>>>>> b7ba80a49124 (Commit)
 		return &ndev->stats;
 
 	sh_eth_update_stat(ndev, &ndev->stats.tx_dropped, TROCR);
@@ -2612,6 +2626,11 @@ static int sh_eth_close(struct net_device *ndev)
 	/* Free all the skbuffs in the Rx queue and the DMA buffer. */
 	sh_eth_ring_free(ndev);
 
+<<<<<<< HEAD
+=======
+	mdp->is_opened = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_put(&mdp->pdev->dev);
 
 	return 0;
@@ -3038,22 +3057,35 @@ static int sh_mdio_release(struct sh_eth_private *mdp)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int sh_mdiobb_read_c22(struct mii_bus *bus, int phy, int reg)
+=======
+static int sh_mdiobb_read(struct mii_bus *bus, int phy, int reg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int res;
 
 	pm_runtime_get_sync(bus->parent);
+<<<<<<< HEAD
 	res = mdiobb_read_c22(bus, phy, reg);
+=======
+	res = mdiobb_read(bus, phy, reg);
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_put(bus->parent);
 
 	return res;
 }
 
+<<<<<<< HEAD
 static int sh_mdiobb_write_c22(struct mii_bus *bus, int phy, int reg, u16 val)
+=======
+static int sh_mdiobb_write(struct mii_bus *bus, int phy, int reg, u16 val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int res;
 
 	pm_runtime_get_sync(bus->parent);
+<<<<<<< HEAD
 	res = mdiobb_write_c22(bus, phy, reg, val);
 	pm_runtime_put(bus->parent);
 
@@ -3078,6 +3110,9 @@ static int sh_mdiobb_write_c45(struct mii_bus *bus, int phy, int devad,
 
 	pm_runtime_get_sync(bus->parent);
 	res = mdiobb_write_c45(bus, phy, devad, reg, val);
+=======
+	res = mdiobb_write(bus, phy, reg, val);
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_put(bus->parent);
 
 	return res;
@@ -3091,8 +3126,11 @@ static int sh_mdio_init(struct sh_eth_private *mdp,
 	struct bb_info *bitbang;
 	struct platform_device *pdev = mdp->pdev;
 	struct device *dev = &mdp->pdev->dev;
+<<<<<<< HEAD
 	struct phy_device *phydev;
 	struct device_node *pn;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* create bit control struct for PHY */
 	bitbang = devm_kzalloc(dev, sizeof(struct bb_info), GFP_KERNEL);
@@ -3110,10 +3148,15 @@ static int sh_mdio_init(struct sh_eth_private *mdp,
 		return -ENOMEM;
 
 	/* Wrap accessors with Runtime PM-aware ops */
+<<<<<<< HEAD
 	mdp->mii_bus->read = sh_mdiobb_read_c22;
 	mdp->mii_bus->write = sh_mdiobb_write_c22;
 	mdp->mii_bus->read_c45 = sh_mdiobb_read_c45;
 	mdp->mii_bus->write_c45 = sh_mdiobb_write_c45;
+=======
+	mdp->mii_bus->read = sh_mdiobb_read;
+	mdp->mii_bus->write = sh_mdiobb_write;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Hook up MII support for ethtool */
 	mdp->mii_bus->name = "sh_mii";
@@ -3129,6 +3172,7 @@ static int sh_mdio_init(struct sh_eth_private *mdp,
 	if (ret)
 		goto out_free_bus;
 
+<<<<<<< HEAD
 	pn = of_parse_phandle(dev->of_node, "phy-handle", 0);
 	phydev = of_phy_find_device(pn);
 	if (phydev) {
@@ -3137,6 +3181,8 @@ static int sh_mdio_init(struct sh_eth_private *mdp,
 	}
 	of_node_put(pn);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 out_free_bus:
@@ -3397,7 +3443,11 @@ static int sh_eth_drv_probe(struct platform_device *pdev)
 		goto out_release;
 	}
 
+<<<<<<< HEAD
 	netif_napi_add(ndev, &mdp->napi, sh_eth_poll);
+=======
+	netif_napi_add(ndev, &mdp->napi, sh_eth_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* network device register */
 	ret = register_netdev(ndev);

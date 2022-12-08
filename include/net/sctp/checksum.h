@@ -24,7 +24,11 @@
 #define __sctp_checksum_h__
 
 #include <linux/types.h>
+<<<<<<< HEAD
 #include <linux/sctp.h>
+=======
+#include <net/sctp/sctp.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/crc32c.h>
 #include <linux/crc32.h>
 

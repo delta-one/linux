@@ -28,7 +28,10 @@ VERSION
 		__vdso_time;
 		__vdso_clock_getres;
 		__vdso_clock_gettime64;
+<<<<<<< HEAD
 		__vdso_getcpu;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	LINUX_2.5 {

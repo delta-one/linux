@@ -120,7 +120,11 @@ int acpi_bus_register_early_device(int type);
                      Device Matching and Notification
    -------------------------------------------------------------------------- */
 struct acpi_device *acpi_companion_match(const struct device *dev);
+<<<<<<< HEAD
 int __acpi_device_uevent_modalias(const struct acpi_device *adev,
+=======
+int __acpi_device_uevent_modalias(struct acpi_device *adev,
+>>>>>>> b7ba80a49124 (Commit)
 				  struct kobj_uevent_env *env);
 
 /* --------------------------------------------------------------------------
@@ -173,7 +177,10 @@ enum acpi_ec_event_state {
 
 struct acpi_ec {
 	acpi_handle handle;
+<<<<<<< HEAD
 	acpi_handle address_space_handler_holder;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int gpe;
 	int irq;
 	unsigned long command_addr;

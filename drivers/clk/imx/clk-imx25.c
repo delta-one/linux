@@ -218,7 +218,11 @@ static int __init __mx25_clocks_init(void __iomem *ccm_base)
 	 */
 	clk_set_parent(clk[cko_sel], clk[ipg]);
 
+<<<<<<< HEAD
 	imx_register_uart_clocks();
+=======
+	imx_register_uart_clocks(6);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

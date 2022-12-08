@@ -8,7 +8,10 @@
 /dts-v1/;
 
 #include "imx7d.dtsi"
+<<<<<<< HEAD
 #include <dt-bindings/input/linux-event-codes.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	model = "reMarkable 2.0";
@@ -23,6 +26,7 @@
 		reg = <0x80000000 0x40000000>;
 	};
 
+<<<<<<< HEAD
 	thermal-zones {
 		epd-thermal {
 			thermal-sensors = <&sy7636a>;
@@ -45,6 +49,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	reg_brcm: regulator-brcm {
 		compatible = "regulator-fixed";
 		regulator-name = "brcm_reg";
@@ -70,6 +76,7 @@
 		startup-delay-us = <100000>; /* 100 ms */
 	};
 
+<<<<<<< HEAD
 	reg_touch: regulator-touch {
 		compatible = "regulator-fixed";
 		regulator-name = "VDD_3V3_TOUCH";
@@ -81,6 +88,8 @@
 		enable-active-high;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	wifi_pwrseq: wifi_pwrseq {
 		compatible = "mmc-pwrseq-simple";
 		pinctrl-names = "default";
@@ -91,10 +100,13 @@
 	};
 };
 
+<<<<<<< HEAD
 &cpu0 {
 	cpu-supply = <&buck1>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &clks {
 	assigned-clocks = <&clks IMX7D_CLKO2_ROOT_SRC>,
 			  <&clks IMX7D_CLKO2_ROOT_DIV>;
@@ -122,6 +134,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &i2c2 {
 	clock-frequency = <100000>;
 	pinctrl-names = "default";
@@ -335,6 +348,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &snvs_pwrkey {
 	status = "okay";
 };
@@ -421,12 +436,15 @@
 };
 
 &iomuxc {
+<<<<<<< HEAD
 	pinctrl_bd71815: bd71815grp {
 		fsl,pins = <
 			MX7D_PAD_SAI1_RX_SYNC__GPIO6_IO16	0x59
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_brcm_reg: brcmreggrp {
 		fsl,pins = <
 			/* WIFI_PWR_EN */
@@ -434,6 +452,7 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_epdpmic: epdpmicgrp {
 		fsl,pins = <
 			MX7D_PAD_SAI2_RX_DATA__GPIO6_IO21	0x00000074
@@ -450,6 +469,8 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_i2c1: i2c1grp {
 		fsl,pins = <
 			MX7D_PAD_I2C1_SDA__I2C1_SDA		0x4000007f
@@ -457,6 +478,7 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_i2c2: i2c2grp {
 		fsl,pins = <
 			MX7D_PAD_I2C2_SDA__I2C2_SDA		0x4000007f
@@ -485,6 +507,8 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_uart1: uart1grp {
 		fsl,pins = <
 			MX7D_PAD_UART1_TX_DATA__UART1_DCE_TX	0x79

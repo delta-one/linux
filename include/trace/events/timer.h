@@ -371,8 +371,12 @@ TRACE_EVENT(itimer_expire,
 		tick_dep_name(PERF_EVENTS)		\
 		tick_dep_name(SCHED)			\
 		tick_dep_name(CLOCK_UNSTABLE)		\
+<<<<<<< HEAD
 		tick_dep_name(RCU)			\
 		tick_dep_name_end(RCU_EXP)
+=======
+		tick_dep_name_end(RCU)
+>>>>>>> b7ba80a49124 (Commit)
 
 #undef tick_dep_name
 #undef tick_dep_mask_name

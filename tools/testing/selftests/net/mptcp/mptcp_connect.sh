@@ -274,7 +274,12 @@ check_transfer()
 
 check_mptcp_disabled()
 {
+<<<<<<< HEAD
 	local disabled_ns="ns_disabled-$rndh"
+=======
+	local disabled_ns
+	disabled_ns="ns_disabled-$sech-$(mktemp -u XXXXXX)"
+>>>>>>> b7ba80a49124 (Commit)
 	ip netns add ${disabled_ns} || exit $ksft_skip
 
 	# net.mptcp.enabled should be enabled by default
@@ -761,6 +766,7 @@ run_tests_peekmode()
 	run_tests_lo "$ns1" "$ns1" dead:beef:1::1 1 "-P ${peekmode}"
 }
 
+<<<<<<< HEAD
 run_tests_mptfo()
 {
 	echo "INFO: with MPTFO start"
@@ -780,6 +786,11 @@ run_tests_mptfo()
 
 run_tests_disconnect()
 {
+=======
+run_tests_disconnect()
+{
+	local peekmode="$1"
+>>>>>>> b7ba80a49124 (Commit)
 	local old_cin=$cin
 	local old_sin=$sin
 
@@ -787,6 +798,10 @@ run_tests_disconnect()
 
 	# force do_transfer to cope with the multiple tranmissions
 	sin="$cin.disconnect"
+<<<<<<< HEAD
+=======
+	sin_disconnect=$old_sin
+>>>>>>> b7ba80a49124 (Commit)
 	cin="$cin.disconnect"
 	cin_disconnect="$old_cin"
 	connect_per_transfer=3
@@ -797,6 +812,10 @@ run_tests_disconnect()
 
 	# restore previous status
 	sin=$old_sin
+<<<<<<< HEAD
+=======
+	sin_disconnect="$cout".disconnect
+>>>>>>> b7ba80a49124 (Commit)
 	cin=$old_cin
 	cin_disconnect="$cin".disconnect
 	connect_per_transfer=1
@@ -914,10 +933,13 @@ run_tests_peekmode "saveWithPeek"
 run_tests_peekmode "saveAfterPeek"
 stop_if_error "Tests with peek mode have failed"
 
+<<<<<<< HEAD
 # MPTFO (MultiPath TCP Fatopen tests)
 run_tests_mptfo
 stop_if_error "Tests with MPTFO have failed"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # connect to ns4 ip address, ns2 should intercept/proxy
 run_test_transparent 10.0.3.1 "tproxy ipv4"
 run_test_transparent dead:beef:3::1 "tproxy ipv6"

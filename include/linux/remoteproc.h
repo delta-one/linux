@@ -490,6 +490,7 @@ struct rproc_dump_segment {
 };
 
 /**
+<<<<<<< HEAD
  * enum rproc_features - features supported
  *
  * @RPROC_FEAT_ATTACH_ON_RECOVERY: The remote processor does not need help
@@ -504,6 +505,8 @@ enum rproc_features {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct rproc - represents a physical remote processor device
  * @node: list node of this rproc object
  * @domain: iommu domain
@@ -544,7 +547,10 @@ enum rproc_features {
  * @elf_machine: firmware ELF machine
  * @cdev: character device of the rproc
  * @cdev_put_on_release: flag to indicate if remoteproc should be shutdown on @char_dev release
+<<<<<<< HEAD
  * @features: indicate remoteproc features
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct rproc {
 	struct list_head node;
@@ -585,7 +591,10 @@ struct rproc {
 	u16 elf_machine;
 	struct cdev cdev;
 	bool cdev_put_on_release;
+<<<<<<< HEAD
 	DECLARE_BITMAP(features, RPROC_MAX_FEATURES);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**

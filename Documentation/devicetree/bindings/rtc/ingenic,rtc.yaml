@@ -4,13 +4,18 @@
 $id: http://devicetree.org/schemas/rtc/ingenic,rtc.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Ingenic SoCs Real-Time Clock
+=======
+title: Ingenic SoCs Real-Time Clock DT bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Paul Cercueil <paul@crapouillou.net>
 
 allOf:
   - $ref: rtc.yaml#
+<<<<<<< HEAD
   - if:
       not:
         properties:
@@ -22,6 +27,8 @@ allOf:
     then:
       properties:
         "#clock-cells": false
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -50,9 +57,12 @@ properties:
   clock-names:
     const: rtc
 
+<<<<<<< HEAD
   "#clock-cells":
     const: 0
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   system-power-controller:
     description: |
       Indicates that the RTC is responsible for powering OFF
@@ -97,6 +107,7 @@ examples:
       clocks = <&cgu JZ4740_CLK_RTC>;
       clock-names = "rtc";
     };
+<<<<<<< HEAD
 
   - |
     #include <dt-bindings/clock/ingenic,jz4780-cgu.h>
@@ -112,3 +123,5 @@ examples:
 
       #clock-cells = <0>;
     };
+=======
+>>>>>>> b7ba80a49124 (Commit)

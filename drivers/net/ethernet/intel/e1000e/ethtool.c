@@ -110,9 +110,15 @@ static const char e1000_gstrings_test[][ETH_GSTRING_LEN] = {
 static int e1000_get_link_ksettings(struct net_device *netdev,
 				    struct ethtool_link_ksettings *cmd)
 {
+<<<<<<< HEAD
 	u32 speed, supported, advertising, lp_advertising, lpa_t;
 	struct e1000_adapter *adapter = netdev_priv(netdev);
 	struct e1000_hw *hw = &adapter->hw;
+=======
+	struct e1000_adapter *adapter = netdev_priv(netdev);
+	struct e1000_hw *hw = &adapter->hw;
+	u32 speed, supported, advertising;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (hw->phy.media_type == e1000_media_type_copper) {
 		supported = (SUPPORTED_10baseT_Half |
@@ -120,9 +126,13 @@ static int e1000_get_link_ksettings(struct net_device *netdev,
 			     SUPPORTED_100baseT_Half |
 			     SUPPORTED_100baseT_Full |
 			     SUPPORTED_1000baseT_Full |
+<<<<<<< HEAD
 			     SUPPORTED_Asym_Pause |
 			     SUPPORTED_Autoneg |
 			     SUPPORTED_Pause |
+=======
+			     SUPPORTED_Autoneg |
+>>>>>>> b7ba80a49124 (Commit)
 			     SUPPORTED_TP);
 		if (hw->phy.type == e1000_phy_ife)
 			supported &= ~SUPPORTED_1000baseT_Full;
@@ -194,16 +204,22 @@ static int e1000_get_link_ksettings(struct net_device *netdev,
 	if (hw->phy.media_type != e1000_media_type_copper)
 		cmd->base.eth_tp_mdix_ctrl = ETH_TP_MDI_INVALID;
 
+<<<<<<< HEAD
 	lpa_t = mii_stat1000_to_ethtool_lpa_t(adapter->phy_regs.stat1000);
 	lp_advertising = lpa_t |
 	mii_lpa_to_ethtool_lpa_t(adapter->phy_regs.lpa);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ethtool_convert_legacy_u32_to_link_mode(cmd->link_modes.supported,
 						supported);
 	ethtool_convert_legacy_u32_to_link_mode(cmd->link_modes.advertising,
 						advertising);
+<<<<<<< HEAD
 	ethtool_convert_legacy_u32_to_link_mode(cmd->link_modes.lp_advertising,
 						lp_advertising);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -916,7 +932,10 @@ static int e1000_reg_test(struct e1000_adapter *adapter, u64 *data)
 	case e1000_pch_adp:
 	case e1000_pch_mtp:
 	case e1000_pch_lnp:
+<<<<<<< HEAD
 	case e1000_pch_ptp:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		mask |= BIT(18);
 		break;
 	default:
@@ -1584,7 +1603,10 @@ static void e1000_loopback_cleanup(struct e1000_adapter *adapter)
 	case e1000_pch_adp:
 	case e1000_pch_mtp:
 	case e1000_pch_lnp:
+<<<<<<< HEAD
 	case e1000_pch_ptp:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		fext_nvm11 = er32(FEXTNVM11);
 		fext_nvm11 &= ~E1000_FEXTNVM11_DISABLE_MULR_FIX;
 		ew32(FEXTNVM11, fext_nvm11);

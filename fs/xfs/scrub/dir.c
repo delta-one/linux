@@ -666,12 +666,16 @@ xchk_directory_blocks(
 	struct xfs_scrub	*sc)
 {
 	struct xfs_bmbt_irec	got;
+<<<<<<< HEAD
 	struct xfs_da_args	args = {
 		.dp		= sc ->ip,
 		.whichfork	= XFS_DATA_FORK,
 		.geo		= sc->mp->m_dir_geo,
 		.trans		= sc->tp,
 	};
+=======
+	struct xfs_da_args	args;
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfs_ifork	*ifp = xfs_ifork_ptr(sc->ip, XFS_DATA_FORK);
 	struct xfs_mount	*mp = sc->mp;
 	xfs_fileoff_t		leaf_lblk;
@@ -681,7 +685,11 @@ xchk_directory_blocks(
 	xfs_dablk_t		dabno;
 	xfs_dir2_db_t		last_data_db = 0;
 	bool			found;
+<<<<<<< HEAD
 	bool			is_block = false;
+=======
+	int			is_block = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int			error;
 
 	/* Ignore local format directories. */
@@ -694,6 +702,12 @@ xchk_directory_blocks(
 	free_lblk = XFS_B_TO_FSB(mp, XFS_DIR2_FREE_OFFSET);
 
 	/* Is this a block dir? */
+<<<<<<< HEAD
+=======
+	args.dp = sc->ip;
+	args.geo = mp->m_dir_geo;
+	args.trans = sc->tp;
+>>>>>>> b7ba80a49124 (Commit)
 	error = xfs_dir2_isblock(&args, &is_block);
 	if (!xchk_fblock_process_error(sc, XFS_DATA_FORK, lblk, &error))
 		goto out;

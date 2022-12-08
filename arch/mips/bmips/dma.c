@@ -5,8 +5,11 @@
 #include <asm/bmips.h>
 #include <asm/io.h>
 
+<<<<<<< HEAD
 bool bmips_rac_flush_disable;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void arch_sync_dma_for_cpu_all(void)
 {
 	void __iomem *cbr = BMIPS_GET_CBR();
@@ -17,9 +20,12 @@ void arch_sync_dma_for_cpu_all(void)
 	    boot_cpu_type() != CPU_BMIPS4380)
 		return;
 
+<<<<<<< HEAD
 	if (unlikely(bmips_rac_flush_disable))
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Flush stale data out of the readahead cache */
 	cfg = __raw_readl(cbr + BMIPS_RAC_CONFIG);
 	__raw_writel(cfg | 0x100, cbr + BMIPS_RAC_CONFIG);

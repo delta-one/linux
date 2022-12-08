@@ -108,6 +108,10 @@ if (!$kernel) {
 sub declare_function() {
 	my ($name, $align, $nargs) = @_;
 	if($kernel) {
+<<<<<<< HEAD
+=======
+		$code .= ".align $align\n";
+>>>>>>> b7ba80a49124 (Commit)
 		$code .= "SYM_FUNC_START($name)\n";
 		$code .= ".L$name:\n";
 	} else {

@@ -91,7 +91,11 @@ struct a6xx_state_memobj {
 static void *state_kcalloc(struct a6xx_gpu_state *a6xx_state, int nr, size_t objsize)
 {
 	struct a6xx_state_memobj *obj =
+<<<<<<< HEAD
 		kvzalloc((nr * objsize) + sizeof(*obj), GFP_KERNEL);
+=======
+		kzalloc((nr * objsize) + sizeof(*obj), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!obj)
 		return NULL;
@@ -147,7 +151,12 @@ static int a6xx_crashdumper_run(struct msm_gpu *gpu,
 	/* Make sure all pending memory writes are posted */
 	wmb();
 
+<<<<<<< HEAD
 	gpu_write64(gpu, REG_A6XX_CP_CRASH_SCRIPT_BASE, dumper->iova);
+=======
+	gpu_write64(gpu, REG_A6XX_CP_CRASH_SCRIPT_BASE_LO,
+		REG_A6XX_CP_CRASH_SCRIPT_BASE_HI, dumper->iova);
+>>>>>>> b7ba80a49124 (Commit)
 
 	gpu_write(gpu, REG_A6XX_CP_CRASH_DUMP_CNTL, 1);
 
@@ -385,9 +394,12 @@ static void a6xx_get_debugbus(struct msm_gpu *gpu,
 	nr_debugbus_blocks = ARRAY_SIZE(a6xx_debugbus_blocks) +
 		(a6xx_has_gbif(to_adreno_gpu(gpu)) ? 1 : 0);
 
+<<<<<<< HEAD
 	if (adreno_is_a650_family(to_adreno_gpu(gpu)))
 		nr_debugbus_blocks += ARRAY_SIZE(a650_debugbus_blocks);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	a6xx_state->debugbus = state_kcalloc(a6xx_state, nr_debugbus_blocks,
 			sizeof(*a6xx_state->debugbus));
 
@@ -414,6 +426,7 @@ static void a6xx_get_debugbus(struct msm_gpu *gpu,
 
 			a6xx_state->nr_debugbus += 1;
 		}
+<<<<<<< HEAD
 
 
 		if (adreno_is_a650_family(to_adreno_gpu(gpu))) {
@@ -423,6 +436,8 @@ static void a6xx_get_debugbus(struct msm_gpu *gpu,
 					&a650_debugbus_blocks[i],
 					&a6xx_state->debugbus[i]);
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*  Dump the VBIF debugbus on applicable targets */
@@ -536,11 +551,15 @@ static void a6xx_get_cluster(struct msm_gpu *gpu,
 		struct a6xx_gpu_state_obj *obj,
 		struct a6xx_crashdumper *dumper)
 {
+<<<<<<< HEAD
 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 *in = dumper->ptr;
 	u64 out = dumper->iova + A6XX_CD_DATA_OFFSET;
 	size_t datasize;
 	int i, regcount = 0;
+<<<<<<< HEAD
 	u32 id = cluster->id;
 
 	/* Skip registers that are not present on older generation */
@@ -551,6 +570,8 @@ static void a6xx_get_cluster(struct msm_gpu *gpu,
 	if (adreno_is_a650_family(adreno_gpu) &&
 			cluster->registers == a6xx_ps_cluster)
 		id = CLUSTER_VPC_PS;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Some clusters need a selector register to be programmed too */
 	if (cluster->sel_reg)
@@ -560,7 +581,11 @@ static void a6xx_get_cluster(struct msm_gpu *gpu,
 		int j;
 
 		in += CRASHDUMP_WRITE(in, REG_A6XX_CP_APERTURE_CNTL_CD,
+<<<<<<< HEAD
 			(id << 8) | (i << 4) | i);
+=======
+			(cluster->id << 8) | (i << 4) | i);
+>>>>>>> b7ba80a49124 (Commit)
 
 		for (j = 0; j < cluster->count; j += 2) {
 			int count = RANGE(cluster->registers, j);
@@ -710,11 +735,14 @@ static void a6xx_get_crashdumper_registers(struct msm_gpu *gpu,
 	u64 out = dumper->iova + A6XX_CD_DATA_OFFSET;
 	int i, regcount = 0;
 
+<<<<<<< HEAD
 	/* Skip unsupported registers on older generations */
 	if (!adreno_is_a660_family(to_adreno_gpu(gpu)) &&
 			(regs->registers == a660_registers))
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Some blocks might need to program a selector register first */
 	if (regs->val0)
 		in += CRASHDUMP_WRITE(in, regs->val0, regs->val1);
@@ -749,11 +777,14 @@ static void a6xx_get_ahb_gpu_registers(struct msm_gpu *gpu,
 {
 	int i, regcount = 0, index = 0;
 
+<<<<<<< HEAD
 	/* Skip unsupported registers on older generations */
 	if (!adreno_is_a660_family(to_adreno_gpu(gpu)) &&
 			(regs->registers == a660_registers))
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < regs->count; i += 2)
 		regcount += RANGE(regs->registers, i);
 
@@ -845,9 +876,12 @@ static struct msm_gpu_state_bo *a6xx_snapshot_gmu_bo(
 {
 	struct msm_gpu_state_bo *snapshot;
 
+<<<<<<< HEAD
 	if (!bo->size)
 		return NULL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	snapshot = state_kcalloc(a6xx_state, 1, sizeof(*snapshot));
 	if (!snapshot)
 		return NULL;
@@ -942,6 +976,7 @@ static void a6xx_get_registers(struct msm_gpu *gpu,
 			dumper);
 }
 
+<<<<<<< HEAD
 static u32 a6xx_get_cp_roq_size(struct msm_gpu *gpu)
 {
 	/* The value at [16:31] is in 4dword units. Convert it to dwords */
@@ -952,14 +987,23 @@ static u32 a6xx_get_cp_roq_size(struct msm_gpu *gpu)
 static void a6xx_get_indexed_regs(struct msm_gpu *gpu,
 		struct a6xx_gpu_state *a6xx_state,
 		struct a6xx_indexed_registers *indexed,
+=======
+/* Read a block of data from an indexed register pair */
+static void a6xx_get_indexed_regs(struct msm_gpu *gpu,
+		struct a6xx_gpu_state *a6xx_state,
+		const struct a6xx_indexed_registers *indexed,
+>>>>>>> b7ba80a49124 (Commit)
 		struct a6xx_gpu_state_obj *obj)
 {
 	int i;
 
 	obj->handle = (const void *) indexed;
+<<<<<<< HEAD
 	if (indexed->count_fn)
 		indexed->count = indexed->count_fn(gpu);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	obj->data = state_kcalloc(a6xx_state, indexed->count, sizeof(u32));
 	if (!obj->data)
 		return;
@@ -988,6 +1032,7 @@ static void a6xx_get_indexed_registers(struct msm_gpu *gpu,
 		a6xx_get_indexed_regs(gpu, a6xx_state, &a6xx_indexed_reglist[i],
 			&a6xx_state->indexed_regs[i]);
 
+<<<<<<< HEAD
 	if (adreno_is_a650_family(to_adreno_gpu(gpu))) {
 		u32 val;
 
@@ -1003,6 +1048,8 @@ static void a6xx_get_indexed_registers(struct msm_gpu *gpu,
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Set the CP mempool size to 0 to stabilize it while dumping */
 	mempool_size = gpu_read(gpu, REG_A6XX_CP_MEM_POOL_SIZE);
 	gpu_write(gpu, REG_A6XX_CP_MEM_POOL_SIZE, 0);
@@ -1099,6 +1146,7 @@ static void a6xx_gpu_state_destroy(struct kref *kref)
 	if (a6xx_state->gmu_hfi)
 		kvfree(a6xx_state->gmu_hfi->data);
 
+<<<<<<< HEAD
 	if (a6xx_state->gmu_debug)
 		kvfree(a6xx_state->gmu_debug->data);
 
@@ -1106,6 +1154,10 @@ static void a6xx_gpu_state_destroy(struct kref *kref)
 		list_del(&obj->node);
 		kvfree(obj);
 	}
+=======
+	list_for_each_entry_safe(obj, tmp, &a6xx_state->objs, node)
+		kfree(obj);
+>>>>>>> b7ba80a49124 (Commit)
 
 	adreno_gpu_state_destroy(state);
 	kfree(a6xx_state);

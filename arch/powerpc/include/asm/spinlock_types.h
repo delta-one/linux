@@ -7,7 +7,11 @@
 #endif
 
 #ifdef CONFIG_PPC_QUEUED_SPINLOCKS
+<<<<<<< HEAD
 #include <asm/qspinlock_types.h>
+=======
+#include <asm-generic/qspinlock_types.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm-generic/qrwlock_types.h>
 #else
 #include <asm/simple_spinlock_types.h>

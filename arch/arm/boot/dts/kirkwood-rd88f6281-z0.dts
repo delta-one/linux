@@ -19,7 +19,11 @@
 };
 
 &eth1 {
+<<<<<<< HEAD
 	status = "disabled";
+=======
+      status = "disabled";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &switch {

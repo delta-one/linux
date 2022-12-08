@@ -7,39 +7,86 @@
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 #include <linux/device.h>
+<<<<<<< HEAD
 #include <linux/intel_tcc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/thermal.h>
 #include <asm/cpu_device_id.h>
 
+<<<<<<< HEAD
 #define TCC_PROGRAMMABLE	BIT(30)
 #define TCC_LOCKED		BIT(31)
+=======
+#define TCC_SHIFT 24
+#define TCC_MASK	(0x3fULL<<24)
+#define TCC_PROGRAMMABLE	BIT(30)
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct thermal_cooling_device *tcc_cdev;
 
 static int tcc_get_max_state(struct thermal_cooling_device *cdev, unsigned long
 			     *state)
 {
+<<<<<<< HEAD
 	*state = 0x3f;
+=======
+	*state = TCC_MASK >> TCC_SHIFT;
+	return 0;
+}
+
+static int tcc_offset_update(int tcc)
+{
+	u64 val;
+	int err;
+
+	err = rdmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, &val);
+	if (err)
+		return err;
+
+	val &= ~TCC_MASK;
+	val |= tcc << TCC_SHIFT;
+
+	err = wrmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, val);
+	if (err)
+		return err;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static int tcc_get_cur_state(struct thermal_cooling_device *cdev, unsigned long
 			     *state)
 {
+<<<<<<< HEAD
 	int offset = intel_tcc_get_offset(-1);
 
 	if (offset < 0)
 		return offset;
 
 	*state = offset;
+=======
+	u64 val;
+	int err;
+
+	err = rdmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, &val);
+	if (err)
+		return err;
+
+	*state = (val & TCC_MASK) >> TCC_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static int tcc_set_cur_state(struct thermal_cooling_device *cdev, unsigned long
 			     state)
 {
+<<<<<<< HEAD
 	return intel_tcc_set_offset(-1, (int)state);
+=======
+	return tcc_offset_update(state);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct thermal_cooling_device_ops tcc_cooling_ops = {
@@ -63,7 +110,10 @@ static const struct x86_cpu_id tcc_ids[] __initconst = {
 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_N, NULL),
 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE, NULL),
 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P, NULL),
+<<<<<<< HEAD
 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S, NULL),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 
@@ -88,6 +138,7 @@ static int __init tcc_cooling_init(void)
 	if (!(val & TCC_PROGRAMMABLE))
 		return -ENODEV;
 
+<<<<<<< HEAD
 	err = rdmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, &val);
 	if (err)
 		return err;
@@ -97,6 +148,8 @@ static int __init tcc_cooling_init(void)
 		return -ENODEV;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pr_info("Programmable TCC Offset detected\n");
 
 	tcc_cdev =
@@ -118,7 +171,10 @@ static void __exit tcc_cooling_exit(void)
 
 module_exit(tcc_cooling_exit)
 
+<<<<<<< HEAD
 MODULE_IMPORT_NS(INTEL_TCC);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_DESCRIPTION("TCC offset cooling device Driver");
 MODULE_AUTHOR("Zhang Rui <rui.zhang@intel.com>");
 MODULE_LICENSE("GPL v2");

@@ -44,10 +44,14 @@ struct hdm_i2c {
 	char name[64];
 };
 
+<<<<<<< HEAD
 static inline struct hdm_i2c *to_hdm(struct most_interface *iface)
 {
 	return container_of(iface, struct hdm_i2c, most_iface);
 }
+=======
+#define to_hdm(iface) container_of(iface, struct hdm_i2c, most_iface)
+>>>>>>> b7ba80a49124 (Commit)
 
 static irqreturn_t most_irq_handler(int, void *);
 static void pending_rx_work(struct work_struct *);
@@ -287,7 +291,11 @@ static irqreturn_t most_irq_handler(int irq, void *_dev)
  *
  * Register the i2c client device as a MOST interface
  */
+<<<<<<< HEAD
 static int i2c_probe(struct i2c_client *client)
+=======
+static int i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hdm_i2c *dev;
 	int ret, i;
@@ -362,7 +370,11 @@ static struct i2c_driver i2c_driver = {
 	.driver = {
 		.name = "hdm_i2c",
 	},
+<<<<<<< HEAD
 	.probe_new = i2c_probe,
+=======
+	.probe = i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = i2c_remove,
 	.id_table = i2c_id,
 };

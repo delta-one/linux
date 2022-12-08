@@ -962,7 +962,10 @@ static int brcms_ops_beacon_set_tim(struct ieee80211_hw *hw,
 
 static const struct ieee80211_ops brcms_ops = {
 	.tx = brcms_ops_tx,
+<<<<<<< HEAD
 	.wake_tx_queue = ieee80211_handle_wake_tx_queue,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.start = brcms_ops_start,
 	.stop = brcms_ops_stop,
 	.add_interface = brcms_ops_add_interface,

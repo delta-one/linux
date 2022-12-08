@@ -337,6 +337,7 @@ const struct nbio_hdp_flush_reg nbio_v4_3_hdp_flush_reg = {
 
 static void nbio_v4_3_init_registers(struct amdgpu_device *adev)
 {
+<<<<<<< HEAD
 	if (adev->ip_versions[NBIO_HWIP][0] == IP_VERSION(4, 3, 0)) {
 		uint32_t data;
 
@@ -344,6 +345,9 @@ static void nbio_v4_3_init_registers(struct amdgpu_device *adev)
 		data &= ~RCC_DEV0_EPF2_STRAP2__STRAP_NO_SOFT_RESET_DEV0_F2_MASK;
 		WREG32_SOC15(NBIO, 0, regRCC_DEV0_EPF2_STRAP2, data);
 	}
+=======
+	return;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static u32 nbio_v4_3_get_rom_offset(struct amdgpu_device *adev)

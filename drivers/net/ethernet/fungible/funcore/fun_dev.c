@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
 
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/bitmap.h>
 #include <linux/delay.h>
 #include <linux/interrupt.h>
@@ -747,6 +751,10 @@ void fun_dev_disable(struct fun_dev *fdev)
 	pci_free_irq_vectors(pdev);
 
 	pci_clear_master(pdev);
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_disable_device(pdev);
 
 	fun_unmap_bars(fdev);
@@ -779,6 +787,11 @@ int fun_dev_enable(struct fun_dev *fdev, struct pci_dev *pdev,
 		goto unmap;
 	}
 
+<<<<<<< HEAD
+=======
+	pci_enable_pcie_error_reporting(pdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	rc = sanitize_dev(fdev);
 	if (rc)
 		goto disable_dev;
@@ -826,6 +839,10 @@ free_irq_mgr:
 free_irqs:
 	pci_free_irq_vectors(pdev);
 disable_dev:
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_disable_device(pdev);
 unmap:
 	fun_unmap_bars(fdev);

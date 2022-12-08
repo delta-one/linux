@@ -649,7 +649,10 @@ static const struct rproc_ops scp_ops = {
 	.load		= scp_load,
 	.da_to_va	= scp_da_to_va,
 	.parse_fw	= scp_parse_fw,
+<<<<<<< HEAD
 	.sanity_check	= rproc_elf_sanity_check,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**

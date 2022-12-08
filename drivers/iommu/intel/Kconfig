@@ -20,8 +20,11 @@ config INTEL_IOMMU
 	select SWIOTLB
 	select IOASID
 	select PCI_ATS
+<<<<<<< HEAD
 	select PCI_PRI
 	select PCI_PASID
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  DMA remapping (DMAR) devices support enables independent address
 	  translations for Direct Memory Access (DMA) from devices.
@@ -49,7 +52,14 @@ config INTEL_IOMMU_DEBUGFS
 config INTEL_IOMMU_SVM
 	bool "Support for Shared Virtual Memory with Intel IOMMU"
 	depends on X86_64
+<<<<<<< HEAD
 	select MMU_NOTIFIER
+=======
+	select PCI_PASID
+	select PCI_PRI
+	select MMU_NOTIFIER
+	select IOASID
+>>>>>>> b7ba80a49124 (Commit)
 	select IOMMU_SVA
 	help
 	  Shared Virtual Memory (SVM) provides a facility for devices
@@ -96,6 +106,7 @@ config INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
 	  passing intel_iommu=sm_on to the kernel. If not sure, please use
 	  the default value.
 
+<<<<<<< HEAD
 config INTEL_IOMMU_PERF_EVENTS
 	def_bool y
 	bool "Intel IOMMU performance events"
@@ -107,4 +118,6 @@ config INTEL_IOMMU_PERF_EVENTS
 	  to aid performance tuning and debug. These are available on modern
 	  processors which support Intel VT-d 4.0 and later.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endif # INTEL_IOMMU

@@ -43,13 +43,17 @@ static struct sk_buff *ieee80211_clean_skb(struct sk_buff *skb,
 					   unsigned int present_fcs_len,
 					   unsigned int rtap_space)
 {
+<<<<<<< HEAD
 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct ieee80211_hdr *hdr;
 	unsigned int hdrlen;
 	__le16 fc;
 
 	if (present_fcs_len)
 		__pskb_trim(skb, skb->len - present_fcs_len);
+<<<<<<< HEAD
 	pskb_pull(skb, rtap_space);
 
 	/* After pulling radiotap header, clear all flags that indicate
@@ -59,6 +63,9 @@ static struct sk_buff *ieee80211_clean_skb(struct sk_buff *skb,
 			  RX_FLAG_RADIOTAP_LSIG |
 			  RX_FLAG_RADIOTAP_HE_MU |
 			  RX_FLAG_RADIOTAP_HE);
+=======
+	__pskb_pull(skb, rtap_space);
+>>>>>>> b7ba80a49124 (Commit)
 
 	hdr = (void *)skb->data;
 	fc = hdr->frame_control;
@@ -83,7 +90,11 @@ static struct sk_buff *ieee80211_clean_skb(struct sk_buff *skb,
 
 	memmove(skb->data + IEEE80211_HT_CTL_LEN, skb->data,
 		hdrlen - IEEE80211_HT_CTL_LEN);
+<<<<<<< HEAD
 	pskb_pull(skb, IEEE80211_HT_CTL_LEN);
+=======
+	__pskb_pull(skb, IEEE80211_HT_CTL_LEN);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return skb;
 }
@@ -126,6 +137,12 @@ ieee80211_rx_radiotap_hdrlen(struct ieee80211_local *local,
 	/* allocate extra bitmaps */
 	if (status->chains)
 		len += 4 * hweight8(status->chains);
+<<<<<<< HEAD
+=======
+	/* vendor presence bitmap */
+	if (status->flag & RX_FLAG_RADIOTAP_VENDOR_DATA)
+		len += 4;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ieee80211_have_rx_timestamp(status)) {
 		len = ALIGN(len, 8);
@@ -187,14 +204,21 @@ ieee80211_rx_radiotap_hdrlen(struct ieee80211_local *local,
 		len += 2 * hweight8(status->chains);
 	}
 
+<<<<<<< HEAD
 	if (status->flag & RX_FLAG_RADIOTAP_TLV_AT_END) {
 		int tlv_offset = 0;
+=======
+	if (status->flag & RX_FLAG_RADIOTAP_VENDOR_DATA) {
+		struct ieee80211_vendor_radiotap *rtap;
+		int vendor_data_offset = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * The position to look at depends on the existence (or non-
 		 * existence) of other elements, so take that into account...
 		 */
 		if (status->flag & RX_FLAG_RADIOTAP_HE)
+<<<<<<< HEAD
 			tlv_offset +=
 				sizeof(struct ieee80211_radiotap_he);
 		if (status->flag & RX_FLAG_RADIOTAP_HE_MU)
@@ -209,6 +233,27 @@ ieee80211_rx_radiotap_hdrlen(struct ieee80211_local *local,
 
 		/* TLVs until the mac header */
 		len += skb_mac_header(skb) - &skb->data[tlv_offset];
+=======
+			vendor_data_offset +=
+				sizeof(struct ieee80211_radiotap_he);
+		if (status->flag & RX_FLAG_RADIOTAP_HE_MU)
+			vendor_data_offset +=
+				sizeof(struct ieee80211_radiotap_he_mu);
+		if (status->flag & RX_FLAG_RADIOTAP_LSIG)
+			vendor_data_offset +=
+				sizeof(struct ieee80211_radiotap_lsig);
+
+		rtap = (void *)&skb->data[vendor_data_offset];
+
+		/* alignment for fixed 6-byte vendor data header */
+		len = ALIGN(len, 2);
+		/* vendor data header */
+		len += 6;
+		if (WARN_ON(rtap->align == 0))
+			rtap->align = 1;
+		len = ALIGN(len, rtap->align);
+		len += rtap->len + rtap->pad;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return len;
@@ -304,9 +349,15 @@ ieee80211_add_rx_radiotap_header(struct ieee80211_local *local,
 	u32 it_present_val;
 	u16 rx_flags = 0;
 	u16 channel_flags = 0;
+<<<<<<< HEAD
 	u32 tlvs_len = 0;
 	int mpdulen, chain;
 	unsigned long chains = status->chains;
+=======
+	int mpdulen, chain;
+	unsigned long chains = status->chains;
+	struct ieee80211_vendor_radiotap rtap = {};
+>>>>>>> b7ba80a49124 (Commit)
 	struct ieee80211_radiotap_he he = {};
 	struct ieee80211_radiotap_he_mu he_mu = {};
 	struct ieee80211_radiotap_lsig lsig = {};
@@ -327,17 +378,29 @@ ieee80211_add_rx_radiotap_header(struct ieee80211_local *local,
 		skb_pull(skb, sizeof(lsig));
 	}
 
+<<<<<<< HEAD
 	if (status->flag & RX_FLAG_RADIOTAP_TLV_AT_END) {
 		/* data is pointer at tlv all other info was pulled off */
 		tlvs_len = skb_mac_header(skb) - skb->data;
+=======
+	if (status->flag & RX_FLAG_RADIOTAP_VENDOR_DATA) {
+		rtap = *(struct ieee80211_vendor_radiotap *)skb->data;
+		/* rtap.len and rtap.pad are undone immediately */
+		skb_pull(skb, sizeof(rtap) + rtap.len + rtap.pad);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	mpdulen = skb->len;
 	if (!(has_fcs && ieee80211_hw_check(&local->hw, RX_INCLUDES_FCS)))
 		mpdulen += FCS_LEN;
 
+<<<<<<< HEAD
 	rthdr = skb_push(skb, rtap_len - tlvs_len);
 	memset(rthdr, 0, rtap_len - tlvs_len);
+=======
+	rthdr = skb_push(skb, rtap_len);
+	memset(rthdr, 0, rtap_len - rtap.len - rtap.pad);
+>>>>>>> b7ba80a49124 (Commit)
 	it_present = &rthdr->it_present;
 
 	/* radiotap header, set always present flags */
@@ -359,8 +422,18 @@ ieee80211_add_rx_radiotap_header(struct ieee80211_local *local,
 				 BIT(IEEE80211_RADIOTAP_DBM_ANTSIGNAL);
 	}
 
+<<<<<<< HEAD
 	if (status->flag & RX_FLAG_RADIOTAP_TLV_AT_END)
 		it_present_val |= BIT(IEEE80211_RADIOTAP_TLV);
+=======
+	if (status->flag & RX_FLAG_RADIOTAP_VENDOR_DATA) {
+		it_present_val |= BIT(IEEE80211_RADIOTAP_VENDOR_NAMESPACE) |
+				  BIT(IEEE80211_RADIOTAP_EXT);
+		put_unaligned_le32(it_present_val, it_present);
+		it_present++;
+		it_present_val = rtap.present;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	put_unaligned_le32(it_present_val, it_present);
 
@@ -691,6 +764,25 @@ ieee80211_add_rx_radiotap_header(struct ieee80211_local *local,
 		*pos++ = status->chain_signal[chain];
 		*pos++ = chain;
 	}
+<<<<<<< HEAD
+=======
+
+	if (status->flag & RX_FLAG_RADIOTAP_VENDOR_DATA) {
+		/* ensure 2 byte alignment for the vendor field as required */
+		if ((pos - (u8 *)rthdr) & 1)
+			*pos++ = 0;
+		*pos++ = rtap.oui[0];
+		*pos++ = rtap.oui[1];
+		*pos++ = rtap.oui[2];
+		*pos++ = rtap.subns;
+		put_unaligned_le16(rtap.len, pos);
+		pos += 2;
+		/* align the actual payload as requested */
+		while ((pos - (u8 *)rthdr) & (rtap.align - 1))
+			*pos++ = 0;
+		/* data (and possible padding) already follows */
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct sk_buff *
@@ -766,6 +858,7 @@ ieee80211_rx_monitor(struct ieee80211_local *local, struct sk_buff *origskb,
 	bool only_monitor = false;
 	unsigned int min_head_len;
 
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(status->flag & RX_FLAG_RADIOTAP_TLV_AT_END &&
 			 !skb_mac_header_was_set(origskb))) {
 		/* with this skb no way to know where frame payload starts */
@@ -773,6 +866,8 @@ ieee80211_rx_monitor(struct ieee80211_local *local, struct sk_buff *origskb,
 		return NULL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (status->flag & RX_FLAG_RADIOTAP_HE)
 		rtap_space += sizeof(struct ieee80211_radiotap_he);
 
@@ -782,8 +877,17 @@ ieee80211_rx_monitor(struct ieee80211_local *local, struct sk_buff *origskb,
 	if (status->flag & RX_FLAG_RADIOTAP_LSIG)
 		rtap_space += sizeof(struct ieee80211_radiotap_lsig);
 
+<<<<<<< HEAD
 	if (status->flag & RX_FLAG_RADIOTAP_TLV_AT_END)
 		rtap_space += skb_mac_header(origskb) - &origskb->data[rtap_space];
+=======
+	if (unlikely(status->flag & RX_FLAG_RADIOTAP_VENDOR_DATA)) {
+		struct ieee80211_vendor_radiotap *rtap =
+			(void *)(origskb->data + rtap_space);
+
+		rtap_space += sizeof(*rtap) + rtap->len + rtap->pad;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	min_head_len = rtap_space;
 
@@ -1552,6 +1656,12 @@ static void sta_ps_start(struct sta_info *sta)
 
 	ieee80211_clear_fast_xmit(sta);
 
+<<<<<<< HEAD
+=======
+	if (!sta->sta.txq[0])
+		return;
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (tid = 0; tid < IEEE80211_NUM_TIDS; tid++) {
 		struct ieee80211_txq *txq = sta->sta.txq[tid];
 		struct txq_info *txqi = to_txq_info(txq);
@@ -1956,11 +2066,18 @@ ieee80211_rx_h_decrypt(struct ieee80211_rx_data *rx)
 
 		if (mmie_keyidx < NUM_DEFAULT_KEYS + NUM_DEFAULT_MGMT_KEYS ||
 		    mmie_keyidx >= NUM_DEFAULT_KEYS + NUM_DEFAULT_MGMT_KEYS +
+<<<<<<< HEAD
 				   NUM_DEFAULT_BEACON_KEYS) {
 			if (rx->sdata->dev)
 				cfg80211_rx_unprot_mlme_mgmt(rx->sdata->dev,
 							     skb->data,
 							     skb->len);
+=======
+		    NUM_DEFAULT_BEACON_KEYS) {
+			cfg80211_rx_unprot_mlme_mgmt(rx->sdata->dev,
+						     skb->data,
+						     skb->len);
+>>>>>>> b7ba80a49124 (Commit)
 			return RX_DROP_MONITOR; /* unexpected BIP keyidx */
 		}
 
@@ -2110,8 +2227,12 @@ ieee80211_rx_h_decrypt(struct ieee80211_rx_data *rx)
 	/* either the frame has been decrypted or will be dropped */
 	status->flag |= RX_FLAG_DECRYPTED;
 
+<<<<<<< HEAD
 	if (unlikely(ieee80211_is_beacon(fc) && result == RX_DROP_UNUSABLE &&
 		     rx->sdata->dev))
+=======
+	if (unlikely(ieee80211_is_beacon(fc) && result == RX_DROP_UNUSABLE))
+>>>>>>> b7ba80a49124 (Commit)
 		cfg80211_rx_unprot_mlme_mgmt(rx->sdata->dev,
 					     skb->data, skb->len);
 
@@ -2384,6 +2505,10 @@ static int ieee80211_802_1x_port_control(struct ieee80211_rx_data *rx)
 
 static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
 {
+<<<<<<< HEAD
+=======
+	struct ieee80211_hdr *hdr = (void *)rx->skb->data;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sk_buff *skb = rx->skb;
 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
 
@@ -2394,6 +2519,34 @@ static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
 	if (status->flag & RX_FLAG_DECRYPTED)
 		return 0;
 
+<<<<<<< HEAD
+=======
+	/* check mesh EAPOL frames first */
+	if (unlikely(rx->sta && ieee80211_vif_is_mesh(&rx->sdata->vif) &&
+		     ieee80211_is_data(fc))) {
+		struct ieee80211s_hdr *mesh_hdr;
+		u16 hdr_len = ieee80211_hdrlen(fc);
+		u16 ethertype_offset;
+		__be16 ethertype;
+
+		if (!ether_addr_equal(hdr->addr1, rx->sdata->vif.addr))
+			goto drop_check;
+
+		/* make sure fixed part of mesh header is there, also checks skb len */
+		if (!pskb_may_pull(rx->skb, hdr_len + 6))
+			goto drop_check;
+
+		mesh_hdr = (struct ieee80211s_hdr *)(skb->data + hdr_len);
+		ethertype_offset = hdr_len + ieee80211_get_mesh_hdrlen(mesh_hdr) +
+				   sizeof(rfc1042_header);
+
+		if (skb_copy_bits(rx->skb, ethertype_offset, &ethertype, 2) == 0 &&
+		    ethertype == rx->sdata->control_port_protocol)
+			return 0;
+	}
+
+drop_check:
+>>>>>>> b7ba80a49124 (Commit)
 	/* Drop unencrypted frames if key is set. */
 	if (unlikely(!ieee80211_has_protected(fc) &&
 		     !ieee80211_is_any_nullfunc(fc) &&
@@ -2563,7 +2716,11 @@ static void ieee80211_deliver_skb_to_local_stack(struct sk_buff *skb,
 		struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
 		bool noencrypt = !(status->flag & RX_FLAG_DECRYPTED);
 
+<<<<<<< HEAD
 		cfg80211_rx_control_port(dev, skb, noencrypt, rx->link_id);
+=======
+		cfg80211_rx_control_port(dev, skb, noencrypt);
+>>>>>>> b7ba80a49124 (Commit)
 		dev_kfree_skb(skb);
 	} else {
 		struct ethhdr *ehdr = (void *)skb_mac_header(skb);
@@ -2701,6 +2858,7 @@ ieee80211_deliver_skb(struct ieee80211_rx_data *rx)
 	}
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_MAC80211_MESH
 static bool
 ieee80211_rx_mesh_fast_forward(struct ieee80211_sub_if_data *sdata,
@@ -2940,6 +3098,8 @@ rx_accept:
 	return RX_CONTINUE;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static ieee80211_rx_result debug_noinline
 __ieee80211_rx_h_amsdu(struct ieee80211_rx_data *rx, u8 data_offset)
 {
@@ -2948,7 +3108,10 @@ __ieee80211_rx_h_amsdu(struct ieee80211_rx_data *rx, u8 data_offset)
 	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)skb->data;
 	__le16 fc = hdr->frame_control;
 	struct sk_buff_head frame_list;
+<<<<<<< HEAD
 	static ieee80211_rx_result res;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct ethhdr ethhdr;
 	const u8 *check_da = ethhdr.h_dest, *check_sa = ethhdr.h_source;
 
@@ -2967,7 +3130,10 @@ __ieee80211_rx_h_amsdu(struct ieee80211_rx_data *rx, u8 data_offset)
 			break;
 		case NL80211_IFTYPE_MESH_POINT:
 			check_sa = NULL;
+<<<<<<< HEAD
 			check_da = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		default:
 			break;
@@ -2982,6 +3148,7 @@ __ieee80211_rx_h_amsdu(struct ieee80211_rx_data *rx, u8 data_offset)
 					  data_offset, true))
 		return RX_DROP_UNUSABLE;
 
+<<<<<<< HEAD
 	if (rx->sta && rx->sta->amsdu_mesh_control < 0) {
 		s8 valid = -1;
 		int i;
@@ -3007,10 +3174,17 @@ __ieee80211_rx_h_amsdu(struct ieee80211_rx_data *rx, u8 data_offset)
 				 rx->local->hw.extra_tx_headroom,
 				 check_da, check_sa,
 				 rx->sta->amsdu_mesh_control);
+=======
+	ieee80211_amsdu_to_8023s(skb, &frame_list, dev->dev_addr,
+				 rx->sdata->vif.type,
+				 rx->local->hw.extra_tx_headroom,
+				 check_da, check_sa);
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (!skb_queue_empty(&frame_list)) {
 		rx->skb = __skb_dequeue(&frame_list);
 
+<<<<<<< HEAD
 		res = ieee80211_rx_mesh_data(rx->sdata, rx->sta, rx->skb);
 		switch (res) {
 		case RX_QUEUED:
@@ -3029,6 +3203,14 @@ __ieee80211_rx_h_amsdu(struct ieee80211_rx_data *rx, u8 data_offset)
 
 free:
 		dev_kfree_skb(rx->skb);
+=======
+		if (!ieee80211_frame_allowed(rx, fc)) {
+			dev_kfree_skb(rx->skb);
+			continue;
+		}
+
+		ieee80211_deliver_skb(rx);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return RX_QUEUED;
@@ -3061,8 +3243,11 @@ ieee80211_rx_h_amsdu(struct ieee80211_rx_data *rx)
 			if (!rx->sdata->u.mgd.use_4addr)
 				return RX_DROP_UNUSABLE;
 			break;
+<<<<<<< HEAD
 		case NL80211_IFTYPE_MESH_POINT:
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		default:
 			return RX_DROP_UNUSABLE;
 		}
@@ -3091,6 +3276,155 @@ ieee80211_rx_h_amsdu(struct ieee80211_rx_data *rx)
 	return __ieee80211_rx_h_amsdu(rx, 0);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_MAC80211_MESH
+static ieee80211_rx_result
+ieee80211_rx_h_mesh_fwding(struct ieee80211_rx_data *rx)
+{
+	struct ieee80211_hdr *fwd_hdr, *hdr;
+	struct ieee80211_tx_info *info;
+	struct ieee80211s_hdr *mesh_hdr;
+	struct sk_buff *skb = rx->skb, *fwd_skb;
+	struct ieee80211_local *local = rx->local;
+	struct ieee80211_sub_if_data *sdata = rx->sdata;
+	struct ieee80211_if_mesh *ifmsh = &sdata->u.mesh;
+	u16 ac, q, hdrlen;
+	int tailroom = 0;
+
+	hdr = (struct ieee80211_hdr *) skb->data;
+	hdrlen = ieee80211_hdrlen(hdr->frame_control);
+
+	/* make sure fixed part of mesh header is there, also checks skb len */
+	if (!pskb_may_pull(rx->skb, hdrlen + 6))
+		return RX_DROP_MONITOR;
+
+	mesh_hdr = (struct ieee80211s_hdr *) (skb->data + hdrlen);
+
+	/* make sure full mesh header is there, also checks skb len */
+	if (!pskb_may_pull(rx->skb,
+			   hdrlen + ieee80211_get_mesh_hdrlen(mesh_hdr)))
+		return RX_DROP_MONITOR;
+
+	/* reload pointers */
+	hdr = (struct ieee80211_hdr *) skb->data;
+	mesh_hdr = (struct ieee80211s_hdr *) (skb->data + hdrlen);
+
+	if (ieee80211_drop_unencrypted(rx, hdr->frame_control))
+		return RX_DROP_MONITOR;
+
+	/* frame is in RMC, don't forward */
+	if (ieee80211_is_data(hdr->frame_control) &&
+	    is_multicast_ether_addr(hdr->addr1) &&
+	    mesh_rmc_check(rx->sdata, hdr->addr3, mesh_hdr))
+		return RX_DROP_MONITOR;
+
+	if (!ieee80211_is_data(hdr->frame_control))
+		return RX_CONTINUE;
+
+	if (!mesh_hdr->ttl)
+		return RX_DROP_MONITOR;
+
+	if (mesh_hdr->flags & MESH_FLAGS_AE) {
+		struct mesh_path *mppath;
+		char *proxied_addr;
+		char *mpp_addr;
+
+		if (is_multicast_ether_addr(hdr->addr1)) {
+			mpp_addr = hdr->addr3;
+			proxied_addr = mesh_hdr->eaddr1;
+		} else if ((mesh_hdr->flags & MESH_FLAGS_AE) ==
+			    MESH_FLAGS_AE_A5_A6) {
+			/* has_a4 already checked in ieee80211_rx_mesh_check */
+			mpp_addr = hdr->addr4;
+			proxied_addr = mesh_hdr->eaddr2;
+		} else {
+			return RX_DROP_MONITOR;
+		}
+
+		rcu_read_lock();
+		mppath = mpp_path_lookup(sdata, proxied_addr);
+		if (!mppath) {
+			mpp_path_add(sdata, proxied_addr, mpp_addr);
+		} else {
+			spin_lock_bh(&mppath->state_lock);
+			if (!ether_addr_equal(mppath->mpp, mpp_addr))
+				memcpy(mppath->mpp, mpp_addr, ETH_ALEN);
+			mppath->exp_time = jiffies;
+			spin_unlock_bh(&mppath->state_lock);
+		}
+		rcu_read_unlock();
+	}
+
+	/* Frame has reached destination.  Don't forward */
+	if (!is_multicast_ether_addr(hdr->addr1) &&
+	    ether_addr_equal(sdata->vif.addr, hdr->addr3))
+		return RX_CONTINUE;
+
+	ac = ieee802_1d_to_ac[skb->priority];
+	q = sdata->vif.hw_queue[ac];
+	if (ieee80211_queue_stopped(&local->hw, q)) {
+		IEEE80211_IFSTA_MESH_CTR_INC(ifmsh, dropped_frames_congestion);
+		return RX_DROP_MONITOR;
+	}
+	skb_set_queue_mapping(skb, ac);
+
+	if (!--mesh_hdr->ttl) {
+		if (!is_multicast_ether_addr(hdr->addr1))
+			IEEE80211_IFSTA_MESH_CTR_INC(ifmsh,
+						     dropped_frames_ttl);
+		goto out;
+	}
+
+	if (!ifmsh->mshcfg.dot11MeshForwarding)
+		goto out;
+
+	if (sdata->crypto_tx_tailroom_needed_cnt)
+		tailroom = IEEE80211_ENCRYPT_TAILROOM;
+
+	fwd_skb = skb_copy_expand(skb, local->tx_headroom +
+				       IEEE80211_ENCRYPT_HEADROOM,
+				  tailroom, GFP_ATOMIC);
+	if (!fwd_skb)
+		goto out;
+
+	fwd_skb->dev = sdata->dev;
+	fwd_hdr =  (struct ieee80211_hdr *) fwd_skb->data;
+	fwd_hdr->frame_control &= ~cpu_to_le16(IEEE80211_FCTL_RETRY);
+	info = IEEE80211_SKB_CB(fwd_skb);
+	memset(info, 0, sizeof(*info));
+	info->control.flags |= IEEE80211_TX_INTCFL_NEED_TXPROCESSING;
+	info->control.vif = &rx->sdata->vif;
+	info->control.jiffies = jiffies;
+	if (is_multicast_ether_addr(fwd_hdr->addr1)) {
+		IEEE80211_IFSTA_MESH_CTR_INC(ifmsh, fwded_mcast);
+		memcpy(fwd_hdr->addr2, sdata->vif.addr, ETH_ALEN);
+		/* update power mode indication when forwarding */
+		ieee80211_mps_set_frame_flags(sdata, NULL, fwd_hdr);
+	} else if (!mesh_nexthop_lookup(sdata, fwd_skb)) {
+		/* mesh power mode flags updated in mesh_nexthop_lookup */
+		IEEE80211_IFSTA_MESH_CTR_INC(ifmsh, fwded_unicast);
+	} else {
+		/* unable to resolve next hop */
+		mesh_path_error_tx(sdata, ifmsh->mshcfg.element_ttl,
+				   fwd_hdr->addr3, 0,
+				   WLAN_REASON_MESH_PATH_NOFORWARD,
+				   fwd_hdr->addr2);
+		IEEE80211_IFSTA_MESH_CTR_INC(ifmsh, dropped_frames_no_route);
+		kfree_skb(fwd_skb);
+		return RX_DROP_MONITOR;
+	}
+
+	IEEE80211_IFSTA_MESH_CTR_INC(ifmsh, fwded_frames);
+	ieee80211_add_pending_skb(local, fwd_skb);
+ out:
+	if (is_multicast_ether_addr(hdr->addr1))
+		return RX_CONTINUE;
+	return RX_DROP_MONITOR;
+}
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 static ieee80211_rx_result debug_noinline
 ieee80211_rx_h_data(struct ieee80211_rx_data *rx)
 {
@@ -3099,7 +3433,10 @@ ieee80211_rx_h_data(struct ieee80211_rx_data *rx)
 	struct net_device *dev = sdata->dev;
 	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)rx->skb->data;
 	__le16 fc = hdr->frame_control;
+<<<<<<< HEAD
 	static ieee80211_rx_result res;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool port_control;
 	int err;
 
@@ -3126,10 +3463,13 @@ ieee80211_rx_h_data(struct ieee80211_rx_data *rx)
 	if (unlikely(err))
 		return RX_DROP_UNUSABLE;
 
+<<<<<<< HEAD
 	res = ieee80211_rx_mesh_data(rx->sdata, rx->sta, rx->skb);
 	if (res != RX_CONTINUE)
 		return res;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ieee80211_frame_allowed(rx, fc))
 		return RX_DROP_MONITOR;
 
@@ -3327,9 +3667,15 @@ ieee80211_rx_check_bss_color_collision(struct ieee80211_rx_data *rx)
 		color = le32_get_bits(he_oper->he_oper_params,
 				      IEEE80211_HE_OPERATION_BSS_COLOR_MASK);
 		if (color == bss_conf->he_bss_color.color)
+<<<<<<< HEAD
 			ieee80211_obss_color_collision_notify(&rx->sdata->vif,
 							      BIT_ULL(color),
 							      GFP_ATOMIC);
+=======
+			ieeee80211_obss_color_collision_notify(&rx->sdata->vif,
+							       BIT_ULL(color),
+							       GFP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -3978,6 +4324,11 @@ static void ieee80211_rx_cooked_monitor(struct ieee80211_rx_data *rx,
 	if (!local->cooked_mntrs)
 		goto out_free_skb;
 
+<<<<<<< HEAD
+=======
+	/* vendor data is long removed here */
+	status->flag &= ~RX_FLAG_RADIOTAP_VENDOR_DATA;
+>>>>>>> b7ba80a49124 (Commit)
 	/* room for the radiotap header based on driver features */
 	needed_headroom = ieee80211_rx_radiotap_hdrlen(local, status, skb);
 
@@ -4098,6 +4449,13 @@ static void ieee80211_rx_handlers(struct ieee80211_rx_data *rx,
 		CALL_RXH(ieee80211_rx_h_defragment);
 		CALL_RXH(ieee80211_rx_h_michael_mic_verify);
 		/* must be after MMIC verify so header is counted in MPDU mic */
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_MAC80211_MESH
+		if (ieee80211_vif_is_mesh(&rx->sdata->vif))
+			CALL_RXH(ieee80211_rx_h_mesh_fwding);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 		CALL_RXH(ieee80211_rx_h_amsdu);
 		CALL_RXH(ieee80211_rx_h_data);
 
@@ -4151,6 +4509,7 @@ static void ieee80211_invoke_rx_handlers(struct ieee80211_rx_data *rx)
 #undef CALL_RXH
 }
 
+<<<<<<< HEAD
 static bool
 ieee80211_rx_is_valid_sta_link_id(struct ieee80211_sta *sta, u8 link_id)
 {
@@ -4197,6 +4556,8 @@ static bool ieee80211_rx_data_set_sta(struct ieee80211_rx_data *rx,
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This function makes calls into the RX path, therefore
  * it has to be invoked under RCU read lock.
@@ -4205,6 +4566,7 @@ void ieee80211_release_reorder_timeout(struct sta_info *sta, int tid)
 {
 	struct sk_buff_head frames;
 	struct ieee80211_rx_data rx = {
+<<<<<<< HEAD
 		/* This is OK -- must be QoS data frame */
 		.security_idx = tid,
 		.seqno_idx = tid,
@@ -4218,6 +4580,18 @@ void ieee80211_release_reorder_timeout(struct sta_info *sta, int tid)
 
 	if (!ieee80211_rx_data_set_sta(&rx, sta, link_id))
 		return;
+=======
+		.sta = sta,
+		.sdata = sta->sdata,
+		.local = sta->local,
+		/* This is OK -- must be QoS data frame */
+		.security_idx = tid,
+		.seqno_idx = tid,
+		.link_id = -1,
+	};
+	struct tid_ampdu_rx *tid_agg_rx;
+	u8 link_id;
+>>>>>>> b7ba80a49124 (Commit)
 
 	tid_agg_rx = rcu_dereference(sta->ampdu_mlme.tid_rx[tid]);
 	if (!tid_agg_rx)
@@ -4237,6 +4611,13 @@ void ieee80211_release_reorder_timeout(struct sta_info *sta, int tid)
 		};
 		drv_event_callback(rx.local, rx.sdata, &event);
 	}
+<<<<<<< HEAD
+=======
+	/* FIXME: statistics won't be right with this */
+	link_id = sta->sta.valid_links ? ffs(sta->sta.valid_links) - 1 : 0;
+	rx.link = rcu_dereference(sta->sdata->link[link_id]);
+	rx.link_sta = rcu_dereference(sta->link[link_id]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ieee80211_rx_handlers(&rx, &frames);
 }
@@ -4252,6 +4633,10 @@ void ieee80211_mark_rx_ba_filtered_frames(struct ieee80211_sta *pubsta, u8 tid,
 		/* This is OK -- must be QoS data frame */
 		.security_idx = tid,
 		.seqno_idx = tid,
+<<<<<<< HEAD
+=======
+		.link_id = -1,
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	int i, diff;
 
@@ -4262,8 +4647,15 @@ void ieee80211_mark_rx_ba_filtered_frames(struct ieee80211_sta *pubsta, u8 tid,
 
 	sta = container_of(pubsta, struct sta_info, sta);
 
+<<<<<<< HEAD
 	if (!ieee80211_rx_data_set_sta(&rx, sta, -1))
 		return;
+=======
+	rx.sta = sta;
+	rx.sdata = sta->sdata;
+	rx.link = &rx.sdata->deflink;
+	rx.local = sta->local;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rcu_read_lock();
 	tid_agg_rx = rcu_dereference(sta->ampdu_mlme.tid_rx[tid]);
@@ -4341,8 +4733,12 @@ static bool ieee80211_accept_frame(struct ieee80211_rx_data *rx)
 	case NL80211_IFTYPE_STATION:
 		if (!bssid && !sdata->u.mgd.use_4addr)
 			return false;
+<<<<<<< HEAD
 		if (ieee80211_is_first_frag(hdr->seq_ctrl) &&
 		    ieee80211_is_robust_mgmt_frame(skb) && !rx->sta)
+=======
+		if (ieee80211_is_robust_mgmt_frame(skb) && !rx->sta)
+>>>>>>> b7ba80a49124 (Commit)
 			return false;
 		if (multicast)
 			return true;
@@ -4478,7 +4874,10 @@ void ieee80211_check_fast_rx(struct sta_info *sta)
 		.vif_type = sdata->vif.type,
 		.control_port_protocol = sdata->control_port_protocol,
 	}, *old, *new = NULL;
+<<<<<<< HEAD
 	u32 offload_flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool set_offload = false;
 	bool assign = false;
 	bool offload;
@@ -4553,12 +4952,15 @@ void ieee80211_check_fast_rx(struct sta_info *sta)
 		}
 
 		break;
+<<<<<<< HEAD
 	case NL80211_IFTYPE_MESH_POINT:
 		fastrx.expected_ds_bits = cpu_to_le16(IEEE80211_FCTL_FROMDS |
 						      IEEE80211_FCTL_TODS);
 		fastrx.da_offs = offsetof(struct ieee80211_hdr, addr3);
 		fastrx.sa_offs = offsetof(struct ieee80211_hdr, addr4);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		goto clear;
 	}
@@ -4600,10 +5002,17 @@ void ieee80211_check_fast_rx(struct sta_info *sta)
 	if (assign)
 		new = kmemdup(&fastrx, sizeof(fastrx), GFP_KERNEL);
 
+<<<<<<< HEAD
 	offload_flags = get_bss_sdata(sdata)->vif.offload_flags;
 	offload = offload_flags & IEEE80211_OFFLOAD_DECAP_ENABLED;
 
 	if (assign && offload)
+=======
+	offload = assign &&
+		  (sdata->vif.offload_flags & IEEE80211_OFFLOAD_DECAP_ENABLED);
+
+	if (offload)
+>>>>>>> b7ba80a49124 (Commit)
 		set_offload = !test_and_set_sta_flag(sta, WLAN_STA_DECAP_OFFLOAD);
 	else
 		set_offload = test_and_clear_sta_flag(sta, WLAN_STA_DECAP_OFFLOAD);
@@ -4657,6 +5066,18 @@ void ieee80211_check_fast_rx_iface(struct ieee80211_sub_if_data *sdata)
 	mutex_unlock(&local->sta_mtx);
 }
 
+<<<<<<< HEAD
+=======
+static bool
+ieee80211_rx_is_valid_sta_link_id(struct ieee80211_sta *sta, u8 link_id)
+{
+	if (!sta->mlo)
+		return false;
+
+	return !!(sta->valid_links & BIT(link_id));
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void ieee80211_rx_8023(struct ieee80211_rx_data *rx,
 			      struct ieee80211_fast_rx *fast_rx,
 			      int orig_len)
@@ -4767,7 +5188,11 @@ static bool ieee80211_invoke_fast_rx(struct ieee80211_rx_data *rx,
 	struct sk_buff *skb = rx->skb;
 	struct ieee80211_hdr *hdr = (void *)skb->data;
 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
+<<<<<<< HEAD
 	static ieee80211_rx_result res;
+=======
+	struct sta_info *sta = rx->sta;
+>>>>>>> b7ba80a49124 (Commit)
 	int orig_len = skb->len;
 	int hdrlen = ieee80211_hdrlen(hdr->frame_control);
 	int snap_offs = hdrlen;
@@ -4779,6 +5204,10 @@ static bool ieee80211_invoke_fast_rx(struct ieee80211_rx_data *rx,
 		u8 da[ETH_ALEN];
 		u8 sa[ETH_ALEN];
 	} addrs __aligned(2);
+<<<<<<< HEAD
+=======
+	struct link_sta_info *link_sta;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ieee80211_sta_rx_stats *stats;
 
 	/* for parallel-rx, we need to have DUP_VALIDATED, otherwise we write
@@ -4829,10 +5258,16 @@ static bool ieee80211_invoke_fast_rx(struct ieee80211_rx_data *rx,
 		snap_offs += IEEE80211_CCMP_HDR_LEN;
 	}
 
+<<<<<<< HEAD
 	if (!ieee80211_vif_is_mesh(&rx->sdata->vif) &&
 	    !(status->rx_flags & IEEE80211_RX_AMSDU)) {
 		if (!pskb_may_pull(skb, snap_offs + sizeof(*payload)))
 			return false;
+=======
+	if (!(status->rx_flags & IEEE80211_RX_AMSDU)) {
+		if (!pskb_may_pull(skb, snap_offs + sizeof(*payload)))
+			goto drop;
+>>>>>>> b7ba80a49124 (Commit)
 
 		payload = (void *)(skb->data + snap_offs);
 
@@ -4869,6 +5304,7 @@ static bool ieee80211_invoke_fast_rx(struct ieee80211_rx_data *rx,
 	/* do the header conversion - first grab the addresses */
 	ether_addr_copy(addrs.da, skb->data + fast_rx->da_offs);
 	ether_addr_copy(addrs.sa, skb->data + fast_rx->sa_offs);
+<<<<<<< HEAD
 	if (ieee80211_vif_is_mesh(&rx->sdata->vif)) {
 	    skb_pull(skb, snap_offs - 2);
 	    put_unaligned_be16(skb->len - 2, skb->data);
@@ -4892,16 +5328,40 @@ static bool ieee80211_invoke_fast_rx(struct ieee80211_rx_data *rx,
 		goto drop;
 	}
 
+=======
+	skb_postpull_rcsum(skb, skb->data + snap_offs,
+			   sizeof(rfc1042_header) + 2);
+	/* remove the SNAP but leave the ethertype */
+	skb_pull(skb, snap_offs + sizeof(rfc1042_header));
+	/* push the addresses in front */
+	memcpy(skb_push(skb, sizeof(addrs)), &addrs, sizeof(addrs));
+
+>>>>>>> b7ba80a49124 (Commit)
 	ieee80211_rx_8023(rx, fast_rx, orig_len);
 
 	return true;
  drop:
 	dev_kfree_skb(skb);
 
+<<<<<<< HEAD
 	if (fast_rx->uses_rss)
 		stats = this_cpu_ptr(rx->link_sta->pcpu_rx_stats);
 	else
 		stats = &rx->link_sta->rx_stats;
+=======
+	if (rx->link_id >= 0) {
+		link_sta = rcu_dereference(sta->link[rx->link_id]);
+		if (!link_sta)
+			return true;
+	} else {
+		link_sta = &sta->deflink;
+	}
+
+	if (fast_rx->uses_rss)
+		stats = this_cpu_ptr(link_sta->pcpu_rx_stats);
+	else
+		stats = &link_sta->rx_stats;
+>>>>>>> b7ba80a49124 (Commit)
 
 	stats->dropped++;
 	return true;
@@ -4919,8 +5379,13 @@ static bool ieee80211_prepare_and_rx_handle(struct ieee80211_rx_data *rx,
 	struct ieee80211_local *local = rx->local;
 	struct ieee80211_sub_if_data *sdata = rx->sdata;
 	struct ieee80211_hdr *hdr = (void *)skb->data;
+<<<<<<< HEAD
 	struct link_sta_info *link_sta = rx->link_sta;
 	struct ieee80211_link_data *link = rx->link;
+=======
+	struct link_sta_info *link_sta = NULL;
+	struct ieee80211_link_data *link;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rx->skb = skb;
 
@@ -4942,6 +5407,38 @@ static bool ieee80211_prepare_and_rx_handle(struct ieee80211_rx_data *rx,
 	if (!ieee80211_accept_frame(rx))
 		return false;
 
+<<<<<<< HEAD
+=======
+	if (rx->link_id >= 0) {
+		link = rcu_dereference(rx->sdata->link[rx->link_id]);
+
+		/* we might race link removal */
+		if (!link)
+			return true;
+		rx->link = link;
+
+		if (rx->sta) {
+			rx->link_sta =
+				rcu_dereference(rx->sta->link[rx->link_id]);
+			if (!rx->link_sta)
+				return true;
+		}
+	} else {
+		if (rx->sta)
+			rx->link_sta = &rx->sta->deflink;
+
+		rx->link = &sdata->deflink;
+	}
+
+	if (unlikely(!is_multicast_ether_addr(hdr->addr1) &&
+		     rx->link_id >= 0 && rx->sta && rx->sta->sta.mlo)) {
+		link_sta = rcu_dereference(rx->sta->link[rx->link_id]);
+
+		if (WARN_ON_ONCE(!link_sta))
+			return true;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!consume) {
 		struct skb_shared_hwtstamps *shwt;
 
@@ -4959,6 +5456,7 @@ static bool ieee80211_prepare_and_rx_handle(struct ieee80211_rx_data *rx,
 		 */
 		shwt = skb_hwtstamps(rx->skb);
 		shwt->hwtstamp = skb_hwtstamps(skb)->hwtstamp;
+<<<<<<< HEAD
 
 		/* Update the hdr pointer to the new skb for translation below */
 		hdr = (struct ieee80211_hdr *)rx->skb->data;
@@ -4966,6 +5464,11 @@ static bool ieee80211_prepare_and_rx_handle(struct ieee80211_rx_data *rx,
 
 	if (unlikely(rx->sta && rx->sta->sta.mlo) &&
 	    is_unicast_ether_addr(hdr->addr1)) {
+=======
+	}
+
+	if (unlikely(link_sta)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* translate to MLD addresses */
 		if (ether_addr_equal(link->conf->addr, hdr->addr1))
 			ether_addr_copy(hdr->addr1, rx->sdata->vif.addr);
@@ -4995,8 +5498,11 @@ static void __ieee80211_rx_handle_8023(struct ieee80211_hw *hw,
 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
 	struct ieee80211_fast_rx *fast_rx;
 	struct ieee80211_rx_data rx;
+<<<<<<< HEAD
 	struct sta_info *sta;
 	int link_id = -1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(&rx, 0, sizeof(rx));
 	rx.skb = skb;
@@ -5013,8 +5519,17 @@ static void __ieee80211_rx_handle_8023(struct ieee80211_hw *hw,
 	if (!pubsta)
 		goto drop;
 
+<<<<<<< HEAD
 	if (status->link_valid)
 		link_id = status->link_id;
+=======
+	rx.sta = container_of(pubsta, struct sta_info, sta);
+	rx.sdata = rx.sta->sdata;
+
+	if (status->link_valid &&
+	    !ieee80211_rx_is_valid_sta_link_id(pubsta, status->link_id))
+		goto drop;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * TODO: Should the frame be dropped if the right link_id is not
@@ -5023,9 +5538,25 @@ static void __ieee80211_rx_handle_8023(struct ieee80211_hw *hw,
 	 * link_id is used only for stats purpose and updating the stats on
 	 * the deflink is fine?
 	 */
+<<<<<<< HEAD
 	sta = container_of(pubsta, struct sta_info, sta);
 	if (!ieee80211_rx_data_set_sta(&rx, sta, link_id))
 		goto drop;
+=======
+	if (status->link_valid)
+		rx.link_id = status->link_id;
+
+	if (rx.link_id >= 0) {
+		struct ieee80211_link_data *link;
+
+		link =  rcu_dereference(rx.sdata->link[rx.link_id]);
+		if (!link)
+			goto drop;
+		rx.link = link;
+	} else {
+		rx.link = &rx.sdata->deflink;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	fast_rx = rcu_dereference(rx.sta->fast_rx);
 	if (!fast_rx)
@@ -5043,8 +5574,11 @@ static bool ieee80211_rx_for_interface(struct ieee80211_rx_data *rx,
 {
 	struct link_sta_info *link_sta;
 	struct ieee80211_hdr *hdr = (void *)skb->data;
+<<<<<<< HEAD
 	struct sta_info *sta;
 	int link_id = -1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Look up link station first, in case there's a
@@ -5054,6 +5588,7 @@ static bool ieee80211_rx_for_interface(struct ieee80211_rx_data *rx,
 	 */
 	link_sta = link_sta_info_get_bss(rx->sdata, hdr->addr2);
 	if (link_sta) {
+<<<<<<< HEAD
 		sta = link_sta->sta;
 		link_id = link_sta->link_id;
 	} else {
@@ -5066,6 +5601,25 @@ static bool ieee80211_rx_for_interface(struct ieee80211_rx_data *rx,
 
 	if (!ieee80211_rx_data_set_sta(rx, sta, link_id))
 		return false;
+=======
+		rx->sta = link_sta->sta;
+		rx->link_id = link_sta->link_id;
+	} else {
+		struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
+
+		rx->sta = sta_info_get_bss(rx->sdata, hdr->addr2);
+		if (rx->sta) {
+			if (status->link_valid &&
+			    !ieee80211_rx_is_valid_sta_link_id(&rx->sta->sta,
+							       status->link_id))
+				return false;
+
+			rx->link_id = status->link_valid ? status->link_id : -1;
+		} else {
+			rx->link_id = -1;
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ieee80211_prepare_and_rx_handle(rx, skb, consume);
 }
@@ -5125,6 +5679,7 @@ static void __ieee80211_rx_handle_packet(struct ieee80211_hw *hw,
 
 	if (ieee80211_is_data(fc)) {
 		struct sta_info *sta, *prev_sta;
+<<<<<<< HEAD
 		int link_id = -1;
 
 		if (status->link_valid)
@@ -5135,6 +5690,21 @@ static void __ieee80211_rx_handle_packet(struct ieee80211_hw *hw,
 			if (!ieee80211_rx_data_set_sta(&rx, sta, link_id))
 				goto out;
 
+=======
+		u8 link_id = status->link_id;
+
+		if (pubsta) {
+			rx.sta = container_of(pubsta, struct sta_info, sta);
+			rx.sdata = rx.sta->sdata;
+
+			if (status->link_valid &&
+			    !ieee80211_rx_is_valid_sta_link_id(pubsta, link_id))
+				goto out;
+
+			if (status->link_valid)
+				rx.link_id = status->link_id;
+
+>>>>>>> b7ba80a49124 (Commit)
 			/*
 			 * In MLO connection, fetch the link_id using addr2
 			 * when the driver does not pass link_id in status.
@@ -5152,7 +5722,11 @@ static void __ieee80211_rx_handle_packet(struct ieee80211_hw *hw,
 				if (!link_sta)
 					goto out;
 
+<<<<<<< HEAD
 				ieee80211_rx_data_set_link(&rx, link_sta->link_id);
+=======
+				rx.link_id = link_sta->link_id;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 
 			if (ieee80211_prepare_and_rx_handle(&rx, skb, true))
@@ -5168,6 +5742,7 @@ static void __ieee80211_rx_handle_packet(struct ieee80211_hw *hw,
 				continue;
 			}
 
+<<<<<<< HEAD
 			rx.sdata = prev_sta->sdata;
 			if (!ieee80211_rx_data_set_sta(&rx, prev_sta, link_id))
 				goto out;
@@ -5175,18 +5750,41 @@ static void __ieee80211_rx_handle_packet(struct ieee80211_hw *hw,
 			if (!status->link_valid && prev_sta->sta.mlo)
 				continue;
 
+=======
+			if ((status->link_valid &&
+			     !ieee80211_rx_is_valid_sta_link_id(&prev_sta->sta,
+								link_id)) ||
+			    (!status->link_valid && prev_sta->sta.mlo))
+				continue;
+
+			rx.link_id = status->link_valid ? link_id : -1;
+			rx.sta = prev_sta;
+			rx.sdata = prev_sta->sdata;
+>>>>>>> b7ba80a49124 (Commit)
 			ieee80211_prepare_and_rx_handle(&rx, skb, false);
 
 			prev_sta = sta;
 		}
 
 		if (prev_sta) {
+<<<<<<< HEAD
 			rx.sdata = prev_sta->sdata;
 			if (!ieee80211_rx_data_set_sta(&rx, prev_sta, link_id))
 				goto out;
 
 			if (!status->link_valid && prev_sta->sta.mlo)
 				goto out;
+=======
+			if ((status->link_valid &&
+			     !ieee80211_rx_is_valid_sta_link_id(&prev_sta->sta,
+								link_id)) ||
+			    (!status->link_valid && prev_sta->sta.mlo))
+				goto out;
+
+			rx.link_id = status->link_valid ? link_id : -1;
+			rx.sta = prev_sta;
+			rx.sdata = prev_sta->sdata;
+>>>>>>> b7ba80a49124 (Commit)
 
 			if (ieee80211_prepare_and_rx_handle(&rx, skb, true))
 				return;
@@ -5317,6 +5915,7 @@ void ieee80211_rx_list(struct ieee80211_hw *hw, struct ieee80211_sta *pubsta,
 				      status->rate_idx, status->nss))
 				goto drop;
 			break;
+<<<<<<< HEAD
 		case RX_ENC_EHT:
 			if (WARN_ONCE(status->rate_idx > 15 ||
 				      !status->nss ||
@@ -5326,6 +5925,8 @@ void ieee80211_rx_list(struct ieee80211_hw *hw, struct ieee80211_sta *pubsta,
 				      status->rate_idx, status->nss, status->eht.gi))
 				goto drop;
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		default:
 			WARN_ON_ONCE(1);
 			fallthrough;

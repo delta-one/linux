@@ -108,6 +108,7 @@ config EROFS_FS_ONDEMAND
 	  read support.
 
 	  If unsure, say N.
+<<<<<<< HEAD
 
 config EROFS_FS_PCPU_KTHREAD
 	bool "EROFS per-cpu decompression kthread workers"
@@ -126,3 +127,5 @@ config EROFS_FS_PCPU_KTHREAD_HIPRI
 	  at higher priority.
 
 	  If unsure, say N.
+=======
+>>>>>>> b7ba80a49124 (Commit)

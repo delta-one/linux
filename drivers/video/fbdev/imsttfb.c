@@ -1617,12 +1617,16 @@ static int __init imsttfb_init(void)
 {
 #ifndef MODULE
 	char *option = NULL;
+<<<<<<< HEAD
 #endif
 
 	if (fb_modesetting_disabled("imsttfb"))
 		return -ENODEV;
 
 #ifndef MODULE
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (fb_get_options("imsttfb", &option))
 		return -ENODEV;
 
@@ -1636,6 +1640,10 @@ static void __exit imsttfb_exit(void)
 	pci_unregister_driver(&imsttfb_pci_driver);
 }
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)
 
 module_init(imsttfb_init);
 module_exit(imsttfb_exit);

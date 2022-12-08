@@ -2484,7 +2484,10 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
 static struct platform_driver qcom_spmi_regulator_driver = {
 	.driver		= {
 		.name	= "qcom-spmi-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = qcom_spmi_regulator_match,
 	},
 	.probe		= qcom_spmi_regulator_probe,

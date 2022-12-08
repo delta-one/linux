@@ -445,7 +445,11 @@ static int hisi_sllc_pmu_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	hisi_pmu_init(sllc_pmu, name, THIS_MODULE);
+=======
+	hisi_pmu_init(&sllc_pmu->pmu, name, sllc_pmu->pmu_events.attr_groups, THIS_MODULE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = perf_pmu_register(&sllc_pmu->pmu, name, -1);
 	if (ret) {

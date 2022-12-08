@@ -27,8 +27,13 @@ static unsigned long ccu_nm_calc_rate(unsigned long parent,
 	return rate;
 }
 
+<<<<<<< HEAD
 static unsigned long ccu_nm_find_best(unsigned long parent, unsigned long rate,
 				      struct _ccu_nm *nm)
+=======
+static void ccu_nm_find_best(unsigned long parent, unsigned long rate,
+			     struct _ccu_nm *nm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long best_rate = 0;
 	unsigned long best_n = 0, best_m = 0;
@@ -52,8 +57,11 @@ static unsigned long ccu_nm_find_best(unsigned long parent, unsigned long rate,
 
 	nm->n = best_n;
 	nm->m = best_m;
+<<<<<<< HEAD
 
 	return best_rate;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ccu_nm_disable(struct clk_hw *hw)
@@ -159,7 +167,12 @@ static long ccu_nm_round_rate(struct clk_hw *hw, unsigned long rate,
 	_nm.min_m = 1;
 	_nm.max_m = nm->m.max ?: 1 << nm->m.width;
 
+<<<<<<< HEAD
 	rate = ccu_nm_find_best(*parent_rate, rate, &_nm);
+=======
+	ccu_nm_find_best(*parent_rate, rate, &_nm);
+	rate = ccu_nm_calc_rate(*parent_rate, _nm.n, _nm.m);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (nm->common.features & CCU_FEATURE_FIXED_POSTDIV)
 		rate /= nm->fixed_post_div;

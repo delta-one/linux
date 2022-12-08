@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0-only */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2012 Red Hat, Inc.
  *
@@ -61,7 +64,11 @@ struct dm_cache_metadata *dm_cache_metadata_open(struct block_device *bdev,
 						 sector_t data_block_size,
 						 bool may_format_device,
 						 size_t policy_hint_size,
+<<<<<<< HEAD
 						 unsigned int metadata_version);
+=======
+						 unsigned metadata_version);
+>>>>>>> b7ba80a49124 (Commit)
 
 void dm_cache_metadata_close(struct dm_cache_metadata *cmd);
 
@@ -97,7 +104,11 @@ int dm_cache_load_mappings(struct dm_cache_metadata *cmd,
 			   void *context);
 
 int dm_cache_set_dirty_bits(struct dm_cache_metadata *cmd,
+<<<<<<< HEAD
 			    unsigned int nr_bits, unsigned long *bits);
+=======
+			    unsigned nr_bits, unsigned long *bits);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct dm_cache_statistics {
 	uint32_t read_hits;

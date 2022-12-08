@@ -6,8 +6,13 @@
  * Copyright (c) 2016 Maxime Ripard <maxime.ripard@free-electrons.com>
  */
 
+<<<<<<< HEAD
 #ifndef _CCU_SUN8I_V3S_H_
 #define _CCU_SUN8I_V3S_H_
+=======
+#ifndef _CCU_SUN8I_H3_H_
+#define _CCU_SUN8I_H3_H_
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <dt-bindings/clock/sun8i-v3s-ccu.h>
 #include <dt-bindings/reset/sun8i-v3s-ccu.h>
@@ -51,4 +56,8 @@
 
 #define CLK_PLL_DDR1		74
 
+<<<<<<< HEAD
 #endif /* _CCU_SUN8I_V3S_H_ */
+=======
+#endif /* _CCU_SUN8I_H3_H_ */
+>>>>>>> b7ba80a49124 (Commit)

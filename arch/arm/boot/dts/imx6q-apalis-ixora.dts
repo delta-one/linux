@@ -151,13 +151,19 @@
 };
 
 &usbh1 {
+<<<<<<< HEAD
 	disable-over-current;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vbus-supply = <&reg_usb_host_vbus>;
 	status = "okay";
 };
 
 &usbotg {
+<<<<<<< HEAD
 	disable-over-current;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vbus-supply = <&reg_usb_otg_vbus>;
 	status = "okay";
 };

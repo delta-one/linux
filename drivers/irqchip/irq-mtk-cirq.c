@@ -15,6 +15,7 @@
 #include <linux/slab.h>
 #include <linux/syscore_ops.h>
 
+<<<<<<< HEAD
 enum mtk_cirq_regoffs_index {
 	CIRQ_STA,
 	CIRQ_ACK,
@@ -50,6 +51,16 @@ static const u32 mtk_cirq_regoffs_v2[] = {
 	[CIRQ_POL_CLR]	= 0x500,
 	[CIRQ_CONTROL]	= 0x600,
 };
+=======
+#define CIRQ_ACK	0x40
+#define CIRQ_MASK_SET	0xc0
+#define CIRQ_MASK_CLR	0x100
+#define CIRQ_SENS_SET	0x180
+#define CIRQ_SENS_CLR	0x1c0
+#define CIRQ_POL_SET	0x240
+#define CIRQ_POL_CLR	0x280
+#define CIRQ_CONTROL	0x300
+>>>>>>> b7ba80a49124 (Commit)
 
 #define CIRQ_EN	0x1
 #define CIRQ_EDGE	0x2
@@ -59,12 +70,16 @@ struct mtk_cirq_chip_data {
 	void __iomem *base;
 	unsigned int ext_irq_start;
 	unsigned int ext_irq_end;
+<<<<<<< HEAD
 	const u32 *offsets;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct irq_domain *domain;
 };
 
 static struct mtk_cirq_chip_data *cirq_data;
 
+<<<<<<< HEAD
 static void __iomem *mtk_cirq_reg(struct mtk_cirq_chip_data *chip_data,
 				  enum mtk_cirq_regoffs_index idx)
 {
@@ -79,12 +94,19 @@ static void __iomem *mtk_cirq_irq_reg(struct mtk_cirq_chip_data *chip_data,
 }
 
 static void mtk_cirq_write_mask(struct irq_data *data, enum mtk_cirq_regoffs_index idx)
+=======
+static void mtk_cirq_write_mask(struct irq_data *data, unsigned int offset)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mtk_cirq_chip_data *chip_data = data->chip_data;
 	unsigned int cirq_num = data->hwirq;
 	u32 mask = 1 << (cirq_num % 32);
 
+<<<<<<< HEAD
 	writel_relaxed(mask, mtk_cirq_irq_reg(chip_data, idx, cirq_num));
+=======
+	writel_relaxed(mask, chip_data->base + offset + (cirq_num / 32) * 4);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mtk_cirq_mask(struct irq_data *data)
@@ -201,7 +223,10 @@ static const struct irq_domain_ops cirq_domain_ops = {
 #ifdef CONFIG_PM_SLEEP
 static int mtk_cirq_suspend(void)
 {
+<<<<<<< HEAD
 	void __iomem *reg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 value, mask;
 	unsigned int irq, hwirq_num;
 	bool pending, masked;
@@ -242,23 +267,35 @@ static int mtk_cirq_suspend(void)
 				continue;
 		}
 
+<<<<<<< HEAD
 		reg = mtk_cirq_irq_reg(cirq_data, CIRQ_ACK, i);
 		mask = 1 << (i % 32);
 		writel_relaxed(mask, reg);
+=======
+		mask = 1 << (i % 32);
+		writel_relaxed(mask, cirq_data->base + CIRQ_ACK + (i / 32) * 4);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* set edge_only mode, record edge-triggerd interrupts */
 	/* enable cirq */
+<<<<<<< HEAD
 	reg = mtk_cirq_reg(cirq_data, CIRQ_CONTROL);
 	value = readl_relaxed(reg);
 	value |= (CIRQ_EDGE | CIRQ_EN);
 	writel_relaxed(value, reg);
+=======
+	value = readl_relaxed(cirq_data->base + CIRQ_CONTROL);
+	value |= (CIRQ_EDGE | CIRQ_EN);
+	writel_relaxed(value, cirq_data->base + CIRQ_CONTROL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 static void mtk_cirq_resume(void)
 {
+<<<<<<< HEAD
 	void __iomem *reg = mtk_cirq_reg(cirq_data, CIRQ_CONTROL);
 	u32 value;
 
@@ -270,6 +307,18 @@ static void mtk_cirq_resume(void)
 	value = readl_relaxed(reg);
 	value &= ~(CIRQ_EDGE | CIRQ_EN);
 	writel_relaxed(value, reg);
+=======
+	u32 value;
+
+	/* flush recorded interrupts, will send signals to parent controller */
+	value = readl_relaxed(cirq_data->base + CIRQ_CONTROL);
+	writel_relaxed(value | CIRQ_FLUSH, cirq_data->base + CIRQ_CONTROL);
+
+	/* disable cirq */
+	value = readl_relaxed(cirq_data->base + CIRQ_CONTROL);
+	value &= ~(CIRQ_EDGE | CIRQ_EN);
+	writel_relaxed(value, cirq_data->base + CIRQ_CONTROL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct syscore_ops mtk_cirq_syscore_ops = {
@@ -285,6 +334,7 @@ static void mtk_cirq_syscore_init(void)
 static inline void mtk_cirq_syscore_init(void) {}
 #endif
 
+<<<<<<< HEAD
 static const struct of_device_id mtk_cirq_of_match[] = {
 	{ .compatible = "mediatek,mt2701-cirq", .data = &mtk_cirq_regoffs_v1 },
 	{ .compatible = "mediatek,mt8135-cirq", .data = &mtk_cirq_regoffs_v1 },
@@ -293,11 +343,16 @@ static const struct of_device_id mtk_cirq_of_match[] = {
 	{ /* sentinel */ }
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __init mtk_cirq_of_init(struct device_node *node,
 				   struct device_node *parent)
 {
 	struct irq_domain *domain, *domain_parent;
+<<<<<<< HEAD
 	const struct of_device_id *match;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int irq_num;
 	int ret;
 
@@ -328,6 +383,7 @@ static int __init mtk_cirq_of_init(struct device_node *node,
 	if (ret)
 		goto out_unmap;
 
+<<<<<<< HEAD
 	match = of_match_node(mtk_cirq_of_match, node);
 	if (!match) {
 		ret = -ENODEV;
@@ -335,6 +391,8 @@ static int __init mtk_cirq_of_init(struct device_node *node,
 	}
 	cirq_data->offsets = match->data;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	irq_num = cirq_data->ext_irq_end - cirq_data->ext_irq_start + 1;
 	domain = irq_domain_add_hierarchy(domain_parent, 0,
 					  irq_num, node,

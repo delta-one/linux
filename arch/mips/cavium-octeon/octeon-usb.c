@@ -245,7 +245,11 @@ static int dwc3_octeon_config_power(struct device *dev, u64 base)
 			power_active_low = 0;
 			gpio = gpio_pwr[1];
 		} else {
+<<<<<<< HEAD
 			dev_err(dev, "invalid power configuration\n");
+=======
+			dev_err(dev, "dwc3 controller clock init failure.\n");
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 		if ((OCTEON_IS_MODEL(OCTEON_CN73XX) ||
@@ -278,7 +282,11 @@ static int dwc3_octeon_config_power(struct device *dev, u64 base)
 		uctl_host_cfg.s.ppc_en = 0;
 		uctl_host_cfg.s.ppc_active_high_en = 0;
 		cvmx_write_csr(base + UCTL_HOST_CFG, uctl_host_cfg.u64);
+<<<<<<< HEAD
 		dev_info(dev, "power control disabled\n");
+=======
+		dev_warn(dev, "dwc3 controller clock init failure.\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return 0;
 }
@@ -301,19 +309,31 @@ static int dwc3_octeon_clocks_start(struct device *dev, u64 base)
 		i = of_property_read_u32(dev->of_node,
 					 "refclk-frequency", &clock_rate);
 		if (i) {
+<<<<<<< HEAD
 			dev_err(dev, "No UCTL \"refclk-frequency\"\n");
+=======
+			pr_err("No UCTL \"refclk-frequency\"\n");
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 		i = of_property_read_string(dev->of_node,
 					    "refclk-type-ss", &ss_clock_type);
 		if (i) {
+<<<<<<< HEAD
 			dev_err(dev, "No UCTL \"refclk-type-ss\"\n");
+=======
+			pr_err("No UCTL \"refclk-type-ss\"\n");
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 		i = of_property_read_string(dev->of_node,
 					    "refclk-type-hs", &hs_clock_type);
 		if (i) {
+<<<<<<< HEAD
 			dev_err(dev, "No UCTL \"refclk-type-hs\"\n");
+=======
+			pr_err("No UCTL \"refclk-type-hs\"\n");
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 		if (strcmp("dlmc_ref_clk0", ss_clock_type) == 0) {
@@ -322,14 +342,20 @@ static int dwc3_octeon_clocks_start(struct device *dev, u64 base)
 			else if (strcmp(hs_clock_type, "pll_ref_clk") == 0)
 				ref_clk_sel = 2;
 			else
+<<<<<<< HEAD
 				dev_warn(dev, "Invalid HS clock type %s, using pll_ref_clk instead\n",
 					 hs_clock_type);
+=======
+				pr_err("Invalid HS clock type %s, using  pll_ref_clk instead\n",
+				       hs_clock_type);
+>>>>>>> b7ba80a49124 (Commit)
 		} else if (strcmp(ss_clock_type, "dlmc_ref_clk1") == 0) {
 			if (strcmp(hs_clock_type, "dlmc_ref_clk1") == 0)
 				ref_clk_sel = 1;
 			else if (strcmp(hs_clock_type, "pll_ref_clk") == 0)
 				ref_clk_sel = 3;
 			else {
+<<<<<<< HEAD
 				dev_warn(dev, "Invalid HS clock type %s, using pll_ref_clk instead\n",
 					 hs_clock_type);
 				ref_clk_sel = 3;
@@ -345,6 +371,23 @@ static int dwc3_octeon_clocks_start(struct device *dev, u64 base)
 
 	} else {
 		dev_err(dev, "No USB UCTL device node\n");
+=======
+				pr_err("Invalid HS clock type %s, using  pll_ref_clk instead\n",
+				       hs_clock_type);
+				ref_clk_sel = 3;
+			}
+		} else
+			pr_err("Invalid SS clock type %s, using  dlmc_ref_clk0 instead\n",
+			       ss_clock_type);
+
+		if ((ref_clk_sel == 0 || ref_clk_sel == 1) &&
+				  (clock_rate != 100000000))
+			pr_err("Invalid UCTL clock rate of %u, using 100000000 instead\n",
+			       clock_rate);
+
+	} else {
+		pr_err("No USB UCTL device node\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -396,8 +439,13 @@ static int dwc3_octeon_clocks_start(struct device *dev, u64 base)
 	uctl_ctl.s.ref_clk_div2 = 0;
 	switch (clock_rate) {
 	default:
+<<<<<<< HEAD
 		dev_warn(dev, "Invalid ref_clk %u, using 100000000 instead\n",
 			 clock_rate);
+=======
+		dev_err(dev, "Invalid ref_clk %u, using 100000000 instead\n",
+			clock_rate);
+>>>>>>> b7ba80a49124 (Commit)
 		fallthrough;
 	case 100000000:
 		mpll_mul = 0x19;
@@ -438,8 +486,15 @@ static int dwc3_octeon_clocks_start(struct device *dev, u64 base)
 	udelay(10);
 
 	/* Steo 8c: Setup power-power control. */
+<<<<<<< HEAD
 	if (dwc3_octeon_config_power(dev, base))
 		return -EINVAL;
+=======
+	if (dwc3_octeon_config_power(dev, base)) {
+		dev_err(dev, "Error configuring power.\n");
+		return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Step 8d: Deassert UAHC reset signal. */
 	uctl_ctl.u64 = cvmx_read_csr(uctl_ctl_reg);
@@ -527,10 +582,17 @@ static int __init dwc3_octeon_device_init(void)
 			}
 
 			mutex_lock(&dwc3_octeon_clocks_mutex);
+<<<<<<< HEAD
 			if (dwc3_octeon_clocks_start(&pdev->dev, (u64)base) == 0)
 				dev_info(&pdev->dev, "clocks initialized.\n");
 			dwc3_octeon_set_endian_mode((u64)base);
 			dwc3_octeon_phy_reset((u64)base);
+=======
+			dwc3_octeon_clocks_start(&pdev->dev, (u64)base);
+			dwc3_octeon_set_endian_mode((u64)base);
+			dwc3_octeon_phy_reset((u64)base);
+			dev_info(&pdev->dev, "clocks initialized.\n");
+>>>>>>> b7ba80a49124 (Commit)
 			mutex_unlock(&dwc3_octeon_clocks_mutex);
 			devm_iounmap(&pdev->dev, base);
 			devm_release_mem_region(&pdev->dev, res->start,

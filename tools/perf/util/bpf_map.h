@@ -3,6 +3,10 @@
 #define __PERF_BPF_MAP_H 1
 
 #include <stdio.h>
+<<<<<<< HEAD
+=======
+#include <linux/compiler.h>
+>>>>>>> b7ba80a49124 (Commit)
 struct bpf_map;
 
 #ifdef HAVE_LIBBPF_SUPPORT
@@ -11,8 +15,11 @@ int bpf_map__fprintf(struct bpf_map *map, FILE *fp);
 
 #else
 
+<<<<<<< HEAD
 #include <linux/compiler.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int bpf_map__fprintf(struct bpf_map *map __maybe_unused, FILE *fp __maybe_unused)
 {
 	return 0;

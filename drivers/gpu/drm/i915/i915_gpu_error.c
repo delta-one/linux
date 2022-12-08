@@ -55,7 +55,10 @@
 #include "i915_drv.h"
 #include "i915_gpu_error.h"
 #include "i915_memcpy.h"
+<<<<<<< HEAD
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "i915_scatterlist.h"
 #include "i915_utils.h"
 
@@ -505,7 +508,10 @@ static void error_print_context(struct drm_i915_error_state_buf *m,
 		   header, ctx->comm, ctx->pid, ctx->sched_attr.priority,
 		   ctx->guilty, ctx->active,
 		   ctx->total_runtime, ctx->avg_runtime);
+<<<<<<< HEAD
 	err_printf(m, "  context timeline seqno %u\n", ctx->hwsp_seqno);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct i915_vma_coredump *
@@ -1223,10 +1229,14 @@ static void engine_record_registers(struct intel_engine_coredump *ee)
 	if (GRAPHICS_VER(i915) >= 6) {
 		ee->rc_psmi = ENGINE_READ(engine, RING_PSMI_CTL);
 
+<<<<<<< HEAD
 		if (GRAPHICS_VER_FULL(i915) >= IP_VER(12, 50))
 			ee->fault_reg = intel_gt_mcr_read_any(engine->gt,
 							      XEHP_RING_FAULT_REG);
 		else if (GRAPHICS_VER(i915) >= 12)
+=======
+		if (GRAPHICS_VER(i915) >= 12)
+>>>>>>> b7ba80a49124 (Commit)
 			ee->fault_reg = intel_uncore_read(engine->uncore,
 							  GEN12_RING_FAULT_REG);
 		else if (GRAPHICS_VER(i915) >= 8)
@@ -1371,14 +1381,22 @@ static void engine_record_execlists(struct intel_engine_coredump *ee)
 }
 
 static bool record_context(struct i915_gem_context_coredump *e,
+<<<<<<< HEAD
 			   struct intel_context *ce)
+=======
+			   const struct i915_request *rq)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i915_gem_context *ctx;
 	struct task_struct *task;
 	bool simulated;
 
 	rcu_read_lock();
+<<<<<<< HEAD
 	ctx = rcu_dereference(ce->gem_context);
+=======
+	ctx = rcu_dereference(rq->context->gem_context);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ctx && !kref_get_unless_zero(&ctx->ref))
 		ctx = NULL;
 	rcu_read_unlock();
@@ -1396,11 +1414,17 @@ static bool record_context(struct i915_gem_context_coredump *e,
 	e->sched_attr = ctx->sched;
 	e->guilty = atomic_read(&ctx->guilty_count);
 	e->active = atomic_read(&ctx->active_count);
+<<<<<<< HEAD
 	e->hwsp_seqno = (ce->timeline && ce->timeline->hwsp_seqno) ?
 				*ce->timeline->hwsp_seqno : ~0U;
 
 	e->total_runtime = intel_context_get_total_runtime_ns(ce);
 	e->avg_runtime = intel_context_get_avg_runtime_ns(ce);
+=======
+
+	e->total_runtime = intel_context_get_total_runtime_ns(rq->context);
+	e->avg_runtime = intel_context_get_avg_runtime_ns(rq->context);
+>>>>>>> b7ba80a49124 (Commit)
 
 	simulated = i915_gem_context_no_error_capture(ctx);
 
@@ -1535,6 +1559,7 @@ intel_engine_coredump_alloc(struct intel_engine_cs *engine, gfp_t gfp, u32 dump_
 	return ee;
 }
 
+<<<<<<< HEAD
 static struct intel_engine_capture_vma *
 engine_coredump_add_context(struct intel_engine_coredump *ee,
 			    struct intel_context *ce,
@@ -1557,15 +1582,24 @@ engine_coredump_add_context(struct intel_engine_coredump *ee,
 	return vma;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct intel_engine_capture_vma *
 intel_engine_coredump_add_request(struct intel_engine_coredump *ee,
 				  struct i915_request *rq,
 				  gfp_t gfp)
 {
+<<<<<<< HEAD
 	struct intel_engine_capture_vma *vma;
 
 	vma = engine_coredump_add_context(ee, rq->context, gfp);
 	if (!vma)
+=======
+	struct intel_engine_capture_vma *vma = NULL;
+
+	ee->simulated |= record_context(&ee->context, rq);
+	if (ee->simulated)
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	/*
@@ -1575,6 +1609,11 @@ intel_engine_coredump_add_request(struct intel_engine_coredump *ee,
 	 */
 	vma = capture_vma_snapshot(vma, rq->batch_res, gfp, "batch");
 	vma = capture_user(vma, rq, gfp);
+<<<<<<< HEAD
+=======
+	vma = capture_vma(vma, rq->ring->vma, "ring", gfp);
+	vma = capture_vma(vma, rq->context->state, "HW context", gfp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ee->rq_head = rq->head;
 	ee->rq_post = rq->postfix;
@@ -1619,13 +1658,20 @@ capture_engine(struct intel_engine_cs *engine,
 {
 	struct intel_engine_capture_vma *capture = NULL;
 	struct intel_engine_coredump *ee;
+<<<<<<< HEAD
 	struct intel_context *ce = NULL;
 	struct i915_request *rq = NULL;
+=======
+	struct intel_context *ce;
+	struct i915_request *rq = NULL;
+	unsigned long flags;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ee = intel_engine_coredump_alloc(engine, ALLOW_FAIL, dump_flags);
 	if (!ee)
 		return NULL;
 
+<<<<<<< HEAD
 	intel_engine_get_hung_entity(engine, &ce, &rq);
 	if (rq && !i915_request_started(rq))
 		drm_info(&engine->gt->i915->drm, "Got hung context on %s with active request %lld:%lld [0x%04X] not yet started\n",
@@ -1649,6 +1695,48 @@ capture_engine(struct intel_engine_cs *engine,
 	}
 
 	return ee;
+=======
+	ce = intel_engine_get_hung_context(engine);
+	if (ce) {
+		intel_engine_clear_hung_context(engine);
+		rq = intel_context_find_active_request(ce);
+		if (!rq || !i915_request_started(rq))
+			goto no_request_capture;
+	} else {
+		/*
+		 * Getting here with GuC enabled means it is a forced error capture
+		 * with no actual hang. So, no need to attempt the execlist search.
+		 */
+		if (!intel_uc_uses_guc_submission(&engine->gt->uc)) {
+			spin_lock_irqsave(&engine->sched_engine->lock, flags);
+			rq = intel_engine_execlist_find_hung_request(engine);
+			spin_unlock_irqrestore(&engine->sched_engine->lock,
+					       flags);
+		}
+	}
+	if (rq)
+		rq = i915_request_get_rcu(rq);
+
+	if (!rq)
+		goto no_request_capture;
+
+	capture = intel_engine_coredump_add_request(ee, rq, ATOMIC_MAYFAIL);
+	if (!capture) {
+		i915_request_put(rq);
+		goto no_request_capture;
+	}
+	if (dump_flags & CORE_DUMP_FLAG_IS_GUC_CAPTURE)
+		intel_guc_capture_get_matching_node(engine->gt, ee, ce);
+
+	intel_engine_coredump_add_vma(ee, capture, compress);
+	i915_request_put(rq);
+
+	return ee;
+
+no_request_capture:
+	kfree(ee);
+	return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -1829,12 +1917,16 @@ static void gt_record_global_regs(struct intel_gt_coredump *gt)
 	if (GRAPHICS_VER(i915) == 7)
 		gt->err_int = intel_uncore_read(uncore, GEN7_ERR_INT);
 
+<<<<<<< HEAD
 	if (GRAPHICS_VER_FULL(i915) >= IP_VER(12, 50)) {
 		gt->fault_data0 = intel_gt_mcr_read_any((struct intel_gt *)gt->_gt,
 							XEHP_FAULT_TLB_DATA0);
 		gt->fault_data1 = intel_gt_mcr_read_any((struct intel_gt *)gt->_gt,
 							XEHP_FAULT_TLB_DATA1);
 	} else if (GRAPHICS_VER(i915) >= 12) {
+=======
+	if (GRAPHICS_VER(i915) >= 12) {
+>>>>>>> b7ba80a49124 (Commit)
 		gt->fault_data0 = intel_uncore_read(uncore,
 						    GEN12_FAULT_TLB_DATA0);
 		gt->fault_data1 = intel_uncore_read(uncore,

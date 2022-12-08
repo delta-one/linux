@@ -35,7 +35,10 @@
 
 		L2_0: l2-cache0 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -60,12 +63,15 @@
 			#clock-cells = <0>;
 			clock-frequency = <200000000>;
 		};
+<<<<<<< HEAD
 
 		hsspi_pll: hsspi-pll {
 			compatible = "fixed-clock";
 			#clock-cells = <0>;
 			clock-frequency = <400000000>;
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	psci {
@@ -106,6 +112,7 @@
 			clock-names = "refclk";
 			status = "disabled";
 		};
+<<<<<<< HEAD
 
 		hsspi: spi@1000 {
 			#address-cells = <1>;
@@ -118,5 +125,7 @@
 			num-cs = <8>;
 			status = "disabled";
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };

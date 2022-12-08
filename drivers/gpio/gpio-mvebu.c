@@ -657,10 +657,16 @@ static void mvebu_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
 	spin_unlock_irqrestore(&mvpwm->lock, flags);
 }
 
+<<<<<<< HEAD
 static int mvebu_pwm_get_state(struct pwm_chip *chip,
 			       struct pwm_device *pwm,
 			       struct pwm_state *state)
 {
+=======
+static void mvebu_pwm_get_state(struct pwm_chip *chip,
+				struct pwm_device *pwm,
+				struct pwm_state *state) {
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct mvebu_pwm *mvpwm = to_mvebu_pwm(chip);
 	struct mvebu_gpio_chip *mvchip = mvpwm->mvchip;
@@ -694,8 +700,11 @@ static int mvebu_pwm_get_state(struct pwm_chip *chip,
 		state->enabled = false;
 
 	spin_unlock_irqrestore(&mvpwm->lock, flags);
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mvebu_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
@@ -793,12 +802,17 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
 	u32 offset;
 	u32 set;
 
+<<<<<<< HEAD
 	if (mvchip->soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K) {
 		int ret = of_property_read_u32(dev->of_node,
 					       "marvell,pwm-offset", &offset);
 		if (ret < 0)
 			return 0;
 	} else {
+=======
+	if (of_device_is_compatible(mvchip->chip.of_node,
+				    "marvell,armada-370-gpio")) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * There are only two sets of PWM configuration registers for
 		 * all the GPIO lines on those SoCs which this driver reserves
@@ -808,6 +822,16 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
 		if (!platform_get_resource_byname(pdev, IORESOURCE_MEM, "pwm"))
 			return 0;
 		offset = 0;
+<<<<<<< HEAD
+=======
+	} else if (mvchip->soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K) {
+		int ret = of_property_read_u32(dev->of_node,
+					       "marvell,pwm-offset", &offset);
+		if (ret < 0)
+			return 0;
+	} else {
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (IS_ERR(mvchip->clk))
@@ -1002,7 +1026,11 @@ static int mvebu_gpio_suspend(struct platform_device *pdev, pm_message_t state)
 		BUG();
 	}
 
+<<<<<<< HEAD
 	if (IS_REACHABLE(CONFIG_PWM))
+=======
+	if (IS_ENABLED(CONFIG_PWM))
+>>>>>>> b7ba80a49124 (Commit)
 		mvebu_pwm_suspend(mvchip);
 
 	return 0;
@@ -1054,7 +1082,11 @@ static int mvebu_gpio_resume(struct platform_device *pdev)
 		BUG();
 	}
 
+<<<<<<< HEAD
 	if (IS_REACHABLE(CONFIG_PWM))
+=======
+	if (IS_ENABLED(CONFIG_PWM))
+>>>>>>> b7ba80a49124 (Commit)
 		mvebu_pwm_resume(mvchip);
 
 	return 0;
@@ -1228,7 +1260,11 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
 	devm_gpiochip_add_data(&pdev->dev, &mvchip->chip, mvchip);
 
 	/* Some MVEBU SoCs have simple PWM support for GPIO lines */
+<<<<<<< HEAD
 	if (IS_REACHABLE(CONFIG_PWM)) {
+=======
+	if (IS_ENABLED(CONFIG_PWM)) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = mvebu_pwm_probe(pdev, mvchip, id);
 		if (err)
 			return err;

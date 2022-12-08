@@ -281,7 +281,10 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
 		val_cr4 |= FSL_SAI_CR4_MF;
 
 	sai->is_pdm_mode = false;
+<<<<<<< HEAD
 	sai->is_dsp_mode = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* DAI mode */
 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
 	case SND_SOC_DAIFMT_I2S:
@@ -873,10 +876,17 @@ static int fsl_sai_dai_probe(struct snd_soc_dai *cpu_dai)
 
 	regmap_update_bits(sai->regmap, FSL_SAI_TCR1(ofs),
 			   FSL_SAI_CR1_RFW_MASK(sai->soc_data->fifo_depth),
+<<<<<<< HEAD
 			   sai->soc_data->fifo_depth - sai->dma_params_tx.maxburst);
 	regmap_update_bits(sai->regmap, FSL_SAI_RCR1(ofs),
 			   FSL_SAI_CR1_RFW_MASK(sai->soc_data->fifo_depth),
 			   sai->dma_params_rx.maxburst - 1);
+=======
+			   sai->soc_data->fifo_depth - FSL_SAI_MAXBURST_TX);
+	regmap_update_bits(sai->regmap, FSL_SAI_RCR1(ofs),
+			   FSL_SAI_CR1_RFW_MASK(sai->soc_data->fifo_depth),
+			   FSL_SAI_MAXBURST_RX - 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	snd_soc_dai_init_dma_data(cpu_dai, &sai->dma_params_tx,
 				&sai->dma_params_rx);
@@ -1142,7 +1152,10 @@ static int fsl_sai_check_version(struct device *dev)
 
 	sai->verid.version = val &
 		(FSL_SAI_VERID_MAJOR_MASK | FSL_SAI_VERID_MINOR_MASK);
+<<<<<<< HEAD
 	sai->verid.version >>= FSL_SAI_VERID_MINOR_SHIFT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sai->verid.feature = val & FSL_SAI_VERID_FEATURE_MASK;
 
 	ret = regmap_read(sai->regmap, FSL_SAI_PARAM, &val);
@@ -1380,18 +1393,31 @@ static int fsl_sai_probe(struct platform_device *pdev)
 	sai->cpu_dai_drv.symmetric_channels = 1;
 	sai->cpu_dai_drv.symmetric_sample_bits = 1;
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "fsl,sai-synchronous-rx") &&
 	    of_property_read_bool(np, "fsl,sai-asynchronous")) {
+=======
+	if (of_find_property(np, "fsl,sai-synchronous-rx", NULL) &&
+	    of_find_property(np, "fsl,sai-asynchronous", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* error out if both synchronous and asynchronous are present */
 		dev_err(dev, "invalid binding for synchronous mode\n");
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "fsl,sai-synchronous-rx")) {
 		/* Sync Rx with Tx */
 		sai->synchronous[RX] = false;
 		sai->synchronous[TX] = true;
 	} else if (of_property_read_bool(np, "fsl,sai-asynchronous")) {
+=======
+	if (of_find_property(np, "fsl,sai-synchronous-rx", NULL)) {
+		/* Sync Rx with Tx */
+		sai->synchronous[RX] = false;
+		sai->synchronous[TX] = true;
+	} else if (of_find_property(np, "fsl,sai-asynchronous", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Discard all settings for asynchronous mode */
 		sai->synchronous[RX] = false;
 		sai->synchronous[TX] = false;
@@ -1400,7 +1426,11 @@ static int fsl_sai_probe(struct platform_device *pdev)
 		sai->cpu_dai_drv.symmetric_sample_bits = 0;
 	}
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "fsl,sai-mclk-direction-output") &&
+=======
+	if (of_find_property(np, "fsl,sai-mclk-direction-output", NULL) &&
+>>>>>>> b7ba80a49124 (Commit)
 	    of_device_is_compatible(np, "fsl,imx6ul-sai")) {
 		gpr = syscon_regmap_lookup_by_compatible("fsl,imx6ul-iomuxc-gpr");
 		if (IS_ERR(gpr)) {
@@ -1418,10 +1448,15 @@ static int fsl_sai_probe(struct platform_device *pdev)
 
 	sai->dma_params_rx.addr = sai->res->start + FSL_SAI_RDR0;
 	sai->dma_params_tx.addr = sai->res->start + FSL_SAI_TDR0;
+<<<<<<< HEAD
 	sai->dma_params_rx.maxburst =
 		sai->soc_data->max_burst[RX] ? sai->soc_data->max_burst[RX] : FSL_SAI_MAXBURST_RX;
 	sai->dma_params_tx.maxburst =
 		sai->soc_data->max_burst[TX] ? sai->soc_data->max_burst[TX] : FSL_SAI_MAXBURST_TX;
+=======
+	sai->dma_params_rx.maxburst = FSL_SAI_MAXBURST_RX;
+	sai->dma_params_tx.maxburst = FSL_SAI_MAXBURST_TX;
+>>>>>>> b7ba80a49124 (Commit)
 
 	sai->pinctrl = devm_pinctrl_get(&pdev->dev);
 
@@ -1443,14 +1478,22 @@ static int fsl_sai_probe(struct platform_device *pdev)
 		dev_warn(dev, "Error reading SAI version: %d\n", ret);
 
 	/* Select MCLK direction */
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "fsl,sai-mclk-direction-output") &&
+=======
+	if (of_find_property(np, "fsl,sai-mclk-direction-output", NULL) &&
+>>>>>>> b7ba80a49124 (Commit)
 	    sai->soc_data->max_register >= FSL_SAI_MCTL) {
 		regmap_update_bits(sai->regmap, FSL_SAI_MCTL,
 				   FSL_SAI_MCTL_MCLK_EN, FSL_SAI_MCTL_MCLK_EN);
 	}
 
 	ret = pm_runtime_put_sync(dev);
+<<<<<<< HEAD
 	if (ret < 0 && ret != -ENOSYS)
+=======
+	if (ret < 0)
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_pm_get_sync;
 
 	/*
@@ -1460,17 +1503,25 @@ static int fsl_sai_probe(struct platform_device *pdev)
 	if (sai->soc_data->use_imx_pcm) {
 		ret = imx_pcm_dma_init(pdev);
 		if (ret) {
+<<<<<<< HEAD
 			dev_err_probe(dev, ret, "PCM DMA init failed\n");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			if (!IS_ENABLED(CONFIG_SND_SOC_IMX_PCM_DMA))
 				dev_err(dev, "Error: You must enable the imx-pcm-dma support!\n");
 			goto err_pm_get_sync;
 		}
 	} else {
 		ret = devm_snd_dmaengine_pcm_register(dev, NULL, 0);
+<<<<<<< HEAD
 		if (ret) {
 			dev_err_probe(dev, ret, "Registering PCM dmaengine failed\n");
 			goto err_pm_get_sync;
 		}
+=======
+		if (ret)
+			goto err_pm_get_sync;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = devm_snd_soc_register_component(dev, &fsl_component,
@@ -1489,11 +1540,20 @@ err_pm_disable:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void fsl_sai_remove(struct platform_device *pdev)
+=======
+static int fsl_sai_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pm_runtime_disable(&pdev->dev);
 	if (!pm_runtime_status_suspended(&pdev->dev))
 		fsl_sai_runtime_suspend(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct fsl_sai_soc_data fsl_sai_vf610_data = {
@@ -1584,6 +1644,7 @@ static const struct fsl_sai_soc_data fsl_sai_imx8ulp_data = {
 	.max_register = FSL_SAI_RTCAP,
 };
 
+<<<<<<< HEAD
 static const struct fsl_sai_soc_data fsl_sai_imx93_data = {
 	.use_imx_pcm = true,
 	.use_edma = true,
@@ -1596,6 +1657,8 @@ static const struct fsl_sai_soc_data fsl_sai_imx93_data = {
 	.max_burst = {8, 8},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id fsl_sai_ids[] = {
 	{ .compatible = "fsl,vf610-sai", .data = &fsl_sai_vf610_data },
 	{ .compatible = "fsl,imx6sx-sai", .data = &fsl_sai_imx6sx_data },
@@ -1607,7 +1670,10 @@ static const struct of_device_id fsl_sai_ids[] = {
 	{ .compatible = "fsl,imx8mp-sai", .data = &fsl_sai_imx8mp_data },
 	{ .compatible = "fsl,imx8ulp-sai", .data = &fsl_sai_imx8ulp_data },
 	{ .compatible = "fsl,imx8mn-sai", .data = &fsl_sai_imx8mp_data },
+<<<<<<< HEAD
 	{ .compatible = "fsl,imx93-sai", .data = &fsl_sai_imx93_data },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ /* sentinel */ }
 };
 MODULE_DEVICE_TABLE(of, fsl_sai_ids);
@@ -1694,7 +1760,11 @@ static const struct dev_pm_ops fsl_sai_pm_ops = {
 
 static struct platform_driver fsl_sai_driver = {
 	.probe = fsl_sai_probe,
+<<<<<<< HEAD
 	.remove_new = fsl_sai_remove,
+=======
+	.remove = fsl_sai_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "fsl-sai",
 		.pm = &fsl_sai_pm_ops,

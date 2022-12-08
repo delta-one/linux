@@ -4,8 +4,11 @@
  *
  */
 
+<<<<<<< HEAD
 #include <dt-bindings/clock/tegra124-car.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 / {
 	clock@60006000 {
 		emc-timings-1 {
@@ -1476,6 +1479,7 @@
 			};
 		};
 	};
+<<<<<<< HEAD
 
 	opp-table-actmon {
 		/delete-node/ opp-1200000000;
@@ -1484,4 +1488,14 @@
 	opp-table-emc {
 		/delete-node/ opp-1200000000-1100;
 	};
+=======
+};
+
+&emc_icc_dvfs_opp_table {
+	/delete-node/ opp-1200000000-1100;
+};
+
+&emc_bw_dfs_opp_table {
+	/delete-node/ opp-1200000000;
+>>>>>>> b7ba80a49124 (Commit)
 };

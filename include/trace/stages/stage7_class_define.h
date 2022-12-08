@@ -13,17 +13,26 @@
 #undef __get_dynamic_array_len
 #undef __get_str
 #undef __get_bitmask
+<<<<<<< HEAD
 #undef __get_cpumask
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #undef __get_sockaddr
 #undef __get_rel_dynamic_array
 #undef __get_rel_dynamic_array_len
 #undef __get_rel_str
 #undef __get_rel_bitmask
+<<<<<<< HEAD
 #undef __get_rel_cpumask
 #undef __get_rel_sockaddr
 #undef __print_array
 #undef __print_hex_dump
 #undef __get_buf
+=======
+#undef __get_rel_sockaddr
+#undef __print_array
+#undef __print_hex_dump
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * The below is not executed in the kernel. It is only what is

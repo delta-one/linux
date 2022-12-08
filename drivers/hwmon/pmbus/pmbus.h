@@ -26,7 +26,11 @@ enum pmbus_regs {
 
 	PMBUS_CAPABILITY		= 0x19,
 	PMBUS_QUERY			= 0x1A,
+<<<<<<< HEAD
 	PMBUS_SMBALERT_MASK		= 0x1B,
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	PMBUS_VOUT_MODE			= 0x20,
 	PMBUS_VOUT_COMMAND		= 0x21,
 	PMBUS_VOUT_TRIM			= 0x22,
@@ -464,9 +468,16 @@ struct pmbus_driver_info {
 extern const struct regulator_ops pmbus_regulator_ops;
 
 /* Macros for filling in array of struct regulator_desc */
+<<<<<<< HEAD
 #define PMBUS_REGULATOR_STEP(_name, _id, _voltages, _step, _min_uV)  \
 	[_id] = {						\
 		.name = (_name # _id),				\
+=======
+#define PMBUS_REGULATOR_STEP(_name, _id, _voltages, _step)  \
+	[_id] = {						\
+		.name = (_name # _id),				\
+		.supply_name = "vin",				\
+>>>>>>> b7ba80a49124 (Commit)
 		.id = (_id),					\
 		.of_match = of_match_ptr(_name # _id),		\
 		.regulators_node = of_match_ptr("regulators"),	\
@@ -475,10 +486,16 @@ extern const struct regulator_ops pmbus_regulator_ops;
 		.owner = THIS_MODULE,				\
 		.n_voltages = _voltages,			\
 		.uV_step = _step,				\
+<<<<<<< HEAD
 		.min_uV = _min_uV,				\
 	}
 
 #define PMBUS_REGULATOR(_name, _id)   PMBUS_REGULATOR_STEP(_name, _id, 0, 0, 0)
+=======
+	}
+
+#define PMBUS_REGULATOR(_name, _id)	PMBUS_REGULATOR_STEP(_name, _id, 0, 0)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Function declarations */
 

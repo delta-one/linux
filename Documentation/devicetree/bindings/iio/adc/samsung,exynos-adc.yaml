@@ -52,7 +52,11 @@ properties:
   vdd-supply: true
 
   samsung,syscon-phandle:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/phandle
+=======
+    $ref: '/schemas/types.yaml#/definitions/phandle'
+>>>>>>> b7ba80a49124 (Commit)
     description:
       Phandle to the PMU system controller node (to access the ADC_PHY
       register on Exynos3250/4x12/5250/5420/5800).
@@ -142,7 +146,11 @@ examples:
             pullup-ohm = <47000>;
             pulldown-ohm = <0>;
             io-channels = <&adc 4>;
+<<<<<<< HEAD
         };
+=======
+          };
+>>>>>>> b7ba80a49124 (Commit)
     };
 
   - |
@@ -150,7 +158,11 @@ examples:
 
     adc@126c0000 {
         compatible = "samsung,exynos3250-adc";
+<<<<<<< HEAD
         reg = <0x126c0000 0x100>;
+=======
+        reg = <0x126C0000 0x100>;
+>>>>>>> b7ba80a49124 (Commit)
         interrupts = <0 137 0>;
         #io-channel-cells = <1>;
 

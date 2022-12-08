@@ -22,7 +22,11 @@
 
 LEAF(__kvm_save_fpu)
 	.set	push
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	.set	fp=64
 	mfc0	t0, CP0_STATUS
 	sll     t0, t0, 5			# is Status.FR set?
@@ -66,7 +70,11 @@ LEAF(__kvm_save_fpu)
 
 LEAF(__kvm_restore_fpu)
 	.set	push
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	.set	fp=64
 	mfc0	t0, CP0_STATUS
 	sll     t0, t0, 5			# is Status.FR set?
@@ -110,7 +118,11 @@ LEAF(__kvm_restore_fpu)
 
 LEAF(__kvm_restore_fcsr)
 	.set	push
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	lw	t0, VCPU_FCR31(a0)
 	/*
 	 * The ctc1 must stay at this offset in __kvm_restore_fcsr.

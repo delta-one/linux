@@ -35,6 +35,7 @@ properties:
     maxItems: 1
 
   tx-fifo-depth:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/uint32
     description: CAN Tx fifo depth (Zynq, Axi CAN).
 
@@ -44,6 +45,17 @@ properties:
 
   tx-mailbox-count:
     $ref: /schemas/types.yaml#/definitions/uint32
+=======
+    $ref: "/schemas/types.yaml#/definitions/uint32"
+    description: CAN Tx fifo depth (Zynq, Axi CAN).
+
+  rx-fifo-depth:
+    $ref: "/schemas/types.yaml#/definitions/uint32"
+    description: CAN Rx fifo depth (Zynq, Axi CAN, CAN FD in sequential Rx mode)
+
+  tx-mailbox-count:
+    $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
     description: CAN Tx mailbox buffer count (CAN FD)
 
 required:

@@ -11,8 +11,11 @@
  */
 #include "sun8i-ss.h"
 #include <linux/dma-mapping.h>
+<<<<<<< HEAD
 #include <linux/kernel.h>
 #include <linux/mm.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pm_runtime.h>
 #include <crypto/internal/rng.h>
 
@@ -27,7 +30,11 @@ int sun8i_ss_prng_seed(struct crypto_rng *tfm, const u8 *seed,
 		ctx->seed = NULL;
 	}
 	if (!ctx->seed)
+<<<<<<< HEAD
 		ctx->seed = kmalloc(slen, GFP_KERNEL);
+=======
+		ctx->seed = kmalloc(slen, GFP_KERNEL | GFP_DMA);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ctx->seed)
 		return -ENOMEM;
 
@@ -60,7 +67,10 @@ int sun8i_ss_prng_generate(struct crypto_rng *tfm, const u8 *src,
 	struct sun8i_ss_rng_tfm_ctx *ctx = crypto_rng_ctx(tfm);
 	struct rng_alg *alg = crypto_rng_alg(tfm);
 	struct sun8i_ss_alg_template *algt;
+<<<<<<< HEAD
 	unsigned int todo_with_padding;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct sun8i_ss_dev *ss;
 	dma_addr_t dma_iv, dma_dst;
 	unsigned int todo;
@@ -84,11 +94,15 @@ int sun8i_ss_prng_generate(struct crypto_rng *tfm, const u8 *src,
 	todo = dlen + PRNG_SEED_SIZE + PRNG_DATA_SIZE;
 	todo -= todo % PRNG_DATA_SIZE;
 
+<<<<<<< HEAD
 	todo_with_padding = ALIGN(todo, dma_get_cache_alignment());
 	if (todo_with_padding < todo || todo < dlen)
 		return -EOVERFLOW;
 
 	d = kzalloc(todo_with_padding, GFP_KERNEL);
+=======
+	d = kzalloc(todo, GFP_KERNEL | GFP_DMA);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!d)
 		return -ENOMEM;
 

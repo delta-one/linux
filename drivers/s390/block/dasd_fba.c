@@ -83,7 +83,11 @@ define_extent(struct ccw1 * ccw, struct DE_fba_data *data, int rw,
 	ccw->cmd_code = DASD_FBA_CCW_DEFINE_EXTENT;
 	ccw->flags = 0;
 	ccw->count = 16;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(data);
+=======
+	ccw->cda = (__u32) __pa(data);
+>>>>>>> b7ba80a49124 (Commit)
 	memset(data, 0, sizeof (struct DE_fba_data));
 	if (rw == WRITE)
 		(data->mask).perm = 0x0;
@@ -103,7 +107,11 @@ locate_record(struct ccw1 * ccw, struct LO_fba_data *data, int rw,
 	ccw->cmd_code = DASD_FBA_CCW_LOCATE;
 	ccw->flags = 0;
 	ccw->count = 8;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(data);
+=======
+	ccw->cda = (__u32) __pa(data);
+>>>>>>> b7ba80a49124 (Commit)
 	memset(data, 0, sizeof (struct LO_fba_data));
 	if (rw == WRITE)
 		data->operation.cmd = 0x5;
@@ -262,7 +270,11 @@ static void ccw_write_zero(struct ccw1 *ccw, int count)
 	ccw->cmd_code = DASD_FBA_CCW_WRITE;
 	ccw->flags |= CCW_FLAG_SLI;
 	ccw->count = count;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(dasd_fba_zero_page);
+=======
+	ccw->cda = (__u32) (addr_t) dasd_fba_zero_page;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -528,11 +540,19 @@ static struct dasd_ccw_req *dasd_fba_build_cp_regular(
 			ccw->cmd_code = cmd;
 			ccw->count = block->bp_block;
 			if (idal_is_needed(dst, blksize)) {
+<<<<<<< HEAD
 				ccw->cda = (__u32)virt_to_phys(idaws);
 				ccw->flags = CCW_FLAG_IDA;
 				idaws = idal_create_words(idaws, dst, blksize);
 			} else {
 				ccw->cda = (__u32)virt_to_phys(dst);
+=======
+				ccw->cda = (__u32)(addr_t) idaws;
+				ccw->flags = CCW_FLAG_IDA;
+				idaws = idal_create_words(idaws, dst, blksize);
+			} else {
+				ccw->cda = (__u32)(addr_t) dst;
+>>>>>>> b7ba80a49124 (Commit)
 				ccw->flags = 0;
 			}
 			ccw++;
@@ -590,9 +610,15 @@ dasd_fba_free_cp(struct dasd_ccw_req *cqr, struct request *req)
 				ccw++;
 			if (dst) {
 				if (ccw->flags & CCW_FLAG_IDA)
+<<<<<<< HEAD
 					cda = *((char **)phys_to_virt(ccw->cda));
 				else
 					cda = phys_to_virt(ccw->cda);
+=======
+					cda = *((char **)((addr_t) ccw->cda));
+				else
+					cda = (char *)((addr_t) ccw->cda);
+>>>>>>> b7ba80a49124 (Commit)
 				if (dst != cda) {
 					if (rq_data_dir(req) == READ)
 						memcpy(dst, cda, bv.bv_len);
@@ -767,7 +793,11 @@ dasd_fba_dump_sense(struct dasd_device *device, struct dasd_ccw_req * req,
 static void dasd_fba_setup_blk_queue(struct dasd_block *block)
 {
 	unsigned int logical_block_size = block->bp_block;
+<<<<<<< HEAD
 	struct request_queue *q = block->gdp->queue;
+=======
+	struct request_queue *q = block->request_queue;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int max_bytes, max_discard_sectors;
 	int max;
 

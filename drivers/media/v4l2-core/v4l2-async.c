@@ -24,8 +24,11 @@
 #include <media/v4l2-fwnode.h>
 #include <media/v4l2-subdev.h>
 
+<<<<<<< HEAD
 #include "v4l2-subdev-priv.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int v4l2_async_nf_call_bound(struct v4l2_async_notifier *n,
 				    struct v4l2_subdev *subdev,
 				    struct v4l2_async_subdev *asd)
@@ -824,8 +827,11 @@ void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
 	if (!sd->async_list.next)
 		return;
 
+<<<<<<< HEAD
 	v4l2_subdev_put_privacy_led(sd);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&list_lock);
 
 	__v4l2_async_nf_unregister(sd->subdev_notifier);

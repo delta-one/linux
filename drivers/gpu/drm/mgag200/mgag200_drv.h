@@ -18,6 +18,10 @@
 #include <drm/drm_connector.h>
 #include <drm/drm_crtc.h>
 #include <drm/drm_encoder.h>
+<<<<<<< HEAD
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_gem.h>
 #include <drm/drm_gem_shmem_helper.h>
 #include <drm/drm_plane.h>
@@ -375,15 +379,21 @@ int mgag200_primary_plane_helper_atomic_check(struct drm_plane *plane,
 					      struct drm_atomic_state *new_state);
 void mgag200_primary_plane_helper_atomic_update(struct drm_plane *plane,
 						struct drm_atomic_state *old_state);
+<<<<<<< HEAD
 void mgag200_primary_plane_helper_atomic_enable(struct drm_plane *plane,
 						struct drm_atomic_state *state);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void mgag200_primary_plane_helper_atomic_disable(struct drm_plane *plane,
 						 struct drm_atomic_state *old_state);
 #define MGAG200_PRIMARY_PLANE_HELPER_FUNCS \
 	DRM_GEM_SHADOW_PLANE_HELPER_FUNCS, \
 	.atomic_check = mgag200_primary_plane_helper_atomic_check, \
 	.atomic_update = mgag200_primary_plane_helper_atomic_update, \
+<<<<<<< HEAD
 	.atomic_enable = mgag200_primary_plane_helper_atomic_enable, \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.atomic_disable = mgag200_primary_plane_helper_atomic_disable
 
 #define MGAG200_PRIMARY_PLANE_FUNCS \

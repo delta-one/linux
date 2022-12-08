@@ -25,6 +25,7 @@
 static struct kvm_pgtable *hyp_pgtable;
 static DEFINE_MUTEX(kvm_hyp_pgd_mutex);
 
+<<<<<<< HEAD
 static unsigned long __ro_after_init hyp_idmap_start;
 static unsigned long __ro_after_init hyp_idmap_end;
 static phys_addr_t __ro_after_init hyp_idmap_vector;
@@ -38,6 +39,14 @@ static phys_addr_t stage2_range_addr_end(phys_addr_t addr, phys_addr_t end)
 
 	return (boundary - 1 < end - 1) ? boundary : end;
 }
+=======
+static unsigned long hyp_idmap_start;
+static unsigned long hyp_idmap_end;
+static phys_addr_t hyp_idmap_vector;
+
+static unsigned long io_map_base;
+
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Release kvm_mmu_lock periodically if the memory region is large. Otherwise,
@@ -46,21 +55,36 @@ static phys_addr_t stage2_range_addr_end(phys_addr_t addr, phys_addr_t end)
  * long will also starve other vCPUs. We have to also make sure that the page
  * tables are not freed while we released the lock.
  */
+<<<<<<< HEAD
 static int stage2_apply_range(struct kvm_s2_mmu *mmu, phys_addr_t addr,
+=======
+static int stage2_apply_range(struct kvm *kvm, phys_addr_t addr,
+>>>>>>> b7ba80a49124 (Commit)
 			      phys_addr_t end,
 			      int (*fn)(struct kvm_pgtable *, u64, u64),
 			      bool resched)
 {
+<<<<<<< HEAD
 	struct kvm *kvm = kvm_s2_mmu_to_kvm(mmu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 	u64 next;
 
 	do {
+<<<<<<< HEAD
 		struct kvm_pgtable *pgt = mmu->pgt;
 		if (!pgt)
 			return -EINVAL;
 
 		next = stage2_range_addr_end(addr, end);
+=======
+		struct kvm_pgtable *pgt = kvm->arch.mmu.pgt;
+		if (!pgt)
+			return -EINVAL;
+
+		next = stage2_pgd_addr_end(kvm, addr, end);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = fn(pgt, addr, next - addr);
 		if (ret)
 			break;
@@ -72,8 +96,13 @@ static int stage2_apply_range(struct kvm_s2_mmu *mmu, phys_addr_t addr,
 	return ret;
 }
 
+<<<<<<< HEAD
 #define stage2_apply_range_resched(mmu, addr, end, fn)			\
 	stage2_apply_range(mmu, addr, end, fn, true)
+=======
+#define stage2_apply_range_resched(kvm, addr, end, fn)			\
+	stage2_apply_range(kvm, addr, end, fn, true)
+>>>>>>> b7ba80a49124 (Commit)
 
 static bool memslot_is_logging(struct kvm_memory_slot *memslot)
 {
@@ -100,6 +129,7 @@ static bool kvm_is_device_pfn(unsigned long pfn)
 static void *stage2_memcache_zalloc_page(void *arg)
 {
 	struct kvm_mmu_memory_cache *mc = arg;
+<<<<<<< HEAD
 	void *virt;
 
 	/* Allocated with __GFP_ZERO, so no need to zero */
@@ -107,6 +137,11 @@ static void *stage2_memcache_zalloc_page(void *arg)
 	if (virt)
 		kvm_account_pgtable_pages(virt, 1);
 	return virt;
+=======
+
+	/* Allocated with __GFP_ZERO, so no need to zero */
+	return kvm_mmu_memory_cache_alloc(mc);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void *kvm_host_zalloc_pages_exact(size_t size)
@@ -114,6 +149,7 @@ static void *kvm_host_zalloc_pages_exact(size_t size)
 	return alloc_pages_exact(size, GFP_KERNEL_ACCOUNT | __GFP_ZERO);
 }
 
+<<<<<<< HEAD
 static void *kvm_s2_zalloc_pages_exact(size_t size)
 {
 	void *virt = kvm_host_zalloc_pages_exact(size);
@@ -148,6 +184,8 @@ static void stage2_free_removed_table(void *addr, u32 level)
 	call_rcu(&page->rcu_head, stage2_free_removed_table_rcu_cb);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void kvm_host_get_page(void *addr)
 {
 	get_page(virt_to_page(addr));
@@ -158,6 +196,7 @@ static void kvm_host_put_page(void *addr)
 	put_page(virt_to_page(addr));
 }
 
+<<<<<<< HEAD
 static void kvm_s2_put_page(void *addr)
 {
 	struct page *p = virt_to_page(addr);
@@ -167,6 +206,8 @@ static void kvm_s2_put_page(void *addr)
 	put_page(p);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int kvm_host_page_count(void *addr)
 {
 	return page_count(virt_to_page(addr));
@@ -236,7 +277,11 @@ static void __unmap_stage2_range(struct kvm_s2_mmu *mmu, phys_addr_t start, u64 
 
 	lockdep_assert_held_write(&kvm->mmu_lock);
 	WARN_ON(size & ~PAGE_MASK);
+<<<<<<< HEAD
 	WARN_ON(stage2_apply_range(mmu, start, end, kvm_pgtable_stage2_unmap,
+=======
+	WARN_ON(stage2_apply_range(kvm, start, end, kvm_pgtable_stage2_unmap,
+>>>>>>> b7ba80a49124 (Commit)
 				   may_block));
 }
 
@@ -251,7 +296,11 @@ static void stage2_flush_memslot(struct kvm *kvm,
 	phys_addr_t addr = memslot->base_gfn << PAGE_SHIFT;
 	phys_addr_t end = addr + PAGE_SIZE * memslot->npages;
 
+<<<<<<< HEAD
 	stage2_apply_range_resched(&kvm->arch.mmu, addr, end, kvm_pgtable_stage2_flush);
+=======
+	stage2_apply_range_resched(kvm, addr, end, kvm_pgtable_stage2_flush);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -281,7 +330,11 @@ static void stage2_flush_vm(struct kvm *kvm)
 /**
  * free_hyp_pgds - free Hyp-mode page tables
  */
+<<<<<<< HEAD
 void __init free_hyp_pgds(void)
+=======
+void free_hyp_pgds(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	mutex_lock(&kvm_hyp_pgd_mutex);
 	if (hyp_pgtable) {
@@ -660,8 +713,13 @@ static struct kvm_pgtable_mm_ops kvm_user_mm_ops = {
 static int get_user_mapping_size(struct kvm *kvm, u64 addr)
 {
 	struct kvm_pgtable pgt = {
+<<<<<<< HEAD
 		.pgd		= (kvm_pteref_t)kvm->mm->pgd,
 		.ia_bits	= vabits_actual,
+=======
+		.pgd		= (kvm_pte_t *)kvm->mm->pgd,
+		.ia_bits	= VA_BITS,
+>>>>>>> b7ba80a49124 (Commit)
 		.start_level	= (KVM_PGTABLE_MAX_LEVELS -
 				   CONFIG_PGTABLE_LEVELS),
 		.mm_ops		= &kvm_user_mm_ops,
@@ -680,11 +738,18 @@ static int get_user_mapping_size(struct kvm *kvm, u64 addr)
 
 static struct kvm_pgtable_mm_ops kvm_s2_mm_ops = {
 	.zalloc_page		= stage2_memcache_zalloc_page,
+<<<<<<< HEAD
 	.zalloc_pages_exact	= kvm_s2_zalloc_pages_exact,
 	.free_pages_exact	= kvm_s2_free_pages_exact,
 	.free_removed_table	= stage2_free_removed_table,
 	.get_page		= kvm_host_get_page,
 	.put_page		= kvm_s2_put_page,
+=======
+	.zalloc_pages_exact	= kvm_host_zalloc_pages_exact,
+	.free_pages_exact	= free_pages_exact,
+	.get_page		= kvm_host_get_page,
+	.put_page		= kvm_host_put_page,
+>>>>>>> b7ba80a49124 (Commit)
 	.page_count		= kvm_host_page_count,
 	.phys_to_virt		= kvm_host_va,
 	.virt_to_phys		= kvm_host_pa,
@@ -696,12 +761,16 @@ static struct kvm_pgtable_mm_ops kvm_s2_mm_ops = {
  * kvm_init_stage2_mmu - Initialise a S2 MMU structure
  * @kvm:	The pointer to the KVM structure
  * @mmu:	The pointer to the s2 MMU structure
+<<<<<<< HEAD
  * @type:	The machine type of the virtual machine
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Allocates only the stage-2 HW PGD level table(s).
  * Note we don't need locking here as this is only called when the VM is
  * created, which can only be done once.
  */
+<<<<<<< HEAD
 int kvm_init_stage2_mmu(struct kvm *kvm, struct kvm_s2_mmu *mmu, unsigned long type)
 {
 	u32 kvm_ipa_limit = get_kvm_ipa_limit();
@@ -732,6 +801,12 @@ int kvm_init_stage2_mmu(struct kvm *kvm, struct kvm_s2_mmu *mmu, unsigned long t
 	mmfr0 = read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
 	mmfr1 = read_sanitised_ftr_reg(SYS_ID_AA64MMFR1_EL1);
 	kvm->arch.vtcr = kvm_get_vtcr(mmfr0, mmfr1, phys_shift);
+=======
+int kvm_init_stage2_mmu(struct kvm *kvm, struct kvm_s2_mmu *mmu)
+{
+	int cpu, err;
+	struct kvm_pgtable *pgt;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (mmu->pgt != NULL) {
 		kvm_err("kvm_arch already initialized?\n");
@@ -855,6 +930,7 @@ void kvm_free_stage2_pgd(struct kvm_s2_mmu *mmu)
 	}
 }
 
+<<<<<<< HEAD
 static void hyp_mc_free_fn(void *addr, void *unused)
 {
 	free_page((unsigned long)addr);
@@ -881,6 +957,8 @@ int topup_hyp_memcache(struct kvm_hyp_memcache *mc, unsigned long min_pages)
 				    kvm_host_pa, NULL);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * kvm_phys_addr_ioremap - map a device range to guest IPA
  *
@@ -915,7 +993,11 @@ int kvm_phys_addr_ioremap(struct kvm *kvm, phys_addr_t guest_ipa,
 
 		write_lock(&kvm->mmu_lock);
 		ret = kvm_pgtable_stage2_map(pgt, addr, PAGE_SIZE, pa, prot,
+<<<<<<< HEAD
 					     &cache, 0);
+=======
+					     &cache);
+>>>>>>> b7ba80a49124 (Commit)
 		write_unlock(&kvm->mmu_lock);
 		if (ret)
 			break;
@@ -935,7 +1017,12 @@ int kvm_phys_addr_ioremap(struct kvm *kvm, phys_addr_t guest_ipa,
  */
 static void stage2_wp_range(struct kvm_s2_mmu *mmu, phys_addr_t addr, phys_addr_t end)
 {
+<<<<<<< HEAD
 	stage2_apply_range_resched(mmu, addr, end, kvm_pgtable_stage2_wrprotect);
+=======
+	struct kvm *kvm = kvm_s2_mmu_to_kvm(mmu);
+	stage2_apply_range_resched(kvm, addr, end, kvm_pgtable_stage2_wrprotect);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1164,6 +1251,7 @@ static int get_vma_page_shift(struct vm_area_struct *vma, unsigned long hva)
  * - mmap_lock protects between a VM faulting a page in and the VMM performing
  *   an mprotect() to add VM_MTE
  */
+<<<<<<< HEAD
 static void sanitise_mte_tags(struct kvm *kvm, kvm_pfn_t pfn,
 			      unsigned long size)
 {
@@ -1184,6 +1272,34 @@ static void sanitise_mte_tags(struct kvm *kvm, kvm_pfn_t pfn,
 static bool kvm_vma_mte_allowed(struct vm_area_struct *vma)
 {
 	return vma->vm_flags & VM_MTE_ALLOWED;
+=======
+static int sanitise_mte_tags(struct kvm *kvm, kvm_pfn_t pfn,
+			     unsigned long size)
+{
+	unsigned long i, nr_pages = size >> PAGE_SHIFT;
+	struct page *page;
+
+	if (!kvm_has_mte(kvm))
+		return 0;
+
+	/*
+	 * pfn_to_online_page() is used to reject ZONE_DEVICE pages
+	 * that may not support tags.
+	 */
+	page = pfn_to_online_page(pfn);
+
+	if (!page)
+		return -EFAULT;
+
+	for (i = 0; i < nr_pages; i++, page++) {
+		if (!test_bit(PG_mte_tagged, &page->flags)) {
+			mte_clear_page_tags(page_address(page));
+			set_bit(PG_mte_tagged, &page->flags);
+		}
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
@@ -1194,6 +1310,10 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
 	bool write_fault, writable, force_pte = false;
 	bool exec_fault;
 	bool device = false;
+<<<<<<< HEAD
+=======
+	bool shared;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long mmu_seq;
 	struct kvm *kvm = vcpu->kvm;
 	struct kvm_mmu_memory_cache *memcache = &vcpu->arch.mmu_page_cache;
@@ -1202,6 +1322,10 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
 	gfn_t gfn;
 	kvm_pfn_t pfn;
 	bool logging_active = memslot_is_logging(memslot);
+<<<<<<< HEAD
+=======
+	bool use_read_lock = false;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long fault_level = kvm_vcpu_trap_get_fault_level(vcpu);
 	unsigned long vma_pagesize, fault_granule;
 	enum kvm_pgtable_prot prot = KVM_PGTABLE_PROT_R;
@@ -1212,7 +1336,11 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
 	exec_fault = kvm_vcpu_trap_is_exec_fault(vcpu);
 	VM_BUG_ON(write_fault && exec_fault);
 
+<<<<<<< HEAD
 	if (fault_status == ESR_ELx_FSC_PERM && !write_fault && !exec_fault) {
+=======
+	if (fault_status == FSC_PERM && !write_fault && !exec_fault) {
+>>>>>>> b7ba80a49124 (Commit)
 		kvm_err("Unexpected L2 read permission error\n");
 		return -EFAULT;
 	}
@@ -1236,10 +1364,20 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
 	if (logging_active) {
 		force_pte = true;
 		vma_shift = PAGE_SHIFT;
+<<<<<<< HEAD
+=======
+		use_read_lock = (fault_status == FSC_PERM && write_fault &&
+				 fault_granule == PAGE_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		vma_shift = get_vma_page_shift(vma, hva);
 	}
 
+<<<<<<< HEAD
+=======
+	shared = (vma->vm_flags & VM_SHARED);
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (vma_shift) {
 #ifndef __PAGETABLE_PMD_FOLDED
 	case PUD_SHIFT:
@@ -1277,8 +1415,12 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
 	 * only exception to this is when dirty logging is enabled at runtime
 	 * and a write fault needs to collapse a block entry into a table.
 	 */
+<<<<<<< HEAD
 	if (fault_status != ESR_ELx_FSC_PERM ||
 	    (logging_active && write_fault)) {
+=======
+	if (fault_status != FSC_PERM || (logging_active && write_fault)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = kvm_mmu_topup_memory_cache(memcache,
 						 kvm_mmu_cache_min_pages(kvm));
 		if (ret)
@@ -1301,7 +1443,11 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
 	 */
 	smp_rmb();
 
+<<<<<<< HEAD
 	pfn = __gfn_to_pfn_memslot(memslot, gfn, false, false, NULL,
+=======
+	pfn = __gfn_to_pfn_memslot(memslot, gfn, false, NULL,
+>>>>>>> b7ba80a49124 (Commit)
 				   write_fault, &writable, NULL);
 	if (pfn == KVM_PFN_ERR_HWPOISON) {
 		kvm_send_hwpoison_signal(hva, vma_shift);
@@ -1333,7 +1479,19 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
 	if (exec_fault && device)
 		return -ENOEXEC;
 
+<<<<<<< HEAD
 	read_lock(&kvm->mmu_lock);
+=======
+	/*
+	 * To reduce MMU contentions and enhance concurrency during dirty
+	 * logging dirty logging, only acquire read lock for permission
+	 * relaxation.
+	 */
+	if (use_read_lock)
+		read_lock(&kvm->mmu_lock);
+	else
+		write_lock(&kvm->mmu_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	pgt = vcpu->arch.hw_mmu->pgt;
 	if (mmu_invalidate_retry(kvm, mmu_seq))
 		goto out_unlock;
@@ -1343,8 +1501,12 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
 	 * backed by a THP and thus use block mapping if possible.
 	 */
 	if (vma_pagesize == PAGE_SIZE && !(force_pte || device)) {
+<<<<<<< HEAD
 		if (fault_status ==  ESR_ELx_FSC_PERM &&
 		    fault_granule > PAGE_SIZE)
+=======
+		if (fault_status == FSC_PERM && fault_granule > PAGE_SIZE)
+>>>>>>> b7ba80a49124 (Commit)
 			vma_pagesize = fault_granule;
 		else
 			vma_pagesize = transparent_hugepage_adjust(kvm, memslot,
@@ -1352,6 +1514,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
 								   &fault_ipa);
 	}
 
+<<<<<<< HEAD
 	if (fault_status != ESR_ELx_FSC_PERM && !device && kvm_has_mte(kvm)) {
 		/* Check the VMM hasn't introduced a new disallowed VMA */
 		if (kvm_vma_mte_allowed(vma)) {
@@ -1360,6 +1523,16 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
 			ret = -EFAULT;
 			goto out_unlock;
 		}
+=======
+	if (fault_status != FSC_PERM && !device && kvm_has_mte(kvm)) {
+		/* Check the VMM hasn't introduced a new VM_SHARED VMA */
+		if (!shared)
+			ret = sanitise_mte_tags(kvm, pfn, vma_pagesize);
+		else
+			ret = -EFAULT;
+		if (ret)
+			goto out_unlock;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (writable)
@@ -1378,6 +1551,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
 	 * permissions only if vma_pagesize equals fault_granule. Otherwise,
 	 * kvm_pgtable_stage2_map() should be called to change block size.
 	 */
+<<<<<<< HEAD
 	if (fault_status == ESR_ELx_FSC_PERM && vma_pagesize == fault_granule)
 		ret = kvm_pgtable_stage2_relax_perms(pgt, fault_ipa, prot);
 	else
@@ -1386,6 +1560,17 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
 					     memcache,
 					     KVM_PGTABLE_WALK_HANDLE_FAULT |
 					     KVM_PGTABLE_WALK_SHARED);
+=======
+	if (fault_status == FSC_PERM && vma_pagesize == fault_granule) {
+		ret = kvm_pgtable_stage2_relax_perms(pgt, fault_ipa, prot);
+	} else {
+		WARN_ONCE(use_read_lock, "Attempted stage-2 map outside of write lock\n");
+
+		ret = kvm_pgtable_stage2_map(pgt, fault_ipa, vma_pagesize,
+					     __pfn_to_phys(pfn), prot,
+					     memcache);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Mark the page dirty only if the fault is handled successfully */
 	if (writable && !ret) {
@@ -1394,7 +1579,14 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
 	}
 
 out_unlock:
+<<<<<<< HEAD
 	read_unlock(&kvm->mmu_lock);
+=======
+	if (use_read_lock)
+		read_unlock(&kvm->mmu_lock);
+	else
+		write_unlock(&kvm->mmu_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	kvm_set_pfn_accessed(pfn);
 	kvm_release_pfn_clean(pfn);
 	return ret != -EAGAIN ? ret : 0;
@@ -1403,11 +1595,17 @@ out_unlock:
 /* Resolve the access fault by making the page young again. */
 static void handle_access_fault(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa)
 {
+<<<<<<< HEAD
 	kvm_pte_t pte;
+=======
+	pte_t pte;
+	kvm_pte_t kpte;
+>>>>>>> b7ba80a49124 (Commit)
 	struct kvm_s2_mmu *mmu;
 
 	trace_kvm_access_fault(fault_ipa);
 
+<<<<<<< HEAD
 	read_lock(&vcpu->kvm->mmu_lock);
 	mmu = vcpu->arch.hw_mmu;
 	pte = kvm_pgtable_stage2_mkyoung(mmu->pgt, fault_ipa);
@@ -1415,6 +1613,16 @@ static void handle_access_fault(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa)
 
 	if (kvm_pte_valid(pte))
 		kvm_set_pfn_accessed(kvm_pte_to_pfn(pte));
+=======
+	write_lock(&vcpu->kvm->mmu_lock);
+	mmu = vcpu->arch.hw_mmu;
+	kpte = kvm_pgtable_stage2_mkyoung(mmu->pgt, fault_ipa);
+	write_unlock(&vcpu->kvm->mmu_lock);
+
+	pte = __pte(kpte);
+	if (pte_valid(pte))
+		kvm_set_pfn_accessed(pte_pfn(pte));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1443,7 +1651,11 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu)
 	fault_ipa = kvm_vcpu_get_fault_ipa(vcpu);
 	is_iabt = kvm_vcpu_trap_is_iabt(vcpu);
 
+<<<<<<< HEAD
 	if (fault_status == ESR_ELx_FSC_FAULT) {
+=======
+	if (fault_status == FSC_FAULT) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Beyond sanitised PARange (which is the IPA limit) */
 		if (fault_ipa >= BIT_ULL(get_kvm_ipa_limit())) {
 			kvm_inject_size_fault(vcpu);
@@ -1478,9 +1690,14 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu)
 			      kvm_vcpu_get_hfar(vcpu), fault_ipa);
 
 	/* Check the stage-2 fault is trans. fault or write fault */
+<<<<<<< HEAD
 	if (fault_status != ESR_ELx_FSC_FAULT &&
 	    fault_status != ESR_ELx_FSC_PERM &&
 	    fault_status != ESR_ELx_FSC_ACCESS) {
+=======
+	if (fault_status != FSC_FAULT && fault_status != FSC_PERM &&
+	    fault_status != FSC_ACCESS) {
+>>>>>>> b7ba80a49124 (Commit)
 		kvm_err("Unsupported FSC: EC=%#x xFSC=%#lx ESR_EL2=%#lx\n",
 			kvm_vcpu_trap_get_class(vcpu),
 			(unsigned long)kvm_vcpu_trap_get_fault(vcpu),
@@ -1542,7 +1759,11 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu)
 	/* Userspace should not be able to register out-of-bounds IPAs */
 	VM_BUG_ON(fault_ipa >= kvm_phys_size(vcpu->kvm));
 
+<<<<<<< HEAD
 	if (fault_status == ESR_ELx_FSC_ACCESS) {
+=======
+	if (fault_status == FSC_ACCESS) {
+>>>>>>> b7ba80a49124 (Commit)
 		handle_access_fault(vcpu, fault_ipa);
 		ret = 1;
 		goto out_unlock;
@@ -1576,18 +1797,27 @@ bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range)
 bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
 {
 	kvm_pfn_t pfn = pte_pfn(range->pte);
+<<<<<<< HEAD
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!kvm->arch.mmu.pgt)
 		return false;
 
 	WARN_ON(range->end - range->start != 1);
 
+<<<<<<< HEAD
 	/*
 	 * If the page isn't tagged, defer to user_mem_abort() for sanitising
 	 * the MTE tags. The S2 pte should have been unmapped by
 	 * mmu_notifier_invalidate_range_end().
 	 */
 	if (kvm_has_mte(kvm) && !page_mte_tagged(pfn_to_page(pfn)))
+=======
+	ret = sanitise_mte_tags(kvm, pfn, PAGE_SIZE);
+	if (ret)
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	/*
@@ -1602,7 +1832,11 @@ bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
 	 */
 	kvm_pgtable_stage2_map(kvm->arch.mmu.pgt, range->start << PAGE_SHIFT,
 			       PAGE_SIZE, __pfn_to_phys(pfn),
+<<<<<<< HEAD
 			       KVM_PGTABLE_PROT_R, NULL, 0);
+=======
+			       KVM_PGTABLE_PROT_R, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return false;
 }
@@ -1668,11 +1902,17 @@ static struct kvm_pgtable_mm_ops kvm_hyp_mm_ops = {
 	.virt_to_phys		= kvm_host_pa,
 };
 
+<<<<<<< HEAD
 int __init kvm_mmu_init(u32 *hyp_va_bits)
 {
 	int err;
 	u32 idmap_bits;
 	u32 kernel_bits;
+=======
+int kvm_mmu_init(u32 *hyp_va_bits)
+{
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	hyp_idmap_start = __pa_symbol(__hyp_idmap_text_start);
 	hyp_idmap_start = ALIGN_DOWN(hyp_idmap_start, PAGE_SIZE);
@@ -1686,6 +1926,7 @@ int __init kvm_mmu_init(u32 *hyp_va_bits)
 	 */
 	BUG_ON((hyp_idmap_start ^ (hyp_idmap_end - 1)) & PAGE_MASK);
 
+<<<<<<< HEAD
 	/*
 	 * The ID map may be configured to use an extended virtual address
 	 * range. This is only the case if system RAM is out of range for the
@@ -1711,6 +1952,9 @@ int __init kvm_mmu_init(u32 *hyp_va_bits)
 	kernel_bits = vabits_actual;
 	*hyp_va_bits = max(idmap_bits, kernel_bits);
 
+=======
+	*hyp_va_bits = 64 - ((idmap_t0sz & TCR_T0SZ_MASK) >> TCR_T0SZ_OFFSET);
+>>>>>>> b7ba80a49124 (Commit)
 	kvm_debug("Using %u-bit virtual addresses at EL2\n", *hyp_va_bits);
 	kvm_debug("IDMAP page: %lx\n", hyp_idmap_start);
 	kvm_debug("HYP VA range: %lx:%lx\n",
@@ -1819,7 +2063,16 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
 		if (!vma)
 			break;
 
+<<<<<<< HEAD
 		if (kvm_has_mte(kvm) && !kvm_vma_mte_allowed(vma)) {
+=======
+		/*
+		 * VM_SHARED mappings are not allowed with MTE to avoid races
+		 * when updating the PG_mte_tagged page flag, see
+		 * sanitise_mte_tags for more details.
+		 */
+		if (kvm_has_mte(kvm) && vma->vm_flags & VM_SHARED) {
+>>>>>>> b7ba80a49124 (Commit)
 			ret = -EINVAL;
 			break;
 		}

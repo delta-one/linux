@@ -145,8 +145,11 @@ bool v4l2_valid_dv_timings(const struct v4l2_dv_timings *t,
 	const struct v4l2_bt_timings *bt = &t->bt;
 	const struct v4l2_bt_timings_cap *cap = &dvcap->bt;
 	u32 caps = cap->capabilities;
+<<<<<<< HEAD
 	const u32 max_vert = 10240;
 	u32 max_hor = 3 * bt->width;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (t->type != V4L2_DV_BT_656_1120)
 		return false;
@@ -163,6 +166,7 @@ bool v4l2_valid_dv_timings(const struct v4l2_dv_timings *t,
 	    (bt->interlaced && !(caps & V4L2_DV_BT_CAP_INTERLACED)) ||
 	    (!bt->interlaced && !(caps & V4L2_DV_BT_CAP_PROGRESSIVE)))
 		return false;
+<<<<<<< HEAD
 
 	/* sanity checks for the blanking timings */
 	if (!bt->interlaced &&
@@ -183,6 +187,8 @@ bool v4l2_valid_dv_timings(const struct v4l2_dv_timings *t,
 	if (bt->interlaced && (bt->il_vfrontporch > max_vert ||
 	    bt->il_vsync > max_vert || bt->il_vbackporch > max_vert))
 		return false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return fnc == NULL || fnc(t, fnc_handle);
 }
 EXPORT_SYMBOL_GPL(v4l2_valid_dv_timings);

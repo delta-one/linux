@@ -85,8 +85,11 @@ static size_t ZSTD_entropyCost(unsigned const* count, unsigned const max, size_t
 {
     unsigned cost = 0;
     unsigned s;
+<<<<<<< HEAD
 
     assert(total > 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
     for (s = 0; s <= max; ++s) {
         unsigned norm = (unsigned)((256 * count[s]) / total);
         if (count[s] != 0 && norm == 0)
@@ -275,11 +278,18 @@ ZSTD_buildCTable(void* dst, size_t dstCapacity,
         assert(nbSeq_1 > 1);
         assert(entropyWorkspaceSize >= sizeof(ZSTD_BuildCTableWksp));
         (void)entropyWorkspaceSize;
+<<<<<<< HEAD
         FORWARD_IF_ERROR(FSE_normalizeCount(wksp->norm, tableLog, count, nbSeq_1, max, ZSTD_useLowProbCount(nbSeq_1)), "FSE_normalizeCount failed");
         assert(oend >= op);
         {   size_t const NCountSize = FSE_writeNCount(op, (size_t)(oend - op), wksp->norm, max, tableLog);   /* overflow protected */
             FORWARD_IF_ERROR(NCountSize, "FSE_writeNCount failed");
             FORWARD_IF_ERROR(FSE_buildCTable_wksp(nextCTable, wksp->norm, max, tableLog, wksp->wksp, sizeof(wksp->wksp)), "FSE_buildCTable_wksp failed");
+=======
+        FORWARD_IF_ERROR(FSE_normalizeCount(wksp->norm, tableLog, count, nbSeq_1, max, ZSTD_useLowProbCount(nbSeq_1)), "");
+        {   size_t const NCountSize = FSE_writeNCount(op, oend - op, wksp->norm, max, tableLog);   /* overflow protected */
+            FORWARD_IF_ERROR(NCountSize, "FSE_writeNCount failed");
+            FORWARD_IF_ERROR(FSE_buildCTable_wksp(nextCTable, wksp->norm, max, tableLog, wksp->wksp, sizeof(wksp->wksp)), "");
+>>>>>>> b7ba80a49124 (Commit)
             return NCountSize;
         }
     }
@@ -313,12 +323,17 @@ ZSTD_encodeSequences_body(
     FSE_initCState2(&stateLitLength,   CTable_LitLength,   llCodeTable[nbSeq-1]);
     BIT_addBits(&blockStream, sequences[nbSeq-1].litLength, LL_bits[llCodeTable[nbSeq-1]]);
     if (MEM_32bits()) BIT_flushBits(&blockStream);
+<<<<<<< HEAD
     BIT_addBits(&blockStream, sequences[nbSeq-1].mlBase, ML_bits[mlCodeTable[nbSeq-1]]);
+=======
+    BIT_addBits(&blockStream, sequences[nbSeq-1].matchLength, ML_bits[mlCodeTable[nbSeq-1]]);
+>>>>>>> b7ba80a49124 (Commit)
     if (MEM_32bits()) BIT_flushBits(&blockStream);
     if (longOffsets) {
         U32 const ofBits = ofCodeTable[nbSeq-1];
         unsigned const extraBits = ofBits - MIN(ofBits, STREAM_ACCUMULATOR_MIN-1);
         if (extraBits) {
+<<<<<<< HEAD
             BIT_addBits(&blockStream, sequences[nbSeq-1].offBase, extraBits);
             BIT_flushBits(&blockStream);
         }
@@ -326,6 +341,15 @@ ZSTD_encodeSequences_body(
                     ofBits - extraBits);
     } else {
         BIT_addBits(&blockStream, sequences[nbSeq-1].offBase, ofCodeTable[nbSeq-1]);
+=======
+            BIT_addBits(&blockStream, sequences[nbSeq-1].offset, extraBits);
+            BIT_flushBits(&blockStream);
+        }
+        BIT_addBits(&blockStream, sequences[nbSeq-1].offset >> extraBits,
+                    ofBits - extraBits);
+    } else {
+        BIT_addBits(&blockStream, sequences[nbSeq-1].offset, ofCodeTable[nbSeq-1]);
+>>>>>>> b7ba80a49124 (Commit)
     }
     BIT_flushBits(&blockStream);
 
@@ -339,8 +363,13 @@ ZSTD_encodeSequences_body(
             U32  const mlBits = ML_bits[mlCode];
             DEBUGLOG(6, "encoding: litlen:%2u - matchlen:%2u - offCode:%7u",
                         (unsigned)sequences[n].litLength,
+<<<<<<< HEAD
                         (unsigned)sequences[n].mlBase + MINMATCH,
                         (unsigned)sequences[n].offBase);
+=======
+                        (unsigned)sequences[n].matchLength + MINMATCH,
+                        (unsigned)sequences[n].offset);
+>>>>>>> b7ba80a49124 (Commit)
                                                                             /* 32b*/  /* 64b*/
                                                                             /* (7)*/  /* (7)*/
             FSE_encodeSymbol(&blockStream, &stateOffsetBits, ofCode);       /* 15 */  /* 15 */
@@ -351,11 +380,16 @@ ZSTD_encodeSequences_body(
                 BIT_flushBits(&blockStream);                                /* (7)*/
             BIT_addBits(&blockStream, sequences[n].litLength, llBits);
             if (MEM_32bits() && ((llBits+mlBits)>24)) BIT_flushBits(&blockStream);
+<<<<<<< HEAD
             BIT_addBits(&blockStream, sequences[n].mlBase, mlBits);
+=======
+            BIT_addBits(&blockStream, sequences[n].matchLength, mlBits);
+>>>>>>> b7ba80a49124 (Commit)
             if (MEM_32bits() || (ofBits+mlBits+llBits > 56)) BIT_flushBits(&blockStream);
             if (longOffsets) {
                 unsigned const extraBits = ofBits - MIN(ofBits, STREAM_ACCUMULATOR_MIN-1);
                 if (extraBits) {
+<<<<<<< HEAD
                     BIT_addBits(&blockStream, sequences[n].offBase, extraBits);
                     BIT_flushBits(&blockStream);                            /* (7)*/
                 }
@@ -363,6 +397,15 @@ ZSTD_encodeSequences_body(
                             ofBits - extraBits);                            /* 31 */
             } else {
                 BIT_addBits(&blockStream, sequences[n].offBase, ofBits);     /* 31 */
+=======
+                    BIT_addBits(&blockStream, sequences[n].offset, extraBits);
+                    BIT_flushBits(&blockStream);                            /* (7)*/
+                }
+                BIT_addBits(&blockStream, sequences[n].offset >> extraBits,
+                            ofBits - extraBits);                            /* 31 */
+            } else {
+                BIT_addBits(&blockStream, sequences[n].offset, ofBits);     /* 31 */
+>>>>>>> b7ba80a49124 (Commit)
             }
             BIT_flushBits(&blockStream);                                    /* (7)*/
             DEBUGLOG(7, "remaining space : %i", (int)(blockStream.endPtr - blockStream.ptr));
@@ -399,7 +442,11 @@ ZSTD_encodeSequences_default(
 
 #if DYNAMIC_BMI2
 
+<<<<<<< HEAD
 static BMI2_TARGET_ATTRIBUTE size_t
+=======
+static TARGET_ATTRIBUTE("bmi2") size_t
+>>>>>>> b7ba80a49124 (Commit)
 ZSTD_encodeSequences_bmi2(
             void* dst, size_t dstCapacity,
             FSE_CTable const* CTable_MatchLength, BYTE const* mlCodeTable,

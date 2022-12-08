@@ -80,7 +80,12 @@ def calc(oldfile, newfile, format):
         if d<0: shrink, down = shrink+1, down-d
         delta.append((d, name))
 
+<<<<<<< HEAD
     delta.sort(reverse=True)
+=======
+    delta.sort()
+    delta.reverse()
+>>>>>>> b7ba80a49124 (Commit)
     return grow, shrink, add, remove, up, down, delta, old, new, otot, ntot
 
 def print_result(symboltype, symbolformat):

@@ -58,9 +58,12 @@
 #define _PAGE_ED		(__IA64_UL(1) << 52)	/* exception deferral */
 #define _PAGE_PROTNONE		(__IA64_UL(1) << 63)
 
+<<<<<<< HEAD
 /* We borrow bit 7 to store the exclusive marker in swap PTEs. */
 #define _PAGE_SWP_EXCLUSIVE	(1 << 7)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define _PFN_MASK		_PAGE_PPN_MASK
 /* Mask of bits which may be changed by pte_modify(); the odd bits are there for _PAGE_PROTNONE */
 #define _PAGE_CHG_MASK	(_PAGE_P | _PAGE_PROTNONE | _PAGE_PL_MASK | _PAGE_AR_MASK | _PAGE_ED)
@@ -185,6 +188,25 @@ ia64_phys_addr_valid (unsigned long addr)
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * kern_addr_valid(ADDR) tests if ADDR is pointing to valid kernel
+ * memory.  For the return value to be meaningful, ADDR must be >=
+ * PAGE_OFFSET.  This operation can be relatively expensive (e.g.,
+ * require a hash-, or multi-level tree-lookup or something of that
+ * sort) but it guarantees to return TRUE only if accessing the page
+ * at that address does not cause an error.  Note that there may be
+ * addresses for which kern_addr_valid() returns FALSE even though an
+ * access would not cause an error (e.g., this is typically true for
+ * memory mapped I/O regions.
+ *
+ * XXX Need to implement this for IA-64.
+ */
+#define kern_addr_valid(addr)	(1)
+
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * Now come the defines and routines to manage and access the three-level
  * page table.
  */
@@ -268,7 +290,11 @@ ia64_phys_addr_valid (unsigned long addr)
  * access rights:
  */
 #define pte_wrprotect(pte)	(__pte(pte_val(pte) & ~_PAGE_AR_RW))
+<<<<<<< HEAD
 #define pte_mkwrite(pte, vma)	(__pte(pte_val(pte) | _PAGE_AR_RW))
+=======
+#define pte_mkwrite(pte)	(__pte(pte_val(pte) | _PAGE_AR_RW))
+>>>>>>> b7ba80a49124 (Commit)
 #define pte_mkold(pte)		(__pte(pte_val(pte) & ~_PAGE_A))
 #define pte_mkyoung(pte)	(__pte(pte_val(pte) | _PAGE_A))
 #define pte_mkclean(pte)	(__pte(pte_val(pte) & ~_PAGE_D))
@@ -402,9 +428,12 @@ extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
 extern void paging_init (void);
 
 /*
+<<<<<<< HEAD
  * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
  * are !pte_none() && !pte_present().
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Note: The macros below rely on the fact that MAX_SWAPFILES_SHIFT <= number of
  *	 bits in the swap-type field of the swap pte.  It would be nice to
  *	 enforce that, but we can't easily include <linux/swap.h> here.
@@ -412,6 +441,7 @@ extern void paging_init (void);
  *
  * Format of swap pte:
  *	bit   0   : present bit (must be zero)
+<<<<<<< HEAD
  *	bits  1- 6: swap type
  *	bit   7   : exclusive marker
  *	bits  8-62: swap offset
@@ -441,6 +471,18 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
 	return pte;
 }
 
+=======
+ *	bits  1- 7: swap-type
+ *	bits  8-62: swap offset
+ *	bit  63   : _PAGE_PROTNONE bit
+ */
+#define __swp_type(entry)		(((entry).val >> 1) & 0x7f)
+#define __swp_offset(entry)		(((entry).val << 1) >> 9)
+#define __swp_entry(type,offset)	((swp_entry_t) { ((type) << 1) | ((long) (offset) << 8) })
+#define __pte_to_swp_entry(pte)		((swp_entry_t) { pte_val(pte) })
+#define __swp_entry_to_pte(x)		((pte_t) { (x).val })
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * ZERO_PAGE is a global shared page that is always zero: used
  * for zero-mapped memory areas etc..

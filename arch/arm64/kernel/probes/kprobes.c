@@ -44,6 +44,7 @@ post_kprobe_handler(struct kprobe *, struct kprobe_ctlblk *, struct pt_regs *);
 static void __kprobes arch_prepare_ss_slot(struct kprobe *p)
 {
 	kprobe_opcode_t *addr = p->ainsn.api.insn;
+<<<<<<< HEAD
 
 	/*
 	 * Prepare insn slot, Mark Rutland points out it depends on a coupe of
@@ -66,6 +67,15 @@ static void __kprobes arch_prepare_ss_slot(struct kprobe *p)
 	 */
 	aarch64_insn_patch_text_nosync(addr, p->opcode);
 	aarch64_insn_patch_text_nosync(addr + 1, BRK64_OPCODE_KPROBES_SS);
+=======
+	void *addrs[] = {addr, addr + 1};
+	u32 insns[] = {p->opcode, BRK64_OPCODE_KPROBES_SS};
+
+	/* prepare insn slot */
+	aarch64_insn_patch_text(addrs, insns, 2);
+
+	flush_icache_range((uintptr_t)addr, (uintptr_t)(addr + MAX_INSN_SIZE));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Needs restoring of return address after stepping xol.
@@ -294,12 +304,27 @@ int __kprobes kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr)
 		}
 
 		break;
+<<<<<<< HEAD
+=======
+	case KPROBE_HIT_ACTIVE:
+	case KPROBE_HIT_SSDONE:
+		/*
+		 * In case the user-specified fault handler returned
+		 * zero, try to fix up.
+		 */
+		if (fixup_exception(regs))
+			return 1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return 0;
 }
 
+<<<<<<< HEAD
 static int __kprobes
 kprobe_breakpoint_handler(struct pt_regs *regs, unsigned long esr)
+=======
+static void __kprobes kprobe_handler(struct pt_regs *regs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct kprobe *p, *cur_kprobe;
 	struct kprobe_ctlblk *kcb;
@@ -309,6 +334,7 @@ kprobe_breakpoint_handler(struct pt_regs *regs, unsigned long esr)
 	cur_kprobe = kprobe_running();
 
 	p = get_kprobe((kprobe_opcode_t *) addr);
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(!p)) {
 		/*
 		 * Something went wrong. This BRK used an immediate reserved
@@ -347,6 +373,41 @@ static struct break_hook kprobes_break_hook = {
 	.fn = kprobe_breakpoint_handler,
 };
 
+=======
+
+	if (p) {
+		if (cur_kprobe) {
+			if (reenter_kprobe(p, regs, kcb))
+				return;
+		} else {
+			/* Probe hit */
+			set_current_kprobe(p);
+			kcb->kprobe_status = KPROBE_HIT_ACTIVE;
+
+			/*
+			 * If we have no pre-handler or it returned 0, we
+			 * continue with normal processing.  If we have a
+			 * pre-handler and it returned non-zero, it will
+			 * modify the execution path and no need to single
+			 * stepping. Let's just reset current kprobe and exit.
+			 */
+			if (!p->pre_handler || !p->pre_handler(p, regs)) {
+				setup_singlestep(p, regs, kcb, 0);
+			} else
+				reset_current_kprobe();
+		}
+	}
+	/*
+	 * The breakpoint instruction was removed right
+	 * after we hit it.  Another cpu has removed
+	 * either a probepoint or a debugger breakpoint
+	 * at this address.  In either case, no further
+	 * handling of this interrupt is appropriate.
+	 * Return back to original instruction, and continue.
+	 */
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __kprobes
 kprobe_breakpoint_ss_handler(struct pt_regs *regs, unsigned long esr)
 {
@@ -371,6 +432,21 @@ static struct break_hook kprobes_break_ss_hook = {
 	.fn = kprobe_breakpoint_ss_handler,
 };
 
+<<<<<<< HEAD
+=======
+static int __kprobes
+kprobe_breakpoint_handler(struct pt_regs *regs, unsigned long esr)
+{
+	kprobe_handler(regs);
+	return DBG_HOOK_HANDLED;
+}
+
+static struct break_hook kprobes_break_hook = {
+	.imm = KPROBES_BRK_IMM,
+	.fn = kprobe_breakpoint_handler,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Provide a blacklist of symbols identifying ranges which cannot be kprobed.
  * This blacklist is exposed to userspace via debugfs (kprobes/blacklist).
@@ -387,6 +463,13 @@ int __init arch_populate_kprobe_blacklist(void)
 					(unsigned long)__irqentry_text_end);
 	if (ret)
 		return ret;
+<<<<<<< HEAD
+=======
+	ret = kprobe_add_area_blacklist((unsigned long)__idmap_text_start,
+					(unsigned long)__idmap_text_end);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	ret = kprobe_add_area_blacklist((unsigned long)__hyp_text_start,
 					(unsigned long)__hyp_text_end);
 	if (ret || is_kernel_in_hyp_mode())

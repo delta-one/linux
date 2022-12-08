@@ -288,7 +288,11 @@ static bool ceph_netfs_issue_op_inline(struct netfs_io_subrequest *subreq)
 	}
 
 	len = min_t(size_t, iinfo->inline_len - subreq->start, subreq->len);
+<<<<<<< HEAD
 	iov_iter_xarray(&iter, ITER_DEST, &rreq->mapping->i_pages, subreq->start, len);
+=======
+	iov_iter_xarray(&iter, READ, &rreq->mapping->i_pages, subreq->start, len);
+>>>>>>> b7ba80a49124 (Commit)
 	err = copy_to_iter(iinfo->inline_data + subreq->start, len, &iter);
 	if (err == 0)
 		err = -EFAULT;
@@ -305,7 +309,11 @@ static void ceph_netfs_issue_read(struct netfs_io_subrequest *subreq)
 	struct inode *inode = rreq->inode;
 	struct ceph_inode_info *ci = ceph_inode(inode);
 	struct ceph_fs_client *fsc = ceph_inode_to_client(inode);
+<<<<<<< HEAD
 	struct ceph_osd_request *req = NULL;
+=======
+	struct ceph_osd_request *req;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ceph_vino vino = ceph_vino(inode);
 	struct iov_iter iter;
 	struct page **pages;
@@ -313,11 +321,14 @@ static void ceph_netfs_issue_read(struct netfs_io_subrequest *subreq)
 	int err = 0;
 	u64 len = subreq->len;
 
+<<<<<<< HEAD
 	if (ceph_inode_is_shutdown(inode)) {
 		err = -EIO;
 		goto out;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (ceph_has_inline_data(ci) && ceph_netfs_issue_op_inline(subreq))
 		return;
 
@@ -332,7 +343,11 @@ static void ceph_netfs_issue_read(struct netfs_io_subrequest *subreq)
 	}
 
 	dout("%s: pos=%llu orig_len=%zu len=%llu\n", __func__, subreq->start, subreq->len, len);
+<<<<<<< HEAD
 	iov_iter_xarray(&iter, ITER_DEST, &rreq->mapping->i_pages, subreq->start, len);
+=======
+	iov_iter_xarray(&iter, READ, &rreq->mapping->i_pages, subreq->start, len);
+>>>>>>> b7ba80a49124 (Commit)
 	err = iov_iter_get_pages_alloc2(&iter, &pages, len, &page_off);
 	if (err < 0) {
 		dout("%s: iov_ter_get_pages_alloc returned %d\n", __func__, err);
@@ -568,9 +583,12 @@ static int writepage_nounlock(struct page *page, struct writeback_control *wbc)
 
 	dout("writepage %p idx %lu\n", page, page->index);
 
+<<<<<<< HEAD
 	if (ceph_inode_is_shutdown(inode))
 		return -EIO;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* verify this is a writeable snap context */
 	snapc = page_snap_context(page);
 	if (!snapc) {
@@ -800,7 +818,11 @@ static int ceph_writepages_start(struct address_space *mapping,
 	struct ceph_vino vino = ceph_vino(inode);
 	pgoff_t index, start_index, end = -1;
 	struct ceph_snap_context *snapc = NULL, *last_snapc = NULL, *pgsnapc;
+<<<<<<< HEAD
 	struct folio_batch fbatch;
+=======
+	struct pagevec pvec;
+>>>>>>> b7ba80a49124 (Commit)
 	int rc = 0;
 	unsigned int wsize = i_blocksize(inode);
 	struct ceph_osd_request *req = NULL;
@@ -829,7 +851,11 @@ static int ceph_writepages_start(struct address_space *mapping,
 	if (fsc->mount_options->wsize < wsize)
 		wsize = fsc->mount_options->wsize;
 
+<<<<<<< HEAD
 	folio_batch_init(&fbatch);
+=======
+	pagevec_init(&pvec);
+>>>>>>> b7ba80a49124 (Commit)
 
 	start_index = wbc->range_cyclic ? mapping->writeback_index : 0;
 	index = start_index;
@@ -877,7 +903,11 @@ retry:
 
 	while (!done && index <= end) {
 		int num_ops = 0, op_idx;
+<<<<<<< HEAD
 		unsigned i, nr_folios, max_pages, locked_pages = 0;
+=======
+		unsigned i, pvec_pages, max_pages, locked_pages = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		struct page **pages = NULL, **data_pages;
 		struct page *page;
 		pgoff_t strip_unit_end = 0;
@@ -887,6 +917,7 @@ retry:
 		max_pages = wsize >> PAGE_SHIFT;
 
 get_more_pages:
+<<<<<<< HEAD
 		nr_folios = filemap_get_folios_tag(mapping, &index,
 				end, PAGECACHE_TAG_DIRTY, &fbatch);
 		dout("pagevec_lookup_range_tag got %d\n", nr_folios);
@@ -894,6 +925,15 @@ get_more_pages:
 			break;
 		for (i = 0; i < nr_folios && locked_pages < max_pages; i++) {
 			page = &fbatch.folios[i]->page;
+=======
+		pvec_pages = pagevec_lookup_range_tag(&pvec, mapping, &index,
+						end, PAGECACHE_TAG_DIRTY);
+		dout("pagevec_lookup_range_tag got %d\n", pvec_pages);
+		if (!pvec_pages && !locked_pages)
+			break;
+		for (i = 0; i < pvec_pages && locked_pages < max_pages; i++) {
+			page = pvec.pages[i];
+>>>>>>> b7ba80a49124 (Commit)
 			dout("? %p idx %lu\n", page, page->index);
 			if (locked_pages == 0)
 				lock_page(page);  /* first page */
@@ -1003,7 +1043,11 @@ get_more_pages:
 				len = 0;
 			}
 
+<<<<<<< HEAD
 			/* note position of first page in fbatch */
+=======
+			/* note position of first page in pvec */
+>>>>>>> b7ba80a49124 (Commit)
 			dout("%p will write page %p idx %lu\n",
 			     inode, page, page->index);
 
@@ -1013,13 +1057,18 @@ get_more_pages:
 				fsc->write_congested = true;
 
 			pages[locked_pages++] = page;
+<<<<<<< HEAD
 			fbatch.folios[i] = NULL;
+=======
+			pvec.pages[i] = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 			len += thp_size(page);
 		}
 
 		/* did we get anything? */
 		if (!locked_pages)
+<<<<<<< HEAD
 			goto release_folios;
 		if (i) {
 			unsigned j, n = 0;
@@ -1037,6 +1086,25 @@ get_more_pages:
 			    locked_pages < max_pages) {
 				dout("reached end fbatch, trying for more\n");
 				folio_batch_release(&fbatch);
+=======
+			goto release_pvec_pages;
+		if (i) {
+			unsigned j, n = 0;
+			/* shift unused page to beginning of pvec */
+			for (j = 0; j < pvec_pages; j++) {
+				if (!pvec.pages[j])
+					continue;
+				if (n < j)
+					pvec.pages[n] = pvec.pages[j];
+				n++;
+			}
+			pvec.nr = n;
+
+			if (pvec_pages && i == pvec_pages &&
+			    locked_pages < max_pages) {
+				dout("reached end pvec, trying for more\n");
+				pagevec_release(&pvec);
+>>>>>>> b7ba80a49124 (Commit)
 				goto get_more_pages;
 			}
 		}
@@ -1172,10 +1240,17 @@ new_request:
 		if (wbc->nr_to_write <= 0 && wbc->sync_mode == WB_SYNC_NONE)
 			done = true;
 
+<<<<<<< HEAD
 release_folios:
 		dout("folio_batch release on %d folios (%p)\n", (int)fbatch.nr,
 		     fbatch.nr ? fbatch.folios[0] : NULL);
 		folio_batch_release(&fbatch);
+=======
+release_pvec_pages:
+		dout("pagevec_release on %d pages (%p)\n", (int)pvec.nr,
+		     pvec.nr ? pvec.pages[0] : NULL);
+		pagevec_release(&pvec);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (should_loop && !done) {
@@ -1192,17 +1267,28 @@ release_folios:
 			unsigned i, nr;
 			index = 0;
 			while ((index <= end) &&
+<<<<<<< HEAD
 			       (nr = filemap_get_folios_tag(mapping, &index,
 						(pgoff_t)-1,
 						PAGECACHE_TAG_WRITEBACK,
 						&fbatch))) {
 				for (i = 0; i < nr; i++) {
 					page = &fbatch.folios[i]->page;
+=======
+			       (nr = pagevec_lookup_tag(&pvec, mapping, &index,
+						PAGECACHE_TAG_WRITEBACK))) {
+				for (i = 0; i < nr; i++) {
+					page = pvec.pages[i];
+>>>>>>> b7ba80a49124 (Commit)
 					if (page_snap_context(page) != snapc)
 						continue;
 					wait_on_page_writeback(page);
 				}
+<<<<<<< HEAD
 				folio_batch_release(&fbatch);
+=======
+				pagevec_release(&pvec);
+>>>>>>> b7ba80a49124 (Commit)
 				cond_resched();
 			}
 		}
@@ -1377,7 +1463,11 @@ out:
 	folio_put(folio);
 
 	if (check_cap)
+<<<<<<< HEAD
 		ceph_check_caps(ceph_inode(inode), CHECK_CAPS_AUTHONLY);
+=======
+		ceph_check_caps(ceph_inode(inode), CHECK_CAPS_AUTHONLY, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return copied;
 }
@@ -1653,7 +1743,11 @@ int ceph_uninline_data(struct file *file)
 	struct ceph_inode_info *ci = ceph_inode(inode);
 	struct ceph_fs_client *fsc = ceph_inode_to_client(inode);
 	struct ceph_osd_request *req = NULL;
+<<<<<<< HEAD
 	struct ceph_cap_flush *prealloc_cf = NULL;
+=======
+	struct ceph_cap_flush *prealloc_cf;
+>>>>>>> b7ba80a49124 (Commit)
 	struct folio *folio = NULL;
 	u64 inline_version = CEPH_INLINE_NONE;
 	struct page *pages[1];
@@ -1667,11 +1761,14 @@ int ceph_uninline_data(struct file *file)
 	dout("uninline_data %p %llx.%llx inline_version %llu\n",
 	     inode, ceph_vinop(inode), inline_version);
 
+<<<<<<< HEAD
 	if (ceph_inode_is_shutdown(inode)) {
 		err = -EIO;
 		goto out;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (inline_version == CEPH_INLINE_NONE)
 		return 0;
 

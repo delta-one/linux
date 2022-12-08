@@ -134,6 +134,7 @@ offline_memory_expect_fail()
 	return 0
 }
 
+<<<<<<< HEAD
 online_all_offline_memory()
 {
 	for memory in `hotpluggable_offline_memory`; do
@@ -143,6 +144,8 @@ online_all_offline_memory()
 	done
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 error=-12
 priority=0
 # Run with default of ratio=2 for Kselftest run
@@ -206,11 +209,16 @@ echo -e "\t trying to offline $target out of $hotpluggable_num memory block(s):"
 for memory in `hotpluggable_online_memory`; do
 	if [ "$target" -gt 0 ]; then
 		echo "online->offline memory$memory"
+<<<<<<< HEAD
 		if offline_memory_expect_success $memory &>/dev/null; then
 			target=$(($target - 1))
 			echo "-> Success"
 		else
 			echo "-> Failure"
+=======
+		if offline_memory_expect_success $memory; then
+			target=$(($target - 1))
+>>>>>>> b7ba80a49124 (Commit)
 		fi
 	fi
 done
@@ -269,7 +277,11 @@ prerequisite_extra
 echo 0 > $NOTIFIER_ERR_INJECT_DIR/actions/MEM_GOING_OFFLINE/error
 for memory in `hotpluggable_online_memory`; do
 	if [ $((RANDOM % 100)) -lt $ratio ]; then
+<<<<<<< HEAD
 		offline_memory_expect_success $memory &>/dev/null
+=======
+		offline_memory_expect_success $memory
+>>>>>>> b7ba80a49124 (Commit)
 	fi
 done
 
@@ -278,16 +290,26 @@ done
 #
 echo $error > $NOTIFIER_ERR_INJECT_DIR/actions/MEM_GOING_ONLINE/error
 for memory in `hotpluggable_offline_memory`; do
+<<<<<<< HEAD
 	if ! online_memory_expect_fail $memory; then
 		retval=1
 	fi
+=======
+	online_memory_expect_fail $memory
+>>>>>>> b7ba80a49124 (Commit)
 done
 
 #
 # Online all hot-pluggable memory
 #
 echo 0 > $NOTIFIER_ERR_INJECT_DIR/actions/MEM_GOING_ONLINE/error
+<<<<<<< HEAD
 online_all_offline_memory
+=======
+for memory in `hotpluggable_offline_memory`; do
+	online_memory_expect_success $memory
+done
+>>>>>>> b7ba80a49124 (Commit)
 
 #
 # Test memory hot-remove error handling (online => offline)
@@ -295,18 +317,25 @@ online_all_offline_memory
 echo $error > $NOTIFIER_ERR_INJECT_DIR/actions/MEM_GOING_OFFLINE/error
 for memory in `hotpluggable_online_memory`; do
 	if [ $((RANDOM % 100)) -lt $ratio ]; then
+<<<<<<< HEAD
 		if ! offline_memory_expect_fail $memory; then
 			retval=1
 		fi
+=======
+		offline_memory_expect_fail $memory
+>>>>>>> b7ba80a49124 (Commit)
 	fi
 done
 
 echo 0 > $NOTIFIER_ERR_INJECT_DIR/actions/MEM_GOING_OFFLINE/error
 /sbin/modprobe -q -r memory-notifier-error-inject
 
+<<<<<<< HEAD
 #
 # Restore memory before exit
 #
 online_all_offline_memory
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 exit $retval

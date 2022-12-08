@@ -22,8 +22,12 @@ int nft_reject_init(const struct nft_ctx *ctx,
 		    const struct nft_expr *expr,
 		    const struct nlattr * const tb[]);
 
+<<<<<<< HEAD
 int nft_reject_dump(struct sk_buff *skb,
 		    const struct nft_expr *expr, bool reset);
+=======
+int nft_reject_dump(struct sk_buff *skb, const struct nft_expr *expr);
+>>>>>>> b7ba80a49124 (Commit)
 
 int nft_reject_icmp_code(u8 code);
 int nft_reject_icmpv6_code(u8 code);

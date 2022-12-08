@@ -87,9 +87,15 @@ struct sl28cpld_pwm {
 #define sl28cpld_pwm_from_chip(_chip) \
 	container_of(_chip, struct sl28cpld_pwm, pwm_chip)
 
+<<<<<<< HEAD
 static int sl28cpld_pwm_get_state(struct pwm_chip *chip,
 				  struct pwm_device *pwm,
 				  struct pwm_state *state)
+=======
+static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
+				   struct pwm_device *pwm,
+				   struct pwm_state *state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sl28cpld_pwm *priv = sl28cpld_pwm_from_chip(chip);
 	unsigned int reg;
@@ -115,8 +121,11 @@ static int sl28cpld_pwm_get_state(struct pwm_chip *chip,
 	 * the PWM core.
 	 */
 	state->duty_cycle = min(state->duty_cycle, state->period);
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int sl28cpld_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,

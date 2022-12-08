@@ -144,7 +144,10 @@
 };
 
 &mailbox0_cluster0 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	interrupts = <436>;
 
 	mbox_mcu_r5fss0_core0: mbox-mcu-r5fss0-core0 {
@@ -159,7 +162,10 @@
 };
 
 &mailbox0_cluster1 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	interrupts = <432>;
 
 	mbox_main_r5fss0_core0: mbox-main-r5fss0-core0 {
@@ -173,6 +179,49 @@
 	};
 };
 
+<<<<<<< HEAD
+=======
+&mailbox0_cluster2 {
+	status = "disabled";
+};
+
+&mailbox0_cluster3 {
+	status = "disabled";
+};
+
+&mailbox0_cluster4 {
+	status = "disabled";
+};
+
+&mailbox0_cluster5 {
+	status = "disabled";
+};
+
+&mailbox0_cluster6 {
+	status = "disabled";
+};
+
+&mailbox0_cluster7 {
+	status = "disabled";
+};
+
+&mailbox0_cluster8 {
+	status = "disabled";
+};
+
+&mailbox0_cluster9 {
+	status = "disabled";
+};
+
+&mailbox0_cluster10 {
+	status = "disabled";
+};
+
+&mailbox0_cluster11 {
+	status = "disabled";
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &mcu_r5fss0_core0 {
 	mboxes = <&mailbox0_cluster0 &mbox_mcu_r5fss0_core0>;
 	memory-region = <&mcu_r5fss0_core0_dma_memory_region>,

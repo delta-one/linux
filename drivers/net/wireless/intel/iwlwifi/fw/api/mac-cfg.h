@@ -1,14 +1,21 @@
 /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
 /*
+<<<<<<< HEAD
  * Copyright (C) 2012-2014, 2018-2019, 2021-2022 Intel Corporation
+=======
+ * Copyright (C) 2012-2014, 2018-2019, 2021 Intel Corporation
+>>>>>>> b7ba80a49124 (Commit)
  * Copyright (C) 2013-2015 Intel Mobile Communications GmbH
  * Copyright (C) 2016-2017 Intel Deutschland GmbH
  */
 #ifndef __iwl_fw_api_mac_cfg_h__
 #define __iwl_fw_api_mac_cfg_h__
 
+<<<<<<< HEAD
 #include "mac.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * enum iwl_mac_conf_subcmd_ids - mac configuration command IDs
  */
@@ -33,6 +40,7 @@ enum iwl_mac_conf_subcmd_ids {
 	 * @CANCEL_CHANNEL_SWITCH_CMD: &struct iwl_cancel_channel_switch_cmd
 	 */
 	CANCEL_CHANNEL_SWITCH_CMD = 0x6,
+<<<<<<< HEAD
 	/**
 	 * @MAC_CONFIG_CMD: &struct iwl_mac_config_cmd
 	 */
@@ -57,6 +65,9 @@ enum iwl_mac_conf_subcmd_ids {
 	 * @STA_DISABLE_TX_CMD: &struct iwl_mvm_sta_disable_tx_cmd
 	 */
 	STA_DISABLE_TX_CMD = 0xD,
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	/**
 	 * @SESSION_PROTECTION_NOTIF: &struct iwl_mvm_session_prot_notif
 	 */
@@ -207,6 +218,7 @@ struct iwl_mac_low_latency_cmd {
 	__le16 reserved;
 } __packed; /* MAC_LOW_LATENCY_API_S_VER_1 */
 
+<<<<<<< HEAD
 /**
  * struct iwl_mac_client_data - configuration data for client MAC context
  *
@@ -594,4 +606,6 @@ struct iwl_mvm_sta_disable_tx_cmd {
 	__le32 disable;
 } __packed; /* STA_DISABLE_TX_API_S_VER_1 */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __iwl_fw_api_mac_cfg_h__ */

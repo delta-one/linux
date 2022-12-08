@@ -22,19 +22,28 @@
 #define PHY_ID_AQR107	0x03a1b4e0
 #define PHY_ID_AQCS109	0x03a1b5c2
 #define PHY_ID_AQR405	0x03a1b4b0
+<<<<<<< HEAD
 #define PHY_ID_AQR112	0x03a1b662
 #define PHY_ID_AQR412	0x03a1b712
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PHY_ID_AQR113C	0x31c31c12
 
 #define MDIO_PHYXS_VEND_IF_STATUS		0xe812
 #define MDIO_PHYXS_VEND_IF_STATUS_TYPE_MASK	GENMASK(7, 3)
 #define MDIO_PHYXS_VEND_IF_STATUS_TYPE_KR	0
+<<<<<<< HEAD
 #define MDIO_PHYXS_VEND_IF_STATUS_TYPE_KX	1
 #define MDIO_PHYXS_VEND_IF_STATUS_TYPE_XFI	2
 #define MDIO_PHYXS_VEND_IF_STATUS_TYPE_USXGMII	3
 #define MDIO_PHYXS_VEND_IF_STATUS_TYPE_XAUI	4
 #define MDIO_PHYXS_VEND_IF_STATUS_TYPE_SGMII	6
 #define MDIO_PHYXS_VEND_IF_STATUS_TYPE_RXAUI	7
+=======
+#define MDIO_PHYXS_VEND_IF_STATUS_TYPE_XFI	2
+#define MDIO_PHYXS_VEND_IF_STATUS_TYPE_USXGMII	3
+#define MDIO_PHYXS_VEND_IF_STATUS_TYPE_SGMII	6
+>>>>>>> b7ba80a49124 (Commit)
 #define MDIO_PHYXS_VEND_IF_STATUS_TYPE_OCSGMII	10
 
 #define MDIO_AN_VEND_PROV			0xc400
@@ -99,6 +108,7 @@
 #define VEND1_GLOBAL_GEN_STAT2			0xc831
 #define VEND1_GLOBAL_GEN_STAT2_OP_IN_PROG	BIT(15)
 
+<<<<<<< HEAD
 /* The following registers all have similar layouts; first the registers... */
 #define VEND1_GLOBAL_CFG_10M			0x0310
 #define VEND1_GLOBAL_CFG_100M			0x031b
@@ -112,6 +122,8 @@
 #define VEND1_GLOBAL_CFG_RATE_ADAPT_USX		1
 #define VEND1_GLOBAL_CFG_RATE_ADAPT_PAUSE	2
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define VEND1_GLOBAL_RSVD_STAT1			0xc885
 #define VEND1_GLOBAL_RSVD_STAT1_FW_BUILD_ID	GENMASK(7, 4)
 #define VEND1_GLOBAL_RSVD_STAT1_PROV_ID		GENMASK(3, 0)
@@ -362,18 +374,49 @@ static int aqr_read_status(struct phy_device *phydev)
 
 static int aqr107_read_rate(struct phy_device *phydev)
 {
+<<<<<<< HEAD
 	u32 config_reg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int val;
 
 	val = phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_AN_TX_VEND_STATUS1);
 	if (val < 0)
 		return val;
 
+<<<<<<< HEAD
+=======
+	switch (FIELD_GET(MDIO_AN_TX_VEND_STATUS1_RATE_MASK, val)) {
+	case MDIO_AN_TX_VEND_STATUS1_10BASET:
+		phydev->speed = SPEED_10;
+		break;
+	case MDIO_AN_TX_VEND_STATUS1_100BASETX:
+		phydev->speed = SPEED_100;
+		break;
+	case MDIO_AN_TX_VEND_STATUS1_1000BASET:
+		phydev->speed = SPEED_1000;
+		break;
+	case MDIO_AN_TX_VEND_STATUS1_2500BASET:
+		phydev->speed = SPEED_2500;
+		break;
+	case MDIO_AN_TX_VEND_STATUS1_5000BASET:
+		phydev->speed = SPEED_5000;
+		break;
+	case MDIO_AN_TX_VEND_STATUS1_10GBASET:
+		phydev->speed = SPEED_10000;
+		break;
+	default:
+		phydev->speed = SPEED_UNKNOWN;
+		break;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (val & MDIO_AN_TX_VEND_STATUS1_FULL_DUPLEX)
 		phydev->duplex = DUPLEX_FULL;
 	else
 		phydev->duplex = DUPLEX_HALF;
 
+<<<<<<< HEAD
 	switch (FIELD_GET(MDIO_AN_TX_VEND_STATUS1_RATE_MASK, val)) {
 	case MDIO_AN_TX_VEND_STATUS1_10BASET:
 		phydev->speed = SPEED_10;
@@ -414,6 +457,8 @@ static int aqr107_read_rate(struct phy_device *phydev)
 	else
 		phydev->rate_matching = RATE_MATCH_NONE;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -436,15 +481,19 @@ static int aqr107_read_status(struct phy_device *phydev)
 	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_KR:
 		phydev->interface = PHY_INTERFACE_MODE_10GKR;
 		break;
+<<<<<<< HEAD
 	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_KX:
 		phydev->interface = PHY_INTERFACE_MODE_1000BASEKX;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_XFI:
 		phydev->interface = PHY_INTERFACE_MODE_10GBASER;
 		break;
 	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_USXGMII:
 		phydev->interface = PHY_INTERFACE_MODE_USXGMII;
 		break;
+<<<<<<< HEAD
 	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_XAUI:
 		phydev->interface = PHY_INTERFACE_MODE_XAUI;
 		break;
@@ -454,6 +503,11 @@ static int aqr107_read_status(struct phy_device *phydev)
 	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_RXAUI:
 		phydev->interface = PHY_INTERFACE_MODE_RXAUI;
 		break;
+=======
+	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_SGMII:
+		phydev->interface = PHY_INTERFACE_MODE_SGMII;
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_OCSGMII:
 		phydev->interface = PHY_INTERFACE_MODE_2500BASEX;
 		break;
@@ -566,14 +620,21 @@ static int aqr107_config_init(struct phy_device *phydev)
 
 	/* Check that the PHY interface type is compatible */
 	if (phydev->interface != PHY_INTERFACE_MODE_SGMII &&
+<<<<<<< HEAD
 	    phydev->interface != PHY_INTERFACE_MODE_1000BASEKX &&
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	    phydev->interface != PHY_INTERFACE_MODE_2500BASEX &&
 	    phydev->interface != PHY_INTERFACE_MODE_XGMII &&
 	    phydev->interface != PHY_INTERFACE_MODE_USXGMII &&
 	    phydev->interface != PHY_INTERFACE_MODE_10GKR &&
+<<<<<<< HEAD
 	    phydev->interface != PHY_INTERFACE_MODE_10GBASER &&
 	    phydev->interface != PHY_INTERFACE_MODE_XAUI &&
 	    phydev->interface != PHY_INTERFACE_MODE_RXAUI)
+=======
+	    phydev->interface != PHY_INTERFACE_MODE_10GBASER)
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODEV;
 
 	WARN(phydev->interface == PHY_INTERFACE_MODE_XGMII,
@@ -677,6 +738,7 @@ static int aqr107_wait_processor_intensive_op(struct phy_device *phydev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int aqr107_get_rate_matching(struct phy_device *phydev,
 				    phy_interface_t iface)
 {
@@ -687,6 +749,8 @@ static int aqr107_get_rate_matching(struct phy_device *phydev,
 	return RATE_MATCH_NONE;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int aqr107_suspend(struct phy_device *phydev)
 {
 	int err;
@@ -760,7 +824,10 @@ static struct phy_driver aqr_driver[] = {
 	PHY_ID_MATCH_MODEL(PHY_ID_AQR107),
 	.name		= "Aquantia AQR107",
 	.probe		= aqr107_probe,
+<<<<<<< HEAD
 	.get_rate_matching = aqr107_get_rate_matching,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.config_init	= aqr107_config_init,
 	.config_aneg    = aqr_config_aneg,
 	.config_intr	= aqr_config_intr,
@@ -779,7 +846,10 @@ static struct phy_driver aqr_driver[] = {
 	PHY_ID_MATCH_MODEL(PHY_ID_AQCS109),
 	.name		= "Aquantia AQCS109",
 	.probe		= aqr107_probe,
+<<<<<<< HEAD
 	.get_rate_matching = aqr107_get_rate_matching,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.config_init	= aqcs109_config_init,
 	.config_aneg    = aqr_config_aneg,
 	.config_intr	= aqr_config_intr,
@@ -803,6 +873,7 @@ static struct phy_driver aqr_driver[] = {
 	.read_status	= aqr_read_status,
 },
 {
+<<<<<<< HEAD
 	PHY_ID_MATCH_MODEL(PHY_ID_AQR112),
 	.name		= "Aquantia AQR112",
 	.probe		= aqr107_probe,
@@ -843,6 +914,11 @@ static struct phy_driver aqr_driver[] = {
 	.name           = "Aquantia AQR113C",
 	.probe          = aqr107_probe,
 	.get_rate_matching = aqr107_get_rate_matching,
+=======
+	PHY_ID_MATCH_MODEL(PHY_ID_AQR113C),
+	.name           = "Aquantia AQR113C",
+	.probe          = aqr107_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.config_init    = aqr107_config_init,
 	.config_aneg    = aqr_config_aneg,
 	.config_intr    = aqr_config_intr,
@@ -869,8 +945,11 @@ static struct mdio_device_id __maybe_unused aqr_tbl[] = {
 	{ PHY_ID_MATCH_MODEL(PHY_ID_AQR107) },
 	{ PHY_ID_MATCH_MODEL(PHY_ID_AQCS109) },
 	{ PHY_ID_MATCH_MODEL(PHY_ID_AQR405) },
+<<<<<<< HEAD
 	{ PHY_ID_MATCH_MODEL(PHY_ID_AQR112) },
 	{ PHY_ID_MATCH_MODEL(PHY_ID_AQR412) },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ PHY_ID_MATCH_MODEL(PHY_ID_AQR113C) },
 	{ }
 };

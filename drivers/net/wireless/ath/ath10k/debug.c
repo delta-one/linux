@@ -10,7 +10,10 @@
 #include <linux/vmalloc.h>
 #include <linux/crc32.h>
 #include <linux/firmware.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "core.h"
 #include "debug.h"
@@ -1082,7 +1085,11 @@ exit:
  * struct available..
  */
 
+<<<<<<< HEAD
 /* This generally corresponds to the debugfs fw_stats file */
+=======
+/* This generally cooresponds to the debugfs fw_stats file */
+>>>>>>> b7ba80a49124 (Commit)
 static const char ath10k_gstrings_stats[][ETH_GSTRING_LEN] = {
 	"tx_pkts_nic",
 	"tx_bytes_nic",
@@ -1976,7 +1983,11 @@ static ssize_t ath10k_write_btcoex(struct file *file,
 
 	buf[buf_size] = '\0';
 
+<<<<<<< HEAD
 	if (kstrtobool(buf, &val) != 0)
+=======
+	if (strtobool(buf, &val) != 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (!ar->coex_support)
@@ -2114,7 +2125,11 @@ static ssize_t ath10k_write_peer_stats(struct file *file,
 
 	buf[buf_size] = '\0';
 
+<<<<<<< HEAD
 	if (kstrtobool(buf, &val) != 0)
+=======
+	if (strtobool(buf, &val) != 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	mutex_lock(&ar->conf_mutex);

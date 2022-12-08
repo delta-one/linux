@@ -15,7 +15,11 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
 	ret = (pgd_t *) __get_free_pages(GFP_KERNEL, PGD_TABLE_ORDER);
 	if (ret) {
 		init = pgd_offset(&init_mm, 0UL);
+<<<<<<< HEAD
 		pgd_init(ret);
+=======
+		pgd_init((unsigned long)ret);
+>>>>>>> b7ba80a49124 (Commit)
 		memcpy(ret + USER_PTRS_PER_PGD, init + USER_PTRS_PER_PGD,
 		       (PTRS_PER_PGD - USER_PTRS_PER_PGD) * sizeof(pgd_t));
 	}

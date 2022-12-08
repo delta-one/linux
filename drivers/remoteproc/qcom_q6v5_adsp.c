@@ -9,7 +9,10 @@
 #include <linux/firmware.h>
 #include <linux/interrupt.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/iommu.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/iopoll.h>
 #include <linux/kernel.h>
 #include <linux/mfd/syscon.h>
@@ -49,18 +52,24 @@
 #define LPASS_PWR_ON_REG		0x10
 #define LPASS_HALTREQ_REG		0x0
 
+<<<<<<< HEAD
 #define SID_MASK_DEFAULT        0xF
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define QDSP6SS_XO_CBCR		0x38
 #define QDSP6SS_CORE_CBCR	0x20
 #define QDSP6SS_SLEEP_CBCR	0x3c
 
 #define QCOM_Q6V5_RPROC_PROXY_PD_MAX	3
 
+<<<<<<< HEAD
 #define LPASS_BOOT_CORE_START	BIT(0)
 #define LPASS_BOOT_CMD_START	BIT(0)
 #define LPASS_EFUSE_Q6SS_EVB_SEL 0x0
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct adsp_pil_data {
 	int crash_reason_smem;
 	const char *firmware_name;
@@ -69,7 +78,10 @@ struct adsp_pil_data {
 	const char *sysmon_name;
 	int ssctl_id;
 	bool is_wpss;
+<<<<<<< HEAD
 	bool has_iommu;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool auto_boot;
 
 	const char **clk_ids;
@@ -90,7 +102,10 @@ struct qcom_adsp {
 	struct clk_bulk_data *clks;
 
 	void __iomem *qdsp6ss_base;
+<<<<<<< HEAD
 	void __iomem *lpass_efuse;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct reset_control *pdc_sync_reset;
 	struct reset_control *restart;
@@ -108,7 +123,10 @@ struct qcom_adsp {
 	phys_addr_t mem_reloc;
 	void *mem_region;
 	size_t mem_size;
+<<<<<<< HEAD
 	bool has_iommu;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct device *proxy_pds[QCOM_Q6V5_RPROC_PROXY_PD_MAX];
 	size_t proxy_pd_count;
@@ -335,6 +353,7 @@ static int adsp_load(struct rproc *rproc, const struct firmware *fw)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void adsp_unmap_carveout(struct rproc *rproc)
 {
 	struct qcom_adsp *adsp = rproc->priv;
@@ -377,6 +396,8 @@ static int adsp_map_carveout(struct rproc *rproc)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int adsp_start(struct rproc *rproc)
 {
 	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
@@ -387,6 +408,7 @@ static int adsp_start(struct rproc *rproc)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = adsp_map_carveout(rproc);
 	if (ret) {
 		dev_err(adsp->dev, "ADSP smmu mapping failed\n");
@@ -396,6 +418,11 @@ static int adsp_start(struct rproc *rproc)
 	ret = clk_prepare_enable(adsp->xo);
 	if (ret)
 		goto adsp_smmu_unmap;
+=======
+	ret = clk_prepare_enable(adsp->xo);
+	if (ret)
+		goto disable_irqs;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = qcom_rproc_pds_enable(adsp, adsp->proxy_pds,
 				    adsp->proxy_pd_count);
@@ -420,6 +447,7 @@ static int adsp_start(struct rproc *rproc)
 	/* Program boot address */
 	writel(adsp->mem_phys >> 4, adsp->qdsp6ss_base + RST_EVB_REG);
 
+<<<<<<< HEAD
 	if (adsp->lpass_efuse)
 		writel(LPASS_EFUSE_Q6SS_EVB_SEL, adsp->lpass_efuse);
 
@@ -428,6 +456,13 @@ static int adsp_start(struct rproc *rproc)
 
 	/* Trigger boot FSM to start QDSP6 */
 	writel(LPASS_BOOT_CMD_START, adsp->qdsp6ss_base + BOOT_CMD_REG);
+=======
+	/* De-assert QDSP6 stop core. QDSP6 will execute after out of reset */
+	writel(0x1, adsp->qdsp6ss_base + CORE_START_REG);
+
+	/* Trigger boot FSM to start QDSP6 */
+	writel(0x1, adsp->qdsp6ss_base + BOOT_CMD_REG);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Wait for core to come out of reset */
 	ret = readl_poll_timeout(adsp->qdsp6ss_base + BOOT_STATUS_REG,
@@ -451,8 +486,11 @@ disable_power_domain:
 	qcom_rproc_pds_disable(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
 disable_xo_clk:
 	clk_disable_unprepare(adsp->xo);
+<<<<<<< HEAD
 adsp_smmu_unmap:
 	adsp_unmap_carveout(rproc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 disable_irqs:
 	qcom_q6v5_unprepare(&adsp->q6v5);
 
@@ -481,8 +519,11 @@ static int adsp_stop(struct rproc *rproc)
 	if (ret)
 		dev_err(adsp->dev, "failed to shutdown: %d\n", ret);
 
+<<<<<<< HEAD
 	adsp_unmap_carveout(rproc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	handover = qcom_q6v5_unprepare(&adsp->q6v5);
 	if (handover)
 		qcom_adsp_pil_handover(&adsp->q6v5);
@@ -502,6 +543,7 @@ static void *adsp_da_to_va(struct rproc *rproc, u64 da, size_t len, bool *is_iom
 	return adsp->mem_region + offset;
 }
 
+<<<<<<< HEAD
 static int adsp_parse_firmware(struct rproc *rproc, const struct firmware *fw)
 {
 	struct qcom_adsp *adsp = rproc->priv;
@@ -523,6 +565,8 @@ static int adsp_parse_firmware(struct rproc *rproc, const struct firmware *fw)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned long adsp_panic(struct rproc *rproc)
 {
 	struct qcom_adsp *adsp = rproc->priv;
@@ -534,7 +578,11 @@ static const struct rproc_ops adsp_ops = {
 	.start = adsp_start,
 	.stop = adsp_stop,
 	.da_to_va = adsp_da_to_va,
+<<<<<<< HEAD
 	.parse_fw = adsp_parse_firmware,
+=======
+	.parse_fw = qcom_register_dump_segments,
+>>>>>>> b7ba80a49124 (Commit)
 	.load = adsp_load,
 	.panic = adsp_panic,
 };
@@ -593,7 +641,10 @@ static int adsp_init_reset(struct qcom_adsp *adsp)
 static int adsp_init_mmio(struct qcom_adsp *adsp,
 				struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	struct resource *efuse_region;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct device_node *syscon;
 	int ret;
 
@@ -603,6 +654,7 @@ static int adsp_init_mmio(struct qcom_adsp *adsp,
 		return PTR_ERR(adsp->qdsp6ss_base);
 	}
 
+<<<<<<< HEAD
 	efuse_region = platform_get_resource(pdev, IORESOURCE_MEM, 1);
 	if (!efuse_region) {
 		adsp->lpass_efuse = NULL;
@@ -614,6 +666,8 @@ static int adsp_init_mmio(struct qcom_adsp *adsp,
 			return PTR_ERR(adsp->lpass_efuse);
 		}
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	syscon = of_parse_phandle(pdev->dev.of_node, "qcom,halt-regs", 0);
 	if (!syscon) {
 		dev_err(&pdev->dev, "failed to parse qcom,halt-regs\n");
@@ -693,15 +747,21 @@ static int adsp_probe(struct platform_device *pdev)
 	}
 
 	rproc->auto_boot = desc->auto_boot;
+<<<<<<< HEAD
 	rproc->has_iommu = desc->has_iommu;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
 
 	adsp = (struct qcom_adsp *)rproc->priv;
 	adsp->dev = &pdev->dev;
 	adsp->rproc = rproc;
 	adsp->info_name = desc->sysmon_name;
+<<<<<<< HEAD
 	adsp->has_iommu = desc->has_iommu;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	platform_set_drvdata(pdev, adsp);
 
 	if (desc->is_wpss)
@@ -797,6 +857,7 @@ static const struct adsp_pil_data adsp_resource_init = {
 	},
 };
 
+<<<<<<< HEAD
 static const struct adsp_pil_data adsp_sc7280_resource_init = {
 	.crash_reason_smem = 423,
 	.firmware_name = "adsp.pbn",
@@ -812,6 +873,8 @@ static const struct adsp_pil_data adsp_sc7280_resource_init = {
 	.num_clks = 1,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct adsp_pil_data cdsp_resource_init = {
 	.crash_reason_smem = 601,
 	.firmware_name = "cdsp.mdt",
@@ -850,7 +913,10 @@ static const struct adsp_pil_data wpss_resource_init = {
 
 static const struct of_device_id adsp_of_match[] = {
 	{ .compatible = "qcom,qcs404-cdsp-pil", .data = &cdsp_resource_init },
+<<<<<<< HEAD
 	{ .compatible = "qcom,sc7280-adsp-pil", .data = &adsp_sc7280_resource_init },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "qcom,sc7280-wpss-pil", .data = &wpss_resource_init },
 	{ .compatible = "qcom,sdm845-adsp-pil", .data = &adsp_resource_init },
 	{ },

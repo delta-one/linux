@@ -40,7 +40,11 @@
 #define MLXCPLD_LPCI2C_STATUS_REG	0x9
 #define MLXCPLD_LPCI2C_DATA_REG		0xa
 
+<<<<<<< HEAD
 /* LPC I2C masks and parameters */
+=======
+/* LPC I2C masks and parametres */
+>>>>>>> b7ba80a49124 (Commit)
 #define MLXCPLD_LPCI2C_RST_SEL_MASK	0x1
 #define MLXCPLD_LPCI2C_TRANS_END	0x1
 #define MLXCPLD_LPCI2C_STATUS_NACK	0x10

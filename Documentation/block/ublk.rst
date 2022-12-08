@@ -144,6 +144,7 @@ managing and controlling ublk devices with help of several control commands:
   For retrieving device info via ``ublksrv_ctrl_dev_info``. It is the server's
   responsibility to save IO target specific info in userspace.
 
+<<<<<<< HEAD
 - ``UBLK_CMD_GET_DEV_INFO2``
   Same purpose with ``UBLK_CMD_GET_DEV_INFO``, but ublk server has to
   provide path of the char device of ``/dev/ublkc*`` for kernel to run
@@ -226,6 +227,8 @@ be provided in these commands' payload from ublk server. With this way,
 ublk device becomes container-ware, and device created in one container
 can be controlled/accessed just inside this container.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Data plane
 ----------
 
@@ -300,6 +303,18 @@ with specified IO tag in the command data:
 Future development
 ==================
 
+<<<<<<< HEAD
+=======
+Container-aware ublk deivice
+----------------------------
+
+ublk driver doesn't handle any IO logic. Its function is well defined
+for now and very limited userspace interfaces are needed, which is also
+well defined too. It is possible to make ublk devices container-aware block
+devices in future as Stefan Hajnoczi suggested [#stefan]_, by removing
+ADMIN privilege.
+
+>>>>>>> b7ba80a49124 (Commit)
 Zero copy
 ---------
 

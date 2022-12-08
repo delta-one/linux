@@ -29,16 +29,22 @@ struct rxrpc_crypt {
 
 struct key_preparsed_payload;
 struct rxrpc_connection;
+<<<<<<< HEAD
 struct rxrpc_txbuf;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Mark applied to socket buffers in skb->mark.  skb->priority is used
  * to pass supplementary information.
  */
 enum rxrpc_skb_mark {
+<<<<<<< HEAD
 	RXRPC_SKB_MARK_PACKET,		/* Received packet */
 	RXRPC_SKB_MARK_ERROR,		/* Error notification */
 	RXRPC_SKB_MARK_SERVICE_CONN_SECURED, /* Service connection response has been verified */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	RXRPC_SKB_MARK_REJECT_BUSY,	/* Reject with BUSY */
 	RXRPC_SKB_MARK_REJECT_ABORT,	/* Reject with ABORT (code in skb->priority) */
 };
@@ -76,7 +82,17 @@ struct rxrpc_net {
 
 	bool			live;
 
+<<<<<<< HEAD
 	atomic_t		nr_client_conns;
+=======
+	bool			kill_all_client_conns;
+	atomic_t		nr_client_conns;
+	spinlock_t		client_conn_cache_lock; /* Lock for ->*_client_conns */
+	spinlock_t		client_conn_discard_lock; /* Prevent multiple discarders */
+	struct list_head	idle_client_conns;
+	struct work_struct	client_conn_reaper;
+	struct timer_list	client_conn_reap_timer;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct hlist_head	local_endpoints;
 	struct mutex		local_mutex;	/* Lock for ->local_endpoints */
@@ -91,6 +107,7 @@ struct rxrpc_net {
 	struct list_head	peer_keepalive_new;
 	struct timer_list	peer_keepalive_timer;
 	struct work_struct	peer_keepalive_work;
+<<<<<<< HEAD
 
 	atomic_t		stat_tx_data;
 	atomic_t		stat_tx_data_retrans;
@@ -112,6 +129,8 @@ struct rxrpc_net {
 	atomic_t		stat_why_req_ack[8];
 
 	atomic_t		stat_io_loop;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -149,7 +168,11 @@ struct rxrpc_sock {
 	struct list_head	sock_calls;	/* List of calls owned by this socket */
 	struct list_head	to_be_accepted;	/* calls awaiting acceptance */
 	struct list_head	recvmsg_q;	/* Calls awaiting recvmsg's attention  */
+<<<<<<< HEAD
 	spinlock_t		recvmsg_lock;	/* Lock for recvmsg_q */
+=======
+	rwlock_t		recvmsg_lock;	/* Lock for recvmsg_q */
+>>>>>>> b7ba80a49124 (Commit)
 	struct key		*key;		/* security for this socket */
 	struct key		*securities;	/* list of server security descriptors */
 	struct rb_root		calls;		/* User ID -> call mapping */
@@ -197,6 +220,7 @@ struct rxrpc_host_header {
  * - max 48 bytes (struct sk_buff::cb)
  */
 struct rxrpc_skb_priv {
+<<<<<<< HEAD
 	struct rxrpc_connection *conn;	/* Connection referred to (poke packet) */
 	u16		offset;		/* Offset of data */
 	u16		len;		/* Length of data */
@@ -204,6 +228,22 @@ struct rxrpc_skb_priv {
 #define RXRPC_RX_VERIFIED	0x01
 
 	struct rxrpc_host_header hdr;	/* RxRPC packet header from this packet */
+=======
+	atomic_t	nr_ring_pins;		/* Number of rxtx ring pins */
+	u8		nr_subpackets;		/* Number of subpackets */
+	u8		rx_flags;		/* Received packet flags */
+#define RXRPC_SKB_INCL_LAST	0x01		/* - Includes last packet */
+#define RXRPC_SKB_TX_BUFFER	0x02		/* - Is transmit buffer */
+	union {
+		int		remain;		/* amount of space remaining for next write */
+
+		/* List of requested ACKs on subpackets */
+		unsigned long	rx_req_ack[(RXRPC_MAX_NR_JUMBO + BITS_PER_LONG - 1) /
+					   BITS_PER_LONG];
+	};
+
+	struct rxrpc_host_header hdr;		/* RxRPC packet header from this packet */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define rxrpc_skb(__skb) ((struct rxrpc_skb_priv *) &(__skb)->cb)
@@ -245,24 +285,49 @@ struct rxrpc_security {
 			     size_t *, size_t *, size_t *);
 
 	/* impose security on a packet */
+<<<<<<< HEAD
 	int (*secure_packet)(struct rxrpc_call *, struct rxrpc_txbuf *);
 
 	/* verify the security on a received packet */
 	int (*verify_packet)(struct rxrpc_call *, struct sk_buff *);
+=======
+	int (*secure_packet)(struct rxrpc_call *, struct sk_buff *, size_t);
+
+	/* verify the security on a received packet */
+	int (*verify_packet)(struct rxrpc_call *, struct sk_buff *,
+			     unsigned int, unsigned int, rxrpc_seq_t, u16);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Free crypto request on a call */
 	void (*free_call_crypto)(struct rxrpc_call *);
 
+<<<<<<< HEAD
+=======
+	/* Locate the data in a received packet that has been verified. */
+	void (*locate_data)(struct rxrpc_call *, struct sk_buff *,
+			    unsigned int *, unsigned int *);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* issue a challenge */
 	int (*issue_challenge)(struct rxrpc_connection *);
 
 	/* respond to a challenge */
 	int (*respond_to_challenge)(struct rxrpc_connection *,
+<<<<<<< HEAD
 				    struct sk_buff *);
 
 	/* verify a response */
 	int (*verify_response)(struct rxrpc_connection *,
 			       struct sk_buff *);
+=======
+				    struct sk_buff *,
+				    u32 *);
+
+	/* verify a response */
+	int (*verify_response)(struct rxrpc_connection *,
+			       struct sk_buff *,
+			       u32 *);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* clear connection security */
 	void (*clear)(struct rxrpc_connection *);
@@ -277,6 +342,7 @@ struct rxrpc_local {
 	struct rcu_head		rcu;
 	atomic_t		active_users;	/* Number of users of the local endpoint */
 	refcount_t		ref;		/* Number of references to the structure */
+<<<<<<< HEAD
 	struct net		*net;		/* The network namespace */
 	struct rxrpc_net	*rxnet;		/* Our bits in the network namespace */
 	struct hlist_node	link;
@@ -299,14 +365,29 @@ struct rxrpc_local {
 	unsigned long		client_conn_flags;
 #define RXRPC_CLIENT_CONN_REAP_TIMER	0	/* The client conn reap timer expired */
 
+=======
+	struct rxrpc_net	*rxnet;		/* The network ns in which this resides */
+	struct hlist_node	link;
+	struct socket		*socket;	/* my UDP socket */
+	struct work_struct	processor;
+	struct rxrpc_sock __rcu	*service;	/* Service(s) listening on this endpoint */
+	struct rw_semaphore	defrag_sem;	/* control re-enablement of IP DF bit */
+	struct sk_buff_head	reject_queue;	/* packets awaiting rejection */
+	struct sk_buff_head	event_queue;	/* endpoint event packets awaiting processing */
+	struct rb_root		client_bundles;	/* Client connection bundles by socket params */
+	spinlock_t		client_bundles_lock; /* Lock for client_bundles */
+>>>>>>> b7ba80a49124 (Commit)
 	spinlock_t		lock;		/* access lock */
 	rwlock_t		services_lock;	/* lock for services list */
 	int			debug_id;	/* debug ID for printks */
 	bool			dead;
 	bool			service_closed;	/* Service socket closed */
+<<<<<<< HEAD
 	struct idr		conn_ids;	/* List of connection IDs */
 	struct list_head	new_client_calls; /* Newly created client calls need connection */
 	spinlock_t		client_call_lock; /* Lock for ->new_client_calls */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct sockaddr_rxrpc	srx;		/* local address */
 };
 
@@ -346,7 +427,11 @@ struct rxrpc_peer {
 	u32			rto_j;		/* Retransmission timeout in jiffies */
 	u8			backoff;	/* Backoff timeout */
 
+<<<<<<< HEAD
 	u8			cong_ssthresh;	/* Congestion slow-start threshold */
+=======
+	u8			cong_cwnd;	/* Congestion window size */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -364,6 +449,10 @@ struct rxrpc_conn_proto {
 
 struct rxrpc_conn_parameters {
 	struct rxrpc_local	*local;		/* Representation of local endpoint */
+<<<<<<< HEAD
+=======
+	struct rxrpc_peer	*peer;		/* Remote endpoint */
+>>>>>>> b7ba80a49124 (Commit)
 	struct key		*key;		/* Security details */
 	bool			exclusive;	/* T if conn is exclusive */
 	bool			upgrade;	/* T if service ID can be upgraded */
@@ -372,6 +461,7 @@ struct rxrpc_conn_parameters {
 };
 
 /*
+<<<<<<< HEAD
  * Call completion condition (state == RXRPC_CALL_COMPLETE).
  */
 enum rxrpc_call_completion {
@@ -387,6 +477,12 @@ enum rxrpc_call_completion {
  * Bits in the connection flags.
  */
 enum rxrpc_conn_flag {
+=======
+ * Bits in the connection flags.
+ */
+enum rxrpc_conn_flag {
+	RXRPC_CONN_HAS_IDR,		/* Has a client conn ID assigned */
+>>>>>>> b7ba80a49124 (Commit)
 	RXRPC_CONN_IN_SERVICE_CONNS,	/* Conn is in peer->service_conns */
 	RXRPC_CONN_DONT_REUSE,		/* Don't reuse this connection */
 	RXRPC_CONN_PROBING_FOR_UPGRADE,	/* Probing for service upgrade */
@@ -406,7 +502,10 @@ enum rxrpc_conn_flag {
  */
 enum rxrpc_conn_event {
 	RXRPC_CONN_EV_CHALLENGE,	/* Send challenge packet */
+<<<<<<< HEAD
 	RXRPC_CONN_EV_ABORT_CALLS,	/* Abort attached calls */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -414,13 +513,21 @@ enum rxrpc_conn_event {
  */
 enum rxrpc_conn_proto_state {
 	RXRPC_CONN_UNUSED,		/* Connection not yet attempted */
+<<<<<<< HEAD
 	RXRPC_CONN_CLIENT_UNSECURED,	/* Client connection needs security init */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	RXRPC_CONN_CLIENT,		/* Client connection */
 	RXRPC_CONN_SERVICE_PREALLOC,	/* Service connection preallocation */
 	RXRPC_CONN_SERVICE_UNSECURED,	/* Service unsecured connection */
 	RXRPC_CONN_SERVICE_CHALLENGING,	/* Service challenging for security */
 	RXRPC_CONN_SERVICE,		/* Service secured connection */
+<<<<<<< HEAD
 	RXRPC_CONN_ABORTED,		/* Conn aborted */
+=======
+	RXRPC_CONN_REMOTELY_ABORTED,	/* Conn aborted by peer */
+	RXRPC_CONN_LOCALLY_ABORTED,	/* Conn aborted locally */
+>>>>>>> b7ba80a49124 (Commit)
 	RXRPC_CONN__NR_STATES
 };
 
@@ -428,6 +535,7 @@ enum rxrpc_conn_proto_state {
  * RxRPC client connection bundle.
  */
 struct rxrpc_bundle {
+<<<<<<< HEAD
 	struct rxrpc_local	*local;		/* Representation of local endpoint */
 	struct rxrpc_peer	*peer;		/* Remote endpoint */
 	struct key		*key;		/* Security details */
@@ -441,6 +549,15 @@ struct rxrpc_bundle {
 	bool			exclusive;	/* T if conn is exclusive */
 	bool			upgrade;	/* T if service ID can be upgraded */
 	unsigned short		alloc_error;	/* Error from last conn allocation */
+=======
+	struct rxrpc_conn_parameters params;
+	refcount_t		ref;
+	unsigned int		debug_id;
+	bool			try_upgrade;	/* True if the bundle is attempting upgrade */
+	bool			alloc_conn;	/* True if someone's getting a conn */
+	short			alloc_error;	/* Error from last conn allocation */
+	spinlock_t		channel_lock;
+>>>>>>> b7ba80a49124 (Commit)
 	struct rb_node		local_node;	/* Node in local->client_conns */
 	struct list_head	waiting_calls;	/* Calls waiting for channels */
 	unsigned long		avail_chans;	/* Mask of available channels */
@@ -454,6 +571,7 @@ struct rxrpc_bundle {
  */
 struct rxrpc_connection {
 	struct rxrpc_conn_proto	proto;
+<<<<<<< HEAD
 	struct rxrpc_local	*local;		/* Representation of local endpoint */
 	struct rxrpc_peer	*peer;		/* Remote endpoint */
 	struct rxrpc_net	*rxnet;		/* Network namespace to which call belongs */
@@ -462,13 +580,22 @@ struct rxrpc_connection {
 
 	refcount_t		ref;
 	atomic_t		active;		/* Active count for service conns */
+=======
+	struct rxrpc_conn_parameters params;
+
+	refcount_t		ref;
+>>>>>>> b7ba80a49124 (Commit)
 	struct rcu_head		rcu;
 	struct list_head	cache_link;
 
 	unsigned char		act_chans;	/* Mask of active channels */
 	struct rxrpc_channel {
 		unsigned long		final_ack_at;	/* Time at which to issue final ACK */
+<<<<<<< HEAD
 		struct rxrpc_call	*call;		/* Active call */
+=======
+		struct rxrpc_call __rcu	*call;		/* Active call */
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned int		call_debug_id;	/* call->debug_id */
 		u32			call_id;	/* ID of current call */
 		u32			call_counter;	/* Call ID counter */
@@ -482,14 +609,20 @@ struct rxrpc_connection {
 
 	struct timer_list	timer;		/* Conn event timer */
 	struct work_struct	processor;	/* connection event processor */
+<<<<<<< HEAD
 	struct work_struct	destructor;	/* In-process-context destroyer */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct rxrpc_bundle	*bundle;	/* Client connection bundle */
 	struct rb_node		service_node;	/* Node in peer->service_conns */
 	struct list_head	proc_link;	/* link in procfs list */
 	struct list_head	link;		/* link in master connection list */
 	struct sk_buff_head	rx_queue;	/* received conn-level packets */
 
+<<<<<<< HEAD
 	struct mutex		security_lock;	/* Lock for security management */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const struct rxrpc_security *security;	/* applied security module */
 	union {
 		struct {
@@ -503,12 +636,17 @@ struct rxrpc_connection {
 	unsigned long		idle_timestamp;	/* Time at which last became idle */
 	spinlock_t		state_lock;	/* state-change lock */
 	enum rxrpc_conn_proto_state state;	/* current state of connection */
+<<<<<<< HEAD
 	enum rxrpc_call_completion completion;	/* Completion condition */
 	s32			abort_code;	/* Abort code of connection abort */
+=======
+	u32			abort_code;	/* Abort code of connection abort */
+>>>>>>> b7ba80a49124 (Commit)
 	int			debug_id;	/* debug ID for printks */
 	atomic_t		serial;		/* packet serial number counter */
 	unsigned int		hi_serial;	/* highest serial number received */
 	u32			service_id;	/* Service ID, possibly upgraded */
+<<<<<<< HEAD
 	u32			security_level;	/* Security level selected */
 	u8			security_ix;	/* security type */
 	u8			out_clientflag;	/* RXRPC_CLIENT_INITIATED if we are client */
@@ -516,6 +654,11 @@ struct rxrpc_connection {
 	bool			exclusive;	/* T if conn is exclusive */
 	bool			upgrade;	/* T if service ID can be upgraded */
 	u16			orig_service_id; /* Originally requested service ID */
+=======
+	u8			security_ix;	/* security type */
+	u8			out_clientflag;	/* RXRPC_CLIENT_INITIATED if we are client */
+	u8			bundle_shift;	/* Index into bundle->avail_chans */
+>>>>>>> b7ba80a49124 (Commit)
 	short			error;		/* Local error code */
 };
 
@@ -539,25 +682,44 @@ enum rxrpc_call_flag {
 	RXRPC_CALL_EXPOSED,		/* The call was exposed to the world */
 	RXRPC_CALL_RX_LAST,		/* Received the last packet (at rxtx_top) */
 	RXRPC_CALL_TX_LAST,		/* Last packet in Tx buffer (at rxtx_top) */
+<<<<<<< HEAD
 	RXRPC_CALL_TX_ALL_ACKED,	/* Last packet has been hard-acked */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	RXRPC_CALL_SEND_PING,		/* A ping will need to be sent */
 	RXRPC_CALL_RETRANS_TIMEOUT,	/* Retransmission due to timeout occurred */
 	RXRPC_CALL_BEGAN_RX_TIMER,	/* We began the expect_rx_by timer */
 	RXRPC_CALL_RX_HEARD,		/* The peer responded at least once to this call */
+<<<<<<< HEAD
 	RXRPC_CALL_DISCONNECTED,	/* The call has been disconnected */
 	RXRPC_CALL_KERNEL,		/* The call was made by the kernel */
 	RXRPC_CALL_UPGRADE,		/* Service upgrade was requested for the call */
 	RXRPC_CALL_EXCLUSIVE,		/* The call uses a once-only connection */
 	RXRPC_CALL_RX_IS_IDLE,		/* recvmsg() is idle - send an ACK */
 	RXRPC_CALL_RECVMSG_READ_ALL,	/* recvmsg() read all of the received data */
+=======
+	RXRPC_CALL_RX_UNDERRUN,		/* Got data underrun */
+	RXRPC_CALL_DISCONNECTED,	/* The call has been disconnected */
+	RXRPC_CALL_KERNEL,		/* The call was made by the kernel */
+	RXRPC_CALL_UPGRADE,		/* Service upgrade was requested for the call */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
  * Events that can be raised on a call.
  */
 enum rxrpc_call_event {
+<<<<<<< HEAD
 	RXRPC_CALL_EV_ACK_LOST,		/* ACK may be lost, send ping */
 	RXRPC_CALL_EV_INITIAL_PING,	/* Send initial ping for a new service call */
+=======
+	RXRPC_CALL_EV_ACK,		/* need to generate ACK */
+	RXRPC_CALL_EV_ABORT,		/* need to generate abort */
+	RXRPC_CALL_EV_RESEND,		/* Tx resend required */
+	RXRPC_CALL_EV_PING,		/* Ping send required */
+	RXRPC_CALL_EV_EXPIRED,		/* Expiry occurred */
+	RXRPC_CALL_EV_ACK_LOST,		/* ACK may be lost, send ping */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -580,6 +742,21 @@ enum rxrpc_call_state {
 };
 
 /*
+<<<<<<< HEAD
+=======
+ * Call completion condition (state == RXRPC_CALL_COMPLETE).
+ */
+enum rxrpc_call_completion {
+	RXRPC_CALL_SUCCEEDED,		/* - Normal termination */
+	RXRPC_CALL_REMOTELY_ABORTED,	/* - call aborted by peer */
+	RXRPC_CALL_LOCALLY_ABORTED,	/* - call aborted locally on error or close */
+	RXRPC_CALL_LOCAL_ERROR,		/* - call failed due to local error */
+	RXRPC_CALL_NETWORK_ERROR,	/* - call terminated by network error */
+	NR__RXRPC_CALL_COMPLETIONS
+};
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * Call Tx congestion management modes.
  */
 enum rxrpc_congest_mode {
@@ -597,6 +774,7 @@ enum rxrpc_congest_mode {
 struct rxrpc_call {
 	struct rcu_head		rcu;
 	struct rxrpc_connection	*conn;		/* connection carrying call */
+<<<<<<< HEAD
 	struct rxrpc_bundle	*bundle;	/* Connection bundle to use */
 	struct rxrpc_peer	*peer;		/* Peer record for remote address */
 	struct rxrpc_local	*local;		/* Representation of local endpoint */
@@ -607,6 +785,14 @@ struct rxrpc_call {
 	struct mutex		user_mutex;	/* User access mutex */
 	struct sockaddr_rxrpc	dest_srx;	/* Destination address */
 	unsigned long		delay_ack_at;	/* When DELAY ACK needs to happen */
+=======
+	struct rxrpc_peer	*peer;		/* Peer record for remote address */
+	struct rxrpc_sock __rcu	*socket;	/* socket responsible */
+	struct rxrpc_net	*rxnet;		/* Network namespace to which call belongs */
+	const struct rxrpc_security *security;	/* applied security module */
+	struct mutex		user_mutex;	/* User access mutex */
+	unsigned long		ack_at;		/* When deferred ACK needs to happen */
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long		ack_lost_at;	/* When ACK is figured as lost */
 	unsigned long		resend_at;	/* When next resend needs to happen */
 	unsigned long		ping_at;	/* When next to send a ping */
@@ -616,16 +802,26 @@ struct rxrpc_call {
 	unsigned long		expect_term_by;	/* When we expect call termination by */
 	u32			next_rx_timo;	/* Timeout for next Rx packet (jif) */
 	u32			next_req_timo;	/* Timeout for next Rx request packet (jif) */
+<<<<<<< HEAD
 	struct timer_list	timer;		/* Combined event timer */
 	struct work_struct	destroyer;	/* In-process-context destroyer */
 	rxrpc_notify_rx_t	notify_rx;	/* kernel service Rx notification function */
 	struct list_head	link;		/* link in master call list */
 	struct list_head	wait_link;	/* Link in local->new_client_calls */
+=======
+	struct skcipher_request	*cipher_req;	/* Packet cipher request buffer */
+	struct timer_list	timer;		/* Combined event timer */
+	struct work_struct	processor;	/* Event processor */
+	rxrpc_notify_rx_t	notify_rx;	/* kernel service Rx notification function */
+	struct list_head	link;		/* link in master call list */
+	struct list_head	chan_wait_link;	/* Link in conn->bundle->waiting_calls */
+>>>>>>> b7ba80a49124 (Commit)
 	struct hlist_node	error_link;	/* link in error distribution list */
 	struct list_head	accept_link;	/* Link in rx->acceptq */
 	struct list_head	recvmsg_link;	/* Link in rx->recvmsg_q */
 	struct list_head	sock_link;	/* Link in rx->sock_calls */
 	struct rb_node		sock_node;	/* Node in rx->calls */
+<<<<<<< HEAD
 	struct list_head	attend_link;	/* Link in local->call_attend_q */
 	struct rxrpc_txbuf	*tx_pending;	/* Tx buffer being filled */
 	wait_queue_head_t	waitq;		/* Wait queue for channel or Tx */
@@ -643,10 +839,29 @@ struct rxrpc_call {
 	enum rxrpc_call_state	_state;		/* Current state of call (needs barrier) */
 	enum rxrpc_call_completion completion;	/* Call completion condition */
 	refcount_t		ref;
+=======
+	struct sk_buff		*tx_pending;	/* Tx socket buffer being filled */
+	wait_queue_head_t	waitq;		/* Wait queue for channel or Tx */
+	s64			tx_total_len;	/* Total length left to be transmitted (or -1) */
+	__be32			crypto_buf[2];	/* Temporary packet crypto buffer */
+	unsigned long		user_call_ID;	/* user-defined call ID */
+	unsigned long		flags;
+	unsigned long		events;
+	spinlock_t		lock;
+	spinlock_t		notify_lock;	/* Kernel notification lock */
+	rwlock_t		state_lock;	/* lock for state transition */
+	u32			abort_code;	/* Local/remote abort code */
+	int			error;		/* Local error incurred */
+	enum rxrpc_call_state	state;		/* current state of call */
+	enum rxrpc_call_completion completion;	/* Call completion condition */
+	refcount_t		ref;
+	u16			service_id;	/* service ID */
+>>>>>>> b7ba80a49124 (Commit)
 	u8			security_ix;	/* Security type */
 	enum rxrpc_interruptibility interruptibility; /* At what point call may be interrupted */
 	u32			call_id;	/* call ID on connection  */
 	u32			cid;		/* connection ID plus channel index */
+<<<<<<< HEAD
 	u32			security_level;	/* Security level selected */
 	int			debug_id;	/* debug ID for printks */
 	unsigned short		rx_pkt_offset;	/* Current recvmsg packet offset */
@@ -673,13 +888,52 @@ struct rxrpc_call {
 	rxrpc_seq_t		rx_consumed;	/* Highest packet consumed */
 	rxrpc_serial_t		rx_serial;	/* Highest serial received for this call */
 	u8			rx_winsize;	/* Size of Rx window */
+=======
+	int			debug_id;	/* debug ID for printks */
+	unsigned short		rx_pkt_offset;	/* Current recvmsg packet offset */
+	unsigned short		rx_pkt_len;	/* Current recvmsg packet len */
+	bool			rx_pkt_last;	/* Current recvmsg packet is last */
+
+	/* Rx/Tx circular buffer, depending on phase.
+	 *
+	 * In the Rx phase, packets are annotated with 0 or the number of the
+	 * segment of a jumbo packet each buffer refers to.  There can be up to
+	 * 47 segments in a maximum-size UDP packet.
+	 *
+	 * In the Tx phase, packets are annotated with which buffers have been
+	 * acked.
+	 */
+#define RXRPC_RXTX_BUFF_SIZE	64
+#define RXRPC_RXTX_BUFF_MASK	(RXRPC_RXTX_BUFF_SIZE - 1)
+#define RXRPC_INIT_RX_WINDOW_SIZE 63
+	struct sk_buff		**rxtx_buffer;
+	u8			*rxtx_annotations;
+#define RXRPC_TX_ANNO_ACK	0
+#define RXRPC_TX_ANNO_UNACK	1
+#define RXRPC_TX_ANNO_NAK	2
+#define RXRPC_TX_ANNO_RETRANS	3
+#define RXRPC_TX_ANNO_MASK	0x03
+#define RXRPC_TX_ANNO_LAST	0x04
+#define RXRPC_TX_ANNO_RESENT	0x08
+
+#define RXRPC_RX_ANNO_SUBPACKET	0x3f		/* Subpacket number in jumbogram */
+#define RXRPC_RX_ANNO_VERIFIED	0x80		/* Set if verified and decrypted */
+	rxrpc_seq_t		tx_hard_ack;	/* Dead slot in buffer; the first transmitted but
+						 * not hard-ACK'd packet follows this.
+						 */
+	rxrpc_seq_t		tx_top;		/* Highest Tx slot allocated. */
+	u16			tx_backoff;	/* Delay to insert due to Tx failure */
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* TCP-style slow-start congestion control [RFC5681].  Since the SMSS
 	 * is fixed, we keep these numbers in terms of segments (ie. DATA
 	 * packets) rather than bytes.
 	 */
 #define RXRPC_TX_SMSS		RXRPC_JUMBO_DATALEN
+<<<<<<< HEAD
 #define RXRPC_MIN_CWND		(RXRPC_TX_SMSS > 2190 ? 2 : RXRPC_TX_SMSS > 1095 ? 3 : 4)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8			cong_cwnd;	/* Congestion window size */
 	u8			cong_extra;	/* Extra to send for congestion management */
 	u8			cong_ssthresh;	/* Slow-start threshold */
@@ -688,6 +942,7 @@ struct rxrpc_call {
 	u8			cong_cumul_acks; /* Cumulative ACK count */
 	ktime_t			cong_tstamp;	/* Last time cwnd was changed */
 
+<<<<<<< HEAD
 	/* Receive-phase ACK management (ACKs we send). */
 	u8			ackr_reason;	/* reason to ACK */
 	u16			ackr_sack_base;	/* Starting slot in SACK table ring */
@@ -701,6 +956,27 @@ struct rxrpc_call {
 		 /* SACK table for soft-acked packets */
 		u8		ackr_sack_table[RXRPC_SACK_SIZE];
 	} __aligned(8);
+=======
+	rxrpc_seq_t		rx_hard_ack;	/* Dead slot in buffer; the first received but not
+						 * consumed packet follows this.
+						 */
+	rxrpc_seq_t		rx_top;		/* Highest Rx slot allocated. */
+	rxrpc_seq_t		rx_expect_next;	/* Expected next packet sequence number */
+	rxrpc_serial_t		rx_serial;	/* Highest serial received for this call */
+	u8			rx_winsize;	/* Size of Rx window */
+	u8			tx_winsize;	/* Maximum size of Tx window */
+	bool			tx_phase;	/* T if transmission phase, F if receive phase */
+	u8			nr_jumbo_bad;	/* Number of jumbo dups/exceeds-windows */
+
+	spinlock_t		input_lock;	/* Lock for packet input to this call */
+
+	/* Receive-phase ACK management (ACKs we send). */
+	u8			ackr_reason;	/* reason to ACK */
+	rxrpc_serial_t		ackr_serial;	/* serial of packet being ACK'd */
+	rxrpc_seq_t		ackr_highest_seq; /* Higest sequence number received */
+	atomic_t		ackr_nr_unacked; /* Number of unacked packets */
+	atomic_t		ackr_nr_consumed; /* Number of packets needing hard ACK */
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* RTT management */
 	rxrpc_serial_t		rtt_serial[4];	/* Serial number of DATA or PING sent */
@@ -714,20 +990,35 @@ struct rxrpc_call {
 	ktime_t			acks_latest_ts;	/* Timestamp of latest ACK received */
 	rxrpc_seq_t		acks_first_seq;	/* first sequence number received */
 	rxrpc_seq_t		acks_prev_seq;	/* Highest previousPacket received */
+<<<<<<< HEAD
 	rxrpc_seq_t		acks_hard_ack;	/* Latest hard-ack point */
 	rxrpc_seq_t		acks_lowest_nak; /* Lowest NACK in the buffer (or ==tx_hard_ack) */
 	rxrpc_serial_t		acks_highest_serial; /* Highest serial number ACK'd */
+=======
+	rxrpc_seq_t		acks_lowest_nak; /* Lowest NACK in the buffer (or ==tx_hard_ack) */
+	rxrpc_seq_t		acks_lost_top;	/* tx_top at the time lost-ack ping sent */
+	rxrpc_serial_t		acks_lost_ping;	/* Serial number of probe ACK */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
  * Summary of a new ACK and the changes it made to the Tx buffer packet states.
  */
 struct rxrpc_ack_summary {
+<<<<<<< HEAD
 	u16			nr_acks;		/* Number of ACKs in packet */
 	u16			nr_new_acks;		/* Number of new ACKs in packet */
 	u16			nr_rot_new_acks;	/* Number of rotated new ACKs */
 	u8			ack_reason;
 	bool			saw_nacks;		/* Saw NACKs in packet */
+=======
+	u8			ack_reason;
+	u8			nr_acks;		/* Number of ACKs in packet */
+	u8			nr_nacks;		/* Number of NACKs in packet */
+	u8			nr_new_acks;		/* Number of new ACKs in packet */
+	u8			nr_new_nacks;		/* Number of new NACKs in packet */
+	u8			nr_rot_new_acks;	/* Number of rotated new ACKs */
+>>>>>>> b7ba80a49124 (Commit)
 	bool			new_low_nack;		/* T if new low NACK found */
 	bool			retrans_timeo;		/* T if reTx due to timeout happened */
 	u8			flight_size;		/* Number of unreceived transmissions */
@@ -770,6 +1061,7 @@ struct rxrpc_send_params {
 	bool			upgrade;	/* If the connection is upgradeable */
 };
 
+<<<<<<< HEAD
 /*
  * Buffer of data to be output as a packet.
  */
@@ -815,12 +1107,18 @@ static inline bool rxrpc_sending_to_client(const struct rxrpc_txbuf *txb)
 	return !rxrpc_sending_to_server(txb);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <trace/events/rxrpc.h>
 
 /*
  * af_rxrpc.c
  */
+<<<<<<< HEAD
 extern atomic_t rxrpc_n_rx_skbs;
+=======
+extern atomic_t rxrpc_n_tx_skbs, rxrpc_n_rx_skbs;
+>>>>>>> b7ba80a49124 (Commit)
 extern struct workqueue_struct *rxrpc_workqueue;
 
 /*
@@ -828,17 +1126,24 @@ extern struct workqueue_struct *rxrpc_workqueue;
  */
 int rxrpc_service_prealloc(struct rxrpc_sock *, gfp_t);
 void rxrpc_discard_prealloc(struct rxrpc_sock *);
+<<<<<<< HEAD
 bool rxrpc_new_incoming_call(struct rxrpc_local *local,
 			     struct rxrpc_peer *peer,
 			     struct rxrpc_connection *conn,
 			     struct sockaddr_rxrpc *peer_srx,
 			     struct sk_buff *skb);
+=======
+struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *,
+					   struct rxrpc_sock *,
+					   struct sk_buff *);
+>>>>>>> b7ba80a49124 (Commit)
 void rxrpc_accept_incoming_calls(struct rxrpc_local *);
 int rxrpc_user_charge_accept(struct rxrpc_sock *, unsigned long);
 
 /*
  * call_event.c
  */
+<<<<<<< HEAD
 void rxrpc_propose_ping(struct rxrpc_call *call, u32 serial,
 			enum rxrpc_propose_ack_trace why);
 void rxrpc_send_ACK(struct rxrpc_call *, u8, rxrpc_serial_t, enum rxrpc_propose_ack_trace);
@@ -846,13 +1151,22 @@ void rxrpc_propose_delay_ACK(struct rxrpc_call *, rxrpc_serial_t,
 			     enum rxrpc_propose_ack_trace);
 void rxrpc_shrink_call_tx_buffer(struct rxrpc_call *);
 void rxrpc_resend(struct rxrpc_call *call, struct sk_buff *ack_skb);
+=======
+void rxrpc_propose_ACK(struct rxrpc_call *, u8, u32, bool, bool,
+		       enum rxrpc_propose_ack_trace);
+void rxrpc_process_call(struct work_struct *);
+>>>>>>> b7ba80a49124 (Commit)
 
 void rxrpc_reduce_call_timer(struct rxrpc_call *call,
 			     unsigned long expire_at,
 			     unsigned long now,
 			     enum rxrpc_timer_trace why);
 
+<<<<<<< HEAD
 bool rxrpc_input_call_event(struct rxrpc_call *call, struct sk_buff *skb);
+=======
+void rxrpc_delete_call_timer(struct rxrpc_call *call);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * call_object.c
@@ -861,7 +1175,10 @@ extern const char *const rxrpc_call_states[];
 extern const char *const rxrpc_call_completions[];
 extern struct kmem_cache *rxrpc_call_jar;
 
+<<<<<<< HEAD
 void rxrpc_poke_call(struct rxrpc_call *call, enum rxrpc_call_poke_trace what);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct rxrpc_call *rxrpc_find_call_by_user_ID(struct rxrpc_sock *, unsigned long);
 struct rxrpc_call *rxrpc_alloc_call(struct rxrpc_sock *, gfp_t, unsigned int);
 struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *,
@@ -869,13 +1186,23 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *,
 					 struct sockaddr_rxrpc *,
 					 struct rxrpc_call_params *, gfp_t,
 					 unsigned int);
+<<<<<<< HEAD
 void rxrpc_start_call_timer(struct rxrpc_call *call);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void rxrpc_incoming_call(struct rxrpc_sock *, struct rxrpc_call *,
 			 struct sk_buff *);
 void rxrpc_release_call(struct rxrpc_sock *, struct rxrpc_call *);
 void rxrpc_release_calls_on_socket(struct rxrpc_sock *);
+<<<<<<< HEAD
 void rxrpc_see_call(struct rxrpc_call *, enum rxrpc_call_trace);
 struct rxrpc_call *rxrpc_try_get_call(struct rxrpc_call *, enum rxrpc_call_trace);
+=======
+bool __rxrpc_queue_call(struct rxrpc_call *);
+bool rxrpc_queue_call(struct rxrpc_call *);
+void rxrpc_see_call(struct rxrpc_call *);
+bool rxrpc_try_get_call(struct rxrpc_call *call, enum rxrpc_call_trace op);
+>>>>>>> b7ba80a49124 (Commit)
 void rxrpc_get_call(struct rxrpc_call *, enum rxrpc_call_trace);
 void rxrpc_put_call(struct rxrpc_call *, enum rxrpc_call_trace);
 void rxrpc_cleanup_call(struct rxrpc_call *);
@@ -892,6 +1219,7 @@ static inline bool rxrpc_is_client_call(const struct rxrpc_call *call)
 }
 
 /*
+<<<<<<< HEAD
  * call_state.c
  */
 bool rxrpc_set_call_completion(struct rxrpc_call *call,
@@ -939,11 +1267,14 @@ static inline bool rxrpc_call_has_failed(const struct rxrpc_call *call)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * conn_client.c
  */
 extern unsigned int rxrpc_reap_client_connections;
 extern unsigned long rxrpc_conn_idle_client_expiry;
 extern unsigned long rxrpc_conn_idle_client_fast_expiry;
+<<<<<<< HEAD
 
 void rxrpc_purge_client_connections(struct rxrpc_local *local);
 struct rxrpc_bundle *rxrpc_get_bundle(struct rxrpc_bundle *, enum rxrpc_bundle_trace);
@@ -955,11 +1286,27 @@ void rxrpc_disconnect_client_call(struct rxrpc_bundle *, struct rxrpc_call *);
 void rxrpc_deactivate_bundle(struct rxrpc_bundle *bundle);
 void rxrpc_put_client_conn(struct rxrpc_connection *, enum rxrpc_conn_trace);
 void rxrpc_discard_expired_client_conns(struct rxrpc_local *local);
+=======
+extern struct idr rxrpc_client_conn_ids;
+
+void rxrpc_destroy_client_conn_ids(void);
+struct rxrpc_bundle *rxrpc_get_bundle(struct rxrpc_bundle *);
+void rxrpc_put_bundle(struct rxrpc_bundle *);
+int rxrpc_connect_call(struct rxrpc_sock *, struct rxrpc_call *,
+		       struct rxrpc_conn_parameters *, struct sockaddr_rxrpc *,
+		       gfp_t);
+void rxrpc_expose_client_call(struct rxrpc_call *);
+void rxrpc_disconnect_client_call(struct rxrpc_bundle *, struct rxrpc_call *);
+void rxrpc_put_client_conn(struct rxrpc_connection *);
+void rxrpc_discard_expired_client_conns(struct work_struct *);
+void rxrpc_destroy_all_client_connections(struct rxrpc_net *);
+>>>>>>> b7ba80a49124 (Commit)
 void rxrpc_clean_up_local_conns(struct rxrpc_local *);
 
 /*
  * conn_event.c
  */
+<<<<<<< HEAD
 void rxrpc_conn_retransmit_call(struct rxrpc_connection *conn, struct sk_buff *skb,
 				unsigned int channel);
 int rxrpc_abort_conn(struct rxrpc_connection *conn, struct sk_buff *skb,
@@ -974,6 +1321,10 @@ static inline bool rxrpc_is_conn_aborted(const struct rxrpc_connection *conn)
 	/* Order reading the abort info after the state check. */
 	return smp_load_acquire(&conn->state) == RXRPC_CONN_ABORTED;
 }
+=======
+void rxrpc_process_connection(struct work_struct *);
+void rxrpc_process_delayed_final_acks(struct rxrpc_connection *, bool);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * conn_object.c
@@ -981,6 +1332,7 @@ static inline bool rxrpc_is_conn_aborted(const struct rxrpc_connection *conn)
 extern unsigned int rxrpc_connection_expiry;
 extern unsigned int rxrpc_closed_conn_expiry;
 
+<<<<<<< HEAD
 void rxrpc_poke_conn(struct rxrpc_connection *conn, enum rxrpc_conn_trace why);
 struct rxrpc_connection *rxrpc_alloc_connection(struct rxrpc_net *, gfp_t);
 struct rxrpc_connection *rxrpc_find_client_connection_rcu(struct rxrpc_local *,
@@ -996,6 +1348,20 @@ struct rxrpc_connection *rxrpc_get_connection(struct rxrpc_connection *,
 struct rxrpc_connection *rxrpc_get_connection_maybe(struct rxrpc_connection *,
 						    enum rxrpc_conn_trace);
 void rxrpc_put_connection(struct rxrpc_connection *, enum rxrpc_conn_trace);
+=======
+struct rxrpc_connection *rxrpc_alloc_connection(gfp_t);
+struct rxrpc_connection *rxrpc_find_connection_rcu(struct rxrpc_local *,
+						   struct sk_buff *,
+						   struct rxrpc_peer **);
+void __rxrpc_disconnect_call(struct rxrpc_connection *, struct rxrpc_call *);
+void rxrpc_disconnect_call(struct rxrpc_call *);
+void rxrpc_kill_connection(struct rxrpc_connection *);
+bool rxrpc_queue_conn(struct rxrpc_connection *);
+void rxrpc_see_connection(struct rxrpc_connection *);
+struct rxrpc_connection *rxrpc_get_connection(struct rxrpc_connection *);
+struct rxrpc_connection *rxrpc_get_connection_maybe(struct rxrpc_connection *);
+void rxrpc_put_service_conn(struct rxrpc_connection *);
+>>>>>>> b7ba80a49124 (Commit)
 void rxrpc_service_connection_reaper(struct work_struct *);
 void rxrpc_destroy_all_connections(struct rxrpc_net *);
 
@@ -1009,6 +1375,20 @@ static inline bool rxrpc_conn_is_service(const struct rxrpc_connection *conn)
 	return !rxrpc_conn_is_client(conn);
 }
 
+<<<<<<< HEAD
+=======
+static inline void rxrpc_put_connection(struct rxrpc_connection *conn)
+{
+	if (!conn)
+		return;
+
+	if (rxrpc_conn_is_client(conn))
+		rxrpc_put_client_conn(conn);
+	else
+		rxrpc_put_service_conn(conn);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void rxrpc_reduce_conn_timer(struct rxrpc_connection *conn,
 					   unsigned long expire_at)
 {
@@ -1028,6 +1408,7 @@ void rxrpc_unpublish_service_conn(struct rxrpc_connection *);
 /*
  * input.c
  */
+<<<<<<< HEAD
 void rxrpc_congestion_degrade(struct rxrpc_call *);
 void rxrpc_input_call_packet(struct rxrpc_call *, struct sk_buff *);
 void rxrpc_implicit_end_call(struct rxrpc_call *, struct sk_buff *);
@@ -1049,6 +1430,9 @@ static inline bool rxrpc_protocol_error(struct sk_buff *skb, enum rxrpc_abort_re
 {
 	return rxrpc_direct_abort(skb, why, RX_PROTOCOL_ERROR, -EPROTO);
 }
+=======
+int rxrpc_input_packet(struct sock *, struct sk_buff *);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * insecure.c
@@ -1067,14 +1451,19 @@ int rxrpc_get_server_data_key(struct rxrpc_connection *, const void *, time64_t,
 /*
  * local_event.c
  */
+<<<<<<< HEAD
 void rxrpc_send_version_request(struct rxrpc_local *local,
 				struct rxrpc_host_header *hdr,
 				struct sk_buff *skb);
+=======
+extern void rxrpc_process_local_events(struct rxrpc_local *);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * local_object.c
  */
 struct rxrpc_local *rxrpc_lookup_local(struct net *, const struct sockaddr_rxrpc *);
+<<<<<<< HEAD
 struct rxrpc_local *rxrpc_get_local(struct rxrpc_local *, enum rxrpc_local_trace);
 struct rxrpc_local *rxrpc_get_local_maybe(struct rxrpc_local *, enum rxrpc_local_trace);
 void rxrpc_put_local(struct rxrpc_local *, enum rxrpc_local_trace);
@@ -1102,20 +1491,47 @@ static inline void rxrpc_see_local(struct rxrpc_local *local,
 	r = refcount_read(&local->ref);
 	u = atomic_read(&local->active_users);
 	trace_rxrpc_local(local->debug_id, why, r, u);
+=======
+struct rxrpc_local *rxrpc_get_local(struct rxrpc_local *);
+struct rxrpc_local *rxrpc_get_local_maybe(struct rxrpc_local *);
+void rxrpc_put_local(struct rxrpc_local *);
+struct rxrpc_local *rxrpc_use_local(struct rxrpc_local *);
+void rxrpc_unuse_local(struct rxrpc_local *);
+void rxrpc_queue_local(struct rxrpc_local *);
+void rxrpc_destroy_all_locals(struct rxrpc_net *);
+
+static inline bool __rxrpc_unuse_local(struct rxrpc_local *local)
+{
+	return atomic_dec_return(&local->active_users) == 0;
+}
+
+static inline bool __rxrpc_use_local(struct rxrpc_local *local)
+{
+	return atomic_fetch_add_unless(&local->active_users, 1, 0) != 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
  * misc.c
  */
 extern unsigned int rxrpc_max_backlog __read_mostly;
+<<<<<<< HEAD
+=======
+extern unsigned long rxrpc_requested_ack_delay;
+>>>>>>> b7ba80a49124 (Commit)
 extern unsigned long rxrpc_soft_ack_delay;
 extern unsigned long rxrpc_idle_ack_delay;
 extern unsigned int rxrpc_rx_window_size;
 extern unsigned int rxrpc_rx_mtu;
 extern unsigned int rxrpc_rx_jumbo_max;
+<<<<<<< HEAD
 #ifdef CONFIG_AF_RXRPC_INJECT_RX_DELAY
 extern unsigned long rxrpc_inject_rx_delay;
 #endif
+=======
+
+extern const s8 rxrpc_ack_priority[];
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * net_ns.c
@@ -1131,6 +1547,7 @@ static inline struct rxrpc_net *rxrpc_net(struct net *net)
 /*
  * output.c
  */
+<<<<<<< HEAD
 int rxrpc_send_ack_packet(struct rxrpc_call *call, struct rxrpc_txbuf *txb);
 int rxrpc_send_abort_packet(struct rxrpc_call *);
 int rxrpc_send_data_packet(struct rxrpc_call *, struct rxrpc_txbuf *);
@@ -1138,11 +1555,23 @@ void rxrpc_send_conn_abort(struct rxrpc_connection *conn);
 void rxrpc_reject_packet(struct rxrpc_local *local, struct sk_buff *skb);
 void rxrpc_send_keepalive(struct rxrpc_peer *);
 void rxrpc_transmit_one(struct rxrpc_call *call, struct rxrpc_txbuf *txb);
+=======
+int rxrpc_send_ack_packet(struct rxrpc_call *, bool, rxrpc_serial_t *);
+int rxrpc_send_abort_packet(struct rxrpc_call *);
+int rxrpc_send_data_packet(struct rxrpc_call *, struct sk_buff *, bool);
+void rxrpc_reject_packets(struct rxrpc_local *);
+void rxrpc_send_keepalive(struct rxrpc_peer *);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * peer_event.c
  */
+<<<<<<< HEAD
 void rxrpc_input_error(struct rxrpc_local *, struct sk_buff *);
+=======
+void rxrpc_encap_err_rcv(struct sock *sk, struct sk_buff *skb, unsigned int udp_offset);
+void rxrpc_error_report(struct sock *);
+>>>>>>> b7ba80a49124 (Commit)
 void rxrpc_peer_keepalive_worker(struct work_struct *);
 
 /*
@@ -1150,6 +1579,7 @@ void rxrpc_peer_keepalive_worker(struct work_struct *);
  */
 struct rxrpc_peer *rxrpc_lookup_peer_rcu(struct rxrpc_local *,
 					 const struct sockaddr_rxrpc *);
+<<<<<<< HEAD
 struct rxrpc_peer *rxrpc_lookup_peer(struct rxrpc_local *local,
 				     struct sockaddr_rxrpc *srx, gfp_t gfp);
 struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *, gfp_t,
@@ -1159,6 +1589,18 @@ void rxrpc_destroy_all_peers(struct rxrpc_net *);
 struct rxrpc_peer *rxrpc_get_peer(struct rxrpc_peer *, enum rxrpc_peer_trace);
 struct rxrpc_peer *rxrpc_get_peer_maybe(struct rxrpc_peer *, enum rxrpc_peer_trace);
 void rxrpc_put_peer(struct rxrpc_peer *, enum rxrpc_peer_trace);
+=======
+struct rxrpc_peer *rxrpc_lookup_peer(struct rxrpc_sock *, struct rxrpc_local *,
+				     struct sockaddr_rxrpc *, gfp_t);
+struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *, gfp_t);
+void rxrpc_new_incoming_peer(struct rxrpc_sock *, struct rxrpc_local *,
+			     struct rxrpc_peer *);
+void rxrpc_destroy_all_peers(struct rxrpc_net *);
+struct rxrpc_peer *rxrpc_get_peer(struct rxrpc_peer *);
+struct rxrpc_peer *rxrpc_get_peer_maybe(struct rxrpc_peer *);
+void rxrpc_put_peer(struct rxrpc_peer *);
+void rxrpc_put_peer_locked(struct rxrpc_peer *);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * proc.c
@@ -1172,11 +1614,21 @@ extern const struct seq_operations rxrpc_local_seq_ops;
  * recvmsg.c
  */
 void rxrpc_notify_socket(struct rxrpc_call *);
+<<<<<<< HEAD
+=======
+bool __rxrpc_set_call_completion(struct rxrpc_call *, enum rxrpc_call_completion, u32, int);
+bool rxrpc_set_call_completion(struct rxrpc_call *, enum rxrpc_call_completion, u32, int);
+bool __rxrpc_call_completed(struct rxrpc_call *);
+bool rxrpc_call_completed(struct rxrpc_call *);
+bool __rxrpc_abort_call(const char *, struct rxrpc_call *, rxrpc_seq_t, u32, int);
+bool rxrpc_abort_call(const char *, struct rxrpc_call *, rxrpc_seq_t, u32, int);
+>>>>>>> b7ba80a49124 (Commit)
 int rxrpc_recvmsg(struct socket *, struct msghdr *, size_t, int);
 
 /*
  * Abort a call due to a protocol error.
  */
+<<<<<<< HEAD
 static inline int rxrpc_abort_eproto(struct rxrpc_call *call,
 				     struct sk_buff *skb,
 				     s32 abort_code,
@@ -1188,6 +1640,24 @@ static inline int rxrpc_abort_eproto(struct rxrpc_call *call,
 	return -EPROTO;
 }
 
+=======
+static inline bool __rxrpc_abort_eproto(struct rxrpc_call *call,
+					struct sk_buff *skb,
+					const char *eproto_why,
+					const char *why,
+					u32 abort_code)
+{
+	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
+
+	trace_rxrpc_rx_eproto(call, sp->hdr.serial, eproto_why);
+	return rxrpc_abort_call(why, call, sp->hdr.seq, abort_code, -EPROTO);
+}
+
+#define rxrpc_abort_eproto(call, skb, eproto_why, abort_why, abort_code) \
+	__rxrpc_abort_eproto((call), (skb), tracepoint_string(eproto_why), \
+			     (abort_why), (abort_code))
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * rtt.c
  */
@@ -1209,7 +1679,10 @@ extern const struct rxrpc_security rxkad;
 int __init rxrpc_init_security(void);
 const struct rxrpc_security *rxrpc_security_lookup(u8);
 void rxrpc_exit_security(void);
+<<<<<<< HEAD
 int rxrpc_init_client_call_security(struct rxrpc_call *);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int rxrpc_init_client_conn_security(struct rxrpc_connection *);
 const struct rxrpc_security *rxrpc_get_incoming_security(struct rxrpc_sock *,
 							 struct sk_buff *);
@@ -1219,8 +1692,11 @@ struct key *rxrpc_look_up_server_security(struct rxrpc_connection *,
 /*
  * sendmsg.c
  */
+<<<<<<< HEAD
 bool rxrpc_propose_abort(struct rxrpc_call *call, s32 abort_code, int error,
 			 enum rxrpc_abort_reason why);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int rxrpc_do_sendmsg(struct rxrpc_sock *, struct msghdr *, size_t);
 
 /*
@@ -1234,6 +1710,10 @@ int rxrpc_server_keyring(struct rxrpc_sock *, sockptr_t, int);
  * skbuff.c
  */
 void rxrpc_kernel_data_consumed(struct rxrpc_call *, struct sk_buff *);
+<<<<<<< HEAD
+=======
+void rxrpc_packet_destructor(struct sk_buff *);
+>>>>>>> b7ba80a49124 (Commit)
 void rxrpc_new_skb(struct sk_buff *, enum rxrpc_skb_trace);
 void rxrpc_see_skb(struct sk_buff *, enum rxrpc_skb_trace);
 void rxrpc_eaten_skb(struct sk_buff *, enum rxrpc_skb_trace);
@@ -1242,6 +1722,7 @@ void rxrpc_free_skb(struct sk_buff *, enum rxrpc_skb_trace);
 void rxrpc_purge_queue(struct sk_buff_head *);
 
 /*
+<<<<<<< HEAD
  * stats.c
  */
 int rxrpc_stats_show(struct seq_file *seq, void *v);
@@ -1251,6 +1732,8 @@ int rxrpc_stats_clear(struct file *file, char *buf, size_t size);
 #define rxrpc_dec_stat(rxnet, s) atomic_dec(&(rxnet)->s)
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * sysctl.c
  */
 #ifdef CONFIG_SYSCTL
@@ -1262,6 +1745,7 @@ static inline void rxrpc_sysctl_exit(void) {}
 #endif
 
 /*
+<<<<<<< HEAD
  * txbuf.c
  */
 extern atomic_t rxrpc_nr_txbuf;
@@ -1272,6 +1756,8 @@ void rxrpc_see_txbuf(struct rxrpc_txbuf *txb, enum rxrpc_txbuf_trace what);
 void rxrpc_put_txbuf(struct rxrpc_txbuf *txb, enum rxrpc_txbuf_trace what);
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * utils.c
  */
 int rxrpc_extract_addr_from_skb(struct sockaddr_rxrpc *, struct sk_buff *);
@@ -1304,17 +1790,32 @@ extern unsigned int rxrpc_debug;
 #define kenter(FMT,...)	dbgprintk("==> %s("FMT")",__func__ ,##__VA_ARGS__)
 #define kleave(FMT,...)	dbgprintk("<== %s()"FMT"",__func__ ,##__VA_ARGS__)
 #define kdebug(FMT,...)	dbgprintk("    "FMT ,##__VA_ARGS__)
+<<<<<<< HEAD
+=======
+#define kproto(FMT,...)	dbgprintk("### "FMT ,##__VA_ARGS__)
+#define knet(FMT,...)	dbgprintk("@@@ "FMT ,##__VA_ARGS__)
+>>>>>>> b7ba80a49124 (Commit)
 
 
 #if defined(__KDEBUG)
 #define _enter(FMT,...)	kenter(FMT,##__VA_ARGS__)
 #define _leave(FMT,...)	kleave(FMT,##__VA_ARGS__)
 #define _debug(FMT,...)	kdebug(FMT,##__VA_ARGS__)
+<<<<<<< HEAD
+=======
+#define _proto(FMT,...)	kproto(FMT,##__VA_ARGS__)
+#define _net(FMT,...)	knet(FMT,##__VA_ARGS__)
+>>>>>>> b7ba80a49124 (Commit)
 
 #elif defined(CONFIG_AF_RXRPC_DEBUG)
 #define RXRPC_DEBUG_KENTER	0x01
 #define RXRPC_DEBUG_KLEAVE	0x02
 #define RXRPC_DEBUG_KDEBUG	0x04
+<<<<<<< HEAD
+=======
+#define RXRPC_DEBUG_KPROTO	0x08
+#define RXRPC_DEBUG_KNET	0x10
+>>>>>>> b7ba80a49124 (Commit)
 
 #define _enter(FMT,...)					\
 do {							\
@@ -1334,10 +1835,30 @@ do {							\
 		kdebug(FMT,##__VA_ARGS__);		\
 } while (0)
 
+<<<<<<< HEAD
+=======
+#define _proto(FMT,...)					\
+do {							\
+	if (unlikely(rxrpc_debug & RXRPC_DEBUG_KPROTO))	\
+		kproto(FMT,##__VA_ARGS__);		\
+} while (0)
+
+#define _net(FMT,...)					\
+do {							\
+	if (unlikely(rxrpc_debug & RXRPC_DEBUG_KNET))	\
+		knet(FMT,##__VA_ARGS__);		\
+} while (0)
+
+>>>>>>> b7ba80a49124 (Commit)
 #else
 #define _enter(FMT,...)	no_printk("==> %s("FMT")",__func__ ,##__VA_ARGS__)
 #define _leave(FMT,...)	no_printk("<== %s()"FMT"",__func__ ,##__VA_ARGS__)
 #define _debug(FMT,...)	no_printk("    "FMT ,##__VA_ARGS__)
+<<<<<<< HEAD
+=======
+#define _proto(FMT,...)	no_printk("### "FMT ,##__VA_ARGS__)
+#define _net(FMT,...)	no_printk("@@@ "FMT ,##__VA_ARGS__)
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 /*

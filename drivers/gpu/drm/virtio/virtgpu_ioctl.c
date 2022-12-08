@@ -47,7 +47,11 @@ static int virtio_gpu_fence_event_create(struct drm_device *dev,
 	struct virtio_gpu_fence_event *e = NULL;
 	int ret;
 
+<<<<<<< HEAD
 	if (!(vfpriv->ring_idx_mask & BIT_ULL(ring_idx)))
+=======
+	if (!(vfpriv->ring_idx_mask & (1 << ring_idx)))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	e = kzalloc(sizeof(*e), GFP_KERNEL);
@@ -126,6 +130,10 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
 	void __user *user_bo_handles = NULL;
 	struct virtio_gpu_object_array *buflist = NULL;
 	struct sync_file *sync_file;
+<<<<<<< HEAD
+=======
+	int in_fence_fd = exbuf->fence_fd;
+>>>>>>> b7ba80a49124 (Commit)
 	int out_fence_fd = -1;
 	void *buf;
 	uint64_t fence_ctx;
@@ -151,11 +159,20 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
 		ring_idx = exbuf->ring_idx;
 	}
 
+<<<<<<< HEAD
+=======
+	exbuf->fence_fd = -1;
+
+>>>>>>> b7ba80a49124 (Commit)
 	virtio_gpu_create_context(dev, file);
 	if (exbuf->flags & VIRTGPU_EXECBUF_FENCE_FD_IN) {
 		struct dma_fence *in_fence;
 
+<<<<<<< HEAD
 		in_fence = sync_file_get_fence(exbuf->fence_fd);
+=======
+		in_fence = sync_file_get_fence(in_fence_fd);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!in_fence)
 			return -EINVAL;
@@ -355,6 +372,7 @@ static int virtio_gpu_resource_create_ioctl(struct drm_device *dev, void *data,
 		drm_gem_object_release(obj);
 		return ret;
 	}
+<<<<<<< HEAD
 
 	rc->res_handle = qobj->hw_res_handle; /* similiar to a VM address */
 	rc->bo_handle = handle;
@@ -367,6 +385,12 @@ static int virtio_gpu_resource_create_ioctl(struct drm_device *dev, void *data,
 	 */
 	drm_gem_object_put(obj);
 
+=======
+	drm_gem_object_put(obj);
+
+	rc->res_handle = qobj->hw_res_handle; /* similiar to a VM address */
+	rc->bo_handle = handle;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -728,10 +752,15 @@ static int virtio_gpu_resource_create_blob_ioctl(struct drm_device *dev,
 		drm_gem_object_release(obj);
 		return ret;
 	}
+<<<<<<< HEAD
+=======
+	drm_gem_object_put(obj);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc_blob->res_handle = bo->hw_res_handle;
 	rc_blob->bo_handle = handle;
 
+<<<<<<< HEAD
 	/*
 	 * The handle owns the reference now.  But we must drop our
 	 * remaining reference *after* we no longer need to dereference
@@ -740,6 +769,8 @@ static int virtio_gpu_resource_create_blob_ioctl(struct drm_device *dev,
 	 */
 	drm_gem_object_put(obj);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

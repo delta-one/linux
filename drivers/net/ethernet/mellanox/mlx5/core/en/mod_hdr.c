@@ -47,7 +47,10 @@ void mlx5e_mod_hdr_tbl_init(struct mod_hdr_tbl *tbl)
 
 void mlx5e_mod_hdr_tbl_destroy(struct mod_hdr_tbl *tbl)
 {
+<<<<<<< HEAD
 	WARN_ON(!hash_empty(tbl->hlist));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_destroy(&tbl->lock);
 }
 

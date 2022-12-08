@@ -7,13 +7,19 @@
 
 struct bus_type;
 struct typec_mux;
+<<<<<<< HEAD
 struct typec_retimer;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct altmode {
 	unsigned int			id;
 	struct typec_altmode		adev;
 	struct typec_mux		*mux;
+<<<<<<< HEAD
 	struct typec_retimer		*retimer;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	enum typec_port_data		roles;
 

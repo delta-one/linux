@@ -54,6 +54,7 @@ parameters.
      - Control the number of large groups (size > 1) in the FDB table.
 
        * The default value is 15, and the range is between 1 and 1024.
+<<<<<<< HEAD
    * - ``esw_multiport``
      - Boolean
      - runtime
@@ -84,6 +85,8 @@ parameters.
      - u32
      - driverinit
      - Control the size (in packets) of the hairpin queues.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 The ``mlx5`` driver supports reloading via ``DEVLINK_CMD_RELOAD``
 

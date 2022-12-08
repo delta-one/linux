@@ -5,9 +5,12 @@
 # Makefile for the Intel(R) PRO/1000 ethernet driver
 #
 
+<<<<<<< HEAD
 ccflags-y += -I$(src)
 subdir-ccflags-y += -I$(src)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_E1000E) += e1000e.o
 
 e1000e-objs := 82571.o ich8lan.o 80003es2lan.o \

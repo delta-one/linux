@@ -151,7 +151,10 @@ void mv88e6xxx_ptp_free(struct mv88e6xxx_chip *chip);
 extern const struct mv88e6xxx_ptp_ops mv88e6165_ptp_ops;
 extern const struct mv88e6xxx_ptp_ops mv88e6250_ptp_ops;
 extern const struct mv88e6xxx_ptp_ops mv88e6352_ptp_ops;
+<<<<<<< HEAD
 extern const struct mv88e6xxx_ptp_ops mv88e6390_ptp_ops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #else /* !CONFIG_NET_DSA_MV88E6XXX_PTP */
 
@@ -172,7 +175,10 @@ static inline void mv88e6xxx_ptp_free(struct mv88e6xxx_chip *chip)
 static const struct mv88e6xxx_ptp_ops mv88e6165_ptp_ops = {};
 static const struct mv88e6xxx_ptp_ops mv88e6250_ptp_ops = {};
 static const struct mv88e6xxx_ptp_ops mv88e6352_ptp_ops = {};
+<<<<<<< HEAD
 static const struct mv88e6xxx_ptp_ops mv88e6390_ptp_ops = {};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* CONFIG_NET_DSA_MV88E6XXX_PTP */
 

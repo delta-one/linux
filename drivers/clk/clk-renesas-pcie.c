@@ -60,6 +60,10 @@ struct rs9_driver_data {
 	struct i2c_client	*client;
 	struct regmap		*regmap;
 	const struct rs9_chip_info *chip_info;
+<<<<<<< HEAD
+=======
+	struct clk		*pin_xin;
+>>>>>>> b7ba80a49124 (Commit)
 	struct clk_hw		*clk_dif[2];
 	u8			pll_amplitude;
 	u8			pll_ssc;
@@ -89,6 +93,7 @@ static const struct regmap_access_table rs9_writeable_table = {
 	.n_yes_ranges = ARRAY_SIZE(rs9_writeable_ranges),
 };
 
+<<<<<<< HEAD
 static int rs9_regmap_i2c_write(void *context,
 				unsigned int reg, unsigned int val)
 {
@@ -140,16 +145,24 @@ static int rs9_regmap_i2c_read(void *context,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct regmap_config rs9_regmap_config = {
 	.reg_bits = 8,
 	.val_bits = 8,
 	.cache_type = REGCACHE_FLAT,
+<<<<<<< HEAD
 	.max_register = RS9_REG_BCP,
 	.num_reg_defaults_raw = 0x8,
 	.rd_table = &rs9_readable_table,
 	.wr_table = &rs9_writeable_table,
 	.reg_write = rs9_regmap_i2c_write,
 	.reg_read = rs9_regmap_i2c_read,
+=======
+	.max_register = 0x8,
+	.rd_table = &rs9_readable_table,
+	.wr_table = &rs9_writeable_table,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int rs9_get_output_config(struct rs9_driver_data *rs9, int idx)
@@ -295,17 +308,24 @@ static int rs9_probe(struct i2c_client *client)
 			return ret;
 	}
 
+<<<<<<< HEAD
 	rs9->regmap = devm_regmap_init(&client->dev, NULL,
 				       client, &rs9_regmap_config);
+=======
+	rs9->regmap = devm_regmap_init_i2c(client, &rs9_regmap_config);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(rs9->regmap))
 		return dev_err_probe(&client->dev, PTR_ERR(rs9->regmap),
 				     "Failed to allocate register map\n");
 
+<<<<<<< HEAD
 	/* Always read back 1 Byte via I2C */
 	ret = regmap_write(rs9->regmap, RS9_REG_BCP, 1);
 	if (ret < 0)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Register clock */
 	for (i = 0; i < rs9->chip_info->num_clks; i++) {
 		snprintf(name, 5, "DIF%d", i);

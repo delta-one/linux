@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _slub:
+
+>>>>>>> b7ba80a49124 (Commit)
 ==========================
 Short users guide for SLUB
 ==========================
@@ -19,7 +24,11 @@ slabs that have data in them. See "slabinfo -h" for more options when
 running the command. ``slabinfo`` can be compiled with
 ::
 
+<<<<<<< HEAD
 	gcc -o slabinfo tools/mm/slabinfo.c
+=======
+	gcc -o slabinfo tools/vm/slabinfo.c
+>>>>>>> b7ba80a49124 (Commit)
 
 Some of the modes of operation of ``slabinfo`` require that slub debugging
 be enabled on the command line. F.e. no tracking information will be
@@ -114,8 +123,11 @@ options from the ``slub_debug`` parameter translate to the following files::
 	T	trace
 	A	failslab
 
+<<<<<<< HEAD
 failslab file is writable, so writing 1 or 0 will enable or disable
 the option at runtime. Write returns -EINVAL if cache is an alias.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Careful with tracing: It may spew out lots of information and never stop if
 used on the wrong slab.
 
@@ -400,6 +412,7 @@ information:
     allocated objects. The output is sorted by frequency of each trace.
 
     Information in the output:
+<<<<<<< HEAD
     Number of objects, allocating function, possible memory wastage of
     kmalloc objects(total/per-object), minimal/average/maximal jiffies
     since alloc, pid range of the allocating processes, cpu mask of
@@ -424,6 +437,23 @@ information:
         device_for_each_child+0xb7/0x110
         acpi_dev_for_each_child+0x77/0xa0
         acpi_bus_attach+0x108/0x3f0
+=======
+    Number of objects, allocating function, minimal/average/maximal jiffies since alloc,
+    pid range of the allocating processes, cpu mask of allocating cpus, and stack trace.
+
+    Example:::
+
+    1085 populate_error_injection_list+0x97/0x110 age=166678/166680/166682 pid=1 cpus=1::
+	__slab_alloc+0x6d/0x90
+	kmem_cache_alloc_trace+0x2eb/0x300
+	populate_error_injection_list+0x97/0x110
+	init_error_injection+0x1b/0x71
+	do_one_initcall+0x5f/0x2d0
+	kernel_init_freeable+0x26f/0x2d7
+	kernel_init+0xe/0x118
+	ret_from_fork+0x22/0x30
+
+>>>>>>> b7ba80a49124 (Commit)
 
 2. free_traces::
 

@@ -128,10 +128,16 @@
 		BPF_EXIT_INSN(),
 	},
 	.fixup_map_hash_8b = { 3 },
+<<<<<<< HEAD
 	.errstr_unpriv = "invalid read from stack off -16+0 size 8",
 	.result_unpriv = REJECT,
 	/* in privileged mode reads from uninitialized stack locations are permitted */
 	.result = ACCEPT,
+=======
+	.errstr = "invalid read from stack off -16+0 size 8",
+	.result = REJECT,
+	.prog_type = BPF_PROG_TYPE_TRACEPOINT,
+>>>>>>> b7ba80a49124 (Commit)
 },
 {
 	"precision tracking for u32 spill/fill",
@@ -226,6 +232,7 @@
 	.result_unpriv = ACCEPT,
 	.insn_processed = 15,
 },
+<<<<<<< HEAD
 /* The test performs a conditional 64-bit write to a stack location
  * fp[-8], this is followed by an unconditional 8-bit write to fp[-8],
  * then data is read from fp[-8]. This sequence is unsafe.
@@ -264,3 +271,5 @@
 	/* in privileged mode reads from uninitialized stack locations are permitted */
 	.result = ACCEPT,
 },
+=======
+>>>>>>> b7ba80a49124 (Commit)

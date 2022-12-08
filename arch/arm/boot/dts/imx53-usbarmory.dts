@@ -67,7 +67,11 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_led>;
 
+<<<<<<< HEAD
 		led-user {
+=======
+		user {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "LED";
 			gpios = <&gpio4 27 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "heartbeat";

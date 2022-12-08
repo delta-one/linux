@@ -162,6 +162,10 @@ int snd_unregister_oss_device(int type, struct snd_card *card, int dev)
 		mutex_unlock(&sound_oss_mutex);
 		return -ENOENT;
 	}
+<<<<<<< HEAD
+=======
+	unregister_sound_special(minor);
+>>>>>>> b7ba80a49124 (Commit)
 	switch (SNDRV_MINOR_OSS_DEVICE(minor)) {
 	case SNDRV_MINOR_OSS_PCM:
 		track2 = SNDRV_MINOR_OSS(cidx, SNDRV_MINOR_OSS_AUDIO);
@@ -173,6 +177,7 @@ int snd_unregister_oss_device(int type, struct snd_card *card, int dev)
 		track2 = SNDRV_MINOR_OSS(cidx, SNDRV_MINOR_OSS_DMMIDI1);
 		break;
 	}
+<<<<<<< HEAD
 	if (track2 >= 0)
 		snd_oss_minors[track2] = NULL;
 	snd_oss_minors[minor] = NULL;
@@ -185,6 +190,14 @@ int snd_unregister_oss_device(int type, struct snd_card *card, int dev)
 	if (track2 >= 0)
 		unregister_sound_special(track2);
 
+=======
+	if (track2 >= 0) {
+		unregister_sound_special(track2);
+		snd_oss_minors[track2] = NULL;
+	}
+	snd_oss_minors[minor] = NULL;
+	mutex_unlock(&sound_oss_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(mptr);
 	return 0;
 }

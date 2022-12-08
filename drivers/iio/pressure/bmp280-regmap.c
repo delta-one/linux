@@ -115,6 +115,7 @@ static bool bmp380_is_volatile_reg(struct device *dev, unsigned int reg)
 	}
 }
 
+<<<<<<< HEAD
 static bool bmp580_is_writeable_reg(struct device *dev, unsigned int reg)
 {
 	switch (reg) {
@@ -163,6 +164,8 @@ static bool bmp580_is_volatile_reg(struct device *dev, unsigned int reg)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct regmap_config bmp280_regmap_config = {
 	.reg_bits = 8,
 	.val_bits = 8,
@@ -186,6 +189,7 @@ const struct regmap_config bmp380_regmap_config = {
 	.volatile_reg = bmp380_is_volatile_reg,
 };
 EXPORT_SYMBOL_NS(bmp380_regmap_config, IIO_BMP280);
+<<<<<<< HEAD
 
 const struct regmap_config bmp580_regmap_config = {
 	.reg_bits = 8,
@@ -198,3 +202,5 @@ const struct regmap_config bmp580_regmap_config = {
 	.volatile_reg = bmp580_is_volatile_reg,
 };
 EXPORT_SYMBOL_NS(bmp580_regmap_config, IIO_BMP280);
+=======
+>>>>>>> b7ba80a49124 (Commit)

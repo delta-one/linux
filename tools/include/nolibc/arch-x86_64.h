@@ -7,6 +7,21 @@
 #ifndef _NOLIBC_ARCH_X86_64_H
 #define _NOLIBC_ARCH_X86_64_H
 
+<<<<<<< HEAD
+=======
+/* O_* macros for fcntl/open are architecture-specific */
+#define O_RDONLY            0
+#define O_WRONLY            1
+#define O_RDWR              2
+#define O_CREAT          0x40
+#define O_EXCL           0x80
+#define O_NOCTTY        0x100
+#define O_TRUNC         0x200
+#define O_APPEND        0x400
+#define O_NONBLOCK      0x800
+#define O_DIRECTORY   0x10000
+
+>>>>>>> b7ba80a49124 (Commit)
 /* The struct returned by the stat() syscall, equivalent to stat64(). The
  * syscall returns 116 bytes and stops in the middle of __unused.
  */
@@ -178,9 +193,12 @@ struct sys_stat_struct {
 	_ret;                                                                 \
 })
 
+<<<<<<< HEAD
 char **environ __attribute__((weak));
 const unsigned long *_auxv __attribute__((weak));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* startup code */
 /*
  * x86-64 System V ABI mandates:
@@ -188,6 +206,7 @@ const unsigned long *_auxv __attribute__((weak));
  * 2) The deepest stack frame should be zero (the %rbp).
  *
  */
+<<<<<<< HEAD
 void __attribute__((weak,noreturn,optimize("omit-frame-pointer"))) _start(void)
 {
 	__asm__ volatile (
@@ -211,5 +230,21 @@ void __attribute__((weak,noreturn,optimize("omit-frame-pointer"))) _start(void)
 	);
 	__builtin_unreachable();
 }
+=======
+__asm__ (".section .text\n"
+    ".weak _start\n"
+    "_start:\n"
+    "pop %rdi\n"                // argc   (first arg, %rdi)
+    "mov %rsp, %rsi\n"          // argv[] (second arg, %rsi)
+    "lea 8(%rsi,%rdi,8),%rdx\n" // then a NULL then envp (third arg, %rdx)
+    "xor %ebp, %ebp\n"          // zero the stack frame
+    "and $-16, %rsp\n"          // x86 ABI : esp must be 16-byte aligned before call
+    "call main\n"               // main() returns the status code, we'll exit with it.
+    "mov %eax, %edi\n"          // retrieve exit code (32 bit)
+    "mov $60, %eax\n"           // NR_exit == 60
+    "syscall\n"                 // really exit
+    "hlt\n"                     // ensure it does not return
+    "");
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif // _NOLIBC_ARCH_X86_64_H

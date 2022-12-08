@@ -4,7 +4,11 @@
 
 extern const struct dma_map_ops *dma_ops;
 
+<<<<<<< HEAD
 static inline const struct dma_map_ops *get_arch_dma_ops(void)
+=======
+static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* sparc32 uses per-device dma_ops */
 	return IS_ENABLED(CONFIG_SPARC64) ? dma_ops : NULL;

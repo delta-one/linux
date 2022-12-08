@@ -12,7 +12,10 @@
 #define pr_fmt(fmt) "bt1-ccu-pll: " fmt
 
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/platform_device.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/printk.h>
 #include <linux/slab.h>
 #include <linux/clk-provider.h>
@@ -32,6 +35,7 @@
 #define CCU_PCIE_PLL_BASE		0x018
 #define CCU_ETH_PLL_BASE		0x020
 
+<<<<<<< HEAD
 #define CCU_PLL_INFO(_id, _name, _pname, _base, _flags, _features)	\
 	{								\
 		.id = _id,						\
@@ -40,6 +44,15 @@
 		.base = _base,						\
 		.flags = _flags,					\
 		.features = _features,					\
+=======
+#define CCU_PLL_INFO(_id, _name, _pname, _base, _flags)	\
+	{						\
+		.id = _id,				\
+		.name = _name,				\
+		.parent_name = _pname,			\
+		.base = _base,				\
+		.flags = _flags				\
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 #define CCU_PLL_NUM			ARRAY_SIZE(pll_info)
@@ -50,7 +63,10 @@ struct ccu_pll_info {
 	const char *parent_name;
 	unsigned int base;
 	unsigned long flags;
+<<<<<<< HEAD
 	unsigned long features;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -64,6 +80,7 @@ struct ccu_pll_info {
  */
 static const struct ccu_pll_info pll_info[] = {
 	CCU_PLL_INFO(CCU_CPU_PLL, "cpu_pll", "ref_clk", CCU_CPU_PLL_BASE,
+<<<<<<< HEAD
 		     CLK_IS_CRITICAL, CCU_PLL_BASIC),
 	CCU_PLL_INFO(CCU_SATA_PLL, "sata_pll", "ref_clk", CCU_SATA_PLL_BASE,
 		     CLK_IS_CRITICAL | CLK_SET_RATE_GATE, 0),
@@ -73,6 +90,17 @@ static const struct ccu_pll_info pll_info[] = {
 		     CLK_IS_CRITICAL, CCU_PLL_BASIC),
 	CCU_PLL_INFO(CCU_ETH_PLL, "eth_pll", "ref_clk", CCU_ETH_PLL_BASE,
 		     CLK_IS_CRITICAL | CLK_SET_RATE_GATE, 0)
+=======
+		     CLK_IS_CRITICAL),
+	CCU_PLL_INFO(CCU_SATA_PLL, "sata_pll", "ref_clk", CCU_SATA_PLL_BASE,
+		     CLK_IS_CRITICAL | CLK_SET_RATE_GATE),
+	CCU_PLL_INFO(CCU_DDR_PLL, "ddr_pll", "ref_clk", CCU_DDR_PLL_BASE,
+		     CLK_IS_CRITICAL | CLK_SET_RATE_GATE),
+	CCU_PLL_INFO(CCU_PCIE_PLL, "pcie_pll", "ref_clk", CCU_PCIE_PLL_BASE,
+		     CLK_IS_CRITICAL),
+	CCU_PLL_INFO(CCU_ETH_PLL, "eth_pll", "ref_clk", CCU_ETH_PLL_BASE,
+		     CLK_IS_CRITICAL | CLK_SET_RATE_GATE)
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ccu_pll_data {
@@ -81,6 +109,7 @@ struct ccu_pll_data {
 	struct ccu_pll *plls[CCU_PLL_NUM];
 };
 
+<<<<<<< HEAD
 static struct ccu_pll_data *pll_data;
 
 static struct ccu_pll *ccu_pll_find_desc(struct ccu_pll_data *data,
@@ -91,6 +120,18 @@ static struct ccu_pll *ccu_pll_find_desc(struct ccu_pll_data *data,
 	for (idx = 0; idx < CCU_PLL_NUM; ++idx) {
 		if (pll_info[idx].id == clk_id)
 			return data->plls[idx];
+=======
+static struct ccu_pll *ccu_pll_find_desc(struct ccu_pll_data *data,
+					 unsigned int clk_id)
+{
+	struct ccu_pll *pll;
+	int idx;
+
+	for (idx = 0; idx < CCU_PLL_NUM; ++idx) {
+		pll = data->plls[idx];
+		if (pll && pll->id == clk_id)
+			return pll;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ERR_PTR(-EINVAL);
@@ -136,16 +177,24 @@ static struct clk_hw *ccu_pll_of_clk_hw_get(struct of_phandle_args *clkspec,
 	clk_id = clkspec->args[0];
 	pll = ccu_pll_find_desc(data, clk_id);
 	if (IS_ERR(pll)) {
+<<<<<<< HEAD
 		if (pll != ERR_PTR(-EPROBE_DEFER))
 			pr_info("Invalid PLL clock ID %d specified\n", clk_id);
 
+=======
+		pr_info("Invalid PLL clock ID %d specified\n", clk_id);
+>>>>>>> b7ba80a49124 (Commit)
 		return ERR_CAST(pll);
 	}
 
 	return ccu_pll_get_clk_hw(pll);
 }
 
+<<<<<<< HEAD
 static int ccu_pll_clk_register(struct ccu_pll_data *data, bool defer)
+=======
+static int ccu_pll_clk_register(struct ccu_pll_data *data)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int idx, ret;
 
@@ -153,6 +202,7 @@ static int ccu_pll_clk_register(struct ccu_pll_data *data, bool defer)
 		const struct ccu_pll_info *info = &pll_info[idx];
 		struct ccu_pll_init_data init = {0};
 
+<<<<<<< HEAD
 		/* Defer non-basic PLLs allocation for the probe stage */
 		if (!!(info->features & CCU_PLL_BASIC) ^ defer) {
 			if (!data->plls[idx])
@@ -161,6 +211,8 @@ static int ccu_pll_clk_register(struct ccu_pll_data *data, bool defer)
 			continue;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		init.id = info->id;
 		init.name = info->name;
 		init.parent_name = info->parent_name;
@@ -168,7 +220,10 @@ static int ccu_pll_clk_register(struct ccu_pll_data *data, bool defer)
 		init.sys_regs = data->sys_regs;
 		init.np = data->np;
 		init.flags = info->flags;
+<<<<<<< HEAD
 		init.features = info->features;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		data->plls[idx] = ccu_pll_hw_register(&init);
 		if (IS_ERR(data->plls[idx])) {
@@ -179,6 +234,7 @@ static int ccu_pll_clk_register(struct ccu_pll_data *data, bool defer)
 		}
 	}
 
+<<<<<<< HEAD
 	return 0;
 
 err_hw_unregister:
@@ -209,10 +265,13 @@ static int ccu_pll_of_register(struct ccu_pll_data *data)
 {
 	int ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = of_clk_add_hw_provider(data->np, ccu_pll_of_clk_hw_get, data);
 	if (ret) {
 		pr_err("Couldn't register PLL provider of '%s'\n",
 			of_node_full_name(data->np));
+<<<<<<< HEAD
 	}
 
 	return ret;
@@ -243,6 +302,20 @@ static struct platform_driver ccu_pll_driver = {
 };
 builtin_platform_driver(ccu_pll_driver);
 
+=======
+		goto err_hw_unregister;
+	}
+
+	return 0;
+
+err_hw_unregister:
+	for (--idx; idx >= 0; --idx)
+		ccu_pll_hw_unregister(data->plls[idx]);
+
+	return ret;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static __init void ccu_pll_init(struct device_node *np)
 {
 	struct ccu_pll_data *data;
@@ -256,6 +329,7 @@ static __init void ccu_pll_init(struct device_node *np)
 	if (ret)
 		goto err_free_data;
 
+<<<<<<< HEAD
 	ret = ccu_pll_clk_register(data, true);
 	if (ret)
 		goto err_free_data;
@@ -275,3 +349,15 @@ err_free_data:
 	ccu_pll_free_data(data);
 }
 CLK_OF_DECLARE_DRIVER(ccu_pll, "baikal,bt1-ccu-pll", ccu_pll_init);
+=======
+	ret = ccu_pll_clk_register(data);
+	if (ret)
+		goto err_free_data;
+
+	return;
+
+err_free_data:
+	ccu_pll_free_data(data);
+}
+CLK_OF_DECLARE(ccu_pll, "baikal,bt1-ccu-pll", ccu_pll_init);
+>>>>>>> b7ba80a49124 (Commit)

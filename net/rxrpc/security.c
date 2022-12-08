@@ -63,6 +63,7 @@ const struct rxrpc_security *rxrpc_security_lookup(u8 security_index)
 }
 
 /*
+<<<<<<< HEAD
  * Initialise the security on a client call.
  */
 int rxrpc_init_client_call_security(struct rxrpc_call *call)
@@ -74,6 +75,21 @@ int rxrpc_init_client_call_security(struct rxrpc_call *call)
 
 	if (!key)
 		goto found;
+=======
+ * initialise the security on a client connection
+ */
+int rxrpc_init_client_conn_security(struct rxrpc_connection *conn)
+{
+	const struct rxrpc_security *sec;
+	struct rxrpc_key_token *token;
+	struct key *key = conn->params.key;
+	int ret;
+
+	_enter("{%d},{%x}", conn->debug_id, key_serial(key));
+
+	if (!key)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = key_validate(key);
 	if (ret < 0)
@@ -87,12 +103,25 @@ int rxrpc_init_client_call_security(struct rxrpc_call *call)
 	return -EKEYREJECTED;
 
 found:
+<<<<<<< HEAD
 	call->security = sec;
 	call->security_ix = sec->security_index;
+=======
+	conn->security = sec;
+
+	ret = conn->security->init_connection_security(conn, token);
+	if (ret < 0) {
+		conn->security = &rxrpc_no_security;
+		return ret;
+	}
+
+	_leave(" = 0");
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 /*
+<<<<<<< HEAD
  * initialise the security on a client connection
  */
 int rxrpc_init_client_conn_security(struct rxrpc_connection *conn)
@@ -125,6 +154,8 @@ found:
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Set the ops a server connection.
  */
 const struct rxrpc_security *rxrpc_get_incoming_security(struct rxrpc_sock *rx,
@@ -137,15 +168,31 @@ const struct rxrpc_security *rxrpc_get_incoming_security(struct rxrpc_sock *rx,
 
 	sec = rxrpc_security_lookup(sp->hdr.securityIndex);
 	if (!sec) {
+<<<<<<< HEAD
 		rxrpc_direct_abort(skb, rxrpc_abort_unsupported_security,
 				   RX_INVALID_OPERATION, -EKEYREJECTED);
+=======
+		trace_rxrpc_abort(0, "SVS",
+				  sp->hdr.cid, sp->hdr.callNumber, sp->hdr.seq,
+				  RX_INVALID_OPERATION, EKEYREJECTED);
+		skb->mark = RXRPC_SKB_MARK_REJECT_ABORT;
+		skb->priority = RX_INVALID_OPERATION;
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 	}
 
 	if (sp->hdr.securityIndex != RXRPC_SECURITY_NONE &&
 	    !rx->securities) {
+<<<<<<< HEAD
 		rxrpc_direct_abort(skb, rxrpc_abort_no_service_key,
 				   sec->no_key_abort, -EKEYREJECTED);
+=======
+		trace_rxrpc_abort(0, "SVR",
+				  sp->hdr.cid, sp->hdr.callNumber, sp->hdr.seq,
+				  RX_INVALID_OPERATION, EKEYREJECTED);
+		skb->mark = RXRPC_SKB_MARK_REJECT_ABORT;
+		skb->priority = sec->no_key_abort;
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 	}
 
@@ -178,9 +225,15 @@ struct key *rxrpc_look_up_server_security(struct rxrpc_connection *conn,
 		sprintf(kdesc, "%u:%u",
 			sp->hdr.serviceId, sp->hdr.securityIndex);
 
+<<<<<<< HEAD
 	read_lock(&conn->local->services_lock);
 
 	rx = conn->local->service;
+=======
+	rcu_read_lock();
+
+	rx = rcu_dereference(conn->params.local->service);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!rx)
 		goto out;
 
@@ -202,6 +255,10 @@ struct key *rxrpc_look_up_server_security(struct rxrpc_connection *conn,
 	}
 
 out:
+<<<<<<< HEAD
 	read_unlock(&conn->local->services_lock);
+=======
+	rcu_read_unlock();
+>>>>>>> b7ba80a49124 (Commit)
 	return key;
 }

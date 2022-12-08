@@ -158,7 +158,11 @@ static int udc_plat_probe(struct platform_device *pdev)
 	}
 
 	/* Register for extcon if supported */
+<<<<<<< HEAD
 	if (of_property_present(dev->of_node, "extcon")) {
+=======
+	if (of_get_property(dev->of_node, "extcon", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		udc->edev = extcon_get_edev_by_phandle(dev, 0);
 		if (IS_ERR(udc->edev)) {
 			if (PTR_ERR(udc->edev) == -EPROBE_DEFER)

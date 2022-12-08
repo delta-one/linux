@@ -158,7 +158,10 @@ typedef struct page *pgtable_t;
 
 #ifdef CONFIG_HAVE_ARCH_PFN_VALID
 extern int pfn_valid(unsigned long);
+<<<<<<< HEAD
 #define pfn_valid pfn_valid
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #include <asm/memory.h>
@@ -168,6 +171,9 @@ extern int pfn_valid(unsigned long);
 #define VM_DATA_DEFAULT_FLAGS	VM_DATA_FLAGS_TSK_EXEC
 
 #include <asm-generic/getorder.h>
+<<<<<<< HEAD
 #include <asm-generic/memory_model.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

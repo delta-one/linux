@@ -27,10 +27,18 @@
  ******************************************************************************/
 
 #include <core/client.h>
+<<<<<<< HEAD
+=======
+#include <core/notify.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <core/ioctl.h>
 
 #include <nvif/client.h>
 #include <nvif/driver.h>
+<<<<<<< HEAD
+=======
+#include <nvif/notify.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <nvif/event.h>
 #include <nvif/ioctl.h>
 
@@ -70,6 +78,7 @@ nvkm_client_suspend(void *priv)
 }
 
 static int
+<<<<<<< HEAD
 nvkm_client_event(u64 token, void *repv, u32 repc)
 {
 	struct nvif_object *object = (void *)(unsigned long)token;
@@ -87,6 +96,12 @@ nvkm_client_driver_init(const char *name, u64 device, const char *cfg,
 {
 	return nvkm_client_new(name, device, cfg, dbg, nvkm_client_event,
 			       (struct nvkm_client **)ppriv);
+=======
+nvkm_client_driver_init(const char *name, u64 device, const char *cfg,
+			const char *dbg, void **ppriv)
+{
+	return nvkm_client_new(name, device, cfg, dbg, nvif_notify, (struct nvkm_client **)ppriv);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 const struct nvif_driver

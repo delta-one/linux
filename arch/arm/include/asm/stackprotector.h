@@ -15,6 +15,12 @@
 #ifndef _ASM_STACKPROTECTOR_H
 #define _ASM_STACKPROTECTOR_H 1
 
+<<<<<<< HEAD
+=======
+#include <linux/random.h>
+#include <linux/version.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/thread_info.h>
 
 extern unsigned long __stack_chk_guard;
@@ -27,7 +33,15 @@ extern unsigned long __stack_chk_guard;
  */
 static __always_inline void boot_init_stack_canary(void)
 {
+<<<<<<< HEAD
 	unsigned long canary = get_random_canary();
+=======
+	unsigned long canary;
+
+	/* Try to get a semi random initial value. */
+	get_random_bytes(&canary, sizeof(canary));
+	canary ^= LINUX_VERSION_CODE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	current->stack_canary = canary;
 #ifndef CONFIG_STACKPROTECTOR_PER_TASK

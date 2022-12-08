@@ -13,11 +13,15 @@
 #include "mac.h"
 
 static const struct usb_device_id mt7921u_device_table[] = {
+<<<<<<< HEAD
 	{ USB_DEVICE_AND_INTERFACE_INFO(0x0e8d, 0x7961, 0xff, 0xff, 0xff),
 		.driver_info = (kernel_ulong_t)MT7921_FIRMWARE_WM },
 	/* Comfast CF-952AX */
 	{ USB_DEVICE_AND_INTERFACE_INFO(0x3574, 0x6211, 0xff, 0xff, 0xff),
 		.driver_info = (kernel_ulong_t)MT7921_FIRMWARE_WM },
+=======
+	{ USB_DEVICE_AND_INTERFACE_INFO(0x0e8d, 0x7961, 0xff, 0xff, 0xff) },
+>>>>>>> b7ba80a49124 (Commit)
 	{ },
 };
 
@@ -136,6 +140,10 @@ static int mt7921u_mcu_init(struct mt7921_dev *dev)
 		.tailroom = MT_USB_TAIL_SIZE,
 		.mcu_skb_send_msg = mt7921u_mcu_send_message,
 		.mcu_parse_response = mt7921_mcu_parse_response,
+<<<<<<< HEAD
+=======
+		.mcu_restart = mt76_connac_mcu_restart,
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	int ret;
 
@@ -173,8 +181,12 @@ static int mt7921u_probe(struct usb_interface *usb_intf,
 {
 	static const struct mt76_driver_ops drv_ops = {
 		.txwi_size = MT_SDIO_TXD_SIZE,
+<<<<<<< HEAD
 		.drv_flags = MT_DRV_RX_DMA_HDR | MT_DRV_HW_MGMT_TXQ |
 			     MT_DRV_AMSDU_OFFLOAD,
+=======
+		.drv_flags = MT_DRV_RX_DMA_HDR | MT_DRV_HW_MGMT_TXQ,
+>>>>>>> b7ba80a49124 (Commit)
 		.survey_flags = SURVEY_INFO_TIME_TX |
 				SURVEY_INFO_TIME_RX |
 				SURVEY_INFO_TIME_BSS_RX,
@@ -207,16 +219,22 @@ static int mt7921u_probe(struct usb_interface *usb_intf,
 	struct ieee80211_hw *hw;
 	struct mt7921_dev *dev;
 	struct mt76_dev *mdev;
+<<<<<<< HEAD
 	u8 features;
 	int ret;
 
 	features = mt7921_check_offload_capability(&usb_intf->dev, (const char *)
 						   id->driver_info);
+=======
+	int ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ops = devm_kmemdup(&usb_intf->dev, &mt7921_ops, sizeof(mt7921_ops),
 			   GFP_KERNEL);
 	if (!ops)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	if (!(features & MT7921_FW_CAP_CNM)) {
 		ops->remain_on_channel = NULL;
 		ops->cancel_remain_on_channel = NULL;
@@ -229,6 +247,8 @@ static int mt7921u_probe(struct usb_interface *usb_intf,
 		ops->mgd_complete_tx = NULL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ops->stop = mt7921u_stop;
 
 	mdev = mt76_alloc_device(&usb_intf->dev, sizeof(*dev), ops, &drv_ops);
@@ -236,7 +256,10 @@ static int mt7921u_probe(struct usb_interface *usb_intf,
 		return -ENOMEM;
 
 	dev = container_of(mdev, struct mt7921_dev, mt76);
+<<<<<<< HEAD
 	dev->fw_features = features;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev->hif_ops = &hif_ops;
 
 	udev = usb_get_dev(udev);

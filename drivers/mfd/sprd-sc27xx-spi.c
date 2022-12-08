@@ -181,10 +181,18 @@ static int sprd_pmic_probe(struct spi_device *spi)
 	ddata->irq_chip.name = dev_name(&spi->dev);
 	ddata->irq_chip.status_base =
 		pdata->irq_base + SPRD_PMIC_INT_MASK_STATUS;
+<<<<<<< HEAD
 	ddata->irq_chip.unmask_base = pdata->irq_base + SPRD_PMIC_INT_EN;
 	ddata->irq_chip.ack_base = 0;
 	ddata->irq_chip.num_regs = 1;
 	ddata->irq_chip.num_irqs = pdata->num_irqs;
+=======
+	ddata->irq_chip.mask_base = pdata->irq_base + SPRD_PMIC_INT_EN;
+	ddata->irq_chip.ack_base = 0;
+	ddata->irq_chip.num_regs = 1;
+	ddata->irq_chip.num_irqs = pdata->num_irqs;
+	ddata->irq_chip.mask_invert = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ddata->irqs = devm_kcalloc(&spi->dev,
 				   pdata->num_irqs, sizeof(struct regmap_irq),
@@ -214,6 +222,10 @@ static int sprd_pmic_probe(struct spi_device *spi)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int sprd_pmic_suspend(struct device *dev)
 {
 	struct sprd_pmic *ddata = dev_get_drvdata(dev);
@@ -233,9 +245,15 @@ static int sprd_pmic_resume(struct device *dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 static DEFINE_SIMPLE_DEV_PM_OPS(sprd_pmic_pm_ops,
 				sprd_pmic_suspend, sprd_pmic_resume);
+=======
+#endif
+
+static SIMPLE_DEV_PM_OPS(sprd_pmic_pm_ops, sprd_pmic_suspend, sprd_pmic_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct of_device_id sprd_pmic_match[] = {
 	{ .compatible = "sprd,sc2730", .data = &sc2730_data },
@@ -255,7 +273,11 @@ static struct spi_driver sprd_pmic_driver = {
 	.driver = {
 		.name = "sc27xx-pmic",
 		.of_match_table = sprd_pmic_match,
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&sprd_pmic_pm_ops),
+=======
+		.pm = &sprd_pmic_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = sprd_pmic_probe,
 	.id_table = sprd_pmic_spi_ids,

@@ -7,7 +7,13 @@
 
 #ifdef CONFIG_X86_LOCAL_APIC
 enum {
+<<<<<<< HEAD
 	X86_IRQ_ALLOC_LEGACY				= 0x1,
+=======
+	/* Allocate contiguous CPU vectors */
+	X86_IRQ_ALLOC_CONTIGUOUS_VECTORS		= 0x1,
+	X86_IRQ_ALLOC_LEGACY				= 0x2,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 extern int x86_fwspec_is_ioapic(struct irq_fwspec *fwspec);

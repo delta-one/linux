@@ -90,6 +90,7 @@ Then the strings can be specified::
 	$ echo <manufacturer> > strings/0x409/manufacturer
 	$ echo <product> > strings/0x409/product
 
+<<<<<<< HEAD
 Further custom string descriptors can be created as directories within the
 language's directory, with the string text being written to the "s" attribute
 within the string's directory:
@@ -100,6 +101,8 @@ within the string's directory:
 Where function drivers support it, functions may allow symlinks to these custom
 string descriptors to associate those strings with class descriptors.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 2. Creating the configurations
 ------------------------------
 

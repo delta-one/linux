@@ -39,6 +39,7 @@
 #define VCO_REF_CLK_RATE		19200000
 #define FRAC_BITS 18
 
+<<<<<<< HEAD
 /* Hardware is pre V4.1 */
 #define DSI_PHY_7NM_QUIRK_PRE_V4_1	BIT(0)
 /* Hardware is V4.1 */
@@ -49,6 +50,10 @@
 #define DSI_PHY_7NM_QUIRK_V4_3		BIT(3)
 /* Hardware is V5.2 */
 #define DSI_PHY_7NM_QUIRK_V5_2		BIT(4)
+=======
+/* Hardware is V4.1 */
+#define DSI_PHY_7NM_QUIRK_V4_1		BIT(0)
+>>>>>>> b7ba80a49124 (Commit)
 
 struct dsi_pll_config {
 	bool enable_ssc;
@@ -124,6 +129,7 @@ static void dsi_pll_calc_dec_frac(struct dsi_pll_7nm *pll, struct dsi_pll_config
 	dec_multiple = div_u64(pll_freq * multiplier, divider);
 	dec = div_u64_rem(dec_multiple, multiplier, &frac);
 
+<<<<<<< HEAD
 	if (pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_PRE_V4_1)
 		config->pll_clock_inverters = 0x28;
 	else if ((pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V5_2)) {
@@ -145,6 +151,18 @@ static void dsi_pll_calc_dec_frac(struct dsi_pll_7nm *pll, struct dsi_pll_config
 		else
 			config->pll_clock_inverters = 0x40;
 	}
+=======
+	if (!(pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V4_1))
+		config->pll_clock_inverters = 0x28;
+	else if (pll_freq <= 1000000000ULL)
+		config->pll_clock_inverters = 0xa0;
+	else if (pll_freq <= 2500000000ULL)
+		config->pll_clock_inverters = 0x20;
+	else if (pll_freq <= 3020000000ULL)
+		config->pll_clock_inverters = 0x00;
+	else
+		config->pll_clock_inverters = 0x40;
+>>>>>>> b7ba80a49124 (Commit)
 
 	config->decimal_div_start = dec;
 	config->frac_div_start = frac;
@@ -216,17 +234,25 @@ static void dsi_pll_config_hzindep_reg(struct dsi_pll_7nm *pll)
 	void __iomem *base = pll->phy->pll_base;
 	u8 analog_controls_five_1 = 0x01, vco_config_1 = 0x00;
 
+<<<<<<< HEAD
 	if (!(pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_PRE_V4_1))
 		if (pll->vco_current_rate >= 3100000000ULL)
 			analog_controls_five_1 = 0x03;
 
 	if (pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V4_1) {
+=======
+	if (pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V4_1) {
+		if (pll->vco_current_rate >= 3100000000ULL)
+			analog_controls_five_1 = 0x03;
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (pll->vco_current_rate < 1520000000ULL)
 			vco_config_1 = 0x08;
 		else if (pll->vco_current_rate < 2990000000ULL)
 			vco_config_1 = 0x01;
 	}
 
+<<<<<<< HEAD
 	if ((pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V4_2) ||
 	    (pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V4_3)) {
 		if (pll->vco_current_rate < 1520000000ULL)
@@ -242,6 +268,8 @@ static void dsi_pll_config_hzindep_reg(struct dsi_pll_7nm *pll)
 			vco_config_1 = 0x01;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dsi_phy_write(base + REG_DSI_7nm_PHY_PLL_ANALOG_CONTROLS_FIVE_1,
 		      analog_controls_five_1);
 	dsi_phy_write(base + REG_DSI_7nm_PHY_PLL_VCO_CONFIG_1, vco_config_1);
@@ -266,9 +294,15 @@ static void dsi_pll_config_hzindep_reg(struct dsi_pll_7nm *pll)
 	dsi_phy_write(base + REG_DSI_7nm_PHY_PLL_PFILT, 0x2f);
 	dsi_phy_write(base + REG_DSI_7nm_PHY_PLL_IFILT, 0x2a);
 	dsi_phy_write(base + REG_DSI_7nm_PHY_PLL_IFILT,
+<<<<<<< HEAD
 		  !(pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_PRE_V4_1) ? 0x3f : 0x22);
 
 	if (!(pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_PRE_V4_1)) {
+=======
+		  pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V4_1 ? 0x3f : 0x22);
+
+	if (pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V4_1) {
+>>>>>>> b7ba80a49124 (Commit)
 		dsi_phy_write(base + REG_DSI_7nm_PHY_PLL_PERF_OPTIMIZE, 0x22);
 		if (pll->slave)
 			dsi_phy_write(pll->slave->phy->pll_base + REG_DSI_7nm_PHY_PLL_PERF_OPTIMIZE, 0x22);
@@ -823,7 +857,11 @@ static void dsi_phy_hw_v4_0_lane_settings(struct msm_dsi_phy *phy)
 	const u8 *tx_dctrl = tx_dctrl_0;
 	void __iomem *lane_base = phy->lane_base;
 
+<<<<<<< HEAD
 	if (!(phy->cfg->quirks & DSI_PHY_7NM_QUIRK_PRE_V4_1))
+=======
+	if (phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V4_1)
+>>>>>>> b7ba80a49124 (Commit)
 		tx_dctrl = tx_dctrl_1;
 
 	/* Strength ctrl settings */
@@ -879,6 +917,7 @@ static int dsi_7nm_phy_enable(struct msm_dsi_phy *phy,
 	if (dsi_phy_hw_v4_0_is_pll_on(phy))
 		pr_warn("PLL turned on before configuring PHY\n");
 
+<<<<<<< HEAD
 	/* Request for REFGEN READY */
 	if ((phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V4_3) ||
 	    (phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V5_2)) {
@@ -886,6 +925,8 @@ static int dsi_7nm_phy_enable(struct msm_dsi_phy *phy,
 		udelay(500);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* wait for REFGEN READY */
 	ret = readl_poll_timeout_atomic(base + REG_DSI_7nm_PHY_CMN_PHY_STATUS,
 					status, (status & BIT(0)),
@@ -900,6 +941,7 @@ static int dsi_7nm_phy_enable(struct msm_dsi_phy *phy,
 	/* Alter PHY configurations if data rate less than 1.5GHZ*/
 	less_than_1500_mhz = (clk_req->bitclk_rate <= 1500000000);
 
+<<<<<<< HEAD
 	glbl_str_swi_cal_sel_ctrl = 0x00;
 	if (phy->cphy_mode) {
 		vreg_ctrl_0 = 0x51;
@@ -946,18 +988,33 @@ static int dsi_7nm_phy_enable(struct msm_dsi_phy *phy,
 	} else if (phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V4_1) {
 		if (phy->cphy_mode) {
 			glbl_hstx_str_ctrl_0 = 0x88;
+=======
+	if (phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V4_1) {
+		vreg_ctrl_0 = less_than_1500_mhz ? 0x53 : 0x52;
+		if (phy->cphy_mode) {
+>>>>>>> b7ba80a49124 (Commit)
 			glbl_rescode_top_ctrl = 0x00;
 			glbl_rescode_bot_ctrl = 0x3c;
 		} else {
 			glbl_rescode_top_ctrl = less_than_1500_mhz ? 0x3d :  0x00;
 			glbl_rescode_bot_ctrl = less_than_1500_mhz ? 0x39 :  0x3c;
 		}
+<<<<<<< HEAD
 	} else {
+=======
+		glbl_str_swi_cal_sel_ctrl = 0x00;
+		glbl_hstx_str_ctrl_0 = 0x88;
+	} else {
+		vreg_ctrl_0 = less_than_1500_mhz ? 0x5B : 0x59;
+>>>>>>> b7ba80a49124 (Commit)
 		if (phy->cphy_mode) {
 			glbl_str_swi_cal_sel_ctrl = 0x03;
 			glbl_hstx_str_ctrl_0 = 0x66;
 		} else {
+<<<<<<< HEAD
 			vreg_ctrl_0 = less_than_1500_mhz ? 0x5B : 0x59;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			glbl_str_swi_cal_sel_ctrl = less_than_1500_mhz ? 0x03 : 0x00;
 			glbl_hstx_str_ctrl_0 = less_than_1500_mhz ? 0x66 : 0x88;
 		}
@@ -965,6 +1022,20 @@ static int dsi_7nm_phy_enable(struct msm_dsi_phy *phy,
 		glbl_rescode_bot_ctrl = 0x3c;
 	}
 
+<<<<<<< HEAD
+=======
+	if (phy->cphy_mode) {
+		vreg_ctrl_0 = 0x51;
+		vreg_ctrl_1 = 0x55;
+		glbl_pemph_ctrl_0 = 0x11;
+		lane_ctrl0 = 0x17;
+	} else {
+		vreg_ctrl_1 = 0x5c;
+		glbl_pemph_ctrl_0 = 0x00;
+		lane_ctrl0 = 0x1f;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* de-assert digital and pll power down */
 	data = BIT(6) | BIT(5);
 	dsi_phy_write(base + REG_DSI_7nm_PHY_CMN_CTRL_0, data);
@@ -976,8 +1047,14 @@ static int dsi_7nm_phy_enable(struct msm_dsi_phy *phy,
 	dsi_phy_write(base + REG_DSI_7nm_PHY_CMN_RBUF_CTRL, 0x00);
 
 	/* program CMN_CTRL_4 for minor_ver 2 chipsets*/
+<<<<<<< HEAD
 	if ((phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V5_2) ||
 	    (dsi_phy_read(base + REG_DSI_7nm_PHY_CMN_REVISION_ID0) & (0xf0)) == 0x20)
+=======
+	data = dsi_phy_read(base + REG_DSI_7nm_PHY_CMN_REVISION_ID0);
+	data = data & (0xf0);
+	if (data == 0x20)
+>>>>>>> b7ba80a49124 (Commit)
 		dsi_phy_write(base + REG_DSI_7nm_PHY_CMN_CTRL_4, 0x04);
 
 	/* Configure PHY lane swap (TODO: we need to calculate this) */
@@ -1088,6 +1165,7 @@ static void dsi_7nm_phy_disable(struct msm_dsi_phy *phy)
 		pr_warn("Turning OFF PHY while PLL is on\n");
 
 	dsi_phy_hw_v4_0_config_lpcdrx(phy, false);
+<<<<<<< HEAD
 
 	/* Turn off REFGEN Vote */
 	if ((phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V4_3) ||
@@ -1098,6 +1176,8 @@ static void dsi_7nm_phy_disable(struct msm_dsi_phy *phy)
 		udelay(2);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	data = dsi_phy_read(base + REG_DSI_7nm_PHY_CMN_CTRL_0);
 
 	/* disable all lanes */
@@ -1121,6 +1201,7 @@ static const struct regulator_bulk_data dsi_phy_7nm_37750uA_regulators[] = {
 	{ .supply = "vdds", .init_load_uA = 37550 },
 };
 
+<<<<<<< HEAD
 static const struct regulator_bulk_data dsi_phy_7nm_97800uA_regulators[] = {
 	{ .supply = "vdds", .init_load_uA = 97800 },
 };
@@ -1129,6 +1210,8 @@ static const struct regulator_bulk_data dsi_phy_7nm_98400uA_regulators[] = {
 	{ .supply = "vdds", .init_load_uA = 98400 },
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct msm_dsi_phy_cfg dsi_phy_7nm_cfgs = {
 	.has_phy_lane = true,
 	.regulator_data = dsi_phy_7nm_36mA_regulators,
@@ -1152,6 +1235,7 @@ const struct msm_dsi_phy_cfg dsi_phy_7nm_cfgs = {
 	.quirks = DSI_PHY_7NM_QUIRK_V4_1,
 };
 
+<<<<<<< HEAD
 const struct msm_dsi_phy_cfg dsi_phy_7nm_6375_cfgs = {
 	.has_phy_lane = true,
 	.ops = {
@@ -1172,6 +1256,8 @@ const struct msm_dsi_phy_cfg dsi_phy_7nm_6375_cfgs = {
 	.quirks = DSI_PHY_7NM_QUIRK_V4_1,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct msm_dsi_phy_cfg dsi_phy_7nm_8150_cfgs = {
 	.has_phy_lane = true,
 	.regulator_data = dsi_phy_7nm_36mA_regulators,
@@ -1188,7 +1274,10 @@ const struct msm_dsi_phy_cfg dsi_phy_7nm_8150_cfgs = {
 	.max_pll_rate = 3500000000UL,
 	.io_start = { 0xae94400, 0xae96400 },
 	.num_dsi_phy = 2,
+<<<<<<< HEAD
 	.quirks = DSI_PHY_7NM_QUIRK_PRE_V4_1,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 const struct msm_dsi_phy_cfg dsi_phy_7nm_7280_cfgs = {
@@ -1212,6 +1301,7 @@ const struct msm_dsi_phy_cfg dsi_phy_7nm_7280_cfgs = {
 	.num_dsi_phy = 1,
 	.quirks = DSI_PHY_7NM_QUIRK_V4_1,
 };
+<<<<<<< HEAD
 
 const struct msm_dsi_phy_cfg dsi_phy_5nm_8350_cfgs = {
 	.has_phy_lane = true,
@@ -1281,3 +1371,5 @@ const struct msm_dsi_phy_cfg dsi_phy_4nm_8550_cfgs = {
 	.num_dsi_phy = 2,
 	.quirks = DSI_PHY_7NM_QUIRK_V5_2,
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -484,6 +484,7 @@ s64 v4l2_get_link_freq(struct v4l2_ctrl_handler *handler, unsigned int mul,
 	return freq > 0 ? freq : -EINVAL;
 }
 EXPORT_SYMBOL_GPL(v4l2_get_link_freq);
+<<<<<<< HEAD
 
 /*
  * Simplify a fraction using a simple continued fraction decomposition. The
@@ -570,3 +571,5 @@ u32 v4l2_fraction_to_interval(u32 numerator, u32 denominator)
 	return denominator ? numerator * multiplier / denominator : 0;
 }
 EXPORT_SYMBOL_GPL(v4l2_fraction_to_interval);
+=======
+>>>>>>> b7ba80a49124 (Commit)

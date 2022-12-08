@@ -13,6 +13,10 @@
 /dts-v1/;
 
 #include "stm32mp157.dtsi"
+<<<<<<< HEAD
+=======
+#include "stm32mp15xc.dtsi"
+>>>>>>> b7ba80a49124 (Commit)
 #include "stm32mp15xx-dhcor-som.dtsi"
 #include "stm32mp15xx-dhcor-avenger96.dtsi"
 

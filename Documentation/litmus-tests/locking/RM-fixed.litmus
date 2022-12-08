@@ -9,11 +9,20 @@ C RM-fixed
  *)
 
 {
+<<<<<<< HEAD
 	int x;
 	atomic_t y;
 }
 
 P0(int *x, atomic_t *y, spinlock_t *lck)
+=======
+	int lck;
+	int x;
+	int y;
+}
+
+P0(int *x, int *y, int *lck)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r2;
 
@@ -23,7 +32,11 @@ P0(int *x, atomic_t *y, spinlock_t *lck)
 	spin_unlock(lck);
 }
 
+<<<<<<< HEAD
 P1(int *x, atomic_t *y, spinlock_t *lck)
+=======
+P1(int *x, int *y, int *lck)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r0;
 	int r1;
@@ -36,6 +49,11 @@ P1(int *x, atomic_t *y, spinlock_t *lck)
 	spin_unlock(lck);
 }
 
+<<<<<<< HEAD
 locations [x;0:r2;1:r0;1:r1;1:r2]
 filter (1:r0=0 /\ 1:r1=1)
+=======
+locations [x;lck;0:r2;1:r0;1:r1;1:r2]
+filter (y=2 /\ 1:r0=0 /\ 1:r1=1)
+>>>>>>> b7ba80a49124 (Commit)
 exists (1:r2=1)

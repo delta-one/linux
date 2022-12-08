@@ -29,7 +29,11 @@ obj-$(CONFIG_GENERIC_PCI_IOMAP) += ioport.o
 
 USER_OBJS := config.o
 
+<<<<<<< HEAD
 include $(srctree)/arch/um/scripts/Makefile.rules
+=======
+include arch/um/scripts/Makefile.rules
+>>>>>>> b7ba80a49124 (Commit)
 
 targets := config.c config.tmp capflags.c
 

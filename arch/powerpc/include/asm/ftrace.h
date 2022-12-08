@@ -10,6 +10,7 @@
 
 #define HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
 
+<<<<<<< HEAD
 /* Ignore unused weak functions which will have larger offsets */
 #ifdef CONFIG_MPROFILE_KERNEL
 #define FTRACE_MCOUNT_MAX_OFFSET	12
@@ -17,6 +18,8 @@
 #define FTRACE_MCOUNT_MAX_OFFSET	8
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef __ASSEMBLY__
 extern void _mcount(void);
 
@@ -44,13 +47,19 @@ static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *
 	return fregs->regs.msr ? &fregs->regs : NULL;
 }
 
+<<<<<<< HEAD
 static __always_inline void
 ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
 				    unsigned long ip)
+=======
+static __always_inline void ftrace_instruction_pointer_set(struct ftrace_regs *fregs,
+							   unsigned long ip)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	regs_set_return_ip(&fregs->regs, ip);
 }
 
+<<<<<<< HEAD
 static __always_inline unsigned long
 ftrace_regs_get_instruction_pointer(struct ftrace_regs *fregs)
 {
@@ -70,6 +79,8 @@ ftrace_regs_get_instruction_pointer(struct ftrace_regs *fregs)
 #define ftrace_regs_query_register_offset(name) \
 	regs_query_register_offset(name)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ftrace_ops;
 
 #define ftrace_graph_func ftrace_graph_func
@@ -91,6 +102,20 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
  * those.
  */
 #define ARCH_HAS_SYSCALL_MATCH_SYM_NAME
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PPC64_ELF_ABI_V1
+static inline bool arch_syscall_match_sym_name(const char *sym, const char *name)
+{
+	/* We need to skip past the initial dot, and the __se_sys alias */
+	return !strcmp(sym + 1, name) ||
+		(!strncmp(sym, ".__se_sys", 9) && !strcmp(sym + 6, name)) ||
+		(!strncmp(sym, ".ppc_", 5) && !strcmp(sym + 5, name + 4)) ||
+		(!strncmp(sym, ".ppc32_", 7) && !strcmp(sym + 7, name + 4)) ||
+		(!strncmp(sym, ".ppc64_", 7) && !strcmp(sym + 7, name + 4));
+}
+#else
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool arch_syscall_match_sym_name(const char *sym, const char *name)
 {
 	return !strcmp(sym, name) ||
@@ -99,6 +124,10 @@ static inline bool arch_syscall_match_sym_name(const char *sym, const char *name
 		(!strncmp(sym, "ppc32_", 6) && !strcmp(sym + 6, name + 4)) ||
 		(!strncmp(sym, "ppc64_", 6) && !strcmp(sym + 6, name + 4));
 }
+<<<<<<< HEAD
+=======
+#endif /* CONFIG_PPC64_ELF_ABI_V1 */
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_FTRACE_SYSCALLS */
 
 #if defined(CONFIG_PPC64) && defined(CONFIG_FUNCTION_TRACER)

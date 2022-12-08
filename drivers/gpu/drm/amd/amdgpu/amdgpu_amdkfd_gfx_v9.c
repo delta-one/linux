@@ -787,7 +787,11 @@ void kgd_gfx_v9_get_cu_occupancy(struct amdgpu_device *adev, int pasid,
 	for (se_idx = 0; se_idx < se_cnt; se_idx++) {
 		for (sh_idx = 0; sh_idx < sh_cnt; sh_idx++) {
 
+<<<<<<< HEAD
 			amdgpu_gfx_select_se_sh(adev, se_idx, sh_idx, 0xffffffff);
+=======
+			gfx_v9_0_select_se_sh(adev, se_idx, sh_idx, 0xffffffff);
+>>>>>>> b7ba80a49124 (Commit)
 			queue_map = RREG32_SOC15(GC, 0, mmSPI_CSQ_WF_ACTIVE_STATUS);
 
 			/*
@@ -820,7 +824,11 @@ void kgd_gfx_v9_get_cu_occupancy(struct amdgpu_device *adev, int pasid,
 		}
 	}
 
+<<<<<<< HEAD
 	amdgpu_gfx_select_se_sh(adev, 0xffffffff, 0xffffffff, 0xffffffff);
+=======
+	gfx_v9_0_select_se_sh(adev, 0xffffffff, 0xffffffff, 0xffffffff);
+>>>>>>> b7ba80a49124 (Commit)
 	soc15_grbm_select(adev, 0, 0, 0, 0);
 	unlock_spi_csq_mutexes(adev);
 

@@ -126,3 +126,7 @@ static struct platform_driver integrator_ap_lm_driver = {
 module_platform_driver(integrator_ap_lm_driver);
 MODULE_AUTHOR("Linus Walleij <linus.walleij@linaro.org>");
 MODULE_DESCRIPTION("Integrator AP Logical Module driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

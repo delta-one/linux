@@ -102,6 +102,10 @@ static int __init orion_nand_probe(struct platform_device *pdev)
 	struct mtd_info *mtd;
 	struct nand_chip *nc;
 	struct orion_nand_data *board;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem *io_base;
 	int ret = 0;
 	u32 val = 0;
@@ -118,7 +122,12 @@ static int __init orion_nand_probe(struct platform_device *pdev)
 	info->controller.ops = &orion_nand_ops;
 	nc->controller = &info->controller;
 
+<<<<<<< HEAD
 	io_base = devm_platform_ioremap_resource(pdev, 0);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	io_base = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_ERR(io_base))
 		return PTR_ERR(io_base);

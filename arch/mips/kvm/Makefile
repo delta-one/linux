@@ -17,4 +17,8 @@ kvm-$(CONFIG_CPU_LOONGSON64) += loongson_ipi.o
 
 kvm-y		+= vz.o
 obj-$(CONFIG_KVM)	+= kvm.o
+<<<<<<< HEAD
 obj-y			+= tlb.o
+=======
+obj-y			+= callback.o tlb.o
+>>>>>>> b7ba80a49124 (Commit)

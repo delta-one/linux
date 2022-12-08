@@ -122,7 +122,11 @@ struct iosm_protocol {
 	struct iosm_imem *imem;
 	struct ipc_rsp *rsp_ring[IPC_MEM_MSG_ENTRIES];
 	struct device *dev;
+<<<<<<< HEAD
 	dma_addr_t phy_ap_shm;
+=======
+	phys_addr_t phy_ap_shm;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 old_msg_tail;
 };
 

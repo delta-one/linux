@@ -7,9 +7,13 @@
 # and produce insane amounts of uninteresting coverage.
 KCOV_INSTRUMENT_module.o := n
 
+<<<<<<< HEAD
 obj-y += main.o
 obj-y += strict_rwx.o
 obj-y += kmod.o
+=======
+obj-y += main.o strict_rwx.o
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_MODULE_DECOMPRESS) += decompress.o
 obj-$(CONFIG_MODULE_SIG) += signing.o
 obj-$(CONFIG_LIVEPATCH) += livepatch.o

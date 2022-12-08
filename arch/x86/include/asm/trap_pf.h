@@ -11,7 +11,10 @@
  *   bit 3 ==				1: use of reserved bit detected
  *   bit 4 ==				1: fault was an instruction fetch
  *   bit 5 ==				1: protection keys block access
+<<<<<<< HEAD
  *   bit 6 ==				1: shadow stack access fault
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *   bit 15 ==				1: SGX MMU page-fault
  */
 enum x86_pf_error_code {
@@ -21,7 +24,10 @@ enum x86_pf_error_code {
 	X86_PF_RSVD	=		1 << 3,
 	X86_PF_INSTR	=		1 << 4,
 	X86_PF_PK	=		1 << 5,
+<<<<<<< HEAD
 	X86_PF_SHSTK	=		1 << 6,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	X86_PF_SGX	=		1 << 15,
 };
 

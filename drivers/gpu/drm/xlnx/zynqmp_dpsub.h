@@ -14,6 +14,7 @@
 
 struct clk;
 struct device;
+<<<<<<< HEAD
 struct drm_bridge;
 struct zynqmp_disp;
 struct zynqmp_disp_layer;
@@ -31,6 +32,11 @@ enum zynqmp_dpsub_port {
 	ZYNQMP_DPSUB_PORT_OUT_DP,
 	ZYNQMP_DPSUB_NUM_PORTS,
 };
+=======
+struct drm_device;
+struct zynqmp_disp;
+struct zynqmp_dp;
+>>>>>>> b7ba80a49124 (Commit)
 
 enum zynqmp_dpsub_format {
 	ZYNQMP_DPSUB_FORMAT_RGB,
@@ -41,6 +47,7 @@ enum zynqmp_dpsub_format {
 
 /**
  * struct zynqmp_dpsub - ZynqMP DisplayPort Subsystem
+<<<<<<< HEAD
  * @dev: The physical device
  * @apb_clk: The APB clock
  * @vid_clk: Video clock
@@ -52,11 +59,17 @@ enum zynqmp_dpsub_format {
  *	driven by the live input
  * @drm: The DRM/KMS device data
  * @bridge: The DP encoder bridge
+=======
+ * @drm: The DRM/KMS device
+ * @dev: The physical device
+ * @apb_clk: The APB clock
+>>>>>>> b7ba80a49124 (Commit)
  * @disp: The display controller
  * @dp: The DisplayPort controller
  * @dma_align: DMA alignment constraint (must be a power of 2)
  */
 struct zynqmp_dpsub {
+<<<<<<< HEAD
 	struct device *dev;
 
 	struct clk *apb_clk;
@@ -73,14 +86,29 @@ struct zynqmp_dpsub {
 
 	struct zynqmp_disp *disp;
 	struct zynqmp_disp_layer *layers[ZYNQMP_DPSUB_NUM_LAYERS];
+=======
+	struct drm_device drm;
+	struct device *dev;
+
+	struct clk *apb_clk;
+
+	struct zynqmp_disp *disp;
+>>>>>>> b7ba80a49124 (Commit)
 	struct zynqmp_dp *dp;
 
 	unsigned int dma_align;
 };
 
+<<<<<<< HEAD
 bool zynqmp_dpsub_audio_enabled(struct zynqmp_dpsub *dpsub);
 unsigned int zynqmp_dpsub_get_audio_clk_rate(struct zynqmp_dpsub *dpsub);
 
 void zynqmp_dpsub_release(struct zynqmp_dpsub *dpsub);
+=======
+static inline struct zynqmp_dpsub *to_zynqmp_dpsub(struct drm_device *drm)
+{
+	return container_of(drm, struct zynqmp_dpsub, drm);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _ZYNQMP_DPSUB_H_ */

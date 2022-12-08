@@ -739,7 +739,10 @@ static int ib_uverbs_reg_mr(struct uverbs_attr_bundle *attrs)
 	mr->uobject = uobj;
 	atomic_inc(&pd->usecnt);
 	mr->iova = cmd.hca_va;
+<<<<<<< HEAD
 	mr->length = cmd.length;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	rdma_restrack_new(&mr->res, RDMA_RESTRACK_MR);
 	rdma_restrack_set_name(&mr->res, NULL);
@@ -862,10 +865,15 @@ static int ib_uverbs_rereg_mr(struct uverbs_attr_bundle *attrs)
 			mr->pd = new_pd;
 			atomic_inc(&new_pd->usecnt);
 		}
+<<<<<<< HEAD
 		if (cmd.flags & IB_MR_REREG_TRANS) {
 			mr->iova = cmd.hca_va;
 			mr->length = cmd.length;
 		}
+=======
+		if (cmd.flags & IB_MR_REREG_TRANS)
+			mr->iova = cmd.hca_va;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	memset(&resp, 0, sizeof(resp));

@@ -15,12 +15,20 @@ x86_irq_vectors=${arch_x86_header_dir}/irq_vectors.h
 # the time of writing of this script was: IRQ_MOVE_CLEANUP_VECTOR.
 
 first_external_regex='^#define[[:space:]]+FIRST_EXTERNAL_VECTOR[[:space:]]+(0x[[:xdigit:]]+)$'
+<<<<<<< HEAD
 first_external_vector=$(grep -E ${first_external_regex} ${x86_irq_vectors} | sed -r "s/${first_external_regex}/\1/g")
+=======
+first_external_vector=$(egrep ${first_external_regex} ${x86_irq_vectors} | sed -r "s/${first_external_regex}/\1/g")
+>>>>>>> b7ba80a49124 (Commit)
 
 printf "static const char *x86_irq_vectors[] = {\n"
 regex='^#define[[:space:]]+([[:alnum:]_]+)_VECTOR[[:space:]]+(0x[[:xdigit:]]+)$'
 sed -r "s/FIRST_EXTERNAL_VECTOR/${first_external_vector}/g" ${x86_irq_vectors} | \
+<<<<<<< HEAD
 grep -E ${regex} | \
+=======
+egrep ${regex} | \
+>>>>>>> b7ba80a49124 (Commit)
 	sed -r "s/${regex}/\2 \1/g" | sort -n | \
 	xargs printf "\t[%s] = \"%s\",\n"
 printf "};\n\n"

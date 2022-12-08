@@ -263,12 +263,15 @@ static int __init acpi_processor_driver_init(void)
 	if (acpi_disabled)
 		return 0;
 
+<<<<<<< HEAD
 	if (!cpufreq_register_notifier(&acpi_processor_notifier_block,
 				       CPUFREQ_POLICY_NOTIFIER)) {
 		acpi_processor_cpufreq_init = true;
 		acpi_processor_ignore_ppc_init();
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	result = driver_register(&acpi_processor_driver);
 	if (result < 0)
 		return result;
@@ -282,6 +285,15 @@ static int __init acpi_processor_driver_init(void)
 	cpuhp_setup_state_nocalls(CPUHP_ACPI_CPUDRV_DEAD, "acpi/cpu-drv:dead",
 				  NULL, acpi_soft_cpu_dead);
 
+<<<<<<< HEAD
+=======
+	if (!cpufreq_register_notifier(&acpi_processor_notifier_block,
+				       CPUFREQ_POLICY_NOTIFIER)) {
+		acpi_processor_cpufreq_init = true;
+		acpi_processor_ignore_ppc_init();
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	acpi_processor_throttling_init();
 	return 0;
 err:

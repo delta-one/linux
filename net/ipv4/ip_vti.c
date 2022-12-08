@@ -107,8 +107,13 @@ static int vti_rcv_cb(struct sk_buff *skb, int err)
 	dev = tunnel->dev;
 
 	if (err) {
+<<<<<<< HEAD
 		DEV_STATS_INC(dev, rx_errors);
 		DEV_STATS_INC(dev, rx_dropped);
+=======
+		dev->stats.rx_errors++;
+		dev->stats.rx_dropped++;
+>>>>>>> b7ba80a49124 (Commit)
 
 		return 0;
 	}
@@ -183,7 +188,11 @@ static netdev_tx_t vti_xmit(struct sk_buff *skb, struct net_device *dev,
 			fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
 			rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
 			if (IS_ERR(rt)) {
+<<<<<<< HEAD
 				DEV_STATS_INC(dev, tx_carrier_errors);
+=======
+				dev->stats.tx_carrier_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 				goto tx_error_icmp;
 			}
 			dst = &rt->dst;
@@ -198,14 +207,22 @@ static netdev_tx_t vti_xmit(struct sk_buff *skb, struct net_device *dev,
 			if (dst->error) {
 				dst_release(dst);
 				dst = NULL;
+<<<<<<< HEAD
 				DEV_STATS_INC(dev, tx_carrier_errors);
+=======
+				dev->stats.tx_carrier_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 				goto tx_error_icmp;
 			}
 			skb_dst_set(skb, dst);
 			break;
 #endif
 		default:
+<<<<<<< HEAD
 			DEV_STATS_INC(dev, tx_carrier_errors);
+=======
+			dev->stats.tx_carrier_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 			goto tx_error_icmp;
 		}
 	}
@@ -213,7 +230,11 @@ static netdev_tx_t vti_xmit(struct sk_buff *skb, struct net_device *dev,
 	dst_hold(dst);
 	dst = xfrm_lookup_route(tunnel->net, dst, fl, NULL, 0);
 	if (IS_ERR(dst)) {
+<<<<<<< HEAD
 		DEV_STATS_INC(dev, tx_carrier_errors);
+=======
+		dev->stats.tx_carrier_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 		goto tx_error_icmp;
 	}
 
@@ -221,7 +242,11 @@ static netdev_tx_t vti_xmit(struct sk_buff *skb, struct net_device *dev,
 		goto xmit;
 
 	if (!vti_state_check(dst->xfrm, parms->iph.daddr, parms->iph.saddr)) {
+<<<<<<< HEAD
 		DEV_STATS_INC(dev, tx_carrier_errors);
+=======
+		dev->stats.tx_carrier_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 		dst_release(dst);
 		goto tx_error_icmp;
 	}
@@ -230,7 +255,11 @@ static netdev_tx_t vti_xmit(struct sk_buff *skb, struct net_device *dev,
 
 	if (tdev == dev) {
 		dst_release(dst);
+<<<<<<< HEAD
 		DEV_STATS_INC(dev, collisions);
+=======
+		dev->stats.collisions++;
+>>>>>>> b7ba80a49124 (Commit)
 		goto tx_error;
 	}
 
@@ -267,7 +296,11 @@ xmit:
 tx_error_icmp:
 	dst_link_failure(skb);
 tx_error:
+<<<<<<< HEAD
 	DEV_STATS_INC(dev, tx_errors);
+=======
+	dev->stats.tx_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 	kfree_skb(skb);
 	return NETDEV_TX_OK;
 }
@@ -304,7 +337,11 @@ static netdev_tx_t vti_tunnel_xmit(struct sk_buff *skb, struct net_device *dev)
 	return vti_xmit(skb, dev, &fl);
 
 tx_err:
+<<<<<<< HEAD
 	DEV_STATS_INC(dev, tx_errors);
+=======
+	dev->stats.tx_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 	kfree_skb(skb);
 	return NETDEV_TX_OK;
 }

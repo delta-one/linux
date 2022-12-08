@@ -65,7 +65,10 @@ void nft_fib4_eval(const struct nft_expr *expr, struct nft_regs *regs,
 	struct flowi4 fl4 = {
 		.flowi4_scope = RT_SCOPE_UNIVERSE,
 		.flowi4_iif = LOOPBACK_IFINDEX,
+<<<<<<< HEAD
 		.flowi4_uid = sock_net_uid(nft_net(pkt), NULL),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	const struct net_device *oif;
 	const struct net_device *found;
@@ -84,9 +87,12 @@ void nft_fib4_eval(const struct nft_expr *expr, struct nft_regs *regs,
 	else
 		oif = NULL;
 
+<<<<<<< HEAD
 	if (priv->flags & NFTA_FIB_F_IIF)
 		fl4.flowi4_l3mdev = l3mdev_master_ifindex_rcu(oif);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (nft_hook(pkt) == NF_INET_PRE_ROUTING &&
 	    nft_fib_is_loopback(pkt->skb, nft_in(pkt))) {
 		nft_fib_store_result(dest, priv, nft_in(pkt));
@@ -138,11 +144,20 @@ void nft_fib4_eval(const struct nft_expr *expr, struct nft_regs *regs,
 		break;
 	}
 
+<<<<<<< HEAD
 	if (!oif) {
 		found = FIB_RES_DEV(res);
 	} else {
 		if (!fib_info_nh_uses_dev(res.fi, oif))
 			return;
+=======
+       if (!oif) {
+               found = FIB_RES_DEV(res);
+	} else {
+		if (!fib_info_nh_uses_dev(res.fi, oif))
+			return;
+
+>>>>>>> b7ba80a49124 (Commit)
 		found = oif;
 	}
 

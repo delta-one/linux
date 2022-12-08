@@ -399,7 +399,11 @@
 			};
 		};
 
+<<<<<<< HEAD
 		state_i2cmux_ddc: pinmux-i2cmux-ddc {
+=======
+		state_i2cmux_ddc: pinmux_i2cmux_ddc {
+>>>>>>> b7ba80a49124 (Commit)
 			ddc {
 				nvidia,pins = "ddc";
 				nvidia,function = "i2c2";
@@ -411,6 +415,7 @@
 			};
 		};
 
+<<<<<<< HEAD
 		state_i2cmux_idle: pinmux-i2cmux-idle {
 			ddc {
 				nvidia,pins = "ddc";
@@ -424,6 +429,9 @@
 		};
 
 		state_i2cmux_pta: pinmux-i2cmux-pta {
+=======
+		state_i2cmux_pta: pinmux_i2cmux_pta {
+>>>>>>> b7ba80a49124 (Commit)
 			ddc {
 				nvidia,pins = "ddc";
 				nvidia,function = "rsvd4";
@@ -434,6 +442,21 @@
 				nvidia,function = "i2c2";
 			};
 		};
+<<<<<<< HEAD
+=======
+
+		state_i2cmux_idle: pinmux_i2cmux_idle {
+			ddc {
+				nvidia,pins = "ddc";
+				nvidia,function = "rsvd4";
+			};
+
+			pta {
+				nvidia,pins = "pta";
+				nvidia,function = "rsvd4";
+			};
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	spdif@70002400 {
@@ -764,6 +787,16 @@
 			#address-cells = <1>;
 			#size-cells = <0>;
 
+<<<<<<< HEAD
+=======
+			lpddr2 {
+				compatible = "elpida,B8132B2PB-6D-F", "jedec,lpddr2-s4";
+				revision-id = <1 0>;
+				density = <2048>;
+				io-width = <16>;
+			};
+
+>>>>>>> b7ba80a49124 (Commit)
 			emc-table@25000 {
 				reg = <25000>;
 				compatible = "nvidia,tegra20-emc-table";
@@ -853,6 +886,7 @@
 					0x007e0010 0x00000000 0x00000000 0x0000001b
 					0x00000000 0x00000000 0x00000000 0x00000000>;
 			};
+<<<<<<< HEAD
 
 			lpddr2 {
 				compatible = "elpida,B8132B2PB-6D-F", "jedec,lpddr2-s4";
@@ -860,6 +894,8 @@
 				density = <2048>;
 				io-width = <16>;
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -977,8 +1013,54 @@
 		};
 	};
 
+<<<<<<< HEAD
 	display-panel {
 		compatible = "auo,b101ew05", "panel-lvds";
+=======
+	gpio-keys {
+		compatible = "gpio-keys";
+
+		switch-dock-hall-sensor {
+			label = "Lid";
+			gpios = <&gpio TEGRA_GPIO(S, 4) GPIO_ACTIVE_LOW>;
+			linux,input-type = <EV_SW>;
+			linux,code = <SW_LID>;
+			debounce-interval = <500>;
+			wakeup-event-action = <EV_ACT_ASSERTED>;
+			wakeup-source;
+		};
+
+		key-power {
+			label = "Power";
+			gpios = <&gpio TEGRA_GPIO(V, 2) GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_POWER>;
+			debounce-interval = <10>;
+			wakeup-event-action = <EV_ACT_ASSERTED>;
+			wakeup-source;
+		};
+
+		key-volume-up {
+			label = "Volume Up";
+			gpios = <&gpio TEGRA_GPIO(Q, 5) GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_VOLUMEUP>;
+			debounce-interval = <10>;
+			wakeup-event-action = <EV_ACT_ASSERTED>;
+			wakeup-source;
+		};
+
+		key-volume-down {
+			label = "Volume Down";
+			gpios = <&gpio TEGRA_GPIO(Q, 4) GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_VOLUMEDOWN>;
+			debounce-interval = <10>;
+			wakeup-event-action = <EV_ACT_ASSERTED>;
+			wakeup-source;
+		};
+	};
+
+	display-panel {
+		compatible = "panel-lvds";
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* AUO B101EW05 using custom timings */
 
@@ -1010,6 +1092,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	gpio-keys {
 		compatible = "gpio-keys";
 
@@ -1051,6 +1134,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	i2cmux {
 		compatible = "i2c-mux-pinctrl";
 		#address-cells = <1>;
@@ -1112,11 +1197,14 @@
 		};
 	};
 
+<<<<<<< HEAD
 	opp-table-emc {
 		/delete-node/ opp-666000000;
 		/delete-node/ opp-760000000;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vdd_5v0_sys: regulator-5v0 {
 		compatible = "regulator-fixed";
 		regulator-name = "vdd_5v0";
@@ -1288,3 +1376,11 @@
 		power-off-delay-us = <200>;
 	};
 };
+<<<<<<< HEAD
+=======
+
+&emc_icc_dvfs_opp_table {
+	/delete-node/ opp-666000000;
+	/delete-node/ opp-760000000;
+};
+>>>>>>> b7ba80a49124 (Commit)

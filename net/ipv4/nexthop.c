@@ -1124,6 +1124,7 @@ static bool ipv6_good_nh(const struct fib6_nh *nh)
 	int state = NUD_REACHABLE;
 	struct neighbour *n;
 
+<<<<<<< HEAD
 	rcu_read_lock();
 
 	n = __ipv6_neigh_lookup_noref_stub(nh->fib_nh_dev, &nh->fib_nh_gw6);
@@ -1131,6 +1132,15 @@ static bool ipv6_good_nh(const struct fib6_nh *nh)
 		state = READ_ONCE(n->nud_state);
 
 	rcu_read_unlock();
+=======
+	rcu_read_lock_bh();
+
+	n = __ipv6_neigh_lookup_noref_stub(nh->fib_nh_dev, &nh->fib_nh_gw6);
+	if (n)
+		state = n->nud_state;
+
+	rcu_read_unlock_bh();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return !!(state & NUD_VALID);
 }
@@ -1140,14 +1150,24 @@ static bool ipv4_good_nh(const struct fib_nh *nh)
 	int state = NUD_REACHABLE;
 	struct neighbour *n;
 
+<<<<<<< HEAD
 	rcu_read_lock();
+=======
+	rcu_read_lock_bh();
+>>>>>>> b7ba80a49124 (Commit)
 
 	n = __ipv4_neigh_lookup_noref(nh->fib_nh_dev,
 				      (__force u32)nh->fib_nh_gw4);
 	if (n)
+<<<<<<< HEAD
 		state = READ_ONCE(n->nud_state);
 
 	rcu_read_unlock();
+=======
+		state = n->nud_state;
+
+	rcu_read_unlock_bh();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return !!(state & NUD_VALID);
 }
@@ -2534,7 +2554,11 @@ static int nh_create_ipv4(struct net *net, struct nexthop *nh,
 	if (!err) {
 		nh->nh_flags = fib_nh->fib_nh_flags;
 		fib_info_update_nhc_saddr(net, &fib_nh->nh_common,
+<<<<<<< HEAD
 					  !fib_nh->fib_nh_scope ? 0 : fib_nh->fib_nh_scope - 1);
+=======
+					  fib_nh->fib_nh_scope);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		fib_nh_release(net, fib_nh);
 	}

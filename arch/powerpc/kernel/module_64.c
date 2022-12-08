@@ -31,6 +31,7 @@
    this, and makes other things simpler.  Anton?
    --RR.  */
 
+<<<<<<< HEAD
 bool module_elf_check_arch(Elf_Ehdr *hdr)
 {
 	unsigned long abi_level = hdr->e_flags & 0x3;
@@ -41,6 +42,8 @@ bool module_elf_check_arch(Elf_Ehdr *hdr)
 		return abi_level < 2;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PPC64_ELF_ABI_V2
 
 static func_desc_t func_desc(unsigned long addr)
@@ -502,10 +505,16 @@ static unsigned long stub_for_addr(const Elf64_Shdr *sechdrs,
 static int restore_r2(const char *name, u32 *instruction, struct module *me)
 {
 	u32 *prev_insn = instruction - 1;
+<<<<<<< HEAD
 	u32 insn_val = *instruction;
 
 	if (is_mprofile_ftrace_call(name))
 		return 0;
+=======
+
+	if (is_mprofile_ftrace_call(name))
+		return 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Make sure the branch isn't a sibling call.  Sibling calls aren't
@@ -513,6 +522,7 @@ static int restore_r2(const char *name, u32 *instruction, struct module *me)
 	 * restore afterwards.
 	 */
 	if (!instr_is_relative_link_branch(ppc_inst(*prev_insn)))
+<<<<<<< HEAD
 		return 0;
 
 	/*
@@ -532,6 +542,21 @@ static int restore_r2(const char *name, u32 *instruction, struct module *me)
 
 	/* ld r2,R2_STACK_OFFSET(r1) */
 	return patch_instruction(instruction, ppc_inst(PPC_INST_LD_TOC));
+=======
+		return 1;
+
+	if (*instruction != PPC_RAW_NOP()) {
+		pr_err("%s: Expected nop after call, got %08x at %pS\n",
+			me->name, *instruction, instruction);
+		return 0;
+	}
+
+	/* ld r2,R2_STACK_OFFSET(r1) */
+	if (patch_instruction(instruction, ppc_inst(PPC_INST_LD_TOC)))
+		return 0;
+
+	return 1;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int apply_relocate_add(Elf64_Shdr *sechdrs,
@@ -655,8 +680,13 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
 						strtab + sym->st_name);
 				if (!value)
 					return -ENOENT;
+<<<<<<< HEAD
 				if (restore_r2(strtab + sym->st_name,
 					       (u32 *)location + 1, me))
+=======
+				if (!restore_r2(strtab + sym->st_name,
+							(u32 *)location + 1, me))
+>>>>>>> b7ba80a49124 (Commit)
 					return -ENOEXEC;
 			} else
 				value += local_entry_offset(sym);

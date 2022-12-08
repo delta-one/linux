@@ -375,9 +375,12 @@ static bool cpu_power_down_ok(struct dev_pm_domain *pd)
 	if (idle_duration_ns <= 0)
 		return false;
 
+<<<<<<< HEAD
 	/* Store the next domain_wakeup to allow consumers to use it. */
 	genpd->gd->next_hrtimer = domain_wakeup;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Find the deepest idle state that has its residency value satisfied
 	 * and by also taking into account the power off latency for the state.

@@ -402,7 +402,11 @@ int cap_init(void)
 {
 	int ret;
 
+<<<<<<< HEAD
 	cap_class = class_create("gb_authenticate");
+=======
+	cap_class = class_create(THIS_MODULE, "gb_authenticate");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(cap_class))
 		return PTR_ERR(cap_class);
 

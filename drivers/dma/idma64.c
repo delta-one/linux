@@ -137,11 +137,16 @@ static void idma64_chan_irq(struct idma64 *idma64, unsigned short c,
 		u32 status_err, u32 status_xfer)
 {
 	struct idma64_chan *idma64c = &idma64->chan[c];
+<<<<<<< HEAD
 	struct dma_chan_percpu *stat;
 	struct idma64_desc *desc;
 
 	stat = this_cpu_ptr(idma64c->vchan.chan.local);
 
+=======
+	struct idma64_desc *desc;
+
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock(&idma64c->vchan.lock);
 	desc = idma64c->desc;
 	if (desc) {
@@ -152,7 +157,10 @@ static void idma64_chan_irq(struct idma64 *idma64, unsigned short c,
 			dma_writel(idma64, CLEAR(XFER), idma64c->mask);
 			desc->status = DMA_COMPLETE;
 			vchan_cookie_complete(&desc->vdesc);
+<<<<<<< HEAD
 			stat->bytes_transferred += desc->length;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			idma64_start_transfer(idma64c);
 		}
 
@@ -604,7 +612,11 @@ static int idma64_probe(struct idma64_chip *chip)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void idma64_remove(struct idma64_chip *chip)
+=======
+static int idma64_remove(struct idma64_chip *chip)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct idma64 *idma64 = chip->idma64;
 	unsigned short i;
@@ -622,6 +634,11 @@ static void idma64_remove(struct idma64_chip *chip)
 
 		tasklet_kill(&idma64c->vchan.task);
 	}
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* ---------------------------------------------------------------------- */
@@ -631,6 +648,10 @@ static int idma64_platform_probe(struct platform_device *pdev)
 	struct idma64_chip *chip;
 	struct device *dev = &pdev->dev;
 	struct device *sysdev = dev->parent;
+<<<<<<< HEAD
+=======
+	struct resource *mem;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
@@ -641,7 +662,12 @@ static int idma64_platform_probe(struct platform_device *pdev)
 	if (chip->irq < 0)
 		return chip->irq;
 
+<<<<<<< HEAD
 	chip->regs = devm_platform_ioremap_resource(pdev, 0);
+=======
+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	chip->regs = devm_ioremap_resource(dev, mem);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(chip->regs))
 		return PTR_ERR(chip->regs);
 
@@ -664,9 +690,13 @@ static int idma64_platform_remove(struct platform_device *pdev)
 {
 	struct idma64_chip *chip = platform_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	idma64_remove(chip);
 
 	return 0;
+=======
+	return idma64_remove(chip);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused idma64_pm_suspend(struct device *dev)

@@ -160,12 +160,15 @@ struct mptcp_info {
  *                           daddr4 | daddr6, sport, dport, backup, if_idx
  *                           [, error]
  * The priority of a subflow has changed. 'error' should not be set.
+<<<<<<< HEAD
  *
  * MPTCP_EVENT_LISTENER_CREATED: family, sport, saddr4 | saddr6
  * A new PM listener is created.
  *
  * MPTCP_EVENT_LISTENER_CLOSED: family, sport, saddr4 | saddr6
  * A PM listener is closed.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum mptcp_event_type {
 	MPTCP_EVENT_UNSPEC = 0,
@@ -180,9 +183,12 @@ enum mptcp_event_type {
 	MPTCP_EVENT_SUB_CLOSED = 11,
 
 	MPTCP_EVENT_SUB_PRIORITY = 13,
+<<<<<<< HEAD
 
 	MPTCP_EVENT_LISTENER_CREATED = 15,
 	MPTCP_EVENT_LISTENER_CLOSED = 16,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum mptcp_event_attr {

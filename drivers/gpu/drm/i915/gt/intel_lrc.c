@@ -20,6 +20,7 @@
 #include "intel_ring.h"
 #include "shmem_utils.h"
 
+<<<<<<< HEAD
 /*
  * The per-platform tables are u8-encoded in @data. Decode @data and set the
  * addresses' offset and commands in @regs. The following encoding is used
@@ -44,6 +45,8 @@
  * This function only tweaks the commands and register offsets. Values are not
  * filled out.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void set_offsets(u32 *regs,
 			const u8 *data,
 			const struct intel_engine_cs *engine,
@@ -630,6 +633,7 @@ static const u8 dg2_rcs_offsets[] = {
 	END
 };
 
+<<<<<<< HEAD
 static const u8 mtl_rcs_offsets[] = {
 	NOP(1),
 	LRI(15, POSTED),
@@ -673,6 +677,8 @@ static const u8 mtl_rcs_offsets[] = {
 	END
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #undef END
 #undef REG16
 #undef REG
@@ -691,9 +697,13 @@ static const u8 *reg_offsets(const struct intel_engine_cs *engine)
 		   !intel_engine_has_relative_mmio(engine));
 
 	if (engine->flags & I915_ENGINE_HAS_RCS_REG_STATE) {
+<<<<<<< HEAD
 		if (GRAPHICS_VER_FULL(engine->i915) >= IP_VER(12, 70))
 			return mtl_rcs_offsets;
 		else if (GRAPHICS_VER_FULL(engine->i915) >= IP_VER(12, 55))
+=======
+		if (GRAPHICS_VER_FULL(engine->i915) >= IP_VER(12, 55))
+>>>>>>> b7ba80a49124 (Commit)
 			return dg2_rcs_offsets;
 		else if (GRAPHICS_VER_FULL(engine->i915) >= IP_VER(12, 50))
 			return xehp_rcs_offsets;
@@ -814,6 +824,7 @@ static int lrc_ring_cmd_buf_cctl(const struct intel_engine_cs *engine)
 static u32
 lrc_ring_indirect_offset_default(const struct intel_engine_cs *engine)
 {
+<<<<<<< HEAD
 	if (GRAPHICS_VER(engine->i915) >= 12)
 		return GEN12_CTX_RCS_INDIRECT_CTX_OFFSET_DEFAULT;
 	else if (GRAPHICS_VER(engine->i915) >= 11)
@@ -826,6 +837,21 @@ lrc_ring_indirect_offset_default(const struct intel_engine_cs *engine)
 	GEM_BUG_ON(GRAPHICS_VER(engine->i915) < 8);
 
 	return 0;
+=======
+	switch (GRAPHICS_VER(engine->i915)) {
+	default:
+		MISSING_CASE(GRAPHICS_VER(engine->i915));
+		fallthrough;
+	case 12:
+		return GEN12_CTX_RCS_INDIRECT_CTX_OFFSET_DEFAULT;
+	case 11:
+		return GEN11_CTX_RCS_INDIRECT_CTX_OFFSET_DEFAULT;
+	case 9:
+		return GEN9_CTX_RCS_INDIRECT_CTX_OFFSET_DEFAULT;
+	case 8:
+		return GEN8_CTX_RCS_INDIRECT_CTX_OFFSET_DEFAULT;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -1080,7 +1106,11 @@ __lrc_alloc_state(struct intel_context *ce, struct intel_engine_cs *engine)
 	if (IS_ENABLED(CONFIG_DRM_I915_DEBUG_GEM))
 		context_size += I915_GTT_PAGE_SIZE; /* for redzone */
 
+<<<<<<< HEAD
 	if (GRAPHICS_VER(engine->i915) >= 12) {
+=======
+	if (GRAPHICS_VER(engine->i915) == 12) {
+>>>>>>> b7ba80a49124 (Commit)
 		ce->wa_bb_page = context_size / PAGE_SIZE;
 		context_size += PAGE_SIZE;
 	}
@@ -1109,7 +1139,11 @@ __lrc_alloc_state(struct intel_context *ce, struct intel_engine_cs *engine)
 static struct intel_timeline *
 pinned_timeline(struct intel_context *ce, struct intel_engine_cs *engine)
 {
+<<<<<<< HEAD
 	struct intel_timeline *tl = __xchg(&ce->timeline, 0);
+=======
+	struct intel_timeline *tl = fetch_and_zero(&ce->timeline);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return intel_timeline_create_from_engine(engine, page_unmask_bits(tl));
 }
@@ -1226,8 +1260,13 @@ void lrc_fini(struct intel_context *ce)
 	if (!ce->state)
 		return;
 
+<<<<<<< HEAD
 	intel_ring_put(__xchg(&ce->ring, 0));
 	i915_vma_put(__xchg(&ce->state, 0));
+=======
+	intel_ring_put(fetch_and_zero(&ce->ring));
+	i915_vma_put(fetch_and_zero(&ce->state));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void lrc_destroy(struct kref *kref)
@@ -1316,16 +1355,28 @@ static u32 *
 dg2_emit_rcs_hang_wabb(const struct intel_context *ce, u32 *cs)
 {
 	*cs++ = MI_LOAD_REGISTER_IMM(1);
+<<<<<<< HEAD
 	*cs++ = i915_mmio_reg_offset(GEN12_STATE_ACK_DEBUG(ce->engine->mmio_base));
+=======
+	*cs++ = i915_mmio_reg_offset(GEN12_STATE_ACK_DEBUG);
+>>>>>>> b7ba80a49124 (Commit)
 	*cs++ = 0x21;
 
 	*cs++ = MI_LOAD_REGISTER_REG;
 	*cs++ = i915_mmio_reg_offset(RING_NOPID(ce->engine->mmio_base));
+<<<<<<< HEAD
 	*cs++ = i915_mmio_reg_offset(XEHP_CULLBIT1);
 
 	*cs++ = MI_LOAD_REGISTER_REG;
 	*cs++ = i915_mmio_reg_offset(RING_NOPID(ce->engine->mmio_base));
 	*cs++ = i915_mmio_reg_offset(XEHP_CULLBIT2);
+=======
+	*cs++ = i915_mmio_reg_offset(GEN12_CULLBIT1);
+
+	*cs++ = MI_LOAD_REGISTER_REG;
+	*cs++ = i915_mmio_reg_offset(RING_NOPID(ce->engine->mmio_base));
+	*cs++ = i915_mmio_reg_offset(GEN12_CULLBIT2);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return cs;
 }
@@ -1786,6 +1837,7 @@ void lrc_init_wa_ctx(struct intel_engine_cs *engine)
 	unsigned int i;
 	int err;
 
+<<<<<<< HEAD
 	if (GRAPHICS_VER(engine->i915) >= 11 ||
 	    !(engine->flags & I915_ENGINE_HAS_RCS_REG_STATE))
 		return;
@@ -1796,6 +1848,26 @@ void lrc_init_wa_ctx(struct intel_engine_cs *engine)
 	} else if (GRAPHICS_VER(engine->i915) == 8) {
 		wa_bb_fn[0] = gen8_init_indirectctx_bb;
 		wa_bb_fn[1] = NULL;
+=======
+	if (!(engine->flags & I915_ENGINE_HAS_RCS_REG_STATE))
+		return;
+
+	switch (GRAPHICS_VER(engine->i915)) {
+	case 12:
+	case 11:
+		return;
+	case 9:
+		wa_bb_fn[0] = gen9_init_indirectctx_bb;
+		wa_bb_fn[1] = NULL;
+		break;
+	case 8:
+		wa_bb_fn[0] = gen8_init_indirectctx_bb;
+		wa_bb_fn[1] = NULL;
+		break;
+	default:
+		MISSING_CASE(GRAPHICS_VER(engine->i915));
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	err = lrc_create_wa_ctx(engine);

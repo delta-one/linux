@@ -566,8 +566,12 @@ miimon
 	link monitoring.  A value of 100 is a good starting point.
 	The use_carrier option, below, affects how the link state is
 	determined.  See the High Availability section for additional
+<<<<<<< HEAD
 	information.  The default value is 100 if arp_interval is not
 	set.
+=======
+	information.  The default value is 0.
+>>>>>>> b7ba80a49124 (Commit)
 
 min_links
 
@@ -957,7 +961,10 @@ xmit_hash_policy
 		hash = hash XOR source IP XOR destination IP
 		hash = hash XOR (hash RSHIFT 16)
 		hash = hash XOR (hash RSHIFT 8)
+<<<<<<< HEAD
 		hash = hash RSHIFT 1
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		And then hash is reduced modulo slave count.
 
 		If the protocol is IPv6 then the source and destination

@@ -12,7 +12,10 @@
 #include <linux/clockchips.h>
 #include <linux/interrupt.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/kexec.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/profile.h>
 #include <linux/smp.h>
 #include <linux/sched.h>
@@ -23,13 +26,19 @@
 #include <asm/sbi.h>
 #include <asm/tlbflush.h>
 #include <asm/cacheflush.h>
+<<<<<<< HEAD
 #include <asm/cpu_ops.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum ipi_message_type {
 	IPI_RESCHEDULE,
 	IPI_CALL_FUNC,
 	IPI_CPU_STOP,
+<<<<<<< HEAD
 	IPI_CPU_CRASH_STOP,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	IPI_IRQ_WORK,
 	IPI_TIMER,
 	IPI_MAX
@@ -74,6 +83,7 @@ static void ipi_stop(void)
 		wait_for_interrupt();
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_KEXEC_CORE
 static atomic_t waiting_for_crash_ipi = ATOMIC_INIT(0);
 
@@ -100,6 +110,8 @@ static inline void ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct riscv_ipi_ops *ipi_ops __ro_after_init;
 
 void riscv_set_ipi_ops(const struct riscv_ipi_ops *ops)
@@ -153,9 +165,14 @@ void arch_irq_work_raise(void)
 
 void handle_IPI(struct pt_regs *regs)
 {
+<<<<<<< HEAD
 	unsigned int cpu = smp_processor_id();
 	unsigned long *pending_ipis = &ipi_data[cpu].bits;
 	unsigned long *stats = ipi_data[cpu].stats;
+=======
+	unsigned long *pending_ipis = &ipi_data[smp_processor_id()].bits;
+	unsigned long *stats = ipi_data[smp_processor_id()].stats;
+>>>>>>> b7ba80a49124 (Commit)
 
 	riscv_clear_ipi();
 
@@ -184,10 +201,13 @@ void handle_IPI(struct pt_regs *regs)
 			ipi_stop();
 		}
 
+<<<<<<< HEAD
 		if (ops & (1 << IPI_CPU_CRASH_STOP)) {
 			ipi_cpu_crash_stop(cpu, get_irq_regs());
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (ops & (1 << IPI_IRQ_WORK)) {
 			stats[IPI_IRQ_WORK]++;
 			irq_work_run();
@@ -210,7 +230,10 @@ static const char * const ipi_names[] = {
 	[IPI_RESCHEDULE]	= "Rescheduling interrupts",
 	[IPI_CALL_FUNC]		= "Function call interrupts",
 	[IPI_CPU_STOP]		= "CPU stop interrupts",
+<<<<<<< HEAD
 	[IPI_CPU_CRASH_STOP]	= "CPU stop (for crash dump) interrupts",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	[IPI_IRQ_WORK]		= "IRQ work interrupts",
 	[IPI_TIMER]		= "Timer broadcast interrupts",
 };
@@ -270,6 +293,7 @@ void smp_send_stop(void)
 			   cpumask_pr_args(cpu_online_mask));
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_KEXEC_CORE
 /*
  * The number of CPUs online, not counting this CPU (which may not be
@@ -328,6 +352,8 @@ bool smp_crash_stop_failed(void)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void smp_send_reschedule(int cpu)
 {
 	send_ipi_single(cpu, IPI_RESCHEDULE);

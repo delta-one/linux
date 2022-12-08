@@ -1737,7 +1737,10 @@ static struct platform_driver ab8500_regulator_driver = {
 	.probe = ab8500_regulator_probe,
 	.driver         = {
 		.name   = "ab8500-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

@@ -1804,9 +1804,15 @@ static int saa711x_detect_chip(struct i2c_client *client,
 	return -ENODEV;
 }
 
+<<<<<<< HEAD
 static int saa711x_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int saa711x_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct saa711x_state *state;
 	struct v4l2_subdev *sd;
 	struct v4l2_ctrl_handler *hdl;
@@ -1951,7 +1957,11 @@ static struct i2c_driver saa711x_driver = {
 	.driver = {
 		.name	= "saa7115",
 	},
+<<<<<<< HEAD
 	.probe_new	= saa711x_probe,
+=======
+	.probe		= saa711x_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= saa711x_remove,
 	.id_table	= saa711x_id,
 };

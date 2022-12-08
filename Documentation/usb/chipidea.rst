@@ -35,10 +35,17 @@ which can show otg fsm variables and some controller registers value::
 1) Power up 2 Freescale i.MX6Q sabre SD boards with gadget class driver loaded
    (e.g. g_mass_storage).
 
+<<<<<<< HEAD
 2) Connect 2 boards with usb cable: one end is micro A plug, the other end
    is micro B plug.
 
    The A-device (with micro A plug inserted) should enumerate B-device.
+=======
+2) Connect 2 boards with usb cable with one end is micro A plug, the other end
+   is micro B plug.
+
+   The A-device(with micro A plug inserted) should enumerate B-device.
+>>>>>>> b7ba80a49124 (Commit)
 
 3) Role switch
 
@@ -54,19 +61,32 @@ which can show otg fsm variables and some controller registers value::
 
 	echo 0 > /sys/bus/platform/devices/ci_hdrc.0/inputs/b_bus_req
 
+<<<<<<< HEAD
    or, by introducing HNP polling, B-Host can know when A-peripheral wishes to
    be in the host role, so this role switch also can be triggered in
    A-peripheral side by answering the polling from B-Host. This can be done on
    A-device::
+=======
+   or, by introducing HNP polling, B-Host can know when A-peripheral wish
+   to be host role, so this role switch also can be trigged in A-peripheral
+   side by answering the polling from B-Host, this can be done on A-device::
+>>>>>>> b7ba80a49124 (Commit)
 
 	echo 1 > /sys/bus/platform/devices/ci_hdrc.0/inputs/a_bus_req
 
    A-device should switch back to host and enumerate B-device.
 
+<<<<<<< HEAD
 5) Remove B-device (unplug micro B plug) and insert again in 10 seconds;
    A-device should enumerate B-device again.
 
 6) Remove B-device (unplug micro B plug) and insert again after 10 seconds;
+=======
+5) Remove B-device(unplug micro B plug) and insert again in 10 seconds,
+   A-device should enumerate B-device again.
+
+6) Remove B-device(unplug micro B plug) and insert again after 10 seconds,
+>>>>>>> b7ba80a49124 (Commit)
    A-device should NOT enumerate B-device.
 
    if A-device wants to use bus:
@@ -106,7 +126,11 @@ July 27, 2012 Revision 2.0 version 1.1a"
 2. How to enable USB as system wakeup source
 --------------------------------------------
 Below is the example for how to enable USB as system wakeup source
+<<<<<<< HEAD
 on an imx6 platform.
+=======
+at imx6 platform.
+>>>>>>> b7ba80a49124 (Commit)
 
 2.1 Enable core's wakeup::
 
@@ -129,6 +153,10 @@ on an imx6 platform.
 	echo enabled > /sys/bus/usb/devices/1-1/power/wakeup
 
 If the system has only one usb port, and you want usb wakeup at this port, you
+<<<<<<< HEAD
 can use the below script to enable usb wakeup::
+=======
+can use below script to enable usb wakeup::
+>>>>>>> b7ba80a49124 (Commit)
 
 	for i in $(find /sys -name wakeup | grep usb);do echo enabled > $i;done;

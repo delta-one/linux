@@ -6,9 +6,13 @@
 #include <linux/sort.h>
 
 #include "gem/i915_gem_internal.h"
+<<<<<<< HEAD
 #include "gem/i915_gem_lmem.h"
 
 #include "selftests/igt_spinner.h"
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 #include "selftests/i915_random.h"
 
 static const unsigned int sizes[] = {
@@ -487,8 +491,12 @@ global_clear(struct intel_migrate *migrate, u32 sz, struct rnd_state *prng)
 
 static int live_migrate_copy(void *arg)
 {
+<<<<<<< HEAD
 	struct intel_gt *gt = arg;
 	struct intel_migrate *migrate = &gt->migrate;
+=======
+	struct intel_migrate *migrate = arg;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_i915_private *i915 = migrate->context->engine->i915;
 	I915_RND_STATE(prng);
 	int i;
@@ -509,8 +517,12 @@ static int live_migrate_copy(void *arg)
 
 static int live_migrate_clear(void *arg)
 {
+<<<<<<< HEAD
 	struct intel_gt *gt = arg;
 	struct intel_migrate *migrate = &gt->migrate;
+=======
+	struct intel_migrate *migrate = arg;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_i915_private *i915 = migrate->context->engine->i915;
 	I915_RND_STATE(prng);
 	int i;
@@ -530,6 +542,7 @@ static int live_migrate_clear(void *arg)
 	return 0;
 }
 
+<<<<<<< HEAD
 struct spinner_timer {
 	struct timer_list timer;
 	struct igt_spinner spin;
@@ -673,6 +686,8 @@ out_spinner:
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct threaded_migrate {
 	struct intel_migrate *migrate;
 	struct task_struct *tsk;
@@ -739,10 +754,14 @@ static int __thread_migrate_copy(void *arg)
 
 static int thread_migrate_copy(void *arg)
 {
+<<<<<<< HEAD
 	struct intel_gt *gt = arg;
 	struct intel_migrate *migrate = &gt->migrate;
 
 	return threaded_migrate(migrate, __thread_migrate_copy, 0);
+=======
+	return threaded_migrate(arg, __thread_migrate_copy, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __thread_global_copy(void *arg)
@@ -754,10 +773,14 @@ static int __thread_global_copy(void *arg)
 
 static int thread_global_copy(void *arg)
 {
+<<<<<<< HEAD
 	struct intel_gt *gt = arg;
 	struct intel_migrate *migrate = &gt->migrate;
 
 	return threaded_migrate(migrate, __thread_global_copy, 0);
+=======
+	return threaded_migrate(arg, __thread_global_copy, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __thread_migrate_clear(void *arg)
@@ -776,18 +799,26 @@ static int __thread_global_clear(void *arg)
 
 static int thread_migrate_clear(void *arg)
 {
+<<<<<<< HEAD
 	struct intel_gt *gt = arg;
 	struct intel_migrate *migrate = &gt->migrate;
 
 	return threaded_migrate(migrate, __thread_migrate_clear, 0);
+=======
+	return threaded_migrate(arg, __thread_migrate_clear, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int thread_global_clear(void *arg)
 {
+<<<<<<< HEAD
 	struct intel_gt *gt = arg;
 	struct intel_migrate *migrate = &gt->migrate;
 
 	return threaded_migrate(migrate, __thread_global_clear, 0);
+=======
+	return threaded_migrate(arg, __thread_global_clear, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int intel_migrate_live_selftests(struct drm_i915_private *i915)
@@ -795,7 +826,10 @@ int intel_migrate_live_selftests(struct drm_i915_private *i915)
 	static const struct i915_subtest tests[] = {
 		SUBTEST(live_migrate_copy),
 		SUBTEST(live_migrate_clear),
+<<<<<<< HEAD
 		SUBTEST(live_emit_pte_full_ring),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		SUBTEST(thread_migrate_copy),
 		SUBTEST(thread_migrate_clear),
 		SUBTEST(thread_global_copy),
@@ -806,7 +840,11 @@ int intel_migrate_live_selftests(struct drm_i915_private *i915)
 	if (!gt->migrate.context)
 		return 0;
 
+<<<<<<< HEAD
 	return intel_gt_live_subtests(tests, gt);
+=======
+	return i915_subtests(tests, &gt->migrate);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct drm_i915_gem_object *

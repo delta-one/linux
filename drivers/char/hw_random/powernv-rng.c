@@ -11,7 +11,10 @@
 #include <linux/platform_device.h>
 #include <linux/random.h>
 #include <linux/hw_random.h>
+<<<<<<< HEAD
 #include <asm/archrandom.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int powernv_rng_read(struct hwrng *rng, void *data, size_t max, bool wait)
 {

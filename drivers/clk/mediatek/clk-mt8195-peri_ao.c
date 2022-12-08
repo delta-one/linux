@@ -51,7 +51,10 @@ static const struct of_device_id of_match_clk_mt8195_peri_ao[] = {
 		/* sentinel */
 	}
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(of, of_match_clk_mt8195_peri_ao);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_driver clk_mt8195_peri_ao_drv = {
 	.probe = mtk_clk_simple_probe,
@@ -61,5 +64,9 @@ static struct platform_driver clk_mt8195_peri_ao_drv = {
 		.of_match_table = of_match_clk_mt8195_peri_ao,
 	},
 };
+<<<<<<< HEAD
 module_platform_driver(clk_mt8195_peri_ao_drv);
 MODULE_LICENSE("GPL");
+=======
+builtin_platform_driver(clk_mt8195_peri_ao_drv);
+>>>>>>> b7ba80a49124 (Commit)

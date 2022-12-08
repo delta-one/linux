@@ -2186,6 +2186,7 @@ int rio_register_mport(struct rio_mport *port)
 	atomic_set(&port->state, RIO_DEVICE_RUNNING);
 
 	res = device_register(&port->dev);
+<<<<<<< HEAD
 	if (res) {
 		dev_err(&port->dev, "RIO: mport%d registration failed ERR=%d\n",
 			port->id, res);
@@ -2196,6 +2197,13 @@ int rio_register_mport(struct rio_mport *port)
 	} else {
 		dev_dbg(&port->dev, "RIO: registered mport%d\n", port->id);
 	}
+=======
+	if (res)
+		dev_err(&port->dev, "RIO: mport%d registration failed ERR=%d\n",
+			port->id, res);
+	else
+		dev_dbg(&port->dev, "RIO: registered mport%d\n", port->id);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return res;
 }

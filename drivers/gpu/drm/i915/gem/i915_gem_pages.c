@@ -16,7 +16,12 @@
 #include "i915_gem_mman.h"
 
 void __i915_gem_object_set_pages(struct drm_i915_gem_object *obj,
+<<<<<<< HEAD
 				 struct sg_table *pages)
+=======
+				 struct sg_table *pages,
+				 unsigned int sg_page_sizes)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drm_i915_private *i915 = to_i915(obj->base.dev);
 	unsigned long supported = RUNTIME_INFO(i915)->page_sizes;
@@ -44,8 +49,13 @@ void __i915_gem_object_set_pages(struct drm_i915_gem_object *obj,
 
 	obj->mm.pages = pages;
 
+<<<<<<< HEAD
 	obj->mm.page_sizes.phys = i915_sg_dma_sizes(pages->sgl);
 	GEM_BUG_ON(!obj->mm.page_sizes.phys);
+=======
+	GEM_BUG_ON(!sg_page_sizes);
+	obj->mm.page_sizes.phys = sg_page_sizes;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Calculate the supported page-sizes which fit into the given
@@ -465,6 +475,7 @@ void *i915_gem_object_pin_map_unlocked(struct drm_i915_gem_object *obj,
 	return ret;
 }
 
+<<<<<<< HEAD
 enum i915_map_type i915_coherent_map_type(struct drm_i915_private *i915,
 					  struct drm_i915_gem_object *obj,
 					  bool always_coherent)
@@ -477,6 +488,8 @@ enum i915_map_type i915_coherent_map_type(struct drm_i915_private *i915,
 		return I915_MAP_WC;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void __i915_gem_object_flush_map(struct drm_i915_gem_object *obj,
 				 unsigned long offset,
 				 unsigned long size)
@@ -521,6 +534,7 @@ void __i915_gem_object_release_map(struct drm_i915_gem_object *obj)
 }
 
 struct scatterlist *
+<<<<<<< HEAD
 __i915_gem_object_page_iter_get_sg(struct drm_i915_gem_object *obj,
 				   struct i915_gem_object_page_iter *iter,
 				   pgoff_t n,
@@ -531,6 +545,16 @@ __i915_gem_object_page_iter_get_sg(struct drm_i915_gem_object *obj,
 			 iter == &obj->ttm.get_io_page;
 	unsigned int idx, count;
 	struct scatterlist *sg;
+=======
+__i915_gem_object_get_sg(struct drm_i915_gem_object *obj,
+			 struct i915_gem_object_page_iter *iter,
+			 unsigned int n,
+			 unsigned int *offset,
+			 bool dma)
+{
+	struct scatterlist *sg;
+	unsigned int idx, count;
+>>>>>>> b7ba80a49124 (Commit)
 
 	might_sleep();
 	GEM_BUG_ON(n >= obj->base.size >> PAGE_SHIFT);
@@ -638,7 +662,11 @@ lookup:
 }
 
 struct page *
+<<<<<<< HEAD
 __i915_gem_object_get_page(struct drm_i915_gem_object *obj, pgoff_t n)
+=======
+i915_gem_object_get_page(struct drm_i915_gem_object *obj, unsigned int n)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct scatterlist *sg;
 	unsigned int offset;
@@ -651,7 +679,12 @@ __i915_gem_object_get_page(struct drm_i915_gem_object *obj, pgoff_t n)
 
 /* Like i915_gem_object_get_page(), but mark the returned page dirty */
 struct page *
+<<<<<<< HEAD
 __i915_gem_object_get_dirty_page(struct drm_i915_gem_object *obj, pgoff_t n)
+=======
+i915_gem_object_get_dirty_page(struct drm_i915_gem_object *obj,
+			       unsigned int n)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct page *page;
 
@@ -663,8 +696,14 @@ __i915_gem_object_get_dirty_page(struct drm_i915_gem_object *obj, pgoff_t n)
 }
 
 dma_addr_t
+<<<<<<< HEAD
 __i915_gem_object_get_dma_address_len(struct drm_i915_gem_object *obj,
 				      pgoff_t n, unsigned int *len)
+=======
+i915_gem_object_get_dma_address_len(struct drm_i915_gem_object *obj,
+				    unsigned long n,
+				    unsigned int *len)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct scatterlist *sg;
 	unsigned int offset;
@@ -678,7 +717,12 @@ __i915_gem_object_get_dma_address_len(struct drm_i915_gem_object *obj,
 }
 
 dma_addr_t
+<<<<<<< HEAD
 __i915_gem_object_get_dma_address(struct drm_i915_gem_object *obj, pgoff_t n)
+=======
+i915_gem_object_get_dma_address(struct drm_i915_gem_object *obj,
+				unsigned long n)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return i915_gem_object_get_dma_address_len(obj, n, NULL);
 }

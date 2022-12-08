@@ -16,8 +16,11 @@ KASAN_SANITIZE_feature-fixups.o := n
 # restart_table.o contains functions called in the NMI interrupt path
 # which can be in real mode. Disable KASAN.
 KASAN_SANITIZE_restart_table.o := n
+<<<<<<< HEAD
 KCSAN_SANITIZE_code-patching.o := n
 KCSAN_SANITIZE_feature-fixups.o := n
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 ifdef CONFIG_KASAN
 CFLAGS_code-patching.o += -DDISABLE_BRANCH_PROFILING
@@ -54,9 +57,13 @@ obj-$(CONFIG_PPC_BOOK3S_64) += copyuser_power7.o copypage_power7.o \
 obj64-y	+= copypage_64.o copyuser_64.o mem_64.o hweight_64.o \
 	   memcpy_64.o copy_mc_64.o
 
+<<<<<<< HEAD
 ifdef CONFIG_PPC_QUEUED_SPINLOCKS
 obj-$(CONFIG_SMP)	+= qspinlock.o
 else
+=======
+ifndef CONFIG_PPC_QUEUED_SPINLOCKS
+>>>>>>> b7ba80a49124 (Commit)
 obj64-$(CONFIG_SMP)	+= locks.o
 endif
 

@@ -241,7 +241,11 @@ according to the filesystem's idmapping as this would give the wrong owner if
 the caller is using an idmapping.
 
 So the kernel will map the id back up in the idmapping of the caller. Let's
+<<<<<<< HEAD
 assume the caller has the somewhat unconventional idmapping
+=======
+assume the caller has the slighly unconventional idmapping
+>>>>>>> b7ba80a49124 (Commit)
 ``u3000:k20000:r10000`` then ``k21000`` would map back up to ``u4000``.
 Consequently the user would see that this file is owned by ``u4000``.
 
@@ -320,10 +324,13 @@ and equally wrong::
  from_kuid(u20000:k0:r10000, u1000) = k21000
                              ~~~~~
 
+<<<<<<< HEAD
 Since userspace ids have type ``uid_t`` and ``gid_t`` and kernel ids have type
 ``kuid_t`` and ``kgid_t`` the compiler will throw an error when they are
 conflated. So the two examples above would cause a compilation failure.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Idmappings when creating filesystem objects
 -------------------------------------------
 
@@ -627,6 +634,7 @@ privileged users in the initial user namespace.
 However, it is perfectly possible to combine idmapped mounts with filesystems
 mountable inside user namespaces. We will touch on this further below.
 
+<<<<<<< HEAD
 Filesystem types vs idmapped mount types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -687,45 +695,74 @@ Similar to how we prefix all userspace ids in this document with ``u`` and all
 kernel ids with ``k`` we will prefix all VFS ids with ``v``. So a mount
 idmapping will be written as: ``u0:v10000:r10000``.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Remapping helpers
 ~~~~~~~~~~~~~~~~~
 
 Idmapping functions were added that translate between idmappings. They make use
+<<<<<<< HEAD
 of the remapping algorithm we've introduced earlier. We're going to look at:
 
 - ``i_uid_into_vfsuid()`` and ``i_gid_into_vfsgid()``
 
   The ``i_*id_into_vfs*id()`` functions translate filesystem's kernel ids into
   VFS ids in the mount's idmapping::
+=======
+of the remapping algorithm we've introduced earlier. We're going to look at
+two:
+
+- ``i_uid_into_mnt()`` and ``i_gid_into_mnt()``
+
+  The ``i_*id_into_mnt()`` functions translate filesystem's kernel ids into
+  kernel ids in the mount's idmapping::
+>>>>>>> b7ba80a49124 (Commit)
 
    /* Map the filesystem's kernel id up into a userspace id in the filesystem's idmapping. */
    from_kuid(filesystem, kid) = uid
 
+<<<<<<< HEAD
    /* Map the filesystem's userspace id down ito a VFS id in the mount's idmapping. */
+=======
+   /* Map the filesystem's userspace id down ito a kernel id in the mount's idmapping. */
+>>>>>>> b7ba80a49124 (Commit)
    make_kuid(mount, uid) = kuid
 
 - ``mapped_fsuid()`` and ``mapped_fsgid()``
 
   The ``mapped_fs*id()`` functions translate the caller's kernel ids into
   kernel ids in the filesystem's idmapping. This translation is achieved by
+<<<<<<< HEAD
   remapping the caller's VFS ids using the mount's idmapping::
 
    /* Map the caller's VFS id up into a userspace id in the mount's idmapping. */
+=======
+  remapping the caller's kernel ids using the mount's idmapping::
+
+   /* Map the caller's kernel id up into a userspace id in the mount's idmapping. */
+>>>>>>> b7ba80a49124 (Commit)
    from_kuid(mount, kid) = uid
 
    /* Map the mount's userspace id down into a kernel id in the filesystem's idmapping. */
    make_kuid(filesystem, uid) = kuid
 
+<<<<<<< HEAD
 - ``vfsuid_into_kuid()`` and ``vfsgid_into_kgid()``
 
    Whenever
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Note that these two functions invert each other. Consider the following
 idmappings::
 
  caller idmapping:     u0:k10000:r10000
  filesystem idmapping: u0:k20000:r10000
+<<<<<<< HEAD
  mount idmapping:      u0:v10000:r10000
+=======
+ mount idmapping:      u0:k10000:r10000
+>>>>>>> b7ba80a49124 (Commit)
 
 Assume a file owned by ``u1000`` is read from disk. The filesystem maps this id
 to ``k21000`` according to its idmapping. This is what is stored in the
@@ -736,6 +773,7 @@ would usually simply use the crossmapping algorithm and map the filesystem's
 kernel id up to a userspace id in the caller's idmapping.
 
 But when the caller is accessing the file on an idmapped mount the kernel will
+<<<<<<< HEAD
 first call ``i_uid_into_vfsuid()`` thereby translating the filesystem's kernel
 id into a VFS id in the mount's idmapping::
 
@@ -751,6 +789,22 @@ VFS id in the mount's idmapping into a userspace id in the caller's
 idmapping::
 
   k11000 = vfsuid_into_kuid(v11000)
+=======
+first call ``i_uid_into_mnt()`` thereby translating the filesystem's kernel id
+into a kernel id in the mount's idmapping::
+
+ i_uid_into_mnt(k21000):
+   /* Map the filesystem's kernel id up into a userspace id. */
+   from_kuid(u0:k20000:r10000, k21000) = u1000
+
+   /* Map the filesystem's userspace id down ito a kernel id in the mount's idmapping. */
+   make_kuid(u0:k10000:r10000, u1000) = k11000
+
+Finally, when the kernel reports the owner to the caller it will turn the
+kernel id in the mount's idmapping into a userspace id in the caller's
+idmapping::
+
+>>>>>>> b7ba80a49124 (Commit)
   from_kuid(u0:k10000:r10000, k11000) = u1000
 
 We can test whether this algorithm really works by verifying what happens when
@@ -764,19 +818,31 @@ fails.
 
 But when the caller is accessing the file on an idmapped mount the kernel will
 first call ``mapped_fs*id()`` thereby translating the caller's kernel id into
+<<<<<<< HEAD
 a VFS id according to the mount's idmapping::
+=======
+a kernel id according to the mount's idmapping::
+>>>>>>> b7ba80a49124 (Commit)
 
  mapped_fsuid(k11000):
     /* Map the caller's kernel id up into a userspace id in the mount's idmapping. */
     from_kuid(u0:k10000:r10000, k11000) = u1000
 
     /* Map the mount's userspace id down into a kernel id in the filesystem's idmapping. */
+<<<<<<< HEAD
     make_kuid(u0:v20000:r10000, u1000) = v21000
 
 When finally writing to disk the kernel will then map ``v21000`` up into a
 userspace id in the filesystem's idmapping::
 
    k21000 = vfsuid_into_kuid(v21000)
+=======
+    make_kuid(u0:k20000:r10000, u1000) = k21000
+
+When finally writing to disk the kernel will then map ``k21000`` up into a
+userspace id in the filesystem's idmapping::
+
+>>>>>>> b7ba80a49124 (Commit)
    from_kuid(u0:k20000:r10000, k21000) = u1000
 
 As we can see, we end up with an invertible and therefore information
@@ -794,7 +860,11 @@ Example 2 reconsidered
  caller id:            u1000
  caller idmapping:     u0:k10000:r10000
  filesystem idmapping: u0:k20000:r10000
+<<<<<<< HEAD
  mount idmapping:      u0:v10000:r10000
+=======
+ mount idmapping:      u0:k10000:r10000
+>>>>>>> b7ba80a49124 (Commit)
 
 When the caller is using a non-initial idmapping the common case is to attach
 the same idmapping to the mount. We now perform three steps:
@@ -803,12 +873,21 @@ the same idmapping to the mount. We now perform three steps:
 
     make_kuid(u0:k10000:r10000, u1000) = k11000
 
+<<<<<<< HEAD
 2. Translate the caller's VFS id into a kernel id in the filesystem's
    idmapping::
 
     mapped_fsuid(v11000):
       /* Map the VFS id up into a userspace id in the mount's idmapping. */
       from_kuid(u0:v10000:r10000, v11000) = u1000
+=======
+2. Translate the caller's kernel id into a kernel id in the filesystem's
+   idmapping::
+
+    mapped_fsuid(k11000):
+      /* Map the kernel id up into a userspace id in the mount's idmapping. */
+      from_kuid(u0:k10000:r10000, k11000) = u1000
+>>>>>>> b7ba80a49124 (Commit)
 
       /* Map the userspace id down into a kernel id in the filesystem's idmapping. */
       make_kuid(u0:k20000:r10000, u1000) = k21000
@@ -828,7 +907,11 @@ Example 3 reconsidered
  caller id:            u1000
  caller idmapping:     u0:k10000:r10000
  filesystem idmapping: u0:k0:r4294967295
+<<<<<<< HEAD
  mount idmapping:      u0:v10000:r10000
+=======
+ mount idmapping:      u0:k10000:r10000
+>>>>>>> b7ba80a49124 (Commit)
 
 The same translation algorithm works with the third example.
 
@@ -836,12 +919,21 @@ The same translation algorithm works with the third example.
 
     make_kuid(u0:k10000:r10000, u1000) = k11000
 
+<<<<<<< HEAD
 2. Translate the caller's VFS id into a kernel id in the filesystem's
    idmapping::
 
     mapped_fsuid(v11000):
        /* Map the VFS id up into a userspace id in the mount's idmapping. */
        from_kuid(u0:v10000:r10000, v11000) = u1000
+=======
+2. Translate the caller's kernel id into a kernel id in the filesystem's
+   idmapping::
+
+    mapped_fsuid(k11000):
+       /* Map the kernel id up into a userspace id in the mount's idmapping. */
+       from_kuid(u0:k10000:r10000, k11000) = u1000
+>>>>>>> b7ba80a49124 (Commit)
 
        /* Map the userspace id down into a kernel id in the filesystem's idmapping. */
        make_kuid(u0:k0:r4294967295, u1000) = k1000
@@ -861,7 +953,11 @@ Example 4 reconsidered
  file id:              u1000
  caller idmapping:     u0:k10000:r10000
  filesystem idmapping: u0:k0:r4294967295
+<<<<<<< HEAD
  mount idmapping:      u0:v10000:r10000
+=======
+ mount idmapping:      u0:k10000:r10000
+>>>>>>> b7ba80a49124 (Commit)
 
 In order to report ownership to userspace the kernel now does three steps using
 the translation algorithm we introduced earlier:
@@ -871,6 +967,7 @@ the translation algorithm we introduced earlier:
 
     make_kuid(u0:k0:r4294967295, u1000) = k1000
 
+<<<<<<< HEAD
 2. Translate the kernel id into a VFS id in the mount's idmapping::
 
     i_uid_into_vfsuid(k1000):
@@ -883,6 +980,19 @@ the translation algorithm we introduced earlier:
 3. Map the VFS id up into a userspace id in the caller's idmapping::
 
     k11000 = vfsuid_into_kuid(v11000)
+=======
+2. Translate the kernel id into a kernel id in the mount's idmapping::
+
+    i_uid_into_mnt(k1000):
+      /* Map the kernel id up into a userspace id in the filesystem's idmapping. */
+      from_kuid(u0:k0:r4294967295, k1000) = u1000
+
+      /* Map the userspace id down into a kernel id in the mounts's idmapping. */
+      make_kuid(u0:k10000:r10000, u1000) = k11000
+
+3. Map the kernel id up into a userspace id in the caller's idmapping::
+
+>>>>>>> b7ba80a49124 (Commit)
     from_kuid(u0:k10000:r10000, k11000) = u1000
 
 Earlier, the caller's kernel id couldn't be crossmapped in the filesystems's
@@ -898,7 +1008,11 @@ Example 5 reconsidered
  file id:              u1000
  caller idmapping:     u0:k10000:r10000
  filesystem idmapping: u0:k20000:r10000
+<<<<<<< HEAD
  mount idmapping:      u0:v10000:r10000
+=======
+ mount idmapping:      u0:k10000:r10000
+>>>>>>> b7ba80a49124 (Commit)
 
 Again, in order to report ownership to userspace the kernel now does three
 steps using the translation algorithm we introduced earlier:
@@ -908,6 +1022,7 @@ steps using the translation algorithm we introduced earlier:
 
     make_kuid(u0:k20000:r10000, u1000) = k21000
 
+<<<<<<< HEAD
 2. Translate the kernel id into a VFS id in the mount's idmapping::
 
     i_uid_into_vfsuid(k21000):
@@ -920,6 +1035,19 @@ steps using the translation algorithm we introduced earlier:
 3. Map the VFS id up into a userspace id in the caller's idmapping::
 
     k11000 = vfsuid_into_kuid(v11000)
+=======
+2. Translate the kernel id into a kernel id in the mount's idmapping::
+
+    i_uid_into_mnt(k21000):
+      /* Map the kernel id up into a userspace id in the filesystem's idmapping. */
+      from_kuid(u0:k20000:r10000, k21000) = u1000
+
+      /* Map the userspace id down into a kernel id in the mounts's idmapping. */
+      make_kuid(u0:k10000:r10000, u1000) = k11000
+
+3. Map the kernel id up into a userspace id in the caller's idmapping::
+
+>>>>>>> b7ba80a49124 (Commit)
     from_kuid(u0:k10000:r10000, k11000) = u1000
 
 Earlier, the file's kernel id couldn't be crossmapped in the filesystems's
@@ -970,23 +1098,40 @@ from above:::
  caller id:            u1125
  caller idmapping:     u0:k0:r4294967295
  filesystem idmapping: u0:k0:r4294967295
+<<<<<<< HEAD
  mount idmapping:      u1000:v1125:r1
+=======
+ mount idmapping:      u1000:k1125:r1
+>>>>>>> b7ba80a49124 (Commit)
 
 1. Map the caller's userspace ids into kernel ids in the caller's idmapping::
 
     make_kuid(u0:k0:r4294967295, u1125) = k1125
 
+<<<<<<< HEAD
 2. Translate the caller's VFS id into a kernel id in the filesystem's
    idmapping::
 
     mapped_fsuid(v1125):
       /* Map the VFS id up into a userspace id in the mount's idmapping. */
       from_kuid(u1000:v1125:r1, v1125) = u1000
+=======
+2. Translate the caller's kernel id into a kernel id in the filesystem's
+   idmapping::
+
+    mapped_fsuid(k1125):
+      /* Map the kernel id up into a userspace id in the mount's idmapping. */
+      from_kuid(u1000:k1125:r1, k1125) = u1000
+>>>>>>> b7ba80a49124 (Commit)
 
       /* Map the userspace id down into a kernel id in the filesystem's idmapping. */
       make_kuid(u0:k0:r4294967295, u1000) = k1000
 
+<<<<<<< HEAD
 2. Verify that the caller's filesystem ids can be mapped to userspace ids in the
+=======
+2. Verify that the caller's kernel ids can be mapped to userspace ids in the
+>>>>>>> b7ba80a49124 (Commit)
    filesystem's idmapping::
 
     from_kuid(u0:k0:r4294967295, k1000) = u1000
@@ -1001,13 +1146,18 @@ on their work computer:
  file id:              u1000
  caller idmapping:     u0:k0:r4294967295
  filesystem idmapping: u0:k0:r4294967295
+<<<<<<< HEAD
  mount idmapping:      u1000:v1125:r1
+=======
+ mount idmapping:      u1000:k1125:r1
+>>>>>>> b7ba80a49124 (Commit)
 
 1. Map the userspace id on disk down into a kernel id in the filesystem's
    idmapping::
 
     make_kuid(u0:k0:r4294967295, u1000) = k1000
 
+<<<<<<< HEAD
 2. Translate the kernel id into a VFS id in the mount's idmapping::
 
     i_uid_into_vfsuid(k1000):
@@ -1020,6 +1170,19 @@ on their work computer:
 3. Map the VFS id up into a userspace id in the caller's idmapping::
 
     k1125 = vfsuid_into_kuid(v1125)
+=======
+2. Translate the kernel id into a kernel id in the mount's idmapping::
+
+    i_uid_into_mnt(k1000):
+      /* Map the kernel id up into a userspace id in the filesystem's idmapping. */
+      from_kuid(u0:k0:r4294967295, k1000) = u1000
+
+      /* Map the userspace id down into a kernel id in the mounts's idmapping. */
+      make_kuid(u1000:k1125:r1, u1000) = k1125
+
+3. Map the kernel id up into a userspace id in the caller's idmapping::
+
+>>>>>>> b7ba80a49124 (Commit)
     from_kuid(u0:k0:r4294967295, k1125) = u1125
 
 So ultimately the caller will be reported that the file belongs to ``u1125``

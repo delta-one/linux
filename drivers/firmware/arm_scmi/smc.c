@@ -52,9 +52,15 @@ static irqreturn_t smc_msg_done_isr(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static bool smc_chan_available(struct device_node *of_node, int idx)
 {
 	struct device_node *np = of_parse_phandle(of_node, "shmem", 0);
+=======
+static bool smc_chan_available(struct device *dev, int idx)
+{
+	struct device_node *np = of_parse_phandle(dev->of_node, "shmem", 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!np)
 		return false;
 
@@ -171,6 +177,11 @@ static int smc_chan_free(int id, void *p, void *data)
 	cinfo->transport_info = NULL;
 	scmi_info->cinfo = NULL;
 
+<<<<<<< HEAD
+=======
+	scmi_free_channel(cinfo, data, id);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -186,7 +197,11 @@ static int smc_send_message(struct scmi_chan_info *cinfo,
 	 */
 	smc_channel_lock_acquire(scmi_info, xfer);
 
+<<<<<<< HEAD
 	shmem_tx_prepare(scmi_info->shmem, xfer, cinfo);
+=======
+	shmem_tx_prepare(scmi_info->shmem, xfer);
+>>>>>>> b7ba80a49124 (Commit)
 
 	arm_smccc_1_1_invoke(scmi_info->func_id, 0, 0, 0, 0, 0, 0, 0, &res);
 

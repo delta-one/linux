@@ -91,9 +91,15 @@
 			};
 
 			ethernet@70000 {
+<<<<<<< HEAD
 				status = "okay";
 				phy = <&phy1>;
 				phy-mode = "sgmii";
+=======
+			       status = "okay";
+			       phy = <&phy1>;
+			       phy-mode = "sgmii";
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			sata@a0000 {

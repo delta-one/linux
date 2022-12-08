@@ -10,7 +10,10 @@
 #include <errno.h>
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_tracing.h>
+<<<<<<< HEAD
 #include "bpf_misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 extern struct bpf_key *bpf_lookup_system_key(__u64 id) __ksym;
 extern void bpf_key_put(struct bpf_key *key) __ksym;
@@ -20,7 +23,10 @@ extern int bpf_verify_pkcs7_signature(struct bpf_dynptr *data_ptr,
 
 struct {
 	__uint(type, BPF_MAP_TYPE_RINGBUF);
+<<<<<<< HEAD
 	__uint(max_entries, 4096);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } ringbuf SEC(".maps");
 
 struct {
@@ -35,7 +41,22 @@ int err, pid;
 char _license[] SEC("license") = "GPL";
 
 SEC("?lsm.s/bpf")
+<<<<<<< HEAD
 __failure __msg("cannot pass in dynptr at an offset=-8")
+=======
+int BPF_PROG(dynptr_type_not_supp, int cmd, union bpf_attr *attr,
+	     unsigned int size)
+{
+	char write_data[64] = "hello there, world!!";
+	struct bpf_dynptr ptr;
+
+	bpf_ringbuf_reserve_dynptr(&ringbuf, sizeof(write_data), 0, &ptr);
+
+	return bpf_verify_pkcs7_signature(&ptr, &ptr, NULL);
+}
+
+SEC("?lsm.s/bpf")
+>>>>>>> b7ba80a49124 (Commit)
 int BPF_PROG(not_valid_dynptr, int cmd, union bpf_attr *attr, unsigned int size)
 {
 	unsigned long val;
@@ -45,10 +66,16 @@ int BPF_PROG(not_valid_dynptr, int cmd, union bpf_attr *attr, unsigned int size)
 }
 
 SEC("?lsm.s/bpf")
+<<<<<<< HEAD
 __failure __msg("arg#0 expected pointer to stack or dynptr_ptr")
 int BPF_PROG(not_ptr_to_stack, int cmd, union bpf_attr *attr, unsigned int size)
 {
 	unsigned long val = 0;
+=======
+int BPF_PROG(not_ptr_to_stack, int cmd, union bpf_attr *attr, unsigned int size)
+{
+	unsigned long val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return bpf_verify_pkcs7_signature((struct bpf_dynptr *)val,
 					  (struct bpf_dynptr *)val, NULL);

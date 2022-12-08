@@ -115,8 +115,11 @@ extern struct auxiliary_driver i40iw_auxiliary_drv;
 #define IRDMA_REFLUSH		BIT(2)
 #define IRDMA_FLUSH_WAIT	BIT(3)
 
+<<<<<<< HEAD
 #define IRDMA_IRQ_NAME_STR_LEN (64)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum init_completion_state {
 	INVALID_STATE = 0,
 	INITIAL_STATE,
@@ -214,7 +217,10 @@ struct irdma_msix_vector {
 	u32 cpu_affinity;
 	u32 ceq_id;
 	cpumask_t mask;
+<<<<<<< HEAD
 	char name[IRDMA_IRQ_NAME_STR_LEN];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct irdma_mc_table_info {

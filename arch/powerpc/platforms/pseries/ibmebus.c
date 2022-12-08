@@ -426,6 +426,7 @@ static struct attribute *ibmebus_bus_device_attrs[] = {
 };
 ATTRIBUTE_GROUPS(ibmebus_bus_device);
 
+<<<<<<< HEAD
 static int ibmebus_bus_modalias(const struct device *dev, struct kobj_uevent_env *env)
 {
 	return of_device_uevent_modalias(dev, env);
@@ -434,6 +435,11 @@ static int ibmebus_bus_modalias(const struct device *dev, struct kobj_uevent_env
 struct bus_type ibmebus_bus_type = {
 	.name      = "ibmebus",
 	.uevent    = ibmebus_bus_modalias,
+=======
+struct bus_type ibmebus_bus_type = {
+	.name      = "ibmebus",
+	.uevent    = of_device_uevent_modalias,
+>>>>>>> b7ba80a49124 (Commit)
 	.bus_groups = ibmbus_bus_groups,
 	.match     = ibmebus_bus_bus_match,
 	.probe     = ibmebus_bus_device_probe,

@@ -18,7 +18,10 @@
 #define SVE_CTX		(1 << 1)
 #define ZA_CTX		(1 << 2)
 #define EXTRA_CTX	(1 << 3)
+<<<<<<< HEAD
 #define ZT_CTX		(1 << 4)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define KSFT_BAD_MAGIC	0xdeadbeef
 

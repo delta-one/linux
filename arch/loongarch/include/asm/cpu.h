@@ -36,7 +36,11 @@
 
 #define PRID_SERIES_LA132	0x8000  /* Loongson 32bit */
 #define PRID_SERIES_LA264	0xa000  /* Loongson 64bit, 2-issue */
+<<<<<<< HEAD
 #define PRID_SERIES_LA364	0xb000  /* Loongson 64bit, 3-issue */
+=======
+#define PRID_SERIES_LA364	0xb000  /* Loongson 64bit，3-issue */
+>>>>>>> b7ba80a49124 (Commit)
 #define PRID_SERIES_LA464	0xc000  /* Loongson 64bit, 4-issue */
 #define PRID_SERIES_LA664	0xd000  /* Loongson 64bit, 6-issue */
 

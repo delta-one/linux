@@ -52,7 +52,10 @@
 #include <linux/uio.h>
 #include <linux/sched/mm.h>
 
+<<<<<<< HEAD
 #include <trace/events/sock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <trace/events/sunrpc.h>
 
 #include "socklib.h"
@@ -262,7 +265,11 @@ static void xs_format_common_peer_addresses(struct rpc_xprt *xprt)
 	switch (sap->sa_family) {
 	case AF_LOCAL:
 		sun = xs_addr_un(xprt);
+<<<<<<< HEAD
 		strscpy(buf, sun->sun_path, sizeof(buf));
+=======
+		strlcpy(buf, sun->sun_path, sizeof(buf));
+>>>>>>> b7ba80a49124 (Commit)
 		xprt->address_strings[RPC_DISPLAY_ADDR] =
 						kstrdup(buf, GFP_KERNEL);
 		break;
@@ -365,7 +372,11 @@ static ssize_t
 xs_read_kvec(struct socket *sock, struct msghdr *msg, int flags,
 		struct kvec *kvec, size_t count, size_t seek)
 {
+<<<<<<< HEAD
 	iov_iter_kvec(&msg->msg_iter, ITER_DEST, kvec, 1, count);
+=======
+	iov_iter_kvec(&msg->msg_iter, READ, kvec, 1, count);
+>>>>>>> b7ba80a49124 (Commit)
 	return xs_sock_recvmsg(sock, msg, flags, seek);
 }
 
@@ -374,7 +385,11 @@ xs_read_bvec(struct socket *sock, struct msghdr *msg, int flags,
 		struct bio_vec *bvec, unsigned long nr, size_t count,
 		size_t seek)
 {
+<<<<<<< HEAD
 	iov_iter_bvec(&msg->msg_iter, ITER_DEST, bvec, nr, count);
+=======
+	iov_iter_bvec(&msg->msg_iter, READ, bvec, nr, count);
+>>>>>>> b7ba80a49124 (Commit)
 	return xs_sock_recvmsg(sock, msg, flags, seek);
 }
 
@@ -382,7 +397,11 @@ static ssize_t
 xs_read_discard(struct socket *sock, struct msghdr *msg, int flags,
 		size_t count)
 {
+<<<<<<< HEAD
 	iov_iter_discard(&msg->msg_iter, ITER_DEST, count);
+=======
+	iov_iter_discard(&msg->msg_iter, READ, count);
+>>>>>>> b7ba80a49124 (Commit)
 	return sock_recvmsg(sock, msg, flags);
 }
 
@@ -1379,8 +1398,11 @@ static void xs_data_ready(struct sock *sk)
 {
 	struct rpc_xprt *xprt;
 
+<<<<<<< HEAD
 	trace_sk_data_ready(sk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	xprt = xprt_from_sock(sk);
 	if (xprt != NULL) {
 		struct sock_xprt *transport = container_of(xprt,
@@ -1622,7 +1644,11 @@ static int xs_get_random_port(void)
 	if (max < min)
 		return -EADDRINUSE;
 	range = max - min + 1;
+<<<<<<< HEAD
 	rand = get_random_u32_below(range);
+=======
+	rand = (unsigned short) prandom_u32() % range;
+>>>>>>> b7ba80a49124 (Commit)
 	return rand + min;
 }
 
@@ -1885,7 +1911,10 @@ static int xs_local_finish_connecting(struct rpc_xprt *xprt,
 		sk->sk_write_space = xs_udp_write_space;
 		sk->sk_state_change = xs_local_state_change;
 		sk->sk_error_report = xs_error_report;
+<<<<<<< HEAD
 		sk->sk_use_task_frag = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		xprt_clear_connected(xprt);
 
@@ -1982,7 +2011,12 @@ static void xs_local_connect(struct rpc_xprt *xprt, struct rpc_task *task)
 		 * we'll need to figure out how to pass a namespace to
 		 * connect.
 		 */
+<<<<<<< HEAD
 		rpc_task_set_rpc_status(task, -ENOTCONN);
+=======
+		task->tk_rpc_status = -ENOTCONN;
+		rpc_exit(task, -ENOTCONN);
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_wake;
 	}
 	ret = xs_local_setup_socket(transport);
@@ -2086,7 +2120,10 @@ static void xs_udp_finish_connecting(struct rpc_xprt *xprt, struct socket *sock)
 		sk->sk_user_data = xprt;
 		sk->sk_data_ready = xs_data_ready;
 		sk->sk_write_space = xs_udp_write_space;
+<<<<<<< HEAD
 		sk->sk_use_task_frag = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		xprt_set_connected(xprt);
 
@@ -2158,7 +2195,10 @@ static void xs_tcp_shutdown(struct rpc_xprt *xprt)
 	switch (skst) {
 	case TCP_FIN_WAIT1:
 	case TCP_FIN_WAIT2:
+<<<<<<< HEAD
 	case TCP_LAST_ACK:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case TCP_ESTABLISHED:
 	case TCP_CLOSE_WAIT:
@@ -2255,7 +2295,10 @@ static int xs_tcp_finish_connecting(struct rpc_xprt *xprt, struct socket *sock)
 		sk->sk_state_change = xs_tcp_state_change;
 		sk->sk_write_space = xs_tcp_write_space;
 		sk->sk_error_report = xs_error_report;
+<<<<<<< HEAD
 		sk->sk_use_task_frag = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* socket options */
 		sock_reset_flag(sk, SOCK_LINGER);

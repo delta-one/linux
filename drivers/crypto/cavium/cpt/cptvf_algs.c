@@ -28,7 +28,11 @@ static void cvm_callback(u32 status, void *arg)
 {
 	struct crypto_async_request *req = (struct crypto_async_request *)arg;
 
+<<<<<<< HEAD
 	crypto_request_complete(req, !status);
+=======
+	req->complete(req, !status);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void update_input_iv(struct cpt_request_info *req_info,
@@ -97,7 +101,11 @@ static inline u32 create_ctx_hdr(struct skcipher_request *req, u32 enc,
 {
 	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
 	struct cvm_enc_ctx *ctx = crypto_skcipher_ctx(tfm);
+<<<<<<< HEAD
 	struct cvm_req_ctx *rctx = skcipher_request_ctx_dma(req);
+=======
+	struct cvm_req_ctx *rctx = skcipher_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct fc_context *fctx = &rctx->fctx;
 	u32 enc_iv_len = crypto_skcipher_ivsize(tfm);
 	struct cpt_request_info *req_info = &rctx->cpt_req;
@@ -151,7 +159,11 @@ static inline u32 create_ctx_hdr(struct skcipher_request *req, u32 enc,
 static inline u32 create_input_list(struct skcipher_request  *req, u32 enc,
 				    u32 enc_iv_len)
 {
+<<<<<<< HEAD
 	struct cvm_req_ctx *rctx = skcipher_request_ctx_dma(req);
+=======
+	struct cvm_req_ctx *rctx = skcipher_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct cpt_request_info *req_info = &rctx->cpt_req;
 	u32 argcnt =  0;
 
@@ -173,7 +185,11 @@ static inline void store_cb_info(struct skcipher_request *req,
 static inline void create_output_list(struct skcipher_request *req,
 				      u32 enc_iv_len)
 {
+<<<<<<< HEAD
 	struct cvm_req_ctx *rctx = skcipher_request_ctx_dma(req);
+=======
+	struct cvm_req_ctx *rctx = skcipher_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct cpt_request_info *req_info = &rctx->cpt_req;
 	u32 argcnt = 0;
 
@@ -193,7 +209,11 @@ static inline void create_output_list(struct skcipher_request *req,
 static inline int cvm_enc_dec(struct skcipher_request *req, u32 enc)
 {
 	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct cvm_req_ctx *rctx = skcipher_request_ctx_dma(req);
+=======
+	struct cvm_req_ctx *rctx = skcipher_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	u32 enc_iv_len = crypto_skcipher_ivsize(tfm);
 	struct fc_context *fctx = &rctx->fctx;
 	struct cpt_request_info *req_info = &rctx->cpt_req;
@@ -232,12 +252,21 @@ static int cvm_decrypt(struct skcipher_request *req)
 static int cvm_xts_setkey(struct crypto_skcipher *cipher, const u8 *key,
 		   u32 keylen)
 {
+<<<<<<< HEAD
 	struct cvm_enc_ctx *ctx = crypto_skcipher_ctx(cipher);
+=======
+	struct crypto_tfm *tfm = crypto_skcipher_tfm(cipher);
+	struct cvm_enc_ctx *ctx = crypto_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 	const u8 *key1 = key;
 	const u8 *key2 = key + (keylen / 2);
 
+<<<<<<< HEAD
 	err = xts_verify_key(cipher, key, keylen);
+=======
+	err = xts_check_key(tfm, key, keylen);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 	ctx->key_len = keylen;
@@ -288,7 +317,12 @@ static int cvm_validate_keylen(struct cvm_enc_ctx *ctx, u32 keylen)
 static int cvm_setkey(struct crypto_skcipher *cipher, const u8 *key,
 		      u32 keylen, u8 cipher_type)
 {
+<<<<<<< HEAD
 	struct cvm_enc_ctx *ctx = crypto_skcipher_ctx(cipher);
+=======
+	struct crypto_tfm *tfm = crypto_skcipher_tfm(cipher);
+	struct cvm_enc_ctx *ctx = crypto_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctx->cipher_type = cipher_type;
 	if (!cvm_validate_keylen(ctx, keylen)) {
@@ -333,7 +367,11 @@ static int cvm_ecb_des3_setkey(struct crypto_skcipher *cipher, const u8 *key,
 
 static int cvm_enc_dec_init(struct crypto_skcipher *tfm)
 {
+<<<<<<< HEAD
 	crypto_skcipher_set_reqsize_dma(tfm, sizeof(struct cvm_req_ctx));
+=======
+	crypto_skcipher_set_reqsize(tfm, sizeof(struct cvm_req_ctx));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

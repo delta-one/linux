@@ -186,6 +186,7 @@ static void devm_regulator_bulk_release(struct device *dev, void *res)
 	regulator_bulk_free(devres->num_consumers, devres->consumers);
 }
 
+<<<<<<< HEAD
 static int _devm_regulator_bulk_get(struct device *dev, int num_consumers,
 				    struct regulator_bulk_data *consumers,
 				    enum regulator_get_type get_type)
@@ -210,6 +211,8 @@ static int _devm_regulator_bulk_get(struct device *dev, int num_consumers,
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * devm_regulator_bulk_get - managed get multiple regulator consumers
  *
@@ -228,11 +231,33 @@ static int _devm_regulator_bulk_get(struct device *dev, int num_consumers,
 int devm_regulator_bulk_get(struct device *dev, int num_consumers,
 			    struct regulator_bulk_data *consumers)
 {
+<<<<<<< HEAD
 	return _devm_regulator_bulk_get(dev, num_consumers, consumers, NORMAL_GET);
+=======
+	struct regulator_bulk_devres *devres;
+	int ret;
+
+	devres = devres_alloc(devm_regulator_bulk_release,
+			      sizeof(*devres), GFP_KERNEL);
+	if (!devres)
+		return -ENOMEM;
+
+	ret = regulator_bulk_get(dev, num_consumers, consumers);
+	if (!ret) {
+		devres->consumers = consumers;
+		devres->num_consumers = num_consumers;
+		devres_add(dev, devres);
+	} else {
+		devres_free(devres);
+	}
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(devm_regulator_bulk_get);
 
 /**
+<<<<<<< HEAD
  * devm_regulator_bulk_get_exclusive - managed exclusive get of multiple
  * regulator consumers
  *
@@ -256,6 +281,8 @@ int devm_regulator_bulk_get_exclusive(struct device *dev, int num_consumers,
 EXPORT_SYMBOL_GPL(devm_regulator_bulk_get_exclusive);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * devm_regulator_bulk_get_const - devm_regulator_bulk_get() w/ const data
  *
  * @dev:           device to supply
@@ -415,7 +442,11 @@ struct regulator_dev *devm_regulator_register(struct device *dev,
 	if (!ptr)
 		return ERR_PTR(-ENOMEM);
 
+<<<<<<< HEAD
 	rdev = regulator_register(dev, regulator_desc, config);
+=======
+	rdev = regulator_register(regulator_desc, config);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!IS_ERR(rdev)) {
 		*ptr = rdev;
 		devres_add(dev, ptr);

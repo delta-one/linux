@@ -475,8 +475,13 @@ out:
 
 #define PREPARE_HAL_BUF(send_buf, msg_body) \
 	do {							\
+<<<<<<< HEAD
 		memcpy_and_pad(send_buf, msg_body.header.len,	\
 			       &msg_body, sizeof(msg_body), 0);	\
+=======
+		memset(send_buf, 0, msg_body.header.len);	\
+		memcpy(send_buf, &msg_body, sizeof(msg_body));	\
+>>>>>>> b7ba80a49124 (Commit)
 	} while (0)						\
 
 #define PREPARE_HAL_PTT_MSG_BUF(send_buf, p_msg_body) \

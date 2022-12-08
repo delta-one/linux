@@ -15,7 +15,10 @@ extern void __khugepaged_exit(struct mm_struct *mm);
 extern void khugepaged_enter_vma(struct vm_area_struct *vma,
 				 unsigned long vm_flags);
 extern void khugepaged_min_free_kbytes_update(void);
+<<<<<<< HEAD
 extern bool current_is_khugepaged(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SHMEM
 extern int collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
 				   bool install_pmd);
@@ -58,11 +61,14 @@ static inline int collapse_pte_mapped_thp(struct mm_struct *mm,
 static inline void khugepaged_min_free_kbytes_update(void)
 {
 }
+<<<<<<< HEAD
 
 static inline bool current_is_khugepaged(void)
 {
 	return false;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
 
 #endif /* _LINUX_KHUGEPAGED_H */

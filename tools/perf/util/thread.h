@@ -158,7 +158,10 @@ static inline bool thread__is_filtered(struct thread *thread)
 
 void thread__free_stitch_list(struct thread *thread);
 
+<<<<<<< HEAD
 void thread__resolve(struct thread *thread, struct addr_location *al,
 		     struct perf_sample *sample);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif	/* __PERF_THREAD_H */

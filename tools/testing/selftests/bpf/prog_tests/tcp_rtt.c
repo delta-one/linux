@@ -16,7 +16,12 @@ static void send_byte(int fd)
 {
 	char b = 0x55;
 
+<<<<<<< HEAD
 	ASSERT_EQ(write(fd, &b, sizeof(b)), 1, "send single byte");
+=======
+	if (CHECK_FAIL(write(fd, &b, sizeof(b)) != 1))
+		perror("Failed to send single byte");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int wait_for_ack(int fd, int retries)
@@ -50,8 +55,15 @@ static int verify_sk(int map_fd, int client_fd, const char *msg, __u32 invoked,
 	int err = 0;
 	struct tcp_rtt_storage val;
 
+<<<<<<< HEAD
 	if (!ASSERT_GE(bpf_map_lookup_elem(map_fd, &client_fd, &val), 0, "read socket storage"))
 		return -1;
+=======
+	if (CHECK_FAIL(bpf_map_lookup_elem(map_fd, &client_fd, &val) < 0)) {
+		perror("Failed to read socket storage");
+		return -1;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (val.invoked != invoked) {
 		log_err("%s: unexpected bpf_tcp_sock.invoked %d != %d",
@@ -148,6 +160,7 @@ void test_tcp_rtt(void)
 	int server_fd, cgroup_fd;
 
 	cgroup_fd = test__join_cgroup("/tcp_rtt");
+<<<<<<< HEAD
 	if (!ASSERT_GE(cgroup_fd, 0, "join_cgroup /tcp_rtt"))
 		return;
 
@@ -156,6 +169,16 @@ void test_tcp_rtt(void)
 		goto close_cgroup_fd;
 
 	ASSERT_OK(run_test(cgroup_fd, server_fd), "run_test");
+=======
+	if (CHECK_FAIL(cgroup_fd < 0))
+		return;
+
+	server_fd = start_server(AF_INET, SOCK_STREAM, NULL, 0, 0);
+	if (CHECK_FAIL(server_fd < 0))
+		goto close_cgroup_fd;
+
+	CHECK_FAIL(run_test(cgroup_fd, server_fd));
+>>>>>>> b7ba80a49124 (Commit)
 
 	close(server_fd);
 

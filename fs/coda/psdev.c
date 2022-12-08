@@ -361,7 +361,11 @@ static int __init init_coda_psdev(void)
 		       __func__, CODA_PSDEV_MAJOR);
 		return -EIO;
 	}
+<<<<<<< HEAD
 	coda_psdev_class = class_create("coda");
+=======
+	coda_psdev_class = class_create(THIS_MODULE, "coda");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(coda_psdev_class)) {
 		err = PTR_ERR(coda_psdev_class);
 		goto out_chrdev;

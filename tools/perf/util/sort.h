@@ -35,7 +35,10 @@ extern struct sort_entry sort_sym_from;
 extern struct sort_entry sort_sym_to;
 extern struct sort_entry sort_srcline;
 extern const char default_mem_sort_order[];
+<<<<<<< HEAD
 extern bool chk_double_cl;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct res_sample {
 	u64 time;
@@ -144,7 +147,10 @@ struct hist_entry {
 	struct hists		*hists;
 	struct mem_info		*mem_info;
 	struct block_info	*block_info;
+<<<<<<< HEAD
 	struct kvm_info		*kvm_info;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void			*raw_data;
 	u32			raw_size;
 	int			num_res;
@@ -238,9 +244,12 @@ enum sort_type {
 	SORT_GLOBAL_INS_LAT,
 	SORT_LOCAL_PIPELINE_STAGE_CYC,
 	SORT_GLOBAL_PIPELINE_STAGE_CYC,
+<<<<<<< HEAD
 	SORT_ADDR,
 	SORT_LOCAL_RETIRE_LAT,
 	SORT_GLOBAL_RETIRE_LAT,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* branch stack specific sort keys */
 	__SORT_BRANCH_STACK,
@@ -286,7 +295,10 @@ struct sort_entry {
 	int	(*se_snprintf)(struct hist_entry *he, char *bf, size_t size,
 			       unsigned int width);
 	int	(*se_filter)(struct hist_entry *he, int type, const void *arg);
+<<<<<<< HEAD
 	void	(*se_init)(struct hist_entry *he);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8	se_width_idx;
 };
 

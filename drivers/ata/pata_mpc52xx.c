@@ -731,7 +731,11 @@ static int mpc52xx_ata_probe(struct platform_device *op)
 		udma_mask = ATA_UDMA2 & ((1 << (*prop + 1)) - 1);
 
 	ata_irq = irq_of_parse_and_map(op->dev.of_node, 0);
+<<<<<<< HEAD
 	if (!ata_irq) {
+=======
+	if (ata_irq == NO_IRQ) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(&op->dev, "error mapping irq\n");
 		return -EINVAL;
 	}

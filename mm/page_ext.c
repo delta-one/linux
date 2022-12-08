@@ -71,7 +71,10 @@ static bool need_page_idle(void)
 }
 static struct page_ext_operations page_idle_ops __initdata = {
 	.need = need_page_idle,
+<<<<<<< HEAD
 	.need_shared_flags = true,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 #endif
 
@@ -87,12 +90,20 @@ static struct page_ext_operations *page_ext_ops[] __initdata = {
 #endif
 };
 
+<<<<<<< HEAD
 unsigned long page_ext_size;
+=======
+unsigned long page_ext_size = sizeof(struct page_ext);
+>>>>>>> b7ba80a49124 (Commit)
 
 static unsigned long total_usage;
 static struct page_ext *lookup_page_ext(const struct page *page);
 
+<<<<<<< HEAD
 bool early_page_ext __meminitdata;
+=======
+bool early_page_ext;
+>>>>>>> b7ba80a49124 (Commit)
 static int __init setup_early_page_ext(char *str)
 {
 	early_page_ext = true;
@@ -107,6 +118,7 @@ static bool __init invoke_need_callbacks(void)
 	bool need = false;
 
 	for (i = 0; i < entries; i++) {
+<<<<<<< HEAD
 		if (page_ext_ops[i]->need()) {
 			if (page_ext_ops[i]->need_shared_flags) {
 				page_ext_size = sizeof(struct page_ext);
@@ -117,6 +129,9 @@ static bool __init invoke_need_callbacks(void)
 
 	for (i = 0; i < entries; i++) {
 		if (page_ext_ops[i]->need()) {
+=======
+		if (page_ext_ops[i]->need && page_ext_ops[i]->need()) {
+>>>>>>> b7ba80a49124 (Commit)
 			page_ext_ops[i]->offset = page_ext_size;
 			page_ext_size += page_ext_ops[i]->size;
 			need = true;
@@ -176,7 +191,11 @@ struct page_ext *page_ext_get(struct page *page)
 
 /**
  * page_ext_put() - Working with page extended information is done.
+<<<<<<< HEAD
  * @page_ext: Page extended information received from page_ext_get().
+=======
+ * @page_ext - Page extended information received from page_ext_get().
+>>>>>>> b7ba80a49124 (Commit)
  *
  * The page extended information of the page may not be valid after this
  * function is called.
@@ -523,7 +542,11 @@ void __init page_ext_init(void)
 			cond_resched();
 		}
 	}
+<<<<<<< HEAD
 	hotplug_memory_notifier(page_ext_callback, DEFAULT_CALLBACK_PRI);
+=======
+	hotplug_memory_notifier(page_ext_callback, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	pr_info("allocated %ld bytes of page_ext\n", total_usage);
 	invoke_init_callbacks();
 	return;

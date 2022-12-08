@@ -12,7 +12,10 @@
 #include <linux/of_device.h>
 #include <linux/perf_event.h>
 #include <linux/hrtimer.h>
+<<<<<<< HEAD
 #include <linux/acpi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Performance Counters Operating Mode Control Registers */
 #define DDRC_PERF_CNT_OP_MODE_CTRL	0x8020
@@ -718,6 +721,7 @@ static const struct of_device_id cn10k_ddr_pmu_of_match[] = {
 MODULE_DEVICE_TABLE(of, cn10k_ddr_pmu_of_match);
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_ACPI
 static const struct acpi_device_id cn10k_ddr_pmu_acpi_match[] = {
 	{"MRVL000A", 0},
@@ -726,11 +730,16 @@ static const struct acpi_device_id cn10k_ddr_pmu_acpi_match[] = {
 MODULE_DEVICE_TABLE(acpi, cn10k_ddr_pmu_acpi_match);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver cn10k_ddr_pmu_driver = {
 	.driver	= {
 		.name   = "cn10k-ddr-pmu",
 		.of_match_table = of_match_ptr(cn10k_ddr_pmu_of_match),
+<<<<<<< HEAD
 		.acpi_match_table  = ACPI_PTR(cn10k_ddr_pmu_acpi_match),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.suppress_bind_attrs = true,
 	},
 	.probe		= cn10k_ddr_perf_probe,

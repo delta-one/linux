@@ -25,8 +25,11 @@ Config Initiator
 #. Switch the serial line to using the n_gsm line discipline by using
    ``TIOCSETD`` ioctl.
 
+<<<<<<< HEAD
 #. Configure the mux using ``GSMIOC_GETCONF_EXT``/``GSMIOC_SETCONF_EXT`` ioctl if needed.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #. Configure the mux using ``GSMIOC_GETCONF``/``GSMIOC_SETCONF`` ioctl.
 
 #. Obtain base gsmtty number for the used serial port.
@@ -44,7 +47,10 @@ Config Initiator
 
       int ldisc = N_GSM0710;
       struct gsm_config c;
+<<<<<<< HEAD
       struct gsm_config_ext ce;
+=======
+>>>>>>> b7ba80a49124 (Commit)
       struct termios configuration;
       uint32_t first;
 
@@ -65,12 +71,15 @@ Config Initiator
       /* use n_gsm line discipline */
       ioctl(fd, TIOCSETD, &ldisc);
 
+<<<<<<< HEAD
       /* get n_gsm extended configuration */
       ioctl(fd, GSMIOC_GETCONF_EXT, &ce);
       /* use keep-alive once every 5s for modem connection supervision */
       ce.keep_alive = 500;
       /* set the new extended configuration */
       ioctl(fd, GSMIOC_SETCONF_EXT, &ce);
+=======
+>>>>>>> b7ba80a49124 (Commit)
       /* get n_gsm configuration */
       ioctl(fd, GSMIOC_GETCONF, &c);
       /* we are initiator and need encoding 0 (basic) */
@@ -115,9 +124,12 @@ Config Requester
 #. Switch the serial line to using the *n_gsm* line discipline by using
    ``TIOCSETD`` ioctl.
 
+<<<<<<< HEAD
 #. Configure the mux using ``GSMIOC_GETCONF_EXT``/``GSMIOC_SETCONF_EXT``
    ioctl if needed.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #. Configure the mux using ``GSMIOC_GETCONF``/``GSMIOC_SETCONF`` ioctl.
 
 #. Obtain base gsmtty number for the used serial port::
@@ -131,7 +143,10 @@ Config Requester
 
 	int ldisc = N_GSM0710;
 	struct gsm_config c;
+<<<<<<< HEAD
 	struct gsm_config_ext ce;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct termios configuration;
 	uint32_t first;
 
@@ -145,12 +160,15 @@ Config Requester
 	/* use n_gsm line discipline */
 	ioctl(fd, TIOCSETD, &ldisc);
 
+<<<<<<< HEAD
 	/* get n_gsm extended configuration */
 	ioctl(fd, GSMIOC_GETCONF_EXT, &ce);
 	/* use keep-alive once every 5s for peer connection supervision */
 	ce.keep_alive = 500;
 	/* set the new extended configuration */
 	ioctl(fd, GSMIOC_SETCONF_EXT, &ce);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* get n_gsm configuration */
 	ioctl(fd, GSMIOC_GETCONF, &c);
 	/* we are requester and need encoding 0 (basic) */

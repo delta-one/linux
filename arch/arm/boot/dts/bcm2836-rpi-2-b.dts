@@ -2,7 +2,10 @@
 /dts-v1/;
 #include "bcm2836.dtsi"
 #include "bcm2836-rpi.dtsi"
+<<<<<<< HEAD
 #include "bcm283x-rpi-led-deprecated.dtsi"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "bcm283x-rpi-smsc9514.dtsi"
 #include "bcm283x-rpi-usb-host.dtsi"
 
@@ -14,6 +17,22 @@
 		device_type = "memory";
 		reg = <0 0x40000000>;
 	};
+<<<<<<< HEAD
+=======
+
+	leds {
+		led-act {
+			gpios = <&gpio 47 GPIO_ACTIVE_HIGH>;
+		};
+
+		led-pwr {
+			label = "PWR";
+			gpios = <&gpio 35 GPIO_ACTIVE_HIGH>;
+			default-state = "keep";
+			linux,default-trigger = "default-on";
+		};
+	};
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &gpio {
@@ -97,6 +116,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &led_act {
 	gpios = <&gpio 47 GPIO_ACTIVE_HIGH>;
 };
@@ -110,6 +130,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &pwm {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pwm0_gpio40 &pwm1_gpio45>;

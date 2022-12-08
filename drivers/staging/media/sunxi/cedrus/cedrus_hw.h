@@ -16,7 +16,11 @@
 #ifndef _CEDRUS_HW_H_
 #define _CEDRUS_HW_H_
 
+<<<<<<< HEAD
 int cedrus_engine_enable(struct cedrus_ctx *ctx);
+=======
+int cedrus_engine_enable(struct cedrus_ctx *ctx, enum cedrus_codec codec);
+>>>>>>> b7ba80a49124 (Commit)
 void cedrus_engine_disable(struct cedrus_dev *dev);
 
 void cedrus_dst_format_set(struct cedrus_dev *dev,

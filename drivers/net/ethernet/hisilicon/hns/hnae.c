@@ -419,10 +419,17 @@ int hnae_ae_register(struct hnae_ae_dev *hdev, struct module *owner)
 	hdev->cls_dev.release = hnae_release;
 	(void)dev_set_name(&hdev->cls_dev, "hnae%d", hdev->id);
 	ret = device_register(&hdev->cls_dev);
+<<<<<<< HEAD
 	if (ret) {
 		put_device(&hdev->cls_dev);
 		return ret;
 	}
+=======
+	if (ret)
+		return ret;
+
+	__module_get(THIS_MODULE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	INIT_LIST_HEAD(&hdev->handle_list);
 	spin_lock_init(&hdev->lock);
@@ -443,12 +450,20 @@ EXPORT_SYMBOL(hnae_ae_register);
 void hnae_ae_unregister(struct hnae_ae_dev *hdev)
 {
 	device_unregister(&hdev->cls_dev);
+<<<<<<< HEAD
+=======
+	module_put(THIS_MODULE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(hnae_ae_unregister);
 
 static int __init hnae_init(void)
 {
+<<<<<<< HEAD
 	hnae_class = class_create("hnae");
+=======
+	hnae_class = class_create(THIS_MODULE, "hnae");
+>>>>>>> b7ba80a49124 (Commit)
 	return PTR_ERR_OR_ZERO(hnae_class);
 }
 

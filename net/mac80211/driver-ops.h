@@ -465,6 +465,7 @@ static inline void drv_sta_remove(struct ieee80211_local *local,
 }
 
 #ifdef CONFIG_MAC80211_DEBUGFS
+<<<<<<< HEAD
 static inline void drv_link_add_debugfs(struct ieee80211_local *local,
 					struct ieee80211_sub_if_data *sdata,
 					struct ieee80211_bss_conf *link_conf,
@@ -481,6 +482,8 @@ static inline void drv_link_add_debugfs(struct ieee80211_local *local,
 					     link_conf, dir);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void drv_sta_add_debugfs(struct ieee80211_local *local,
 				       struct ieee80211_sub_if_data *sdata,
 				       struct ieee80211_sta *sta,
@@ -496,6 +499,7 @@ static inline void drv_sta_add_debugfs(struct ieee80211_local *local,
 		local->ops->sta_add_debugfs(&local->hw, &sdata->vif,
 					    sta, dir);
 }
+<<<<<<< HEAD
 
 static inline void drv_link_sta_add_debugfs(struct ieee80211_local *local,
 					    struct ieee80211_sub_if_data *sdata,
@@ -512,6 +516,8 @@ static inline void drv_link_sta_add_debugfs(struct ieee80211_local *local,
 		local->ops->link_sta_add_debugfs(&local->hw, &sdata->vif,
 						 link_sta, dir);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 static inline void drv_sta_pre_rcu_remove(struct ieee80211_local *local,
@@ -1215,7 +1221,11 @@ static inline void drv_wake_tx_queue(struct ieee80211_local *local,
 
 	/* In reconfig don't transmit now, but mark for waking later */
 	if (local->in_reconfig) {
+<<<<<<< HEAD
 		set_bit(IEEE80211_TXQ_DIRTY, &txq->flags);
+=======
+		set_bit(IEEE80211_TXQ_STOP_NETIF_TX, &txq->flags);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -1502,6 +1512,7 @@ static inline int drv_net_fill_forward_path(struct ieee80211_local *local,
 	return ret;
 }
 
+<<<<<<< HEAD
 static inline int drv_net_setup_tc(struct ieee80211_local *local,
 				   struct ieee80211_sub_if_data *sdata,
 				   struct net_device *dev,
@@ -1519,6 +1530,8 @@ static inline int drv_net_setup_tc(struct ieee80211_local *local,
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int drv_change_vif_links(struct ieee80211_local *local,
 			 struct ieee80211_sub_if_data *sdata,
 			 u16 old_links, u16 new_links,

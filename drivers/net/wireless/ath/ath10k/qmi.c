@@ -13,8 +13,12 @@
 #include <linux/module.h>
 #include <linux/net.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/firmware/qcom/qcom_scm.h>
 #include <linux/soc/qcom/smem.h>
+=======
+#include <linux/qcom_scm.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/string.h>
 #include <net/sock.h>
 
@@ -23,17 +27,24 @@
 
 #define ATH10K_QMI_CLIENT_ID		0x4b4e454c
 #define ATH10K_QMI_TIMEOUT		30
+<<<<<<< HEAD
 #define SMEM_IMAGE_VERSION_TABLE       469
 #define SMEM_IMAGE_TABLE_CNSS_INDEX     13
 #define SMEM_IMAGE_VERSION_ENTRY_SIZE	128
 #define SMEM_IMAGE_VERSION_NAME_SIZE	75
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int ath10k_qmi_map_msa_permission(struct ath10k_qmi *qmi,
 					 struct ath10k_msa_mem_info *mem_info)
 {
 	struct qcom_scm_vmperm dst_perms[3];
 	struct ath10k *ar = qmi->ar;
+<<<<<<< HEAD
 	u64 src_perms;
+=======
+	unsigned int src_perms;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 perm_count;
 	int ret;
 
@@ -65,7 +76,11 @@ static int ath10k_qmi_unmap_msa_permission(struct ath10k_qmi *qmi,
 {
 	struct qcom_scm_vmperm dst_perms;
 	struct ath10k *ar = qmi->ar;
+<<<<<<< HEAD
 	u64 src_perms;
+=======
+	unsigned int src_perms;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	src_perms = BIT(QCOM_SCM_VMID_MSS_MSA) | BIT(QCOM_SCM_VMID_WLAN);
@@ -541,6 +556,7 @@ int ath10k_qmi_wlan_disable(struct ath10k *ar)
 	return ath10k_qmi_mode_send_sync_msg(ar, QMI_WLFW_OFF_V01);
 }
 
+<<<<<<< HEAD
 static void ath10k_qmi_add_wlan_ver_smem(struct ath10k *ar, const char *fw_build_id)
 {
 	u8 *table_ptr;
@@ -568,6 +584,8 @@ static void ath10k_qmi_add_wlan_ver_smem(struct ath10k *ar, const char *fw_build
 		SMEM_IMAGE_VERSION_NAME_SIZE);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ath10k_qmi_cap_send_sync_msg(struct ath10k_qmi *qmi)
 {
 	struct wlfw_cap_resp_msg_v01 *resp;
@@ -638,9 +656,12 @@ static int ath10k_qmi_cap_send_sync_msg(struct ath10k_qmi *qmi)
 			    qmi->fw_version, qmi->fw_build_timestamp, qmi->fw_build_id);
 	}
 
+<<<<<<< HEAD
 	if (resp->fw_build_id_valid)
 		ath10k_qmi_add_wlan_ver_smem(ar, qmi->fw_build_id);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(resp);
 	return 0;
 
@@ -653,7 +674,11 @@ static int ath10k_qmi_host_cap_send_sync(struct ath10k_qmi *qmi)
 {
 	struct wlfw_host_cap_resp_msg_v01 resp = {};
 	struct wlfw_host_cap_req_msg_v01 req = {};
+<<<<<<< HEAD
 	const struct qmi_elem_info *req_ei;
+=======
+	struct qmi_elem_info *req_ei;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ath10k *ar = qmi->ar;
 	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
 	struct qmi_txn txn;
@@ -827,7 +852,11 @@ static void ath10k_qmi_event_server_arrive(struct ath10k_qmi *qmi)
 		return;
 
 	/*
+<<<<<<< HEAD
 	 * HACK: sleep for a while between receiving the msa info response
+=======
+	 * HACK: sleep for a while inbetween receiving the msa info response
+>>>>>>> b7ba80a49124 (Commit)
 	 * and the XPU update to prevent SDM845 from crashing due to a security
 	 * violation, when running MPSS.AT.4.0.c2-01184-SDM845_GEN_PACK-1.
 	 */

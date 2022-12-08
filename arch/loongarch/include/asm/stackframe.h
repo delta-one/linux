@@ -7,7 +7,10 @@
 
 #include <linux/threads.h>
 
+<<<<<<< HEAD
 #include <asm/addrspace.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/asm.h>
 #include <asm/asmmacro.h>
 #include <asm/asm-offsets.h>
@@ -37,6 +40,7 @@
 	cfi_restore \reg \offset \docfi
 	.endm
 
+<<<<<<< HEAD
 /* Jump to the runtime virtual address. */
 	.macro JUMP_VIRT_ADDR temp1 temp2
 	li.d	\temp1, CACHE_BASE
@@ -45,6 +49,8 @@
 	jirl	zero, \temp1, 0xc
 	.endm
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.macro BACKUP_T0T1
 	csrwr	t0, EXCEPTION_KS0
 	csrwr	t1, EXCEPTION_KS1
@@ -86,7 +92,11 @@
  * new value in sp.
  */
 	.macro	get_saved_sp docfi=0
+<<<<<<< HEAD
 	la_abs	  t1, kernelsp
+=======
+	la.abs	  t1, kernelsp
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SMP
 	csrrd	  t0, PERCPU_BASE_KS
 	LONG_ADD  t1, t1, t0
@@ -99,7 +109,11 @@
 	.endm
 
 	.macro	set_saved_sp stackp temp temp2
+<<<<<<< HEAD
 	la.pcrel  \temp, kernelsp
+=======
+	la.abs	  \temp, kernelsp
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SMP
 	LONG_ADD  \temp, \temp, u0
 #endif

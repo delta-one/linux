@@ -100,12 +100,20 @@ static struct daemon __daemon = {
 };
 
 static const char * const daemon_usage[] = {
+<<<<<<< HEAD
 	"perf daemon {start|signal|stop|ping} [<options>]",
+=======
+	"perf daemon start [<options>]",
+>>>>>>> b7ba80a49124 (Commit)
 	"perf daemon [<options>]",
 	NULL
 };
 
+<<<<<<< HEAD
 static volatile sig_atomic_t done;
+=======
+static bool done;
+>>>>>>> b7ba80a49124 (Commit)
 
 static void sig_handler(int sig __maybe_unused)
 {

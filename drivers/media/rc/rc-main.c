@@ -1017,7 +1017,11 @@ static void ir_close(struct input_dev *idev)
 }
 
 /* class for /sys/class/rc */
+<<<<<<< HEAD
 static char *rc_devnode(const struct device *dev, umode_t *mode)
+=======
+static char *rc_devnode(struct device *dev, umode_t *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return kasprintf(GFP_KERNEL, "rc/%s", dev_name(dev));
 }
@@ -1614,7 +1618,11 @@ static void rc_dev_release(struct device *device)
 	kfree(dev);
 }
 
+<<<<<<< HEAD
 static int rc_dev_uevent(const struct device *device, struct kobj_uevent_env *env)
+=======
+static int rc_dev_uevent(struct device *device, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rc_dev *dev = to_rc_dev(device);
 	int ret = 0;

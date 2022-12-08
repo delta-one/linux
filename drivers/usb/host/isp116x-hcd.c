@@ -1205,7 +1205,11 @@ static void create_debug_file(struct isp116x *isp116x)
 
 static void remove_debug_file(struct isp116x *isp116x)
 {
+<<<<<<< HEAD
 	debugfs_lookup_and_remove(hcd_name, usb_debug_root);
+=======
+	debugfs_remove(debugfs_lookup(hcd_name, usb_debug_root));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #else

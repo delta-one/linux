@@ -26,10 +26,13 @@
 #define SOF_IPC4_MODULE_LL		BIT(5)
 #define SOF_IPC4_MODULE_DP		BIT(6)
 #define SOF_IPC4_MODULE_LIB_CODE		BIT(7)
+<<<<<<< HEAD
 #define SOF_IPC4_MODULE_INIT_CONFIG_MASK	GENMASK(11, 8)
 
 #define SOF_IPC4_MODULE_INIT_CONFIG_TYPE_BASE_CFG		0
 #define SOF_IPC4_MODULE_INIT_CONFIG_TYPE_BASE_CFG_WITH_EXT	1
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SOF_IPC4_MODULE_INSTANCE_LIST_ITEM_SIZE 12
 #define SOF_IPC4_PIPELINE_OBJECT_SIZE 448
@@ -50,18 +53,25 @@
 #define SOF_IPC4_NODE_INDEX_INTEL_SSP(x) (((x) & 0xf) << 4)
 
 /* Node ID for DMIC type DAI copiers */
+<<<<<<< HEAD
 #define SOF_IPC4_NODE_INDEX_INTEL_DMIC(x) ((x) & 0x7)
+=======
+#define SOF_IPC4_NODE_INDEX_INTEL_DMIC(x) (((x) & 0x7) << 5)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SOF_IPC4_GAIN_ALL_CHANNELS_MASK 0xffffffff
 #define SOF_IPC4_VOL_ZERO_DB	0x7fffffff
 
 #define ALH_MAX_NUMBER_OF_GTW   16
 
+<<<<<<< HEAD
 #define SOF_IPC4_INVALID_NODE_ID	0xffffffff
 
 /* FW requires minimum 2ms DMA buffer size */
 #define SOF_IPC4_MIN_DMA_BUFFER_SIZE	2
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The base of multi-gateways. Multi-gateways addressing starts from
  * ALH_MULTI_GTW_BASE and there are ALH_MULTI_GTW_COUNT multi-sources
@@ -73,6 +83,7 @@
 /* A magic number from FW */
 #define ALH_MULTI_GTW_COUNT	8
 
+<<<<<<< HEAD
 enum sof_ipc4_copier_module_config_params {
 /*
  * Use LARGE_CONFIG_SET to initialize timestamp event. Ipc mailbox must
@@ -119,21 +130,29 @@ struct sof_ipc4_copier_config_set_sink_format {
 	struct sof_ipc4_audio_format sink_fmt;
 } __packed __aligned(4);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct sof_ipc4_pipeline - pipeline config data
  * @priority: Priority of this pipeline
  * @lp_mode: Low power mode
  * @mem_usage: Memory usage
+<<<<<<< HEAD
  * @core_id: Target core for the pipeline
  * @state: Pipeline state
  * @use_chain_dma: flag to indicate if the firmware shall use chained DMA
  * @msg: message structure for pipeline
  * @skip_during_fe_trigger: skip triggering this pipeline during the FE DAI trigger
+=======
+ * @state: Pipeline state
+ * @msg: message structure for pipeline
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct sof_ipc4_pipeline {
 	uint32_t priority;
 	uint32_t lp_mode;
 	uint32_t mem_usage;
+<<<<<<< HEAD
 	uint32_t core_id;
 	int state;
 	bool use_chain_dma;
@@ -164,10 +183,15 @@ struct sof_ipc4_pin_format {
 	u32 pin_index;
 	u32 buffer_size;
 	struct sof_ipc4_audio_format audio_fmt;
+=======
+	int state;
+	struct sof_ipc4_msg msg;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
  * struct sof_ipc4_available_audio_format - Available audio formats
+<<<<<<< HEAD
  * @output_pin_fmts: Available output pin formats
  * @input_pin_fmts: Available input pin formats
  * @num_input_formats: Number of input pin formats
@@ -178,6 +202,20 @@ struct sof_ipc4_available_audio_format {
 	struct sof_ipc4_pin_format *input_pin_fmts;
 	u32 num_input_formats;
 	u32 num_output_formats;
+=======
+ * @base_config: Available base config
+ * @out_audio_fmt: Available output audio format
+ * @ref_audio_fmt: Reference audio format to match runtime audio format
+ * @dma_buffer_size: Available Gateway DMA buffer size (in bytes)
+ * @audio_fmt_num: Number of available audio formats
+ */
+struct sof_ipc4_available_audio_format {
+	struct sof_ipc4_base_module_cfg *base_config;
+	struct sof_ipc4_audio_format *out_audio_fmt;
+	struct sof_ipc4_audio_format *ref_audio_fmt;
+	u32 *dma_buffer_size;
+	int audio_fmt_num;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -290,8 +328,13 @@ struct sof_ipc4_control_data {
 	int index;
 
 	union {
+<<<<<<< HEAD
 		DECLARE_FLEX_ARRAY(struct sof_ipc4_ctrl_value_chan, chanv);
 		DECLARE_FLEX_ARRAY(struct sof_abi_hdr, data);
+=======
+		struct sof_ipc4_ctrl_value_chan chanv[0];
+		struct sof_abi_hdr data[0];
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -301,16 +344,24 @@ struct sof_ipc4_control_data {
  * @init_val: Initial value
  * @curve_type: Curve type
  * @reserved: reserved for future use
+<<<<<<< HEAD
  * @curve_duration_l: Curve duration low part
  * @curve_duration_h: Curve duration high part
+=======
+ * @curve_duration: Curve duration
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct sof_ipc4_gain_data {
 	uint32_t channels;
 	uint32_t init_val;
 	uint32_t curve_type;
 	uint32_t reserved;
+<<<<<<< HEAD
 	uint32_t curve_duration_l;
 	uint32_t curve_duration_h;
+=======
+	uint32_t curve_duration;
+>>>>>>> b7ba80a49124 (Commit)
 } __aligned(8);
 
 /**
@@ -353,6 +404,7 @@ struct sof_ipc4_src {
 	struct sof_ipc4_msg msg;
 };
 
+<<<<<<< HEAD
 /**
  * struct sof_ipc4_base_module_cfg_ext - base module config extension containing the pin format
  * information for the module. Both @num_input_pin_fmts and @num_output_pin_fmts cannot be 0 for a
@@ -394,4 +446,6 @@ struct sof_ipc4_process {
 	u32 init_config;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

@@ -108,7 +108,10 @@ static char mv643xx_eth_driver_version[] = "1.4";
 #define TXQ_COMMAND			0x0048
 #define TXQ_FIX_PRIO_CONF		0x004c
 #define PORT_SERIAL_CONTROL1		0x004c
+<<<<<<< HEAD
 #define  RGMII_EN			0x00000008
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define  CLK125_BYPASS_EN		0x00000010
 #define TX_BW_RATE			0x0050
 #define TX_BW_MTU			0x0058
@@ -2482,7 +2485,10 @@ out_free:
 	for (i = 0; i < mp->rxq_count; i++)
 		rxq_deinit(mp->rxq + i);
 out:
+<<<<<<< HEAD
 	napi_disable(&mp->napi);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	free_irq(dev->irq, dev);
 
 	return err;
@@ -2763,8 +2769,11 @@ static int mv643xx_eth_shared_of_add_port(struct platform_device *pdev,
 	mv643xx_eth_property(pnp, "rx-sram-addr", ppd.rx_sram_addr);
 	mv643xx_eth_property(pnp, "rx-sram-size", ppd.rx_sram_size);
 
+<<<<<<< HEAD
 	of_get_phy_mode(pnp, &ppd.interface);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ppd.phy_node = of_parse_phandle(pnp, "phy-handle", 0);
 	if (!ppd.phy_node) {
 		ppd.phy_addr = MV643XX_ETH_PHY_NONE;
@@ -3096,7 +3105,10 @@ static int mv643xx_eth_probe(struct platform_device *pdev)
 	struct mv643xx_eth_private *mp;
 	struct net_device *dev;
 	struct phy_device *phydev = NULL;
+<<<<<<< HEAD
 	u32 psc1r;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err, irq;
 
 	pd = dev_get_platdata(&pdev->dev);
@@ -3124,6 +3136,7 @@ static int mv643xx_eth_probe(struct platform_device *pdev)
 
 	mp->dev = dev;
 
+<<<<<<< HEAD
 	if (of_device_is_compatible(pdev->dev.of_node,
 				    "marvell,kirkwood-eth-port")) {
 		psc1r = rdlp(mp, PORT_SERIAL_CONTROL1);
@@ -3163,6 +3176,16 @@ static int mv643xx_eth_probe(struct platform_device *pdev)
 
 		wrlp(mp, PORT_SERIAL_CONTROL1, psc1r);
 	}
+=======
+	/* Kirkwood resets some registers on gated clocks. Especially
+	 * CLK125_BYPASS_EN must be cleared but is not available on
+	 * all other SoCs/System Controllers using this driver.
+	 */
+	if (of_device_is_compatible(pdev->dev.of_node,
+				    "marvell,kirkwood-eth-port"))
+		wrlp(mp, PORT_SERIAL_CONTROL1,
+		     rdlp(mp, PORT_SERIAL_CONTROL1) & ~CLK125_BYPASS_EN);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Start with a default rate, and if there is a clock, allow
@@ -3219,7 +3242,11 @@ static int mv643xx_eth_probe(struct platform_device *pdev)
 
 	INIT_WORK(&mp->tx_timeout_task, tx_timeout_task);
 
+<<<<<<< HEAD
 	netif_napi_add(dev, &mp->napi, mv643xx_eth_poll);
+=======
+	netif_napi_add(dev, &mp->napi, mv643xx_eth_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	timer_setup(&mp->rx_oom, oom_timer_wrapper, 0);
 

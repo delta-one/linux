@@ -34,6 +34,10 @@
 static int tsi148_probe(struct pci_dev *, const struct pci_device_id *);
 static void tsi148_remove(struct pci_dev *);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Module parameter */
 static bool err_chk;
 static int geoid;
@@ -672,6 +676,10 @@ static int tsi148_slave_get(struct vme_slave_resource *image, int *enabled,
 	/* Need granularity before we set the size */
 	*size = (unsigned long long)((vme_bound - *vme_base) + granularity);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if ((ctl & TSI148_LCSR_ITAT_2eSSTM_M) == TSI148_LCSR_ITAT_2eSSTM_160)
 		*cycle |= VME_2eSST160;
 	if ((ctl & TSI148_LCSR_ITAT_2eSSTM_M) == TSI148_LCSR_ITAT_2eSSTM_267)
@@ -737,7 +745,11 @@ static int tsi148_alloc_resource(struct vme_master_resource *image,
 		return 0;
 
 	if (!image->bus_resource.name) {
+<<<<<<< HEAD
 		image->bus_resource.name = kmalloc(VMENAMSIZ + 3, GFP_ATOMIC);
+=======
+		image->bus_resource.name = kmalloc(VMENAMSIZ+3, GFP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!image->bus_resource.name) {
 			retval = -ENOMEM;
 			goto err_name;
@@ -983,7 +995,11 @@ static int tsi148_master_set(struct vme_master_resource *image, int enabled,
 		goto err_aspace;
 	}
 
+<<<<<<< HEAD
 	temp_ctl &= ~(3 << 4);
+=======
+	temp_ctl &= ~(3<<4);
+>>>>>>> b7ba80a49124 (Commit)
 	if (cycle & VME_SUPER)
 		temp_ctl |= TSI148_LCSR_OTAT_SUP;
 	if (cycle & VME_PROG)
@@ -1023,6 +1039,10 @@ err_gran:
 err_res:
 err_window:
 	return retval;
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1139,6 +1159,10 @@ static int __tsi148_master_get(struct vme_master_resource *image, int *enabled,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static int tsi148_master_get(struct vme_master_resource *image, int *enabled,
 	unsigned long long *vme_base, unsigned long long *size, u32 *aspace,
 	u32 *cycle, u32 *dwidth)
@@ -1240,6 +1264,10 @@ out:
 	return retval;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t tsi148_master_write(struct vme_master_resource *image, void *buf,
 	size_t count, loff_t offset)
 {
@@ -1740,12 +1768,19 @@ static int tsi148_dma_list_add(struct vme_dma_list *list,
 				  list);
 		prev->descriptor.dnlau = cpu_to_be32(address_high);
 		prev->descriptor.dnlal = cpu_to_be32(address_low);
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
 
 err_dma:
+<<<<<<< HEAD
 	list_del(&entry->list);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_dest:
 err_source:
 err_align:
@@ -1771,6 +1806,10 @@ static int tsi148_dma_busy(struct vme_bridge *tsi148_bridge, int channel)
 		return 0;
 	else
 		return 1;
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1993,6 +2032,10 @@ static int tsi148_lm_get(struct vme_lm_resource *lm,
 	if ((lm_ctl & TSI148_LCSR_LMAT_AS_M) == TSI148_LCSR_LMAT_AS_A64)
 		*aspace |= VME_A64;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (lm_ctl & TSI148_LCSR_LMAT_SUPR)
 		*cycle |= VME_SUPER;
 	if (lm_ctl & TSI148_LCSR_LMAT_NPRIV)
@@ -2184,14 +2227,22 @@ static int tsi148_crcsr_init(struct vme_bridge *tsi148_bridge,
 
 	/* Ensure that the CR/CSR is configured at the correct offset */
 	cbar = ioread32be(bridge->base + TSI148_CBAR);
+<<<<<<< HEAD
 	cbar = (cbar & TSI148_CRCSR_CBAR_M) >> 3;
+=======
+	cbar = (cbar & TSI148_CRCSR_CBAR_M)>>3;
+>>>>>>> b7ba80a49124 (Commit)
 
 	vstat = tsi148_slot_get(tsi148_bridge);
 
 	if (cbar != vstat) {
 		cbar = vstat;
 		dev_info(tsi148_bridge->parent, "Setting CR/CSR offset\n");
+<<<<<<< HEAD
 		iowrite32be(cbar << 3, bridge->base + TSI148_CBAR);
+=======
+		iowrite32be(cbar<<3, bridge->base + TSI148_CBAR);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	dev_info(tsi148_bridge->parent, "CR/CSR Offset: %d\n", cbar);
 
@@ -2217,6 +2268,10 @@ static int tsi148_crcsr_init(struct vme_bridge *tsi148_bridge,
 	}
 
 	return 0;
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void tsi148_crcsr_exit(struct vme_bridge *tsi148_bridge,
@@ -2526,6 +2581,10 @@ err_driver:
 	kfree(tsi148_bridge);
 err_struct:
 	return retval;
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void tsi148_remove(struct pci_dev *pdev)
@@ -2541,6 +2600,10 @@ static void tsi148_remove(struct pci_dev *pdev)
 
 	bridge = tsi148_bridge->driver_priv;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	dev_dbg(&pdev->dev, "Driver is being unloaded.\n");
 
 	/*

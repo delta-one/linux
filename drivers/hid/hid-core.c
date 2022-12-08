@@ -41,6 +41,14 @@
 
 #define DRIVER_DESC "HID core driver"
 
+<<<<<<< HEAD
+=======
+int hid_debug = 0;
+module_param_named(debug, hid_debug, int, 0600);
+MODULE_PARM_DESC(debug, "toggle HID debugging messages");
+EXPORT_SYMBOL_GPL(hid_debug);
+
+>>>>>>> b7ba80a49124 (Commit)
 static int hid_ignore_special_drivers = 0;
 module_param_named(ignore_special_drivers, hid_ignore_special_drivers, int, 0600);
 MODULE_PARM_DESC(ignore_special_drivers, "Ignore any special drivers and handle all devices by generic driver");
@@ -256,7 +264,10 @@ static int hid_add_field(struct hid_parser *parser, unsigned report_type, unsign
 {
 	struct hid_report *report;
 	struct hid_field *field;
+<<<<<<< HEAD
 	unsigned int max_buffer_size = HID_MAX_BUFFER_SIZE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int usages;
 	unsigned int offset;
 	unsigned int i;
@@ -287,11 +298,16 @@ static int hid_add_field(struct hid_parser *parser, unsigned report_type, unsign
 	offset = report->size;
 	report->size += parser->global.report_size * parser->global.report_count;
 
+<<<<<<< HEAD
 	if (parser->device->ll_driver->max_buffer_size)
 		max_buffer_size = parser->device->ll_driver->max_buffer_size;
 
 	/* Total size check: Allow for possible report index byte */
 	if (report->size > (max_buffer_size - 1) << 3) {
+=======
+	/* Total size check: Allow for possible report index byte */
+	if (report->size > (HID_MAX_BUFFER_SIZE - 1) << 3) {
+>>>>>>> b7ba80a49124 (Commit)
 		hid_err(parser->device, "report is too long\n");
 		return -1;
 	}
@@ -803,8 +819,12 @@ static void hid_scan_collection(struct hid_parser *parser, unsigned type)
 	int i;
 
 	if (((parser->global.usage_page << 16) == HID_UP_SENSOR) &&
+<<<<<<< HEAD
 	    (type == HID_COLLECTION_PHYSICAL ||
 	     type == HID_COLLECTION_APPLICATION))
+=======
+	    type == HID_COLLECTION_PHYSICAL)
+>>>>>>> b7ba80a49124 (Commit)
 		hid->group = HID_GROUP_SENSOR_HUB;
 
 	if (hid->vendor == USB_VENDOR_ID_MICROSOFT &&
@@ -993,8 +1013,13 @@ struct hid_report *hid_validate_values(struct hid_device *hid,
 		 * Validating on id 0 means we should examine the first
 		 * report in the list.
 		 */
+<<<<<<< HEAD
 		report = list_first_entry_or_null(
 				&hid->report_enum[type].report_list,
+=======
+		report = list_entry(
+				hid->report_enum[type].report_list.next,
+>>>>>>> b7ba80a49124 (Commit)
 				struct hid_report, list);
 	} else {
 		report = hid->report_enum[type].report_id_hash[id];
@@ -1202,7 +1227,10 @@ int hid_open_report(struct hid_device *device)
 	__u8 *end;
 	__u8 *next;
 	int ret;
+<<<<<<< HEAD
 	int i;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	static int (*dispatch_type[])(struct hid_parser *parser,
 				      struct hid_item *item) = {
 		hid_parser_main,
@@ -1219,8 +1247,12 @@ int hid_open_report(struct hid_device *device)
 		return -ENODEV;
 	size = device->dev_rsize;
 
+<<<<<<< HEAD
 	/* call_hid_bpf_rdesc_fixup() ensures we work on a copy of rdesc */
 	buf = call_hid_bpf_rdesc_fixup(device, start, &size);
+=======
+	buf = kmemdup(start, size, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (buf == NULL)
 		return -ENOMEM;
 
@@ -1254,8 +1286,11 @@ int hid_open_report(struct hid_device *device)
 		goto err;
 	}
 	device->collection_size = HID_DEFAULT_NUM_COLLECTIONS;
+<<<<<<< HEAD
 	for (i = 0; i < HID_DEFAULT_NUM_COLLECTIONS; i++)
 		device->collection[i].parent_idx = -1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = -EINVAL;
 	while ((next = fetch_item(start, end, &item)) != NULL) {
@@ -1319,9 +1354,12 @@ static s32 snto32(__u32 value, unsigned n)
 	if (!value || !n)
 		return 0;
 
+<<<<<<< HEAD
 	if (n > 32)
 		n = 32;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	switch (n) {
 	case 8:  return ((__s8)value);
 	case 16: return ((__s16)value);
@@ -1967,7 +2005,10 @@ int hid_report_raw_event(struct hid_device *hid, enum hid_report_type type, u8 *
 	struct hid_report_enum *report_enum = hid->report_enum + type;
 	struct hid_report *report;
 	struct hid_driver *hdrv;
+<<<<<<< HEAD
 	int max_buffer_size = HID_MAX_BUFFER_SIZE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 rsize, csize = size;
 	u8 *cdata = data;
 	int ret = 0;
@@ -1983,6 +2024,7 @@ int hid_report_raw_event(struct hid_device *hid, enum hid_report_type type, u8 *
 
 	rsize = hid_compute_report_size(report);
 
+<<<<<<< HEAD
 	if (hid->ll_driver->max_buffer_size)
 		max_buffer_size = hid->ll_driver->max_buffer_size;
 
@@ -1990,6 +2032,12 @@ int hid_report_raw_event(struct hid_device *hid, enum hid_report_type type, u8 *
 		rsize = max_buffer_size - 1;
 	else if (rsize > max_buffer_size)
 		rsize = max_buffer_size;
+=======
+	if (report_enum->numbered && rsize >= HID_MAX_BUFFER_SIZE)
+		rsize = HID_MAX_BUFFER_SIZE - 1;
+	else if (rsize > HID_MAX_BUFFER_SIZE)
+		rsize = HID_MAX_BUFFER_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (csize < rsize) {
 		dbg_hid("report %d is too short, (%d < %d)\n", report->id,
@@ -2051,12 +2099,15 @@ int hid_input_report(struct hid_device *hid, enum hid_report_type type, u8 *data
 	report_enum = hid->report_enum + type;
 	hdrv = hid->driver;
 
+<<<<<<< HEAD
 	data = dispatch_hid_bpf_device_event(hid, type, data, &size, interrupt);
 	if (IS_ERR(data)) {
 		ret = PTR_ERR(data);
 		goto unlock;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!size) {
 		dbg_hid("empty report\n");
 		ret = -1;
@@ -2171,10 +2222,13 @@ int hid_connect(struct hid_device *hdev, unsigned int connect_mask)
 	int len;
 	int ret;
 
+<<<<<<< HEAD
 	ret = hid_bpf_connect_device(hdev);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (hdev->quirks & HID_QUIRK_HIDDEV_FORCE)
 		connect_mask |= (HID_CONNECT_HIDDEV_FORCE | HID_CONNECT_HIDDEV);
 	if (hdev->quirks & HID_QUIRK_HIDINPUT_FORCE)
@@ -2276,8 +2330,11 @@ void hid_disconnect(struct hid_device *hdev)
 	if (hdev->claimed & HID_CLAIMED_HIDRAW)
 		hidraw_disconnect(hdev);
 	hdev->claimed = 0;
+<<<<<<< HEAD
 
 	hid_bpf_disconnect_device(hdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(hid_disconnect);
 
@@ -2404,12 +2461,16 @@ int hid_hw_raw_request(struct hid_device *hdev,
 		       unsigned char reportnum, __u8 *buf,
 		       size_t len, enum hid_report_type rtype, enum hid_class_request reqtype)
 {
+<<<<<<< HEAD
 	unsigned int max_buffer_size = HID_MAX_BUFFER_SIZE;
 
 	if (hdev->ll_driver->max_buffer_size)
 		max_buffer_size = hdev->ll_driver->max_buffer_size;
 
 	if (len < 1 || len > max_buffer_size || !buf)
+=======
+	if (len < 1 || len > HID_MAX_BUFFER_SIZE || !buf)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	return hdev->ll_driver->raw_request(hdev, reportnum, buf, len,
@@ -2428,12 +2489,16 @@ EXPORT_SYMBOL_GPL(hid_hw_raw_request);
  */
 int hid_hw_output_report(struct hid_device *hdev, __u8 *buf, size_t len)
 {
+<<<<<<< HEAD
 	unsigned int max_buffer_size = HID_MAX_BUFFER_SIZE;
 
 	if (hdev->ll_driver->max_buffer_size)
 		max_buffer_size = hdev->ll_driver->max_buffer_size;
 
 	if (len < 1 || len > max_buffer_size || !buf)
+=======
+	if (len < 1 || len > HID_MAX_BUFFER_SIZE || !buf)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (hdev->ll_driver->output_report)
@@ -2694,9 +2759,15 @@ static const struct attribute_group hid_dev_group = {
 };
 __ATTRIBUTE_GROUPS(hid_dev);
 
+<<<<<<< HEAD
 static int hid_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct hid_device *hdev = to_hid_device(dev);
+=======
+static int hid_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct hid_device *hdev = to_hid_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (add_uevent_var(env, "HID_ID=%04X:%08X:%08X",
 			hdev->bus, hdev->vendor, hdev->product))
@@ -2823,8 +2894,11 @@ struct hid_device *hid_allocate_device(void)
 	sema_init(&hdev->driver_input_lock, 1);
 	mutex_init(&hdev->ll_open_lock);
 
+<<<<<<< HEAD
 	hid_bpf_device_init(hdev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return hdev;
 }
 EXPORT_SYMBOL_GPL(hid_allocate_device);
@@ -2851,7 +2925,10 @@ static void hid_remove_device(struct hid_device *hdev)
  */
 void hid_destroy_device(struct hid_device *hdev)
 {
+<<<<<<< HEAD
 	hid_bpf_destroy_device(hdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hid_remove_device(hdev);
 	put_device(&hdev->dev);
 }
@@ -2938,6 +3015,7 @@ int hid_check_keys_pressed(struct hid_device *hid)
 }
 EXPORT_SYMBOL_GPL(hid_check_keys_pressed);
 
+<<<<<<< HEAD
 #ifdef CONFIG_HID_BPF
 static struct hid_bpf_ops hid_ops = {
 	.hid_get_report = hid_get_report,
@@ -2947,20 +3025,32 @@ static struct hid_bpf_ops hid_ops = {
 };
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __init hid_init(void)
 {
 	int ret;
 
+<<<<<<< HEAD
+=======
+	if (hid_debug)
+		pr_warn("hid_debug is now used solely for parser and driver debugging.\n"
+			"debugfs is now used for inspecting the device (report descriptor, reports)\n");
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = bus_register(&hid_bus_type);
 	if (ret) {
 		pr_err("can't register hid bus\n");
 		goto err;
 	}
 
+<<<<<<< HEAD
 #ifdef CONFIG_HID_BPF
 	hid_bpf_ops = &hid_ops;
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = hidraw_init();
 	if (ret)
 		goto err_bus;
@@ -2976,9 +3066,12 @@ err:
 
 static void __exit hid_exit(void)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_HID_BPF
 	hid_bpf_ops = NULL;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hid_debug_exit();
 	hidraw_exit();
 	bus_unregister(&hid_bus_type);

@@ -356,8 +356,13 @@ static int atmel_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int atmel_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 			       struct pwm_state *state)
+=======
+static void atmel_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+				struct pwm_state *state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
 	u32 sr, cmr;
@@ -396,8 +401,11 @@ static int atmel_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 		state->polarity = PWM_POLARITY_INVERSED;
 	else
 		state->polarity = PWM_POLARITY_NORMAL;
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct pwm_ops atmel_pwm_ops = {

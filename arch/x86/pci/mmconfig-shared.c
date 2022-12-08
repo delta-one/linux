@@ -12,7 +12,10 @@
  */
 
 #include <linux/acpi.h>
+<<<<<<< HEAD
 #include <linux/efi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pci.h>
 #include <linux/init.h>
 #include <linux/bitmap.h>
@@ -443,6 +446,7 @@ static bool is_acpi_reserved(u64 start, u64 end, enum e820_type not_used)
 	return mcfg_res.flags;
 }
 
+<<<<<<< HEAD
 static bool is_efi_mmio(u64 start, u64 end, enum e820_type not_used)
 {
 #ifdef CONFIG_EFI
@@ -469,16 +473,26 @@ static bool is_efi_mmio(u64 start, u64 end, enum e820_type not_used)
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 typedef bool (*check_reserved_t)(u64 start, u64 end, enum e820_type type);
 
 static bool __ref is_mmconf_reserved(check_reserved_t is_reserved,
 				     struct pci_mmcfg_region *cfg,
+<<<<<<< HEAD
 				     struct device *dev, const char *method)
+=======
+				     struct device *dev, int with_e820)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u64 addr = cfg->res.start;
 	u64 size = resource_size(&cfg->res);
 	u64 old_size = size;
 	int num_buses;
+<<<<<<< HEAD
+=======
+	char *method = with_e820 ? "E820" : "ACPI motherboard resources";
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (!is_reserved(addr, addr + size, E820_TYPE_RESERVED)) {
 		size >>= 1;
@@ -490,10 +504,17 @@ static bool __ref is_mmconf_reserved(check_reserved_t is_reserved,
 		return false;
 
 	if (dev)
+<<<<<<< HEAD
 		dev_info(dev, "MMCONFIG at %pR reserved as %s\n",
 			 &cfg->res, method);
 	else
 		pr_info(PREFIX "MMCONFIG at %pR reserved as %s\n",
+=======
+		dev_info(dev, "MMCONFIG at %pR reserved in %s\n",
+			 &cfg->res, method);
+	else
+		pr_info(PREFIX "MMCONFIG at %pR reserved in %s\n",
+>>>>>>> b7ba80a49124 (Commit)
 		       &cfg->res, method);
 
 	if (old_size != size) {
@@ -526,8 +547,12 @@ static bool __ref
 pci_mmcfg_check_reserved(struct device *dev, struct pci_mmcfg_region *cfg, int early)
 {
 	if (!early && !acpi_disabled) {
+<<<<<<< HEAD
 		if (is_mmconf_reserved(is_acpi_reserved, cfg, dev,
 				       "ACPI motherboard resource"))
+=======
+		if (is_mmconf_reserved(is_acpi_reserved, cfg, dev, 0))
+>>>>>>> b7ba80a49124 (Commit)
 			return true;
 
 		if (dev)
@@ -540,10 +565,13 @@ pci_mmcfg_check_reserved(struct device *dev, struct pci_mmcfg_region *cfg, int e
 			       "MMCONFIG at %pR not reserved in "
 			       "ACPI motherboard resources\n",
 			       &cfg->res);
+<<<<<<< HEAD
 
 		if (is_mmconf_reserved(is_efi_mmio, cfg, dev,
 				       "EfiMemoryMappedIO"))
 			return true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -558,8 +586,12 @@ pci_mmcfg_check_reserved(struct device *dev, struct pci_mmcfg_region *cfg, int e
 	/* Don't try to do this check unless configuration
 	   type 1 is available. how about type 2 ?*/
 	if (raw_pci_ops)
+<<<<<<< HEAD
 		return is_mmconf_reserved(e820__mapped_all, cfg, dev,
 					  "E820 entry");
+=======
+		return is_mmconf_reserved(e820__mapped_all, cfg, dev, 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return false;
 }

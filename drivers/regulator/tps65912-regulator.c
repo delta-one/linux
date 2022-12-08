@@ -150,7 +150,10 @@ MODULE_DEVICE_TABLE(platform, tps65912_regulator_id_table);
 static struct platform_driver tps65912_regulator_driver = {
 	.driver = {
 		.name = "tps65912-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = tps65912_regulator_probe,
 	.id_table = tps65912_regulator_id_table,

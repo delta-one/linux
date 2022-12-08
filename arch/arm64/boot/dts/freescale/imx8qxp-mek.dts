@@ -61,7 +61,11 @@
 	pinctrl-0 = <&pinctrl_lpi2c1 &pinctrl_ioexp_rst>;
 	status = "okay";
 
+<<<<<<< HEAD
 	i2c-mux@71 {
+=======
+	i2c-switch@71 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "nxp,pca9646", "nxp,pca9546";
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -148,7 +152,11 @@
 };
 
 &thermal_zones {
+<<<<<<< HEAD
 	pmic-thermal {
+=======
+	pmic-thermal0 {
+>>>>>>> b7ba80a49124 (Commit)
 		polling-delay-passive = <250>;
 		polling-delay = <2000>;
 		thermal-sensors = <&tsens IMX_SC_R_PMIC_0>;

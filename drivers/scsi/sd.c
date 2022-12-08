@@ -121,6 +121,10 @@ static void scsi_disk_release(struct device *cdev);
 
 static DEFINE_IDA(sd_index_ida);
 
+<<<<<<< HEAD
+=======
+static struct kmem_cache *sd_cdb_cache;
+>>>>>>> b7ba80a49124 (Commit)
 static mempool_t *sd_page_pool;
 static struct lock_class_key sd_bio_compl_lkclass;
 
@@ -587,6 +591,10 @@ ATTRIBUTE_GROUPS(sd_disk);
 
 static struct class sd_disk_class = {
 	.name		= "scsi_disk",
+<<<<<<< HEAD
+=======
+	.owner		= THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.dev_release	= scsi_disk_release,
 	.dev_groups	= sd_disk_groups,
 };
@@ -662,9 +670,12 @@ static int sd_sec_submit(void *data, u16 spsp, u8 secp, void *buffer,
 	struct scsi_disk *sdkp = data;
 	struct scsi_device *sdev = sdkp->device;
 	u8 cdb[12] = { 0, };
+<<<<<<< HEAD
 	const struct scsi_exec_args exec_args = {
 		.req_flags = BLK_MQ_REQ_PM,
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	cdb[0] = send ? SECURITY_PROTOCOL_OUT : SECURITY_PROTOCOL_IN;
@@ -672,9 +683,15 @@ static int sd_sec_submit(void *data, u16 spsp, u8 secp, void *buffer,
 	put_unaligned_be16(spsp, &cdb[2]);
 	put_unaligned_be32(len, &cdb[6]);
 
+<<<<<<< HEAD
 	ret = scsi_execute_cmd(sdev, cdb, send ? REQ_OP_DRV_OUT : REQ_OP_DRV_IN,
 			       buffer, len, SD_TIMEOUT, sdkp->max_retries,
 			       &exec_args);
+=======
+	ret = scsi_execute(sdev, cdb, send ? DMA_TO_DEVICE : DMA_FROM_DEVICE,
+		buffer, len, NULL, NULL, SD_TIMEOUT, sdkp->max_retries, 0,
+		RQF_PM, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret <= 0 ? ret : -EIO;
 }
 #endif /* CONFIG_BLK_SED_OPAL */
@@ -832,6 +849,7 @@ static void sd_config_discard(struct scsi_disk *sdkp, unsigned int mode)
 	blk_queue_max_discard_sectors(q, max_blocks * (logical_block_size >> 9));
 }
 
+<<<<<<< HEAD
 static void *sd_set_special_bvec(struct request *rq, unsigned int data_len)
 {
 	struct page *page;
@@ -845,6 +863,8 @@ static void *sd_set_special_bvec(struct request *rq, unsigned int data_len)
 	return bvec_virt(&rq->special_vec);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static blk_status_t sd_setup_unmap_cmnd(struct scsi_cmnd *cmd)
 {
 	struct scsi_device *sdp = cmd->device;
@@ -855,14 +875,28 @@ static blk_status_t sd_setup_unmap_cmnd(struct scsi_cmnd *cmd)
 	unsigned int data_len = 24;
 	char *buf;
 
+<<<<<<< HEAD
 	buf = sd_set_special_bvec(rq, data_len);
 	if (!buf)
 		return BLK_STS_RESOURCE;
+=======
+	rq->special_vec.bv_page = mempool_alloc(sd_page_pool, GFP_ATOMIC);
+	if (!rq->special_vec.bv_page)
+		return BLK_STS_RESOURCE;
+	clear_highpage(rq->special_vec.bv_page);
+	rq->special_vec.bv_offset = 0;
+	rq->special_vec.bv_len = data_len;
+	rq->rq_flags |= RQF_SPECIAL_PAYLOAD;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cmd->cmd_len = 10;
 	cmd->cmnd[0] = UNMAP;
 	cmd->cmnd[8] = 24;
 
+<<<<<<< HEAD
+=======
+	buf = bvec_virt(&rq->special_vec);
+>>>>>>> b7ba80a49124 (Commit)
 	put_unaligned_be16(6 + 16, &buf[0]);
 	put_unaligned_be16(16, &buf[2]);
 	put_unaligned_be64(lba, &buf[8]);
@@ -885,8 +919,18 @@ static blk_status_t sd_setup_write_same16_cmnd(struct scsi_cmnd *cmd,
 	u32 nr_blocks = sectors_to_logical(sdp, blk_rq_sectors(rq));
 	u32 data_len = sdp->sector_size;
 
+<<<<<<< HEAD
 	if (!sd_set_special_bvec(rq, data_len))
 		return BLK_STS_RESOURCE;
+=======
+	rq->special_vec.bv_page = mempool_alloc(sd_page_pool, GFP_ATOMIC);
+	if (!rq->special_vec.bv_page)
+		return BLK_STS_RESOURCE;
+	clear_highpage(rq->special_vec.bv_page);
+	rq->special_vec.bv_offset = 0;
+	rq->special_vec.bv_len = data_len;
+	rq->rq_flags |= RQF_SPECIAL_PAYLOAD;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cmd->cmd_len = 16;
 	cmd->cmnd[0] = WRITE_SAME_16;
@@ -912,8 +956,18 @@ static blk_status_t sd_setup_write_same10_cmnd(struct scsi_cmnd *cmd,
 	u32 nr_blocks = sectors_to_logical(sdp, blk_rq_sectors(rq));
 	u32 data_len = sdp->sector_size;
 
+<<<<<<< HEAD
 	if (!sd_set_special_bvec(rq, data_len))
 		return BLK_STS_RESOURCE;
+=======
+	rq->special_vec.bv_page = mempool_alloc(sd_page_pool, GFP_ATOMIC);
+	if (!rq->special_vec.bv_page)
+		return BLK_STS_RESOURCE;
+	clear_highpage(rq->special_vec.bv_page);
+	rq->special_vec.bv_offset = 0;
+	rq->special_vec.bv_len = data_len;
+	rq->rq_flags |= RQF_SPECIAL_PAYLOAD;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cmd->cmd_len = 10;
 	cmd->cmnd[0] = WRITE_SAME;
@@ -1025,6 +1079,7 @@ static blk_status_t sd_setup_flush_cmnd(struct scsi_cmnd *cmd)
 	/* flush requests don't perform I/O, zero the S/G table */
 	memset(&cmd->sdb, 0, sizeof(cmd->sdb));
 
+<<<<<<< HEAD
 	if (cmd->device->use_16_for_sync) {
 		cmd->cmnd[0] = SYNCHRONIZE_CACHE_16;
 		cmd->cmd_len = 16;
@@ -1032,6 +1087,10 @@ static blk_status_t sd_setup_flush_cmnd(struct scsi_cmnd *cmd)
 		cmd->cmnd[0] = SYNCHRONIZE_CACHE;
 		cmd->cmd_len = 10;
 	}
+=======
+	cmd->cmnd[0] = SYNCHRONIZE_CACHE;
+	cmd->cmd_len = 10;
+>>>>>>> b7ba80a49124 (Commit)
 	cmd->transfersize = 0;
 	cmd->allowed = sdkp->max_retries;
 
@@ -1582,15 +1641,19 @@ static int sd_sync_cache(struct scsi_disk *sdkp, struct scsi_sense_hdr *sshdr)
 	const int timeout = sdp->request_queue->rq_timeout
 		* SD_FLUSH_TIMEOUT_MULTIPLIER;
 	struct scsi_sense_hdr my_sshdr;
+<<<<<<< HEAD
 	const struct scsi_exec_args exec_args = {
 		.req_flags = BLK_MQ_REQ_PM,
 		/* caller might not be interested in sense, but we need it */
 		.sshdr = sshdr ? : &my_sshdr,
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!scsi_device_online(sdp))
 		return -ENODEV;
 
+<<<<<<< HEAD
 	sshdr = exec_args.sshdr;
 
 	for (retries = 3; retries > 0; --retries) {
@@ -1600,12 +1663,27 @@ static int sd_sync_cache(struct scsi_disk *sdkp, struct scsi_sense_hdr *sshdr)
 			cmd[0] = SYNCHRONIZE_CACHE_16;
 		else
 			cmd[0] = SYNCHRONIZE_CACHE;
+=======
+	/* caller might not be interested in sense, but we need it */
+	if (!sshdr)
+		sshdr = &my_sshdr;
+
+	for (retries = 3; retries > 0; --retries) {
+		unsigned char cmd[10] = { 0 };
+
+		cmd[0] = SYNCHRONIZE_CACHE;
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Leave the rest of the command zero to indicate
 		 * flush everything.
 		 */
+<<<<<<< HEAD
 		res = scsi_execute_cmd(sdp, cmd, REQ_OP_DRV_IN, NULL, 0,
 				       timeout, sdkp->max_retries, &exec_args);
+=======
+		res = scsi_execute(sdp, cmd, DMA_NONE, NULL, 0, NULL, sshdr,
+				timeout, sdkp->max_retries, 0, RQF_PM, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (res == 0)
 			break;
 	}
@@ -1711,6 +1789,7 @@ static char sd_pr_type(enum pr_type type)
 	}
 };
 
+<<<<<<< HEAD
 static int sd_scsi_to_pr_err(struct scsi_sense_hdr *sshdr, int result)
 {
 	switch (host_byte(result)) {
@@ -1741,15 +1820,20 @@ static int sd_scsi_to_pr_err(struct scsi_sense_hdr *sshdr, int result)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int sd_pr_command(struct block_device *bdev, u8 sa,
 		u64 key, u64 sa_key, u8 type, u8 flags)
 {
 	struct scsi_disk *sdkp = scsi_disk(bdev->bd_disk);
 	struct scsi_device *sdev = sdkp->device;
 	struct scsi_sense_hdr sshdr;
+<<<<<<< HEAD
 	const struct scsi_exec_args exec_args = {
 		.sshdr = &sshdr,
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int result;
 	u8 cmd[16] = { 0, };
 	u8 data[24] = { 0, };
@@ -1763,9 +1847,14 @@ static int sd_pr_command(struct block_device *bdev, u8 sa,
 	put_unaligned_be64(sa_key, &data[8]);
 	data[20] = flags;
 
+<<<<<<< HEAD
 	result = scsi_execute_cmd(sdev, cmd, REQ_OP_DRV_OUT, &data,
 				  sizeof(data), SD_TIMEOUT, sdkp->max_retries,
 				  &exec_args);
+=======
+	result = scsi_execute_req(sdev, cmd, DMA_TO_DEVICE, &data, sizeof(data),
+			&sshdr, SD_TIMEOUT, sdkp->max_retries, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (scsi_status_is_check_condition(result) &&
 	    scsi_sense_valid(&sshdr)) {
@@ -1773,10 +1862,14 @@ static int sd_pr_command(struct block_device *bdev, u8 sa,
 		scsi_print_sense_hdr(sdev, NULL, &sshdr);
 	}
 
+<<<<<<< HEAD
 	if (result <= 0)
 		return result;
 
 	return sd_scsi_to_pr_err(&sshdr, result);
+=======
+	return result;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int sd_pr_register(struct block_device *bdev, u64 old_key, u64 new_key,
@@ -2094,9 +2187,12 @@ sd_spinup_disk(struct scsi_disk *sdkp)
 	int retries, spintime;
 	unsigned int the_result;
 	struct scsi_sense_hdr sshdr;
+<<<<<<< HEAD
 	const struct scsi_exec_args exec_args = {
 		.sshdr = &sshdr,
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int sense_valid = 0;
 
 	spintime = 0;
@@ -2112,11 +2208,18 @@ sd_spinup_disk(struct scsi_disk *sdkp)
 			cmd[0] = TEST_UNIT_READY;
 			memset((void *) &cmd[1], 0, 9);
 
+<<<<<<< HEAD
 			the_result = scsi_execute_cmd(sdkp->device, cmd,
 						      REQ_OP_DRV_IN, NULL, 0,
 						      SD_TIMEOUT,
 						      sdkp->max_retries,
 						      &exec_args);
+=======
+			the_result = scsi_execute_req(sdkp->device, cmd,
+						      DMA_NONE, NULL, 0,
+						      &sshdr, SD_TIMEOUT,
+						      sdkp->max_retries, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 			/*
 			 * If the drive has indicated to us that it
@@ -2173,10 +2276,17 @@ sd_spinup_disk(struct scsi_disk *sdkp)
 				cmd[4] = 1;	/* Start spin cycle */
 				if (sdkp->device->start_stop_pwr_cond)
 					cmd[4] |= 1 << 4;
+<<<<<<< HEAD
 				scsi_execute_cmd(sdkp->device, cmd,
 						 REQ_OP_DRV_IN, NULL, 0,
 						 SD_TIMEOUT, sdkp->max_retries,
 						 &exec_args);
+=======
+				scsi_execute_req(sdkp->device, cmd, DMA_NONE,
+						 NULL, 0, &sshdr,
+						 SD_TIMEOUT, sdkp->max_retries,
+						 NULL);
+>>>>>>> b7ba80a49124 (Commit)
 				spintime_expire = jiffies + 100 * HZ;
 				spintime = 1;
 			}
@@ -2250,12 +2360,19 @@ static void sd_config_protection(struct scsi_disk *sdkp)
 {
 	struct scsi_device *sdp = sdkp->device;
 
+<<<<<<< HEAD
+=======
+	if (!sdkp->first_scan)
+		return;
+
+>>>>>>> b7ba80a49124 (Commit)
 	sd_dif_config_host(sdkp);
 
 	if (!sdkp->protection_type)
 		return;
 
 	if (!scsi_host_dif_capable(sdp->host, sdkp->protection_type)) {
+<<<<<<< HEAD
 		sd_first_printk(KERN_NOTICE, sdkp,
 				"Disabling DIF Type %u protection\n",
 				sdkp->protection_type);
@@ -2264,6 +2381,16 @@ static void sd_config_protection(struct scsi_disk *sdkp)
 
 	sd_first_printk(KERN_NOTICE, sdkp, "Enabling DIF Type %u protection\n",
 			sdkp->protection_type);
+=======
+		sd_printk(KERN_NOTICE, sdkp,
+			  "Disabling DIF Type %u protection\n",
+			  sdkp->protection_type);
+		sdkp->protection_type = 0;
+	}
+
+	sd_printk(KERN_NOTICE, sdkp, "Enabling DIF Type %u protection\n",
+		  sdkp->protection_type);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void read_capacity_error(struct scsi_disk *sdkp, struct scsi_device *sdp,
@@ -2303,9 +2430,12 @@ static int read_capacity_16(struct scsi_disk *sdkp, struct scsi_device *sdp,
 {
 	unsigned char cmd[16];
 	struct scsi_sense_hdr sshdr;
+<<<<<<< HEAD
 	const struct scsi_exec_args exec_args = {
 		.sshdr = &sshdr,
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int sense_valid = 0;
 	int the_result;
 	int retries = 3, reset_retries = READ_CAPACITY_RETRIES_ON_RESET;
@@ -2323,9 +2453,15 @@ static int read_capacity_16(struct scsi_disk *sdkp, struct scsi_device *sdp,
 		cmd[13] = RC16_LEN;
 		memset(buffer, 0, RC16_LEN);
 
+<<<<<<< HEAD
 		the_result = scsi_execute_cmd(sdp, cmd, REQ_OP_DRV_IN,
 					      buffer, RC16_LEN, SD_TIMEOUT,
 					      sdkp->max_retries, &exec_args);
+=======
+		the_result = scsi_execute_req(sdp, cmd, DMA_FROM_DEVICE,
+					buffer, RC16_LEN, &sshdr,
+					SD_TIMEOUT, sdkp->max_retries, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (media_not_present(sdkp, &sshdr))
 			return -ENODEV;
@@ -2397,9 +2533,12 @@ static int read_capacity_10(struct scsi_disk *sdkp, struct scsi_device *sdp,
 {
 	unsigned char cmd[16];
 	struct scsi_sense_hdr sshdr;
+<<<<<<< HEAD
 	const struct scsi_exec_args exec_args = {
 		.sshdr = &sshdr,
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int sense_valid = 0;
 	int the_result;
 	int retries = 3, reset_retries = READ_CAPACITY_RETRIES_ON_RESET;
@@ -2411,9 +2550,15 @@ static int read_capacity_10(struct scsi_disk *sdkp, struct scsi_device *sdp,
 		memset(&cmd[1], 0, 9);
 		memset(buffer, 0, 8);
 
+<<<<<<< HEAD
 		the_result = scsi_execute_cmd(sdp, cmd, REQ_OP_DRV_IN, buffer,
 					      8, SD_TIMEOUT, sdkp->max_retries,
 					      &exec_args);
+=======
+		the_result = scsi_execute_req(sdp, cmd, DMA_FROM_DEVICE,
+					buffer, 8, &sshdr,
+					SD_TIMEOUT, sdkp->max_retries, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (media_not_present(sdkp, &sshdr))
 			return -ENODEV;
@@ -2987,6 +3132,7 @@ static void sd_read_block_characteristics(struct scsi_disk *sdkp)
 	}
 
 	if (sdkp->device->type == TYPE_ZBC) {
+<<<<<<< HEAD
 		/*
 		 * Host-managed: Per ZBC and ZAC specifications, writes in
 		 * sequential write required zones of host-managed devices must
@@ -2994,6 +3140,10 @@ static void sd_read_block_characteristics(struct scsi_disk *sdkp)
 		 */
 		disk_set_zoned(sdkp->disk, BLK_ZONED_HM);
 		blk_queue_zone_write_granularity(q, sdkp->physical_block_size);
+=======
+		/* Host-managed */
+		disk_set_zoned(sdkp->disk, BLK_ZONED_HM);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		sdkp->zoned = zoned;
 		if (sdkp->zoned == 1) {
@@ -3655,10 +3805,13 @@ static int sd_start_stop_device(struct scsi_disk *sdkp, int start)
 {
 	unsigned char cmd[6] = { START_STOP };	/* START_VALID */
 	struct scsi_sense_hdr sshdr;
+<<<<<<< HEAD
 	const struct scsi_exec_args exec_args = {
 		.sshdr = &sshdr,
 		.req_flags = BLK_MQ_REQ_PM,
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct scsi_device *sdp = sdkp->device;
 	int res;
 
@@ -3671,8 +3824,13 @@ static int sd_start_stop_device(struct scsi_disk *sdkp, int start)
 	if (!scsi_device_online(sdp))
 		return -ENODEV;
 
+<<<<<<< HEAD
 	res = scsi_execute_cmd(sdp, cmd, REQ_OP_DRV_IN, NULL, 0, SD_TIMEOUT,
 			       sdkp->max_retries, &exec_args);
+=======
+	res = scsi_execute(sdp, cmd, DMA_NONE, NULL, 0, NULL, &sshdr,
+			SD_TIMEOUT, sdkp->max_retries, 0, RQF_PM, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (res) {
 		sd_print_result(sdkp, "Start/Stop Unit failed", res);
 		if (res > 0 && scsi_sense_valid(&sshdr)) {
@@ -3812,6 +3970,7 @@ static int sd_resume_runtime(struct device *dev)
 	if (sdp->ignore_media_change) {
 		/* clear the device's sense data */
 		static const u8 cmd[10] = { REQUEST_SENSE };
+<<<<<<< HEAD
 		const struct scsi_exec_args exec_args = {
 			.req_flags = BLK_MQ_REQ_PM,
 		};
@@ -3819,6 +3978,12 @@ static int sd_resume_runtime(struct device *dev)
 		if (scsi_execute_cmd(sdp, cmd, REQ_OP_DRV_IN, NULL, 0,
 				     sdp->request_queue->rq_timeout, 1,
 				     &exec_args))
+=======
+
+		if (scsi_execute(sdp, cmd, DMA_NONE, NULL, 0, NULL,
+				 NULL, sdp->request_queue->rq_timeout, 1, 0,
+				 RQF_PM, NULL))
+>>>>>>> b7ba80a49124 (Commit)
 			sd_printk(KERN_NOTICE, sdkp,
 				  "Failed to clear sense data\n");
 	}
@@ -3851,11 +4016,26 @@ static int __init init_sd(void)
 	if (err)
 		goto err_out;
 
+<<<<<<< HEAD
+=======
+	sd_cdb_cache = kmem_cache_create("sd_ext_cdb", SD_EXT_CDB_SIZE,
+					 0, 0, NULL);
+	if (!sd_cdb_cache) {
+		printk(KERN_ERR "sd: can't init extended cdb cache\n");
+		err = -ENOMEM;
+		goto err_out_class;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	sd_page_pool = mempool_create_page_pool(SD_MEMPOOL_SIZE, 0);
 	if (!sd_page_pool) {
 		printk(KERN_ERR "sd: can't init discard page pool\n");
 		err = -ENOMEM;
+<<<<<<< HEAD
 		goto err_out_class;
+=======
+		goto err_out_cache;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	err = scsi_register_driver(&sd_template.gendrv);
@@ -3866,6 +4046,13 @@ static int __init init_sd(void)
 
 err_out_driver:
 	mempool_destroy(sd_page_pool);
+<<<<<<< HEAD
+=======
+
+err_out_cache:
+	kmem_cache_destroy(sd_cdb_cache);
+
+>>>>>>> b7ba80a49124 (Commit)
 err_out_class:
 	class_unregister(&sd_disk_class);
 err_out:
@@ -3887,6 +4074,10 @@ static void __exit exit_sd(void)
 
 	scsi_unregister_driver(&sd_template.gendrv);
 	mempool_destroy(sd_page_pool);
+<<<<<<< HEAD
+=======
+	kmem_cache_destroy(sd_cdb_cache);
+>>>>>>> b7ba80a49124 (Commit)
 
 	class_unregister(&sd_disk_class);
 

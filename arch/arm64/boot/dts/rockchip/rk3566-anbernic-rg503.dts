@@ -17,6 +17,7 @@
 		mmc2 = &sdmmc2;
 	};
 
+<<<<<<< HEAD
 	battery: battery {
 		compatible = "simple-battery";
 		charge-full-design-microamp-hours = <3472000>;
@@ -36,6 +37,8 @@
 					<3400000 0>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gpio_spi: spi {
 		compatible = "spi-gpio";
 		pinctrl-names = "default";
@@ -47,6 +50,7 @@
 		mosi-gpios = <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
 		cs-gpios = <&gpio4 RK_PA7 GPIO_ACTIVE_HIGH>;
 		num-chipselects = <0>;
+<<<<<<< HEAD
 
 		panel@0 {
 			compatible = "samsung,ams495qa01";
@@ -132,6 +136,8 @@
 				remote-endpoint = <&mipi_in_panel>;
 			};
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -180,6 +186,7 @@
 };
 
 &pinctrl {
+<<<<<<< HEAD
 	audio-amplifier {
 		spk_amp_enable_h: spk-amp-enable-h {
 			rockchip,pins =
@@ -194,6 +201,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gpio-spi {
 		spi_pins: spi-pins {
 			rockchip,pins =
@@ -203,6 +212,7 @@
 		};
 	};
 };
+<<<<<<< HEAD
 
 &rk817 {
 	rk817_charger: charger {
@@ -219,3 +229,5 @@
 		remote-endpoint = <&dsi0_in_vp1>;
 	};
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

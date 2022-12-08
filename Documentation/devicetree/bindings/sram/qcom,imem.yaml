@@ -25,8 +25,11 @@ properties:
           - qcom,sdm630-imem
           - qcom,sdm845-imem
           - qcom,sdx55-imem
+<<<<<<< HEAD
           - qcom,sdx65-imem
           - qcom,sm8450-imem
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - const: syscon
       - const: simple-mfd
 

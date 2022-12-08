@@ -41,7 +41,11 @@ typedef struct cpumask { DECLARE_BITMAP(bits, NR_CPUS); } cpumask_t;
 extern unsigned int nr_cpu_ids;
 #endif
 
+<<<<<<< HEAD
 static __always_inline void set_nr_cpu_ids(unsigned int nr)
+=======
+static inline void set_nr_cpu_ids(unsigned int nr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 #if (NR_CPUS == 1) || defined(CONFIG_FORCE_NR_CPUS)
 	WARN_ON(nr != nr_cpu_ids);
@@ -50,6 +54,7 @@ static __always_inline void set_nr_cpu_ids(unsigned int nr)
 #endif
 }
 
+<<<<<<< HEAD
 /*
  * We have several different "preferred sizes" for the cpumask
  * operations, depending on operation.
@@ -85,6 +90,10 @@ static __always_inline void set_nr_cpu_ids(unsigned int nr)
   #define large_cpumask_bits nr_cpu_ids
 #endif
 #define nr_cpumask_bits nr_cpu_ids
+=======
+/* Deprecated. Always use nr_cpu_ids. */
+#define nr_cpumask_bits	nr_cpu_ids
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * The following particular system cpumasks and operations manage
@@ -147,7 +156,11 @@ static __always_inline void cpu_max_bits_warn(unsigned int cpu, unsigned int bit
 /* verify cpu argument to cpumask_* operators */
 static __always_inline unsigned int cpumask_check(unsigned int cpu)
 {
+<<<<<<< HEAD
 	cpu_max_bits_warn(cpu, small_cpumask_bits);
+=======
+	cpu_max_bits_warn(cpu, nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 	return cpu;
 }
 
@@ -157,9 +170,15 @@ static __always_inline unsigned int cpumask_check(unsigned int cpu)
  *
  * Returns >= nr_cpu_ids if no cpus set.
  */
+<<<<<<< HEAD
 static __always_inline unsigned int cpumask_first(const struct cpumask *srcp)
 {
 	return find_first_bit(cpumask_bits(srcp), small_cpumask_bits);
+=======
+static inline unsigned int cpumask_first(const struct cpumask *srcp)
+{
+	return find_first_bit(cpumask_bits(srcp), nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -168,9 +187,15 @@ static __always_inline unsigned int cpumask_first(const struct cpumask *srcp)
  *
  * Returns >= nr_cpu_ids if all cpus are set.
  */
+<<<<<<< HEAD
 static __always_inline unsigned int cpumask_first_zero(const struct cpumask *srcp)
 {
 	return find_first_zero_bit(cpumask_bits(srcp), small_cpumask_bits);
+=======
+static inline unsigned int cpumask_first_zero(const struct cpumask *srcp)
+{
+	return find_first_zero_bit(cpumask_bits(srcp), nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -180,10 +205,17 @@ static __always_inline unsigned int cpumask_first_zero(const struct cpumask *src
  *
  * Returns >= nr_cpu_ids if no cpus set in both.  See also cpumask_next_and().
  */
+<<<<<<< HEAD
 static __always_inline
 unsigned int cpumask_first_and(const struct cpumask *srcp1, const struct cpumask *srcp2)
 {
 	return find_first_and_bit(cpumask_bits(srcp1), cpumask_bits(srcp2), small_cpumask_bits);
+=======
+static inline
+unsigned int cpumask_first_and(const struct cpumask *srcp1, const struct cpumask *srcp2)
+{
+	return find_first_and_bit(cpumask_bits(srcp1), cpumask_bits(srcp2), nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -192,9 +224,15 @@ unsigned int cpumask_first_and(const struct cpumask *srcp1, const struct cpumask
  *
  * Returns	>= nr_cpumask_bits if no CPUs set.
  */
+<<<<<<< HEAD
 static __always_inline unsigned int cpumask_last(const struct cpumask *srcp)
 {
 	return find_last_bit(cpumask_bits(srcp), small_cpumask_bits);
+=======
+static inline unsigned int cpumask_last(const struct cpumask *srcp)
+{
+	return find_last_bit(cpumask_bits(srcp), nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -204,13 +242,21 @@ static __always_inline unsigned int cpumask_last(const struct cpumask *srcp)
  *
  * Returns >= nr_cpu_ids if no further cpus set.
  */
+<<<<<<< HEAD
 static __always_inline
+=======
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 unsigned int cpumask_next(int n, const struct cpumask *srcp)
 {
 	/* -1 is a legal arg here. */
 	if (n != -1)
 		cpumask_check(n);
+<<<<<<< HEAD
 	return find_next_bit(cpumask_bits(srcp), small_cpumask_bits, n + 1);
+=======
+	return find_next_bit(cpumask_bits(srcp), nr_cpumask_bits, n + 1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -220,28 +266,48 @@ unsigned int cpumask_next(int n, const struct cpumask *srcp)
  *
  * Returns >= nr_cpu_ids if no further cpus unset.
  */
+<<<<<<< HEAD
 static __always_inline unsigned int cpumask_next_zero(int n, const struct cpumask *srcp)
+=======
+static inline unsigned int cpumask_next_zero(int n, const struct cpumask *srcp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* -1 is a legal arg here. */
 	if (n != -1)
 		cpumask_check(n);
+<<<<<<< HEAD
 	return find_next_zero_bit(cpumask_bits(srcp), small_cpumask_bits, n+1);
+=======
+	return find_next_zero_bit(cpumask_bits(srcp), nr_cpumask_bits, n+1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #if NR_CPUS == 1
 /* Uniprocessor: there is only one valid CPU */
+<<<<<<< HEAD
 static __always_inline unsigned int cpumask_local_spread(unsigned int i, int node)
+=======
+static inline unsigned int cpumask_local_spread(unsigned int i, int node)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return 0;
 }
 
+<<<<<<< HEAD
 static __always_inline unsigned int cpumask_any_and_distribute(const struct cpumask *src1p,
+=======
+static inline unsigned int cpumask_any_and_distribute(const struct cpumask *src1p,
+>>>>>>> b7ba80a49124 (Commit)
 						      const struct cpumask *src2p)
 {
 	return cpumask_first_and(src1p, src2p);
 }
 
+<<<<<<< HEAD
 static __always_inline unsigned int cpumask_any_distribute(const struct cpumask *srcp)
+=======
+static inline unsigned int cpumask_any_distribute(const struct cpumask *srcp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return cpumask_first(srcp);
 }
@@ -260,7 +326,11 @@ unsigned int cpumask_any_distribute(const struct cpumask *srcp);
  *
  * Returns >= nr_cpu_ids if no further cpus set in both.
  */
+<<<<<<< HEAD
 static __always_inline
+=======
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 unsigned int cpumask_next_and(int n, const struct cpumask *src1p,
 		     const struct cpumask *src2p)
 {
@@ -268,7 +338,11 @@ unsigned int cpumask_next_and(int n, const struct cpumask *src1p,
 	if (n != -1)
 		cpumask_check(n);
 	return find_next_and_bit(cpumask_bits(src1p), cpumask_bits(src2p),
+<<<<<<< HEAD
 		small_cpumask_bits, n + 1);
+=======
+		nr_cpumask_bits, n + 1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -279,10 +353,31 @@ unsigned int cpumask_next_and(int n, const struct cpumask *src1p,
  * After the loop, cpu is >= nr_cpu_ids.
  */
 #define for_each_cpu(cpu, mask)				\
+<<<<<<< HEAD
 	for_each_set_bit(cpu, cpumask_bits(mask), small_cpumask_bits)
 
 #if NR_CPUS == 1
 static __always_inline
+=======
+	for ((cpu) = -1;				\
+		(cpu) = cpumask_next((cpu), (mask)),	\
+		(cpu) < nr_cpu_ids;)
+
+/**
+ * for_each_cpu_not - iterate over every cpu in a complemented mask
+ * @cpu: the (optionally unsigned) integer iterator
+ * @mask: the cpumask pointer
+ *
+ * After the loop, cpu is >= nr_cpu_ids.
+ */
+#define for_each_cpu_not(cpu, mask)				\
+	for ((cpu) = -1;					\
+		(cpu) = cpumask_next_zero((cpu), (mask)),	\
+		(cpu) < nr_cpu_ids;)
+
+#if NR_CPUS == 1
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 unsigned int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool wrap)
 {
 	cpumask_check(start);
@@ -312,8 +407,15 @@ unsigned int __pure cpumask_next_wrap(int n, const struct cpumask *mask, int sta
  *
  * After the loop, cpu is >= nr_cpu_ids.
  */
+<<<<<<< HEAD
 #define for_each_cpu_wrap(cpu, mask, start)				\
 	for_each_set_bit_wrap(cpu, cpumask_bits(mask), small_cpumask_bits, start)
+=======
+#define for_each_cpu_wrap(cpu, mask, start)					\
+	for ((cpu) = cpumask_next_wrap((start)-1, (mask), (start), false);	\
+	     (cpu) < nr_cpumask_bits;						\
+	     (cpu) = cpumask_next_wrap((cpu), (mask), (start), true))
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * for_each_cpu_and - iterate over every cpu in both masks
@@ -330,6 +432,7 @@ unsigned int __pure cpumask_next_wrap(int n, const struct cpumask *mask, int sta
  * After the loop, cpu is >= nr_cpu_ids.
  */
 #define for_each_cpu_and(cpu, mask1, mask2)				\
+<<<<<<< HEAD
 	for_each_and_bit(cpu, cpumask_bits(mask1), cpumask_bits(mask2), small_cpumask_bits)
 
 /**
@@ -366,6 +469,11 @@ unsigned int __pure cpumask_next_wrap(int n, const struct cpumask *mask, int sta
  */
 #define for_each_cpu_or(cpu, mask1, mask2)				\
 	for_each_or_bit(cpu, cpumask_bits(mask1), cpumask_bits(mask2), small_cpumask_bits)
+=======
+	for ((cpu) = -1;						\
+		(cpu) = cpumask_next_and((cpu), (mask1), (mask2)),	\
+		(cpu) < nr_cpu_ids;)
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * cpumask_any_but - return a "random" in a cpumask, but not this one.
@@ -375,7 +483,11 @@ unsigned int __pure cpumask_next_wrap(int n, const struct cpumask *mask, int sta
  * Often used to find any cpu but smp_processor_id() in a mask.
  * Returns >= nr_cpu_ids if no cpus set.
  */
+<<<<<<< HEAD
 static __always_inline
+=======
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 unsigned int cpumask_any_but(const struct cpumask *mask, unsigned int cpu)
 {
 	unsigned int i;
@@ -387,6 +499,7 @@ unsigned int cpumask_any_but(const struct cpumask *mask, unsigned int cpu)
 	return i;
 }
 
+<<<<<<< HEAD
 /**
  * cpumask_nth - get the first cpu in a cpumask
  * @srcp: the cpumask pointer
@@ -451,6 +564,8 @@ unsigned int cpumask_nth_and_andnot(unsigned int cpu, const struct cpumask *srcp
 					small_cpumask_bits, cpumask_check(cpu));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CPU_BITS_NONE						\
 {								\
 	[0 ... BITS_TO_LONGS(NR_CPUS)-1] = 0UL			\
@@ -536,12 +651,17 @@ static __always_inline bool cpumask_test_and_clear_cpu(int cpu, struct cpumask *
  * cpumask_setall - set all cpus (< nr_cpu_ids) in a cpumask
  * @dstp: the cpumask pointer
  */
+<<<<<<< HEAD
 static __always_inline void cpumask_setall(struct cpumask *dstp)
 {
 	if (small_const_nbits(small_cpumask_bits)) {
 		cpumask_bits(dstp)[0] = BITMAP_LAST_WORD_MASK(nr_cpumask_bits);
 		return;
 	}
+=======
+static inline void cpumask_setall(struct cpumask *dstp)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	bitmap_fill(cpumask_bits(dstp), nr_cpumask_bits);
 }
 
@@ -549,9 +669,15 @@ static __always_inline void cpumask_setall(struct cpumask *dstp)
  * cpumask_clear - clear all cpus (< nr_cpu_ids) in a cpumask
  * @dstp: the cpumask pointer
  */
+<<<<<<< HEAD
 static __always_inline void cpumask_clear(struct cpumask *dstp)
 {
 	bitmap_zero(cpumask_bits(dstp), large_cpumask_bits);
+=======
+static inline void cpumask_clear(struct cpumask *dstp)
+{
+	bitmap_zero(cpumask_bits(dstp), nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -562,12 +688,20 @@ static __always_inline void cpumask_clear(struct cpumask *dstp)
  *
  * If *@dstp is empty, returns false, else returns true
  */
+<<<<<<< HEAD
 static __always_inline bool cpumask_and(struct cpumask *dstp,
+=======
+static inline bool cpumask_and(struct cpumask *dstp,
+>>>>>>> b7ba80a49124 (Commit)
 			       const struct cpumask *src1p,
 			       const struct cpumask *src2p)
 {
 	return bitmap_and(cpumask_bits(dstp), cpumask_bits(src1p),
+<<<<<<< HEAD
 				       cpumask_bits(src2p), small_cpumask_bits);
+=======
+				       cpumask_bits(src2p), nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -576,11 +710,19 @@ static __always_inline bool cpumask_and(struct cpumask *dstp,
  * @src1p: the first input
  * @src2p: the second input
  */
+<<<<<<< HEAD
 static __always_inline void cpumask_or(struct cpumask *dstp, const struct cpumask *src1p,
 			      const struct cpumask *src2p)
 {
 	bitmap_or(cpumask_bits(dstp), cpumask_bits(src1p),
 				      cpumask_bits(src2p), small_cpumask_bits);
+=======
+static inline void cpumask_or(struct cpumask *dstp, const struct cpumask *src1p,
+			      const struct cpumask *src2p)
+{
+	bitmap_or(cpumask_bits(dstp), cpumask_bits(src1p),
+				      cpumask_bits(src2p), nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -589,12 +731,20 @@ static __always_inline void cpumask_or(struct cpumask *dstp, const struct cpumas
  * @src1p: the first input
  * @src2p: the second input
  */
+<<<<<<< HEAD
 static __always_inline void cpumask_xor(struct cpumask *dstp,
+=======
+static inline void cpumask_xor(struct cpumask *dstp,
+>>>>>>> b7ba80a49124 (Commit)
 			       const struct cpumask *src1p,
 			       const struct cpumask *src2p)
 {
 	bitmap_xor(cpumask_bits(dstp), cpumask_bits(src1p),
+<<<<<<< HEAD
 				       cpumask_bits(src2p), small_cpumask_bits);
+=======
+				       cpumask_bits(src2p), nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -605,12 +755,32 @@ static __always_inline void cpumask_xor(struct cpumask *dstp,
  *
  * If *@dstp is empty, returns false, else returns true
  */
+<<<<<<< HEAD
 static __always_inline bool cpumask_andnot(struct cpumask *dstp,
+=======
+static inline bool cpumask_andnot(struct cpumask *dstp,
+>>>>>>> b7ba80a49124 (Commit)
 				  const struct cpumask *src1p,
 				  const struct cpumask *src2p)
 {
 	return bitmap_andnot(cpumask_bits(dstp), cpumask_bits(src1p),
+<<<<<<< HEAD
 					  cpumask_bits(src2p), small_cpumask_bits);
+=======
+					  cpumask_bits(src2p), nr_cpumask_bits);
+}
+
+/**
+ * cpumask_complement - *dstp = ~*srcp
+ * @dstp: the cpumask result
+ * @srcp: the input to invert
+ */
+static inline void cpumask_complement(struct cpumask *dstp,
+				      const struct cpumask *srcp)
+{
+	bitmap_complement(cpumask_bits(dstp), cpumask_bits(srcp),
+					      nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -618,11 +788,19 @@ static __always_inline bool cpumask_andnot(struct cpumask *dstp,
  * @src1p: the first input
  * @src2p: the second input
  */
+<<<<<<< HEAD
 static __always_inline bool cpumask_equal(const struct cpumask *src1p,
 				const struct cpumask *src2p)
 {
 	return bitmap_equal(cpumask_bits(src1p), cpumask_bits(src2p),
 						 small_cpumask_bits);
+=======
+static inline bool cpumask_equal(const struct cpumask *src1p,
+				const struct cpumask *src2p)
+{
+	return bitmap_equal(cpumask_bits(src1p), cpumask_bits(src2p),
+						 nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -631,12 +809,20 @@ static __always_inline bool cpumask_equal(const struct cpumask *src1p,
  * @src2p: the second input
  * @src3p: the third input
  */
+<<<<<<< HEAD
 static __always_inline bool cpumask_or_equal(const struct cpumask *src1p,
+=======
+static inline bool cpumask_or_equal(const struct cpumask *src1p,
+>>>>>>> b7ba80a49124 (Commit)
 				    const struct cpumask *src2p,
 				    const struct cpumask *src3p)
 {
 	return bitmap_or_equal(cpumask_bits(src1p), cpumask_bits(src2p),
+<<<<<<< HEAD
 			       cpumask_bits(src3p), small_cpumask_bits);
+=======
+			       cpumask_bits(src3p), nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -644,11 +830,19 @@ static __always_inline bool cpumask_or_equal(const struct cpumask *src1p,
  * @src1p: the first input
  * @src2p: the second input
  */
+<<<<<<< HEAD
 static __always_inline bool cpumask_intersects(const struct cpumask *src1p,
 				     const struct cpumask *src2p)
 {
 	return bitmap_intersects(cpumask_bits(src1p), cpumask_bits(src2p),
 						      small_cpumask_bits);
+=======
+static inline bool cpumask_intersects(const struct cpumask *src1p,
+				     const struct cpumask *src2p)
+{
+	return bitmap_intersects(cpumask_bits(src1p), cpumask_bits(src2p),
+						      nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -658,27 +852,45 @@ static __always_inline bool cpumask_intersects(const struct cpumask *src1p,
  *
  * Returns true if *@src1p is a subset of *@src2p, else returns false
  */
+<<<<<<< HEAD
 static __always_inline bool cpumask_subset(const struct cpumask *src1p,
 				 const struct cpumask *src2p)
 {
 	return bitmap_subset(cpumask_bits(src1p), cpumask_bits(src2p),
 						  small_cpumask_bits);
+=======
+static inline bool cpumask_subset(const struct cpumask *src1p,
+				 const struct cpumask *src2p)
+{
+	return bitmap_subset(cpumask_bits(src1p), cpumask_bits(src2p),
+						  nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
  * cpumask_empty - *srcp == 0
  * @srcp: the cpumask to that all cpus < nr_cpu_ids are clear.
  */
+<<<<<<< HEAD
 static __always_inline bool cpumask_empty(const struct cpumask *srcp)
 {
 	return bitmap_empty(cpumask_bits(srcp), small_cpumask_bits);
+=======
+static inline bool cpumask_empty(const struct cpumask *srcp)
+{
+	return bitmap_empty(cpumask_bits(srcp), nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
  * cpumask_full - *srcp == 0xFFFFFFFF...
  * @srcp: the cpumask to that all cpus < nr_cpu_ids are set.
  */
+<<<<<<< HEAD
 static __always_inline bool cpumask_full(const struct cpumask *srcp)
+=======
+static inline bool cpumask_full(const struct cpumask *srcp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return bitmap_full(cpumask_bits(srcp), nr_cpumask_bits);
 }
@@ -687,6 +899,7 @@ static __always_inline bool cpumask_full(const struct cpumask *srcp)
  * cpumask_weight - Count of bits in *srcp
  * @srcp: the cpumask to count bits (< nr_cpu_ids) in.
  */
+<<<<<<< HEAD
 static __always_inline unsigned int cpumask_weight(const struct cpumask *srcp)
 {
 	return bitmap_weight(cpumask_bits(srcp), small_cpumask_bits);
@@ -701,6 +914,11 @@ static __always_inline unsigned int cpumask_weight_and(const struct cpumask *src
 						const struct cpumask *srcp2)
 {
 	return bitmap_weight_and(cpumask_bits(srcp1), cpumask_bits(srcp2), small_cpumask_bits);
+=======
+static inline unsigned int cpumask_weight(const struct cpumask *srcp)
+{
+	return bitmap_weight(cpumask_bits(srcp), nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -709,11 +927,19 @@ static __always_inline unsigned int cpumask_weight_and(const struct cpumask *src
  * @srcp: the input to shift
  * @n: the number of bits to shift by
  */
+<<<<<<< HEAD
 static __always_inline void cpumask_shift_right(struct cpumask *dstp,
 				       const struct cpumask *srcp, int n)
 {
 	bitmap_shift_right(cpumask_bits(dstp), cpumask_bits(srcp), n,
 					       small_cpumask_bits);
+=======
+static inline void cpumask_shift_right(struct cpumask *dstp,
+				       const struct cpumask *srcp, int n)
+{
+	bitmap_shift_right(cpumask_bits(dstp), cpumask_bits(srcp), n,
+					       nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -722,7 +948,11 @@ static __always_inline void cpumask_shift_right(struct cpumask *dstp,
  * @srcp: the input to shift
  * @n: the number of bits to shift by
  */
+<<<<<<< HEAD
 static __always_inline void cpumask_shift_left(struct cpumask *dstp,
+=======
+static inline void cpumask_shift_left(struct cpumask *dstp,
+>>>>>>> b7ba80a49124 (Commit)
 				      const struct cpumask *srcp, int n)
 {
 	bitmap_shift_left(cpumask_bits(dstp), cpumask_bits(srcp), n,
@@ -734,10 +964,17 @@ static __always_inline void cpumask_shift_left(struct cpumask *dstp,
  * @dstp: the result
  * @srcp: the input cpumask
  */
+<<<<<<< HEAD
 static __always_inline void cpumask_copy(struct cpumask *dstp,
 				const struct cpumask *srcp)
 {
 	bitmap_copy(cpumask_bits(dstp), cpumask_bits(srcp), large_cpumask_bits);
+=======
+static inline void cpumask_copy(struct cpumask *dstp,
+				const struct cpumask *srcp)
+{
+	bitmap_copy(cpumask_bits(dstp), cpumask_bits(srcp), nr_cpumask_bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -771,7 +1008,11 @@ static __always_inline void cpumask_copy(struct cpumask *dstp,
  *
  * Returns -errno, or 0 for success.
  */
+<<<<<<< HEAD
 static __always_inline int cpumask_parse_user(const char __user *buf, int len,
+=======
+static inline int cpumask_parse_user(const char __user *buf, int len,
+>>>>>>> b7ba80a49124 (Commit)
 				     struct cpumask *dstp)
 {
 	return bitmap_parse_user(buf, len, cpumask_bits(dstp), nr_cpumask_bits);
@@ -785,7 +1026,11 @@ static __always_inline int cpumask_parse_user(const char __user *buf, int len,
  *
  * Returns -errno, or 0 for success.
  */
+<<<<<<< HEAD
 static __always_inline int cpumask_parselist_user(const char __user *buf, int len,
+=======
+static inline int cpumask_parselist_user(const char __user *buf, int len,
+>>>>>>> b7ba80a49124 (Commit)
 				     struct cpumask *dstp)
 {
 	return bitmap_parselist_user(buf, len, cpumask_bits(dstp),
@@ -799,7 +1044,11 @@ static __always_inline int cpumask_parselist_user(const char __user *buf, int le
  *
  * Returns -errno, or 0 for success.
  */
+<<<<<<< HEAD
 static __always_inline int cpumask_parse(const char *buf, struct cpumask *dstp)
+=======
+static inline int cpumask_parse(const char *buf, struct cpumask *dstp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return bitmap_parse(buf, UINT_MAX, cpumask_bits(dstp), nr_cpumask_bits);
 }
@@ -811,7 +1060,11 @@ static __always_inline int cpumask_parse(const char *buf, struct cpumask *dstp)
  *
  * Returns -errno, or 0 for success.
  */
+<<<<<<< HEAD
 static __always_inline int cpulist_parse(const char *buf, struct cpumask *dstp)
+=======
+static inline int cpulist_parse(const char *buf, struct cpumask *dstp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return bitmap_parselist(buf, cpumask_bits(dstp), nr_cpumask_bits);
 }
@@ -819,9 +1072,15 @@ static __always_inline int cpulist_parse(const char *buf, struct cpumask *dstp)
 /**
  * cpumask_size - size to allocate for a 'struct cpumask' in bytes
  */
+<<<<<<< HEAD
 static __always_inline unsigned int cpumask_size(void)
 {
 	return BITS_TO_LONGS(large_cpumask_bits) * sizeof(long);
+=======
+static inline unsigned int cpumask_size(void)
+{
+	return BITS_TO_LONGS(nr_cpumask_bits) * sizeof(long);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -872,7 +1131,11 @@ typedef struct cpumask *cpumask_var_t;
 
 bool alloc_cpumask_var_node(cpumask_var_t *mask, gfp_t flags, int node);
 
+<<<<<<< HEAD
 static __always_inline
+=======
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 bool zalloc_cpumask_var_node(cpumask_var_t *mask, gfp_t flags, int node)
 {
 	return alloc_cpumask_var_node(mask, flags | __GFP_ZERO, node);
@@ -888,13 +1151,21 @@ bool zalloc_cpumask_var_node(cpumask_var_t *mask, gfp_t flags, int node)
  *
  * See alloc_cpumask_var_node.
  */
+<<<<<<< HEAD
 static __always_inline
+=======
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 bool alloc_cpumask_var(cpumask_var_t *mask, gfp_t flags)
 {
 	return alloc_cpumask_var_node(mask, flags, NUMA_NO_NODE);
 }
 
+<<<<<<< HEAD
 static __always_inline
+=======
+static inline
+>>>>>>> b7ba80a49124 (Commit)
 bool zalloc_cpumask_var(cpumask_var_t *mask, gfp_t flags)
 {
 	return alloc_cpumask_var(mask, flags | __GFP_ZERO);
@@ -904,7 +1175,11 @@ void alloc_bootmem_cpumask_var(cpumask_var_t *mask);
 void free_cpumask_var(cpumask_var_t mask);
 void free_bootmem_cpumask_var(cpumask_var_t mask);
 
+<<<<<<< HEAD
 static __always_inline bool cpumask_available(cpumask_var_t mask)
+=======
+static inline bool cpumask_available(cpumask_var_t mask)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return mask != NULL;
 }
@@ -915,30 +1190,47 @@ typedef struct cpumask cpumask_var_t[1];
 #define this_cpu_cpumask_var_ptr(x) this_cpu_ptr(x)
 #define __cpumask_var_read_mostly
 
+<<<<<<< HEAD
 static __always_inline bool alloc_cpumask_var(cpumask_var_t *mask, gfp_t flags)
+=======
+static inline bool alloc_cpumask_var(cpumask_var_t *mask, gfp_t flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return true;
 }
 
+<<<<<<< HEAD
 static __always_inline bool alloc_cpumask_var_node(cpumask_var_t *mask, gfp_t flags,
+=======
+static inline bool alloc_cpumask_var_node(cpumask_var_t *mask, gfp_t flags,
+>>>>>>> b7ba80a49124 (Commit)
 					  int node)
 {
 	return true;
 }
 
+<<<<<<< HEAD
 static __always_inline bool zalloc_cpumask_var(cpumask_var_t *mask, gfp_t flags)
+=======
+static inline bool zalloc_cpumask_var(cpumask_var_t *mask, gfp_t flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	cpumask_clear(*mask);
 	return true;
 }
 
+<<<<<<< HEAD
 static __always_inline bool zalloc_cpumask_var_node(cpumask_var_t *mask, gfp_t flags,
+=======
+static inline bool zalloc_cpumask_var_node(cpumask_var_t *mask, gfp_t flags,
+>>>>>>> b7ba80a49124 (Commit)
 					  int node)
 {
 	cpumask_clear(*mask);
 	return true;
 }
 
+<<<<<<< HEAD
 static __always_inline void alloc_bootmem_cpumask_var(cpumask_var_t *mask)
 {
 }
@@ -952,6 +1244,21 @@ static __always_inline void free_bootmem_cpumask_var(cpumask_var_t mask)
 }
 
 static __always_inline bool cpumask_available(cpumask_var_t mask)
+=======
+static inline void alloc_bootmem_cpumask_var(cpumask_var_t *mask)
+{
+}
+
+static inline void free_cpumask_var(cpumask_var_t mask)
+{
+}
+
+static inline void free_bootmem_cpumask_var(cpumask_var_t mask)
+{
+}
+
+static inline bool cpumask_available(cpumask_var_t mask)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return true;
 }
@@ -981,12 +1288,20 @@ void init_cpu_present(const struct cpumask *src);
 void init_cpu_possible(const struct cpumask *src);
 void init_cpu_online(const struct cpumask *src);
 
+<<<<<<< HEAD
 static __always_inline void reset_cpu_possible_mask(void)
+=======
+static inline void reset_cpu_possible_mask(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	bitmap_zero(cpumask_bits(&__cpu_possible_mask), NR_CPUS);
 }
 
+<<<<<<< HEAD
 static __always_inline void
+=======
+static inline void
+>>>>>>> b7ba80a49124 (Commit)
 set_cpu_possible(unsigned int cpu, bool possible)
 {
 	if (possible)
@@ -995,7 +1310,11 @@ set_cpu_possible(unsigned int cpu, bool possible)
 		cpumask_clear_cpu(cpu, &__cpu_possible_mask);
 }
 
+<<<<<<< HEAD
 static __always_inline void
+=======
+static inline void
+>>>>>>> b7ba80a49124 (Commit)
 set_cpu_present(unsigned int cpu, bool present)
 {
 	if (present)
@@ -1006,7 +1325,11 @@ set_cpu_present(unsigned int cpu, bool present)
 
 void set_cpu_online(unsigned int cpu, bool online);
 
+<<<<<<< HEAD
 static __always_inline void
+=======
+static inline void
+>>>>>>> b7ba80a49124 (Commit)
 set_cpu_active(unsigned int cpu, bool active)
 {
 	if (active)
@@ -1015,7 +1338,11 @@ set_cpu_active(unsigned int cpu, bool active)
 		cpumask_clear_cpu(cpu, &__cpu_active_mask);
 }
 
+<<<<<<< HEAD
 static __always_inline void
+=======
+static inline void
+>>>>>>> b7ba80a49124 (Commit)
 set_cpu_dying(unsigned int cpu, bool dying)
 {
 	if (dying)
@@ -1038,7 +1365,11 @@ set_cpu_dying(unsigned int cpu, bool dying)
 	((struct cpumask *)(1 ? (bitmap)				\
 			    : (void *)sizeof(__check_is_bitmap(bitmap))))
 
+<<<<<<< HEAD
 static __always_inline int __check_is_bitmap(const unsigned long *bitmap)
+=======
+static inline int __check_is_bitmap(const unsigned long *bitmap)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return 1;
 }
@@ -1053,7 +1384,11 @@ static __always_inline int __check_is_bitmap(const unsigned long *bitmap)
 extern const unsigned long
 	cpu_bit_bitmap[BITS_PER_LONG+1][BITS_TO_LONGS(NR_CPUS)];
 
+<<<<<<< HEAD
 static __always_inline const struct cpumask *get_cpu_mask(unsigned int cpu)
+=======
+static inline const struct cpumask *get_cpu_mask(unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const unsigned long *p = cpu_bit_bitmap[1 + cpu % BITS_PER_LONG];
 	p -= cpu / BITS_PER_LONG;
@@ -1069,35 +1404,61 @@ static __always_inline const struct cpumask *get_cpu_mask(unsigned int cpu)
  * concurrent CPU hotplug operations unless invoked from a cpuhp_lock held
  * region.
  */
+<<<<<<< HEAD
 static __always_inline unsigned int num_online_cpus(void)
 {
 	return arch_atomic_read(&__num_online_cpus);
+=======
+static inline unsigned int num_online_cpus(void)
+{
+	return atomic_read(&__num_online_cpus);
+>>>>>>> b7ba80a49124 (Commit)
 }
 #define num_possible_cpus()	cpumask_weight(cpu_possible_mask)
 #define num_present_cpus()	cpumask_weight(cpu_present_mask)
 #define num_active_cpus()	cpumask_weight(cpu_active_mask)
 
+<<<<<<< HEAD
 static __always_inline bool cpu_online(unsigned int cpu)
+=======
+static inline bool cpu_online(unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return cpumask_test_cpu(cpu, cpu_online_mask);
 }
 
+<<<<<<< HEAD
 static __always_inline bool cpu_possible(unsigned int cpu)
+=======
+static inline bool cpu_possible(unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return cpumask_test_cpu(cpu, cpu_possible_mask);
 }
 
+<<<<<<< HEAD
 static __always_inline bool cpu_present(unsigned int cpu)
+=======
+static inline bool cpu_present(unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return cpumask_test_cpu(cpu, cpu_present_mask);
 }
 
+<<<<<<< HEAD
 static __always_inline bool cpu_active(unsigned int cpu)
+=======
+static inline bool cpu_active(unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return cpumask_test_cpu(cpu, cpu_active_mask);
 }
 
+<<<<<<< HEAD
 static __always_inline bool cpu_dying(unsigned int cpu)
+=======
+static inline bool cpu_dying(unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return cpumask_test_cpu(cpu, cpu_dying_mask);
 }
@@ -1109,27 +1470,47 @@ static __always_inline bool cpu_dying(unsigned int cpu)
 #define num_present_cpus()	1U
 #define num_active_cpus()	1U
 
+<<<<<<< HEAD
 static __always_inline bool cpu_online(unsigned int cpu)
+=======
+static inline bool cpu_online(unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return cpu == 0;
 }
 
+<<<<<<< HEAD
 static __always_inline bool cpu_possible(unsigned int cpu)
+=======
+static inline bool cpu_possible(unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return cpu == 0;
 }
 
+<<<<<<< HEAD
 static __always_inline bool cpu_present(unsigned int cpu)
+=======
+static inline bool cpu_present(unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return cpu == 0;
 }
 
+<<<<<<< HEAD
 static __always_inline bool cpu_active(unsigned int cpu)
+=======
+static inline bool cpu_active(unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return cpu == 0;
 }
 
+<<<<<<< HEAD
 static __always_inline bool cpu_dying(unsigned int cpu)
+=======
+static inline bool cpu_dying(unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return false;
 }
@@ -1163,7 +1544,11 @@ static __always_inline bool cpu_dying(unsigned int cpu)
  * Returns the length of the (null-terminated) @buf string, zero if
  * nothing is copied.
  */
+<<<<<<< HEAD
 static __always_inline ssize_t
+=======
+static inline ssize_t
+>>>>>>> b7ba80a49124 (Commit)
 cpumap_print_to_pagebuf(bool list, char *buf, const struct cpumask *mask)
 {
 	return bitmap_print_to_pagebuf(list, buf, cpumask_bits(mask),
@@ -1186,7 +1571,11 @@ cpumap_print_to_pagebuf(bool list, char *buf, const struct cpumask *mask)
  * Returns the length of how many bytes have been copied, excluding
  * terminating '\0'.
  */
+<<<<<<< HEAD
 static __always_inline ssize_t
+=======
+static inline ssize_t
+>>>>>>> b7ba80a49124 (Commit)
 cpumap_print_bitmask_to_buf(char *buf, const struct cpumask *mask,
 		loff_t off, size_t count)
 {
@@ -1201,7 +1590,11 @@ cpumap_print_bitmask_to_buf(char *buf, const struct cpumask *mask,
  * Everything is same with the above cpumap_print_bitmask_to_buf()
  * except the print format.
  */
+<<<<<<< HEAD
 static __always_inline ssize_t
+=======
+static inline ssize_t
+>>>>>>> b7ba80a49124 (Commit)
 cpumap_print_list_to_buf(char *buf, const struct cpumask *mask,
 		loff_t off, size_t count)
 {

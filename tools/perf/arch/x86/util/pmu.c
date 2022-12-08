@@ -15,6 +15,11 @@
 #include "../../../util/pmu.h"
 #include "../../../util/fncache.h"
 
+<<<<<<< HEAD
+=======
+#define TEMPLATE_ALIAS	"%s/bus/event_source/devices/%s/alias"
+
+>>>>>>> b7ba80a49124 (Commit)
 struct pmu_alias {
 	char *name;
 	char *alias;
@@ -27,6 +32,7 @@ static bool cached_list;
 struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
 {
 #ifdef HAVE_AUXTRACE_SUPPORT
+<<<<<<< HEAD
 	if (!strcmp(pmu->name, INTEL_PT_PMU_NAME)) {
 		pmu->auxtrace = true;
 		return intel_pt_pmu_default_config(pmu);
@@ -35,6 +41,12 @@ struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu __mayb
 		pmu->auxtrace = true;
 		pmu->selectable = true;
 	}
+=======
+	if (!strcmp(pmu->name, INTEL_PT_PMU_NAME))
+		return intel_pt_pmu_default_config(pmu);
+	if (!strcmp(pmu->name, INTEL_BTS_PMU_NAME))
+		pmu->selectable = true;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	return NULL;
 }
@@ -74,14 +86,27 @@ static int setup_pmu_alias_list(void)
 	char path[PATH_MAX];
 	DIR *dir;
 	struct dirent *dent;
+<<<<<<< HEAD
+=======
+	const char *sysfs = sysfs__mountpoint();
+>>>>>>> b7ba80a49124 (Commit)
 	struct pmu_alias *pmu_alias;
 	char buf[MAX_PMU_NAME_LEN];
 	FILE *file;
 	int ret = -ENOMEM;
 
+<<<<<<< HEAD
 	if (!perf_pmu__event_source_devices_scnprintf(path, sizeof(path)))
 		return -1;
 
+=======
+	if (!sysfs)
+		return -1;
+
+	snprintf(path, PATH_MAX,
+		 "%s" EVENT_SOURCE_DEVICE_PATH, sysfs);
+
+>>>>>>> b7ba80a49124 (Commit)
 	dir = opendir(path);
 	if (!dir)
 		return -errno;
@@ -91,7 +116,13 @@ static int setup_pmu_alias_list(void)
 		    !strcmp(dent->d_name, ".."))
 			continue;
 
+<<<<<<< HEAD
 		perf_pmu__pathname_scnprintf(path, sizeof(path), dent->d_name, "alias");
+=======
+		snprintf(path, PATH_MAX,
+			 TEMPLATE_ALIAS, sysfs, dent->d_name);
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (!file_available(path))
 			continue;
 

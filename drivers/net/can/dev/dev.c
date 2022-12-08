@@ -498,6 +498,7 @@ static int can_get_termination(struct net_device *ndev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool
 can_bittiming_const_valid(const struct can_bittiming_const *btc)
 {
@@ -510,6 +511,8 @@ can_bittiming_const_valid(const struct can_bittiming_const *btc)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Register the CAN network device */
 int register_candev(struct net_device *dev)
 {
@@ -530,6 +533,7 @@ int register_candev(struct net_device *dev)
 	if (!priv->data_bitrate_const != !priv->data_bitrate_const_cnt)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/* We only support either fixed bit rates or bit timing const. */
 	if ((priv->bitrate_const || priv->data_bitrate_const) &&
 	    (priv->bittiming_const || priv->data_bittiming_const))
@@ -539,6 +543,8 @@ int register_candev(struct net_device *dev)
 	    !can_bittiming_const_valid(priv->data_bittiming_const))
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!priv->termination_const) {
 		err = can_get_termination(dev);
 		if (err)

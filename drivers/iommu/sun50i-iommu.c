@@ -27,7 +27,10 @@
 #include <linux/types.h>
 
 #define IOMMU_RESET_REG			0x010
+<<<<<<< HEAD
 #define IOMMU_RESET_RELEASE_ALL			0xffffffff
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define IOMMU_ENABLE_REG		0x020
 #define IOMMU_ENABLE_ENABLE			BIT(0)
 
@@ -93,8 +96,11 @@
 #define NUM_PT_ENTRIES			256
 #define PT_SIZE				(NUM_PT_ENTRIES * PT_ENTRY_SIZE)
 
+<<<<<<< HEAD
 #define SPAGE_SIZE			4096
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct sun50i_iommu {
 	struct iommu_device iommu;
 
@@ -273,7 +279,11 @@ static u32 sun50i_mk_pte(phys_addr_t page, int prot)
 	enum sun50i_iommu_aci aci;
 	u32 flags = 0;
 
+<<<<<<< HEAD
 	if ((prot & (IOMMU_READ | IOMMU_WRITE)) == (IOMMU_READ | IOMMU_WRITE))
+=======
+	if (prot & (IOMMU_READ | IOMMU_WRITE))
+>>>>>>> b7ba80a49124 (Commit)
 		aci = SUN50I_IOMMU_ACI_RD_WR;
 	else if (prot & IOMMU_READ)
 		aci = SUN50I_IOMMU_ACI_RD;
@@ -297,6 +307,7 @@ static void sun50i_table_flush(struct sun50i_iommu_domain *sun50i_domain,
 	dma_sync_single_for_device(iommu->dev, dma, size, DMA_TO_DEVICE);
 }
 
+<<<<<<< HEAD
 static void sun50i_iommu_zap_iova(struct sun50i_iommu *iommu,
 				  unsigned long iova)
 {
@@ -353,6 +364,8 @@ static void sun50i_iommu_zap_range(struct sun50i_iommu *iommu,
 	iommu_write(iommu, IOMMU_AUTO_GATING_REG, IOMMU_AUTO_GATING_ENABLE);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int sun50i_iommu_flush_all_tlb(struct sun50i_iommu *iommu)
 {
 	u32 reg;
@@ -402,6 +415,7 @@ static void sun50i_iommu_flush_iotlb_all(struct iommu_domain *domain)
 	spin_unlock_irqrestore(&iommu->iommu_lock, flags);
 }
 
+<<<<<<< HEAD
 static void sun50i_iommu_iotlb_sync_map(struct iommu_domain *domain,
 					unsigned long iova, size_t size)
 {
@@ -414,6 +428,8 @@ static void sun50i_iommu_iotlb_sync_map(struct iommu_domain *domain,
 	spin_unlock_irqrestore(&iommu->iommu_lock, flags);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void sun50i_iommu_iotlb_sync(struct iommu_domain *domain,
 				    struct iommu_iotlb_gather *gather)
 {
@@ -582,7 +598,11 @@ static u32 *sun50i_dte_get_page_table(struct sun50i_iommu_domain *sun50i_domain,
 		sun50i_iommu_free_page_table(iommu, drop_pt);
 	}
 
+<<<<<<< HEAD
 	sun50i_table_flush(sun50i_domain, page_table, NUM_PT_ENTRIES);
+=======
+	sun50i_table_flush(sun50i_domain, page_table, PT_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 	sun50i_table_flush(sun50i_domain, dte_addr, 1);
 
 	return page_table;
@@ -672,6 +692,10 @@ static struct iommu_domain *sun50i_iommu_domain_alloc(unsigned type)
 	struct sun50i_iommu_domain *sun50i_domain;
 
 	if (type != IOMMU_DOMAIN_DMA &&
+<<<<<<< HEAD
+=======
+	    type != IOMMU_DOMAIN_IDENTITY &&
+>>>>>>> b7ba80a49124 (Commit)
 	    type != IOMMU_DOMAIN_UNMANAGED)
 		return NULL;
 
@@ -834,8 +858,13 @@ static const struct iommu_ops sun50i_iommu_ops = {
 	.probe_device	= sun50i_iommu_probe_device,
 	.default_domain_ops = &(const struct iommu_domain_ops) {
 		.attach_dev	= sun50i_iommu_attach_device,
+<<<<<<< HEAD
 		.flush_iotlb_all = sun50i_iommu_flush_iotlb_all,
 		.iotlb_sync_map = sun50i_iommu_iotlb_sync_map,
+=======
+		.detach_dev	= sun50i_iommu_detach_device,
+		.flush_iotlb_all = sun50i_iommu_flush_iotlb_all,
+>>>>>>> b7ba80a49124 (Commit)
 		.iotlb_sync	= sun50i_iommu_iotlb_sync,
 		.iova_to_phys	= sun50i_iommu_iova_to_phys,
 		.map		= sun50i_iommu_map,
@@ -855,8 +884,11 @@ static void sun50i_iommu_report_fault(struct sun50i_iommu *iommu,
 		report_iommu_fault(iommu->domain, iommu->dev, iova, prot);
 	else
 		dev_err(iommu->dev, "Page fault while iommu not attached to any domain?\n");
+<<<<<<< HEAD
 
 	sun50i_iommu_zap_range(iommu, iova, SPAGE_SIZE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static phys_addr_t sun50i_iommu_handle_pt_irq(struct sun50i_iommu *iommu,
@@ -940,8 +972,13 @@ static phys_addr_t sun50i_iommu_handle_perm_irq(struct sun50i_iommu *iommu)
 
 static irqreturn_t sun50i_iommu_irq(int irq, void *dev_id)
 {
+<<<<<<< HEAD
 	u32 status, l1_status, l2_status, resets;
 	struct sun50i_iommu *iommu = dev_id;
+=======
+	struct sun50i_iommu *iommu = dev_id;
+	u32 status;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock(&iommu->iommu_lock);
 
@@ -951,9 +988,12 @@ static irqreturn_t sun50i_iommu_irq(int irq, void *dev_id)
 		return IRQ_NONE;
 	}
 
+<<<<<<< HEAD
 	l1_status = iommu_read(iommu, IOMMU_L1PG_INT_REG);
 	l2_status = iommu_read(iommu, IOMMU_L2PG_INT_REG);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (status & IOMMU_INT_INVALID_L2PG)
 		sun50i_iommu_handle_pt_irq(iommu,
 					    IOMMU_INT_ERR_ADDR_L2_REG,
@@ -967,9 +1007,14 @@ static irqreturn_t sun50i_iommu_irq(int irq, void *dev_id)
 
 	iommu_write(iommu, IOMMU_INT_CLR_REG, status);
 
+<<<<<<< HEAD
 	resets = (status | l1_status | l2_status) & IOMMU_INT_MASTER_MASK;
 	iommu_write(iommu, IOMMU_RESET_REG, ~resets);
 	iommu_write(iommu, IOMMU_RESET_REG, IOMMU_RESET_RELEASE_ALL);
+=======
+	iommu_write(iommu, IOMMU_RESET_REG, ~status);
+	iommu_write(iommu, IOMMU_RESET_REG, status);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_unlock(&iommu->iommu_lock);
 
@@ -1076,3 +1121,7 @@ builtin_platform_driver_probe(sun50i_iommu_driver, sun50i_iommu_probe);
 MODULE_DESCRIPTION("Allwinner H6 IOMMU driver");
 MODULE_AUTHOR("Maxime Ripard <maxime@cerno.tech>");
 MODULE_AUTHOR("zhuxianbin <zhuxianbin@allwinnertech.com>");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("Dual BSD/GPL");
+>>>>>>> b7ba80a49124 (Commit)

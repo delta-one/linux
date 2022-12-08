@@ -92,11 +92,20 @@ int vpe_run(struct vpe *v)
 	write_tc_c0_tchalt(read_tc_c0_tchalt() & ~TCHALT_H);
 
 	/*
+<<<<<<< HEAD
 	 * We don't pass the memsize here, so VPE programs need to be
 	 * compiled with DFLT_STACK_SIZE and DFLT_HEAP_SIZE defined.
 	 */
 	mttgpr(7, 0);
 	mttgpr(6, v->ntcs);
+=======
+	 * The sde-kit passes 'memsize' to __start in $a3, so set something
+	 * here...  Or set $a3 to zero and define DFLT_STACK_SIZE and
+	 * DFLT_HEAP_SIZE when you compile your program
+	 */
+	mttgpr(6, v->ntcs);
+	mttgpr(7, physical_memsize);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* set up VPE1 */
 	/*
@@ -312,10 +321,18 @@ ATTRIBUTE_GROUPS(vpe);
 
 static void vpe_device_release(struct device *cd)
 {
+<<<<<<< HEAD
+=======
+	kfree(cd);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct class vpe_class = {
 	.name = "vpe",
+<<<<<<< HEAD
+=======
+	.owner = THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.dev_release = vpe_device_release,
 	.dev_groups = vpe_groups,
 };
@@ -494,7 +511,10 @@ out_dev:
 	device_del(&vpe_device);
 
 out_class:
+<<<<<<< HEAD
 	put_device(&vpe_device);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	class_unregister(&vpe_class);
 
 out_chrdev:
@@ -507,7 +527,11 @@ void __exit vpe_module_exit(void)
 {
 	struct vpe *v, *n;
 
+<<<<<<< HEAD
 	device_unregister(&vpe_device);
+=======
+	device_del(&vpe_device);
+>>>>>>> b7ba80a49124 (Commit)
 	class_unregister(&vpe_class);
 	unregister_chrdev(major, VPE_MODULE_NAME);
 

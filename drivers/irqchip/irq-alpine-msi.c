@@ -199,20 +199,34 @@ static int alpine_msix_init_domains(struct alpine_msix_data *priv,
 	}
 
 	gic_domain = irq_find_host(gic_node);
+<<<<<<< HEAD
 	of_node_put(gic_node);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!gic_domain) {
 		pr_err("Failed to find the GIC domain\n");
 		return -ENXIO;
 	}
 
+<<<<<<< HEAD
 	middle_domain = irq_domain_add_hierarchy(gic_domain, 0, 0, NULL,
 						 &alpine_msix_middle_domain_ops,
 						 priv);
+=======
+	middle_domain = irq_domain_add_tree(NULL,
+					    &alpine_msix_middle_domain_ops,
+					    priv);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!middle_domain) {
 		pr_err("Failed to create the MSIX middle domain\n");
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
+=======
+	middle_domain->parent = gic_domain;
+
+>>>>>>> b7ba80a49124 (Commit)
 	msi_domain = pci_msi_create_irq_domain(of_node_to_fwnode(node),
 					       &alpine_msix_domain_info,
 					       middle_domain);

@@ -78,7 +78,11 @@ definitions:
     $ref: /schemas/types.yaml#/definitions/uint32
 
   prefix:
+<<<<<<< HEAD
     description: device name prefix
+=======
+    description: "device name prefix"
+>>>>>>> b7ba80a49124 (Commit)
     $ref: /schemas/types.yaml#/definitions/string
 
   label:
@@ -205,8 +209,11 @@ patternProperties:
     $ref: "#/definitions/dai"
   "^simple-audio-card,codec(@[0-9a-f]+)?$":
     $ref: "#/definitions/dai"
+<<<<<<< HEAD
   "^simple-audio-card,plat(@[0-9a-f]+)?$":
     $ref: "#/definitions/dai"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   "^simple-audio-card,dai-link(@[0-9a-f]+)?$":
     description: |
@@ -217,10 +224,13 @@ patternProperties:
       reg:
         maxItems: 1
 
+<<<<<<< HEAD
       "#address-cells":
         const: 1
       "#size-cells":
         const: 0
+=======
+>>>>>>> b7ba80a49124 (Commit)
       # common properties
       frame-master:
         $ref: "#/definitions/frame-master"
@@ -250,9 +260,15 @@ patternProperties:
         maxItems: 1
 
     patternProperties:
+<<<<<<< HEAD
       "^cpu(-[0-9]+)?$":
         $ref: "#/definitions/dai"
       "^codec(-[0-9]+)?$":
+=======
+      "^cpu(@[0-9a-f]+)?":
+        $ref: "#/definitions/dai"
+      "^codec(@[0-9a-f]+)?":
+>>>>>>> b7ba80a49124 (Commit)
         $ref: "#/definitions/dai"
     additionalProperties: false
 
@@ -262,9 +278,15 @@ required:
 additionalProperties: false
 
 examples:
+<<<<<<< HEAD
 # --------------------
 # single DAI link
 # --------------------
+=======
+#--------------------
+# single DAI link
+#--------------------
+>>>>>>> b7ba80a49124 (Commit)
   - |
     sound {
         compatible = "simple-audio-card";
@@ -291,9 +313,15 @@ examples:
         };
     };
 
+<<<<<<< HEAD
 # --------------------
 # Multi DAI links
 # --------------------
+=======
+#--------------------
+# Multi DAI links
+#--------------------
+>>>>>>> b7ba80a49124 (Commit)
   - |
     sound {
         compatible = "simple-audio-card";
@@ -334,10 +362,17 @@ examples:
         };
     };
 
+<<<<<<< HEAD
 # --------------------
 # route audio from IMX6 SSI2 through TLV320DAC3100 codec
 # through TPA6130A2 amplifier to headphones:
 # --------------------
+=======
+#--------------------
+# route audio from IMX6 SSI2 through TLV320DAC3100 codec
+# through TPA6130A2 amplifier to headphones:
+#--------------------
+>>>>>>> b7ba80a49124 (Commit)
   - |
     sound {
         compatible = "simple-audio-card";
@@ -359,9 +394,15 @@ examples:
         };
     };
 
+<<<<<<< HEAD
 # --------------------
 # Sampling Rate Conversion
 # --------------------
+=======
+#--------------------
+# Sampling Rate Conversion
+#--------------------
+>>>>>>> b7ba80a49124 (Commit)
   - |
     sound {
         compatible = "simple-audio-card";
@@ -387,9 +428,15 @@ examples:
         };
     };
 
+<<<<<<< HEAD
 # --------------------
 # 2 CPU 1 Codec (Mixing)
 # --------------------
+=======
+#--------------------
+# 2 CPU 1 Codec (Mixing)
+#--------------------
+>>>>>>> b7ba80a49124 (Commit)
   - |
     sound {
         compatible = "simple-audio-card";
@@ -424,7 +471,11 @@ examples:
         };
     };
 
+<<<<<<< HEAD
 # --------------------
+=======
+#--------------------
+>>>>>>> b7ba80a49124 (Commit)
 # Multi DAI links with DPCM:
 #
 # CPU0 ------ ak4613
@@ -433,7 +484,11 @@ examples:
 # CPU3 --/                /* DPCM 5ch/6ch */
 # CPU4 --/                /* DPCM 7ch/8ch */
 # CPU5 ------ PCM3168A-c
+<<<<<<< HEAD
 # --------------------
+=======
+#--------------------
+>>>>>>> b7ba80a49124 (Commit)
   - |
     sound {
         compatible = "simple-audio-card";
@@ -468,6 +523,7 @@ examples:
 
             convert-channels = <8>; /* TDM Split */
 
+<<<<<<< HEAD
             sndcpu1: cpu-0 {
                 sound-dai = <&rcar_sound 1>;
             };
@@ -478,6 +534,18 @@ examples:
                 sound-dai = <&rcar_sound 3>;
             };
             cpu-3 {
+=======
+            sndcpu1: cpu0 {
+                sound-dai = <&rcar_sound 1>;
+            };
+            cpu1 {
+                sound-dai = <&rcar_sound 2>;
+            };
+            cpu2 {
+                sound-dai = <&rcar_sound 3>;
+            };
+            cpu3 {
+>>>>>>> b7ba80a49124 (Commit)
                 sound-dai = <&rcar_sound 4>;
             };
             codec {

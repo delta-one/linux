@@ -13,14 +13,28 @@
 #include <linux/irq.h>
 #include <linux/mfd/syscon.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/of_address.h>
 #include <linux/of_device.h>
 #include <linux/of.h>
 #include <linux/of_irq.h>
+=======
+#include <linux/of.h>
+#include <linux/of_address.h>
+#include <linux/of_device.h>
+#include <linux/of_irq.h>
+#include <linux/pinctrl/consumer.h>
+#include <linux/pinctrl/machine.h>
+#include <linux/pinctrl/pinconf.h>
+#include <linux/pinctrl/pinconf-generic.h>
+#include <linux/pinctrl/pinctrl.h>
+#include <linux/pinctrl/pinmux.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <linux/property.h>
 #include <linux/regmap.h>
 #include <linux/reset.h>
+<<<<<<< HEAD
 #include <linux/seq_file.h>
 #include <linux/slab.h>
 
@@ -31,6 +45,10 @@
 #include <linux/pinctrl/pinctrl.h>
 #include <linux/pinctrl/pinmux.h>
 
+=======
+#include <linux/slab.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #include "../core.h"
 #include "../pinconf.h"
 #include "../pinctrl-utils.h"
@@ -1330,7 +1348,11 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode
 	if (fwnode_property_read_u32(fwnode, "st,bank-ioport", &bank_ioport_nr))
 		bank_ioport_nr = bank_nr;
 
+<<<<<<< HEAD
 	bank->gpio_chip.base = -1;
+=======
+	bank->gpio_chip.base = bank_nr * STM32_GPIO_PINS_PER_BANK;
+>>>>>>> b7ba80a49124 (Commit)
 
 	bank->gpio_chip.ngpio = npins;
 	bank->gpio_chip.fwnode = fwnode;
@@ -1382,7 +1404,10 @@ static struct irq_domain *stm32_pctrl_get_irq_domain(struct platform_device *pde
 		return ERR_PTR(-ENXIO);
 
 	domain = irq_find_host(parent);
+<<<<<<< HEAD
 	of_node_put(parent);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!domain)
 		/* domain not registered yet */
 		return ERR_PTR(-EPROBE_DEFER);
@@ -1500,6 +1525,14 @@ int stm32_pctl_probe(struct platform_device *pdev)
 	if (!match_data)
 		return -EINVAL;
 
+<<<<<<< HEAD
+=======
+	if (!device_property_present(dev, "pins-are-numbered")) {
+		dev_err(dev, "only support pins-are-numbered format\n");
+		return -EINVAL;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	pctl = devm_kzalloc(dev, sizeof(*pctl), GFP_KERNEL);
 	if (!pctl)
 		return -ENOMEM;

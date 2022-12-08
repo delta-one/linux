@@ -55,6 +55,7 @@
  * being built from shared code.
  */
 
+<<<<<<< HEAD
 #define NO_DEV "(i40e no_device)"
 
 TRACE_EVENT(i40e_napi_poll,
@@ -104,6 +105,8 @@ TRACE_EVENT(i40e_napi_poll,
 		__entry->rx_clean_complete, __entry->tx_clean_complete)
 );
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Events related to a vsi & ring */
 DECLARE_EVENT_CLASS(
 	i40e_tx_template,
@@ -162,45 +165,77 @@ DECLARE_EVENT_CLASS(
 
 	TP_PROTO(struct i40e_ring *ring,
 		 union i40e_16byte_rx_desc *desc,
+<<<<<<< HEAD
 		 struct xdp_buff *xdp),
 
 	TP_ARGS(ring, desc, xdp),
+=======
+		 struct sk_buff *skb),
+
+	TP_ARGS(ring, desc, skb),
+>>>>>>> b7ba80a49124 (Commit)
 
 	TP_STRUCT__entry(
 		__field(void*, ring)
 		__field(void*, desc)
+<<<<<<< HEAD
 		__field(void*, xdp)
+=======
+		__field(void*, skb)
+>>>>>>> b7ba80a49124 (Commit)
 		__string(devname, ring->netdev->name)
 	),
 
 	TP_fast_assign(
 		__entry->ring = ring;
 		__entry->desc = desc;
+<<<<<<< HEAD
 		__entry->xdp = xdp;
+=======
+		__entry->skb = skb;
+>>>>>>> b7ba80a49124 (Commit)
 		__assign_str(devname, ring->netdev->name);
 	),
 
 	TP_printk(
+<<<<<<< HEAD
 		"netdev: %s ring: %p desc: %p xdp %p",
 		__get_str(devname), __entry->ring,
 		__entry->desc, __entry->xdp)
+=======
+		"netdev: %s ring: %p desc: %p skb %p",
+		__get_str(devname), __entry->ring,
+		__entry->desc, __entry->skb)
+>>>>>>> b7ba80a49124 (Commit)
 );
 
 DEFINE_EVENT(
 	i40e_rx_template, i40e_clean_rx_irq,
 	TP_PROTO(struct i40e_ring *ring,
 		 union i40e_16byte_rx_desc *desc,
+<<<<<<< HEAD
 		 struct xdp_buff *xdp),
 
 	TP_ARGS(ring, desc, xdp));
+=======
+		 struct sk_buff *skb),
+
+	TP_ARGS(ring, desc, skb));
+>>>>>>> b7ba80a49124 (Commit)
 
 DEFINE_EVENT(
 	i40e_rx_template, i40e_clean_rx_irq_rx,
 	TP_PROTO(struct i40e_ring *ring,
 		 union i40e_16byte_rx_desc *desc,
+<<<<<<< HEAD
 		 struct xdp_buff *xdp),
 
 	TP_ARGS(ring, desc, xdp));
+=======
+		 struct sk_buff *skb),
+
+	TP_ARGS(ring, desc, skb));
+>>>>>>> b7ba80a49124 (Commit)
 
 DECLARE_EVENT_CLASS(
 	i40e_xmit_template,

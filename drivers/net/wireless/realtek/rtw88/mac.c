@@ -217,6 +217,7 @@ static int rtw_pwr_seq_parser(struct rtw_dev *rtwdev,
 	cut_mask = cut_version_to_mask(cut);
 	switch (rtw_hci_type(rtwdev)) {
 	case RTW_HCI_TYPE_PCIE:
+<<<<<<< HEAD
 		intf_mask = RTW_PWR_INTF_PCI_MSK;
 		break;
 	case RTW_HCI_TYPE_USB:
@@ -224,6 +225,12 @@ static int rtw_pwr_seq_parser(struct rtw_dev *rtwdev,
 		break;
 	case RTW_HCI_TYPE_SDIO:
 		intf_mask = RTW_PWR_INTF_SDIO_MSK;
+=======
+		intf_mask = BIT(2);
+		break;
+	case RTW_HCI_TYPE_USB:
+		intf_mask = BIT(1);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		return -EINVAL;
@@ -236,7 +243,11 @@ static int rtw_pwr_seq_parser(struct rtw_dev *rtwdev,
 
 		ret = rtw_sub_pwr_seq_parser(rtwdev, intf_mask, cut_mask, cmd);
 		if (ret)
+<<<<<<< HEAD
 			return ret;
+=======
+			return -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 
 		idx++;
 	} while (1);
@@ -250,7 +261,10 @@ static int rtw_mac_power_switch(struct rtw_dev *rtwdev, bool pwr_on)
 	const struct rtw_pwr_seq_cmd **pwr_seq;
 	u8 rpwm;
 	bool cur_pwr;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rtw_chip_wcpu_11ac(rtwdev)) {
 		rpwm = rtw_read8(rtwdev, rtwdev->hci.rpwm_addr);
@@ -274,6 +288,7 @@ static int rtw_mac_power_switch(struct rtw_dev *rtwdev, bool pwr_on)
 		return -EALREADY;
 
 	pwr_seq = pwr_on ? chip->pwr_on_seq : chip->pwr_off_seq;
+<<<<<<< HEAD
 	ret = rtw_pwr_seq_parser(rtwdev, pwr_seq);
 	if (ret)
 		return ret;
@@ -282,6 +297,10 @@ static int rtw_mac_power_switch(struct rtw_dev *rtwdev, bool pwr_on)
 		set_bit(RTW_FLAG_POWERON, rtwdev->flags);
 	else
 		clear_bit(RTW_FLAG_POWERON, rtwdev->flags);
+=======
+	if (rtw_pwr_seq_parser(rtwdev, pwr_seq))
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -345,11 +364,14 @@ int rtw_mac_power_on(struct rtw_dev *rtwdev)
 	ret = rtw_mac_power_switch(rtwdev, true);
 	if (ret == -EALREADY) {
 		rtw_mac_power_switch(rtwdev, false);
+<<<<<<< HEAD
 
 		ret = rtw_mac_pre_system_cfg(rtwdev);
 		if (ret)
 			goto err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ret = rtw_mac_power_switch(rtwdev, true);
 		if (ret)
 			goto err;
@@ -921,8 +943,12 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static
 int _rtw_download_firmware(struct rtw_dev *rtwdev, struct rtw_fw_state *fw)
+=======
+int rtw_download_firmware(struct rtw_dev *rtwdev, struct rtw_fw_state *fw)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (rtw_chip_wcpu_11n(rtwdev))
 		return __rtw_download_firmware_legacy(rtwdev, fw);
@@ -930,6 +956,7 @@ int _rtw_download_firmware(struct rtw_dev *rtwdev, struct rtw_fw_state *fw)
 	return __rtw_download_firmware(rtwdev, fw);
 }
 
+<<<<<<< HEAD
 int rtw_download_firmware(struct rtw_dev *rtwdev, struct rtw_fw_state *fw)
 {
 	int ret;
@@ -945,6 +972,8 @@ int rtw_download_firmware(struct rtw_dev *rtwdev, struct rtw_fw_state *fw)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static u32 get_priority_queues(struct rtw_dev *rtwdev, u32 queues)
 {
 	const struct rtw_rqpn *rqpn = rtwdev->fifo.rqpn;
@@ -1045,9 +1074,12 @@ static int txdma_queue_mapping(struct rtw_dev *rtwdev)
 		else
 			return -EINVAL;
 		break;
+<<<<<<< HEAD
 	case RTW_HCI_TYPE_SDIO:
 		rqpn = &chip->rqpn_table[0];
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -EINVAL;
 	}
@@ -1066,9 +1098,12 @@ static int txdma_queue_mapping(struct rtw_dev *rtwdev)
 	if (rtw_chip_wcpu_11ac(rtwdev))
 		rtw_write32(rtwdev, REG_H2CQ_CSR, BIT_H2CQ_FULL);
 
+<<<<<<< HEAD
 	if (rtw_hci_type(rtwdev) == RTW_HCI_TYPE_USB)
 		rtw_write8_set(rtwdev, REG_TXDMA_PQ_MAP, BIT_RXDMA_ARBBW_EN);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1210,9 +1245,12 @@ static int priority_queue_cfg(struct rtw_dev *rtwdev)
 		else
 			return -EINVAL;
 		break;
+<<<<<<< HEAD
 	case RTW_HCI_TYPE_SDIO:
 		pg_tbl = &chip->page_table[0];
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -EINVAL;
 	}

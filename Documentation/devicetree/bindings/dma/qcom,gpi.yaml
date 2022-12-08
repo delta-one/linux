@@ -14,6 +14,7 @@ description: |
   peripheral buses such as I2C, UART, and SPI.
 
 allOf:
+<<<<<<< HEAD
   - $ref: dma-controller.yaml#
 
 properties:
@@ -40,6 +41,20 @@ properties:
               - qcom,sm8150-gpi-dma
               - qcom,sm8250-gpi-dma
           - const: qcom,sdm845-gpi-dma
+=======
+  - $ref: "dma-controller.yaml#"
+
+properties:
+  compatible:
+    enum:
+      - qcom,sc7280-gpi-dma
+      - qcom,sdm845-gpi-dma
+      - qcom,sm6350-gpi-dma
+      - qcom,sm8150-gpi-dma
+      - qcom,sm8250-gpi-dma
+      - qcom,sm8350-gpi-dma
+      - qcom,sm8450-gpi-dma
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1

@@ -16,6 +16,14 @@
 #ifndef __AA_DOMAIN_H
 #define __AA_DOMAIN_H
 
+<<<<<<< HEAD
+=======
+struct aa_domain {
+	int size;
+	char **table;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 #define AA_CHANGE_NOFLAGS 0
 #define AA_CHANGE_TEST 1
 #define AA_CHANGE_CHILD 2
@@ -27,6 +35,10 @@ struct aa_label *x_table_lookup(struct aa_profile *profile, u32 xindex,
 
 int apparmor_bprm_creds_for_exec(struct linux_binprm *bprm);
 
+<<<<<<< HEAD
+=======
+void aa_free_domain_entries(struct aa_domain *domain);
+>>>>>>> b7ba80a49124 (Commit)
 int aa_change_hat(const char *hats[], int count, u64 token, int flags);
 int aa_change_profile(const char *fqname, int flags);
 

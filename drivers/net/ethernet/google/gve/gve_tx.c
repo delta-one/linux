@@ -11,7 +11,10 @@
 #include <linux/tcp.h>
 #include <linux/vmalloc.h>
 #include <linux/skbuff.h>
+<<<<<<< HEAD
 #include <net/xdp_sock_drv.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void gve_tx_put_doorbell(struct gve_priv *priv,
 				       struct gve_queue_resources *q_resources,
@@ -20,6 +23,7 @@ static inline void gve_tx_put_doorbell(struct gve_priv *priv,
 	iowrite32be(val, &priv->db_bar2[be32_to_cpu(q_resources->db_index)]);
 }
 
+<<<<<<< HEAD
 void gve_xdp_tx_flush(struct gve_priv *priv, u32 xdp_qid)
 {
 	u32 tx_qid = gve_xdp_tx_queue_id(priv, xdp_qid);
@@ -28,6 +32,8 @@ void gve_xdp_tx_flush(struct gve_priv *priv, u32 xdp_qid)
 	gve_tx_put_doorbell(priv, tx->q_resources, tx->req);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* gvnic can only transmit from a Registered Segment.
  * We copy skb payloads into the registered segment before writing Tx
  * descriptors and ringing the Tx doorbell.
@@ -141,6 +147,7 @@ static void gve_tx_free_fifo(struct gve_tx_fifo *fifo, size_t bytes)
 	atomic_add(bytes, &fifo->available);
 }
 
+<<<<<<< HEAD
 static size_t gve_tx_clear_buffer_state(struct gve_tx_buffer_state *info)
 {
 	size_t space_freed = 0;
@@ -193,6 +200,8 @@ static int gve_clean_xdp_done(struct gve_priv *priv, struct gve_tx_ring *tx,
 	return pkts;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int gve_clean_tx_done(struct gve_priv *priv, struct gve_tx_ring *tx,
 			     u32 to_do, bool try_to_wake);
 
@@ -205,12 +214,17 @@ static void gve_tx_free_ring(struct gve_priv *priv, int idx)
 
 	gve_tx_remove_from_block(priv, idx);
 	slots = tx->mask + 1;
+<<<<<<< HEAD
 	if (tx->q_num < priv->tx_cfg.num_queues) {
 		gve_clean_tx_done(priv, tx, priv->tx_desc_cnt, false);
 		netdev_tx_reset_queue(tx->netdev_txq);
 	} else {
 		gve_clean_xdp_done(priv, tx, priv->tx_desc_cnt);
 	}
+=======
+	gve_clean_tx_done(priv, tx, priv->tx_desc_cnt, false);
+	netdev_tx_reset_queue(tx->netdev_txq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dma_free_coherent(hdev, sizeof(*tx->q_resources),
 			  tx->q_resources, tx->q_resources_bus);
@@ -242,7 +256,10 @@ static int gve_tx_alloc_ring(struct gve_priv *priv, int idx)
 	/* Make sure everything is zeroed to start */
 	memset(tx, 0, sizeof(*tx));
 	spin_lock_init(&tx->clean_lock);
+<<<<<<< HEAD
 	spin_lock_init(&tx->xdp_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tx->q_num = idx;
 
 	tx->mask = slots - 1;
@@ -261,7 +278,11 @@ static int gve_tx_alloc_ring(struct gve_priv *priv, int idx)
 	tx->raw_addressing = priv->queue_format == GVE_GQI_RDA_FORMAT;
 	tx->dev = &priv->pdev->dev;
 	if (!tx->raw_addressing) {
+<<<<<<< HEAD
 		tx->tx_fifo.qpl = gve_assign_tx_qpl(priv, idx);
+=======
+		tx->tx_fifo.qpl = gve_assign_tx_qpl(priv);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!tx->tx_fifo.qpl)
 			goto abort_with_desc;
 		/* map Tx FIFO */
@@ -279,8 +300,12 @@ static int gve_tx_alloc_ring(struct gve_priv *priv, int idx)
 
 	netif_dbg(priv, drv, priv->dev, "tx[%d]->bus=%lx\n", idx,
 		  (unsigned long)tx->bus);
+<<<<<<< HEAD
 	if (idx < priv->tx_cfg.num_queues)
 		tx->netdev_txq = netdev_get_tx_queue(priv->dev, idx);
+=======
+	tx->netdev_txq = netdev_get_tx_queue(priv->dev, idx);
+>>>>>>> b7ba80a49124 (Commit)
 	gve_tx_add_to_block(priv, idx);
 
 	return 0;
@@ -300,12 +325,20 @@ abort_with_info:
 	return -ENOMEM;
 }
 
+<<<<<<< HEAD
 int gve_tx_alloc_rings(struct gve_priv *priv, int start_id, int num_rings)
+=======
+int gve_tx_alloc_rings(struct gve_priv *priv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err = 0;
 	int i;
 
+<<<<<<< HEAD
 	for (i = start_id; i < start_id + num_rings; i++) {
+=======
+	for (i = 0; i < priv->tx_cfg.num_queues; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = gve_tx_alloc_ring(priv, i);
 		if (err) {
 			netif_err(priv, drv, priv->dev,
@@ -318,17 +351,29 @@ int gve_tx_alloc_rings(struct gve_priv *priv, int start_id, int num_rings)
 	if (err) {
 		int j;
 
+<<<<<<< HEAD
 		for (j = start_id; j < i; j++)
+=======
+		for (j = 0; j < i; j++)
+>>>>>>> b7ba80a49124 (Commit)
 			gve_tx_free_ring(priv, j);
 	}
 	return err;
 }
 
+<<<<<<< HEAD
 void gve_tx_free_rings_gqi(struct gve_priv *priv, int start_id, int num_rings)
 {
 	int i;
 
 	for (i = start_id; i < start_id + num_rings; i++)
+=======
+void gve_tx_free_rings_gqi(struct gve_priv *priv)
+{
+	int i;
+
+	for (i = 0; i < priv->tx_cfg.num_queues; i++)
+>>>>>>> b7ba80a49124 (Commit)
 		gve_tx_free_ring(priv, i);
 }
 
@@ -441,18 +486,32 @@ static int gve_maybe_stop_tx(struct gve_priv *priv, struct gve_tx_ring *tx,
 }
 
 static void gve_tx_fill_pkt_desc(union gve_tx_desc *pkt_desc,
+<<<<<<< HEAD
 				 u16 csum_offset, u8 ip_summed, bool is_gso,
 				 int l4_hdr_offset, u32 desc_cnt,
 				 u16 hlen, u64 addr, u16 pkt_len)
+=======
+				 struct sk_buff *skb, bool is_gso,
+				 int l4_hdr_offset, u32 desc_cnt,
+				 u16 hlen, u64 addr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* l4_hdr_offset and csum_offset are in units of 16-bit words */
 	if (is_gso) {
 		pkt_desc->pkt.type_flags = GVE_TXD_TSO | GVE_TXF_L4CSUM;
+<<<<<<< HEAD
 		pkt_desc->pkt.l4_csum_offset = csum_offset >> 1;
 		pkt_desc->pkt.l4_hdr_offset = l4_hdr_offset >> 1;
 	} else if (likely(ip_summed == CHECKSUM_PARTIAL)) {
 		pkt_desc->pkt.type_flags = GVE_TXD_STD | GVE_TXF_L4CSUM;
 		pkt_desc->pkt.l4_csum_offset = csum_offset >> 1;
+=======
+		pkt_desc->pkt.l4_csum_offset = skb->csum_offset >> 1;
+		pkt_desc->pkt.l4_hdr_offset = l4_hdr_offset >> 1;
+	} else if (likely(skb->ip_summed == CHECKSUM_PARTIAL)) {
+		pkt_desc->pkt.type_flags = GVE_TXD_STD | GVE_TXF_L4CSUM;
+		pkt_desc->pkt.l4_csum_offset = skb->csum_offset >> 1;
+>>>>>>> b7ba80a49124 (Commit)
 		pkt_desc->pkt.l4_hdr_offset = l4_hdr_offset >> 1;
 	} else {
 		pkt_desc->pkt.type_flags = GVE_TXD_STD;
@@ -460,7 +519,11 @@ static void gve_tx_fill_pkt_desc(union gve_tx_desc *pkt_desc,
 		pkt_desc->pkt.l4_hdr_offset = 0;
 	}
 	pkt_desc->pkt.desc_cnt = desc_cnt;
+<<<<<<< HEAD
 	pkt_desc->pkt.len = cpu_to_be16(pkt_len);
+=======
+	pkt_desc->pkt.len = cpu_to_be16(skb->len);
+>>>>>>> b7ba80a49124 (Commit)
 	pkt_desc->pkt.seg_len = cpu_to_be16(hlen);
 	pkt_desc->pkt.seg_addr = cpu_to_be64(addr);
 }
@@ -479,16 +542,27 @@ static void gve_tx_fill_mtd_desc(union gve_tx_desc *mtd_desc,
 }
 
 static void gve_tx_fill_seg_desc(union gve_tx_desc *seg_desc,
+<<<<<<< HEAD
 				 u16 l3_offset, u16 gso_size,
 				 bool is_gso_v6, bool is_gso,
+=======
+				 struct sk_buff *skb, bool is_gso,
+>>>>>>> b7ba80a49124 (Commit)
 				 u16 len, u64 addr)
 {
 	seg_desc->seg.type_flags = GVE_TXD_SEG;
 	if (is_gso) {
+<<<<<<< HEAD
 		if (is_gso_v6)
 			seg_desc->seg.type_flags |= GVE_TXSF_IPV6;
 		seg_desc->seg.l3_offset = l3_offset >> 1;
 		seg_desc->seg.mss = cpu_to_be16(gso_size);
+=======
+		if (skb_is_gso_v6(skb))
+			seg_desc->seg.type_flags |= GVE_TXSF_IPV6;
+		seg_desc->seg.l3_offset = skb_network_offset(skb) >> 1;
+		seg_desc->seg.mss = cpu_to_be16(skb_shinfo(skb)->gso_size);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	seg_desc->seg.seg_len = cpu_to_be16(len);
 	seg_desc->seg.seg_addr = cpu_to_be64(addr);
@@ -541,10 +615,16 @@ static int gve_tx_add_skb_copy(struct gve_priv *priv, struct gve_tx_ring *tx, st
 	payload_nfrags = gve_tx_alloc_fifo(&tx->tx_fifo, skb->len - hlen,
 					   &info->iov[payload_iov]);
 
+<<<<<<< HEAD
 	gve_tx_fill_pkt_desc(pkt_desc, skb->csum_offset, skb->ip_summed,
 			     is_gso, l4_hdr_offset,
 			     1 + mtd_desc_nr + payload_nfrags, hlen,
 			     info->iov[hdr_nfrags - 1].iov_offset, skb->len);
+=======
+	gve_tx_fill_pkt_desc(pkt_desc, skb, is_gso, l4_hdr_offset,
+			     1 + mtd_desc_nr + payload_nfrags, hlen,
+			     info->iov[hdr_nfrags - 1].iov_offset);
+>>>>>>> b7ba80a49124 (Commit)
 
 	skb_copy_bits(skb, 0,
 		      tx->tx_fifo.base + info->iov[hdr_nfrags - 1].iov_offset,
@@ -563,9 +643,13 @@ static int gve_tx_add_skb_copy(struct gve_priv *priv, struct gve_tx_ring *tx, st
 		next_idx = (tx->req + 1 + mtd_desc_nr + i - payload_iov) & tx->mask;
 		seg_desc = &tx->desc[next_idx];
 
+<<<<<<< HEAD
 		gve_tx_fill_seg_desc(seg_desc, skb_network_offset(skb),
 				     skb_shinfo(skb)->gso_size,
 				     skb_is_gso_v6(skb), is_gso,
+=======
+		gve_tx_fill_seg_desc(seg_desc, skb, is_gso,
+>>>>>>> b7ba80a49124 (Commit)
 				     info->iov[i].iov_len,
 				     info->iov[i].iov_offset);
 
@@ -623,9 +707,14 @@ static int gve_tx_add_skb_no_copy(struct gve_priv *priv, struct gve_tx_ring *tx,
 	if (mtd_desc_nr)
 		num_descriptors++;
 
+<<<<<<< HEAD
 	gve_tx_fill_pkt_desc(pkt_desc, skb->csum_offset, skb->ip_summed,
 			     is_gso, l4_hdr_offset,
 			     num_descriptors, hlen, addr, skb->len);
+=======
+	gve_tx_fill_pkt_desc(pkt_desc, skb, is_gso, l4_hdr_offset,
+			     num_descriptors, hlen, addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (mtd_desc_nr) {
 		idx = (idx + 1) & tx->mask;
@@ -641,9 +730,13 @@ static int gve_tx_add_skb_no_copy(struct gve_priv *priv, struct gve_tx_ring *tx,
 		addr += hlen;
 		idx = (idx + 1) & tx->mask;
 		seg_desc = &tx->desc[idx];
+<<<<<<< HEAD
 		gve_tx_fill_seg_desc(seg_desc, skb_network_offset(skb),
 				     skb_shinfo(skb)->gso_size,
 				     skb_is_gso_v6(skb), is_gso, len, addr);
+=======
+		gve_tx_fill_seg_desc(seg_desc, skb, is_gso, len, addr);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (i = 0; i < shinfo->nr_frags; i++) {
@@ -661,9 +754,13 @@ static int gve_tx_add_skb_no_copy(struct gve_priv *priv, struct gve_tx_ring *tx,
 		dma_unmap_len_set(&tx->info[idx], len, len);
 		dma_unmap_addr_set(&tx->info[idx], dma, addr);
 
+<<<<<<< HEAD
 		gve_tx_fill_seg_desc(seg_desc, skb_network_offset(skb),
 				     skb_shinfo(skb)->gso_size,
 				     skb_is_gso_v6(skb), is_gso, len, addr);
+=======
+		gve_tx_fill_seg_desc(seg_desc, skb, is_gso, len, addr);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return num_descriptors;
@@ -724,6 +821,7 @@ netdev_tx_t gve_tx(struct sk_buff *skb, struct net_device *dev)
 	return NETDEV_TX_OK;
 }
 
+<<<<<<< HEAD
 static int gve_tx_fill_xdp(struct gve_priv *priv, struct gve_tx_ring *tx,
 			   void *data, int len, void *frame_p, bool is_xsk)
 {
@@ -821,6 +919,8 @@ int gve_xdp_xmit_one(struct gve_priv *priv, struct gve_tx_ring *tx,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define GVE_TX_START_THRESH	PAGE_SIZE
 
 static int gve_clean_tx_done(struct gve_priv *priv, struct gve_tx_ring *tx,
@@ -830,8 +930,13 @@ static int gve_clean_tx_done(struct gve_priv *priv, struct gve_tx_ring *tx,
 	u64 pkts = 0, bytes = 0;
 	size_t space_freed = 0;
 	struct sk_buff *skb;
+<<<<<<< HEAD
 	u32 idx;
 	int j;
+=======
+	int i, j;
+	u32 idx;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (j = 0; j < to_do; j++) {
 		idx = tx->done & tx->mask;
@@ -853,7 +958,16 @@ static int gve_clean_tx_done(struct gve_priv *priv, struct gve_tx_ring *tx,
 			dev_consume_skb_any(skb);
 			if (tx->raw_addressing)
 				continue;
+<<<<<<< HEAD
 			space_freed += gve_tx_clear_buffer_state(info);
+=======
+			/* FIFO free */
+			for (i = 0; i < ARRAY_SIZE(info->iov); i++) {
+				space_freed += info->iov[i].iov_len + info->iov[i].iov_padding;
+				info->iov[i].iov_len = 0;
+				info->iov[i].iov_padding = 0;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -888,6 +1002,7 @@ u32 gve_tx_load_event_counter(struct gve_priv *priv,
 	return be32_to_cpu(counter);
 }
 
+<<<<<<< HEAD
 static int gve_xsk_tx(struct gve_priv *priv, struct gve_tx_ring *tx,
 		      int budget)
 {
@@ -952,6 +1067,8 @@ bool gve_xdp_poll(struct gve_notify_block *block, int budget)
 	return repoll;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool gve_tx_poll(struct gve_notify_block *block, int budget)
 {
 	struct gve_priv *priv = block->priv;

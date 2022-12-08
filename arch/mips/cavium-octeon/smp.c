@@ -20,7 +20,10 @@
 #include <asm/mmu_context.h>
 #include <asm/time.h>
 #include <asm/setup.h>
+<<<<<<< HEAD
 #include <asm/smp.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/octeon/octeon.h>
 

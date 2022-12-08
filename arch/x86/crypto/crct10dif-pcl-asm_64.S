@@ -94,6 +94,10 @@
 #
 # Assumes len >= 16.
 #
+<<<<<<< HEAD
+=======
+.align 16
+>>>>>>> b7ba80a49124 (Commit)
 SYM_FUNC_START(crc_t10dif_pcl)
 
 	movdqa	.Lbswap_mask(%rip), BSWAP_MASK

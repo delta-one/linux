@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/dma/dma-common.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: DMA Engine Common Properties
+=======
+title: DMA Engine Generic Binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Vinod Koul <vkoul@kernel.org>

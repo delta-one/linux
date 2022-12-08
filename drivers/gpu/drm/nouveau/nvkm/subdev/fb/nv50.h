@@ -7,6 +7,11 @@
 struct nv50_fb {
 	const struct nv50_fb_func *func;
 	struct nvkm_fb base;
+<<<<<<< HEAD
+=======
+	struct page *r100c08_page;
+	dma_addr_t r100c08;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct nv50_fb_func {

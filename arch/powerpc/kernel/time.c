@@ -130,7 +130,11 @@ unsigned long tb_ticks_per_jiffy;
 unsigned long tb_ticks_per_usec = 100; /* sane default */
 EXPORT_SYMBOL(tb_ticks_per_usec);
 unsigned long tb_ticks_per_sec;
+<<<<<<< HEAD
 EXPORT_SYMBOL(tb_ticks_per_sec);	/* for cputime conversions */
+=======
+EXPORT_SYMBOL(tb_ticks_per_sec);	/* for cputime_t conversions */
+>>>>>>> b7ba80a49124 (Commit)
 
 DEFINE_SPINLOCK(rtc_lock);
 EXPORT_SYMBOL_GPL(rtc_lock);
@@ -151,6 +155,24 @@ bool tb_invalid;
 
 #ifdef CONFIG_VIRT_CPU_ACCOUNTING_NATIVE
 /*
+<<<<<<< HEAD
+=======
+ * Factor for converting from cputime_t (timebase ticks) to
+ * microseconds. This is stored as 0.64 fixed-point binary fraction.
+ */
+u64 __cputime_usec_factor;
+EXPORT_SYMBOL(__cputime_usec_factor);
+
+static void calc_cputime_factors(void)
+{
+	struct div_result res;
+
+	div128_by_32(1000000, 0, tb_ticks_per_sec, &res);
+	__cputime_usec_factor = res.result_low;
+}
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * Read the SPURR on systems that have it, otherwise the PURR,
  * or if that doesn't exist return the timebase value passed in.
  */
@@ -354,9 +376,18 @@ void vtime_flush(struct task_struct *tsk)
 	acct->hardirq_time = 0;
 	acct->softirq_time = 0;
 }
+<<<<<<< HEAD
 #endif /* CONFIG_VIRT_CPU_ACCOUNTING_NATIVE */
 
 void __no_kcsan __delay(unsigned long loops)
+=======
+
+#else /* ! CONFIG_VIRT_CPU_ACCOUNTING_NATIVE */
+#define calc_cputime_factors()
+#endif
+
+void __delay(unsigned long loops)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long start;
 
@@ -377,7 +408,11 @@ void __no_kcsan __delay(unsigned long loops)
 }
 EXPORT_SYMBOL(__delay);
 
+<<<<<<< HEAD
 void __no_kcsan udelay(unsigned long usecs)
+=======
+void udelay(unsigned long usecs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	__delay(tb_ticks_per_usec * usecs);
 }
@@ -514,6 +549,7 @@ DEFINE_INTERRUPT_HANDLER_ASYNC(timer_interrupt)
 		return;
 	}
 
+<<<<<<< HEAD
 	/* Conditionally hard-enable interrupts. */
 	if (should_hard_irq_enable(regs)) {
 		/*
@@ -531,6 +567,24 @@ DEFINE_INTERRUPT_HANDLER_ASYNC(timer_interrupt)
 
 		do_hard_irq_enable();
 	}
+=======
+	/*
+	 * Ensure a positive value is written to the decrementer, or
+	 * else some CPUs will continue to take decrementer exceptions.
+	 * When the PPC_WATCHDOG (decrementer based) is configured,
+	 * keep this at most 31 bits, which is about 4 seconds on most
+	 * systems, which gives the watchdog a chance of catching timer
+	 * interrupt hard lockups.
+	 */
+	if (IS_ENABLED(CONFIG_PPC_WATCHDOG))
+		set_dec(0x7fffffff);
+	else
+		set_dec(decrementer_max);
+
+	/* Conditionally hard-enable interrupts. */
+	if (should_hard_irq_enable())
+		do_hard_irq_enable();
+>>>>>>> b7ba80a49124 (Commit)
 
 #if defined(CONFIG_PPC32) && defined(CONFIG_PPC_PMAC)
 	if (atomic_read(&ppc_n_lost_interrupts) != 0)
@@ -887,11 +941,15 @@ void __init time_init(void)
 	unsigned shift;
 
 	/* Normal PowerPC with timebase register */
+<<<<<<< HEAD
 	if (ppc_md.calibrate_decr)
 		ppc_md.calibrate_decr();
 	else
 		generic_calibrate_decr();
 
+=======
+	ppc_md.calibrate_decr();
+>>>>>>> b7ba80a49124 (Commit)
 	printk(KERN_DEBUG "time_init: decrementer frequency = %lu.%.6lu MHz\n",
 	       ppc_tb_freq / 1000000, ppc_tb_freq % 1000000);
 	printk(KERN_DEBUG "time_init: processor frequency   = %lu.%.6lu MHz\n",
@@ -900,6 +958,10 @@ void __init time_init(void)
 	tb_ticks_per_jiffy = ppc_tb_freq / HZ;
 	tb_ticks_per_sec = ppc_tb_freq;
 	tb_ticks_per_usec = ppc_tb_freq / 1000000;
+<<<<<<< HEAD
+=======
+	calc_cputime_factors();
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Compute scale factor for sched_clock.

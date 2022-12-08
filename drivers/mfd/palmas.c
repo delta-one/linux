@@ -502,7 +502,12 @@ static const struct of_device_id of_palmas_match_tbl[] = {
 };
 MODULE_DEVICE_TABLE(of, of_palmas_match_tbl);
 
+<<<<<<< HEAD
 static int palmas_i2c_probe(struct i2c_client *i2c)
+=======
+static int palmas_i2c_probe(struct i2c_client *i2c,
+			    const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct palmas *palmas;
 	struct palmas_platform_data *pdata;
@@ -511,6 +516,10 @@ static int palmas_i2c_probe(struct i2c_client *i2c)
 	int ret = 0, i;
 	unsigned int reg, addr;
 	int slave;
+<<<<<<< HEAD
+=======
+	const struct of_device_id *match;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pdata = dev_get_platdata(&i2c->dev);
 
@@ -534,7 +543,16 @@ static int palmas_i2c_probe(struct i2c_client *i2c)
 	palmas->dev = &i2c->dev;
 	palmas->irq = i2c->irq;
 
+<<<<<<< HEAD
 	driver_data = (struct palmas_driver_data *) device_get_match_data(&i2c->dev);
+=======
+	match = of_match_device(of_palmas_match_tbl, &i2c->dev);
+
+	if (!match)
+		return -ENODATA;
+
+	driver_data = (struct palmas_driver_data *)match->data;
+>>>>>>> b7ba80a49124 (Commit)
 	palmas->features = *driver_data->features;
 
 	for (i = 0; i < PALMAS_NUM_CLIENTS; i++) {
@@ -725,7 +743,11 @@ static struct i2c_driver palmas_i2c_driver = {
 		   .name = "palmas",
 		   .of_match_table = of_palmas_match_tbl,
 	},
+<<<<<<< HEAD
 	.probe_new = palmas_i2c_probe,
+=======
+	.probe = palmas_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = palmas_i2c_remove,
 	.id_table = palmas_i2c_id,
 };

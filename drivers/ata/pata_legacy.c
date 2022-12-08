@@ -315,10 +315,16 @@ static void pdc20230_set_piomode(struct ata_port *ap, struct ata_device *adev)
 	outb(inb(0x1F4) & 0x07, 0x1F4);
 
 	rt = inb(0x1F3);
+<<<<<<< HEAD
 	rt &= ~(0x07 << (3 * !adev->devno));
 	if (pio)
 		rt |= (1 + 3 * pio) << (3 * !adev->devno);
 	outb(rt, 0x1F3);
+=======
+	rt &= 0x07 << (3 * adev->devno);
+	if (pio)
+		rt |= (1 + 3 * pio) << (3 * adev->devno);
+>>>>>>> b7ba80a49124 (Commit)
 
 	udelay(100);
 	outb(inb(0x1F2) | 0x01, 0x1F2);

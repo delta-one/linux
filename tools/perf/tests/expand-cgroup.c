@@ -180,14 +180,24 @@ static int expand_metric_events(void)
 	struct evlist *evlist;
 	struct rblist metric_events;
 	const char metric_str[] = "CPI";
+<<<<<<< HEAD
 	const struct pmu_metrics_table *pme_test;
+=======
+	const struct pmu_events_table *pme_test;
+>>>>>>> b7ba80a49124 (Commit)
 
 	evlist = evlist__new();
 	TEST_ASSERT_VAL("failed to get evlist", evlist);
 
 	rblist__init(&metric_events);
+<<<<<<< HEAD
 	pme_test = find_core_metrics_table("testarch", "testcpu");
 	ret = metricgroup__parse_groups_test(evlist, pme_test, metric_str, &metric_events);
+=======
+	pme_test = find_core_events_table("testarch", "testcpu");
+	ret = metricgroup__parse_groups_test(evlist, pme_test, metric_str,
+					     false, false, &metric_events);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0) {
 		pr_debug("failed to parse '%s' metric\n", metric_str);
 		goto out;

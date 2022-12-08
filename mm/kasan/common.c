@@ -43,7 +43,11 @@ depot_stack_handle_t kasan_save_stack(gfp_t flags, bool can_alloc)
 	unsigned int nr_entries;
 
 	nr_entries = stack_trace_save(entries, ARRAY_SIZE(entries), 0);
+<<<<<<< HEAD
 	return __stack_depot_save(entries, nr_entries, flags, can_alloc);
+=======
+	return __stack_depot_save(entries, nr_entries, 0, flags, can_alloc);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void kasan_set_track(struct kasan_track *track, gfp_t flags)
@@ -95,24 +99,35 @@ asmlinkage void kasan_unpoison_task_stack_below(const void *watermark)
 }
 #endif /* CONFIG_KASAN_STACK */
 
+<<<<<<< HEAD
 bool __kasan_unpoison_pages(struct page *page, unsigned int order, bool init)
+=======
+void __kasan_unpoison_pages(struct page *page, unsigned int order, bool init)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u8 tag;
 	unsigned long i;
 
 	if (unlikely(PageHighMem(page)))
+<<<<<<< HEAD
 		return false;
 
 	if (!kasan_sample_page_alloc(order))
 		return false;
+=======
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	tag = kasan_random_tag();
 	kasan_unpoison(set_tag(page_address(page), tag),
 		       PAGE_SIZE << order, init);
 	for (i = 0; i < (1 << order); i++)
 		page_kasan_tag_set(page + i, tag);
+<<<<<<< HEAD
 
 	return true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void __kasan_poison_pages(struct page *page, unsigned int order, bool init)
@@ -122,6 +137,14 @@ void __kasan_poison_pages(struct page *page, unsigned int order, bool init)
 			     KASAN_PAGE_FREE, init);
 }
 
+<<<<<<< HEAD
+=======
+void __kasan_cache_create_kmalloc(struct kmem_cache *cache)
+{
+	cache->kasan_info.is_kmalloc = true;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 void __kasan_poison_slab(struct slab *slab)
 {
 	struct page *page = slab_page(slab);
@@ -246,9 +269,12 @@ bool __kasan_slab_free(struct kmem_cache *cache, void *object,
 
 static inline bool ____kasan_kfree_large(void *ptr, unsigned long ip)
 {
+<<<<<<< HEAD
 	if (!kasan_arch_is_ready())
 		return false;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (ptr != page_address(virt_to_head_page(ptr))) {
 		kasan_report_invalid_free(ptr, ip, KASAN_REPORT_INVALID_FREE);
 		return true;
@@ -324,7 +350,11 @@ void * __must_check __kasan_slab_alloc(struct kmem_cache *cache,
 	kasan_unpoison(tagged_object, cache->object_size, init);
 
 	/* Save alloc info (if possible) for non-kmalloc() allocations. */
+<<<<<<< HEAD
 	if (kasan_stack_collection_enabled() && !is_kmalloc_cache(cache))
+=======
+	if (kasan_stack_collection_enabled() && !cache->kasan_info.is_kmalloc)
+>>>>>>> b7ba80a49124 (Commit)
 		kasan_save_alloc_info(cache, tagged_object, flags);
 
 	return tagged_object;
@@ -370,7 +400,11 @@ static inline void *____kasan_kmalloc(struct kmem_cache *cache,
 	 * Save alloc info (if possible) for kmalloc() allocations.
 	 * This also rewrites the alloc info when called from kasan_krealloc().
 	 */
+<<<<<<< HEAD
 	if (kasan_stack_collection_enabled() && is_kmalloc_cache(cache))
+=======
+	if (kasan_stack_collection_enabled() && cache->kasan_info.is_kmalloc)
+>>>>>>> b7ba80a49124 (Commit)
 		kasan_save_alloc_info(cache, (void *)object, flags);
 
 	/* Keep the tag that was set by kasan_slab_alloc(). */

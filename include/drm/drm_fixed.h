@@ -25,7 +25,10 @@
 #ifndef DRM_FIXED_H
 #define DRM_FIXED_H
 
+<<<<<<< HEAD
 #include <linux/kernel.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/math64.h>
 
 typedef union dfixed {

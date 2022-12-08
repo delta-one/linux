@@ -30,6 +30,7 @@ struct dpaa2_mac {
 	struct phy *serdes_phy;
 };
 
+<<<<<<< HEAD
 static inline bool dpaa2_mac_is_type_phy(struct dpaa2_mac *mac)
 {
 	if (!mac)
@@ -38,6 +39,10 @@ static inline bool dpaa2_mac_is_type_phy(struct dpaa2_mac *mac)
 	return mac->attr.link_type == DPMAC_LINK_TYPE_PHY ||
 	       mac->attr.link_type == DPMAC_LINK_TYPE_BACKPLANE;
 }
+=======
+bool dpaa2_mac_is_type_fixed(struct fsl_mc_device *dpmac_dev,
+			     struct fsl_mc_io *mc_io);
+>>>>>>> b7ba80a49124 (Commit)
 
 int dpaa2_mac_open(struct dpaa2_mac *mac);
 

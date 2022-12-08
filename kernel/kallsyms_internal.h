@@ -26,6 +26,9 @@ extern const char kallsyms_token_table[] __weak;
 extern const u16 kallsyms_token_index[] __weak;
 
 extern const unsigned int kallsyms_markers[] __weak;
+<<<<<<< HEAD
 extern const u8 kallsyms_seqs_of_names[] __weak;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif // LINUX_KALLSYMS_INTERNAL_H_

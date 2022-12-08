@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 // Copyright (C) 2018 Facebook
 
+<<<<<<< HEAD
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
+=======
+#define _GNU_SOURCE
+>>>>>>> b7ba80a49124 (Commit)
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>

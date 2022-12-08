@@ -1330,9 +1330,18 @@ static struct phy *devm_of_phy_optional_get_index(struct device *dev,
 	if (!name)
 		return ERR_PTR(-ENOMEM);
 
+<<<<<<< HEAD
 	phy = devm_of_phy_optional_get(dev, np, name);
 	kfree(name);
 
+=======
+	phy = devm_of_phy_get(dev, np, name);
+	kfree(name);
+
+	if (PTR_ERR(phy) == -ENODEV)
+		phy = NULL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return phy;
 }
 
@@ -2199,11 +2208,18 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
 		 * and in this case fall back to using AFI per port register
 		 * to toggle PERST# SFIO line.
 		 */
+<<<<<<< HEAD
 		rp->reset_gpio = devm_fwnode_gpiod_get(dev,
 						       of_fwnode_handle(port),
 						       "reset",
 						       GPIOD_OUT_LOW,
 						       label);
+=======
+		rp->reset_gpio = devm_gpiod_get_from_of_node(dev, port,
+							     "reset-gpios", 0,
+							     GPIOD_OUT_LOW,
+							     label);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(rp->reset_gpio)) {
 			if (PTR_ERR(rp->reset_gpio) == -ENOENT) {
 				rp->reset_gpio = NULL;
@@ -2811,3 +2827,7 @@ static struct platform_driver tegra_pcie_driver = {
 	.remove = tegra_pcie_remove,
 };
 module_platform_driver(tegra_pcie_driver);
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

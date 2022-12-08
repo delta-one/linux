@@ -707,10 +707,14 @@ int mac802154_llsec_encrypt(struct mac802154_llsec *sec, struct sk_buff *skb)
 
 	hlen = ieee802154_hdr_pull(skb, &hdr);
 
+<<<<<<< HEAD
 	/* TODO: control frames security support */
 	if (hlen < 0 ||
 	    (hdr.fc.type != IEEE802154_FC_TYPE_DATA &&
 	     hdr.fc.type != IEEE802154_FC_TYPE_BEACON))
+=======
+	if (hlen < 0 || hdr.fc.type != IEEE802154_FC_TYPE_DATA)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (!hdr.fc.security_enabled ||

@@ -566,11 +566,15 @@ static int mdp_m2m_open(struct file *file)
 		goto err_free_ctx;
 	}
 
+<<<<<<< HEAD
 	ret = ida_alloc(&mdp->mdp_ida, GFP_KERNEL);
 	if (ret < 0)
 		goto err_unlock_mutex;
 	ctx->id = ret;
 
+=======
+	ctx->id = ida_alloc(&mdp->mdp_ida, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	ctx->mdp_dev = mdp;
 
 	v4l2_fh_init(&ctx->fh, vdev);
@@ -621,8 +625,11 @@ err_release_handler:
 	v4l2_fh_del(&ctx->fh);
 err_exit_fh:
 	v4l2_fh_exit(&ctx->fh);
+<<<<<<< HEAD
 	ida_free(&mdp->mdp_ida, ctx->id);
 err_unlock_mutex:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&mdp->m2m_lock);
 err_free_ctx:
 	kfree(ctx);

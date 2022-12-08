@@ -216,7 +216,11 @@
 					clock-names = "KMIREFCLK", "apb_pclk";
 				};
 
+<<<<<<< HEAD
 				v2m_serial0: serial@9000 {
+=======
+				v2m_serial0: uart@9000 {
+>>>>>>> b7ba80a49124 (Commit)
 					compatible = "arm,pl011", "arm,primecell";
 					reg = <0x09000 0x1000>;
 					interrupts = <5>;
@@ -224,7 +228,11 @@
 					clock-names = "uartclk", "apb_pclk";
 				};
 
+<<<<<<< HEAD
 				v2m_serial1: serial@a000 {
+=======
+				v2m_serial1: uart@a000 {
+>>>>>>> b7ba80a49124 (Commit)
 					compatible = "arm,pl011", "arm,primecell";
 					reg = <0x0a000 0x1000>;
 					interrupts = <6>;
@@ -232,7 +240,11 @@
 					clock-names = "uartclk", "apb_pclk";
 				};
 
+<<<<<<< HEAD
 				v2m_serial2: serial@b000 {
+=======
+				v2m_serial2: uart@b000 {
+>>>>>>> b7ba80a49124 (Commit)
 					compatible = "arm,pl011", "arm,primecell";
 					reg = <0x0b000 0x1000>;
 					interrupts = <7>;
@@ -240,7 +252,11 @@
 					clock-names = "uartclk", "apb_pclk";
 				};
 
+<<<<<<< HEAD
 				v2m_serial3: serial@c000 {
+=======
+				v2m_serial3: uart@c000 {
+>>>>>>> b7ba80a49124 (Commit)
 					compatible = "arm,pl011", "arm,primecell";
 					reg = <0x0c000 0x1000>;
 					interrupts = <8>;
@@ -383,49 +399,81 @@
 			leds {
 				compatible = "gpio-leds";
 
+<<<<<<< HEAD
 				led-user1 {
+=======
+				user1 {
+>>>>>>> b7ba80a49124 (Commit)
 					label = "v2m:green:user1";
 					gpios = <&v2m_led_gpios 0 0>;
 					linux,default-trigger = "heartbeat";
 				};
 
+<<<<<<< HEAD
 				led-user2 {
+=======
+				user2 {
+>>>>>>> b7ba80a49124 (Commit)
 					label = "v2m:green:user2";
 					gpios = <&v2m_led_gpios 1 0>;
 					linux,default-trigger = "mmc0";
 				};
 
+<<<<<<< HEAD
 				led-user3 {
+=======
+				user3 {
+>>>>>>> b7ba80a49124 (Commit)
 					label = "v2m:green:user3";
 					gpios = <&v2m_led_gpios 2 0>;
 					linux,default-trigger = "cpu0";
 				};
 
+<<<<<<< HEAD
 				led-user4 {
+=======
+				user4 {
+>>>>>>> b7ba80a49124 (Commit)
 					label = "v2m:green:user4";
 					gpios = <&v2m_led_gpios 3 0>;
 					linux,default-trigger = "cpu1";
 				};
 
+<<<<<<< HEAD
 				led-user5 {
+=======
+				user5 {
+>>>>>>> b7ba80a49124 (Commit)
 					label = "v2m:green:user5";
 					gpios = <&v2m_led_gpios 4 0>;
 					linux,default-trigger = "cpu2";
 				};
 
+<<<<<<< HEAD
 				led-user6 {
+=======
+				user6 {
+>>>>>>> b7ba80a49124 (Commit)
 					label = "v2m:green:user6";
 					gpios = <&v2m_led_gpios 5 0>;
 					linux,default-trigger = "cpu3";
 				};
 
+<<<<<<< HEAD
 				led-user7 {
+=======
+				user7 {
+>>>>>>> b7ba80a49124 (Commit)
 					label = "v2m:green:user7";
 					gpios = <&v2m_led_gpios 6 0>;
 					linux,default-trigger = "cpu4";
 				};
 
+<<<<<<< HEAD
 				led-user8 {
+=======
+				user8 {
+>>>>>>> b7ba80a49124 (Commit)
 					label = "v2m:green:user8";
 					gpios = <&v2m_led_gpios 7 0>;
 					linux,default-trigger = "cpu5";

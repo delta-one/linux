@@ -10,9 +10,12 @@
 #define _PAGE_PRESENT		(1<<10)
 #define _PAGE_MODIFIED		(1<<11)
 
+<<<<<<< HEAD
 /* We borrow bit 7 to store the exclusive marker in swap PTEs. */
 #define _PAGE_SWP_EXCLUSIVE	(1<<7)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* implemented in hardware */
 #define _PAGE_GLOBAL		(1<<0)
 #define _PAGE_VALID		(1<<1)
@@ -29,13 +32,18 @@
 #define _PAGE_PROT_NONE		_PAGE_WRITE
 
 /*
+<<<<<<< HEAD
  * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
  * are !pte_none() && !pte_present().
+=======
+ * Encode and decode a swap entry
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Format of swap PTE:
  *     bit          0:    _PAGE_GLOBAL (zero)
  *     bit          1:    _PAGE_VALID (zero)
  *     bit      2 - 6:    swap type
+<<<<<<< HEAD
  *     bit          7:    exclusive marker
  *     bit          8:    swap offset[0]
  *     bit          9:    _PAGE_WRITE (zero)
@@ -49,5 +57,19 @@
 					((type & 0x1f) << 2) | \
 					((offset & 0x1) << 8) | \
 					((offset & 0x3ffffe) << 10)})
+=======
+ *     bit      7 - 8:    swap offset[0 - 1]
+ *     bit          9:    _PAGE_WRITE (zero)
+ *     bit         10:    _PAGE_PRESENT (zero)
+ *     bit    11 - 31:    swap offset[2 - 22]
+ */
+#define __swp_type(x)			(((x).val >> 2) & 0x1f)
+#define __swp_offset(x)			((((x).val >> 7) & 0x3) | \
+					(((x).val >> 9) & 0x7ffffc))
+#define __swp_entry(type, offset)	((swp_entry_t) { \
+					((type & 0x1f) << 2) | \
+					((offset & 0x3) << 7) | \
+					((offset & 0x7ffffc) << 9)})
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __ASM_CSKY_PGTABLE_BITS_H */

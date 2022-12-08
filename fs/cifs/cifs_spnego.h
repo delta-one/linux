@@ -24,7 +24,11 @@ struct cifs_spnego_msg {
 	uint32_t	flags;
 	uint32_t	sesskey_len;
 	uint32_t	secblob_len;
+<<<<<<< HEAD
 	uint8_t		data[];
+=======
+	uint8_t		data[1];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #ifdef __KERNEL__

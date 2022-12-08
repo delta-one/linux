@@ -13,6 +13,7 @@
 
 #include <linux/types.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_KASAN_HW_TAGS
 
 /* Whether the MTE asynchronous mode is enabled. */
@@ -81,6 +82,11 @@ static inline void __mte_enable_tco_async(void)
 }
 
 /*
+=======
+#ifdef CONFIG_ARM64_MTE
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * These functions are meant to be only used from KASAN runtime through
  * the arch_*() interface defined in asm/memory.h.
  * These functions don't include system_supports_mte() checks,
@@ -203,6 +209,7 @@ void mte_enable_kernel_asymm(void);
 
 #else /* CONFIG_ARM64_MTE */
 
+<<<<<<< HEAD
 static inline void __mte_disable_tco(void)
 {
 }
@@ -219,6 +226,8 @@ static inline void __mte_enable_tco_async(void)
 {
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline u8 mte_get_ptr_tag(void *ptr)
 {
 	return 0xFF;

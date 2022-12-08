@@ -474,7 +474,12 @@ static const struct iio_chan_spec lv0104cs_channels[] = {
 	},
 };
 
+<<<<<<< HEAD
 static int lv0104cs_probe(struct i2c_client *client)
+=======
+static int lv0104cs_probe(struct i2c_client *client,
+				const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct iio_dev *indio_dev;
 	struct lv0104cs_private *lv0104cs;
@@ -520,7 +525,11 @@ static struct i2c_driver lv0104cs_i2c_driver = {
 		.name	= "lv0104cs",
 	},
 	.id_table	= lv0104cs_id,
+<<<<<<< HEAD
 	.probe_new	= lv0104cs_probe,
+=======
+	.probe		= lv0104cs_probe,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_i2c_driver(lv0104cs_i2c_driver);
 

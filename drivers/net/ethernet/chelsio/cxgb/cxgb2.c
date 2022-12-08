@@ -1053,7 +1053,11 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 		netdev->hard_header_len += (netdev->hw_features & NETIF_F_TSO) ?
 			sizeof(struct cpl_tx_pkt_lso) : sizeof(struct cpl_tx_pkt);
 
+<<<<<<< HEAD
 		netif_napi_add(netdev, &adapter->napi, t1_poll);
+=======
+		netif_napi_add(netdev, &adapter->napi, t1_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 		netdev->ethtool_ops = &t1_ethtool_ops;
 

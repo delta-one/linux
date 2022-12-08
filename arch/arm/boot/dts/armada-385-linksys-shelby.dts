@@ -62,11 +62,19 @@
 };
 
 &gpio_leds {
+<<<<<<< HEAD
 	led-power {
 		label = "shelby:white:power";
 	};
 
 	led-sata {
+=======
+	power {
+		label = "shelby:white:power";
+	};
+
+	sata {
+>>>>>>> b7ba80a49124 (Commit)
 		label = "shelby:white:sata";
 	};
 };

@@ -758,7 +758,11 @@ struct kvm_mips_callbacks {
 	void (*vcpu_reenter)(struct kvm_vcpu *vcpu);
 };
 extern struct kvm_mips_callbacks *kvm_mips_callbacks;
+<<<<<<< HEAD
 int kvm_mips_emulation_init(void);
+=======
+int kvm_mips_emulation_init(struct kvm_mips_callbacks **install_callbacks);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Debug: dump vcpu state */
 int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu);
@@ -888,6 +892,10 @@ extern unsigned long kvm_mips_get_ramsize(struct kvm *kvm);
 extern int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu,
 			     struct kvm_mips_interrupt *irq);
 
+<<<<<<< HEAD
+=======
+static inline void kvm_arch_hardware_unsetup(void) {}
+>>>>>>> b7ba80a49124 (Commit)
 static inline void kvm_arch_sync_events(struct kvm *kvm) {}
 static inline void kvm_arch_free_memslot(struct kvm *kvm,
 					 struct kvm_memory_slot *slot) {}

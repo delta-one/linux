@@ -15,11 +15,17 @@
 #include <linux/kernel.h>
 #include <linux/mm.h>
 #include <linux/moduleloader.h>
+<<<<<<< HEAD
 #include <linux/scs.h>
 #include <linux/vmalloc.h>
 #include <asm/alternative.h>
 #include <asm/insn.h>
 #include <asm/scs.h>
+=======
+#include <linux/vmalloc.h>
+#include <asm/alternative.h>
+#include <asm/insn.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/sections.h>
 
 void *module_alloc(unsigned long size)
@@ -499,6 +505,12 @@ static int module_init_ftrace_plt(const Elf_Ehdr *hdr,
 
 	__init_plt(&plts[FTRACE_PLT_IDX], FTRACE_ADDR);
 
+<<<<<<< HEAD
+=======
+	if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_REGS))
+		__init_plt(&plts[FTRACE_REGS_PLT_IDX], FTRACE_REGS_ADDR);
+
+>>>>>>> b7ba80a49124 (Commit)
 	mod->arch.ftrace_trampolines = plts;
 #endif
 	return 0;
@@ -513,11 +525,14 @@ int module_finalize(const Elf_Ehdr *hdr,
 	if (s)
 		apply_alternatives_module((void *)s->sh_addr, s->sh_size);
 
+<<<<<<< HEAD
 	if (scs_is_dynamic()) {
 		s = find_section(hdr, sechdrs, ".init.eh_frame");
 		if (s)
 			scs_patch((void *)s->sh_addr, s->sh_size);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return module_init_ftrace_plt(hdr, sechdrs, me);
 }

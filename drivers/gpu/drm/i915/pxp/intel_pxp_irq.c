@@ -3,6 +3,7 @@
  * Copyright(c) 2020 Intel Corporation.
  */
 #include <linux/workqueue.h>
+<<<<<<< HEAD
 
 #include "gt/intel_gt_irq.h"
 #include "gt/intel_gt_regs.h"
@@ -15,6 +16,16 @@
 #include "intel_pxp_irq.h"
 #include "intel_pxp_session.h"
 #include "intel_pxp_types.h"
+=======
+#include "intel_pxp.h"
+#include "intel_pxp_irq.h"
+#include "intel_pxp_session.h"
+#include "gt/intel_gt_irq.h"
+#include "gt/intel_gt_regs.h"
+#include "gt/intel_gt_types.h"
+#include "i915_irq.h"
+#include "i915_reg.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_runtime_pm.h"
 
 /**
@@ -24,13 +35,20 @@
  */
 void intel_pxp_irq_handler(struct intel_pxp *pxp, u16 iir)
 {
+<<<<<<< HEAD
 	struct intel_gt *gt;
+=======
+	struct intel_gt *gt = pxp_to_gt(pxp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (GEM_WARN_ON(!intel_pxp_is_enabled(pxp)))
 		return;
 
+<<<<<<< HEAD
 	gt = pxp->ctrl_gt;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	lockdep_assert_held(gt->irq_lock);
 
 	if (unlikely(!iir))
@@ -68,7 +86,11 @@ static inline void pxp_irq_reset(struct intel_gt *gt)
 
 void intel_pxp_irq_enable(struct intel_pxp *pxp)
 {
+<<<<<<< HEAD
 	struct intel_gt *gt = pxp->ctrl_gt;
+=======
+	struct intel_gt *gt = pxp_to_gt(pxp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irq(gt->irq_lock);
 
@@ -83,7 +105,11 @@ void intel_pxp_irq_enable(struct intel_pxp *pxp)
 
 void intel_pxp_irq_disable(struct intel_pxp *pxp)
 {
+<<<<<<< HEAD
 	struct intel_gt *gt = pxp->ctrl_gt;
+=======
+	struct intel_gt *gt = pxp_to_gt(pxp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * We always need to submit a global termination when we re-enable the

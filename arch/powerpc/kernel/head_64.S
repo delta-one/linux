@@ -18,7 +18,10 @@
  *  variants.
  */
 
+<<<<<<< HEAD
 #include <linux/linkage.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/threads.h>
 #include <linux/init.h>
 #include <asm/reg.h>
@@ -144,7 +147,11 @@ DEFINE_FIXED_SYMBOL(__run_at_load, first_256B)
 	.globl	__secondary_hold
 __secondary_hold:
 	FIXUP_ENDIAN
+<<<<<<< HEAD
 #ifndef CONFIG_PPC_BOOK3E_64
+=======
+#ifndef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	mfmsr	r24
 	ori	r24,r24,MSR_RI
 	mtmsrd	r24			/* RI on */
@@ -160,13 +167,26 @@ __secondary_hold:
 	std	r24,(ABS_ADDR(__secondary_hold_acknowledge, first_256B))(0)
 	sync
 
+<<<<<<< HEAD
 	/* All secondary cpus wait here until told to start. */
 100:	ld	r12,(ABS_ADDR(__secondary_hold_spinloop, first_256B))(0)
+=======
+	li	r26,0
+#ifdef CONFIG_PPC_BOOK3E
+	tovirt(r26,r26)
+#endif
+	/* All secondary cpus wait here until told to start. */
+100:	ld	r12,(ABS_ADDR(__secondary_hold_spinloop, first_256B))(r26)
+>>>>>>> b7ba80a49124 (Commit)
 	cmpdi	0,r12,0
 	beq	100b
 
 #if defined(CONFIG_SMP) || defined(CONFIG_KEXEC_CORE)
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	tovirt(r12,r12)
 #endif
 	mtctr	r12
@@ -175,7 +195,11 @@ __secondary_hold:
 	 * it may be the case that other platforms have r4 right to
 	 * begin with, this gives us some safety in case it is not
 	 */
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	mr	r4,r25
 #else
 	li	r4,0
@@ -189,6 +213,16 @@ __secondary_hold:
 #endif
 CLOSE_FIXED_SECTION(first_256B)
 
+<<<<<<< HEAD
+=======
+/* This value is used to mark exception frames on the stack. */
+	.section ".toc","aw"
+/* This value is used to mark exception frames on the stack. */
+exception_marker:
+	.tc	ID_EXC_MARKER[TC],STACK_FRAME_REGS_MARKER
+	.previous
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * On server, we include the exception vectors code here as it
  * relies on absolute addressing which is only possible within
@@ -204,7 +238,11 @@ USE_TEXT_SECTION()
 
 #include "interrupt_64.S"
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The booting_thread_hwid holds the thread id we want to boot in cpu
  * hotplug case. It is set by cpu hotplug code, and is invalid by default.
@@ -312,7 +350,11 @@ _GLOBAL(fsl_secondary_thread_init)
 	bl	book3e_secondary_thread_init
 	b	generic_secondary_common_init
 
+<<<<<<< HEAD
 #endif /* CONFIG_PPC_BOOK3E_64 */
+=======
+#endif /* CONFIG_PPC_BOOK3E */
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * On pSeries and most other platforms, secondary processors spin
@@ -335,7 +377,11 @@ _GLOBAL(generic_secondary_smp_init)
 	bl	relative_toc
 	tovirt(r2,r2)
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	/* Book3E initialization */
 	mr	r3,r24
 	mr	r4,r25
@@ -411,7 +457,11 @@ generic_secondary_common_init:
 	b	kexec_wait		/* next kernel might do better	 */
 
 2:	SET_PACA(r13)
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	addi	r12,r13,PACA_EXTLB	/* and TLB exc frame in another  */
 	mtspr	SPRN_SPRG_TLB_EXFRAME,r12
 #endif
@@ -421,7 +471,11 @@ generic_secondary_common_init:
 
 	/* Create a temp kernel stack for use before relocation is on.	*/
 	ld	r1,PACAEMERGSP(r13)
+<<<<<<< HEAD
 	subi	r1,r1,STACK_FRAME_MIN_SIZE
+=======
+	subi	r1,r1,STACK_FRAME_OVERHEAD
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* See if we need to call a cpu state restore handler */
 	LOAD_REG_ADDR(r23, cur_cpu_spec)
@@ -459,7 +513,11 @@ generic_secondary_common_init:
  * Assumes we're mapped EA == RA if the MMU is on.
  */
 #ifdef CONFIG_PPC_BOOK3S
+<<<<<<< HEAD
 SYM_FUNC_START_LOCAL(__mmu_off)
+=======
+__mmu_off:
+>>>>>>> b7ba80a49124 (Commit)
 	mfmsr	r3
 	andi.	r0,r3,MSR_IR|MSR_DR
 	beqlr
@@ -470,6 +528,7 @@ SYM_FUNC_START_LOCAL(__mmu_off)
 	sync
 	rfid
 	b	.	/* prevent speculative execution */
+<<<<<<< HEAD
 SYM_FUNC_END(__mmu_off)
 
 SYM_FUNC_START_LOCAL(start_initialization_book3s)
@@ -497,6 +556,11 @@ SYM_FUNC_START_LOCAL(start_initialization_book3s)
 SYM_FUNC_END(start_initialization_book3s)
 #endif
 
+=======
+#endif
+
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Here is our main kernel entry point. We support currently 2 kind of entries
  * depending on the value of r5.
@@ -512,9 +576,12 @@ __start_initialization_multiplatform:
 	/* Make sure we are running in 64 bits mode */
 	bl	enable_64b_mode
 
+<<<<<<< HEAD
 	/* Zero r13 (paca) so early program check / mce don't use it */
 	li	r13,0
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Get TOC pointer (current runtime address) */
 	bl	relative_toc
 
@@ -540,12 +607,37 @@ __start_initialization_multiplatform:
 	mr	r29,r9
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
 	bl	start_initialization_book3e
 #else
 	bl	start_initialization_book3s
 #endif /* CONFIG_PPC_BOOK3E_64 */
 	b	__after_prom_start
+=======
+#ifdef CONFIG_PPC_BOOK3E
+	bl	start_initialization_book3e
+	b	__after_prom_start
+#else
+	/* Setup some critical 970 SPRs before switching MMU off */
+	mfspr	r0,SPRN_PVR
+	srwi	r0,r0,16
+	cmpwi	r0,0x39		/* 970 */
+	beq	1f
+	cmpwi	r0,0x3c		/* 970FX */
+	beq	1f
+	cmpwi	r0,0x44		/* 970MP */
+	beq	1f
+	cmpwi	r0,0x45		/* 970GX */
+	bne	2f
+1:	bl	__cpu_preinit_ppc970
+2:
+
+	/* Switch off MMU if not already off */
+	bl	__mmu_off
+	b	__after_prom_start
+#endif /* CONFIG_PPC_BOOK3E */
+>>>>>>> b7ba80a49124 (Commit)
 
 __REF
 __boot_from_prom:
@@ -592,11 +684,19 @@ __after_prom_start:
 	/* process relocations for the final address of the kernel */
 	lis	r25,PAGE_OFFSET@highest	/* compute virtual base of kernel */
 	sldi	r25,r25,32
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_BOOK3E_64)
 	tovirt(r26,r26)		/* on booke, we already run at PAGE_OFFSET */
 #endif
 	lwz	r7,(FIXED_SYMBOL_ABS_ADDR(__run_at_load))(r26)
 #if defined(CONFIG_PPC_BOOK3E_64)
+=======
+#if defined(CONFIG_PPC_BOOK3E)
+	tovirt(r26,r26)		/* on booke, we already run at PAGE_OFFSET */
+#endif
+	lwz	r7,(FIXED_SYMBOL_ABS_ADDR(__run_at_load))(r26)
+#if defined(CONFIG_PPC_BOOK3E)
+>>>>>>> b7ba80a49124 (Commit)
 	tophys(r26,r26)
 #endif
 	cmplwi	cr0,r7,1	/* flagged to stay where we are ? */
@@ -604,7 +704,11 @@ __after_prom_start:
 	add	r25,r25,r26
 1:	mr	r3,r25
 	bl	relocate
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_BOOK3E_64)
+=======
+#if defined(CONFIG_PPC_BOOK3E)
+>>>>>>> b7ba80a49124 (Commit)
 	/* IVPR needs to be set after relocation. */
 	bl	init_core_book3e
 #endif
@@ -618,11 +722,19 @@ __after_prom_start:
  * Note: This process overwrites the OF exception vectors.
  */
 	li	r3,0			/* target addr */
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
 	tovirt(r3,r3)		/* on booke, we already run at PAGE_OFFSET */
 #endif
 	mr.	r4,r26			/* In some cases the loader may  */
 #if defined(CONFIG_PPC_BOOK3E_64)
+=======
+#ifdef CONFIG_PPC_BOOK3E
+	tovirt(r3,r3)		/* on booke, we already run at PAGE_OFFSET */
+#endif
+	mr.	r4,r26			/* In some cases the loader may  */
+#if defined(CONFIG_PPC_BOOK3E)
+>>>>>>> b7ba80a49124 (Commit)
 	tovirt(r4,r4)
 #endif
 	beq	9f			/* have already put us at zero */
@@ -635,14 +747,22 @@ __after_prom_start:
  * variable __run_at_load, if it is set the kernel is treated as relocatable
  * kernel, otherwise it will be moved to PHYSICAL_START
  */
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_BOOK3E_64)
+=======
+#if defined(CONFIG_PPC_BOOK3E)
+>>>>>>> b7ba80a49124 (Commit)
 	tovirt(r26,r26)		/* on booke, we already run at PAGE_OFFSET */
 #endif
 	lwz	r7,(FIXED_SYMBOL_ABS_ADDR(__run_at_load))(r26)
 	cmplwi	cr0,r7,1
 	bne	3f
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	LOAD_REG_ADDR(r5, __end_interrupts)
 	LOAD_REG_ADDR(r11, _stext)
 	sub	r5,r5,r11
@@ -785,7 +905,11 @@ _GLOBAL(pmac_secondary_start)
 
 	/* Create a temp kernel stack for use before relocation is on.	*/
 	ld	r1,PACAEMERGSP(r13)
+<<<<<<< HEAD
 	subi	r1,r1,STACK_FRAME_MIN_SIZE
+=======
+	subi	r1,r1,STACK_FRAME_OVERHEAD
+>>>>>>> b7ba80a49124 (Commit)
 
 	b	__secondary_start
 
@@ -853,7 +977,11 @@ __secondary_start:
  * before going into C code.
  */
 start_secondary_prolog:
+<<<<<<< HEAD
 	LOAD_PACA_TOC()
+=======
+	ld	r2,PACATOC(r13)
+>>>>>>> b7ba80a49124 (Commit)
 	li	r3,0
 	std	r3,0(r1)		/* Zero the stack frame pointer	*/
 	bl	start_secondary
@@ -874,19 +1002,31 @@ _GLOBAL(start_secondary_resume)
 /*
  * This subroutine clobbers r11 and r12
  */
+<<<<<<< HEAD
 SYM_FUNC_START_LOCAL(enable_64b_mode)
 	mfmsr	r11			/* grab the current MSR */
 #ifdef CONFIG_PPC_BOOK3E_64
 	oris	r11,r11,0x8000		/* CM bit set, we'll set ICM later */
 	mtmsr	r11
 #else /* CONFIG_PPC_BOOK3E_64 */
+=======
+enable_64b_mode:
+	mfmsr	r11			/* grab the current MSR */
+#ifdef CONFIG_PPC_BOOK3E
+	oris	r11,r11,0x8000		/* CM bit set, we'll set ICM later */
+	mtmsr	r11
+#else /* CONFIG_PPC_BOOK3E */
+>>>>>>> b7ba80a49124 (Commit)
 	LOAD_REG_IMMEDIATE(r12, MSR_64BIT)
 	or	r11,r11,r12
 	mtmsrd	r11
 	isync
 #endif
 	blr
+<<<<<<< HEAD
 SYM_FUNC_END(enable_64b_mode)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * This puts the TOC pointer into r2, offset by 0x8000 (as expected
@@ -946,7 +1086,11 @@ start_here_multiplatform:
 	std	r29,8(r11);
 #endif
 
+<<<<<<< HEAD
 #ifndef CONFIG_PPC_BOOK3E_64
+=======
+#ifndef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	mfmsr	r6
 	ori	r6,r6,MSR_RI
 	mtmsrd	r6			/* RI on */
@@ -964,7 +1108,11 @@ start_here_multiplatform:
 	LOAD_REG_IMMEDIATE(r1,THREAD_SIZE)
 	add	r1,r3,r1
 	li	r0,0
+<<<<<<< HEAD
 	stdu	r0,-STACK_FRAME_MIN_SIZE(r1)
+=======
+	stdu	r0,-STACK_FRAME_OVERHEAD(r1)
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Do very early kernel initializations, including initial hash table
@@ -994,7 +1142,11 @@ start_here_common:
 	std	r1,PACAKSAVE(r13)
 
 	/* Load the TOC (virtual address) */
+<<<<<<< HEAD
 	LOAD_PACA_TOC()
+=======
+	ld	r2,PACATOC(r13)
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Mark interrupts soft and hard disabled (they might be enabled
 	 * in the PACA when doing hotplug)

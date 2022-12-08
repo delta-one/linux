@@ -188,6 +188,7 @@ static int imgu_subdev_set_fmt(struct v4l2_subdev *sd,
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct v4l2_rect *
 imgu_subdev_get_crop(struct imgu_v4l2_subdev *sd,
 		     struct v4l2_subdev_state *sd_state, unsigned int pad,
@@ -210,18 +211,28 @@ imgu_subdev_get_compose(struct imgu_v4l2_subdev *sd,
 		return &sd->rect.bds;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int imgu_subdev_get_selection(struct v4l2_subdev *sd,
 				     struct v4l2_subdev_state *sd_state,
 				     struct v4l2_subdev_selection *sel)
 {
+<<<<<<< HEAD
 	struct imgu_v4l2_subdev *imgu_sd =
 		container_of(sd, struct imgu_v4l2_subdev, subdev);
+=======
+	struct v4l2_rect *try_sel, *r;
+	struct imgu_v4l2_subdev *imgu_sd = container_of(sd,
+							struct imgu_v4l2_subdev,
+							subdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (sel->pad != IMGU_NODE_IN)
 		return -EINVAL;
 
 	switch (sel->target) {
 	case V4L2_SEL_TGT_CROP:
+<<<<<<< HEAD
 		sel->r = *imgu_subdev_get_crop(imgu_sd, sd_state, sel->pad,
 					       sel->which);
 		return 0;
@@ -232,6 +243,25 @@ static int imgu_subdev_get_selection(struct v4l2_subdev *sd,
 	default:
 		return -EINVAL;
 	}
+=======
+		try_sel = v4l2_subdev_get_try_crop(sd, sd_state, sel->pad);
+		r = &imgu_sd->rect.eff;
+		break;
+	case V4L2_SEL_TGT_COMPOSE:
+		try_sel = v4l2_subdev_get_try_compose(sd, sd_state, sel->pad);
+		r = &imgu_sd->rect.bds;
+		break;
+	default:
+		return -EINVAL;
+	}
+
+	if (sel->which == V4L2_SUBDEV_FORMAT_TRY)
+		sel->r = *try_sel;
+	else
+		sel->r = *r;
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int imgu_subdev_set_selection(struct v4l2_subdev *sd,
@@ -239,9 +269,16 @@ static int imgu_subdev_set_selection(struct v4l2_subdev *sd,
 				     struct v4l2_subdev_selection *sel)
 {
 	struct imgu_device *imgu = v4l2_get_subdevdata(sd);
+<<<<<<< HEAD
 	struct imgu_v4l2_subdev *imgu_sd =
 		container_of(sd, struct imgu_v4l2_subdev, subdev);
 	struct v4l2_rect *rect;
+=======
+	struct imgu_v4l2_subdev *imgu_sd = container_of(sd,
+							struct imgu_v4l2_subdev,
+							subdev);
+	struct v4l2_rect *rect, *try_sel;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_dbg(&imgu->pci_dev->dev,
 		 "set subdev %u sel which %u target 0x%4x rect [%ux%u]",
@@ -253,18 +290,35 @@ static int imgu_subdev_set_selection(struct v4l2_subdev *sd,
 
 	switch (sel->target) {
 	case V4L2_SEL_TGT_CROP:
+<<<<<<< HEAD
 		rect = imgu_subdev_get_crop(imgu_sd, sd_state, sel->pad,
 					    sel->which);
 		break;
 	case V4L2_SEL_TGT_COMPOSE:
 		rect = imgu_subdev_get_compose(imgu_sd, sd_state, sel->pad,
 					       sel->which);
+=======
+		try_sel = v4l2_subdev_get_try_crop(sd, sd_state, sel->pad);
+		rect = &imgu_sd->rect.eff;
+		break;
+	case V4L2_SEL_TGT_COMPOSE:
+		try_sel = v4l2_subdev_get_try_compose(sd, sd_state, sel->pad);
+		rect = &imgu_sd->rect.bds;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	*rect = sel->r;
+=======
+	if (sel->which == V4L2_SUBDEV_FORMAT_TRY)
+		*try_sel = sel->r;
+	else
+		*rect = sel->r;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -494,7 +548,11 @@ static int imgu_vb2_start_streaming(struct vb2_queue *vq, unsigned int count)
 	pipe = node->pipe;
 	imgu_pipe = &imgu->imgu_pipe[pipe];
 	atomic_set(&node->sequence, 0);
+<<<<<<< HEAD
 	r = video_device_pipeline_start(&node->vdev, &imgu_pipe->pipeline);
+=======
+	r = media_pipeline_start(&node->vdev.entity, &imgu_pipe->pipeline);
+>>>>>>> b7ba80a49124 (Commit)
 	if (r < 0)
 		goto fail_return_bufs;
 
@@ -519,7 +577,11 @@ static int imgu_vb2_start_streaming(struct vb2_queue *vq, unsigned int count)
 	return 0;
 
 fail_stop_pipeline:
+<<<<<<< HEAD
 	video_device_pipeline_stop(&node->vdev);
+=======
+	media_pipeline_stop(&node->vdev.entity);
+>>>>>>> b7ba80a49124 (Commit)
 fail_return_bufs:
 	imgu_return_all_buffers(imgu, node, VB2_BUF_STATE_QUEUED);
 
@@ -559,7 +621,11 @@ static void imgu_vb2_stop_streaming(struct vb2_queue *vq)
 	imgu_return_all_buffers(imgu, node, VB2_BUF_STATE_ERROR);
 	mutex_unlock(&imgu->streaming_lock);
 
+<<<<<<< HEAD
 	video_device_pipeline_stop(&node->vdev);
+=======
+	media_pipeline_stop(&node->vdev.entity);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /******************** v4l2_ioctl_ops ********************/

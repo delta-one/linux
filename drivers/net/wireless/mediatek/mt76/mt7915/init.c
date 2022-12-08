@@ -8,7 +8,10 @@
 #include "mt7915.h"
 #include "mac.h"
 #include "mcu.h"
+<<<<<<< HEAD
 #include "coredump.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "eeprom.h"
 
 static const struct ieee80211_iface_limit if_limits[] = {
@@ -38,7 +41,12 @@ static const struct ieee80211_iface_combination if_comb[] = {
 				       BIT(NL80211_CHAN_WIDTH_20) |
 				       BIT(NL80211_CHAN_WIDTH_40) |
 				       BIT(NL80211_CHAN_WIDTH_80) |
+<<<<<<< HEAD
 				       BIT(NL80211_CHAN_WIDTH_160),
+=======
+				       BIT(NL80211_CHAN_WIDTH_160) |
+				       BIT(NL80211_CHAN_WIDTH_80P80),
+>>>>>>> b7ba80a49124 (Commit)
 	}
 };
 
@@ -82,6 +90,7 @@ static ssize_t mt7915_thermal_temp_store(struct device *dev,
 
 	mutex_lock(&phy->dev->mt76.mutex);
 	val = clamp_val(DIV_ROUND_CLOSEST(val, 1000), 60, 130);
+<<<<<<< HEAD
 
 	if ((i - 1 == MT7915_CRIT_TEMP_IDX &&
 	     val > phy->throttle_temp[MT7915_MAX_TEMP_IDX]) ||
@@ -99,6 +108,11 @@ static ssize_t mt7915_thermal_temp_store(struct device *dev,
 	if (ret)
 		return ret;
 
+=======
+	phy->throttle_temp[i - 1] = val;
+	mutex_unlock(&phy->dev->mt76.mutex);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return count;
 }
 
@@ -144,11 +158,19 @@ mt7915_thermal_set_cur_throttle_state(struct thermal_cooling_device *cdev,
 	u8 throttling = MT7915_THERMAL_THROTTLE_MAX - state;
 	int ret;
 
+<<<<<<< HEAD
 	if (state > MT7915_CDEV_THROTTLE_MAX) {
 		dev_err(phy->dev->mt76.dev,
 			"please specify a valid throttling state\n");
 		return -EINVAL;
 	}
+=======
+	if (state > MT7915_CDEV_THROTTLE_MAX)
+		return -EINVAL;
+
+	if (phy->throttle_temp[0] > phy->throttle_temp[1])
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (state == phy->cdev_state)
 		return 0;
@@ -177,7 +199,11 @@ static void mt7915_unregister_thermal(struct mt7915_phy *phy)
 	struct wiphy *wiphy = phy->mt76->hw->wiphy;
 
 	if (!phy->cdev)
+<<<<<<< HEAD
 		return;
+=======
+	    return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	sysfs_remove_link(&wiphy->dev.kobj, "cooling_device");
 	thermal_cooling_device_unregister(phy->cdev);
@@ -211,16 +237,25 @@ static int mt7915_thermal_init(struct mt7915_phy *phy)
 		return PTR_ERR(hwmon);
 
 	/* initialize critical/maximum high temperature */
+<<<<<<< HEAD
 	phy->throttle_temp[MT7915_CRIT_TEMP_IDX] = MT7915_CRIT_TEMP;
 	phy->throttle_temp[MT7915_MAX_TEMP_IDX] = MT7915_MAX_TEMP;
 
 	return 0;
+=======
+	phy->throttle_temp[0] = 110;
+	phy->throttle_temp[1] = 120;
+
+	return mt7915_mcu_set_thermal_throttling(phy,
+						 MT7915_THERMAL_THROTTLE_MAX);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mt7915_led_set_config(struct led_classdev *led_cdev,
 				  u8 delay_on, u8 delay_off)
 {
 	struct mt7915_dev *dev;
+<<<<<<< HEAD
 	struct mt76_phy *mphy;
 	u32 val;
 
@@ -246,6 +281,32 @@ static void mt7915_led_set_config(struct led_classdev *led_cdev,
 
 	mt76_wr(dev, MT_LED_CTRL(mphy->band_idx), val);
 	mt76_clear(dev, MT_LED_CTRL(mphy->band_idx), MT_LED_CTRL_KICK);
+=======
+	struct mt76_dev *mt76;
+	u32 val;
+
+	mt76 = container_of(led_cdev, struct mt76_dev, led_cdev);
+	dev = container_of(mt76, struct mt7915_dev, mt76);
+
+	/* select TX blink mode, 2: only data frames */
+	mt76_rmw_field(dev, MT_TMAC_TCR0(0), MT_TMAC_TCR0_TX_BLINK, 2);
+
+	/* enable LED */
+	mt76_wr(dev, MT_LED_EN(0), 1);
+
+	/* set LED Tx blink on/off time */
+	val = FIELD_PREP(MT_LED_TX_BLINK_ON_MASK, delay_on) |
+	      FIELD_PREP(MT_LED_TX_BLINK_OFF_MASK, delay_off);
+	mt76_wr(dev, MT_LED_TX_BLINK(0), val);
+
+	/* control LED */
+	val = MT_LED_CTRL_BLINK_MODE | MT_LED_CTRL_KICK;
+	if (dev->mt76.led_al)
+		val |= MT_LED_CTRL_POLARITY;
+
+	mt76_wr(dev, MT_LED_CTRL(0), val);
+	mt76_clear(dev, MT_LED_CTRL(0), MT_LED_CTRL_KICK);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mt7915_led_set_blink(struct led_classdev *led_cdev,
@@ -276,8 +337,14 @@ static void mt7915_led_set_brightness(struct led_classdev *led_cdev,
 		mt7915_led_set_config(led_cdev, 0xff, 0);
 }
 
+<<<<<<< HEAD
 void mt7915_init_txpower(struct mt7915_dev *dev,
 			 struct ieee80211_supported_band *sband)
+=======
+static void
+mt7915_init_txpower(struct mt7915_dev *dev,
+		    struct ieee80211_supported_band *sband)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i, n_chains = hweight8(dev->mphy.antenna_mask);
 	int nss_delta = mt76_tx_power_nss_delta(n_chains);
@@ -332,10 +399,16 @@ mt7915_regd_notifier(struct wiphy *wiphy,
 }
 
 static void
+<<<<<<< HEAD
 mt7915_init_wiphy(struct mt7915_phy *phy)
 {
 	struct mt76_phy *mphy = phy->mt76;
 	struct ieee80211_hw *hw = mphy->hw;
+=======
+mt7915_init_wiphy(struct ieee80211_hw *hw)
+{
+	struct mt7915_phy *phy = mt7915_hw_phy(hw);
+>>>>>>> b7ba80a49124 (Commit)
 	struct mt76_dev *mdev = &phy->dev->mt76;
 	struct wiphy *wiphy = hw->wiphy;
 	struct mt7915_dev *dev = phy->dev;
@@ -367,10 +440,13 @@ mt7915_init_wiphy(struct mt7915_phy *phy)
 	wiphy_ext_feature_set(wiphy, NL80211_EXT_FEATURE_BEACON_RATE_HE);
 	wiphy_ext_feature_set(wiphy, NL80211_EXT_FEATURE_UNSOL_BCAST_PROBE_RESP);
 	wiphy_ext_feature_set(wiphy, NL80211_EXT_FEATURE_FILS_DISCOVERY);
+<<<<<<< HEAD
 	wiphy_ext_feature_set(wiphy, NL80211_EXT_FEATURE_ACK_SIGNAL_SUPPORT);
 
 	if (!is_mt7915(&dev->mt76))
 		wiphy_ext_feature_set(wiphy, NL80211_EXT_FEATURE_STA_TX_PWR);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!mdev->dev->of_node ||
 	    !of_property_read_bool(mdev->dev->of_node,
@@ -383,6 +459,10 @@ mt7915_init_wiphy(struct mt7915_phy *phy)
 	ieee80211_hw_set(hw, SUPPORTS_RX_DECAP_OFFLOAD);
 	ieee80211_hw_set(hw, SUPPORTS_MULTI_BSSID);
 	ieee80211_hw_set(hw, WANT_MONITOR_VIF);
+<<<<<<< HEAD
+=======
+	ieee80211_hw_set(hw, SUPPORTS_VHT_EXT_NSS_BW);
+>>>>>>> b7ba80a49124 (Commit)
 
 	hw->max_tx_fragments = 4;
 
@@ -395,9 +475,12 @@ mt7915_init_wiphy(struct mt7915_phy *phy)
 	}
 
 	if (phy->mt76->cap.has_5ghz) {
+<<<<<<< HEAD
 		struct ieee80211_sta_vht_cap *vht_cap;
 
 		vht_cap = &phy->mt76->sband_5g.sband.vht_cap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		phy->mt76->sband_5g.sband.ht_cap.cap |=
 			IEEE80211_HT_CAP_LDPC_CODING |
 			IEEE80211_HT_CAP_MAX_AMSDU;
@@ -405,21 +488,34 @@ mt7915_init_wiphy(struct mt7915_phy *phy)
 			IEEE80211_HT_MPDU_DENSITY_4;
 
 		if (is_mt7915(&dev->mt76)) {
+<<<<<<< HEAD
 			vht_cap->cap |=
+=======
+			phy->mt76->sband_5g.sband.vht_cap.cap |=
+>>>>>>> b7ba80a49124 (Commit)
 				IEEE80211_VHT_CAP_MAX_MPDU_LENGTH_7991 |
 				IEEE80211_VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_MASK;
 
 			if (!dev->dbdc_support)
+<<<<<<< HEAD
 				vht_cap->cap |=
 					IEEE80211_VHT_CAP_SHORT_GI_160 |
 					IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160MHZ |
 					FIELD_PREP(IEEE80211_VHT_CAP_EXT_NSS_BW_MASK, 1);
 		} else {
 			vht_cap->cap |=
+=======
+				phy->mt76->sband_5g.sband.vht_cap.cap |=
+					IEEE80211_VHT_CAP_SHORT_GI_160 |
+					IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160_80PLUS80MHZ;
+		} else {
+			phy->mt76->sband_5g.sband.vht_cap.cap |=
+>>>>>>> b7ba80a49124 (Commit)
 				IEEE80211_VHT_CAP_MAX_MPDU_LENGTH_11454 |
 				IEEE80211_VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_MASK;
 
 			/* mt7916 dbdc with 2g 2x2 bw40 and 5g 2x2 bw160c */
+<<<<<<< HEAD
 			vht_cap->cap |=
 				IEEE80211_VHT_CAP_SHORT_GI_160 |
 				IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160MHZ;
@@ -427,6 +523,12 @@ mt7915_init_wiphy(struct mt7915_phy *phy)
 
 		if (!is_mt7915(&dev->mt76) || !dev->dbdc_support)
 			ieee80211_hw_set(hw, SUPPORTS_VHT_EXT_NSS_BW);
+=======
+			phy->mt76->sband_5g.sband.vht_cap.cap |=
+				IEEE80211_VHT_CAP_SHORT_GI_160 |
+				IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160MHZ;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	mt76_set_stream_caps(phy->mt76, true);
@@ -435,12 +537,15 @@ mt7915_init_wiphy(struct mt7915_phy *phy)
 
 	wiphy->available_antennas_rx = phy->mt76->antenna_mask;
 	wiphy->available_antennas_tx = phy->mt76->antenna_mask;
+<<<<<<< HEAD
 
 	/* init led callbacks */
 	if (IS_ENABLED(CONFIG_MT76_LEDS)) {
 		mphy->leds.cdev.brightness_set = mt7915_led_set_brightness;
 		mphy->leds.cdev.blink_set = mt7915_led_set_blink;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -474,6 +579,7 @@ mt7915_mac_init_band(struct mt7915_dev *dev, u8 band)
 
 	/* mt7915: disable rx rate report by default due to hw issues */
 	mt76_clear(dev, MT_DMA_DCR0(band), MT_DMA_DCR0_RXD_G5_EN);
+<<<<<<< HEAD
 
 	/* clear estimated value of EIFS for Rx duration & OBSS time */
 	mt76_wr(dev, MT_WF_RMAC_RSVD0(band), MT_WF_RMAC_RSVD0_EIFS_CLR);
@@ -566,6 +672,11 @@ mt7915_init_led_mux(struct mt7915_dev *dev)
 }
 
 void mt7915_mac_init(struct mt7915_dev *dev)
+=======
+}
+
+static void mt7915_mac_init(struct mt7915_dev *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 	u32 rx_len = is_mt7915(&dev->mt76) ? 0x400 : 0x680;
@@ -589,10 +700,20 @@ void mt7915_mac_init(struct mt7915_dev *dev)
 	for (i = 0; i < 2; i++)
 		mt7915_mac_init_band(dev, i);
 
+<<<<<<< HEAD
 	mt7915_init_led_mux(dev);
 }
 
 int mt7915_txbf_init(struct mt7915_dev *dev)
+=======
+	if (IS_ENABLED(CONFIG_MT76_LEDS)) {
+		i = dev->mt76.led_pin ? MT_LED_GPIO_MUX3 : MT_LED_GPIO_MUX2;
+		mt76_rmw_field(dev, i, MT_LED_GPIO_SEL_MASK, 4);
+	}
+}
+
+static int mt7915_txbf_init(struct mt7915_dev *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
@@ -629,7 +750,11 @@ mt7915_alloc_ext_phy(struct mt7915_dev *dev)
 	phy->mt76 = mphy;
 
 	/* Bind main phy to band0 and ext_phy to band1 for dbdc case */
+<<<<<<< HEAD
 	phy->mt76->band_idx = 1;
+=======
+	phy->band_idx = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return phy;
 }
@@ -658,7 +783,11 @@ mt7915_register_ext_phy(struct mt7915_dev *dev, struct mt7915_phy *phy)
 	mt76_eeprom_override(mphy);
 
 	/* init wiphy according to mphy and phy */
+<<<<<<< HEAD
 	mt7915_init_wiphy(phy);
+=======
+	mt7915_init_wiphy(mphy->hw);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = mt76_register_phy(mphy, true, mt76_rates,
 				ARRAY_SIZE(mt76_rates));
@@ -749,7 +878,11 @@ static bool mt7915_band_config(struct mt7915_dev *dev)
 {
 	bool ret = true;
 
+<<<<<<< HEAD
 	dev->phy.mt76->band_idx = 0;
+=======
+	dev->phy.band_idx = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (is_mt7986(&dev->mt76)) {
 		u32 sku = mt7915_check_adie(dev, true);
@@ -760,7 +893,11 @@ static bool mt7915_band_config(struct mt7915_dev *dev)
 		 * dbdc is disabled.
 		 */
 		if (sku == MT7975_ONE_ADIE || sku == MT7976_ONE_ADIE) {
+<<<<<<< HEAD
 			dev->phy.mt76->band_idx = 1;
+=======
+			dev->phy.band_idx = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			ret = false;
 		}
 	} else {
@@ -816,30 +953,47 @@ mt7915_init_hardware(struct mt7915_dev *dev, struct mt7915_phy *phy2)
 
 void mt7915_set_stream_vht_txbf_caps(struct mt7915_phy *phy)
 {
+<<<<<<< HEAD
 	int sts;
+=======
+	int nss;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 *cap;
 
 	if (!phy->mt76->cap.has_5ghz)
 		return;
 
+<<<<<<< HEAD
 	sts = hweight8(phy->mt76->chainmask);
+=======
+	nss = hweight8(phy->mt76->chainmask);
+>>>>>>> b7ba80a49124 (Commit)
 	cap = &phy->mt76->sband_5g.sband.vht_cap.cap;
 
 	*cap |= IEEE80211_VHT_CAP_SU_BEAMFORMEE_CAPABLE |
 		IEEE80211_VHT_CAP_MU_BEAMFORMEE_CAPABLE |
+<<<<<<< HEAD
 		FIELD_PREP(IEEE80211_VHT_CAP_BEAMFORMEE_STS_MASK,
 			   sts - 1);
+=======
+		(3 << IEEE80211_VHT_CAP_BEAMFORMEE_STS_SHIFT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	*cap &= ~(IEEE80211_VHT_CAP_SOUNDING_DIMENSIONS_MASK |
 		  IEEE80211_VHT_CAP_SU_BEAMFORMER_CAPABLE |
 		  IEEE80211_VHT_CAP_MU_BEAMFORMER_CAPABLE);
 
+<<<<<<< HEAD
 	if (sts < 2)
+=======
+	if (nss < 2)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	*cap |= IEEE80211_VHT_CAP_SU_BEAMFORMER_CAPABLE |
 		IEEE80211_VHT_CAP_MU_BEAMFORMER_CAPABLE |
 		FIELD_PREP(IEEE80211_VHT_CAP_SOUNDING_DIMENSIONS_MASK,
+<<<<<<< HEAD
 			   sts - 1);
 }
 
@@ -859,6 +1013,24 @@ mt7915_set_stream_he_txbf_caps(struct mt7915_phy *phy,
 		else
 			sts_160 = 0;
 	}
+=======
+			   nss - 1);
+}
+
+static void
+mt7915_set_stream_he_txbf_caps(struct mt7915_dev *dev,
+			       struct ieee80211_sta_he_cap *he_cap,
+			       int vif, int nss)
+{
+	struct ieee80211_he_cap_elem *elem = &he_cap->he_cap_elem;
+	u8 c, nss_160;
+
+	/* Can do 1/2 of NSS streams in 160Mhz mode for mt7915 */
+	if (is_mt7915(&dev->mt76) && !dev->dbdc_support)
+		nss_160 = nss / 2;
+	else
+		nss_160 = nss;
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_MAC80211_MESH
 	if (vif == NL80211_IFTYPE_MESH_POINT)
@@ -868,9 +1040,14 @@ mt7915_set_stream_he_txbf_caps(struct mt7915_phy *phy,
 	elem->phy_cap_info[3] &= ~IEEE80211_HE_PHY_CAP3_SU_BEAMFORMER;
 	elem->phy_cap_info[4] &= ~IEEE80211_HE_PHY_CAP4_MU_BEAMFORMER;
 
+<<<<<<< HEAD
 	c = IEEE80211_HE_PHY_CAP5_BEAMFORMEE_NUM_SND_DIM_UNDER_80MHZ_MASK;
 	if (sts_160)
 		c |= IEEE80211_HE_PHY_CAP5_BEAMFORMEE_NUM_SND_DIM_ABOVE_80MHZ_MASK;
+=======
+	c = IEEE80211_HE_PHY_CAP5_BEAMFORMEE_NUM_SND_DIM_UNDER_80MHZ_MASK |
+	    IEEE80211_HE_PHY_CAP5_BEAMFORMEE_NUM_SND_DIM_ABOVE_80MHZ_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 	elem->phy_cap_info[5] &= ~c;
 
 	c = IEEE80211_HE_PHY_CAP6_TRIG_SU_BEAMFORMING_FB |
@@ -886,9 +1063,14 @@ mt7915_set_stream_he_txbf_caps(struct mt7915_phy *phy,
 	elem->phy_cap_info[2] |= c;
 
 	c = IEEE80211_HE_PHY_CAP4_SU_BEAMFORMEE |
+<<<<<<< HEAD
 	    IEEE80211_HE_PHY_CAP4_BEAMFORMEE_MAX_STS_UNDER_80MHZ_4;
 	if (sts_160)
 		c |= IEEE80211_HE_PHY_CAP4_BEAMFORMEE_MAX_STS_ABOVE_80MHZ_4;
+=======
+	    IEEE80211_HE_PHY_CAP4_BEAMFORMEE_MAX_STS_UNDER_80MHZ_4 |
+	    IEEE80211_HE_PHY_CAP4_BEAMFORMEE_MAX_STS_ABOVE_80MHZ_4;
+>>>>>>> b7ba80a49124 (Commit)
 	elem->phy_cap_info[4] |= c;
 
 	/* do not support NG16 due to spec D4.0 changes subcarrier idx */
@@ -900,11 +1082,19 @@ mt7915_set_stream_he_txbf_caps(struct mt7915_phy *phy,
 
 	elem->phy_cap_info[6] |= c;
 
+<<<<<<< HEAD
 	if (sts < 2)
 		return;
 
 	/* the maximum cap is 4 x 3, (Nr, Nc) = (3, 2) */
 	elem->phy_cap_info[7] |= min_t(int, sts - 1, 2) << 3;
+=======
+	if (nss < 2)
+		return;
+
+	/* the maximum cap is 4 x 3, (Nr, Nc) = (3, 2) */
+	elem->phy_cap_info[7] |= min_t(int, nss - 1, 2) << 3;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (vif != NL80211_IFTYPE_AP)
 		return;
@@ -912,11 +1102,21 @@ mt7915_set_stream_he_txbf_caps(struct mt7915_phy *phy,
 	elem->phy_cap_info[3] |= IEEE80211_HE_PHY_CAP3_SU_BEAMFORMER;
 	elem->phy_cap_info[4] |= IEEE80211_HE_PHY_CAP4_MU_BEAMFORMER;
 
+<<<<<<< HEAD
 	c = FIELD_PREP(IEEE80211_HE_PHY_CAP5_BEAMFORMEE_NUM_SND_DIM_UNDER_80MHZ_MASK,
 		       sts - 1);
 	if (sts_160)
 		c |= FIELD_PREP(IEEE80211_HE_PHY_CAP5_BEAMFORMEE_NUM_SND_DIM_ABOVE_80MHZ_MASK,
 				sts_160 - 1);
+=======
+	/* num_snd_dim
+	 * for mt7915, max supported nss is 2 for bw > 80MHz
+	 */
+	c = FIELD_PREP(IEEE80211_HE_PHY_CAP5_BEAMFORMEE_NUM_SND_DIM_UNDER_80MHZ_MASK,
+		       nss - 1) |
+	    FIELD_PREP(IEEE80211_HE_PHY_CAP5_BEAMFORMEE_NUM_SND_DIM_ABOVE_80MHZ_MASK,
+		       nss_160 - 1);
+>>>>>>> b7ba80a49124 (Commit)
 	elem->phy_cap_info[5] |= c;
 
 	c = IEEE80211_HE_PHY_CAP6_TRIG_SU_BEAMFORMING_FB |
@@ -956,11 +1156,16 @@ mt7915_init_he_caps(struct mt7915_phy *phy, enum nl80211_band band,
 		    struct ieee80211_sband_iftype_data *data)
 {
 	struct mt7915_dev *dev = phy->dev;
+<<<<<<< HEAD
 	int i, idx = 0, nss = hweight8(phy->mt76->antenna_mask);
+=======
+	int i, idx = 0, nss = hweight8(phy->mt76->chainmask);
+>>>>>>> b7ba80a49124 (Commit)
 	u16 mcs_map = 0;
 	u16 mcs_map_160 = 0;
 	u8 nss_160;
 
+<<<<<<< HEAD
 	if (!is_mt7915(&dev->mt76))
 		nss_160 = nss;
 	else if (!dev->dbdc_support)
@@ -969,6 +1174,13 @@ mt7915_init_he_caps(struct mt7915_phy *phy, enum nl80211_band band,
 	else
 		/* Can't do 160MHz with mt7915 dbdc */
 		nss_160 = 0;
+=======
+	/* Can do 1/2 of NSS streams in 160Mhz mode for mt7915 */
+	if (is_mt7915(&dev->mt76) && !dev->dbdc_support)
+		nss_160 = nss / 2;
+	else
+		nss_160 = nss;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < 8; i++) {
 		if (i < nss)
@@ -1014,6 +1226,7 @@ mt7915_init_he_caps(struct mt7915_phy *phy, enum nl80211_band band,
 		if (band == NL80211_BAND_2GHZ)
 			he_cap_elem->phy_cap_info[0] =
 				IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_40MHZ_IN_2G;
+<<<<<<< HEAD
 		else if (nss_160)
 			he_cap_elem->phy_cap_info[0] =
 				IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_40MHZ_80MHZ_IN_5G |
@@ -1021,6 +1234,13 @@ mt7915_init_he_caps(struct mt7915_phy *phy, enum nl80211_band band,
 		else
 			he_cap_elem->phy_cap_info[0] =
 				IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_40MHZ_80MHZ_IN_5G;
+=======
+		else
+			he_cap_elem->phy_cap_info[0] =
+				IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_40MHZ_80MHZ_IN_5G |
+				IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_160MHZ_IN_5G |
+				IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_80PLUS80_MHZ_IN_5G;
+>>>>>>> b7ba80a49124 (Commit)
 
 		he_cap_elem->phy_cap_info[1] =
 			IEEE80211_HE_PHY_CAP1_LDPC_CODING_IN_PAYLOAD;
@@ -1074,11 +1294,17 @@ mt7915_init_he_caps(struct mt7915_phy *phy, enum nl80211_band band,
 				IEEE80211_HE_PHY_CAP7_HE_SU_MU_PPDU_4XLTF_AND_08_US_GI;
 			he_cap_elem->phy_cap_info[8] |=
 				IEEE80211_HE_PHY_CAP8_20MHZ_IN_40MHZ_HE_PPDU_IN_2G |
+<<<<<<< HEAD
 				IEEE80211_HE_PHY_CAP8_DCM_MAX_RU_484;
 			if (nss_160)
 				he_cap_elem->phy_cap_info[8] |=
 					IEEE80211_HE_PHY_CAP8_20MHZ_IN_160MHZ_HE_PPDU |
 					IEEE80211_HE_PHY_CAP8_80MHZ_IN_160MHZ_HE_PPDU;
+=======
+				IEEE80211_HE_PHY_CAP8_20MHZ_IN_160MHZ_HE_PPDU |
+				IEEE80211_HE_PHY_CAP8_80MHZ_IN_160MHZ_HE_PPDU |
+				IEEE80211_HE_PHY_CAP8_DCM_MAX_RU_484;
+>>>>>>> b7ba80a49124 (Commit)
 			he_cap_elem->phy_cap_info[9] |=
 				IEEE80211_HE_PHY_CAP9_LONGER_THAN_16_SIGB_OFDM_SYM |
 				IEEE80211_HE_PHY_CAP9_NON_TRIGGERED_CQI_FEEDBACK |
@@ -1089,13 +1315,23 @@ mt7915_init_he_caps(struct mt7915_phy *phy, enum nl80211_band band,
 			break;
 		}
 
+<<<<<<< HEAD
 		memset(he_mcs, 0, sizeof(*he_mcs));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		he_mcs->rx_mcs_80 = cpu_to_le16(mcs_map);
 		he_mcs->tx_mcs_80 = cpu_to_le16(mcs_map);
 		he_mcs->rx_mcs_160 = cpu_to_le16(mcs_map_160);
 		he_mcs->tx_mcs_160 = cpu_to_le16(mcs_map_160);
+<<<<<<< HEAD
 
 		mt7915_set_stream_he_txbf_caps(phy, he_cap, i);
+=======
+		he_mcs->rx_mcs_80p80 = cpu_to_le16(mcs_map_160);
+		he_mcs->tx_mcs_80p80 = cpu_to_le16(mcs_map_160);
+
+		mt7915_set_stream_he_txbf_caps(dev, he_cap, i, nss);
+>>>>>>> b7ba80a49124 (Commit)
 
 		memset(he_cap->ppe_thres, 0, sizeof(he_cap->ppe_thres));
 		if (he_cap_elem->phy_cap_info[6] &
@@ -1185,8 +1421,15 @@ static void mt7915_stop_hardware(struct mt7915_dev *dev)
 		mt7986_wmac_disable(dev);
 }
 
+<<<<<<< HEAD
 int mt7915_register_device(struct mt7915_dev *dev)
 {
+=======
+
+int mt7915_register_device(struct mt7915_dev *dev)
+{
+	struct ieee80211_hw *hw = mt76_hw(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	struct mt7915_phy *phy2;
 	int ret;
 
@@ -1202,8 +1445,11 @@ int mt7915_register_device(struct mt7915_dev *dev)
 
 	init_waitqueue_head(&dev->reset_wait);
 	INIT_WORK(&dev->reset_work, mt7915_mac_reset_work);
+<<<<<<< HEAD
 	INIT_WORK(&dev->dump_work, mt7915_mac_dump_work);
 	mutex_init(&dev->dump_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev->dbdc_support = mt7915_band_config(dev);
 
@@ -1215,12 +1461,25 @@ int mt7915_register_device(struct mt7915_dev *dev)
 	if (ret)
 		goto free_phy2;
 
+<<<<<<< HEAD
 	mt7915_init_wiphy(&dev->phy);
+=======
+	mt7915_init_wiphy(hw);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_NL80211_TESTMODE
 	dev->mt76.test_ops = &mt7915_testmode_ops;
 #endif
 
+<<<<<<< HEAD
+=======
+	/* init led callbacks */
+	if (IS_ENABLED(CONFIG_MT76_LEDS)) {
+		dev->mt76.led_cdev.brightness_set = mt7915_led_set_brightness;
+		dev->mt76.led_cdev.blink_set = mt7915_led_set_blink;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = mt76_register_device(&dev->mt76, true, mt76_rates,
 				   ARRAY_SIZE(mt76_rates));
 	if (ret)
@@ -1238,6 +1497,7 @@ int mt7915_register_device(struct mt7915_dev *dev)
 			goto unreg_thermal;
 	}
 
+<<<<<<< HEAD
 	dev->recovery.hw_init_done = true;
 
 	ret = mt7915_init_debugfs(&dev->phy);
@@ -1247,6 +1507,9 @@ int mt7915_register_device(struct mt7915_dev *dev)
 	ret = mt7915_coredump_register(dev);
 	if (ret)
 		goto unreg_thermal;
+=======
+	mt7915_init_debugfs(&dev->phy);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -1265,7 +1528,10 @@ free_phy2:
 void mt7915_unregister_device(struct mt7915_dev *dev)
 {
 	mt7915_unregister_ext_phy(dev);
+<<<<<<< HEAD
 	mt7915_coredump_unregister(dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mt7915_unregister_thermal(&dev->phy);
 	mt76_unregister_device(&dev->mt76);
 	mt7915_stop_hardware(dev);

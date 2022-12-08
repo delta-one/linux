@@ -422,9 +422,14 @@
 		clock-names = "xin24m";
 		#clock-cells = <1>;
 		#reset-cells = <1>;
+<<<<<<< HEAD
 		assigned-clocks = <&pmucru CLK_RTC_32K>, <&cru PLL_GPLL>, <&pmucru PLL_PPLL>;
 		assigned-clock-rates = <32768>, <1200000000>, <200000000>;
 		assigned-clock-parents = <&pmucru CLK_RTC32K_FRAC>;
+=======
+		assigned-clocks = <&cru PLL_GPLL>, <&pmucru PLL_PPLL>;
+		assigned-clock-rates = <1200000000>, <200000000>;
+>>>>>>> b7ba80a49124 (Commit)
 		rockchip,grf = <&grf>;
 	};
 
@@ -740,6 +745,7 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
 	dsi0: dsi@fe060000 {
 		compatible = "rockchip,rk3568-mipi-dsi", "snps,dw-mipi-dsi";
 		reg = <0x00 0xfe060000 0x00 0x10000>;
@@ -796,6 +802,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hdmi: hdmi@fe0a0000 {
 		compatible = "rockchip,rk3568-dw-hdmi";
 		reg = <0x0 0xfe0a0000 0x0 0x20000>;
@@ -967,7 +975,10 @@
 		clock-names = "aclk_mst", "aclk_slv",
 			      "aclk_dbi", "pclk", "aux";
 		device_type = "pci";
+<<<<<<< HEAD
 		#interrupt-cells = <1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		interrupt-map-mask = <0 0 0 7>;
 		interrupt-map = <0 0 0 1 &pcie_intc 0>,
 				<0 0 0 2 &pcie_intc 1>,
@@ -1051,6 +1062,23 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
+=======
+	spdif: spdif@fe460000 {
+		compatible = "rockchip,rk3568-spdif";
+		reg = <0x0 0xfe460000 0x0 0x1000>;
+		interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
+		clock-names = "mclk", "hclk";
+		clocks = <&cru MCLK_SPDIF_8CH>, <&cru HCLK_SPDIF_8CH>;
+		dmas = <&dmac1 1>;
+		dma-names = "tx";
+		pinctrl-names = "default";
+		pinctrl-0 = <&spdifm0_tx>;
+		#sound-dai-cells = <0>;
+		status = "disabled";
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	i2s0_8ch: i2s@fe400000 {
 		compatible = "rockchip,rk3568-i2s-tdm";
 		reg = <0x0 0xfe400000 0x0 0x1000>;
@@ -1093,6 +1121,7 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
 	i2s2_2ch: i2s@fe420000 {
 		compatible = "rockchip,rk3568-i2s-tdm";
 		reg = <0x0 0xfe420000 0x0 0x1000>;
@@ -1115,6 +1144,8 @@
 		status = "disabled";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	i2s3_2ch: i2s@fe430000 {
 		compatible = "rockchip,rk3568-i2s-tdm";
 		reg = <0x0 0xfe430000 0x0 0x1000>;
@@ -1152,6 +1183,7 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
 	spdif: spdif@fe460000 {
 		compatible = "rockchip,rk3568-spdif";
 		reg = <0x0 0xfe460000 0x0 0x1000>;
@@ -1166,6 +1198,8 @@
 		status = "disabled";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dmac0: dma-controller@fe530000 {
 		compatible = "arm,pl330", "arm,primecell";
 		reg = <0x0 0xfe530000 0x0 0x4000>;
@@ -1726,6 +1760,7 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
 	dsi_dphy0: mipi-dphy@fe850000 {
 		compatible = "rockchip,rk3568-dsi-dphy";
 		reg = <0x0 0xfe850000 0x0 0x10000>;
@@ -1750,6 +1785,8 @@
 		status = "disabled";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	usb2phy0: usb2phy@fe8a0000 {
 		compatible = "rockchip,rk3568-usb2phy";
 		reg = <0x0 0xfe8a0000 0x0 0x10000>;

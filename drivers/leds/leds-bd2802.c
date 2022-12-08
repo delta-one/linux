@@ -656,7 +656,12 @@ static void bd2802_unregister_led_classdev(struct bd2802_led *led)
 	led_classdev_unregister(&led->cdev_led1r);
 }
 
+<<<<<<< HEAD
 static int bd2802_probe(struct i2c_client *client)
+=======
+static int bd2802_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bd2802_led *led;
 	int ret, i;
@@ -786,7 +791,11 @@ static struct i2c_driver bd2802_i2c_driver = {
 		.name	= "BD2802",
 		.pm	= &bd2802_pm,
 	},
+<<<<<<< HEAD
 	.probe_new	= bd2802_probe,
+=======
+	.probe		= bd2802_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= bd2802_remove,
 	.id_table	= bd2802_id,
 };

@@ -494,7 +494,11 @@ static int locomo_probe(struct platform_device *dev)
 	return __locomo_probe(&dev->dev, mem, irq);
 }
 
+<<<<<<< HEAD
 static void locomo_remove(struct platform_device *dev)
+=======
+static int locomo_remove(struct platform_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct locomo *lchip = platform_get_drvdata(dev);
 
@@ -502,6 +506,11 @@ static void locomo_remove(struct platform_device *dev)
 		__locomo_remove(lchip);
 		platform_set_drvdata(dev, NULL);
 	}
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -512,7 +521,11 @@ static void locomo_remove(struct platform_device *dev)
  */
 static struct platform_driver locomo_device_driver = {
 	.probe		= locomo_probe,
+<<<<<<< HEAD
 	.remove_new	= locomo_remove,
+=======
+	.remove		= locomo_remove,
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PM
 	.suspend	= locomo_suspend,
 	.resume		= locomo_resume,

@@ -35,7 +35,10 @@ required:
 
 allOf:
   - $ref: pata-common.yaml#
+<<<<<<< HEAD
   - $ref: /schemas/memory-controllers/intel,ixp4xx-expansion-peripheral-props.yaml#
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 unevaluatedProperties: false
 

@@ -55,9 +55,13 @@ struct cont_desc {
 };
 
 static u32 ucode_new_rev;
+<<<<<<< HEAD
 
 /* One blob per node. */
 static u8 amd_ucode_patch[MAX_NUMNODES][PATCH_MAX_SIZE];
+=======
+static u8 amd_ucode_patch[PATCH_MAX_SIZE];
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Microcode patch container file is prepended to the initrd in cpio
@@ -332,9 +336,14 @@ static size_t parse_container(u8 *ucode, size_t size, struct cont_desc *desc)
 		ret = verify_patch(x86_family(desc->cpuid_1_eax), buf, size, &patch_size, true);
 		if (ret < 0) {
 			/*
+<<<<<<< HEAD
 			 * Patch verification failed, skip to the next container, if
 			 * there is one. Before exit, check whether that container has
 			 * found a patch already. If so, use it.
+=======
+			 * Patch verification failed, skip to the next
+			 * container, if there's one:
+>>>>>>> b7ba80a49124 (Commit)
 			 */
 			goto out;
 		} else if (ret > 0) {
@@ -353,7 +362,10 @@ skip:
 		size -= patch_size + SECTION_HDR_SIZE;
 	}
 
+<<<<<<< HEAD
 out:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * If we have found a patch (desc->mc), it means we're looking at the
 	 * container which has a patch for this CPU so return 0 to mean, @ucode
@@ -368,6 +380,10 @@ out:
 		return 0;
 	}
 
+<<<<<<< HEAD
+=======
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	return orig_size - size;
 }
 
@@ -417,7 +433,12 @@ static int __apply_microcode_amd(struct microcode_amd *mc)
  *
  * Returns true if container found (sets @desc), false otherwise.
  */
+<<<<<<< HEAD
 static bool early_apply_microcode(u32 cpuid_1_eax, void *ucode, size_t size, bool save_patch)
+=======
+static bool
+apply_microcode_early_amd(u32 cpuid_1_eax, void *ucode, size_t size, bool save_patch)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cont_desc desc = { 0 };
 	u8 (*patch)[PATCH_MAX_SIZE];
@@ -430,7 +451,11 @@ static bool early_apply_microcode(u32 cpuid_1_eax, void *ucode, size_t size, boo
 	patch	= (u8 (*)[PATCH_MAX_SIZE])__pa_nodebug(&amd_ucode_patch);
 #else
 	new_rev = &ucode_new_rev;
+<<<<<<< HEAD
 	patch	= &amd_ucode_patch[0];
+=======
+	patch	= &amd_ucode_patch;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	desc.cpuid_1_eax = cpuid_1_eax;
@@ -442,6 +467,7 @@ static bool early_apply_microcode(u32 cpuid_1_eax, void *ucode, size_t size, boo
 		return ret;
 
 	native_rdmsr(MSR_AMD64_PATCH_LEVEL, rev, dummy);
+<<<<<<< HEAD
 
 	/*
 	 * Allow application of the same revision to pick up SMT-specific
@@ -449,6 +475,9 @@ static bool early_apply_microcode(u32 cpuid_1_eax, void *ucode, size_t size, boo
 	 * up-to-date.
 	 */
 	if (rev > mc->hdr.patch_id)
+=======
+	if (rev >= mc->hdr.patch_id)
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 
 	if (!__apply_microcode_amd(mc)) {
@@ -483,7 +512,11 @@ static bool get_builtin_microcode(struct cpio_data *cp, unsigned int family)
 	return false;
 }
 
+<<<<<<< HEAD
 static void find_blobs_in_containers(unsigned int cpuid_1_eax, struct cpio_data *ret)
+=======
+static void __load_ucode_amd(unsigned int cpuid_1_eax, struct cpio_data *ret)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ucode_cpu_info *uci;
 	struct cpio_data cp;
@@ -513,11 +546,19 @@ void __init load_ucode_amd_bsp(unsigned int cpuid_1_eax)
 {
 	struct cpio_data cp = { };
 
+<<<<<<< HEAD
 	find_blobs_in_containers(cpuid_1_eax, &cp);
 	if (!(cp.data && cp.size))
 		return;
 
 	early_apply_microcode(cpuid_1_eax, cp.data, cp.size, true);
+=======
+	__load_ucode_amd(cpuid_1_eax, &cp);
+	if (!(cp.data && cp.size))
+		return;
+
+	apply_microcode_early_amd(cpuid_1_eax, cp.data, cp.size, true);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void load_ucode_amd_ap(unsigned int cpuid_1_eax)
@@ -536,18 +577,24 @@ void load_ucode_amd_ap(unsigned int cpuid_1_eax)
 
 	native_rdmsr(MSR_AMD64_PATCH_LEVEL, rev, dummy);
 
+<<<<<<< HEAD
 	/*
 	 * Check whether a new patch has been saved already. Also, allow application of
 	 * the same revision in order to pick up SMT-thread-specific configuration even
 	 * if the sibling SMT thread already has an up-to-date revision.
 	 */
 	if (*new_rev && rev <= mc->hdr.patch_id) {
+=======
+	/* Check whether we have saved a new patch already: */
+	if (*new_rev && rev < mc->hdr.patch_id) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!__apply_microcode_amd(mc)) {
 			*new_rev = mc->hdr.patch_id;
 			return;
 		}
 	}
 
+<<<<<<< HEAD
 	find_blobs_in_containers(cpuid_1_eax, &cp);
 	if (!(cp.data && cp.size))
 		return;
@@ -556,6 +603,17 @@ void load_ucode_amd_ap(unsigned int cpuid_1_eax)
 }
 
 static enum ucode_state load_microcode_amd(u8 family, const u8 *data, size_t size);
+=======
+	__load_ucode_amd(cpuid_1_eax, &cp);
+	if (!(cp.data && cp.size))
+		return;
+
+	apply_microcode_early_amd(cpuid_1_eax, cp.data, cp.size, false);
+}
+
+static enum ucode_state
+load_microcode_amd(bool save, u8 family, const u8 *data, size_t size);
+>>>>>>> b7ba80a49124 (Commit)
 
 int __init save_microcode_in_initrd_amd(unsigned int cpuid_1_eax)
 {
@@ -573,19 +631,32 @@ int __init save_microcode_in_initrd_amd(unsigned int cpuid_1_eax)
 	if (!desc.mc)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	ret = load_microcode_amd(x86_family(cpuid_1_eax), desc.data, desc.size);
+=======
+	ret = load_microcode_amd(true, x86_family(cpuid_1_eax), desc.data, desc.size);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret > UCODE_UPDATED)
 		return -EINVAL;
 
 	return 0;
 }
 
+<<<<<<< HEAD
 void reload_ucode_amd(unsigned int cpu)
 {
 	u32 rev, dummy __always_unused;
 	struct microcode_amd *mc;
 
 	mc = (struct microcode_amd *)amd_ucode_patch[cpu_to_node(cpu)];
+=======
+void reload_ucode_amd(void)
+{
+	struct microcode_amd *mc;
+	u32 rev, dummy __always_unused;
+
+	mc = (struct microcode_amd *)amd_ucode_patch;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rdmsr(MSR_AMD64_PATCH_LEVEL, rev, dummy);
 
@@ -596,6 +667,14 @@ void reload_ucode_amd(unsigned int cpu)
 		}
 	}
 }
+<<<<<<< HEAD
+=======
+static u16 __find_equiv_id(unsigned int cpu)
+{
+	struct ucode_cpu_info *uci = ucode_cpu_info + cpu;
+	return find_equiv_id(&equiv_table, uci->cpu_sig.sig);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * a small, trivial cache of per-family ucode patches
@@ -646,11 +725,17 @@ static void free_cache(void)
 
 static struct ucode_patch *find_patch(unsigned int cpu)
 {
+<<<<<<< HEAD
 	struct ucode_cpu_info *uci = ucode_cpu_info + cpu;
 	u16 equiv_id;
 
 
 	equiv_id = find_equiv_id(&equiv_table, uci->cpu_sig.sig);
+=======
+	u16 equiv_id;
+
+	equiv_id = __find_equiv_id(cpu);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!equiv_id)
 		return NULL;
 
@@ -796,7 +881,10 @@ static int verify_and_add_patch(u8 family, u8 *fw, unsigned int leftover,
 		kfree(patch);
 		return -EINVAL;
 	}
+<<<<<<< HEAD
 	patch->size = *patch_size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	mc_hdr      = (struct microcode_header_amd *)(fw + SECTION_HDR_SIZE);
 	proc_id     = mc_hdr->processor_rev_id;
@@ -814,7 +902,10 @@ static int verify_and_add_patch(u8 family, u8 *fw, unsigned int leftover,
 	return 0;
 }
 
+<<<<<<< HEAD
 /* Scan the blob in @data and add microcode patches to the cache. */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static enum ucode_state __load_microcode_amd(u8 family, const u8 *data,
 					     size_t size)
 {
@@ -849,10 +940,16 @@ static enum ucode_state __load_microcode_amd(u8 family, const u8 *data,
 	return UCODE_OK;
 }
 
+<<<<<<< HEAD
 static enum ucode_state load_microcode_amd(u8 family, const u8 *data, size_t size)
 {
 	struct cpuinfo_x86 *c;
 	unsigned int nid, cpu;
+=======
+static enum ucode_state
+load_microcode_amd(bool save, u8 family, const u8 *data, size_t size)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct ucode_patch *p;
 	enum ucode_state ret;
 
@@ -865,6 +962,7 @@ static enum ucode_state load_microcode_amd(u8 family, const u8 *data, size_t siz
 		return ret;
 	}
 
+<<<<<<< HEAD
 	for_each_node(nid) {
 		cpu = cpumask_first(cpumask_of_node(nid));
 		c = &cpu_data(cpu);
@@ -882,6 +980,25 @@ static enum ucode_state load_microcode_amd(u8 family, const u8 *data, size_t siz
 		memcpy(&amd_ucode_patch[nid], p->data, min_t(u32, p->size, PATCH_MAX_SIZE));
 	}
 
+=======
+	p = find_patch(0);
+	if (!p) {
+		return ret;
+	} else {
+		if (boot_cpu_data.microcode >= p->patch_id)
+			return ret;
+
+		ret = UCODE_NEW;
+	}
+
+	/* save BSP's matching patch for early load */
+	if (!save)
+		return ret;
+
+	memset(amd_ucode_patch, 0, PATCH_MAX_SIZE);
+	memcpy(amd_ucode_patch, p->data, min_t(u32, ksize(p->data), PATCH_MAX_SIZE));
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -901,6 +1018,7 @@ static enum ucode_state load_microcode_amd(u8 family, const u8 *data, size_t siz
  *
  * These might be larger than 2K.
  */
+<<<<<<< HEAD
 static enum ucode_state request_microcode_amd(int cpu, struct device *device)
 {
 	char fw_name[36] = "amd-ucode/microcode_amd.bin";
@@ -908,6 +1026,21 @@ static enum ucode_state request_microcode_amd(int cpu, struct device *device)
 	enum ucode_state ret = UCODE_NFOUND;
 	const struct firmware *fw;
 
+=======
+static enum ucode_state request_microcode_amd(int cpu, struct device *device,
+					      bool refresh_fw)
+{
+	char fw_name[36] = "amd-ucode/microcode_amd.bin";
+	struct cpuinfo_x86 *c = &cpu_data(cpu);
+	bool bsp = c->cpu_index == boot_cpu_data.cpu_index;
+	enum ucode_state ret = UCODE_NFOUND;
+	const struct firmware *fw;
+
+	/* reload ucode container only on the boot cpu */
+	if (!refresh_fw || !bsp)
+		return UCODE_OK;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (c->x86 >= 0x15)
 		snprintf(fw_name, sizeof(fw_name), "amd-ucode/microcode_amd_fam%.2xh.bin", c->x86);
 
@@ -920,7 +1053,11 @@ static enum ucode_state request_microcode_amd(int cpu, struct device *device)
 	if (!verify_container(fw->data, fw->size, false))
 		goto fw_release;
 
+<<<<<<< HEAD
 	ret = load_microcode_amd(c->x86, fw->data, fw->size);
+=======
+	ret = load_microcode_amd(bsp, c->x86, fw->data, fw->size);
+>>>>>>> b7ba80a49124 (Commit)
 
  fw_release:
 	release_firmware(fw);

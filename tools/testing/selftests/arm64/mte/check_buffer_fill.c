@@ -32,7 +32,11 @@ static int check_buffer_by_byte(int mem_type, int mode)
 	bool err;
 
 	mte_switch_mode(mode, MTE_ALLOW_NON_ZERO_TAG);
+<<<<<<< HEAD
 	item = ARRAY_SIZE(sizes);
+=======
+	item = sizeof(sizes)/sizeof(int);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < item; i++) {
 		ptr = (char *)mte_allocate_memory(sizes[i], mem_type, 0, true);
@@ -69,7 +73,11 @@ static int check_buffer_underflow_by_byte(int mem_type, int mode,
 	char *und_ptr = NULL;
 
 	mte_switch_mode(mode, MTE_ALLOW_NON_ZERO_TAG);
+<<<<<<< HEAD
 	item = ARRAY_SIZE(sizes);
+=======
+	item = sizeof(sizes)/sizeof(int);
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < item; i++) {
 		ptr = (char *)mte_allocate_memory_tag_range(sizes[i], mem_type, 0,
 							    underflow_range, 0);
@@ -165,7 +173,11 @@ static int check_buffer_overflow_by_byte(int mem_type, int mode,
 	char *over_ptr = NULL;
 
 	mte_switch_mode(mode, MTE_ALLOW_NON_ZERO_TAG);
+<<<<<<< HEAD
 	item = ARRAY_SIZE(sizes);
+=======
+	item = sizeof(sizes)/sizeof(int);
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < item; i++) {
 		ptr = (char *)mte_allocate_memory_tag_range(sizes[i], mem_type, 0,
 							    0, overflow_range);
@@ -338,7 +350,11 @@ static int check_buffer_by_block(int mem_type, int mode)
 	int i, item, result = KSFT_PASS;
 
 	mte_switch_mode(mode, MTE_ALLOW_NON_ZERO_TAG);
+<<<<<<< HEAD
 	item = ARRAY_SIZE(sizes);
+=======
+	item = sizeof(sizes)/sizeof(int);
+>>>>>>> b7ba80a49124 (Commit)
 	cur_mte_cxt.fault_valid = false;
 	for (i = 0; i < item; i++) {
 		result = check_buffer_by_block_iterate(mem_type, mode, sizes[i]);
@@ -366,7 +382,11 @@ static int check_memory_initial_tags(int mem_type, int mode, int mapping)
 {
 	char *ptr;
 	int run, fd;
+<<<<<<< HEAD
 	int total = ARRAY_SIZE(sizes);
+=======
+	int total = sizeof(sizes)/sizeof(int);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mte_switch_mode(mode, MTE_ALLOW_NON_ZERO_TAG);
 	for (run = 0; run < total; run++) {
@@ -404,7 +424,11 @@ int main(int argc, char *argv[])
 {
 	int err;
 	size_t page_size = getpagesize();
+<<<<<<< HEAD
 	int item = ARRAY_SIZE(sizes);
+=======
+	int item = sizeof(sizes)/sizeof(int);
+>>>>>>> b7ba80a49124 (Commit)
 
 	sizes[item - 3] = page_size - 1;
 	sizes[item - 2] = page_size;

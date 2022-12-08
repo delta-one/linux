@@ -2,7 +2,10 @@
 #if !defined(_TRACE_ARM_ARM64_KVM_H) || defined(TRACE_HEADER_MULTI_READ)
 #define _TRACE_ARM_ARM64_KVM_H
 
+<<<<<<< HEAD
 #include <asm/kvm_emulate.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <kvm/arm_arch_timer.h>
 #include <linux/tracepoint.h>
 
@@ -302,6 +305,7 @@ TRACE_EVENT(kvm_timer_emulate,
 		  __entry->timer_idx, __entry->should_fire)
 );
 
+<<<<<<< HEAD
 TRACE_EVENT(kvm_nested_eret,
 	TP_PROTO(struct kvm_vcpu *vcpu, unsigned long elr_el2,
 		 unsigned long spsr_el2),
@@ -360,6 +364,8 @@ TRACE_EVENT(kvm_inject_nested_exception,
 		  __entry->hcr_el2)
 );
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _TRACE_ARM_ARM64_KVM_H */
 
 #undef TRACE_INCLUDE_PATH

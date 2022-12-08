@@ -12,7 +12,10 @@
 #include "util/parse-events.h"
 #include "util/pmu.h"
 #include "util/pfm.h"
+<<<<<<< HEAD
 #include "util/strbuf.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <string.h>
 #include <linux/kernel.h>
@@ -112,6 +115,10 @@ int parse_libpfm_events_option(const struct option *opt, const char *str,
 				   "cannot close a non-existing event group\n");
 				goto error;
 			}
+<<<<<<< HEAD
+=======
+			evlist->core.nr_groups++;
+>>>>>>> b7ba80a49124 (Commit)
 			grp_leader = NULL;
 			grp_evt = -1;
 		}
@@ -130,6 +137,7 @@ static const char *srcs[PFM_ATTR_CTRL_MAX] = {
 };
 
 static void
+<<<<<<< HEAD
 print_attr_flags(struct strbuf *buf, const pfm_event_attr_info_t *info)
 {
 	if (info->is_dfl)
@@ -162,11 +170,63 @@ print_libpfm_event(const struct print_callbacks *print_cb, void *print_state,
 		if (ret != PFM_SUCCESS)
 			continue;
 
+=======
+print_attr_flags(pfm_event_attr_info_t *info)
+{
+	int n = 0;
+
+	if (info->is_dfl) {
+		printf("[default] ");
+		n++;
+	}
+
+	if (info->is_precise) {
+		printf("[precise] ");
+		n++;
+	}
+
+	if (!n)
+		printf("- ");
+}
+
+static void
+print_libpfm_events_detailed(pfm_event_info_t *info, bool long_desc)
+{
+	pfm_event_attr_info_t ainfo;
+	const char *src;
+	int j, ret;
+
+	ainfo.size = sizeof(ainfo);
+
+	printf("  %s\n", info->name);
+	printf("    [%s]\n", info->desc);
+	if (long_desc) {
+		if (info->equiv)
+			printf("      Equiv: %s\n", info->equiv);
+
+		printf("      Code  : 0x%"PRIx64"\n", info->code);
+	}
+	pfm_for_each_event_attr(j, info) {
+		ret = pfm_get_event_attr_info(info->idx, j,
+					      PFM_OS_PERF_EVENT_EXT, &ainfo);
+		if (ret != PFM_SUCCESS)
+			continue;
+
+		if (ainfo.type == PFM_ATTR_UMASK) {
+			printf("      %s:%s\n", info->name, ainfo.name);
+			printf("        [%s]\n", ainfo.desc);
+		}
+
+		if (!long_desc)
+			continue;
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (ainfo.ctrl >= PFM_ATTR_CTRL_MAX)
 			ainfo.ctrl = PFM_ATTR_CTRL_UNKNOWN;
 
 		src = srcs[ainfo.ctrl];
 		switch (ainfo.type) {
+<<<<<<< HEAD
 		case PFM_ATTR_UMASK: /* Ignore for now */
 			break;
 		case PFM_ATTR_MOD_BOOL:
@@ -176,11 +236,27 @@ print_libpfm_event(const struct print_callbacks *print_cb, void *print_state,
 		case PFM_ATTR_MOD_INTEGER:
 			strbuf_addf(buf, " Modif: %s: [%s] : %s (integer)\n", src,
 				    ainfo.name, ainfo.desc);
+=======
+		case PFM_ATTR_UMASK:
+			printf("        Umask : 0x%02"PRIx64" : %s: ",
+				ainfo.code, src);
+			print_attr_flags(&ainfo);
+			putchar('\n');
+			break;
+		case PFM_ATTR_MOD_BOOL:
+			printf("      Modif : %s: [%s] : %s (boolean)\n", src,
+				ainfo.name, ainfo.desc);
+			break;
+		case PFM_ATTR_MOD_INTEGER:
+			printf("      Modif : %s: [%s] : %s (integer)\n", src,
+				ainfo.name, ainfo.desc);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case PFM_ATTR_NONE:
 		case PFM_ATTR_RAW_UMASK:
 		case PFM_ATTR_MAX:
 		default:
+<<<<<<< HEAD
 			strbuf_addf(buf, " Attr: %s: [%s] : %s\n", src,
 				    ainfo.name, ainfo.desc);
 		}
@@ -223,16 +299,57 @@ print_libpfm_event(const struct print_callbacks *print_cb, void *print_state,
 					/*deprecated=*/NULL, "PFM event",
 					ainfo.desc, /*long_desc=*/NULL,
 					/*encoding_desc=*/buf->buf);
+=======
+			printf("      Attr  : %s: [%s] : %s\n", src,
+				ainfo.name, ainfo.desc);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }
 
+<<<<<<< HEAD
 void print_libpfm_events(const struct print_callbacks *print_cb, void *print_state)
 {
 	pfm_event_info_t info;
 	pfm_pmu_info_t pinfo;
 	int p, ret;
 	struct strbuf storage;
+=======
+/*
+ * list all pmu::event:umask, pmu::event
+ * printed events may not be all valid combinations of umask for an event
+ */
+static void
+print_libpfm_events_raw(pfm_pmu_info_t *pinfo, pfm_event_info_t *info)
+{
+	pfm_event_attr_info_t ainfo;
+	int j, ret;
+	bool has_umask = false;
+
+	ainfo.size = sizeof(ainfo);
+
+	pfm_for_each_event_attr(j, info) {
+		ret = pfm_get_event_attr_info(info->idx, j,
+					      PFM_OS_PERF_EVENT_EXT, &ainfo);
+		if (ret != PFM_SUCCESS)
+			continue;
+
+		if (ainfo.type != PFM_ATTR_UMASK)
+			continue;
+
+		printf("%s::%s:%s\n", pinfo->name, info->name, ainfo.name);
+		has_umask = true;
+	}
+	if (!has_umask)
+		printf("%s::%s\n", pinfo->name, info->name);
+}
+
+void print_libpfm_events(bool name_only, bool long_desc)
+{
+	pfm_event_info_t info;
+	pfm_pmu_info_t pinfo;
+	int i, p, ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	libpfm_initialize();
 
@@ -240,9 +357,18 @@ void print_libpfm_events(const struct print_callbacks *print_cb, void *print_sta
 	info.size  = sizeof(info);
 	pinfo.size = sizeof(pinfo);
 
+<<<<<<< HEAD
 	strbuf_init(&storage, 2048);
 
 	pfm_for_all_pmus(p) {
+=======
+	if (!name_only)
+		puts("\nList of pre-defined events (to be used in --pfm-events):\n");
+
+	pfm_for_all_pmus(p) {
+		bool printed_pmu = false;
+
+>>>>>>> b7ba80a49124 (Commit)
 		ret = pfm_get_pmu_info(p, &pinfo);
 		if (ret != PFM_SUCCESS)
 			continue;
@@ -255,14 +381,36 @@ void print_libpfm_events(const struct print_callbacks *print_cb, void *print_sta
 		if (pinfo.pmu == PFM_PMU_PERF_EVENT)
 			continue;
 
+<<<<<<< HEAD
 		for (int i = pinfo.first_event; i != -1; i = pfm_get_event_next(i)) {
+=======
+		for (i = pinfo.first_event; i != -1;
+		     i = pfm_get_event_next(i)) {
+
+>>>>>>> b7ba80a49124 (Commit)
 			ret = pfm_get_event_info(i, PFM_OS_PERF_EVENT_EXT,
 						&info);
 			if (ret != PFM_SUCCESS)
 				continue;
 
+<<<<<<< HEAD
 			print_libpfm_event(print_cb, print_state, &pinfo, &info, &storage);
 		}
 	}
 	strbuf_release(&storage);
+=======
+			if (!name_only && !printed_pmu) {
+				printf("%s:\n", pinfo.name);
+				printed_pmu = true;
+			}
+
+			if (!name_only)
+				print_libpfm_events_detailed(&info, long_desc);
+			else
+				print_libpfm_events_raw(&pinfo, &info);
+		}
+		if (!name_only && printed_pmu)
+			putchar('\n');
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }

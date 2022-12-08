@@ -33,6 +33,10 @@ EXPORT_SYMBOL(pm_power_off);
 
 void arch_cpu_idle(void)
 {
+<<<<<<< HEAD
+=======
+	raw_local_irq_enable();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*

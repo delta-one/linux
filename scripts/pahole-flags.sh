@@ -19,9 +19,12 @@ fi
 if [ "${pahole_ver}" -ge "122" ]; then
 	extra_paholeopt="${extra_paholeopt} -j"
 fi
+<<<<<<< HEAD
 if [ "${pahole_ver}" -ge "124" ]; then
 	# see PAHOLE_HAS_LANG_EXCLUDE
 	extra_paholeopt="${extra_paholeopt} --lang_exclude=rust"
 fi
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 echo ${extra_paholeopt}

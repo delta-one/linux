@@ -15,6 +15,7 @@ LD ?= $(CROSS_COMPILE)ld
 
 MAKEFLAGS += --no-print-directory
 
+<<<<<<< HEAD
 INSTALL = install
 
 
@@ -25,6 +26,8 @@ INSTALL = install
 DESTDIR ?=
 DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 LIBFILE = $(OUTPUT)libapi.a
 
 CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
@@ -55,6 +58,7 @@ RM = rm -f
 
 API_IN := $(OUTPUT)libapi-in.o
 
+<<<<<<< HEAD
 ifeq ($(LP64), 1)
   libdir_relative = lib64
 else
@@ -67,11 +71,16 @@ libdir = $(prefix)/$(libdir_relative)
 # Shell quotes
 libdir_SQ = $(subst ','\'',$(libdir))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 all:
 
 export srctree OUTPUT CC LD CFLAGS V
 include $(srctree)/tools/build/Makefile.include
+<<<<<<< HEAD
 include $(srctree)/tools/scripts/Makefile.include
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 all: fixdep $(LIBFILE)
 
@@ -81,6 +90,7 @@ $(API_IN): FORCE
 $(LIBFILE): $(API_IN)
 	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(API_IN)
 
+<<<<<<< HEAD
 define do_install_mkdir
 	if [ ! -d '$(DESTDIR_SQ)$1' ]; then             \
 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$1'; \
@@ -124,6 +134,8 @@ install_headers: $(INSTALL_HDRS) $(INSTALL_FD_HDRS) $(INSTALL_FS_HDRS)
 
 install: install_lib install_headers
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 clean:
 	$(call QUIET_CLEAN, libapi) $(RM) $(LIBFILE); \
 	find $(or $(OUTPUT),.) -name \*.o -or -name \*.o.cmd -or -name \*.o.d | xargs $(RM)

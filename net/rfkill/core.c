@@ -685,7 +685,11 @@ static ssize_t name_show(struct device *dev, struct device_attribute *attr,
 {
 	struct rfkill *rfkill = to_rfkill(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", rfkill->name);
+=======
+	return sprintf(buf, "%s\n", rfkill->name);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(name);
 
@@ -694,7 +698,11 @@ static ssize_t type_show(struct device *dev, struct device_attribute *attr,
 {
 	struct rfkill *rfkill = to_rfkill(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", rfkill_types[rfkill->type]);
+=======
+	return sprintf(buf, "%s\n", rfkill_types[rfkill->type]);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(type);
 
@@ -703,7 +711,11 @@ static ssize_t index_show(struct device *dev, struct device_attribute *attr,
 {
 	struct rfkill *rfkill = to_rfkill(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", rfkill->idx);
+=======
+	return sprintf(buf, "%d\n", rfkill->idx);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(index);
 
@@ -712,7 +724,11 @@ static ssize_t persistent_show(struct device *dev,
 {
 	struct rfkill *rfkill = to_rfkill(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", rfkill->persistent);
+=======
+	return sprintf(buf, "%d\n", rfkill->persistent);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(persistent);
 
@@ -721,7 +737,11 @@ static ssize_t hard_show(struct device *dev, struct device_attribute *attr,
 {
 	struct rfkill *rfkill = to_rfkill(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", (rfkill->state & RFKILL_BLOCK_HW) ? 1 : 0);
+=======
+	return sprintf(buf, "%d\n", (rfkill->state & RFKILL_BLOCK_HW) ? 1 : 0 );
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(hard);
 
@@ -730,7 +750,11 @@ static ssize_t soft_show(struct device *dev, struct device_attribute *attr,
 {
 	struct rfkill *rfkill = to_rfkill(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", (rfkill->state & RFKILL_BLOCK_SW) ? 1 : 0);
+=======
+	return sprintf(buf, "%d\n", (rfkill->state & RFKILL_BLOCK_SW) ? 1 : 0 );
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t soft_store(struct device *dev, struct device_attribute *attr,
@@ -764,7 +788,11 @@ static ssize_t hard_block_reasons_show(struct device *dev,
 {
 	struct rfkill *rfkill = to_rfkill(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "0x%lx\n", rfkill->hard_block_reasons);
+=======
+	return sprintf(buf, "0x%lx\n", rfkill->hard_block_reasons);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(hard_block_reasons);
 
@@ -783,7 +811,11 @@ static ssize_t state_show(struct device *dev, struct device_attribute *attr,
 {
 	struct rfkill *rfkill = to_rfkill(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", user_state_from_blocked(rfkill->state));
+=======
+	return sprintf(buf, "%d\n", user_state_from_blocked(rfkill->state));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t state_store(struct device *dev, struct device_attribute *attr,
@@ -832,7 +864,11 @@ static void rfkill_release(struct device *dev)
 	kfree(rfkill);
 }
 
+<<<<<<< HEAD
 static int rfkill_dev_uevent(const struct device *dev, struct kobj_uevent_env *env)
+=======
+static int rfkill_dev_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rfkill *rfkill = to_rfkill(dev);
 	unsigned long flags;

@@ -215,6 +215,14 @@ static int platform_parse_resource(struct platform_device *pdev, void *data)
 
 	adsp->pa_sram = (phys_addr_t)mmio->start;
 	adsp->sramsize = resource_size(mmio);
+<<<<<<< HEAD
+=======
+	if (adsp->sramsize < TOTAL_SIZE_SHARED_SRAM_FROM_TAIL) {
+		dev_err(dev, "adsp SRAM(%#x) is not enough for share\n",
+			adsp->sramsize);
+		return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_dbg(dev, "sram pbase=%pa,%#x\n", &adsp->pa_sram, adsp->sramsize);
 
@@ -491,6 +499,7 @@ static int mt8195_get_bar_index(struct snd_sof_dev *sdev, u32 type)
 	return type;
 }
 
+<<<<<<< HEAD
 static int mt8195_pcm_hw_params(struct snd_sof_dev *sdev,
 				struct snd_pcm_substream *substream,
 				struct snd_pcm_hw_params *params,
@@ -533,6 +542,8 @@ static snd_pcm_uframes_t mt8195_pcm_pointer(struct snd_sof_dev *sdev,
 	return pos;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void mt8195_adsp_dump(struct snd_sof_dev *sdev, u32 flags)
 {
 	u32 dbg_pc, dbg_data, dbg_bus0, dbg_bus1, dbg_inst;
@@ -625,8 +636,11 @@ static struct snd_sof_dsp_ops sof_mt8195_ops = {
 
 	/* stream callbacks */
 	.pcm_open	= sof_stream_pcm_open,
+<<<<<<< HEAD
 	.pcm_hw_params	= mt8195_pcm_hw_params,
 	.pcm_pointer	= mt8195_pcm_pointer,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.pcm_close	= sof_stream_pcm_close,
 
 	/* firmware loading */
@@ -637,7 +651,10 @@ static struct snd_sof_dsp_ops sof_mt8195_ops = {
 
 	/* Debug information */
 	.dbg_dump = mt8195_adsp_dump,
+<<<<<<< HEAD
 	.debugfs_add_region_item = snd_sof_debugfs_add_region_item_iomem,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* DAI drivers */
 	.drv = mt8195_dai,

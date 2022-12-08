@@ -260,11 +260,27 @@ int amdgpu_uvd_sw_init(struct amdgpu_device *adev)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	r = amdgpu_ucode_request(adev, &adev->uvd.fw, fw_name);
 	if (r) {
 		dev_err(adev->dev, "amdgpu_uvd: Can't validate firmware \"%s\"\n",
 			fw_name);
 		amdgpu_ucode_release(&adev->uvd.fw);
+=======
+	r = request_firmware(&adev->uvd.fw, fw_name, adev->dev);
+	if (r) {
+		dev_err(adev->dev, "amdgpu_uvd: Can't load firmware \"%s\"\n",
+			fw_name);
+		return r;
+	}
+
+	r = amdgpu_ucode_validate(adev->uvd.fw);
+	if (r) {
+		dev_err(adev->dev, "amdgpu_uvd: Can't validate firmware \"%s\"\n",
+			fw_name);
+		release_firmware(adev->uvd.fw);
+		adev->uvd.fw = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 		return r;
 	}
 
@@ -323,11 +339,16 @@ int amdgpu_uvd_sw_init(struct amdgpu_device *adev)
 		if (adev->uvd.harvest_config & (1 << j))
 			continue;
 		r = amdgpu_bo_create_kernel(adev, bo_size, PAGE_SIZE,
+<<<<<<< HEAD
 					    AMDGPU_GEM_DOMAIN_VRAM |
 					    AMDGPU_GEM_DOMAIN_GTT,
 					    &adev->uvd.inst[j].vcpu_bo,
 					    &adev->uvd.inst[j].gpu_addr,
 					    &adev->uvd.inst[j].cpu_addr);
+=======
+					    AMDGPU_GEM_DOMAIN_VRAM, &adev->uvd.inst[j].vcpu_bo,
+					    &adev->uvd.inst[j].gpu_addr, &adev->uvd.inst[j].cpu_addr);
+>>>>>>> b7ba80a49124 (Commit)
 		if (r) {
 			dev_err(adev->dev, "(%d) failed to allocate UVD bo\n", r);
 			return r;
@@ -389,7 +410,11 @@ int amdgpu_uvd_sw_fini(struct amdgpu_device *adev)
 			amdgpu_ring_fini(&adev->uvd.inst[j].ring_enc[i]);
 	}
 	amdgpu_bo_free_kernel(&adev->uvd.ib_bo, NULL, &addr);
+<<<<<<< HEAD
 	amdgpu_ucode_release(&adev->uvd.fw);
+=======
+	release_firmware(adev->uvd.fw);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1118,6 +1143,7 @@ static int amdgpu_uvd_send_msg(struct amdgpu_ring *ring, struct amdgpu_bo *bo,
 {
 	struct amdgpu_device *adev = ring->adev;
 	struct dma_fence *f = NULL;
+<<<<<<< HEAD
 	uint32_t offset, data[4];
 	struct amdgpu_job *job;
 	struct amdgpu_ib *ib;
@@ -1127,10 +1153,23 @@ static int amdgpu_uvd_send_msg(struct amdgpu_ring *ring, struct amdgpu_bo *bo,
 	r = amdgpu_job_alloc_with_ib(ring->adev, &adev->uvd.entity,
 				     AMDGPU_FENCE_OWNER_UNDEFINED,
 				     64, direct ? AMDGPU_IB_POOL_DIRECT :
+=======
+	struct amdgpu_job *job;
+	struct amdgpu_ib *ib;
+	uint32_t data[4];
+	uint64_t addr;
+	long r;
+	int i;
+	unsigned offset_idx = 0;
+	unsigned offset[3] = { UVD_BASE_SI, 0, 0 };
+
+	r = amdgpu_job_alloc_with_ib(adev, 64, direct ? AMDGPU_IB_POOL_DIRECT :
+>>>>>>> b7ba80a49124 (Commit)
 				     AMDGPU_IB_POOL_DELAYED, &job);
 	if (r)
 		return r;
 
+<<<<<<< HEAD
 	if (adev->asic_type >= CHIP_VEGA10)
 		offset = adev->reg_offset[UVD_HWIP][ring->me][1];
 	else
@@ -1140,6 +1179,18 @@ static int amdgpu_uvd_send_msg(struct amdgpu_ring *ring, struct amdgpu_bo *bo,
 	data[1] = PACKET0(offset + UVD_GPCOM_VCPU_DATA1, 0);
 	data[2] = PACKET0(offset + UVD_GPCOM_VCPU_CMD, 0);
 	data[3] = PACKET0(offset + UVD_NO_OP, 0);
+=======
+	if (adev->asic_type >= CHIP_VEGA10) {
+		offset_idx = 1 + ring->me;
+		offset[1] = adev->reg_offset[UVD_HWIP][0][1];
+		offset[2] = adev->reg_offset[UVD_HWIP][1][1];
+	}
+
+	data[0] = PACKET0(offset[offset_idx] + UVD_GPCOM_VCPU_DATA0, 0);
+	data[1] = PACKET0(offset[offset_idx] + UVD_GPCOM_VCPU_DATA1, 0);
+	data[2] = PACKET0(offset[offset_idx] + UVD_GPCOM_VCPU_CMD, 0);
+	data[3] = PACKET0(offset[offset_idx] + UVD_NO_OP, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ib = &job->ibs[0];
 	addr = amdgpu_bo_gpu_offset(bo);
@@ -1156,10 +1207,22 @@ static int amdgpu_uvd_send_msg(struct amdgpu_ring *ring, struct amdgpu_bo *bo,
 	ib->length_dw = 16;
 
 	if (direct) {
+<<<<<<< HEAD
+=======
+		r = dma_resv_wait_timeout(bo->tbo.base.resv,
+					  DMA_RESV_USAGE_KERNEL, false,
+					  msecs_to_jiffies(10));
+		if (r == 0)
+			r = -ETIMEDOUT;
+		if (r < 0)
+			goto err_free;
+
+>>>>>>> b7ba80a49124 (Commit)
 		r = amdgpu_job_submit_direct(job, ring, &f);
 		if (r)
 			goto err_free;
 	} else {
+<<<<<<< HEAD
 		r = drm_sched_job_add_resv_dependencies(&job->base,
 							bo->tbo.base.resv,
 							DMA_RESV_USAGE_KERNEL);
@@ -1167,6 +1230,18 @@ static int amdgpu_uvd_send_msg(struct amdgpu_ring *ring, struct amdgpu_bo *bo,
 			goto err_free;
 
 		f = amdgpu_job_submit(job);
+=======
+		r = amdgpu_sync_resv(adev, &job->sync, bo->tbo.base.resv,
+				     AMDGPU_SYNC_ALWAYS,
+				     AMDGPU_FENCE_OWNER_UNDEFINED);
+		if (r)
+			goto err_free;
+
+		r = amdgpu_job_submit(job, &adev->uvd.entity,
+				      AMDGPU_FENCE_OWNER_UNDEFINED, &f);
+		if (r)
+			goto err_free;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	amdgpu_bo_reserve(bo, true);

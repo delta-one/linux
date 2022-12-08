@@ -161,7 +161,10 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
 					  *init_params)
 {
 	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
+<<<<<<< HEAD
 	unsigned int set = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct brcmstb_l2_intc_data *data;
 	struct irq_chip_type *ct;
 	int ret;
@@ -209,12 +212,18 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
 	if (IS_ENABLED(CONFIG_MIPS) && IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
 		flags |= IRQ_GC_BE_IO;
 
+<<<<<<< HEAD
 	if (init_params->handler == handle_level_irq)
 		set |= IRQ_LEVEL;
 
 	/* Allocate a single Generic IRQ chip for this node */
 	ret = irq_alloc_domain_generic_chips(data->domain, 32, 1,
 			np->full_name, init_params->handler, clr, set, flags);
+=======
+	/* Allocate a single Generic IRQ chip for this node */
+	ret = irq_alloc_domain_generic_chips(data->domain, 32, 1,
+			np->full_name, init_params->handler, clr, 0, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		pr_err("failed to allocate generic irq chip\n");
 		goto out_free_domain;

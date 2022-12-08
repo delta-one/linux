@@ -323,7 +323,11 @@ static const struct atmel_hsmc_reg_layout sama5d2_reg_layout = {
 	.timing_regs_offset = 0x700,
 };
 
+<<<<<<< HEAD
 static const struct of_device_id atmel_smc_ids[] __maybe_unused = {
+=======
+static const struct of_device_id atmel_smc_ids[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "atmel,at91sam9260-smc", .data = NULL },
 	{ .compatible = "atmel,sama5d3-smc", .data = &sama5d3_reg_layout },
 	{ .compatible = "atmel,sama5d2-smc", .data = &sama5d2_reg_layout },

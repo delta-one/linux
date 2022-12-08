@@ -6,6 +6,7 @@
 #include <linux/pci.h>
 #include <linux/netdevice.h>
 #include <linux/string.h>
+<<<<<<< HEAD
 #include <linux/etherdevice.h>
 #include <net/ip.h>
 #include <linux/if_vlan.h>
@@ -16,6 +17,12 @@
 #include "txgbe_type.h"
 #include "txgbe_hw.h"
 #include "txgbe_ethtool.h"
+=======
+#include <linux/aer.h>
+#include <linux/etherdevice.h>
+
+#include "txgbe.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 char txgbe_driver_name[] = "txgbe";
 
@@ -36,6 +43,7 @@ static const struct pci_device_id txgbe_pci_tbl[] = {
 
 #define DEFAULT_DEBUG_LEVEL_SHIFT 3
 
+<<<<<<< HEAD
 static void txgbe_check_minimum_link(struct wx *wx)
 {
 	struct pci_dev *pdev;
@@ -469,6 +477,15 @@ static void txgbe_dev_shutdown(struct pci_dev *pdev, bool *enable_wake)
 
 	wx_control_hw(wx, false);
 
+=======
+static void txgbe_dev_shutdown(struct pci_dev *pdev, bool *enable_wake)
+{
+	struct txgbe_adapter *adapter = pci_get_drvdata(pdev);
+	struct net_device *netdev = adapter->netdev;
+
+	netif_device_detach(netdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	pci_disable_device(pdev);
 }
 
@@ -484,6 +501,7 @@ static void txgbe_shutdown(struct pci_dev *pdev)
 	}
 }
 
+<<<<<<< HEAD
 static const struct net_device_ops txgbe_netdev_ops = {
 	.ndo_open               = txgbe_open,
 	.ndo_stop               = txgbe_close,
@@ -495,6 +513,8 @@ static const struct net_device_ops txgbe_netdev_ops = {
 	.ndo_get_stats64        = wx_get_stats64,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * txgbe_probe - Device Initialization Routine
  * @pdev: PCI device information struct
@@ -503,12 +523,17 @@ static const struct net_device_ops txgbe_netdev_ops = {
  * Returns 0 on success, negative on failure
  *
  * txgbe_probe initializes an adapter identified by a pci_dev structure.
+<<<<<<< HEAD
  * The OS initialization, configuring of the wx private structure,
+=======
+ * The OS initialization, configuring of the adapter private structure,
+>>>>>>> b7ba80a49124 (Commit)
  * and a hardware reset occur.
  **/
 static int txgbe_probe(struct pci_dev *pdev,
 		       const struct pci_device_id __always_unused *ent)
 {
+<<<<<<< HEAD
 	struct net_device *netdev;
 	int err, expected_gts;
 	struct wx *wx = NULL;
@@ -518,6 +543,11 @@ static int txgbe_probe(struct pci_dev *pdev,
 	u16 build = 0, major = 0, patch = 0;
 	u8 part_str[TXGBE_PBANUM_LENGTH];
 	u32 etrack_id = 0;
+=======
+	struct txgbe_adapter *adapter = NULL;
+	struct net_device *netdev;
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = pci_enable_device_mem(pdev);
 	if (err)
@@ -539,10 +569,18 @@ static int txgbe_probe(struct pci_dev *pdev,
 		goto err_pci_disable_dev;
 	}
 
+<<<<<<< HEAD
 	pci_set_master(pdev);
 
 	netdev = devm_alloc_etherdev_mqs(&pdev->dev,
 					 sizeof(struct wx),
+=======
+	pci_enable_pcie_error_reporting(pdev);
+	pci_set_master(pdev);
+
+	netdev = devm_alloc_etherdev_mqs(&pdev->dev,
+					 sizeof(struct txgbe_adapter),
+>>>>>>> b7ba80a49124 (Commit)
 					 TXGBE_MAX_TX_QUEUES,
 					 TXGBE_MAX_RX_QUEUES);
 	if (!netdev) {
@@ -552,6 +590,7 @@ static int txgbe_probe(struct pci_dev *pdev,
 
 	SET_NETDEV_DEV(netdev, &pdev->dev);
 
+<<<<<<< HEAD
 	wx = netdev_priv(netdev);
 	wx->netdev = netdev;
 	wx->pdev = pdev;
@@ -562,10 +601,21 @@ static int txgbe_probe(struct pci_dev *pdev,
 				   pci_resource_start(pdev, 0),
 				   pci_resource_len(pdev, 0));
 	if (!wx->hw_addr) {
+=======
+	adapter = netdev_priv(netdev);
+	adapter->netdev = netdev;
+	adapter->pdev = pdev;
+
+	adapter->io_addr = devm_ioremap(&pdev->dev,
+					pci_resource_start(pdev, 0),
+					pci_resource_len(pdev, 0));
+	if (!adapter->io_addr) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EIO;
 		goto err_pci_release_regions;
 	}
 
+<<<<<<< HEAD
 	wx->driver_name = txgbe_driver_name;
 	txgbe_set_ethtool_ops(netdev);
 	netdev->netdev_ops = &txgbe_netdev_ops;
@@ -699,6 +749,16 @@ err_release_hw:
 err_free_mac_table:
 	kfree(wx->mac_table);
 err_pci_release_regions:
+=======
+	netdev->features |= NETIF_F_HIGHDMA;
+
+	pci_set_drvdata(pdev, adapter);
+
+	return 0;
+
+err_pci_release_regions:
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_release_selected_regions(pdev,
 				     pci_select_bars(pdev, IORESOURCE_MEM));
 err_pci_disable_dev:
@@ -717,6 +777,7 @@ err_pci_disable_dev:
  **/
 static void txgbe_remove(struct pci_dev *pdev)
 {
+<<<<<<< HEAD
 	struct wx *wx = pci_get_drvdata(pdev);
 	struct net_device *netdev;
 
@@ -728,6 +789,12 @@ static void txgbe_remove(struct pci_dev *pdev)
 
 	kfree(wx->mac_table);
 	wx_clear_interrupt_scheme(wx);
+=======
+	pci_release_selected_regions(pdev,
+				     pci_select_bars(pdev, IORESOURCE_MEM));
+
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pci_disable_device(pdev);
 }

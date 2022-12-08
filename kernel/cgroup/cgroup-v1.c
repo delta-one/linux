@@ -58,7 +58,11 @@ int cgroup_attach_task_all(struct task_struct *from, struct task_struct *tsk)
 	struct cgroup_root *root;
 	int retval = 0;
 
+<<<<<<< HEAD
 	cgroup_lock();
+=======
+	mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	cgroup_attach_lock(true);
 	for_each_root(root) {
 		struct cgroup *from_cgrp;
@@ -72,7 +76,11 @@ int cgroup_attach_task_all(struct task_struct *from, struct task_struct *tsk)
 			break;
 	}
 	cgroup_attach_unlock(true);
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return retval;
 }
@@ -106,7 +114,11 @@ int cgroup_transfer_tasks(struct cgroup *to, struct cgroup *from)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	cgroup_lock();
+=======
+	mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	percpu_down_write(&cgroup_threadgroup_rwsem);
 
@@ -145,7 +157,11 @@ int cgroup_transfer_tasks(struct cgroup *to, struct cgroup *from)
 out_err:
 	cgroup_migrate_finish(&mgctx);
 	percpu_up_write(&cgroup_threadgroup_rwsem);
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -847,13 +863,21 @@ static int cgroup1_rename(struct kernfs_node *kn, struct kernfs_node *new_parent
 	kernfs_break_active_protection(new_parent);
 	kernfs_break_active_protection(kn);
 
+<<<<<<< HEAD
 	cgroup_lock();
+=======
+	mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = kernfs_rename(kn, new_parent, new_name_str);
 	if (!ret)
 		TRACE_CGROUP_PATH(rename, cgrp);
 
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kernfs_unbreak_active_protection(kn);
 	kernfs_unbreak_active_protection(new_parent);
@@ -1119,7 +1143,11 @@ int cgroup1_reconfigure(struct fs_context *fc)
 	trace_cgroup_remount(root);
 
  out_unlock:
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -1246,7 +1274,11 @@ int cgroup1_get_tree(struct fs_context *fc)
 	if (!ret && !percpu_ref_tryget_live(&ctx->root->cgrp.self.refcnt))
 		ret = 1;	/* restart */
 
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!ret)
 		ret = cgroup_do_get_tree(fc);

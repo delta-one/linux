@@ -346,6 +346,7 @@ struct_size() and flex_array_size() helpers::
         instance->count = count;
 
         memcpy(instance->items, source, flex_array_size(instance, items, instance->count));
+<<<<<<< HEAD
 
 There are two special cases of replacement where the DECLARE_FLEX_ARRAY()
 helper needs to be used. (Note that it is named __DECLARE_FLEX_ARRAY() for
@@ -372,3 +373,5 @@ The helper must be used::
 			DECLARE_FLEX_ARRAY(struct type2, two);
 		};
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)

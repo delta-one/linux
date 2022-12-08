@@ -54,7 +54,11 @@ void serial_test_perf_link(void)
 		goto cleanup;
 
 	memset(&info, 0, sizeof(info));
+<<<<<<< HEAD
 	err = bpf_link_get_info_by_fd(link_fd, &info, &info_len);
+=======
+	err = bpf_obj_get_info_by_fd(link_fd, &info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ASSERT_OK(err, "link_get_info"))
 		goto cleanup;
 

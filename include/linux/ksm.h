@@ -18,6 +18,7 @@
 #ifdef CONFIG_KSM
 int ksm_madvise(struct vm_area_struct *vma, unsigned long start,
 		unsigned long end, int advice, unsigned long *vm_flags);
+<<<<<<< HEAD
 int __ksm_enter(struct mm_struct *mm, int flag);
 void __ksm_exit(struct mm_struct *mm, int flag);
 
@@ -27,15 +28,29 @@ static inline int ksm_fork(struct mm_struct *mm, struct mm_struct *oldmm)
 		return __ksm_enter(mm, MMF_VM_MERGE_ANY);
 	if (test_bit(MMF_VM_MERGEABLE, &oldmm->flags))
 		return __ksm_enter(mm, MMF_VM_MERGEABLE);
+=======
+int __ksm_enter(struct mm_struct *mm);
+void __ksm_exit(struct mm_struct *mm);
+
+static inline int ksm_fork(struct mm_struct *mm, struct mm_struct *oldmm)
+{
+	if (test_bit(MMF_VM_MERGEABLE, &oldmm->flags))
+		return __ksm_enter(mm);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static inline void ksm_exit(struct mm_struct *mm)
 {
+<<<<<<< HEAD
 	if (test_bit(MMF_VM_MERGE_ANY, &mm->flags))
 		__ksm_exit(mm, MMF_VM_MERGE_ANY);
 	else if (test_bit(MMF_VM_MERGEABLE, &mm->flags))
 		__ksm_exit(mm, MMF_VM_MERGEABLE);
+=======
+	if (test_bit(MMF_VM_MERGEABLE, &mm->flags))
+		__ksm_exit(mm);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -55,11 +70,14 @@ struct page *ksm_might_need_to_copy(struct page *page,
 void rmap_walk_ksm(struct folio *folio, struct rmap_walk_control *rwc);
 void folio_migrate_ksm(struct folio *newfolio, struct folio *folio);
 
+<<<<<<< HEAD
 #ifdef CONFIG_PROC_FS
 long ksm_process_profit(struct mm_struct *);
 const char *ksm_merge_type(struct mm_struct *mm);
 #endif /* CONFIG_PROC_FS */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else  /* !CONFIG_KSM */
 
 static inline int ksm_fork(struct mm_struct *mm, struct mm_struct *oldmm)

@@ -147,6 +147,7 @@ struct hpre_asym_request {
 	struct timespec64 req_time;
 };
 
+<<<<<<< HEAD
 static inline unsigned int hpre_align_sz(void)
 {
 	return ((crypto_dma_align() - 1) | (HPRE_ALIGN_SZ - 1)) + 1;
@@ -157,6 +158,8 @@ static inline unsigned int hpre_align_pd(void)
 	return (hpre_align_sz() - 1) & ~(crypto_tfm_ctx_alignment() - 1);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int hpre_alloc_req_id(struct hpre_ctx *ctx)
 {
 	unsigned long flags;
@@ -527,7 +530,11 @@ static int hpre_msg_request_set(struct hpre_ctx *ctx, void *req, bool is_rsa)
 		}
 
 		tmp = akcipher_request_ctx(akreq);
+<<<<<<< HEAD
 		h_req = PTR_ALIGN(tmp, hpre_align_sz());
+=======
+		h_req = PTR_ALIGN(tmp, HPRE_ALIGN_SZ);
+>>>>>>> b7ba80a49124 (Commit)
 		h_req->cb = hpre_rsa_cb;
 		h_req->areq.rsa = akreq;
 		msg = &h_req->req;
@@ -541,7 +548,11 @@ static int hpre_msg_request_set(struct hpre_ctx *ctx, void *req, bool is_rsa)
 		}
 
 		tmp = kpp_request_ctx(kreq);
+<<<<<<< HEAD
 		h_req = PTR_ALIGN(tmp, hpre_align_sz());
+=======
+		h_req = PTR_ALIGN(tmp, HPRE_ALIGN_SZ);
+>>>>>>> b7ba80a49124 (Commit)
 		h_req->cb = hpre_dh_cb;
 		h_req->areq.dh = kreq;
 		msg = &h_req->req;
@@ -592,7 +603,11 @@ static int hpre_dh_compute_value(struct kpp_request *req)
 	struct crypto_kpp *tfm = crypto_kpp_reqtfm(req);
 	struct hpre_ctx *ctx = kpp_tfm_ctx(tfm);
 	void *tmp = kpp_request_ctx(req);
+<<<<<<< HEAD
 	struct hpre_asym_request *hpre_req = PTR_ALIGN(tmp, hpre_align_sz());
+=======
+	struct hpre_asym_request *hpre_req = PTR_ALIGN(tmp, HPRE_ALIGN_SZ);
+>>>>>>> b7ba80a49124 (Commit)
 	struct hpre_sqe *msg = &hpre_req->req;
 	int ret;
 
@@ -750,8 +765,11 @@ static int hpre_dh_init_tfm(struct crypto_kpp *tfm)
 {
 	struct hpre_ctx *ctx = kpp_tfm_ctx(tfm);
 
+<<<<<<< HEAD
 	kpp_set_reqsize(tfm, sizeof(struct hpre_asym_request) + hpre_align_pd());
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return hpre_ctx_init(ctx, HPRE_V2_ALG_TYPE);
 }
 
@@ -795,7 +813,11 @@ static int hpre_rsa_enc(struct akcipher_request *req)
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
 	struct hpre_ctx *ctx = akcipher_tfm_ctx(tfm);
 	void *tmp = akcipher_request_ctx(req);
+<<<<<<< HEAD
 	struct hpre_asym_request *hpre_req = PTR_ALIGN(tmp, hpre_align_sz());
+=======
+	struct hpre_asym_request *hpre_req = PTR_ALIGN(tmp, HPRE_ALIGN_SZ);
+>>>>>>> b7ba80a49124 (Commit)
 	struct hpre_sqe *msg = &hpre_req->req;
 	int ret;
 
@@ -843,7 +865,11 @@ static int hpre_rsa_dec(struct akcipher_request *req)
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
 	struct hpre_ctx *ctx = akcipher_tfm_ctx(tfm);
 	void *tmp = akcipher_request_ctx(req);
+<<<<<<< HEAD
 	struct hpre_asym_request *hpre_req = PTR_ALIGN(tmp, hpre_align_sz());
+=======
+	struct hpre_asym_request *hpre_req = PTR_ALIGN(tmp, HPRE_ALIGN_SZ);
+>>>>>>> b7ba80a49124 (Commit)
 	struct hpre_sqe *msg = &hpre_req->req;
 	int ret;
 
@@ -1177,9 +1203,12 @@ static int hpre_rsa_init_tfm(struct crypto_akcipher *tfm)
 		return PTR_ERR(ctx->rsa.soft_tfm);
 	}
 
+<<<<<<< HEAD
 	akcipher_set_reqsize(tfm, sizeof(struct hpre_asym_request) +
 				  hpre_align_pd());
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = hpre_ctx_init(ctx, HPRE_V2_ALG_TYPE);
 	if (ret)
 		crypto_free_akcipher(ctx->rsa.soft_tfm);
@@ -1500,7 +1529,11 @@ static int hpre_ecdh_msg_request_set(struct hpre_ctx *ctx,
 	}
 
 	tmp = kpp_request_ctx(req);
+<<<<<<< HEAD
 	h_req = PTR_ALIGN(tmp, hpre_align_sz());
+=======
+	h_req = PTR_ALIGN(tmp, HPRE_ALIGN_SZ);
+>>>>>>> b7ba80a49124 (Commit)
 	h_req->cb = hpre_ecdh_cb;
 	h_req->areq.ecdh = req;
 	msg = &h_req->req;
@@ -1581,7 +1614,11 @@ static int hpre_ecdh_compute_value(struct kpp_request *req)
 	struct hpre_ctx *ctx = kpp_tfm_ctx(tfm);
 	struct device *dev = ctx->dev;
 	void *tmp = kpp_request_ctx(req);
+<<<<<<< HEAD
 	struct hpre_asym_request *hpre_req = PTR_ALIGN(tmp, hpre_align_sz());
+=======
+	struct hpre_asym_request *hpre_req = PTR_ALIGN(tmp, HPRE_ALIGN_SZ);
+>>>>>>> b7ba80a49124 (Commit)
 	struct hpre_sqe *msg = &hpre_req->req;
 	int ret;
 
@@ -1632,8 +1669,11 @@ static int hpre_ecdh_nist_p192_init_tfm(struct crypto_kpp *tfm)
 
 	ctx->curve_id = ECC_CURVE_NIST_P192;
 
+<<<<<<< HEAD
 	kpp_set_reqsize(tfm, sizeof(struct hpre_asym_request) + hpre_align_pd());
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return hpre_ctx_init(ctx, HPRE_V3_ECC_ALG_TYPE);
 }
 
@@ -1643,8 +1683,11 @@ static int hpre_ecdh_nist_p256_init_tfm(struct crypto_kpp *tfm)
 
 	ctx->curve_id = ECC_CURVE_NIST_P256;
 
+<<<<<<< HEAD
 	kpp_set_reqsize(tfm, sizeof(struct hpre_asym_request) + hpre_align_pd());
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return hpre_ctx_init(ctx, HPRE_V3_ECC_ALG_TYPE);
 }
 
@@ -1654,8 +1697,11 @@ static int hpre_ecdh_nist_p384_init_tfm(struct crypto_kpp *tfm)
 
 	ctx->curve_id = ECC_CURVE_NIST_P384;
 
+<<<<<<< HEAD
 	kpp_set_reqsize(tfm, sizeof(struct hpre_asym_request) + hpre_align_pd());
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return hpre_ctx_init(ctx, HPRE_V3_ECC_ALG_TYPE);
 }
 
@@ -1812,7 +1858,11 @@ static int hpre_curve25519_msg_request_set(struct hpre_ctx *ctx,
 	}
 
 	tmp = kpp_request_ctx(req);
+<<<<<<< HEAD
 	h_req = PTR_ALIGN(tmp, hpre_align_sz());
+=======
+	h_req = PTR_ALIGN(tmp, HPRE_ALIGN_SZ);
+>>>>>>> b7ba80a49124 (Commit)
 	h_req->cb = hpre_curve25519_cb;
 	h_req->areq.curve25519 = req;
 	msg = &h_req->req;
@@ -1933,7 +1983,11 @@ static int hpre_curve25519_compute_value(struct kpp_request *req)
 	struct hpre_ctx *ctx = kpp_tfm_ctx(tfm);
 	struct device *dev = ctx->dev;
 	void *tmp = kpp_request_ctx(req);
+<<<<<<< HEAD
 	struct hpre_asym_request *hpre_req = PTR_ALIGN(tmp, hpre_align_sz());
+=======
+	struct hpre_asym_request *hpre_req = PTR_ALIGN(tmp, HPRE_ALIGN_SZ);
+>>>>>>> b7ba80a49124 (Commit)
 	struct hpre_sqe *msg = &hpre_req->req;
 	int ret;
 
@@ -1982,8 +2036,11 @@ static int hpre_curve25519_init_tfm(struct crypto_kpp *tfm)
 {
 	struct hpre_ctx *ctx = kpp_tfm_ctx(tfm);
 
+<<<<<<< HEAD
 	kpp_set_reqsize(tfm, sizeof(struct hpre_asym_request) + hpre_align_pd());
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return hpre_ctx_init(ctx, HPRE_V3_ECC_ALG_TYPE);
 }
 
@@ -2004,6 +2061,10 @@ static struct akcipher_alg rsa = {
 	.max_size = hpre_rsa_max_size,
 	.init = hpre_rsa_init_tfm,
 	.exit = hpre_rsa_exit_tfm,
+<<<<<<< HEAD
+=======
+	.reqsize = sizeof(struct hpre_asym_request) + HPRE_ALIGN_SZ,
+>>>>>>> b7ba80a49124 (Commit)
 	.base = {
 		.cra_ctxsize = sizeof(struct hpre_ctx),
 		.cra_priority = HPRE_CRYPTO_ALG_PRI,
@@ -2020,6 +2081,10 @@ static struct kpp_alg dh = {
 	.max_size = hpre_dh_max_size,
 	.init = hpre_dh_init_tfm,
 	.exit = hpre_dh_exit_tfm,
+<<<<<<< HEAD
+=======
+	.reqsize = sizeof(struct hpre_asym_request) + HPRE_ALIGN_SZ,
+>>>>>>> b7ba80a49124 (Commit)
 	.base = {
 		.cra_ctxsize = sizeof(struct hpre_ctx),
 		.cra_priority = HPRE_CRYPTO_ALG_PRI,
@@ -2037,6 +2102,10 @@ static struct kpp_alg ecdh_curves[] = {
 		.max_size = hpre_ecdh_max_size,
 		.init = hpre_ecdh_nist_p192_init_tfm,
 		.exit = hpre_ecdh_exit_tfm,
+<<<<<<< HEAD
+=======
+		.reqsize = sizeof(struct hpre_asym_request) + HPRE_ALIGN_SZ,
+>>>>>>> b7ba80a49124 (Commit)
 		.base = {
 			.cra_ctxsize = sizeof(struct hpre_ctx),
 			.cra_priority = HPRE_CRYPTO_ALG_PRI,
@@ -2051,6 +2120,10 @@ static struct kpp_alg ecdh_curves[] = {
 		.max_size = hpre_ecdh_max_size,
 		.init = hpre_ecdh_nist_p256_init_tfm,
 		.exit = hpre_ecdh_exit_tfm,
+<<<<<<< HEAD
+=======
+		.reqsize = sizeof(struct hpre_asym_request) + HPRE_ALIGN_SZ,
+>>>>>>> b7ba80a49124 (Commit)
 		.base = {
 			.cra_ctxsize = sizeof(struct hpre_ctx),
 			.cra_priority = HPRE_CRYPTO_ALG_PRI,
@@ -2065,6 +2138,10 @@ static struct kpp_alg ecdh_curves[] = {
 		.max_size = hpre_ecdh_max_size,
 		.init = hpre_ecdh_nist_p384_init_tfm,
 		.exit = hpre_ecdh_exit_tfm,
+<<<<<<< HEAD
+=======
+		.reqsize = sizeof(struct hpre_asym_request) + HPRE_ALIGN_SZ,
+>>>>>>> b7ba80a49124 (Commit)
 		.base = {
 			.cra_ctxsize = sizeof(struct hpre_ctx),
 			.cra_priority = HPRE_CRYPTO_ALG_PRI,
@@ -2082,6 +2159,10 @@ static struct kpp_alg curve25519_alg = {
 	.max_size = hpre_curve25519_max_size,
 	.init = hpre_curve25519_init_tfm,
 	.exit = hpre_curve25519_exit_tfm,
+<<<<<<< HEAD
+=======
+	.reqsize = sizeof(struct hpre_asym_request) + HPRE_ALIGN_SZ,
+>>>>>>> b7ba80a49124 (Commit)
 	.base = {
 		.cra_ctxsize = sizeof(struct hpre_ctx),
 		.cra_priority = HPRE_CRYPTO_ALG_PRI,

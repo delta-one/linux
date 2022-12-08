@@ -162,12 +162,21 @@ static int rockchip_snd_txctrl(struct rk_i2s_dev *i2s, int on)
 						 I2S_CLR_TXC | I2S_CLR_RXC);
 			if (ret < 0)
 				goto end;
+<<<<<<< HEAD
 			ret = regmap_read_poll_timeout_atomic(i2s->regmap,
 							      I2S_CLR,
 							      val,
 							      val == 0,
 							      20,
 							      200);
+=======
+			ret = regmap_read_poll_timeout(i2s->regmap,
+						       I2S_CLR,
+						       val,
+						       val != 0,
+						       20,
+						       200);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret < 0)
 				dev_warn(i2s->dev, "fail to clear: %d\n", ret);
 		}
@@ -220,12 +229,21 @@ static int rockchip_snd_rxctrl(struct rk_i2s_dev *i2s, int on)
 						 I2S_CLR_TXC | I2S_CLR_RXC);
 			if (ret < 0)
 				goto end;
+<<<<<<< HEAD
 			ret = regmap_read_poll_timeout_atomic(i2s->regmap,
 							      I2S_CLR,
 							      val,
 							      val == 0,
 							      20,
 							      200);
+=======
+			ret = regmap_read_poll_timeout(i2s->regmap,
+						       I2S_CLR,
+						       val,
+						       val != 0,
+						       20,
+						       200);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret < 0)
 				dev_warn(i2s->dev, "fail to clear: %d\n", ret);
 		}
@@ -659,7 +677,10 @@ static const struct of_device_id rockchip_i2s_match[] __maybe_unused = {
 	{ .compatible = "rockchip,rk3366-i2s", },
 	{ .compatible = "rockchip,rk3368-i2s", },
 	{ .compatible = "rockchip,rk3399-i2s", .data = &rk3399_i2s_pins },
+<<<<<<< HEAD
 	{ .compatible = "rockchip,rk3588-i2s", },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "rockchip,rv1126-i2s", },
 	{},
 };
@@ -851,7 +872,11 @@ err_clk:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void rockchip_i2s_remove(struct platform_device *pdev)
+=======
+static int rockchip_i2s_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rk_i2s_dev *i2s = dev_get_drvdata(&pdev->dev);
 
@@ -860,6 +885,11 @@ static void rockchip_i2s_remove(struct platform_device *pdev)
 		i2s_runtime_suspend(&pdev->dev);
 
 	clk_disable_unprepare(i2s->hclk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct dev_pm_ops rockchip_i2s_pm_ops = {
@@ -869,7 +899,11 @@ static const struct dev_pm_ops rockchip_i2s_pm_ops = {
 
 static struct platform_driver rockchip_i2s_driver = {
 	.probe = rockchip_i2s_probe,
+<<<<<<< HEAD
 	.remove_new = rockchip_i2s_remove,
+=======
+	.remove = rockchip_i2s_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = DRV_NAME,
 		.of_match_table = of_match_ptr(rockchip_i2s_match),

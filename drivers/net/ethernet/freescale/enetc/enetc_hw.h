@@ -18,10 +18,16 @@
 #define ENETC_SICTR0	0x18
 #define ENETC_SICTR1	0x1c
 #define ENETC_SIPCAPR0	0x20
+<<<<<<< HEAD
 #define ENETC_SIPCAPR0_PSFP	BIT(9)
 #define ENETC_SIPCAPR0_RSS	BIT(8)
 #define ENETC_SIPCAPR0_QBV	BIT(4)
 #define ENETC_SIPCAPR0_QBU	BIT(3)
+=======
+#define ENETC_SIPCAPR0_QBV	BIT(4)
+#define ENETC_SIPCAPR0_PSFP	BIT(9)
+#define ENETC_SIPCAPR0_RSS	BIT(8)
+>>>>>>> b7ba80a49124 (Commit)
 #define ENETC_SIPCAPR1	0x24
 #define ENETC_SITGTGR	0x30
 #define ENETC_SIRBGCR	0x38
@@ -214,6 +220,10 @@ enum enetc_bdr_type {TX, RX};
 #define ENETC_PSIRFSCFGR(n)	(0x1814 + (n) * 4) /* n = SI index */
 #define ENETC_PFPMR		0x1900
 #define ENETC_PFPMR_PMACE	BIT(1)
+<<<<<<< HEAD
+=======
+#define ENETC_PFPMR_MWLM	BIT(0)
+>>>>>>> b7ba80a49124 (Commit)
 #define ENETC_EMDIO_BASE	0x1c00
 #define ENETC_PSIUMHFR0(n, err)	(((err) ? 0x1d08 : 0x1d00) + (n) * 0x10)
 #define ENETC_PSIUMHFR1(n)	(0x1d04 + (n) * 0x10)
@@ -222,6 +232,7 @@ enum enetc_bdr_type {TX, RX};
 #define ENETC_PSIVHFR0(n)	(0x1e00 + (n) * 8) /* n = SI index */
 #define ENETC_PSIVHFR1(n)	(0x1e04 + (n) * 8) /* n = SI index */
 #define ENETC_MMCSR		0x1f00
+<<<<<<< HEAD
 #define ENETC_MMCSR_LINK_FAIL	BIT(31)
 #define ENETC_MMCSR_VT_MASK	GENMASK(29, 23) /* Verify Time */
 #define ENETC_MMCSR_VT(x)	(((x) << 23) & ENETC_MMCSR_VT_MASK)
@@ -251,6 +262,13 @@ enum enetc_bdr_type {TX, RX};
 #define ENETC_PMAC_OFFSET	0x1000
 
 #define ENETC_PM0_CMD_CFG	0x8008
+=======
+#define ENETC_MMCSR_ME		BIT(16)
+#define ENETC_PTCMSDUR(n)	(0x2020 + (n) * 4) /* n = TC index [0..7] */
+
+#define ENETC_PM0_CMD_CFG	0x8008
+#define ENETC_PM1_CMD_CFG	0x9008
+>>>>>>> b7ba80a49124 (Commit)
 #define ENETC_PM0_TX_EN		BIT(0)
 #define ENETC_PM0_RX_EN		BIT(1)
 #define ENETC_PM0_PROMISC	BIT(4)
@@ -269,8 +287,16 @@ enum enetc_bdr_type {TX, RX};
 
 #define ENETC_PM0_PAUSE_QUANTA	0x8054
 #define ENETC_PM0_PAUSE_THRESH	0x8064
+<<<<<<< HEAD
 
 #define ENETC_PM0_SINGLE_STEP		0x80c0
+=======
+#define ENETC_PM1_PAUSE_QUANTA	0x9054
+#define ENETC_PM1_PAUSE_THRESH	0x9064
+
+#define ENETC_PM0_SINGLE_STEP		0x80c0
+#define ENETC_PM1_SINGLE_STEP		0x90c0
+>>>>>>> b7ba80a49124 (Commit)
 #define ENETC_PM0_SINGLE_STEP_CH	BIT(7)
 #define ENETC_PM0_SINGLE_STEP_EN	BIT(31)
 #define ENETC_SET_SINGLE_STEP_OFFSET(v)	(((v) & 0xff) << 8)
@@ -300,6 +326,7 @@ enum enetc_bdr_type {TX, RX};
 /* Port MAC counters: Port MAC 0 corresponds to the eMAC and
  * Port MAC 1 to the pMAC.
  */
+<<<<<<< HEAD
 #define ENETC_PM_REOCT(mac)	(0x8100 + ENETC_PMAC_OFFSET * (mac))
 #define ENETC_PM_RALN(mac)	(0x8110 + ENETC_PMAC_OFFSET * (mac))
 #define ENETC_PM_RXPF(mac)	(0x8118 + ENETC_PMAC_OFFSET * (mac))
@@ -351,6 +378,59 @@ enum enetc_bdr_type {TX, RX};
 #define ENETC_PM_TSCOL(mac)	(0x82E0 + ENETC_PMAC_OFFSET * (mac))
 #define ENETC_PM_TLCOL(mac)	(0x82E8 + ENETC_PMAC_OFFSET * (mac))
 #define ENETC_PM_TECOL(mac)	(0x82F0 + ENETC_PMAC_OFFSET * (mac))
+=======
+#define ENETC_PM_REOCT(mac)	(0x8100 + 0x1000 * (mac))
+#define ENETC_PM_RALN(mac)	(0x8110 + 0x1000 * (mac))
+#define ENETC_PM_RXPF(mac)	(0x8118 + 0x1000 * (mac))
+#define ENETC_PM_RFRM(mac)	(0x8120 + 0x1000 * (mac))
+#define ENETC_PM_RFCS(mac)	(0x8128 + 0x1000 * (mac))
+#define ENETC_PM_RVLAN(mac)	(0x8130 + 0x1000 * (mac))
+#define ENETC_PM_RERR(mac)	(0x8138 + 0x1000 * (mac))
+#define ENETC_PM_RUCA(mac)	(0x8140 + 0x1000 * (mac))
+#define ENETC_PM_RMCA(mac)	(0x8148 + 0x1000 * (mac))
+#define ENETC_PM_RBCA(mac)	(0x8150 + 0x1000 * (mac))
+#define ENETC_PM_RDRP(mac)	(0x8158 + 0x1000 * (mac))
+#define ENETC_PM_RPKT(mac)	(0x8160 + 0x1000 * (mac))
+#define ENETC_PM_RUND(mac)	(0x8168 + 0x1000 * (mac))
+#define ENETC_PM_R64(mac)	(0x8170 + 0x1000 * (mac))
+#define ENETC_PM_R127(mac)	(0x8178 + 0x1000 * (mac))
+#define ENETC_PM_R255(mac)	(0x8180 + 0x1000 * (mac))
+#define ENETC_PM_R511(mac)	(0x8188 + 0x1000 * (mac))
+#define ENETC_PM_R1023(mac)	(0x8190 + 0x1000 * (mac))
+#define ENETC_PM_R1522(mac)	(0x8198 + 0x1000 * (mac))
+#define ENETC_PM_R1523X(mac)	(0x81A0 + 0x1000 * (mac))
+#define ENETC_PM_ROVR(mac)	(0x81A8 + 0x1000 * (mac))
+#define ENETC_PM_RJBR(mac)	(0x81B0 + 0x1000 * (mac))
+#define ENETC_PM_RFRG(mac)	(0x81B8 + 0x1000 * (mac))
+#define ENETC_PM_RCNP(mac)	(0x81C0 + 0x1000 * (mac))
+#define ENETC_PM_RDRNTP(mac)	(0x81C8 + 0x1000 * (mac))
+#define ENETC_PM_TEOCT(mac)	(0x8200 + 0x1000 * (mac))
+#define ENETC_PM_TOCT(mac)	(0x8208 + 0x1000 * (mac))
+#define ENETC_PM_TCRSE(mac)	(0x8210 + 0x1000 * (mac))
+#define ENETC_PM_TXPF(mac)	(0x8218 + 0x1000 * (mac))
+#define ENETC_PM_TFRM(mac)	(0x8220 + 0x1000 * (mac))
+#define ENETC_PM_TFCS(mac)	(0x8228 + 0x1000 * (mac))
+#define ENETC_PM_TVLAN(mac)	(0x8230 + 0x1000 * (mac))
+#define ENETC_PM_TERR(mac)	(0x8238 + 0x1000 * (mac))
+#define ENETC_PM_TUCA(mac)	(0x8240 + 0x1000 * (mac))
+#define ENETC_PM_TMCA(mac)	(0x8248 + 0x1000 * (mac))
+#define ENETC_PM_TBCA(mac)	(0x8250 + 0x1000 * (mac))
+#define ENETC_PM_TPKT(mac)	(0x8260 + 0x1000 * (mac))
+#define ENETC_PM_TUND(mac)	(0x8268 + 0x1000 * (mac))
+#define ENETC_PM_T64(mac)	(0x8270 + 0x1000 * (mac))
+#define ENETC_PM_T127(mac)	(0x8278 + 0x1000 * (mac))
+#define ENETC_PM_T255(mac)	(0x8280 + 0x1000 * (mac))
+#define ENETC_PM_T511(mac)	(0x8288 + 0x1000 * (mac))
+#define ENETC_PM_T1023(mac)	(0x8290 + 0x1000 * (mac))
+#define ENETC_PM_T1522(mac)	(0x8298 + 0x1000 * (mac))
+#define ENETC_PM_T1523X(mac)	(0x82A0 + 0x1000 * (mac))
+#define ENETC_PM_TCNP(mac)	(0x82C0 + 0x1000 * (mac))
+#define ENETC_PM_TDFR(mac)	(0x82D0 + 0x1000 * (mac))
+#define ENETC_PM_TMCOL(mac)	(0x82D8 + 0x1000 * (mac))
+#define ENETC_PM_TSCOL(mac)	(0x82E0 + 0x1000 * (mac))
+#define ENETC_PM_TLCOL(mac)	(0x82E8 + 0x1000 * (mac))
+#define ENETC_PM_TECOL(mac)	(0x82F0 + 0x1000 * (mac))
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Port counters */
 #define ENETC_PICDR(n)		(0x0700 + (n) * 8) /* n = [0..3] */
@@ -966,6 +1046,7 @@ static inline u32 enetc_usecs_to_cycles(u32 usecs)
 }
 
 /* port time gating control register */
+<<<<<<< HEAD
 #define ENETC_PTGCR			0x11a00
 #define ENETC_PTGCR_TGE			BIT(31)
 #define ENETC_PTGCR_TGPE		BIT(30)
@@ -973,6 +1054,15 @@ static inline u32 enetc_usecs_to_cycles(u32 usecs)
 /* Port time gating capability register */
 #define ENETC_PTGCAPR			0x11a08
 #define ENETC_PTGCAPR_MAX_GCL_LEN_MASK	GENMASK(15, 0)
+=======
+#define ENETC_QBV_PTGCR_OFFSET		0x11a00
+#define ENETC_QBV_TGE			BIT(31)
+#define ENETC_QBV_TGPE			BIT(30)
+
+/* Port time gating capability register */
+#define ENETC_QBV_PTGCAPR_OFFSET	0x11a08
+#define ENETC_QBV_MAX_GCL_LEN_MASK	GENMASK(15, 0)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Port time specific departure */
 #define ENETC_PTCTSDR(n)	(0x1210 + 4 * (n))

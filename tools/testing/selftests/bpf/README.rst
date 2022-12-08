@@ -6,6 +6,7 @@ General instructions on running selftests can be found in
 
 __ /Documentation/bpf/bpf_devel_QA.rst#q-how-to-run-bpf-selftests
 
+<<<<<<< HEAD
 =============
 BPF CI System
 =============
@@ -45,12 +46,15 @@ example, indicates that lack of trampoline support is causing the test to fail.
 This last entry helps identify tests that can be re-enabled once such support is
 added.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 =========================
 Running Selftests in a VM
 =========================
 
 It's now possible to run the selftests using ``tools/testing/selftests/bpf/vmtest.sh``.
 The script tries to ensure that the tests are run with the same environment as they
+<<<<<<< HEAD
 would be run post-submit in the CI used by the Maintainers, with the exception
 that deny lists are not automatically honored.
 
@@ -59,6 +63,14 @@ image from the system used by the CI. It builds the kernel (without overwriting
 your existing Kconfig), recompiles the bpf selftests, runs them (by default
 ``tools/testing/selftests/bpf/test_progs``) and saves the resulting output (by
 default in ``~/.bpf_selftests``).
+=======
+would be run post-submit in the CI used by the Maintainers.
+
+This script downloads a suitable Kconfig and VM userspace image from the system used by
+the CI. It builds the kernel (without overwriting your existing Kconfig), recompiles the
+bpf selftests, runs them (by default ``tools/testing/selftests/bpf/test_progs``) and
+saves the resulting output (by default in ``~/.bpf_selftests``).
+>>>>>>> b7ba80a49124 (Commit)
 
 Script dependencies:
 - clang (preferably built from sources, https://github.com/llvm/llvm-project);
@@ -67,7 +79,11 @@ Script dependencies:
 - docutils (for ``rst2man``);
 - libcap-devel.
 
+<<<<<<< HEAD
 For more information about using the script, run:
+=======
+For more information on about using the script, run:
+>>>>>>> b7ba80a49124 (Commit)
 
 .. code-block:: console
 

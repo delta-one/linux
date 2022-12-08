@@ -6,7 +6,10 @@
 
 #include "system.h"
 
+<<<<<<< HEAD
 #include <stdbool.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <stddef.h>
 #include <linux/errno.h>
 #include <linux/auxvec.h>
@@ -102,8 +105,12 @@ static void handler(int n, siginfo_t *si __always_unused,
 	uc->uc_mcontext.pstate &= ~PSR_BTYPE_MASK;
 }
 
+<<<<<<< HEAD
 /* Does the system have BTI? */
 static bool have_bti;
+=======
+static int skip_all;
+>>>>>>> b7ba80a49124 (Commit)
 
 static void __do_test(void (*trampoline)(void (*)(void)),
 		      void (*fn)(void),
@@ -111,11 +118,27 @@ static void __do_test(void (*trampoline)(void (*)(void)),
 		      const char *name,
 		      int expect_sigill)
 {
+<<<<<<< HEAD
 	/*
 	 * Branch Target exceptions should only happen for BTI
 	 * binaries running on a system with BTI:
 	 */
 	if (!BTI || !have_bti)
+=======
+	if (skip_all) {
+		test_skipped++;
+		putstr("ok ");
+		putnum(test_num);
+		putstr(" ");
+		puttestname(name, trampoline_name);
+		putstr(" # SKIP\n");
+
+		return;
+	}
+
+	/* Branch Target exceptions should only happen in BTI binaries: */
+	if (!BTI)
+>>>>>>> b7ba80a49124 (Commit)
 		expect_sigill = 0;
 
 	sigill_expected = expect_sigill;
@@ -193,10 +216,16 @@ void start(int *argcp)
 		putstr("# HWCAP2_BTI present\n");
 		if (!(hwcap & HWCAP_PACA))
 			putstr("# Bad hardware?  Expect problems.\n");
+<<<<<<< HEAD
 		have_bti = true;
 	} else {
 		putstr("# HWCAP2_BTI not present\n");
 		have_bti = false;
+=======
+	} else {
+		putstr("# HWCAP2_BTI not present\n");
+		skip_all = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	putstr("# Test binary");

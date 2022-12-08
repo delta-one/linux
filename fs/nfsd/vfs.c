@@ -49,6 +49,7 @@
 
 #define NFSDDBG_FACILITY		NFSDDBG_FILEOP
 
+<<<<<<< HEAD
 /**
  * nfserrno - Map Linux errnos to NFS errnos
  * @errno: POSIX(-ish) error code to be mapped
@@ -112,6 +113,8 @@ nfserrno (int errno)
 	return nfserr_io;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* 
  * Called from nfsd_lookup and encode_dirent. Check if we have crossed 
  * a mount point.
@@ -126,6 +129,7 @@ nfsd_cross_mnt(struct svc_rqst *rqstp, struct dentry **dpp,
 	struct dentry *dentry = *dpp;
 	struct path path = {.mnt = mntget(exp->ex_path.mnt),
 			    .dentry = dget(dentry)};
+<<<<<<< HEAD
 	unsigned int follow_flags = 0;
 	int err = 0;
 
@@ -133,6 +137,11 @@ nfsd_cross_mnt(struct svc_rqst *rqstp, struct dentry **dpp,
 		follow_flags = LOOKUP_AUTOMOUNT;
 
 	err = follow_down(&path, follow_flags);
+=======
+	int err = 0;
+
+	err = follow_down(&path);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err < 0)
 		goto out;
 	if (path.mnt == exp->ex_path.mnt && path.dentry == dentry &&
@@ -227,7 +236,11 @@ int nfsd_mountpoint(struct dentry *dentry, struct svc_export *exp)
 		return 1;
 	if (nfsd4_is_junction(dentry))
 		return 1;
+<<<<<<< HEAD
 	if (d_managed(dentry))
+=======
+	if (d_mountpoint(dentry))
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Might only be a mountpoint in a different namespace,
 		 * but we need to check.
@@ -430,7 +443,11 @@ static int __nfsd_setattr(struct dentry *dentry, struct iattr *iap)
 		if (iap->ia_size < 0)
 			return -EFBIG;
 
+<<<<<<< HEAD
 		host_err = notify_change(&nop_mnt_idmap, dentry, &size_attr, NULL);
+=======
+		host_err = notify_change(&init_user_ns, dentry, &size_attr, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (host_err)
 			return host_err;
 		iap->ia_valid &= ~ATTR_SIZE;
@@ -448,7 +465,11 @@ static int __nfsd_setattr(struct dentry *dentry, struct iattr *iap)
 		return 0;
 
 	iap->ia_valid |= ATTR_CTIME;
+<<<<<<< HEAD
 	return notify_change(&nop_mnt_idmap, dentry, iap, NULL);
+=======
+	return notify_change(&init_user_ns, dentry, iap, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -546,6 +567,7 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
 		attr->na_labelerr = security_inode_setsecctx(dentry,
 			attr->na_seclabel->data, attr->na_seclabel->len);
 	if (IS_ENABLED(CONFIG_FS_POSIX_ACL) && attr->na_pacl)
+<<<<<<< HEAD
 		attr->na_aclerr = set_posix_acl(&nop_mnt_idmap,
 						dentry, ACL_TYPE_ACCESS,
 						attr->na_pacl);
@@ -553,6 +575,15 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
 	    !attr->na_aclerr && attr->na_dpacl && S_ISDIR(inode->i_mode))
 		attr->na_aclerr = set_posix_acl(&nop_mnt_idmap,
 						dentry, ACL_TYPE_DEFAULT,
+=======
+		attr->na_aclerr = set_posix_acl(&init_user_ns,
+						inode, ACL_TYPE_ACCESS,
+						attr->na_pacl);
+	if (IS_ENABLED(CONFIG_FS_POSIX_ACL) &&
+	    !attr->na_aclerr && attr->na_dpacl && S_ISDIR(inode->i_mode))
+		attr->na_aclerr = set_posix_acl(&init_user_ns,
+						inode, ACL_TYPE_DEFAULT,
+>>>>>>> b7ba80a49124 (Commit)
 						attr->na_dpacl);
 	inode_unlock(inode);
 	if (size_change)
@@ -587,7 +618,11 @@ int nfsd4_is_junction(struct dentry *dentry)
 		return 0;
 	if (!(inode->i_mode & S_ISVTX))
 		return 0;
+<<<<<<< HEAD
 	if (vfs_getxattr(&nop_mnt_idmap, dentry, NFSD_JUNCTION_XATTR_NAME,
+=======
+	if (vfs_getxattr(&init_user_ns, dentry, NFSD_JUNCTION_XATTR_NAME,
+>>>>>>> b7ba80a49124 (Commit)
 			 NULL, 0) <= 0)
 		return 0;
 	return 1;
@@ -663,8 +698,13 @@ ssize_t nfsd_copy_file_range(struct file *src, u64 src_pos, struct file *dst,
 	ret = vfs_copy_file_range(src, src_pos, dst, dst_pos, count, 0);
 
 	if (ret == -EOPNOTSUPP || ret == -EXDEV)
+<<<<<<< HEAD
 		ret = vfs_copy_file_range(src, src_pos, dst, dst_pos, count,
 					  COPY_FILE_SPLICE);
+=======
+		ret = generic_copy_file_range(src, src_pos, dst, dst_pos,
+					      count, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -938,6 +978,7 @@ nfsd_splice_actor(struct pipe_inode_info *pipe, struct pipe_buffer *buf,
 	struct svc_rqst *rqstp = sd->u.data;
 	struct page *page = buf->page;	// may be a compound one
 	unsigned offset = buf->offset;
+<<<<<<< HEAD
 	struct page *last_page;
 
 	last_page = page + (offset + sd->len - 1) / PAGE_SIZE;
@@ -950,6 +991,12 @@ nfsd_splice_actor(struct pipe_inode_info *pipe, struct pipe_buffer *buf,
 			continue;
 		svc_rqst_replace_page(rqstp, page);
 	}
+=======
+
+	page += offset / PAGE_SIZE;
+	for (int i = sd->len; i > 0; i -= PAGE_SIZE)
+		svc_rqst_replace_page(rqstp, page++);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rqstp->rq_res.page_len == 0)	// first call
 		rqstp->rq_res.page_base = offset % PAGE_SIZE;
 	rqstp->rq_res.page_len += sd->len;
@@ -1017,7 +1064,11 @@ __be32 nfsd_readv(struct svc_rqst *rqstp, struct svc_fh *fhp,
 	ssize_t host_err;
 
 	trace_nfsd_read_vector(rqstp, fhp, offset, *count);
+<<<<<<< HEAD
 	iov_iter_kvec(&iter, ITER_DEST, vec, vlen, *count);
+=======
+	iov_iter_kvec(&iter, READ, vec, vlen, *count);
+>>>>>>> b7ba80a49124 (Commit)
 	host_err = vfs_iter_read(file, &iter, &ppos, 0);
 	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
 }
@@ -1107,6 +1158,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
 	if (stable && !use_wgather)
 		flags |= RWF_SYNC;
 
+<<<<<<< HEAD
 	iov_iter_kvec(&iter, ITER_SOURCE, vec, vlen, *cnt);
 	since = READ_ONCE(file->f_wb_err);
 	if (verf)
@@ -1114,6 +1166,13 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
 	file_start_write(file);
 	host_err = vfs_iter_write(file, &iter, &pos, flags);
 	file_end_write(file);
+=======
+	iov_iter_kvec(&iter, WRITE, vec, vlen, *cnt);
+	since = READ_ONCE(file->f_wb_err);
+	if (verf)
+		nfsd_copy_write_verifier(verf, nn);
+	host_err = vfs_iter_write(file, &iter, &pos, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (host_err < 0) {
 		nfsd_reset_write_verifier(nn);
 		trace_nfsd_writeverf_reset(nn, rqstp, host_err);
@@ -1161,7 +1220,11 @@ __be32 nfsd_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
 	__be32 err;
 
 	trace_nfsd_read_start(rqstp, fhp, offset, *count);
+<<<<<<< HEAD
 	err = nfsd_file_acquire_gc(rqstp, fhp, NFSD_MAY_READ, &nf);
+=======
+	err = nfsd_file_acquire(rqstp, fhp, NFSD_MAY_READ, &nf);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 
@@ -1193,7 +1256,11 @@ nfsd_write(struct svc_rqst *rqstp, struct svc_fh *fhp, loff_t offset,
 
 	trace_nfsd_write_start(rqstp, fhp, offset, *cnt);
 
+<<<<<<< HEAD
 	err = nfsd_file_acquire_gc(rqstp, fhp, NFSD_MAY_WRITE, &nf);
+=======
+	err = nfsd_file_acquire(rqstp, fhp, NFSD_MAY_WRITE, &nf);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out;
 
@@ -1209,7 +1276,10 @@ out:
  * nfsd_commit - Commit pending writes to stable storage
  * @rqstp: RPC request being processed
  * @fhp: NFS filehandle
+<<<<<<< HEAD
  * @nf: target file
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @offset: raw offset from beginning of file
  * @count: raw count of bytes to sync
  * @verf: filled in with the server's current write verifier
@@ -1226,6 +1296,7 @@ out:
  *   An nfsstat value in network byte order.
  */
 __be32
+<<<<<<< HEAD
 nfsd_commit(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
 	    u64 offset, u32 count, __be32 *verf)
 {
@@ -1233,6 +1304,21 @@ nfsd_commit(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
 	u64			maxbytes;
 	loff_t			start, end;
 	struct nfsd_net		*nn;
+=======
+nfsd_commit(struct svc_rqst *rqstp, struct svc_fh *fhp, u64 offset,
+	    u32 count, __be32 *verf)
+{
+	u64			maxbytes;
+	loff_t			start, end;
+	struct nfsd_net		*nn;
+	struct nfsd_file	*nf;
+	__be32			err;
+
+	err = nfsd_file_acquire(rqstp, fhp,
+			NFSD_MAY_WRITE|NFSD_MAY_NOT_BREAK_LEASE, &nf);
+	if (err)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Convert the client-provided (offset, count) range to a
@@ -1273,6 +1359,11 @@ nfsd_commit(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
 	} else
 		nfsd_copy_write_verifier(verf, nn);
 
+<<<<<<< HEAD
+=======
+	nfsd_file_put(nf);
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -1374,15 +1465,26 @@ nfsd_create_locked(struct svc_rqst *rqstp, struct svc_fh *fhp,
 		iap->ia_mode &= ~current_umask();
 
 	err = 0;
+<<<<<<< HEAD
 	switch (type) {
 	case S_IFREG:
 		host_err = vfs_create(&nop_mnt_idmap, dirp, dchild,
 				      iap->ia_mode, true);
+=======
+	host_err = 0;
+	switch (type) {
+	case S_IFREG:
+		host_err = vfs_create(&init_user_ns, dirp, dchild, iap->ia_mode, true);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!host_err)
 			nfsd_check_ignore_resizing(iap);
 		break;
 	case S_IFDIR:
+<<<<<<< HEAD
 		host_err = vfs_mkdir(&nop_mnt_idmap, dirp, dchild, iap->ia_mode);
+=======
+		host_err = vfs_mkdir(&init_user_ns, dirp, dchild, iap->ia_mode);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!host_err && unlikely(d_unhashed(dchild))) {
 			struct dentry *d;
 			d = lookup_one_len(dchild->d_name.name,
@@ -1410,7 +1512,11 @@ nfsd_create_locked(struct svc_rqst *rqstp, struct svc_fh *fhp,
 	case S_IFBLK:
 	case S_IFIFO:
 	case S_IFSOCK:
+<<<<<<< HEAD
 		host_err = vfs_mknod(&nop_mnt_idmap, dirp, dchild,
+=======
+		host_err = vfs_mknod(&init_user_ns, dirp, dchild,
+>>>>>>> b7ba80a49124 (Commit)
 				     iap->ia_mode, rdev);
 		break;
 	default:
@@ -1571,7 +1677,11 @@ nfsd_symlink(struct svc_rqst *rqstp, struct svc_fh *fhp,
 		goto out_drop_write;
 	}
 	fh_fill_pre_attrs(fhp);
+<<<<<<< HEAD
 	host_err = vfs_symlink(&nop_mnt_idmap, d_inode(dentry), dnew, path);
+=======
+	host_err = vfs_symlink(&init_user_ns, d_inode(dentry), dnew, path);
+>>>>>>> b7ba80a49124 (Commit)
 	err = nfserrno(host_err);
 	cerr = fh_compose(resfhp, fhp->fh_export, dnew, fhp);
 	if (!err)
@@ -1639,7 +1749,11 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ffhp,
 	if (d_really_is_negative(dold))
 		goto out_dput;
 	fh_fill_pre_attrs(ffhp);
+<<<<<<< HEAD
 	host_err = vfs_link(dold, &nop_mnt_idmap, dirp, dnew, NULL);
+=======
+	host_err = vfs_link(dold, &init_user_ns, dirp, dnew, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	fh_fill_post_attrs(ffhp);
 	inode_unlock(dirp);
 	if (!host_err) {
@@ -1759,10 +1873,17 @@ retry:
 		goto out_dput_old;
 	} else {
 		struct renamedata rd = {
+<<<<<<< HEAD
 			.old_mnt_idmap	= &nop_mnt_idmap,
 			.old_dir	= fdir,
 			.old_dentry	= odentry,
 			.new_mnt_idmap	= &nop_mnt_idmap,
+=======
+			.old_mnt_userns	= &init_user_ns,
+			.old_dir	= fdir,
+			.old_dentry	= odentry,
+			.new_mnt_userns	= &init_user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 			.new_dir	= tdir,
 			.new_dentry	= ndentry,
 		};
@@ -1864,14 +1985,22 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
 			nfsd_close_cached_files(rdentry);
 
 		for (retries = 1;;) {
+<<<<<<< HEAD
 			host_err = vfs_unlink(&nop_mnt_idmap, dirp, rdentry, NULL);
+=======
+			host_err = vfs_unlink(&init_user_ns, dirp, rdentry, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 			if (host_err != -EAGAIN || !retries--)
 				break;
 			if (!nfsd_wait_for_delegreturn(rqstp, rinode))
 				break;
 		}
 	} else {
+<<<<<<< HEAD
 		host_err = vfs_rmdir(&nop_mnt_idmap, dirp, rdentry);
+=======
+		host_err = vfs_rmdir(&init_user_ns, dirp, rdentry);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	fh_fill_post_attrs(fhp);
 
@@ -2143,7 +2272,11 @@ nfsd_getxattr(struct svc_rqst *rqstp, struct svc_fh *fhp, char *name,
 
 	inode_lock_shared(inode);
 
+<<<<<<< HEAD
 	len = vfs_getxattr(&nop_mnt_idmap, dentry, name, NULL, 0);
+=======
+	len = vfs_getxattr(&init_user_ns, dentry, name, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Zero-length attribute, just return.
@@ -2170,7 +2303,11 @@ nfsd_getxattr(struct svc_rqst *rqstp, struct svc_fh *fhp, char *name,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	len = vfs_getxattr(&nop_mnt_idmap, dentry, name, buf, len);
+=======
+	len = vfs_getxattr(&init_user_ns, dentry, name, buf, len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (len <= 0) {
 		kvfree(buf);
 		buf = NULL;
@@ -2281,7 +2418,11 @@ nfsd_removexattr(struct svc_rqst *rqstp, struct svc_fh *fhp, char *name)
 	inode_lock(fhp->fh_dentry->d_inode);
 	fh_fill_pre_attrs(fhp);
 
+<<<<<<< HEAD
 	ret = __vfs_removexattr_locked(&nop_mnt_idmap, fhp->fh_dentry,
+=======
+	ret = __vfs_removexattr_locked(&init_user_ns, fhp->fh_dentry,
+>>>>>>> b7ba80a49124 (Commit)
 				       name, NULL);
 
 	fh_fill_post_attrs(fhp);
@@ -2308,7 +2449,11 @@ nfsd_setxattr(struct svc_rqst *rqstp, struct svc_fh *fhp, char *name,
 	inode_lock(fhp->fh_dentry->d_inode);
 	fh_fill_pre_attrs(fhp);
 
+<<<<<<< HEAD
 	ret = __vfs_setxattr_locked(&nop_mnt_idmap, fhp->fh_dentry, name, buf,
+=======
+	ret = __vfs_setxattr_locked(&init_user_ns, fhp->fh_dentry, name, buf,
+>>>>>>> b7ba80a49124 (Commit)
 				    len, flags, NULL);
 	fh_fill_post_attrs(fhp);
 	inode_unlock(fhp->fh_dentry->d_inode);
@@ -2392,14 +2537,22 @@ nfsd_permission(struct svc_rqst *rqstp, struct svc_export *exp,
 		return 0;
 
 	/* This assumes  NFSD_MAY_{READ,WRITE,EXEC} == MAY_{READ,WRITE,EXEC} */
+<<<<<<< HEAD
 	err = inode_permission(&nop_mnt_idmap, inode,
+=======
+	err = inode_permission(&init_user_ns, inode,
+>>>>>>> b7ba80a49124 (Commit)
 			       acc & (MAY_READ | MAY_WRITE | MAY_EXEC));
 
 	/* Allow read access to binaries even when mode 111 */
 	if (err == -EACCES && S_ISREG(inode->i_mode) &&
 	     (acc == (NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE) ||
 	      acc == (NFSD_MAY_READ | NFSD_MAY_READ_IF_EXEC)))
+<<<<<<< HEAD
 		err = inode_permission(&nop_mnt_idmap, inode, MAY_EXEC);
+=======
+		err = inode_permission(&init_user_ns, inode, MAY_EXEC);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return err? nfserrno(err) : 0;
 }

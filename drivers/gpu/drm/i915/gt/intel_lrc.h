@@ -110,8 +110,11 @@ enum {
 #define XEHP_SW_CTX_ID_WIDTH			16
 #define XEHP_SW_COUNTER_SHIFT			58
 #define XEHP_SW_COUNTER_WIDTH			6
+<<<<<<< HEAD
 #define GEN12_GUC_SW_CTX_ID_SHIFT		39
 #define GEN12_GUC_SW_CTX_ID_WIDTH		16
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void lrc_runtime_start(struct intel_context *ce)
 {

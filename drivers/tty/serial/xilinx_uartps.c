@@ -326,7 +326,13 @@ static void cdns_uart_handle_tx(void *dev_id)
 	       !(readl(port->membase + CDNS_UART_SR) & CDNS_UART_SR_TXFULL)) {
 
 		writel(xmit->buf[xmit->tail], port->membase + CDNS_UART_FIFO);
+<<<<<<< HEAD
 		uart_xmit_advance(port, 1);
+=======
+
+		port->icount.tx++;
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+>>>>>>> b7ba80a49124 (Commit)
 		numbytes--;
 	}
 
@@ -1629,7 +1635,11 @@ static int cdns_uart_probe(struct platform_device *pdev)
 #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
 	/* This is not port which is used for console that's why clean it up */
 	if (console_port == port &&
+<<<<<<< HEAD
 	    !console_is_registered(cdns_uart_uart_driver.cons)) {
+=======
+	    !(cdns_uart_uart_driver.cons->flags & CON_ENABLED)) {
+>>>>>>> b7ba80a49124 (Commit)
 		console_port = NULL;
 		cdns_uart_console.index = -1;
 	}

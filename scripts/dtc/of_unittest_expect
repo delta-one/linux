@@ -9,7 +9,11 @@
 # on the console log that results from executing the Linux kernel
 # devicetree unittest (drivers/of/unitest.c).
 
+<<<<<<< HEAD
 $VUFX = "230211a";
+=======
+$VUFX = "220201a";
+>>>>>>> b7ba80a49124 (Commit)
 
 use strict 'refs';
 use strict subs;
@@ -62,8 +66,11 @@ sub compare {
 			} else {
 				return 0;
 			}
+<<<<<<< HEAD
 		} elsif ($type eq "all") {
 			return 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		} elsif ($type eq "") {
 			if ($expect_next ne $got_next) {
 				return 0;
@@ -132,7 +139,10 @@ usage:
 
      <<int>> matches: [+-]*[0-9]+
      <<hex>> matches: (0x)*[0-9a-f]+
+<<<<<<< HEAD
      <<all>> matches: anything to end of line
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   'EXPECT \\' (begin) and 'EXPECT /' (end) lines are suppressed.
 
@@ -243,8 +253,11 @@ if ($#ARGV != 0) {
 $pr_fmt = "### dt-test ### ";
 $exp_begin = "${pr_fmt}EXPECT \\\\ : ";
 $exp_end   = "${pr_fmt}EXPECT / : ";
+<<<<<<< HEAD
 $expnot_begin = "${pr_fmt}EXPECT_NOT \\\\ : ";
 $expnot_end   = "${pr_fmt}EXPECT_NOT / : ";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 
 $line_num = "";
@@ -255,8 +268,11 @@ while ($line = <ARGV>) {
 
 	chomp $line;
 
+<<<<<<< HEAD
 	$suppress_line = 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	$prefix = "  ";  ## 2 characters
 
 
@@ -281,7 +297,11 @@ while ($line = <ARGV>) {
 	if ($line =~ /^\s*$exp_begin/) {
 		$data = $line;
 		$data =~ s/^\s*$exp_begin//;
+<<<<<<< HEAD
 		push @exp_begin_stack, $data;
+=======
+		push @begin, $data;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if ($verbose) {
 			if ($print_line_num) {
@@ -309,6 +329,7 @@ while ($line = <ARGV>) {
 
 		$found = 0;
 		$no_begin = 0;
+<<<<<<< HEAD
 		if (@exp_found_or_begin > 0) {
 			$begin = pop @exp_found_or_begin;
 			if (compare($data, $begin)) {
@@ -317,14 +338,28 @@ while ($line = <ARGV>) {
 			}
 		} elsif (@begin > 0) {
 			$begin = pop @exp_begin_stack;
+=======
+		if (@found_or_begin > 0) {
+			$begin = pop @found_or_begin;
+			if (compare($data, $begin)) {
+				$found = 1;
+			}
+		} elsif (@begin > 0) {
+			$begin = pop @begin;
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			$no_begin = 1;
 		}
 
 		if ($no_begin) {
 
+<<<<<<< HEAD
 			$exp_missing_begin++;
 			print "** ERROR: EXPECT end without matching EXPECT begin:\n";
+=======
+			$expect_missing_begin++;
+			print "** ERROR: EXPECT end without any EXPECT begin:\n";
+>>>>>>> b7ba80a49124 (Commit)
 			print "       end ---> $line\n";
 
 		} elsif (! $found) {
@@ -333,6 +368,7 @@ while ($line = <ARGV>) {
 				$line_num = sprintf("%4s ", $.);
 			}
 
+<<<<<<< HEAD
 			$exp_missing++;
 			printf "** %s%s$script_name WARNING - not found ---> %s\n",
 					$line_num,  $timestamp, $data;
@@ -340,10 +376,20 @@ while ($line = <ARGV>) {
 		} elsif (! compare($data, $begin) and ($data ne $begin)) {
 
 			$exp_missing_end++;
+=======
+			$expect_not_found++;
+			printf "** %s%s$script_name WARNING - not found ---> %s\n",
+					$line_num,  $timestamp, $data;
+
+		} elsif (! compare($data, $begin)) {
+
+			$expect_missing_end++;
+>>>>>>> b7ba80a49124 (Commit)
 			print "** ERROR: EXPECT end does not match EXPECT begin:\n";
 			print "       begin -> $begin\n";
 			print "       end ---> $line\n";
 
+<<<<<<< HEAD
 		}
 
 		next LINE;
@@ -430,6 +476,14 @@ while ($line = <ARGV>) {
 			}
 		}
 
+=======
+		} else {
+
+			$expect_found++;
+
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		next LINE;
 	}
 
@@ -445,6 +499,7 @@ while ($line = <ARGV>) {
 	}
 
 	$found = 0;
+<<<<<<< HEAD
 	foreach $begin (@exp_begin_stack) {
 		if (compare($begin, $line)) {
 			$found = 1;
@@ -469,6 +524,9 @@ while ($line = <ARGV>) {
 
 	$found = 0;
 	foreach $begin (@expnot_begin_stack) {
+=======
+	foreach $begin (@begin) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (compare($begin, $line)) {
 			$found = 1;
 			last;
@@ -478,6 +536,7 @@ while ($line = <ARGV>) {
 	if ($found) {
 		$begin = shift @begin;
 		while (! compare($begin, $line)) {
+<<<<<<< HEAD
 			push @expnot_found_or_begin, $begin;
 			$begin = shift @begin;
 		}
@@ -494,6 +553,21 @@ while ($line = <ARGV>) {
 		next LINE;
 	}
 
+=======
+			push @found_or_begin, $begin;
+			$begin = shift @begin;
+		}
+		push @found_or_begin, $line;
+
+		if ($hide_expect) {
+			$suppress_line = 1;
+			next LINE;
+		}
+		$prefix = "ok"; # 2 characters
+	}
+
+
+>>>>>>> b7ba80a49124 (Commit)
 	if ($print_line_num) {
 		$line_num = sprintf("%4s ", $.);
 	}
@@ -505,6 +579,7 @@ if (! $no_expect_stats) {
 	print  "\n";
 	print  "** EXPECT statistics:\n";
 	print  "**\n";
+<<<<<<< HEAD
 	printf "**   non-zero values expected:\n";
 	print  "**\n";
 	printf "**     EXPECT found              : %4i\n", $exp_found;
@@ -536,6 +611,20 @@ if (@expnot_begin_stack) {
 	print "** ERROR: EXPECT_NOT begin without matching EXPECT_NOT end:\n";
 	print "          This list may be misleading.\n";
 	foreach $begin (@expnot_begin_stack) {
+=======
+	printf "**   EXPECT found          : %4i\n", $expect_found;
+	printf "**   EXPECT not found      : %4i\n", $expect_not_found;
+	printf "**   missing EXPECT begin  : %4i\n", $expect_missing_begin;
+	printf "**   missing EXPECT end    : %4i\n", $expect_missing_end;
+	printf "**   unittest FAIL         : %4i\n", $unittest_fail;
+	printf "**   internal error        : %4i\n", $internal_err;
+}
+
+if (@begin) {
+	print "** ERROR: EXPECT begin without any EXPECT end:\n";
+	print "          This list may be misleading.\n";
+	foreach $begin (@begin) {
+>>>>>>> b7ba80a49124 (Commit)
 		print "       begin ---> $begin\n";
 	}
 }

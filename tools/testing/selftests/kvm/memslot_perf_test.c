@@ -20,12 +20,16 @@
 #include <unistd.h>
 
 #include <linux/compiler.h>
+<<<<<<< HEAD
 #include <linux/sizes.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <test_util.h>
 #include <kvm_util.h>
 #include <processor.h>
 
+<<<<<<< HEAD
 #define MEM_EXTRA_SIZE		SZ_64K
 
 #define MEM_SIZE		(SZ_512M + MEM_EXTRA_SIZE)
@@ -34,6 +38,17 @@
 #define MEM_SYNC_GPA		MEM_AUX_GPA
 #define MEM_TEST_GPA		(MEM_AUX_GPA + MEM_EXTRA_SIZE)
 #define MEM_TEST_SIZE		(MEM_SIZE - MEM_EXTRA_SIZE)
+=======
+#define MEM_SIZE		((512U << 20) + 4096)
+#define MEM_SIZE_PAGES		(MEM_SIZE / 4096)
+#define MEM_GPA		0x10000000UL
+#define MEM_AUX_GPA		MEM_GPA
+#define MEM_SYNC_GPA		MEM_AUX_GPA
+#define MEM_TEST_GPA		(MEM_AUX_GPA + 4096)
+#define MEM_TEST_SIZE		(MEM_SIZE - 4096)
+static_assert(MEM_SIZE % 4096 == 0, "invalid mem size");
+static_assert(MEM_TEST_SIZE % 4096 == 0, "invalid mem test size");
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * 32 MiB is max size that gets well over 100 iterations on 509 slots.
@@ -41,23 +56,50 @@
  * 8194 slots in use can then be tested (although with slightly
  * limited resolution).
  */
+<<<<<<< HEAD
 #define MEM_SIZE_MAP		(SZ_32M + MEM_EXTRA_SIZE)
 #define MEM_TEST_MAP_SIZE	(MEM_SIZE_MAP - MEM_EXTRA_SIZE)
+=======
+#define MEM_SIZE_MAP		((32U << 20) + 4096)
+#define MEM_SIZE_MAP_PAGES	(MEM_SIZE_MAP / 4096)
+#define MEM_TEST_MAP_SIZE	(MEM_SIZE_MAP - 4096)
+#define MEM_TEST_MAP_SIZE_PAGES (MEM_TEST_MAP_SIZE / 4096)
+static_assert(MEM_SIZE_MAP % 4096 == 0, "invalid map test region size");
+static_assert(MEM_TEST_MAP_SIZE % 4096 == 0, "invalid map test region size");
+static_assert(MEM_TEST_MAP_SIZE_PAGES % 2 == 0, "invalid map test region size");
+static_assert(MEM_TEST_MAP_SIZE_PAGES > 2, "invalid map test region size");
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * 128 MiB is min size that fills 32k slots with at least one page in each
  * while at the same time gets 100+ iterations in such test
+<<<<<<< HEAD
  *
  * 2 MiB chunk size like a typical huge page
  */
 #define MEM_TEST_UNMAP_SIZE		SZ_128M
 #define MEM_TEST_UNMAP_CHUNK_SIZE	SZ_2M
+=======
+ */
+#define MEM_TEST_UNMAP_SIZE		(128U << 20)
+#define MEM_TEST_UNMAP_SIZE_PAGES	(MEM_TEST_UNMAP_SIZE / 4096)
+/* 2 MiB chunk size like a typical huge page */
+#define MEM_TEST_UNMAP_CHUNK_PAGES	(2U << (20 - 12))
+static_assert(MEM_TEST_UNMAP_SIZE <= MEM_TEST_SIZE,
+	      "invalid unmap test region size");
+static_assert(MEM_TEST_UNMAP_SIZE % 4096 == 0,
+	      "invalid unmap test region size");
+static_assert(MEM_TEST_UNMAP_SIZE_PAGES %
+	      (2 * MEM_TEST_UNMAP_CHUNK_PAGES) == 0,
+	      "invalid unmap test region size");
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * For the move active test the middle of the test area is placed on
  * a memslot boundary: half lies in the memslot being moved, half in
  * other memslot(s).
  *
+<<<<<<< HEAD
  * We have different number of memory slots, excluding the reserved
  * memory slot 0, on various architectures and configurations. The
  * memory size in this test is calculated by picking the maximal
@@ -73,6 +115,16 @@
  * arm64-64KB     8192     64KB               128KB
  */
 #define MEM_TEST_MOVE_SIZE		(3 * SZ_64K)
+=======
+ * When running this test with 32k memslots (32764, really) each memslot
+ * contains 4 pages.
+ * The last one additionally contains the remaining 21 pages of memory,
+ * for the total size of 25 pages.
+ * Hence, the maximum size here is 50 pages.
+ */
+#define MEM_TEST_MOVE_SIZE_PAGES	(50)
+#define MEM_TEST_MOVE_SIZE		(MEM_TEST_MOVE_SIZE_PAGES * 4096)
+>>>>>>> b7ba80a49124 (Commit)
 #define MEM_TEST_MOVE_GPA_DEST		(MEM_GPA + MEM_SIZE)
 static_assert(MEM_TEST_MOVE_SIZE <= MEM_TEST_SIZE,
 	      "invalid move test region size");
@@ -94,7 +146,10 @@ struct vm_data {
 };
 
 struct sync_area {
+<<<<<<< HEAD
 	uint32_t    guest_page_size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_bool start_flag;
 	atomic_bool exit_flag;
 	atomic_bool sync_flag;
@@ -187,6 +242,7 @@ static void *vm_gpa2hva(struct vm_data *data, uint64_t gpa, uint64_t *rempages)
 	uint64_t gpage, pgoffs;
 	uint32_t slot, slotoffs;
 	void *base;
+<<<<<<< HEAD
 	uint32_t guest_page_size = data->vm->page_size;
 
 	TEST_ASSERT(gpa >= MEM_GPA, "Too low gpa to translate");
@@ -196,6 +252,16 @@ static void *vm_gpa2hva(struct vm_data *data, uint64_t gpa, uint64_t *rempages)
 
 	gpage = gpa / guest_page_size;
 	pgoffs = gpa % guest_page_size;
+=======
+
+	TEST_ASSERT(gpa >= MEM_GPA, "Too low gpa to translate");
+	TEST_ASSERT(gpa < MEM_GPA + data->npages * 4096,
+		    "Too high gpa to translate");
+	gpa -= MEM_GPA;
+
+	gpage = gpa / 4096;
+	pgoffs = gpa % 4096;
+>>>>>>> b7ba80a49124 (Commit)
 	slot = min(gpage / data->pages_per_slot, (uint64_t)data->nslots - 1);
 	slotoffs = gpage - (slot * data->pages_per_slot);
 
@@ -213,16 +279,26 @@ static void *vm_gpa2hva(struct vm_data *data, uint64_t gpa, uint64_t *rempages)
 	}
 
 	base = data->hva_slots[slot];
+<<<<<<< HEAD
 	return (uint8_t *)base + slotoffs * guest_page_size + pgoffs;
+=======
+	return (uint8_t *)base + slotoffs * 4096 + pgoffs;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static uint64_t vm_slot2gpa(struct vm_data *data, uint32_t slot)
 {
+<<<<<<< HEAD
 	uint32_t guest_page_size = data->vm->page_size;
 
 	TEST_ASSERT(slot < data->nslots, "Too high slot number");
 
 	return MEM_GPA + slot * data->pages_per_slot * guest_page_size;
+=======
+	TEST_ASSERT(slot < data->nslots, "Too high slot number");
+
+	return MEM_GPA + slot * data->pages_per_slot * 4096;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct vm_data *alloc_vm(void)
@@ -239,6 +315,7 @@ static struct vm_data *alloc_vm(void)
 	return data;
 }
 
+<<<<<<< HEAD
 static bool check_slot_pages(uint32_t host_page_size, uint32_t guest_page_size,
 			     uint64_t pages_per_slot, uint64_t rempages)
 {
@@ -317,20 +394,78 @@ static bool prepare_vm(struct vm_data *data, int nslots, uint64_t *maxslots,
 
 		npages = data->pages_per_slot;
 		if (slot == data->nslots)
+=======
+static bool prepare_vm(struct vm_data *data, int nslots, uint64_t *maxslots,
+		       void *guest_code, uint64_t mempages,
+		       struct timespec *slot_runtime)
+{
+	uint32_t max_mem_slots;
+	uint64_t rempages;
+	uint64_t guest_addr;
+	uint32_t slot;
+	struct timespec tstart;
+	struct sync_area *sync;
+
+	max_mem_slots = kvm_check_cap(KVM_CAP_NR_MEMSLOTS);
+	TEST_ASSERT(max_mem_slots > 1,
+		    "KVM_CAP_NR_MEMSLOTS should be greater than 1");
+	TEST_ASSERT(nslots > 1 || nslots == -1,
+		    "Slot count cap should be greater than 1");
+	if (nslots != -1)
+		max_mem_slots = min(max_mem_slots, (uint32_t)nslots);
+	pr_info_v("Allowed number of memory slots: %"PRIu32"\n", max_mem_slots);
+
+	TEST_ASSERT(mempages > 1,
+		    "Can't test without any memory");
+
+	data->npages = mempages;
+	data->nslots = max_mem_slots - 1;
+	data->pages_per_slot = mempages / data->nslots;
+	if (!data->pages_per_slot) {
+		*maxslots = mempages + 1;
+		return false;
+	}
+
+	rempages = mempages % data->nslots;
+	data->hva_slots = malloc(sizeof(*data->hva_slots) * data->nslots);
+	TEST_ASSERT(data->hva_slots, "malloc() fail");
+
+	data->vm = __vm_create_with_one_vcpu(&data->vcpu, mempages, guest_code);
+	ucall_init(data->vm, NULL);
+
+	pr_info_v("Adding slots 1..%i, each slot with %"PRIu64" pages + %"PRIu64" extra pages last\n",
+		max_mem_slots - 1, data->pages_per_slot, rempages);
+
+	clock_gettime(CLOCK_MONOTONIC, &tstart);
+	for (slot = 1, guest_addr = MEM_GPA; slot < max_mem_slots; slot++) {
+		uint64_t npages;
+
+		npages = data->pages_per_slot;
+		if (slot == max_mem_slots - 1)
+>>>>>>> b7ba80a49124 (Commit)
 			npages += rempages;
 
 		vm_userspace_mem_region_add(data->vm, VM_MEM_SRC_ANONYMOUS,
 					    guest_addr, slot, npages,
 					    0);
+<<<<<<< HEAD
 		guest_addr += npages * guest_page_size;
 	}
 	*slot_runtime = timespec_elapsed(tstart);
 
 	for (slot = 1, guest_addr = MEM_GPA; slot <= data->nslots; slot++) {
+=======
+		guest_addr += npages * 4096;
+	}
+	*slot_runtime = timespec_elapsed(tstart);
+
+	for (slot = 0, guest_addr = MEM_GPA; slot < max_mem_slots - 1; slot++) {
+>>>>>>> b7ba80a49124 (Commit)
 		uint64_t npages;
 		uint64_t gpa;
 
 		npages = data->pages_per_slot;
+<<<<<<< HEAD
 		if (slot == data->nslots)
 			npages += rempages;
 
@@ -348,6 +483,25 @@ static bool prepare_vm(struct vm_data *data, int nslots, uint64_t *maxslots,
 
 	sync = (typeof(sync))vm_gpa2hva(data, MEM_SYNC_GPA, NULL);
 	sync->guest_page_size = data->vm->page_size;
+=======
+		if (slot == max_mem_slots - 2)
+			npages += rempages;
+
+		gpa = vm_phy_pages_alloc(data->vm, npages, guest_addr,
+					 slot + 1);
+		TEST_ASSERT(gpa == guest_addr,
+			    "vm_phy_pages_alloc() failed\n");
+
+		data->hva_slots[slot] = addr_gpa2hva(data->vm, guest_addr);
+		memset(data->hva_slots[slot], 0, npages * 4096);
+
+		guest_addr += npages * 4096;
+	}
+
+	virt_map(data->vm, MEM_GPA, MEM_GPA, mempages);
+
+	sync = (typeof(sync))vm_gpa2hva(data, MEM_SYNC_GPA, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_init(&sync->start_flag, false);
 	atomic_init(&sync->exit_flag, false);
 	atomic_init(&sync->sync_flag, false);
@@ -444,7 +598,10 @@ static bool guest_perform_sync(void)
 static void guest_code_test_memslot_move(void)
 {
 	struct sync_area *sync = (typeof(sync))MEM_SYNC_GPA;
+<<<<<<< HEAD
 	uint32_t page_size = (typeof(page_size))READ_ONCE(sync->guest_page_size);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	uintptr_t base = (typeof(base))READ_ONCE(sync->move_area_ptr);
 
 	GUEST_SYNC(0);
@@ -455,7 +612,11 @@ static void guest_code_test_memslot_move(void)
 		uintptr_t ptr;
 
 		for (ptr = base; ptr < base + MEM_TEST_MOVE_SIZE;
+<<<<<<< HEAD
 		     ptr += page_size)
+=======
+		     ptr += 4096)
+>>>>>>> b7ba80a49124 (Commit)
 			*(uint64_t *)ptr = MEM_TEST_VAL_1;
 
 		/*
@@ -473,7 +634,10 @@ static void guest_code_test_memslot_move(void)
 static void guest_code_test_memslot_map(void)
 {
 	struct sync_area *sync = (typeof(sync))MEM_SYNC_GPA;
+<<<<<<< HEAD
 	uint32_t page_size = (typeof(page_size))READ_ONCE(sync->guest_page_size);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	GUEST_SYNC(0);
 
@@ -483,16 +647,24 @@ static void guest_code_test_memslot_map(void)
 		uintptr_t ptr;
 
 		for (ptr = MEM_TEST_GPA;
+<<<<<<< HEAD
 		     ptr < MEM_TEST_GPA + MEM_TEST_MAP_SIZE / 2;
 		     ptr += page_size)
+=======
+		     ptr < MEM_TEST_GPA + MEM_TEST_MAP_SIZE / 2; ptr += 4096)
+>>>>>>> b7ba80a49124 (Commit)
 			*(uint64_t *)ptr = MEM_TEST_VAL_1;
 
 		if (!guest_perform_sync())
 			break;
 
 		for (ptr = MEM_TEST_GPA + MEM_TEST_MAP_SIZE / 2;
+<<<<<<< HEAD
 		     ptr < MEM_TEST_GPA + MEM_TEST_MAP_SIZE;
 		     ptr += page_size)
+=======
+		     ptr < MEM_TEST_GPA + MEM_TEST_MAP_SIZE; ptr += 4096)
+>>>>>>> b7ba80a49124 (Commit)
 			*(uint64_t *)ptr = MEM_TEST_VAL_2;
 
 		if (!guest_perform_sync())
@@ -539,9 +711,12 @@ static void guest_code_test_memslot_unmap(void)
 
 static void guest_code_test_memslot_rw(void)
 {
+<<<<<<< HEAD
 	struct sync_area *sync = (typeof(sync))MEM_SYNC_GPA;
 	uint32_t page_size = (typeof(page_size))READ_ONCE(sync->guest_page_size);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	GUEST_SYNC(0);
 
 	guest_spin_until_start();
@@ -550,14 +725,23 @@ static void guest_code_test_memslot_rw(void)
 		uintptr_t ptr;
 
 		for (ptr = MEM_TEST_GPA;
+<<<<<<< HEAD
 		     ptr < MEM_TEST_GPA + MEM_TEST_SIZE; ptr += page_size)
+=======
+		     ptr < MEM_TEST_GPA + MEM_TEST_SIZE; ptr += 4096)
+>>>>>>> b7ba80a49124 (Commit)
 			*(uint64_t *)ptr = MEM_TEST_VAL_1;
 
 		if (!guest_perform_sync())
 			break;
 
+<<<<<<< HEAD
 		for (ptr = MEM_TEST_GPA + page_size / 2;
 		     ptr < MEM_TEST_GPA + MEM_TEST_SIZE; ptr += page_size) {
+=======
+		for (ptr = MEM_TEST_GPA + 4096 / 2;
+		     ptr < MEM_TEST_GPA + MEM_TEST_SIZE; ptr += 4096) {
+>>>>>>> b7ba80a49124 (Commit)
 			uint64_t val = *(uint64_t *)ptr;
 
 			GUEST_ASSERT_1(val == MEM_TEST_VAL_2, val);
@@ -575,7 +759,10 @@ static bool test_memslot_move_prepare(struct vm_data *data,
 				      struct sync_area *sync,
 				      uint64_t *maxslots, bool isactive)
 {
+<<<<<<< HEAD
 	uint32_t guest_page_size = data->vm->page_size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	uint64_t movesrcgpa, movetestgpa;
 
 	movesrcgpa = vm_slot2gpa(data, data->nslots - 1);
@@ -584,7 +771,11 @@ static bool test_memslot_move_prepare(struct vm_data *data,
 		uint64_t lastpages;
 
 		vm_gpa2hva(data, movesrcgpa, &lastpages);
+<<<<<<< HEAD
 		if (lastpages * guest_page_size < MEM_TEST_MOVE_SIZE / 2) {
+=======
+		if (lastpages < MEM_TEST_MOVE_SIZE_PAGES / 2) {
+>>>>>>> b7ba80a49124 (Commit)
 			*maxslots = 0;
 			return false;
 		}
@@ -630,9 +821,14 @@ static void test_memslot_do_unmap(struct vm_data *data,
 				  uint64_t offsp, uint64_t count)
 {
 	uint64_t gpa, ctr;
+<<<<<<< HEAD
 	uint32_t guest_page_size = data->vm->page_size;
 
 	for (gpa = MEM_TEST_GPA + offsp * guest_page_size, ctr = 0; ctr < count; ) {
+=======
+
+	for (gpa = MEM_TEST_GPA + offsp * 4096, ctr = 0; ctr < count; ) {
+>>>>>>> b7ba80a49124 (Commit)
 		uint64_t npages;
 		void *hva;
 		int ret;
@@ -640,12 +836,20 @@ static void test_memslot_do_unmap(struct vm_data *data,
 		hva = vm_gpa2hva(data, gpa, &npages);
 		TEST_ASSERT(npages, "Empty memory slot at gptr 0x%"PRIx64, gpa);
 		npages = min(npages, count - ctr);
+<<<<<<< HEAD
 		ret = madvise(hva, npages * guest_page_size, MADV_DONTNEED);
+=======
+		ret = madvise(hva, npages * 4096, MADV_DONTNEED);
+>>>>>>> b7ba80a49124 (Commit)
 		TEST_ASSERT(!ret,
 			    "madvise(%p, MADV_DONTNEED) on VM memory should not fail for gptr 0x%"PRIx64,
 			    hva, gpa);
 		ctr += npages;
+<<<<<<< HEAD
 		gpa += npages * guest_page_size;
+=======
+		gpa += npages * 4096;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	TEST_ASSERT(ctr == count,
 		    "madvise(MADV_DONTNEED) should exactly cover all of the requested area");
@@ -656,12 +860,19 @@ static void test_memslot_map_unmap_check(struct vm_data *data,
 {
 	uint64_t gpa;
 	uint64_t *val;
+<<<<<<< HEAD
 	uint32_t guest_page_size = data->vm->page_size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!map_unmap_verify)
 		return;
 
+<<<<<<< HEAD
 	gpa = MEM_TEST_GPA + offsp * guest_page_size;
+=======
+	gpa = MEM_TEST_GPA + offsp * 4096;
+>>>>>>> b7ba80a49124 (Commit)
 	val = (typeof(val))vm_gpa2hva(data, gpa, NULL);
 	TEST_ASSERT(*val == valexp,
 		    "Guest written values should read back correctly before unmap (%"PRIu64" vs %"PRIu64" @ %"PRIx64")",
@@ -671,14 +882,22 @@ static void test_memslot_map_unmap_check(struct vm_data *data,
 
 static void test_memslot_map_loop(struct vm_data *data, struct sync_area *sync)
 {
+<<<<<<< HEAD
 	uint32_t guest_page_size = data->vm->page_size;
 	uint64_t guest_pages = MEM_TEST_MAP_SIZE / guest_page_size;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Unmap the second half of the test area while guest writes to (maps)
 	 * the first half.
 	 */
+<<<<<<< HEAD
 	test_memslot_do_unmap(data, guest_pages / 2, guest_pages / 2);
+=======
+	test_memslot_do_unmap(data, MEM_TEST_MAP_SIZE_PAGES / 2,
+			      MEM_TEST_MAP_SIZE_PAGES / 2);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Wait for the guest to finish writing the first half of the test
@@ -689,8 +908,15 @@ static void test_memslot_map_loop(struct vm_data *data, struct sync_area *sync)
 	 */
 	host_perform_sync(sync);
 	test_memslot_map_unmap_check(data, 0, MEM_TEST_VAL_1);
+<<<<<<< HEAD
 	test_memslot_map_unmap_check(data, guest_pages / 2 - 1, MEM_TEST_VAL_1);
 	test_memslot_do_unmap(data, 0, guest_pages / 2);
+=======
+	test_memslot_map_unmap_check(data,
+				     MEM_TEST_MAP_SIZE_PAGES / 2 - 1,
+				     MEM_TEST_VAL_1);
+	test_memslot_do_unmap(data, 0, MEM_TEST_MAP_SIZE_PAGES / 2);
+>>>>>>> b7ba80a49124 (Commit)
 
 
 	/*
@@ -703,16 +929,26 @@ static void test_memslot_map_loop(struct vm_data *data, struct sync_area *sync)
 	 * the test area.
 	 */
 	host_perform_sync(sync);
+<<<<<<< HEAD
 	test_memslot_map_unmap_check(data, guest_pages / 2, MEM_TEST_VAL_2);
 	test_memslot_map_unmap_check(data, guest_pages - 1, MEM_TEST_VAL_2);
+=======
+	test_memslot_map_unmap_check(data, MEM_TEST_MAP_SIZE_PAGES / 2,
+				     MEM_TEST_VAL_2);
+	test_memslot_map_unmap_check(data, MEM_TEST_MAP_SIZE_PAGES - 1,
+				     MEM_TEST_VAL_2);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void test_memslot_unmap_loop_common(struct vm_data *data,
 					   struct sync_area *sync,
 					   uint64_t chunk)
 {
+<<<<<<< HEAD
 	uint32_t guest_page_size = data->vm->page_size;
 	uint64_t guest_pages = MEM_TEST_UNMAP_SIZE / guest_page_size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	uint64_t ctr;
 
 	/*
@@ -724,49 +960,78 @@ static void test_memslot_unmap_loop_common(struct vm_data *data,
 	 */
 	host_perform_sync(sync);
 	test_memslot_map_unmap_check(data, 0, MEM_TEST_VAL_1);
+<<<<<<< HEAD
 	for (ctr = 0; ctr < guest_pages / 2; ctr += chunk)
+=======
+	for (ctr = 0; ctr < MEM_TEST_UNMAP_SIZE_PAGES / 2; ctr += chunk)
+>>>>>>> b7ba80a49124 (Commit)
 		test_memslot_do_unmap(data, ctr, chunk);
 
 	/* Likewise, but for the opposite host / guest areas */
 	host_perform_sync(sync);
+<<<<<<< HEAD
 	test_memslot_map_unmap_check(data, guest_pages / 2, MEM_TEST_VAL_2);
 	for (ctr = guest_pages / 2; ctr < guest_pages; ctr += chunk)
+=======
+	test_memslot_map_unmap_check(data, MEM_TEST_UNMAP_SIZE_PAGES / 2,
+				     MEM_TEST_VAL_2);
+	for (ctr = MEM_TEST_UNMAP_SIZE_PAGES / 2;
+	     ctr < MEM_TEST_UNMAP_SIZE_PAGES; ctr += chunk)
+>>>>>>> b7ba80a49124 (Commit)
 		test_memslot_do_unmap(data, ctr, chunk);
 }
 
 static void test_memslot_unmap_loop(struct vm_data *data,
 				    struct sync_area *sync)
 {
+<<<<<<< HEAD
 	uint32_t host_page_size = getpagesize();
 	uint32_t guest_page_size = data->vm->page_size;
 	uint64_t guest_chunk_pages = guest_page_size >= host_page_size ?
 					1 : host_page_size / guest_page_size;
 
 	test_memslot_unmap_loop_common(data, sync, guest_chunk_pages);
+=======
+	test_memslot_unmap_loop_common(data, sync, 1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void test_memslot_unmap_loop_chunked(struct vm_data *data,
 					    struct sync_area *sync)
 {
+<<<<<<< HEAD
 	uint32_t guest_page_size = data->vm->page_size;
 	uint64_t guest_chunk_pages = MEM_TEST_UNMAP_CHUNK_SIZE / guest_page_size;
 
 	test_memslot_unmap_loop_common(data, sync, guest_chunk_pages);
+=======
+	test_memslot_unmap_loop_common(data, sync, MEM_TEST_UNMAP_CHUNK_PAGES);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void test_memslot_rw_loop(struct vm_data *data, struct sync_area *sync)
 {
 	uint64_t gptr;
+<<<<<<< HEAD
 	uint32_t guest_page_size = data->vm->page_size;
 
 	for (gptr = MEM_TEST_GPA + guest_page_size / 2;
 	     gptr < MEM_TEST_GPA + MEM_TEST_SIZE; gptr += guest_page_size)
+=======
+
+	for (gptr = MEM_TEST_GPA + 4096 / 2;
+	     gptr < MEM_TEST_GPA + MEM_TEST_SIZE; gptr += 4096)
+>>>>>>> b7ba80a49124 (Commit)
 		*(uint64_t *)vm_gpa2hva(data, gptr, NULL) = MEM_TEST_VAL_2;
 
 	host_perform_sync(sync);
 
 	for (gptr = MEM_TEST_GPA;
+<<<<<<< HEAD
 	     gptr < MEM_TEST_GPA + MEM_TEST_SIZE; gptr += guest_page_size) {
+=======
+	     gptr < MEM_TEST_GPA + MEM_TEST_SIZE; gptr += 4096) {
+>>>>>>> b7ba80a49124 (Commit)
 		uint64_t *vptr = (typeof(vptr))vm_gpa2hva(data, gptr, NULL);
 		uint64_t val = *vptr;
 
@@ -795,7 +1060,11 @@ static bool test_execute(int nslots, uint64_t *maxslots,
 			 struct timespec *slot_runtime,
 			 struct timespec *guest_runtime)
 {
+<<<<<<< HEAD
 	uint64_t mem_size = tdata->mem_size ? : MEM_SIZE;
+=======
+	uint64_t mem_size = tdata->mem_size ? : MEM_SIZE_PAGES;
+>>>>>>> b7ba80a49124 (Commit)
 	struct vm_data *data;
 	struct sync_area *sync;
 	struct timespec tstart;
@@ -809,6 +1078,10 @@ static bool test_execute(int nslots, uint64_t *maxslots,
 	}
 
 	sync = (typeof(sync))vm_gpa2hva(data, MEM_SYNC_GPA, NULL);
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (tdata->prepare &&
 	    !tdata->prepare(data, sync, maxslots)) {
 		ret = false;
@@ -842,19 +1115,31 @@ exit_free:
 static const struct test_data tests[] = {
 	{
 		.name = "map",
+<<<<<<< HEAD
 		.mem_size = MEM_SIZE_MAP,
+=======
+		.mem_size = MEM_SIZE_MAP_PAGES,
+>>>>>>> b7ba80a49124 (Commit)
 		.guest_code = guest_code_test_memslot_map,
 		.loop = test_memslot_map_loop,
 	},
 	{
 		.name = "unmap",
+<<<<<<< HEAD
 		.mem_size = MEM_TEST_UNMAP_SIZE + MEM_EXTRA_SIZE,
+=======
+		.mem_size = MEM_TEST_UNMAP_SIZE_PAGES + 1,
+>>>>>>> b7ba80a49124 (Commit)
 		.guest_code = guest_code_test_memslot_unmap,
 		.loop = test_memslot_unmap_loop,
 	},
 	{
 		.name = "unmap chunked",
+<<<<<<< HEAD
 		.mem_size = MEM_TEST_UNMAP_SIZE + MEM_EXTRA_SIZE,
+=======
+		.mem_size = MEM_TEST_UNMAP_SIZE_PAGES + 1,
+>>>>>>> b7ba80a49124 (Commit)
 		.guest_code = guest_code_test_memslot_unmap,
 		.loop = test_memslot_unmap_loop_chunked,
 	},
@@ -912,6 +1197,7 @@ static void help(char *name, struct test_args *targs)
 		pr_info("%d: %s\n", ctr, tests[ctr].name);
 }
 
+<<<<<<< HEAD
 static bool check_memory_sizes(void)
 {
 	uint32_t host_page_size = getpagesize();
@@ -952,6 +1238,11 @@ static bool parse_args(int argc, char *argv[],
 		       struct test_args *targs)
 {
 	uint32_t max_mem_slots;
+=======
+static bool parse_args(int argc, char *argv[],
+		       struct test_args *targs)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	int opt;
 
 	while ((opt = getopt(argc, argv, "hvds:f:e:l:r:")) != -1) {
@@ -967,28 +1258,61 @@ static bool parse_args(int argc, char *argv[],
 			map_unmap_verify = true;
 			break;
 		case 's':
+<<<<<<< HEAD
 			targs->nslots = atoi_paranoid(optarg);
 			if (targs->nslots <= 1 && targs->nslots != -1) {
 				pr_info("Slot count cap must be larger than 1 or -1 for no cap\n");
+=======
+			targs->nslots = atoi(optarg);
+			if (targs->nslots <= 0 && targs->nslots != -1) {
+				pr_info("Slot count cap has to be positive or -1 for no cap\n");
+>>>>>>> b7ba80a49124 (Commit)
 				return false;
 			}
 			break;
 		case 'f':
+<<<<<<< HEAD
 			targs->tfirst = atoi_non_negative("First test", optarg);
 			break;
 		case 'e':
 			targs->tlast = atoi_non_negative("Last test", optarg);
 			if (targs->tlast >= NTESTS) {
+=======
+			targs->tfirst = atoi(optarg);
+			if (targs->tfirst < 0) {
+				pr_info("First test to run has to be non-negative\n");
+				return false;
+			}
+			break;
+		case 'e':
+			targs->tlast = atoi(optarg);
+			if (targs->tlast < 0 || targs->tlast >= NTESTS) {
+>>>>>>> b7ba80a49124 (Commit)
 				pr_info("Last test to run has to be non-negative and less than %zu\n",
 					NTESTS);
 				return false;
 			}
 			break;
 		case 'l':
+<<<<<<< HEAD
 			targs->seconds = atoi_non_negative("Test length", optarg);
 			break;
 		case 'r':
 			targs->runs = atoi_positive("Runs per test", optarg);
+=======
+			targs->seconds = atoi(optarg);
+			if (targs->seconds < 0) {
+				pr_info("Test length in seconds has to be non-negative\n");
+				return false;
+			}
+			break;
+		case 'r':
+			targs->runs = atoi(optarg);
+			if (targs->runs <= 0) {
+				pr_info("Runs per test has to be positive\n");
+				return false;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 	}
@@ -1003,6 +1327,7 @@ static bool parse_args(int argc, char *argv[],
 		return false;
 	}
 
+<<<<<<< HEAD
 	max_mem_slots = kvm_check_cap(KVM_CAP_NR_MEMSLOTS);
 	if (max_mem_slots <= 1) {
 		pr_info("KVM_CAP_NR_MEMSLOTS should be greater than 1\n");
@@ -1018,6 +1343,8 @@ static bool parse_args(int argc, char *argv[],
 	pr_info_v("Allowed Number of memory slots: %"PRIu32"\n",
 		  targs->nslots + 1);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -1092,8 +1419,13 @@ int main(int argc, char *argv[])
 	struct test_result rbestslottime;
 	int tctr;
 
+<<<<<<< HEAD
 	if (!check_memory_sizes())
 		return -1;
+=======
+	/* Tell stdout not to buffer its content */
+	setbuf(stdout, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!parse_args(argc, argv, &targs))
 		return -1;

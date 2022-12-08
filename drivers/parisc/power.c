@@ -37,6 +37,10 @@
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/notifier.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/panic_notifier.h>
 #include <linux/reboot.h>
 #include <linux/sched/signal.h>
@@ -174,6 +178,7 @@ static void powerfail_interrupt(int code, void *x)
 
 
 
+<<<<<<< HEAD
 /*
  * parisc_panic_event() is called by the panic handler.
  *
@@ -183,12 +188,22 @@ static void powerfail_interrupt(int code, void *x)
  * the system. We rely in pdc_soft_power_button_panic()
  * since this version spin_trylocks (instead of regular
  * spinlock), preventing deadlocks on panic path.
+=======
+/* parisc_panic_event() is called by the panic handler.
+ * As soon as a panic occurs, our tasklets above will not be
+ * executed any longer. This function then re-enables the 
+ * soft-power switch and allows the user to switch off the system
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int parisc_panic_event(struct notifier_block *this,
 		unsigned long event, void *ptr)
 {
 	/* re-enable the soft-power switch */
+<<<<<<< HEAD
 	pdc_soft_power_button_panic(0);
+=======
+	pdc_soft_power_button(0);
+>>>>>>> b7ba80a49124 (Commit)
 	return NOTIFY_DONE;
 }
 

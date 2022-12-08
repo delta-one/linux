@@ -286,9 +286,12 @@ enum {
 	RT1308_AIFS
 };
 
+<<<<<<< HEAD
 enum rt1308_hw_ver {
 	RT1308_VER_C = 2,
 	RT1308_VER_D
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif		/* end of _RT1308_H_ */

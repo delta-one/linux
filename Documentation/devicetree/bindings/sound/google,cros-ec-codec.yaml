@@ -8,7 +8,11 @@ title: Audio codec controlled by ChromeOS EC
 
 maintainers:
   - Cheng-Yi Chiang <cychiang@chromium.org>
+<<<<<<< HEAD
   - Tzung-Bi Shih <tzungbi@kernel.org>
+=======
+  - Tzung-Bi Shih <tzungbi@google.com>
+>>>>>>> b7ba80a49124 (Commit)
 
 description: |
   Google's ChromeOS EC codec is a digital mic codec provided by the
@@ -17,9 +21,12 @@ description: |
   subnode of a cros-ec node.
   (see Documentation/devicetree/bindings/mfd/google,cros-ec.yaml).
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     const: google,cros-ec-codec
@@ -45,7 +52,11 @@ required:
   - compatible
   - '#sound-dai-cells'
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |
@@ -60,7 +71,10 @@ examples:
         cros-ec@0 {
             compatible = "google,cros-ec-spi";
             reg = <0>;
+<<<<<<< HEAD
             interrupts = <93 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
             codecs {
                 #address-cells = <2>;

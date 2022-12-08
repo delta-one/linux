@@ -214,6 +214,7 @@
 
 #define FSPI_DLLACR			0xC0
 #define FSPI_DLLACR_OVRDEN		BIT(8)
+<<<<<<< HEAD
 #define FSPI_DLLACR_SLVDLY(x)		((x) << 3)
 #define FSPI_DLLACR_DLLRESET		BIT(1)
 #define FSPI_DLLACR_DLLEN		BIT(0)
@@ -223,6 +224,11 @@
 #define FSPI_DLLBCR_SLVDLY(x)		((x) << 3)
 #define FSPI_DLLBCR_DLLRESET		BIT(1)
 #define FSPI_DLLBCR_DLLEN		BIT(0)
+=======
+
+#define FSPI_DLLBCR			0xC4
+#define FSPI_DLLBCR_OVRDEN		BIT(8)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define FSPI_STS0			0xE0
 #define FSPI_STS0_DLPHB(x)		((x) << 8)
@@ -237,6 +243,7 @@
 #define FSPI_STS1_AHB_ERRCD(x)		((x) << 8)
 #define FSPI_STS1_AHB_ERRID(x)		(x)
 
+<<<<<<< HEAD
 #define FSPI_STS2			0xE8
 #define FSPI_STS2_BREFLOCK		BIT(17)
 #define FSPI_STS2_BSLVLOCK		BIT(16)
@@ -247,6 +254,8 @@
 					 FSPI_STS2_AREFLOCK | \
 					 FSPI_STS2_ASLVLOCK)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define FSPI_AHBSPNST			0xEC
 #define FSPI_AHBSPNST_DATLFT(x)		((x) << 16)
 #define FSPI_AHBSPNST_BUFID(x)		((x) << 1)
@@ -631,6 +640,7 @@ static int nxp_fspi_clk_disable_unprep(struct nxp_fspi *f)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void nxp_fspi_dll_calibration(struct nxp_fspi *f)
 {
 	int ret;
@@ -660,6 +670,8 @@ static void nxp_fspi_dll_calibration(struct nxp_fspi *f)
 		dev_warn(f->dev, "DLL lock failed, please fix it!\n");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * In FlexSPI controller, flash access is based on value of FSPI_FLSHXXCR0
  * register and start base address of the slave device.
@@ -708,7 +720,11 @@ static void nxp_fspi_select_mem(struct nxp_fspi *f, struct spi_device *spi)
 	 * Return, if previously selected slave device is same as current
 	 * requested slave device.
 	 */
+<<<<<<< HEAD
 	if (f->selected == spi_get_chipselect(spi, 0))
+=======
+	if (f->selected == spi->chip_select)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	/* Reset FLSHxxCR0 registers */
@@ -721,9 +737,15 @@ static void nxp_fspi_select_mem(struct nxp_fspi *f, struct spi_device *spi)
 	size_kb = FSPI_FLSHXCR0_SZ(f->memmap_phy_size);
 
 	fspi_writel(f, size_kb, f->iobase + FSPI_FLSHA1CR0 +
+<<<<<<< HEAD
 		    4 * spi_get_chipselect(spi, 0));
 
 	dev_dbg(f->dev, "Slave device [CS:%x] selected\n", spi_get_chipselect(spi, 0));
+=======
+		    4 * spi->chip_select);
+
+	dev_dbg(f->dev, "Slave device [CS:%x] selected\n", spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	nxp_fspi_clk_disable_unprep(f);
 
@@ -735,6 +757,7 @@ static void nxp_fspi_select_mem(struct nxp_fspi *f, struct spi_device *spi)
 	if (ret)
 		return;
 
+<<<<<<< HEAD
 	/*
 	 * If clock rate > 100MHz, then switch from DLL override mode to
 	 * DLL calibration mode.
@@ -743,6 +766,9 @@ static void nxp_fspi_select_mem(struct nxp_fspi *f, struct spi_device *spi)
 		nxp_fspi_dll_calibration(f);
 
 	f->selected = spi_get_chipselect(spi, 0);
+=======
+	f->selected = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int nxp_fspi_read_ahb(struct nxp_fspi *f, const struct spi_mem_op *op)
@@ -976,7 +1002,11 @@ static int nxp_fspi_adjust_op_size(struct spi_mem *mem, struct spi_mem_op *op)
 
 static void erratum_err050568(struct nxp_fspi *f)
 {
+<<<<<<< HEAD
 	static const struct soc_device_attribute ls1028a_soc_attr[] = {
+=======
+	const struct soc_device_attribute ls1028a_soc_attr[] = {
+>>>>>>> b7ba80a49124 (Commit)
 		{ .family = "QorIQ LS1028A" },
 		{ /* sentinel */ }
 	};
@@ -1049,11 +1079,15 @@ static int nxp_fspi_default_setup(struct nxp_fspi *f)
 	/* Disable the module */
 	fspi_writel(f, FSPI_MCR0_MDIS, base + FSPI_MCR0);
 
+<<<<<<< HEAD
 	/*
 	 * Config the DLL register to default value, enable the slave clock delay
 	 * line delay cell override mode, and use 1 fixed delay cell in DLL delay
 	 * chain, this is the suggested setting when clock rate < 100MHz.
 	 */
+=======
+	/* Reset the DLL register to default value */
+>>>>>>> b7ba80a49124 (Commit)
 	fspi_writel(f, FSPI_DLLACR_OVRDEN, base + FSPI_DLLACR);
 	fspi_writel(f, FSPI_DLLBCR_OVRDEN, base + FSPI_DLLBCR);
 
@@ -1111,7 +1145,11 @@ static const char *nxp_fspi_get_name(struct spi_mem *mem)
 
 	name = devm_kasprintf(dev, GFP_KERNEL,
 			      "%s-%d", dev_name(f->dev),
+<<<<<<< HEAD
 			      spi_get_chipselect(mem->spi, 0));
+=======
+			      mem->spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!name) {
 		dev_err(dev, "failed to get memory for custom flash name\n");
@@ -1251,7 +1289,11 @@ err_put_ctrl:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void nxp_fspi_remove(struct platform_device *pdev)
+=======
+static int nxp_fspi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nxp_fspi *f = platform_get_drvdata(pdev);
 
@@ -1264,6 +1306,11 @@ static void nxp_fspi_remove(struct platform_device *pdev)
 
 	if (f->ahb_addr)
 		iounmap(f->ahb_addr);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int nxp_fspi_suspend(struct device *dev)
@@ -1311,7 +1358,11 @@ static struct platform_driver nxp_fspi_driver = {
 		.pm =   &nxp_fspi_pm_ops,
 	},
 	.probe          = nxp_fspi_probe,
+<<<<<<< HEAD
 	.remove_new	= nxp_fspi_remove,
+=======
+	.remove		= nxp_fspi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(nxp_fspi_driver);
 

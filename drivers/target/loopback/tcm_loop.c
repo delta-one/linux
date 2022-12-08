@@ -397,7 +397,10 @@ static int tcm_loop_setup_hba_bus(struct tcm_loop_hba *tl_hba, int tcm_loop_host
 	ret = device_register(&tl_hba->dev);
 	if (ret) {
 		pr_err("device_register() failed for tl_hba->dev: %d\n", ret);
+<<<<<<< HEAD
 		put_device(&tl_hba->dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODEV;
 	}
 
@@ -480,6 +483,33 @@ static int tcm_loop_check_demo_mode(struct se_portal_group *se_tpg)
 	return 1;
 }
 
+<<<<<<< HEAD
+=======
+static int tcm_loop_check_demo_mode_cache(struct se_portal_group *se_tpg)
+{
+	return 0;
+}
+
+/*
+ * Allow I_T Nexus full READ-WRITE access without explict Initiator Node ACLs for
+ * local virtual Linux/SCSI LLD passthrough into VM hypervisor guest
+ */
+static int tcm_loop_check_demo_mode_write_protect(struct se_portal_group *se_tpg)
+{
+	return 0;
+}
+
+/*
+ * Because TCM_Loop does not use explict ACLs and MappedLUNs, this will
+ * never be called for TCM_Loop by target_core_fabric_configfs.c code.
+ * It has been added here as a nop for target_fabric_tf_ops_check()
+ */
+static int tcm_loop_check_prod_mode_write_protect(struct se_portal_group *se_tpg)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int tcm_loop_check_prot_fabric_only(struct se_portal_group *se_tpg)
 {
 	struct tcm_loop_tpg *tl_tpg = container_of(se_tpg, struct tcm_loop_tpg,
@@ -487,11 +517,27 @@ static int tcm_loop_check_prot_fabric_only(struct se_portal_group *se_tpg)
 	return tl_tpg->tl_fabric_prot_type;
 }
 
+<<<<<<< HEAD
+=======
+static u32 tcm_loop_get_inst_index(struct se_portal_group *se_tpg)
+{
+	return 1;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static u32 tcm_loop_sess_get_index(struct se_session *se_sess)
 {
 	return 1;
 }
 
+<<<<<<< HEAD
+=======
+static void tcm_loop_set_default_node_attributes(struct se_node_acl *se_acl)
+{
+	return;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int tcm_loop_get_cmd_state(struct se_cmd *se_cmd)
 {
 	struct tcm_loop_cmd *tl_cmd = container_of(se_cmd,
@@ -1040,7 +1086,11 @@ check_len:
 	 */
 	ret = tcm_loop_setup_hba_bus(tl_hba, tcm_loop_hba_no_cnt);
 	if (ret)
+<<<<<<< HEAD
 		return ERR_PTR(ret);
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	sh = tl_hba->sh;
 	tcm_loop_hba_no_cnt++;
@@ -1090,11 +1140,25 @@ static const struct target_core_fabric_ops loop_ops = {
 	.tpg_get_wwn			= tcm_loop_get_endpoint_wwn,
 	.tpg_get_tag			= tcm_loop_get_tag,
 	.tpg_check_demo_mode		= tcm_loop_check_demo_mode,
+<<<<<<< HEAD
 	.tpg_check_prot_fabric_only	= tcm_loop_check_prot_fabric_only,
+=======
+	.tpg_check_demo_mode_cache	= tcm_loop_check_demo_mode_cache,
+	.tpg_check_demo_mode_write_protect =
+				tcm_loop_check_demo_mode_write_protect,
+	.tpg_check_prod_mode_write_protect =
+				tcm_loop_check_prod_mode_write_protect,
+	.tpg_check_prot_fabric_only	= tcm_loop_check_prot_fabric_only,
+	.tpg_get_inst_index		= tcm_loop_get_inst_index,
+>>>>>>> b7ba80a49124 (Commit)
 	.check_stop_free		= tcm_loop_check_stop_free,
 	.release_cmd			= tcm_loop_release_cmd,
 	.sess_get_index			= tcm_loop_sess_get_index,
 	.write_pending			= tcm_loop_write_pending,
+<<<<<<< HEAD
+=======
+	.set_default_node_attributes	= tcm_loop_set_default_node_attributes,
+>>>>>>> b7ba80a49124 (Commit)
 	.get_cmd_state			= tcm_loop_get_cmd_state,
 	.queue_data_in			= tcm_loop_queue_data_in,
 	.queue_status			= tcm_loop_queue_status,

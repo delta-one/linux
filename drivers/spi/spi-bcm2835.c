@@ -1274,9 +1274,15 @@ static int bcm2835_spi_setup(struct spi_device *spi)
 	 * The SPI core has successfully requested the CS GPIO line from the
 	 * device tree, so we are done.
 	 */
+<<<<<<< HEAD
 	if (spi_get_csgpiod(spi, 0))
 		return 0;
 	if (spi_get_chipselect(spi, 0) > 1) {
+=======
+	if (spi->cs_gpiod)
+		return 0;
+	if (spi->chip_select > 1) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* error in the case of native CS requested with CS > 1
 		 * officially there is a CS2, but it is not documented
 		 * which GPIO is connected with that...
@@ -1301,6 +1307,7 @@ static int bcm2835_spi_setup(struct spi_device *spi)
 	if (!chip)
 		return 0;
 
+<<<<<<< HEAD
 	spi_set_csgpiod(spi, 0, gpiochip_request_own_desc(chip,
 							  8 - (spi_get_chipselect(spi, 0)),
 							  DRV_NAME,
@@ -1308,12 +1315,24 @@ static int bcm2835_spi_setup(struct spi_device *spi)
 							  GPIOD_OUT_LOW));
 	if (IS_ERR(spi_get_csgpiod(spi, 0))) {
 		ret = PTR_ERR(spi_get_csgpiod(spi, 0));
+=======
+	spi->cs_gpiod = gpiochip_request_own_desc(chip, 8 - spi->chip_select,
+						  DRV_NAME,
+						  GPIO_LOOKUP_FLAGS_DEFAULT,
+						  GPIOD_OUT_LOW);
+	if (IS_ERR(spi->cs_gpiod)) {
+		ret = PTR_ERR(spi->cs_gpiod);
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_cleanup;
 	}
 
 	/* and set up the "mode" and level */
 	dev_info(&spi->dev, "setting up native-CS%i to use GPIO\n",
+<<<<<<< HEAD
 		 spi_get_chipselect(spi, 0));
+=======
+		 spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 

@@ -874,7 +874,11 @@ mwifiex_timeshare_coex_write(struct file *file, const char __user *ubuf,
 	if (copy_from_user(&kbuf, ubuf, min_t(size_t, sizeof(kbuf) - 1, count)))
 		return -EFAULT;
 
+<<<<<<< HEAD
 	if (kstrtobool(kbuf, &timeshare_coex))
+=======
+	if (strtobool(kbuf, &timeshare_coex))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	ret = mwifiex_send_cmd(priv, HostCmd_CMD_ROBUST_COEX,

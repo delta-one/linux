@@ -1,10 +1,19 @@
 # SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
 if SOC_SIFIVE || SOC_STARFIVE
 
 config SIFIVE_CCACHE
 	bool "Sifive Composable Cache controller"
 	help
 	  Support for the composable cache controller on SiFive platforms.
+=======
+if SOC_SIFIVE
+
+config SIFIVE_L2
+	bool "Sifive L2 Cache controller"
+	help
+	  Support for the L2 cache controller on SiFive platforms.
+>>>>>>> b7ba80a49124 (Commit)
 
 endif

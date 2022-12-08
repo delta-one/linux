@@ -24,6 +24,10 @@ config M68KCLASSIC
 
 config COLDFIRE
 	bool "Coldfire CPU family support"
+<<<<<<< HEAD
+=======
+	select ARCH_HAVE_CUSTOM_GPIO_H
+>>>>>>> b7ba80a49124 (Commit)
 	select CPU_HAS_NO_BITFIELDS
 	select CPU_HAS_NO_CAS
 	select CPU_HAS_NO_MULDIV64
@@ -399,7 +403,11 @@ config SINGLE_MEMORY_CHUNK
 config ARCH_FORCE_MAX_ORDER
 	int "Maximum zone order" if ADVANCED
 	depends on !SINGLE_MEMORY_CHUNK
+<<<<<<< HEAD
 	default "10"
+=======
+	default "11"
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  The kernel memory allocator divides physically contiguous memory
 	  blocks into "zones", where each zone is a power of two number of
@@ -412,6 +420,12 @@ config ARCH_FORCE_MAX_ORDER
 	  value also defines the minimal size of the hole that allows
 	  freeing unused memory map.
 
+<<<<<<< HEAD
+=======
+	  This config option is actually maximum order plus one. For example,
+	  a value of 11 means that the largest free memory block is 2^10 pages.
+
+>>>>>>> b7ba80a49124 (Commit)
 config 060_WRITETHROUGH
 	bool "Use write-through caching for 68060 supervisor accesses"
 	depends on ADVANCED && M68060

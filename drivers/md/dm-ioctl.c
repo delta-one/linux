@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2001, 2002 Sistina Software (UK) Limited.
  * Copyright (C) 2004 - 2006 Red Hat, Inc. All rights reserved.
@@ -32,6 +35,7 @@ struct dm_file {
 	 * poll will wait until the global event number is greater than
 	 * this value.
 	 */
+<<<<<<< HEAD
 	volatile unsigned int global_event_nr;
 };
 
@@ -41,6 +45,15 @@ struct dm_file {
  * name or uuid.
  *---------------------------------------------------------------
  */
+=======
+	volatile unsigned global_event_nr;
+};
+
+/*-----------------------------------------------------------------
+ * The ioctl interface needs to be able to look up devices by
+ * name or uuid.
+ *---------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 struct hash_cell {
 	struct rb_node name_node;
 	struct rb_node uuid_node;
@@ -54,10 +67,17 @@ struct hash_cell {
 };
 
 struct vers_iter {
+<<<<<<< HEAD
 	size_t param_size;
 	struct dm_target_versions *vers, *old_vers;
 	char *end;
 	uint32_t flags;
+=======
+    size_t param_size;
+    struct dm_target_versions *vers, *old_vers;
+    char *end;
+    uint32_t flags;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 
@@ -81,20 +101,30 @@ static void dm_hash_exit(void)
 	dm_hash_remove_all(false, false, false);
 }
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
  * Code for looking up a device by name
  *---------------------------------------------------------------
  */
+=======
+/*-----------------------------------------------------------------
+ * Code for looking up a device by name
+ *---------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 static struct hash_cell *__get_name_cell(const char *str)
 {
 	struct rb_node *n = name_rb_tree.rb_node;
 
 	while (n) {
 		struct hash_cell *hc = container_of(n, struct hash_cell, name_node);
+<<<<<<< HEAD
 		int c;
 
 		c = strcmp(hc->name, str);
+=======
+		int c = strcmp(hc->name, str);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!c) {
 			dm_get(hc->md);
 			return hc;
@@ -111,9 +141,13 @@ static struct hash_cell *__get_uuid_cell(const char *str)
 
 	while (n) {
 		struct hash_cell *hc = container_of(n, struct hash_cell, uuid_node);
+<<<<<<< HEAD
 		int c;
 
 		c = strcmp(hc->uuid, str);
+=======
+		int c = strcmp(hc->uuid, str);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!c) {
 			dm_get(hc->md);
 			return hc;
@@ -153,9 +187,13 @@ static void __link_name(struct hash_cell *new_hc)
 
 	while (*n) {
 		struct hash_cell *hc = container_of(*n, struct hash_cell, name_node);
+<<<<<<< HEAD
 		int c;
 
 		c = strcmp(hc->name, new_hc->name);
+=======
+		int c = strcmp(hc->name, new_hc->name);
+>>>>>>> b7ba80a49124 (Commit)
 		BUG_ON(!c);
 		parent = *n;
 		n = c >= 0 ? &hc->name_node.rb_left : &hc->name_node.rb_right;
@@ -178,9 +216,13 @@ static void __link_uuid(struct hash_cell *new_hc)
 
 	while (*n) {
 		struct hash_cell *hc = container_of(*n, struct hash_cell, uuid_node);
+<<<<<<< HEAD
 		int c;
 
 		c = strcmp(hc->uuid, new_hc->uuid);
+=======
+		int c = strcmp(hc->uuid, new_hc->uuid);
+>>>>>>> b7ba80a49124 (Commit)
 		BUG_ON(!c);
 		parent = *n;
 		n = c > 0 ? &hc->uuid_node.rb_left : &hc->uuid_node.rb_right;
@@ -208,11 +250,17 @@ static struct hash_cell *__get_dev_cell(uint64_t dev)
 	return hc;
 }
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
  * Inserting, removing and renaming a device.
  *---------------------------------------------------------------
  */
+=======
+/*-----------------------------------------------------------------
+ * Inserting, removing and renaming a device.
+ *---------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 static struct hash_cell *alloc_cell(const char *name, const char *uuid,
 				    struct mapped_device *md)
 {
@@ -310,8 +358,11 @@ static struct dm_table *__hash_remove(struct hash_cell *hc)
 	struct dm_table *table;
 	int srcu_idx;
 
+<<<<<<< HEAD
 	lockdep_assert_held(&_hash_lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* remove from the dev trees */
 	__unlink_name(hc);
 	__unlink_uuid(hc);
@@ -430,7 +481,11 @@ static struct mapped_device *dm_hash_rename(struct dm_ioctl *param,
 	struct hash_cell *hc;
 	struct dm_table *table;
 	struct mapped_device *md;
+<<<<<<< HEAD
 	unsigned int change_uuid = (param->flags & DM_UUID_FLAG) ? 1 : 0;
+=======
+	unsigned change_uuid = (param->flags & DM_UUID_FLAG) ? 1 : 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int srcu_idx;
 
 	/*
@@ -451,7 +506,12 @@ static struct mapped_device *dm_hash_rename(struct dm_ioctl *param,
 		hc = __get_name_cell(new);
 
 	if (hc) {
+<<<<<<< HEAD
 		DMERR("Unable to change %s on mapped device %s to one that already exists: %s",
+=======
+		DMERR("Unable to change %s on mapped device %s to one that "
+		      "already exists: %s",
+>>>>>>> b7ba80a49124 (Commit)
 		      change_uuid ? "uuid" : "name",
 		      param->name, new);
 		dm_put(hc->md);
@@ -498,7 +558,11 @@ static struct mapped_device *dm_hash_rename(struct dm_ioctl *param,
 		dm_table_event(table);
 	dm_put_live_table(hc->md, srcu_idx);
 
+<<<<<<< HEAD
 	if (!dm_kobject_uevent(hc->md, KOBJ_CHANGE, param->event_nr, false))
+=======
+	if (!dm_kobject_uevent(hc->md, KOBJ_CHANGE, param->event_nr))
+>>>>>>> b7ba80a49124 (Commit)
 		param->flags |= DM_UEVENT_GENERATED_FLAG;
 
 	md = hc->md;
@@ -516,11 +580,17 @@ void dm_deferred_remove(void)
 	dm_hash_remove_all(true, false, true);
 }
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
  * Implementation of the ioctl commands
  *---------------------------------------------------------------
  */
+=======
+/*-----------------------------------------------------------------
+ * Implementation of the ioctl commands
+ *---------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * All the ioctl commands get dispatched to functions with this
  * prototype.
@@ -630,7 +700,10 @@ static int list_devices(struct file *filp, struct dm_ioctl *param, size_t param_
 	 */
 	for (n = rb_first(&name_rb_tree); n; n = rb_next(n)) {
 		void *uuid_ptr;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		hc = container_of(n, struct hash_cell, name_node);
 		if (!filter_device(hc, param->name, param->uuid))
 			continue;
@@ -671,15 +744,24 @@ static int list_devices(struct file *filp, struct dm_ioctl *param, size_t param_
 
 static void list_version_get_needed(struct target_type *tt, void *needed_param)
 {
+<<<<<<< HEAD
 	size_t *needed = needed_param;
 
 	*needed += sizeof(struct dm_target_versions);
 	*needed += strlen(tt->name) + 1;
 	*needed += ALIGN_MASK;
+=======
+    size_t *needed = needed_param;
+
+    *needed += sizeof(struct dm_target_versions);
+    *needed += strlen(tt->name);
+    *needed += ALIGN_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void list_version_get_info(struct target_type *tt, void *param)
 {
+<<<<<<< HEAD
 	struct vers_iter *info = param;
 
 	/* Check space - it might have changed since the first iteration */
@@ -699,6 +781,29 @@ static void list_version_get_info(struct target_type *tt, void *param)
 
 	info->old_vers = info->vers;
 	info->vers = align_ptr((void *)(info->vers + 1) + strlen(tt->name) + 1);
+=======
+    struct vers_iter *info = param;
+
+    /* Check space - it might have changed since the first iteration */
+    if ((char *)info->vers + sizeof(tt->version) + strlen(tt->name) + 1 >
+	info->end) {
+
+	info->flags = DM_BUFFER_FULL_FLAG;
+	return;
+    }
+
+    if (info->old_vers)
+	info->old_vers->next = (uint32_t) ((void *)info->vers -
+					   (void *)info->old_vers);
+    info->vers->version[0] = tt->version[0];
+    info->vers->version[1] = tt->version[1];
+    info->vers->version[2] = tt->version[2];
+    info->vers->next = 0;
+    strcpy(info->vers->name, tt->name);
+
+    info->old_vers = info->vers;
+    info->vers = align_ptr(((void *) ++info->vers) + strlen(tt->name) + 1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __list_versions(struct dm_ioctl *param, size_t param_size, const char *name)
@@ -737,7 +842,11 @@ static int __list_versions(struct dm_ioctl *param, size_t param_size, const char
 	iter_info.old_vers = NULL;
 	iter_info.vers = vers;
 	iter_info.flags = 0;
+<<<<<<< HEAD
 	iter_info.end = (char *)vers + needed;
+=======
+	iter_info.end = (char *)vers+len;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Now loop through filling out the names & versions.
@@ -789,7 +898,11 @@ static struct dm_table *dm_get_inactive_table(struct mapped_device *md, int *src
 
 	down_read(&_hash_lock);
 	hc = dm_get_mdptr(md);
+<<<<<<< HEAD
 	if (!hc) {
+=======
+	if (!hc || hc->md != md) {
+>>>>>>> b7ba80a49124 (Commit)
 		DMERR("device has been removed from the dev hash table.");
 		goto out;
 	}
@@ -858,7 +971,10 @@ static void __dev_status(struct mapped_device *md, struct dm_ioctl *param)
 
 	if (param->flags & DM_QUERY_INACTIVE_TABLE_FLAG) {
 		int srcu_idx;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		table = dm_get_inactive_table(md, &srcu_idx);
 		if (table) {
 			if (!(dm_table_get_mode(table) & FMODE_WRITE))
@@ -939,9 +1055,15 @@ static struct hash_cell *__find_device_hash_cell(struct dm_ioctl *param)
 	 * Sneakily write in both the name and the uuid
 	 * while we have the cell.
 	 */
+<<<<<<< HEAD
 	strscpy(param->name, hc->name, sizeof(param->name));
 	if (hc->uuid)
 		strscpy(param->uuid, hc->uuid, sizeof(param->uuid));
+=======
+	strlcpy(param->name, hc->name, sizeof(param->name));
+	if (hc->uuid)
+		strlcpy(param->uuid, hc->uuid, sizeof(param->uuid));
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		param->uuid[0] = '\0';
 
@@ -1013,7 +1135,11 @@ static int dev_remove(struct file *filp, struct dm_ioctl *param, size_t param_si
 
 	dm_ima_measure_on_device_remove(md, false);
 
+<<<<<<< HEAD
 	if (!dm_kobject_uevent(md, KOBJ_REMOVE, param->event_nr, false))
+=======
+	if (!dm_kobject_uevent(md, KOBJ_REMOVE, param->event_nr))
+>>>>>>> b7ba80a49124 (Commit)
 		param->flags |= DM_UEVENT_GENERATED_FLAG;
 
 	dm_put(md);
@@ -1039,7 +1165,11 @@ static int dev_rename(struct file *filp, struct dm_ioctl *param, size_t param_si
 	int r;
 	char *new_data = (char *) param + param->data_start;
 	struct mapped_device *md;
+<<<<<<< HEAD
 	unsigned int change_uuid = (param->flags & DM_UUID_FLAG) ? 1 : 0;
+=======
+	unsigned change_uuid = (param->flags & DM_UUID_FLAG) ? 1 : 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (new_data < param->data ||
 	    invalid_str(new_data, (void *) param + param_size) || !*new_data ||
@@ -1091,7 +1221,12 @@ static int dev_set_geometry(struct file *filp, struct dm_ioctl *param, size_t pa
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if (indata[0] > 65535 || indata[1] > 255 || indata[2] > 255) {
+=======
+	if (indata[0] > 65535 || indata[1] > 255 ||
+	    indata[2] > 255 || indata[3] > ULONG_MAX) {
+>>>>>>> b7ba80a49124 (Commit)
 		DMERR("Geometry exceeds range limits.");
 		goto out;
 	}
@@ -1113,7 +1248,11 @@ out:
 static int do_suspend(struct dm_ioctl *param)
 {
 	int r = 0;
+<<<<<<< HEAD
 	unsigned int suspend_flags = DM_SUSPEND_LOCKFS_FLAG;
+=======
+	unsigned suspend_flags = DM_SUSPEND_LOCKFS_FLAG;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mapped_device *md;
 
 	md = find_device(param);
@@ -1142,11 +1281,18 @@ out:
 static int do_resume(struct dm_ioctl *param)
 {
 	int r = 0;
+<<<<<<< HEAD
 	unsigned int suspend_flags = DM_SUSPEND_LOCKFS_FLAG;
 	struct hash_cell *hc;
 	struct mapped_device *md;
 	struct dm_table *new_map, *old_map = NULL;
 	bool need_resize_uevent = false;
+=======
+	unsigned suspend_flags = DM_SUSPEND_LOCKFS_FLAG;
+	struct hash_cell *hc;
+	struct mapped_device *md;
+	struct dm_table *new_map, *old_map = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	down_write(&_hash_lock);
 
@@ -1167,8 +1313,11 @@ static int do_resume(struct dm_ioctl *param)
 
 	/* Do we need to load a new map ? */
 	if (new_map) {
+<<<<<<< HEAD
 		sector_t old_size, new_size;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Suspend if it isn't already suspended */
 		if (param->flags & DM_SKIP_LOCKFS_FLAG)
 			suspend_flags &= ~DM_SUSPEND_LOCKFS_FLAG;
@@ -1177,7 +1326,10 @@ static int do_resume(struct dm_ioctl *param)
 		if (!dm_suspended_md(md))
 			dm_suspend(md, suspend_flags);
 
+<<<<<<< HEAD
 		old_size = dm_get_size(md);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		old_map = dm_swap_table(md, new_map);
 		if (IS_ERR(old_map)) {
 			dm_sync_table(md);
@@ -1185,9 +1337,12 @@ static int do_resume(struct dm_ioctl *param)
 			dm_put(md);
 			return PTR_ERR(old_map);
 		}
+<<<<<<< HEAD
 		new_size = dm_get_size(md);
 		if (old_size && new_size && old_size != new_size)
 			need_resize_uevent = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (dm_table_get_mode(new_map) & FMODE_WRITE)
 			set_disk_ro(dm_disk(md), 0);
@@ -1200,7 +1355,11 @@ static int do_resume(struct dm_ioctl *param)
 		if (!r) {
 			dm_ima_measure_on_device_resume(md, new_map ? true : false);
 
+<<<<<<< HEAD
 			if (!dm_kobject_uevent(md, KOBJ_CHANGE, param->event_nr, need_resize_uevent))
+=======
+			if (!dm_kobject_uevent(md, KOBJ_CHANGE, param->event_nr))
+>>>>>>> b7ba80a49124 (Commit)
 				param->flags |= DM_UEVENT_GENERATED_FLAG;
 		}
 	}
@@ -1260,7 +1419,11 @@ static void retrieve_status(struct dm_table *table,
 	char *outbuf, *outptr;
 	status_type_t type;
 	size_t remaining, len, used = 0;
+<<<<<<< HEAD
 	unsigned int status_flags = 0;
+=======
+	unsigned status_flags = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	outptr = outbuf = get_result_buffer(param, param_size, &len);
 
@@ -1401,7 +1564,12 @@ static int next_target(struct dm_target_spec *last, uint32_t next, void *end,
 }
 
 static int populate_table(struct dm_table *table,
+<<<<<<< HEAD
 			  struct dm_ioctl *param, size_t param_size)
+=======
+			  struct dm_ioctl *param, size_t param_size,
+			  char **ti_error)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r;
 	unsigned int i = 0;
@@ -1411,7 +1579,13 @@ static int populate_table(struct dm_table *table,
 	char *target_params;
 
 	if (!param->target_count) {
+<<<<<<< HEAD
 		DMERR("%s: no targets specified", __func__);
+=======
+		DMERR("populate_table: no targets specified");
+		if (ti_error)
+			*ti_error = "no targets specified";
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -1420,13 +1594,22 @@ static int populate_table(struct dm_table *table,
 		r = next_target(spec, next, end, &spec, &target_params);
 		if (r) {
 			DMERR("unable to find target");
+<<<<<<< HEAD
+=======
+			if (ti_error)
+				*ti_error = "unable to find target";
+>>>>>>> b7ba80a49124 (Commit)
 			return r;
 		}
 
 		r = dm_table_add_target(table, spec->target_type,
 					(sector_t) spec->sector_start,
 					(sector_t) spec->length,
+<<<<<<< HEAD
 					target_params);
+=======
+					target_params, ti_error);
+>>>>>>> b7ba80a49124 (Commit)
 		if (r) {
 			DMERR("error adding target to table");
 			return r;
@@ -1454,6 +1637,7 @@ static int table_load(struct file *filp, struct dm_ioctl *param, size_t param_si
 	struct dm_table *t, *old_map = NULL;
 	struct mapped_device *md;
 	struct target_type *immutable_target_type;
+<<<<<<< HEAD
 
 	md = find_device(param);
 	if (!md)
@@ -1466,6 +1650,26 @@ static int table_load(struct file *filp, struct dm_ioctl *param, size_t param_si
 	/* Protect md->type and md->queue against concurrent table loads. */
 	dm_lock_md_type(md);
 	r = populate_table(t, param, param_size);
+=======
+	char *ti_error;
+
+	md = find_device(param);
+	if (!md) {
+		r = -ENXIO;
+		ti_error = "unable to find device";
+		goto err0;
+	}
+
+	r = dm_table_create(&t, get_mode(param), param->target_count, md);
+	if (r) {
+		ti_error = "unable to create table";
+		goto err;
+	}
+
+	/* Protect md->type and md->queue against concurrent table loads. */
+	dm_lock_md_type(md);
+	r = populate_table(t, param, param_size, &ti_error);
+>>>>>>> b7ba80a49124 (Commit)
 	if (r)
 		goto err_unlock_md_type;
 
@@ -1478,6 +1682,10 @@ static int table_load(struct file *filp, struct dm_ioctl *param, size_t param_si
 		DMERR("can't replace immutable target type %s",
 		      immutable_target_type->name);
 		r = -EINVAL;
+<<<<<<< HEAD
+=======
+		ti_error = "can't replace immutable target";
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_unlock_md_type;
 	}
 
@@ -1486,6 +1694,10 @@ static int table_load(struct file *filp, struct dm_ioctl *param, size_t param_si
 		r = dm_setup_md_queue(md, t);
 		if (r) {
 			DMERR("unable to set up device queue for new table.");
+<<<<<<< HEAD
+=======
+			ti_error = "unable to set up device queue for new table";
+>>>>>>> b7ba80a49124 (Commit)
 			goto err_unlock_md_type;
 		}
 	} else if (!is_valid_type(dm_get_md_type(md), dm_table_get_type(t))) {
@@ -1500,10 +1712,18 @@ static int table_load(struct file *filp, struct dm_ioctl *param, size_t param_si
 	/* stage inactive table */
 	down_write(&_hash_lock);
 	hc = dm_get_mdptr(md);
+<<<<<<< HEAD
 	if (!hc) {
 		DMERR("device has been removed from the dev hash table.");
 		up_write(&_hash_lock);
 		r = -ENXIO;
+=======
+	if (!hc || hc->md != md) {
+		DMERR("device has been removed from the dev hash table.");
+		up_write(&_hash_lock);
+		r = -ENXIO;
+		ti_error = "device has been removed from the dev hash table";
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_destroy_table;
 	}
 
@@ -1530,7 +1750,17 @@ err_destroy_table:
 	dm_table_destroy(t);
 err:
 	dm_put(md);
+<<<<<<< HEAD
 
+=======
+err0:
+	if (param->flags & DM_RETURN_ERROR_FLAG) {
+		param->flags &= ~DM_RETURN_ERROR_FLAG;
+		strlcpy(param->name, ti_error, sizeof param->name);
+		param->error = r;
+		return 0;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return r;
 }
 
@@ -1588,7 +1818,11 @@ static void retrieve_deps(struct dm_table *table,
 	/*
 	 * Count the devices.
 	 */
+<<<<<<< HEAD
 	list_for_each(tmp, dm_table_get_devices(table))
+=======
+	list_for_each (tmp, dm_table_get_devices(table))
+>>>>>>> b7ba80a49124 (Commit)
 		count++;
 
 	/*
@@ -1605,7 +1839,11 @@ static void retrieve_deps(struct dm_table *table,
 	 */
 	deps->count = count;
 	count = 0;
+<<<<<<< HEAD
 	list_for_each_entry(dd, dm_table_get_devices(table), list)
+=======
+	list_for_each_entry (dd, dm_table_get_devices(table), list)
+>>>>>>> b7ba80a49124 (Commit)
 		deps->dev[count++] = huge_encode_dev(dd->dm_dev->bdev->bd_dev);
 
 	param->data_size = param->data_start + needed;
@@ -1665,8 +1903,13 @@ static int table_status(struct file *filp, struct dm_ioctl *param, size_t param_
  * Returns a number <= 1 if message was processed by device mapper.
  * Returns 2 if message should be delivered to the target.
  */
+<<<<<<< HEAD
 static int message_for_md(struct mapped_device *md, unsigned int argc, char **argv,
 			  char *result, unsigned int maxlen)
+=======
+static int message_for_md(struct mapped_device *md, unsigned argc, char **argv,
+			  char *result, unsigned maxlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r;
 
@@ -1781,11 +2024,18 @@ static int target_message(struct file *filp, struct dm_ioctl *param, size_t para
 #define IOCTL_FLAGS_NO_PARAMS		1
 #define IOCTL_FLAGS_ISSUE_GLOBAL_EVENT	2
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
  * Implementation of open/close/ioctl on the special char device.
  *---------------------------------------------------------------
  */
+=======
+/*-----------------------------------------------------------------
+ * Implementation of open/close/ioctl on the special char
+ * device.
+ *---------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 static ioctl_fn lookup_ioctl(unsigned int cmd, int *ioctl_flags)
 {
 	static const struct {
@@ -1813,8 +2063,13 @@ static ioctl_fn lookup_ioctl(unsigned int cmd, int *ioctl_flags)
 
 		{DM_TARGET_MSG_CMD, 0, target_message},
 		{DM_DEV_SET_GEOMETRY_CMD, 0, dev_set_geometry},
+<<<<<<< HEAD
 		{DM_DEV_ARM_POLL_CMD, IOCTL_FLAGS_NO_PARAMS, dev_arm_poll},
 		{DM_GET_TARGET_VERSION_CMD, 0, get_target_version},
+=======
+		{DM_DEV_ARM_POLL, IOCTL_FLAGS_NO_PARAMS, dev_arm_poll},
+		{DM_GET_TARGET_VERSION, 0, get_target_version},
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	if (unlikely(cmd >= ARRAY_SIZE(_ioctls)))
@@ -1837,9 +2092,16 @@ static int check_version(unsigned int cmd, struct dm_ioctl __user *user)
 	if (copy_from_user(version, user->version, sizeof(version)))
 		return -EFAULT;
 
+<<<<<<< HEAD
 	if ((version[0] != DM_VERSION_MAJOR) ||
 	    (version[1] > DM_VERSION_MINOR)) {
 		DMERR("ioctl interface mismatch: kernel(%u.%u.%u), user(%u.%u.%u), cmd(%d)",
+=======
+	if ((DM_VERSION_MAJOR != version[0]) ||
+	    (DM_VERSION_MINOR < version[1])) {
+		DMERR("ioctl interface mismatch: "
+		      "kernel(%u.%u.%u), user(%u.%u.%u), cmd(%d)",
+>>>>>>> b7ba80a49124 (Commit)
 		      DM_VERSION_MAJOR, DM_VERSION_MINOR,
 		      DM_VERSION_PATCHLEVEL,
 		      version[0], version[1], version[2], cmd);
@@ -1876,7 +2138,11 @@ static int copy_params(struct dm_ioctl __user *user, struct dm_ioctl *param_kern
 	struct dm_ioctl *dmi;
 	int secure_data;
 	const size_t minimum_data_size = offsetof(struct dm_ioctl, data);
+<<<<<<< HEAD
 	unsigned int noio_flag;
+=======
+	unsigned noio_flag;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (copy_from_user(param_kernel, user, minimum_data_size))
 		return -EFAULT;
@@ -1943,6 +2209,12 @@ static int validate_params(uint cmd, struct dm_ioctl *param)
 	param->flags &= ~DM_SECURE_DATA_FLAG;
 	param->flags &= ~DM_DATA_OUT_FLAG;
 
+<<<<<<< HEAD
+=======
+	if (param->flags & DM_RETURN_ERROR_FLAG)
+		param->error = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Ignores parameters */
 	if (cmd == DM_REMOVE_ALL_CMD ||
 	    cmd == DM_LIST_DEVICES_CMD ||
@@ -2103,9 +2375,15 @@ static const struct file_operations _ctl_fops = {
 
 static struct miscdevice _dm_misc = {
 	.minor		= MAPPER_CTRL_MINOR,
+<<<<<<< HEAD
 	.name		= DM_NAME,
 	.nodename	= DM_DIR "/" DM_CONTROL_NODE,
 	.fops		= &_ctl_fops
+=======
+	.name  		= DM_NAME,
+	.nodename	= DM_DIR "/" DM_CONTROL_NODE,
+	.fops  		= &_ctl_fops
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 MODULE_ALIAS_MISCDEV(MAPPER_CTRL_MINOR);
@@ -2152,7 +2430,11 @@ int dm_copy_name_and_uuid(struct mapped_device *md, char *name, char *uuid)
 
 	mutex_lock(&dm_hash_cells_mutex);
 	hc = dm_get_mdptr(md);
+<<<<<<< HEAD
 	if (!hc) {
+=======
+	if (!hc || hc->md != md) {
+>>>>>>> b7ba80a49124 (Commit)
 		r = -ENXIO;
 		goto out;
 	}
@@ -2225,7 +2507,11 @@ int __init dm_early_create(struct dm_ioctl *dmi,
 		r = dm_table_add_target(t, spec_array[i]->target_type,
 					(sector_t) spec_array[i]->sector_start,
 					(sector_t) spec_array[i]->length,
+<<<<<<< HEAD
 					target_params_array[i]);
+=======
+					target_params_array[i], NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (r) {
 			DMERR("error adding target to table");
 			goto err_destroy_table;
@@ -2265,9 +2551,13 @@ int __init dm_early_create(struct dm_ioctl *dmi,
 err_destroy_table:
 	dm_table_destroy(t);
 err_hash_remove:
+<<<<<<< HEAD
 	down_write(&_hash_lock);
 	(void) __hash_remove(__get_name_cell(dmi->name));
 	up_write(&_hash_lock);
+=======
+	(void) __hash_remove(__get_name_cell(dmi->name));
+>>>>>>> b7ba80a49124 (Commit)
 	/* release reference from __get_name_cell */
 	dm_put(md);
 err_destroy_dm:

@@ -13,8 +13,13 @@
 
 	aliases {
 		ethernet0 = &gmac1;
+<<<<<<< HEAD
 		mmc0 = &sdhci;
 		mmc1 = &sdmmc0;
+=======
+		mmc0 = &sdmmc0;
+		mmc1 = &sdhci;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	chosen: chosen {
@@ -32,6 +37,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	gmac1_clkin: external-gmac1-clock {
 		compatible = "fixed-clock";
 		clock-frequency = <125000000>;
@@ -39,6 +45,8 @@
 		#clock-cells = <0>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	leds {
 		compatible = "gpio-leds";
 
@@ -67,6 +75,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	sdio_pwrseq: sdio-pwrseq {
 		compatible = "mmc-pwrseq-simple";
 		clocks = <&rk809 1>;
@@ -79,12 +88,16 @@
 	};
 
 	vcc12v_dcin: vcc12v-dcin-regulator {
+=======
+	vcc12v_dcin: vcc12v-dcin {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "vcc12v_dcin";
 		regulator-always-on;
 		regulator-boot-on;
 	};
 
+<<<<<<< HEAD
 	pcie30_avdd0v9: pcie30-avdd0v9-regulator {
 		compatible = "regulator-fixed";
 		regulator-name = "pcie30_avdd0v9";
@@ -116,6 +129,8 @@
 		vin-supply = <&vcc5v0_sys>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vcc3v3_pcie: vcc3v3-pcie-regulator {
 		compatible = "regulator-fixed";
 		enable-active-high;
@@ -128,7 +143,11 @@
 		vin-supply = <&vcc5v0_sys>;
 	};
 
+<<<<<<< HEAD
 	vcc3v3_sys: vcc3v3-sys-regulator {
+=======
+	vcc3v3_sys: vcc3v3-sys {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "vcc3v3_sys";
 		regulator-always-on;
@@ -138,7 +157,11 @@
 		vin-supply = <&vcc12v_dcin>;
 	};
 
+<<<<<<< HEAD
 	vcc5v0_sys: vcc5v0-sys-regulator {
+=======
+	vcc5v0_sys: vcc5v0-sys {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "vcc5v0_sys";
 		regulator-always-on;
@@ -148,7 +171,11 @@
 		vin-supply = <&vcc12v_dcin>;
 	};
 
+<<<<<<< HEAD
 	vcc5v0_usb: vcc5v0-usb-regulator {
+=======
+	vcc5v0_usb: vcc5v0-usb {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "vcc5v0_usb";
 		regulator-always-on;
@@ -158,7 +185,11 @@
 		vin-supply = <&vcc12v_dcin>;
 	};
 
+<<<<<<< HEAD
 	vcc5v0_usb_host: vcc5v0-usb-host-regulator {
+=======
+	vcc5v0_usb_host: vcc5v0-usb-host {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		enable-active-high;
 		gpio = <&gpio0 RK_PA6 GPIO_ACTIVE_HIGH>;
@@ -193,7 +224,11 @@
 		vin-supply = <&vcc5v0_usb>;
 	};
 
+<<<<<<< HEAD
 	vcc_cam: vcc-cam-regulator {
+=======
+	vcc_cam: vcc-cam {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		enable-active-high;
 		gpio = <&gpio1 RK_PB1 GPIO_ACTIVE_HIGH>;
@@ -209,7 +244,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	vcc_mipi: vcc-mipi-regulator {
+=======
+	vcc_mipi: vcc-mipi {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		enable-active-high;
 		gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_HIGH>;
@@ -256,17 +295,28 @@
 
 &gmac1 {
 	assigned-clocks = <&cru SCLK_GMAC1_RX_TX>, <&cru SCLK_GMAC1>;
+<<<<<<< HEAD
 	assigned-clock-parents = <&cru SCLK_GMAC1_RGMII_SPEED>, <&gmac1_clkin>;
 	clock_in_out = "input";
 	phy-handle = <&rgmii_phy1>;
 	phy-mode = "rgmii-id";
 	phy-supply = <&vcc_3v3>;
+=======
+	assigned-clock-parents = <&cru SCLK_GMAC1_RGMII_SPEED>;
+	assigned-clock-rates = <0>, <125000000>;
+	clock_in_out = "output";
+	phy-handle = <&rgmii_phy1>;
+	phy-mode = "rgmii-id";
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&gmac1m1_miim
 		     &gmac1m1_tx_bus2
 		     &gmac1m1_rx_bus2
 		     &gmac1m1_rgmii_clk
+<<<<<<< HEAD
 		     &gmac1m1_clkinout
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		     &gmac1m1_rgmii_bus>;
 	status = "okay";
 };
@@ -279,8 +329,11 @@
 &hdmi {
 	avdd-0v9-supply = <&vdda0v9_image>;
 	avdd-1v8-supply = <&vcca1v8_image>;
+<<<<<<< HEAD
 	pinctrl-names = "default";
 	pinctrl-0 = <&hdmitx_scl &hdmitx_sda &hdmitxm1_cec>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 
@@ -561,6 +614,10 @@
 		interrupt-parent = <&gpio0>;
 		interrupts = <RK_PD3 IRQ_TYPE_LEVEL_LOW>;
 		#clock-cells = <0>;
+<<<<<<< HEAD
+=======
+		clock-frequency = <32768>;
+>>>>>>> b7ba80a49124 (Commit)
 		clock-output-names = "rtcic_32kout";
 		pinctrl-names = "default";
 		pinctrl-0 = <&hym8563_int>;
@@ -573,6 +630,7 @@
 };
 
 &i2s1_8ch {
+<<<<<<< HEAD
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2s1m0_sclktx &i2s1m0_lrcktx &i2s1m0_sdi0 &i2s1m0_sdo0>;
 	rockchip,trcm-sync-tx-only;
@@ -580,6 +638,8 @@
 };
 
 &i2s2_2ch {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rockchip,trcm-sync-tx-only;
 	status = "okay";
 };
@@ -604,6 +664,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &pcie30phy {
 	phy-supply = <&vcc3v3_pi6c_03>;
 	status = "okay";
@@ -617,6 +678,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &pinctrl {
 	cam {
 		vcc_cam_en: vcc_cam_en {
@@ -676,6 +739,7 @@
 			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 	};
+<<<<<<< HEAD
 
 	bt {
 		bt_enable: bt-enable {
@@ -696,6 +760,8 @@
 			rockchip,pins = <3 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &pmu_io_domains {
@@ -734,12 +800,17 @@
 	disable-wp;
 	pinctrl-names = "default";
 	pinctrl-0 = <&sdmmc0_bus4 &sdmmc0_clk &sdmmc0_cmd &sdmmc0_det>;
+<<<<<<< HEAD
 	sd-uhs-sdr50;
+=======
+	sd-uhs-sdr104;
+>>>>>>> b7ba80a49124 (Commit)
 	vmmc-supply = <&vcc3v3_sd>;
 	vqmmc-supply = <&vccio_sd>;
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &sdmmc2 {
 	bus-width = <4>;
 	disable-wp;
@@ -756,12 +827,15 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &tsadc {
 	rockchip,hw-tshut-mode = <1>;
 	rockchip,hw-tshut-polarity = <0>;
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &uart1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart1m0_xfer &uart1m0_ctsn &uart1m0_rtsn>;
@@ -783,6 +857,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &uart2 {
 	status = "okay";
 };

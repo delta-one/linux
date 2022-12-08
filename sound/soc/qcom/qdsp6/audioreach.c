@@ -159,8 +159,11 @@ struct apm_module_hw_ep_mf_cfg {
 
 #define APM_HW_EP_CFG_PSIZE ALIGN(sizeof(struct apm_module_hw_ep_mf_cfg), 8)
 
+<<<<<<< HEAD
 #define APM_MFC_CFG_PSIZE(p, n) ALIGN(struct_size(p, channel_mapping, n), 4)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct apm_module_frame_size_factor_cfg {
 	struct apm_module_param_data param_data;
 	uint32_t frame_size_factor;
@@ -313,6 +316,18 @@ static void apm_populate_sub_graph_config(struct apm_sub_graph_data *cfg,
 	cfg->sid.scenario_id = sg->scenario_id;
 }
 
+<<<<<<< HEAD
+=======
+static void apm_populate_connection_obj(struct apm_module_conn_obj *obj,
+					struct audioreach_module *module)
+{
+	obj->src_mod_inst_id = module->src_mod_inst_id;
+	obj->src_mod_op_port_id = module->src_mod_op_port_id;
+	obj->dst_mod_inst_id = module->instance_id;
+	obj->dst_mod_ip_port_id = module->in_port;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void apm_populate_module_prop_obj(struct apm_mod_prop_obj *obj,
 					 struct audioreach_module *module)
 {
@@ -325,6 +340,66 @@ static void apm_populate_module_prop_obj(struct apm_mod_prop_obj *obj,
 	obj->prop_id_port.max_op_port = module->max_op_port;
 }
 
+<<<<<<< HEAD
+=======
+struct audioreach_module *audioreach_get_container_last_module(
+							struct audioreach_container *container)
+{
+	struct audioreach_module *module;
+
+	list_for_each_entry(module, &container->modules_list, node) {
+		if (module->dst_mod_inst_id == 0)
+			return module;
+	}
+
+	return NULL;
+}
+EXPORT_SYMBOL_GPL(audioreach_get_container_last_module);
+
+static bool is_module_in_container(struct audioreach_container *container, int module_iid)
+{
+	struct audioreach_module *module;
+
+	list_for_each_entry(module, &container->modules_list, node) {
+		if (module->instance_id == module_iid)
+			return true;
+	}
+
+	return false;
+}
+
+struct audioreach_module *audioreach_get_container_first_module(
+							struct audioreach_container *container)
+{
+	struct audioreach_module *module;
+
+	/* get the first module from both connected or un-connected containers */
+	list_for_each_entry(module, &container->modules_list, node) {
+		if (module->src_mod_inst_id == 0 ||
+		    !is_module_in_container(container, module->src_mod_inst_id))
+			return module;
+	}
+	return NULL;
+}
+EXPORT_SYMBOL_GPL(audioreach_get_container_first_module);
+
+struct audioreach_module *audioreach_get_container_next_module(
+						struct audioreach_container *container,
+						struct audioreach_module *module)
+{
+	int nmodule_iid = module->dst_mod_inst_id;
+	struct audioreach_module *nmodule;
+
+	list_for_each_entry(nmodule, &container->modules_list, node) {
+		if (nmodule->instance_id == nmodule_iid)
+			return nmodule;
+	}
+
+	return NULL;
+}
+EXPORT_SYMBOL_GPL(audioreach_get_container_next_module);
+
+>>>>>>> b7ba80a49124 (Commit)
 static void apm_populate_module_list_obj(struct apm_mod_list_obj *obj,
 					 struct audioreach_container *container,
 					 int sub_graph_id)
@@ -336,15 +411,23 @@ static void apm_populate_module_list_obj(struct apm_mod_list_obj *obj,
 	obj->container_id = container->container_id;
 	obj->num_modules = container->num_modules;
 	i = 0;
+<<<<<<< HEAD
 	list_for_each_entry(module, &container->modules_list, node) {
+=======
+	list_for_each_container_module(module, container) {
+>>>>>>> b7ba80a49124 (Commit)
 		obj->mod_cfg[i].module_id = module->module_id;
 		obj->mod_cfg[i].instance_id = module->instance_id;
 		i++;
 	}
 }
 
+<<<<<<< HEAD
 static void audioreach_populate_graph(struct q6apm *apm, struct audioreach_graph_info *info,
 				      struct apm_graph_open_params *open,
+=======
+static void audioreach_populate_graph(struct apm_graph_open_params *open,
+>>>>>>> b7ba80a49124 (Commit)
 				      struct list_head *sg_list,
 				      int num_sub_graphs)
 {
@@ -365,6 +448,7 @@ static void audioreach_populate_graph(struct q6apm *apm, struct audioreach_graph
 
 	mlobj = &ml_data->mod_list_obj[0];
 
+<<<<<<< HEAD
 
 	if (info->dst_mod_inst_id && info->src_mod_inst_id) {
 		conn_obj = &mc_data->conn_obj[nconn];
@@ -375,6 +459,8 @@ static void audioreach_populate_graph(struct q6apm *apm, struct audioreach_graph
 		nconn++;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry(sg, sg_list, node) {
 		struct apm_sub_graph_data *sg_cfg = &sg_data->sg_cfg[i++];
 
@@ -386,6 +472,7 @@ static void audioreach_populate_graph(struct q6apm *apm, struct audioreach_graph
 			apm_populate_container_config(cobj, container);
 			apm_populate_module_list_obj(mlobj, container, sg->sub_graph_id);
 
+<<<<<<< HEAD
 			list_for_each_entry(module, &container->modules_list, node) {
 				int pn;
 
@@ -411,13 +498,36 @@ static void audioreach_populate_graph(struct q6apm *apm, struct audioreach_graph
 			}
 			mlobj = (void *) mlobj + APM_MOD_LIST_OBJ_PSIZE(mlobj,
 									container->num_modules);
+=======
+			list_for_each_container_module(module, container) {
+				uint32_t src_mod_inst_id;
+
+				src_mod_inst_id = module->src_mod_inst_id;
+
+				module_prop_obj = &mp_data->mod_prop_obj[nmodule];
+				apm_populate_module_prop_obj(module_prop_obj, module);
+
+				if (src_mod_inst_id) {
+					conn_obj = &mc_data->conn_obj[nconn];
+					apm_populate_connection_obj(conn_obj, module);
+					nconn++;
+				}
+
+				nmodule++;
+			}
+			mlobj = (void *) mlobj + APM_MOD_LIST_OBJ_PSIZE(mlobj, container->num_modules);
+>>>>>>> b7ba80a49124 (Commit)
 
 			ncontainer++;
 		}
 	}
 }
 
+<<<<<<< HEAD
 void *audioreach_alloc_graph_pkt(struct q6apm *apm, struct audioreach_graph_info *info)
+=======
+void *audioreach_alloc_graph_pkt(struct q6apm *apm, struct list_head *sg_list, int graph_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int payload_size, sg_sz, cont_sz, ml_sz, mp_sz, mc_sz;
 	struct apm_module_param_data  *param_data;
@@ -430,7 +540,11 @@ void *audioreach_alloc_graph_pkt(struct q6apm *apm, struct audioreach_graph_info
 	struct audioreach_module *module;
 	struct audioreach_sub_graph *sgs;
 	struct apm_mod_list_obj *mlobj;
+<<<<<<< HEAD
 	struct list_head *sg_list;
+=======
+	int num_modules_per_list;
+>>>>>>> b7ba80a49124 (Commit)
 	int num_connections = 0;
 	int num_containers = 0;
 	int num_sub_graphs = 0;
@@ -439,6 +553,7 @@ void *audioreach_alloc_graph_pkt(struct q6apm *apm, struct audioreach_graph_info
 	struct gpr_pkt *pkt;
 	void *p;
 
+<<<<<<< HEAD
 	sg_list = &info->sg_list;
 	ml_sz = 0;
 
@@ -446,26 +561,42 @@ void *audioreach_alloc_graph_pkt(struct q6apm *apm, struct audioreach_graph_info
 	if (info->dst_mod_inst_id && info->src_mod_inst_id)
 		num_connections++;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry(sgs, sg_list, node) {
 		num_sub_graphs++;
 		list_for_each_entry(container, &sgs->container_list, node) {
 			num_containers++;
 			num_modules += container->num_modules;
+<<<<<<< HEAD
 			ml_sz = ml_sz + sizeof(struct apm_module_list_params) +
 				APM_MOD_LIST_OBJ_PSIZE(mlobj, container->num_modules);
 
 			list_for_each_entry(module, &container->modules_list, node) {
 				num_connections += module->num_connections;
+=======
+			list_for_each_container_module(module, container) {
+				if (module->src_mod_inst_id)
+					num_connections++;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 	}
 
 	num_modules_list = num_containers;
+<<<<<<< HEAD
 	sg_sz = APM_SUB_GRAPH_PSIZE(sg_params, num_sub_graphs);
 	cont_sz = APM_CONTAINER_PSIZE(cont_params, num_containers);
 
 	ml_sz = ALIGN(ml_sz, 8);
 
+=======
+	num_modules_per_list = num_modules/num_containers;
+	sg_sz = APM_SUB_GRAPH_PSIZE(sg_params, num_sub_graphs);
+	cont_sz = APM_CONTAINER_PSIZE(cont_params, num_containers);
+	ml_sz =	ALIGN(sizeof(struct apm_module_list_params) +
+		num_modules_list * APM_MOD_LIST_OBJ_PSIZE(mlobj,  num_modules_per_list), 8);
+>>>>>>> b7ba80a49124 (Commit)
 	mp_sz = APM_MOD_PROP_PSIZE(mprop, num_modules);
 	mc_sz =	APM_MOD_CONN_PSIZE(mcon, num_connections);
 
@@ -500,7 +631,11 @@ void *audioreach_alloc_graph_pkt(struct q6apm *apm, struct audioreach_graph_info
 	param_data->module_instance_id = APM_MODULE_INSTANCE_ID;
 	param_data->param_id = APM_PARAM_ID_MODULE_LIST;
 	param_data->param_size = ml_sz - APM_MODULE_PARAM_DATA_SIZE;
+<<<<<<< HEAD
 	params.mod_list_data->num_modules_list = num_modules_list;
+=======
+	params.mod_list_data->num_modules_list = num_sub_graphs;
+>>>>>>> b7ba80a49124 (Commit)
 	p += ml_sz;
 
 	/* Module Properties */
@@ -521,7 +656,11 @@ void *audioreach_alloc_graph_pkt(struct q6apm *apm, struct audioreach_graph_info
 	params.mod_conn_list_data->num_connections = num_connections;
 	p += mc_sz;
 
+<<<<<<< HEAD
 	audioreach_populate_graph(apm, info, &params, sg_list, num_sub_graphs);
+=======
+	audioreach_populate_graph(&params, sg_list, num_sub_graphs);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return pkt;
 }
@@ -660,6 +799,7 @@ static int audioreach_codec_dma_set_media_format(struct q6apm_graph *graph,
 	return rc;
 }
 
+<<<<<<< HEAD
 static int audioreach_sal_limiter_enable(struct q6apm_graph *graph,
 					 struct audioreach_module *module, bool enable)
 {
@@ -814,6 +954,8 @@ static int audioreach_mfc_set_media_format(struct q6apm_graph *graph,
 	return rc;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int audioreach_i2s_set_media_format(struct q6apm_graph *graph,
 					   struct audioreach_module *module,
 					   struct audioreach_module_config *cfg)
@@ -1113,9 +1255,13 @@ int audioreach_set_media_format(struct q6apm_graph *graph, struct audioreach_mod
 
 	switch (module->module_id) {
 	case MODULE_ID_DATA_LOGGING:
+<<<<<<< HEAD
 		rc = audioreach_module_enable(graph, module, true);
 		if (!rc)
 			rc = audioreach_logging_set_media_format(graph, module);
+=======
+		rc = audioreach_logging_set_media_format(graph, module);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case MODULE_ID_PCM_DEC:
 	case MODULE_ID_PCM_ENC:
@@ -1136,6 +1282,7 @@ int audioreach_set_media_format(struct q6apm_graph *graph, struct audioreach_mod
 	case MODULE_ID_CODEC_DMA_SOURCE:
 		rc = audioreach_codec_dma_set_media_format(graph, module, cfg);
 		break;
+<<<<<<< HEAD
 	case MODULE_ID_SAL:
 		rc = audioreach_sal_set_media_format(graph, module, cfg);
 		if (!rc)
@@ -1144,6 +1291,8 @@ int audioreach_set_media_format(struct q6apm_graph *graph, struct audioreach_mod
 	case MODULE_ID_MFC:
 		rc = audioreach_mfc_set_media_format(graph, module, cfg);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		rc = 0;
 	}

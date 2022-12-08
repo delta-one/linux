@@ -75,7 +75,11 @@ OPTIONS
 
 -q::
 --quiet::
+<<<<<<< HEAD
 	Do not show any warnings or messages.  (Suppress -v)
+=======
+	Do not show any message.  (Suppress -v)
+>>>>>>> b7ba80a49124 (Commit)
 
 -f::
 --force::

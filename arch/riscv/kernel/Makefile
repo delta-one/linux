@@ -81,7 +81,10 @@ obj-$(CONFIG_KGDB)		+= kgdb.o
 obj-$(CONFIG_KEXEC_CORE)	+= kexec_relocate.o crash_save_regs.o machine_kexec.o
 obj-$(CONFIG_KEXEC_FILE)	+= elf_kexec.o machine_kexec_file.o
 obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
+<<<<<<< HEAD
 obj-$(CONFIG_CRASH_CORE)	+= crash_core.o
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 obj-$(CONFIG_JUMP_LABEL)	+= jump_label.o
 

@@ -119,7 +119,11 @@ examples:
       #address-cells = <1>;
       #size-cells = <0>;
 
+<<<<<<< HEAD
       pmic@34 {
+=======
+        pmic@34 {
+>>>>>>> b7ba80a49124 (Commit)
         compatible = "mediatek,mt6370";
         reg = <0x34>;
         wakeup-source;
@@ -139,8 +143,13 @@ examples:
 
         charger {
           compatible = "mediatek,mt6370-charger";
+<<<<<<< HEAD
           interrupts = <68>, <48>, <6>;
           interrupt-names = "uvp_d_evt", "attach_i", "mivr";
+=======
+          interrupts = <48>, <68>, <6>;
+          interrupt-names = "attach_i", "uvp_d_evt", "mivr";
+>>>>>>> b7ba80a49124 (Commit)
           io-channels = <&mt6370_adc MT6370_CHAN_IBUS>;
 
           mt6370_otg_vbus: usb-otg-vbus-regulator {

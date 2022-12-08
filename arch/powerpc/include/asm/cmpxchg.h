@@ -77,11 +77,15 @@ u32 __cmpxchg_##type##sfx(volatile void *p, u32 old, u32 new)	\
  * the previous value stored there.
  */
 
+<<<<<<< HEAD
 #ifndef CONFIG_PPC_HAS_LBARX_LHARX
+=======
+>>>>>>> b7ba80a49124 (Commit)
 XCHG_GEN(u8, _local, "memory");
 XCHG_GEN(u8, _relaxed, "cc");
 XCHG_GEN(u16, _local, "memory");
 XCHG_GEN(u16, _relaxed, "cc");
+<<<<<<< HEAD
 #else
 static __always_inline unsigned long
 __xchg_u8_local(volatile void *p, unsigned long val)
@@ -147,6 +151,8 @@ __xchg_u16_relaxed(u16 *p, unsigned long val)
 	return prev;
 }
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static __always_inline unsigned long
 __xchg_u32_local(volatile void *p, unsigned long val)
@@ -229,7 +235,11 @@ __xchg_local(void *ptr, unsigned long x, unsigned int size)
 		return __xchg_u64_local(ptr, x);
 #endif
 	}
+<<<<<<< HEAD
 	BUILD_BUG_ON_MSG(1, "Unsupported size for __xchg_local");
+=======
+	BUILD_BUG_ON_MSG(1, "Unsupported size for __xchg");
+>>>>>>> b7ba80a49124 (Commit)
 	return x;
 }
 
@@ -248,7 +258,11 @@ __xchg_relaxed(void *ptr, unsigned long x, unsigned int size)
 		return __xchg_u64_relaxed(ptr, x);
 #endif
 	}
+<<<<<<< HEAD
 	BUILD_BUG_ON_MSG(1, "Unsupported size for __xchg_relaxed");
+=======
+	BUILD_BUG_ON_MSG(1, "Unsupported size for __xchg_local");
+>>>>>>> b7ba80a49124 (Commit)
 	return x;
 }
 #define arch_xchg_local(ptr,x)						     \
@@ -264,12 +278,19 @@ __xchg_relaxed(void *ptr, unsigned long x, unsigned int size)
 	(__typeof__(*(ptr))) __xchg_relaxed((ptr),			\
 			(unsigned long)_x_, sizeof(*(ptr)));		\
 })
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Compare and exchange - if *p == old, set it to new,
  * and return the old value of *p.
  */
+<<<<<<< HEAD
 #ifndef CONFIG_PPC_HAS_LBARX_LHARX
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 CMPXCHG_GEN(u8, , PPC_ATOMIC_ENTRY_BARRIER, PPC_ATOMIC_EXIT_BARRIER, "memory");
 CMPXCHG_GEN(u8, _local, , , "memory");
 CMPXCHG_GEN(u8, _acquire, , PPC_ACQUIRE_BARRIER, "memory");
@@ -278,6 +299,7 @@ CMPXCHG_GEN(u16, , PPC_ATOMIC_ENTRY_BARRIER, PPC_ATOMIC_EXIT_BARRIER, "memory");
 CMPXCHG_GEN(u16, _local, , , "memory");
 CMPXCHG_GEN(u16, _acquire, , PPC_ACQUIRE_BARRIER, "memory");
 CMPXCHG_GEN(u16, _relaxed, , , "cc");
+<<<<<<< HEAD
 #else
 static __always_inline unsigned long
 __cmpxchg_u8(volatile unsigned char *p, unsigned long old, unsigned long new)
@@ -440,6 +462,8 @@ __cmpxchg_u16_acquire(u16 *p, unsigned long old, unsigned long new)
 	return prev;
 }
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static __always_inline unsigned long
 __cmpxchg_u32(volatile unsigned int *p, unsigned long old, unsigned long new)

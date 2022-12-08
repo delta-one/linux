@@ -96,7 +96,11 @@ static int walk_pte_level(pmd_t *pmdp, unsigned long addr, unsigned long end,
 		if (flags & SET_MEMORY_RO)
 			new = pte_wrprotect(new);
 		else if (flags & SET_MEMORY_RW)
+<<<<<<< HEAD
 			new = pte_mkwrite_kernel(pte_mkdirty(new));
+=======
+			new = pte_mkwrite(pte_mkdirty(new));
+>>>>>>> b7ba80a49124 (Commit)
 		if (flags & SET_MEMORY_NX)
 			new = set_pte_bit(new, __pgprot(_PAGE_NOEXEC));
 		else if (flags & SET_MEMORY_X)
@@ -146,7 +150,11 @@ static void modify_pmd_page(pmd_t *pmdp, unsigned long addr,
 	if (flags & SET_MEMORY_RO)
 		new = pmd_wrprotect(new);
 	else if (flags & SET_MEMORY_RW)
+<<<<<<< HEAD
 		new = pmd_mkwrite_kernel(pmd_mkdirty(new));
+=======
+		new = pmd_mkwrite(pmd_mkdirty(new));
+>>>>>>> b7ba80a49124 (Commit)
 	if (flags & SET_MEMORY_NX)
 		new = set_pmd_bit(new, __pgprot(_SEGMENT_ENTRY_NOEXEC));
 	else if (flags & SET_MEMORY_X)
@@ -300,6 +308,11 @@ static int change_page_attr(unsigned long addr, unsigned long end,
 
 	if (addr == end)
 		return 0;
+<<<<<<< HEAD
+=======
+	if (end >= MODULES_END)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&cpa_mutex);
 	pgdp = pgd_offset_k(addr);
 	do {

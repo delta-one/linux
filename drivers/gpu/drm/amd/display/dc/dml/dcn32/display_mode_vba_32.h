@@ -44,17 +44,24 @@
 #define __DML_MIN_DCFCLK_FACTOR__   1.15
 
 // Prefetch schedule max vratio
+<<<<<<< HEAD
 #define __DML_MAX_VRATIO_PRE__ 7.9
 #define __DML_MAX_BW_RATIO_PRE__ 4.0
 
 #define __DML_VBA_MAX_DST_Y_PRE__    63.75
+=======
+#define __DML_MAX_VRATIO_PRE__ 4.0
+>>>>>>> b7ba80a49124 (Commit)
 
 #define BPP_INVALID 0
 #define BPP_BLENDED_PIPE 0xffffffff
 
+<<<<<<< HEAD
 #define MEM_STROBE_FREQ_MHZ 1600
 #define MEM_STROBE_MAX_DELIVERY_TIME_US 60.0
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct display_mode_lib;
 
 void dml32_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib);

@@ -106,7 +106,11 @@ static int panfrost_perfcnt_enable_locked(struct panfrost_device *pfdev,
 		goto err_close_bo;
 	}
 
+<<<<<<< HEAD
 	ret = drm_gem_vmap_unlocked(&bo->base, &map);
+=======
+	ret = drm_gem_shmem_vmap(bo, &map);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto err_put_mapping;
 	perfcnt->buf = map.vaddr;
@@ -165,7 +169,11 @@ static int panfrost_perfcnt_enable_locked(struct panfrost_device *pfdev,
 	return 0;
 
 err_vunmap:
+<<<<<<< HEAD
 	drm_gem_vunmap_unlocked(&bo->base, &map);
+=======
+	drm_gem_shmem_vunmap(bo, &map);
+>>>>>>> b7ba80a49124 (Commit)
 err_put_mapping:
 	panfrost_gem_mapping_put(perfcnt->mapping);
 err_close_bo:
@@ -195,7 +203,11 @@ static int panfrost_perfcnt_disable_locked(struct panfrost_device *pfdev,
 		  GPU_PERFCNT_CFG_MODE(GPU_PERFCNT_CFG_MODE_OFF));
 
 	perfcnt->user = NULL;
+<<<<<<< HEAD
 	drm_gem_vunmap_unlocked(&perfcnt->mapping->obj->base.base, &map);
+=======
+	drm_gem_shmem_vunmap(&perfcnt->mapping->obj->base, &map);
+>>>>>>> b7ba80a49124 (Commit)
 	perfcnt->buf = NULL;
 	panfrost_gem_close(&perfcnt->mapping->obj->base.base, file_priv);
 	panfrost_mmu_as_put(pfdev, perfcnt->mapping->mmu);

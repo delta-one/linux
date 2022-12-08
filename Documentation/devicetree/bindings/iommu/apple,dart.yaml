@@ -24,7 +24,10 @@ properties:
   compatible:
     enum:
       - apple,t8103-dart
+<<<<<<< HEAD
       - apple,t8110-dart
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - apple,t6000-dart
 
   reg:

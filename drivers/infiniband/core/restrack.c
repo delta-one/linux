@@ -343,6 +343,11 @@ void rdma_restrack_del(struct rdma_restrack_entry *res)
 	rt = &dev->res[res->type];
 
 	old = xa_erase(&rt->xa, res->id);
+<<<<<<< HEAD
+=======
+	if (res->type == RDMA_RESTRACK_MR)
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 	WARN_ON(old != res);
 
 out:

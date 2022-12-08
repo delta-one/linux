@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2003 Sistina Software.
  * Copyright (C) 2004-2005 Red Hat, Inc. All rights reserved.
@@ -21,6 +24,7 @@
 #define RR_MIN_IO     1
 #define RR_VERSION    "1.2.0"
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
  * Path-handling code, paths are held in lists
@@ -30,6 +34,15 @@ struct path_info {
 	struct list_head list;
 	struct dm_path *path;
 	unsigned int repeat_count;
+=======
+/*-----------------------------------------------------------------
+ * Path-handling code, paths are held in lists
+ *---------------------------------------------------------------*/
+struct path_info {
+	struct list_head list;
+	struct dm_path *path;
+	unsigned repeat_count;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void free_paths(struct list_head *paths)
@@ -42,11 +55,18 @@ static void free_paths(struct list_head *paths)
 	}
 }
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
  * Round-robin selector
  *---------------------------------------------------------------
  */
+=======
+/*-----------------------------------------------------------------
+ * Round-robin selector
+ *---------------------------------------------------------------*/
+
+>>>>>>> b7ba80a49124 (Commit)
 struct selector {
 	struct list_head valid_paths;
 	struct list_head invalid_paths;
@@ -66,7 +86,11 @@ static struct selector *alloc_selector(void)
 	return s;
 }
 
+<<<<<<< HEAD
 static int rr_create(struct path_selector *ps, unsigned int argc, char **argv)
+=======
+static int rr_create(struct path_selector *ps, unsigned argc, char **argv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct selector *s;
 
@@ -97,7 +121,11 @@ static int rr_status(struct path_selector *ps, struct dm_path *path,
 	if (!path)
 		DMEMIT("0 ");
 	else {
+<<<<<<< HEAD
 		switch (type) {
+=======
+		switch(type) {
+>>>>>>> b7ba80a49124 (Commit)
 		case STATUSTYPE_INFO:
 			break;
 		case STATUSTYPE_TABLE:
@@ -123,7 +151,11 @@ static int rr_add_path(struct path_selector *ps, struct dm_path *path,
 {
 	struct selector *s = ps->context;
 	struct path_info *pi;
+<<<<<<< HEAD
 	unsigned int repeat_count = RR_MIN_IO;
+=======
+	unsigned repeat_count = RR_MIN_IO;
+>>>>>>> b7ba80a49124 (Commit)
 	char dummy;
 	unsigned long flags;
 

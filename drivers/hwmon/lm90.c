@@ -103,7 +103,10 @@
 #include <linux/interrupt.h>
 #include <linux/jiffies.h>
 #include <linux/hwmon.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/mutex.h>
 #include <linux/of_device.h>
@@ -2664,6 +2667,14 @@ static void lm90_remove_pec(void *dev)
 	device_remove_file(dev, &dev_attr_pec);
 }
 
+<<<<<<< HEAD
+=======
+static void lm90_regulator_disable(void *regulator)
+{
+	regulator_disable(regulator);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int lm90_probe_channel_from_dt(struct i2c_client *client,
 				      struct device_node *child,
 				      struct lm90_data *data)
@@ -2745,13 +2756,33 @@ static int lm90_probe(struct i2c_client *client)
 	struct device *dev = &client->dev;
 	struct i2c_adapter *adapter = client->adapter;
 	struct hwmon_channel_info *info;
+<<<<<<< HEAD
+=======
+	struct regulator *regulator;
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *hwmon_dev;
 	struct lm90_data *data;
 	int err;
 
+<<<<<<< HEAD
 	err = devm_regulator_get_enable(dev, "vcc");
 	if (err)
 		return dev_err_probe(dev, err, "Failed to enable regulator\n");
+=======
+	regulator = devm_regulator_get(dev, "vcc");
+	if (IS_ERR(regulator))
+		return PTR_ERR(regulator);
+
+	err = regulator_enable(regulator);
+	if (err < 0) {
+		dev_err(dev, "Failed to enable regulator: %d\n", err);
+		return err;
+	}
+
+	err = devm_add_action_or_reset(dev, lm90_regulator_disable, regulator);
+	if (err)
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	data = devm_kzalloc(dev, sizeof(struct lm90_data), GFP_KERNEL);
 	if (!data)
@@ -2941,7 +2972,11 @@ static void lm90_alert(struct i2c_client *client, enum i2c_alert_protocol type,
 	}
 }
 
+<<<<<<< HEAD
 static int lm90_suspend(struct device *dev)
+=======
+static int __maybe_unused lm90_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lm90_data *data = dev_get_drvdata(dev);
 	struct i2c_client *client = data->client;
@@ -2952,7 +2987,11 @@ static int lm90_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int lm90_resume(struct device *dev)
+=======
+static int __maybe_unused lm90_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lm90_data *data = dev_get_drvdata(dev);
 	struct i2c_client *client = data->client;
@@ -2963,14 +3002,22 @@ static int lm90_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(lm90_pm_ops, lm90_suspend, lm90_resume);
+=======
+static SIMPLE_DEV_PM_OPS(lm90_pm_ops, lm90_suspend, lm90_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct i2c_driver lm90_driver = {
 	.class		= I2C_CLASS_HWMON,
 	.driver = {
 		.name	= "lm90",
 		.of_match_table = of_match_ptr(lm90_of_match),
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&lm90_pm_ops),
+=======
+		.pm	= &lm90_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe_new	= lm90_probe,
 	.alert		= lm90_alert,

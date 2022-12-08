@@ -264,7 +264,10 @@ int iioutils_get_param_float(float *output, const char *param_name,
 			if (fscanf(sysfsfp, "%f", output) != 1)
 				ret = errno ? -errno : -ENODATA;
 
+<<<<<<< HEAD
 			fclose(sysfsfp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 error_free_filename:
@@ -346,9 +349,15 @@ int build_channel_array(const char *device_dir, int buffer_idx,
 			}
 
 			sysfsfp = fopen(filename, "r");
+<<<<<<< HEAD
 			free(filename);
 			if (!sysfsfp) {
 				ret = -errno;
+=======
+			if (!sysfsfp) {
+				ret = -errno;
+				free(filename);
+>>>>>>> b7ba80a49124 (Commit)
 				goto error_close_dir;
 			}
 
@@ -358,6 +367,10 @@ int build_channel_array(const char *device_dir, int buffer_idx,
 				if (fclose(sysfsfp))
 					perror("build_channel_array(): Failed to close file");
 
+<<<<<<< HEAD
+=======
+				free(filename);
+>>>>>>> b7ba80a49124 (Commit)
 				goto error_close_dir;
 			}
 			if (ret == 1)
@@ -365,9 +378,17 @@ int build_channel_array(const char *device_dir, int buffer_idx,
 
 			if (fclose(sysfsfp)) {
 				ret = -errno;
+<<<<<<< HEAD
 				goto error_close_dir;
 			}
 
+=======
+				free(filename);
+				goto error_close_dir;
+			}
+
+			free(filename);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 	*ci_array = malloc(sizeof(**ci_array) * (*counter));
@@ -393,9 +414,15 @@ int build_channel_array(const char *device_dir, int buffer_idx,
 			}
 
 			sysfsfp = fopen(filename, "r");
+<<<<<<< HEAD
 			free(filename);
 			if (!sysfsfp) {
 				ret = -errno;
+=======
+			if (!sysfsfp) {
+				ret = -errno;
+				free(filename);
+>>>>>>> b7ba80a49124 (Commit)
 				count--;
 				goto error_cleanup_array;
 			}
@@ -403,17 +430,29 @@ int build_channel_array(const char *device_dir, int buffer_idx,
 			errno = 0;
 			if (fscanf(sysfsfp, "%i", &current_enabled) != 1) {
 				ret = errno ? -errno : -ENODATA;
+<<<<<<< HEAD
+=======
+				free(filename);
+>>>>>>> b7ba80a49124 (Commit)
 				count--;
 				goto error_cleanup_array;
 			}
 
 			if (fclose(sysfsfp)) {
 				ret = -errno;
+<<<<<<< HEAD
+=======
+				free(filename);
+>>>>>>> b7ba80a49124 (Commit)
 				count--;
 				goto error_cleanup_array;
 			}
 
 			if (!current_enabled) {
+<<<<<<< HEAD
+=======
+				free(filename);
+>>>>>>> b7ba80a49124 (Commit)
 				count--;
 				continue;
 			}
@@ -424,6 +463,10 @@ int build_channel_array(const char *device_dir, int buffer_idx,
 						strlen(ent->d_name) -
 						strlen("_en"));
 			if (!current->name) {
+<<<<<<< HEAD
+=======
+				free(filename);
+>>>>>>> b7ba80a49124 (Commit)
 				ret = -ENOMEM;
 				count--;
 				goto error_cleanup_array;
@@ -433,6 +476,10 @@ int build_channel_array(const char *device_dir, int buffer_idx,
 			ret = iioutils_break_up_name(current->name,
 						     &current->generic_name);
 			if (ret) {
+<<<<<<< HEAD
+=======
+				free(filename);
+>>>>>>> b7ba80a49124 (Commit)
 				free(current->name);
 				count--;
 				goto error_cleanup_array;
@@ -443,16 +490,28 @@ int build_channel_array(const char *device_dir, int buffer_idx,
 				       scan_el_dir,
 				       current->name);
 			if (ret < 0) {
+<<<<<<< HEAD
+=======
+				free(filename);
+>>>>>>> b7ba80a49124 (Commit)
 				ret = -ENOMEM;
 				goto error_cleanup_array;
 			}
 
 			sysfsfp = fopen(filename, "r");
+<<<<<<< HEAD
 			free(filename);
 			if (!sysfsfp) {
 				ret = -errno;
 				fprintf(stderr, "failed to open %s/%s_index\n",
 					scan_el_dir, current->name);
+=======
+			if (!sysfsfp) {
+				ret = -errno;
+				fprintf(stderr, "failed to open %s\n",
+					filename);
+				free(filename);
+>>>>>>> b7ba80a49124 (Commit)
 				goto error_cleanup_array;
 			}
 
@@ -462,14 +521,26 @@ int build_channel_array(const char *device_dir, int buffer_idx,
 				if (fclose(sysfsfp))
 					perror("build_channel_array(): Failed to close file");
 
+<<<<<<< HEAD
+=======
+				free(filename);
+>>>>>>> b7ba80a49124 (Commit)
 				goto error_cleanup_array;
 			}
 
 			if (fclose(sysfsfp)) {
 				ret = -errno;
+<<<<<<< HEAD
 				goto error_cleanup_array;
 			}
 
+=======
+				free(filename);
+				goto error_cleanup_array;
+			}
+
+			free(filename);
+>>>>>>> b7ba80a49124 (Commit)
 			/* Find the scale */
 			ret = iioutils_get_param_float(&current->scale,
 						       "scale",
@@ -536,10 +607,13 @@ static int calc_digits(int num)
 {
 	int count = 0;
 
+<<<<<<< HEAD
 	/* It takes a digit to represent zero */
 	if (!num)
 		return 1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	while (num != 0) {
 		num /= 10;
 		count++;

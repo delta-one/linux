@@ -73,7 +73,11 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-power {
+=======
+		power {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "ec100:red:power";
 			/*
 			 * Needs to go LOW (together with the poweroff GPIO)

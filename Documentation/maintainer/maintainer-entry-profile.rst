@@ -104,4 +104,7 @@ to do something different in the near future.
    ../riscv/patch-acceptance
    ../driver-api/media/maintainer-entry-profile
    ../driver-api/vfio-pci-device-specific-driver-acceptance
+<<<<<<< HEAD
    ../nvme/feature-and-quirk-policy
+=======
+>>>>>>> b7ba80a49124 (Commit)

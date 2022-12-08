@@ -178,8 +178,12 @@ static void nft_lookup_destroy(const struct nft_ctx *ctx,
 	nf_tables_destroy_set(ctx, priv->set);
 }
 
+<<<<<<< HEAD
 static int nft_lookup_dump(struct sk_buff *skb,
 			   const struct nft_expr *expr, bool reset)
+=======
+static int nft_lookup_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_lookup *priv = nft_expr_priv(expr);
 	u32 flags = priv->invert ? NFT_LOOKUP_F_INV : 0;

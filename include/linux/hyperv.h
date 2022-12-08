@@ -969,7 +969,11 @@ struct vmbus_channel {
 	 * mechanism improves throughput by:
 	 *
 	 * A) Making the host more efficient - each time it wakes up,
+<<<<<<< HEAD
 	 *    potentially it will process more number of packets. The
+=======
+	 *    potentially it will process morev number of packets. The
+>>>>>>> b7ba80a49124 (Commit)
 	 *    monitor latency allows a batch to build up.
 	 * B) By deferring the hypercall to signal, we will also minimize
 	 *    the interrupts.
@@ -1273,7 +1277,11 @@ struct hv_driver {
 	} dynids;
 
 	int (*probe)(struct hv_device *, const struct hv_vmbus_device_id *);
+<<<<<<< HEAD
 	void (*remove)(struct hv_device *dev);
+=======
+	int (*remove)(struct hv_device *);
+>>>>>>> b7ba80a49124 (Commit)
 	void (*shutdown)(struct hv_device *);
 
 	int (*suspend)(struct hv_device *);
@@ -1309,7 +1317,14 @@ struct hv_device {
 };
 
 
+<<<<<<< HEAD
 #define device_to_hv_device(d)	container_of_const(d, struct hv_device, device)
+=======
+static inline struct hv_device *device_to_hv_device(struct device *d)
+{
+	return container_of(d, struct hv_device, device);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline struct hv_driver *drv_to_hv_drv(struct device_driver *d)
 {
@@ -1338,8 +1353,11 @@ struct hv_ring_buffer_debug_info {
 int hv_ringbuffer_get_debuginfo(struct hv_ring_buffer_info *ring_info,
 				struct hv_ring_buffer_debug_info *debug_info);
 
+<<<<<<< HEAD
 bool hv_ringbuffer_spinlock_busy(struct vmbus_channel *channel);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Vmbus interface */
 #define vmbus_driver_register(driver)	\
 	__vmbus_driver_register(driver, THIS_MODULE, KBUILD_MODNAME)

@@ -30,10 +30,16 @@
 #define AT_L1D_CACHEGEOMETRY	43
 #define AT_L2_CACHESIZE		44
 #define AT_L2_CACHEGEOMETRY	45
+<<<<<<< HEAD
 #define AT_L3_CACHESIZE		46
 #define AT_L3_CACHEGEOMETRY	47
 
 /* entries in ARCH_DLINFO */
 #define AT_VECTOR_SIZE_ARCH	9
+=======
+
+/* entries in ARCH_DLINFO */
+#define AT_VECTOR_SIZE_ARCH	7
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _UAPI_ASM_RISCV_AUXVEC_H */

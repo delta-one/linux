@@ -170,6 +170,10 @@ static int sy8827n_i2c_probe(struct i2c_client *client)
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_OF
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id sy8827n_dt_ids[] = {
 	{
 		.compatible = "silergy,sy8827n",
@@ -177,6 +181,10 @@ static const struct of_device_id sy8827n_dt_ids[] = {
 	{ }
 };
 MODULE_DEVICE_TABLE(of, sy8827n_dt_ids);
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id sy8827n_id[] = {
 	{ "sy8827n", },
@@ -187,8 +195,12 @@ MODULE_DEVICE_TABLE(i2c, sy8827n_id);
 static struct i2c_driver sy8827n_regulator_driver = {
 	.driver = {
 		.name = "sy8827n-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 		.of_match_table = sy8827n_dt_ids,
+=======
+		.of_match_table = of_match_ptr(sy8827n_dt_ids),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe_new = sy8827n_i2c_probe,
 	.id_table = sy8827n_id,

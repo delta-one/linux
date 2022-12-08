@@ -136,3 +136,7 @@ subsys_initcall_sync(_imx_scu_gpio_init);
 
 MODULE_AUTHOR("Shenwei Wang <shenwei.wang@nxp.com>");
 MODULE_DESCRIPTION("NXP GPIO over IMX SCU API");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

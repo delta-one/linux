@@ -1,14 +1,18 @@
 #!/bin/sh
 # SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
 cflags=$1
 libs=$2
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 PKG="ncursesw"
 PKG2="ncurses"
 
 if [ -n "$(command -v ${HOSTPKG_CONFIG})" ]; then
 	if ${HOSTPKG_CONFIG} --exists $PKG; then
+<<<<<<< HEAD
 		${HOSTPKG_CONFIG} --cflags ${PKG} > ${cflags}
 		${HOSTPKG_CONFIG} --libs ${PKG} > ${libs}
 		exit 0
@@ -17,6 +21,16 @@ if [ -n "$(command -v ${HOSTPKG_CONFIG})" ]; then
 	if ${HOSTPKG_CONFIG} --exists ${PKG2}; then
 		${HOSTPKG_CONFIG} --cflags ${PKG2} > ${cflags}
 		${HOSTPKG_CONFIG} --libs ${PKG2} > ${libs}
+=======
+		echo cflags=\"$(${HOSTPKG_CONFIG} --cflags $PKG)\"
+		echo libs=\"$(${HOSTPKG_CONFIG} --libs $PKG)\"
+		exit 0
+	fi
+
+	if ${HOSTPKG_CONFIG} --exists $PKG2; then
+		echo cflags=\"$(${HOSTPKG_CONFIG} --cflags $PKG2)\"
+		echo libs=\"$(${HOSTPKG_CONFIG} --libs $PKG2)\"
+>>>>>>> b7ba80a49124 (Commit)
 		exit 0
 	fi
 fi
@@ -25,22 +39,37 @@ fi
 # (Even if it is installed, some distributions such as openSUSE cannot
 # find ncurses by pkg-config.)
 if [ -f /usr/include/ncursesw/ncurses.h ]; then
+<<<<<<< HEAD
 	echo -D_GNU_SOURCE -I/usr/include/ncursesw > ${cflags}
 	echo -lncursesw > ${libs}
+=======
+	echo cflags=\"-D_GNU_SOURCE -I/usr/include/ncursesw\"
+	echo libs=\"-lncursesw\"
+>>>>>>> b7ba80a49124 (Commit)
 	exit 0
 fi
 
 if [ -f /usr/include/ncurses/ncurses.h ]; then
+<<<<<<< HEAD
 	echo -D_GNU_SOURCE -I/usr/include/ncurses > ${cflags}
 	echo -lncurses > ${libs}
+=======
+	echo cflags=\"-D_GNU_SOURCE -I/usr/include/ncurses\"
+	echo libs=\"-lncurses\"
+>>>>>>> b7ba80a49124 (Commit)
 	exit 0
 fi
 
 # As a final fallback before giving up, check if $HOSTCC knows of a default
 # ncurses installation (e.g. from a vendor-specific sysroot).
 if echo '#include <ncurses.h>' | ${HOSTCC} -E - >/dev/null 2>&1; then
+<<<<<<< HEAD
 	echo -D_GNU_SOURCE > ${cflags}
 	echo -lncurses > ${libs}
+=======
+	echo cflags=\"-D_GNU_SOURCE\"
+	echo libs=\"-lncurses\"
+>>>>>>> b7ba80a49124 (Commit)
 	exit 0
 fi
 

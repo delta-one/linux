@@ -187,7 +187,11 @@
 
 /* Wifi model has Atheros chipset on pcie port */
 &pciec {
+<<<<<<< HEAD
 	status = "okay";
+=======
+        status = "okay";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &pcie0 {

@@ -3,12 +3,18 @@
 #define _MEMREGION_H_
 #include <linux/types.h>
 #include <linux/errno.h>
+<<<<<<< HEAD
 #include <linux/range.h>
 #include <linux/bug.h>
 
 struct memregion_info {
 	int target_node;
 	struct range range;
+=======
+
+struct memregion_info {
+	int target_node;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #ifdef CONFIG_MEMREGION
@@ -23,6 +29,7 @@ static inline void memregion_free(int id)
 {
 }
 #endif
+<<<<<<< HEAD
 
 /**
  * cpu_cache_invalidate_memregion - drop any CPU cached data for
@@ -60,4 +67,6 @@ static inline int cpu_cache_invalidate_memregion(int res_desc)
 	return -ENXIO;
 }
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _MEMREGION_H_ */

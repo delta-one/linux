@@ -16,7 +16,11 @@ static int __init gate_vma_init(void)
 	vma_init(&gate_vma, NULL);
 	gate_vma.vm_start = FIXADDR_USER_START;
 	gate_vma.vm_end = FIXADDR_USER_END;
+<<<<<<< HEAD
 	vm_flags_init(&gate_vma, VM_READ | VM_MAYREAD | VM_EXEC | VM_MAYEXEC);
+=======
+	gate_vma.vm_flags = VM_READ | VM_MAYREAD | VM_EXEC | VM_MAYEXEC;
+>>>>>>> b7ba80a49124 (Commit)
 	gate_vma.vm_page_prot = PAGE_READONLY;
 
 	return 0;

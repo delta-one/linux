@@ -57,11 +57,14 @@ properties:
       - description: interrupt ID for I2C event
       - description: interrupt ID for I2C error
 
+<<<<<<< HEAD
   interrupt-names:
     items:
       - const: event
       - const: error
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   resets:
     maxItems: 1
 
@@ -97,8 +100,11 @@ properties:
           - description: register offset within syscfg
           - description: register bitmask for FMP bit
 
+<<<<<<< HEAD
   wakeup-source: true
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg

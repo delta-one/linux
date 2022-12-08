@@ -202,24 +202,39 @@ static int sja1000_isa_probe(struct platform_device *pdev)
 	if (err) {
 		dev_err(&pdev->dev, "registering %s failed (err=%d)\n",
 			DRV_NAME, err);
+<<<<<<< HEAD
 		goto exit_free;
+=======
+		goto exit_unmap;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	dev_info(&pdev->dev, "%s device registered (reg_base=0x%p, irq=%d)\n",
 		 DRV_NAME, priv->reg_base, dev->irq);
 	return 0;
 
+<<<<<<< HEAD
 exit_free:
 	free_sja1000dev(dev);
 exit_unmap:
 	if (mem[idx])
 		iounmap(base);
 exit_release:
+=======
+ exit_unmap:
+	if (mem[idx])
+		iounmap(base);
+ exit_release:
+>>>>>>> b7ba80a49124 (Commit)
 	if (mem[idx])
 		release_mem_region(mem[idx], iosize);
 	else
 		release_region(port[idx], iosize);
+<<<<<<< HEAD
 exit:
+=======
+ exit:
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 

@@ -39,6 +39,7 @@ struct rproc_vdev_data {
 	struct fw_rsc_vdev *rsc;
 };
 
+<<<<<<< HEAD
 static inline bool rproc_has_feature(struct rproc *rproc, unsigned int feature)
 {
 	return test_bit(feature, rproc->features);
@@ -54,6 +55,8 @@ static inline int rproc_set_feature(struct rproc *rproc, unsigned int feature)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* from remoteproc_core.c */
 void rproc_release(struct kref *kref);
 int rproc_of_parse_firmware(struct device *dev, int index,

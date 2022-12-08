@@ -57,6 +57,9 @@ config LAN743X
 
 source "drivers/net/ethernet/microchip/lan966x/Kconfig"
 source "drivers/net/ethernet/microchip/sparx5/Kconfig"
+<<<<<<< HEAD
 source "drivers/net/ethernet/microchip/vcap/Kconfig"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 endif # NET_VENDOR_MICROCHIP

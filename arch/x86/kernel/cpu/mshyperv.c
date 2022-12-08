@@ -37,6 +37,7 @@
 
 /* Is Linux running as the root partition? */
 bool hv_root_partition;
+<<<<<<< HEAD
 /* Is Linux running on nested Microsoft Hypervisor */
 bool hv_nested;
 struct ms_hyperv_info ms_hyperv;
@@ -107,6 +108,11 @@ void hv_set_register(unsigned int reg, u64 value)
 }
 EXPORT_SYMBOL_GPL(hv_set_register);
 
+=======
+struct ms_hyperv_info ms_hyperv;
+
+#if IS_ENABLED(CONFIG_HYPERV)
+>>>>>>> b7ba80a49124 (Commit)
 static void (*vmbus_handler)(void);
 static void (*hv_stimer0_handler)(void);
 static void (*hv_kexec_handler)(void);
@@ -358,6 +364,7 @@ static void __init ms_hyperv_init_platform(void)
 	 * To mirror what Windows does we should extract CPU management
 	 * features and use the ReservedIdentityBit to detect if Linux is the
 	 * root partition. But that requires negotiating CPU management
+<<<<<<< HEAD
 	 * interface (a process to be finalized). For now, use the privilege
 	 * flag as the indicator for running as root.
 	 *
@@ -368,15 +375,26 @@ static void __init ms_hyperv_init_platform(void)
 	 */
 	if ((ms_hyperv.priv_high & HV_CPU_MANAGEMENT) &&
 	    !(ms_hyperv.priv_high & HV_ISOLATION)) {
+=======
+	 * interface (a process to be finalized).
+	 *
+	 * For now, use the privilege flag as the indicator for running as
+	 * root.
+	 */
+	if (cpuid_ebx(HYPERV_CPUID_FEATURES) & HV_CPU_MANAGEMENT) {
+>>>>>>> b7ba80a49124 (Commit)
 		hv_root_partition = true;
 		pr_info("Hyper-V: running as root partition\n");
 	}
 
+<<<<<<< HEAD
 	if (ms_hyperv.hints & HV_X64_HYPERV_NESTED) {
 		hv_nested = true;
 		pr_info("Hyper-V: running on a nested hypervisor\n");
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Extract host information.
 	 */
@@ -464,7 +482,11 @@ static void __init ms_hyperv_init_platform(void)
 		 * setting of this MSR bit should happen before init_intel()
 		 * is called.
 		 */
+<<<<<<< HEAD
 		wrmsrl(HV_X64_MSR_TSC_INVARIANT_CONTROL, HV_EXPOSE_INVARIANT_TSC);
+=======
+		wrmsrl(HV_X64_MSR_TSC_INVARIANT_CONTROL, 0x1);
+>>>>>>> b7ba80a49124 (Commit)
 		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
 	}
 
@@ -551,12 +573,15 @@ static bool __init ms_hyperv_x2apic_available(void)
  * (logically) generates MSIs directly to the system APIC irq domain.
  * There is no HPET, and PCI MSI/MSI-X interrupts are remapped by the
  * pci-hyperv host bridge.
+<<<<<<< HEAD
  *
  * Note: for a Hyper-V root partition, this will always return false.
  * The hypervisor doesn't expose these HYPERV_CPUID_VIRT_STACK_* cpuids by
  * default, they are implemented as intercepts by the Windows Hyper-V stack.
  * Even a nested root partition (L2 root) will not get them because the
  * nested (L1) hypervisor filters them out.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 static bool __init ms_hyperv_msi_ext_dest_id(void)
 {

@@ -150,7 +150,11 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&sleep_cfg>;
 
+<<<<<<< HEAD
 	fm_i2c_pins: fm-i2c-pins {
+=======
+	fm_i2c_pins: fm-i2c-pins-pins {
+>>>>>>> b7ba80a49124 (Commit)
 		samsung,pins = "gpd1-2", "gpd1-3";
 		samsung,pin-pud = <S5PV210_PIN_PULL_NONE>;
 		samsung,pin-drv = <S5PV210_PIN_DRV_LV1>;

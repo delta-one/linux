@@ -28,7 +28,10 @@ properties:
       - mediatek,mt8173-power-controller
       - mediatek,mt8183-power-controller
       - mediatek,mt8186-power-controller
+<<<<<<< HEAD
       - mediatek,mt8188-power-controller
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - mediatek,mt8192-power-controller
       - mediatek,mt8195-power-controller
 
@@ -85,7 +88,10 @@ $defs:
               "include/dt-bindings/power/mt8167-power.h" - for MT8167 type power domain.
               "include/dt-bindings/power/mt8173-power.h" - for MT8173 type power domain.
               "include/dt-bindings/power/mt8183-power.h" - for MT8183 type power domain.
+<<<<<<< HEAD
               "include/dt-bindings/power/mediatek,mt8188-power.h" - for MT8188 type power domain.
+=======
+>>>>>>> b7ba80a49124 (Commit)
               "include/dt-bindings/power/mt8192-power.h" - for MT8192 type power domain.
               "include/dt-bindings/power/mt8195-power.h" - for MT8195 type power domain.
         maxItems: 1

@@ -130,7 +130,11 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-d2 {
+=======
+		d2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "d2";
 			gpios = <&pioE 25 GPIO_ACTIVE_LOW>;	/* PE25, conflicts with A25, RXD2 */
 			linux,default-trigger = "heartbeat";

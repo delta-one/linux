@@ -356,8 +356,11 @@ static int mtu3_probe(struct platform_device *pdev)
 	pm_runtime_enable(dev);
 	pm_runtime_get_sync(dev);
 
+<<<<<<< HEAD
 	device_init_wakeup(dev, true);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ssusb_rscs_init(ssusb);
 	if (ret)
 		goto comm_init_err;

@@ -7,7 +7,11 @@ subdir-ccflags-y := -Werror
 endif
 
 # platform specific definitions
+<<<<<<< HEAD
 include $(srctree)/arch/mips/Kbuild.platforms
+=======
+include arch/mips/Kbuild.platforms
+>>>>>>> b7ba80a49124 (Commit)
 obj-y := $(platform-y)
 
 # make clean traverses $(obj-) without having included .config, so

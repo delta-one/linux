@@ -78,7 +78,11 @@ static void drain_openssl_errors(void)
 static const char *key_pass;
 static BIO *wb;
 static char *cert_dst;
+<<<<<<< HEAD
 static bool verbose;
+=======
+static int kbuild_verbose;
+>>>>>>> b7ba80a49124 (Commit)
 
 static void write_cert(X509 *x509)
 {
@@ -90,22 +94,33 @@ static void write_cert(X509 *x509)
 	}
 	X509_NAME_oneline(X509_get_subject_name(x509), buf, sizeof(buf));
 	ERR(!i2d_X509_bio(wb, x509), "%s", cert_dst);
+<<<<<<< HEAD
 	if (verbose)
+=======
+	if (kbuild_verbose)
+>>>>>>> b7ba80a49124 (Commit)
 		fprintf(stderr, "Extracted cert: %s\n", buf);
 }
 
 int main(int argc, char **argv)
 {
 	char *cert_src;
+<<<<<<< HEAD
 	char *verbose_env;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	OpenSSL_add_all_algorithms();
 	ERR_load_crypto_strings();
 	ERR_clear_error();
 
+<<<<<<< HEAD
 	verbose_env = getenv("KBUILD_VERBOSE");
 	if (verbose_env && strchr(verbose_env, '1'))
 		verbose = true;
+=======
+	kbuild_verbose = atoi(getenv("KBUILD_VERBOSE")?:"0");
+>>>>>>> b7ba80a49124 (Commit)
 
         key_pass = getenv("KBUILD_SIGN_PIN");
 

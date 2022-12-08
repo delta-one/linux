@@ -16,12 +16,16 @@ skip_test() {
 [[ $(id -u) -eq 0 ]] || skip_test "Test must be run as root!"
 
 # Set sched verbose flag, if available
+<<<<<<< HEAD
 if [[ -d /sys/kernel/debug/sched ]]
 then
 	# Used to restore the original setting during cleanup
 	SCHED_DEBUG=$(cat /sys/kernel/debug/sched/verbose)
 	echo Y > /sys/kernel/debug/sched/verbose
 fi
+=======
+[[ -d /sys/kernel/debug/sched ]] && echo Y > /sys/kernel/debug/sched/verbose
+>>>>>>> b7ba80a49124 (Commit)
 
 # Get wait_inotify location
 WAIT_INOTIFY=$(cd $(dirname $0); pwd)/wait_inotify
@@ -30,7 +34,11 @@ WAIT_INOTIFY=$(cd $(dirname $0); pwd)/wait_inotify
 CGROUP2=$(mount -t cgroup2 | head -1 | awk -e '{print $3}')
 [[ -n "$CGROUP2" ]] || skip_test "Cgroup v2 mount point not found!"
 
+<<<<<<< HEAD
 CPUS=$(lscpu | grep "^CPU(s):" | sed -e "s/.*:[[:space:]]*//")
+=======
+CPUS=$(lscpu | grep "^CPU(s)" | sed -e "s/.*:[[:space:]]*//")
+>>>>>>> b7ba80a49124 (Commit)
 [[ $CPUS -lt 8 ]] && skip_test "Test needs at least 8 cpus available!"
 
 # Set verbose flag and delay factor
@@ -59,6 +67,7 @@ echo +cpuset > cgroup.subtree_control
 [[ -d test ]] || mkdir test
 cd test
 
+<<<<<<< HEAD
 cleanup()
 {
 	online_cpus
@@ -68,6 +77,8 @@ cleanup()
 	echo "$SCHED_DEBUG" > /sys/kernel/debug/sched/verbose
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # Pause in ms
 pause()
 {
@@ -268,7 +279,10 @@ TEST_MATRIX=(
 	# Taking away all CPUs from parent or itself if there are tasks
 	# will make the partition invalid.
 	"  S+ C2-3:P1:S+  C3:P1  .      .      T     C2-3    .      .     0 A1:2-3,A2:2-3 A1:P1,A2:P-1"
+<<<<<<< HEAD
 	"  S+  C3:P1:S+    C3    .      .      T      P1     .      .     0 A1:3,A2:3 A1:P1,A2:P-1"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	"  S+ $SETUP_A123_PARTITIONS    .    T:C2-3   .      .      .     0 A1:2-3,A2:2-3,A3:3 A1:P1,A2:P-1,A3:P-1"
 	"  S+ $SETUP_A123_PARTITIONS    . T:C2-3:C1-3 .      .      .     0 A1:1,A2:2,A3:3 A1:P1,A2:P1,A3:P1"
 
@@ -681,7 +695,10 @@ test_inotify()
 	fi
 }
 
+<<<<<<< HEAD
 trap cleanup 0 2 3 6
+=======
+>>>>>>> b7ba80a49124 (Commit)
 run_state_test TEST_MATRIX
 test_isolated
 test_inotify

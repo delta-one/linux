@@ -15,8 +15,11 @@
 #define _LINUX_CONSOLE_H_ 1
 
 #include <linux/atomic.h>
+<<<<<<< HEAD
 #include <linux/bits.h>
 #include <linux/rculist.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/types.h>
 
 struct vc_data;
@@ -60,9 +63,14 @@ struct consw {
 	int	(*con_switch)(struct vc_data *vc);
 	int	(*con_blank)(struct vc_data *vc, int blank, int mode_switch);
 	int	(*con_font_set)(struct vc_data *vc, struct console_font *font,
+<<<<<<< HEAD
 			unsigned int vpitch, unsigned int flags);
 	int	(*con_font_get)(struct vc_data *vc, struct console_font *font,
 			unsigned int vpitch);
+=======
+			unsigned int flags);
+	int	(*con_font_get)(struct vc_data *vc, struct console_font *font);
+>>>>>>> b7ba80a49124 (Commit)
 	int	(*con_font_default)(struct vc_data *vc,
 			struct console_font *font, char *name);
 	int     (*con_resize)(struct vc_data *vc, unsigned int width,
@@ -127,6 +135,7 @@ static inline int con_debug_leave(void)
 /*
  * The interface for a console, or any other device that wants to capture
  * console messages (printer driver?)
+<<<<<<< HEAD
  */
 
 /**
@@ -328,6 +337,46 @@ static inline bool console_is_registered(const struct console *con)
 #define for_each_console(con)						\
 	lockdep_assert_console_list_lock_held();			\
 	hlist_for_each_entry(con, &console_list, node)
+=======
+ *
+ * If a console driver is marked CON_BOOT then it will be auto-unregistered
+ * when the first real console is registered.  This is for early-printk drivers.
+ */
+
+#define CON_PRINTBUFFER	(1)
+#define CON_CONSDEV	(2) /* Preferred console, /dev/console */
+#define CON_ENABLED	(4)
+#define CON_BOOT	(8)
+#define CON_ANYTIME	(16) /* Safe to call when cpu is offline */
+#define CON_BRL		(32) /* Used for a braille device */
+#define CON_EXTENDED	(64) /* Use the extended output format a la /dev/kmsg */
+
+struct console {
+	char	name[16];
+	void	(*write)(struct console *, const char *, unsigned);
+	int	(*read)(struct console *, char *, unsigned);
+	struct tty_driver *(*device)(struct console *, int *);
+	void	(*unblank)(void);
+	int	(*setup)(struct console *, char *);
+	int	(*exit)(struct console *);
+	int	(*match)(struct console *, char *name, int idx, char *options);
+	short	flags;
+	short	index;
+	int	cflag;
+	uint	ispeed;
+	uint	ospeed;
+	u64	seq;
+	unsigned long dropped;
+	void	*data;
+	struct	 console *next;
+};
+
+/*
+ * for_each_console() allows you to iterate on each console
+ */
+#define for_each_console(con) \
+	for (con = console_drivers; con != NULL; con = con->next)
+>>>>>>> b7ba80a49124 (Commit)
 
 extern int console_set_on_cmdline;
 extern struct console *early_console;
@@ -338,9 +387,15 @@ enum con_flush_mode {
 };
 
 extern int add_preferred_console(char *name, int idx, char *options);
+<<<<<<< HEAD
 extern void console_force_preferred_locked(struct console *con);
 extern void register_console(struct console *);
 extern int unregister_console(struct console *);
+=======
+extern void register_console(struct console *);
+extern int unregister_console(struct console *);
+extern struct console *console_drivers;
+>>>>>>> b7ba80a49124 (Commit)
 extern void console_lock(void);
 extern int console_trylock(void);
 extern void console_unlock(void);

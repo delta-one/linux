@@ -17,6 +17,10 @@
 #include <linux/of_address.h>
 #include <linux/of_platform.h>
 #include <linux/phy.h>
+<<<<<<< HEAD
+=======
+#include <linux/pinctrl/consumer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sys_soc.h>
 #include <asm/mach/arch.h>
 #include <asm/mach/map.h>
@@ -174,7 +178,11 @@ static void __init update_fec_mac_prop(enum mac_oui oui)
 
 		from = np;
 
+<<<<<<< HEAD
 		if (of_property_present(np, "local-mac-address"))
+=======
+		if (of_get_property(np, "local-mac-address", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		newmac = kzalloc(sizeof(*newmac) + 6, GFP_KERNEL);
@@ -392,10 +400,15 @@ static void __init mxs_machine_init(void)
 
 	root = of_find_node_by_path("/");
 	ret = of_property_read_string(root, "model", &soc_dev_attr->machine);
+<<<<<<< HEAD
 	if (ret) {
 		kfree(soc_dev_attr);
 		return;
 	}
+=======
+	if (ret)
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	soc_dev_attr->family = "Freescale MXS Family";
 	soc_dev_attr->soc_id = mxs_get_soc_id();

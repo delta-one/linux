@@ -160,6 +160,7 @@ static int vkms_plane_atomic_check(struct drm_plane *plane,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int vkms_prepare_fb(struct drm_plane *plane,
 			   struct drm_plane_state *state)
 {
@@ -198,6 +199,12 @@ static const struct drm_plane_helper_funcs vkms_primary_helper_funcs = {
 	.atomic_check		= vkms_plane_atomic_check,
 	.prepare_fb		= vkms_prepare_fb,
 	.cleanup_fb		= vkms_cleanup_fb,
+=======
+static const struct drm_plane_helper_funcs vkms_primary_helper_funcs = {
+	.atomic_update		= vkms_plane_atomic_update,
+	.atomic_check		= vkms_plane_atomic_check,
+	DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct vkms_plane *vkms_plane_init(struct vkms_device *vkmsdev,

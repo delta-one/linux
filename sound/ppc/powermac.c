@@ -130,9 +130,16 @@ __error:
 }
 
 
+<<<<<<< HEAD
 static void snd_pmac_remove(struct platform_device *devptr)
 {
 	snd_card_free(platform_get_drvdata(devptr));
+=======
+static int snd_pmac_remove(struct platform_device *devptr)
+{
+	snd_card_free(platform_get_drvdata(devptr));
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -160,7 +167,11 @@ static SIMPLE_DEV_PM_OPS(snd_pmac_pm, snd_pmac_driver_suspend, snd_pmac_driver_r
 
 static struct platform_driver snd_pmac_driver = {
 	.probe		= snd_pmac_probe,
+<<<<<<< HEAD
 	.remove_new	= snd_pmac_remove,
+=======
+	.remove		= snd_pmac_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= SND_PMAC_DRIVER,
 		.pm	= SND_PMAC_PM_OPS,

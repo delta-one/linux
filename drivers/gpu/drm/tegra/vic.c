@@ -56,17 +56,30 @@ static void vic_writel(struct vic *vic, u32 value, unsigned int offset)
 
 static int vic_boot(struct vic *vic)
 {
+<<<<<<< HEAD
 	u32 fce_ucode_size, fce_bin_data_offset, stream_id;
 	void *hdr;
 	int err = 0;
 
 	if (vic->config->supports_sid && tegra_dev_iommu_get_stream_id(vic->dev, &stream_id)) {
+=======
+#ifdef CONFIG_IOMMU_API
+	struct iommu_fwspec *spec = dev_iommu_fwspec_get(vic->dev);
+#endif
+	u32 fce_ucode_size, fce_bin_data_offset;
+	void *hdr;
+	int err = 0;
+
+#ifdef CONFIG_IOMMU_API
+	if (vic->config->supports_sid && spec) {
+>>>>>>> b7ba80a49124 (Commit)
 		u32 value;
 
 		value = TRANSCFG_ATT(1, TRANSCFG_SID_FALCON) |
 			TRANSCFG_ATT(0, TRANSCFG_SID_HW);
 		vic_writel(vic, value, VIC_TFBIF_TRANSCFG);
 
+<<<<<<< HEAD
 		/*
 		 * STREAMID0 is used for input/output buffers. Initialize it to SID_VIC in case
 		 * context isolation is not enabled, and SID_VIC is used for both firmware and
@@ -80,6 +93,28 @@ static int vic_boot(struct vic *vic)
 		/* STREAMID1 is used for firmware loading. */
 		vic_writel(vic, stream_id, VIC_THI_STREAMID1);
 	}
+=======
+		if (spec->num_ids > 0) {
+			value = spec->ids[0] & 0xffff;
+
+			/*
+			 * STREAMID0 is used for input/output buffers.
+			 * Initialize it to SID_VIC in case context isolation
+			 * is not enabled, and SID_VIC is used for both firmware
+			 * and data buffers.
+			 *
+			 * If context isolation is enabled, it will be
+			 * overridden by the SETSTREAMID opcode as part of
+			 * each job.
+			 */
+			vic_writel(vic, value, VIC_THI_STREAMID0);
+
+			/* STREAMID1 is used for firmware loading. */
+			vic_writel(vic, value, VIC_THI_STREAMID1);
+		}
+	}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* setup clockgating registers */
 	vic_writel(vic, CG_IDLE_CG_DLY_CNT(4) |

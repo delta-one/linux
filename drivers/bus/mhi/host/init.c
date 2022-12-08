@@ -1395,9 +1395,15 @@ void mhi_driver_unregister(struct mhi_driver *mhi_drv)
 }
 EXPORT_SYMBOL_GPL(mhi_driver_unregister);
 
+<<<<<<< HEAD
 static int mhi_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct mhi_device *mhi_dev = to_mhi_device(dev);
+=======
+static int mhi_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct mhi_device *mhi_dev = to_mhi_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return add_uevent_var(env, "MODALIAS=" MHI_DEVICE_MODALIAS_FMT,
 					mhi_dev->name);
@@ -1449,4 +1455,8 @@ postcore_initcall(mhi_init);
 module_exit(mhi_exit);
 
 MODULE_LICENSE("GPL v2");
+<<<<<<< HEAD
 MODULE_DESCRIPTION("Modem Host Interface");
+=======
+MODULE_DESCRIPTION("MHI Host Interface");
+>>>>>>> b7ba80a49124 (Commit)

@@ -127,9 +127,15 @@ static int eisa_bus_match(struct device *dev, struct device_driver *drv)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int eisa_bus_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct eisa_device *edev = to_eisa_device(dev);
+=======
+static int eisa_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct eisa_device *edev = to_eisa_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	add_uevent_var(env, "MODALIAS=" EISA_DEVICE_MODALIAS_FMT, edev->id.sig);
 	return 0;

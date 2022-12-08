@@ -1500,9 +1500,12 @@ static const struct devlink_param rvu_af_dl_params[] = {
 			     BIT(DEVLINK_PARAM_CMODE_RUNTIME),
 			     rvu_af_dl_dwrr_mtu_get, rvu_af_dl_dwrr_mtu_set,
 			     rvu_af_dl_dwrr_mtu_validate),
+<<<<<<< HEAD
 };
 
 static const struct devlink_param rvu_af_dl_param_exact_match[] = {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	DEVLINK_PARAM_DRIVER(RVU_AF_DEVLINK_PARAM_ID_NPC_EXACT_FEATURE_DISABLE,
 			     "npc_exact_feature_disable", DEVLINK_PARAM_TYPE_STRING,
 			     BIT(DEVLINK_PARAM_CMODE_RUNTIME),
@@ -1550,7 +1553,18 @@ static int rvu_devlink_eswitch_mode_set(struct devlink *devlink, u16 mode,
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct devlink_ops rvu_devlink_ops = {
+=======
+static int rvu_devlink_info_get(struct devlink *devlink, struct devlink_info_req *req,
+				struct netlink_ext_ack *extack)
+{
+	return devlink_info_driver_name_put(req, DRV_NAME);
+}
+
+static const struct devlink_ops rvu_devlink_ops = {
+	.info_get = rvu_devlink_info_get,
+>>>>>>> b7ba80a49124 (Commit)
 	.eswitch_mode_get = rvu_devlink_eswitch_mode_get,
 	.eswitch_mode_set = rvu_devlink_eswitch_mode_set,
 };
@@ -1559,6 +1573,10 @@ int rvu_register_dl(struct rvu *rvu)
 {
 	struct rvu_devlink *rvu_dl;
 	struct devlink *dl;
+<<<<<<< HEAD
+=======
+	size_t size;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	dl = devlink_alloc(&rvu_devlink_ops, sizeof(struct rvu_devlink),
@@ -1580,13 +1598,23 @@ int rvu_register_dl(struct rvu *rvu)
 		goto err_dl_health;
 	}
 
+<<<<<<< HEAD
 	err = devlink_params_register(dl, rvu_af_dl_params, ARRAY_SIZE(rvu_af_dl_params));
+=======
+	/* Register exact match devlink only for CN10K-B */
+	size = ARRAY_SIZE(rvu_af_dl_params);
+	if (!rvu_npc_exact_has_match_table(rvu))
+		size -= 1;
+
+	err = devlink_params_register(dl, rvu_af_dl_params, size);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		dev_err(rvu->dev,
 			"devlink params register failed with error %d", err);
 		goto err_dl_health;
 	}
 
+<<<<<<< HEAD
 	/* Register exact match devlink only for CN10K-B */
 	if (!rvu_npc_exact_has_match_table(rvu))
 		goto done;
@@ -1606,6 +1634,11 @@ done:
 err_dl_exact_match:
 	devlink_params_unregister(dl, rvu_af_dl_params, ARRAY_SIZE(rvu_af_dl_params));
 
+=======
+	devlink_register(dl);
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 err_dl_health:
 	rvu_health_reporters_destroy(rvu);
 	devlink_free(dl);
@@ -1618,6 +1651,7 @@ void rvu_unregister_dl(struct rvu *rvu)
 	struct devlink *dl = rvu_dl->dl;
 
 	devlink_unregister(dl);
+<<<<<<< HEAD
 
 	devlink_params_unregister(dl, rvu_af_dl_params, ARRAY_SIZE(rvu_af_dl_params));
 
@@ -1626,6 +1660,10 @@ void rvu_unregister_dl(struct rvu *rvu)
 		devlink_params_unregister(dl, rvu_af_dl_param_exact_match,
 					  ARRAY_SIZE(rvu_af_dl_param_exact_match));
 
+=======
+	devlink_params_unregister(dl, rvu_af_dl_params,
+				  ARRAY_SIZE(rvu_af_dl_params));
+>>>>>>> b7ba80a49124 (Commit)
 	rvu_health_reporters_destroy(rvu);
 	devlink_free(dl);
 }

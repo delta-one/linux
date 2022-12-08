@@ -392,10 +392,19 @@ static int ab8500_rtc_probe(struct platform_device *pdev)
 	return devm_rtc_register_device(rtc);
 }
 
+<<<<<<< HEAD
 static void ab8500_rtc_remove(struct platform_device *pdev)
 {
 	dev_pm_clear_wake_irq(&pdev->dev);
 	device_init_wakeup(&pdev->dev, false);
+=======
+static int ab8500_rtc_remove(struct platform_device *pdev)
+{
+	dev_pm_clear_wake_irq(&pdev->dev);
+	device_init_wakeup(&pdev->dev, false);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver ab8500_rtc_driver = {
@@ -403,7 +412,11 @@ static struct platform_driver ab8500_rtc_driver = {
 		.name = "ab8500-rtc",
 	},
 	.probe	= ab8500_rtc_probe,
+<<<<<<< HEAD
 	.remove_new = ab8500_rtc_remove,
+=======
+	.remove = ab8500_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = ab85xx_rtc_ids,
 };
 

@@ -267,12 +267,15 @@ int mlx5_query_hca_caps(struct mlx5_core_dev *dev)
 			return err;
 	}
 
+<<<<<<< HEAD
 	if (MLX5_CAP_GEN(dev, crypto)) {
 		err = mlx5_core_get_caps(dev, MLX5_CAP_CRYPTO);
 		if (err)
 			return err;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (MLX5_CAP_GEN(dev, shampo)) {
 		err = mlx5_core_get_caps(dev, MLX5_CAP_DEV_SHAMPO);
 		if (err)
@@ -292,6 +295,15 @@ int mlx5_query_hca_caps(struct mlx5_core_dev *dev)
 			return err;
 	}
 
+<<<<<<< HEAD
+=======
+	if (MLX5_CAP_GEN(dev, nvmeotcp)) {
+		err = mlx5_core_get_caps(dev, MLX5_CAP_DEV_NVMEOTCP);
+		if (err)
+			return err;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

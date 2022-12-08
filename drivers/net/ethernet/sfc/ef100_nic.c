@@ -130,15 +130,22 @@ static void ef100_mcdi_reboot_detected(struct efx_nic *efx)
 
 /*	MCDI calls
  */
+<<<<<<< HEAD
 int ef100_get_mac_address(struct efx_nic *efx, u8 *mac_address,
 			  int client_handle, bool empty_ok)
 {
 	MCDI_DECLARE_BUF(outbuf, MC_CMD_GET_CLIENT_MAC_ADDRESSES_OUT_LEN(1));
 	MCDI_DECLARE_BUF(inbuf, MC_CMD_GET_CLIENT_MAC_ADDRESSES_IN_LEN);
+=======
+static int ef100_get_mac_address(struct efx_nic *efx, u8 *mac_address)
+{
+	MCDI_DECLARE_BUF(outbuf, MC_CMD_GET_MAC_ADDRESSES_OUT_LEN);
+>>>>>>> b7ba80a49124 (Commit)
 	size_t outlen;
 	int rc;
 
 	BUILD_BUG_ON(MC_CMD_GET_MAC_ADDRESSES_IN_LEN != 0);
+<<<<<<< HEAD
 	MCDI_SET_DWORD(inbuf, GET_CLIENT_MAC_ADDRESSES_IN_CLIENT_HANDLE,
 		       client_handle);
 
@@ -158,6 +165,18 @@ int ef100_get_mac_address(struct efx_nic *efx, u8 *mac_address,
 	} else {
 		return -ENOENT;
 	}
+=======
+
+	rc = efx_mcdi_rpc(efx, MC_CMD_GET_MAC_ADDRESSES, NULL, 0,
+			  outbuf, sizeof(outbuf), &outlen);
+	if (rc)
+		return rc;
+	if (outlen < MC_CMD_GET_MAC_ADDRESSES_OUT_LEN)
+		return -EIO;
+
+	ether_addr_copy(mac_address,
+			MCDI_PTR(outbuf, GET_MAC_ADDRESSES_OUT_MAC_ADDR_BASE));
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -399,14 +418,23 @@ static int ef100_filter_table_up(struct efx_nic *efx)
 	 * filter insertion will need to take the lock for read.
 	 */
 	up_write(&efx->filter_sem);
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_SFC_SRIOV))
 		rc = efx_tc_insert_rep_filters(efx);
 
+=======
+#ifdef CONFIG_SFC_SRIOV
+	rc = efx_tc_insert_rep_filters(efx);
+>>>>>>> b7ba80a49124 (Commit)
 	/* Rep filter failure is nonfatal */
 	if (rc)
 		netif_warn(efx, drv, efx->net_dev,
 			   "Failed to insert representor filters, rc %d\n",
 			   rc);
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 fail_vlan0:
@@ -419,8 +447,14 @@ fail_unspec:
 
 static void ef100_filter_table_down(struct efx_nic *efx)
 {
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_SFC_SRIOV))
 		efx_tc_remove_rep_filters(efx);
+=======
+#ifdef CONFIG_SFC_SRIOV
+	efx_tc_remove_rep_filters(efx);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	down_write(&efx->filter_sem);
 	efx_mcdi_filter_del_vlan(efx, 0);
 	efx_mcdi_filter_del_vlan(efx, EFX_FILTER_VID_UNSPEC);
@@ -736,6 +770,10 @@ static unsigned int efx_ef100_recycle_ring_size(const struct efx_nic *efx)
 	return 10 * EFX_RECYCLE_RING_SIZE_10G;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_SFC_SRIOV
+>>>>>>> b7ba80a49124 (Commit)
 static int efx_ef100_get_base_mport(struct efx_nic *efx)
 {
 	struct ef100_nic_data *nic_data = efx->nic_data;
@@ -745,7 +783,11 @@ static int efx_ef100_get_base_mport(struct efx_nic *efx)
 	/* Construct mport selector for "physical network port" */
 	efx_mae_mport_wire(efx, &selector);
 	/* Look up actual mport ID */
+<<<<<<< HEAD
 	rc = efx_mae_fw_lookup_mport(efx, selector, &id);
+=======
+	rc = efx_mae_lookup_mport(efx, selector, &id);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 	/* The ID should always fit in 16 bits, because that's how wide the
@@ -756,6 +798,7 @@ static int efx_ef100_get_base_mport(struct efx_nic *efx)
 			   id);
 	nic_data->base_mport = id;
 	nic_data->have_mport = true;
+<<<<<<< HEAD
 
 	/* Construct mport selector for "calling PF" */
 	efx_mae_mport_uplink(efx, &selector);
@@ -771,6 +814,11 @@ static int efx_ef100_get_base_mport(struct efx_nic *efx)
 
 	return 0;
 }
+=======
+	return 0;
+}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static int compare_versions(const char *a, const char *b)
 {
@@ -1119,6 +1167,7 @@ fail:
 	return rc;
 }
 
+<<<<<<< HEAD
 /* MCDI commands are related to the same device issuing them. This function
  * allows to do an MCDI command on behalf of another device, mainly PFs setting
  * things for VFs.
@@ -1146,15 +1195,31 @@ int efx_ef100_lookup_client_id(struct efx_nic *efx, efx_qword_t pciefn, u32 *id)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ef100_probe_netdev_pf(struct efx_nic *efx)
 {
 	struct ef100_nic_data *nic_data = efx->nic_data;
 	struct net_device *net_dev = efx->net_dev;
 	int rc;
 
+<<<<<<< HEAD
 	if (!IS_ENABLED(CONFIG_SFC_SRIOV) || !nic_data->grp_mae)
 		return 0;
 
+=======
+	rc = ef100_get_mac_address(efx, net_dev->perm_addr);
+	if (rc)
+		goto fail;
+	/* Assign MAC address */
+	eth_hw_addr_set(net_dev, net_dev->perm_addr);
+	memcpy(nic_data->port_id, net_dev->perm_addr, ETH_ALEN);
+
+	if (!nic_data->grp_mae)
+		return 0;
+
+#ifdef CONFIG_SFC_SRIOV
+>>>>>>> b7ba80a49124 (Commit)
 	rc = efx_init_struct_tc(efx);
 	if (rc)
 		return rc;
@@ -1166,6 +1231,7 @@ int ef100_probe_netdev_pf(struct efx_nic *efx)
 			   rc);
 	}
 
+<<<<<<< HEAD
 	rc = efx_init_mae(efx);
 	if (rc)
 		netif_warn(efx, probe, net_dev,
@@ -1174,6 +1240,8 @@ int ef100_probe_netdev_pf(struct efx_nic *efx)
 	else
 		efx_ef100_init_reps(efx);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rc = efx_init_tc(efx);
 	if (rc) {
 		/* Either we don't have an MAE at all (i.e. legacy v-switching),
@@ -1185,10 +1253,18 @@ int ef100_probe_netdev_pf(struct efx_nic *efx)
 		 */
 		netif_warn(efx, probe, net_dev, "Failed to probe MAE rc %d\n",
 			   rc);
+<<<<<<< HEAD
 	} else {
 		net_dev->features |= NETIF_F_HW_TC;
 		efx->fixed_features |= NETIF_F_HW_TC;
 	}
+=======
+	}
+#endif
+	return 0;
+
+fail:
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -1201,11 +1277,14 @@ void ef100_remove(struct efx_nic *efx)
 {
 	struct ef100_nic_data *nic_data = efx->nic_data;
 
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_SFC_SRIOV) && efx->mae) {
 		efx_ef100_fini_reps(efx);
 		efx_fini_mae(efx);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	efx_mcdi_detach(efx);
 	efx_mcdi_fini(efx);
 	if (nic_data)
@@ -1298,8 +1377,14 @@ const struct efx_nic_type ef100_pf_nic_type = {
 	.update_stats = ef100_update_stats,
 	.pull_stats = efx_mcdi_mac_pull_stats,
 	.stop_stats = efx_mcdi_mac_stop_stats,
+<<<<<<< HEAD
 	.sriov_configure = IS_ENABLED(CONFIG_SFC_SRIOV) ?
 		efx_ef100_sriov_configure : NULL,
+=======
+#ifdef CONFIG_SFC_SRIOV
+	.sriov_configure = efx_ef100_sriov_configure,
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Per-type bar/size configuration not used on ef100. Location of
 	 * registers is defined by extended capabilities.

@@ -538,6 +538,7 @@ xfs_check_summary_counts(
 	return 0;
 }
 
+<<<<<<< HEAD
 static void
 xfs_unmount_check(
 	struct xfs_mount	*mp)
@@ -552,6 +553,8 @@ xfs_unmount_check(
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Flush and reclaim dirty inodes in preparation for unmount. Inodes and
  * internal inode structures can be sitting in the CIL and AIL at this point,
@@ -1091,7 +1094,10 @@ xfs_unmountfs(
 	if (error)
 		xfs_warn(mp, "Unable to free reserved block pool. "
 				"Freespace may not be correct on next mount.");
+<<<<<<< HEAD
 	xfs_unmount_check(mp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	xfs_log_unmount(mp);
 	xfs_da_unmount(mp);

@@ -19,7 +19,10 @@ __u64 payload1_len1 = 0;
 __u64 payload1_len2 = 0;
 __u64 total1 = 0;
 char payload1[MAX_LEN + MAX_LEN] = {};
+<<<<<<< HEAD
 __u64 ret_bad_read = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* .data */
 int payload2_len1 = -1;
@@ -37,8 +40,11 @@ int payload4_len2 = -1;
 int total4= -1;
 char payload4[MAX_LEN + MAX_LEN] = { 1 };
 
+<<<<<<< HEAD
 char payload_bad[5] = { 0x42, 0x42, 0x42, 0x42, 0x42 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 SEC("raw_tp/sys_enter")
 int handler64_unsigned(void *regs)
 {
@@ -64,8 +70,11 @@ int handler64_unsigned(void *regs)
 
 	total1 = payload - (void *)payload1;
 
+<<<<<<< HEAD
 	ret_bad_read = bpf_probe_read_kernel_str(payload_bad + 2, 1, (void *) -1);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

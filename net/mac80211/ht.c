@@ -391,6 +391,7 @@ void ieee80211_ba_session_work(struct work_struct *work)
 
 		tid_tx = sta->ampdu_mlme.tid_start_tx[tid];
 		if (!blocked && tid_tx) {
+<<<<<<< HEAD
 			struct txq_info *txqi = to_txq_info(sta->sta.txq[tid]);
 			struct ieee80211_sub_if_data *sdata =
 				vif_to_sdata(txqi->txq.vif);
@@ -422,6 +423,8 @@ void ieee80211_ba_session_work(struct work_struct *work)
 
 			spin_unlock_bh(&fq->lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			/*
 			 * Assign it over to the normal tid_tx array
 			 * where it "goes live".

@@ -242,13 +242,20 @@ xfs_acl_set_mode(
 }
 
 int
+<<<<<<< HEAD
 xfs_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+xfs_set_acl(struct user_namespace *mnt_userns, struct inode *inode,
+>>>>>>> b7ba80a49124 (Commit)
 	    struct posix_acl *acl, int type)
 {
 	umode_t mode;
 	bool set_mode = false;
 	int error = 0;
+<<<<<<< HEAD
 	struct inode *inode = d_inode(dentry);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!acl)
 		goto set_acl;
@@ -258,7 +265,11 @@ xfs_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
 		return error;
 
 	if (type == ACL_TYPE_ACCESS) {
+<<<<<<< HEAD
 		error = posix_acl_update_mode(idmap, inode, &mode, &acl);
+=======
+		error = posix_acl_update_mode(mnt_userns, inode, &mode, &acl);
+>>>>>>> b7ba80a49124 (Commit)
 		if (error)
 			return error;
 		set_mode = true;

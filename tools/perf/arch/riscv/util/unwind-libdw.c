@@ -4,7 +4,11 @@
 #include <elfutils/libdwfl.h>
 #include "../../util/unwind-libdw.h"
 #include "../../util/perf_regs.h"
+<<<<<<< HEAD
 #include "../../util/sample.h"
+=======
+#include "../../util/event.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
 {

@@ -5,8 +5,12 @@
 
 # Please keep it alphabetically sorted by directory
 # (e. g. LC_ALL=C sort Makefile)
+<<<<<<< HEAD
 obj-y        +=	ttpci/		\
 		b2c2/		\
+=======
+obj-y        +=	b2c2/		\
+>>>>>>> b7ba80a49124 (Commit)
 		pluto2/		\
 		dm1105/		\
 		pt1/		\
@@ -14,7 +18,10 @@ obj-y        +=	ttpci/		\
 		mantis/		\
 		ngene/		\
 		ddbridge/	\
+<<<<<<< HEAD
 		saa7146/	\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		smipcie/	\
 		netup_unidvb/	\
 		intel/

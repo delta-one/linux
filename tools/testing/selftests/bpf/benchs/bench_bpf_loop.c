@@ -95,7 +95,10 @@ static void setup(void)
 
 const struct bench bench_bpf_loop = {
 	.name = "bpf-loop",
+<<<<<<< HEAD
 	.argp = &bench_bpf_loop_argp,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.validate = validate,
 	.setup = setup,
 	.producer_thread = producer,

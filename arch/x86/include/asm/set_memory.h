@@ -6,9 +6,12 @@
 #include <asm/page.h>
 #include <asm-generic/set_memory.h>
 
+<<<<<<< HEAD
 #define set_memory_rox set_memory_rox
 int set_memory_rox(unsigned long addr, int numpages);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The set_memory_* API can be used to change various attributes of a virtual
  * address range. The attributes include:

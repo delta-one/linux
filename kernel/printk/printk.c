@@ -79,6 +79,7 @@ int oops_in_progress;
 EXPORT_SYMBOL(oops_in_progress);
 
 /*
+<<<<<<< HEAD
  * console_mutex protects console_list updates and console->flags updates.
  * The flags are synchronized only for consoles that are registered, i.e.
  * accessible via the console list.
@@ -93,6 +94,15 @@ static DEFINE_SEMAPHORE(console_sem);
 HLIST_HEAD(console_list);
 EXPORT_SYMBOL_GPL(console_list);
 DEFINE_STATIC_SRCU(console_srcu);
+=======
+ * console_sem protects the console_drivers list, and also
+ * provides serialisation for access to the entire console
+ * driver system.
+ */
+static DEFINE_SEMAPHORE(console_sem);
+struct console *console_drivers;
+EXPORT_SYMBOL_GPL(console_drivers);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * System may need to suppress printk message under certain
@@ -110,6 +120,7 @@ static int __read_mostly suppress_panic_printk;
 static struct lockdep_map console_lock_dep_map = {
 	.name = "console_lock"
 };
+<<<<<<< HEAD
 
 void lockdep_assert_console_list_lock_held(void)
 {
@@ -124,6 +135,8 @@ bool console_srcu_read_lock_is_held(void)
 	return srcu_read_lock_held(&console_srcu);
 }
 EXPORT_SYMBOL(console_srcu_read_lock_is_held);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 enum devkmsg_log_bits {
@@ -241,6 +254,7 @@ int devkmsg_sysctl_set_loglvl(struct ctl_table *table, int write,
 }
 #endif /* CONFIG_PRINTK && CONFIG_SYSCTL */
 
+<<<<<<< HEAD
 /**
  * console_list_lock - Lock the console list
  *
@@ -303,6 +317,10 @@ void console_srcu_read_unlock(int cookie)
 	srcu_read_unlock_nmisafe(&console_srcu, cookie);
 }
 EXPORT_SYMBOL(console_srcu_read_unlock);
+=======
+/* Number of registered extended console drivers. */
+static int nr_ext_console_drivers;
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Helper macros to handle lockdep when locking/unlocking console_sem. We use
@@ -466,6 +484,24 @@ static struct latched_seq clear_seq = {
 	.val[1]		= 0,
 };
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PRINTK_CALLER
+#define PREFIX_MAX		48
+#else
+#define PREFIX_MAX		32
+#endif
+
+/* the maximum size of a formatted record (i.e. with prefix added per line) */
+#define CONSOLE_LOG_MAX		1024
+
+/* the maximum size for a dropped text message */
+#define DROPPED_TEXT_MAX	64
+
+/* the maximum size allowed to be reserved for a record */
+#define LOG_LINE_MAX		(CONSOLE_LOG_MAX - PREFIX_MAX)
+
+>>>>>>> b7ba80a49124 (Commit)
 #define LOG_LEVEL(v)		((v) & 0x07)
 #define LOG_FACILITY(v)		((v) >> 3 & 0xff)
 
@@ -499,7 +535,11 @@ static struct printk_ringbuffer *prb = &printk_rb_static;
  * per_cpu_areas are initialised. This variable is set to true when
  * it's safe to access per-CPU data.
  */
+<<<<<<< HEAD
 static bool __printk_percpu_data_ready __ro_after_init;
+=======
+static bool __printk_percpu_data_ready __read_mostly;
+>>>>>>> b7ba80a49124 (Commit)
 
 bool printk_percpu_data_ready(void)
 {
@@ -696,15 +736,26 @@ out:
 	return len;
 }
 
+<<<<<<< HEAD
 static bool printk_get_next_message(struct printk_message *pmsg, u64 seq,
 				    bool is_extended, bool may_supress);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* /dev/kmsg - userspace message inject/listen interface */
 struct devkmsg_user {
 	atomic64_t seq;
 	struct ratelimit_state rs;
 	struct mutex lock;
+<<<<<<< HEAD
 	struct printk_buffers pbufs;
+=======
+	char buf[CONSOLE_EXT_LOG_MAX];
+
+	struct printk_info info;
+	char text_buf[CONSOLE_EXT_LOG_MAX];
+	struct printk_record record;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static __printf(3, 4) __cold
@@ -730,7 +781,11 @@ static ssize_t devkmsg_write(struct kiocb *iocb, struct iov_iter *from)
 	size_t len = iov_iter_count(from);
 	ssize_t ret = len;
 
+<<<<<<< HEAD
 	if (!user || len > PRINTKRB_RECORD_MAX)
+=======
+	if (!user || len > LOG_LINE_MAX)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	/* Ignore when user logging is disabled. */
@@ -786,10 +841,15 @@ static ssize_t devkmsg_read(struct file *file, char __user *buf,
 			    size_t count, loff_t *ppos)
 {
 	struct devkmsg_user *user = file->private_data;
+<<<<<<< HEAD
 	char *outbuf = &user->pbufs.outbuf[0];
 	struct printk_message pmsg = {
 		.pbufs = &user->pbufs,
 	};
+=======
+	struct printk_record *r = &user->record;
+	size_t len;
+>>>>>>> b7ba80a49124 (Commit)
 	ssize_t ret;
 
 	if (!user)
@@ -799,7 +859,11 @@ static ssize_t devkmsg_read(struct file *file, char __user *buf,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (!printk_get_next_message(&pmsg, atomic64_read(&user->seq), true, false)) {
+=======
+	if (!prb_read_valid(prb, atomic64_read(&user->seq), r)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (file->f_flags & O_NONBLOCK) {
 			ret = -EAGAIN;
 			goto out;
@@ -816,31 +880,61 @@ static ssize_t devkmsg_read(struct file *file, char __user *buf,
 		 * This pairs with __wake_up_klogd:A.
 		 */
 		ret = wait_event_interruptible(log_wait,
+<<<<<<< HEAD
 				printk_get_next_message(&pmsg, atomic64_read(&user->seq), true,
 							false)); /* LMM(devkmsg_read:A) */
+=======
+				prb_read_valid(prb,
+					atomic64_read(&user->seq), r)); /* LMM(devkmsg_read:A) */
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			goto out;
 	}
 
+<<<<<<< HEAD
 	if (pmsg.dropped) {
 		/* our last seen message is gone, return error and reset */
 		atomic64_set(&user->seq, pmsg.seq);
+=======
+	if (r->info->seq != atomic64_read(&user->seq)) {
+		/* our last seen message is gone, return error and reset */
+		atomic64_set(&user->seq, r->info->seq);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EPIPE;
 		goto out;
 	}
 
+<<<<<<< HEAD
 	atomic64_set(&user->seq, pmsg.seq + 1);
 
 	if (pmsg.outbuf_len > count) {
+=======
+	len = info_print_ext_header(user->buf, sizeof(user->buf), r->info);
+	len += msg_print_ext_body(user->buf + len, sizeof(user->buf) - len,
+				  &r->text_buf[0], r->info->text_len,
+				  &r->info->dev_info);
+
+	atomic64_set(&user->seq, r->info->seq + 1);
+
+	if (len > count) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EINVAL;
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if (copy_to_user(buf, outbuf, pmsg.outbuf_len)) {
 		ret = -EFAULT;
 		goto out;
 	}
 	ret = pmsg.outbuf_len;
+=======
+	if (copy_to_user(buf, user->buf, len)) {
+		ret = -EFAULT;
+		goto out;
+	}
+	ret = len;
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	mutex_unlock(&user->lock);
 	return ret;
@@ -934,6 +1028,12 @@ static int devkmsg_open(struct inode *inode, struct file *file)
 
 	mutex_init(&user->lock);
 
+<<<<<<< HEAD
+=======
+	prb_rec_init_rd(&user->record, &user->info,
+			&user->text_buf[0], sizeof(user->text_buf));
+
+>>>>>>> b7ba80a49124 (Commit)
 	atomic64_set(&user->seq, prb_first_valid_seq(prb));
 
 	file->private_data = user;
@@ -1128,7 +1228,11 @@ static unsigned int __init add_to_rb(struct printk_ringbuffer *rb,
 	return prb_record_text_space(&e);
 }
 
+<<<<<<< HEAD
 static char setup_text_buf[PRINTKRB_RECORD_MAX] __initdata;
+=======
+static char setup_text_buf[LOG_LINE_MAX] __initdata;
+>>>>>>> b7ba80a49124 (Commit)
 
 void __init setup_log_buf(int early)
 {
@@ -1394,7 +1498,11 @@ static size_t record_print_text(struct printk_record *r, bool syslog,
 	size_t text_len = r->info->text_len;
 	size_t buf_size = r->text_buf_size;
 	char *text = r->text_buf;
+<<<<<<< HEAD
 	char prefix[PRINTK_PREFIX_MAX];
+=======
+	char prefix[PREFIX_MAX];
+>>>>>>> b7ba80a49124 (Commit)
 	bool truncated = false;
 	size_t prefix_len;
 	size_t line_len;
@@ -1493,7 +1601,11 @@ static size_t get_record_print_text_size(struct printk_info *info,
 					 unsigned int line_count,
 					 bool syslog, bool time)
 {
+<<<<<<< HEAD
 	char prefix[PRINTK_PREFIX_MAX];
+=======
+	char prefix[PREFIX_MAX];
+>>>>>>> b7ba80a49124 (Commit)
 	size_t prefix_len;
 
 	prefix_len = info_print_prefix(info, syslog, time, prefix);
@@ -1559,11 +1671,19 @@ static int syslog_print(char __user *buf, int size)
 	int len = 0;
 	u64 seq;
 
+<<<<<<< HEAD
 	text = kmalloc(PRINTK_MESSAGE_MAX, GFP_KERNEL);
 	if (!text)
 		return -ENOMEM;
 
 	prb_rec_init_rd(&r, &info, text, PRINTK_MESSAGE_MAX);
+=======
+	text = kmalloc(CONSOLE_LOG_MAX, GFP_KERNEL);
+	if (!text)
+		return -ENOMEM;
+
+	prb_rec_init_rd(&r, &info, text, CONSOLE_LOG_MAX);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&syslog_lock);
 
@@ -1664,7 +1784,11 @@ static int syslog_print_all(char __user *buf, int size, bool clear)
 	u64 seq;
 	bool time;
 
+<<<<<<< HEAD
 	text = kmalloc(PRINTK_MESSAGE_MAX, GFP_KERNEL);
+=======
+	text = kmalloc(CONSOLE_LOG_MAX, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!text)
 		return -ENOMEM;
 
@@ -1676,7 +1800,11 @@ static int syslog_print_all(char __user *buf, int size, bool clear)
 	seq = find_first_fitting_seq(latched_seq_read_nolock(&clear_seq), -1,
 				     size, true, time);
 
+<<<<<<< HEAD
 	prb_rec_init_rd(&r, &info, text, PRINTK_MESSAGE_MAX);
+=======
+	prb_rec_init_rd(&r, &info, text, CONSOLE_LOG_MAX);
+>>>>>>> b7ba80a49124 (Commit)
 
 	len = 0;
 	prb_for_each_record(seq, prb, seq, &r) {
@@ -1870,13 +1998,17 @@ static void console_lock_spinning_enable(void)
 /**
  * console_lock_spinning_disable_and_check - mark end of code where another
  *	thread was able to busy wait and check if there is a waiter
+<<<<<<< HEAD
  * @cookie: cookie returned from console_srcu_read_lock()
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This is called at the end of the section where spinning is allowed.
  * It has two functions. First, it is a signal that it is no longer
  * safe to start busy waiting for the lock. Second, it checks if
  * there is a busy waiter and passes the lock rights to her.
  *
+<<<<<<< HEAD
  * Important: Callers lose both the console_lock and the SRCU read lock if
  *	there was a busy waiter. They must not touch items synchronized by
  *	console_lock or SRCU read lock in this case.
@@ -1884,6 +2016,15 @@ static void console_lock_spinning_enable(void)
  * Return: 1 if the lock rights were passed, 0 otherwise.
  */
 static int console_lock_spinning_disable_and_check(int cookie)
+=======
+ * Important: Callers lose the lock if there was a busy waiter.
+ *	They must not touch items synchronized by console_lock
+ *	in this case.
+ *
+ * Return: 1 if the lock rights were passed, 0 otherwise.
+ */
+static int console_lock_spinning_disable_and_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int waiter;
 
@@ -1903,12 +2044,15 @@ static int console_lock_spinning_disable_and_check(int cookie)
 	spin_release(&console_owner_dep_map, _THIS_IP_);
 
 	/*
+<<<<<<< HEAD
 	 * Preserve lockdep lock ordering. Release the SRCU read lock before
 	 * releasing the console_lock.
 	 */
 	console_srcu_read_unlock(cookie);
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * Hand off console_lock to waiter. The waiter will perform
 	 * the up(). After this, the waiter is the console_lock owner.
 	 */
@@ -1991,6 +2135,30 @@ static int console_trylock_spinning(void)
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * Call the specified console driver, asking it to write out the specified
+ * text and length. If @dropped_text is non-NULL and any records have been
+ * dropped, a dropped message will be written out first.
+ */
+static void call_console_driver(struct console *con, const char *text, size_t len,
+				char *dropped_text)
+{
+	size_t dropped_len;
+
+	if (con->dropped && dropped_text) {
+		dropped_len = snprintf(dropped_text, DROPPED_TEXT_MAX,
+				       "** %lu printk messages dropped **\n",
+				       con->dropped);
+		con->dropped = 0;
+		con->write(con, dropped_text, dropped_len);
+	}
+
+	con->write(con, text, len);
+}
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * Recursion is tracked separately on each CPU. If NMIs are supported, an
  * additional NMI context per CPU is also separately tracked. Until per-CPU
  * is available, a separate "early tracking" is performed.
@@ -2153,7 +2321,11 @@ static u16 printk_sprint(char *text, u16 size, int facility,
 		}
 	}
 
+<<<<<<< HEAD
 	trace_console(text, text_len);
+=======
+	trace_console_rcuidle(text, text_len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return text_len;
 }
@@ -2200,8 +2372,13 @@ int vprintk_store(int facility, int level,
 	reserve_size = vsnprintf(&prefix_buf[0], sizeof(prefix_buf), fmt, args2) + 1;
 	va_end(args2);
 
+<<<<<<< HEAD
 	if (reserve_size > PRINTKRB_RECORD_MAX)
 		reserve_size = PRINTKRB_RECORD_MAX;
+=======
+	if (reserve_size > LOG_LINE_MAX)
+		reserve_size = LOG_LINE_MAX;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Extract log level or control flags. */
 	if (facility == 0)
@@ -2215,7 +2392,11 @@ int vprintk_store(int facility, int level,
 
 	if (flags & LOG_CONT) {
 		prb_rec_init_wr(&r, reserve_size);
+<<<<<<< HEAD
 		if (prb_reserve_in_last(&e, prb, &r, caller_id, PRINTKRB_RECORD_MAX)) {
+=======
+		if (prb_reserve_in_last(&e, prb, &r, caller_id, LOG_LINE_MAX)) {
+>>>>>>> b7ba80a49124 (Commit)
 			text_len = printk_sprint(&r.text_buf[r.info->text_len], reserve_size,
 						 facility, &flags, fmt, args);
 			r.info->text_len += text_len;
@@ -2341,11 +2522,19 @@ asmlinkage __visible int _printk(const char *fmt, ...)
 }
 EXPORT_SYMBOL(_printk);
 
+<<<<<<< HEAD
 static bool pr_flush(int timeout_ms, bool reset_on_progress);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progress);
 
 #else /* CONFIG_PRINTK */
 
+<<<<<<< HEAD
+=======
+#define CONSOLE_LOG_MAX		0
+#define DROPPED_TEXT_MAX	0
+>>>>>>> b7ba80a49124 (Commit)
 #define printk_time		false
 
 #define prb_read_valid(rb, seq, r)	false
@@ -2368,9 +2557,18 @@ static ssize_t msg_print_ext_body(char *buf, size_t size,
 				  char *text, size_t text_len,
 				  struct dev_printk_info *dev_info) { return 0; }
 static void console_lock_spinning_enable(void) { }
+<<<<<<< HEAD
 static int console_lock_spinning_disable_and_check(int cookie) { return 0; }
 static bool suppress_message_printing(int level) { return false; }
 static bool pr_flush(int timeout_ms, bool reset_on_progress) { return true; }
+=======
+static int console_lock_spinning_disable_and_check(void) { return 0; }
+static void call_console_driver(struct console *con, const char *text, size_t len,
+				char *dropped_text)
+{
+}
+static bool suppress_message_printing(int level) { return false; }
+>>>>>>> b7ba80a49124 (Commit)
 static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progress) { return true; }
 
 #endif /* CONFIG_PRINTK */
@@ -2433,7 +2631,11 @@ static int __add_preferred_console(char *name, int idx, char *options,
 		return -E2BIG;
 	if (!brl_options)
 		preferred_console = i;
+<<<<<<< HEAD
 	strscpy(c->name, name, sizeof(c->name));
+=======
+	strlcpy(c->name, name, sizeof(c->name));
+>>>>>>> b7ba80a49124 (Commit)
 	c->options = options;
 	set_user_specified(c, user_specified);
 	braille_set_options(c, brl_options);
@@ -2595,10 +2797,17 @@ static int console_cpu_notify(unsigned int cpu)
 }
 
 /**
+<<<<<<< HEAD
  * console_lock - block the console subsystem from printing
  *
  * Acquires a lock which guarantees that no consoles will
  * be in or enter their write() callback.
+=======
+ * console_lock - lock the console system for exclusive use.
+ *
+ * Acquires a lock which guarantees that the caller has
+ * exclusive access to the console system and the console_drivers list.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Can sleep, returns nothing.
  */
@@ -2615,10 +2824,17 @@ void console_lock(void)
 EXPORT_SYMBOL(console_lock);
 
 /**
+<<<<<<< HEAD
  * console_trylock - try to block the console subsystem from printing
  *
  * Try to acquire a lock which guarantees that no consoles will
  * be in or enter their write() callback.
+=======
+ * console_trylock - try to lock the console system for exclusive use.
+ *
+ * Try to acquire a lock which guarantees that the caller has exclusive
+ * access to the console system and the console_drivers list.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * returns 1 on success, and 0 on failure to acquire the lock.
  */
@@ -2665,6 +2881,7 @@ static bool abandon_console_lock_in_panic(void)
  * Check if the given console is currently capable and allowed to print
  * records.
  *
+<<<<<<< HEAD
  * Requires the console_srcu_read_lock.
  */
 static inline bool console_is_usable(struct console *con)
@@ -2672,6 +2889,13 @@ static inline bool console_is_usable(struct console *con)
 	short flags = console_srcu_read_flags(con);
 
 	if (!(flags & CON_ENABLED))
+=======
+ * Requires the console_lock.
+ */
+static inline bool console_is_usable(struct console *con)
+{
+	if (!(con->flags & CON_ENABLED))
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	if (!con->write)
@@ -2682,7 +2906,12 @@ static inline bool console_is_usable(struct console *con)
 	 * allocated. So unless they're explicitly marked as being able to
 	 * cope (CON_ANYTIME) don't call them until this CPU is officially up.
 	 */
+<<<<<<< HEAD
 	if (!cpu_online(raw_smp_processor_id()) && !(flags & CON_ANYTIME))
+=======
+	if (!cpu_online(raw_smp_processor_id()) &&
+	    !(con->flags & CON_ANYTIME))
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	return true;
@@ -2695,6 +2924,7 @@ static void __console_unlock(void)
 }
 
 /*
+<<<<<<< HEAD
  * Prepend the message in @pmsg->pbufs->outbuf with a "dropped message". This
  * is achieved by shifting the existing message over and inserting the dropped
  * message.
@@ -2831,10 +3061,27 @@ out:
  * console_lock and the SRCU read lock. Otherwise it is set to false.
  *
  * @cookie is the cookie from the SRCU read lock.
+=======
+ * Print one record for the given console. The record printed is whatever
+ * record is the next available record for the given console.
+ *
+ * @text is a buffer of size CONSOLE_LOG_MAX.
+ *
+ * If extended messages should be printed, @ext_text is a buffer of size
+ * CONSOLE_EXT_LOG_MAX. Otherwise @ext_text must be NULL.
+ *
+ * If dropped messages should be printed, @dropped_text is a buffer of size
+ * DROPPED_TEXT_MAX. Otherwise @dropped_text must be NULL.
+ *
+ * @handover will be set to true if a printk waiter has taken over the
+ * console_lock, in which case the caller is no longer holding the
+ * console_lock. Otherwise it is set to false.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Returns false if the given console has no next record to print, otherwise
  * true.
  *
+<<<<<<< HEAD
  * Requires the console_lock and the SRCU read lock.
  */
 static bool console_emit_next_record(struct console *con, bool *handover, int cookie)
@@ -2864,6 +3111,50 @@ static bool console_emit_next_record(struct console *con, bool *handover, int co
 	if (con->dropped && !is_extended) {
 		console_prepend_dropped(&pmsg, con->dropped);
 		con->dropped = 0;
+=======
+ * Requires the console_lock.
+ */
+static bool console_emit_next_record(struct console *con, char *text, char *ext_text,
+				     char *dropped_text, bool *handover)
+{
+	static int panic_console_dropped;
+	struct printk_info info;
+	struct printk_record r;
+	unsigned long flags;
+	char *write_text;
+	size_t len;
+
+	prb_rec_init_rd(&r, &info, text, CONSOLE_LOG_MAX);
+
+	*handover = false;
+
+	if (!prb_read_valid(prb, con->seq, &r))
+		return false;
+
+	if (con->seq != r.info->seq) {
+		con->dropped += r.info->seq - con->seq;
+		con->seq = r.info->seq;
+		if (panic_in_progress() && panic_console_dropped++ > 10) {
+			suppress_panic_printk = 1;
+			pr_warn_once("Too many dropped messages. Suppress messages on non-panic CPUs to prevent livelock.\n");
+		}
+	}
+
+	/* Skip record that has level above the console loglevel. */
+	if (suppress_message_printing(r.info->level)) {
+		con->seq++;
+		goto skip;
+	}
+
+	if (ext_text) {
+		write_text = ext_text;
+		len = info_print_ext_header(ext_text, CONSOLE_EXT_LOG_MAX, r.info);
+		len += msg_print_ext_body(ext_text + len, CONSOLE_EXT_LOG_MAX - len,
+					  &r.text_buf[0], r.info->text_len, &r.info->dev_info);
+	} else {
+		write_text = text;
+		len = record_print_text(&r, console_msg_format & MSG_FORMAT_SYSLOG, printk_time);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -2879,6 +3170,7 @@ static bool console_emit_next_record(struct console *con, bool *handover, int co
 	printk_safe_enter_irqsave(flags);
 	console_lock_spinning_enable();
 
+<<<<<<< HEAD
 	/* Do not trace print latency. */
 	stop_critical_timings();
 
@@ -2890,6 +3182,15 @@ static bool console_emit_next_record(struct console *con, bool *handover, int co
 	con->seq = pmsg.seq + 1;
 
 	*handover = console_lock_spinning_disable_and_check(cookie);
+=======
+	stop_critical_timings();	/* don't trace print latency */
+	call_console_driver(con, write_text, len, dropped_text);
+	start_critical_timings();
+
+	con->seq++;
+
+	*handover = console_lock_spinning_disable_and_check();
+>>>>>>> b7ba80a49124 (Commit)
 	printk_safe_exit_irqrestore(flags);
 skip:
 	return true;
@@ -2920,10 +3221,19 @@ skip:
  */
 static bool console_flush_all(bool do_cond_resched, u64 *next_seq, bool *handover)
 {
+<<<<<<< HEAD
 	bool any_usable = false;
 	struct console *con;
 	bool any_progress;
 	int cookie;
+=======
+	static char dropped_text[DROPPED_TEXT_MAX];
+	static char ext_text[CONSOLE_EXT_LOG_MAX];
+	static char text[CONSOLE_LOG_MAX];
+	bool any_usable = false;
+	struct console *con;
+	bool any_progress;
+>>>>>>> b7ba80a49124 (Commit)
 
 	*next_seq = 0;
 	*handover = false;
@@ -2931,20 +3241,37 @@ static bool console_flush_all(bool do_cond_resched, u64 *next_seq, bool *handove
 	do {
 		any_progress = false;
 
+<<<<<<< HEAD
 		cookie = console_srcu_read_lock();
 		for_each_console_srcu(con) {
+=======
+		for_each_console(con) {
+>>>>>>> b7ba80a49124 (Commit)
 			bool progress;
 
 			if (!console_is_usable(con))
 				continue;
 			any_usable = true;
 
+<<<<<<< HEAD
 			progress = console_emit_next_record(con, handover, cookie);
 
 			/*
 			 * If a handover has occurred, the SRCU read lock
 			 * is already released.
 			 */
+=======
+			if (con->flags & CON_EXTENDED) {
+				/* Extended consoles do not print "dropped messages". */
+				progress = console_emit_next_record(con, &text[0],
+								    &ext_text[0], NULL,
+								    handover);
+			} else {
+				progress = console_emit_next_record(con, &text[0],
+								    NULL, &dropped_text[0],
+								    handover);
+			}
+>>>>>>> b7ba80a49124 (Commit)
 			if (*handover)
 				return false;
 
@@ -2958,11 +3285,16 @@ static bool console_flush_all(bool do_cond_resched, u64 *next_seq, bool *handove
 
 			/* Allow panic_cpu to take over the consoles safely. */
 			if (abandon_console_lock_in_panic())
+<<<<<<< HEAD
 				goto abandon;
+=======
+				return false;
+>>>>>>> b7ba80a49124 (Commit)
 
 			if (do_cond_resched)
 				cond_resched();
 		}
+<<<<<<< HEAD
 		console_srcu_read_unlock(cookie);
 	} while (any_progress);
 
@@ -2978,6 +3310,18 @@ abandon:
  *
  * Releases the console_lock which the caller holds to block printing of
  * the console subsystem.
+=======
+	} while (any_progress);
+
+	return any_usable;
+}
+
+/**
+ * console_unlock - unlock the console system
+ *
+ * Releases the console_lock which the caller holds on the console system
+ * and the console driver list.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * While the console_lock was held, console output may have been buffered
  * by printk().  If this is the case, console_unlock(); emits
@@ -3055,6 +3399,7 @@ EXPORT_SYMBOL(console_conditional_schedule);
 void console_unblank(void)
 {
 	struct console *c;
+<<<<<<< HEAD
 	int cookie;
 
 	/*
@@ -3063,6 +3408,12 @@ void console_unblank(void)
 	 *
 	 * If @oops_in_progress is set, this may be an atomic context.
 	 * In that case, attempt a trylock as best-effort.
+=======
+
+	/*
+	 * console_unblank can no longer be called in interrupt context unless
+	 * oops_in_progress is set to 1..
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	if (oops_in_progress) {
 		if (down_trylock_console_sem() != 0)
@@ -3072,6 +3423,7 @@ void console_unblank(void)
 
 	console_locked = 1;
 	console_may_schedule = 0;
+<<<<<<< HEAD
 
 	cookie = console_srcu_read_lock();
 	for_each_console_srcu(c) {
@@ -3080,6 +3432,11 @@ void console_unblank(void)
 	}
 	console_srcu_read_unlock(cookie);
 
+=======
+	for_each_console(c)
+		if ((c->flags & CON_ENABLED) && c->unblank)
+			c->unblank();
+>>>>>>> b7ba80a49124 (Commit)
 	console_unlock();
 
 	if (!oops_in_progress)
@@ -3106,6 +3463,7 @@ void console_flush_on_panic(enum con_flush_mode mode)
 
 	if (mode == CONSOLE_REPLAY_ALL) {
 		struct console *c;
+<<<<<<< HEAD
 		int cookie;
 		u64 seq;
 
@@ -3121,6 +3479,13 @@ void console_flush_on_panic(enum con_flush_mode mode)
 			c->seq = seq;
 		}
 		console_srcu_read_unlock(cookie);
+=======
+		u64 seq;
+
+		seq = prb_first_valid_seq(prb);
+		for_each_console(c)
+			c->seq = seq;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	console_unlock();
 }
@@ -3132,6 +3497,7 @@ struct tty_driver *console_device(int *index)
 {
 	struct console *c;
 	struct tty_driver *driver = NULL;
+<<<<<<< HEAD
 	int cookie;
 
 	/*
@@ -3143,14 +3509,22 @@ struct tty_driver *console_device(int *index)
 
 	cookie = console_srcu_read_lock();
 	for_each_console_srcu(c) {
+=======
+
+	console_lock();
+	for_each_console(c) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!c->device)
 			continue;
 		driver = c->device(c, index);
 		if (driver)
 			break;
 	}
+<<<<<<< HEAD
 	console_srcu_read_unlock(cookie);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	console_unlock();
 	return driver;
 }
@@ -3163,6 +3537,7 @@ struct tty_driver *console_device(int *index)
 void console_stop(struct console *console)
 {
 	__pr_flush(console, 1000, true);
+<<<<<<< HEAD
 	console_list_lock();
 	console_srcu_write_flags(console, console->flags & ~CON_ENABLED);
 	console_list_unlock();
@@ -3174,14 +3549,25 @@ void console_stop(struct console *console)
 	 * using the port.
 	 */
 	synchronize_srcu(&console_srcu);
+=======
+	console_lock();
+	console->flags &= ~CON_ENABLED;
+	console_unlock();
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(console_stop);
 
 void console_start(struct console *console)
 {
+<<<<<<< HEAD
 	console_list_lock();
 	console_srcu_write_flags(console, console->flags | CON_ENABLED);
 	console_list_unlock();
+=======
+	console_lock();
+	console->flags |= CON_ENABLED;
+	console_unlock();
+>>>>>>> b7ba80a49124 (Commit)
 	__pr_flush(console, 1000, true);
 }
 EXPORT_SYMBOL(console_start);
@@ -3274,6 +3660,7 @@ static void try_enable_default_console(struct console *newcon)
 	       (con->flags & CON_BOOT) ? "boot" : "",	\
 	       con->name, con->index, ##__VA_ARGS__)
 
+<<<<<<< HEAD
 static void console_init_seq(struct console *newcon, bool bootcon_registered)
 {
 	struct console *con;
@@ -3340,6 +3727,8 @@ static void console_init_seq(struct console *newcon, bool bootcon_registered)
 
 static int unregister_console_locked(struct console *console);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The console driver calls this routine during kernel initialization
  * to register the console printing procedure with printk() and to
@@ -3362,6 +3751,7 @@ static int unregister_console_locked(struct console *console);
 void register_console(struct console *newcon)
 {
 	struct console *con;
+<<<<<<< HEAD
 	bool bootcon_registered = false;
 	bool realcon_registered = false;
 	int err;
@@ -3385,6 +3775,30 @@ void register_console(struct console *newcon)
 		pr_info("Too late to register bootconsole %s%d\n",
 			newcon->name, newcon->index);
 		goto unlock;
+=======
+	bool bootcon_enabled = false;
+	bool realcon_enabled = false;
+	int err;
+
+	for_each_console(con) {
+		if (WARN(con == newcon, "console '%s%d' already registered\n",
+					 con->name, con->index))
+			return;
+	}
+
+	for_each_console(con) {
+		if (con->flags & CON_BOOT)
+			bootcon_enabled = true;
+		else
+			realcon_enabled = true;
+	}
+
+	/* Do not register boot consoles when there already is a real one. */
+	if (newcon->flags & CON_BOOT && realcon_enabled) {
+		pr_info("Too late to register bootconsole %s%d\n",
+			newcon->name, newcon->index);
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -3400,8 +3814,13 @@ void register_console(struct console *newcon)
 	 * flag set and will be first in the list.
 	 */
 	if (preferred_console < 0) {
+<<<<<<< HEAD
 		if (hlist_empty(&console_list) || !console_first()->device ||
 		    console_first()->flags & CON_BOOT) {
+=======
+		if (!console_drivers || !console_drivers->device ||
+		    console_drivers->flags & CON_BOOT) {
+>>>>>>> b7ba80a49124 (Commit)
 			try_enable_default_console(newcon);
 		}
 	}
@@ -3415,7 +3834,11 @@ void register_console(struct console *newcon)
 
 	/* printk() messages are not printed to the Braille console. */
 	if (err || newcon->flags & CON_BRL)
+<<<<<<< HEAD
 		goto unlock;
+=======
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * If we have a bootconsole, and are switching to a real console,
@@ -3423,11 +3846,16 @@ void register_console(struct console *newcon)
 	 * the real console are the same physical device, it's annoying to
 	 * see the beginning boot messages twice
 	 */
+<<<<<<< HEAD
 	if (bootcon_registered &&
+=======
+	if (bootcon_enabled &&
+>>>>>>> b7ba80a49124 (Commit)
 	    ((newcon->flags & (CON_CONSDEV | CON_BOOT)) == CON_CONSDEV)) {
 		newcon->flags &= ~CON_PRINTBUFFER;
 	}
 
+<<<<<<< HEAD
 	newcon->dropped = 0;
 	console_init_seq(newcon, bootcon_registered);
 
@@ -3455,6 +3883,39 @@ void register_console(struct console *newcon)
 	 * register_console() completes.
 	 */
 
+=======
+	/*
+	 *	Put this console in the list - keep the
+	 *	preferred driver at the head of the list.
+	 */
+	console_lock();
+	if ((newcon->flags & CON_CONSDEV) || console_drivers == NULL) {
+		newcon->next = console_drivers;
+		console_drivers = newcon;
+		if (newcon->next)
+			newcon->next->flags &= ~CON_CONSDEV;
+		/* Ensure this flag is always set for the head of the list */
+		newcon->flags |= CON_CONSDEV;
+	} else {
+		newcon->next = console_drivers->next;
+		console_drivers->next = newcon;
+	}
+
+	if (newcon->flags & CON_EXTENDED)
+		nr_ext_console_drivers++;
+
+	newcon->dropped = 0;
+	if (newcon->flags & CON_PRINTBUFFER) {
+		/* Get a consistent copy of @syslog_seq. */
+		mutex_lock(&syslog_lock);
+		newcon->seq = syslog_seq;
+		mutex_unlock(&syslog_lock);
+	} else {
+		/* Begin with next message. */
+		newcon->seq = prb_next_seq(prb);
+	}
+	console_unlock();
+>>>>>>> b7ba80a49124 (Commit)
 	console_sysfs_notify();
 
 	/*
@@ -3465,6 +3926,7 @@ void register_console(struct console *newcon)
 	 * went to the bootconsole (that they do not see on the real console)
 	 */
 	con_printk(KERN_INFO, newcon, "enabled\n");
+<<<<<<< HEAD
 	if (bootcon_registered &&
 	    ((newcon->flags & (CON_CONSDEV | CON_BOOT)) == CON_CONSDEV) &&
 	    !keep_bootcon) {
@@ -3487,6 +3949,26 @@ static int unregister_console_locked(struct console *console)
 
 	lockdep_assert_console_list_lock_held();
 
+=======
+	if (bootcon_enabled &&
+	    ((newcon->flags & (CON_CONSDEV | CON_BOOT)) == CON_CONSDEV) &&
+	    !keep_bootcon) {
+		/* We need to iterate through all boot consoles, to make
+		 * sure we print everything out, before we unregister them.
+		 */
+		for_each_console(con)
+			if (con->flags & CON_BOOT)
+				unregister_console(con);
+	}
+}
+EXPORT_SYMBOL(register_console);
+
+int unregister_console(struct console *console)
+{
+	struct console *con;
+	int res;
+
+>>>>>>> b7ba80a49124 (Commit)
 	con_printk(KERN_INFO, console, "disabled\n");
 
 	res = _braille_unregister_console(console);
@@ -3495,6 +3977,7 @@ static int unregister_console_locked(struct console *console)
 	if (res > 0)
 		return 0;
 
+<<<<<<< HEAD
 	/* Disable it unconditionally */
 	console_srcu_write_flags(console, console->flags & ~CON_ENABLED);
 
@@ -3522,12 +4005,45 @@ static int unregister_console_locked(struct console *console)
 	 */
 	synchronize_srcu(&console_srcu);
 
+=======
+	res = -ENODEV;
+	console_lock();
+	if (console_drivers == console) {
+		console_drivers=console->next;
+		res = 0;
+	} else {
+		for_each_console(con) {
+			if (con->next == console) {
+				con->next = console->next;
+				res = 0;
+				break;
+			}
+		}
+	}
+
+	if (res)
+		goto out_disable_unlock;
+
+	if (console->flags & CON_EXTENDED)
+		nr_ext_console_drivers--;
+
+	/*
+	 * If this isn't the last console and it has CON_CONSDEV set, we
+	 * need to set it on the next preferred console.
+	 */
+	if (console_drivers != NULL && console->flags & CON_CONSDEV)
+		console_drivers->flags |= CON_CONSDEV;
+
+	console->flags &= ~CON_ENABLED;
+	console_unlock();
+>>>>>>> b7ba80a49124 (Commit)
 	console_sysfs_notify();
 
 	if (console->exit)
 		res = console->exit(console);
 
 	return res;
+<<<<<<< HEAD
 }
 
 int unregister_console(struct console *console)
@@ -3537,10 +4053,18 @@ int unregister_console(struct console *console)
 	console_list_lock();
 	res = unregister_console_locked(console);
 	console_list_unlock();
+=======
+
+out_disable_unlock:
+	console->flags &= ~CON_ENABLED;
+	console_unlock();
+
+>>>>>>> b7ba80a49124 (Commit)
 	return res;
 }
 EXPORT_SYMBOL(unregister_console);
 
+<<<<<<< HEAD
 /**
  * console_force_preferred_locked - force a registered console preferred
  * @con: The registered console to force preferred.
@@ -3583,6 +4107,8 @@ void console_force_preferred_locked(struct console *con)
 }
 EXPORT_SYMBOL(console_force_preferred_locked);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Initialize the console device. This is called *early*, so
  * we can't necessarily depend on lots of kernel help here.
@@ -3629,12 +4155,19 @@ void __init console_init(void)
  */
 static int __init printk_late_init(void)
 {
+<<<<<<< HEAD
 	struct hlist_node *tmp;
 	struct console *con;
 	int ret;
 
 	console_list_lock();
 	hlist_for_each_entry_safe(con, tmp, &console_list, node) {
+=======
+	struct console *con;
+	int ret;
+
+	for_each_console(con) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!(con->flags & CON_BOOT))
 			continue;
 
@@ -3651,11 +4184,17 @@ static int __init printk_late_init(void)
 			 */
 			pr_warn("bootconsole [%s%d] uses init memory and must be disabled even before the real one is ready\n",
 				con->name, con->index);
+<<<<<<< HEAD
 			unregister_console_locked(con);
 		}
 	}
 	console_list_unlock();
 
+=======
+			unregister_console(con);
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	ret = cpuhp_setup_state_nocalls(CPUHP_PRINTK_DEAD, "printk:dead", NULL,
 					console_cpu_notify);
 	WARN_ON(ret < 0);
@@ -3675,7 +4214,10 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
 	struct console *c;
 	u64 last_diff = 0;
 	u64 printk_seq;
+<<<<<<< HEAD
 	int cookie;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 diff;
 	u64 seq;
 
@@ -3686,6 +4228,7 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
 	for (;;) {
 		diff = 0;
 
+<<<<<<< HEAD
 		/*
 		 * Hold the console_lock to guarantee safe access to
 		 * console->seq and to prevent changes to @console_suspended
@@ -3695,6 +4238,11 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
 
 		cookie = console_srcu_read_lock();
 		for_each_console_srcu(c) {
+=======
+		console_lock();
+
+		for_each_console(c) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (con && con != c)
 				continue;
 			if (!console_is_usable(c))
@@ -3703,7 +4251,10 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
 			if (printk_seq < seq)
 				diff += seq - printk_seq;
 		}
+<<<<<<< HEAD
 		console_srcu_read_unlock(cookie);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * If consoles are suspended, it cannot be expected that they
@@ -3752,10 +4303,18 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
  * Context: Process context. May sleep while acquiring console lock.
  * Return: true if all enabled printers are caught up.
  */
+<<<<<<< HEAD
 static bool pr_flush(int timeout_ms, bool reset_on_progress)
 {
 	return __pr_flush(NULL, timeout_ms, reset_on_progress);
 }
+=======
+bool pr_flush(int timeout_ms, bool reset_on_progress)
+{
+	return __pr_flush(NULL, timeout_ms, reset_on_progress);
+}
+EXPORT_SYMBOL(pr_flush);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Delayed printk version, for scheduler-internal messages:

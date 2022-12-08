@@ -9,7 +9,10 @@
 
 #include "std.h"
 #include <linux/time.h>
+<<<<<<< HEAD
 #include <linux/stat.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 
 /* Only the generic macros and types may be defined here. The arch-specific
@@ -17,11 +20,15 @@
  * the layout of sys_stat_struct must not be defined here.
  */
 
+<<<<<<< HEAD
 /* stat flags (WARNING, octal here). We need to check for an existing
  * definition because linux/stat.h may omit to define those if it finds
  * that any glibc header was already included.
  */
 #if !defined(S_IFMT)
+=======
+/* stat flags (WARNING, octal here) */
+>>>>>>> b7ba80a49124 (Commit)
 #define S_IFDIR        0040000
 #define S_IFCHR        0020000
 #define S_IFBLK        0060000
@@ -31,6 +38,7 @@
 #define S_IFSOCK       0140000
 #define S_IFMT         0170000
 
+<<<<<<< HEAD
 #define S_ISDIR(mode)  (((mode) & S_IFMT) == S_IFDIR)
 #define S_ISCHR(mode)  (((mode) & S_IFMT) == S_IFCHR)
 #define S_ISBLK(mode)  (((mode) & S_IFMT) == S_IFBLK)
@@ -54,6 +62,15 @@
 #define S_IWOTH 00002
 #define S_IXOTH 00001
 #endif
+=======
+#define S_ISDIR(mode)  (((mode) & S_IFDIR)  == S_IFDIR)
+#define S_ISCHR(mode)  (((mode) & S_IFCHR)  == S_IFCHR)
+#define S_ISBLK(mode)  (((mode) & S_IFBLK)  == S_IFBLK)
+#define S_ISREG(mode)  (((mode) & S_IFREG)  == S_IFREG)
+#define S_ISFIFO(mode) (((mode) & S_IFIFO)  == S_IFIFO)
+#define S_ISLNK(mode)  (((mode) & S_IFLNK)  == S_IFLNK)
+#define S_ISSOCK(mode) (((mode) & S_IFSOCK) == S_IFSOCK)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* dirent types */
 #define DT_UNKNOWN     0x0
@@ -81,6 +98,14 @@
 #define MAXPATHLEN     (PATH_MAX)
 #endif
 
+<<<<<<< HEAD
+=======
+/* Special FD used by all the *at functions */
+#ifndef AT_FDCWD
+#define AT_FDCWD       (-100)
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 /* whence values for lseek() */
 #define SEEK_SET       0
 #define SEEK_CUR       1
@@ -105,6 +130,7 @@
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 
+<<<<<<< HEAD
 #define FD_SETIDXMASK (8 * sizeof(unsigned long))
 #define FD_SETBITMASK (8 * sizeof(unsigned long)-1)
 
@@ -145,6 +171,41 @@ typedef struct {
 		int __size = (FD_SETSIZE+FD_SETBITMASK) / FD_SETIDXMASK;\
 		for (__idx = 0; __idx < __size; __idx++)		\
 			__set->fds[__idx] = 0;				\
+=======
+/* for select() */
+typedef struct {
+	uint32_t fd32[(FD_SETSIZE + 31) / 32];
+} fd_set;
+
+#define FD_CLR(fd, set) do {                                            \
+		fd_set *__set = (set);                                  \
+		int __fd = (fd);                                        \
+		if (__fd >= 0)                                          \
+			__set->fd32[__fd / 32] &= ~(1U << (__fd & 31)); \
+	} while (0)
+
+#define FD_SET(fd, set) do {                                            \
+		fd_set *__set = (set);                                  \
+		int __fd = (fd);                                        \
+		if (__fd >= 0)                                          \
+			__set->fd32[__fd / 32] |= 1U << (__fd & 31);    \
+	} while (0)
+
+#define FD_ISSET(fd, set) ({                                                  \
+		fd_set *__set = (set);                                        \
+		int __fd = (fd);                                              \
+		int __r = 0;                                                  \
+		if (__fd >= 0)                                                \
+			__r = !!(__set->fd32[__fd / 32] & 1U << (__fd & 31)); \
+		__r;                                                          \
+	})
+
+#define FD_ZERO(set) do {                                               \
+		fd_set *__set = (set);                                  \
+		int __idx;                                              \
+		for (__idx = 0; __idx < (FD_SETSIZE+31) / 32; __idx ++) \
+			__set->fd32[__idx] = 0;                         \
+>>>>>>> b7ba80a49124 (Commit)
 	} while (0)
 
 /* for poll() */
@@ -225,7 +286,10 @@ struct stat {
 })
 #endif
 
+<<<<<<< HEAD
 /* make sure to include all global symbols */
 #include "nolibc.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _NOLIBC_TYPES_H */

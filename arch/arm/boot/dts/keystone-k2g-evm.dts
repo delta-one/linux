@@ -534,7 +534,11 @@
 &dss {
 	pinctrl-names = "default";
 	pinctrl-0 = <&vout_pins>;
+<<<<<<< HEAD
 	status = "okay";
+=======
+	status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 
 	port {
 		dpi_out: endpoint {

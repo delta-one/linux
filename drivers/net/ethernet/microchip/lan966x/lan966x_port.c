@@ -165,8 +165,11 @@ static void lan966x_port_link_up(struct lan966x_port *port)
 		break;
 	}
 
+<<<<<<< HEAD
 	lan966x_taprio_speed_set(port, config->speed);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Also the GIGA_MODE_ENA(1) needs to be set regardless of the
 	 * port speed for QSGMII ports.
 	 */
@@ -381,7 +384,11 @@ int lan966x_port_pcs_set(struct lan966x_port *port,
 	}
 
 	/* Take PCS out of reset */
+<<<<<<< HEAD
 	lan_rmw(DEV_CLOCK_CFG_LINK_SPEED_SET(LAN966X_SPEED_1000) |
+=======
+	lan_rmw(DEV_CLOCK_CFG_LINK_SPEED_SET(2) |
+>>>>>>> b7ba80a49124 (Commit)
 		DEV_CLOCK_CFG_PCS_RX_RST_SET(0) |
 		DEV_CLOCK_CFG_PCS_TX_RST_SET(0),
 		DEV_CLOCK_CFG_LINK_SPEED |

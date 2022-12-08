@@ -73,7 +73,11 @@ static int __init pcibios_init(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 subsys_initcall_sync(pcibios_init);
+=======
+subsys_initcall(pcibios_init);
+>>>>>>> b7ba80a49124 (Commit)
 
 int pcibios_unmap_io_space(struct pci_bus *bus)
 {
@@ -132,7 +136,11 @@ void __iomem *ioremap_phb(phys_addr_t paddr, unsigned long size)
 	 * address decoding but I'd rather not deal with those outside of the
 	 * reserved 64K legacy region.
 	 */
+<<<<<<< HEAD
 	area = __get_vm_area_caller(size, VM_IOREMAP, PHB_IO_BASE, PHB_IO_END,
+=======
+	area = __get_vm_area_caller(size, 0, PHB_IO_BASE, PHB_IO_END,
+>>>>>>> b7ba80a49124 (Commit)
 				    __builtin_return_address(0));
 	if (!area)
 		return NULL;

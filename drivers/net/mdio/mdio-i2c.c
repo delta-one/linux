@@ -3,7 +3,10 @@
  * MDIO I2C bridge
  *
  * Copyright (C) 2015-2016 Russell King
+<<<<<<< HEAD
  * Copyright (C) 2021 Marek Behun
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Network PHYs can appear on I2C buses when they are part of SFP module.
  * This driver exposes these PHYs to the networking PHY code, allowing
@@ -13,7 +16,10 @@
 #include <linux/i2c.h>
 #include <linux/mdio/mdio-i2c.h>
 #include <linux/phy.h>
+<<<<<<< HEAD
 #include <linux/sfp.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * I2C bus addresses 0x50 and 0x51 are normally an EEPROM, which is
@@ -30,8 +36,12 @@ static unsigned int i2c_mii_phy_addr(int phy_id)
 	return phy_id + 0x40;
 }
 
+<<<<<<< HEAD
 static int i2c_mii_read_default_c45(struct mii_bus *bus, int phy_id, int devad,
 				    int reg)
+=======
+static int i2c_mii_read(struct mii_bus *bus, int phy_id, int reg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_adapter *i2c = bus->priv;
 	struct i2c_msg msgs[2];
@@ -42,8 +52,13 @@ static int i2c_mii_read_default_c45(struct mii_bus *bus, int phy_id, int devad,
 		return 0xffff;
 
 	p = addr;
+<<<<<<< HEAD
 	if (devad >= 0) {
 		*p++ = 0x20 | devad;
+=======
+	if (reg & MII_ADDR_C45) {
+		*p++ = 0x20 | ((reg >> 16) & 31);
+>>>>>>> b7ba80a49124 (Commit)
 		*p++ = reg >> 8;
 	}
 	*p++ = reg;
@@ -65,8 +80,12 @@ static int i2c_mii_read_default_c45(struct mii_bus *bus, int phy_id, int devad,
 	return data[0] << 8 | data[1];
 }
 
+<<<<<<< HEAD
 static int i2c_mii_write_default_c45(struct mii_bus *bus, int phy_id,
 				     int devad, int reg, u16 val)
+=======
+static int i2c_mii_write(struct mii_bus *bus, int phy_id, int reg, u16 val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_adapter *i2c = bus->priv;
 	struct i2c_msg msg;
@@ -77,8 +96,13 @@ static int i2c_mii_write_default_c45(struct mii_bus *bus, int phy_id,
 		return 0;
 
 	p = data;
+<<<<<<< HEAD
 	if (devad >= 0) {
 		*p++ = devad;
+=======
+	if (reg & MII_ADDR_C45) {
+		*p++ = (reg >> 16) & 31;
+>>>>>>> b7ba80a49124 (Commit)
 		*p++ = reg >> 8;
 	}
 	*p++ = reg;
@@ -95,6 +119,7 @@ static int i2c_mii_write_default_c45(struct mii_bus *bus, int phy_id,
 	return ret < 0 ? ret : 0;
 }
 
+<<<<<<< HEAD
 static int i2c_mii_read_default_c22(struct mii_bus *bus, int phy_id, int reg)
 {
 	return i2c_mii_read_default_c45(bus, phy_id, -1, reg);
@@ -382,6 +407,11 @@ struct mii_bus *mdio_i2c_alloc(struct device *parent, struct i2c_adapter *i2c,
 {
 	struct mii_bus *mii;
 	int ret;
+=======
+struct mii_bus *mdio_i2c_alloc(struct device *parent, struct i2c_adapter *i2c)
+{
+	struct mii_bus *mii;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!i2c_check_functionality(i2c, I2C_FUNC_I2C))
 		return ERR_PTR(-EINVAL);
@@ -392,6 +422,7 @@ struct mii_bus *mdio_i2c_alloc(struct device *parent, struct i2c_adapter *i2c,
 
 	snprintf(mii->id, MII_BUS_ID_SIZE, "i2c:%s", dev_name(parent));
 	mii->parent = parent;
+<<<<<<< HEAD
 	mii->priv = i2c;
 
 	switch (protocol) {
@@ -416,6 +447,12 @@ struct mii_bus *mdio_i2c_alloc(struct device *parent, struct i2c_adapter *i2c,
 		break;
 	}
 
+=======
+	mii->read = i2c_mii_read;
+	mii->write = i2c_mii_write;
+	mii->priv = i2c;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return mii;
 }
 EXPORT_SYMBOL_GPL(mdio_i2c_alloc);

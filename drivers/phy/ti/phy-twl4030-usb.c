@@ -787,7 +787,11 @@ static int twl4030_usb_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void twl4030_usb_remove(struct platform_device *pdev)
+=======
+static int twl4030_usb_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct twl4030_usb *twl = platform_get_drvdata(pdev);
 	int val;
@@ -821,6 +825,11 @@ static void twl4030_usb_remove(struct platform_device *pdev)
 
 	/* disable complete OTG block */
 	twl4030_usb_clear_bits(twl, POWER_CTRL, POWER_CTRL_OTG_ENAB);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_OF
@@ -833,7 +842,11 @@ MODULE_DEVICE_TABLE(of, twl4030_usb_id_table);
 
 static struct platform_driver twl4030_usb_driver = {
 	.probe		= twl4030_usb_probe,
+<<<<<<< HEAD
 	.remove_new	= twl4030_usb_remove,
+=======
+	.remove		= twl4030_usb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "twl4030_usb",
 		.pm	= &twl4030_usb_pm_ops,

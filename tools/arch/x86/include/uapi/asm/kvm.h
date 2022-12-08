@@ -9,7 +9,10 @@
 
 #include <linux/types.h>
 #include <linux/ioctl.h>
+<<<<<<< HEAD
 #include <linux/stddef.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define KVM_PIO_PAGE_OFFSET 1
 #define KVM_COALESCED_MMIO_PAGE_OFFSET 2
@@ -54,6 +57,17 @@
 /* Architectural interrupt line count. */
 #define KVM_NR_INTERRUPTS 256
 
+<<<<<<< HEAD
+=======
+struct kvm_memory_alias {
+	__u32 slot;  /* this has a different namespace than memory slots */
+	__u32 flags;
+	__u64 guest_phys_addr;
+	__u64 memory_size;
+	__u64 target_phys_addr;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* for KVM_GET_IRQCHIP and KVM_SET_IRQCHIP */
 struct kvm_pic_state {
 	__u8 last_irr;	/* edge detection */
@@ -207,8 +221,11 @@ struct kvm_msr_list {
 struct kvm_msr_filter_range {
 #define KVM_MSR_FILTER_READ  (1 << 0)
 #define KVM_MSR_FILTER_WRITE (1 << 1)
+<<<<<<< HEAD
 #define KVM_MSR_FILTER_RANGE_VALID_MASK (KVM_MSR_FILTER_READ | \
 					 KVM_MSR_FILTER_WRITE)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__u32 flags;
 	__u32 nmsrs; /* number of msrs in bitmap */
 	__u32 base;  /* MSR index the bitmap starts at */
@@ -217,11 +234,16 @@ struct kvm_msr_filter_range {
 
 #define KVM_MSR_FILTER_MAX_RANGES 16
 struct kvm_msr_filter {
+<<<<<<< HEAD
 #ifndef __KERNEL__
 #define KVM_MSR_FILTER_DEFAULT_ALLOW (0 << 0)
 #endif
 #define KVM_MSR_FILTER_DEFAULT_DENY  (1 << 0)
 #define KVM_MSR_FILTER_VALID_MASK (KVM_MSR_FILTER_DEFAULT_DENY)
+=======
+#define KVM_MSR_FILTER_DEFAULT_ALLOW (0 << 0)
+#define KVM_MSR_FILTER_DEFAULT_DENY  (1 << 0)
+>>>>>>> b7ba80a49124 (Commit)
 	__u32 flags;
 	struct kvm_msr_filter_range ranges[KVM_MSR_FILTER_MAX_RANGES];
 };
@@ -508,8 +530,13 @@ struct kvm_nested_state {
 	 * KVM_{GET,PUT}_NESTED_STATE ioctl values.
 	 */
 	union {
+<<<<<<< HEAD
 		__DECLARE_FLEX_ARRAY(struct kvm_vmx_nested_state_data, vmx);
 		__DECLARE_FLEX_ARRAY(struct kvm_svm_nested_state_data, svm);
+=======
+		struct kvm_vmx_nested_state_data vmx[0];
+		struct kvm_svm_nested_state_data svm[0];
+>>>>>>> b7ba80a49124 (Commit)
 	} data;
 };
 
@@ -526,6 +553,7 @@ struct kvm_pmu_event_filter {
 #define KVM_PMU_EVENT_ALLOW 0
 #define KVM_PMU_EVENT_DENY 1
 
+<<<<<<< HEAD
 #define KVM_PMU_EVENT_FLAG_MASKED_EVENTS BIT(0)
 #define KVM_PMU_EVENT_FLAGS_VALID_MASK (KVM_PMU_EVENT_FLAG_MASKED_EVENTS)
 
@@ -555,6 +583,8 @@ struct kvm_pmu_event_filter {
 #define KVM_PMU_MASKED_ENTRY_EXCLUDE		(BIT_ULL(55))
 #define KVM_PMU_MASKED_ENTRY_UMASK_MASK_SHIFT	(56)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* for KVM_{GET,SET,HAS}_DEVICE_ATTR */
 #define KVM_VCPU_TSC_CTRL 0 /* control group for the timestamp counter (TSC) */
 #define   KVM_VCPU_TSC_OFFSET 0 /* attribute for the TSC offset */

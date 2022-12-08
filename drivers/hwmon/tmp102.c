@@ -260,6 +260,10 @@ static int tmp102_probe(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int tmp102_suspend(struct device *dev)
 {
 	struct i2c_client *client = to_i2c_client(dev);
@@ -282,8 +286,14 @@ static int tmp102_resume(struct device *dev)
 
 	return err;
 }
+<<<<<<< HEAD
 
 static DEFINE_SIMPLE_DEV_PM_OPS(tmp102_dev_pm_ops, tmp102_suspend, tmp102_resume);
+=======
+#endif /* CONFIG_PM */
+
+static SIMPLE_DEV_PM_OPS(tmp102_dev_pm_ops, tmp102_suspend, tmp102_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id tmp102_id[] = {
 	{ "tmp102", 0 },
@@ -300,7 +310,11 @@ MODULE_DEVICE_TABLE(of, tmp102_of_match);
 static struct i2c_driver tmp102_driver = {
 	.driver.name	= DRIVER_NAME,
 	.driver.of_match_table = of_match_ptr(tmp102_of_match),
+<<<<<<< HEAD
 	.driver.pm	= pm_sleep_ptr(&tmp102_dev_pm_ops),
+=======
+	.driver.pm	= &tmp102_dev_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	.probe_new	= tmp102_probe,
 	.id_table	= tmp102_id,
 };

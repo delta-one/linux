@@ -247,7 +247,11 @@ static int __videobuf_mmap_mapper(struct videobuf_queue *q,
 	}
 
 	vma->vm_ops          = &videobuf_vm_ops;
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_DONTEXPAND | VM_DONTDUMP);
+=======
+	vma->vm_flags       |= VM_DONTEXPAND | VM_DONTDUMP;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_private_data = map;
 
 	dprintk(1, "mmap %p: q=%p %08lx-%08lx (%lx) pgoff %08lx buf %d\n",

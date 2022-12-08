@@ -67,10 +67,13 @@
 #include <unistd.h>
 #include <linux/mman.h>
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 #include <traceevent/event-parse.h>
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct report {
 	struct perf_tool	tool;
 	struct perf_session	*session;
@@ -1203,9 +1206,13 @@ int cmd_report(int argc, const char **argv)
 			.lost		 = perf_event__process_lost,
 			.read		 = process_read_event,
 			.attr		 = process_attr,
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 			.tracing_data	 = perf_event__process_tracing_data,
 #endif
+=======
+			.tracing_data	 = perf_event__process_tracing_data,
+>>>>>>> b7ba80a49124 (Commit)
 			.build_id	 = perf_event__process_build_id,
 			.id_index	 = perf_event__process_id_index,
 			.auxtrace_info	 = perf_event__process_auxtrace_info,
@@ -1228,7 +1235,11 @@ int cmd_report(int argc, const char **argv)
 		    "input file name"),
 	OPT_INCR('v', "verbose", &verbose,
 		    "be more verbose (show symbol address, etc)"),
+<<<<<<< HEAD
 	OPT_BOOLEAN('q', "quiet", &quiet, "Do not show any warnings or messages"),
+=======
+	OPT_BOOLEAN('q', "quiet", &quiet, "Do not show any message"),
+>>>>>>> b7ba80a49124 (Commit)
 	OPT_BOOLEAN('D', "dump-raw-trace", &dump_trace,
 		    "dump raw trace in ASCII"),
 	OPT_BOOLEAN(0, "stats", &report.stats_mode, "Display event stats"),
@@ -1481,7 +1492,11 @@ repeat:
 
 	setup_forced_leader(&report, session->evlist);
 
+<<<<<<< HEAD
 	if (symbol_conf.group_sort_idx && evlist__nr_groups(session->evlist) == 0) {
+=======
+	if (symbol_conf.group_sort_idx && !session->evlist->core.nr_groups) {
+>>>>>>> b7ba80a49124 (Commit)
 		parse_options_usage(NULL, options, "group-sort-idx", 0);
 		ret = -EINVAL;
 		goto error;
@@ -1666,7 +1681,10 @@ repeat:
 						  report.range_num);
 	}
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (session->tevent.pevent &&
 	    tep_set_function_resolver(session->tevent.pevent,
 				      machine__resolve_kernel_addr,
@@ -1675,7 +1693,11 @@ repeat:
 		       __func__);
 		return -1;
 	}
+<<<<<<< HEAD
 #endif
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	sort__setup_elide(stdout);
 
 	ret = __cmd_report(&report);

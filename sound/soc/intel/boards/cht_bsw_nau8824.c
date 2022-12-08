@@ -136,7 +136,11 @@ static int cht_codec_fixup(struct snd_soc_pcm_runtime *rtd,
 		hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
 	int ret;
 
+<<<<<<< HEAD
 	/* The DSP will convert the FE rate to 48k, stereo, 24bits */
+=======
+	/* The DSP will covert the FE rate to 48k, stereo, 24bits */
+>>>>>>> b7ba80a49124 (Commit)
 	rate->min = rate->max = 48000;
 	channels->min = channels->max = 2;
 

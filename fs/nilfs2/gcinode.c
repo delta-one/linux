@@ -140,7 +140,11 @@ int nilfs_gccache_wait_and_mark_dirty(struct buffer_head *bh)
 {
 	wait_on_buffer(bh);
 	if (!buffer_uptodate(bh)) {
+<<<<<<< HEAD
 		struct inode *inode = bh->b_folio->mapping->host;
+=======
+		struct inode *inode = bh->b_page->mapping->host;
+>>>>>>> b7ba80a49124 (Commit)
 
 		nilfs_err(inode->i_sb,
 			  "I/O error reading %s block for GC (ino=%lu, vblocknr=%llu)",

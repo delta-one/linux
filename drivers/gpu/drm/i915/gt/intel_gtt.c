@@ -12,12 +12,18 @@
 
 #include "gem/i915_gem_internal.h"
 #include "gem/i915_gem_lmem.h"
+<<<<<<< HEAD
 #include "i915_reg.h"
 #include "i915_trace.h"
 #include "i915_utils.h"
 #include "intel_gt.h"
 #include "intel_gt_mcr.h"
 #include "intel_gt_print.h"
+=======
+#include "i915_trace.h"
+#include "i915_utils.h"
+#include "intel_gt.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_gt_regs.h"
 #include "intel_gtt.h"
 
@@ -272,7 +278,15 @@ void i915_address_space_init(struct i915_address_space *vm, int subclass)
 	memset64(vm->min_alignment, I915_GTT_MIN_ALIGNMENT,
 		 ARRAY_SIZE(vm->min_alignment));
 
+<<<<<<< HEAD
 	if (HAS_64K_PAGES(vm->i915)) {
+=======
+	if (HAS_64K_PAGES(vm->i915) && NEEDS_COMPACT_PT(vm->i915) &&
+	    subclass == VM_CLASS_PPGTT) {
+		vm->min_alignment[INTEL_MEMORY_LOCAL] = I915_GTT_PAGE_SIZE_2M;
+		vm->min_alignment[INTEL_MEMORY_STOLEN_LOCAL] = I915_GTT_PAGE_SIZE_2M;
+	} else if (HAS_64K_PAGES(vm->i915)) {
+>>>>>>> b7ba80a49124 (Commit)
 		vm->min_alignment[INTEL_MEMORY_LOCAL] = I915_GTT_PAGE_SIZE_64K;
 		vm->min_alignment[INTEL_MEMORY_STOLEN_LOCAL] = I915_GTT_PAGE_SIZE_64K;
 	}
@@ -342,8 +356,12 @@ int setup_scratch_page(struct i915_address_space *vm)
 	 */
 	size = I915_GTT_PAGE_SIZE_4K;
 	if (i915_vm_is_4lvl(vm) &&
+<<<<<<< HEAD
 	    HAS_PAGE_SIZES(vm->i915, I915_GTT_PAGE_SIZE_64K) &&
 	    !HAS_64K_PAGES(vm->i915))
+=======
+	    HAS_PAGE_SIZES(vm->i915, I915_GTT_PAGE_SIZE_64K))
+>>>>>>> b7ba80a49124 (Commit)
 		size = I915_GTT_PAGE_SIZE_64K;
 
 	do {
@@ -385,6 +403,21 @@ skip:
 		if (size == I915_GTT_PAGE_SIZE_4K)
 			return -ENOMEM;
 
+<<<<<<< HEAD
+=======
+		/*
+		 * If we need 64K minimum GTT pages for device local-memory,
+		 * like on XEHPSDV, then we need to fail the allocation here,
+		 * otherwise we can't safely support the insertion of
+		 * local-memory pages for this vm, since the HW expects the
+		 * correct physical alignment and size when the page-table is
+		 * operating in 64K GTT mode, which includes any scratch PTEs,
+		 * since userspace can still touch them.
+		 */
+		if (HAS_64K_PAGES(vm->i915))
+			return -ENOMEM;
+
+>>>>>>> b7ba80a49124 (Commit)
 		size = I915_GTT_PAGE_SIZE_4K;
 	} while (1);
 }
@@ -393,9 +426,12 @@ void free_scratch(struct i915_address_space *vm)
 {
 	int i;
 
+<<<<<<< HEAD
 	if (!vm->scratch[0])
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i <= vm->top; i++)
 		i915_gem_object_put(vm->scratch[i]);
 }
@@ -462,9 +498,15 @@ void gtt_write_workarounds(struct intel_gt *gt)
 		intel_uncore_write(uncore,
 				   HSW_GTT_CACHE_EN,
 				   can_use_gtt_cache ? GTT_CACHE_EN_ALL : 0);
+<<<<<<< HEAD
 		gt_WARN_ON_ONCE(gt, can_use_gtt_cache &&
 				intel_uncore_read(uncore,
 						  HSW_GTT_CACHE_EN) == 0);
+=======
+		drm_WARN_ON_ONCE(&i915->drm, can_use_gtt_cache &&
+				 intel_uncore_read(uncore,
+						   HSW_GTT_CACHE_EN) == 0);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -481,6 +523,7 @@ static void tgl_setup_private_ppat(struct intel_uncore *uncore)
 	intel_uncore_write(uncore, GEN12_PAT_INDEX(7), GEN8_PPAT_WB);
 }
 
+<<<<<<< HEAD
 static void xehp_setup_private_ppat(struct intel_gt *gt)
 {
 	enum forcewake_domains fw;
@@ -504,6 +547,8 @@ static void xehp_setup_private_ppat(struct intel_gt *gt)
 	intel_uncore_forcewake_put(gt->uncore, fw);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void icl_setup_private_ppat(struct intel_uncore *uncore)
 {
 	intel_uncore_write(uncore,
@@ -596,6 +641,7 @@ static void chv_setup_private_ppat(struct intel_uncore *uncore)
 	intel_uncore_write(uncore, GEN8_PRIVATE_PAT_HI, upper_32_bits(pat));
 }
 
+<<<<<<< HEAD
 void setup_private_pat(struct intel_gt *gt)
 {
 	struct intel_uncore *uncore = gt->uncore;
@@ -606,6 +652,15 @@ void setup_private_pat(struct intel_gt *gt)
 	if (GRAPHICS_VER_FULL(i915) >= IP_VER(12, 50))
 		xehp_setup_private_ppat(gt);
 	else if (GRAPHICS_VER(i915) >= 12)
+=======
+void setup_private_pat(struct intel_uncore *uncore)
+{
+	struct drm_i915_private *i915 = uncore->i915;
+
+	GEM_BUG_ON(GRAPHICS_VER(i915) < 8);
+
+	if (GRAPHICS_VER(i915) >= 12)
+>>>>>>> b7ba80a49124 (Commit)
 		tgl_setup_private_ppat(uncore);
 	else if (GRAPHICS_VER(i915) >= 11)
 		icl_setup_private_ppat(uncore);

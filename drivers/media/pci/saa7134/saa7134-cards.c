@@ -2116,6 +2116,10 @@ struct saa7134_board saa7134_boards[] = {
 		- Remote control doesn't initialize properly.
 		- Audio volume starts muted,
 		then gradually increases after channel change.
+<<<<<<< HEAD
+=======
+		- Overlay scaling problems (application error?)
+>>>>>>> b7ba80a49124 (Commit)
 		- Composite S-Video untested.
 		From: Konrad Rzepecki <hannibal@megapolis.pl>
 		*/

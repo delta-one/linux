@@ -30,7 +30,10 @@
 #include <asm/facility.h>
 #include <asm/nospec-branch.h>
 #include <asm/set_memory.h>
+<<<<<<< HEAD
 #include <asm/text-patching.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "bpf_jit.h"
 
 struct bpf_jit {
@@ -51,13 +54,20 @@ struct bpf_jit {
 	int r14_thunk_ip;	/* Address of expoline thunk for 'br %r14' */
 	int tail_call_start;	/* Tail call start offset */
 	int excnt;		/* Number of exception table entries */
+<<<<<<< HEAD
 	int prologue_plt_ret;	/* Return address for prologue hotpatch PLT */
 	int prologue_plt;	/* Start of prologue hotpatch PLT */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define SEEN_MEM	BIT(0)		/* use mem[] for temporary storage */
 #define SEEN_LITERAL	BIT(1)		/* code uses literals */
 #define SEEN_FUNC	BIT(2)		/* calls C functions */
+<<<<<<< HEAD
+=======
+#define SEEN_TAIL_CALL	BIT(3)		/* code uses tail calls */
+>>>>>>> b7ba80a49124 (Commit)
 #define SEEN_STACK	(SEEN_FUNC | SEEN_MEM)
 
 /*
@@ -70,10 +80,13 @@ struct bpf_jit {
 #define REG_0		REG_W0			/* Register 0 */
 #define REG_1		REG_W1			/* Register 1 */
 #define REG_2		BPF_REG_1		/* Register 2 */
+<<<<<<< HEAD
 #define REG_3		BPF_REG_2		/* Register 3 */
 #define REG_4		BPF_REG_3		/* Register 4 */
 #define REG_7		BPF_REG_6		/* Register 7 */
 #define REG_8		BPF_REG_7		/* Register 8 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define REG_14		BPF_REG_0		/* Register 14 */
 
 /*
@@ -513,6 +526,7 @@ static void bpf_skip(struct bpf_jit *jit, int size)
 }
 
 /*
+<<<<<<< HEAD
  * PLT for hotpatchable calls. The calling convention is the same as for the
  * ftrace hotpatch trampolines: %r0 is return address, %r1 is clobbered.
  */
@@ -558,13 +572,28 @@ static void bpf_jit_prologue(struct bpf_jit *jit, struct bpf_prog *fp,
 
 	if (fp->aux->func_idx == 0) {
 		/* Initialize the tail call counter in the main program. */
+=======
+ * Emit function prologue
+ *
+ * Save registers and create stack frame if necessary.
+ * See stack frame layout desription in "bpf_jit.h"!
+ */
+static void bpf_jit_prologue(struct bpf_jit *jit, u32 stack_depth)
+{
+	if (jit->seen & SEEN_TAIL_CALL) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* xc STK_OFF_TCCNT(4,%r15),STK_OFF_TCCNT(%r15) */
 		_EMIT6(0xd703f000 | STK_OFF_TCCNT, 0xf000 | STK_OFF_TCCNT);
 	} else {
 		/*
+<<<<<<< HEAD
 		 * Skip the tail call counter initialization in subprograms.
 		 * Insert nops in order to have tail_call_start at a
 		 * predictable offset.
+=======
+		 * There are no tail calls. Insert nops in order to have
+		 * tail_call_start at a predictable offset.
+>>>>>>> b7ba80a49124 (Commit)
 		 */
 		bpf_skip(jit, 6);
 	}
@@ -602,6 +631,7 @@ static void bpf_jit_prologue(struct bpf_jit *jit, struct bpf_prog *fp,
 }
 
 /*
+<<<<<<< HEAD
  * Emit an expoline for a jump that follows
  */
 static void emit_expoline(struct bpf_jit *jit)
@@ -639,6 +669,8 @@ static void call_r1(struct bpf_jit *jit)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Function epilogue
  */
 static void bpf_jit_epilogue(struct bpf_jit *jit, u32 stack_depth)
@@ -651,11 +683,19 @@ static void bpf_jit_epilogue(struct bpf_jit *jit, u32 stack_depth)
 	if (nospec_uses_trampoline()) {
 		jit->r14_thunk_ip = jit->prg;
 		/* Generate __s390_indirect_jump_r14 thunk */
+<<<<<<< HEAD
 		emit_expoline(jit);
+=======
+		/* exrl %r0,.+10 */
+		EMIT6_PCREL_RIL(0xc6000000, jit->prg + 10);
+		/* j . */
+		EMIT4_PCREL(0xa7f40000, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	/* br %r14 */
 	_EMIT2(0x07fe);
 
+<<<<<<< HEAD
 	if (is_first_pass(jit) || (jit->seen & SEEN_FUNC))
 		emit_r1_thunk(jit);
 
@@ -665,6 +705,19 @@ static void bpf_jit_epilogue(struct bpf_jit *jit, u32 stack_depth)
 		bpf_jit_plt(jit->prg_buf + jit->prg,
 			    jit->prg_buf + jit->prologue_plt_ret, NULL);
 	jit->prg += BPF_PLT_SIZE;
+=======
+	if ((nospec_uses_trampoline()) &&
+	    (is_first_pass(jit) || (jit->seen & SEEN_FUNC))) {
+		jit->r1_thunk_ip = jit->prg;
+		/* Generate __s390_indirect_jump_r1 thunk */
+		/* exrl %r0,.+10 */
+		EMIT6_PCREL_RIL(0xc6000000, jit->prg + 10);
+		/* j . */
+		EMIT4_PCREL(0xa7f40000, 0);
+		/* br %r1 */
+		_EMIT2(0x07f1);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int get_probe_mem_regno(const u8 *insn)
@@ -739,6 +792,7 @@ static int bpf_jit_probe_mem(struct bpf_jit *jit, struct bpf_prog *fp,
 }
 
 /*
+<<<<<<< HEAD
  * Sign-extend the register if necessary
  */
 static int sign_extend(struct bpf_jit *jit, int r, u8 size, u8 flags)
@@ -767,6 +821,8 @@ static int sign_extend(struct bpf_jit *jit, int r, u8 size, u8 flags)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Compile one eBPF instruction into s390x code
  *
  * NOTE: Use noinline because for gcov (-fprofile-arcs) gcc allocates a lot of
@@ -1401,10 +1457,16 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp,
 	 */
 	case BPF_JMP | BPF_CALL:
 	{
+<<<<<<< HEAD
 		const struct btf_func_model *m;
 		bool func_addr_fixed;
 		int j, ret;
 		u64 func;
+=======
+		u64 func;
+		bool func_addr_fixed;
+		int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 		ret = bpf_jit_get_func_addr(fp, insn, extra_pass,
 					    &func, &func_addr_fixed);
@@ -1413,6 +1475,7 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp,
 
 		REG_SET_SEEN(BPF_REG_5);
 		jit->seen |= SEEN_FUNC;
+<<<<<<< HEAD
 		/*
 		 * Copy the tail call counter to where the callee expects it.
 		 *
@@ -1445,6 +1508,17 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp,
 		EMIT6_PCREL_RILB(0xc4080000, REG_W1, _EMIT_CONST_U64(func));
 		/* %r1() */
 		call_r1(jit);
+=======
+		/* lgrl %w1,func */
+		EMIT6_PCREL_RILB(0xc4080000, REG_W1, _EMIT_CONST_U64(func));
+		if (nospec_uses_trampoline()) {
+			/* brasl %r14,__s390_indirect_jump_r1 */
+			EMIT6_PCREL_RILB(0xc0050000, REG_14, jit->r1_thunk_ip);
+		} else {
+			/* basr %r14,%w1 */
+			EMIT2(0x0d00, REG_14, REG_W1);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		/* lgr %b0,%r2: load return value into %b0 */
 		EMIT4(0xb9040000, BPF_REG_0, REG_2);
 		break;
@@ -1457,7 +1531,14 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp,
 		 *  B1: pointer to ctx
 		 *  B2: pointer to bpf_array
 		 *  B3: index in bpf_array
+<<<<<<< HEAD
 		 *
+=======
+		 */
+		jit->seen |= SEEN_TAIL_CALL;
+
+		/*
+>>>>>>> b7ba80a49124 (Commit)
 		 * if (index >= array->map.max_entries)
 		 *         goto out;
 		 */
@@ -1518,6 +1599,7 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp,
 		/* lg %r1,bpf_func(%r1) */
 		EMIT6_DISP_LH(0xe3000000, 0x0004, REG_1, REG_1, REG_0,
 			      offsetof(struct bpf_prog, bpf_func));
+<<<<<<< HEAD
 		if (nospec_uses_trampoline()) {
 			jit->seen |= SEEN_FUNC;
 			/* aghi %r1,tail_call_start */
@@ -1528,6 +1610,10 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp,
 			/* bc 0xf,tail_call_start(%r1) */
 			_EMIT4(0x47f01000 + jit->tail_call_start);
 		}
+=======
+		/* bc 0xf,tail_call_start(%r1) */
+		_EMIT4(0x47f01000 + jit->tail_call_start);
+>>>>>>> b7ba80a49124 (Commit)
 		/* out: */
 		if (jit->prg_buf) {
 			*(u16 *)(jit->prg_buf + patch_1_clrj + 2) =
@@ -1821,7 +1907,11 @@ static int bpf_jit_prog(struct bpf_jit *jit, struct bpf_prog *fp,
 	jit->prg = 0;
 	jit->excnt = 0;
 
+<<<<<<< HEAD
 	bpf_jit_prologue(jit, fp, stack_depth);
+=======
+	bpf_jit_prologue(jit, stack_depth);
+>>>>>>> b7ba80a49124 (Commit)
 	if (bpf_set_addr(jit, 0) < 0)
 		return -1;
 	for (i = 0; i < fp->len; i += insn_count) {
@@ -1901,9 +1991,12 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *fp)
 	struct bpf_jit jit;
 	int pass;
 
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(bpf_plt_end - bpf_plt != BPF_PLT_SIZE))
 		return orig_fp;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!fp->jit_requested)
 		return orig_fp;
 
@@ -1995,6 +2088,7 @@ out:
 					   tmp : orig_fp);
 	return fp;
 }
+<<<<<<< HEAD
 
 bool bpf_jit_supports_kfunc_call(void)
 {
@@ -2500,3 +2594,5 @@ bool bpf_jit_supports_subprog_tailcalls(void)
 {
 	return true;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

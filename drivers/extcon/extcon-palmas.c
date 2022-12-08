@@ -18,6 +18,10 @@
 #include <linux/mfd/palmas.h>
 #include <linux/of.h>
 #include <linux/of_platform.h>
+<<<<<<< HEAD
+=======
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/gpio/consumer.h>
 #include <linux/workqueue.h>
 

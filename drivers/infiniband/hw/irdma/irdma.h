@@ -147,7 +147,10 @@ struct irdma_hw_attrs {
 	u32 max_sleep_count;
 	u32 max_cqp_compl_wait_time_ms;
 	u16 max_stat_inst;
+<<<<<<< HEAD
 	u16 max_stat_idx;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void i40iw_init_hw(struct irdma_sc_dev *dev);

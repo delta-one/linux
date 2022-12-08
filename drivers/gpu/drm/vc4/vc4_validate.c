@@ -117,7 +117,11 @@ vc4_use_bo(struct vc4_exec_info *exec, uint32_t hindex)
 			  hindex, exec->bo_count);
 		return NULL;
 	}
+<<<<<<< HEAD
 	obj = to_drm_gem_dma_obj(exec->bo[hindex]);
+=======
+	obj = exec->bo[hindex];
+>>>>>>> b7ba80a49124 (Commit)
 	bo = to_vc4_bo(&obj->base);
 
 	if (bo->validated_shader) {
@@ -810,7 +814,11 @@ validate_gl_shader_rec(struct drm_device *dev,
 			return -EINVAL;
 		}
 
+<<<<<<< HEAD
 		bo[i] = to_drm_gem_dma_obj(exec->bo[src_handles[i]]);
+=======
+		bo[i] = exec->bo[src_handles[i]];
+>>>>>>> b7ba80a49124 (Commit)
 		if (!bo[i])
 			return -EINVAL;
 	}

@@ -2,6 +2,11 @@
 #ifndef _LINUX_TRACE_H
 #define _LINUX_TRACE_H
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_TRACING
+
+>>>>>>> b7ba80a49124 (Commit)
 #define TRACE_EXPORT_FUNCTION	BIT(0)
 #define TRACE_EXPORT_EVENT	BIT(1)
 #define TRACE_EXPORT_MARKER	BIT(2)
@@ -26,6 +31,7 @@ struct trace_export {
 	int flags;
 };
 
+<<<<<<< HEAD
 struct trace_array;
 
 #ifdef CONFIG_TRACING
@@ -44,6 +50,12 @@ int unregister_ftrace_export(struct trace_export *export);
 	})
 int __trace_array_puts(struct trace_array *tr, unsigned long ip,
 		       const char *str, int size);
+=======
+int register_ftrace_export(struct trace_export *export);
+int unregister_ftrace_export(struct trace_export *export);
+
+struct trace_array;
+>>>>>>> b7ba80a49124 (Commit)
 
 void trace_printk_init_buffers(void);
 __printf(3, 4)
@@ -60,6 +72,7 @@ void osnoise_arch_unregister(void);
 void osnoise_trace_irq_entry(int id);
 void osnoise_trace_irq_exit(int id, const char *desc);
 
+<<<<<<< HEAD
 #else /* CONFIG_TRACING */
 static inline int register_ftrace_export(struct trace_export *export)
 {
@@ -92,6 +105,8 @@ static inline int trace_array_destroy(struct trace_array *tr)
 {
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif	/* CONFIG_TRACING */
 
 #endif	/* _LINUX_TRACE_H */

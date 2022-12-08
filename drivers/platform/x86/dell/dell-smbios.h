@@ -34,8 +34,11 @@
 #define KBD_LED_AUTO_100_TOKEN	0x02F6
 #define GLOBAL_MIC_MUTE_ENABLE	0x0364
 #define GLOBAL_MIC_MUTE_DISABLE	0x0365
+<<<<<<< HEAD
 #define GLOBAL_MUTE_ENABLE	0x058C
 #define GLOBAL_MUTE_DISABLE	0x058D
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct notifier_block;
 

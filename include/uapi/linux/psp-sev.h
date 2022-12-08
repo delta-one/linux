@@ -36,6 +36,7 @@ enum {
  * SEV Firmware status code
  */
 typedef enum {
+<<<<<<< HEAD
 	/*
 	 * This error code is not in the SEV spec. Its purpose is to convey that
 	 * there was an error that prevented the SEV firmware from being called.
@@ -43,6 +44,8 @@ typedef enum {
 	 * with possible values from the specification.
 	 */
 	SEV_RET_NO_FW_CALL = -1,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SEV_RET_SUCCESS = 0,
 	SEV_RET_INVALID_PLATFORM_STATE,
 	SEV_RET_INVALID_GUEST_STATE,

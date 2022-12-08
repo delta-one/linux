@@ -29,7 +29,10 @@
 #define NVMET_DEFAULT_CTRL_MODEL	"Linux"
 #define NVMET_MN_MAX_SIZE		40
 #define NVMET_SN_MAX_SIZE		20
+<<<<<<< HEAD
 #define NVMET_FR_MAX_SIZE		8
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Supported optional AENs:
@@ -78,6 +81,10 @@ struct nvmet_ns {
 
 	struct completion	disable_done;
 	mempool_t		*bvec_pool;
+<<<<<<< HEAD
+=======
+	struct kmem_cache	*bvec_cache;
+>>>>>>> b7ba80a49124 (Commit)
 
 	int			use_p2pmem;
 	struct pci_dev		*p2p_dev;
@@ -264,8 +271,11 @@ struct nvmet_subsys {
 	struct config_group	allowed_hosts_group;
 
 	char			*model_number;
+<<<<<<< HEAD
 	u32			ieee_oui;
 	char			*firmware_rev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_NVME_TARGET_PASSTHRU
 	struct nvme_ctrl	*passthru_ctrl;
@@ -395,8 +405,11 @@ struct nvmet_req {
 	u64			error_slba;
 };
 
+<<<<<<< HEAD
 #define NVMET_MAX_MPOOL_BVEC		16
 extern struct kmem_cache *nvmet_bvec_cache;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern struct workqueue_struct *buffered_io_wq;
 extern struct workqueue_struct *zbd_wq;
 extern struct workqueue_struct *nvmet_wq;
@@ -708,7 +721,11 @@ int nvmet_auth_set_key(struct nvmet_host *host, const char *secret,
 		       bool set_ctrl);
 int nvmet_auth_set_host_hash(struct nvmet_host *host, const char *hash);
 int nvmet_setup_auth(struct nvmet_ctrl *ctrl);
+<<<<<<< HEAD
 void nvmet_auth_sq_init(struct nvmet_sq *sq);
+=======
+void nvmet_init_auth(struct nvmet_ctrl *ctrl, struct nvmet_req *req);
+>>>>>>> b7ba80a49124 (Commit)
 void nvmet_destroy_auth(struct nvmet_ctrl *ctrl);
 void nvmet_auth_sq_free(struct nvmet_sq *sq);
 int nvmet_setup_dhgroup(struct nvmet_ctrl *ctrl, u8 dhgroup_id);
@@ -730,9 +747,14 @@ static inline int nvmet_setup_auth(struct nvmet_ctrl *ctrl)
 {
 	return 0;
 }
+<<<<<<< HEAD
 static inline void nvmet_auth_sq_init(struct nvmet_sq *sq)
 {
 }
+=======
+static inline void nvmet_init_auth(struct nvmet_ctrl *ctrl,
+				   struct nvmet_req *req) {};
+>>>>>>> b7ba80a49124 (Commit)
 static inline void nvmet_destroy_auth(struct nvmet_ctrl *ctrl) {};
 static inline void nvmet_auth_sq_free(struct nvmet_sq *sq) {};
 static inline bool nvmet_check_auth_status(struct nvmet_req *req)

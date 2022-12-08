@@ -253,6 +253,7 @@ EXPORT_SYMBOL_NS(sof_rt1015p_codec_conf, SND_SOC_INTEL_SOF_REALTEK_COMMON);
  * RT1015 audio amplifier
  */
 
+<<<<<<< HEAD
 static const struct {
 	unsigned int tx;
 	unsigned int rx;
@@ -261,10 +262,13 @@ static const struct {
 	{.tx = 0x0, .rx = 0x2},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int rt1015_hw_params(struct snd_pcm_substream *substream,
 			    struct snd_pcm_hw_params *params)
 {
 	struct snd_soc_pcm_runtime *rtd = asoc_substream_to_rtd(substream);
+<<<<<<< HEAD
 	struct snd_soc_dai_link *dai_link = rtd->dai_link;
 	struct snd_soc_dai *codec_dai;
 	int i, clk_freq;
@@ -286,10 +290,22 @@ static int rt1015_hw_params(struct snd_pcm_substream *substream,
 				ret);
 			return ret;
 		}
+=======
+	struct snd_soc_dai *codec_dai;
+	int i, fs = 64, ret;
+
+	for_each_rtd_codec_dais(rtd, i, codec_dai) {
+		ret = snd_soc_dai_set_pll(codec_dai, 0, RT1015_PLL_S_BCLK,
+					  params_rate(params) * fs,
+					  params_rate(params) * 256);
+		if (ret)
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 		ret = snd_soc_dai_set_sysclk(codec_dai, RT1015_SCLK_S_PLL,
 					     params_rate(params) * 256,
 					     SND_SOC_CLOCK_IN);
+<<<<<<< HEAD
 		if (ret) {
 			dev_err(codec_dai->dev, "fail to set sysclk, ret %d\n",
 				ret);
@@ -318,6 +334,48 @@ static int rt1015_hw_params(struct snd_pcm_substream *substream,
 	}
 
 	return ret;
+=======
+		if (ret)
+			return ret;
+	}
+
+	return 0;
+}
+
+static int rt1015_hw_params_pll_and_tdm(struct snd_pcm_substream *substream,
+					 struct snd_pcm_hw_params *params)
+{
+	struct snd_soc_pcm_runtime *rtd = asoc_substream_to_rtd(substream);
+	struct snd_soc_dai *codec_dai;
+	int i, fs = 100, ret;
+
+	for_each_rtd_codec_dais(rtd, i, codec_dai) {
+		ret = snd_soc_dai_set_pll(codec_dai, 0, RT1015_PLL_S_BCLK,
+					  params_rate(params) * fs,
+					  params_rate(params) * 256);
+		if (ret)
+			return ret;
+
+		ret = snd_soc_dai_set_sysclk(codec_dai, RT1015_SCLK_S_PLL,
+					     params_rate(params) * 256,
+					     SND_SOC_CLOCK_IN);
+		if (ret)
+			return ret;
+	}
+	/* rx slot 1 for RT1015_DEV0_NAME */
+	ret = snd_soc_dai_set_tdm_slot(asoc_rtd_to_codec(rtd, 0),
+				       0x0, 0x1, 4, 24);
+	if (ret)
+		return ret;
+
+	/* rx slot 2 for RT1015_DEV1_NAME */
+	ret = snd_soc_dai_set_tdm_slot(asoc_rtd_to_codec(rtd, 1),
+				       0x0, 0x2, 4, 24);
+	if (ret)
+		return ret;
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct snd_soc_ops rt1015_ops = {
@@ -359,12 +417,22 @@ void sof_rt1015_codec_conf(struct snd_soc_card *card)
 }
 EXPORT_SYMBOL_NS(sof_rt1015_codec_conf, SND_SOC_INTEL_SOF_REALTEK_COMMON);
 
+<<<<<<< HEAD
 void sof_rt1015_dai_link(struct snd_soc_dai_link *link)
+=======
+void sof_rt1015_dai_link(struct snd_soc_dai_link *link, unsigned int fs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	link->codecs = rt1015_components;
 	link->num_codecs = ARRAY_SIZE(rt1015_components);
 	link->init = speaker_codec_init_lr;
 	link->ops = &rt1015_ops;
+<<<<<<< HEAD
+=======
+
+	if (fs == 100)
+		rt1015_ops.hw_params = rt1015_hw_params_pll_and_tdm;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_NS(sof_rt1015_dai_link, SND_SOC_INTEL_SOF_REALTEK_COMMON);
 

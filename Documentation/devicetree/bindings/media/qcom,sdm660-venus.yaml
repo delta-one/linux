@@ -1,10 +1,20 @@
 # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+<<<<<<< HEAD
 %YAML 1.2
 ---
 $id: http://devicetree.org/schemas/media/qcom,sdm660-venus.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
 title: Qualcomm SDM660 Venus video encode and decode accelerators
+=======
+
+%YAML 1.2
+---
+$id: "http://devicetree.org/schemas/media/qcom,sdm660-venus.yaml#"
+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+
+title: Qualcomm Venus video encode and decode accelerators
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Stanimir Varbanov <stanimir.varbanov@linaro.org>
@@ -14,13 +24,22 @@ description: |
   The Venus IP is a video encode and decode accelerator present
   on Qualcomm platforms
 
+<<<<<<< HEAD
 allOf:
   - $ref: qcom,venus-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     const: qcom,sdm660-venus
 
+<<<<<<< HEAD
+=======
+  reg:
+    maxItems: 1
+
+>>>>>>> b7ba80a49124 (Commit)
   clocks:
     maxItems: 4
 
@@ -39,9 +58,21 @@ properties:
       - const: cpu-cfg
       - const: video-mem
 
+<<<<<<< HEAD
   iommus:
     maxItems: 20
 
+=======
+  interrupts:
+    maxItems: 1
+
+  iommus:
+    maxItems: 20
+
+  memory-region:
+    maxItems: 1
+
+>>>>>>> b7ba80a49124 (Commit)
   power-domains:
     maxItems: 1
 
@@ -95,6 +126,7 @@ properties:
 
     additionalProperties: false
 
+<<<<<<< HEAD
 required:
   - compatible
   - iommus
@@ -157,3 +189,88 @@ examples:
             power-domains = <&mmcc VENUS_CORE0_GDSC>;
         };
     };
+=======
+  video-firmware:
+    type: object
+    additionalProperties: false
+
+    description: |
+      Firmware subnode is needed when the platform does not
+      have TrustZone.
+
+    properties:
+      iommus:
+        maxItems: 1
+
+    required:
+      - iommus
+
+required:
+  - compatible
+  - reg
+  - clocks
+  - clock-names
+  - interrupts
+  - iommus
+  - memory-region
+  - power-domains
+  - video-decoder
+  - video-encoder
+
+additionalProperties: false
+
+examples:
+  - |
+        #include <dt-bindings/clock/qcom,mmcc-sdm660.h>
+        #include <dt-bindings/interrupt-controller/arm-gic.h>
+
+        video-codec@cc00000 {
+                compatible = "qcom,sdm660-venus";
+                reg = <0x0cc00000 0xff000>;
+                clocks = <&mmcc VIDEO_CORE_CLK>,
+                         <&mmcc VIDEO_AHB_CLK>,
+                         <&mmcc VIDEO_AXI_CLK>,
+                         <&mmcc THROTTLE_VIDEO_AXI_CLK>;
+                clock-names = "core", "iface", "bus", "bus_throttle";
+                interconnects = <&gnoc 0 &mnoc 13>,
+                                <&mnoc 4 &bimc 5>;
+                interconnect-names = "cpu-cfg", "video-mem";
+                interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
+                iommus = <&mmss_smmu 0x400>,
+                         <&mmss_smmu 0x401>,
+                         <&mmss_smmu 0x40a>,
+                         <&mmss_smmu 0x407>,
+                         <&mmss_smmu 0x40e>,
+                         <&mmss_smmu 0x40f>,
+                         <&mmss_smmu 0x408>,
+                         <&mmss_smmu 0x409>,
+                         <&mmss_smmu 0x40b>,
+                         <&mmss_smmu 0x40c>,
+                         <&mmss_smmu 0x40d>,
+                         <&mmss_smmu 0x410>,
+                         <&mmss_smmu 0x421>,
+                         <&mmss_smmu 0x428>,
+                         <&mmss_smmu 0x429>,
+                         <&mmss_smmu 0x42b>,
+                         <&mmss_smmu 0x42c>,
+                         <&mmss_smmu 0x42d>,
+                         <&mmss_smmu 0x411>,
+                         <&mmss_smmu 0x431>;
+                memory-region = <&venus_region>;
+                power-domains = <&mmcc VENUS_GDSC>;
+
+                video-decoder {
+                        compatible = "venus-decoder";
+                        clocks = <&mmcc VIDEO_SUBCORE0_CLK>;
+                        clock-names = "vcodec0_core";
+                        power-domains = <&mmcc VENUS_CORE0_GDSC>;
+                };
+
+                video-encoder {
+                        compatible = "venus-encoder";
+                        clocks = <&mmcc VIDEO_SUBCORE0_CLK>;
+                        clock-names = "vcodec0_core";
+                        power-domains = <&mmcc VENUS_CORE0_GDSC>;
+                };
+        };
+>>>>>>> b7ba80a49124 (Commit)

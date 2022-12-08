@@ -35,7 +35,11 @@
 #define MTD_PARAM_LEN_MAX 64
 
 /* Maximum number of comma-separated items in the 'mtd=' parameter */
+<<<<<<< HEAD
 #define MTD_PARAM_MAX_COUNT 5
+=======
+#define MTD_PARAM_MAX_COUNT 4
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Maximum value for the number of bad PEBs per 1024 PEBs */
 #define MAX_MTD_UBI_BEB_LIMIT 768
@@ -53,14 +57,20 @@
  * @ubi_num: UBI number
  * @vid_hdr_offs: VID header offset
  * @max_beb_per1024: maximum expected number of bad PEBs per 1024 PEBs
+<<<<<<< HEAD
  * @enable_fm: enable fastmap when value is non-zero
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct mtd_dev_param {
 	char name[MTD_PARAM_LEN_MAX];
 	int ubi_num;
 	int vid_hdr_offs;
 	int max_beb_per1024;
+<<<<<<< HEAD
 	int enable_fm;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Numbers of elements set in the @mtd_dev_param array */
@@ -111,6 +121,10 @@ ATTRIBUTE_GROUPS(ubi_class);
 /* Root UBI "class" object (corresponds to '/<sysfs>/class/ubi/') */
 struct class ubi_class = {
 	.name		= UBI_NAME_STR,
+<<<<<<< HEAD
+=======
+	.owner		= THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.class_groups	= ubi_class_groups,
 };
 
@@ -469,7 +483,10 @@ static int uif_init(struct ubi_device *ubi)
 			err = ubi_add_volume(ubi, ubi->volumes[i]);
 			if (err) {
 				ubi_err(ubi, "cannot add volume %d", i);
+<<<<<<< HEAD
 				ubi->volumes[i] = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				goto out_volumes;
 			}
 		}
@@ -665,12 +682,15 @@ static int io_init(struct ubi_device *ubi, int max_beb_per1024)
 	ubi->ec_hdr_alsize = ALIGN(UBI_EC_HDR_SIZE, ubi->hdrs_min_io_size);
 	ubi->vid_hdr_alsize = ALIGN(UBI_VID_HDR_SIZE, ubi->hdrs_min_io_size);
 
+<<<<<<< HEAD
 	if (ubi->vid_hdr_offset && ((ubi->vid_hdr_offset + UBI_VID_HDR_SIZE) >
 	    ubi->vid_hdr_alsize)) {
 		ubi_err(ubi, "VID header offset %d too large.", ubi->vid_hdr_offset);
 		return -EINVAL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dbg_gen("min_io_size      %d", ubi->min_io_size);
 	dbg_gen("max_write_size   %d", ubi->max_write_size);
 	dbg_gen("hdrs_min_io_size %d", ubi->hdrs_min_io_size);
@@ -914,7 +934,10 @@ int ubi_attach_mtd_dev(struct mtd_info *mtd, int ubi_num,
 	ubi->dev.release = dev_release;
 	ubi->dev.class = &ubi_class;
 	ubi->dev.groups = ubi_dev_groups;
+<<<<<<< HEAD
 	ubi->dev.parent = &mtd->dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ubi->mtd = mtd;
 	ubi->ubi_num = ubi_num;
@@ -1257,7 +1280,11 @@ static int __init ubi_init(void)
 		mutex_lock(&ubi_devices_mutex);
 		err = ubi_attach_mtd_dev(mtd, p->ubi_num,
 					 p->vid_hdr_offs, p->max_beb_per1024,
+<<<<<<< HEAD
 					 p->enable_fm == 0 ? true : false);
+=======
+					 false);
+>>>>>>> b7ba80a49124 (Commit)
 		mutex_unlock(&ubi_devices_mutex);
 		if (err < 0) {
 			pr_err("UBI error: cannot attach mtd%d\n",
@@ -1436,7 +1463,11 @@ static int ubi_mtd_param_parse(const char *val, const struct kernel_param *kp)
 		int err = kstrtoint(token, 10, &p->max_beb_per1024);
 
 		if (err) {
+<<<<<<< HEAD
 			pr_err("UBI error: bad value for max_beb_per1024 parameter: %s\n",
+=======
+			pr_err("UBI error: bad value for max_beb_per1024 parameter: %s",
+>>>>>>> b7ba80a49124 (Commit)
 			       token);
 			return -EINVAL;
 		}
@@ -1447,13 +1478,18 @@ static int ubi_mtd_param_parse(const char *val, const struct kernel_param *kp)
 		int err = kstrtoint(token, 10, &p->ubi_num);
 
 		if (err) {
+<<<<<<< HEAD
 			pr_err("UBI error: bad value for ubi_num parameter: %s\n",
+=======
+			pr_err("UBI error: bad value for ubi_num parameter: %s",
+>>>>>>> b7ba80a49124 (Commit)
 			       token);
 			return -EINVAL;
 		}
 	} else
 		p->ubi_num = UBI_DEV_NUM_AUTO;
 
+<<<<<<< HEAD
 	token = tokens[4];
 	if (token) {
 		int err = kstrtoint(token, 10, &p->enable_fm);
@@ -1466,6 +1502,8 @@ static int ubi_mtd_param_parse(const char *val, const struct kernel_param *kp)
 	} else
 		p->enable_fm = 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mtd_devs += 1;
 	return 0;
 }
@@ -1478,13 +1516,19 @@ MODULE_PARM_DESC(mtd, "MTD devices to attach. Parameter format: mtd=<name|num|pa
 		      "Optional \"max_beb_per1024\" parameter specifies the maximum expected bad eraseblock per 1024 eraseblocks. (default value ("
 		      __stringify(CONFIG_MTD_UBI_BEB_LIMIT) ") if 0)\n"
 		      "Optional \"ubi_num\" parameter specifies UBI device number which have to be assigned to the newly created UBI device (assigned automatically by default)\n"
+<<<<<<< HEAD
 		      "Optional \"enable_fm\" parameter determines whether to enable fastmap during attach. If the value is non-zero, fastmap is enabled. Default value is 0.\n"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		      "\n"
 		      "Example 1: mtd=/dev/mtd0 - attach MTD device /dev/mtd0.\n"
 		      "Example 2: mtd=content,1984 mtd=4 - attach MTD device with name \"content\" using VID header offset 1984, and MTD device number 4 with default VID header offset.\n"
 		      "Example 3: mtd=/dev/mtd1,0,25 - attach MTD device /dev/mtd1 using default VID header offset and reserve 25*nand_size_in_blocks/1024 erase blocks for bad block handling.\n"
 		      "Example 4: mtd=/dev/mtd1,0,0,5 - attach MTD device /dev/mtd1 to UBI 5 and using default values for the other fields.\n"
+<<<<<<< HEAD
 		      "example 5: mtd=1,0,0,5 mtd=2,0,0,6,1 - attach MTD device /dev/mtd1 to UBI 5 and disable fastmap; attach MTD device /dev/mtd2 to UBI 6 and enable fastmap.(only works when fastmap is enabled and fm_autoconvert=Y).\n"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		      "\t(e.g. if the NAND *chipset* has 4096 PEB, 100 will be reserved for this UBI device).");
 #ifdef CONFIG_MTD_UBI_FASTMAP
 module_param(fm_autoconvert, bool, 0644);

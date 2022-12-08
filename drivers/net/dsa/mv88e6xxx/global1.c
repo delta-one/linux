@@ -403,6 +403,7 @@ int mv88e6390_g1_set_cpu_port(struct mv88e6xxx_chip *chip, int port)
 	return mv88e6390_g1_monitor_write(chip, ptr, port);
 }
 
+<<<<<<< HEAD
 int mv88e6390_g1_set_ptp_cpu_port(struct mv88e6xxx_chip *chip, int port)
 {
 	u16 ptr = MV88E6390_G1_MONITOR_MGMT_CTL_PTR_PTP_CPU_DEST;
@@ -415,6 +416,8 @@ int mv88e6390_g1_set_ptp_cpu_port(struct mv88e6xxx_chip *chip, int port)
 	return mv88e6390_g1_monitor_write(chip, ptr, port);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int mv88e6390_g1_mgmt_rsvd2cpu(struct mv88e6xxx_chip *chip)
 {
 	u16 ptr;

@@ -289,7 +289,10 @@ static void axon_msi_teardown_msi_irqs(struct pci_dev *dev)
 	msi_for_each_desc(entry, &dev->dev, MSI_DESC_ASSOCIATED) {
 		irq_set_msi_desc(entry->irq, NULL);
 		irq_dispose_mapping(entry->irq);
+<<<<<<< HEAD
 		entry->irq = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

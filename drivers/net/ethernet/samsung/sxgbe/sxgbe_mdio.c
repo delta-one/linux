@@ -50,12 +50,20 @@ static void sxgbe_mdio_ctrl_data(struct sxgbe_priv_data *sp, u32 cmd,
 }
 
 static void sxgbe_mdio_c45(struct sxgbe_priv_data *sp, u32 cmd, int phyaddr,
+<<<<<<< HEAD
 			   int devad, int phyreg, u16 phydata)
+=======
+			   int phyreg, u16 phydata)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 reg;
 
 	/* set mdio address register */
+<<<<<<< HEAD
 	reg = (devad & 0x1f) << 21;
+=======
+	reg = ((phyreg >> 16) & 0x1f) << 21;
+>>>>>>> b7ba80a49124 (Commit)
 	reg |= (phyaddr << 16) | (phyreg & 0xffff);
 	writel(reg, sp->ioaddr + sp->hw->mii.addr);
 
@@ -76,8 +84,13 @@ static void sxgbe_mdio_c22(struct sxgbe_priv_data *sp, u32 cmd, int phyaddr,
 	sxgbe_mdio_ctrl_data(sp, cmd, phydata);
 }
 
+<<<<<<< HEAD
 static int sxgbe_mdio_access_c22(struct sxgbe_priv_data *sp, u32 cmd,
 				 int phyaddr, int phyreg, u16 phydata)
+=======
+static int sxgbe_mdio_access(struct sxgbe_priv_data *sp, u32 cmd, int phyaddr,
+			     int phyreg, u16 phydata)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct mii_regs *mii = &sp->hw->mii;
 	int rc;
@@ -86,6 +99,7 @@ static int sxgbe_mdio_access_c22(struct sxgbe_priv_data *sp, u32 cmd,
 	if (rc < 0)
 		return rc;
 
+<<<<<<< HEAD
 	/* Ports 0-3 only support C22. */
 	if (phyaddr >= 4)
 		return -ENODEV;
@@ -107,11 +121,23 @@ static int sxgbe_mdio_access_c45(struct sxgbe_priv_data *sp, u32 cmd,
 		return rc;
 
 	sxgbe_mdio_c45(sp, cmd, phyaddr, devad, phyreg, phydata);
+=======
+	if (phyreg & MII_ADDR_C45) {
+		sxgbe_mdio_c45(sp, cmd, phyaddr, phyreg, phydata);
+	} else {
+		 /* Ports 0-3 only support C22. */
+		if (phyaddr >= 4)
+			return -ENODEV;
+
+		sxgbe_mdio_c22(sp, cmd, phyaddr, phyreg, phydata);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return sxgbe_mdio_busy_wait(sp->ioaddr, mii->data);
 }
 
 /**
+<<<<<<< HEAD
  * sxgbe_mdio_read_c22
  * @bus: points to the mii_bus structure
  * @phyaddr: address of phy port
@@ -119,13 +145,26 @@ static int sxgbe_mdio_access_c45(struct sxgbe_priv_data *sp, u32 cmd,
  * Description: this function used for C22 MDIO Read
  */
 static int sxgbe_mdio_read_c22(struct mii_bus *bus, int phyaddr, int phyreg)
+=======
+ * sxgbe_mdio_read
+ * @bus: points to the mii_bus structure
+ * @phyaddr: address of phy port
+ * @phyreg: address of register with in phy register
+ * Description: this function used for C45 and C22 MDIO Read
+ */
+static int sxgbe_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct net_device *ndev = bus->priv;
 	struct sxgbe_priv_data *priv = netdev_priv(ndev);
 	int rc;
 
+<<<<<<< HEAD
 	rc = sxgbe_mdio_access_c22(priv, SXGBE_SMA_READ_CMD, phyaddr,
 				   phyreg, 0);
+=======
+	rc = sxgbe_mdio_access(priv, SXGBE_SMA_READ_CMD, phyaddr, phyreg, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc < 0)
 		return rc;
 
@@ -133,6 +172,7 @@ static int sxgbe_mdio_read_c22(struct mii_bus *bus, int phyaddr, int phyreg)
 }
 
 /**
+<<<<<<< HEAD
  * sxgbe_mdio_read_c45
  * @bus: points to the mii_bus structure
  * @phyaddr: address of phy port
@@ -157,18 +197,29 @@ static int sxgbe_mdio_read_c45(struct mii_bus *bus, int phyaddr, int devad,
 
 /**
  * sxgbe_mdio_write_c22
+=======
+ * sxgbe_mdio_write
+>>>>>>> b7ba80a49124 (Commit)
  * @bus: points to the mii_bus structure
  * @phyaddr: address of phy port
  * @phyreg: address of phy registers
  * @phydata: data to be written into phy register
+<<<<<<< HEAD
  * Description: this function is used for C22 MDIO write
  */
 static int sxgbe_mdio_write_c22(struct mii_bus *bus, int phyaddr, int phyreg,
 				u16 phydata)
+=======
+ * Description: this function is used for C45 and C22 MDIO write
+ */
+static int sxgbe_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+			     u16 phydata)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct net_device *ndev = bus->priv;
 	struct sxgbe_priv_data *priv = netdev_priv(ndev);
 
+<<<<<<< HEAD
 	return sxgbe_mdio_access_c22(priv, SXGBE_SMA_WRITE_CMD, phyaddr, phyreg,
 				     phydata);
 }
@@ -190,6 +241,10 @@ static int sxgbe_mdio_write_c45(struct mii_bus *bus, int phyaddr, int devad,
 
 	return sxgbe_mdio_access_c45(priv, SXGBE_SMA_WRITE_CMD, phyaddr,
 				     devad, phyreg, phydata);
+=======
+	return sxgbe_mdio_access(priv, SXGBE_SMA_WRITE_CMD, phyaddr, phyreg,
+				 phydata);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int sxgbe_mdio_register(struct net_device *ndev)
@@ -216,10 +271,15 @@ int sxgbe_mdio_register(struct net_device *ndev)
 
 	/* assign mii bus fields */
 	mdio_bus->name = "sxgbe";
+<<<<<<< HEAD
 	mdio_bus->read = sxgbe_mdio_read_c22;
 	mdio_bus->write = sxgbe_mdio_write_c22;
 	mdio_bus->read_c45 = sxgbe_mdio_read_c45;
 	mdio_bus->write_c45 = sxgbe_mdio_write_c45;
+=======
+	mdio_bus->read = &sxgbe_mdio_read;
+	mdio_bus->write = &sxgbe_mdio_write;
+>>>>>>> b7ba80a49124 (Commit)
 	snprintf(mdio_bus->id, MII_BUS_ID_SIZE, "%s-%x",
 		 mdio_bus->name, priv->plat->bus_id);
 	mdio_bus->priv = ndev;

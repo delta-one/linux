@@ -351,6 +351,7 @@ static int sctp_v4_addr_valid(union sctp_addr *addr,
 /* Should this be available for binding?   */
 static int sctp_v4_available(union sctp_addr *addr, struct sctp_sock *sp)
 {
+<<<<<<< HEAD
 	struct sock *sk = &sp->inet.sk;
 	struct net *net = sock_net(sk);
 	int tb_id = RT_TABLE_LOCAL;
@@ -358,6 +359,12 @@ static int sctp_v4_available(union sctp_addr *addr, struct sctp_sock *sp)
 
 	tb_id = l3mdev_fib_table_by_index(net, sk->sk_bound_dev_if) ?: tb_id;
 	ret = inet_addr_type_table(net, addr->v4.sin_addr.s_addr, tb_id);
+=======
+	struct net *net = sock_net(&sp->inet.sk);
+	int ret = inet_addr_type(net, addr->v4.sin_addr.s_addr);
+
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (addr->v4.sin_addr.s_addr != htonl(INADDR_ANY) &&
 	   ret != RTN_LOCAL &&
 	   !sp->inet.freebind &&
@@ -567,11 +574,14 @@ static int sctp_v4_skb_iif(const struct sk_buff *skb)
 	return inet_iif(skb);
 }
 
+<<<<<<< HEAD
 static int sctp_v4_skb_sdif(const struct sk_buff *skb)
 {
 	return inet_sdif(skb);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Was this packet marked by Explicit Congestion Notification? */
 static int sctp_v4_is_ce(const struct sk_buff *skb)
 {
@@ -601,6 +611,11 @@ static struct sock *sctp_v4_create_accept_sk(struct sock *sk,
 
 	newinet->inet_daddr = asoc->peer.primary_addr.v4.sin_addr.s_addr;
 
+<<<<<<< HEAD
+=======
+	sk_refcnt_debug_inc(newsk);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (newsk->sk_prot->init(newsk)) {
 		sk_common_release(newsk);
 		newsk = NULL;
@@ -1188,7 +1203,10 @@ static struct sctp_af sctp_af_inet = {
 	.available	   = sctp_v4_available,
 	.scope		   = sctp_v4_scope,
 	.skb_iif	   = sctp_v4_skb_iif,
+<<<<<<< HEAD
 	.skb_sdif	   = sctp_v4_skb_sdif,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.is_ce		   = sctp_v4_is_ce,
 	.seq_dump_addr	   = sctp_v4_seq_dump_addr,
 	.ecn_capable	   = sctp_v4_ecn_capable,
@@ -1392,10 +1410,13 @@ static int __net_init sctp_defaults_init(struct net *net)
 	/* Initialize maximum autoclose timeout. */
 	net->sctp.max_autoclose		= INT_MAX / HZ;
 
+<<<<<<< HEAD
 #ifdef CONFIG_NET_L3_MASTER_DEV
 	net->sctp.l3mdev_accept = 1;
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	status = sctp_sysctl_net_register(net);
 	if (status)
 		goto err_sysctl_register;

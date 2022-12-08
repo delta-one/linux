@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 #include <linux/dma-mapping.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/virtio.h>
 #include <linux/spinlock.h>
 #include <linux/virtio_config.h>
@@ -16,7 +19,11 @@ static ssize_t device_show(struct device *_d,
 			   struct device_attribute *attr, char *buf)
 {
 	struct virtio_device *dev = dev_to_virtio(_d);
+<<<<<<< HEAD
 	return sysfs_emit(buf, "0x%04x\n", dev->id.device);
+=======
+	return sprintf(buf, "0x%04x\n", dev->id.device);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(device);
 
@@ -24,7 +31,11 @@ static ssize_t vendor_show(struct device *_d,
 			   struct device_attribute *attr, char *buf)
 {
 	struct virtio_device *dev = dev_to_virtio(_d);
+<<<<<<< HEAD
 	return sysfs_emit(buf, "0x%04x\n", dev->id.vendor);
+=======
+	return sprintf(buf, "0x%04x\n", dev->id.vendor);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(vendor);
 
@@ -32,7 +43,11 @@ static ssize_t status_show(struct device *_d,
 			   struct device_attribute *attr, char *buf)
 {
 	struct virtio_device *dev = dev_to_virtio(_d);
+<<<<<<< HEAD
 	return sysfs_emit(buf, "0x%08x\n", dev->config->get_status(dev));
+=======
+	return sprintf(buf, "0x%08x\n", dev->config->get_status(dev));
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(status);
 
@@ -40,7 +55,11 @@ static ssize_t modalias_show(struct device *_d,
 			     struct device_attribute *attr, char *buf)
 {
 	struct virtio_device *dev = dev_to_virtio(_d);
+<<<<<<< HEAD
 	return sysfs_emit(buf, "virtio:d%08Xv%08X\n",
+=======
+	return sprintf(buf, "virtio:d%08Xv%08X\n",
+>>>>>>> b7ba80a49124 (Commit)
 		       dev->id.device, dev->id.vendor);
 }
 static DEVICE_ATTR_RO(modalias);
@@ -55,9 +74,15 @@ static ssize_t features_show(struct device *_d,
 	/* We actually represent this as a bitstring, as it could be
 	 * arbitrary length in future. */
 	for (i = 0; i < sizeof(dev->features)*8; i++)
+<<<<<<< HEAD
 		len += sysfs_emit_at(buf, len, "%c",
 			       __virtio_test_bit(dev, i) ? '1' : '0');
 	len += sysfs_emit_at(buf, len, "\n");
+=======
+		len += sprintf(buf+len, "%c",
+			       __virtio_test_bit(dev, i) ? '1' : '0');
+	len += sprintf(buf+len, "\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return len;
 }
 static DEVICE_ATTR_RO(features);
@@ -96,9 +121,15 @@ static int virtio_dev_match(struct device *_dv, struct device_driver *_dr)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int virtio_uevent(const struct device *_dv, struct kobj_uevent_env *env)
 {
 	const struct virtio_device *dev = dev_to_virtio(_dv);
+=======
+static int virtio_uevent(struct device *_dv, struct kobj_uevent_env *env)
+{
+	struct virtio_device *dev = dev_to_virtio(_dv);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return add_uevent_var(env, "MODALIAS=virtio:d%08Xv%08X",
 			      dev->id.device, dev->id.vendor);
@@ -244,11 +275,14 @@ static int virtio_dev_probe(struct device *_d)
 	u64 driver_features;
 	u64 driver_features_legacy;
 
+<<<<<<< HEAD
 	_d->dma_mask = &_d->coherent_dma_mask;
 	err = dma_set_mask_and_coherent(_d, DMA_BIT_MASK(64));
 	if (err)
 		return err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* We have a driver! */
 	virtio_add_status(dev, VIRTIO_CONFIG_S_DRIVER);
 

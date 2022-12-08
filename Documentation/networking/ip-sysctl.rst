@@ -50,7 +50,11 @@ ip_no_pmtu_disc - INTEGER
 	Default: FALSE
 
 min_pmtu - INTEGER
+<<<<<<< HEAD
 	default 552 - minimum Path MTU. Unless this is changed manually,
+=======
+	default 552 - minimum Path MTU. Unless this is changed mannually,
+>>>>>>> b7ba80a49124 (Commit)
 	each cached pmtu will never be lower than this setting.
 
 ip_forward_use_pmtu - BOOLEAN
@@ -156,9 +160,12 @@ route/max_size - INTEGER
 	From linux kernel 3.6 onwards, this is deprecated for ipv4
 	as route cache is no longer used.
 
+<<<<<<< HEAD
 	From linux kernel 6.3 onwards, this is deprecated for ipv6
 	as garbage collection manages cached route entries.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 neigh/default/gc_thresh1 - INTEGER
 	Minimum number of entries to keep.  Garbage collector will not
 	purge entries if there are fewer than this number.
@@ -1072,6 +1079,7 @@ tcp_child_ehash_entries - INTEGER
 
 	Default: 0
 
+<<<<<<< HEAD
 tcp_plb_enabled - BOOLEAN
 	If set and the underlying congestion control (e.g. DCTCP) supports
 	and enables PLB feature, TCP PLB (Protective Load Balancing) is
@@ -1147,6 +1155,8 @@ tcp_plb_cong_thresh - INTEGER
 
 	Default: 128
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 UDP variables
 =============
 
@@ -1180,6 +1190,7 @@ udp_rmem_min - INTEGER
 udp_wmem_min - INTEGER
 	UDP does not have tx memory accounting and this tunable has no effect.
 
+<<<<<<< HEAD
 udp_hash_entries - INTEGER
 	Show the number of hash buckets for UDP sockets in the current
 	networking namespace.
@@ -1207,6 +1218,8 @@ udp_child_ehash_entries - INTEGER
 	Default: 0
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 RAW variables
 =============
 
@@ -1592,6 +1605,7 @@ proxy_arp_pvlan - BOOLEAN
 	  Hewlett-Packard call it Source-Port filtering or port-isolation.
 	  Ericsson call it MAC-Forced Forwarding (RFC Draft).
 
+<<<<<<< HEAD
 proxy_delay - INTEGER
 	Delay proxy response.
 
@@ -1600,6 +1614,8 @@ proxy_delay - INTEGER
 	will be chosen, setting to zero means reply with no delay.
 	Value in jiffies. Defaults to 80.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 shared_media - BOOLEAN
 	Send(router) or accept(host) RFC1620 shared media redirects.
 	Overrides secure_redirects.
@@ -2086,7 +2102,11 @@ skip_notify_on_dev_down - BOOLEAN
 
 nexthop_compat_mode - BOOLEAN
 	New nexthop API provides a means for managing nexthops independent of
+<<<<<<< HEAD
 	prefixes. Backwards compatibility with old route format is enabled by
+=======
+	prefixes. Backwards compatibilty with old route format is enabled by
+>>>>>>> b7ba80a49124 (Commit)
 	default which means route dumps and notifications contain the new
 	nexthop attribute but also the full, expanded nexthop definition.
 	Further, updates or deletes of a nexthop configuration generate route
@@ -2819,7 +2839,11 @@ pf_expose - INTEGER
 	can be got via SCTP_GET_PEER_ADDR_INFO sockopt;  When it's enabled,
 	a SCTP_PEER_ADDR_CHANGE event will be sent for a transport becoming
 	SCTP_PF state and a SCTP_PF-state transport info can be got via
+<<<<<<< HEAD
 	SCTP_GET_PEER_ADDR_INFO sockopt;  When it's disabled, no
+=======
+	SCTP_GET_PEER_ADDR_INFO sockopt;  When it's diabled, no
+>>>>>>> b7ba80a49124 (Commit)
 	SCTP_PEER_ADDR_CHANGE event will be sent and it returns -EACCES when
 	trying to get a SCTP_PF-state transport info via SCTP_GET_PEER_ADDR_INFO
 	sockopt.
@@ -3138,6 +3162,7 @@ ecn_enable - BOOLEAN
 
         Default: 1
 
+<<<<<<< HEAD
 l3mdev_accept - BOOLEAN
 	Enabling this option allows a "global" bound socket to work
 	across L3 master domains (e.g., VRFs) with packets capable of
@@ -3147,6 +3172,8 @@ l3mdev_accept - BOOLEAN
 
 	Default: 1 (enabled)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 ``/proc/sys/net/core/*``
 ========================

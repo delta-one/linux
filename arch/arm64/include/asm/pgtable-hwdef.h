@@ -159,7 +159,10 @@
 #ifdef CONFIG_ARM64_PA_BITS_52
 #define PTE_ADDR_HIGH		(_AT(pteval_t, 0xf) << 12)
 #define PTE_ADDR_MASK		(PTE_ADDR_LOW | PTE_ADDR_HIGH)
+<<<<<<< HEAD
 #define PTE_ADDR_HIGH_SHIFT	36
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 #define PTE_ADDR_MASK		PTE_ADDR_LOW
 #endif

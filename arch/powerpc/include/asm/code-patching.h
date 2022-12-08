@@ -22,6 +22,11 @@
 #define BRANCH_SET_LINK	0x1
 #define BRANCH_ABSOLUTE	0x2
 
+<<<<<<< HEAD
+=======
+DECLARE_STATIC_KEY_FALSE(init_mem_is_free);
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Powerpc branch instruction is :
  *

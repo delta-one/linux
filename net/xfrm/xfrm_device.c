@@ -97,6 +97,7 @@ static void xfrm_outer_mode_prep(struct xfrm_state *x, struct sk_buff *skb)
 	}
 }
 
+<<<<<<< HEAD
 static inline bool xmit_xfrm_check_overflow(struct sk_buff *skb)
 {
 	struct xfrm_offload *xo = xfrm_offload(skb);
@@ -109,6 +110,8 @@ static inline bool xmit_xfrm_check_overflow(struct sk_buff *skb)
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t features, bool *again)
 {
 	int err;
@@ -132,6 +135,7 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
 	if (xo->flags & XFRM_GRO || x->xso.dir == XFRM_DEV_OFFLOAD_IN)
 		return skb;
 
+<<<<<<< HEAD
 	/* The packet was sent to HW IPsec packet offload engine,
 	 * but to wrong device. Drop the packet, so it won't skip
 	 * XFRM stack.
@@ -142,6 +146,8 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
 		return NULL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* This skb was already validated on the upper/virtual dev */
 	if ((x->xso.dev != dev) && (x->xso.real_dev == dev))
 		return skb;
@@ -156,8 +162,12 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
 		return skb;
 	}
 
+<<<<<<< HEAD
 	if (skb_is_gso(skb) && (unlikely(x->xso.dev != dev) ||
 				unlikely(xmit_xfrm_check_overflow(skb)))) {
+=======
+	if (skb_is_gso(skb) && unlikely(x->xso.dev != dev)) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct sk_buff *segs;
 
 		/* Packet got rerouted, fixup features and segment it. */
@@ -230,8 +240,12 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
 EXPORT_SYMBOL_GPL(validate_xmit_xfrm);
 
 int xfrm_dev_state_add(struct net *net, struct xfrm_state *x,
+<<<<<<< HEAD
 		       struct xfrm_user_offload *xuo,
 		       struct netlink_ext_ack *extack)
+=======
+		       struct xfrm_user_offload *xuo)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 	struct dst_entry *dst;
@@ -239,6 +253,7 @@ int xfrm_dev_state_add(struct net *net, struct xfrm_state *x,
 	struct xfrm_dev_offload *xso = &x->xso;
 	xfrm_address_t *saddr;
 	xfrm_address_t *daddr;
+<<<<<<< HEAD
 	bool is_packet_offload;
 
 	if (!x->type_offload) {
@@ -259,6 +274,19 @@ int xfrm_dev_state_add(struct net *net, struct xfrm_state *x,
 	}
 
 	is_packet_offload = xuo->flags & XFRM_OFFLOAD_PACKET;
+=======
+
+	if (!x->type_offload)
+		return -EINVAL;
+
+	/* We don't yet support UDP encapsulation and TFC padding. */
+	if (x->encap || x->tfcpad)
+		return -EINVAL;
+
+	if (xuo->flags & ~(XFRM_OFFLOAD_IPV6 | XFRM_OFFLOAD_INBOUND))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	dev = dev_get_by_index(net, xuo->ifindex);
 	if (!dev) {
 		if (!(xuo->flags & XFRM_OFFLOAD_INBOUND)) {
@@ -273,7 +301,11 @@ int xfrm_dev_state_add(struct net *net, struct xfrm_state *x,
 					x->props.family,
 					xfrm_smark_get(0, x));
 		if (IS_ERR(dst))
+<<<<<<< HEAD
 			return (is_packet_offload) ? -EINVAL : 0;
+=======
+			return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 		dev = dst->dev;
 
@@ -284,12 +316,19 @@ int xfrm_dev_state_add(struct net *net, struct xfrm_state *x,
 	if (!dev->xfrmdev_ops || !dev->xfrmdev_ops->xdo_dev_state_add) {
 		xso->dev = NULL;
 		dev_put(dev);
+<<<<<<< HEAD
 		return (is_packet_offload) ? -EINVAL : 0;
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (x->props.flags & XFRM_STATE_ESN &&
 	    !dev->xfrmdev_ops->xdo_dev_state_advance_esn) {
+<<<<<<< HEAD
 		NL_SET_ERR_MSG(extack, "Device doesn't support offload with ESN");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		xso->dev = NULL;
 		dev_put(dev);
 		return -EINVAL;
@@ -304,17 +343,22 @@ int xfrm_dev_state_add(struct net *net, struct xfrm_state *x,
 	else
 		xso->dir = XFRM_DEV_OFFLOAD_OUT;
 
+<<<<<<< HEAD
 	if (is_packet_offload)
 		xso->type = XFRM_DEV_OFFLOAD_PACKET;
 	else
 		xso->type = XFRM_DEV_OFFLOAD_CRYPTO;
 
 	err = dev->xfrmdev_ops->xdo_dev_state_add(x, extack);
+=======
+	err = dev->xfrmdev_ops->xdo_dev_state_add(x);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		xso->dev = NULL;
 		xso->dir = 0;
 		xso->real_dev = NULL;
 		netdev_put(dev, &xso->dev_tracker);
+<<<<<<< HEAD
 		xso->type = XFRM_DEV_OFFLOAD_UNSPECIFIED;
 
 		/* User explicitly requested packet offload mode and configured
@@ -329,12 +373,18 @@ int xfrm_dev_state_add(struct net *net, struct xfrm_state *x,
 			NL_SET_ERR_MSG_WEAK(extack, "Device failed to offload this state");
 			return err;
 		}
+=======
+
+		if (err != -EOPNOTSUPP)
+			return err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
 }
 EXPORT_SYMBOL_GPL(xfrm_dev_state_add);
 
+<<<<<<< HEAD
 int xfrm_dev_policy_add(struct net *net, struct xfrm_policy *xp,
 			struct xfrm_user_offload *xuo, u8 dir,
 			struct netlink_ext_ack *extack)
@@ -398,6 +448,8 @@ int xfrm_dev_policy_add(struct net *net, struct xfrm_policy *xp,
 }
 EXPORT_SYMBOL_GPL(xfrm_dev_policy_add);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool xfrm_dev_offload_ok(struct sk_buff *skb, struct xfrm_state *x)
 {
 	int mtu;
@@ -408,9 +460,14 @@ bool xfrm_dev_offload_ok(struct sk_buff *skb, struct xfrm_state *x)
 	if (!x->type_offload || x->encap)
 		return false;
 
+<<<<<<< HEAD
 	if (x->xso.type == XFRM_DEV_OFFLOAD_PACKET ||
 	    ((!dev || (dev == xfrm_dst_path(dst)->dev)) &&
 	     !xdst->child->xfrm)) {
+=======
+	if ((!dev || (dev == xfrm_dst_path(dst)->dev)) &&
+	    (!xdst->child->xfrm)) {
+>>>>>>> b7ba80a49124 (Commit)
 		mtu = xfrm_state_mtu(x, xdst->child_mtu_cached);
 		if (skb->len <= mtu)
 			goto ok;
@@ -501,10 +558,15 @@ static int xfrm_api_check(struct net_device *dev)
 
 static int xfrm_dev_down(struct net_device *dev)
 {
+<<<<<<< HEAD
 	if (dev->features & NETIF_F_HW_ESP) {
 		xfrm_dev_state_flush(dev_net(dev), dev, true);
 		xfrm_dev_policy_flush(dev_net(dev), dev, true);
 	}
+=======
+	if (dev->features & NETIF_F_HW_ESP)
+		xfrm_dev_state_flush(dev_net(dev), dev, true);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return NOTIFY_DONE;
 }

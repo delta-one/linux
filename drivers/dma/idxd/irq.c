@@ -17,6 +17,15 @@ enum irq_work_type {
 	IRQ_WORK_PROCESS_FAULT,
 };
 
+<<<<<<< HEAD
+=======
+struct idxd_fault {
+	struct work_struct work;
+	u64 addr;
+	struct idxd_device *idxd;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct idxd_resubmit {
 	struct work_struct work;
 	struct idxd_desc *desc;
@@ -43,12 +52,20 @@ static void idxd_device_reinit(struct work_struct *work)
 		goto out;
 
 	for (i = 0; i < idxd->max_wqs; i++) {
+<<<<<<< HEAD
 		if (test_bit(i, idxd->wq_enable_map)) {
 			struct idxd_wq *wq = idxd->wqs[i];
 
 			rc = idxd_wq_enable(wq);
 			if (rc < 0) {
 				clear_bit(i, idxd->wq_enable_map);
+=======
+		struct idxd_wq *wq = idxd->wqs[i];
+
+		if (wq->state == IDXD_WQ_ENABLED) {
+			rc = idxd_wq_enable(wq);
+			if (rc < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 				dev_warn(dev, "Unable to re-enable wq %s\n",
 					 dev_name(wq_confdev(wq)));
 			}

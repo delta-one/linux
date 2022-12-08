@@ -22,7 +22,12 @@ fi
 
 phc2sys_start()
 {
+<<<<<<< HEAD
 	local uds_address=$1
+=======
+	local if_name=$1
+	local uds_address=$2
+>>>>>>> b7ba80a49124 (Commit)
 	local extra_args=""
 
 	if ! [ -z "${uds_address}" ]; then
@@ -32,7 +37,13 @@ phc2sys_start()
 	phc2sys_log="$(mktemp)"
 
 	chrt -f 10 phc2sys -m \
+<<<<<<< HEAD
 		-a -rr \
+=======
+		-c ${if_name} \
+		-s CLOCK_REALTIME \
+		-O ${UTC_TAI_OFFSET} \
+>>>>>>> b7ba80a49124 (Commit)
 		--step_threshold 0.00002 \
 		--first_step_threshold 0.00002 \
 		${extra_args} \
@@ -50,6 +61,7 @@ phc2sys_stop()
 	rm "${phc2sys_log}" 2> /dev/null
 }
 
+<<<<<<< HEAD
 # Replace space separators from interface list with underscores
 if_names_to_label()
 {
@@ -71,6 +83,17 @@ ptp4l_start()
 		extra_args="${extra_args} -i ${if_name}"
 	done
 
+=======
+ptp4l_start()
+{
+	local if_name=$1
+	local slave_only=$2
+	local uds_address=$3
+	local log="ptp4l_log_${if_name}"
+	local pid="ptp4l_pid_${if_name}"
+	local extra_args=""
+
+>>>>>>> b7ba80a49124 (Commit)
 	if [ "${slave_only}" = true ]; then
 		extra_args="${extra_args} -s"
 	fi
@@ -80,6 +103,10 @@ ptp4l_start()
 	declare -g "${log}=$(mktemp)"
 
 	chrt -f 10 ptp4l -m -2 -P \
+<<<<<<< HEAD
+=======
+		-i ${if_name} \
+>>>>>>> b7ba80a49124 (Commit)
 		--step_threshold 0.00002 \
 		--first_step_threshold 0.00002 \
 		--tx_timestamp_timeout 100 \
@@ -88,16 +115,26 @@ ptp4l_start()
 		> "${!log}" 2>&1 &
 	declare -g "${pid}=$!"
 
+<<<<<<< HEAD
 	echo "ptp4l for interfaces ${if_names} logs to ${!log} and has pid ${!pid}"
+=======
+	echo "ptp4l for interface ${if_name} logs to ${!log} and has pid ${!pid}"
+>>>>>>> b7ba80a49124 (Commit)
 
 	sleep 1
 }
 
 ptp4l_stop()
 {
+<<<<<<< HEAD
 	local if_names="$1"
 	local log="ptp4l_log_$(if_names_to_label ${if_names})"
 	local pid="ptp4l_pid_$(if_names_to_label ${if_names})"
+=======
+	local if_name=$1
+	local log="ptp4l_log_${if_name}"
+	local pid="ptp4l_pid_${if_name}"
+>>>>>>> b7ba80a49124 (Commit)
 
 	{ kill ${!pid} && wait ${!pid}; } 2> /dev/null
 	rm "${!log}" 2> /dev/null
@@ -144,12 +181,19 @@ isochron_recv_start()
 {
 	local if_name=$1
 	local uds=$2
+<<<<<<< HEAD
 	local stats_port=$3
 	local extra_args=$4
 	local pid="isochron_pid_${stats_port}"
 
 	if ! [ -z "${uds}" ]; then
 		extra_args="${extra_args} --unix-domain-socket ${uds}"
+=======
+	local extra_args=$3
+
+	if ! [ -z "${uds}" ]; then
+		extra_args="--unix-domain-socket ${uds}"
+>>>>>>> b7ba80a49124 (Commit)
 	fi
 
 	isochron rcv \
@@ -157,20 +201,30 @@ isochron_recv_start()
 		--sched-priority 98 \
 		--sched-fifo \
 		--utc-tai-offset ${UTC_TAI_OFFSET} \
+<<<<<<< HEAD
 		--stats-port ${stats_port} \
 		--quiet \
 		${extra_args} & \
 	declare -g "${pid}=$!"
+=======
+		--quiet \
+		${extra_args} & \
+	isochron_pid=$!
+>>>>>>> b7ba80a49124 (Commit)
 
 	sleep 1
 }
 
 isochron_recv_stop()
 {
+<<<<<<< HEAD
 	local stats_port=$1
 	local pid="isochron_pid_${stats_port}"
 
 	{ kill ${!pid} && wait ${!pid}; } 2> /dev/null
+=======
+	{ kill ${isochron_pid} && wait ${isochron_pid}; } 2> /dev/null
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 isochron_do()
@@ -222,7 +276,11 @@ isochron_do()
 
 	cpufreq_max ${ISOCHRON_CPU}
 
+<<<<<<< HEAD
 	isochron_recv_start "${h2}" "${receiver_uds}" 5000 "${receiver_extra_args}"
+=======
+	isochron_recv_start "${h2}" "${receiver_uds}" "${receiver_extra_args}"
+>>>>>>> b7ba80a49124 (Commit)
 
 	isochron send \
 		--interface ${sender_if_name} \
@@ -243,7 +301,11 @@ isochron_do()
 		${extra_args} \
 		--quiet
 
+<<<<<<< HEAD
 	isochron_recv_stop 5000
+=======
+	isochron_recv_stop
+>>>>>>> b7ba80a49124 (Commit)
 
 	cpufreq_restore ${ISOCHRON_CPU}
 }

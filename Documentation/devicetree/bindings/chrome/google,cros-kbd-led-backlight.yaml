@@ -20,14 +20,21 @@ additionalProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     spi {
+=======
+    spi0 {
+>>>>>>> b7ba80a49124 (Commit)
       #address-cells = <1>;
       #size-cells = <0>;
 
       cros_ec: ec@0 {
         compatible = "google,cros-ec-spi";
         reg = <0>;
+<<<<<<< HEAD
         interrupts = <15 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
         kbd-led-backlight {
           compatible = "google,cros-kbd-led-backlight";

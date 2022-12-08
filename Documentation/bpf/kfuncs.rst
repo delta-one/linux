@@ -1,7 +1,10 @@
+<<<<<<< HEAD
 .. SPDX-License-Identifier: GPL-2.0
 
 .. _kfuncs-header-label:
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 =============================
 BPF Kernel Functions (kfuncs)
 =============================
@@ -13,7 +16,11 @@ BPF Kernel Functions or more commonly known as kfuncs are functions in the Linux
 kernel which are exposed for use by BPF programs. Unlike normal BPF helpers,
 kfuncs do not have a stable interface and can change from one kernel release to
 another. Hence, BPF programs need to be updated in response to changes in the
+<<<<<<< HEAD
 kernel. See :ref:`BPF_kfunc_lifecycle_expectations` for more information.
+=======
+kernel.
+>>>>>>> b7ba80a49124 (Commit)
 
 2. Defining a kfunc
 ===================
@@ -41,7 +48,11 @@ An example is given below::
         __diag_ignore_all("-Wmissing-prototypes",
                           "Global kfuncs as their definitions will be in BTF");
 
+<<<<<<< HEAD
         __bpf_kfunc struct task_struct *bpf_find_get_task_by_vpid(pid_t nr)
+=======
+        struct task_struct *bpf_find_get_task_by_vpid(pid_t nr)
+>>>>>>> b7ba80a49124 (Commit)
         {
                 return find_get_task_by_vpid(nr);
         }
@@ -66,7 +77,11 @@ kfunc with a __tag, where tag may be one of the supported annotations.
 This annotation is used to indicate a memory and size pair in the argument list.
 An example is given below::
 
+<<<<<<< HEAD
         __bpf_kfunc void bpf_memzero(void *mem, int mem__sz)
+=======
+        void bpf_memzero(void *mem, int mem__sz)
+>>>>>>> b7ba80a49124 (Commit)
         {
         ...
         }
@@ -76,6 +91,7 @@ argument as its size. By default, without __sz annotation, the size of the type
 of the pointer is used. Without __sz annotation, a kfunc cannot accept a void
 pointer.
 
+<<<<<<< HEAD
 2.2.2 __k Annotation
 --------------------
 
@@ -117,6 +133,8 @@ Here, the dynptr will be treated as an uninitialized dynptr. Without this
 annotation, the verifier will reject the program if the dynptr passed in is
 not initialized.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 .. _BPF_kfunc_nodef:
 
 2.3 Using an existing kernel function
@@ -142,6 +160,7 @@ flags on a set of kfuncs as follows::
 This set encodes the BTF ID of each kfunc listed above, and encodes the flags
 along with it. Ofcourse, it is also allowed to specify no flags.
 
+<<<<<<< HEAD
 kfunc definitions should also always be annotated with the ``__bpf_kfunc``
 macro. This prevents issues such as the compiler inlining the kfunc if it's a
 static kernel function, or the function being elided in an LTO build as it's
@@ -156,6 +175,8 @@ protected. An example is given below::
         ...
         }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 2.4.1 KF_ACQUIRE flag
 ---------------------
 
@@ -196,6 +217,7 @@ KF_ACQUIRE and KF_RET_NULL flags.
 --------------------------
 
 The KF_TRUSTED_ARGS flag is used for kfuncs taking pointer arguments. It
+<<<<<<< HEAD
 indicates that the all pointer arguments are valid, and that all pointers to
 BTF objects have been passed in their unmodified form (that is, at a zero
 offset, and without having been obtained from walking another pointer, with one
@@ -230,6 +252,24 @@ In other words, you must:
 
 2. Specify the type and name of the trusted nested field. This field must match
    the field in the original type definition exactly.
+=======
+indicates that the all pointer arguments will always have a guaranteed lifetime,
+and pointers to kernel objects are always passed to helpers in their unmodified
+form (as obtained from acquire kfuncs).
+
+It can be used to enforce that a pointer to a refcounted object acquired from a
+kfunc or BPF helper is passed as an argument to this kfunc without any
+modifications (e.g. pointer arithmetic) such that it is trusted and points to
+the original object.
+
+Meanwhile, it is also allowed pass pointers to normal memory to such kfuncs,
+but those can have a non-zero offset.
+
+This flag is often used for kfuncs that operate (change some property, perform
+some operation) on an object that was obtained using an acquire kfunc. Such
+kfuncs need an unchanged pointer to ensure the integrity of the operation being
+performed on the expected object.
+>>>>>>> b7ba80a49124 (Commit)
 
 2.4.6 KF_SLEEPABLE flag
 -----------------------
@@ -246,6 +286,7 @@ rebooting or panicking. Due to this additional restrictions apply to these
 calls. At the moment they only require CAP_SYS_BOOT capability, but more can be
 added later.
 
+<<<<<<< HEAD
 2.4.8 KF_RCU flag
 -----------------
 
@@ -279,6 +320,8 @@ encouraged to make their use-cases known as early as possible, and participate
 in upstream discussions regarding whether to keep, change, deprecate, or remove
 those kfuncs if and when such discussions occur.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 2.5 Registering the kfuncs
 --------------------------
 
@@ -301,6 +344,7 @@ type. An example is shown below::
                 return register_btf_kfunc_id_set(BPF_PROG_TYPE_TRACING, &bpf_task_kfunc_set);
         }
         late_initcall(init_subsystem);
+<<<<<<< HEAD
 
 2.6  Specifying no-cast aliases with ___init
 --------------------------------------------
@@ -646,3 +690,5 @@ the verifier. bpf_cgroup_ancestor() can be used as follows:
 BPF provides a set of kfuncs that can be used to query, allocate, mutate, and
 destroy struct cpumask * objects. Please refer to :ref:`cpumasks-header-label`
 for more details.
+=======
+>>>>>>> b7ba80a49124 (Commit)

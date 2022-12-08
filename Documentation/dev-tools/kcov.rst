@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 KCOV: code coverage for fuzzing
 ===============================
 
@@ -19,10 +20,29 @@ Besides collecting coverage data from syscall handlers, KCOV can also collect
 coverage for annotated parts of the kernel executing in background kernel
 tasks or soft interrupts. See the "Remote coverage collection" section for
 details.
+=======
+kcov: code coverage for fuzzing
+===============================
+
+kcov exposes kernel code coverage information in a form suitable for coverage-
+guided fuzzing (randomized testing). Coverage data of a running kernel is
+exported via the "kcov" debugfs file. Coverage collection is enabled on a task
+basis, and thus it can capture precise coverage of a single system call.
+
+Note that kcov does not aim to collect as much coverage as possible. It aims
+to collect more or less stable coverage that is function of syscall inputs.
+To achieve this goal it does not collect coverage in soft/hard interrupts
+and instrumentation of some inherently non-deterministic parts of kernel is
+disabled (e.g. scheduler, locking).
+
+kcov is also able to collect comparison operands from the instrumented code
+(this feature currently requires that the kernel is compiled with clang).
+>>>>>>> b7ba80a49124 (Commit)
 
 Prerequisites
 -------------
 
+<<<<<<< HEAD
 KCOV relies on compiler instrumentation and requires GCC 6.1.0 or later
 or any Clang version supported by the kernel.
 
@@ -37,14 +57,32 @@ To enable comparison operands collection, set::
 	CONFIG_KCOV_ENABLE_COMPARISONS=y
 
 Coverage data only becomes accessible once debugfs has been mounted::
+=======
+Configure the kernel with::
+
+        CONFIG_KCOV=y
+
+CONFIG_KCOV requires gcc 6.1.0 or later.
+
+If the comparison operands need to be collected, set::
+
+	CONFIG_KCOV_ENABLE_COMPARISONS=y
+
+Profiling data will only become accessible once debugfs has been mounted::
+>>>>>>> b7ba80a49124 (Commit)
 
         mount -t debugfs none /sys/kernel/debug
 
 Coverage collection
 -------------------
 
+<<<<<<< HEAD
 The following program demonstrates how to use KCOV to collect coverage for a
 single syscall from within a test program:
+=======
+The following program demonstrates coverage collection from within a test
+program using kcov:
+>>>>>>> b7ba80a49124 (Commit)
 
 .. code-block:: c
 
@@ -92,7 +130,11 @@ single syscall from within a test program:
 		perror("ioctl"), exit(1);
 	/* Reset coverage from the tail of the ioctl() call. */
 	__atomic_store_n(&cover[0], 0, __ATOMIC_RELAXED);
+<<<<<<< HEAD
 	/* Call the target syscall call. */
+=======
+	/* That's the target syscal call. */
+>>>>>>> b7ba80a49124 (Commit)
 	read(-1, NULL, 0);
 	/* Read number of PCs collected. */
 	n = __atomic_load_n(&cover[0], __ATOMIC_RELAXED);
@@ -111,7 +153,11 @@ single syscall from within a test program:
 	return 0;
     }
 
+<<<<<<< HEAD
 After piping through ``addr2line`` the output of the program looks as follows::
+=======
+After piping through addr2line output of the program looks as follows::
+>>>>>>> b7ba80a49124 (Commit)
 
     SyS_read
     fs/read_write.c:562
@@ -129,6 +175,7 @@ After piping through ``addr2line`` the output of the program looks as follows::
     fs/read_write.c:562
 
 If a program needs to collect coverage from several threads (independently),
+<<<<<<< HEAD
 it needs to open ``/sys/kernel/debug/kcov`` in each thread separately.
 
 The interface is fine-grained to allow efficient forking of test processes.
@@ -136,6 +183,14 @@ That is, a parent process opens ``/sys/kernel/debug/kcov``, enables trace mode,
 mmaps coverage buffer, and then forks child processes in a loop. The child
 processes only need to enable coverage (it gets disabled automatically when
 a thread exits).
+=======
+it needs to open /sys/kernel/debug/kcov in each thread separately.
+
+The interface is fine-grained to allow efficient forking of test processes.
+That is, a parent process opens /sys/kernel/debug/kcov, enables trace mode,
+mmaps coverage buffer and then forks child processes in a loop. Child processes
+only need to enable coverage (disable happens automatically on thread end).
+>>>>>>> b7ba80a49124 (Commit)
 
 Comparison operands collection
 ------------------------------
@@ -214,12 +269,18 @@ Comparison operands collection is similar to coverage collection:
 	return 0;
     }
 
+<<<<<<< HEAD
 Note that the KCOV modes (collection of code coverage or comparison operands)
 are mutually exclusive.
+=======
+Note that the kcov modes (coverage collection or comparison operands) are
+mutually exclusive.
+>>>>>>> b7ba80a49124 (Commit)
 
 Remote coverage collection
 --------------------------
 
+<<<<<<< HEAD
 Besides collecting coverage data from handlers of syscalls issued from a
 userspace process, KCOV can also collect coverage for parts of the kernel
 executing in other contexts - so-called "remote" coverage.
@@ -286,6 +347,48 @@ handle instance id.
 
 The following program demonstrates using KCOV to collect coverage from both
 local tasks spawned by the process and the global task that handles USB bus #1:
+=======
+With KCOV_ENABLE coverage is collected only for syscalls that are issued
+from the current process. With KCOV_REMOTE_ENABLE it's possible to collect
+coverage for arbitrary parts of the kernel code, provided that those parts
+are annotated with kcov_remote_start()/kcov_remote_stop().
+
+This allows to collect coverage from two types of kernel background
+threads: the global ones, that are spawned during kernel boot in a limited
+number of instances (e.g. one USB hub_event() worker thread is spawned per
+USB HCD); and the local ones, that are spawned when a user interacts with
+some kernel interface (e.g. vhost workers); as well as from soft
+interrupts.
+
+To enable collecting coverage from a global background thread or from a
+softirq, a unique global handle must be assigned and passed to the
+corresponding kcov_remote_start() call. Then a userspace process can pass
+a list of such handles to the KCOV_REMOTE_ENABLE ioctl in the handles
+array field of the kcov_remote_arg struct. This will attach the used kcov
+device to the code sections, that are referenced by those handles.
+
+Since there might be many local background threads spawned from different
+userspace processes, we can't use a single global handle per annotation.
+Instead, the userspace process passes a non-zero handle through the
+common_handle field of the kcov_remote_arg struct. This common handle gets
+saved to the kcov_handle field in the current task_struct and needs to be
+passed to the newly spawned threads via custom annotations. Those threads
+should in turn be annotated with kcov_remote_start()/kcov_remote_stop().
+
+Internally kcov stores handles as u64 integers. The top byte of a handle
+is used to denote the id of a subsystem that this handle belongs to, and
+the lower 4 bytes are used to denote the id of a thread instance within
+that subsystem. A reserved value 0 is used as a subsystem id for common
+handles as they don't belong to a particular subsystem. The bytes 4-7 are
+currently reserved and must be zero. In the future the number of bytes
+used for the subsystem or handle ids might be increased.
+
+When a particular userspace process collects coverage via a common
+handle, kcov will collect coverage for each code section that is annotated
+to use the common handle obtained as kcov_handle from the current
+task_struct. However non common handles allow to collect coverage
+selectively from different subsystems.
+>>>>>>> b7ba80a49124 (Commit)
 
 .. code-block:: c
 

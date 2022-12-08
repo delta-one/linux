@@ -139,6 +139,7 @@ TRACE_EVENT(scmi_rx_done,
 );
 
 TRACE_EVENT(scmi_msg_dump,
+<<<<<<< HEAD
 	TP_PROTO(int id, u8 channel_id, u8 protocol_id, u8 msg_id,
 		 unsigned char *tag, u16 seq, int status,
 		 void *buf, size_t len),
@@ -148,6 +149,13 @@ TRACE_EVENT(scmi_msg_dump,
 	TP_STRUCT__entry(
 		__field(int, id)
 		__field(u8, channel_id)
+=======
+	TP_PROTO(u8 protocol_id, u8 msg_id, unsigned char *tag, u16 seq,
+		 int status, void *buf, size_t len),
+	TP_ARGS(protocol_id, msg_id, tag, seq, status, buf, len),
+
+	TP_STRUCT__entry(
+>>>>>>> b7ba80a49124 (Commit)
 		__field(u8, protocol_id)
 		__field(u8, msg_id)
 		__array(char, tag, 5)
@@ -158,8 +166,11 @@ TRACE_EVENT(scmi_msg_dump,
 	),
 
 	TP_fast_assign(
+<<<<<<< HEAD
 		__entry->id = id;
 		__entry->channel_id = channel_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->protocol_id = protocol_id;
 		__entry->msg_id = msg_id;
 		strscpy(__entry->tag, tag, 5);
@@ -169,9 +180,15 @@ TRACE_EVENT(scmi_msg_dump,
 		memcpy(__get_dynamic_array(cmd), buf, __entry->len);
 	),
 
+<<<<<<< HEAD
 	TP_printk("id=%d ch=%02X pt=%02X t=%s msg_id=%02X seq=%04X s=%d pyld=%s",
 		  __entry->id, __entry->channel_id, __entry->protocol_id,
 		  __entry->tag, __entry->msg_id, __entry->seq, __entry->status,
+=======
+	TP_printk("pt=%02X t=%s msg_id=%02X seq=%04X s=%d pyld=%s",
+		  __entry->protocol_id, __entry->tag, __entry->msg_id,
+		  __entry->seq, __entry->status,
+>>>>>>> b7ba80a49124 (Commit)
 		__print_hex_str(__get_dynamic_array(cmd), __entry->len))
 );
 #endif /* _TRACE_SCMI_H */

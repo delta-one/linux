@@ -496,9 +496,15 @@ static const struct of_device_id sgp_dt_ids[] = {
 	{ }
 };
 
+<<<<<<< HEAD
 static int sgp_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int sgp_probe(struct i2c_client *client,
+		     const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = &client->dev;
 	struct iio_dev *indio_dev;
 	struct sgp_data *data;
@@ -575,7 +581,11 @@ static struct i2c_driver sgp_driver = {
 		.name = "sgp30",
 		.of_match_table = sgp_dt_ids,
 	},
+<<<<<<< HEAD
 	.probe_new = sgp_probe,
+=======
+	.probe = sgp_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = sgp_remove,
 	.id_table = sgp_id,
 };

@@ -123,7 +123,11 @@ extern struct inode *ufs_iget(struct super_block *, unsigned long);
 extern int ufs_write_inode (struct inode *, struct writeback_control *);
 extern int ufs_sync_inode (struct inode *);
 extern void ufs_evict_inode (struct inode *);
+<<<<<<< HEAD
 extern int ufs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+extern int ufs_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct iattr *attr);
 
 /* namei.c */

@@ -49,6 +49,7 @@
 	vdda-phy-dpdm-supply = <&pm8953_l13>;
 };
 
+<<<<<<< HEAD
 &i2c_3 {
 	status = "okay";
 
@@ -78,6 +79,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &pm8953_resin {
 	status = "okay";
 	linux,code = <KEY_VOLUMEDOWN>;
@@ -98,7 +101,11 @@
 };
 
 &rpm_requests {
+<<<<<<< HEAD
 	regulators {
+=======
+	pm8953-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pm8953-regulators";
 
 		vdd_l1-supply = <&pm8953_s3>;

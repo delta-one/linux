@@ -1513,7 +1513,11 @@ unregister_clk:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void cdns_sierra_phy_remove(struct platform_device *pdev)
+=======
+static int cdns_sierra_phy_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cdns_sierra_phy *phy = platform_get_drvdata(pdev);
 	int i;
@@ -1533,6 +1537,11 @@ static void cdns_sierra_phy_remove(struct platform_device *pdev)
 	}
 
 	cdns_sierra_clk_unregister(phy);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* QSGMII PHY PMA lane configuration */
@@ -2518,7 +2527,11 @@ MODULE_DEVICE_TABLE(of, cdns_sierra_id_table);
 
 static struct platform_driver cdns_sierra_driver = {
 	.probe		= cdns_sierra_phy_probe,
+<<<<<<< HEAD
 	.remove_new	= cdns_sierra_phy_remove,
+=======
+	.remove		= cdns_sierra_phy_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "cdns-sierra-phy",
 		.of_match_table = cdns_sierra_id_table,

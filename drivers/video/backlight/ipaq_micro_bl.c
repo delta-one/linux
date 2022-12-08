@@ -16,12 +16,24 @@
 static int micro_bl_update_status(struct backlight_device *bd)
 {
 	struct ipaq_micro *micro = dev_get_drvdata(&bd->dev);
+<<<<<<< HEAD
 	int intensity = backlight_get_brightness(bd);
+=======
+	int intensity = bd->props.brightness;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ipaq_micro_msg msg = {
 		.id = MSG_BACKLIGHT,
 		.tx_len = 3,
 	};
 
+<<<<<<< HEAD
+=======
+	if (bd->props.power != FB_BLANK_UNBLANK)
+		intensity = 0;
+	if (bd->props.state & (BL_CORE_FBBLANK | BL_CORE_SUSPENDED))
+		intensity = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Message format:
 	 * Byte 0: backlight instance (usually 1)

@@ -13,6 +13,7 @@
 #include "processor.h"
 #include "hyperv.h"
 
+<<<<<<< HEAD
 /*
  * HYPERV_CPUID_ENLIGHTMENT_INFO.EBX is not a 'feature' CPUID leaf
  * but to activate the feature it is sufficient to set it to a non-zero
@@ -24,6 +25,29 @@
 struct msr_data {
 	uint32_t idx;
 	bool fault_expected;
+=======
+#define LINUX_OS_ID ((u64)0x8100 << 48)
+
+static inline uint8_t hypercall(u64 control, vm_vaddr_t input_address,
+				vm_vaddr_t output_address, uint64_t *hv_status)
+{
+	uint8_t vector;
+
+	/* Note both the hypercall and the "asm safe" clobber r9-r11. */
+	asm volatile("mov %[output_address], %%r8\n\t"
+		     KVM_ASM_SAFE("vmcall")
+		     : "=a" (*hv_status),
+		       "+c" (control), "+d" (input_address),
+		       KVM_ASM_SAFE_OUTPUTS(vector)
+		     : [output_address] "r"(output_address)
+		     : "cc", "memory", "r8", KVM_ASM_SAFE_CLOBBERS);
+	return vector;
+}
+
+struct msr_data {
+	uint32_t idx;
+	bool available;
+>>>>>>> b7ba80a49124 (Commit)
 	bool write;
 	u64 write_val;
 };
@@ -34,6 +58,7 @@ struct hcall_data {
 	bool ud_expected;
 };
 
+<<<<<<< HEAD
 static bool is_write_only_msr(uint32_t msr)
 {
 	return msr == HV_X64_MSR_EOI;
@@ -74,6 +99,24 @@ static void guest_msr(struct msr_data *msr)
 	}
 
 done:
+=======
+static void guest_msr(struct msr_data *msr)
+{
+	uint64_t ignored;
+	uint8_t vector;
+
+	GUEST_ASSERT(msr->idx);
+
+	if (!msr->write)
+		vector = rdmsr_safe(msr->idx, &ignored);
+	else
+		vector = wrmsr_safe(msr->idx, msr->write_val);
+
+	if (msr->available)
+		GUEST_ASSERT_2(!vector, msr->idx, vector);
+	else
+		GUEST_ASSERT_2(vector == GP_VECTOR, msr->idx, vector);
+>>>>>>> b7ba80a49124 (Commit)
 	GUEST_DONE();
 }
 
@@ -84,7 +127,11 @@ static void guest_hcall(vm_vaddr_t pgs_gpa, struct hcall_data *hcall)
 
 	GUEST_ASSERT(hcall->control);
 
+<<<<<<< HEAD
 	wrmsr(HV_X64_MSR_GUEST_OS_ID, HYPERV_LINUX_OS_ID);
+=======
+	wrmsr(HV_X64_MSR_GUEST_OS_ID, LINUX_OS_ID);
+>>>>>>> b7ba80a49124 (Commit)
 	wrmsr(HV_X64_MSR_HYPERCALL, pgs_gpa);
 
 	if (!(hcall->control & HV_HYPERCALL_FAST_BIT)) {
@@ -94,6 +141,7 @@ static void guest_hcall(vm_vaddr_t pgs_gpa, struct hcall_data *hcall)
 		input = output = 0;
 	}
 
+<<<<<<< HEAD
 	vector = __hyperv_hypercall(hcall->control, input, output, &res);
 	if (hcall->ud_expected) {
 		GUEST_ASSERT_2(vector == UD_VECTOR, hcall->control, vector);
@@ -102,6 +150,16 @@ static void guest_hcall(vm_vaddr_t pgs_gpa, struct hcall_data *hcall)
 		GUEST_ASSERT_2(res == hcall->expect, hcall->expect, res);
 	}
 
+=======
+	vector = hypercall(hcall->control, input, output, &res);
+	if (hcall->ud_expected)
+		GUEST_ASSERT_2(vector == UD_VECTOR, hcall->control, vector);
+	else
+		GUEST_ASSERT_2(!vector, hcall->control, vector);
+
+	GUEST_ASSERT_2(!hcall->ud_expected || res == hcall->expect,
+			hcall->expect, res);
+>>>>>>> b7ba80a49124 (Commit)
 	GUEST_DONE();
 }
 
@@ -121,13 +179,22 @@ static void vcpu_reset_hv_cpuid(struct kvm_vcpu *vcpu)
 static void guest_test_msrs_access(void)
 {
 	struct kvm_cpuid2 *prev_cpuid = NULL;
+<<<<<<< HEAD
 	struct kvm_vcpu *vcpu;
+=======
+	struct kvm_cpuid_entry2 *feat, *dbg;
+	struct kvm_vcpu *vcpu;
+	struct kvm_run *run;
+>>>>>>> b7ba80a49124 (Commit)
 	struct kvm_vm *vm;
 	struct ucall uc;
 	int stage = 0;
 	vm_vaddr_t msr_gva;
 	struct msr_data *msr;
+<<<<<<< HEAD
 	bool has_invtsc = kvm_cpu_has(X86_FEATURE_INVTSC);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (true) {
 		vm = vm_create_with_one_vcpu(&vcpu, guest_msr);
@@ -147,9 +214,20 @@ static void guest_test_msrs_access(void)
 			vcpu_init_cpuid(vcpu, prev_cpuid);
 		}
 
+<<<<<<< HEAD
 		vm_init_descriptor_tables(vm);
 		vcpu_init_descriptor_tables(vcpu);
 
+=======
+		feat = vcpu_get_cpuid_entry(vcpu, HYPERV_CPUID_FEATURES);
+		dbg = vcpu_get_cpuid_entry(vcpu, HYPERV_CPUID_SYNDBG_PLATFORM_CAPABILITIES);
+
+		vm_init_descriptor_tables(vm);
+		vcpu_init_descriptor_tables(vcpu);
+
+		run = vcpu->run;
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* TODO: Make this entire test easier to maintain. */
 		if (stage >= 21)
 			vcpu_enable_cap(vcpu, KVM_CAP_HYPERV_SYNIC2, 0);
@@ -160,6 +238,7 @@ static void guest_test_msrs_access(void)
 			 * Only available when Hyper-V identification is set
 			 */
 			msr->idx = HV_X64_MSR_GUEST_OS_ID;
+<<<<<<< HEAD
 			msr->write = false;
 			msr->fault_expected = true;
 			break;
@@ -170,11 +249,24 @@ static void guest_test_msrs_access(void)
 			break;
 		case 2:
 			vcpu_set_cpuid_feature(vcpu, HV_MSR_HYPERCALL_AVAILABLE);
+=======
+			msr->write = 0;
+			msr->available = 0;
+			break;
+		case 1:
+			msr->idx = HV_X64_MSR_HYPERCALL;
+			msr->write = 0;
+			msr->available = 0;
+			break;
+		case 2:
+			feat->eax |= HV_MSR_HYPERCALL_AVAILABLE;
+>>>>>>> b7ba80a49124 (Commit)
 			/*
 			 * HV_X64_MSR_GUEST_OS_ID has to be written first to make
 			 * HV_X64_MSR_HYPERCALL available.
 			 */
 			msr->idx = HV_X64_MSR_GUEST_OS_ID;
+<<<<<<< HEAD
 			msr->write = true;
 			msr->write_val = HYPERV_LINUX_OS_ID;
 			msr->fault_expected = false;
@@ -188,10 +280,26 @@ static void guest_test_msrs_access(void)
 			msr->idx = HV_X64_MSR_HYPERCALL;
 			msr->write = false;
 			msr->fault_expected = false;
+=======
+			msr->write = 1;
+			msr->write_val = LINUX_OS_ID;
+			msr->available = 1;
+			break;
+		case 3:
+			msr->idx = HV_X64_MSR_GUEST_OS_ID;
+			msr->write = 0;
+			msr->available = 1;
+			break;
+		case 4:
+			msr->idx = HV_X64_MSR_HYPERCALL;
+			msr->write = 0;
+			msr->available = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		case 5:
 			msr->idx = HV_X64_MSR_VP_RUNTIME;
+<<<<<<< HEAD
 			msr->write = false;
 			msr->fault_expected = true;
 			break;
@@ -200,17 +308,34 @@ static void guest_test_msrs_access(void)
 			msr->idx = HV_X64_MSR_VP_RUNTIME;
 			msr->write = false;
 			msr->fault_expected = false;
+=======
+			msr->write = 0;
+			msr->available = 0;
+			break;
+		case 6:
+			feat->eax |= HV_MSR_VP_RUNTIME_AVAILABLE;
+			msr->idx = HV_X64_MSR_VP_RUNTIME;
+			msr->write = 0;
+			msr->available = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 7:
 			/* Read only */
 			msr->idx = HV_X64_MSR_VP_RUNTIME;
+<<<<<<< HEAD
 			msr->write = true;
 			msr->write_val = 1;
 			msr->fault_expected = true;
+=======
+			msr->write = 1;
+			msr->write_val = 1;
+			msr->available = 0;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		case 8:
 			msr->idx = HV_X64_MSR_TIME_REF_COUNT;
+<<<<<<< HEAD
 			msr->write = false;
 			msr->fault_expected = true;
 			break;
@@ -219,17 +344,34 @@ static void guest_test_msrs_access(void)
 			msr->idx = HV_X64_MSR_TIME_REF_COUNT;
 			msr->write = false;
 			msr->fault_expected = false;
+=======
+			msr->write = 0;
+			msr->available = 0;
+			break;
+		case 9:
+			feat->eax |= HV_MSR_TIME_REF_COUNT_AVAILABLE;
+			msr->idx = HV_X64_MSR_TIME_REF_COUNT;
+			msr->write = 0;
+			msr->available = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 10:
 			/* Read only */
 			msr->idx = HV_X64_MSR_TIME_REF_COUNT;
+<<<<<<< HEAD
 			msr->write = true;
 			msr->write_val = 1;
 			msr->fault_expected = true;
+=======
+			msr->write = 1;
+			msr->write_val = 1;
+			msr->available = 0;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		case 11:
 			msr->idx = HV_X64_MSR_VP_INDEX;
+<<<<<<< HEAD
 			msr->write = false;
 			msr->fault_expected = true;
 			break;
@@ -238,17 +380,34 @@ static void guest_test_msrs_access(void)
 			msr->idx = HV_X64_MSR_VP_INDEX;
 			msr->write = false;
 			msr->fault_expected = false;
+=======
+			msr->write = 0;
+			msr->available = 0;
+			break;
+		case 12:
+			feat->eax |= HV_MSR_VP_INDEX_AVAILABLE;
+			msr->idx = HV_X64_MSR_VP_INDEX;
+			msr->write = 0;
+			msr->available = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 13:
 			/* Read only */
 			msr->idx = HV_X64_MSR_VP_INDEX;
+<<<<<<< HEAD
 			msr->write = true;
 			msr->write_val = 1;
 			msr->fault_expected = true;
+=======
+			msr->write = 1;
+			msr->write_val = 1;
+			msr->available = 0;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		case 14:
 			msr->idx = HV_X64_MSR_RESET;
+<<<<<<< HEAD
 			msr->write = false;
 			msr->fault_expected = true;
 			break;
@@ -269,10 +428,27 @@ static void guest_test_msrs_access(void)
 			 */
 			msr->write_val = 0;
 			msr->fault_expected = false;
+=======
+			msr->write = 0;
+			msr->available = 0;
+			break;
+		case 15:
+			feat->eax |= HV_MSR_RESET_AVAILABLE;
+			msr->idx = HV_X64_MSR_RESET;
+			msr->write = 0;
+			msr->available = 1;
+			break;
+		case 16:
+			msr->idx = HV_X64_MSR_RESET;
+			msr->write = 1;
+			msr->write_val = 0;
+			msr->available = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		case 17:
 			msr->idx = HV_X64_MSR_REFERENCE_TSC;
+<<<<<<< HEAD
 			msr->write = false;
 			msr->fault_expected = true;
 			break;
@@ -287,12 +463,33 @@ static void guest_test_msrs_access(void)
 			msr->write = true;
 			msr->write_val = 0;
 			msr->fault_expected = false;
+=======
+			msr->write = 0;
+			msr->available = 0;
+			break;
+		case 18:
+			feat->eax |= HV_MSR_REFERENCE_TSC_AVAILABLE;
+			msr->idx = HV_X64_MSR_REFERENCE_TSC;
+			msr->write = 0;
+			msr->available = 1;
+			break;
+		case 19:
+			msr->idx = HV_X64_MSR_REFERENCE_TSC;
+			msr->write = 1;
+			msr->write_val = 0;
+			msr->available = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		case 20:
 			msr->idx = HV_X64_MSR_EOM;
+<<<<<<< HEAD
 			msr->write = false;
 			msr->fault_expected = true;
+=======
+			msr->write = 0;
+			msr->available = 0;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 21:
 			/*
@@ -300,6 +497,7 @@ static void guest_test_msrs_access(void)
 			 * capability enabled and guest visible CPUID bit unset.
 			 */
 			msr->idx = HV_X64_MSR_EOM;
+<<<<<<< HEAD
 			msr->write = false;
 			msr->fault_expected = true;
 			break;
@@ -314,10 +512,27 @@ static void guest_test_msrs_access(void)
 			msr->write = true;
 			msr->write_val = 0;
 			msr->fault_expected = false;
+=======
+			msr->write = 0;
+			msr->available = 0;
+			break;
+		case 22:
+			feat->eax |= HV_MSR_SYNIC_AVAILABLE;
+			msr->idx = HV_X64_MSR_EOM;
+			msr->write = 0;
+			msr->available = 1;
+			break;
+		case 23:
+			msr->idx = HV_X64_MSR_EOM;
+			msr->write = 1;
+			msr->write_val = 0;
+			msr->available = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		case 24:
 			msr->idx = HV_X64_MSR_STIMER0_CONFIG;
+<<<<<<< HEAD
 			msr->write = false;
 			msr->fault_expected = true;
 			break;
@@ -332,10 +547,27 @@ static void guest_test_msrs_access(void)
 			msr->write = true;
 			msr->write_val = 0;
 			msr->fault_expected = false;
+=======
+			msr->write = 0;
+			msr->available = 0;
+			break;
+		case 25:
+			feat->eax |= HV_MSR_SYNTIMER_AVAILABLE;
+			msr->idx = HV_X64_MSR_STIMER0_CONFIG;
+			msr->write = 0;
+			msr->available = 1;
+			break;
+		case 26:
+			msr->idx = HV_X64_MSR_STIMER0_CONFIG;
+			msr->write = 1;
+			msr->write_val = 0;
+			msr->available = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 27:
 			/* Direct mode test */
 			msr->idx = HV_X64_MSR_STIMER0_CONFIG;
+<<<<<<< HEAD
 			msr->write = true;
 			msr->write_val = 1 << 12;
 			msr->fault_expected = true;
@@ -346,10 +578,23 @@ static void guest_test_msrs_access(void)
 			msr->write = true;
 			msr->write_val = 1 << 12;
 			msr->fault_expected = false;
+=======
+			msr->write = 1;
+			msr->write_val = 1 << 12;
+			msr->available = 0;
+			break;
+		case 28:
+			feat->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
+			msr->idx = HV_X64_MSR_STIMER0_CONFIG;
+			msr->write = 1;
+			msr->write_val = 1 << 12;
+			msr->available = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		case 29:
 			msr->idx = HV_X64_MSR_EOI;
+<<<<<<< HEAD
 			msr->write = false;
 			msr->fault_expected = true;
 			break;
@@ -359,10 +604,22 @@ static void guest_test_msrs_access(void)
 			msr->write = true;
 			msr->write_val = 1;
 			msr->fault_expected = false;
+=======
+			msr->write = 0;
+			msr->available = 0;
+			break;
+		case 30:
+			feat->eax |= HV_MSR_APIC_ACCESS_AVAILABLE;
+			msr->idx = HV_X64_MSR_EOI;
+			msr->write = 1;
+			msr->write_val = 1;
+			msr->available = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		case 31:
 			msr->idx = HV_X64_MSR_TSC_FREQUENCY;
+<<<<<<< HEAD
 			msr->write = false;
 			msr->fault_expected = true;
 			break;
@@ -371,17 +628,34 @@ static void guest_test_msrs_access(void)
 			msr->idx = HV_X64_MSR_TSC_FREQUENCY;
 			msr->write = false;
 			msr->fault_expected = false;
+=======
+			msr->write = 0;
+			msr->available = 0;
+			break;
+		case 32:
+			feat->eax |= HV_ACCESS_FREQUENCY_MSRS;
+			msr->idx = HV_X64_MSR_TSC_FREQUENCY;
+			msr->write = 0;
+			msr->available = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 33:
 			/* Read only */
 			msr->idx = HV_X64_MSR_TSC_FREQUENCY;
+<<<<<<< HEAD
 			msr->write = true;
 			msr->write_val = 1;
 			msr->fault_expected = true;
+=======
+			msr->write = 1;
+			msr->write_val = 1;
+			msr->available = 0;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		case 34:
 			msr->idx = HV_X64_MSR_REENLIGHTENMENT_CONTROL;
+<<<<<<< HEAD
 			msr->write = false;
 			msr->fault_expected = true;
 			break;
@@ -396,17 +670,40 @@ static void guest_test_msrs_access(void)
 			msr->write = true;
 			msr->write_val = 1;
 			msr->fault_expected = false;
+=======
+			msr->write = 0;
+			msr->available = 0;
+			break;
+		case 35:
+			feat->eax |= HV_ACCESS_REENLIGHTENMENT;
+			msr->idx = HV_X64_MSR_REENLIGHTENMENT_CONTROL;
+			msr->write = 0;
+			msr->available = 1;
+			break;
+		case 36:
+			msr->idx = HV_X64_MSR_REENLIGHTENMENT_CONTROL;
+			msr->write = 1;
+			msr->write_val = 1;
+			msr->available = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 37:
 			/* Can only write '0' */
 			msr->idx = HV_X64_MSR_TSC_EMULATION_STATUS;
+<<<<<<< HEAD
 			msr->write = true;
 			msr->write_val = 1;
 			msr->fault_expected = true;
+=======
+			msr->write = 1;
+			msr->write_val = 1;
+			msr->available = 0;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		case 38:
 			msr->idx = HV_X64_MSR_CRASH_P0;
+<<<<<<< HEAD
 			msr->write = false;
 			msr->fault_expected = true;
 			break;
@@ -421,10 +718,27 @@ static void guest_test_msrs_access(void)
 			msr->write = true;
 			msr->write_val = 1;
 			msr->fault_expected = false;
+=======
+			msr->write = 0;
+			msr->available = 0;
+			break;
+		case 39:
+			feat->edx |= HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
+			msr->idx = HV_X64_MSR_CRASH_P0;
+			msr->write = 0;
+			msr->available = 1;
+			break;
+		case 40:
+			msr->idx = HV_X64_MSR_CRASH_P0;
+			msr->write = 1;
+			msr->write_val = 1;
+			msr->available = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		case 41:
 			msr->idx = HV_X64_MSR_SYNDBG_STATUS;
+<<<<<<< HEAD
 			msr->write = false;
 			msr->fault_expected = true;
 			break;
@@ -479,6 +793,26 @@ static void guest_test_msrs_access(void)
 			break;
 
 		default:
+=======
+			msr->write = 0;
+			msr->available = 0;
+			break;
+		case 42:
+			feat->edx |= HV_FEATURE_DEBUG_MSRS_AVAILABLE;
+			dbg->eax |= HV_X64_SYNDBG_CAP_ALLOW_KERNEL_DEBUGGING;
+			msr->idx = HV_X64_MSR_SYNDBG_STATUS;
+			msr->write = 0;
+			msr->available = 1;
+			break;
+		case 43:
+			msr->idx = HV_X64_MSR_SYNDBG_STATUS;
+			msr->write = 1;
+			msr->write_val = 0;
+			msr->available = 1;
+			break;
+
+		case 44:
+>>>>>>> b7ba80a49124 (Commit)
 			kvm_vm_free(vm);
 			return;
 		}
@@ -491,11 +825,21 @@ static void guest_test_msrs_access(void)
 			 msr->idx, msr->write ? "write" : "read");
 
 		vcpu_run(vcpu);
+<<<<<<< HEAD
 		TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
 
 		switch (get_ucall(vcpu, &uc)) {
 		case UCALL_ABORT:
 			REPORT_GUEST_ASSERT_3(uc, "MSR = %lx, arg1 = %lx, arg2 = %lx");
+=======
+		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+			    "unexpected exit reason: %u (%s)",
+			    run->exit_reason, exit_reason_str(run->exit_reason));
+
+		switch (get_ucall(vcpu, &uc)) {
+		case UCALL_ABORT:
+			REPORT_GUEST_ASSERT_2(uc, "MSR = %lx, vector = %lx");
+>>>>>>> b7ba80a49124 (Commit)
 			return;
 		case UCALL_DONE:
 			break;
@@ -511,8 +855,15 @@ static void guest_test_msrs_access(void)
 
 static void guest_test_hcalls_access(void)
 {
+<<<<<<< HEAD
 	struct kvm_cpuid2 *prev_cpuid = NULL;
 	struct kvm_vcpu *vcpu;
+=======
+	struct kvm_cpuid_entry2 *feat, *recomm, *dbg;
+	struct kvm_cpuid2 *prev_cpuid = NULL;
+	struct kvm_vcpu *vcpu;
+	struct kvm_run *run;
+>>>>>>> b7ba80a49124 (Commit)
 	struct kvm_vm *vm;
 	struct ucall uc;
 	int stage = 0;
@@ -544,10 +895,23 @@ static void guest_test_hcalls_access(void)
 			vcpu_init_cpuid(vcpu, prev_cpuid);
 		}
 
+<<<<<<< HEAD
 		switch (stage) {
 		case 0:
 			vcpu_set_cpuid_feature(vcpu, HV_MSR_HYPERCALL_AVAILABLE);
 			hcall->control = 0xbeef;
+=======
+		feat = vcpu_get_cpuid_entry(vcpu, HYPERV_CPUID_FEATURES);
+		recomm = vcpu_get_cpuid_entry(vcpu, HYPERV_CPUID_ENLIGHTMENT_INFO);
+		dbg = vcpu_get_cpuid_entry(vcpu, HYPERV_CPUID_SYNDBG_PLATFORM_CAPABILITIES);
+
+		run = vcpu->run;
+
+		switch (stage) {
+		case 0:
+			feat->eax |= HV_MSR_HYPERCALL_AVAILABLE;
+			hcall->control = 0xdeadbeef;
+>>>>>>> b7ba80a49124 (Commit)
 			hcall->expect = HV_STATUS_INVALID_HYPERCALL_CODE;
 			break;
 
@@ -556,7 +920,11 @@ static void guest_test_hcalls_access(void)
 			hcall->expect = HV_STATUS_ACCESS_DENIED;
 			break;
 		case 2:
+<<<<<<< HEAD
 			vcpu_set_cpuid_feature(vcpu, HV_POST_MESSAGES);
+=======
+			feat->ebx |= HV_POST_MESSAGES;
+>>>>>>> b7ba80a49124 (Commit)
 			hcall->control = HVCALL_POST_MESSAGE;
 			hcall->expect = HV_STATUS_INVALID_HYPERCALL_INPUT;
 			break;
@@ -566,7 +934,11 @@ static void guest_test_hcalls_access(void)
 			hcall->expect = HV_STATUS_ACCESS_DENIED;
 			break;
 		case 4:
+<<<<<<< HEAD
 			vcpu_set_cpuid_feature(vcpu, HV_SIGNAL_EVENTS);
+=======
+			feat->ebx |= HV_SIGNAL_EVENTS;
+>>>>>>> b7ba80a49124 (Commit)
 			hcall->control = HVCALL_SIGNAL_EVENT;
 			hcall->expect = HV_STATUS_INVALID_HYPERCALL_INPUT;
 			break;
@@ -576,12 +948,20 @@ static void guest_test_hcalls_access(void)
 			hcall->expect = HV_STATUS_INVALID_HYPERCALL_CODE;
 			break;
 		case 6:
+<<<<<<< HEAD
 			vcpu_set_cpuid_feature(vcpu, HV_X64_SYNDBG_CAP_ALLOW_KERNEL_DEBUGGING);
+=======
+			dbg->eax |= HV_X64_SYNDBG_CAP_ALLOW_KERNEL_DEBUGGING;
+>>>>>>> b7ba80a49124 (Commit)
 			hcall->control = HVCALL_RESET_DEBUG_SESSION;
 			hcall->expect = HV_STATUS_ACCESS_DENIED;
 			break;
 		case 7:
+<<<<<<< HEAD
 			vcpu_set_cpuid_feature(vcpu, HV_DEBUGGING);
+=======
+			feat->ebx |= HV_DEBUGGING;
+>>>>>>> b7ba80a49124 (Commit)
 			hcall->control = HVCALL_RESET_DEBUG_SESSION;
 			hcall->expect = HV_STATUS_OPERATION_DENIED;
 			break;
@@ -591,7 +971,11 @@ static void guest_test_hcalls_access(void)
 			hcall->expect = HV_STATUS_ACCESS_DENIED;
 			break;
 		case 9:
+<<<<<<< HEAD
 			vcpu_set_cpuid_feature(vcpu, HV_X64_REMOTE_TLB_FLUSH_RECOMMENDED);
+=======
+			recomm->eax |= HV_X64_REMOTE_TLB_FLUSH_RECOMMENDED;
+>>>>>>> b7ba80a49124 (Commit)
 			hcall->control = HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE;
 			hcall->expect = HV_STATUS_SUCCESS;
 			break;
@@ -600,7 +984,11 @@ static void guest_test_hcalls_access(void)
 			hcall->expect = HV_STATUS_ACCESS_DENIED;
 			break;
 		case 11:
+<<<<<<< HEAD
 			vcpu_set_cpuid_feature(vcpu, HV_X64_EX_PROCESSOR_MASKS_RECOMMENDED);
+=======
+			recomm->eax |= HV_X64_EX_PROCESSOR_MASKS_RECOMMENDED;
+>>>>>>> b7ba80a49124 (Commit)
 			hcall->control = HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE_EX;
 			hcall->expect = HV_STATUS_SUCCESS;
 			break;
@@ -610,7 +998,11 @@ static void guest_test_hcalls_access(void)
 			hcall->expect = HV_STATUS_ACCESS_DENIED;
 			break;
 		case 13:
+<<<<<<< HEAD
 			vcpu_set_cpuid_feature(vcpu, HV_X64_CLUSTER_IPI_RECOMMENDED);
+=======
+			recomm->eax |= HV_X64_CLUSTER_IPI_RECOMMENDED;
+>>>>>>> b7ba80a49124 (Commit)
 			hcall->control = HVCALL_SEND_IPI;
 			hcall->expect = HV_STATUS_INVALID_HYPERCALL_INPUT;
 			break;
@@ -625,7 +1017,11 @@ static void guest_test_hcalls_access(void)
 			hcall->expect = HV_STATUS_ACCESS_DENIED;
 			break;
 		case 16:
+<<<<<<< HEAD
 			vcpu_set_cpuid_feature(vcpu, HV_PV_SPINLOCKS_TEST);
+=======
+			recomm->ebx = 0xfff;
+>>>>>>> b7ba80a49124 (Commit)
 			hcall->control = HVCALL_NOTIFY_LONG_SPIN_WAIT;
 			hcall->expect = HV_STATUS_SUCCESS;
 			break;
@@ -635,12 +1031,17 @@ static void guest_test_hcalls_access(void)
 			hcall->ud_expected = true;
 			break;
 		case 18:
+<<<<<<< HEAD
 			vcpu_set_cpuid_feature(vcpu, HV_X64_HYPERCALL_XMM_INPUT_AVAILABLE);
+=======
+			feat->edx |= HV_X64_HYPERCALL_XMM_INPUT_AVAILABLE;
+>>>>>>> b7ba80a49124 (Commit)
 			hcall->control = HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE | HV_HYPERCALL_FAST_BIT;
 			hcall->ud_expected = false;
 			hcall->expect = HV_STATUS_SUCCESS;
 			break;
 		case 19:
+<<<<<<< HEAD
 			hcall->control = HV_EXT_CALL_QUERY_CAPABILITIES;
 			hcall->expect = HV_STATUS_ACCESS_DENIED;
 			break;
@@ -650,6 +1051,8 @@ static void guest_test_hcalls_access(void)
 			hcall->expect = HV_STATUS_INVALID_PARAMETER;
 			break;
 		case 21:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			kvm_vm_free(vm);
 			return;
 		}
@@ -661,7 +1064,13 @@ static void guest_test_hcalls_access(void)
 		pr_debug("Stage %d: testing hcall: 0x%lx\n", stage, hcall->control);
 
 		vcpu_run(vcpu);
+<<<<<<< HEAD
 		TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+=======
+		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+			    "unexpected exit reason: %u (%s)",
+			    run->exit_reason, exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 
 		switch (get_ucall(vcpu, &uc)) {
 		case UCALL_ABORT:

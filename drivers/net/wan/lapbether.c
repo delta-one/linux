@@ -325,7 +325,10 @@ static int lapbeth_open(struct net_device *dev)
 
 	err = lapb_register(dev, &lapbeth_callbacks);
 	if (err != LAPB_OK) {
+<<<<<<< HEAD
 		napi_disable(&lapbeth->napi);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pr_err("lapb_register error: %d\n", err);
 		return -ENODEV;
 	}
@@ -447,7 +450,11 @@ static int lapbeth_device_event(struct notifier_block *this,
 	if (dev_net(dev) != &init_net)
 		return NOTIFY_DONE;
 
+<<<<<<< HEAD
 	if (!dev_is_ethdev(dev) && !lapbeth_get_x25_dev(dev))
+=======
+	if (!dev_is_ethdev(dev))
+>>>>>>> b7ba80a49124 (Commit)
 		return NOTIFY_DONE;
 
 	switch (event) {

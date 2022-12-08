@@ -460,6 +460,7 @@ static inline void acpi_thermal_cpufreq_exit(struct cpufreq_policy *policy)
 }
 #endif	/* CONFIG_CPU_FREQ */
 
+<<<<<<< HEAD
 #ifdef CONFIG_ACPI_PROCESSOR_IDLE
 extern int acpi_processor_ffh_lpi_probe(unsigned int cpu);
 extern int acpi_processor_ffh_lpi_enter(struct acpi_lpi_state *lpi);
@@ -470,4 +471,6 @@ extern int arch_register_cpu(int cpu);
 extern void arch_unregister_cpu(int cpu);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

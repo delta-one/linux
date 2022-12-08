@@ -59,12 +59,21 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(block_split);
 EXPORT_TRACEPOINT_SYMBOL_GPL(block_unplug);
 EXPORT_TRACEPOINT_SYMBOL_GPL(block_rq_insert);
 
+<<<<<<< HEAD
 static DEFINE_IDA(blk_queue_ida);
+=======
+DEFINE_IDA(blk_queue_ida);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * For queue allocation
  */
+<<<<<<< HEAD
 static struct kmem_cache *blk_requestq_cachep;
+=======
+struct kmem_cache *blk_requestq_cachep;
+struct kmem_cache *blk_requestq_srcu_cachep;
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Controlling structure to kblockd
@@ -252,6 +261,7 @@ void blk_clear_pm_only(struct request_queue *q)
 }
 EXPORT_SYMBOL_GPL(blk_clear_pm_only);
 
+<<<<<<< HEAD
 static void blk_free_queue_rcu(struct rcu_head *rcu_head)
 {
 	struct request_queue *q = container_of(rcu_head,
@@ -271,10 +281,13 @@ static void blk_free_queue(struct request_queue *q)
 	call_rcu(&q->rcu_head, blk_free_queue_rcu);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * blk_put_queue - decrement the request_queue refcount
  * @q: the request_queue structure to decrement the refcount for
  *
+<<<<<<< HEAD
  * Decrements the refcount of the request_queue and free it when the refcount
  * reaches 0.
  */
@@ -282,6 +295,17 @@ void blk_put_queue(struct request_queue *q)
 {
 	if (refcount_dec_and_test(&q->refs))
 		blk_free_queue(q);
+=======
+ * Decrements the refcount of the request_queue kobject. When this reaches 0
+ * we'll have blk_release_queue() called.
+ *
+ * Context: Any context, but the last reference must not be dropped from
+ *          atomic context.
+ */
+void blk_put_queue(struct request_queue *q)
+{
+	kobject_put(&q->kobj);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(blk_put_queue);
 
@@ -389,6 +413,7 @@ static void blk_timeout_work(struct work_struct *work)
 {
 }
 
+<<<<<<< HEAD
 struct request_queue *blk_alloc_queue(int node_id)
 {
 	struct request_queue *q;
@@ -398,11 +423,32 @@ struct request_queue *blk_alloc_queue(int node_id)
 	if (!q)
 		return NULL;
 
+=======
+struct request_queue *blk_alloc_queue(int node_id, bool alloc_srcu)
+{
+	struct request_queue *q;
+
+	q = kmem_cache_alloc_node(blk_get_queue_kmem_cache(alloc_srcu),
+			GFP_KERNEL | __GFP_ZERO, node_id);
+	if (!q)
+		return NULL;
+
+	if (alloc_srcu) {
+		blk_queue_flag_set(QUEUE_FLAG_HAS_SRCU, q);
+		if (init_srcu_struct(q->srcu) != 0)
+			goto fail_q;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	q->last_merge = NULL;
 
 	q->id = ida_alloc(&blk_queue_ida, GFP_KERNEL);
 	if (q->id < 0)
+<<<<<<< HEAD
 		goto fail_q;
+=======
+		goto fail_srcu;
+>>>>>>> b7ba80a49124 (Commit)
 
 	q->stats = blk_alloc_queue_stats();
 	if (!q->stats)
@@ -416,7 +462,12 @@ struct request_queue *blk_alloc_queue(int node_id)
 	INIT_WORK(&q->timeout_work, blk_timeout_work);
 	INIT_LIST_HEAD(&q->icq_list);
 
+<<<<<<< HEAD
 	refcount_set(&q->refs, 1);
+=======
+	kobject_init(&q->kobj, &blk_queue_ktype);
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&q->debugfs_mutex);
 	mutex_init(&q->sysfs_lock);
 	mutex_init(&q->sysfs_dir_lock);
@@ -434,6 +485,10 @@ struct request_queue *blk_alloc_queue(int node_id)
 				PERCPU_REF_INIT_ATOMIC, GFP_KERNEL))
 		goto fail_stats;
 
+<<<<<<< HEAD
+=======
+	blk_queue_dma_alignment(q, 511);
+>>>>>>> b7ba80a49124 (Commit)
 	blk_set_default_limits(&q->limits);
 	q->nr_requests = BLKDEV_DEFAULT_RQ;
 
@@ -443,8 +498,16 @@ fail_stats:
 	blk_free_queue_stats(q->stats);
 fail_id:
 	ida_free(&blk_queue_ida, q->id);
+<<<<<<< HEAD
 fail_q:
 	kmem_cache_free(blk_requestq_cachep, q);
+=======
+fail_srcu:
+	if (alloc_srcu)
+		cleanup_srcu_struct(q->srcu);
+fail_q:
+	kmem_cache_free(blk_get_queue_kmem_cache(alloc_srcu), q);
+>>>>>>> b7ba80a49124 (Commit)
 	return NULL;
 }
 
@@ -460,7 +523,11 @@ bool blk_get_queue(struct request_queue *q)
 {
 	if (unlikely(blk_queue_dying(q)))
 		return false;
+<<<<<<< HEAD
 	refcount_inc(&q->refs);
+=======
+	kobject_get(&q->kobj);
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 EXPORT_SYMBOL(blk_get_queue);
@@ -564,7 +631,11 @@ static inline blk_status_t blk_check_zone_append(struct request_queue *q,
 		return BLK_STS_NOTSUPP;
 
 	/* The bio sector must point to the start of a sequential zone */
+<<<<<<< HEAD
 	if (!bdev_is_zone_start(bio->bi_bdev, bio->bi_iter.bi_sector) ||
+=======
+	if (bio->bi_iter.bi_sector & (bdev_zone_sectors(bio->bi_bdev) - 1) ||
+>>>>>>> b7ba80a49124 (Commit)
 	    !bio_zone_is_seq(bio))
 		return BLK_STS_IOERR;
 
@@ -678,6 +749,7 @@ static void __submit_bio_noacct_mq(struct bio *bio)
 
 void submit_bio_noacct_nocheck(struct bio *bio)
 {
+<<<<<<< HEAD
 	blk_cgroup_bio_start(bio);
 	blkcg_bio_issue_init(bio);
 
@@ -690,6 +762,8 @@ void submit_bio_noacct_nocheck(struct bio *bio)
 		bio_set_flag(bio, BIO_TRACE_COMPLETION);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * We only want one ->submit_bio to be active at a time, else stack
 	 * usage with stacked devices could be a problem.  Use current->bio_list
@@ -730,7 +804,11 @@ void submit_bio_noacct(struct bio *bio)
 	 * For a REQ_NOWAIT based request, return -EOPNOTSUPP
 	 * if queue does not support NOWAIT.
 	 */
+<<<<<<< HEAD
 	if ((bio->bi_opf & REQ_NOWAIT) && !bdev_nowait(bdev))
+=======
+	if ((bio->bi_opf & REQ_NOWAIT) && !blk_queue_nowait(q))
+>>>>>>> b7ba80a49124 (Commit)
 		goto not_supported;
 
 	if (should_fail_bio(bio))
@@ -747,6 +825,7 @@ void submit_bio_noacct(struct bio *bio)
 	 * Filter flush bio's early so that bio based drivers without flush
 	 * support don't have to worry about them.
 	 */
+<<<<<<< HEAD
 	if (op_is_flush(bio->bi_opf)) {
 		if (WARN_ON_ONCE(bio_op(bio) != REQ_OP_WRITE &&
 				 bio_op(bio) != REQ_OP_ZONE_APPEND))
@@ -757,6 +836,14 @@ void submit_bio_noacct(struct bio *bio)
 				status = BLK_STS_OK;
 				goto end_io;
 			}
+=======
+	if (op_is_flush(bio->bi_opf) &&
+	    !test_bit(QUEUE_FLAG_WC, &q->queue_flags)) {
+		bio->bi_opf &= ~(REQ_PREFLUSH | REQ_FUA);
+		if (!bio_sectors(bio)) {
+			status = BLK_STS_OK;
+			goto end_io;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -798,6 +885,20 @@ void submit_bio_noacct(struct bio *bio)
 
 	if (blk_throtl_bio(bio))
 		return;
+<<<<<<< HEAD
+=======
+
+	blk_cgroup_bio_start(bio);
+	blkcg_bio_issue_init(bio);
+
+	if (!bio_flagged(bio, BIO_TRACE_COMPLETION)) {
+		trace_block_bio_queue(bio);
+		/* Now that enqueuing has been traced, we need to trace
+		 * completion as well.
+		 */
+		bio_set_flag(bio, BIO_TRACE_COMPLETION);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	submit_bio_noacct_nocheck(bio);
 	return;
 
@@ -852,6 +953,7 @@ EXPORT_SYMBOL(submit_bio);
  */
 int bio_poll(struct bio *bio, struct io_comp_batch *iob, unsigned int flags)
 {
+<<<<<<< HEAD
 	blk_qc_t cookie = READ_ONCE(bio->bi_cookie);
 	struct block_device *bdev;
 	struct request_queue *q;
@@ -862,10 +964,17 @@ int bio_poll(struct bio *bio, struct io_comp_batch *iob, unsigned int flags)
 		return 0;
 
 	q = bdev_get_queue(bdev);
+=======
+	struct request_queue *q = bdev_get_queue(bio->bi_bdev);
+	blk_qc_t cookie = READ_ONCE(bio->bi_cookie);
+	int ret = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (cookie == BLK_QC_T_NONE ||
 	    !test_bit(QUEUE_FLAG_POLL, &q->queue_flags))
 		return 0;
 
+<<<<<<< HEAD
 	/*
 	 * As the requests that require a zone lock are not plugged in the
 	 * first place, directly accessing the plug instead of using
@@ -884,6 +993,11 @@ int bio_poll(struct bio *bio, struct io_comp_batch *iob, unsigned int flags)
 	 * that should be all that matters.
 	 */
 	if (!percpu_ref_tryget(&q->q_usage_counter))
+=======
+	blk_flush_plug(current->plug, false);
+
+	if (bio_queue_enter(bio))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	if (queue_is_mq(q)) {
 		ret = blk_mq_poll(q, cookie, iob, flags);
@@ -930,7 +1044,11 @@ int iocb_bio_iopoll(struct kiocb *kiocb, struct io_comp_batch *iob,
 	 */
 	rcu_read_lock();
 	bio = READ_ONCE(kiocb->private);
+<<<<<<< HEAD
 	if (bio)
+=======
+	if (bio && bio->bi_bdev)
+>>>>>>> b7ba80a49124 (Commit)
 		ret = bio_poll(bio, iob, flags);
 	rcu_read_unlock();
 
@@ -953,11 +1071,24 @@ again:
 	}
 }
 
+<<<<<<< HEAD
 unsigned long bdev_start_io_acct(struct block_device *bdev, enum req_op op,
 				 unsigned long start_time)
 {
 	part_stat_lock();
 	update_io_ticks(bdev, start_time, false);
+=======
+unsigned long bdev_start_io_acct(struct block_device *bdev,
+				 unsigned int sectors, enum req_op op,
+				 unsigned long start_time)
+{
+	const int sgrp = op_stat_group(op);
+
+	part_stat_lock();
+	update_io_ticks(bdev, start_time, false);
+	part_stat_inc(bdev, ios[sgrp]);
+	part_stat_add(bdev, sectors[sgrp], sectors);
+>>>>>>> b7ba80a49124 (Commit)
 	part_stat_local_inc(bdev, in_flight[op_is_write(op)]);
 	part_stat_unlock();
 
@@ -966,6 +1097,21 @@ unsigned long bdev_start_io_acct(struct block_device *bdev, enum req_op op,
 EXPORT_SYMBOL(bdev_start_io_acct);
 
 /**
+<<<<<<< HEAD
+=======
+ * bio_start_io_acct_time - start I/O accounting for bio based drivers
+ * @bio:	bio to start account for
+ * @start_time:	start time that should be passed back to bio_end_io_acct().
+ */
+void bio_start_io_acct_time(struct bio *bio, unsigned long start_time)
+{
+	bdev_start_io_acct(bio->bi_bdev, bio_sectors(bio),
+			   bio_op(bio), start_time);
+}
+EXPORT_SYMBOL_GPL(bio_start_io_acct_time);
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * bio_start_io_acct - start I/O accounting for bio based drivers
  * @bio:	bio to start account for
  *
@@ -973,12 +1119,21 @@ EXPORT_SYMBOL(bdev_start_io_acct);
  */
 unsigned long bio_start_io_acct(struct bio *bio)
 {
+<<<<<<< HEAD
 	return bdev_start_io_acct(bio->bi_bdev, bio_op(bio), jiffies);
+=======
+	return bdev_start_io_acct(bio->bi_bdev, bio_sectors(bio),
+				  bio_op(bio), jiffies);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(bio_start_io_acct);
 
 void bdev_end_io_acct(struct block_device *bdev, enum req_op op,
+<<<<<<< HEAD
 		      unsigned int sectors, unsigned long start_time)
+=======
+		      unsigned long start_time)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const int sgrp = op_stat_group(op);
 	unsigned long now = READ_ONCE(jiffies);
@@ -986,8 +1141,11 @@ void bdev_end_io_acct(struct block_device *bdev, enum req_op op,
 
 	part_stat_lock();
 	update_io_ticks(bdev, now, true);
+<<<<<<< HEAD
 	part_stat_inc(bdev, ios[sgrp]);
 	part_stat_add(bdev, sectors[sgrp], sectors);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	part_stat_add(bdev, nsecs[sgrp], jiffies_to_nsecs(duration));
 	part_stat_local_dec(bdev, in_flight[op_is_write(op)]);
 	part_stat_unlock();
@@ -997,7 +1155,11 @@ EXPORT_SYMBOL(bdev_end_io_acct);
 void bio_end_io_acct_remapped(struct bio *bio, unsigned long start_time,
 			      struct block_device *orig_bdev)
 {
+<<<<<<< HEAD
 	bdev_end_io_acct(orig_bdev, bio_op(bio), bio_sectors(bio), start_time);
+=======
+	bdev_end_io_acct(orig_bdev, bio_op(bio), start_time);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(bio_end_io_acct_remapped);
 
@@ -1193,6 +1355,12 @@ int __init blk_dev_init(void)
 			sizeof_field(struct request, cmd_flags));
 	BUILD_BUG_ON(REQ_OP_BITS + REQ_FLAG_BITS > 8 *
 			sizeof_field(struct bio, bi_opf));
+<<<<<<< HEAD
+=======
+	BUILD_BUG_ON(ALIGN(offsetof(struct request_queue, srcu),
+			   __alignof__(struct request_queue)) !=
+		     sizeof(struct request_queue));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* used for unplugging and affects IO latency/throughput - HIGHPRI */
 	kblockd_workqueue = alloc_workqueue("kblockd",
@@ -1203,6 +1371,13 @@ int __init blk_dev_init(void)
 	blk_requestq_cachep = kmem_cache_create("request_queue",
 			sizeof(struct request_queue), 0, SLAB_PANIC, NULL);
 
+<<<<<<< HEAD
+=======
+	blk_requestq_srcu_cachep = kmem_cache_create("request_queue_srcu",
+			sizeof(struct request_queue) +
+			sizeof(struct srcu_struct), 0, SLAB_PANIC, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	blk_debugfs_root = debugfs_create_dir("block", NULL);
 
 	return 0;

@@ -33,6 +33,7 @@
 	 */
 	chosen {};
 
+<<<<<<< HEAD
 	firmware {
 		trusted-foundations {
 			compatible = "tlm,trusted-foundations";
@@ -41,6 +42,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memory@80000000 {
 		reg = <0x80000000 0x40000000>;
 	};
@@ -176,7 +179,11 @@
 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 				nvidia,lock = <0>;
+<<<<<<< HEAD
 				nvidia,io-reset = <0>;
+=======
+				nvidia,ioreset = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			/* SDMMC3 pinmux */
@@ -719,7 +726,11 @@
 				nvidia,tristate = <TEGRA_PIN_ENABLE>;
 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 				nvidia,lock = <0>;
+<<<<<<< HEAD
 				nvidia,io-reset = <0>;
+=======
+				nvidia,ioreset = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			/* GPIO keys pinmux */
@@ -813,7 +824,11 @@
 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 				nvidia,lock = <0>;
+<<<<<<< HEAD
 				nvidia,io-reset = <0>;
+=======
+				nvidia,ioreset = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			vi_d10_pt2 {
@@ -945,7 +960,11 @@
 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
 				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
 				nvidia,lock = <0>;
+<<<<<<< HEAD
 				nvidia,io-reset = <0>;
+=======
+				nvidia,ioreset = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			vi_mclk_pt1 {
@@ -1195,6 +1214,20 @@
 		status = "okay";
 		clock-frequency = <400000>;
 
+<<<<<<< HEAD
+=======
+		nct72: temperature-sensor@4c {
+			compatible = "onnn,nct1008";
+			reg = <0x4c>;
+
+			interrupt-parent = <&gpio>;
+			interrupts = <TEGRA_GPIO(CC, 2) IRQ_TYPE_EDGE_FALLING>;
+
+			vcc-supply = <&vdd_3v3_sys>;
+			#thermal-sensor-cells = <1>;
+		};
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* Texas Instruments TPS659110 PMIC */
 		pmic: pmic@2d {
 			compatible = "ti,tps65911";
@@ -1320,6 +1353,7 @@
 			};
 		};
 
+<<<<<<< HEAD
 		nct72: temperature-sensor@4c {
 			compatible = "onnn,nct1008";
 			reg = <0x4c>;
@@ -1331,6 +1365,8 @@
 			#thermal-sensor-cells = <1>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		vdd_core: core-regulator@60 {
 			compatible = "ti,tps62361";
 			reg = <0x60>;
@@ -1517,6 +1553,10 @@
 
 	extcon-keys {
 		compatible = "gpio-keys";
+<<<<<<< HEAD
+=======
+		interrupt-parent = <&gpio>;
+>>>>>>> b7ba80a49124 (Commit)
 
 		switch-dock-hall-sensor {
 			label = "Lid sensor";
@@ -1539,8 +1579,22 @@
 		};
 	};
 
+<<<<<<< HEAD
 	gpio-keys {
 		compatible = "gpio-keys";
+=======
+	firmware {
+		trusted-foundations {
+			compatible = "tlm,trusted-foundations";
+			tlm,version-major = <2>;
+			tlm,version-minor = <8>;
+		};
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys";
+		interrupt-parent = <&gpio>;
+>>>>>>> b7ba80a49124 (Commit)
 
 		key-power {
 			label = "Power";
@@ -1551,19 +1605,33 @@
 			wakeup-source;
 		};
 
+<<<<<<< HEAD
 		key-volume-down {
 			label = "Volume Down";
 			gpios = <&gpio TEGRA_GPIO(Q, 3) GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_VOLUMEDOWN>;
+=======
+		key-volume-up {
+			label = "Volume Up";
+			gpios = <&gpio TEGRA_GPIO(Q, 2) GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_VOLUMEUP>;
+>>>>>>> b7ba80a49124 (Commit)
 			debounce-interval = <10>;
 			wakeup-event-action = <EV_ACT_ASSERTED>;
 			wakeup-source;
 		};
 
+<<<<<<< HEAD
 		key-volume-up {
 			label = "Volume Up";
 			gpios = <&gpio TEGRA_GPIO(Q, 2) GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_VOLUMEUP>;
+=======
+		key-volume-down {
+			label = "Volume Down";
+			gpios = <&gpio TEGRA_GPIO(Q, 3) GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_VOLUMEDOWN>;
+>>>>>>> b7ba80a49124 (Commit)
 			debounce-interval = <10>;
 			wakeup-event-action = <EV_ACT_ASSERTED>;
 			wakeup-source;

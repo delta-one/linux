@@ -347,7 +347,11 @@ static void check_modem_status(struct serial_state *info)
 #if (defined(SERIAL_DEBUG_INTR) || defined(SERIAL_DEBUG_FLOW))
 				printk("CTS tx start...");
 #endif
+<<<<<<< HEAD
 				port->tty->hw_stopped = false;
+=======
+				port->tty->hw_stopped = 0;
+>>>>>>> b7ba80a49124 (Commit)
 				info->IER |= UART_IER_THRI;
 				amiga_custom.intena = IF_SETCLR | IF_TBE;
 				mb();
@@ -362,7 +366,11 @@ static void check_modem_status(struct serial_state *info)
 #if (defined(SERIAL_DEBUG_INTR) || defined(SERIAL_DEBUG_FLOW))
 				printk("CTS tx stop...");
 #endif
+<<<<<<< HEAD
 				port->tty->hw_stopped = true;
+=======
+				port->tty->hw_stopped = 1;
+>>>>>>> b7ba80a49124 (Commit)
 				info->IER &= ~UART_IER_THRI;
 				/* disable Tx interrupt and remove any pending interrupts */
 				amiga_custom.intena = IF_TBE;
@@ -502,7 +510,11 @@ static int startup(struct tty_struct *tty, struct serial_state *info)
 	 */
 	change_speed(tty, info, NULL);
 
+<<<<<<< HEAD
 	tty_port_set_initialized(port, true);
+=======
+	tty_port_set_initialized(port, 1);
+>>>>>>> b7ba80a49124 (Commit)
 	local_irq_restore(flags);
 	return 0;
 
@@ -556,7 +568,11 @@ static void shutdown(struct tty_struct *tty, struct serial_state *info)
 
 	set_bit(TTY_IO_ERROR, &tty->flags);
 
+<<<<<<< HEAD
 	tty_port_set_initialized(&info->tport, false);
+=======
+	tty_port_set_initialized(&info->tport, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	local_irq_restore(flags);
 }
 
@@ -1197,7 +1213,11 @@ static void rs_set_termios(struct tty_struct *tty, const struct ktermios *old_te
 
 	/* Handle turning off CRTSCTS */
 	if ((old_termios->c_cflag & CRTSCTS) && !C_CRTSCTS(tty)) {
+<<<<<<< HEAD
 		tty->hw_stopped = false;
+=======
+		tty->hw_stopped = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		rs_start(tty);
 	}
 
@@ -1329,7 +1349,11 @@ static void rs_hangup(struct tty_struct *tty)
 	rs_flush_buffer(tty);
 	shutdown(tty, info);
 	info->tport.count = 0;
+<<<<<<< HEAD
 	tty_port_set_active(&info->tport, false);
+=======
+	tty_port_set_active(&info->tport, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	info->tport.tty = NULL;
 	wake_up_interruptible(&info->tport.open_wait);
 }
@@ -1454,18 +1478,30 @@ static const struct tty_operations serial_ops = {
 	.proc_show = rs_proc_show,
 };
 
+<<<<<<< HEAD
 static bool amiga_carrier_raised(struct tty_port *port)
+=======
+static int amiga_carrier_raised(struct tty_port *port)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return !(ciab.pra & SER_DCD);
 }
 
+<<<<<<< HEAD
 static void amiga_dtr_rts(struct tty_port *port, bool active)
+=======
+static void amiga_dtr_rts(struct tty_port *port, int raise)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct serial_state *info = container_of(port, struct serial_state,
 			tport);
 	unsigned long flags;
 
+<<<<<<< HEAD
 	if (active)
+=======
+	if (raise)
+>>>>>>> b7ba80a49124 (Commit)
 		info->MCR |= SER_DTR|SER_RTS;
 	else
 		info->MCR &= ~(SER_DTR|SER_RTS);

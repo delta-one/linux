@@ -154,6 +154,17 @@ static void __init pq2fads_setup_arch(void)
 		ppc_md.progress("pq2fads_setup_arch(), finish", 0);
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * Called very early, device-tree isn't unflattened
+ */
+static int __init pq2fads_probe(void)
+{
+	return of_machine_is_compatible("fsl,pq2fads");
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id of_bus_ids[] __initconst = {
 	{ .name = "soc", },
 	{ .name = "cpm", },
@@ -172,11 +183,19 @@ machine_device_initcall(pq2fads, declare_of_platform_devices);
 define_machine(pq2fads)
 {
 	.name = "Freescale PQ2FADS",
+<<<<<<< HEAD
 	.compatible = "fsl,pq2fads",
+=======
+	.probe = pq2fads_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.setup_arch = pq2fads_setup_arch,
 	.discover_phbs = pq2_init_pci,
 	.init_IRQ = pq2fads_pic_init,
 	.get_irq = cpm2_get_irq,
+<<<<<<< HEAD
+=======
+	.calibrate_decr = generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.restart = pq2_restart,
 	.progress = udbg_progress,
 };

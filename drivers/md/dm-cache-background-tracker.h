@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0-only */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2017 Red Hat. All rights reserved.
  *
@@ -13,6 +16,7 @@
 
 /*----------------------------------------------------------------*/
 
+<<<<<<< HEAD
 /*
  * The cache policy decides what background work should be performed,
  * such as promotions, demotions and writebacks. The core cache target
@@ -26,10 +30,13 @@
  * protected with a spinlock.
  */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct background_work;
 struct background_tracker;
 
 /*
+<<<<<<< HEAD
  * Create a new tracker, it will not be able to queue more than
  * 'max_work' entries.
  */
@@ -51,6 +58,17 @@ unsigned int btracker_nr_demotions_queued(struct background_tracker *b);
  * is not NULL then it will be set to point to the tracker's internal
  * copy of the work.
  *
+=======
+ * FIXME: discuss lack of locking in all methods.
+ */
+struct background_tracker *btracker_create(unsigned max_work);
+void btracker_destroy(struct background_tracker *b);
+
+unsigned btracker_nr_writebacks_queued(struct background_tracker *b);
+unsigned btracker_nr_demotions_queued(struct background_tracker *b);
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * returns -EINVAL iff the work is already queued.  -ENOMEM if the work
  * couldn't be queued for another reason.
  */
@@ -59,6 +77,7 @@ int btracker_queue(struct background_tracker *b,
 		   struct policy_work **pwork);
 
 /*
+<<<<<<< HEAD
  * Hands out the next piece of work to be performed.
  * Returns -ENODATA if there's no work.
  */
@@ -73,6 +92,13 @@ void btracker_complete(struct background_tracker *b, struct policy_work *op);
 /*
  * Predicate to see if an origin block is already scheduled for promotion.
  */
+=======
+ * Returns -ENODATA if there's no work.
+ */
+int btracker_issue(struct background_tracker *b, struct policy_work **work);
+void btracker_complete(struct background_tracker *b,
+		       struct policy_work *op);
+>>>>>>> b7ba80a49124 (Commit)
 bool btracker_promotion_already_present(struct background_tracker *b,
 					dm_oblock_t oblock);
 

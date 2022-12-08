@@ -43,7 +43,11 @@ static void ath9k_hw_set_powermode_wow_sleep(struct ath_hw *ah)
 	/* set rx disable bit */
 	REG_WRITE(ah, AR_CR, AR_CR_RXD);
 
+<<<<<<< HEAD
 	if (!ath9k_hw_wait(ah, AR_CR, AR_CR_RXE(ah), 0, AH_WAIT_TIMEOUT)) {
+=======
+	if (!ath9k_hw_wait(ah, AR_CR, AR_CR_RXE, 0, AH_WAIT_TIMEOUT)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ath_err(common, "Failed to stop Rx DMA in 10ms AR_CR=0x%08x AR_DIAG_SW=0x%08x\n",
 			REG_READ(ah, AR_CR), REG_READ(ah, AR_DIAG_SW));
 		return;
@@ -61,7 +65,11 @@ static void ath9k_hw_set_powermode_wow_sleep(struct ath_hw *ah)
 	if (ath9k_hw_mci_is_enabled(ah))
 		REG_WRITE(ah, AR_RTC_KEEP_AWAKE, 0x2);
 
+<<<<<<< HEAD
 	REG_WRITE(ah, AR_RTC_FORCE_WAKE(ah), AR_RTC_FORCE_WAKE_ON_INT);
+=======
+	REG_WRITE(ah, AR_RTC_FORCE_WAKE, AR_RTC_FORCE_WAKE_ON_INT);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ath9k_wow_create_keep_alive_pattern(struct ath_hw *ah)
@@ -226,7 +234,11 @@ u32 ath9k_hw_wow_wakeup(struct ath_hw *ah)
 	 */
 
 	/* do we need to check the bit value 0x01000000 (7-10) ?? */
+<<<<<<< HEAD
 	REG_RMW(ah, AR_PCIE_PM_CTRL(ah), AR_PMCTRL_WOW_PME_CLR,
+=======
+	REG_RMW(ah, AR_PCIE_PM_CTRL, AR_PMCTRL_WOW_PME_CLR,
+>>>>>>> b7ba80a49124 (Commit)
 		AR_PMCTRL_PWR_STATE_D1D3);
 
 	/*
@@ -278,12 +290,20 @@ static void ath9k_hw_wow_set_arwr_reg(struct ath_hw *ah)
 	 * to the external PCI-E reset. We also need to tie
 	 * the PCI-E Phy reset to the PCI-E reset.
 	 */
+<<<<<<< HEAD
 	wa_reg = REG_READ(ah, AR_WA(ah));
+=======
+	wa_reg = REG_READ(ah, AR_WA);
+>>>>>>> b7ba80a49124 (Commit)
 	wa_reg &= ~AR_WA_UNTIE_RESET_EN;
 	wa_reg |= AR_WA_RESET_EN;
 	wa_reg |= AR_WA_POR_SHORT;
 
+<<<<<<< HEAD
 	REG_WRITE(ah, AR_WA(ah), wa_reg);
+=======
+	REG_WRITE(ah, AR_WA, wa_reg);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void ath9k_hw_wow_enable(struct ath_hw *ah, u32 pattern_enable)
@@ -309,11 +329,19 @@ void ath9k_hw_wow_enable(struct ath_hw *ah, u32 pattern_enable)
 	 * Set and clear WOW_PME_CLEAR for the chip
 	 * to generate next wow signal.
 	 */
+<<<<<<< HEAD
 	REG_SET_BIT(ah, AR_PCIE_PM_CTRL(ah), AR_PMCTRL_HOST_PME_EN |
 		    			 AR_PMCTRL_PWR_PM_CTRL_ENA |
 		    			 AR_PMCTRL_AUX_PWR_DET |
 		    			 AR_PMCTRL_WOW_PME_CLR);
 	REG_CLR_BIT(ah, AR_PCIE_PM_CTRL(ah), AR_PMCTRL_WOW_PME_CLR);
+=======
+	REG_SET_BIT(ah, AR_PCIE_PM_CTRL, AR_PMCTRL_HOST_PME_EN |
+		    			 AR_PMCTRL_PWR_PM_CTRL_ENA |
+		    			 AR_PMCTRL_AUX_PWR_DET |
+		    			 AR_PMCTRL_WOW_PME_CLR);
+	REG_CLR_BIT(ah, AR_PCIE_PM_CTRL, AR_PMCTRL_WOW_PME_CLR);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Random Backoff.
@@ -414,7 +442,11 @@ void ath9k_hw_wow_enable(struct ath_hw *ah, u32 pattern_enable)
 	/*
 	 * Set the power states appropriately and enable PME.
 	 */
+<<<<<<< HEAD
 	host_pm_ctrl = REG_READ(ah, AR_PCIE_PM_CTRL(ah));
+=======
+	host_pm_ctrl = REG_READ(ah, AR_PCIE_PM_CTRL);
+>>>>>>> b7ba80a49124 (Commit)
 	host_pm_ctrl |= AR_PMCTRL_PWR_STATE_D1D3 |
 			AR_PMCTRL_HOST_PME_EN |
 			AR_PMCTRL_PWR_PM_CTRL_ENA;
@@ -430,7 +462,11 @@ void ath9k_hw_wow_enable(struct ath_hw *ah, u32 pattern_enable)
 		host_pm_ctrl |= AR_PMCTRL_PWR_STATE_D1D3_REAL;
 	}
 
+<<<<<<< HEAD
 	REG_WRITE(ah, AR_PCIE_PM_CTRL(ah), host_pm_ctrl);
+=======
+	REG_WRITE(ah, AR_PCIE_PM_CTRL, host_pm_ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Enable sequence number generation when asleep.

@@ -146,6 +146,7 @@ stable_node_dups
 
 比值 ``pages_sharing/pages_shared`` 的最大值受限制于 ``max_page_sharing``
 的设定。要想增加该比值，则相应地要增加 ``max_page_sharing`` 的值。
+<<<<<<< HEAD
 
 监测KSM的收益
 =============
@@ -196,3 +197,5 @@ ksm_swpin_copy
 --
 Izik Eidus,
 Hugh Dickins, 2009年11月17日。
+=======
+>>>>>>> b7ba80a49124 (Commit)

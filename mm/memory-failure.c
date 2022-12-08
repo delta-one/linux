@@ -24,7 +24,11 @@
  * - You have a test that can be added to mce-test
  *   https://git.kernel.org/cgit/utils/cpu/mce/mce-test.git/
  * - The case actually shows up as a frequent (top 10) page state in
+<<<<<<< HEAD
  *   tools/mm/page-types when running a real workload.
+=======
+ *   tools/vm/page-types when running a real workload.
+>>>>>>> b7ba80a49124 (Commit)
  * 
  * There are several operations here with exponential complexity because
  * of unsuitable VM data structures. For example the operation to map back 
@@ -62,32 +66,50 @@
 #include <linux/page-isolation.h>
 #include <linux/pagewalk.h>
 #include <linux/shmem_fs.h>
+<<<<<<< HEAD
 #include <linux/sysctl.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "swap.h"
 #include "internal.h"
 #include "ras/ras_event.h"
 
+<<<<<<< HEAD
 static int sysctl_memory_failure_early_kill __read_mostly;
 
 static int sysctl_memory_failure_recovery __read_mostly = 1;
+=======
+int sysctl_memory_failure_early_kill __read_mostly = 0;
+
+int sysctl_memory_failure_recovery __read_mostly = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 atomic_long_t num_poisoned_pages __read_mostly = ATOMIC_LONG_INIT(0);
 
 static bool hw_memory_failure __read_mostly = false;
 
+<<<<<<< HEAD
 inline void num_poisoned_pages_inc(unsigned long pfn)
+=======
+void num_poisoned_pages_inc(unsigned long pfn)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	atomic_long_inc(&num_poisoned_pages);
 	memblk_nr_poison_inc(pfn);
 }
 
+<<<<<<< HEAD
 inline void num_poisoned_pages_sub(unsigned long pfn, long i)
+=======
+static inline void num_poisoned_pages_sub(unsigned long pfn, long i)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	atomic_long_sub(i, &num_poisoned_pages);
 	if (pfn != -1UL)
 		memblk_nr_poison_sub(pfn, i);
 }
 
+<<<<<<< HEAD
 /**
  * MF_ATTR_RO - Create sysfs entry for each memory failure statistics.
  * @_name: name of the file in the per NUMA sysfs directory.
@@ -154,6 +176,8 @@ static int __init memory_failure_sysctl_init(void)
 late_initcall(memory_failure_sysctl_init);
 #endif /* CONFIG_SYSCTL */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Return values:
  *   1:   the page is dissolved (if needed) and taken off from buddy,
@@ -200,7 +224,11 @@ static bool page_handle_poison(struct page *page, bool hugepage_or_freepage, boo
 	return true;
 }
 
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_HWPOISON_INJECT)
+=======
+#if defined(CONFIG_HWPOISON_INJECT) || defined(CONFIG_HWPOISON_INJECT_MODULE)
+>>>>>>> b7ba80a49124 (Commit)
 
 u32 hwpoison_filter_enable = 0;
 u32 hwpoison_filter_dev_major = ~0U;
@@ -878,7 +906,11 @@ static const char * const action_page_types[] = {
  */
 static int delete_from_lru_cache(struct page *p)
 {
+<<<<<<< HEAD
 	if (isolate_lru_page(p)) {
+=======
+	if (!isolate_lru_page(p)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Clear sensible page flags, so that the buddy system won't
 		 * complain when the page is unpoison-and-freed.
@@ -907,13 +939,21 @@ static int truncate_error_page(struct page *p, unsigned long pfn,
 	int ret = MF_FAILED;
 
 	if (mapping->a_ops->error_remove_page) {
+<<<<<<< HEAD
 		struct folio *folio = page_folio(p);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		int err = mapping->a_ops->error_remove_page(mapping, p);
 
 		if (err != 0) {
 			pr_info("%#lx: Failed to punch page: %d\n", pfn, err);
+<<<<<<< HEAD
 		} else if (folio_has_private(folio) &&
 			   !filemap_release_folio(folio, GFP_NOIO)) {
+=======
+		} else if (page_has_private(p) &&
+			   !try_to_release_page(p, GFP_NOIO)) {
+>>>>>>> b7ba80a49124 (Commit)
 			pr_info("%#lx: failed to release buffers\n", pfn);
 		} else {
 			ret = MF_RECOVERED;
@@ -1101,7 +1141,11 @@ static int me_pagecache_dirty(struct page_state *ps, struct page *p)
  * cache and swap cache(ie. page is freshly swapped in). So it could be
  * referenced concurrently by 2 types of PTEs:
  * normal PTEs and swap PTEs. We try to handle them consistently by calling
+<<<<<<< HEAD
  * try_to_unmap(!TTU_HWPOISON) to convert the normal PTEs to swap PTEs,
+=======
+ * try_to_unmap(TTU_IGNORE_HWPOISON) to convert the normal PTEs to swap PTEs,
+>>>>>>> b7ba80a49124 (Commit)
  * and then
  *      - clear dirty bit to prevent IO
  *      - remove from LRU
@@ -1161,7 +1205,10 @@ static int me_huge_page(struct page_state *ps, struct page *p)
 	int res;
 	struct page *hpage = compound_head(p);
 	struct address_space *mapping;
+<<<<<<< HEAD
 	bool extra_pins = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!PageHuge(hpage))
 		return MF_DELAYED;
@@ -1169,8 +1216,11 @@ static int me_huge_page(struct page_state *ps, struct page *p)
 	mapping = page_mapping(hpage);
 	if (mapping) {
 		res = truncate_error_page(hpage, page_to_pfn(p), mapping);
+<<<<<<< HEAD
 		/* The page is kept in page cache. */
 		extra_pins = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		unlock_page(hpage);
 	} else {
 		unlock_page(hpage);
@@ -1188,7 +1238,11 @@ static int me_huge_page(struct page_state *ps, struct page *p)
 		}
 	}
 
+<<<<<<< HEAD
 	if (has_extra_refcount(ps, p, extra_pins))
+=======
+	if (has_extra_refcount(ps, p, false))
+>>>>>>> b7ba80a49124 (Commit)
 		res = MF_FAILED;
 
 	return res;
@@ -1259,6 +1313,7 @@ static struct page_state error_states[] = {
 #undef slab
 #undef reserved
 
+<<<<<<< HEAD
 static void update_per_node_mf_stats(unsigned long pfn,
 				     enum mf_result result)
 {
@@ -1292,16 +1347,24 @@ static void update_per_node_mf_stats(unsigned long pfn,
 	++mf_stats->total;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * "Dirty/Clean" indication is not 100% accurate due to the possibility of
  * setting PG_dirty outside page lock. See also comment above set_page_dirty().
  */
+<<<<<<< HEAD
 static int action_result(unsigned long pfn, enum mf_action_page_type type,
 			 enum mf_result result)
+=======
+static void action_result(unsigned long pfn, enum mf_action_page_type type,
+			  enum mf_result result)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	trace_memory_failure_event(pfn, type, result);
 
 	num_poisoned_pages_inc(pfn);
+<<<<<<< HEAD
 
 	update_per_node_mf_stats(pfn, result);
 
@@ -1309,6 +1372,10 @@ static int action_result(unsigned long pfn, enum mf_action_page_type type,
 		pfn, action_page_types[type], action_name[result]);
 
 	return (result == MF_RECOVERED || result == MF_DELAYED) ? 0 : -EBUSY;
+=======
+	pr_err("%#lx: recovery action for %s: %s\n",
+		pfn, action_page_types[type], action_name[result]);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int page_action(struct page_state *ps, struct page *p,
@@ -1319,12 +1386,21 @@ static int page_action(struct page_state *ps, struct page *p,
 	/* page p should be unlocked after returning from ps->action().  */
 	result = ps->action(ps, p);
 
+<<<<<<< HEAD
+=======
+	action_result(pfn, ps->type, result);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Could do more checks here if page looks ok */
 	/*
 	 * Could adjust zone counters here to correct for the missing page.
 	 */
 
+<<<<<<< HEAD
 	return action_result(pfn, ps->type, result);
+=======
+	return (result == MF_RECOVERED || result == MF_DELAYED) ? 0 : -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool PageHWPoisonTakenOff(struct page *page)
@@ -1360,15 +1436,24 @@ static inline bool HWPoisonHandlable(struct page *page, unsigned long flags)
 
 static int __get_hwpoison_page(struct page *page, unsigned long flags)
 {
+<<<<<<< HEAD
 	struct folio *folio = page_folio(page);
 	int ret = 0;
 	bool hugetlb = false;
 
 	ret = get_hwpoison_hugetlb_folio(folio, &hugetlb, false);
+=======
+	struct page *head = compound_head(page);
+	int ret = 0;
+	bool hugetlb = false;
+
+	ret = get_hwpoison_huge_page(head, &hugetlb, false);
+>>>>>>> b7ba80a49124 (Commit)
 	if (hugetlb)
 		return ret;
 
 	/*
+<<<<<<< HEAD
 	 * This check prevents from calling folio_try_get() for any
 	 * unsupported type of folio in order to reduce the risk of unexpected
 	 * races caused by taking a folio refcount.
@@ -1382,6 +1467,21 @@ static int __get_hwpoison_page(struct page *page, unsigned long flags)
 
 		pr_info("%#lx cannot catch tail\n", page_to_pfn(page));
 		folio_put(folio);
+=======
+	 * This check prevents from calling get_page_unless_zero() for any
+	 * unsupported type of page in order to reduce the risk of unexpected
+	 * races caused by taking a page refcount.
+	 */
+	if (!HWPoisonHandlable(head, flags))
+		return -EBUSY;
+
+	if (get_page_unless_zero(head)) {
+		if (head == compound_head(page))
+			return 1;
+
+		pr_info("%#lx cannot catch tail\n", page_to_pfn(page));
+		put_page(head);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -1450,11 +1550,19 @@ out:
 
 static int __get_unpoison_page(struct page *page)
 {
+<<<<<<< HEAD
 	struct folio *folio = page_folio(page);
 	int ret = 0;
 	bool hugetlb = false;
 
 	ret = get_hwpoison_hugetlb_folio(folio, &hugetlb, true);
+=======
+	struct page *head = compound_head(page);
+	int ret = 0;
+	bool hugetlb = false;
+
+	ret = get_hwpoison_huge_page(head, &hugetlb, true);
+>>>>>>> b7ba80a49124 (Commit)
 	if (hugetlb)
 		return ret;
 
@@ -1518,7 +1626,11 @@ static bool hwpoison_user_mappings(struct page *p, unsigned long pfn,
 				  int flags, struct page *hpage)
 {
 	struct folio *folio = page_folio(hpage);
+<<<<<<< HEAD
 	enum ttu_flags ttu = TTU_IGNORE_MLOCK | TTU_SYNC | TTU_HWPOISON;
+=======
+	enum ttu_flags ttu = TTU_IGNORE_MLOCK | TTU_SYNC;
+>>>>>>> b7ba80a49124 (Commit)
 	struct address_space *mapping;
 	LIST_HEAD(tokill);
 	bool unmap_success;
@@ -1548,7 +1660,11 @@ static bool hwpoison_user_mappings(struct page *p, unsigned long pfn,
 
 	if (PageSwapCache(p)) {
 		pr_err("%#lx: keeping poisoned page in swap cache\n", pfn);
+<<<<<<< HEAD
 		ttu &= ~TTU_HWPOISON;
+=======
+		ttu |= TTU_IGNORE_HWPOISON;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -1563,7 +1679,11 @@ static bool hwpoison_user_mappings(struct page *p, unsigned long pfn,
 		if (page_mkclean(hpage)) {
 			SetPageDirty(hpage);
 		} else {
+<<<<<<< HEAD
 			ttu &= ~TTU_HWPOISON;
+=======
+			ttu |= TTU_IGNORE_HWPOISON;
+>>>>>>> b7ba80a49124 (Commit)
 			pr_info("%#lx: corrupted page was clean: dropped without side effects\n",
 				pfn);
 		}
@@ -1791,32 +1911,53 @@ EXPORT_SYMBOL_GPL(mf_dax_kill_procs);
 #ifdef CONFIG_HUGETLB_PAGE
 /*
  * Struct raw_hwp_page represents information about "raw error page",
+<<<<<<< HEAD
  * constructing singly linked list from ->_hugetlb_hwpoison field of folio.
+=======
+ * constructing singly linked list originated from ->private field of
+ * SUBPAGE_INDEX_HWPOISON-th tail page.
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct raw_hwp_page {
 	struct llist_node node;
 	struct page *page;
 };
 
+<<<<<<< HEAD
 static inline struct llist_head *raw_hwp_list_head(struct folio *folio)
 {
 	return (struct llist_head *)&folio->_hugetlb_hwpoison;
 }
 
 static unsigned long __folio_free_raw_hwp(struct folio *folio, bool move_flag)
+=======
+static inline struct llist_head *raw_hwp_list_head(struct page *hpage)
+{
+	return (struct llist_head *)&page_private(hpage + SUBPAGE_INDEX_HWPOISON);
+}
+
+static unsigned long __free_raw_hwp_pages(struct page *hpage, bool move_flag)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct llist_head *head;
 	struct llist_node *t, *tnode;
 	unsigned long count = 0;
 
+<<<<<<< HEAD
 	head = raw_hwp_list_head(folio);
+=======
+	head = raw_hwp_list_head(hpage);
+>>>>>>> b7ba80a49124 (Commit)
 	llist_for_each_safe(tnode, t, head->first) {
 		struct raw_hwp_page *p = container_of(tnode, struct raw_hwp_page, node);
 
 		if (move_flag)
 			SetPageHWPoison(p->page);
+<<<<<<< HEAD
 		else
 			num_poisoned_pages_sub(page_to_pfn(p->page), 1);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(p);
 		count++;
 	}
@@ -1824,21 +1965,35 @@ static unsigned long __folio_free_raw_hwp(struct folio *folio, bool move_flag)
 	return count;
 }
 
+<<<<<<< HEAD
 static int folio_set_hugetlb_hwpoison(struct folio *folio, struct page *page)
+=======
+static int hugetlb_set_page_hwpoison(struct page *hpage, struct page *page)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct llist_head *head;
 	struct raw_hwp_page *raw_hwp;
 	struct llist_node *t, *tnode;
+<<<<<<< HEAD
 	int ret = folio_test_set_hwpoison(folio) ? -EHWPOISON : 0;
+=======
+	int ret = TestSetPageHWPoison(hpage) ? -EHWPOISON : 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Once the hwpoison hugepage has lost reliable raw error info,
 	 * there is little meaning to keep additional error info precisely,
 	 * so skip to add additional raw error info.
 	 */
+<<<<<<< HEAD
 	if (folio_test_hugetlb_raw_hwp_unreliable(folio))
 		return -EHWPOISON;
 	head = raw_hwp_list_head(folio);
+=======
+	if (HPageRawHwpUnreliable(hpage))
+		return -EHWPOISON;
+	head = raw_hwp_list_head(hpage);
+>>>>>>> b7ba80a49124 (Commit)
 	llist_for_each_safe(tnode, t, head->first) {
 		struct raw_hwp_page *p = container_of(tnode, struct raw_hwp_page, node);
 
@@ -1859,16 +2014,26 @@ static int folio_set_hugetlb_hwpoison(struct folio *folio, struct page *page)
 		 * hwpoisoned subpages, and we need refuse to free/dissolve
 		 * this hwpoisoned hugepage.
 		 */
+<<<<<<< HEAD
 		folio_set_hugetlb_raw_hwp_unreliable(folio);
 		/*
 		 * Once hugetlb_raw_hwp_unreliable is set, raw_hwp_page is not
 		 * used any more, so free it.
 		 */
 		__folio_free_raw_hwp(folio, false);
+=======
+		SetHPageRawHwpUnreliable(hpage);
+		/*
+		 * Once HPageRawHwpUnreliable is set, raw_hwp_page is not
+		 * used any more, so free it.
+		 */
+		__free_raw_hwp_pages(hpage, false);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret;
 }
 
+<<<<<<< HEAD
 static unsigned long folio_free_raw_hwp(struct folio *folio, bool move_flag)
 {
 	/*
@@ -1894,6 +2059,33 @@ void folio_clear_hugetlb_hwpoison(struct folio *folio)
 		return;
 	folio_clear_hwpoison(folio);
 	folio_free_raw_hwp(folio, true);
+=======
+static unsigned long free_raw_hwp_pages(struct page *hpage, bool move_flag)
+{
+	/*
+	 * HPageVmemmapOptimized hugepages can't be freed because struct
+	 * pages for tail pages are required but they don't exist.
+	 */
+	if (move_flag && HPageVmemmapOptimized(hpage))
+		return 0;
+
+	/*
+	 * HPageRawHwpUnreliable hugepages shouldn't be unpoisoned by
+	 * definition.
+	 */
+	if (HPageRawHwpUnreliable(hpage))
+		return 0;
+
+	return __free_raw_hwp_pages(hpage, move_flag);
+}
+
+void hugetlb_clear_page_hwpoison(struct page *hpage)
+{
+	if (HPageRawHwpUnreliable(hpage))
+		return;
+	ClearPageHWPoison(hpage);
+	free_raw_hwp_pages(hpage, true);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1906,6 +2098,7 @@ void folio_clear_hugetlb_hwpoison(struct folio *folio)
  *   -EBUSY        - the hugepage is busy (try to retry)
  *   -EHWPOISON    - the hugepage is already hwpoisoned
  */
+<<<<<<< HEAD
 int __get_huge_page_for_hwpoison(unsigned long pfn, int flags,
 				 bool *migratable_cleared)
 {
@@ -1915,15 +2108,32 @@ int __get_huge_page_for_hwpoison(unsigned long pfn, int flags,
 	bool count_increased = false;
 
 	if (!folio_test_hugetlb(folio))
+=======
+int __get_huge_page_for_hwpoison(unsigned long pfn, int flags)
+{
+	struct page *page = pfn_to_page(pfn);
+	struct page *head = compound_head(page);
+	int ret = 2;	/* fallback to normal page handling */
+	bool count_increased = false;
+
+	if (!PageHeadHuge(head))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	if (flags & MF_COUNT_INCREASED) {
 		ret = 1;
 		count_increased = true;
+<<<<<<< HEAD
 	} else if (folio_test_hugetlb_freed(folio)) {
 		ret = 0;
 	} else if (folio_test_hugetlb_migratable(folio)) {
 		ret = folio_try_get(folio);
+=======
+	} else if (HPageFreed(head)) {
+		ret = 0;
+	} else if (HPageMigratable(head)) {
+		ret = get_page_unless_zero(head);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			count_increased = true;
 	} else {
@@ -1932,12 +2142,17 @@ int __get_huge_page_for_hwpoison(unsigned long pfn, int flags,
 			goto out;
 	}
 
+<<<<<<< HEAD
 	if (folio_set_hugetlb_hwpoison(folio, page)) {
+=======
+	if (hugetlb_set_page_hwpoison(head, page)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EHWPOISON;
 		goto out;
 	}
 
 	/*
+<<<<<<< HEAD
 	 * Clearing hugetlb_migratable for hwpoisoned hugepages to prevent them
 	 * from being migrated by memory hotremove.
 	 */
@@ -1945,11 +2160,22 @@ int __get_huge_page_for_hwpoison(unsigned long pfn, int flags,
 		folio_clear_hugetlb_migratable(folio);
 		*migratable_cleared = true;
 	}
+=======
+	 * Clearing HPageMigratable for hwpoisoned hugepages to prevent them
+	 * from being migrated by memory hotremove.
+	 */
+	if (count_increased)
+		ClearHPageMigratable(head);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 out:
 	if (count_increased)
+<<<<<<< HEAD
 		folio_put(folio);
+=======
+		put_page(head);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -1963,6 +2189,7 @@ static int try_memory_failure_hugetlb(unsigned long pfn, int flags, int *hugetlb
 {
 	int res;
 	struct page *p = pfn_to_page(pfn);
+<<<<<<< HEAD
 	struct folio *folio;
 	unsigned long page_flags;
 	bool migratable_cleared = false;
@@ -1970,14 +2197,27 @@ static int try_memory_failure_hugetlb(unsigned long pfn, int flags, int *hugetlb
 	*hugetlb = 1;
 retry:
 	res = get_huge_page_for_hwpoison(pfn, flags, &migratable_cleared);
+=======
+	struct page *head;
+	unsigned long page_flags;
+
+	*hugetlb = 1;
+retry:
+	res = get_huge_page_for_hwpoison(pfn, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (res == 2) { /* fallback to normal page handling */
 		*hugetlb = 0;
 		return 0;
 	} else if (res == -EHWPOISON) {
 		pr_err("%#lx: already hardware poisoned\n", pfn);
 		if (flags & MF_ACTION_REQUIRED) {
+<<<<<<< HEAD
 			folio = page_folio(p);
 			res = kill_accessing_process(current, folio_pfn(folio), flags);
+=======
+			head = compound_head(p);
+			res = kill_accessing_process(current, page_to_pfn(head), flags);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		return res;
 	} else if (res == -EBUSY) {
@@ -1985,6 +2225,7 @@ retry:
 			flags |= MF_NO_RETRY;
 			goto retry;
 		}
+<<<<<<< HEAD
 		return action_result(pfn, MF_MSG_UNKNOWN, MF_IGNORED);
 	}
 
@@ -1998,6 +2239,21 @@ retry:
 		folio_unlock(folio);
 		if (res == 1)
 			folio_put(folio);
+=======
+		action_result(pfn, MF_MSG_UNKNOWN, MF_IGNORED);
+		return res;
+	}
+
+	head = compound_head(p);
+	lock_page(head);
+
+	if (hwpoison_filter(p)) {
+		hugetlb_clear_page_hwpoison(head);
+		SetHPageMigratable(head);
+		unlock_page(head);
+		if (res == 1)
+			put_page(head);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOPNOTSUPP;
 	}
 
@@ -2006,13 +2262,18 @@ retry:
 	 * or demotion can be prevented by PageHWPoison flag.
 	 */
 	if (res == 0) {
+<<<<<<< HEAD
 		folio_unlock(folio);
+=======
+		unlock_page(head);
+>>>>>>> b7ba80a49124 (Commit)
 		if (__page_handle_poison(p) >= 0) {
 			page_ref_inc(p);
 			res = MF_RECOVERED;
 		} else {
 			res = MF_FAILED;
 		}
+<<<<<<< HEAD
 		return action_result(pfn, MF_MSG_FREE_HUGE, res);
 	}
 
@@ -2024,6 +2285,24 @@ retry:
 	}
 
 	return identify_page_state(pfn, p, page_flags);
+=======
+		action_result(pfn, MF_MSG_FREE_HUGE, res);
+		return res == MF_RECOVERED ? 0 : -EBUSY;
+	}
+
+	page_flags = head->flags;
+
+	if (!hwpoison_user_mappings(p, pfn, flags, head)) {
+		action_result(pfn, MF_MSG_UNMAP_FAILED, MF_IGNORED);
+		res = -EBUSY;
+		goto out;
+	}
+
+	return identify_page_state(pfn, p, page_flags);
+out:
+	unlock_page(head);
+	return res;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #else
@@ -2032,12 +2311,17 @@ static inline int try_memory_failure_hugetlb(unsigned long pfn, int flags, int *
 	return 0;
 }
 
+<<<<<<< HEAD
 static inline unsigned long folio_free_raw_hwp(struct folio *folio, bool flag)
+=======
+static inline unsigned long free_raw_hwp_pages(struct page *hpage, bool flag)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return 0;
 }
 #endif	/* CONFIG_HUGETLB_PAGE */
 
+<<<<<<< HEAD
 /* Drop the extra refcount in case we come from madvise() */
 static void put_ref_page(unsigned long pfn, int flags)
 {
@@ -2057,6 +2341,19 @@ static int memory_failure_dev_pagemap(unsigned long pfn, int flags,
 	int rc = -ENXIO;
 
 	put_ref_page(pfn, flags);
+=======
+static int memory_failure_dev_pagemap(unsigned long pfn, int flags,
+		struct dev_pagemap *pgmap)
+{
+	struct page *page = pfn_to_page(pfn);
+	int rc = -ENXIO;
+
+	if (flags & MF_COUNT_INCREASED)
+		/*
+		 * Drop the extra refcount in case we come from madvise().
+		 */
+		put_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* device metadata space is not recoverable */
 	if (!pgmap_pfn_valid(pgmap, pfn))
@@ -2188,6 +2485,7 @@ try_again:
 					}
 					res = MF_FAILED;
 				}
+<<<<<<< HEAD
 				res = action_result(pfn, MF_MSG_BUDDY, res);
 			} else {
 				res = action_result(pfn, MF_MSG_KERNEL_HIGH_ORDER, MF_IGNORED);
@@ -2195,6 +2493,18 @@ try_again:
 			goto unlock_mutex;
 		} else if (res < 0) {
 			res = action_result(pfn, MF_MSG_UNKNOWN, MF_IGNORED);
+=======
+				action_result(pfn, MF_MSG_BUDDY, res);
+				res = res == MF_RECOVERED ? 0 : -EBUSY;
+			} else {
+				action_result(pfn, MF_MSG_KERNEL_HIGH_ORDER, MF_IGNORED);
+				res = -EBUSY;
+			}
+			goto unlock_mutex;
+		} else if (res < 0) {
+			action_result(pfn, MF_MSG_UNKNOWN, MF_IGNORED);
+			res = -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 			goto unlock_mutex;
 		}
 	}
@@ -2215,7 +2525,12 @@ try_again:
 		 */
 		SetPageHasHWPoisoned(hpage);
 		if (try_to_split_thp_page(p) < 0) {
+<<<<<<< HEAD
 			res = action_result(pfn, MF_MSG_UNSPLIT_THP, MF_IGNORED);
+=======
+			action_result(pfn, MF_MSG_UNSPLIT_THP, MF_IGNORED);
+			res = -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 			goto unlock_mutex;
 		}
 		VM_BUG_ON_PAGE(!page_count(p), p);
@@ -2248,7 +2563,12 @@ try_again:
 			retry = false;
 			goto try_again;
 		}
+<<<<<<< HEAD
 		res = action_result(pfn, MF_MSG_DIFFERENT_COMPOUND, MF_IGNORED);
+=======
+		action_result(pfn, MF_MSG_DIFFERENT_COMPOUND, MF_IGNORED);
+		res = -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 		goto unlock_page;
 	}
 
@@ -2270,7 +2590,11 @@ try_again:
 	}
 
 	/*
+<<<<<<< HEAD
 	 * __munlock_folio() may clear a writeback page's LRU flag without
+=======
+	 * __munlock_pagevec may clear a writeback page's LRU flag without
+>>>>>>> b7ba80a49124 (Commit)
 	 * page_lock. We need wait writeback completion for this page or it
 	 * may trigger vfs BUG while evict inode.
 	 */
@@ -2288,7 +2612,12 @@ try_again:
 	 * Abort on fail: __filemap_remove_folio() assumes unmapped page.
 	 */
 	if (!hwpoison_user_mappings(p, pfn, flags, p)) {
+<<<<<<< HEAD
 		res = action_result(pfn, MF_MSG_UNMAP_FAILED, MF_IGNORED);
+=======
+		action_result(pfn, MF_MSG_UNMAP_FAILED, MF_IGNORED);
+		res = -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 		goto unlock_page;
 	}
 
@@ -2296,7 +2625,12 @@ try_again:
 	 * Torn down by someone else?
 	 */
 	if (PageLRU(p) && !PageSwapCache(p) && p->mapping == NULL) {
+<<<<<<< HEAD
 		res = action_result(pfn, MF_MSG_TRUNCATED_LRU, MF_IGNORED);
+=======
+		action_result(pfn, MF_MSG_TRUNCATED_LRU, MF_IGNORED);
+		res = -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 		goto unlock_page;
 	}
 
@@ -2438,11 +2772,19 @@ core_initcall(memory_failure_init);
  */
 int unpoison_memory(unsigned long pfn)
 {
+<<<<<<< HEAD
 	struct folio *folio;
 	struct page *p;
 	int ret = -EBUSY;
 	unsigned long count = 1;
 	bool huge = false;
+=======
+	struct page *page;
+	struct page *p;
+	int ret = -EBUSY;
+	int freeit = 0;
+	unsigned long count = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	static DEFINE_RATELIMIT_STATE(unpoison_rs, DEFAULT_RATELIMIT_INTERVAL,
 					DEFAULT_RATELIMIT_BURST);
 
@@ -2450,7 +2792,11 @@ int unpoison_memory(unsigned long pfn)
 		return -ENXIO;
 
 	p = pfn_to_page(pfn);
+<<<<<<< HEAD
 	folio = page_folio(p);
+=======
+	page = compound_head(p);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&mf_mutex);
 
@@ -2461,44 +2807,72 @@ int unpoison_memory(unsigned long pfn)
 		goto unlock_mutex;
 	}
 
+<<<<<<< HEAD
 	if (!folio_test_hwpoison(folio)) {
+=======
+	if (!PageHWPoison(p)) {
+>>>>>>> b7ba80a49124 (Commit)
 		unpoison_pr_info("Unpoison: Page was already unpoisoned %#lx\n",
 				 pfn, &unpoison_rs);
 		goto unlock_mutex;
 	}
 
+<<<<<<< HEAD
 	if (folio_ref_count(folio) > 1) {
+=======
+	if (page_count(page) > 1) {
+>>>>>>> b7ba80a49124 (Commit)
 		unpoison_pr_info("Unpoison: Someone grabs the hwpoison page %#lx\n",
 				 pfn, &unpoison_rs);
 		goto unlock_mutex;
 	}
 
+<<<<<<< HEAD
 	if (folio_mapped(folio)) {
+=======
+	if (page_mapped(page)) {
+>>>>>>> b7ba80a49124 (Commit)
 		unpoison_pr_info("Unpoison: Someone maps the hwpoison page %#lx\n",
 				 pfn, &unpoison_rs);
 		goto unlock_mutex;
 	}
 
+<<<<<<< HEAD
 	if (folio_mapping(folio)) {
+=======
+	if (page_mapping(page)) {
+>>>>>>> b7ba80a49124 (Commit)
 		unpoison_pr_info("Unpoison: the hwpoison page has non-NULL mapping %#lx\n",
 				 pfn, &unpoison_rs);
 		goto unlock_mutex;
 	}
 
+<<<<<<< HEAD
 	if (folio_test_slab(folio) || PageTable(&folio->page) || folio_test_reserved(folio))
+=======
+	if (PageSlab(page) || PageTable(page) || PageReserved(page))
+>>>>>>> b7ba80a49124 (Commit)
 		goto unlock_mutex;
 
 	ret = get_hwpoison_page(p, MF_UNPOISON);
 	if (!ret) {
 		if (PageHuge(p)) {
+<<<<<<< HEAD
 			huge = true;
 			count = folio_free_raw_hwp(folio, false);
+=======
+			count = free_raw_hwp_pages(page, false);
+>>>>>>> b7ba80a49124 (Commit)
 			if (count == 0) {
 				ret = -EBUSY;
 				goto unlock_mutex;
 			}
 		}
+<<<<<<< HEAD
 		ret = folio_test_clear_hwpoison(folio) ? 0 : -EBUSY;
+=======
+		ret = TestClearPageHWPoison(page) ? 0 : -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (ret < 0) {
 		if (ret == -EHWPOISON) {
 			ret = put_page_back_buddy(p) ? 0 : -EBUSY;
@@ -2507,6 +2881,7 @@ int unpoison_memory(unsigned long pfn)
 					 pfn, &unpoison_rs);
 	} else {
 		if (PageHuge(p)) {
+<<<<<<< HEAD
 			huge = true;
 			count = folio_free_raw_hwp(folio, false);
 			if (count == 0) {
@@ -2519,15 +2894,38 @@ int unpoison_memory(unsigned long pfn)
 		folio_put(folio);
 		if (TestClearPageHWPoison(p)) {
 			folio_put(folio);
+=======
+			count = free_raw_hwp_pages(page, false);
+			if (count == 0) {
+				ret = -EBUSY;
+				put_page(page);
+				goto unlock_mutex;
+			}
+		}
+		freeit = !!TestClearPageHWPoison(p);
+
+		put_page(page);
+		if (freeit) {
+			put_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 			ret = 0;
 		}
 	}
 
 unlock_mutex:
 	mutex_unlock(&mf_mutex);
+<<<<<<< HEAD
 	if (!ret) {
 		if (!huge)
 			num_poisoned_pages_sub(pfn, 1);
+=======
+	if (!ret || freeit) {
+		/*
+		 * TODO: per-memory_block counter might break when the page
+		 * size to be unpoisoned is larger than a memory_block.
+		 */
+		num_poisoned_pages_sub(pfn, count);
+>>>>>>> b7ba80a49124 (Commit)
 		unpoison_pr_info("Unpoison: Software-unpoisoned page %#lx\n",
 				 page_to_pfn(p), &unpoison_rs);
 	}
@@ -2540,15 +2938,26 @@ static bool isolate_page(struct page *page, struct list_head *pagelist)
 	bool isolated = false;
 
 	if (PageHuge(page)) {
+<<<<<<< HEAD
 		isolated = isolate_hugetlb(page_folio(page), pagelist);
+=======
+		isolated = !isolate_hugetlb(page, pagelist);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		bool lru = !__PageMovable(page);
 
 		if (lru)
+<<<<<<< HEAD
 			isolated = isolate_lru_page(page);
 		else
 			isolated = isolate_movable_page(page,
 							ISOLATE_UNEVICTABLE);
+=======
+			isolated = !isolate_lru_page(page);
+		else
+			isolated = !isolate_movable_page(page,
+							 ISOLATE_UNEVICTABLE);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (isolated) {
 			list_add(&page->lru, pagelist);
@@ -2644,6 +3053,15 @@ static int soft_offline_in_use_page(struct page *page)
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static void put_ref_page(struct page *page)
+{
+	if (page)
+		put_page(page);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * soft_offline_page - Soft offline a page.
  * @pfn: pfn to soft-offline
@@ -2672,17 +3090,32 @@ int soft_offline_page(unsigned long pfn, int flags)
 {
 	int ret;
 	bool try_again = true;
+<<<<<<< HEAD
 	struct page *page;
 
 	if (!pfn_valid(pfn)) {
 		WARN_ON_ONCE(flags & MF_COUNT_INCREASED);
 		return -ENXIO;
 	}
+=======
+	struct page *page, *ref_page = NULL;
+
+	WARN_ON_ONCE(!pfn_valid(pfn) && (flags & MF_COUNT_INCREASED));
+
+	if (!pfn_valid(pfn))
+		return -ENXIO;
+	if (flags & MF_COUNT_INCREASED)
+		ref_page = pfn_to_page(pfn);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Only online pages can be soft-offlined (esp., not ZONE_DEVICE). */
 	page = pfn_to_online_page(pfn);
 	if (!page) {
+<<<<<<< HEAD
 		put_ref_page(pfn, flags);
+=======
+		put_ref_page(ref_page);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EIO;
 	}
 
@@ -2690,7 +3123,11 @@ int soft_offline_page(unsigned long pfn, int flags)
 
 	if (PageHWPoison(page)) {
 		pr_info("%s: %#lx page already poisoned\n", __func__, pfn);
+<<<<<<< HEAD
 		put_ref_page(pfn, flags);
+=======
+		put_ref_page(ref_page);
+>>>>>>> b7ba80a49124 (Commit)
 		mutex_unlock(&mf_mutex);
 		return 0;
 	}
@@ -2722,3 +3159,11 @@ retry:
 
 	return ret;
 }
+<<<<<<< HEAD
+=======
+
+void clear_hwpoisoned_pages(long nr_poison)
+{
+	num_poisoned_pages_sub(-1UL, nr_poison);
+}
+>>>>>>> b7ba80a49124 (Commit)

@@ -4,7 +4,10 @@
  */
 
 #include "i915_drv.h"
+<<<<<<< HEAD
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_context.h"
 #include "intel_engine_pm.h"
 #include "intel_engine_regs.h"
@@ -18,6 +21,7 @@
 /**
  * DOC: Hardware workarounds
  *
+<<<<<<< HEAD
  * Hardware workarounds are register programming documented to be executed in
  * the driver that fall outside of the normal programming sequences for a
  * platform. There are some basic categories of workarounds, depending on
@@ -96,6 +100,48 @@ static void wa_init_start(struct i915_wa_list *wal, struct intel_gt *gt,
 			  const char *name, const char *engine_name)
 {
 	wal->gt = gt;
+=======
+ * This file is intended as a central place to implement most [1]_ of the
+ * required workarounds for hardware to work as originally intended. They fall
+ * in five basic categories depending on how/when they are applied:
+ *
+ * - Workarounds that touch registers that are saved/restored to/from the HW
+ *   context image. The list is emitted (via Load Register Immediate commands)
+ *   everytime a new context is created.
+ * - GT workarounds. The list of these WAs is applied whenever these registers
+ *   revert to default values (on GPU reset, suspend/resume [2]_, etc..).
+ * - Display workarounds. The list is applied during display clock-gating
+ *   initialization.
+ * - Workarounds that whitelist a privileged register, so that UMDs can manage
+ *   them directly. This is just a special case of a MMMIO workaround (as we
+ *   write the list of these to/be-whitelisted registers to some special HW
+ *   registers).
+ * - Workaround batchbuffers, that get executed automatically by the hardware
+ *   on every HW context restore.
+ *
+ * .. [1] Please notice that there are other WAs that, due to their nature,
+ *    cannot be applied from a central place. Those are peppered around the rest
+ *    of the code, as needed.
+ *
+ * .. [2] Technically, some registers are powercontext saved & restored, so they
+ *    survive a suspend/resume. In practice, writing them again is not too
+ *    costly and simplifies things. We can revisit this in the future.
+ *
+ * Layout
+ * ~~~~~~
+ *
+ * Keep things in this file ordered by WA type, as per the above (context, GT,
+ * display, register whitelist, batchbuffer). Then, inside each type, keep the
+ * following order:
+ *
+ * - Infrastructure functions and macros
+ * - WAs per platform in standard gen/chrono order
+ * - Public functions to init or apply the given workaround type.
+ */
+
+static void wa_init_start(struct i915_wa_list *wal, const char *name, const char *engine_name)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	wal->name = name;
 	wal->engine_name = engine_name;
 }
@@ -119,14 +165,22 @@ static void wa_init_finish(struct i915_wa_list *wal)
 	if (!wal->count)
 		return;
 
+<<<<<<< HEAD
 	drm_dbg(&wal->gt->i915->drm, "Initialized %u %s workarounds on %s\n",
 		wal->wa_count, wal->name, wal->engine_name);
+=======
+	DRM_DEBUG_DRIVER("Initialized %u %s workarounds on %s\n",
+			 wal->wa_count, wal->name, wal->engine_name);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void _wa_add(struct i915_wa_list *wal, const struct i915_wa *wa)
 {
 	unsigned int addr = i915_mmio_reg_offset(wa->reg);
+<<<<<<< HEAD
 	struct drm_i915_private *i915 = wal->gt->i915;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int start = 0, end = wal->count;
 	const unsigned int grow = WA_LIST_CHUNK;
 	struct i915_wa *wa_;
@@ -139,7 +193,11 @@ static void _wa_add(struct i915_wa_list *wal, const struct i915_wa *wa)
 		list = kmalloc_array(ALIGN(wal->count + 1, grow), sizeof(*wa),
 				     GFP_KERNEL);
 		if (!list) {
+<<<<<<< HEAD
 			drm_err(&i915->drm, "No space for workaround init!\n");
+=======
+			DRM_ERROR("No space for workaround init!\n");
+>>>>>>> b7ba80a49124 (Commit)
 			return;
 		}
 
@@ -162,10 +220,16 @@ static void _wa_add(struct i915_wa_list *wal, const struct i915_wa *wa)
 			wa_ = &wal->list[mid];
 
 			if ((wa->clr | wa_->clr) && !(wa->clr & ~wa_->clr)) {
+<<<<<<< HEAD
 				drm_err(&i915->drm,
 					"Discarding overwritten w/a for reg %04x (clear: %08x, set: %08x)\n",
 					i915_mmio_reg_offset(wa_->reg),
 					wa_->clr, wa_->set);
+=======
+				DRM_ERROR("Discarding overwritten w/a for reg %04x (clear: %08x, set: %08x)\n",
+					  i915_mmio_reg_offset(wa_->reg),
+					  wa_->clr, wa_->set);
+>>>>>>> b7ba80a49124 (Commit)
 
 				wa_->set &= ~wa->clr;
 			}
@@ -207,6 +271,7 @@ static void wa_add(struct i915_wa_list *wal, i915_reg_t reg,
 	_wa_add(wal, &wa);
 }
 
+<<<<<<< HEAD
 static void wa_mcr_add(struct i915_wa_list *wal, i915_mcr_reg_t reg,
 		       u32 clear, u32 set, u32 read_mask, bool masked_reg)
 {
@@ -222,6 +287,8 @@ static void wa_mcr_add(struct i915_wa_list *wal, i915_mcr_reg_t reg,
 	_wa_add(wal, &wa);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void
 wa_write_clr_set(struct i915_wa_list *wal, i915_reg_t reg, u32 clear, u32 set)
 {
@@ -229,47 +296,59 @@ wa_write_clr_set(struct i915_wa_list *wal, i915_reg_t reg, u32 clear, u32 set)
 }
 
 static void
+<<<<<<< HEAD
 wa_mcr_write_clr_set(struct i915_wa_list *wal, i915_mcr_reg_t reg, u32 clear, u32 set)
 {
 	wa_mcr_add(wal, reg, clear, set, clear, false);
 }
 
 static void
+=======
+>>>>>>> b7ba80a49124 (Commit)
 wa_write(struct i915_wa_list *wal, i915_reg_t reg, u32 set)
 {
 	wa_write_clr_set(wal, reg, ~0, set);
 }
 
 static void
+<<<<<<< HEAD
 wa_mcr_write(struct i915_wa_list *wal, i915_mcr_reg_t reg, u32 set)
 {
 	wa_mcr_write_clr_set(wal, reg, ~0, set);
 }
 
 static void
+=======
+>>>>>>> b7ba80a49124 (Commit)
 wa_write_or(struct i915_wa_list *wal, i915_reg_t reg, u32 set)
 {
 	wa_write_clr_set(wal, reg, set, set);
 }
 
 static void
+<<<<<<< HEAD
 wa_mcr_write_or(struct i915_wa_list *wal, i915_mcr_reg_t reg, u32 set)
 {
 	wa_mcr_write_clr_set(wal, reg, set, set);
 }
 
 static void
+=======
+>>>>>>> b7ba80a49124 (Commit)
 wa_write_clr(struct i915_wa_list *wal, i915_reg_t reg, u32 clr)
 {
 	wa_write_clr_set(wal, reg, clr, 0);
 }
 
+<<<<<<< HEAD
 static void
 wa_mcr_write_clr(struct i915_wa_list *wal, i915_mcr_reg_t reg, u32 clr)
 {
 	wa_mcr_write_clr_set(wal, reg, clr, 0);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * WA operations on "masked register". A masked register has the upper 16 bits
  * documented as "masked" in b-spec. Its purpose is to allow writing to just a
@@ -288,30 +367,37 @@ wa_masked_en(struct i915_wa_list *wal, i915_reg_t reg, u32 val)
 }
 
 static void
+<<<<<<< HEAD
 wa_mcr_masked_en(struct i915_wa_list *wal, i915_mcr_reg_t reg, u32 val)
 {
 	wa_mcr_add(wal, reg, 0, _MASKED_BIT_ENABLE(val), val, true);
 }
 
 static void
+=======
+>>>>>>> b7ba80a49124 (Commit)
 wa_masked_dis(struct i915_wa_list *wal, i915_reg_t reg, u32 val)
 {
 	wa_add(wal, reg, 0, _MASKED_BIT_DISABLE(val), val, true);
 }
 
 static void
+<<<<<<< HEAD
 wa_mcr_masked_dis(struct i915_wa_list *wal, i915_mcr_reg_t reg, u32 val)
 {
 	wa_mcr_add(wal, reg, 0, _MASKED_BIT_DISABLE(val), val, true);
 }
 
 static void
+=======
+>>>>>>> b7ba80a49124 (Commit)
 wa_masked_field_set(struct i915_wa_list *wal, i915_reg_t reg,
 		    u32 mask, u32 val)
 {
 	wa_add(wal, reg, 0, _MASKED_FIELD(mask, val), mask, true);
 }
 
+<<<<<<< HEAD
 static void
 wa_mcr_masked_field_set(struct i915_wa_list *wal, i915_mcr_reg_t reg,
 			u32 mask, u32 val)
@@ -319,6 +405,8 @@ wa_mcr_masked_field_set(struct i915_wa_list *wal, i915_mcr_reg_t reg,
 	wa_mcr_add(wal, reg, 0, _MASKED_FIELD(mask, val), mask, true);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void gen6_ctx_workarounds_init(struct intel_engine_cs *engine,
 				      struct i915_wa_list *wal)
 {
@@ -340,8 +428,13 @@ static void gen8_ctx_workarounds_init(struct intel_engine_cs *engine,
 	wa_masked_en(wal, RING_MI_MODE(RENDER_RING_BASE), ASYNC_FLIP_PERF_DISABLE);
 
 	/* WaDisablePartialInstShootdown:bdw,chv */
+<<<<<<< HEAD
 	wa_mcr_masked_en(wal, GEN8_ROW_CHICKEN,
 			 PARTIAL_INSTRUCTION_SHOOTDOWN_DISABLE);
+=======
+	wa_masked_en(wal, GEN8_ROW_CHICKEN,
+		     PARTIAL_INSTRUCTION_SHOOTDOWN_DISABLE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Use Force Non-Coherent whenever executing a 3D context. This is a
 	 * workaround for a possible hang in the unlikely event a TLB
@@ -387,18 +480,30 @@ static void bdw_ctx_workarounds_init(struct intel_engine_cs *engine,
 	gen8_ctx_workarounds_init(engine, wal);
 
 	/* WaDisableThreadStallDopClockGating:bdw (pre-production) */
+<<<<<<< HEAD
 	wa_mcr_masked_en(wal, GEN8_ROW_CHICKEN, STALL_DOP_GATING_DISABLE);
+=======
+	wa_masked_en(wal, GEN8_ROW_CHICKEN, STALL_DOP_GATING_DISABLE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* WaDisableDopClockGating:bdw
 	 *
 	 * Also see the related UCGTCL1 write in bdw_init_clock_gating()
 	 * to disable EUTC clock gating.
 	 */
+<<<<<<< HEAD
 	wa_mcr_masked_en(wal, GEN8_ROW_CHICKEN2,
 			 DOP_CLOCK_GATING_DISABLE);
 
 	wa_mcr_masked_en(wal, GEN8_HALF_SLICE_CHICKEN3,
 			 GEN8_SAMPLER_POWER_BYPASS_DIS);
+=======
+	wa_masked_en(wal, GEN7_ROW_CHICKEN2,
+		     DOP_CLOCK_GATING_DISABLE);
+
+	wa_masked_en(wal, HALF_SLICE_CHICKEN3,
+		     GEN8_SAMPLER_POWER_BYPASS_DIS);
+>>>>>>> b7ba80a49124 (Commit)
 
 	wa_masked_en(wal, HDC_CHICKEN0,
 		     /* WaForceContextSaveRestoreNonCoherent:bdw */
@@ -413,7 +518,11 @@ static void chv_ctx_workarounds_init(struct intel_engine_cs *engine,
 	gen8_ctx_workarounds_init(engine, wal);
 
 	/* WaDisableThreadStallDopClockGating:chv */
+<<<<<<< HEAD
 	wa_mcr_masked_en(wal, GEN8_ROW_CHICKEN, STALL_DOP_GATING_DISABLE);
+=======
+	wa_masked_en(wal, GEN8_ROW_CHICKEN, STALL_DOP_GATING_DISABLE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Improve HiZ throughput on CHV. */
 	wa_masked_en(wal, HIZ_CHICKEN, CHV_HZ_8X8_MODE_IN_1X);
@@ -432,12 +541,18 @@ static void gen9_ctx_workarounds_init(struct intel_engine_cs *engine,
 		 */
 		wa_masked_en(wal, COMMON_SLICE_CHICKEN2,
 			     GEN9_PBE_COMPRESSED_HASH_SELECTION);
+<<<<<<< HEAD
 		wa_mcr_masked_en(wal, GEN9_HALF_SLICE_CHICKEN7,
 				 GEN9_SAMPLER_HASH_COMPRESSED_READ_ADDR);
+=======
+		wa_masked_en(wal, GEN9_HALF_SLICE_CHICKEN7,
+			     GEN9_SAMPLER_HASH_COMPRESSED_READ_ADDR);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* WaClearFlowControlGpgpuContextSave:skl,bxt,kbl,glk,cfl */
 	/* WaDisablePartialInstShootdown:skl,bxt,kbl,glk,cfl */
+<<<<<<< HEAD
 	wa_mcr_masked_en(wal, GEN8_ROW_CHICKEN,
 			 FLOW_CONTROL_ENABLE |
 			 PARTIAL_INSTRUCTION_SHOOTDOWN_DISABLE);
@@ -447,6 +562,17 @@ static void gen9_ctx_workarounds_init(struct intel_engine_cs *engine,
 	wa_mcr_masked_en(wal, GEN9_HALF_SLICE_CHICKEN7,
 			 GEN9_ENABLE_YV12_BUGFIX |
 			 GEN9_ENABLE_GPGPU_PREEMPTION);
+=======
+	wa_masked_en(wal, GEN8_ROW_CHICKEN,
+		     FLOW_CONTROL_ENABLE |
+		     PARTIAL_INSTRUCTION_SHOOTDOWN_DISABLE);
+
+	/* WaEnableYV12BugFixInHalfSliceChicken7:skl,bxt,kbl,glk,cfl */
+	/* WaEnableSamplerGPGPUPreemptionSupport:skl,bxt,kbl,cfl */
+	wa_masked_en(wal, GEN9_HALF_SLICE_CHICKEN7,
+		     GEN9_ENABLE_YV12_BUGFIX |
+		     GEN9_ENABLE_GPGPU_PREEMPTION);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Wa4x4STCOptimizationDisable:skl,bxt,kbl,glk,cfl */
 	/* WaDisablePartialResolveInVc:skl,bxt,kbl,cfl */
@@ -455,8 +581,13 @@ static void gen9_ctx_workarounds_init(struct intel_engine_cs *engine,
 		     GEN9_PARTIAL_RESOLVE_IN_VC_DISABLE);
 
 	/* WaCcsTlbPrefetchDisable:skl,bxt,kbl,glk,cfl */
+<<<<<<< HEAD
 	wa_mcr_masked_dis(wal, GEN9_HALF_SLICE_CHICKEN5,
 			  GEN9_CCS_TLB_PREFETCH_ENABLE);
+=======
+	wa_masked_dis(wal, GEN9_HALF_SLICE_CHICKEN5,
+		      GEN9_CCS_TLB_PREFETCH_ENABLE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* WaForceContextSaveRestoreNonCoherent:skl,bxt,kbl,cfl */
 	wa_masked_en(wal, HDC_CHICKEN0,
@@ -485,11 +616,19 @@ static void gen9_ctx_workarounds_init(struct intel_engine_cs *engine,
 	    IS_KABYLAKE(i915) ||
 	    IS_COFFEELAKE(i915) ||
 	    IS_COMETLAKE(i915))
+<<<<<<< HEAD
 		wa_mcr_masked_en(wal, GEN8_HALF_SLICE_CHICKEN3,
 				 GEN8_SAMPLER_POWER_BYPASS_DIS);
 
 	/* WaDisableSTUnitPowerOptimization:skl,bxt,kbl,glk,cfl */
 	wa_mcr_masked_en(wal, HALF_SLICE_CHICKEN2, GEN8_ST_PO_DISABLE);
+=======
+		wa_masked_en(wal, HALF_SLICE_CHICKEN3,
+			     GEN8_SAMPLER_POWER_BYPASS_DIS);
+
+	/* WaDisableSTUnitPowerOptimization:skl,bxt,kbl,glk,cfl */
+	wa_masked_en(wal, HALF_SLICE_CHICKEN2, GEN8_ST_PO_DISABLE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Supporting preemption with fine-granularity requires changes in the
@@ -568,8 +707,13 @@ static void bxt_ctx_workarounds_init(struct intel_engine_cs *engine,
 	gen9_ctx_workarounds_init(engine, wal);
 
 	/* WaDisableThreadStallDopClockGating:bxt */
+<<<<<<< HEAD
 	wa_mcr_masked_en(wal, GEN8_ROW_CHICKEN,
 			 STALL_DOP_GATING_DISABLE);
+=======
+	wa_masked_en(wal, GEN8_ROW_CHICKEN,
+		     STALL_DOP_GATING_DISABLE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* WaToEnableHwFixForPushConstHWBug:bxt */
 	wa_masked_en(wal, COMMON_SLICE_CHICKEN2,
@@ -589,8 +733,13 @@ static void kbl_ctx_workarounds_init(struct intel_engine_cs *engine,
 			     GEN8_SBE_DISABLE_REPLAY_BUF_OPTIMIZATION);
 
 	/* WaDisableSbeCacheDispatchPortSharing:kbl */
+<<<<<<< HEAD
 	wa_mcr_masked_en(wal, GEN8_HALF_SLICE_CHICKEN1,
 			 GEN7_SBE_SS_CACHE_DISPATCH_PORT_SHARING_DISABLE);
+=======
+	wa_masked_en(wal, GEN7_HALF_SLICE_CHICKEN1,
+		     GEN7_SBE_SS_CACHE_DISPATCH_PORT_SHARING_DISABLE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void glk_ctx_workarounds_init(struct intel_engine_cs *engine,
@@ -613,8 +762,13 @@ static void cfl_ctx_workarounds_init(struct intel_engine_cs *engine,
 		     GEN8_SBE_DISABLE_REPLAY_BUF_OPTIMIZATION);
 
 	/* WaDisableSbeCacheDispatchPortSharing:cfl */
+<<<<<<< HEAD
 	wa_mcr_masked_en(wal, GEN8_HALF_SLICE_CHICKEN1,
 			 GEN7_SBE_SS_CACHE_DISPATCH_PORT_SHARING_DISABLE);
+=======
+	wa_masked_en(wal, GEN7_HALF_SLICE_CHICKEN1,
+		     GEN7_SBE_SS_CACHE_DISPATCH_PORT_SHARING_DISABLE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void icl_ctx_workarounds_init(struct intel_engine_cs *engine,
@@ -633,6 +787,7 @@ static void icl_ctx_workarounds_init(struct intel_engine_cs *engine,
 	 * (the register is whitelisted in hardware now, so UMDs can opt in
 	 * for coherency if they have a good reason).
 	 */
+<<<<<<< HEAD
 	wa_mcr_masked_en(wal, ICL_HDC_MODE, HDC_FORCE_NON_COHERENT);
 
 	/* WaEnableFloatBlendOptimization:icl */
@@ -640,6 +795,15 @@ static void icl_ctx_workarounds_init(struct intel_engine_cs *engine,
 		   _MASKED_BIT_ENABLE(FLOAT_BLEND_OPTIMIZATION_ENABLE),
 		   0 /* write-only, so skip validation */,
 		   true);
+=======
+	wa_masked_en(wal, ICL_HDC_MODE, HDC_FORCE_NON_COHERENT);
+
+	/* WaEnableFloatBlendOptimization:icl */
+	wa_add(wal, GEN10_CACHE_MODE_SS, 0,
+	       _MASKED_BIT_ENABLE(FLOAT_BLEND_OPTIMIZATION_ENABLE),
+	       0 /* write-only, so skip validation */,
+	       true);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* WaDisableGPGPUMidThreadPreemption:icl */
 	wa_masked_field_set(wal, GEN8_CS_CHICKEN1,
@@ -647,8 +811,13 @@ static void icl_ctx_workarounds_init(struct intel_engine_cs *engine,
 			    GEN9_PREEMPT_GPGPU_THREAD_GROUP_LEVEL);
 
 	/* allow headerless messages for preemptible GPGPU context */
+<<<<<<< HEAD
 	wa_mcr_masked_en(wal, GEN10_SAMPLER_MODE,
 			 GEN11_SAMPLER_ENABLE_HEADLESS_MSG);
+=======
+	wa_masked_en(wal, GEN10_SAMPLER_MODE,
+		     GEN11_SAMPLER_ENABLE_HEADLESS_MSG);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Wa_1604278689:icl,ehl */
 	wa_write(wal, IVB_FBC_RT_BASE, 0xFFFFFFFF & ~ILK_FBC_RT_VALID);
@@ -657,7 +826,11 @@ static void icl_ctx_workarounds_init(struct intel_engine_cs *engine,
 			 0xFFFFFFFF);
 
 	/* Wa_1406306137:icl,ehl */
+<<<<<<< HEAD
 	wa_mcr_masked_en(wal, GEN9_ROW_CHICKEN4, GEN11_DIS_PICK_2ND_EU);
+=======
+	wa_masked_en(wal, GEN9_ROW_CHICKEN4, GEN11_DIS_PICK_2ND_EU);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -667,6 +840,7 @@ static void icl_ctx_workarounds_init(struct intel_engine_cs *engine,
 static void dg2_ctx_gt_tuning_init(struct intel_engine_cs *engine,
 				   struct i915_wa_list *wal)
 {
+<<<<<<< HEAD
 	wa_mcr_masked_en(wal, CHICKEN_RASTER_2, TBIMR_FAST_CLIP);
 	wa_mcr_write_clr_set(wal, XEHP_L3SQCREG5, L3_PWM_TIMER_INIT_VAL_MASK,
 			     REG_FIELD_PREP(L3_PWM_TIMER_INIT_VAL_MASK, 0x7f));
@@ -675,6 +849,16 @@ static void dg2_ctx_gt_tuning_init(struct intel_engine_cs *engine,
 		   FF_MODE2_TDS_TIMER_MASK,
 		   FF_MODE2_TDS_TIMER_128,
 		   0, false);
+=======
+	wa_masked_en(wal, CHICKEN_RASTER_2, TBIMR_FAST_CLIP);
+	wa_write_clr_set(wal, GEN11_L3SQCREG5, L3_PWM_TIMER_INIT_VAL_MASK,
+			 REG_FIELD_PREP(L3_PWM_TIMER_INIT_VAL_MASK, 0x7f));
+	wa_add(wal,
+	       FF_MODE2,
+	       FF_MODE2_TDS_TIMER_MASK,
+	       FF_MODE2_TDS_TIMER_128,
+	       0, false);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -698,7 +882,11 @@ static void gen12_ctx_gt_tuning_init(struct intel_engine_cs *engine,
 	 * verification is ignored.
 	 */
 	wa_add(wal,
+<<<<<<< HEAD
 	       GEN12_FF_MODE2,
+=======
+	       FF_MODE2,
+>>>>>>> b7ba80a49124 (Commit)
 	       FF_MODE2_TDS_TIMER_MASK,
 	       FF_MODE2_TDS_TIMER_128,
 	       0, false);
@@ -707,8 +895,11 @@ static void gen12_ctx_gt_tuning_init(struct intel_engine_cs *engine,
 static void gen12_ctx_workarounds_init(struct intel_engine_cs *engine,
 				       struct i915_wa_list *wal)
 {
+<<<<<<< HEAD
 	struct drm_i915_private *i915 = engine->i915;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gen12_ctx_gt_tuning_init(engine, wal);
 
 	/*
@@ -738,6 +929,7 @@ static void gen12_ctx_workarounds_init(struct intel_engine_cs *engine,
 	 * to Wa_1608008084.
 	 */
 	wa_add(wal,
+<<<<<<< HEAD
 	       GEN12_FF_MODE2,
 	       FF_MODE2_GS_TIMER_MASK,
 	       FF_MODE2_GS_TIMER_224,
@@ -750,6 +942,12 @@ static void gen12_ctx_workarounds_init(struct intel_engine_cs *engine,
 		/* Wa_1606376872 */
 		wa_masked_en(wal, COMMON_SLICE_CHICKEN4, DISABLE_TDC_LOAD_BALANCING_CALC);
 	}
+=======
+	       FF_MODE2,
+	       FF_MODE2_GS_TIMER_MASK,
+	       FF_MODE2_GS_TIMER_224,
+	       0, false);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void dg1_ctx_workarounds_init(struct intel_engine_cs *engine,
@@ -773,20 +971,31 @@ static void dg2_ctx_workarounds_init(struct intel_engine_cs *engine,
 
 	/* Wa_16011186671:dg2_g11 */
 	if (IS_DG2_GRAPHICS_STEP(engine->i915, G11, STEP_A0, STEP_B0)) {
+<<<<<<< HEAD
 		wa_mcr_masked_dis(wal, VFLSKPD, DIS_MULT_MISS_RD_SQUASH);
 		wa_mcr_masked_en(wal, VFLSKPD, DIS_OVER_FETCH_CACHE);
+=======
+		wa_masked_dis(wal, VFLSKPD, DIS_MULT_MISS_RD_SQUASH);
+		wa_masked_en(wal, VFLSKPD, DIS_OVER_FETCH_CACHE);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (IS_DG2_GRAPHICS_STEP(engine->i915, G10, STEP_A0, STEP_B0)) {
 		/* Wa_14010469329:dg2_g10 */
+<<<<<<< HEAD
 		wa_mcr_masked_en(wal, XEHP_COMMON_SLICE_CHICKEN3,
 				 XEHP_DUAL_SIMD8_SEQ_MERGE_DISABLE);
+=======
+		wa_masked_en(wal, GEN11_COMMON_SLICE_CHICKEN3,
+			     XEHP_DUAL_SIMD8_SEQ_MERGE_DISABLE);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * Wa_22010465075:dg2_g10
 		 * Wa_22010613112:dg2_g10
 		 * Wa_14010698770:dg2_g10
 		 */
+<<<<<<< HEAD
 		wa_mcr_masked_en(wal, XEHP_COMMON_SLICE_CHICKEN3,
 				 GEN12_DISABLE_CPS_AWARE_COLOR_PIPE);
 	}
@@ -836,6 +1045,23 @@ static void mtl_ctx_workarounds_init(struct intel_engine_cs *engine,
 
 	/* Wa_18019271663 */
 	wa_masked_en(wal, CACHE_MODE_1, MSAA_OPTIMIZATION_REDUC_DISABLE);
+=======
+		wa_masked_en(wal, GEN11_COMMON_SLICE_CHICKEN3,
+			     GEN12_DISABLE_CPS_AWARE_COLOR_PIPE);
+	}
+
+	/* Wa_16013271637:dg2 */
+	wa_masked_en(wal, SLICE_COMMON_ECO_CHICKEN1,
+		     MSC_MSAA_REODER_BUF_BYPASS_DISABLE);
+
+	/* Wa_14014947963:dg2 */
+	if (IS_DG2_GRAPHICS_STEP(engine->i915, G10, STEP_B0, STEP_FOREVER) ||
+		IS_DG2_G11(engine->i915) || IS_DG2_G12(engine->i915))
+		wa_masked_field_set(wal, VF_PREEMPTION, PREEMPTION_VERTEX_COUNT, 0x4000);
+
+	/* Wa_15010599737:dg2 */
+	wa_masked_en(wal, CHICKEN_RASTER_1, DIS_SF_ROUND_NEAREST_EVEN);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void fakewa_disable_nestedbb_mode(struct intel_engine_cs *engine,
@@ -911,7 +1137,11 @@ __intel_engine_init_ctx_wa(struct intel_engine_cs *engine,
 {
 	struct drm_i915_private *i915 = engine->i915;
 
+<<<<<<< HEAD
 	wa_init_start(wal, engine->gt, name, engine->name);
+=======
+	wa_init_start(wal, name, engine->name);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Applies to all engines */
 	/*
@@ -924,9 +1154,13 @@ __intel_engine_init_ctx_wa(struct intel_engine_cs *engine,
 	if (engine->class != RENDER_CLASS)
 		goto done;
 
+<<<<<<< HEAD
 	if (IS_METEORLAKE(i915))
 		mtl_ctx_workarounds_init(engine, wal);
 	else if (IS_PONTEVECCHIO(i915))
+=======
+	if (IS_PONTEVECCHIO(i915))
+>>>>>>> b7ba80a49124 (Commit)
 		; /* noop; none at this time */
 	else if (IS_DG2(i915))
 		dg2_ctx_workarounds_init(engine, wal);
@@ -1221,6 +1455,7 @@ static void __set_mcr_steering(struct i915_wa_list *wal,
 	wa_write_clr_set(wal, steering_reg, mcr_mask, mcr);
 }
 
+<<<<<<< HEAD
 static void debug_dump_steering(struct intel_gt *gt)
 {
 	struct drm_printer p = drm_debug_printer("MCR Steering:");
@@ -1232,12 +1467,24 @@ static void debug_dump_steering(struct intel_gt *gt)
 static void __add_mcr_wa(struct intel_gt *gt, struct i915_wa_list *wal,
 			 unsigned int slice, unsigned int subslice)
 {
+=======
+static void __add_mcr_wa(struct intel_gt *gt, struct i915_wa_list *wal,
+			 unsigned int slice, unsigned int subslice)
+{
+	struct drm_printer p = drm_debug_printer("MCR Steering:");
+
+>>>>>>> b7ba80a49124 (Commit)
 	__set_mcr_steering(wal, GEN8_MCR_SELECTOR, slice, subslice);
 
 	gt->default_steering.groupid = slice;
 	gt->default_steering.instanceid = subslice;
 
+<<<<<<< HEAD
 	debug_dump_steering(gt);
+=======
+	if (drm_debug_enabled(DRM_UT_DRIVER))
+		intel_gt_mcr_report_steering(&p, gt, false);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -1331,9 +1578,12 @@ xehp_init_mcr(struct intel_gt *gt, struct i915_wa_list *wal)
 		gt->steering_table[MSLICE] = NULL;
 	}
 
+<<<<<<< HEAD
 	if (IS_XEHPSDV(gt->i915) && slice_mask & BIT(0))
 		gt->steering_table[GAM] = NULL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	slice = __ffs(slice_mask);
 	subslice = intel_sseu_find_first_xehp_dss(sseu, GEN_DSS_PER_GSLICE, slice) %
 		GEN_DSS_PER_GSLICE;
@@ -1351,6 +1601,7 @@ xehp_init_mcr(struct intel_gt *gt, struct i915_wa_list *wal)
 	 */
 	__set_mcr_steering(wal, MCFG_MCR_SELECTOR, 0, 2);
 	__set_mcr_steering(wal, SF_MCR_SELECTOR, 0, 2);
+<<<<<<< HEAD
 
 	/*
 	 * On DG2, GAM registers have a dedicated steering control register
@@ -1358,6 +1609,8 @@ xehp_init_mcr(struct intel_gt *gt, struct i915_wa_list *wal)
 	 */
 	if (IS_DG2(gt->i915))
 		__set_mcr_steering(wal, GAM_MCR_SELECTOR, 1, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -1409,6 +1662,7 @@ icl_gt_workarounds_init(struct intel_gt *gt, struct i915_wa_list *wal)
 		    GAMT_CHKN_BIT_REG,
 		    GAMT_CHKN_DISABLE_L3_COH_PIPE);
 
+<<<<<<< HEAD
 	/*
 	 * Wa_1408615072:icl,ehl  (vsunit)
 	 * Wa_1407596294:icl,ehl  (hsunit)
@@ -1416,27 +1670,43 @@ icl_gt_workarounds_init(struct intel_gt *gt, struct i915_wa_list *wal)
 	wa_write_or(wal, UNSLICE_UNIT_LEVEL_CLKGATE,
 		    VSUNIT_CLKGATE_DIS | HSUNIT_CLKGATE_DIS);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Wa_1407352427:icl,ehl */
 	wa_write_or(wal, UNSLICE_UNIT_LEVEL_CLKGATE2,
 		    PSDUNIT_CLKGATE_DIS);
 
 	/* Wa_1406680159:icl,ehl */
+<<<<<<< HEAD
 	wa_mcr_write_or(wal,
 			GEN11_SUBSLICE_UNIT_LEVEL_CLKGATE,
 			GWUNIT_CLKGATE_DIS);
+=======
+	wa_write_or(wal,
+		    SUBSLICE_UNIT_LEVEL_CLKGATE,
+		    GWUNIT_CLKGATE_DIS);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Wa_1607087056:icl,ehl,jsl */
 	if (IS_ICELAKE(i915) ||
 	    IS_JSL_EHL_GRAPHICS_STEP(i915, STEP_A0, STEP_B0))
 		wa_write_or(wal,
+<<<<<<< HEAD
 			    GEN11_SLICE_UNIT_LEVEL_CLKGATE,
+=======
+			    SLICE_UNIT_LEVEL_CLKGATE,
+>>>>>>> b7ba80a49124 (Commit)
 			    L3_CLKGATE_DIS | L3_CR2X_CLKGATE_DIS);
 
 	/*
 	 * This is not a documented workaround, but rather an optimization
 	 * to reduce sampler power.
 	 */
+<<<<<<< HEAD
 	wa_mcr_write_clr(wal, GEN10_DFR_RATIO_EN_AND_CHICKEN, DFR_DISABLE);
+=======
+	wa_write_clr(wal, GEN10_DFR_RATIO_EN_AND_CHICKEN, DFR_DISABLE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1470,12 +1740,42 @@ gen12_gt_workarounds_init(struct intel_gt *gt, struct i915_wa_list *wal)
 	wa_14011060649(gt, wal);
 
 	/* Wa_14011059788:tgl,rkl,adl-s,dg1,adl-p */
+<<<<<<< HEAD
 	wa_mcr_write_or(wal, GEN10_DFR_RATIO_EN_AND_CHICKEN, DFR_DISABLE);
+=======
+	wa_write_or(wal, GEN10_DFR_RATIO_EN_AND_CHICKEN, DFR_DISABLE);
+}
+
+static void
+tgl_gt_workarounds_init(struct intel_gt *gt, struct i915_wa_list *wal)
+{
+	struct drm_i915_private *i915 = gt->i915;
+
+	gen12_gt_workarounds_init(gt, wal);
+
+	/* Wa_1409420604:tgl */
+	if (IS_TGL_UY_GRAPHICS_STEP(i915, STEP_A0, STEP_B0))
+		wa_write_or(wal,
+			    SUBSLICE_UNIT_LEVEL_CLKGATE2,
+			    CPSSUNIT_CLKGATE_DIS);
+
+	/* Wa_1607087056:tgl also know as BUG:1409180338 */
+	if (IS_TGL_UY_GRAPHICS_STEP(i915, STEP_A0, STEP_B0))
+		wa_write_or(wal,
+			    SLICE_UNIT_LEVEL_CLKGATE,
+			    L3_CLKGATE_DIS | L3_CR2X_CLKGATE_DIS);
+
+	/* Wa_1408615072:tgl[a0] */
+	if (IS_TGL_UY_GRAPHICS_STEP(i915, STEP_A0, STEP_B0))
+		wa_write_or(wal, UNSLICE_UNIT_LEVEL_CLKGATE2,
+			    VSUNIT_CLKGATE_DIS_TGL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
 dg1_gt_workarounds_init(struct intel_gt *gt, struct i915_wa_list *wal)
 {
+<<<<<<< HEAD
 	gen12_gt_workarounds_init(gt, wal);
 
 	/* Wa_1409420604:dg1 */
@@ -1485,6 +1785,29 @@ dg1_gt_workarounds_init(struct intel_gt *gt, struct i915_wa_list *wal)
 	/* Wa_1408615072:dg1 */
 	/* Empirical testing shows this register is unaffected by engine reset. */
 	wa_write_or(wal, UNSLICE_UNIT_LEVEL_CLKGATE2, VSUNIT_CLKGATE_DIS_TGL);
+=======
+	struct drm_i915_private *i915 = gt->i915;
+
+	gen12_gt_workarounds_init(gt, wal);
+
+	/* Wa_1607087056:dg1 */
+	if (IS_DG1_GRAPHICS_STEP(i915, STEP_A0, STEP_B0))
+		wa_write_or(wal,
+			    SLICE_UNIT_LEVEL_CLKGATE,
+			    L3_CLKGATE_DIS | L3_CR2X_CLKGATE_DIS);
+
+	/* Wa_1409420604:dg1 */
+	if (IS_DG1(i915))
+		wa_write_or(wal,
+			    SUBSLICE_UNIT_LEVEL_CLKGATE2,
+			    CPSSUNIT_CLKGATE_DIS);
+
+	/* Wa_1408615072:dg1 */
+	/* Empirical testing shows this register is unaffected by engine reset. */
+	if (IS_DG1(i915))
+		wa_write_or(wal, UNSLICE_UNIT_LEVEL_CLKGATE2,
+			    VSUNIT_CLKGATE_DIS_TGL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -1495,6 +1818,7 @@ xehpsdv_gt_workarounds_init(struct intel_gt *gt, struct i915_wa_list *wal)
 	xehp_init_mcr(gt, wal);
 
 	/* Wa_1409757795:xehpsdv */
+<<<<<<< HEAD
 	wa_mcr_write_or(wal, SCCGCTL94DC, CG3DDISURB);
 
 	/* Wa_18011725039:xehpsdv */
@@ -1502,6 +1826,9 @@ xehpsdv_gt_workarounds_init(struct intel_gt *gt, struct i915_wa_list *wal)
 		wa_mcr_masked_dis(wal, MLTICTXCTL, TDONRENDER);
 		wa_mcr_write_or(wal, L3SQCREG1_CCS0, FLUSHALLNONCOH);
 	}
+=======
+	wa_write_or(wal, SCCGCTL94DC, CG3DDISURB);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Wa_16011155590:xehpsdv */
 	if (IS_XEHPSDV_GRAPHICS_STEP(i915, STEP_A0, STEP_B0))
@@ -1545,6 +1872,7 @@ xehpsdv_gt_workarounds_init(struct intel_gt *gt, struct i915_wa_list *wal)
 
 	/* Wa_14011060649:xehpsdv */
 	wa_14011060649(gt, wal);
+<<<<<<< HEAD
 
 	/* Wa_14012362059:xehpsdv */
 	wa_mcr_write_or(wal, XEHP_MERT_MOD_CTRL, FORCE_MISS_FTLB);
@@ -1555,6 +1883,8 @@ xehpsdv_gt_workarounds_init(struct intel_gt *gt, struct i915_wa_list *wal)
 
 	/* Wa_14010670810:xehpsdv */
 	wa_mcr_write_or(wal, XEHP_L3NODEARBCFG, XEHP_LNESPARE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -1591,6 +1921,7 @@ dg2_gt_workarounds_init(struct intel_gt *gt, struct i915_wa_list *wal)
 			    CG3DDISCFEG_CLKGATE_DIS);
 
 		/* Wa_14011006942:dg2 */
+<<<<<<< HEAD
 		wa_mcr_write_or(wal, GEN11_SUBSLICE_UNIT_LEVEL_CLKGATE,
 				DSS_ROUTER_CLKGATE_DIS);
 	}
@@ -1599,6 +1930,10 @@ dg2_gt_workarounds_init(struct intel_gt *gt, struct i915_wa_list *wal)
 	    IS_DG2_GRAPHICS_STEP(gt->i915, G11, STEP_A0, STEP_B0)) {
 		/* Wa_14012362059:dg2 */
 		wa_mcr_write_or(wal, XEHP_MERT_MOD_CTRL, FORCE_MISS_FTLB);
+=======
+		wa_write_or(wal, SUBSLICE_UNIT_LEVEL_CLKGATE,
+			    DSS_ROUTER_CLKGATE_DIS);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (IS_DG2_GRAPHICS_STEP(gt->i915, G10, STEP_A0, STEP_B0)) {
@@ -1609,7 +1944,11 @@ dg2_gt_workarounds_init(struct intel_gt *gt, struct i915_wa_list *wal)
 		wa_write_or(wal, UNSLCGCTL9444, LTCDD_CLKGATE_DIS);
 
 		/* Wa_14011371254:dg2_g10 */
+<<<<<<< HEAD
 		wa_mcr_write_or(wal, XEHP_SLICE_UNIT_LEVEL_CLKGATE, NODEDSS_CLKGATE_DIS);
+=======
+		wa_write_or(wal, SLICE_UNIT_LEVEL_CLKGATE, NODEDSS_CLKGATE_DIS);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Wa_14011431319:dg2_g10 */
 		wa_write_or(wal, UNSLCGCTL9440, GAMTLBOACS_CLKGATE_DIS |
@@ -1645,6 +1984,7 @@ dg2_gt_workarounds_init(struct intel_gt *gt, struct i915_wa_list *wal)
 			    GAMEDIA_CLKGATE_DIS);
 
 		/* Wa_14011028019:dg2_g10 */
+<<<<<<< HEAD
 		wa_mcr_write_or(wal, SSMCGCTL9530, RTFUNIT_CLKGATE_DIS);
 
 		/* Wa_14010680813:dg2_g10 */
@@ -1672,6 +2012,23 @@ dg2_gt_workarounds_init(struct intel_gt *gt, struct i915_wa_list *wal)
 
 	/* Wa_14010648519:dg2 */
 	wa_mcr_write_or(wal, XEHP_L3NODEARBCFG, XEHP_LNESPARE);
+=======
+		wa_write_or(wal, SSMCGCTL9530, RTFUNIT_CLKGATE_DIS);
+	}
+
+	/* Wa_14014830051:dg2 */
+	wa_write_clr(wal, SARB_CHICKEN1, COMP_CKN_IN);
+
+	/*
+	 * The following are not actually "workarounds" but rather
+	 * recommended tuning settings documented in the bspec's
+	 * performance guide section.
+	 */
+	wa_write_or(wal, GEN12_SQCM, EN_32B_ACCESS);
+
+	/* Wa_14015795083 */
+	wa_write_clr(wal, GEN7_MISCCPCTL, GEN12_DOP_CLOCK_GATE_RENDER_ENABLE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -1681,6 +2038,7 @@ pvc_gt_workarounds_init(struct intel_gt *gt, struct i915_wa_list *wal)
 
 	/* Wa_14015795083 */
 	wa_write_clr(wal, GEN7_MISCCPCTL, GEN12_DOP_CLOCK_GATE_RENDER_ENABLE);
+<<<<<<< HEAD
 
 	/* Wa_18018781329 */
 	wa_mcr_write_or(wal, RENDER_MOD_CTRL, FORCE_MISS_FTLB);
@@ -1753,6 +2111,8 @@ static void gt_tuning_settings(struct intel_gt *gt, struct i915_wa_list *wal)
 		wa_mcr_write_or(wal, XEHP_L3SCQREG7, BLEND_FILL_CACHING_OPT_DIS);
 		wa_mcr_write_or(wal, XEHP_SQCM, EN_32B_ACCESS);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -1760,6 +2120,7 @@ gt_init_workarounds(struct intel_gt *gt, struct i915_wa_list *wal)
 {
 	struct drm_i915_private *i915 = gt->i915;
 
+<<<<<<< HEAD
 	gt_tuning_settings(gt, wal);
 
 	if (gt->type == GT_MEDIA) {
@@ -1774,6 +2135,9 @@ gt_init_workarounds(struct intel_gt *gt, struct i915_wa_list *wal)
 	if (GRAPHICS_VER_FULL(i915) >= IP_VER(12, 70))
 		xelpg_gt_workarounds_init(gt, wal);
 	else if (IS_PONTEVECCHIO(i915))
+=======
+	if (IS_PONTEVECCHIO(i915))
+>>>>>>> b7ba80a49124 (Commit)
 		pvc_gt_workarounds_init(gt, wal);
 	else if (IS_DG2(i915))
 		dg2_gt_workarounds_init(gt, wal);
@@ -1781,6 +2145,11 @@ gt_init_workarounds(struct intel_gt *gt, struct i915_wa_list *wal)
 		xehpsdv_gt_workarounds_init(gt, wal);
 	else if (IS_DG1(i915))
 		dg1_gt_workarounds_init(gt, wal);
+<<<<<<< HEAD
+=======
+	else if (IS_TIGERLAKE(i915))
+		tgl_gt_workarounds_init(gt, wal);
+>>>>>>> b7ba80a49124 (Commit)
 	else if (GRAPHICS_VER(i915) == 12)
 		gen12_gt_workarounds_init(gt, wal);
 	else if (GRAPHICS_VER(i915) == 11)
@@ -1819,7 +2188,11 @@ void intel_gt_init_workarounds(struct intel_gt *gt)
 {
 	struct i915_wa_list *wal = &gt->wa_list;
 
+<<<<<<< HEAD
 	wa_init_start(wal, gt, "GT", "global");
+=======
+	wa_init_start(wal, "GT", "global");
+>>>>>>> b7ba80a49124 (Commit)
 	gt_init_workarounds(gt, wal);
 	wa_init_finish(wal);
 }
@@ -1841,6 +2214,7 @@ wal_get_fw_for_rmw(struct intel_uncore *uncore, const struct i915_wa_list *wal)
 }
 
 static bool
+<<<<<<< HEAD
 wa_verify(struct intel_gt *gt, const struct i915_wa *wa, u32 cur,
 	  const char *name, const char *from)
 {
@@ -1849,6 +2223,14 @@ wa_verify(struct intel_gt *gt, const struct i915_wa *wa, u32 cur,
 			"%s workaround lost on %s! (reg[%x]=0x%x, relevant bits were 0x%x vs expected 0x%x)\n",
 			name, from, i915_mmio_reg_offset(wa->reg),
 			cur, cur & wa->read, wa->set & wa->read);
+=======
+wa_verify(const struct i915_wa *wa, u32 cur, const char *name, const char *from)
+{
+	if ((cur ^ wa->set) & wa->read) {
+		DRM_ERROR("%s workaround lost on %s! (reg[%x]=0x%x, relevant bits were 0x%x vs expected 0x%x)\n",
+			  name, from, i915_mmio_reg_offset(wa->reg),
+			  cur, cur & wa->read, wa->set & wa->read);
+>>>>>>> b7ba80a49124 (Commit)
 
 		return false;
 	}
@@ -1856,9 +2238,15 @@ wa_verify(struct intel_gt *gt, const struct i915_wa *wa, u32 cur,
 	return true;
 }
 
+<<<<<<< HEAD
 static void wa_list_apply(const struct i915_wa_list *wal)
 {
 	struct intel_gt *gt = wal->gt;
+=======
+static void
+wa_list_apply(struct intel_gt *gt, const struct i915_wa_list *wal)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct intel_uncore *uncore = gt->uncore;
 	enum forcewake_domains fw;
 	unsigned long flags;
@@ -1870,14 +2258,19 @@ static void wa_list_apply(const struct i915_wa_list *wal)
 
 	fw = wal_get_fw_for_rmw(uncore, wal);
 
+<<<<<<< HEAD
 	intel_gt_mcr_lock(gt, &flags);
 	spin_lock(&uncore->lock);
+=======
+	spin_lock_irqsave(&uncore->lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	intel_uncore_forcewake_get__locked(uncore, fw);
 
 	for (i = 0, wa = wal->list; i < wal->count; i++, wa++) {
 		u32 val, old = 0;
 
 		/* open-coded rmw due to steering */
+<<<<<<< HEAD
 		if (wa->clr)
 			old = wa->is_mcr ?
 				intel_gt_mcr_read_any_fw(gt, wa->mcr_reg) :
@@ -1902,11 +2295,29 @@ static void wa_list_apply(const struct i915_wa_list *wal)
 	intel_uncore_forcewake_put__locked(uncore, fw);
 	spin_unlock(&uncore->lock);
 	intel_gt_mcr_unlock(gt, flags);
+=======
+		old = wa->clr ? intel_gt_mcr_read_any_fw(gt, wa->reg) : 0;
+		val = (old & ~wa->clr) | wa->set;
+		if (val != old || !wa->clr)
+			intel_uncore_write_fw(uncore, wa->reg, val);
+
+		if (IS_ENABLED(CONFIG_DRM_I915_DEBUG_GEM))
+			wa_verify(wa, intel_gt_mcr_read_any_fw(gt, wa->reg),
+				  wal->name, "application");
+	}
+
+	intel_uncore_forcewake_put__locked(uncore, fw);
+	spin_unlock_irqrestore(&uncore->lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void intel_gt_apply_workarounds(struct intel_gt *gt)
 {
+<<<<<<< HEAD
 	wa_list_apply(&gt->wa_list);
+=======
+	wa_list_apply(gt, &gt->wa_list);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool wa_list_verify(struct intel_gt *gt,
@@ -1922,6 +2333,7 @@ static bool wa_list_verify(struct intel_gt *gt,
 
 	fw = wal_get_fw_for_rmw(uncore, wal);
 
+<<<<<<< HEAD
 	intel_gt_mcr_lock(gt, &flags);
 	spin_lock(&uncore->lock);
 	intel_uncore_forcewake_get__locked(uncore, fw);
@@ -1935,6 +2347,18 @@ static bool wa_list_verify(struct intel_gt *gt,
 	intel_uncore_forcewake_put__locked(uncore, fw);
 	spin_unlock(&uncore->lock);
 	intel_gt_mcr_unlock(gt, flags);
+=======
+	spin_lock_irqsave(&uncore->lock, flags);
+	intel_uncore_forcewake_get__locked(uncore, fw);
+
+	for (i = 0, wa = wal->list; i < wal->count; i++, wa++)
+		ok &= wa_verify(wa,
+				intel_gt_mcr_read_any_fw(gt, wa->reg),
+				wal->name, from);
+
+	intel_uncore_forcewake_put__locked(uncore, fw);
+	spin_unlock_irqrestore(&uncore->lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ok;
 }
@@ -1977,6 +2401,7 @@ whitelist_reg_ext(struct i915_wa_list *wal, i915_reg_t reg, u32 flags)
 }
 
 static void
+<<<<<<< HEAD
 whitelist_mcr_reg_ext(struct i915_wa_list *wal, i915_mcr_reg_t reg, u32 flags)
 {
 	struct i915_wa wa = {
@@ -1995,17 +2420,22 @@ whitelist_mcr_reg_ext(struct i915_wa_list *wal, i915_mcr_reg_t reg, u32 flags)
 }
 
 static void
+=======
+>>>>>>> b7ba80a49124 (Commit)
 whitelist_reg(struct i915_wa_list *wal, i915_reg_t reg)
 {
 	whitelist_reg_ext(wal, reg, RING_FORCE_TO_NONPRIV_ACCESS_RW);
 }
 
+<<<<<<< HEAD
 static void
 whitelist_mcr_reg(struct i915_wa_list *wal, i915_mcr_reg_t reg)
 {
 	whitelist_mcr_reg_ext(wal, reg, RING_FORCE_TO_NONPRIV_ACCESS_RW);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void gen9_whitelist_build(struct i915_wa_list *w)
 {
 	/* WaVFEStateAfterPipeControlwithMediaStateClear:skl,bxt,glk,cfl */
@@ -2031,7 +2461,11 @@ static void skl_whitelist_build(struct intel_engine_cs *engine)
 	gen9_whitelist_build(w);
 
 	/* WaDisableLSQCROPERFforOCL:skl */
+<<<<<<< HEAD
 	whitelist_mcr_reg(w, GEN8_L3SQCREG4);
+=======
+	whitelist_reg(w, GEN8_L3SQCREG4);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void bxt_whitelist_build(struct intel_engine_cs *engine)
@@ -2052,7 +2486,11 @@ static void kbl_whitelist_build(struct intel_engine_cs *engine)
 	gen9_whitelist_build(w);
 
 	/* WaDisableLSQCROPERFforOCL:kbl */
+<<<<<<< HEAD
 	whitelist_mcr_reg(w, GEN8_L3SQCREG4);
+=======
+	whitelist_reg(w, GEN8_L3SQCREG4);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void glk_whitelist_build(struct intel_engine_cs *engine)
@@ -2117,10 +2555,17 @@ static void icl_whitelist_build(struct intel_engine_cs *engine)
 	switch (engine->class) {
 	case RENDER_CLASS:
 		/* WaAllowUMDToModifyHalfSliceChicken7:icl */
+<<<<<<< HEAD
 		whitelist_mcr_reg(w, GEN9_HALF_SLICE_CHICKEN7);
 
 		/* WaAllowUMDToModifySamplerMode:icl */
 		whitelist_mcr_reg(w, GEN10_SAMPLER_MODE);
+=======
+		whitelist_reg(w, GEN9_HALF_SLICE_CHICKEN7);
+
+		/* WaAllowUMDToModifySamplerMode:icl */
+		whitelist_reg(w, GEN10_SAMPLER_MODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* WaEnableStateCacheRedirectToCS:icl */
 		whitelist_reg(w, GEN9_SLICE_COMMON_ECO_CHICKEN1);
@@ -2187,20 +2632,50 @@ static void tgl_whitelist_build(struct intel_engine_cs *engine)
 
 		/* Wa_1806527549:tgl */
 		whitelist_reg(w, HIZ_CHICKEN);
+<<<<<<< HEAD
 
 		/* Required by recommended tuning setting (not a workaround) */
 		whitelist_reg(w, GEN11_COMMON_SLICE_CHICKEN3);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		break;
 	}
 }
 
+<<<<<<< HEAD
+=======
+static void dg1_whitelist_build(struct intel_engine_cs *engine)
+{
+	struct i915_wa_list *w = &engine->whitelist;
+
+	tgl_whitelist_build(engine);
+
+	/* GEN:BUG:1409280441:dg1 */
+	if (IS_DG1_GRAPHICS_STEP(engine->i915, STEP_A0, STEP_B0) &&
+	    (engine->class == RENDER_CLASS ||
+	     engine->class == COPY_ENGINE_CLASS))
+		whitelist_reg_ext(w, RING_ID(engine->mmio_base),
+				  RING_FORCE_TO_NONPRIV_ACCESS_RD);
+}
+
+static void xehpsdv_whitelist_build(struct intel_engine_cs *engine)
+{
+	allow_read_ctx_timestamp(engine);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void dg2_whitelist_build(struct intel_engine_cs *engine)
 {
 	struct i915_wa_list *w = &engine->whitelist;
 
+<<<<<<< HEAD
+=======
+	allow_read_ctx_timestamp(engine);
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (engine->class) {
 	case RENDER_CLASS:
 		/*
@@ -2217,9 +2692,12 @@ static void dg2_whitelist_build(struct intel_engine_cs *engine)
 					  RING_FORCE_TO_NONPRIV_ACCESS_RD |
 					  RING_FORCE_TO_NONPRIV_RANGE_4);
 
+<<<<<<< HEAD
 		/* Required by recommended tuning setting (not a workaround) */
 		whitelist_mcr_reg(w, XEHP_COMMON_SLICE_CHICKEN3);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case COMPUTE_CLASS:
 		/* Wa_16011157294:dg2_g10 */
@@ -2251,10 +2729,16 @@ static void blacklist_trtt(struct intel_engine_cs *engine)
 
 static void pvc_whitelist_build(struct intel_engine_cs *engine)
 {
+<<<<<<< HEAD
+=======
+	allow_read_ctx_timestamp(engine);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Wa_16014440446:pvc */
 	blacklist_trtt(engine);
 }
 
+<<<<<<< HEAD
 static void mtl_whitelist_build(struct intel_engine_cs *engine)
 {
 	struct i915_wa_list *w = &engine->whitelist;
@@ -2270,21 +2754,35 @@ static void mtl_whitelist_build(struct intel_engine_cs *engine)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void intel_engine_init_whitelist(struct intel_engine_cs *engine)
 {
 	struct drm_i915_private *i915 = engine->i915;
 	struct i915_wa_list *w = &engine->whitelist;
 
+<<<<<<< HEAD
 	wa_init_start(w, engine->gt, "whitelist", engine->name);
 
 	if (IS_METEORLAKE(i915))
 		mtl_whitelist_build(engine);
 	else if (IS_PONTEVECCHIO(i915))
+=======
+	wa_init_start(w, "whitelist", engine->name);
+
+	if (IS_PONTEVECCHIO(i915))
+>>>>>>> b7ba80a49124 (Commit)
 		pvc_whitelist_build(engine);
 	else if (IS_DG2(i915))
 		dg2_whitelist_build(engine);
 	else if (IS_XEHPSDV(i915))
+<<<<<<< HEAD
 		; /* none needed */
+=======
+		xehpsdv_whitelist_build(engine);
+	else if (IS_DG1(i915))
+		dg1_whitelist_build(engine);
+>>>>>>> b7ba80a49124 (Commit)
 	else if (GRAPHICS_VER(i915) == 12)
 		tgl_whitelist_build(engine);
 	else if (GRAPHICS_VER(i915) == 11)
@@ -2387,6 +2885,7 @@ rcs_engine_wa_init(struct intel_engine_cs *engine, struct i915_wa_list *wal)
 {
 	struct drm_i915_private *i915 = engine->i915;
 
+<<<<<<< HEAD
 	if (IS_MTL_GRAPHICS_STEP(i915, M, STEP_A0, STEP_B0) ||
 	    IS_MTL_GRAPHICS_STEP(i915, P, STEP_A0, STEP_B0)) {
 		/* Wa_22014600077 */
@@ -2409,18 +2908,58 @@ rcs_engine_wa_init(struct intel_engine_cs *engine, struct i915_wa_list *wal)
 		/* Wa_22012856258 */
 		wa_mcr_masked_en(wal, GEN8_ROW_CHICKEN2,
 				 GEN12_DISABLE_READ_SUPPRESSION);
+=======
+	if (IS_DG2(i915)) {
+		/* Wa_1509235366:dg2 */
+		wa_write_or(wal, GEN12_GAMCNTRL_CTRL, INVALIDATION_BROADCAST_MODE_DIS |
+			    GLOBAL_INVALIDATION_MODE);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (IS_DG2_GRAPHICS_STEP(i915, G11, STEP_A0, STEP_B0)) {
 		/* Wa_14013392000:dg2_g11 */
+<<<<<<< HEAD
 		wa_mcr_masked_en(wal, GEN8_ROW_CHICKEN2, GEN12_ENABLE_LARGE_GRF_MODE);
+=======
+		wa_masked_en(wal, GEN7_ROW_CHICKEN2, GEN12_ENABLE_LARGE_GRF_MODE);
+
+		/* Wa_16011620976:dg2_g11 */
+		wa_write_or(wal, LSC_CHICKEN_BIT_0_UDW, DIS_CHAIN_2XSIMD8);
+	}
+
+	if (IS_DG2_GRAPHICS_STEP(i915, G10, STEP_B0, STEP_FOREVER) ||
+	    IS_DG2_G11(i915) || IS_DG2_G12(i915)) {
+		/* Wa_1509727124:dg2 */
+		wa_masked_en(wal, GEN10_SAMPLER_MODE,
+			     SC_DISABLE_POWER_OPTIMIZATION_EBB);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (IS_DG2_GRAPHICS_STEP(i915, G10, STEP_A0, STEP_B0) ||
 	    IS_DG2_GRAPHICS_STEP(i915, G11, STEP_A0, STEP_B0)) {
 		/* Wa_14012419201:dg2 */
+<<<<<<< HEAD
 		wa_mcr_masked_en(wal, GEN9_ROW_CHICKEN4,
 				 GEN12_DISABLE_HDR_PAST_PAYLOAD_HOLD_FIX);
+=======
+		wa_masked_en(wal, GEN9_ROW_CHICKEN4,
+			     GEN12_DISABLE_HDR_PAST_PAYLOAD_HOLD_FIX);
+	}
+
+	if (IS_DG2_GRAPHICS_STEP(i915, G10, STEP_B0, STEP_C0) ||
+	    IS_DG2_G11(i915)) {
+		/*
+		 * Wa_22012826095:dg2
+		 * Wa_22013059131:dg2
+		 */
+		wa_write_clr_set(wal, LSC_CHICKEN_BIT_0_UDW,
+				 MAXREQS_PER_BANK,
+				 REG_FIELD_PREP(MAXREQS_PER_BANK, 2));
+
+		/* Wa_22013059131:dg2 */
+		wa_write_or(wal, LSC_CHICKEN_BIT_0,
+			    FORCE_1_SUB_MESSAGE_PER_FRAGMENT);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Wa_1308578152:dg2_g10 when first gslice is fused off */
@@ -2432,12 +2971,28 @@ rcs_engine_wa_init(struct intel_engine_cs *engine, struct i915_wa_list *wal)
 
 	if (IS_DG2_GRAPHICS_STEP(i915, G10, STEP_B0, STEP_FOREVER) ||
 	    IS_DG2_G11(i915) || IS_DG2_G12(i915)) {
+<<<<<<< HEAD
+=======
+		/* Wa_22013037850:dg2 */
+		wa_write_or(wal, LSC_CHICKEN_BIT_0_UDW,
+			    DISABLE_128B_EVICTION_COMMAND_UDW);
+
+		/* Wa_22012856258:dg2 */
+		wa_masked_en(wal, GEN7_ROW_CHICKEN2,
+			     GEN12_DISABLE_READ_SUPPRESSION);
+
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Wa_22010960976:dg2
 		 * Wa_14013347512:dg2
 		 */
+<<<<<<< HEAD
 		wa_mcr_masked_dis(wal, XEHP_HDC_CHICKEN0,
 				  LSC_L1_FLUSH_CTL_3D_DATAPORT_FLUSH_EVENTS_MASK);
+=======
+		wa_masked_dis(wal, GEN12_HDC_CHICKEN0,
+			      LSC_L1_FLUSH_CTL_3D_DATAPORT_FLUSH_EVENTS_MASK);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (IS_DG2_GRAPHICS_STEP(i915, G10, STEP_A0, STEP_B0)) {
@@ -2445,6 +3000,7 @@ rcs_engine_wa_init(struct intel_engine_cs *engine, struct i915_wa_list *wal)
 		 * Wa_1608949956:dg2_g10
 		 * Wa_14010198302:dg2_g10
 		 */
+<<<<<<< HEAD
 		wa_mcr_masked_en(wal, GEN8_ROW_CHICKEN,
 				 MDQ_ARBITRATION_MODE | UGM_BACKUP_MODE);
 	}
@@ -2454,31 +3010,110 @@ rcs_engine_wa_init(struct intel_engine_cs *engine, struct i915_wa_list *wal)
 		wa_mcr_masked_en(wal,
 				 GEN9_ROW_CHICKEN4,
 				 GEN12_DISABLE_GRF_CLEAR);
+=======
+		wa_masked_en(wal, GEN8_ROW_CHICKEN,
+			     MDQ_ARBITRATION_MODE | UGM_BACKUP_MODE);
+
+		/*
+		 * Wa_14010918519:dg2_g10
+		 *
+		 * LSC_CHICKEN_BIT_0 always reads back as 0 is this stepping,
+		 * so ignoring verification.
+		 */
+		wa_add(wal, LSC_CHICKEN_BIT_0_UDW, 0,
+		       FORCE_SLM_FENCE_SCOPE_TO_TILE | FORCE_UGM_FENCE_SCOPE_TO_TILE,
+		       0, false);
+	}
+
+	if (IS_DG2_GRAPHICS_STEP(i915, G10, STEP_A0, STEP_B0)) {
+		/* Wa_22010430635:dg2 */
+		wa_masked_en(wal,
+			     GEN9_ROW_CHICKEN4,
+			     GEN12_DISABLE_GRF_CLEAR);
+
+		/* Wa_14010648519:dg2 */
+		wa_write_or(wal, XEHP_L3NODEARBCFG, XEHP_LNESPARE);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Wa_14013202645:dg2 */
 	if (IS_DG2_GRAPHICS_STEP(i915, G10, STEP_B0, STEP_C0) ||
 	    IS_DG2_GRAPHICS_STEP(i915, G11, STEP_A0, STEP_B0))
+<<<<<<< HEAD
 		wa_mcr_write_or(wal, RT_CTRL, DIS_NULL_QUERY);
+=======
+		wa_write_or(wal, RT_CTRL, DIS_NULL_QUERY);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Wa_22012532006:dg2 */
 	if (IS_DG2_GRAPHICS_STEP(engine->i915, G10, STEP_A0, STEP_C0) ||
 	    IS_DG2_GRAPHICS_STEP(engine->i915, G11, STEP_A0, STEP_B0))
+<<<<<<< HEAD
 		wa_mcr_masked_en(wal, GEN9_HALF_SLICE_CHICKEN7,
 				 DG2_DISABLE_ROUND_ENABLE_ALLOW_FOR_SSLA);
+=======
+		wa_masked_en(wal, GEN9_HALF_SLICE_CHICKEN7,
+			     DG2_DISABLE_ROUND_ENABLE_ALLOW_FOR_SSLA);
+
+	if (IS_DG2_GRAPHICS_STEP(engine->i915, G10, STEP_A0, STEP_B0)) {
+		/* Wa_14010680813:dg2_g10 */
+		wa_write_or(wal, GEN12_GAMSTLB_CTRL, CONTROL_BLOCK_CLKGATE_DIS |
+			    EGRESS_BLOCK_CLKGATE_DIS | TAG_BLOCK_CLKGATE_DIS);
+	}
+
+	if (IS_DG2_GRAPHICS_STEP(engine->i915, G10, STEP_A0, STEP_B0) ||
+	    IS_DG2_GRAPHICS_STEP(engine->i915, G11, STEP_A0, STEP_B0)) {
+		/* Wa_14012362059:dg2 */
+		wa_write_or(wal, GEN12_MERT_MOD_CTRL, FORCE_MISS_FTLB);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_DG2_GRAPHICS_STEP(i915, G11, STEP_B0, STEP_FOREVER) ||
 	    IS_DG2_G10(i915)) {
 		/* Wa_22014600077:dg2 */
+<<<<<<< HEAD
 		wa_mcr_add(wal, GEN10_CACHE_MODE_SS, 0,
 			   _MASKED_BIT_ENABLE(ENABLE_EU_COUNT_FOR_TDL_FLUSH),
 			   0 /* Wa_14012342262 write-only reg, so skip verification */,
 			   true);
+=======
+		wa_add(wal, GEN10_CACHE_MODE_SS, 0,
+		       _MASKED_BIT_ENABLE(ENABLE_EU_COUNT_FOR_TDL_FLUSH),
+		       0 /* Wa_14012342262 :write-only reg, so skip
+			    verification */,
+		       true);
+	}
+
+	if (IS_DG1_GRAPHICS_STEP(i915, STEP_A0, STEP_B0) ||
+	    IS_TGL_UY_GRAPHICS_STEP(i915, STEP_A0, STEP_B0)) {
+		/*
+		 * Wa_1607138336:tgl[a0],dg1[a0]
+		 * Wa_1607063988:tgl[a0],dg1[a0]
+		 */
+		wa_write_or(wal,
+			    GEN9_CTX_PREEMPT_REG,
+			    GEN12_DISABLE_POSH_BUSY_FF_DOP_CG);
+	}
+
+	if (IS_TGL_UY_GRAPHICS_STEP(i915, STEP_A0, STEP_B0)) {
+		/*
+		 * Wa_1606679103:tgl
+		 * (see also Wa_1606682166:icl)
+		 */
+		wa_write_or(wal,
+			    GEN7_SARCHKMD,
+			    GEN7_DISABLE_SAMPLER_PREFETCH);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (IS_ALDERLAKE_P(i915) || IS_ALDERLAKE_S(i915) || IS_DG1(i915) ||
 	    IS_ROCKETLAKE(i915) || IS_TIGERLAKE(i915)) {
 		/* Wa_1606931601:tgl,rkl,dg1,adl-s,adl-p */
+<<<<<<< HEAD
 		wa_mcr_masked_en(wal, GEN8_ROW_CHICKEN2, GEN12_DISABLE_EARLY_READ);
+=======
+		wa_masked_en(wal, GEN7_ROW_CHICKEN2, GEN12_DISABLE_EARLY_READ);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * Wa_1407928979:tgl A*
@@ -2504,6 +3139,7 @@ rcs_engine_wa_init(struct intel_engine_cs *engine, struct i915_wa_list *wal)
 	}
 
 	if (IS_ALDERLAKE_P(i915) || IS_ALDERLAKE_S(i915) ||
+<<<<<<< HEAD
 	    IS_ROCKETLAKE(i915) || IS_TIGERLAKE(i915)) {
 		/* Wa_1409804808 */
 		wa_mcr_masked_en(wal, GEN8_ROW_CHICKEN2,
@@ -2516,10 +3152,35 @@ rcs_engine_wa_init(struct intel_engine_cs *engine, struct i915_wa_list *wal)
 	if (IS_ROCKETLAKE(i915) || IS_TIGERLAKE(i915) || IS_ALDERLAKE_P(i915)) {
 		/*
 		 * Wa_1607297627
+=======
+	    IS_DG1_GRAPHICS_STEP(i915, STEP_A0, STEP_B0) ||
+	    IS_ROCKETLAKE(i915) || IS_TIGERLAKE(i915)) {
+		/* Wa_1409804808:tgl,rkl,dg1[a0],adl-s,adl-p */
+		wa_masked_en(wal, GEN7_ROW_CHICKEN2,
+			     GEN12_PUSH_CONST_DEREF_HOLD_DIS);
+
+		/*
+		 * Wa_1409085225:tgl
+		 * Wa_14010229206:tgl,rkl,dg1[a0],adl-s,adl-p
+		 */
+		wa_masked_en(wal, GEN9_ROW_CHICKEN4, GEN12_DISABLE_TDL_PUSH);
+	}
+
+	if (IS_DG1_GRAPHICS_STEP(i915, STEP_A0, STEP_B0) ||
+	    IS_ROCKETLAKE(i915) || IS_TIGERLAKE(i915)) {
+		/*
+		 * Wa_1607030317:tgl
+		 * Wa_1607186500:tgl
+		 * Wa_1607297627:tgl,rkl,dg1[a0]
+>>>>>>> b7ba80a49124 (Commit)
 		 *
 		 * On TGL and RKL there are multiple entries for this WA in the
 		 * BSpec; some indicate this is an A0-only WA, others indicate
 		 * it applies to all steppings so we trust the "all steppings."
+<<<<<<< HEAD
+=======
+		 * For DG1 this only applies to A0.
+>>>>>>> b7ba80a49124 (Commit)
 		 */
 		wa_masked_en(wal,
 			     RING_PSMI_CTL(RENDER_RING_BASE),
@@ -2530,9 +3191,15 @@ rcs_engine_wa_init(struct intel_engine_cs *engine, struct i915_wa_list *wal)
 	if (IS_DG1(i915) || IS_ROCKETLAKE(i915) || IS_TIGERLAKE(i915) ||
 	    IS_ALDERLAKE_S(i915) || IS_ALDERLAKE_P(i915)) {
 		/* Wa_1406941453:tgl,rkl,dg1,adl-s,adl-p */
+<<<<<<< HEAD
 		wa_mcr_masked_en(wal,
 				 GEN10_SAMPLER_MODE,
 				 ENABLE_SMALLPL);
+=======
+		wa_masked_en(wal,
+			     GEN10_SAMPLER_MODE,
+			     ENABLE_SMALLPL);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (GRAPHICS_VER(i915) == 11) {
@@ -2566,9 +3233,15 @@ rcs_engine_wa_init(struct intel_engine_cs *engine, struct i915_wa_list *wal)
 		 * Wa_1405733216:icl
 		 * Formerly known as WaDisableCleanEvicts
 		 */
+<<<<<<< HEAD
 		wa_mcr_write_or(wal,
 				GEN8_L3SQCREG4,
 				GEN11_LQSC_CLEAN_EVICT_DISABLE);
+=======
+		wa_write_or(wal,
+			    GEN8_L3SQCREG4,
+			    GEN11_LQSC_CLEAN_EVICT_DISABLE);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Wa_1606682166:icl */
 		wa_write_or(wal,
@@ -2576,16 +3249,33 @@ rcs_engine_wa_init(struct intel_engine_cs *engine, struct i915_wa_list *wal)
 			    GEN7_DISABLE_SAMPLER_PREFETCH);
 
 		/* Wa_1409178092:icl */
+<<<<<<< HEAD
 		wa_mcr_write_clr_set(wal,
 				     GEN11_SCRATCH2,
 				     GEN11_COHERENT_PARTIAL_WRITE_MERGE_ENABLE,
 				     0);
+=======
+		wa_write_clr_set(wal,
+				 GEN11_SCRATCH2,
+				 GEN11_COHERENT_PARTIAL_WRITE_MERGE_ENABLE,
+				 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* WaEnable32PlaneMode:icl */
 		wa_masked_en(wal, GEN9_CSFE_CHICKEN1_RCS,
 			     GEN11_ENABLE_32_PLANE_MODE);
 
 		/*
+<<<<<<< HEAD
+=======
+		 * Wa_1408615072:icl,ehl  (vsunit)
+		 * Wa_1407596294:icl,ehl  (hsunit)
+		 */
+		wa_write_or(wal, UNSLICE_UNIT_LEVEL_CLKGATE,
+			    VSUNIT_CLKGATE_DIS | HSUNIT_CLKGATE_DIS);
+
+		/*
+>>>>>>> b7ba80a49124 (Commit)
 		 * Wa_1408767742:icl[a2..forever],ehl[all]
 		 * Wa_1605460711:icl[a0..c0]
 		 */
@@ -2599,6 +3289,7 @@ rcs_engine_wa_init(struct intel_engine_cs *engine, struct i915_wa_list *wal)
 			     FF_DOP_CLOCK_GATE_DISABLE);
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Intel platforms that support fine-grained preemption (i.e., gen9 and
 	 * beyond) allow the kernel-mode driver to choose between two different
@@ -2657,6 +3348,14 @@ rcs_engine_wa_init(struct intel_engine_cs *engine, struct i915_wa_list *wal)
 		wa_masked_en(wal,
 			     GEN7_FF_SLICE_CS_CHICKEN1,
 			     GEN9_FFSC_PERCTX_PREEMPT_CTRL);
+=======
+	if (IS_GRAPHICS_VER(i915, 9, 12)) {
+		/* FtrPerCtxtPreemptionGranularityControl:skl,bxt,kbl,cfl,cnl,icl,tgl */
+		wa_masked_en(wal,
+			     GEN7_FF_SLICE_CS_CHICKEN1,
+			     GEN9_FFSC_PERCTX_PREEMPT_CTRL);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_SKYLAKE(i915) ||
 	    IS_KABYLAKE(i915) ||
@@ -2682,6 +3381,7 @@ rcs_engine_wa_init(struct intel_engine_cs *engine, struct i915_wa_list *wal)
 			     GEN9_PREEMPT_GPGPU_SYNC_SWITCH_DISABLE);
 
 		/* WaEnableLbsSlaRetryTimerDecrement:skl,bxt,kbl,glk,cfl */
+<<<<<<< HEAD
 		wa_mcr_write_or(wal,
 				BDW_SCRATCH1,
 				GEN9_LBS_SLA_RETRY_TIMER_DECREMENT_ENABLE);
@@ -2698,20 +3398,49 @@ rcs_engine_wa_init(struct intel_engine_cs *engine, struct i915_wa_list *wal)
 		wa_mcr_write_or(wal,
 				GEN8_L3SQCREG4,
 				GEN8_LQSC_FLUSH_COHERENT_LINES);
+=======
+		wa_write_or(wal,
+			    BDW_SCRATCH1,
+			    GEN9_LBS_SLA_RETRY_TIMER_DECREMENT_ENABLE);
+
+		/* WaProgramL3SqcReg1DefaultForPerf:bxt,glk */
+		if (IS_GEN9_LP(i915))
+			wa_write_clr_set(wal,
+					 GEN8_L3SQCREG1,
+					 L3_PRIO_CREDITS_MASK,
+					 L3_GENERAL_PRIO_CREDITS(62) |
+					 L3_HIGH_PRIO_CREDITS(2));
+
+		/* WaOCLCoherentLineFlush:skl,bxt,kbl,cfl */
+		wa_write_or(wal,
+			    GEN8_L3SQCREG4,
+			    GEN8_LQSC_FLUSH_COHERENT_LINES);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Disable atomics in L3 to prevent unrecoverable hangs */
 		wa_write_clr_set(wal, GEN9_SCRATCH_LNCF1,
 				 GEN9_LNCF_NONIA_COHERENT_ATOMICS_ENABLE, 0);
+<<<<<<< HEAD
 		wa_mcr_write_clr_set(wal, GEN8_L3SQCREG4,
 				     GEN8_LQSQ_NONIA_COHERENT_ATOMICS_ENABLE, 0);
 		wa_mcr_write_clr_set(wal, GEN9_SCRATCH1,
 				     EVICTION_PERF_FIX_ENABLE, 0);
+=======
+		wa_write_clr_set(wal, GEN8_L3SQCREG4,
+				 GEN8_LQSQ_NONIA_COHERENT_ATOMICS_ENABLE, 0);
+		wa_write_clr_set(wal, GEN9_SCRATCH1,
+				 EVICTION_PERF_FIX_ENABLE, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (IS_HASWELL(i915)) {
 		/* WaSampleCChickenBitEnable:hsw */
 		wa_masked_en(wal,
+<<<<<<< HEAD
 			     HSW_HALF_SLICE_CHICKEN3, HSW_SAMPLE_C_PERFORMANCE);
+=======
+			     HALF_SLICE_CHICKEN3, HSW_SAMPLE_C_PERFORMANCE);
+>>>>>>> b7ba80a49124 (Commit)
 
 		wa_masked_dis(wal,
 			      CACHE_MODE_0_GEN7,
@@ -2919,7 +3648,11 @@ ccs_engine_wa_init(struct intel_engine_cs *engine, struct i915_wa_list *wal)
 {
 	if (IS_PVC_CT_STEP(engine->i915, STEP_A0, STEP_C0)) {
 		/* Wa_14014999345:pvc */
+<<<<<<< HEAD
 		wa_mcr_masked_en(wal, GEN10_CACHE_MODE_SS, DISABLE_ECC);
+=======
+		wa_masked_en(wal, GEN10_CACHE_MODE_SS, DISABLE_ECC);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -2939,8 +3672,34 @@ static void
 add_render_compute_tuning_settings(struct drm_i915_private *i915,
 				   struct i915_wa_list *wal)
 {
+<<<<<<< HEAD
 	if (IS_DG2(i915))
 		wa_mcr_write_clr_set(wal, RT_CTRL, STACKID_CTRL, STACKID_CTRL_512);
+=======
+	if (IS_PONTEVECCHIO(i915)) {
+		wa_write(wal, XEHPC_L3SCRUB,
+			 SCRUB_CL_DWNGRADE_SHARED | SCRUB_RATE_4B_PER_CLK);
+	}
+
+	if (IS_DG2(i915)) {
+		wa_write_or(wal, XEHP_L3SCQREG7, BLEND_FILL_CACHING_OPT_DIS);
+		wa_write_clr_set(wal, RT_CTRL, STACKID_CTRL, STACKID_CTRL_512);
+
+		/*
+		 * This is also listed as Wa_22012654132 for certain DG2
+		 * steppings, but the tuning setting programming is a superset
+		 * since it applies to all DG2 variants and steppings.
+		 *
+		 * Note that register 0xE420 is write-only and cannot be read
+		 * back for verification on DG2 (due to Wa_14012342262), so
+		 * we need to explicitly skip the readback.
+		 */
+		wa_add(wal, GEN10_CACHE_MODE_SS, 0,
+		       _MASKED_BIT_ENABLE(ENABLE_PREFETCH_INTO_IC),
+		       0 /* write-only, so skip validation */,
+		       true);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * This tuning setting proves beneficial only on ATS-M designs; the
@@ -2948,11 +3707,16 @@ add_render_compute_tuning_settings(struct drm_i915_private *i915,
 	 * platforms.
 	 */
 	if (INTEL_INFO(i915)->tuning_thread_rr_after_dep)
+<<<<<<< HEAD
 		wa_mcr_masked_field_set(wal, GEN9_ROW_CHICKEN4, THREAD_EX_ARB_MODE,
 					THREAD_EX_ARB_MODE_RR_AFTER_DEP);
 
 	if (GRAPHICS_VER(i915) == 12 && GRAPHICS_VER_FULL(i915) < IP_VER(12, 50))
 		wa_write_clr(wal, GEN8_GARBCNTL, GEN12_BUS_HASH_CTL_BIT_EXC);
+=======
+		wa_masked_field_set(wal, GEN9_ROW_CHICKEN4, THREAD_EX_ARB_MODE,
+				    THREAD_EX_ARB_MODE_RR_AFTER_DEP);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -2971,6 +3735,7 @@ general_render_compute_wa_init(struct intel_engine_cs *engine, struct i915_wa_li
 
 	add_render_compute_tuning_settings(i915, wal);
 
+<<<<<<< HEAD
 	if (IS_MTL_GRAPHICS_STEP(i915, M, STEP_A0, STEP_B0) ||
 	    IS_MTL_GRAPHICS_STEP(i915, P, STEP_A0, STEP_B0) ||
 	    IS_DG2_GRAPHICS_STEP(i915, G10, STEP_B0, STEP_FOREVER) ||
@@ -3020,10 +3785,16 @@ general_render_compute_wa_init(struct intel_engine_cs *engine, struct i915_wa_li
 		wa_mcr_add(wal, LSC_CHICKEN_BIT_0_UDW, 0,
 			   FORCE_SLM_FENCE_SCOPE_TO_TILE | FORCE_UGM_FENCE_SCOPE_TO_TILE,
 			   0, false);
+=======
+	if (IS_PONTEVECCHIO(i915)) {
+		/* Wa_16016694945 */
+		wa_masked_en(wal, XEHPC_LNCFMISCCFGREG0, XEHPC_OVRLSCCC);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (IS_XEHPSDV(i915)) {
 		/* Wa_1409954639 */
+<<<<<<< HEAD
 		wa_mcr_masked_en(wal,
 				 GEN8_ROW_CHICKEN,
 				 SYSTOLIC_DOP_CLOCK_GATING_DIS);
@@ -3036,10 +3807,41 @@ general_render_compute_wa_init(struct intel_engine_cs *engine, struct i915_wa_li
 		/* Wa_14010449647:xehpsdv */
 		wa_mcr_masked_en(wal, GEN8_HALF_SLICE_CHICKEN1,
 				 GEN7_PSD_SINGLE_PORT_DISPATCH_ENABLE);
+=======
+		wa_masked_en(wal,
+			     GEN8_ROW_CHICKEN,
+			     SYSTOLIC_DOP_CLOCK_GATING_DIS);
+
+		/* Wa_1607196519 */
+		wa_masked_en(wal,
+			     GEN9_ROW_CHICKEN4,
+			     GEN12_DISABLE_GRF_CLEAR);
+
+		/* Wa_14010670810:xehpsdv */
+		wa_write_or(wal, XEHP_L3NODEARBCFG, XEHP_LNESPARE);
+
+		/* Wa_14010449647:xehpsdv */
+		wa_masked_en(wal, GEN7_HALF_SLICE_CHICKEN1,
+			     GEN7_PSD_SINGLE_PORT_DISPATCH_ENABLE);
+
+		/* Wa_18011725039:xehpsdv */
+		if (IS_XEHPSDV_GRAPHICS_STEP(i915, STEP_A1, STEP_B0)) {
+			wa_masked_dis(wal, MLTICTXCTL, TDONRENDER);
+			wa_write_or(wal, L3SQCREG1_CCS0, FLUSHALLNONCOH);
+		}
+
+		/* Wa_14012362059:xehpsdv */
+		wa_write_or(wal, GEN12_MERT_MOD_CTRL, FORCE_MISS_FTLB);
+
+		/* Wa_14014368820:xehpsdv */
+		wa_write_or(wal, GEN12_GAMCNTRL_CTRL, INVALIDATION_BROADCAST_MODE_DIS |
+				GLOBAL_INVALIDATION_MODE);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (IS_DG2(i915) || IS_PONTEVECCHIO(i915)) {
 		/* Wa_14015227452:dg2,pvc */
+<<<<<<< HEAD
 		wa_mcr_masked_en(wal, GEN9_ROW_CHICKEN4, XEHP_DIS_BBL_SYSPIPE);
 
 		/* Wa_16015675438:dg2,pvc */
@@ -3066,12 +3868,32 @@ general_render_compute_wa_init(struct intel_engine_cs *engine, struct i915_wa_li
 			   _MASKED_BIT_ENABLE(ENABLE_PREFETCH_INTO_IC),
 			   0 /* write-only, so skip validation */,
 			   true);
+=======
+		wa_masked_en(wal, GEN9_ROW_CHICKEN4, XEHP_DIS_BBL_SYSPIPE);
+
+		/* Wa_22014226127:dg2,pvc */
+		wa_write_or(wal, LSC_CHICKEN_BIT_0, DISABLE_D8_D16_COASLESCE);
+
+		/* Wa_16015675438:dg2,pvc */
+		wa_masked_en(wal, FF_SLICE_CS_CHICKEN2, GEN12_PERF_FIX_BALANCING_CFE_DISABLE);
+
+		/* Wa_18018781329:dg2,pvc */
+		wa_write_or(wal, RENDER_MOD_CTRL, FORCE_MISS_FTLB);
+		wa_write_or(wal, COMP_MOD_CTRL, FORCE_MISS_FTLB);
+		wa_write_or(wal, VDBX_MOD_CTRL, FORCE_MISS_FTLB);
+		wa_write_or(wal, VEBX_MOD_CTRL, FORCE_MISS_FTLB);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
 engine_init_workarounds(struct intel_engine_cs *engine, struct i915_wa_list *wal)
 {
+<<<<<<< HEAD
 	if (GRAPHICS_VER(engine->i915) < 4)
+=======
+	if (I915_SELFTEST_ONLY(GRAPHICS_VER(engine->i915) < 4))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	engine_fake_wa_init(engine, wal);
@@ -3096,14 +3918,25 @@ void intel_engine_init_workarounds(struct intel_engine_cs *engine)
 {
 	struct i915_wa_list *wal = &engine->wa_list;
 
+<<<<<<< HEAD
 	wa_init_start(wal, engine->gt, "engine", engine->name);
+=======
+	if (GRAPHICS_VER(engine->i915) < 4)
+		return;
+
+	wa_init_start(wal, "engine", engine->name);
+>>>>>>> b7ba80a49124 (Commit)
 	engine_init_workarounds(engine, wal);
 	wa_init_finish(wal);
 }
 
 void intel_engine_apply_workarounds(struct intel_engine_cs *engine)
 {
+<<<<<<< HEAD
 	wa_list_apply(&engine->wa_list);
+=======
+	wa_list_apply(engine->gt, &engine->wa_list);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct i915_range mcr_ranges_gen8[] = {
@@ -3247,7 +4080,13 @@ retry:
 		goto err_vma;
 	}
 
+<<<<<<< HEAD
 	err = i915_vma_move_to_active(vma, rq, EXEC_OBJECT_WRITE);
+=======
+	err = i915_request_await_object(rq, vma->obj, true);
+	if (err == 0)
+		err = i915_vma_move_to_active(vma, rq, EXEC_OBJECT_WRITE);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err == 0)
 		err = wa_list_srm(rq, wal, vma);
 
@@ -3275,7 +4114,11 @@ retry:
 		if (mcr_range(rq->engine->i915, i915_mmio_reg_offset(wa->reg)))
 			continue;
 
+<<<<<<< HEAD
 		if (!wa_verify(wal->gt, wa, results[i], wal->name, from))
+=======
+		if (!wa_verify(wa, results[i], wal->name, from))
+>>>>>>> b7ba80a49124 (Commit)
 			err = -ENXIO;
 	}
 

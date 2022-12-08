@@ -31,12 +31,19 @@
 #include <linux/seq_file.h>
 #include <linux/device.h>
 #include <linux/debugfs.h>
+<<<<<<< HEAD
 #include <linux/dynamic_debug.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <drm/drm.h>
 
 /* Do *not* use outside of drm_print.[ch]! */
+<<<<<<< HEAD
 extern unsigned long __drm_debug;
+=======
+extern unsigned int __drm_debug;
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * DOC: print
@@ -276,16 +283,24 @@ static inline struct drm_printer drm_err_printer(const char *prefix)
  *
  */
 enum drm_debug_category {
+<<<<<<< HEAD
 	/* These names must match those in DYNAMIC_DEBUG_CLASSBITS */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/**
 	 * @DRM_UT_CORE: Used in the generic drm code: drm_ioctl.c, drm_mm.c,
 	 * drm_memory.c, ...
 	 */
+<<<<<<< HEAD
 	DRM_UT_CORE,
+=======
+	DRM_UT_CORE		= 0x01,
+>>>>>>> b7ba80a49124 (Commit)
 	/**
 	 * @DRM_UT_DRIVER: Used in the vendor specific part of the driver: i915,
 	 * radeon, ... macro.
 	 */
+<<<<<<< HEAD
 	DRM_UT_DRIVER,
 	/**
 	 * @DRM_UT_KMS: Used in the modesetting code.
@@ -345,6 +360,48 @@ static inline bool drm_debug_enabled_raw(enum drm_debug_category category)
 #define drm_debug_enabled(category)	drm_debug_enabled_raw(category)
 #endif
 
+=======
+	DRM_UT_DRIVER		= 0x02,
+	/**
+	 * @DRM_UT_KMS: Used in the modesetting code.
+	 */
+	DRM_UT_KMS		= 0x04,
+	/**
+	 * @DRM_UT_PRIME: Used in the prime code.
+	 */
+	DRM_UT_PRIME		= 0x08,
+	/**
+	 * @DRM_UT_ATOMIC: Used in the atomic code.
+	 */
+	DRM_UT_ATOMIC		= 0x10,
+	/**
+	 * @DRM_UT_VBL: Used for verbose debug message in the vblank code.
+	 */
+	DRM_UT_VBL		= 0x20,
+	/**
+	 * @DRM_UT_STATE: Used for verbose atomic state debugging.
+	 */
+	DRM_UT_STATE		= 0x40,
+	/**
+	 * @DRM_UT_LEASE: Used in the lease code.
+	 */
+	DRM_UT_LEASE		= 0x80,
+	/**
+	 * @DRM_UT_DP: Used in the DP code.
+	 */
+	DRM_UT_DP		= 0x100,
+	/**
+	 * @DRM_UT_DRMRES: Used in the drm managed resources code.
+	 */
+	DRM_UT_DRMRES		= 0x200,
+};
+
+static inline bool drm_debug_enabled(enum drm_debug_category category)
+{
+	return unlikely(__drm_debug & category);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * struct device based logging
  *
@@ -354,10 +411,16 @@ static inline bool drm_debug_enabled_raw(enum drm_debug_category category)
 __printf(3, 4)
 void drm_dev_printk(const struct device *dev, const char *level,
 		    const char *format, ...);
+<<<<<<< HEAD
 struct _ddebug;
 __printf(4, 5)
 void __drm_dev_dbg(struct _ddebug *desc, const struct device *dev,
 		   enum drm_debug_category category, const char *format, ...);
+=======
+__printf(3, 4)
+void drm_dev_dbg(const struct device *dev, enum drm_debug_category category,
+		 const char *format, ...);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * DRM_DEV_ERROR() - Error output.
@@ -405,6 +468,7 @@ void __drm_dev_dbg(struct _ddebug *desc, const struct device *dev,
 	}								\
 })
 
+<<<<<<< HEAD
 #if !defined(CONFIG_DRM_USE_DYNAMIC_DEBUG)
 #define drm_dev_dbg(dev, cat, fmt, ...)				\
 	__drm_dev_dbg(NULL, dev, cat, fmt, ##__VA_ARGS__)
@@ -414,6 +478,8 @@ void __drm_dev_dbg(struct _ddebug *desc, const struct device *dev,
 			       dev, cat, fmt, ##__VA_ARGS__)
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * DRM_DEV_DEBUG() - Debug output for generic drm code
  *
@@ -488,7 +554,11 @@ void __drm_dev_dbg(struct _ddebug *desc, const struct device *dev,
 
 #define drm_dbg_core(drm, fmt, ...)					\
 	drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_CORE, fmt, ##__VA_ARGS__)
+<<<<<<< HEAD
 #define drm_dbg_driver(drm, fmt, ...)						\
+=======
+#define drm_dbg(drm, fmt, ...)						\
+>>>>>>> b7ba80a49124 (Commit)
 	drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_DRIVER, fmt, ##__VA_ARGS__)
 #define drm_dbg_kms(drm, fmt, ...)					\
 	drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_KMS, fmt, ##__VA_ARGS__)
@@ -507,7 +577,10 @@ void __drm_dev_dbg(struct _ddebug *desc, const struct device *dev,
 #define drm_dbg_drmres(drm, fmt, ...)					\
 	drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_DRMRES, fmt, ##__VA_ARGS__)
 
+<<<<<<< HEAD
 #define drm_dbg(drm, fmt, ...)	drm_dbg_driver(drm, fmt, ##__VA_ARGS__)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * printk based logging
@@ -515,6 +588,7 @@ void __drm_dev_dbg(struct _ddebug *desc, const struct device *dev,
  * Prefer drm_device based logging over device or prink based logging.
  */
 
+<<<<<<< HEAD
 __printf(3, 4)
 void ___drm_dbg(struct _ddebug *desc, enum drm_debug_category category, const char *format, ...);
 __printf(1, 2)
@@ -528,6 +602,13 @@ void __drm_err(const char *format, ...);
 			       cat, fmt, ##__VA_ARGS__)
 #endif
 
+=======
+__printf(2, 3)
+void __drm_dbg(enum drm_debug_category category, const char *format, ...);
+__printf(1, 2)
+void __drm_err(const char *format, ...);
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Macros to make printk easier */
 
 #define _DRM_PRINTK(once, level, fmt, ...)				\
@@ -605,6 +686,12 @@ void __drm_err(const char *format, ...);
 #define drm_dbg_kms_ratelimited(drm, fmt, ...) \
 	__DRM_DEFINE_DBG_RATELIMITED(KMS, drm, fmt, ## __VA_ARGS__)
 
+<<<<<<< HEAD
+=======
+/* NOTE: this is deprecated in favor of drm_dbg_kms_ratelimited(NULL, ...). */
+#define DRM_DEBUG_KMS_RATELIMITED(fmt, ...) drm_dbg_kms_ratelimited(NULL, fmt, ## __VA_ARGS__)
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * struct drm_device based WARNs
  *

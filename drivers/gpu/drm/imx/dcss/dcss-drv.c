@@ -74,6 +74,11 @@ static int dcss_drv_platform_probe(struct platform_device *pdev)
 dcss_shutoff:
 	dcss_dev_destroy(mdrv->dcss);
 
+<<<<<<< HEAD
+=======
+	dev_set_drvdata(dev, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 err:
 	kfree(mdrv);
 	return err;
@@ -83,9 +88,20 @@ static int dcss_drv_platform_remove(struct platform_device *pdev)
 {
 	struct dcss_drv *mdrv = dev_get_drvdata(&pdev->dev);
 
+<<<<<<< HEAD
 	dcss_kms_detach(mdrv->kms);
 	dcss_dev_destroy(mdrv->dcss);
 
+=======
+	if (!mdrv)
+		return 0;
+
+	dcss_kms_detach(mdrv->kms);
+	dcss_dev_destroy(mdrv->dcss);
+
+	dev_set_drvdata(&pdev->dev, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(mdrv);
 
 	return 0;
@@ -110,13 +126,26 @@ static const struct of_device_id dcss_of_match[] = {
 
 MODULE_DEVICE_TABLE(of, dcss_of_match);
 
+<<<<<<< HEAD
+=======
+static const struct dev_pm_ops dcss_dev_pm = {
+	SET_SYSTEM_SLEEP_PM_OPS(dcss_dev_suspend, dcss_dev_resume)
+	SET_RUNTIME_PM_OPS(dcss_dev_runtime_suspend,
+			   dcss_dev_runtime_resume, NULL)
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver dcss_platform_driver = {
 	.probe	= dcss_drv_platform_probe,
 	.remove	= dcss_drv_platform_remove,
 	.driver	= {
 		.name = "imx-dcss",
 		.of_match_table	= dcss_of_match,
+<<<<<<< HEAD
 		.pm = pm_ptr(&dcss_dev_pm_ops),
+=======
+		.pm = &dcss_dev_pm,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

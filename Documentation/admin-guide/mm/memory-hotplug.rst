@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _admin_guide_memory_hotplug:
+
+>>>>>>> b7ba80a49124 (Commit)
 ==================
 Memory Hot(Un)Plug
 ==================

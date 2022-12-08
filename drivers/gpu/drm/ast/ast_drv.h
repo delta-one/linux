@@ -38,6 +38,10 @@
 #include <drm/drm_encoder.h>
 #include <drm/drm_mode.h>
 #include <drm/drm_framebuffer.h>
+<<<<<<< HEAD
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DRIVER_AUTHOR		"Dave Airlie"
 
@@ -86,7 +90,11 @@ enum ast_tx_chip {
 #define AST_DRAM_8Gx16   8
 
 /*
+<<<<<<< HEAD
  * Hardware cursor
+=======
+ * Cursor plane
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #define AST_MAX_HWC_WIDTH	64
@@ -95,6 +103,11 @@ enum ast_tx_chip {
 #define AST_HWC_SIZE		(AST_MAX_HWC_WIDTH * AST_MAX_HWC_HEIGHT * 2)
 #define AST_HWC_SIGNATURE_SIZE	32
 
+<<<<<<< HEAD
+=======
+#define AST_DEFAULT_HWC_NUM	2
+
+>>>>>>> b7ba80a49124 (Commit)
 /* define for signature structure */
 #define AST_HWC_SIGNATURE_CHECKSUM	0x00
 #define AST_HWC_SIGNATURE_SizeX		0x04
@@ -104,6 +117,7 @@ enum ast_tx_chip {
 #define AST_HWC_SIGNATURE_HOTSPOTX	0x14
 #define AST_HWC_SIGNATURE_HOTSPOTY	0x18
 
+<<<<<<< HEAD
 /*
  * Planes
  */
@@ -119,6 +133,24 @@ struct ast_plane {
 static inline struct ast_plane *to_ast_plane(struct drm_plane *plane)
 {
 	return container_of(plane, struct ast_plane, base);
+=======
+struct ast_cursor_plane {
+	struct drm_plane base;
+
+	struct {
+		struct drm_gem_vram_object *gbo;
+		struct iosys_map map;
+		u64 off;
+	} hwc[AST_DEFAULT_HWC_NUM];
+
+	unsigned int next_hwc_index;
+};
+
+static inline struct ast_cursor_plane *
+to_ast_cursor_plane(struct drm_plane *plane)
+{
+	return container_of(plane, struct ast_cursor_plane, base);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -157,7 +189,11 @@ to_ast_sil164_connector(struct drm_connector *connector)
  * Device
  */
 
+<<<<<<< HEAD
 struct ast_device {
+=======
+struct ast_private {
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_device base;
 
 	struct mutex ioregs_lock; /* Protects access to I/O registers in ioregs */
@@ -171,6 +207,7 @@ struct ast_device {
 	uint32_t dram_type;
 	uint32_t mclk;
 
+<<<<<<< HEAD
 	void __iomem	*vram;
 	unsigned long	vram_base;
 	unsigned long	vram_size;
@@ -178,6 +215,10 @@ struct ast_device {
 
 	struct ast_plane primary_plane;
 	struct ast_plane cursor_plane;
+=======
+	struct drm_plane primary_plane;
+	struct ast_cursor_plane cursor_plane;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_crtc crtc;
 	struct {
 		struct {
@@ -210,6 +251,7 @@ struct ast_device {
 	const struct firmware *dp501_fw;	/* dp501 fw */
 };
 
+<<<<<<< HEAD
 static inline struct ast_device *to_ast_device(struct drm_device *dev)
 {
 	return container_of(dev, struct ast_device, base);
@@ -218,6 +260,16 @@ static inline struct ast_device *to_ast_device(struct drm_device *dev)
 struct ast_device *ast_device_create(const struct drm_driver *drv,
 				     struct pci_dev *pdev,
 				     unsigned long flags);
+=======
+static inline struct ast_private *to_ast_private(struct drm_device *dev)
+{
+	return container_of(dev, struct ast_private, base);
+}
+
+struct ast_private *ast_device_create(const struct drm_driver *drv,
+				      struct pci_dev *pdev,
+				      unsigned long flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define AST_IO_AR_PORT_WRITE		(0x40)
 #define AST_IO_MISC_PORT_WRITE		(0x42)
@@ -238,6 +290,7 @@ struct ast_device *ast_device_create(const struct drm_driver *drv,
 #define AST_IO_VGACRCB_HWC_ENABLED     BIT(1)
 #define AST_IO_VGACRCB_HWC_16BPP       BIT(0) /* set: ARGB4444, cleared: 2bpp palette */
 
+<<<<<<< HEAD
 static inline u32 ast_read32(struct ast_device *ast, u32 reg)
 {
 	return ioread32(ast->regs + reg);
@@ -276,6 +329,64 @@ uint8_t ast_get_index_reg_mask(struct ast_device *ast,
 			       uint32_t base, uint8_t index, uint8_t mask);
 
 static inline void ast_open_key(struct ast_device *ast)
+=======
+#define __ast_read(x) \
+static inline u##x ast_read##x(struct ast_private *ast, u32 reg) { \
+u##x val = 0;\
+val = ioread##x(ast->regs + reg); \
+return val;\
+}
+
+__ast_read(8);
+__ast_read(16);
+__ast_read(32)
+
+#define __ast_io_read(x) \
+static inline u##x ast_io_read##x(struct ast_private *ast, u32 reg) { \
+u##x val = 0;\
+val = ioread##x(ast->ioregs + reg); \
+return val;\
+}
+
+__ast_io_read(8);
+__ast_io_read(16);
+__ast_io_read(32);
+
+#define __ast_write(x) \
+static inline void ast_write##x(struct ast_private *ast, u32 reg, u##x val) {\
+	iowrite##x(val, ast->regs + reg);\
+	}
+
+__ast_write(8);
+__ast_write(16);
+__ast_write(32);
+
+#define __ast_io_write(x) \
+static inline void ast_io_write##x(struct ast_private *ast, u32 reg, u##x val) {\
+	iowrite##x(val, ast->ioregs + reg);\
+	}
+
+__ast_io_write(8);
+__ast_io_write(16);
+#undef __ast_io_write
+
+static inline void ast_set_index_reg(struct ast_private *ast,
+				     uint32_t base, uint8_t index,
+				     uint8_t val)
+{
+	ast_io_write16(ast, base, ((u16)val << 8) | index);
+}
+
+void ast_set_index_reg_mask(struct ast_private *ast,
+			    uint32_t base, uint8_t index,
+			    uint8_t mask, uint8_t val);
+uint8_t ast_get_index_reg(struct ast_private *ast,
+			  uint32_t base, uint8_t index);
+uint8_t ast_get_index_reg_mask(struct ast_private *ast,
+			       uint32_t base, uint8_t index, uint8_t mask);
+
+static inline void ast_open_key(struct ast_private *ast)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0x80, 0xA8);
 }
@@ -334,7 +445,11 @@ struct ast_crtc_state {
 
 #define to_ast_crtc_state(state) container_of(state, struct ast_crtc_state, base)
 
+<<<<<<< HEAD
 int ast_mode_config_init(struct ast_device *ast);
+=======
+int ast_mode_config_init(struct ast_private *ast);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define AST_MM_ALIGN_SHIFT 4
 #define AST_MM_ALIGN_MASK ((1 << AST_MM_ALIGN_SHIFT) - 1)
@@ -458,16 +573,26 @@ int ast_mode_config_init(struct ast_device *ast);
 #define ASTDP_1366x768_60		0x1E
 #define ASTDP_1152x864_75		0x1F
 
+<<<<<<< HEAD
 int ast_mm_init(struct ast_device *ast);
+=======
+int ast_mm_init(struct ast_private *ast);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* ast post */
 void ast_enable_vga(struct drm_device *dev);
 void ast_enable_mmio(struct drm_device *dev);
 bool ast_is_vga_enabled(struct drm_device *dev);
 void ast_post_gpu(struct drm_device *dev);
+<<<<<<< HEAD
 u32 ast_mindwm(struct ast_device *ast, u32 r);
 void ast_moutdwm(struct ast_device *ast, u32 r, u32 v);
 void ast_patch_ahb_2500(struct ast_device *ast);
+=======
+u32 ast_mindwm(struct ast_private *ast, u32 r);
+void ast_moutdwm(struct ast_private *ast, u32 r, u32 v);
+void ast_patch_ahb_2500(struct ast_private *ast);
+>>>>>>> b7ba80a49124 (Commit)
 /* ast dp501 */
 void ast_set_dp501_video_output(struct drm_device *dev, u8 mode);
 bool ast_backup_fw(struct drm_device *dev, u8 *addr, u32 size);

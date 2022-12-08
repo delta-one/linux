@@ -26,7 +26,10 @@
 #include <stdint.h>
 
 #include "../kselftest.h"
+<<<<<<< HEAD
 #include "alsa-local.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define TESTS_PER_CONTROL 7
 
@@ -51,11 +54,62 @@ struct ctl_data {
 	struct ctl_data *next;
 };
 
+<<<<<<< HEAD
+=======
+static const char *alsa_config =
+"ctl.hw {\n"
+"	@args [ CARD ]\n"
+"	@args.CARD.type string\n"
+"	type hw\n"
+"	card $CARD\n"
+"}\n"
+;
+
+>>>>>>> b7ba80a49124 (Commit)
 int num_cards = 0;
 int num_controls = 0;
 struct card_data *card_list = NULL;
 struct ctl_data *ctl_list = NULL;
 
+<<<<<<< HEAD
+=======
+#ifdef SND_LIB_VER
+#if SND_LIB_VERSION >= SND_LIB_VER(1, 2, 6)
+#define LIB_HAS_LOAD_STRING
+#endif
+#endif
+
+#ifndef LIB_HAS_LOAD_STRING
+static int snd_config_load_string(snd_config_t **config, const char *s,
+				  size_t size)
+{
+	snd_input_t *input;
+	snd_config_t *dst;
+	int err;
+
+	assert(config && s);
+	if (size == 0)
+		size = strlen(s);
+	err = snd_input_buffer_open(&input, s, size);
+	if (err < 0)
+		return err;
+	err = snd_config_top(&dst);
+	if (err < 0) {
+		snd_input_close(input);
+		return err;
+	}
+	err = snd_config_load(dst, input);
+	snd_input_close(input);
+	if (err < 0) {
+		snd_config_delete(dst);
+		return err;
+	}
+	*config = dst;
+	return 0;
+}
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 static void find_controls(void)
 {
 	char name[32];
@@ -63,13 +117,25 @@ static void find_controls(void)
 	struct card_data *card_data;
 	struct ctl_data *ctl_data;
 	snd_config_t *config;
+<<<<<<< HEAD
 	char *card_name, *card_longname;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	card = -1;
 	if (snd_card_next(&card) < 0 || card < 0)
 		return;
 
+<<<<<<< HEAD
 	config = get_alsalib_config();
+=======
+	err = snd_config_load_string(&config, alsa_config, strlen(alsa_config));
+	if (err < 0) {
+		ksft_print_msg("Unable to parse custom alsa-lib configuration: %s\n",
+			       snd_strerror(err));
+		ksft_exit_fail();
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (card >= 0) {
 		sprintf(name, "hw:%d", card);
@@ -85,6 +151,7 @@ static void find_controls(void)
 			goto next_card;
 		}
 
+<<<<<<< HEAD
 		err = snd_card_get_name(card, &card_name);
 		if (err != 0)
 			card_name = "Unknown";
@@ -94,6 +161,8 @@ static void find_controls(void)
 		ksft_print_msg("Card %d - %s (%s)\n", card,
 			       card_name, card_longname);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Count controls */
 		snd_ctl_elem_list_malloc(&card_data->ctls);
 		snd_ctl_elem_list(card_data->handle, card_data->ctls);
@@ -432,9 +501,12 @@ static void test_ctl_name(struct ctl_data *ctl)
 	bool name_ok = true;
 	bool check;
 
+<<<<<<< HEAD
 	ksft_print_msg("%d.%d %s\n", ctl->card->card, ctl->elem,
 		       ctl->name);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Only boolean controls should end in Switch */
 	if (strend(ctl->name, " Switch")) {
 		if (snd_ctl_elem_info_get_type(ctl->info) != SND_CTL_ELEM_TYPE_BOOLEAN) {
@@ -768,6 +840,10 @@ static bool test_ctl_write_valid_enumerated(struct ctl_data *ctl)
 static void test_ctl_write_valid(struct ctl_data *ctl)
 {
 	bool pass;
+<<<<<<< HEAD
+=======
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* If the control is turned off let's be polite */
 	if (snd_ctl_elem_info_is_inactive(ctl->info)) {
@@ -809,7 +885,13 @@ static void test_ctl_write_valid(struct ctl_data *ctl)
 	}
 
 	/* Restore the default value to minimise disruption */
+<<<<<<< HEAD
 	write_and_verify(ctl, ctl->def_val, NULL);
+=======
+	err = write_and_verify(ctl, ctl->def_val, NULL);
+	if (err < 0)
+		pass = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ksft_test_result(pass, "write_valid.%d.%d\n",
 			 ctl->card->card, ctl->elem);
@@ -1025,7 +1107,13 @@ static void test_ctl_write_invalid(struct ctl_data *ctl)
 	}
 
 	/* Restore the default value to minimise disruption */
+<<<<<<< HEAD
 	write_and_verify(ctl, ctl->def_val, NULL);
+=======
+	err = write_and_verify(ctl, ctl->def_val, NULL);
+	if (err < 0)
+		pass = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ksft_test_result(pass, "write_invalid.%d.%d\n",
 			 ctl->card->card, ctl->elem);

@@ -12,7 +12,10 @@
  *  Copyright (c) 2017 Alex Manoussakis <amanou@gnu.org>
  *  Copyright (c) 2017 Tomasz Kramkowski <tk@the-tk.com>
  *  Copyright (c) 2020 YOSHIOKA Takuma <lo48576@hard-wi.red>
+<<<<<<< HEAD
  *  Copyright (c) 2022 Takahiro Fujii <fujii@xaxxi.net>
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 /*
@@ -90,7 +93,11 @@ static __u8 *elecom_report_fixup(struct hid_device *hdev, __u8 *rdesc,
 	case USB_DEVICE_ID_ELECOM_M_DT1URBK:
 	case USB_DEVICE_ID_ELECOM_M_DT1DRBK:
 	case USB_DEVICE_ID_ELECOM_M_HT1URBK:
+<<<<<<< HEAD
 	case USB_DEVICE_ID_ELECOM_M_HT1DRBK_010D:
+=======
+	case USB_DEVICE_ID_ELECOM_M_HT1DRBK:
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Report descriptor format:
 		 * 12: button bit count
@@ -100,6 +107,7 @@ static __u8 *elecom_report_fixup(struct hid_device *hdev, __u8 *rdesc,
 		 */
 		mouse_button_fixup(hdev, rdesc, *rsize, 12, 30, 14, 20, 8);
 		break;
+<<<<<<< HEAD
 	case USB_DEVICE_ID_ELECOM_M_HT1DRBK_011C:
 		/*
 		 * Report descriptor format:
@@ -110,6 +118,8 @@ static __u8 *elecom_report_fixup(struct hid_device *hdev, __u8 *rdesc,
 		 */
 		mouse_button_fixup(hdev, rdesc, *rsize, 22, 30, 24, 16, 8);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return rdesc;
 }
@@ -123,8 +133,12 @@ static const struct hid_device_id elecom_devices[] = {
 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_DT1URBK) },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_DT1DRBK) },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_HT1URBK) },
+<<<<<<< HEAD
 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_HT1DRBK_010D) },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_HT1DRBK_011C) },
+=======
+	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_HT1DRBK) },
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(hid, elecom_devices);

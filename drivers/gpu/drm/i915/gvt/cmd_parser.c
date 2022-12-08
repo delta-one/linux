@@ -37,7 +37,10 @@
 #include <linux/slab.h>
 
 #include "i915_drv.h"
+<<<<<<< HEAD
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "gt/intel_engine_regs.h"
 #include "gt/intel_gpu_commands.h"
 #include "gt/intel_gt_regs.h"
@@ -49,7 +52,10 @@
 #include "i915_pvinfo.h"
 #include "trace.h"
 
+<<<<<<< HEAD
 #include "display/intel_display.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "gem/i915_gem_context.h"
 #include "gem/i915_gem_pm.h"
 #include "gt/intel_context.h"

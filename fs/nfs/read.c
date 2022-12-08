@@ -15,7 +15,10 @@
 #include <linux/stat.h>
 #include <linux/mm.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/task_io_accounting_ops.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pagemap.h>
 #include <linux/sunrpc/clnt.h>
 #include <linux/nfs_fs.h>
@@ -50,11 +53,20 @@ static void nfs_readhdr_free(struct nfs_pgio_header *rhdr)
 	kmem_cache_free(nfs_rdata_cachep, rhdr);
 }
 
+<<<<<<< HEAD
 static int nfs_return_empty_folio(struct folio *folio)
 {
 	folio_zero_segment(folio, 0, folio_size(folio));
 	folio_mark_uptodate(folio);
 	folio_unlock(folio);
+=======
+static
+int nfs_return_empty_page(struct page *page)
+{
+	zero_user(page, 0, PAGE_SIZE);
+	SetPageUptodate(page);
+	unlock_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -111,18 +123,30 @@ EXPORT_SYMBOL_GPL(nfs_pageio_reset_read_mds);
 static void nfs_readpage_release(struct nfs_page *req, int error)
 {
 	struct inode *inode = d_inode(nfs_req_openctx(req)->dentry);
+<<<<<<< HEAD
 	struct folio *folio = nfs_page_to_folio(req);
+=======
+	struct page *page = req->wb_page;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dprintk("NFS: read done (%s/%llu %d@%lld)\n", inode->i_sb->s_id,
 		(unsigned long long)NFS_FILEID(inode), req->wb_bytes,
 		(long long)req_offset(req));
 
 	if (nfs_error_is_fatal_on_server(error) && error != -ETIMEDOUT)
+<<<<<<< HEAD
 		folio_set_error(folio);
 	if (nfs_page_group_sync_on_bit(req, PG_UNLOCKPAGE)) {
 		if (folio_test_uptodate(folio))
 			nfs_fscache_write_page(inode, &folio->page);
 		folio_unlock(folio);
+=======
+		SetPageError(page);
+	if (nfs_page_group_sync_on_bit(req, PG_UNLOCKPAGE)) {
+		if (PageUptodate(page))
+			nfs_fscache_write_page(inode, page);
+		unlock_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	nfs_release_request(req);
 }
@@ -135,7 +159,11 @@ struct nfs_readdesc {
 static void nfs_page_group_set_uptodate(struct nfs_page *req)
 {
 	if (nfs_page_group_sync_on_bit(req, PG_UPTODATE))
+<<<<<<< HEAD
 		folio_mark_uptodate(nfs_page_to_folio(req));
+=======
+		SetPageUptodate(req->wb_page);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void nfs_read_completion(struct nfs_pgio_header *hdr)
@@ -147,7 +175,11 @@ static void nfs_read_completion(struct nfs_pgio_header *hdr)
 		goto out;
 	while (!list_empty(&hdr->pages)) {
 		struct nfs_page *req = nfs_list_entry(hdr->pages.next);
+<<<<<<< HEAD
 		struct folio *folio = nfs_page_to_folio(req);
+=======
+		struct page *page = req->wb_page;
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned long start = req->wb_pgbase;
 		unsigned long end = req->wb_pgbase + req->wb_bytes;
 
@@ -157,14 +189,22 @@ static void nfs_read_completion(struct nfs_pgio_header *hdr)
 			if (bytes > hdr->good_bytes) {
 				/* nothing in this request was good, so zero
 				 * the full extent of the request */
+<<<<<<< HEAD
 				folio_zero_segment(folio, start, end);
+=======
+				zero_user_segment(page, start, end);
+>>>>>>> b7ba80a49124 (Commit)
 
 			} else if (hdr->good_bytes - bytes < req->wb_bytes) {
 				/* part of this request has good bytes, but
 				 * not all. zero the bad bytes */
 				start += hdr->good_bytes - bytes;
 				WARN_ON(start < req->wb_pgbase);
+<<<<<<< HEAD
 				folio_zero_segment(folio, start, end);
+=======
+				zero_user_segment(page, start, end);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 		error = 0;
@@ -281,16 +321,25 @@ static void nfs_readpage_result(struct rpc_task *task,
 		nfs_readpage_retry(task, hdr);
 }
 
+<<<<<<< HEAD
 static int readpage_async_filler(struct nfs_readdesc *desc, struct folio *folio)
 {
 	struct inode *inode = folio_file_mapping(folio)->host;
 	struct nfs_server *server = NFS_SERVER(inode);
 	size_t fsize = folio_size(folio);
 	unsigned int rsize = server->rsize;
+=======
+static int
+readpage_async_filler(struct nfs_readdesc *desc, struct page *page)
+{
+	struct inode *inode = page_file_mapping(page)->host;
+	unsigned int rsize = NFS_SERVER(inode)->rsize;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nfs_page *new;
 	unsigned int len, aligned_len;
 	int error;
 
+<<<<<<< HEAD
 	len = nfs_folio_length(folio);
 	if (len == 0)
 		return nfs_return_empty_folio(folio);
@@ -299,16 +348,35 @@ static int readpage_async_filler(struct nfs_readdesc *desc, struct folio *folio)
 
 	if (!IS_SYNC(inode)) {
 		error = nfs_fscache_read_page(inode, &folio->page);
+=======
+	len = nfs_page_length(page);
+	if (len == 0)
+		return nfs_return_empty_page(page);
+
+	aligned_len = min_t(unsigned int, ALIGN(len, rsize), PAGE_SIZE);
+
+	if (!IS_SYNC(page->mapping->host)) {
+		error = nfs_fscache_read_page(page->mapping->host, page);
+>>>>>>> b7ba80a49124 (Commit)
 		if (error == 0)
 			goto out_unlock;
 	}
 
+<<<<<<< HEAD
 	new = nfs_page_create_from_folio(desc->ctx, folio, 0, aligned_len);
 	if (IS_ERR(new))
 		goto out_error;
 
 	if (len < fsize)
 		folio_zero_segment(folio, len, fsize);
+=======
+	new = nfs_create_request(desc->ctx, page, 0, aligned_len);
+	if (IS_ERR(new))
+		goto out_error;
+
+	if (len < PAGE_SIZE)
+		zero_user_segment(page, len, PAGE_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!nfs_pageio_add_request(&desc->pgio, new)) {
 		nfs_list_remove_request(new);
 		error = desc->pgio.pg_error;
@@ -319,7 +387,11 @@ static int readpage_async_filler(struct nfs_readdesc *desc, struct folio *folio)
 out_error:
 	error = PTR_ERR(new);
 out_unlock:
+<<<<<<< HEAD
 	folio_unlock(folio);
+=======
+	unlock_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	return error;
 }
@@ -332,6 +404,7 @@ out:
  */
 int nfs_read_folio(struct file *file, struct folio *folio)
 {
+<<<<<<< HEAD
 	struct nfs_readdesc desc;
 	struct inode *inode = file_inode(file);
 	int ret;
@@ -339,10 +412,20 @@ int nfs_read_folio(struct file *file, struct folio *folio)
 	trace_nfs_aop_readpage(inode, folio);
 	nfs_inc_stats(inode, NFSIOS_VFSREADPAGE);
 	task_io_account_read(folio_size(folio));
+=======
+	struct page *page = &folio->page;
+	struct nfs_readdesc desc;
+	struct inode *inode = page_file_mapping(page)->host;
+	int ret;
+
+	trace_nfs_aop_readpage(inode, page);
+	nfs_inc_stats(inode, NFSIOS_VFSREADPAGE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Try to flush any pending writes to the file..
 	 *
+<<<<<<< HEAD
 	 * NOTE! Because we own the folio lock, there cannot
 	 * be any new pending writes generated at this point
 	 * for this folio (other folios can be written to).
@@ -351,36 +434,73 @@ int nfs_read_folio(struct file *file, struct folio *folio)
 	if (ret)
 		goto out_unlock;
 	if (folio_test_uptodate(folio))
+=======
+	 * NOTE! Because we own the page lock, there cannot
+	 * be any new pending writes generated at this point
+	 * for this page (other pages can be written to).
+	 */
+	ret = nfs_wb_page(inode, page);
+	if (ret)
+		goto out_unlock;
+	if (PageUptodate(page))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_unlock;
 
 	ret = -ESTALE;
 	if (NFS_STALE(inode))
 		goto out_unlock;
 
+<<<<<<< HEAD
 	desc.ctx = get_nfs_open_context(nfs_file_open_context(file));
+=======
+	if (file == NULL) {
+		ret = -EBADF;
+		desc.ctx = nfs_find_open_context(inode, NULL, FMODE_READ);
+		if (desc.ctx == NULL)
+			goto out_unlock;
+	} else
+		desc.ctx = get_nfs_open_context(nfs_file_open_context(file));
+>>>>>>> b7ba80a49124 (Commit)
 
 	xchg(&desc.ctx->error, 0);
 	nfs_pageio_init_read(&desc.pgio, inode, false,
 			     &nfs_async_read_completion_ops);
 
+<<<<<<< HEAD
 	ret = readpage_async_filler(&desc, folio);
+=======
+	ret = readpage_async_filler(&desc, page);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto out;
 
 	nfs_pageio_complete_read(&desc.pgio);
 	ret = desc.pgio.pg_error < 0 ? desc.pgio.pg_error : 0;
 	if (!ret) {
+<<<<<<< HEAD
 		ret = folio_wait_locked_killable(folio);
 		if (!folio_test_uptodate(folio) && !ret)
+=======
+		ret = wait_on_page_locked_killable(page);
+		if (!PageUptodate(page) && !ret)
+>>>>>>> b7ba80a49124 (Commit)
 			ret = xchg(&desc.ctx->error, 0);
 	}
 out:
 	put_nfs_open_context(desc.ctx);
+<<<<<<< HEAD
 	trace_nfs_aop_readpage_done(inode, folio, ret);
 	return ret;
 out_unlock:
 	folio_unlock(folio);
 	trace_nfs_aop_readpage_done(inode, folio, ret);
+=======
+	trace_nfs_aop_readpage_done(inode, page, ret);
+	return ret;
+out_unlock:
+	unlock_page(page);
+	trace_nfs_aop_readpage_done(inode, page, ret);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -390,12 +510,19 @@ void nfs_readahead(struct readahead_control *ractl)
 	struct file *file = ractl->file;
 	struct nfs_readdesc desc;
 	struct inode *inode = ractl->mapping->host;
+<<<<<<< HEAD
 	struct folio *folio;
+=======
+	struct page *page;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	trace_nfs_aop_readahead(inode, readahead_pos(ractl), nr_pages);
 	nfs_inc_stats(inode, NFSIOS_VFSREADPAGES);
+<<<<<<< HEAD
 	task_io_account_read(readahead_length(ractl));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = -ESTALE;
 	if (NFS_STALE(inode))
@@ -412,8 +539,14 @@ void nfs_readahead(struct readahead_control *ractl)
 	nfs_pageio_init_read(&desc.pgio, inode, false,
 			     &nfs_async_read_completion_ops);
 
+<<<<<<< HEAD
 	while ((folio = readahead_folio(ractl)) != NULL) {
 		ret = readpage_async_filler(&desc, folio);
+=======
+	while ((page = readahead_page(ractl)) != NULL) {
+		ret = readpage_async_filler(&desc, page);
+		put_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			break;
 	}

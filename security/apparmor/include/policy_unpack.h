@@ -16,7 +16,10 @@
 #include <linux/dcache.h>
 #include <linux/workqueue.h>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct aa_load_ent {
 	struct list_head list;
 	struct aa_profile *new;
@@ -36,7 +39,10 @@ struct aa_load_ent *aa_load_ent_alloc(void);
 #define PACKED_MODE_COMPLAIN	1
 #define PACKED_MODE_KILL	2
 #define PACKED_MODE_UNCONFINED	3
+<<<<<<< HEAD
 #define PACKED_MODE_USER	4
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct aa_ns;
 
@@ -51,6 +57,7 @@ enum {
 };
 
 /*
+<<<<<<< HEAD
  * The AppArmor interface treats data as a type byte followed by the
  * actual data.  The interface has the notion of a named entry
  * which has a name (AA_NAME typecode followed by name string) followed by
@@ -88,6 +95,8 @@ struct aa_ext {
 };
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct aa_loaddata - buffer of policy raw_data set
  *
  * there is no loaddata ref for being on ns list, nor a ref from
@@ -165,6 +174,7 @@ static inline void aa_put_loaddata(struct aa_loaddata *data)
 		kref_put(&data->count, aa_loaddata_kref);
 }
 
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_KUNIT)
 bool aa_inbounds(struct aa_ext *e, size_t size);
 size_t aa_unpack_u16_chunk(struct aa_ext *e, char **chunk);
@@ -178,4 +188,6 @@ int aa_unpack_str(struct aa_ext *e, const char **string, const char *name);
 int aa_unpack_strdup(struct aa_ext *e, char **string, const char *name);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __POLICY_INTERFACE_H */

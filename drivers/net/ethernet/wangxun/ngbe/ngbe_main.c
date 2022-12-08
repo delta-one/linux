@@ -6,6 +6,7 @@
 #include <linux/pci.h>
 #include <linux/netdevice.h>
 #include <linux/string.h>
+<<<<<<< HEAD
 #include <linux/etherdevice.h>
 #include <net/ip.h>
 #include <linux/phy.h>
@@ -19,6 +20,12 @@
 #include "ngbe_hw.h"
 #include "ngbe_ethtool.h"
 
+=======
+#include <linux/aer.h>
+#include <linux/etherdevice.h>
+
+#include "ngbe.h"
+>>>>>>> b7ba80a49124 (Commit)
 char ngbe_driver_name[] = "ngbe";
 
 /* ngbe_pci_tbl - PCI Device ID Table
@@ -43,6 +50,7 @@ static const struct pci_device_id ngbe_pci_tbl[] = {
 	{ .device = 0 }
 };
 
+<<<<<<< HEAD
 /**
  *  ngbe_init_type_code - Initialize the shared code
  *  @wx: pointer to hardware structure
@@ -449,16 +457,30 @@ static void ngbe_dev_shutdown(struct pci_dev *pdev, bool *enable_wake)
 	rtnl_unlock();
 	wx_control_hw(wx, false);
 
+=======
+static void ngbe_dev_shutdown(struct pci_dev *pdev, bool *enable_wake)
+{
+	struct ngbe_adapter *adapter = pci_get_drvdata(pdev);
+	struct net_device *netdev = adapter->netdev;
+
+	netif_device_detach(netdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	pci_disable_device(pdev);
 }
 
 static void ngbe_shutdown(struct pci_dev *pdev)
 {
+<<<<<<< HEAD
 	struct wx *wx = pci_get_drvdata(pdev);
 	bool wake;
 
 	wake = !!wx->wol;
 
+=======
+	bool wake;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ngbe_dev_shutdown(pdev, &wake);
 
 	if (system_state == SYSTEM_POWER_OFF) {
@@ -467,6 +489,7 @@ static void ngbe_shutdown(struct pci_dev *pdev)
 	}
 }
 
+<<<<<<< HEAD
 static const struct net_device_ops ngbe_netdev_ops = {
 	.ndo_open               = ngbe_open,
 	.ndo_stop               = ngbe_close,
@@ -478,6 +501,8 @@ static const struct net_device_ops ngbe_netdev_ops = {
 	.ndo_get_stats64        = wx_get_stats64,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * ngbe_probe - Device Initialization Routine
  * @pdev: PCI device information struct
@@ -485,13 +510,19 @@ static const struct net_device_ops ngbe_netdev_ops = {
  *
  * Returns 0 on success, negative on failure
  *
+<<<<<<< HEAD
  * ngbe_probe initializes an wx identified by a pci_dev structure.
  * The OS initialization, configuring of the wx private structure,
+=======
+ * ngbe_probe initializes an adapter identified by a pci_dev structure.
+ * The OS initialization, configuring of the adapter private structure,
+>>>>>>> b7ba80a49124 (Commit)
  * and a hardware reset occur.
  **/
 static int ngbe_probe(struct pci_dev *pdev,
 		      const struct pci_device_id __always_unused *ent)
 {
+<<<<<<< HEAD
 	struct net_device *netdev;
 	u32 e2rom_cksum_cap = 0;
 	struct wx *wx = NULL;
@@ -499,6 +530,10 @@ static int ngbe_probe(struct pci_dev *pdev,
 	u16 e2rom_ver = 0;
 	u32 etrack_id = 0;
 	u32 saved_ver = 0;
+=======
+	struct ngbe_adapter *adapter = NULL;
+	struct net_device *netdev;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	err = pci_enable_device_mem(pdev);
@@ -521,10 +556,18 @@ static int ngbe_probe(struct pci_dev *pdev,
 		goto err_pci_disable_dev;
 	}
 
+<<<<<<< HEAD
 	pci_set_master(pdev);
 
 	netdev = devm_alloc_etherdev_mqs(&pdev->dev,
 					 sizeof(struct wx),
+=======
+	pci_enable_pcie_error_reporting(pdev);
+	pci_set_master(pdev);
+
+	netdev = devm_alloc_etherdev_mqs(&pdev->dev,
+					 sizeof(struct ngbe_adapter),
+>>>>>>> b7ba80a49124 (Commit)
 					 NGBE_MAX_TX_QUEUES,
 					 NGBE_MAX_RX_QUEUES);
 	if (!netdev) {
@@ -534,6 +577,7 @@ static int ngbe_probe(struct pci_dev *pdev,
 
 	SET_NETDEV_DEV(netdev, &pdev->dev);
 
+<<<<<<< HEAD
 	wx = netdev_priv(netdev);
 	wx->netdev = netdev;
 	wx->pdev = pdev;
@@ -543,10 +587,21 @@ static int ngbe_probe(struct pci_dev *pdev,
 				   pci_resource_start(pdev, 0),
 				   pci_resource_len(pdev, 0));
 	if (!wx->hw_addr) {
+=======
+	adapter = netdev_priv(netdev);
+	adapter->netdev = netdev;
+	adapter->pdev = pdev;
+
+	adapter->io_addr = devm_ioremap(&pdev->dev,
+					pci_resource_start(pdev, 0),
+					pci_resource_len(pdev, 0));
+	if (!adapter->io_addr) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EIO;
 		goto err_pci_release_regions;
 	}
 
+<<<<<<< HEAD
 	wx->driver_name = ngbe_driver_name;
 	ngbe_set_ethtool_ops(netdev);
 	netdev->netdev_ops = &ngbe_netdev_ops;
@@ -670,6 +725,16 @@ err_clear_interrupt_scheme:
 err_free_mac_table:
 	kfree(wx->mac_table);
 err_pci_release_regions:
+=======
+	netdev->features |= NETIF_F_HIGHDMA;
+
+	pci_set_drvdata(pdev, adapter);
+
+	return 0;
+
+err_pci_release_regions:
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_release_selected_regions(pdev,
 				     pci_select_bars(pdev, IORESOURCE_MEM));
 err_pci_disable_dev:
@@ -688,6 +753,7 @@ err_pci_disable_dev:
  **/
 static void ngbe_remove(struct pci_dev *pdev)
 {
+<<<<<<< HEAD
 	struct wx *wx = pci_get_drvdata(pdev);
 	struct net_device *netdev;
 
@@ -698,6 +764,12 @@ static void ngbe_remove(struct pci_dev *pdev)
 
 	kfree(wx->mac_table);
 	wx_clear_interrupt_scheme(wx);
+=======
+	pci_release_selected_regions(pdev,
+				     pci_select_bars(pdev, IORESOURCE_MEM));
+
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pci_disable_device(pdev);
 }

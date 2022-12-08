@@ -7,11 +7,18 @@
  * Copyright (C) 2002 Dag Arne Osvik <osvik@ii.uib.no>
  */
 
+<<<<<<< HEAD
 #include <crypto/algapi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/errno.h>
 #include <asm/unaligned.h>
+<<<<<<< HEAD
+=======
+#include <linux/crypto.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/types.h>
 #include <crypto/serpent.h>
 

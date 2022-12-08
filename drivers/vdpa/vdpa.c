@@ -39,11 +39,14 @@ static int vdpa_dev_probe(struct device *d)
 	u32 max_num, min_num = 1;
 	int ret = 0;
 
+<<<<<<< HEAD
 	d->dma_mask = &d->coherent_dma_mask;
 	ret = dma_set_mask_and_coherent(d, DMA_BIT_MASK(64));
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	max_num = ops->get_vq_num_max(vdev);
 	if (ops->get_vq_num_min)
 		min_num = ops->get_vq_num_min(vdev);
@@ -465,6 +468,7 @@ static int vdpa_nl_mgmtdev_handle_fill(struct sk_buff *msg, const struct vdpa_mg
 	return 0;
 }
 
+<<<<<<< HEAD
 static u64 vdpa_mgmtdev_get_classes(const struct vdpa_mgmt_dev *mdev,
 				    unsigned int *nclasses)
 {
@@ -487,6 +491,14 @@ static int vdpa_mgmtdev_fill(const struct vdpa_mgmt_dev *mdev, struct sk_buff *m
 			     u32 portid, u32 seq, int flags)
 {
 	void *hdr;
+=======
+static int vdpa_mgmtdev_fill(const struct vdpa_mgmt_dev *mdev, struct sk_buff *msg,
+			     u32 portid, u32 seq, int flags)
+{
+	u64 supported_classes = 0;
+	void *hdr;
+	int i = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	hdr = genlmsg_put(msg, portid, seq, &vdpa_nl_family, flags, VDPA_CMD_MGMTDEV_NEW);
@@ -496,9 +508,20 @@ static int vdpa_mgmtdev_fill(const struct vdpa_mgmt_dev *mdev, struct sk_buff *m
 	if (err)
 		goto msg_err;
 
+<<<<<<< HEAD
 	if (nla_put_u64_64bit(msg, VDPA_ATTR_MGMTDEV_SUPPORTED_CLASSES,
 			      vdpa_mgmtdev_get_classes(mdev, NULL),
 			      VDPA_ATTR_UNSPEC)) {
+=======
+	while (mdev->id_table[i].device) {
+		if (mdev->id_table[i].device <= 63)
+			supported_classes |= BIT_ULL(mdev->id_table[i].device);
+		i++;
+	}
+
+	if (nla_put_u64_64bit(msg, VDPA_ATTR_MGMTDEV_SUPPORTED_CLASSES,
+			      supported_classes, VDPA_ATTR_UNSPEC)) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EMSGSIZE;
 		goto msg_err;
 	}
@@ -582,6 +605,7 @@ out:
 				 BIT_ULL(VDPA_ATTR_DEV_NET_CFG_MTU)     | \
 				 BIT_ULL(VDPA_ATTR_DEV_NET_CFG_MAX_VQP))
 
+<<<<<<< HEAD
 /*
  * Bitmask for all per-device features: feature bits VIRTIO_TRANSPORT_F_START
  * through VIRTIO_TRANSPORT_F_END are unset, i.e. 0xfffffc000fffffff for
@@ -592,15 +616,22 @@ out:
 #define VIRTIO_DEVICE_F_MASK (~0ULL << (VIRTIO_TRANSPORT_F_END + 1) | \
 			      ((1ULL << VIRTIO_TRANSPORT_F_START) - 1))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int vdpa_nl_cmd_dev_add_set_doit(struct sk_buff *skb, struct genl_info *info)
 {
 	struct vdpa_dev_set_config config = {};
 	struct nlattr **nl_attrs = info->attrs;
 	struct vdpa_mgmt_dev *mdev;
+<<<<<<< HEAD
 	unsigned int ncls = 0;
 	const u8 *macaddr;
 	const char *name;
 	u64 classes;
+=======
+	const u8 *macaddr;
+	const char *name;
+>>>>>>> b7ba80a49124 (Commit)
 	int err = 0;
 
 	if (!info->attrs[VDPA_ATTR_DEV_NAME])
@@ -628,6 +659,7 @@ static int vdpa_nl_cmd_dev_add_set_doit(struct sk_buff *skb, struct genl_info *i
 		}
 		config.mask |= BIT_ULL(VDPA_ATTR_DEV_NET_CFG_MAX_VQP);
 	}
+<<<<<<< HEAD
 	if (nl_attrs[VDPA_ATTR_DEV_FEATURES]) {
 		u64 missing = 0x0ULL;
 
@@ -651,6 +683,8 @@ static int vdpa_nl_cmd_dev_add_set_doit(struct sk_buff *skb, struct genl_info *i
 		}
 		config.mask |= BIT_ULL(VDPA_ATTR_DEV_FEATURES);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Skip checking capability if user didn't prefer to configure any
 	 * device networking attributes. It is likely that user might have used
@@ -668,15 +702,22 @@ static int vdpa_nl_cmd_dev_add_set_doit(struct sk_buff *skb, struct genl_info *i
 		err = PTR_ERR(mdev);
 		goto err;
 	}
+<<<<<<< HEAD
 
 	if ((config.mask & mdev->config_attr_mask) != config.mask) {
 		NL_SET_ERR_MSG_FMT_MOD(info->extack,
 				       "Some provided attributes are not supported: 0x%llx",
 				       config.mask & ~mdev->config_attr_mask);
+=======
+	if ((config.mask & mdev->config_attr_mask) != config.mask) {
+		NL_SET_ERR_MSG_MOD(info->extack,
+				   "All provided attributes are not supported");
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EOPNOTSUPP;
 		goto err;
 	}
 
+<<<<<<< HEAD
 	classes = vdpa_mgmtdev_get_classes(mdev, &ncls);
 	if (config.mask & VDPA_DEV_NET_ATTRS_MASK &&
 	    !(classes & BIT_ULL(VIRTIO_ID_NET))) {
@@ -695,6 +736,8 @@ static int vdpa_nl_cmd_dev_add_set_doit(struct sk_buff *skb, struct genl_info *i
 		goto err;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = mdev->ops->dev_add(mdev, name, &config);
 err:
 	up_write(&vdpa_dev_lock);
@@ -870,11 +913,17 @@ static int vdpa_nl_cmd_dev_get_dumpit(struct sk_buff *msg, struct netlink_callba
 	return msg->len;
 }
 
+<<<<<<< HEAD
 static int vdpa_dev_net_mq_config_fill(struct sk_buff *msg, u64 features,
+=======
+static int vdpa_dev_net_mq_config_fill(struct vdpa_device *vdev,
+				       struct sk_buff *msg, u64 features,
+>>>>>>> b7ba80a49124 (Commit)
 				       const struct virtio_net_config *config)
 {
 	u16 val_u16;
 
+<<<<<<< HEAD
 	if ((features & BIT_ULL(VIRTIO_NET_F_MQ)) == 0 &&
 	    (features & BIT_ULL(VIRTIO_NET_F_RSS)) == 0)
 		return 0;
@@ -942,14 +991,52 @@ static int vdpa_dev_net_config_fill(struct vdpa_device *vdev, struct sk_buff *ms
 		return -EMSGSIZE;
 
 	return vdpa_dev_net_mq_config_fill(msg, features_device, &config);
+=======
+	if ((features & BIT_ULL(VIRTIO_NET_F_MQ)) == 0)
+		return 0;
+
+	val_u16 = le16_to_cpu(config->max_virtqueue_pairs);
+	return nla_put_u16(msg, VDPA_ATTR_DEV_NET_CFG_MAX_VQP, val_u16);
+}
+
+static int vdpa_dev_net_config_fill(struct vdpa_device *vdev, struct sk_buff *msg)
+{
+	struct virtio_net_config config = {};
+	u64 features;
+	u16 val_u16;
+
+	vdpa_get_config_unlocked(vdev, 0, &config, sizeof(config));
+
+	if (nla_put(msg, VDPA_ATTR_DEV_NET_CFG_MACADDR, sizeof(config.mac),
+		    config.mac))
+		return -EMSGSIZE;
+
+	val_u16 = __virtio16_to_cpu(true, config.status);
+	if (nla_put_u16(msg, VDPA_ATTR_DEV_NET_STATUS, val_u16))
+		return -EMSGSIZE;
+
+	val_u16 = __virtio16_to_cpu(true, config.mtu);
+	if (nla_put_u16(msg, VDPA_ATTR_DEV_NET_CFG_MTU, val_u16))
+		return -EMSGSIZE;
+
+	features = vdev->config->get_driver_features(vdev);
+	if (nla_put_u64_64bit(msg, VDPA_ATTR_DEV_NEGOTIATED_FEATURES, features,
+			      VDPA_ATTR_PAD))
+		return -EMSGSIZE;
+
+	return vdpa_dev_net_mq_config_fill(vdev, msg, features, &config);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int
 vdpa_dev_config_fill(struct vdpa_device *vdev, struct sk_buff *msg, u32 portid, u32 seq,
 		     int flags, struct netlink_ext_ack *extack)
 {
+<<<<<<< HEAD
 	u64 features_driver;
 	u8 status = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 device_id;
 	void *hdr;
 	int err;
@@ -973,6 +1060,7 @@ vdpa_dev_config_fill(struct vdpa_device *vdev, struct sk_buff *msg, u32 portid, 
 		goto msg_err;
 	}
 
+<<<<<<< HEAD
 	/* only read driver features after the feature negotiation is done */
 	status = vdev->config->get_status(vdev);
 	if (status & VIRTIO_CONFIG_S_FEATURES_OK) {
@@ -984,6 +1072,8 @@ vdpa_dev_config_fill(struct vdpa_device *vdev, struct sk_buff *msg, u32 portid, 
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	switch (device_id) {
 	case VIRTIO_ID_NET:
 		err = vdpa_dev_net_config_fill(vdev, msg);
@@ -1011,6 +1101,10 @@ static int vdpa_fill_stats_rec(struct vdpa_device *vdev, struct sk_buff *msg,
 {
 	struct virtio_net_config config = {};
 	u64 features;
+<<<<<<< HEAD
+=======
+	u16 max_vqp;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 status;
 	int err;
 
@@ -1021,15 +1115,25 @@ static int vdpa_fill_stats_rec(struct vdpa_device *vdev, struct sk_buff *msg,
 	}
 	vdpa_get_config_unlocked(vdev, 0, &config, sizeof(config));
 
+<<<<<<< HEAD
+=======
+	max_vqp = __virtio16_to_cpu(true, config.max_virtqueue_pairs);
+	if (nla_put_u16(msg, VDPA_ATTR_DEV_NET_CFG_MAX_VQP, max_vqp))
+		return -EMSGSIZE;
+
+>>>>>>> b7ba80a49124 (Commit)
 	features = vdev->config->get_driver_features(vdev);
 	if (nla_put_u64_64bit(msg, VDPA_ATTR_DEV_NEGOTIATED_FEATURES,
 			      features, VDPA_ATTR_PAD))
 		return -EMSGSIZE;
 
+<<<<<<< HEAD
 	err = vdpa_dev_net_mq_config_fill(msg, features, &config);
 	if (err)
 		return err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (nla_put_u32(msg, VDPA_ATTR_DEV_QUEUE_INDEX, index))
 		return -EMSGSIZE;
 
@@ -1087,7 +1191,11 @@ static int vdpa_dev_vendor_stats_fill(struct vdpa_device *vdev,
 	switch (device_id) {
 	case VIRTIO_ID_NET:
 		if (index > VIRTIO_NET_CTRL_MQ_VQ_PAIRS_MAX) {
+<<<<<<< HEAD
 			NL_SET_ERR_MSG_MOD(info->extack, "queue index exceeds max value");
+=======
+			NL_SET_ERR_MSG_MOD(info->extack, "queue index excceeds max value");
+>>>>>>> b7ba80a49124 (Commit)
 			err = -ERANGE;
 			break;
 		}

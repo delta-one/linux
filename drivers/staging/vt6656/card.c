@@ -11,6 +11,10 @@
  *      vnt_add_basic_rate - Add to BasicRateSet
  *      vnt_ofdm_min_rate - Check if any OFDM rate is in BasicRateSet
  *      vnt_get_tsf_offset - Calculate TSFOffset
+<<<<<<< HEAD
+=======
+ *      vnt_get_current_tsf - Read Current NIC TSF counter
+>>>>>>> b7ba80a49124 (Commit)
  *      vnt_get_next_tbtt - Calculate Next Beacon TSF counter
  *      vnt_reset_next_tbtt - Set NIC Beacon time
  *      vnt_update_next_tbtt - Sync. NIC Beacon time
@@ -230,6 +234,29 @@ int vnt_adjust_tsf(struct vnt_private *priv, u8 rx_rate,
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * Description: Read NIC TSF counter
+ *              Get local TSF counter
+ *
+ * Parameters:
+ *  In:
+ *	priv		- The adapter to be read
+ *  Out:
+ *	current_tsf	- Current TSF counter
+ *
+ * Return Value: true if success; otherwise false
+ *
+ */
+bool vnt_get_current_tsf(struct vnt_private *priv, u64 *current_tsf)
+{
+	*current_tsf = priv->current_tsf;
+
+	return true;
+}
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * Description: Clear NIC TSF counter
  *              Clear local TSF counter
  *

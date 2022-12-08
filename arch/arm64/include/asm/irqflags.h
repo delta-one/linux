@@ -21,6 +21,7 @@
  * exceptions should be unmasked.
  */
 
+<<<<<<< HEAD
 static __always_inline bool __irqflags_uses_pmr(void)
 {
 	return IS_ENABLED(CONFIG_ARM64_PSEUDO_NMI) &&
@@ -73,10 +74,33 @@ static __always_inline void __pmr_local_irq_disable(void)
 	barrier();
 	write_sysreg_s(GIC_PRIO_IRQOFF, SYS_ICC_PMR_EL1);
 	barrier();
+=======
+/*
+ * CPU interrupt mask handling.
+ */
+static inline void arch_local_irq_enable(void)
+{
+	if (system_has_prio_mask_debugging()) {
+		u32 pmr = read_sysreg_s(SYS_ICC_PMR_EL1);
+
+		WARN_ON_ONCE(pmr != GIC_PRIO_IRQON && pmr != GIC_PRIO_IRQOFF);
+	}
+
+	asm volatile(ALTERNATIVE(
+		"msr	daifclr, #3		// arch_local_irq_enable",
+		__msr_s(SYS_ICC_PMR_EL1, "%0"),
+		ARM64_HAS_IRQ_PRIO_MASKING)
+		:
+		: "r" ((unsigned long) GIC_PRIO_IRQON)
+		: "memory");
+
+	pmr_sync();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void arch_local_irq_disable(void)
 {
+<<<<<<< HEAD
 	if (__irqflags_uses_pmr()) {
 		__pmr_local_irq_disable();
 	} else {
@@ -92,6 +116,21 @@ static __always_inline unsigned long __daif_local_save_flags(void)
 static __always_inline unsigned long __pmr_local_save_flags(void)
 {
 	return read_sysreg_s(SYS_ICC_PMR_EL1);
+=======
+	if (system_has_prio_mask_debugging()) {
+		u32 pmr = read_sysreg_s(SYS_ICC_PMR_EL1);
+
+		WARN_ON_ONCE(pmr != GIC_PRIO_IRQON && pmr != GIC_PRIO_IRQOFF);
+	}
+
+	asm volatile(ALTERNATIVE(
+		"msr	daifset, #3		// arch_local_irq_disable",
+		__msr_s(SYS_ICC_PMR_EL1, "%0"),
+		ARM64_HAS_IRQ_PRIO_MASKING)
+		:
+		: "r" ((unsigned long) GIC_PRIO_IRQOFF)
+		: "memory");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -99,6 +138,7 @@ static __always_inline unsigned long __pmr_local_save_flags(void)
  */
 static inline unsigned long arch_local_save_flags(void)
 {
+<<<<<<< HEAD
 	if (__irqflags_uses_pmr()) {
 		return __pmr_local_save_flags();
 	} else {
@@ -149,24 +189,69 @@ static __always_inline unsigned long __daif_local_irq_save(void)
 	unsigned long flags = __daif_local_save_flags();
 
 	__daif_local_irq_disable();
+=======
+	unsigned long flags;
+
+	asm volatile(ALTERNATIVE(
+		"mrs	%0, daif",
+		__mrs_s("%0", SYS_ICC_PMR_EL1),
+		ARM64_HAS_IRQ_PRIO_MASKING)
+		: "=&r" (flags)
+		:
+		: "memory");
+>>>>>>> b7ba80a49124 (Commit)
 
 	return flags;
 }
 
+<<<<<<< HEAD
 static __always_inline unsigned long __pmr_local_irq_save(void)
 {
 	unsigned long flags = __pmr_local_save_flags();
+=======
+static inline int arch_irqs_disabled_flags(unsigned long flags)
+{
+	int res;
+
+	asm volatile(ALTERNATIVE(
+		"and	%w0, %w1, #" __stringify(PSR_I_BIT),
+		"eor	%w0, %w1, #" __stringify(GIC_PRIO_IRQON),
+		ARM64_HAS_IRQ_PRIO_MASKING)
+		: "=&r" (res)
+		: "r" ((int) flags)
+		: "memory");
+
+	return res;
+}
+
+static inline int arch_irqs_disabled(void)
+{
+	return arch_irqs_disabled_flags(arch_local_save_flags());
+}
+
+static inline unsigned long arch_local_irq_save(void)
+{
+	unsigned long flags;
+
+	flags = arch_local_save_flags();
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * There are too many states with IRQs disabled, just keep the current
 	 * state if interrupts are already disabled/masked.
 	 */
+<<<<<<< HEAD
 	if (!__pmr_irqs_disabled_flags(flags))
 		__pmr_local_irq_disable();
+=======
+	if (!arch_irqs_disabled_flags(flags))
+		arch_local_irq_disable();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return flags;
 }
 
+<<<<<<< HEAD
 static inline unsigned long arch_local_irq_save(void)
 {
 	if (__irqflags_uses_pmr()) {
@@ -191,16 +276,30 @@ static __always_inline void __pmr_local_irq_restore(unsigned long flags)
 	barrier();
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * restore saved IRQ state
  */
 static inline void arch_local_irq_restore(unsigned long flags)
 {
+<<<<<<< HEAD
 	if (__irqflags_uses_pmr()) {
 		__pmr_local_irq_restore(flags);
 	} else {
 		__daif_local_irq_restore(flags);
 	}
+=======
+	asm volatile(ALTERNATIVE(
+		"msr	daif, %0",
+		__msr_s(SYS_ICC_PMR_EL1, "%0"),
+		ARM64_HAS_IRQ_PRIO_MASKING)
+		:
+		: "r" (flags)
+		: "memory");
+
+	pmr_sync();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #endif /* __ASM_IRQFLAGS_H */

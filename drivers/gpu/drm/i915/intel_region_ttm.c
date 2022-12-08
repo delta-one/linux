@@ -2,6 +2,10 @@
 /*
  * Copyright © 2021 Intel Corporation
  */
+<<<<<<< HEAD
+=======
+#include <drm/ttm/ttm_bo_driver.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/ttm/ttm_device.h>
 #include <drm/ttm/ttm_range_manager.h>
 
@@ -131,7 +135,11 @@ int intel_region_ttm_fini(struct intel_memory_region *mem)
 			break;
 
 		msleep(20);
+<<<<<<< HEAD
 		drain_workqueue(mem->i915->bdev.wq);
+=======
+		flush_delayed_work(&mem->i915->bdev.wq);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* If we leaked objects, Don't free the region causing use after free */
@@ -208,6 +216,7 @@ intel_region_ttm_resource_alloc(struct intel_memory_region *mem,
 	if (flags & I915_BO_ALLOC_CONTIGUOUS)
 		place.flags |= TTM_PL_FLAG_CONTIGUOUS;
 	if (offset != I915_BO_INVALID_OFFSET) {
+<<<<<<< HEAD
 		if (WARN_ON(overflows_type(offset >> PAGE_SHIFT, place.fpfn))) {
 			ret = -E2BIG;
 			goto out;
@@ -217,16 +226,22 @@ intel_region_ttm_resource_alloc(struct intel_memory_region *mem,
 			ret = -E2BIG;
 			goto out;
 		}
+=======
+		place.fpfn = offset >> PAGE_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 		place.lpfn = place.fpfn + (size >> PAGE_SHIFT);
 	} else if (mem->io_size && mem->io_size < mem->total) {
 		if (flags & I915_BO_ALLOC_GPU_ONLY) {
 			place.flags |= TTM_PL_FLAG_TOPDOWN;
 		} else {
 			place.fpfn = 0;
+<<<<<<< HEAD
 			if (WARN_ON(overflows_type(mem->io_size >> PAGE_SHIFT, place.lpfn))) {
 				ret = -E2BIG;
 				goto out;
 			}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			place.lpfn = mem->io_size >> PAGE_SHIFT;
 		}
 	}
@@ -235,8 +250,11 @@ intel_region_ttm_resource_alloc(struct intel_memory_region *mem,
 	mock_bo.bdev = &mem->i915->bdev;
 
 	ret = man->func->alloc(man, &mock_bo, &place, &res);
+<<<<<<< HEAD
 
 out:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret == -ENOSPC)
 		ret = -ENXIO;
 	if (!ret)
@@ -257,7 +275,11 @@ void intel_region_ttm_resource_free(struct intel_memory_region *mem,
 	struct ttm_resource_manager *man = mem->region_private;
 	struct ttm_buffer_object mock_bo = {};
 
+<<<<<<< HEAD
 	mock_bo.base.size = res->size;
+=======
+	mock_bo.base.size = res->num_pages << PAGE_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 	mock_bo.bdev = &mem->i915->bdev;
 	res->bo = &mock_bo;
 

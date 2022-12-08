@@ -91,7 +91,11 @@ static struct dst_entry *ip6_negative_advice(struct dst_entry *);
 static void		ip6_dst_destroy(struct dst_entry *);
 static void		ip6_dst_ifdown(struct dst_entry *,
 				       struct net_device *dev, int how);
+<<<<<<< HEAD
 static void		 ip6_dst_gc(struct dst_ops *ops);
+=======
+static int		 ip6_dst_gc(struct dst_ops *ops);
+>>>>>>> b7ba80a49124 (Commit)
 
 static int		ip6_pkt_discard(struct sk_buff *skb);
 static int		ip6_pkt_discard_out(struct net *net, struct sock *sk, struct sk_buff *skb);
@@ -633,15 +637,26 @@ static void rt6_probe(struct fib6_nh *fib6_nh)
 
 	nh_gw = &fib6_nh->fib_nh_gw6;
 	dev = fib6_nh->fib_nh_dev;
+<<<<<<< HEAD
 	rcu_read_lock();
+=======
+	rcu_read_lock_bh();
+>>>>>>> b7ba80a49124 (Commit)
 	last_probe = READ_ONCE(fib6_nh->last_probe);
 	idev = __in6_dev_get(dev);
 	neigh = __ipv6_neigh_lookup_noref(dev, nh_gw);
 	if (neigh) {
+<<<<<<< HEAD
 		if (READ_ONCE(neigh->nud_state) & NUD_VALID)
 			goto out;
 
 		write_lock_bh(&neigh->lock);
+=======
+		if (neigh->nud_state & NUD_VALID)
+			goto out;
+
+		write_lock(&neigh->lock);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!(neigh->nud_state & NUD_VALID) &&
 		    time_after(jiffies,
 			       neigh->updated + idev->cnf.rtr_probe_interval)) {
@@ -649,7 +664,11 @@ static void rt6_probe(struct fib6_nh *fib6_nh)
 			if (work)
 				__neigh_set_probe_once(neigh);
 		}
+<<<<<<< HEAD
 		write_unlock_bh(&neigh->lock);
+=======
+		write_unlock(&neigh->lock);
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (time_after(jiffies, last_probe +
 				       idev->cnf.rtr_probe_interval)) {
 		work = kmalloc(sizeof(*work), GFP_ATOMIC);
@@ -667,7 +686,11 @@ static void rt6_probe(struct fib6_nh *fib6_nh)
 	}
 
 out:
+<<<<<<< HEAD
 	rcu_read_unlock();
+=======
+	rcu_read_unlock_bh();
+>>>>>>> b7ba80a49124 (Commit)
 }
 #else
 static inline void rt6_probe(struct fib6_nh *fib6_nh)
@@ -683,6 +706,7 @@ static enum rt6_nud_state rt6_check_neigh(const struct fib6_nh *fib6_nh)
 	enum rt6_nud_state ret = RT6_NUD_FAIL_HARD;
 	struct neighbour *neigh;
 
+<<<<<<< HEAD
 	rcu_read_lock();
 	neigh = __ipv6_neigh_lookup_noref(fib6_nh->fib_nh_dev,
 					  &fib6_nh->fib_nh_gw6);
@@ -693,15 +717,34 @@ static enum rt6_nud_state rt6_check_neigh(const struct fib6_nh *fib6_nh)
 			ret = RT6_NUD_SUCCEED;
 #ifdef CONFIG_IPV6_ROUTER_PREF
 		else if (!(nud_state & NUD_FAILED))
+=======
+	rcu_read_lock_bh();
+	neigh = __ipv6_neigh_lookup_noref(fib6_nh->fib_nh_dev,
+					  &fib6_nh->fib_nh_gw6);
+	if (neigh) {
+		read_lock(&neigh->lock);
+		if (neigh->nud_state & NUD_VALID)
+			ret = RT6_NUD_SUCCEED;
+#ifdef CONFIG_IPV6_ROUTER_PREF
+		else if (!(neigh->nud_state & NUD_FAILED))
+>>>>>>> b7ba80a49124 (Commit)
 			ret = RT6_NUD_SUCCEED;
 		else
 			ret = RT6_NUD_FAIL_PROBE;
 #endif
+<<<<<<< HEAD
+=======
+		read_unlock(&neigh->lock);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		ret = IS_ENABLED(CONFIG_IPV6_ROUTER_PREF) ?
 		      RT6_NUD_SUCCEED : RT6_NUD_FAIL_DO_RR;
 	}
+<<<<<<< HEAD
 	rcu_read_unlock();
+=======
+	rcu_read_unlock_bh();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -1713,7 +1756,11 @@ static int rt6_insert_exception(struct rt6_info *nrt,
 	net->ipv6.rt6_stats->fib_rt_cache++;
 
 	/* Randomize max depth to avoid some side channels attacks. */
+<<<<<<< HEAD
 	max_depth = FIB6_MAX_DEPTH + get_random_u32_below(FIB6_MAX_DEPTH);
+=======
+	max_depth = FIB6_MAX_DEPTH + prandom_u32_max(FIB6_MAX_DEPTH);
+>>>>>>> b7ba80a49124 (Commit)
 	while (bucket->depth > max_depth)
 		rt6_exception_remove_oldest(bucket);
 
@@ -2593,10 +2640,16 @@ INDIRECT_CALLABLE_SCOPE struct rt6_info *ip6_pol_route_output(struct net *net,
 	return ip6_pol_route(net, table, fl6->flowi6_oif, fl6, skb, flags);
 }
 
+<<<<<<< HEAD
 static struct dst_entry *ip6_route_output_flags_noref(struct net *net,
 						      const struct sock *sk,
 						      struct flowi6 *fl6,
 						      int flags)
+=======
+struct dst_entry *ip6_route_output_flags_noref(struct net *net,
+					       const struct sock *sk,
+					       struct flowi6 *fl6, int flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	bool any_src;
 
@@ -2625,6 +2678,10 @@ static struct dst_entry *ip6_route_output_flags_noref(struct net *net,
 
 	return fib6_rule_lookup(net, fl6, NULL, flags, ip6_pol_route_output);
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(ip6_route_output_flags_noref);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct dst_entry *ip6_route_output_flags(struct net *net,
 					 const struct sock *sk,
@@ -3284,17 +3341,34 @@ out:
 	return dst;
 }
 
+<<<<<<< HEAD
 static void ip6_dst_gc(struct dst_ops *ops)
 {
 	struct net *net = container_of(ops, struct net, ipv6.ip6_dst_ops);
 	int rt_min_interval = net->ipv6.sysctl.ip6_rt_gc_min_interval;
+=======
+static int ip6_dst_gc(struct dst_ops *ops)
+{
+	struct net *net = container_of(ops, struct net, ipv6.ip6_dst_ops);
+	int rt_min_interval = net->ipv6.sysctl.ip6_rt_gc_min_interval;
+	int rt_max_size = net->ipv6.sysctl.ip6_rt_max_size;
+>>>>>>> b7ba80a49124 (Commit)
 	int rt_elasticity = net->ipv6.sysctl.ip6_rt_gc_elasticity;
 	int rt_gc_timeout = net->ipv6.sysctl.ip6_rt_gc_timeout;
 	unsigned long rt_last_gc = net->ipv6.ip6_rt_last_gc;
 	unsigned int val;
 	int entries;
 
+<<<<<<< HEAD
 	if (time_after(rt_last_gc + rt_min_interval, jiffies))
+=======
+	entries = dst_entries_get_fast(ops);
+	if (entries > rt_max_size)
+		entries = dst_entries_get_slow(ops);
+
+	if (time_after(rt_last_gc + rt_min_interval, jiffies) &&
+	    entries <= rt_max_size)
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	fib6_run_gc(atomic_inc_return(&net->ipv6.ip6_rt_gc_expire), net, true);
@@ -3304,6 +3378,10 @@ static void ip6_dst_gc(struct dst_ops *ops)
 out:
 	val = atomic_read(&net->ipv6.ip6_rt_gc_expire);
 	atomic_set(&net->ipv6.ip6_rt_gc_expire, val - (val >> rt_elasticity));
+<<<<<<< HEAD
+=======
+	return entries > rt_max_size;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ip6_nh_lookup_table(struct net *net, struct fib6_config *cfg,
@@ -5533,17 +5611,29 @@ static size_t rt6_nlmsg_size(struct fib6_info *f6i)
 		nexthop_for_each_fib6_nh(f6i->nh, rt6_nh_nlmsg_size,
 					 &nexthop_len);
 	} else {
+<<<<<<< HEAD
 		struct fib6_info *sibling, *next_sibling;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		struct fib6_nh *nh = f6i->fib6_nh;
 
 		nexthop_len = 0;
 		if (f6i->fib6_nsiblings) {
+<<<<<<< HEAD
 			rt6_nh_nlmsg_size(nh, &nexthop_len);
 
 			list_for_each_entry_safe(sibling, next_sibling,
 						 &f6i->fib6_siblings, fib6_siblings) {
 				rt6_nh_nlmsg_size(sibling->fib6_nh, &nexthop_len);
 			}
+=======
+			nexthop_len = nla_total_size(0)	 /* RTA_MULTIPATH */
+				    + NLA_ALIGN(sizeof(struct rtnexthop))
+				    + nla_total_size(16) /* RTA_GATEWAY */
+				    + lwtunnel_get_encap_size(nh->fib_nh_lws);
+
+			nexthop_len *= f6i->fib6_nsiblings;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		nexthop_len += lwtunnel_get_encap_size(nh->fib_nh_lws);
 	}
@@ -6506,7 +6596,11 @@ static int __net_init ip6_route_net_init(struct net *net)
 #endif
 
 	net->ipv6.sysctl.flush_delay = 0;
+<<<<<<< HEAD
 	net->ipv6.sysctl.ip6_rt_max_size = INT_MAX;
+=======
+	net->ipv6.sysctl.ip6_rt_max_size = 4096;
+>>>>>>> b7ba80a49124 (Commit)
 	net->ipv6.sysctl.ip6_rt_gc_min_interval = HZ / 2;
 	net->ipv6.sysctl.ip6_rt_gc_timeout = 60*HZ;
 	net->ipv6.sysctl.ip6_rt_gc_interval = 30*HZ;
@@ -6549,6 +6643,7 @@ static void __net_exit ip6_route_net_exit(struct net *net)
 static int __net_init ip6_route_net_init_late(struct net *net)
 {
 #ifdef CONFIG_PROC_FS
+<<<<<<< HEAD
 	if (!proc_create_net("ipv6_route", 0, net->proc_net,
 			     &ipv6_route_seq_ops,
 			     sizeof(struct ipv6_route_iter)))
@@ -6559,6 +6654,12 @@ static int __net_init ip6_route_net_init_late(struct net *net)
 		remove_proc_entry("ipv6_route", net->proc_net);
 		return -ENOMEM;
 	}
+=======
+	proc_create_net("ipv6_route", 0, net->proc_net, &ipv6_route_seq_ops,
+			sizeof(struct ipv6_route_iter));
+	proc_create_net_single("rt6_stats", 0444, net->proc_net,
+			rt6_stats_seq_show, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	return 0;
 }

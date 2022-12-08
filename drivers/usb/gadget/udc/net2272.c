@@ -1451,6 +1451,10 @@ static int net2272_start(struct usb_gadget *_gadget,
 		dev->ep[i].irqs = 0;
 	/* hook up the driver ... */
 	dev->softconnect = 1;
+<<<<<<< HEAD
+=======
+	driver->driver.bus = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	dev->driver = driver;
 
 	/* ... then enable host detection and ep0; and we're ready

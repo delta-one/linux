@@ -910,6 +910,10 @@ static int axi_dmac_probe(struct platform_device *pdev)
 {
 	struct dma_device *dma_dev;
 	struct axi_dmac *dmac;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	struct regmap *regmap;
 	unsigned int version;
 	int ret;
@@ -924,7 +928,12 @@ static int axi_dmac_probe(struct platform_device *pdev)
 	if (dmac->irq == 0)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	dmac->base = devm_platform_ioremap_resource(pdev, 0);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	dmac->base = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(dmac->base))
 		return PTR_ERR(dmac->base);
 

@@ -223,7 +223,11 @@ struct se_dev_entry *core_get_se_deve_from_rtpi(
 				tpg->se_tpg_tfo->fabric_name);
 			continue;
 		}
+<<<<<<< HEAD
 		if (lun->lun_tpg->tpg_rtpi != rtpi)
+=======
+		if (lun->lun_rtpi != rtpi)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		kref_get(&deve->pr_kref);
@@ -284,6 +288,7 @@ void target_pr_kref_release(struct kref *kref)
 	complete(&deve->pr_comp);
 }
 
+<<<<<<< HEAD
 /*
  * Establish UA condition on SCSI device - all LUNs
  */
@@ -303,6 +308,8 @@ void target_dev_ua_allocate(struct se_device *dev, u8 asc, u8 ascq)
 	spin_unlock(&dev->se_port_lock);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void
 target_luns_data_has_changed(struct se_node_acl *nacl, struct se_dev_entry *new,
 			     bool skip_new)
@@ -479,6 +486,50 @@ void core_clear_lun_from_tpg(struct se_lun *lun, struct se_portal_group *tpg)
 	mutex_unlock(&tpg->acl_node_mutex);
 }
 
+<<<<<<< HEAD
+=======
+int core_alloc_rtpi(struct se_lun *lun, struct se_device *dev)
+{
+	struct se_lun *tmp;
+
+	spin_lock(&dev->se_port_lock);
+	if (dev->export_count == 0x0000ffff) {
+		pr_warn("Reached dev->dev_port_count =="
+				" 0x0000ffff\n");
+		spin_unlock(&dev->se_port_lock);
+		return -ENOSPC;
+	}
+again:
+	/*
+	 * Allocate the next RELATIVE TARGET PORT IDENTIFIER for this struct se_device
+	 * Here is the table from spc4r17 section 7.7.3.8.
+	 *
+	 *    Table 473 -- RELATIVE TARGET PORT IDENTIFIER field
+	 *
+	 * Code      Description
+	 * 0h        Reserved
+	 * 1h        Relative port 1, historically known as port A
+	 * 2h        Relative port 2, historically known as port B
+	 * 3h to FFFFh    Relative port 3 through 65 535
+	 */
+	lun->lun_rtpi = dev->dev_rpti_counter++;
+	if (!lun->lun_rtpi)
+		goto again;
+
+	list_for_each_entry(tmp, &dev->dev_sep_list, lun_dev_link) {
+		/*
+		 * Make sure RELATIVE TARGET PORT IDENTIFIER is unique
+		 * for 16-bit wrap..
+		 */
+		if (lun->lun_rtpi == tmp->lun_rtpi)
+			goto again;
+	}
+	spin_unlock(&dev->se_port_lock);
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void se_release_vpd_for_dev(struct se_device *dev)
 {
 	struct t10_vpd *vpd, *vpd_tmp;
@@ -763,7 +814,10 @@ struct se_device *target_alloc_device(struct se_hba *hba, const char *name)
 	dev->dev_attrib.emulate_caw = DA_EMULATE_CAW;
 	dev->dev_attrib.emulate_3pc = DA_EMULATE_3PC;
 	dev->dev_attrib.emulate_pr = DA_EMULATE_PR;
+<<<<<<< HEAD
 	dev->dev_attrib.emulate_rsoc = DA_EMULATE_RSOC;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev->dev_attrib.pi_prot_type = TARGET_DIF_TYPE0_PROT;
 	dev->dev_attrib.enforce_pr_isids = DA_ENFORCE_PR_ISIDS;
 	dev->dev_attrib.force_pr_aptpl = DA_FORCE_PR_APTPL;

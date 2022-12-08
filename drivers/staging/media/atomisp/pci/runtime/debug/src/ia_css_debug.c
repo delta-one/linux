@@ -133,6 +133,10 @@ static const char *const pipe_id_to_str[] = {
 	/* [IA_CSS_PIPE_ID_VIDEO]     =*/ "video",
 	/* [IA_CSS_PIPE_ID_CAPTURE]   =*/ "capture",
 	/* [IA_CSS_PIPE_ID_YUVPP]     =*/ "yuvpp",
+<<<<<<< HEAD
+=======
+	/* [IA_CSS_PIPE_ID_ACC]       =*/ "accelerator"
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static char dot_id_input_bin[SH_CSS_MAX_BINARY_NAME + 10];
@@ -1300,11 +1304,19 @@ void ia_css_debug_frame_print(const struct ia_css_frame *frame,
 	data = (char *)HOST_ADDRESS(frame->data);
 	ia_css_debug_dtrace(2, "frame %s (%p):\n", descr, frame);
 	ia_css_debug_dtrace(2, "  resolution    = %dx%d\n",
+<<<<<<< HEAD
 			    frame->frame_info.res.width, frame->frame_info.res.height);
 	ia_css_debug_dtrace(2, "  padded width  = %d\n",
 			    frame->frame_info.padded_width);
 	ia_css_debug_dtrace(2, "  format        = %d\n", frame->frame_info.format);
 	switch (frame->frame_info.format) {
+=======
+			    frame->info.res.width, frame->info.res.height);
+	ia_css_debug_dtrace(2, "  padded width  = %d\n",
+			    frame->info.padded_width);
+	ia_css_debug_dtrace(2, "  format        = %d\n", frame->info.format);
+	switch (frame->info.format) {
+>>>>>>> b7ba80a49124 (Commit)
 	case IA_CSS_FRAME_FORMAT_NV12:
 	case IA_CSS_FRAME_FORMAT_NV16:
 	case IA_CSS_FRAME_FORMAT_NV21:
@@ -2564,11 +2576,19 @@ ia_css_debug_pipe_graph_dump_frame(
 	dtrace_dot(
 	    "node [shape = box, fixedsize=true, width=2, height=0.7]; \"%p\" [label = \"%s\\n%d(%d) x %d, %dbpp\\n%s\"];",
 	    frame,
+<<<<<<< HEAD
 	    debug_frame_format2str(frame->frame_info.format),
 	    frame->frame_info.res.width,
 	    frame->frame_info.padded_width,
 	    frame->frame_info.res.height,
 	    frame->frame_info.raw_bit_depth,
+=======
+	    debug_frame_format2str(frame->info.format),
+	    frame->info.res.width,
+	    frame->info.padded_width,
+	    frame->info.res.height,
+	    frame->info.raw_bit_depth,
+>>>>>>> b7ba80a49124 (Commit)
 	    bufinfo);
 
 	if (in_frame) {
@@ -2865,10 +2885,17 @@ ia_css_debug_pipe_graph_dump_sp_raw_copy(
 	snprintf(ring_buffer, sizeof(ring_buffer),
 		 "node [shape = box, fixedsize=true, width=2, height=0.7]; \"%p\" [label = \"%s\\n%d(%d) x %d\\nRingbuffer\"];",
 		 out_frame,
+<<<<<<< HEAD
 		 debug_frame_format2str(out_frame->frame_info.format),
 		 out_frame->frame_info.res.width,
 		 out_frame->frame_info.padded_width,
 		 out_frame->frame_info.res.height);
+=======
+		 debug_frame_format2str(out_frame->info.format),
+		 out_frame->info.res.width,
+		 out_frame->info.padded_width,
+		 out_frame->info.res.height);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dtrace_dot(ring_buffer);
 
@@ -2988,10 +3015,22 @@ ia_css_debug_dump_pipe_config(
 		ia_css_debug_dump_frame_info(&config->vf_output_info[i],
 					     "vf_output_info");
 	}
+<<<<<<< HEAD
+=======
+	ia_css_debug_dtrace(IA_CSS_DEBUG_TRACE, "acc_extension: %p\n",
+			    config->acc_extension);
+	ia_css_debug_dtrace(IA_CSS_DEBUG_TRACE, "num_acc_stages: %d\n",
+			    config->num_acc_stages);
+>>>>>>> b7ba80a49124 (Commit)
 	ia_css_debug_dump_capture_config(&config->default_capture_config);
 	ia_css_debug_dump_resolution(&config->dvs_envelope, "dvs_envelope");
 	ia_css_debug_dtrace(IA_CSS_DEBUG_TRACE, "dvs_frame_delay: %d\n",
 			    config->dvs_frame_delay);
+<<<<<<< HEAD
+=======
+	ia_css_debug_dtrace(IA_CSS_DEBUG_TRACE, "acc_num_execs: %d\n",
+			    config->acc_num_execs);
+>>>>>>> b7ba80a49124 (Commit)
 	ia_css_debug_dtrace(IA_CSS_DEBUG_TRACE, "enable_dz: %d\n",
 			    config->enable_dz);
 	IA_CSS_LEAVE_PRIVATE("");

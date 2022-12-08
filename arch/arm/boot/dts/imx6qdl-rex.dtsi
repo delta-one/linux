@@ -55,7 +55,11 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_led>;
 
+<<<<<<< HEAD
 		led0: led-usr {
+=======
+		led0: usr {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "usr";
 			gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
 			default-state = "off";

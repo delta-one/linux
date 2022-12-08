@@ -26,7 +26,11 @@
 #define TPAUSE_C01_STATE		1
 #define TPAUSE_C02_STATE		0
 
+<<<<<<< HEAD
 static __always_inline void __monitor(const void *eax, unsigned long ecx,
+=======
+static inline void __monitor(const void *eax, unsigned long ecx,
+>>>>>>> b7ba80a49124 (Commit)
 			     unsigned long edx)
 {
 	/* "monitor %eax, %ecx, %edx;" */
@@ -34,7 +38,11 @@ static __always_inline void __monitor(const void *eax, unsigned long ecx,
 		     :: "a" (eax), "c" (ecx), "d"(edx));
 }
 
+<<<<<<< HEAD
 static __always_inline void __monitorx(const void *eax, unsigned long ecx,
+=======
+static inline void __monitorx(const void *eax, unsigned long ecx,
+>>>>>>> b7ba80a49124 (Commit)
 			      unsigned long edx)
 {
 	/* "monitorx %eax, %ecx, %edx;" */
@@ -42,7 +50,11 @@ static __always_inline void __monitorx(const void *eax, unsigned long ecx,
 		     :: "a" (eax), "c" (ecx), "d"(edx));
 }
 
+<<<<<<< HEAD
 static __always_inline void __mwait(unsigned long eax, unsigned long ecx)
+=======
+static inline void __mwait(unsigned long eax, unsigned long ecx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	mds_idle_clear_cpu_buffers();
 
@@ -77,8 +89,13 @@ static __always_inline void __mwait(unsigned long eax, unsigned long ecx)
  * EAX                     (logical) address to monitor
  * ECX                     #GP if not zero
  */
+<<<<<<< HEAD
 static __always_inline void __mwaitx(unsigned long eax, unsigned long ebx,
 				     unsigned long ecx)
+=======
+static inline void __mwaitx(unsigned long eax, unsigned long ebx,
+			    unsigned long ecx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* No MDS buffer clear as this is AMD/HYGON only */
 
@@ -87,7 +104,11 @@ static __always_inline void __mwaitx(unsigned long eax, unsigned long ebx,
 		     :: "a" (eax), "b" (ebx), "c" (ecx));
 }
 
+<<<<<<< HEAD
 static __always_inline void __sti_mwait(unsigned long eax, unsigned long ecx)
+=======
+static inline void __sti_mwait(unsigned long eax, unsigned long ecx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	mds_idle_clear_cpu_buffers();
 	/* "mwait %eax, %ecx;" */
@@ -105,7 +126,11 @@ static __always_inline void __sti_mwait(unsigned long eax, unsigned long ecx)
  * New with Core Duo processors, MWAIT can take some hints based on CPU
  * capability.
  */
+<<<<<<< HEAD
 static __always_inline void mwait_idle_with_hints(unsigned long eax, unsigned long ecx)
+=======
+static inline void mwait_idle_with_hints(unsigned long eax, unsigned long ecx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (static_cpu_has_bug(X86_BUG_MONITOR) || !current_set_polling_and_test()) {
 		if (static_cpu_has_bug(X86_BUG_CLFLUSH_MONITOR)) {

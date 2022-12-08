@@ -7,11 +7,15 @@
 #define BTRFS_BACKREF_H
 
 #include <linux/btrfs.h>
+<<<<<<< HEAD
 #include "messages.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "ulist.h"
 #include "disk-io.h"
 #include "extent_io.h"
 
+<<<<<<< HEAD
 /*
  * Used by implementations of iterate_extent_inodes_t (see definition below) to
  * signal that backref iteration can stop immediately and no error happened.
@@ -129,6 +133,8 @@ struct btrfs_backref_walk_ctx {
 	void *user_ctx;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct inode_fs_paths {
 	struct btrfs_path		*btrfs_path;
 	struct btrfs_root		*fs_root;
@@ -141,6 +147,7 @@ struct btrfs_backref_shared_cache_entry {
 	bool is_shared;
 };
 
+<<<<<<< HEAD
 #define BTRFS_BACKREF_CTX_PREV_EXTENTS_SIZE 8
 
 struct btrfs_backref_share_check_ctx {
@@ -159,10 +166,14 @@ struct btrfs_backref_share_check_ctx {
 	 * leaf. On the first call it must be 0.
 	 */
 	u64 prev_leaf_bytenr;
+=======
+struct btrfs_backref_shared_cache {
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * A path from a root to a leaf that has a file extent item pointing to
 	 * a given data extent should never exceed the maximum b+tree height.
 	 */
+<<<<<<< HEAD
 	struct btrfs_backref_shared_cache_entry path_cache_entries[BTRFS_MAX_LEVEL];
 	bool use_path_cache;
 	/*
@@ -194,6 +205,13 @@ struct btrfs_backref_share_check_ctx {
 
 struct btrfs_backref_share_check_ctx *btrfs_alloc_backref_share_check_ctx(void);
 void btrfs_free_backref_share_ctx(struct btrfs_backref_share_check_ctx *ctx);
+=======
+	struct btrfs_backref_shared_cache_entry entries[BTRFS_MAX_LEVEL];
+};
+
+typedef int (iterate_extent_inodes_t)(u64 inum, u64 offset, u64 root,
+		void *ctx);
+>>>>>>> b7ba80a49124 (Commit)
 
 int extent_from_logical(struct btrfs_fs_info *fs_info, u64 logical,
 			struct btrfs_path *path, struct btrfs_key *found_key,
@@ -203,9 +221,17 @@ int tree_backref_for_extent(unsigned long *ptr, struct extent_buffer *eb,
 			    struct btrfs_key *key, struct btrfs_extent_item *ei,
 			    u32 item_size, u64 *out_root, u8 *out_level);
 
+<<<<<<< HEAD
 int iterate_extent_inodes(struct btrfs_backref_walk_ctx *ctx,
 			  bool search_commit_root,
 			  iterate_extent_inodes_t *iterate, void *user_ctx);
+=======
+int iterate_extent_inodes(struct btrfs_fs_info *fs_info,
+				u64 extent_item_objectid,
+				u64 extent_offset, int search_commit_root,
+				iterate_extent_inodes_t *iterate, void *ctx,
+				bool ignore_offset);
+>>>>>>> b7ba80a49124 (Commit)
 
 int iterate_inodes_from_logical(u64 logical, struct btrfs_fs_info *fs_info,
 				struct btrfs_path *path, void *ctx,
@@ -213,8 +239,18 @@ int iterate_inodes_from_logical(u64 logical, struct btrfs_fs_info *fs_info,
 
 int paths_from_inode(u64 inum, struct inode_fs_paths *ipath);
 
+<<<<<<< HEAD
 int btrfs_find_all_leafs(struct btrfs_backref_walk_ctx *ctx);
 int btrfs_find_all_roots(struct btrfs_backref_walk_ctx *ctx,
+=======
+int btrfs_find_all_leafs(struct btrfs_trans_handle *trans,
+			 struct btrfs_fs_info *fs_info, u64 bytenr,
+			 u64 time_seq, struct ulist **leafs,
+			 const u64 *extent_item_pos, bool ignore_offset);
+int btrfs_find_all_roots(struct btrfs_trans_handle *trans,
+			 struct btrfs_fs_info *fs_info, u64 bytenr,
+			 u64 time_seq, struct ulist **roots,
+>>>>>>> b7ba80a49124 (Commit)
 			 bool skip_commit_root_sem);
 char *btrfs_ref_to_path(struct btrfs_root *fs_root, struct btrfs_path *path,
 			u32 name_len, unsigned long name_off,
@@ -230,9 +266,16 @@ int btrfs_find_one_extref(struct btrfs_root *root, u64 inode_objectid,
 			  u64 start_off, struct btrfs_path *path,
 			  struct btrfs_inode_extref **ret_extref,
 			  u64 *found_off);
+<<<<<<< HEAD
 int btrfs_is_data_extent_shared(struct btrfs_inode *inode, u64 bytenr,
 				u64 extent_gen,
 				struct btrfs_backref_share_check_ctx *ctx);
+=======
+int btrfs_is_data_extent_shared(struct btrfs_root *root, u64 inum, u64 bytenr,
+				u64 extent_gen,
+				struct ulist *roots, struct ulist *tmp,
+				struct btrfs_backref_shared_cache *cache);
+>>>>>>> b7ba80a49124 (Commit)
 
 int __init btrfs_prelim_ref_init(void);
 void __cold btrfs_prelim_ref_exit(void);
@@ -263,7 +306,12 @@ struct btrfs_backref_iter {
 	u32 end_ptr;
 };
 
+<<<<<<< HEAD
 struct btrfs_backref_iter *btrfs_backref_iter_alloc(struct btrfs_fs_info *fs_info);
+=======
+struct btrfs_backref_iter *btrfs_backref_iter_alloc(
+		struct btrfs_fs_info *fs_info, gfp_t gfp_flag);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void btrfs_backref_iter_free(struct btrfs_backref_iter *iter)
 {

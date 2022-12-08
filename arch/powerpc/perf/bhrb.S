@@ -21,7 +21,11 @@
 _GLOBAL(read_bhrb)
 	cmpldi	r3,31
 	bgt	1f
+<<<<<<< HEAD
 	LOAD_REG_ADDR(r4, bhrb_table)
+=======
+	ld	r4,bhrb_table@got(r2)
+>>>>>>> b7ba80a49124 (Commit)
 	sldi	r3,r3,3
 	add	r3,r4,r3
 	mtctr	r3

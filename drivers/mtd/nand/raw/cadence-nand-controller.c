@@ -1184,6 +1184,7 @@ static int cadence_nand_hw_init(struct cdns_nand_ctrl *cdns_ctrl)
 	if (cadence_nand_read_bch_caps(cdns_ctrl))
 		return -EIO;
 
+<<<<<<< HEAD
 #ifndef CONFIG_64BIT
 	if (cdns_ctrl->caps2.data_dma_width == 8) {
 		dev_err(cdns_ctrl->dev,
@@ -1192,6 +1193,8 @@ static int cadence_nand_hw_init(struct cdns_nand_ctrl *cdns_ctrl)
 	}
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Set IO width access to 8.
 	 * It is because during SW device discovering width access
@@ -1890,6 +1893,7 @@ static int cadence_nand_read_buf(struct cdns_nand_ctrl *cdns_ctrl,
 		return status;
 
 	if (!cdns_ctrl->caps1->has_dma) {
+<<<<<<< HEAD
 		u8 data_dma_width = cdns_ctrl->caps2.data_dma_width;
 
 		int len_in_words = (data_dma_width == 4) ? len >> 2 : len >> 3;
@@ -1920,6 +1924,19 @@ static int cadence_nand_read_buf(struct cdns_nand_ctrl *cdns_ctrl,
 			/* copy rest of data */
 			memcpy(buf + read_bytes, cdns_ctrl->buf,
 			       len - read_bytes);
+=======
+		int len_in_words = len >> 2;
+
+		/* read alingment data */
+		ioread32_rep(cdns_ctrl->io.virt, buf, len_in_words);
+		if (sdma_size > len) {
+			/* read rest data from slave DMA interface if any */
+			ioread32_rep(cdns_ctrl->io.virt, cdns_ctrl->buf,
+				     sdma_size / 4 - len_in_words);
+			/* copy rest of data */
+			memcpy(buf + (len_in_words << 2), cdns_ctrl->buf,
+			       len - (len_in_words << 2));
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		return 0;
 	}
@@ -1963,6 +1980,7 @@ static int cadence_nand_write_buf(struct cdns_nand_ctrl *cdns_ctrl,
 		return status;
 
 	if (!cdns_ctrl->caps1->has_dma) {
+<<<<<<< HEAD
 		u8 data_dma_width = cdns_ctrl->caps2.data_dma_width;
 
 		int len_in_words = (data_dma_width == 4) ? len >> 2 : len >> 3;
@@ -1992,6 +2010,18 @@ static int cadence_nand_write_buf(struct cdns_nand_ctrl *cdns_ctrl,
 				writesq(cdns_ctrl->io.virt, cdns_ctrl->buf,
 					sdma_size / 8 - len_in_words);
 #endif
+=======
+		int len_in_words = len >> 2;
+
+		iowrite32_rep(cdns_ctrl->io.virt, buf, len_in_words);
+		if (sdma_size > len) {
+			/* copy rest of data */
+			memcpy(cdns_ctrl->buf, buf + (len_in_words << 2),
+			       len - (len_in_words << 2));
+			/* write all expected by nand controller data */
+			iowrite32_rep(cdns_ctrl->io.virt, cdns_ctrl->buf,
+				      sdma_size / 4 - len_in_words);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		return 0;

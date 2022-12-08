@@ -4,6 +4,7 @@
  * Copyright (c) 2017 Microchip Technology
  */
 
+<<<<<<< HEAD
 #include <linux/dsa/ksz_common.h>
 #include <linux/etherdevice.h>
 #include <linux/list.h>
@@ -83,6 +84,17 @@ static int ksz_connect(struct dsa_switch *ds)
 	return 0;
 }
 
+=======
+#include <linux/etherdevice.h>
+#include <linux/list.h>
+#include <net/dsa.h>
+#include "dsa_priv.h"
+
+/* Typically only one byte is used for tail tag. */
+#define KSZ_EGRESS_TAG_LEN		1
+#define KSZ_INGRESS_TAG_LEN		1
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct sk_buff *ksz_common_rcv(struct sk_buff *skb,
 				      struct net_device *dev,
 				      unsigned int port, unsigned int len)
@@ -91,8 +103,12 @@ static struct sk_buff *ksz_common_rcv(struct sk_buff *skb,
 	if (!skb->dev)
 		return NULL;
 
+<<<<<<< HEAD
 	if (pskb_trim_rcsum(skb, skb->len - len))
 		return NULL;
+=======
+	pskb_trim_rcsum(skb, skb->len - len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dsa_default_offload_fwd_mark(skb);
 
@@ -145,7 +161,11 @@ static struct sk_buff *ksz8795_rcv(struct sk_buff *skb, struct net_device *dev)
 }
 
 static const struct dsa_device_ops ksz8795_netdev_ops = {
+<<<<<<< HEAD
 	.name	= KSZ8795_NAME,
+=======
+	.name	= "ksz8795",
+>>>>>>> b7ba80a49124 (Commit)
 	.proto	= DSA_TAG_PROTO_KSZ8795,
 	.xmit	= ksz8795_xmit,
 	.rcv	= ksz8795_rcv,
@@ -153,6 +173,7 @@ static const struct dsa_device_ops ksz8795_netdev_ops = {
 };
 
 DSA_TAG_DRIVER(ksz8795_netdev_ops);
+<<<<<<< HEAD
 MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_KSZ8795, KSZ8795_NAME);
 
 /*
@@ -170,6 +191,22 @@ MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_KSZ8795, KSZ8795_NAME);
  * DA(6bytes)|SA(6bytes)|....|Data(nbytes)|ts(4bytes)|tag0(1byte)|FCS(4bytes)
  * ---------------------------------------------------------------------------
  * ts   : time stamp (Present only if bit 7 of tag0 is set)
+=======
+MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_KSZ8795);
+
+/*
+ * For Ingress (Host -> KSZ9477), 2 bytes are added before FCS.
+ * ---------------------------------------------------------------------------
+ * DA(6bytes)|SA(6bytes)|....|Data(nbytes)|tag0(1byte)|tag1(1byte)|FCS(4bytes)
+ * ---------------------------------------------------------------------------
+ * tag0 : Prioritization (not used now)
+ * tag1 : each bit represents port (eg, 0x01=port1, 0x02=port2, 0x10=port5)
+ *
+ * For Egress (KSZ9477 -> Host), 1 byte is added before FCS.
+ * ---------------------------------------------------------------------------
+ * DA(6bytes)|SA(6bytes)|....|Data(nbytes)|tag0(1byte)|FCS(4bytes)
+ * ---------------------------------------------------------------------------
+>>>>>>> b7ba80a49124 (Commit)
  * tag0 : zero-based value represents port
  *	  (eg, 0x00=port1, 0x02=port3, 0x06=port7)
  */
@@ -178,6 +215,7 @@ MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_KSZ8795, KSZ8795_NAME);
 #define KSZ9477_PTP_TAG_LEN		4
 #define KSZ9477_PTP_TAG_INDICATION	0x80
 
+<<<<<<< HEAD
 #define KSZ9477_TAIL_TAG_PRIO		GENMASK(8, 7)
 #define KSZ9477_TAIL_TAG_OVERRIDE	BIT(9)
 #define KSZ9477_TAIL_TAG_LOOKUP		BIT(10)
@@ -272,6 +310,14 @@ static struct sk_buff *ksz9477_xmit(struct sk_buff *skb,
 {
 	u16 queue_mapping = skb_get_queue_mapping(skb);
 	u8 prio = netdev_txq_to_tc(dev, queue_mapping);
+=======
+#define KSZ9477_TAIL_TAG_OVERRIDE	BIT(9)
+#define KSZ9477_TAIL_TAG_LOOKUP		BIT(10)
+
+static struct sk_buff *ksz9477_xmit(struct sk_buff *skb,
+				    struct net_device *dev)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct dsa_port *dp = dsa_slave_to_port(dev);
 	__be16 *tag;
 	u8 *addr;
@@ -281,21 +327,31 @@ static struct sk_buff *ksz9477_xmit(struct sk_buff *skb,
 		return NULL;
 
 	/* Tag encoding */
+<<<<<<< HEAD
 	ksz_xmit_timestamp(dp, skb);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tag = skb_put(skb, KSZ9477_INGRESS_TAG_LEN);
 	addr = skb_mac_header(skb);
 
 	val = BIT(dp->index);
 
+<<<<<<< HEAD
 	val |= FIELD_PREP(KSZ9477_TAIL_TAG_PRIO, prio);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (is_link_local_ether_addr(addr))
 		val |= KSZ9477_TAIL_TAG_OVERRIDE;
 
 	*tag = cpu_to_be16(val);
 
+<<<<<<< HEAD
 	return ksz_defer_xmit(dp, skb);
+=======
+	return skb;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct sk_buff *ksz9477_rcv(struct sk_buff *skb, struct net_device *dev)
@@ -306,15 +362,21 @@ static struct sk_buff *ksz9477_rcv(struct sk_buff *skb, struct net_device *dev)
 	unsigned int len = KSZ_EGRESS_TAG_LEN;
 
 	/* Extra 4-bytes PTP timestamp */
+<<<<<<< HEAD
 	if (tag[0] & KSZ9477_PTP_TAG_INDICATION) {
 		ksz_rcv_timestamp(skb, tag);
 		len += KSZ_PTP_TAG_LEN;
 	}
+=======
+	if (tag[0] & KSZ9477_PTP_TAG_INDICATION)
+		len += KSZ9477_PTP_TAG_LEN;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ksz_common_rcv(skb, dev, port, len);
 }
 
 static const struct dsa_device_ops ksz9477_netdev_ops = {
+<<<<<<< HEAD
 	.name	= KSZ9477_NAME,
 	.proto	= DSA_TAG_PROTO_KSZ9477,
 	.xmit	= ksz9477_xmit,
@@ -328,14 +390,29 @@ DSA_TAG_DRIVER(ksz9477_netdev_ops);
 MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_KSZ9477, KSZ9477_NAME);
 
 #define KSZ9893_TAIL_TAG_PRIO		GENMASK(4, 3)
+=======
+	.name	= "ksz9477",
+	.proto	= DSA_TAG_PROTO_KSZ9477,
+	.xmit	= ksz9477_xmit,
+	.rcv	= ksz9477_rcv,
+	.needed_tailroom = KSZ9477_INGRESS_TAG_LEN,
+};
+
+DSA_TAG_DRIVER(ksz9477_netdev_ops);
+MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_KSZ9477);
+
+>>>>>>> b7ba80a49124 (Commit)
 #define KSZ9893_TAIL_TAG_OVERRIDE	BIT(5)
 #define KSZ9893_TAIL_TAG_LOOKUP		BIT(6)
 
 static struct sk_buff *ksz9893_xmit(struct sk_buff *skb,
 				    struct net_device *dev)
 {
+<<<<<<< HEAD
 	u16 queue_mapping = skb_get_queue_mapping(skb);
 	u8 prio = netdev_txq_to_tc(dev, queue_mapping);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct dsa_port *dp = dsa_slave_to_port(dev);
 	u8 *addr;
 	u8 *tag;
@@ -344,13 +421,17 @@ static struct sk_buff *ksz9893_xmit(struct sk_buff *skb,
 		return NULL;
 
 	/* Tag encoding */
+<<<<<<< HEAD
 	ksz_xmit_timestamp(dp, skb);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tag = skb_put(skb, KSZ_INGRESS_TAG_LEN);
 	addr = skb_mac_header(skb);
 
 	*tag = BIT(dp->index);
 
+<<<<<<< HEAD
 	*tag |= FIELD_PREP(KSZ9893_TAIL_TAG_PRIO, prio);
 
 	if (is_link_local_ether_addr(addr))
@@ -386,6 +467,36 @@ MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_KSZ9893, KSZ9893_NAME);
  * DA(6bytes)|SA(6bytes)|....|Data(nbytes)|ts(4bytes)|tag0(1byte)|FCS(4bytes)
  * ---------------------------------------------------------------------------
  * ts   : time stamp (Present only if bit 7 of tag0 is set)
+=======
+	if (is_link_local_ether_addr(addr))
+		*tag |= KSZ9893_TAIL_TAG_OVERRIDE;
+
+	return skb;
+}
+
+static const struct dsa_device_ops ksz9893_netdev_ops = {
+	.name	= "ksz9893",
+	.proto	= DSA_TAG_PROTO_KSZ9893,
+	.xmit	= ksz9893_xmit,
+	.rcv	= ksz9477_rcv,
+	.needed_tailroom = KSZ_INGRESS_TAG_LEN,
+};
+
+DSA_TAG_DRIVER(ksz9893_netdev_ops);
+MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_KSZ9893);
+
+/* For xmit, 2 bytes are added before FCS.
+ * ---------------------------------------------------------------------------
+ * DA(6bytes)|SA(6bytes)|....|Data(nbytes)|tag0(1byte)|tag1(1byte)|FCS(4bytes)
+ * ---------------------------------------------------------------------------
+ * tag0 : represents tag override, lookup and valid
+ * tag1 : each bit represents port (eg, 0x01=port1, 0x02=port2, 0x80=port8)
+ *
+ * For rcv, 1 byte is added before FCS.
+ * ---------------------------------------------------------------------------
+ * DA(6bytes)|SA(6bytes)|....|Data(nbytes)|tag0(1byte)|FCS(4bytes)
+ * ---------------------------------------------------------------------------
+>>>>>>> b7ba80a49124 (Commit)
  * tag0 : zero-based value represents port
  *	  (eg, 0x00=port1, 0x02=port3, 0x07=port8)
  */
@@ -394,14 +505,20 @@ MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_KSZ9893, KSZ9893_NAME);
 #define LAN937X_TAIL_TAG_BLOCKING_OVERRIDE	BIT(11)
 #define LAN937X_TAIL_TAG_LOOKUP			BIT(12)
 #define LAN937X_TAIL_TAG_VALID			BIT(13)
+<<<<<<< HEAD
 #define LAN937X_TAIL_TAG_PRIO			GENMASK(10, 8)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define LAN937X_TAIL_TAG_PORT_MASK		7
 
 static struct sk_buff *lan937x_xmit(struct sk_buff *skb,
 				    struct net_device *dev)
 {
+<<<<<<< HEAD
 	u16 queue_mapping = skb_get_queue_mapping(skb);
 	u8 prio = netdev_txq_to_tc(dev, queue_mapping);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct dsa_port *dp = dsa_slave_to_port(dev);
 	const struct ethhdr *hdr = eth_hdr(skb);
 	__be16 *tag;
@@ -410,14 +527,20 @@ static struct sk_buff *lan937x_xmit(struct sk_buff *skb,
 	if (skb->ip_summed == CHECKSUM_PARTIAL && skb_checksum_help(skb))
 		return NULL;
 
+<<<<<<< HEAD
 	ksz_xmit_timestamp(dp, skb);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tag = skb_put(skb, LAN937X_EGRESS_TAG_LEN);
 
 	val = BIT(dp->index);
 
+<<<<<<< HEAD
 	val |= FIELD_PREP(LAN937X_TAIL_TAG_PRIO, prio);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (is_link_local_ether_addr(hdr->h_dest))
 		val |= LAN937X_TAIL_TAG_BLOCKING_OVERRIDE;
 
@@ -426,6 +549,7 @@ static struct sk_buff *lan937x_xmit(struct sk_buff *skb,
 
 	put_unaligned_be16(val, tag);
 
+<<<<<<< HEAD
 	return ksz_defer_xmit(dp, skb);
 }
 
@@ -441,6 +565,21 @@ static const struct dsa_device_ops lan937x_netdev_ops = {
 
 DSA_TAG_DRIVER(lan937x_netdev_ops);
 MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_LAN937X, LAN937X_NAME);
+=======
+	return skb;
+}
+
+static const struct dsa_device_ops lan937x_netdev_ops = {
+	.name	= "lan937x",
+	.proto	= DSA_TAG_PROTO_LAN937X,
+	.xmit	= lan937x_xmit,
+	.rcv	= ksz9477_rcv,
+	.needed_tailroom = LAN937X_EGRESS_TAG_LEN,
+};
+
+DSA_TAG_DRIVER(lan937x_netdev_ops);
+MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_LAN937X);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct dsa_tag_driver *dsa_tag_driver_array[] = {
 	&DSA_TAG_DRIVER_NAME(ksz8795_netdev_ops),

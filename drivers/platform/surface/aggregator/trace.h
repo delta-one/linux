@@ -96,7 +96,10 @@ TRACE_DEFINE_ENUM(SSAM_SSH_TC_POS);
 #define SSAM_SEQ_NOT_APPLICABLE		((u16)-1)
 #define SSAM_RQID_NOT_APPLICABLE	((u32)-1)
 #define SSAM_SSH_TC_NOT_APPLICABLE	0
+<<<<<<< HEAD
 #define SSAM_SSH_TID_NOT_APPLICABLE	((u8)-1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifndef _SURFACE_AGGREGATOR_TRACE_HELPERS
 #define _SURFACE_AGGREGATOR_TRACE_HELPERS
@@ -152,6 +155,7 @@ static inline u32 ssam_trace_get_request_id(const struct ssh_packet *p)
 }
 
 /**
+<<<<<<< HEAD
  * ssam_trace_get_request_tid() - Read the packet's request target ID.
  * @p: The packet.
  *
@@ -184,11 +188,17 @@ static inline u32 ssam_trace_get_request_sid(const struct ssh_packet *p)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ssam_trace_get_request_tc() - Read the packet's request target category.
  * @p: The packet.
  *
  * Return: Returns the packet's request target category (TC) field if the
+<<<<<<< HEAD
  * packet represents a request with command data, or %SSAM_SSH_TC_NOT_APPLICABLE
+=======
+ * packet represents a request with command data, or %SSAM_TC_NOT_APPLICABLE
+>>>>>>> b7ba80a49124 (Commit)
  * if not (e.g. flush request, control packet).
  */
 static inline u32 ssam_trace_get_request_tc(const struct ssh_packet *p)
@@ -265,6 +275,7 @@ static inline u32 ssam_trace_get_request_tc(const struct ssh_packet *p)
 		{ SSAM_RQID_NOT_APPLICABLE,		"N/A" }		\
 	)
 
+<<<<<<< HEAD
 #define ssam_show_ssh_tid(tid)						\
 	__print_symbolic(tid,						\
 		{ SSAM_SSH_TID_NOT_APPLICABLE,		"N/A"      },	\
@@ -277,6 +288,10 @@ static inline u32 ssam_trace_get_request_tc(const struct ssh_packet *p)
 
 #define ssam_show_ssh_tc(tc)						\
 	__print_symbolic(tc,						\
+=======
+#define ssam_show_ssh_tc(rqid)						\
+	__print_symbolic(rqid,						\
+>>>>>>> b7ba80a49124 (Commit)
 		{ SSAM_SSH_TC_NOT_APPLICABLE,		"N/A"  },	\
 		{ SSAM_SSH_TC_SAM,			"SAM"  },	\
 		{ SSAM_SSH_TC_BAT,			"BAT"  },	\
@@ -356,8 +371,11 @@ DECLARE_EVENT_CLASS(ssam_command_class,
 	TP_STRUCT__entry(
 		__field(u16, rqid)
 		__field(u16, len)
+<<<<<<< HEAD
 		__field(u8, tid)
 		__field(u8, sid)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		__field(u8, tc)
 		__field(u8, cid)
 		__field(u8, iid)
@@ -365,18 +383,26 @@ DECLARE_EVENT_CLASS(ssam_command_class,
 
 	TP_fast_assign(
 		__entry->rqid = get_unaligned_le16(&cmd->rqid);
+<<<<<<< HEAD
 		__entry->tid = cmd->tid;
 		__entry->sid = cmd->sid;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->tc = cmd->tc;
 		__entry->cid = cmd->cid;
 		__entry->iid = cmd->iid;
 		__entry->len = len;
 	),
 
+<<<<<<< HEAD
 	TP_printk("rqid=%#06x, tid=%s, sid=%s, tc=%s, cid=%#04x, iid=%#04x, len=%u",
 		__entry->rqid,
 		ssam_show_ssh_tid(__entry->tid),
 		ssam_show_ssh_tid(__entry->sid),
+=======
+	TP_printk("rqid=%#06x, tc=%s, cid=%#04x, iid=%#04x, len=%u",
+		__entry->rqid,
+>>>>>>> b7ba80a49124 (Commit)
 		ssam_show_ssh_tc(__entry->tc),
 		__entry->cid,
 		__entry->iid,
@@ -479,8 +505,11 @@ DECLARE_EVENT_CLASS(ssam_request_class,
 		__field(u8, tc)
 		__field(u16, cid)
 		__field(u16, iid)
+<<<<<<< HEAD
 		__field(u8, tid)
 		__field(u8, sid)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	),
 
 	TP_fast_assign(
@@ -490,20 +519,30 @@ DECLARE_EVENT_CLASS(ssam_request_class,
 		__entry->state = READ_ONCE(request->state);
 		__entry->rqid = ssam_trace_get_request_id(p);
 		ssam_trace_ptr_uid(p, __entry->uid);
+<<<<<<< HEAD
 		__entry->tid = ssam_trace_get_request_tid(p);
 		__entry->sid = ssam_trace_get_request_sid(p);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->tc = ssam_trace_get_request_tc(p);
 		__entry->cid = ssam_trace_get_command_field_u8(p, cid);
 		__entry->iid = ssam_trace_get_command_field_u8(p, iid);
 	),
 
+<<<<<<< HEAD
 	TP_printk("uid=%s, rqid=%s, ty=%s, sta=%s, tid=%s, sid=%s, tc=%s, cid=%s, iid=%s",
+=======
+	TP_printk("uid=%s, rqid=%s, ty=%s, sta=%s, tc=%s, cid=%s, iid=%s",
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->uid,
 		ssam_show_request_id(__entry->rqid),
 		ssam_show_request_type(__entry->state),
 		ssam_show_request_state(__entry->state),
+<<<<<<< HEAD
 		ssam_show_ssh_tid(__entry->tid),
 		ssam_show_ssh_tid(__entry->sid),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ssam_show_ssh_tc(__entry->tc),
 		ssam_show_generic_u8_field(__entry->cid),
 		ssam_show_generic_u8_field(__entry->iid)
@@ -529,8 +568,11 @@ DECLARE_EVENT_CLASS(ssam_request_status_class,
 		__field(u8, tc)
 		__field(u16, cid)
 		__field(u16, iid)
+<<<<<<< HEAD
 		__field(u8, tid)
 		__field(u8, sid)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	),
 
 	TP_fast_assign(
@@ -541,20 +583,30 @@ DECLARE_EVENT_CLASS(ssam_request_status_class,
 		__entry->rqid = ssam_trace_get_request_id(p);
 		__entry->status = status;
 		ssam_trace_ptr_uid(p, __entry->uid);
+<<<<<<< HEAD
 		__entry->tid = ssam_trace_get_request_tid(p);
 		__entry->sid = ssam_trace_get_request_sid(p);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->tc = ssam_trace_get_request_tc(p);
 		__entry->cid = ssam_trace_get_command_field_u8(p, cid);
 		__entry->iid = ssam_trace_get_command_field_u8(p, iid);
 	),
 
+<<<<<<< HEAD
 	TP_printk("uid=%s, rqid=%s, ty=%s, sta=%s, tid=%s, sid=%s, tc=%s, cid=%s, iid=%s, status=%d",
+=======
+	TP_printk("uid=%s, rqid=%s, ty=%s, sta=%s, tc=%s, cid=%s, iid=%s, status=%d",
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->uid,
 		ssam_show_request_id(__entry->rqid),
 		ssam_show_request_type(__entry->state),
 		ssam_show_request_state(__entry->state),
+<<<<<<< HEAD
 		ssam_show_ssh_tid(__entry->tid),
 		ssam_show_ssh_tid(__entry->sid),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ssam_show_ssh_tc(__entry->tc),
 		ssam_show_generic_u8_field(__entry->cid),
 		ssam_show_generic_u8_field(__entry->iid),

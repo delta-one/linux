@@ -117,13 +117,22 @@ static int xtfpga_spi_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void xtfpga_spi_remove(struct platform_device *pdev)
+=======
+static int xtfpga_spi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct xtfpga_spi *xspi = spi_master_get_devdata(master);
 
 	spi_bitbang_stop(&xspi->bitbang);
 	spi_master_put(master);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 MODULE_ALIAS("platform:" XTFPGA_SPI_NAME);
@@ -138,7 +147,11 @@ MODULE_DEVICE_TABLE(of, xtfpga_spi_of_match);
 
 static struct platform_driver xtfpga_spi_driver = {
 	.probe = xtfpga_spi_probe,
+<<<<<<< HEAD
 	.remove_new = xtfpga_spi_remove,
+=======
+	.remove = xtfpga_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = XTFPGA_SPI_NAME,
 		.of_match_table = of_match_ptr(xtfpga_spi_of_match),

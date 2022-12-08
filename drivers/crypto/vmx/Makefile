@@ -2,6 +2,7 @@
 obj-$(CONFIG_CRYPTO_DEV_VMX_ENCRYPT) += vmx-crypto.o
 vmx-crypto-objs := vmx.o aesp8-ppc.o ghashp8-ppc.o aes.o aes_cbc.o aes_ctr.o aes_xts.o ghash.o
 
+<<<<<<< HEAD
 ifeq ($(CONFIG_CPU_LITTLE_ENDIAN),y)
 override flavour := linux-ppc64le
 else
@@ -14,10 +15,17 @@ endif
 
 quiet_cmd_perl = PERL    $@
       cmd_perl = $(PERL) $< $(flavour) > $@
+=======
+quiet_cmd_perl = PERL    $@
+      cmd_perl = $(PERL) $< $(if $(CONFIG_CPU_LITTLE_ENDIAN), linux-ppc64le, linux-ppc64) > $@
+>>>>>>> b7ba80a49124 (Commit)
 
 targets += aesp8-ppc.S ghashp8-ppc.S
 
 $(obj)/aesp8-ppc.S $(obj)/ghashp8-ppc.S: $(obj)/%.S: $(src)/%.pl FORCE
 	$(call if_changed,perl)
+<<<<<<< HEAD
 
 OBJECT_FILES_NON_STANDARD_aesp8-ppc.o := y
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -44,6 +44,10 @@ enum {
 	P_HDMIPLL,
 	P_DPVCO,
 	P_DPLINK,
+<<<<<<< HEAD
+=======
+	P_CORE_BI_PLL_TEST_SE,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct clk_fixed_factor gpll0_div = {
@@ -302,59 +306,99 @@ static struct clk_alpha_pll_postdiv mmpll10_out_even = {
 static const struct parent_map mmss_xo_hdmi_map[] = {
 	{ P_XO, 0 },
 	{ P_HDMIPLL, 1 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 }
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data mmss_xo_hdmi[] = {
 	{ .fw_name = "xo" },
 	{ .fw_name = "hdmipll" },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map mmss_xo_dsi0pll_dsi1pll_map[] = {
 	{ P_XO, 0 },
 	{ P_DSI0PLL, 1 },
 	{ P_DSI1PLL, 2 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 }
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data mmss_xo_dsi0pll_dsi1pll[] = {
 	{ .fw_name = "xo" },
 	{ .fw_name = "dsi0dsi" },
 	{ .fw_name = "dsi1dsi" },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map mmss_xo_dsibyte_map[] = {
 	{ P_XO, 0 },
 	{ P_DSI0PLL_BYTE, 1 },
 	{ P_DSI1PLL_BYTE, 2 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 }
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data mmss_xo_dsibyte[] = {
 	{ .fw_name = "xo" },
 	{ .fw_name = "dsi0byte" },
 	{ .fw_name = "dsi1byte" },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map mmss_xo_dp_map[] = {
 	{ P_XO, 0 },
 	{ P_DPLINK, 1 },
 	{ P_DPVCO, 2 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 }
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data mmss_xo_dp[] = {
 	{ .fw_name = "xo" },
 	{ .fw_name = "dplink" },
 	{ .fw_name = "dpvco" },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map mmss_xo_gpll0_gpll0_div_map[] = {
 	{ P_XO, 0 },
 	{ P_GPLL0, 5 },
 	{ P_GPLL0_DIV, 6 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 }
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data mmss_xo_gpll0_gpll0_div[] = {
 	{ .fw_name = "xo" },
 	{ .fw_name = "gpll0" },
 	{ .hw = &gpll0_div.hw },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map mmss_xo_mmpll0_gpll0_gpll0_div_map[] = {
@@ -362,6 +406,10 @@ static const struct parent_map mmss_xo_mmpll0_gpll0_gpll0_div_map[] = {
 	{ P_MMPLL0_OUT_EVEN, 1 },
 	{ P_GPLL0, 5 },
 	{ P_GPLL0_DIV, 6 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 }
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data mmss_xo_mmpll0_gpll0_gpll0_div[] = {
@@ -369,6 +417,10 @@ static const struct clk_parent_data mmss_xo_mmpll0_gpll0_gpll0_div[] = {
 	{ .hw = &mmpll0_out_even.clkr.hw },
 	{ .fw_name = "gpll0" },
 	{ .hw = &gpll0_div.hw },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map mmss_xo_mmpll0_mmpll1_gpll0_gpll0_div_map[] = {
@@ -377,6 +429,10 @@ static const struct parent_map mmss_xo_mmpll0_mmpll1_gpll0_gpll0_div_map[] = {
 	{ P_MMPLL1_OUT_EVEN, 2 },
 	{ P_GPLL0, 5 },
 	{ P_GPLL0_DIV, 6 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 }
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data mmss_xo_mmpll0_mmpll1_gpll0_gpll0_div[] = {
@@ -385,6 +441,10 @@ static const struct clk_parent_data mmss_xo_mmpll0_mmpll1_gpll0_gpll0_div[] = {
 	{ .hw = &mmpll1_out_even.clkr.hw },
 	{ .fw_name = "gpll0" },
 	{ .hw = &gpll0_div.hw },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map mmss_xo_mmpll0_mmpll5_gpll0_gpll0_div_map[] = {
@@ -393,6 +453,10 @@ static const struct parent_map mmss_xo_mmpll0_mmpll5_gpll0_gpll0_div_map[] = {
 	{ P_MMPLL5_OUT_EVEN, 2 },
 	{ P_GPLL0, 5 },
 	{ P_GPLL0_DIV, 6 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 }
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data mmss_xo_mmpll0_mmpll5_gpll0_gpll0_div[] = {
@@ -401,6 +465,10 @@ static const struct clk_parent_data mmss_xo_mmpll0_mmpll5_gpll0_gpll0_div[] = {
 	{ .hw = &mmpll5_out_even.clkr.hw },
 	{ .fw_name = "gpll0" },
 	{ .hw = &gpll0_div.hw },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map mmss_xo_mmpll0_mmpll3_mmpll6_gpll0_gpll0_div_map[] = {
@@ -410,6 +478,10 @@ static const struct parent_map mmss_xo_mmpll0_mmpll3_mmpll6_gpll0_gpll0_div_map[
 	{ P_MMPLL6_OUT_EVEN, 4 },
 	{ P_GPLL0, 5 },
 	{ P_GPLL0_DIV, 6 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 }
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data mmss_xo_mmpll0_mmpll3_mmpll6_gpll0_gpll0_div[] = {
@@ -419,6 +491,10 @@ static const struct clk_parent_data mmss_xo_mmpll0_mmpll3_mmpll6_gpll0_gpll0_div
 	{ .hw = &mmpll6_out_even.clkr.hw },
 	{ .fw_name = "gpll0" },
 	{ .hw = &gpll0_div.hw },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map mmss_xo_mmpll4_mmpll7_mmpll10_gpll0_gpll0_div_map[] = {
@@ -428,6 +504,10 @@ static const struct parent_map mmss_xo_mmpll4_mmpll7_mmpll10_gpll0_gpll0_div_map
 	{ P_MMPLL10_OUT_EVEN, 3 },
 	{ P_GPLL0, 5 },
 	{ P_GPLL0_DIV, 6 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 }
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data mmss_xo_mmpll4_mmpll7_mmpll10_gpll0_gpll0_div[] = {
@@ -437,6 +517,10 @@ static const struct clk_parent_data mmss_xo_mmpll4_mmpll7_mmpll10_gpll0_gpll0_di
 	{ .hw = &mmpll10_out_even.clkr.hw },
 	{ .fw_name = "gpll0" },
 	{ .hw = &gpll0_div.hw },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map mmss_xo_mmpll0_mmpll7_mmpll10_gpll0_gpll0_div_map[] = {
@@ -446,6 +530,10 @@ static const struct parent_map mmss_xo_mmpll0_mmpll7_mmpll10_gpll0_gpll0_div_map
 	{ P_MMPLL10_OUT_EVEN, 3 },
 	{ P_GPLL0, 5 },
 	{ P_GPLL0_DIV, 6 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 }
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data mmss_xo_mmpll0_mmpll7_mmpll10_gpll0_gpll0_div[] = {
@@ -455,6 +543,10 @@ static const struct clk_parent_data mmss_xo_mmpll0_mmpll7_mmpll10_gpll0_gpll0_di
 	{ .hw = &mmpll10_out_even.clkr.hw },
 	{ .fw_name = "gpll0" },
 	{ .hw = &gpll0_div.hw },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map mmss_xo_mmpll0_mmpll4_mmpll7_mmpll10_gpll0_gpll0_div_map[] = {
@@ -465,6 +557,10 @@ static const struct parent_map mmss_xo_mmpll0_mmpll4_mmpll7_mmpll10_gpll0_gpll0_
 	{ P_MMPLL10_OUT_EVEN, 4 },
 	{ P_GPLL0, 5 },
 	{ P_GPLL0_DIV, 6 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 }
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data mmss_xo_mmpll0_mmpll4_mmpll7_mmpll10_gpll0_gpll0_div[] = {
@@ -475,6 +571,10 @@ static const struct clk_parent_data mmss_xo_mmpll0_mmpll4_mmpll7_mmpll10_gpll0_g
 	{ .hw = &mmpll10_out_even.clkr.hw },
 	{ .fw_name = "gpll0" },
 	{ .hw = &gpll0_div.hw },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct clk_rcg2 byte0_clk_src = {

@@ -349,11 +349,16 @@ static ssize_t available_slots_show(struct device *dev,
 }
 static DEVICE_ATTR_RO(available_slots);
 
+<<<<<<< HEAD
 ssize_t security_show(struct device *dev,
+=======
+__weak ssize_t security_show(struct device *dev,
+>>>>>>> b7ba80a49124 (Commit)
 		struct device_attribute *attr, char *buf)
 {
 	struct nvdimm *nvdimm = to_nvdimm(dev);
 
+<<<<<<< HEAD
 	/*
 	 * For the test version we need to poll the "hardware" in order
 	 * to get the updated status for unlock testing.
@@ -361,6 +366,8 @@ ssize_t security_show(struct device *dev,
 	if (IS_ENABLED(CONFIG_NVDIMM_SECURITY_TEST))
 		nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (test_bit(NVDIMM_SECURITY_OVERWRITE, &nvdimm->sec.flags))
 		return sprintf(buf, "overwrite\n");
 	if (test_bit(NVDIMM_SECURITY_DISABLED, &nvdimm->sec.flags))
@@ -572,7 +579,11 @@ static const struct device_type nvdimm_device_type = {
 	.groups = nvdimm_attribute_groups,
 };
 
+<<<<<<< HEAD
 bool is_nvdimm(const struct device *dev)
+=======
+bool is_nvdimm(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return dev->type == &nvdimm_device_type;
 }
@@ -624,10 +635,14 @@ struct nvdimm *__nvdimm_create(struct nvdimm_bus *nvdimm_bus,
 	nvdimm->sec.ext_flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
 	device_initialize(dev);
 	lockdep_set_class(&dev->mutex, &nvdimm_key);
+<<<<<<< HEAD
 	if (test_bit(NDD_REGISTER_SYNC, &flags))
 		nd_device_register_sync(dev);
 	else
 		nd_device_register(dev);
+=======
+	nd_device_register(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return nvdimm;
 }

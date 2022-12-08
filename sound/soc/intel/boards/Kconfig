@@ -554,12 +554,18 @@ config SND_SOC_INTEL_SOF_NAU8825_MACH
 	select SND_SOC_RT1015P
 	select SND_SOC_MAX98373_I2C
 	select SND_SOC_MAX98357A
+<<<<<<< HEAD
 	select SND_SOC_NAU8315
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select SND_SOC_DMIC
 	select SND_SOC_HDAC_HDMI
 	select SND_SOC_INTEL_HDA_DSP_COMMON
 	select SND_SOC_INTEL_SOF_MAXIM_COMMON
+<<<<<<< HEAD
 	select SND_SOC_INTEL_SOF_REALTEK_COMMON
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	   This adds support for ASoC machine driver for SOF platforms
 	   with nau8825 codec.
@@ -670,7 +676,10 @@ config SND_SOC_INTEL_SOUNDWIRE_SOF_MACH
 	select SND_SOC_RT1308_SDW
 	select SND_SOC_RT1308
 	select SND_SOC_RT1316_SDW
+<<<<<<< HEAD
 	select SND_SOC_RT1318_SDW
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select SND_SOC_RT715_SDW
 	select SND_SOC_RT715_SDCA_SDW
 	select SND_SOC_RT5682_SDW

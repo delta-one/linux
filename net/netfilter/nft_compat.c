@@ -324,8 +324,12 @@ static int nft_extension_dump_info(struct sk_buff *skb, int attr,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int nft_target_dump(struct sk_buff *skb,
 			   const struct nft_expr *expr, bool reset)
+=======
+static int nft_target_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct xt_target *target = expr->ops->data;
 	void *info = nft_expr_priv(expr);
@@ -573,14 +577,22 @@ nla_put_failure:
 	return -1;
 }
 
+<<<<<<< HEAD
 static int nft_match_dump(struct sk_buff *skb,
 			  const struct nft_expr *expr, bool reset)
+=======
+static int nft_match_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return __nft_match_dump(skb, expr, nft_expr_priv(expr));
 }
 
+<<<<<<< HEAD
 static int nft_match_large_dump(struct sk_buff *skb,
 				const struct nft_expr *e, bool reset)
+=======
+static int nft_match_large_dump(struct sk_buff *skb, const struct nft_expr *e)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nft_xt_match_priv *priv = nft_expr_priv(e);
 

@@ -5,7 +5,10 @@
 #include "common.h"
 
 int memblock_alloc_nid_checks(void);
+<<<<<<< HEAD
 int memblock_alloc_exact_nid_range_checks(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int __memblock_alloc_nid_numa_checks(void);
 
 #ifdef CONFIG_NUMA

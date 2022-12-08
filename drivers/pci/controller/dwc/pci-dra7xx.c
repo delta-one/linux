@@ -840,7 +840,11 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
 	}
 	dra7xx->mode = mode;
 
+<<<<<<< HEAD
 	ret = devm_request_threaded_irq(dev, irq, NULL, dra7xx_pcie_irq_handler,
+=======
+	ret = devm_request_irq(dev, irq, dra7xx_pcie_irq_handler,
+>>>>>>> b7ba80a49124 (Commit)
 			       IRQF_SHARED, "dra7xx-pcie-main", dra7xx);
 	if (ret) {
 		dev_err(dev, "failed to request irq\n");

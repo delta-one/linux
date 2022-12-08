@@ -95,5 +95,9 @@ Driver-specific Traps
    * - ``fid_miss``
      - ``exception``
      - When a packet enters the device it is classified to a filtering
+<<<<<<< HEAD
        identifier (FID) based on the ingress port and VLAN. This trap is used
+=======
+       indentifier (FID) based on the ingress port and VLAN. This trap is used
+>>>>>>> b7ba80a49124 (Commit)
        to trap packets for which a FID could not be found

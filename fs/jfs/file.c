@@ -85,24 +85,40 @@ static int jfs_release(struct inode *inode, struct file *file)
 	return 0;
 }
 
+<<<<<<< HEAD
 int jfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+int jfs_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		struct iattr *iattr)
 {
 	struct inode *inode = d_inode(dentry);
 	int rc;
 
+<<<<<<< HEAD
 	rc = setattr_prepare(&nop_mnt_idmap, dentry, iattr);
 	if (rc)
 		return rc;
 
 	if (is_quota_modification(&nop_mnt_idmap, inode, iattr)) {
+=======
+	rc = setattr_prepare(&init_user_ns, dentry, iattr);
+	if (rc)
+		return rc;
+
+	if (is_quota_modification(mnt_userns, inode, iattr)) {
+>>>>>>> b7ba80a49124 (Commit)
 		rc = dquot_initialize(inode);
 		if (rc)
 			return rc;
 	}
 	if ((iattr->ia_valid & ATTR_UID && !uid_eq(iattr->ia_uid, inode->i_uid)) ||
 	    (iattr->ia_valid & ATTR_GID && !gid_eq(iattr->ia_gid, inode->i_gid))) {
+<<<<<<< HEAD
 		rc = dquot_transfer(&nop_mnt_idmap, inode, iattr);
+=======
+		rc = dquot_transfer(mnt_userns, inode, iattr);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rc)
 			return rc;
 	}
@@ -119,11 +135,19 @@ int jfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 		jfs_truncate(inode);
 	}
 
+<<<<<<< HEAD
 	setattr_copy(&nop_mnt_idmap, inode, iattr);
 	mark_inode_dirty(inode);
 
 	if (iattr->ia_valid & ATTR_MODE)
 		rc = posix_acl_chmod(&nop_mnt_idmap, dentry, inode->i_mode);
+=======
+	setattr_copy(&init_user_ns, inode, iattr);
+	mark_inode_dirty(inode);
+
+	if (iattr->ia_valid & ATTR_MODE)
+		rc = posix_acl_chmod(&init_user_ns, inode, inode->i_mode);
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -133,7 +157,11 @@ const struct inode_operations jfs_file_inode_operations = {
 	.fileattr_get	= jfs_fileattr_get,
 	.fileattr_set	= jfs_fileattr_set,
 #ifdef CONFIG_JFS_POSIX_ACL
+<<<<<<< HEAD
 	.get_inode_acl	= jfs_get_acl,
+=======
+	.get_acl	= jfs_get_acl,
+>>>>>>> b7ba80a49124 (Commit)
 	.set_acl	= jfs_set_acl,
 #endif
 };

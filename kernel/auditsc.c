@@ -64,7 +64,10 @@
 #include <uapi/linux/limits.h>
 #include <uapi/linux/netfilter/nf_tables.h>
 #include <uapi/linux/openat2.h> // struct open_how
+<<<<<<< HEAD
 #include <uapi/linux/fanotify.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "audit.h"
 
@@ -807,6 +810,7 @@ static int audit_in_mask(const struct audit_krule *rule, unsigned long val)
 }
 
 /**
+<<<<<<< HEAD
  * __audit_filter_op - common filter helper for operations (syscall/uring/etc)
  * @tsk: associated task
  * @ctx: audit context
@@ -841,6 +845,8 @@ static int __audit_filter_op(struct task_struct *tsk,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * audit_filter_uring - apply filters to an io_uring operation
  * @tsk: associated task
  * @ctx: audit context
@@ -848,12 +854,31 @@ static int __audit_filter_op(struct task_struct *tsk,
 static void audit_filter_uring(struct task_struct *tsk,
 			       struct audit_context *ctx)
 {
+<<<<<<< HEAD
+=======
+	struct audit_entry *e;
+	enum audit_state state;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (auditd_test_task(tsk))
 		return;
 
 	rcu_read_lock();
+<<<<<<< HEAD
 	__audit_filter_op(tsk, ctx, &audit_filter_list[AUDIT_FILTER_URING_EXIT],
 			NULL, ctx->uring_op);
+=======
+	list_for_each_entry_rcu(e, &audit_filter_list[AUDIT_FILTER_URING_EXIT],
+				list) {
+		if (audit_in_mask(&e->rule, ctx->uring_op) &&
+		    audit_filter_rules(tsk, &e->rule, ctx, NULL, &state,
+				       false)) {
+			rcu_read_unlock();
+			ctx->current_state = state;
+			return;
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_read_unlock();
 }
 
@@ -865,13 +890,33 @@ static void audit_filter_uring(struct task_struct *tsk,
 static void audit_filter_syscall(struct task_struct *tsk,
 				 struct audit_context *ctx)
 {
+<<<<<<< HEAD
+=======
+	struct audit_entry *e;
+	enum audit_state state;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (auditd_test_task(tsk))
 		return;
 
 	rcu_read_lock();
+<<<<<<< HEAD
 	__audit_filter_op(tsk, ctx, &audit_filter_list[AUDIT_FILTER_EXIT],
 			NULL, ctx->major);
 	rcu_read_unlock();
+=======
+	list_for_each_entry_rcu(e, &audit_filter_list[AUDIT_FILTER_EXIT], list) {
+		if (audit_in_mask(&e->rule, ctx->major) &&
+		    audit_filter_rules(tsk, &e->rule, ctx, NULL,
+				       &state, false)) {
+			rcu_read_unlock();
+			ctx->current_state = state;
+			return;
+		}
+	}
+	rcu_read_unlock();
+	return;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -883,8 +928,22 @@ static int audit_filter_inode_name(struct task_struct *tsk,
 				   struct audit_context *ctx) {
 	int h = audit_hash_ino((u32)n->ino);
 	struct list_head *list = &audit_inode_hash[h];
+<<<<<<< HEAD
 
 	return __audit_filter_op(tsk, ctx, list, n, ctx->major);
+=======
+	struct audit_entry *e;
+	enum audit_state state;
+
+	list_for_each_entry_rcu(e, list, list) {
+		if (audit_in_mask(&e->rule, ctx->major) &&
+		    audit_filter_rules(tsk, &e->rule, ctx, n, &state, false)) {
+			ctx->current_state = state;
+			return 1;
+		}
+	}
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* At syscall exit time, this filter is called if any audit_names have been
@@ -1295,11 +1354,22 @@ out:
 static void audit_log_cap(struct audit_buffer *ab, char *prefix,
 			  kernel_cap_t *cap)
 {
+<<<<<<< HEAD
+=======
+	int i;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (cap_isclear(*cap)) {
 		audit_log_format(ab, " %s=0", prefix);
 		return;
 	}
+<<<<<<< HEAD
 	audit_log_format(ab, " %s=%016llx", prefix, cap->val);
+=======
+	audit_log_format(ab, " %s=", prefix);
+	CAP_FOR_EACH_U32(i)
+		audit_log_format(ab, "%08x", cap->cap[CAP_LAST_U32 - i]);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void audit_log_fcaps(struct audit_buffer *ab, struct audit_names *name)
@@ -2249,7 +2319,11 @@ static inline int audit_copy_fcaps(struct audit_names *name,
 	if (!dentry)
 		return 0;
 
+<<<<<<< HEAD
 	rc = get_vfs_caps_from_disk(&nop_mnt_idmap, dentry, &caps);
+=======
+	rc = get_vfs_caps_from_disk(&init_user_ns, dentry, &caps);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 
@@ -2804,7 +2878,11 @@ int __audit_log_bprm_fcaps(struct linux_binprm *bprm,
 	ax->d.next = context->aux;
 	context->aux = (void *)ax;
 
+<<<<<<< HEAD
 	get_vfs_caps_from_disk(&nop_mnt_idmap,
+=======
+	get_vfs_caps_from_disk(&init_user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 			       bprm->file->f_path.dentry, &vcaps);
 
 	ax->fcap.permitted = vcaps.permitted;
@@ -2874,6 +2952,7 @@ void __audit_log_kern_module(char *name)
 	context->type = AUDIT_KERN_MODULE;
 }
 
+<<<<<<< HEAD
 void __audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar)
 {
 	/* {subj,obj}_trust values are {0,1,2}: no,yes,unknown */
@@ -2889,6 +2968,12 @@ void __audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *fr
 			  response, friar->hdr.type, friar->rule_number,
 			  friar->subj_trust, friar->obj_trust);
 	}
+=======
+void __audit_fanotify(unsigned int response)
+{
+	audit_log(audit_context(), GFP_KERNEL,
+		AUDIT_FANOTIFY,	"resp=%u", response);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void __audit_tk_injoffset(struct timespec64 offset)

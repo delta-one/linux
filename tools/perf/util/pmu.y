@@ -18,7 +18,11 @@ do { \
 
 %}
 
+<<<<<<< HEAD
 %token PP_CONFIG
+=======
+%token PP_CONFIG PP_CONFIG1 PP_CONFIG2
+>>>>>>> b7ba80a49124 (Commit)
 %token PP_VALUE PP_ERROR
 %type <num> PP_VALUE
 %type <bits> bit_term
@@ -45,11 +49,26 @@ PP_CONFIG ':' bits
 				      $3));
 }
 |
+<<<<<<< HEAD
 PP_CONFIG PP_VALUE ':' bits
 {
 	ABORT_ON(perf_pmu__new_format(format, name,
 				      $2,
 				      $4));
+=======
+PP_CONFIG1 ':' bits
+{
+	ABORT_ON(perf_pmu__new_format(format, name,
+				      PERF_PMU_FORMAT_VALUE_CONFIG1,
+				      $3));
+}
+|
+PP_CONFIG2 ':' bits
+{
+	ABORT_ON(perf_pmu__new_format(format, name,
+				      PERF_PMU_FORMAT_VALUE_CONFIG2,
+				      $3));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 bits:

@@ -86,22 +86,41 @@ extern int selinux_enabled_boot;
 /* limitation of boundary depth  */
 #define POLICYDB_BOUNDS_MAXDEPTH	4
 
+<<<<<<< HEAD
 struct selinux_policy;
 
 struct selinux_state {
 #ifdef CONFIG_SECURITY_SELINUX_DEVELOP
 	bool enforcing;
 #endif
+=======
+struct selinux_avc;
+struct selinux_policy;
+
+struct selinux_state {
+#ifdef CONFIG_SECURITY_SELINUX_DISABLE
+	bool disabled;
+#endif
+#ifdef CONFIG_SECURITY_SELINUX_DEVELOP
+	bool enforcing;
+#endif
+	bool checkreqprot;
+>>>>>>> b7ba80a49124 (Commit)
 	bool initialized;
 	bool policycap[__POLICYDB_CAP_MAX];
 
 	struct page *status_page;
 	struct mutex status_lock;
 
+<<<<<<< HEAD
+=======
+	struct selinux_avc *avc;
+>>>>>>> b7ba80a49124 (Commit)
 	struct selinux_policy __rcu *policy;
 	struct mutex policy_mutex;
 } __randomize_layout;
 
+<<<<<<< HEAD
 void selinux_avc_init(void);
 
 extern struct selinux_state selinux_state;
@@ -130,21 +149,87 @@ static inline void enforcing_set(bool value)
 }
 #else
 static inline bool enforcing_enabled(void)
+=======
+void selinux_avc_init(struct selinux_avc **avc);
+
+extern struct selinux_state selinux_state;
+
+static inline bool selinux_initialized(const struct selinux_state *state)
+{
+	/* do a synchronized load to avoid race conditions */
+	return smp_load_acquire(&state->initialized);
+}
+
+static inline void selinux_mark_initialized(struct selinux_state *state)
+{
+	/* do a synchronized write to avoid race conditions */
+	smp_store_release(&state->initialized, true);
+}
+
+#ifdef CONFIG_SECURITY_SELINUX_DEVELOP
+static inline bool enforcing_enabled(struct selinux_state *state)
+{
+	return READ_ONCE(state->enforcing);
+}
+
+static inline void enforcing_set(struct selinux_state *state, bool value)
+{
+	WRITE_ONCE(state->enforcing, value);
+}
+#else
+static inline bool enforcing_enabled(struct selinux_state *state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return true;
 }
 
+<<<<<<< HEAD
 static inline void enforcing_set(bool value)
+=======
+static inline void enforcing_set(struct selinux_state *state, bool value)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 #endif
 
+<<<<<<< HEAD
 static inline bool checkreqprot_get(void)
 {
 	/* non-zero/true checkreqprot values are no longer supported */
 	return 0;
 }
 
+=======
+static inline bool checkreqprot_get(const struct selinux_state *state)
+{
+	return READ_ONCE(state->checkreqprot);
+}
+
+static inline void checkreqprot_set(struct selinux_state *state, bool value)
+{
+	if (value)
+		pr_err("SELinux: https://github.com/SELinuxProject/selinux-kernel/wiki/DEPRECATE-checkreqprot\n");
+	WRITE_ONCE(state->checkreqprot, value);
+}
+
+#ifdef CONFIG_SECURITY_SELINUX_DISABLE
+static inline bool selinux_disabled(struct selinux_state *state)
+{
+	return READ_ONCE(state->disabled);
+}
+
+static inline void selinux_mark_disabled(struct selinux_state *state)
+{
+	WRITE_ONCE(state->disabled, true);
+}
+#else
+static inline bool selinux_disabled(struct selinux_state *state)
+{
+	return false;
+}
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool selinux_policycap_netpeer(void)
 {
 	struct selinux_state *state = &selinux_state;
@@ -208,6 +293,7 @@ struct selinux_load_state {
 	struct selinux_policy_convert_data *convert_data;
 };
 
+<<<<<<< HEAD
 int security_mls_enabled(void);
 int security_load_policy(void *data, size_t len,
 			 struct selinux_load_state *load_state);
@@ -216,6 +302,22 @@ void selinux_policy_cancel(struct selinux_load_state *load_state);
 int security_read_policy(void **data, size_t *len);
 int security_read_state_kernel(void **data, size_t *len);
 int security_policycap_supported(unsigned int req_cap);
+=======
+int security_mls_enabled(struct selinux_state *state);
+int security_load_policy(struct selinux_state *state,
+			 void *data, size_t len,
+			 struct selinux_load_state *load_state);
+void selinux_policy_commit(struct selinux_state *state,
+			   struct selinux_load_state *load_state);
+void selinux_policy_cancel(struct selinux_state *state,
+			   struct selinux_load_state *load_state);
+int security_read_policy(struct selinux_state *state,
+			 void **data, size_t *len);
+int security_read_state_kernel(struct selinux_state *state,
+			       void **data, size_t *len);
+int security_policycap_supported(struct selinux_state *state,
+				 unsigned int req_cap);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SEL_VEC_MAX 32
 struct av_decision {
@@ -252,6 +354,7 @@ struct extended_perms {
 /* definitions of av_decision.flags */
 #define AVD_FLAGS_PERMISSIVE	0x0001
 
+<<<<<<< HEAD
 void security_compute_av(u32 ssid, u32 tsid,
 			 u16 tclass, struct av_decision *avd,
 			 struct extended_perms *xperms);
@@ -314,6 +417,96 @@ int security_bounded_transition(u32 oldsid, u32 newsid);
 int security_sid_mls_copy(u32 sid, u32 mls_sid, u32 *new_sid);
 
 int security_net_peersid_resolve(u32 nlbl_sid, u32 nlbl_type,
+=======
+void security_compute_av(struct selinux_state *state,
+			 u32 ssid, u32 tsid,
+			 u16 tclass, struct av_decision *avd,
+			 struct extended_perms *xperms);
+
+void security_compute_xperms_decision(struct selinux_state *state,
+				      u32 ssid, u32 tsid, u16 tclass,
+				      u8 driver,
+				      struct extended_perms_decision *xpermd);
+
+void security_compute_av_user(struct selinux_state *state,
+			      u32 ssid, u32 tsid,
+			      u16 tclass, struct av_decision *avd);
+
+int security_transition_sid(struct selinux_state *state,
+			    u32 ssid, u32 tsid, u16 tclass,
+			    const struct qstr *qstr, u32 *out_sid);
+
+int security_transition_sid_user(struct selinux_state *state,
+				 u32 ssid, u32 tsid, u16 tclass,
+				 const char *objname, u32 *out_sid);
+
+int security_member_sid(struct selinux_state *state, u32 ssid, u32 tsid,
+			u16 tclass, u32 *out_sid);
+
+int security_change_sid(struct selinux_state *state, u32 ssid, u32 tsid,
+			u16 tclass, u32 *out_sid);
+
+int security_sid_to_context(struct selinux_state *state, u32 sid,
+			    char **scontext, u32 *scontext_len);
+
+int security_sid_to_context_force(struct selinux_state *state,
+				  u32 sid, char **scontext, u32 *scontext_len);
+
+int security_sid_to_context_inval(struct selinux_state *state,
+				  u32 sid, char **scontext, u32 *scontext_len);
+
+int security_context_to_sid(struct selinux_state *state,
+			    const char *scontext, u32 scontext_len,
+			    u32 *out_sid, gfp_t gfp);
+
+int security_context_str_to_sid(struct selinux_state *state,
+				const char *scontext, u32 *out_sid, gfp_t gfp);
+
+int security_context_to_sid_default(struct selinux_state *state,
+				    const char *scontext, u32 scontext_len,
+				    u32 *out_sid, u32 def_sid, gfp_t gfp_flags);
+
+int security_context_to_sid_force(struct selinux_state *state,
+				  const char *scontext, u32 scontext_len,
+				  u32 *sid);
+
+int security_get_user_sids(struct selinux_state *state,
+			   u32 callsid, char *username,
+			   u32 **sids, u32 *nel);
+
+int security_port_sid(struct selinux_state *state,
+		      u8 protocol, u16 port, u32 *out_sid);
+
+int security_ib_pkey_sid(struct selinux_state *state,
+			 u64 subnet_prefix, u16 pkey_num, u32 *out_sid);
+
+int security_ib_endport_sid(struct selinux_state *state,
+			    const char *dev_name, u8 port_num, u32 *out_sid);
+
+int security_netif_sid(struct selinux_state *state,
+		       char *name, u32 *if_sid);
+
+int security_node_sid(struct selinux_state *state,
+		      u16 domain, void *addr, u32 addrlen,
+		      u32 *out_sid);
+
+int security_validate_transition(struct selinux_state *state,
+				 u32 oldsid, u32 newsid, u32 tasksid,
+				 u16 tclass);
+
+int security_validate_transition_user(struct selinux_state *state,
+				      u32 oldsid, u32 newsid, u32 tasksid,
+				      u16 tclass);
+
+int security_bounded_transition(struct selinux_state *state,
+				u32 oldsid, u32 newsid);
+
+int security_sid_mls_copy(struct selinux_state *state,
+			  u32 sid, u32 mls_sid, u32 *new_sid);
+
+int security_net_peersid_resolve(struct selinux_state *state,
+				 u32 nlbl_sid, u32 nlbl_type,
+>>>>>>> b7ba80a49124 (Commit)
 				 u32 xfrm_sid,
 				 u32 *peer_sid);
 
@@ -321,8 +514,13 @@ int security_get_classes(struct selinux_policy *policy,
 			 char ***classes, int *nclasses);
 int security_get_permissions(struct selinux_policy *policy,
 			     char *class, char ***perms, int *nperms);
+<<<<<<< HEAD
 int security_get_reject_unknown(void);
 int security_get_allow_unknown(void);
+=======
+int security_get_reject_unknown(struct selinux_state *state);
+int security_get_allow_unknown(struct selinux_state *state);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SECURITY_FS_USE_XATTR		1 /* use xattr */
 #define SECURITY_FS_USE_TRANS		2 /* use transition SIDs, e.g. devpts/tmpfs */
@@ -333,9 +531,16 @@ int security_get_allow_unknown(void);
 #define SECURITY_FS_USE_NATIVE		7 /* use native label support */
 #define SECURITY_FS_USE_MAX		7 /* Highest SECURITY_FS_USE_XXX */
 
+<<<<<<< HEAD
 int security_fs_use(struct super_block *sb);
 
 int security_genfs_sid(const char *fstype, const char *path, u16 sclass,
+=======
+int security_fs_use(struct selinux_state *state, struct super_block *sb);
+
+int security_genfs_sid(struct selinux_state *state,
+		       const char *fstype, const char *path, u16 sclass,
+>>>>>>> b7ba80a49124 (Commit)
 		       u32 *sid);
 
 int selinux_policy_genfs_sid(struct selinux_policy *policy,
@@ -343,6 +548,7 @@ int selinux_policy_genfs_sid(struct selinux_policy *policy,
 		       u32 *sid);
 
 #ifdef CONFIG_NETLABEL
+<<<<<<< HEAD
 int security_netlbl_secattr_to_sid(struct netlbl_lsm_secattr *secattr,
 				   u32 *sid);
 
@@ -350,12 +556,29 @@ int security_netlbl_sid_to_secattr(u32 sid,
 				   struct netlbl_lsm_secattr *secattr);
 #else
 static inline int security_netlbl_secattr_to_sid(struct netlbl_lsm_secattr *secattr,
+=======
+int security_netlbl_secattr_to_sid(struct selinux_state *state,
+				   struct netlbl_lsm_secattr *secattr,
+				   u32 *sid);
+
+int security_netlbl_sid_to_secattr(struct selinux_state *state,
+				   u32 sid,
+				   struct netlbl_lsm_secattr *secattr);
+#else
+static inline int security_netlbl_secattr_to_sid(struct selinux_state *state,
+					    struct netlbl_lsm_secattr *secattr,
+>>>>>>> b7ba80a49124 (Commit)
 					    u32 *sid)
 {
 	return -EIDRM;
 }
 
+<<<<<<< HEAD
 static inline int security_netlbl_sid_to_secattr(u32 sid,
+=======
+static inline int security_netlbl_sid_to_secattr(struct selinux_state *state,
+					 u32 sid,
+>>>>>>> b7ba80a49124 (Commit)
 					 struct netlbl_lsm_secattr *secattr)
 {
 	return -ENOENT;
@@ -367,7 +590,11 @@ const char *security_get_initial_sid_context(u32 sid);
 /*
  * status notifier using mmap interface
  */
+<<<<<<< HEAD
 extern struct page *selinux_kernel_status_page(void);
+=======
+extern struct page *selinux_kernel_status_page(struct selinux_state *state);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SELINUX_KERNEL_STATUS_VERSION	1
 struct selinux_kernel_status {
@@ -381,9 +608,18 @@ struct selinux_kernel_status {
 	 */
 } __packed;
 
+<<<<<<< HEAD
 extern void selinux_status_update_setenforce(int enforcing);
 extern void selinux_status_update_policyload(int seqno);
 extern void selinux_complete_init(void);
+=======
+extern void selinux_status_update_setenforce(struct selinux_state *state,
+					     int enforcing);
+extern void selinux_status_update_policyload(struct selinux_state *state,
+					     int seqno);
+extern void selinux_complete_init(void);
+extern int selinux_disable(struct selinux_state *state);
+>>>>>>> b7ba80a49124 (Commit)
 extern void exit_sel_fs(void);
 extern struct path selinux_null;
 extern void selnl_notify_setenforce(int val);
@@ -393,6 +629,10 @@ extern int selinux_nlmsg_lookup(u16 sclass, u16 nlmsg_type, u32 *perm);
 extern void avtab_cache_init(void);
 extern void ebitmap_cache_init(void);
 extern void hashtab_cache_init(void);
+<<<<<<< HEAD
 extern int security_sidtab_hash_stats(char *page);
+=======
+extern int security_sidtab_hash_stats(struct selinux_state *state, char *page);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _SELINUX_SECURITY_H_ */

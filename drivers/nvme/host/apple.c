@@ -763,7 +763,11 @@ static blk_status_t apple_nvme_queue_rq(struct blk_mq_hw_ctx *hctx,
 			goto out_free_cmd;
 	}
 
+<<<<<<< HEAD
 	nvme_start_request(req);
+=======
+	blk_mq_start_request(req);
+>>>>>>> b7ba80a49124 (Commit)
 	apple_nvme_submit_cmd(q, cmnd);
 	return BLK_STS_OK;
 
@@ -821,7 +825,11 @@ static void apple_nvme_disable(struct apple_nvme *anv, bool shutdown)
 	if (!dead && shutdown && freeze)
 		nvme_wait_freeze_timeout(&anv->ctrl, NVME_IO_TIMEOUT);
 
+<<<<<<< HEAD
 	nvme_quiesce_io_queues(&anv->ctrl);
+=======
+	nvme_stop_queues(&anv->ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!dead) {
 		if (READ_ONCE(anv->ioq.enabled)) {
@@ -829,6 +837,7 @@ static void apple_nvme_disable(struct apple_nvme *anv, bool shutdown)
 			apple_nvme_remove_cq(anv);
 		}
 
+<<<<<<< HEAD
 		/*
 		 * Always disable the NVMe controller after shutdown.
 		 * We need to do this to bring it back up later anyway, and we
@@ -846,12 +855,21 @@ static void apple_nvme_disable(struct apple_nvme *anv, bool shutdown)
 		if (shutdown)
 			nvme_disable_ctrl(&anv->ctrl, shutdown);
 		nvme_disable_ctrl(&anv->ctrl, false);
+=======
+		if (shutdown)
+			nvme_shutdown_ctrl(&anv->ctrl);
+		nvme_disable_ctrl(&anv->ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	WRITE_ONCE(anv->ioq.enabled, false);
 	WRITE_ONCE(anv->adminq.enabled, false);
 	mb(); /* ensure that nvme_queue_rq() sees that enabled is cleared */
+<<<<<<< HEAD
 	nvme_quiesce_admin_queue(&anv->ctrl);
+=======
+	nvme_stop_admin_queue(&anv->ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* last chance to complete any requests before nvme_cancel_request */
 	spin_lock_irqsave(&anv->lock, flags);
@@ -868,8 +886,13 @@ static void apple_nvme_disable(struct apple_nvme *anv, bool shutdown)
 	 * deadlocking blk-mq hot-cpu notifier.
 	 */
 	if (shutdown) {
+<<<<<<< HEAD
 		nvme_unquiesce_io_queues(&anv->ctrl);
 		nvme_unquiesce_admin_queue(&anv->ctrl);
+=======
+		nvme_start_queues(&anv->ctrl);
+		nvme_start_admin_queue(&anv->ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -1001,11 +1024,19 @@ static void apple_nvme_reset_work(struct work_struct *work)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	/* RTKit must be shut down cleanly for the (soft)-reset to work */
 	if (apple_rtkit_is_running(anv->rtk)) {
 		/* reset the controller if it is enabled */
 		if (anv->ctrl.ctrl_config & NVME_CC_ENABLE)
 			apple_nvme_disable(anv, false);
+=======
+	if (anv->ctrl.ctrl_config & NVME_CC_ENABLE)
+		apple_nvme_disable(anv, false);
+
+	/* RTKit must be shut down cleanly for the (soft)-reset to work */
+	if (apple_rtkit_is_running(anv->rtk)) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_dbg(anv->dev, "Trying to shut down RTKit before reset.");
 		ret = apple_rtkit_shutdown(anv->rtk);
 		if (ret)
@@ -1053,8 +1084,11 @@ static void apple_nvme_reset_work(struct work_struct *work)
 					 dma_max_mapping_size(anv->dev) >> 9);
 	anv->ctrl.max_segments = NVME_MAX_SEGS;
 
+<<<<<<< HEAD
 	dma_set_max_seg_size(anv->dev, 0xffffffff);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Enable NVMMU and linear submission queues.
 	 * While we could keep those disabled and pretend this is slightly
@@ -1107,7 +1141,11 @@ static void apple_nvme_reset_work(struct work_struct *work)
 
 	dev_dbg(anv->dev, "Starting admin queue");
 	apple_nvme_init_queue(&anv->adminq);
+<<<<<<< HEAD
 	nvme_unquiesce_admin_queue(&anv->ctrl);
+=======
+	nvme_start_admin_queue(&anv->ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!nvme_change_ctrl_state(&anv->ctrl, NVME_CTRL_CONNECTING)) {
 		dev_warn(anv->ctrl.device,
@@ -1116,7 +1154,11 @@ static void apple_nvme_reset_work(struct work_struct *work)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	ret = nvme_init_ctrl_finish(&anv->ctrl, false);
+=======
+	ret = nvme_init_ctrl_finish(&anv->ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto out;
 
@@ -1141,7 +1183,11 @@ static void apple_nvme_reset_work(struct work_struct *work)
 
 	anv->ctrl.queue_count = nr_io_queues + 1;
 
+<<<<<<< HEAD
 	nvme_unquiesce_io_queues(&anv->ctrl);
+=======
+	nvme_start_queues(&anv->ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 	nvme_wait_freeze(&anv->ctrl);
 	blk_mq_update_nr_hw_queues(&anv->tagset, 1);
 	nvme_unfreeze(&anv->ctrl);
@@ -1167,7 +1213,11 @@ out:
 	nvme_change_ctrl_state(&anv->ctrl, NVME_CTRL_DELETING);
 	nvme_get_ctrl(&anv->ctrl);
 	apple_nvme_disable(anv, false);
+<<<<<<< HEAD
 	nvme_mark_namespaces_dead(&anv->ctrl);
+=======
+	nvme_kill_queues(&anv->ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!queue_work(nvme_wq, &anv->remove_work))
 		nvme_put_ctrl(&anv->ctrl);
 }
@@ -1509,7 +1559,11 @@ static int apple_nvme_probe(struct platform_device *pdev)
 	}
 
 	ret = nvme_init_ctrl(&anv->ctrl, anv->dev, &nvme_ctrl_ops,
+<<<<<<< HEAD
 			     NVME_QUIRK_SKIP_CID_GEN | NVME_QUIRK_IDENTIFY_CNS);
+=======
+			     NVME_QUIRK_SKIP_CID_GEN);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err_probe(dev, ret, "Failed to initialize nvme_ctrl");
 		goto put_dev;
@@ -1521,6 +1575,17 @@ static int apple_nvme_probe(struct platform_device *pdev)
 		goto put_dev;
 	}
 
+<<<<<<< HEAD
+=======
+	if (!blk_get_queue(anv->ctrl.admin_q)) {
+		nvme_start_admin_queue(&anv->ctrl);
+		blk_mq_destroy_queue(anv->ctrl.admin_q);
+		anv->ctrl.admin_q = NULL;
+		ret = -ENODEV;
+		goto put_dev;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	nvme_reset_ctrl(&anv->ctrl);
 	async_schedule(apple_nvme_async_probe, anv);
 

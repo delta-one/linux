@@ -21,6 +21,7 @@
 		reg = <0x00000000 0x00000000 0x00000000 0x10000000>;
 	};
 
+<<<<<<< HEAD
 	clocks {
 		sys_clk: litex_sys_clk {
 			#clock-cells = <0>;
@@ -29,6 +30,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cpus {
 		#size-cells = <0x00>;
 		#address-cells = <0x01>;
@@ -149,6 +152,7 @@
 			litex,slot-size = <0x800>;
 			interrupts = <0x11 0x1>;
 		};
+<<<<<<< HEAD
 
 		mmc@8040000 {
 			compatible = "litex,mmc";
@@ -163,6 +167,8 @@
 			cap-sd-highspeed;
 			clocks = <&sys_clk>;
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	chosen {

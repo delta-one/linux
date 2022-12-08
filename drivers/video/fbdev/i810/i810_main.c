@@ -2143,9 +2143,12 @@ static int i810fb_init(void)
 {
 	char *option = NULL;
 
+<<<<<<< HEAD
 	if (fb_modesetting_disabled("i810fb"))
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (fb_get_options("i810fb", &option))
 		return -ENODEV;
 	i810fb_setup(option);
@@ -2162,9 +2165,12 @@ static int i810fb_init(void)
 
 static int i810fb_init(void)
 {
+<<<<<<< HEAD
 	if (fb_modesetting_disabled("i810fb"))
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hsync1 *= 1000;
 	hsync2 *= 1000;
 

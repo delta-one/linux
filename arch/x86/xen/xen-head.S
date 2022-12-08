@@ -49,7 +49,11 @@ SYM_CODE_START(startup_xen)
 	ANNOTATE_NOENDBR
 	cld
 
+<<<<<<< HEAD
 	leaq	(__end_init_task - PTREGS_SIZE)(%rip), %rsp
+=======
+	mov initial_stack(%rip), %rsp
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Set up %gs.
 	 *
@@ -76,6 +80,7 @@ SYM_CODE_START(asm_cpu_bringup_and_idle)
 
 	call cpu_bringup_and_idle
 SYM_CODE_END(asm_cpu_bringup_and_idle)
+<<<<<<< HEAD
 
 SYM_CODE_START(xen_cpu_bringup_again)
 	UNWIND_HINT_FUNC
@@ -83,6 +88,8 @@ SYM_CODE_START(xen_cpu_bringup_again)
 	UNWIND_HINT_REGS
 	call	cpu_bringup_and_idle
 SYM_CODE_END(xen_cpu_bringup_again)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 .popsection
 #endif
 #endif

@@ -759,7 +759,11 @@ static int clcdfb_of_vram_setup(struct clcd_fb *fb)
 {
 	int err;
 	struct device_node *memory;
+<<<<<<< HEAD
 	struct resource res;
+=======
+	u64 size;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = clcdfb_of_init_display(fb);
 	if (err)
@@ -769,6 +773,7 @@ static int clcdfb_of_vram_setup(struct clcd_fb *fb)
 	if (!memory)
 		return -ENODEV;
 
+<<<<<<< HEAD
 
 	err = of_address_to_resource(memory, 0, &res);
 	if (err)
@@ -783,6 +788,20 @@ static int clcdfb_of_vram_setup(struct clcd_fb *fb)
 out:
 	of_node_put(memory);
 	return err;
+=======
+	fb->fb.screen_base = of_iomap(memory, 0);
+	if (!fb->fb.screen_base) {
+		of_node_put(memory);
+		return -ENOMEM;
+	}
+
+	fb->fb.fix.smem_start = of_translate_address(memory,
+			of_get_address(memory, 0, &size, NULL));
+	fb->fb.fix.smem_len = size;
+	of_node_put(memory);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int clcdfb_of_vram_mmap(struct clcd_fb *fb, struct vm_area_struct *vma)
@@ -856,7 +875,11 @@ static struct clcd_board *clcdfb_of_get_board(struct amba_device *dev)
 	board->caps = CLCD_CAP_ALL;
 	board->check = clcdfb_check;
 	board->decode = clcdfb_decode;
+<<<<<<< HEAD
 	if (of_property_present(node, "memory-region")) {
+=======
+	if (of_find_property(node, "memory-region", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		board->setup = clcdfb_of_vram_setup;
 		board->mmap = clcdfb_of_vram_mmap;
 		board->remove = clcdfb_of_vram_remove;

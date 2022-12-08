@@ -63,6 +63,7 @@ ENTRY(_diag210_amode31)
 ENDPROC(_diag210_amode31)
 
 /*
+<<<<<<< HEAD
  * int diag8c(struct diag8c *addr, struct ccw_dev_id *devno, size_t len)
 */
 ENTRY(_diag8c_amode31)
@@ -76,6 +77,8 @@ ENTRY(_diag8c_amode31)
 	EX_TABLE_AMODE31(.Ldiag8c_ex, .Ldiag8c_ex)
 ENDPROC(_diag8c_amode31)
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * int _diag26c_amode31(void *req, void *resp, enum diag26c_sc subcode)
  */
 ENTRY(_diag26c_amode31)

@@ -114,16 +114,26 @@ static int sk_diag_show_rqlen(struct sock *sk, struct sk_buff *nlskb)
 	return nla_put(nlskb, UNIX_DIAG_RQLEN, sizeof(rql), &rql);
 }
 
+<<<<<<< HEAD
 static int sk_diag_dump_uid(struct sock *sk, struct sk_buff *nlskb,
 			    struct user_namespace *user_ns)
 {
 	uid_t uid = from_kuid_munged(user_ns, sock_i_uid(sk));
+=======
+static int sk_diag_dump_uid(struct sock *sk, struct sk_buff *nlskb)
+{
+	uid_t uid = from_kuid_munged(sk_user_ns(nlskb->sk), sock_i_uid(sk));
+>>>>>>> b7ba80a49124 (Commit)
 	return nla_put(nlskb, UNIX_DIAG_UID, sizeof(uid_t), &uid);
 }
 
 static int sk_diag_fill(struct sock *sk, struct sk_buff *skb, struct unix_diag_req *req,
+<<<<<<< HEAD
 			struct user_namespace *user_ns,
 			u32 portid, u32 seq, u32 flags, int sk_ino)
+=======
+		u32 portid, u32 seq, u32 flags, int sk_ino)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nlmsghdr *nlh;
 	struct unix_diag_msg *rep;
@@ -169,7 +179,11 @@ static int sk_diag_fill(struct sock *sk, struct sk_buff *skb, struct unix_diag_r
 		goto out_nlmsg_trim;
 
 	if ((req->udiag_show & UDIAG_SHOW_UID) &&
+<<<<<<< HEAD
 	    sk_diag_dump_uid(sk, skb, user_ns))
+=======
+	    sk_diag_dump_uid(sk, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_nlmsg_trim;
 
 	nlmsg_end(skb, nlh);
@@ -181,8 +195,12 @@ out_nlmsg_trim:
 }
 
 static int sk_diag_dump(struct sock *sk, struct sk_buff *skb, struct unix_diag_req *req,
+<<<<<<< HEAD
 			struct user_namespace *user_ns,
 			u32 portid, u32 seq, u32 flags)
+=======
+		u32 portid, u32 seq, u32 flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int sk_ino;
 
@@ -193,7 +211,11 @@ static int sk_diag_dump(struct sock *sk, struct sk_buff *skb, struct unix_diag_r
 	if (!sk_ino)
 		return 0;
 
+<<<<<<< HEAD
 	return sk_diag_fill(sk, skb, req, user_ns, portid, seq, flags, sk_ino);
+=======
+	return sk_diag_fill(sk, skb, req, portid, seq, flags, sk_ino);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int unix_diag_dump(struct sk_buff *skb, struct netlink_callback *cb)
@@ -217,7 +239,11 @@ static int unix_diag_dump(struct sk_buff *skb, struct netlink_callback *cb)
 				goto next;
 			if (!(req->udiag_states & (1 << sk->sk_state)))
 				goto next;
+<<<<<<< HEAD
 			if (sk_diag_dump(sk, skb, req, sk_user_ns(skb->sk),
+=======
+			if (sk_diag_dump(sk, skb, req,
+>>>>>>> b7ba80a49124 (Commit)
 					 NETLINK_CB(cb->skb).portid,
 					 cb->nlh->nlmsg_seq,
 					 NLM_F_MULTI) < 0) {
@@ -285,8 +311,12 @@ again:
 	if (!rep)
 		goto out;
 
+<<<<<<< HEAD
 	err = sk_diag_fill(sk, rep, req, sk_user_ns(NETLINK_CB(in_skb).sk),
 			   NETLINK_CB(in_skb).portid,
+=======
+	err = sk_diag_fill(sk, rep, req, NETLINK_CB(in_skb).portid,
+>>>>>>> b7ba80a49124 (Commit)
 			   nlh->nlmsg_seq, 0, req->udiag_ino);
 	if (err < 0) {
 		nlmsg_free(rep);

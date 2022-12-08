@@ -85,6 +85,7 @@ bool vxlan_addr_equal(const union vxlan_addr *a, const union vxlan_addr *b)
 		return a->sin.sin_addr.s_addr == b->sin.sin_addr.s_addr;
 }
 
+<<<<<<< HEAD
 static inline int vxlan_nla_get_addr(union vxlan_addr *ip,
 				     const struct nlattr *nla)
 {
@@ -118,6 +119,8 @@ static inline bool vxlan_addr_is_multicast(const union vxlan_addr *ip)
 		return ipv4_is_multicast(ip->sin.sin_addr.s_addr);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else /* !CONFIG_IPV6 */
 
 static inline
@@ -126,6 +129,7 @@ bool vxlan_addr_equal(const union vxlan_addr *a, const union vxlan_addr *b)
 	return a->sin.sin_addr.s_addr == b->sin.sin_addr.s_addr;
 }
 
+<<<<<<< HEAD
 static inline int vxlan_nla_get_addr(union vxlan_addr *ip,
 				     const struct nlattr *nla)
 {
@@ -161,6 +165,10 @@ static inline size_t vxlan_addr_size(const union vxlan_addr *ip)
 		return sizeof(__be32);
 }
 
+=======
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct vxlan_vni_node *
 vxlan_vnifilter_lookup(struct vxlan_dev *vxlan, __be32 vni)
 {
@@ -193,8 +201,11 @@ int vxlan_fdb_update(struct vxlan_dev *vxlan,
 		     __be16 port, __be32 src_vni, __be32 vni,
 		     __u32 ifindex, __u16 ndm_flags, u32 nhid,
 		     bool swdev_notify, struct netlink_ext_ack *extack);
+<<<<<<< HEAD
 void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
 		    __be32 default_vni, struct vxlan_rdst *rdst, bool did_rsc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int vxlan_vni_in_use(struct net *src_net, struct vxlan_dev *vxlan,
 		     struct vxlan_config *conf, __be32 vni);
 
@@ -227,6 +238,7 @@ int vxlan_igmp_join(struct vxlan_dev *vxlan, union vxlan_addr *rip,
 		    int rifindex);
 int vxlan_igmp_leave(struct vxlan_dev *vxlan, union vxlan_addr *rip,
 		     int rifindex);
+<<<<<<< HEAD
 
 /* vxlan_mdb.c */
 int vxlan_mdb_dump(struct net_device *dev, struct sk_buff *skb,
@@ -243,4 +255,6 @@ netdev_tx_t vxlan_mdb_xmit(struct vxlan_dev *vxlan,
 			   struct sk_buff *skb);
 int vxlan_mdb_init(struct vxlan_dev *vxlan);
 void vxlan_mdb_fini(struct vxlan_dev *vxlan);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

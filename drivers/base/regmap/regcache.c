@@ -242,7 +242,11 @@ int regcache_read(struct regmap *map,
 	int ret;
 
 	if (map->cache_type == REGCACHE_NONE)
+<<<<<<< HEAD
 		return -EINVAL;
+=======
+		return -ENOSYS;
+>>>>>>> b7ba80a49124 (Commit)
 
 	BUG_ON(!map->cache_ops);
 
@@ -349,9 +353,12 @@ int regcache_sync(struct regmap *map)
 	const char *name;
 	bool bypass;
 
+<<<<<<< HEAD
 	if (WARN_ON(map->cache_type == REGCACHE_NONE))
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BUG_ON(!map->cache_ops);
 
 	map->lock(map->lock_arg);
@@ -421,9 +428,12 @@ int regcache_sync_region(struct regmap *map, unsigned int min,
 	const char *name;
 	bool bypass;
 
+<<<<<<< HEAD
 	if (WARN_ON(map->cache_type == REGCACHE_NONE))
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BUG_ON(!map->cache_ops);
 
 	map->lock(map->lock_arg);

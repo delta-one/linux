@@ -11,6 +11,7 @@
 #include "bus.h"
 #include "class.h"
 #include "mux.h"
+<<<<<<< HEAD
 #include "retimer.h"
 
 static inline int
@@ -27,6 +28,8 @@ typec_altmode_set_retimer(struct altmode *alt, unsigned long conf, void *data)
 
 	return typec_retimer_set(alt->retimer, &state);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline int
 typec_altmode_set_mux(struct altmode *alt, unsigned long conf, void *data)
@@ -43,6 +46,7 @@ typec_altmode_set_mux(struct altmode *alt, unsigned long conf, void *data)
 	return typec_mux_set(alt->mux, &state);
 }
 
+<<<<<<< HEAD
 /* Wrapper to set various Type-C port switches together. */
 static inline int
 typec_altmode_set_switches(struct altmode *alt, unsigned long conf, void *data)
@@ -56,6 +60,8 @@ typec_altmode_set_switches(struct altmode *alt, unsigned long conf, void *data)
 	return typec_altmode_set_mux(alt, conf, data);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int typec_altmode_set_state(struct typec_altmode *adev,
 				   unsigned long conf, void *data)
 {
@@ -64,7 +70,11 @@ static int typec_altmode_set_state(struct typec_altmode *adev,
 
 	port_altmode = is_port ? to_altmode(adev) : to_altmode(adev)->partner;
 
+<<<<<<< HEAD
 	return typec_altmode_set_switches(port_altmode, conf, data);
+=======
+	return typec_altmode_set_mux(port_altmode, conf, data);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* -------------------------------------------------------------------------- */
@@ -102,7 +112,11 @@ int typec_altmode_notify(struct typec_altmode *adev,
 	is_port = is_typec_port(adev->dev.parent);
 	partner = altmode->partner;
 
+<<<<<<< HEAD
 	ret = typec_altmode_set_switches(is_port ? altmode : partner, conf, data);
+=======
+	ret = typec_altmode_set_mux(is_port ? altmode : partner, conf, data);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -163,7 +177,11 @@ int typec_altmode_exit(struct typec_altmode *adev)
 	if (!adev || !adev->active)
 		return 0;
 
+<<<<<<< HEAD
 	if (!pdev->ops || !pdev->ops->exit)
+=======
+	if (!pdev->ops || !pdev->ops->enter)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOPNOTSUPP;
 
 	/* Moving to USB Safe State */
@@ -350,9 +368,15 @@ static int typec_match(struct device *dev, struct device_driver *driver)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int typec_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct typec_altmode *altmode = to_typec_altmode(dev);
+=======
+static int typec_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct typec_altmode *altmode = to_typec_altmode(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (add_uevent_var(env, "SVID=%04X", altmode->svid))
 		return -ENOMEM;

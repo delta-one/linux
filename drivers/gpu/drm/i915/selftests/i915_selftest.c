@@ -135,7 +135,11 @@ static int __run_selftests(const char *name,
 	int err = 0;
 
 	while (!i915_selftest.random_seed)
+<<<<<<< HEAD
 		i915_selftest.random_seed = get_random_u32();
+=======
+		i915_selftest.random_seed = get_random_int();
+>>>>>>> b7ba80a49124 (Commit)
 
 	i915_selftest.timeout_jiffies =
 		i915_selftest.timeout_ms ?

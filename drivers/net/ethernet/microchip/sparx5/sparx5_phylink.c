@@ -138,6 +138,10 @@ const struct phylink_pcs_ops sparx5_phylink_pcs_ops = {
 };
 
 const struct phylink_mac_ops sparx5_phylink_mac_ops = {
+<<<<<<< HEAD
+=======
+	.validate = phylink_generic_validate,
+>>>>>>> b7ba80a49124 (Commit)
 	.mac_select_pcs = sparx5_phylink_mac_select_pcs,
 	.mac_config = sparx5_phylink_mac_config,
 	.mac_link_down = sparx5_phylink_mac_link_down,

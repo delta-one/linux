@@ -236,7 +236,11 @@ err_ioremap:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void scoop_remove(struct platform_device *pdev)
+=======
+static int scoop_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct scoop_dev *sdev = platform_get_drvdata(pdev);
 
@@ -246,11 +250,20 @@ static void scoop_remove(struct platform_device *pdev)
 	platform_set_drvdata(pdev, NULL);
 	iounmap(sdev->base);
 	kfree(sdev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver scoop_driver = {
 	.probe		= scoop_probe,
+<<<<<<< HEAD
 	.remove_new	= scoop_remove,
+=======
+	.remove		= scoop_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.suspend	= scoop_suspend,
 	.resume		= scoop_resume,
 	.driver		= {

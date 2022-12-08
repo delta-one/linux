@@ -71,7 +71,11 @@ struct f_hidg {
 	wait_queue_head_t		write_queue;
 	struct usb_request		*req;
 
+<<<<<<< HEAD
 	struct device			dev;
+=======
+	int				minor;
+>>>>>>> b7ba80a49124 (Commit)
 	struct cdev			cdev;
 	struct usb_function		func;
 
@@ -84,6 +88,7 @@ static inline struct f_hidg *func_to_hidg(struct usb_function *f)
 	return container_of(f, struct f_hidg, func);
 }
 
+<<<<<<< HEAD
 static void hidg_release(struct device *dev)
 {
 	struct f_hidg *hidg = container_of(dev, struct f_hidg, dev);
@@ -92,6 +97,8 @@ static void hidg_release(struct device *dev)
 	kfree(hidg);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*-------------------------------------------------------------------------*/
 /*                           Static descriptors                            */
 
@@ -912,7 +919,13 @@ static int hidg_bind(struct usb_configuration *c, struct usb_function *f)
 	struct usb_ep		*ep;
 	struct f_hidg		*hidg = func_to_hidg(f);
 	struct usb_string	*us;
+<<<<<<< HEAD
 	int			status;
+=======
+	struct device		*device;
+	int			status;
+	dev_t			dev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* maybe allocate device-global string IDs, and patch descriptors */
 	us = usb_gstrings_attach(c->cdev, ct_func_strings,
@@ -1005,11 +1018,29 @@ static int hidg_bind(struct usb_configuration *c, struct usb_function *f)
 
 	/* create char device */
 	cdev_init(&hidg->cdev, &f_hidg_fops);
+<<<<<<< HEAD
 	status = cdev_device_add(&hidg->cdev, &hidg->dev);
 	if (status)
 		goto fail_free_descs;
 
 	return 0;
+=======
+	dev = MKDEV(major, hidg->minor);
+	status = cdev_add(&hidg->cdev, dev, 1);
+	if (status)
+		goto fail_free_descs;
+
+	device = device_create(hidg_class, NULL, dev, NULL,
+			       "%s%d", "hidg", hidg->minor);
+	if (IS_ERR(device)) {
+		status = PTR_ERR(device);
+		goto del;
+	}
+
+	return 0;
+del:
+	cdev_del(&hidg->cdev);
+>>>>>>> b7ba80a49124 (Commit)
 fail_free_descs:
 	usb_free_all_descriptors(f);
 fail:
@@ -1240,7 +1271,13 @@ static void hidg_free(struct usb_function *f)
 
 	hidg = func_to_hidg(f);
 	opts = container_of(f->fi, struct f_hid_opts, func_inst);
+<<<<<<< HEAD
 	put_device(&hidg->dev);
+=======
+	kfree(hidg->report_desc);
+	kfree(hidg->set_report_buf);
+	kfree(hidg);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&opts->lock);
 	--opts->refcnt;
 	mutex_unlock(&opts->lock);
@@ -1250,7 +1287,12 @@ static void hidg_unbind(struct usb_configuration *c, struct usb_function *f)
 {
 	struct f_hidg *hidg = func_to_hidg(f);
 
+<<<<<<< HEAD
 	cdev_device_del(&hidg->cdev, &hidg->dev);
+=======
+	device_destroy(hidg_class, MKDEV(major, hidg->minor));
+	cdev_del(&hidg->cdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	usb_free_all_descriptors(f);
 }
@@ -1259,7 +1301,10 @@ static struct usb_function *hidg_alloc(struct usb_function_instance *fi)
 {
 	struct f_hidg *hidg;
 	struct f_hid_opts *opts;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* allocate and initialize one new instance */
 	hidg = kzalloc(sizeof(*hidg), GFP_KERNEL);
@@ -1269,6 +1314,7 @@ static struct usb_function *hidg_alloc(struct usb_function_instance *fi)
 	opts = container_of(fi, struct f_hid_opts, func_inst);
 
 	mutex_lock(&opts->lock);
+<<<<<<< HEAD
 
 	device_initialize(&hidg->dev);
 	hidg->dev.release = hidg_release;
@@ -1278,22 +1324,40 @@ static struct usb_function *hidg_alloc(struct usb_function_instance *fi)
 	if (ret)
 		goto err_unlock;
 
+=======
+	++opts->refcnt;
+
+	hidg->minor = opts->minor;
+>>>>>>> b7ba80a49124 (Commit)
 	hidg->bInterfaceSubClass = opts->subclass;
 	hidg->bInterfaceProtocol = opts->protocol;
 	hidg->report_length = opts->report_length;
 	hidg->report_desc_length = opts->report_desc_length;
 	if (opts->report_desc) {
+<<<<<<< HEAD
 		hidg->report_desc = devm_kmemdup(&hidg->dev, opts->report_desc,
 						 opts->report_desc_length,
 						 GFP_KERNEL);
 		if (!hidg->report_desc) {
 			ret = -ENOMEM;
 			goto err_put_device;
+=======
+		hidg->report_desc = kmemdup(opts->report_desc,
+					    opts->report_desc_length,
+					    GFP_KERNEL);
+		if (!hidg->report_desc) {
+			kfree(hidg);
+			mutex_unlock(&opts->lock);
+			return ERR_PTR(-ENOMEM);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 	hidg->use_out_ep = !opts->no_out_endpoint;
 
+<<<<<<< HEAD
 	++opts->refcnt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&opts->lock);
 
 	hidg->func.name    = "hid";
@@ -1308,12 +1372,15 @@ static struct usb_function *hidg_alloc(struct usb_function_instance *fi)
 	hidg->qlen	   = 4;
 
 	return &hidg->func;
+<<<<<<< HEAD
 
 err_put_device:
 	put_device(&hidg->dev);
 err_unlock:
 	mutex_unlock(&opts->lock);
 	return ERR_PTR(ret);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 DECLARE_USB_FUNCTION_INIT(hid, hidg_alloc_inst, hidg_alloc);
@@ -1325,7 +1392,11 @@ int ghid_setup(struct usb_gadget *g, int count)
 	int status;
 	dev_t dev;
 
+<<<<<<< HEAD
 	hidg_class = class_create("hidg");
+=======
+	hidg_class = class_create(THIS_MODULE, "hidg");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(hidg_class)) {
 		status = PTR_ERR(hidg_class);
 		hidg_class = NULL;

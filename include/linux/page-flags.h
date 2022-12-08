@@ -132,9 +132,17 @@ enum pageflags {
 	PG_young,
 	PG_idle,
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_USES_PG_ARCH_X
 	PG_arch_2,
 	PG_arch_3,
+=======
+#ifdef CONFIG_64BIT
+	PG_arch_2,
+#endif
+#ifdef CONFIG_KASAN_HW_TAGS
+	PG_skip_kasan_poison,
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	__NR_PAGEFLAGS,
 
@@ -171,6 +179,15 @@ enum pageflags {
 	/* Remapped by swiotlb-xen. */
 	PG_xen_remapped = PG_owner_priv_1,
 
+<<<<<<< HEAD
+=======
+	/* SLOB */
+	PG_slob_free = PG_private,
+
+	/* Compound pages. Stored in first tail page's flags */
+	PG_double_map = PG_workingset,
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_MEMORY_FAILURE
 	/*
 	 * Compound pages. Stored in first tail page's flags.
@@ -477,6 +494,10 @@ PAGEFLAG(Active, active, PF_HEAD) __CLEARPAGEFLAG(Active, active, PF_HEAD)
 PAGEFLAG(Workingset, workingset, PF_HEAD)
 	TESTCLEARFLAG(Workingset, workingset, PF_HEAD)
 __PAGEFLAG(Slab, slab, PF_NO_TAIL)
+<<<<<<< HEAD
+=======
+__PAGEFLAG(SlobFree, slob_free, PF_NO_TAIL)
+>>>>>>> b7ba80a49124 (Commit)
 PAGEFLAG(Checked, checked, PF_NO_COMPOUND)	   /* Used by some filesystems */
 
 /* Xen */
@@ -524,7 +545,10 @@ PAGEFLAG(Readahead, readahead, PF_NO_COMPOUND)
  * available at this point.
  */
 #define PageHighMem(__p) is_highmem_idx(page_zonenum(__p))
+<<<<<<< HEAD
 #define folio_test_highmem(__f)	is_highmem_idx(folio_zonenum(__f))
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 PAGEFLAG_FALSE(HighMem, highmem)
 #endif
@@ -587,6 +611,15 @@ TESTCLEARFLAG(Young, young, PF_ANY)
 PAGEFLAG(Idle, idle, PF_ANY)
 #endif
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_KASAN_HW_TAGS
+PAGEFLAG(SkipKASanPoison, skip_kasan_poison, PF_HEAD)
+#else
+PAGEFLAG_FALSE(SkipKASanPoison, skip_kasan_poison)
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * PageReported() is used to track reported free pages within the Buddy
  * allocator. We can use the non-atomic version of the test and set
@@ -627,7 +660,11 @@ PAGEFLAG_FALSE(VmemmapSelfHosted, vmemmap_self_hosted)
  * Different with flags above, this flag is used only for fsdax mode.  It
  * indicates that this page->mapping is now under reflink case.
  */
+<<<<<<< HEAD
 #define PAGE_MAPPING_DAX_SHARED	((void *)0x1)
+=======
+#define PAGE_MAPPING_DAX_COW	0x1
+>>>>>>> b7ba80a49124 (Commit)
 
 static __always_inline bool folio_mapping_flags(struct folio *folio)
 {
@@ -860,11 +897,35 @@ static inline int PageTransTail(struct page *page)
 {
 	return PageTail(page);
 }
+<<<<<<< HEAD
+=======
+
+/*
+ * PageDoubleMap indicates that the compound page is mapped with PTEs as well
+ * as PMDs.
+ *
+ * This is required for optimization of rmap operations for THP: we can postpone
+ * per small page mapcount accounting (and its overhead from atomic operations)
+ * until the first PMD split.
+ *
+ * For the page PageDoubleMap means ->_mapcount in all sub-pages is offset up
+ * by one. This reference will go away with last compound_mapcount.
+ *
+ * See also __split_huge_pmd_locked() and page_remove_anon_compound_rmap().
+ */
+PAGEFLAG(DoubleMap, double_map, PF_SECOND)
+	TESTSCFLAG(DoubleMap, double_map, PF_SECOND)
+>>>>>>> b7ba80a49124 (Commit)
 #else
 TESTPAGEFLAG_FALSE(TransHuge, transhuge)
 TESTPAGEFLAG_FALSE(TransCompound, transcompound)
 TESTPAGEFLAG_FALSE(TransCompoundMap, transcompoundmap)
 TESTPAGEFLAG_FALSE(TransTail, transtail)
+<<<<<<< HEAD
+=======
+PAGEFLAG_FALSE(DoubleMap, double_map)
+	TESTSCFLAG_FALSE(DoubleMap, double_map)
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #if defined(CONFIG_MEMORY_FAILURE) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
@@ -913,6 +974,7 @@ static inline bool is_page_hwpoison(struct page *page)
 #define PageType(page, flag)						\
 	((page->page_type & (PAGE_TYPE_BASE | flag)) == PAGE_TYPE_BASE)
 
+<<<<<<< HEAD
 static inline int page_type_has_type(unsigned int page_type)
 {
 	return (int)page_type < PAGE_MAPCOUNT_RESERVE;
@@ -921,6 +983,11 @@ static inline int page_type_has_type(unsigned int page_type)
 static inline int page_has_type(struct page *page)
 {
 	return page_type_has_type(page->page_type);
+=======
+static inline int page_has_type(struct page *page)
+{
+	return (int)page->page_type < PAGE_MAPCOUNT_RESERVE;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define PAGE_TYPE_OPS(uname, lname)					\

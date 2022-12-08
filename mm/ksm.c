@@ -39,15 +39,21 @@
 #include <linux/freezer.h>
 #include <linux/oom.h>
 #include <linux/numa.h>
+<<<<<<< HEAD
 #include <linux/pagewalk.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/tlbflush.h>
 #include "internal.h"
 #include "mm_slot.h"
 
+<<<<<<< HEAD
 #define CREATE_TRACE_POINTS
 #include <trace/events/ksm.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_NUMA
 #define NUMA(x)		(x)
 #define DO_NUMA(x)	do { (x); } while (0)
@@ -217,7 +223,10 @@ struct ksm_rmap_item {
 #define SEQNR_MASK	0x0ff	/* low bits of unstable tree seqnr */
 #define UNSTABLE_FLAG	0x100	/* is a node of the unstable tree */
 #define STABLE_FLAG	0x200	/* is listed from the stable tree */
+<<<<<<< HEAD
 #define ZERO_PAGE_FLAG 0x400 /* is zero page placed by KSM */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* The stable and unstable tree heads */
 static struct rb_root one_stable_tree[1] = { RB_ROOT };
@@ -279,9 +288,12 @@ static unsigned int zero_checksum __read_mostly;
 /* Whether to merge empty (zeroed) pages with actual zero pages */
 static bool ksm_use_zero_pages __read_mostly;
 
+<<<<<<< HEAD
 /* The number of zero pages placed by KSM use_zero_pages */
 static unsigned long ksm_zero_pages_sharing;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_NUMA
 /* Zeroed when merging across nodes is not allowed */
 static unsigned int ksm_merge_across_nodes = 1;
@@ -427,6 +439,7 @@ static inline bool ksm_test_exit(struct mm_struct *mm)
 	return atomic_read(&mm->mm_users) == 0;
 }
 
+<<<<<<< HEAD
 enum break_ksm_pmd_entry_return_flag {
 	HAVE_KSM_PAGE = 1,
 	HAVE_ZERO_PAGE
@@ -480,10 +493,20 @@ static const struct mm_walk_ops break_ksm_ops = {
  * such that the ksm page will get replaced by an exclusive anonymous page.
  *
  * We take great care only to touch a ksm page, in a VM_MERGEABLE vma,
+=======
+/*
+ * We use break_ksm to break COW on a ksm page: it's a stripped down
+ *
+ *	if (get_user_pages(addr, 1, FOLL_WRITE, &page, NULL) == 1)
+ *		put_page(page);
+ *
+ * but taking great care only to touch a ksm page, in a VM_MERGEABLE vma,
+>>>>>>> b7ba80a49124 (Commit)
  * in case the application has unmapped and remapped mm,addr meanwhile.
  * Could a ksm page appear anywhere else?  Actually yes, in a VM_PFNMAP
  * mmap of /dev/mem, where we would not want to touch it.
  *
+<<<<<<< HEAD
  * FAULT_FLAG_REMOTE/FOLL_REMOTE are because we do this outside the context
  * of the process that owns 'vma'.  We also do not want to enforce
  * protection keys here anyway.
@@ -513,6 +536,38 @@ static int break_ksm(struct vm_area_struct *vma, unsigned long addr,
 	 * We must loop until we no longer find a KSM page because
 	 * handle_mm_fault() may back out if there's any difficulty e.g. if
 	 * pte accessed bit gets updated concurrently.
+=======
+ * FAULT_FLAG/FOLL_REMOTE are because we do this outside the context
+ * of the process that owns 'vma'.  We also do not want to enforce
+ * protection keys here anyway.
+ */
+static int break_ksm(struct vm_area_struct *vma, unsigned long addr)
+{
+	struct page *page;
+	vm_fault_t ret = 0;
+
+	do {
+		cond_resched();
+		page = follow_page(vma, addr,
+				FOLL_GET | FOLL_MIGRATION | FOLL_REMOTE);
+		if (IS_ERR_OR_NULL(page))
+			break;
+		if (PageKsm(page))
+			ret = handle_mm_fault(vma, addr,
+					      FAULT_FLAG_WRITE | FAULT_FLAG_REMOTE,
+					      NULL);
+		else
+			ret = VM_FAULT_WRITE;
+		put_page(page);
+	} while (!(ret & (VM_FAULT_WRITE | VM_FAULT_SIGBUS | VM_FAULT_SIGSEGV | VM_FAULT_OOM)));
+	/*
+	 * We must loop because handle_mm_fault() may back out if there's
+	 * any difficulty e.g. if pte accessed bit gets updated concurrently.
+	 *
+	 * VM_FAULT_WRITE is what we have been hoping for: it indicates that
+	 * COW has been broken, even if the vma does not permit VM_WRITE;
+	 * but note that a concurrent fault might break PageKsm for us.
+>>>>>>> b7ba80a49124 (Commit)
 	 *
 	 * VM_FAULT_SIGBUS could occur if we race with truncation of the
 	 * backing file, which also invalidates anonymous pages: that's
@@ -537,6 +592,7 @@ static int break_ksm(struct vm_area_struct *vma, unsigned long addr,
 	return (ret & VM_FAULT_OOM) ? -ENOMEM : 0;
 }
 
+<<<<<<< HEAD
 static bool vma_ksm_compatible(struct vm_area_struct *vma)
 {
 	/*
@@ -574,10 +630,13 @@ static bool vma_ksm_mergeable(struct vm_area_struct *vma)
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct vm_area_struct *find_mergeable_vma(struct mm_struct *mm,
 		unsigned long addr)
 {
 	struct vm_area_struct *vma;
+<<<<<<< HEAD
 
 	if (ksm_test_exit(mm))
 		return NULL;
@@ -589,6 +648,14 @@ static struct vm_area_struct *find_mergeable_vma(struct mm_struct *mm,
 		return vma;
 
 	return NULL;
+=======
+	if (ksm_test_exit(mm))
+		return NULL;
+	vma = vma_lookup(mm, addr);
+	if (!vma || !(vma->vm_flags & VM_MERGEABLE) || !vma->anon_vma)
+		return NULL;
+	return vma;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void break_cow(struct ksm_rmap_item *rmap_item)
@@ -606,7 +673,11 @@ static void break_cow(struct ksm_rmap_item *rmap_item)
 	mmap_read_lock(mm);
 	vma = find_mergeable_vma(mm, addr);
 	if (vma)
+<<<<<<< HEAD
 		break_ksm(vma, addr, false);
+=======
+		break_ksm(vma, addr);
+>>>>>>> b7ba80a49124 (Commit)
 	mmap_read_unlock(mm);
 }
 
@@ -700,12 +771,19 @@ static void remove_node_from_stable_tree(struct ksm_stable_node *stable_node)
 	BUG_ON(stable_node->rmap_hlist_len < 0);
 
 	hlist_for_each_entry(rmap_item, &stable_node->hlist, hlist) {
+<<<<<<< HEAD
 		if (rmap_item->hlist.next) {
 			ksm_pages_sharing--;
 			trace_ksm_remove_rmap_item(stable_node->kpfn, rmap_item, rmap_item->mm);
 		} else {
 			ksm_pages_shared--;
 		}
+=======
+		if (rmap_item->hlist.next)
+			ksm_pages_sharing--;
+		else
+			ksm_pages_shared--;
+>>>>>>> b7ba80a49124 (Commit)
 
 		rmap_item->mm->ksm_merging_pages--;
 
@@ -726,7 +804,10 @@ static void remove_node_from_stable_tree(struct ksm_stable_node *stable_node)
 	BUILD_BUG_ON(STABLE_NODE_DUP_HEAD <= &migrate_nodes);
 	BUILD_BUG_ON(STABLE_NODE_DUP_HEAD >= &migrate_nodes + 1);
 
+<<<<<<< HEAD
 	trace_ksm_remove_ksm_page(stable_node->kpfn);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (stable_node->head == &migrate_nodes)
 		list_del(&stable_node->list);
 	else
@@ -835,6 +916,7 @@ stale:
 }
 
 /*
+<<<<<<< HEAD
  * Cleaning the rmap_item's ZERO_PAGE_FLAG
  * This function will be called when unshare or writing on zero pages.
  */
@@ -862,6 +944,8 @@ static inline void unshare_zero_pages(struct ksm_rmap_item *rmap_item)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Removing rmap_item from stable or unstable tree.
  * This function will clean the information from the stable/unstable tree.
  */
@@ -921,7 +1005,10 @@ static void remove_trailing_rmap_items(struct ksm_rmap_item **rmap_list)
 		struct ksm_rmap_item *rmap_item = *rmap_list;
 		*rmap_list = rmap_item->rmap_list;
 		remove_rmap_item_from_tree(rmap_item);
+<<<<<<< HEAD
 		unshare_zero_pages(rmap_item);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		free_rmap_item(rmap_item);
 	}
 }
@@ -951,7 +1038,11 @@ static int unmerge_ksm_pages(struct vm_area_struct *vma,
 		if (signal_pending(current))
 			err = -ERESTARTSYS;
 		else
+<<<<<<< HEAD
 			err = break_ksm(vma, addr, false);
+=======
+			err = break_ksm(vma, addr);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return err;
 }
@@ -1086,6 +1177,7 @@ static int unmerge_and_remove_all_rmap_items(void)
 
 		mm = mm_slot->slot.mm;
 		mmap_read_lock(mm);
+<<<<<<< HEAD
 
 		/*
 		 * Exit right away if mm is exiting to avoid lockdep issue in
@@ -1096,6 +1188,12 @@ static int unmerge_and_remove_all_rmap_items(void)
 
 		for_each_vma(vmi, vma) {
 			if (!vma_ksm_mergeable(vma) || !vma->anon_vma)
+=======
+		for_each_vma(vmi, vma) {
+			if (ksm_test_exit(mm))
+				break;
+			if (!(vma->vm_flags & VM_MERGEABLE) || !vma->anon_vma)
+>>>>>>> b7ba80a49124 (Commit)
 				continue;
 			err = unmerge_ksm_pages(vma,
 						vma->vm_start, vma->vm_end);
@@ -1103,7 +1201,10 @@ static int unmerge_and_remove_all_rmap_items(void)
 				goto error;
 		}
 
+<<<<<<< HEAD
 mm_exiting:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		remove_trailing_rmap_items(&mm_slot->rmap_list);
 		mmap_read_unlock(mm);
 
@@ -1118,7 +1219,10 @@ mm_exiting:
 
 			mm_slot_free(mm_slot_cache, mm_slot);
 			clear_bit(MMF_VM_MERGEABLE, &mm->flags);
+<<<<<<< HEAD
 			clear_bit(MMF_VM_MERGE_ANY, &mm->flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			mmdrop(mm);
 		} else
 			spin_unlock(&ksm_mmlist_lock);
@@ -1163,7 +1267,12 @@ static int write_protect_page(struct vm_area_struct *vma, struct page *page,
 
 	BUG_ON(PageTransCompound(page));
 
+<<<<<<< HEAD
 	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, pvmw.address,
+=======
+	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, mm,
+				pvmw.address,
+>>>>>>> b7ba80a49124 (Commit)
 				pvmw.address + PAGE_SIZE);
 	mmu_notifier_invalidate_range_start(&range);
 
@@ -1174,6 +1283,10 @@ static int write_protect_page(struct vm_area_struct *vma, struct page *page,
 
 	anon_exclusive = PageAnonExclusive(page);
 	if (pte_write(*pvmw.pte) || pte_dirty(*pvmw.pte) ||
+<<<<<<< HEAD
+=======
+	    (pte_protnone(*pvmw.pte) && pte_savedwrite(*pvmw.pte)) ||
+>>>>>>> b7ba80a49124 (Commit)
 	    anon_exclusive || mm_tlb_flush_pending(mm)) {
 		pte_t entry;
 
@@ -1211,11 +1324,19 @@ static int write_protect_page(struct vm_area_struct *vma, struct page *page,
 
 		if (pte_dirty(entry))
 			set_page_dirty(page);
+<<<<<<< HEAD
 		entry = pte_mkclean(entry);
 
 		if (pte_write(entry))
 			entry = pte_wrprotect(entry);
 
+=======
+
+		if (pte_protnone(entry))
+			entry = pte_mkclean(pte_clear_savedwrite(entry));
+		else
+			entry = pte_mkclean(pte_wrprotect(entry));
+>>>>>>> b7ba80a49124 (Commit)
 		set_pte_at_notify(mm, pvmw.address, pvmw.pte, entry);
 	}
 	*orig_pte = *pvmw.pte;
@@ -1269,7 +1390,11 @@ static int replace_page(struct vm_area_struct *vma, struct page *page,
 	if (!pmd_present(pmde) || pmd_trans_huge(pmde))
 		goto out;
 
+<<<<<<< HEAD
 	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, addr,
+=======
+	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, mm, addr,
+>>>>>>> b7ba80a49124 (Commit)
 				addr + PAGE_SIZE);
 	mmu_notifier_invalidate_range_start(&range);
 
@@ -1423,8 +1548,11 @@ static int try_to_merge_with_ksm_page(struct ksm_rmap_item *rmap_item,
 	get_anon_vma(vma->anon_vma);
 out:
 	mmap_read_unlock(mm);
+<<<<<<< HEAD
 	trace_ksm_merge_with_ksm_page(kpage, page_to_pfn(kpage ? kpage : page),
 				rmap_item, mm, err);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -2151,6 +2279,7 @@ static void stable_tree_append(struct ksm_rmap_item *rmap_item,
 	rmap_item->mm->ksm_merging_pages++;
 }
 
+<<<<<<< HEAD
 static int try_to_merge_with_kernel_zero_page(struct ksm_rmap_item *rmap_item,
 									struct page *page)
 {
@@ -2190,6 +2319,8 @@ static int try_to_merge_with_kernel_zero_page(struct ksm_rmap_item *rmap_item,
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * cmp_and_merge_page - first see if page can be merged into the stable tree;
  * if not, compare checksum to previous and if it's the same, see if page can
@@ -2201,6 +2332,10 @@ static int try_to_merge_with_kernel_zero_page(struct ksm_rmap_item *rmap_item,
  */
 static void cmp_and_merge_page(struct page *page, struct ksm_rmap_item *rmap_item)
 {
+<<<<<<< HEAD
+=======
+	struct mm_struct *mm = rmap_item->mm;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ksm_rmap_item *tree_rmap_item;
 	struct page *tree_page = NULL;
 	struct ksm_stable_node *stable_node;
@@ -2237,7 +2372,10 @@ static void cmp_and_merge_page(struct page *page, struct ksm_rmap_item *rmap_ite
 	}
 
 	remove_rmap_item_from_tree(rmap_item);
+<<<<<<< HEAD
 	clean_rmap_item_zero_flag(rmap_item);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (kpage) {
 		if (PTR_ERR(kpage) == -EBUSY)
@@ -2274,6 +2412,7 @@ static void cmp_and_merge_page(struct page *page, struct ksm_rmap_item *rmap_ite
 	 * Same checksum as an empty page. We attempt to merge it with the
 	 * appropriate zero page if the user enabled this via sysfs.
 	 */
+<<<<<<< HEAD
 	if (ksm_use_zero_pages) {
 		if (checksum == zero_checksum)
 			/*
@@ -2284,6 +2423,31 @@ static void cmp_and_merge_page(struct page *page, struct ksm_rmap_item *rmap_ite
 				return;
 	}
 
+=======
+	if (ksm_use_zero_pages && (checksum == zero_checksum)) {
+		struct vm_area_struct *vma;
+
+		mmap_read_lock(mm);
+		vma = find_mergeable_vma(mm, rmap_item->address);
+		if (vma) {
+			err = try_to_merge_one_page(vma, page,
+					ZERO_PAGE(rmap_item->address));
+		} else {
+			/*
+			 * If the vma is out of date, we do not need to
+			 * continue.
+			 */
+			err = 0;
+		}
+		mmap_read_unlock(mm);
+		/*
+		 * In case of failure, the page was not really empty, so we
+		 * need to continue. Otherwise we're done.
+		 */
+		if (!err)
+			return;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	tree_rmap_item =
 		unstable_tree_search_insert(rmap_item, page, &tree_page);
 	if (tree_rmap_item) {
@@ -2347,6 +2511,7 @@ static void cmp_and_merge_page(struct page *page, struct ksm_rmap_item *rmap_ite
 	}
 }
 
+<<<<<<< HEAD
 static struct ksm_rmap_item *try_to_get_old_rmap_item(unsigned long addr,
 					 struct ksm_rmap_item **rmap_list)
 {
@@ -2370,15 +2535,30 @@ static struct ksm_rmap_item *try_to_get_old_rmap_item(unsigned long addr,
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct ksm_rmap_item *get_next_rmap_item(struct ksm_mm_slot *mm_slot,
 					    struct ksm_rmap_item **rmap_list,
 					    unsigned long addr)
 {
 	struct ksm_rmap_item *rmap_item;
 
+<<<<<<< HEAD
 	rmap_item = try_to_get_old_rmap_item(addr, rmap_list);
 	if (rmap_item)
 		return rmap_item;
+=======
+	while (*rmap_list) {
+		rmap_item = *rmap_list;
+		if ((rmap_item->address & PAGE_MASK) == addr)
+			return rmap_item;
+		if (rmap_item->address > addr)
+			break;
+		*rmap_list = rmap_item->rmap_list;
+		remove_rmap_item_from_tree(rmap_item);
+		free_rmap_item(rmap_item);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	rmap_item = alloc_rmap_item();
 	if (rmap_item) {
@@ -2407,8 +2587,11 @@ static struct ksm_rmap_item *scan_get_next_rmap_item(struct page **page)
 
 	mm_slot = ksm_scan.mm_slot;
 	if (mm_slot == &ksm_mm_head) {
+<<<<<<< HEAD
 		trace_ksm_start_scan(ksm_scan.seqnr, ksm_rmap_items);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * A number of pages can hang around indefinitely on per-cpu
 		 * pagevecs, raised page count preventing write_protect_page
@@ -2470,9 +2653,14 @@ next_mm:
 		goto no_vmas;
 
 	for_each_vma(vmi, vma) {
+<<<<<<< HEAD
 		if (!vma_ksm_mergeable(vma))
 			continue;
 
+=======
+		if (!(vma->vm_flags & VM_MERGEABLE))
+			continue;
+>>>>>>> b7ba80a49124 (Commit)
 		if (ksm_scan.address < vma->vm_start)
 			ksm_scan.address = vma->vm_start;
 		if (!vma->anon_vma)
@@ -2489,6 +2677,7 @@ next_mm:
 			}
 			if (is_zone_device_page(*page))
 				goto next_page;
+<<<<<<< HEAD
 			if (is_zero_pfn(page_to_pfn(*page))) {
 				/*
 				 * To monitor ksm zero pages which becomes non-anonymous,
@@ -2505,6 +2694,8 @@ next_mm:
 					ksm_scan.rmap_list = &rmap_item->rmap_list;
 				goto next_page;
 			}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			if (PageAnon(*page)) {
 				flush_anon_page(vma, *page, ksm_scan.address);
 				flush_dcache_page(*page);
@@ -2557,7 +2748,10 @@ no_vmas:
 
 		mm_slot_free(mm_slot_cache, mm_slot);
 		clear_bit(MMF_VM_MERGEABLE, &mm->flags);
+<<<<<<< HEAD
 		clear_bit(MMF_VM_MERGE_ANY, &mm->flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		mmap_read_unlock(mm);
 		mmdrop(mm);
 	} else {
@@ -2577,7 +2771,10 @@ no_vmas:
 	if (mm_slot != &ksm_mm_head)
 		goto next_mm;
 
+<<<<<<< HEAD
 	trace_ksm_stop_scan(ksm_scan.seqnr, ksm_rmap_items);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ksm_scan.seqnr++;
 	return NULL;
 }
@@ -2643,12 +2840,37 @@ int ksm_madvise(struct vm_area_struct *vma, unsigned long start,
 
 	switch (advice) {
 	case MADV_MERGEABLE:
+<<<<<<< HEAD
 		if (!vma_ksm_compatible(vma))
 			return 0;
 
 		if (!test_bit(MMF_VM_MERGEABLE, &mm->flags) &&
 		    !test_bit(MMF_VM_MERGE_ANY, &mm->flags)) {
 			err = __ksm_enter(mm, MMF_VM_MERGEABLE);
+=======
+		/*
+		 * Be somewhat over-protective for now!
+		 */
+		if (*vm_flags & (VM_MERGEABLE | VM_SHARED  | VM_MAYSHARE   |
+				 VM_PFNMAP    | VM_IO      | VM_DONTEXPAND |
+				 VM_HUGETLB | VM_MIXEDMAP))
+			return 0;		/* just ignore the advice */
+
+		if (vma_is_dax(vma))
+			return 0;
+
+#ifdef VM_SAO
+		if (*vm_flags & VM_SAO)
+			return 0;
+#endif
+#ifdef VM_SPARC_ADI
+		if (*vm_flags & VM_SPARC_ADI)
+			return 0;
+#endif
+
+		if (!test_bit(MMF_VM_MERGEABLE, &mm->flags)) {
+			err = __ksm_enter(mm);
+>>>>>>> b7ba80a49124 (Commit)
 			if (err)
 				return err;
 		}
@@ -2674,7 +2896,11 @@ int ksm_madvise(struct vm_area_struct *vma, unsigned long start,
 }
 EXPORT_SYMBOL_GPL(ksm_madvise);
 
+<<<<<<< HEAD
 int __ksm_enter(struct mm_struct *mm, int flag)
+=======
+int __ksm_enter(struct mm_struct *mm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ksm_mm_slot *mm_slot;
 	struct mm_slot *slot;
@@ -2707,27 +2933,41 @@ int __ksm_enter(struct mm_struct *mm, int flag)
 		list_add_tail(&slot->mm_node, &ksm_scan.mm_slot->slot.mm_node);
 	spin_unlock(&ksm_mmlist_lock);
 
+<<<<<<< HEAD
 	set_bit(flag, &mm->flags);
+=======
+	set_bit(MMF_VM_MERGEABLE, &mm->flags);
+>>>>>>> b7ba80a49124 (Commit)
 	mmgrab(mm);
 
 	if (needs_wakeup)
 		wake_up_interruptible(&ksm_thread_wait);
 
+<<<<<<< HEAD
 	trace_ksm_enter(mm);
 	return 0;
 }
 
 void __ksm_exit(struct mm_struct *mm, int flag)
+=======
+	return 0;
+}
+
+void __ksm_exit(struct mm_struct *mm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ksm_mm_slot *mm_slot;
 	struct mm_slot *slot;
 	int easy_to_free = 0;
 
+<<<<<<< HEAD
 	if (!(current->flags & PF_EXITING) &&
 	      flag == MMF_VM_MERGE_ANY &&
 	      test_bit(MMF_VM_MERGE_ANY, &mm->flags))
 		clear_bit(MMF_VM_MERGE_ANY, &mm->flags);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * This process is exiting: if it's straightforward (as is the
 	 * case when ksmd was never running), free mm_slot immediately.
@@ -2754,14 +2994,21 @@ void __ksm_exit(struct mm_struct *mm, int flag)
 
 	if (easy_to_free) {
 		mm_slot_free(mm_slot_cache, mm_slot);
+<<<<<<< HEAD
 		clear_bit(flag, &mm->flags);
+=======
+		clear_bit(MMF_VM_MERGEABLE, &mm->flags);
+>>>>>>> b7ba80a49124 (Commit)
 		mmdrop(mm);
 	} else if (mm_slot) {
 		mmap_write_lock(mm);
 		mmap_write_unlock(mm);
 	}
+<<<<<<< HEAD
 
 	trace_ksm_exit(mm);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct page *ksm_might_need_to_copy(struct page *page,
@@ -2791,11 +3038,16 @@ struct page *ksm_might_need_to_copy(struct page *page,
 		new_page = NULL;
 	}
 	if (new_page) {
+<<<<<<< HEAD
 		if (copy_mc_user_highpage(new_page, page, address, vma)) {
 			put_page(new_page);
 			memory_failure_queue(page_to_pfn(page), 0);
 			return ERR_PTR(-EHWPOISON);
 		}
+=======
+		copy_user_highpage(new_page, page, address, vma);
+
+>>>>>>> b7ba80a49124 (Commit)
 		SetPageDirty(new_page);
 		__SetPageUptodate(new_page);
 		__SetPageLocked(new_page);
@@ -3031,6 +3283,7 @@ static void wait_while_offlining(void)
 }
 #endif /* CONFIG_MEMORY_HOTREMOVE */
 
+<<<<<<< HEAD
 #ifdef CONFIG_PROC_FS
 long ksm_process_profit(struct mm_struct *mm)
 {
@@ -3050,6 +3303,8 @@ const char *ksm_merge_type(struct mm_struct *mm)
 }
 #endif /* CONFIG_PROC_FS */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SYSFS
 /*
  * This all compiles without CONFIG_SYSFS, but is a waste of space.
@@ -3297,7 +3552,12 @@ static ssize_t pages_unshared_show(struct kobject *kobj,
 }
 KSM_ATTR_RO(pages_unshared);
 
+<<<<<<< HEAD
 static long pages_volatile(void)
+=======
+static ssize_t pages_volatile_show(struct kobject *kobj,
+				   struct kobj_attribute *attr, char *buf)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	long ksm_pages_volatile;
 
@@ -3309,6 +3569,7 @@ static long pages_volatile(void)
 	 */
 	if (ksm_pages_volatile < 0)
 		ksm_pages_volatile = 0;
+<<<<<<< HEAD
 
 	return ksm_pages_volatile;
 }
@@ -3342,6 +3603,12 @@ static ssize_t general_profit_show(struct kobject *kobj,
 }
 KSM_ATTR_RO(general_profit);
 
+=======
+	return sysfs_emit(buf, "%ld\n", ksm_pages_volatile);
+}
+KSM_ATTR_RO(pages_volatile);
+
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t stable_node_dups_show(struct kobject *kobj,
 				     struct kobj_attribute *attr, char *buf)
 {
@@ -3397,7 +3664,10 @@ static struct attribute *ksm_attrs[] = {
 	&pages_sharing_attr.attr,
 	&pages_unshared_attr.attr,
 	&pages_volatile_attr.attr,
+<<<<<<< HEAD
 	&zero_pages_sharing_attr.attr,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	&full_scans_attr.attr,
 #ifdef CONFIG_NUMA
 	&merge_across_nodes_attr.attr,
@@ -3407,7 +3677,10 @@ static struct attribute *ksm_attrs[] = {
 	&stable_node_dups_attr.attr,
 	&stable_node_chains_prune_millisecs_attr.attr,
 	&use_zero_pages_attr.attr,
+<<<<<<< HEAD
 	&general_profit_attr.attr,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	NULL,
 };
 
@@ -3452,7 +3725,11 @@ static int __init ksm_init(void)
 
 #ifdef CONFIG_MEMORY_HOTREMOVE
 	/* There is no significance to this priority 100 */
+<<<<<<< HEAD
 	hotplug_memory_notifier(ksm_memory_callback, KSM_CALLBACK_PRI);
+=======
+	hotplug_memory_notifier(ksm_memory_callback, 100);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	return 0;
 

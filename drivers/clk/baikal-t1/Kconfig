@@ -29,6 +29,10 @@ config CLK_BT1_CCU_PLL
 
 config CLK_BT1_CCU_DIV
 	bool "Baikal-T1 CCU Dividers support"
+<<<<<<< HEAD
+=======
+	select RESET_CONTROLLER
+>>>>>>> b7ba80a49124 (Commit)
 	select MFD_SYSCON
 	default MIPS_BAIKAL_T1
 	help
@@ -38,6 +42,7 @@ config CLK_BT1_CCU_DIV
 	  either gateable or ungateable. Some of the CCU dividers can be as well
 	  used to reset the domains they're supplying clock to.
 
+<<<<<<< HEAD
 config CLK_BT1_CCU_RST
 	bool "Baikal-T1 CCU Resets support"
 	select RESET_CONTROLLER
@@ -49,4 +54,6 @@ config CLK_BT1_CCU_RST
 	  self-deasserted reset controls but there are several lines which
 	  can be directly asserted/de-asserted (PCIe and DDR sub-domains).
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endif

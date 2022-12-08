@@ -55,7 +55,11 @@ static inline unsigned long xchg64(__volatile__ unsigned long *m, unsigned long 
 #define arch_xchg(ptr,x)							\
 ({	__typeof__(*(ptr)) __ret;					\
 	__ret = (__typeof__(*(ptr)))					\
+<<<<<<< HEAD
 		__arch_xchg((unsigned long)(x), (ptr), sizeof(*(ptr)));	\
+=======
+		__xchg((unsigned long)(x), (ptr), sizeof(*(ptr)));	\
+>>>>>>> b7ba80a49124 (Commit)
 	__ret;								\
 })
 
@@ -87,8 +91,13 @@ xchg16(__volatile__ unsigned short *m, unsigned short val)
 	return (load32 & mask) >> bit_shift;
 }
 
+<<<<<<< HEAD
 static inline unsigned long
 __arch_xchg(unsigned long x, __volatile__ void * ptr, int size)
+=======
+static inline unsigned long __xchg(unsigned long x, __volatile__ void * ptr,
+				       int size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (size) {
 	case 2:

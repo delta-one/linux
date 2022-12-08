@@ -672,7 +672,12 @@ static const struct dvb_frontend_ops si2168_ops = {
 	.read_status = si2168_read_status,
 };
 
+<<<<<<< HEAD
 static int si2168_probe(struct i2c_client *client)
+=======
+static int si2168_probe(struct i2c_client *client,
+		const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct si2168_config *config = client->dev.platform_data;
 	struct si2168_dev *dev;
@@ -798,7 +803,11 @@ static struct i2c_driver si2168_driver = {
 		.name                = "si2168",
 		.suppress_bind_attrs = true,
 	},
+<<<<<<< HEAD
 	.probe_new	= si2168_probe,
+=======
+	.probe		= si2168_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= si2168_remove,
 	.id_table	= si2168_id_table,
 };

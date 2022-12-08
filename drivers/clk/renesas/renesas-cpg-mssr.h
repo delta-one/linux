@@ -187,7 +187,27 @@ void __init cpg_mssr_early_init(struct device_node *np,
     /*
      * Helpers for fixing up clock tables depending on SoC revision
      */
+<<<<<<< HEAD
 extern void mssr_mod_nullify(struct mssr_mod_clk *mod_clks,
 			     unsigned int num_mod_clks,
 			     const unsigned int *clks, unsigned int n);
+=======
+
+struct mssr_mod_reparent {
+	unsigned int clk, parent;
+};
+
+
+extern void cpg_core_nullify_range(struct cpg_core_clk *core_clks,
+				   unsigned int num_core_clks,
+				   unsigned int first_clk,
+				   unsigned int last_clk);
+extern void mssr_mod_nullify(struct mssr_mod_clk *mod_clks,
+			     unsigned int num_mod_clks,
+			     const unsigned int *clks, unsigned int n);
+extern void mssr_mod_reparent(struct mssr_mod_clk *mod_clks,
+			      unsigned int num_mod_clks,
+			      const struct mssr_mod_reparent *clks,
+			      unsigned int n);
+>>>>>>> b7ba80a49124 (Commit)
 #endif

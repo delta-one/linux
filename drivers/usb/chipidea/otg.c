@@ -165,12 +165,19 @@ static int hw_wait_vbus_lower_bsv(struct ci_hdrc *ci)
 	return 0;
 }
 
+<<<<<<< HEAD
 void ci_handle_id_switch(struct ci_hdrc *ci)
 {
 	enum ci_role role;
 
 	mutex_lock(&ci->mutex);
 	role = ci_otg_role(ci);
+=======
+static void ci_handle_id_switch(struct ci_hdrc *ci)
+{
+	enum ci_role role = ci_otg_role(ci);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (role != ci->role) {
 		dev_dbg(ci->dev, "switching from %s to %s\n",
 			ci_role(ci)->name, ci->roles[role]->name);
@@ -200,7 +207,10 @@ void ci_handle_id_switch(struct ci_hdrc *ci)
 		if (role == CI_ROLE_GADGET)
 			ci_handle_vbus_change(ci);
 	}
+<<<<<<< HEAD
 	mutex_unlock(&ci->mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 /**
  * ci_otg_work - perform otg (vbus/id) event handle

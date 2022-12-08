@@ -667,7 +667,11 @@ void __init exynos_pm_init(void)
 		return;
 	}
 
+<<<<<<< HEAD
 	if (WARN_ON(!of_property_read_bool(np, "interrupt-controller"))) {
+=======
+	if (WARN_ON(!of_find_property(np, "interrupt-controller", NULL))) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_warn("Outdated DT detected, suspend/resume will NOT work\n");
 		of_node_put(np);
 		return;

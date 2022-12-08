@@ -21,6 +21,7 @@
  * wherever it is modified to a readable name.
  */
 
+<<<<<<< HEAD
 #include <linux/bitmap.h>
 #include <linux/bitops.h>
 #include <linux/can/dev.h>
@@ -41,6 +42,34 @@
 
 #define RCANFD_DRV_NAME			"rcar_canfd"
 
+=======
+#include <linux/module.h>
+#include <linux/moduleparam.h>
+#include <linux/kernel.h>
+#include <linux/types.h>
+#include <linux/interrupt.h>
+#include <linux/errno.h>
+#include <linux/ethtool.h>
+#include <linux/netdevice.h>
+#include <linux/platform_device.h>
+#include <linux/can/dev.h>
+#include <linux/clk.h>
+#include <linux/of.h>
+#include <linux/of_device.h>
+#include <linux/bitmap.h>
+#include <linux/bitops.h>
+#include <linux/iopoll.h>
+#include <linux/reset.h>
+
+#define RCANFD_DRV_NAME			"rcar_canfd"
+
+enum rcanfd_chip_id {
+	RENESAS_RCAR_GEN3 = 0,
+	RENESAS_RZG2L,
+	RENESAS_R8A779A0,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Global register bits */
 
 /* RSCFDnCFDGRMCFG */
@@ -75,15 +104,25 @@
 
 /* RSCFDnCFDGERFL / RSCFDnGERFL */
 #define RCANFD_GERFL_EEF0_7		GENMASK(23, 16)
+<<<<<<< HEAD
 #define RCANFD_GERFL_EEF(ch)		BIT(16 + (ch))
+=======
+#define RCANFD_GERFL_EEF1		BIT(17)
+#define RCANFD_GERFL_EEF0		BIT(16)
+>>>>>>> b7ba80a49124 (Commit)
 #define RCANFD_GERFL_CMPOF		BIT(3)	/* CAN FD only */
 #define RCANFD_GERFL_THLES		BIT(2)
 #define RCANFD_GERFL_MES		BIT(1)
 #define RCANFD_GERFL_DEF		BIT(0)
 
 #define RCANFD_GERFL_ERR(gpriv, x) \
+<<<<<<< HEAD
 	((x) & (reg_gen4(gpriv, RCANFD_GERFL_EEF0_7, \
 			 RCANFD_GERFL_EEF(0) | RCANFD_GERFL_EEF(1)) | \
+=======
+	((x) & (reg_v3u(gpriv, RCANFD_GERFL_EEF0_7, \
+			RCANFD_GERFL_EEF0 | RCANFD_GERFL_EEF1) | \
+>>>>>>> b7ba80a49124 (Commit)
 		RCANFD_GERFL_MES | \
 		((gpriv)->fdmode ? RCANFD_GERFL_CMPOF : 0)))
 
@@ -91,6 +130,7 @@
 
 /* RSCFDnCFDGAFLCFG0 / RSCFDnGAFLCFG0 */
 #define RCANFD_GAFLCFG_SETRNC(gpriv, n, x) \
+<<<<<<< HEAD
 	(((x) & reg_gen4(gpriv, 0x1ff, 0xff)) << \
 	 (reg_gen4(gpriv, 16, 24) - ((n) & 1) * reg_gen4(gpriv, 16, 8)))
 
@@ -101,6 +141,18 @@
 /* RSCFDnCFDGAFLECTR / RSCFDnGAFLECTR */
 #define RCANFD_GAFLECTR_AFLDAE		BIT(8)
 #define RCANFD_GAFLECTR_AFLPN(gpriv, x)	((x) & reg_gen4(gpriv, 0x7f, 0x1f))
+=======
+	(((x) & reg_v3u(gpriv, 0x1ff, 0xff)) << \
+	 (reg_v3u(gpriv, 16, 24) - (n) * reg_v3u(gpriv, 16, 8)))
+
+#define RCANFD_GAFLCFG_GETRNC(gpriv, n, x) \
+	(((x) >> (reg_v3u(gpriv, 16, 24) - (n) * reg_v3u(gpriv, 16, 8))) & \
+	 reg_v3u(gpriv, 0x1ff, 0xff))
+
+/* RSCFDnCFDGAFLECTR / RSCFDnGAFLECTR */
+#define RCANFD_GAFLECTR_AFLDAE		BIT(8)
+#define RCANFD_GAFLECTR_AFLPN(gpriv, x)	((x) & reg_v3u(gpriv, 0x7f, 0x1f))
+>>>>>>> b7ba80a49124 (Commit)
 
 /* RSCFDnCFDGAFLIDj / RSCFDnGAFLIDj */
 #define RCANFD_GAFLID_GAFLLB		BIT(29)
@@ -118,6 +170,7 @@
 
 /* RSCFDnCFDCmNCFG - CAN FD only */
 #define RCANFD_NCFG_NTSEG2(gpriv, x) \
+<<<<<<< HEAD
 	(((x) & reg_gen4(gpriv, 0x7f, 0x1f)) << reg_gen4(gpriv, 25, 24))
 
 #define RCANFD_NCFG_NTSEG1(gpriv, x) \
@@ -125,6 +178,15 @@
 
 #define RCANFD_NCFG_NSJW(gpriv, x) \
 	(((x) & reg_gen4(gpriv, 0x7f, 0x1f)) << reg_gen4(gpriv, 10, 11))
+=======
+	(((x) & reg_v3u(gpriv, 0x7f, 0x1f)) << reg_v3u(gpriv, 25, 24))
+
+#define RCANFD_NCFG_NTSEG1(gpriv, x) \
+	(((x) & reg_v3u(gpriv, 0xff, 0x7f)) << reg_v3u(gpriv, 17, 16))
+
+#define RCANFD_NCFG_NSJW(gpriv, x) \
+	(((x) & reg_v3u(gpriv, 0x7f, 0x1f)) << reg_v3u(gpriv, 10, 11))
+>>>>>>> b7ba80a49124 (Commit)
 
 #define RCANFD_NCFG_NBRP(x)		(((x) & 0x3ff) << 0)
 
@@ -186,6 +248,7 @@
 #define RCANFD_CERFL_ERR(x)		((x) & (0x7fff)) /* above bits 14:0 */
 
 /* RSCFDnCFDCmDCFG */
+<<<<<<< HEAD
 #define RCANFD_DCFG_DSJW(gpriv, x)	(((x) & reg_gen4(gpriv, 0xf, 0x7)) << 24)
 
 #define RCANFD_DCFG_DTSEG2(gpriv, x) \
@@ -193,12 +256,26 @@
 
 #define RCANFD_DCFG_DTSEG1(gpriv, x) \
 	(((x) & reg_gen4(gpriv, 0x1f, 0xf)) << reg_gen4(gpriv, 8, 16))
+=======
+#define RCANFD_DCFG_DSJW(x)		(((x) & 0x7) << 24)
+
+#define RCANFD_DCFG_DTSEG2(gpriv, x) \
+	(((x) & reg_v3u(gpriv, 0x0f, 0x7)) << reg_v3u(gpriv, 16, 20))
+
+#define RCANFD_DCFG_DTSEG1(gpriv, x) \
+	(((x) & reg_v3u(gpriv, 0x1f, 0xf)) << reg_v3u(gpriv, 8, 16))
+>>>>>>> b7ba80a49124 (Commit)
 
 #define RCANFD_DCFG_DBRP(x)		(((x) & 0xff) << 0)
 
 /* RSCFDnCFDCmFDCFG */
+<<<<<<< HEAD
 #define RCANFD_GEN4_FDCFG_CLOE		BIT(30)
 #define RCANFD_GEN4_FDCFG_FDOE		BIT(28)
+=======
+#define RCANFD_FDCFG_CLOE		BIT(30)
+#define RCANFD_FDCFG_FDOE		BIT(28)
+>>>>>>> b7ba80a49124 (Commit)
 #define RCANFD_FDCFG_TDCE		BIT(9)
 #define RCANFD_FDCFG_TDCOC		BIT(8)
 #define RCANFD_FDCFG_TDCO(x)		(((x) & 0x7f) >> 16)
@@ -233,11 +310,18 @@
 /* Common FIFO bits */
 
 /* RSCFDnCFDCFCCk */
+<<<<<<< HEAD
 #define RCANFD_CFCC_CFTML(gpriv, x)	\
 	(((x) & reg_gen4(gpriv, 0x1f, 0xf)) << reg_gen4(gpriv, 16, 20))
 #define RCANFD_CFCC_CFM(gpriv, x)	(((x) & 0x3) << reg_gen4(gpriv,  8, 16))
 #define RCANFD_CFCC_CFIM		BIT(12)
 #define RCANFD_CFCC_CFDC(gpriv, x)	(((x) & 0x7) << reg_gen4(gpriv, 21,  8))
+=======
+#define RCANFD_CFCC_CFTML(gpriv, x)	(((x) & 0xf) << reg_v3u(gpriv, 16, 20))
+#define RCANFD_CFCC_CFM(gpriv, x)	(((x) & 0x3) << reg_v3u(gpriv,  8, 16))
+#define RCANFD_CFCC_CFIM		BIT(12)
+#define RCANFD_CFCC_CFDC(gpriv, x)	(((x) & 0x7) << reg_v3u(gpriv, 21,  8))
+>>>>>>> b7ba80a49124 (Commit)
 #define RCANFD_CFCC_CFPLS(x)		(((x) & 0x7) << 4)
 #define RCANFD_CFCC_CFTXIE		BIT(2)
 #define RCANFD_CFCC_CFE			BIT(0)
@@ -305,7 +389,11 @@
 #define RCANFD_RMND(y)			(0x00a8 + (0x04 * (y)))
 
 /* RSCFDnCFDRFCCx / RSCFDnRFCCx */
+<<<<<<< HEAD
 #define RCANFD_RFCC(gpriv, x)		(reg_gen4(gpriv, 0x00c0, 0x00b8) + (0x04 * (x)))
+=======
+#define RCANFD_RFCC(gpriv, x)		(reg_v3u(gpriv, 0x00c0, 0x00b8) + (0x04 * (x)))
+>>>>>>> b7ba80a49124 (Commit)
 /* RSCFDnCFDRFSTSx / RSCFDnRFSTSx */
 #define RCANFD_RFSTS(gpriv, x)		(RCANFD_RFCC(gpriv, x) + 0x20)
 /* RSCFDnCFDRFPCTRx / RSCFDnRFPCTRx */
@@ -315,6 +403,7 @@
 
 /* RSCFDnCFDCFCCx / RSCFDnCFCCx */
 #define RCANFD_CFCC(gpriv, ch, idx) \
+<<<<<<< HEAD
 	(reg_gen4(gpriv, 0x0120, 0x0118) + (0x0c * (ch)) + (0x04 * (idx)))
 /* RSCFDnCFDCFSTSx / RSCFDnCFSTSx */
 #define RCANFD_CFSTS(gpriv, ch, idx) \
@@ -322,6 +411,15 @@
 /* RSCFDnCFDCFPCTRx / RSCFDnCFPCTRx */
 #define RCANFD_CFPCTR(gpriv, ch, idx) \
 	(reg_gen4(gpriv, 0x0240, 0x01d8) + (0x0c * (ch)) + (0x04 * (idx)))
+=======
+	(reg_v3u(gpriv, 0x0120, 0x0118) + (0x0c * (ch)) + (0x04 * (idx)))
+/* RSCFDnCFDCFSTSx / RSCFDnCFSTSx */
+#define RCANFD_CFSTS(gpriv, ch, idx) \
+	(reg_v3u(gpriv, 0x01e0, 0x0178) + (0x0c * (ch)) + (0x04 * (idx)))
+/* RSCFDnCFDCFPCTRx / RSCFDnCFPCTRx */
+#define RCANFD_CFPCTR(gpriv, ch, idx) \
+	(reg_v3u(gpriv, 0x0240, 0x01d8) + (0x0c * (ch)) + (0x04 * (idx)))
+>>>>>>> b7ba80a49124 (Commit)
 
 /* RSCFDnCFDFESTS / RSCFDnFESTS */
 #define RCANFD_FESTS			(0x0238)
@@ -429,15 +527,27 @@
 /* RSCFDnRPGACCr */
 #define RCANFD_C_RPGACC(r)		(0x1900 + (0x04 * (r)))
 
+<<<<<<< HEAD
 /* R-Car Gen4 Classical and CAN FD mode specific register map */
 #define RCANFD_GEN4_FDCFG(m)		(0x1404 + (0x20 * (m)))
 
 #define RCANFD_GEN4_GAFL_OFFSET		(0x1800)
+=======
+/* R-Car V3U Classical and CAN FD mode specific register map */
+#define RCANFD_V3U_CFDCFG		(0x1314)
+#define RCANFD_V3U_DCFG(m)		(0x1400 + (0x20 * (m)))
+
+#define RCANFD_V3U_GAFL_OFFSET		(0x1800)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* CAN FD mode specific register map */
 
 /* RSCFDnCFDCmXXX -> RCANFD_F_XXX(m) */
+<<<<<<< HEAD
 #define RCANFD_F_DCFG(gpriv, m)		(reg_gen4(gpriv, 0x1400, 0x0500) + (0x20 * (m)))
+=======
+#define RCANFD_F_DCFG(m)		(0x0500 + (0x20 * (m)))
+>>>>>>> b7ba80a49124 (Commit)
 #define RCANFD_F_CFDCFG(m)		(0x0504 + (0x20 * (m)))
 #define RCANFD_F_CFDCTR(m)		(0x0508 + (0x20 * (m)))
 #define RCANFD_F_CFDSTS(m)		(0x050c + (0x20 * (m)))
@@ -453,7 +563,11 @@
 #define RCANFD_F_RMDF(q, b)		(0x200c + (0x04 * (b)) + (0x20 * (q)))
 
 /* RSCFDnCFDRFXXx -> RCANFD_F_RFXX(x) */
+<<<<<<< HEAD
 #define RCANFD_F_RFOFFSET(gpriv)	reg_gen4(gpriv, 0x6000, 0x3000)
+=======
+#define RCANFD_F_RFOFFSET(gpriv)	reg_v3u(gpriv, 0x6000, 0x3000)
+>>>>>>> b7ba80a49124 (Commit)
 #define RCANFD_F_RFID(gpriv, x)		(RCANFD_F_RFOFFSET(gpriv) + (0x80 * (x)))
 #define RCANFD_F_RFPTR(gpriv, x)	(RCANFD_F_RFOFFSET(gpriv) + 0x04 + (0x80 * (x)))
 #define RCANFD_F_RFFDSTS(gpriv, x)	(RCANFD_F_RFOFFSET(gpriv) + 0x08 + (0x80 * (x)))
@@ -461,7 +575,11 @@
 	(RCANFD_F_RFOFFSET(gpriv) + 0x0c + (0x80 * (x)) + (0x04 * (df)))
 
 /* RSCFDnCFDCFXXk -> RCANFD_F_CFXX(ch, k) */
+<<<<<<< HEAD
 #define RCANFD_F_CFOFFSET(gpriv)	reg_gen4(gpriv, 0x6400, 0x3400)
+=======
+#define RCANFD_F_CFOFFSET(gpriv)	reg_v3u(gpriv, 0x6400, 0x3400)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define RCANFD_F_CFID(gpriv, ch, idx) \
 	(RCANFD_F_CFOFFSET(gpriv) + (0x180 * (ch)) + (0x80 * (idx)))
@@ -516,6 +634,7 @@ enum rcar_canfd_fcanclk {
 
 struct rcar_canfd_global;
 
+<<<<<<< HEAD
 struct rcar_canfd_hw_info {
 	u8 max_channels;
 	u8 postdiv;
@@ -524,6 +643,8 @@ struct rcar_canfd_hw_info {
 	unsigned multi_channel_irqs:1;	/* Has multiple channel irqs */
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Channel priv data */
 struct rcar_canfd_channel {
 	struct can_priv can;			/* Must be the first member */
@@ -549,7 +670,12 @@ struct rcar_canfd_global {
 	bool fdmode;			/* CAN FD or Classical CAN only mode */
 	struct reset_control *rstc1;
 	struct reset_control *rstc2;
+<<<<<<< HEAD
 	const struct rcar_canfd_hw_info *info;
+=======
+	enum rcanfd_chip_id chip_id;
+	u32 max_channels;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* CAN FD mode nominal rate constants */
@@ -591,6 +717,7 @@ static const struct can_bittiming_const rcar_canfd_bittiming_const = {
 	.brp_inc = 1,
 };
 
+<<<<<<< HEAD
 static const struct rcar_canfd_hw_info rcar_gen3_hw_info = {
 	.max_channels = 2,
 	.postdiv = 2,
@@ -619,6 +746,18 @@ static inline u32 reg_gen4(struct rcar_canfd_global *gpriv,
 			   u32 gen4, u32 not_gen4)
 {
 	return is_gen4(gpriv) ? gen4 : not_gen4;
+=======
+/* Helper functions */
+static inline bool is_v3u(struct rcar_canfd_global *gpriv)
+{
+	return gpriv->chip_id == RENESAS_R8A779A0;
+}
+
+static inline u32 reg_v3u(struct rcar_canfd_global *gpriv,
+			  u32 v3u, u32 not_v3u)
+{
+	return is_v3u(gpriv) ? v3u : not_v3u;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void rcar_canfd_update(u32 mask, u32 val, u32 __iomem *reg)
@@ -688,6 +827,7 @@ static void rcar_canfd_tx_failure_cleanup(struct net_device *ndev)
 
 static void rcar_canfd_set_mode(struct rcar_canfd_global *gpriv)
 {
+<<<<<<< HEAD
 	if (is_gen4(gpriv)) {
 		u32 ch, val = gpriv->fdmode ? RCANFD_GEN4_FDCFG_FDOE
 					    : RCANFD_GEN4_FDCFG_CLOE;
@@ -696,6 +836,15 @@ static void rcar_canfd_set_mode(struct rcar_canfd_global *gpriv)
 				 gpriv->info->max_channels)
 			rcar_canfd_set_bit(gpriv->base, RCANFD_GEN4_FDCFG(ch),
 					   val);
+=======
+	if (is_v3u(gpriv)) {
+		if (gpriv->fdmode)
+			rcar_canfd_set_bit(gpriv->base, RCANFD_V3U_CFDCFG,
+					   RCANFD_FDCFG_FDOE);
+		else
+			rcar_canfd_set_bit(gpriv->base, RCANFD_V3U_CFDCFG,
+					   RCANFD_FDCFG_CLOE);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		if (gpriv->fdmode)
 			rcar_canfd_set_bit(gpriv->base, RCANFD_GRMCFG,
@@ -741,7 +890,11 @@ static int rcar_canfd_reset_controller(struct rcar_canfd_global *gpriv)
 	rcar_canfd_set_mode(gpriv);
 
 	/* Transition all Channels to reset mode */
+<<<<<<< HEAD
 	for_each_set_bit(ch, &gpriv->channels_mask, gpriv->info->max_channels) {
+=======
+	for_each_set_bit(ch, &gpriv->channels_mask, gpriv->max_channels) {
+>>>>>>> b7ba80a49124 (Commit)
 		rcar_canfd_clear_bit(gpriv->base,
 				     RCANFD_CCTR(ch), RCANFD_CCTR_CSLPR);
 
@@ -782,7 +935,11 @@ static void rcar_canfd_configure_controller(struct rcar_canfd_global *gpriv)
 	rcar_canfd_set_bit(gpriv->base, RCANFD_GCFG, cfg);
 
 	/* Channel configuration settings */
+<<<<<<< HEAD
 	for_each_set_bit(ch, &gpriv->channels_mask, gpriv->info->max_channels) {
+=======
+	for_each_set_bit(ch, &gpriv->channels_mask, gpriv->max_channels) {
+>>>>>>> b7ba80a49124 (Commit)
 		rcar_canfd_set_bit(gpriv->base, RCANFD_CCTR(ch),
 				   RCANFD_CCTR_ERRD);
 		rcar_canfd_update_bit(gpriv->base, RCANFD_CCTR(ch),
@@ -815,8 +972,13 @@ static void rcar_canfd_configure_afl_rules(struct rcar_canfd_global *gpriv,
 	/* Write number of rules for channel */
 	rcar_canfd_set_bit(gpriv->base, RCANFD_GAFLCFG(ch),
 			   RCANFD_GAFLCFG_SETRNC(gpriv, ch, num_rules));
+<<<<<<< HEAD
 	if (is_gen4(gpriv))
 		offset = RCANFD_GEN4_GAFL_OFFSET;
+=======
+	if (is_v3u(gpriv))
+		offset = RCANFD_V3U_GAFL_OFFSET;
+>>>>>>> b7ba80a49124 (Commit)
 	else if (gpriv->fdmode)
 		offset = RCANFD_F_GAFL_OFFSET;
 	else
@@ -955,8 +1117,17 @@ static void rcar_canfd_global_error(struct net_device *ndev)
 	u32 ridx = ch + RCANFD_RFFIFO_IDX;
 
 	gerfl = rcar_canfd_read(priv->base, RCANFD_GERFL);
+<<<<<<< HEAD
 	if (gerfl & RCANFD_GERFL_EEF(ch)) {
 		netdev_dbg(ndev, "Ch%u: ECC Error flag\n", ch);
+=======
+	if ((gerfl & RCANFD_GERFL_EEF0) && (ch == 0)) {
+		netdev_dbg(ndev, "Ch0: ECC Error flag\n");
+		stats->tx_dropped++;
+	}
+	if ((gerfl & RCANFD_GERFL_EEF1) && (ch == 1)) {
+		netdev_dbg(ndev, "Ch1: ECC Error flag\n");
+>>>>>>> b7ba80a49124 (Commit)
 		stats->tx_dropped++;
 	}
 	if (gerfl & RCANFD_GERFL_MES) {
@@ -1162,7 +1333,11 @@ static irqreturn_t rcar_canfd_global_err_interrupt(int irq, void *dev_id)
 	struct rcar_canfd_global *gpriv = dev_id;
 	u32 ch;
 
+<<<<<<< HEAD
 	for_each_set_bit(ch, &gpriv->channels_mask, gpriv->info->max_channels)
+=======
+	for_each_set_bit(ch, &gpriv->channels_mask, gpriv->max_channels)
+>>>>>>> b7ba80a49124 (Commit)
 		rcar_canfd_handle_global_err(gpriv, ch);
 
 	return IRQ_HANDLED;
@@ -1172,6 +1347,7 @@ static void rcar_canfd_handle_global_receive(struct rcar_canfd_global *gpriv, u3
 {
 	struct rcar_canfd_channel *priv = gpriv->ch[ch];
 	u32 ridx = ch + RCANFD_RFFIFO_IDX;
+<<<<<<< HEAD
 	u32 sts, cc;
 
 	/* Handle Rx interrupts */
@@ -1179,6 +1355,13 @@ static void rcar_canfd_handle_global_receive(struct rcar_canfd_global *gpriv, u3
 	cc = rcar_canfd_read(priv->base, RCANFD_RFCC(gpriv, ridx));
 	if (likely(sts & RCANFD_RFSTS_RFIF &&
 		   cc & RCANFD_RFCC_RFIE)) {
+=======
+	u32 sts;
+
+	/* Handle Rx interrupts */
+	sts = rcar_canfd_read(priv->base, RCANFD_RFSTS(gpriv, ridx));
+	if (likely(sts & RCANFD_RFSTS_RFIF)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (napi_schedule_prep(&priv->napi)) {
 			/* Disable Rx FIFO interrupts */
 			rcar_canfd_clear_bit(priv->base,
@@ -1194,7 +1377,11 @@ static irqreturn_t rcar_canfd_global_receive_fifo_interrupt(int irq, void *dev_i
 	struct rcar_canfd_global *gpriv = dev_id;
 	u32 ch;
 
+<<<<<<< HEAD
 	for_each_set_bit(ch, &gpriv->channels_mask, gpriv->info->max_channels)
+=======
+	for_each_set_bit(ch, &gpriv->channels_mask, gpriv->max_channels)
+>>>>>>> b7ba80a49124 (Commit)
 		rcar_canfd_handle_global_receive(gpriv, ch);
 
 	return IRQ_HANDLED;
@@ -1208,7 +1395,11 @@ static irqreturn_t rcar_canfd_global_interrupt(int irq, void *dev_id)
 	/* Global error interrupts still indicate a condition specific
 	 * to a channel. RxFIFO interrupt is a global interrupt.
 	 */
+<<<<<<< HEAD
 	for_each_set_bit(ch, &gpriv->channels_mask, gpriv->info->max_channels) {
+=======
+	for_each_set_bit(ch, &gpriv->channels_mask, gpriv->max_channels) {
+>>>>>>> b7ba80a49124 (Commit)
 		rcar_canfd_handle_global_err(gpriv, ch);
 		rcar_canfd_handle_global_receive(gpriv, ch);
 	}
@@ -1261,9 +1452,17 @@ static void rcar_canfd_handle_channel_tx(struct rcar_canfd_global *gpriv, u32 ch
 
 static irqreturn_t rcar_canfd_channel_tx_interrupt(int irq, void *dev_id)
 {
+<<<<<<< HEAD
 	struct rcar_canfd_channel *priv = dev_id;
 
 	rcar_canfd_handle_channel_tx(priv->gpriv, priv->channel);
+=======
+	struct rcar_canfd_global *gpriv = dev_id;
+	u32 ch;
+
+	for_each_set_bit(ch, &gpriv->channels_mask, gpriv->max_channels)
+		rcar_canfd_handle_channel_tx(gpriv, ch);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return IRQ_HANDLED;
 }
@@ -1291,9 +1490,17 @@ static void rcar_canfd_handle_channel_err(struct rcar_canfd_global *gpriv, u32 c
 
 static irqreturn_t rcar_canfd_channel_err_interrupt(int irq, void *dev_id)
 {
+<<<<<<< HEAD
 	struct rcar_canfd_channel *priv = dev_id;
 
 	rcar_canfd_handle_channel_err(priv->gpriv, priv->channel);
+=======
+	struct rcar_canfd_global *gpriv = dev_id;
+	u32 ch;
+
+	for_each_set_bit(ch, &gpriv->channels_mask, gpriv->max_channels)
+		rcar_canfd_handle_channel_err(gpriv, ch);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return IRQ_HANDLED;
 }
@@ -1304,7 +1511,11 @@ static irqreturn_t rcar_canfd_channel_interrupt(int irq, void *dev_id)
 	u32 ch;
 
 	/* Common FIFO is a per channel resource */
+<<<<<<< HEAD
 	for_each_set_bit(ch, &gpriv->channels_mask, gpriv->info->max_channels) {
+=======
+	for_each_set_bit(ch, &gpriv->channels_mask, gpriv->max_channels) {
+>>>>>>> b7ba80a49124 (Commit)
 		rcar_canfd_handle_channel_err(gpriv, ch);
 		rcar_canfd_handle_channel_tx(gpriv, ch);
 	}
@@ -1344,14 +1555,27 @@ static void rcar_canfd_set_bittiming(struct net_device *dev)
 		tseg2 = dbt->phase_seg2 - 1;
 
 		cfg = (RCANFD_DCFG_DTSEG1(gpriv, tseg1) | RCANFD_DCFG_DBRP(brp) |
+<<<<<<< HEAD
 		       RCANFD_DCFG_DSJW(gpriv, sjw) | RCANFD_DCFG_DTSEG2(gpriv, tseg2));
 
 		rcar_canfd_write(priv->base, RCANFD_F_DCFG(gpriv, ch), cfg);
+=======
+		       RCANFD_DCFG_DSJW(sjw) | RCANFD_DCFG_DTSEG2(gpriv, tseg2));
+
+		if (is_v3u(gpriv))
+			rcar_canfd_write(priv->base, RCANFD_V3U_DCFG(ch), cfg);
+		else
+			rcar_canfd_write(priv->base, RCANFD_F_DCFG(ch), cfg);
+>>>>>>> b7ba80a49124 (Commit)
 		netdev_dbg(priv->ndev, "drate: brp %u, sjw %u, tseg1 %u, tseg2 %u\n",
 			   brp, sjw, tseg1, tseg2);
 	} else {
 		/* Classical CAN only mode */
+<<<<<<< HEAD
 		if (is_gen4(gpriv)) {
+=======
+		if (is_v3u(gpriv)) {
+>>>>>>> b7ba80a49124 (Commit)
 			cfg = (RCANFD_NCFG_NTSEG1(gpriv, tseg1) |
 			       RCANFD_NCFG_NBRP(brp) |
 			       RCANFD_NCFG_NSJW(gpriv, sjw) |
@@ -1493,7 +1717,11 @@ static netdev_tx_t rcar_canfd_start_xmit(struct sk_buff *skb,
 	unsigned long flags;
 	u32 ch = priv->channel;
 
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(ndev, skb))
+=======
+	if (can_dropped_invalid_skb(ndev, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	if (cf->can_id & CAN_EFF_FLAG) {
@@ -1508,7 +1736,11 @@ static netdev_tx_t rcar_canfd_start_xmit(struct sk_buff *skb,
 
 	dlc = RCANFD_CFPTR_CFDLC(can_fd_len2dlc(cf->len));
 
+<<<<<<< HEAD
 	if ((priv->can.ctrlmode & CAN_CTRLMODE_FD) || is_gen4(gpriv)) {
+=======
+	if ((priv->can.ctrlmode & CAN_CTRLMODE_FD) || is_v3u(gpriv)) {
+>>>>>>> b7ba80a49124 (Commit)
 		rcar_canfd_write(priv->base,
 				 RCANFD_F_CFID(gpriv, ch, RCANFD_CFFIFO_IDX), id);
 		rcar_canfd_write(priv->base,
@@ -1567,7 +1799,11 @@ static void rcar_canfd_rx_pkt(struct rcar_canfd_channel *priv)
 	u32 ch = priv->channel;
 	u32 ridx = ch + RCANFD_RFFIFO_IDX;
 
+<<<<<<< HEAD
 	if ((priv->can.ctrlmode & CAN_CTRLMODE_FD) || is_gen4(gpriv)) {
+=======
+	if ((priv->can.ctrlmode & CAN_CTRLMODE_FD) || is_v3u(gpriv)) {
+>>>>>>> b7ba80a49124 (Commit)
 		id = rcar_canfd_read(priv->base, RCANFD_F_RFID(gpriv, ridx));
 		dlc = rcar_canfd_read(priv->base, RCANFD_F_RFPTR(gpriv, ridx));
 
@@ -1618,7 +1854,11 @@ static void rcar_canfd_rx_pkt(struct rcar_canfd_channel *priv)
 		cf->len = can_cc_dlc2len(RCANFD_RFPTR_RFDLC(dlc));
 		if (id & RCANFD_RFID_RFRTR)
 			cf->can_id |= CAN_RTR_FLAG;
+<<<<<<< HEAD
 		else if (is_gen4(gpriv))
+=======
+		else if (is_v3u(gpriv))
+>>>>>>> b7ba80a49124 (Commit)
 			rcar_canfd_get_data(priv, cf, RCANFD_F_RFDF(gpriv, ridx, 0));
 		else
 			rcar_canfd_get_data(priv, cf, RCANFD_C_RFDF(ridx, 0));
@@ -1713,16 +1953,24 @@ static const struct ethtool_ops rcar_canfd_ethtool_ops = {
 static int rcar_canfd_channel_probe(struct rcar_canfd_global *gpriv, u32 ch,
 				    u32 fcan_freq)
 {
+<<<<<<< HEAD
 	const struct rcar_canfd_hw_info *info = gpriv->info;
 	struct platform_device *pdev = gpriv->pdev;
 	struct device *dev = &pdev->dev;
+=======
+	struct platform_device *pdev = gpriv->pdev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct rcar_canfd_channel *priv;
 	struct net_device *ndev;
 	int err = -ENODEV;
 
 	ndev = alloc_candev(sizeof(*priv), RCANFD_FIFO_DEPTH);
 	if (!ndev) {
+<<<<<<< HEAD
 		dev_err(dev, "alloc_candev() failed\n");
+=======
+		dev_err(&pdev->dev, "alloc_candev() failed\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOMEM;
 	}
 	priv = netdev_priv(ndev);
@@ -1733,11 +1981,18 @@ static int rcar_canfd_channel_probe(struct rcar_canfd_global *gpriv, u32 ch,
 	priv->ndev = ndev;
 	priv->base = gpriv->base;
 	priv->channel = ch;
+<<<<<<< HEAD
 	priv->gpriv = gpriv;
 	priv->can.clock.freq = fcan_freq;
 	dev_info(dev, "can_clk rate is %u\n", priv->can.clock.freq);
 
 	if (info->multi_channel_irqs) {
+=======
+	priv->can.clock.freq = fcan_freq;
+	dev_info(&pdev->dev, "can_clk rate is %u\n", priv->can.clock.freq);
+
+	if (gpriv->chip_id == RENESAS_RZG2L) {
+>>>>>>> b7ba80a49124 (Commit)
 		char *irq_name;
 		int err_irq;
 		int tx_irq;
@@ -1754,12 +2009,18 @@ static int rcar_canfd_channel_probe(struct rcar_canfd_global *gpriv, u32 ch,
 			goto fail;
 		}
 
+<<<<<<< HEAD
 		irq_name = devm_kasprintf(dev, GFP_KERNEL, "canfd.ch%d_err",
 					  ch);
+=======
+		irq_name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
+					  "canfd.ch%d_err", ch);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!irq_name) {
 			err = -ENOMEM;
 			goto fail;
 		}
+<<<<<<< HEAD
 		err = devm_request_irq(dev, err_irq,
 				       rcar_canfd_channel_err_interrupt, 0,
 				       irq_name, priv);
@@ -1770,15 +2031,35 @@ static int rcar_canfd_channel_probe(struct rcar_canfd_global *gpriv, u32 ch,
 		}
 		irq_name = devm_kasprintf(dev, GFP_KERNEL, "canfd.ch%d_trx",
 					  ch);
+=======
+		err = devm_request_irq(&pdev->dev, err_irq,
+				       rcar_canfd_channel_err_interrupt, 0,
+				       irq_name, gpriv);
+		if (err) {
+			dev_err(&pdev->dev, "devm_request_irq CH Err(%d) failed, error %d\n",
+				err_irq, err);
+			goto fail;
+		}
+		irq_name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
+					  "canfd.ch%d_trx", ch);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!irq_name) {
 			err = -ENOMEM;
 			goto fail;
 		}
+<<<<<<< HEAD
 		err = devm_request_irq(dev, tx_irq,
 				       rcar_canfd_channel_tx_interrupt, 0,
 				       irq_name, priv);
 		if (err) {
 			dev_err(dev, "devm_request_irq Tx (%d) failed, error %d\n",
+=======
+		err = devm_request_irq(&pdev->dev, tx_irq,
+				       rcar_canfd_channel_tx_interrupt, 0,
+				       irq_name, gpriv);
+		if (err) {
+			dev_err(&pdev->dev, "devm_request_irq Tx (%d) failed, error %d\n",
+>>>>>>> b7ba80a49124 (Commit)
 				tx_irq, err);
 			goto fail;
 		}
@@ -1802,7 +2083,12 @@ static int rcar_canfd_channel_probe(struct rcar_canfd_global *gpriv, u32 ch,
 
 	priv->can.do_set_mode = rcar_canfd_do_set_mode;
 	priv->can.do_get_berr_counter = rcar_canfd_get_berr_counter;
+<<<<<<< HEAD
 	SET_NETDEV_DEV(ndev, dev);
+=======
+	priv->gpriv = gpriv;
+	SET_NETDEV_DEV(ndev, &pdev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	netif_napi_add_weight(ndev, &priv->napi, rcar_canfd_rx_poll,
 			      RCANFD_NAPI_WEIGHT);
@@ -1810,10 +2096,18 @@ static int rcar_canfd_channel_probe(struct rcar_canfd_global *gpriv, u32 ch,
 	gpriv->ch[priv->channel] = priv;
 	err = register_candev(ndev);
 	if (err) {
+<<<<<<< HEAD
 		dev_err(dev, "register_candev() failed, error %d\n", err);
 		goto fail_candev;
 	}
 	dev_info(dev, "device registered (channel %u)\n", priv->channel);
+=======
+		dev_err(&pdev->dev,
+			"register_candev() failed, error %d\n", err);
+		goto fail_candev;
+	}
+	dev_info(&pdev->dev, "device registered (channel %u)\n", priv->channel);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 fail_candev:
@@ -1836,8 +2130,11 @@ static void rcar_canfd_channel_remove(struct rcar_canfd_global *gpriv, u32 ch)
 
 static int rcar_canfd_probe(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	const struct rcar_canfd_hw_info *info;
 	struct device *dev = &pdev->dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem *addr;
 	u32 sts, ch, fcan_freq;
 	struct rcar_canfd_global *gpriv;
@@ -1846,6 +2143,7 @@ static int rcar_canfd_probe(struct platform_device *pdev)
 	int err, ch_irq, g_irq;
 	int g_err_irq, g_recc_irq;
 	bool fdmode = true;			/* CAN FD only mode - default */
+<<<<<<< HEAD
 	char name[9] = "channelX";
 	int i;
 
@@ -1857,12 +2155,32 @@ static int rcar_canfd_probe(struct platform_device *pdev)
 	for (i = 0; i < info->max_channels; ++i) {
 		name[7] = '0' + i;
 		of_child = of_get_child_by_name(dev->of_node, name);
+=======
+	enum rcanfd_chip_id chip_id;
+	int max_channels;
+	char name[9] = "channelX";
+	int i;
+
+	chip_id = (uintptr_t)of_device_get_match_data(&pdev->dev);
+	max_channels = chip_id == RENESAS_R8A779A0 ? 8 : 2;
+
+	if (of_property_read_bool(pdev->dev.of_node, "renesas,no-can-fd"))
+		fdmode = false;			/* Classical CAN only mode */
+
+	for (i = 0; i < max_channels; ++i) {
+		name[7] = '0' + i;
+		of_child = of_get_child_by_name(pdev->dev.of_node, name);
+>>>>>>> b7ba80a49124 (Commit)
 		if (of_child && of_device_is_available(of_child))
 			channels_mask |= BIT(i);
 		of_node_put(of_child);
 	}
 
+<<<<<<< HEAD
 	if (info->shared_global_irqs) {
+=======
+	if (chip_id != RENESAS_RZG2L) {
+>>>>>>> b7ba80a49124 (Commit)
 		ch_irq = platform_get_irq_byname_optional(pdev, "ch_int");
 		if (ch_irq < 0) {
 			/* For backward compatibility get irq by index */
@@ -1889,13 +2207,18 @@ static int rcar_canfd_probe(struct platform_device *pdev)
 	}
 
 	/* Global controller context */
+<<<<<<< HEAD
 	gpriv = devm_kzalloc(dev, sizeof(*gpriv), GFP_KERNEL);
+=======
+	gpriv = devm_kzalloc(&pdev->dev, sizeof(*gpriv), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!gpriv)
 		return -ENOMEM;
 
 	gpriv->pdev = pdev;
 	gpriv->channels_mask = channels_mask;
 	gpriv->fdmode = fdmode;
+<<<<<<< HEAD
 	gpriv->info = info;
 
 	gpriv->rstc1 = devm_reset_control_get_optional_exclusive(dev, "rstp_n");
@@ -1912,16 +2235,45 @@ static int rcar_canfd_probe(struct platform_device *pdev)
 	gpriv->clkp = devm_clk_get(dev, "fck");
 	if (IS_ERR(gpriv->clkp))
 		return dev_err_probe(dev, PTR_ERR(gpriv->clkp),
+=======
+	gpriv->chip_id = chip_id;
+	gpriv->max_channels = max_channels;
+
+	if (gpriv->chip_id == RENESAS_RZG2L) {
+		gpriv->rstc1 = devm_reset_control_get_exclusive(&pdev->dev, "rstp_n");
+		if (IS_ERR(gpriv->rstc1))
+			return dev_err_probe(&pdev->dev, PTR_ERR(gpriv->rstc1),
+					     "failed to get rstp_n\n");
+
+		gpriv->rstc2 = devm_reset_control_get_exclusive(&pdev->dev, "rstc_n");
+		if (IS_ERR(gpriv->rstc2))
+			return dev_err_probe(&pdev->dev, PTR_ERR(gpriv->rstc2),
+					     "failed to get rstc_n\n");
+	}
+
+	/* Peripheral clock */
+	gpriv->clkp = devm_clk_get(&pdev->dev, "fck");
+	if (IS_ERR(gpriv->clkp))
+		return dev_err_probe(&pdev->dev, PTR_ERR(gpriv->clkp),
+>>>>>>> b7ba80a49124 (Commit)
 				     "cannot get peripheral clock\n");
 
 	/* fCAN clock: Pick External clock. If not available fallback to
 	 * CANFD clock
 	 */
+<<<<<<< HEAD
 	gpriv->can_clk = devm_clk_get(dev, "can_clk");
 	if (IS_ERR(gpriv->can_clk) || (clk_get_rate(gpriv->can_clk) == 0)) {
 		gpriv->can_clk = devm_clk_get(dev, "canfd");
 		if (IS_ERR(gpriv->can_clk))
 			return dev_err_probe(dev, PTR_ERR(gpriv->can_clk),
+=======
+	gpriv->can_clk = devm_clk_get(&pdev->dev, "can_clk");
+	if (IS_ERR(gpriv->can_clk) || (clk_get_rate(gpriv->can_clk) == 0)) {
+		gpriv->can_clk = devm_clk_get(&pdev->dev, "canfd");
+		if (IS_ERR(gpriv->can_clk))
+			return dev_err_probe(&pdev->dev, PTR_ERR(gpriv->can_clk),
+>>>>>>> b7ba80a49124 (Commit)
 					     "cannot get canfd clock\n");
 
 		gpriv->fcan = RCANFD_CANFDCLK;
@@ -1931,9 +2283,15 @@ static int rcar_canfd_probe(struct platform_device *pdev)
 	}
 	fcan_freq = clk_get_rate(gpriv->can_clk);
 
+<<<<<<< HEAD
 	if (gpriv->fcan == RCANFD_CANFDCLK)
 		/* CANFD clock is further divided by (1/2) within the IP */
 		fcan_freq /= info->postdiv;
+=======
+	if (gpriv->fcan == RCANFD_CANFDCLK && gpriv->chip_id != RENESAS_RZG2L)
+		/* CANFD clock is further divided by (1/2) within the IP */
+		fcan_freq /= 2;
+>>>>>>> b7ba80a49124 (Commit)
 
 	addr = devm_platform_ioremap_resource(pdev, 0);
 	if (IS_ERR(addr)) {
@@ -1943,39 +2301,72 @@ static int rcar_canfd_probe(struct platform_device *pdev)
 	gpriv->base = addr;
 
 	/* Request IRQ that's common for both channels */
+<<<<<<< HEAD
 	if (info->shared_global_irqs) {
 		err = devm_request_irq(dev, ch_irq,
 				       rcar_canfd_channel_interrupt, 0,
 				       "canfd.ch_int", gpriv);
 		if (err) {
 			dev_err(dev, "devm_request_irq(%d) failed, error %d\n",
+=======
+	if (gpriv->chip_id != RENESAS_RZG2L) {
+		err = devm_request_irq(&pdev->dev, ch_irq,
+				       rcar_canfd_channel_interrupt, 0,
+				       "canfd.ch_int", gpriv);
+		if (err) {
+			dev_err(&pdev->dev, "devm_request_irq(%d) failed, error %d\n",
+>>>>>>> b7ba80a49124 (Commit)
 				ch_irq, err);
 			goto fail_dev;
 		}
 
+<<<<<<< HEAD
 		err = devm_request_irq(dev, g_irq, rcar_canfd_global_interrupt,
 				       0, "canfd.g_int", gpriv);
 		if (err) {
 			dev_err(dev, "devm_request_irq(%d) failed, error %d\n",
+=======
+		err = devm_request_irq(&pdev->dev, g_irq,
+				       rcar_canfd_global_interrupt, 0,
+				       "canfd.g_int", gpriv);
+		if (err) {
+			dev_err(&pdev->dev, "devm_request_irq(%d) failed, error %d\n",
+>>>>>>> b7ba80a49124 (Commit)
 				g_irq, err);
 			goto fail_dev;
 		}
 	} else {
+<<<<<<< HEAD
 		err = devm_request_irq(dev, g_recc_irq,
+=======
+		err = devm_request_irq(&pdev->dev, g_recc_irq,
+>>>>>>> b7ba80a49124 (Commit)
 				       rcar_canfd_global_receive_fifo_interrupt, 0,
 				       "canfd.g_recc", gpriv);
 
 		if (err) {
+<<<<<<< HEAD
 			dev_err(dev, "devm_request_irq(%d) failed, error %d\n",
+=======
+			dev_err(&pdev->dev, "devm_request_irq(%d) failed, error %d\n",
+>>>>>>> b7ba80a49124 (Commit)
 				g_recc_irq, err);
 			goto fail_dev;
 		}
 
+<<<<<<< HEAD
 		err = devm_request_irq(dev, g_err_irq,
 				       rcar_canfd_global_err_interrupt, 0,
 				       "canfd.g_err", gpriv);
 		if (err) {
 			dev_err(dev, "devm_request_irq(%d) failed, error %d\n",
+=======
+		err = devm_request_irq(&pdev->dev, g_err_irq,
+				       rcar_canfd_global_err_interrupt, 0,
+				       "canfd.g_err", gpriv);
+		if (err) {
+			dev_err(&pdev->dev, "devm_request_irq(%d) failed, error %d\n",
+>>>>>>> b7ba80a49124 (Commit)
 				g_err_irq, err);
 			goto fail_dev;
 		}
@@ -1993,14 +2384,23 @@ static int rcar_canfd_probe(struct platform_device *pdev)
 	/* Enable peripheral clock for register access */
 	err = clk_prepare_enable(gpriv->clkp);
 	if (err) {
+<<<<<<< HEAD
 		dev_err(dev, "failed to enable peripheral clock, error %d\n",
 			err);
+=======
+		dev_err(&pdev->dev,
+			"failed to enable peripheral clock, error %d\n", err);
+>>>>>>> b7ba80a49124 (Commit)
 		goto fail_reset;
 	}
 
 	err = rcar_canfd_reset_controller(gpriv);
 	if (err) {
+<<<<<<< HEAD
 		dev_err(dev, "reset controller failed\n");
+=======
+		dev_err(&pdev->dev, "reset controller failed\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto fail_clk;
 	}
 
@@ -2008,7 +2408,11 @@ static int rcar_canfd_probe(struct platform_device *pdev)
 	rcar_canfd_configure_controller(gpriv);
 
 	/* Configure per channel attributes */
+<<<<<<< HEAD
 	for_each_set_bit(ch, &gpriv->channels_mask, info->max_channels) {
+=======
+	for_each_set_bit(ch, &gpriv->channels_mask, max_channels) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Configure Channel's Rx fifo */
 		rcar_canfd_configure_rx(gpriv, ch);
 
@@ -2030,23 +2434,39 @@ static int rcar_canfd_probe(struct platform_device *pdev)
 	err = readl_poll_timeout((gpriv->base + RCANFD_GSTS), sts,
 				 !(sts & RCANFD_GSTS_GNOPM), 2, 500000);
 	if (err) {
+<<<<<<< HEAD
 		dev_err(dev, "global operational mode failed\n");
 		goto fail_mode;
 	}
 
 	for_each_set_bit(ch, &gpriv->channels_mask, info->max_channels) {
+=======
+		dev_err(&pdev->dev, "global operational mode failed\n");
+		goto fail_mode;
+	}
+
+	for_each_set_bit(ch, &gpriv->channels_mask, max_channels) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = rcar_canfd_channel_probe(gpriv, ch, fcan_freq);
 		if (err)
 			goto fail_channel;
 	}
 
 	platform_set_drvdata(pdev, gpriv);
+<<<<<<< HEAD
 	dev_info(dev, "global operational state (clk %d, fdmode %d)\n",
+=======
+	dev_info(&pdev->dev, "global operational state (clk %d, fdmode %d)\n",
+>>>>>>> b7ba80a49124 (Commit)
 		 gpriv->fcan, gpriv->fdmode);
 	return 0;
 
 fail_channel:
+<<<<<<< HEAD
 	for_each_set_bit(ch, &gpriv->channels_mask, info->max_channels)
+=======
+	for_each_set_bit(ch, &gpriv->channels_mask, max_channels)
+>>>>>>> b7ba80a49124 (Commit)
 		rcar_canfd_channel_remove(gpriv, ch);
 fail_mode:
 	rcar_canfd_disable_global_interrupts(gpriv);
@@ -2067,7 +2487,11 @@ static int rcar_canfd_remove(struct platform_device *pdev)
 	rcar_canfd_reset_controller(gpriv);
 	rcar_canfd_disable_global_interrupts(gpriv);
 
+<<<<<<< HEAD
 	for_each_set_bit(ch, &gpriv->channels_mask, gpriv->info->max_channels) {
+=======
+	for_each_set_bit(ch, &gpriv->channels_mask, gpriv->max_channels) {
+>>>>>>> b7ba80a49124 (Commit)
 		rcar_canfd_disable_channel_interrupts(gpriv->ch[ch]);
 		rcar_canfd_channel_remove(gpriv, ch);
 	}
@@ -2095,10 +2519,16 @@ static SIMPLE_DEV_PM_OPS(rcar_canfd_pm_ops, rcar_canfd_suspend,
 			 rcar_canfd_resume);
 
 static const __maybe_unused struct of_device_id rcar_canfd_of_table[] = {
+<<<<<<< HEAD
 	{ .compatible = "renesas,r8a779a0-canfd", .data = &rcar_gen4_hw_info },
 	{ .compatible = "renesas,rcar-gen3-canfd", .data = &rcar_gen3_hw_info },
 	{ .compatible = "renesas,rcar-gen4-canfd", .data = &rcar_gen4_hw_info },
 	{ .compatible = "renesas,rzg2l-canfd", .data = &rzg2l_hw_info },
+=======
+	{ .compatible = "renesas,rcar-gen3-canfd", .data = (void *)RENESAS_RCAR_GEN3 },
+	{ .compatible = "renesas,rzg2l-canfd", .data = (void *)RENESAS_RZG2L },
+	{ .compatible = "renesas,r8a779a0-canfd", .data = (void *)RENESAS_R8A779A0 },
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 

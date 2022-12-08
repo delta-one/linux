@@ -1088,11 +1088,20 @@ static int mchp_i2s_mcc_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void mchp_i2s_mcc_remove(struct platform_device *pdev)
+=======
+static int mchp_i2s_mcc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mchp_i2s_mcc_dev *dev = platform_get_drvdata(pdev);
 
 	clk_disable_unprepare(dev->pclk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver mchp_i2s_mcc_driver = {
@@ -1101,7 +1110,11 @@ static struct platform_driver mchp_i2s_mcc_driver = {
 		.of_match_table	= of_match_ptr(mchp_i2s_mcc_dt_ids),
 	},
 	.probe		= mchp_i2s_mcc_probe,
+<<<<<<< HEAD
 	.remove_new	= mchp_i2s_mcc_remove,
+=======
+	.remove		= mchp_i2s_mcc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(mchp_i2s_mcc_driver);
 

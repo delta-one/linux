@@ -106,7 +106,11 @@ static u32 batch_offset(const struct batch_chunk *bc, u32 *cs)
 
 static u32 batch_addr(const struct batch_chunk *bc)
 {
+<<<<<<< HEAD
 	return i915_vma_offset(bc->vma);
+=======
+	return bc->vma->node.start;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void batch_add(struct batch_chunk *bc, const u32 d)

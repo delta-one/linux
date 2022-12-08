@@ -13,7 +13,10 @@ typedef struct func_desc func_desc_t;
 #include <asm-generic/sections.h>
 
 extern char __head_end[];
+<<<<<<< HEAD
 extern char __srwx_boundary[];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Patch sites */
 extern s32 patch__call_flush_branch_caches1;
@@ -33,6 +36,12 @@ extern long kvm_flush_link_stack;
 extern char __start_interrupts[];
 extern char __end_interrupts[];
 
+<<<<<<< HEAD
+=======
+extern char __prom_init_toc_start[];
+extern char __prom_init_toc_end[];
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PPC_POWERNV
 extern char start_real_trampolines[];
 extern char end_real_trampolines[];

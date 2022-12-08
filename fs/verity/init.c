@@ -49,6 +49,10 @@ static int __init fsverity_init(void)
 	if (err)
 		goto err_exit_workqueue;
 
+<<<<<<< HEAD
+=======
+	pr_debug("Initialized fs-verity\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_exit_workqueue:

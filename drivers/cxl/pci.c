@@ -9,7 +9,10 @@
 #include <linux/list.h>
 #include <linux/pci.h>
 #include <linux/pci-doe.h>
+<<<<<<< HEAD
 #include <linux/aer.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/io.h>
 #include "cxlmem.h"
 #include "cxlpci.h"
@@ -160,7 +163,11 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
 	writeq(cmd_reg, cxlds->regs.mbox + CXLDEV_MBOX_CMD_OFFSET);
 
 	/* #4 */
+<<<<<<< HEAD
 	dev_dbg(dev, "Sending command: 0x%04x\n", mbox_cmd->opcode);
+=======
+	dev_dbg(dev, "Sending command\n");
+>>>>>>> b7ba80a49124 (Commit)
 	writel(CXLDEV_MBOX_CTRL_DOORBELL,
 	       cxlds->regs.mbox + CXLDEV_MBOX_CTRL_OFFSET);
 
@@ -277,22 +284,50 @@ static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
 
 static int cxl_map_regblock(struct pci_dev *pdev, struct cxl_register_map *map)
 {
+<<<<<<< HEAD
 	struct device *dev = &pdev->dev;
 
 	map->base = ioremap(map->resource, map->max_size);
 	if (!map->base) {
+=======
+	void __iomem *addr;
+	int bar = map->barno;
+	struct device *dev = &pdev->dev;
+	resource_size_t offset = map->block_offset;
+
+	/* Basic sanity check that BAR is big enough */
+	if (pci_resource_len(pdev, bar) < offset) {
+		dev_err(dev, "BAR%d: %pr: too small (offset: %pa)\n", bar,
+			&pdev->resource[bar], &offset);
+		return -ENXIO;
+	}
+
+	addr = pci_iomap(pdev, bar, 0);
+	if (!addr) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(dev, "failed to map registers\n");
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	dev_dbg(dev, "Mapped CXL Memory Device resource %pa\n", &map->resource);
+=======
+	dev_dbg(dev, "Mapped CXL Memory Device resource bar %u @ %pa\n",
+		bar, &offset);
+
+	map->base = addr + map->block_offset;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static void cxl_unmap_regblock(struct pci_dev *pdev,
 			       struct cxl_register_map *map)
 {
+<<<<<<< HEAD
 	iounmap(map->base);
+=======
+	pci_iounmap(pdev, map->base - map->block_offset);
+>>>>>>> b7ba80a49124 (Commit)
 	map->base = NULL;
 }
 
@@ -312,9 +347,12 @@ static int cxl_probe_regs(struct pci_dev *pdev, struct cxl_register_map *map)
 			return -ENXIO;
 		}
 
+<<<<<<< HEAD
 		if (!comp_map->ras.valid)
 			dev_dbg(dev, "RAS registers not found\n");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		dev_dbg(dev, "Set up component registers\n");
 		break;
 	case CXL_REGLOC_RBI_MEMDEV:
@@ -338,6 +376,30 @@ static int cxl_probe_regs(struct pci_dev *pdev, struct cxl_register_map *map)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int cxl_map_regs(struct cxl_dev_state *cxlds, struct cxl_register_map *map)
+{
+	struct device *dev = cxlds->dev;
+	struct pci_dev *pdev = to_pci_dev(dev);
+
+	switch (map->reg_type) {
+	case CXL_REGLOC_RBI_COMPONENT:
+		cxl_map_component_regs(pdev, &cxlds->regs.component, map);
+		dev_dbg(dev, "Mapping component registers...\n");
+		break;
+	case CXL_REGLOC_RBI_MEMDEV:
+		cxl_map_device_regs(pdev, &cxlds->regs.device_regs, map);
+		dev_dbg(dev, "Probing device registers...\n");
+		break;
+	default:
+		break;
+	}
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
 			  struct cxl_register_map *map)
 {
@@ -388,11 +450,14 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
 			continue;
 		}
 
+<<<<<<< HEAD
 		if (!pci_request_config_region_exclusive(pdev, off,
 							 PCI_DOE_CAP_SIZEOF,
 							 dev_name(dev)))
 			pci_err(pdev, "Failed to exclude DOE registers\n");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (xa_insert(&cxlds->doe_mbs, off, doe_mb, GFP_KERNEL)) {
 			dev_err(dev, "xa_insert failed to insert MB @ %x\n",
 				off);
@@ -403,6 +468,7 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
 	}
 }
 
+<<<<<<< HEAD
 /*
  * Assume that any RCIEP that emits the CXL memory expander class code
  * is an RCD
@@ -701,6 +767,10 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
 static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 {
 	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
+=======
+static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct cxl_register_map map;
 	struct cxl_memdev *cxlmd;
 	struct cxl_dev_state *cxlds;
@@ -716,14 +786,21 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	rc = pcim_enable_device(pdev);
 	if (rc)
 		return rc;
+<<<<<<< HEAD
 	pci_set_master(pdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	cxlds = cxl_dev_state_create(&pdev->dev);
 	if (IS_ERR(cxlds))
 		return PTR_ERR(cxlds);
+<<<<<<< HEAD
 	pci_set_drvdata(pdev, cxlds);
 
 	cxlds->rcd = is_cxl_restricted(pdev);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	cxlds->serial = pci_get_dsn(pdev);
 	cxlds->cxl_dvsec = pci_find_dvsec_capability(
 		pdev, PCI_DVSEC_VENDOR_ID_CXL, CXL_DVSEC_PCIE_DEVICE);
@@ -735,7 +812,11 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
 	rc = cxl_map_device_regs(&pdev->dev, &cxlds->regs.device_regs, &map);
+=======
+	rc = cxl_map_regs(cxlds, &map);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 
@@ -748,6 +829,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	if (rc)
 		dev_warn(&pdev->dev, "No component registers (%d)\n", rc);
 
+<<<<<<< HEAD
 	cxlds->component_reg_phys = map.resource;
 
 	devm_cxl_pci_create_doe(cxlds);
@@ -757,6 +839,12 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	if (rc)
 		dev_dbg(&pdev->dev, "Failed to map RAS capability.\n");
 
+=======
+	cxlds->component_reg_phys = cxl_regmap_to_base(pdev, &map);
+
+	devm_cxl_pci_create_doe(cxlds);
+
+>>>>>>> b7ba80a49124 (Commit)
 	rc = cxl_pci_setup_mailbox(cxlds);
 	if (rc)
 		return rc;
@@ -765,10 +853,13 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
 	rc = cxl_set_timestamp(cxlds);
 	if (rc)
 		return rc;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rc = cxl_dev_state_identify(cxlds);
 	if (rc)
 		return rc;
@@ -777,14 +868,18 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
 	rc = cxl_alloc_irq_vectors(pdev);
 	if (rc)
 		return rc;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cxlmd = devm_cxl_add_memdev(cxlds);
 	if (IS_ERR(cxlmd))
 		return PTR_ERR(cxlmd);
 
+<<<<<<< HEAD
 	rc = cxl_event_config(host_bridge, cxlds);
 	if (rc)
 		return rc;
@@ -794,6 +889,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 		dev_dbg(&pdev->dev, "No RAS reporting unmasked\n");
 
 	pci_save_state(pdev);
+=======
+	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM))
+		rc = devm_cxl_add_nvdimm(&pdev->dev, cxlmd);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return rc;
 }
@@ -805,6 +904,7 @@ static const struct pci_device_id cxl_mem_pci_tbl[] = {
 };
 MODULE_DEVICE_TABLE(pci, cxl_mem_pci_tbl);
 
+<<<<<<< HEAD
 static pci_ers_result_t cxl_slot_reset(struct pci_dev *pdev)
 {
 	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
@@ -836,11 +936,16 @@ static const struct pci_error_handlers cxl_error_handlers = {
 	.cor_error_detected	= cxl_cor_error_detected,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct pci_driver cxl_pci_driver = {
 	.name			= KBUILD_MODNAME,
 	.id_table		= cxl_mem_pci_tbl,
 	.probe			= cxl_pci_probe,
+<<<<<<< HEAD
 	.err_handler		= &cxl_error_handlers,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
 	},

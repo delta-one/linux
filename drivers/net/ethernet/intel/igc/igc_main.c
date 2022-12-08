@@ -4,6 +4,10 @@
 #include <linux/module.h>
 #include <linux/types.h>
 #include <linux/if_vlan.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/tcp.h>
 #include <linux/udp.h>
 #include <linux/ip.h>
@@ -999,6 +1003,7 @@ static int igc_write_mc_addr_list(struct net_device *netdev)
 	return netdev_mc_count(netdev);
 }
 
+<<<<<<< HEAD
 static __le32 igc_tx_launchtime(struct igc_ring *ring, ktime_t txtime,
 				bool *first_flag, bool *insert_empty)
 {
@@ -1041,10 +1046,26 @@ static __le32 igc_tx_launchtime(struct igc_ring *ring, ktime_t txtime,
 		div_s64_rem(launchtime, cycle_time, &launchtime);
 	else
 		launchtime = 0;
+=======
+static __le32 igc_tx_launchtime(struct igc_adapter *adapter, ktime_t txtime)
+{
+	ktime_t cycle_time = adapter->cycle_time;
+	ktime_t base_time = adapter->base_time;
+	u32 launchtime;
+
+	/* FIXME: when using ETF together with taprio, we may have a
+	 * case where 'delta' is larger than the cycle_time, this may
+	 * cause problems if we don't read the current value of
+	 * IGC_BASET, as the value writen into the launchtime
+	 * descriptor field may be misinterpreted.
+	 */
+	div_s64_rem(ktime_sub_ns(txtime, base_time), cycle_time, &launchtime);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return cpu_to_le32(launchtime);
 }
 
+<<<<<<< HEAD
 static int igc_init_empty_frame(struct igc_ring *ring,
 				struct igc_tx_buffer *buffer,
 				struct sk_buff *skb)
@@ -1111,6 +1132,10 @@ static int igc_init_tx_empty_descriptor(struct igc_ring *ring,
 
 static void igc_tx_ctxtdesc(struct igc_ring *tx_ring,
 			    __le32 launch_time, bool first_flag,
+=======
+static void igc_tx_ctxtdesc(struct igc_ring *tx_ring,
+			    struct igc_tx_buffer *first,
+>>>>>>> b7ba80a49124 (Commit)
 			    u32 vlan_macip_lens, u32 type_tucmd,
 			    u32 mss_l4len_idx)
 {
@@ -1129,6 +1154,7 @@ static void igc_tx_ctxtdesc(struct igc_ring *tx_ring,
 	if (test_bit(IGC_RING_FLAG_TX_CTX_IDX, &tx_ring->flags))
 		mss_l4len_idx |= tx_ring->reg_idx << 4;
 
+<<<<<<< HEAD
 	if (first_flag)
 		mss_l4len_idx |= IGC_ADVTXD_TSN_CNTX_FIRST;
 
@@ -1140,6 +1166,28 @@ static void igc_tx_ctxtdesc(struct igc_ring *tx_ring,
 
 static void igc_tx_csum(struct igc_ring *tx_ring, struct igc_tx_buffer *first,
 			__le32 launch_time, bool first_flag)
+=======
+	context_desc->vlan_macip_lens	= cpu_to_le32(vlan_macip_lens);
+	context_desc->type_tucmd_mlhl	= cpu_to_le32(type_tucmd);
+	context_desc->mss_l4len_idx	= cpu_to_le32(mss_l4len_idx);
+
+	/* We assume there is always a valid Tx time available. Invalid times
+	 * should have been handled by the upper layers.
+	 */
+	if (tx_ring->launchtime_enable) {
+		struct igc_adapter *adapter = netdev_priv(tx_ring->netdev);
+		ktime_t txtime = first->skb->tstamp;
+
+		skb_txtime_consumed(first->skb);
+		context_desc->launch_time = igc_tx_launchtime(adapter,
+							      txtime);
+	} else {
+		context_desc->launch_time = 0;
+	}
+}
+
+static void igc_tx_csum(struct igc_ring *tx_ring, struct igc_tx_buffer *first)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sk_buff *skb = first->skb;
 	u32 vlan_macip_lens = 0;
@@ -1179,8 +1227,12 @@ no_csum:
 	vlan_macip_lens |= skb_network_offset(skb) << IGC_ADVTXD_MACLEN_SHIFT;
 	vlan_macip_lens |= first->tx_flags & IGC_TX_FLAGS_VLAN_MASK;
 
+<<<<<<< HEAD
 	igc_tx_ctxtdesc(tx_ring, launch_time, first_flag,
 			vlan_macip_lens, type_tucmd, 0);
+=======
+	igc_tx_ctxtdesc(tx_ring, first, vlan_macip_lens, type_tucmd, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __igc_maybe_stop_tx(struct igc_ring *tx_ring, const u16 size)
@@ -1404,7 +1456,10 @@ dma_error:
 
 static int igc_tso(struct igc_ring *tx_ring,
 		   struct igc_tx_buffer *first,
+<<<<<<< HEAD
 		   __le32 launch_time, bool first_flag,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		   u8 *hdr_len)
 {
 	u32 vlan_macip_lens, type_tucmd, mss_l4len_idx;
@@ -1491,8 +1546,13 @@ static int igc_tso(struct igc_ring *tx_ring,
 	vlan_macip_lens |= (ip.hdr - skb->data) << IGC_ADVTXD_MACLEN_SHIFT;
 	vlan_macip_lens |= first->tx_flags & IGC_TX_FLAGS_VLAN_MASK;
 
+<<<<<<< HEAD
 	igc_tx_ctxtdesc(tx_ring, launch_time, first_flag,
 			vlan_macip_lens, type_tucmd, mss_l4len_idx);
+=======
+	igc_tx_ctxtdesc(tx_ring, first, vlan_macip_lens,
+			type_tucmd, mss_l4len_idx);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 1;
 }
@@ -1500,6 +1560,7 @@ static int igc_tso(struct igc_ring *tx_ring,
 static netdev_tx_t igc_xmit_frame_ring(struct sk_buff *skb,
 				       struct igc_ring *tx_ring)
 {
+<<<<<<< HEAD
 	struct igc_adapter *adapter = netdev_priv(tx_ring->netdev);
 	bool first_flag = false, insert_empty = false;
 	u16 count = TXD_USE_COUNT(skb_headlen(skb));
@@ -1509,6 +1570,13 @@ static netdev_tx_t igc_xmit_frame_ring(struct sk_buff *skb,
 	u32 tx_flags = 0;
 	unsigned short f;
 	ktime_t txtime;
+=======
+	u16 count = TXD_USE_COUNT(skb_headlen(skb));
+	__be16 protocol = vlan_get_protocol(skb);
+	struct igc_tx_buffer *first;
+	u32 tx_flags = 0;
+	unsigned short f;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 hdr_len = 0;
 	int tso = 0;
 
@@ -1522,11 +1590,16 @@ static netdev_tx_t igc_xmit_frame_ring(struct sk_buff *skb,
 		count += TXD_USE_COUNT(skb_frag_size(
 						&skb_shinfo(skb)->frags[f]));
 
+<<<<<<< HEAD
 	if (igc_maybe_stop_tx(tx_ring, count + 5)) {
+=======
+	if (igc_maybe_stop_tx(tx_ring, count + 3)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* this is a hard error */
 		return NETDEV_TX_BUSY;
 	}
 
+<<<<<<< HEAD
 	if (!tx_ring->launchtime_enable)
 		goto done;
 
@@ -1556,6 +1629,8 @@ static netdev_tx_t igc_xmit_frame_ring(struct sk_buff *skb,
 	}
 
 done:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* record the location of the first descriptor for this packet */
 	first = &tx_ring->tx_buffer_info[tx_ring->next_to_use];
 	first->type = IGC_TX_BUFFER_TYPE_SKB;
@@ -1563,6 +1638,7 @@ done:
 	first->bytecount = skb->len;
 	first->gso_segs = 1;
 
+<<<<<<< HEAD
 	if (tx_ring->max_sdu > 0) {
 		u32 max_sdu = 0;
 
@@ -1576,6 +1652,11 @@ done:
 	}
 
 	if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP)) {
+=======
+	if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP)) {
+		struct igc_adapter *adapter = netdev_priv(tx_ring->netdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* FIXME: add support for retrieving timestamps from
 		 * the other timer registers before skipping the
 		 * timestamping request.
@@ -1602,11 +1683,19 @@ done:
 	first->tx_flags = tx_flags;
 	first->protocol = protocol;
 
+<<<<<<< HEAD
 	tso = igc_tso(tx_ring, first, launch_time, first_flag, &hdr_len);
 	if (tso < 0)
 		goto out_drop;
 	else if (!tso)
 		igc_tx_csum(tx_ring, first, launch_time, first_flag);
+=======
+	tso = igc_tso(tx_ring, first, &hdr_len);
+	if (tso < 0)
+		goto out_drop;
+	else if (!tso)
+		igc_tx_csum(tx_ring, first);
+>>>>>>> b7ba80a49124 (Commit)
 
 	igc_tx_map(tx_ring, first, hdr_len);
 
@@ -2952,9 +3041,13 @@ static bool igc_clean_tx_irq(struct igc_q_vector *q_vector, int napi_budget)
 		if (tx_buffer->next_to_watch &&
 		    time_after(jiffies, tx_buffer->time_stamp +
 		    (adapter->tx_timeout_factor * HZ)) &&
+<<<<<<< HEAD
 		    !(rd32(IGC_STATUS) & IGC_STATUS_TXOFF) &&
 		    (rd32(IGC_TDH(tx_ring->reg_idx)) !=
 		     readl(tx_ring->tail))) {
+=======
+		    !(rd32(IGC_STATUS) & IGC_STATUS_TXOFF)) {
+>>>>>>> b7ba80a49124 (Commit)
 			/* detected Tx unit hang */
 			netdev_err(tx_ring->netdev,
 				   "Detected Tx Unit Hang\n"
@@ -4524,7 +4617,12 @@ static int igc_alloc_q_vector(struct igc_adapter *adapter,
 		return -ENOMEM;
 
 	/* initialize NAPI */
+<<<<<<< HEAD
 	netif_napi_add(adapter->netdev, &q_vector->napi, igc_poll);
+=======
+	netif_napi_add(adapter->netdev, &q_vector->napi,
+		       igc_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* tie q_vector and adapter together */
 	adapter->q_vector[v_idx] = q_vector;
@@ -4812,10 +4910,17 @@ void igc_update_stats(struct igc_adapter *adapter)
 		}
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&ring->rx_syncp);
 			_bytes = ring->rx_stats.bytes;
 			_packets = ring->rx_stats.packets;
 		} while (u64_stats_fetch_retry(&ring->rx_syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&ring->rx_syncp);
+			_bytes = ring->rx_stats.bytes;
+			_packets = ring->rx_stats.packets;
+		} while (u64_stats_fetch_retry_irq(&ring->rx_syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 		bytes += _bytes;
 		packets += _packets;
 	}
@@ -4829,10 +4934,17 @@ void igc_update_stats(struct igc_adapter *adapter)
 		struct igc_ring *ring = adapter->tx_ring[i];
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&ring->tx_syncp);
 			_bytes = ring->tx_stats.bytes;
 			_packets = ring->tx_stats.packets;
 		} while (u64_stats_fetch_retry(&ring->tx_syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&ring->tx_syncp);
+			_bytes = ring->tx_stats.bytes;
+			_packets = ring->tx_stats.packets;
+		} while (u64_stats_fetch_retry_irq(&ring->tx_syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 		bytes += _bytes;
 		packets += _packets;
 	}
@@ -4930,8 +5042,12 @@ void igc_update_stats(struct igc_adapter *adapter)
 	net_stats->tx_window_errors = adapter->stats.latecol;
 	net_stats->tx_carrier_errors = adapter->stats.tncrs;
 
+<<<<<<< HEAD
 	/* Tx Dropped */
 	net_stats->tx_dropped = adapter->stats.txdrop;
+=======
+	/* Tx Dropped needs to be maintained elsewhere */
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Management Stats */
 	adapter->stats.mgptc += rd32(IGC_MGTPTC);
@@ -5082,6 +5198,7 @@ static int igc_change_mtu(struct net_device *netdev, int new_mtu)
 }
 
 /**
+<<<<<<< HEAD
  * igc_tx_timeout - Respond to a Tx Hang
  * @netdev: network interface device structure
  * @txqueue: queue number that timed out
@@ -5100,6 +5217,8 @@ static void igc_tx_timeout(struct net_device *netdev,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * igc_get_stats64 - Get System Network Statistics
  * @netdev: network interface device structure
  * @stats: rtnl_link_stats64 pointer
@@ -5526,6 +5645,7 @@ static void igc_watchdog_task(struct work_struct *work)
 			case SPEED_100:
 			case SPEED_1000:
 			case SPEED_2500:
+<<<<<<< HEAD
 				adapter->tx_timeout_factor = 1;
 				break;
 			}
@@ -5537,6 +5657,12 @@ static void igc_watchdog_task(struct work_struct *work)
 			 */
 			igc_tsn_adjust_txtime_offset(adapter);
 
+=======
+				adapter->tx_timeout_factor = 7;
+				break;
+			}
+
+>>>>>>> b7ba80a49124 (Commit)
 			if (adapter->link_speed != SPEED_1000)
 				goto no_wait;
 
@@ -5577,8 +5703,30 @@ no_wait:
 				mod_timer(&adapter->phy_info_timer,
 					  round_jiffies(jiffies + 2 * HZ));
 
+<<<<<<< HEAD
 			pm_schedule_suspend(netdev->dev.parent,
 					    MSEC_PER_SEC * 5);
+=======
+			/* link is down, time to check for alternate media */
+			if (adapter->flags & IGC_FLAG_MAS_ENABLE) {
+				if (adapter->flags & IGC_FLAG_MEDIA_RESET) {
+					schedule_work(&adapter->reset_task);
+					/* return immediately */
+					return;
+				}
+			}
+			pm_schedule_suspend(netdev->dev.parent,
+					    MSEC_PER_SEC * 5);
+
+		/* also check for alternate media here */
+		} else if (!netif_carrier_ok(netdev) &&
+			   (adapter->flags & IGC_FLAG_MAS_ENABLE)) {
+			if (adapter->flags & IGC_FLAG_MEDIA_RESET) {
+				schedule_work(&adapter->reset_task);
+				/* return immediately */
+				return;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -5972,7 +6120,10 @@ static bool validate_schedule(struct igc_adapter *adapter,
 			      const struct tc_taprio_qopt_offload *qopt)
 {
 	int queue_uses[IGC_MAX_TX_QUEUES] = { };
+<<<<<<< HEAD
 	struct igc_hw *hw = &adapter->hw;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct timespec64 now;
 	size_t n;
 
@@ -5985,10 +6136,15 @@ static bool validate_schedule(struct igc_adapter *adapter,
 	 * in the future, it will hold all the packets until that
 	 * time, causing a lot of TX Hangs, so to avoid that, we
 	 * reject schedules that would start in the future.
+<<<<<<< HEAD
 	 * Note: Limitation above is no longer in i226.
 	 */
 	if (!is_base_time_past(qopt->base_time, &now) &&
 	    igc_is_device_id_i225(hw))
+=======
+	 */
+	if (!is_base_time_past(qopt->base_time, &now))
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	for (n = 0; n < qopt->num_entries; n++) {
@@ -6004,6 +6160,7 @@ static bool validate_schedule(struct igc_adapter *adapter,
 		if (e->command != TC_TAPRIO_CMD_SET_GATES)
 			return false;
 
+<<<<<<< HEAD
 		for (i = 0; i < adapter->num_tx_queues; i++)
 			if (e->gate_mask & BIT(i)) {
 				queue_uses[i]++;
@@ -6016,6 +6173,20 @@ static bool validate_schedule(struct igc_adapter *adapter,
 				    !(prev->gate_mask & BIT(i)))
 					return false;
 			}
+=======
+		for (i = 0; i < adapter->num_tx_queues; i++) {
+			if (e->gate_mask & BIT(i))
+				queue_uses[i]++;
+
+			/* There are limitations: A single queue cannot be
+			 * opened and closed multiple times per cycle unless the
+			 * gate stays open. Check for it.
+			 */
+			if (queue_uses[i] > 1 &&
+			    !(prev->gate_mask & BIT(i)))
+				return false;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return true;
@@ -6043,14 +6214,20 @@ static int igc_tsn_clear_schedule(struct igc_adapter *adapter)
 
 	adapter->base_time = 0;
 	adapter->cycle_time = NSEC_PER_SEC;
+<<<<<<< HEAD
 	adapter->qbv_config_change_errors = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < adapter->num_tx_queues; i++) {
 		struct igc_ring *ring = adapter->tx_ring[i];
 
 		ring->start_time = 0;
 		ring->end_time = NSEC_PER_SEC;
+<<<<<<< HEAD
 		ring->max_sdu = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -6060,20 +6237,29 @@ static int igc_save_qbv_schedule(struct igc_adapter *adapter,
 				 struct tc_taprio_qopt_offload *qopt)
 {
 	bool queue_configured[IGC_MAX_TX_QUEUES] = { };
+<<<<<<< HEAD
 	struct igc_hw *hw = &adapter->hw;
 	u32 start_time = 0, end_time = 0;
 	size_t n;
 	int i;
 
 	adapter->qbv_enable = qopt->enable;
+=======
+	u32 start_time = 0, end_time = 0;
+	size_t n;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!qopt->enable)
 		return igc_tsn_clear_schedule(adapter);
 
+<<<<<<< HEAD
 	if (qopt->base_time < 0)
 		return -ERANGE;
 
 	if (igc_is_device_id_i225(hw) && adapter->base_time)
+=======
+	if (adapter->base_time)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EALREADY;
 
 	if (!validate_schedule(adapter, qopt))
@@ -6084,6 +6270,7 @@ static int igc_save_qbv_schedule(struct igc_adapter *adapter,
 
 	for (n = 0; n < qopt->num_entries; n++) {
 		struct tc_taprio_sched_entry *e = &qopt->entries[n];
+<<<<<<< HEAD
 
 		end_time += e->interval;
 
@@ -6102,6 +6289,12 @@ static int igc_save_qbv_schedule(struct igc_adapter *adapter,
 		    n + 1 == qopt->num_entries)
 			end_time = adapter->cycle_time;
 
+=======
+		int i;
+
+		end_time += e->interval;
+
+>>>>>>> b7ba80a49124 (Commit)
 		for (i = 0; i < adapter->num_tx_queues; i++) {
 			struct igc_ring *ring = adapter->tx_ring[i];
 
@@ -6122,6 +6315,7 @@ static int igc_save_qbv_schedule(struct igc_adapter *adapter,
 		start_time += e->interval;
 	}
 
+<<<<<<< HEAD
 	/* Check whether a queue gets configured.
 	 * If not, set the start and end time to be end time.
 	 */
@@ -6144,6 +6338,8 @@ static int igc_save_qbv_schedule(struct igc_adapter *adapter,
 			ring->max_sdu = 0;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -6231,6 +6427,7 @@ static int igc_tsn_enable_cbs(struct igc_adapter *adapter,
 	return igc_tsn_offload_apply(adapter);
 }
 
+<<<<<<< HEAD
 static int igc_tc_query_caps(struct igc_adapter *adapter,
 			     struct tc_query_caps_base *base)
 {
@@ -6254,14 +6451,19 @@ static int igc_tc_query_caps(struct igc_adapter *adapter,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int igc_setup_tc(struct net_device *dev, enum tc_setup_type type,
 			void *type_data)
 {
 	struct igc_adapter *adapter = netdev_priv(dev);
 
 	switch (type) {
+<<<<<<< HEAD
 	case TC_QUERY_CAPS:
 		return igc_tc_query_caps(adapter, type_data);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case TC_SETUP_QDISC_TAPRIO:
 		return igc_tsn_enable_qbv_scheduling(adapter, type_data);
 
@@ -6375,7 +6577,10 @@ static const struct net_device_ops igc_netdev_ops = {
 	.ndo_set_rx_mode	= igc_set_rx_mode,
 	.ndo_set_mac_address	= igc_set_mac,
 	.ndo_change_mtu		= igc_change_mtu,
+<<<<<<< HEAD
 	.ndo_tx_timeout		= igc_tx_timeout,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.ndo_get_stats64	= igc_get_stats64,
 	.ndo_fix_features	= igc_fix_features,
 	.ndo_set_features	= igc_set_features,
@@ -6486,6 +6691,11 @@ static int igc_probe(struct pci_dev *pdev,
 	if (err)
 		goto err_pci_reg;
 
+<<<<<<< HEAD
+=======
+	pci_enable_pcie_error_reporting(pdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = pci_enable_ptm(pdev, NULL);
 	if (err < 0)
 		dev_info(&pdev->dev, "PCIe PTM not supported by PCIe bus/controller\n");
@@ -6583,9 +6793,12 @@ static int igc_probe(struct pci_dev *pdev,
 	netdev->mpls_features |= NETIF_F_HW_CSUM;
 	netdev->hw_enc_features |= netdev->vlan_features;
 
+<<<<<<< HEAD
 	netdev->xdp_features = NETDEV_XDP_ACT_BASIC | NETDEV_XDP_ACT_REDIRECT |
 			       NETDEV_XDP_ACT_XSK_ZEROCOPY;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* MTU range: 68 - 9216 */
 	netdev->min_mtu = ETH_MIN_MTU;
 	netdev->max_mtu = MAX_STD_JUMBO_FRAME_SIZE;
@@ -6693,6 +6906,10 @@ err_sw_init:
 err_ioremap:
 	free_netdev(netdev);
 err_alloc_etherdev:
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_release_mem_regions(pdev);
 err_pci_reg:
 err_dma:
@@ -6740,6 +6957,11 @@ static void igc_remove(struct pci_dev *pdev)
 
 	free_netdev(netdev);
 
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	pci_disable_device(pdev);
 }
 

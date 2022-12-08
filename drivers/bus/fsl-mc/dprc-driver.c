@@ -11,6 +11,10 @@
 #include <linux/module.h>
 #include <linux/slab.h>
 #include <linux/interrupt.h>
+<<<<<<< HEAD
+=======
+#include <linux/msi.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/fsl/mc.h>
 
 #include "fsl-mc-private.h"

@@ -1,7 +1,10 @@
 # SPDX-License-Identifier: GPL-2.0
 
 KASAN_SANITIZE := n
+<<<<<<< HEAD
 KCSAN_SANITIZE := n
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 targets += trampoline_$(BITS).o purgatory.ro
 

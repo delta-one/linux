@@ -124,8 +124,12 @@ struct statx {
 	__u32	stx_dev_minor;
 	/* 0x90 */
 	__u64	stx_mnt_id;
+<<<<<<< HEAD
 	__u32	stx_dio_mem_align;	/* Memory buffer alignment for direct I/O */
 	__u32	stx_dio_offset_align;	/* File offset alignment for direct I/O */
+=======
+	__u64	__spare2;
+>>>>>>> b7ba80a49124 (Commit)
 	/* 0xa0 */
 	__u64	__spare3[12];	/* Spare space for future expansion */
 	/* 0x100 */
@@ -153,7 +157,10 @@ struct statx {
 #define STATX_BASIC_STATS	0x000007ffU	/* The stuff in the normal stat struct */
 #define STATX_BTIME		0x00000800U	/* Want/got stx_btime */
 #define STATX_MNT_ID		0x00001000U	/* Got stx_mnt_id */
+<<<<<<< HEAD
 #define STATX_DIOALIGN		0x00002000U	/* Want/got direct I/O alignment info */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define STATX__RESERVED		0x80000000U	/* Reserved for future struct statx expansion */
 

@@ -76,9 +76,15 @@ static void ipack_bus_remove(struct device *device)
 		drv->ops->remove(dev);
 }
 
+<<<<<<< HEAD
 static int ipack_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct ipack_device *idev;
+=======
+static int ipack_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct ipack_device *idev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!dev)
 		return -ENODEV;

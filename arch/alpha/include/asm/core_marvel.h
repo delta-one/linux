@@ -332,10 +332,17 @@ struct io7 {
 #define vucp	volatile unsigned char __force *
 #define vusp	volatile unsigned short __force *
 
+<<<<<<< HEAD
 extern u8 marvel_ioread8(const void __iomem *);
 extern void marvel_iowrite8(u8 b, void __iomem *);
 
 __EXTERN_INLINE u16 marvel_ioread16(const void __iomem *addr)
+=======
+extern unsigned int marvel_ioread8(const void __iomem *);
+extern void marvel_iowrite8(u8 b, void __iomem *);
+
+__EXTERN_INLINE unsigned int marvel_ioread16(const void __iomem *addr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return __kernel_ldwu(*(vusp)addr);
 }

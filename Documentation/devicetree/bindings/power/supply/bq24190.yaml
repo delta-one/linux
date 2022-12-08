@@ -5,7 +5,11 @@
 $id: http://devicetree.org/schemas/power/supply/bq24190.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: TI BQ2419x Li-Ion Battery Charger
+=======
+title: Binding for TI BQ2419x Li-Ion Battery Charger
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Sebastian Reichel <sre@kernel.org>
@@ -75,7 +79,11 @@ examples:
       charge-term-current-microamp = <128000>;
     };
 
+<<<<<<< HEAD
     i2c {
+=======
+    i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
       #address-cells = <1>;
       #size-cells = <0>;
 

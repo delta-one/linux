@@ -14,6 +14,7 @@
 	#address-cells = <2>;
 	#size-cells = <2>;
 
+<<<<<<< HEAD
 	/* External Audio clock - to be overridden by boards that provide it */
 	audio_clkin: audio_clkin {
 		compatible = "fixed-clock";
@@ -61,10 +62,13 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cpus {
 		#address-cells = <1>;
 		#size-cells = <0>;
 
+<<<<<<< HEAD
 		cpu-map {
 			cluster0 {
 				core0 {
@@ -85,11 +89,14 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		a76_0: cpu@0 {
 			compatible = "arm,cortex-a76";
 			reg = <0>;
 			device_type = "cpu";
 			power-domains = <&sysc R8A779G0_PD_A1E0D0C0>;
+<<<<<<< HEAD
 			next-level-cache = <&L3_CA76_0>;
 			enable-method = "psci";
 			cpu-idle-states = <&CPU_SLEEP_0>;
@@ -164,6 +171,9 @@
 	psci {
 		compatible = "arm,psci-1.0", "arm,psci-0.2";
 		method = "smc";
+=======
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	extal_clk: extal {
@@ -354,6 +364,7 @@
 			#interrupt-cells = <2>;
 		};
 
+<<<<<<< HEAD
 		cmt0: timer@e60f0000 {
 			compatible = "renesas,r8a779g0-cmt0",
 				     "renesas,rcar-gen4-cmt0";
@@ -424,6 +435,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		cpg: clock-controller@e6150000 {
 			compatible = "renesas,r8a779g0-cpg-mssr";
 			reg = <0 0xe6150000 0 0x4000>;
@@ -445,6 +458,7 @@
 			#power-domain-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		tsc: thermal@e6198000 {
 			compatible = "renesas,r8a779g0-thermal";
 			reg = <0 0xe6198000 0 0x200>,
@@ -538,15 +552,20 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		i2c0: i2c@e6500000 {
 			compatible = "renesas,i2c-r8a779g0",
 				     "renesas,rcar-gen4-i2c";
 			reg = <0 0xe6500000 0 0x40>;
 			interrupts = <GIC_SPI 610 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cpg CPG_MOD 518>;
+<<<<<<< HEAD
 			dmas = <&dmac0 0x91>, <&dmac0 0x90>,
 			       <&dmac1 0x91>, <&dmac1 0x90>;
 			dma-names = "tx", "rx", "tx", "rx";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
 			resets = <&cpg 518>;
 			i2c-scl-internal-delay-ns = <110>;
@@ -561,9 +580,12 @@
 			reg = <0 0xe6508000 0 0x40>;
 			interrupts = <GIC_SPI 611 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cpg CPG_MOD 519>;
+<<<<<<< HEAD
 			dmas = <&dmac0 0x93>, <&dmac0 0x92>,
 			       <&dmac1 0x93>, <&dmac1 0x92>;
 			dma-names = "tx", "rx", "tx", "rx";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
 			resets = <&cpg 519>;
 			i2c-scl-internal-delay-ns = <110>;
@@ -578,9 +600,12 @@
 			reg = <0 0xe6510000 0 0x40>;
 			interrupts = <GIC_SPI 612 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cpg CPG_MOD 520>;
+<<<<<<< HEAD
 			dmas = <&dmac0 0x95>, <&dmac0 0x94>,
 			       <&dmac1 0x95>, <&dmac1 0x94>;
 			dma-names = "tx", "rx", "tx", "rx";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
 			resets = <&cpg 520>;
 			i2c-scl-internal-delay-ns = <110>;
@@ -595,9 +620,12 @@
 			reg = <0 0xe66d0000 0 0x40>;
 			interrupts = <GIC_SPI 613 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cpg CPG_MOD 521>;
+<<<<<<< HEAD
 			dmas = <&dmac0 0x97>, <&dmac0 0x96>,
 			       <&dmac1 0x97>, <&dmac1 0x96>;
 			dma-names = "tx", "rx", "tx", "rx";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
 			resets = <&cpg 521>;
 			i2c-scl-internal-delay-ns = <110>;
@@ -612,9 +640,12 @@
 			reg = <0 0xe66d8000 0 0x40>;
 			interrupts = <GIC_SPI 614 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cpg CPG_MOD 522>;
+<<<<<<< HEAD
 			dma-names = "tx", "rx", "tx", "rx";
 			dmas = <&dmac0 0x99>, <&dmac0 0x98>,
 			       <&dmac1 0x99>, <&dmac1 0x98>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
 			resets = <&cpg 522>;
 			i2c-scl-internal-delay-ns = <110>;
@@ -629,9 +660,12 @@
 			reg = <0 0xe66e0000 0 0x40>;
 			interrupts = <GIC_SPI 615 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cpg CPG_MOD 523>;
+<<<<<<< HEAD
 			dmas = <&dmac0 0x9b>, <&dmac0 0x9a>,
 			       <&dmac1 0x9b>, <&dmac1 0x9a>;
 			dma-names = "tx", "rx", "tx", "rx";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
 			resets = <&cpg 523>;
 			i2c-scl-internal-delay-ns = <110>;
@@ -642,6 +676,7 @@
 
 		hscif0: serial@e6540000 {
 			compatible = "renesas,hscif-r8a779g0",
+<<<<<<< HEAD
 				     "renesas,rcar-gen4-hscif", "renesas,hscif";
 			reg = <0 0xe6540000 0 0x60>;
 			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
@@ -652,11 +687,22 @@
 			dmas = <&dmac0 0x31>, <&dmac0 0x30>,
 			       <&dmac1 0x31>, <&dmac1 0x30>;
 			dma-names = "tx", "rx", "tx", "rx";
+=======
+				     "renesas,rcar-gen4-hscif",
+				     "renesas,hscif";
+			reg = <0 0xe6540000 0 96>;
+			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&cpg CPG_MOD 514>,
+				 <&cpg CPG_CORE R8A779G0_CLK_S0D3_PER>,
+				 <&scif_clk>;
+			clock-names = "fck", "brg_int", "scif_clk";
+>>>>>>> b7ba80a49124 (Commit)
 			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
 			resets = <&cpg 514>;
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		hscif1: serial@e6550000 {
 			compatible = "renesas,hscif-r8a779g0",
 				     "renesas,rcar-gen4-hscif", "renesas,hscif";
@@ -758,6 +804,8 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		avb0: ethernet@e6800000 {
 			compatible = "renesas,etheravb-r8a779g0",
 				     "renesas,etheravb-rcar-gen4";
@@ -899,6 +947,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		pwm0: pwm@e6e30000 {
 			compatible = "renesas,pwm-r8a779g0", "renesas,pwm-rcar";
 			reg = <0 0xe6e30000 0 0x10>;
@@ -1791,6 +1840,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		gic: interrupt-controller@f1000000 {
 			compatible = "arm,gic-v3";
 			#interrupt-cells = <3>;
@@ -1798,6 +1849,7 @@
 			interrupt-controller;
 			reg = <0x0 0xf1000000 0 0x20000>,
 			      <0x0 0xf1060000 0 0x110000>;
+<<<<<<< HEAD
 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
 		};
 
@@ -2147,6 +2199,10 @@
 					reg = <1>;
 				};
 			};
+=======
+			interrupts = <GIC_PPI 9
+				      (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_HIGH)>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		prr: chipid@fff00044 {
@@ -2155,6 +2211,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	thermal-zones {
 		sensor_thermal_cr52: sensor1-thermal {
 			polling-delay-passive = <250>;
@@ -2219,5 +2276,13 @@
 				      <&gic GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
 				      <&gic GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
 				      <&gic GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+=======
+	timer {
+		compatible = "arm,armv8-timer";
+		interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
+				      <&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
+				      <&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
+				      <&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };

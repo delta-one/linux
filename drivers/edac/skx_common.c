@@ -27,11 +27,17 @@ static const char * const component_names[] = {
 	[INDEX_MEMCTRL]		= "MemoryControllerId",
 	[INDEX_CHANNEL]		= "ChannelId",
 	[INDEX_DIMM]		= "DimmSlotId",
+<<<<<<< HEAD
 	[INDEX_CS]		= "ChipSelect",
 	[INDEX_NM_MEMCTRL]	= "NmMemoryControllerId",
 	[INDEX_NM_CHANNEL]	= "NmChannelId",
 	[INDEX_NM_DIMM]		= "NmDimmSlotId",
 	[INDEX_NM_CS]		= "NmChipSelect",
+=======
+	[INDEX_NM_MEMCTRL]	= "NmMemoryControllerId",
+	[INDEX_NM_CHANNEL]	= "NmChannelId",
+	[INDEX_NM_DIMM]		= "NmDimmSlotId",
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int component_indices[ARRAY_SIZE(component_names)];
@@ -141,13 +147,19 @@ static bool skx_adxl_decode(struct decoded_addr *res, bool error_in_1st_level_me
 			       (int)adxl_values[component_indices[INDEX_NM_CHANNEL]] : -1;
 		res->dimm    = (adxl_nm_bitmap & BIT_NM_DIMM) ?
 			       (int)adxl_values[component_indices[INDEX_NM_DIMM]] : -1;
+<<<<<<< HEAD
 		res->cs      = (adxl_nm_bitmap & BIT_NM_CS) ?
 			       (int)adxl_values[component_indices[INDEX_NM_CS]] : -1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		res->imc     = (int)adxl_values[component_indices[INDEX_MEMCTRL]];
 		res->channel = (int)adxl_values[component_indices[INDEX_CHANNEL]];
 		res->dimm    = (int)adxl_values[component_indices[INDEX_DIMM]];
+<<<<<<< HEAD
 		res->cs      = (int)adxl_values[component_indices[INDEX_CS]];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (res->imc > NUM_IMC - 1 || res->imc < 0) {
@@ -560,6 +572,7 @@ static void skx_mce_output_error(struct mem_ctl_info *mci,
 		tp_event = HW_EVENT_ERR_CORRECTED;
 	}
 
+<<<<<<< HEAD
 	switch (optypenum) {
 	case 0:
 		optype = "generic undef request error";
@@ -582,6 +595,46 @@ static void skx_mce_output_error(struct mem_ctl_info *mci,
 		break;
 	}
 
+=======
+	/*
+	 * According to Intel Architecture spec vol 3B,
+	 * Table 15-10 "IA32_MCi_Status [15:0] Compound Error Code Encoding"
+	 * memory errors should fit one of these masks:
+	 *	000f 0000 1mmm cccc (binary)
+	 *	000f 0010 1mmm cccc (binary)	[RAM used as cache]
+	 * where:
+	 *	f = Correction Report Filtering Bit. If 1, subsequent errors
+	 *	    won't be shown
+	 *	mmm = error type
+	 *	cccc = channel
+	 * If the mask doesn't match, report an error to the parsing logic
+	 */
+	if (!((errcode & 0xef80) == 0x80 || (errcode & 0xef80) == 0x280)) {
+		optype = "Can't parse: it is not a mem";
+	} else {
+		switch (optypenum) {
+		case 0:
+			optype = "generic undef request error";
+			break;
+		case 1:
+			optype = "memory read error";
+			break;
+		case 2:
+			optype = "memory write error";
+			break;
+		case 3:
+			optype = "addr/cmd error";
+			break;
+		case 4:
+			optype = "memory scrubbing error";
+			scrub_err = true;
+			break;
+		default:
+			optype = "reserved";
+			break;
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (res->decoded_by_adxl) {
 		len = snprintf(skx_msg, MSG_SIZE, "%s%s err_code:0x%04x:0x%04x %s",
 			 overflow ? " OVERFLOW" : "",
@@ -616,6 +669,7 @@ static bool skx_error_in_1st_level_mem(const struct mce *m)
 	if (!skx_mem_cfg_2lm)
 		return false;
 
+<<<<<<< HEAD
 	errcode = GET_BITFIELD(m->status, 0, 15) & MCACOD_MEM_ERR_MASK;
 
 	return errcode == MCACOD_EXT_MEM_ERR;
@@ -628,6 +682,14 @@ static bool skx_error_in_mem(const struct mce *m)
 	errcode = GET_BITFIELD(m->status, 0, 15) & MCACOD_MEM_ERR_MASK;
 
 	return (errcode == MCACOD_MEM_CTL_ERR || errcode == MCACOD_EXT_MEM_ERR);
+=======
+	errcode = GET_BITFIELD(m->status, 0, 15);
+
+	if ((errcode & 0xef80) != 0x280)
+		return false;
+
+	return true;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int skx_mce_check_error(struct notifier_block *nb, unsigned long val,
@@ -641,13 +703,22 @@ int skx_mce_check_error(struct notifier_block *nb, unsigned long val,
 	if (mce->kflags & MCE_HANDLED_CEC)
 		return NOTIFY_DONE;
 
+<<<<<<< HEAD
 	/* Ignore unless this is memory related with an address */
 	if (!skx_error_in_mem(mce) || !(mce->status & MCI_STATUS_ADDRV))
+=======
+	/* ignore unless this is memory related with an address */
+	if ((mce->status & 0xefff) >> 7 != 1 || !(mce->status & MCI_STATUS_ADDRV))
+>>>>>>> b7ba80a49124 (Commit)
 		return NOTIFY_DONE;
 
 	memset(&res, 0, sizeof(res));
 	res.mce  = mce;
+<<<<<<< HEAD
 	res.addr = mce->addr & MCI_ADDR_PHYSADDR;
+=======
+	res.addr = mce->addr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Try driver decoder first */
 	if (!(driver_decode && driver_decode(&res))) {

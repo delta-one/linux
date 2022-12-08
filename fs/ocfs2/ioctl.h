@@ -12,7 +12,11 @@
 #define OCFS2_IOCTL_PROTO_H
 
 int ocfs2_fileattr_get(struct dentry *dentry, struct fileattr *fa);
+<<<<<<< HEAD
 int ocfs2_fileattr_set(struct mnt_idmap *idmap,
+=======
+int ocfs2_fileattr_set(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct dentry *dentry, struct fileattr *fa);
 long ocfs2_ioctl(struct file *filp, unsigned int cmd, unsigned long arg);
 long ocfs2_compat_ioctl(struct file *file, unsigned cmd, unsigned long arg);

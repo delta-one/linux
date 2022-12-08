@@ -29,6 +29,10 @@ struct omap_volt_data {
 struct voltagedomain;
 
 struct voltagedomain *voltdm_lookup(const char *name);
+<<<<<<< HEAD
+=======
+int voltdm_scale(struct voltagedomain *voltdm, unsigned long target_volt);
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long voltdm_get_voltage(struct voltagedomain *voltdm);
 struct omap_volt_data *omap_voltage_get_voltdata(struct voltagedomain *voltdm,
 		unsigned long volt);

@@ -18,7 +18,10 @@ enum intel_cht_wc_models {
 	INTEL_CHT_WC_GPD_WIN_POCKET,
 	INTEL_CHT_WC_XIAOMI_MIPAD2,
 	INTEL_CHT_WC_LENOVO_YOGABOOK1,
+<<<<<<< HEAD
 	INTEL_CHT_WC_LENOVO_YT3_X90,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**

@@ -30,7 +30,11 @@ unsigned int cxl_pci_to_cfg_record(struct pci_dev *dev);
 /*
  * Context lifetime overview:
  *
+<<<<<<< HEAD
  * An AFU context may be inited and then started and stopped multiple times
+=======
+ * An AFU context may be inited and then started and stoppped multiple times
+>>>>>>> b7ba80a49124 (Commit)
  * before it's released. ie.
  *    - cxl_dev_context_init()
  *      - cxl_start_context()

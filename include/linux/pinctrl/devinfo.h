@@ -14,6 +14,7 @@
 #ifndef PINCTRL_DEVINFO_H
 #define PINCTRL_DEVINFO_H
 
+<<<<<<< HEAD
 struct device;
 
 #ifdef CONFIG_PINCTRL
@@ -25,6 +26,13 @@ struct device;
 
 struct pinctrl;
 
+=======
+#ifdef CONFIG_PINCTRL
+
+/* The device core acts as a consumer toward pinctrl */
+#include <linux/pinctrl/consumer.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct dev_pin_info - pin state container for devices
  * @p: pinctrl handle for the containing device
@@ -46,6 +54,7 @@ struct dev_pin_info {
 extern int pinctrl_bind_pins(struct device *dev);
 extern int pinctrl_init_done(struct device *dev);
 
+<<<<<<< HEAD
 static inline struct pinctrl *dev_pinctrl(struct device *dev)
 {
 	if (!dev->pins)
@@ -56,6 +65,12 @@ static inline struct pinctrl *dev_pinctrl(struct device *dev)
 
 #else
 
+=======
+#else
+
+struct device;
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Stubs if we're not using pinctrl */
 
 static inline int pinctrl_bind_pins(struct device *dev)
@@ -68,10 +83,13 @@ static inline int pinctrl_init_done(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static inline struct pinctrl *dev_pinctrl(struct device *dev)
 {
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_PINCTRL */
 #endif /* PINCTRL_DEVINFO_H */

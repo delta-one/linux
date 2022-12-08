@@ -391,7 +391,12 @@ static int lm3560_init_device(struct lm3560_flash *flash)
 	return rval;
 }
 
+<<<<<<< HEAD
 static int lm3560_probe(struct i2c_client *client)
+=======
+static int lm3560_probe(struct i2c_client *client,
+			const struct i2c_device_id *devid)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lm3560_flash *flash;
 	struct lm3560_platform_data *pdata = dev_get_platdata(&client->dev);
@@ -467,7 +472,11 @@ static struct i2c_driver lm3560_i2c_driver = {
 		   .name = LM3560_NAME,
 		   .pm = NULL,
 		   },
+<<<<<<< HEAD
 	.probe_new = lm3560_probe,
+=======
+	.probe = lm3560_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = lm3560_remove,
 	.id_table = lm3560_id_table,
 };

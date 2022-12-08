@@ -173,6 +173,7 @@ hash_netportnet4_kadt(struct ip_set *set, const struct sk_buff *skb,
 	return adtfn(set, &e, &ext, &opt->ext, opt->cmdflags);
 }
 
+<<<<<<< HEAD
 static u32
 hash_netportnet4_range_to_cidr(u32 from, u32 to, u8 *cidr)
 {
@@ -183,16 +184,27 @@ hash_netportnet4_range_to_cidr(u32 from, u32 to, u8 *cidr)
 	return ip_set_range_to_cidr(from, to, cidr);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int
 hash_netportnet4_uadt(struct ip_set *set, struct nlattr *tb[],
 		      enum ipset_adt adt, u32 *lineno, u32 flags, bool retried)
 {
+<<<<<<< HEAD
 	struct hash_netportnet4 *h = set->data;
+=======
+	const struct hash_netportnet4 *h = set->data;
+>>>>>>> b7ba80a49124 (Commit)
 	ipset_adtfn adtfn = set->variant->adt[adt];
 	struct hash_netportnet4_elem e = { };
 	struct ip_set_ext ext = IP_SET_INIT_UEXT(set);
 	u32 ip = 0, ip_to = 0, p = 0, port, port_to;
+<<<<<<< HEAD
 	u32 ip2_from = 0, ip2_to = 0, ip2, i = 0;
+=======
+	u32 ip2_from = 0, ip2_to = 0, ip2, ipn;
+	u64 n = 0, m = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	bool with_ports = false;
 	int ret;
 
@@ -294,6 +306,22 @@ hash_netportnet4_uadt(struct ip_set *set, struct nlattr *tb[],
 	} else {
 		ip_set_mask_from_to(ip2_from, ip2_to, e.cidr[1]);
 	}
+<<<<<<< HEAD
+=======
+	ipn = ip;
+	do {
+		ipn = ip_set_range_to_cidr(ipn, ip_to, &e.cidr[0]);
+		n++;
+	} while (ipn++ < ip_to);
+	ipn = ip2_from;
+	do {
+		ipn = ip_set_range_to_cidr(ipn, ip2_to, &e.cidr[1]);
+		m++;
+	} while (ipn++ < ip2_to);
+
+	if (n*m*(port_to - port + 1) > IPSET_MAX_RANGE)
+		return -ERANGE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (retried) {
 		ip = ntohl(h->next.ip[0]);
@@ -306,6 +334,7 @@ hash_netportnet4_uadt(struct ip_set *set, struct nlattr *tb[],
 
 	do {
 		e.ip[0] = htonl(ip);
+<<<<<<< HEAD
 		ip = hash_netportnet4_range_to_cidr(ip, ip_to, &e.cidr[0]);
 		for (; p <= port_to; p++) {
 			e.port = htons(p);
@@ -319,6 +348,15 @@ hash_netportnet4_uadt(struct ip_set *set, struct nlattr *tb[],
 				}
 				ip2 = hash_netportnet4_range_to_cidr(ip2,
 							ip2_to, &e.cidr[1]);
+=======
+		ip = ip_set_range_to_cidr(ip, ip_to, &e.cidr[0]);
+		for (; p <= port_to; p++) {
+			e.port = htons(p);
+			do {
+				e.ip[1] = htonl(ip2);
+				ip2 = ip_set_range_to_cidr(ip2, ip2_to,
+							   &e.cidr[1]);
+>>>>>>> b7ba80a49124 (Commit)
 				ret = adtfn(set, &e, &ext, &ext, flags);
 				if (ret && !ip_set_eexist(ret, flags))
 					return ret;

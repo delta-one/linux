@@ -186,6 +186,7 @@ int msm_iommu_pagetable_params(struct msm_mmu *mmu,
 	return 0;
 }
 
+<<<<<<< HEAD
 struct iommu_domain_geometry *msm_iommu_get_geometry(struct msm_mmu *mmu)
 {
 	struct msm_iommu *iommu = to_msm_iommu(mmu);
@@ -193,6 +194,8 @@ struct iommu_domain_geometry *msm_iommu_get_geometry(struct msm_mmu *mmu)
 	return &iommu->domain->geometry;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct msm_mmu_funcs pagetable_funcs = {
 		.map = msm_iommu_pagetable_map,
 		.unmap = msm_iommu_pagetable_unmap,
@@ -374,6 +377,7 @@ static const struct msm_mmu_funcs funcs = {
 		.resume_translation = msm_iommu_resume_translation,
 };
 
+<<<<<<< HEAD
 struct msm_mmu *msm_iommu_new(struct device *dev, unsigned long quirks)
 {
 	struct iommu_domain *domain;
@@ -391,6 +395,19 @@ struct msm_mmu *msm_iommu_new(struct device *dev, unsigned long quirks)
 		iommu_domain_free(domain);
 		return ERR_PTR(-ENOMEM);
 	}
+=======
+struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain)
+{
+	struct msm_iommu *iommu;
+	int ret;
+
+	if (!domain)
+		return ERR_PTR(-ENODEV);
+
+	iommu = kzalloc(sizeof(*iommu), GFP_KERNEL);
+	if (!iommu)
+		return ERR_PTR(-ENOMEM);
+>>>>>>> b7ba80a49124 (Commit)
 
 	iommu->domain = domain;
 	msm_mmu_init(&iommu->base, dev, &funcs, MSM_MMU_IOMMU);
@@ -399,7 +416,10 @@ struct msm_mmu *msm_iommu_new(struct device *dev, unsigned long quirks)
 
 	ret = iommu_attach_device(iommu->domain, dev);
 	if (ret) {
+<<<<<<< HEAD
 		iommu_domain_free(domain);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(iommu);
 		return ERR_PTR(ret);
 	}

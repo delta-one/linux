@@ -180,6 +180,7 @@
  */
 #define VHOST_VDPA_SUSPEND		_IO(VHOST_VIRTIO, 0x7D)
 
+<<<<<<< HEAD
 /* Resume a device so it can resume processing virtqueue requests
  *
  * After the return of this ioctl the device will have restored all the
@@ -188,4 +189,6 @@
  */
 #define VHOST_VDPA_RESUME		_IO(VHOST_VIRTIO, 0x7E)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

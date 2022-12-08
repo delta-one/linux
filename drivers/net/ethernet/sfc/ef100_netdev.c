@@ -23,8 +23,11 @@
 #include "mcdi_filters.h"
 #include "rx_common.h"
 #include "ef100_sriov.h"
+<<<<<<< HEAD
 #include "tc_bindings.h"
 #include "efx_devlink.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void ef100_update_name(struct efx_nic *efx)
 {
@@ -219,7 +222,10 @@ netdev_tx_t __ef100_hard_start_xmit(struct sk_buff *skb,
 		   skb->len, skb->data_len, channel->channel);
 	if (!efx->n_channels || !efx->n_tx_channels || !channel) {
 		netif_stop_queue(net_dev);
+<<<<<<< HEAD
 		dev_kfree_skb_any(skb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto err;
 	}
 
@@ -249,9 +255,12 @@ static const struct net_device_ops ef100_netdev_ops = {
 #ifdef CONFIG_RFS_ACCEL
 	.ndo_rx_flow_steer      = efx_filter_rfs,
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_SFC_SRIOV
 	.ndo_setup_tc		= efx_tc_setup,
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*	Netdev registration
@@ -333,11 +342,17 @@ void ef100_remove_netdev(struct efx_probe_data *probe_data)
 		efx_ef100_pci_sriov_disable(efx, true);
 #endif
 
+<<<<<<< HEAD
 	efx_fini_devlink_lock(efx);
 	ef100_unregister_netdev(efx);
 
 #ifdef CONFIG_SFC_SRIOV
 	ef100_pf_unset_devlink_port(efx);
+=======
+	ef100_unregister_netdev(efx);
+
+#ifdef CONFIG_SFC_SRIOV
+>>>>>>> b7ba80a49124 (Commit)
 	efx_fini_tc(efx);
 #endif
 
@@ -348,8 +363,11 @@ void ef100_remove_netdev(struct efx_probe_data *probe_data)
 	kfree(efx->phy_data);
 	efx->phy_data = NULL;
 
+<<<<<<< HEAD
 	efx_fini_devlink_and_unlock(efx);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	free_netdev(efx->net_dev);
 	efx->net_dev = NULL;
 	efx->state = STATE_PROBED;
@@ -359,7 +377,10 @@ int ef100_probe_netdev(struct efx_probe_data *probe_data)
 {
 	struct efx_nic *efx = &probe_data->efx;
 	struct efx_probe_data **probe_ptr;
+<<<<<<< HEAD
 	struct ef100_nic_data *nic_data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct net_device *net_dev;
 	int rc;
 
@@ -411,6 +432,7 @@ int ef100_probe_netdev(struct efx_probe_data *probe_data)
 	/* Don't fail init if RSS setup doesn't work. */
 	efx_mcdi_push_default_indir_table(efx, efx->n_rx_channels);
 
+<<<<<<< HEAD
 	nic_data = efx->nic_data;
 	rc = ef100_get_mac_address(efx, net_dev->perm_addr, CLIENT_HANDLE_SELF,
 				   efx->type->is_vf);
@@ -425,6 +447,8 @@ int ef100_probe_netdev(struct efx_probe_data *probe_data)
 	if (rc)
 		pci_info(efx->pci_dev, "devlink registration failed");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rc = ef100_register_netdev(efx);
 	if (rc)
 		goto fail;
@@ -433,9 +457,12 @@ int ef100_probe_netdev(struct efx_probe_data *probe_data)
 		rc = ef100_probe_netdev_pf(efx);
 		if (rc)
 			goto fail;
+<<<<<<< HEAD
 #ifdef CONFIG_SFC_SRIOV
 		ef100_pf_set_devlink_port(efx);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	efx->netdev_notifier.notifier_call = ef100_netdev_event;
@@ -446,6 +473,7 @@ int ef100_probe_netdev(struct efx_probe_data *probe_data)
 		goto fail;
 	}
 
+<<<<<<< HEAD
 	efx_probe_devlink_unlock(efx);
 	return rc;
 fail:
@@ -454,5 +482,8 @@ fail:
 	ef100_pf_unset_devlink_port(efx);
 #endif
 	efx_probe_devlink_unlock(efx);
+=======
+fail:
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }

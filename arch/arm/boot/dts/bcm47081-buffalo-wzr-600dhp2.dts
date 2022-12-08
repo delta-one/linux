@@ -49,40 +49,68 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-power0 {
+=======
+		power0 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:power";
 			gpios = <&hc595 1 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "default-on";
 		};
 
+<<<<<<< HEAD
 		led-power1 {
+=======
+		power1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:red:power";
 			gpios = <&hc595 2 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-router0 {
+=======
+		router0 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:router";
 			gpios = <&hc595 3 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "default-on";
 		};
 
+<<<<<<< HEAD
 		led-router1 {
+=======
+		router1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:amber:router";
 			gpios = <&hc595 4 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-wan {
+=======
+		wan {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:wan";
 			gpios = <&hc595 5 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "default-on";
 		};
 
+<<<<<<< HEAD
 		led-wireless0 {
+=======
+		wireless0 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:wireless";
 			gpios = <&hc595 6 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-wireless1 {
+=======
+		wireless1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:amber:wireless";
 			gpios = <&hc595 7 GPIO_ACTIVE_HIGH>;
 		};

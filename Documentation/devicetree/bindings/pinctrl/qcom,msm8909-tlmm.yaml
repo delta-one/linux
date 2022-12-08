@@ -10,7 +10,12 @@ maintainers:
   - Stephan Gerhold <stephan@gerhold.net>
 
 description: |
+<<<<<<< HEAD
   Top Level Mode Multiplexer pin controller in Qualcomm MSM8909 SoC.
+=======
+  This binding describes the Top Level Mode Multiplexer (TLMM) block found
+  in the MSM8909 platform.
+>>>>>>> b7ba80a49124 (Commit)
 
 allOf:
   - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
@@ -22,6 +27,7 @@ properties:
   reg:
     maxItems: 1
 
+<<<<<<< HEAD
   interrupts:
     maxItems: 1
 
@@ -30,6 +36,14 @@ properties:
   gpio-controller: true
   gpio-reserved-ranges: true
   "#gpio-cells": true
+=======
+  interrupts: true
+  interrupt-controller: true
+  '#interrupt-cells': true
+  gpio-controller: true
+  gpio-reserved-ranges: true
+  '#gpio-cells': true
+>>>>>>> b7ba80a49124 (Commit)
   gpio-ranges: true
   wakeup-parent: true
 
@@ -40,6 +54,7 @@ required:
 additionalProperties: false
 
 patternProperties:
+<<<<<<< HEAD
   "-state$":
     oneOf:
       - $ref: "#/$defs/qcom-msm8909-tlmm-state"
@@ -47,6 +62,14 @@ patternProperties:
           "-pins$":
             $ref: "#/$defs/qcom-msm8909-tlmm-state"
         additionalProperties: false
+=======
+  '-state$':
+    oneOf:
+      - $ref: "#/$defs/qcom-msm8909-tlmm-state"
+      - patternProperties:
+          ".*":
+            $ref: "#/$defs/qcom-msm8909-tlmm-state"
+>>>>>>> b7ba80a49124 (Commit)
 
 $defs:
   qcom-msm8909-tlmm-state:
@@ -54,7 +77,11 @@ $defs:
     description:
       Pinctrl node's client devices use subnodes for desired pin configuration.
       Client device subnodes use below standard properties.
+<<<<<<< HEAD
     $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
+=======
+    $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
+>>>>>>> b7ba80a49124 (Commit)
 
     properties:
       pins:
@@ -63,7 +90,11 @@ $defs:
           subnode.
         items:
           oneOf:
+<<<<<<< HEAD
             - pattern: "^gpio([0-9]|[1-9][0-9]|10[0-9]|11[0-2])$"
+=======
+            - pattern: "^gpio([0-9]|[1-9][0-9]|10[0-9]|11[0-7])$"
+>>>>>>> b7ba80a49124 (Commit)
             - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd,
                       sdc2_data, qdsd_clk, qdsd_cmd, qdsd_data0, qdsd_data1,
                       qdsd_data2, qdsd_data3 ]
@@ -114,11 +145,16 @@ $defs:
 
     required:
       - pins
+<<<<<<< HEAD
+=======
+      - function
+>>>>>>> b7ba80a49124 (Commit)
 
     additionalProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     #include <dt-bindings/interrupt-controller/arm-gic.h>
 
     pinctrl@1000000 {
@@ -150,4 +186,37 @@ examples:
             };
         };
     };
+=======
+        #include <dt-bindings/interrupt-controller/arm-gic.h>
+
+        pinctrl@1000000 {
+                compatible = "qcom,msm8909-tlmm";
+                reg = <0x1000000 0x300000>;
+                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+                gpio-controller;
+                #gpio-cells = <2>;
+                gpio-ranges = <&tlmm 0 0 117>;
+                interrupt-controller;
+                #interrupt-cells = <2>;
+
+                gpio-wo-subnode-state {
+                        pins = "gpio1";
+                        function = "gpio";
+                };
+
+                uart-w-subnodes-state {
+                        rx {
+                                pins = "gpio4";
+                                function = "blsp_uart1";
+                                bias-pull-up;
+                        };
+
+                        tx {
+                                pins = "gpio5";
+                                function = "blsp_uart1";
+                                bias-disable;
+                        };
+                };
+        };
+>>>>>>> b7ba80a49124 (Commit)
 ...

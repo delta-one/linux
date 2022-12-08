@@ -65,7 +65,11 @@ struct btrfs_raid_bio {
 	/* Number of data stripes (no p/q) */
 	u8 nr_data;
 
+<<<<<<< HEAD
 	/* Number of all stripes (including P/Q) */
+=======
+	/* Numer of all stripes (including P/Q) */
+>>>>>>> b7ba80a49124 (Commit)
 	u8 real_stripes;
 
 	/* How many pages there are for each stripe */
@@ -74,6 +78,15 @@ struct btrfs_raid_bio {
 	/* How many sectors there are for each stripe */
 	u8 stripe_nsectors;
 
+<<<<<<< HEAD
+=======
+	/* First bad stripe, -1 means no corruption */
+	s8 faila;
+
+	/* Second bad stripe (for RAID6 use) */
+	s8 failb;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Stripe number that we're scrubbing  */
 	u8 scrubp;
 
@@ -87,7 +100,13 @@ struct btrfs_raid_bio {
 
 	atomic_t stripes_pending;
 
+<<<<<<< HEAD
 	wait_queue_head_t io_wait;
+=======
+	atomic_t error;
+
+	struct work_struct end_io_work;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Bitmap to record which horizontal stripe has data */
 	unsigned long dbitmap;
@@ -118,6 +137,7 @@ struct btrfs_raid_bio {
 
 	/* Allocated with real_stripes-many pointers for finish_*() calls */
 	void **finish_pointers;
+<<<<<<< HEAD
 
 	/*
 	 * The bitmap recording where IO errors happened.
@@ -141,6 +161,8 @@ struct btrfs_raid_bio {
 	 * Should only cover data sectors (excluding P/Q sectors).
 	 */
 	unsigned long *csum_bitmap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*

@@ -11,11 +11,14 @@ struct device;
 struct file;
 struct task_struct;
 
+<<<<<<< HEAD
 static inline bool string_is_terminated(const char *s, int len)
 {
 	return memchr(s, '\0', len) ? true : false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Descriptions of the types of units to
  * print in */
 enum string_size_units {

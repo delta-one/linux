@@ -38,7 +38,10 @@
 #include <drm/drm_edid.h>
 #include <drm/drm_file.h>
 #include <drm/drm_gem.h>
+<<<<<<< HEAD
 #include <drm/drm_managed.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "drm_crtc_internal.h"
 #include "drm_internal.h"
@@ -51,8 +54,14 @@
 
 static int drm_name_info(struct seq_file *m, void *data)
 {
+<<<<<<< HEAD
 	struct drm_debugfs_entry *entry = m->private;
 	struct drm_device *dev = entry->dev;
+=======
+	struct drm_info_node *node = (struct drm_info_node *) m->private;
+	struct drm_minor *minor = node->minor;
+	struct drm_device *dev = minor->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_master *master;
 
 	mutex_lock(&dev->master_mutex);
@@ -72,15 +81,24 @@ static int drm_name_info(struct seq_file *m, void *data)
 
 static int drm_clients_info(struct seq_file *m, void *data)
 {
+<<<<<<< HEAD
 	struct drm_debugfs_entry *entry = m->private;
 	struct drm_device *dev = entry->dev;
+=======
+	struct drm_info_node *node = (struct drm_info_node *) m->private;
+	struct drm_device *dev = node->minor->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_file *priv;
 	kuid_t uid;
 
 	seq_printf(m,
 		   "%20s %5s %3s master a %5s %10s\n",
 		   "command",
+<<<<<<< HEAD
 		   "tgid",
+=======
+		   "pid",
+>>>>>>> b7ba80a49124 (Commit)
 		   "dev",
 		   "uid",
 		   "magic");
@@ -94,7 +112,11 @@ static int drm_clients_info(struct seq_file *m, void *data)
 		bool is_current_master = drm_is_current_master(priv);
 
 		rcu_read_lock(); /* locks pid_task()->comm */
+<<<<<<< HEAD
 		task = pid_task(priv->pid, PIDTYPE_TGID);
+=======
+		task = pid_task(priv->pid, PIDTYPE_PID);
+>>>>>>> b7ba80a49124 (Commit)
 		uid = task ? __task_cred(task)->euid : GLOBAL_ROOT_UID;
 		seq_printf(m, "%20s %5d %3d   %c    %c %5d %10u\n",
 			   task ? task->comm : "<unknown>",
@@ -124,8 +146,13 @@ static int drm_gem_one_name_info(int id, void *ptr, void *data)
 
 static int drm_gem_name_info(struct seq_file *m, void *data)
 {
+<<<<<<< HEAD
 	struct drm_debugfs_entry *entry = m->private;
 	struct drm_device *dev = entry->dev;
+=======
+	struct drm_info_node *node = (struct drm_info_node *) m->private;
+	struct drm_device *dev = node->minor->dev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	seq_printf(m, "  name     size handles refcount\n");
 
@@ -136,7 +163,11 @@ static int drm_gem_name_info(struct seq_file *m, void *data)
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct drm_debugfs_info drm_debugfs_list[] = {
+=======
+static const struct drm_info_list drm_debugfs_list[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{"name", drm_name_info, 0},
 	{"clients", drm_clients_info, 0},
 	{"gem_names", drm_gem_name_info, DRIVER_GEM},
@@ -151,6 +182,7 @@ static int drm_debugfs_open(struct inode *inode, struct file *file)
 	return single_open(file, node->info_ent->show, node);
 }
 
+<<<<<<< HEAD
 static int drm_debugfs_entry_open(struct inode *inode, struct file *file)
 {
 	struct drm_debugfs_entry *entry = inode->i_private;
@@ -166,6 +198,8 @@ static const struct file_operations drm_debugfs_entry_fops = {
 	.llseek = seq_lseek,
 	.release = single_release,
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct file_operations drm_debugfs_fops = {
 	.owner = THIS_MODULE,
@@ -207,7 +241,11 @@ void drm_debugfs_create_files(const struct drm_info_list *files, int count,
 
 		tmp->minor = minor;
 		tmp->dent = debugfs_create_file(files[i].name,
+<<<<<<< HEAD
 						0444, root, tmp,
+=======
+						S_IFREG | S_IRUGO, root, tmp,
+>>>>>>> b7ba80a49124 (Commit)
 						&drm_debugfs_fops);
 		tmp->info_ent = &files[i];
 
@@ -222,7 +260,10 @@ int drm_debugfs_init(struct drm_minor *minor, int minor_id,
 		     struct dentry *root)
 {
 	struct drm_device *dev = minor->dev;
+<<<<<<< HEAD
 	struct drm_debugfs_entry *entry, *tmp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	char name[64];
 
 	INIT_LIST_HEAD(&minor->debugfs_list);
@@ -230,7 +271,12 @@ int drm_debugfs_init(struct drm_minor *minor, int minor_id,
 	sprintf(name, "%d", minor_id);
 	minor->debugfs_root = debugfs_create_dir(name, root);
 
+<<<<<<< HEAD
 	drm_debugfs_add_files(minor->dev, drm_debugfs_list, DRM_DEBUGFS_ENTRIES);
+=======
+	drm_debugfs_create_files(drm_debugfs_list, DRM_DEBUGFS_ENTRIES,
+				 minor->debugfs_root, minor);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (drm_drv_uses_atomic_modeset(dev)) {
 		drm_atomic_debugfs_init(minor);
@@ -245,6 +291,7 @@ int drm_debugfs_init(struct drm_minor *minor, int minor_id,
 	if (dev->driver->debugfs_init)
 		dev->driver->debugfs_init(minor);
 
+<<<<<<< HEAD
 	list_for_each_entry_safe(entry, tmp, &dev->debugfs_list, list) {
 		debugfs_create_file(entry->file.name, 0444,
 				    minor->debugfs_root, entry, &drm_debugfs_entry_fops);
@@ -268,6 +315,11 @@ void drm_debugfs_late_register(struct drm_device *dev)
 		list_del(&entry->list);
 	}
 }
+=======
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 
 int drm_debugfs_remove_files(const struct drm_info_list *files, int count,
 			     struct drm_minor *minor)
@@ -316,6 +368,7 @@ void drm_debugfs_cleanup(struct drm_minor *minor)
 	minor->debugfs_root = NULL;
 }
 
+<<<<<<< HEAD
 /**
  * drm_debugfs_add_file - Add a given file to the DRM device debugfs file list
  * @dev: drm device for the ioctl
@@ -363,6 +416,8 @@ void drm_debugfs_add_files(struct drm_device *dev, const struct drm_debugfs_info
 }
 EXPORT_SYMBOL(drm_debugfs_add_files);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int connector_show(struct seq_file *m, void *data)
 {
 	struct drm_connector *connector = m->private;
@@ -410,7 +465,17 @@ static ssize_t connector_write(struct file *file, const char __user *ubuf,
 
 static int edid_show(struct seq_file *m, void *data)
 {
+<<<<<<< HEAD
 	return drm_edid_override_show(m->private, m);
+=======
+	struct drm_connector *connector = m->private;
+	struct drm_property_blob *edid = connector->edid_blob_ptr;
+
+	if (connector->override_edid && edid)
+		seq_write(m, edid->data, edid->length);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int edid_open(struct inode *inode, struct file *file)
@@ -508,6 +573,7 @@ void drm_debugfs_connector_add(struct drm_connector *connector)
 	connector->debugfs_entry = root;
 
 	/* force */
+<<<<<<< HEAD
 	debugfs_create_file("force", 0644, root, connector,
 			    &drm_connector_fops);
 
@@ -517,6 +583,17 @@ void drm_debugfs_connector_add(struct drm_connector *connector)
 
 	/* vrr range */
 	debugfs_create_file("vrr_range", 0444, root, connector,
+=======
+	debugfs_create_file("force", S_IRUGO | S_IWUSR, root, connector,
+			    &drm_connector_fops);
+
+	/* edid */
+	debugfs_create_file("edid_override", S_IRUGO | S_IWUSR, root, connector,
+			    &drm_edid_fops);
+
+	/* vrr range */
+	debugfs_create_file("vrr_range", S_IRUGO, root, connector,
+>>>>>>> b7ba80a49124 (Commit)
 			    &vrr_range_fops);
 
 	/* max bpc */

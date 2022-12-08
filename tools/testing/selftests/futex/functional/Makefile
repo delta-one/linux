@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 INCLUDES := -I../include -I../../ $(KHDR_INCLUDES)
 CFLAGS := $(CFLAGS) -g -O2 -Wall -D_GNU_SOURCE -pthread $(INCLUDES) $(KHDR_INCLUDES)
 LDLIBS := -lpthread -lrt
@@ -8,6 +9,17 @@ LOCAL_HDRS := \
 	../include/atomic.h \
 	../include/logging.h
 TEST_GEN_PROGS := \
+=======
+INCLUDES := -I../include -I../../ -I../../../../../usr/include/
+CFLAGS := $(CFLAGS) -g -O2 -Wall -D_GNU_SOURCE -pthread $(INCLUDES) $(KHDR_INCLUDES)
+LDLIBS := -lpthread -lrt
+
+HEADERS := \
+	../include/futextest.h \
+	../include/atomic.h \
+	../include/logging.h
+TEST_GEN_FILES := \
+>>>>>>> b7ba80a49124 (Commit)
 	futex_wait_timeout \
 	futex_wait_wouldblock \
 	futex_requeue_pi \
@@ -24,3 +36,8 @@ TEST_PROGS := run.sh
 top_srcdir = ../../../../..
 DEFAULT_INSTALL_HDR_PATH := 1
 include ../../lib.mk
+<<<<<<< HEAD
+=======
+
+$(TEST_GEN_FILES): $(HEADERS)
+>>>>>>> b7ba80a49124 (Commit)

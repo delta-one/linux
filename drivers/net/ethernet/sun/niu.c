@@ -9115,7 +9115,11 @@ static int niu_ldg_init(struct niu *np)
 	for (i = 0; i < np->num_ldg; i++) {
 		struct niu_ldg *lp = &np->ldg[i];
 
+<<<<<<< HEAD
 		netif_napi_add(np->dev, &lp->napi, niu_poll);
+=======
+		netif_napi_add(np->dev, &lp->napi, niu_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 		lp->np = np;
 		lp->ldg_num = ldg_num_map[i];
@@ -9271,7 +9275,11 @@ static int niu_get_of_props(struct niu *np)
 	if (model)
 		strcpy(np->vpd.model, model);
 
+<<<<<<< HEAD
 	if (of_property_read_bool(dp, "hot-swappable-phy")) {
+=======
+	if (of_find_property(dp, "hot-swappable-phy", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		np->flags |= (NIU_FLAGS_10G | NIU_FLAGS_FIBER |
 			NIU_FLAGS_HOTPLUG_PHY);
 	}

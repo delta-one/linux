@@ -10,6 +10,7 @@
  * Read the event log created by the firmware on PPC64
  */
 
+<<<<<<< HEAD
 #include <linux/device.h>
 #include <linux/slab.h>
 #include <linux/io.h>
@@ -17,11 +18,16 @@
 #include <linux/of.h>
 #include <linux/of_address.h>
 #include <linux/of_reserved_mem.h>
+=======
+#include <linux/slab.h>
+#include <linux/of.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/tpm_eventlog.h>
 
 #include "../tpm.h"
 #include "common.h"
 
+<<<<<<< HEAD
 static int tpm_read_log_memory_region(struct tpm_chip *chip)
 {
 	struct device_node *node;
@@ -48,6 +54,8 @@ static int tpm_read_log_memory_region(struct tpm_chip *chip)
 		EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int tpm_read_log_of(struct tpm_chip *chip)
 {
 	struct device_node *np;
@@ -69,7 +77,11 @@ int tpm_read_log_of(struct tpm_chip *chip)
 	sizep = of_get_property(np, "linux,sml-size", NULL);
 	basep = of_get_property(np, "linux,sml-base", NULL);
 	if (sizep == NULL && basep == NULL)
+<<<<<<< HEAD
 		return tpm_read_log_memory_region(chip);
+=======
+		return -ENODEV;
+>>>>>>> b7ba80a49124 (Commit)
 	if (sizep == NULL || basep == NULL)
 		return -EIO;
 
@@ -96,7 +108,11 @@ int tpm_read_log_of(struct tpm_chip *chip)
 		return -EIO;
 	}
 
+<<<<<<< HEAD
 	log->bios_event_log = devm_kmemdup(&chip->dev, __va(base), size, GFP_KERNEL);
+=======
+	log->bios_event_log = kmemdup(__va(base), size, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!log->bios_event_log)
 		return -ENOMEM;
 

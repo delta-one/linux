@@ -29,7 +29,10 @@
 #include <net/netfilter/nf_conntrack.h>
 #endif
 #include <net/net_namespace.h>		/* Netw namespace */
+<<<<<<< HEAD
 #include <linux/sched/isolation.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define IP_VS_HDR_INVERSE	1
 #define IP_VS_HDR_ICMP		2
@@ -43,8 +46,11 @@ static inline struct netns_ipvs *net_ipvs(struct net* net)
 /* Connections' size value needed by ip_vs_ctl.c */
 extern int ip_vs_conn_tab_size;
 
+<<<<<<< HEAD
 extern struct mutex __ip_vs_mutex;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ip_vs_iphdr {
 	int hdr_flags;	/* ipvs flags */
 	__u32 off;	/* Where IP or IPv4 header starts */
@@ -354,11 +360,19 @@ struct ip_vs_seq {
 
 /* counters per cpu */
 struct ip_vs_counters {
+<<<<<<< HEAD
 	u64_stats_t	conns;		/* connections scheduled */
 	u64_stats_t	inpkts;		/* incoming packets */
 	u64_stats_t	outpkts;	/* outgoing packets */
 	u64_stats_t	inbytes;	/* incoming bytes */
 	u64_stats_t	outbytes;	/* outgoing bytes */
+=======
+	__u64		conns;		/* connections scheduled */
+	__u64		inpkts;		/* incoming packets */
+	__u64		outpkts;	/* outgoing packets */
+	__u64		inbytes;	/* incoming bytes */
+	__u64		outbytes;	/* outgoing bytes */
+>>>>>>> b7ba80a49124 (Commit)
 };
 /* Stats per cpu */
 struct ip_vs_cpu_stats {
@@ -366,12 +380,18 @@ struct ip_vs_cpu_stats {
 	struct u64_stats_sync   syncp;
 };
 
+<<<<<<< HEAD
 /* Default nice for estimator kthreads */
 #define IPVS_EST_NICE		0
 
 /* IPVS statistics objects */
 struct ip_vs_estimator {
 	struct hlist_node	list;
+=======
+/* IPVS statistics objects */
+struct ip_vs_estimator {
+	struct list_head	list;
+>>>>>>> b7ba80a49124 (Commit)
 
 	u64			last_inbytes;
 	u64			last_outbytes;
@@ -384,10 +404,13 @@ struct ip_vs_estimator {
 	u64			outpps;
 	u64			inbps;
 	u64			outbps;
+<<<<<<< HEAD
 
 	s32			ktid:16,	/* kthread ID, -1=temp list */
 				ktrow:8,	/* row/tick ID for kthread */
 				ktcid:8;	/* chain ID for kthread tick */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -415,6 +438,7 @@ struct ip_vs_stats {
 	struct ip_vs_kstats	kstats0;	/* reset values */
 };
 
+<<<<<<< HEAD
 struct ip_vs_stats_rcu {
 	struct ip_vs_stats	s;
 	struct rcu_head		rcu_head;
@@ -486,6 +510,8 @@ struct ip_vs_est_kt_data {
 	int			est_row;	/* estimated row */
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct dst_entry;
 struct iphdr;
 struct ip_vs_conn;
@@ -769,7 +795,10 @@ struct ip_vs_dest {
 	union nf_inet_addr	vaddr;		/* virtual IP address */
 	__u32			vfwmark;	/* firewall mark of service */
 
+<<<<<<< HEAD
 	struct rcu_head		rcu_head;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head	t_list;		/* in dest_trash */
 	unsigned int		in_rs_table:1;	/* we are in rs_table */
 };
@@ -951,7 +980,11 @@ struct netns_ipvs {
 	atomic_t		conn_count;      /* connection counter */
 
 	/* ip_vs_ctl */
+<<<<<<< HEAD
 	struct ip_vs_stats_rcu	*tot_stats;      /* Statistics & est. */
+=======
+	struct ip_vs_stats		tot_stats;  /* Statistics & est. */
+>>>>>>> b7ba80a49124 (Commit)
 
 	int			num_services;    /* no of virtual services */
 	int			num_services6;   /* IPv6 virtual services */
@@ -1014,12 +1047,15 @@ struct netns_ipvs {
 	int			sysctl_schedule_icmp;
 	int			sysctl_ignore_tunneled;
 	int			sysctl_run_estimation;
+<<<<<<< HEAD
 #ifdef CONFIG_SYSCTL
 	cpumask_var_t		sysctl_est_cpulist;	/* kthread cpumask */
 	int			est_cpulist_valid;	/* cpulist set */
 	int			sysctl_est_nice;	/* kthread nice */
 	int			est_stopped;		/* stop tasks */
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* ip_vs_lblc */
 	int			sysctl_lblc_expiration;
@@ -1030,6 +1066,7 @@ struct netns_ipvs {
 	struct ctl_table_header	*lblcr_ctl_header;
 	struct ctl_table	*lblcr_ctl_table;
 	/* ip_vs_est */
+<<<<<<< HEAD
 	struct delayed_work	est_reload_work;/* Reload kthread tasks */
 	struct mutex		est_mutex;	/* protect kthread tasks */
 	struct hlist_head	est_temp_list;	/* Ests during calc phase */
@@ -1041,6 +1078,11 @@ struct netns_ipvs {
 	int			est_add_ktid;	/* ktid where to add ests */
 	atomic_t		est_genid;	/* kthreads reload genid */
 	atomic_t		est_genid_done;	/* applied genid */
+=======
+	struct list_head	est_list;	/* estimator list */
+	spinlock_t		est_lock;
+	struct timer_list	est_timer;	/* Estimation timer */
+>>>>>>> b7ba80a49124 (Commit)
 	/* ip_vs_sync */
 	spinlock_t		sync_lock;
 	struct ipvs_master_sync_state *ms;
@@ -1173,6 +1215,7 @@ static inline int sysctl_run_estimation(struct netns_ipvs *ipvs)
 	return ipvs->sysctl_run_estimation;
 }
 
+<<<<<<< HEAD
 static inline const struct cpumask *sysctl_est_cpulist(struct netns_ipvs *ipvs)
 {
 	if (ipvs->est_cpulist_valid)
@@ -1186,6 +1229,8 @@ static inline int sysctl_est_nice(struct netns_ipvs *ipvs)
 	return ipvs->sysctl_est_nice;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 
 static inline int sysctl_sync_threshold(struct netns_ipvs *ipvs)
@@ -1283,6 +1328,7 @@ static inline int sysctl_run_estimation(struct netns_ipvs *ipvs)
 	return 1;
 }
 
+<<<<<<< HEAD
 static inline const struct cpumask *sysctl_est_cpulist(struct netns_ipvs *ipvs)
 {
 	return housekeeping_cpumask(HK_TYPE_KTHREAD);
@@ -1293,6 +1339,8 @@ static inline int sysctl_est_nice(struct netns_ipvs *ipvs)
 	return IPVS_EST_NICE;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 /* IPVS core functions
@@ -1594,6 +1642,7 @@ int stop_sync_thread(struct netns_ipvs *ipvs, int state);
 void ip_vs_sync_conn(struct netns_ipvs *ipvs, struct ip_vs_conn *cp, int pkts);
 
 /* IPVS rate estimator prototypes (from ip_vs_est.c) */
+<<<<<<< HEAD
 int ip_vs_start_estimator(struct netns_ipvs *ipvs, struct ip_vs_stats *stats);
 void ip_vs_stop_estimator(struct netns_ipvs *ipvs, struct ip_vs_stats *stats);
 void ip_vs_zero_estimator(struct ip_vs_stats *stats);
@@ -1629,6 +1678,12 @@ static inline int ip_vs_est_max_threads(struct netns_ipvs *ipvs)
 
 	return max(1U, limit);
 }
+=======
+void ip_vs_start_estimator(struct netns_ipvs *ipvs, struct ip_vs_stats *stats);
+void ip_vs_stop_estimator(struct netns_ipvs *ipvs, struct ip_vs_stats *stats);
+void ip_vs_zero_estimator(struct ip_vs_stats *stats);
+void ip_vs_read_estimator(struct ip_vs_kstats *dst, struct ip_vs_stats *stats);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Various IPVS packet transmitters (from ip_vs_xmit.c) */
 int ip_vs_null_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,

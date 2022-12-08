@@ -11,6 +11,12 @@ menuconfig ACPI_DPTF
 	  a coordinated approach for different policies to effect the hardware
 	  state of a system.
 
+<<<<<<< HEAD
+=======
+	  For more information see:
+	  <https://01.org/intel%C2%AE-dynamic-platform-and-thermal-framework-dptf-chromium-os/overview>
+
+>>>>>>> b7ba80a49124 (Commit)
 if ACPI_DPTF
 
 config DPTF_POWER

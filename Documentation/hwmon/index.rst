@@ -1,8 +1,14 @@
+<<<<<<< HEAD
 .. SPDX-License-Identifier: GPL-2.0
 
 ===================
 Hardware Monitoring
 ===================
+=======
+=========================
+Linux Hardware Monitoring
+=========================
+>>>>>>> b7ba80a49124 (Commit)
 
 .. toctree::
    :maxdepth: 1
@@ -75,7 +81,10 @@ Hardware Monitoring Kernel Drivers
    g762
    gsc-hwmon
    gl518sm
+<<<<<<< HEAD
    gxp-fan-ctrl
+=======
+>>>>>>> b7ba80a49124 (Commit)
    hih6130
    ibmaem
    ibm-cffps
@@ -147,7 +156,10 @@ Hardware Monitoring Kernel Drivers
    max6697
    max8688
    mc13783-adc
+<<<<<<< HEAD
    mc34vr500
+=======
+>>>>>>> b7ba80a49124 (Commit)
    mcp3021
    menf21bmc
    mlxreg-fan
@@ -164,7 +176,10 @@ Hardware Monitoring Kernel Drivers
    nzxt-kraken2
    nzxt-smart2
    occ
+<<<<<<< HEAD
    oxp-sensors
+=======
+>>>>>>> b7ba80a49124 (Commit)
    pc87360
    pc87427
    pcf8591
@@ -192,7 +207,10 @@ Hardware Monitoring Kernel Drivers
    sis5595
    sl28cpld
    smm665
+<<<<<<< HEAD
    smpro-hwmon
+=======
+>>>>>>> b7ba80a49124 (Commit)
    smsc47b397
    smsc47m192
    smsc47m1

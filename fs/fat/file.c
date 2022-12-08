@@ -90,13 +90,21 @@ static int fat_ioctl_set_attributes(struct file *file, u32 __user *user_attr)
 	 * out the RO attribute for checking by the security
 	 * module, just because it maps to a file mode.
 	 */
+<<<<<<< HEAD
 	err = security_inode_setattr(file_mnt_idmap(file),
+=======
+	err = security_inode_setattr(file_mnt_user_ns(file),
+>>>>>>> b7ba80a49124 (Commit)
 				     file->f_path.dentry, &ia);
 	if (err)
 		goto out_unlock_inode;
 
 	/* This MUST be done before doing anything irreversible... */
+<<<<<<< HEAD
 	err = fat_setattr(file_mnt_idmap(file), file->f_path.dentry, &ia);
+=======
+	err = fat_setattr(file_mnt_user_ns(file), file->f_path.dentry, &ia);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out_unlock_inode;
 
@@ -395,13 +403,21 @@ void fat_truncate_blocks(struct inode *inode, loff_t offset)
 	fat_flush_inodes(inode->i_sb, inode, NULL);
 }
 
+<<<<<<< HEAD
 int fat_getattr(struct mnt_idmap *idmap, const struct path *path,
+=======
+int fat_getattr(struct user_namespace *mnt_userns, const struct path *path,
+>>>>>>> b7ba80a49124 (Commit)
 		struct kstat *stat, u32 request_mask, unsigned int flags)
 {
 	struct inode *inode = d_inode(path->dentry);
 	struct msdos_sb_info *sbi = MSDOS_SB(inode->i_sb);
 
+<<<<<<< HEAD
 	generic_fillattr(idmap, inode, stat);
+=======
+	generic_fillattr(mnt_userns, inode, stat);
+>>>>>>> b7ba80a49124 (Commit)
 	stat->blksize = sbi->cluster_size;
 
 	if (sbi->options.nfs == FAT_NFS_NOSTALE_RO) {
@@ -456,14 +472,23 @@ static int fat_sanitize_mode(const struct msdos_sb_info *sbi,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int fat_allow_set_time(struct mnt_idmap *idmap,
+=======
+static int fat_allow_set_time(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			      struct msdos_sb_info *sbi, struct inode *inode)
 {
 	umode_t allow_utime = sbi->options.allow_utime;
 
+<<<<<<< HEAD
 	if (!vfsuid_eq_kuid(i_uid_into_vfsuid(idmap, inode),
 			    current_fsuid())) {
 		if (vfsgid_in_group_p(i_gid_into_vfsgid(idmap, inode)))
+=======
+	if (!uid_eq(current_fsuid(), i_uid_into_mnt(mnt_userns, inode))) {
+		if (in_group_p(i_gid_into_mnt(mnt_userns, inode)))
+>>>>>>> b7ba80a49124 (Commit)
 			allow_utime >>= 3;
 		if (allow_utime & MAY_WRITE)
 			return 1;
@@ -477,7 +502,11 @@ static int fat_allow_set_time(struct mnt_idmap *idmap,
 /* valid file mode bits */
 #define FAT_VALID_MODE	(S_IFREG | S_IFDIR | S_IRWXUGO)
 
+<<<<<<< HEAD
 int fat_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+int fat_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		struct iattr *attr)
 {
 	struct msdos_sb_info *sbi = MSDOS_SB(dentry->d_sb);
@@ -488,11 +517,19 @@ int fat_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 	/* Check for setting the inode time. */
 	ia_valid = attr->ia_valid;
 	if (ia_valid & TIMES_SET_FLAGS) {
+<<<<<<< HEAD
 		if (fat_allow_set_time(idmap, sbi, inode))
 			attr->ia_valid &= ~TIMES_SET_FLAGS;
 	}
 
 	error = setattr_prepare(idmap, dentry, attr);
+=======
+		if (fat_allow_set_time(mnt_userns, sbi, inode))
+			attr->ia_valid &= ~TIMES_SET_FLAGS;
+	}
+
+	error = setattr_prepare(mnt_userns, dentry, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	attr->ia_valid = ia_valid;
 	if (error) {
 		if (sbi->options.quiet)
@@ -518,10 +555,17 @@ int fat_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 	}
 
 	if (((attr->ia_valid & ATTR_UID) &&
+<<<<<<< HEAD
 	     (!uid_eq(from_vfsuid(idmap, i_user_ns(inode), attr->ia_vfsuid),
 		      sbi->options.fs_uid))) ||
 	    ((attr->ia_valid & ATTR_GID) &&
 	     (!gid_eq(from_vfsgid(idmap, i_user_ns(inode), attr->ia_vfsgid),
+=======
+	     (!uid_eq(from_vfsuid(mnt_userns, i_user_ns(inode), attr->ia_vfsuid),
+		      sbi->options.fs_uid))) ||
+	    ((attr->ia_valid & ATTR_GID) &&
+	     (!gid_eq(from_vfsgid(mnt_userns, i_user_ns(inode), attr->ia_vfsgid),
+>>>>>>> b7ba80a49124 (Commit)
 		      sbi->options.fs_gid))) ||
 	    ((attr->ia_valid & ATTR_MODE) &&
 	     (attr->ia_mode & ~FAT_VALID_MODE)))
@@ -564,7 +608,11 @@ int fat_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 		fat_truncate_time(inode, &attr->ia_mtime, S_MTIME);
 	attr->ia_valid &= ~(ATTR_ATIME|ATTR_CTIME|ATTR_MTIME);
 
+<<<<<<< HEAD
 	setattr_copy(idmap, inode, attr);
+=======
+	setattr_copy(mnt_userns, inode, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	mark_inode_dirty(inode);
 out:
 	return error;

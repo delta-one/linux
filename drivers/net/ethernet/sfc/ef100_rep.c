@@ -9,14 +9,20 @@
  * by the Free Software Foundation, incorporated herein by reference.
  */
 
+<<<<<<< HEAD
 #include <linux/rhashtable.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "ef100_rep.h"
 #include "ef100_netdev.h"
 #include "ef100_nic.h"
 #include "mae.h"
 #include "rx_common.h"
+<<<<<<< HEAD
 #include "tc_bindings.h"
 #include "efx_devlink.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define EFX_EF100_REP_DRIVER	"efx_ef100_rep"
 
@@ -45,7 +51,12 @@ static int efx_ef100_rep_open(struct net_device *net_dev)
 {
 	struct efx_rep *efv = netdev_priv(net_dev);
 
+<<<<<<< HEAD
 	netif_napi_add(net_dev, &efv->napi, efx_ef100_rep_poll);
+=======
+	netif_napi_add(net_dev, &efv->napi, efx_ef100_rep_poll,
+		       NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 	napi_enable(&efv->napi);
 	return 0;
 }
@@ -109,6 +120,7 @@ static int efx_ef100_rep_get_phys_port_name(struct net_device *dev,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int efx_ef100_rep_setup_tc(struct net_device *net_dev,
 				  enum tc_setup_type type, void *type_data)
 {
@@ -123,6 +135,8 @@ static int efx_ef100_rep_setup_tc(struct net_device *net_dev,
 	return -EOPNOTSUPP;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void efx_ef100_rep_get_stats64(struct net_device *dev,
 				      struct rtnl_link_stats64 *stats)
 {
@@ -136,14 +150,21 @@ static void efx_ef100_rep_get_stats64(struct net_device *dev,
 	stats->tx_errors = atomic64_read(&efv->stats.tx_errors);
 }
 
+<<<<<<< HEAD
 const struct net_device_ops efx_ef100_rep_netdev_ops = {
+=======
+static const struct net_device_ops efx_ef100_rep_netdev_ops = {
+>>>>>>> b7ba80a49124 (Commit)
 	.ndo_open		= efx_ef100_rep_open,
 	.ndo_stop		= efx_ef100_rep_close,
 	.ndo_start_xmit		= efx_ef100_rep_xmit,
 	.ndo_get_port_parent_id	= efx_ef100_rep_get_port_parent_id,
 	.ndo_get_phys_port_name	= efx_ef100_rep_get_phys_port_name,
 	.ndo_get_stats64	= efx_ef100_rep_get_stats64,
+<<<<<<< HEAD
 	.ndo_setup_tc		= efx_ef100_rep_setup_tc,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void efx_ef100_rep_get_drvinfo(struct net_device *dev,
@@ -244,11 +265,22 @@ fail1:
 static int efx_ef100_configure_rep(struct efx_rep *efv)
 {
 	struct efx_nic *efx = efv->parent;
+<<<<<<< HEAD
 	int rc;
 
 	efv->rx_pring_size = EFX_REP_DEFAULT_PSEUDO_RING_SIZE;
 	/* Look up actual mport ID */
 	rc = efx_mae_lookup_mport(efx, efv->idx, &efv->mport);
+=======
+	u32 selector;
+	int rc;
+
+	efv->rx_pring_size = EFX_REP_DEFAULT_PSEUDO_RING_SIZE;
+	/* Construct mport selector for corresponding VF */
+	efx_mae_mport_vf(efx, efv->idx, &selector);
+	/* Look up actual mport ID */
+	rc = efx_mae_lookup_mport(efx, selector, &efv->mport);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 	pci_dbg(efx->pci_dev, "VF %u has mport ID %#x\n", efv->idx, efv->mport);
@@ -298,7 +330,10 @@ int efx_ef100_vfrep_create(struct efx_nic *efx, unsigned int i)
 			i, rc);
 		goto fail1;
 	}
+<<<<<<< HEAD
 	ef100_rep_set_devlink_port(efv);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rc = register_netdev(efv->net_dev);
 	if (rc) {
 		pci_err(efx->pci_dev,
@@ -310,7 +345,10 @@ int efx_ef100_vfrep_create(struct efx_nic *efx, unsigned int i)
 		efv->net_dev->name);
 	return 0;
 fail2:
+<<<<<<< HEAD
 	ef100_rep_unset_devlink_port(efv);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	efx_ef100_deconfigure_rep(efv);
 fail1:
 	efx_ef100_rep_destroy_netdev(efv);
@@ -326,7 +364,10 @@ void efx_ef100_vfrep_destroy(struct efx_nic *efx, struct efx_rep *efv)
 		return;
 	netif_dbg(efx, drv, rep_dev, "Removing VF representor\n");
 	unregister_netdev(rep_dev);
+<<<<<<< HEAD
 	ef100_rep_unset_devlink_port(efv);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	efx_ef100_deconfigure_rep(efv);
 	efx_ef100_rep_destroy_netdev(efv);
 }
@@ -343,6 +384,7 @@ void efx_ef100_fini_vfreps(struct efx_nic *efx)
 		efx_ef100_vfrep_destroy(efx, efv);
 }
 
+<<<<<<< HEAD
 static bool ef100_mport_is_pcie_vnic(struct mae_mport_desc *mport_desc)
 {
 	return mport_desc->mport_type == MAE_MPORT_DESC_MPORT_TYPE_VNIC &&
@@ -390,6 +432,8 @@ void efx_ef100_fini_reps(struct efx_nic *efx)
 				    NULL);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int efx_ef100_rep_poll(struct napi_struct *napi, int weight)
 {
 	struct efx_rep *efv = container_of(napi, struct efx_rep, napi);

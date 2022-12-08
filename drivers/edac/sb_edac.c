@@ -335,12 +335,15 @@ struct sbridge_info {
 struct sbridge_channel {
 	u32		ranks;
 	u32		dimms;
+<<<<<<< HEAD
 	struct dimm {
 		u32 rowbits;
 		u32 colbits;
 		u32 bank_xor_enable;
 		u32 amap_fine;
 	} dimm[MAX_DIMMS];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct pci_id_descr {
@@ -1609,7 +1612,11 @@ static int __populate_dimms(struct mem_ctl_info *mci,
 		banks = 8;
 
 	for (i = 0; i < channels; i++) {
+<<<<<<< HEAD
 		u32 mtr, amap = 0;
+=======
+		u32 mtr;
+>>>>>>> b7ba80a49124 (Commit)
 
 		int max_dimms_per_channel;
 
@@ -1621,7 +1628,10 @@ static int __populate_dimms(struct mem_ctl_info *mci,
 			max_dimms_per_channel = ARRAY_SIZE(mtr_regs);
 			if (!pvt->pci_tad[i])
 				continue;
+<<<<<<< HEAD
 			pci_read_config_dword(pvt->pci_tad[i], 0x8c, &amap);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		for (j = 0; j < max_dimms_per_channel; j++) {
@@ -1634,7 +1644,10 @@ static int __populate_dimms(struct mem_ctl_info *mci,
 					mtr_regs[j], &mtr);
 			}
 			edac_dbg(4, "Channel #%d  MTR%d = %x\n", i, j, mtr);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			if (IS_DIMM_PRESENT(mtr)) {
 				if (!IS_ECC_ENABLED(pvt->info.mcmtr)) {
 					sbridge_printk(KERN_ERR, "CPU SrcID #%d, Ha #%d, Channel #%d has DIMMs, but ECC is disabled\n",
@@ -1669,11 +1682,14 @@ static int __populate_dimms(struct mem_ctl_info *mci,
 				dimm->dtype = pvt->info.get_width(pvt, mtr);
 				dimm->mtype = mtype;
 				dimm->edac_mode = mode;
+<<<<<<< HEAD
 				pvt->channel[i].dimm[j].rowbits = order_base_2(rows);
 				pvt->channel[i].dimm[j].colbits = order_base_2(cols);
 				pvt->channel[i].dimm[j].bank_xor_enable =
 						GET_BITFIELD(pvt->info.mcmtr, 9, 9);
 				pvt->channel[i].dimm[j].amap_fine = GET_BITFIELD(amap, 0, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				snprintf(dimm->label, sizeof(dimm->label),
 						 "CPU_SrcID#%u_Ha#%u_Chan#%u_DIMM#%u",
 						 pvt->sbridge_dev->source_id, pvt->sbridge_dev->dom, i, j);
@@ -1935,6 +1951,7 @@ static struct mem_ctl_info *get_mci_for_node_id(u8 node_id, u8 ha)
 	return NULL;
 }
 
+<<<<<<< HEAD
 static u8 sb_close_row[] = {
 	15, 16, 17, 18, 20, 21, 22, 28, 10, 11, 12, 13, 29, 30, 31, 32, 33
 };
@@ -2028,6 +2045,8 @@ static bool sb_decode_ddr3(struct mem_ctl_info *mci, int ch, u8 rank,
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int get_memory_error_data(struct mem_ctl_info *mci,
 				 u64 addr,
 				 u8 *socket, u8 *ha,
@@ -2043,13 +2062,21 @@ static int get_memory_error_data(struct mem_ctl_info *mci,
 	int			interleave_mode, shiftup = 0;
 	unsigned int		sad_interleave[MAX_INTERLEAVE];
 	u32			reg, dram_rule;
+<<<<<<< HEAD
 	u8			ch_way, sck_way, pkg, sad_ha = 0, rankid = 0;
+=======
+	u8			ch_way, sck_way, pkg, sad_ha = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	u32			tad_offset;
 	u32			rir_way;
 	u32			mb, gb;
 	u64			ch_addr, offset, limit = 0, prv = 0;
+<<<<<<< HEAD
 	u64			rank_addr;
 	enum mem_type		mtype;
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Step 0) Check if the address is at special memory ranges
@@ -2333,6 +2360,7 @@ static int get_memory_error_data(struct mem_ctl_info *mci,
 	pci_read_config_dword(pvt->pci_tad[base_ch], rir_offset[n_rir][idx], &reg);
 	*rank = RIR_RNK_TGT(pvt->info.type, reg);
 
+<<<<<<< HEAD
 	if (pvt->info.type == BROADWELL) {
 		if (pvt->is_close_pg)
 			shiftup = 6;
@@ -2355,6 +2383,8 @@ static int get_memory_error_data(struct mem_ctl_info *mci,
 		msg[0] = '\0';
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	edac_dbg(0, "RIR#%d: channel address 0x%08Lx < 0x%08Lx, RIR interleave %d, index %d\n",
 		 n_rir,
 		 ch_addr,
@@ -3079,7 +3109,11 @@ static void sbridge_mce_output_error(struct mem_ctl_info *mci,
 	struct mem_ctl_info *new_mci;
 	struct sbridge_pvt *pvt = mci->pvt_info;
 	enum hw_event_mc_err_type tp_event;
+<<<<<<< HEAD
 	char *optype, msg[256], msg_full[512];
+=======
+	char *optype, msg[256];
+>>>>>>> b7ba80a49124 (Commit)
 	bool ripv = GET_BITFIELD(m->mcgstatus, 0, 0);
 	bool overflow = GET_BITFIELD(m->status, 62, 62);
 	bool uncorrected_error = GET_BITFIELD(m->status, 61, 61);
@@ -3218,17 +3252,29 @@ static void sbridge_mce_output_error(struct mem_ctl_info *mci,
 	 */
 	if (!pvt->is_lockstep && !pvt->is_cur_addr_mirrored && !pvt->is_close_pg)
 		channel = first_channel;
+<<<<<<< HEAD
 	snprintf(msg_full, sizeof(msg_full),
 		 "%s%s area:%s err_code:%04x:%04x socket:%d ha:%d channel_mask:%ld rank:%d %s",
+=======
+
+	snprintf(msg, sizeof(msg),
+		 "%s%s area:%s err_code:%04x:%04x socket:%d ha:%d channel_mask:%ld rank:%d",
+>>>>>>> b7ba80a49124 (Commit)
 		 overflow ? " OVERFLOW" : "",
 		 (uncorrected_error && recoverable) ? " recoverable" : "",
 		 area_type,
 		 mscod, errcode,
 		 socket, ha,
 		 channel_mask,
+<<<<<<< HEAD
 		 rank, msg);
 
 	edac_dbg(0, "%s\n", msg_full);
+=======
+		 rank);
+
+	edac_dbg(0, "%s\n", msg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* FIXME: need support for channel mask */
 
@@ -3239,7 +3285,11 @@ static void sbridge_mce_output_error(struct mem_ctl_info *mci,
 	edac_mc_handle_error(tp_event, mci, core_err_cnt,
 			     m->addr >> PAGE_SHIFT, m->addr & ~PAGE_MASK, 0,
 			     channel, dimm, -1,
+<<<<<<< HEAD
 			     optype, msg_full);
+=======
+			     optype, msg);
+>>>>>>> b7ba80a49124 (Commit)
 	return;
 err_parsing:
 	edac_mc_handle_error(tp_event, mci, core_err_cnt, 0, 0, 0,
@@ -3634,9 +3684,12 @@ static int __init sbridge_init(void)
 
 	edac_dbg(2, "\n");
 
+<<<<<<< HEAD
 	if (ghes_get_devices())
 		return -EBUSY;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	owner = edac_get_owner();
 	if (owner && strncmp(owner, EDAC_MOD_STR, sizeof(EDAC_MOD_STR)))
 		return -EBUSY;

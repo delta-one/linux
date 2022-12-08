@@ -7,6 +7,7 @@
 
 #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
 #include "sm8450.dtsi"
+<<<<<<< HEAD
 #include "pm8350.dtsi"
 #include "pm8350b.dtsi"
 #include "pm8350c.dtsi"
@@ -14,6 +15,8 @@
 #include "pmk8350.dtsi"
 #include "pmr735a.dtsi"
 #include "pmr735b.dtsi"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	model = "Qualcomm Technologies, Inc. SM8450 QRD";
@@ -39,7 +42,11 @@
 };
 
 &apps_rsc {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pm8350-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8350-rpmh-regulators";
 		qcom,pmic-id = "b";
 
@@ -130,7 +137,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-1 {
+=======
+	pm8350c-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8350c-rpmh-regulators";
 		qcom,pmic-id = "c";
 
@@ -242,7 +253,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-2 {
+=======
+	pm8450-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8450-rpmh-regulators";
 		qcom,pmic-id = "h";
 
@@ -282,9 +297,16 @@
 			regulator-max-microvolt = <912000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
+<<<<<<< HEAD
 	};
 
 	regulators-3 {
+=======
+
+	};
+
+	pmr735a-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pmr735a-rpmh-regulators";
 		qcom,pmic-id = "e";
 
@@ -394,6 +416,7 @@
 	firmware-name = "qcom/sm8450/slpi.mbn";
 };
 
+<<<<<<< HEAD
 &sdhc_2 {
 	cd-gpios = <&tlmm 92 GPIO_ACTIVE_HIGH>;
 	pinctrl-names = "default", "sleep";
@@ -406,6 +429,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &spi4 {
 	status = "okay";
 };
@@ -420,6 +445,7 @@
 
 &tlmm {
 	gpio-reserved-ranges = <28 4>, <36 4>;
+<<<<<<< HEAD
 
 	sdc2_card_det_n: sd-card-det-n-state {
 		pins = "gpio92";
@@ -427,6 +453,8 @@
 		drive-strength = <2>;
 		bias-pull-up;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &uart7 {

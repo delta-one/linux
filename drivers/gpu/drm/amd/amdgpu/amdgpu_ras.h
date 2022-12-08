@@ -540,15 +540,23 @@ void amdgpu_ras_suspend(struct amdgpu_device *adev);
 
 int amdgpu_ras_query_error_count(struct amdgpu_device *adev,
 				 unsigned long *ce_count,
+<<<<<<< HEAD
 				 unsigned long *ue_count,
 				 struct ras_query_if *query_info);
+=======
+				 unsigned long *ue_count);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* error handling functions */
 int amdgpu_ras_add_bad_pages(struct amdgpu_device *adev,
 		struct eeprom_table_record *bps, int pages);
 
+<<<<<<< HEAD
 int amdgpu_ras_save_bad_pages(struct amdgpu_device *adev,
 		unsigned long *new_cnt);
+=======
+int amdgpu_ras_save_bad_pages(struct amdgpu_device *adev);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline enum ta_ras_block
 amdgpu_ras_block_to_ta(enum amdgpu_ras_block block) {

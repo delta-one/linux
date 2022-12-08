@@ -183,8 +183,11 @@ vdec_try_fmt_common(struct venus_inst *inst, struct v4l2_format *f)
 		else
 			return NULL;
 		fmt = find_format(inst, pixmp->pixelformat, f->type);
+<<<<<<< HEAD
 		if (!fmt)
 			return NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	pixmp->width = clamp(pixmp->width, frame_width_min(inst),

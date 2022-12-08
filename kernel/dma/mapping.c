@@ -498,6 +498,7 @@ void *dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
 
 	WARN_ON_ONCE(!dev->coherent_dma_mask);
 
+<<<<<<< HEAD
 	/*
 	 * DMA allocations can never be turned back into a page pointer, so
 	 * requesting compound pages doesn't make sense (and can't even be
@@ -506,6 +507,8 @@ void *dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
 	if (WARN_ON_ONCE(flag & __GFP_COMP))
 		return NULL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (dma_alloc_from_dev_coherent(dev, size, dma_handle, &cpu_addr))
 		return cpu_addr;
 
@@ -560,8 +563,11 @@ static struct page *__dma_alloc_pages(struct device *dev, size_t size,
 		return NULL;
 	if (WARN_ON_ONCE(gfp & (__GFP_DMA | __GFP_DMA32 | __GFP_HIGHMEM)))
 		return NULL;
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(gfp & __GFP_COMP))
 		return NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	size = PAGE_ALIGN(size);
 	if (dma_alloc_direct(dev, ops))
@@ -647,8 +653,11 @@ struct sg_table *dma_alloc_noncontiguous(struct device *dev, size_t size,
 
 	if (WARN_ON_ONCE(attrs & ~DMA_ATTR_ALLOC_SINGLE_PAGES))
 		return NULL;
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(gfp & __GFP_COMP))
 		return NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ops && ops->alloc_noncontiguous)
 		sgt = ops->alloc_noncontiguous(dev, size, dir, gfp, attrs);

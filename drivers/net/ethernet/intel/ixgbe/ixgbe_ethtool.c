@@ -1117,6 +1117,7 @@ static void ixgbe_get_drvinfo(struct net_device *netdev,
 	drvinfo->n_priv_flags = IXGBE_PRIV_FLAGS_STR_LEN;
 }
 
+<<<<<<< HEAD
 static u32 ixgbe_get_max_rxd(struct ixgbe_adapter *adapter)
 {
 	switch (adapter->hw.mac.type) {
@@ -1153,6 +1154,8 @@ static u32 ixgbe_get_max_txd(struct ixgbe_adapter *adapter)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void ixgbe_get_ringparam(struct net_device *netdev,
 				struct ethtool_ringparam *ring,
 				struct kernel_ethtool_ringparam *kernel_ring,
@@ -1162,8 +1165,13 @@ static void ixgbe_get_ringparam(struct net_device *netdev,
 	struct ixgbe_ring *tx_ring = adapter->tx_ring[0];
 	struct ixgbe_ring *rx_ring = adapter->rx_ring[0];
 
+<<<<<<< HEAD
 	ring->rx_max_pending = ixgbe_get_max_rxd(adapter);
 	ring->tx_max_pending = ixgbe_get_max_txd(adapter);
+=======
+	ring->rx_max_pending = IXGBE_MAX_RXD;
+	ring->tx_max_pending = IXGBE_MAX_TXD;
+>>>>>>> b7ba80a49124 (Commit)
 	ring->rx_pending = rx_ring->count;
 	ring->tx_pending = tx_ring->count;
 }
@@ -1182,11 +1190,19 @@ static int ixgbe_set_ringparam(struct net_device *netdev,
 		return -EINVAL;
 
 	new_tx_count = clamp_t(u32, ring->tx_pending,
+<<<<<<< HEAD
 			       IXGBE_MIN_TXD, ixgbe_get_max_txd(adapter));
 	new_tx_count = ALIGN(new_tx_count, IXGBE_REQ_TX_DESCRIPTOR_MULTIPLE);
 
 	new_rx_count = clamp_t(u32, ring->rx_pending,
 			       IXGBE_MIN_RXD, ixgbe_get_max_rxd(adapter));
+=======
+			       IXGBE_MIN_TXD, IXGBE_MAX_TXD);
+	new_tx_count = ALIGN(new_tx_count, IXGBE_REQ_TX_DESCRIPTOR_MULTIPLE);
+
+	new_rx_count = clamp_t(u32, ring->rx_pending,
+			       IXGBE_MIN_RXD, IXGBE_MAX_RXD);
+>>>>>>> b7ba80a49124 (Commit)
 	new_rx_count = ALIGN(new_rx_count, IXGBE_REQ_RX_DESCRIPTOR_MULTIPLE);
 
 	if ((new_tx_count == adapter->tx_ring_count) &&
@@ -1371,10 +1387,17 @@ static void ixgbe_get_ethtool_stats(struct net_device *netdev,
 		}
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&ring->syncp);
 			data[i]   = ring->stats.packets;
 			data[i+1] = ring->stats.bytes;
 		} while (u64_stats_fetch_retry(&ring->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&ring->syncp);
+			data[i]   = ring->stats.packets;
+			data[i+1] = ring->stats.bytes;
+		} while (u64_stats_fetch_retry_irq(&ring->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 		i += 2;
 	}
 	for (j = 0; j < IXGBE_NUM_RX_QUEUES; j++) {
@@ -1387,10 +1410,17 @@ static void ixgbe_get_ethtool_stats(struct net_device *netdev,
 		}
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&ring->syncp);
 			data[i]   = ring->stats.packets;
 			data[i+1] = ring->stats.bytes;
 		} while (u64_stats_fetch_retry(&ring->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&ring->syncp);
+			data[i]   = ring->stats.packets;
+			data[i+1] = ring->stats.bytes;
+		} while (u64_stats_fetch_retry_irq(&ring->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 		i += 2;
 	}
 
@@ -1996,13 +2026,26 @@ static bool ixgbe_check_lbtest_frame(struct ixgbe_rx_buffer *rx_buffer,
 				     unsigned int frame_size)
 {
 	unsigned char *data;
+<<<<<<< HEAD
+=======
+	bool match = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	frame_size >>= 1;
 
 	data = page_address(rx_buffer->page) + rx_buffer->page_offset;
 
+<<<<<<< HEAD
 	return data[3] == 0xFF && data[frame_size + 10] == 0xBE &&
 		data[frame_size + 12] == 0xAF;
+=======
+	if (data[3] != 0xFF ||
+	    data[frame_size + 10] != 0xBE ||
+	    data[frame_size + 12] != 0xAF)
+		match = false;
+
+	return match;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static u16 ixgbe_clean_test_rings(struct ixgbe_ring *rx_ring,

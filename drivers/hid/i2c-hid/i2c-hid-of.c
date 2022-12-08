@@ -66,7 +66,12 @@ static void i2c_hid_of_power_down(struct i2chid_ops *ops)
 			       ihid_of->supplies);
 }
 
+<<<<<<< HEAD
 static int i2c_hid_of_probe(struct i2c_client *client)
+=======
+static int i2c_hid_of_probe(struct i2c_client *client,
+			    const struct i2c_device_id *dev_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &client->dev;
 	struct i2c_hid_of *ihid_of;
@@ -137,7 +142,11 @@ static struct i2c_driver i2c_hid_of_driver = {
 		.of_match_table = of_match_ptr(i2c_hid_of_match),
 	},
 
+<<<<<<< HEAD
 	.probe_new	= i2c_hid_of_probe,
+=======
+	.probe		= i2c_hid_of_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= i2c_hid_core_remove,
 	.shutdown	= i2c_hid_core_shutdown,
 	.id_table	= i2c_hid_of_id_table,

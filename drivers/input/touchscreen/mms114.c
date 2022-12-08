@@ -440,7 +440,12 @@ static int mms114_parse_legacy_bindings(struct mms114_data *data)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mms114_probe(struct i2c_client *client)
+=======
+static int mms114_probe(struct i2c_client *client,
+				  const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mms114_data *data;
 	struct input_dev *input_dev;
@@ -557,7 +562,11 @@ static int mms114_probe(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mms114_suspend(struct device *dev)
+=======
+static int __maybe_unused mms114_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct mms114_data *data = i2c_get_clientdata(client);
@@ -581,7 +590,11 @@ static int mms114_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mms114_resume(struct device *dev)
+=======
+static int __maybe_unused mms114_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct mms114_data *data = i2c_get_clientdata(client);
@@ -601,7 +614,11 @@ static int mms114_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(mms114_pm_ops, mms114_suspend, mms114_resume);
+=======
+static SIMPLE_DEV_PM_OPS(mms114_pm_ops, mms114_suspend, mms114_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id mms114_id[] = {
 	{ "mms114", 0 },
@@ -635,10 +652,17 @@ MODULE_DEVICE_TABLE(of, mms114_dt_match);
 static struct i2c_driver mms114_driver = {
 	.driver = {
 		.name	= "mms114",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&mms114_pm_ops),
 		.of_match_table = of_match_ptr(mms114_dt_match),
 	},
 	.probe_new	= mms114_probe,
+=======
+		.pm	= &mms114_pm_ops,
+		.of_match_table = of_match_ptr(mms114_dt_match),
+	},
+	.probe		= mms114_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= mms114_id,
 };
 

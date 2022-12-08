@@ -19,7 +19,11 @@ struct padded_implicitly {
 /*
  *struct padded_explicitly {
  *	int a;
+<<<<<<< HEAD
  *	long: 0;
+=======
+ *	int: 32;
+>>>>>>> b7ba80a49124 (Commit)
  *	int b;
  *};
  *
@@ -28,28 +32,61 @@ struct padded_implicitly {
 
 struct padded_explicitly {
 	int a;
+<<<<<<< HEAD
 	int: 1; /* algo will emit aligning `long: 0;` here */
+=======
+	int: 1; /* algo will explicitly pad with full 32 bits here */
+>>>>>>> b7ba80a49124 (Commit)
 	int b;
 };
 
 /* ----- START-EXPECTED-OUTPUT ----- */
+<<<<<<< HEAD
 struct padded_a_lot {
 	int a;
+=======
+/*
+ *struct padded_a_lot {
+ *	int a;
+ *	long: 32;
+ *	long: 64;
+ *	long: 64;
+ *	int b;
+ *};
+ *
+ */
+/* ------ END-EXPECTED-OUTPUT ------ */
+
+struct padded_a_lot {
+	int a;
+	/* 32 bit of implicit padding here, which algo will make explicit */
+>>>>>>> b7ba80a49124 (Commit)
 	long: 64;
 	long: 64;
 	int b;
 };
 
+<<<<<<< HEAD
 /* ------ END-EXPECTED-OUTPUT ------ */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* ----- START-EXPECTED-OUTPUT ----- */
 /*
  *struct padded_cache_line {
  *	int a;
+<<<<<<< HEAD
+=======
+ *	long: 32;
+>>>>>>> b7ba80a49124 (Commit)
  *	long: 64;
  *	long: 64;
  *	long: 64;
  *	int b;
+<<<<<<< HEAD
+=======
+ *	long: 32;
+>>>>>>> b7ba80a49124 (Commit)
  *	long: 64;
  *	long: 64;
  *	long: 64;
@@ -72,7 +109,11 @@ struct padded_cache_line {
  *struct zone {
  *	int a;
  *	short b;
+<<<<<<< HEAD
  *	long: 0;
+=======
+ *	short: 16;
+>>>>>>> b7ba80a49124 (Commit)
  *	struct zone_padding __pad__;
  *};
  *
@@ -89,6 +130,7 @@ struct zone {
 	struct zone_padding __pad__;
 };
 
+<<<<<<< HEAD
 /* ----- START-EXPECTED-OUTPUT ----- */
 struct padding_wo_named_members {
 	long: 64;
@@ -222,12 +264,15 @@ struct outer_mixed_but_unpacked {
 
 /* ------ END-EXPECTED-OUTPUT ------ */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int f(struct {
 	struct padded_implicitly _1;
 	struct padded_explicitly _2;
 	struct padded_a_lot _3;
 	struct padded_cache_line _4;
 	struct zone _5;
+<<<<<<< HEAD
 	struct padding_wo_named_members _6;
 	struct padding_weird_1 _7;
 	struct padding_weird_2 _8;
@@ -243,6 +288,8 @@ int f(struct {
 	struct ib_wc _201;
 	struct acpi_object_method _202;
 	struct outer_mixed_but_unpacked _203;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } *_)
 {
 	return 0;

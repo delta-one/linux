@@ -13,8 +13,11 @@ BPF_DESTDIR := $(BPFOBJ_OUTPUT)
 BPF_INCLUDE := $(BPF_DESTDIR)/include
 INCLUDES := -I$(OUTPUT) -I$(BPF_INCLUDE) -I$(abspath ../../include/uapi)
 CFLAGS := -g -Wall $(CLANG_CROSS_FLAGS)
+<<<<<<< HEAD
 CFLAGS += $(EXTRA_CFLAGS)
 LDFLAGS += $(EXTRA_LDFLAGS)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 # Try to detect best kernel BTF source
 KERNEL_REL := $(shell uname -r)

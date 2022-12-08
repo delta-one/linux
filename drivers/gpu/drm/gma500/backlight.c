@@ -7,8 +7,11 @@
  * Authors: Eric Knopp
  */
 
+<<<<<<< HEAD
 #include <linux/backlight.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <acpi/video.h>
 
 #include "psb_drv.h"

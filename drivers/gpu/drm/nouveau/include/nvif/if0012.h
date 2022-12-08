@@ -11,6 +11,7 @@ union nvif_outp_args {
 };
 
 #define NVIF_OUTP_V0_LOAD_DETECT 0x00
+<<<<<<< HEAD
 #define NVIF_OUTP_V0_ACQUIRE     0x01
 #define NVIF_OUTP_V0_RELEASE     0x02
 #define NVIF_OUTP_V0_INFOFRAME   0x03
@@ -18,6 +19,8 @@ union nvif_outp_args {
 #define NVIF_OUTP_V0_DP_AUX_PWR  0x05
 #define NVIF_OUTP_V0_DP_RETRAIN  0x06
 #define NVIF_OUTP_V0_DP_MST_VCPI 0x07
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 union nvif_outp_load_detect_args {
 	struct nvif_outp_load_detect_v0 {
@@ -27,6 +30,7 @@ union nvif_outp_load_detect_args {
 		__u32 data; /*TODO: move vbios loadval parsing into nvkm */
 	} v0;
 };
+<<<<<<< HEAD
 
 union nvif_outp_acquire_args {
 	struct nvif_outp_acquire_v0 {
@@ -118,4 +122,6 @@ union nvif_outp_dp_mst_vcpi_args {
 		__u16 aligned_pbn;
 	} v0;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

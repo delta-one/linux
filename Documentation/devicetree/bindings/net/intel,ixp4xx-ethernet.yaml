@@ -2,13 +2,22 @@
 # Copyright 2018 Linaro Ltd.
 %YAML 1.2
 ---
+<<<<<<< HEAD
 $id: http://devicetree.org/schemas/net/intel,ixp4xx-ethernet.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
+=======
+$id: "http://devicetree.org/schemas/net/intel,ixp4xx-ethernet.yaml#"
+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 title: Intel IXP4xx ethernet
 
 allOf:
+<<<<<<< HEAD
   - $ref: ethernet-controller.yaml#
+=======
+  - $ref: "ethernet-controller.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Linus Walleij <linus.walleij@linaro.org>
@@ -28,7 +37,11 @@ properties:
     description: Ethernet MMIO address range
 
   queue-rx:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/phandle-array
+=======
+    $ref: '/schemas/types.yaml#/definitions/phandle-array'
+>>>>>>> b7ba80a49124 (Commit)
     items:
       - items:
           - description: phandle to the RX queue node
@@ -36,7 +49,11 @@ properties:
     description: phandle to the RX queue on the NPE
 
   queue-txready:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/phandle-array
+=======
+    $ref: '/schemas/types.yaml#/definitions/phandle-array'
+>>>>>>> b7ba80a49124 (Commit)
     items:
       - items:
           - description: phandle to the TX READY queue node
@@ -48,7 +65,11 @@ properties:
   phy-handle: true
 
   intel,npe-handle:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/phandle-array
+=======
+    $ref: '/schemas/types.yaml#/definitions/phandle-array'
+>>>>>>> b7ba80a49124 (Commit)
     items:
       - items:
           - description: phandle to the NPE this ethernet instance is using

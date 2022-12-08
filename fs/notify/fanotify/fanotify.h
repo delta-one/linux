@@ -425,6 +425,7 @@ FANOTIFY_PE(struct fanotify_event *event)
 struct fanotify_perm_event {
 	struct fanotify_event fae;
 	struct path path;
+<<<<<<< HEAD
 	u32 response;			/* userspace answer to the event */
 	unsigned short state;		/* state of the event */
 	int fd;		/* fd we passed to userspace for this event */
@@ -432,6 +433,11 @@ struct fanotify_perm_event {
 		struct fanotify_response_info_header hdr;
 		struct fanotify_response_info_audit_rule audit_rule;
 	};
+=======
+	unsigned short response;	/* userspace answer to the event */
+	unsigned short state;		/* state of the event */
+	int fd;		/* fd we passed to userspace for this event */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct fanotify_perm_event *
@@ -456,6 +462,15 @@ static inline bool fanotify_is_error_event(u32 mask)
 	return mask & FAN_FS_ERROR;
 }
 
+<<<<<<< HEAD
+=======
+static inline bool fanotify_event_has_path(struct fanotify_event *event)
+{
+	return event->type == FANOTIFY_EVENT_TYPE_PATH ||
+		event->type == FANOTIFY_EVENT_TYPE_PATH_PERM;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline const struct path *fanotify_event_path(struct fanotify_event *event)
 {
 	if (event->type == FANOTIFY_EVENT_TYPE_PATH)

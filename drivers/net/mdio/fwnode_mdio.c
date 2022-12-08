@@ -10,11 +10,15 @@
 #include <linux/fwnode_mdio.h>
 #include <linux/of.h>
 #include <linux/phy.h>
+<<<<<<< HEAD
 #include <linux/pse-pd/pse.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_AUTHOR("Calvin Johnson <calvin.johnson@oss.nxp.com>");
 MODULE_LICENSE("GPL");
 
+<<<<<<< HEAD
 static struct pse_control *
 fwnode_find_pse_control(struct fwnode_handle *fwnode)
 {
@@ -35,6 +39,8 @@ fwnode_find_pse_control(struct fwnode_handle *fwnode)
 	return psec;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct mii_timestamper *
 fwnode_find_mii_timestamper(struct fwnode_handle *fwnode)
 {
@@ -98,7 +104,10 @@ int fwnode_mdiobus_phy_device_register(struct mii_bus *mdio,
 	 */
 	rc = phy_device_register(phy);
 	if (rc) {
+<<<<<<< HEAD
 		device_set_node(&phy->mdio.dev, NULL);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		fwnode_handle_put(child);
 		return rc;
 	}
@@ -113,6 +122,7 @@ int fwnode_mdiobus_register_phy(struct mii_bus *bus,
 				struct fwnode_handle *child, u32 addr)
 {
 	struct mii_timestamper *mii_ts = NULL;
+<<<<<<< HEAD
 	struct pse_control *psec = NULL;
 	struct phy_device *phy;
 	bool is_c45;
@@ -130,13 +140,34 @@ int fwnode_mdiobus_register_phy(struct mii_bus *bus,
 	}
 
 	is_c45 = fwnode_device_is_compatible(child, "ethernet-phy-ieee802.3-c45");
+=======
+	struct phy_device *phy;
+	bool is_c45 = false;
+	u32 phy_id;
+	int rc;
+
+	mii_ts = fwnode_find_mii_timestamper(child);
+	if (IS_ERR(mii_ts))
+		return PTR_ERR(mii_ts);
+
+	rc = fwnode_property_match_string(child, "compatible",
+					  "ethernet-phy-ieee802.3-c45");
+	if (rc >= 0)
+		is_c45 = true;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (is_c45 || fwnode_get_phy_id(child, &phy_id))
 		phy = get_phy_device(bus, addr, is_c45);
 	else
 		phy = phy_device_create(bus, addr, phy_id, 0, NULL);
 	if (IS_ERR(phy)) {
+<<<<<<< HEAD
 		rc = PTR_ERR(phy);
 		goto clean_mii_ts;
+=======
+		unregister_mii_timestamper(mii_ts);
+		return PTR_ERR(phy);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (is_acpi_node(child)) {
@@ -145,11 +176,16 @@ int fwnode_mdiobus_register_phy(struct mii_bus *bus,
 		/* Associate the fwnode with the device structure so it
 		 * can be looked up later.
 		 */
+<<<<<<< HEAD
 		phy->mdio.dev.fwnode = fwnode_handle_get(child);
+=======
+		phy->mdio.dev.fwnode = child;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* All data is now stored in the phy struct, so register it */
 		rc = phy_device_register(phy);
 		if (rc) {
+<<<<<<< HEAD
 			phy->mdio.dev.fwnode = NULL;
 			fwnode_handle_put(child);
 			goto clean_phy;
@@ -162,12 +198,28 @@ int fwnode_mdiobus_register_phy(struct mii_bus *bus,
 
 	phy->psec = psec;
 
+=======
+			phy_device_free(phy);
+			fwnode_handle_put(phy->mdio.dev.fwnode);
+			return rc;
+		}
+	} else if (is_of_node(child)) {
+		rc = fwnode_mdiobus_phy_device_register(bus, phy, child, addr);
+		if (rc) {
+			unregister_mii_timestamper(mii_ts);
+			phy_device_free(phy);
+			return rc;
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* phy->mii_ts may already be defined by the PHY driver. A
 	 * mii_timestamper probed via the device tree will still have
 	 * precedence.
 	 */
 	if (mii_ts)
 		phy->mii_ts = mii_ts;
+<<<<<<< HEAD
 
 	return 0;
 
@@ -179,5 +231,8 @@ clean_pse:
 	pse_control_put(psec);
 
 	return rc;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(fwnode_mdiobus_register_phy);

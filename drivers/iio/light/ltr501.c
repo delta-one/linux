@@ -153,6 +153,10 @@ struct ltr501_chip_info {
 
 struct ltr501_data {
 	struct i2c_client *client;
+<<<<<<< HEAD
+=======
+	struct regulator_bulk_data regulators[2];
+>>>>>>> b7ba80a49124 (Commit)
 	struct mutex lock_als, lock_ps;
 	const struct ltr501_chip_info *chip_info;
 	u8 als_contr, ps_contr;
@@ -1414,6 +1418,16 @@ static const struct regmap_config ltr501_regmap_config = {
 	.volatile_reg = ltr501_is_volatile_reg,
 };
 
+<<<<<<< HEAD
+=======
+static void ltr501_disable_regulators(void *d)
+{
+	struct ltr501_data *data = d;
+
+	regulator_bulk_disable(ARRAY_SIZE(data->regulators), data->regulators);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int ltr501_powerdown(struct ltr501_data *data)
 {
 	return ltr501_write_contr(data, data->als_contr &
@@ -1432,10 +1446,16 @@ static const char *ltr501_match_acpi_device(struct device *dev, int *chip_idx)
 	return dev_name(dev);
 }
 
+<<<<<<< HEAD
 static int ltr501_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
 	static const char * const regulator_names[] = { "vdd", "vddio" };
+=======
+static int ltr501_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct ltr501_data *data;
 	struct iio_dev *indio_dev;
 	struct regmap *regmap;
@@ -1459,13 +1479,34 @@ static int ltr501_probe(struct i2c_client *client)
 	mutex_init(&data->lock_als);
 	mutex_init(&data->lock_ps);
 
+<<<<<<< HEAD
 	ret = devm_regulator_bulk_get_enable(&client->dev,
 					     ARRAY_SIZE(regulator_names),
 					     regulator_names);
+=======
+	data->regulators[0].supply = "vdd";
+	data->regulators[1].supply = "vddio";
+	ret = devm_regulator_bulk_get(&client->dev,
+				      ARRAY_SIZE(data->regulators),
+				      data->regulators);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return dev_err_probe(&client->dev, ret,
 				     "Failed to get regulators\n");
 
+<<<<<<< HEAD
+=======
+	ret = regulator_bulk_enable(ARRAY_SIZE(data->regulators),
+				    data->regulators);
+	if (ret)
+		return ret;
+
+	ret = devm_add_action_or_reset(&client->dev,
+				       ltr501_disable_regulators, data);
+	if (ret)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	data->reg_it = devm_regmap_field_alloc(&client->dev, regmap,
 					       reg_field_it);
 	if (IS_ERR(data->reg_it)) {
@@ -1641,7 +1682,11 @@ static struct i2c_driver ltr501_driver = {
 		.pm	= pm_sleep_ptr(&ltr501_pm_ops),
 		.acpi_match_table = ACPI_PTR(ltr_acpi_match),
 	},
+<<<<<<< HEAD
 	.probe_new = ltr501_probe,
+=======
+	.probe  = ltr501_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove	= ltr501_remove,
 	.id_table = ltr501_id,
 };

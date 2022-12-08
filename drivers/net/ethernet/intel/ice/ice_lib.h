@@ -7,6 +7,7 @@
 #include "ice.h"
 #include "ice_vlan.h"
 
+<<<<<<< HEAD
 /* Flags used for VSI configuration and rebuild */
 #define ICE_VSI_FLAG_INIT	BIT(0)
 #define ICE_VSI_FLAG_NO_INIT	0
@@ -48,6 +49,8 @@ static inline struct ice_vsi_cfg_params ice_vsi_to_params(struct ice_vsi *vsi)
 	return params;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const char *ice_vsi_type_str(enum ice_vsi_type vsi_type);
 
 bool ice_pf_state_is_nominal(struct ice_pf *pf);
@@ -83,6 +86,10 @@ void ice_cfg_sw_lldp(struct ice_vsi *vsi, bool tx, bool create);
 int ice_set_link(struct ice_vsi *vsi, bool ena);
 
 void ice_vsi_delete(struct ice_vsi *vsi);
+<<<<<<< HEAD
+=======
+int ice_vsi_clear(struct ice_vsi *vsi);
+>>>>>>> b7ba80a49124 (Commit)
 
 int ice_vsi_cfg_tc(struct ice_vsi *vsi, u8 ena_tc);
 
@@ -91,7 +98,13 @@ int ice_vsi_cfg_rss_lut_key(struct ice_vsi *vsi);
 void ice_vsi_cfg_netdev_tc(struct ice_vsi *vsi, u8 ena_tc);
 
 struct ice_vsi *
+<<<<<<< HEAD
 ice_vsi_setup(struct ice_pf *pf, struct ice_vsi_cfg_params *params);
+=======
+ice_vsi_setup(struct ice_pf *pf, struct ice_port_info *pi,
+	      enum ice_vsi_type vsi_type, struct ice_vf *vf,
+	      struct ice_channel *ch);
+>>>>>>> b7ba80a49124 (Commit)
 
 void ice_napi_del(struct ice_vsi *vsi);
 
@@ -101,7 +114,10 @@ void ice_vsi_close(struct ice_vsi *vsi);
 
 int ice_ena_vsi(struct ice_vsi *vsi, bool locked);
 
+<<<<<<< HEAD
 void ice_vsi_decfg(struct ice_vsi *vsi);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void ice_dis_vsi(struct ice_vsi *vsi, bool locked);
 
 int ice_free_res(struct ice_res_tracker *res, u16 index, u16 id);
@@ -109,8 +125,12 @@ int ice_free_res(struct ice_res_tracker *res, u16 index, u16 id);
 int
 ice_get_res(struct ice_pf *pf, struct ice_res_tracker *res, u16 needed, u16 id);
 
+<<<<<<< HEAD
 int ice_vsi_rebuild(struct ice_vsi *vsi, u32 vsi_flags);
 int ice_vsi_cfg(struct ice_vsi *vsi, struct ice_vsi_cfg_params *params);
+=======
+int ice_vsi_rebuild(struct ice_vsi *vsi, bool init_vsi);
+>>>>>>> b7ba80a49124 (Commit)
 
 bool ice_is_reset_in_progress(unsigned long *state);
 int ice_wait_for_reset(struct ice_pf *pf, unsigned long timeout);
@@ -169,5 +189,8 @@ u16 ice_vsi_num_non_zero_vlans(struct ice_vsi *vsi);
 bool ice_is_feature_supported(struct ice_pf *pf, enum ice_feature f);
 void ice_clear_feature_support(struct ice_pf *pf, enum ice_feature f);
 void ice_init_feature_support(struct ice_pf *pf);
+<<<<<<< HEAD
 bool ice_vsi_is_rx_queue_active(struct ice_vsi *vsi);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* !_ICE_LIB_H_ */

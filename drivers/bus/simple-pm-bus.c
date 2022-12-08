@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Simple Power-Managed Bus Driver
  *
@@ -9,24 +12,33 @@
  * for more details.
  */
 
+<<<<<<< HEAD
 #include <linux/clk.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/of_platform.h>
 #include <linux/platform_device.h>
 #include <linux/pm_runtime.h>
 
+<<<<<<< HEAD
 struct simple_pm_bus {
 	struct clk_bulk_data *clks;
 	int num_clks;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int simple_pm_bus_probe(struct platform_device *pdev)
 {
 	const struct device *dev = &pdev->dev;
 	const struct of_dev_auxdata *lookup = dev_get_platdata(dev);
 	struct device_node *np = dev->of_node;
 	const struct of_device_id *match;
+<<<<<<< HEAD
 	struct simple_pm_bus *bus;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Allow user to use driver_override to bind this driver to a
@@ -52,6 +64,7 @@ static int simple_pm_bus_probe(struct platform_device *pdev)
 			return -ENODEV;
 	}
 
+<<<<<<< HEAD
 	bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
 	if (!bus)
 		return -ENOMEM;
@@ -62,6 +75,8 @@ static int simple_pm_bus_probe(struct platform_device *pdev)
 
 	dev_set_drvdata(&pdev->dev, bus);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev_dbg(&pdev->dev, "%s\n", __func__);
 
 	pm_runtime_enable(&pdev->dev);
@@ -85,6 +100,7 @@ static int simple_pm_bus_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int simple_pm_bus_runtime_suspend(struct device *dev)
 {
 	struct simple_pm_bus *bus = dev_get_drvdata(dev);
@@ -113,6 +129,8 @@ static const struct dev_pm_ops simple_pm_bus_pm_ops = {
 	NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ONLY_BUS	((void *) 1) /* Match if the device is only a bus. */
 
 static const struct of_device_id simple_pm_bus_of_match[] = {
@@ -131,7 +149,10 @@ static struct platform_driver simple_pm_bus_driver = {
 	.driver = {
 		.name = "simple-pm-bus",
 		.of_match_table = simple_pm_bus_of_match,
+<<<<<<< HEAD
 		.pm = pm_ptr(&simple_pm_bus_pm_ops),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 
@@ -139,3 +160,7 @@ module_platform_driver(simple_pm_bus_driver);
 
 MODULE_DESCRIPTION("Simple Power-Managed Bus Driver");
 MODULE_AUTHOR("Geert Uytterhoeven <geert+renesas@glider.be>");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

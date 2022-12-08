@@ -55,6 +55,7 @@ flags the caller provides. The caller is required to pass in a non-null struct
 pages* array, and the function then pins pages by incrementing each by a special
 value: GUP_PIN_COUNTING_BIAS.
 
+<<<<<<< HEAD
 For large folios, the GUP_PIN_COUNTING_BIAS scheme is not used. Instead,
 the extra space available in the struct folio is used to store the
 pincount directly.
@@ -66,6 +67,20 @@ head page. And in fact, testing revealed that, without a separate pincount
 field, refcount overflows were seen in some huge page stress tests.
 
 This also means that huge pages and large folios do not suffer
+=======
+For compound pages, the GUP_PIN_COUNTING_BIAS scheme is not used. Instead,
+an exact form of pin counting is achieved, by using the 2nd struct page
+in the compound page. A new struct page field, compound_pincount, has
+been added in order to support this.
+
+This approach for compound pages avoids the counting upper limit problems that
+are discussed below. Those limitations would have been aggravated severely by
+huge pages, because each tail page adds a refcount to the head page. And in
+fact, testing revealed that, without a separate compound_pincount field,
+page overflows were seen in some huge page stress tests.
+
+This also means that huge pages and compound pages do not suffer
+>>>>>>> b7ba80a49124 (Commit)
 from the false positives problem that is mentioned below.::
 
  Function
@@ -220,7 +235,11 @@ Unit testing
 ============
 This file::
 
+<<<<<<< HEAD
  tools/testing/selftests/mm/gup_test.c
+=======
+ tools/testing/selftests/vm/gup_test.c
+>>>>>>> b7ba80a49124 (Commit)
 
 has the following new calls to exercise the new pin*() wrapper functions:
 
@@ -263,9 +282,15 @@ place.)
 Other diagnostics
 =================
 
+<<<<<<< HEAD
 dump_page() has been enhanced slightly to handle these new counting
 fields, and to better report on large folios in general.  Specifically,
 for large folios, the exact pincount is reported.
+=======
+dump_page() has been enhanced slightly, to handle these new counting
+fields, and to better report on compound pages in general. Specifically,
+for compound pages, the exact (compound_pincount) pincount is reported.
+>>>>>>> b7ba80a49124 (Commit)
 
 References
 ==========

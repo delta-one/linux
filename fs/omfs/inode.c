@@ -48,7 +48,11 @@ struct inode *omfs_new_inode(struct inode *dir, umode_t mode)
 		goto fail;
 
 	inode->i_ino = new_block;
+<<<<<<< HEAD
 	inode_init_owner(&nop_mnt_idmap, inode, NULL, mode);
+=======
+	inode_init_owner(&init_user_ns, inode, NULL, mode);
+>>>>>>> b7ba80a49124 (Commit)
 	inode->i_mapping->a_ops = &omfs_aops;
 
 	inode->i_atime = inode->i_mtime = inode->i_ctime = current_time(inode);

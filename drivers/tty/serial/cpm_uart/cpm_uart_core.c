@@ -684,7 +684,12 @@ static int cpm_uart_tx_pump(struct uart_port *port)
 		p = cpm2cpu_addr(in_be32(&bdp->cbd_bufaddr), pinfo);
 		while (count < pinfo->tx_fifosize) {
 			*p++ = xmit->buf[xmit->tail];
+<<<<<<< HEAD
 			uart_xmit_advance(port, 1);
+=======
+			xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+			port->icount.tx++;
+>>>>>>> b7ba80a49124 (Commit)
 			count++;
 			if (xmit->head == xmit->tail)
 				break;
@@ -1202,6 +1207,15 @@ static int cpm_uart_init_port(struct device_node *np,
 	pinfo->port.fifosize = pinfo->tx_nrfifos * pinfo->tx_fifosize;
 	spin_lock_init(&pinfo->port.lock);
 
+<<<<<<< HEAD
+=======
+	pinfo->port.irq = irq_of_parse_and_map(np, 0);
+	if (pinfo->port.irq == NO_IRQ) {
+		ret = -EINVAL;
+		goto out_pram;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < NUM_GPIOS; i++) {
 		struct gpio_desc *gpiod;
 
@@ -1211,7 +1225,11 @@ static int cpm_uart_init_port(struct device_node *np,
 
 		if (IS_ERR(gpiod)) {
 			ret = PTR_ERR(gpiod);
+<<<<<<< HEAD
 			goto out_pram;
+=======
+			goto out_irq;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (gpiod) {
@@ -1237,6 +1255,11 @@ static int cpm_uart_init_port(struct device_node *np,
 
 	return cpm_uart_request_port(&pinfo->port);
 
+<<<<<<< HEAD
+=======
+out_irq:
+	irq_dispose_mapping(pinfo->port.irq);
+>>>>>>> b7ba80a49124 (Commit)
 out_pram:
 	cpm_uart_unmap_pram(pinfo, pram);
 out_mem:
@@ -1416,6 +1439,7 @@ static int cpm_uart_probe(struct platform_device *ofdev)
 	/* initialize the device pointer for the port */
 	pinfo->port.dev = &ofdev->dev;
 
+<<<<<<< HEAD
 	pinfo->port.irq = irq_of_parse_and_map(ofdev->dev.of_node, 0);
 	if (!pinfo->port.irq)
 		return -EINVAL;
@@ -1427,6 +1451,13 @@ static int cpm_uart_probe(struct platform_device *ofdev)
 	irq_dispose_mapping(pinfo->port.irq);
 
 	return ret;
+=======
+	ret = cpm_uart_init_port(ofdev->dev.of_node, pinfo);
+	if (ret)
+		return ret;
+
+	return uart_add_one_port(&cpm_reg, &pinfo->port);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cpm_uart_remove(struct platform_device *ofdev)

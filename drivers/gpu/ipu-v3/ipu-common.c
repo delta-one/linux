@@ -1165,7 +1165,10 @@ static int ipu_add_client_devices(struct ipu_soc *ipu, unsigned long ipu_base)
 		pdev = platform_device_alloc(reg->name, id++);
 		if (!pdev) {
 			ret = -ENOMEM;
+<<<<<<< HEAD
 			of_node_put(of_node);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			goto err_register;
 		}
 

@@ -230,11 +230,20 @@ static int thc63_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void thc63_remove(struct platform_device *pdev)
+=======
+static int thc63_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct thc63_dev *thc63 = platform_get_drvdata(pdev);
 
 	drm_bridge_remove(&thc63->bridge);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id thc63_match[] = {
@@ -245,7 +254,11 @@ MODULE_DEVICE_TABLE(of, thc63_match);
 
 static struct platform_driver thc63_driver = {
 	.probe	= thc63_probe,
+<<<<<<< HEAD
 	.remove_new = thc63_remove,
+=======
+	.remove	= thc63_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name		= "thc63lvd1024",
 		.of_match_table	= thc63_match,

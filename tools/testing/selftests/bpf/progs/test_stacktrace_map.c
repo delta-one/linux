@@ -38,7 +38,11 @@ struct {
 	__type(value, stack_trace_t);
 } stack_amap SEC(".maps");
 
+<<<<<<< HEAD
 /* taken from /sys/kernel/tracing/events/sched/sched_switch/format */
+=======
+/* taken from /sys/kernel/debug/tracing/events/sched/sched_switch/format */
+>>>>>>> b7ba80a49124 (Commit)
 struct sched_switch_args {
 	unsigned long long pad;
 	char prev_comm[TASK_COMM_LEN];

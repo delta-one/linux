@@ -445,7 +445,11 @@ static int __init armada37xx_cpufreq_driver_init(void)
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
 	clk = clk_get(cpu_dev, NULL);
+=======
+	clk = clk_get(cpu_dev, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(clk)) {
 		dev_err(cpu_dev, "Cannot get clock for CPU0\n");
 		return PTR_ERR(clk);

@@ -106,6 +106,7 @@ struct drm_client_dev {
 	 * @modesets: CRTC configurations
 	 */
 	struct drm_mode_set *modesets;
+<<<<<<< HEAD
 
 	/**
 	 * @hotplug_failed:
@@ -114,6 +115,8 @@ struct drm_client_dev {
 	 * before. It is usually not tried again.
 	 */
 	bool hotplug_failed;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int drm_client_init(struct drm_device *dev, struct drm_client_dev *client,
@@ -135,6 +138,14 @@ struct drm_client_buffer {
 	struct drm_client_dev *client;
 
 	/**
+<<<<<<< HEAD
+=======
+	 * @handle: Buffer handle
+	 */
+	u32 handle;
+
+	/**
+>>>>>>> b7ba80a49124 (Commit)
 	 * @pitch: Buffer pitch
 	 */
 	u32 pitch;

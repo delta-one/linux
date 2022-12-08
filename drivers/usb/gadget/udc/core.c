@@ -734,6 +734,7 @@ int usb_gadget_disconnect(struct usb_gadget *gadget)
 	}
 
 	ret = gadget->ops->pullup(gadget, 0);
+<<<<<<< HEAD
 	if (!ret)
 		gadget->connected = 0;
 
@@ -741,6 +742,15 @@ int usb_gadget_disconnect(struct usb_gadget *gadget)
 	if (gadget->udc->driver)
 		gadget->udc->driver->disconnect(gadget);
 	mutex_unlock(&udc_lock);
+=======
+	if (!ret) {
+		gadget->connected = 0;
+		mutex_lock(&udc_lock);
+		if (gadget->udc->driver)
+			gadget->udc->driver->disconnect(gadget);
+		mutex_unlock(&udc_lock);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	trace_usb_gadget_disconnect(gadget, ret);
@@ -1723,9 +1733,15 @@ static const struct attribute_group *usb_udc_attr_groups[] = {
 	NULL,
 };
 
+<<<<<<< HEAD
 static int usb_udc_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct usb_udc	*udc = container_of(dev, struct usb_udc, dev);
+=======
+static int usb_udc_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct usb_udc		*udc = container_of(dev, struct usb_udc, dev);
+>>>>>>> b7ba80a49124 (Commit)
 	int			ret;
 
 	ret = add_uevent_var(env, "USB_UDC_NAME=%s", udc->gadget->name);
@@ -1758,7 +1774,11 @@ static int __init usb_udc_init(void)
 {
 	int rc;
 
+<<<<<<< HEAD
 	udc_class = class_create("udc");
+=======
+	udc_class = class_create(THIS_MODULE, "udc");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(udc_class)) {
 		pr_err("failed to create udc class --> %ld\n",
 				PTR_ERR(udc_class));

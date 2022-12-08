@@ -51,7 +51,10 @@ struct device;
  *  bitmap_empty(src, nbits)                    Are all bits zero in *src?
  *  bitmap_full(src, nbits)                     Are all bits set in *src?
  *  bitmap_weight(src, nbits)                   Hamming Weight: number set bits
+<<<<<<< HEAD
  *  bitmap_weight_and(src1, src2, nbits)        Hamming Weight of and'ed bitmap
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *  bitmap_set(dst, pos, nbits)                 Set specified bit area
  *  bitmap_clear(dst, pos, nbits)               Clear specified bit area
  *  bitmap_find_next_zero_area(buf, len, pos, n, mask)  Find bit free area
@@ -165,8 +168,11 @@ bool __bitmap_intersects(const unsigned long *bitmap1,
 bool __bitmap_subset(const unsigned long *bitmap1,
 		     const unsigned long *bitmap2, unsigned int nbits);
 unsigned int __bitmap_weight(const unsigned long *bitmap, unsigned int nbits);
+<<<<<<< HEAD
 unsigned int __bitmap_weight_and(const unsigned long *bitmap1,
 				 const unsigned long *bitmap2, unsigned int nbits);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void __bitmap_set(unsigned long *map, unsigned int start, int len);
 void __bitmap_clear(unsigned long *map, unsigned int start, int len);
 
@@ -189,7 +195,11 @@ unsigned long bitmap_find_next_zero_area_off(unsigned long *map,
  * the bit offset of all zero areas this function finds is multiples of that
  * power of 2. A @align_mask of 0 means no alignment is required.
  */
+<<<<<<< HEAD
 static __always_inline unsigned long
+=======
+static inline unsigned long
+>>>>>>> b7ba80a49124 (Commit)
 bitmap_find_next_zero_area(unsigned long *map,
 			   unsigned long size,
 			   unsigned long start,
@@ -225,6 +235,10 @@ void bitmap_copy_le(unsigned long *dst, const unsigned long *src, unsigned int n
 #else
 #define bitmap_copy_le bitmap_copy
 #endif
+<<<<<<< HEAD
+=======
+unsigned int bitmap_ord_to_pos(const unsigned long *bitmap, unsigned int ord, unsigned int nbits);
+>>>>>>> b7ba80a49124 (Commit)
 int bitmap_print_to_pagebuf(bool list, char *buf,
 				   const unsigned long *maskp, int nmaskbits);
 
@@ -237,7 +251,11 @@ extern int bitmap_print_list_to_buf(char *buf, const unsigned long *maskp,
 #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
 #define BITMAP_LAST_WORD_MASK(nbits) (~0UL >> (-(nbits) & (BITS_PER_LONG - 1)))
 
+<<<<<<< HEAD
 static __always_inline void bitmap_zero(unsigned long *dst, unsigned int nbits)
+=======
+static inline void bitmap_zero(unsigned long *dst, unsigned int nbits)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int len = BITS_TO_LONGS(nbits) * sizeof(unsigned long);
 
@@ -247,7 +265,11 @@ static __always_inline void bitmap_zero(unsigned long *dst, unsigned int nbits)
 		memset(dst, 0, len);
 }
 
+<<<<<<< HEAD
 static __always_inline void bitmap_fill(unsigned long *dst, unsigned int nbits)
+=======
+static inline void bitmap_fill(unsigned long *dst, unsigned int nbits)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int len = BITS_TO_LONGS(nbits) * sizeof(unsigned long);
 
@@ -257,7 +279,11 @@ static __always_inline void bitmap_fill(unsigned long *dst, unsigned int nbits)
 		memset(dst, 0xff, len);
 }
 
+<<<<<<< HEAD
 static __always_inline void bitmap_copy(unsigned long *dst, const unsigned long *src,
+=======
+static inline void bitmap_copy(unsigned long *dst, const unsigned long *src,
+>>>>>>> b7ba80a49124 (Commit)
 			unsigned int nbits)
 {
 	unsigned int len = BITS_TO_LONGS(nbits) * sizeof(unsigned long);
@@ -271,7 +297,11 @@ static __always_inline void bitmap_copy(unsigned long *dst, const unsigned long 
 /*
  * Copy bitmap and clear tail bits in last word.
  */
+<<<<<<< HEAD
 static __always_inline void bitmap_copy_clear_tail(unsigned long *dst,
+=======
+static inline void bitmap_copy_clear_tail(unsigned long *dst,
+>>>>>>> b7ba80a49124 (Commit)
 		const unsigned long *src, unsigned int nbits)
 {
 	bitmap_copy(dst, src, nbits);
@@ -302,10 +332,19 @@ void bitmap_to_arr32(u32 *buf, const unsigned long *bitmap,
 #endif
 
 /*
+<<<<<<< HEAD
  * On 64-bit systems bitmaps are represented as u64 arrays internally. So,
  * the conversion is not needed when copying data from/to arrays of u64.
  */
 #if BITS_PER_LONG == 32
+=======
+ * On 64-bit systems bitmaps are represented as u64 arrays internally. On LE32
+ * machines the order of hi and lo parts of numbers match the bitmap structure.
+ * In both cases conversion is not needed when copying data from/to arrays of
+ * u64.
+ */
+#if (BITS_PER_LONG == 32) && defined(__BIG_ENDIAN)
+>>>>>>> b7ba80a49124 (Commit)
 void bitmap_from_arr64(unsigned long *bitmap, const u64 *buf, unsigned int nbits);
 void bitmap_to_arr64(u64 *buf, const unsigned long *bitmap, unsigned int nbits);
 #else
@@ -315,7 +354,11 @@ void bitmap_to_arr64(u64 *buf, const unsigned long *bitmap, unsigned int nbits);
 	bitmap_copy_clear_tail((unsigned long *)(buf), (const unsigned long *)(bitmap), (nbits))
 #endif
 
+<<<<<<< HEAD
 static __always_inline bool bitmap_and(unsigned long *dst, const unsigned long *src1,
+=======
+static inline bool bitmap_and(unsigned long *dst, const unsigned long *src1,
+>>>>>>> b7ba80a49124 (Commit)
 			const unsigned long *src2, unsigned int nbits)
 {
 	if (small_const_nbits(nbits))
@@ -323,7 +366,11 @@ static __always_inline bool bitmap_and(unsigned long *dst, const unsigned long *
 	return __bitmap_and(dst, src1, src2, nbits);
 }
 
+<<<<<<< HEAD
 static __always_inline void bitmap_or(unsigned long *dst, const unsigned long *src1,
+=======
+static inline void bitmap_or(unsigned long *dst, const unsigned long *src1,
+>>>>>>> b7ba80a49124 (Commit)
 			const unsigned long *src2, unsigned int nbits)
 {
 	if (small_const_nbits(nbits))
@@ -332,7 +379,11 @@ static __always_inline void bitmap_or(unsigned long *dst, const unsigned long *s
 		__bitmap_or(dst, src1, src2, nbits);
 }
 
+<<<<<<< HEAD
 static __always_inline void bitmap_xor(unsigned long *dst, const unsigned long *src1,
+=======
+static inline void bitmap_xor(unsigned long *dst, const unsigned long *src1,
+>>>>>>> b7ba80a49124 (Commit)
 			const unsigned long *src2, unsigned int nbits)
 {
 	if (small_const_nbits(nbits))
@@ -341,7 +392,11 @@ static __always_inline void bitmap_xor(unsigned long *dst, const unsigned long *
 		__bitmap_xor(dst, src1, src2, nbits);
 }
 
+<<<<<<< HEAD
 static __always_inline bool bitmap_andnot(unsigned long *dst, const unsigned long *src1,
+=======
+static inline bool bitmap_andnot(unsigned long *dst, const unsigned long *src1,
+>>>>>>> b7ba80a49124 (Commit)
 			const unsigned long *src2, unsigned int nbits)
 {
 	if (small_const_nbits(nbits))
@@ -349,7 +404,11 @@ static __always_inline bool bitmap_andnot(unsigned long *dst, const unsigned lon
 	return __bitmap_andnot(dst, src1, src2, nbits);
 }
 
+<<<<<<< HEAD
 static __always_inline void bitmap_complement(unsigned long *dst, const unsigned long *src,
+=======
+static inline void bitmap_complement(unsigned long *dst, const unsigned long *src,
+>>>>>>> b7ba80a49124 (Commit)
 			unsigned int nbits)
 {
 	if (small_const_nbits(nbits))
@@ -365,7 +424,11 @@ static __always_inline void bitmap_complement(unsigned long *dst, const unsigned
 #endif
 #define BITMAP_MEM_MASK (BITMAP_MEM_ALIGNMENT - 1)
 
+<<<<<<< HEAD
 static __always_inline bool bitmap_equal(const unsigned long *src1,
+=======
+static inline bool bitmap_equal(const unsigned long *src1,
+>>>>>>> b7ba80a49124 (Commit)
 				const unsigned long *src2, unsigned int nbits)
 {
 	if (small_const_nbits(nbits))
@@ -385,7 +448,11 @@ static __always_inline bool bitmap_equal(const unsigned long *src1,
  *
  * Returns: True if (*@src1 | *@src2) == *@src3, false otherwise
  */
+<<<<<<< HEAD
 static __always_inline bool bitmap_or_equal(const unsigned long *src1,
+=======
+static inline bool bitmap_or_equal(const unsigned long *src1,
+>>>>>>> b7ba80a49124 (Commit)
 				   const unsigned long *src2,
 				   const unsigned long *src3,
 				   unsigned int nbits)
@@ -396,7 +463,11 @@ static __always_inline bool bitmap_or_equal(const unsigned long *src1,
 	return !(((*src1 | *src2) ^ *src3) & BITMAP_LAST_WORD_MASK(nbits));
 }
 
+<<<<<<< HEAD
 static __always_inline bool bitmap_intersects(const unsigned long *src1,
+=======
+static inline bool bitmap_intersects(const unsigned long *src1,
+>>>>>>> b7ba80a49124 (Commit)
 				     const unsigned long *src2,
 				     unsigned int nbits)
 {
@@ -406,7 +477,11 @@ static __always_inline bool bitmap_intersects(const unsigned long *src1,
 		return __bitmap_intersects(src1, src2, nbits);
 }
 
+<<<<<<< HEAD
 static __always_inline bool bitmap_subset(const unsigned long *src1,
+=======
+static inline bool bitmap_subset(const unsigned long *src1,
+>>>>>>> b7ba80a49124 (Commit)
 				 const unsigned long *src2, unsigned int nbits)
 {
 	if (small_const_nbits(nbits))
@@ -415,7 +490,11 @@ static __always_inline bool bitmap_subset(const unsigned long *src1,
 		return __bitmap_subset(src1, src2, nbits);
 }
 
+<<<<<<< HEAD
 static __always_inline bool bitmap_empty(const unsigned long *src, unsigned int nbits)
+=======
+static inline bool bitmap_empty(const unsigned long *src, unsigned nbits)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (small_const_nbits(nbits))
 		return ! (*src & BITMAP_LAST_WORD_MASK(nbits));
@@ -423,7 +502,11 @@ static __always_inline bool bitmap_empty(const unsigned long *src, unsigned int 
 	return find_first_bit(src, nbits) == nbits;
 }
 
+<<<<<<< HEAD
 static __always_inline bool bitmap_full(const unsigned long *src, unsigned int nbits)
+=======
+static inline bool bitmap_full(const unsigned long *src, unsigned int nbits)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (small_const_nbits(nbits))
 		return ! (~(*src) & BITMAP_LAST_WORD_MASK(nbits));
@@ -439,6 +522,7 @@ unsigned int bitmap_weight(const unsigned long *src, unsigned int nbits)
 	return __bitmap_weight(src, nbits);
 }
 
+<<<<<<< HEAD
 static __always_inline
 unsigned long bitmap_weight_and(const unsigned long *src1,
 				const unsigned long *src2, unsigned int nbits)
@@ -448,6 +532,8 @@ unsigned long bitmap_weight_and(const unsigned long *src1,
 	return __bitmap_weight_and(src1, src2, nbits);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static __always_inline void bitmap_set(unsigned long *map, unsigned int start,
 		unsigned int nbits)
 {
@@ -480,7 +566,11 @@ static __always_inline void bitmap_clear(unsigned long *map, unsigned int start,
 		__bitmap_clear(map, start, nbits);
 }
 
+<<<<<<< HEAD
 static __always_inline void bitmap_shift_right(unsigned long *dst, const unsigned long *src,
+=======
+static inline void bitmap_shift_right(unsigned long *dst, const unsigned long *src,
+>>>>>>> b7ba80a49124 (Commit)
 				unsigned int shift, unsigned int nbits)
 {
 	if (small_const_nbits(nbits))
@@ -489,7 +579,11 @@ static __always_inline void bitmap_shift_right(unsigned long *dst, const unsigne
 		__bitmap_shift_right(dst, src, shift, nbits);
 }
 
+<<<<<<< HEAD
 static __always_inline void bitmap_shift_left(unsigned long *dst, const unsigned long *src,
+=======
+static inline void bitmap_shift_left(unsigned long *dst, const unsigned long *src,
+>>>>>>> b7ba80a49124 (Commit)
 				unsigned int shift, unsigned int nbits)
 {
 	if (small_const_nbits(nbits))
@@ -498,7 +592,11 @@ static __always_inline void bitmap_shift_left(unsigned long *dst, const unsigned
 		__bitmap_shift_left(dst, src, shift, nbits);
 }
 
+<<<<<<< HEAD
 static __always_inline void bitmap_replace(unsigned long *dst,
+=======
+static inline void bitmap_replace(unsigned long *dst,
+>>>>>>> b7ba80a49124 (Commit)
 				  const unsigned long *old,
 				  const unsigned long *new,
 				  const unsigned long *mask,
@@ -510,7 +608,11 @@ static __always_inline void bitmap_replace(unsigned long *dst,
 		__bitmap_replace(dst, old, new, mask, nbits);
 }
 
+<<<<<<< HEAD
 static __always_inline void bitmap_next_set_region(unsigned long *bitmap,
+=======
+static inline void bitmap_next_set_region(unsigned long *bitmap,
+>>>>>>> b7ba80a49124 (Commit)
 					  unsigned int *rs, unsigned int *re,
 					  unsigned int end)
 {
@@ -561,7 +663,11 @@ static __always_inline void bitmap_next_set_region(unsigned long *bitmap,
  * That is ``(u32 *)(&val)[0]`` gets the upper 32 bits,
  * but we expect the lower 32-bits of u64.
  */
+<<<<<<< HEAD
 static __always_inline void bitmap_from_u64(unsigned long *dst, u64 mask)
+=======
+static inline void bitmap_from_u64(unsigned long *dst, u64 mask)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	bitmap_from_arr64(dst, &mask, 64);
 }
@@ -574,7 +680,11 @@ static __always_inline void bitmap_from_u64(unsigned long *dst, u64 mask)
  * Returns the 8-bit value located at the @start bit offset within the @src
  * memory region.
  */
+<<<<<<< HEAD
 static __always_inline unsigned long bitmap_get_value8(const unsigned long *map,
+=======
+static inline unsigned long bitmap_get_value8(const unsigned long *map,
+>>>>>>> b7ba80a49124 (Commit)
 					      unsigned long start)
 {
 	const size_t index = BIT_WORD(start);
@@ -589,7 +699,11 @@ static __always_inline unsigned long bitmap_get_value8(const unsigned long *map,
  * @value: the 8-bit value; values wider than 8 bits may clobber bitmap
  * @start: bit offset of the 8-bit value; must be a multiple of 8
  */
+<<<<<<< HEAD
 static __always_inline void bitmap_set_value8(unsigned long *map, unsigned long value,
+=======
+static inline void bitmap_set_value8(unsigned long *map, unsigned long value,
+>>>>>>> b7ba80a49124 (Commit)
 				     unsigned long start)
 {
 	const size_t index = BIT_WORD(start);

@@ -23,7 +23,10 @@ Supported boards:
  * ROG STRIX X570-I GAMING
  * ROG STRIX Z690-A GAMING WIFI D4
  * ROG ZENITH II EXTREME
+<<<<<<< HEAD
  * ROG ZENITH II EXTREME ALPHA
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 Authors:
     - Eugene Shalygin <eugene.shalygin@gmail.com>

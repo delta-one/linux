@@ -705,6 +705,7 @@ struct atom_gpio_pin_lut_v2_1
 };
 
 
+<<<<<<< HEAD
 /*
  * VBIOS/PRE-OS always reserve a FB region at the top of frame buffer. driver should not write
  * access that region. driver can allocate their own reservation region as long as it does not
@@ -764,6 +765,22 @@ struct vram_usagebyfirmware_v2_2 {
 	uint32_t  used_by_driver_region0_in_kb;
 	uint32_t  reserved32[7];
 };
+=======
+/* 
+  ***************************************************************************
+    Data Table vram_usagebyfirmware  structure
+  ***************************************************************************
+*/
+
+struct vram_usagebyfirmware_v2_1
+{
+  struct  atom_common_table_header  table_header;
+  uint32_t  start_address_in_kb;
+  uint16_t  used_by_firmware_in_kb;
+  uint16_t  used_by_driver_in_kb; 
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 
 /* 
   ***************************************************************************

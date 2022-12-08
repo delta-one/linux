@@ -51,7 +51,11 @@ Entries specific to zPCI functions and entries that hold zPCI information.
 
   The slot entries are set up using the function identifier (FID) of the
   PCI function. The format depicted as XXXXXXXX above is 8 hexadecimal digits
+<<<<<<< HEAD
   with 0 padding and lower case hexadecimal digits.
+=======
+  with 0 padding and lower case hexadecimal digitis.
+>>>>>>> b7ba80a49124 (Commit)
 
   - /sys/bus/pci/slots/XXXXXXXX/power
 
@@ -66,7 +70,11 @@ Entries specific to zPCI functions and entries that hold zPCI information.
 
   - function_handle
     Low-level identifier used for a configured PCI function.
+<<<<<<< HEAD
     It might be useful for debugging.
+=======
+    It might be useful for debuging.
+>>>>>>> b7ba80a49124 (Commit)
 
   - pchid
     Model-dependent location of the I/O adapter.

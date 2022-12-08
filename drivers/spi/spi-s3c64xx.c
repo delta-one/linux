@@ -84,7 +84,10 @@
 #define S3C64XX_SPI_ST_TX_FIFORDY		(1<<0)
 
 #define S3C64XX_SPI_PACKET_CNT_EN		(1<<16)
+<<<<<<< HEAD
 #define S3C64XX_SPI_PACKET_CNT_MASK		GENMASK(15, 0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define S3C64XX_SPI_PND_TX_UNDERRUN_CLR		(1<<4)
 #define S3C64XX_SPI_PND_TX_OVERRUN_CLR		(1<<3)
@@ -712,6 +715,7 @@ static int s3c64xx_spi_prepare_message(struct spi_master *master,
 	return 0;
 }
 
+<<<<<<< HEAD
 static size_t s3c64xx_spi_max_transfer_size(struct spi_device *spi)
 {
 	struct spi_controller *ctlr = spi->controller;
@@ -719,6 +723,8 @@ static size_t s3c64xx_spi_max_transfer_size(struct spi_device *spi)
 	return ctlr->can_dma ? S3C64XX_SPI_PACKET_CNT_MASK : SIZE_MAX;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int s3c64xx_spi_transfer_one(struct spi_master *master,
 				    struct spi_device *spi,
 				    struct spi_transfer *xfer)
@@ -891,7 +897,11 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
 
 	/* NULL is fine, we just avoid using the FB delay (=0) */
 	if (IS_ERR(cs)) {
+<<<<<<< HEAD
 		dev_err(&spi->dev, "No CS for SPI(%d)\n", spi_get_chipselect(spi, 0));
+=======
+		dev_err(&spi->dev, "No CS for SPI(%d)\n", spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODEV;
 	}
 
@@ -1160,7 +1170,10 @@ static int s3c64xx_spi_probe(struct platform_device *pdev)
 	master->unprepare_transfer_hardware = s3c64xx_spi_unprepare_transfer;
 	master->prepare_message = s3c64xx_spi_prepare_message;
 	master->transfer_one = s3c64xx_spi_transfer_one;
+<<<<<<< HEAD
 	master->max_transfer_size = s3c64xx_spi_max_transfer_size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	master->num_chipselect = sci->num_cs;
 	master->use_gpio_descriptors = true;
 	master->dma_alignment = 8;
@@ -1286,7 +1299,11 @@ err_deref_master:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void s3c64xx_spi_remove(struct platform_device *pdev)
+=======
+static int s3c64xx_spi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct s3c64xx_spi_driver_data *sdd = spi_master_get_devdata(master);
@@ -1309,6 +1326,11 @@ static void s3c64xx_spi_remove(struct platform_device *pdev)
 	pm_runtime_put_noidle(&pdev->dev);
 	pm_runtime_disable(&pdev->dev);
 	pm_runtime_set_suspended(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -1529,7 +1551,11 @@ static struct platform_driver s3c64xx_spi_driver = {
 		.of_match_table = of_match_ptr(s3c64xx_spi_dt_match),
 	},
 	.probe = s3c64xx_spi_probe,
+<<<<<<< HEAD
 	.remove_new = s3c64xx_spi_remove,
+=======
+	.remove = s3c64xx_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = s3c64xx_spi_driver_ids,
 };
 MODULE_ALIAS("platform:s3c64xx-spi");

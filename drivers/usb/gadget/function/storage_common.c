@@ -23,7 +23,10 @@
 #include <linux/blkdev.h>
 #include <linux/file.h>
 #include <linux/fs.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/usb/composite.h>
 
 #include "storage_common.h"
@@ -397,7 +400,11 @@ ssize_t fsg_store_ro(struct fsg_lun *curlun, struct rw_semaphore *filesem,
 	ssize_t		rc;
 	bool		ro;
 
+<<<<<<< HEAD
 	rc = kstrtobool(buf, &ro);
+=======
+	rc = strtobool(buf, &ro);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 
@@ -420,7 +427,11 @@ ssize_t fsg_store_nofua(struct fsg_lun *curlun, const char *buf, size_t count)
 	bool		nofua;
 	int		ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(buf, &nofua);
+=======
+	ret = strtobool(buf, &nofua);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -471,7 +482,11 @@ ssize_t fsg_store_cdrom(struct fsg_lun *curlun, struct rw_semaphore *filesem,
 	bool		cdrom;
 	int		ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(buf, &cdrom);
+=======
+	ret = strtobool(buf, &cdrom);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -494,7 +509,11 @@ ssize_t fsg_store_removable(struct fsg_lun *curlun, const char *buf,
 	bool		removable;
 	int		ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(buf, &removable);
+=======
+	ret = strtobool(buf, &removable);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 

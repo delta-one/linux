@@ -317,3 +317,7 @@ module_platform_driver(ltc2952_poweroff_driver);
 
 MODULE_AUTHOR("René Moll <rene.moll@xsens.com>");
 MODULE_DESCRIPTION("LTC PowerPath power-off driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

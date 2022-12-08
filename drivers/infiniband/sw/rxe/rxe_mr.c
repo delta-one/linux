@@ -4,8 +4,11 @@
  * Copyright (c) 2015 System Fabric Works, Inc. All rights reserved.
  */
 
+<<<<<<< HEAD
 #include <linux/libnvdimm.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "rxe.h"
 #include "rxe_loc.h"
 
@@ -26,12 +29,19 @@ u8 rxe_get_next_key(u32 last_key)
 
 int mr_check_range(struct rxe_mr *mr, u64 iova, size_t length)
 {
+<<<<<<< HEAD
 	switch (mr->ibmr.type) {
+=======
+
+
+	switch (mr->type) {
+>>>>>>> b7ba80a49124 (Commit)
 	case IB_MR_TYPE_DMA:
 		return 0;
 
 	case IB_MR_TYPE_USER:
 	case IB_MR_TYPE_MEM_REG:
+<<<<<<< HEAD
 		if (iova < mr->ibmr.iova ||
 		    iova + length > mr->ibmr.iova + mr->ibmr.length) {
 			rxe_dbg_mr(mr, "iova/length out of range");
@@ -42,6 +52,17 @@ int mr_check_range(struct rxe_mr *mr, u64 iova, size_t length)
 	default:
 		rxe_dbg_mr(mr, "mr type not supported\n");
 		return -EINVAL;
+=======
+		if (iova < mr->iova || length > mr->length ||
+		    iova > mr->iova + mr->length - length)
+			return -EFAULT;
+		return 0;
+
+	default:
+		pr_warn("%s: mr type (%d) not supported\n",
+			__func__, mr->type);
+		return -EFAULT;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -62,6 +83,7 @@ static void rxe_mr_init(int access, struct rxe_mr *mr)
 	mr->lkey = mr->ibmr.lkey = lkey;
 	mr->rkey = mr->ibmr.rkey = rkey;
 
+<<<<<<< HEAD
 	mr->access = access;
 	mr->ibmr.page_size = PAGE_SIZE;
 	mr->page_mask = PAGE_MASK;
@@ -159,10 +181,15 @@ int rxe_mr_init_user(struct rxe_dev *rxe, u64 start, u64 length, u64 iova,
 	mr->state = RXE_MR_STATE_VALID;
 
 	return 0;
+=======
+	mr->state = RXE_MR_STATE_INVALID;
+	mr->map_shift = ilog2(RXE_BUF_PER_MAP);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int rxe_mr_alloc(struct rxe_mr *mr, int num_buf)
 {
+<<<<<<< HEAD
 	XA_STATE(xas, &mr->page_list, 0);
 	int i = 0;
 	int err;
@@ -191,6 +218,138 @@ static int rxe_mr_alloc(struct rxe_mr *mr, int num_buf)
 }
 
 int rxe_mr_init_fast(int max_pages, struct rxe_mr *mr)
+=======
+	int i;
+	int num_map;
+	struct rxe_map **map = mr->map;
+
+	num_map = (num_buf + RXE_BUF_PER_MAP - 1) / RXE_BUF_PER_MAP;
+
+	mr->map = kmalloc_array(num_map, sizeof(*map), GFP_KERNEL);
+	if (!mr->map)
+		goto err1;
+
+	for (i = 0; i < num_map; i++) {
+		mr->map[i] = kmalloc(sizeof(**map), GFP_KERNEL);
+		if (!mr->map[i])
+			goto err2;
+	}
+
+	BUILD_BUG_ON(!is_power_of_2(RXE_BUF_PER_MAP));
+
+	mr->map_shift = ilog2(RXE_BUF_PER_MAP);
+	mr->map_mask = RXE_BUF_PER_MAP - 1;
+
+	mr->num_buf = num_buf;
+	mr->num_map = num_map;
+	mr->max_buf = num_map * RXE_BUF_PER_MAP;
+
+	return 0;
+
+err2:
+	for (i--; i >= 0; i--)
+		kfree(mr->map[i]);
+
+	kfree(mr->map);
+err1:
+	return -ENOMEM;
+}
+
+void rxe_mr_init_dma(struct rxe_pd *pd, int access, struct rxe_mr *mr)
+{
+	rxe_mr_init(access, mr);
+
+	mr->ibmr.pd = &pd->ibpd;
+	mr->access = access;
+	mr->state = RXE_MR_STATE_VALID;
+	mr->type = IB_MR_TYPE_DMA;
+}
+
+int rxe_mr_init_user(struct rxe_pd *pd, u64 start, u64 length, u64 iova,
+		     int access, struct rxe_mr *mr)
+{
+	struct rxe_map		**map;
+	struct rxe_phys_buf	*buf = NULL;
+	struct ib_umem		*umem;
+	struct sg_page_iter	sg_iter;
+	int			num_buf;
+	void			*vaddr;
+	int err;
+	int i;
+
+	umem = ib_umem_get(pd->ibpd.device, start, length, access);
+	if (IS_ERR(umem)) {
+		pr_warn("%s: Unable to pin memory region err = %d\n",
+			__func__, (int)PTR_ERR(umem));
+		err = PTR_ERR(umem);
+		goto err_out;
+	}
+
+	num_buf = ib_umem_num_pages(umem);
+
+	rxe_mr_init(access, mr);
+
+	err = rxe_mr_alloc(mr, num_buf);
+	if (err) {
+		pr_warn("%s: Unable to allocate memory for map\n",
+				__func__);
+		goto err_release_umem;
+	}
+
+	mr->page_shift = PAGE_SHIFT;
+	mr->page_mask = PAGE_SIZE - 1;
+
+	num_buf			= 0;
+	map = mr->map;
+	if (length > 0) {
+		buf = map[0]->buf;
+
+		for_each_sgtable_page (&umem->sgt_append.sgt, &sg_iter, 0) {
+			if (num_buf >= RXE_BUF_PER_MAP) {
+				map++;
+				buf = map[0]->buf;
+				num_buf = 0;
+			}
+
+			vaddr = page_address(sg_page_iter_page(&sg_iter));
+			if (!vaddr) {
+				pr_warn("%s: Unable to get virtual address\n",
+						__func__);
+				err = -ENOMEM;
+				goto err_cleanup_map;
+			}
+
+			buf->addr = (uintptr_t)vaddr;
+			buf->size = PAGE_SIZE;
+			num_buf++;
+			buf++;
+
+		}
+	}
+
+	mr->ibmr.pd = &pd->ibpd;
+	mr->umem = umem;
+	mr->access = access;
+	mr->length = length;
+	mr->iova = iova;
+	mr->offset = ib_umem_offset(umem);
+	mr->state = RXE_MR_STATE_VALID;
+	mr->type = IB_MR_TYPE_USER;
+
+	return 0;
+
+err_cleanup_map:
+	for (i = 0; i < mr->num_map; i++)
+		kfree(mr->map[i]);
+	kfree(mr->map);
+err_release_umem:
+	ib_umem_release(umem);
+err_out:
+	return err;
+}
+
+int rxe_mr_init_fast(struct rxe_pd *pd, int max_pages, struct rxe_mr *mr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 
@@ -201,8 +360,15 @@ int rxe_mr_init_fast(int max_pages, struct rxe_mr *mr)
 	if (err)
 		goto err1;
 
+<<<<<<< HEAD
 	mr->state = RXE_MR_STATE_FREE;
 	mr->ibmr.type = IB_MR_TYPE_MEM_REG;
+=======
+	mr->ibmr.pd = &pd->ibpd;
+	mr->max_buf = max_pages;
+	mr->state = RXE_MR_STATE_FREE;
+	mr->type = IB_MR_TYPE_MEM_REG;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -210,6 +376,7 @@ err1:
 	return err;
 }
 
+<<<<<<< HEAD
 static int rxe_set_page(struct ib_mr *ibmr, u64 iova)
 {
 	struct rxe_mr *mr = to_rmr(ibmr);
@@ -310,10 +477,100 @@ int rxe_mr_copy(struct rxe_mr *mr, u64 iova, void *addr,
 		unsigned int length, enum rxe_mr_copy_dir dir)
 {
 	int err;
+=======
+static void lookup_iova(struct rxe_mr *mr, u64 iova, int *m_out, int *n_out,
+			size_t *offset_out)
+{
+	size_t offset = iova - mr->iova + mr->offset;
+	int			map_index;
+	int			buf_index;
+	u64			length;
+
+	if (likely(mr->page_shift)) {
+		*offset_out = offset & mr->page_mask;
+		offset >>= mr->page_shift;
+		*n_out = offset & mr->map_mask;
+		*m_out = offset >> mr->map_shift;
+	} else {
+		map_index = 0;
+		buf_index = 0;
+
+		length = mr->map[map_index]->buf[buf_index].size;
+
+		while (offset >= length) {
+			offset -= length;
+			buf_index++;
+
+			if (buf_index == RXE_BUF_PER_MAP) {
+				map_index++;
+				buf_index = 0;
+			}
+			length = mr->map[map_index]->buf[buf_index].size;
+		}
+
+		*m_out = map_index;
+		*n_out = buf_index;
+		*offset_out = offset;
+	}
+}
+
+void *iova_to_vaddr(struct rxe_mr *mr, u64 iova, int length)
+{
+	size_t offset;
+	int m, n;
+	void *addr;
+
+	if (mr->state != RXE_MR_STATE_VALID) {
+		pr_warn("mr not in valid state\n");
+		addr = NULL;
+		goto out;
+	}
+
+	if (!mr->map) {
+		addr = (void *)(uintptr_t)iova;
+		goto out;
+	}
+
+	if (mr_check_range(mr, iova, length)) {
+		pr_warn("range violation\n");
+		addr = NULL;
+		goto out;
+	}
+
+	lookup_iova(mr, iova, &m, &n, &offset);
+
+	if (offset + length > mr->map[m]->buf[n].size) {
+		pr_warn("crosses page boundary\n");
+		addr = NULL;
+		goto out;
+	}
+
+	addr = (void *)(uintptr_t)mr->map[m]->buf[n].addr + offset;
+
+out:
+	return addr;
+}
+
+/* copy data from a range (vaddr, vaddr+length-1) to or from
+ * a mr object starting at iova.
+ */
+int rxe_mr_copy(struct rxe_mr *mr, u64 iova, void *addr, int length,
+		enum rxe_mr_copy_dir dir)
+{
+	int			err;
+	int			bytes;
+	u8			*va;
+	struct rxe_map		**map;
+	struct rxe_phys_buf	*buf;
+	int			m;
+	int			i;
+	size_t			offset;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (length == 0)
 		return 0;
 
+<<<<<<< HEAD
 	if (WARN_ON(!mr))
 		return -EINVAL;
 
@@ -329,6 +586,65 @@ int rxe_mr_copy(struct rxe_mr *mr, u64 iova, void *addr,
 	}
 
 	return rxe_mr_copy_xarray(mr, iova, addr, length, dir);
+=======
+	if (mr->type == IB_MR_TYPE_DMA) {
+		u8 *src, *dest;
+
+		src = (dir == RXE_TO_MR_OBJ) ? addr : ((void *)(uintptr_t)iova);
+
+		dest = (dir == RXE_TO_MR_OBJ) ? ((void *)(uintptr_t)iova) : addr;
+
+		memcpy(dest, src, length);
+
+		return 0;
+	}
+
+	WARN_ON_ONCE(!mr->map);
+
+	err = mr_check_range(mr, iova, length);
+	if (err) {
+		err = -EFAULT;
+		goto err1;
+	}
+
+	lookup_iova(mr, iova, &m, &i, &offset);
+
+	map = mr->map + m;
+	buf	= map[0]->buf + i;
+
+	while (length > 0) {
+		u8 *src, *dest;
+
+		va	= (u8 *)(uintptr_t)buf->addr + offset;
+		src = (dir == RXE_TO_MR_OBJ) ? addr : va;
+		dest = (dir == RXE_TO_MR_OBJ) ? va : addr;
+
+		bytes	= buf->size - offset;
+
+		if (bytes > length)
+			bytes = length;
+
+		memcpy(dest, src, bytes);
+
+		length	-= bytes;
+		addr	+= bytes;
+
+		offset	= 0;
+		buf++;
+		i++;
+
+		if (i == RXE_BUF_PER_MAP) {
+			i = 0;
+			map++;
+			buf = map[0]->buf;
+		}
+	}
+
+	return 0;
+
+err1:
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* copy data in or out of a wqe, i.e. sg list
@@ -400,6 +716,10 @@ int copy_data(
 
 		if (bytes > 0) {
 			iova = sge->addr + offset;
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 			err = rxe_mr_copy(mr, iova, addr, bytes, dir);
 			if (err)
 				goto err2;
@@ -426,6 +746,7 @@ err1:
 	return err;
 }
 
+<<<<<<< HEAD
 int rxe_flush_pmem_iova(struct rxe_mr *mr, u64 iova, unsigned int length)
 {
 	unsigned int page_offset;
@@ -585,6 +906,8 @@ int rxe_mr_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int advance_dma_data(struct rxe_dma_info *dma, unsigned int length)
 {
 	struct rxe_sge		*sge	= &dma->sge[dma->cur_sge];
@@ -618,6 +941,15 @@ int advance_dma_data(struct rxe_dma_info *dma, unsigned int length)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+/* (1) find the mr corresponding to lkey/rkey
+ *     depending on lookup_type
+ * (2) verify that the (qp) pd matches the mr pd
+ * (3) verify that the mr can support the requested access
+ * (4) verify that mr state is valid
+ */
+>>>>>>> b7ba80a49124 (Commit)
 struct rxe_mr *lookup_mr(struct rxe_pd *pd, int access, u32 key,
 			 enum rxe_mr_lookup_type type)
 {
@@ -631,7 +963,11 @@ struct rxe_mr *lookup_mr(struct rxe_pd *pd, int access, u32 key,
 
 	if (unlikely((type == RXE_LOOKUP_LOCAL && mr->lkey != key) ||
 		     (type == RXE_LOOKUP_REMOTE && mr->rkey != key) ||
+<<<<<<< HEAD
 		     mr_pd(mr) != pd || ((access & mr->access) != access) ||
+=======
+		     mr_pd(mr) != pd || (access && !(access & mr->access)) ||
+>>>>>>> b7ba80a49124 (Commit)
 		     mr->state != RXE_MR_STATE_VALID)) {
 		rxe_put(mr);
 		mr = NULL;
@@ -648,26 +984,45 @@ int rxe_invalidate_mr(struct rxe_qp *qp, u32 key)
 
 	mr = rxe_pool_get_index(&rxe->mr_pool, key >> 8);
 	if (!mr) {
+<<<<<<< HEAD
 		rxe_dbg_qp(qp, "No MR for key %#x\n", key);
+=======
+		pr_err("%s: No MR for key %#x\n", __func__, key);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EINVAL;
 		goto err;
 	}
 
 	if (mr->rkey ? (key != mr->rkey) : (key != mr->lkey)) {
+<<<<<<< HEAD
 		rxe_dbg_mr(mr, "wr key (%#x) doesn't match mr key (%#x)\n",
 			key, (mr->rkey ? mr->rkey : mr->lkey));
+=======
+		pr_err("%s: wr key (%#x) doesn't match mr key (%#x)\n",
+			__func__, key, (mr->rkey ? mr->rkey : mr->lkey));
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EINVAL;
 		goto err_drop_ref;
 	}
 
 	if (atomic_read(&mr->num_mw) > 0) {
+<<<<<<< HEAD
 		rxe_dbg_mr(mr, "Attempt to invalidate an MR while bound to MWs\n");
+=======
+		pr_warn("%s: Attempt to invalidate an MR while bound to MWs\n",
+			__func__);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EINVAL;
 		goto err_drop_ref;
 	}
 
+<<<<<<< HEAD
 	if (unlikely(mr->ibmr.type != IB_MR_TYPE_MEM_REG)) {
 		rxe_dbg_mr(mr, "Type (%d) is wrong\n", mr->ibmr.type);
+=======
+	if (unlikely(mr->type != IB_MR_TYPE_MEM_REG)) {
+		pr_warn("%s: mr->type (%d) is wrong type\n", __func__, mr->type);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EINVAL;
 		goto err_drop_ref;
 	}
@@ -696,27 +1051,46 @@ int rxe_reg_fast_mr(struct rxe_qp *qp, struct rxe_send_wqe *wqe)
 
 	/* user can only register MR in free state */
 	if (unlikely(mr->state != RXE_MR_STATE_FREE)) {
+<<<<<<< HEAD
 		rxe_dbg_mr(mr, "mr->lkey = 0x%x not free\n", mr->lkey);
+=======
+		pr_warn("%s: mr->lkey = 0x%x not free\n",
+			__func__, mr->lkey);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
 	/* user can only register mr with qp in same protection domain */
 	if (unlikely(qp->ibqp.pd != mr->ibmr.pd)) {
+<<<<<<< HEAD
 		rxe_dbg_mr(mr, "qp->pd and mr->pd don't match\n");
+=======
+		pr_warn("%s: qp->pd and mr->pd don't match\n",
+			__func__);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
 	/* user is only allowed to change key portion of l/rkey */
 	if (unlikely((mr->lkey & ~0xff) != (key & ~0xff))) {
+<<<<<<< HEAD
 		rxe_dbg_mr(mr, "key = 0x%x has wrong index mr->lkey = 0x%x\n",
 			key, mr->lkey);
+=======
+		pr_warn("%s: key = 0x%x has wrong index mr->lkey = 0x%x\n",
+			__func__, key, mr->lkey);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
 	mr->access = access;
 	mr->lkey = key;
 	mr->rkey = (access & IB_ACCESS_REMOTE) ? key : 0;
+<<<<<<< HEAD
 	mr->ibmr.iova = wqe->wr.wr.reg.mr->iova;
+=======
+	mr->iova = wqe->wr.wr.reg.mr->iova;
+>>>>>>> b7ba80a49124 (Commit)
 	mr->state = RXE_MR_STATE_VALID;
 
 	return 0;
@@ -731,17 +1105,34 @@ int rxe_dereg_mr(struct ib_mr *ibmr, struct ib_udata *udata)
 		return -EINVAL;
 
 	rxe_cleanup(mr);
+<<<<<<< HEAD
 	kfree(mr);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 void rxe_mr_cleanup(struct rxe_pool_elem *elem)
 {
 	struct rxe_mr *mr = container_of(elem, typeof(*mr), elem);
+<<<<<<< HEAD
+=======
+	int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rxe_put(mr_pd(mr));
 	ib_umem_release(mr->umem);
 
+<<<<<<< HEAD
 	if (mr->ibmr.type != IB_MR_TYPE_DMA)
 		xa_destroy(&mr->page_list);
+=======
+	if (mr->map) {
+		for (i = 0; i < mr->num_map; i++)
+			kfree(mr->map[i]);
+
+		kfree(mr->map);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }

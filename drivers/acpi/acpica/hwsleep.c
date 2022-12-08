@@ -311,6 +311,7 @@ acpi_status acpi_hw_legacy_wake(u8 sleep_state)
 				    [ACPI_EVENT_SLEEP_BUTTON].
 				    status_register_id, ACPI_CLEAR_STATUS);
 
+<<<<<<< HEAD
 	/* Enable pcie wake event if support */
 	if ((acpi_gbl_FADT.flags & ACPI_FADT_PCI_EXPRESS_WAKE)) {
 		(void)
@@ -325,6 +326,8 @@ acpi_status acpi_hw_legacy_wake(u8 sleep_state)
 					    ACPI_CLEAR_STATUS);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	acpi_hw_execute_sleep_method(METHOD_PATHNAME__SST, ACPI_SST_WORKING);
 	return_ACPI_STATUS(status);
 }

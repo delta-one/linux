@@ -19,7 +19,11 @@ accuracy:)
 - nxp,wr_low: WR_LOW
 
 Optional subnodes:
+<<<<<<< HEAD
 - Partitions, see Documentation/devicetree/bindings/mtd/mtd.yaml
+=======
+- Partitions, see Documentation/devicetree/bindings/mtd/partition.txt
+>>>>>>> b7ba80a49124 (Commit)
 
 Example:
 

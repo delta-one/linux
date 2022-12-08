@@ -7,16 +7,22 @@
 
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
+<<<<<<< HEAD
 #include <linux/atomic.h>
 #include <linux/types.h>
 #include <linux/module.h>
 #include <linux/of.h>
+=======
+#include <linux/types.h>
+#include <linux/module.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kernel.h>
 #include <linux/slab.h>
 #include <linux/device.h>
 
 #include "common.h"
 
+<<<<<<< HEAD
 BLOCKING_NOTIFIER_HEAD(scmi_requested_devices_nh);
 EXPORT_SYMBOL_GPL(scmi_requested_devices_nh);
 
@@ -185,6 +191,11 @@ static void scmi_protocol_device_unrequest(const struct scmi_device_id *id_table
 	}
 	mutex_unlock(&scmi_requested_devices_mtx);
 }
+=======
+static DEFINE_IDA(scmi_bus_id);
+static DEFINE_IDR(scmi_protocols);
+static DEFINE_SPINLOCK(protocol_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct scmi_device_id *
 scmi_dev_match_id(struct scmi_device *scmi_dev, struct scmi_driver *scmi_drv)
@@ -224,11 +235,19 @@ static int scmi_match_by_id_table(struct device *dev, void *data)
 	struct scmi_device_id *id_table = data;
 
 	return sdev->protocol_id == id_table->protocol_id &&
+<<<<<<< HEAD
 		(id_table->name && !strcmp(sdev->name, id_table->name));
 }
 
 static struct scmi_device *scmi_child_dev_find(struct device *parent,
 					       int prot_id, const char *name)
+=======
+		!strcmp(sdev->name, id_table->name);
+}
+
+struct scmi_device *scmi_child_dev_find(struct device *parent,
+					int prot_id, const char *name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct scmi_device_id id_table;
 	struct device *dev;
@@ -243,6 +262,33 @@ static struct scmi_device *scmi_child_dev_find(struct device *parent,
 	return to_scmi_dev(dev);
 }
 
+<<<<<<< HEAD
+=======
+const struct scmi_protocol *scmi_protocol_get(int protocol_id)
+{
+	const struct scmi_protocol *proto;
+
+	proto = idr_find(&scmi_protocols, protocol_id);
+	if (!proto || !try_module_get(proto->owner)) {
+		pr_warn("SCMI Protocol 0x%x not found!\n", protocol_id);
+		return NULL;
+	}
+
+	pr_debug("Found SCMI Protocol 0x%x\n", protocol_id);
+
+	return proto;
+}
+
+void scmi_protocol_put(int protocol_id)
+{
+	const struct scmi_protocol *proto;
+
+	proto = idr_find(&scmi_protocols, protocol_id);
+	if (proto)
+		module_put(proto->owner);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int scmi_dev_probe(struct device *dev)
 {
 	struct scmi_driver *scmi_drv = to_scmi_driver(dev->driver);
@@ -263,13 +309,20 @@ static void scmi_dev_remove(struct device *dev)
 		scmi_drv->remove(scmi_dev);
 }
 
+<<<<<<< HEAD
 struct bus_type scmi_bus_type = {
+=======
+static struct bus_type scmi_bus_type = {
+>>>>>>> b7ba80a49124 (Commit)
 	.name =	"scmi_protocol",
 	.match = scmi_dev_match,
 	.probe = scmi_dev_probe,
 	.remove = scmi_dev_remove,
 };
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(scmi_bus_type);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int scmi_driver_register(struct scmi_driver *driver, struct module *owner,
 			 const char *mod_name)
@@ -290,7 +343,11 @@ int scmi_driver_register(struct scmi_driver *driver, struct module *owner,
 
 	retval = driver_register(&driver->driver);
 	if (!retval)
+<<<<<<< HEAD
 		pr_debug("Registered new scmi driver %s\n", driver->name);
+=======
+		pr_debug("registered new scmi driver %s\n", driver->name);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return retval;
 }
@@ -308,6 +365,7 @@ static void scmi_device_release(struct device *dev)
 	kfree(to_scmi_dev(dev));
 }
 
+<<<<<<< HEAD
 static void __scmi_device_destroy(struct scmi_device *scmi_dev)
 {
 	pr_debug("(%s) Destroying SCMI device '%s' for protocol 0x%x (%s)\n",
@@ -326,10 +384,16 @@ static void __scmi_device_destroy(struct scmi_device *scmi_dev)
 static struct scmi_device *
 __scmi_device_create(struct device_node *np, struct device *parent,
 		     int protocol, const char *name)
+=======
+struct scmi_device *
+scmi_device_create(struct device_node *np, struct device *parent, int protocol,
+		   const char *name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int id, retval;
 	struct scmi_device *scmi_dev;
 
+<<<<<<< HEAD
 	/*
 	 * If the same protocol/name device already exist under the same parent
 	 * (i.e. SCMI instance) just return the existent device.
@@ -355,6 +419,8 @@ __scmi_device_create(struct device_node *np, struct device *parent,
 		return NULL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	scmi_dev = kzalloc(sizeof(*scmi_dev), GFP_KERNEL);
 	if (!scmi_dev)
 		return NULL;
@@ -375,7 +441,11 @@ __scmi_device_create(struct device_node *np, struct device *parent,
 	scmi_dev->id = id;
 	scmi_dev->protocol_id = protocol;
 	scmi_dev->dev.parent = parent;
+<<<<<<< HEAD
 	device_set_node(&scmi_dev->dev, of_fwnode_handle(np));
+=======
+	scmi_dev->dev.of_node = np;
+>>>>>>> b7ba80a49124 (Commit)
 	scmi_dev->dev.bus = &scmi_bus_type;
 	scmi_dev->dev.release = scmi_device_release;
 	dev_set_name(&scmi_dev->dev, "scmi_dev.%d", id);
@@ -384,10 +454,13 @@ __scmi_device_create(struct device_node *np, struct device *parent,
 	if (retval)
 		goto put_dev;
 
+<<<<<<< HEAD
 	pr_debug("(%s) Created SCMI device '%s' for protocol 0x%x (%s)\n",
 		 of_node_full_name(parent->of_node),
 		 dev_name(&scmi_dev->dev), protocol, name);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return scmi_dev;
 put_dev:
 	kfree_const(scmi_dev->name);
@@ -396,6 +469,7 @@ put_dev:
 	return NULL;
 }
 
+<<<<<<< HEAD
 /**
  * scmi_device_create  - A method to create one or more SCMI devices
  *
@@ -469,12 +543,72 @@ void scmi_device_destroy(struct device *parent, int protocol, const char *name)
 		__scmi_device_destroy(scmi_dev);
 }
 EXPORT_SYMBOL_GPL(scmi_device_destroy);
+=======
+void scmi_device_destroy(struct scmi_device *scmi_dev)
+{
+	kfree_const(scmi_dev->name);
+	scmi_handle_put(scmi_dev->handle);
+	ida_free(&scmi_bus_id, scmi_dev->id);
+	device_unregister(&scmi_dev->dev);
+}
+
+void scmi_set_handle(struct scmi_device *scmi_dev)
+{
+	scmi_dev->handle = scmi_handle_get(&scmi_dev->dev);
+}
+
+int scmi_protocol_register(const struct scmi_protocol *proto)
+{
+	int ret;
+
+	if (!proto) {
+		pr_err("invalid protocol\n");
+		return -EINVAL;
+	}
+
+	if (!proto->instance_init) {
+		pr_err("missing init for protocol 0x%x\n", proto->id);
+		return -EINVAL;
+	}
+
+	spin_lock(&protocol_lock);
+	ret = idr_alloc(&scmi_protocols, (void *)proto,
+			proto->id, proto->id + 1, GFP_ATOMIC);
+	spin_unlock(&protocol_lock);
+	if (ret != proto->id) {
+		pr_err("unable to allocate SCMI idr slot for 0x%x - err %d\n",
+		       proto->id, ret);
+		return ret;
+	}
+
+	pr_debug("Registered SCMI Protocol 0x%x\n", proto->id);
+
+	return 0;
+}
+EXPORT_SYMBOL_GPL(scmi_protocol_register);
+
+void scmi_protocol_unregister(const struct scmi_protocol *proto)
+{
+	spin_lock(&protocol_lock);
+	idr_remove(&scmi_protocols, proto->id);
+	spin_unlock(&protocol_lock);
+
+	pr_debug("Unregistered SCMI Protocol 0x%x\n", proto->id);
+
+	return;
+}
+EXPORT_SYMBOL_GPL(scmi_protocol_unregister);
+>>>>>>> b7ba80a49124 (Commit)
 
 static int __scmi_devices_unregister(struct device *dev, void *data)
 {
 	struct scmi_device *scmi_dev = to_scmi_dev(dev);
 
+<<<<<<< HEAD
 	__scmi_device_destroy(scmi_dev);
+=======
+	scmi_device_destroy(scmi_dev);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -483,12 +617,17 @@ static void scmi_devices_unregister(void)
 	bus_for_each_dev(&scmi_bus_type, NULL, NULL, __scmi_devices_unregister);
 }
 
+<<<<<<< HEAD
 static int __init scmi_bus_init(void)
+=======
+int __init scmi_bus_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int retval;
 
 	retval = bus_register(&scmi_bus_type);
 	if (retval)
+<<<<<<< HEAD
 		pr_err("SCMI protocol bus register failed (%d)\n", retval);
 
 	pr_info("SCMI protocol bus registered\n");
@@ -503,13 +642,25 @@ static void __exit scmi_bus_exit(void)
 	 * Destroy all remaining devices: just in case the drivers were
 	 * manually unbound and at first and then the modules unloaded.
 	 */
+=======
+		pr_err("scmi protocol bus register failed (%d)\n", retval);
+
+	return retval;
+}
+
+void __exit scmi_bus_exit(void)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	scmi_devices_unregister();
 	bus_unregister(&scmi_bus_type);
 	ida_destroy(&scmi_bus_id);
 }
+<<<<<<< HEAD
 module_exit(scmi_bus_exit);
 
 MODULE_ALIAS("scmi-core");
 MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
 MODULE_DESCRIPTION("ARM SCMI protocol bus");
 MODULE_LICENSE("GPL");
+=======
+>>>>>>> b7ba80a49124 (Commit)

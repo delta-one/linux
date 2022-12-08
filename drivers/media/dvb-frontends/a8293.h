@@ -18,12 +18,18 @@
 /**
  * struct a8293_platform_data - Platform data for the a8293 driver
  * @dvb_frontend: DVB frontend.
+<<<<<<< HEAD
  * @volt_slew_nanos_per_mv: Slew rate when increasing LNB voltage,
  *	 in nanoseconds per millivolt.
  */
 struct a8293_platform_data {
 	struct dvb_frontend *dvb_frontend;
 	int volt_slew_nanos_per_mv;
+=======
+ */
+struct a8293_platform_data {
+	struct dvb_frontend *dvb_frontend;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #endif /* A8293_H */

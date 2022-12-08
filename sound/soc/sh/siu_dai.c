@@ -778,9 +778,16 @@ static int siu_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void siu_remove(struct platform_device *pdev)
 {
 	pm_runtime_disable(&pdev->dev);
+=======
+static int siu_remove(struct platform_device *pdev)
+{
+	pm_runtime_disable(&pdev->dev);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver siu_driver = {
@@ -788,7 +795,11 @@ static struct platform_driver siu_driver = {
 		.name	= "siu-pcm-audio",
 	},
 	.probe		= siu_probe,
+<<<<<<< HEAD
 	.remove_new	= siu_remove,
+=======
+	.remove		= siu_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(siu_driver);

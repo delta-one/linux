@@ -108,10 +108,14 @@ struct dim2_platform_data {
 	u8 fcnt;
 };
 
+<<<<<<< HEAD
 static inline struct dim2_hdm *iface_to_hdm(struct most_interface *iface)
 {
 	return container_of(iface, struct dim2_hdm, most_iface);
 }
+=======
+#define iface_to_hdm(iface) container_of(iface, struct dim2_hdm, most_iface)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Macro to identify a network status message */
 #define PACKET_IS_NET_INFO(p)  \
@@ -164,7 +168,11 @@ static int try_start_dim_transfer(struct hdm_channel *hdm_ch)
 	struct list_head *head = &hdm_ch->pending_list;
 	struct mbo *mbo;
 	unsigned long flags;
+<<<<<<< HEAD
 	struct dim_ch_state st;
+=======
+	struct dim_ch_state_t st;
+>>>>>>> b7ba80a49124 (Commit)
 
 	BUG_ON(!hdm_ch);
 	BUG_ON(!hdm_ch->is_initialized);
@@ -262,7 +270,11 @@ static void retrieve_netinfo(struct dim2_hdm *dev, struct mbo *mbo)
 static void service_done_flag(struct dim2_hdm *dev, int ch_idx)
 {
 	struct hdm_channel *hdm_ch = dev->hch + ch_idx;
+<<<<<<< HEAD
 	struct dim_ch_state st;
+=======
+	struct dim_ch_state_t st;
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head *head;
 	struct mbo *mbo;
 	int done_buffers;
@@ -778,7 +790,12 @@ static int dim2_probe(struct platform_device *pdev)
 		goto err_free_dev;
 	}
 
+<<<<<<< HEAD
 	dev->io_base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	dev->io_base = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(dev->io_base)) {
 		ret = PTR_ERR(dev->io_base);
 		goto err_free_dev;

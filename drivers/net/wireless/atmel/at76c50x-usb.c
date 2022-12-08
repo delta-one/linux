@@ -2179,7 +2179,10 @@ static int at76_set_key(struct ieee80211_hw *hw, enum set_key_cmd cmd,
 
 static const struct ieee80211_ops at76_ops = {
 	.tx = at76_mac80211_tx,
+<<<<<<< HEAD
 	.wake_tx_queue = ieee80211_handle_wake_tx_queue,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.add_interface = at76_add_interface,
 	.remove_interface = at76_remove_interface,
 	.config = at76_config,

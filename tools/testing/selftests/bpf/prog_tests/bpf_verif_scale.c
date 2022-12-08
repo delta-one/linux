@@ -144,12 +144,15 @@ void test_verif_scale_pyperf600_nounroll()
 	scale_test("pyperf600_nounroll.bpf.o", BPF_PROG_TYPE_RAW_TRACEPOINT, false);
 }
 
+<<<<<<< HEAD
 void test_verif_scale_pyperf600_iter()
 {
 	/* open-coded BPF iterator version */
 	scale_test("pyperf600_iter.bpf.o", BPF_PROG_TYPE_RAW_TRACEPOINT, false);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void test_verif_scale_loop1()
 {
 	scale_test("loop1.bpf.o", BPF_PROG_TYPE_RAW_TRACEPOINT, false);

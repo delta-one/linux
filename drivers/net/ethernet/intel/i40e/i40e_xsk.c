@@ -10,6 +10,17 @@
 #include "i40e_txrx_common.h"
 #include "i40e_xsk.h"
 
+<<<<<<< HEAD
+=======
+int i40e_alloc_rx_bi_zc(struct i40e_ring *rx_ring)
+{
+	unsigned long sz = sizeof(*rx_ring->rx_bi_zc) * rx_ring->count;
+
+	rx_ring->rx_bi_zc = kzalloc(sz, GFP_KERNEL);
+	return rx_ring->rx_bi_zc ? 0 : -ENOMEM;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 void i40e_clear_rx_bi_zc(struct i40e_ring *rx_ring)
 {
 	memset(rx_ring->rx_bi_zc, 0,
@@ -22,6 +33,7 @@ static struct xdp_buff **i40e_rx_bi(struct i40e_ring *rx_ring, u32 idx)
 }
 
 /**
+<<<<<<< HEAD
  * i40e_realloc_rx_xdp_bi - reallocate SW ring for either XSK or normal buffer
  * @rx_ring: Current rx ring
  * @pool_present: is pool for XSK present
@@ -74,6 +86,8 @@ int i40e_realloc_rx_bi_zc(struct i40e_vsi *vsi, bool zc)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * i40e_xsk_pool_enable - Enable/associate an AF_XDP buffer pool to a
  * certain ring/qid
  * @vsi: Current VSI
@@ -113,10 +127,13 @@ static int i40e_xsk_pool_enable(struct i40e_vsi *vsi,
 		if (err)
 			return err;
 
+<<<<<<< HEAD
 		err = i40e_realloc_rx_xdp_bi(vsi->rx_rings[qid], true);
 		if (err)
 			return err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		err = i40e_queue_pair_enable(vsi, qid);
 		if (err)
 			return err;
@@ -161,9 +178,12 @@ static int i40e_xsk_pool_disable(struct i40e_vsi *vsi, u16 qid)
 	xsk_pool_dma_unmap(pool, I40E_RX_DMA_ATTR);
 
 	if (if_running) {
+<<<<<<< HEAD
 		err = i40e_realloc_rx_xdp_bi(vsi->rx_rings[qid], false);
 		if (err)
 			return err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		err = i40e_queue_pair_enable(vsi, qid);
 		if (err)
 			return err;

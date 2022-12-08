@@ -73,13 +73,21 @@ static int ti_sci_inta_msi_alloc_descs(struct device *dev,
 	for (set = 0; set < res->sets; set++) {
 		for (i = 0; i < res->desc[set].num; i++, count++) {
 			msi_desc.msi_index = res->desc[set].start + i;
+<<<<<<< HEAD
 			if (msi_insert_msi_desc(dev, &msi_desc))
+=======
+			if (msi_add_msi_desc(dev, &msi_desc))
+>>>>>>> b7ba80a49124 (Commit)
 				goto fail;
 		}
 
 		for (i = 0; i < res->desc[set].num_sec; i++, count++) {
 			msi_desc.msi_index = res->desc[set].start_sec + i;
+<<<<<<< HEAD
 			if (msi_insert_msi_desc(dev, &msi_desc))
+=======
+			if (msi_add_msi_desc(dev, &msi_desc))
+>>>>>>> b7ba80a49124 (Commit)
 				goto fail;
 		}
 	}
@@ -93,8 +101,18 @@ int ti_sci_inta_msi_domain_alloc_irqs(struct device *dev,
 				      struct ti_sci_resource *res)
 {
 	struct platform_device *pdev = to_platform_device(dev);
+<<<<<<< HEAD
 	int ret, nvec;
 
+=======
+	struct irq_domain *msi_domain;
+	int ret, nvec;
+
+	msi_domain = dev_get_msi_domain(dev);
+	if (!msi_domain)
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (pdev->id < 0)
 		return -ENODEV;
 
@@ -109,8 +127,12 @@ int ti_sci_inta_msi_domain_alloc_irqs(struct device *dev,
 		goto unlock;
 	}
 
+<<<<<<< HEAD
 	/* Use alloc ALL as it's unclear whether there are gaps in the indices */
 	ret = msi_domain_alloc_irqs_all_locked(dev, MSI_DEFAULT_DOMAIN, nvec);
+=======
+	ret = msi_domain_alloc_irqs_descs_locked(msi_domain, dev, nvec);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		dev_err(dev, "Failed to allocate IRQs %d\n", ret);
 unlock:

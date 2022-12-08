@@ -350,7 +350,11 @@ static const struct drm_encoder_slave_funcs sil164_encoder_funcs = {
 /* I2C driver functions */
 
 static int
+<<<<<<< HEAD
 sil164_probe(struct i2c_client *client)
+=======
+sil164_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int vendor = sil164_read(client, SIL164_VENDOR_HI) << 8 |
 		sil164_read(client, SIL164_VENDOR_LO);
@@ -420,7 +424,11 @@ MODULE_DEVICE_TABLE(i2c, sil164_ids);
 
 static struct drm_i2c_encoder_driver sil164_driver = {
 	.i2c_driver = {
+<<<<<<< HEAD
 		.probe_new = sil164_probe,
+=======
+		.probe = sil164_probe,
+>>>>>>> b7ba80a49124 (Commit)
 		.driver = {
 			.name = "sil164",
 		},

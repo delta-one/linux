@@ -158,12 +158,40 @@ pcf50633_client_dev_register(struct pcf50633 *pcf, const char *name,
 	}
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+static int pcf50633_suspend(struct device *dev)
+{
+	struct i2c_client *client = to_i2c_client(dev);
+	struct pcf50633 *pcf = i2c_get_clientdata(client);
+
+	return pcf50633_irq_suspend(pcf);
+}
+
+static int pcf50633_resume(struct device *dev)
+{
+	struct i2c_client *client = to_i2c_client(dev);
+	struct pcf50633 *pcf = i2c_get_clientdata(client);
+
+	return pcf50633_irq_resume(pcf);
+}
+#endif
+
+static SIMPLE_DEV_PM_OPS(pcf50633_pm, pcf50633_suspend, pcf50633_resume);
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct regmap_config pcf50633_regmap_config = {
 	.reg_bits = 8,
 	.val_bits = 8,
 };
 
+<<<<<<< HEAD
 static int pcf50633_probe(struct i2c_client *client)
+=======
+static int pcf50633_probe(struct i2c_client *client,
+				const struct i2c_device_id *ids)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pcf50633 *pcf;
 	struct platform_device *pdev;
@@ -279,10 +307,17 @@ MODULE_DEVICE_TABLE(i2c, pcf50633_id_table);
 static struct i2c_driver pcf50633_driver = {
 	.driver = {
 		.name	= "pcf50633",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&pcf50633_pm),
 	},
 	.id_table = pcf50633_id_table,
 	.probe_new = pcf50633_probe,
+=======
+		.pm	= &pcf50633_pm,
+	},
+	.id_table = pcf50633_id_table,
+	.probe = pcf50633_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = pcf50633_remove,
 };
 

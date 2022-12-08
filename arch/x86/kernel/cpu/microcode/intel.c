@@ -48,6 +48,37 @@ static int llc_size_per_core;
 /*
  * Returns 1 if update has been found, 0 otherwise.
  */
+<<<<<<< HEAD
+=======
+static int find_matching_signature(void *mc, unsigned int csig, int cpf)
+{
+	struct microcode_header_intel *mc_hdr = mc;
+	struct extended_sigtable *ext_hdr;
+	struct extended_signature *ext_sig;
+	int i;
+
+	if (intel_cpu_signatures_match(csig, cpf, mc_hdr->sig, mc_hdr->pf))
+		return 1;
+
+	/* Look for ext. headers: */
+	if (get_totalsize(mc_hdr) <= get_datasize(mc_hdr) + MC_HEADER_SIZE)
+		return 0;
+
+	ext_hdr = mc + get_datasize(mc_hdr) + MC_HEADER_SIZE;
+	ext_sig = (void *)ext_hdr + EXT_HEADER_SIZE;
+
+	for (i = 0; i < ext_hdr->count; i++) {
+		if (intel_cpu_signatures_match(csig, cpf, ext_sig->sig, ext_sig->pf))
+			return 1;
+		ext_sig++;
+	}
+	return 0;
+}
+
+/*
+ * Returns 1 if update has been found, 0 otherwise.
+ */
+>>>>>>> b7ba80a49124 (Commit)
 static int has_newer_microcode(void *mc, unsigned int csig, int cpf, int new_rev)
 {
 	struct microcode_header_intel *mc_hdr = mc;
@@ -55,7 +86,11 @@ static int has_newer_microcode(void *mc, unsigned int csig, int cpf, int new_rev
 	if (mc_hdr->rev <= new_rev)
 		return 0;
 
+<<<<<<< HEAD
 	return intel_find_matching_signature(mc, csig, cpf);
+=======
+	return find_matching_signature(mc, csig, cpf);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct ucode_patch *memdup_patch(void *data, unsigned int size)
@@ -89,7 +124,11 @@ static void save_microcode_patch(struct ucode_cpu_info *uci, void *data, unsigne
 		sig	     = mc_saved_hdr->sig;
 		pf	     = mc_saved_hdr->pf;
 
+<<<<<<< HEAD
 		if (intel_find_matching_signature(data, sig, pf)) {
+=======
+		if (find_matching_signature(data, sig, pf)) {
+>>>>>>> b7ba80a49124 (Commit)
 			prev_found = true;
 
 			if (mc_hdr->rev <= mc_saved_hdr->rev)
@@ -121,7 +160,11 @@ static void save_microcode_patch(struct ucode_cpu_info *uci, void *data, unsigne
 	if (!p)
 		return;
 
+<<<<<<< HEAD
 	if (!intel_find_matching_signature(p->data, uci->cpu_sig.sig, uci->cpu_sig.pf))
+=======
+	if (!find_matching_signature(p->data, uci->cpu_sig.sig, uci->cpu_sig.pf))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	/*
@@ -135,6 +178,107 @@ static void save_microcode_patch(struct ucode_cpu_info *uci, void *data, unsigne
 		intel_ucode_patch = p->data;
 }
 
+<<<<<<< HEAD
+=======
+static int microcode_sanity_check(void *mc, int print_err)
+{
+	unsigned long total_size, data_size, ext_table_size;
+	struct microcode_header_intel *mc_header = mc;
+	struct extended_sigtable *ext_header = NULL;
+	u32 sum, orig_sum, ext_sigcount = 0, i;
+	struct extended_signature *ext_sig;
+
+	total_size = get_totalsize(mc_header);
+	data_size = get_datasize(mc_header);
+
+	if (data_size + MC_HEADER_SIZE > total_size) {
+		if (print_err)
+			pr_err("Error: bad microcode data file size.\n");
+		return -EINVAL;
+	}
+
+	if (mc_header->ldrver != 1 || mc_header->hdrver != 1) {
+		if (print_err)
+			pr_err("Error: invalid/unknown microcode update format.\n");
+		return -EINVAL;
+	}
+
+	ext_table_size = total_size - (MC_HEADER_SIZE + data_size);
+	if (ext_table_size) {
+		u32 ext_table_sum = 0;
+		u32 *ext_tablep;
+
+		if ((ext_table_size < EXT_HEADER_SIZE)
+		 || ((ext_table_size - EXT_HEADER_SIZE) % EXT_SIGNATURE_SIZE)) {
+			if (print_err)
+				pr_err("Error: truncated extended signature table.\n");
+			return -EINVAL;
+		}
+
+		ext_header = mc + MC_HEADER_SIZE + data_size;
+		if (ext_table_size != exttable_size(ext_header)) {
+			if (print_err)
+				pr_err("Error: extended signature table size mismatch.\n");
+			return -EFAULT;
+		}
+
+		ext_sigcount = ext_header->count;
+
+		/*
+		 * Check extended table checksum: the sum of all dwords that
+		 * comprise a valid table must be 0.
+		 */
+		ext_tablep = (u32 *)ext_header;
+
+		i = ext_table_size / sizeof(u32);
+		while (i--)
+			ext_table_sum += ext_tablep[i];
+
+		if (ext_table_sum) {
+			if (print_err)
+				pr_warn("Bad extended signature table checksum, aborting.\n");
+			return -EINVAL;
+		}
+	}
+
+	/*
+	 * Calculate the checksum of update data and header. The checksum of
+	 * valid update data and header including the extended signature table
+	 * must be 0.
+	 */
+	orig_sum = 0;
+	i = (MC_HEADER_SIZE + data_size) / sizeof(u32);
+	while (i--)
+		orig_sum += ((u32 *)mc)[i];
+
+	if (orig_sum) {
+		if (print_err)
+			pr_err("Bad microcode data checksum, aborting.\n");
+		return -EINVAL;
+	}
+
+	if (!ext_table_size)
+		return 0;
+
+	/*
+	 * Check extended signature checksum: 0 => valid.
+	 */
+	for (i = 0; i < ext_sigcount; i++) {
+		ext_sig = (void *)ext_header + EXT_HEADER_SIZE +
+			  EXT_SIGNATURE_SIZE * i;
+
+		sum = (mc_header->sig + mc_header->pf + mc_header->cksum) -
+		      (ext_sig->sig + ext_sig->pf + ext_sig->cksum);
+		if (sum) {
+			if (print_err)
+				pr_err("Bad extended signature checksum, aborting.\n");
+			return -EINVAL;
+		}
+	}
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Get microcode matching with BSP's model. Only CPUs with the same model as
  * BSP can stay in the platform.
@@ -155,13 +299,22 @@ scan_microcode(void *data, size_t size, struct ucode_cpu_info *uci, bool save)
 		mc_size = get_totalsize(mc_header);
 		if (!mc_size ||
 		    mc_size > size ||
+<<<<<<< HEAD
 		    intel_microcode_sanity_check(data, false, MC_HEADER_TYPE_MICROCODE) < 0)
+=======
+		    microcode_sanity_check(data, 0) < 0)
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		size -= mc_size;
 
+<<<<<<< HEAD
 		if (!intel_find_matching_signature(data, uci->cpu_sig.sig,
 						   uci->cpu_sig.pf)) {
+=======
+		if (!find_matching_signature(data, uci->cpu_sig.sig,
+					     uci->cpu_sig.pf)) {
+>>>>>>> b7ba80a49124 (Commit)
 			data += mc_size;
 			continue;
 		}
@@ -305,11 +458,22 @@ static bool load_builtin_intel_microcode(struct cpio_data *cp)
 	return false;
 }
 
+<<<<<<< HEAD
 static void print_ucode_info(int old_rev, int new_rev, unsigned int date)
 {
 	pr_info_once("updated early: 0x%x -> 0x%x, date = %04x-%02x-%02x\n",
 		     old_rev,
 		     new_rev,
+=======
+/*
+ * Print ucode update info.
+ */
+static void
+print_ucode_info(struct ucode_cpu_info *uci, unsigned int date)
+{
+	pr_info_once("microcode updated early to revision 0x%x, date = %04x-%02x-%02x\n",
+		     uci->cpu_sig.rev,
+>>>>>>> b7ba80a49124 (Commit)
 		     date & 0xffff,
 		     date >> 24,
 		     (date >> 16) & 0xff);
@@ -319,7 +483,10 @@ static void print_ucode_info(int old_rev, int new_rev, unsigned int date)
 
 static int delay_ucode_info;
 static int current_mc_date;
+<<<<<<< HEAD
 static int early_old_rev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Print early updated ucode info after printk works. This is delayed info dump.
@@ -330,7 +497,11 @@ void show_ucode_info_early(void)
 
 	if (delay_ucode_info) {
 		intel_cpu_collect_info(&uci);
+<<<<<<< HEAD
 		print_ucode_info(early_old_rev, uci.cpu_sig.rev, current_mc_date);
+=======
+		print_ucode_info(&uci, current_mc_date);
+>>>>>>> b7ba80a49124 (Commit)
 		delay_ucode_info = 0;
 	}
 }
@@ -339,6 +510,7 @@ void show_ucode_info_early(void)
  * At this point, we can not call printk() yet. Delay printing microcode info in
  * show_ucode_info_early() until printk() works.
  */
+<<<<<<< HEAD
 static void print_ucode(int old_rev, int new_rev, int date)
 {
 	int *delay_ucode_info_p;
@@ -358,13 +530,46 @@ static void print_ucode(int old_rev, int new_rev, int date)
 static inline void print_ucode(int old_rev, int new_rev, int date)
 {
 	print_ucode_info(old_rev, new_rev, date);
+=======
+static void print_ucode(struct ucode_cpu_info *uci)
+{
+	struct microcode_intel *mc;
+	int *delay_ucode_info_p;
+	int *current_mc_date_p;
+
+	mc = uci->mc;
+	if (!mc)
+		return;
+
+	delay_ucode_info_p = (int *)__pa_nodebug(&delay_ucode_info);
+	current_mc_date_p = (int *)__pa_nodebug(&current_mc_date);
+
+	*delay_ucode_info_p = 1;
+	*current_mc_date_p = mc->hdr.date;
+}
+#else
+
+static inline void print_ucode(struct ucode_cpu_info *uci)
+{
+	struct microcode_intel *mc;
+
+	mc = uci->mc;
+	if (!mc)
+		return;
+
+	print_ucode_info(uci, mc->hdr.date);
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif
 
 static int apply_microcode_early(struct ucode_cpu_info *uci, bool early)
 {
 	struct microcode_intel *mc;
+<<<<<<< HEAD
 	u32 rev, old_rev;
+=======
+	u32 rev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mc = uci->mc;
 	if (!mc)
@@ -381,8 +586,11 @@ static int apply_microcode_early(struct ucode_cpu_info *uci, bool early)
 		return UCODE_OK;
 	}
 
+<<<<<<< HEAD
 	old_rev = rev;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Writeback and invalidate caches before updating microcode to avoid
 	 * internal issues depending on what the microcode is updating.
@@ -399,9 +607,15 @@ static int apply_microcode_early(struct ucode_cpu_info *uci, bool early)
 	uci->cpu_sig.rev = rev;
 
 	if (early)
+<<<<<<< HEAD
 		print_ucode(old_rev, uci->cpu_sig.rev, mc->hdr.date);
 	else
 		print_ucode_info(old_rev, uci->cpu_sig.rev, mc->hdr.date);
+=======
+		print_ucode(uci);
+	else
+		print_ucode_info(uci, mc->hdr.date);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -487,6 +701,10 @@ void load_ucode_intel_ap(void)
 	else
 		iup = &intel_ucode_patch;
 
+<<<<<<< HEAD
+=======
+reget:
+>>>>>>> b7ba80a49124 (Commit)
 	if (!*iup) {
 		patch = __load_ucode_intel(&uci);
 		if (!patch)
@@ -497,7 +715,16 @@ void load_ucode_intel_ap(void)
 
 	uci.mc = *iup;
 
+<<<<<<< HEAD
 	apply_microcode_early(&uci, true);
+=======
+	if (apply_microcode_early(&uci, true)) {
+		/* Mixed-silicon system? Try to refetch the proper patch: */
+		*iup = NULL;
+
+		goto reget;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct microcode_intel *find_patch(struct ucode_cpu_info *uci)
@@ -512,9 +739,15 @@ static struct microcode_intel *find_patch(struct ucode_cpu_info *uci)
 		if (phdr->rev <= uci->cpu_sig.rev)
 			continue;
 
+<<<<<<< HEAD
 		if (!intel_find_matching_signature(phdr,
 						   uci->cpu_sig.sig,
 						   uci->cpu_sig.pf))
+=======
+		if (!find_matching_signature(phdr,
+					     uci->cpu_sig.sig,
+					     uci->cpu_sig.pf))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		return iter->data;
@@ -540,6 +773,10 @@ void reload_ucode_intel(void)
 
 static int collect_cpu_info(int cpu_num, struct cpu_signature *csig)
 {
+<<<<<<< HEAD
+=======
+	static struct cpu_signature prev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct cpuinfo_x86 *c = &cpu_data(cpu_num);
 	unsigned int val[2];
 
@@ -555,6 +792,16 @@ static int collect_cpu_info(int cpu_num, struct cpu_signature *csig)
 
 	csig->rev = c->microcode;
 
+<<<<<<< HEAD
+=======
+	/* No extra locking on prev, races are harmless. */
+	if (csig->sig != prev.sig || csig->pf != prev.pf || csig->rev != prev.rev) {
+		pr_info("sig=0x%x, pf=0x%x, revision=0x%x\n",
+			csig->sig, csig->pf, csig->rev);
+		prev = *csig;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -672,7 +919,11 @@ static enum ucode_state generic_load_microcode(int cpu, struct iov_iter *iter)
 		memcpy(mc, &mc_header, sizeof(mc_header));
 		data = mc + sizeof(mc_header);
 		if (!copy_from_iter_full(data, data_size, iter) ||
+<<<<<<< HEAD
 		    intel_microcode_sanity_check(mc, true, MC_HEADER_TYPE_MICROCODE) < 0) {
+=======
+		    microcode_sanity_check(mc, 1) < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 
@@ -737,7 +988,12 @@ static bool is_blacklisted(unsigned int cpu)
 	return false;
 }
 
+<<<<<<< HEAD
 static enum ucode_state request_microcode_fw(int cpu, struct device *device)
+=======
+static enum ucode_state request_microcode_fw(int cpu, struct device *device,
+					     bool refresh_fw)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cpuinfo_x86 *c = &cpu_data(cpu);
 	const struct firmware *firmware;
@@ -759,7 +1015,11 @@ static enum ucode_state request_microcode_fw(int cpu, struct device *device)
 
 	kvec.iov_base = (void *)firmware->data;
 	kvec.iov_len = firmware->size;
+<<<<<<< HEAD
 	iov_iter_kvec(&iter, ITER_SOURCE, &kvec, 1, firmware->size);
+=======
+	iov_iter_kvec(&iter, WRITE, &kvec, 1, firmware->size);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = generic_load_microcode(cpu, &iter);
 
 	release_firmware(firmware);

@@ -35,6 +35,7 @@ nvkm_engine_chsw_load(struct nvkm_engine *engine)
 	return false;
 }
 
+<<<<<<< HEAD
 int
 nvkm_engine_reset(struct nvkm_engine *engine)
 {
@@ -45,13 +46,24 @@ nvkm_engine_reset(struct nvkm_engine *engine)
 	return nvkm_subdev_init(&engine->subdev);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void
 nvkm_engine_unref(struct nvkm_engine **pengine)
 {
 	struct nvkm_engine *engine = *pengine;
+<<<<<<< HEAD
 
 	if (engine) {
 		nvkm_subdev_unref(&engine->subdev);
+=======
+	if (engine) {
+		if (refcount_dec_and_mutex_lock(&engine->use.refcount, &engine->use.mutex)) {
+			nvkm_subdev_fini(&engine->subdev, false);
+			engine->use.enabled = false;
+			mutex_unlock(&engine->use.mutex);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		*pengine = NULL;
 	}
 }
@@ -60,6 +72,7 @@ struct nvkm_engine *
 nvkm_engine_ref(struct nvkm_engine *engine)
 {
 	int ret;
+<<<<<<< HEAD
 
 	if (engine) {
 		ret = nvkm_subdev_ref(&engine->subdev);
@@ -67,6 +80,23 @@ nvkm_engine_ref(struct nvkm_engine *engine)
 			return ERR_PTR(ret);
 	}
 
+=======
+	if (engine) {
+		if (!refcount_inc_not_zero(&engine->use.refcount)) {
+			mutex_lock(&engine->use.mutex);
+			if (!refcount_inc_not_zero(&engine->use.refcount)) {
+				engine->use.enabled = true;
+				if ((ret = nvkm_subdev_init(&engine->subdev))) {
+					engine->use.enabled = false;
+					mutex_unlock(&engine->use.mutex);
+					return ERR_PTR(ret);
+				}
+				refcount_set(&engine->use.refcount, 1);
+			}
+			mutex_unlock(&engine->use.mutex);
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return engine;
 }
 
@@ -90,10 +120,21 @@ static int
 nvkm_engine_info(struct nvkm_subdev *subdev, u64 mthd, u64 *data)
 {
 	struct nvkm_engine *engine = nvkm_engine(subdev);
+<<<<<<< HEAD
 
 	if (engine->func->info)
 		return engine->func->info(engine, mthd, data);
 
+=======
+	if (engine->func->info) {
+		if (!IS_ERR((engine = nvkm_engine_ref(engine)))) {
+			int ret = engine->func->info(engine, mthd, data);
+			nvkm_engine_unref(&engine);
+			return ret;
+		}
+		return PTR_ERR(engine);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return -ENOSYS;
 }
 
@@ -112,6 +153,29 @@ nvkm_engine_init(struct nvkm_subdev *subdev)
 	struct nvkm_engine *engine = nvkm_engine(subdev);
 	struct nvkm_fb *fb = subdev->device->fb;
 	int ret = 0, i;
+<<<<<<< HEAD
+=======
+	s64 time;
+
+	if (!engine->use.enabled) {
+		nvkm_trace(subdev, "init skipped, engine has no users\n");
+		return ret;
+	}
+
+	if (engine->func->oneinit && !engine->subdev.oneinit) {
+		nvkm_trace(subdev, "one-time init running...\n");
+		time = ktime_to_us(ktime_get());
+		ret = engine->func->oneinit(engine);
+		if (ret) {
+			nvkm_trace(subdev, "one-time init failed, %d\n", ret);
+			return ret;
+		}
+
+		engine->subdev.oneinit = true;
+		time = ktime_to_us(ktime_get()) - time;
+		nvkm_trace(subdev, "one-time init completed in %lldus\n", time);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (engine->func->init)
 		ret = engine->func->init(engine);
@@ -122,6 +186,7 @@ nvkm_engine_init(struct nvkm_subdev *subdev)
 }
 
 static int
+<<<<<<< HEAD
 nvkm_engine_oneinit(struct nvkm_subdev *subdev)
 {
 	struct nvkm_engine *engine = nvkm_engine(subdev);
@@ -133,6 +198,8 @@ nvkm_engine_oneinit(struct nvkm_subdev *subdev)
 }
 
 static int
+=======
+>>>>>>> b7ba80a49124 (Commit)
 nvkm_engine_preinit(struct nvkm_subdev *subdev)
 {
 	struct nvkm_engine *engine = nvkm_engine(subdev);
@@ -147,6 +214,10 @@ nvkm_engine_dtor(struct nvkm_subdev *subdev)
 	struct nvkm_engine *engine = nvkm_engine(subdev);
 	if (engine->func->dtor)
 		return engine->func->dtor(engine);
+<<<<<<< HEAD
+=======
+	mutex_destroy(&engine->use.mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	return engine;
 }
 
@@ -154,7 +225,10 @@ const struct nvkm_subdev_func
 nvkm_engine = {
 	.dtor = nvkm_engine_dtor,
 	.preinit = nvkm_engine_preinit,
+<<<<<<< HEAD
 	.oneinit = nvkm_engine_oneinit,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.init = nvkm_engine_init,
 	.fini = nvkm_engine_fini,
 	.info = nvkm_engine_info,
@@ -165,9 +239,16 @@ int
 nvkm_engine_ctor(const struct nvkm_engine_func *func, struct nvkm_device *device,
 		 enum nvkm_subdev_type type, int inst, bool enable, struct nvkm_engine *engine)
 {
+<<<<<<< HEAD
 	engine->func = func;
 	nvkm_subdev_ctor(&nvkm_engine, device, type, inst, &engine->subdev);
 	refcount_set(&engine->subdev.use.refcount, 0);
+=======
+	nvkm_subdev_ctor(&nvkm_engine, device, type, inst, &engine->subdev);
+	engine->func = func;
+	refcount_set(&engine->use.refcount, 0);
+	mutex_init(&engine->use.mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!nvkm_boolopt(device->cfgopt, engine->subdev.name, enable)) {
 		nvkm_debug(&engine->subdev, "disabled\n");

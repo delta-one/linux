@@ -14,10 +14,16 @@
 #include <linux/tracepoint.h>
 
 TRACE_EVENT(amdtp_packet,
+<<<<<<< HEAD
 	TP_PROTO(const struct amdtp_stream *s, u32 cycles, const __be32 *cip_header, unsigned int payload_length, unsigned int data_blocks, unsigned int data_block_counter, unsigned int packet_index, unsigned int index, u32 curr_cycle_time),
 	TP_ARGS(s, cycles, cip_header, payload_length, data_blocks, data_block_counter, packet_index, index, curr_cycle_time),
 	TP_STRUCT__entry(
 		__field(unsigned int, cycle_time)
+=======
+	TP_PROTO(const struct amdtp_stream *s, u32 cycles, const __be32 *cip_header, unsigned int payload_length, unsigned int data_blocks, unsigned int data_block_counter, unsigned int packet_index, unsigned int index),
+	TP_ARGS(s, cycles, cip_header, payload_length, data_blocks, data_block_counter, packet_index, index),
+	TP_STRUCT__entry(
+>>>>>>> b7ba80a49124 (Commit)
 		__field(unsigned int, second)
 		__field(unsigned int, cycle)
 		__field(int, channel)
@@ -32,7 +38,10 @@ TRACE_EVENT(amdtp_packet,
 		__field(unsigned int, index)
 	),
 	TP_fast_assign(
+<<<<<<< HEAD
 		__entry->cycle_time = curr_cycle_time;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->second = cycles / CYCLES_PER_SECOND;
 		__entry->cycle = cycles % CYCLES_PER_SECOND;
 		__entry->channel = s->context->channel;
@@ -55,8 +64,12 @@ TRACE_EVENT(amdtp_packet,
 		__entry->index = index;
 	),
 	TP_printk(
+<<<<<<< HEAD
 		"%08x %02u %04u %04x %04x %02d %03u %02u %03u %02u %01u %02u %s",
 		__entry->cycle_time,
+=======
+		"%02u %04u %04x %04x %02d %03u %02u %03u %02u %01u %02u %s",
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->second,
 		__entry->cycle,
 		__entry->src,

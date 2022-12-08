@@ -972,6 +972,7 @@ extern "C" {
 #define DRM_IOCTL_GET_STATS             DRM_IOR( 0x06, struct drm_stats)
 #define DRM_IOCTL_SET_VERSION		DRM_IOWR(0x07, struct drm_set_version)
 #define DRM_IOCTL_MODESET_CTL           DRM_IOW(0x08, struct drm_modeset_ctl)
+<<<<<<< HEAD
 /**
  * DRM_IOCTL_GEM_CLOSE - Close a GEM handle.
  *
@@ -985,6 +986,8 @@ extern "C" {
  * and always returns fresh new GEM handles even if an existing GEM handle
  * already refers to the same memory object before the IOCTL is performed.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DRM_IOCTL_GEM_CLOSE		DRM_IOW (0x09, struct drm_gem_close)
 #define DRM_IOCTL_GEM_FLINK		DRM_IOWR(0x0a, struct drm_gem_flink)
 #define DRM_IOCTL_GEM_OPEN		DRM_IOWR(0x0b, struct drm_gem_open)
@@ -1025,6 +1028,7 @@ extern "C" {
 #define DRM_IOCTL_UNLOCK		DRM_IOW( 0x2b, struct drm_lock)
 #define DRM_IOCTL_FINISH		DRM_IOW( 0x2c, struct drm_lock)
 
+<<<<<<< HEAD
 /**
  * DRM_IOCTL_PRIME_HANDLE_TO_FD - Convert a GEM handle to a DMA-BUF FD.
  *
@@ -1056,6 +1060,9 @@ extern "C" {
  *
  * Support for importing DMA-BUFs is advertised via &DRM_PRIME_CAP_IMPORT.
  */
+=======
+#define DRM_IOCTL_PRIME_HANDLE_TO_FD    DRM_IOWR(0x2d, struct drm_prime_handle)
+>>>>>>> b7ba80a49124 (Commit)
 #define DRM_IOCTL_PRIME_FD_TO_HANDLE    DRM_IOWR(0x2e, struct drm_prime_handle)
 
 #define DRM_IOCTL_AGP_ACQUIRE		DRM_IO(  0x30)
@@ -1147,6 +1154,7 @@ extern "C" {
  * struct as the output.
  *
  * If the client is DRM master or has &CAP_SYS_ADMIN, &drm_mode_fb_cmd2.handles
+<<<<<<< HEAD
  * will be filled with GEM buffer handles. Fresh new GEM handles are always
  * returned, even if another GEM handle referring to the same memory object
  * already exists on the DRM file description. The caller is responsible for
@@ -1154,6 +1162,10 @@ extern "C" {
  * new handle will be returned for multiple planes in case they use the same
  * memory object. Planes are valid until one has a zero handle -- this can be
  * used to compute the number of planes.
+=======
+ * will be filled with GEM buffer handles. Planes are valid until one has a
+ * zero handle -- this can be used to compute the number of planes.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Otherwise, &drm_mode_fb_cmd2.handles will be zeroed and planes are valid
  * until one has a zero &drm_mode_fb_cmd2.pitches.
@@ -1161,11 +1173,14 @@ extern "C" {
  * If the framebuffer has a format modifier, &DRM_MODE_FB_MODIFIERS will be set
  * in &drm_mode_fb_cmd2.flags and &drm_mode_fb_cmd2.modifier will contain the
  * modifier. Otherwise, user-space must ignore &drm_mode_fb_cmd2.modifier.
+<<<<<<< HEAD
  *
  * To obtain DMA-BUF FDs for each plane without leaking GEM handles, user-space
  * can export each handle via &DRM_IOCTL_PRIME_HANDLE_TO_FD, then immediately
  * close each unique handle via &DRM_IOCTL_GEM_CLOSE, making sure to not
  * double-close handles which are specified multiple times in the array.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 #define DRM_IOCTL_MODE_GETFB2		DRM_IOWR(0xCE, struct drm_mode_fb_cmd2)
 

@@ -40,9 +40,12 @@ static int one_day_secs = 24 * 3600;
 static u32 fib_multipath_hash_fields_all_mask __maybe_unused =
 	FIB_MULTIPATH_HASH_FIELD_ALL_MASK;
 static unsigned int tcp_child_ehash_entries_max = 16 * 1024 * 1024;
+<<<<<<< HEAD
 static unsigned int udp_child_hash_entries_max = UDP_HTABLE_SIZE_MAX;
 static int tcp_plb_max_rounds = 31;
 static int tcp_plb_max_cong_thresh = 256;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* obsolete */
 static int sysctl_tcp_low_latency __read_mostly;
@@ -403,13 +406,17 @@ static int proc_tcp_ehash_entries(struct ctl_table *table, int write,
 	if (!net_eq(net, &init_net) && !hinfo->pernet)
 		tcp_ehash_entries *= -1;
 
+<<<<<<< HEAD
 	memset(&tbl, 0, sizeof(tbl));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tbl.data = &tcp_ehash_entries;
 	tbl.maxlen = sizeof(int);
 
 	return proc_dointvec(&tbl, write, buffer, lenp, ppos);
 }
 
+<<<<<<< HEAD
 static int proc_udp_hash_entries(struct ctl_table *table, int write,
 				 void *buffer, size_t *lenp, loff_t *ppos)
 {
@@ -433,6 +440,8 @@ static int proc_udp_hash_entries(struct ctl_table *table, int write,
 	return proc_dointvec(&tbl, write, buffer, lenp, ppos);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_IP_ROUTE_MULTIPATH
 static int proc_fib_multipath_hash_policy(struct ctl_table *table, int write,
 					  void *buffer, size_t *lenp,
@@ -1387,6 +1396,7 @@ static struct ctl_table ipv4_net_table[] = {
 		.extra2		= &tcp_child_ehash_entries_max,
 	},
 	{
+<<<<<<< HEAD
 		.procname	= "udp_hash_entries",
 		.data		= &init_net.ipv4.sysctl_udp_child_hash_entries,
 		.mode		= 0444,
@@ -1402,6 +1412,8 @@ static struct ctl_table ipv4_net_table[] = {
 		.extra2		= &udp_child_hash_entries_max,
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.procname	= "udp_rmem_min",
 		.data		= &init_net.ipv4.sysctl_udp_rmem_min,
 		.maxlen		= sizeof(init_net.ipv4.sysctl_udp_rmem_min),
@@ -1426,6 +1438,7 @@ static struct ctl_table ipv4_net_table[] = {
 		.extra1		= SYSCTL_ZERO,
 		.extra2		= SYSCTL_TWO,
 	},
+<<<<<<< HEAD
 	{
 		.procname       = "tcp_plb_enabled",
 		.data           = &init_net.ipv4.sysctl_tcp_plb_enabled,
@@ -1467,6 +1480,8 @@ static struct ctl_table ipv4_net_table[] = {
 		.extra1         = SYSCTL_ZERO,
 		.extra2         = &tcp_plb_max_cong_thresh,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 

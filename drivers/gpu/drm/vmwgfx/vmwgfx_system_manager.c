@@ -26,6 +26,10 @@
 
 #include "vmwgfx_drv.h"
 
+<<<<<<< HEAD
+=======
+#include <drm/ttm/ttm_bo_driver.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/ttm/ttm_device.h>
 #include <drm/ttm/ttm_placement.h>
 #include <drm/ttm/ttm_resource.h>

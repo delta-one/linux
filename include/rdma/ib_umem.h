@@ -25,6 +25,10 @@ struct ib_umem {
 	u32 writable : 1;
 	u32 is_odp : 1;
 	u32 is_dmabuf : 1;
+<<<<<<< HEAD
+=======
+	struct work_struct	work;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sg_append_table sgt_append;
 };
 

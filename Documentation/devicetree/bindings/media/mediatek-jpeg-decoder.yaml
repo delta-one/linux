@@ -22,7 +22,10 @@ properties:
       - items:
           - enum:
               - mediatek,mt7623-jpgdec
+<<<<<<< HEAD
               - mediatek,mt8188-jpgdec
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - const: mediatek,mt2701-jpgdec
 
   reg:

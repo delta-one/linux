@@ -58,3 +58,11 @@ void __init mmp2_map_io(void)
 	mmp_map_io();
 	iotable_init(mmp2_io_desc, ARRAY_SIZE(mmp2_io_desc));
 }
+<<<<<<< HEAD
+=======
+
+void mmp_restart(enum reboot_mode mode, const char *cmd)
+{
+	soft_restart(0);
+}
+>>>>>>> b7ba80a49124 (Commit)

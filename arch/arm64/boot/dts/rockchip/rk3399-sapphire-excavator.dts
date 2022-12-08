@@ -33,13 +33,21 @@
 			press-threshold-microvolt = <300000>;
 		};
 
+<<<<<<< HEAD
 		button-back {
+=======
+		back {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "Back";
 			linux,code = <KEY_BACK>;
 			press-threshold-microvolt = <985000>;
 		};
 
+<<<<<<< HEAD
 		button-menu {
+=======
+		menu {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "Menu";
 			linux,code = <KEY_MENU>;
 			press-threshold-microvolt = <1314000>;

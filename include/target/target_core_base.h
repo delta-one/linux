@@ -91,8 +91,11 @@
 #define DA_EMULATE_ALUA				0
 /* Emulate SCSI2 RESERVE/RELEASE and Persistent Reservations by default */
 #define DA_EMULATE_PR				1
+<<<<<<< HEAD
 /* Emulation for REPORT SUPPORTED OPERATION CODES */
 #define DA_EMULATE_RSOC				1
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Enforce SCSI Initiator Port TransportID with 'ISID' for PR */
 #define DA_ENFORCE_PR_ISIDS			1
 /* Force SPC-3 PR Activate Persistence across Target Power Loss */
@@ -692,7 +695,10 @@ struct se_dev_attrib {
 	bool		emulate_caw;
 	bool		emulate_3pc;
 	bool		emulate_pr;
+<<<<<<< HEAD
 	bool		emulate_rsoc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	enum target_prot_type pi_prot_type;
 	enum target_prot_type hw_pi_prot_type;
 	bool		pi_prot_verify;
@@ -712,6 +718,10 @@ struct se_dev_attrib {
 	u32		unmap_granularity;
 	u32		unmap_granularity_alignment;
 	u32		max_write_same_len;
+<<<<<<< HEAD
+=======
+	u32		max_bytes_per_io;
+>>>>>>> b7ba80a49124 (Commit)
 	struct se_device *da_dev;
 	struct config_group da_group;
 };
@@ -735,6 +745,11 @@ struct se_lun {
 	bool			lun_access_ro;
 	u32			lun_index;
 
+<<<<<<< HEAD
+=======
+	/* RELATIVE TARGET PORT IDENTIFER */
+	u16			lun_rtpi;
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_t		lun_acl_count;
 	struct se_device __rcu	*lun_se_dev;
 
@@ -786,6 +801,11 @@ struct se_device_queue {
 };
 
 struct se_device {
+<<<<<<< HEAD
+=======
+	/* RELATIVE TARGET PORT IDENTIFER Counter */
+	u16			dev_rpti_counter;
+>>>>>>> b7ba80a49124 (Commit)
 	/* Used for SAM Task Attribute ordering */
 	u32			dev_cur_ordered_id;
 	u32			dev_flags;
@@ -865,6 +885,7 @@ struct se_device {
 	struct se_device_queue	*queues;
 };
 
+<<<<<<< HEAD
 struct target_opcode_descriptor {
 	u8			support:3;
 	u8			serv_action_valid:1;
@@ -880,6 +901,8 @@ struct target_opcode_descriptor {
 	u8			usage_bits[];
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct se_hba {
 	u16			hba_tpgt;
 	u32			hba_id;
@@ -916,9 +939,12 @@ struct se_portal_group {
 	 */
 	int			proto_id;
 	bool			enabled;
+<<<<<<< HEAD
 	/* RELATIVE TARGET PORT IDENTIFIER */
 	u16			tpg_rtpi;
 	bool			rtpi_manual;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Used for PR SPEC_I_PT=1 and REGISTER_AND_MOVE */
 	atomic_t		tpg_pr_ref_count;
 	/* Spinlock for adding/removing ACLed Nodes */

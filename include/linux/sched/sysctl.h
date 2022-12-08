@@ -4,6 +4,11 @@
 
 #include <linux/types.h>
 
+<<<<<<< HEAD
+=======
+struct ctl_table;
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_DETECT_HUNG_TASK
 /* used for hung_task and block/ */
 extern unsigned long sysctl_hung_task_timeout_secs;
@@ -25,8 +30,18 @@ enum sched_tunable_scaling {
 
 #ifdef CONFIG_NUMA_BALANCING
 extern int sysctl_numa_balancing_mode;
+<<<<<<< HEAD
+=======
+extern unsigned int sysctl_numa_balancing_promote_rate_limit;
+>>>>>>> b7ba80a49124 (Commit)
 #else
 #define sysctl_numa_balancing_mode	0
 #endif
 
+<<<<<<< HEAD
+=======
+int sysctl_numa_balancing(struct ctl_table *table, int write, void *buffer,
+		size_t *lenp, loff_t *ppos);
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _LINUX_SCHED_SYSCTL_H */

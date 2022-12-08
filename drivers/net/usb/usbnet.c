@@ -555,30 +555,52 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
 
 /*-------------------------------------------------------------------------*/
 
+<<<<<<< HEAD
 static inline int rx_process(struct usbnet *dev, struct sk_buff *skb)
+=======
+static inline void rx_process (struct usbnet *dev, struct sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (dev->driver_info->rx_fixup &&
 	    !dev->driver_info->rx_fixup (dev, skb)) {
 		/* With RX_ASSEMBLE, rx_fixup() must update counters */
 		if (!(dev->driver_info->flags & FLAG_RX_ASSEMBLE))
 			dev->net->stats.rx_errors++;
+<<<<<<< HEAD
 		return -EPROTO;
+=======
+		goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	// else network stack removes extra byte if we forced a short packet
 
 	/* all data was already cloned from skb inside the driver */
 	if (dev->driver_info->flags & FLAG_MULTI_PACKET)
+<<<<<<< HEAD
 		return -EALREADY;
+=======
+		goto done;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (skb->len < ETH_HLEN) {
 		dev->net->stats.rx_errors++;
 		dev->net->stats.rx_length_errors++;
 		netif_dbg(dev, rx_err, dev->net, "rx length %d\n", skb->len);
+<<<<<<< HEAD
 		return -EPROTO;
 	}
 
 	usbnet_skb_return(dev, skb);
 	return 0;
+=======
+	} else {
+		usbnet_skb_return(dev, skb);
+		return;
+	}
+
+done:
+	skb_queue_tail(&dev->done, skb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*-------------------------------------------------------------------------*/
@@ -1512,6 +1534,7 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static inline void usb_free_skb(struct sk_buff *skb)
 {
 	struct skb_data *entry = (struct skb_data *)skb->cb;
@@ -1520,6 +1543,8 @@ static inline void usb_free_skb(struct sk_buff *skb)
 	dev_kfree_skb(skb);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*-------------------------------------------------------------------------*/
 
 // tasklet (work deferred from completions, in_irq) or timer
@@ -1534,14 +1559,24 @@ static void usbnet_bh (struct timer_list *t)
 		entry = (struct skb_data *) skb->cb;
 		switch (entry->state) {
 		case rx_done:
+<<<<<<< HEAD
 			if (rx_process(dev, skb))
 				usb_free_skb(skb);
+=======
+			entry->state = rx_cleanup;
+			rx_process (dev, skb);
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		case tx_done:
 			kfree(entry->urb->sg);
 			fallthrough;
 		case rx_cleanup:
+<<<<<<< HEAD
 			usb_free_skb(skb);
+=======
+			usb_free_urb (entry->urb);
+			dev_kfree_skb (skb);
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		default:
 			netdev_dbg(dev->net, "bogus skb state %d\n", entry->state);
@@ -1603,7 +1638,10 @@ void usbnet_disconnect (struct usb_interface *intf)
 	struct usbnet		*dev;
 	struct usb_device	*xdev;
 	struct net_device	*net;
+<<<<<<< HEAD
 	struct urb		*urb;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev = usb_get_intfdata(intf);
 	usb_set_intfdata(intf, NULL);
@@ -1620,11 +1658,15 @@ void usbnet_disconnect (struct usb_interface *intf)
 	net = dev->net;
 	unregister_netdev (net);
 
+<<<<<<< HEAD
 	while ((urb = usb_get_from_anchor(&dev->deferred))) {
 		dev_kfree_skb(urb->context);
 		kfree(urb->sg);
 		usb_free_urb(urb);
 	}
+=======
+	usb_scuttle_anchored_urbs(&dev->deferred);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dev->driver_info->unbind)
 		dev->driver_info->unbind(dev, intf);

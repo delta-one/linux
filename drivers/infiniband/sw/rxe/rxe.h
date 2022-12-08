@@ -38,6 +38,7 @@
 
 #define RXE_ROCE_V2_SPORT		(0xc000)
 
+<<<<<<< HEAD
 #define rxe_dbg(rxe, fmt, ...) ibdev_dbg(&(rxe)->ib_dev,		\
 		"%s: " fmt, __func__, ##__VA_ARGS__)
 #define rxe_dbg_uc(uc, fmt, ...) ibdev_dbg((uc)->ibuc.device,		\
@@ -95,6 +96,8 @@ enum resp_states {
 	RESPST_EXIT,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void rxe_set_mtu(struct rxe_dev *rxe, unsigned int dev_mtu);
 
 int rxe_add(struct rxe_dev *rxe, unsigned int mtu, const char *ibdev_name);

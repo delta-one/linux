@@ -531,11 +531,18 @@ static int fpr_set(struct task_struct *target,
 		ptrace_setfcr31(target, fcr31);
 	}
 
+<<<<<<< HEAD
 	if (count > 0) {
 		user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
 					  fir_pos, fir_pos + sizeof(u32));
 		return 0;
 	}
+=======
+	if (count > 0)
+		err = user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+						fir_pos,
+						fir_pos + sizeof(u32));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return err;
 }

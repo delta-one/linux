@@ -513,7 +513,11 @@ static int fill_res_qp_entry(struct sk_buff *msg, bool has_cap_net_admin,
 
 	/* In create_qp() port is not set yet */
 	if (qp->port && nla_put_u32(msg, RDMA_NLDEV_ATTR_PORT_INDEX, qp->port))
+<<<<<<< HEAD
 		return -EMSGSIZE;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = nla_put_u32(msg, RDMA_NLDEV_ATTR_RES_LQPN, qp->qp_num);
 	if (ret)
@@ -552,7 +556,11 @@ static int fill_res_cm_id_entry(struct sk_buff *msg, bool has_cap_net_admin,
 	struct rdma_cm_id *cm_id = &id_priv->id;
 
 	if (port && port != cm_id->port_num)
+<<<<<<< HEAD
 		return -EAGAIN;
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (cm_id->port_num &&
 	    nla_put_u32(msg, RDMA_NLDEV_ATTR_PORT_INDEX, cm_id->port_num))
@@ -894,8 +902,11 @@ static int fill_stat_counter_qps(struct sk_buff *msg,
 	int ret = 0;
 
 	table_attr = nla_nest_start(msg, RDMA_NLDEV_ATTR_RES_QP);
+<<<<<<< HEAD
 	if (!table_attr)
 		return -EMSGSIZE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	rt = &counter->device->res[RDMA_RESTRACK_QP];
 	xa_lock(&rt->xa);
@@ -1043,10 +1054,13 @@ static int nldev_get_doit(struct sk_buff *skb, struct nlmsghdr *nlh,
 	nlh = nlmsg_put(msg, NETLINK_CB(skb).portid, nlh->nlmsg_seq,
 			RDMA_NL_GET_TYPE(RDMA_NL_NLDEV, RDMA_NLDEV_CMD_GET),
 			0, 0);
+<<<<<<< HEAD
 	if (!nlh) {
 		err = -EMSGSIZE;
 		goto err_free;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = fill_dev_info(msg, device);
 	if (err)
@@ -1132,7 +1146,11 @@ static int _nldev_get_dumpit(struct ib_device *device,
 			RDMA_NL_GET_TYPE(RDMA_NL_NLDEV, RDMA_NLDEV_CMD_GET),
 			0, NLM_F_MULTI);
 
+<<<<<<< HEAD
 	if (!nlh || fill_dev_info(skb, device)) {
+=======
+	if (fill_dev_info(skb, device)) {
+>>>>>>> b7ba80a49124 (Commit)
 		nlmsg_cancel(skb, nlh);
 		goto out;
 	}
@@ -1191,10 +1209,13 @@ static int nldev_port_get_doit(struct sk_buff *skb, struct nlmsghdr *nlh,
 	nlh = nlmsg_put(msg, NETLINK_CB(skb).portid, nlh->nlmsg_seq,
 			RDMA_NL_GET_TYPE(RDMA_NL_NLDEV, RDMA_NLDEV_CMD_GET),
 			0, 0);
+<<<<<<< HEAD
 	if (!nlh) {
 		err = -EMSGSIZE;
 		goto err_free;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = fill_port_info(msg, device, port, sock_net(skb->sk));
 	if (err)
@@ -1256,7 +1277,11 @@ static int nldev_port_get_dumpit(struct sk_buff *skb,
 						 RDMA_NLDEV_CMD_PORT_GET),
 				0, NLM_F_MULTI);
 
+<<<<<<< HEAD
 		if (!nlh || fill_port_info(skb, device, p, sock_net(skb->sk))) {
+=======
+		if (fill_port_info(skb, device, p, sock_net(skb->sk))) {
+>>>>>>> b7ba80a49124 (Commit)
 			nlmsg_cancel(skb, nlh);
 			goto out;
 		}
@@ -1298,10 +1323,13 @@ static int nldev_res_get_doit(struct sk_buff *skb, struct nlmsghdr *nlh,
 	nlh = nlmsg_put(msg, NETLINK_CB(skb).portid, nlh->nlmsg_seq,
 			RDMA_NL_GET_TYPE(RDMA_NL_NLDEV, RDMA_NLDEV_CMD_RES_GET),
 			0, 0);
+<<<<<<< HEAD
 	if (!nlh) {
 		ret = -EMSGSIZE;
 		goto err_free;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = fill_res_info(msg, device);
 	if (ret)
@@ -1333,7 +1361,11 @@ static int _nldev_res_get_dumpit(struct ib_device *device,
 			RDMA_NL_GET_TYPE(RDMA_NL_NLDEV, RDMA_NLDEV_CMD_RES_GET),
 			0, NLM_F_MULTI);
 
+<<<<<<< HEAD
 	if (!nlh || fill_res_info(skb, device)) {
+=======
+	if (fill_res_info(skb, device)) {
+>>>>>>> b7ba80a49124 (Commit)
 		nlmsg_cancel(skb, nlh);
 		goto out;
 	}
@@ -1468,7 +1500,11 @@ static int res_get_common_doit(struct sk_buff *skb, struct nlmsghdr *nlh,
 					 RDMA_NL_GET_OP(nlh->nlmsg_type)),
 			0, 0);
 
+<<<<<<< HEAD
 	if (!nlh || fill_nldev_handle(msg, device)) {
+=======
+	if (fill_nldev_handle(msg, device)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EMSGSIZE;
 		goto err_free;
 	}
@@ -1547,7 +1583,11 @@ static int res_get_common_dumpit(struct sk_buff *skb,
 					 RDMA_NL_GET_OP(cb->nlh->nlmsg_type)),
 			0, NLM_F_MULTI);
 
+<<<<<<< HEAD
 	if (!nlh || fill_nldev_handle(skb, device)) {
+=======
+	if (fill_nldev_handle(skb, device)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EMSGSIZE;
 		goto err;
 	}
@@ -1809,10 +1849,13 @@ static int nldev_get_chardev(struct sk_buff *skb, struct nlmsghdr *nlh,
 			RDMA_NL_GET_TYPE(RDMA_NL_NLDEV,
 					 RDMA_NLDEV_CMD_GET_CHARDEV),
 			0, 0);
+<<<<<<< HEAD
 	if (!nlh) {
 		err = -EMSGSIZE;
 		goto out_nlmsg;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	data.nl_msg = msg;
 	err = ib_get_client_nl_info(ibdev, client_name, &data);
@@ -1870,10 +1913,13 @@ static int nldev_sys_get_doit(struct sk_buff *skb, struct nlmsghdr *nlh,
 			RDMA_NL_GET_TYPE(RDMA_NL_NLDEV,
 					 RDMA_NLDEV_CMD_SYS_GET),
 			0, 0);
+<<<<<<< HEAD
 	if (!nlh) {
 		nlmsg_free(msg);
 		return -EMSGSIZE;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = nla_put_u8(msg, RDMA_NLDEV_SYS_ATTR_NETNS_MODE,
 			 (u8)ib_devices_shared_netns);
@@ -2054,7 +2100,11 @@ static int nldev_stat_set_doit(struct sk_buff *skb, struct nlmsghdr *nlh,
 			RDMA_NL_GET_TYPE(RDMA_NL_NLDEV,
 					 RDMA_NLDEV_CMD_STAT_SET),
 			0, 0);
+<<<<<<< HEAD
 	if (!nlh || fill_nldev_handle(msg, device) ||
+=======
+	if (fill_nldev_handle(msg, device) ||
+>>>>>>> b7ba80a49124 (Commit)
 	    nla_put_u32(msg, RDMA_NLDEV_ATTR_PORT_INDEX, port)) {
 		ret = -EMSGSIZE;
 		goto err_free_msg;
@@ -2123,10 +2173,13 @@ static int nldev_stat_del_doit(struct sk_buff *skb, struct nlmsghdr *nlh,
 			RDMA_NL_GET_TYPE(RDMA_NL_NLDEV,
 					 RDMA_NLDEV_CMD_STAT_SET),
 			0, 0);
+<<<<<<< HEAD
 	if (!nlh) {
 		ret = -EMSGSIZE;
 		goto err_fill;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	cntn = nla_get_u32(tb[RDMA_NLDEV_ATTR_STAT_COUNTER_ID]);
 	qpn = nla_get_u32(tb[RDMA_NLDEV_ATTR_RES_LQPN]);
@@ -2197,7 +2250,11 @@ static int stat_get_doit_default_counter(struct sk_buff *skb,
 					 RDMA_NLDEV_CMD_STAT_GET),
 			0, 0);
 
+<<<<<<< HEAD
 	if (!nlh || fill_nldev_handle(msg, device) ||
+=======
+	if (fill_nldev_handle(msg, device) ||
+>>>>>>> b7ba80a49124 (Commit)
 	    nla_put_u32(msg, RDMA_NLDEV_ATTR_PORT_INDEX, port)) {
 		ret = -EMSGSIZE;
 		goto err_msg;
@@ -2285,10 +2342,13 @@ static int stat_get_doit_qp(struct sk_buff *skb, struct nlmsghdr *nlh,
 			RDMA_NL_GET_TYPE(RDMA_NL_NLDEV,
 					 RDMA_NLDEV_CMD_STAT_GET),
 			0, 0);
+<<<<<<< HEAD
 	if (!nlh) {
 		ret = -EMSGSIZE;
 		goto err_msg;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = rdma_counter_get_mode(device, port, &mode, &mask);
 	if (ret)
@@ -2421,7 +2481,11 @@ static int nldev_stat_get_counter_status_doit(struct sk_buff *skb,
 		0, 0);
 
 	ret = -EMSGSIZE;
+<<<<<<< HEAD
 	if (!nlh || fill_nldev_handle(msg, device) ||
+=======
+	if (fill_nldev_handle(msg, device) ||
+>>>>>>> b7ba80a49124 (Commit)
 	    nla_put_u32(msg, RDMA_NLDEV_ATTR_PORT_INDEX, port))
 		goto err_msg;
 
@@ -2567,7 +2631,11 @@ void __init nldev_init(void)
 	rdma_nl_register(RDMA_NL_NLDEV, nldev_cb_table);
 }
 
+<<<<<<< HEAD
 void nldev_exit(void)
+=======
+void __exit nldev_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	rdma_nl_unregister(RDMA_NL_NLDEV);
 }

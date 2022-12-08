@@ -169,6 +169,7 @@
 	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
 	.result = ACCEPT,
 },
+<<<<<<< HEAD
 {
 	"MAP_VALUE_OR_NULL check_ids() in regsafe()",
 	.insns = {
@@ -218,3 +219,5 @@
 	.errstr_unpriv = "",
 	.prog_type = BPF_PROG_TYPE_CGROUP_SKB,
 },
+=======
+>>>>>>> b7ba80a49124 (Commit)

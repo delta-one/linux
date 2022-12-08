@@ -156,10 +156,17 @@ probe_read_lim(void* dst, void* src, unsigned long len, unsigned long max)
 {
 	len = len < max ? len : max;
 	if (len > 1) {
+<<<<<<< HEAD
 		if (bpf_probe_read_kernel(dst, len, src))
 			return 0;
 	} else if (len == 1) {
 		if (bpf_probe_read_kernel(dst, 1, src))
+=======
+		if (bpf_probe_read(dst, len, src))
+			return 0;
+	} else if (len == 1) {
+		if (bpf_probe_read(dst, 1, src))
+>>>>>>> b7ba80a49124 (Commit)
 			return 0;
 	}
 	return len;
@@ -216,8 +223,12 @@ static INLINE void* read_full_cgroup_path(struct kernfs_node* cgroup_node,
 #endif
 	for (int i = 0; i < MAX_CGROUPS_PATH_DEPTH; i++) {
 		filepart_length =
+<<<<<<< HEAD
 			bpf_probe_read_kernel_str(payload, MAX_PATH,
 						  BPF_CORE_READ(cgroup_node, name));
+=======
+			bpf_probe_read_str(payload, MAX_PATH, BPF_CORE_READ(cgroup_node, name));
+>>>>>>> b7ba80a49124 (Commit)
 		if (!cgroup_node)
 			return payload;
 		if (cgroup_node == cgroup_root_node)
@@ -304,8 +315,12 @@ static INLINE void* populate_cgroup_info(struct cgroup_data_t* cgroup_data,
 	cgroup_data->cgroup_full_length = 0;
 
 	size_t cgroup_root_length =
+<<<<<<< HEAD
 		bpf_probe_read_kernel_str(payload, MAX_PATH,
 					  BPF_CORE_READ(root_kernfs, name));
+=======
+		bpf_probe_read_str(payload, MAX_PATH, BPF_CORE_READ(root_kernfs, name));
+>>>>>>> b7ba80a49124 (Commit)
 	barrier_var(cgroup_root_length);
 	if (cgroup_root_length <= MAX_PATH) {
 		barrier_var(cgroup_root_length);
@@ -314,8 +329,12 @@ static INLINE void* populate_cgroup_info(struct cgroup_data_t* cgroup_data,
 	}
 
 	size_t cgroup_proc_length =
+<<<<<<< HEAD
 		bpf_probe_read_kernel_str(payload, MAX_PATH,
 					  BPF_CORE_READ(proc_kernfs, name));
+=======
+		bpf_probe_read_str(payload, MAX_PATH, BPF_CORE_READ(proc_kernfs, name));
+>>>>>>> b7ba80a49124 (Commit)
 	barrier_var(cgroup_proc_length);
 	if (cgroup_proc_length <= MAX_PATH) {
 		barrier_var(cgroup_proc_length);
@@ -398,8 +417,12 @@ static INLINE int trace_var_sys_kill(void* ctx, int tpid, int sig)
 		arr_struct = bpf_map_lookup_elem(&data_heap, &zero);
 		if (arr_struct == NULL)
 			return 0;
+<<<<<<< HEAD
 		bpf_probe_read_kernel(&arr_struct->array[0],
 				      sizeof(arr_struct->array[0]), kill_data);
+=======
+		bpf_probe_read(&arr_struct->array[0], sizeof(arr_struct->array[0]), kill_data);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		int index = get_var_spid_index(arr_struct, spid);
 
@@ -413,9 +436,14 @@ static INLINE int trace_var_sys_kill(void* ctx, int tpid, int sig)
 #endif
 			for (int i = 0; i < ARRAY_SIZE(arr_struct->array); i++)
 				if (arr_struct->array[i].meta.pid == 0) {
+<<<<<<< HEAD
 					bpf_probe_read_kernel(&arr_struct->array[i],
 							      sizeof(arr_struct->array[i]),
 							      kill_data);
+=======
+					bpf_probe_read(&arr_struct->array[i],
+						       sizeof(arr_struct->array[i]), kill_data);
+>>>>>>> b7ba80a49124 (Commit)
 					bpf_map_update_elem(&var_tpid_to_data, &tpid,
 							    arr_struct, 0);
 
@@ -432,17 +460,29 @@ static INLINE int trace_var_sys_kill(void* ctx, int tpid, int sig)
 		if (delta_sec < STALE_INFO) {
 			kill_data->kill_count++;
 			kill_data->last_kill_time = bpf_ktime_get_ns();
+<<<<<<< HEAD
 			bpf_probe_read_kernel(&arr_struct->array[index],
 					      sizeof(arr_struct->array[index]),
 					      kill_data);
+=======
+			bpf_probe_read(&arr_struct->array[index],
+				       sizeof(arr_struct->array[index]),
+				       kill_data);
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			struct var_kill_data_t* kill_data =
 				get_var_kill_data(ctx, spid, tpid, sig);
 			if (kill_data == NULL)
 				return 0;
+<<<<<<< HEAD
 			bpf_probe_read_kernel(&arr_struct->array[index],
 					      sizeof(arr_struct->array[index]),
 					      kill_data);
+=======
+			bpf_probe_read(&arr_struct->array[index],
+				       sizeof(arr_struct->array[index]),
+				       kill_data);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 	bpf_map_update_elem(&var_tpid_to_data, &tpid, arr_struct, 0);
@@ -492,9 +532,14 @@ read_absolute_file_path_from_dentry(struct dentry* filp_dentry, void* payload)
 #pragma unroll
 #endif
 	for (int i = 0; i < MAX_PATH_DEPTH; i++) {
+<<<<<<< HEAD
 		filepart_length =
 			bpf_probe_read_kernel_str(payload, MAX_PATH,
 						  BPF_CORE_READ(filp_dentry, d_name.name));
+=======
+		filepart_length = bpf_probe_read_str(payload, MAX_PATH,
+						     BPF_CORE_READ(filp_dentry, d_name.name));
+>>>>>>> b7ba80a49124 (Commit)
 		barrier_var(filepart_length);
 		if (filepart_length > MAX_PATH)
 			break;
@@ -578,8 +623,12 @@ ssize_t BPF_KPROBE(kprobe__proc_sys_write,
 	sysctl_data->sysctl_val_length = 0;
 	sysctl_data->sysctl_path_length = 0;
 
+<<<<<<< HEAD
 	size_t sysctl_val_length = bpf_probe_read_kernel_str(payload,
 							     CTL_MAXNAME, buf);
+=======
+	size_t sysctl_val_length = bpf_probe_read_str(payload, CTL_MAXNAME, buf);
+>>>>>>> b7ba80a49124 (Commit)
 	barrier_var(sysctl_val_length);
 	if (sysctl_val_length <= CTL_MAXNAME) {
 		barrier_var(sysctl_val_length);
@@ -587,10 +636,15 @@ ssize_t BPF_KPROBE(kprobe__proc_sys_write,
 		payload += sysctl_val_length;
 	}
 
+<<<<<<< HEAD
 	size_t sysctl_path_length =
 		bpf_probe_read_kernel_str(payload, MAX_PATH,
 					  BPF_CORE_READ(filp, f_path.dentry,
 							d_name.name));
+=======
+	size_t sysctl_path_length = bpf_probe_read_str(payload, MAX_PATH,
+						       BPF_CORE_READ(filp, f_path.dentry, d_name.name));
+>>>>>>> b7ba80a49124 (Commit)
 	barrier_var(sysctl_path_length);
 	if (sysctl_path_length <= MAX_PATH) {
 		barrier_var(sysctl_path_length);
@@ -647,8 +701,12 @@ int raw_tracepoint__sched_process_exit(void* ctx)
 		struct var_kill_data_t* past_kill_data = &arr_struct->array[i];
 
 		if (past_kill_data != NULL && past_kill_data->kill_target_pid == tpid) {
+<<<<<<< HEAD
 			bpf_probe_read_kernel(kill_data, sizeof(*past_kill_data),
 					      past_kill_data);
+=======
+			bpf_probe_read(kill_data, sizeof(*past_kill_data), past_kill_data);
+>>>>>>> b7ba80a49124 (Commit)
 			void* payload = kill_data->payload;
 			size_t offset = kill_data->payload_length;
 			if (offset >= MAX_METADATA_PAYLOAD_LEN + MAX_CGROUP_PAYLOAD_LEN)
@@ -666,10 +724,15 @@ int raw_tracepoint__sched_process_exit(void* ctx)
 				payload += comm_length;
 			}
 
+<<<<<<< HEAD
 			size_t cgroup_proc_length =
 				bpf_probe_read_kernel_str(payload,
 							  KILL_TARGET_LEN,
 							  BPF_CORE_READ(proc_kernfs, name));
+=======
+			size_t cgroup_proc_length = bpf_probe_read_str(payload, KILL_TARGET_LEN,
+								       BPF_CORE_READ(proc_kernfs, name));
+>>>>>>> b7ba80a49124 (Commit)
 			barrier_var(cgroup_proc_length);
 			if (cgroup_proc_length <= KILL_TARGET_LEN) {
 				barrier_var(cgroup_proc_length);
@@ -730,8 +793,12 @@ int raw_tracepoint__sched_process_exec(struct bpf_raw_tracepoint_args* ctx)
 	proc_exec_data->parent_start_time = BPF_CORE_READ(parent_task, start_time);
 
 	const char* filename = BPF_CORE_READ(bprm, filename);
+<<<<<<< HEAD
 	size_t bin_path_length =
 		bpf_probe_read_kernel_str(payload, MAX_FILENAME_LEN, filename);
+=======
+	size_t bin_path_length = bpf_probe_read_str(payload, MAX_FILENAME_LEN, filename);
+>>>>>>> b7ba80a49124 (Commit)
 	barrier_var(bin_path_length);
 	if (bin_path_length <= MAX_FILENAME_LEN) {
 		barrier_var(bin_path_length);
@@ -839,7 +906,11 @@ out:
 
 SEC("kprobe/vfs_link")
 int BPF_KPROBE(kprobe__vfs_link,
+<<<<<<< HEAD
 	       struct dentry* old_dentry, struct mnt_idmap *idmap,
+=======
+	       struct dentry* old_dentry, struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 	       struct inode* dir, struct dentry* new_dentry,
 	       struct inode** delegated_inode)
 {
@@ -935,8 +1006,12 @@ int BPF_KPROBE(kprobe__vfs_symlink, struct inode* dir, struct dentry* dentry,
 					      filemod_data->payload);
 	payload = populate_cgroup_info(&filemod_data->cgroup_data, task, payload);
 
+<<<<<<< HEAD
 	size_t len = bpf_probe_read_kernel_str(payload, MAX_FILEPATH_LENGTH,
 					       oldname);
+=======
+	size_t len = bpf_probe_read_str(payload, MAX_FILEPATH_LENGTH, oldname);
+>>>>>>> b7ba80a49124 (Commit)
 	barrier_var(len);
 	if (len <= MAX_FILEPATH_LENGTH) {
 		barrier_var(len);

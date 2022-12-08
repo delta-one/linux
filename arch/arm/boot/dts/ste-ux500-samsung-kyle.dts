@@ -34,6 +34,7 @@
 			polling-delay = <0>;
 			polling-delay-passive = <0>;
 			thermal-sensors = <&bat_therm>;
+<<<<<<< HEAD
 
 			trips {
 				battery-crit-hi {
@@ -42,6 +43,8 @@
 					type = "critical";
 				};
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -315,6 +318,7 @@
 			pinctrl-names = "default", "sleep";
 			pinctrl-0 = <&u1rxtx_a_1_default &u1ctsrts_a_1_default>;
 			pinctrl-1 = <&u1rxtx_a_1_sleep &u1ctsrts_a_1_sleep>;
+<<<<<<< HEAD
 
 			gnss {
 				/* The CSRG05TA03-ICJE-R is a SirfStarV 5t chip */
@@ -330,6 +334,8 @@
 				/* According to /etc/sirfgps.conf */
 				current-speed = <460800>;
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		/* Debugging console UART connected to AB8505 USB */
@@ -689,6 +695,7 @@
 			};
 		};
 	};
+<<<<<<< HEAD
 	g05ta03 {
 		g05ta03_kyle_default: g05ta03 {
 			/* Reset line, start out de-asserted */
@@ -703,6 +710,8 @@
 			};
 		};
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &ab8505_gpio {

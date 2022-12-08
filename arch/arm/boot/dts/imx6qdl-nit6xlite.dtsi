@@ -85,31 +85,51 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_leds>;
 
+<<<<<<< HEAD
 		led-j14-pin1 {
+=======
+		j14-pin1 {
+>>>>>>> b7ba80a49124 (Commit)
 			gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
 			retain-state-suspended;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-j14-pin3 {
+=======
+		j14-pin3 {
+>>>>>>> b7ba80a49124 (Commit)
 			gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
 			retain-state-suspended;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-j14-pins8-9 {
+=======
+		j14-pins8-9 {
+>>>>>>> b7ba80a49124 (Commit)
 			gpios = <&gpio3 29 GPIO_ACTIVE_LOW>;
 			retain-state-suspended;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-j46-pin2 {
+=======
+		j46-pin2 {
+>>>>>>> b7ba80a49124 (Commit)
 			gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
 			retain-state-suspended;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-j46-pin3 {
+=======
+		j46-pin3 {
+>>>>>>> b7ba80a49124 (Commit)
 			gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
 			retain-state-suspended;
 			default-state = "off";

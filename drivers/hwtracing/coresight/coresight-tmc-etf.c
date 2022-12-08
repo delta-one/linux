@@ -16,6 +16,7 @@
 static int tmc_set_etf_buffer(struct coresight_device *csdev,
 			      struct perf_output_handle *handle);
 
+<<<<<<< HEAD
 static int __tmc_etb_enable_hw(struct tmc_drvdata *drvdata)
 {
 	int rc = 0;
@@ -30,6 +31,14 @@ static int __tmc_etb_enable_hw(struct tmc_drvdata *drvdata)
 		CS_LOCK(drvdata->base);
 		return rc;
 	}
+=======
+static void __tmc_etb_enable_hw(struct tmc_drvdata *drvdata)
+{
+	CS_UNLOCK(drvdata->base);
+
+	/* Wait for TMCSReady bit to be set */
+	tmc_wait_for_tmcready(drvdata);
+>>>>>>> b7ba80a49124 (Commit)
 
 	writel_relaxed(TMC_MODE_CIRCULAR_BUFFER, drvdata->base + TMC_MODE);
 	writel_relaxed(TMC_FFCR_EN_FMT | TMC_FFCR_EN_TI |
@@ -41,7 +50,10 @@ static int __tmc_etb_enable_hw(struct tmc_drvdata *drvdata)
 	tmc_enable_hw(drvdata);
 
 	CS_LOCK(drvdata->base);
+<<<<<<< HEAD
 	return rc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int tmc_etb_enable_hw(struct tmc_drvdata *drvdata)
@@ -51,10 +63,15 @@ static int tmc_etb_enable_hw(struct tmc_drvdata *drvdata)
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
 	rc = __tmc_etb_enable_hw(drvdata);
 	if (rc)
 		coresight_disclaim_device(drvdata->csdev);
 	return rc;
+=======
+	__tmc_etb_enable_hw(drvdata);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void tmc_etb_dump_hw(struct tmc_drvdata *drvdata)
@@ -102,6 +119,7 @@ static void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
 	coresight_disclaim_device(drvdata->csdev);
 }
 
+<<<<<<< HEAD
 static int __tmc_etf_enable_hw(struct tmc_drvdata *drvdata)
 {
 	int rc = 0;
@@ -116,6 +134,14 @@ static int __tmc_etf_enable_hw(struct tmc_drvdata *drvdata)
 		CS_LOCK(drvdata->base);
 		return rc;
 	}
+=======
+static void __tmc_etf_enable_hw(struct tmc_drvdata *drvdata)
+{
+	CS_UNLOCK(drvdata->base);
+
+	/* Wait for TMCSReady bit to be set */
+	tmc_wait_for_tmcready(drvdata);
+>>>>>>> b7ba80a49124 (Commit)
 
 	writel_relaxed(TMC_MODE_HARDWARE_FIFO, drvdata->base + TMC_MODE);
 	writel_relaxed(TMC_FFCR_EN_FMT | TMC_FFCR_EN_TI,
@@ -124,7 +150,10 @@ static int __tmc_etf_enable_hw(struct tmc_drvdata *drvdata)
 	tmc_enable_hw(drvdata);
 
 	CS_LOCK(drvdata->base);
+<<<<<<< HEAD
 	return rc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int tmc_etf_enable_hw(struct tmc_drvdata *drvdata)
@@ -134,10 +163,15 @@ static int tmc_etf_enable_hw(struct tmc_drvdata *drvdata)
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
 	rc = __tmc_etf_enable_hw(drvdata);
 	if (rc)
 		coresight_disclaim_device(drvdata->csdev);
 	return rc;
+=======
+	__tmc_etf_enable_hw(drvdata);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void tmc_etf_disable_hw(struct tmc_drvdata *drvdata)
@@ -661,7 +695,10 @@ int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata)
 	char *buf = NULL;
 	enum tmc_mode mode;
 	unsigned long flags;
+<<<<<<< HEAD
 	int rc = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* config types are set a boot time and never change */
 	if (WARN_ON_ONCE(drvdata->config_type != TMC_CONFIG_TYPE_ETB &&
@@ -687,11 +724,15 @@ int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata)
 		 * can't be NULL.
 		 */
 		memset(drvdata->buf, 0, drvdata->size);
+<<<<<<< HEAD
 		rc = __tmc_etb_enable_hw(drvdata);
 		if (rc) {
 			spin_unlock_irqrestore(&drvdata->spinlock, flags);
 			return rc;
 		}
+=======
+		__tmc_etb_enable_hw(drvdata);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		/*
 		 * The ETB/ETF is not tracing and the buffer was just read.

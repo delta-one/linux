@@ -29,6 +29,7 @@
 
 #include "dc.h"
 
+<<<<<<< HEAD
 void amdgpu_dm_plane_handle_cursor_update(struct drm_plane *plane,
 			  struct drm_plane_state *old_plane_state);
 
@@ -40,6 +41,19 @@ int amdgpu_dm_plane_helper_check_state(struct drm_plane_state *state,
 				struct drm_crtc_state *new_crtc_state);
 
 int amdgpu_dm_plane_fill_plane_buffer_attributes(struct amdgpu_device *adev,
+=======
+void handle_cursor_update(struct drm_plane *plane,
+			  struct drm_plane_state *old_plane_state);
+
+int fill_dc_scaling_info(struct amdgpu_device *adev,
+			 const struct drm_plane_state *state,
+			 struct dc_scaling_info *scaling_info);
+
+int dm_plane_helper_check_state(struct drm_plane_state *state,
+				struct drm_crtc_state *new_crtc_state);
+
+int fill_plane_buffer_attributes(struct amdgpu_device *adev,
+>>>>>>> b7ba80a49124 (Commit)
 				 const struct amdgpu_framebuffer *afb,
 				 const enum surface_pixel_format format,
 				 const enum dc_rotation_angle rotation,
@@ -56,6 +70,7 @@ int amdgpu_dm_plane_init(struct amdgpu_display_manager *dm,
 			 unsigned long possible_crtcs,
 			 const struct dc_plane_cap *plane_cap);
 
+<<<<<<< HEAD
 const struct drm_format_info *amdgpu_dm_plane_get_format_info(const struct drm_mode_fb_cmd2 *cmd);
 
 void amdgpu_dm_plane_fill_blending_from_plane_state(const struct drm_plane_state *plane_state,
@@ -63,4 +78,12 @@ void amdgpu_dm_plane_fill_blending_from_plane_state(const struct drm_plane_state
 				    bool *global_alpha, int *global_alpha_value);
 
 bool is_video_format(uint32_t format);
+=======
+const struct drm_format_info *amd_get_format_info(const struct drm_mode_fb_cmd2 *cmd);
+
+void fill_blending_from_plane_state(const struct drm_plane_state *plane_state,
+				    bool *per_pixel_alpha, bool *pre_multiplied_alpha,
+				    bool *global_alpha, int *global_alpha_value);
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif

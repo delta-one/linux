@@ -140,9 +140,15 @@ static int xts_xor_tweak_post(struct skcipher_request *req, bool enc)
 	return xts_xor_tweak(req, true, enc);
 }
 
+<<<<<<< HEAD
 static void xts_cts_done(void *data, int err)
 {
 	struct skcipher_request *req = data;
+=======
+static void xts_cts_done(struct crypto_async_request *areq, int err)
+{
+	struct skcipher_request *req = areq->data;
+>>>>>>> b7ba80a49124 (Commit)
 	le128 b;
 
 	if (!err) {
@@ -196,19 +202,33 @@ static int xts_cts_final(struct skcipher_request *req,
 	return 0;
 }
 
+<<<<<<< HEAD
 static void xts_encrypt_done(void *data, int err)
 {
 	struct skcipher_request *req = data;
+=======
+static void xts_encrypt_done(struct crypto_async_request *areq, int err)
+{
+	struct skcipher_request *req = areq->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!err) {
 		struct xts_request_ctx *rctx = skcipher_request_ctx(req);
 
+<<<<<<< HEAD
 		rctx->subreq.base.flags &= CRYPTO_TFM_REQ_MAY_BACKLOG;
+=======
+		rctx->subreq.base.flags &= ~CRYPTO_TFM_REQ_MAY_SLEEP;
+>>>>>>> b7ba80a49124 (Commit)
 		err = xts_xor_tweak_post(req, true);
 
 		if (!err && unlikely(req->cryptlen % XTS_BLOCK_SIZE)) {
 			err = xts_cts_final(req, crypto_skcipher_encrypt);
+<<<<<<< HEAD
 			if (err == -EINPROGRESS || err == -EBUSY)
+=======
+			if (err == -EINPROGRESS)
+>>>>>>> b7ba80a49124 (Commit)
 				return;
 		}
 	}
@@ -216,19 +236,33 @@ static void xts_encrypt_done(void *data, int err)
 	skcipher_request_complete(req, err);
 }
 
+<<<<<<< HEAD
 static void xts_decrypt_done(void *data, int err)
 {
 	struct skcipher_request *req = data;
+=======
+static void xts_decrypt_done(struct crypto_async_request *areq, int err)
+{
+	struct skcipher_request *req = areq->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!err) {
 		struct xts_request_ctx *rctx = skcipher_request_ctx(req);
 
+<<<<<<< HEAD
 		rctx->subreq.base.flags &= CRYPTO_TFM_REQ_MAY_BACKLOG;
+=======
+		rctx->subreq.base.flags &= ~CRYPTO_TFM_REQ_MAY_SLEEP;
+>>>>>>> b7ba80a49124 (Commit)
 		err = xts_xor_tweak_post(req, false);
 
 		if (!err && unlikely(req->cryptlen % XTS_BLOCK_SIZE)) {
 			err = xts_cts_final(req, crypto_skcipher_decrypt);
+<<<<<<< HEAD
 			if (err == -EINPROGRESS || err == -EBUSY)
+=======
+			if (err == -EINPROGRESS)
+>>>>>>> b7ba80a49124 (Commit)
 				return;
 		}
 	}

@@ -1378,7 +1378,10 @@ static int rtl8187_conf_tx(struct ieee80211_hw *dev,
 
 static const struct ieee80211_ops rtl8187_ops = {
 	.tx			= rtl8187_tx,
+<<<<<<< HEAD
 	.wake_tx_queue		= ieee80211_handle_wake_tx_queue,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.start			= rtl8187_start,
 	.stop			= rtl8187_stop,
 	.add_interface		= rtl8187_add_interface,

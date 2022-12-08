@@ -215,7 +215,11 @@ static void pxa_init_debugfs(struct pxa_udc *udc)
 
 static void pxa_cleanup_debugfs(struct pxa_udc *udc)
 {
+<<<<<<< HEAD
 	debugfs_lookup_and_remove(udc->gadget.name, usb_debug_root);
+=======
+	debugfs_remove(debugfs_lookup(udc->gadget.name, usb_debug_root));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #else

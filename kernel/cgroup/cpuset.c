@@ -550,6 +550,7 @@ static void guarantee_online_mems(struct cpuset *cs, nodemask_t *pmask)
 /*
  * update task's spread flag if cpuset's page/slab spread flag is set
  *
+<<<<<<< HEAD
  * Call with callback_lock or cpuset_rwsem held. The check can be skipped
  * if on default hierarchy.
  */
@@ -559,6 +560,13 @@ static void cpuset_update_task_spread_flags(struct cpuset *cs,
 	if (cgroup_subsys_on_dfl(cpuset_cgrp_subsys))
 		return;
 
+=======
+ * Call with callback_lock or cpuset_rwsem held.
+ */
+static void cpuset_update_task_spread_flag(struct cpuset *cs,
+					struct task_struct *tsk)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	if (is_spread_page(cs))
 		task_set_spread_page(tsk);
 	else
@@ -1205,13 +1213,20 @@ void rebuild_sched_domains(void)
 /**
  * update_tasks_cpumask - Update the cpumasks of tasks in the cpuset.
  * @cs: the cpuset in which each task's cpus_allowed mask needs to be changed
+<<<<<<< HEAD
  * @new_cpus: the temp variable for the new effective_cpus mask
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Iterate through each task of @cs updating its cpus_allowed to the
  * effective cpuset's.  As this function is called with cpuset_rwsem held,
  * cpuset membership stays stable.
  */
+<<<<<<< HEAD
 static void update_tasks_cpumask(struct cpuset *cs, struct cpumask *new_cpus)
+=======
+static void update_tasks_cpumask(struct cpuset *cs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct css_task_iter it;
 	struct task_struct *task;
@@ -1225,10 +1240,14 @@ static void update_tasks_cpumask(struct cpuset *cs, struct cpumask *new_cpus)
 		if (top_cs && (task->flags & PF_KTHREAD) &&
 		    kthread_is_per_cpu(task))
 			continue;
+<<<<<<< HEAD
 
 		cpumask_and(new_cpus, cs->effective_cpus,
 			    task_cpu_possible_mask(task));
 		set_cpus_allowed_ptr(task, new_cpus);
+=======
+		set_cpus_allowed_ptr(task, cs->effective_cpus);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	css_task_iter_end(&it);
 }
@@ -1271,7 +1290,11 @@ static int update_flag(cpuset_flagbits_t bit, struct cpuset *cs,
 		       int turning_on);
 /**
  * update_parent_subparts_cpumask - update subparts_cpus mask of parent cpuset
+<<<<<<< HEAD
  * @cs:      The cpuset that requests change in partition root state
+=======
+ * @cpuset:  The cpuset that requests change in partition root state
+>>>>>>> b7ba80a49124 (Commit)
  * @cmd:     Partition root state change command
  * @newmask: Optional new cpumask for partcmd_update
  * @tmp:     Temporary addmask and delmask
@@ -1350,7 +1373,11 @@ static int update_parent_subparts_cpumask(struct cpuset *cs, int cmd,
 		 * A parent can be left with no CPU as long as there is no
 		 * task directly associated with the parent partition.
 		 */
+<<<<<<< HEAD
 		if (cpumask_subset(parent->effective_cpus, cs->cpus_allowed) &&
+=======
+		if (!cpumask_intersects(cs->cpus_allowed, parent->effective_cpus) &&
+>>>>>>> b7ba80a49124 (Commit)
 		    partition_is_populated(parent, cs))
 			return PERR_NOCPUS;
 
@@ -1513,7 +1540,11 @@ static int update_parent_subparts_cpumask(struct cpuset *cs, int cmd,
 	spin_unlock_irq(&callback_lock);
 
 	if (adding || deleting)
+<<<<<<< HEAD
 		update_tasks_cpumask(parent, tmp->new_cpus);
+=======
+		update_tasks_cpumask(parent);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Set or clear CS_SCHED_LOAD_BALANCE when partcmd_update, if necessary.
@@ -1665,7 +1696,11 @@ update_parent_subparts:
 		WARN_ON(!is_in_v2_mode() &&
 			!cpumask_equal(cp->cpus_allowed, cp->effective_cpus));
 
+<<<<<<< HEAD
 		update_tasks_cpumask(cp, tmp->new_cpus);
+=======
+		update_tasks_cpumask(cp);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * On legacy hierarchy, if the effective cpumask of any non-
@@ -2161,7 +2196,11 @@ static void update_tasks_flags(struct cpuset *cs)
 
 	css_task_iter_start(&cs->css, 0, &it);
 	while ((task = css_task_iter_next(&it)))
+<<<<<<< HEAD
 		cpuset_update_task_spread_flags(cs, task);
+=======
+		cpuset_update_task_spread_flag(cs, task);
+>>>>>>> b7ba80a49124 (Commit)
 	css_task_iter_end(&it);
 }
 
@@ -2313,7 +2352,11 @@ static int update_prstate(struct cpuset *cs, int new_prs)
 		}
 	}
 
+<<<<<<< HEAD
 	update_tasks_cpumask(parent, tmpmask.new_cpus);
+=======
+	update_tasks_cpumask(parent);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (parent->child_ecpus_count)
 		update_sibling_cpumasks(parent, cs, &tmpmask);
@@ -2328,7 +2371,10 @@ out:
 		new_prs = -new_prs;
 	spin_lock_irq(&callback_lock);
 	cs->partition_root_state = new_prs;
+<<<<<<< HEAD
 	WRITE_ONCE(cs->prs_err, err);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irq(&callback_lock);
 	/*
 	 * Update child cpusets, if present.
@@ -2518,13 +2564,17 @@ static void cpuset_attach(struct cgroup_taskset *tset)
 	struct cgroup_subsys_state *css;
 	struct cpuset *cs;
 	struct cpuset *oldcs = cpuset_attach_old_cs;
+<<<<<<< HEAD
 	bool cpus_updated, mems_updated;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	cgroup_taskset_first(tset, &css);
 	cs = css_cs(css);
 
 	lockdep_assert_cpus_held();	/* see cgroup_attach_lock() */
 	percpu_down_write(&cpuset_rwsem);
+<<<<<<< HEAD
 	cpus_updated = !cpumask_equal(cs->effective_cpus,
 				      oldcs->effective_cpus);
 	mems_updated = !nodes_equal(cs->effective_mems, oldcs->effective_mems);
@@ -2540,6 +2590,8 @@ static void cpuset_attach(struct cgroup_taskset *tset)
 		cpuset_attach_nodemask_to = cs->effective_mems;
 		goto out;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	guarantee_online_mems(cs, &cpuset_attach_nodemask_to);
 
@@ -2555,11 +2607,16 @@ static void cpuset_attach(struct cgroup_taskset *tset)
 		WARN_ON_ONCE(set_cpus_allowed_ptr(task, cpus_attach));
 
 		cpuset_change_task_nodemask(task, &cpuset_attach_nodemask_to);
+<<<<<<< HEAD
 		cpuset_update_task_spread_flags(cs, task);
+=======
+		cpuset_update_task_spread_flag(cs, task);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
 	 * Change mm for all threadgroup leaders. This is expensive and may
+<<<<<<< HEAD
 	 * sleep and should be moved outside migration path proper. Skip it
 	 * if there is no change in effective_mems and CS_MEMORY_MIGRATE is
 	 * not set.
@@ -2568,6 +2625,11 @@ static void cpuset_attach(struct cgroup_taskset *tset)
 	if (!is_memory_migrate(cs) && !mems_updated)
 		goto out;
 
+=======
+	 * sleep and should be moved outside migration path proper.
+	 */
+	cpuset_attach_nodemask_to = cs->effective_mems;
+>>>>>>> b7ba80a49124 (Commit)
 	cgroup_taskset_for_each_leader(leader, css, tset) {
 		struct mm_struct *mm = get_task_mm(leader);
 
@@ -2590,7 +2652,10 @@ static void cpuset_attach(struct cgroup_taskset *tset)
 		}
 	}
 
+<<<<<<< HEAD
 out:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cs->old_mems_allowed = cpuset_attach_nodemask_to;
 
 	cs->attach_in_progress--;
@@ -3077,6 +3142,7 @@ static struct cftype dfl_files[] = {
 };
 
 
+<<<<<<< HEAD
 /**
  * cpuset_css_alloc - Allocate a cpuset css
  * @parent_css: Parent css of the control group that the new cpuset will be
@@ -3086,6 +3152,13 @@ static struct cftype dfl_files[] = {
  * Allocate and initialize a new cpuset css, for non-NULL @parent_css, return
  * top cpuset css otherwise.
  */
+=======
+/*
+ *	cpuset_css_alloc - allocate a cpuset css
+ *	cgrp:	control group that the new cpuset will be part of
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct cgroup_subsys_state *
 cpuset_css_alloc(struct cgroup_subsys_state *parent_css)
 {
@@ -3286,6 +3359,11 @@ struct cgroup_subsys cpuset_cgrp_subsys = {
 
 int __init cpuset_init(void)
 {
+<<<<<<< HEAD
+=======
+	BUG_ON(percpu_init_rwsem(&cpuset_rwsem));
+
+>>>>>>> b7ba80a49124 (Commit)
 	BUG_ON(!alloc_cpumask_var(&top_cpuset.cpus_allowed, GFP_KERNEL));
 	BUG_ON(!alloc_cpumask_var(&top_cpuset.effective_cpus, GFP_KERNEL));
 	BUG_ON(!zalloc_cpumask_var(&top_cpuset.subparts_cpus, GFP_KERNEL));
@@ -3350,7 +3428,11 @@ hotplug_update_tasks_legacy(struct cpuset *cs,
 	 * as the tasks will be migrated to an ancestor.
 	 */
 	if (cpus_updated && !cpumask_empty(cs->cpus_allowed))
+<<<<<<< HEAD
 		update_tasks_cpumask(cs, new_cpus);
+=======
+		update_tasks_cpumask(cs);
+>>>>>>> b7ba80a49124 (Commit)
 	if (mems_updated && !nodes_empty(cs->mems_allowed))
 		update_tasks_nodemask(cs);
 
@@ -3387,7 +3469,11 @@ hotplug_update_tasks(struct cpuset *cs,
 	spin_unlock_irq(&callback_lock);
 
 	if (cpus_updated)
+<<<<<<< HEAD
 		update_tasks_cpumask(cs, new_cpus);
+=======
+		update_tasks_cpumask(cs);
+>>>>>>> b7ba80a49124 (Commit)
 	if (mems_updated)
 		update_tasks_nodemask(cs);
 }
@@ -3663,6 +3749,14 @@ static int cpuset_track_online_nodes(struct notifier_block *self,
 	return NOTIFY_OK;
 }
 
+<<<<<<< HEAD
+=======
+static struct notifier_block cpuset_track_online_nodes_nb = {
+	.notifier_call = cpuset_track_online_nodes,
+	.priority = 10,		/* ??! */
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * cpuset_init_smp - initialize cpus_allowed
  *
@@ -3680,7 +3774,11 @@ void __init cpuset_init_smp(void)
 	cpumask_copy(top_cpuset.effective_cpus, cpu_active_mask);
 	top_cpuset.effective_mems = node_states[N_MEMORY];
 
+<<<<<<< HEAD
 	hotplug_memory_notifier(cpuset_track_online_nodes, CPUSET_CALLBACK_PRI);
+=======
+	register_hotmemory_notifier(&cpuset_track_online_nodes_nb);
+>>>>>>> b7ba80a49124 (Commit)
 
 	cpuset_migrate_mm_wq = alloc_ordered_workqueue("cpuset_migrate_mm", 0);
 	BUG_ON(!cpuset_migrate_mm_wq);
@@ -3694,12 +3792,17 @@ void __init cpuset_init_smp(void)
  * Description: Returns the cpumask_var_t cpus_allowed of the cpuset
  * attached to the specified @tsk.  Guaranteed to return some non-empty
  * subset of cpu_online_mask, even if this means going outside the
+<<<<<<< HEAD
  * tasks cpuset, except when the task is in the top cpuset.
+=======
+ * tasks cpuset.
+>>>>>>> b7ba80a49124 (Commit)
  **/
 
 void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
 {
 	unsigned long flags;
+<<<<<<< HEAD
 	struct cpuset *cs;
 
 	spin_lock_irqsave(&callback_lock, flags);
@@ -3726,6 +3829,11 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
 	}
 
 	rcu_read_unlock();
+=======
+
+	spin_lock_irqsave(&callback_lock, flags);
+	guarantee_online_cpus(tsk, pmask);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irqrestore(&callback_lock, flags);
 }
 
@@ -3831,7 +3939,11 @@ static struct cpuset *nearest_hardwall_ancestor(struct cpuset *cs)
 }
 
 /*
+<<<<<<< HEAD
  * cpuset_node_allowed - Can we allocate on a memory node?
+=======
+ * __cpuset_node_allowed - Can we allocate on a memory node?
+>>>>>>> b7ba80a49124 (Commit)
  * @node: is this an allowed node?
  * @gfp_mask: memory allocation flags
  *
@@ -3870,7 +3982,11 @@ static struct cpuset *nearest_hardwall_ancestor(struct cpuset *cs)
  *	GFP_KERNEL   - any node in enclosing hardwalled cpuset ok
  *	GFP_USER     - only nodes in current tasks mems allowed ok.
  */
+<<<<<<< HEAD
 bool cpuset_node_allowed(int node, gfp_t gfp_mask)
+=======
+bool __cpuset_node_allowed(int node, gfp_t gfp_mask)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cpuset *cs;		/* current cpuset ancestors */
 	bool allowed;			/* is allocation in zone z allowed? */
@@ -3905,7 +4021,12 @@ bool cpuset_node_allowed(int node, gfp_t gfp_mask)
 }
 
 /**
+<<<<<<< HEAD
  * cpuset_spread_node() - On which node to begin search for a page
+=======
+ * cpuset_mem_spread_node() - On which node to begin search for a file page
+ * cpuset_slab_spread_node() - On which node to begin search for a slab page
+>>>>>>> b7ba80a49124 (Commit)
  *
  * If a task is marked PF_SPREAD_PAGE or PF_SPREAD_SLAB (as for
  * tasks in a cpuset with is_spread_page or is_spread_slab set),
@@ -3929,14 +4050,21 @@ bool cpuset_node_allowed(int node, gfp_t gfp_mask)
  * is passed an offline node, it will fall back to the local node.
  * See kmem_cache_alloc_node().
  */
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static int cpuset_spread_node(int *rotor)
 {
 	return *rotor = next_node_in(*rotor, current->mems_allowed);
 }
 
+<<<<<<< HEAD
 /**
  * cpuset_mem_spread_node() - On which node to begin search for a file page
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int cpuset_mem_spread_node(void)
 {
 	if (current->cpuset_mem_spread_rotor == NUMA_NO_NODE)
@@ -3946,9 +4074,12 @@ int cpuset_mem_spread_node(void)
 	return cpuset_spread_node(&current->cpuset_mem_spread_rotor);
 }
 
+<<<<<<< HEAD
 /**
  * cpuset_slab_spread_node() - On which node to begin search for a slab page
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int cpuset_slab_spread_node(void)
 {
 	if (current->cpuset_slab_spread_rotor == NUMA_NO_NODE)
@@ -3957,6 +4088,10 @@ int cpuset_slab_spread_node(void)
 
 	return cpuset_spread_node(&current->cpuset_slab_spread_rotor);
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL_GPL(cpuset_mem_spread_node);
 
 /**

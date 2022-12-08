@@ -149,6 +149,11 @@ static int _rtl92e_wx_force_reset(struct net_device *dev,
 
 	mutex_lock(&priv->wx_mutex);
 
+<<<<<<< HEAD
+=======
+	RT_TRACE(COMP_DBG, "%s(): force reset ! extra is %d\n",
+		 __func__, *extra);
+>>>>>>> b7ba80a49124 (Commit)
 	priv->force_reset = *extra;
 	mutex_unlock(&priv->wx_mutex);
 	return 0;
@@ -159,21 +164,38 @@ static int _rtl92e_wx_adapter_power_status(struct net_device *dev,
 					   union iwreq_data *wrqu, char *extra)
 {
 	struct r8192_priv *priv = rtllib_priv(dev);
+<<<<<<< HEAD
 	struct rt_pwr_save_ctrl *psc = (struct rt_pwr_save_ctrl *)
 					(&priv->rtllib->pwr_save_ctrl);
+=======
+	struct rt_pwr_save_ctrl *pPSC = (struct rt_pwr_save_ctrl *)
+					(&priv->rtllib->PowerSaveControl);
+>>>>>>> b7ba80a49124 (Commit)
 	struct rtllib_device *ieee = priv->rtllib;
 
 	mutex_lock(&priv->wx_mutex);
 
+<<<<<<< HEAD
 	if (*extra || priv->force_lps) {
 		priv->ps_force = false;
 		psc->bLeisurePs = true;
+=======
+	RT_TRACE(COMP_POWER, "%s(): %s\n", __func__, (*extra == 6) ?
+		 "DC power" : "AC power");
+	if (*extra || priv->force_lps) {
+		priv->ps_force = false;
+		pPSC->bLeisurePs = true;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		if (priv->rtllib->state == RTLLIB_LINKED)
 			rtl92e_leisure_ps_leave(dev);
 
 		priv->ps_force = true;
+<<<<<<< HEAD
 		psc->bLeisurePs = false;
+=======
+		pPSC->bLeisurePs = false;
+>>>>>>> b7ba80a49124 (Commit)
 		ieee->ps = *extra;
 	}
 
@@ -188,15 +210,24 @@ static int _rtl92e_wx_set_lps_awake_interval(struct net_device *dev,
 					     char *extra)
 {
 	struct r8192_priv *priv = rtllib_priv(dev);
+<<<<<<< HEAD
 	struct rt_pwr_save_ctrl *psc = (struct rt_pwr_save_ctrl *)
 					(&priv->rtllib->pwr_save_ctrl);
+=======
+	struct rt_pwr_save_ctrl *pPSC = (struct rt_pwr_save_ctrl *)
+					(&priv->rtllib->PowerSaveControl);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&priv->wx_mutex);
 
 	netdev_info(dev, "%s(): set lps awake interval ! extra is %d\n",
 		    __func__, *extra);
 
+<<<<<<< HEAD
 	psc->reg_max_lps_awake_intvl = *extra;
+=======
+	pPSC->RegMaxLPSAwakeIntvl = *extra;
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&priv->wx_mutex);
 	return 0;
 }
@@ -248,6 +279,7 @@ static int _rtl92e_wx_set_mode(struct net_device *dev,
 
 	if (priv->hw_radio_off)
 		return 0;
+<<<<<<< HEAD
 	rt_state = priv->rtllib->rf_power_state;
 	mutex_lock(&priv->wx_mutex);
 	if (wrqu->mode == IW_MODE_ADHOC || wrqu->mode == IW_MODE_MONITOR ||
@@ -266,6 +298,28 @@ static int _rtl92e_wx_set_mode(struct net_device *dev,
 			mutex_lock(&priv->rtllib->ips_mutex);
 			rtl92e_ips_leave(dev);
 			mutex_unlock(&priv->rtllib->ips_mutex);
+=======
+	rt_state = priv->rtllib->eRFPowerState;
+	mutex_lock(&priv->wx_mutex);
+	if (wrqu->mode == IW_MODE_ADHOC || wrqu->mode == IW_MODE_MONITOR ||
+	    ieee->bNetPromiscuousMode) {
+		if (priv->rtllib->PowerSaveControl.bInactivePs) {
+			if (rt_state == eRfOff) {
+				if (priv->rtllib->RfOffReason >
+				    RF_CHANGE_BY_IPS) {
+					netdev_warn(dev, "%s(): RF is OFF.\n",
+						    __func__);
+					mutex_unlock(&priv->wx_mutex);
+					return -1;
+				}
+				netdev_info(dev,
+					    "=========>%s(): rtl92e_ips_leave\n",
+					    __func__);
+				mutex_lock(&priv->rtllib->ips_mutex);
+				rtl92e_ips_leave(dev);
+				mutex_unlock(&priv->rtllib->ips_mutex);
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 	ret = rtllib_wx_set_mode(priv->rtllib, a, wrqu, b);
@@ -390,10 +444,17 @@ static int _rtl92e_wx_set_scan(struct net_device *dev,
 			    __func__);
 		return 0;
 	}
+<<<<<<< HEAD
 	rt_state = priv->rtllib->rf_power_state;
 	if (!priv->up)
 		return -ENETDOWN;
 	if (priv->rtllib->link_detect_info.bBusyTraffic == true)
+=======
+	rt_state = priv->rtllib->eRFPowerState;
+	if (!priv->up)
+		return -ENETDOWN;
+	if (priv->rtllib->LinkDetectInfo.bBusyTraffic == true)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EAGAIN;
 
 	if (wrqu->data.flags & IW_SCAN_THIS_ESSID) {
@@ -412,6 +473,7 @@ static int _rtl92e_wx_set_scan(struct net_device *dev,
 	priv->rtllib->FirstIe_InScan = true;
 
 	if (priv->rtllib->state != RTLLIB_LINKED) {
+<<<<<<< HEAD
 		if (rt_state == rf_off) {
 			if (priv->rtllib->rf_off_reason >
 			    RF_CHANGE_BY_IPS) {
@@ -423,12 +485,31 @@ static int _rtl92e_wx_set_scan(struct net_device *dev,
 			mutex_lock(&priv->rtllib->ips_mutex);
 			rtl92e_ips_leave(dev);
 			mutex_unlock(&priv->rtllib->ips_mutex);
+=======
+		if (priv->rtllib->PowerSaveControl.bInactivePs) {
+			if (rt_state == eRfOff) {
+				if (priv->rtllib->RfOffReason >
+				    RF_CHANGE_BY_IPS) {
+					netdev_warn(dev, "%s(): RF is OFF.\n",
+						    __func__);
+					mutex_unlock(&priv->wx_mutex);
+					return -1;
+				}
+				RT_TRACE(COMP_PS,
+					 "=========>%s(): rtl92e_ips_leave\n",
+					 __func__);
+				mutex_lock(&priv->rtllib->ips_mutex);
+				rtl92e_ips_leave(dev);
+				mutex_unlock(&priv->rtllib->ips_mutex);
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		rtllib_stop_scan(priv->rtllib);
 		if (priv->rtllib->LedControlHandler)
 			priv->rtllib->LedControlHandler(dev,
 							 LED_CTL_SITE_SURVEY);
 
+<<<<<<< HEAD
 		if (priv->rtllib->rf_power_state != rf_off) {
 			priv->rtllib->actscanning = true;
 
@@ -437,6 +518,20 @@ static int _rtl92e_wx_set_scan(struct net_device *dev,
 			rtllib_start_scan_syncro(priv->rtllib, 0);
 
 			ieee->ScanOperationBackupHandler(ieee->dev, SCAN_OPT_RESTORE);
+=======
+		if (priv->rtllib->eRFPowerState != eRfOff) {
+			priv->rtllib->actscanning = true;
+
+			if (ieee->ScanOperationBackupHandler)
+				ieee->ScanOperationBackupHandler(ieee->dev,
+							 SCAN_OPT_BACKUP);
+
+			rtllib_start_scan_syncro(priv->rtllib, 0);
+
+			if (ieee->ScanOperationBackupHandler)
+				ieee->ScanOperationBackupHandler(ieee->dev,
+							 SCAN_OPT_RESTORE);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		ret = 0;
 	} else {
@@ -479,7 +574,11 @@ static int _rtl92e_wx_set_essid(struct net_device *dev,
 
 	if (priv->hw_radio_off) {
 		netdev_info(dev,
+<<<<<<< HEAD
 			    "=========>%s():hw radio off,or Rf state is rf_off, return\n",
+=======
+			    "=========>%s():hw radio off,or Rf state is eRfOff, return\n",
+>>>>>>> b7ba80a49124 (Commit)
 			    __func__);
 		return 0;
 	}
@@ -666,6 +765,10 @@ static int _rtl92e_wx_set_enc(struct net_device *dev,
 	mutex_unlock(&priv->rtllib->ips_mutex);
 	mutex_lock(&priv->wx_mutex);
 
+<<<<<<< HEAD
+=======
+	RT_TRACE(COMP_SEC, "Setting SW wep key");
+>>>>>>> b7ba80a49124 (Commit)
 	ret = rtllib_wx_set_encode(priv->rtllib, info, wrqu, key);
 	mutex_unlock(&priv->wx_mutex);
 
@@ -911,7 +1014,11 @@ static int _rtl92e_wx_set_encode_ext(struct net_device *dev,
 					 key, 0);
 		} else {
 			if ((ieee->pairwise_key_type == KEY_TYPE_CCMP) &&
+<<<<<<< HEAD
 			     ieee->ht_info->bCurrentHTSupport)
+=======
+			     ieee->pHTInfo->bCurrentHTSupport)
+>>>>>>> b7ba80a49124 (Commit)
 				rtl92e_writeb(dev, 0x173, 1);
 			rtl92e_set_key(dev, 4, idx, alg,
 				       (u8 *)ieee->ap_mac_addr, 0, key);
@@ -1010,13 +1117,19 @@ static int _rtl92e_wx_set_promisc_mode(struct net_device *dev,
 	u32 info_buf[3];
 
 	u32 oid;
+<<<<<<< HEAD
 	u32 promiscuous_on;
 	u32 fltr_src_sta_frame;
+=======
+	u32 bPromiscuousOn;
+	u32 bFilterSourceStationFrame;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (copy_from_user(info_buf, wrqu->data.pointer, sizeof(info_buf)))
 		return -EFAULT;
 
 	oid = info_buf[0];
+<<<<<<< HEAD
 	promiscuous_on = info_buf[1];
 	fltr_src_sta_frame = info_buf[2];
 
@@ -1026,13 +1139,29 @@ static int _rtl92e_wx_set_promisc_mode(struct net_device *dev,
 		ieee->intel_promiscuous_md_info.fltr_src_sta_frame =
 			(fltr_src_sta_frame) ? (true) : (false);
 		(promiscuous_on) ?
+=======
+	bPromiscuousOn = info_buf[1];
+	bFilterSourceStationFrame = info_buf[2];
+
+	if (oid == OID_RT_INTEL_PROMISCUOUS_MODE) {
+		ieee->IntelPromiscuousModeInfo.bPromiscuousOn =
+					(bPromiscuousOn) ? (true) : (false);
+		ieee->IntelPromiscuousModeInfo.bFilterSourceStationFrame =
+			(bFilterSourceStationFrame) ? (true) : (false);
+		(bPromiscuousOn) ?
+>>>>>>> b7ba80a49124 (Commit)
 		(rtllib_EnableIntelPromiscuousMode(dev, false)) :
 		(rtllib_DisableIntelPromiscuousMode(dev, false));
 
 		netdev_info(dev,
 			    "=======>%s(), on = %d, filter src sta = %d\n",
+<<<<<<< HEAD
 			    __func__, promiscuous_on,
 			    fltr_src_sta_frame);
+=======
+			    __func__, bPromiscuousOn,
+			    bFilterSourceStationFrame);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		return -1;
 	}
@@ -1050,8 +1179,13 @@ static int _rtl92e_wx_get_promisc_mode(struct net_device *dev,
 	mutex_lock(&priv->wx_mutex);
 
 	snprintf(extra, 45, "PromiscuousMode:%d, FilterSrcSTAFrame:%d",
+<<<<<<< HEAD
 		 ieee->intel_promiscuous_md_info.promiscuous_on,
 		 ieee->intel_promiscuous_md_info.fltr_src_sta_frame);
+=======
+		 ieee->IntelPromiscuousModeInfo.bPromiscuousOn,
+		 ieee->IntelPromiscuousModeInfo.bFilterSourceStationFrame);
+>>>>>>> b7ba80a49124 (Commit)
 	wrqu->data.length = strlen(extra) + 1;
 
 	mutex_unlock(&priv->wx_mutex);

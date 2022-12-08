@@ -387,6 +387,10 @@ static struct clk_alpha_pll_postdiv gpll4_out_test = {
 
 enum {
 	P_AUD_REF_CLK,
+<<<<<<< HEAD
+=======
+	P_CORE_BI_PLL_TEST_SE,
+>>>>>>> b7ba80a49124 (Commit)
 	P_GPLL0_OUT_MAIN,
 	P_GPLL4_OUT_MAIN,
 	P_PLL0_EARLY_DIV_CLK_SRC,
@@ -398,22 +402,38 @@ static const struct parent_map gcc_parent_map_0[] = {
 	{ P_XO, 0 },
 	{ P_GPLL0_OUT_MAIN, 1 },
 	{ P_PLL0_EARLY_DIV_CLK_SRC, 6 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data gcc_parent_data_0[] = {
 	{ .fw_name = "xo" },
 	{ .hw = &gpll0_out_main.clkr.hw },
 	{ .hw = &gpll0_out_main.clkr.hw },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map gcc_parent_map_1[] = {
 	{ P_XO, 0 },
 	{ P_GPLL0_OUT_MAIN, 1 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data gcc_parent_data_1[] = {
 	{ .fw_name = "xo" },
 	{ .hw = &gpll0_out_main.clkr.hw },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map gcc_parent_map_2[] = {
@@ -421,6 +441,10 @@ static const struct parent_map gcc_parent_map_2[] = {
 	{ P_GPLL0_OUT_MAIN, 1 },
 	{ P_SLEEP_CLK, 5 },
 	{ P_PLL0_EARLY_DIV_CLK_SRC, 6 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data gcc_parent_data_2[] = {
@@ -428,40 +452,68 @@ static const struct clk_parent_data gcc_parent_data_2[] = {
 	{ .hw = &gpll0_out_main.clkr.hw },
 	{ .fw_name = "sleep_clk" },
 	{ .hw = &gpll0_out_main.clkr.hw },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map gcc_parent_map_3[] = {
 	{ P_XO, 0 },
 	{ P_SLEEP_CLK, 5 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data gcc_parent_data_3[] = {
 	{ .fw_name = "xo" },
 	{ .fw_name = "sleep_clk" },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map gcc_parent_map_4[] = {
 	{ P_XO, 0 },
 	{ P_GPLL0_OUT_MAIN, 1 },
 	{ P_GPLL4_OUT_MAIN, 5 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data gcc_parent_data_4[] = {
 	{ .fw_name = "xo" },
 	{ .hw = &gpll0_out_main.clkr.hw },
 	{ .hw = &gpll4_out_main.clkr.hw },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct parent_map gcc_parent_map_5[] = {
 	{ P_XO, 0 },
 	{ P_GPLL0_OUT_MAIN, 1 },
 	{ P_AUD_REF_CLK, 2 },
+<<<<<<< HEAD
+=======
+	{ P_CORE_BI_PLL_TEST_SE, 7 },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct clk_parent_data gcc_parent_data_5[] = {
 	{ .fw_name = "xo" },
 	{ .hw = &gpll0_out_main.clkr.hw },
 	{ .fw_name = "aud_ref_clk" },
+<<<<<<< HEAD
+=======
+	{ .fw_name = "core_bi_pll_test_se" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct freq_tbl ftbl_blsp1_qup1_i2c_apps_clk_src[] = {
@@ -2898,8 +2950,12 @@ static struct gdsc usb_30_gdsc = {
 	.pd = {
 		.name = "usb_30_gdsc",
 	},
+<<<<<<< HEAD
 	/* TODO: Change to OFF_ON when USB drivers get proper suspend support */
 	.pwrsts = PWRSTS_RET_ON,
+=======
+	.pwrsts = PWRSTS_OFF_ON,
+>>>>>>> b7ba80a49124 (Commit)
 	.flags = VOTABLE,
 };
 

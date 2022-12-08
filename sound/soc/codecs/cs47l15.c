@@ -1468,7 +1468,11 @@ error_core:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void cs47l15_remove(struct platform_device *pdev)
+=======
+static int cs47l15_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cs47l15 *cs47l15 = platform_get_drvdata(pdev);
 
@@ -1482,6 +1486,11 @@ static void cs47l15_remove(struct platform_device *pdev)
 	madera_free_irq(cs47l15->core.madera, MADERA_IRQ_DSP_IRQ1, cs47l15);
 	madera_free_overheat(&cs47l15->core);
 	madera_core_free(&cs47l15->core);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver cs47l15_codec_driver = {
@@ -1489,7 +1498,11 @@ static struct platform_driver cs47l15_codec_driver = {
 		.name = "cs47l15-codec",
 	},
 	.probe = &cs47l15_probe,
+<<<<<<< HEAD
 	.remove_new = cs47l15_remove,
+=======
+	.remove = &cs47l15_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(cs47l15_codec_driver);

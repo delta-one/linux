@@ -1562,7 +1562,11 @@ static int __init fcloop_init(void)
 {
 	int ret;
 
+<<<<<<< HEAD
 	fcloop_class = class_create("fcloop");
+=======
+	fcloop_class = class_create(THIS_MODULE, "fcloop");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(fcloop_class)) {
 		pr_err("couldn't register class fcloop\n");
 		ret = PTR_ERR(fcloop_class);

@@ -150,10 +150,16 @@ restore_sigcontext(struct sigcontext __user *sc, struct pt_regs *regs)
 {
 	unsigned long usp;
 	struct switch_stack *sw = (struct switch_stack *)regs - 1;
+<<<<<<< HEAD
 	long err = __get_user(regs->pc, &sc->sc_pc);
 
 	current->restart_block.fn = do_no_restart_syscall;
 	current_thread_info()->status |= TS_SAVED_FP | TS_RESTORE_FP;
+=======
+	long i, err = __get_user(regs->pc, &sc->sc_pc);
+
+	current->restart_block.fn = do_no_restart_syscall;
+>>>>>>> b7ba80a49124 (Commit)
 
 	sw->r26 = (unsigned long) ret_from_sys_call;
 
@@ -190,9 +196,15 @@ restore_sigcontext(struct sigcontext __user *sc, struct pt_regs *regs)
 	err |= __get_user(usp, sc->sc_regs+30);
 	wrusp(usp);
 
+<<<<<<< HEAD
 	err |= __copy_from_user(current_thread_info()->fp,
 				sc->sc_fpregs, 31 * 8);
 	err |= __get_user(current_thread_info()->fp[31], &sc->sc_fpcr);
+=======
+	for (i = 0; i < 31; i++)
+		err |= __get_user(sw->fp[i], sc->sc_fpregs+i);
+	err |= __get_user(sw->fp[31], &sc->sc_fpcr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return err;
 }
@@ -273,7 +285,11 @@ setup_sigcontext(struct sigcontext __user *sc, struct pt_regs *regs,
 		 unsigned long mask, unsigned long sp)
 {
 	struct switch_stack *sw = (struct switch_stack *)regs - 1;
+<<<<<<< HEAD
 	long err = 0;
+=======
+	long i, err = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err |= __put_user(on_sig_stack((unsigned long)sc), &sc->sc_onstack);
 	err |= __put_user(mask, &sc->sc_mask);
@@ -313,10 +329,17 @@ setup_sigcontext(struct sigcontext __user *sc, struct pt_regs *regs,
 	err |= __put_user(sp, sc->sc_regs+30);
 	err |= __put_user(0, sc->sc_regs+31);
 
+<<<<<<< HEAD
 	err |= __copy_to_user(sc->sc_fpregs,
 			      current_thread_info()->fp, 31 * 8);
 	err |= __put_user(0, sc->sc_fpregs+31);
 	err |= __put_user(current_thread_info()->fp[31], &sc->sc_fpcr);
+=======
+	for (i = 0; i < 31; i++)
+		err |= __put_user(sw->fp[i], sc->sc_fpregs+i);
+	err |= __put_user(0, sc->sc_fpregs+31);
+	err |= __put_user(sw->fp[31], &sc->sc_fpcr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	err |= __put_user(regs->trap_a0, &sc->sc_traparg_a0);
 	err |= __put_user(regs->trap_a1, &sc->sc_traparg_a1);
@@ -529,9 +552,12 @@ do_work_pending(struct pt_regs *regs, unsigned long thread_flags,
 		} else {
 			local_irq_enable();
 			if (thread_flags & (_TIF_SIGPENDING|_TIF_NOTIFY_SIGNAL)) {
+<<<<<<< HEAD
 				preempt_disable();
 				save_fpu();
 				preempt_enable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				do_signal(regs, r0, r19);
 				r0 = 0;
 			} else {

@@ -373,7 +373,11 @@ def clear_trace_file():
     """ Clear trace file """
 
     try:
+<<<<<<< HEAD
         f_handle = open('/sys/kernel/tracing/trace', 'w')
+=======
+        f_handle = open('/sys/kernel/debug/tracing/trace', 'w')
+>>>>>>> b7ba80a49124 (Commit)
         f_handle.close()
     except:
         print('IO error clearing trace file ')
@@ -401,7 +405,11 @@ def set_trace_buffer_size(memory):
     """ Set trace buffer size """
 
     try:
+<<<<<<< HEAD
        with open('/sys/kernel/tracing/buffer_size_kb', 'w') as fp:
+=======
+       with open('/sys/kernel/debug/tracing/buffer_size_kb', 'w') as fp:
+>>>>>>> b7ba80a49124 (Commit)
           fp.write(memory)
     except:
        print('IO error setting trace buffer size ')
@@ -411,7 +419,11 @@ def free_trace_buffer():
     """ Free the trace buffer memory """
 
     try:
+<<<<<<< HEAD
        open('/sys/kernel/tracing/buffer_size_kb'
+=======
+       open('/sys/kernel/debug/tracing/buffer_size_kb'
+>>>>>>> b7ba80a49124 (Commit)
                  , 'w').write("1")
     except:
         print('IO error freeing trace buffer ')
@@ -495,7 +507,11 @@ def signal_handler(signal, frame):
         sys.exit(0)
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     trace_file = "/sys/kernel/tracing/events/power/pstate_sample/enable"
+=======
+    trace_file = "/sys/kernel/debug/tracing/events/power/pstate_sample/enable"
+>>>>>>> b7ba80a49124 (Commit)
     signal.signal(signal.SIGINT, signal_handler)
 
     interval = ""
@@ -569,7 +585,11 @@ if __name__ == "__main__":
     cleanup_data_files()
 
     if interval:
+<<<<<<< HEAD
         filename = "/sys/kernel/tracing/trace"
+=======
+        filename = "/sys/kernel/debug/tracing/trace"
+>>>>>>> b7ba80a49124 (Commit)
         clear_trace_file()
         set_trace_buffer_size(memory)
         enable_trace(trace_file)

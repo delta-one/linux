@@ -1554,10 +1554,13 @@ found:
 	if (WARN_ON(!tbl))
 		return;
 
+<<<<<<< HEAD
 #ifdef CONFIG_IOMMU_API
 	pe->table_group.ops = &spapr_tce_table_group_ops;
 	pe->table_group.pgsizes = SZ_4K;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	iommu_register_group(&pe->table_group, phb->hose->global_number,
 			pe->pe_number);
 	pnv_pci_link_table_and_group(phb->hose->node, 0, tbl, &pe->table_group);
@@ -1744,7 +1747,11 @@ static long pnv_pci_ioda2_setup_default_config(struct pnv_ioda_pe *pe)
 	 * DMA window can be larger than available memory, which will
 	 * cause errors later.
 	 */
+<<<<<<< HEAD
 	const u64 maxblock = 1UL << (PAGE_SHIFT + MAX_ORDER);
+=======
+	const u64 maxblock = 1UL << (PAGE_SHIFT + MAX_ORDER - 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * We create the default window as big as we can. The constraint is
@@ -1892,13 +1899,18 @@ static void pnv_ioda_setup_bus_dma(struct pnv_ioda_pe *pe, struct pci_bus *bus)
 	}
 }
 
+<<<<<<< HEAD
 static long pnv_ioda2_take_ownership(struct iommu_table_group *table_group)
+=======
+static void pnv_ioda2_take_ownership(struct iommu_table_group *table_group)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pnv_ioda_pe *pe = container_of(table_group, struct pnv_ioda_pe,
 						table_group);
 	/* Store @tbl as pnv_pci_ioda2_unset_window() resets it */
 	struct iommu_table *tbl = pe->table_group.tables[0];
 
+<<<<<<< HEAD
 	/*
 	 * iommu_ops transfers the ownership per a device and we mode
 	 * the group ownership with the first device in the group.
@@ -1906,6 +1918,8 @@ static long pnv_ioda2_take_ownership(struct iommu_table_group *table_group)
 	if (!tbl)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pnv_pci_ioda2_set_bypass(pe, false);
 	pnv_pci_ioda2_unset_window(&pe->table_group, 0);
 	if (pe->pbus)
@@ -1913,8 +1927,11 @@ static long pnv_ioda2_take_ownership(struct iommu_table_group *table_group)
 	else if (pe->pdev)
 		set_iommu_table_base(&pe->pdev->dev, NULL);
 	iommu_tce_table_put(tbl);
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void pnv_ioda2_release_ownership(struct iommu_table_group *table_group)
@@ -1922,9 +1939,12 @@ static void pnv_ioda2_release_ownership(struct iommu_table_group *table_group)
 	struct pnv_ioda_pe *pe = container_of(table_group, struct pnv_ioda_pe,
 						table_group);
 
+<<<<<<< HEAD
 	/* See the comment about iommu_ops above */
 	if (pe->table_group.tables[0])
 		return;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pnv_pci_ioda2_setup_default_config(pe);
 	if (pe->pbus)
 		pnv_ioda_setup_bus_dma(pe, pe->pbus);
@@ -2341,8 +2361,12 @@ static void pnv_ioda_setup_pe_res(struct pnv_ioda_pe *pe,
 	int index;
 	int64_t rc;
 
+<<<<<<< HEAD
 	if (!res || !res->flags || res->start > res->end ||
 	    res->flags & IORESOURCE_UNSET)
+=======
+	if (!res || !res->flags || res->start > res->end)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	if (res->flags & IORESOURCE_IO) {
@@ -2931,6 +2955,7 @@ static void pnv_pci_ioda_dma_bus_setup(struct pci_bus *bus)
 	}
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_IOMMU_API
 static struct iommu_group *pnv_pci_device_group(struct pci_controller *hose,
 						struct pci_dev *pdev)
@@ -2952,6 +2977,8 @@ static struct iommu_group *pnv_pci_device_group(struct pci_controller *hose,
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct pci_controller_ops pnv_pci_ioda_controller_ops = {
 	.dma_dev_setup		= pnv_pci_ioda_dma_dev_setup,
 	.dma_bus_setup		= pnv_pci_ioda_dma_bus_setup,
@@ -2962,9 +2989,12 @@ static const struct pci_controller_ops pnv_pci_ioda_controller_ops = {
 	.setup_bridge		= pnv_pci_fixup_bridge_resources,
 	.reset_secondary_bus	= pnv_pci_reset_secondary_bus,
 	.shutdown		= pnv_pci_ioda_shutdown,
+<<<<<<< HEAD
 #ifdef CONFIG_IOMMU_API
 	.device_group		= pnv_pci_device_group,
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct pci_controller_ops pnv_npu_ocapi_ioda_controller_ops = {

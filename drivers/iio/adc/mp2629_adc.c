@@ -57,8 +57,12 @@ static struct iio_map mp2629_adc_maps[] = {
 	MP2629_MAP(SYSTEM_VOLT, "system-volt"),
 	MP2629_MAP(INPUT_VOLT, "input-volt"),
 	MP2629_MAP(BATT_CURRENT, "batt-current"),
+<<<<<<< HEAD
 	MP2629_MAP(INPUT_CURRENT, "input-current"),
 	{ }
+=======
+	MP2629_MAP(INPUT_CURRENT, "input-current")
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int mp2629_read_raw(struct iio_dev *indio_dev,
@@ -75,7 +79,11 @@ static int mp2629_read_raw(struct iio_dev *indio_dev,
 		if (ret)
 			return ret;
 
+<<<<<<< HEAD
 		if (chan->channel == MP2629_INPUT_VOLT)
+=======
+		if (chan->address == MP2629_INPUT_VOLT)
+>>>>>>> b7ba80a49124 (Commit)
 			rval &= GENMASK(6, 0);
 		*val = rval;
 		return IIO_VAL_INT;

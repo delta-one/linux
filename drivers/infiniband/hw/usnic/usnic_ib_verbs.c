@@ -672,7 +672,11 @@ int usnic_ib_mmap(struct ib_ucontext *context,
 	usnic_dbg("\n");
 
 	us_ibdev = to_usdev(context->device);
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_IO);
+=======
+	vma->vm_flags |= VM_IO;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
 	vfid = vma->vm_pgoff;
 	usnic_dbg("Page Offset %lu PAGE_SHIFT %u VFID %u\n",

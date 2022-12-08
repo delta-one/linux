@@ -49,8 +49,11 @@ properties:
   reg:
     maxItems: 1
 
+<<<<<<< HEAD
   dma-coherent: true
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - clocks

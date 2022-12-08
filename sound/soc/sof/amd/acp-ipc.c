@@ -154,6 +154,7 @@ irqreturn_t acp_sof_ipc_irq_thread(int irq, void *context)
 				     offsetof(struct scratch_ipc_conf, sof_dsp_ack_write);
 	bool ipc_irq = false;
 	int dsp_msg, dsp_ack;
+<<<<<<< HEAD
 	unsigned int status;
 
 	if (sdev->first_boot && sdev->fw_state != SOF_FW_BOOT_COMPLETE) {
@@ -163,6 +164,10 @@ irqreturn_t acp_sof_ipc_irq_thread(int irq, void *context)
 					  true);
 			return IRQ_HANDLED;
 		}
+=======
+
+	if (sdev->first_boot && sdev->fw_state != SOF_FW_BOOT_COMPLETE) {
+>>>>>>> b7ba80a49124 (Commit)
 		snd_sof_ipc_msgs_rx(sdev);
 		acp_dsp_ipc_host_done(sdev);
 		return IRQ_HANDLED;
@@ -187,12 +192,15 @@ irqreturn_t acp_sof_ipc_irq_thread(int irq, void *context)
 		ipc_irq = true;
 	}
 
+<<<<<<< HEAD
 	acp_mailbox_read(sdev, sdev->debug_box.offset, &status, sizeof(u32));
 	if ((status & SOF_IPC_PANIC_MAGIC_MASK) == SOF_IPC_PANIC_MAGIC) {
 		snd_sof_dsp_panic(sdev, sdev->dsp_oops_offset, true);
 		return IRQ_HANDLED;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ipc_irq)
 		dev_dbg_ratelimited(sdev->dev, "nothing to do in IPC IRQ thread\n");
 
@@ -200,11 +208,16 @@ irqreturn_t acp_sof_ipc_irq_thread(int irq, void *context)
 }
 EXPORT_SYMBOL_NS(acp_sof_ipc_irq_thread, SND_SOC_SOF_AMD_COMMON);
 
+<<<<<<< HEAD
 int acp_sof_ipc_msg_data(struct snd_sof_dev *sdev, struct snd_sof_pcm_stream *sps,
+=======
+int acp_sof_ipc_msg_data(struct snd_sof_dev *sdev, struct snd_pcm_substream *substream,
+>>>>>>> b7ba80a49124 (Commit)
 			 void *p, size_t sz)
 {
 	unsigned int offset = sdev->dsp_box.offset;
 
+<<<<<<< HEAD
 	if (!sps || !sdev->stream_box.size) {
 		acp_mailbox_read(sdev, offset, p, sz);
 	} else {
@@ -216,11 +229,16 @@ int acp_sof_ipc_msg_data(struct snd_sof_dev *sdev, struct snd_sof_pcm_stream *sp
 
 		acp_mailbox_read(sdev, stream->posn_offset, p, sz);
 	}
+=======
+	if (!substream || !sdev->stream_box.size)
+		acp_mailbox_read(sdev, offset, p, sz);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 EXPORT_SYMBOL_NS(acp_sof_ipc_msg_data, SND_SOC_SOF_AMD_COMMON);
 
+<<<<<<< HEAD
 int acp_set_stream_data_offset(struct snd_sof_dev *sdev,
 			       struct snd_sof_pcm_stream *sps,
 			       size_t posn_offset)
@@ -242,6 +260,8 @@ int acp_set_stream_data_offset(struct snd_sof_dev *sdev,
 }
 EXPORT_SYMBOL_NS(acp_set_stream_data_offset, SND_SOC_SOF_AMD_COMMON);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int acp_sof_ipc_get_mailbox_offset(struct snd_sof_dev *sdev)
 {
 	const struct sof_amd_acp_desc *desc = get_chip_info(sdev->pdata);

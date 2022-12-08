@@ -7,7 +7,10 @@
  */
 
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/refcount.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* `bindgen` gets confused at certain things. */
 const gfp_t BINDINGS_GFP_KERNEL = GFP_KERNEL;

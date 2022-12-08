@@ -288,7 +288,11 @@ static void amd_mp2_clear_reg(struct amd_mp2_dev *privdata)
 static int amd_mp2_pci_init(struct amd_mp2_dev *privdata,
 			    struct pci_dev *pci_dev)
 {
+<<<<<<< HEAD
 	int irq_flag = 0, rc;
+=======
+	int rc;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pci_set_drvdata(pci_dev, privdata);
 
@@ -311,6 +315,7 @@ static int amd_mp2_pci_init(struct amd_mp2_dev *privdata,
 	if (rc)
 		goto err_dma_mask;
 
+<<<<<<< HEAD
 	/* request and enable interrupt */
 	writel(0, privdata->mmio + AMD_P2C_MSG_INTEN);
 	rc = pci_alloc_irq_vectors(pci_dev, 1, 1, PCI_IRQ_ALL_TYPES);
@@ -334,6 +339,19 @@ static int amd_mp2_pci_init(struct amd_mp2_dev *privdata,
 
 free_irq_vectors:
 	free_irq(privdata->dev_irq, privdata);
+=======
+	/* Set up intx irq */
+	writel(0, privdata->mmio + AMD_P2C_MSG_INTEN);
+	pci_intx(pci_dev, 1);
+	rc = devm_request_irq(&pci_dev->dev, pci_dev->irq, amd_mp2_irq_isr,
+			      IRQF_SHARED, dev_name(&pci_dev->dev), privdata);
+	if (rc)
+		pci_err(pci_dev, "Failure requesting irq %i: %d\n",
+			pci_dev->irq, rc);
+
+	return rc;
+
+>>>>>>> b7ba80a49124 (Commit)
 err_dma_mask:
 	pci_clear_master(pci_dev);
 err_pci_enable:
@@ -376,7 +394,11 @@ static void amd_mp2_pci_remove(struct pci_dev *pci_dev)
 	pm_runtime_forbid(&pci_dev->dev);
 	pm_runtime_get_noresume(&pci_dev->dev);
 
+<<<<<<< HEAD
 	free_irq(privdata->dev_irq, privdata);
+=======
+	pci_intx(pci_dev, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_clear_master(pci_dev);
 
 	amd_mp2_clear_reg(privdata);

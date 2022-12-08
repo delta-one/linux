@@ -1047,7 +1047,11 @@ xfs_file_fallocate(
 
 		iattr.ia_valid = ATTR_SIZE;
 		iattr.ia_size = new_size;
+<<<<<<< HEAD
 		error = xfs_vn_setattr_size(file_mnt_idmap(file),
+=======
+		error = xfs_vn_setattr_size(file_mnt_user_ns(file),
+>>>>>>> b7ba80a49124 (Commit)
 					    file_dentry(file), &iattr);
 		if (error)
 			goto out_unlock;
@@ -1171,8 +1175,12 @@ xfs_file_open(
 {
 	if (xfs_is_shutdown(XFS_M(inode->i_sb)))
 		return -EIO;
+<<<<<<< HEAD
 	file->f_mode |= FMODE_NOWAIT | FMODE_BUF_RASYNC | FMODE_BUF_WASYNC |
 			FMODE_DIO_PARALLEL_WRITE;
+=======
+	file->f_mode |= FMODE_NOWAIT | FMODE_BUF_RASYNC | FMODE_BUF_WASYNC;
+>>>>>>> b7ba80a49124 (Commit)
 	return generic_file_open(inode, file);
 }
 
@@ -1262,7 +1270,11 @@ xfs_file_llseek(
 }
 
 #ifdef CONFIG_FS_DAX
+<<<<<<< HEAD
 static inline vm_fault_t
+=======
+static int
+>>>>>>> b7ba80a49124 (Commit)
 xfs_dax_fault(
 	struct vm_fault		*vmf,
 	enum page_entry_size	pe_size,
@@ -1275,15 +1287,23 @@ xfs_dax_fault(
 				&xfs_read_iomap_ops);
 }
 #else
+<<<<<<< HEAD
 static inline vm_fault_t
+=======
+static int
+>>>>>>> b7ba80a49124 (Commit)
 xfs_dax_fault(
 	struct vm_fault		*vmf,
 	enum page_entry_size	pe_size,
 	bool			write_fault,
 	pfn_t			*pfn)
 {
+<<<<<<< HEAD
 	ASSERT(0);
 	return VM_FAULT_SIGBUS;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif
 
@@ -1326,7 +1346,11 @@ __xfs_filemap_fault(
 		if (write_fault) {
 			xfs_ilock(XFS_I(inode), XFS_MMAPLOCK_SHARED);
 			ret = iomap_page_mkwrite(vmf,
+<<<<<<< HEAD
 					&xfs_page_mkwrite_iomap_ops);
+=======
+					&xfs_buffered_write_iomap_ops);
+>>>>>>> b7ba80a49124 (Commit)
 			xfs_iunlock(XFS_I(inode), XFS_MMAPLOCK_SHARED);
 		} else {
 			ret = filemap_fault(vmf);
@@ -1430,7 +1454,11 @@ xfs_file_mmap(
 	file_accessed(file);
 	vma->vm_ops = &xfs_file_vm_ops;
 	if (IS_DAX(inode))
+<<<<<<< HEAD
 		vm_flags_set(vma, VM_HUGEPAGE);
+=======
+		vma->vm_flags |= VM_HUGEPAGE;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

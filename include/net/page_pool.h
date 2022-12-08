@@ -277,6 +277,7 @@ void page_pool_put_defragged_page(struct page_pool *pool, struct page *page,
 				  unsigned int dma_sync_size,
 				  bool allow_direct);
 
+<<<<<<< HEAD
 /* pp_frag_count represents the number of writers who can update the page
  * either by updating skb->data or via DMA mappings for the device.
  * We can't rely on the page refcnt for that as we don't know who might be
@@ -287,6 +288,8 @@ void page_pool_put_defragged_page(struct page_pool *pool, struct page *page,
  * refcnt is 1 or return it back to the memory allocator and destroy any
  * mappings we have.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void page_pool_fragment_page(struct page *page, long nr)
 {
 	atomic_long_set(&page->pp_frag_count, nr);
@@ -396,7 +399,11 @@ static inline void page_pool_nid_changed(struct page_pool *pool, int new_nid)
 static inline void page_pool_ring_lock(struct page_pool *pool)
 	__acquires(&pool->ring.producer_lock)
 {
+<<<<<<< HEAD
 	if (in_softirq())
+=======
+	if (in_serving_softirq())
+>>>>>>> b7ba80a49124 (Commit)
 		spin_lock(&pool->ring.producer_lock);
 	else
 		spin_lock_bh(&pool->ring.producer_lock);
@@ -405,7 +412,11 @@ static inline void page_pool_ring_lock(struct page_pool *pool)
 static inline void page_pool_ring_unlock(struct page_pool *pool)
 	__releases(&pool->ring.producer_lock)
 {
+<<<<<<< HEAD
 	if (in_softirq())
+=======
+	if (in_serving_softirq())
+>>>>>>> b7ba80a49124 (Commit)
 		spin_unlock(&pool->ring.producer_lock);
 	else
 		spin_unlock_bh(&pool->ring.producer_lock);

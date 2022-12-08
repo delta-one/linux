@@ -141,6 +141,7 @@ config IPQ_GCC_4019
 	  Say Y if you want to use peripheral devices such as UART, SPI,
 	  i2c, USB, SD/eMMC, etc.
 
+<<<<<<< HEAD
 config IPQ_GCC_5332
 	tristate "IPQ5332 Global Clock Controller"
 	depends on ARM64 || COMPILE_TEST
@@ -149,6 +150,8 @@ config IPQ_GCC_5332
 	  Say Y if you want to use peripheral devices such as UART, SPI,
 	  i2c, USB, SD/eMMC, etc.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config IPQ_GCC_6018
 	tristate "IPQ6018 Global Clock Controller"
 	help
@@ -204,6 +207,7 @@ config MSM_GCC_8916
 	  Say Y if you want to use devices such as UART, SPI i2c, USB,
 	  SD/eMMC, display, graphics, camera etc.
 
+<<<<<<< HEAD
 config MSM_GCC_8917
 	tristate "MSM8917/QM215 Global Clock Controller"
 	depends on ARM64 || COMPILE_TEST
@@ -214,6 +218,8 @@ config MSM_GCC_8917
 	  Say Y if you want to use devices such as UART, SPI i2c, USB,
 	  SD/eMMC, display, graphics, camera etc.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config MSM_GCC_8939
 	tristate "MSM8939 Global Clock Controller"
 	select QCOM_GDSC
@@ -419,6 +425,7 @@ config SC_DISPCC_7280
 	  Say Y if you want to support display devices and functionality such as
 	  splash screen.
 
+<<<<<<< HEAD
 config SC_DISPCC_8280XP
 	tristate "SC8280XP Display Clock Controller"
 	select SC_GCC_8280XP
@@ -437,6 +444,8 @@ config SA_GCC_8775P
 	  Say Y if you want to use peripheral devices such as UART, SPI,
 	  I2C, USB, UFS, SDCC, etc.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SC_GCC_7180
 	tristate "SC7180 Global Clock Controller"
 	select QCOM_GDSC
@@ -489,6 +498,7 @@ config SC_GPUCC_7280
 	  Say Y if you want to support graphics controller devices and
 	  functionality such as 3D graphics.
 
+<<<<<<< HEAD
 config SC_GPUCC_8280XP
 	tristate "SC8280XP Graphics Clock Controller"
 	select SC_GCC_8280XP
@@ -497,6 +507,8 @@ config SC_GPUCC_8280XP
 	  Say Y if you want to support graphics controller devices and
 	  functionality such as 3D graphics.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SC_LPASSCC_7280
 	tristate "SC7280 Low Power Audio Subsystem (LPASS) Clock Controller"
 	select SC_GCC_7280
@@ -596,6 +608,7 @@ config QCS_Q6SSTOP_404
 	  Say Y if you want to use the Q6SSTOP branch clocks of the WCSS clock
 	  controller to reset the Q6SSTOP subsystem.
 
+<<<<<<< HEAD
 config QDU_GCC_1000
 	tristate "QDU1000/QRU1000 Global Clock Controller"
 	select QCOM_GDSC
@@ -604,6 +617,8 @@ config QDU_GCC_1000
 	  QRU1000 devices. Say Y if you want to use peripheral
 	  devices such as UART, SPI, I2C, USB, SD, PCIe, etc.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SDM_GCC_845
 	tristate "SDM845/SDM670 Global Clock Controller"
 	select QCOM_GDSC
@@ -662,6 +677,7 @@ config SDX_GCC_65
 	  Say Y if you want to use peripheral devices such as UART,
 	  SPI, I2C, USB, SD/UFS, PCIe etc.
 
+<<<<<<< HEAD
 config SM_CAMCC_6350
 	tristate "SM6350 Camera Clock Controller"
 	select SM_GCC_6350
@@ -669,6 +685,8 @@ config SM_CAMCC_6350
 	  Support for the camera clock controller on SM6350 devices.
 	  Say Y if you want to support camera devices and camera functionality.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SM_CAMCC_8250
 	tristate "SM8250 Camera Clock Controller"
 	select SM_GCC_8250
@@ -683,6 +701,7 @@ config SM_CAMCC_8450
 	  Support for the camera clock controller on SM8450 devices.
 	  Say Y if you want to support camera devices and camera functionality.
 
+<<<<<<< HEAD
 config SM_DISPCC_6115
 	tristate "SM6115 Display Clock Controller"
 	depends on SM_GCC_6115
@@ -692,6 +711,8 @@ config SM_DISPCC_6115
 	  Say Y if you want to support display devices and functionality such as
 	  splash screen
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SM_DISPCC_6125
 	tristate "SM6125 Display Clock Controller"
 	depends on SM_GCC_6125
@@ -719,6 +740,7 @@ config SM_DISPCC_6350
 	  Say Y if you want to support display devices and functionality such as
 	  splash screen.
 
+<<<<<<< HEAD
 config SM_DISPCC_6375
 	tristate "SM6375 Display Clock Controller"
 	depends on SM_GCC_6375
@@ -746,6 +768,8 @@ config SM_DISPCC_8550
 	  Say Y if you want to support display devices and functionality such as
 	  splash screen.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SM_GCC_6115
 	tristate "SM6115 and SM4250 Global Clock Controller"
 	select QCOM_GDSC
@@ -769,6 +793,7 @@ config SM_GCC_6350
 	  Say Y if you want to use peripheral devices such as UART,
 	  SPI, I2C, USB, SD/UFS, PCIe etc.
 
+<<<<<<< HEAD
 config SM_GCC_6375
 	tristate "SM6375 Global Clock Controller"
 	select QCOM_GDSC
@@ -785,6 +810,8 @@ config SM_GCC_7150
 	  Say Y if you want to use peripheral devices such as UART,
 	  SPI, I2C, USB, SD/UFS, PCIe etc.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SM_GCC_8150
 	tristate "SM8150 Global Clock Controller"
 	help
@@ -816,6 +843,7 @@ config SM_GCC_8450
 	  Say Y if you want to use peripheral devices such as UART,
 	  SPI, I2C, USB, SD/UFS, PCIe etc.
 
+<<<<<<< HEAD
 config SM_GCC_8550
 	tristate "SM8550 Global Clock Controller"
 	select QCOM_GDSC
@@ -851,6 +879,8 @@ config SM_GPUCC_6375
 	  Say Y if you want to support graphics controller devices and
 	  functionality such as 3D graphics.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SM_GPUCC_6350
 	tristate "SM6350 Graphics Clock Controller"
 	select SM_GCC_6350
@@ -883,6 +913,7 @@ config SM_GPUCC_8350
 	  Say Y if you want to support graphics controller devices and
 	  functionality such as 3D graphics.
 
+<<<<<<< HEAD
 config SM_TCSRCC_8550
 	tristate "SM8550 TCSR Clock Controller"
 	select QCOM_GDSC
@@ -890,6 +921,8 @@ config SM_TCSRCC_8550
 	  Support for the TCSR clock controller on SM8550 devices.
 	  Say Y if you want to use peripheral devices such as SD/UFS.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SM_VIDEOCC_8150
 	tristate "SM8150 Video Clock Controller"
 	select SM_GCC_8150

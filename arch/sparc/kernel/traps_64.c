@@ -897,7 +897,11 @@ void __init cheetah_ecache_flush_init(void)
 
 	/* Now allocate error trap reporting scoreboard. */
 	sz = NR_CPUS * (2 * sizeof(struct cheetah_err_info));
+<<<<<<< HEAD
 	for (order = 0; order <= MAX_ORDER; order++) {
+=======
+	for (order = 0; order < MAX_ORDER; order++) {
+>>>>>>> b7ba80a49124 (Commit)
 		if ((PAGE_SIZE << order) >= sz)
 			break;
 	}

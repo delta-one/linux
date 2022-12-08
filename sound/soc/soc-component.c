@@ -256,6 +256,7 @@ int snd_soc_component_set_jack(struct snd_soc_component *component,
 }
 EXPORT_SYMBOL_GPL(snd_soc_component_set_jack);
 
+<<<<<<< HEAD
 /**
  * snd_soc_component_get_jack_type
  * @component: COMPONENTs
@@ -276,6 +277,8 @@ int snd_soc_component_get_jack_type(
 }
 EXPORT_SYMBOL_GPL(snd_soc_component_get_jack_type);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int snd_soc_component_module_get(struct snd_soc_component *component,
 				 void *mark, int upon_open)
 {

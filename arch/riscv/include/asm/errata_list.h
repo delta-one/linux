@@ -6,9 +6,12 @@
 #define ASM_ERRATA_LIST_H
 
 #include <asm/alternative.h>
+<<<<<<< HEAD
 #include <asm/csr.h>
 #include <asm/insn-def.h>
 #include <asm/hwcap.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/vendorid_list.h>
 
 #ifdef CONFIG_ERRATA_SIFIVE
@@ -20,10 +23,20 @@
 #ifdef CONFIG_ERRATA_THEAD
 #define	ERRATA_THEAD_PBMT 0
 #define	ERRATA_THEAD_CMO 1
+<<<<<<< HEAD
 #define	ERRATA_THEAD_PMU 2
 #define	ERRATA_THEAD_NUMBER 3
 #endif
 
+=======
+#define	ERRATA_THEAD_NUMBER 2
+#endif
+
+#define	CPUFEATURE_SVPBMT 0
+#define	CPUFEATURE_ZICBOM 1
+#define	CPUFEATURE_NUMBER 2
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef __ASSEMBLY__
 
 #define ALT_INSN_FAULT(x)						\
@@ -53,7 +66,11 @@ asm(ALTERNATIVE("sfence.vma %0", "sfence.vma", SIFIVE_VENDOR_ID,	\
 #define ALT_SVPBMT(_val, prot)						\
 asm(ALTERNATIVE_2("li %0, 0\t\nnop",					\
 		  "li %0, %1\t\nslli %0,%0,%3", 0,			\
+<<<<<<< HEAD
 			RISCV_ISA_EXT_SVPBMT, CONFIG_RISCV_ISA_SVPBMT,	\
+=======
+			CPUFEATURE_SVPBMT, CONFIG_RISCV_ISA_SVPBMT,	\
+>>>>>>> b7ba80a49124 (Commit)
 		  "li %0, %2\t\nslli %0,%0,%4", THEAD_VENDOR_ID,	\
 			ERRATA_THEAD_PBMT, CONFIG_ERRATA_THEAD_PBMT)	\
 		: "=r"(_val)						\
@@ -123,11 +140,19 @@ asm volatile(ALTERNATIVE_2(						\
 	"mv a0, %1\n\t"							\
 	"j 2f\n\t"							\
 	"3:\n\t"							\
+<<<<<<< HEAD
 	CBO_##_op(a0)							\
 	"add a0, a0, %0\n\t"						\
 	"2:\n\t"							\
 	"bltu a0, %2, 3b\n\t"						\
 	"nop", 0, RISCV_ISA_EXT_ZICBOM, CONFIG_RISCV_ISA_ZICBOM,	\
+=======
+	"cbo." __stringify(_op) " (a0)\n\t"				\
+	"add a0, a0, %0\n\t"						\
+	"2:\n\t"							\
+	"bltu a0, %2, 3b\n\t"						\
+	"nop", 0, CPUFEATURE_ZICBOM, CONFIG_RISCV_ISA_ZICBOM,		\
+>>>>>>> b7ba80a49124 (Commit)
 	"mv a0, %1\n\t"							\
 	"j 2f\n\t"							\
 	"3:\n\t"							\
@@ -142,6 +167,7 @@ asm volatile(ALTERNATIVE_2(						\
 	    "r"((unsigned long)(_start) + (_size))			\
 	: "a0")
 
+<<<<<<< HEAD
 #define THEAD_C9XX_RV_IRQ_PMU			17
 #define THEAD_C9XX_CSR_SCOUNTEROF		0x5c5
 
@@ -154,6 +180,8 @@ asm volatile(ALTERNATIVE(						\
 	: "=r" (__ovl) :						\
 	: "memory")
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __ASSEMBLY__ */
 
 #endif

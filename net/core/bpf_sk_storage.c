@@ -40,7 +40,11 @@ static int bpf_sk_storage_del(struct sock *sk, struct bpf_map *map)
 	if (!sdata)
 		return -ENOENT;
 
+<<<<<<< HEAD
 	bpf_selem_unlink(SELEM(sdata), false);
+=======
+	bpf_selem_unlink(SELEM(sdata), true);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -48,7 +52,14 @@ static int bpf_sk_storage_del(struct sock *sk, struct bpf_map *map)
 /* Called by __sk_destruct() & bpf_sk_storage_clone() */
 void bpf_sk_storage_free(struct sock *sk)
 {
+<<<<<<< HEAD
 	struct bpf_local_storage *sk_storage;
+=======
+	struct bpf_local_storage_elem *selem;
+	struct bpf_local_storage *sk_storage;
+	bool free_sk_storage = false;
+	struct hlist_node *n;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rcu_read_lock();
 	sk_storage = rcu_dereference(sk->sk_bpf_storage);
@@ -57,18 +68,63 @@ void bpf_sk_storage_free(struct sock *sk)
 		return;
 	}
 
+<<<<<<< HEAD
 	bpf_local_storage_destroy(sk_storage);
 	rcu_read_unlock();
+=======
+	/* Netiher the bpf_prog nor the bpf-map's syscall
+	 * could be modifying the sk_storage->list now.
+	 * Thus, no elem can be added-to or deleted-from the
+	 * sk_storage->list by the bpf_prog or by the bpf-map's syscall.
+	 *
+	 * It is racing with bpf_local_storage_map_free() alone
+	 * when unlinking elem from the sk_storage->list and
+	 * the map's bucket->list.
+	 */
+	raw_spin_lock_bh(&sk_storage->lock);
+	hlist_for_each_entry_safe(selem, n, &sk_storage->list, snode) {
+		/* Always unlink from map before unlinking from
+		 * sk_storage.
+		 */
+		bpf_selem_unlink_map(selem);
+		free_sk_storage = bpf_selem_unlink_storage_nolock(
+			sk_storage, selem, true, false);
+	}
+	raw_spin_unlock_bh(&sk_storage->lock);
+	rcu_read_unlock();
+
+	if (free_sk_storage)
+		kfree_rcu(sk_storage, rcu);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void bpf_sk_storage_map_free(struct bpf_map *map)
 {
+<<<<<<< HEAD
 	bpf_local_storage_map_free(map, &sk_cache, NULL);
+=======
+	struct bpf_local_storage_map *smap;
+
+	smap = (struct bpf_local_storage_map *)map;
+	bpf_local_storage_cache_idx_free(&sk_cache, smap->cache_idx);
+	bpf_local_storage_map_free(smap, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct bpf_map *bpf_sk_storage_map_alloc(union bpf_attr *attr)
 {
+<<<<<<< HEAD
 	return bpf_local_storage_map_alloc(attr, &sk_cache);
+=======
+	struct bpf_local_storage_map *smap;
+
+	smap = bpf_local_storage_map_alloc(attr);
+	if (IS_ERR(smap))
+		return ERR_CAST(smap);
+
+	smap->cache_idx = bpf_local_storage_cache_idx_get(&sk_cache);
+	return &smap->map;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int notsupp_get_next_key(struct bpf_map *map, void *key,
@@ -94,8 +150,13 @@ static void *bpf_fd_sk_storage_lookup_elem(struct bpf_map *map, void *key)
 	return ERR_PTR(err);
 }
 
+<<<<<<< HEAD
 static long bpf_fd_sk_storage_update_elem(struct bpf_map *map, void *key,
 					  void *value, u64 map_flags)
+=======
+static int bpf_fd_sk_storage_update_elem(struct bpf_map *map, void *key,
+					 void *value, u64 map_flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_local_storage_data *sdata;
 	struct socket *sock;
@@ -114,7 +175,11 @@ static long bpf_fd_sk_storage_update_elem(struct bpf_map *map, void *key,
 	return err;
 }
 
+<<<<<<< HEAD
 static long bpf_fd_sk_storage_delete_elem(struct bpf_map *map, void *key)
+=======
+static int bpf_fd_sk_storage_delete_elem(struct bpf_map *map, void *key)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct socket *sock;
 	int fd, err;
@@ -141,7 +206,11 @@ bpf_sk_storage_clone_elem(struct sock *newsk,
 	if (!copy_selem)
 		return NULL;
 
+<<<<<<< HEAD
 	if (btf_record_has_field(smap->map.record, BPF_SPIN_LOCK))
+=======
+	if (map_value_has_spin_lock(&smap->map))
+>>>>>>> b7ba80a49124 (Commit)
 		copy_map_value_locked(&smap->map, SDATA(copy_selem)->data,
 				      SDATA(selem)->data, true);
 	else
@@ -197,7 +266,11 @@ int bpf_sk_storage_clone(const struct sock *sk, struct sock *newsk)
 		} else {
 			ret = bpf_local_storage_alloc(newsk, smap, copy_selem, GFP_ATOMIC);
 			if (ret) {
+<<<<<<< HEAD
 				bpf_selem_free(copy_selem, smap, true);
+=======
+				kfree(copy_selem);
+>>>>>>> b7ba80a49124 (Commit)
 				atomic_sub(smap->elem_size,
 					   &newsk->sk_omem_alloc);
 				bpf_map_put(map);
@@ -304,6 +377,10 @@ bpf_sk_storage_ptr(void *owner)
 	return &sk->sk_bpf_storage;
 }
 
+<<<<<<< HEAD
+=======
+BTF_ID_LIST_SINGLE(sk_storage_map_btf_ids, struct, bpf_local_storage_map)
+>>>>>>> b7ba80a49124 (Commit)
 const struct bpf_map_ops sk_storage_map_ops = {
 	.map_meta_equal = bpf_map_meta_equal,
 	.map_alloc_check = bpf_local_storage_map_alloc_check,
@@ -314,11 +391,18 @@ const struct bpf_map_ops sk_storage_map_ops = {
 	.map_update_elem = bpf_fd_sk_storage_update_elem,
 	.map_delete_elem = bpf_fd_sk_storage_delete_elem,
 	.map_check_btf = bpf_local_storage_map_check_btf,
+<<<<<<< HEAD
 	.map_btf_id = &bpf_local_storage_map_btf_id[0],
 	.map_local_storage_charge = bpf_sk_storage_charge,
 	.map_local_storage_uncharge = bpf_sk_storage_uncharge,
 	.map_owner_storage_ptr = bpf_sk_storage_ptr,
 	.map_mem_usage = bpf_local_storage_map_mem_usage,
+=======
+	.map_btf_id = &sk_storage_map_btf_ids[0],
+	.map_local_storage_charge = bpf_sk_storage_charge,
+	.map_local_storage_uncharge = bpf_sk_storage_uncharge,
+	.map_owner_storage_ptr = bpf_sk_storage_ptr,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 const struct bpf_func_proto bpf_sk_storage_get_proto = {
@@ -560,7 +644,11 @@ static int diag_get(struct bpf_local_storage_data *sdata, struct sk_buff *skb)
 	if (!nla_value)
 		goto errout;
 
+<<<<<<< HEAD
 	if (btf_record_has_field(smap->map.record, BPF_SPIN_LOCK))
+=======
+	if (map_value_has_spin_lock(&smap->map))
+>>>>>>> b7ba80a49124 (Commit)
 		copy_map_value_locked(&smap->map, nla_data(nla_value),
 				      sdata->data, true);
 	else

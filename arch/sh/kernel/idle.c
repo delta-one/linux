@@ -4,7 +4,10 @@
  *
  *  Copyright (C) 2002 - 2009  Paul Mundt
  */
+<<<<<<< HEAD
 #include <linux/cpu.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/mm.h>
@@ -26,11 +29,18 @@ void default_idle(void)
 	raw_local_irq_enable();
 	/* Isn't this racy ? */
 	cpu_sleep();
+<<<<<<< HEAD
 	raw_local_irq_disable();
 	clear_bl_bit();
 }
 
 void __noreturn arch_cpu_idle_dead(void)
+=======
+	clear_bl_bit();
+}
+
+void arch_cpu_idle_dead(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	play_dead();
 }

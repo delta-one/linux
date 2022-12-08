@@ -3,7 +3,11 @@
  * Microchip / Atmel ECC (I2C) driver.
  *
  * Copyright (c) 2017, Microchip Technology Inc.
+<<<<<<< HEAD
  * Author: Tudor Ambarus
+=======
+ * Author: Tudor Ambarus <tudor.ambarus@microchip.com>
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/delay.h>
@@ -311,12 +315,21 @@ static struct kpp_alg atmel_ecdh_nist_p256 = {
 	},
 };
 
+<<<<<<< HEAD
 static int atmel_ecc_probe(struct i2c_client *client)
+=======
+static int atmel_ecc_probe(struct i2c_client *client,
+			   const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct atmel_i2c_client_priv *i2c_priv;
 	int ret;
 
+<<<<<<< HEAD
 	ret = atmel_i2c_probe(client);
+=======
+	ret = atmel_i2c_probe(client, id);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -389,7 +402,11 @@ static struct i2c_driver atmel_ecc_driver = {
 		.name	= "atmel-ecc",
 		.of_match_table = of_match_ptr(atmel_ecc_dt_ids),
 	},
+<<<<<<< HEAD
 	.probe_new	= atmel_ecc_probe,
+=======
+	.probe		= atmel_ecc_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= atmel_ecc_remove,
 	.id_table	= atmel_ecc_id,
 };
@@ -410,6 +427,10 @@ static void __exit atmel_ecc_exit(void)
 module_init(atmel_ecc_init);
 module_exit(atmel_ecc_exit);
 
+<<<<<<< HEAD
 MODULE_AUTHOR("Tudor Ambarus");
+=======
+MODULE_AUTHOR("Tudor Ambarus <tudor.ambarus@microchip.com>");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_DESCRIPTION("Microchip / Atmel ECC (I2C) driver");
 MODULE_LICENSE("GPL v2");

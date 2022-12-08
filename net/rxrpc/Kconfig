@@ -36,6 +36,7 @@ config AF_RXRPC_INJECT_LOSS
 	  Say Y here to inject packet loss by discarding some received and some
 	  transmitted packets.
 
+<<<<<<< HEAD
 config AF_RXRPC_INJECT_RX_DELAY
 	bool "Inject delay into packet reception"
 	depends on SYSCTL
@@ -45,6 +46,8 @@ config AF_RXRPC_INJECT_RX_DELAY
 	  /proc/sys/net/rxrpc/rxrpc_inject_rx_delay, setting a number of
 	  milliseconds up to 0.5s (note that the granularity is actually in
 	  jiffies).
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 config AF_RXRPC_DEBUG
 	bool "RxRPC dynamic debugging"
@@ -67,6 +70,7 @@ config RXKAD
 
 	  See Documentation/networking/rxrpc.rst.
 
+<<<<<<< HEAD
 config RXPERF
 	tristate "RxRPC test service"
 	help
@@ -74,4 +78,6 @@ config RXPERF
 	  incoming calls from the rxperf program (an example of which can be
 	  found in OpenAFS).
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endif

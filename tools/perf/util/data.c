@@ -132,7 +132,10 @@ int perf_data__open_dir(struct perf_data *data)
 		file->size = st.st_size;
 	}
 
+<<<<<<< HEAD
 	closedir(dir);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!files)
 		return -EINVAL;
 
@@ -141,7 +144,10 @@ int perf_data__open_dir(struct perf_data *data)
 	return 0;
 
 out_err:
+<<<<<<< HEAD
 	closedir(dir);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	close_dir(files, nr);
 	return ret;
 }

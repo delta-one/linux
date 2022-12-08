@@ -26,4 +26,7 @@ LEDs
    leds-lp55xx
    leds-mlxcpld
    leds-sc27xx
+<<<<<<< HEAD
    leds-qcom-lpg
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -15,9 +15,12 @@
 #ifndef MAP_32BIT
 #define MAP_32BIT 0
 #endif
+<<<<<<< HEAD
 #ifndef MAP_ABOVE4G
 #define MAP_ABOVE4G 0
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef MAP_HUGE_2MB
 #define MAP_HUGE_2MB 0
 #endif
@@ -53,7 +56,10 @@
 		| MAP_STACK \
 		| MAP_HUGETLB \
 		| MAP_32BIT \
+<<<<<<< HEAD
 		| MAP_ABOVE4G \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		| MAP_HUGE_2MB \
 		| MAP_HUGE_1GB)
 
@@ -160,6 +166,7 @@ calc_vm_flag_bits(unsigned long flags)
 }
 
 unsigned long vm_commit_limit(void);
+<<<<<<< HEAD
 
 /*
  * Denies creating a writable executable mapping or gaining executable permissions.
@@ -194,4 +201,6 @@ static inline bool map_deny_write_exec(struct vm_area_struct *vma,  unsigned lon
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _LINUX_MMAN_H */

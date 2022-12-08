@@ -105,7 +105,10 @@ static int fdb_fill_info(struct sk_buff *skb, const struct net_bridge *br,
 	struct nda_cacheinfo ci;
 	struct nlmsghdr *nlh;
 	struct ndmsg *ndm;
+<<<<<<< HEAD
 	u32 ext_flags = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	nlh = nlmsg_put(skb, portid, seq, type, sizeof(*ndm), flags);
 	if (nlh == NULL)
@@ -126,16 +129,22 @@ static int fdb_fill_info(struct sk_buff *skb, const struct net_bridge *br,
 		ndm->ndm_flags |= NTF_EXT_LEARNED;
 	if (test_bit(BR_FDB_STICKY, &fdb->flags))
 		ndm->ndm_flags |= NTF_STICKY;
+<<<<<<< HEAD
 	if (test_bit(BR_FDB_LOCKED, &fdb->flags))
 		ext_flags |= NTF_EXT_LOCKED;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (nla_put(skb, NDA_LLADDR, ETH_ALEN, &fdb->key.addr))
 		goto nla_put_failure;
 	if (nla_put_u32(skb, NDA_MASTER, br->dev->ifindex))
 		goto nla_put_failure;
+<<<<<<< HEAD
 	if (nla_put_u32(skb, NDA_FLAGS_EXT, ext_flags))
 		goto nla_put_failure;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ci.ndm_used	 = jiffies_to_clock_t(now - fdb->used);
 	ci.ndm_confirmed = 0;
 	ci.ndm_updated	 = jiffies_to_clock_t(now - fdb->updated);
@@ -177,7 +186,10 @@ static inline size_t fdb_nlmsg_size(void)
 	return NLMSG_ALIGN(sizeof(struct ndmsg))
 		+ nla_total_size(ETH_ALEN) /* NDA_LLADDR */
 		+ nla_total_size(sizeof(u32)) /* NDA_MASTER */
+<<<<<<< HEAD
 		+ nla_total_size(sizeof(u32)) /* NDA_FLAGS_EXT */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		+ nla_total_size(sizeof(u16)) /* NDA_VLAN */
 		+ nla_total_size(sizeof(struct nda_cacheinfo))
 		+ nla_total_size(0) /* NDA_FDB_EXT_ATTRS */
@@ -886,11 +898,14 @@ void br_fdb_update(struct net_bridge *br, struct net_bridge_port *source,
 						      &fdb->flags)))
 					clear_bit(BR_FDB_ADDED_BY_EXT_LEARN,
 						  &fdb->flags);
+<<<<<<< HEAD
 				/* Clear locked flag when roaming to an
 				 * unlocked port.
 				 */
 				if (unlikely(test_bit(BR_FDB_LOCKED, &fdb->flags)))
 					clear_bit(BR_FDB_LOCKED, &fdb->flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			}
 
 			if (unlikely(test_bit(BR_FDB_ADDED_BY_USER, &flags)))
@@ -1094,9 +1109,12 @@ static int fdb_add_entry(struct net_bridge *br, struct net_bridge_port *source,
 		modified = true;
 	}
 
+<<<<<<< HEAD
 	if (test_and_clear_bit(BR_FDB_LOCKED, &fdb->flags))
 		modified = true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (fdb_handle_notify(fdb, notify))
 		modified = true;
 
@@ -1139,7 +1157,11 @@ static int __br_fdb_add(struct ndmsg *ndm, struct net_bridge *br,
 					   "FDB entry towards bridge must be permanent");
 			return -EINVAL;
 		}
+<<<<<<< HEAD
 		err = br_fdb_external_learn_add(br, p, addr, vid, false, true);
+=======
+		err = br_fdb_external_learn_add(br, p, addr, vid, true);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		spin_lock_bh(&br->hash_lock);
 		err = fdb_add_entry(br, p, addr, ndm, nlh_flags, vid, nfea_tb);
@@ -1165,7 +1187,10 @@ int br_fdb_add(struct ndmsg *ndm, struct nlattr *tb[],
 	struct net_bridge_port *p = NULL;
 	struct net_bridge_vlan *v;
 	struct net_bridge *br = NULL;
+<<<<<<< HEAD
 	u32 ext_flags = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err = 0;
 
 	trace_br_fdb_add(ndm, dev, addr, vid, nlh_flags);
@@ -1194,6 +1219,7 @@ int br_fdb_add(struct ndmsg *ndm, struct nlattr *tb[],
 		vg = nbp_vlan_group(p);
 	}
 
+<<<<<<< HEAD
 	if (tb[NDA_FLAGS_EXT])
 		ext_flags = nla_get_u32(tb[NDA_FLAGS_EXT]);
 
@@ -1202,6 +1228,8 @@ int br_fdb_add(struct ndmsg *ndm, struct nlattr *tb[],
 		return -EINVAL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (tb[NDA_FDB_EXT_ATTRS]) {
 		attr = tb[NDA_FDB_EXT_ATTRS];
 		err = nla_parse_nested(nfea_tb, NFEA_MAX, attr,
@@ -1377,7 +1405,11 @@ void br_fdb_unsync_static(struct net_bridge *br, struct net_bridge_port *p)
 }
 
 int br_fdb_external_learn_add(struct net_bridge *br, struct net_bridge_port *p,
+<<<<<<< HEAD
 			      const unsigned char *addr, u16 vid, bool locked,
+=======
+			      const unsigned char *addr, u16 vid,
+>>>>>>> b7ba80a49124 (Commit)
 			      bool swdev_notify)
 {
 	struct net_bridge_fdb_entry *fdb;
@@ -1386,9 +1418,12 @@ int br_fdb_external_learn_add(struct net_bridge *br, struct net_bridge_port *p,
 
 	trace_br_fdb_external_learn_add(br, p, addr, vid);
 
+<<<<<<< HEAD
 	if (locked && (!p || !(p->flags & BR_PORT_MAB)))
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_bh(&br->hash_lock);
 
 	fdb = br_fdb_find(br, addr, vid);
@@ -1401,9 +1436,12 @@ int br_fdb_external_learn_add(struct net_bridge *br, struct net_bridge_port *p,
 		if (!p)
 			flags |= BIT(BR_FDB_LOCAL);
 
+<<<<<<< HEAD
 		if (locked)
 			flags |= BIT(BR_FDB_LOCKED);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		fdb = fdb_create(br, p, addr, vid, flags);
 		if (!fdb) {
 			err = -ENOMEM;
@@ -1411,6 +1449,7 @@ int br_fdb_external_learn_add(struct net_bridge *br, struct net_bridge_port *p,
 		}
 		fdb_notify(br, fdb, RTM_NEWNEIGH, swdev_notify);
 	} else {
+<<<<<<< HEAD
 		if (locked &&
 		    (!test_bit(BR_FDB_LOCKED, &fdb->flags) ||
 		     READ_ONCE(fdb->dst) != p)) {
@@ -1418,6 +1457,8 @@ int br_fdb_external_learn_add(struct net_bridge *br, struct net_bridge_port *p,
 			goto err_unlock;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		fdb->updated = jiffies;
 
 		if (READ_ONCE(fdb->dst) != p) {
@@ -1434,11 +1475,14 @@ int br_fdb_external_learn_add(struct net_bridge *br, struct net_bridge_port *p,
 			modified = true;
 		}
 
+<<<<<<< HEAD
 		if (locked != test_bit(BR_FDB_LOCKED, &fdb->flags)) {
 			change_bit(BR_FDB_LOCKED, &fdb->flags);
 			modified = true;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (swdev_notify)
 			set_bit(BR_FDB_ADDED_BY_USER, &fdb->flags);
 

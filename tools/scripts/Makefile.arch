@@ -5,7 +5,11 @@ HOSTARCH := $(shell uname -m | sed -e s/i.86/x86/ -e s/x86_64/x86/ \
                                   -e s/s390x/s390/ -e s/parisc64/parisc/ \
                                   -e s/ppc.*/powerpc/ -e s/mips.*/mips/ \
                                   -e s/sh[234].*/sh/ -e s/aarch64.*/arm64/ \
+<<<<<<< HEAD
                                   -e s/riscv.*/riscv/ -e s/loongarch.*/loongarch/)
+=======
+                                  -e s/riscv.*/riscv/)
+>>>>>>> b7ba80a49124 (Commit)
 
 ifndef ARCH
 ARCH := $(HOSTARCH)
@@ -29,6 +33,7 @@ ifeq ($(ARCH),sparc64)
        SRCARCH := sparc
 endif
 
+<<<<<<< HEAD
 # Additional ARCH settings for loongarch
 ifeq ($(ARCH),loongarch32)
        SRCARCH := loongarch
@@ -36,6 +41,11 @@ endif
 
 ifeq ($(ARCH),loongarch64)
        SRCARCH := loongarch
+=======
+# Additional ARCH settings for sh
+ifeq ($(ARCH),sh64)
+       SRCARCH := sh
+>>>>>>> b7ba80a49124 (Commit)
 endif
 
 LP64 := $(shell echo __LP64__ | ${CC} ${CFLAGS} -E -x c - | tail -n 1)

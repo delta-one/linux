@@ -5,10 +5,13 @@
  * Copyright (C) 2021 Renesas Electronics Corp.
  */
 
+<<<<<<< HEAD
 &eth_serdes {
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &i2c4 {
 	eeprom@52 {
 		compatible = "rohm,br24g01", "atmel,24c01";
@@ -17,6 +20,7 @@
 		pagesize = <8>;
 	};
 };
+<<<<<<< HEAD
 
 &pfc {
 	tsn0_pins: tsn0 {
@@ -103,3 +107,5 @@
 		};
 	};
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

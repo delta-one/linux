@@ -537,9 +537,15 @@ static int mlx90614_probe_num_ir_sensors(struct i2c_client *client)
 	return (ret & MLX90614_CONFIG_DUAL_MASK) ? 1 : 0;
 }
 
+<<<<<<< HEAD
 static int mlx90614_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int mlx90614_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct iio_dev *indio_dev;
 	struct mlx90614_data *data;
 	int ret;
@@ -675,7 +681,11 @@ static struct i2c_driver mlx90614_driver = {
 		.of_match_table = mlx90614_of_match,
 		.pm	= pm_ptr(&mlx90614_pm_ops),
 	},
+<<<<<<< HEAD
 	.probe_new = mlx90614_probe,
+=======
+	.probe = mlx90614_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = mlx90614_remove,
 	.id_table = mlx90614_id,
 };

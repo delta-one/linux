@@ -39,7 +39,10 @@ enum idh_request {
 
 	IDH_LOG_VF_ERROR       = 200,
 	IDH_READY_TO_RESET 	= 201,
+<<<<<<< HEAD
 	IDH_RAS_POISON  = 202,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum idh_event {

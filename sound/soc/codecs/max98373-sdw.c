@@ -10,7 +10,10 @@
 #include <linux/slab.h>
 #include <sound/pcm.h>
 #include <sound/pcm_params.h>
+<<<<<<< HEAD
 #include <sound/sdw.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <sound/soc.h>
 #include <sound/tlv.h>
 #include <linux/of.h>
@@ -534,8 +537,15 @@ static int max98373_sdw_dai_hw_params(struct snd_pcm_substream *substream,
 	struct snd_soc_component *component = dai->component;
 	struct max98373_priv *max98373 =
 		snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
 	struct sdw_stream_config stream_config = {0};
 	struct sdw_port_config port_config = {0};
+=======
+
+	struct sdw_stream_config stream_config;
+	struct sdw_port_config port_config;
+	enum sdw_data_direction direction;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sdw_stream_data *stream;
 	int ret, chan_sz, sampling_rate;
 
@@ -547,6 +557,7 @@ static int max98373_sdw_dai_hw_params(struct snd_pcm_substream *substream,
 	if (!max98373->slave)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	snd_sdw_params_to_config(substream, params, &stream_config, &port_config);
 
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
@@ -561,6 +572,30 @@ static int max98373_sdw_dai_hw_params(struct snd_pcm_substream *substream,
 
 		/* only IV are supported by capture */
 		stream_config.ch_count = 2;
+=======
+	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+		direction = SDW_DATA_DIR_RX;
+		port_config.num = 1;
+	} else {
+		direction = SDW_DATA_DIR_TX;
+		port_config.num = 3;
+	}
+
+	stream_config.frame_rate = params_rate(params);
+	stream_config.bps = snd_pcm_format_width(params_format(params));
+	stream_config.direction = direction;
+
+	if (max98373->slot && direction == SDW_DATA_DIR_RX) {
+		stream_config.ch_count = max98373->slot;
+		port_config.ch_mask = max98373->rx_mask;
+	} else {
+		/* only IV are supported by capture */
+		if (direction == SDW_DATA_DIR_TX)
+			stream_config.ch_count = 2;
+		else
+			stream_config.ch_count = params_channels(params);
+
+>>>>>>> b7ba80a49124 (Commit)
 		port_config.ch_mask = GENMASK((int)stream_config.ch_count - 1, 0);
 	}
 
@@ -689,7 +724,14 @@ static int max98373_set_sdw_stream(struct snd_soc_dai *dai,
 	stream->sdw_stream = sdw_stream;
 
 	/* Use tx_mask or rx_mask to configure stream tag and set dma_data */
+<<<<<<< HEAD
 	snd_soc_dai_dma_data_set(dai, direction, stream);
+=======
+	if (direction == SNDRV_PCM_STREAM_PLAYBACK)
+		dai->playback_dma_data = stream;
+	else
+		dai->capture_dma_data = stream;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

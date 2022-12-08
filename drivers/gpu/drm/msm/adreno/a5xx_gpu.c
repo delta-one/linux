@@ -5,7 +5,11 @@
 #include <linux/kernel.h>
 #include <linux/types.h>
 #include <linux/cpumask.h>
+<<<<<<< HEAD
 #include <linux/firmware/qcom/qcom_scm.h>
+=======
+#include <linux/qcom_scm.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pm_opp.h>
 #include <linux/nvmem-consumer.h>
 #include <linux/slab.h>
@@ -151,8 +155,13 @@ static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
 	OUT_RING(ring, 1);
 
 	/* Enable local preemption for finegrain preemption */
+<<<<<<< HEAD
 	OUT_PKT7(ring, CP_PREEMPT_ENABLE_LOCAL, 1);
 	OUT_RING(ring, 0x1);
+=======
+	OUT_PKT7(ring, CP_PREEMPT_ENABLE_GLOBAL, 1);
+	OUT_RING(ring, 0x02);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Allow CP_CONTEXT_SWITCH_YIELD packets in the IB2 */
 	OUT_PKT7(ring, CP_YIELD_ENABLE, 1);
@@ -605,9 +614,17 @@ static int a5xx_ucode_init(struct msm_gpu *gpu)
 		a5xx_ucode_check_version(a5xx_gpu, a5xx_gpu->pfp_bo);
 	}
 
+<<<<<<< HEAD
 	gpu_write64(gpu, REG_A5XX_CP_ME_INSTR_BASE_LO, a5xx_gpu->pm4_iova);
 
 	gpu_write64(gpu, REG_A5XX_CP_PFP_INSTR_BASE_LO, a5xx_gpu->pfp_iova);
+=======
+	gpu_write64(gpu, REG_A5XX_CP_ME_INSTR_BASE_LO,
+		REG_A5XX_CP_ME_INSTR_BASE_HI, a5xx_gpu->pm4_iova);
+
+	gpu_write64(gpu, REG_A5XX_CP_PFP_INSTR_BASE_LO,
+		REG_A5XX_CP_PFP_INSTR_BASE_HI, a5xx_gpu->pfp_iova);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -806,7 +823,11 @@ static int a5xx_hw_init(struct msm_gpu *gpu)
 	gpu_write(gpu, REG_A5XX_RBBM_AHB_CNTL2, 0x0000003F);
 
 	/* Set the highest bank bit */
+<<<<<<< HEAD
 	if (adreno_is_a540(adreno_gpu) || adreno_is_a530(adreno_gpu))
+=======
+	if (adreno_is_a540(adreno_gpu))
+>>>>>>> b7ba80a49124 (Commit)
 		regbit = 2;
 	else
 		regbit = 1;
@@ -866,7 +887,12 @@ static int a5xx_hw_init(struct msm_gpu *gpu)
 	 * memory rendering at this point in time and we don't want to block off
 	 * part of the virtual memory space.
 	 */
+<<<<<<< HEAD
 	gpu_write64(gpu, REG_A5XX_RBBM_SECVID_TSB_TRUSTED_BASE_LO, 0x00000000);
+=======
+	gpu_write64(gpu, REG_A5XX_RBBM_SECVID_TSB_TRUSTED_BASE_LO,
+		REG_A5XX_RBBM_SECVID_TSB_TRUSTED_BASE_HI, 0x00000000);
+>>>>>>> b7ba80a49124 (Commit)
 	gpu_write(gpu, REG_A5XX_RBBM_SECVID_TSB_TRUSTED_SIZE, 0x00000000);
 
 	/* Put the GPU into 64 bit by default */
@@ -905,7 +931,12 @@ static int a5xx_hw_init(struct msm_gpu *gpu)
 		return ret;
 
 	/* Set the ringbuffer address */
+<<<<<<< HEAD
 	gpu_write64(gpu, REG_A5XX_CP_RB_BASE, gpu->rb[0]->iova);
+=======
+	gpu_write64(gpu, REG_A5XX_CP_RB_BASE, REG_A5XX_CP_RB_BASE_HI,
+		gpu->rb[0]->iova);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * If the microcode supports the WHERE_AM_I opcode then we can use that
@@ -932,7 +963,11 @@ static int a5xx_hw_init(struct msm_gpu *gpu)
 		}
 
 		gpu_write64(gpu, REG_A5XX_CP_RB_RPTR_ADDR,
+<<<<<<< HEAD
 			    shadowptr(a5xx_gpu, gpu->rb[0]));
+=======
+			REG_A5XX_CP_RB_RPTR_ADDR_HI, shadowptr(a5xx_gpu, gpu->rb[0]));
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (gpu->nr_rings > 1) {
 		/* Disable preemption if WHERE_AM_I isn't available */
 		a5xx_preempt_fini(gpu);
@@ -1235,9 +1270,15 @@ static void a5xx_fault_detect_irq(struct msm_gpu *gpu)
 		gpu_read(gpu, REG_A5XX_RBBM_STATUS),
 		gpu_read(gpu, REG_A5XX_CP_RB_RPTR),
 		gpu_read(gpu, REG_A5XX_CP_RB_WPTR),
+<<<<<<< HEAD
 		gpu_read64(gpu, REG_A5XX_CP_IB1_BASE),
 		gpu_read(gpu, REG_A5XX_CP_IB1_BUFSZ),
 		gpu_read64(gpu, REG_A5XX_CP_IB2_BASE),
+=======
+		gpu_read64(gpu, REG_A5XX_CP_IB1_BASE, REG_A5XX_CP_IB1_BASE_HI),
+		gpu_read(gpu, REG_A5XX_CP_IB1_BUFSZ),
+		gpu_read64(gpu, REG_A5XX_CP_IB2_BASE, REG_A5XX_CP_IB2_BASE_HI),
+>>>>>>> b7ba80a49124 (Commit)
 		gpu_read(gpu, REG_A5XX_CP_IB2_BUFSZ));
 
 	/* Turn off the hangcheck timer to keep it from bothering us */
@@ -1423,7 +1464,12 @@ static int a5xx_pm_suspend(struct msm_gpu *gpu)
 
 static int a5xx_get_timestamp(struct msm_gpu *gpu, uint64_t *value)
 {
+<<<<<<< HEAD
 	*value = gpu_read64(gpu, REG_A5XX_RBBM_ALWAYSON_COUNTER_LO);
+=======
+	*value = gpu_read64(gpu, REG_A5XX_RBBM_ALWAYSON_COUNTER_LO,
+		REG_A5XX_RBBM_ALWAYSON_COUNTER_HI);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1460,7 +1506,12 @@ static int a5xx_crashdumper_run(struct msm_gpu *gpu,
 	if (IS_ERR_OR_NULL(dumper->ptr))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	gpu_write64(gpu, REG_A5XX_CP_CRASH_SCRIPT_BASE_LO, dumper->iova);
+=======
+	gpu_write64(gpu, REG_A5XX_CP_CRASH_SCRIPT_BASE_LO,
+		REG_A5XX_CP_CRASH_SCRIPT_BASE_HI, dumper->iova);
+>>>>>>> b7ba80a49124 (Commit)
 
 	gpu_write(gpu, REG_A5XX_CP_CRASH_DUMP_CNTL, 1);
 
@@ -1660,7 +1711,12 @@ static u64 a5xx_gpu_busy(struct msm_gpu *gpu, unsigned long *out_sample_rate)
 {
 	u64 busy_cycles;
 
+<<<<<<< HEAD
 	busy_cycles = gpu_read64(gpu, REG_A5XX_RBBM_PERFCTR_RBBM_0_LO);
+=======
+	busy_cycles = gpu_read64(gpu, REG_A5XX_RBBM_PERFCTR_RBBM_0_LO,
+			REG_A5XX_RBBM_PERFCTR_RBBM_0_HI);
+>>>>>>> b7ba80a49124 (Commit)
 	*out_sample_rate = clk_get_rate(gpu->core_clk);
 
 	return busy_cycles;
@@ -1698,7 +1754,11 @@ static const struct adreno_gpu_funcs funcs = {
 		.gpu_busy = a5xx_gpu_busy,
 		.gpu_state_get = a5xx_gpu_state_get,
 		.gpu_state_put = a5xx_gpu_state_put,
+<<<<<<< HEAD
 		.create_address_space = adreno_create_address_space,
+=======
+		.create_address_space = adreno_iommu_create_address_space,
+>>>>>>> b7ba80a49124 (Commit)
 		.get_rptr = a5xx_get_rptr,
 	},
 	.get_timestamp = a5xx_get_timestamp,
@@ -1743,7 +1803,10 @@ struct msm_gpu *a5xx_gpu_init(struct drm_device *dev)
 	struct a5xx_gpu *a5xx_gpu = NULL;
 	struct adreno_gpu *adreno_gpu;
 	struct msm_gpu *gpu;
+<<<<<<< HEAD
 	unsigned int nr_rings;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (!pdev) {
@@ -1764,12 +1827,16 @@ struct msm_gpu *a5xx_gpu_init(struct drm_device *dev)
 
 	check_speed_bin(&pdev->dev);
 
+<<<<<<< HEAD
 	nr_rings = 4;
 
 	if (adreno_is_a510(adreno_gpu))
 		nr_rings = 1;
 
 	ret = adreno_gpu_init(dev, pdev, adreno_gpu, &funcs, nr_rings);
+=======
+	ret = adreno_gpu_init(dev, pdev, adreno_gpu, &funcs, 4);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		a5xx_destroy(&(a5xx_gpu->base.base));
 		return ERR_PTR(ret);

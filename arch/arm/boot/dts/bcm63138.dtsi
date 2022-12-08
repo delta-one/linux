@@ -66,12 +66,15 @@
 			clock-div = <4>;
 			clock-mult = <1>;
 		};
+<<<<<<< HEAD
 
 		hsspi_pll: hsspi-pll {
 			compatible = "fixed-clock";
 			#clock-cells = <0>;
 			clock-frequency = <400000000>;
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	/* ARM bus */
@@ -209,6 +212,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		hsspi: spi@1000 {
 			#address-cells = <1>;
 			#size-cells = <0>;
@@ -221,6 +225,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		nand_controller: nand-controller@2000 {
 			#address-cells = <1>;
 			#size-cells = <0>;

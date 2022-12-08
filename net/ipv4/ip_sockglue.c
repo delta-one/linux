@@ -267,7 +267,11 @@ int ip_cmsg_send(struct sock *sk, struct msghdr *msg, struct ipcm_cookie *ipc,
 		}
 #endif
 		if (cmsg->cmsg_level == SOL_SOCKET) {
+<<<<<<< HEAD
 			err = __sock_cmsg_send(sk, cmsg, &ipc->sockc);
+=======
+			err = __sock_cmsg_send(sk, msg, cmsg, &ipc->sockc);
+>>>>>>> b7ba80a49124 (Commit)
 			if (err)
 				return err;
 			continue;
@@ -433,7 +437,10 @@ void ip_icmp_error(struct sock *sk, struct sk_buff *skb, int err,
 	}
 	kfree_skb(skb);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(ip_icmp_error);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void ip_local_error(struct sock *sk, int err, __be32 daddr, __be16 port, u32 info)
 {
@@ -923,7 +930,10 @@ int do_ip_setsockopt(struct sock *sk, int level, int optname,
 	case IP_CHECKSUM:
 	case IP_RECVFRAGSIZE:
 	case IP_RECVERR_RFC4884:
+<<<<<<< HEAD
 	case IP_LOCAL_PORT_RANGE:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (optlen >= sizeof(int)) {
 			if (copy_from_sockptr(&val, optval, sizeof(val)))
 				return -EFAULT;
@@ -1366,6 +1376,7 @@ int do_ip_setsockopt(struct sock *sk, int level, int optname,
 		WRITE_ONCE(inet->min_ttl, val);
 		break;
 
+<<<<<<< HEAD
 	case IP_LOCAL_PORT_RANGE:
 	{
 		const __u16 lo = val;
@@ -1380,6 +1391,8 @@ int do_ip_setsockopt(struct sock *sk, int level, int optname,
 		inet->local_port_range.hi = hi;
 		break;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		err = -ENOPROTOOPT;
 		break;
@@ -1758,9 +1771,12 @@ int do_ip_getsockopt(struct sock *sk, int level, int optname,
 	case IP_MINTTL:
 		val = inet->min_ttl;
 		break;
+<<<<<<< HEAD
 	case IP_LOCAL_PORT_RANGE:
 		val = inet->local_port_range.hi << 16 | inet->local_port_range.lo;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		sockopt_release_sock(sk);
 		return -ENOPROTOOPT;

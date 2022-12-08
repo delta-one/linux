@@ -631,7 +631,11 @@ static const struct attribute_group *op_attr_update[] = {
 
 static struct perf_ibs perf_ibs_fetch = {
 	.pmu = {
+<<<<<<< HEAD
 		.task_ctx_nr	= perf_hw_context,
+=======
+		.task_ctx_nr	= perf_invalid_context,
+>>>>>>> b7ba80a49124 (Commit)
 
 		.event_init	= perf_ibs_init,
 		.add		= perf_ibs_add,
@@ -655,7 +659,11 @@ static struct perf_ibs perf_ibs_fetch = {
 
 static struct perf_ibs perf_ibs_op = {
 	.pmu = {
+<<<<<<< HEAD
 		.task_ctx_nr	= perf_hw_context,
+=======
+		.task_ctx_nr	= perf_invalid_context,
+>>>>>>> b7ba80a49124 (Commit)
 
 		.event_init	= perf_ibs_init,
 		.add		= perf_ibs_add,
@@ -678,6 +686,7 @@ static struct perf_ibs perf_ibs_op = {
 	.get_count		= get_ibs_op_count,
 };
 
+<<<<<<< HEAD
 static void perf_ibs_get_mem_op(union ibs_op_data3 *op_data3,
 				struct perf_sample_data *data)
 {
@@ -1011,6 +1020,8 @@ static int perf_ibs_get_offset_max(struct perf_ibs *perf_ibs, u64 sample_type,
 	return 1;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
 {
 	struct cpu_perf_ibs *pcpu = this_cpu_ptr(perf_ibs->pcpu);
@@ -1058,9 +1069,18 @@ fail:
 	size = 1;
 	offset = 1;
 	check_rip = (perf_ibs == &perf_ibs_op && (ibs_caps & IBS_CAPS_RIPINVALIDCHK));
+<<<<<<< HEAD
 
 	offset_max = perf_ibs_get_offset_max(perf_ibs, event->attr.sample_type, check_rip);
 
+=======
+	if (event->attr.sample_type & PERF_SAMPLE_RAW)
+		offset_max = perf_ibs->offset_max;
+	else if (check_rip)
+		offset_max = 3;
+	else
+		offset_max = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	do {
 		rdmsrl(msr + offset, *buf++);
 		size++;
@@ -1110,19 +1130,32 @@ fail:
 				.data = ibs_data.data,
 			},
 		};
+<<<<<<< HEAD
 		perf_sample_save_raw_data(&data, &raw);
 	}
 
 	if (perf_ibs == &perf_ibs_op)
 		perf_ibs_parse_ld_st_data(event->attr.sample_type, &ibs_data, &data);
 
+=======
+		data.raw = &raw;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * rip recorded by IbsOpRip will not be consistent with rsp and rbp
 	 * recorded as part of interrupt regs. Thus we need to use rip from
 	 * interrupt regs while unwinding call stack.
 	 */
+<<<<<<< HEAD
 	if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN)
 		perf_sample_save_callchain(&data, event, iregs);
+=======
+	if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN) {
+		data.callchain = perf_callchain(event, iregs);
+		data.sample_flags |= PERF_SAMPLE_CALLCHAIN;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	throttle = perf_event_overflow(event, &data, &regs);
 out:

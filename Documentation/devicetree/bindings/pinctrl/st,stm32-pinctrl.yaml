@@ -34,9 +34,13 @@ properties:
     const: 1
 
   ranges: true
+<<<<<<< HEAD
   pins-are-numbered:
     $ref: /schemas/types.yaml#/definitions/flag
     deprecated: true
+=======
+  pins-are-numbered: true
+>>>>>>> b7ba80a49124 (Commit)
   hwlocks: true
 
   interrupts:
@@ -66,9 +70,12 @@ patternProperties:
       gpio-controller: true
       '#gpio-cells':
         const: 2
+<<<<<<< HEAD
       interrupt-controller: true
       '#interrupt-cells':
         const: 2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
       reg:
         maxItems: 1
@@ -76,7 +83,10 @@ patternProperties:
         maxItems: 1
       resets:
         maxItems: 1
+<<<<<<< HEAD
       gpio-line-names: true
+=======
+>>>>>>> b7ba80a49124 (Commit)
       gpio-ranges:
         minItems: 1
         maxItems: 16
@@ -112,12 +122,15 @@ patternProperties:
         minimum: 0
         maximum: 11
 
+<<<<<<< HEAD
     patternProperties:
       "^(.+-hog(-[0-9]+)?)$":
         type: object
         required:
           - gpio-hog
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     required:
       - gpio-controller
       - '#gpio-cells'
@@ -208,6 +221,10 @@ required:
   - '#address-cells'
   - '#size-cells'
   - ranges
+<<<<<<< HEAD
+=======
+  - pins-are-numbered
+>>>>>>> b7ba80a49124 (Commit)
 
 additionalProperties: false
 
@@ -221,6 +238,10 @@ examples:
               #size-cells = <1>;
               compatible = "st,stm32f429-pinctrl";
               ranges = <0 0x40020000 0x3000>;
+<<<<<<< HEAD
+=======
+              pins-are-numbered;
+>>>>>>> b7ba80a49124 (Commit)
 
               gpioa: gpio@0 {
                       gpio-controller;
@@ -238,6 +259,10 @@ examples:
               #size-cells = <1>;
               compatible = "st,stm32f429-pinctrl";
               ranges = <0 0x50020000 0x3000>;
+<<<<<<< HEAD
+=======
+              pins-are-numbered;
+>>>>>>> b7ba80a49124 (Commit)
 
               gpiob: gpio@1000 {
                       gpio-controller;

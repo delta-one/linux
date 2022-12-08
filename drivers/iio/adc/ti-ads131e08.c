@@ -807,8 +807,11 @@ static int ads131e08_probe(struct spi_device *spi)
 	int ret;
 
 	info = device_get_match_data(&spi->dev);
+<<<<<<< HEAD
 	if (!info)
 		info = (void *)spi_get_device_id(spi)->driver_data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!info) {
 		dev_err(&spi->dev, "failed to get match data\n");
 		return -ENODEV;
@@ -928,6 +931,7 @@ static const struct of_device_id ads131e08_of_match[] = {
 };
 MODULE_DEVICE_TABLE(of, ads131e08_of_match);
 
+<<<<<<< HEAD
 static const struct spi_device_id ads131e08_ids[] = {
 	{ "ads131e04", (kernel_ulong_t)&ads131e08_info_tbl[ads131e04] },
 	{ "ads131e06", (kernel_ulong_t)&ads131e08_info_tbl[ads131e06] },
@@ -936,13 +940,18 @@ static const struct spi_device_id ads131e08_ids[] = {
 };
 MODULE_DEVICE_TABLE(spi, ads131e08_ids);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct spi_driver ads131e08_driver = {
 	.driver = {
 		.name = "ads131e08",
 		.of_match_table = ads131e08_of_match,
 	},
 	.probe = ads131e08_probe,
+<<<<<<< HEAD
 	.id_table = ads131e08_ids,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_spi_driver(ads131e08_driver);
 

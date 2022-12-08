@@ -192,6 +192,7 @@ static void timens_setup_vdso_data(struct vdso_data *vdata,
 	offset[CLOCK_BOOTTIME_ALARM]	= boottime;
 }
 
+<<<<<<< HEAD
 struct page *find_timens_vvar_page(struct vm_area_struct *vma)
 {
 	if (likely(vma->vm_mm == current->mm))
@@ -210,6 +211,8 @@ struct page *find_timens_vvar_page(struct vm_area_struct *vma)
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Protects possibly multiple offsets writers racing each other
  * and tasks entering the namespace.

@@ -62,6 +62,11 @@ extern long __copy_user_nocache(void *dst, const void __user *src,
 				unsigned size, int zerorest);
 
 extern long __copy_user_flushcache(void *dst, const void __user *src, unsigned size);
+<<<<<<< HEAD
+=======
+extern void memcpy_page_flushcache(char *to, struct page *page, size_t offset,
+			   size_t len);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline int
 __copy_from_user_inatomic_nocache(void *dst, const void __user *src,

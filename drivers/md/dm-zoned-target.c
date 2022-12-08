@@ -1119,6 +1119,10 @@ static void dmz_status(struct dm_target *ti, status_type_t type,
 		*result = '\0';
 		break;
 	}
+<<<<<<< HEAD
+=======
+	return;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int dmz_message(struct dm_target *ti, unsigned int argc, char **argv,

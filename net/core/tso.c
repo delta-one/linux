@@ -5,6 +5,17 @@
 #include <net/tso.h>
 #include <asm/unaligned.h>
 
+<<<<<<< HEAD
+=======
+/* Calculate expected number of TX descriptors */
+int tso_count_descs(const struct sk_buff *skb)
+{
+	/* The Marvell Way */
+	return skb_shinfo(skb)->gso_segs * 2 + skb_shinfo(skb)->nr_frags;
+}
+EXPORT_SYMBOL(tso_count_descs);
+
+>>>>>>> b7ba80a49124 (Commit)
 void tso_build_hdr(const struct sk_buff *skb, char *hdr, struct tso_t *tso,
 		   int size, bool is_last)
 {

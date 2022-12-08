@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2003 Jana Saout <jana@saout.de>
  * Copyright (C) 2004 Clemens Fruhwirth <clemens@endorphin.org>
@@ -72,9 +75,13 @@ struct dm_crypt_io {
 	struct crypt_config *cc;
 	struct bio *base_bio;
 	u8 *integrity_metadata;
+<<<<<<< HEAD
 	bool integrity_metadata_from_pool:1;
 	bool in_tasklet:1;
 
+=======
+	bool integrity_metadata_from_pool;
+>>>>>>> b7ba80a49124 (Commit)
 	struct work_struct work;
 	struct tasklet_struct tasklet;
 
@@ -174,14 +181,22 @@ struct crypt_config {
 	} iv_gen_private;
 	u64 iv_offset;
 	unsigned int iv_size;
+<<<<<<< HEAD
 	unsigned short sector_size;
+=======
+	unsigned short int sector_size;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned char sector_shift;
 
 	union {
 		struct crypto_skcipher **tfms;
 		struct crypto_aead **tfms_aead;
 	} cipher_tfm;
+<<<<<<< HEAD
 	unsigned int tfms_count;
+=======
+	unsigned tfms_count;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long cipher_flags;
 
 	/*
@@ -215,7 +230,11 @@ struct crypt_config {
 	 * pool for per bio private data, crypto requests,
 	 * encryption requeusts/buffer pages and integrity tags
 	 */
+<<<<<<< HEAD
 	unsigned int tag_pool_max_sectors;
+=======
+	unsigned tag_pool_max_sectors;
+>>>>>>> b7ba80a49124 (Commit)
 	mempool_t tag_pool;
 	mempool_t req_pool;
 	mempool_t page_pool;
@@ -232,7 +251,11 @@ struct crypt_config {
 #define POOL_ENTRY_SIZE	512
 
 static DEFINE_SPINLOCK(dm_crypt_clients_lock);
+<<<<<<< HEAD
 static unsigned int dm_crypt_clients_n;
+=======
+static unsigned dm_crypt_clients_n = 0;
+>>>>>>> b7ba80a49124 (Commit)
 static volatile unsigned long dm_crypt_pages_per_client;
 #define DM_CRYPT_MEMORY_PERCENT			2
 #define DM_CRYPT_MIN_PAGES_PER_CLIENT		(BIO_MAX_VECS * 16)
@@ -357,7 +380,11 @@ static int crypt_iv_essiv_gen(struct crypt_config *cc, u8 *iv,
 static int crypt_iv_benbi_ctr(struct crypt_config *cc, struct dm_target *ti,
 			      const char *opts)
 {
+<<<<<<< HEAD
 	unsigned int bs;
+=======
+	unsigned bs;
+>>>>>>> b7ba80a49124 (Commit)
 	int log;
 
 	if (crypt_integrity_aead(cc))
@@ -366,10 +393,16 @@ static int crypt_iv_benbi_ctr(struct crypt_config *cc, struct dm_target *ti,
 		bs = crypto_skcipher_blocksize(any_tfm(cc));
 	log = ilog2(bs);
 
+<<<<<<< HEAD
 	/*
 	 * We need to calculate how far we must shift the sector count
 	 * to get the cipher block count, we use this shift in _gen.
 	 */
+=======
+	/* we need to calculate how far we must shift the sector count
+	 * to get the cipher block count, we use this shift in _gen */
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (1 << log != bs) {
 		ti->error = "cypher blocksize is not a power of 2";
 		return -EINVAL;
@@ -535,9 +568,15 @@ static int crypt_iv_lmk_gen(struct crypt_config *cc, u8 *iv,
 
 	if (bio_data_dir(dmreq->ctx->bio_in) == WRITE) {
 		sg = crypt_get_sg_data(cc, dmreq->sg_in);
+<<<<<<< HEAD
 		src = kmap_local_page(sg_page(sg));
 		r = crypt_iv_lmk_one(cc, iv, dmreq, src + sg->offset);
 		kunmap_local(src);
+=======
+		src = kmap_atomic(sg_page(sg));
+		r = crypt_iv_lmk_one(cc, iv, dmreq, src + sg->offset);
+		kunmap_atomic(src);
+>>>>>>> b7ba80a49124 (Commit)
 	} else
 		memset(iv, 0, cc->iv_size);
 
@@ -555,14 +594,22 @@ static int crypt_iv_lmk_post(struct crypt_config *cc, u8 *iv,
 		return 0;
 
 	sg = crypt_get_sg_data(cc, dmreq->sg_out);
+<<<<<<< HEAD
 	dst = kmap_local_page(sg_page(sg));
+=======
+	dst = kmap_atomic(sg_page(sg));
+>>>>>>> b7ba80a49124 (Commit)
 	r = crypt_iv_lmk_one(cc, iv, dmreq, dst + sg->offset);
 
 	/* Tweak the first block of plaintext sector */
 	if (!r)
 		crypto_xor(dst + sg->offset, iv, cc->iv_size);
 
+<<<<<<< HEAD
 	kunmap_local(dst);
+=======
+	kunmap_atomic(dst);
+>>>>>>> b7ba80a49124 (Commit)
 	return r;
 }
 
@@ -685,9 +732,15 @@ static int crypt_iv_tcw_gen(struct crypt_config *cc, u8 *iv,
 	/* Remove whitening from ciphertext */
 	if (bio_data_dir(dmreq->ctx->bio_in) != WRITE) {
 		sg = crypt_get_sg_data(cc, dmreq->sg_in);
+<<<<<<< HEAD
 		src = kmap_local_page(sg_page(sg));
 		r = crypt_iv_tcw_whitening(cc, dmreq, src + sg->offset);
 		kunmap_local(src);
+=======
+		src = kmap_atomic(sg_page(sg));
+		r = crypt_iv_tcw_whitening(cc, dmreq, src + sg->offset);
+		kunmap_atomic(src);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Calculate IV */
@@ -711,9 +764,15 @@ static int crypt_iv_tcw_post(struct crypt_config *cc, u8 *iv,
 
 	/* Apply whitening on ciphertext */
 	sg = crypt_get_sg_data(cc, dmreq->sg_out);
+<<<<<<< HEAD
 	dst = kmap_local_page(sg_page(sg));
 	r = crypt_iv_tcw_whitening(cc, dmreq, dst + sg->offset);
 	kunmap_local(dst);
+=======
+	dst = kmap_atomic(sg_page(sg));
+	r = crypt_iv_tcw_whitening(cc, dmreq, dst + sg->offset);
+	kunmap_atomic(dst);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return r;
 }
@@ -735,7 +794,12 @@ static int crypt_iv_eboiv_ctr(struct crypt_config *cc, struct dm_target *ti,
 	}
 
 	if (crypto_skcipher_blocksize(any_tfm(cc)) != cc->iv_size) {
+<<<<<<< HEAD
 		ti->error = "Block size of EBOIV cipher does not match IV size of block cipher";
+=======
+		ti->error = "Block size of EBOIV cipher does "
+			    "not match IV size of block cipher";
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -977,12 +1041,17 @@ static int crypt_iv_elephant(struct crypt_config *cc, struct dm_crypt_request *d
 		goto out;
 
 	sg = crypt_get_sg_data(cc, dmreq->sg_out);
+<<<<<<< HEAD
 	data = kmap_local_page(sg_page(sg));
+=======
+	data = kmap_atomic(sg_page(sg));
+>>>>>>> b7ba80a49124 (Commit)
 	data_offset = data + sg->offset;
 
 	/* Cannot modify original bio, copy to sg_out and apply Elephant to it */
 	if (bio_data_dir(dmreq->ctx->bio_in) == WRITE) {
 		sg2 = crypt_get_sg_data(cc, dmreq->sg_in);
+<<<<<<< HEAD
 		data2 = kmap_local_page(sg_page(sg2));
 		memcpy(data_offset, data2 + sg2->offset, cc->sector_size);
 		kunmap_local(data2);
@@ -993,12 +1062,25 @@ static int crypt_iv_elephant(struct crypt_config *cc, struct dm_crypt_request *d
 		diffuser_b_decrypt((u32 *)data_offset, cc->sector_size / sizeof(u32));
 		diffuser_a_decrypt((u32 *)data_offset, cc->sector_size / sizeof(u32));
 		diffuser_cpu_to_disk((__le32 *)data_offset, cc->sector_size / sizeof(u32));
+=======
+		data2 = kmap_atomic(sg_page(sg2));
+		memcpy(data_offset, data2 + sg2->offset, cc->sector_size);
+		kunmap_atomic(data2);
+	}
+
+	if (bio_data_dir(dmreq->ctx->bio_in) != WRITE) {
+		diffuser_disk_to_cpu((u32*)data_offset, cc->sector_size / sizeof(u32));
+		diffuser_b_decrypt((u32*)data_offset, cc->sector_size / sizeof(u32));
+		diffuser_a_decrypt((u32*)data_offset, cc->sector_size / sizeof(u32));
+		diffuser_cpu_to_disk((__le32*)data_offset, cc->sector_size / sizeof(u32));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (i = 0; i < (cc->sector_size / 32); i++)
 		crypto_xor(data_offset + i * 32, ks, 32);
 
 	if (bio_data_dir(dmreq->ctx->bio_in) == WRITE) {
+<<<<<<< HEAD
 		diffuser_disk_to_cpu((u32 *)data_offset, cc->sector_size / sizeof(u32));
 		diffuser_a_encrypt((u32 *)data_offset, cc->sector_size / sizeof(u32));
 		diffuser_b_encrypt((u32 *)data_offset, cc->sector_size / sizeof(u32));
@@ -1006,6 +1088,15 @@ static int crypt_iv_elephant(struct crypt_config *cc, struct dm_crypt_request *d
 	}
 
 	kunmap_local(data);
+=======
+		diffuser_disk_to_cpu((u32*)data_offset, cc->sector_size / sizeof(u32));
+		diffuser_a_encrypt((u32*)data_offset, cc->sector_size / sizeof(u32));
+		diffuser_b_encrypt((u32*)data_offset, cc->sector_size / sizeof(u32));
+		diffuser_cpu_to_disk((__le32*)data_offset, cc->sector_size / sizeof(u32));
+	}
+
+	kunmap_atomic(data);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	kfree_sensitive(ks);
 	kfree_sensitive(es);
@@ -1258,7 +1349,10 @@ static __le64 *org_sector_of_dmreq(struct crypt_config *cc,
 		       struct dm_crypt_request *dmreq)
 {
 	u8 *ptr = iv_of_dmreq(cc, dmreq) + cc->iv_size + cc->iv_size;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return (__le64 *) ptr;
 }
 
@@ -1267,8 +1361,12 @@ static unsigned int *org_tag_of_dmreq(struct crypt_config *cc,
 {
 	u8 *ptr = iv_of_dmreq(cc, dmreq) + cc->iv_size +
 		  cc->iv_size + sizeof(uint64_t);
+<<<<<<< HEAD
 
 	return (unsigned int *)ptr;
+=======
+	return (unsigned int*)ptr;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void *tag_from_dmreq(struct crypt_config *cc,
@@ -1463,12 +1561,21 @@ static int crypt_convert_block_skcipher(struct crypt_config *cc,
 	return r;
 }
 
+<<<<<<< HEAD
 static void kcryptd_async_done(void *async_req, int error);
+=======
+static void kcryptd_async_done(struct crypto_async_request *async_req,
+			       int error);
+>>>>>>> b7ba80a49124 (Commit)
 
 static int crypt_alloc_req_skcipher(struct crypt_config *cc,
 				     struct convert_context *ctx)
 {
+<<<<<<< HEAD
 	unsigned int key_index = ctx->cc_sector & (cc->tfms_count - 1);
+=======
+	unsigned key_index = ctx->cc_sector & (cc->tfms_count - 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!ctx->r.req) {
 		ctx->r.req = mempool_alloc(&cc->req_pool, in_interrupt() ? GFP_ATOMIC : GFP_NOIO);
@@ -1662,13 +1769,21 @@ static void crypt_free_buffer_pages(struct crypt_config *cc, struct bio *clone);
  * non-blocking allocations without a mutex first but on failure we fallback
  * to blocking allocations with a mutex.
  */
+<<<<<<< HEAD
 static struct bio *crypt_alloc_buffer(struct dm_crypt_io *io, unsigned int size)
+=======
+static struct bio *crypt_alloc_buffer(struct dm_crypt_io *io, unsigned size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct crypt_config *cc = io->cc;
 	struct bio *clone;
 	unsigned int nr_iovecs = (size + PAGE_SIZE - 1) >> PAGE_SHIFT;
 	gfp_t gfp_mask = GFP_NOWAIT | __GFP_HIGHMEM;
+<<<<<<< HEAD
 	unsigned int i, len, remaining_size;
+=======
+	unsigned i, len, remaining_size;
+>>>>>>> b7ba80a49124 (Commit)
 	struct page *page;
 
 retry:
@@ -1732,7 +1847,10 @@ static void crypt_io_init(struct dm_crypt_io *io, struct crypt_config *cc,
 	io->ctx.r.req = NULL;
 	io->integrity_metadata = NULL;
 	io->integrity_metadata_from_pool = false;
+<<<<<<< HEAD
 	io->in_tasklet = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_set(&io->io_pending, 0);
 }
 
@@ -1744,7 +1862,10 @@ static void crypt_inc_pending(struct dm_crypt_io *io)
 static void kcryptd_io_bio_endio(struct work_struct *work)
 {
 	struct dm_crypt_io *io = container_of(work, struct dm_crypt_io, work);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bio_endio(io->base_bio);
 }
 
@@ -1779,6 +1900,7 @@ static void crypt_dec_pending(struct dm_crypt_io *io)
 	 * our tasklet. In this case we need to delay bio_endio()
 	 * execution to after the tasklet is done and dequeued.
 	 */
+<<<<<<< HEAD
 	if (io->in_tasklet) {
 		INIT_WORK(&io->work, kcryptd_io_bio_endio);
 		queue_work(cc->io_queue, &io->work);
@@ -1786,6 +1908,16 @@ static void crypt_dec_pending(struct dm_crypt_io *io)
 	}
 
 	bio_endio(base_bio);
+=======
+	if (tasklet_trylock(&io->tasklet)) {
+		tasklet_unlock(&io->tasklet);
+		bio_endio(base_bio);
+		return;
+	}
+
+	INIT_WORK(&io->work, kcryptd_io_bio_endio);
+	queue_work(cc->io_queue, &io->work);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1809,7 +1941,11 @@ static void crypt_endio(struct bio *clone)
 {
 	struct dm_crypt_io *io = clone->bi_private;
 	struct crypt_config *cc = io->cc;
+<<<<<<< HEAD
 	unsigned int rw = bio_data_dir(clone);
+=======
+	unsigned rw = bio_data_dir(clone);
+>>>>>>> b7ba80a49124 (Commit)
 	blk_status_t error;
 
 	/*
@@ -1938,7 +2074,10 @@ pop_from_list:
 			io = crypt_io_from_node(rb_first(&write_tree));
 			rb_erase(&io->rb_node, &write_tree);
 			kcryptd_io_write(io);
+<<<<<<< HEAD
 			cond_resched();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		} while (!RB_EMPTY_ROOT(&write_tree));
 		blk_finish_plug(&plug);
 	}
@@ -2153,9 +2292,16 @@ static void kcryptd_crypt_read_convert(struct dm_crypt_io *io)
 	crypt_dec_pending(io);
 }
 
+<<<<<<< HEAD
 static void kcryptd_async_done(void *data, int error)
 {
 	struct dm_crypt_request *dmreq = data;
+=======
+static void kcryptd_async_done(struct crypto_async_request *async_req,
+			       int error)
+{
+	struct dm_crypt_request *dmreq = async_req->data;
+>>>>>>> b7ba80a49124 (Commit)
 	struct convert_context *ctx = dmreq->ctx;
 	struct dm_crypt_io *io = container_of(ctx, struct dm_crypt_io, ctx);
 	struct crypt_config *cc = io->cc;
@@ -2233,7 +2379,10 @@ static void kcryptd_queue_crypt(struct dm_crypt_io *io)
 		 * it is being executed with irqs disabled.
 		 */
 		if (in_hardirq() || irqs_disabled()) {
+<<<<<<< HEAD
 			io->in_tasklet = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			tasklet_init(&io->tasklet, kcryptd_crypt_tasklet, (unsigned long)&io->work);
 			tasklet_schedule(&io->tasklet);
 			return;
@@ -2263,7 +2412,11 @@ static void crypt_free_tfms_aead(struct crypt_config *cc)
 
 static void crypt_free_tfms_skcipher(struct crypt_config *cc)
 {
+<<<<<<< HEAD
 	unsigned int i;
+=======
+	unsigned i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!cc->cipher_tfm.tfms)
 		return;
@@ -2288,7 +2441,11 @@ static void crypt_free_tfms(struct crypt_config *cc)
 
 static int crypt_alloc_tfms_skcipher(struct crypt_config *cc, char *ciphermode)
 {
+<<<<<<< HEAD
 	unsigned int i;
+=======
+	unsigned i;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	cc->cipher_tfm.tfms = kcalloc(cc->tfms_count,
@@ -2346,12 +2503,20 @@ static int crypt_alloc_tfms(struct crypt_config *cc, char *ciphermode)
 		return crypt_alloc_tfms_skcipher(cc, ciphermode);
 }
 
+<<<<<<< HEAD
 static unsigned int crypt_subkey_size(struct crypt_config *cc)
+=======
+static unsigned crypt_subkey_size(struct crypt_config *cc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return (cc->key_size - cc->key_extra_size) >> ilog2(cc->tfms_count);
 }
 
+<<<<<<< HEAD
 static unsigned int crypt_authenckey_size(struct crypt_config *cc)
+=======
+static unsigned crypt_authenckey_size(struct crypt_config *cc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return crypt_subkey_size(cc) + RTA_SPACE(sizeof(struct crypto_authenc_key_param));
 }
@@ -2362,7 +2527,11 @@ static unsigned int crypt_authenckey_size(struct crypt_config *cc)
  * This funcion converts cc->key to this special format.
  */
 static void crypt_copy_authenckey(char *p, const void *key,
+<<<<<<< HEAD
 				  unsigned int enckeylen, unsigned int authkeylen)
+=======
+				  unsigned enckeylen, unsigned authkeylen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct crypto_authenc_key_param *param;
 	struct rtattr *rta;
@@ -2380,7 +2549,11 @@ static void crypt_copy_authenckey(char *p, const void *key,
 
 static int crypt_setkey(struct crypt_config *cc)
 {
+<<<<<<< HEAD
 	unsigned int subkey_size;
+=======
+	unsigned subkey_size;
+>>>>>>> b7ba80a49124 (Commit)
 	int err = 0, i, r;
 
 	/* Ignore extra keys (which are used for IV etc) */
@@ -2493,7 +2666,11 @@ static int crypt_set_keyring_key(struct crypt_config *cc, const char *key_string
 	}
 
 	/* look for next ':' separating key_type from key_description */
+<<<<<<< HEAD
 	key_desc = strchr(key_string, ':');
+=======
+	key_desc = strpbrk(key_string, ":");
+>>>>>>> b7ba80a49124 (Commit)
 	if (!key_desc || key_desc == key_string || !strlen(key_desc + 1))
 		return -EINVAL;
 
@@ -2508,7 +2685,11 @@ static int crypt_set_keyring_key(struct crypt_config *cc, const char *key_string
 		type = &key_type_encrypted;
 		set_key = set_key_encrypted;
 	} else if (IS_ENABLED(CONFIG_TRUSTED_KEYS) &&
+<<<<<<< HEAD
 		   !strncmp(key_string, "trusted:", key_desc - key_string + 1)) {
+=======
+	           !strncmp(key_string, "trusted:", key_desc - key_string + 1)) {
+>>>>>>> b7ba80a49124 (Commit)
 		type = &key_type_trusted;
 		set_key = set_key_trusted;
 	} else {
@@ -3419,6 +3600,7 @@ static int crypt_map(struct dm_target *ti, struct bio *bio)
 	crypt_io_init(io, cc, bio, dm_target_offset(ti, bio->bi_iter.bi_sector));
 
 	if (cc->on_disk_tag_size) {
+<<<<<<< HEAD
 		unsigned int tag_len = cc->on_disk_tag_size * (bio_sectors(bio) >> cc->sector_shift);
 
 		if (unlikely(tag_len > KMALLOC_MAX_SIZE))
@@ -3427,6 +3609,13 @@ static int crypt_map(struct dm_target *ti, struct bio *bio)
 			io->integrity_metadata = kmalloc(tag_len, GFP_NOIO | __GFP_NORETRY | __GFP_NOMEMALLOC | __GFP_NOWARN);
 
 		if (unlikely(!io->integrity_metadata)) {
+=======
+		unsigned tag_len = cc->on_disk_tag_size * (bio_sectors(bio) >> cc->sector_shift);
+
+		if (unlikely(tag_len > KMALLOC_MAX_SIZE) ||
+		    unlikely(!(io->integrity_metadata = kmalloc(tag_len,
+				GFP_NOIO | __GFP_NORETRY | __GFP_NOMEMALLOC | __GFP_NOWARN)))) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (bio_sectors(bio) > cc->tag_pool_max_sectors)
 				dm_accept_partial_bio(bio, cc->tag_pool_max_sectors);
 			io->integrity_metadata = mempool_alloc(&cc->tag_pool, GFP_NOIO);
@@ -3450,6 +3639,7 @@ static int crypt_map(struct dm_target *ti, struct bio *bio)
 
 static char hex2asc(unsigned char c)
 {
+<<<<<<< HEAD
 	return c + '0' + ((unsigned int)(9 - c) >> 4 & 0x27);
 }
 
@@ -3458,6 +3648,16 @@ static void crypt_status(struct dm_target *ti, status_type_t type,
 {
 	struct crypt_config *cc = ti->private;
 	unsigned int i, sz = 0;
+=======
+	return c + '0' + ((unsigned)(9 - c) >> 4 & 0x27);
+}
+
+static void crypt_status(struct dm_target *ti, status_type_t type,
+			 unsigned status_flags, char *result, unsigned maxlen)
+{
+	struct crypt_config *cc = ti->private;
+	unsigned i, sz = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int num_feature_args = 0;
 
 	switch (type) {
@@ -3573,8 +3773,13 @@ static void crypt_resume(struct dm_target *ti)
  *	key set <key>
  *	key wipe
  */
+<<<<<<< HEAD
 static int crypt_message(struct dm_target *ti, unsigned int argc, char **argv,
 			 char *result, unsigned int maxlen)
+=======
+static int crypt_message(struct dm_target *ti, unsigned argc, char **argv,
+			 char *result, unsigned maxlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct crypt_config *cc = ti->private;
 	int key_size, ret = -EINVAL;
@@ -3635,11 +3840,18 @@ static void crypt_io_hints(struct dm_target *ti, struct queue_limits *limits)
 	limits->max_segment_size = PAGE_SIZE;
 
 	limits->logical_block_size =
+<<<<<<< HEAD
 		max_t(unsigned int, limits->logical_block_size, cc->sector_size);
 	limits->physical_block_size =
 		max_t(unsigned int, limits->physical_block_size, cc->sector_size);
 	limits->io_min = max_t(unsigned int, limits->io_min, cc->sector_size);
 	limits->dma_alignment = limits->logical_block_size - 1;
+=======
+		max_t(unsigned, limits->logical_block_size, cc->sector_size);
+	limits->physical_block_size =
+		max_t(unsigned, limits->physical_block_size, cc->sector_size);
+	limits->io_min = max_t(unsigned, limits->io_min, cc->sector_size);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct target_type crypt_target = {

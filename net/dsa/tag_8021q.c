@@ -7,10 +7,14 @@
 #include <linux/if_vlan.h>
 #include <linux/dsa/8021q.h>
 
+<<<<<<< HEAD
 #include "port.h"
 #include "switch.h"
 #include "tag.h"
 #include "tag_8021q.h"
+=======
+#include "dsa_priv.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Binary structure of the fake 12-bit VID field (when the TPID is
  * ETH_P_DSA_8021Q):
@@ -63,6 +67,7 @@
 #define DSA_8021Q_PORT(x)		(((x) << DSA_8021Q_PORT_SHIFT) & \
 						 DSA_8021Q_PORT_MASK)
 
+<<<<<<< HEAD
 struct dsa_tag_8021q_vlan {
 	struct list_head list;
 	int port;
@@ -77,6 +82,8 @@ struct dsa_8021q_context {
 	__be16 proto;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 u16 dsa_tag_8021q_bridge_vid(unsigned int bridge_num)
 {
 	/* The VBID value of 0 is reserved for precise TX, but it is also
@@ -415,7 +422,10 @@ static void dsa_tag_8021q_teardown(struct dsa_switch *ds)
 int dsa_tag_8021q_register(struct dsa_switch *ds, __be16 proto)
 {
 	struct dsa_8021q_context *ctx;
+<<<<<<< HEAD
 	int err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
 	if (!ctx)
@@ -428,6 +438,7 @@ int dsa_tag_8021q_register(struct dsa_switch *ds, __be16 proto)
 
 	ds->tag_8021q_ctx = ctx;
 
+<<<<<<< HEAD
 	err = dsa_tag_8021q_setup(ds);
 	if (err)
 		goto err_free;
@@ -437,6 +448,9 @@ int dsa_tag_8021q_register(struct dsa_switch *ds, __be16 proto)
 err_free:
 	kfree(ctx);
 	return err;
+=======
+	return dsa_tag_8021q_setup(ds);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(dsa_tag_8021q_register);
 

@@ -1212,14 +1212,22 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 int ufs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+int ufs_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		struct iattr *attr)
 {
 	struct inode *inode = d_inode(dentry);
 	unsigned int ia_valid = attr->ia_valid;
 	int error;
 
+<<<<<<< HEAD
 	error = setattr_prepare(&nop_mnt_idmap, dentry, attr);
+=======
+	error = setattr_prepare(&init_user_ns, dentry, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		return error;
 
@@ -1229,7 +1237,11 @@ int ufs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 			return error;
 	}
 
+<<<<<<< HEAD
 	setattr_copy(&nop_mnt_idmap, inode, attr);
+=======
+	setattr_copy(&init_user_ns, inode, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	mark_inode_dirty(inode);
 	return 0;
 }

@@ -14,12 +14,19 @@
 #include <linux/fileattr.h>
 #include <linux/security.h>
 #include <linux/namei.h>
+<<<<<<< HEAD
 #include <linux/posix_acl.h>
 #include <linux/posix_acl_xattr.h>
 #include "overlayfs.h"
 
 
 int ovl_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+#include "overlayfs.h"
+
+
+int ovl_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		struct iattr *attr)
 {
 	int err;
@@ -28,7 +35,11 @@ int ovl_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 	struct dentry *upperdentry;
 	const struct cred *old_cred;
 
+<<<<<<< HEAD
 	err = setattr_prepare(&nop_mnt_idmap, dentry, attr);
+=======
+	err = setattr_prepare(&init_user_ns, dentry, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 
@@ -153,7 +164,11 @@ static void ovl_map_dev_ino(struct dentry *dentry, struct kstat *stat, int fsid)
 	}
 }
 
+<<<<<<< HEAD
 int ovl_getattr(struct mnt_idmap *idmap, const struct path *path,
+=======
+int ovl_getattr(struct user_namespace *mnt_userns, const struct path *path,
+>>>>>>> b7ba80a49124 (Commit)
 		struct kstat *stat, u32 request_mask, unsigned int flags)
 {
 	struct dentry *dentry = path->dentry;
@@ -278,7 +293,11 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 int ovl_permission(struct mnt_idmap *idmap,
+=======
+int ovl_permission(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		   struct inode *inode, int mask)
 {
 	struct inode *upperinode = ovl_inode_upper(inode);
@@ -298,7 +317,11 @@ int ovl_permission(struct mnt_idmap *idmap,
 	 * Check overlay inode with the creds of task and underlying inode
 	 * with creds of mounter
 	 */
+<<<<<<< HEAD
 	err = generic_permission(&nop_mnt_idmap, inode, mask);
+=======
+	err = generic_permission(&init_user_ns, inode, mask);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 
@@ -310,7 +333,11 @@ int ovl_permission(struct mnt_idmap *idmap,
 		/* Make sure mounter can read file for copy up later */
 		mask |= MAY_READ;
 	}
+<<<<<<< HEAD
 	err = inode_permission(mnt_idmap(realpath.mnt), realinode, mask);
+=======
+	err = inode_permission(mnt_user_ns(realpath.mnt), realinode, mask);
+>>>>>>> b7ba80a49124 (Commit)
 	revert_creds(old_cred);
 
 	return err;
@@ -361,7 +388,11 @@ int ovl_xattr_set(struct dentry *dentry, struct inode *inode, const char *name,
 	if (!value && !upperdentry) {
 		ovl_path_lower(dentry, &realpath);
 		old_cred = ovl_override_creds(dentry->d_sb);
+<<<<<<< HEAD
 		err = vfs_getxattr(mnt_idmap(realpath.mnt), realdentry, name, NULL, 0);
+=======
+		err = vfs_getxattr(mnt_user_ns(realpath.mnt), realdentry, name, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		revert_creds(old_cred);
 		if (err < 0)
 			goto out_drop_write;
@@ -403,7 +434,11 @@ int ovl_xattr_get(struct dentry *dentry, struct inode *inode, const char *name,
 
 	ovl_i_path_real(inode, &realpath);
 	old_cred = ovl_override_creds(dentry->d_sb);
+<<<<<<< HEAD
 	res = vfs_getxattr(mnt_idmap(realpath.mnt), realpath.dentry, name, value, size);
+=======
+	res = vfs_getxattr(mnt_user_ns(realpath.mnt), realpath.dentry, name, value, size);
+>>>>>>> b7ba80a49124 (Commit)
 	revert_creds(old_cred);
 	return res;
 }
@@ -462,8 +497,13 @@ ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size)
  * of the POSIX ACLs retrieved from the lower layer to this function to not
  * alter the POSIX ACLs for the underlying filesystem.
  */
+<<<<<<< HEAD
 static void ovl_idmap_posix_acl(const struct inode *realinode,
 				struct mnt_idmap *idmap,
+=======
+static void ovl_idmap_posix_acl(struct inode *realinode,
+				struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				struct posix_acl *acl)
 {
 	struct user_namespace *fs_userns = i_user_ns(realinode);
@@ -475,11 +515,19 @@ static void ovl_idmap_posix_acl(const struct inode *realinode,
 		struct posix_acl_entry *e = &acl->a_entries[i];
 		switch (e->e_tag) {
 		case ACL_USER:
+<<<<<<< HEAD
 			vfsuid = make_vfsuid(idmap, fs_userns, e->e_uid);
 			e->e_uid = vfsuid_into_kuid(vfsuid);
 			break;
 		case ACL_GROUP:
 			vfsgid = make_vfsgid(idmap, fs_userns, e->e_gid);
+=======
+			vfsuid = make_vfsuid(mnt_userns, fs_userns, e->e_uid);
+			e->e_uid = vfsuid_into_kuid(vfsuid);
+			break;
+		case ACL_GROUP:
+			vfsgid = make_vfsgid(mnt_userns, fs_userns, e->e_gid);
+>>>>>>> b7ba80a49124 (Commit)
 			e->e_gid = vfsgid_into_kgid(vfsgid);
 			break;
 		}
@@ -487,6 +535,7 @@ static void ovl_idmap_posix_acl(const struct inode *realinode,
 }
 
 /*
+<<<<<<< HEAD
  * The @noperm argument is used to skip permission checking and is a temporary
  * measure. Quoting Miklos from an earlier discussion:
  *
@@ -545,6 +594,8 @@ struct posix_acl *ovl_get_acl_path(const struct path *path,
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * When the relevant layer is an idmapped mount we need to take the idmapping
  * of the layer into account and translate any ACL_{GROUP,USER} values
  * according to the idmapped mount.
@@ -555,12 +606,19 @@ struct posix_acl *ovl_get_acl_path(const struct path *path,
  *
  * This is obviously only relevant when idmapped layers are used.
  */
+<<<<<<< HEAD
 struct posix_acl *do_ovl_get_acl(struct mnt_idmap *idmap,
 				 struct inode *inode, int type,
 				 bool rcu, bool noperm)
 {
 	struct inode *realinode = ovl_inode_real(inode);
 	struct posix_acl *acl;
+=======
+struct posix_acl *ovl_get_acl(struct inode *inode, int type, bool rcu)
+{
+	struct inode *realinode = ovl_inode_real(inode);
+	struct posix_acl *acl, *clone;
+>>>>>>> b7ba80a49124 (Commit)
 	struct path realpath;
 
 	if (!IS_POSIXACL(realinode))
@@ -574,6 +632,7 @@ struct posix_acl *do_ovl_get_acl(struct mnt_idmap *idmap,
 	}
 
 	if (rcu) {
+<<<<<<< HEAD
 		/*
 		 * If the layer is idmapped drop out of RCU path walk
 		 * so we can clone the ACLs.
@@ -581,11 +640,14 @@ struct posix_acl *do_ovl_get_acl(struct mnt_idmap *idmap,
 		if (is_idmapped_mnt(realpath.mnt))
 			return ERR_PTR(-ECHILD);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		acl = get_cached_acl_rcu(realinode, type);
 	} else {
 		const struct cred *old_cred;
 
 		old_cred = ovl_override_creds(inode->i_sb);
+<<<<<<< HEAD
 		acl = ovl_get_acl_path(&realpath, posix_acl_xattr_name(type), noperm);
 		revert_creds(old_cred);
 	}
@@ -683,6 +745,37 @@ int ovl_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
 	}
 
 	return ovl_set_or_remove_acl(dentry, inode, acl, type);
+=======
+		acl = get_acl(realinode, type);
+		revert_creds(old_cred);
+	}
+	/*
+	 * If there are no POSIX ACLs, or we encountered an error,
+	 * or the layer isn't idmapped we don't need to do anything.
+	 */
+	if (!is_idmapped_mnt(realpath.mnt) || IS_ERR_OR_NULL(acl))
+		return acl;
+
+	/*
+	 * We only get here if the layer is idmapped. So drop out of RCU path
+	 * walk so we can clone the ACLs. There's no need to release the ACLs
+	 * since get_cached_acl_rcu() doesn't take a reference on the ACLs.
+	 */
+	if (rcu)
+		return ERR_PTR(-ECHILD);
+
+	clone = posix_acl_clone(acl, GFP_KERNEL);
+	if (!clone)
+		clone = ERR_PTR(-ENOMEM);
+	else
+		ovl_idmap_posix_acl(realinode, mnt_user_ns(realpath.mnt), clone);
+	/*
+	 * Since we're not in RCU path walk we always need to release the
+	 * original ACLs.
+	 */
+	posix_acl_release(acl);
+	return clone;
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif
 
@@ -755,10 +848,17 @@ int ovl_real_fileattr_set(const struct path *realpath, struct fileattr *fa)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	return vfs_fileattr_set(mnt_idmap(realpath->mnt), realpath->dentry, fa);
 }
 
 int ovl_fileattr_set(struct mnt_idmap *idmap,
+=======
+	return vfs_fileattr_set(mnt_user_ns(realpath->mnt), realpath->dentry, fa);
+}
+
+int ovl_fileattr_set(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		     struct dentry *dentry, struct fileattr *fa)
 {
 	struct inode *inode = d_inode(dentry);
@@ -858,9 +958,13 @@ static const struct inode_operations ovl_file_inode_operations = {
 	.permission	= ovl_permission,
 	.getattr	= ovl_getattr,
 	.listxattr	= ovl_listxattr,
+<<<<<<< HEAD
 	.get_inode_acl	= ovl_get_inode_acl,
 	.get_acl	= ovl_get_acl,
 	.set_acl	= ovl_set_acl,
+=======
+	.get_acl	= ovl_get_acl,
+>>>>>>> b7ba80a49124 (Commit)
 	.update_time	= ovl_update_time,
 	.fiemap		= ovl_fiemap,
 	.fileattr_get	= ovl_fileattr_get,
@@ -880,9 +984,13 @@ static const struct inode_operations ovl_special_inode_operations = {
 	.permission	= ovl_permission,
 	.getattr	= ovl_getattr,
 	.listxattr	= ovl_listxattr,
+<<<<<<< HEAD
 	.get_inode_acl	= ovl_get_inode_acl,
 	.get_acl	= ovl_get_acl,
 	.set_acl	= ovl_set_acl,
+=======
+	.get_acl	= ovl_get_acl,
+>>>>>>> b7ba80a49124 (Commit)
 	.update_time	= ovl_update_time,
 };
 

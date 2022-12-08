@@ -153,8 +153,13 @@
 	};
 
 	ethernet@f2000 { /* 10GEC2 */
+<<<<<<< HEAD
 		phy-connection-type = "10gbase-r";
 		managed = "in-band-status";
+=======
+		fixed-link = <0 1 1000 0 0>;
+		phy-connection-type = "xgmii";
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	mdio@fc000 {

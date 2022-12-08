@@ -345,10 +345,15 @@ static int __init dmtimer_systimer_init_clock(struct dmtimer_systimer *t,
 		return error;
 
 	r = clk_get_rate(clock);
+<<<<<<< HEAD
 	if (!r) {
 		clk_disable_unprepare(clock);
 		return -ENODEV;
 	}
+=======
+	if (!r)
+		return -ENODEV;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (is_ick)
 		t->ick = clock;

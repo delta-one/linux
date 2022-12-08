@@ -60,17 +60,24 @@ static struct notifier_block tts_notifier = {
 	.priority	= 0,
 };
 
+<<<<<<< HEAD
 #ifndef acpi_skip_set_wakeup_address
 #define acpi_skip_set_wakeup_address() false
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int acpi_sleep_prepare(u32 acpi_state)
 {
 #ifdef CONFIG_ACPI_SLEEP
 	unsigned long acpi_wakeup_address;
 
 	/* do we have a wakeup address for S2 and S3? */
+<<<<<<< HEAD
 	if (acpi_state == ACPI_STATE_S3 && !acpi_skip_set_wakeup_address()) {
+=======
+	if (acpi_state == ACPI_STATE_S3) {
+>>>>>>> b7ba80a49124 (Commit)
 		acpi_wakeup_address = acpi_get_wakeup_address();
 		if (!acpi_wakeup_address)
 			return -EFAULT;
@@ -714,6 +721,7 @@ int acpi_s2idle_begin(void)
 int acpi_s2idle_prepare(void)
 {
 	if (acpi_sci_irq_valid()) {
+<<<<<<< HEAD
 		int error;
 
 		error = enable_irq_wake(acpi_sci_irq);
@@ -721,6 +729,9 @@ int acpi_s2idle_prepare(void)
 			pr_warn("Warning: Failed to enable wakeup from IRQ %d: %d\n",
 				acpi_sci_irq, error);
 
+=======
+		enable_irq_wake(acpi_sci_irq);
+>>>>>>> b7ba80a49124 (Commit)
 		acpi_ec_set_gpe_wake_mask(ACPI_GPE_ENABLE);
 	}
 
@@ -1098,6 +1109,7 @@ int __init acpi_sleep_init(void)
 		register_sys_off_handler(SYS_OFF_MODE_POWER_OFF,
 					 SYS_OFF_PRIO_FIRMWARE,
 					 acpi_power_off, NULL);
+<<<<<<< HEAD
 
 		/*
 		 * Windows uses S5 for reboot, so some BIOSes depend on it to
@@ -1106,6 +1118,8 @@ int __init acpi_sleep_init(void)
 		register_sys_off_handler(SYS_OFF_MODE_RESTART_PREPARE,
 					 SYS_OFF_PRIO_FIRMWARE,
 					 acpi_power_off_prepare, NULL);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		acpi_no_s5 = true;
 	}

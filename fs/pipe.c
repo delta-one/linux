@@ -108,6 +108,7 @@ static inline void __pipe_unlock(struct pipe_inode_info *pipe)
 	mutex_unlock(&pipe->mutex);
 }
 
+<<<<<<< HEAD
 static inline bool __pipe_trylock(struct pipe_inode_info *pipe, bool nonblock)
 {
 	if (!nonblock) {
@@ -118,6 +119,8 @@ static inline bool __pipe_trylock(struct pipe_inode_info *pipe, bool nonblock)
 	return mutex_trylock(&pipe->mutex);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void pipe_double_lock(struct pipe_inode_info *pipe1,
 		      struct pipe_inode_info *pipe2)
 {
@@ -244,7 +247,10 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
 	struct file *filp = iocb->ki_filp;
 	struct pipe_inode_info *pipe = filp->private_data;
 	bool was_full, wake_next_reader = false;
+<<<<<<< HEAD
 	const bool nonblock = iocb->ki_flags & IOCB_NOWAIT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ssize_t ret;
 
 	/* Null read succeeds. */
@@ -252,8 +258,12 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
 		return 0;
 
 	ret = 0;
+<<<<<<< HEAD
 	if (!__pipe_trylock(pipe, nonblock))
 		return -EAGAIN;
+=======
+	__pipe_lock(pipe);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * We only wake up writers if the pipe was full when we started
@@ -309,7 +319,11 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
 				chars = total_len;
 			}
 
+<<<<<<< HEAD
 			error = pipe_buf_confirm(pipe, buf, nonblock);
+=======
+			error = pipe_buf_confirm(pipe, buf);
+>>>>>>> b7ba80a49124 (Commit)
 			if (error) {
 				if (!ret)
 					ret = error;
@@ -354,7 +368,11 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
 			break;
 		if (ret)
 			break;
+<<<<<<< HEAD
 		if (filp->f_flags & O_NONBLOCK || nonblock) {
+=======
+		if (filp->f_flags & O_NONBLOCK) {
+>>>>>>> b7ba80a49124 (Commit)
 			ret = -EAGAIN;
 			break;
 		}
@@ -435,14 +453,21 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
 	ssize_t chars;
 	bool was_empty = false;
 	bool wake_next_writer = false;
+<<<<<<< HEAD
 	const bool nonblock = iocb->ki_flags & IOCB_NOWAIT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Null write succeeds. */
 	if (unlikely(total_len == 0))
 		return 0;
 
+<<<<<<< HEAD
 	if (!__pipe_trylock(pipe, nonblock))
 		return -EAGAIN;
+=======
+	__pipe_lock(pipe);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!pipe->readers) {
 		send_sig(SIGPIPE, current, 0);
@@ -475,7 +500,11 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
 
 		if ((buf->flags & PIPE_BUF_FLAG_CAN_MERGE) &&
 		    offset + chars <= PAGE_SIZE) {
+<<<<<<< HEAD
 			ret = pipe_buf_confirm(pipe, buf, nonblock);
+=======
+			ret = pipe_buf_confirm(pipe, buf);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret)
 				goto out;
 
@@ -507,6 +536,7 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
 			int copied;
 
 			if (!page) {
+<<<<<<< HEAD
 				gfp_t gfp = __GFP_HIGHMEM | __GFP_ACCOUNT |
 					    __GFP_HARDWALL;
 				int this_ret = -EAGAIN;
@@ -519,6 +549,11 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
 				if (unlikely(!page)) {
 					if (!ret)
 						ret = this_ret;
+=======
+				page = alloc_page(GFP_HIGHUSER | __GFP_ACCOUNT);
+				if (unlikely(!page)) {
+					ret = ret ? : -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 					break;
 				}
 				pipe->tmp_page = page;
@@ -570,7 +605,11 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
 			continue;
 
 		/* Wait for buffer space to become available. */
+<<<<<<< HEAD
 		if (filp->f_flags & O_NONBLOCK || nonblock) {
+=======
+		if (filp->f_flags & O_NONBLOCK) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (!ret)
 				ret = -EAGAIN;
 			break;
@@ -999,9 +1038,12 @@ static int __do_pipe_flags(int *fd, struct file **files, int flags)
 	audit_fd_pair(fdr, fdw);
 	fd[0] = fdr;
 	fd[1] = fdw;
+<<<<<<< HEAD
 	/* pipe groks IOCB_NOWAIT */
 	files[0]->f_mode |= FMODE_NOWAIT;
 	files[1]->f_mode |= FMODE_NOWAIT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
  err_fdr:

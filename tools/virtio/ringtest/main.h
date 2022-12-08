@@ -140,6 +140,7 @@ static inline void busy_wait(void)
 #define smp_wmb() smp_release()
 #endif
 
+<<<<<<< HEAD
 static __always_inline
 void __read_once_size(const volatile void *p, void *res, int size)
 {
@@ -153,6 +154,27 @@ void __read_once_size(const volatile void *p, void *res, int size)
 		__builtin_memcpy((void *)res, (const void *)p, size);
 		barrier();
 	}
+=======
+#ifdef __alpha__
+#define smp_read_barrier_depends() smp_acquire()
+#else
+#define smp_read_barrier_depends() do {} while(0)
+#endif
+
+static __always_inline
+void __read_once_size(const volatile void *p, void *res, int size)
+{
+        switch (size) {                                                 \
+        case 1: *(unsigned char *)res = *(volatile unsigned char *)p; break;              \
+        case 2: *(unsigned short *)res = *(volatile unsigned short *)p; break;            \
+        case 4: *(unsigned int *)res = *(volatile unsigned int *)p; break;            \
+        case 8: *(unsigned long long *)res = *(volatile unsigned long long *)p; break;            \
+        default:                                                        \
+                barrier();                                              \
+                __builtin_memcpy((void *)res, (const void *)p, size);   \
+                barrier();                                              \
+        }                                                               \
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static __always_inline void __write_once_size(volatile void *p, void *res, int size)
@@ -169,11 +191,15 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
 	}
 }
 
+<<<<<<< HEAD
 #ifdef __alpha__
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define READ_ONCE(x) \
 ({									\
 	union { typeof(x) __val; char __c[1]; } __u;			\
 	__read_once_size(&(x), __u.__c, sizeof(x));		\
+<<<<<<< HEAD
 	smp_mb(); /* Enforce dependency ordering from x */		\
 	__u.__val;							\
 })
@@ -185,6 +211,11 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
 	__u.__val;							\
 })
 #endif
+=======
+	smp_read_barrier_depends(); /* Enforce dependency ordering from x */ \
+	__u.__val;							\
+})
+>>>>>>> b7ba80a49124 (Commit)
 
 #define WRITE_ONCE(x, val) \
 ({							\

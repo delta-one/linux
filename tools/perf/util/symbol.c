@@ -201,14 +201,20 @@ again:
 			continue;
 
 		if (choose_best_symbol(curr, next) == SYMBOL_A) {
+<<<<<<< HEAD
 			if (next->type == STT_GNU_IFUNC)
 				curr->ifunc_alias = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			rb_erase_cached(&next->rb_node, symbols);
 			symbol__delete(next);
 			goto again;
 		} else {
+<<<<<<< HEAD
 			if (curr->type == STT_GNU_IFUNC)
 				next->ifunc_alias = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			nd = rb_next(&curr->rb_node);
 			rb_erase_cached(&curr->rb_node, symbols);
 			symbol__delete(curr);
@@ -560,11 +566,14 @@ struct symbol *dso__find_symbol(struct dso *dso, u64 addr)
 	return dso->last_find_result.symbol;
 }
 
+<<<<<<< HEAD
 struct symbol *dso__find_symbol_nocache(struct dso *dso, u64 addr)
 {
 	return symbols__find(&dso->symbols, addr);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct symbol *dso__first_symbol(struct dso *dso)
 {
 	return symbols__first(&dso->symbols);
@@ -1377,6 +1386,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
 
 	/* Find the kernel map using the '_stext' symbol */
 	if (!kallsyms__get_function_start(kallsyms_filename, "_stext", &stext)) {
+<<<<<<< HEAD
 		u64 replacement_size = 0;
 
 		list_for_each_entry(new_map, &md.maps, node) {
@@ -1394,6 +1404,12 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
 			if (!replacement_map || new_size < replacement_size) {
 				replacement_map = new_map;
 				replacement_size = new_size;
+=======
+		list_for_each_entry(new_map, &md.maps, node) {
+			if (stext >= new_map->start && stext < new_map->end) {
+				replacement_map = new_map;
+				break;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 	}

@@ -12,7 +12,10 @@ struct bpf_map *bpf_map_meta_alloc(int inner_map_ufd)
 	struct bpf_map *inner_map, *inner_map_meta;
 	u32 inner_map_meta_size;
 	struct fd f;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	f = fdget(inner_map_ufd);
 	inner_map = __bpf_map_get(f);
@@ -21,6 +24,7 @@ struct bpf_map *bpf_map_meta_alloc(int inner_map_ufd)
 
 	/* Does not support >1 level map-in-map */
 	if (inner_map->inner_map_meta) {
+<<<<<<< HEAD
 		ret = -EINVAL;
 		goto put;
 	}
@@ -28,6 +32,20 @@ struct bpf_map *bpf_map_meta_alloc(int inner_map_ufd)
 	if (!inner_map->ops->map_meta_equal) {
 		ret = -ENOTSUPP;
 		goto put;
+=======
+		fdput(f);
+		return ERR_PTR(-EINVAL);
+	}
+
+	if (!inner_map->ops->map_meta_equal) {
+		fdput(f);
+		return ERR_PTR(-ENOTSUPP);
+	}
+
+	if (map_value_has_spin_lock(inner_map)) {
+		fdput(f);
+		return ERR_PTR(-ENOTSUPP);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	inner_map_meta_size = sizeof(*inner_map_meta);
@@ -37,8 +55,13 @@ struct bpf_map *bpf_map_meta_alloc(int inner_map_ufd)
 
 	inner_map_meta = kzalloc(inner_map_meta_size, GFP_USER);
 	if (!inner_map_meta) {
+<<<<<<< HEAD
 		ret = -ENOMEM;
 		goto put;
+=======
+		fdput(f);
+		return ERR_PTR(-ENOMEM);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	inner_map_meta->map_type = inner_map->map_type;
@@ -46,6 +69,7 @@ struct bpf_map *bpf_map_meta_alloc(int inner_map_ufd)
 	inner_map_meta->value_size = inner_map->value_size;
 	inner_map_meta->map_flags = inner_map->map_flags;
 	inner_map_meta->max_entries = inner_map->max_entries;
+<<<<<<< HEAD
 
 	inner_map_meta->record = btf_record_dup(inner_map->record);
 	if (IS_ERR(inner_map_meta->record)) {
@@ -73,6 +97,11 @@ struct bpf_map *bpf_map_meta_alloc(int inner_map_ufd)
 	 * record->fields.list_head have pointers like value_rec pointing into
 	 * inner_map->btf.
 	 */
+=======
+	inner_map_meta->spin_lock_off = inner_map->spin_lock_off;
+	inner_map_meta->timer_off = inner_map->timer_off;
+	inner_map_meta->kptr_off_tab = bpf_map_copy_kptr_off_tab(inner_map);
+>>>>>>> b7ba80a49124 (Commit)
 	if (inner_map->btf) {
 		btf_get(inner_map->btf);
 		inner_map_meta->btf = inner_map->btf;
@@ -88,6 +117,7 @@ struct bpf_map *bpf_map_meta_alloc(int inner_map_ufd)
 
 	fdput(f);
 	return inner_map_meta;
+<<<<<<< HEAD
 free_rec:
 	btf_record_free(inner_map_meta->record);
 free:
@@ -95,12 +125,18 @@ free:
 put:
 	fdput(f);
 	return ERR_PTR(ret);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void bpf_map_meta_free(struct bpf_map *map_meta)
 {
+<<<<<<< HEAD
 	kfree(map_meta->field_offs);
 	bpf_map_free_record(map_meta);
+=======
+	bpf_map_free_kptr_off_tab(map_meta);
+>>>>>>> b7ba80a49124 (Commit)
 	btf_put(map_meta->btf);
 	kfree(map_meta);
 }
@@ -112,8 +148,14 @@ bool bpf_map_meta_equal(const struct bpf_map *meta0,
 	return meta0->map_type == meta1->map_type &&
 		meta0->key_size == meta1->key_size &&
 		meta0->value_size == meta1->value_size &&
+<<<<<<< HEAD
 		meta0->map_flags == meta1->map_flags &&
 		btf_record_equal(meta0->record, meta1->record);
+=======
+		meta0->timer_off == meta1->timer_off &&
+		meta0->map_flags == meta1->map_flags &&
+		bpf_map_equal_kptr_off_tab(meta0, meta1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void *bpf_map_fd_get_ptr(struct bpf_map *map,

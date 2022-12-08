@@ -1003,7 +1003,11 @@ static void sysrq_disconnect(struct input_handle *handle)
 
 	input_close_device(handle);
 	cancel_work_sync(&sysrq->reinject_work);
+<<<<<<< HEAD
 	timer_shutdown_sync(&sysrq->keyreset_timer);
+=======
+	del_timer_sync(&sysrq->keyreset_timer);
+>>>>>>> b7ba80a49124 (Commit)
 	input_unregister_handle(handle);
 	kfree(sysrq);
 }

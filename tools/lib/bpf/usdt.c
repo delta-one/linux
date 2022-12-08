@@ -282,7 +282,11 @@ struct usdt_manager *usdt_manager_new(struct bpf_object *obj)
 	 * If this is not supported, USDTs with semaphores will not be supported.
 	 * Added in: a6ca88b241d5 ("trace_uprobe: support reference counter in fd-based uprobe")
 	 */
+<<<<<<< HEAD
 	man->has_sema_refcnt = faccessat(AT_FDCWD, ref_ctr_sysfs_path, F_OK, AT_EACCESS) == 0;
+=======
+	man->has_sema_refcnt = access(ref_ctr_sysfs_path, F_OK) == 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return man;
 }
@@ -771,7 +775,11 @@ static int collect_usdt_targets(struct usdt_manager *man, Elf *elf, const char *
 		target->rel_ip = usdt_rel_ip;
 		target->sema_off = usdt_sema_off;
 
+<<<<<<< HEAD
 		/* notes.args references strings from ELF itself, so they can
+=======
+		/* notes.args references strings from Elf itself, so they can
+>>>>>>> b7ba80a49124 (Commit)
 		 * be referenced safely until elf_end() call
 		 */
 		target->spec_str = note.args;
@@ -873,6 +881,7 @@ static void bpf_link_usdt_dealloc(struct bpf_link *link)
 	free(usdt_link);
 }
 
+<<<<<<< HEAD
 static size_t specs_hash_fn(long key, void *ctx)
 {
 	return str_hash((char *)key);
@@ -881,19 +890,42 @@ static size_t specs_hash_fn(long key, void *ctx)
 static bool specs_equal_fn(long key1, long key2, void *ctx)
 {
 	return strcmp((char *)key1, (char *)key2) == 0;
+=======
+static size_t specs_hash_fn(const void *key, void *ctx)
+{
+	const char *s = key;
+
+	return str_hash(s);
+}
+
+static bool specs_equal_fn(const void *key1, const void *key2, void *ctx)
+{
+	const char *s1 = key1;
+	const char *s2 = key2;
+
+	return strcmp(s1, s2) == 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int allocate_spec_id(struct usdt_manager *man, struct hashmap *specs_hash,
 			    struct bpf_link_usdt *link, struct usdt_target *target,
 			    int *spec_id, bool *is_new)
 {
+<<<<<<< HEAD
 	long tmp;
 	void *new_ids;
+=======
+	void *tmp;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	/* check if we already allocated spec ID for this spec string */
 	if (hashmap__find(specs_hash, target->spec_str, &tmp)) {
+<<<<<<< HEAD
 		*spec_id = tmp;
+=======
+		*spec_id = (long)tmp;
+>>>>>>> b7ba80a49124 (Commit)
 		*is_new = false;
 		return 0;
 	}
@@ -901,17 +933,28 @@ static int allocate_spec_id(struct usdt_manager *man, struct hashmap *specs_hash
 	/* otherwise it's a new ID that needs to be set up in specs map and
 	 * returned back to usdt_manager when USDT link is detached
 	 */
+<<<<<<< HEAD
 	new_ids = libbpf_reallocarray(link->spec_ids, link->spec_cnt + 1, sizeof(*link->spec_ids));
 	if (!new_ids)
 		return -ENOMEM;
 	link->spec_ids = new_ids;
+=======
+	tmp = libbpf_reallocarray(link->spec_ids, link->spec_cnt + 1, sizeof(*link->spec_ids));
+	if (!tmp)
+		return -ENOMEM;
+	link->spec_ids = tmp;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* get next free spec ID, giving preference to free list, if not empty */
 	if (man->free_spec_cnt) {
 		*spec_id = man->free_spec_ids[man->free_spec_cnt - 1];
 
 		/* cache spec ID for current spec string for future lookups */
+<<<<<<< HEAD
 		err = hashmap__add(specs_hash, target->spec_str, *spec_id);
+=======
+		err = hashmap__add(specs_hash, target->spec_str, (void *)(long)*spec_id);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			 return err;
 
@@ -924,7 +967,11 @@ static int allocate_spec_id(struct usdt_manager *man, struct hashmap *specs_hash
 		*spec_id = man->next_free_spec_id;
 
 		/* cache spec ID for current spec string for future lookups */
+<<<<<<< HEAD
 		err = hashmap__add(specs_hash, target->spec_str, *spec_id);
+=======
+		err = hashmap__add(specs_hash, target->spec_str, (void *)(long)*spec_id);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			 return err;
 
@@ -1141,6 +1188,7 @@ static int parse_usdt_note(Elf *elf, const char *path, GElf_Nhdr *nhdr,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec *arg, int *arg_sz);
 
 static int parse_usdt_spec(struct usdt_spec *spec, const struct usdt_note *note, __u64 usdt_cookie)
@@ -1148,6 +1196,14 @@ static int parse_usdt_spec(struct usdt_spec *spec, const struct usdt_note *note,
 	struct usdt_arg_spec *arg;
 	const char *s;
 	int arg_sz, len;
+=======
+static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec *arg);
+
+static int parse_usdt_spec(struct usdt_spec *spec, const struct usdt_note *note, __u64 usdt_cookie)
+{
+	const char *s;
+	int len;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spec->usdt_cookie = usdt_cookie;
 	spec->arg_cnt = 0;
@@ -1160,6 +1216,7 @@ static int parse_usdt_spec(struct usdt_spec *spec, const struct usdt_note *note,
 			return -E2BIG;
 		}
 
+<<<<<<< HEAD
 		arg = &spec->args[spec->arg_cnt];
 		len = parse_usdt_arg(s, spec->arg_cnt, arg, &arg_sz);
 		if (len < 0)
@@ -1179,6 +1236,12 @@ static int parse_usdt_spec(struct usdt_spec *spec, const struct usdt_note *note,
 			return -EINVAL;
 		}
 
+=======
+		len = parse_usdt_arg(s, spec->arg_cnt, &spec->args[spec->arg_cnt]);
+		if (len < 0)
+			return len;
+
+>>>>>>> b7ba80a49124 (Commit)
 		s += len;
 		spec->arg_cnt++;
 	}
@@ -1235,6 +1298,7 @@ static int calc_pt_regs_off(const char *reg_name)
 	return -ENOENT;
 }
 
+<<<<<<< HEAD
 static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec *arg, int *arg_sz)
 {
 	char reg_name[16];
@@ -1242,10 +1306,20 @@ static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec
 	long off;
 
 	if (sscanf(arg_str, " %d @ %ld ( %%%15[^)] ) %n", arg_sz, &off, reg_name, &len) == 3) {
+=======
+static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec *arg)
+{
+	char *reg_name = NULL;
+	int arg_sz, len, reg_off;
+	long off;
+
+	if (sscanf(arg_str, " %d @ %ld ( %%%m[^)] ) %n", &arg_sz, &off, &reg_name, &len) == 3) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Memory dereference case, e.g., -4@-20(%rbp) */
 		arg->arg_type = USDT_ARG_REG_DEREF;
 		arg->val_off = off;
 		reg_off = calc_pt_regs_off(reg_name);
+<<<<<<< HEAD
 		if (reg_off < 0)
 			return reg_off;
 		arg->reg_off = reg_off;
@@ -1258,15 +1332,30 @@ static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec
 			return reg_off;
 		arg->reg_off = reg_off;
 	} else if (sscanf(arg_str, " %d @ %%%15s %n", arg_sz, reg_name, &len) == 2) {
+=======
+		free(reg_name);
+		if (reg_off < 0)
+			return reg_off;
+		arg->reg_off = reg_off;
+	} else if (sscanf(arg_str, " %d @ %%%ms %n", &arg_sz, &reg_name, &len) == 2) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Register read case, e.g., -4@%eax */
 		arg->arg_type = USDT_ARG_REG;
 		arg->val_off = 0;
 
 		reg_off = calc_pt_regs_off(reg_name);
+<<<<<<< HEAD
 		if (reg_off < 0)
 			return reg_off;
 		arg->reg_off = reg_off;
 	} else if (sscanf(arg_str, " %d @ $%ld %n", arg_sz, &off, &len) == 2) {
+=======
+		free(reg_name);
+		if (reg_off < 0)
+			return reg_off;
+		arg->reg_off = reg_off;
+	} else if (sscanf(arg_str, " %d @ $%ld %n", &arg_sz, &off, &len) == 2) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Constant value case, e.g., 4@$71 */
 		arg->arg_type = USDT_ARG_CONST;
 		arg->val_off = off;
@@ -1276,6 +1365,23 @@ static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	arg->arg_signed = arg_sz < 0;
+	if (arg_sz < 0)
+		arg_sz = -arg_sz;
+
+	switch (arg_sz) {
+	case 1: case 2: case 4: case 8:
+		arg->arg_bitshift = 64 - arg_sz * 8;
+		break;
+	default:
+		pr_warn("usdt: unsupported arg #%d (spec '%s') size: %d\n",
+			arg_num, arg_str, arg_sz);
+		return -EINVAL;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return len;
 }
 
@@ -1283,6 +1389,7 @@ static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec
 
 /* Do not support __s390__ for now, since user_pt_regs is broken with -m31. */
 
+<<<<<<< HEAD
 static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec *arg, int *arg_sz)
 {
 	unsigned int reg;
@@ -1290,6 +1397,15 @@ static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec
 	long off;
 
 	if (sscanf(arg_str, " %d @ %ld ( %%r%u ) %n", arg_sz, &off, &reg, &len) == 3) {
+=======
+static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec *arg)
+{
+	unsigned int reg;
+	int arg_sz, len;
+	long off;
+
+	if (sscanf(arg_str, " %d @ %ld ( %%r%u ) %n", &arg_sz, &off, &reg, &len) == 3) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Memory dereference case, e.g., -2@-28(%r15) */
 		arg->arg_type = USDT_ARG_REG_DEREF;
 		arg->val_off = off;
@@ -1298,7 +1414,11 @@ static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec
 			return -EINVAL;
 		}
 		arg->reg_off = offsetof(user_pt_regs, gprs[reg]);
+<<<<<<< HEAD
 	} else if (sscanf(arg_str, " %d @ %%r%u %n", arg_sz, &reg, &len) == 2) {
+=======
+	} else if (sscanf(arg_str, " %d @ %%r%u %n", &arg_sz, &reg, &len) == 2) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Register read case, e.g., -8@%r0 */
 		arg->arg_type = USDT_ARG_REG;
 		arg->val_off = 0;
@@ -1307,7 +1427,11 @@ static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec
 			return -EINVAL;
 		}
 		arg->reg_off = offsetof(user_pt_regs, gprs[reg]);
+<<<<<<< HEAD
 	} else if (sscanf(arg_str, " %d @ %ld %n", arg_sz, &off, &len) == 2) {
+=======
+	} else if (sscanf(arg_str, " %d @ %ld %n", &arg_sz, &off, &len) == 2) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Constant value case, e.g., 4@71 */
 		arg->arg_type = USDT_ARG_CONST;
 		arg->val_off = off;
@@ -1317,6 +1441,23 @@ static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	arg->arg_signed = arg_sz < 0;
+	if (arg_sz < 0)
+		arg_sz = -arg_sz;
+
+	switch (arg_sz) {
+	case 1: case 2: case 4: case 8:
+		arg->arg_bitshift = 64 - arg_sz * 8;
+		break;
+	default:
+		pr_warn("usdt: unsupported arg #%d (spec '%s') size: %d\n",
+			arg_num, arg_str, arg_sz);
+		return -EINVAL;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return len;
 }
 
@@ -1336,6 +1477,7 @@ static int calc_pt_regs_off(const char *reg_name)
 	return -ENOENT;
 }
 
+<<<<<<< HEAD
 static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec *arg, int *arg_sz)
 {
 	char reg_name[16];
@@ -1343,31 +1485,64 @@ static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec
 	long off;
 
 	if (sscanf(arg_str, " %d @ \[ %15[a-z0-9] , %ld ] %n", arg_sz, reg_name, &off, &len) == 3) {
+=======
+static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec *arg)
+{
+	char *reg_name = NULL;
+	int arg_sz, len, reg_off;
+	long off;
+
+	if (sscanf(arg_str, " %d @ \[ %m[a-z0-9], %ld ] %n", &arg_sz, &reg_name, &off, &len) == 3) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Memory dereference case, e.g., -4@[sp, 96] */
 		arg->arg_type = USDT_ARG_REG_DEREF;
 		arg->val_off = off;
 		reg_off = calc_pt_regs_off(reg_name);
+<<<<<<< HEAD
 		if (reg_off < 0)
 			return reg_off;
 		arg->reg_off = reg_off;
 	} else if (sscanf(arg_str, " %d @ \[ %15[a-z0-9] ] %n", arg_sz, reg_name, &len) == 2) {
+=======
+		free(reg_name);
+		if (reg_off < 0)
+			return reg_off;
+		arg->reg_off = reg_off;
+	} else if (sscanf(arg_str, " %d @ \[ %m[a-z0-9] ] %n", &arg_sz, &reg_name, &len) == 2) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Memory dereference case, e.g., -4@[sp] */
 		arg->arg_type = USDT_ARG_REG_DEREF;
 		arg->val_off = 0;
 		reg_off = calc_pt_regs_off(reg_name);
+<<<<<<< HEAD
 		if (reg_off < 0)
 			return reg_off;
 		arg->reg_off = reg_off;
 	} else if (sscanf(arg_str, " %d @ %ld %n", arg_sz, &off, &len) == 2) {
+=======
+		free(reg_name);
+		if (reg_off < 0)
+			return reg_off;
+		arg->reg_off = reg_off;
+	} else if (sscanf(arg_str, " %d @ %ld %n", &arg_sz, &off, &len) == 2) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Constant value case, e.g., 4@5 */
 		arg->arg_type = USDT_ARG_CONST;
 		arg->val_off = off;
 		arg->reg_off = 0;
+<<<<<<< HEAD
 	} else if (sscanf(arg_str, " %d @ %15[a-z0-9] %n", arg_sz, reg_name, &len) == 2) {
+=======
+	} else if (sscanf(arg_str, " %d @ %m[a-z0-9] %n", &arg_sz, &reg_name, &len) == 2) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Register read case, e.g., -8@x4 */
 		arg->arg_type = USDT_ARG_REG;
 		arg->val_off = 0;
 		reg_off = calc_pt_regs_off(reg_name);
+<<<<<<< HEAD
+=======
+		free(reg_name);
+>>>>>>> b7ba80a49124 (Commit)
 		if (reg_off < 0)
 			return reg_off;
 		arg->reg_off = reg_off;
@@ -1376,6 +1551,23 @@ static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	arg->arg_signed = arg_sz < 0;
+	if (arg_sz < 0)
+		arg_sz = -arg_sz;
+
+	switch (arg_sz) {
+	case 1: case 2: case 4: case 8:
+		arg->arg_bitshift = 64 - arg_sz * 8;
+		break;
+	default:
+		pr_warn("usdt: unsupported arg #%d (spec '%s') size: %d\n",
+			arg_num, arg_str, arg_sz);
+		return -EINVAL;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return len;
 }
 
@@ -1430,6 +1622,7 @@ static int calc_pt_regs_off(const char *reg_name)
 	return -ENOENT;
 }
 
+<<<<<<< HEAD
 static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec *arg, int *arg_sz)
 {
 	char reg_name[16];
@@ -1437,23 +1630,48 @@ static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec
 	long off;
 
 	if (sscanf(arg_str, " %d @ %ld ( %15[a-z0-9] ) %n", arg_sz, &off, reg_name, &len) == 3) {
+=======
+static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec *arg)
+{
+	char *reg_name = NULL;
+	int arg_sz, len, reg_off;
+	long off;
+
+	if (sscanf(arg_str, " %d @ %ld ( %m[a-z0-9] ) %n", &arg_sz, &off, &reg_name, &len) == 3) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Memory dereference case, e.g., -8@-88(s0) */
 		arg->arg_type = USDT_ARG_REG_DEREF;
 		arg->val_off = off;
 		reg_off = calc_pt_regs_off(reg_name);
+<<<<<<< HEAD
 		if (reg_off < 0)
 			return reg_off;
 		arg->reg_off = reg_off;
 	} else if (sscanf(arg_str, " %d @ %ld %n", arg_sz, &off, &len) == 2) {
+=======
+		free(reg_name);
+		if (reg_off < 0)
+			return reg_off;
+		arg->reg_off = reg_off;
+	} else if (sscanf(arg_str, " %d @ %ld %n", &arg_sz, &off, &len) == 2) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Constant value case, e.g., 4@5 */
 		arg->arg_type = USDT_ARG_CONST;
 		arg->val_off = off;
 		arg->reg_off = 0;
+<<<<<<< HEAD
 	} else if (sscanf(arg_str, " %d @ %15[a-z0-9] %n", arg_sz, reg_name, &len) == 2) {
+=======
+	} else if (sscanf(arg_str, " %d @ %m[a-z0-9] %n", &arg_sz, &reg_name, &len) == 2) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Register read case, e.g., -8@a1 */
 		arg->arg_type = USDT_ARG_REG;
 		arg->val_off = 0;
 		reg_off = calc_pt_regs_off(reg_name);
+<<<<<<< HEAD
+=======
+		free(reg_name);
+>>>>>>> b7ba80a49124 (Commit)
 		if (reg_off < 0)
 			return reg_off;
 		arg->reg_off = reg_off;
@@ -1462,6 +1680,7 @@ static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	return len;
 }
 
@@ -1539,6 +1758,19 @@ static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec
 		arg->reg_off = reg_off;
 	} else {
 		pr_warn("usdt: unrecognized arg #%d spec '%s'\n", arg_num, arg_str);
+=======
+	arg->arg_signed = arg_sz < 0;
+	if (arg_sz < 0)
+		arg_sz = -arg_sz;
+
+	switch (arg_sz) {
+	case 1: case 2: case 4: case 8:
+		arg->arg_bitshift = 64 - arg_sz * 8;
+		break;
+	default:
+		pr_warn("usdt: unsupported arg #%d (spec '%s') size: %d\n",
+			arg_num, arg_str, arg_sz);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -1547,7 +1779,11 @@ static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec
 
 #else
 
+<<<<<<< HEAD
 static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec *arg, int *arg_sz)
+=======
+static int parse_usdt_arg(const char *arg_str, int arg_num, struct usdt_arg_spec *arg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pr_warn("usdt: libbpf doesn't support USDTs on current architecture\n");
 	return -ENOTSUP;

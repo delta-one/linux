@@ -39,11 +39,14 @@ static inline struct intel_gt *huc_to_gt(struct intel_huc *huc)
 	return container_of(huc, struct intel_gt, uc.huc);
 }
 
+<<<<<<< HEAD
 static inline struct intel_gt *gsc_uc_to_gt(struct intel_gsc_uc *gsc_uc)
 {
 	return container_of(gsc_uc, struct intel_gt, uc.gsc);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct intel_gt *gsc_to_gt(struct intel_gsc *gsc)
 {
 	return container_of(gsc, struct intel_gt, gsc);
@@ -65,7 +68,10 @@ void intel_gt_driver_late_release_all(struct drm_i915_private *i915);
 int intel_gt_wait_for_idle(struct intel_gt *gt, long timeout);
 
 void intel_gt_check_and_clear_faults(struct intel_gt *gt);
+<<<<<<< HEAD
 i915_reg_t intel_gt_perf_limit_reasons_reg(struct intel_gt *gt);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void intel_gt_clear_error_registers(struct intel_gt *gt,
 				    intel_engine_mask_t engine_mask);
 

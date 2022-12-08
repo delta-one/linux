@@ -43,7 +43,10 @@
 enum {
 	MCTP_I2C_FLOW_STATE_NEW = 0,
 	MCTP_I2C_FLOW_STATE_ACTIVE,
+<<<<<<< HEAD
 	MCTP_I2C_FLOW_STATE_INVALID,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* List of all struct mctp_i2c_client
@@ -375,6 +378,7 @@ mctp_i2c_get_tx_flow_state(struct mctp_i2c_dev *midev, struct sk_buff *skb)
 	 */
 	if (!key->valid) {
 		state = MCTP_I2C_TX_FLOW_INVALID;
+<<<<<<< HEAD
 	} else {
 		switch (key->dev_flow_state) {
 		case MCTP_I2C_FLOW_STATE_NEW:
@@ -387,6 +391,14 @@ mctp_i2c_get_tx_flow_state(struct mctp_i2c_dev *midev, struct sk_buff *skb)
 		default:
 			state = MCTP_I2C_TX_FLOW_INVALID;
 		}
+=======
+
+	} else if (key->dev_flow_state == MCTP_I2C_FLOW_STATE_NEW) {
+		key->dev_flow_state = MCTP_I2C_FLOW_STATE_ACTIVE;
+		state = MCTP_I2C_TX_FLOW_NEW;
+	} else {
+		state = MCTP_I2C_TX_FLOW_EXISTING;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	spin_unlock_irqrestore(&key->lock, flags);
@@ -624,6 +636,7 @@ static void mctp_i2c_release_flow(struct mctp_dev *mdev,
 
 {
 	struct mctp_i2c_dev *midev = netdev_priv(mdev->dev);
+<<<<<<< HEAD
 	bool queue_release = false;
 	unsigned long flags;
 
@@ -649,6 +662,23 @@ static void mctp_i2c_release_flow(struct mctp_dev *mdev,
 		spin_unlock(&midev->tx_queue.lock);
 		wake_up(&midev->tx_wq);
 	}
+=======
+	unsigned long flags;
+
+	spin_lock_irqsave(&midev->lock, flags);
+	midev->release_count++;
+	spin_unlock_irqrestore(&midev->lock, flags);
+
+	/* Ensure we have a release operation queued, through the fake
+	 * marker skb
+	 */
+	spin_lock(&midev->tx_queue.lock);
+	if (!midev->unlock_marker.next)
+		__skb_queue_tail(&midev->tx_queue, &midev->unlock_marker);
+	spin_unlock(&midev->tx_queue.lock);
+
+	wake_up(&midev->tx_wq);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct net_device_ops mctp_i2c_ops = {

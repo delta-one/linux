@@ -102,7 +102,11 @@ static int arm64__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
 	if (err)
 		goto out_free_arm;
 	/* b, b.cond, br, cbz/cbnz, tbz/tbnz */
+<<<<<<< HEAD
 	err = regcomp(&arm->jump_insn, "^[ct]?br?\\.?(cc|cs|eq|ge|gt|hi|hs|le|lo|ls|lt|mi|ne|pl|vc|vs)?n?z?$",
+=======
+	err = regcomp(&arm->jump_insn, "^[ct]?br?\\.?(cc|cs|eq|ge|gt|hi|le|ls|lt|mi|ne|pl)?n?z?$",
+>>>>>>> b7ba80a49124 (Commit)
 		      REG_EXTENDED);
 	if (err)
 		goto out_free_call;

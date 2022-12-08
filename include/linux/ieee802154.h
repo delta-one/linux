@@ -44,6 +44,7 @@
 #define IEEE802154_SHORT_ADDR_LEN	2
 #define IEEE802154_PAN_ID_LEN		2
 
+<<<<<<< HEAD
 /* Duration in superframe order */
 #define IEEE802154_MAX_SCAN_DURATION	14
 #define IEEE802154_ACTIVE_SCAN_DURATION	15
@@ -51,6 +52,8 @@
 #define IEEE802154_SUPERFRAME_PERIOD	16
 /* Various periods expressed in symbols */
 #define IEEE802154_SLOT_PERIOD		60
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define IEEE802154_LIFS_PERIOD		40
 #define IEEE802154_SIFS_PERIOD		12
 #define IEEE802154_MAX_SIFS_FRAME_SIZE	18
@@ -283,6 +286,7 @@ enum {
 	IEEE802154_SYSTEM_ERROR = 0xff,
 };
 
+<<<<<<< HEAD
 /**
  * enum ieee802154_filtering_level - Filtering levels applicable to a PHY
  *
@@ -307,6 +311,8 @@ enum ieee802154_filtering_level {
 	IEEE802154_FILTERING_4_FRAME_FIELDS,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* frame control handling */
 #define IEEE802154_FCTL_FTYPE		0x0003
 #define IEEE802154_FCTL_ACKREQ		0x0020

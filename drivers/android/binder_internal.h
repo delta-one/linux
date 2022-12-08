@@ -133,7 +133,11 @@ enum binder_stat_types {
 };
 
 struct binder_stats {
+<<<<<<< HEAD
 	atomic_t br[_IOC_NR(BR_TRANSACTION_PENDING_FROZEN) + 1];
+=======
+	atomic_t br[_IOC_NR(BR_ONEWAY_SPAM_SUSPECT) + 1];
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_t bc[_IOC_NR(BC_REPLY_SG) + 1];
 	atomic_t obj_created[BINDER_STAT_COUNT];
 	atomic_t obj_deleted[BINDER_STAT_COUNT];
@@ -152,7 +156,10 @@ struct binder_work {
 	enum binder_work_type {
 		BINDER_WORK_TRANSACTION = 1,
 		BINDER_WORK_TRANSACTION_COMPLETE,
+<<<<<<< HEAD
 		BINDER_WORK_TRANSACTION_PENDING,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		BINDER_WORK_TRANSACTION_ONEWAY_SPAM_SUSPECT,
 		BINDER_WORK_RETURN_ERROR,
 		BINDER_WORK_NODE,

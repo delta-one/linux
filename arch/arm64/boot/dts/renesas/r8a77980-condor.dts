@@ -14,6 +14,7 @@
 	model = "Renesas Condor board based on r8a77980";
 	compatible = "renesas,condor", "renesas,r8a77980";
 };
+<<<<<<< HEAD
 
 &i2c0 {
 	eeprom@50 {
@@ -22,3 +23,5 @@
 		pagesize = <8>;
 	};
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

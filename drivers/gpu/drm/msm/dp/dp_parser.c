@@ -91,6 +91,7 @@ static int dp_parser_ctrl_res(struct dp_parser *parser)
 	return 0;
 }
 
+<<<<<<< HEAD
 static u32 dp_parser_link_frequencies(struct device_node *of_node)
 {
 	struct device_node *endpoint;
@@ -138,6 +139,21 @@ static int dp_parser_misc(struct dp_parser *parser)
 	if (!parser->max_dp_link_rate)
 		parser->max_dp_link_rate = DP_LINK_RATE_HBR2;
 
+=======
+static int dp_parser_misc(struct dp_parser *parser)
+{
+	struct device_node *of_node = parser->pdev->dev.of_node;
+	int len;
+
+	len = drm_of_get_data_lanes_count(of_node, 1, DP_MAX_NUM_DP_LANES);
+	if (len < 0) {
+		DRM_WARN("Invalid property \"data-lanes\", default max DP lanes = %d\n",
+			 DP_MAX_NUM_DP_LANES);
+		len = DP_MAX_NUM_DP_LANES;
+	}
+
+	parser->max_dp_lanes = len;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -274,12 +290,21 @@ static int dp_parser_clock(struct dp_parser *parser)
 	return 0;
 }
 
+<<<<<<< HEAD
 int devm_dp_parser_find_next_bridge(struct device *dev, struct dp_parser *parser)
 {
 	struct platform_device *pdev = parser->pdev;
 	struct drm_bridge *bridge;
 
 	bridge = devm_drm_of_get_bridge(dev, pdev->dev.of_node, 1, 0);
+=======
+int dp_parser_find_next_bridge(struct dp_parser *parser)
+{
+	struct device *dev = &parser->pdev->dev;
+	struct drm_bridge *bridge;
+
+	bridge = devm_drm_of_get_bridge(dev, dev->of_node, 1, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(bridge))
 		return PTR_ERR(bridge);
 

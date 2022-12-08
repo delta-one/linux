@@ -7,6 +7,12 @@
  * Driver for Amiga joysticks for Linux/m68k
  */
 
+<<<<<<< HEAD
+=======
+/*
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/types.h>
 #include <linux/errno.h>
 #include <linux/kernel.h>

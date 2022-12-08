@@ -80,7 +80,10 @@ FEATURE_TESTS_EXTRA :=                  \
          compile-32                     \
          compile-x32                    \
          cplus-demangle                 \
+<<<<<<< HEAD
          cxa-demangle                   \
+=======
+>>>>>>> b7ba80a49124 (Commit)
          gtk2                           \
          gtk2-infobar                   \
          hello                          \
@@ -104,7 +107,10 @@ FEATURE_TESTS_EXTRA :=                  \
          libbpf-bpf_prog_load           \
          libbpf-bpf_object__next_program \
          libbpf-bpf_object__next_map    \
+<<<<<<< HEAD
          libbpf-bpf_program__set_insns  \
+=======
+>>>>>>> b7ba80a49124 (Commit)
          libbpf-bpf_create_map		\
          libpfm4                        \
          libdebuginfod			\

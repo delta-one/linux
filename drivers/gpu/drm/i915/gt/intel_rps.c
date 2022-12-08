@@ -7,7 +7,10 @@
 
 #include <drm/i915_drm.h>
 
+<<<<<<< HEAD
 #include "display/intel_display.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "i915_drv.h"
 #include "i915_irq.h"
 #include "intel_breadcrumbs.h"
@@ -431,8 +434,12 @@ static int __gen5_rps_set(struct intel_rps *rps, u8 val)
 
 	rgvswctl = intel_uncore_read16(uncore, MEMSWCTL);
 	if (rgvswctl & MEMCTL_CMD_STS) {
+<<<<<<< HEAD
 		drm_dbg(&rps_to_i915(rps)->drm,
 			"gpu busy, RCS change rejected\n");
+=======
+		DRM_DEBUG("gpu busy, RCS change rejected\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EBUSY; /* still busy with another command */
 	}
 
@@ -627,7 +634,13 @@ static void gen5_rps_disable(struct intel_rps *rps)
 	rgvswctl = intel_uncore_read16(uncore, MEMSWCTL);
 
 	/* Ack interrupts, disable EFC interrupt */
+<<<<<<< HEAD
 	intel_uncore_rmw(uncore, MEMINTREN, MEMINT_EVAL_CHG_EN, 0);
+=======
+	intel_uncore_write(uncore, MEMINTREN,
+			   intel_uncore_read(uncore, MEMINTREN) &
+			   ~MEMINT_EVAL_CHG_EN);
+>>>>>>> b7ba80a49124 (Commit)
 	intel_uncore_write(uncore, MEMINTRSTS, MEMINT_EVAL_CHG);
 
 	/* Go back to the starting frequency */
@@ -1016,6 +1029,7 @@ void intel_rps_boost(struct i915_request *rq)
 		if (rps_uses_slpc(rps)) {
 			slpc = rps_to_slpc(rps);
 
+<<<<<<< HEAD
 			if (slpc->min_freq_softlimit >= slpc->boost_freq)
 				return;
 
@@ -1025,6 +1039,11 @@ void intel_rps_boost(struct i915_request *rq)
 					 rq->fence.context, rq->fence.seqno);
 				schedule_work(&slpc->boost_work);
 			}
+=======
+			/* Return if old value is non zero */
+			if (!atomic_fetch_inc(&slpc->num_waiters))
+				schedule_work(&slpc->boost_work);
+>>>>>>> b7ba80a49124 (Commit)
 
 			return;
 		}
@@ -1091,6 +1110,7 @@ static u32 intel_rps_read_state_cap(struct intel_rps *rps)
 		return intel_uncore_read(uncore, GEN6_RP_STATE_CAP);
 }
 
+<<<<<<< HEAD
 static void
 mtl_get_freq_caps(struct intel_rps *rps, struct intel_rps_freq_caps *caps)
 {
@@ -1110,6 +1130,17 @@ mtl_get_freq_caps(struct intel_rps *rps, struct intel_rps_freq_caps *caps)
 
 static void
 __gen6_rps_get_freq_caps(struct intel_rps *rps, struct intel_rps_freq_caps *caps)
+=======
+/**
+ * gen6_rps_get_freq_caps - Get freq caps exposed by HW
+ * @rps: the intel_rps structure
+ * @caps: returned freq caps
+ *
+ * Returned "caps" frequencies should be converted to MHz using
+ * intel_gpu_freq()
+ */
+void gen6_rps_get_freq_caps(struct intel_rps *rps, struct intel_rps_freq_caps *caps)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drm_i915_private *i915 = rps_to_i915(rps);
 	u32 rp_state_cap;
@@ -1144,6 +1175,7 @@ __gen6_rps_get_freq_caps(struct intel_rps *rps, struct intel_rps_freq_caps *caps
 	}
 }
 
+<<<<<<< HEAD
 /**
  * gen6_rps_get_freq_caps - Get freq caps exposed by HW
  * @rps: the intel_rps structure
@@ -1162,6 +1194,8 @@ void gen6_rps_get_freq_caps(struct intel_rps *rps, struct intel_rps_freq_caps *c
 		return __gen6_rps_get_freq_caps(rps, caps);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void gen6_rps_init(struct intel_rps *rps)
 {
 	struct drm_i915_private *i915 = rps_to_i915(rps);
@@ -1677,6 +1711,10 @@ static void vlv_init_gpll_ref_freq(struct intel_rps *rps)
 static void vlv_rps_init(struct intel_rps *rps)
 {
 	struct drm_i915_private *i915 = rps_to_i915(rps);
+<<<<<<< HEAD
+=======
+	u32 val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	vlv_iosf_sb_get(i915,
 			BIT(VLV_IOSF_SB_PUNIT) |
@@ -1685,6 +1723,24 @@ static void vlv_rps_init(struct intel_rps *rps)
 
 	vlv_init_gpll_ref_freq(rps);
 
+<<<<<<< HEAD
+=======
+	val = vlv_punit_read(i915, PUNIT_REG_GPU_FREQ_STS);
+	switch ((val >> 6) & 3) {
+	case 0:
+	case 1:
+		i915->mem_freq = 800;
+		break;
+	case 2:
+		i915->mem_freq = 1066;
+		break;
+	case 3:
+		i915->mem_freq = 1333;
+		break;
+	}
+	drm_dbg(&i915->drm, "DDR speed: %d MHz\n", i915->mem_freq);
+
+>>>>>>> b7ba80a49124 (Commit)
 	rps->max_freq = vlv_rps_max_freq(rps);
 	rps->rp0_freq = rps->max_freq;
 	drm_dbg(&i915->drm, "max GPU freq: %d MHz (%u)\n",
@@ -1711,6 +1767,10 @@ static void vlv_rps_init(struct intel_rps *rps)
 static void chv_rps_init(struct intel_rps *rps)
 {
 	struct drm_i915_private *i915 = rps_to_i915(rps);
+<<<<<<< HEAD
+=======
+	u32 val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	vlv_iosf_sb_get(i915,
 			BIT(VLV_IOSF_SB_PUNIT) |
@@ -1719,6 +1779,21 @@ static void chv_rps_init(struct intel_rps *rps)
 
 	vlv_init_gpll_ref_freq(rps);
 
+<<<<<<< HEAD
+=======
+	val = vlv_cck_read(i915, CCK_FUSE_REG);
+
+	switch ((val >> 2) & 0x7) {
+	case 3:
+		i915->mem_freq = 2000;
+		break;
+	default:
+		i915->mem_freq = 1600;
+		break;
+	}
+	drm_dbg(&i915->drm, "DDR speed: %d MHz\n", i915->mem_freq);
+
+>>>>>>> b7ba80a49124 (Commit)
 	rps->max_freq = chv_rps_max_freq(rps);
 	rps->rp0_freq = rps->max_freq;
 	drm_dbg(&i915->drm, "max GPU freq: %d MHz (%u)\n",
@@ -1803,7 +1878,11 @@ static void rps_work(struct work_struct *work)
 	u32 pm_iir = 0;
 
 	spin_lock_irq(gt->irq_lock);
+<<<<<<< HEAD
 	pm_iir = __xchg(&rps->pm_iir, 0) & rps->pm_events;
+=======
+	pm_iir = fetch_and_zero(&rps->pm_iir) & rps->pm_events;
+>>>>>>> b7ba80a49124 (Commit)
 	client_boost = atomic_read(&rps->num_waiters);
 	spin_unlock_irq(gt->irq_lock);
 
@@ -1926,8 +2005,12 @@ void gen6_rps_irq_handler(struct intel_rps *rps, u32 pm_iir)
 		intel_engine_cs_irq(gt->engine[VECS0], pm_iir >> 10);
 
 	if (pm_iir & PM_VEBOX_CS_ERROR_INTERRUPT)
+<<<<<<< HEAD
 		drm_dbg(&rps_to_i915(rps)->drm,
 			"Command parser error, pm_iir 0x%08x\n", pm_iir);
+=======
+		DRM_DEBUG("Command parser error, pm_iir 0x%08x\n", pm_iir);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void gen5_rps_irq_handler(struct intel_rps *rps)
@@ -2046,6 +2129,7 @@ void intel_rps_sanitize(struct intel_rps *rps)
 		rps_disable_interrupts(rps);
 }
 
+<<<<<<< HEAD
 u32 intel_rps_read_rpstat_fw(struct intel_rps *rps)
 {
 	struct drm_i915_private *i915 = rps_to_i915(rps);
@@ -2066,11 +2150,14 @@ u32 intel_rps_read_rpstat(struct intel_rps *rps)
 	return intel_uncore_read(rps_to_gt(rps)->uncore, rpstat);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 u32 intel_rps_get_cagf(struct intel_rps *rps, u32 rpstat)
 {
 	struct drm_i915_private *i915 = rps_to_i915(rps);
 	u32 cagf;
 
+<<<<<<< HEAD
 	if (GRAPHICS_VER_FULL(i915) >= IP_VER(12, 70))
 		cagf = REG_FIELD_GET(MTL_CAGF_MASK, rpstat);
 	else if (GRAPHICS_VER(i915) >= 12)
@@ -2085,6 +2172,19 @@ u32 intel_rps_get_cagf(struct intel_rps *rps, u32 rpstat)
 		cagf = REG_FIELD_GET(GEN6_CAGF_MASK, rpstat);
 	else
 		cagf = gen5_invert_freq(rps, REG_FIELD_GET(MEMSTAT_PSTATE_MASK, rpstat));
+=======
+	if (IS_VALLEYVIEW(i915) || IS_CHERRYVIEW(i915))
+		cagf = (rpstat >> 8) & 0xff;
+	else if (GRAPHICS_VER(i915) >= 9)
+		cagf = (rpstat & GEN9_CAGF_MASK) >> GEN9_CAGF_SHIFT;
+	else if (IS_HASWELL(i915) || IS_BROADWELL(i915))
+		cagf = (rpstat & HSW_CAGF_MASK) >> HSW_CAGF_SHIFT;
+	else if (GRAPHICS_VER(i915) >= 6)
+		cagf = (rpstat & GEN6_CAGF_MASK) >> GEN6_CAGF_SHIFT;
+	else
+		cagf = gen5_invert_freq(rps, (rpstat & MEMSTAT_PSTATE_MASK) >>
+					MEMSTAT_PSTATE_SHIFT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return cagf;
 }
@@ -2095,6 +2195,7 @@ static u32 read_cagf(struct intel_rps *rps)
 	struct intel_uncore *uncore = rps_to_uncore(rps);
 	u32 freq;
 
+<<<<<<< HEAD
 	/*
 	 * For Gen12+ reading freq from HW does not need a forcewake and
 	 * registers will return 0 freq when GT is in RC6
@@ -2104,6 +2205,9 @@ static u32 read_cagf(struct intel_rps *rps)
 	} else if (GRAPHICS_VER(i915) >= 12) {
 		freq = intel_uncore_read(uncore, GEN12_RPSTAT1);
 	} else if (IS_VALLEYVIEW(i915) || IS_CHERRYVIEW(i915)) {
+=======
+	if (IS_VALLEYVIEW(i915) || IS_CHERRYVIEW(i915)) {
+>>>>>>> b7ba80a49124 (Commit)
 		vlv_punit_get(i915);
 		freq = vlv_punit_read(i915, PUNIT_REG_GPU_FREQ_STS);
 		vlv_punit_put(i915);
@@ -2228,6 +2332,7 @@ u32 intel_rps_get_rpn_frequency(struct intel_rps *rps)
 		return intel_gpu_freq(rps, rps->min_freq);
 }
 
+<<<<<<< HEAD
 static void rps_frequency_dump(struct intel_rps *rps, struct drm_printer *p)
 {
 	struct intel_gt *gt = rps_to_gt(rps);
@@ -2435,6 +2540,8 @@ void gen6_rps_frequency_dump(struct intel_rps *rps, struct drm_printer *p)
 		return rps_frequency_dump(rps, p);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int set_max_freq(struct intel_rps *rps, u32 val)
 {
 	struct drm_i915_private *i915 = rps_to_i915(rps);

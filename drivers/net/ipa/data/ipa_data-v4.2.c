@@ -372,6 +372,7 @@ static const struct ipa_power_data ipa_power_data = {
 
 /* Configuration data for an SoC having IPA v4.2 */
 const struct ipa_data ipa_data_v4_2 = {
+<<<<<<< HEAD
 	.version		= IPA_VERSION_4_2,
 	/* backward_compat value is 0 */
 	.qsb_count		= ARRAY_SIZE(ipa_qsb_data),
@@ -382,4 +383,15 @@ const struct ipa_data ipa_data_v4_2 = {
 	.resource_data		= &ipa_resource_data,
 	.mem_data		= &ipa_mem_data,
 	.power_data		= &ipa_power_data,
+=======
+	.version	= IPA_VERSION_4_2,
+	/* backward_compat value is 0 */
+	.qsb_count	= ARRAY_SIZE(ipa_qsb_data),
+	.qsb_data	= ipa_qsb_data,
+	.endpoint_count	= ARRAY_SIZE(ipa_gsi_endpoint_data),
+	.endpoint_data	= ipa_gsi_endpoint_data,
+	.resource_data	= &ipa_resource_data,
+	.mem_data	= &ipa_mem_data,
+	.power_data	= &ipa_power_data,
+>>>>>>> b7ba80a49124 (Commit)
 };

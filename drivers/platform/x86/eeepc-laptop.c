@@ -444,7 +444,11 @@ static int eeepc_platform_init(struct eeepc_laptop *eeepc)
 {
 	int result;
 
+<<<<<<< HEAD
 	eeepc->platform_device = platform_device_alloc(EEEPC_LAPTOP_FILE, PLATFORM_DEVID_NONE);
+=======
+	eeepc->platform_device = platform_device_alloc(EEEPC_LAPTOP_FILE, -1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!eeepc->platform_device)
 		return -ENOMEM;
 	platform_set_drvdata(eeepc->platform_device, eeepc);
@@ -1440,7 +1444,11 @@ fail_platform:
 	return result;
 }
 
+<<<<<<< HEAD
 static void eeepc_acpi_remove(struct acpi_device *device)
+=======
+static int eeepc_acpi_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct eeepc_laptop *eeepc = acpi_driver_data(device);
 
@@ -1451,6 +1459,10 @@ static void eeepc_acpi_remove(struct acpi_device *device)
 	eeepc_platform_exit(eeepc);
 
 	kfree(eeepc);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 

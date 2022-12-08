@@ -211,7 +211,11 @@ static int slic_ds26522_probe(struct spi_device *spi)
 
 	ret = slic_ds26522_init_configure(spi);
 	if (ret == 0)
+<<<<<<< HEAD
 		pr_info("DS26522 cs%d configured\n", spi_get_chipselect(spi, 0));
+=======
+		pr_info("DS26522 cs%d configured\n", spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }

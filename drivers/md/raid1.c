@@ -1321,7 +1321,11 @@ static void raid1_read_request(struct mddev *mddev, struct bio *bio,
 	read_bio->bi_iter.bi_sector = r1_bio->sector +
 		mirror->rdev->data_offset;
 	read_bio->bi_end_io = raid1_end_read_request;
+<<<<<<< HEAD
 	read_bio->bi_opf = op | do_sync;
+=======
+	bio_set_op_attrs(read_bio, op, do_sync);
+>>>>>>> b7ba80a49124 (Commit)
 	if (test_bit(FailFast, &mirror->rdev->flags) &&
 	    test_bit(R1BIO_FailFast, &r1_bio->state))
 	        read_bio->bi_opf |= MD_FAILFAST;
@@ -2254,7 +2258,11 @@ static void sync_request_write(struct mddev *mddev, struct r1bio *r1_bio)
 			continue;
 		}
 
+<<<<<<< HEAD
 		wbio->bi_opf = REQ_OP_WRITE;
+=======
+		bio_set_op_attrs(wbio, REQ_OP_WRITE, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		if (test_bit(FailFast, &conf->mirrors[i].rdev->flags))
 			wbio->bi_opf |= MD_FAILFAST;
 
@@ -2419,7 +2427,11 @@ static int narrow_write_error(struct r1bio *r1_bio, int i)
 					       GFP_NOIO, &mddev->bio_set);
 		}
 
+<<<<<<< HEAD
 		wbio->bi_opf = REQ_OP_WRITE;
+=======
+		bio_set_op_attrs(wbio, REQ_OP_WRITE, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		wbio->bi_iter.bi_sector = r1_bio->sector;
 		wbio->bi_iter.bi_size = r1_bio->sectors << 9;
 
@@ -2770,7 +2782,11 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
 			if (i < conf->raid_disks)
 				still_degraded = 1;
 		} else if (!test_bit(In_sync, &rdev->flags)) {
+<<<<<<< HEAD
 			bio->bi_opf = REQ_OP_WRITE;
+=======
+			bio_set_op_attrs(bio, REQ_OP_WRITE, 0);
+>>>>>>> b7ba80a49124 (Commit)
 			bio->bi_end_io = end_sync_write;
 			write_targets ++;
 		} else {
@@ -2797,7 +2813,11 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
 					if (disk < 0)
 						disk = i;
 				}
+<<<<<<< HEAD
 				bio->bi_opf = REQ_OP_READ;
+=======
+				bio_set_op_attrs(bio, REQ_OP_READ, 0);
+>>>>>>> b7ba80a49124 (Commit)
 				bio->bi_end_io = end_sync_read;
 				read_targets++;
 			} else if (!test_bit(WriteErrorSeen, &rdev->flags) &&
@@ -2809,7 +2829,11 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
 				 * if we are doing resync or repair. Otherwise, leave
 				 * this device alone for this sync request.
 				 */
+<<<<<<< HEAD
 				bio->bi_opf = REQ_OP_WRITE;
+=======
+				bio_set_op_attrs(bio, REQ_OP_WRITE, 0);
+>>>>>>> b7ba80a49124 (Commit)
 				bio->bi_end_io = end_sync_write;
 				write_targets++;
 			}
@@ -3159,7 +3183,10 @@ static int raid1_run(struct mddev *mddev)
 	 * RAID1 needs at least one disk in active
 	 */
 	if (conf->raid_disks - mddev->degraded < 1) {
+<<<<<<< HEAD
 		md_unregister_thread(&conf->thread);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EINVAL;
 		goto abort;
 	}

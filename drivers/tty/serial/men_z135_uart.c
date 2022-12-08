@@ -352,8 +352,16 @@ static void men_z135_handle_tx(struct men_z135_port *uart)
 	n = min(n, s);
 
 	memcpy_toio(port->membase + MEN_Z135_TX_RAM, &xmit->buf[xmit->tail], n);
+<<<<<<< HEAD
 	iowrite32(n & 0x3ff, port->membase + MEN_Z135_TX_CTRL);
 	uart_xmit_advance(port, n);
+=======
+	xmit->tail = (xmit->tail + n) & (UART_XMIT_SIZE - 1);
+
+	iowrite32(n & 0x3ff, port->membase + MEN_Z135_TX_CTRL);
+
+	port->icount.tx += n;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
 		uart_write_wakeup(port);

@@ -87,8 +87,13 @@
 #include <linux/ctype.h>
 #include <perf/mmap.h>
 
+<<<<<<< HEAD
 static volatile sig_atomic_t done;
 static volatile sig_atomic_t resize;
+=======
+static volatile int done;
+static volatile int resize;
+>>>>>>> b7ba80a49124 (Commit)
 
 #define HEADER_LINE_NR  5
 
@@ -1471,6 +1476,11 @@ int cmd_top(int argc, const char **argv)
 			    "dump the symbol table used for profiling"),
 	OPT_INTEGER('f', "count-filter", &top.count_filter,
 		    "only display functions with more events than this"),
+<<<<<<< HEAD
+=======
+	OPT_BOOLEAN(0, "group", &opts->group,
+			    "put the counters into a counter group"),
+>>>>>>> b7ba80a49124 (Commit)
 	OPT_BOOLEAN('i', "no-inherit", &opts->no_inherit,
 		    "child tasks do not inherit counters"),
 	OPT_STRING(0, "sym-annotate", &top.sym_filter, "symbol name",
@@ -1705,7 +1715,10 @@ int cmd_top(int argc, const char **argv)
 	if (evlist__create_maps(top.evlist, target) < 0) {
 		ui__error("Couldn't create thread/CPU maps: %s\n",
 			  errno == ENOENT ? "No such process" : str_error_r(errno, errbuf, sizeof(errbuf)));
+<<<<<<< HEAD
 		status = -errno;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_delete_evlist;
 	}
 
@@ -1758,13 +1771,19 @@ int cmd_top(int argc, const char **argv)
 
 		if (top.sb_evlist == NULL) {
 			pr_err("Couldn't create side band evlist.\n.");
+<<<<<<< HEAD
 			status = -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			goto out_delete_evlist;
 		}
 
 		if (evlist__add_bpf_sb_event(top.sb_evlist, &perf_env)) {
 			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
+<<<<<<< HEAD
 			status = -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			goto out_delete_evlist;
 		}
 	}

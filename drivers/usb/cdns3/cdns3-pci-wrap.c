@@ -60,11 +60,14 @@ static struct pci_dev *cdns3_get_second_fun(struct pci_dev *pdev)
 			return NULL;
 	}
 
+<<<<<<< HEAD
 	if (func->devfn != PCI_DEV_FN_HOST_DEVICE &&
 	    func->devfn != PCI_DEV_FN_OTG) {
 		return NULL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return func;
 }
 

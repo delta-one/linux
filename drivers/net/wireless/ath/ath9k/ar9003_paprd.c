@@ -201,6 +201,7 @@ static int ar9003_paprd_setup_single_table(struct ath_hw *ah)
 
 	ar9003_paprd_enable(ah, false);
 
+<<<<<<< HEAD
 	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL1(ah),
 		      AR_PHY_PAPRD_TRAINER_CNTL1_CF_PAPRD_LB_SKIP, 0x30);
 	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL1(ah),
@@ -214,6 +215,21 @@ static int ar9003_paprd_setup_single_table(struct ath_hw *ah)
 	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL1(ah),
 		      AR_PHY_PAPRD_TRAINER_CNTL1_CF_PAPRD_AGC2_SETTLING, 28);
 	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL1(ah),
+=======
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL1,
+		      AR_PHY_PAPRD_TRAINER_CNTL1_CF_PAPRD_LB_SKIP, 0x30);
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL1,
+		      AR_PHY_PAPRD_TRAINER_CNTL1_CF_PAPRD_LB_ENABLE, 1);
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL1,
+		      AR_PHY_PAPRD_TRAINER_CNTL1_CF_PAPRD_TX_GAIN_FORCE, 1);
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL1,
+		      AR_PHY_PAPRD_TRAINER_CNTL1_CF_PAPRD_RX_BB_GAIN_FORCE, 0);
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL1,
+		      AR_PHY_PAPRD_TRAINER_CNTL1_CF_PAPRD_IQCORR_ENABLE, 0);
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL1,
+		      AR_PHY_PAPRD_TRAINER_CNTL1_CF_PAPRD_AGC2_SETTLING, 28);
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL1,
+>>>>>>> b7ba80a49124 (Commit)
 		      AR_PHY_PAPRD_TRAINER_CNTL1_CF_CF_PAPRD_TRAIN_ENABLE, 1);
 
 	if (AR_SREV_9485(ah)) {
@@ -229,6 +245,7 @@ static int ar9003_paprd_setup_single_table(struct ath_hw *ah)
 		}
 	}
 
+<<<<<<< HEAD
 	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL2(ah),
 		      AR_PHY_PAPRD_TRAINER_CNTL2_CF_PAPRD_INIT_RX_BB_GAIN, val);
 	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3(ah),
@@ -238,6 +255,17 @@ static int ar9003_paprd_setup_single_table(struct ath_hw *ah)
 	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3(ah),
 		      AR_PHY_PAPRD_TRAINER_CNTL3_CF_PAPRD_NUM_CORR_STAGES, 7);
 	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3(ah),
+=======
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL2,
+		      AR_PHY_PAPRD_TRAINER_CNTL2_CF_PAPRD_INIT_RX_BB_GAIN, val);
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3,
+		      AR_PHY_PAPRD_TRAINER_CNTL3_CF_PAPRD_FINE_CORR_LEN, 4);
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3,
+		      AR_PHY_PAPRD_TRAINER_CNTL3_CF_PAPRD_COARSE_CORR_LEN, 4);
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3,
+		      AR_PHY_PAPRD_TRAINER_CNTL3_CF_PAPRD_NUM_CORR_STAGES, 7);
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3,
+>>>>>>> b7ba80a49124 (Commit)
 		      AR_PHY_PAPRD_TRAINER_CNTL3_CF_PAPRD_MIN_LOOPBACK_DEL, 1);
 
 	if (AR_SREV_9485(ah) ||
@@ -246,10 +274,17 @@ static int ar9003_paprd_setup_single_table(struct ath_hw *ah)
 	    AR_SREV_9550(ah) ||
 	    AR_SREV_9330(ah) ||
 	    AR_SREV_9340(ah))
+<<<<<<< HEAD
 		REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3(ah),
 			      AR_PHY_PAPRD_TRAINER_CNTL3_CF_PAPRD_QUICK_DROP, -3);
 	else
 		REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3(ah),
+=======
+		REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3,
+			      AR_PHY_PAPRD_TRAINER_CNTL3_CF_PAPRD_QUICK_DROP, -3);
+	else
+		REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3,
+>>>>>>> b7ba80a49124 (Commit)
 			      AR_PHY_PAPRD_TRAINER_CNTL3_CF_PAPRD_QUICK_DROP, -6);
 
 	val = -10;
@@ -257,6 +292,7 @@ static int ar9003_paprd_setup_single_table(struct ath_hw *ah)
 	if (IS_CHAN_2GHZ(ah->curchan) && !AR_SREV_9462(ah) && !AR_SREV_9565(ah))
 		val = -15;
 
+<<<<<<< HEAD
 	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3(ah),
 		      AR_PHY_PAPRD_TRAINER_CNTL3_CF_PAPRD_ADC_DESIRED_SIZE,
 		      val);
@@ -267,6 +303,18 @@ static int ar9003_paprd_setup_single_table(struct ath_hw *ah)
 	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL4(ah),
 		      AR_PHY_PAPRD_TRAINER_CNTL4_CF_PAPRD_MIN_CORR, 400);
 	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL4(ah),
+=======
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3,
+		      AR_PHY_PAPRD_TRAINER_CNTL3_CF_PAPRD_ADC_DESIRED_SIZE,
+		      val);
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3,
+		      AR_PHY_PAPRD_TRAINER_CNTL3_CF_PAPRD_BBTXMIX_DISABLE, 1);
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL4,
+		      AR_PHY_PAPRD_TRAINER_CNTL4_CF_PAPRD_SAFETY_DELTA, 0);
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL4,
+		      AR_PHY_PAPRD_TRAINER_CNTL4_CF_PAPRD_MIN_CORR, 400);
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL4,
+>>>>>>> b7ba80a49124 (Commit)
 		      AR_PHY_PAPRD_TRAINER_CNTL4_CF_PAPRD_NUM_TRAIN_SAMPLES,
 		      100);
 	REG_RMW_FIELD(ah, AR_PHY_PAPRD_PRE_POST_SCALE_0_B0,
@@ -313,7 +361,11 @@ static unsigned int ar9003_get_desired_gain(struct ath_hw *ah, int chain,
 	int desired_scale, desired_gain = 0;
 	u32 reg_olpc  = 0, reg_cl_gain  = 0;
 
+<<<<<<< HEAD
 	REG_CLR_BIT(ah, AR_PHY_PAPRD_TRAINER_STAT1(ah),
+=======
+	REG_CLR_BIT(ah, AR_PHY_PAPRD_TRAINER_STAT1,
+>>>>>>> b7ba80a49124 (Commit)
 		    AR_PHY_PAPRD_TRAINER_STAT1_PAPRD_TRAIN_DONE);
 	desired_scale = REG_READ_FIELD(ah, AR_PHY_TPC_12,
 				       AR_PHY_TPC_12_DESIRED_SCALE_HT40_5);
@@ -812,7 +864,11 @@ void ar9003_paprd_setup_gain_table(struct ath_hw *ah, int chain)
 
 	ar9003_tx_force_gain(ah, gain_index);
 
+<<<<<<< HEAD
 	REG_CLR_BIT(ah, AR_PHY_PAPRD_TRAINER_STAT1(ah),
+=======
+	REG_CLR_BIT(ah, AR_PHY_PAPRD_TRAINER_STAT1,
+>>>>>>> b7ba80a49124 (Commit)
 			AR_PHY_PAPRD_TRAINER_STAT1_PAPRD_TRAIN_DONE);
 }
 EXPORT_SYMBOL(ar9003_paprd_setup_gain_table);
@@ -833,7 +889,11 @@ static bool ar9003_paprd_retrain_pa_in(struct ath_hw *ah,
 	capdiv2g = REG_READ_FIELD(ah, AR_PHY_65NM_CH0_TXRF3,
 				  AR_PHY_65NM_CH0_TXRF3_CAPDIV2G);
 
+<<<<<<< HEAD
 	quick_drop = REG_READ_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3(ah),
+=======
+	quick_drop = REG_READ_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3,
+>>>>>>> b7ba80a49124 (Commit)
 				    AR_PHY_PAPRD_TRAINER_CNTL3_CF_PAPRD_QUICK_DROP);
 
 	if (quick_drop)
@@ -906,7 +966,11 @@ static bool ar9003_paprd_retrain_pa_in(struct ath_hw *ah,
 
 	REG_RMW_FIELD(ah, AR_PHY_65NM_CH0_TXRF3,
 		      AR_PHY_65NM_CH0_TXRF3_CAPDIV2G, capdiv2g);
+<<<<<<< HEAD
 	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3(ah),
+=======
+	REG_RMW_FIELD(ah, AR_PHY_PAPRD_TRAINER_CNTL3,
+>>>>>>> b7ba80a49124 (Commit)
 		      AR_PHY_PAPRD_TRAINER_CNTL3_CF_PAPRD_QUICK_DROP,
 		      quick_drop);
 
@@ -932,14 +996,22 @@ int ar9003_paprd_create_curve(struct ath_hw *ah,
 	data_L = &buf[0];
 	data_U = &buf[48];
 
+<<<<<<< HEAD
 	REG_CLR_BIT(ah, AR_PHY_CHAN_INFO_MEMORY(ah),
+=======
+	REG_CLR_BIT(ah, AR_PHY_CHAN_INFO_MEMORY,
+>>>>>>> b7ba80a49124 (Commit)
 		    AR_PHY_CHAN_INFO_MEMORY_CHANINFOMEM_S2_READ);
 
 	reg = AR_PHY_CHAN_INFO_TAB_0;
 	for (i = 0; i < 48; i++)
 		data_L[i] = REG_READ(ah, reg + (i << 2));
 
+<<<<<<< HEAD
 	REG_SET_BIT(ah, AR_PHY_CHAN_INFO_MEMORY(ah),
+=======
+	REG_SET_BIT(ah, AR_PHY_CHAN_INFO_MEMORY,
+>>>>>>> b7ba80a49124 (Commit)
 		    AR_PHY_CHAN_INFO_MEMORY_CHANINFOMEM_S2_READ);
 
 	for (i = 0; i < 48; i++)
@@ -951,7 +1023,11 @@ int ar9003_paprd_create_curve(struct ath_hw *ah,
 	if (ar9003_paprd_retrain_pa_in(ah, caldata, chain))
 		status = -EINPROGRESS;
 
+<<<<<<< HEAD
 	REG_CLR_BIT(ah, AR_PHY_PAPRD_TRAINER_STAT1(ah),
+=======
+	REG_CLR_BIT(ah, AR_PHY_PAPRD_TRAINER_STAT1,
+>>>>>>> b7ba80a49124 (Commit)
 		    AR_PHY_PAPRD_TRAINER_STAT1_PAPRD_TRAIN_DONE);
 
 	kfree(buf);
@@ -977,14 +1053,22 @@ bool ar9003_paprd_is_done(struct ath_hw *ah)
 {
 	int paprd_done, agc2_pwr;
 
+<<<<<<< HEAD
 	paprd_done = REG_READ_FIELD(ah, AR_PHY_PAPRD_TRAINER_STAT1(ah),
+=======
+	paprd_done = REG_READ_FIELD(ah, AR_PHY_PAPRD_TRAINER_STAT1,
+>>>>>>> b7ba80a49124 (Commit)
 				AR_PHY_PAPRD_TRAINER_STAT1_PAPRD_TRAIN_DONE);
 
 	if (AR_SREV_9485(ah))
 		goto exit;
 
 	if (paprd_done == 0x1) {
+<<<<<<< HEAD
 		agc2_pwr = REG_READ_FIELD(ah, AR_PHY_PAPRD_TRAINER_STAT1(ah),
+=======
+		agc2_pwr = REG_READ_FIELD(ah, AR_PHY_PAPRD_TRAINER_STAT1,
+>>>>>>> b7ba80a49124 (Commit)
 				AR_PHY_PAPRD_TRAINER_STAT1_PAPRD_AGC2_PWR);
 
 		ath_dbg(ath9k_hw_common(ah), CALIBRATE,

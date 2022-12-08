@@ -263,6 +263,10 @@ enum {
 enum {
 	MLX5_MKEY_MASK_LEN		= 1ull << 0,
 	MLX5_MKEY_MASK_PAGE_SIZE	= 1ull << 1,
+<<<<<<< HEAD
+=======
+	MLX5_MKEY_MASK_XLT_OCT_SIZE     = 1ull << 2,
+>>>>>>> b7ba80a49124 (Commit)
 	MLX5_MKEY_MASK_START_ADDR	= 1ull << 6,
 	MLX5_MKEY_MASK_PD		= 1ull << 7,
 	MLX5_MKEY_MASK_EN_RINVAL	= 1ull << 8,
@@ -290,9 +294,16 @@ enum {
 	MLX5_UMR_INLINE			= (1 << 7),
 };
 
+<<<<<<< HEAD
 #define MLX5_UMR_FLEX_ALIGNMENT 0x40
 #define MLX5_UMR_MTT_NUM_ENTRIES_ALIGNMENT (MLX5_UMR_FLEX_ALIGNMENT / sizeof(struct mlx5_mtt))
 #define MLX5_UMR_KLM_NUM_ENTRIES_ALIGNMENT (MLX5_UMR_FLEX_ALIGNMENT / sizeof(struct mlx5_klm))
+=======
+#define MLX5_UMR_KLM_ALIGNMENT 4
+#define MLX5_UMR_MTT_ALIGNMENT 0x40
+#define MLX5_UMR_MTT_MASK      (MLX5_UMR_MTT_ALIGNMENT - 1)
+#define MLX5_UMR_MTT_MIN_CHUNK_SIZE MLX5_UMR_MTT_ALIGNMENT
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MLX5_USER_INDEX_LEN (MLX5_FLD_SZ_BYTES(qpc, user_index) * 8)
 
@@ -324,7 +335,10 @@ enum mlx5_event {
 	MLX5_EVENT_TYPE_WQ_INVAL_REQ_ERROR = 0x10,
 	MLX5_EVENT_TYPE_WQ_ACCESS_ERROR	   = 0x11,
 	MLX5_EVENT_TYPE_SRQ_CATAS_ERROR	   = 0x12,
+<<<<<<< HEAD
 	MLX5_EVENT_TYPE_OBJECT_CHANGE	   = 0x27,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	MLX5_EVENT_TYPE_INTERNAL_ERROR	   = 0x08,
 	MLX5_EVENT_TYPE_PORT_CHANGE	   = 0x09,
@@ -362,13 +376,19 @@ enum mlx5_event {
 
 enum mlx5_driver_event {
 	MLX5_DRIVER_EVENT_TYPE_TRAP = 0,
+<<<<<<< HEAD
 	MLX5_DRIVER_EVENT_UPLINK_NETDEV,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum {
 	MLX5_TRACER_SUBTYPE_OWNERSHIP_CHANGE = 0x0,
 	MLX5_TRACER_SUBTYPE_TRACES_AVAILABLE = 0x1,
+<<<<<<< HEAD
 	MLX5_TRACER_SUBTYPE_STRINGS_DB_UPDATE = 0x2,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum {
@@ -446,8 +466,13 @@ enum {
 };
 
 enum {
+<<<<<<< HEAD
 	MLX5_OPC_MOD_TLS_TIS_STATIC_PARAMS = 0x1,
 	MLX5_OPC_MOD_TLS_TIR_STATIC_PARAMS = 0x2,
+=======
+	MLX5_OPC_MOD_TRANSPORT_TIS_STATIC_PARAMS = 0x1,
+	MLX5_OPC_MOD_TRANSPORT_TIR_STATIC_PARAMS = 0x2,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum {
@@ -455,8 +480,13 @@ enum {
 	MLX5_OPC_MOD_TLS_TIR_PROGRESS_PARAMS = 0x2,
 };
 
+<<<<<<< HEAD
 struct mlx5_wqe_tls_static_params_seg {
 	u8     ctx[MLX5_ST_SZ_BYTES(tls_static_params)];
+=======
+struct mlx5_wqe_transport_static_params_seg {
+	u8     ctx[MLX5_ST_SZ_BYTES(transport_static_params)];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlx5_wqe_tls_progress_params_seg {
@@ -701,12 +731,15 @@ struct mlx5_eqe_temp_warning {
 	__be64 sensor_warning_lsb;
 } __packed;
 
+<<<<<<< HEAD
 struct mlx5_eqe_obj_change {
 	u8      rsvd0[2];
 	__be16  obj_type;
 	__be32  obj_id;
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define SYNC_RST_STATE_MASK    0xf
 
 enum sync_rst_state_type {
@@ -745,7 +778,10 @@ union ev_data {
 	struct mlx5_eqe_xrq_err		xrq_err;
 	struct mlx5_eqe_sync_fw_update	sync_fw_update;
 	struct mlx5_eqe_vhca_state	vhca_state;
+<<<<<<< HEAD
 	struct mlx5_eqe_obj_change	obj_change;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 struct mlx5_eqe {
@@ -789,7 +825,15 @@ struct mlx5_err_cqe {
 
 struct mlx5_cqe64 {
 	u8		tls_outer_l3_tunneled;
+<<<<<<< HEAD
 	u8		rsvd0;
+=======
+	u8		rsvd16bit:4;
+	u8		nvmeotcp_zc:1;
+	u8		nvmeotcp_ddgst:1;
+	u8		nvmeotcp_resync:1;
+	u8		rsvd23bit:1;
+>>>>>>> b7ba80a49124 (Commit)
 	__be16		wqe_id;
 	union {
 		struct {
@@ -838,6 +882,22 @@ struct mlx5_cqe64 {
 	u8		op_own;
 };
 
+<<<<<<< HEAD
+=======
+struct mlx5e_cqe128 {
+	__be16 cclen;
+	__be16 hlen;
+	union {
+		__be32 resync_tcp_sn;
+		__be32 ccoff;
+	};
+	__be16 ccid;
+	__be16 rsvd8;
+	u8 rsvd12[52];
+	struct mlx5_cqe64 cqe64;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct mlx5_mini_cqe8 {
 	union {
 		__be32 rx_hash_result;
@@ -873,6 +933,31 @@ enum {
 
 #define MLX5_MINI_CQE_ARRAY_SIZE 8
 
+<<<<<<< HEAD
+=======
+static inline bool cqe_is_nvmeotcp_resync(struct mlx5_cqe64 *cqe)
+{
+	return cqe->nvmeotcp_resync;
+}
+
+static inline bool cqe_is_nvmeotcp_crcvalid(struct mlx5_cqe64 *cqe)
+{
+	return cqe->nvmeotcp_ddgst;
+}
+
+static inline bool cqe_is_nvmeotcp_zc(struct mlx5_cqe64 *cqe)
+{
+	return cqe->nvmeotcp_zc;
+}
+
+/* check if cqe is zc or crc or resync */
+static inline bool cqe_is_nvmeotcp(struct mlx5_cqe64 *cqe)
+{
+	return cqe_is_nvmeotcp_zc(cqe) || cqe_is_nvmeotcp_crcvalid(cqe) ||
+	       cqe_is_nvmeotcp_resync(cqe);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline u8 mlx5_get_cqe_format(struct mlx5_cqe64 *cqe)
 {
 	return (cqe->op_own >> 2) & 0x3;
@@ -883,12 +968,15 @@ static inline u8 get_cqe_opcode(struct mlx5_cqe64 *cqe)
 	return cqe->op_own >> 4;
 }
 
+<<<<<<< HEAD
 static inline u8 get_cqe_enhanced_num_mini_cqes(struct mlx5_cqe64 *cqe)
 {
 	/* num_of_mini_cqes is zero based */
 	return get_cqe_opcode(cqe) + 1;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline u8 get_cqe_lro_tcppsh(struct mlx5_cqe64 *cqe)
 {
 	return (cqe->lro.tcppsh_abort_dupack >> 6) & 1;
@@ -1093,11 +1181,14 @@ enum {
 };
 
 enum {
+<<<<<<< HEAD
 	MLX5_VPORT_CVLAN_INSERT_WHEN_NO_CVLAN  = 0x1,
 	MLX5_VPORT_CVLAN_INSERT_ALWAYS         = 0x3,
 };
 
 enum {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	MLX5_L3_PROT_TYPE_IPV4		= 0,
 	MLX5_L3_PROT_TYPE_IPV6		= 1,
 };
@@ -1206,7 +1297,11 @@ enum mlx5_cap_type {
 	MLX5_CAP_VDPA_EMULATION = 0x13,
 	MLX5_CAP_DEV_EVENT = 0x14,
 	MLX5_CAP_IPSEC,
+<<<<<<< HEAD
 	MLX5_CAP_CRYPTO = 0x1a,
+=======
+	MLX5_CAP_DEV_NVMEOTCP = 0x19,
+>>>>>>> b7ba80a49124 (Commit)
 	MLX5_CAP_DEV_SHAMPO = 0x1d,
 	MLX5_CAP_MACSEC = 0x1f,
 	MLX5_CAP_GENERAL_2 = 0x20,
@@ -1357,12 +1452,15 @@ enum mlx5_qcam_feature_groups {
 #define MLX5_CAP_ESW_INGRESS_ACL_MAX(mdev, cap) \
 	MLX5_CAP_ESW_FLOWTABLE_MAX(mdev, flow_table_properties_esw_acl_ingress.cap)
 
+<<<<<<< HEAD
 #define MLX5_CAP_ESW_FT_FIELD_SUPPORT_2(mdev, cap) \
 	MLX5_CAP_ESW_FLOWTABLE(mdev, ft_field_support_2_esw_fdb.cap)
 
 #define MLX5_CAP_ESW_FT_FIELD_SUPPORT_2_MAX(mdev, cap) \
 	MLX5_CAP_ESW_FLOWTABLE_MAX(mdev, ft_field_support_2_esw_fdb.cap)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MLX5_CAP_ESW(mdev, cap) \
 	MLX5_GET(e_switch_cap, \
 		 mdev->caps.hca[MLX5_CAP_ESWITCH]->cur, cap)
@@ -1469,15 +1567,29 @@ enum mlx5_qcam_feature_groups {
 #define MLX5_CAP_IPSEC(mdev, cap)\
 	MLX5_GET(ipsec_cap, (mdev)->caps.hca[MLX5_CAP_IPSEC]->cur, cap)
 
+<<<<<<< HEAD
 #define MLX5_CAP_CRYPTO(mdev, cap)\
 	MLX5_GET(crypto_cap, (mdev)->caps.hca[MLX5_CAP_CRYPTO]->cur, cap)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MLX5_CAP_DEV_SHAMPO(mdev, cap)\
 	MLX5_GET(shampo_cap, mdev->caps.hca_cur[MLX5_CAP_DEV_SHAMPO], cap)
 
 #define MLX5_CAP_MACSEC(mdev, cap)\
 	MLX5_GET(macsec_cap, (mdev)->caps.hca[MLX5_CAP_MACSEC]->cur, cap)
 
+<<<<<<< HEAD
+=======
+#define MLX5_CAP_DEV_NVMEOTCP(mdev, cap)\
+	MLX5_GET(nvmeotcp_cap, \
+		 (mdev)->caps.hca[MLX5_CAP_DEV_NVMEOTCP]->cur, cap)
+
+#define MLX5_CAP64_DEV_NVMEOTCP(mdev, cap)\
+	MLX5_GET64(nvmeotcp_cap, \
+		   (mdev)->caps.hca[MLX5_CAP_DEV_NVMEOTCP]->cur, cap)
+
+>>>>>>> b7ba80a49124 (Commit)
 enum {
 	MLX5_CMD_STAT_OK			= 0x0,
 	MLX5_CMD_STAT_INT_ERR			= 0x1,

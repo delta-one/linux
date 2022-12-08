@@ -239,11 +239,20 @@ err_clk_disable:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void axi_spdif_dev_remove(struct platform_device *pdev)
+=======
+static int axi_spdif_dev_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct axi_spdif *spdif = platform_get_drvdata(pdev);
 
 	clk_disable_unprepare(spdif->clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id axi_spdif_of_match[] = {
@@ -258,7 +267,11 @@ static struct platform_driver axi_spdif_driver = {
 		.of_match_table = axi_spdif_of_match,
 	},
 	.probe = axi_spdif_probe,
+<<<<<<< HEAD
 	.remove_new = axi_spdif_dev_remove,
+=======
+	.remove = axi_spdif_dev_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(axi_spdif_driver);
 

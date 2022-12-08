@@ -6,15 +6,19 @@
  * Authors: Weigang Li <weigang.li@intel.com>
  *          Giovanni Cabiddu <giovanni.cabiddu@intel.com>
  */
+<<<<<<< HEAD
 
 #include <crypto/internal/acompress.h>
 #include <linux/cryptouser.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/errno.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/seq_file.h>
 #include <linux/slab.h>
 #include <linux/string.h>
+<<<<<<< HEAD
 #include <net/netlink.h>
 
 #include "compress.h"
@@ -35,6 +39,21 @@ static inline struct acomp_alg *crypto_acomp_alg(struct crypto_acomp *tfm)
 
 static int __maybe_unused crypto_acomp_report(
 	struct sk_buff *skb, struct crypto_alg *alg)
+=======
+#include <linux/crypto.h>
+#include <crypto/algapi.h>
+#include <linux/cryptouser.h>
+#include <linux/compiler.h>
+#include <net/netlink.h>
+#include <crypto/internal/acompress.h>
+#include <crypto/internal/scompress.h>
+#include "internal.h"
+
+static const struct crypto_type crypto_acomp_type;
+
+#ifdef CONFIG_NET
+static int crypto_acomp_report(struct sk_buff *skb, struct crypto_alg *alg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct crypto_report_acomp racomp;
 
@@ -44,6 +63,15 @@ static int __maybe_unused crypto_acomp_report(
 
 	return nla_put(skb, CRYPTOCFGA_REPORT_ACOMP, sizeof(racomp), &racomp);
 }
+<<<<<<< HEAD
+=======
+#else
+static int crypto_acomp_report(struct sk_buff *skb, struct crypto_alg *alg)
+{
+	return -ENOSYS;
+}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static void crypto_acomp_show(struct seq_file *m, struct crypto_alg *alg)
 	__maybe_unused;
@@ -93,6 +121,7 @@ static unsigned int crypto_acomp_extsize(struct crypto_alg *alg)
 	return extsize;
 }
 
+<<<<<<< HEAD
 static inline int __crypto_acomp_report_stat(struct sk_buff *skb,
 					     struct crypto_alg *alg)
 {
@@ -119,18 +148,24 @@ int crypto_acomp_report_stat(struct sk_buff *skb, struct crypto_alg *alg)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct crypto_type crypto_acomp_type = {
 	.extsize = crypto_acomp_extsize,
 	.init_tfm = crypto_acomp_init_tfm,
 #ifdef CONFIG_PROC_FS
 	.show = crypto_acomp_show,
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_USER
 	.report = crypto_acomp_report,
 #endif
 #ifdef CONFIG_CRYPTO_STATS
 	.report_stat = crypto_acomp_report_stat,
 #endif
+=======
+	.report = crypto_acomp_report,
+>>>>>>> b7ba80a49124 (Commit)
 	.maskclear = ~CRYPTO_ALG_TYPE_MASK,
 	.maskset = CRYPTO_ALG_TYPE_ACOMPRESS_MASK,
 	.type = CRYPTO_ALG_TYPE_ACOMPRESS,
@@ -182,6 +217,7 @@ void acomp_request_free(struct acomp_req *req)
 }
 EXPORT_SYMBOL_GPL(acomp_request_free);
 
+<<<<<<< HEAD
 void comp_prepare_alg(struct comp_alg_common *alg)
 {
 	struct crypto_istat_compress *istat = comp_get_stat(alg);
@@ -200,6 +236,14 @@ int crypto_register_acomp(struct acomp_alg *alg)
 	comp_prepare_alg(&alg->calg);
 
 	base->cra_type = &crypto_acomp_type;
+=======
+int crypto_register_acomp(struct acomp_alg *alg)
+{
+	struct crypto_alg *base = &alg->base;
+
+	base->cra_type = &crypto_acomp_type;
+	base->cra_flags &= ~CRYPTO_ALG_TYPE_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 	base->cra_flags |= CRYPTO_ALG_TYPE_ACOMPRESS;
 
 	return crypto_register_alg(base);

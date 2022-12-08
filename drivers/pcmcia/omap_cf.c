@@ -124,6 +124,11 @@ static int omap_cf_get_status(struct pcmcia_socket *s, u_int *sp)
 static int
 omap_cf_set_socket(struct pcmcia_socket *sock, struct socket_state_t *s)
 {
+<<<<<<< HEAD
+=======
+	u16		control;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* REVISIT some non-OSK boards may support power switching */
 	switch (s->Vcc) {
 	case 0:
@@ -133,7 +138,11 @@ omap_cf_set_socket(struct pcmcia_socket *sock, struct socket_state_t *s)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	omap_readw(CF_CONTROL);
+=======
+	control = omap_readw(CF_CONTROL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (s->flags & SS_RESET)
 		omap_writew(CF_CONTROL_RESET, CF_CONTROL);
 	else
@@ -296,7 +305,11 @@ static int __exit omap_cf_remove(struct platform_device *pdev)
 
 	cf->active = 0;
 	pcmcia_unregister_socket(&cf->socket);
+<<<<<<< HEAD
 	timer_shutdown_sync(&cf->timer);
+=======
+	del_timer_sync(&cf->timer);
+>>>>>>> b7ba80a49124 (Commit)
 	release_mem_region(cf->phys_cf, SZ_8K);
 	free_irq(cf->irq, cf);
 	kfree(cf);

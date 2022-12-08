@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/clock/intel,easic-n5x.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Intel SoCFPGA eASIC N5X platform clock controller
+=======
+title: Intel SoCFPGA eASIC N5X platform clock controller binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Dinh Nguyen <dinguyen@kernel.org>

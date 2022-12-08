@@ -74,6 +74,7 @@
 #define R_LARCH_SUB64				56
 #define R_LARCH_GNU_VTINHERIT			57
 #define R_LARCH_GNU_VTENTRY			58
+<<<<<<< HEAD
 #define R_LARCH_B16				64
 #define R_LARCH_B21				65
 #define R_LARCH_B26				66
@@ -111,6 +112,8 @@
 #define R_LARCH_TLS_GD_HI20			98
 #define R_LARCH_32_PCREL			99
 #define R_LARCH_RELAX				100
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifndef ELF_ARCH
 

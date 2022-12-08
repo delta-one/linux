@@ -100,8 +100,18 @@ EXPORT_SYMBOL_GPL(halt_poll_ns_shrink);
  */
 
 DEFINE_MUTEX(kvm_lock);
+<<<<<<< HEAD
 LIST_HEAD(vm_list);
 
+=======
+static DEFINE_RAW_SPINLOCK(kvm_count_lock);
+LIST_HEAD(vm_list);
+
+static cpumask_var_t cpus_hardware_enabled;
+static int kvm_usage_count;
+static atomic_t hardware_enable_failed;
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct kmem_cache *kvm_vcpu_cache;
 
 static __read_mostly struct preempt_ops kvm_preempt_ops;
@@ -143,6 +153,12 @@ static void hardware_disable_all(void);
 
 static void kvm_io_bus_destroy(struct kvm_io_bus *bus);
 
+<<<<<<< HEAD
+=======
+__visible bool kvm_rebooting;
+EXPORT_SYMBOL_GPL(kvm_rebooting);
+
+>>>>>>> b7ba80a49124 (Commit)
 #define KVM_EVENT_CREATE_VM 0
 #define KVM_EVENT_DESTROY_VM 1
 static void kvm_uevent_notify_change(unsigned int type, struct kvm *kvm);
@@ -1190,6 +1206,11 @@ static struct kvm *kvm_create_vm(unsigned long type, const char *fdname)
 			goto out_err_no_arch_destroy_vm;
 	}
 
+<<<<<<< HEAD
+=======
+	kvm->max_halt_poll_ns = halt_poll_ns;
+
+>>>>>>> b7ba80a49124 (Commit)
 	r = kvm_arch_init_vm(kvm, type);
 	if (r)
 		goto out_err_no_arch_destroy_vm;
@@ -1607,7 +1628,11 @@ static int kvm_prepare_memory_region(struct kvm *kvm,
 			new->dirty_bitmap = NULL;
 		else if (old && old->dirty_bitmap)
 			new->dirty_bitmap = old->dirty_bitmap;
+<<<<<<< HEAD
 		else if (kvm_use_dirty_bitmap(kvm)) {
+=======
+		else if (!kvm->dirty_ring_size) {
+>>>>>>> b7ba80a49124 (Commit)
 			r = kvm_alloc_dirty_bitmap(new);
 			if (r)
 				return r;
@@ -1631,8 +1656,11 @@ static void kvm_commit_memory_region(struct kvm *kvm,
 				     const struct kvm_memory_slot *new,
 				     enum kvm_mr_change change)
 {
+<<<<<<< HEAD
 	int old_flags = old ? old->flags : 0;
 	int new_flags = new ? new->flags : 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Update the total number of memslot pages before calling the arch
 	 * hook so that architectures can consume the result directly.
@@ -1642,12 +1670,15 @@ static void kvm_commit_memory_region(struct kvm *kvm,
 	else if (change == KVM_MR_CREATE)
 		kvm->nr_memslot_pages += new->npages;
 
+<<<<<<< HEAD
 	if ((old_flags ^ new_flags) & KVM_MEM_LOG_DIRTY_PAGES) {
 		int change = (new_flags & KVM_MEM_LOG_DIRTY_PAGES) ? 1 : -1;
 		atomic_set(&kvm->nr_memslots_dirty_logging,
 			   atomic_read(&kvm->nr_memslots_dirty_logging) + change);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kvm_arch_commit_memory_region(kvm, old, new, change);
 
 	switch (change) {
@@ -2058,8 +2089,13 @@ int kvm_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log,
 	unsigned long n;
 	unsigned long any = 0;
 
+<<<<<<< HEAD
 	/* Dirty ring tracking may be exclusive to dirty log tracking */
 	if (!kvm_use_dirty_bitmap(kvm))
+=======
+	/* Dirty ring tracking is exclusive to dirty log tracking */
+	if (kvm->dirty_ring_size)
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENXIO;
 
 	*memslot = NULL;
@@ -2123,8 +2159,13 @@ static int kvm_get_dirty_log_protect(struct kvm *kvm, struct kvm_dirty_log *log)
 	unsigned long *dirty_bitmap_buffer;
 	bool flush;
 
+<<<<<<< HEAD
 	/* Dirty ring tracking may be exclusive to dirty log tracking */
 	if (!kvm_use_dirty_bitmap(kvm))
+=======
+	/* Dirty ring tracking is exclusive to dirty log tracking */
+	if (kvm->dirty_ring_size)
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENXIO;
 
 	as_id = log->slot >> 16;
@@ -2235,8 +2276,13 @@ static int kvm_clear_dirty_log_protect(struct kvm *kvm,
 	unsigned long *dirty_bitmap_buffer;
 	bool flush;
 
+<<<<<<< HEAD
 	/* Dirty ring tracking may be exclusive to dirty log tracking */
 	if (!kvm_use_dirty_bitmap(kvm))
+=======
+	/* Dirty ring tracking is exclusive to dirty log tracking */
+	if (kvm->dirty_ring_size)
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENXIO;
 
 	as_id = log->slot >> 16;
@@ -2512,7 +2558,11 @@ static bool hva_to_pfn_fast(unsigned long addr, bool write_fault,
  * 1 indicates success, -errno is returned if error is detected.
  */
 static int hva_to_pfn_slow(unsigned long addr, bool *async, bool write_fault,
+<<<<<<< HEAD
 			   bool interruptible, bool *writable, kvm_pfn_t *pfn)
+=======
+			   bool *writable, kvm_pfn_t *pfn)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int flags = FOLL_HWPOISON;
 	struct page *page;
@@ -2527,8 +2577,11 @@ static int hva_to_pfn_slow(unsigned long addr, bool *async, bool write_fault,
 		flags |= FOLL_WRITE;
 	if (async)
 		flags |= FOLL_NOWAIT;
+<<<<<<< HEAD
 	if (interruptible)
 		flags |= FOLL_INTERRUPTIBLE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	npages = get_user_pages_unlocked(addr, 1, &page, flags);
 	if (npages != 1)
@@ -2638,7 +2691,10 @@ out:
  * Pin guest page in memory and return its pfn.
  * @addr: host virtual address which maps memory to the guest
  * @atomic: whether this function can sleep
+<<<<<<< HEAD
  * @interruptible: whether the process can be interrupted by non-fatal signals
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @async: whether this function need to wait IO complete if the
  *         host page is not in the memory
  * @write_fault: whether we should get a writable host page
@@ -2649,8 +2705,13 @@ out:
  * 2): @write_fault = false && @writable, @writable will tell the caller
  *     whether the mapping is writable.
  */
+<<<<<<< HEAD
 kvm_pfn_t hva_to_pfn(unsigned long addr, bool atomic, bool interruptible,
 		     bool *async, bool write_fault, bool *writable)
+=======
+kvm_pfn_t hva_to_pfn(unsigned long addr, bool atomic, bool *async,
+		     bool write_fault, bool *writable)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vm_area_struct *vma;
 	kvm_pfn_t pfn;
@@ -2665,12 +2726,18 @@ kvm_pfn_t hva_to_pfn(unsigned long addr, bool atomic, bool interruptible,
 	if (atomic)
 		return KVM_PFN_ERR_FAULT;
 
+<<<<<<< HEAD
 	npages = hva_to_pfn_slow(addr, async, write_fault, interruptible,
 				 writable, &pfn);
 	if (npages == 1)
 		return pfn;
 	if (npages == -EINTR)
 		return KVM_PFN_ERR_SIGPENDING;
+=======
+	npages = hva_to_pfn_slow(addr, async, write_fault, writable, &pfn);
+	if (npages == 1)
+		return pfn;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mmap_read_lock(current->mm);
 	if (npages == -EHWPOISON ||
@@ -2701,8 +2768,13 @@ exit:
 }
 
 kvm_pfn_t __gfn_to_pfn_memslot(const struct kvm_memory_slot *slot, gfn_t gfn,
+<<<<<<< HEAD
 			       bool atomic, bool interruptible, bool *async,
 			       bool write_fault, bool *writable, hva_t *hva)
+=======
+			       bool atomic, bool *async, bool write_fault,
+			       bool *writable, hva_t *hva)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long addr = __gfn_to_hva_many(slot, gfn, NULL, write_fault);
 
@@ -2727,7 +2799,11 @@ kvm_pfn_t __gfn_to_pfn_memslot(const struct kvm_memory_slot *slot, gfn_t gfn,
 		writable = NULL;
 	}
 
+<<<<<<< HEAD
 	return hva_to_pfn(addr, atomic, interruptible, async, write_fault,
+=======
+	return hva_to_pfn(addr, atomic, async, write_fault,
+>>>>>>> b7ba80a49124 (Commit)
 			  writable);
 }
 EXPORT_SYMBOL_GPL(__gfn_to_pfn_memslot);
@@ -2735,22 +2811,35 @@ EXPORT_SYMBOL_GPL(__gfn_to_pfn_memslot);
 kvm_pfn_t gfn_to_pfn_prot(struct kvm *kvm, gfn_t gfn, bool write_fault,
 		      bool *writable)
 {
+<<<<<<< HEAD
 	return __gfn_to_pfn_memslot(gfn_to_memslot(kvm, gfn), gfn, false, false,
 				    NULL, write_fault, writable, NULL);
+=======
+	return __gfn_to_pfn_memslot(gfn_to_memslot(kvm, gfn), gfn, false, NULL,
+				    write_fault, writable, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(gfn_to_pfn_prot);
 
 kvm_pfn_t gfn_to_pfn_memslot(const struct kvm_memory_slot *slot, gfn_t gfn)
 {
+<<<<<<< HEAD
 	return __gfn_to_pfn_memslot(slot, gfn, false, false, NULL, true,
 				    NULL, NULL);
+=======
+	return __gfn_to_pfn_memslot(slot, gfn, false, NULL, true, NULL, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(gfn_to_pfn_memslot);
 
 kvm_pfn_t gfn_to_pfn_memslot_atomic(const struct kvm_memory_slot *slot, gfn_t gfn)
 {
+<<<<<<< HEAD
 	return __gfn_to_pfn_memslot(slot, gfn, true, false, NULL, true,
 				    NULL, NULL);
+=======
+	return __gfn_to_pfn_memslot(slot, gfn, true, NULL, true, NULL, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(gfn_to_pfn_memslot_atomic);
 
@@ -3311,19 +3400,31 @@ void mark_page_dirty_in_slot(struct kvm *kvm,
 	struct kvm_vcpu *vcpu = kvm_get_running_vcpu();
 
 #ifdef CONFIG_HAVE_KVM_DIRTY_RING
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(vcpu && vcpu->kvm != kvm))
 		return;
 
 	WARN_ON_ONCE(!vcpu && !kvm_arch_allow_write_without_running_vcpu(kvm));
+=======
+	if (WARN_ON_ONCE(!vcpu) || WARN_ON_ONCE(vcpu->kvm != kvm))
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	if (memslot && kvm_slot_dirty_track_enabled(memslot)) {
 		unsigned long rel_gfn = gfn - memslot->base_gfn;
 		u32 slot = (memslot->as_id << 16) | memslot->id;
 
+<<<<<<< HEAD
 		if (kvm->dirty_ring_size && vcpu)
 			kvm_dirty_ring_push(vcpu, slot, rel_gfn);
 		else if (memslot->dirty_bitmap)
+=======
+		if (kvm->dirty_ring_size)
+			kvm_dirty_ring_push(&vcpu->dirty_ring,
+					    slot, rel_gfn);
+		else
+>>>>>>> b7ba80a49124 (Commit)
 			set_bit_le(rel_gfn, memslot->dirty_bitmap);
 	}
 }
@@ -3384,6 +3485,12 @@ static void grow_halt_poll_ns(struct kvm_vcpu *vcpu)
 	if (val < grow_start)
 		val = grow_start;
 
+<<<<<<< HEAD
+=======
+	if (val > vcpu->kvm->max_halt_poll_ns)
+		val = vcpu->kvm->max_halt_poll_ns;
+
+>>>>>>> b7ba80a49124 (Commit)
 	vcpu->halt_poll_ns = val;
 out:
 	trace_kvm_halt_poll_ns_grow(vcpu->vcpu_id, val, old);
@@ -3413,8 +3520,15 @@ static int kvm_vcpu_check_block(struct kvm_vcpu *vcpu)
 	int ret = -EINTR;
 	int idx = srcu_read_lock(&vcpu->kvm->srcu);
 
+<<<<<<< HEAD
 	if (kvm_arch_vcpu_runnable(vcpu))
 		goto out;
+=======
+	if (kvm_arch_vcpu_runnable(vcpu)) {
+		kvm_make_request(KVM_REQ_UNHALT, vcpu);
+		goto out;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (kvm_cpu_has_pending_timer(vcpu))
 		goto out;
 	if (signal_pending(current))
@@ -3487,6 +3601,7 @@ static inline void update_halt_poll_stats(struct kvm_vcpu *vcpu, ktime_t start,
 	}
 }
 
+<<<<<<< HEAD
 static unsigned int kvm_vcpu_max_halt_poll_ns(struct kvm_vcpu *vcpu)
 {
 	struct kvm *kvm = vcpu->kvm;
@@ -3505,6 +3620,8 @@ static unsigned int kvm_vcpu_max_halt_poll_ns(struct kvm_vcpu *vcpu)
 	return READ_ONCE(halt_poll_ns);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Emulate a vCPU halt condition, e.g. HLT on x86, WFI on arm, etc...  If halt
  * polling is enabled, busy wait for a short time before blocking to avoid the
@@ -3513,6 +3630,7 @@ static unsigned int kvm_vcpu_max_halt_poll_ns(struct kvm_vcpu *vcpu)
  */
 void kvm_vcpu_halt(struct kvm_vcpu *vcpu)
 {
+<<<<<<< HEAD
 	unsigned int max_halt_poll_ns = kvm_vcpu_max_halt_poll_ns(vcpu);
 	bool halt_poll_allowed = !kvm_arch_no_poll(vcpu);
 	ktime_t start, cur, poll_end;
@@ -3525,11 +3643,26 @@ void kvm_vcpu_halt(struct kvm_vcpu *vcpu)
 
 	do_halt_poll = halt_poll_allowed && vcpu->halt_poll_ns;
 
+=======
+	bool halt_poll_allowed = !kvm_arch_no_poll(vcpu);
+	bool do_halt_poll = halt_poll_allowed && vcpu->halt_poll_ns;
+	ktime_t start, cur, poll_end;
+	bool waited = false;
+	u64 halt_ns;
+
+>>>>>>> b7ba80a49124 (Commit)
 	start = cur = poll_end = ktime_get();
 	if (do_halt_poll) {
 		ktime_t stop = ktime_add_ns(start, vcpu->halt_poll_ns);
 
 		do {
+<<<<<<< HEAD
+=======
+			/*
+			 * This sets KVM_REQ_UNHALT if an interrupt
+			 * arrives.
+			 */
+>>>>>>> b7ba80a49124 (Commit)
 			if (kvm_vcpu_check_block(vcpu) < 0)
 				goto out;
 			cpu_relax();
@@ -3559,21 +3692,35 @@ out:
 		update_halt_poll_stats(vcpu, start, poll_end, !waited);
 
 	if (halt_poll_allowed) {
+<<<<<<< HEAD
 		/* Recompute the max halt poll time in case it changed. */
 		max_halt_poll_ns = kvm_vcpu_max_halt_poll_ns(vcpu);
 
 		if (!vcpu_valid_wakeup(vcpu)) {
 			shrink_halt_poll_ns(vcpu);
 		} else if (max_halt_poll_ns) {
+=======
+		if (!vcpu_valid_wakeup(vcpu)) {
+			shrink_halt_poll_ns(vcpu);
+		} else if (vcpu->kvm->max_halt_poll_ns) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (halt_ns <= vcpu->halt_poll_ns)
 				;
 			/* we had a long block, shrink polling */
 			else if (vcpu->halt_poll_ns &&
+<<<<<<< HEAD
 				 halt_ns > max_halt_poll_ns)
 				shrink_halt_poll_ns(vcpu);
 			/* we had a short halt and our poll time is too small */
 			else if (vcpu->halt_poll_ns < max_halt_poll_ns &&
 				 halt_ns < max_halt_poll_ns)
+=======
+				 halt_ns > vcpu->kvm->max_halt_poll_ns)
+				shrink_halt_poll_ns(vcpu);
+			/* we had a short halt and our poll time is too small */
+			else if (vcpu->halt_poll_ns < vcpu->kvm->max_halt_poll_ns &&
+				 halt_ns < vcpu->kvm->max_halt_poll_ns)
+>>>>>>> b7ba80a49124 (Commit)
 				grow_halt_poll_ns(vcpu);
 		} else {
 			vcpu->halt_poll_ns = 0;
@@ -3946,6 +4093,7 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
 	}
 
 	mutex_lock(&kvm->lock);
+<<<<<<< HEAD
 
 #ifdef CONFIG_LOCKDEP
 	/* Ensure that lockdep knows vcpu->mutex is taken *inside* kvm->lock */
@@ -3953,6 +4101,8 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
 	mutex_unlock(&vcpu->mutex);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (kvm_get_vcpu_by_id(kvm, id)) {
 		r = -EEXIST;
 		goto unlock_vcpu_destroy;
@@ -4467,7 +4617,11 @@ static int kvm_ioctl_create_device(struct kvm *kvm,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
+=======
+static long kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (arg) {
 	case KVM_CAP_USER_MEMORY:
@@ -4507,11 +4661,16 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
 	case KVM_CAP_NR_MEMSLOTS:
 		return KVM_USER_MEM_SLOTS;
 	case KVM_CAP_DIRTY_LOG_RING:
+<<<<<<< HEAD
 #ifdef CONFIG_HAVE_KVM_DIRTY_RING_TSO
+=======
+#ifdef CONFIG_HAVE_KVM_DIRTY_RING
+>>>>>>> b7ba80a49124 (Commit)
 		return KVM_DIRTY_RING_MAX_ENTRIES * sizeof(struct kvm_dirty_gfn);
 #else
 		return 0;
 #endif
+<<<<<<< HEAD
 	case KVM_CAP_DIRTY_LOG_RING_ACQ_REL:
 #ifdef CONFIG_HAVE_KVM_DIRTY_RING_ACQ_REL
 		return KVM_DIRTY_RING_MAX_ENTRIES * sizeof(struct kvm_dirty_gfn);
@@ -4521,6 +4680,8 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
 #ifdef CONFIG_NEED_KVM_DIRTY_RING_WITH_BITMAP
 	case KVM_CAP_DIRTY_LOG_RING_WITH_BITMAP:
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case KVM_CAP_BINARY_STATS_FD:
 	case KVM_CAP_SYSTEM_EVENT_DATA:
 		return 1;
@@ -4596,6 +4757,7 @@ int __attribute__((weak)) kvm_vm_ioctl_enable_cap(struct kvm *kvm,
 	return -EINVAL;
 }
 
+<<<<<<< HEAD
 static bool kvm_are_all_memslots_empty(struct kvm *kvm)
 {
 	int i;
@@ -4610,6 +4772,8 @@ static bool kvm_are_all_memslots_empty(struct kvm *kvm)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int kvm_vm_ioctl_enable_cap_generic(struct kvm *kvm,
 					   struct kvm_enable_cap *cap)
 {
@@ -4632,6 +4796,7 @@ static int kvm_vm_ioctl_enable_cap_generic(struct kvm *kvm,
 			return -EINVAL;
 
 		kvm->max_halt_poll_ns = cap->args[0];
+<<<<<<< HEAD
 
 		/*
 		 * Ensure kvm->override_halt_poll_ns does not become visible
@@ -4673,6 +4838,12 @@ static int kvm_vm_ioctl_enable_cap_generic(struct kvm *kvm,
 
 		return r;
 	}
+=======
+		return 0;
+	}
+	case KVM_CAP_DIRTY_LOG_RING:
+		return kvm_vm_ioctl_enable_dirty_log_ring(kvm, cap->args[0]);
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return kvm_vm_ioctl_enable_cap(kvm, cap);
 	}
@@ -4926,12 +5097,15 @@ struct compat_kvm_clear_dirty_log {
 	};
 };
 
+<<<<<<< HEAD
 long __weak kvm_arch_vm_compat_ioctl(struct file *filp, unsigned int ioctl,
 				     unsigned long arg)
 {
 	return -ENOTTY;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static long kvm_vm_compat_ioctl(struct file *filp,
 			   unsigned int ioctl, unsigned long arg)
 {
@@ -4940,11 +5114,14 @@ static long kvm_vm_compat_ioctl(struct file *filp,
 
 	if (kvm->mm != current->mm || kvm->vm_dead)
 		return -EIO;
+<<<<<<< HEAD
 
 	r = kvm_arch_vm_compat_ioctl(filp, ioctl, arg);
 	if (r != -ENOTTY)
 		return r;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	switch (ioctl) {
 #ifdef CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT
 	case KVM_CLEAR_DIRTY_LOG: {
@@ -5045,7 +5222,11 @@ put_fd:
 static long kvm_dev_ioctl(struct file *filp,
 			  unsigned int ioctl, unsigned long arg)
 {
+<<<<<<< HEAD
 	int r = -EINVAL;
+=======
+	long r = -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (ioctl) {
 	case KVM_GET_API_VERSION:
@@ -5094,6 +5275,7 @@ static struct miscdevice kvm_dev = {
 	&kvm_chardev_ops,
 };
 
+<<<<<<< HEAD
 #ifdef CONFIG_KVM_GENERIC_HARDWARE_ENABLING
 __visible bool kvm_rebooting;
 EXPORT_SYMBOL_GPL(kvm_rebooting);
@@ -5136,10 +5318,39 @@ static int kvm_online_cpu(unsigned int cpu)
 		ret = __hardware_enable_nolock();
 	mutex_unlock(&kvm_lock);
 	return ret;
+=======
+static void hardware_enable_nolock(void *junk)
+{
+	int cpu = raw_smp_processor_id();
+	int r;
+
+	if (cpumask_test_cpu(cpu, cpus_hardware_enabled))
+		return;
+
+	cpumask_set_cpu(cpu, cpus_hardware_enabled);
+
+	r = kvm_arch_hardware_enable();
+
+	if (r) {
+		cpumask_clear_cpu(cpu, cpus_hardware_enabled);
+		atomic_inc(&hardware_enable_failed);
+		pr_info("kvm: enabling virtualization on CPU%d failed\n", cpu);
+	}
+}
+
+static int kvm_starting_cpu(unsigned int cpu)
+{
+	raw_spin_lock(&kvm_count_lock);
+	if (kvm_usage_count)
+		hardware_enable_nolock(NULL);
+	raw_spin_unlock(&kvm_count_lock);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void hardware_disable_nolock(void *junk)
 {
+<<<<<<< HEAD
 	/*
 	 * Note, hardware_disable_all_nolock() tells all online CPUs to disable
 	 * hardware, not just CPUs that successfully enabled hardware!
@@ -5158,6 +5369,22 @@ static int kvm_offline_cpu(unsigned int cpu)
 	if (kvm_usage_count)
 		hardware_disable_nolock(NULL);
 	mutex_unlock(&kvm_lock);
+=======
+	int cpu = raw_smp_processor_id();
+
+	if (!cpumask_test_cpu(cpu, cpus_hardware_enabled))
+		return;
+	cpumask_clear_cpu(cpu, cpus_hardware_enabled);
+	kvm_arch_hardware_disable();
+}
+
+static int kvm_dying_cpu(unsigned int cpu)
+{
+	raw_spin_lock(&kvm_count_lock);
+	if (kvm_usage_count)
+		hardware_disable_nolock(NULL);
+	raw_spin_unlock(&kvm_count_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -5172,15 +5399,22 @@ static void hardware_disable_all_nolock(void)
 
 static void hardware_disable_all(void)
 {
+<<<<<<< HEAD
 	cpus_read_lock();
 	mutex_lock(&kvm_lock);
 	hardware_disable_all_nolock();
 	mutex_unlock(&kvm_lock);
 	cpus_read_unlock();
+=======
+	raw_spin_lock(&kvm_count_lock);
+	hardware_disable_all_nolock();
+	raw_spin_unlock(&kvm_count_lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int hardware_enable_all(void)
 {
+<<<<<<< HEAD
 	atomic_t failed = ATOMIC_INIT(0);
 	int r = 0;
 
@@ -5200,13 +5434,29 @@ static int hardware_enable_all(void)
 		on_each_cpu(hardware_enable_nolock, &failed, 1);
 
 		if (atomic_read(&failed)) {
+=======
+	int r = 0;
+
+	raw_spin_lock(&kvm_count_lock);
+
+	kvm_usage_count++;
+	if (kvm_usage_count == 1) {
+		atomic_set(&hardware_enable_failed, 0);
+		on_each_cpu(hardware_enable_nolock, NULL, 1);
+
+		if (atomic_read(&hardware_enable_failed)) {
+>>>>>>> b7ba80a49124 (Commit)
 			hardware_disable_all_nolock();
 			r = -EBUSY;
 		}
 	}
 
+<<<<<<< HEAD
 	mutex_unlock(&kvm_lock);
 	cpus_read_unlock();
+=======
+	raw_spin_unlock(&kvm_count_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return r;
 }
@@ -5231,6 +5481,7 @@ static struct notifier_block kvm_reboot_notifier = {
 	.priority = 0,
 };
 
+<<<<<<< HEAD
 static int kvm_suspend(void)
 {
 	/*
@@ -5274,6 +5525,8 @@ static void hardware_disable_all(void)
 }
 #endif /* CONFIG_KVM_GENERIC_HARDWARE_ENABLING */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void kvm_io_bus_destroy(struct kvm_io_bus *bus)
 {
 	int i;
@@ -5571,7 +5824,10 @@ static int kvm_debugfs_open(struct inode *inode, struct file *file,
 			   int (*get)(void *, u64 *), int (*set)(void *, u64),
 			   const char *fmt)
 {
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct kvm_stat_data *stat_data = (struct kvm_stat_data *)
 					  inode->i_private;
 
@@ -5583,6 +5839,7 @@ static int kvm_debugfs_open(struct inode *inode, struct file *file,
 	if (!kvm_get_kvm_safe(stat_data->kvm))
 		return -ENOENT;
 
+<<<<<<< HEAD
 	ret = simple_attr_open(inode, file, get,
 			       kvm_stats_debugfs_mode(stat_data->desc) & 0222
 			       ? set : NULL, fmt);
@@ -5590,6 +5847,17 @@ static int kvm_debugfs_open(struct inode *inode, struct file *file,
 		kvm_put_kvm(stat_data->kvm);
 
 	return ret;
+=======
+	if (simple_attr_open(inode, file, get,
+		    kvm_stats_debugfs_mode(stat_data->desc) & 0222
+		    ? set : NULL,
+		    fmt)) {
+		kvm_put_kvm(stat_data->kvm);
+		return -ENOMEM;
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int kvm_debugfs_release(struct inode *inode, struct file *file)
@@ -5852,6 +6120,29 @@ static void kvm_init_debug(void)
 	}
 }
 
+<<<<<<< HEAD
+=======
+static int kvm_suspend(void)
+{
+	if (kvm_usage_count)
+		hardware_disable_nolock(NULL);
+	return 0;
+}
+
+static void kvm_resume(void)
+{
+	if (kvm_usage_count) {
+		lockdep_assert_not_held(&kvm_count_lock);
+		hardware_enable_nolock(NULL);
+	}
+}
+
+static struct syscore_ops kvm_syscore_ops = {
+	.suspend = kvm_suspend,
+	.resume = kvm_resume,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline
 struct kvm_vcpu *preempt_notifier_to_vcpu(struct preempt_notifier *pn)
 {
@@ -5956,6 +6247,7 @@ void kvm_unregister_perf_callbacks(void)
 }
 #endif
 
+<<<<<<< HEAD
 int kvm_init(unsigned vcpu_size, unsigned vcpu_align, struct module *module)
 {
 	int r;
@@ -5970,6 +6262,64 @@ int kvm_init(unsigned vcpu_size, unsigned vcpu_align, struct module *module)
 	register_reboot_notifier(&kvm_reboot_notifier);
 	register_syscore_ops(&kvm_syscore_ops);
 #endif
+=======
+struct kvm_cpu_compat_check {
+	void *opaque;
+	int *ret;
+};
+
+static void check_processor_compat(void *data)
+{
+	struct kvm_cpu_compat_check *c = data;
+
+	*c->ret = kvm_arch_check_processor_compat(c->opaque);
+}
+
+int kvm_init(void *opaque, unsigned vcpu_size, unsigned vcpu_align,
+		  struct module *module)
+{
+	struct kvm_cpu_compat_check c;
+	int r;
+	int cpu;
+
+	r = kvm_arch_init(opaque);
+	if (r)
+		goto out_fail;
+
+	/*
+	 * kvm_arch_init makes sure there's at most one caller
+	 * for architectures that support multiple implementations,
+	 * like intel and amd on x86.
+	 * kvm_arch_init must be called before kvm_irqfd_init to avoid creating
+	 * conflicts in case kvm is already setup for another implementation.
+	 */
+	r = kvm_irqfd_init();
+	if (r)
+		goto out_irqfd;
+
+	if (!zalloc_cpumask_var(&cpus_hardware_enabled, GFP_KERNEL)) {
+		r = -ENOMEM;
+		goto out_free_0;
+	}
+
+	r = kvm_arch_hardware_setup(opaque);
+	if (r < 0)
+		goto out_free_1;
+
+	c.ret = &r;
+	c.opaque = opaque;
+	for_each_online_cpu(cpu) {
+		smp_call_function_single(cpu, check_processor_compat, &c, 1);
+		if (r < 0)
+			goto out_free_2;
+	}
+
+	r = cpuhp_setup_state_nocalls(CPUHP_AP_KVM_STARTING, "kvm/cpu:starting",
+				      kvm_starting_cpu, kvm_dying_cpu);
+	if (r)
+		goto out_free_2;
+	register_reboot_notifier(&kvm_reboot_notifier);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* A kmem cache lets us meet the alignment requirements of fx_save. */
 	if (!vcpu_align)
@@ -5983,13 +6333,18 @@ int kvm_init(unsigned vcpu_size, unsigned vcpu_align, struct module *module)
 					   NULL);
 	if (!kvm_vcpu_cache) {
 		r = -ENOMEM;
+<<<<<<< HEAD
 		goto err_vcpu_cache;
+=======
+		goto out_free_3;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for_each_possible_cpu(cpu) {
 		if (!alloc_cpumask_var_node(&per_cpu(cpu_kick_mask, cpu),
 					    GFP_KERNEL, cpu_to_node(cpu))) {
 			r = -ENOMEM;
+<<<<<<< HEAD
 			goto err_cpu_kick_mask;
 		}
 	}
@@ -6004,12 +6359,33 @@ int kvm_init(unsigned vcpu_size, unsigned vcpu_align, struct module *module)
 
 	kvm_chardev_ops.owner = module;
 
+=======
+			goto out_free_4;
+		}
+	}
+
+	r = kvm_async_pf_init();
+	if (r)
+		goto out_free_5;
+
+	kvm_chardev_ops.owner = module;
+
+	r = misc_register(&kvm_dev);
+	if (r) {
+		pr_err("kvm: misc device register failed\n");
+		goto out_unreg;
+	}
+
+	register_syscore_ops(&kvm_syscore_ops);
+
+>>>>>>> b7ba80a49124 (Commit)
 	kvm_preempt_ops.sched_in = kvm_sched_in;
 	kvm_preempt_ops.sched_out = kvm_sched_out;
 
 	kvm_init_debug();
 
 	r = kvm_vfio_ops_init();
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(r))
 		goto err_vfio;
 
@@ -6042,6 +6418,31 @@ err_vcpu_cache:
 	unregister_reboot_notifier(&kvm_reboot_notifier);
 	cpuhp_remove_state_nocalls(CPUHP_AP_KVM_ONLINE);
 #endif
+=======
+	WARN_ON(r);
+
+	return 0;
+
+out_unreg:
+	kvm_async_pf_deinit();
+out_free_5:
+	for_each_possible_cpu(cpu)
+		free_cpumask_var(per_cpu(cpu_kick_mask, cpu));
+out_free_4:
+	kmem_cache_destroy(kvm_vcpu_cache);
+out_free_3:
+	unregister_reboot_notifier(&kvm_reboot_notifier);
+	cpuhp_remove_state_nocalls(CPUHP_AP_KVM_STARTING);
+out_free_2:
+	kvm_arch_hardware_unsetup();
+out_free_1:
+	free_cpumask_var(cpus_hardware_enabled);
+out_free_0:
+	kvm_irqfd_exit();
+out_irqfd:
+	kvm_arch_exit();
+out_fail:
+>>>>>>> b7ba80a49124 (Commit)
 	return r;
 }
 EXPORT_SYMBOL_GPL(kvm_init);
@@ -6050,6 +6451,7 @@ void kvm_exit(void)
 {
 	int cpu;
 
+<<<<<<< HEAD
 	/*
 	 * Note, unregistering /dev/kvm doesn't strictly need to come first,
 	 * fops_get(), a.k.a. try_module_get(), prevents acquiring references
@@ -6069,6 +6471,23 @@ void kvm_exit(void)
 	cpuhp_remove_state_nocalls(CPUHP_AP_KVM_ONLINE);
 #endif
 	kvm_irqfd_exit();
+=======
+	debugfs_remove_recursive(kvm_debugfs_dir);
+	misc_deregister(&kvm_dev);
+	for_each_possible_cpu(cpu)
+		free_cpumask_var(per_cpu(cpu_kick_mask, cpu));
+	kmem_cache_destroy(kvm_vcpu_cache);
+	kvm_async_pf_deinit();
+	unregister_syscore_ops(&kvm_syscore_ops);
+	unregister_reboot_notifier(&kvm_reboot_notifier);
+	cpuhp_remove_state_nocalls(CPUHP_AP_KVM_STARTING);
+	on_each_cpu(hardware_disable_nolock, NULL, 1);
+	kvm_arch_hardware_unsetup();
+	kvm_arch_exit();
+	kvm_irqfd_exit();
+	free_cpumask_var(cpus_hardware_enabled);
+	kvm_vfio_ops_exit();
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(kvm_exit);
 

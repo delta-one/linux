@@ -4,10 +4,17 @@
  *
  * Copyright (C) 2013-2014 Stephane Grosjean <s.grosjean@peak-system.com>
  */
+<<<<<<< HEAD
 #include <linux/ethtool.h>
 #include <linux/module.h>
 #include <linux/netdevice.h>
 #include <linux/usb.h>
+=======
+#include <linux/netdevice.h>
+#include <linux/usb.h>
+#include <linux/module.h>
+#include <linux/ethtool.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/can.h>
 #include <linux/can/dev.h>
@@ -147,6 +154,7 @@ struct __packed pcan_ufd_ovr_msg {
 	u8	unused[3];
 };
 
+<<<<<<< HEAD
 #define PCAN_UFD_CMD_DEVID_SET		0x81
 
 struct __packed pcan_ufd_device_id {
@@ -156,6 +164,8 @@ struct __packed pcan_ufd_device_id {
 	__le32	device_id;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int pufd_omsg_get_channel(struct pcan_ufd_ovr_msg *om)
 {
 	return om->channel & 0xf;
@@ -243,6 +253,7 @@ static int pcan_usb_fd_send_cmd(struct peak_usb_device *dev, void *cmd_tail)
 	return err;
 }
 
+<<<<<<< HEAD
 static int pcan_usb_fd_read_fwinfo(struct peak_usb_device *dev,
 				   struct pcan_ufd_fw_info *fw_info)
 {
@@ -252,6 +263,8 @@ static int pcan_usb_fd_read_fwinfo(struct peak_usb_device *dev,
 				     sizeof(*fw_info));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* build the commands list in the given buffer, to enter operational mode */
 static int pcan_usb_fd_build_restart_cmd(struct peak_usb_device *dev, u8 *buf)
 {
@@ -452,6 +465,7 @@ static int pcan_usb_fd_set_bittiming_fast(struct peak_usb_device *dev,
 	return pcan_usb_fd_send_cmd(dev, ++cmd);
 }
 
+<<<<<<< HEAD
 /* read user CAN channel id from device */
 static int pcan_usb_fd_get_can_channel_id(struct peak_usb_device *dev,
 					  u32 *can_ch_id)
@@ -480,6 +494,8 @@ static int pcan_usb_fd_set_can_channel_id(struct peak_usb_device *dev, u32 can_c
 	return pcan_usb_fd_send_cmd(dev, ++cmd);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* handle restart but in asynchronously way
  * (uses PCAN-USB Pro code to complete asynchronous request)
  */
@@ -953,7 +969,14 @@ static int pcan_usb_fd_init(struct peak_usb_device *dev)
 
 		fw_info = &pdev->usb_if->fw_info;
 
+<<<<<<< HEAD
 		err = pcan_usb_fd_read_fwinfo(dev, fw_info);
+=======
+		err = pcan_usb_pro_send_req(dev, PCAN_USBPRO_REQ_INFO,
+					    PCAN_USBPRO_INFO_FW,
+					    fw_info,
+					    sizeof(*fw_info));
+>>>>>>> b7ba80a49124 (Commit)
 		if (err) {
 			dev_err(dev->netdev->dev.parent,
 				"unable to read %s firmware info (err %d)\n",
@@ -1015,7 +1038,11 @@ static int pcan_usb_fd_init(struct peak_usb_device *dev)
 	}
 
 	pdev->usb_if->dev[dev->ctrl_idx] = dev;
+<<<<<<< HEAD
 	dev->can_channel_id =
+=======
+	dev->device_number =
+>>>>>>> b7ba80a49124 (Commit)
 		le32_to_cpu(pdev->usb_if->fw_info.dev_id[dev->ctrl_idx]);
 
 	/* if vendor rsp is of type 2, then it contains EP numbers to
@@ -1124,9 +1151,12 @@ static int pcan_usb_fd_set_phys_id(struct net_device *netdev,
 static const struct ethtool_ops pcan_usb_fd_ethtool_ops = {
 	.set_phys_id = pcan_usb_fd_set_phys_id,
 	.get_ts_info = pcan_get_ts_info,
+<<<<<<< HEAD
 	.get_eeprom_len	= peak_usb_get_eeprom_len,
 	.get_eeprom = peak_usb_get_eeprom,
 	.set_eeprom = peak_usb_set_eeprom,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* describes the PCAN-USB FD adapter */
@@ -1194,8 +1224,11 @@ const struct peak_usb_adapter pcan_usb_fd = {
 	.dev_set_bus = pcan_usb_fd_set_bus,
 	.dev_set_bittiming = pcan_usb_fd_set_bittiming_slow,
 	.dev_set_data_bittiming = pcan_usb_fd_set_bittiming_fast,
+<<<<<<< HEAD
 	.dev_get_can_channel_id = pcan_usb_fd_get_can_channel_id,
 	.dev_set_can_channel_id = pcan_usb_fd_set_can_channel_id,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.dev_decode_buf = pcan_usb_fd_decode_buf,
 	.dev_start = pcan_usb_fd_start,
 	.dev_stop = pcan_usb_fd_stop,
@@ -1270,8 +1303,11 @@ const struct peak_usb_adapter pcan_usb_chip = {
 	.dev_set_bus = pcan_usb_fd_set_bus,
 	.dev_set_bittiming = pcan_usb_fd_set_bittiming_slow,
 	.dev_set_data_bittiming = pcan_usb_fd_set_bittiming_fast,
+<<<<<<< HEAD
 	.dev_get_can_channel_id = pcan_usb_fd_get_can_channel_id,
 	.dev_set_can_channel_id = pcan_usb_fd_set_can_channel_id,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.dev_decode_buf = pcan_usb_fd_decode_buf,
 	.dev_start = pcan_usb_fd_start,
 	.dev_stop = pcan_usb_fd_stop,
@@ -1346,8 +1382,11 @@ const struct peak_usb_adapter pcan_usb_pro_fd = {
 	.dev_set_bus = pcan_usb_fd_set_bus,
 	.dev_set_bittiming = pcan_usb_fd_set_bittiming_slow,
 	.dev_set_data_bittiming = pcan_usb_fd_set_bittiming_fast,
+<<<<<<< HEAD
 	.dev_get_can_channel_id = pcan_usb_fd_get_can_channel_id,
 	.dev_set_can_channel_id = pcan_usb_fd_set_can_channel_id,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.dev_decode_buf = pcan_usb_fd_decode_buf,
 	.dev_start = pcan_usb_fd_start,
 	.dev_stop = pcan_usb_fd_stop,
@@ -1422,8 +1461,11 @@ const struct peak_usb_adapter pcan_usb_x6 = {
 	.dev_set_bus = pcan_usb_fd_set_bus,
 	.dev_set_bittiming = pcan_usb_fd_set_bittiming_slow,
 	.dev_set_data_bittiming = pcan_usb_fd_set_bittiming_fast,
+<<<<<<< HEAD
 	.dev_get_can_channel_id = pcan_usb_fd_get_can_channel_id,
 	.dev_set_can_channel_id = pcan_usb_fd_set_can_channel_id,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.dev_decode_buf = pcan_usb_fd_decode_buf,
 	.dev_start = pcan_usb_fd_start,
 	.dev_stop = pcan_usb_fd_stop,

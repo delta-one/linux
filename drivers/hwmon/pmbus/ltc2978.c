@@ -23,7 +23,11 @@ enum chips {
 	/* Managers */
 	ltc2972, ltc2974, ltc2975, ltc2977, ltc2978, ltc2979, ltc2980,
 	/* Controllers */
+<<<<<<< HEAD
 	ltc3880, ltc3882, ltc3883, ltc3884, ltc3886, ltc3887, ltc3889, ltc7132, ltc7880,
+=======
+	ltc3880, ltc3882, ltc3883, ltc3884, ltc3886, ltc3887, ltc3889, ltc7880,
+>>>>>>> b7ba80a49124 (Commit)
 	/* Modules */
 	ltm2987, ltm4664, ltm4675, ltm4676, ltm4677, ltm4678, ltm4680, ltm4686,
 	ltm4700,
@@ -45,14 +49,25 @@ enum chips {
 #define LTC2974_MFR_IOUT_PEAK		0xd7
 #define LTC2974_MFR_IOUT_MIN		0xd8
 
+<<<<<<< HEAD
 /* LTC3880, LTC3882, LTC3883, LTC3887, LTM4675, LTM4676, LTC7132 */
+=======
+/* LTC3880, LTC3882, LTC3883, LTC3887, LTM4675, and LTM4676 */
+>>>>>>> b7ba80a49124 (Commit)
 #define LTC3880_MFR_IOUT_PEAK		0xd7
 #define LTC3880_MFR_CLEAR_PEAKS		0xe3
 #define LTC3880_MFR_TEMPERATURE2_PEAK	0xf4
 
+<<<<<<< HEAD
 /* LTC3883, LTC3884, LTC3886, LTC3889, LTC7132, LTC7880 */
 #define LTC3883_MFR_IIN_PEAK		0xe1
 
+=======
+/* LTC3883, LTC3884, LTC3886, LTC3889 and LTC7880 only */
+#define LTC3883_MFR_IIN_PEAK		0xe1
+
+
+>>>>>>> b7ba80a49124 (Commit)
 /* LTC2975 only */
 #define LTC2975_MFR_IIN_PEAK		0xc4
 #define LTC2975_MFR_IIN_MIN		0xc5
@@ -78,11 +93,18 @@ enum chips {
 #define LTC3884_ID			0x4C00
 #define LTC3886_ID			0x4600
 #define LTC3887_ID			0x4700
+<<<<<<< HEAD
 #define LTC3889_ID			0x4900
 #define LTC7132_ID			0x4CE0
 #define LTC7880_ID			0x49E0
 #define LTM2987_ID_A			0x8010	/* A/B for two die IDs */
 #define LTM2987_ID_B			0x8020
+=======
+#define LTM2987_ID_A			0x8010	/* A/B for two die IDs */
+#define LTM2987_ID_B			0x8020
+#define LTC3889_ID			0x4900
+#define LTC7880_ID			0x49E0
+>>>>>>> b7ba80a49124 (Commit)
 #define LTM4664_ID			0x4120
 #define LTM4675_ID			0x47a0
 #define LTM4676_ID_REV1			0x4400
@@ -547,7 +569,10 @@ static const struct i2c_device_id ltc2978_id[] = {
 	{"ltc3886", ltc3886},
 	{"ltc3887", ltc3887},
 	{"ltc3889", ltc3889},
+<<<<<<< HEAD
 	{"ltc7132", ltc7132},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{"ltc7880", ltc7880},
 	{"ltm2987", ltm2987},
 	{"ltm4664", ltm4664},
@@ -570,6 +595,7 @@ MODULE_DEVICE_TABLE(i2c, ltc2978_id);
 #define LTC2978_N_VOLTAGES	((LTC2978_MAX_UV / LTC2978_UV_STEP) + 1)
 
 static const struct regulator_desc ltc2978_reg_desc[] = {
+<<<<<<< HEAD
 	PMBUS_REGULATOR_STEP("vout", 0, LTC2978_N_VOLTAGES, LTC2978_UV_STEP, 0),
 	PMBUS_REGULATOR_STEP("vout", 1, LTC2978_N_VOLTAGES, LTC2978_UV_STEP, 0),
 	PMBUS_REGULATOR_STEP("vout", 2, LTC2978_N_VOLTAGES, LTC2978_UV_STEP, 0),
@@ -578,6 +604,16 @@ static const struct regulator_desc ltc2978_reg_desc[] = {
 	PMBUS_REGULATOR_STEP("vout", 5, LTC2978_N_VOLTAGES, LTC2978_UV_STEP, 0),
 	PMBUS_REGULATOR_STEP("vout", 6, LTC2978_N_VOLTAGES, LTC2978_UV_STEP, 0),
 	PMBUS_REGULATOR_STEP("vout", 7, LTC2978_N_VOLTAGES, LTC2978_UV_STEP, 0),
+=======
+	PMBUS_REGULATOR_STEP("vout", 0, LTC2978_N_VOLTAGES, LTC2978_UV_STEP),
+	PMBUS_REGULATOR_STEP("vout", 1, LTC2978_N_VOLTAGES, LTC2978_UV_STEP),
+	PMBUS_REGULATOR_STEP("vout", 2, LTC2978_N_VOLTAGES, LTC2978_UV_STEP),
+	PMBUS_REGULATOR_STEP("vout", 3, LTC2978_N_VOLTAGES, LTC2978_UV_STEP),
+	PMBUS_REGULATOR_STEP("vout", 4, LTC2978_N_VOLTAGES, LTC2978_UV_STEP),
+	PMBUS_REGULATOR_STEP("vout", 5, LTC2978_N_VOLTAGES, LTC2978_UV_STEP),
+	PMBUS_REGULATOR_STEP("vout", 6, LTC2978_N_VOLTAGES, LTC2978_UV_STEP),
+	PMBUS_REGULATOR_STEP("vout", 7, LTC2978_N_VOLTAGES, LTC2978_UV_STEP),
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct regulator_desc ltc2978_reg_desc_default[] = {
@@ -652,8 +688,11 @@ static int ltc2978_get_id(struct i2c_client *client)
 		return ltc3887;
 	else if (chip_id == LTC3889_ID)
 		return ltc3889;
+<<<<<<< HEAD
 	else if (chip_id == LTC7132_ID)
 		return ltc7132;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	else if (chip_id == LTC7880_ID)
 		return ltc7880;
 	else if (chip_id == LTM2987_ID_A || chip_id == LTM2987_ID_B)
@@ -834,7 +873,10 @@ static int ltc2978_probe(struct i2c_client *client)
 	case ltc3884:
 	case ltc3886:
 	case ltc3889:
+<<<<<<< HEAD
 	case ltc7132:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case ltc7880:
 	case ltm4664:
 	case ltm4678:
@@ -906,7 +948,10 @@ static const struct of_device_id ltc2978_of_match[] = {
 	{ .compatible = "lltc,ltc3886" },
 	{ .compatible = "lltc,ltc3887" },
 	{ .compatible = "lltc,ltc3889" },
+<<<<<<< HEAD
 	{ .compatible = "lltc,ltc7132" },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "lltc,ltc7880" },
 	{ .compatible = "lltc,ltm2987" },
 	{ .compatible = "lltc,ltm4664" },

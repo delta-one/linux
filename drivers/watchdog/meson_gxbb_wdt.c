@@ -146,11 +146,23 @@ static const struct of_device_id meson_gxbb_wdt_dt_ids[] = {
 };
 MODULE_DEVICE_TABLE(of, meson_gxbb_wdt_dt_ids);
 
+<<<<<<< HEAD
+=======
+static void meson_clk_disable_unprepare(void *data)
+{
+	clk_disable_unprepare(data);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int meson_gxbb_wdt_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 	struct meson_gxbb_wdt *data;
+<<<<<<< HEAD
 	u32 ctrl_reg;
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
 	if (!data)
@@ -160,10 +172,25 @@ static int meson_gxbb_wdt_probe(struct platform_device *pdev)
 	if (IS_ERR(data->reg_base))
 		return PTR_ERR(data->reg_base);
 
+<<<<<<< HEAD
 	data->clk = devm_clk_get_enabled(dev, NULL);
 	if (IS_ERR(data->clk))
 		return PTR_ERR(data->clk);
 
+=======
+	data->clk = devm_clk_get(dev, NULL);
+	if (IS_ERR(data->clk))
+		return PTR_ERR(data->clk);
+
+	ret = clk_prepare_enable(data->clk);
+	if (ret)
+		return ret;
+	ret = devm_add_action_or_reset(dev, meson_clk_disable_unprepare,
+				       data->clk);
+	if (ret)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	platform_set_drvdata(pdev, data);
 
 	data->wdt_dev.parent = dev;
@@ -176,6 +203,7 @@ static int meson_gxbb_wdt_probe(struct platform_device *pdev)
 	watchdog_set_nowayout(&data->wdt_dev, nowayout);
 	watchdog_set_drvdata(&data->wdt_dev, data);
 
+<<<<<<< HEAD
 	ctrl_reg = readl(data->reg_base + GXBB_WDT_CTRL_REG) &
 				GXBB_WDT_CTRL_EN;
 
@@ -196,6 +224,15 @@ static int meson_gxbb_wdt_probe(struct platform_device *pdev)
 			GXBB_WDT_CTRL_CLKDIV_EN;
 
 	writel(ctrl_reg, data->reg_base + GXBB_WDT_CTRL_REG);
+=======
+	/* Setup with 1ms timebase */
+	writel(((clk_get_rate(data->clk) / 1000) & GXBB_WDT_CTRL_DIV_MASK) |
+		GXBB_WDT_CTRL_EE_RESET |
+		GXBB_WDT_CTRL_CLK_EN |
+		GXBB_WDT_CTRL_CLKDIV_EN,
+		data->reg_base + GXBB_WDT_CTRL_REG);
+
+>>>>>>> b7ba80a49124 (Commit)
 	meson_gxbb_wdt_set_timeout(&data->wdt_dev, data->wdt_dev.timeout);
 
 	return devm_watchdog_register_device(dev, &data->wdt_dev);

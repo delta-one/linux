@@ -25,16 +25,28 @@ static int none_how_much_data(struct rxrpc_call *call, size_t remain,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int none_secure_packet(struct rxrpc_call *call, struct rxrpc_txbuf *txb)
+=======
+static int none_secure_packet(struct rxrpc_call *call, struct sk_buff *skb,
+			      size_t data_size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return 0;
 }
 
+<<<<<<< HEAD
 static int none_verify_packet(struct rxrpc_call *call, struct sk_buff *skb)
 {
 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
 
 	sp->flags |= RXRPC_RX_VERIFIED;
+=======
+static int none_verify_packet(struct rxrpc_call *call, struct sk_buff *skb,
+			      unsigned int offset, unsigned int len,
+			      rxrpc_seq_t seq, u16 expected_cksum)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -42,6 +54,7 @@ static void none_free_call_crypto(struct rxrpc_call *call)
 {
 }
 
+<<<<<<< HEAD
 static int none_respond_to_challenge(struct rxrpc_connection *conn,
 				     struct sk_buff *skb)
 {
@@ -54,6 +67,33 @@ static int none_verify_response(struct rxrpc_connection *conn,
 {
 	return rxrpc_abort_conn(conn, skb, RX_PROTOCOL_ERROR, -EPROTO,
 				rxrpc_eproto_rxnull_response);
+=======
+static void none_locate_data(struct rxrpc_call *call, struct sk_buff *skb,
+			     unsigned int *_offset, unsigned int *_len)
+{
+}
+
+static int none_respond_to_challenge(struct rxrpc_connection *conn,
+				     struct sk_buff *skb,
+				     u32 *_abort_code)
+{
+	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
+
+	trace_rxrpc_rx_eproto(NULL, sp->hdr.serial,
+			      tracepoint_string("chall_none"));
+	return -EPROTO;
+}
+
+static int none_verify_response(struct rxrpc_connection *conn,
+				struct sk_buff *skb,
+				u32 *_abort_code)
+{
+	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
+
+	trace_rxrpc_rx_eproto(NULL, sp->hdr.serial,
+			      tracepoint_string("resp_none"));
+	return -EPROTO;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void none_clear(struct rxrpc_connection *conn)
@@ -82,6 +122,10 @@ const struct rxrpc_security rxrpc_no_security = {
 	.how_much_data			= none_how_much_data,
 	.secure_packet			= none_secure_packet,
 	.verify_packet			= none_verify_packet,
+<<<<<<< HEAD
+=======
+	.locate_data			= none_locate_data,
+>>>>>>> b7ba80a49124 (Commit)
 	.respond_to_challenge		= none_respond_to_challenge,
 	.verify_response		= none_verify_response,
 	.clear				= none_clear,

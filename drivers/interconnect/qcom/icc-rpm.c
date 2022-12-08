@@ -11,6 +11,10 @@
 #include <linux/of_device.h>
 #include <linux/of_platform.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
+=======
+#include <linux/pm_domain.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regmap.h>
 #include <linux/slab.h>
 
@@ -476,8 +480,16 @@ int qnoc_probe(struct platform_device *pdev)
 		}
 
 		mmio = devm_ioremap_resource(dev, res);
+<<<<<<< HEAD
 		if (IS_ERR(mmio))
 			return PTR_ERR(mmio);
+=======
+
+		if (IS_ERR(mmio)) {
+			dev_err(dev, "Cannot ioremap interconnect bus resource\n");
+			return PTR_ERR(mmio);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		qp->regmap = devm_regmap_init_mmio(dev, mmio, desc->regmap_cfg);
 		if (IS_ERR(qp->regmap)) {
@@ -487,7 +499,11 @@ int qnoc_probe(struct platform_device *pdev)
 	}
 
 regmap_done:
+<<<<<<< HEAD
 	ret = devm_clk_bulk_get_optional(dev, qp->num_clks, qp->bus_clks);
+=======
+	ret = devm_clk_bulk_get(dev, qp->num_clks, qp->bus_clks);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -495,7 +511,18 @@ regmap_done:
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	provider = &qp->provider;
+=======
+	if (desc->has_bus_pd) {
+		ret = dev_pm_domain_attach(dev, true);
+		if (ret)
+			return ret;
+	}
+
+	provider = &qp->provider;
+	INIT_LIST_HEAD(&provider->nodes);
+>>>>>>> b7ba80a49124 (Commit)
 	provider->dev = dev;
 	provider->set = qcom_icc_set;
 	provider->pre_aggregate = qcom_icc_pre_bw_aggregate;
@@ -503,7 +530,16 @@ regmap_done:
 	provider->xlate_extended = qcom_icc_xlate_extended;
 	provider->data = data;
 
+<<<<<<< HEAD
 	icc_provider_init(provider);
+=======
+	ret = icc_provider_add(provider);
+	if (ret) {
+		dev_err(dev, "error adding interconnect provider: %d\n", ret);
+		clk_bulk_disable_unprepare(qp->num_clks, qp->bus_clks);
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < num_nodes; i++) {
 		size_t j;
@@ -511,7 +547,11 @@ regmap_done:
 		node = icc_node_create(qnodes[i]->id);
 		if (IS_ERR(node)) {
 			ret = PTR_ERR(node);
+<<<<<<< HEAD
 			goto err_remove_nodes;
+=======
+			goto err;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		node->name = qnodes[i]->name;
@@ -525,6 +565,7 @@ regmap_done:
 	}
 	data->num_nodes = num_nodes;
 
+<<<<<<< HEAD
 	ret = icc_provider_register(provider);
 	if (ret)
 		goto err_remove_nodes;
@@ -545,6 +586,19 @@ err_deregister_provider:
 err_remove_nodes:
 	icc_nodes_remove(provider);
 	clk_bulk_disable_unprepare(qp->num_clks, qp->bus_clks);
+=======
+	platform_set_drvdata(pdev, qp);
+
+	/* Populate child NoC devices if any */
+	if (of_get_child_count(dev->of_node) > 0)
+		return of_platform_populate(dev->of_node, NULL, NULL, dev);
+
+	return 0;
+err:
+	icc_nodes_remove(provider);
+	clk_bulk_disable_unprepare(qp->num_clks, qp->bus_clks);
+	icc_provider_del(provider);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -554,9 +608,15 @@ int qnoc_remove(struct platform_device *pdev)
 {
 	struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	icc_provider_deregister(&qp->provider);
 	icc_nodes_remove(&qp->provider);
 	clk_bulk_disable_unprepare(qp->num_clks, qp->bus_clks);
+=======
+	icc_nodes_remove(&qp->provider);
+	clk_bulk_disable_unprepare(qp->num_clks, qp->bus_clks);
+	icc_provider_del(&qp->provider);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

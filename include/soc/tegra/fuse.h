@@ -34,6 +34,7 @@ enum tegra_revision {
 	TEGRA_REVISION_MAX,
 };
 
+<<<<<<< HEAD
 enum tegra_platform {
 	TEGRA_PLATFORM_SILICON = 0,
 	TEGRA_PLATFORM_QT,
@@ -48,6 +49,8 @@ enum tegra_platform {
 	TEGRA_PLATFORM_MAX,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct tegra_sku_info {
 	int sku_id;
 	int cpu_process_id;
@@ -61,7 +64,10 @@ struct tegra_sku_info {
 	int gpu_speedo_id;
 	int gpu_speedo_value;
 	enum tegra_revision revision;
+<<<<<<< HEAD
 	enum tegra_platform platform;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #ifdef CONFIG_ARCH_TEGRA

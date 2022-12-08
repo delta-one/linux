@@ -15,13 +15,17 @@
 
 #include <nvhe/mem_protect.h>
 #include <nvhe/mm.h>
+<<<<<<< HEAD
 #include <nvhe/pkvm.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <nvhe/trap_handler.h>
 
 DEFINE_PER_CPU(struct kvm_nvhe_init_params, kvm_init_params);
 
 void __kvm_hyp_host_forward_smc(struct kvm_cpu_context *host_ctxt);
 
+<<<<<<< HEAD
 static void flush_hyp_vcpu(struct pkvm_hyp_vcpu *hyp_vcpu)
 {
 	struct kvm_vcpu *host_vcpu = hyp_vcpu->host_vcpu;
@@ -102,6 +106,13 @@ static void handle___kvm_vcpu_run(struct kvm_cpu_context *host_ctxt)
 
 out:
 	cpu_reg(host_ctxt, 1) =  ret;
+=======
+static void handle___kvm_vcpu_run(struct kvm_cpu_context *host_ctxt)
+{
+	DECLARE_REG(struct kvm_vcpu *, vcpu, host_ctxt, 1);
+
+	cpu_reg(host_ctxt, 1) =  __kvm_vcpu_run(kern_hyp_va(vcpu));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void handle___kvm_adjust_pc(struct kvm_cpu_context *host_ctxt)
@@ -267,6 +278,7 @@ static void handle___pkvm_vcpu_init_traps(struct kvm_cpu_context *host_ctxt)
 	__pkvm_vcpu_init_traps(kern_hyp_va(vcpu));
 }
 
+<<<<<<< HEAD
 static void handle___pkvm_init_vm(struct kvm_cpu_context *host_ctxt)
 {
 	DECLARE_REG(struct kvm *, host_kvm, host_ctxt, 1);
@@ -294,6 +306,8 @@ static void handle___pkvm_teardown_vm(struct kvm_cpu_context *host_ctxt)
 	cpu_reg(host_ctxt, 1) = __pkvm_teardown_vm(handle);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 typedef void (*hcall_t)(struct kvm_cpu_context *);
 
 #define HANDLE_FUNC(x)	[__KVM_HOST_SMCCC_FUNC_##x] = (hcall_t)handle_##x
@@ -323,9 +337,12 @@ static const hcall_t host_hcall[] = {
 	HANDLE_FUNC(__vgic_v3_save_aprs),
 	HANDLE_FUNC(__vgic_v3_restore_aprs),
 	HANDLE_FUNC(__pkvm_vcpu_init_traps),
+<<<<<<< HEAD
 	HANDLE_FUNC(__pkvm_init_vm),
 	HANDLE_FUNC(__pkvm_init_vcpu),
 	HANDLE_FUNC(__pkvm_teardown_vm),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void handle_host_hcall(struct kvm_cpu_context *host_ctxt)

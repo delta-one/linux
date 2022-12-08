@@ -317,7 +317,11 @@ static int electra_cf_remove(struct platform_device *ofdev)
 	cf->active = 0;
 	pcmcia_unregister_socket(&cf->socket);
 	free_irq(cf->irq, cf);
+<<<<<<< HEAD
 	timer_shutdown_sync(&cf->timer);
+=======
+	del_timer_sync(&cf->timer);
+>>>>>>> b7ba80a49124 (Commit)
 
 	iounmap(cf->io_virt);
 	iounmap(cf->mem_base);

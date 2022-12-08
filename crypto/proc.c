@@ -11,7 +11,10 @@
 #include <linux/atomic.h>
 #include <linux/init.h>
 #include <linux/crypto.h>
+<<<<<<< HEAD
 #include <linux/fips.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>	/* for module_name() */
 #include <linux/rwsem.h>
 #include <linux/proc_fs.h>
@@ -49,11 +52,14 @@ static int c_show(struct seq_file *m, void *p)
 	seq_printf(m, "internal     : %s\n",
 		   (alg->cra_flags & CRYPTO_ALG_INTERNAL) ?
 		   "yes" : "no");
+<<<<<<< HEAD
 	if (fips_enabled) {
 		seq_printf(m, "fips         : %s\n",
 			   (alg->cra_flags & CRYPTO_ALG_FIPS_INTERNAL) ?
 			   "no" : "yes");
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (alg->cra_flags & CRYPTO_ALG_LARVAL) {
 		seq_printf(m, "type         : larval\n");

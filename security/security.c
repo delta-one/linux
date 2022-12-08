@@ -6,7 +6,10 @@
  * Copyright (C) 2001-2002 Greg Kroah-Hartman <greg@kroah.com>
  * Copyright (C) 2001 Networks Associates Technology, Inc <ssmalley@nai.com>
  * Copyright (C) 2016 Mellanox Technologies
+<<<<<<< HEAD
  * Copyright (C) 2023 Microsoft Corporation <paul@paul-moore.com>
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #define pr_fmt(fmt) "LSM: " fmt
@@ -42,7 +45,11 @@
  * all security modules to use the same descriptions for auditing
  * purposes.
  */
+<<<<<<< HEAD
 const char *const lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX + 1] = {
+=======
+const char *const lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+>>>>>>> b7ba80a49124 (Commit)
 	[LOCKDOWN_NONE] = "none",
 	[LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
 	[LOCKDOWN_DEV_MEM] = "/dev/mem,kmem,port",
@@ -53,7 +60,10 @@ const char *const lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX + 1] = {
 	[LOCKDOWN_IOPORT] = "raw io port access",
 	[LOCKDOWN_MSR] = "raw MSR access",
 	[LOCKDOWN_ACPI_TABLES] = "modifying ACPI tables",
+<<<<<<< HEAD
 	[LOCKDOWN_DEVICE_TREE] = "modifying device tree contents",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	[LOCKDOWN_PCMCIA_CIS] = "direct PCMCIA CIS storage",
 	[LOCKDOWN_TIOCSSERIAL] = "reconfiguration of serial port IO",
 	[LOCKDOWN_MODULE_PARAMETERS] = "unsafe module parameters",
@@ -62,7 +72,10 @@ const char *const lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX + 1] = {
 	[LOCKDOWN_XMON_WR] = "xmon write access",
 	[LOCKDOWN_BPF_WRITE_USER] = "use of bpf to write user RAM",
 	[LOCKDOWN_DBG_WRITE_KERNEL] = "use of kgdb/kdb to write kernel RAM",
+<<<<<<< HEAD
 	[LOCKDOWN_RTAS_ERROR_INJECTION] = "RTAS error injection",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
 	[LOCKDOWN_KCORE] = "/proc/kcore access",
 	[LOCKDOWN_KPROBES] = "use of kprobes",
@@ -75,20 +88,32 @@ const char *const lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX + 1] = {
 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
 };
 
+<<<<<<< HEAD
 struct security_hook_heads security_hook_heads __ro_after_init;
+=======
+struct security_hook_heads security_hook_heads __lsm_ro_after_init;
+>>>>>>> b7ba80a49124 (Commit)
 static BLOCKING_NOTIFIER_HEAD(blocking_lsm_notifier_chain);
 
 static struct kmem_cache *lsm_file_cache;
 static struct kmem_cache *lsm_inode_cache;
 
 char *lsm_names;
+<<<<<<< HEAD
 static struct lsm_blob_sizes blob_sizes __ro_after_init;
+=======
+static struct lsm_blob_sizes blob_sizes __lsm_ro_after_init;
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Boot-time LSM user choice */
 static __initdata const char *chosen_lsm_order;
 static __initdata const char *chosen_major_lsm;
 
+<<<<<<< HEAD
 static __initconst const char *const builtin_lsm_order = CONFIG_LSM;
+=======
+static __initconst const char * const builtin_lsm_order = CONFIG_LSM;
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Ordered list of LSMs to initialize. */
 static __initdata struct lsm_info **ordered_lsms;
@@ -162,8 +187,13 @@ static void __init append_ordered_lsm(struct lsm_info *lsm, const char *from)
 		lsm->enabled = &lsm_enabled_true;
 	ordered_lsms[last_lsm++] = lsm;
 
+<<<<<<< HEAD
 	init_debug("%s ordered: %s (%s)\n", from, lsm->name,
 		   is_enabled(lsm) ? "enabled" : "disabled");
+=======
+	init_debug("%s ordering: %s (%sabled)\n", from, lsm->name,
+		   is_enabled(lsm) ? "en" : "dis");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Is an LSM allowed to be initialized? */
@@ -186,12 +216,20 @@ static void __init lsm_set_blob_size(int *need, int *lbs)
 {
 	int offset;
 
+<<<<<<< HEAD
 	if (*need <= 0)
 		return;
 
 	offset = ALIGN(*lbs, sizeof(void *));
 	*lbs = offset + *need;
 	*need = offset;
+=======
+	if (*need > 0) {
+		offset = *lbs;
+		*lbs += *need;
+		*need = offset;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __init lsm_set_blob_sizes(struct lsm_blob_sizes *needed)
@@ -226,7 +264,11 @@ static void __init prepare_lsm(struct lsm_info *lsm)
 	if (enabled) {
 		if ((lsm->flags & LSM_FLAG_EXCLUSIVE) && !exclusive) {
 			exclusive = lsm;
+<<<<<<< HEAD
 			init_debug("exclusive chosen:   %s\n", lsm->name);
+=======
+			init_debug("exclusive chosen: %s\n", lsm->name);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		lsm_set_blob_sizes(lsm->blobs);
@@ -254,7 +296,11 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
 	/* LSM_ORDER_FIRST is always first. */
 	for (lsm = __start_lsm_info; lsm < __end_lsm_info; lsm++) {
 		if (lsm->order == LSM_ORDER_FIRST)
+<<<<<<< HEAD
 			append_ordered_lsm(lsm, "  first");
+=======
+			append_ordered_lsm(lsm, "first");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Process "security=", if given. */
@@ -272,7 +318,11 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
 			if ((major->flags & LSM_FLAG_LEGACY_MAJOR) &&
 			    strcmp(major->name, chosen_major_lsm) != 0) {
 				set_enabled(major, false);
+<<<<<<< HEAD
 				init_debug("security=%s disabled: %s (only one legacy major LSM)\n",
+=======
+				init_debug("security=%s disabled: %s\n",
+>>>>>>> b7ba80a49124 (Commit)
 					   chosen_major_lsm, major->name);
 			}
 		}
@@ -285,16 +335,26 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
 		bool found = false;
 
 		for (lsm = __start_lsm_info; lsm < __end_lsm_info; lsm++) {
+<<<<<<< HEAD
 			if (strcmp(lsm->name, name) == 0) {
 				if (lsm->order == LSM_ORDER_MUTABLE)
 					append_ordered_lsm(lsm, origin);
+=======
+			if (lsm->order == LSM_ORDER_MUTABLE &&
+			    strcmp(lsm->name, name) == 0) {
+				append_ordered_lsm(lsm, origin);
+>>>>>>> b7ba80a49124 (Commit)
 				found = true;
 			}
 		}
 
 		if (!found)
+<<<<<<< HEAD
 			init_debug("%s ignored: %s (not built into kernel)\n",
 				   origin, name);
+=======
+			init_debug("%s ignored: %s\n", origin, name);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Process "security=", if given. */
@@ -307,19 +367,26 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
 		}
 	}
 
+<<<<<<< HEAD
 	/* LSM_ORDER_LAST is always last. */
 	for (lsm = __start_lsm_info; lsm < __end_lsm_info; lsm++) {
 		if (lsm->order == LSM_ORDER_LAST)
 			append_ordered_lsm(lsm, "   last");
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Disable all LSMs not in the ordered list. */
 	for (lsm = __start_lsm_info; lsm < __end_lsm_info; lsm++) {
 		if (exists_ordered_lsm(lsm))
 			continue;
 		set_enabled(lsm, false);
+<<<<<<< HEAD
 		init_debug("%s skipped: %s (not in requested order)\n",
 			   origin, lsm->name);
+=======
+		init_debug("%s disabled: %s\n", origin, lsm->name);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	kfree(sep);
@@ -330,6 +397,7 @@ static void __init lsm_early_task(struct task_struct *task);
 
 static int lsm_append(const char *new, char **result);
 
+<<<<<<< HEAD
 static void __init report_lsm_order(void)
 {
 	struct lsm_info **lsm, *early;
@@ -349,17 +417,27 @@ static void __init report_lsm_order(void)
 	pr_cont("\n");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void __init ordered_lsm_init(void)
 {
 	struct lsm_info **lsm;
 
 	ordered_lsms = kcalloc(LSM_COUNT + 1, sizeof(*ordered_lsms),
+<<<<<<< HEAD
 			       GFP_KERNEL);
 
 	if (chosen_lsm_order) {
 		if (chosen_major_lsm) {
 			pr_warn("security=%s is ignored because it is superseded by lsm=%s\n",
 				chosen_major_lsm, chosen_lsm_order);
+=======
+				GFP_KERNEL);
+
+	if (chosen_lsm_order) {
+		if (chosen_major_lsm) {
+			pr_info("security= is ignored because it is superseded by lsm=\n");
+>>>>>>> b7ba80a49124 (Commit)
 			chosen_major_lsm = NULL;
 		}
 		ordered_lsm_parse(chosen_lsm_order, "cmdline");
@@ -369,8 +447,11 @@ static void __init ordered_lsm_init(void)
 	for (lsm = ordered_lsms; *lsm; lsm++)
 		prepare_lsm(*lsm);
 
+<<<<<<< HEAD
 	report_lsm_order();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	init_debug("cred blob size       = %d\n", blob_sizes.lbs_cred);
 	init_debug("file blob size       = %d\n", blob_sizes.lbs_file);
 	init_debug("inode blob size      = %d\n", blob_sizes.lbs_inode);
@@ -427,17 +508,24 @@ int __init security_init(void)
 {
 	struct lsm_info *lsm;
 
+<<<<<<< HEAD
 	init_debug("legacy security=%s\n", chosen_major_lsm ? : " *unspecified*");
 	init_debug("  CONFIG_LSM=%s\n", builtin_lsm_order);
 	init_debug("boot arg lsm=%s\n", chosen_lsm_order ? : " *unspecified*");
+=======
+	pr_info("Security Framework initializing\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Append the names of the early LSM modules now that kmalloc() is
 	 * available
 	 */
 	for (lsm = __start_early_lsm_info; lsm < __end_early_lsm_info; lsm++) {
+<<<<<<< HEAD
 		init_debug("  early started: %s (%s)\n", lsm->name,
 			   is_enabled(lsm) ? "enabled" : "disabled");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (lsm->enabled)
 			lsm_append(lsm->name, &lsm_names);
 	}
@@ -517,7 +605,11 @@ static int lsm_append(const char *new, char **result)
  * Each LSM has to register its hooks with the infrastructure.
  */
 void __init security_add_hooks(struct security_hook_list *hooks, int count,
+<<<<<<< HEAD
 			       const char *lsm)
+=======
+				const char *lsm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 
@@ -786,6 +878,7 @@ static int lsm_superblock_alloc(struct super_block *sb)
 
 /* Security operations */
 
+<<<<<<< HEAD
 /**
  * security_binder_set_context_mgr() - Check if becoming binder ctx mgr is ok
  * @mgr: task credentials of current binder process
@@ -794,11 +887,14 @@ static int lsm_superblock_alloc(struct super_block *sb)
  *
  * Return: Return 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_binder_set_context_mgr(const struct cred *mgr)
 {
 	return call_int_hook(binder_set_context_mgr, 0, mgr);
 }
 
+<<<<<<< HEAD
 /**
  * security_binder_transaction() - Check if a binder transaction is allowed
  * @from: sending process
@@ -808,12 +904,15 @@ int security_binder_set_context_mgr(const struct cred *mgr)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_binder_transaction(const struct cred *from,
 				const struct cred *to)
 {
 	return call_int_hook(binder_transaction, 0, from, to);
 }
 
+<<<<<<< HEAD
 /**
  * security_binder_transfer_binder() - Check if a binder transfer is allowed
  * @from: sending process
@@ -823,12 +922,15 @@ int security_binder_transaction(const struct cred *from,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_binder_transfer_binder(const struct cred *from,
 				    const struct cred *to)
 {
 	return call_int_hook(binder_transfer_binder, 0, from, to);
 }
 
+<<<<<<< HEAD
 /**
  * security_binder_transfer_file() - Check if a binder file xfer is allowed
  * @from: sending process
@@ -839,12 +941,15 @@ int security_binder_transfer_binder(const struct cred *from,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_binder_transfer_file(const struct cred *from,
 				  const struct cred *to, struct file *file)
 {
 	return call_int_hook(binder_transfer_file, 0, from, to, file);
 }
 
+<<<<<<< HEAD
 /**
  * security_ptrace_access_check() - Check if tracing is allowed
  * @child: target process
@@ -859,11 +964,14 @@ int security_binder_transfer_file(const struct cred *from,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_ptrace_access_check(struct task_struct *child, unsigned int mode)
 {
 	return call_int_hook(ptrace_access_check, 0, child, mode);
 }
 
+<<<<<<< HEAD
 /**
  * security_ptrace_traceme() - Check if tracing is allowed
  * @parent: tracing process
@@ -874,11 +982,14 @@ int security_ptrace_access_check(struct task_struct *child, unsigned int mode)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_ptrace_traceme(struct task_struct *parent)
 {
 	return call_int_hook(ptrace_traceme, 0, parent);
 }
 
+<<<<<<< HEAD
 /**
  * security_capget() - Get the capability sets for a process
  * @target: target process
@@ -915,12 +1026,24 @@ int security_capget(struct task_struct *target,
  *
  * Return: Returns 0 and update @new if permission is granted.
  */
+=======
+int security_capget(struct task_struct *target,
+		     kernel_cap_t *effective,
+		     kernel_cap_t *inheritable,
+		     kernel_cap_t *permitted)
+{
+	return call_int_hook(capget, 0, target,
+				effective, inheritable, permitted);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int security_capset(struct cred *new, const struct cred *old,
 		    const kernel_cap_t *effective,
 		    const kernel_cap_t *inheritable,
 		    const kernel_cap_t *permitted)
 {
 	return call_int_hook(capset, 0, new, old,
+<<<<<<< HEAD
 			     effective, inheritable, permitted);
 }
 
@@ -937,6 +1060,11 @@ int security_capset(struct cred *new, const struct cred *old,
  *
  * Return: Returns 0 if the capability is granted.
  */
+=======
+				effective, inheritable, permitted);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int security_capable(const struct cred *cred,
 		     struct user_namespace *ns,
 		     int cap,
@@ -945,6 +1073,7 @@ int security_capable(const struct cred *cred,
 	return call_int_hook(capable, 0, cred, ns, cap, opts);
 }
 
+<<<<<<< HEAD
 /**
  * security_quotactl() - Check if a quotactl() syscall is allowed for this fs
  * @cmds: commands
@@ -956,11 +1085,14 @@ int security_capable(const struct cred *cred,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_quotactl(int cmds, int type, int id, struct super_block *sb)
 {
 	return call_int_hook(quotactl, 0, cmds, type, id, sb);
 }
 
+<<<<<<< HEAD
 /**
  * security_quota_on() - Check if QUOTAON is allowed for a dentry
  * @dentry: dentry
@@ -969,11 +1101,14 @@ int security_quotactl(int cmds, int type, int id, struct super_block *sb)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_quota_on(struct dentry *dentry)
 {
 	return call_int_hook(quota_on, 0, dentry);
 }
 
+<<<<<<< HEAD
 /**
  * security_syslog() - Check if accessing the kernel message ring is allowed
  * @type: SYSLOG_ACTION_* type
@@ -984,11 +1119,14 @@ int security_quota_on(struct dentry *dentry)
  *
  * Return: Return 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_syslog(int type)
 {
 	return call_int_hook(syslog, 0, type);
 }
 
+<<<<<<< HEAD
 /**
  * security_settime64() - Check if changing the system time is allowed
  * @ts: new time
@@ -999,11 +1137,14 @@ int security_syslog(int type)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_settime64(const struct timespec64 *ts, const struct timezone *tz)
 {
 	return call_int_hook(settime, 0, ts, tz);
 }
 
+<<<<<<< HEAD
 /**
  * security_vm_enough_memory_mm() - Check if allocating a new mem map is allowed
  * @mm: mm struct
@@ -1017,6 +1158,8 @@ int security_settime64(const struct timespec64 *ts, const struct timezone *tz)
  * Return: Returns 0 if permission is granted by the LSM infrastructure to the
  *         caller.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_vm_enough_memory_mm(struct mm_struct *mm, long pages)
 {
 	struct security_hook_list *hp;
@@ -1040,6 +1183,7 @@ int security_vm_enough_memory_mm(struct mm_struct *mm, long pages)
 	return __vm_enough_memory(mm, pages, cap_sys_admin);
 }
 
+<<<<<<< HEAD
 /**
  * security_bprm_creds_for_exec() - Prepare the credentials for exec()
  * @bprm: binary program information
@@ -1054,11 +1198,14 @@ int security_vm_enough_memory_mm(struct mm_struct *mm, long pages)
  *
  * Return: Returns 0 if the hook is successful and permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_bprm_creds_for_exec(struct linux_binprm *bprm)
 {
 	return call_int_hook(bprm_creds_for_exec, 0, bprm);
 }
 
+<<<<<<< HEAD
 /**
  * security_bprm_creds_from_file() - Update linux_binprm creds based on file
  * @bprm: binary program information
@@ -1078,11 +1225,14 @@ int security_bprm_creds_for_exec(struct linux_binprm *bprm)
  *
  * Return: Returns 0 if the hook is successful and permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_bprm_creds_from_file(struct linux_binprm *bprm, struct file *file)
 {
 	return call_int_hook(bprm_creds_from_file, 0, bprm, file);
 }
 
+<<<<<<< HEAD
 /**
  * security_bprm_check() - Mediate binary handler search
  * @bprm: binary program information
@@ -1095,6 +1245,8 @@ int security_bprm_creds_from_file(struct linux_binprm *bprm, struct file *file)
  *
  * Return: Returns 0 if the hook is successful and permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_bprm_check(struct linux_binprm *bprm)
 {
 	int ret;
@@ -1105,6 +1257,7 @@ int security_bprm_check(struct linux_binprm *bprm)
 	return ima_bprm_check(bprm);
 }
 
+<<<<<<< HEAD
 /**
  * security_bprm_committing_creds() - Install creds for a process during exec()
  * @bprm: binary program information
@@ -1117,11 +1270,14 @@ int security_bprm_check(struct linux_binprm *bprm)
  * open file descriptors to which access will no longer be granted when the
  * attributes are changed.  This is called immediately before commit_creds().
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_bprm_committing_creds(struct linux_binprm *bprm)
 {
 	call_void_hook(bprm_committing_creds, bprm);
 }
 
+<<<<<<< HEAD
 /**
  * security_bprm_committed_creds() - Tidy up after cred install during exec()
  * @bprm: binary program information
@@ -1133,11 +1289,14 @@ void security_bprm_committing_creds(struct linux_binprm *bprm)
  * process such as clearing out non-inheritable signal state.  This is called
  * immediately after commit_creds().
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_bprm_committed_creds(struct linux_binprm *bprm)
 {
 	call_void_hook(bprm_committed_creds, bprm);
 }
 
+<<<<<<< HEAD
 /**
  * security_fs_context_dup() - Duplicate a fs_context LSM blob
  * @fc: destination filesystem context
@@ -1149,11 +1308,14 @@ void security_bprm_committed_creds(struct linux_binprm *bprm)
  *
  * Return: Returns 0 on success or a negative error code on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_fs_context_dup(struct fs_context *fc, struct fs_context *src_fc)
 {
 	return call_int_hook(fs_context_dup, 0, fc, src_fc);
 }
 
+<<<<<<< HEAD
 /**
  * security_fs_context_parse_param() - Configure a filesystem context
  * @fc: filesystem context
@@ -1166,6 +1328,8 @@ int security_fs_context_dup(struct fs_context *fc, struct fs_context *src_fc)
  *         returned to the caller -ENOPARAM is returned, otherwise a negative
  *         error code is returned.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_fs_context_parse_param(struct fs_context *fc,
 				    struct fs_parameter *param)
 {
@@ -1184,6 +1348,7 @@ int security_fs_context_parse_param(struct fs_context *fc,
 	return rc;
 }
 
+<<<<<<< HEAD
 /**
  * security_sb_alloc() - Allocate a super_block LSM blob
  * @sb: filesystem superblock
@@ -1194,6 +1359,8 @@ int security_fs_context_parse_param(struct fs_context *fc,
  *
  * Return: Returns 0 if operation was successful.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_sb_alloc(struct super_block *sb)
 {
 	int rc = lsm_superblock_alloc(sb);
@@ -1206,6 +1373,7 @@ int security_sb_alloc(struct super_block *sb)
 	return rc;
 }
 
+<<<<<<< HEAD
 /**
  * security_sb_delete() - Release super_block LSM associated objects
  * @sb: filesystem superblock
@@ -1213,11 +1381,14 @@ int security_sb_alloc(struct super_block *sb)
  * Release objects tied to a superblock (e.g. inodes).  @sb contains the
  * super_block structure being released.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_sb_delete(struct super_block *sb)
 {
 	call_void_hook(sb_delete, sb);
 }
 
+<<<<<<< HEAD
 /**
  * security_sb_free() - Free a super_block LSM blob
  * @sb: filesystem superblock
@@ -1225,6 +1396,8 @@ void security_sb_delete(struct super_block *sb)
  * Deallocate and clear the sb->s_security field.  @sb contains the super_block
  * structure to be modified.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_sb_free(struct super_block *sb)
 {
 	call_void_hook(sb_free_security, sb);
@@ -1232,12 +1405,15 @@ void security_sb_free(struct super_block *sb)
 	sb->s_security = NULL;
 }
 
+<<<<<<< HEAD
 /**
  * security_free_mnt_opts() - Free memory associated with mount options
  * @mnt_opts: LSM processed mount options
  *
  * Free memory associated with @mnt_ops.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_free_mnt_opts(void **mnt_opts)
 {
 	if (!*mnt_opts)
@@ -1247,6 +1423,7 @@ void security_free_mnt_opts(void **mnt_opts)
 }
 EXPORT_SYMBOL(security_free_mnt_opts);
 
+<<<<<<< HEAD
 /**
  * security_sb_eat_lsm_opts() - Consume LSM mount options
  * @options: mount options
@@ -1256,12 +1433,15 @@ EXPORT_SYMBOL(security_free_mnt_opts);
  *
  * Return: Returns 0 on success, negative values on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_sb_eat_lsm_opts(char *options, void **mnt_opts)
 {
 	return call_int_hook(sb_eat_lsm_opts, 0, options, mnt_opts);
 }
 EXPORT_SYMBOL(security_sb_eat_lsm_opts);
 
+<<<<<<< HEAD
 /**
  * security_sb_mnt_opts_compat() - Check if new mount options are allowed
  * @sb: filesystem superblock
@@ -1272,6 +1452,8 @@ EXPORT_SYMBOL(security_sb_eat_lsm_opts);
  *
  * Return: Returns 0 if options are compatible.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_sb_mnt_opts_compat(struct super_block *sb,
 				void *mnt_opts)
 {
@@ -1279,6 +1461,7 @@ int security_sb_mnt_opts_compat(struct super_block *sb,
 }
 EXPORT_SYMBOL(security_sb_mnt_opts_compat);
 
+<<<<<<< HEAD
 /**
  * security_sb_remount() - Verify no incompatible mount changes during remount
  * @sb: filesystem superblock
@@ -1289,6 +1472,8 @@ EXPORT_SYMBOL(security_sb_mnt_opts_compat);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_sb_remount(struct super_block *sb,
 			void *mnt_opts)
 {
@@ -1296,6 +1481,7 @@ int security_sb_remount(struct super_block *sb,
 }
 EXPORT_SYMBOL(security_sb_remount);
 
+<<<<<<< HEAD
 /**
  * security_sb_kern_mount() - Check if a kernel mount is allowed
  * @sb: filesystem superblock
@@ -1304,11 +1490,14 @@ EXPORT_SYMBOL(security_sb_remount);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_sb_kern_mount(struct super_block *sb)
 {
 	return call_int_hook(sb_kern_mount, 0, sb);
 }
 
+<<<<<<< HEAD
 /**
  * security_sb_show_options() - Output the mount options for a superblock
  * @m: output file
@@ -1318,11 +1507,14 @@ int security_sb_kern_mount(struct super_block *sb)
  *
  * Return: Returns 0 on success, negative values on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_sb_show_options(struct seq_file *m, struct super_block *sb)
 {
 	return call_int_hook(sb_show_options, 0, m, sb);
 }
 
+<<<<<<< HEAD
 /**
  * security_sb_statfs() - Check if accessing fs stats is allowed
  * @dentry: superblock handle
@@ -1332,11 +1524,14 @@ int security_sb_show_options(struct seq_file *m, struct super_block *sb)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_sb_statfs(struct dentry *dentry)
 {
 	return call_int_hook(sb_statfs, 0, dentry);
 }
 
+<<<<<<< HEAD
 /**
  * security_sb_mount() - Check permission for mounting a filesystem
  * @dev_name: filesystem backing device
@@ -1356,10 +1551,15 @@ int security_sb_statfs(struct dentry *dentry)
  */
 int security_sb_mount(const char *dev_name, const struct path *path,
 		      const char *type, unsigned long flags, void *data)
+=======
+int security_sb_mount(const char *dev_name, const struct path *path,
+                       const char *type, unsigned long flags, void *data)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(sb_mount, 0, dev_name, path, type, flags, data);
 }
 
+<<<<<<< HEAD
 /**
  * security_sb_umount() - Check permission for unmounting a filesystem
  * @mnt: mounted filesystem
@@ -1369,11 +1569,14 @@ int security_sb_mount(const char *dev_name, const struct path *path,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_sb_umount(struct vfsmount *mnt, int flags)
 {
 	return call_int_hook(sb_umount, 0, mnt, flags);
 }
 
+<<<<<<< HEAD
 /**
  * security_sb_pivotroot() - Check permissions for pivoting the rootfs
  * @old_path: new location for current rootfs
@@ -1385,10 +1588,14 @@ int security_sb_umount(struct vfsmount *mnt, int flags)
  */
 int security_sb_pivotroot(const struct path *old_path,
 			  const struct path *new_path)
+=======
+int security_sb_pivotroot(const struct path *old_path, const struct path *new_path)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(sb_pivotroot, 0, old_path, new_path);
 }
 
+<<<<<<< HEAD
 /**
  * security_sb_set_mnt_opts() - Set the mount options for a filesystem
  * @sb: filesystem superblock
@@ -1443,10 +1650,35 @@ EXPORT_SYMBOL(security_sb_clone_mnt_opts);
  */
 int security_move_mount(const struct path *from_path,
 			const struct path *to_path)
+=======
+int security_sb_set_mnt_opts(struct super_block *sb,
+				void *mnt_opts,
+				unsigned long kern_flags,
+				unsigned long *set_kern_flags)
+{
+	return call_int_hook(sb_set_mnt_opts,
+				mnt_opts ? -EOPNOTSUPP : 0, sb,
+				mnt_opts, kern_flags, set_kern_flags);
+}
+EXPORT_SYMBOL(security_sb_set_mnt_opts);
+
+int security_sb_clone_mnt_opts(const struct super_block *oldsb,
+				struct super_block *newsb,
+				unsigned long kern_flags,
+				unsigned long *set_kern_flags)
+{
+	return call_int_hook(sb_clone_mnt_opts, 0, oldsb, newsb,
+				kern_flags, set_kern_flags);
+}
+EXPORT_SYMBOL(security_sb_clone_mnt_opts);
+
+int security_move_mount(const struct path *from_path, const struct path *to_path)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(move_mount, 0, from_path, to_path);
 }
 
+<<<<<<< HEAD
 /**
  * security_path_notify() - Check if setting a watch is allowed
  * @path: file path
@@ -1460,10 +1692,15 @@ int security_move_mount(const struct path *from_path,
  */
 int security_path_notify(const struct path *path, u64 mask,
 			 unsigned int obj_type)
+=======
+int security_path_notify(const struct path *path, u64 mask,
+				unsigned int obj_type)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(path_notify, 0, path, mask, obj_type);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_alloc() - Allocate an inode LSM blob
  * @inode: the inode
@@ -1474,6 +1711,8 @@ int security_path_notify(const struct path *path, u64 mask,
  *
  * Return: Return 0 if operation was successful.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_alloc(struct inode *inode)
 {
 	int rc = lsm_inode_alloc(inode);
@@ -1494,12 +1733,15 @@ static void inode_free_by_rcu(struct rcu_head *head)
 	kmem_cache_free(lsm_inode_cache, head);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_free() - Free an inode's LSM blob
  * @inode: the inode
  *
  * Deallocate the inode security structure and set @inode->i_security to NULL.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_inode_free(struct inode *inode)
 {
 	integrity_inode_free(inode);
@@ -1515,6 +1757,7 @@ void security_inode_free(struct inode *inode)
 	 */
 	if (inode->i_security)
 		call_rcu((struct rcu_head *)inode->i_security,
+<<<<<<< HEAD
 			 inode_free_by_rcu);
 }
 
@@ -1533,6 +1776,11 @@ void security_inode_free(struct inode *inode)
  *
  * Return: Returns 0 on success, negative values on failure.
  */
+=======
+				inode_free_by_rcu);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int security_dentry_init_security(struct dentry *dentry, int mode,
 				  const struct qstr *name,
 				  const char **xattr_name, void **ctx,
@@ -1544,8 +1792,12 @@ int security_dentry_init_security(struct dentry *dentry, int mode,
 	/*
 	 * Only one module will provide a security context.
 	 */
+<<<<<<< HEAD
 	hlist_for_each_entry(hp, &security_hook_heads.dentry_init_security,
 			     list) {
+=======
+	hlist_for_each_entry(hp, &security_hook_heads.dentry_init_security, list) {
+>>>>>>> b7ba80a49124 (Commit)
 		rc = hp->hook.dentry_init_security(dentry, mode, name,
 						   xattr_name, ctx, ctxlen);
 		if (rc != LSM_RET_DEFAULT(dentry_init_security))
@@ -1555,6 +1807,7 @@ int security_dentry_init_security(struct dentry *dentry, int mode,
 }
 EXPORT_SYMBOL(security_dentry_init_security);
 
+<<<<<<< HEAD
 /**
  * security_dentry_create_files_as() - Perform dentry initialization
  * @dentry: the dentry to initialize
@@ -1570,11 +1823,14 @@ EXPORT_SYMBOL(security_dentry_init_security);
  *
  * Return: Returns 0 on success, error on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_dentry_create_files_as(struct dentry *dentry, int mode,
 				    struct qstr *name,
 				    const struct cred *old, struct cred *new)
 {
 	return call_int_hook(dentry_create_files_as, 0, dentry, mode,
+<<<<<<< HEAD
 			     name, old, new);
 }
 EXPORT_SYMBOL(security_dentry_create_files_as);
@@ -1600,6 +1856,12 @@ EXPORT_SYMBOL(security_dentry_create_files_as);
  * Return: Returns 0 on success, -EOPNOTSUPP if no security attribute is
  * needed, or -ENOMEM on memory allocation failure.
  */
+=======
+				name, old, new);
+}
+EXPORT_SYMBOL(security_dentry_create_files_as);
+
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_init_security(struct inode *inode, struct inode *dir,
 				 const struct qstr *qstr,
 				 const initxattrs initxattrs, void *fs_data)
@@ -1617,9 +1879,15 @@ int security_inode_init_security(struct inode *inode, struct inode *dir,
 	memset(new_xattrs, 0, sizeof(new_xattrs));
 	lsm_xattr = new_xattrs;
 	ret = call_int_hook(inode_init_security, -EOPNOTSUPP, inode, dir, qstr,
+<<<<<<< HEAD
 			    &lsm_xattr->name,
 			    &lsm_xattr->value,
 			    &lsm_xattr->value_len);
+=======
+						&lsm_xattr->name,
+						&lsm_xattr->value,
+						&lsm_xattr->value_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto out;
 
@@ -1635,6 +1903,7 @@ out:
 }
 EXPORT_SYMBOL(security_inode_init_security);
 
+<<<<<<< HEAD
 /**
  * security_inode_init_security_anon() - Initialize an anonymous inode
  * @inode: the inode
@@ -1647,6 +1916,8 @@ EXPORT_SYMBOL(security_inode_init_security);
  * Return: Returns 0 on success, -EACCES if the security module denies the
  * creation of this inode, or another -errno upon other errors.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_init_security_anon(struct inode *inode,
 				      const struct qstr *name,
 				      const struct inode *context_inode)
@@ -1655,6 +1926,7 @@ int security_inode_init_security_anon(struct inode *inode,
 			     context_inode);
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_SECURITY_PATH
 /**
  * security_path_mknod() - Check if creating a special file is allowed
@@ -1670,6 +1942,22 @@ int security_inode_init_security_anon(struct inode *inode,
  */
 int security_path_mknod(const struct path *dir, struct dentry *dentry,
 			umode_t mode, unsigned int dev)
+=======
+int security_old_inode_init_security(struct inode *inode, struct inode *dir,
+				     const struct qstr *qstr, const char **name,
+				     void **value, size_t *len)
+{
+	if (unlikely(IS_PRIVATE(inode)))
+		return -EOPNOTSUPP;
+	return call_int_hook(inode_init_security, -EOPNOTSUPP, inode, dir,
+			     qstr, name, value, len);
+}
+EXPORT_SYMBOL(security_old_inode_init_security);
+
+#ifdef CONFIG_SECURITY_PATH
+int security_path_mknod(const struct path *dir, struct dentry *dentry, umode_t mode,
+			unsigned int dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (unlikely(IS_PRIVATE(d_backing_inode(dir->dentry))))
 		return 0;
@@ -1677,6 +1965,7 @@ int security_path_mknod(const struct path *dir, struct dentry *dentry,
 }
 EXPORT_SYMBOL(security_path_mknod);
 
+<<<<<<< HEAD
 /**
  * security_path_mkdir() - Check if creating a new directory is allowed
  * @dir: parent directory
@@ -1689,6 +1978,9 @@ EXPORT_SYMBOL(security_path_mknod);
  */
 int security_path_mkdir(const struct path *dir, struct dentry *dentry,
 			umode_t mode)
+=======
+int security_path_mkdir(const struct path *dir, struct dentry *dentry, umode_t mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (unlikely(IS_PRIVATE(d_backing_inode(dir->dentry))))
 		return 0;
@@ -1696,6 +1988,7 @@ int security_path_mkdir(const struct path *dir, struct dentry *dentry,
 }
 EXPORT_SYMBOL(security_path_mkdir);
 
+<<<<<<< HEAD
 /**
  * security_path_rmdir() - Check if removing a directory is allowed
  * @dir: parent directory
@@ -1705,6 +1998,8 @@ EXPORT_SYMBOL(security_path_mkdir);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_path_rmdir(const struct path *dir, struct dentry *dentry)
 {
 	if (unlikely(IS_PRIVATE(d_backing_inode(dir->dentry))))
@@ -1712,6 +2007,7 @@ int security_path_rmdir(const struct path *dir, struct dentry *dentry)
 	return call_int_hook(path_rmdir, 0, dir, dentry);
 }
 
+<<<<<<< HEAD
 /**
  * security_path_unlink() - Check if removing a hard link is allowed
  * @dir: parent directory
@@ -1721,6 +2017,8 @@ int security_path_rmdir(const struct path *dir, struct dentry *dentry)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_path_unlink(const struct path *dir, struct dentry *dentry)
 {
 	if (unlikely(IS_PRIVATE(d_backing_inode(dir->dentry))))
@@ -1729,6 +2027,7 @@ int security_path_unlink(const struct path *dir, struct dentry *dentry)
 }
 EXPORT_SYMBOL(security_path_unlink);
 
+<<<<<<< HEAD
 /**
  * security_path_symlink() - Check if creating a symbolic link is allowed
  * @dir: parent directory
@@ -1739,6 +2038,8 @@ EXPORT_SYMBOL(security_path_unlink);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_path_symlink(const struct path *dir, struct dentry *dentry,
 			  const char *old_name)
 {
@@ -1747,6 +2048,7 @@ int security_path_symlink(const struct path *dir, struct dentry *dentry,
 	return call_int_hook(path_symlink, 0, dir, dentry, old_name);
 }
 
+<<<<<<< HEAD
 /**
  * security_path_link - Check if creating a hard link is allowed
  * @old_dentry: existing file
@@ -1757,6 +2059,8 @@ int security_path_symlink(const struct path *dir, struct dentry *dentry,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_path_link(struct dentry *old_dentry, const struct path *new_dir,
 		       struct dentry *new_dentry)
 {
@@ -1765,6 +2069,7 @@ int security_path_link(struct dentry *old_dentry, const struct path *new_dir,
 	return call_int_hook(path_link, 0, old_dentry, new_dir, new_dentry);
 }
 
+<<<<<<< HEAD
 /**
  * security_path_rename() - Check if renaming a file is allowed
  * @old_dir: parent directory of the old file
@@ -1777,11 +2082,14 @@ int security_path_link(struct dentry *old_dentry, const struct path *new_dir,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_path_rename(const struct path *old_dir, struct dentry *old_dentry,
 			 const struct path *new_dir, struct dentry *new_dentry,
 			 unsigned int flags)
 {
 	if (unlikely(IS_PRIVATE(d_backing_inode(old_dentry)) ||
+<<<<<<< HEAD
 		     (d_is_positive(new_dentry) &&
 		      IS_PRIVATE(d_backing_inode(new_dentry)))))
 		return 0;
@@ -1801,6 +2109,16 @@ EXPORT_SYMBOL(security_path_rename);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+		     (d_is_positive(new_dentry) && IS_PRIVATE(d_backing_inode(new_dentry)))))
+		return 0;
+
+	return call_int_hook(path_rename, 0, old_dir, old_dentry, new_dir,
+				new_dentry, flags);
+}
+EXPORT_SYMBOL(security_path_rename);
+
+>>>>>>> b7ba80a49124 (Commit)
 int security_path_truncate(const struct path *path)
 {
 	if (unlikely(IS_PRIVATE(d_backing_inode(path->dentry))))
@@ -1808,6 +2126,7 @@ int security_path_truncate(const struct path *path)
 	return call_int_hook(path_truncate, 0, path);
 }
 
+<<<<<<< HEAD
 /**
  * security_path_chmod() - Check if changing the file's mode is allowed
  * @path: file
@@ -1819,6 +2138,8 @@ int security_path_truncate(const struct path *path)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_path_chmod(const struct path *path, umode_t mode)
 {
 	if (unlikely(IS_PRIVATE(d_backing_inode(path->dentry))))
@@ -1826,6 +2147,7 @@ int security_path_chmod(const struct path *path, umode_t mode)
 	return call_int_hook(path_chmod, 0, path, mode);
 }
 
+<<<<<<< HEAD
 /**
  * security_path_chown() - Check if changing the file's owner/group is allowed
  * @path: file
@@ -1836,6 +2158,8 @@ int security_path_chmod(const struct path *path, umode_t mode)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_path_chown(const struct path *path, kuid_t uid, kgid_t gid)
 {
 	if (unlikely(IS_PRIVATE(d_backing_inode(path->dentry))))
@@ -1843,6 +2167,7 @@ int security_path_chown(const struct path *path, kuid_t uid, kgid_t gid)
 	return call_int_hook(path_chown, 0, path, uid, gid);
 }
 
+<<<<<<< HEAD
 /**
  * security_path_chroot() - Check if changing the root directory is allowed
  * @path: directory
@@ -1851,10 +2176,13 @@ int security_path_chown(const struct path *path, kuid_t uid, kgid_t gid)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_path_chroot(const struct path *path)
 {
 	return call_int_hook(path_chroot, 0, path);
 }
+<<<<<<< HEAD
 #endif /* CONFIG_SECURITY_PATH */
 
 /**
@@ -1869,6 +2197,11 @@ int security_path_chroot(const struct path *path)
  */
 int security_inode_create(struct inode *dir, struct dentry *dentry,
 			  umode_t mode)
+=======
+#endif
+
+int security_inode_create(struct inode *dir, struct dentry *dentry, umode_t mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (unlikely(IS_PRIVATE(dir)))
 		return 0;
@@ -1876,6 +2209,7 @@ int security_inode_create(struct inode *dir, struct dentry *dentry,
 }
 EXPORT_SYMBOL_GPL(security_inode_create);
 
+<<<<<<< HEAD
 /**
  * security_inode_link() - Check if creating a hard link is allowed
  * @old_dentry: existing file
@@ -1888,12 +2222,17 @@ EXPORT_SYMBOL_GPL(security_inode_create);
  */
 int security_inode_link(struct dentry *old_dentry, struct inode *dir,
 			struct dentry *new_dentry)
+=======
+int security_inode_link(struct dentry *old_dentry, struct inode *dir,
+			 struct dentry *new_dentry)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (unlikely(IS_PRIVATE(d_backing_inode(old_dentry))))
 		return 0;
 	return call_int_hook(inode_link, 0, old_dentry, dir, new_dentry);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_unlink() - Check if removing a hard link is allowed
  * @dir: parent directory
@@ -1903,6 +2242,8 @@ int security_inode_link(struct dentry *old_dentry, struct inode *dir,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_unlink(struct inode *dir, struct dentry *dentry)
 {
 	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
@@ -1910,6 +2251,7 @@ int security_inode_unlink(struct inode *dir, struct dentry *dentry)
 	return call_int_hook(inode_unlink, 0, dir, dentry);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_symlink() - Check if creating a symbolic link is allowed
  * @dir: parent directory
@@ -1922,12 +2264,17 @@ int security_inode_unlink(struct inode *dir, struct dentry *dentry)
  */
 int security_inode_symlink(struct inode *dir, struct dentry *dentry,
 			   const char *old_name)
+=======
+int security_inode_symlink(struct inode *dir, struct dentry *dentry,
+			    const char *old_name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (unlikely(IS_PRIVATE(dir)))
 		return 0;
 	return call_int_hook(inode_symlink, 0, dir, dentry, old_name);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_mkdir() - Check if creation a new director is allowed
  * @dir: parent directory
@@ -1939,6 +2286,8 @@ int security_inode_symlink(struct inode *dir, struct dentry *dentry,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
 {
 	if (unlikely(IS_PRIVATE(dir)))
@@ -1947,6 +2296,7 @@ int security_inode_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
 }
 EXPORT_SYMBOL_GPL(security_inode_mkdir);
 
+<<<<<<< HEAD
 /**
  * security_inode_rmdir() - Check if removing a directory is allowed
  * @dir: parent directory
@@ -1956,6 +2306,8 @@ EXPORT_SYMBOL_GPL(security_inode_mkdir);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_rmdir(struct inode *dir, struct dentry *dentry)
 {
 	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
@@ -1963,6 +2315,7 @@ int security_inode_rmdir(struct inode *dir, struct dentry *dentry)
 	return call_int_hook(inode_rmdir, 0, dir, dentry);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_mknod() - Check if creating a special file is allowed
  * @dir: parent directory
@@ -1979,12 +2332,16 @@ int security_inode_rmdir(struct inode *dir, struct dentry *dentry)
  */
 int security_inode_mknod(struct inode *dir, struct dentry *dentry,
 			 umode_t mode, dev_t dev)
+=======
+int security_inode_mknod(struct inode *dir, struct dentry *dentry, umode_t mode, dev_t dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (unlikely(IS_PRIVATE(dir)))
 		return 0;
 	return call_int_hook(inode_mknod, 0, dir, dentry, mode, dev);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_rename() - Check if renaming a file is allowed
  * @old_dir: parent directory of the old file
@@ -2004,16 +2361,29 @@ int security_inode_rename(struct inode *old_dir, struct dentry *old_dentry,
 	if (unlikely(IS_PRIVATE(d_backing_inode(old_dentry)) ||
 		     (d_is_positive(new_dentry) &&
 		      IS_PRIVATE(d_backing_inode(new_dentry)))))
+=======
+int security_inode_rename(struct inode *old_dir, struct dentry *old_dentry,
+			   struct inode *new_dir, struct dentry *new_dentry,
+			   unsigned int flags)
+{
+        if (unlikely(IS_PRIVATE(d_backing_inode(old_dentry)) ||
+            (d_is_positive(new_dentry) && IS_PRIVATE(d_backing_inode(new_dentry)))))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	if (flags & RENAME_EXCHANGE) {
 		int err = call_int_hook(inode_rename, 0, new_dir, new_dentry,
+<<<<<<< HEAD
 					old_dir, old_dentry);
+=======
+						     old_dir, old_dentry);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			return err;
 	}
 
 	return call_int_hook(inode_rename, 0, old_dir, old_dentry,
+<<<<<<< HEAD
 			     new_dir, new_dentry);
 }
 
@@ -2025,6 +2395,11 @@ int security_inode_rename(struct inode *old_dir, struct dentry *old_dentry,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+					   new_dir, new_dentry);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_readlink(struct dentry *dentry)
 {
 	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
@@ -2032,6 +2407,7 @@ int security_inode_readlink(struct dentry *dentry)
 	return call_int_hook(inode_readlink, 0, dentry);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_follow_link() - Check if following a symbolic link is allowed
  * @dentry: link dentry
@@ -2043,6 +2419,8 @@ int security_inode_readlink(struct dentry *dentry)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_follow_link(struct dentry *dentry, struct inode *inode,
 			       bool rcu)
 {
@@ -2051,6 +2429,7 @@ int security_inode_follow_link(struct dentry *dentry, struct inode *inode,
 	return call_int_hook(inode_follow_link, 0, dentry, inode, rcu);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_permission() - Check if accessing an inode is allowed
  * @inode: inode
@@ -2065,6 +2444,8 @@ int security_inode_follow_link(struct dentry *dentry, struct inode *inode,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_permission(struct inode *inode, int mask)
 {
 	if (unlikely(IS_PRIVATE(inode)))
@@ -2072,6 +2453,7 @@ int security_inode_permission(struct inode *inode, int mask)
 	return call_int_hook(inode_permission, 0, inode, mask);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_setattr() - Check if setting file attributes is allowed
  * @idmap: idmap of the mount
@@ -2086,6 +2468,9 @@ int security_inode_permission(struct inode *inode, int mask)
  * Return: Returns 0 if permission is granted.
  */
 int security_inode_setattr(struct mnt_idmap *idmap,
+=======
+int security_inode_setattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			   struct dentry *dentry, struct iattr *attr)
 {
 	int ret;
@@ -2095,6 +2480,7 @@ int security_inode_setattr(struct mnt_idmap *idmap,
 	ret = call_int_hook(inode_setattr, 0, dentry, attr);
 	if (ret)
 		return ret;
+<<<<<<< HEAD
 	return evm_inode_setattr(idmap, dentry, attr);
 }
 EXPORT_SYMBOL_GPL(security_inode_setattr);
@@ -2107,6 +2493,12 @@ EXPORT_SYMBOL_GPL(security_inode_setattr);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+	return evm_inode_setattr(mnt_userns, dentry, attr);
+}
+EXPORT_SYMBOL_GPL(security_inode_setattr);
+
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_getattr(const struct path *path)
 {
 	if (unlikely(IS_PRIVATE(d_backing_inode(path->dentry))))
@@ -2114,6 +2506,7 @@ int security_inode_getattr(const struct path *path)
 	return call_int_hook(inode_getattr, 0, path);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_setxattr() - Check if setting file xattrs is allowed
  * @idmap: idmap of the mount
@@ -2128,6 +2521,9 @@ int security_inode_getattr(const struct path *path)
  * Return: Returns 0 if permission is granted.
  */
 int security_inode_setxattr(struct mnt_idmap *idmap,
+=======
+int security_inode_setxattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			    struct dentry *dentry, const char *name,
 			    const void *value, size_t size, int flags)
 {
@@ -2139,7 +2535,11 @@ int security_inode_setxattr(struct mnt_idmap *idmap,
 	 * SELinux and Smack integrate the cap call,
 	 * so assume that all LSMs supplying this call do so.
 	 */
+<<<<<<< HEAD
 	ret = call_int_hook(inode_setxattr, 1, idmap, dentry, name, value,
+=======
+	ret = call_int_hook(inode_setxattr, 1, mnt_userns, dentry, name, value,
+>>>>>>> b7ba80a49124 (Commit)
 			    size, flags);
 
 	if (ret == 1)
@@ -2149,6 +2549,7 @@ int security_inode_setxattr(struct mnt_idmap *idmap,
 	ret = ima_inode_setxattr(dentry, name, value, size);
 	if (ret)
 		return ret;
+<<<<<<< HEAD
 	return evm_inode_setxattr(idmap, dentry, name, value, size);
 }
 
@@ -2238,6 +2639,11 @@ int security_inode_remove_acl(struct mnt_idmap *idmap,
  *
  * Update inode security field after successful setxattr operation.
  */
+=======
+	return evm_inode_setxattr(mnt_userns, dentry, name, value, size);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 void security_inode_post_setxattr(struct dentry *dentry, const char *name,
 				  const void *value, size_t size, int flags)
 {
@@ -2247,6 +2653,7 @@ void security_inode_post_setxattr(struct dentry *dentry, const char *name,
 	evm_inode_post_setxattr(dentry, name, value, size);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_getxattr() - Check if xattr access is allowed
  * @dentry: file
@@ -2257,6 +2664,8 @@ void security_inode_post_setxattr(struct dentry *dentry, const char *name,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_getxattr(struct dentry *dentry, const char *name)
 {
 	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
@@ -2264,6 +2673,7 @@ int security_inode_getxattr(struct dentry *dentry, const char *name)
 	return call_int_hook(inode_getxattr, 0, dentry, name);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_listxattr() - Check if listing xattrs is allowed
  * @dentry: file
@@ -2273,6 +2683,8 @@ int security_inode_getxattr(struct dentry *dentry, const char *name)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_listxattr(struct dentry *dentry)
 {
 	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
@@ -2280,6 +2692,7 @@ int security_inode_listxattr(struct dentry *dentry)
 	return call_int_hook(inode_listxattr, 0, dentry);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_removexattr() - Check if removing an xattr is allowed
  * @idmap: idmap of the mount
@@ -2292,6 +2705,9 @@ int security_inode_listxattr(struct dentry *dentry)
  * Return: Returns 0 if permission is granted.
  */
 int security_inode_removexattr(struct mnt_idmap *idmap,
+=======
+int security_inode_removexattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			       struct dentry *dentry, const char *name)
 {
 	int ret;
@@ -2302,14 +2718,21 @@ int security_inode_removexattr(struct mnt_idmap *idmap,
 	 * SELinux and Smack integrate the cap call,
 	 * so assume that all LSMs supplying this call do so.
 	 */
+<<<<<<< HEAD
 	ret = call_int_hook(inode_removexattr, 1, idmap, dentry, name);
 	if (ret == 1)
 		ret = cap_inode_removexattr(idmap, dentry, name);
+=======
+	ret = call_int_hook(inode_removexattr, 1, mnt_userns, dentry, name);
+	if (ret == 1)
+		ret = cap_inode_removexattr(mnt_userns, dentry, name);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 	ret = ima_inode_removexattr(dentry, name);
 	if (ret)
 		return ret;
+<<<<<<< HEAD
 	return evm_inode_removexattr(idmap, dentry, name);
 }
 
@@ -2324,11 +2747,17 @@ int security_inode_removexattr(struct mnt_idmap *idmap,
  *         security_inode_killpriv() does not need to be called, return >0 if
  *         security_inode_killpriv() does need to be called.
  */
+=======
+	return evm_inode_removexattr(mnt_userns, dentry, name);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_need_killpriv(struct dentry *dentry)
 {
 	return call_int_hook(inode_need_killpriv, 0, dentry);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_killpriv() - The setuid bit is removed, update LSM state
  * @idmap: idmap of the mount
@@ -2363,6 +2792,15 @@ int security_inode_killpriv(struct mnt_idmap *idmap,
  * Return: Returns size of buffer on success.
  */
 int security_inode_getsecurity(struct mnt_idmap *idmap,
+=======
+int security_inode_killpriv(struct user_namespace *mnt_userns,
+			    struct dentry *dentry)
+{
+	return call_int_hook(inode_killpriv, 0, mnt_userns, dentry);
+}
+
+int security_inode_getsecurity(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			       struct inode *inode, const char *name,
 			       void **buffer, bool alloc)
 {
@@ -2375,14 +2813,19 @@ int security_inode_getsecurity(struct mnt_idmap *idmap,
 	 * Only one module will provide an attribute with a given name.
 	 */
 	hlist_for_each_entry(hp, &security_hook_heads.inode_getsecurity, list) {
+<<<<<<< HEAD
 		rc = hp->hook.inode_getsecurity(idmap, inode, name, buffer,
 						alloc);
+=======
+		rc = hp->hook.inode_getsecurity(mnt_userns, inode, name, buffer, alloc);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rc != LSM_RET_DEFAULT(inode_getsecurity))
 			return rc;
 	}
 	return LSM_RET_DEFAULT(inode_getsecurity);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_setsecurity() - Set the xattr security label of an inode
  * @inode: inode
@@ -2400,6 +2843,9 @@ int security_inode_getsecurity(struct mnt_idmap *idmap,
  */
 int security_inode_setsecurity(struct inode *inode, const char *name,
 			       const void *value, size_t size, int flags)
+=======
+int security_inode_setsecurity(struct inode *inode, const char *name, const void *value, size_t size, int flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct security_hook_list *hp;
 	int rc;
@@ -2411,13 +2857,18 @@ int security_inode_setsecurity(struct inode *inode, const char *name,
 	 */
 	hlist_for_each_entry(hp, &security_hook_heads.inode_setsecurity, list) {
 		rc = hp->hook.inode_setsecurity(inode, name, value, size,
+<<<<<<< HEAD
 						flags);
+=======
+								flags);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rc != LSM_RET_DEFAULT(inode_setsecurity))
 			return rc;
 	}
 	return LSM_RET_DEFAULT(inode_setsecurity);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_listsecurity() - List the xattr security label names
  * @inode: inode
@@ -2433,6 +2884,9 @@ int security_inode_setsecurity(struct inode *inode, const char *name,
  */
 int security_inode_listsecurity(struct inode *inode,
 				char *buffer, size_t buffer_size)
+=======
+int security_inode_listsecurity(struct inode *inode, char *buffer, size_t buffer_size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (unlikely(IS_PRIVATE(inode)))
 		return 0;
@@ -2440,6 +2894,7 @@ int security_inode_listsecurity(struct inode *inode,
 }
 EXPORT_SYMBOL(security_inode_listsecurity);
 
+<<<<<<< HEAD
 /**
  * security_inode_getsecid() - Get an inode's secid
  * @inode: inode
@@ -2448,11 +2903,14 @@ EXPORT_SYMBOL(security_inode_listsecurity);
  * Get the secid associated with the node.  In case of failure, @secid will be
  * set to zero.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_inode_getsecid(struct inode *inode, u32 *secid)
 {
 	call_void_hook(inode_getsecid, inode, secid);
 }
 
+<<<<<<< HEAD
 /**
  * security_inode_copy_up() - Create new creds for an overlayfs copy-up op
  * @src: union dentry of copy-up file
@@ -2465,12 +2923,15 @@ void security_inode_getsecid(struct inode *inode, u32 *secid)
  *
  * Return: Returns 0 on success or a negative error code on error.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_copy_up(struct dentry *src, struct cred **new)
 {
 	return call_int_hook(inode_copy_up, 0, src, new);
 }
 EXPORT_SYMBOL(security_inode_copy_up);
 
+<<<<<<< HEAD
 /**
  * security_inode_copy_up_xattr() - Filter xattrs in an overlayfs copy-up op
  * @name: xattr name
@@ -2483,6 +2944,8 @@ EXPORT_SYMBOL(security_inode_copy_up);
  *         if the security module does not know about attribute, or a negative
  *         error code to abort the copy up.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_copy_up_xattr(const char *name)
 {
 	struct security_hook_list *hp;
@@ -2494,7 +2957,11 @@ int security_inode_copy_up_xattr(const char *name)
 	 * any other error code incase of an error.
 	 */
 	hlist_for_each_entry(hp,
+<<<<<<< HEAD
 			     &security_hook_heads.inode_copy_up_xattr, list) {
+=======
+		&security_hook_heads.inode_copy_up_xattr, list) {
+>>>>>>> b7ba80a49124 (Commit)
 		rc = hp->hook.inode_copy_up_xattr(name);
 		if (rc != LSM_RET_DEFAULT(inode_copy_up_xattr))
 			return rc;
@@ -2504,6 +2971,7 @@ int security_inode_copy_up_xattr(const char *name)
 }
 EXPORT_SYMBOL(security_inode_copy_up_xattr);
 
+<<<<<<< HEAD
 /**
  * security_kernfs_init_security() - Init LSM context for a kernfs node
  * @kn_dir: parent kernfs node
@@ -2514,12 +2982,15 @@ EXPORT_SYMBOL(security_inode_copy_up_xattr);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_kernfs_init_security(struct kernfs_node *kn_dir,
 				  struct kernfs_node *kn)
 {
 	return call_int_hook(kernfs_init_security, 0, kn_dir, kn);
 }
 
+<<<<<<< HEAD
 /**
  * security_file_permission() - Check file permissions
  * @file: file
@@ -2539,6 +3010,8 @@ int security_kernfs_init_security(struct kernfs_node *kn_dir,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_file_permission(struct file *file, int mask)
 {
 	int ret;
@@ -2550,6 +3023,7 @@ int security_file_permission(struct file *file, int mask)
 	return fsnotify_perm(file, mask);
 }
 
+<<<<<<< HEAD
 /**
  * security_file_alloc() - Allocate and init a file's LSM blob
  * @file: the file
@@ -2559,6 +3033,8 @@ int security_file_permission(struct file *file, int mask)
  *
  * Return: Return 0 if the hook is successful and permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_file_alloc(struct file *file)
 {
 	int rc = lsm_file_alloc(file);
@@ -2571,12 +3047,15 @@ int security_file_alloc(struct file *file)
 	return rc;
 }
 
+<<<<<<< HEAD
 /**
  * security_file_free() - Free a file's LSM blob
  * @file: the file
  *
  * Deallocate and free any security structures stored in file->f_security.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_file_free(struct file *file)
 {
 	void *blob;
@@ -2590,6 +3069,7 @@ void security_file_free(struct file *file)
 	}
 }
 
+<<<<<<< HEAD
 /**
  * security_file_ioctl() - Check if an ioctl is allowed
  * @file: associated file
@@ -2603,6 +3083,8 @@ void security_file_free(struct file *file)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_file_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 {
 	return call_int_hook(file_ioctl, 0, file, cmd, arg);
@@ -2642,6 +3124,7 @@ static inline unsigned long mmap_prot(struct file *file, unsigned long prot)
 	return prot;
 }
 
+<<<<<<< HEAD
 /**
  * security_mmap_file() - Check if mmap'ing a file is allowed
  * @file: file
@@ -2673,11 +3156,25 @@ int security_mmap_file(struct file *file, unsigned long prot,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+int security_mmap_file(struct file *file, unsigned long prot,
+			unsigned long flags)
+{
+	int ret;
+	ret = call_int_hook(mmap_file, 0, file, prot,
+					mmap_prot(file, prot), flags);
+	if (ret)
+		return ret;
+	return ima_file_mmap(file, prot);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int security_mmap_addr(unsigned long addr)
 {
 	return call_int_hook(mmap_addr, 0, addr);
 }
 
+<<<<<<< HEAD
 /**
  * security_file_mprotect() - Check if changing memory protections is allowed
  * @vma: memory region
@@ -2690,6 +3187,10 @@ int security_mmap_addr(unsigned long addr)
  */
 int security_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
 			   unsigned long prot)
+=======
+int security_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
+			    unsigned long prot)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
@@ -2699,6 +3200,7 @@ int security_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
 	return ima_file_mprotect(vma, prot);
 }
 
+<<<<<<< HEAD
 /**
  * security_file_lock() - Check if a file lock is allowed
  * @file: file
@@ -2709,11 +3211,14 @@ int security_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_file_lock(struct file *file, unsigned int cmd)
 {
 	return call_int_hook(file_lock, 0, file, cmd);
 }
 
+<<<<<<< HEAD
 /**
  * security_file_fcntl() - Check if fcntl() op is allowed
  * @file: file
@@ -2728,11 +3233,14 @@ int security_file_lock(struct file *file, unsigned int cmd)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_file_fcntl(struct file *file, unsigned int cmd, unsigned long arg)
 {
 	return call_int_hook(file_fcntl, 0, file, cmd, arg);
 }
 
+<<<<<<< HEAD
 /**
  * security_file_set_fowner() - Set the file owner info in the LSM blob
  * @file: the file
@@ -2742,11 +3250,14 @@ int security_file_fcntl(struct file *file, unsigned int cmd, unsigned long arg)
  *
  * Return: Returns 0 on success.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_file_set_fowner(struct file *file)
 {
 	call_void_hook(file_set_fowner, file);
 }
 
+<<<<<<< HEAD
 /**
  * security_file_send_sigiotask() - Check if sending SIGIO/SIGURG is allowed
  * @tsk: target task
@@ -2763,10 +3274,15 @@ void security_file_set_fowner(struct file *file)
  */
 int security_file_send_sigiotask(struct task_struct *tsk,
 				 struct fown_struct *fown, int sig)
+=======
+int security_file_send_sigiotask(struct task_struct *tsk,
+				  struct fown_struct *fown, int sig)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(file_send_sigiotask, 0, tsk, fown, sig);
 }
 
+<<<<<<< HEAD
 /**
  * security_file_receive() - Check is receiving a file via IPC is allowed
  * @file: file being received
@@ -2776,11 +3292,14 @@ int security_file_send_sigiotask(struct task_struct *tsk,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_file_receive(struct file *file)
 {
 	return call_int_hook(file_receive, 0, file);
 }
 
+<<<<<<< HEAD
 /**
  * security_file_open() - Save open() time state for late use by the LSM
  * @file:
@@ -2790,6 +3309,8 @@ int security_file_receive(struct file *file)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_file_open(struct file *file)
 {
 	int ret;
@@ -2801,6 +3322,7 @@ int security_file_open(struct file *file)
 	return fsnotify_perm(file, MAY_OPEN);
 }
 
+<<<<<<< HEAD
 /**
  * security_file_truncate() - Check if truncating a file is allowed
  * @file: file
@@ -2825,6 +3347,8 @@ int security_file_truncate(struct file *file)
  *
  * Return: Returns a zero on success, negative values on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_task_alloc(struct task_struct *task, unsigned long clone_flags)
 {
 	int rc = lsm_task_alloc(task);
@@ -2837,6 +3361,7 @@ int security_task_alloc(struct task_struct *task, unsigned long clone_flags)
 	return rc;
 }
 
+<<<<<<< HEAD
 /**
  * security_task_free() - Free a task's LSM blob and related resources
  * @task: task
@@ -2844,6 +3369,8 @@ int security_task_alloc(struct task_struct *task, unsigned long clone_flags)
  * Handle release of task-related resources.  Note that this can be called from
  * interrupt context.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_task_free(struct task_struct *task)
 {
 	call_void_hook(task_free, task);
@@ -2852,6 +3379,7 @@ void security_task_free(struct task_struct *task)
 	task->security = NULL;
 }
 
+<<<<<<< HEAD
 /**
  * security_cred_alloc_blank() - Allocate the min memory to allow cred_transfer
  * @cred: credentials
@@ -2862,6 +3390,8 @@ void security_task_free(struct task_struct *task)
  *
  * Return: Returns 0 on success, negative values on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_cred_alloc_blank(struct cred *cred, gfp_t gfp)
 {
 	int rc = lsm_cred_alloc(cred, gfp);
@@ -2875,12 +3405,15 @@ int security_cred_alloc_blank(struct cred *cred, gfp_t gfp)
 	return rc;
 }
 
+<<<<<<< HEAD
 /**
  * security_cred_free() - Free the cred's LSM blob and associated resources
  * @cred: credentials
  *
  * Deallocate and clear the cred->security field in a set of credentials.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_cred_free(struct cred *cred)
 {
 	/*
@@ -2896,6 +3429,7 @@ void security_cred_free(struct cred *cred)
 	cred->security = NULL;
 }
 
+<<<<<<< HEAD
 /**
  * security_prepare_creds() - Prepare a new set of credentials
  * @new: new credentials
@@ -2906,6 +3440,8 @@ void security_cred_free(struct cred *cred)
  *
  * Return: Returns 0 on success, negative values on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_prepare_creds(struct cred *new, const struct cred *old, gfp_t gfp)
 {
 	int rc = lsm_cred_alloc(new, gfp);
@@ -2919,6 +3455,7 @@ int security_prepare_creds(struct cred *new, const struct cred *old, gfp_t gfp)
 	return rc;
 }
 
+<<<<<<< HEAD
 /**
  * security_transfer_creds() - Transfer creds
  * @new: target credentials
@@ -2926,11 +3463,14 @@ int security_prepare_creds(struct cred *new, const struct cred *old, gfp_t gfp)
  *
  * Transfer data from original creds to new creds.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_transfer_creds(struct cred *new, const struct cred *old)
 {
 	call_void_hook(cred_transfer, new, old);
 }
 
+<<<<<<< HEAD
 /**
  * security_cred_getsecid() - Get the secid from a set of credentials
  * @c: credentials
@@ -2939,6 +3479,8 @@ void security_transfer_creds(struct cred *new, const struct cred *old)
  * Retrieve the security identifier of the cred structure @c.  In case of
  * failure, @secid will be set to zero.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_cred_getsecid(const struct cred *c, u32 *secid)
 {
 	*secid = 0;
@@ -2946,6 +3488,7 @@ void security_cred_getsecid(const struct cred *c, u32 *secid)
 }
 EXPORT_SYMBOL(security_cred_getsecid);
 
+<<<<<<< HEAD
 /**
  * security_kernel_act_as() - Set the kernel credentials to act as secid
  * @new: credentials
@@ -2956,11 +3499,14 @@ EXPORT_SYMBOL(security_cred_getsecid);
  *
  * Return: Returns 0 if successful.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_kernel_act_as(struct cred *new, u32 secid)
 {
 	return call_int_hook(kernel_act_as, 0, new, secid);
 }
 
+<<<<<<< HEAD
 /**
  * security_kernel_create_files_as() - Set file creation context using an inode
  * @new: target credentials
@@ -2972,11 +3518,14 @@ int security_kernel_act_as(struct cred *new, u32 secid)
  *
  * Return: Returns 0 if successful.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_kernel_create_files_as(struct cred *new, struct inode *inode)
 {
 	return call_int_hook(kernel_create_files_as, 0, new, inode);
 }
 
+<<<<<<< HEAD
 /**
  * security_kernel_module_request() - Check is loading a module is allowed
  * @kmod_name: module name
@@ -2986,6 +3535,8 @@ int security_kernel_create_files_as(struct cred *new, struct inode *inode)
  *
  * Return: Returns 0 if successful.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_kernel_module_request(char *kmod_name)
 {
 	int ret;
@@ -2996,6 +3547,7 @@ int security_kernel_module_request(char *kmod_name)
 	return integrity_kernel_module_request(kmod_name);
 }
 
+<<<<<<< HEAD
 /**
  * security_kernel_read_file() - Read a file specified by userspace
  * @file: file
@@ -3006,6 +3558,8 @@ int security_kernel_module_request(char *kmod_name)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_kernel_read_file(struct file *file, enum kernel_read_file_id id,
 			      bool contents)
 {
@@ -3018,6 +3572,7 @@ int security_kernel_read_file(struct file *file, enum kernel_read_file_id id,
 }
 EXPORT_SYMBOL_GPL(security_kernel_read_file);
 
+<<<<<<< HEAD
 /**
  * security_kernel_post_read_file() - Read a file specified by userspace
  * @file: file
@@ -3031,6 +3586,8 @@ EXPORT_SYMBOL_GPL(security_kernel_read_file);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
 				   enum kernel_read_file_id id)
 {
@@ -3043,6 +3600,7 @@ int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
 }
 EXPORT_SYMBOL_GPL(security_kernel_post_read_file);
 
+<<<<<<< HEAD
 /**
  * security_kernel_load_data() - Load data provided by userspace
  * @id: data identifier
@@ -3052,6 +3610,8 @@ EXPORT_SYMBOL_GPL(security_kernel_post_read_file);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_kernel_load_data(enum kernel_load_data_id id, bool contents)
 {
 	int ret;
@@ -3063,6 +3623,7 @@ int security_kernel_load_data(enum kernel_load_data_id id, bool contents)
 }
 EXPORT_SYMBOL_GPL(security_kernel_load_data);
 
+<<<<<<< HEAD
 /**
  * security_kernel_post_load_data() - Load userspace data from a non-file source
  * @buf: data
@@ -3077,6 +3638,8 @@ EXPORT_SYMBOL_GPL(security_kernel_load_data);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_kernel_post_load_data(char *buf, loff_t size,
 				   enum kernel_load_data_id id,
 				   char *description)
@@ -3091,6 +3654,7 @@ int security_kernel_post_load_data(char *buf, loff_t size,
 }
 EXPORT_SYMBOL_GPL(security_kernel_post_load_data);
 
+<<<<<<< HEAD
 /**
  * security_task_fix_setuid() - Update LSM with new user id attributes
  * @new: updated credentials
@@ -3105,12 +3669,15 @@ EXPORT_SYMBOL_GPL(security_kernel_post_load_data);
  *
  * Return: Returns 0 on success.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_task_fix_setuid(struct cred *new, const struct cred *old,
 			     int flags)
 {
 	return call_int_hook(task_fix_setuid, 0, new, old, flags);
 }
 
+<<<<<<< HEAD
 /**
  * security_task_fix_setgid() - Update LSM with new group id attributes
  * @new: updated credentials
@@ -3127,10 +3694,15 @@ int security_task_fix_setuid(struct cred *new, const struct cred *old,
  */
 int security_task_fix_setgid(struct cred *new, const struct cred *old,
 			     int flags)
+=======
+int security_task_fix_setgid(struct cred *new, const struct cred *old,
+				 int flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(task_fix_setgid, 0, new, old, flags);
 }
 
+<<<<<<< HEAD
 /**
  * security_task_fix_setgroups() - Update LSM with new supplementary groups
  * @new: updated credentials
@@ -3143,11 +3715,14 @@ int security_task_fix_setgid(struct cred *new, const struct cred *old,
  *
  * Return: Returns 0 on success.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_task_fix_setgroups(struct cred *new, const struct cred *old)
 {
 	return call_int_hook(task_fix_setgroups, 0, new, old);
 }
 
+<<<<<<< HEAD
 /**
  * security_task_setpgid() - Check if setting the pgid is allowed
  * @p: task being modified
@@ -3158,11 +3733,14 @@ int security_task_fix_setgroups(struct cred *new, const struct cred *old)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_task_setpgid(struct task_struct *p, pid_t pgid)
 {
 	return call_int_hook(task_setpgid, 0, p, pgid);
 }
 
+<<<<<<< HEAD
 /**
  * security_task_getpgid() - Check if getting the pgid is allowed
  * @p: task
@@ -3172,11 +3750,14 @@ int security_task_setpgid(struct task_struct *p, pid_t pgid)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_task_getpgid(struct task_struct *p)
 {
 	return call_int_hook(task_getpgid, 0, p);
 }
 
+<<<<<<< HEAD
 /**
  * security_task_getsid() - Check if getting the session id is allowed
  * @p: task
@@ -3185,11 +3766,14 @@ int security_task_getpgid(struct task_struct *p)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_task_getsid(struct task_struct *p)
 {
 	return call_int_hook(task_getsid, 0, p);
 }
 
+<<<<<<< HEAD
 /**
  * security_current_getsecid_subj() - Get the current task's subjective secid
  * @secid: secid value
@@ -3197,6 +3781,8 @@ int security_task_getsid(struct task_struct *p)
  * Retrieve the subjective security identifier of the current task and return
  * it in @secid.  In case of failure, @secid will be set to zero.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_current_getsecid_subj(u32 *secid)
 {
 	*secid = 0;
@@ -3204,6 +3790,7 @@ void security_current_getsecid_subj(u32 *secid)
 }
 EXPORT_SYMBOL(security_current_getsecid_subj);
 
+<<<<<<< HEAD
 /**
  * security_task_getsecid_obj() - Get a task's objective secid
  * @p: target task
@@ -3212,6 +3799,8 @@ EXPORT_SYMBOL(security_current_getsecid_subj);
  * Retrieve the objective security identifier of the task_struct in @p and
  * return it in @secid. In case of failure, @secid will be set to zero.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_task_getsecid_obj(struct task_struct *p, u32 *secid)
 {
 	*secid = 0;
@@ -3219,6 +3808,7 @@ void security_task_getsecid_obj(struct task_struct *p, u32 *secid)
 }
 EXPORT_SYMBOL(security_task_getsecid_obj);
 
+<<<<<<< HEAD
 /**
  * security_task_setnice() - Check if setting a task's nice value is allowed
  * @p: target task
@@ -3228,11 +3818,14 @@ EXPORT_SYMBOL(security_task_getsecid_obj);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_task_setnice(struct task_struct *p, int nice)
 {
 	return call_int_hook(task_setnice, 0, p, nice);
 }
 
+<<<<<<< HEAD
 /**
  * security_task_setioprio() - Check if setting a task's ioprio is allowed
  * @p: target task
@@ -3242,11 +3835,14 @@ int security_task_setnice(struct task_struct *p, int nice)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_task_setioprio(struct task_struct *p, int ioprio)
 {
 	return call_int_hook(task_setioprio, 0, p, ioprio);
 }
 
+<<<<<<< HEAD
 /**
  * security_task_getioprio() - Check if getting a task's ioprio is allowed
  * @p: task
@@ -3255,11 +3851,14 @@ int security_task_setioprio(struct task_struct *p, int ioprio)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_task_getioprio(struct task_struct *p)
 {
 	return call_int_hook(task_getioprio, 0, p);
 }
 
+<<<<<<< HEAD
 /**
  * security_task_prlimit() - Check if get/setting resources limits is allowed
  * @cred: current task credentials
@@ -3271,12 +3870,15 @@ int security_task_getioprio(struct task_struct *p)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_task_prlimit(const struct cred *cred, const struct cred *tcred,
 			  unsigned int flags)
 {
 	return call_int_hook(task_prlimit, 0, cred, tcred, flags);
 }
 
+<<<<<<< HEAD
 /**
  * security_task_setrlimit() - Check if setting a new rlimit value is allowed
  * @p: target task's group leader
@@ -3291,10 +3893,15 @@ int security_task_prlimit(const struct cred *cred, const struct cred *tcred,
  */
 int security_task_setrlimit(struct task_struct *p, unsigned int resource,
 			    struct rlimit *new_rlim)
+=======
+int security_task_setrlimit(struct task_struct *p, unsigned int resource,
+		struct rlimit *new_rlim)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(task_setrlimit, 0, p, resource, new_rlim);
 }
 
+<<<<<<< HEAD
 /**
  * security_task_setscheduler() - Check if setting sched policy/param is allowed
  * @p: target task
@@ -3304,11 +3911,14 @@ int security_task_setrlimit(struct task_struct *p, unsigned int resource,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_task_setscheduler(struct task_struct *p)
 {
 	return call_int_hook(task_setscheduler, 0, p);
 }
 
+<<<<<<< HEAD
 /**
  * security_task_getscheduler() - Check if getting scheduling info is allowed
  * @p: target task
@@ -3317,11 +3927,14 @@ int security_task_setscheduler(struct task_struct *p)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_task_getscheduler(struct task_struct *p)
 {
 	return call_int_hook(task_getscheduler, 0, p);
 }
 
+<<<<<<< HEAD
 /**
  * security_task_movememory() - Check if moving memory is allowed
  * @p: task
@@ -3330,11 +3943,14 @@ int security_task_getscheduler(struct task_struct *p)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_task_movememory(struct task_struct *p)
 {
 	return call_int_hook(task_movememory, 0, p);
 }
 
+<<<<<<< HEAD
 /**
  * security_task_kill() - Check if sending a signal is allowed
  * @p: target process
@@ -3352,10 +3968,15 @@ int security_task_movememory(struct task_struct *p)
  */
 int security_task_kill(struct task_struct *p, struct kernel_siginfo *info,
 		       int sig, const struct cred *cred)
+=======
+int security_task_kill(struct task_struct *p, struct kernel_siginfo *info,
+			int sig, const struct cred *cred)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(task_kill, 0, p, info, sig, cred);
 }
 
+<<<<<<< HEAD
 /**
  * security_task_prctl() - Check if a prctl op is allowed
  * @option: operation
@@ -3372,6 +3993,10 @@ int security_task_kill(struct task_struct *p, struct kernel_siginfo *info,
  */
 int security_task_prctl(int option, unsigned long arg2, unsigned long arg3,
 			unsigned long arg4, unsigned long arg5)
+=======
+int security_task_prctl(int option, unsigned long arg2, unsigned long arg3,
+			 unsigned long arg4, unsigned long arg5)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int thisrc;
 	int rc = LSM_RET_DEFAULT(task_prctl);
@@ -3388,6 +4013,7 @@ int security_task_prctl(int option, unsigned long arg2, unsigned long arg3,
 	return rc;
 }
 
+<<<<<<< HEAD
 /**
  * security_task_to_inode() - Set the security attributes of a task's inode
  * @p: task
@@ -3396,11 +4022,14 @@ int security_task_prctl(int option, unsigned long arg2, unsigned long arg3,
  * Set the security attributes for an inode based on an associated task's
  * security attributes, e.g. for /proc/pid inodes.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_task_to_inode(struct task_struct *p, struct inode *inode)
 {
 	call_void_hook(task_to_inode, p, inode);
 }
 
+<<<<<<< HEAD
 /**
  * security_create_user_ns() - Check if creating a new userns is allowed
  * @cred: prepared creds
@@ -3409,11 +4038,14 @@ void security_task_to_inode(struct task_struct *p, struct inode *inode)
  *
  * Return: Returns 0 if successful, otherwise < 0 error code.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_create_user_ns(const struct cred *cred)
 {
 	return call_int_hook(userns_create, 0, cred);
 }
 
+<<<<<<< HEAD
 /**
  * security_ipc_permission() - Check if sysv ipc access is allowed
  * @ipcp: ipc permission structure
@@ -3423,11 +4055,14 @@ int security_create_user_ns(const struct cred *cred)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_ipc_permission(struct kern_ipc_perm *ipcp, short flag)
 {
 	return call_int_hook(ipc_permission, 0, ipcp, flag);
 }
 
+<<<<<<< HEAD
 /**
  * security_ipc_getsecid() - Get the sysv ipc object's secid
  * @ipcp: ipc permission structure
@@ -3436,12 +4071,15 @@ int security_ipc_permission(struct kern_ipc_perm *ipcp, short flag)
  * Get the secid associated with the ipc object.  In case of failure, @secid
  * will be set to zero.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_ipc_getsecid(struct kern_ipc_perm *ipcp, u32 *secid)
 {
 	*secid = 0;
 	call_void_hook(ipc_getsecid, ipcp, secid);
 }
 
+<<<<<<< HEAD
 /**
  * security_msg_msg_alloc() - Allocate a sysv ipc message LSM blob
  * @msg: message structure
@@ -3451,6 +4089,8 @@ void security_ipc_getsecid(struct kern_ipc_perm *ipcp, u32 *secid)
  *
  * Return: Return 0 if operation was successful and permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_msg_msg_alloc(struct msg_msg *msg)
 {
 	int rc = lsm_msg_msg_alloc(msg);
@@ -3463,12 +4103,15 @@ int security_msg_msg_alloc(struct msg_msg *msg)
 	return rc;
 }
 
+<<<<<<< HEAD
 /**
  * security_msg_msg_free() - Free a sysv ipc message LSM blob
  * @msg: message structure
  *
  * Deallocate the security structure for this message.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_msg_msg_free(struct msg_msg *msg)
 {
 	call_void_hook(msg_msg_free_security, msg);
@@ -3476,6 +4119,7 @@ void security_msg_msg_free(struct msg_msg *msg)
 	msg->security = NULL;
 }
 
+<<<<<<< HEAD
 /**
  * security_msg_queue_alloc() - Allocate a sysv ipc msg queue LSM blob
  * @msq: sysv ipc permission structure
@@ -3485,6 +4129,8 @@ void security_msg_msg_free(struct msg_msg *msg)
  *
  * Return: Returns 0 if operation was successful and permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_msg_queue_alloc(struct kern_ipc_perm *msq)
 {
 	int rc = lsm_ipc_alloc(msq);
@@ -3497,12 +4143,15 @@ int security_msg_queue_alloc(struct kern_ipc_perm *msq)
 	return rc;
 }
 
+<<<<<<< HEAD
 /**
  * security_msg_queue_free() - Free a sysv ipc msg queue LSM blob
  * @msq: sysv ipc permission structure
  *
  * Deallocate security field @perm->security for the message queue.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_msg_queue_free(struct kern_ipc_perm *msq)
 {
 	call_void_hook(msg_queue_free_security, msq);
@@ -3510,6 +4159,7 @@ void security_msg_queue_free(struct kern_ipc_perm *msq)
 	msq->security = NULL;
 }
 
+<<<<<<< HEAD
 /**
  * security_msg_queue_associate() - Check if a msg queue operation is allowed
  * @msq: sysv ipc permission structure
@@ -3521,11 +4171,14 @@ void security_msg_queue_free(struct kern_ipc_perm *msq)
  *
  * Return: Return 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_msg_queue_associate(struct kern_ipc_perm *msq, int msqflg)
 {
 	return call_int_hook(msg_queue_associate, 0, msq, msqflg);
 }
 
+<<<<<<< HEAD
 /**
  * security_msg_queue_msgctl() - Check if a msg queue operation is allowed
  * @msq: sysv ipc permission structure
@@ -3536,11 +4189,14 @@ int security_msg_queue_associate(struct kern_ipc_perm *msq, int msqflg)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_msg_queue_msgctl(struct kern_ipc_perm *msq, int cmd)
 {
 	return call_int_hook(msg_queue_msgctl, 0, msq, cmd);
 }
 
+<<<<<<< HEAD
 /**
  * security_msg_queue_msgsnd() - Check if sending a sysv ipc message is allowed
  * @msq: sysv ipc permission structure
@@ -3554,10 +4210,15 @@ int security_msg_queue_msgctl(struct kern_ipc_perm *msq, int cmd)
  */
 int security_msg_queue_msgsnd(struct kern_ipc_perm *msq,
 			      struct msg_msg *msg, int msqflg)
+=======
+int security_msg_queue_msgsnd(struct kern_ipc_perm *msq,
+			       struct msg_msg *msg, int msqflg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(msg_queue_msgsnd, 0, msq, msg, msqflg);
 }
 
+<<<<<<< HEAD
 /**
  * security_msg_queue_msgrcv() - Check if receiving a sysv ipc msg is allowed
  * @msq: sysv ipc permission structure
@@ -3575,10 +4236,15 @@ int security_msg_queue_msgsnd(struct kern_ipc_perm *msq,
  */
 int security_msg_queue_msgrcv(struct kern_ipc_perm *msq, struct msg_msg *msg,
 			      struct task_struct *target, long type, int mode)
+=======
+int security_msg_queue_msgrcv(struct kern_ipc_perm *msq, struct msg_msg *msg,
+			       struct task_struct *target, long type, int mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(msg_queue_msgrcv, 0, msq, msg, target, type, mode);
 }
 
+<<<<<<< HEAD
 /**
  * security_shm_alloc() - Allocate a sysv shm LSM blob
  * @shp: sysv ipc permission structure
@@ -3588,6 +4254,8 @@ int security_msg_queue_msgrcv(struct kern_ipc_perm *msq, struct msg_msg *msg,
  *
  * Return: Returns 0 if operation was successful and permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_shm_alloc(struct kern_ipc_perm *shp)
 {
 	int rc = lsm_ipc_alloc(shp);
@@ -3600,12 +4268,15 @@ int security_shm_alloc(struct kern_ipc_perm *shp)
 	return rc;
 }
 
+<<<<<<< HEAD
 /**
  * security_shm_free() - Free a sysv shm LSM blob
  * @shp: sysv ipc permission structure
  *
  * Deallocate the security structure @perm->security for the memory segment.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_shm_free(struct kern_ipc_perm *shp)
 {
 	call_void_hook(shm_free_security, shp);
@@ -3613,6 +4284,7 @@ void security_shm_free(struct kern_ipc_perm *shp)
 	shp->security = NULL;
 }
 
+<<<<<<< HEAD
 /**
  * security_shm_associate() - Check if a sysv shm operation is allowed
  * @shp: sysv ipc permission structure
@@ -3625,11 +4297,14 @@ void security_shm_free(struct kern_ipc_perm *shp)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_shm_associate(struct kern_ipc_perm *shp, int shmflg)
 {
 	return call_int_hook(shm_associate, 0, shp, shmflg);
 }
 
+<<<<<<< HEAD
 /**
  * security_shm_shmctl() - Check if a sysv shm operation is allowed
  * @shp: sysv ipc permission structure
@@ -3640,11 +4315,14 @@ int security_shm_associate(struct kern_ipc_perm *shp, int shmflg)
  *
  * Return: Return 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_shm_shmctl(struct kern_ipc_perm *shp, int cmd)
 {
 	return call_int_hook(shm_shmctl, 0, shp, cmd);
 }
 
+<<<<<<< HEAD
 /**
  * security_shm_shmat() - Check if a sysv shm attach operation is allowed
  * @shp: sysv ipc permission structure
@@ -3659,10 +4337,14 @@ int security_shm_shmctl(struct kern_ipc_perm *shp, int cmd)
  */
 int security_shm_shmat(struct kern_ipc_perm *shp,
 		       char __user *shmaddr, int shmflg)
+=======
+int security_shm_shmat(struct kern_ipc_perm *shp, char __user *shmaddr, int shmflg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(shm_shmat, 0, shp, shmaddr, shmflg);
 }
 
+<<<<<<< HEAD
 /**
  * security_sem_alloc() - Allocate a sysv semaphore LSM blob
  * @sma: sysv ipc permission structure
@@ -3672,6 +4354,8 @@ int security_shm_shmat(struct kern_ipc_perm *shp,
  *
  * Return: Returns 0 if operation was successful and permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_sem_alloc(struct kern_ipc_perm *sma)
 {
 	int rc = lsm_ipc_alloc(sma);
@@ -3684,12 +4368,15 @@ int security_sem_alloc(struct kern_ipc_perm *sma)
 	return rc;
 }
 
+<<<<<<< HEAD
 /**
  * security_sem_free() - Free a sysv semaphore LSM blob
  * @sma: sysv ipc permission structure
  *
  * Deallocate security structure @sma->security for the semaphore.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_sem_free(struct kern_ipc_perm *sma)
 {
 	call_void_hook(sem_free_security, sma);
@@ -3697,6 +4384,7 @@ void security_sem_free(struct kern_ipc_perm *sma)
 	sma->security = NULL;
 }
 
+<<<<<<< HEAD
 /**
  * security_sem_associate() - Check if a sysv semaphore operation is allowed
  * @sma: sysv ipc permission structure
@@ -3708,11 +4396,14 @@ void security_sem_free(struct kern_ipc_perm *sma)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_sem_associate(struct kern_ipc_perm *sma, int semflg)
 {
 	return call_int_hook(sem_associate, 0, sma, semflg);
 }
 
+<<<<<<< HEAD
 /**
  * security_sem_semctl() - Check if a sysv semaphore operation is allowed
  * @sma: sysv ipc permission structure
@@ -3723,11 +4414,14 @@ int security_sem_associate(struct kern_ipc_perm *sma, int semflg)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_sem_semctl(struct kern_ipc_perm *sma, int cmd)
 {
 	return call_int_hook(sem_semctl, 0, sma, cmd);
 }
 
+<<<<<<< HEAD
 /**
  * security_sem_semop() - Check if a sysv semaphore operation is allowed
  * @sma: sysv ipc permission structure
@@ -3742,10 +4436,15 @@ int security_sem_semctl(struct kern_ipc_perm *sma, int cmd)
  */
 int security_sem_semop(struct kern_ipc_perm *sma, struct sembuf *sops,
 		       unsigned nsops, int alter)
+=======
+int security_sem_semop(struct kern_ipc_perm *sma, struct sembuf *sops,
+			unsigned nsops, int alter)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(sem_semop, 0, sma, sops, nsops, alter);
 }
 
+<<<<<<< HEAD
 /**
  * security_d_instantiate() - Populate an inode's LSM state based on a dentry
  * @dentry: dentry
@@ -3753,6 +4452,8 @@ int security_sem_semop(struct kern_ipc_perm *sma, struct sembuf *sops,
  *
  * Fill in @inode security information for a @dentry if allowed.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_d_instantiate(struct dentry *dentry, struct inode *inode)
 {
 	if (unlikely(inode && IS_PRIVATE(inode)))
@@ -3761,6 +4462,7 @@ void security_d_instantiate(struct dentry *dentry, struct inode *inode)
 }
 EXPORT_SYMBOL(security_d_instantiate);
 
+<<<<<<< HEAD
 /**
  * security_getprocattr() - Read an attribute for a task
  * @p: the task
@@ -3772,6 +4474,8 @@ EXPORT_SYMBOL(security_d_instantiate);
  *
  * Return: Returns the length of @value on success, a negative value otherwise.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_getprocattr(struct task_struct *p, const char *lsm,
 			 const char *name, char **value)
 {
@@ -3785,6 +4489,7 @@ int security_getprocattr(struct task_struct *p, const char *lsm,
 	return LSM_RET_DEFAULT(getprocattr);
 }
 
+<<<<<<< HEAD
 /**
  * security_setprocattr() - Set an attribute for a task
  * @lsm: LSM name
@@ -3797,6 +4502,8 @@ int security_getprocattr(struct task_struct *p, const char *lsm,
  *
  * Return: Returns bytes written on success, a negative value otherwise.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_setprocattr(const char *lsm, const char *name, void *value,
 			 size_t size)
 {
@@ -3810,6 +4517,7 @@ int security_setprocattr(const char *lsm, const char *name, void *value,
 	return LSM_RET_DEFAULT(setprocattr);
 }
 
+<<<<<<< HEAD
 /**
  * security_netlink_send() - Save info and check if netlink sending is allowed
  * @sk: sending socket
@@ -3823,11 +4531,14 @@ int security_setprocattr(const char *lsm, const char *name, void *value,
  * Return: Returns 0 if the information was successfully saved and message is
  *         allowed to be transmitted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_netlink_send(struct sock *sk, struct sk_buff *skb)
 {
 	return call_int_hook(netlink_send, 0, sk, skb);
 }
 
+<<<<<<< HEAD
 /**
  * security_ismaclabel() - Check is the named attribute is a MAC label
  * @name: full extended attribute name
@@ -3836,12 +4547,15 @@ int security_netlink_send(struct sock *sk, struct sk_buff *skb)
  *
  * Return: Returns 1 if name is a MAC attribute otherwise returns 0.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_ismaclabel(const char *name)
 {
 	return call_int_hook(ismaclabel, 0, name);
 }
 EXPORT_SYMBOL(security_ismaclabel);
 
+<<<<<<< HEAD
 /**
  * security_secid_to_secctx() - Convert a secid to a secctx
  * @secid: secid
@@ -3855,6 +4569,8 @@ EXPORT_SYMBOL(security_ismaclabel);
  *
  * Return: Return 0 on success, error on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_secid_to_secctx(u32 secid, char **secdata, u32 *seclen)
 {
 	struct security_hook_list *hp;
@@ -3874,6 +4590,7 @@ int security_secid_to_secctx(u32 secid, char **secdata, u32 *seclen)
 }
 EXPORT_SYMBOL(security_secid_to_secctx);
 
+<<<<<<< HEAD
 /**
  * security_secctx_to_secid() - Convert a secctx to a secid
  * @secdata: secctx
@@ -3884,6 +4601,8 @@ EXPORT_SYMBOL(security_secid_to_secctx);
  *
  * Return: Returns 0 on success, error on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_secctx_to_secid(const char *secdata, u32 seclen, u32 *secid)
 {
 	*secid = 0;
@@ -3891,6 +4610,7 @@ int security_secctx_to_secid(const char *secdata, u32 seclen, u32 *secid)
 }
 EXPORT_SYMBOL(security_secctx_to_secid);
 
+<<<<<<< HEAD
 /**
  * security_release_secctx() - Free a secctx buffer
  * @secdata: secctx
@@ -3898,12 +4618,15 @@ EXPORT_SYMBOL(security_secctx_to_secid);
  *
  * Release the security context.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_release_secctx(char *secdata, u32 seclen)
 {
 	call_void_hook(release_secctx, secdata, seclen);
 }
 EXPORT_SYMBOL(security_release_secctx);
 
+<<<<<<< HEAD
 /**
  * security_inode_invalidate_secctx() - Invalidate an inode's security label
  * @inode: inode
@@ -3911,12 +4634,15 @@ EXPORT_SYMBOL(security_release_secctx);
  * Notify the security module that it must revalidate the security context of
  * an inode.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_inode_invalidate_secctx(struct inode *inode)
 {
 	call_void_hook(inode_invalidate_secctx, inode);
 }
 EXPORT_SYMBOL(security_inode_invalidate_secctx);
 
+<<<<<<< HEAD
 /**
  * security_inode_notifysecctx() - Nofify the LSM of an inode's security label
  * @inode: inode
@@ -3932,12 +4658,15 @@ EXPORT_SYMBOL(security_inode_invalidate_secctx);
  *
  * Return: Returns 0 on success, error on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen)
 {
 	return call_int_hook(inode_notifysecctx, 0, inode, ctx, ctxlen);
 }
 EXPORT_SYMBOL(security_inode_notifysecctx);
 
+<<<<<<< HEAD
 /**
  * security_inode_setsecctx() - Change the security label of an inode
  * @dentry: inode
@@ -3954,12 +4683,15 @@ EXPORT_SYMBOL(security_inode_notifysecctx);
  *
  * Return: Returns 0 on success, error on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen)
 {
 	return call_int_hook(inode_setsecctx, 0, dentry, ctx, ctxlen);
 }
 EXPORT_SYMBOL(security_inode_setsecctx);
 
+<<<<<<< HEAD
 /**
  * security_inode_getsecctx() - Get the security label of an inode
  * @inode: inode
@@ -3971,6 +4703,8 @@ EXPORT_SYMBOL(security_inode_setsecctx);
  *
  * Return: Returns 0 on success, error on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen)
 {
 	return call_int_hook(inode_getsecctx, -EOPNOTSUPP, inode, ctx, ctxlen);
@@ -3978,6 +4712,7 @@ int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen)
 EXPORT_SYMBOL(security_inode_getsecctx);
 
 #ifdef CONFIG_WATCH_QUEUE
+<<<<<<< HEAD
 /**
  * security_post_notification() - Check if a watch notification can be posted
  * @w_cred: credentials of the task that set the watch
@@ -3988,6 +4723,8 @@ EXPORT_SYMBOL(security_inode_getsecctx);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_post_notification(const struct cred *w_cred,
 			       const struct cred *cred,
 			       struct watch_notification *n)
@@ -3997,6 +4734,7 @@ int security_post_notification(const struct cred *w_cred,
 #endif /* CONFIG_WATCH_QUEUE */
 
 #ifdef CONFIG_KEY_NOTIFICATIONS
+<<<<<<< HEAD
 /**
  * security_watch_key() - Check if a task is allowed to watch for key events
  * @key: the key to watch
@@ -4006,10 +4744,13 @@ int security_post_notification(const struct cred *w_cred,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_watch_key(struct key *key)
 {
 	return call_int_hook(watch_key, 0, key);
 }
+<<<<<<< HEAD
 #endif /* CONFIG_KEY_NOTIFICATIONS */
 
 #ifdef CONFIG_SECURITY_NETWORK
@@ -4036,11 +4777,19 @@ int security_watch_key(struct key *key)
  */
 int security_unix_stream_connect(struct sock *sock, struct sock *other,
 				 struct sock *newsk)
+=======
+#endif
+
+#ifdef CONFIG_SECURITY_NETWORK
+
+int security_unix_stream_connect(struct sock *sock, struct sock *other, struct sock *newsk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(unix_stream_connect, 0, sock, other, newsk);
 }
 EXPORT_SYMBOL(security_unix_stream_connect);
 
+<<<<<<< HEAD
 /**
  * security_unix_may_send() - Check if AF_UNIX socket can send datagrams
  * @sock: originating sock
@@ -4061,12 +4810,15 @@ EXPORT_SYMBOL(security_unix_stream_connect);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_unix_may_send(struct socket *sock,  struct socket *other)
 {
 	return call_int_hook(unix_may_send, 0, sock, other);
 }
 EXPORT_SYMBOL(security_unix_may_send);
 
+<<<<<<< HEAD
 /**
  * security_socket_create() - Check if creating a new socket is allowed
  * @family: protocol family
@@ -4078,11 +4830,14 @@ EXPORT_SYMBOL(security_unix_may_send);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_socket_create(int family, int type, int protocol, int kern)
 {
 	return call_int_hook(socket_create, 0, family, type, protocol, kern);
 }
 
+<<<<<<< HEAD
 /**
  * security_socket_post_create() - Initialize a newly created socket
  * @sock: socket
@@ -4101,10 +4856,13 @@ int security_socket_create(int family, int type, int protocol, int kern)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_socket_post_create(struct socket *sock, int family,
 				int type, int protocol, int kern)
 {
 	return call_int_hook(socket_post_create, 0, sock, family, type,
+<<<<<<< HEAD
 			     protocol, kern);
 }
 
@@ -4118,12 +4876,18 @@ int security_socket_post_create(struct socket *sock, int family,
  * Return: Returns 0 if permission is granted and the connection was
  *         established.
  */
+=======
+						protocol, kern);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int security_socket_socketpair(struct socket *socka, struct socket *sockb)
 {
 	return call_int_hook(socket_socketpair, 0, socka, sockb);
 }
 EXPORT_SYMBOL(security_socket_socketpair);
 
+<<<<<<< HEAD
 /**
  * security_socket_bind() - Check if a socket bind operation is allowed
  * @sock: socket
@@ -4138,10 +4902,14 @@ EXPORT_SYMBOL(security_socket_socketpair);
  */
 int security_socket_bind(struct socket *sock,
 			 struct sockaddr *address, int addrlen)
+=======
+int security_socket_bind(struct socket *sock, struct sockaddr *address, int addrlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(socket_bind, 0, sock, address, addrlen);
 }
 
+<<<<<<< HEAD
 /**
  * security_socket_connect() - Check if a socket connect operation is allowed
  * @sock: socket
@@ -4155,10 +4923,14 @@ int security_socket_bind(struct socket *sock,
  */
 int security_socket_connect(struct socket *sock,
 			    struct sockaddr *address, int addrlen)
+=======
+int security_socket_connect(struct socket *sock, struct sockaddr *address, int addrlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(socket_connect, 0, sock, address, addrlen);
 }
 
+<<<<<<< HEAD
 /**
  * security_socket_listen() - Check if a socket is allowed to listen
  * @sock: socket
@@ -4168,11 +4940,14 @@ int security_socket_connect(struct socket *sock,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_socket_listen(struct socket *sock, int backlog)
 {
 	return call_int_hook(socket_listen, 0, sock, backlog);
 }
 
+<<<<<<< HEAD
 /**
  * security_socket_accept() - Check if a socket is allowed to accept connections
  * @sock: listening socket
@@ -4184,11 +4959,14 @@ int security_socket_listen(struct socket *sock, int backlog)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_socket_accept(struct socket *sock, struct socket *newsock)
 {
 	return call_int_hook(socket_accept, 0, sock, newsock);
 }
 
+<<<<<<< HEAD
 /**
  * security_socket_sendmsg() - Check is sending a message is allowed
  * @sock: sending socket
@@ -4199,11 +4977,14 @@ int security_socket_accept(struct socket *sock, struct socket *newsock)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_socket_sendmsg(struct socket *sock, struct msghdr *msg, int size)
 {
 	return call_int_hook(socket_sendmsg, 0, sock, msg, size);
 }
 
+<<<<<<< HEAD
 /**
  * security_socket_recvmsg() - Check if receiving a message is allowed
  * @sock: receiving socket
@@ -4215,12 +4996,15 @@ int security_socket_sendmsg(struct socket *sock, struct msghdr *msg, int size)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_socket_recvmsg(struct socket *sock, struct msghdr *msg,
 			    int size, int flags)
 {
 	return call_int_hook(socket_recvmsg, 0, sock, msg, size, flags);
 }
 
+<<<<<<< HEAD
 /**
  * security_socket_getsockname() - Check if reading the socket addr is allowed
  * @sock: socket
@@ -4230,11 +5014,14 @@ int security_socket_recvmsg(struct socket *sock, struct msghdr *msg,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_socket_getsockname(struct socket *sock)
 {
 	return call_int_hook(socket_getsockname, 0, sock);
 }
 
+<<<<<<< HEAD
 /**
  * security_socket_getpeername() - Check if reading the peer's addr is allowed
  * @sock: socket
@@ -4243,11 +5030,14 @@ int security_socket_getsockname(struct socket *sock)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_socket_getpeername(struct socket *sock)
 {
 	return call_int_hook(socket_getpeername, 0, sock);
 }
 
+<<<<<<< HEAD
 /**
  * security_socket_getsockopt() - Check if reading a socket option is allowed
  * @sock: socket
@@ -4259,11 +5049,14 @@ int security_socket_getpeername(struct socket *sock)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_socket_getsockopt(struct socket *sock, int level, int optname)
 {
 	return call_int_hook(socket_getsockopt, 0, sock, level, optname);
 }
 
+<<<<<<< HEAD
 /**
  * security_socket_setsockopt() - Check if setting a socket option is allowed
  * @sock: socket
@@ -4274,11 +5067,14 @@ int security_socket_getsockopt(struct socket *sock, int level, int optname)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_socket_setsockopt(struct socket *sock, int level, int optname)
 {
 	return call_int_hook(socket_setsockopt, 0, sock, level, optname);
 }
 
+<<<<<<< HEAD
 /**
  * security_socket_shutdown() - Checks if shutting down the socket is allowed
  * @sock: socket
@@ -4289,11 +5085,14 @@ int security_socket_setsockopt(struct socket *sock, int level, int optname)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_socket_shutdown(struct socket *sock, int how)
 {
 	return call_int_hook(socket_shutdown, 0, sock, how);
 }
 
+<<<<<<< HEAD
 /**
  * security_sock_rcv_skb() - Check if an incoming network packet is allowed
  * @sk: destination sock
@@ -4306,12 +5105,15 @@ int security_socket_shutdown(struct socket *sock, int how)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_sock_rcv_skb(struct sock *sk, struct sk_buff *skb)
 {
 	return call_int_hook(socket_sock_rcv_skb, 0, sk, skb);
 }
 EXPORT_SYMBOL(security_sock_rcv_skb);
 
+<<<<<<< HEAD
 /**
  * security_socket_getpeersec_stream() - Get the remote peer label
  * @sock: socket
@@ -4350,12 +5152,23 @@ int security_socket_getpeersec_stream(struct socket *sock, sockptr_t optval,
  */
 int security_socket_getpeersec_dgram(struct socket *sock,
 				     struct sk_buff *skb, u32 *secid)
+=======
+int security_socket_getpeersec_stream(struct socket *sock, char __user *optval,
+				      int __user *optlen, unsigned len)
+{
+	return call_int_hook(socket_getpeersec_stream, -ENOPROTOOPT, sock,
+				optval, optlen, len);
+}
+
+int security_socket_getpeersec_dgram(struct socket *sock, struct sk_buff *skb, u32 *secid)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(socket_getpeersec_dgram, -ENOPROTOOPT, sock,
 			     skb, secid);
 }
 EXPORT_SYMBOL(security_socket_getpeersec_dgram);
 
+<<<<<<< HEAD
 /**
  * security_sk_alloc() - Allocate and initialize a sock's LSM blob
  * @sk: sock
@@ -4367,22 +5180,28 @@ EXPORT_SYMBOL(security_socket_getpeersec_dgram);
  *
  * Return: Returns 0 on success, error on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_sk_alloc(struct sock *sk, int family, gfp_t priority)
 {
 	return call_int_hook(sk_alloc_security, 0, sk, family, priority);
 }
 
+<<<<<<< HEAD
 /**
  * security_sk_free() - Free the sock's LSM blob
  * @sk: sock
  *
  * Deallocate security structure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_sk_free(struct sock *sk)
 {
 	call_void_hook(sk_free_security, sk);
 }
 
+<<<<<<< HEAD
 /**
  * security_sk_clone() - Clone a sock's LSM state
  * @sk: original sock
@@ -4390,6 +5209,8 @@ void security_sk_free(struct sock *sk)
  *
  * Clone/copy security structure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_sk_clone(const struct sock *sk, struct sock *newsk)
 {
 	call_void_hook(sk_clone_security, sk, newsk);
@@ -4402,6 +5223,7 @@ void security_sk_classify_flow(struct sock *sk, struct flowi_common *flic)
 }
 EXPORT_SYMBOL(security_sk_classify_flow);
 
+<<<<<<< HEAD
 /**
  * security_req_classify_flow() - Set a flow's secid based on request_sock
  * @req: request_sock
@@ -4409,6 +5231,8 @@ EXPORT_SYMBOL(security_sk_classify_flow);
  *
  * Sets @flic's secid to @req's secid.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_req_classify_flow(const struct request_sock *req,
 				struct flowi_common *flic)
 {
@@ -4416,6 +5240,7 @@ void security_req_classify_flow(const struct request_sock *req,
 }
 EXPORT_SYMBOL(security_req_classify_flow);
 
+<<<<<<< HEAD
 /**
  * security_sock_graft() - Reconcile LSM state when grafting a sock on a socket
  * @sk: sock being grafted
@@ -4424,12 +5249,15 @@ EXPORT_SYMBOL(security_req_classify_flow);
  * Sets @parent's inode secid to @sk's secid and update @sk with any necessary
  * LSM state from @parent.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_sock_graft(struct sock *sk, struct socket *parent)
 {
 	call_void_hook(sock_graft, sk, parent);
 }
 EXPORT_SYMBOL(security_sock_graft);
 
+<<<<<<< HEAD
 /**
  * security_inet_conn_request() - Set request_sock state using incoming connect
  * @sk: parent listening sock
@@ -4442,11 +5270,16 @@ EXPORT_SYMBOL(security_sock_graft);
  */
 int security_inet_conn_request(const struct sock *sk,
 			       struct sk_buff *skb, struct request_sock *req)
+=======
+int security_inet_conn_request(const struct sock *sk,
+			struct sk_buff *skb, struct request_sock *req)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(inet_conn_request, 0, sk, skb, req);
 }
 EXPORT_SYMBOL(security_inet_conn_request);
 
+<<<<<<< HEAD
 /**
  * security_inet_csk_clone() - Set new sock LSM state based on request_sock
  * @newsk: new sock
@@ -4456,10 +5289,15 @@ EXPORT_SYMBOL(security_inet_conn_request);
  */
 void security_inet_csk_clone(struct sock *newsk,
 			     const struct request_sock *req)
+=======
+void security_inet_csk_clone(struct sock *newsk,
+			const struct request_sock *req)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	call_void_hook(inet_csk_clone, newsk, req);
 }
 
+<<<<<<< HEAD
 /**
  * security_inet_conn_established() - Update sock's LSM state with connection
  * @sk: sock
@@ -4469,11 +5307,16 @@ void security_inet_csk_clone(struct sock *newsk,
  */
 void security_inet_conn_established(struct sock *sk,
 				    struct sk_buff *skb)
+=======
+void security_inet_conn_established(struct sock *sk,
+			struct sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	call_void_hook(inet_conn_established, sk, skb);
 }
 EXPORT_SYMBOL(security_inet_conn_established);
 
+<<<<<<< HEAD
 /**
  * security_secmark_relabel_packet() - Check if setting a secmark is allowed
  * @secid: new secmark value
@@ -4482,34 +5325,43 @@ EXPORT_SYMBOL(security_inet_conn_established);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_secmark_relabel_packet(u32 secid)
 {
 	return call_int_hook(secmark_relabel_packet, 0, secid);
 }
 EXPORT_SYMBOL(security_secmark_relabel_packet);
 
+<<<<<<< HEAD
 /**
  * security_secmark_refcount_inc() - Increment the secmark labeling rule count
  *
  * Tells the LSM to increment the number of secmark labeling rules loaded.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_secmark_refcount_inc(void)
 {
 	call_void_hook(secmark_refcount_inc);
 }
 EXPORT_SYMBOL(security_secmark_refcount_inc);
 
+<<<<<<< HEAD
 /**
  * security_secmark_refcount_dec() - Decrement the secmark labeling rule count
  *
  * Tells the LSM to decrement the number of secmark labeling rules loaded.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_secmark_refcount_dec(void)
 {
 	call_void_hook(secmark_refcount_dec);
 }
 EXPORT_SYMBOL(security_secmark_refcount_dec);
 
+<<<<<<< HEAD
 /**
  * security_tun_dev_alloc_security() - Allocate a LSM blob for a TUN device
  * @security: pointer to the LSM blob
@@ -4519,24 +5371,30 @@ EXPORT_SYMBOL(security_secmark_refcount_dec);
  *
  * Return: Returns a zero on success, negative values on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_tun_dev_alloc_security(void **security)
 {
 	return call_int_hook(tun_dev_alloc_security, 0, security);
 }
 EXPORT_SYMBOL(security_tun_dev_alloc_security);
 
+<<<<<<< HEAD
 /**
  * security_tun_dev_free_security() - Free a TUN device LSM blob
  * @security: LSM blob
  *
  * This hook allows a module to free the security structure for a TUN device.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_tun_dev_free_security(void *security)
 {
 	call_void_hook(tun_dev_free_security, security);
 }
 EXPORT_SYMBOL(security_tun_dev_free_security);
 
+<<<<<<< HEAD
 /**
  * security_tun_dev_create() - Check if creating a TUN device is allowed
  *
@@ -4544,12 +5402,15 @@ EXPORT_SYMBOL(security_tun_dev_free_security);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_tun_dev_create(void)
 {
 	return call_int_hook(tun_dev_create, 0);
 }
 EXPORT_SYMBOL(security_tun_dev_create);
 
+<<<<<<< HEAD
 /**
  * security_tun_dev_attach_queue() - Check if attaching a TUN queue is allowed
  * @security: TUN device LSM blob
@@ -4558,12 +5419,15 @@ EXPORT_SYMBOL(security_tun_dev_create);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_tun_dev_attach_queue(void *security)
 {
 	return call_int_hook(tun_dev_attach_queue, 0, security);
 }
 EXPORT_SYMBOL(security_tun_dev_attach_queue);
 
+<<<<<<< HEAD
 /**
  * security_tun_dev_attach() - Update TUN device LSM state on attach
  * @sk: associated sock
@@ -4574,12 +5438,15 @@ EXPORT_SYMBOL(security_tun_dev_attach_queue);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_tun_dev_attach(struct sock *sk, void *security)
 {
 	return call_int_hook(tun_dev_attach, 0, sk, security);
 }
 EXPORT_SYMBOL(security_tun_dev_attach);
 
+<<<<<<< HEAD
 /**
  * security_tun_dev_open() - Update TUN device LSM state on open
  * @security: TUN device LSM blob
@@ -4589,12 +5456,15 @@ EXPORT_SYMBOL(security_tun_dev_attach);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_tun_dev_open(void *security)
 {
 	return call_int_hook(tun_dev_open, 0, security);
 }
 EXPORT_SYMBOL(security_tun_dev_open);
 
+<<<<<<< HEAD
 /**
  * security_sctp_assoc_request() - Update the LSM on a SCTP association req
  * @asoc: SCTP association
@@ -4606,11 +5476,15 @@ EXPORT_SYMBOL(security_tun_dev_open);
  */
 int security_sctp_assoc_request(struct sctp_association *asoc,
 				struct sk_buff *skb)
+=======
+int security_sctp_assoc_request(struct sctp_association *asoc, struct sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(sctp_assoc_request, 0, asoc, skb);
 }
 EXPORT_SYMBOL(security_sctp_assoc_request);
 
+<<<<<<< HEAD
 /**
  * security_sctp_bind_connect() - Validate a list of addrs for a SCTP option
  * @sk: socket
@@ -4625,6 +5499,8 @@ EXPORT_SYMBOL(security_sctp_assoc_request);
  *
  * Return: Returns 0 on success, error on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_sctp_bind_connect(struct sock *sk, int optname,
 			       struct sockaddr *address, int addrlen)
 {
@@ -4633,6 +5509,7 @@ int security_sctp_bind_connect(struct sock *sk, int optname,
 }
 EXPORT_SYMBOL(security_sctp_bind_connect);
 
+<<<<<<< HEAD
 /**
  * security_sctp_sk_clone() - Clone a SCTP sock's LSM state
  * @asoc: SCTP association
@@ -4643,6 +5520,8 @@ EXPORT_SYMBOL(security_sctp_bind_connect);
  * socket) or when a socket is 'peeled off' e.g userspace calls
  * sctp_peeloff(3).
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_sctp_sk_clone(struct sctp_association *asoc, struct sock *sk,
 			    struct sock *newsk)
 {
@@ -4650,6 +5529,7 @@ void security_sctp_sk_clone(struct sctp_association *asoc, struct sock *sk,
 }
 EXPORT_SYMBOL(security_sctp_sk_clone);
 
+<<<<<<< HEAD
 /**
  * security_sctp_assoc_established() - Update LSM state when assoc established
  * @asoc: SCTP association
@@ -4660,6 +5540,8 @@ EXPORT_SYMBOL(security_sctp_sk_clone);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_sctp_assoc_established(struct sctp_association *asoc,
 				    struct sk_buff *skb)
 {
@@ -4670,6 +5552,7 @@ EXPORT_SYMBOL(security_sctp_assoc_established);
 #endif	/* CONFIG_SECURITY_NETWORK */
 
 #ifdef CONFIG_SECURITY_INFINIBAND
+<<<<<<< HEAD
 /**
  * security_ib_pkey_access() - Check if access to an IB pkey is allowed
  * @sec: LSM blob
@@ -4680,12 +5563,16 @@ EXPORT_SYMBOL(security_sctp_assoc_established);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 int security_ib_pkey_access(void *sec, u64 subnet_prefix, u16 pkey)
 {
 	return call_int_hook(ib_pkey_access, 0, sec, subnet_prefix, pkey);
 }
 EXPORT_SYMBOL(security_ib_pkey_access);
 
+<<<<<<< HEAD
 /**
  * security_ib_endport_manage_subnet() - Check if SMPs traffic is allowed
  * @sec: LSM blob
@@ -4712,18 +5599,29 @@ EXPORT_SYMBOL(security_ib_endport_manage_subnet);
  *
  * Return: Returns 0 on success, non-zero on failure.
  */
+=======
+int security_ib_endport_manage_subnet(void *sec, const char *dev_name, u8 port_num)
+{
+	return call_int_hook(ib_endport_manage_subnet, 0, sec, dev_name, port_num);
+}
+EXPORT_SYMBOL(security_ib_endport_manage_subnet);
+
+>>>>>>> b7ba80a49124 (Commit)
 int security_ib_alloc_security(void **sec)
 {
 	return call_int_hook(ib_alloc_security, 0, sec);
 }
 EXPORT_SYMBOL(security_ib_alloc_security);
 
+<<<<<<< HEAD
 /**
  * security_ib_free_security() - Free an Infiniband LSM blob
  * @sec: LSM blob
  *
  * Deallocate an Infiniband security structure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_ib_free_security(void *sec)
 {
 	call_void_hook(ib_free_security, sec);
@@ -4732,6 +5630,7 @@ EXPORT_SYMBOL(security_ib_free_security);
 #endif	/* CONFIG_SECURITY_INFINIBAND */
 
 #ifdef CONFIG_SECURITY_NETWORK_XFRM
+<<<<<<< HEAD
 /**
  * security_xfrm_policy_alloc() - Allocate a xfrm policy LSM blob
  * @ctxp: xfrm security context being added to the SPD
@@ -4743,6 +5642,9 @@ EXPORT_SYMBOL(security_ib_free_security);
  *
  * Return:  Return 0 if operation was successful.
  */
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 int security_xfrm_policy_alloc(struct xfrm_sec_ctx **ctxp,
 			       struct xfrm_user_sec_ctx *sec_ctx,
 			       gfp_t gfp)
@@ -4751,6 +5653,7 @@ int security_xfrm_policy_alloc(struct xfrm_sec_ctx **ctxp,
 }
 EXPORT_SYMBOL(security_xfrm_policy_alloc);
 
+<<<<<<< HEAD
 /**
  * security_xfrm_policy_clone() - Clone xfrm policy LSM state
  * @old_ctx: xfrm security context
@@ -4763,22 +5666,30 @@ EXPORT_SYMBOL(security_xfrm_policy_alloc);
  */
 int security_xfrm_policy_clone(struct xfrm_sec_ctx *old_ctx,
 			       struct xfrm_sec_ctx **new_ctxp)
+=======
+int security_xfrm_policy_clone(struct xfrm_sec_ctx *old_ctx,
+			      struct xfrm_sec_ctx **new_ctxp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return call_int_hook(xfrm_policy_clone_security, 0, old_ctx, new_ctxp);
 }
 
+<<<<<<< HEAD
 /**
  * security_xfrm_policy_free() - Free a xfrm security context
  * @ctx: xfrm security context
  *
  * Free LSM resources associated with @ctx.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_xfrm_policy_free(struct xfrm_sec_ctx *ctx)
 {
 	call_void_hook(xfrm_policy_free_security, ctx);
 }
 EXPORT_SYMBOL(security_xfrm_policy_free);
 
+<<<<<<< HEAD
 /**
  * security_xfrm_policy_delete() - Check if deleting a xfrm policy is allowed
  * @ctx: xfrm security context
@@ -4787,11 +5698,14 @@ EXPORT_SYMBOL(security_xfrm_policy_free);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_xfrm_policy_delete(struct xfrm_sec_ctx *ctx)
 {
 	return call_int_hook(xfrm_policy_delete_security, 0, ctx);
 }
 
+<<<<<<< HEAD
 /**
  * security_xfrm_state_alloc() - Allocate a xfrm state LSM blob
  * @x: xfrm state being added to the SAD
@@ -4803,6 +5717,8 @@ int security_xfrm_policy_delete(struct xfrm_sec_ctx *ctx)
  *
  * Return: Return 0 if operation was successful.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_xfrm_state_alloc(struct xfrm_state *x,
 			      struct xfrm_user_sec_ctx *sec_ctx)
 {
@@ -4810,6 +5726,7 @@ int security_xfrm_state_alloc(struct xfrm_state *x,
 }
 EXPORT_SYMBOL(security_xfrm_state_alloc);
 
+<<<<<<< HEAD
 /**
  * security_xfrm_state_alloc_acquire() - Allocate a xfrm state LSM blob
  * @x: xfrm state being added to the SAD
@@ -4822,12 +5739,15 @@ EXPORT_SYMBOL(security_xfrm_state_alloc);
  *
  * Return: Returns 0 if operation was successful.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_xfrm_state_alloc_acquire(struct xfrm_state *x,
 				      struct xfrm_sec_ctx *polsec, u32 secid)
 {
 	return call_int_hook(xfrm_state_alloc_acquire, 0, x, polsec, secid);
 }
 
+<<<<<<< HEAD
 /**
  * security_xfrm_state_delete() - Check if deleting a xfrm state is allowed
  * @x: xfrm state
@@ -4836,23 +5756,29 @@ int security_xfrm_state_alloc_acquire(struct xfrm_state *x,
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_xfrm_state_delete(struct xfrm_state *x)
 {
 	return call_int_hook(xfrm_state_delete_security, 0, x);
 }
 EXPORT_SYMBOL(security_xfrm_state_delete);
 
+<<<<<<< HEAD
 /**
  * security_xfrm_state_free() - Free a xfrm state
  * @x: xfrm state
  *
  * Deallocate x->security.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_xfrm_state_free(struct xfrm_state *x)
 {
 	call_void_hook(xfrm_state_free_security, x);
 }
 
+<<<<<<< HEAD
 /**
  * security_xfrm_policy_lookup() - Check if using a xfrm policy is allowed
  * @ctx: target xfrm security context
@@ -4865,11 +5791,14 @@ void security_xfrm_state_free(struct xfrm_state *x)
  * Return: Return 0 if permission is granted, -ESRCH otherwise, or -errno on
  *         other errors.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_xfrm_policy_lookup(struct xfrm_sec_ctx *ctx, u32 fl_secid)
 {
 	return call_int_hook(xfrm_policy_lookup, 0, ctx, fl_secid);
 }
 
+<<<<<<< HEAD
 /**
  * security_xfrm_state_pol_flow_match() - Check for a xfrm match
  * @x: xfrm state to match
@@ -4880,6 +5809,8 @@ int security_xfrm_policy_lookup(struct xfrm_sec_ctx *ctx, u32 fl_secid)
  *
  * Return: Returns 1 if there is a match.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_xfrm_state_pol_flow_match(struct xfrm_state *x,
 				       struct xfrm_policy *xp,
 				       const struct flowi_common *flic)
@@ -4897,13 +5828,18 @@ int security_xfrm_state_pol_flow_match(struct xfrm_state *x,
 	 * using the macro
 	 */
 	hlist_for_each_entry(hp, &security_hook_heads.xfrm_state_pol_flow_match,
+<<<<<<< HEAD
 			     list) {
+=======
+				list) {
+>>>>>>> b7ba80a49124 (Commit)
 		rc = hp->hook.xfrm_state_pol_flow_match(x, xp, flic);
 		break;
 	}
 	return rc;
 }
 
+<<<<<<< HEAD
 /**
  * security_xfrm_decode_session() - Determine the xfrm secid for a packet
  * @skb: xfrm packet
@@ -4913,6 +5849,8 @@ int security_xfrm_state_pol_flow_match(struct xfrm_state *x,
  *
  * Return: Return 0 if all xfrms used have the same secid.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_xfrm_decode_session(struct sk_buff *skb, u32 *secid)
 {
 	return call_int_hook(xfrm_decode_session, 0, skb, secid, 1);
@@ -4921,11 +5859,16 @@ int security_xfrm_decode_session(struct sk_buff *skb, u32 *secid)
 void security_skb_classify_flow(struct sk_buff *skb, struct flowi_common *flic)
 {
 	int rc = call_int_hook(xfrm_decode_session, 0, skb, &flic->flowic_secid,
+<<<<<<< HEAD
 			       0);
+=======
+				0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	BUG_ON(rc);
 }
 EXPORT_SYMBOL(security_skb_classify_flow);
+<<<<<<< HEAD
 #endif	/* CONFIG_SECURITY_NETWORK_XFRM */
 
 #ifdef CONFIG_KEYS
@@ -4940,23 +5883,34 @@ EXPORT_SYMBOL(security_skb_classify_flow);
  *
  * Return: Return 0 if permission is granted, -ve error otherwise.
  */
+=======
+
+#endif	/* CONFIG_SECURITY_NETWORK_XFRM */
+
+#ifdef CONFIG_KEYS
+
+>>>>>>> b7ba80a49124 (Commit)
 int security_key_alloc(struct key *key, const struct cred *cred,
 		       unsigned long flags)
 {
 	return call_int_hook(key_alloc, 0, key, cred, flags);
 }
 
+<<<<<<< HEAD
 /**
  * security_key_free() - Free a kernel key LSM blob
  * @key: key
  *
  * Notification of destruction; free security data.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_key_free(struct key *key)
 {
 	call_void_hook(key_free, key);
 }
 
+<<<<<<< HEAD
 /**
  * security_key_permission() - Check if a kernel key operation is allowed
  * @key_ref: key reference
@@ -4967,12 +5921,15 @@ void security_key_free(struct key *key)
  *
  * Return: Return 0 if permission is granted, -ve error otherwise.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_key_permission(key_ref_t key_ref, const struct cred *cred,
 			    enum key_need_perm need_perm)
 {
 	return call_int_hook(key_permission, 0, key_ref, cred, need_perm);
 }
 
+<<<<<<< HEAD
 /**
  * security_key_getsecurity() - Get the key's security label
  * @key: key
@@ -5006,11 +5963,24 @@ int security_key_getsecurity(struct key *key, char **buffer)
  * Return: Return 0 if @lsmrule has been successfully set, -EINVAL in case of
  *         an invalid rule.
  */
+=======
+int security_key_getsecurity(struct key *key, char **_buffer)
+{
+	*_buffer = NULL;
+	return call_int_hook(key_getsecurity, 0, key, _buffer);
+}
+
+#endif	/* CONFIG_KEYS */
+
+#ifdef CONFIG_AUDIT
+
+>>>>>>> b7ba80a49124 (Commit)
 int security_audit_rule_init(u32 field, u32 op, char *rulestr, void **lsmrule)
 {
 	return call_int_hook(audit_rule_init, 0, field, op, rulestr, lsmrule);
 }
 
+<<<<<<< HEAD
 /**
  * security_audit_rule_known() - Check if an audit rule contains LSM fields
  * @krule: audit rule
@@ -5020,11 +5990,14 @@ int security_audit_rule_init(u32 field, u32 op, char *rulestr, void **lsmrule)
  *
  * Return: Returns 1 in case of relation found, 0 otherwise.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_audit_rule_known(struct audit_krule *krule)
 {
 	return call_int_hook(audit_rule_known, 0, krule);
 }
 
+<<<<<<< HEAD
 /**
  * security_audit_rule_free() - Free an LSM audit rule struct
  * @lsmrule: audit rule struct
@@ -5032,11 +6005,14 @@ int security_audit_rule_known(struct audit_krule *krule)
  * Deallocate the LSM audit rule structure previously allocated by
  * audit_rule_init().
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_audit_rule_free(void *lsmrule)
 {
 	call_void_hook(audit_rule_free, lsmrule);
 }
 
+<<<<<<< HEAD
 /**
  * security_audit_rule_match() - Check if a label matches an audit rule
  * @secid: security label
@@ -5050,6 +6026,8 @@ void security_audit_rule_free(void *lsmrule)
  * Return: Returns 1 if secid matches the rule, 0 if it does not, -ERRNO on
  *         failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_audit_rule_match(u32 secid, u32 field, u32 op, void *lsmrule)
 {
 	return call_int_hook(audit_rule_match, 0, secid, field, op, lsmrule);
@@ -5057,6 +6035,7 @@ int security_audit_rule_match(u32 secid, u32 field, u32 op, void *lsmrule)
 #endif /* CONFIG_AUDIT */
 
 #ifdef CONFIG_BPF_SYSCALL
+<<<<<<< HEAD
 /**
  * security_bpf() - Check if the bpf syscall operation is allowed
  * @cmd: command
@@ -5069,10 +6048,13 @@ int security_audit_rule_match(u32 secid, u32 field, u32 op, void *lsmrule)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_bpf(int cmd, union bpf_attr *attr, unsigned int size)
 {
 	return call_int_hook(bpf, 0, cmd, attr, size);
 }
+<<<<<<< HEAD
 
 /**
  * security_bpf_map() - Check if access to a bpf map is allowed
@@ -5084,10 +6066,13 @@ int security_bpf(int cmd, union bpf_attr *attr, unsigned int size)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_bpf_map(struct bpf_map *map, fmode_t fmode)
 {
 	return call_int_hook(bpf_map, 0, map, fmode);
 }
+<<<<<<< HEAD
 
 /**
  * security_bpf_prog() - Check if access to a bpf program is allowed
@@ -5098,10 +6083,13 @@ int security_bpf_map(struct bpf_map *map, fmode_t fmode)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_bpf_prog(struct bpf_prog *prog)
 {
 	return call_int_hook(bpf_prog, 0, prog);
 }
+<<<<<<< HEAD
 
 /**
  * security_bpf_map_alloc() - Allocate a bpf map LSM blob
@@ -5111,10 +6099,13 @@ int security_bpf_prog(struct bpf_prog *prog)
  *
  * Return: Returns 0 on success, error on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_bpf_map_alloc(struct bpf_map *map)
 {
 	return call_int_hook(bpf_map_alloc_security, 0, map);
 }
+<<<<<<< HEAD
 
 /**
  * security_bpf_prog_alloc() - Allocate a bpf program LSM blob
@@ -5124,10 +6115,13 @@ int security_bpf_map_alloc(struct bpf_map *map)
  *
  * Return: Returns 0 on success, error on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_bpf_prog_alloc(struct bpf_prog_aux *aux)
 {
 	return call_int_hook(bpf_prog_alloc_security, 0, aux);
 }
+<<<<<<< HEAD
 
 /**
  * security_bpf_map_free() - Free a bpf map's LSM blob
@@ -5135,10 +6129,13 @@ int security_bpf_prog_alloc(struct bpf_prog_aux *aux)
  *
  * Clean up the security information stored inside bpf map.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_bpf_map_free(struct bpf_map *map)
 {
 	call_void_hook(bpf_map_free_security, map);
 }
+<<<<<<< HEAD
 
 /**
  * security_bpf_prog_free() - Free a bpf program's LSM blob
@@ -5146,12 +6143,15 @@ void security_bpf_map_free(struct bpf_map *map)
  *
  * Clean up the security information stored inside bpf prog.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_bpf_prog_free(struct bpf_prog_aux *aux)
 {
 	call_void_hook(bpf_prog_free_security, aux);
 }
 #endif /* CONFIG_BPF_SYSCALL */
 
+<<<<<<< HEAD
 /**
  * security_locked_down() - Check if a kernel feature is allowed
  * @what: requested kernel feature
@@ -5161,6 +6161,8 @@ void security_bpf_prog_free(struct bpf_prog_aux *aux)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_locked_down(enum lockdown_reason what)
 {
 	return call_int_hook(locked_down, 0, what);
@@ -5168,6 +6170,7 @@ int security_locked_down(enum lockdown_reason what)
 EXPORT_SYMBOL(security_locked_down);
 
 #ifdef CONFIG_PERF_EVENTS
+<<<<<<< HEAD
 /**
  * security_perf_event_open() - Check if a perf event open is allowed
  * @attr: perf event attribute
@@ -5177,11 +6180,14 @@ EXPORT_SYMBOL(security_locked_down);
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_perf_event_open(struct perf_event_attr *attr, int type)
 {
 	return call_int_hook(perf_event_open, 0, attr, type);
 }
 
+<<<<<<< HEAD
 /**
  * security_perf_event_alloc() - Allocate a perf event LSM blob
  * @event: perf event
@@ -5190,22 +6196,28 @@ int security_perf_event_open(struct perf_event_attr *attr, int type)
  *
  * Return: Returns 0 on success, error on failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_perf_event_alloc(struct perf_event *event)
 {
 	return call_int_hook(perf_event_alloc, 0, event);
 }
 
+<<<<<<< HEAD
 /**
  * security_perf_event_free() - Free a perf event LSM blob
  * @event: perf event
  *
  * Release (free) perf_event security info.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void security_perf_event_free(struct perf_event *event)
 {
 	call_void_hook(perf_event_free, event);
 }
 
+<<<<<<< HEAD
 /**
  * security_perf_event_read() - Check if reading a perf event label is allowed
  * @event: perf event
@@ -5214,11 +6226,14 @@ void security_perf_event_free(struct perf_event *event)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_perf_event_read(struct perf_event *event)
 {
 	return call_int_hook(perf_event_read, 0, event);
 }
 
+<<<<<<< HEAD
 /**
  * security_perf_event_write() - Check if writing a perf event label is allowed
  * @event: perf event
@@ -5227,6 +6242,8 @@ int security_perf_event_read(struct perf_event *event)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_perf_event_write(struct perf_event *event)
 {
 	return call_int_hook(perf_event_write, 0, event);
@@ -5234,6 +6251,7 @@ int security_perf_event_write(struct perf_event *event)
 #endif /* CONFIG_PERF_EVENTS */
 
 #ifdef CONFIG_IO_URING
+<<<<<<< HEAD
 /**
  * security_uring_override_creds() - Check if overriding creds is allowed
  * @new: new credentials
@@ -5243,11 +6261,14 @@ int security_perf_event_write(struct perf_event *event)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_uring_override_creds(const struct cred *new)
 {
 	return call_int_hook(uring_override_creds, 0, new);
 }
 
+<<<<<<< HEAD
 /**
  * security_uring_sqpoll() - Check if IORING_SETUP_SQPOLL is allowed
  *
@@ -5256,10 +6277,13 @@ int security_uring_override_creds(const struct cred *new)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_uring_sqpoll(void)
 {
 	return call_int_hook(uring_sqpoll, 0);
 }
+<<<<<<< HEAD
 
 /**
  * security_uring_cmd() - Check if a io_uring passthrough command is allowed
@@ -5269,6 +6293,8 @@ int security_uring_sqpoll(void)
  *
  * Return: Returns 0 if permission is granted.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int security_uring_cmd(struct io_uring_cmd *ioucmd)
 {
 	return call_int_hook(uring_cmd, 0, ioucmd);

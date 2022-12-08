@@ -54,7 +54,11 @@
 
 /* architecture-specific bits */
 #ifdef CONFIG_ZLIB_DFLTCC
+<<<<<<< HEAD
 #  include "../zlib_dfltcc/dfltcc_deflate.h"
+=======
+#  include "../zlib_dfltcc/dfltcc.h"
+>>>>>>> b7ba80a49124 (Commit)
 #else
 #define DEFLATE_RESET_HOOK(strm) do {} while (0)
 #define DEFLATE_HOOK(strm, flush, bstate) 0
@@ -106,7 +110,11 @@ typedef struct deflate_workspace {
     deflate_state deflate_memory;
 #ifdef CONFIG_ZLIB_DFLTCC
     /* State memory for s390 hardware deflate */
+<<<<<<< HEAD
     struct dfltcc_deflate_state dfltcc_memory;
+=======
+    struct dfltcc_state dfltcc_memory;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
     Byte *window_memory;
     Pos *prev_memory;
@@ -451,16 +459,25 @@ int zlib_deflate(
     Assert(strm->avail_out > 0, "bug2");
 
     if (flush != Z_FINISH) return Z_OK;
+<<<<<<< HEAD
 
     if (!s->noheader) {
 	/* Write zlib trailer (adler32) */
 	putShortMSB(s, (uInt)(strm->adler >> 16));
 	putShortMSB(s, (uInt)(strm->adler & 0xffff));
     }
+=======
+    if (s->noheader) return Z_STREAM_END;
+
+    /* Write the zlib trailer (adler32) */
+    putShortMSB(s, (uInt)(strm->adler >> 16));
+    putShortMSB(s, (uInt)(strm->adler & 0xffff));
+>>>>>>> b7ba80a49124 (Commit)
     flush_pending(strm);
     /* If avail_out is zero, the application will call deflate again
      * to flush the rest.
      */
+<<<<<<< HEAD
     if (!s->noheader) {
 	s->noheader = -1; /* write the trailer only once! */
     }
@@ -469,6 +486,10 @@ int zlib_deflate(
 	return Z_STREAM_END;
     }
     return Z_OK;
+=======
+    s->noheader = -1; /* write the trailer only once! */
+    return s->pending != 0 ? Z_OK : Z_STREAM_END;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* ========================================================================= */

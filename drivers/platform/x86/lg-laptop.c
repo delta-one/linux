@@ -546,7 +546,11 @@ static DEVICE_ATTR_RW(fn_lock);
 static DEVICE_ATTR_RW(charge_control_end_threshold);
 static DEVICE_ATTR_RW(battery_care_limit);
 
+<<<<<<< HEAD
 static int lg_battery_add(struct power_supply *battery, struct acpi_battery_hook *hook)
+=======
+static int lg_battery_add(struct power_supply *battery)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (device_create_file(&battery->dev,
 			       &dev_attr_charge_control_end_threshold))
@@ -555,7 +559,11 @@ static int lg_battery_add(struct power_supply *battery, struct acpi_battery_hook
 	return 0;
 }
 
+<<<<<<< HEAD
 static int lg_battery_remove(struct power_supply *battery, struct acpi_battery_hook *hook)
+=======
+static int lg_battery_remove(struct power_supply *battery)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	device_remove_file(&battery->dev,
 			   &dev_attr_charge_control_end_threshold);
@@ -761,7 +769,11 @@ out_platform_registered:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void acpi_remove(struct acpi_device *device)
+=======
+static int acpi_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	sysfs_remove_group(&pf_device->dev.kobj, &dev_attribute_group);
 
@@ -773,6 +785,11 @@ static void acpi_remove(struct acpi_device *device)
 	platform_device_unregister(pf_device);
 	pf_device = NULL;
 	platform_driver_unregister(&pf_driver);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id device_ids[] = {

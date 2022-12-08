@@ -257,7 +257,11 @@ static void as3935_event_work(struct work_struct *work)
 
 	switch (val) {
 	case AS3935_EVENT_INT:
+<<<<<<< HEAD
 		iio_trigger_poll_nested(st->trig);
+=======
+		iio_trigger_poll_chained(st->trig);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case AS3935_DISTURB_INT:
 	case AS3935_NOISE_INT:

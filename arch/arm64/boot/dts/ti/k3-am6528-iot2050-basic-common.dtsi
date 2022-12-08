@@ -50,7 +50,10 @@
 };
 
 &main_uart0 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_uart0_pins_default>;
 };

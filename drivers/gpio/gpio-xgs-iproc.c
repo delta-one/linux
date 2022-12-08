@@ -11,7 +11,10 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/seq_file.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/spinlock.h>
 
 #define IPROC_CCA_INT_F_GPIOINT		BIT(0)
@@ -28,6 +31,10 @@
 #define IPROC_GPIO_CCA_INT_EDGE		0x24
 
 struct iproc_gpio_chip {
+<<<<<<< HEAD
+=======
+	struct irq_chip irqchip;
+>>>>>>> b7ba80a49124 (Commit)
 	struct gpio_chip gc;
 	spinlock_t lock;
 	struct device *dev;
@@ -69,7 +76,10 @@ static void iproc_gpio_irq_unmask(struct irq_data *d)
 	u32 irq = d->irq;
 	u32 int_mask, irq_type, event_mask;
 
+<<<<<<< HEAD
 	gpiochip_enable_irq(gc, pin);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_irqsave(&chip->lock, flags);
 	irq_type = irq_get_trigger_type(irq);
 	event_mask = readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
@@ -111,7 +121,10 @@ static void iproc_gpio_irq_mask(struct irq_data *d)
 			       chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
 	}
 	spin_unlock_irqrestore(&chip->lock, flags);
+<<<<<<< HEAD
 	gpiochip_disable_irq(gc, pin);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int iproc_gpio_irq_set_type(struct irq_data *d, u32 type)
@@ -193,6 +206,7 @@ static irqreturn_t iproc_gpio_irq_handler(int irq, void *data)
 	return int_bits ? IRQ_HANDLED : IRQ_NONE;
 }
 
+<<<<<<< HEAD
 static void iproc_gpio_irq_print_chip(struct irq_data *d, struct seq_file *p)
 {
 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
@@ -211,6 +225,8 @@ static const struct irq_chip iproc_gpio_irq_chip = {
 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int iproc_gpio_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
@@ -250,8 +266,21 @@ static int iproc_gpio_probe(struct platform_device *pdev)
 	irq = platform_get_irq(pdev, 0);
 	if (irq > 0) {
 		struct gpio_irq_chip *girq;
+<<<<<<< HEAD
 		u32 val;
 
+=======
+		struct irq_chip *irqc;
+		u32 val;
+
+		irqc = &chip->irqchip;
+		irqc->name = dev_name(dev);
+		irqc->irq_ack = iproc_gpio_irq_ack;
+		irqc->irq_mask = iproc_gpio_irq_mask;
+		irqc->irq_unmask = iproc_gpio_irq_unmask;
+		irqc->irq_set_type = iproc_gpio_irq_set_type;
+
+>>>>>>> b7ba80a49124 (Commit)
 		chip->intr = devm_platform_ioremap_resource(pdev, 1);
 		if (IS_ERR(chip->intr))
 			return PTR_ERR(chip->intr);
@@ -273,7 +302,11 @@ static int iproc_gpio_probe(struct platform_device *pdev)
 		}
 
 		girq = &chip->gc.irq;
+<<<<<<< HEAD
 		gpio_irq_chip_set_chip(girq, &iproc_gpio_irq_chip);
+=======
+		girq->chip = irqc;
+>>>>>>> b7ba80a49124 (Commit)
 		/* This will let us handle the parent IRQ in the driver */
 		girq->parent_handler = NULL;
 		girq->num_parents = 0;

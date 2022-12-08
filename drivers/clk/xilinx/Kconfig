@@ -2,7 +2,11 @@
 
 config XILINX_VCU
 	tristate "Xilinx VCU logicoreIP Init"
+<<<<<<< HEAD
 	depends on HAS_IOMEM
+=======
+	depends on HAS_IOMEM && COMMON_CLK
+>>>>>>> b7ba80a49124 (Commit)
 	select REGMAP_MMIO
 	help
 	  Provides the driver to enable and disable the isolation between the
@@ -19,8 +23,12 @@ config XILINX_VCU
 
 config COMMON_CLK_XLNX_CLKWZRD
 	tristate "Xilinx Clocking Wizard"
+<<<<<<< HEAD
 	depends on OF
 	depends on HAS_IOMEM
+=======
+	depends on COMMON_CLK && OF
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Support for the Xilinx Clocking Wizard IP core clock generator.
 	  Adds support for clocking wizard and compatible.

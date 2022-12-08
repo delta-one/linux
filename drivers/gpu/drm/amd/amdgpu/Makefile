@@ -34,7 +34,10 @@ ccflags-y := -I$(FULL_AMD_PATH)/include/asic_reg \
 	-I$(FULL_AMD_PATH)/acp/include \
 	-I$(FULL_AMD_DISPLAY_PATH) \
 	-I$(FULL_AMD_DISPLAY_PATH)/include \
+<<<<<<< HEAD
 	-I$(FULL_AMD_DISPLAY_PATH)/modules/inc \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	-I$(FULL_AMD_DISPLAY_PATH)/dc \
 	-I$(FULL_AMD_DISPLAY_PATH)/amdgpu_dm \
 	-I$(FULL_AMD_PATH)/amdkfd
@@ -54,13 +57,21 @@ amdgpu-y += amdgpu_device.o amdgpu_kms.o \
 	amdgpu_ucode.o amdgpu_bo_list.o amdgpu_ctx.o amdgpu_sync.o \
 	amdgpu_gtt_mgr.o amdgpu_preempt_mgr.o amdgpu_vram_mgr.o amdgpu_virt.o \
 	amdgpu_atomfirmware.o amdgpu_vf_error.o amdgpu_sched.o \
+<<<<<<< HEAD
 	amdgpu_debugfs.o amdgpu_ids.o amdgpu_gmc.o amdgpu_mmhub.o amdgpu_hdp.o \
+=======
+	amdgpu_debugfs.o amdgpu_ids.o amdgpu_gmc.o \
+>>>>>>> b7ba80a49124 (Commit)
 	amdgpu_xgmi.o amdgpu_csa.o amdgpu_ras.o amdgpu_vm_cpu.o \
 	amdgpu_vm_sdma.o amdgpu_discovery.o amdgpu_ras_eeprom.o amdgpu_nbio.o \
 	amdgpu_umc.o smu_v11_0_i2c.o amdgpu_fru_eeprom.o amdgpu_rap.o \
 	amdgpu_fw_attestation.o amdgpu_securedisplay.o \
+<<<<<<< HEAD
 	amdgpu_eeprom.o amdgpu_mca.o amdgpu_psp_ta.o amdgpu_lsdma.o \
 	amdgpu_ring_mux.o
+=======
+	amdgpu_eeprom.o amdgpu_mca.o amdgpu_psp_ta.o amdgpu_lsdma.o
+>>>>>>> b7ba80a49124 (Commit)
 
 amdgpu-$(CONFIG_PROC_FS) += amdgpu_fdinfo.o
 
@@ -77,13 +88,21 @@ amdgpu-y += \
 	vi.o mxgpu_vi.o nbio_v6_1.o soc15.o emu_soc.o mxgpu_ai.o nbio_v7_0.o vega10_reg_init.o \
 	vega20_reg_init.o nbio_v7_4.o nbio_v2_3.o nv.o arct_reg_init.o mxgpu_nv.o \
 	nbio_v7_2.o hdp_v4_0.o hdp_v5_0.o aldebaran_reg_init.o aldebaran.o soc21.o \
+<<<<<<< HEAD
 	sienna_cichlid.o smu_v13_0_10.o nbio_v4_3.o hdp_v6_0.o nbio_v7_7.o hdp_v5_2.o lsdma_v6_0.o
+=======
+	sienna_cichlid.o nbio_v4_3.o hdp_v6_0.o nbio_v7_7.o hdp_v5_2.o lsdma_v6_0.o
+>>>>>>> b7ba80a49124 (Commit)
 
 # add DF block
 amdgpu-y += \
 	df_v1_7.o \
+<<<<<<< HEAD
 	df_v3_6.o \
 	df_v4_3.o
+=======
+	df_v3_6.o
+>>>>>>> b7ba80a49124 (Commit)
 
 # add GMC block
 amdgpu-y += \
@@ -138,7 +157,10 @@ amdgpu-y += \
 	gfx_v10_0.o \
 	imu_v11_0.o \
 	gfx_v11_0.o \
+<<<<<<< HEAD
 	gfx_v11_0_3.o \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	imu_v11_0_3.o
 
 # add async DMA block
@@ -148,7 +170,10 @@ amdgpu-y += \
 	sdma_v3_0.o \
 	sdma_v4_0.o \
 	sdma_v4_4.o \
+<<<<<<< HEAD
 	sdma_v4_4_2.o \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sdma_v5_0.o \
 	sdma_v5_2.o \
 	sdma_v6_0.o
@@ -255,7 +280,11 @@ endif
 amdgpu-$(CONFIG_COMPAT) += amdgpu_ioc32.o
 amdgpu-$(CONFIG_VGA_SWITCHEROO) += amdgpu_atpx_handler.o
 amdgpu-$(CONFIG_ACPI) += amdgpu_acpi.o
+<<<<<<< HEAD
 amdgpu-$(CONFIG_HMM_MIRROR) += amdgpu_hmm.o
+=======
+amdgpu-$(CONFIG_HMM_MIRROR) += amdgpu_mn.o
+>>>>>>> b7ba80a49124 (Commit)
 
 include $(FULL_AMD_PATH)/pm/Makefile
 

@@ -38,7 +38,10 @@ struct xdp_umem {
 struct xsk_map {
 	struct bpf_map map;
 	spinlock_t lock; /* Synchronize map updates */
+<<<<<<< HEAD
 	atomic_t count;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdp_sock __rcu *xsk_map[];
 };
 

@@ -123,7 +123,11 @@ int main(int ac, char **argv)
 	int i, j = 0;
 	FILE *f;
 
+<<<<<<< HEAD
 	snprintf(filename, sizeof(filename), "%s.bpf.o", argv[0]);
+=======
+	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+>>>>>>> b7ba80a49124 (Commit)
 	obj = bpf_object__open_file(filename, NULL);
 	if (libbpf_get_error(obj)) {
 		fprintf(stderr, "ERROR: opening BPF object file failed\n");
@@ -146,8 +150,12 @@ int main(int ac, char **argv)
 	signal(SIGINT, int_exit);
 	signal(SIGTERM, int_exit);
 
+<<<<<<< HEAD
 	/* start 'ping' in the background to have some kfree_skb_reason
 	 * events */
+=======
+	/* start 'ping' in the background to have some kfree_skb events */
+>>>>>>> b7ba80a49124 (Commit)
 	f = popen("ping -4 -c5 localhost", "r");
 	(void) f;
 

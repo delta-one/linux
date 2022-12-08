@@ -14,7 +14,11 @@
 #include <linux/delay.h>
 #include "pci.h"
 
+<<<<<<< HEAD
 #define VIRTFN_ID_LEN	17	/* "virtfn%u\0" for 2^32 - 1 */
+=======
+#define VIRTFN_ID_LEN	16
+>>>>>>> b7ba80a49124 (Commit)
 
 int pci_iov_virtfn_bus(struct pci_dev *dev, int vf_id)
 {

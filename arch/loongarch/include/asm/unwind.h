@@ -8,9 +8,13 @@
 #define _ASM_UNWIND_H
 
 #include <linux/sched.h>
+<<<<<<< HEAD
 #include <linux/ftrace.h>
 
 #include <asm/ptrace.h>
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/stacktrace.h>
 
 enum unwinder_type {
@@ -22,6 +26,7 @@ struct unwind_state {
 	char type; /* UNWINDER_XXX */
 	struct stack_info stack_info;
 	struct task_struct *task;
+<<<<<<< HEAD
 	bool first, error, reset;
 	int graph_idx;
 	unsigned long sp, pc, ra;
@@ -29,6 +34,12 @@ struct unwind_state {
 
 bool default_next_frame(struct unwind_state *state);
 
+=======
+	bool first, error;
+	unsigned long sp, pc, ra;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 void unwind_start(struct unwind_state *state,
 		  struct task_struct *task, struct pt_regs *regs);
 bool unwind_next_frame(struct unwind_state *state);
@@ -44,6 +55,7 @@ static inline bool unwind_error(struct unwind_state *state)
 	return state->error;
 }
 
+<<<<<<< HEAD
 #define GRAPH_FAKE_OFFSET (sizeof(struct pt_regs) - offsetof(struct pt_regs, regs[1]))
 
 static inline unsigned long unwind_graph_addr(struct unwind_state *state,
@@ -79,4 +91,6 @@ static __always_inline unsigned long __unwind_get_return_address(struct unwind_s
 {
 	return unwind_done(state) ? 0 : state->pc;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_UNWIND_H */

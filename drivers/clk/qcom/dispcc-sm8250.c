@@ -462,6 +462,7 @@ static struct clk_branch disp_cc_mdss_edp_link_clk = {
 	},
 };
 
+<<<<<<< HEAD
 static struct clk_regmap_div disp_cc_mdss_edp_link_div_clk_src = {
 	.reg = 0x2288,
 	.shift = 0,
@@ -476,6 +477,8 @@ static struct clk_regmap_div disp_cc_mdss_edp_link_div_clk_src = {
 	},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct clk_branch disp_cc_mdss_edp_link_intf_clk = {
 	.halt_reg = 0x2074,
 	.halt_check = BRANCH_HALT,
@@ -485,7 +488,11 @@ static struct clk_branch disp_cc_mdss_edp_link_intf_clk = {
 		.hw.init = &(struct clk_init_data){
 			.name = "disp_cc_mdss_edp_link_intf_clk",
 			.parent_hws = (const struct clk_hw*[]){
+<<<<<<< HEAD
 				&disp_cc_mdss_edp_link_div_clk_src.clkr.hw,
+=======
+				&disp_cc_mdss_edp_link_clk_src.clkr.hw,
+>>>>>>> b7ba80a49124 (Commit)
 			},
 			.num_parents = 1,
 			.flags = CLK_GET_RATE_NOCACHE,
@@ -1151,7 +1158,11 @@ static struct gdsc mdss_gdsc = {
 		.name = "mdss_gdsc",
 	},
 	.pwrsts = PWRSTS_OFF_ON,
+<<<<<<< HEAD
 	.flags = HW_CTRL | RETAIN_FF_ENABLE,
+=======
+	.flags = HW_CTRL,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct clk_regmap *disp_cc_sm8250_clocks[] = {
@@ -1189,7 +1200,10 @@ static struct clk_regmap *disp_cc_sm8250_clocks[] = {
 	[DISP_CC_MDSS_EDP_GTC_CLK_SRC] = &disp_cc_mdss_edp_gtc_clk_src.clkr,
 	[DISP_CC_MDSS_EDP_LINK_CLK] = &disp_cc_mdss_edp_link_clk.clkr,
 	[DISP_CC_MDSS_EDP_LINK_CLK_SRC] = &disp_cc_mdss_edp_link_clk_src.clkr,
+<<<<<<< HEAD
 	[DISP_CC_MDSS_EDP_LINK_DIV_CLK_SRC] = &disp_cc_mdss_edp_link_div_clk_src.clkr,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	[DISP_CC_MDSS_EDP_LINK_INTF_CLK] = &disp_cc_mdss_edp_link_intf_clk.clkr,
 	[DISP_CC_MDSS_EDP_PIXEL_CLK] = &disp_cc_mdss_edp_pixel_clk.clkr,
 	[DISP_CC_MDSS_EDP_PIXEL_CLK_SRC] = &disp_cc_mdss_edp_pixel_clk_src.clkr,
@@ -1251,12 +1265,26 @@ static const struct of_device_id disp_cc_sm8250_match_table[] = {
 };
 MODULE_DEVICE_TABLE(of, disp_cc_sm8250_match_table);
 
+<<<<<<< HEAD
+=======
+static void disp_cc_sm8250_pm_runtime_disable(void *data)
+{
+	pm_runtime_disable(data);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int disp_cc_sm8250_probe(struct platform_device *pdev)
 {
 	struct regmap *regmap;
 	int ret;
 
+<<<<<<< HEAD
 	ret = devm_pm_runtime_enable(&pdev->dev);
+=======
+	pm_runtime_enable(&pdev->dev);
+
+	ret = devm_add_action_or_reset(&pdev->dev, disp_cc_sm8250_pm_runtime_disable, &pdev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -1282,6 +1310,7 @@ static int disp_cc_sm8250_probe(struct platform_device *pdev)
 		disp_cc_pll1_config.config_ctl_hi1_val = 0x00000024;
 		disp_cc_pll1_config.user_ctl_hi1_val = 0x000000D0;
 		disp_cc_pll1_init.ops = &clk_alpha_pll_trion_ops;
+<<<<<<< HEAD
 
 		disp_cc_mdss_dp_link_intf_clk.clkr.hw.init->parent_hws[0] =
 			&disp_cc_mdss_dp_link_clk_src.clkr.hw;
@@ -1293,6 +1322,8 @@ static int disp_cc_sm8250_probe(struct platform_device *pdev)
 		disp_cc_sm8250_clocks[DISP_CC_MDSS_DP_LINK1_DIV_CLK_SRC] = NULL;
 		disp_cc_sm8250_clocks[DISP_CC_MDSS_DP_LINK_DIV_CLK_SRC] = NULL;
 		disp_cc_sm8250_clocks[DISP_CC_MDSS_EDP_LINK_DIV_CLK_SRC] = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (of_device_is_compatible(pdev->dev.of_node, "qcom,sm8350-dispcc")) {
 		static struct clk_rcg2 * const rcgs[] = {
 			&disp_cc_mdss_byte0_clk_src,
@@ -1304,11 +1335,15 @@ static int disp_cc_sm8250_probe(struct platform_device *pdev)
 			&disp_cc_mdss_dp_pixel1_clk_src,
 			&disp_cc_mdss_dp_pixel2_clk_src,
 			&disp_cc_mdss_dp_pixel_clk_src,
+<<<<<<< HEAD
 			&disp_cc_mdss_edp_aux_clk_src,
 			&disp_cc_mdss_edp_link_clk_src,
 			&disp_cc_mdss_edp_pixel_clk_src,
 			&disp_cc_mdss_esc0_clk_src,
 			&disp_cc_mdss_esc1_clk_src,
+=======
+			&disp_cc_mdss_esc0_clk_src,
+>>>>>>> b7ba80a49124 (Commit)
 			&disp_cc_mdss_mdp_clk_src,
 			&disp_cc_mdss_pclk0_clk_src,
 			&disp_cc_mdss_pclk1_clk_src,
@@ -1320,7 +1355,10 @@ static int disp_cc_sm8250_probe(struct platform_device *pdev)
 			&disp_cc_mdss_byte1_div_clk_src,
 			&disp_cc_mdss_dp_link1_div_clk_src,
 			&disp_cc_mdss_dp_link_div_clk_src,
+<<<<<<< HEAD
 			&disp_cc_mdss_edp_link_div_clk_src,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 		unsigned int i;
 		static bool offset_applied;
@@ -1354,9 +1392,12 @@ static int disp_cc_sm8250_probe(struct platform_device *pdev)
 		disp_cc_pll1_config.test_ctl_hi1_val = 0x01800000;
 		disp_cc_pll1_init.ops = &clk_alpha_pll_lucid_5lpe_ops;
 		disp_cc_pll1.vco_table = lucid_5lpe_vco;
+<<<<<<< HEAD
 
 		disp_cc_sm8250_clocks[DISP_CC_MDSS_EDP_GTC_CLK] = NULL;
 		disp_cc_sm8250_clocks[DISP_CC_MDSS_EDP_GTC_CLK_SRC] = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	clk_lucid_pll_configure(&disp_cc_pll0, regmap, &disp_cc_pll0_config);

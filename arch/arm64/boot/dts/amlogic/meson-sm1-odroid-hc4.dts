@@ -76,6 +76,7 @@
 };
 
 &cpu_thermal {
+<<<<<<< HEAD
 	trips {
 		cpu_active: cpu-active {
 			temperature = <60000>; /* millicelsius */
@@ -87,6 +88,11 @@
 	cooling-maps {
 		map {
 			trip = <&cpu_active>;
+=======
+	cooling-maps {
+		map {
+			trip = <&cpu_passive>;
+>>>>>>> b7ba80a49124 (Commit)
 			cooling-device = <&fan0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 		};
 	};
@@ -139,6 +145,15 @@
 };
 
 &usb {
+<<<<<<< HEAD
 	phys = <&usb2_phy0>, <&usb2_phy1>;
 	phy-names = "usb2-phy0", "usb2-phy1";
+=======
+	phys = <&usb2_phy1>;
+	phy-names = "usb2-phy1";
+};
+
+&usb2_phy0 {
+	status = "disabled";
+>>>>>>> b7ba80a49124 (Commit)
 };

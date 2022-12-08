@@ -35,7 +35,11 @@
 
 #endif
 
+<<<<<<< HEAD
 #if defined(__GNUC__)
+=======
+#if defined(__GNUC__) && !defined(__INTEL_COMPILER)
+>>>>>>> b7ba80a49124 (Commit)
 #include "acgccex.h"
 
 #elif defined(_MSC_VER)

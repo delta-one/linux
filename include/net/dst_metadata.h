@@ -26,7 +26,10 @@ struct macsec_info {
 struct xfrm_md_info {
 	u32 if_id;
 	int link;
+<<<<<<< HEAD
 	struct dst_entry *dst_orig;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct metadata_dst {

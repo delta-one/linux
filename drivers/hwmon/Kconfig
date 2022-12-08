@@ -67,6 +67,7 @@ config SENSORS_ABITUGURU3
 	  This driver can also be built as a module. If so, the module
 	  will be called abituguru3.
 
+<<<<<<< HEAD
 config SENSORS_SMPRO
 	tristate "Ampere's Altra SMpro hardware monitoring driver"
 	depends on MFD_SMPRO
@@ -75,6 +76,8 @@ config SENSORS_SMPRO
 	  current and power sensors of Ampere's Altra processor family SoC
 	  with SMpro co-processor.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SENSORS_AD7314
 	tristate "Analog Devices AD7314 and compatibles"
 	depends on SPI
@@ -714,6 +717,7 @@ config SENSORS_GPIO_FAN
 	  This driver can also be built as a module. If so, the module
 	  will be called gpio-fan.
 
+<<<<<<< HEAD
 config SENSORS_GXP_FAN_CTRL
 	tristate "HPE GXP fan controller"
 	depends on ARCH_HPE_GXP || COMPILE_TEST
@@ -723,6 +727,8 @@ config SENSORS_GXP_FAN_CTRL
 	  The GXP controls fan function via the CPLD through the use of PWM
 	  registers. This driver reports status and pwm setting of the fans.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SENSORS_HIH6130
 	tristate "Honeywell Humidicon HIH-6130 humidity/temperature sensor"
 	depends on I2C
@@ -816,7 +822,10 @@ config SENSORS_IT87
 config SENSORS_JC42
 	tristate "JEDEC JC42.4 compliant memory module temperature sensors"
 	depends on I2C
+<<<<<<< HEAD
 	select REGMAP_I2C
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  If you say yes here, you get support for JEDEC JC42.4 compliant
 	  temperature sensors, which are used on many DDR3 memory modules for
@@ -1175,6 +1184,7 @@ config SENSORS_MAX31790
 	  This driver can also be built as a module. If so, the module
 	  will be called max31790.
 
+<<<<<<< HEAD
 config SENSORS_MC34VR500
 	tristate "NXP MC34VR500 hardware monitoring driver"
 	depends on I2C
@@ -1182,6 +1192,8 @@ config SENSORS_MC34VR500
 	  If you say yes here you get support for the temperature and input
 	  voltage sensors of the NXP MC34VR500.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SENSORS_MCP3021
 	tristate "Microchip MCP3021 and compatibles"
 	depends on I2C
@@ -1532,7 +1544,11 @@ config SENSORS_NCT6775_CORE
 config SENSORS_NCT6775
 	tristate "Platform driver for Nuvoton NCT6775F and compatibles"
 	depends on !PPC
+<<<<<<< HEAD
 	depends on ACPI || ACPI=n
+=======
+	depends on ACPI_WMI || ACPI_WMI=n
+>>>>>>> b7ba80a49124 (Commit)
 	select HWMON_VID
 	select SENSORS_NCT6775_CORE
 	help
@@ -1632,6 +1648,7 @@ config SENSORS_NZXT_SMART2
 
 source "drivers/hwmon/occ/Kconfig"
 
+<<<<<<< HEAD
 config SENSORS_OXP
 	tristate "OneXPlayer EC fan control"
 	depends on ACPI
@@ -1643,6 +1660,8 @@ config SENSORS_OXP
 
 		Can also be built as a module. In that case it will be called oxp-sensors.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SENSORS_PCF8591
 	tristate "Philips PCF8591 ADC/DAC"
 	depends on I2C
@@ -1765,6 +1784,26 @@ config SENSORS_SHTC1
 	  This driver can also be built as a module. If so, the module
 	  will be called shtc1.
 
+<<<<<<< HEAD
+=======
+config SENSORS_S3C
+	tristate "Samsung built-in ADC"
+	depends on S3C_ADC
+	help
+	  If you say yes here you get support for the on-board ADCs of
+	  the Samsung S3C24XX, S3C64XX and other series of SoC
+
+	  This driver can also be built as a module. If so, the module
+	  will be called s3c-hwmon.
+
+config SENSORS_S3C_RAW
+	bool "Include raw channel attributes in sysfs"
+	depends on SENSORS_S3C
+	help
+	  Say Y here if you want to include raw copies of all the ADC
+	  channels in sysfs.
+
+>>>>>>> b7ba80a49124 (Commit)
 config SENSORS_SIS5595
 	tristate "Silicon Integrated Systems Corp. SiS5595"
 	depends on PCI
@@ -2340,7 +2379,11 @@ config SENSORS_XGENE
 
 config SENSORS_INTEL_M10_BMC_HWMON
 	tristate "Intel MAX10 BMC Hardware Monitoring"
+<<<<<<< HEAD
 	depends on MFD_INTEL_M10_BMC_CORE
+=======
+	depends on MFD_INTEL_M10_BMC
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This driver provides support for the hardware monitoring functionality
 	  on Intel MAX10 BMC chip.

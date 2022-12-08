@@ -78,6 +78,10 @@ void arch_cpu_idle(void)
 		arm_pm_idle();
 	else
 		cpu_do_idle();
+<<<<<<< HEAD
+=======
+	raw_local_irq_enable();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void arch_cpu_idle_prepare(void)
@@ -315,7 +319,11 @@ static int __init gate_vma_init(void)
 	gate_vma.vm_page_prot = PAGE_READONLY_EXEC;
 	gate_vma.vm_start = 0xffff0000;
 	gate_vma.vm_end	= 0xffff0000 + PAGE_SIZE;
+<<<<<<< HEAD
 	vm_flags_init(&gate_vma, VM_READ | VM_EXEC | VM_MAYREAD | VM_MAYEXEC);
+=======
+	gate_vma.vm_flags = VM_READ | VM_EXEC | VM_MAYREAD | VM_MAYEXEC;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 arch_initcall(gate_vma_init);
@@ -370,7 +378,11 @@ static unsigned long sigpage_addr(const struct mm_struct *mm,
 
 	slots = ((last - first) >> PAGE_SHIFT) + 1;
 
+<<<<<<< HEAD
 	offset = get_random_u32_below(slots);
+=======
+	offset = get_random_int() % slots;
+>>>>>>> b7ba80a49124 (Commit)
 
 	addr = first + (offset << PAGE_SHIFT);
 

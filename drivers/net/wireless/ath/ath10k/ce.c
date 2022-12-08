@@ -77,6 +77,48 @@ static inline u32 shadow_sr_wr_ind_addr(struct ath10k *ar,
 	return addr;
 }
 
+<<<<<<< HEAD
+=======
+static inline u32 shadow_dst_wr_ind_addr(struct ath10k *ar,
+					 struct ath10k_ce_pipe *ce_state)
+{
+	u32 ce_id = ce_state->id;
+	u32 addr = 0;
+
+	switch (ce_id) {
+	case 1:
+		addr = 0x00032034;
+		break;
+	case 2:
+		addr = 0x00032038;
+		break;
+	case 5:
+		addr = 0x00032044;
+		break;
+	case 7:
+		addr = 0x0003204C;
+		break;
+	case 8:
+		addr = 0x00032050;
+		break;
+	case 9:
+		addr = 0x00032054;
+		break;
+	case 10:
+		addr = 0x00032058;
+		break;
+	case 11:
+		addr = 0x0003205C;
+		break;
+	default:
+		ath10k_warn(ar, "invalid CE id: %d", ce_id);
+		break;
+	}
+
+	return addr;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline unsigned int
 ath10k_set_ring_byte(unsigned int offset,
 		     struct ath10k_hw_ce_regs_addr_map *addr_map)
@@ -169,6 +211,17 @@ ath10k_ce_shadow_src_ring_write_index_set(struct ath10k *ar,
 	ath10k_ce_write32(ar, shadow_sr_wr_ind_addr(ar, ce_state), value);
 }
 
+<<<<<<< HEAD
+=======
+static inline void
+ath10k_ce_shadow_dest_ring_write_index_set(struct ath10k *ar,
+					   struct ath10k_ce_pipe *ce_state,
+					   unsigned int value)
+{
+	ath10k_ce_write32(ar, shadow_dst_wr_ind_addr(ar, ce_state), value);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void ath10k_ce_src_ring_base_addr_set(struct ath10k *ar,
 						    u32 ce_id,
 						    u64 addr)
@@ -399,6 +452,22 @@ static inline void ath10k_ce_watermark_intr_disable(struct ath10k *ar,
 			  host_ie_addr & ~(wm_regs->wm_mask));
 }
 
+<<<<<<< HEAD
+=======
+static inline void ath10k_ce_error_intr_enable(struct ath10k *ar,
+					       u32 ce_ctrl_addr)
+{
+	struct ath10k_hw_ce_misc_regs *misc_regs = ar->hw_ce_regs->misc_regs;
+
+	u32 misc_ie_addr = ath10k_ce_read32(ar, ce_ctrl_addr +
+					    ar->hw_ce_regs->misc_ie_addr);
+
+	ath10k_ce_write32(ar,
+			  ce_ctrl_addr + ar->hw_ce_regs->misc_ie_addr,
+			  misc_ie_addr | misc_regs->err_mask);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void ath10k_ce_error_intr_disable(struct ath10k *ar,
 						u32 ce_ctrl_addr)
 {
@@ -1263,7 +1332,11 @@ EXPORT_SYMBOL(ath10k_ce_per_engine_service);
 /*
  * Handler for per-engine interrupts on ALL active CEs.
  * This is used in cases where the system is sharing a
+<<<<<<< HEAD
  * single interrupt for all CEs
+=======
+ * single interrput for all CEs
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 void ath10k_ce_per_engine_service_any(struct ath10k *ar)

@@ -14,10 +14,15 @@
 #include <sys/auxv.h>
 #include <sys/mman.h>
 #include <sys/shm.h>
+<<<<<<< HEAD
 #include <sys/ptrace.h>
 #include <sys/syscall.h>
 #include <sys/wait.h>
 #include <sys/uio.h>
+=======
+#include <sys/syscall.h>
+#include <sys/wait.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "../kselftest.h" /* For __cpuid_count() */
 
@@ -585,6 +590,7 @@ static void test_dynamic_state(void)
 	_exit(0);
 }
 
+<<<<<<< HEAD
 static inline int __compare_tiledata_state(struct xsave_buffer *xbuf1, struct xsave_buffer *xbuf2)
 {
 	return memcmp(&xbuf1->bytes[xtiledata.xbuf_offset],
@@ -592,6 +598,8 @@ static inline int __compare_tiledata_state(struct xsave_buffer *xbuf1, struct xs
 		      xtiledata.size);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Save current register state and compare it to @xbuf1.'
  *
@@ -608,7 +616,13 @@ static inline bool __validate_tiledata_regs(struct xsave_buffer *xbuf1)
 		fatal_error("failed to allocate XSAVE buffer\n");
 
 	xsave(xbuf2, XFEATURE_MASK_XTILEDATA);
+<<<<<<< HEAD
 	ret = __compare_tiledata_state(xbuf1, xbuf2);
+=======
+	ret = memcmp(&xbuf1->bytes[xtiledata.xbuf_offset],
+		     &xbuf2->bytes[xtiledata.xbuf_offset],
+		     xtiledata.size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	free(xbuf2);
 
@@ -833,6 +847,7 @@ static void test_context_switch(void)
 	free(finfo);
 }
 
+<<<<<<< HEAD
 /* Ptrace test */
 
 /*
@@ -926,6 +941,8 @@ static void test_ptrace(void)
 		err(1, "ptrace test");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int main(void)
 {
 	/* Check hardware availability at first */
@@ -946,8 +963,11 @@ int main(void)
 	ctxtswtest_config.num_threads = 5;
 	test_context_switch();
 
+<<<<<<< HEAD
 	test_ptrace();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	clearhandler(SIGILL);
 	free_stashed_xsave();
 

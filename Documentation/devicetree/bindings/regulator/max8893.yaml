@@ -25,7 +25,11 @@ properties:
 
     patternProperties:
       "^(ldo[1-5]|buck)$":
+<<<<<<< HEAD
         $ref: regulator.yaml#
+=======
+        $ref: "regulator.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
     additionalProperties: false
 

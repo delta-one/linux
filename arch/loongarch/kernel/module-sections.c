@@ -6,6 +6,7 @@
 #include <linux/elf.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/ftrace.h>
 
 Elf_Addr module_emit_got_entry(struct module *mod, Elf_Shdr *sechdrs, Elf_Addr val)
@@ -35,11 +36,19 @@ Elf_Addr module_emit_got_entry(struct module *mod, Elf_Shdr *sechdrs, Elf_Addr v
 }
 
 Elf_Addr module_emit_plt_entry(struct module *mod, Elf_Shdr *sechdrs, Elf_Addr val)
+=======
+
+Elf_Addr module_emit_plt_entry(struct module *mod, unsigned long val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nr;
 	struct mod_section *plt_sec = &mod->arch.plt;
 	struct mod_section *plt_idx_sec = &mod->arch.plt_idx;
+<<<<<<< HEAD
 	struct plt_entry *plt = get_plt_entry(val, sechdrs, plt_sec, plt_idx_sec);
+=======
+	struct plt_entry *plt = get_plt_entry(val, plt_sec, plt_idx_sec);
+>>>>>>> b7ba80a49124 (Commit)
 	struct plt_idx_entry *plt_idx;
 
 	if (plt)
@@ -48,9 +57,15 @@ Elf_Addr module_emit_plt_entry(struct module *mod, Elf_Shdr *sechdrs, Elf_Addr v
 	nr = plt_sec->num_entries;
 
 	/* There is no duplicate entry, create a new one */
+<<<<<<< HEAD
 	plt = (struct plt_entry *)sechdrs[plt_sec->shndx].sh_addr;
 	plt[nr] = emit_plt_entry(val);
 	plt_idx = (struct plt_idx_entry *)sechdrs[plt_idx_sec->shndx].sh_addr;
+=======
+	plt = (struct plt_entry *)plt_sec->shdr->sh_addr;
+	plt[nr] = emit_plt_entry(val);
+	plt_idx = (struct plt_idx_entry *)plt_idx_sec->shdr->sh_addr;
+>>>>>>> b7ba80a49124 (Commit)
 	plt_idx[nr] = emit_plt_idx_entry(val);
 
 	plt_sec->num_entries++;
@@ -77,13 +92,18 @@ static bool duplicate_rela(const Elf_Rela *rela, int idx)
 	return false;
 }
 
+<<<<<<< HEAD
 static void count_max_entries(Elf_Rela *relas, int num,
 			      unsigned int *plts, unsigned int *gots)
+=======
+static void count_max_entries(Elf_Rela *relas, int num, unsigned int *plts)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int i, type;
 
 	for (i = 0; i < num; i++) {
 		type = ELF_R_TYPE(relas[i].r_info);
+<<<<<<< HEAD
 		switch (type) {
 		case R_LARCH_SOP_PUSH_PLT_PCREL:
 		case R_LARCH_B26:
@@ -96,6 +116,11 @@ static void count_max_entries(Elf_Rela *relas, int num,
 			break;
 		default:
 			break; /* Do nothing. */
+=======
+		if (type == R_LARCH_SOP_PUSH_PLT_PCREL) {
+			if (!duplicate_rela(relas, i))
+				(*plts)++;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }
@@ -103,13 +128,18 @@ static void count_max_entries(Elf_Rela *relas, int num,
 int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
 			      char *secstrings, struct module *mod)
 {
+<<<<<<< HEAD
 	unsigned int i, num_plts = 0, num_gots = 0;
 	Elf_Shdr *got_sec, *plt_sec, *plt_idx_sec, *tramp = NULL;
+=======
+	unsigned int i, num_plts = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Find the empty .plt sections.
 	 */
 	for (i = 0; i < ehdr->e_shnum; i++) {
+<<<<<<< HEAD
 		if (!strcmp(secstrings + sechdrs[i].sh_name, ".got"))
 			mod->arch.got.shndx = i;
 		else if (!strcmp(secstrings + sechdrs[i].sh_name, ".plt"))
@@ -129,6 +159,19 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
 		return -ENOEXEC;
 	}
 	if (!mod->arch.plt_idx.shndx) {
+=======
+		if (!strcmp(secstrings + sechdrs[i].sh_name, ".plt"))
+			mod->arch.plt.shdr = sechdrs + i;
+		else if (!strcmp(secstrings + sechdrs[i].sh_name, ".plt.idx"))
+			mod->arch.plt_idx.shdr = sechdrs + i;
+	}
+
+	if (!mod->arch.plt.shdr) {
+		pr_err("%s: module PLT section(s) missing\n", mod->name);
+		return -ENOEXEC;
+	}
+	if (!mod->arch.plt_idx.shdr) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_err("%s: module PLT.IDX section(s) missing\n", mod->name);
 		return -ENOEXEC;
 	}
@@ -146,6 +189,7 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
 		if (!(dst_sec->sh_flags & SHF_EXECINSTR))
 			continue;
 
+<<<<<<< HEAD
 		count_max_entries(relas, num_rela, &num_plts, &num_gots);
 	}
 
@@ -180,5 +224,24 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
 		tramp->sh_size = NR_FTRACE_PLTS * sizeof(struct plt_entry);
 	}
 
+=======
+		count_max_entries(relas, num_rela, &num_plts);
+	}
+
+	mod->arch.plt.shdr->sh_type = SHT_NOBITS;
+	mod->arch.plt.shdr->sh_flags = SHF_EXECINSTR | SHF_ALLOC;
+	mod->arch.plt.shdr->sh_addralign = L1_CACHE_BYTES;
+	mod->arch.plt.shdr->sh_size = (num_plts + 1) * sizeof(struct plt_entry);
+	mod->arch.plt.num_entries = 0;
+	mod->arch.plt.max_entries = num_plts;
+
+	mod->arch.plt_idx.shdr->sh_type = SHT_NOBITS;
+	mod->arch.plt_idx.shdr->sh_flags = SHF_ALLOC;
+	mod->arch.plt_idx.shdr->sh_addralign = L1_CACHE_BYTES;
+	mod->arch.plt_idx.shdr->sh_size = (num_plts + 1) * sizeof(struct plt_idx_entry);
+	mod->arch.plt_idx.num_entries = 0;
+	mod->arch.plt_idx.max_entries = num_plts;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }

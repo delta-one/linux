@@ -488,7 +488,11 @@ found_entry:
 	case RC_NOCACHE:
 		break;
 	case RC_REPLSTAT:
+<<<<<<< HEAD
 		xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
+=======
+		svc_putu32(&rqstp->rq_res.head[0], rp->c_replstat);
+>>>>>>> b7ba80a49124 (Commit)
 		rtn = RC_REPLY;
 		break;
 	case RC_REPLBUFF:
@@ -509,7 +513,11 @@ out_trace:
  * nfsd_cache_update - Update an entry in the duplicate reply cache.
  * @rqstp: svc_rqst with a finished Reply
  * @cachetype: which cache to update
+<<<<<<< HEAD
  * @statp: pointer to Reply's NFS status code, or NULL
+=======
+ * @statp: Reply's status code
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This is called from nfsd_dispatch when the procedure has been
  * executed and the complete reply is in rqstp->rq_res.

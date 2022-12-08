@@ -24,7 +24,10 @@
 #include <linux/export.h>
 #include <linux/module.h>
 #include <linux/console.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kthread.h>
 #include <linux/workqueue.h>
 #include <linux/kfifo.h>
@@ -82,9 +85,12 @@
 #define WRITE_BUF_SIZE		8192		/* TX only */
 #define GS_CONSOLE_BUF_SIZE	8192
 
+<<<<<<< HEAD
 /* Prevents race conditions while accessing gser->ioport */
 static DEFINE_SPINLOCK(serial_port_lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* console info */
 struct gs_console {
 	struct console		console;
@@ -1074,7 +1080,11 @@ ssize_t gserial_set_console(unsigned char port_num, const char *page, size_t cou
 	bool enable;
 	int ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(page, &enable);
+=======
+	ret = strtobool(page, &enable);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -1378,10 +1388,15 @@ void gserial_disconnect(struct gserial *gser)
 	if (!port)
 		return;
 
+<<<<<<< HEAD
 	spin_lock_irqsave(&serial_port_lock, flags);
 
 	/* tell the TTY glue not to do I/O here any more */
 	spin_lock(&port->port_lock);
+=======
+	/* tell the TTY glue not to do I/O here any more */
+	spin_lock_irqsave(&port->port_lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	gs_console_disconnect(port);
 
@@ -1396,8 +1411,12 @@ void gserial_disconnect(struct gserial *gser)
 			tty_hangup(port->port.tty);
 	}
 	port->suspended = false;
+<<<<<<< HEAD
 	spin_unlock(&port->port_lock);
 	spin_unlock_irqrestore(&serial_port_lock, flags);
+=======
+	spin_unlock_irqrestore(&port->port_lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* disable endpoints, aborting down any active I/O */
 	usb_ep_disable(gser->out);
@@ -1431,6 +1450,7 @@ EXPORT_SYMBOL_GPL(gserial_suspend);
 
 void gserial_resume(struct gserial *gser)
 {
+<<<<<<< HEAD
 	struct gs_port *port;
 	unsigned long	flags;
 
@@ -1444,6 +1464,12 @@ void gserial_resume(struct gserial *gser)
 
 	spin_lock(&port->port_lock);
 	spin_unlock(&serial_port_lock);
+=======
+	struct gs_port *port = gser->ioport;
+	unsigned long	flags;
+
+	spin_lock_irqsave(&port->port_lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	port->suspended = false;
 	if (!port->start_delayed) {
 		spin_unlock_irqrestore(&port->port_lock, flags);
@@ -1459,7 +1485,11 @@ void gserial_resume(struct gserial *gser)
 }
 EXPORT_SYMBOL_GPL(gserial_resume);
 
+<<<<<<< HEAD
 static int __init userial_init(void)
+=======
+static int userial_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tty_driver *driver;
 	unsigned			i;
@@ -1512,7 +1542,11 @@ fail:
 }
 module_init(userial_init);
 
+<<<<<<< HEAD
 static void __exit userial_cleanup(void)
+=======
+static void userial_cleanup(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	tty_unregister_driver(gs_tty_driver);
 	tty_driver_kref_put(gs_tty_driver);

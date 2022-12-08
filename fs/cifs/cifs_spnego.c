@@ -189,7 +189,11 @@ init_cifs_spnego(void)
 	 * spnego upcalls.
 	 */
 
+<<<<<<< HEAD
 	cred = prepare_kernel_cred(&init_task);
+=======
+	cred = prepare_kernel_cred(NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!cred)
 		return -ENOMEM;
 

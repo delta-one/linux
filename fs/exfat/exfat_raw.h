@@ -27,7 +27,10 @@
 	((sbi)->num_clusters - EXFAT_RESERVED_CLUSTERS)
 
 /* AllocationPossible and NoFatChain field in GeneralSecondaryFlags Field */
+<<<<<<< HEAD
 #define ALLOC_POSSIBLE		0x01
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ALLOC_FAT_CHAIN		0x01
 #define ALLOC_NO_FAT_CHAIN	0x03
 
@@ -51,8 +54,11 @@
 #define EXFAT_STREAM		0xC0	/* stream entry */
 #define EXFAT_NAME		0xC1	/* file name entry */
 #define EXFAT_ACL		0xC2	/* stream entry */
+<<<<<<< HEAD
 #define EXFAT_VENDOR_EXT	0xE0	/* vendor extension entry */
 #define EXFAT_VENDOR_ALLOC	0xE1	/* vendor allocation entry */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define IS_EXFAT_CRITICAL_PRI(x)	(x < 0xA0)
 #define IS_EXFAT_BENIGN_PRI(x)		(x < 0xC0)
@@ -158,6 +164,7 @@ struct exfat_dentry {
 			__le32 start_clu;
 			__le64 size;
 		} __packed upcase; /* up-case table directory entry */
+<<<<<<< HEAD
 		struct {
 			__u8 flags;
 			__u8 vendor_guid[16];
@@ -176,6 +183,8 @@ struct exfat_dentry {
 			__le32 start_clu;
 			__le64 size;
 		} __packed generic_secondary; /* generic secondary directory entry */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} __packed dentry;
 } __packed;
 

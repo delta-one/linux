@@ -103,7 +103,11 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip_id
 	bool throttle = false;
 	int old_target;
 
+<<<<<<< HEAD
 	__thermal_zone_get_trip(tz, trip_id, &trip);
+=======
+	thermal_zone_get_trip(tz, trip_id, &trip);
+>>>>>>> b7ba80a49124 (Commit)
 
 	trend = get_tz_trend(tz, trip_id);
 

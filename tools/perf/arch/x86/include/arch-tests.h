@@ -8,7 +8,10 @@ struct test_suite;
 int test__rdpmc(struct test_suite *test, int subtest);
 int test__insn_x86(struct test_suite *test, int subtest);
 int test__intel_pt_pkt_decoder(struct test_suite *test, int subtest);
+<<<<<<< HEAD
 int test__intel_pt_hybrid_compat(struct test_suite *test, int subtest);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int test__bp_modify(struct test_suite *test, int subtest);
 int test__x86_sample_parsing(struct test_suite *test, int subtest);
 

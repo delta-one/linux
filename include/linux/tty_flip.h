@@ -25,9 +25,15 @@ static inline int tty_insert_flip_char(struct tty_port *port,
 	struct tty_buffer *tb = port->buf.tail;
 	int change;
 
+<<<<<<< HEAD
 	change = !tb->flags && (flag != TTY_NORMAL);
 	if (!change && tb->used < tb->size) {
 		if (tb->flags)
+=======
+	change = (tb->flags & TTYB_NORMAL) && (flag != TTY_NORMAL);
+	if (!change && tb->used < tb->size) {
+		if (~tb->flags & TTYB_NORMAL)
+>>>>>>> b7ba80a49124 (Commit)
 			*flag_buf_ptr(tb, tb->used) = flag;
 		*char_buf_ptr(tb, tb->used++) = ch;
 		return 1;

@@ -54,10 +54,13 @@
 		vbus-supply = <&typec2_vbus>;
 
 		status = "okay";
+<<<<<<< HEAD
 
 		connector {
 			compatible = "usb-c-connector";
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 

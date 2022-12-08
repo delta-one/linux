@@ -1,7 +1,10 @@
 #!/bin/bash
 # SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
 sec=$(date +%s)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
 ns="ns1-$rndh"
 ksft_skip=4
@@ -17,11 +20,14 @@ flush_pids()
 	sleep 1.1
 
 	ip netns pids "${ns}" | xargs --no-run-if-empty kill -SIGUSR1 &>/dev/null
+<<<<<<< HEAD
 
 	for _ in $(seq 10); do
 		[ -z "$(ip netns pids "${ns}")" ] && break
 		sleep 0.1
 	done
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 cleanup()
@@ -42,6 +48,7 @@ if [ $? -ne 0 ];then
 	exit $ksft_skip
 fi
 
+<<<<<<< HEAD
 get_msk_inuse()
 {
 	ip netns exec $ns cat /proc/net/protocols | awk '$1~/^MPTCP$/{print $3}'
@@ -50,12 +57,21 @@ get_msk_inuse()
 __chk_nr()
 {
 	local command="$1"
+=======
+__chk_nr()
+{
+	local condition="$1"
+>>>>>>> b7ba80a49124 (Commit)
 	local expected=$2
 	local msg nr
 
 	shift 2
 	msg=$*
+<<<<<<< HEAD
 	nr=$(eval $command)
+=======
+	nr=$(ss -inmHMN $ns | $condition)
+>>>>>>> b7ba80a49124 (Commit)
 
 	printf "%-50s" "$msg"
 	if [ $nr != $expected ]; then
@@ -67,6 +83,7 @@ __chk_nr()
 	test_cnt=$((test_cnt+1))
 }
 
+<<<<<<< HEAD
 __chk_msk_nr()
 {
 	local condition=$1
@@ -78,6 +95,11 @@ __chk_msk_nr()
 chk_msk_nr()
 {
 	__chk_msk_nr "grep -c token:" $*
+=======
+chk_msk_nr()
+{
+	__chk_nr "grep -c token:" $*
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 wait_msk_nr()
@@ -115,12 +137,20 @@ wait_msk_nr()
 
 chk_msk_fallback_nr()
 {
+<<<<<<< HEAD
 		__chk_msk_nr "grep -c fallback" $*
+=======
+		__chk_nr "grep -c fallback" $*
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 chk_msk_remote_key_nr()
 {
+<<<<<<< HEAD
 		__chk_msk_nr "grep -c remote_key" $*
+=======
+		__chk_nr "grep -c remote_key" $*
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 __chk_listen()
@@ -160,6 +190,7 @@ chk_msk_listen()
 	nr=$(ss -Ml $filter | wc -l)
 }
 
+<<<<<<< HEAD
 chk_msk_inuse()
 {
 	local expected=$1
@@ -180,6 +211,8 @@ chk_msk_inuse()
 	__chk_nr get_msk_inuse $expected $*
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # $1: ns, $2: port
 wait_local_port_listen()
 {
@@ -233,10 +266,15 @@ wait_connected $ns 10000
 chk_msk_nr 2 "after MPC handshake "
 chk_msk_remote_key_nr 2 "....chk remote_key"
 chk_msk_fallback_nr 0 "....chk no fallback"
+<<<<<<< HEAD
 chk_msk_inuse 2 "....chk 2 msk in use"
 flush_pids
 
 chk_msk_inuse 0 "....chk 0 msk in use after flush"
+=======
+flush_pids
+
+>>>>>>> b7ba80a49124 (Commit)
 
 echo "a" | \
 	timeout ${timeout_test} \
@@ -251,11 +289,16 @@ echo "b" | \
 				127.0.0.1 >/dev/null &
 wait_connected $ns 10001
 chk_msk_fallback_nr 1 "check fallback"
+<<<<<<< HEAD
 chk_msk_inuse 1 "....chk 1 msk in use"
 flush_pids
 
 chk_msk_inuse 0 "....chk 0 msk in use after flush"
 
+=======
+flush_pids
+
+>>>>>>> b7ba80a49124 (Commit)
 NR_CLIENTS=100
 for I in `seq 1 $NR_CLIENTS`; do
 	echo "a" | \
@@ -275,9 +318,14 @@ for I in `seq 1 $NR_CLIENTS`; do
 done
 
 wait_msk_nr $((NR_CLIENTS*2)) "many msk socket present"
+<<<<<<< HEAD
 chk_msk_inuse $((NR_CLIENTS*2)) "....chk many msk in use"
 flush_pids
 
 chk_msk_inuse 0 "....chk 0 msk in use after flush"
 
+=======
+flush_pids
+
+>>>>>>> b7ba80a49124 (Commit)
 exit $ret

@@ -8,7 +8,10 @@
 #include "bpf_dctcp.skel.h"
 #include "bpf_cubic.skel.h"
 #include "bpf_tcp_nogpl.skel.h"
+<<<<<<< HEAD
 #include "tcp_ca_update.skel.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "bpf_dctcp_release.skel.h"
 #include "tcp_ca_write_sk_pacing.skel.h"
 #include "tcp_ca_incompl_cong_ops.skel.h"
@@ -291,10 +294,13 @@ static void test_dctcp_fallback(void)
 		goto done;
 	ASSERT_STREQ(dctcp_skel->bss->cc_res, "cubic", "cc_res");
 	ASSERT_EQ(dctcp_skel->bss->tcp_cdg_res, -ENOTSUPP, "tcp_cdg_res");
+<<<<<<< HEAD
 	/* All setsockopt(TCP_CONGESTION) in the recurred
 	 * bpf_dctcp->init() should fail with -EBUSY.
 	 */
 	ASSERT_EQ(dctcp_skel->bss->ebusy_cnt, 3, "ebusy_cnt");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = getsockopt(srv_fd, SOL_TCP, TCP_CONGESTION, srv_cc, &cc_len);
 	if (!ASSERT_OK(err, "getsockopt(srv_fd, TCP_CONGESTION)"))
@@ -382,6 +388,7 @@ static void test_unsupp_cong_op(void)
 	libbpf_set_print(old_print_fn);
 }
 
+<<<<<<< HEAD
 static void test_update_ca(void)
 {
 	struct tcp_ca_update *skel;
@@ -531,6 +538,8 @@ static void test_link_replace(void)
 	tcp_ca_update__destroy(skel);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void test_bpf_tcp_ca(void)
 {
 	if (test__start_subtest("dctcp"))
@@ -549,6 +558,7 @@ void test_bpf_tcp_ca(void)
 		test_incompl_cong_ops();
 	if (test__start_subtest("unsupp_cong_op"))
 		test_unsupp_cong_op();
+<<<<<<< HEAD
 	if (test__start_subtest("update_ca"))
 		test_update_ca();
 	if (test__start_subtest("update_wrong"))
@@ -559,4 +569,6 @@ void test_bpf_tcp_ca(void)
 		test_multi_links();
 	if (test__start_subtest("link_replace"))
 		test_link_replace();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

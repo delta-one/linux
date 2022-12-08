@@ -5,6 +5,7 @@
 SEC("xdp")
 int _xdp_adjust_tail_grow(struct xdp_md *xdp)
 {
+<<<<<<< HEAD
 	int data_len = bpf_xdp_get_buff_len(xdp);
 	int offset = 0;
 	/* SKB_DATA_ALIGN(sizeof(struct skb_shared_info)) */
@@ -13,6 +14,12 @@ int _xdp_adjust_tail_grow(struct xdp_md *xdp)
 #else
 	int tailroom = 320;
 #endif
+=======
+	void *data_end = (void *)(long)xdp->data_end;
+	void *data = (void *)(long)xdp->data;
+	int data_len = bpf_xdp_get_buff_len(xdp);
+	int offset = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Data length determine test case */
 
@@ -24,7 +31,11 @@ int _xdp_adjust_tail_grow(struct xdp_md *xdp)
 		offset = 128;
 	} else if (data_len == 128) {
 		/* Max tail grow 3520 */
+<<<<<<< HEAD
 		offset = 4096 - 256 - tailroom - data_len;
+=======
+		offset = 4096 - 256 - 320 - data_len;
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (data_len == 9000) {
 		offset = 10;
 	} else if (data_len == 9001) {

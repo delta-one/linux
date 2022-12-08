@@ -570,8 +570,14 @@ retry:
 			if (gmadr_bytes == 8)
 				bb->bb_start_cmd_va[2] = 0;
 
+<<<<<<< HEAD
 			ret = i915_vma_move_to_active(bb->vma, workload->req,
 						      __EXEC_OBJECT_NO_REQUEST_AWAIT);
+=======
+			ret = i915_vma_move_to_active(bb->vma,
+						      workload->req,
+						      0);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret)
 				goto err;
 
@@ -695,7 +701,10 @@ intel_vgpu_shadow_mm_pin(struct intel_vgpu_workload *workload)
 
 	if (workload->shadow_mm->type != INTEL_GVT_MM_PPGTT ||
 	    !workload->shadow_mm->ppgtt_mm.shadowed) {
+<<<<<<< HEAD
 		intel_vgpu_unpin_mm(workload->shadow_mm);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		gvt_vgpu_err("workload shadow ppgtt isn't ready\n");
 		return -EINVAL;
 	}
@@ -866,8 +875,12 @@ pick_next_workload(struct intel_gvt *gvt, struct intel_engine_cs *engine)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if (!test_bit(INTEL_VGPU_STATUS_ACTIVE,
 		      scheduler->current_vgpu->status) ||
+=======
+	if (!scheduler->current_vgpu->active ||
+>>>>>>> b7ba80a49124 (Commit)
 	    list_empty(workload_q_head(scheduler->current_vgpu, engine)))
 		goto out;
 

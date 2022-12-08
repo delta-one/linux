@@ -7,7 +7,11 @@
 
 #include <linux/init.h>
 #include <linux/export.h>
+<<<<<<< HEAD
 #include <linux/gpio/driver.h>
+=======
+#include <linux/gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/mach-ar7/ar7.h>
 

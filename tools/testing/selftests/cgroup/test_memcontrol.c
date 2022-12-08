@@ -98,11 +98,14 @@ static int alloc_anon_50M_check(const char *cgroup, void *arg)
 	int ret = -1;
 
 	buf = malloc(size);
+<<<<<<< HEAD
 	if (buf == NULL) {
 		fprintf(stderr, "malloc() failed\n");
 		return -1;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (ptr = buf; ptr < buf + size; ptr += PAGE_SIZE)
 		*ptr = 0;
 
@@ -216,11 +219,14 @@ static int alloc_anon_noexit(const char *cgroup, void *arg)
 	char *buf, *ptr;
 
 	buf = malloc(size);
+<<<<<<< HEAD
 	if (buf == NULL) {
 		fprintf(stderr, "malloc() failed\n");
 		return -1;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (ptr = buf; ptr < buf + size; ptr += PAGE_SIZE)
 		*ptr = 0;
 
@@ -248,8 +254,11 @@ static int cg_test_proc_killed(const char *cgroup)
 	return -1;
 }
 
+<<<<<<< HEAD
 static bool reclaim_until(const char *memcg, long goal);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * First, this test creates the following hierarchy:
  * A       memory.min = 0,    memory.max = 200M
@@ -278,12 +287,15 @@ static bool reclaim_until(const char *memcg, long goal);
  * unprotected memory in A available, and checks that:
  * a) memory.min protects pagecache even in this case,
  * b) memory.low allows reclaiming page cache with low events.
+<<<<<<< HEAD
  *
  * Then we try to reclaim from A/B/C using memory.reclaim until its
  * usage reaches 10M.
  * This makes sure that:
  * (a) We ignore the protection of the reclaim target memcg.
  * (b) The previously calculated emin value (~29M) should be dismissed.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int test_memcg_protection(const char *root, bool min)
 {
@@ -403,9 +415,12 @@ static int test_memcg_protection(const char *root, bool min)
 	if (!values_close(cg_read_long(parent[1], "memory.current"), MB(50), 3))
 		goto cleanup;
 
+<<<<<<< HEAD
 	if (!reclaim_until(children[0], MB(10)))
 		goto cleanup;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (min) {
 		ret = KSFT_PASS;
 		goto cleanup;
@@ -667,6 +682,7 @@ cleanup:
 }
 
 /*
+<<<<<<< HEAD
  * Reclaim from @memcg until usage reaches @goal by writing to
  * memory.reclaim.
  *
@@ -709,6 +725,8 @@ static bool reclaim_until(const char *memcg, long goal)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * This test checks that memory.reclaim reclaims the given
  * amount of memory (from both anon and file, if possible).
  */
@@ -716,7 +734,12 @@ static int test_memcg_reclaim(const char *root)
 {
 	int ret = KSFT_FAIL, fd, retries;
 	char *memcg;
+<<<<<<< HEAD
 	long current, expected_usage;
+=======
+	long current, expected_usage, to_reclaim;
+	char buf[64];
+>>>>>>> b7ba80a49124 (Commit)
 
 	memcg = cg_name(root, "memcg_test");
 	if (!memcg)
@@ -767,8 +790,46 @@ static int test_memcg_reclaim(const char *root)
 	 * Reclaim until current reaches 30M, this makes sure we hit both anon
 	 * and file if swap is enabled.
 	 */
+<<<<<<< HEAD
 	if (!reclaim_until(memcg, MB(30)))
 		goto cleanup;
+=======
+	retries = 5;
+	while (true) {
+		int err;
+
+		current = cg_read_long(memcg, "memory.current");
+		to_reclaim = current - MB(30);
+
+		/*
+		 * We only keep looping if we get EAGAIN, which means we could
+		 * not reclaim the full amount.
+		 */
+		if (to_reclaim <= 0)
+			goto cleanup;
+
+
+		snprintf(buf, sizeof(buf), "%ld", to_reclaim);
+		err = cg_write(memcg, "memory.reclaim", buf);
+		if (!err) {
+			/*
+			 * If writing succeeds, then the written amount should have been
+			 * fully reclaimed (and maybe more).
+			 */
+			current = cg_read_long(memcg, "memory.current");
+			if (!values_close(current, MB(30), 3) && current > MB(30))
+				goto cleanup;
+			break;
+		}
+
+		/* The kernel could not reclaim the full amount, try again. */
+		if (err == -EAGAIN && retries--)
+			continue;
+
+		/* We got an unexpected error or ran out of retries. */
+		goto cleanup;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = KSFT_PASS;
 cleanup:
@@ -788,11 +849,14 @@ static int alloc_anon_50M_check_swap(const char *cgroup, void *arg)
 	int ret = -1;
 
 	buf = malloc(size);
+<<<<<<< HEAD
 	if (buf == NULL) {
 		fprintf(stderr, "malloc() failed\n");
 		return -1;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (ptr = buf; ptr < buf + size; ptr += PAGE_SIZE)
 		*ptr = 0;
 

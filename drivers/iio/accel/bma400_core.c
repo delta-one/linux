@@ -98,6 +98,10 @@ enum bma400_activity {
 struct bma400_data {
 	struct device *dev;
 	struct regmap *regmap;
+<<<<<<< HEAD
+=======
+	struct regulator_bulk_data regulators[BMA400_NUM_REGULATORS];
+>>>>>>> b7ba80a49124 (Commit)
 	struct mutex mutex; /* data register lock */
 	struct iio_mount_matrix orientation;
 	enum bma400_power_mode power_mode;
@@ -804,10 +808,15 @@ static int bma400_get_steps_reg(struct bma400_data *data, int *val)
 
 	ret = regmap_bulk_read(data->regmap, BMA400_STEP_CNT0_REG,
 			       steps_raw, BMA400_STEP_RAW_LEN);
+<<<<<<< HEAD
 	if (ret) {
 		kfree(steps_raw);
 		return ret;
 	}
+=======
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	*val = get_unaligned_le24(steps_raw);
 	kfree(steps_raw);
 	return IIO_VAL_INT;
@@ -831,6 +840,16 @@ static void bma400_init_tables(void)
 	}
 }
 
+<<<<<<< HEAD
+=======
+static void bma400_regulators_disable(void *data_ptr)
+{
+	struct bma400_data *data = data_ptr;
+
+	regulator_bulk_disable(ARRAY_SIZE(data->regulators), data->regulators);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void bma400_power_disable(void *data_ptr)
 {
 	struct bma400_data *data = data_ptr;
@@ -860,6 +879,7 @@ static enum iio_modifier bma400_act_to_mod(enum bma400_activity activity)
 
 static int bma400_init(struct bma400_data *data)
 {
+<<<<<<< HEAD
 	static const char * const regulator_names[] = { "vdd", "vddio" };
 	unsigned int val;
 	int ret;
@@ -871,6 +891,11 @@ static int bma400_init(struct bma400_data *data)
 		return dev_err_probe(data->dev, ret, "Failed to get regulators: %d\n",
 				     ret);
 
+=======
+	unsigned int val;
+	int ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Try to read chip_id register. It must return 0x90. */
 	ret = regmap_read(data->regmap, BMA400_CHIP_ID_REG, &val);
 	if (ret) {
@@ -883,6 +908,34 @@ static int bma400_init(struct bma400_data *data)
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
+=======
+	data->regulators[BMA400_VDD_REGULATOR].supply = "vdd";
+	data->regulators[BMA400_VDDIO_REGULATOR].supply = "vddio";
+	ret = devm_regulator_bulk_get(data->dev,
+				      ARRAY_SIZE(data->regulators),
+				      data->regulators);
+	if (ret) {
+		if (ret != -EPROBE_DEFER)
+			dev_err(data->dev,
+				"Failed to get regulators: %d\n",
+				ret);
+
+		return ret;
+	}
+	ret = regulator_bulk_enable(ARRAY_SIZE(data->regulators),
+				    data->regulators);
+	if (ret) {
+		dev_err(data->dev, "Failed to enable regulators: %d\n",
+			ret);
+		return ret;
+	}
+
+	ret = devm_add_action_or_reset(data->dev, bma400_regulators_disable, data);
+	if (ret)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = bma400_get_power_mode(data);
 	if (ret) {
 		dev_err(data->dev, "Failed to get the initial power-mode\n");
@@ -1688,7 +1741,11 @@ static irqreturn_t bma400_interrupt(int irq, void *private)
 
 	if (FIELD_GET(BMA400_INT_DRDY_MSK, le16_to_cpu(data->status))) {
 		mutex_unlock(&data->mutex);
+<<<<<<< HEAD
 		iio_trigger_poll_nested(data->trig);
+=======
+		iio_trigger_poll_chained(data->trig);
+>>>>>>> b7ba80a49124 (Commit)
 		return IRQ_HANDLED;
 	}
 

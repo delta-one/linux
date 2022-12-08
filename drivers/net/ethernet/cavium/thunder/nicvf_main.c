@@ -1472,7 +1472,12 @@ int nicvf_open(struct net_device *netdev)
 		}
 		cq_poll->cq_idx = qidx;
 		cq_poll->nicvf = nic;
+<<<<<<< HEAD
 		netif_napi_add(netdev, &cq_poll->napi, nicvf_poll);
+=======
+		netif_napi_add(netdev, &cq_poll->napi, nicvf_poll,
+			       NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 		napi_enable(&cq_poll->napi);
 		nic->napi[qidx] = cq_poll;
 	}
@@ -2218,10 +2223,13 @@ static int nicvf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	netdev->netdev_ops = &nicvf_netdev_ops;
 	netdev->watchdog_timeo = NICVF_TX_TIMEOUT;
 
+<<<<<<< HEAD
 	if (!pass1_silicon(nic->pdev) &&
 	    nic->rx_queues + nic->tx_queues <= nic->max_queues)
 		netdev->xdp_features = NETDEV_XDP_ACT_BASIC;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* MTU range: 64 - 9200 */
 	netdev->min_mtu = NIC_HW_MIN_FRS;
 	netdev->max_mtu = NIC_HW_MAX_FRS;
@@ -2243,7 +2251,11 @@ static int nicvf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	err = register_netdev(netdev);
 	if (err) {
 		dev_err(dev, "Failed to register netdevice\n");
+<<<<<<< HEAD
 		goto err_destroy_workqueue;
+=======
+		goto err_unregister_interrupts;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	nic->msg_enable = debug;
@@ -2252,8 +2264,11 @@ static int nicvf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 
 	return 0;
 
+<<<<<<< HEAD
 err_destroy_workqueue:
 	destroy_workqueue(nic->nicvf_rx_mode_wq);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_unregister_interrupts:
 	nicvf_unregister_interrupts(nic);
 err_free_netdev:

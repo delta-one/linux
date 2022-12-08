@@ -192,7 +192,11 @@ static int topstar_platform_init(struct topstar_laptop *topstar)
 {
 	int err;
 
+<<<<<<< HEAD
 	topstar->platform = platform_device_alloc(TOPSTAR_LAPTOP_CLASS, PLATFORM_DEVID_NONE);
+=======
+	topstar->platform = platform_device_alloc(TOPSTAR_LAPTOP_CLASS, -1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!topstar->platform)
 		return -ENOMEM;
 
@@ -332,7 +336,11 @@ err_free:
 	return err;
 }
 
+<<<<<<< HEAD
 static void topstar_acpi_remove(struct acpi_device *device)
+=======
+static int topstar_acpi_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct topstar_laptop *topstar = acpi_driver_data(device);
 
@@ -344,6 +352,10 @@ static void topstar_acpi_remove(struct acpi_device *device)
 	topstar_acpi_exit(topstar);
 
 	kfree(topstar);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id topstar_device_ids[] = {

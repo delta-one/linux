@@ -8,7 +8,11 @@ Introduction
 In addition to the normal input type HID devices, USB also uses the
 human interface device protocols for things that are not really human
 interfaces, but have similar sorts of communication needs. The two big
+<<<<<<< HEAD
 examples for this are power devices (especially uninterruptible power
+=======
+examples for this are power devices (especially uninterruptable power
+>>>>>>> b7ba80a49124 (Commit)
 supplies) and monitor control on higher end monitors.
 
 To support these disparate requirements, the Linux USB system provides

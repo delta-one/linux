@@ -30,6 +30,12 @@
   long interval, it is easy to implement a user level daemon which
   periodically reads those statistical counters and measure rate.
 
+<<<<<<< HEAD
+=======
+  Currently, the measurement is activated by slow timer handler. Hope
+  this measurement will not introduce too much load.
+
+>>>>>>> b7ba80a49124 (Commit)
   We measure rate during the last 8 seconds every 2 seconds:
 
     avgrate = avgrate*(1-W) + rate*W
@@ -44,6 +50,7 @@
     to 32-bit values for conns, packets, bps, cps and pps.
 
   * A lot of code is taken from net/core/gen_estimator.c
+<<<<<<< HEAD
 
   KEY POINTS:
   - cpustats counters are updated per-cpu in SoftIRQ context with BH disabled
@@ -117,6 +124,70 @@ static void ip_vs_chain_estimation(struct hlist_head *chain)
 		s->kstats.outpkts = koutpkts;
 		s->kstats.inbytes = kinbytes;
 		s->kstats.outbytes = koutbytes;
+=======
+ */
+
+
+/*
+ * Make a summary from each cpu
+ */
+static void ip_vs_read_cpu_stats(struct ip_vs_kstats *sum,
+				 struct ip_vs_cpu_stats __percpu *stats)
+{
+	int i;
+	bool add = false;
+
+	for_each_possible_cpu(i) {
+		struct ip_vs_cpu_stats *s = per_cpu_ptr(stats, i);
+		unsigned int start;
+		u64 conns, inpkts, outpkts, inbytes, outbytes;
+
+		if (add) {
+			do {
+				start = u64_stats_fetch_begin(&s->syncp);
+				conns = s->cnt.conns;
+				inpkts = s->cnt.inpkts;
+				outpkts = s->cnt.outpkts;
+				inbytes = s->cnt.inbytes;
+				outbytes = s->cnt.outbytes;
+			} while (u64_stats_fetch_retry(&s->syncp, start));
+			sum->conns += conns;
+			sum->inpkts += inpkts;
+			sum->outpkts += outpkts;
+			sum->inbytes += inbytes;
+			sum->outbytes += outbytes;
+		} else {
+			add = true;
+			do {
+				start = u64_stats_fetch_begin(&s->syncp);
+				sum->conns = s->cnt.conns;
+				sum->inpkts = s->cnt.inpkts;
+				sum->outpkts = s->cnt.outpkts;
+				sum->inbytes = s->cnt.inbytes;
+				sum->outbytes = s->cnt.outbytes;
+			} while (u64_stats_fetch_retry(&s->syncp, start));
+		}
+	}
+}
+
+
+static void estimation_timer(struct timer_list *t)
+{
+	struct ip_vs_estimator *e;
+	struct ip_vs_stats *s;
+	u64 rate;
+	struct netns_ipvs *ipvs = from_timer(ipvs, t, est_timer);
+
+	if (!sysctl_run_estimation(ipvs))
+		goto skip;
+
+	spin_lock(&ipvs->est_lock);
+	list_for_each_entry(e, &ipvs->est_list, list) {
+		s = container_of(e, struct ip_vs_stats, est);
+
+		spin_lock(&s->lock);
+		ip_vs_read_cpu_stats(&s->kstats, s->cpustats);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* scaled by 2^10, but divided 2 seconds */
 		rate = (s->kstats.conns - e->last_conns) << 9;
@@ -141,6 +212,7 @@ static void ip_vs_chain_estimation(struct hlist_head *chain)
 		e->outbps += ((s64)rate - (s64)e->outbps) >> 2;
 		spin_unlock(&s->lock);
 	}
+<<<<<<< HEAD
 }
 
 static void ip_vs_tick_estimation(struct ip_vs_est_kt_data *kd, int row)
@@ -893,6 +965,32 @@ unlock2:
 
 unlock:
 	mutex_unlock(&__ip_vs_mutex);
+=======
+	spin_unlock(&ipvs->est_lock);
+
+skip:
+	mod_timer(&ipvs->est_timer, jiffies + 2*HZ);
+}
+
+void ip_vs_start_estimator(struct netns_ipvs *ipvs, struct ip_vs_stats *stats)
+{
+	struct ip_vs_estimator *est = &stats->est;
+
+	INIT_LIST_HEAD(&est->list);
+
+	spin_lock_bh(&ipvs->est_lock);
+	list_add(&est->list, &ipvs->est_list);
+	spin_unlock_bh(&ipvs->est_lock);
+}
+
+void ip_vs_stop_estimator(struct netns_ipvs *ipvs, struct ip_vs_stats *stats)
+{
+	struct ip_vs_estimator *est = &stats->est;
+
+	spin_lock_bh(&ipvs->est_lock);
+	list_del(&est->list);
+	spin_unlock_bh(&ipvs->est_lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void ip_vs_zero_estimator(struct ip_vs_stats *stats)
@@ -927,6 +1025,7 @@ void ip_vs_read_estimator(struct ip_vs_kstats *dst, struct ip_vs_stats *stats)
 
 int __net_init ip_vs_estimator_net_init(struct netns_ipvs *ipvs)
 {
+<<<<<<< HEAD
 	INIT_HLIST_HEAD(&ipvs->est_temp_list);
 	ipvs->est_kt_arr = NULL;
 	ipvs->est_max_threads = 0;
@@ -937,15 +1036,25 @@ int __net_init ip_vs_estimator_net_init(struct netns_ipvs *ipvs)
 	atomic_set(&ipvs->est_genid, 0);
 	atomic_set(&ipvs->est_genid_done, 0);
 	__mutex_init(&ipvs->est_mutex, "ipvs->est_mutex", &__ipvs_est_key);
+=======
+	INIT_LIST_HEAD(&ipvs->est_list);
+	spin_lock_init(&ipvs->est_lock);
+	timer_setup(&ipvs->est_timer, estimation_timer, 0);
+	mod_timer(&ipvs->est_timer, jiffies + 2 * HZ);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 void __net_exit ip_vs_estimator_net_cleanup(struct netns_ipvs *ipvs)
 {
+<<<<<<< HEAD
 	int i;
 
 	for (i = 0; i < ipvs->est_kt_count; i++)
 		ip_vs_est_kthread_destroy(ipvs->est_kt_arr[i]);
 	kfree(ipvs->est_kt_arr);
 	mutex_destroy(&ipvs->est_mutex);
+=======
+	del_timer_sync(&ipvs->est_timer);
+>>>>>>> b7ba80a49124 (Commit)
 }

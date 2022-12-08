@@ -1,6 +1,11 @@
 [
     {
         "BriefDescription": "Number of times HLE abort was triggered",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc8",
         "EventName": "HLE_RETIRED.ABORTED",
         "PEBS": "1",
@@ -10,6 +15,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution aborted due to various memory events (e.g., read/write capacity and conflicts).",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc8",
         "EventName": "HLE_RETIRED.ABORTED_MISC1",
         "PublicDescription": "Number of times an HLE abort was attributed to a Memory condition (See TSX_Memory event for additional details).",
@@ -18,6 +28,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution aborted due to uncommon conditions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc8",
         "EventName": "HLE_RETIRED.ABORTED_MISC2",
         "PublicDescription": "Number of times the TSX watchdog signaled an HLE abort.",
@@ -26,6 +41,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution aborted due to HLE-unfriendly instructions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc8",
         "EventName": "HLE_RETIRED.ABORTED_MISC3",
         "PublicDescription": "Number of times a disallowed operation caused an HLE abort.",
@@ -34,6 +54,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution aborted due to incompatible memory type",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc8",
         "EventName": "HLE_RETIRED.ABORTED_MISC4",
         "PublicDescription": "Number of times HLE caused a fault.",
@@ -42,6 +67,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution aborted due to none of the previous 4 categories (e.g. interrupts)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc8",
         "EventName": "HLE_RETIRED.ABORTED_MISC5",
         "PublicDescription": "Number of times HLE aborted and was not due to the abort conditions in subevents 3-6.",
@@ -50,6 +80,11 @@
     },
     {
         "BriefDescription": "Number of times HLE commit succeeded",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc8",
         "EventName": "HLE_RETIRED.COMMIT",
         "PublicDescription": "Number of times HLE commit succeeded.",
@@ -58,6 +93,11 @@
     },
     {
         "BriefDescription": "Number of times we entered an HLE region; does not count nested transactions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc8",
         "EventName": "HLE_RETIRED.START",
         "PublicDescription": "Number of times we entered an HLE region\n does not count nested transactions.",
@@ -66,6 +106,11 @@
     },
     {
         "BriefDescription": "Counts the number of machine clears due to memory order conflicts.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC3",
         "EventName": "MACHINE_CLEARS.MEMORY_ORDERING",
         "PublicDescription": "This event counts the number of memory ordering Machine Clears detected. Memory Ordering Machine Clears can result from one of the following:\n1. memory disambiguation,\n2. external snoop, or\n3. cross SMT-HW-thread snoop (stores) hitting load buffer.",
@@ -74,6 +119,11 @@
     },
     {
         "BriefDescription": "Randomly selected loads with latency value being above 128",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+        "CounterHTOff": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "Errata": "BDM100, BDM35",
         "EventCode": "0xcd",
@@ -83,10 +133,19 @@
         "PEBS": "2",
         "PublicDescription": "Counts randomly selected loads with latency value being above 128.",
         "SampleAfterValue": "1009",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Randomly selected loads with latency value being above 16",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+        "CounterHTOff": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "Errata": "BDM100, BDM35",
         "EventCode": "0xcd",
@@ -96,10 +155,19 @@
         "PEBS": "2",
         "PublicDescription": "Counts randomly selected loads with latency value being above 16.",
         "SampleAfterValue": "20011",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Randomly selected loads with latency value being above 256",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+        "CounterHTOff": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "Errata": "BDM100, BDM35",
         "EventCode": "0xcd",
@@ -109,10 +177,19 @@
         "PEBS": "2",
         "PublicDescription": "Counts randomly selected loads with latency value being above 256.",
         "SampleAfterValue": "503",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Randomly selected loads with latency value being above 32",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+        "CounterHTOff": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "Errata": "BDM100, BDM35",
         "EventCode": "0xcd",
@@ -122,10 +199,19 @@
         "PEBS": "2",
         "PublicDescription": "Counts randomly selected loads with latency value being above 32.",
         "SampleAfterValue": "100007",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Randomly selected loads with latency value being above 4",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+        "CounterHTOff": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "Errata": "BDM100, BDM35",
         "EventCode": "0xcd",
@@ -135,10 +221,19 @@
         "PEBS": "2",
         "PublicDescription": "Counts randomly selected loads with latency value being above four.",
         "SampleAfterValue": "100003",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Randomly selected loads with latency value being above 512",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+        "CounterHTOff": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "Errata": "BDM100, BDM35",
         "EventCode": "0xcd",
@@ -148,10 +243,19 @@
         "PEBS": "2",
         "PublicDescription": "Counts randomly selected loads with latency value being above 512.",
         "SampleAfterValue": "101",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Randomly selected loads with latency value being above 64",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+        "CounterHTOff": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "Errata": "BDM100, BDM35",
         "EventCode": "0xcd",
@@ -161,10 +265,19 @@
         "PEBS": "2",
         "PublicDescription": "Counts randomly selected loads with latency value being above 64.",
         "SampleAfterValue": "2003",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Randomly selected loads with latency value being above 8",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+        "CounterHTOff": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "Errata": "BDM100, BDM35",
         "EventCode": "0xcd",
@@ -174,10 +287,19 @@
         "PEBS": "2",
         "PublicDescription": "Counts randomly selected loads with latency value being above eight.",
         "SampleAfterValue": "50021",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Speculative cache line split load uops dispatched to L1 cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x05",
         "EventName": "MISALIGN_MEM_REF.LOADS",
         "PublicDescription": "This event counts speculative cache-line split load uops dispatched to the L1 cache.",
@@ -186,6 +308,11 @@
     },
     {
         "BriefDescription": "Speculative cache line split STA uops dispatched to L1 cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x05",
         "EventName": "MISALIGN_MEM_REF.STORES",
         "PublicDescription": "This event counts speculative cache line split store-address (STA) uops dispatched to the L1 cache.",
@@ -194,1815 +321,3830 @@
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_HIT.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20003C0091",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x043C000091",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x023C000091",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x00BC000091",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x013C000091",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3F84000091",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x1004000091",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0404000091",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0204000091",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0084000091",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004000091",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0104000091",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.SUPPLIER_NONE.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2000020091",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_HIT.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20003C0240",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x043C000240",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x023C000240",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x00BC000240",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x013C000240",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3F84000240",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x1004000240",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0404000240",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0204000240",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0084000240",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004000240",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0104000240",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.SUPPLIER_NONE.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2000020240",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_HIT.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20003C0090",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x043C000090",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x023C000090",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x00BC000090",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x013C000090",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3F84000090",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x1004000090",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0404000090",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0204000090",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0084000090",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004000090",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0104000090",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.SUPPLIER_NONE.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2000020090",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_HIT.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20003C0120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x043C000120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x023C000120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x00BC000120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x013C000120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3F84000120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS_LOCAL_DRAM.SNOOP_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x1004000120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS_LOCAL_DRAM.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0404000120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS_LOCAL_DRAM.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0204000120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS_LOCAL_DRAM.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0084000120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS_LOCAL_DRAM.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004000120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS_LOCAL_DRAM.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0104000120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.SUPPLIER_NONE.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2000020120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_HIT.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20003C0122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x043C000122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x023C000122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x00BC000122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x013C000122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3F84000122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS_LOCAL_DRAM.SNOOP_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x1004000122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS_LOCAL_DRAM.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0404000122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS_LOCAL_DRAM.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0204000122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS_LOCAL_DRAM.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0084000122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS_LOCAL_DRAM.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004000122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS_LOCAL_DRAM.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0104000122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.SUPPLIER_NONE.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2000020122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand & prefetch RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts writebacks (modified to exclusive)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.L3_HIT.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20003C0008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts writebacks (modified to exclusive)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts writebacks (modified to exclusive)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x043C000008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts writebacks (modified to exclusive)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts writebacks (modified to exclusive)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x023C000008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts writebacks (modified to exclusive)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts writebacks (modified to exclusive)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x00BC000008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts writebacks (modified to exclusive)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts writebacks (modified to exclusive)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x013C000008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts writebacks (modified to exclusive)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts writebacks (modified to exclusive)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3F84000008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts writebacks (modified to exclusive)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts writebacks (modified to exclusive)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS_LOCAL_DRAM.SNOOP_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x1004000008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts writebacks (modified to exclusive)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts writebacks (modified to exclusive)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS_LOCAL_DRAM.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0404000008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts writebacks (modified to exclusive)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts writebacks (modified to exclusive)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS_LOCAL_DRAM.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0204000008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts writebacks (modified to exclusive)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts writebacks (modified to exclusive)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS_LOCAL_DRAM.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0084000008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts writebacks (modified to exclusive)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts writebacks (modified to exclusive)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS_LOCAL_DRAM.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004000008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts writebacks (modified to exclusive)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts writebacks (modified to exclusive)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS_LOCAL_DRAM.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0104000008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts writebacks (modified to exclusive)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts writebacks (modified to exclusive)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.SUPPLIER_NONE.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2000020008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts writebacks (modified to exclusive)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20003C0004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x043C000004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x023C000004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x00BC000004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x013C000004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3F84000004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x1004000004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0404000004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0204000004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0084000004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004000004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0104000004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.SUPPLIER_NONE.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2000020004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20003C0001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts demand data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x043C000001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts demand data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x023C000001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts demand data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x00BC000001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts demand data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x013C000001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts demand data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3F84000001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts demand data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x1004000001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts demand data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0404000001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts demand data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0204000001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts demand data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0084000001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts demand data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004000001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts demand data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0104000001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts demand data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2000020001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts demand data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand data writes (RFOs)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20003C0002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand data writes (RFOs)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand data writes (RFOs)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x043C000002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand data writes (RFOs)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand data writes (RFOs)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x023C000002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand data writes (RFOs)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand data writes (RFOs)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x00BC000002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand data writes (RFOs)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand data writes (RFOs)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x013C000002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand data writes (RFOs)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand data writes (RFOs)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3F84000002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all demand data writes (RFOs)",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts any other requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20003C8000",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts any other requests",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts any other requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x043C008000",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts any other requests",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts any other requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x023C008000",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts any other requests",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts any other requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x00BC008000",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts any other requests",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts any other requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x013C008000",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts any other requests",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts any other requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3F84008000",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts any other requests",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts any other requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x1004008000",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts any other requests",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts any other requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0404008000",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts any other requests",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts any other requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0204008000",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts any other requests",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts any other requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0084008000",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts any other requests",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts any other requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004008000",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts any other requests",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts any other requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0104008000",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts any other requests",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts any other requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.SUPPLIER_NONE.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2000028000",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts any other requests",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_HIT.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20003C0040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x043C000040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x023C000040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x00BC000040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x013C000040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3F84000040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x1004000040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0404000040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0204000040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0084000040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004000040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0104000040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.SUPPLIER_NONE.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2000020040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_HIT.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20003C0010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to L2) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x043C000010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to L2) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x023C000010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to L2) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x00BC000010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to L2) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x013C000010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to L2) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3F84000010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to L2) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x1004000010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to L2) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0404000010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to L2) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0204000010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to L2) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0084000010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to L2) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004000010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to L2) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0104000010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to L2) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.SUPPLIER_NONE.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2000020010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to L2) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_HIT.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20003C0020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to L2) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x043C000020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to L2) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x023C000020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to L2) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x00BC000020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to L2) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x013C000020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to L2) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3F84000020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to L2) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS_LOCAL_DRAM.SNOOP_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x1004000020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to L2) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS_LOCAL_DRAM.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0404000020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to L2) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS_LOCAL_DRAM.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0204000020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to L2) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS_LOCAL_DRAM.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0084000020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to L2) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS_LOCAL_DRAM.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004000020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to L2) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS_LOCAL_DRAM.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0104000020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to L2) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.SUPPLIER_NONE.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2000020020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to L2) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_HIT.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20003C0200",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x043C000200",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x023C000200",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x00BC000200",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x013C000200",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3F84000200",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x1004000200",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0404000200",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0204000200",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0084000200",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004000200",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0104000200",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.SUPPLIER_NONE.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2000020200",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_HIT.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20003C0080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x043C000080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x023C000080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x00BC000080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x013C000080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3F84000080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x1004000080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0404000080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0204000080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0084000080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004000080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0104000080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.SUPPLIER_NONE.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2000020080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) data reads",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_HIT.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20003C0100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x043C000100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x023C000100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x00BC000100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x013C000100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3F84000100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS_LOCAL_DRAM.SNOOP_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x1004000100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS_LOCAL_DRAM.SNOOP_HIT_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0404000100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS_LOCAL_DRAM.SNOOP_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0204000100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS_LOCAL_DRAM.SNOOP_NONE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0084000100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS_LOCAL_DRAM.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004000100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS_LOCAL_DRAM.SNOOP_NOT_NEEDED",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x0104000100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.SUPPLIER_NONE.SNOOP_NON_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2000020100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Number of times RTM abort was triggered",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc9",
         "EventName": "RTM_RETIRED.ABORTED",
         "PEBS": "1",
@@ -2012,6 +4154,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to various memory events (e.g. read/write capacity and conflicts)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc9",
         "EventName": "RTM_RETIRED.ABORTED_MISC1",
         "PublicDescription": "Number of times an RTM abort was attributed to a Memory condition (See TSX_Memory event for additional details).",
@@ -2020,6 +4167,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to various memory events (e.g., read/write capacity and conflicts).",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc9",
         "EventName": "RTM_RETIRED.ABORTED_MISC2",
         "PublicDescription": "Number of times the TSX watchdog signaled an RTM abort.",
@@ -2028,6 +4180,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to HLE-unfriendly instructions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc9",
         "EventName": "RTM_RETIRED.ABORTED_MISC3",
         "PublicDescription": "Number of times a disallowed operation caused an RTM abort.",
@@ -2036,6 +4193,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to incompatible memory type",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc9",
         "EventName": "RTM_RETIRED.ABORTED_MISC4",
         "PublicDescription": "Number of times a RTM caused a fault.",
@@ -2044,6 +4206,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to none of the previous 4 categories (e.g. interrupt)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc9",
         "EventName": "RTM_RETIRED.ABORTED_MISC5",
         "PublicDescription": "Number of times RTM aborted and was not due to the abort conditions in subevents 3-6.",
@@ -2052,6 +4219,11 @@
     },
     {
         "BriefDescription": "Number of times RTM commit succeeded",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc9",
         "EventName": "RTM_RETIRED.COMMIT",
         "PublicDescription": "Number of times RTM commit succeeded.",
@@ -2060,6 +4232,11 @@
     },
     {
         "BriefDescription": "Number of times we entered an RTM region; does not count nested transactions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc9",
         "EventName": "RTM_RETIRED.START",
         "PublicDescription": "Number of times we entered an RTM region\n does not count nested transactions.",
@@ -2068,6 +4245,11 @@
     },
     {
         "BriefDescription": "Counts the number of times a class of instructions that may cause a transactional abort was executed. Since this is the count of execution, it may not always cause a transactional abort.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5d",
         "EventName": "TX_EXEC.MISC1",
         "SampleAfterValue": "2000003",
@@ -2075,6 +4257,11 @@
     },
     {
         "BriefDescription": "Counts the number of times a class of instructions (e.g., vzeroupper) that may cause a transactional abort was executed inside a transactional region",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5d",
         "EventName": "TX_EXEC.MISC2",
         "PublicDescription": "Unfriendly TSX abort triggered by  a vzeroupper instruction.",
@@ -2083,6 +4270,11 @@
     },
     {
         "BriefDescription": "Counts the number of times an instruction execution caused the transactional nest count supported to be exceeded",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5d",
         "EventName": "TX_EXEC.MISC3",
         "PublicDescription": "Unfriendly TSX abort triggered by a nest count that is too deep.",
@@ -2091,6 +4283,11 @@
     },
     {
         "BriefDescription": "Counts the number of times a XBEGIN instruction was executed inside an HLE transactional region.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5d",
         "EventName": "TX_EXEC.MISC4",
         "PublicDescription": "RTM region detected inside HLE.",
@@ -2099,6 +4296,11 @@
     },
     {
         "BriefDescription": "Counts the number of times an HLE XACQUIRE instruction was executed inside an RTM transactional region.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5d",
         "EventName": "TX_EXEC.MISC5",
         "SampleAfterValue": "2000003",
@@ -2106,6 +4308,11 @@
     },
     {
         "BriefDescription": "Number of times a TSX Abort was triggered due to an evicted line caused by a transaction overflow",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_CAPACITY_WRITE",
         "PublicDescription": "Number of times a TSX Abort was triggered due to an evicted line caused by a transaction overflow.",
@@ -2114,6 +4321,11 @@
     },
     {
         "BriefDescription": "Number of times a TSX line had a cache conflict",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_CONFLICT",
         "PublicDescription": "Number of times a TSX line had a cache conflict.",
@@ -2122,6 +4334,11 @@
     },
     {
         "BriefDescription": "Number of times a TSX Abort was triggered due to release/commit but data and address mismatch",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_HLE_ELISION_BUFFER_MISMATCH",
         "PublicDescription": "Number of times a TSX Abort was triggered due to release/commit but data and address mismatch.",
@@ -2130,6 +4347,11 @@
     },
     {
         "BriefDescription": "Number of times a TSX Abort was triggered due to commit but Lock Buffer not empty",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_HLE_ELISION_BUFFER_NOT_EMPTY",
         "PublicDescription": "Number of times a TSX Abort was triggered due to commit but Lock Buffer not empty.",
@@ -2138,6 +4360,11 @@
     },
     {
         "BriefDescription": "Number of times a TSX Abort was triggered due to attempting an unsupported alignment from Lock Buffer",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_HLE_ELISION_BUFFER_UNSUPPORTED_ALIGNMENT",
         "PublicDescription": "Number of times a TSX Abort was triggered due to attempting an unsupported alignment from Lock Buffer.",
@@ -2146,6 +4373,11 @@
     },
     {
         "BriefDescription": "Number of times a TSX Abort was triggered due to a non-release/commit store to lock",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_HLE_STORE_TO_ELIDED_LOCK",
         "PublicDescription": "Number of times a TSX Abort was triggered due to a non-release/commit store to lock.",
@@ -2154,6 +4386,11 @@
     },
     {
         "BriefDescription": "Number of times we could not allocate Lock Buffer",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.HLE_ELISION_BUFFER_FULL",
         "PublicDescription": "Number of times we could not allocate Lock Buffer.",

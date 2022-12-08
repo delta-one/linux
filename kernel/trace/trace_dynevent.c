@@ -118,7 +118,10 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
 		if (ret)
 			break;
 	}
+<<<<<<< HEAD
 	tracing_reset_all_online_cpus();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&event_mutex);
 out:
 	argv_free(argv);
@@ -215,7 +218,10 @@ int dyn_events_release_all(struct dyn_event_operations *type)
 			break;
 	}
 out:
+<<<<<<< HEAD
 	tracing_reset_all_online_cpus();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&event_mutex);
 
 	return ret;

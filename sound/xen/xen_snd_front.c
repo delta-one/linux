@@ -311,7 +311,11 @@ static int xen_drv_probe(struct xenbus_device *xb_dev,
 	return xenbus_switch_state(xb_dev, XenbusStateInitialising);
 }
 
+<<<<<<< HEAD
 static void xen_drv_remove(struct xenbus_device *dev)
+=======
+static int xen_drv_remove(struct xenbus_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct xen_snd_front_info *front_info = dev_get_drvdata(&dev->dev);
 	int to = 100;
@@ -345,6 +349,10 @@ static void xen_drv_remove(struct xenbus_device *dev)
 
 	xen_snd_drv_fini(front_info);
 	xenbus_frontend_closed(dev);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct xenbus_device_id xen_drv_ids[] = {

@@ -81,6 +81,10 @@ static int __init gef_gpio_probe(struct platform_device *pdev)
 
 	gc->base = -1;
 	gc->ngpio = (u16)(uintptr_t)of_device_get_match_data(&pdev->dev);
+<<<<<<< HEAD
+=======
+	gc->of_gpio_n_cells = 2;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* This function adds a memory mapped GPIO chip */
 	ret = devm_gpiochip_add_data(&pdev->dev, gc, NULL);

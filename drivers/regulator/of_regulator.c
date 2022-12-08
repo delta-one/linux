@@ -505,7 +505,11 @@ struct regulator_init_data *regulator_of_get_init_data(struct device *dev,
 	struct device_node *child;
 	struct regulator_init_data *init_data = NULL;
 
+<<<<<<< HEAD
 	child = regulator_of_get_init_node(config->dev, desc);
+=======
+	child = regulator_of_get_init_node(dev, desc);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!child)
 		return NULL;
 
@@ -701,6 +705,7 @@ struct regulator_dev *of_parse_coupled_regulator(struct regulator_dev *rdev,
 
 	return c_rdev;
 }
+<<<<<<< HEAD
 
 /*
  * Check if name is a supply name according to the '*-supply' pattern
@@ -793,3 +798,5 @@ error:
 	return ret;
 }
 EXPORT_SYMBOL_GPL(of_regulator_bulk_get_all);
+=======
+>>>>>>> b7ba80a49124 (Commit)

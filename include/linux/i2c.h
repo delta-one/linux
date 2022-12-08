@@ -189,7 +189,10 @@ s32 i2c_smbus_read_i2c_block_data_or_emulated(const struct i2c_client *client,
 					      u8 *values);
 int i2c_get_device_id(const struct i2c_client *client,
 		      struct i2c_device_identity *id);
+<<<<<<< HEAD
 const struct i2c_device_id *i2c_client_get_device_id(const struct i2c_client *client);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* I2C */
 
 /**
@@ -236,8 +239,13 @@ enum i2c_driver_flags {
 /**
  * struct i2c_driver - represent an I2C device driver
  * @class: What kind of i2c device we instantiate (for detect)
+<<<<<<< HEAD
  * @probe: Callback for device binding
  * @probe_new: Transitional callback for device binding - do not use
+=======
+ * @probe: Callback for device binding - soon to be deprecated
+ * @probe_new: New callback for device binding
+>>>>>>> b7ba80a49124 (Commit)
  * @remove: Callback for device unbinding
  * @shutdown: Callback for device shutdown
  * @alert: Alert callback, for example for the SMBus alert protocol
@@ -272,6 +280,7 @@ enum i2c_driver_flags {
 struct i2c_driver {
 	unsigned int class;
 
+<<<<<<< HEAD
 	union {
 	/* Standard driver model interfaces */
 		int (*probe)(struct i2c_client *client);
@@ -284,6 +293,16 @@ struct i2c_driver {
 	};
 	void (*remove)(struct i2c_client *client);
 
+=======
+	/* Standard driver model interfaces */
+	int (*probe)(struct i2c_client *client, const struct i2c_device_id *id);
+	void (*remove)(struct i2c_client *client);
+
+	/* New driver model interface to aid the seamless removal of the
+	 * current probe()'s, more commonly unused than used second parameter.
+	 */
+	int (*probe_new)(struct i2c_client *client);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* driver model interfaces that don't relate to enumeration  */
 	void (*shutdown)(struct i2c_client *client);
@@ -969,6 +988,7 @@ int i2c_handle_smbus_host_notify(struct i2c_adapter *adap, unsigned short addr);
 
 #endif /* I2C */
 
+<<<<<<< HEAD
 /* must call put_device() when done with returned i2c_client device */
 struct i2c_client *i2c_find_device_by_fwnode(struct fwnode_handle *fwnode);
 
@@ -996,6 +1016,17 @@ static inline struct i2c_adapter *of_get_i2c_adapter_by_node(struct device_node 
 {
 	return i2c_get_adapter_by_fwnode(of_fwnode_handle(node));
 }
+=======
+#if IS_ENABLED(CONFIG_OF)
+/* must call put_device() when done with returned i2c_client device */
+struct i2c_client *of_find_i2c_device_by_node(struct device_node *node);
+
+/* must call put_device() when done with returned i2c_adapter device */
+struct i2c_adapter *of_find_i2c_adapter_by_node(struct device_node *node);
+
+/* must call i2c_put_adapter() when done with returned i2c_adapter device */
+struct i2c_adapter *of_get_i2c_adapter_by_node(struct device_node *node);
+>>>>>>> b7ba80a49124 (Commit)
 
 const struct of_device_id
 *i2c_of_match_device(const struct of_device_id *matches,

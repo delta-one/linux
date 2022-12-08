@@ -5,6 +5,7 @@
 
 menu "Analog to digital and digital to analog converters"
 
+<<<<<<< HEAD
 config AD74115
 	tristate "Analog Devices AD74115H driver"
 	depends on GPIOLIB && SPI
@@ -19,6 +20,8 @@ config AD74115
 	  To compile this driver as a module, choose M here: the
 	  module will be called ad74115.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config AD74413R
 	tristate "Analog Devices AD74412R/AD74413R driver"
 	depends on GPIOLIB && SPI

@@ -691,6 +691,7 @@ static int nfp_pf_find_rtsyms(struct nfp_pf *pf)
 	return 0;
 }
 
+<<<<<<< HEAD
 int nfp_net_pf_get_app_id(struct nfp_pf *pf)
 {
 	return nfp_pf_rtsym_read_optional(pf, "_pf%u_net_app_id",
@@ -753,6 +754,8 @@ end:
 	nfp_nsp_close(nsp);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int nfp_pci_probe(struct pci_dev *pdev,
 			 const struct pci_device_id *pci_id)
 {
@@ -853,8 +856,11 @@ static int nfp_pci_probe(struct pci_dev *pdev,
 		goto err_fw_unload;
 	}
 
+<<<<<<< HEAD
 	nfp_pf_cfg_hwinfo(pf);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = nfp_net_pci_probe(pf);
 	if (err)
 		goto err_fw_unload;

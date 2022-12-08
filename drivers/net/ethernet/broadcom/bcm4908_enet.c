@@ -36,6 +36,7 @@
 #define ENET_MAX_ETH_OVERHEAD			(ETH_HLEN + BRCM_MAX_TAG_LEN + VLAN_HLEN + \
 						 ETH_FCS_LEN + 4) /* 32 */
 
+<<<<<<< HEAD
 #define ENET_RX_SKB_BUF_SIZE			(NET_SKB_PAD + NET_IP_ALIGN + \
 						 ETH_HLEN + BRCM_MAX_TAG_LEN + VLAN_HLEN + \
 						 ENET_MTU_MAX + ETH_FCS_LEN + 4)
@@ -44,16 +45,22 @@
 #define ENET_RX_BUF_DMA_OFFSET			(NET_SKB_PAD + NET_IP_ALIGN)
 #define ENET_RX_BUF_DMA_SIZE			(ENET_RX_SKB_BUF_SIZE - ENET_RX_BUF_DMA_OFFSET)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct bcm4908_enet_dma_ring_bd {
 	__le32 ctl;
 	__le32 addr;
 } __packed;
 
 struct bcm4908_enet_dma_ring_slot {
+<<<<<<< HEAD
 	union {
 		void *buf;			/* RX */
 		struct sk_buff *skb;		/* TX */
 	};
+=======
+	struct sk_buff *skb;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int len;
 	dma_addr_t dma_addr;
 };
@@ -271,6 +278,7 @@ static int bcm4908_enet_dma_alloc_rx_buf(struct bcm4908_enet *enet, unsigned int
 	u32 tmp;
 	int err;
 
+<<<<<<< HEAD
 	slot->buf = napi_alloc_frag(ENET_RX_SKB_BUF_ALLOC_SIZE);
 	if (!slot->buf)
 		return -ENOMEM;
@@ -286,6 +294,24 @@ static int bcm4908_enet_dma_alloc_rx_buf(struct bcm4908_enet *enet, unsigned int
 	}
 
 	tmp = ENET_RX_BUF_DMA_SIZE << DMA_CTL_LEN_DESC_BUFLENGTH_SHIFT;
+=======
+	slot->len = ENET_MTU_MAX + ENET_MAX_ETH_OVERHEAD;
+
+	slot->skb = netdev_alloc_skb(enet->netdev, slot->len);
+	if (!slot->skb)
+		return -ENOMEM;
+
+	slot->dma_addr = dma_map_single(dev, slot->skb->data, slot->len, DMA_FROM_DEVICE);
+	err = dma_mapping_error(dev, slot->dma_addr);
+	if (err) {
+		dev_err(dev, "Failed to map DMA buffer: %d\n", err);
+		kfree_skb(slot->skb);
+		slot->skb = NULL;
+		return err;
+	}
+
+	tmp = slot->len << DMA_CTL_LEN_DESC_BUFLENGTH_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 	tmp |= DMA_CTL_STATUS_OWN;
 	if (idx == enet->rx_ring.length - 1)
 		tmp |= DMA_CTL_STATUS_WRAP;
@@ -325,11 +351,19 @@ static void bcm4908_enet_dma_uninit(struct bcm4908_enet *enet)
 
 	for (i = rx_ring->length - 1; i >= 0; i--) {
 		slot = &rx_ring->slots[i];
+<<<<<<< HEAD
 		if (!slot->buf)
 			continue;
 		dma_unmap_single(dev, slot->dma_addr, slot->len, DMA_FROM_DEVICE);
 		skb_free_frag(slot->buf);
 		slot->buf = NULL;
+=======
+		if (!slot->skb)
+			continue;
+		dma_unmap_single(dev, slot->dma_addr, slot->len, DMA_FROM_DEVICE);
+		kfree_skb(slot->skb);
+		slot->skb = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -505,7 +539,10 @@ static int bcm4908_enet_stop(struct net_device *netdev)
 	netif_carrier_off(netdev);
 	napi_disable(&rx_ring->napi);
 	napi_disable(&tx_ring->napi);
+<<<<<<< HEAD
 	netdev_reset_queue(netdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	bcm4908_enet_dma_rx_ring_disable(enet, &enet->rx_ring);
 	bcm4908_enet_dma_tx_ring_disable(enet, &enet->tx_ring);
@@ -565,8 +602,11 @@ static netdev_tx_t bcm4908_enet_start_xmit(struct sk_buff *skb, struct net_devic
 	if (ring->write_idx + 1 == ring->length - 1)
 		tmp |= DMA_CTL_STATUS_WRAP;
 
+<<<<<<< HEAD
 	netdev_sent_queue(enet->netdev, skb->len);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	buf_desc->addr = cpu_to_le32((uint32_t)slot->dma_addr);
 	buf_desc->ctl = cpu_to_le32(tmp);
 
@@ -574,6 +614,11 @@ static netdev_tx_t bcm4908_enet_start_xmit(struct sk_buff *skb, struct net_devic
 
 	if (++ring->write_idx == ring->length - 1)
 		ring->write_idx = 0;
+<<<<<<< HEAD
+=======
+	enet->netdev->stats.tx_bytes += skb->len;
+	enet->netdev->stats.tx_packets++;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return NETDEV_TX_OK;
 }
@@ -588,7 +633,10 @@ static int bcm4908_enet_poll_rx(struct napi_struct *napi, int weight)
 	while (handled < weight) {
 		struct bcm4908_enet_dma_ring_bd *buf_desc;
 		struct bcm4908_enet_dma_ring_slot slot;
+<<<<<<< HEAD
 		struct sk_buff *skb;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		u32 ctl;
 		int len;
 		int err;
@@ -612,11 +660,16 @@ static int bcm4908_enet_poll_rx(struct napi_struct *napi, int weight)
 
 		if (len < ETH_ZLEN ||
 		    (ctl & (DMA_CTL_STATUS_SOP | DMA_CTL_STATUS_EOP)) != (DMA_CTL_STATUS_SOP | DMA_CTL_STATUS_EOP)) {
+<<<<<<< HEAD
 			skb_free_frag(slot.buf);
+=======
+			kfree_skb(slot.skb);
+>>>>>>> b7ba80a49124 (Commit)
 			enet->netdev->stats.rx_dropped++;
 			break;
 		}
 
+<<<<<<< HEAD
 		dma_unmap_single(dev, slot.dma_addr, ENET_RX_BUF_DMA_SIZE, DMA_FROM_DEVICE);
 
 		skb = build_skb(slot.buf, ENET_RX_SKB_BUF_ALLOC_SIZE);
@@ -630,6 +683,13 @@ static int bcm4908_enet_poll_rx(struct napi_struct *napi, int weight)
 		skb->protocol = eth_type_trans(skb, enet->netdev);
 
 		netif_receive_skb(skb);
+=======
+		dma_unmap_single(dev, slot.dma_addr, slot.len, DMA_FROM_DEVICE);
+
+		skb_put(slot.skb, len - ETH_FCS_LEN);
+		slot.skb->protocol = eth_type_trans(slot.skb, enet->netdev);
+		netif_receive_skb(slot.skb);
+>>>>>>> b7ba80a49124 (Commit)
 
 		enet->netdev->stats.rx_packets++;
 		enet->netdev->stats.rx_bytes += len;
@@ -655,7 +715,10 @@ static int bcm4908_enet_poll_tx(struct napi_struct *napi, int weight)
 	struct bcm4908_enet_dma_ring_bd *buf_desc;
 	struct bcm4908_enet_dma_ring_slot *slot;
 	struct device *dev = enet->dev;
+<<<<<<< HEAD
 	unsigned int bytes = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int handled = 0;
 
 	while (handled < weight && tx_ring->read_idx != tx_ring->write_idx) {
@@ -666,6 +729,7 @@ static int bcm4908_enet_poll_tx(struct napi_struct *napi, int weight)
 
 		dma_unmap_single(dev, slot->dma_addr, slot->len, DMA_TO_DEVICE);
 		dev_kfree_skb(slot->skb);
+<<<<<<< HEAD
 
 		handled++;
 		bytes += slot->len;
@@ -677,6 +741,13 @@ static int bcm4908_enet_poll_tx(struct napi_struct *napi, int weight)
 	netdev_completed_queue(enet->netdev, handled, bytes);
 	enet->netdev->stats.tx_packets += handled;
 	enet->netdev->stats.tx_bytes += bytes;
+=======
+		if (++tx_ring->read_idx == tx_ring->length)
+			tx_ring->read_idx = 0;
+
+		handled++;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (handled < weight) {
 		napi_complete_done(napi, handled);
@@ -752,7 +823,11 @@ static int bcm4908_enet_probe(struct platform_device *pdev)
 	netdev->mtu = ETH_DATA_LEN;
 	netdev->max_mtu = ENET_MTU_MAX;
 	netif_napi_add_tx(netdev, &enet->tx_ring.napi, bcm4908_enet_poll_tx);
+<<<<<<< HEAD
 	netif_napi_add(netdev, &enet->rx_ring.napi, bcm4908_enet_poll_rx);
+=======
+	netif_napi_add(netdev, &enet->rx_ring.napi, bcm4908_enet_poll_rx, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = register_netdev(netdev);
 	if (err)

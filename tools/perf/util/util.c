@@ -533,6 +533,7 @@ int do_realloc_array_as_needed(void **arr, size_t *arr_sz, size_t x, size_t msz,
 	*arr_sz = new_sz;
 	return 0;
 }
+<<<<<<< HEAD
 
 #ifndef HAVE_SCHED_GETCPU_SUPPORT
 int sched_getcpu(void)
@@ -549,3 +550,5 @@ int sched_getcpu(void)
 	return -1;
 }
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)

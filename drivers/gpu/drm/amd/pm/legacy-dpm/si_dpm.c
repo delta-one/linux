@@ -7714,6 +7714,7 @@ static int si_dpm_init_microcode(struct amdgpu_device *adev)
 	}
 
 	snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_smc.bin", chip_name);
+<<<<<<< HEAD
 	err = amdgpu_ucode_request(adev, &adev->pm.fw, fw_name);
 	if (err) {
 		DRM_ERROR("si_smc: Failed to load firmware. err = %d\"%s\"\n",
@@ -7721,6 +7722,22 @@ static int si_dpm_init_microcode(struct amdgpu_device *adev)
 		amdgpu_ucode_release(&adev->pm.fw);
 	}
 	return err;
+=======
+	err = request_firmware(&adev->pm.fw, fw_name, adev->dev);
+	if (err)
+		goto out;
+	err = amdgpu_ucode_validate(adev->pm.fw);
+
+out:
+	if (err) {
+		DRM_ERROR("si_smc: Failed to load firmware. err = %d\"%s\"\n",
+			  err, fw_name);
+		release_firmware(adev->pm.fw);
+		adev->pm.fw = NULL;
+	}
+	return err;
+
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int si_dpm_sw_init(void *handle)

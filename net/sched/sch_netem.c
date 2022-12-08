@@ -171,7 +171,11 @@ static inline struct netem_skb_cb *netem_skb_cb(struct sk_buff *skb)
 static void init_crandom(struct crndstate *state, unsigned long rho)
 {
 	state->rho = rho;
+<<<<<<< HEAD
 	state->last = get_random_u32();
+=======
+	state->last = prandom_u32();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* get_crandom - correlated random number generator
@@ -184,9 +188,15 @@ static u32 get_crandom(struct crndstate *state)
 	unsigned long answer;
 
 	if (!state || state->rho == 0)	/* no correlation */
+<<<<<<< HEAD
 		return get_random_u32();
 
 	value = get_random_u32();
+=======
+		return prandom_u32();
+
+	value = prandom_u32();
+>>>>>>> b7ba80a49124 (Commit)
 	rho = (u64)state->rho + 1;
 	answer = (value * ((1ull<<32) - rho) + state->last * rho) >> 32;
 	state->last = answer;
@@ -200,7 +210,11 @@ static u32 get_crandom(struct crndstate *state)
 static bool loss_4state(struct netem_sched_data *q)
 {
 	struct clgstate *clg = &q->clg;
+<<<<<<< HEAD
 	u32 rnd = get_random_u32();
+=======
+	u32 rnd = prandom_u32();
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Makes a comparison between rnd and the transition
@@ -268,6 +282,7 @@ static bool loss_gilb_ell(struct netem_sched_data *q)
 
 	switch (clg->state) {
 	case GOOD_STATE:
+<<<<<<< HEAD
 		if (get_random_u32() < clg->a1)
 			clg->state = BAD_STATE;
 		if (get_random_u32() < clg->a4)
@@ -277,6 +292,17 @@ static bool loss_gilb_ell(struct netem_sched_data *q)
 		if (get_random_u32() < clg->a2)
 			clg->state = GOOD_STATE;
 		if (get_random_u32() > clg->a3)
+=======
+		if (prandom_u32() < clg->a1)
+			clg->state = BAD_STATE;
+		if (prandom_u32() < clg->a4)
+			return true;
+		break;
+	case BAD_STATE:
+		if (prandom_u32() < clg->a2)
+			clg->state = GOOD_STATE;
+		if (prandom_u32() > clg->a3)
+>>>>>>> b7ba80a49124 (Commit)
 			return true;
 	}
 
@@ -513,8 +539,13 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
 			goto finish_segs;
 		}
 
+<<<<<<< HEAD
 		skb->data[get_random_u32_below(skb_headlen(skb))] ^=
 			1<<get_random_u32_below(8);
+=======
+		skb->data[prandom_u32() % skb_headlen(skb)] ^=
+			1<<(prandom_u32() % 8);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (unlikely(sch->q.qlen >= sch->limit)) {
@@ -632,7 +663,11 @@ static void get_slot_next(struct netem_sched_data *q, u64 now)
 
 	if (!q->slot_dist)
 		next_delay = q->slot_config.min_delay +
+<<<<<<< HEAD
 				(get_random_u32() *
+=======
+				(prandom_u32() *
+>>>>>>> b7ba80a49124 (Commit)
 				 (q->slot_config.max_delay -
 				  q->slot_config.min_delay) >> 32);
 	else
@@ -1251,8 +1286,17 @@ static unsigned long netem_find(struct Qdisc *sch, u32 classid)
 static void netem_walk(struct Qdisc *sch, struct qdisc_walker *walker)
 {
 	if (!walker->stop) {
+<<<<<<< HEAD
 		if (!tc_qdisc_stats_dump(sch, 1, walker))
 			return;
+=======
+		if (walker->count >= walker->skip)
+			if (walker->fn(sch, 1, walker) < 0) {
+				walker->stop = 1;
+				return;
+			}
+		walker->count++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

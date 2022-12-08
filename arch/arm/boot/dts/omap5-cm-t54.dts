@@ -84,6 +84,7 @@
 	};
 
 	lcd0: display {
+<<<<<<< HEAD
 		compatible = "startek,startek-kd050c", "panel-dpi";
 		label = "lcd";
 
@@ -114,6 +115,38 @@
 			};
 		};
 	};
+=======
+                compatible = "startek,startek-kd050c", "panel-dpi";
+                label = "lcd";
+
+                pinctrl-names = "default";
+                pinctrl-0 = <&lcd_pins>;
+
+                enable-gpios = <&gpio8 3 GPIO_ACTIVE_HIGH>;
+
+                panel-timing {
+                        clock-frequency = <33000000>;
+                        hactive = <800>;
+                        vactive = <480>;
+                        hfront-porch = <40>;
+                        hback-porch = <40>;
+                        hsync-len = <43>;
+                        vback-porch = <29>;
+                        vfront-porch = <13>;
+                        vsync-len = <3>;
+                        hsync-active = <0>;
+                        vsync-active = <0>;
+                        de-active = <1>;
+                        pixelclk-active = <1>;
+                };
+
+                port {
+                        lcd_in: endpoint {
+                                remote-endpoint = <&dpi_lcd_out>;
+                        };
+                };
+        };
+>>>>>>> b7ba80a49124 (Commit)
 
 	hdmi0: connector0 {
 		compatible = "hdmi-connector";
@@ -644,8 +677,13 @@
 };
 
 &usb3 {
+<<<<<<< HEAD
 	extcon = <&extcon_usb3>;
 	vbus-supply = <&smps10_out1_reg>;
+=======
+       extcon = <&extcon_usb3>;
+       vbus-supply = <&smps10_out1_reg>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &cpu0 {

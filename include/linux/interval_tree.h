@@ -27,6 +27,7 @@ extern struct interval_tree_node *
 interval_tree_iter_next(struct interval_tree_node *node,
 			unsigned long start, unsigned long last);
 
+<<<<<<< HEAD
 /**
  * struct interval_tree_span_iter - Find used and unused spans.
  * @start_hole: Start of an interval for a hole when is_hole == 1
@@ -85,4 +86,6 @@ interval_tree_span_iter_done(struct interval_tree_span_iter *state)
 	     !interval_tree_span_iter_done(span);                              \
 	     interval_tree_span_iter_next(span))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif	/* _LINUX_INTERVAL_TREE_H */

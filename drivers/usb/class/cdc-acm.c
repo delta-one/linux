@@ -651,13 +651,21 @@ static int acm_tty_open(struct tty_struct *tty, struct file *filp)
 	return tty_port_open(&acm->port, tty, filp);
 }
 
+<<<<<<< HEAD
 static void acm_port_dtr_rts(struct tty_port *port, bool active)
+=======
+static void acm_port_dtr_rts(struct tty_port *port, int raise)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct acm *acm = container_of(port, struct acm, port);
 	int val;
 	int res;
 
+<<<<<<< HEAD
 	if (active)
+=======
+	if (raise)
+>>>>>>> b7ba80a49124 (Commit)
 		val = USB_CDC_CTRL_DTR | USB_CDC_CTRL_RTS;
 	else
 		val = 0;

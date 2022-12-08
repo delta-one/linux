@@ -147,12 +147,34 @@ static int ieee802154_setup_hw(struct ieee802154_sub_if_data *sdata)
 	struct wpan_dev *wpan_dev = &sdata->wpan_dev;
 	int ret;
 
+<<<<<<< HEAD
 	sdata->required_filtering = sdata->iface_default_filtering;
 
 	if (local->hw.flags & IEEE802154_HW_AFILT) {
 		local->addr_filt.pan_id = wpan_dev->pan_id;
 		local->addr_filt.ieee_addr = wpan_dev->extended_addr;
 		local->addr_filt.short_addr = wpan_dev->short_addr;
+=======
+	if (local->hw.flags & IEEE802154_HW_PROMISCUOUS) {
+		ret = drv_set_promiscuous_mode(local,
+					       wpan_dev->promiscuous_mode);
+		if (ret < 0)
+			return ret;
+	}
+
+	if (local->hw.flags & IEEE802154_HW_AFILT) {
+		ret = drv_set_pan_id(local, wpan_dev->pan_id);
+		if (ret < 0)
+			return ret;
+
+		ret = drv_set_extended_addr(local, wpan_dev->extended_addr);
+		if (ret < 0)
+			return ret;
+
+		ret = drv_set_short_addr(local, wpan_dev->short_addr);
+		if (ret < 0)
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (local->hw.flags & IEEE802154_HW_LBT) {
@@ -193,8 +215,12 @@ static int mac802154_slave_open(struct net_device *dev)
 		if (res)
 			goto err;
 
+<<<<<<< HEAD
 		res = drv_start(local, sdata->required_filtering,
 				&local->addr_filt);
+=======
+		res = drv_start(local);
+>>>>>>> b7ba80a49124 (Commit)
 		if (res)
 			goto err;
 	}
@@ -211,6 +237,7 @@ err:
 
 static int
 ieee802154_check_mac_settings(struct ieee802154_local *local,
+<<<<<<< HEAD
 			      struct ieee802154_sub_if_data *sdata,
 			      struct ieee802154_sub_if_data *nsdata)
 {
@@ -221,6 +248,17 @@ ieee802154_check_mac_settings(struct ieee802154_local *local,
 
 	if (sdata->iface_default_filtering != nsdata->iface_default_filtering)
 		return -EBUSY;
+=======
+			      struct wpan_dev *wpan_dev,
+			      struct wpan_dev *nwpan_dev)
+{
+	ASSERT_RTNL();
+
+	if (local->hw.flags & IEEE802154_HW_PROMISCUOUS) {
+		if (wpan_dev->promiscuous_mode != nwpan_dev->promiscuous_mode)
+			return -EBUSY;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (local->hw.flags & IEEE802154_HW_AFILT) {
 		if (wpan_dev->pan_id != nwpan_dev->pan_id ||
@@ -254,6 +292,10 @@ ieee802154_check_concurrent_iface(struct ieee802154_sub_if_data *sdata,
 				  enum nl802154_iftype iftype)
 {
 	struct ieee802154_local *local = sdata->local;
+<<<<<<< HEAD
+=======
+	struct wpan_dev *wpan_dev = &sdata->wpan_dev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ieee802154_sub_if_data *nsdata;
 
 	/* we hold the RTNL here so can safely walk the list */
@@ -261,6 +303,7 @@ ieee802154_check_concurrent_iface(struct ieee802154_sub_if_data *sdata,
 		if (nsdata != sdata && ieee802154_sdata_running(nsdata)) {
 			int ret;
 
+<<<<<<< HEAD
 			/* TODO currently we don't support multiple node/coord
 			 * types we need to run skb_clone at rx path. Check if
 			 * there exist really an use case if we need to support
@@ -268,12 +311,26 @@ ieee802154_check_concurrent_iface(struct ieee802154_sub_if_data *sdata,
 			 */
 			if (sdata->wpan_dev.iftype != NL802154_IFTYPE_MONITOR &&
 			    nsdata->wpan_dev.iftype != NL802154_IFTYPE_MONITOR)
+=======
+			/* TODO currently we don't support multiple node types
+			 * we need to run skb_clone at rx path. Check if there
+			 * exist really an use case if we need to support
+			 * multiple node types at the same time.
+			 */
+			if (wpan_dev->iftype == NL802154_IFTYPE_NODE &&
+			    nsdata->wpan_dev.iftype == NL802154_IFTYPE_NODE)
+>>>>>>> b7ba80a49124 (Commit)
 				return -EBUSY;
 
 			/* check all phy mac sublayer settings are the same.
 			 * We have only one phy, different values makes trouble.
 			 */
+<<<<<<< HEAD
 			ret = ieee802154_check_mac_settings(local, sdata, nsdata);
+=======
+			ret = ieee802154_check_mac_settings(local, wpan_dev,
+							    &nsdata->wpan_dev);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret < 0)
 				return ret;
 		}
@@ -302,12 +359,15 @@ static int mac802154_slave_close(struct net_device *dev)
 
 	ASSERT_RTNL();
 
+<<<<<<< HEAD
 	if (mac802154_is_scanning(local))
 		mac802154_abort_scan_locked(local, sdata);
 
 	if (mac802154_is_beaconing(local))
 		mac802154_stop_beacons_locked(local, sdata);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	netif_stop_queue(dev);
 	local->open_count--;
 
@@ -570,7 +630,10 @@ ieee802154_setup_sdata(struct ieee802154_sub_if_data *sdata,
 	wpan_dev->short_addr = cpu_to_le16(IEEE802154_ADDR_BROADCAST);
 
 	switch (type) {
+<<<<<<< HEAD
 	case NL802154_IFTYPE_COORD:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case NL802154_IFTYPE_NODE:
 		ieee802154_be64_to_le64(&wpan_dev->extended_addr,
 					sdata->dev->dev_addr);
@@ -580,7 +643,11 @@ ieee802154_setup_sdata(struct ieee802154_sub_if_data *sdata,
 		sdata->dev->priv_destructor = mac802154_wpan_free;
 		sdata->dev->netdev_ops = &mac802154_wpan_ops;
 		sdata->dev->ml_priv = &mac802154_mlme_wpan;
+<<<<<<< HEAD
 		sdata->iface_default_filtering = IEEE802154_FILTERING_4_FRAME_FIELDS;
+=======
+		wpan_dev->promiscuous_mode = false;
+>>>>>>> b7ba80a49124 (Commit)
 		wpan_dev->header_ops = &ieee802154_header_ops;
 
 		mutex_init(&sdata->sec_mtx);
@@ -594,7 +661,11 @@ ieee802154_setup_sdata(struct ieee802154_sub_if_data *sdata,
 	case NL802154_IFTYPE_MONITOR:
 		sdata->dev->needs_free_netdev = true;
 		sdata->dev->netdev_ops = &mac802154_monitor_ops;
+<<<<<<< HEAD
 		sdata->iface_default_filtering = IEEE802154_FILTERING_NONE;
+=======
+		wpan_dev->promiscuous_mode = true;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		BUG();
@@ -630,7 +701,10 @@ ieee802154_if_add(struct ieee802154_local *local, const char *name,
 	ieee802154_le64_to_be64(ndev->perm_addr,
 				&local->hw.phy->perm_extended_addr);
 	switch (type) {
+<<<<<<< HEAD
 	case NL802154_IFTYPE_COORD:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case NL802154_IFTYPE_NODE:
 		ndev->type = ARPHRD_IEEE802154;
 		if (ieee802154_is_valid_extended_unicast_addr(extended_addr)) {
@@ -657,7 +731,10 @@ ieee802154_if_add(struct ieee802154_local *local, const char *name,
 	sdata->dev = ndev;
 	sdata->wpan_dev.wpan_phy = local->hw.phy;
 	sdata->local = local;
+<<<<<<< HEAD
 	INIT_LIST_HEAD(&sdata->wpan_dev.list);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* setup type-dependent data */
 	ret = ieee802154_setup_sdata(sdata, type);

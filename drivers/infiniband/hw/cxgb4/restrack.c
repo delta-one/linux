@@ -238,7 +238,11 @@ int c4iw_fill_res_cm_id_entry(struct sk_buff *msg,
 	if (rdma_nl_put_driver_u64_hex(msg, "history", epcp->history))
 		goto err_cancel_table;
 
+<<<<<<< HEAD
 	if (listen_ep) {
+=======
+	if (epcp->state == LISTEN) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (rdma_nl_put_driver_u32(msg, "stid", listen_ep->stid))
 			goto err_cancel_table;
 		if (rdma_nl_put_driver_u32(msg, "backlog", listen_ep->backlog))

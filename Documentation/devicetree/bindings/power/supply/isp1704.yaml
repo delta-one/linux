@@ -5,7 +5,11 @@
 $id: http://devicetree.org/schemas/power/supply/isp1704.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: NXP ISP1704 USB Charger Detection
+=======
+title: Binding for NXP ISP1704 USB Charger Detection
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Sebastian Reichel <sre@kernel.org>

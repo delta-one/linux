@@ -10,6 +10,10 @@
 #include <linux/clk.h>
 #include <linux/mutex.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
+=======
+#include <linux/sys_soc.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <drm/drm_atomic.h>
 #include <drm/drm_atomic_helper.h>
@@ -203,6 +207,14 @@ static void rcar_du_escr_divider(struct clk *clk, unsigned long target,
 	}
 }
 
+<<<<<<< HEAD
+=======
+static const struct soc_device_attribute rcar_du_r8a7795_es1[] = {
+	{ .soc_id = "r8a7795", .revision = "ES1.*" },
+	{ /* sentinel */ }
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static void rcar_du_crtc_set_display_timing(struct rcar_du_crtc *rcrtc)
 {
 	const struct drm_display_mode *mode = &rcrtc->crtc.state->adjusted_mode;
@@ -232,7 +244,11 @@ static void rcar_du_crtc_set_display_timing(struct rcar_du_crtc *rcrtc)
 		 * no post-divider when a display PLL is present (as shown by
 		 * the workaround breaking HDMI output on M3-W during testing).
 		 */
+<<<<<<< HEAD
 		if (rcdu->info->quirks & RCAR_DU_QUIRK_H3_ES1_PCLK_STABILITY) {
+=======
+		if (soc_device_match(rcar_du_r8a7795_es1)) {
+>>>>>>> b7ba80a49124 (Commit)
 			target *= 2;
 			div = 1;
 		}
@@ -245,6 +261,7 @@ static void rcar_du_crtc_set_display_timing(struct rcar_du_crtc *rcrtc)
 		       | DPLLCR_N(dpll.n) | DPLLCR_M(dpll.m)
 		       | DPLLCR_STBY;
 
+<<<<<<< HEAD
 		if (rcrtc->index == 1) {
 			dpllcr |= DPLLCR_PLCS1
 			       |  DPLLCR_INCS_DOTCLKIN1;
@@ -269,6 +286,15 @@ static void rcar_du_crtc_set_display_timing(struct rcar_du_crtc *rcrtc)
 				dpllcr |= DPLLCR_PLCS0_H3ES1X_PLL1;
 		}
 
+=======
+		if (rcrtc->index == 1)
+			dpllcr |= DPLLCR_PLCS1
+			       |  DPLLCR_INCS_DOTCLKIN1;
+		else
+			dpllcr |= DPLLCR_PLCS0
+			       |  DPLLCR_INCS_DOTCLKIN0;
+
+>>>>>>> b7ba80a49124 (Commit)
 		rcar_du_group_write(rcrtc->group, DPLLCR, dpllcr);
 
 		escr = ESCR_DCLKSEL_DCLKIN | div;
@@ -298,12 +324,19 @@ static void rcar_du_crtc_set_display_timing(struct rcar_du_crtc *rcrtc)
 		escr = params.escr;
 	}
 
+<<<<<<< HEAD
 	if (rcdu->info->gen < 4) {
 		dev_dbg(rcrtc->dev->dev, "%s: ESCR 0x%08x\n", __func__, escr);
 
 		rcar_du_crtc_write(rcrtc, rcrtc->index % 2 ? ESCR13 : ESCR02, escr);
 		rcar_du_crtc_write(rcrtc, rcrtc->index % 2 ? OTAR13 : OTAR02, 0);
 	}
+=======
+	dev_dbg(rcrtc->dev->dev, "%s: ESCR 0x%08x\n", __func__, escr);
+
+	rcar_du_crtc_write(rcrtc, rcrtc->index % 2 ? ESCR13 : ESCR02, escr);
+	rcar_du_crtc_write(rcrtc, rcrtc->index % 2 ? OTAR13 : OTAR02, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Signal polarities */
 	dsmr = ((mode->flags & DRM_MODE_FLAG_PVSYNC) ? DSMR_VSL : 0)

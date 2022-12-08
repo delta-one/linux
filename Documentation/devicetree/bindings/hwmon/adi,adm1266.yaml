@@ -39,13 +39,22 @@ additionalProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     i2c {
+=======
+    i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 
         adm1266@40 {
+<<<<<<< HEAD
             compatible = "adi,adm1266";
             reg = <0x40>;
+=======
+                compatible = "adi,adm1266";
+                reg = <0x40>;
+>>>>>>> b7ba80a49124 (Commit)
         };
     };
 ...

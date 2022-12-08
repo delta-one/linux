@@ -264,9 +264,16 @@ int mlxsw_core_cpu_port_init(struct mlxsw_core *mlxsw_core,
 			     const unsigned char *switch_id,
 			     unsigned char switch_id_len);
 void mlxsw_core_cpu_port_fini(struct mlxsw_core *mlxsw_core);
+<<<<<<< HEAD
 void mlxsw_core_port_netdev_link(struct mlxsw_core *mlxsw_core, u16 local_port,
 				 void *port_driver_priv,
 				 struct net_device *dev);
+=======
+void mlxsw_core_port_eth_set(struct mlxsw_core *mlxsw_core, u16 local_port,
+			     void *port_driver_priv, struct net_device *dev);
+void mlxsw_core_port_clear(struct mlxsw_core *mlxsw_core, u16 local_port,
+			   void *port_driver_priv);
+>>>>>>> b7ba80a49124 (Commit)
 struct devlink_port *
 mlxsw_core_port_devlink_port_get(struct mlxsw_core *mlxsw_core,
 				 u16 local_port);
@@ -421,6 +428,11 @@ struct mlxsw_driver {
 			     const struct mlxsw_config_profile *profile,
 			     u64 *p_single_size, u64 *p_double_size,
 			     u64 *p_linear_size);
+<<<<<<< HEAD
+=======
+	int (*params_register)(struct mlxsw_core *mlxsw_core);
+	void (*params_unregister)(struct mlxsw_core *mlxsw_core);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Notify a driver that a timestamped packet was transmitted. Driver
 	 * is responsible for freeing the passed-in SKB.
@@ -446,6 +458,11 @@ u32 mlxsw_core_read_utc_nsec(struct mlxsw_core *mlxsw_core);
 
 bool mlxsw_core_sdq_supports_cqe_v2(struct mlxsw_core *mlxsw_core);
 
+<<<<<<< HEAD
+=======
+void mlxsw_core_emad_string_tlv_enable(struct mlxsw_core *mlxsw_core);
+
+>>>>>>> b7ba80a49124 (Commit)
 bool mlxsw_core_res_valid(struct mlxsw_core *mlxsw_core,
 			  enum mlxsw_res_id res_id);
 

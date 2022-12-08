@@ -880,7 +880,11 @@ affs_truncate(struct inode *inode)
 	if (inode->i_size > AFFS_I(inode)->mmu_private) {
 		struct address_space *mapping = inode->i_mapping;
 		struct page *page;
+<<<<<<< HEAD
 		void *fsdata = NULL;
+=======
+		void *fsdata;
+>>>>>>> b7ba80a49124 (Commit)
 		loff_t isize = inode->i_size;
 		int res;
 

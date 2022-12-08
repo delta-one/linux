@@ -5,7 +5,10 @@
 
 #include <linux/bsearch.h>
 
+<<<<<<< HEAD
 #include "gem/i915_gem_lmem.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "gt/intel_engine_regs.h"
 #include "gt/intel_gt.h"
 #include "gt/intel_gt_mcr.h"
@@ -15,7 +18,10 @@
 #include "intel_guc_ads.h"
 #include "intel_guc_capture.h"
 #include "intel_guc_fwif.h"
+<<<<<<< HEAD
 #include "intel_guc_print.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_uc.h"
 #include "i915_drv.h"
 
@@ -279,16 +285,35 @@ __mmio_reg_add(struct temp_regset *regset, struct guc_mmio_reg *reg)
 	return slot;
 }
 
+<<<<<<< HEAD
 static long __must_check guc_mmio_reg_add(struct intel_gt *gt,
 					  struct temp_regset *regset,
 					  u32 offset, u32 flags)
 {
 	u32 count = regset->storage_used - (regset->registers - regset->storage);
+=======
+#define GUC_REGSET_STEERING(group, instance) ( \
+	FIELD_PREP(GUC_REGSET_STEERING_GROUP, (group)) | \
+	FIELD_PREP(GUC_REGSET_STEERING_INSTANCE, (instance)) | \
+	GUC_REGSET_NEEDS_STEERING \
+)
+
+static long __must_check guc_mmio_reg_add(struct intel_gt *gt,
+					  struct temp_regset *regset,
+					  i915_reg_t reg, u32 flags)
+{
+	u32 count = regset->storage_used - (regset->registers - regset->storage);
+	u32 offset = i915_mmio_reg_offset(reg);
+>>>>>>> b7ba80a49124 (Commit)
 	struct guc_mmio_reg entry = {
 		.offset = offset,
 		.flags = flags,
 	};
 	struct guc_mmio_reg *slot;
+<<<<<<< HEAD
+=======
+	u8 group, inst;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * The mmio list is built using separate lists within the driver.
@@ -300,6 +325,20 @@ static long __must_check guc_mmio_reg_add(struct intel_gt *gt,
 		    sizeof(entry), guc_mmio_reg_cmp))
 		return 0;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * The GuC doesn't have a default steering, so we need to explicitly
+	 * steer all registers that need steering. However, we do not keep track
+	 * of all the steering ranges, only of those that have a chance of using
+	 * a non-default steering from the i915 pov. Instead of adding such
+	 * tracking, it is easier to just program the default steering for all
+	 * regs that don't need a non-default one.
+	 */
+	intel_gt_mcr_get_nonterminated_steering(gt, reg, &group, &inst);
+	entry.flags |= GUC_REGSET_STEERING(group, inst);
+
+>>>>>>> b7ba80a49124 (Commit)
 	slot = __mmio_reg_add(regset, &entry);
 	if (IS_ERR(slot))
 		return PTR_ERR(slot);
@@ -318,6 +357,7 @@ static long __must_check guc_mmio_reg_add(struct intel_gt *gt,
 #define GUC_MMIO_REG_ADD(gt, regset, reg, masked) \
 	guc_mmio_reg_add(gt, \
 			 regset, \
+<<<<<<< HEAD
 			 i915_mmio_reg_offset(reg), \
 			 (masked) ? GUC_REGSET_MASKED : 0)
 
@@ -350,6 +390,8 @@ static long __must_check guc_mcr_reg_add(struct intel_gt *gt,
 #define GUC_MCR_REG_ADD(gt, regset, reg, masked) \
 	guc_mcr_reg_add(gt, \
 			 regset, \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			 (reg), \
 			 (masked) ? GUC_REGSET_MASKED : 0)
 
@@ -387,6 +429,7 @@ static int guc_mmio_regset_init(struct temp_regset *regset,
 					false);
 
 	/* add in local MOCS registers */
+<<<<<<< HEAD
 	for (i = 0; i < LNCFCMOCS_REG_COUNT; i++)
 		if (GRAPHICS_VER_FULL(engine->i915) >= IP_VER(12, 50))
 			ret |= GUC_MCR_REG_ADD(gt, regset, XEHP_LNCFCMOCS(i), false);
@@ -402,6 +445,10 @@ static int guc_mmio_regset_init(struct temp_regset *regset,
 		ret |= GUC_MMIO_REG_ADD(gt, regset, EU_PERF_CNTL5, false);
 		ret |= GUC_MMIO_REG_ADD(gt, regset, EU_PERF_CNTL6, false);
 	}
+=======
+	for (i = 0; i < GEN9_LNCFCMOCS_REG_COUNT; i++)
+		ret |= GUC_MMIO_REG_ADD(gt, regset, GEN9_LNCFCMOCS(i), false);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret ? -1 : 0;
 }
@@ -428,7 +475,11 @@ static long guc_mmio_reg_state_create(struct intel_guc *guc)
 
 	guc->ads_regset = temp_set.storage;
 
+<<<<<<< HEAD
 	guc_dbg(guc, "Used %zu KB for temporary ADS regset\n",
+=======
+	drm_dbg(&guc_to_gt(guc)->i915->drm, "Used %zu KB for temporary ADS regset\n",
+>>>>>>> b7ba80a49124 (Commit)
 		(temp_set.storage_max * sizeof(struct guc_mmio_reg)) >> 10);
 
 	return total * sizeof(struct guc_mmio_reg);
@@ -489,11 +540,14 @@ static void fill_engine_enable_masks(struct intel_gt *gt,
 	info_map_write(info_map, engine_enabled_masks[GUC_BLITTER_CLASS], BCS_MASK(gt));
 	info_map_write(info_map, engine_enabled_masks[GUC_VIDEO_CLASS], VDBOX_MASK(gt));
 	info_map_write(info_map, engine_enabled_masks[GUC_VIDEOENHANCE_CLASS], VEBOX_MASK(gt));
+<<<<<<< HEAD
 
 	/* The GSC engine is an instance (6) of OTHER_CLASS */
 	if (gt->engine[GSC0])
 		info_map_write(info_map, engine_enabled_masks[GUC_GSC_OTHER_CLASS],
 			       BIT(gt->engine[GSC0]->instance));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define LR_HW_CONTEXT_SIZE (80 * sizeof(u32))
@@ -535,6 +589,12 @@ static int guc_prep_golden_context(struct intel_guc *guc)
 	}
 
 	for (engine_class = 0; engine_class <= MAX_ENGINE_CLASS; ++engine_class) {
+<<<<<<< HEAD
+=======
+		if (engine_class == OTHER_CLASS)
+			continue;
+
+>>>>>>> b7ba80a49124 (Commit)
 		guc_class = engine_class_to_guc_class(engine_class);
 
 		if (!info_map_read(&info_map, engine_enabled_masks[guc_class]))
@@ -612,6 +672,12 @@ static void guc_init_golden_context(struct intel_guc *guc)
 	addr_ggtt = intel_guc_ggtt_offset(guc, guc->ads_vma) + offset;
 
 	for (engine_class = 0; engine_class <= MAX_ENGINE_CLASS; ++engine_class) {
+<<<<<<< HEAD
+=======
+		if (engine_class == OTHER_CLASS)
+			continue;
+
+>>>>>>> b7ba80a49124 (Commit)
 		guc_class = engine_class_to_guc_class(engine_class);
 		if (!ads_blob_read(guc, system_info.engine_enabled_masks[guc_class]))
 			continue;
@@ -622,7 +688,11 @@ static void guc_init_golden_context(struct intel_guc *guc)
 
 		engine = find_engine_state(gt, engine_class);
 		if (!engine) {
+<<<<<<< HEAD
 			guc_err(guc, "No engine state recorded for class %d!\n",
+=======
+			drm_err(&gt->i915->drm, "No engine state recorded for class %d!\n",
+>>>>>>> b7ba80a49124 (Commit)
 				engine_class);
 			ads_blob_write(guc, ads.eng_state_size[guc_class], 0);
 			ads_blob_write(guc, ads.golden_context_lrca[guc_class], 0);
@@ -647,6 +717,10 @@ static int
 guc_capture_prep_lists(struct intel_guc *guc)
 {
 	struct intel_gt *gt = guc_to_gt(guc);
+<<<<<<< HEAD
+=======
+	struct drm_i915_private *i915 = guc_to_gt(guc)->i915;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 ads_ggtt, capture_offset, null_ggtt, total_size = 0;
 	struct guc_gt_system_info local_info;
 	struct iosys_map info_map;
@@ -751,7 +825,11 @@ engine_instance_list:
 	}
 
 	if (guc->ads_capture_size && guc->ads_capture_size != PAGE_ALIGN(total_size))
+<<<<<<< HEAD
 		guc_warn(guc, "ADS capture alloc size changed from %d to %d\n",
+=======
+		drm_warn(&i915->drm, "GuC->ADS->Capture alloc size changed from %d to %d\n",
+>>>>>>> b7ba80a49124 (Commit)
 			 guc->ads_capture_size, PAGE_ALIGN(total_size));
 
 	return PAGE_ALIGN(total_size);

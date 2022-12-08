@@ -178,6 +178,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
 #endif /* CONFIG_HAVE_STATIC_CALL */
 
 /*
+<<<<<<< HEAD
  * ARCH_WANTS_NO_INSTR archs are expected to have sanitized entry and idle
  * code that disallow any/all tracing/instrumentation when RCU isn't watching.
  */
@@ -189,6 +190,8 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
 #endif
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * it_func[0] is never NULL because there is at least one element in the array
  * when the array itself is non NULL.
  */
@@ -199,8 +202,13 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
 		if (!(cond))						\
 			return;						\
 									\
+<<<<<<< HEAD
 		if (WARN_ON_ONCE(RCUIDLE_COND(rcuidle)))		\
 			return;						\
+=======
+		/* srcu can't be used from NMI */			\
+		WARN_ON_ONCE(rcuidle && in_nmi());			\
+>>>>>>> b7ba80a49124 (Commit)
 									\
 		/* keep srcu and sched-rcu usage consistent */		\
 		preempt_disable_notrace();				\
@@ -242,11 +250,20 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
  * not add unwanted padding between the beginning of the section and the
  * structure. Force alignment to the same alignment as the section start.
  *
+<<<<<<< HEAD
  * When lockdep is enabled, we make sure to always test if RCU is
  * "watching" regardless if the tracepoint is enabled or not. Tracepoints
  * require RCU to be active, and it should always warn at the tracepoint
  * site if it is not watching, as it will need to be active when the
  * tracepoint is enabled.
+=======
+ * When lockdep is enabled, we make sure to always do the RCU portions of
+ * the tracepoint code, regardless of whether tracing is on. However,
+ * don't check if the condition is false, due to interaction with idle
+ * instrumentation. This lets us find RCU issues triggered with tracepoints
+ * even when this tracepoint is off. This code has no purpose other than
+ * poking RCU a bit.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #define __DECLARE_TRACE(name, proto, args, cond, data_proto)		\
 	extern int __traceiter_##name(data_proto);			\
@@ -259,7 +276,13 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
 				TP_ARGS(args),				\
 				TP_CONDITION(cond), 0);			\
 		if (IS_ENABLED(CONFIG_LOCKDEP) && (cond)) {		\
+<<<<<<< HEAD
 			WARN_ON_ONCE(!rcu_is_watching());		\
+=======
+			rcu_read_lock_sched_notrace();			\
+			rcu_dereference_sched(__tracepoint_##name.funcs);\
+			rcu_read_unlock_sched_notrace();		\
+>>>>>>> b7ba80a49124 (Commit)
 		}							\
 	}								\
 	__DECLARE_TRACE_RCU(name, PARAMS(proto), PARAMS(args),		\
@@ -479,7 +502,11 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
  *	* This is how the trace record is structured and will
  *	* be saved into the ring buffer. These are the fields
  *	* that will be exposed to user-space in
+<<<<<<< HEAD
  *	* /sys/kernel/tracing/events/<*>/format.
+=======
+ *	* /sys/kernel/debug/tracing/events/<*>/format.
+>>>>>>> b7ba80a49124 (Commit)
  *	*
  *	* The declared 'local variable' is called '__entry'
  *	*
@@ -539,7 +566,11 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
  * tracepoint callback (this is used by programmatic plugins and
  * can also by used by generic instrumentation like SystemTap), and
  * it is also used to expose a structured trace record in
+<<<<<<< HEAD
  * /sys/kernel/tracing/events/.
+=======
+ * /sys/kernel/debug/tracing/events/.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * A set of (un)registration functions can be passed to the variant
  * TRACE_EVENT_FN to perform any (un)registration work.

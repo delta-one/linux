@@ -9,13 +9,17 @@
 
 #include "../kselftest.h"
 
+<<<<<<< HEAD
 static int registrations;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int sys_membarrier(int cmd, int flags)
 {
 	return syscall(__NR_membarrier, cmd, flags);
 }
 
+<<<<<<< HEAD
 static int test_membarrier_get_registrations(int cmd)
 {
 	int ret, flags = 0;
@@ -41,6 +45,8 @@ static int test_membarrier_get_registrations(int cmd)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int test_membarrier_cmd_fail(void)
 {
 	int cmd = -1, flags = 0;
@@ -140,8 +146,11 @@ static int test_membarrier_register_private_expedited_success(void)
 	ksft_test_result_pass(
 		"%s test: flags = %d\n",
 		test_name, flags);
+<<<<<<< HEAD
 
 	test_membarrier_get_registrations(cmd);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -199,8 +208,11 @@ static int test_membarrier_register_private_expedited_sync_core_success(void)
 	ksft_test_result_pass(
 		"%s test: flags = %d\n",
 		test_name, flags);
+<<<<<<< HEAD
 
 	test_membarrier_get_registrations(cmd);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -235,8 +247,11 @@ static int test_membarrier_register_global_expedited_success(void)
 	ksft_test_result_pass(
 		"%s test: flags = %d\n",
 		test_name, flags);
+<<<<<<< HEAD
 
 	test_membarrier_get_registrations(cmd);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

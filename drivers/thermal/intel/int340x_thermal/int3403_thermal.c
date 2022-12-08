@@ -69,7 +69,11 @@ static void int3403_notify(acpi_handle handle,
 						   THERMAL_TRIP_VIOLATED);
 		break;
 	case INT3403_PERF_TRIP_POINT_CHANGED:
+<<<<<<< HEAD
 		int340x_thermal_update_trips(obj->int340x_zone);
+=======
+		int340x_thermal_read_trips(obj->int340x_zone);
+>>>>>>> b7ba80a49124 (Commit)
 		int340x_thermal_zone_device_update(obj->int340x_zone,
 						   THERMAL_TRIP_CHANGED);
 		break;

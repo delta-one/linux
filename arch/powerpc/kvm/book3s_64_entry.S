@@ -315,7 +315,11 @@ kvmppc_p9_exit_interrupt:
 	reg = reg + 1
 	.endr
 
+<<<<<<< HEAD
 	LOAD_PACA_TOC()
+=======
+	ld	r2,PACATOC(r13)
+>>>>>>> b7ba80a49124 (Commit)
 
 	mflr	r4
 	std	r4,VCPU_LR(r3)

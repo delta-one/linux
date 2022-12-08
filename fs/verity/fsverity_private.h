@@ -8,6 +8,13 @@
 #ifndef _FSVERITY_PRIVATE_H
 #define _FSVERITY_PRIVATE_H
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_FS_VERITY_DEBUG
+#define DEBUG
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #define pr_fmt(fmt) "fs-verity: " fmt
 
 #include <linux/fsverity.h>
@@ -28,11 +35,14 @@ struct fsverity_hash_alg {
 	unsigned int digest_size; /* digest size in bytes, e.g. 32 for SHA-256 */
 	unsigned int block_size;  /* block size in bytes, e.g. 64 for SHA-256 */
 	mempool_t req_pool;	  /* mempool with a preallocated hash request */
+<<<<<<< HEAD
 	/*
 	 * The HASH_ALGO_* constant for this algorithm.  This is different from
 	 * FS_VERITY_HASH_ALG_*, which uses a different numbering scheme.
 	 */
 	enum hash_algo algo_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Merkle tree parameters: hash algorithm, initial hash state, and topology */
@@ -42,6 +52,7 @@ struct merkle_tree_params {
 	unsigned int digest_size;	/* same as hash_alg->digest_size */
 	unsigned int block_size;	/* size of data and tree blocks */
 	unsigned int hashes_per_block;	/* number of hashes per tree block */
+<<<<<<< HEAD
 	unsigned int blocks_per_page;	/* PAGE_SIZE / block_size */
 	u8 log_digestsize;		/* log2(digest_size) */
 	u8 log_blocksize;		/* log2(block_size) */
@@ -50,12 +61,23 @@ struct merkle_tree_params {
 	unsigned int num_levels;	/* number of levels in Merkle tree */
 	u64 tree_size;			/* Merkle tree size in bytes */
 	unsigned long tree_pages;	/* Merkle tree size in pages */
+=======
+	unsigned int log_blocksize;	/* log2(block_size) */
+	unsigned int log_arity;		/* log2(hashes_per_block) */
+	unsigned int num_levels;	/* number of levels in Merkle tree */
+	u64 tree_size;			/* Merkle tree size in bytes */
+	unsigned long level0_blocks;	/* number of blocks in tree level 0 */
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Starting block index for each tree level, ordered from leaf level (0)
 	 * to root level ('num_levels - 1')
 	 */
+<<<<<<< HEAD
 	unsigned long level_start[FS_VERITY_MAX_LEVELS];
+=======
+	u64 level_start[FS_VERITY_MAX_LEVELS];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -72,10 +94,16 @@ struct fsverity_info {
 	u8 root_hash[FS_VERITY_MAX_DIGEST_SIZE];
 	u8 file_digest[FS_VERITY_MAX_DIGEST_SIZE];
 	const struct inode *inode;
+<<<<<<< HEAD
 	unsigned long *hash_block_verified;
 	spinlock_t hash_page_init_lock;
 };
 
+=======
+};
+
+
+>>>>>>> b7ba80a49124 (Commit)
 #define FS_VERITY_MAX_SIGNATURE_SIZE	(FS_VERITY_MAX_DESCRIPTOR_SIZE - \
 					 sizeof(struct fsverity_descriptor))
 
@@ -91,9 +119,15 @@ void fsverity_free_hash_request(struct fsverity_hash_alg *alg,
 				struct ahash_request *req);
 const u8 *fsverity_prepare_hash_state(struct fsverity_hash_alg *alg,
 				      const u8 *salt, size_t salt_size);
+<<<<<<< HEAD
 int fsverity_hash_block(const struct merkle_tree_params *params,
 			const struct inode *inode, struct ahash_request *req,
 			struct page *page, unsigned int offset, u8 *out);
+=======
+int fsverity_hash_page(const struct merkle_tree_params *params,
+		       const struct inode *inode,
+		       struct ahash_request *req, struct page *page, u8 *out);
+>>>>>>> b7ba80a49124 (Commit)
 int fsverity_hash_buffer(struct fsverity_hash_alg *alg,
 			 const void *data, size_t size, u8 *out);
 void __init fsverity_check_hash_algs(void);

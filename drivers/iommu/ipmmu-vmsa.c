@@ -30,6 +30,10 @@
 #define arm_iommu_create_mapping(...)	NULL
 #define arm_iommu_attach_device(...)	-ENODEV
 #define arm_iommu_release_mapping(...)	do {} while (0)
+<<<<<<< HEAD
+=======
+#define arm_iommu_detach_device(...)	do {} while (0)
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #define IPMMU_CTX_MAX		16U
@@ -298,6 +302,21 @@ static void ipmmu_utlb_enable(struct ipmmu_vmsa_domain *domain,
 	mmu->utlb_ctx[utlb] = domain->context_id;
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * Disable MMU translation for the microTLB.
+ */
+static void ipmmu_utlb_disable(struct ipmmu_vmsa_domain *domain,
+			       unsigned int utlb)
+{
+	struct ipmmu_vmsa_device *mmu = domain->mmu;
+
+	ipmmu_imuctr_write(mmu, utlb, 0);
+	mmu->utlb_ctx[utlb] = IPMMU_CTX_INVALID;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void ipmmu_tlb_flush_all(void *cookie)
 {
 	struct ipmmu_vmsa_domain *domain = cookie;
@@ -615,6 +634,11 @@ static int ipmmu_attach_device(struct iommu_domain *io_domain,
 		 * Something is wrong, we can't attach two devices using
 		 * different IOMMUs to the same domain.
 		 */
+<<<<<<< HEAD
+=======
+		dev_err(dev, "Can't attach IPMMU %s to domain on IPMMU %s\n",
+			dev_name(mmu->dev), dev_name(domain->mmu->dev));
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EINVAL;
 	} else
 		dev_info(dev, "Reusing IPMMU context %u\n", domain->context_id);
@@ -630,6 +654,7 @@ static int ipmmu_attach_device(struct iommu_domain *io_domain,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ipmmu_map(struct iommu_domain *io_domain, unsigned long iova,
 		     phys_addr_t paddr, size_t pgsize, size_t pgcount,
 		     int prot, gfp_t gfp, size_t *mapped)
@@ -647,6 +672,40 @@ static size_t ipmmu_unmap(struct iommu_domain *io_domain, unsigned long iova,
 	struct ipmmu_vmsa_domain *domain = to_vmsa_domain(io_domain);
 
 	return domain->iop->unmap_pages(domain->iop, iova, pgsize, pgcount, gather);
+=======
+static void ipmmu_detach_device(struct iommu_domain *io_domain,
+				struct device *dev)
+{
+	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+	struct ipmmu_vmsa_domain *domain = to_vmsa_domain(io_domain);
+	unsigned int i;
+
+	for (i = 0; i < fwspec->num_ids; ++i)
+		ipmmu_utlb_disable(domain, fwspec->ids[i]);
+
+	/*
+	 * TODO: Optimize by disabling the context when no device is attached.
+	 */
+}
+
+static int ipmmu_map(struct iommu_domain *io_domain, unsigned long iova,
+		     phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+{
+	struct ipmmu_vmsa_domain *domain = to_vmsa_domain(io_domain);
+
+	if (!domain)
+		return -ENODEV;
+
+	return domain->iop->map(domain->iop, iova, paddr, size, prot, gfp);
+}
+
+static size_t ipmmu_unmap(struct iommu_domain *io_domain, unsigned long iova,
+			  size_t size, struct iommu_iotlb_gather *gather)
+{
+	struct ipmmu_vmsa_domain *domain = to_vmsa_domain(io_domain);
+
+	return domain->iop->unmap(domain->iop, iova, size, gather);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ipmmu_flush_iotlb_all(struct iommu_domain *io_domain)
@@ -696,6 +755,10 @@ static const struct soc_device_attribute soc_needs_opt_in[] = {
 
 static const struct soc_device_attribute soc_denylist[] = {
 	{ .soc_id = "r8a774a1", },
+<<<<<<< HEAD
+=======
+	{ .soc_id = "r8a7795", .revision = "ES1.*" },
+>>>>>>> b7ba80a49124 (Commit)
 	{ .soc_id = "r8a7795", .revision = "ES2.*" },
 	{ .soc_id = "r8a7796", },
 	{ /* sentinel */ }
@@ -818,6 +881,7 @@ static void ipmmu_probe_finalize(struct device *dev)
 
 static void ipmmu_release_device(struct device *dev)
 {
+<<<<<<< HEAD
 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
 	struct ipmmu_vmsa_device *mmu = to_ipmmu(dev);
 	unsigned int i;
@@ -830,6 +894,9 @@ static void ipmmu_release_device(struct device *dev)
 	}
 
 	arm_iommu_release_mapping(mmu->mapping);
+=======
+	arm_iommu_detach_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct iommu_group *ipmmu_find_group(struct device *dev)
@@ -858,8 +925,14 @@ static const struct iommu_ops ipmmu_ops = {
 	.of_xlate = ipmmu_of_xlate,
 	.default_domain_ops = &(const struct iommu_domain_ops) {
 		.attach_dev	= ipmmu_attach_device,
+<<<<<<< HEAD
 		.map_pages	= ipmmu_map,
 		.unmap_pages	= ipmmu_unmap,
+=======
+		.detach_dev	= ipmmu_detach_device,
+		.map		= ipmmu_map,
+		.unmap		= ipmmu_unmap,
+>>>>>>> b7ba80a49124 (Commit)
 		.flush_iotlb_all = ipmmu_flush_iotlb_all,
 		.iotlb_sync	= ipmmu_iotlb_sync,
 		.iova_to_phys	= ipmmu_iova_to_phys,
@@ -1023,7 +1096,11 @@ static int ipmmu_probe(struct platform_device *pdev)
 	 * the lack of has_cache_leaf_nodes flag or renesas,ipmmu-main property.
 	 */
 	if (!mmu->features->has_cache_leaf_nodes ||
+<<<<<<< HEAD
 	    !of_property_present(pdev->dev.of_node, "renesas,ipmmu-main"))
+=======
+	    !of_find_property(pdev->dev.of_node, "renesas,ipmmu-main", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		mmu->root = mmu;
 	else
 		mmu->root = ipmmu_find_root();

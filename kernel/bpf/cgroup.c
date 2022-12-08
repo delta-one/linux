@@ -173,11 +173,19 @@ void bpf_cgroup_atype_put(int cgroup_atype)
 {
 	int i = cgroup_atype - CGROUP_LSM_START;
 
+<<<<<<< HEAD
 	cgroup_lock();
 	if (--cgroup_lsm_atype[i].refcnt <= 0)
 		cgroup_lsm_atype[i].attach_btf_id = 0;
 	WARN_ON_ONCE(cgroup_lsm_atype[i].refcnt < 0);
 	cgroup_unlock();
+=======
+	mutex_lock(&cgroup_mutex);
+	if (--cgroup_lsm_atype[i].refcnt <= 0)
+		cgroup_lsm_atype[i].attach_btf_id = 0;
+	WARN_ON_ONCE(cgroup_lsm_atype[i].refcnt < 0);
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 }
 #else
 static enum cgroup_bpf_attach_type
@@ -282,7 +290,11 @@ static void cgroup_bpf_release(struct work_struct *work)
 
 	unsigned int atype;
 
+<<<<<<< HEAD
 	cgroup_lock();
+=======
+	mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (atype = 0; atype < ARRAY_SIZE(cgrp->bpf.progs); atype++) {
 		struct hlist_head *progs = &cgrp->bpf.progs[atype];
@@ -315,7 +327,11 @@ static void cgroup_bpf_release(struct work_struct *work)
 		bpf_cgroup_storage_free(storage);
 	}
 
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (p = cgroup_parent(cgrp); p; p = cgroup_parent(p))
 		cgroup_bpf_put(p);
@@ -729,9 +745,15 @@ static int cgroup_bpf_attach(struct cgroup *cgrp,
 {
 	int ret;
 
+<<<<<<< HEAD
 	cgroup_lock();
 	ret = __cgroup_bpf_attach(cgrp, prog, replace_prog, link, type, flags);
 	cgroup_unlock();
+=======
+	mutex_lock(&cgroup_mutex);
+	ret = __cgroup_bpf_attach(cgrp, prog, replace_prog, link, type, flags);
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -831,7 +853,11 @@ static int cgroup_bpf_replace(struct bpf_link *link, struct bpf_prog *new_prog,
 
 	cg_link = container_of(link, struct bpf_cgroup_link, link);
 
+<<<<<<< HEAD
 	cgroup_lock();
+=======
+	mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	/* link might have been auto-released by dying cgroup, so fail */
 	if (!cg_link->cgroup) {
 		ret = -ENOLINK;
@@ -843,7 +869,11 @@ static int cgroup_bpf_replace(struct bpf_link *link, struct bpf_prog *new_prog,
 	}
 	ret = __cgroup_bpf_replace(cg_link->cgroup, cg_link, new_prog);
 out_unlock:
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -1009,9 +1039,15 @@ static int cgroup_bpf_detach(struct cgroup *cgrp, struct bpf_prog *prog,
 {
 	int ret;
 
+<<<<<<< HEAD
 	cgroup_lock();
 	ret = __cgroup_bpf_detach(cgrp, prog, NULL, type);
 	cgroup_unlock();
+=======
+	mutex_lock(&cgroup_mutex);
+	ret = __cgroup_bpf_detach(cgrp, prog, NULL, type);
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -1120,9 +1156,15 @@ static int cgroup_bpf_query(struct cgroup *cgrp, const union bpf_attr *attr,
 {
 	int ret;
 
+<<<<<<< HEAD
 	cgroup_lock();
 	ret = __cgroup_bpf_query(cgrp, attr, uattr);
 	cgroup_unlock();
+=======
+	mutex_lock(&cgroup_mutex);
+	ret = __cgroup_bpf_query(cgrp, attr, uattr);
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -1189,11 +1231,19 @@ static void bpf_cgroup_link_release(struct bpf_link *link)
 	if (!cg_link->cgroup)
 		return;
 
+<<<<<<< HEAD
 	cgroup_lock();
 
 	/* re-check cgroup under lock again */
 	if (!cg_link->cgroup) {
 		cgroup_unlock();
+=======
+	mutex_lock(&cgroup_mutex);
+
+	/* re-check cgroup under lock again */
+	if (!cg_link->cgroup) {
+		mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -1205,7 +1255,11 @@ static void bpf_cgroup_link_release(struct bpf_link *link)
 	cg = cg_link->cgroup;
 	cg_link->cgroup = NULL;
 
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	cgroup_put(cg);
 }
@@ -1232,10 +1286,17 @@ static void bpf_cgroup_link_show_fdinfo(const struct bpf_link *link,
 		container_of(link, struct bpf_cgroup_link, link);
 	u64 cg_id = 0;
 
+<<<<<<< HEAD
 	cgroup_lock();
 	if (cg_link->cgroup)
 		cg_id = cgroup_id(cg_link->cgroup);
 	cgroup_unlock();
+=======
+	mutex_lock(&cgroup_mutex);
+	if (cg_link->cgroup)
+		cg_id = cgroup_id(cg_link->cgroup);
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	seq_printf(seq,
 		   "cgroup_id:\t%llu\n"
@@ -1251,10 +1312,17 @@ static int bpf_cgroup_link_fill_link_info(const struct bpf_link *link,
 		container_of(link, struct bpf_cgroup_link, link);
 	u64 cg_id = 0;
 
+<<<<<<< HEAD
 	cgroup_lock();
 	if (cg_link->cgroup)
 		cg_id = cgroup_id(cg_link->cgroup);
 	cgroup_unlock();
+=======
+	mutex_lock(&cgroup_mutex);
+	if (cg_link->cgroup)
+		cg_id = cgroup_id(cg_link->cgroup);
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	info->cgroup.cgroup_id = cg_id;
 	info->cgroup.attach_type = cg_link->type;
@@ -2223,12 +2291,19 @@ static u32 sysctl_convert_ctx_access(enum bpf_access_type type,
 				BPF_FIELD_SIZEOF(struct bpf_sysctl_kern, ppos),
 				treg, si->dst_reg,
 				offsetof(struct bpf_sysctl_kern, ppos));
+<<<<<<< HEAD
 			*insn++ = BPF_RAW_INSN(
 				BPF_CLASS(si->code) | BPF_MEM | BPF_SIZEOF(u32),
 				treg, si->src_reg,
 				bpf_ctx_narrow_access_offset(
 					0, sizeof(u32), sizeof(loff_t)),
 				si->imm);
+=======
+			*insn++ = BPF_STX_MEM(
+				BPF_SIZEOF(u32), treg, si->src_reg,
+				bpf_ctx_narrow_access_offset(
+					0, sizeof(u32), sizeof(loff_t)));
+>>>>>>> b7ba80a49124 (Commit)
 			*insn++ = BPF_LDX_MEM(
 				BPF_DW, treg, si->dst_reg,
 				offsetof(struct bpf_sysctl_kern, tmp_reg));
@@ -2378,6 +2453,7 @@ static bool cg_sockopt_is_valid_access(int off, int size,
 	return true;
 }
 
+<<<<<<< HEAD
 #define CG_SOCKOPT_READ_FIELD(F)					\
 	BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct bpf_sockopt_kern, F),	\
 		    si->dst_reg, si->src_reg,				\
@@ -2389,6 +2465,12 @@ static bool cg_sockopt_is_valid_access(int off, int size,
 		     si->dst_reg, si->src_reg,				\
 		     offsetof(struct bpf_sockopt_kern, F),		\
 		     si->imm)
+=======
+#define CG_SOCKOPT_ACCESS_FIELD(T, F)					\
+	T(BPF_FIELD_SIZEOF(struct bpf_sockopt_kern, F),			\
+	  si->dst_reg, si->src_reg,					\
+	  offsetof(struct bpf_sockopt_kern, F))
+>>>>>>> b7ba80a49124 (Commit)
 
 static u32 cg_sockopt_convert_ctx_access(enum bpf_access_type type,
 					 const struct bpf_insn *si,
@@ -2400,6 +2482,7 @@ static u32 cg_sockopt_convert_ctx_access(enum bpf_access_type type,
 
 	switch (si->off) {
 	case offsetof(struct bpf_sockopt, sk):
+<<<<<<< HEAD
 		*insn++ = CG_SOCKOPT_READ_FIELD(sk);
 		break;
 	case offsetof(struct bpf_sockopt, level):
@@ -2419,6 +2502,27 @@ static u32 cg_sockopt_convert_ctx_access(enum bpf_access_type type,
 			*insn++ = CG_SOCKOPT_WRITE_FIELD(optlen);
 		else
 			*insn++ = CG_SOCKOPT_READ_FIELD(optlen);
+=======
+		*insn++ = CG_SOCKOPT_ACCESS_FIELD(BPF_LDX_MEM, sk);
+		break;
+	case offsetof(struct bpf_sockopt, level):
+		if (type == BPF_WRITE)
+			*insn++ = CG_SOCKOPT_ACCESS_FIELD(BPF_STX_MEM, level);
+		else
+			*insn++ = CG_SOCKOPT_ACCESS_FIELD(BPF_LDX_MEM, level);
+		break;
+	case offsetof(struct bpf_sockopt, optname):
+		if (type == BPF_WRITE)
+			*insn++ = CG_SOCKOPT_ACCESS_FIELD(BPF_STX_MEM, optname);
+		else
+			*insn++ = CG_SOCKOPT_ACCESS_FIELD(BPF_LDX_MEM, optname);
+		break;
+	case offsetof(struct bpf_sockopt, optlen):
+		if (type == BPF_WRITE)
+			*insn++ = CG_SOCKOPT_ACCESS_FIELD(BPF_STX_MEM, optlen);
+		else
+			*insn++ = CG_SOCKOPT_ACCESS_FIELD(BPF_LDX_MEM, optlen);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case offsetof(struct bpf_sockopt, retval):
 		BUILD_BUG_ON(offsetof(struct bpf_cg_run_ctx, run_ctx) != 0);
@@ -2438,11 +2542,17 @@ static u32 cg_sockopt_convert_ctx_access(enum bpf_access_type type,
 			*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct task_struct, bpf_ctx),
 					      treg, treg,
 					      offsetof(struct task_struct, bpf_ctx));
+<<<<<<< HEAD
 			*insn++ = BPF_RAW_INSN(BPF_CLASS(si->code) | BPF_MEM |
 					       BPF_FIELD_SIZEOF(struct bpf_cg_run_ctx, retval),
 					       treg, si->src_reg,
 					       offsetof(struct bpf_cg_run_ctx, retval),
 					       si->imm);
+=======
+			*insn++ = BPF_STX_MEM(BPF_FIELD_SIZEOF(struct bpf_cg_run_ctx, retval),
+					      treg, si->src_reg,
+					      offsetof(struct bpf_cg_run_ctx, retval));
+>>>>>>> b7ba80a49124 (Commit)
 			*insn++ = BPF_LDX_MEM(BPF_DW, treg, si->dst_reg,
 					      offsetof(struct bpf_sockopt_kern, tmp_reg));
 		} else {
@@ -2458,10 +2568,17 @@ static u32 cg_sockopt_convert_ctx_access(enum bpf_access_type type,
 		}
 		break;
 	case offsetof(struct bpf_sockopt, optval):
+<<<<<<< HEAD
 		*insn++ = CG_SOCKOPT_READ_FIELD(optval);
 		break;
 	case offsetof(struct bpf_sockopt, optval_end):
 		*insn++ = CG_SOCKOPT_READ_FIELD(optval_end);
+=======
+		*insn++ = CG_SOCKOPT_ACCESS_FIELD(BPF_LDX_MEM, optval);
+		break;
+	case offsetof(struct bpf_sockopt, optval_end):
+		*insn++ = CG_SOCKOPT_ACCESS_FIELD(BPF_LDX_MEM, optval_end);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -2540,6 +2657,13 @@ cgroup_current_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
 		return &bpf_get_current_pid_tgid_proto;
 	case BPF_FUNC_get_current_comm:
 		return &bpf_get_current_comm_proto;
+<<<<<<< HEAD
+=======
+	case BPF_FUNC_get_current_cgroup_id:
+		return &bpf_get_current_cgroup_id_proto;
+	case BPF_FUNC_get_current_ancestor_cgroup_id:
+		return &bpf_get_current_ancestor_cgroup_id_proto;
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_CGROUP_NET_CLASSID
 	case BPF_FUNC_get_cgroup_classid:
 		return &bpf_get_cgroup_classid_curr_proto;

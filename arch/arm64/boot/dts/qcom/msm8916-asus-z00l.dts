@@ -263,7 +263,11 @@
 };
 
 &msmgpio {
+<<<<<<< HEAD
 	gpio_keys_default: gpio-keys-default-state {
+=======
+	gpio_keys_default: gpio-keys-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio107", "gpio117";
 		function = "gpio";
 
@@ -271,7 +275,11 @@
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	imu_default: imu-default-state {
+=======
+	imu_default: imu-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio36";
 		function = "gpio";
 
@@ -279,7 +287,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	mag_reset_default: mag-reset-default-state {
+=======
+	mag_reset_default: mag-reset-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio112";
 		function = "gpio";
 
@@ -287,7 +299,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	sd_vmmc_en_default: sd-vmmc-en-default-state {
+=======
+	sd_vmmc_en_default: sd-vmmc-en-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio87";
 		function = "gpio";
 
@@ -295,6 +311,7 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	touchscreen_default: touchscreen-default-state {
 		touch-pins {
 			pins = "gpio13";
@@ -305,6 +322,16 @@
 		};
 
 		reset-pins {
+=======
+	touchscreen_default: touchscreen-default {
+		pins = "gpio13";
+		function = "gpio";
+
+		drive-strength = <2>;
+		bias-pull-up;
+
+		reset {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio12";
 			function = "gpio";
 
@@ -313,7 +340,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	usb_id_default: usb-id-default-state {
+=======
+	usb_id_default: usb-id-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio110";
 		function = "gpio";
 

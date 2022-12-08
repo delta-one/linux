@@ -15,7 +15,10 @@
 #include <linux/uaccess.h>
 #include <linux/platform_device.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mm.h>
 #include <linux/omapfb.h>
 
@@ -97,7 +100,11 @@ static ssize_t store_mirror(struct device *dev,
 	int r;
 	struct fb_var_screeninfo new_var;
 
+<<<<<<< HEAD
 	r = kstrtobool(buf, &mirror);
+=======
+	r = strtobool(buf, &mirror);
+>>>>>>> b7ba80a49124 (Commit)
 	if (r)
 		return r;
 

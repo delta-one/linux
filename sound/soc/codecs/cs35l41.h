@@ -33,7 +33,10 @@ struct cs35l41_private {
 	int irq;
 	/* GPIO for /RST */
 	struct gpio_desc *reset_gpio;
+<<<<<<< HEAD
 	struct completion pll_lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int cs35l41_probe(struct cs35l41_private *cs35l41, const struct cs35l41_hw_cfg *hw_cfg);

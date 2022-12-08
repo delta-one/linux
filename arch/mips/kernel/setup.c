@@ -42,7 +42,10 @@
 #include <asm/setup.h>
 #include <asm/smp-ops.h>
 #include <asm/prom.h>
+<<<<<<< HEAD
 #include <asm/fw/fw.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_MIPS_ELF_APPENDED_DTB
 char __section(".appended_dtb") __appended_dtb[0x100000];
@@ -757,6 +760,7 @@ static void __init prefill_possible_map(void)
 static inline void prefill_possible_map(void) {}
 #endif
 
+<<<<<<< HEAD
 static void __init setup_rng_seed(void)
 {
 	char *rng_seed_hex = fw_getenv("rngseed");
@@ -775,6 +779,8 @@ static void __init setup_rng_seed(void)
 	memzero_explicit(rng_seed_hex, len * 2);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void __init setup_arch(char **cmdline_p)
 {
 	cpu_probe();
@@ -805,8 +811,11 @@ void __init setup_arch(char **cmdline_p)
 	paging_init();
 
 	memblock_dump_all();
+<<<<<<< HEAD
 
 	setup_rng_seed();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 unsigned long kernelsp[NR_CPUS];

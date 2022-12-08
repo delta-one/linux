@@ -53,6 +53,7 @@ parameter "split_lock_detect". Here is a summary of different options:
 |off	  	   |Do nothing			|Do nothing		|
 +------------------+----------------------------+-----------------------+
 |warn		   |Kernel OOPs			|Warn once per task and |
+<<<<<<< HEAD
 |(default)	   |Warn once per task, add a	|and continues to run.  |
 |		   |delay, add synchronization	|			|
 |		   |to prevent more than one	|			|
@@ -61,6 +62,10 @@ parameter "split_lock_detect". Here is a summary of different options:
 |		   |sysctl split_lock_mitigate	|			|
 |		   |can be used to avoid the	|			|
 |		   |delay and synchronization	|			|
+=======
+|(default)	   |Warn once per task and	|and continues to run.  |
+|		   |disable future checking	|			|
+>>>>>>> b7ba80a49124 (Commit)
 |		   |When both features are	|			|
 |		   |supported, warn in #AC	|			|
 +------------------+----------------------------+-----------------------+

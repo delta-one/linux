@@ -155,7 +155,11 @@ static const struct attribute_group* sys_dmi_attribute_groups[] = {
 	NULL
 };
 
+<<<<<<< HEAD
 static int dmi_dev_uevent(const struct device *dev, struct kobj_uevent_env *env)
+=======
+static int dmi_dev_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	ssize_t len;
 

@@ -17,8 +17,11 @@
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+<<<<<<< HEAD
 #include <bpf/btf.h>
 #include "json_writer.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static bool verbose(void)
 {
@@ -224,6 +227,7 @@ static char *test_result(bool failed, bool skipped)
 	return failed ? "FAIL" : (skipped ? "SKIP" : "OK");
 }
 
+<<<<<<< HEAD
 #define TEST_NUM_WIDTH 7
 
 static void print_test_result(const struct prog_test_def *test, const struct test_state *test_state)
@@ -244,6 +248,8 @@ static void print_test_result(const struct prog_test_def *test, const struct tes
 	fprintf(env.stdout, "\n");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void print_test_log(char *log_buf, size_t log_cnt)
 {
 	log_buf[log_cnt] = '\0';
@@ -252,6 +258,21 @@ static void print_test_log(char *log_buf, size_t log_cnt)
 		fprintf(env.stdout, "\n");
 }
 
+<<<<<<< HEAD
+=======
+#define TEST_NUM_WIDTH 7
+
+static void print_test_name(int test_num, const char *test_name, char *result)
+{
+	fprintf(env.stdout, "#%-*d %s", TEST_NUM_WIDTH, test_num, test_name);
+
+	if (result)
+		fprintf(env.stdout, ":%s", result);
+
+	fprintf(env.stdout, "\n");
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void print_subtest_name(int test_num, int subtest_num,
 			       const char *test_name, char *subtest_name,
 			       char *result)
@@ -270,6 +291,7 @@ static void print_subtest_name(int test_num, int subtest_num,
 	fprintf(env.stdout, "\n");
 }
 
+<<<<<<< HEAD
 static void jsonw_write_log_message(json_writer_t *w, char *log_buf, size_t log_cnt)
 {
 	/* open_memstream (from stdio_hijack_init) ensures that log_bug is terminated by a
@@ -287,6 +309,12 @@ static void dump_test_log(const struct prog_test_def *test,
 			  bool skip_ok_subtests,
 			  bool par_exec_result,
 			  json_writer_t *w)
+=======
+static void dump_test_log(const struct prog_test_def *test,
+			  const struct test_state *test_state,
+			  bool skip_ok_subtests,
+			  bool par_exec_result)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	bool test_failed = test_state->error_cnt > 0;
 	bool force_log = test_state->force_log;
@@ -310,6 +338,7 @@ static void dump_test_log(const struct prog_test_def *test,
 	if (test_state->log_cnt && print_test)
 		print_test_log(test_state->log_buf, test_state->log_cnt);
 
+<<<<<<< HEAD
 	if (w && print_test) {
 		jsonw_start_object(w);
 		jsonw_string_field(w, "name", test->test_name);
@@ -320,6 +349,8 @@ static void dump_test_log(const struct prog_test_def *test,
 		jsonw_start_array(w);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < test_state->subtest_num; i++) {
 		subtest_state = &test_state->subtest_states[i];
 		subtest_failed = subtest_state->error_cnt;
@@ -338,6 +369,7 @@ static void dump_test_log(const struct prog_test_def *test,
 				   test->test_name, subtest_state->name,
 				   test_result(subtest_state->error_cnt,
 					       subtest_state->skipped));
+<<<<<<< HEAD
 
 		if (w && print_subtest) {
 			jsonw_start_object(w);
@@ -355,6 +387,12 @@ static void dump_test_log(const struct prog_test_def *test,
 	}
 
 	print_test_result(test, test_state);
+=======
+	}
+
+	print_test_name(test->test_num, test->test_name,
+			test_result(test_failed, test_state->skip_cnt));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void stdio_restore(void);
@@ -753,7 +791,10 @@ enum ARG_KEYS {
 	ARG_TEST_NAME_GLOB_DENYLIST = 'd',
 	ARG_NUM_WORKERS = 'j',
 	ARG_DEBUG = -1,
+<<<<<<< HEAD
 	ARG_JSON_SUMMARY = 'J'
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct argp_option opts[] = {
@@ -779,7 +820,10 @@ static const struct argp_option opts[] = {
 	  "Number of workers to run in parallel, default to number of cpus." },
 	{ "debug", ARG_DEBUG, NULL, 0,
 	  "print extra debug information for test_progs." },
+<<<<<<< HEAD
 	{ "json-summary", ARG_JSON_SUMMARY, "FILE", 0, "Write report in json format to this file."},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 
@@ -910,6 +954,7 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 	case ARG_DEBUG:
 		env->debug = true;
 		break;
+<<<<<<< HEAD
 	case ARG_JSON_SUMMARY:
 		env->json = fopen(arg, "w");
 		if (env->json == NULL) {
@@ -917,6 +962,8 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 			return -errno;
 		}
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case ARGP_KEY_ARG:
 		argp_usage(state);
 		break;
@@ -1015,6 +1062,7 @@ int write_sysctl(const char *sysctl, const char *value)
 	return 0;
 }
 
+<<<<<<< HEAD
 int get_bpf_max_tramp_links_from(struct btf *btf)
 {
 	const struct btf_enum *e;
@@ -1052,6 +1100,8 @@ int get_bpf_max_tramp_links(void)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MAX_BACKTRACE_SZ 128
 void crash_handler(int signum)
 {
@@ -1060,12 +1110,21 @@ void crash_handler(int signum)
 
 	sz = backtrace(bt, ARRAY_SIZE(bt));
 
+<<<<<<< HEAD
 	if (env.stdout)
 		stdio_restore();
 	if (env.test) {
 		env.test_state->error_cnt++;
 		dump_test_log(env.test, env.test_state, true, false, NULL);
 	}
+=======
+	if (env.test) {
+		env.test_state->error_cnt++;
+		dump_test_log(env.test, env.test_state, true, false);
+	}
+	if (env.stdout)
+		stdio_restore();
+>>>>>>> b7ba80a49124 (Commit)
 	if (env.worker_id != -1)
 		fprintf(stderr, "[%d]: ", env.worker_id);
 	fprintf(stderr, "Caught signal #%d!\nStack trace:\n", signum);
@@ -1102,7 +1161,11 @@ static inline const char *str_msg(const struct msg *msg, char *buf)
 			msg->subtest_done.have_log);
 		break;
 	case MSG_TEST_LOG:
+<<<<<<< HEAD
 		sprintf(buf, "MSG_TEST_LOG (cnt: %zu, last: %d)",
+=======
+		sprintf(buf, "MSG_TEST_LOG (cnt: %ld, last: %d)",
+>>>>>>> b7ba80a49124 (Commit)
 			strlen(msg->test_log.log_buf),
 			msg->test_log.is_last);
 		break;
@@ -1162,7 +1225,12 @@ static void run_one_test(int test_num)
 	state->tested = true;
 
 	if (verbose() && env.worker_id == -1)
+<<<<<<< HEAD
 		print_test_result(test, state);
+=======
+		print_test_name(test_num + 1, test->test_name,
+				test_result(state->error_cnt, state->skip_cnt));
+>>>>>>> b7ba80a49124 (Commit)
 
 	reset_affinity();
 	restore_netns();
@@ -1171,7 +1239,11 @@ static void run_one_test(int test_num)
 
 	stdio_restore();
 
+<<<<<<< HEAD
 	dump_test_log(test, state, false, false, NULL);
+=======
+	dump_test_log(test, state, false, false);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct dispatch_data {
@@ -1330,7 +1402,11 @@ static void *dispatch_thread(void *ctx)
 		} while (false);
 
 		pthread_mutex_lock(&stdout_output_lock);
+<<<<<<< HEAD
 		dump_test_log(test, state, false, true, NULL);
+=======
+		dump_test_log(test, state, false, true);
+>>>>>>> b7ba80a49124 (Commit)
 		pthread_mutex_unlock(&stdout_output_lock);
 	} /* while (true) */
 error:
@@ -1355,7 +1431,10 @@ static void calculate_summary_and_print_errors(struct test_env *env)
 {
 	int i;
 	int succ_cnt = 0, fail_cnt = 0, sub_succ_cnt = 0, skip_cnt = 0;
+<<<<<<< HEAD
 	json_writer_t *w = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < prog_test_cnt; i++) {
 		struct test_state *state = &test_states[i];
@@ -1372,6 +1451,7 @@ static void calculate_summary_and_print_errors(struct test_env *env)
 			succ_cnt++;
 	}
 
+<<<<<<< HEAD
 	if (env->json) {
 		w = jsonw_new(env->json);
 		if (!w)
@@ -1388,6 +1468,8 @@ static void calculate_summary_and_print_errors(struct test_env *env)
 		jsonw_start_array(w);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * We only print error logs summary when there are failed tests and
 	 * verbose mode is not enabled. Otherwise, results may be incosistent.
@@ -1404,6 +1486,7 @@ static void calculate_summary_and_print_errors(struct test_env *env)
 			if (!state->tested || !state->error_cnt)
 				continue;
 
+<<<<<<< HEAD
 			dump_test_log(test, state, true, true, w);
 		}
 	}
@@ -1417,6 +1500,12 @@ static void calculate_summary_and_print_errors(struct test_env *env)
 	if (env->json)
 		fclose(env->json);
 
+=======
+			dump_test_log(test, state, true, true);
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	printf("Summary: %d/%d PASSED, %d SKIPPED, %d FAILED\n",
 	       succ_cnt, sub_succ_cnt, skip_cnt, fail_cnt);
 

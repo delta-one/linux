@@ -14,17 +14,28 @@
   - auto idle mode support
 */
 
+<<<<<<< HEAD
 #include <linux/err.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/i2c.h>
 #include <linux/interrupt.h>
 #include <linux/input.h>
 #include <linux/irq.h>
+<<<<<<< HEAD
 #include <linux/gpio/consumer.h>
+=======
+#include <linux/gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/delay.h>
 #include <linux/slab.h>
 #include <linux/bitops.h>
 #include <linux/input/mt.h>
+<<<<<<< HEAD
+=======
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Mouse Mode: some panel may configure the controller to mouse mode,
@@ -119,6 +130,7 @@ static irqreturn_t egalax_ts_interrupt(int irq, void *dev_id)
 /* wake up controller by an falling edge of interrupt gpio.  */
 static int egalax_wake_up_device(struct i2c_client *client)
 {
+<<<<<<< HEAD
 	struct gpio_desc *gpio;
 	int ret;
 
@@ -139,6 +151,34 @@ static int egalax_wake_up_device(struct i2c_client *client)
 	/* controller should be woken up, return irq.  */
 	gpiod_direction_input(gpio);
 	gpiod_put(gpio);
+=======
+	struct device_node *np = client->dev.of_node;
+	int gpio;
+	int ret;
+
+	if (!np)
+		return -ENODEV;
+
+	gpio = of_get_named_gpio(np, "wakeup-gpios", 0);
+	if (!gpio_is_valid(gpio))
+		return -ENODEV;
+
+	ret = gpio_request(gpio, "egalax_irq");
+	if (ret < 0) {
+		dev_err(&client->dev,
+			"request gpio failed, cannot wake up controller: %d\n",
+			ret);
+		return ret;
+	}
+
+	/* wake up controller via an falling edge on IRQ gpio. */
+	gpio_direction_output(gpio, 0);
+	gpio_set_value(gpio, 1);
+
+	/* controller should be waken up, return irq.  */
+	gpio_direction_input(gpio);
+	gpio_free(gpio);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -155,7 +195,12 @@ static int egalax_firmware_version(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int egalax_ts_probe(struct i2c_client *client)
+=======
+static int egalax_ts_probe(struct i2c_client *client,
+			   const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct egalax_ts *ts;
 	struct input_dev *input_dev;
@@ -178,8 +223,15 @@ static int egalax_ts_probe(struct i2c_client *client)
 
 	/* controller may be in sleep, wake it up. */
 	error = egalax_wake_up_device(client);
+<<<<<<< HEAD
 	if (error)
 		return error;
+=======
+	if (error) {
+		dev_err(&client->dev, "Failed to wake up the controller\n");
+		return error;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	error = egalax_firmware_version(client);
 	if (error < 0) {
@@ -202,9 +254,16 @@ static int egalax_ts_probe(struct i2c_client *client)
 			     ABS_MT_POSITION_Y, 0, EGALAX_MAX_Y, 0, 0);
 	input_mt_init_slots(input_dev, MAX_SUPPORT_POINTS, 0);
 
+<<<<<<< HEAD
 	error = devm_request_threaded_irq(&client->dev, client->irq,
 					  NULL, egalax_ts_interrupt,
 					  IRQF_ONESHOT, "egalax_ts", ts);
+=======
+	error = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+					  egalax_ts_interrupt,
+					  IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+					  "egalax_ts", ts);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error < 0) {
 		dev_err(&client->dev, "Failed to register interrupt\n");
 		return error;
@@ -223,7 +282,11 @@ static const struct i2c_device_id egalax_ts_id[] = {
 };
 MODULE_DEVICE_TABLE(i2c, egalax_ts_id);
 
+<<<<<<< HEAD
 static int egalax_ts_suspend(struct device *dev)
+=======
+static int __maybe_unused egalax_ts_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	static const u8 suspend_cmd[MAX_I2C_DATA_LEN] = {
 		0x3, 0x6, 0xa, 0x3, 0x36, 0x3f, 0x2, 0, 0, 0
@@ -238,7 +301,11 @@ static int egalax_ts_suspend(struct device *dev)
 	return ret > 0 ? 0 : ret;
 }
 
+<<<<<<< HEAD
 static int egalax_ts_resume(struct device *dev)
+=======
+static int __maybe_unused egalax_ts_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 
@@ -248,8 +315,12 @@ static int egalax_ts_resume(struct device *dev)
 	return egalax_wake_up_device(client);
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(egalax_ts_pm_ops,
 				egalax_ts_suspend, egalax_ts_resume);
+=======
+static SIMPLE_DEV_PM_OPS(egalax_ts_pm_ops, egalax_ts_suspend, egalax_ts_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct of_device_id egalax_ts_dt_ids[] = {
 	{ .compatible = "eeti,egalax_ts" },
@@ -260,11 +331,19 @@ MODULE_DEVICE_TABLE(of, egalax_ts_dt_ids);
 static struct i2c_driver egalax_ts_driver = {
 	.driver = {
 		.name	= "egalax_ts",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&egalax_ts_pm_ops),
 		.of_match_table	= egalax_ts_dt_ids,
 	},
 	.id_table	= egalax_ts_id,
 	.probe_new	= egalax_ts_probe,
+=======
+		.pm	= &egalax_ts_pm_ops,
+		.of_match_table	= egalax_ts_dt_ids,
+	},
+	.id_table	= egalax_ts_id,
+	.probe		= egalax_ts_probe,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_i2c_driver(egalax_ts_driver);

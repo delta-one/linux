@@ -31,7 +31,11 @@
 
 	thermal-zones {
 		cpu0_thermal: cpu0-thermal {
+<<<<<<< HEAD
 			thermal-sensors = <&tmu_cpu0>;
+=======
+			thermal-sensors = <&tmu_cpu0 0>;
+>>>>>>> b7ba80a49124 (Commit)
 			trips {
 				cpu0_alert0: cpu-alert-0 {
 					temperature = <70000>; /* millicelsius */
@@ -86,7 +90,11 @@
 			};
 		};
 		cpu1_thermal: cpu1-thermal {
+<<<<<<< HEAD
 			thermal-sensors = <&tmu_cpu1>;
+=======
+			thermal-sensors = <&tmu_cpu1 0>;
+>>>>>>> b7ba80a49124 (Commit)
 			trips {
 				cpu1_alert0: cpu-alert-0 {
 					temperature = <70000>;
@@ -130,7 +138,11 @@
 			};
 		};
 		cpu2_thermal: cpu2-thermal {
+<<<<<<< HEAD
 			thermal-sensors = <&tmu_cpu2>;
+=======
+			thermal-sensors = <&tmu_cpu2 0>;
+>>>>>>> b7ba80a49124 (Commit)
 			trips {
 				cpu2_alert0: cpu-alert-0 {
 					temperature = <70000>;
@@ -174,7 +186,11 @@
 			};
 		};
 		cpu3_thermal: cpu3-thermal {
+<<<<<<< HEAD
 			thermal-sensors = <&tmu_cpu3>;
+=======
+			thermal-sensors = <&tmu_cpu3 0>;
+>>>>>>> b7ba80a49124 (Commit)
 			trips {
 				cpu3_alert0: cpu-alert-0 {
 					temperature = <70000>;
@@ -218,7 +234,11 @@
 			};
 		};
 		gpu_thermal: gpu-thermal {
+<<<<<<< HEAD
 			thermal-sensors = <&tmu_gpu>;
+=======
+			thermal-sensors = <&tmu_gpu 0>;
+>>>>>>> b7ba80a49124 (Commit)
 			trips {
 				gpu_alert0: gpu-alert-0 {
 					temperature = <70000>;

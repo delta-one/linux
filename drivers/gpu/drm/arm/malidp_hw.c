@@ -1168,7 +1168,11 @@ static void malidp_hw_clear_irq(struct malidp_hw_device *hwdev, u8 block, u32 ir
 static irqreturn_t malidp_de_irq(int irq, void *arg)
 {
 	struct drm_device *drm = arg;
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	struct malidp_hw_device *hwdev;
 	struct malidp_hw *hw;
 	const struct malidp_irq_map *de;
@@ -1226,7 +1230,11 @@ static irqreturn_t malidp_de_irq(int irq, void *arg)
 static irqreturn_t malidp_de_irq_thread_handler(int irq, void *arg)
 {
 	struct drm_device *drm = arg;
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 
 	wake_up(&malidp->wq);
 
@@ -1252,7 +1260,11 @@ void malidp_de_irq_hw_init(struct malidp_hw_device *hwdev)
 
 int malidp_de_irq_init(struct drm_device *drm, int irq)
 {
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	struct malidp_hw_device *hwdev = malidp->dev;
 	int ret;
 
@@ -1286,7 +1298,11 @@ void malidp_de_irq_fini(struct malidp_hw_device *hwdev)
 static irqreturn_t malidp_se_irq(int irq, void *arg)
 {
 	struct drm_device *drm = arg;
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	struct malidp_hw_device *hwdev = malidp->dev;
 	struct malidp_hw *hw = hwdev->hw;
 	const struct malidp_irq_map *se = &hw->map.se_irq_map;
@@ -1363,7 +1379,11 @@ static irqreturn_t malidp_se_irq_thread_handler(int irq, void *arg)
 
 int malidp_se_irq_init(struct drm_device *drm, int irq)
 {
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	struct malidp_hw_device *hwdev = malidp->dev;
 	int ret;
 

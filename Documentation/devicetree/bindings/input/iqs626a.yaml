@@ -564,6 +564,19 @@ patternProperties:
           2: Partial
           3: Full
 
+<<<<<<< HEAD
+=======
+      azoteq,ati-base:
+        $ref: /schemas/types.yaml#/definitions/uint32-array
+        minItems: 6
+        maxItems: 9
+        items:
+          minimum: 45
+          maximum: 300
+        default: [45, 45, 45, 45, 45, 45, 45, 45, 45]
+        description: Specifies each individual trackpad channel's ATI base.
+
+>>>>>>> b7ba80a49124 (Commit)
       azoteq,ati-target:
         $ref: /schemas/types.yaml#/definitions/uint32
         multipleOf: 32
@@ -610,6 +623,20 @@ patternProperties:
         description:
           Tightens the ATI band from 1/8 to 1/16 of the desired target.
 
+<<<<<<< HEAD
+=======
+      azoteq,thresh:
+        $ref: /schemas/types.yaml#/definitions/uint32-array
+        minItems: 6
+        maxItems: 9
+        items:
+          minimum: 0
+          maximum: 255
+        default: [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        description:
+          Specifies each individual trackpad channel's touch threshold.
+
+>>>>>>> b7ba80a49124 (Commit)
       azoteq,hyst:
         $ref: /schemas/types.yaml#/definitions/uint32
         minimum: 0
@@ -699,6 +726,7 @@ patternProperties:
           Specifies the number of points across which an axial gesture must
           travel in order to be interpreted as a flick or swipe.
 
+<<<<<<< HEAD
     patternProperties:
       "^channel-[0-8]$":
         type: object
@@ -721,6 +749,8 @@ patternProperties:
 
         additionalProperties: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     dependencies:
       azoteq,gesture-swipe: ["linux,keycodes"]
       azoteq,timeout-tap-ms: ["linux,keycodes"]
@@ -781,8 +811,19 @@ examples:
                             azoteq,filt-str-lp-cnt = <1>;
 
                             azoteq,hyst = <4>;
+<<<<<<< HEAD
 
                             azoteq,ati-mode = <3>;
+=======
+                            azoteq,thresh = <35>, <40>, <40>,
+                                            <38>, <33>, <38>,
+                                            <35>, <35>, <35>;
+
+                            azoteq,ati-mode = <3>;
+                            azoteq,ati-base = <195>, <195>, <195>,
+                                              <195>, <195>, <195>,
+                                              <195>, <195>, <195>;
+>>>>>>> b7ba80a49124 (Commit)
                             azoteq,ati-target = <512>;
 
                             azoteq,proj-bias = <1>;
@@ -799,6 +840,7 @@ examples:
                             azoteq,timeout-swipe-ms = <800>;
                             azoteq,timeout-tap-ms = <400>;
                             azoteq,thresh-swipe = <40>;
+<<<<<<< HEAD
 
                             channel-0 {
                                     azoteq,thresh = <35>;
@@ -844,6 +886,8 @@ examples:
                                     azoteq,thresh = <35>;
                                     azoteq,ati-base = <195>;
                             };
+=======
+>>>>>>> b7ba80a49124 (Commit)
                     };
 
                     /*

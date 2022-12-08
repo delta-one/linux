@@ -300,8 +300,13 @@ static struct lpm_trie_node *lpm_trie_node_alloc(const struct lpm_trie *trie,
 }
 
 /* Called from syscall or from eBPF program */
+<<<<<<< HEAD
 static long trie_update_elem(struct bpf_map *map,
 			     void *_key, void *value, u64 flags)
+=======
+static int trie_update_elem(struct bpf_map *map,
+			    void *_key, void *value, u64 flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lpm_trie *trie = container_of(map, struct lpm_trie, map);
 	struct lpm_trie_node *node, *im_node = NULL, *new_node = NULL;
@@ -431,7 +436,11 @@ out:
 }
 
 /* Called from syscall or from eBPF program */
+<<<<<<< HEAD
 static long trie_delete_elem(struct bpf_map *map, void *_key)
+=======
+static int trie_delete_elem(struct bpf_map *map, void *_key)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lpm_trie *trie = container_of(map, struct lpm_trie, map);
 	struct bpf_lpm_trie_key *key = _key;
@@ -720,6 +729,7 @@ static int trie_check_btf(const struct bpf_map *map,
 	       -EINVAL : 0;
 }
 
+<<<<<<< HEAD
 static u64 trie_mem_usage(const struct bpf_map *map)
 {
 	struct lpm_trie *trie = container_of(map, struct lpm_trie, map);
@@ -730,6 +740,8 @@ static u64 trie_mem_usage(const struct bpf_map *map)
 	return elem_size * READ_ONCE(trie->n_entries);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 BTF_ID_LIST_SINGLE(trie_map_btf_ids, struct, lpm_trie)
 const struct bpf_map_ops trie_map_ops = {
 	.map_meta_equal = bpf_map_meta_equal,
@@ -743,6 +755,9 @@ const struct bpf_map_ops trie_map_ops = {
 	.map_update_batch = generic_map_update_batch,
 	.map_delete_batch = generic_map_delete_batch,
 	.map_check_btf = trie_check_btf,
+<<<<<<< HEAD
 	.map_mem_usage = trie_mem_usage,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.map_btf_id = &trie_map_btf_ids[0],
 };

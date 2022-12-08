@@ -3,10 +3,17 @@
 
 # select defconfig based on actual architecture
 ifeq ($(ARCH),x86)
+<<<<<<< HEAD
   ifeq ($(shell uname -m | sed -e 's/i.86/i386/'),i386)
         KBUILD_DEFCONFIG := i386_defconfig
   else
         KBUILD_DEFCONFIG := x86_64_defconfig
+=======
+  ifeq ($(shell uname -m),x86_64)
+        KBUILD_DEFCONFIG := x86_64_defconfig
+  else
+        KBUILD_DEFCONFIG := i386_defconfig
+>>>>>>> b7ba80a49124 (Commit)
   endif
 else
         KBUILD_DEFCONFIG := $(ARCH)_defconfig
@@ -14,13 +21,20 @@ endif
 
 ifdef CONFIG_CC_IS_GCC
 RETPOLINE_CFLAGS	:= $(call cc-option,-mindirect-branch=thunk-extern -mindirect-branch-register)
+<<<<<<< HEAD
+=======
+RETPOLINE_CFLAGS	+= $(call cc-option,-mindirect-branch-cs-prefix)
+>>>>>>> b7ba80a49124 (Commit)
 RETPOLINE_VDSO_CFLAGS	:= $(call cc-option,-mindirect-branch=thunk-inline -mindirect-branch-register)
 endif
 ifdef CONFIG_CC_IS_CLANG
 RETPOLINE_CFLAGS	:= -mretpoline-external-thunk
 RETPOLINE_VDSO_CFLAGS	:= -mretpoline
 endif
+<<<<<<< HEAD
 RETPOLINE_CFLAGS	+= $(call cc-option,-mindirect-branch-cs-prefix)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 ifdef CONFIG_RETHUNK
 RETHUNK_CFLAGS		:= -mfunction-return=thunk-extern
@@ -208,6 +222,7 @@ ifdef CONFIG_SLS
   KBUILD_CFLAGS += -mharden-sls=all
 endif
 
+<<<<<<< HEAD
 ifdef CONFIG_CALL_PADDING
 PADDING_CFLAGS := -fpatchable-function-entry=$(CONFIG_FUNCTION_PADDING_BYTES),$(CONFIG_FUNCTION_PADDING_BYTES)
 KBUILD_CFLAGS += $(PADDING_CFLAGS)
@@ -218,6 +233,12 @@ KBUILD_LDFLAGS += -m elf_$(UTS_MACHINE)
 
 ifdef CONFIG_LTO_CLANG
 ifeq ($(call test-lt, $(CONFIG_LLD_VERSION), 130000),y)
+=======
+KBUILD_LDFLAGS += -m elf_$(UTS_MACHINE)
+
+ifdef CONFIG_LTO_CLANG
+ifeq ($(shell test $(CONFIG_LLD_VERSION) -lt 130000; echo $$?),0)
+>>>>>>> b7ba80a49124 (Commit)
 KBUILD_LDFLAGS	+= -plugin-opt=-stack-alignment=$(if $(CONFIG_X86_32),4,8)
 endif
 endif

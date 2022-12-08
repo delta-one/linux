@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/iio/adc/x-powers,axp209-adc.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: X-Powers AXP ADC
+=======
+title: X-Powers AXP ADC bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Chen-Yu Tsai <wens@csie.org>

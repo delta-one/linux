@@ -1099,6 +1099,11 @@ static void ar9331_sw_remove(struct mdio_device *mdiodev)
 	dsa_unregister_switch(&priv->ds);
 
 	reset_control_assert(priv->sw_reset);
+<<<<<<< HEAD
+=======
+
+	dev_set_drvdata(&mdiodev->dev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ar9331_sw_shutdown(struct mdio_device *mdiodev)

@@ -20,8 +20,13 @@ properties:
 patternProperties:
   "^led(-[0-9a-f]+)?$":
     type: object
+<<<<<<< HEAD
     $ref: common.yaml#
     unevaluatedProperties: false
+=======
+
+    $ref: common.yaml#
+>>>>>>> b7ba80a49124 (Commit)
 
     properties:
       pwms:

@@ -69,8 +69,12 @@ int nft_reject_init(const struct nft_ctx *ctx,
 }
 EXPORT_SYMBOL_GPL(nft_reject_init);
 
+<<<<<<< HEAD
 int nft_reject_dump(struct sk_buff *skb,
 		    const struct nft_expr *expr, bool reset)
+=======
+int nft_reject_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_reject *priv = nft_expr_priv(expr);
 

@@ -763,6 +763,7 @@ static irqreturn_t qcom_slim_ngd_interrupt(int irq, void *d)
 {
 	struct qcom_slim_ngd_ctrl *ctrl = d;
 	void __iomem *base = ctrl->ngd->base;
+<<<<<<< HEAD
 	u32 stat;
 
 	if (pm_runtime_suspended(ctrl->ctrl.dev)) {
@@ -771,6 +772,9 @@ static irqreturn_t qcom_slim_ngd_interrupt(int irq, void *d)
 	}
 
 	stat = readl(base + NGD_INT_STAT);
+=======
+	u32 stat = readl(base + NGD_INT_STAT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if ((stat & NGD_INT_MSG_BUF_CONTE) ||
 		(stat & NGD_INT_MSG_TX_INVAL) || (stat & NGD_INT_DEV_ERR) ||
@@ -919,20 +923,29 @@ static int qcom_slim_ngd_xfer_msg_sync(struct slim_controller *ctrl,
 	DECLARE_COMPLETION_ONSTACK(done);
 	int ret, timeout;
 
+<<<<<<< HEAD
 	ret = pm_runtime_get_sync(ctrl->dev);
 	if (ret < 0)
 		goto pm_put;
+=======
+	pm_runtime_get_sync(ctrl->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	txn->comp = &done;
 
 	ret = qcom_slim_ngd_xfer_msg(ctrl, txn);
 	if (ret)
+<<<<<<< HEAD
 		goto pm_put;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	timeout = wait_for_completion_timeout(&done, HZ);
 	if (!timeout) {
 		dev_err(ctrl->dev, "TX timed out:MC:0x%x,mt:0x%x", txn->mc,
 				txn->mt);
+<<<<<<< HEAD
 		ret = -ETIMEDOUT;
 		goto pm_put;
 	}
@@ -990,6 +1003,11 @@ static int qcom_slim_calc_coef(struct slim_stream_runtime *rt, int *exp)
 	}
 
 	return coef;
+=======
+		return -ETIMEDOUT;
+	}
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int qcom_slim_ngd_enable_stream(struct slim_stream_runtime *rt)
@@ -1015,12 +1033,18 @@ static int qcom_slim_ngd_enable_stream(struct slim_stream_runtime *rt)
 		struct slim_port *port = &rt->ports[i];
 
 		if (txn.msg->num_bytes == 0) {
+<<<<<<< HEAD
 			int exp = 0, coef = 0;
+=======
+			int seg_interval = SLIM_SLOTS_PER_SUPERFRAME/rt->ratem;
+			int exp;
+>>>>>>> b7ba80a49124 (Commit)
 
 			wbuf[txn.msg->num_bytes++] = sdev->laddr;
 			wbuf[txn.msg->num_bytes] = rt->bps >> 2 |
 						   (port->ch.aux_fmt << 6);
 
+<<<<<<< HEAD
 			/* calculate coef dynamically */
 			coef = qcom_slim_calc_coef(rt, &exp);
 			if (coef < 0) {
@@ -1031,6 +1055,11 @@ static int qcom_slim_ngd_enable_stream(struct slim_stream_runtime *rt)
 			}
 
 			if (coef)
+=======
+			/* Data channel segment interval not multiple of 3 */
+			exp = seg_interval % 3;
+			if (exp)
+>>>>>>> b7ba80a49124 (Commit)
 				wbuf[txn.msg->num_bytes] |= BIT(5);
 
 			txn.msg->num_bytes++;
@@ -1205,12 +1234,15 @@ static int qcom_slim_ngd_power_up(struct qcom_slim_ngd_ctrl *ctrl)
 		return 0;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Reinitialize only when registers are not retained or when enumeration
 	 * is lost for ngd.
 	 */
 	reinit_completion(&ctrl->reconf);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	writel_relaxed(DEF_NGD_INT_MASK, ngd->base + NGD_INT_EN);
 	rx_msgq = readl_relaxed(ngd->base + NGD_RX_MSGQ_CFG);
 
@@ -1545,6 +1577,7 @@ static int of_qcom_slim_ngd_register(struct device *parent,
 		ngd->pdev->dev.of_node = node;
 		ctrl->ngd = ngd;
 
+<<<<<<< HEAD
 		ret = platform_device_add(ngd->pdev);
 		if (ret) {
 			platform_device_put(ngd->pdev);
@@ -1552,6 +1585,9 @@ static int of_qcom_slim_ngd_register(struct device *parent,
 			of_node_put(node);
 			return ret;
 		}
+=======
+		platform_device_add(ngd->pdev);
+>>>>>>> b7ba80a49124 (Commit)
 		ngd->base = ctrl->base + ngd->id * data->offset +
 					(ngd->id - 1) * data->size;
 
@@ -1603,6 +1639,10 @@ static int qcom_slim_ngd_ctrl_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 	struct qcom_slim_ngd_ctrl *ctrl;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 	struct pdr_service *pds;
 
@@ -1612,7 +1652,12 @@ static int qcom_slim_ngd_ctrl_probe(struct platform_device *pdev)
 
 	dev_set_drvdata(dev, ctrl);
 
+<<<<<<< HEAD
 	ctrl->base = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	ctrl->base = devm_ioremap_resource(dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(ctrl->base))
 		return PTR_ERR(ctrl->base);
 

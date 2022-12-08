@@ -297,6 +297,15 @@ struct drm_bridge_funcs {
 	 * not enable the display link feeding the next bridge in the chain (if
 	 * there is one) when this callback is called.
 	 *
+<<<<<<< HEAD
+=======
+	 * Note that this function will only be invoked in the context of an
+	 * atomic commit. It will not be invoked from
+	 * &drm_bridge_chain_pre_enable. It would be prudent to also provide an
+	 * implementation of @pre_enable if you are expecting driver calls into
+	 * &drm_bridge_chain_pre_enable.
+	 *
+>>>>>>> b7ba80a49124 (Commit)
 	 * The @atomic_pre_enable callback is optional.
 	 */
 	void (*atomic_pre_enable)(struct drm_bridge *bridge,
@@ -317,6 +326,14 @@ struct drm_bridge_funcs {
 	 * callback must enable the display link feeding the next bridge in the
 	 * chain if there is one.
 	 *
+<<<<<<< HEAD
+=======
+	 * Note that this function will only be invoked in the context of an
+	 * atomic commit. It will not be invoked from &drm_bridge_chain_enable.
+	 * It would be prudent to also provide an implementation of @enable if
+	 * you are expecting driver calls into &drm_bridge_chain_enable.
+	 *
+>>>>>>> b7ba80a49124 (Commit)
 	 * The @atomic_enable callback is optional.
 	 */
 	void (*atomic_enable)(struct drm_bridge *bridge,
@@ -334,6 +351,15 @@ struct drm_bridge_funcs {
 	 * The bridge can assume that the display pipe (i.e. clocks and timing
 	 * signals) feeding it is still running when this callback is called.
 	 *
+<<<<<<< HEAD
+=======
+	 * Note that this function will only be invoked in the context of an
+	 * atomic commit. It will not be invoked from
+	 * &drm_bridge_chain_disable. It would be prudent to also provide an
+	 * implementation of @disable if you are expecting driver calls into
+	 * &drm_bridge_chain_disable.
+	 *
+>>>>>>> b7ba80a49124 (Commit)
 	 * The @atomic_disable callback is optional.
 	 */
 	void (*atomic_disable)(struct drm_bridge *bridge,
@@ -353,6 +379,16 @@ struct drm_bridge_funcs {
 	 * signals) feeding it is no longer running when this callback is
 	 * called.
 	 *
+<<<<<<< HEAD
+=======
+	 * Note that this function will only be invoked in the context of an
+	 * atomic commit. It will not be invoked from
+	 * &drm_bridge_chain_post_disable.
+	 * It would be prudent to also provide an implementation of
+	 * @post_disable if you are expecting driver calls into
+	 * &drm_bridge_chain_post_disable.
+	 *
+>>>>>>> b7ba80a49124 (Commit)
 	 * The @atomic_post_disable callback is optional.
 	 */
 	void (*atomic_post_disable)(struct drm_bridge *bridge,
@@ -423,11 +459,19 @@ struct drm_bridge_funcs {
 	 *
 	 * The returned array must be allocated with kmalloc() and will be
 	 * freed by the caller. If the allocation fails, NULL should be
+<<<<<<< HEAD
 	 * returned. num_input_fmts must be set to the returned array size.
 	 * Formats listed in the returned array should be listed in decreasing
 	 * preference order (the core will try all formats until it finds one
 	 * that works). When the format is not supported NULL should be
 	 * returned and num_input_fmts should be set to 0.
+=======
+	 * returned. num_output_fmts must be set to the returned array size.
+	 * Formats listed in the returned array should be listed in decreasing
+	 * preference order (the core will try all formats until it finds one
+	 * that works). When the format is not supported NULL should be
+	 * returned and num_output_fmts should be set to 0.
+>>>>>>> b7ba80a49124 (Commit)
 	 *
 	 * This method is called on all elements of the bridge chain as part of
 	 * the bus format negotiation process that happens in
@@ -745,6 +789,7 @@ struct drm_bridge {
 	 */
 	bool interlace_allowed;
 	/**
+<<<<<<< HEAD
 	 * @pre_enable_prev_first: The bridge requires that the prev
 	 * bridge @pre_enable function is called before its @pre_enable,
 	 * and conversely for post_disable. This is most frequently a
@@ -753,6 +798,8 @@ struct drm_bridge {
 	 */
 	bool pre_enable_prev_first;
 	/**
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * @ddc: Associated I2C adapter for DDC access, if any.
 	 */
 	struct i2c_adapter *ddc;
@@ -860,9 +907,19 @@ enum drm_mode_status
 drm_bridge_chain_mode_valid(struct drm_bridge *bridge,
 			    const struct drm_display_info *info,
 			    const struct drm_display_mode *mode);
+<<<<<<< HEAD
 void drm_bridge_chain_mode_set(struct drm_bridge *bridge,
 			       const struct drm_display_mode *mode,
 			       const struct drm_display_mode *adjusted_mode);
+=======
+void drm_bridge_chain_disable(struct drm_bridge *bridge);
+void drm_bridge_chain_post_disable(struct drm_bridge *bridge);
+void drm_bridge_chain_mode_set(struct drm_bridge *bridge,
+			       const struct drm_display_mode *mode,
+			       const struct drm_display_mode *adjusted_mode);
+void drm_bridge_chain_pre_enable(struct drm_bridge *bridge);
+void drm_bridge_chain_enable(struct drm_bridge *bridge);
+>>>>>>> b7ba80a49124 (Commit)
 
 int drm_atomic_bridge_chain_check(struct drm_bridge *bridge,
 				  struct drm_crtc_state *crtc_state,

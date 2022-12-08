@@ -16,6 +16,7 @@ void serial_test_tp_attach_query(void)
 	for (i = 0; i < num_progs; i++)
 		obj[i] = NULL;
 
+<<<<<<< HEAD
 	if (access("/sys/kernel/tracing/trace", F_OK) == 0) {
 		snprintf(buf, sizeof(buf),
 			 "/sys/kernel/tracing/events/sched/sched_switch/id");
@@ -23,6 +24,10 @@ void serial_test_tp_attach_query(void)
 		snprintf(buf, sizeof(buf),
 			 "/sys/kernel/debug/tracing/events/sched/sched_switch/id");
 	}
+=======
+	snprintf(buf, sizeof(buf),
+		 "/sys/kernel/debug/tracing/events/sched/sched_switch/id");
+>>>>>>> b7ba80a49124 (Commit)
 	efd = open(buf, O_RDONLY, 0);
 	if (CHECK(efd < 0, "open", "err %d errno %d\n", efd, errno))
 		return;
@@ -50,9 +55,14 @@ void serial_test_tp_attach_query(void)
 		prog_info.xlated_prog_len = 0;
 		prog_info.nr_map_ids = 0;
 		info_len = sizeof(prog_info);
+<<<<<<< HEAD
 		err = bpf_prog_get_info_by_fd(prog_fd[i], &prog_info,
 					      &info_len);
 		if (CHECK(err, "bpf_prog_get_info_by_fd", "err %d errno %d\n",
+=======
+		err = bpf_obj_get_info_by_fd(prog_fd[i], &prog_info, &info_len);
+		if (CHECK(err, "bpf_obj_get_info_by_fd", "err %d errno %d\n",
+>>>>>>> b7ba80a49124 (Commit)
 			  err, errno))
 			goto cleanup1;
 		saved_prog_ids[i] = prog_info.id;

@@ -98,8 +98,11 @@ struct crb_priv {
 	u8 __iomem *rsp;
 	u32 cmd_size;
 	u32 smc_func_id;
+<<<<<<< HEAD
 	u32 __iomem *pluton_start_addr;
 	u32 __iomem *pluton_reply_addr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct tpm2_crb_smc {
@@ -110,11 +113,14 @@ struct tpm2_crb_smc {
 	u32 smc_func_id;
 };
 
+<<<<<<< HEAD
 struct tpm2_crb_pluton {
 	u64 start_addr;
 	u64 reply_addr;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool crb_wait_for_reg_32(u32 __iomem *reg, u32 mask, u32 value,
 				unsigned long timeout)
 {
@@ -134,6 +140,7 @@ static bool crb_wait_for_reg_32(u32 __iomem *reg, u32 mask, u32 value,
 	return ((ioread32(reg) & mask) == value);
 }
 
+<<<<<<< HEAD
 static int crb_try_pluton_doorbell(struct crb_priv *priv, bool wait_for_complete)
 {
 	if (priv->sm != ACPI_TPM2_COMMAND_BUFFER_WITH_PLUTON)
@@ -153,6 +160,8 @@ static int crb_try_pluton_doorbell(struct crb_priv *priv, bool wait_for_complete
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * __crb_go_idle - request tpm crb device to go the idle state
  *
@@ -171,8 +180,11 @@ static int crb_try_pluton_doorbell(struct crb_priv *priv, bool wait_for_complete
  */
 static int __crb_go_idle(struct device *dev, struct crb_priv *priv)
 {
+<<<<<<< HEAD
 	int rc;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if ((priv->sm == ACPI_TPM2_START_METHOD) ||
 	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) ||
 	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC))
@@ -180,10 +192,13 @@ static int __crb_go_idle(struct device *dev, struct crb_priv *priv)
 
 	iowrite32(CRB_CTRL_REQ_GO_IDLE, &priv->regs_t->ctrl_req);
 
+<<<<<<< HEAD
 	rc = crb_try_pluton_doorbell(priv, true);
 	if (rc)
 		return rc;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!crb_wait_for_reg_32(&priv->regs_t->ctrl_req,
 				 CRB_CTRL_REQ_GO_IDLE/* mask */,
 				 0, /* value */
@@ -220,19 +235,25 @@ static int crb_go_idle(struct tpm_chip *chip)
  */
 static int __crb_cmd_ready(struct device *dev, struct crb_priv *priv)
 {
+<<<<<<< HEAD
 	int rc;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if ((priv->sm == ACPI_TPM2_START_METHOD) ||
 	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) ||
 	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC))
 		return 0;
 
 	iowrite32(CRB_CTRL_REQ_CMD_READY, &priv->regs_t->ctrl_req);
+<<<<<<< HEAD
 
 	rc = crb_try_pluton_doorbell(priv, true);
 	if (rc)
 		return rc;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!crb_wait_for_reg_32(&priv->regs_t->ctrl_req,
 				 CRB_CTRL_REQ_CMD_READY /* mask */,
 				 0, /* value */
@@ -291,7 +312,11 @@ static int __crb_relinquish_locality(struct device *dev,
 	iowrite32(CRB_LOC_CTRL_RELINQUISH, &priv->regs_h->loc_ctrl);
 	if (!crb_wait_for_reg_32(&priv->regs_h->loc_state, mask, value,
 				 TPM2_TIMEOUT_C)) {
+<<<<<<< HEAD
 		dev_warn(dev, "TPM_LOC_STATE_x.Relinquish timed out\n");
+=======
+		dev_warn(dev, "TPM_LOC_STATE_x.requestAccess timed out\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -ETIME;
 	}
 
@@ -410,10 +435,13 @@ static int crb_send(struct tpm_chip *chip, u8 *buf, size_t len)
 		return -E2BIG;
 	}
 
+<<<<<<< HEAD
 	/* Seems to be necessary for every command */
 	if (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_PLUTON)
 		__crb_cmd_ready(&chip->dev, priv);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy_toio(priv->cmd, buf, len);
 
 	/* Make sure that cmd is populated before issuing start. */
@@ -437,10 +465,14 @@ static int crb_send(struct tpm_chip *chip, u8 *buf, size_t len)
 		rc = tpm_crb_smc_start(&chip->dev, priv->smc_func_id);
 	}
 
+<<<<<<< HEAD
 	if (rc)
 		return rc;
 
 	return crb_try_pluton_doorbell(priv, false);
+=======
+	return rc;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void crb_cancel(struct tpm_chip *chip)
@@ -570,6 +602,7 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
 		return ret;
 	acpi_dev_free_resource_list(&acpi_resource_list);
 
+<<<<<<< HEAD
 	/* Pluton doesn't appear to define ACPI memory regions */
 	if (priv->sm != ACPI_TPM2_COMMAND_BUFFER_WITH_PLUTON) {
 		if (resource_type(iores_array) != IORESOURCE_MEM) {
@@ -582,6 +615,17 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
 			       0, sizeof(*iores_array));
 			iores_array[TPM_CRB_MAX_RESOURCES].flags = 0;
 		}
+=======
+	if (resource_type(iores_array) != IORESOURCE_MEM) {
+		dev_err(dev, FW_BUG "TPM2 ACPI table does not define a memory resource\n");
+		return -EINVAL;
+	} else if (resource_type(iores_array + TPM_CRB_MAX_RESOURCES) ==
+		IORESOURCE_MEM) {
+		dev_warn(dev, "TPM2 ACPI table defines too many memory resources\n");
+		memset(iores_array + TPM_CRB_MAX_RESOURCES,
+		       0, sizeof(*iores_array));
+		iores_array[TPM_CRB_MAX_RESOURCES].flags = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	iores = NULL;
@@ -705,6 +749,7 @@ out_relinquish_locality:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int crb_map_pluton(struct device *dev, struct crb_priv *priv,
 	       struct acpi_table_tpm2 *buf, struct tpm2_crb_pluton *crb_pluton)
 {
@@ -721,6 +766,8 @@ static int crb_map_pluton(struct device *dev, struct crb_priv *priv,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int crb_acpi_add(struct acpi_device *device)
 {
 	struct acpi_table_tpm2 *buf;
@@ -728,7 +775,10 @@ static int crb_acpi_add(struct acpi_device *device)
 	struct tpm_chip *chip;
 	struct device *dev = &device->dev;
 	struct tpm2_crb_smc *crb_smc;
+<<<<<<< HEAD
 	struct tpm2_crb_pluton *crb_pluton;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	acpi_status status;
 	u32 sm;
 	int rc;
@@ -742,6 +792,7 @@ static int crb_acpi_add(struct acpi_device *device)
 
 	/* Should the FIFO driver handle this? */
 	sm = buf->start_method;
+<<<<<<< HEAD
 	if (sm == ACPI_TPM2_MEMORY_MAPPED) {
 		rc = -ENODEV;
 		goto out;
@@ -752,6 +803,14 @@ static int crb_acpi_add(struct acpi_device *device)
 		rc = -ENOMEM;
 		goto out;
 	}
+=======
+	if (sm == ACPI_TPM2_MEMORY_MAPPED)
+		return -ENODEV;
+
+	priv = devm_kzalloc(dev, sizeof(struct crb_priv), GFP_KERNEL);
+	if (!priv)
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC) {
 		if (buf->header.length < (sizeof(*buf) + sizeof(*crb_smc))) {
@@ -759,13 +818,18 @@ static int crb_acpi_add(struct acpi_device *device)
 				FW_BUG "TPM2 ACPI table has wrong size %u for start method type %d\n",
 				buf->header.length,
 				ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC);
+<<<<<<< HEAD
 			rc = -EINVAL;
 			goto out;
+=======
+			return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		crb_smc = ACPI_ADD_PTR(struct tpm2_crb_smc, buf, sizeof(*buf));
 		priv->smc_func_id = crb_smc->smc_func_id;
 	}
 
+<<<<<<< HEAD
 	if (sm == ACPI_TPM2_COMMAND_BUFFER_WITH_PLUTON) {
 		if (buf->header.length < (sizeof(*buf) + sizeof(*crb_pluton))) {
 			dev_err(dev,
@@ -780,11 +844,14 @@ static int crb_acpi_add(struct acpi_device *device)
 			return rc;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	priv->sm = sm;
 	priv->hid = acpi_device_hid(device);
 
 	rc = crb_map_io(device, priv, buf);
 	if (rc)
+<<<<<<< HEAD
 		goto out;
 
 	chip = tpmm_chip_alloc(dev, &tpm_crb);
@@ -792,11 +859,19 @@ static int crb_acpi_add(struct acpi_device *device)
 		rc = PTR_ERR(chip);
 		goto out;
 	}
+=======
+		return rc;
+
+	chip = tpmm_chip_alloc(dev, &tpm_crb);
+	if (IS_ERR(chip))
+		return PTR_ERR(chip);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_set_drvdata(&chip->dev, priv);
 	chip->acpi_dev_handle = device->handle;
 	chip->flags = TPM_CHIP_FLAG_TPM2;
 
+<<<<<<< HEAD
 	rc = tpm_chip_register(chip);
 
 out:
@@ -805,11 +880,22 @@ out:
 }
 
 static void crb_acpi_remove(struct acpi_device *device)
+=======
+	return tpm_chip_register(chip);
+}
+
+static int crb_acpi_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &device->dev;
 	struct tpm_chip *chip = dev_get_drvdata(dev);
 
 	tpm_chip_unregister(chip);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct dev_pm_ops crb_pm = {

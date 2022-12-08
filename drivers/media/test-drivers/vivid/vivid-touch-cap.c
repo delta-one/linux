@@ -210,7 +210,11 @@ static void vivid_fill_buff_noise(__s16 *tch_buf, int size)
 
 	/* Fill 10% of the values within range -3 and 3, zero the others */
 	for (i = 0; i < size; i++) {
+<<<<<<< HEAD
 		unsigned int rand = get_random_u32();
+=======
+		unsigned int rand = get_random_int();
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (rand % 10)
 			tch_buf[i] = 0;
@@ -221,7 +225,11 @@ static void vivid_fill_buff_noise(__s16 *tch_buf, int size)
 
 static inline int get_random_pressure(void)
 {
+<<<<<<< HEAD
 	return get_random_u32_below(VIVID_PRESSURE_LIMIT);
+=======
+	return get_random_int() % VIVID_PRESSURE_LIMIT;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void vivid_tch_buf_set(struct v4l2_pix_format *f,
@@ -272,7 +280,11 @@ void vivid_fillbuff_tch(struct vivid_dev *dev, struct vivid_buffer *buf)
 		return;
 
 	if (test_pat_idx == 0)
+<<<<<<< HEAD
 		dev->tch_pat_random = get_random_u32();
+=======
+		dev->tch_pat_random = get_random_int();
+>>>>>>> b7ba80a49124 (Commit)
 	rand = dev->tch_pat_random;
 
 	switch (test_pattern) {

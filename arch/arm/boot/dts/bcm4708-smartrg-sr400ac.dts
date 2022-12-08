@@ -28,64 +28,108 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-power-white {
+=======
+		power-white {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:white:power";
 			gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "default-on";
 		};
 
+<<<<<<< HEAD
 		led-power-amber {
+=======
+		power-amber {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:amber:power";
 			gpios = <&chipcommon 2 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-usb2 {
+=======
+		usb2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:white:usb2";
 			gpios = <&chipcommon 3 GPIO_ACTIVE_HIGH>;
 			trigger-sources = <&ohci_port2>, <&ehci_port2>;
 			linux,default-trigger = "usbport";
 		};
 
+<<<<<<< HEAD
 		led-usb3-white {
+=======
+		usb3-white {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:white:usb3";
 			gpios = <&chipcommon 4 GPIO_ACTIVE_HIGH>;
 			trigger-sources = <&xhci_port1>;
 			linux,default-trigger = "usbport";
 		};
 
+<<<<<<< HEAD
 		led-usb3-green {
+=======
+		usb3-green {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:usb3";
 			gpios = <&chipcommon 5 GPIO_ACTIVE_HIGH>;
 			trigger-sources = <&ohci_port1>, <&ehci_port1>;
 			linux,default-trigger = "usbport";
 		};
 
+<<<<<<< HEAD
 		led-wps {
+=======
+		wps {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:white:wps";
 			gpios = <&chipcommon 6 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-status-red {
+=======
+		status-red {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:red:status";
 			gpios = <&chipcommon 8 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-status-green {
+=======
+		status-green {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:status";
 			gpios = <&chipcommon 9 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-status-blue {
+=======
+		status-blue {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:blue:status";
 			gpios = <&chipcommon 10 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-wan-white {
+=======
+		wan-white {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:white:wan";
 			gpios = <&chipcommon 12 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-wan-red {
+=======
+		wan-red {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:red:wan";
 			gpios = <&chipcommon 13 GPIO_ACTIVE_HIGH>;
 		};

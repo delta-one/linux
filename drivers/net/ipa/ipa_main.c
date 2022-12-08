@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0
 
 /* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (C) 2018-2023 Linaro Ltd.
+=======
+ * Copyright (C) 2018-2021 Linaro Ltd.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/types.h>
@@ -16,7 +20,11 @@
 #include <linux/of_device.h>
 #include <linux/of_address.h>
 #include <linux/pm_runtime.h>
+<<<<<<< HEAD
 #include <linux/firmware/qcom/qcom_scm.h>
+=======
+#include <linux/qcom_scm.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/soc/qcom/mdt_loader.h>
 
 #include "ipa.h"
@@ -82,6 +90,7 @@
 #define IPA_XO_CLOCK_DIVIDER	192	/* 1 is subtracted where used */
 
 /**
+<<<<<<< HEAD
  * enum ipa_firmware_loader: How GSI firmware gets loaded
  *
  * @IPA_LOADER_DEFER:		System not ready; try again later
@@ -99,6 +108,8 @@ enum ipa_firmware_loader {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ipa_setup() - Set up IPA hardware
  * @ipa:	IPA pointer
  *
@@ -200,6 +211,7 @@ static void ipa_teardown(struct ipa *ipa)
 	gsi_teardown(&ipa->gsi);
 }
 
+<<<<<<< HEAD
 static void
 ipa_hardware_config_bcr(struct ipa *ipa, const struct ipa_data *data)
 {
@@ -267,12 +279,18 @@ static void ipa_hardware_config_comp(struct ipa *ipa)
 {
 	const struct reg *reg;
 	u32 offset;
+=======
+/* Configure bus access behavior for IPA components */
+static void ipa_hardware_config_comp(struct ipa *ipa)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	u32 val;
 
 	/* Nothing to configure prior to IPA v4.0 */
 	if (ipa->version < IPA_VERSION_4_0)
 		return;
 
+<<<<<<< HEAD
 	reg = ipa_reg(ipa, COMP_CFG);
 	offset = reg_offset(reg);
 
@@ -292,6 +310,24 @@ static void ipa_hardware_config_comp(struct ipa *ipa)
 	val |= reg_bit(reg, GSI_MULTI_INORDER_WR_DIS);
 
 	iowrite32(val, ipa->reg_virt + offset);
+=======
+	val = ioread32(ipa->reg_virt + IPA_REG_COMP_CFG_OFFSET);
+
+	if (ipa->version == IPA_VERSION_4_0) {
+		val &= ~IPA_QMB_SELECT_CONS_EN_FMASK;
+		val &= ~IPA_QMB_SELECT_PROD_EN_FMASK;
+		val &= ~IPA_QMB_SELECT_GLOBAL_EN_FMASK;
+	} else if (ipa->version < IPA_VERSION_4_5) {
+		val |= GSI_MULTI_AXI_MASTERS_DIS_FMASK;
+	} else {
+		/* For IPA v4.5 IPA_FULL_FLUSH_WAIT_RSC_CLOSE_EN is 0 */
+	}
+
+	val |= GSI_MULTI_INORDER_RD_DIS_FMASK;
+	val |= GSI_MULTI_INORDER_WR_DIS_FMASK;
+
+	iowrite32(val, ipa->reg_virt + IPA_REG_COMP_CFG_OFFSET);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Configure DDR and (possibly) PCIe max read/write QSB values */
@@ -300,7 +336,10 @@ ipa_hardware_config_qsb(struct ipa *ipa, const struct ipa_data *data)
 {
 	const struct ipa_qsb_data *data0;
 	const struct ipa_qsb_data *data1;
+<<<<<<< HEAD
 	const struct reg *reg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 val;
 
 	/* QMB 0 represents DDR; QMB 1 (if present) represents PCIe */
@@ -309,6 +348,7 @@ ipa_hardware_config_qsb(struct ipa *ipa, const struct ipa_data *data)
 		data1 = &data->qsb_data[IPA_QSB_MASTER_PCIE];
 
 	/* Max outstanding write accesses for QSB masters */
+<<<<<<< HEAD
 	reg = ipa_reg(ipa, QSB_MAX_WRITES);
 
 	val = reg_encode(reg, GEN_QMB_0_MAX_WRITES, data0->max_writes);
@@ -332,6 +372,27 @@ ipa_hardware_config_qsb(struct ipa *ipa, const struct ipa_data *data)
 	}
 
 	iowrite32(val, ipa->reg_virt + reg_offset(reg));
+=======
+	val = u32_encode_bits(data0->max_writes, GEN_QMB_0_MAX_WRITES_FMASK);
+	if (data->qsb_count > 1)
+		val |= u32_encode_bits(data1->max_writes,
+				       GEN_QMB_1_MAX_WRITES_FMASK);
+	iowrite32(val, ipa->reg_virt + IPA_REG_QSB_MAX_WRITES_OFFSET);
+
+	/* Max outstanding read accesses for QSB masters */
+	val = u32_encode_bits(data0->max_reads, GEN_QMB_0_MAX_READS_FMASK);
+	if (ipa->version >= IPA_VERSION_4_0)
+		val |= u32_encode_bits(data0->max_reads_beats,
+				       GEN_QMB_0_MAX_READS_BEATS_FMASK);
+	if (data->qsb_count > 1) {
+		val |= u32_encode_bits(data1->max_reads,
+				       GEN_QMB_1_MAX_READS_FMASK);
+		if (ipa->version >= IPA_VERSION_4_0)
+			val |= u32_encode_bits(data1->max_reads_beats,
+					       GEN_QMB_1_MAX_READS_BEATS_FMASK);
+	}
+	iowrite32(val, ipa->reg_virt + IPA_REG_QSB_MAX_READS_OFFSET);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* The internal inactivity timer clock is used for the aggregation timer */
@@ -367,6 +428,7 @@ static __always_inline u32 ipa_aggr_granularity_val(u32 usec)
  */
 static void ipa_qtime_config(struct ipa *ipa)
 {
+<<<<<<< HEAD
 	const struct reg *reg;
 	u32 offset;
 	u32 val;
@@ -452,12 +514,41 @@ static void ipa_hardware_config_hashing(struct ipa *ipa)
 	 * IPV4_FILTER_HASH are all zero.
 	 */
 	iowrite32(0, ipa->reg_virt + reg_offset(reg));
+=======
+	u32 val;
+
+	/* Timer clock divider must be disabled when we change the rate */
+	iowrite32(0, ipa->reg_virt + IPA_REG_TIMERS_XO_CLK_DIV_CFG_OFFSET);
+
+	/* Set DPL time stamp resolution to use Qtime (instead of 1 msec) */
+	val = u32_encode_bits(DPL_TIMESTAMP_SHIFT, DPL_TIMESTAMP_LSB_FMASK);
+	val |= u32_encode_bits(1, DPL_TIMESTAMP_SEL_FMASK);
+	/* Configure tag and NAT Qtime timestamp resolution as well */
+	val |= u32_encode_bits(TAG_TIMESTAMP_SHIFT, TAG_TIMESTAMP_LSB_FMASK);
+	val |= u32_encode_bits(NAT_TIMESTAMP_SHIFT, NAT_TIMESTAMP_LSB_FMASK);
+	iowrite32(val, ipa->reg_virt + IPA_REG_QTIME_TIMESTAMP_CFG_OFFSET);
+
+	/* Set granularity of pulse generators used for other timers */
+	val = u32_encode_bits(IPA_GRAN_100_US, GRAN_0_FMASK);
+	val |= u32_encode_bits(IPA_GRAN_1_MS, GRAN_1_FMASK);
+	val |= u32_encode_bits(IPA_GRAN_1_MS, GRAN_2_FMASK);
+	iowrite32(val, ipa->reg_virt + IPA_REG_TIMERS_PULSE_GRAN_CFG_OFFSET);
+
+	/* Actual divider is 1 more than value supplied here */
+	val = u32_encode_bits(IPA_XO_CLOCK_DIVIDER - 1, DIV_VALUE_FMASK);
+	iowrite32(val, ipa->reg_virt + IPA_REG_TIMERS_XO_CLK_DIV_CFG_OFFSET);
+
+	/* Divider value is set; re-enable the common timer clock divider */
+	val |= u32_encode_bits(1, DIV_ENABLE_FMASK);
+	iowrite32(val, ipa->reg_virt + IPA_REG_TIMERS_XO_CLK_DIV_CFG_OFFSET);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ipa_idle_indication_cfg(struct ipa *ipa,
 				    u32 enter_idle_debounce_thresh,
 				    bool const_non_idle_enable)
 {
+<<<<<<< HEAD
 	const struct reg *reg;
 	u32 val;
 
@@ -471,6 +562,18 @@ static void ipa_idle_indication_cfg(struct ipa *ipa,
 		val |= reg_bit(reg, CONST_NON_IDLE_ENABLE);
 
 	iowrite32(val, ipa->reg_virt + reg_offset(reg));
+=======
+	u32 offset;
+	u32 val;
+
+	val = u32_encode_bits(enter_idle_debounce_thresh,
+			      ENTER_IDLE_DEBOUNCE_THRESH_FMASK);
+	if (const_non_idle_enable)
+		val |= CONST_NON_IDLE_ENABLE_FMASK;
+
+	offset = ipa_reg_idle_indication_cfg_offset(ipa->version);
+	iowrite32(val, ipa->reg_virt + offset);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -500,6 +603,7 @@ static void ipa_hardware_dcd_deconfig(struct ipa *ipa)
  */
 static void ipa_hardware_config(struct ipa *ipa, const struct ipa_data *data)
 {
+<<<<<<< HEAD
 	ipa_hardware_config_bcr(ipa, data);
 	ipa_hardware_config_tx(ipa);
 	ipa_hardware_config_clkon(ipa);
@@ -507,6 +611,57 @@ static void ipa_hardware_config(struct ipa *ipa, const struct ipa_data *data)
 	ipa_hardware_config_qsb(ipa, data);
 	ipa_hardware_config_timing(ipa);
 	ipa_hardware_config_hashing(ipa);
+=======
+	enum ipa_version version = ipa->version;
+	u32 granularity;
+	u32 val;
+
+	/* IPA v4.5+ has no backward compatibility register */
+	if (version < IPA_VERSION_4_5) {
+		val = data->backward_compat;
+		iowrite32(val, ipa->reg_virt + IPA_REG_BCR_OFFSET);
+	}
+
+	/* Implement some hardware workarounds */
+	if (version >= IPA_VERSION_4_0 && version < IPA_VERSION_4_5) {
+		/* Disable PA mask to allow HOLB drop */
+		val = ioread32(ipa->reg_virt + IPA_REG_TX_CFG_OFFSET);
+		val &= ~PA_MASK_EN_FMASK;
+		iowrite32(val, ipa->reg_virt + IPA_REG_TX_CFG_OFFSET);
+
+		/* Enable open global clocks in the CLKON configuration */
+		val = GLOBAL_FMASK | GLOBAL_2X_CLK_FMASK;
+	} else if (version == IPA_VERSION_3_1) {
+		val = MISC_FMASK;	/* Disable MISC clock gating */
+	} else {
+		val = 0;		/* No CLKON configuration needed */
+	}
+	if (val)
+		iowrite32(val, ipa->reg_virt + IPA_REG_CLKON_CFG_OFFSET);
+
+	ipa_hardware_config_comp(ipa);
+
+	/* Configure system bus limits */
+	ipa_hardware_config_qsb(ipa, data);
+
+	if (version < IPA_VERSION_4_5) {
+		/* Configure aggregation timer granularity */
+		granularity = ipa_aggr_granularity_val(IPA_AGGR_GRANULARITY);
+		val = u32_encode_bits(granularity, AGGR_GRANULARITY_FMASK);
+		iowrite32(val, ipa->reg_virt + IPA_REG_COUNTER_CFG_OFFSET);
+	} else {
+		ipa_qtime_config(ipa);
+	}
+
+	/* IPA v4.2 does not support hashed tables, so disable them */
+	if (version == IPA_VERSION_4_2) {
+		u32 offset = ipa_reg_filt_rout_hash_en_offset(version);
+
+		iowrite32(0, ipa->reg_virt + offset);
+	}
+
+	/* Enable dynamic clock division */
+>>>>>>> b7ba80a49124 (Commit)
 	ipa_hardware_dcd_config(ipa);
 }
 
@@ -673,10 +828,13 @@ static const struct of_device_id ipa_match[] = {
 		.data		= &ipa_data_v4_5,
 	},
 	{
+<<<<<<< HEAD
 		.compatible	= "qcom,sm6350-ipa",
 		.data		= &ipa_data_v4_7,
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.compatible	= "qcom,sm8350-ipa",
 		.data		= &ipa_data_v4_9,
 	},
@@ -684,10 +842,13 @@ static const struct of_device_id ipa_match[] = {
 		.compatible	= "qcom,sc7280-ipa",
 		.data		= &ipa_data_v4_11,
 	},
+<<<<<<< HEAD
 	{
 		.compatible	= "qcom,sdx65-ipa",
 		.data		= &ipa_data_v5_0,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ },
 };
 MODULE_DEVICE_TABLE(of, ipa_match);
@@ -729,6 +890,7 @@ static void ipa_validate_build(void)
 
 	/* Aggregation granularity value can't be 0, and must fit */
 	BUILD_BUG_ON(!ipa_aggr_granularity_val(IPA_AGGR_GRANULARITY));
+<<<<<<< HEAD
 }
 
 static enum ipa_firmware_loader ipa_firmware_loader(struct device *dev)
@@ -773,6 +935,10 @@ out_self:
 		return IPA_LOADER_SELF;
 
 	return IPA_LOADER_DEFER;
+=======
+	BUILD_BUG_ON(ipa_aggr_granularity_val(IPA_AGGR_GRANULARITY) >
+			field_max(AGGR_GRANULARITY_FMASK));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -801,9 +967,15 @@ out_self:
 static int ipa_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
+<<<<<<< HEAD
 	enum ipa_firmware_loader loader;
 	const struct ipa_data *data;
 	struct ipa_power *power;
+=======
+	const struct ipa_data *data;
+	struct ipa_power *power;
+	bool modem_init;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ipa *ipa;
 	int ret;
 
@@ -821,6 +993,7 @@ static int ipa_probe(struct platform_device *pdev)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if (!data->modem_route_count) {
 		dev_err(dev, "modem_route_count cannot be zero\n");
 		return -EINVAL;
@@ -831,6 +1004,13 @@ static int ipa_probe(struct platform_device *pdev)
 		return -EINVAL;
 	if (loader == IPA_LOADER_DEFER)
 		return -EPROBE_DEFER;
+=======
+	/* If we need Trust Zone, make sure it's available */
+	modem_init = of_property_read_bool(dev->of_node, "modem-init");
+	if (!modem_init)
+		if (!qcom_scm_is_available())
+			return -EPROBE_DEFER;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* The clock and interconnects might not be ready when we're
 	 * probed, so might return -EPROBE_DEFER.
@@ -850,7 +1030,10 @@ static int ipa_probe(struct platform_device *pdev)
 	dev_set_drvdata(dev, ipa);
 	ipa->power = power;
 	ipa->version = data->version;
+<<<<<<< HEAD
 	ipa->modem_route_count = data->modem_route_count;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	init_completion(&ipa->completion);
 
 	ret = ipa_reg_init(ipa);
@@ -867,15 +1050,28 @@ static int ipa_probe(struct platform_device *pdev)
 		goto err_mem_exit;
 
 	/* Result is a non-zero mask of endpoints that support filtering */
+<<<<<<< HEAD
 	ret = ipa_endpoint_init(ipa, data->endpoint_count, data->endpoint_data);
 	if (ret)
 		goto err_gsi_exit;
+=======
+	ipa->filter_map = ipa_endpoint_init(ipa, data->endpoint_count,
+					    data->endpoint_data);
+	if (!ipa->filter_map) {
+		ret = -EINVAL;
+		goto err_gsi_exit;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = ipa_table_init(ipa);
 	if (ret)
 		goto err_endpoint_exit;
 
+<<<<<<< HEAD
 	ret = ipa_smp2p_init(ipa, loader == IPA_LOADER_MODEM);
+=======
+	ret = ipa_smp2p_init(ipa, modem_init);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto err_table_exit;
 
@@ -890,6 +1086,7 @@ static int ipa_probe(struct platform_device *pdev)
 
 	dev_info(dev, "IPA driver initialized");
 
+<<<<<<< HEAD
 	/* If the modem is loading GSI firmware, it will trigger a call to
 	 * ipa_setup() when it has finished.  In that case we're done here.
 	 */
@@ -904,6 +1101,22 @@ static int ipa_probe(struct platform_device *pdev)
 	} /* Otherwise loader == IPA_LOADER_SKIP */
 
 	/* GSI firmware is loaded; proceed to setup */
+=======
+	/* If the modem is doing early initialization, it will trigger a
+	 * call to ipa_setup() when it has finished.  In that case we're
+	 * done here.
+	 */
+	if (modem_init)
+		goto done;
+
+	/* Otherwise we need to load the firmware and have Trust Zone validate
+	 * and install it.  If that succeeds we can proceed with setup.
+	 */
+	ret = ipa_firmware_load(dev);
+	if (ret)
+		goto err_deconfig;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ipa_setup(ipa);
 	if (ret)
 		goto err_deconfig;

@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/media/i2c/ovti,ov5640.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: OmniVision OV5640 Image Sensor
+=======
+title: OmniVision OV5640 Image Sensor Device Tree Bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Steve Longerbeam <slongerbeam@gmail.com>

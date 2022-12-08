@@ -52,6 +52,7 @@ struct snd_sof_dev;
 #define ADSP_PRID			0x0
 #define ADSP_ALTVEC_C0			0x04
 #define ADSP_ALTVECSEL			0x0C
+<<<<<<< HEAD
 #define MT8188_ADSP_ALTVECSEL_C0	BIT(0)
 #define MT8186_ADSP_ALTVECSEL_C0	BIT(1)
 
@@ -61,6 +62,9 @@ struct snd_sof_dev;
  */
 #define ADSP_ALTVECSEL_C0		(MT8188_ADSP_ALTVECSEL_C0 | \
 					 MT8186_ADSP_ALTVECSEL_C0)
+=======
+#define ADSP_ALTVECSEL_C0		BIT(1)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* dsp bus */
 #define ADSP_SRAM_POOL_CON		0x190

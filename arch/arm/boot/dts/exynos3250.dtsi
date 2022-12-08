@@ -46,6 +46,7 @@
 		serial2 = &serial_2;
 	};
 
+<<<<<<< HEAD
 	bus_dmc: bus-dmc {
 		compatible = "samsung,exynos-bus";
 		clocks = <&cmu_dmc CLK_DIV_DMC>;
@@ -197,6 +198,8 @@
 		status = "disabled";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cpus {
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -280,6 +283,7 @@
 		clock-output-names = "xtcxo";
 	};
 
+<<<<<<< HEAD
 	bus_leftbus_opp_table: opp-table-0 {
 		compatible = "operating-points-v2";
 
@@ -305,6 +309,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pmu {
 		compatible = "arm,cortex-a7-pmu";
 		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
@@ -346,7 +352,11 @@
 		};
 
 		pmu_system_controller: system-controller@10020000 {
+<<<<<<< HEAD
 			compatible = "samsung,exynos3250-pmu", "simple-mfd", "syscon";
+=======
+			compatible = "samsung,exynos3250-pmu", "syscon";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0x10020000 0x4000>;
 			interrupt-controller;
 			#interrupt-cells = <3>;
@@ -354,44 +364,73 @@
 			clock-names = "clkout8";
 			clocks = <&cmu CLK_FIN_PLL>;
 			#clock-cells = <1>;
+<<<<<<< HEAD
 
 			mipi_phy: mipi-phy {
 				compatible = "samsung,s5pv210-mipi-video-phy";
 				#phy-cells = <1>;
 			};
+=======
+		};
+
+		mipi_phy: video-phy {
+			compatible = "samsung,s5pv210-mipi-video-phy";
+			#phy-cells = <1>;
+			syscon = <&pmu_system_controller>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		pd_cam: power-domain@10023c00 {
 			compatible = "samsung,exynos4210-pd";
+<<<<<<< HEAD
 			reg = <0x10023c00 0x20>;
+=======
+			reg = <0x10023C00 0x20>;
+>>>>>>> b7ba80a49124 (Commit)
 			#power-domain-cells = <0>;
 			label = "CAM";
 		};
 
 		pd_mfc: power-domain@10023c40 {
 			compatible = "samsung,exynos4210-pd";
+<<<<<<< HEAD
 			reg = <0x10023c40 0x20>;
+=======
+			reg = <0x10023C40 0x20>;
+>>>>>>> b7ba80a49124 (Commit)
 			#power-domain-cells = <0>;
 			label = "MFC";
 		};
 
 		pd_g3d: power-domain@10023c60 {
 			compatible = "samsung,exynos4210-pd";
+<<<<<<< HEAD
 			reg = <0x10023c60 0x20>;
+=======
+			reg = <0x10023C60 0x20>;
+>>>>>>> b7ba80a49124 (Commit)
 			#power-domain-cells = <0>;
 			label = "G3D";
 		};
 
 		pd_lcd0: power-domain@10023c80 {
 			compatible = "samsung,exynos4210-pd";
+<<<<<<< HEAD
 			reg = <0x10023c80 0x20>;
+=======
+			reg = <0x10023C80 0x20>;
+>>>>>>> b7ba80a49124 (Commit)
 			#power-domain-cells = <0>;
 			label = "LCD0";
 		};
 
 		pd_isp: power-domain@10023ca0 {
 			compatible = "samsung,exynos4210-pd";
+<<<<<<< HEAD
 			reg = <0x10023ca0 0x20>;
+=======
+			reg = <0x10023CA0 0x20>;
+>>>>>>> b7ba80a49124 (Commit)
 			#power-domain-cells = <0>;
 			label = "ISP";
 		};
@@ -408,7 +447,11 @@
 
 		cmu_dmc: clock-controller@105c0000 {
 			compatible = "samsung,exynos3250-cmu-dmc";
+<<<<<<< HEAD
 			reg = <0x105c0000 0x2000>;
+=======
+			reg = <0x105C0000 0x2000>;
+>>>>>>> b7ba80a49124 (Commit)
 			#clock-cells = <1>;
 		};
 
@@ -423,7 +466,11 @@
 
 		tmu: tmu@100c0000 {
 			compatible = "samsung,exynos3250-tmu";
+<<<<<<< HEAD
 			reg = <0x100c0000 0x100>;
+=======
+			reg = <0x100C0000 0x100>;
+>>>>>>> b7ba80a49124 (Commit)
 			interrupts = <GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cmu CLK_TMU_APBIF>;
 			clock-names = "tmu_apbif";
@@ -517,7 +564,11 @@
 
 		dsi_0: dsi@11c80000 {
 			compatible = "samsung,exynos3250-mipi-dsi";
+<<<<<<< HEAD
 			reg = <0x11c80000 0x10000>;
+=======
+			reg = <0x11C80000 0x10000>;
+>>>>>>> b7ba80a49124 (Commit)
 			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
 			samsung,phy-type = <0>;
 			power-domains = <&pd_lcd0>;
@@ -540,7 +591,11 @@
 			#iommu-cells = <0>;
 		};
 
+<<<<<<< HEAD
 		hsotg: usb@12480000 {
+=======
+		hsotg: hsotg@12480000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "samsung,s3c6400-hsotg";
 			reg = <0x12480000 0x20000>;
 			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
@@ -587,9 +642,15 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		exynos_usbphy: usb-phy@125b0000 {
 			compatible = "samsung,exynos3250-usb2-phy";
 			reg = <0x125b0000 0x100>;
+=======
+		exynos_usbphy: exynos-usbphy@125b0000 {
+			compatible = "samsung,exynos3250-usb2-phy";
+			reg = <0x125B0000 0x100>;
+>>>>>>> b7ba80a49124 (Commit)
 			samsung,pmureg-phandle = <&pmu_system_controller>;
 			clocks = <&cmu CLK_USBOTG>, <&cmu CLK_SCLK_UPLL>;
 			clock-names = "phy", "ref";
@@ -617,7 +678,11 @@
 
 		adc: adc@126c0000 {
 			compatible = "samsung,exynos3250-adc";
+<<<<<<< HEAD
 			reg = <0x126c0000 0x100>;
+=======
+			reg = <0x126C0000 0x100>;
+>>>>>>> b7ba80a49124 (Commit)
 			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
 			clock-names = "adc", "sclk";
 			clocks = <&cmu CLK_TSADC>, <&cmu CLK_SCLK_TSADC>;
@@ -660,7 +725,11 @@
 		};
 
 		mfc: codec@13400000 {
+<<<<<<< HEAD
 			compatible = "samsung,exynos3250-mfc", "samsung,mfc-v7";
+=======
+			compatible = "samsung,mfc-v7";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0x13400000 0x10000>;
 			interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
 			clock-names = "mfc", "sclk_mfc";
@@ -768,7 +837,11 @@
 			#address-cells = <1>;
 			#size-cells = <0>;
 			compatible = "samsung,s3c2440-i2c";
+<<<<<<< HEAD
 			reg = <0x138a0000 0x100>;
+=======
+			reg = <0x138A0000 0x100>;
+>>>>>>> b7ba80a49124 (Commit)
 			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cmu CLK_I2C4>;
 			clock-names = "i2c";
@@ -781,7 +854,11 @@
 			#address-cells = <1>;
 			#size-cells = <0>;
 			compatible = "samsung,s3c2440-i2c";
+<<<<<<< HEAD
 			reg = <0x138b0000 0x100>;
+=======
+			reg = <0x138B0000 0x100>;
+>>>>>>> b7ba80a49124 (Commit)
 			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cmu CLK_I2C5>;
 			clock-names = "i2c";
@@ -794,7 +871,11 @@
 			#address-cells = <1>;
 			#size-cells = <0>;
 			compatible = "samsung,s3c2440-i2c";
+<<<<<<< HEAD
 			reg = <0x138c0000 0x100>;
+=======
+			reg = <0x138C0000 0x100>;
+>>>>>>> b7ba80a49124 (Commit)
 			interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cmu CLK_I2C6>;
 			clock-names = "i2c";
@@ -807,7 +888,11 @@
 			#address-cells = <1>;
 			#size-cells = <0>;
 			compatible = "samsung,s3c2440-i2c";
+<<<<<<< HEAD
 			reg = <0x138d0000 0x100>;
+=======
+			reg = <0x138D0000 0x100>;
+>>>>>>> b7ba80a49124 (Commit)
 			interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cmu CLK_I2C7>;
 			clock-names = "i2c";
@@ -863,7 +948,11 @@
 
 		pwm: pwm@139d0000 {
 			compatible = "samsung,exynos4210-pwm";
+<<<<<<< HEAD
 			reg = <0x139d0000 0x1000>;
+=======
+			reg = <0x139D0000 0x1000>;
+>>>>>>> b7ba80a49124 (Commit)
 			interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
@@ -946,6 +1035,185 @@
 			clock-names = "ppmu";
 			status = "disabled";
 		};
+<<<<<<< HEAD
+=======
+
+		bus_dmc: bus-dmc {
+			compatible = "samsung,exynos-bus";
+			clocks = <&cmu_dmc CLK_DIV_DMC>;
+			clock-names = "bus";
+			operating-points-v2 = <&bus_dmc_opp_table>;
+			status = "disabled";
+		};
+
+		bus_dmc_opp_table: opp-table1 {
+			compatible = "operating-points-v2";
+
+			opp-50000000 {
+				opp-hz = /bits/ 64 <50000000>;
+				opp-microvolt = <800000>;
+			};
+			opp-100000000 {
+				opp-hz = /bits/ 64 <100000000>;
+				opp-microvolt = <800000>;
+			};
+			opp-134000000 {
+				opp-hz = /bits/ 64 <134000000>;
+				opp-microvolt = <800000>;
+			};
+			opp-200000000 {
+				opp-hz = /bits/ 64 <200000000>;
+				opp-microvolt = <825000>;
+			};
+			opp-400000000 {
+				opp-hz = /bits/ 64 <400000000>;
+				opp-microvolt = <875000>;
+			};
+		};
+
+		bus_leftbus: bus-leftbus {
+			compatible = "samsung,exynos-bus";
+			clocks = <&cmu CLK_DIV_GDL>;
+			clock-names = "bus";
+			operating-points-v2 = <&bus_leftbus_opp_table>;
+			status = "disabled";
+		};
+
+		bus_rightbus: bus-rightbus {
+			compatible = "samsung,exynos-bus";
+			clocks = <&cmu CLK_DIV_GDR>;
+			clock-names = "bus";
+			operating-points-v2 = <&bus_leftbus_opp_table>;
+			status = "disabled";
+		};
+
+		bus_lcd0: bus-lcd0 {
+			compatible = "samsung,exynos-bus";
+			clocks = <&cmu CLK_DIV_ACLK_160>;
+			clock-names = "bus";
+			operating-points-v2 = <&bus_leftbus_opp_table>;
+			status = "disabled";
+		};
+
+		bus_fsys: bus-fsys {
+			compatible = "samsung,exynos-bus";
+			clocks = <&cmu CLK_DIV_ACLK_200>;
+			clock-names = "bus";
+			operating-points-v2 = <&bus_leftbus_opp_table>;
+			status = "disabled";
+		};
+
+		bus_mcuisp: bus-mcuisp {
+			compatible = "samsung,exynos-bus";
+			clocks = <&cmu CLK_DIV_ACLK_400_MCUISP>;
+			clock-names = "bus";
+			operating-points-v2 = <&bus_mcuisp_opp_table>;
+			status = "disabled";
+		};
+
+		bus_isp: bus-isp {
+			compatible = "samsung,exynos-bus";
+			clocks = <&cmu CLK_DIV_ACLK_266>;
+			clock-names = "bus";
+			operating-points-v2 = <&bus_isp_opp_table>;
+			status = "disabled";
+		};
+
+		bus_peril: bus-peril {
+			compatible = "samsung,exynos-bus";
+			clocks = <&cmu CLK_DIV_ACLK_100>;
+			clock-names = "bus";
+			operating-points-v2 = <&bus_peril_opp_table>;
+			status = "disabled";
+		};
+
+		bus_mfc: bus-mfc {
+			compatible = "samsung,exynos-bus";
+			clocks = <&cmu CLK_SCLK_MFC>;
+			clock-names = "bus";
+			operating-points-v2 = <&bus_leftbus_opp_table>;
+			status = "disabled";
+		};
+
+		bus_leftbus_opp_table: opp-table2 {
+			compatible = "operating-points-v2";
+
+			opp-50000000 {
+				opp-hz = /bits/ 64 <50000000>;
+				opp-microvolt = <900000>;
+			};
+			opp-80000000 {
+				opp-hz = /bits/ 64 <80000000>;
+				opp-microvolt = <900000>;
+			};
+			opp-100000000 {
+				opp-hz = /bits/ 64 <100000000>;
+				opp-microvolt = <1000000>;
+			};
+			opp-134000000 {
+				opp-hz = /bits/ 64 <134000000>;
+				opp-microvolt = <1000000>;
+			};
+			opp-200000000 {
+				opp-hz = /bits/ 64 <200000000>;
+				opp-microvolt = <1000000>;
+			};
+		};
+
+		bus_mcuisp_opp_table: opp-table3 {
+			compatible = "operating-points-v2";
+
+			opp-50000000 {
+				opp-hz = /bits/ 64 <50000000>;
+			};
+			opp-80000000 {
+				opp-hz = /bits/ 64 <80000000>;
+			};
+			opp-100000000 {
+				opp-hz = /bits/ 64 <100000000>;
+			};
+			opp-200000000 {
+				opp-hz = /bits/ 64 <200000000>;
+			};
+			opp-400000000 {
+				opp-hz = /bits/ 64 <400000000>;
+			};
+		};
+
+		bus_isp_opp_table: opp-table4 {
+			compatible = "operating-points-v2";
+
+			opp-50000000 {
+				opp-hz = /bits/ 64 <50000000>;
+			};
+			opp-80000000 {
+				opp-hz = /bits/ 64 <80000000>;
+			};
+			opp-100000000 {
+				opp-hz = /bits/ 64 <100000000>;
+			};
+			opp-200000000 {
+				opp-hz = /bits/ 64 <200000000>;
+			};
+			opp-300000000 {
+				opp-hz = /bits/ 64 <300000000>;
+			};
+		};
+
+		bus_peril_opp_table: opp-table5 {
+			compatible = "operating-points-v2";
+
+			opp-50000000 {
+				opp-hz = /bits/ 64 <50000000>;
+			};
+			opp-80000000 {
+				opp-hz = /bits/ 64 <80000000>;
+			};
+			opp-100000000 {
+				opp-hz = /bits/ 64 <100000000>;
+			};
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 

@@ -11,11 +11,19 @@
  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
  */
 
+<<<<<<< HEAD
 #include <linux/gpio/consumer.h>
 #include <linux/module.h>
 #include <linux/mod_devicetable.h>
 #include <linux/platform_device.h>
 #include <linux/slab.h>
+=======
+#include <linux/gpio.h>
+#include <linux/module.h>
+#include <linux/platform_device.h>
+#include <linux/slab.h>
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <video/omapfb_dss.h>
 

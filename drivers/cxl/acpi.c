@@ -6,6 +6,7 @@
 #include <linux/kernel.h>
 #include <linux/acpi.h>
 #include <linux/pci.h>
+<<<<<<< HEAD
 #include <asm/div64.h>
 #include "cxlpci.h"
 #include "cxl.h"
@@ -120,6 +121,11 @@ static int cxl_parse_cxims(union acpi_subtable_headers *header, void *arg,
 	return 0;
 }
 
+=======
+#include "cxlpci.h"
+#include "cxl.h"
+
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned long cfmws_to_decoder_flags(int restrictions)
 {
 	unsigned long flags = CXL_DECODER_F_ENABLE;
@@ -144,10 +150,15 @@ static int cxl_acpi_cfmws_verify(struct device *dev,
 	int rc, expected_len;
 	unsigned int ways;
 
+<<<<<<< HEAD
 	if (cfmws->interleave_arithmetic != ACPI_CEDT_CFMWS_ARITHMETIC_MODULO &&
 	    cfmws->interleave_arithmetic != ACPI_CEDT_CFMWS_ARITHMETIC_XOR) {
 		dev_err(dev, "CFMWS Unknown Interleave Arithmetic: %d\n",
 			cfmws->interleave_arithmetic);
+=======
+	if (cfmws->interleave_arithmetic != ACPI_CEDT_CFMWS_ARITHMETIC_MODULO) {
+		dev_err(dev, "CFMWS Unsupported Interleave Arithmetic\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -161,7 +172,11 @@ static int cxl_acpi_cfmws_verify(struct device *dev,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	rc = eiw_to_ways(cfmws->interleave_ways, &ways);
+=======
+	rc = cxl_to_ways(cfmws->interleave_ways, &ways);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		dev_err(dev, "CFMWS Interleave Ways (%d) invalid\n",
 			cfmws->interleave_ways);
@@ -183,10 +198,13 @@ static int cxl_acpi_cfmws_verify(struct device *dev,
 	return 0;
 }
 
+<<<<<<< HEAD
 /*
  * Note, @dev must be the first member, see 'struct cxl_chbs_context'
  * and mock_acpi_table_parse_cedt()
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct cxl_cfmws_context {
 	struct device *dev;
 	struct cxl_port *root_port;
@@ -201,11 +219,17 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
 	struct cxl_cfmws_context *ctx = arg;
 	struct cxl_port *root_port = ctx->root_port;
 	struct resource *cxl_res = ctx->cxl_res;
+<<<<<<< HEAD
 	struct cxl_cxims_context cxims_ctx;
 	struct cxl_root_decoder *cxlrd;
 	struct device *dev = ctx->dev;
 	struct acpi_cedt_cfmws *cfmws;
 	cxl_calc_hb_fn cxl_calc_hb;
+=======
+	struct cxl_root_decoder *cxlrd;
+	struct device *dev = ctx->dev;
+	struct acpi_cedt_cfmws *cfmws;
+>>>>>>> b7ba80a49124 (Commit)
 	struct cxl_decoder *cxld;
 	unsigned int ways, i, ig;
 	struct resource *res;
@@ -221,10 +245,17 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
 		return 0;
 	}
 
+<<<<<<< HEAD
 	rc = eiw_to_ways(cfmws->interleave_ways, &ways);
 	if (rc)
 		return rc;
 	rc = eig_to_granularity(cfmws->granularity, &ig);
+=======
+	rc = cxl_to_ways(cfmws->interleave_ways, &ways);
+	if (rc)
+		return rc;
+	rc = cxl_to_granularity(cfmws->granularity, &ig);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 	for (i = 0; i < ways; i++)
@@ -247,12 +278,16 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
 	if (rc)
 		goto err_insert;
 
+<<<<<<< HEAD
 	if (cfmws->interleave_arithmetic == ACPI_CEDT_CFMWS_ARITHMETIC_MODULO)
 		cxl_calc_hb = cxl_hb_modulo;
 	else
 		cxl_calc_hb = cxl_hb_xor;
 
 	cxlrd = cxl_root_decoder_alloc(root_port, ways, cxl_calc_hb);
+=======
+	cxlrd = cxl_root_decoder_alloc(root_port, ways);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(cxlrd))
 		return 0;
 
@@ -272,6 +307,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
 		ig = CXL_DECODER_MIN_GRANULARITY;
 	cxld->interleave_granularity = ig;
 
+<<<<<<< HEAD
 	if (cfmws->interleave_arithmetic == ACPI_CEDT_CFMWS_ARITHMETIC_XOR) {
 		if (ways != 1 && ways != 3) {
 			cxims_ctx = (struct cxl_cxims_context) {
@@ -291,6 +327,9 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
 	}
 	rc = cxl_decoder_add(cxld, target_map);
 err_xormap:
+=======
+	rc = cxl_decoder_add(cxld, target_map);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		put_device(&cxld->dev);
 	else
@@ -335,6 +374,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
 {
 	struct cxl_port *root_port = arg;
 	struct device *host = root_port->dev.parent;
+<<<<<<< HEAD
 	struct acpi_device *hb = to_cxl_host_bridge(host, match);
 	struct acpi_pci_root *pci_root;
 	struct cxl_dport *dport;
@@ -348,11 +388,24 @@ static int add_host_bridge_uport(struct device *match, void *arg)
 	pci_root = acpi_pci_find_root(hb->handle);
 	bridge = pci_root->bus->bridge;
 	dport = cxl_find_dport_by_dev(root_port, bridge);
+=======
+	struct acpi_device *bridge = to_cxl_host_bridge(host, match);
+	struct acpi_pci_root *pci_root;
+	struct cxl_dport *dport;
+	struct cxl_port *port;
+	int rc;
+
+	if (!bridge)
+		return 0;
+
+	dport = cxl_find_dport_by_dev(root_port, match);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!dport) {
 		dev_dbg(host, "host bridge expected and not found\n");
 		return 0;
 	}
 
+<<<<<<< HEAD
 	if (dport->rch) {
 		dev_info(bridge, "host supports CXL (restricted)\n");
 		return 0;
@@ -368,6 +421,21 @@ static int add_host_bridge_uport(struct device *match, void *arg)
 		return PTR_ERR(port);
 
 	dev_info(bridge, "host supports CXL\n");
+=======
+	/*
+	 * Note that this lookup already succeeded in
+	 * to_cxl_host_bridge(), so no need to check for failure here
+	 */
+	pci_root = acpi_pci_find_root(bridge->handle);
+	rc = devm_cxl_register_pci_bus(host, match, pci_root->bus);
+	if (rc)
+		return rc;
+
+	port = devm_cxl_add_port(host, match, dport->component_reg_phys, dport);
+	if (IS_ERR(port))
+		return PTR_ERR(port);
+	dev_dbg(host, "%s: add: %s\n", dev_name(match), dev_name(&port->dev));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -375,9 +443,13 @@ static int add_host_bridge_uport(struct device *match, void *arg)
 struct cxl_chbs_context {
 	struct device *dev;
 	unsigned long long uid;
+<<<<<<< HEAD
 	resource_size_t rcrb;
 	resource_size_t chbcr;
 	u32 cxl_version;
+=======
+	resource_size_t chbcr;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
@@ -393,6 +465,7 @@ static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
 
 	if (ctx->uid != chbs->uid)
 		return 0;
+<<<<<<< HEAD
 
 	ctx->cxl_version = chbs->cxl_version;
 	ctx->rcrb = CXL_RESOURCE_NONE;
@@ -412,12 +485,16 @@ static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
 	ctx->rcrb = chbs->base;
 	ctx->chbcr = cxl_rcrb_to_component(ctx->dev, chbs->base,
 					   CXL_RCRB_DOWNSTREAM);
+=======
+	ctx->chbcr = chbs->base;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 static int add_host_bridge_dport(struct device *match, void *arg)
 {
+<<<<<<< HEAD
 	acpi_status rc;
 	struct device *bridge;
 	unsigned long long uid;
@@ -441,10 +518,34 @@ static int add_host_bridge_dport(struct device *match, void *arg)
 
 	ctx = (struct cxl_chbs_context) {
 		.dev = match,
+=======
+	acpi_status status;
+	unsigned long long uid;
+	struct cxl_dport *dport;
+	struct cxl_chbs_context ctx;
+	struct cxl_port *root_port = arg;
+	struct device *host = root_port->dev.parent;
+	struct acpi_device *bridge = to_cxl_host_bridge(host, match);
+
+	if (!bridge)
+		return 0;
+
+	status = acpi_evaluate_integer(bridge->handle, METHOD_NAME__UID, NULL,
+				       &uid);
+	if (status != AE_OK) {
+		dev_err(host, "unable to retrieve _UID of %s\n",
+			dev_name(match));
+		return -ENODEV;
+	}
+
+	ctx = (struct cxl_chbs_context) {
+		.dev = host,
+>>>>>>> b7ba80a49124 (Commit)
 		.uid = uid,
 	};
 	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CHBS, cxl_get_chbcr, &ctx);
 
+<<<<<<< HEAD
 	if (!ctx.chbcr) {
 		dev_warn(match, "No CHBS found for Host Bridge (UID %lld)\n",
 			 uid);
@@ -473,6 +574,21 @@ static int add_host_bridge_dport(struct device *match, void *arg)
 	if (IS_ERR(dport))
 		return PTR_ERR(dport);
 
+=======
+	if (ctx.chbcr == 0) {
+		dev_warn(host, "No CHBS found for Host Bridge: %s\n",
+			 dev_name(match));
+		return 0;
+	}
+
+	dport = devm_cxl_add_dport(root_port, match, uid, ctx.chbcr);
+	if (IS_ERR(dport)) {
+		dev_err(host, "failed to add downstream port: %s\n",
+			dev_name(match));
+		return PTR_ERR(dport);
+	}
+	dev_dbg(host, "add dport%llu: %s\n", uid, dev_name(match));
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -650,6 +766,10 @@ static int cxl_acpi_probe(struct platform_device *pdev)
 	root_port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
 	if (IS_ERR(root_port))
 		return PTR_ERR(root_port);
+<<<<<<< HEAD
+=======
+	dev_dbg(host, "add: %s\n", dev_name(&root_port->dev));
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = bus_for_each_dev(adev->dev.bus, NULL, root_port,
 			      add_host_bridge_dport);
@@ -695,8 +815,12 @@ static int cxl_acpi_probe(struct platform_device *pdev)
 		return rc;
 
 	/* In case PCI is scanned before ACPI re-trigger memdev attach */
+<<<<<<< HEAD
 	cxl_bus_rescan();
 	return 0;
+=======
+	return cxl_bus_rescan();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id cxl_acpi_ids[] = {
@@ -720,6 +844,7 @@ static struct platform_driver cxl_acpi_driver = {
 	.id_table = cxl_test_ids,
 };
 
+<<<<<<< HEAD
 static int __init cxl_acpi_init(void)
 {
 	return platform_driver_register(&cxl_acpi_driver);
@@ -734,6 +859,9 @@ static void __exit cxl_acpi_exit(void)
 /* load before dax_hmem sees 'Soft Reserved' CXL ranges */
 subsys_initcall(cxl_acpi_init);
 module_exit(cxl_acpi_exit);
+=======
+module_platform_driver(cxl_acpi_driver);
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_LICENSE("GPL v2");
 MODULE_IMPORT_NS(CXL);
 MODULE_IMPORT_NS(ACPI);

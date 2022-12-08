@@ -122,7 +122,10 @@ struct pci_epc_mem {
  * struct pci_epc - represents the PCI EPC device
  * @dev: PCI EPC device
  * @pci_epf: list of endpoint functions present in this EPC device
+<<<<<<< HEAD
  * list_lock: Mutex for protecting pci_epf list
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @ops: function pointers for performing endpoint operations
  * @windows: array of address space of the endpoint controller
  * @mem: first window of the endpoint controller, which corresponds to
@@ -135,11 +138,18 @@ struct pci_epc_mem {
  * @group: configfs group representing the PCI EPC device
  * @lock: mutex to protect pci_epc ops
  * @function_num_map: bitmap to manage physical function number
+<<<<<<< HEAD
+=======
+ * @notifier: used to notify EPF of any EPC events (like linkup)
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct pci_epc {
 	struct device			dev;
 	struct list_head		pci_epf;
+<<<<<<< HEAD
 	struct mutex			list_lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const struct pci_epc_ops	*ops;
 	struct pci_epc_mem		**windows;
 	struct pci_epc_mem		*mem;
@@ -150,6 +160,10 @@ struct pci_epc {
 	/* mutex to protect against concurrent access of EP controller */
 	struct mutex			lock;
 	unsigned long			function_num_map;
+<<<<<<< HEAD
+=======
+	struct atomic_notifier_head	notifier;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -192,6 +206,15 @@ static inline void *epc_get_drvdata(struct pci_epc *epc)
 	return dev_get_drvdata(&epc->dev);
 }
 
+<<<<<<< HEAD
+=======
+static inline int
+pci_epc_register_notifier(struct pci_epc *epc, struct notifier_block *nb)
+{
+	return atomic_notifier_chain_register(&epc->notifier, nb);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 struct pci_epc *
 __devm_pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
 		      struct module *owner);

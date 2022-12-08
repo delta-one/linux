@@ -942,7 +942,11 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
 	spdif: sound@ff8b0000 {
+=======
+	spdif: sound@ff88b0000 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "rockchip,rk3288-spdif", "rockchip,rk3066-spdif";
 		reg = <0x0 0xff8b0000 0x0 0x10000>;
 		#sound-dai-cells = <0>;
@@ -1114,7 +1118,11 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
 	mipi_dsi: dsi@ff960000 {
+=======
+	mipi_dsi: mipi@ff960000 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "rockchip,rk3288-mipi-dsi", "snps,dw-mipi-dsi";
 		reg = <0x0 0xff960000 0x0 0x4000>;
 		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
@@ -1125,6 +1133,7 @@
 		status = "disabled";
 
 		ports {
+<<<<<<< HEAD
 			#address-cells = <1>;
 			#size-cells = <0>;
 
@@ -1133,20 +1142,31 @@
 				#address-cells = <1>;
 				#size-cells = <0>;
 
+=======
+			mipi_in: port {
+				#address-cells = <1>;
+				#size-cells = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 				mipi_in_vopb: endpoint@0 {
 					reg = <0>;
 					remote-endpoint = <&vopb_out_mipi>;
 				};
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				mipi_in_vopl: endpoint@1 {
 					reg = <1>;
 					remote-endpoint = <&vopl_out_mipi>;
 				};
 			};
+<<<<<<< HEAD
 
 			mipi_out: port@1 {
 				reg = <1>;
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -1167,6 +1187,10 @@
 
 			lvds_in: port@0 {
 				reg = <0>;
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 				#address-cells = <1>;
 				#size-cells = <0>;
 
@@ -1174,16 +1198,22 @@
 					reg = <0>;
 					remote-endpoint = <&vopb_out_lvds>;
 				};
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				lvds_in_vopl: endpoint@1 {
 					reg = <1>;
 					remote-endpoint = <&vopl_out_lvds>;
 				};
 			};
+<<<<<<< HEAD
 
 			lvds_out: port@1 {
 				reg = <1>;
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -1195,7 +1225,10 @@
 		clock-names = "dp", "pclk";
 		phys = <&edp_phy>;
 		phy-names = "dp";
+<<<<<<< HEAD
 		power-domains = <&power RK3288_PD_VIO>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		resets = <&cru SRST_EDP>;
 		reset-names = "dp";
 		rockchip,grf = <&grf>;
@@ -1204,26 +1237,38 @@
 		ports {
 			#address-cells = <1>;
 			#size-cells = <0>;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			edp_in: port@0 {
 				reg = <0>;
 				#address-cells = <1>;
 				#size-cells = <0>;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				edp_in_vopb: endpoint@0 {
 					reg = <0>;
 					remote-endpoint = <&vopb_out_edp>;
 				};
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				edp_in_vopl: endpoint@1 {
 					reg = <1>;
 					remote-endpoint = <&vopl_out_edp>;
 				};
 			};
+<<<<<<< HEAD
 
 			edp_out: port@1 {
 				reg = <1>;
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 

@@ -45,7 +45,10 @@ struct xsk_queue {
 	struct xdp_ring *ring;
 	u64 invalid_descs;
 	u64 queue_empty_descs;
+<<<<<<< HEAD
 	size_t ring_vmalloc_size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* The structure of the shared state of the rings are a simple

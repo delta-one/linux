@@ -450,7 +450,11 @@ enum binder_driver_return_protocol {
 
 	BR_FROZEN_REPLY = _IO('r', 18),
 	/*
+<<<<<<< HEAD
 	 * The target of the last sync transaction (either a bcTRANSACTION or
+=======
+	 * The target of the last transaction (either a bcTRANSACTION or
+>>>>>>> b7ba80a49124 (Commit)
 	 * a bcATTEMPT_ACQUIRE) is frozen.  No parameters.
 	 */
 
@@ -460,11 +464,14 @@ enum binder_driver_return_protocol {
 	 * asynchronous transaction makes the allocated async buffer size exceed
 	 * detection threshold.  No parameters.
 	 */
+<<<<<<< HEAD
 
 	BR_TRANSACTION_PENDING_FROZEN = _IO('r', 20),
 	/*
 	 * The target of the last async transaction is frozen.  No parameters.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum binder_driver_command_protocol {

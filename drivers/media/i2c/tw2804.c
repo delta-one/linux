@@ -343,7 +343,12 @@ static const struct v4l2_subdev_ops tw2804_ops = {
 	.video = &tw2804_video_ops,
 };
 
+<<<<<<< HEAD
 static int tw2804_probe(struct i2c_client *client)
+=======
+static int tw2804_probe(struct i2c_client *client,
+			    const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_adapter *adapter = client->adapter;
 	struct tw2804 *state;
@@ -423,7 +428,11 @@ static struct i2c_driver tw2804_driver = {
 	.driver = {
 		.name	= "tw2804",
 	},
+<<<<<<< HEAD
 	.probe_new	= tw2804_probe,
+=======
+	.probe		= tw2804_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= tw2804_remove,
 	.id_table	= tw2804_id,
 };

@@ -55,10 +55,17 @@ static int soundbus_probe(struct device *dev)
 }
 
 
+<<<<<<< HEAD
 static int soundbus_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct soundbus_dev * soundbus_dev;
 	const struct platform_device * of;
+=======
+static int soundbus_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct soundbus_dev * soundbus_dev;
+	struct platform_device * of;
+>>>>>>> b7ba80a49124 (Commit)
 	const char *compat;
 	int retval = 0;
 	int cplen, seen = 0;

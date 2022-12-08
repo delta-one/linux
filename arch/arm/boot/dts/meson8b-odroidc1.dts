@@ -34,7 +34,11 @@
 
 	leds {
 		compatible = "gpio-leds";
+<<<<<<< HEAD
 		led-blue {
+=======
+		blue {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "c1:blue:alive";
 			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "heartbeat";
@@ -281,6 +285,22 @@
 			  "J7 Header Pin 6", "J7 Header Pin 5",
 			  "J7 Header Pin 7", "HDMI_CEC",
 			  "SYS_LED", "", "";
+<<<<<<< HEAD
+=======
+
+	/*
+	 * WARNING: The USB Hub on the Odroid-C1/C1+ needs a reset signal
+	 * to be turned high in order to be detected by the USB Controller.
+	 * This signal should be handled by a USB specific power sequence
+	 * in order to reset the Hub when USB bus is powered down.
+	 */
+	usb-hub {
+		gpio-hog;
+		gpios = <GPIOAO_4 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "usb-hub-reset";
+	};
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &ir_receiver {
@@ -368,6 +388,7 @@
 };
 
 &usb1 {
+<<<<<<< HEAD
 	dr_mode = "host";
 	#address-cells = <1>;
 	#size-cells = <0>;
@@ -380,4 +401,7 @@
 		vdd-supply = <&p5v0>;
 		reset-gpio = <&gpio_ao GPIOAO_4 GPIO_ACTIVE_LOW>;
 	};
+=======
+	status = "okay";
+>>>>>>> b7ba80a49124 (Commit)
 };

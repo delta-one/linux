@@ -30,6 +30,18 @@ static inline int pud_huge(pud_t pud)
 	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PTE));
 }
 
+<<<<<<< HEAD
+=======
+static inline int pgd_huge(pgd_t pgd)
+{
+	/*
+	 * leaf pte for huge page
+	 */
+	return !!(pgd_raw(pgd) & cpu_to_be64(_PAGE_PTE));
+}
+#define pgd_huge pgd_huge
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * With 64k page size, we have hugepage ptes in the pgd and pmd entries. We don't
  * need to setup hugepage directory for them. Our pte and page directory format

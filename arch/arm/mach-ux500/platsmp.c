@@ -20,6 +20,11 @@
 #include <asm/smp_plat.h>
 #include <asm/smp_scu.h>
 
+<<<<<<< HEAD
+=======
+#include "db8500-regs.h"
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Magic triggers in backup RAM */
 #define UX500_CPU1_JUMPADDR_OFFSET 0x1FF4
 #define UX500_CPU1_WAKEMAGIC_OFFSET 0x1FF0

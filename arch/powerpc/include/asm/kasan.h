@@ -2,7 +2,11 @@
 #ifndef __ASM_KASAN_H
 #define __ASM_KASAN_H
 
+<<<<<<< HEAD
 #if defined(CONFIG_KASAN) && !defined(CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX)
+=======
+#ifdef CONFIG_KASAN
+>>>>>>> b7ba80a49124 (Commit)
 #define _GLOBAL_KASAN(fn)	_GLOBAL(__##fn)
 #define _GLOBAL_TOC_KASAN(fn)	_GLOBAL_TOC(__##fn)
 #define EXPORT_SYMBOL_KASAN(fn)	EXPORT_SYMBOL(__##fn)

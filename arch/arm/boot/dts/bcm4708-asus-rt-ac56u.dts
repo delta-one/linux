@@ -28,39 +28,68 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-usb3 {
+=======
+		usb3 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:blue:usb3";
 			gpios = <&chipcommon 0 GPIO_ACTIVE_LOW>;
 		};
 
+<<<<<<< HEAD
 		led-wan {
+=======
+		wan {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:blue:wan";
 			gpios = <&chipcommon 1 GPIO_ACTIVE_LOW>;
 		};
 
+<<<<<<< HEAD
 		led-lan {
+=======
+		lan {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:blue:lan";
 			gpios = <&chipcommon 2 GPIO_ACTIVE_LOW>;
 		};
 
+<<<<<<< HEAD
 		led-power {
+=======
+		power {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:blue:power";
 			gpios = <&chipcommon 3 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "default-on";
 		};
 
+<<<<<<< HEAD
 		led-all {
+=======
+		all {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:blue:all";
 			gpios = <&chipcommon 4 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "default-on";
 		};
 
+<<<<<<< HEAD
 		led-2ghz {
+=======
+		2ghz {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:blue:2ghz";
 			gpios = <&chipcommon 6 GPIO_ACTIVE_LOW>;
 		};
 
+<<<<<<< HEAD
 		led-usb2 {
+=======
+
+		usb2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:blue:usb2";
 			gpios = <&chipcommon 14 GPIO_ACTIVE_LOW>;
 		};

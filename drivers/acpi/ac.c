@@ -33,9 +33,20 @@ MODULE_DESCRIPTION("ACPI AC Adapter Driver");
 MODULE_LICENSE("GPL");
 
 static int acpi_ac_add(struct acpi_device *device);
+<<<<<<< HEAD
 static void acpi_ac_remove(struct acpi_device *device);
 static void acpi_ac_notify(struct acpi_device *device, u32 event);
 
+=======
+static int acpi_ac_remove(struct acpi_device *device);
+static void acpi_ac_notify(struct acpi_device *device, u32 event);
+
+struct acpi_ac_bl {
+	const char *hid;
+	int hrv;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct acpi_device_id ac_device_ids[] = {
 	{"ACPI0003", 0},
 	{"", 0},
@@ -288,12 +299,20 @@ static int acpi_ac_resume(struct device *dev)
 #define acpi_ac_resume NULL
 #endif
 
+<<<<<<< HEAD
 static void acpi_ac_remove(struct acpi_device *device)
+=======
+static int acpi_ac_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct acpi_ac *ac = NULL;
 
 	if (!device || !acpi_driver_data(device))
+<<<<<<< HEAD
 		return;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ac = acpi_driver_data(device);
 
@@ -301,6 +320,11 @@ static void acpi_ac_remove(struct acpi_device *device)
 	unregister_acpi_notifier(&ac->battery_nb);
 
 	kfree(ac);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __init acpi_ac_init(void)

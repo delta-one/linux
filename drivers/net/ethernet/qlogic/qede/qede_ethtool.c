@@ -4,6 +4,10 @@
  * Copyright (c) 2019-2020 Marvell International Ltd.
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/version.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/types.h>
 #include <linux/netdevice.h>
 #include <linux/etherdevice.h>

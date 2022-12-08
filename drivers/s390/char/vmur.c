@@ -15,14 +15,20 @@
 #include <linux/cdev.h>
 #include <linux/slab.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/kobject.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/uaccess.h>
 #include <asm/cio.h>
 #include <asm/ccwdev.h>
 #include <asm/debug.h>
 #include <asm/diag.h>
+<<<<<<< HEAD
 #include <asm/scsw.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "vmur.h"
 
@@ -80,8 +86,11 @@ static struct ccw_driver ur_driver = {
 
 static DEFINE_MUTEX(vmur_mutex);
 
+<<<<<<< HEAD
 static void ur_uevent(struct work_struct *ws);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Allocation, freeing, getting and putting of urdev structures
  *
@@ -112,7 +121,10 @@ static struct urdev *urdev_alloc(struct ccw_device *cdev)
 	ccw_device_get_id(cdev, &urd->dev_id);
 	mutex_init(&urd->io_mutex);
 	init_waitqueue_head(&urd->wait);
+<<<<<<< HEAD
 	INIT_WORK(&urd->uevent_work, ur_uevent);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_init(&urd->open_lock);
 	refcount_set(&urd->ref_count,  1);
 	urd->cdev = cdev;
@@ -280,6 +292,7 @@ out:
 	return rc;
 }
 
+<<<<<<< HEAD
 static void ur_uevent(struct work_struct *ws)
 {
 	struct urdev *urd = container_of(ws, struct urdev, uevent_work);
@@ -292,6 +305,8 @@ static void ur_uevent(struct work_struct *ws)
 	urdev_put(urd);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * ur interrupt handler, called from the ccw_device layer
  */
@@ -305,6 +320,7 @@ static void ur_int_handler(struct ccw_device *cdev, unsigned long intparm,
 		      intparm, irb->scsw.cmd.cstat, irb->scsw.cmd.dstat,
 		      irb->scsw.cmd.count);
 	}
+<<<<<<< HEAD
 	urd = dev_get_drvdata(&cdev->dev);
 	if (!intparm) {
 		TRACE("ur_int_handler: unsolicited interrupt\n");
@@ -320,6 +336,14 @@ static void ur_int_handler(struct ccw_device *cdev, unsigned long intparm,
 
 		return;
 	}
+=======
+	if (!intparm) {
+		TRACE("ur_int_handler: unsolicited interrupt\n");
+		return;
+	}
+	urd = dev_get_drvdata(&cdev->dev);
+	BUG_ON(!urd);
+>>>>>>> b7ba80a49124 (Commit)
 	/* On special conditions irb is an error pointer */
 	if (IS_ERR(irb))
 		urd->io_request_rc = PTR_ERR(irb);
@@ -835,6 +859,10 @@ static int ur_probe(struct ccw_device *cdev)
 		rc = -ENOMEM;
 		goto fail_urdev_put;
 	}
+<<<<<<< HEAD
+=======
+	cdev->handler = ur_int_handler;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* validate virtual unit record device */
 	urd->class = get_urd_class(urd);
@@ -848,7 +876,10 @@ static int ur_probe(struct ccw_device *cdev)
 	}
 	spin_lock_irq(get_ccwdev_lock(cdev));
 	dev_set_drvdata(&cdev->dev, urd);
+<<<<<<< HEAD
 	cdev->handler = ur_int_handler;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irq(get_ccwdev_lock(cdev));
 
 	mutex_unlock(&vmur_mutex);
@@ -954,10 +985,13 @@ static int ur_set_offline_force(struct ccw_device *cdev, int force)
 		rc = -EBUSY;
 		goto fail_urdev_put;
 	}
+<<<<<<< HEAD
 	if (cancel_work_sync(&urd->uevent_work)) {
 		/* Work not run yet - need to release reference here */
 		urdev_put(urd);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	device_destroy(vmur_class, urd->char_device->dev);
 	cdev_del(urd->char_device);
 	urd->char_device = NULL;
@@ -993,7 +1027,10 @@ static void ur_remove(struct ccw_device *cdev)
 	spin_lock_irqsave(get_ccwdev_lock(cdev), flags);
 	urdev_put(dev_get_drvdata(&cdev->dev));
 	dev_set_drvdata(&cdev->dev, NULL);
+<<<<<<< HEAD
 	cdev->handler = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irqrestore(get_ccwdev_lock(cdev), flags);
 
 	mutex_unlock(&vmur_mutex);
@@ -1022,7 +1059,11 @@ static int __init ur_init(void)
 
 	debug_set_level(vmur_dbf, 6);
 
+<<<<<<< HEAD
 	vmur_class = class_create("vmur");
+=======
+	vmur_class = class_create(THIS_MODULE, "vmur");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(vmur_class)) {
 		rc = PTR_ERR(vmur_class);
 		goto fail_free_dbf;

@@ -159,7 +159,11 @@ void ima_process_queued_keys(void)
 
 	list_for_each_entry_safe(entry, tmp, &ima_keys, list) {
 		if (!timer_expired)
+<<<<<<< HEAD
 			process_buffer_measurement(&nop_mnt_idmap, NULL,
+=======
+			process_buffer_measurement(&init_user_ns, NULL,
+>>>>>>> b7ba80a49124 (Commit)
 						   entry->payload,
 						   entry->payload_len,
 						   entry->keyring_name,

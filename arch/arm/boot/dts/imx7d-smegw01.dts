@@ -198,7 +198,10 @@
 &usbotg2 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_usbotg2>;
+<<<<<<< HEAD
 	over-current-active-low;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dr_mode = "host";
 	status = "okay";
 };
@@ -375,7 +378,11 @@
 
 	pinctrl_usbotg2: usbotg2grp {
 		fsl,pins = <
+<<<<<<< HEAD
 			MX7D_PAD_UART3_RTS_B__USB_OTG2_OC	0x5c
+=======
+			MX7D_PAD_UART3_RTS_B__USB_OTG2_OC	0x04
+>>>>>>> b7ba80a49124 (Commit)
 		>;
 	};
 

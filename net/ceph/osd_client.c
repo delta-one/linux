@@ -1479,7 +1479,11 @@ static bool target_should_be_paused(struct ceph_osd_client *osdc,
 
 static int pick_random_replica(const struct ceph_osds *acting)
 {
+<<<<<<< HEAD
 	int i = get_random_u32_below(acting->size);
+=======
+	int i = prandom_u32() % acting->size;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dout("%s picked osd%d, primary osd%d\n", __func__,
 	     acting->osds[i], acting->primary);

@@ -2153,6 +2153,7 @@ skip_fallback_noirq:
 }
 module_init(init_ipmi_si);
 
+<<<<<<< HEAD
 static void wait_msg_processed(struct smi_info *smi_info)
 {
 	unsigned long jiffies_now;
@@ -2167,6 +2168,8 @@ static void wait_msg_processed(struct smi_info *smi_info)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void shutdown_smi(void *send_info)
 {
 	struct smi_info *smi_info = send_info;
@@ -2201,6 +2204,7 @@ static void shutdown_smi(void *send_info)
 	 * in the BMC.  Note that timers and CPU interrupts are off,
 	 * so no need for locks.
 	 */
+<<<<<<< HEAD
 	wait_msg_processed(smi_info);
 
 	if (smi_info->handlers)
@@ -2208,6 +2212,18 @@ static void shutdown_smi(void *send_info)
 
 	wait_msg_processed(smi_info);
 
+=======
+	while (smi_info->curr_msg || (smi_info->si_state != SI_NORMAL)) {
+		poll(smi_info);
+		schedule_timeout_uninterruptible(1);
+	}
+	if (smi_info->handlers)
+		disable_si_irq(smi_info);
+	while (smi_info->curr_msg || (smi_info->si_state != SI_NORMAL)) {
+		poll(smi_info);
+		schedule_timeout_uninterruptible(1);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (smi_info->handlers)
 		smi_info->handlers->cleanup(smi_info->si_sm);
 

@@ -14,8 +14,15 @@ KBUILD_AFLAGS_MODULE += -fPIC
 KBUILD_CFLAGS_MODULE += -fPIC
 KBUILD_AFLAGS	+= -m64
 KBUILD_CFLAGS	+= -m64
+<<<<<<< HEAD
 KBUILD_CFLAGS	+= -fPIE
 LDFLAGS_vmlinux	:= -pie
+=======
+ifeq ($(CONFIG_RELOCATABLE),y)
+KBUILD_CFLAGS	+= -fPIE
+LDFLAGS_vmlinux	:= -pie
+endif
+>>>>>>> b7ba80a49124 (Commit)
 aflags_dwarf	:= -Wa,-gdwarf-2
 KBUILD_AFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -D__ASSEMBLY__
 ifndef CONFIG_AS_IS_LLVM

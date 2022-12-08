@@ -16,6 +16,10 @@ typedef struct {
 	atomic_long_t id;
 #endif
 	void *vdso;
+<<<<<<< HEAD
+=======
+	void *vdso_info;
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SMP
 	/* A local icache flush is needed before user execution can resume. */
 	cpumask_t icache_stale_mask;

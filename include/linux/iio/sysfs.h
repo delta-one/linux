@@ -97,6 +97,7 @@ struct iio_const_attr {
 	= { .string = _string,						\
 	    .dev_attr = __ATTR(_name, S_IRUGO, iio_read_const_attr, NULL)}
 
+<<<<<<< HEAD
 #define IIO_STATIC_CONST_DEVICE_ATTR(_name, _string)				\
 	static ssize_t iio_const_dev_attr_show_##_name(			\
 					struct device *dev,		\
@@ -108,6 +109,8 @@ struct iio_const_attr {
 	static IIO_DEVICE_ATTR(_name, 0444,				\
 			       iio_const_dev_attr_show_##_name, NULL, 0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Generic attributes of onetype or another */
 
 /**

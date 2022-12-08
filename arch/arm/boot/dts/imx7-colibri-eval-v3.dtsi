@@ -101,7 +101,10 @@
 
 /* Colibri USBC */
 &usbotg1 {
+<<<<<<< HEAD
 	disable-over-current;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 

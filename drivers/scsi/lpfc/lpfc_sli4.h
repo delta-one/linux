@@ -1,7 +1,11 @@
 /*******************************************************************
  * This file is part of the Emulex Linux Device Driver for         *
  * Fibre Channel Host Bus Adapters.                                *
+<<<<<<< HEAD
  * Copyright (C) 2017-2023 Broadcom. All Rights Reserved. The term *
+=======
+ * Copyright (C) 2017-2022 Broadcom. All Rights Reserved. The term *
+>>>>>>> b7ba80a49124 (Commit)
  * “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.     *
  * Copyright (C) 2009-2016 Emulex.  All rights reserved.           *
  * EMULEX and SLI are trademarks of Emulex.                        *
@@ -291,9 +295,14 @@ struct lpfc_sli4_link {
 	uint8_t type;
 	uint8_t number;
 	uint8_t fault;
+<<<<<<< HEAD
 	uint8_t link_status;
 	uint16_t topology;
 	uint32_t logical_speed;
+=======
+	uint32_t logical_speed;
+	uint16_t topology;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct lpfc_fcf_rec {
@@ -557,7 +566,10 @@ struct lpfc_pc_sli4_params {
 #define LPFC_MIB3_SUPPORT	3
 	uint16_t mi_value;
 #define LPFC_DFLT_MIB_VAL	2
+<<<<<<< HEAD
 	uint8_t mi_cap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	uint8_t mib_bde_cnt;
 	uint8_t cmf;
 	uint8_t cqv;
@@ -1180,6 +1192,7 @@ static inline void *lpfc_sli4_qe(struct lpfc_queue *q, uint16_t idx)
 	return q->q_pgs[idx / q->entry_cnt_per_pg] +
 		(q->entry_size * (idx % q->entry_cnt_per_pg));
 }
+<<<<<<< HEAD
 
 /**
  * lpfc_sli4_unrecoverable_port - Check ERR and RN bits in portstat_reg
@@ -1199,3 +1212,5 @@ lpfc_sli4_unrecoverable_port(struct lpfc_register *portstat_reg)
 	return bf_get(lpfc_sliport_status_err, portstat_reg) &&
 	       !bf_get(lpfc_sliport_status_rn, portstat_reg);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -20,7 +20,10 @@
 #include "intel_gsc.h"
 
 #include "i915_vma.h"
+<<<<<<< HEAD
 #include "i915_perf_types.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_engine_types.h"
 #include "intel_gt_buffer_pool_types.h"
 #include "intel_hwconfig.h"
@@ -30,7 +33,11 @@
 #include "intel_rps_types.h"
 #include "intel_migrate_types.h"
 #include "intel_wakeref.h"
+<<<<<<< HEAD
 #include "intel_wopcm.h"
+=======
+#include "pxp/intel_pxp_types.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 struct drm_i915_private;
 struct i915_ggtt;
@@ -60,9 +67,12 @@ enum intel_steering_type {
 	L3BANK,
 	MSLICE,
 	LNCF,
+<<<<<<< HEAD
 	GAM,
 	DSS,
 	OADDRM,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * On some platforms there are multiple types of MCR registers that
@@ -101,7 +111,10 @@ struct intel_gt {
 
 	struct intel_uc uc;
 	struct intel_gsc gsc;
+<<<<<<< HEAD
 	struct intel_wopcm wopcm;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct {
 		/* Serialize global tlb invalidations */
@@ -146,6 +159,23 @@ struct intel_gt {
 	struct intel_wakeref wakeref;
 	atomic_t user_wakeref;
 
+<<<<<<< HEAD
+=======
+	/**
+	 *  Protects access to lmem usefault list.
+	 *  It is required, if we are outside of the runtime suspend path,
+	 *  access to @lmem_userfault_list requires always first grabbing the
+	 *  runtime pm, to ensure we can't race against runtime suspend.
+	 *  Once we have that we also need to grab @lmem_userfault_lock,
+	 *  at which point we have exclusive access.
+	 *  The runtime suspend path is special since it doesn't really hold any locks,
+	 *  but instead has exclusive access by virtue of all other accesses requiring
+	 *  holding the runtime pm wakeref.
+	 */
+	struct mutex lmem_userfault_lock;
+	struct list_head lmem_userfault_list;
+
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head closed_vma;
 	spinlock_t closed_lock; /* guards the list of closed_vma */
 
@@ -161,6 +191,12 @@ struct intel_gt {
 	 */
 	intel_wakeref_t awake;
 
+<<<<<<< HEAD
+=======
+	/* Manual runtime pm autosuspend delay for user GGTT/lmem mmaps */
+	struct intel_wakeref_auto userfault_wakeref;
+
+>>>>>>> b7ba80a49124 (Commit)
 	u32 clock_frequency;
 	u32 clock_period_ns;
 
@@ -232,6 +268,7 @@ struct intel_gt {
 		u8 instanceid;
 	} default_steering;
 
+<<<<<<< HEAD
 	/**
 	 * @mcr_lock: Protects the MCR steering register
 	 *
@@ -240,6 +277,8 @@ struct intel_gt {
 	 */
 	spinlock_t mcr_lock;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Base of per-tile GTTMMADR where we can derive the MMIO and the GGTT.
 	 */
@@ -274,17 +313,25 @@ struct intel_gt {
 		u8 wb_index; /* Only used on HAS_L3_CCS_READ() platforms */
 	} mocs;
 
+<<<<<<< HEAD
+=======
+	struct intel_pxp pxp;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* gt/gtN sysfs */
 	struct kobject sysfs_gt;
 
 	/* sysfs defaults per gt */
 	struct gt_defaults defaults;
 	struct kobject *sysfs_defaults;
+<<<<<<< HEAD
 
 	struct i915_perf_gt perf;
 
 	/** link: &ggtt.gt_list */
 	struct list_head ggtt_link;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct intel_gt_definition {
@@ -304,6 +351,15 @@ enum intel_gt_scratch_field {
 
 	/* 8 bytes */
 	INTEL_GT_SCRATCH_FIELD_COHERENTL3_WA = 256,
+<<<<<<< HEAD
+=======
+
+	/* 6 * 8 bytes */
+	INTEL_GT_SCRATCH_FIELD_PERF_CS_GPR = 2048,
+
+	/* 4 bytes */
+	INTEL_GT_SCRATCH_FIELD_PERF_PREDICATE_RESULT_1 = 2096,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #endif /* __INTEL_GT_TYPES_H__ */

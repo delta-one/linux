@@ -77,18 +77,28 @@ int bcmgenet_set_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
 	if (wol->wolopts) {
 		device_set_wakeup_enable(kdev, 1);
 		/* Avoid unbalanced enable_irq_wake calls */
+<<<<<<< HEAD
 		if (priv->wol_irq_disabled) {
 			enable_irq_wake(priv->wol_irq);
 			enable_irq_wake(priv->irq0);
 		}
+=======
+		if (priv->wol_irq_disabled)
+			enable_irq_wake(priv->wol_irq);
+>>>>>>> b7ba80a49124 (Commit)
 		priv->wol_irq_disabled = false;
 	} else {
 		device_set_wakeup_enable(kdev, 0);
 		/* Avoid unbalanced disable_irq_wake calls */
+<<<<<<< HEAD
 		if (!priv->wol_irq_disabled) {
 			disable_irq_wake(priv->wol_irq);
 			disable_irq_wake(priv->irq0);
 		}
+=======
+		if (!priv->wol_irq_disabled)
+			disable_irq_wake(priv->wol_irq);
+>>>>>>> b7ba80a49124 (Commit)
 		priv->wol_irq_disabled = true;
 	}
 

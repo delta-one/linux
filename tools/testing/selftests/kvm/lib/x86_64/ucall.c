@@ -8,6 +8,7 @@
 
 #define UCALL_PIO_PORT ((uint16_t)0x1000)
 
+<<<<<<< HEAD
 void ucall_arch_init(struct kvm_vm *vm, vm_paddr_t mmio_gpa)
 {
 }
@@ -21,12 +22,60 @@ void ucall_arch_do_ucall(vm_vaddr_t uc)
 void *ucall_arch_get_ucall(struct kvm_vcpu *vcpu)
 {
 	struct kvm_run *run = vcpu->run;
+=======
+void ucall_init(struct kvm_vm *vm, void *arg)
+{
+}
+
+void ucall_uninit(struct kvm_vm *vm)
+{
+}
+
+void ucall(uint64_t cmd, int nargs, ...)
+{
+	struct ucall uc = {
+		.cmd = cmd,
+	};
+	va_list va;
+	int i;
+
+	nargs = min(nargs, UCALL_MAX_ARGS);
+
+	va_start(va, nargs);
+	for (i = 0; i < nargs; ++i)
+		uc.args[i] = va_arg(va, uint64_t);
+	va_end(va);
+
+	asm volatile("in %[port], %%al"
+		: : [port] "d" (UCALL_PIO_PORT), "D" (&uc) : "rax", "memory");
+}
+
+uint64_t get_ucall(struct kvm_vcpu *vcpu, struct ucall *uc)
+{
+	struct kvm_run *run = vcpu->run;
+	struct ucall ucall = {};
+
+	if (uc)
+		memset(uc, 0, sizeof(*uc));
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (run->exit_reason == KVM_EXIT_IO && run->io.port == UCALL_PIO_PORT) {
 		struct kvm_regs regs;
 
 		vcpu_regs_get(vcpu, &regs);
+<<<<<<< HEAD
 		return (void *)regs.rdi;
 	}
 	return NULL;
+=======
+		memcpy(&ucall, addr_gva2hva(vcpu->vm, (vm_vaddr_t)regs.rdi),
+		       sizeof(ucall));
+
+		vcpu_run_complete_io(vcpu);
+		if (uc)
+			memcpy(uc, &ucall, sizeof(ucall));
+	}
+
+	return ucall.cmd;
+>>>>>>> b7ba80a49124 (Commit)
 }

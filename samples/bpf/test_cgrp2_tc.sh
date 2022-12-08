@@ -4,7 +4,11 @@
 MY_DIR=$(dirname $0)
 # Details on the bpf prog
 BPF_CGRP2_ARRAY_NAME='test_cgrp2_array_pin'
+<<<<<<< HEAD
 BPF_PROG="$MY_DIR/test_cgrp2_tc.bpf.o"
+=======
+BPF_PROG="$MY_DIR/test_cgrp2_tc_kern.o"
+>>>>>>> b7ba80a49124 (Commit)
 BPF_SECTION='filter'
 
 [ -z "$TC" ] && TC='tc'
@@ -73,6 +77,7 @@ setup_net() {
 	start)
 	    $IP link add $HOST_IFC type veth peer name $NS_IFC || return $?
 	    $IP link set dev $HOST_IFC up || return $?
+<<<<<<< HEAD
 	    sysctl -q net.ipv6.conf.$HOST_IFC.disable_ipv6=0
 	    sysctl -q net.ipv6.conf.$HOST_IFC.accept_dad=0
 
@@ -80,6 +85,13 @@ setup_net() {
 	    $IP link set dev $NS_IFC netns $NS || return $?
 	    $IP -n $NS link set dev $NS_IFC up || return $?
 	    $IP netns exec $NS sysctl -q net.ipv6.conf.$NS_IFC.disable_ipv6=0
+=======
+	    sysctl -q net.ipv6.conf.$HOST_IFC.accept_dad=0
+
+	    $IP netns add ns || return $?
+	    $IP link set dev $NS_IFC netns ns || return $?
+	    $IP -n $NS link set dev $NS_IFC up || return $?
+>>>>>>> b7ba80a49124 (Commit)
 	    $IP netns exec $NS sysctl -q net.ipv6.conf.$NS_IFC.accept_dad=0
 	    $TC qdisc add dev $HOST_IFC clsact || return $?
 	    $TC filter add dev $HOST_IFC egress bpf da obj $BPF_PROG sec $BPF_SECTION || return $?
@@ -117,7 +129,11 @@ do_exit() {
     if [ "$DEBUG" == "yes" ] && [ "$MODE" != 'cleanuponly' ]
     then
 	echo "------ DEBUG ------"
+<<<<<<< HEAD
 	echo "mount: "; mount | grep -E '(cgroup2|bpf)'; echo
+=======
+	echo "mount: "; mount | egrep '(cgroup2|bpf)'; echo
+>>>>>>> b7ba80a49124 (Commit)
 	echo "$CGRP2_TC_LEAF: "; ls -l $CGRP2_TC_LEAF; echo
 	if [ -d "$BPF_FS_TC_SHARE" ]
 	then

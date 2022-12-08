@@ -7,14 +7,20 @@
 #ifndef __DRV_CLK_MTK_MUX_H
 #define __DRV_CLK_MTK_MUX_H
 
+<<<<<<< HEAD
 #include <linux/notifier.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/spinlock.h>
 #include <linux/types.h>
 
 struct clk;
 struct clk_hw_onecell_data;
 struct clk_ops;
+<<<<<<< HEAD
 struct device;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct device_node;
 
 struct mtk_mux {
@@ -83,8 +89,12 @@ extern const struct clk_ops mtk_mux_gate_clr_set_upd_ops;
 			0, _upd_ofs, _upd, CLK_SET_RATE_PARENT,		\
 			mtk_mux_clr_set_upd_ops)
 
+<<<<<<< HEAD
 int mtk_clk_register_muxes(struct device *dev,
 			   const struct mtk_mux *muxes,
+=======
+int mtk_clk_register_muxes(const struct mtk_mux *muxes,
+>>>>>>> b7ba80a49124 (Commit)
 			   int num, struct device_node *node,
 			   spinlock_t *lock,
 			   struct clk_hw_onecell_data *clk_data);
@@ -92,6 +102,7 @@ int mtk_clk_register_muxes(struct device *dev,
 void mtk_clk_unregister_muxes(const struct mtk_mux *muxes, int num,
 			      struct clk_hw_onecell_data *clk_data);
 
+<<<<<<< HEAD
 struct mtk_mux_nb {
 	struct notifier_block	nb;
 	const struct clk_ops	*ops;
@@ -105,4 +116,6 @@ struct mtk_mux_nb {
 int devm_mtk_clk_mux_notifier_register(struct device *dev, struct clk *clk,
 				       struct mtk_mux_nb *mux_nb);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __DRV_CLK_MTK_MUX_H */

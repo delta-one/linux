@@ -159,7 +159,11 @@ int relocate_restore_code(void)
 	if (!relocated_restore_code)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	__memcpy((void *)relocated_restore_code, core_restore_code, PAGE_SIZE);
+=======
+	memcpy((void *)relocated_restore_code, core_restore_code, PAGE_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Make the page containing the relocated code executable */
 	pgd = (pgd_t *)__va(read_cr3_pa()) +

@@ -98,7 +98,12 @@ static void mlb_usio_tx_chars(struct uart_port *port)
 	do {
 		writew(xmit->buf[xmit->tail], port->membase + MLB_USIO_REG_DR);
 
+<<<<<<< HEAD
 		uart_xmit_advance(port, 1);
+=======
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+		port->icount.tx++;
+>>>>>>> b7ba80a49124 (Commit)
 		if (uart_circ_empty(xmit))
 			break;
 

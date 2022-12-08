@@ -2,6 +2,7 @@
 /*
  * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
  */
+<<<<<<< HEAD
 #include <linux/sizes.h>
 #include <linux/uaccess.h>
 
@@ -231,11 +232,21 @@ u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int imm)
 	return insn.word;
 }
 
+=======
+#include <asm/inst.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm)
 {
 	union loongarch_instruction insn;
 
+<<<<<<< HEAD
 	emit_lu32id(&insn, rd, imm);
+=======
+	insn.reg1i20_format.opcode = lu32id_op;
+	insn.reg1i20_format.rd = rd;
+	insn.reg1i20_format.immediate = imm;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return insn.word;
 }
@@ -244,7 +255,14 @@ u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
 {
 	union loongarch_instruction insn;
 
+<<<<<<< HEAD
 	emit_lu52id(&insn, rd, rj, imm);
+=======
+	insn.reg2i12_format.opcode = lu52id_op;
+	insn.reg2i12_format.rd = rd;
+	insn.reg2i12_format.rj = rj;
+	insn.reg2i12_format.immediate = imm;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return insn.word;
 }
@@ -253,7 +271,14 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned l
 {
 	union loongarch_instruction insn;
 
+<<<<<<< HEAD
 	emit_jirl(&insn, rj, rd, (dest - pc) >> 2);
+=======
+	insn.reg2i16_format.opcode = jirl_op;
+	insn.reg2i16_format.rd = rd;
+	insn.reg2i16_format.rj = rj;
+	insn.reg2i16_format.immediate = (dest - pc) >> 2;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return insn.word;
 }

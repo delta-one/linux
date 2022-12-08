@@ -18,7 +18,11 @@
 	regulators {
 		compatible = "simple-bus";
 
+<<<<<<< HEAD
 		ext_l2: gpio-regulator {
+=======
+		ext_l2: gpio-regulator@91 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "regulator-fixed";
 			regulator-name = "ext_l2";
 			gpio = <&msmgpio 91 0>;
@@ -42,7 +46,11 @@
 		compatible = "micrel,ks8851";
 		reg = <0>;
 		interrupt-parent = <&msmgpio>;
+<<<<<<< HEAD
 		interrupts = <90 IRQ_TYPE_LEVEL_LOW>;
+=======
+		interrupts = <90 8>;
+>>>>>>> b7ba80a49124 (Commit)
 		spi-max-frequency = <5400000>;
 		vdd-supply = <&ext_l2>;
 		vdd-io-supply = <&pm8921_lvs6>;
@@ -60,32 +68,58 @@
 };
 
 &msmgpio {
+<<<<<<< HEAD
 	spi1_default: spi1-default-state {
 		 mosi-pins {
 			pins = "gpio6";
 			function = "gsbi1";
+=======
+	spi1_default: spi1_default {
+		 mux {
+			pins = "gpio6", "gpio7", "gpio9";
+			function = "gsbi1";
+		 };
+
+		 mosi {
+			pins = "gpio6";
+>>>>>>> b7ba80a49124 (Commit)
 			drive-strength = <12>;
 			bias-disable;
 		 };
 
+<<<<<<< HEAD
 		 miso-pins {
 			pins = "gpio7";
 			function = "gsbi1";
+=======
+		 miso {
+			pins = "gpio7";
+>>>>>>> b7ba80a49124 (Commit)
 			drive-strength = <12>;
 			bias-disable;
 		 };
 
+<<<<<<< HEAD
 		 cs-pins {
 			pins = "gpio8";
 			function = "gsbi1";
+=======
+		 cs {
+			pins = "gpio8";
+>>>>>>> b7ba80a49124 (Commit)
 			drive-strength = <12>;
 			bias-disable;
 			output-low;
 		 };
 
+<<<<<<< HEAD
 		 clk-pins {
 			pins = "gpio9";
 			function = "gsbi1";
+=======
+		 clk {
+			pins = "gpio9";
+>>>>>>> b7ba80a49124 (Commit)
 			drive-strength = <12>;
 			bias-disable;
 		 };

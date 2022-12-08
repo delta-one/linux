@@ -30,6 +30,10 @@
 #include <linux/pci.h>
 #include <linux/vgaarb.h>
 
+<<<<<<< HEAD
+=======
+#include <drm/drm_crtc_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/radeon_drm.h>
 
 #include "atom.h"

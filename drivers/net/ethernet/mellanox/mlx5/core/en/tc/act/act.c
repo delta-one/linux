@@ -6,6 +6,7 @@
 #include "en/tc_priv.h"
 #include "mlx5_core.h"
 
+<<<<<<< HEAD
 static struct mlx5e_tc_act *tc_acts_fdb[NUM_FLOW_ACTIONS] = {
 	[FLOW_ACTION_ACCEPT] = &mlx5e_tc_act_accept,
 	[FLOW_ACTION_DROP] = &mlx5e_tc_act_drop,
@@ -42,6 +43,72 @@ static struct mlx5e_tc_act *tc_acts_nic[NUM_FLOW_ACTIONS] = {
 	[FLOW_ACTION_CSUM] = &mlx5e_tc_act_csum,
 	[FLOW_ACTION_MARK] = &mlx5e_tc_act_mark,
 	[FLOW_ACTION_CT] = &mlx5e_tc_act_ct,
+=======
+/* Must be aligned with enum flow_action_id. */
+static struct mlx5e_tc_act *tc_acts_fdb[NUM_FLOW_ACTIONS] = {
+	&mlx5e_tc_act_accept,
+	&mlx5e_tc_act_drop,
+	&mlx5e_tc_act_trap,
+	&mlx5e_tc_act_goto,
+	&mlx5e_tc_act_mirred,
+	&mlx5e_tc_act_mirred,
+	&mlx5e_tc_act_redirect_ingress,
+	NULL, /* FLOW_ACTION_MIRRED_INGRESS, */
+	&mlx5e_tc_act_vlan,
+	&mlx5e_tc_act_vlan,
+	&mlx5e_tc_act_vlan_mangle,
+	&mlx5e_tc_act_tun_encap,
+	&mlx5e_tc_act_tun_decap,
+	&mlx5e_tc_act_pedit,
+	&mlx5e_tc_act_pedit,
+	&mlx5e_tc_act_csum,
+	NULL, /* FLOW_ACTION_MARK, */
+	&mlx5e_tc_act_ptype,
+	NULL, /* FLOW_ACTION_PRIORITY, */
+	NULL, /* FLOW_ACTION_WAKE, */
+	NULL, /* FLOW_ACTION_QUEUE, */
+	&mlx5e_tc_act_sample,
+	&mlx5e_tc_act_police,
+	&mlx5e_tc_act_ct,
+	NULL, /* FLOW_ACTION_CT_METADATA, */
+	&mlx5e_tc_act_mpls_push,
+	&mlx5e_tc_act_mpls_pop,
+	NULL, /* FLOW_ACTION_MPLS_MANGLE, */
+	NULL, /* FLOW_ACTION_GATE, */
+	NULL, /* FLOW_ACTION_PPPOE_PUSH, */
+	NULL, /* FLOW_ACTION_JUMP, */
+	NULL, /* FLOW_ACTION_PIPE, */
+	&mlx5e_tc_act_vlan,
+	&mlx5e_tc_act_vlan,
+};
+
+/* Must be aligned with enum flow_action_id. */
+static struct mlx5e_tc_act *tc_acts_nic[NUM_FLOW_ACTIONS] = {
+	&mlx5e_tc_act_accept,
+	&mlx5e_tc_act_drop,
+	NULL, /* FLOW_ACTION_TRAP, */
+	&mlx5e_tc_act_goto,
+	&mlx5e_tc_act_mirred_nic,
+	NULL, /* FLOW_ACTION_MIRRED, */
+	NULL, /* FLOW_ACTION_REDIRECT_INGRESS, */
+	NULL, /* FLOW_ACTION_MIRRED_INGRESS, */
+	NULL, /* FLOW_ACTION_VLAN_PUSH, */
+	NULL, /* FLOW_ACTION_VLAN_POP, */
+	NULL, /* FLOW_ACTION_VLAN_MANGLE, */
+	NULL, /* FLOW_ACTION_TUNNEL_ENCAP, */
+	NULL, /* FLOW_ACTION_TUNNEL_DECAP, */
+	&mlx5e_tc_act_pedit,
+	&mlx5e_tc_act_pedit,
+	&mlx5e_tc_act_csum,
+	&mlx5e_tc_act_mark,
+	NULL, /* FLOW_ACTION_PTYPE, */
+	NULL, /* FLOW_ACTION_PRIORITY, */
+	NULL, /* FLOW_ACTION_WAKE, */
+	NULL, /* FLOW_ACTION_QUEUE, */
+	NULL, /* FLOW_ACTION_SAMPLE, */
+	NULL, /* FLOW_ACTION_POLICE, */
+	&mlx5e_tc_act_ct,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**

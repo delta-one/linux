@@ -159,6 +159,19 @@ static void __noreturn mpc7448_hpc2_restart(char *cmd)
 	for (;;) ;		/* Spin until reset happens */
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * Called very early, device-tree isn't unflattened
+ */
+static int __init mpc7448_hpc2_probe(void)
+{
+	if (!of_machine_is_compatible("mpc74xx"))
+		return 0;
+	return 1;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int mpc7448_machine_check_exception(struct pt_regs *regs)
 {
 	const struct exception_table_entry *entry;
@@ -175,13 +188,21 @@ static int mpc7448_machine_check_exception(struct pt_regs *regs)
 
 define_machine(mpc7448_hpc2){
 	.name 			= "MPC7448 HPC2",
+<<<<<<< HEAD
 	.compatible		= "mpc74xx",
+=======
+	.probe 			= mpc7448_hpc2_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.setup_arch 		= mpc7448_hpc2_setup_arch,
 	.discover_phbs		= mpc7448_hpc2_setup_pci,
 	.init_IRQ 		= mpc7448_hpc2_init_IRQ,
 	.show_cpuinfo 		= mpc7448_hpc2_show_cpuinfo,
 	.get_irq 		= mpic_get_irq,
 	.restart 		= mpc7448_hpc2_restart,
+<<<<<<< HEAD
+=======
+	.calibrate_decr 	= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.machine_check_exception= mpc7448_machine_check_exception,
 	.progress 		= udbg_progress,
 };

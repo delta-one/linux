@@ -303,11 +303,19 @@ void test_sockopt_multi(void)
 	int err = -1;
 
 	cg_parent = test__join_cgroup("/parent");
+<<<<<<< HEAD
 	if (!ASSERT_GE(cg_parent, 0, "join_cgroup /parent"))
 		goto out;
 
 	cg_child = test__join_cgroup("/parent/child");
 	if (!ASSERT_GE(cg_child, 0, "join_cgroup /parent/child"))
+=======
+	if (CHECK_FAIL(cg_parent < 0))
+		goto out;
+
+	cg_child = test__join_cgroup("/parent/child");
+	if (CHECK_FAIL(cg_child < 0))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	obj = bpf_object__open_file("sockopt_multi.bpf.o", NULL);
@@ -319,11 +327,19 @@ void test_sockopt_multi(void)
 		goto out;
 
 	sock_fd = socket(AF_INET, SOCK_STREAM, 0);
+<<<<<<< HEAD
 	if (!ASSERT_GE(sock_fd, 0, "socket"))
 		goto out;
 
 	ASSERT_OK(run_getsockopt_test(obj, cg_parent, cg_child, sock_fd), "getsockopt_test");
 	ASSERT_OK(run_setsockopt_test(obj, cg_parent, cg_child, sock_fd), "setsockopt_test");
+=======
+	if (CHECK_FAIL(sock_fd < 0))
+		goto out;
+
+	CHECK_FAIL(run_getsockopt_test(obj, cg_parent, cg_child, sock_fd));
+	CHECK_FAIL(run_setsockopt_test(obj, cg_parent, cg_child, sock_fd));
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	close(sock_fd);

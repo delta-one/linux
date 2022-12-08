@@ -37,6 +37,7 @@ let mb = ([M] ; fencerel(Mb) ; [M]) |
 	([M] ; fencerel(Before-atomic) ; [RMW] ; po? ; [M]) |
 	([M] ; po? ; [RMW] ; fencerel(After-atomic) ; [M]) |
 	([M] ; po? ; [LKW] ; fencerel(After-spinlock) ; [M]) |
+<<<<<<< HEAD
 (*
  * Note: The po-unlock-lock-po relation only passes the lock to the direct
  * successor, perhaps giving the impression that the ordering of the
@@ -51,6 +52,10 @@ let mb = ([M] ; fencerel(Mb) ; [M]) |
 	([M] ; po-unlock-lock-po ;
 		[After-unlock-lock] ; po ; [M]) |
 	([M] ; po? ; [Srcu-unlock] ; fencerel(After-srcu-read-unlock) ; [M])
+=======
+	([M] ; po ; [UL] ; (co | po) ; [LKW] ;
+		fencerel(After-unlock-lock) ; [M])
+>>>>>>> b7ba80a49124 (Commit)
 let gp = po ; [Sync-rcu | Sync-srcu] ; po?
 let strong-fence = mb | gp
 
@@ -81,6 +86,7 @@ let dep = addr | data
 let rwdep = (dep | ctrl) ; [W]
 let overwrite = co | fr
 let to-w = rwdep | (overwrite & int) | (addr ; [Plain] ; wmb)
+<<<<<<< HEAD
 let to-r = (addr ; [R]) | (dep ; [Marked] ; rfi)
 let ppo = to-r | to-w | (fence & int) | (po-unlock-lock-po & int)
 
@@ -89,6 +95,15 @@ let A-cumul(r) = (rfe ; [Marked])? ; r
 let rmw-sequence = (rf ; rmw)*
 let cumul-fence = [Marked] ; (A-cumul(strong-fence | po-rel) | wmb |
 	po-unlock-lock-po) ; [Marked] ; rmw-sequence
+=======
+let to-r = addr | (dep ; [Marked] ; rfi)
+let ppo = to-r | to-w | fence | (po-unlock-lock-po & int)
+
+(* Propagation: Ordering from release operations and strong fences. *)
+let A-cumul(r) = (rfe ; [Marked])? ; r
+let cumul-fence = [Marked] ; (A-cumul(strong-fence | po-rel) | wmb |
+	po-unlock-lock-po) ; [Marked]
+>>>>>>> b7ba80a49124 (Commit)
 let prop = [Marked] ; (overwrite & ext)? ; cumul-fence* ;
 	[Marked] ; rfe? ; [Marked]
 
@@ -187,7 +202,11 @@ let vis = cumul-fence* ; rfe? ; [Marked] ;
 let w-pre-bounded = [Marked] ; (addr | fence)?
 let r-pre-bounded = [Marked] ; (addr | nonrw-fence |
 	([R4rmb] ; fencerel(Rmb) ; [~Noreturn]))?
+<<<<<<< HEAD
 let w-post-bounded = fence? ; [Marked] ; rmw-sequence
+=======
+let w-post-bounded = fence? ; [Marked]
+>>>>>>> b7ba80a49124 (Commit)
 let r-post-bounded = (nonrw-fence | ([~Noreturn] ; fencerel(Rmb) ; [R4rmb]))? ;
 	[Marked]
 

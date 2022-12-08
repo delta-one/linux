@@ -423,7 +423,11 @@ static int diff__process_sample_event(struct perf_tool *tool,
 	switch (compute) {
 	case COMPUTE_CYCLES:
 		if (!hists__add_entry_ops(hists, &block_hist_ops, &al, NULL,
+<<<<<<< HEAD
 					  NULL, NULL, NULL, sample, true)) {
+=======
+					  NULL, NULL, sample, true)) {
+>>>>>>> b7ba80a49124 (Commit)
 			pr_warning("problem incrementing symbol period, "
 				   "skipping event\n");
 			goto out_put;
@@ -442,7 +446,11 @@ static int diff__process_sample_event(struct perf_tool *tool,
 		break;
 
 	default:
+<<<<<<< HEAD
 		if (!hists__add_entry(hists, &al, NULL, NULL, NULL, NULL, sample,
+=======
+		if (!hists__add_entry(hists, &al, NULL, NULL, NULL, sample,
+>>>>>>> b7ba80a49124 (Commit)
 				      true)) {
 			pr_warning("problem incrementing symbol period, "
 				   "skipping event\n");
@@ -1260,7 +1268,11 @@ static const char * const diff_usage[] = {
 static const struct option options[] = {
 	OPT_INCR('v', "verbose", &verbose,
 		    "be more verbose (show symbol address, etc)"),
+<<<<<<< HEAD
 	OPT_BOOLEAN('q', "quiet", &quiet, "Do not show any warnings or messages"),
+=======
+	OPT_BOOLEAN('q', "quiet", &quiet, "Do not show any message"),
+>>>>>>> b7ba80a49124 (Commit)
 	OPT_BOOLEAN('b', "baseline-only", &show_baseline_only,
 		    "Show only items with match in baseline"),
 	OPT_CALLBACK('c', "compute", &compute,

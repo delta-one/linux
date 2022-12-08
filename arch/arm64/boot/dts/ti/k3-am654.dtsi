@@ -93,7 +93,10 @@
 	L2_0: l2-cache0 {
 		compatible = "cache";
 		cache-level = <2>;
+<<<<<<< HEAD
 		cache-unified;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		cache-size = <0x80000>;
 		cache-line-size = <64>;
 		cache-sets = <512>;
@@ -103,7 +106,10 @@
 	L2_1: l2-cache1 {
 		compatible = "cache";
 		cache-level = <2>;
+<<<<<<< HEAD
 		cache-unified;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		cache-size = <0x80000>;
 		cache-line-size = <64>;
 		cache-sets = <512>;

@@ -41,6 +41,11 @@ struct hinic_rxq {
 	struct napi_struct      napi;
 };
 
+<<<<<<< HEAD
+=======
+void hinic_rxq_clean_stats(struct hinic_rxq *rxq);
+
+>>>>>>> b7ba80a49124 (Commit)
 void hinic_rxq_get_stats(struct hinic_rxq *rxq, struct hinic_rxq_stats *stats);
 
 int hinic_init_rxq(struct hinic_rxq *rxq, struct hinic_rq *rq,

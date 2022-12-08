@@ -66,11 +66,27 @@ static struct ctl_table crypto_sysctl_table[] = {
 	{}
 };
 
+<<<<<<< HEAD
+=======
+static struct ctl_table crypto_dir_table[] = {
+	{
+		.procname       = "crypto",
+		.mode           = 0555,
+		.child          = crypto_sysctl_table
+	},
+	{}
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct ctl_table_header *crypto_sysctls;
 
 static void crypto_proc_fips_init(void)
 {
+<<<<<<< HEAD
 	crypto_sysctls = register_sysctl("crypto", crypto_sysctl_table);
+=======
+	crypto_sysctls = register_sysctl_table(crypto_dir_table);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void crypto_proc_fips_exit(void)

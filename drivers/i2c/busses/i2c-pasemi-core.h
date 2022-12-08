@@ -7,7 +7,10 @@
 #include <linux/i2c-smbus.h>
 #include <linux/io.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/completion.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define PASEMI_HW_REV_PCI -1
 
@@ -17,6 +20,7 @@ struct pasemi_smbus {
 	void __iomem		*ioaddr;
 	unsigned int		 clk_div;
 	int			 hw_rev;
+<<<<<<< HEAD
 	int			 use_irq;
 	struct completion	 irq_completion;
 };
@@ -24,3 +28,8 @@ struct pasemi_smbus {
 int pasemi_i2c_common_probe(struct pasemi_smbus *smbus);
 
 irqreturn_t pasemi_irq_handler(int irq, void *dev_id);
+=======
+};
+
+int pasemi_i2c_common_probe(struct pasemi_smbus *smbus);
+>>>>>>> b7ba80a49124 (Commit)

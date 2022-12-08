@@ -6,12 +6,19 @@
 
 #include <linux/device.h>
 #include <linux/wait.h>
+<<<<<<< HEAD
+=======
+#include <linux/raspberrypi/vchiq.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <sound/core.h>
 #include <sound/pcm.h>
 #include <sound/pcm-indirect.h>
 
+<<<<<<< HEAD
 #include "../include/linux/raspberrypi/vchiq.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MAX_SUBSTREAMS   (8)
 #define AVAIL_SUBSTREAMS_MASK  (0xff)
 

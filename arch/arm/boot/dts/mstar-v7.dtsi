@@ -174,7 +174,11 @@
 				status = "disabled";
 			};
 
+<<<<<<< HEAD
 			pm_uart: serial@221000 {
+=======
+			pm_uart: uart@221000 {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "ns16550a";
 				reg = <0x221000 0x100>;
 				reg-shift = <3>;

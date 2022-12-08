@@ -660,6 +660,10 @@ void ucb1x00_unregister_driver(struct ucb1x00_driver *drv)
 	mutex_unlock(&ucb1x00_mutex);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int ucb1x00_suspend(struct device *dev)
 {
 	struct ucb1x00_plat_data *pdata = dev_get_platdata(dev);
@@ -727,15 +731,25 @@ static int ucb1x00_resume(struct device *dev)
 	mutex_unlock(&ucb1x00_mutex);
 	return 0;
 }
+<<<<<<< HEAD
 
 static DEFINE_SIMPLE_DEV_PM_OPS(ucb1x00_pm_ops,
 				ucb1x00_suspend, ucb1x00_resume);
+=======
+#endif
+
+static SIMPLE_DEV_PM_OPS(ucb1x00_pm_ops, ucb1x00_suspend, ucb1x00_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct mcp_driver ucb1x00_driver = {
 	.drv		= {
 		.name	= "ucb1x00",
 		.owner	= THIS_MODULE,
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&ucb1x00_pm_ops),
+=======
+		.pm	= &ucb1x00_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe		= ucb1x00_probe,
 	.remove		= ucb1x00_remove,

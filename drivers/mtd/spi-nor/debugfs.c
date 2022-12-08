@@ -1,9 +1,16 @@
 // SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
 #include <linux/debugfs.h>
 #include <linux/mtd/spi-nor.h>
 #include <linux/spi/spi.h>
 #include <linux/spi/spi-mem.h>
+=======
+#include <linux/mtd/spi-nor.h>
+#include <linux/spi/spi.h>
+#include <linux/spi/spi-mem.h>
+#include <linux/debugfs.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "core.h"
 
@@ -81,7 +88,11 @@ static int spi_nor_params_show(struct seq_file *s, void *data)
 	int i;
 
 	seq_printf(s, "name\t\t%s\n", info->name);
+<<<<<<< HEAD
 	seq_printf(s, "id\t\t%*ph\n", SPI_NOR_MAX_ID_LEN, nor->id);
+=======
+	seq_printf(s, "id\t\t%*ph\n", info->id_len, info->id);
+>>>>>>> b7ba80a49124 (Commit)
 	string_get_size(params->size, 1, STRING_UNITS_2, buf, sizeof(buf));
 	seq_printf(s, "size\t\t%s\n", buf);
 	seq_printf(s, "write size\t%u\n", params->writesize);
@@ -226,6 +237,7 @@ static void spi_nor_debugfs_unregister(void *data)
 	nor->debugfs_root = NULL;
 }
 
+<<<<<<< HEAD
 static struct dentry *rootdir;
 
 void spi_nor_debugfs_register(struct spi_nor *nor)
@@ -233,6 +245,15 @@ void spi_nor_debugfs_register(struct spi_nor *nor)
 	struct dentry *d;
 	int ret;
 
+=======
+void spi_nor_debugfs_register(struct spi_nor *nor)
+{
+	struct dentry *rootdir, *d;
+	int ret;
+
+	/* Create rootdir once. Will never be deleted again. */
+	rootdir = debugfs_lookup(SPI_NOR_DEBUGFS_ROOT, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!rootdir)
 		rootdir = debugfs_create_dir(SPI_NOR_DEBUGFS_ROOT, NULL);
 
@@ -247,8 +268,11 @@ void spi_nor_debugfs_register(struct spi_nor *nor)
 	debugfs_create_file("capabilities", 0444, d, nor,
 			    &spi_nor_capabilities_fops);
 }
+<<<<<<< HEAD
 
 void spi_nor_debugfs_shutdown(void)
 {
 	debugfs_remove(rootdir);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

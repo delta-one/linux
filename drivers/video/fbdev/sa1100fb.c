@@ -184,6 +184,10 @@
 
 #include <mach/hardware.h>
 #include <asm/mach-types.h>
+<<<<<<< HEAD
+=======
+#include <mach/shannon.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Complain if VAR is out of range.

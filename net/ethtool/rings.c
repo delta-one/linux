@@ -56,8 +56,12 @@ static int rings_reply_size(const struct ethnl_req_info *req_base,
 	       nla_total_size(sizeof(u32)) +	/* _RINGS_RX_BUF_LEN */
 	       nla_total_size(sizeof(u8))  +	/* _RINGS_TCP_DATA_SPLIT */
 	       nla_total_size(sizeof(u32)  +	/* _RINGS_CQE_SIZE */
+<<<<<<< HEAD
 	       nla_total_size(sizeof(u8))  +	/* _RINGS_TX_PUSH */
 	       nla_total_size(sizeof(u8)));	/* _RINGS_RX_PUSH */
+=======
+	       nla_total_size(sizeof(u8)));	/* _RINGS_TX_PUSH */
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int rings_fill_reply(struct sk_buff *skb,
@@ -97,13 +101,32 @@ static int rings_fill_reply(struct sk_buff *skb,
 			 kr->tcp_data_split))) ||
 	    (kr->cqe_size &&
 	     (nla_put_u32(skb, ETHTOOL_A_RINGS_CQE_SIZE, kr->cqe_size))) ||
+<<<<<<< HEAD
 	    nla_put_u8(skb, ETHTOOL_A_RINGS_TX_PUSH, !!kr->tx_push) ||
 	    nla_put_u8(skb, ETHTOOL_A_RINGS_RX_PUSH, !!kr->rx_push))
+=======
+	    nla_put_u8(skb, ETHTOOL_A_RINGS_TX_PUSH, !!kr->tx_push))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EMSGSIZE;
 
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+const struct ethnl_request_ops ethnl_rings_request_ops = {
+	.request_cmd		= ETHTOOL_MSG_RINGS_GET,
+	.reply_cmd		= ETHTOOL_MSG_RINGS_GET_REPLY,
+	.hdr_attr		= ETHTOOL_A_RINGS_HEADER,
+	.req_info_size		= sizeof(struct rings_req_info),
+	.reply_data_size	= sizeof(struct rings_reply_data),
+
+	.prepare_data		= rings_prepare_data,
+	.reply_size		= rings_reply_size,
+	.fill_reply		= rings_fill_reply,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* RINGS_SET */
 
 const struct nla_policy ethnl_rings_set_policy[] = {
@@ -116,6 +139,7 @@ const struct nla_policy ethnl_rings_set_policy[] = {
 	[ETHTOOL_A_RINGS_RX_BUF_LEN]            = NLA_POLICY_MIN(NLA_U32, 1),
 	[ETHTOOL_A_RINGS_CQE_SIZE]		= NLA_POLICY_MIN(NLA_U32, 1),
 	[ETHTOOL_A_RINGS_TX_PUSH]		= NLA_POLICY_MAX(NLA_U8, 1),
+<<<<<<< HEAD
 	[ETHTOOL_A_RINGS_RX_PUSH]		= NLA_POLICY_MAX(NLA_U8, 1),
 };
 
@@ -132,18 +156,62 @@ ethnl_set_rings_validate(struct ethnl_req_info *req_info,
 				    tb[ETHTOOL_A_RINGS_RX_BUF_LEN],
 				    "setting rx buf len not supported");
 		return -EOPNOTSUPP;
+=======
+};
+
+int ethnl_set_rings(struct sk_buff *skb, struct genl_info *info)
+{
+	struct kernel_ethtool_ringparam kernel_ringparam = {};
+	struct ethtool_ringparam ringparam = {};
+	struct ethnl_req_info req_info = {};
+	struct nlattr **tb = info->attrs;
+	const struct nlattr *err_attr;
+	const struct ethtool_ops *ops;
+	struct net_device *dev;
+	bool mod = false;
+	int ret;
+
+	ret = ethnl_parse_header_dev_get(&req_info,
+					 tb[ETHTOOL_A_RINGS_HEADER],
+					 genl_info_net(info), info->extack,
+					 true);
+	if (ret < 0)
+		return ret;
+	dev = req_info.dev;
+	ops = dev->ethtool_ops;
+	ret = -EOPNOTSUPP;
+	if (!ops->get_ringparam || !ops->set_ringparam)
+		goto out_dev;
+
+	if (tb[ETHTOOL_A_RINGS_RX_BUF_LEN] &&
+	    !(ops->supported_ring_params & ETHTOOL_RING_USE_RX_BUF_LEN)) {
+		ret = -EOPNOTSUPP;
+		NL_SET_ERR_MSG_ATTR(info->extack,
+				    tb[ETHTOOL_A_RINGS_RX_BUF_LEN],
+				    "setting rx buf len not supported");
+		goto out_dev;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (tb[ETHTOOL_A_RINGS_CQE_SIZE] &&
 	    !(ops->supported_ring_params & ETHTOOL_RING_USE_CQE_SIZE)) {
+<<<<<<< HEAD
 		NL_SET_ERR_MSG_ATTR(info->extack,
 				    tb[ETHTOOL_A_RINGS_CQE_SIZE],
 				    "setting cqe size not supported");
 		return -EOPNOTSUPP;
+=======
+		ret = -EOPNOTSUPP;
+		NL_SET_ERR_MSG_ATTR(info->extack,
+				    tb[ETHTOOL_A_RINGS_CQE_SIZE],
+				    "setting cqe size not supported");
+		goto out_dev;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (tb[ETHTOOL_A_RINGS_TX_PUSH] &&
 	    !(ops->supported_ring_params & ETHTOOL_RING_USE_TX_PUSH)) {
+<<<<<<< HEAD
 		NL_SET_ERR_MSG_ATTR(info->extack,
 				    tb[ETHTOOL_A_RINGS_TX_PUSH],
 				    "setting tx push not supported");
@@ -174,6 +242,20 @@ ethnl_set_rings(struct ethnl_req_info *req_info, struct genl_info *info)
 
 	dev->ethtool_ops->get_ringparam(dev, &ringparam,
 					&kernel_ringparam, info->extack);
+=======
+		ret = -EOPNOTSUPP;
+		NL_SET_ERR_MSG_ATTR(info->extack,
+				    tb[ETHTOOL_A_RINGS_TX_PUSH],
+				    "setting tx push not supported");
+		goto out_dev;
+	}
+
+	rtnl_lock();
+	ret = ethnl_ops_begin(dev);
+	if (ret < 0)
+		goto out_rtnl;
+	ops->get_ringparam(dev, &ringparam, &kernel_ringparam, info->extack);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ethnl_update_u32(&ringparam.rx_pending, tb[ETHTOOL_A_RINGS_RX], &mod);
 	ethnl_update_u32(&ringparam.rx_mini_pending,
@@ -187,10 +269,16 @@ ethnl_set_rings(struct ethnl_req_info *req_info, struct genl_info *info)
 			 tb[ETHTOOL_A_RINGS_CQE_SIZE], &mod);
 	ethnl_update_u8(&kernel_ringparam.tx_push,
 			tb[ETHTOOL_A_RINGS_TX_PUSH], &mod);
+<<<<<<< HEAD
 	ethnl_update_u8(&kernel_ringparam.rx_push,
 			tb[ETHTOOL_A_RINGS_RX_PUSH], &mod);
 	if (!mod)
 		return 0;
+=======
+	ret = 0;
+	if (!mod)
+		goto out_ops;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* ensure new ring parameters are within limits */
 	if (ringparam.rx_pending > ringparam.rx_max_pending)
@@ -204,13 +292,21 @@ ethnl_set_rings(struct ethnl_req_info *req_info, struct genl_info *info)
 	else
 		err_attr = NULL;
 	if (err_attr) {
+<<<<<<< HEAD
 		NL_SET_ERR_MSG_ATTR(info->extack, err_attr,
 				    "requested ring size exceeds maximum");
 		return -EINVAL;
+=======
+		ret = -EINVAL;
+		NL_SET_ERR_MSG_ATTR(info->extack, err_attr,
+				    "requested ring size exceeds maximum");
+		goto out_ops;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = dev->ethtool_ops->set_ringparam(dev, &ringparam,
 					      &kernel_ringparam, info->extack);
+<<<<<<< HEAD
 	return ret < 0 ? ret : 1;
 }
 
@@ -229,3 +325,17 @@ const struct ethnl_request_ops ethnl_rings_request_ops = {
 	.set			= ethnl_set_rings,
 	.set_ntf_cmd		= ETHTOOL_MSG_RINGS_NTF,
 };
+=======
+	if (ret < 0)
+		goto out_ops;
+	ethtool_notify(dev, ETHTOOL_MSG_RINGS_NTF, NULL);
+
+out_ops:
+	ethnl_ops_complete(dev);
+out_rtnl:
+	rtnl_unlock();
+out_dev:
+	ethnl_parse_header_dev_put(&req_info);
+	return ret;
+}
+>>>>>>> b7ba80a49124 (Commit)

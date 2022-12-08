@@ -313,6 +313,7 @@ static inline pmd_t *pud_pgtable(pud_t pud)
 #endif
 
 /*
+<<<<<<< HEAD
  * Initialize a new pgd / pud / pmd table with invalid pointers.
  */
 extern void pgd_init(void *addr);
@@ -339,12 +340,31 @@ static inline pte_t mk_swap_pte(unsigned long type, unsigned long offset)
 { pte_t pte; pte_val(pte) = ((type & 0x7f) << 16) | (offset << 24); return pte; }
 
 #define __swp_type(x)		(((x).val >> 16) & 0x7f)
+=======
+ * Initialize a new pgd / pmd table with invalid pointers.
+ */
+extern void pgd_init(unsigned long page);
+extern void pud_init(unsigned long page, unsigned long pagetable);
+extern void pmd_init(unsigned long page, unsigned long pagetable);
+
+/*
+ * Non-present pages:  high 40 bits are offset, next 8 bits type,
+ * low 16 bits zero.
+ */
+static inline pte_t mk_swap_pte(unsigned long type, unsigned long offset)
+{ pte_t pte; pte_val(pte) = (type << 16) | (offset << 24); return pte; }
+
+#define __swp_type(x)		(((x).val >> 16) & 0xff)
+>>>>>>> b7ba80a49124 (Commit)
 #define __swp_offset(x)		((x).val >> 24)
 #define __swp_entry(type, offset) ((swp_entry_t) { pte_val(mk_swap_pte((type), (offset))) })
 #define __pte_to_swp_entry(pte) ((swp_entry_t) { pte_val(pte) })
 #define __swp_entry_to_pte(x)	((pte_t) { (x).val })
 
+<<<<<<< HEAD
 /* We borrow bit 23 to store the exclusive marker in swap PTEs. */
 #define _PAGE_SWP_EXCLUSIVE	(1 << 23)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_PGTABLE_64_H */

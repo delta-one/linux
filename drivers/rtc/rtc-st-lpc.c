@@ -238,7 +238,10 @@ static int st_rtc_probe(struct platform_device *pdev)
 
 	rtc->clkrate = clk_get_rate(rtc->clk);
 	if (!rtc->clkrate) {
+<<<<<<< HEAD
 		clk_disable_unprepare(rtc->clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(&pdev->dev, "Unable to fetch clock rate\n");
 		return -EINVAL;
 	}

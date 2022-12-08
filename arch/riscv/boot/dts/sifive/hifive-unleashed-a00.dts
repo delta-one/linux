@@ -3,8 +3,11 @@
 
 #include "fu540-c000.dtsi"
 #include <dt-bindings/gpio/gpio.h>
+<<<<<<< HEAD
 #include <dt-bindings/leds/common.h>
 #include <dt-bindings/pwm/pwm.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Clock frequency (in Hz) of the PCB crystal for rtcclk */
 #define RTCCLK_FREQ		1000000
@@ -44,6 +47,7 @@
 		compatible = "gpio-restart";
 		gpios = <&gpio 10 GPIO_ACTIVE_LOW>;
 	};
+<<<<<<< HEAD
 
 	led-controller {
 		compatible = "pwm-leds";
@@ -80,6 +84,8 @@
 			label = "d4";
 		};
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &uart0 {

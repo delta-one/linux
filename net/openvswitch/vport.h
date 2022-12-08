@@ -32,8 +32,11 @@ struct vport *ovs_vport_locate(const struct net *net, const char *name);
 
 void ovs_vport_get_stats(struct vport *, struct ovs_vport_stats *);
 
+<<<<<<< HEAD
 int ovs_vport_get_upcall_stats(struct vport *vport, struct sk_buff *skb);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ovs_vport_set_options(struct vport *, struct nlattr *options);
 int ovs_vport_get_options(const struct vport *, struct sk_buff *);
 
@@ -67,7 +70,10 @@ struct vport_portids {
  * @hash_node: Element in @dev_table hash table in vport.c.
  * @dp_hash_node: Element in @datapath->ports hash table in datapath.c.
  * @ops: Class structure.
+<<<<<<< HEAD
  * @upcall_stats: Upcall stats of every ports.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @detach_list: list used for detaching vport in net-exit call.
  * @rcu: RCU callback head for deferred destruction.
  */
@@ -81,7 +87,10 @@ struct vport {
 	struct hlist_node hash_node;
 	struct hlist_node dp_hash_node;
 	const struct vport_ops *ops;
+<<<<<<< HEAD
 	struct vport_upcall_stats_percpu __percpu *upcall_stats;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct list_head detach_list;
 	struct rcu_head rcu;
@@ -141,6 +150,7 @@ struct vport_ops {
 	struct list_head list;
 };
 
+<<<<<<< HEAD
 /**
  * struct vport_upcall_stats_percpu - per-cpu packet upcall statistics for
  * a given vport.
@@ -153,6 +163,8 @@ struct vport_upcall_stats_percpu {
 	u64_stats_t n_fail;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct vport *ovs_vport_alloc(int priv_size, const struct vport_ops *,
 			      const struct vport_parms *);
 void ovs_vport_free(struct vport *);

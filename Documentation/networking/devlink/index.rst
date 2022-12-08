@@ -50,7 +50,10 @@ parameters, info versions, and other features it supports.
    :maxdepth: 1
 
    bnxt
+<<<<<<< HEAD
    etas_es58x
+=======
+>>>>>>> b7ba80a49124 (Commit)
    hns3
    ionic
    ice
@@ -66,4 +69,7 @@ parameters, info versions, and other features it supports.
    prestera
    iosm
    octeontx2
+<<<<<<< HEAD
    sfc
+=======
+>>>>>>> b7ba80a49124 (Commit)

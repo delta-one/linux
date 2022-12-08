@@ -9,7 +9,11 @@ a kernel test module based on a litmus test, please see
 tools/memory-model/README.
 
 
+<<<<<<< HEAD
 atomic (/atomic directory)
+=======
+atomic (/atomic derectory)
+>>>>>>> b7ba80a49124 (Commit)
 --------------------------
 
 Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus

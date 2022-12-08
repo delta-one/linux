@@ -47,7 +47,11 @@ struct nand_ecc_test {
 static void single_bit_error_data(void *error_data, void *correct_data,
 				size_t size)
 {
+<<<<<<< HEAD
 	unsigned int offset = get_random_u32_below(size * BITS_PER_BYTE);
+=======
+	unsigned int offset = prandom_u32() % (size * BITS_PER_BYTE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memcpy(error_data, correct_data, size);
 	__change_bit_le(offset, error_data);
@@ -58,9 +62,15 @@ static void double_bit_error_data(void *error_data, void *correct_data,
 {
 	unsigned int offset[2];
 
+<<<<<<< HEAD
 	offset[0] = get_random_u32_below(size * BITS_PER_BYTE);
 	do {
 		offset[1] = get_random_u32_below(size * BITS_PER_BYTE);
+=======
+	offset[0] = prandom_u32() % (size * BITS_PER_BYTE);
+	do {
+		offset[1] = prandom_u32() % (size * BITS_PER_BYTE);
+>>>>>>> b7ba80a49124 (Commit)
 	} while (offset[0] == offset[1]);
 
 	memcpy(error_data, correct_data, size);
@@ -71,7 +81,11 @@ static void double_bit_error_data(void *error_data, void *correct_data,
 
 static unsigned int random_ecc_bit(size_t size)
 {
+<<<<<<< HEAD
 	unsigned int offset = get_random_u32_below(3 * BITS_PER_BYTE);
+=======
+	unsigned int offset = prandom_u32() % (3 * BITS_PER_BYTE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (size == 256) {
 		/*
@@ -79,7 +93,11 @@ static unsigned int random_ecc_bit(size_t size)
 		 * and 17th bit) in ECC code for 256 byte data block
 		 */
 		while (offset == 16 || offset == 17)
+<<<<<<< HEAD
 			offset = get_random_u32_below(3 * BITS_PER_BYTE);
+=======
+			offset = prandom_u32() % (3 * BITS_PER_BYTE);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return offset;
@@ -266,7 +284,11 @@ static int nand_ecc_test_run(const size_t size)
 		goto error;
 	}
 
+<<<<<<< HEAD
 	get_random_bytes(correct_data, size);
+=======
+	prandom_bytes(correct_data, size);
+>>>>>>> b7ba80a49124 (Commit)
 	ecc_sw_hamming_calculate(correct_data, size, correct_ecc, sm_order);
 	for (i = 0; i < ARRAY_SIZE(nand_ecc_test); i++) {
 		nand_ecc_test[i].prepare(error_data, error_ecc,

@@ -626,7 +626,11 @@ static int iwlagn_request_scan(struct iwl_priv *priv, struct ieee80211_vif *vif)
 	u8 active_chains;
 	u8 scan_tx_antennas = priv->nvm_data->valid_tx_ant;
 	int ret;
+<<<<<<< HEAD
 	size_t scan_cmd_size = sizeof(struct iwl_scan_cmd) +
+=======
+	int scan_cmd_size = sizeof(struct iwl_scan_cmd) +
+>>>>>>> b7ba80a49124 (Commit)
 			    MAX_SCAN_CHANNEL * sizeof(struct iwl_scan_channel) +
 			    priv->fw->ucode_capa.max_probe_length;
 	const u8 *ssid = NULL;
@@ -649,6 +653,7 @@ static int iwlagn_request_scan(struct iwl_priv *priv, struct ieee80211_vif *vif)
 				       "fail to allocate memory for scan\n");
 			return -ENOMEM;
 		}
+<<<<<<< HEAD
 		priv->scan_cmd_size = scan_cmd_size;
 	}
 	if (priv->scan_cmd_size < scan_cmd_size) {
@@ -658,6 +663,11 @@ static int iwlagn_request_scan(struct iwl_priv *priv, struct ieee80211_vif *vif)
 	}
 	scan = priv->scan_cmd;
 	memset(scan, 0, priv->scan_cmd_size);
+=======
+	}
+	scan = priv->scan_cmd;
+	memset(scan, 0, scan_cmd_size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	scan->quiet_plcp_th = IWL_PLCP_QUIET_THRESH;
 	scan->quiet_time = IWL_ACTIVE_QUIET_TIME;

@@ -1607,11 +1607,14 @@ int mwifiex_ret_get_hw_spec(struct mwifiex_private *priv,
 						    api_rev->major_ver,
 						    api_rev->minor_ver);
 					break;
+<<<<<<< HEAD
 				case FW_HOTFIX_VER_ID:
 					mwifiex_dbg(adapter, INFO,
 						    "Firmware hotfix version %d\n",
 						    api_rev->major_ver);
 					break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				default:
 					mwifiex_dbg(adapter, FATAL,
 						    "Unknown api_id: %d\n",

@@ -61,7 +61,11 @@ required:
   - mdio
 
 allOf:
+<<<<<<< HEAD
   - $ref: ethernet-controller.yaml#
+=======
+  - $ref: "ethernet-controller.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:

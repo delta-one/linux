@@ -360,13 +360,24 @@
 };
 
 &main_uart1 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_uart1_pins_default>;
 };
 
+<<<<<<< HEAD
 &mcu_uart0 {
 	status = "okay";
+=======
+&main_uart2 {
+	status = "disabled";
+};
+
+&mcu_uart0 {
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&arduino_uart_pins_default>;
 };
@@ -411,14 +422,20 @@
 };
 
 &wkup_i2c0 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&wkup_i2c0_pins_default>;
 	clock-frequency = <400000>;
 };
 
 &mcu_i2c0 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&mcu_i2c0_pins_default>;
 	clock-frequency = <400000>;
@@ -478,7 +495,10 @@
 };
 
 &main_i2c0 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_i2c0_pins_default>;
 	clock-frequency = <400000>;
@@ -496,21 +516,30 @@
 };
 
 &main_i2c1 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_i2c1_pins_default>;
 	clock-frequency = <400000>;
 };
 
 &main_i2c2 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_i2c2_pins_default>;
 	clock-frequency = <400000>;
 };
 
 &main_i2c3 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_i2c3_pins_default>;
 	clock-frequency = <400000>;
@@ -550,7 +579,10 @@
 };
 
 &ecap0 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&ecap0_pins_default>;
 };
@@ -575,7 +607,10 @@
 };
 
 &mcu_spi0 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&mcu_spi0_pins_default>;
 
@@ -609,6 +644,7 @@
 		cdns,tchsh-ns = <60>;
 		cdns,tslch-ns = <60>;
 		cdns,read-delay = <2>;
+<<<<<<< HEAD
 
 		partitions {
 			compatible = "fixed-partitions";
@@ -655,6 +691,8 @@
 				reg = <0xe80000 0x180000>; /* 1.5M */
 			};
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -678,8 +716,20 @@
 	};
 };
 
+<<<<<<< HEAD
 &pcie1_rc {
 	status = "okay";
+=======
+&pcie0_rc {
+	status = "disabled";
+};
+
+&pcie0_ep {
+	status = "disabled";
+};
+
+&pcie1_rc {
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&minipcie_pins_default>;
 
@@ -689,8 +739,24 @@
 	reset-gpios = <&wkup_gpio0 27 GPIO_ACTIVE_HIGH>;
 };
 
+<<<<<<< HEAD
 &mailbox0_cluster0 {
 	status = "okay";
+=======
+&m_can0 {
+	status = "disabled";
+};
+
+&m_can1 {
+	status = "disabled";
+};
+
+&pcie1_ep {
+	status = "disabled";
+};
+
+&mailbox0_cluster0 {
+>>>>>>> b7ba80a49124 (Commit)
 	interrupts = <436>;
 
 	mbox_mcu_r5fss0_core0: mbox-mcu-r5fss0-core0 {
@@ -700,7 +766,10 @@
 };
 
 &mailbox0_cluster1 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	interrupts = <432>;
 
 	mbox_mcu_r5fss0_core1: mbox-mcu-r5fss0-core1 {
@@ -709,6 +778,49 @@
 	};
 };
 
+<<<<<<< HEAD
+=======
+&mailbox0_cluster2 {
+	status = "disabled";
+};
+
+&mailbox0_cluster3 {
+	status = "disabled";
+};
+
+&mailbox0_cluster4 {
+	status = "disabled";
+};
+
+&mailbox0_cluster5 {
+	status = "disabled";
+};
+
+&mailbox0_cluster6 {
+	status = "disabled";
+};
+
+&mailbox0_cluster7 {
+	status = "disabled";
+};
+
+&mailbox0_cluster8 {
+	status = "disabled";
+};
+
+&mailbox0_cluster9 {
+	status = "disabled";
+};
+
+&mailbox0_cluster10 {
+	status = "disabled";
+};
+
+&mailbox0_cluster11 {
+	status = "disabled";
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &mcu_r5fss0_core0 {
 	memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
 			<&mcu_r5fss0_core0_memory_region>;
@@ -720,3 +832,30 @@
 			<&mcu_r5fss0_core1_memory_region>;
 	mboxes = <&mailbox0_cluster1 &mbox_mcu_r5fss0_core1>;
 };
+<<<<<<< HEAD
+=======
+
+&icssg0_mdio {
+	status = "disabled";
+};
+
+&icssg1_mdio {
+	status = "disabled";
+};
+
+&icssg2_mdio {
+	status = "disabled";
+};
+
+&mcasp0 {
+	status = "disabled";
+};
+
+&mcasp1 {
+	status = "disabled";
+};
+
+&mcasp2 {
+	status = "disabled";
+};
+>>>>>>> b7ba80a49124 (Commit)

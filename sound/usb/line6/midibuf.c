@@ -9,7 +9,10 @@
 
 #include "midibuf.h"
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int midibuf_message_length(unsigned char code)
 {
 	int message_length;
@@ -21,7 +24,16 @@ static int midibuf_message_length(unsigned char code)
 
 		message_length = length[(code >> 4) - 8];
 	} else {
+<<<<<<< HEAD
 		static const int length[] = { -1, 2, 2, 2, -1, -1, 1, 1, 1, -1,
+=======
+		/*
+		   Note that according to the MIDI specification 0xf2 is
+		   the "Song Position Pointer", but this is used by Line 6
+		   to send sysex messages to the host.
+		 */
+		static const int length[] = { -1, 2, -1, 2, -1, -1, 1, 1, 1, 1,
+>>>>>>> b7ba80a49124 (Commit)
 			1, 1, 1, -1, 1, 1
 		};
 		message_length = length[code & 0x0f];
@@ -121,7 +133,11 @@ int line6_midibuf_write(struct midi_buffer *this, unsigned char *data,
 }
 
 int line6_midibuf_read(struct midi_buffer *this, unsigned char *data,
+<<<<<<< HEAD
 		       int length, int read_type)
+=======
+		       int length)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int bytes_used;
 	int length1, length2;
@@ -144,6 +160,7 @@ int line6_midibuf_read(struct midi_buffer *this, unsigned char *data,
 
 	length1 = this->size - this->pos_read;
 
+<<<<<<< HEAD
 	command = this->buf[this->pos_read];
 	/*
 	   PODxt always has status byte lower nibble set to 0010,
@@ -160,6 +177,11 @@ int line6_midibuf_read(struct midi_buffer *this, unsigned char *data,
 	}
 
 	/* check MIDI command length */
+=======
+	/* check MIDI command length */
+	command = this->buf[this->pos_read];
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (command & 0x80) {
 		midi_length = midibuf_message_length(command);
 		this->command_prev = command;

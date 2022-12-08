@@ -28,8 +28,11 @@
 #include <media/v4l2-fwnode.h>
 #include <media/v4l2-subdev.h>
 
+<<<<<<< HEAD
 #include "v4l2-subdev-priv.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct v4l2_fwnode_bus_conv {
 	enum v4l2_fwnode_bus_type fwnode_bus_type;
 	enum v4l2_mbus_type mbus_type;
@@ -300,6 +303,7 @@ v4l2_fwnode_endpoint_parse_parallel_bus(struct fwnode_handle *fwnode,
 
 	if (!fwnode_property_read_u32(fwnode, "pclk-sample", &v)) {
 		flags &= ~(V4L2_MBUS_PCLK_SAMPLE_RISING |
+<<<<<<< HEAD
 			   V4L2_MBUS_PCLK_SAMPLE_FALLING |
 			   V4L2_MBUS_PCLK_SAMPLE_DUALEDGE);
 		switch (v) {
@@ -319,6 +323,12 @@ v4l2_fwnode_endpoint_parse_parallel_bus(struct fwnode_handle *fwnode,
 			pr_warn("invalid argument for pclk-sample");
 			break;
 		}
+=======
+			   V4L2_MBUS_PCLK_SAMPLE_FALLING);
+		flags |= v ? V4L2_MBUS_PCLK_SAMPLE_RISING :
+			V4L2_MBUS_PCLK_SAMPLE_FALLING;
+		pr_debug("pclk-sample %s\n", v ? "high" : "low");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (!fwnode_property_read_u32(fwnode, "data-active", &v)) {
@@ -1304,10 +1314,13 @@ int v4l2_async_register_subdev_sensor(struct v4l2_subdev *sd)
 
 	v4l2_async_nf_init(notifier);
 
+<<<<<<< HEAD
 	ret = v4l2_subdev_get_privacy_led(sd);
 	if (ret < 0)
 		goto out_cleanup;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = v4l2_async_nf_parse_fwnode_sensor(sd->dev, notifier);
 	if (ret < 0)
 		goto out_cleanup;
@@ -1328,7 +1341,10 @@ out_unregister:
 	v4l2_async_nf_unregister(notifier);
 
 out_cleanup:
+<<<<<<< HEAD
 	v4l2_subdev_put_privacy_led(sd);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	v4l2_async_nf_cleanup(notifier);
 	kfree(notifier);
 

@@ -35,7 +35,10 @@
 #define HIDEEP_EVENT_ADDR		0x240
 
 /* command list */
+<<<<<<< HEAD
 #define HIDEEP_WORK_MODE		0x081e
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define HIDEEP_RESET_CMD		0x9800
 
 /* event bit */
@@ -272,6 +275,7 @@ static int hideep_pgm_w_reg(struct hideep_ts *ts, u32 addr, u32 val)
 
 #define SW_RESET_IN_PGM(clk)					\
 {								\
+<<<<<<< HEAD
 	__be32 data = cpu_to_be32(0x01);			\
 	hideep_pgm_w_reg(ts, HIDEEP_SYSCON_WDT_CNT, (clk));	\
 	hideep_pgm_w_reg(ts, HIDEEP_SYSCON_WDT_CON, 0x03);	\
@@ -280,6 +284,11 @@ static int hideep_pgm_w_reg(struct hideep_ts *ts, u32 addr, u32 val)
 	 * write for the second write to avoid error logging.	\
 	 */							\
 	hideep_pgm_w_mem(ts, HIDEEP_SYSCON_WDT_CON, &data, 1);	\
+=======
+	hideep_pgm_w_reg(ts, HIDEEP_SYSCON_WDT_CNT, (clk));	\
+	hideep_pgm_w_reg(ts, HIDEEP_SYSCON_WDT_CON, 0x03);	\
+	hideep_pgm_w_reg(ts, HIDEEP_SYSCON_WDT_CON, 0x01);	\
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define SET_FLASH_PIO(ce)					\
@@ -473,9 +482,15 @@ static int hideep_program_nvm(struct hideep_ts *ts,
 	u32 addr = 0;
 	int error;
 
+<<<<<<< HEAD
 	error = hideep_nvm_unlock(ts);
 	if (error)
 		return error;
+=======
+       error = hideep_nvm_unlock(ts);
+       if (error)
+               return error;
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (ucode_len > 0) {
 		xfer_len = min_t(size_t, ucode_len, HIDEEP_NVM_PAGE_SIZE);
@@ -965,6 +980,7 @@ static const struct attribute_group hideep_ts_attr_group = {
 	.attrs = hideep_ts_sysfs_entries,
 };
 
+<<<<<<< HEAD
 static void hideep_set_work_mode(struct hideep_ts *ts)
 {
 	/*
@@ -981,6 +997,9 @@ static void hideep_set_work_mode(struct hideep_ts *ts)
 }
 
 static int hideep_suspend(struct device *dev)
+=======
+static int __maybe_unused hideep_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct hideep_ts *ts = i2c_get_clientdata(client);
@@ -991,7 +1010,11 @@ static int hideep_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int hideep_resume(struct device *dev)
+=======
+static int __maybe_unused hideep_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct hideep_ts *ts = i2c_get_clientdata(client);
@@ -1003,14 +1026,21 @@ static int hideep_resume(struct device *dev)
 		return error;
 	}
 
+<<<<<<< HEAD
 	hideep_set_work_mode(ts);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	enable_irq(client->irq);
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(hideep_pm_ops, hideep_suspend, hideep_resume);
+=======
+static SIMPLE_DEV_PM_OPS(hideep_pm_ops, hideep_suspend, hideep_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct regmap_config hideep_regmap_config = {
 	.reg_bits = 16,
@@ -1020,7 +1050,12 @@ static const struct regmap_config hideep_regmap_config = {
 	.max_register = 0xffff,
 };
 
+<<<<<<< HEAD
 static int hideep_probe(struct i2c_client *client)
+=======
+static int hideep_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hideep_ts *ts;
 	int error;
@@ -1081,8 +1116,11 @@ static int hideep_probe(struct i2c_client *client)
 		return error;
 	}
 
+<<<<<<< HEAD
 	hideep_set_work_mode(ts);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	error = hideep_init_input(ts);
 	if (error)
 		return error;
@@ -1133,10 +1171,17 @@ static struct i2c_driver hideep_driver = {
 		.name			= HIDEEP_I2C_NAME,
 		.of_match_table		= of_match_ptr(hideep_match_table),
 		.acpi_match_table	= ACPI_PTR(hideep_acpi_id),
+<<<<<<< HEAD
 		.pm			= pm_sleep_ptr(&hideep_pm_ops),
 	},
 	.id_table	= hideep_i2c_id,
 	.probe_new	= hideep_probe,
+=======
+		.pm			= &hideep_pm_ops,
+	},
+	.id_table	= hideep_i2c_id,
+	.probe		= hideep_probe,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_i2c_driver(hideep_driver);

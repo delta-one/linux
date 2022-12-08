@@ -7,7 +7,10 @@
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 #include <linux/bitops.h>
+<<<<<<< HEAD
 #include <linux/intel_tcc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/slab.h>
 #include <linux/interrupt.h>
@@ -46,6 +49,35 @@
 /* DTS0 and DTS 1 */
 #define SOC_MAX_DTS_SENSORS		2
 
+<<<<<<< HEAD
+=======
+static int get_tj_max(u32 *tj_max)
+{
+	u32 eax, edx;
+	u32 val;
+	int err;
+
+	err = rdmsr_safe(MSR_IA32_TEMPERATURE_TARGET, &eax, &edx);
+	if (err)
+		goto err_ret;
+	else {
+		val = (eax >> 16) & 0xff;
+		if (val)
+			*tj_max = val * 1000;
+		else {
+			err = -EINVAL;
+			goto err_ret;
+		}
+	}
+
+	return 0;
+err_ret:
+	*tj_max = 0;
+
+	return err;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int sys_get_trip_temp(struct thermal_zone_device *tzd, int trip,
 			     int *temp)
 {
@@ -54,7 +86,11 @@ static int sys_get_trip_temp(struct thermal_zone_device *tzd, int trip,
 	struct intel_soc_dts_sensor_entry *dts;
 	struct intel_soc_dts_sensors *sensors;
 
+<<<<<<< HEAD
 	dts = thermal_zone_device_priv(tzd);
+=======
+	dts = tzd->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	sensors = dts->sensors;
 	mutex_lock(&sensors->dts_update_lock);
 	status = iosf_mbi_read(BT_MBI_UNIT_PMC, MBI_REG_READ,
@@ -168,7 +204,11 @@ err_restore_ptps:
 static int sys_set_trip_temp(struct thermal_zone_device *tzd, int trip,
 			     int temp)
 {
+<<<<<<< HEAD
 	struct intel_soc_dts_sensor_entry *dts = thermal_zone_device_priv(tzd);
+=======
+	struct intel_soc_dts_sensor_entry *dts = tzd->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct intel_soc_dts_sensors *sensors = dts->sensors;
 	int status;
 
@@ -176,7 +216,11 @@ static int sys_set_trip_temp(struct thermal_zone_device *tzd, int trip,
 		return -EINVAL;
 
 	mutex_lock(&sensors->dts_update_lock);
+<<<<<<< HEAD
 	status = update_trip_temp(dts, trip, temp,
+=======
+	status = update_trip_temp(tzd->devdata, trip, temp,
+>>>>>>> b7ba80a49124 (Commit)
 				  dts->trip_types[trip]);
 	mutex_unlock(&sensors->dts_update_lock);
 
@@ -186,7 +230,13 @@ static int sys_set_trip_temp(struct thermal_zone_device *tzd, int trip,
 static int sys_get_trip_type(struct thermal_zone_device *tzd,
 			     int trip, enum thermal_trip_type *type)
 {
+<<<<<<< HEAD
 	struct intel_soc_dts_sensor_entry *dts = thermal_zone_device_priv(tzd);
+=======
+	struct intel_soc_dts_sensor_entry *dts;
+
+	dts = tzd->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 
 	*type = dts->trip_types[trip];
 
@@ -198,10 +248,18 @@ static int sys_get_curr_temp(struct thermal_zone_device *tzd,
 {
 	int status;
 	u32 out;
+<<<<<<< HEAD
 	struct intel_soc_dts_sensor_entry *dts = thermal_zone_device_priv(tzd);
 	struct intel_soc_dts_sensors *sensors;
 	unsigned long raw;
 
+=======
+	struct intel_soc_dts_sensor_entry *dts;
+	struct intel_soc_dts_sensors *sensors;
+	unsigned long raw;
+
+	dts = tzd->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	sensors = dts->sensors;
 	status = iosf_mbi_read(BT_MBI_UNIT_PMC, MBI_REG_READ,
 			       SOC_DTS_OFFSET_TEMP, &out);
@@ -377,7 +435,11 @@ struct intel_soc_dts_sensors *intel_soc_dts_iosf_init(
 {
 	struct intel_soc_dts_sensors *sensors;
 	bool notification;
+<<<<<<< HEAD
 	int tj_max;
+=======
+	u32 tj_max;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 	int i;
 
@@ -387,9 +449,14 @@ struct intel_soc_dts_sensors *intel_soc_dts_iosf_init(
 	if (!trip_count || read_only_trip_count > trip_count)
 		return ERR_PTR(-EINVAL);
 
+<<<<<<< HEAD
 	tj_max = intel_tcc_get_tjmax(-1);
 	if (tj_max < 0)
 		return ERR_PTR(tj_max);
+=======
+	if (get_tj_max(&tj_max))
+		return ERR_PTR(-EINVAL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	sensors = kzalloc(sizeof(*sensors), GFP_KERNEL);
 	if (!sensors)
@@ -448,5 +515,8 @@ void intel_soc_dts_iosf_exit(struct intel_soc_dts_sensors *sensors)
 }
 EXPORT_SYMBOL_GPL(intel_soc_dts_iosf_exit);
 
+<<<<<<< HEAD
 MODULE_IMPORT_NS(INTEL_TCC);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_LICENSE("GPL v2");

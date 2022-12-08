@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/power/fsl,scu-pd.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: i.MX SCU Client Device Node - Power Domain Based on SCU Message Protocol
+=======
+title: i.MX SCU Client Device Node - Power domain bindings based on SCU Message Protocol
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Dong Aisheng <aisheng.dong@nxp.com>

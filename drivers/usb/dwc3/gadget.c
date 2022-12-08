@@ -291,8 +291,12 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned int cmd,
 	 *
 	 * DWC_usb3 3.30a and DWC_usb31 1.90a programming guide section 3.2.2
 	 */
+<<<<<<< HEAD
 	if (dwc->gadget->speed <= USB_SPEED_HIGH ||
 	    DWC3_DEPCMD_CMD(cmd) == DWC3_DEPCMD_ENDTRANSFER) {
+=======
+	if (dwc->gadget->speed <= USB_SPEED_HIGH) {
+>>>>>>> b7ba80a49124 (Commit)
 		reg = dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
 		if (unlikely(reg & DWC3_GUSB2PHYCFG_SUSPHY)) {
 			saved_config |= DWC3_GUSB2PHYCFG_SUSPHY;
@@ -1012,7 +1016,10 @@ static int __dwc3_gadget_ep_disable(struct dwc3_ep *dep)
 {
 	struct dwc3		*dwc = dep->dwc;
 	u32			reg;
+<<<<<<< HEAD
 	u32			mask;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	trace_dwc3_gadget_ep_disable(dep);
 
@@ -1024,6 +1031,7 @@ static int __dwc3_gadget_ep_disable(struct dwc3_ep *dep)
 	reg &= ~DWC3_DALEPENA_EP(dep->number);
 	dwc3_writel(dwc->regs, DWC3_DALEPENA, reg);
 
+<<<<<<< HEAD
 	dwc3_remove_requests(dwc, dep, -ESHUTDOWN);
 
 	dep->stream_capable = false;
@@ -1038,12 +1046,23 @@ static int __dwc3_gadget_ep_disable(struct dwc3_ep *dep)
 		mask |= (DWC3_EP_DELAY_STOP | DWC3_EP_TRANSFER_STARTED);
 	dep->flags &= mask;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Clear out the ep descriptors for non-ep0 */
 	if (dep->number > 1) {
 		dep->endpoint.comp_desc = NULL;
 		dep->endpoint.desc = NULL;
 	}
 
+<<<<<<< HEAD
+=======
+	dwc3_remove_requests(dwc, dep, -ECONNRESET);
+
+	dep->stream_capable = false;
+	dep->type = 0;
+	dep->flags &= DWC3_EP_TXFIFO_RESIZED;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1293,8 +1312,13 @@ static void dwc3_prepare_one_trb(struct dwc3_ep *dep,
 			trb->ctrl = DWC3_TRBCTL_ISOCHRONOUS;
 		}
 
+<<<<<<< HEAD
 		if (!no_interrupt && !chain)
 			trb->ctrl |= DWC3_TRB_CTRL_ISP_IMI;
+=======
+		/* always enable Interrupt on Missed ISOC */
+		trb->ctrl |= DWC3_TRB_CTRL_ISP_IMI;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case USB_ENDPOINT_XFER_BULK:
@@ -1464,6 +1488,7 @@ static int dwc3_prepare_trbs_sg(struct dwc3_ep *dep,
 			 */
 			if (num_trbs_left == 1 || (needs_extra_trb &&
 					num_trbs_left <= 2 &&
+<<<<<<< HEAD
 					sg_dma_len(sg_next(s)) >= length)) {
 				struct dwc3_request *r;
 
@@ -1476,6 +1501,10 @@ static int dwc3_prepare_trbs_sg(struct dwc3_ep *dep,
 						must_interrupt = true;
 				}
 			}
+=======
+					sg_dma_len(sg_next(s)) >= length))
+				must_interrupt = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 			dwc3_prepare_one_trb(dep, req, trb_length, 1, i, false,
 					must_interrupt);
@@ -1699,7 +1728,10 @@ static int __dwc3_gadget_get_frame(struct dwc3 *dwc)
  */
 static int __dwc3_stop_active_transfer(struct dwc3_ep *dep, bool force, bool interrupt)
 {
+<<<<<<< HEAD
 	struct dwc3 *dwc = dep->dwc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct dwc3_gadget_ep_cmd_params params;
 	u32 cmd;
 	int ret;
@@ -1710,6 +1742,7 @@ static int __dwc3_stop_active_transfer(struct dwc3_ep *dep, bool force, bool int
 	cmd |= DWC3_DEPCMD_PARAM(dep->resource_index);
 	memset(&params, 0, sizeof(params));
 	ret = dwc3_send_gadget_ep_cmd(dep, cmd, &params);
+<<<<<<< HEAD
 	/*
 	 * If the End Transfer command was timed out while the device is
 	 * not in SETUP phase, it's possible that an incoming Setup packet
@@ -1732,6 +1765,16 @@ static int __dwc3_stop_active_transfer(struct dwc3_ep *dep, bool force, bool int
 	}
 
 	dep->flags &= ~DWC3_EP_DELAY_STOP;
+=======
+	WARN_ON_ONCE(ret);
+	dep->resource_index = 0;
+
+	if (!interrupt)
+		dep->flags &= ~DWC3_EP_TRANSFER_STARTED;
+	else if (!ret)
+		dep->flags |= DWC3_EP_END_TRANSFER_PENDING;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -3198,7 +3241,13 @@ static void dwc3_gadget_free_endpoints(struct dwc3 *dwc)
 			list_del(&dep->endpoint.ep_list);
 		}
 
+<<<<<<< HEAD
 		dwc3_debugfs_remove_endpoint_dir(dep);
+=======
+		debugfs_remove_recursive(debugfs_lookup(dep->name,
+				debugfs_lookup(dev_name(dep->dwc->dev),
+					       usb_debug_root)));
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(dep);
 	}
 }
@@ -3262,10 +3311,13 @@ static int dwc3_gadget_ep_reclaim_completed_trb(struct dwc3_ep *dep,
 	if (event->status & DEPEVT_STATUS_SHORT && !chain)
 		return 1;
 
+<<<<<<< HEAD
 	if ((trb->ctrl & DWC3_TRB_CTRL_ISP_IMI) &&
 	    DWC3_TRB_SIZE_TRBSTS(trb->size) == DWC3_TRBSTS_MISSED_ISOC)
 		return 1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if ((trb->ctrl & DWC3_TRB_CTRL_IOC) ||
 	    (trb->ctrl & DWC3_TRB_CTRL_LST))
 		return 1;
@@ -3619,7 +3671,11 @@ static void dwc3_gadget_endpoint_stream_event(struct dwc3_ep *dep,
 		 * streams are updated, and the device controller will not be
 		 * triggered to generate ERDY to move the next stream data. To
 		 * workaround this and maintain compatibility with various
+<<<<<<< HEAD
 		 * hosts, force to reinitiate the stream until the host is ready
+=======
+		 * hosts, force to reinitate the stream until the host is ready
+>>>>>>> b7ba80a49124 (Commit)
 		 * instead of waiting for the host to prime the endpoint.
 		 */
 		if (DWC3_VER_IS_WITHIN(DWC32, 100A, ANY)) {
@@ -3735,10 +3791,15 @@ void dwc3_stop_active_transfer(struct dwc3_ep *dep, bool force,
 	if (dep->number <= 1 && dwc->ep0state != EP0_DATA_PHASE)
 		return;
 
+<<<<<<< HEAD
 	if (interrupt && (dep->flags & DWC3_EP_DELAY_STOP))
 		return;
 
 	if (!(dep->flags & DWC3_EP_TRANSFER_STARTED) ||
+=======
+	if (!(dep->flags & DWC3_EP_TRANSFER_STARTED) ||
+	    (dep->flags & DWC3_EP_DELAY_STOP) ||
+>>>>>>> b7ba80a49124 (Commit)
 	    (dep->flags & DWC3_EP_END_TRANSFER_PENDING))
 		return;
 
@@ -3749,7 +3810,11 @@ void dwc3_stop_active_transfer(struct dwc3_ep *dep, bool force,
 	 * timeout. Delay issuing the End Transfer command until the Setup TRB is
 	 * prepared.
 	 */
+<<<<<<< HEAD
 	if (dwc->ep0state != EP0_SETUP_PHASE && !dwc->delayed_status) {
+=======
+	if (dwc->ep0state != EP0_SETUP_PHASE) {
+>>>>>>> b7ba80a49124 (Commit)
 		dep->flags |= DWC3_EP_DELAY_STOP;
 		return;
 	}
@@ -3778,11 +3843,15 @@ void dwc3_stop_active_transfer(struct dwc3_ep *dep, bool force,
 	 * enabled, the EndTransfer command will have completed upon
 	 * returning from this function.
 	 *
+<<<<<<< HEAD
 	 * This mode is NOT available on the DWC_usb31 IP.  In this
 	 * case, if the IOC bit is not set, then delay by 1ms
 	 * after issuing the EndTransfer command.  This allows for the
 	 * controller to handle the command completely before DWC3
 	 * remove requests attempts to unmap USB request buffers.
+=======
+	 * This mode is NOT available on the DWC_usb31 IP.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 
 	__dwc3_stop_active_transfer(dep, force, interrupt);
@@ -4201,7 +4270,11 @@ static void dwc3_gadget_hibernation_interrupt(struct dwc3 *dwc,
 	unsigned int is_ss = evtinfo & BIT(4);
 
 	/*
+<<<<<<< HEAD
 	 * WORKAROUND: DWC3 revision 2.20a with hibernation support
+=======
+	 * WORKAROUND: DWC3 revison 2.20a with hibernation support
+>>>>>>> b7ba80a49124 (Commit)
 	 * have a known issue which can cause USB CV TD.9.23 to fail
 	 * randomly.
 	 *
@@ -4247,8 +4320,20 @@ static void dwc3_gadget_interrupt(struct dwc3 *dwc,
 		break;
 	case DWC3_DEVICE_EVENT_SUSPEND:
 		/* It changed to be suspend event for version 2.30a and above */
+<<<<<<< HEAD
 		if (!DWC3_VER_IS_PRIOR(DWC3, 230A))
 			dwc3_gadget_suspend_interrupt(dwc, event->event_info);
+=======
+		if (!DWC3_VER_IS_PRIOR(DWC3, 230A)) {
+			/*
+			 * Ignore suspend event until the gadget enters into
+			 * USB_STATE_CONFIGURED state.
+			 */
+			if (dwc->gadget->state >= USB_STATE_CONFIGURED)
+				dwc3_gadget_suspend_interrupt(dwc,
+						event->event_info);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case DWC3_DEVICE_EVENT_SOF:
 	case DWC3_DEVICE_EVENT_ERRATIC_ERROR:
@@ -4410,6 +4495,14 @@ static int dwc3_gadget_get_irq(struct dwc3 *dwc)
 		goto out;
 
 	irq = platform_get_irq(dwc3_pdev, 0);
+<<<<<<< HEAD
+=======
+	if (irq > 0)
+		goto out;
+
+	if (!irq)
+		irq = -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	return irq;

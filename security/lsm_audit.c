@@ -190,7 +190,10 @@ static inline void print_ipv4_addr(struct audit_buffer *ab, __be32 addr,
 
 /**
  * dump_common_audit_data - helper to dump common audit data
+<<<<<<< HEAD
  * @ab : the audit buffer
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @a : common audit data
  *
  */
@@ -310,14 +313,22 @@ static void dump_common_audit_data(struct audit_buffer *ab,
 	case LSM_AUDIT_DATA_NET:
 		if (a->u.net->sk) {
 			const struct sock *sk = a->u.net->sk;
+<<<<<<< HEAD
 			const struct unix_sock *u;
+=======
+			struct unix_sock *u;
+>>>>>>> b7ba80a49124 (Commit)
 			struct unix_address *addr;
 			int len = 0;
 			char *p = NULL;
 
 			switch (sk->sk_family) {
 			case AF_INET: {
+<<<<<<< HEAD
 				const struct inet_sock *inet = inet_sk(sk);
+=======
+				struct inet_sock *inet = inet_sk(sk);
+>>>>>>> b7ba80a49124 (Commit)
 
 				print_ipv4_addr(ab, inet->inet_rcv_saddr,
 						inet->inet_sport,
@@ -329,7 +340,11 @@ static void dump_common_audit_data(struct audit_buffer *ab,
 			}
 #if IS_ENABLED(CONFIG_IPV6)
 			case AF_INET6: {
+<<<<<<< HEAD
 				const struct inet_sock *inet = inet_sk(sk);
+=======
+				struct inet_sock *inet = inet_sk(sk);
+>>>>>>> b7ba80a49124 (Commit)
 
 				print_ipv6_addr(ab, &sk->sk_v6_rcv_saddr,
 						inet->inet_sport,

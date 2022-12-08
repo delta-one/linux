@@ -7,4 +7,8 @@ obj-y := mem.o process.o
 
 USER_OBJS := $(obj-y)
 
+<<<<<<< HEAD
 include $(srctree)/arch/um/scripts/Makefile.rules
+=======
+include arch/um/scripts/Makefile.rules
+>>>>>>> b7ba80a49124 (Commit)

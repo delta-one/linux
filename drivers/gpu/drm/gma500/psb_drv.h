@@ -193,6 +193,11 @@
 #define KSEL_BYPASS_25 6
 #define KSEL_BYPASS_83_100 7
 
+<<<<<<< HEAD
+=======
+struct drm_fb_helper;
+
+>>>>>>> b7ba80a49124 (Commit)
 struct opregion_header;
 struct opregion_acpi;
 struct opregion_swsci;
@@ -520,6 +525,11 @@ struct drm_psb_private {
 	uint32_t blc_adj1;
 	uint32_t blc_adj2;
 
+<<<<<<< HEAD
+=======
+	struct drm_fb_helper *fb_helper;
+
+>>>>>>> b7ba80a49124 (Commit)
 	bool dsr_enable;
 	u32 dsr_fb_update;
 	bool dpi_panel_on[3];
@@ -605,6 +615,7 @@ extern void psb_lid_timer_takedown(struct drm_psb_private *dev_priv);
 /* modesetting */
 extern void psb_modeset_init(struct drm_device *dev);
 extern void psb_modeset_cleanup(struct drm_device *dev);
+<<<<<<< HEAD
 
 /* framebuffer */
 struct drm_framebuffer *psb_framebuffer_create(struct drm_device *dev,
@@ -618,6 +629,9 @@ void psb_fbdev_setup(struct drm_psb_private *dev_priv);
 static inline void psb_fbdev_setup(struct drm_psb_private *dev_priv)
 { }
 #endif
+=======
+extern int psb_fbdev_init(struct drm_device *dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* backlight.c */
 int gma_backlight_init(struct drm_device *dev);

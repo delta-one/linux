@@ -38,6 +38,7 @@ static unsigned char default_operstate(const struct net_device *dev)
 	if (netif_testing(dev))
 		return IF_OPER_TESTING;
 
+<<<<<<< HEAD
 	/* Some uppers (DSA) have additional sources for being down, so
 	 * first check whether lower is indeed the source of its down state.
 	 */
@@ -55,6 +56,11 @@ static unsigned char default_operstate(const struct net_device *dev)
 		return netif_carrier_ok(peer) ? IF_OPER_DOWN :
 						IF_OPER_LOWERLAYERDOWN;
 	}
+=======
+	if (!netif_carrier_ok(dev))
+		return (dev->ifindex != dev_get_iflink(dev) ?
+			IF_OPER_LOWERLAYERDOWN : IF_OPER_DOWN);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (netif_dormant(dev))
 		return IF_OPER_DORMANT;

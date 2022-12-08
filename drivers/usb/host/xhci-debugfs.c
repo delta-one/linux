@@ -692,7 +692,11 @@ void xhci_debugfs_init(struct xhci_hcd *xhci)
 				     "command-ring",
 				     xhci->debugfs_root);
 
+<<<<<<< HEAD
 	xhci_debugfs_create_ring_dir(xhci, &xhci->interrupter->event_ring,
+=======
+	xhci_debugfs_create_ring_dir(xhci, &xhci->event_ring,
+>>>>>>> b7ba80a49124 (Commit)
 				     "event-ring",
 				     xhci->debugfs_root);
 

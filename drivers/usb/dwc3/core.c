@@ -122,18 +122,24 @@ static void __dwc3_set_mode(struct work_struct *work)
 	unsigned long flags;
 	int ret;
 	u32 reg;
+<<<<<<< HEAD
 	u32 desired_dr_role;
 
 	mutex_lock(&dwc->mutex);
 	spin_lock_irqsave(&dwc->lock, flags);
 	desired_dr_role = dwc->desired_dr_role;
 	spin_unlock_irqrestore(&dwc->lock, flags);
+=======
+
+	mutex_lock(&dwc->mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pm_runtime_get_sync(dwc->dev);
 
 	if (dwc->current_dr_role == DWC3_GCTL_PRTCAP_OTG)
 		dwc3_otg_update(dwc, 0);
 
+<<<<<<< HEAD
 	if (!desired_dr_role)
 		goto out;
 
@@ -141,6 +147,15 @@ static void __dwc3_set_mode(struct work_struct *work)
 		goto out;
 
 	if (desired_dr_role == DWC3_GCTL_PRTCAP_OTG && dwc->edev)
+=======
+	if (!dwc->desired_dr_role)
+		goto out;
+
+	if (dwc->desired_dr_role == dwc->current_dr_role)
+		goto out;
+
+	if (dwc->desired_dr_role == DWC3_GCTL_PRTCAP_OTG && dwc->edev)
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	switch (dwc->current_dr_role) {
@@ -168,7 +183,11 @@ static void __dwc3_set_mode(struct work_struct *work)
 	 */
 	if (dwc->current_dr_role && ((DWC3_IP_IS(DWC3) ||
 			DWC3_VER_IS_PRIOR(DWC31, 190A)) &&
+<<<<<<< HEAD
 			desired_dr_role != DWC3_GCTL_PRTCAP_OTG)) {
+=======
+			dwc->desired_dr_role != DWC3_GCTL_PRTCAP_OTG)) {
+>>>>>>> b7ba80a49124 (Commit)
 		reg = dwc3_readl(dwc->regs, DWC3_GCTL);
 		reg |= DWC3_GCTL_CORESOFTRESET;
 		dwc3_writel(dwc->regs, DWC3_GCTL, reg);
@@ -188,11 +207,19 @@ static void __dwc3_set_mode(struct work_struct *work)
 
 	spin_lock_irqsave(&dwc->lock, flags);
 
+<<<<<<< HEAD
 	dwc3_set_prtcap(dwc, desired_dr_role);
 
 	spin_unlock_irqrestore(&dwc->lock, flags);
 
 	switch (desired_dr_role) {
+=======
+	dwc3_set_prtcap(dwc, dwc->desired_dr_role);
+
+	spin_unlock_irqrestore(&dwc->lock, flags);
+
+	switch (dwc->desired_dr_role) {
+>>>>>>> b7ba80a49124 (Commit)
 	case DWC3_GCTL_PRTCAP_HOST:
 		ret = dwc3_host_init(dwc);
 		if (ret) {
@@ -412,10 +439,13 @@ static void dwc3_ref_clk_period(struct dwc3 *dwc)
 	reg |= FIELD_PREP(DWC3_GFLADJ_REFCLK_FLADJ_MASK, fladj)
 	    |  FIELD_PREP(DWC3_GFLADJ_240MHZDECR, decr >> 1)
 	    |  FIELD_PREP(DWC3_GFLADJ_240MHZDECR_PLS1, decr & 1);
+<<<<<<< HEAD
 
 	if (dwc->gfladj_refclk_lpm_sel)
 		reg |=  DWC3_GFLADJ_REFCLK_LPM_SEL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dwc3_writel(dwc->regs, DWC3_GFLADJ, reg);
 }
 
@@ -797,6 +827,7 @@ static int dwc3_phy_setup(struct dwc3 *dwc)
 	else
 		reg |= DWC3_GUSB2PHYCFG_ENBLSLPM;
 
+<<<<<<< HEAD
 	if (dwc->dis_u2_freeclk_exists_quirk || dwc->gfladj_refclk_lpm_sel)
 		reg &= ~DWC3_GUSB2PHYCFG_U2_FREECLK_EXISTS;
 
@@ -810,6 +841,11 @@ static int dwc3_phy_setup(struct dwc3 *dwc)
 	if (dwc->ulpi_ext_vbus_drv)
 		reg |= DWC3_GUSB2PHYCFG_ULPIEXTVBUSDRV;
 
+=======
+	if (dwc->dis_u2_freeclk_exists_quirk)
+		reg &= ~DWC3_GUSB2PHYCFG_U2_FREECLK_EXISTS;
+
+>>>>>>> b7ba80a49124 (Commit)
 	dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
 
 	return 0;
@@ -1110,6 +1146,7 @@ static int dwc3_core_init(struct dwc3 *dwc)
 
 	if (!dwc->ulpi_ready) {
 		ret = dwc3_core_ulpi_init(dwc);
+<<<<<<< HEAD
 		if (ret) {
 			if (ret == -ETIMEDOUT) {
 				dwc3_core_soft_reset(dwc);
@@ -1117,6 +1154,10 @@ static int dwc3_core_init(struct dwc3 *dwc)
 			}
 			goto err0;
 		}
+=======
+		if (ret)
+			goto err0;
+>>>>>>> b7ba80a49124 (Commit)
 		dwc->ulpi_ready = true;
 	}
 
@@ -1203,6 +1244,7 @@ static int dwc3_core_init(struct dwc3 *dwc)
 		dwc3_writel(dwc->regs, DWC3_GUCTL2, reg);
 	}
 
+<<<<<<< HEAD
 	/*
 	 * When configured in HOST mode, after issuing U3/L2 exit controller
 	 * fails to send proper CRC checksum in CRC5 feild. Because of this
@@ -1218,6 +1260,8 @@ static int dwc3_core_init(struct dwc3 *dwc)
 		dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!DWC3_VER_IS_PRIOR(DWC3, 250A)) {
 		reg = dwc3_readl(dwc->regs, DWC3_GUCTL1);
 
@@ -1561,6 +1605,7 @@ static void dwc3_get_properties(struct dwc3 *dwc)
 				"snps,dis-del-phy-power-chg-quirk");
 	dwc->dis_tx_ipgap_linecheck_quirk = device_property_read_bool(dev,
 				"snps,dis-tx-ipgap-linecheck-quirk");
+<<<<<<< HEAD
 	dwc->resume_hs_terminations = device_property_read_bool(dev,
 				"snps,resume-hs-terminations");
 	dwc->ulpi_ext_vbus_drv = device_property_read_bool(dev,
@@ -1569,6 +1614,10 @@ static void dwc3_get_properties(struct dwc3 *dwc)
 				"snps,parkmode-disable-ss-quirk");
 	dwc->gfladj_refclk_lpm_sel = device_property_read_bool(dev,
 				"snps,gfladj-refclk-lpm-sel-quirk");
+=======
+	dwc->parkmode_disable_ss_quirk = device_property_read_bool(dev,
+				"snps,parkmode-disable-ss-quirk");
+>>>>>>> b7ba80a49124 (Commit)
 
 	dwc->tx_de_emphasis_quirk = device_property_read_bool(dev,
 				"snps,tx_de_emphasis_quirk");
@@ -1732,6 +1781,7 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
 		return extcon_get_extcon_dev(name);
 
 	/*
+<<<<<<< HEAD
 	 * Check explicitly if "usb-role-switch" is used since
 	 * extcon_find_edev_by_node() can not be used to check the absence of
 	 * an extcon device. In the absence of an device it will always return
@@ -1742,6 +1792,8 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
 		return NULL;
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * Try to get an extcon device from the USB PHY controller's "port"
 	 * node. Check if it has the "port" node first, to avoid printing the
 	 * error message from underlying code, as it's a valid case: extcon
@@ -1807,10 +1859,15 @@ static int dwc3_probe(struct platform_device *pdev)
 	dwc3_get_properties(dwc);
 
 	dwc->reset = devm_reset_control_array_get_optional_shared(dev);
+<<<<<<< HEAD
 	if (IS_ERR(dwc->reset)) {
 		ret = PTR_ERR(dwc->reset);
 		goto put_usb_psy;
 	}
+=======
+	if (IS_ERR(dwc->reset))
+		return PTR_ERR(dwc->reset);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dev->of_node) {
 		/*
@@ -1820,6 +1877,7 @@ static int dwc3_probe(struct platform_device *pdev)
 		 * check for them to retain backwards compatibility.
 		 */
 		dwc->bus_clk = devm_clk_get_optional(dev, "bus_early");
+<<<<<<< HEAD
 		if (IS_ERR(dwc->bus_clk)) {
 			ret = dev_err_probe(dev, PTR_ERR(dwc->bus_clk),
 					    "could not get bus clock\n");
@@ -1865,12 +1923,51 @@ static int dwc3_probe(struct platform_device *pdev)
 						    "could not get suspend clock\n");
 				goto put_usb_psy;
 			}
+=======
+		if (IS_ERR(dwc->bus_clk))
+			return dev_err_probe(dev, PTR_ERR(dwc->bus_clk),
+					     "could not get bus clock\n");
+
+		if (dwc->bus_clk == NULL) {
+			dwc->bus_clk = devm_clk_get_optional(dev, "bus_clk");
+			if (IS_ERR(dwc->bus_clk))
+				return dev_err_probe(dev, PTR_ERR(dwc->bus_clk),
+						     "could not get bus clock\n");
+		}
+
+		dwc->ref_clk = devm_clk_get_optional(dev, "ref");
+		if (IS_ERR(dwc->ref_clk))
+			return dev_err_probe(dev, PTR_ERR(dwc->ref_clk),
+					     "could not get ref clock\n");
+
+		if (dwc->ref_clk == NULL) {
+			dwc->ref_clk = devm_clk_get_optional(dev, "ref_clk");
+			if (IS_ERR(dwc->ref_clk))
+				return dev_err_probe(dev, PTR_ERR(dwc->ref_clk),
+						     "could not get ref clock\n");
+		}
+
+		dwc->susp_clk = devm_clk_get_optional(dev, "suspend");
+		if (IS_ERR(dwc->susp_clk))
+			return dev_err_probe(dev, PTR_ERR(dwc->susp_clk),
+					     "could not get suspend clock\n");
+
+		if (dwc->susp_clk == NULL) {
+			dwc->susp_clk = devm_clk_get_optional(dev, "suspend_clk");
+			if (IS_ERR(dwc->susp_clk))
+				return dev_err_probe(dev, PTR_ERR(dwc->susp_clk),
+						     "could not get suspend clock\n");
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
 	ret = reset_control_deassert(dwc->reset);
 	if (ret)
+<<<<<<< HEAD
 		goto put_usb_psy;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = dwc3_clk_enable(dwc);
 	if (ret)
@@ -1914,7 +2011,12 @@ static int dwc3_probe(struct platform_device *pdev)
 
 	dwc->edev = dwc3_get_extcon(dwc);
 	if (IS_ERR(dwc->edev)) {
+<<<<<<< HEAD
 		ret = dev_err_probe(dwc->dev, PTR_ERR(dwc->edev), "failed to get extcon\n");
+=======
+		ret = PTR_ERR(dwc->edev);
+		dev_err_probe(dwc->dev, ret, "failed to get extcon\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto err3;
 	}
 
@@ -1976,7 +2078,11 @@ disable_clks:
 	dwc3_clk_disable(dwc);
 assert_reset:
 	reset_control_assert(dwc->reset);
+<<<<<<< HEAD
 put_usb_psy:
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (dwc->usb_psy)
 		power_supply_put(dwc->usb_psy);
 

@@ -46,7 +46,13 @@
 #include "link_hwss.h"
 #include "dpcd_defs.h"
 #include "dce/dmub_outbox.h"
+<<<<<<< HEAD
 #include "link.h"
+=======
+#include "dc_link_dp.h"
+#include "inc/dc_link_dp.h"
+#include "inc/link_dpcd.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "dcn10/dcn10_hw_sequencer.h"
 #include "inc/link_enc_cfg.h"
 #include "dcn30/dcn30_vpg.h"
@@ -346,8 +352,15 @@ unsigned int dcn314_calculate_dccg_k1_k2_values(struct pipe_ctx *pipe_ctx, unsig
 	two_pix_per_container = optc2_is_two_pixels_per_containter(&stream->timing);
 	odm_combine_factor = get_odm_config(pipe_ctx, NULL);
 
+<<<<<<< HEAD
 	if (stream->ctx->dc->link_srv->dp_is_128b_132b_signal(pipe_ctx)) {
 		*k1_div = PIXEL_RATE_DIV_BY_1;
+=======
+	if (pipe_ctx->stream->signal == SIGNAL_TYPE_VIRTUAL)
+		return odm_combine_factor;
+
+	if (is_dp_128b_132b_signal(pipe_ctx)) {
+>>>>>>> b7ba80a49124 (Commit)
 		*k2_div = PIXEL_RATE_DIV_BY_1;
 	} else if (dc_is_hdmi_tmds_signal(pipe_ctx->stream->signal) || dc_is_dvi_signal(pipe_ctx->stream->signal)) {
 		*k1_div = PIXEL_RATE_DIV_BY_1;
@@ -355,7 +368,11 @@ unsigned int dcn314_calculate_dccg_k1_k2_values(struct pipe_ctx *pipe_ctx, unsig
 			*k2_div = PIXEL_RATE_DIV_BY_2;
 		else
 			*k2_div = PIXEL_RATE_DIV_BY_4;
+<<<<<<< HEAD
 	} else if (dc_is_dp_signal(pipe_ctx->stream->signal) || dc_is_virtual_signal(pipe_ctx->stream->signal)) {
+=======
+	} else if (dc_is_dp_signal(pipe_ctx->stream->signal)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (two_pix_per_container) {
 			*k1_div = PIXEL_RATE_DIV_BY_1;
 			*k2_div = PIXEL_RATE_DIV_BY_2;
@@ -389,6 +406,7 @@ void dcn314_set_pixels_per_cycle(struct pipe_ctx *pipe_ctx)
 		pipe_ctx->stream_res.stream_enc->funcs->set_input_mode(pipe_ctx->stream_res.stream_enc,
 				pix_per_cycle);
 }
+<<<<<<< HEAD
 
 void dcn314_hubp_pg_control(struct dce_hwseq *hws, unsigned int hubp_inst, bool power_on)
 {
@@ -413,3 +431,5 @@ void dcn314_hubp_pg_control(struct dce_hwseq *hws, unsigned int hubp_inst, bool 
 
 	PERF_TRACE();
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

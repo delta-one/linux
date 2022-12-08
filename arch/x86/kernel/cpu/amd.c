@@ -503,7 +503,11 @@ static void bsp_init_amd(struct cpuinfo_x86 *c)
 		va_align.flags    = ALIGN_VA_32 | ALIGN_VA_64;
 
 		/* A random value per boot for bit slice [12:upper_bit) */
+<<<<<<< HEAD
 		va_align.bits = get_random_u32() & va_align.mask;
+=======
+		va_align.bits = get_random_int() & va_align.mask;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (cpu_has(c, X86_FEATURE_MWAITX))
@@ -770,6 +774,11 @@ static void init_amd_gh(struct cpuinfo_x86 *c)
 		set_cpu_bug(c, X86_BUG_AMD_TLB_MMATCH);
 }
 
+<<<<<<< HEAD
+=======
+#define MSR_AMD64_DE_CFG	0xC0011029
+
+>>>>>>> b7ba80a49124 (Commit)
 static void init_amd_ln(struct cpuinfo_x86 *c)
 {
 	/*
@@ -880,6 +889,7 @@ void init_spectral_chicken(struct cpuinfo_x86 *c)
 		}
 	}
 #endif
+<<<<<<< HEAD
 	/*
 	 * Work around Erratum 1386.  The XSAVES instruction malfunctions in
 	 * certain circumstances on Zen1/2 uarch, and not all parts have had
@@ -889,6 +899,8 @@ void init_spectral_chicken(struct cpuinfo_x86 *c)
 	 * the XSAVEC instruction (which works fine) is equivalent.
 	 */
 	clear_cpu_cap(c, X86_FEATURE_XSAVES);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void init_amd_zn(struct cpuinfo_x86 *c)
@@ -965,15 +977,24 @@ static void init_amd(struct cpuinfo_x86 *c)
 
 	init_amd_cacheinfo(c);
 
+<<<<<<< HEAD
 	if (!cpu_has(c, X86_FEATURE_LFENCE_RDTSC) && cpu_has(c, X86_FEATURE_XMM2)) {
+=======
+	if (cpu_has(c, X86_FEATURE_XMM2)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Use LFENCE for execution serialization.  On families which
 		 * don't have that MSR, LFENCE is already serializing.
 		 * msr_set_bit() uses the safe accessors, too, even if the MSR
 		 * is not present.
 		 */
+<<<<<<< HEAD
 		msr_set_bit(MSR_AMD64_DE_CFG,
 			    MSR_AMD64_DE_CFG_LFENCE_SERIALIZE_BIT);
+=======
+		msr_set_bit(MSR_F10H_DECFG,
+			    MSR_F10H_DECFG_LFENCE_SERIALIZE_BIT);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* A serializing LFENCE stops RDTSC speculation */
 		set_cpu_cap(c, X86_FEATURE_LFENCE_RDTSC);
@@ -992,7 +1013,11 @@ static void init_amd(struct cpuinfo_x86 *c)
 			set_cpu_cap(c, X86_FEATURE_3DNOWPREFETCH);
 
 	/* AMD CPUs don't reset SS attributes on SYSRET, Xen does. */
+<<<<<<< HEAD
 	if (!cpu_feature_enabled(X86_FEATURE_XENPV))
+=======
+	if (!cpu_has(c, X86_FEATURE_XENPV))
+>>>>>>> b7ba80a49124 (Commit)
 		set_cpu_bug(c, X86_BUG_SYSRET_SS_ATTRS);
 
 	/*
@@ -1005,6 +1030,7 @@ static void init_amd(struct cpuinfo_x86 *c)
 		msr_set_bit(MSR_K7_HWCR, MSR_K7_HWCR_IRPERF_EN_BIT);
 
 	check_null_seg_clears_base(c);
+<<<<<<< HEAD
 
 	/*
 	 * Make sure EFER[AIBRSE - Automatic IBRS Enable] is set. The APs are brought up
@@ -1016,6 +1042,8 @@ static void init_amd(struct cpuinfo_x86 *c)
 	if (spectre_v2_in_eibrs_mode(spectre_v2_enabled) &&
 	    cpu_has(c, X86_FEATURE_AUTOIBRS))
 		WARN_ON_ONCE(msr_set_bit(MSR_EFER, _EFER_AUTOIBRS));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_X86_32
@@ -1178,6 +1206,7 @@ static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum)
 	return false;
 }
 
+<<<<<<< HEAD
 static DEFINE_PER_CPU_READ_MOSTLY(unsigned long[4], amd_dr_addr_mask);
 
 static unsigned int amd_msr_dr_addr_masks[] = {
@@ -1216,6 +1245,27 @@ unsigned long amd_get_dr_addr_mask(unsigned int dr)
 }
 EXPORT_SYMBOL_GPL(amd_get_dr_addr_mask);
 
+=======
+void set_dr_addr_mask(unsigned long mask, int dr)
+{
+	if (!boot_cpu_has(X86_FEATURE_BPEXT))
+		return;
+
+	switch (dr) {
+	case 0:
+		wrmsr(MSR_F16H_DR0_ADDR_MASK, mask, 0);
+		break;
+	case 1:
+	case 2:
+	case 3:
+		wrmsr(MSR_F16H_DR1_ADDR_MASK - 1 + dr, mask, 0);
+		break;
+	default:
+		break;
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 u32 amd_get_highest_perf(void)
 {
 	struct cpuinfo_x86 *c = &boot_cpu_data;

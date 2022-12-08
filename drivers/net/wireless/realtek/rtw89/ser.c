@@ -414,11 +414,16 @@ static void ser_idle_st_hdl(struct rtw89_ser *ser, u8 evt)
 
 static void ser_reset_trx_st_hdl(struct rtw89_ser *ser, u8 evt)
 {
+<<<<<<< HEAD
 	struct rtw89_dev *rtwdev = container_of(ser, struct rtw89_dev, ser);
 
 	switch (evt) {
 	case SER_EV_STATE_IN:
 		cancel_delayed_work_sync(&rtwdev->track_work);
+=======
+	switch (evt) {
+	case SER_EV_STATE_IN:
+>>>>>>> b7ba80a49124 (Commit)
 		drv_stop_tx(ser);
 
 		if (hal_stop_dma(ser)) {
@@ -449,8 +454,11 @@ static void ser_reset_trx_st_hdl(struct rtw89_ser *ser, u8 evt)
 		hal_enable_dma(ser);
 		drv_resume_rx(ser);
 		drv_resume_tx(ser);
+<<<<<<< HEAD
 		ieee80211_queue_delayed_work(rtwdev->hw, &rtwdev->track_work,
 					     RTW89_TRACK_WORK_PERIOD);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	default:
@@ -616,7 +624,10 @@ bottom:
 	ser_reset_mac_binding(rtwdev);
 	rtw89_core_stop(rtwdev);
 	rtw89_entity_init(rtwdev);
+<<<<<<< HEAD
 	rtw89_fw_release_general_pkt_list(rtwdev, false);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_LIST_HEAD(&rtwdev->rtwvifs_list);
 }
 

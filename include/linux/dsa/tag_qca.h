@@ -45,8 +45,13 @@ struct sk_buff;
 					QCA_HDR_MGMT_COMMAND_LEN + \
 					QCA_HDR_MGMT_DATA1_LEN)
 
+<<<<<<< HEAD
 #define QCA_HDR_MGMT_DATA2_LEN		28 /* Other 28 byte for the mdio data */
 #define QCA_HDR_MGMT_PADDING_LEN	18 /* Padding to reach the min Ethernet packet */
+=======
+#define QCA_HDR_MGMT_DATA2_LEN		12 /* Other 12 byte for the mdio data */
+#define QCA_HDR_MGMT_PADDING_LEN	34 /* Padding to reach the min Ethernet packet */
+>>>>>>> b7ba80a49124 (Commit)
 
 #define QCA_HDR_MGMT_PKT_LEN		(QCA_HDR_MGMT_HEADER_LEN + \
 					QCA_HDR_LEN + \
@@ -61,9 +66,15 @@ struct sk_buff;
 
 /* Special struct emulating a Ethernet header */
 struct qca_mgmt_ethhdr {
+<<<<<<< HEAD
 	__le32 command;		/* command bit 31:0 */
 	__le32 seq;		/* seq 63:32 */
 	__le32 mdio_data;		/* first 4byte mdio */
+=======
+	u32 command;		/* command bit 31:0 */
+	u32 seq;		/* seq 63:32 */
+	u32 mdio_data;		/* first 4byte mdio */
+>>>>>>> b7ba80a49124 (Commit)
 	__be16 hdr;		/* qca hdr */
 } __packed;
 
@@ -73,7 +84,11 @@ enum mdio_cmd {
 };
 
 struct mib_ethhdr {
+<<<<<<< HEAD
 	__le32 data[3];		/* first 3 mib counter */
+=======
+	u32 data[3];		/* first 3 mib counter */
+>>>>>>> b7ba80a49124 (Commit)
 	__be16 hdr;		/* qca hdr */
 } __packed;
 

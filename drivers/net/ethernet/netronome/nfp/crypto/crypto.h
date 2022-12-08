@@ -39,6 +39,7 @@ nfp_net_tls_rx_resync_req(struct net_device *netdev,
 }
 #endif
 
+<<<<<<< HEAD
 /* IPsec related structures and functions */
 struct nfp_ipsec_offload {
 	u32 seq_hi;
@@ -62,4 +63,6 @@ bool nfp_net_ipsec_tx_prep(struct nfp_net_dp *dp, struct sk_buff *skb,
 int nfp_net_ipsec_rx(struct nfp_meta_parsed *meta, struct sk_buff *skb);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

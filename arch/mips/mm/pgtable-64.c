@@ -13,7 +13,11 @@
 #include <asm/pgalloc.h>
 #include <asm/tlbflush.h>
 
+<<<<<<< HEAD
 void pgd_init(void *addr)
+=======
+void pgd_init(unsigned long page)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long *p, *end;
 	unsigned long entry;
@@ -26,7 +30,11 @@ void pgd_init(void *addr)
 	entry = (unsigned long)invalid_pte_table;
 #endif
 
+<<<<<<< HEAD
 	p = (unsigned long *) addr;
+=======
+	p = (unsigned long *) page;
+>>>>>>> b7ba80a49124 (Commit)
 	end = p + PTRS_PER_PGD;
 
 	do {
@@ -43,12 +51,20 @@ void pgd_init(void *addr)
 }
 
 #ifndef __PAGETABLE_PMD_FOLDED
+<<<<<<< HEAD
 void pmd_init(void *addr)
 {
 	unsigned long *p, *end;
 	unsigned long pagetable = (unsigned long)invalid_pte_table;
 
 	p = (unsigned long *)addr;
+=======
+void pmd_init(unsigned long addr, unsigned long pagetable)
+{
+	unsigned long *p, *end;
+
+	p = (unsigned long *) addr;
+>>>>>>> b7ba80a49124 (Commit)
 	end = p + PTRS_PER_PMD;
 
 	do {
@@ -67,10 +83,16 @@ EXPORT_SYMBOL_GPL(pmd_init);
 #endif
 
 #ifndef __PAGETABLE_PUD_FOLDED
+<<<<<<< HEAD
 void pud_init(void *addr)
 {
 	unsigned long *p, *end;
 	unsigned long pagetable = (unsigned long)invalid_pmd_table;
+=======
+void pud_init(unsigned long addr, unsigned long pagetable)
+{
+	unsigned long *p, *end;
+>>>>>>> b7ba80a49124 (Commit)
 
 	p = (unsigned long *)addr;
 	end = p + PTRS_PER_PUD;
@@ -110,12 +132,21 @@ void __init pagetable_init(void)
 	pgd_t *pgd_base;
 
 	/* Initialize the entire pgd.  */
+<<<<<<< HEAD
 	pgd_init(swapper_pg_dir);
 #ifndef __PAGETABLE_PUD_FOLDED
 	pud_init(invalid_pud_table);
 #endif
 #ifndef __PAGETABLE_PMD_FOLDED
 	pmd_init(invalid_pmd_table);
+=======
+	pgd_init((unsigned long)swapper_pg_dir);
+#ifndef __PAGETABLE_PUD_FOLDED
+	pud_init((unsigned long)invalid_pud_table, (unsigned long)invalid_pmd_table);
+#endif
+#ifndef __PAGETABLE_PMD_FOLDED
+	pmd_init((unsigned long)invalid_pmd_table, (unsigned long)invalid_pte_table);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	pgd_base = swapper_pg_dir;
 	/*

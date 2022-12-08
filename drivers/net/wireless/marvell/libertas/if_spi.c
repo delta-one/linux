@@ -1051,7 +1051,11 @@ static int if_spi_init_card(struct if_spi_card *card)
 				"spi->max_speed_hz=%d\n",
 				card->card_id, card->card_rev,
 				card->spi->master->bus_num,
+<<<<<<< HEAD
 				spi_get_chipselect(card->spi, 0),
+=======
+				card->spi->chip_select,
+>>>>>>> b7ba80a49124 (Commit)
 				card->spi->max_speed_hz);
 		err = if_spi_prog_helper_firmware(card, helper);
 		if (err)

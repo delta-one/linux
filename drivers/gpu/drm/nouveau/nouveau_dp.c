@@ -29,7 +29,12 @@
 #include "nouveau_encoder.h"
 #include "nouveau_crtc.h"
 
+<<<<<<< HEAD
 #include <nvif/if0011.h>
+=======
+#include <nvif/class.h>
+#include <nvif/cl5070.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_PARM_DESC(mst, "Enable DisplayPort multi-stream (default: enabled)");
 static int nouveau_mst = 1;
@@ -139,6 +144,7 @@ nouveau_dp_detect(struct nouveau_connector *nv_connector,
 	 * TODO: look into checking this before probing I2C to detect DVI/HDMI
 	 */
 	hpd = nvif_conn_hpd_status(&nv_connector->conn);
+<<<<<<< HEAD
 	if (hpd == NVIF_CONN_HPD_STATUS_NOT_PRESENT) {
 		nvif_outp_dp_aux_pwr(&nv_encoder->outp, false);
 		goto out;
@@ -150,6 +156,14 @@ nouveau_dp_detect(struct nouveau_connector *nv_connector,
 		nvif_outp_dp_aux_pwr(&nv_encoder->outp, false);
 		goto out;
 	}
+=======
+	if (hpd == NVIF_CONN_HPD_STATUS_NOT_PRESENT)
+		goto out;
+
+	status = nouveau_dp_probe_dpcd(nv_connector, nv_encoder);
+	if (status == connector_status_disconnected)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* If we're in MST mode, we're done here */
 	if (mstm && mstm->can_mst && mstm->is_mst) {
@@ -197,7 +211,10 @@ nouveau_dp_detect(struct nouveau_connector *nv_connector,
 			ret = NOUVEAU_DP_MST;
 			goto out;
 		} else if (ret != 0) {
+<<<<<<< HEAD
 			nvif_outp_dp_aux_pwr(&nv_encoder->outp, false);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 		}
 	}
@@ -211,6 +228,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 bool
 nouveau_dp_link_check(struct nouveau_connector *nv_connector)
 {
@@ -233,6 +251,16 @@ nouveau_dp_irq(struct work_struct *work)
 	struct nv50_mstm *mstm;
 	u64 hpd = 0;
 	int ret;
+=======
+void nouveau_dp_irq(struct nouveau_drm *drm,
+		    struct nouveau_connector *nv_connector)
+{
+	struct drm_connector *connector = &nv_connector->base;
+	struct nouveau_encoder *outp = find_encoder(connector, DCB_OUTPUT_DP);
+	struct nv50_mstm *mstm;
+	int ret;
+	bool send_hpd = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!outp)
 		return;
@@ -244,14 +272,22 @@ nouveau_dp_irq(struct work_struct *work)
 
 	if (mstm && mstm->is_mst) {
 		if (!nv50_mstm_service(drm, nv_connector, mstm))
+<<<<<<< HEAD
 			hpd |= NVIF_CONN_EVENT_V0_UNPLUG;
+=======
+			send_hpd = true;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		drm_dp_cec_irq(&nv_connector->aux);
 
 		if (nouveau_dp_has_sink_count(connector, outp)) {
 			ret = drm_dp_read_sink_count(&nv_connector->aux);
 			if (ret != outp->dp.sink_count)
+<<<<<<< HEAD
 				hpd |= NVIF_CONN_EVENT_V0_PLUG;
+=======
+				send_hpd = true;
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret >= 0)
 				outp->dp.sink_count = ret;
 		}
@@ -259,7 +295,12 @@ nouveau_dp_irq(struct work_struct *work)
 
 	mutex_unlock(&outp->dp.hpd_irq_lock);
 
+<<<<<<< HEAD
 	nouveau_connector_hpd(nv_connector, NVIF_CONN_EVENT_V0_IRQ | hpd);
+=======
+	if (send_hpd)
+		nouveau_connector_hpd(connector);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* TODO:

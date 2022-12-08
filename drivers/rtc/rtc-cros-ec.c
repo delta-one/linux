@@ -14,8 +14,11 @@
 
 #define DRV_NAME	"cros-ec-rtc"
 
+<<<<<<< HEAD
 #define SECS_PER_DAY	(24 * 60 * 60)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct cros_ec_rtc - Driver data for EC RTC
  *
@@ -45,8 +48,18 @@ static int cros_ec_rtc_get(struct cros_ec_device *cros_ec, u32 command,
 	msg.msg.insize = sizeof(msg.data);
 
 	ret = cros_ec_cmd_xfer_status(cros_ec, &msg.msg);
+<<<<<<< HEAD
 	if (ret < 0)
 		return ret;
+=======
+	if (ret < 0) {
+		dev_err(cros_ec->dev,
+			"error getting %s from EC: %d\n",
+			command == EC_CMD_RTC_GET_VALUE ? "time" : "alarm",
+			ret);
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	*response = msg.data.time;
 
@@ -56,7 +69,11 @@ static int cros_ec_rtc_get(struct cros_ec_device *cros_ec, u32 command,
 static int cros_ec_rtc_set(struct cros_ec_device *cros_ec, u32 command,
 			   u32 param)
 {
+<<<<<<< HEAD
 	int ret;
+=======
+	int ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct {
 		struct cros_ec_command msg;
 		struct ec_response_rtc data;
@@ -68,8 +85,18 @@ static int cros_ec_rtc_set(struct cros_ec_device *cros_ec, u32 command,
 	msg.data.time = param;
 
 	ret = cros_ec_cmd_xfer_status(cros_ec, &msg.msg);
+<<<<<<< HEAD
 	if (ret < 0)
 		return ret;
+=======
+	if (ret < 0) {
+		dev_err(cros_ec->dev, "error setting %s on EC: %d\n",
+			command == EC_CMD_RTC_SET_VALUE ? "time" : "alarm",
+			ret);
+		return ret;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -182,6 +209,7 @@ static int cros_ec_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
 
 	ret = cros_ec_rtc_set(cros_ec, EC_CMD_RTC_SET_ALARM, alarm_offset);
 	if (ret < 0) {
+<<<<<<< HEAD
 		if (ret == -EINVAL && alarm_offset >= SECS_PER_DAY) {
 			/*
 			 * RTC chips on some older Chromebooks can only handle
@@ -197,6 +225,10 @@ static int cros_ec_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
 				alarm_offset, ret);
 			return ret;
 		}
+=======
+		dev_err(dev, "error setting alarm: %d\n", ret);
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -371,7 +403,11 @@ static int cros_ec_rtc_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void cros_ec_rtc_remove(struct platform_device *pdev)
+=======
+static int cros_ec_rtc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cros_ec_rtc *cros_ec_rtc = platform_get_drvdata(pdev);
 	struct device *dev = &pdev->dev;
@@ -382,11 +418,20 @@ static void cros_ec_rtc_remove(struct platform_device *pdev)
 				&cros_ec_rtc->notifier);
 	if (ret)
 		dev_err(dev, "failed to unregister notifier\n");
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver cros_ec_rtc_driver = {
 	.probe = cros_ec_rtc_probe,
+<<<<<<< HEAD
 	.remove_new = cros_ec_rtc_remove,
+=======
+	.remove = cros_ec_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = DRV_NAME,
 		.pm = &cros_ec_rtc_pm_ops,

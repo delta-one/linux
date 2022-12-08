@@ -41,7 +41,10 @@ enum stat_item {
 	CPU_PARTIAL_DRAIN,	/* Drain cpu partial to node partial */
 	NR_SLUB_STAT_ITEMS };
 
+<<<<<<< HEAD
 #ifndef CONFIG_SLUB_TINY
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * When changing the layout, make sure freelist and tid are still compatible
  * with this_cpu_cmpxchg_double() alignment requirements.
@@ -58,7 +61,10 @@ struct kmem_cache_cpu {
 	unsigned stat[NR_SLUB_STAT_ITEMS];
 #endif
 };
+<<<<<<< HEAD
 #endif /* CONFIG_SLUB_TINY */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_SLUB_CPU_PARTIAL
 #define slub_percpu_partial(c)		((c)->partial)
@@ -90,9 +96,13 @@ struct kmem_cache_order_objects {
  * Slab cache management.
  */
 struct kmem_cache {
+<<<<<<< HEAD
 #ifndef CONFIG_SLUB_TINY
 	struct kmem_cache_cpu __percpu *cpu_slab;
 #endif
+=======
+	struct kmem_cache_cpu __percpu *cpu_slab;
+>>>>>>> b7ba80a49124 (Commit)
 	/* Used for retrieving partial slabs, etc. */
 	slab_flags_t flags;
 	unsigned long min_partial;
@@ -136,6 +146,7 @@ struct kmem_cache {
 	unsigned int *random_seq;
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_KASAN_GENERIC
 	struct kasan_cache kasan_info;
 #endif
@@ -144,11 +155,23 @@ struct kmem_cache {
 	unsigned int useroffset;	/* Usercopy region offset */
 	unsigned int usersize;		/* Usercopy region size */
 #endif
+=======
+#ifdef CONFIG_KASAN
+	struct kasan_cache kasan_info;
+#endif
+
+	unsigned int useroffset;	/* Usercopy region offset */
+	unsigned int usersize;		/* Usercopy region size */
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct kmem_cache_node *node[MAX_NUMNODES];
 };
 
+<<<<<<< HEAD
 #if defined(CONFIG_SYSFS) && !defined(CONFIG_SLUB_TINY)
+=======
+#ifdef CONFIG_SYSFS
+>>>>>>> b7ba80a49124 (Commit)
 #define SLAB_SUPPORTS_SYSFS
 void sysfs_slab_unlink(struct kmem_cache *);
 void sysfs_slab_release(struct kmem_cache *);

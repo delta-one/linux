@@ -11,6 +11,10 @@ struct evsel;
 
 struct perf_counts {
 	s8			  scaled;
+<<<<<<< HEAD
+=======
+	struct perf_counts_values aggr;
+>>>>>>> b7ba80a49124 (Commit)
 	struct xyarray		  *values;
 	struct xyarray		  *loaded;
 };

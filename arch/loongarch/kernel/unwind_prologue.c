@@ -2,6 +2,7 @@
 /*
  * Copyright (C) 2022 Loongson Technology Corporation Limited
  */
+<<<<<<< HEAD
 #include <linux/cpumask.h>
 #include <linux/ftrace.h>
 #include <linux/kallsyms.h>
@@ -115,10 +116,56 @@ static bool unwind_by_prologue(struct unwind_state *state)
 	struct pt_regs *regs;
 	struct stack_info *info = &state->stack_info;
 	union loongarch_instruction *ip, *ip_end;
+=======
+#include <linux/kallsyms.h>
+
+#include <asm/inst.h>
+#include <asm/ptrace.h>
+#include <asm/unwind.h>
+
+unsigned long unwind_get_return_address(struct unwind_state *state)
+{
+
+	if (unwind_done(state))
+		return 0;
+	else if (state->type)
+		return state->pc;
+	else if (state->first)
+		return state->pc;
+
+	return *(unsigned long *)(state->sp);
+
+}
+EXPORT_SYMBOL_GPL(unwind_get_return_address);
+
+static bool unwind_by_guess(struct unwind_state *state)
+{
+	struct stack_info *info = &state->stack_info;
+	unsigned long addr;
+
+	for (state->sp += sizeof(unsigned long);
+	     state->sp < info->end;
+	     state->sp += sizeof(unsigned long)) {
+		addr = *(unsigned long *)(state->sp);
+		if (__kernel_text_address(addr))
+			return true;
+	}
+
+	return false;
+}
+
+static bool unwind_by_prologue(struct unwind_state *state)
+{
+	struct stack_info *info = &state->stack_info;
+	union loongarch_instruction *ip, *ip_end;
+	unsigned long frame_size = 0, frame_ra = -1;
+	unsigned long size, offset, pc = state->pc;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (state->sp >= info->end || state->sp < info->begin)
 		return false;
 
+<<<<<<< HEAD
 	if (state->reset) {
 		regs = (struct pt_regs *)state->sp;
 		state->first = true;
@@ -134,6 +181,8 @@ static bool unwind_by_prologue(struct unwind_state *state)
 	 * We need to adjust its value in case overflow to the next symbol.
 	 */
 	pc = state->pc - (state->first ? 0 : LOONGARCH_INSN_SIZE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!kallsyms_lookup_size_offset(pc, &size, &offset))
 		return false;
 
@@ -149,10 +198,13 @@ static bool unwind_by_prologue(struct unwind_state *state)
 		ip++;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Can't find stack alloc action, PC may be in a leaf function. Only the
 	 * first being true is reasonable, otherwise indicate analysis is broken.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!frame_size) {
 		if (state->first)
 			goto first;
@@ -170,7 +222,10 @@ static bool unwind_by_prologue(struct unwind_state *state)
 		ip++;
 	}
 
+<<<<<<< HEAD
 	/* Can't find save $ra action, PC may be in a leaf function, too. */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (frame_ra < 0) {
 		if (state->first) {
 			state->sp = state->sp + frame_size;
@@ -179,6 +234,7 @@ static bool unwind_by_prologue(struct unwind_state *state)
 		return false;
 	}
 
+<<<<<<< HEAD
 	state->pc = *(unsigned long *)(state->sp + frame_ra);
 	state->sp = state->sp + frame_size;
 	goto out;
@@ -196,11 +252,58 @@ static bool next_frame(struct unwind_state *state)
 	unsigned long pc;
 	struct pt_regs *regs;
 	struct stack_info *info = &state->stack_info;
+=======
+	if (state->first)
+		state->first = false;
+
+	state->pc = *(unsigned long *)(state->sp + frame_ra);
+	state->sp = state->sp + frame_size;
+	return !!__kernel_text_address(state->pc);
+
+first:
+	state->first = false;
+	if (state->pc == state->ra)
+		return false;
+
+	state->pc = state->ra;
+
+	return !!__kernel_text_address(state->ra);
+}
+
+void unwind_start(struct unwind_state *state, struct task_struct *task,
+		    struct pt_regs *regs)
+{
+	memset(state, 0, sizeof(*state));
+
+	if (regs &&  __kernel_text_address(regs->csr_era)) {
+		state->pc = regs->csr_era;
+		state->sp = regs->regs[3];
+		state->ra = regs->regs[1];
+		state->type = UNWINDER_PROLOGUE;
+	}
+
+	state->task = task;
+	state->first = true;
+
+	get_stack_info(state->sp, state->task, &state->stack_info);
+
+	if (!unwind_done(state) && !__kernel_text_address(state->pc))
+		unwind_next_frame(state);
+}
+EXPORT_SYMBOL_GPL(unwind_start);
+
+bool unwind_next_frame(struct unwind_state *state)
+{
+	struct stack_info *info = &state->stack_info;
+	struct pt_regs *regs;
+	unsigned long pc;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unwind_done(state))
 		return false;
 
 	do {
+<<<<<<< HEAD
 		if (unwind_by_prologue(state)) {
 			state->pc = unwind_graph_addr(state, state->pc, state->sp);
 			return true;
@@ -220,6 +323,35 @@ static bool next_frame(struct unwind_state *state)
 			get_stack_info(state->sp, state->task, info);
 
 			return true;
+=======
+		switch (state->type) {
+		case UNWINDER_GUESS:
+			state->first = false;
+			if (unwind_by_guess(state))
+				return true;
+			break;
+
+		case UNWINDER_PROLOGUE:
+			if (unwind_by_prologue(state))
+				return true;
+
+			if (info->type == STACK_TYPE_IRQ &&
+				info->end == state->sp) {
+				regs = (struct pt_regs *)info->next_sp;
+				pc = regs->csr_era;
+
+				if (user_mode(regs) || !__kernel_text_address(pc))
+					return false;
+
+				state->pc = pc;
+				state->sp = regs->regs[3];
+				state->ra = regs->regs[1];
+				state->first = true;
+				get_stack_info(state->sp, state->task, info);
+
+				return true;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		state->sp = info->next_sp;
@@ -228,6 +360,7 @@ static bool next_frame(struct unwind_state *state)
 
 	return false;
 }
+<<<<<<< HEAD
 
 unsigned long unwind_get_return_address(struct unwind_state *state)
 {
@@ -260,4 +393,6 @@ bool unwind_next_frame(struct unwind_state *state)
 	return state->type == UNWINDER_PROLOGUE ?
 			next_frame(state) : default_next_frame(state);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL_GPL(unwind_next_frame);

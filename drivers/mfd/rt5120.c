@@ -59,8 +59,14 @@ static const struct regmap_irq rt5120_irqs[] = {
 static const struct regmap_irq_chip rt5120_irq_chip = {
 	.name = "rt5120-pmic",
 	.status_base = RT5120_REG_INTSTAT,
+<<<<<<< HEAD
 	.unmask_base = RT5120_REG_INTENABLE,
 	.ack_base = RT5120_REG_INTSTAT,
+=======
+	.mask_base = RT5120_REG_INTENABLE,
+	.ack_base = RT5120_REG_INTSTAT,
+	.mask_invert = true,
+>>>>>>> b7ba80a49124 (Commit)
 	.use_ack = true,
 	.num_regs = 1,
 	.irqs = rt5120_irqs,

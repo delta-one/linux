@@ -9,8 +9,14 @@ title: Qualcomm Technologies, Inc. MSM8953 TLMM block
 maintainers:
   - Bjorn Andersson <bjorn.andersson@linaro.org>
 
+<<<<<<< HEAD
 description:
   Top Level Mode Multiplexer pin controller in Qualcomm MSM8953 SoC.
+=======
+description: |
+  This binding describes the Top Level Mode Multiplexer block found in the
+  MSM8953 platform.
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -20,6 +26,7 @@ properties:
     maxItems: 1
 
   interrupts:
+<<<<<<< HEAD
     maxItems: 1
 
   interrupt-controller: true
@@ -40,11 +47,43 @@ patternProperties:
 
 $defs:
   qcom-msm8953-tlmm-state:
+=======
+    description: Specifies the TLMM summary IRQ
+    maxItems: 1
+
+  interrupt-controller: true
+
+  '#interrupt-cells':
+    description:
+      Specifies the PIN numbers and Flags, as defined in defined in
+      include/dt-bindings/interrupt-controller/irq.h
+    const: 2
+
+  gpio-controller: true
+
+  gpio-reserved-ranges: true
+
+  '#gpio-cells':
+    description: Specifying the pin number and flags, as defined in
+      include/dt-bindings/gpio/gpio.h
+    const: 2
+
+  gpio-ranges:
+    maxItems: 1
+
+#PIN CONFIGURATION NODES
+patternProperties:
+  '-pins$':
+>>>>>>> b7ba80a49124 (Commit)
     type: object
     description:
       Pinctrl node's client devices use subnodes for desired pin configuration.
       Client device subnodes use below standard properties.
+<<<<<<< HEAD
     $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
+=======
+    $ref: "/schemas/pinctrl/pincfg-node.yaml"
+>>>>>>> b7ba80a49124 (Commit)
 
     properties:
       pins:
@@ -53,7 +92,11 @@ $defs:
           subnode.
         items:
           oneOf:
+<<<<<<< HEAD
             - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-3][0-9]|14[01])$"
+=======
+            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-7][0-9])$"
+>>>>>>> b7ba80a49124 (Commit)
             - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc1_rclk, sdc2_clk,
                       sdc2_cmd, sdc2_data, qdsd_clk, qdsd_cmd, qdsd_data0,
                       qdsd_data1, qdsd_data2, qdsd_data3 ]
@@ -106,29 +149,64 @@ $defs:
                 uim_batt, us_emitter, us_euro, wcss_bt, wcss_fm, wcss_wlan,
                 wcss_wlan0, wcss_wlan1, wcss_wlan2, wsa_en, wsa_io, wsa_irq ]
 
+<<<<<<< HEAD
       bias-pull-down: true
       bias-pull-up: true
       bias-disable: true
       drive-strength: true
       output-high: true
+=======
+      drive-strength:
+        enum: [2, 4, 6, 8, 10, 12, 14, 16]
+        default: 2
+        description:
+          Selects the drive strength for the specified pins, in mA.
+
+      bias-pull-down: true
+
+      bias-pull-up: true
+
+      bias-disable: true
+
+      output-high: true
+
+>>>>>>> b7ba80a49124 (Commit)
       output-low: true
 
     required:
       - pins
+<<<<<<< HEAD
+=======
+      - function
+>>>>>>> b7ba80a49124 (Commit)
 
     additionalProperties: false
 
 allOf:
+<<<<<<< HEAD
   - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
+=======
+  - $ref: "pinctrl.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible
   - reg
+<<<<<<< HEAD
+=======
+  - interrupts
+  - interrupt-controller
+  - '#interrupt-cells'
+  - gpio-controller
+  - '#gpio-cells'
+  - gpio-ranges
+>>>>>>> b7ba80a49124 (Commit)
 
 additionalProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     #include <dt-bindings/interrupt-controller/arm-gic.h>
     tlmm: pinctrl@1000000 {
         compatible = "qcom,msm8953-pinctrl";
@@ -147,3 +225,23 @@ examples:
             bias-disable;
         };
     };
+=======
+        #include <dt-bindings/interrupt-controller/arm-gic.h>
+        tlmm: pinctrl@1000000 {
+              compatible = "qcom,msm8953-pinctrl";
+              reg = <0x01000000 0x300000>;
+              interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+              interrupt-controller;
+              #interrupt-cells = <2>;
+              gpio-controller;
+              #gpio-cells = <2>;
+              gpio-ranges = <&tlmm 0 0 142>;
+
+              serial_default: serial-pins {
+                    pins = "gpio4", "gpio5";
+                    function = "blsp_uart2";
+                    drive-strength = <2>;
+                    bias-disable;
+              };
+        };
+>>>>>>> b7ba80a49124 (Commit)

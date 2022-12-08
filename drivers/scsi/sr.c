@@ -170,6 +170,7 @@ static unsigned int sr_get_events(struct scsi_device *sdev)
 	struct event_header *eh = (void *)buf;
 	struct media_event_desc *med = (void *)(buf + 4);
 	struct scsi_sense_hdr sshdr;
+<<<<<<< HEAD
 	const struct scsi_exec_args exec_args = {
 		.sshdr = &sshdr,
 	};
@@ -177,6 +178,12 @@ static unsigned int sr_get_events(struct scsi_device *sdev)
 
 	result = scsi_execute_cmd(sdev, cmd, REQ_OP_DRV_IN, buf, sizeof(buf),
 				  SR_TIMEOUT, MAX_RETRIES, &exec_args);
+=======
+	int result;
+
+	result = scsi_execute_req(sdev, cmd, DMA_FROM_DEVICE, buf, sizeof(buf),
+				  &sshdr, SR_TIMEOUT, MAX_RETRIES, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (scsi_sense_valid(&sshdr) && sshdr.sense_key == UNIT_ATTENTION)
 		return DISK_EVENT_MEDIA_CHANGE;
 
@@ -733,8 +740,13 @@ static void get_sectorsize(struct scsi_cd *cd)
 		memset(buffer, 0, sizeof(buffer));
 
 		/* Do the command and wait.. */
+<<<<<<< HEAD
 		the_result = scsi_execute_cmd(cd->device, cmd, REQ_OP_DRV_IN,
 					      buffer, sizeof(buffer),
+=======
+		the_result = scsi_execute_req(cd->device, cmd, DMA_FROM_DEVICE,
+					      buffer, sizeof(buffer), NULL,
+>>>>>>> b7ba80a49124 (Commit)
 					      SR_TIMEOUT, MAX_RETRIES, NULL);
 
 		retries--;

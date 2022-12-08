@@ -321,11 +321,14 @@ static const struct config_entry config_table[] = {
 		}
 	},
 	{
+<<<<<<< HEAD
 		.flags = FLAG_SOF,
 		.device = 0x34c8,
 		.codec_hid =  &essx_83x6,
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
 		.device = 0x34c8,
 	},
@@ -472,6 +475,7 @@ static const struct config_entry config_table[] = {
 	},
 #endif
 
+<<<<<<< HEAD
 /* Meteor Lake */
 #if IS_ENABLED(CONFIG_SND_SOC_SOF_METEORLAKE)
 	/* Meteorlake-P */
@@ -481,6 +485,8 @@ static const struct config_entry config_table[] = {
 	},
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct config_entry *snd_intel_dsp_find_config

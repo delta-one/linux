@@ -317,8 +317,13 @@ static int tlmi_get_pwd_settings(struct tlmi_pwdcfg *pwdcfg)
 		return -EIO;
 	}
 
+<<<<<<< HEAD
 	copy_size = min_t(size_t, obj->buffer.length, sizeof(struct tlmi_pwdcfg));
 
+=======
+	copy_size = obj->buffer.length < sizeof(struct tlmi_pwdcfg) ?
+		obj->buffer.length : sizeof(struct tlmi_pwdcfg);
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(pwdcfg, obj->buffer.pointer, copy_size);
 	kfree(obj);
 
@@ -941,6 +946,7 @@ static ssize_t possible_values_show(struct kobject *kobj, struct kobj_attribute 
 {
 	struct tlmi_attr_setting *setting = to_tlmi_attr_setting(kobj);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", setting->possible_values);
 }
 
@@ -958,6 +964,14 @@ static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
 	return sysfs_emit(buf, "string\n");
 }
 
+=======
+	if (!tlmi_priv.can_get_bios_selections)
+		return -EOPNOTSUPP;
+
+	return sysfs_emit(buf, "%s\n", setting->possible_values);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t current_value_store(struct kobject *kobj,
 		struct kobj_attribute *attr,
 		const char *buf, size_t count)
@@ -1047,6 +1061,7 @@ static struct kobj_attribute attr_possible_values = __ATTR_RO(possible_values);
 
 static struct kobj_attribute attr_current_val = __ATTR_RW_MODE(current_value, 0600);
 
+<<<<<<< HEAD
 static struct kobj_attribute attr_type = __ATTR_RO(type);
 
 static umode_t attr_is_visible(struct kobject *kobj,
@@ -1061,19 +1076,57 @@ static umode_t attr_is_visible(struct kobject *kobj,
 	return attr->mode;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct attribute *tlmi_attrs[] = {
 	&attr_displ_name.attr,
 	&attr_current_val.attr,
 	&attr_possible_values.attr,
+<<<<<<< HEAD
 	&attr_type.attr,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	NULL
 };
 
 static const struct attribute_group tlmi_attr_group = {
+<<<<<<< HEAD
 	.is_visible = attr_is_visible,
 	.attrs = tlmi_attrs,
 };
 
+=======
+	.attrs = tlmi_attrs,
+};
+
+static ssize_t tlmi_attr_show(struct kobject *kobj, struct attribute *attr,
+				    char *buf)
+{
+	struct kobj_attribute *kattr;
+
+	kattr = container_of(attr, struct kobj_attribute, attr);
+	if (kattr->show)
+		return kattr->show(kobj, kattr, buf);
+	return -EIO;
+}
+
+static ssize_t tlmi_attr_store(struct kobject *kobj, struct attribute *attr,
+				     const char *buf, size_t count)
+{
+	struct kobj_attribute *kattr;
+
+	kattr = container_of(attr, struct kobj_attribute, attr);
+	if (kattr->store)
+		return kattr->store(kobj, kattr, buf, count);
+	return -EIO;
+}
+
+static const struct sysfs_ops tlmi_kobj_sysfs_ops = {
+	.show	= tlmi_attr_show,
+	.store	= tlmi_attr_store,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static void tlmi_attr_setting_release(struct kobject *kobj)
 {
 	struct tlmi_attr_setting *setting = to_tlmi_attr_setting(kobj);
@@ -1089,6 +1142,7 @@ static void tlmi_pwd_setting_release(struct kobject *kobj)
 	kfree(setting);
 }
 
+<<<<<<< HEAD
 static const struct kobj_type tlmi_attr_setting_ktype = {
 	.release        = &tlmi_attr_setting_release,
 	.sysfs_ops	= &kobj_sysfs_ops,
@@ -1097,6 +1151,16 @@ static const struct kobj_type tlmi_attr_setting_ktype = {
 static const struct kobj_type tlmi_pwd_setting_ktype = {
 	.release        = &tlmi_pwd_setting_release,
 	.sysfs_ops	= &kobj_sysfs_ops,
+=======
+static struct kobj_type tlmi_attr_setting_ktype = {
+	.release        = &tlmi_attr_setting_release,
+	.sysfs_ops	= &tlmi_kobj_sysfs_ops,
+};
+
+static struct kobj_type tlmi_pwd_setting_ktype = {
+	.release        = &tlmi_pwd_setting_release,
+	.sysfs_ops	= &tlmi_kobj_sysfs_ops,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *attr,
@@ -1353,6 +1417,10 @@ static struct tlmi_pwd_setting *tlmi_create_auth(const char *pwd_type,
 
 static int tlmi_analyze(void)
 {
+<<<<<<< HEAD
+=======
+	acpi_status status;
+>>>>>>> b7ba80a49124 (Commit)
 	int i, ret;
 
 	if (wmi_has_guid(LENOVO_SET_BIOS_SETTINGS_GUID) &&
@@ -1389,8 +1457,13 @@ static int tlmi_analyze(void)
 		char *p;
 
 		tlmi_priv.setting[i] = NULL;
+<<<<<<< HEAD
 		ret = tlmi_setting(i, &item, LENOVO_BIOS_SETTING_GUID);
 		if (ret)
+=======
+		status = tlmi_setting(i, &item, LENOVO_BIOS_SETTING_GUID);
+		if (ACPI_FAILURE(status))
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		if (!item)
 			break;
@@ -1422,6 +1495,7 @@ static int tlmi_analyze(void)
 			if (ret || !setting->possible_values)
 				pr_info("Error retrieving possible values for %d : %s\n",
 						i, setting->display_name);
+<<<<<<< HEAD
 		} else {
 			/*
 			 * Older Thinkstations don't support the bios_selections API.
@@ -1450,6 +1524,9 @@ static int tlmi_analyze(void)
 		if (setting->possible_values)
 			strreplace(setting->possible_values, ',', ';');
 
+=======
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		kobject_init(&setting->kobj, &tlmi_attr_setting_ktype);
 		tlmi_priv.setting[i] = setting;
 		kfree(item);

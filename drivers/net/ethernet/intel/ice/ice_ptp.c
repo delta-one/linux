@@ -600,6 +600,7 @@ static u64 ice_ptp_extend_40b_ts(struct ice_pf *pf, u64 in_tstamp)
 }
 
 /**
+<<<<<<< HEAD
  * ice_ptp_is_tx_tracker_up - Check if Tx tracker is ready for new timestamps
  * @tx: the PTP Tx timestamp tracker to check
  *
@@ -617,6 +618,8 @@ ice_ptp_is_tx_tracker_up(struct ice_ptp_tx *tx)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ice_ptp_tx_tstamp - Process Tx timestamps for a port
  * @tx: the PTP Tx timestamp tracker
  *
@@ -625,6 +628,7 @@ ice_ptp_is_tx_tracker_up(struct ice_ptp_tx *tx)
  *
  * If a given index has a valid timestamp, perform the following steps:
  *
+<<<<<<< HEAD
  * 1) check that the timestamp request is not stale
  * 2) check that a timestamp is ready and available in the PHY memory bank
  * 3) read and copy the timestamp out of the PHY register
@@ -672,10 +676,37 @@ ice_ptp_is_tx_tracker_up(struct ice_ptp_tx *tx)
  * we detect a Tx timestamp request that has waited for this long we assume
  * the packet will never be sent by hardware and discard it without reading
  * the timestamp register.
+=======
+ * 1) copy the timestamp out of the PHY register
+ * 4) clear the timestamp valid bit in the PHY register
+ * 5) unlock the index by clearing the associated in_use bit.
+ * 2) extend the 40b timestamp value to get a 64bit timestamp
+ * 3) send that timestamp to the stack
+ *
+ * After looping, if we still have waiting SKBs, return true. This may cause us
+ * effectively poll even when not strictly necessary. We do this because it's
+ * possible a new timestamp was requested around the same time as the interrupt.
+ * In some cases hardware might not interrupt us again when the timestamp is
+ * captured.
+ *
+ * Note that we only take the tracking lock when clearing the bit and when
+ * checking if we need to re-queue this task. The only place where bits can be
+ * set is the hard xmit routine where an SKB has a request flag set. The only
+ * places where we clear bits are this work function, or the periodic cleanup
+ * thread. If the cleanup thread clears a bit we're processing we catch it
+ * when we lock to clear the bit and then grab the SKB pointer. If a Tx thread
+ * starts a new timestamp, we might not begin processing it right away but we
+ * will notice it at the end when we re-queue the task. If a Tx thread starts
+ * a new timestamp just after this function exits without re-queuing,
+ * the interrupt when the timestamp finishes should trigger. Avoiding holding
+ * the lock for the entire function is important in order to ensure that Tx
+ * threads do not get blocked while waiting for the lock.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static bool ice_ptp_tx_tstamp(struct ice_ptp_tx *tx)
 {
 	struct ice_ptp_port *ptp_port;
+<<<<<<< HEAD
 	bool more_timestamps;
 	struct ice_pf *pf;
 	struct ice_hw *hw;
@@ -733,10 +764,35 @@ static bool ice_ptp_tx_tstamp(struct ice_ptp_tx *tx)
 
 		err = ice_read_phy_tstamp(hw, tx->block, phy_idx, &raw_tstamp);
 		if (err && !drop_ts)
+=======
+	bool ts_handled = true;
+	struct ice_pf *pf;
+	u8 idx;
+
+	if (!tx->init)
+		return false;
+
+	ptp_port = container_of(tx, struct ice_ptp_port, tx);
+	pf = ptp_port_to_pf(ptp_port);
+
+	for_each_set_bit(idx, tx->in_use, tx->len) {
+		struct skb_shared_hwtstamps shhwtstamps = {};
+		u8 phy_idx = idx + tx->quad_offset;
+		u64 raw_tstamp, tstamp;
+		struct sk_buff *skb;
+		int err;
+
+		ice_trace(tx_tstamp_fw_req, tx->tstamps[idx].skb, idx);
+
+		err = ice_read_phy_tstamp(&pf->hw, tx->quad, phy_idx,
+					  &raw_tstamp);
+		if (err)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		ice_trace(tx_tstamp_fw_done, tx->tstamps[idx].skb, idx);
 
+<<<<<<< HEAD
 		/* For PHYs which don't implement a proper timestamp ready
 		 * bitmap, verify that the timestamp value is different
 		 * from the last cached timestamp. If it is not, skip this for
@@ -763,15 +819,37 @@ skip_ts_read:
 
 		/* It is unlikely but possible that the SKB will have been
 		 * flushed at this point due to link change or teardown.
+=======
+		/* Check if the timestamp is invalid or stale */
+		if (!(raw_tstamp & ICE_PTP_TS_VALID) ||
+		    raw_tstamp == tx->tstamps[idx].cached_tstamp)
+			continue;
+
+		/* The timestamp is valid, so we'll go ahead and clear this
+		 * index and then send the timestamp up to the stack.
+		 */
+		spin_lock(&tx->lock);
+		tx->tstamps[idx].cached_tstamp = raw_tstamp;
+		clear_bit(idx, tx->in_use);
+		skb = tx->tstamps[idx].skb;
+		tx->tstamps[idx].skb = NULL;
+		spin_unlock(&tx->lock);
+
+		/* it's (unlikely but) possible we raced with the cleanup
+		 * thread for discarding old timestamp requests.
+>>>>>>> b7ba80a49124 (Commit)
 		 */
 		if (!skb)
 			continue;
 
+<<<<<<< HEAD
 		if (drop_ts) {
 			dev_kfree_skb_any(skb);
 			continue;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Extend the timestamp using cached PHC time */
 		tstamp = ice_ptp_extend_40b_ts(pf, raw_tstamp);
 		if (tstamp) {
@@ -787,10 +865,18 @@ skip_ts_read:
 	 * poll for remaining timestamps.
 	 */
 	spin_lock(&tx->lock);
+<<<<<<< HEAD
 	more_timestamps = tx->init && !bitmap_empty(tx->in_use, tx->len);
 	spin_unlock(&tx->lock);
 
 	return !more_timestamps;
+=======
+	if (!bitmap_empty(tx->in_use, tx->len))
+		ts_handled = false;
+	spin_unlock(&tx->lock);
+
+	return ts_handled;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -798,11 +884,16 @@ skip_ts_read:
  * @tx: Tx tracking structure to initialize
  *
  * Assumes that the length has already been initialized. Do not call directly,
+<<<<<<< HEAD
  * use the ice_ptp_init_tx_* instead.
+=======
+ * use the ice_ptp_init_tx_e822 or ice_ptp_init_tx_e810 instead.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int
 ice_ptp_alloc_tx_tracker(struct ice_ptp_tx *tx)
 {
+<<<<<<< HEAD
 	unsigned long *in_use, *stale;
 	struct ice_tx_tstamp *tstamps;
 
@@ -825,6 +916,23 @@ ice_ptp_alloc_tx_tracker(struct ice_ptp_tx *tx)
 
 	spin_lock_init(&tx->lock);
 
+=======
+	tx->tstamps = kcalloc(tx->len, sizeof(*tx->tstamps), GFP_KERNEL);
+	if (!tx->tstamps)
+		return -ENOMEM;
+
+	tx->in_use = bitmap_zalloc(tx->len, GFP_KERNEL);
+	if (!tx->in_use) {
+		kfree(tx->tstamps);
+		tx->tstamps = NULL;
+		return -ENOMEM;
+	}
+
+	spin_lock_init(&tx->lock);
+
+	tx->init = 1;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -832,12 +940,16 @@ ice_ptp_alloc_tx_tracker(struct ice_ptp_tx *tx)
  * ice_ptp_flush_tx_tracker - Flush any remaining timestamps from the tracker
  * @pf: Board private structure
  * @tx: the tracker to flush
+<<<<<<< HEAD
  *
  * Called during teardown when a Tx tracker is being removed.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 static void
 ice_ptp_flush_tx_tracker(struct ice_pf *pf, struct ice_ptp_tx *tx)
 {
+<<<<<<< HEAD
 	struct ice_hw *hw = &pf->hw;
 	u64 tstamp_ready;
 	int err;
@@ -874,10 +986,30 @@ ice_ptp_flush_tx_tracker(struct ice_pf *pf, struct ice_ptp_tx *tx)
 
 		/* Free the SKB after we've cleared the bit */
 		dev_kfree_skb_any(skb);
+=======
+	u8 idx;
+
+	for (idx = 0; idx < tx->len; idx++) {
+		u8 phy_idx = idx + tx->quad_offset;
+
+		spin_lock(&tx->lock);
+		if (tx->tstamps[idx].skb) {
+			dev_kfree_skb_any(tx->tstamps[idx].skb);
+			tx->tstamps[idx].skb = NULL;
+			pf->ptp.tx_hwtstamp_flushed++;
+		}
+		clear_bit(idx, tx->in_use);
+		spin_unlock(&tx->lock);
+
+		/* Clear any potential residual timestamp in the PHY block */
+		if (!pf->hw.reset_ongoing)
+			ice_clear_phy_tstamp(&pf->hw, tx->quad, phy_idx);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
 /**
+<<<<<<< HEAD
  * ice_ptp_mark_tx_tracker_stale - Mark unfinished timestamps as stale
  * @tx: the tracker to mark
  *
@@ -897,6 +1029,8 @@ ice_ptp_mark_tx_tracker_stale(struct ice_ptp_tx *tx)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ice_ptp_release_tx_tracker - Release allocated memory for Tx tracker
  * @pf: Board private structure
  * @tx: Tx tracking structure to release
@@ -906,12 +1040,16 @@ ice_ptp_mark_tx_tracker_stale(struct ice_ptp_tx *tx)
 static void
 ice_ptp_release_tx_tracker(struct ice_pf *pf, struct ice_ptp_tx *tx)
 {
+<<<<<<< HEAD
 	spin_lock(&tx->lock);
 	tx->init = 0;
 	spin_unlock(&tx->lock);
 
 	/* wait for potentially outstanding interrupt to complete */
 	synchronize_irq(pf->msix_entries[pf->oicr_idx].vector);
+=======
+	tx->init = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ice_ptp_flush_tx_tracker(pf, tx);
 
@@ -921,9 +1059,12 @@ ice_ptp_release_tx_tracker(struct ice_pf *pf, struct ice_ptp_tx *tx)
 	bitmap_free(tx->in_use);
 	tx->in_use = NULL;
 
+<<<<<<< HEAD
 	bitmap_free(tx->stale);
 	tx->stale = NULL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tx->len = 0;
 }
 
@@ -941,10 +1082,16 @@ ice_ptp_release_tx_tracker(struct ice_pf *pf, struct ice_ptp_tx *tx)
 static int
 ice_ptp_init_tx_e822(struct ice_pf *pf, struct ice_ptp_tx *tx, u8 port)
 {
+<<<<<<< HEAD
 	tx->block = port / ICE_PORTS_PER_QUAD;
 	tx->offset = (port % ICE_PORTS_PER_QUAD) * INDEX_PER_PORT_E822;
 	tx->len = INDEX_PER_PORT_E822;
 	tx->verify_cached = 0;
+=======
+	tx->quad = port / ICE_PORTS_PER_QUAD;
+	tx->quad_offset = (port % ICE_PORTS_PER_QUAD) * INDEX_PER_PORT;
+	tx->len = INDEX_PER_PORT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ice_ptp_alloc_tx_tracker(tx);
 }
@@ -960,6 +1107,7 @@ ice_ptp_init_tx_e822(struct ice_pf *pf, struct ice_ptp_tx *tx, u8 port)
 static int
 ice_ptp_init_tx_e810(struct ice_pf *pf, struct ice_ptp_tx *tx)
 {
+<<<<<<< HEAD
 	tx->block = pf->hw.port_info->lport;
 	tx->offset = 0;
 	tx->len = INDEX_PER_PORT_E810;
@@ -968,11 +1116,64 @@ ice_ptp_init_tx_e810(struct ice_pf *pf, struct ice_ptp_tx *tx)
 	 * timestamp.
 	 */
 	tx->verify_cached = 1;
+=======
+	tx->quad = pf->hw.port_info->lport;
+	tx->quad_offset = 0;
+	tx->len = INDEX_PER_QUAD;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ice_ptp_alloc_tx_tracker(tx);
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * ice_ptp_tx_tstamp_cleanup - Cleanup old timestamp requests that got dropped
+ * @pf: pointer to the PF struct
+ * @tx: PTP Tx tracker to clean up
+ *
+ * Loop through the Tx timestamp requests and see if any of them have been
+ * waiting for a long time. Discard any SKBs that have been waiting for more
+ * than 2 seconds. This is long enough to be reasonably sure that the
+ * timestamp will never be captured. This might happen if the packet gets
+ * discarded before it reaches the PHY timestamping block.
+ */
+static void ice_ptp_tx_tstamp_cleanup(struct ice_pf *pf, struct ice_ptp_tx *tx)
+{
+	struct ice_hw *hw = &pf->hw;
+	u8 idx;
+
+	if (!tx->init)
+		return;
+
+	for_each_set_bit(idx, tx->in_use, tx->len) {
+		struct sk_buff *skb;
+		u64 raw_tstamp;
+
+		/* Check if this SKB has been waiting for too long */
+		if (time_is_after_jiffies(tx->tstamps[idx].start + 2 * HZ))
+			continue;
+
+		/* Read tstamp to be able to use this register again */
+		ice_read_phy_tstamp(hw, tx->quad, idx + tx->quad_offset,
+				    &raw_tstamp);
+
+		spin_lock(&tx->lock);
+		skb = tx->tstamps[idx].skb;
+		tx->tstamps[idx].skb = NULL;
+		clear_bit(idx, tx->in_use);
+		spin_unlock(&tx->lock);
+
+		/* Count the number of Tx timestamps which have timed out */
+		pf->ptp.tx_hwtstamp_timeouts++;
+
+		/* Free the SKB after we've cleared the bit */
+		dev_kfree_skb_any(skb);
+	}
+}
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * ice_ptp_update_cached_phctime - Update the cached PHC time values
  * @pf: Board specific private structure
  *
@@ -1042,6 +1243,7 @@ static int ice_ptp_update_cached_phctime(struct ice_pf *pf)
  * @pf: Board specific private structure
  *
  * This function must be called when the cached PHC time is no longer valid,
+<<<<<<< HEAD
  * such as after a time adjustment. It marks any currently outstanding Tx
  * timestamps as stale and updates the cached PHC time for both the PF and Rx
  * rings.
@@ -1049,6 +1251,22 @@ static int ice_ptp_update_cached_phctime(struct ice_pf *pf)
  * If updating the PHC time cannot be done immediately, a warning message is
  * logged and the work item is scheduled immediately to minimize the window
  * with a wrong cached timestamp.
+=======
+ * such as after a time adjustment. It discards any outstanding Tx timestamps,
+ * and updates the cached PHC time for both the PF and Rx rings. If updating
+ * the PHC time cannot be done immediately, a warning message is logged and
+ * the work item is scheduled.
+ *
+ * These steps are required in order to ensure that we do not accidentally
+ * report a timestamp extended by the wrong PHC cached copy. Note that we
+ * do not directly update the cached timestamp here because it is possible
+ * this might produce an error when ICE_CFG_BUSY is set. If this occurred, we
+ * would have to try again. During that time window, timestamps might be
+ * requested and returned with an invalid extension. Thus, on failure to
+ * immediately update the cached PHC time we would need to zero the value
+ * anyways. For this reason, we just zero the value immediately and queue the
+ * update work item.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static void ice_ptp_reset_cached_phctime(struct ice_pf *pf)
 {
@@ -1072,12 +1290,17 @@ static void ice_ptp_reset_cached_phctime(struct ice_pf *pf)
 					   msecs_to_jiffies(10));
 	}
 
+<<<<<<< HEAD
 	/* Mark any outstanding timestamps as stale, since they might have
 	 * been captured in hardware before the time update. This could lead
 	 * to us extending them with the wrong cached value resulting in
 	 * incorrect timestamp values.
 	 */
 	ice_ptp_mark_tx_tracker_stale(&pf->ptp.port.tx);
+=======
+	/* Flush any outstanding Tx timestamps */
+	ice_ptp_flush_tx_tracker(pf, &pf->ptp.port.tx);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1158,6 +1381,22 @@ static u64 ice_base_incval(struct ice_pf *pf)
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * ice_ptp_reset_ts_memory_quad - Reset timestamp memory for one quad
+ * @pf: The PF private data structure
+ * @quad: The quad (0-4)
+ */
+static void ice_ptp_reset_ts_memory_quad(struct ice_pf *pf, int quad)
+{
+	struct ice_hw *hw = &pf->hw;
+
+	ice_write_quad_reg_e822(hw, quad, Q_REG_TS_CTRL, Q_REG_TS_CTRL_M);
+	ice_write_quad_reg_e822(hw, quad, Q_REG_TS_CTRL, ~(u32)Q_REG_TS_CTRL_M);
+}
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * ice_ptp_check_tx_fifo - Check whether Tx FIFO is in an OK state
  * @port: PTP port for which Tx FIFO is checked
  */
@@ -1209,7 +1448,11 @@ static int ice_ptp_check_tx_fifo(struct ice_ptp_port *port)
 		dev_dbg(ice_pf_to_dev(pf),
 			"Port %d Tx FIFO still not empty; resetting quad %d\n",
 			port->port_num, quad);
+<<<<<<< HEAD
 		ice_ptp_reset_ts_memory_quad_e822(hw, quad);
+=======
+		ice_ptp_reset_ts_memory_quad(pf, quad);
+>>>>>>> b7ba80a49124 (Commit)
 		port->tx_fifo_busy_cnt = FIFO_OK;
 		return 0;
 	}
@@ -1218,6 +1461,7 @@ static int ice_ptp_check_tx_fifo(struct ice_ptp_port *port)
 }
 
 /**
+<<<<<<< HEAD
  * ice_ptp_wait_for_offsets - Check for valid Tx and Rx offsets
  * @work: Pointer to the kthread_work structure for this task
  *
@@ -1239,19 +1483,134 @@ static void ice_ptp_wait_for_offsets(struct kthread_work *work)
 	struct ice_hw *hw;
 	int tx_err;
 	int rx_err;
+=======
+ * ice_ptp_check_tx_offset_valid - Check if the Tx PHY offset is valid
+ * @port: the PTP port to check
+ *
+ * Checks whether the Tx offset for the PHY associated with this port is
+ * valid. Returns 0 if the offset is valid, and a non-zero error code if it is
+ * not.
+ */
+static int ice_ptp_check_tx_offset_valid(struct ice_ptp_port *port)
+{
+	struct ice_pf *pf = ptp_port_to_pf(port);
+	struct device *dev = ice_pf_to_dev(pf);
+	struct ice_hw *hw = &pf->hw;
+	u32 val;
+	int err;
+
+	err = ice_ptp_check_tx_fifo(port);
+	if (err)
+		return err;
+
+	err = ice_read_phy_reg_e822(hw, port->port_num, P_REG_TX_OV_STATUS,
+				    &val);
+	if (err) {
+		dev_err(dev, "Failed to read TX_OV_STATUS for port %d, err %d\n",
+			port->port_num, err);
+		return -EAGAIN;
+	}
+
+	if (!(val & P_REG_TX_OV_STATUS_OV_M))
+		return -EAGAIN;
+
+	return 0;
+}
+
+/**
+ * ice_ptp_check_rx_offset_valid - Check if the Rx PHY offset is valid
+ * @port: the PTP port to check
+ *
+ * Checks whether the Rx offset for the PHY associated with this port is
+ * valid. Returns 0 if the offset is valid, and a non-zero error code if it is
+ * not.
+ */
+static int ice_ptp_check_rx_offset_valid(struct ice_ptp_port *port)
+{
+	struct ice_pf *pf = ptp_port_to_pf(port);
+	struct device *dev = ice_pf_to_dev(pf);
+	struct ice_hw *hw = &pf->hw;
+	int err;
+	u32 val;
+
+	err = ice_read_phy_reg_e822(hw, port->port_num, P_REG_RX_OV_STATUS,
+				    &val);
+	if (err) {
+		dev_err(dev, "Failed to read RX_OV_STATUS for port %d, err %d\n",
+			port->port_num, err);
+		return err;
+	}
+
+	if (!(val & P_REG_RX_OV_STATUS_OV_M))
+		return -EAGAIN;
+
+	return 0;
+}
+
+/**
+ * ice_ptp_check_offset_valid - Check port offset valid bit
+ * @port: Port for which offset valid bit is checked
+ *
+ * Returns 0 if both Tx and Rx offset are valid, and -EAGAIN if one of the
+ * offset is not ready.
+ */
+static int ice_ptp_check_offset_valid(struct ice_ptp_port *port)
+{
+	int tx_err, rx_err;
+
+	/* always check both Tx and Rx offset validity */
+	tx_err = ice_ptp_check_tx_offset_valid(port);
+	rx_err = ice_ptp_check_rx_offset_valid(port);
+
+	if (tx_err || rx_err)
+		return -EAGAIN;
+
+	return 0;
+}
+
+/**
+ * ice_ptp_wait_for_offset_valid - Check for valid Tx and Rx offsets
+ * @work: Pointer to the kthread_work structure for this task
+ *
+ * Check whether both the Tx and Rx offsets are valid for enabling the vernier
+ * calibration.
+ *
+ * Once we have valid offsets from hardware, update the total Tx and Rx
+ * offsets, and exit bypass mode. This enables more precise timestamps using
+ * the extra data measured during the vernier calibration process.
+ */
+static void ice_ptp_wait_for_offset_valid(struct kthread_work *work)
+{
+	struct ice_ptp_port *port;
+	int err;
+	struct device *dev;
+	struct ice_pf *pf;
+	struct ice_hw *hw;
+>>>>>>> b7ba80a49124 (Commit)
 
 	port = container_of(work, struct ice_ptp_port, ov_work.work);
 	pf = ptp_port_to_pf(port);
 	hw = &pf->hw;
+<<<<<<< HEAD
 
 	if (ice_is_reset_in_progress(pf->state)) {
 		/* wait for device driver to complete reset */
+=======
+	dev = ice_pf_to_dev(pf);
+
+	if (ice_is_reset_in_progress(pf->state))
+		return;
+
+	if (ice_ptp_check_offset_valid(port)) {
+		/* Offsets not ready yet, try again later */
+>>>>>>> b7ba80a49124 (Commit)
 		kthread_queue_delayed_work(pf->ptp.kworker,
 					   &port->ov_work,
 					   msecs_to_jiffies(100));
 		return;
 	}
 
+<<<<<<< HEAD
 	tx_err = ice_ptp_check_tx_fifo(port);
 	if (!tx_err)
 		tx_err = ice_phy_cfg_tx_offset_e822(hw, port->port_num);
@@ -1261,6 +1620,13 @@ static void ice_ptp_wait_for_offsets(struct kthread_work *work)
 		kthread_queue_delayed_work(pf->ptp.kworker,
 					   &port->ov_work,
 					   msecs_to_jiffies(100));
+=======
+	/* Offsets are valid, so it is safe to exit bypass mode */
+	err = ice_phy_exit_bypass_e822(hw, port->port_num);
+	if (err) {
+		dev_warn(dev, "Failed to exit bypass mode for PHY port %u, err %d\n",
+			 port->port_num, err);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 }
@@ -1321,6 +1687,7 @@ ice_ptp_port_phy_restart(struct ice_ptp_port *ptp_port)
 	kthread_cancel_delayed_work_sync(&ptp_port->ov_work);
 
 	/* temporarily disable Tx timestamps while calibrating PHY offset */
+<<<<<<< HEAD
 	spin_lock(&ptp_port->tx.lock);
 	ptp_port->tx.calibrating = true;
 	spin_unlock(&ptp_port->tx.lock);
@@ -1328,13 +1695,24 @@ ice_ptp_port_phy_restart(struct ice_ptp_port *ptp_port)
 
 	/* Start the PHY timer in Vernier mode */
 	err = ice_start_phy_timer_e822(hw, port);
+=======
+	ptp_port->tx.calibrating = true;
+	ptp_port->tx_fifo_busy_cnt = 0;
+
+	/* Start the PHY timer in bypass mode */
+	err = ice_start_phy_timer_e822(hw, port, true);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out_unlock;
 
 	/* Enable Tx timestamps right away */
+<<<<<<< HEAD
 	spin_lock(&ptp_port->tx.lock);
 	ptp_port->tx.calibrating = false;
 	spin_unlock(&ptp_port->tx.lock);
+=======
+	ptp_port->tx.calibrating = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 	kthread_queue_delayed_work(pf->ptp.kworker, &ptp_port->ov_work, 0);
 
@@ -1349,11 +1727,16 @@ out_unlock:
 }
 
 /**
+<<<<<<< HEAD
  * ice_ptp_link_change - Reconfigure PTP after link status change
+=======
+ * ice_ptp_link_change - Set or clear port registers for timestamping
+>>>>>>> b7ba80a49124 (Commit)
  * @pf: Board private structure
  * @port: Port for which the PHY start is set
  * @linkup: Link is up or down
  */
+<<<<<<< HEAD
 void ice_ptp_link_change(struct ice_pf *pf, u8 port, bool linkup)
 {
 	struct ice_ptp_port *ptp_port;
@@ -1376,6 +1759,42 @@ void ice_ptp_link_change(struct ice_pf *pf, u8 port, bool linkup)
 		return;
 
 	ice_ptp_port_phy_restart(ptp_port);
+=======
+int ice_ptp_link_change(struct ice_pf *pf, u8 port, bool linkup)
+{
+	struct ice_ptp_port *ptp_port;
+
+	if (!test_bit(ICE_FLAG_PTP_SUPPORTED, pf->flags))
+		return 0;
+
+	if (port >= ICE_NUM_EXTERNAL_PORTS)
+		return -EINVAL;
+
+	ptp_port = &pf->ptp.port;
+	if (ptp_port->port_num != port)
+		return -EINVAL;
+
+	/* Update cached link err for this port immediately */
+	ptp_port->link_up = linkup;
+
+	if (!test_bit(ICE_FLAG_PTP, pf->flags))
+		/* PTP is not setup */
+		return -EAGAIN;
+
+	return ice_ptp_port_phy_restart(ptp_port);
+}
+
+/**
+ * ice_ptp_reset_ts_memory - Reset timestamp memory for all quads
+ * @pf: The PF private data structure
+ */
+static void ice_ptp_reset_ts_memory(struct ice_pf *pf)
+{
+	int quad;
+
+	quad = pf->hw.port_info->lport / ICE_PORTS_PER_QUAD;
+	ice_ptp_reset_ts_memory_quad(pf, quad);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1393,7 +1812,11 @@ static int ice_ptp_tx_ena_intr(struct ice_pf *pf, bool ena, u32 threshold)
 	int quad;
 	u32 val;
 
+<<<<<<< HEAD
 	ice_ptp_reset_ts_memory(hw);
+=======
+	ice_ptp_reset_ts_memory(pf);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (quad = 0; quad < ICE_MAX_QUAD; quad++) {
 		err = ice_read_quad_reg_e822(hw, quad, Q_REG_TX_MEM_GBL_CFG,
@@ -1443,10 +1866,31 @@ static int ice_ptp_adjfine(struct ptp_clock_info *info, long scaled_ppm)
 {
 	struct ice_pf *pf = ptp_info_to_pf(info);
 	struct ice_hw *hw = &pf->hw;
+<<<<<<< HEAD
 	u64 incval;
 	int err;
 
 	incval = adjust_by_scaled_ppm(ice_base_incval(pf), scaled_ppm);
+=======
+	u64 incval, diff;
+	int neg_adj = 0;
+	int err;
+
+	incval = ice_base_incval(pf);
+
+	if (scaled_ppm < 0) {
+		neg_adj = 1;
+		scaled_ppm = -scaled_ppm;
+	}
+
+	diff = mul_u64_u64_div_u64(incval, (u64)scaled_ppm,
+				   1000000ULL << 16);
+	if (neg_adj)
+		incval -= diff;
+	else
+		incval += diff;
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = ice_ptp_write_incval_locked(hw, incval);
 	if (err) {
 		dev_err(ice_pf_to_dev(pf), "PTP failed to set incval, err %d\n",
@@ -1774,6 +2218,7 @@ ice_ptp_gpio_enable_e810(struct ptp_clock_info *info,
 }
 
 /**
+<<<<<<< HEAD
  * ice_ptp_gpio_enable_e823 - Enable/disable ancillary features of PHC
  * @info: the driver's PTP info structure
  * @rq: The requested feature to change
@@ -1806,6 +2251,8 @@ static int ice_ptp_gpio_enable_e823(struct ptp_clock_info *info,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ice_ptp_gettimex64 - Get the time of the clock
  * @info: the driver's PTP info structure
  * @ts: timespec64 structure to hold the current time value
@@ -2234,10 +2681,45 @@ ice_ptp_setup_sma_pins_e810t(struct ice_pf *pf, struct ptp_clock_info *info)
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * ice_ptp_setup_pins_e810t - Setup PTP pins in sysfs
+ * @pf: pointer to the PF instance
+ * @info: PTP clock capabilities
+ */
+static void
+ice_ptp_setup_pins_e810t(struct ice_pf *pf, struct ptp_clock_info *info)
+{
+	/* Check if SMA controller is in the netlist */
+	if (ice_is_feature_supported(pf, ICE_F_SMA_CTRL) &&
+	    !ice_is_pca9575_present(&pf->hw))
+		ice_clear_feature_support(pf, ICE_F_SMA_CTRL);
+
+	if (!ice_is_feature_supported(pf, ICE_F_SMA_CTRL)) {
+		info->n_ext_ts = N_EXT_TS_E810_NO_SMA;
+		info->n_per_out = N_PER_OUT_E810T_NO_SMA;
+		return;
+	}
+
+	info->n_per_out = N_PER_OUT_E810T;
+
+	if (ice_is_feature_supported(pf, ICE_F_PTP_EXTTS)) {
+		info->n_ext_ts = N_EXT_TS_E810;
+		info->n_pins = NUM_PTP_PINS_E810T;
+		info->verify = ice_verify_pin_e810t;
+	}
+
+	/* Complete setup of the SMA pins */
+	ice_ptp_setup_sma_pins_e810t(pf, info);
+}
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * ice_ptp_setup_pins_e810 - Setup PTP pins in sysfs
  * @pf: pointer to the PF instance
  * @info: PTP clock capabilities
  */
+<<<<<<< HEAD
 static void
 ice_ptp_setup_pins_e810(struct ice_pf *pf, struct ptp_clock_info *info)
 {
@@ -2267,6 +2749,16 @@ ice_ptp_setup_pins_e823(struct ice_pf *pf, struct ptp_clock_info *info)
 	info->pps = 1;
 	info->n_per_out = 0;
 	info->n_ext_ts = 1;
+=======
+static void ice_ptp_setup_pins_e810(struct ice_pf *pf, struct ptp_clock_info *info)
+{
+	info->n_per_out = N_PER_OUT_E810;
+
+	if (!ice_is_feature_supported(pf, ICE_F_PTP_EXTTS))
+		return;
+
+	info->n_ext_ts = N_EXT_TS_E810;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -2303,6 +2795,7 @@ static void
 ice_ptp_set_funcs_e810(struct ice_pf *pf, struct ptp_clock_info *info)
 {
 	info->enable = ice_ptp_gpio_enable_e810;
+<<<<<<< HEAD
 	ice_ptp_setup_pins_e810(pf, info);
 }
 
@@ -2321,6 +2814,13 @@ ice_ptp_set_funcs_e823(struct ice_pf *pf, struct ptp_clock_info *info)
 {
 	info->enable = ice_ptp_gpio_enable_e823;
 	ice_ptp_setup_pins_e823(pf, info);
+=======
+
+	if (ice_is_e810t(&pf->hw))
+		ice_ptp_setup_pins_e810t(pf, info);
+	else
+		ice_ptp_setup_pins_e810(pf, info);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -2335,7 +2835,11 @@ static void ice_ptp_set_caps(struct ice_pf *pf)
 	snprintf(info->name, sizeof(info->name) - 1, "%s-%s-clk",
 		 dev_driver_string(dev), dev_name(dev));
 	info->owner = THIS_MODULE;
+<<<<<<< HEAD
 	info->max_adj = 100000000;
+=======
+	info->max_adj = 999999999;
+>>>>>>> b7ba80a49124 (Commit)
 	info->adjtime = ice_ptp_adjtime;
 	info->adjfine = ice_ptp_adjfine;
 	info->gettimex64 = ice_ptp_gettimex64;
@@ -2343,8 +2847,11 @@ static void ice_ptp_set_caps(struct ice_pf *pf)
 
 	if (ice_is_e810(&pf->hw))
 		ice_ptp_set_funcs_e810(pf, info);
+<<<<<<< HEAD
 	else if (ice_is_e823(&pf->hw))
 		ice_ptp_set_funcs_e823(pf, info);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		ice_ptp_set_funcs_e822(pf, info);
 }
@@ -2392,6 +2899,7 @@ s8 ice_ptp_request_ts(struct ice_ptp_tx *tx, struct sk_buff *skb)
 {
 	u8 idx;
 
+<<<<<<< HEAD
 	spin_lock(&tx->lock);
 
 	/* Check that this tracker is accepting new timestamp requests */
@@ -2400,6 +2908,13 @@ s8 ice_ptp_request_ts(struct ice_ptp_tx *tx, struct sk_buff *skb)
 		return -1;
 	}
 
+=======
+	/* Check if this tracker is initialized */
+	if (!tx->init || tx->calibrating)
+		return -1;
+
+	spin_lock(&tx->lock);
+>>>>>>> b7ba80a49124 (Commit)
 	/* Find and set the first available index */
 	idx = find_first_zero_bit(tx->in_use, tx->len);
 	if (idx < tx->len) {
@@ -2408,7 +2923,10 @@ s8 ice_ptp_request_ts(struct ice_ptp_tx *tx, struct sk_buff *skb)
 		 * requests.
 		 */
 		set_bit(idx, tx->in_use);
+<<<<<<< HEAD
 		clear_bit(idx, tx->stale);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		tx->tstamps[idx].start = jiffies;
 		tx->tstamps[idx].skb = skb_get(skb);
 		skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
@@ -2423,7 +2941,11 @@ s8 ice_ptp_request_ts(struct ice_ptp_tx *tx, struct sk_buff *skb)
 	if (idx >= tx->len)
 		return -1;
 	else
+<<<<<<< HEAD
 		return idx + tx->offset;
+=======
+		return idx + tx->quad_offset;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -2434,7 +2956,14 @@ s8 ice_ptp_request_ts(struct ice_ptp_tx *tx, struct sk_buff *skb)
  */
 bool ice_ptp_process_ts(struct ice_pf *pf)
 {
+<<<<<<< HEAD
 	return ice_ptp_tx_tstamp(&pf->ptp.port.tx);
+=======
+	if (pf->ptp.port.tx.init)
+		return ice_ptp_tx_tstamp(&pf->ptp.port.tx);
+
+	return false;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ice_ptp_periodic_work(struct kthread_work *work)
@@ -2448,6 +2977,11 @@ static void ice_ptp_periodic_work(struct kthread_work *work)
 
 	err = ice_ptp_update_cached_phctime(pf);
 
+<<<<<<< HEAD
+=======
+	ice_ptp_tx_tstamp_cleanup(pf, &pf->ptp.port.tx);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Run twice a second or reschedule if phc update failed */
 	kthread_queue_delayed_work(ptp->kworker, &ptp->work,
 				   msecs_to_jiffies(err ? 10 : 500));
@@ -2524,7 +3058,11 @@ pfr:
 		err = ice_ptp_init_tx_e810(pf, &ptp->port.tx);
 	} else {
 		kthread_init_delayed_work(&ptp->port.ov_work,
+<<<<<<< HEAD
 					  ice_ptp_wait_for_offsets);
+=======
+					  ice_ptp_wait_for_offset_valid);
+>>>>>>> b7ba80a49124 (Commit)
 		err = ice_ptp_init_tx_e822(pf, &ptp->port.tx,
 					   ptp->port.port_num);
 	}
@@ -2687,7 +3225,11 @@ static int ice_ptp_init_port(struct ice_pf *pf, struct ice_ptp_port *ptp_port)
 		return ice_ptp_init_tx_e810(pf, &ptp_port->tx);
 
 	kthread_init_delayed_work(&ptp_port->ov_work,
+<<<<<<< HEAD
 				  ice_ptp_wait_for_offsets);
+=======
+				  ice_ptp_wait_for_offset_valid);
+>>>>>>> b7ba80a49124 (Commit)
 	return ice_ptp_init_tx_e822(pf, &ptp_port->tx, ptp_port->port_num);
 }
 

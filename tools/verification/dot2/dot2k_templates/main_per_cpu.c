@@ -27,7 +27,11 @@
  *
  * The rv monitor reference is needed for the monitor declaration.
  */
+<<<<<<< HEAD
 static struct rv_monitor rv_MODEL_NAME;
+=======
+struct rv_monitor rv_MODEL_NAME;
+>>>>>>> b7ba80a49124 (Commit)
 DECLARE_DA_MON_PER_CPU(MODEL_NAME, MIN_TYPE);
 
 /*
@@ -63,7 +67,11 @@ TRACEPOINT_DETACH
 /*
  * This is the monitor register section.
  */
+<<<<<<< HEAD
 static struct rv_monitor rv_MODEL_NAME = {
+=======
+struct rv_monitor rv_MODEL_NAME = {
+>>>>>>> b7ba80a49124 (Commit)
 	.name = "MODEL_NAME",
 	.description = "auto-generated MODEL_NAME",
 	.enable = enable_MODEL_NAME,
@@ -72,13 +80,21 @@ static struct rv_monitor rv_MODEL_NAME = {
 	.enabled = 0,
 };
 
+<<<<<<< HEAD
 static int __init register_MODEL_NAME(void)
+=======
+static int register_MODEL_NAME(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	rv_register_monitor(&rv_MODEL_NAME);
 	return 0;
 }
 
+<<<<<<< HEAD
 static void __exit unregister_MODEL_NAME(void)
+=======
+static void unregister_MODEL_NAME(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	rv_unregister_monitor(&rv_MODEL_NAME);
 }

@@ -118,10 +118,13 @@ int amdgpu_jpeg_dec_ring_test_ring(struct amdgpu_ring *ring)
 	unsigned i;
 	int r;
 
+<<<<<<< HEAD
 	/* JPEG in SRIOV does not support direct register read/write */
 	if (amdgpu_sriov_vf(adev))
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	WREG32(adev->jpeg.inst[ring->me].external.jpeg_pitch, 0xCAFEDEAD);
 	r = amdgpu_ring_alloc(ring, 3);
 	if (r)
@@ -154,15 +157,24 @@ static int amdgpu_jpeg_dec_set_reg(struct amdgpu_ring *ring, uint32_t handle,
 	const unsigned ib_size_dw = 16;
 	int i, r;
 
+<<<<<<< HEAD
 	r = amdgpu_job_alloc_with_ib(ring->adev, NULL, NULL, ib_size_dw * 4,
 				     AMDGPU_IB_POOL_DIRECT, &job);
+=======
+	r = amdgpu_job_alloc_with_ib(ring->adev, ib_size_dw * 4,
+					AMDGPU_IB_POOL_DIRECT, &job);
+>>>>>>> b7ba80a49124 (Commit)
 	if (r)
 		return r;
 
 	ib = &job->ibs[0];
 
+<<<<<<< HEAD
 	ib->ptr[0] = PACKETJ(adev->jpeg.internal.jpeg_pitch, 0, 0,
 			     PACKETJ_TYPE0);
+=======
+	ib->ptr[0] = PACKETJ(adev->jpeg.internal.jpeg_pitch, 0, 0, PACKETJ_TYPE0);
+>>>>>>> b7ba80a49124 (Commit)
 	ib->ptr[1] = 0xDEADBEEF;
 	for (i = 2; i < 16; i += 2) {
 		ib->ptr[i] = PACKETJ(0, 0, 0, PACKETJ_TYPE6);
@@ -206,6 +218,7 @@ int amdgpu_jpeg_dec_ring_test_ib(struct amdgpu_ring *ring, long timeout)
 	} else {
 		r = 0;
 	}
+<<<<<<< HEAD
 	if (!amdgpu_sriov_vf(adev)) {
 		for (i = 0; i < adev->usec_timeout; i++) {
 			tmp = RREG32(adev->jpeg.inst[ring->me].external.jpeg_pitch);
@@ -218,6 +231,19 @@ int amdgpu_jpeg_dec_ring_test_ib(struct amdgpu_ring *ring, long timeout)
 			r = -ETIMEDOUT;
 	}
 
+=======
+
+	for (i = 0; i < adev->usec_timeout; i++) {
+		tmp = RREG32(adev->jpeg.inst[ring->me].external.jpeg_pitch);
+		if (tmp == 0xDEADBEEF)
+			break;
+		udelay(1);
+	}
+
+	if (i >= adev->usec_timeout)
+		r = -ETIMEDOUT;
+
+>>>>>>> b7ba80a49124 (Commit)
 	dma_fence_put(fence);
 error:
 	return r;
@@ -240,6 +266,7 @@ int amdgpu_jpeg_process_poison_irq(struct amdgpu_device *adev,
 
 	return 0;
 }
+<<<<<<< HEAD
 
 int amdgpu_jpeg_ras_sw_init(struct amdgpu_device *adev)
 {
@@ -266,3 +293,5 @@ int amdgpu_jpeg_ras_sw_init(struct amdgpu_device *adev)
 
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

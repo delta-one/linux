@@ -138,6 +138,11 @@ static int callback_set_0f(int i, void *ctx)
 SEC("fentry/" SYS_PREFIX "sys_nanosleep")
 int prog_non_constant_callback(void *ctx)
 {
+<<<<<<< HEAD
+=======
+	struct callback_ctx data = {};
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (bpf_get_current_pid_tgid() >> 32 != pid)
 		return 0;
 

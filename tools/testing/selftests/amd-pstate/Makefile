@@ -4,6 +4,7 @@
 # No binaries, but make sure arg-less "make" doesn't trigger "run_tests"
 all:
 
+<<<<<<< HEAD
 ARCH ?= $(shell uname -m 2>/dev/null || echo not)
 ARCH := $(shell echo $(ARCH) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
 
@@ -14,5 +15,8 @@ endif
 
 TEST_PROGS += run.sh
 TEST_FILES += basic.sh tbench.sh gitsource.sh
+=======
+TEST_PROGS := amd-pstate-ut.sh
+>>>>>>> b7ba80a49124 (Commit)
 
 include ../lib.mk

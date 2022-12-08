@@ -12,7 +12,10 @@
 #include <linux/stat.h>
 #include <linux/capability.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/cred.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int msg_max_limit_min = MIN_MSGMAX;
 static int msg_max_limit_max = HARD_MSGMAX;
@@ -77,6 +80,7 @@ static int set_is_seen(struct ctl_table_set *set)
 	return &current->nsproxy->ipc_ns->mq_set == set;
 }
 
+<<<<<<< HEAD
 static void mq_set_ownership(struct ctl_table_header *head,
 			     struct ctl_table *table,
 			     kuid_t *uid, kgid_t *gid)
@@ -114,6 +118,10 @@ static struct ctl_table_root set_root = {
 	.lookup = set_lookup,
 	.permissions = mq_permissions,
 	.set_ownership = mq_set_ownership,
+=======
+static struct ctl_table_root set_root = {
+	.lookup = set_lookup,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 bool setup_mq_sysctls(struct ipc_namespace *ns)

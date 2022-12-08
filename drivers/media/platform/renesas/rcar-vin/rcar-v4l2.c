@@ -226,10 +226,17 @@ static int rvin_reset_format(struct rvin_dev *vin)
 
 	v4l2_fill_pix_format(&vin->format, &fmt.format);
 
+<<<<<<< HEAD
 	vin->crop.top = 0;
 	vin->crop.left = 0;
 	vin->crop.width = vin->format.width;
 	vin->crop.height = vin->format.height;
+=======
+	vin->src_rect.top = 0;
+	vin->src_rect.left = 0;
+	vin->src_rect.width = vin->format.width;
+	vin->src_rect.height = vin->format.height;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*  Make use of the hardware interlacer by default. */
 	if (vin->format.field == V4L2_FIELD_ALTERNATE) {
@@ -239,6 +246,11 @@ static int rvin_reset_format(struct rvin_dev *vin)
 
 	rvin_format_align(vin, &vin->format);
 
+<<<<<<< HEAD
+=======
+	vin->crop = vin->src_rect;
+
+>>>>>>> b7ba80a49124 (Commit)
 	vin->compose.top = 0;
 	vin->compose.left = 0;
 	vin->compose.width = vin->format.width;
@@ -347,6 +359,10 @@ static int rvin_s_fmt_vid_cap(struct file *file, void *priv,
 
 	v4l2_rect_map_inside(&vin->crop, &src_rect);
 	v4l2_rect_map_inside(&vin->compose, &fmt_rect);
+<<<<<<< HEAD
+=======
+	vin->src_rect = src_rect;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -425,6 +441,7 @@ static int rvin_enum_fmt_vid_cap(struct file *file, void *priv,
 	return -EINVAL;
 }
 
+<<<<<<< HEAD
 static int rvin_remote_rectangle(struct rvin_dev *vin, struct v4l2_rect *rect)
 {
 	struct v4l2_subdev_format fmt = {
@@ -471,14 +488,19 @@ static int rvin_remote_rectangle(struct rvin_dev *vin, struct v4l2_rect *rect)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int rvin_g_selection(struct file *file, void *fh,
 			    struct v4l2_selection *s)
 {
 	struct rvin_dev *vin = video_drvdata(file);
+<<<<<<< HEAD
 	int ret;
 
 	if (!vin->scaler)
 		return -ENOIOCTLCMD;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
 		return -EINVAL;
@@ -486,10 +508,16 @@ static int rvin_g_selection(struct file *file, void *fh,
 	switch (s->target) {
 	case V4L2_SEL_TGT_CROP_BOUNDS:
 	case V4L2_SEL_TGT_CROP_DEFAULT:
+<<<<<<< HEAD
 		ret = rvin_remote_rectangle(vin, &s->r);
 		if (ret)
 			return ret;
 
+=======
+		s->r.left = s->r.top = 0;
+		s->r.width = vin->src_rect.width;
+		s->r.height = vin->src_rect.height;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case V4L2_SEL_TGT_CROP:
 		s->r = vin->crop;
@@ -521,10 +549,13 @@ static int rvin_s_selection(struct file *file, void *fh,
 		.width = 6,
 		.height = 2,
 	};
+<<<<<<< HEAD
 	int ret;
 
 	if (!vin->scaler)
 		return -ENOIOCTLCMD;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
 		return -EINVAL;
@@ -534,6 +565,7 @@ static int rvin_s_selection(struct file *file, void *fh,
 	switch (s->target) {
 	case V4L2_SEL_TGT_CROP:
 		/* Can't crop outside of source input */
+<<<<<<< HEAD
 		ret = rvin_remote_rectangle(vin, &max_rect);
 		if (ret)
 			return ret;
@@ -545,12 +577,29 @@ static int rvin_s_selection(struct file *file, void *fh,
 
 		r.top  = clamp_t(s32, r.top, 0, max_rect.height - r.height);
 		r.left = clamp_t(s32, r.left, 0, max_rect.width - r.width);
+=======
+		max_rect.top = max_rect.left = 0;
+		max_rect.width = vin->src_rect.width;
+		max_rect.height = vin->src_rect.height;
+		v4l2_rect_map_inside(&r, &max_rect);
+
+		v4l_bound_align_image(&r.width, 6, vin->src_rect.width, 0,
+				      &r.height, 2, vin->src_rect.height, 0, 0);
+
+		r.top  = clamp_t(s32, r.top, 0,
+				 vin->src_rect.height - r.height);
+		r.left = clamp_t(s32, r.left, 0, vin->src_rect.width - r.width);
+>>>>>>> b7ba80a49124 (Commit)
 
 		vin->crop = s->r = r;
 
 		vin_dbg(vin, "Cropped %dx%d@%d:%d of %dx%d\n",
 			r.width, r.height, r.left, r.top,
+<<<<<<< HEAD
 			max_rect.width, max_rect.height);
+=======
+			vin->src_rect.width, vin->src_rect.height);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case V4L2_SEL_TGT_COMPOSE:
 		/* Make sure compose rect fits inside output format */
@@ -918,9 +967,12 @@ static const struct v4l2_ioctl_ops rvin_mc_ioctl_ops = {
 	.vidioc_s_fmt_vid_cap		= rvin_mc_s_fmt_vid_cap,
 	.vidioc_enum_fmt_vid_cap	= rvin_enum_fmt_vid_cap,
 
+<<<<<<< HEAD
 	.vidioc_g_selection		= rvin_g_selection,
 	.vidioc_s_selection		= rvin_s_selection,
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.vidioc_reqbufs			= vb2_ioctl_reqbufs,
 	.vidioc_create_bufs		= vb2_ioctl_create_bufs,
 	.vidioc_querybuf		= vb2_ioctl_querybuf,

@@ -270,7 +270,11 @@ RX flow rules (ntuple filters)
 
     ethtool -K ethX ntuple <on|off>
 
+<<<<<<< HEAD
  When disabling ntuple filters, all the user programmed filters are
+=======
+ When disabling ntuple filters, all the user programed filters are
+>>>>>>> b7ba80a49124 (Commit)
  flushed from the driver cache and hardware. All needed filters must
  be re-added when ntuple is re-enabled.
 
@@ -418,7 +422,11 @@ Default value: 0xFFFF
 0        Disable interrupt throttling.
 1        Enable interrupt throttling and use specified tx and rx rates.
 0xFFFF   Auto throttling mode. Driver will choose the best RX and TX
+<<<<<<< HEAD
 	 interrupt throttling settings based on link speed.
+=======
+	 interrupt throtting settings based on link speed.
+>>>>>>> b7ba80a49124 (Commit)
 ======   ==============================================================
 
 aq_itr_tx - TX interrupt throttle rate
@@ -456,7 +464,11 @@ AQ_CFG_RX_PAGEORDER
 
 Default value: 0
 
+<<<<<<< HEAD
 RX page order override. That's a power of 2 number of RX pages allocated for
+=======
+RX page order override. Thats a power of 2 number of RX pages allocated for
+>>>>>>> b7ba80a49124 (Commit)
 each descriptor. Received descriptor size is still limited by
 AQ_CFG_RX_FRAME_MAX.
 

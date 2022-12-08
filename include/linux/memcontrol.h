@@ -97,7 +97,10 @@ struct shrinker_info {
 	struct rcu_head rcu;
 	atomic_long_t *nr_deferred;
 	unsigned long *map;
+<<<<<<< HEAD
 	int map_nr_max;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct lruvec_stats_percpu {
@@ -467,6 +470,7 @@ static inline struct mem_cgroup *folio_memcg_rcu(struct folio *folio)
 }
 
 /*
+<<<<<<< HEAD
  * folio_memcg_check - Get the memory cgroup associated with a folio.
  * @folio: Pointer to the folio.
  *
@@ -495,6 +499,36 @@ static inline struct mem_cgroup *folio_memcg_check(struct folio *folio)
 	 * for slabs, READ_ONCE() should be used here.
 	 */
 	unsigned long memcg_data = READ_ONCE(folio->memcg_data);
+=======
+ * page_memcg_check - get the memory cgroup associated with a page
+ * @page: a pointer to the page struct
+ *
+ * Returns a pointer to the memory cgroup associated with the page,
+ * or NULL. This function unlike page_memcg() can take any page
+ * as an argument. It has to be used in cases when it's not known if a page
+ * has an associated memory cgroup pointer or an object cgroups vector or
+ * an object cgroup.
+ *
+ * For a non-kmem page any of the following ensures page and memcg binding
+ * stability:
+ *
+ * - the page lock
+ * - LRU isolation
+ * - lock_page_memcg()
+ * - exclusive reference
+ * - mem_cgroup_trylock_pages()
+ *
+ * For a kmem page a caller should hold an rcu read lock to protect memcg
+ * associated with a kmem page from being released.
+ */
+static inline struct mem_cgroup *page_memcg_check(struct page *page)
+{
+	/*
+	 * Because page->memcg_data might be changed asynchronously
+	 * for slab pages, READ_ONCE() should be used here.
+	 */
+	unsigned long memcg_data = READ_ONCE(page->memcg_data);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (memcg_data & MEMCG_DATA_OBJCGS)
 		return NULL;
@@ -509,6 +543,7 @@ static inline struct mem_cgroup *folio_memcg_check(struct folio *folio)
 	return (struct mem_cgroup *)(memcg_data & ~MEMCG_DATA_FLAGS_MASK);
 }
 
+<<<<<<< HEAD
 static inline struct mem_cgroup *page_memcg_check(struct page *page)
 {
 	if (PageTail(page))
@@ -516,6 +551,8 @@ static inline struct mem_cgroup *page_memcg_check(struct page *page)
 	return folio_memcg_check((struct folio *)page);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct mem_cgroup *get_mem_cgroup_from_objcg(struct obj_cgroup *objcg)
 {
 	struct mem_cgroup *memcg;
@@ -623,6 +660,7 @@ static inline void mem_cgroup_protection(struct mem_cgroup *root,
 void mem_cgroup_calculate_protection(struct mem_cgroup *root,
 				     struct mem_cgroup *memcg);
 
+<<<<<<< HEAD
 static inline bool mem_cgroup_unprotected(struct mem_cgroup *target,
 					  struct mem_cgroup *memcg)
 {
@@ -639,16 +677,37 @@ static inline bool mem_cgroup_below_low(struct mem_cgroup *target,
 					struct mem_cgroup *memcg)
 {
 	if (mem_cgroup_unprotected(target, memcg))
+=======
+static inline bool mem_cgroup_supports_protection(struct mem_cgroup *memcg)
+{
+	/*
+	 * The root memcg doesn't account charges, and doesn't support
+	 * protection.
+	 */
+	return !mem_cgroup_disabled() && !mem_cgroup_is_root(memcg);
+
+}
+
+static inline bool mem_cgroup_below_low(struct mem_cgroup *memcg)
+{
+	if (!mem_cgroup_supports_protection(memcg))
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	return READ_ONCE(memcg->memory.elow) >=
 		page_counter_read(&memcg->memory);
 }
 
+<<<<<<< HEAD
 static inline bool mem_cgroup_below_min(struct mem_cgroup *target,
 					struct mem_cgroup *memcg)
 {
 	if (mem_cgroup_unprotected(target, memcg))
+=======
+static inline bool mem_cgroup_below_min(struct mem_cgroup *memcg)
+{
+	if (!mem_cgroup_supports_protection(memcg))
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	return READ_ONCE(memcg->memory.emin) >=
@@ -802,11 +861,14 @@ static inline void obj_cgroup_put(struct obj_cgroup *objcg)
 	percpu_ref_put(&objcg->refcnt);
 }
 
+<<<<<<< HEAD
 static inline bool mem_cgroup_tryget(struct mem_cgroup *memcg)
 {
 	return !memcg || css_tryget(&memcg->css);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void mem_cgroup_put(struct mem_cgroup *memcg)
 {
 	if (memcg)
@@ -891,7 +953,11 @@ static inline bool mm_match_cgroup(struct mm_struct *mm,
 	return match;
 }
 
+<<<<<<< HEAD
 struct cgroup_subsys_state *mem_cgroup_css_from_folio(struct folio *folio);
+=======
+struct cgroup_subsys_state *mem_cgroup_css_from_page(struct page *page);
+>>>>>>> b7ba80a49124 (Commit)
 ino_t page_cgroup_ino(struct page *page);
 
 static inline bool mem_cgroup_online(struct mem_cgroup *memcg)
@@ -1178,11 +1244,14 @@ static inline struct mem_cgroup *folio_memcg_rcu(struct folio *folio)
 	return NULL;
 }
 
+<<<<<<< HEAD
 static inline struct mem_cgroup *folio_memcg_check(struct folio *folio)
 {
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct mem_cgroup *page_memcg_check(struct page *page)
 {
 	return NULL;
@@ -1231,6 +1300,7 @@ static inline void mem_cgroup_calculate_protection(struct mem_cgroup *root,
 {
 }
 
+<<<<<<< HEAD
 static inline bool mem_cgroup_unprotected(struct mem_cgroup *target,
 					  struct mem_cgroup *memcg)
 {
@@ -1238,12 +1308,19 @@ static inline bool mem_cgroup_unprotected(struct mem_cgroup *target,
 }
 static inline bool mem_cgroup_below_low(struct mem_cgroup *target,
 					struct mem_cgroup *memcg)
+=======
+static inline bool mem_cgroup_below_low(struct mem_cgroup *memcg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return false;
 }
 
+<<<<<<< HEAD
 static inline bool mem_cgroup_below_min(struct mem_cgroup *target,
 					struct mem_cgroup *memcg)
+=======
+static inline bool mem_cgroup_below_min(struct mem_cgroup *memcg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return false;
 }
@@ -1319,11 +1396,14 @@ static inline void obj_cgroup_put(struct obj_cgroup *objcg)
 {
 }
 
+<<<<<<< HEAD
 static inline bool mem_cgroup_tryget(struct mem_cgroup *memcg)
 {
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void mem_cgroup_put(struct mem_cgroup *memcg)
 {
 }
@@ -1689,6 +1769,7 @@ void mem_cgroup_track_foreign_dirty_slowpath(struct folio *folio,
 static inline void mem_cgroup_track_foreign_dirty(struct folio *folio,
 						  struct bdi_writeback *wb)
 {
+<<<<<<< HEAD
 	struct mem_cgroup *memcg;
 
 	if (mem_cgroup_disabled())
@@ -1696,6 +1777,12 @@ static inline void mem_cgroup_track_foreign_dirty(struct folio *folio,
 
 	memcg = folio_memcg(folio);
 	if (unlikely(memcg && &memcg->css != wb->memcg_css))
+=======
+	if (mem_cgroup_disabled())
+		return;
+
+	if (unlikely(&folio_memcg(folio)->css != wb->memcg_css))
+>>>>>>> b7ba80a49124 (Commit)
 		mem_cgroup_track_foreign_dirty_slowpath(folio, wb);
 }
 
@@ -1777,6 +1864,7 @@ struct obj_cgroup *get_obj_cgroup_from_page(struct page *page);
 int obj_cgroup_charge(struct obj_cgroup *objcg, gfp_t gfp, size_t size);
 void obj_cgroup_uncharge(struct obj_cgroup *objcg, size_t size);
 
+<<<<<<< HEAD
 extern struct static_key_false memcg_bpf_enabled_key;
 static inline bool memcg_bpf_enabled(void)
 {
@@ -1788,19 +1876,34 @@ extern struct static_key_false memcg_kmem_online_key;
 static inline bool memcg_kmem_online(void)
 {
 	return static_branch_likely(&memcg_kmem_online_key);
+=======
+extern struct static_key_false memcg_kmem_enabled_key;
+
+static inline bool memcg_kmem_enabled(void)
+{
+	return static_branch_likely(&memcg_kmem_enabled_key);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline int memcg_kmem_charge_page(struct page *page, gfp_t gfp,
 					 int order)
 {
+<<<<<<< HEAD
 	if (memcg_kmem_online())
+=======
+	if (memcg_kmem_enabled())
+>>>>>>> b7ba80a49124 (Commit)
 		return __memcg_kmem_charge_page(page, gfp, order);
 	return 0;
 }
 
 static inline void memcg_kmem_uncharge_page(struct page *page, int order)
 {
+<<<<<<< HEAD
 	if (memcg_kmem_online())
+=======
+	if (memcg_kmem_enabled())
+>>>>>>> b7ba80a49124 (Commit)
 		__memcg_kmem_uncharge_page(page, order);
 }
 
@@ -1821,7 +1924,11 @@ static inline void count_objcg_event(struct obj_cgroup *objcg,
 {
 	struct mem_cgroup *memcg;
 
+<<<<<<< HEAD
 	if (!memcg_kmem_online())
+=======
+	if (!memcg_kmem_enabled())
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	rcu_read_lock();
@@ -1830,6 +1937,45 @@ static inline void count_objcg_event(struct obj_cgroup *objcg,
 	rcu_read_unlock();
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * get_mem_cgroup_from_obj - get a memcg associated with passed kernel object.
+ * @p: pointer to object from which memcg should be extracted. It can be NULL.
+ *
+ * Retrieves the memory group into which the memory of the pointed kernel
+ * object is accounted. If memcg is found, its reference is taken.
+ * If a passed kernel object is uncharged, or if proper memcg cannot be found,
+ * as well as if mem_cgroup is disabled, NULL is returned.
+ *
+ * Return: valid memcg pointer with taken reference or NULL.
+ */
+static inline struct mem_cgroup *get_mem_cgroup_from_obj(void *p)
+{
+	struct mem_cgroup *memcg;
+
+	rcu_read_lock();
+	do {
+		memcg = mem_cgroup_from_obj(p);
+	} while (memcg && !css_tryget(&memcg->css));
+	rcu_read_unlock();
+	return memcg;
+}
+
+/**
+ * mem_cgroup_or_root - always returns a pointer to a valid memory cgroup.
+ * @memcg: pointer to a valid memory cgroup or NULL.
+ *
+ * If passed argument is not NULL, returns it without any additional checks
+ * and changes. Otherwise, root_mem_cgroup is returned.
+ *
+ * NOTE: root_mem_cgroup can be NULL during early boot.
+ */
+static inline struct mem_cgroup *mem_cgroup_or_root(struct mem_cgroup *memcg)
+{
+	return memcg ? memcg : root_mem_cgroup;
+}
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline bool mem_cgroup_kmem_disabled(void)
 {
@@ -1861,12 +2007,16 @@ static inline struct obj_cgroup *get_obj_cgroup_from_page(struct page *page)
 	return NULL;
 }
 
+<<<<<<< HEAD
 static inline bool memcg_bpf_enabled(void)
 {
 	return false;
 }
 
 static inline bool memcg_kmem_online(void)
+=======
+static inline bool memcg_kmem_enabled(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return false;
 }
@@ -1891,6 +2041,18 @@ static inline void count_objcg_event(struct obj_cgroup *objcg,
 {
 }
 
+<<<<<<< HEAD
+=======
+static inline struct mem_cgroup *get_mem_cgroup_from_obj(void *p)
+{
+	return NULL;
+}
+
+static inline struct mem_cgroup *mem_cgroup_or_root(struct mem_cgroup *memcg)
+{
+	return NULL;
+}
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_MEMCG_KMEM */
 
 #if defined(CONFIG_MEMCG_KMEM) && defined(CONFIG_ZSWAP)

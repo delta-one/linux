@@ -639,7 +639,11 @@ out:
 
 static int palmas_gpadc_remove(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	struct iio_dev *indio_dev = dev_get_drvdata(&pdev->dev);
+=======
+	struct iio_dev *indio_dev = dev_to_iio_dev(&pdev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	struct palmas_gpadc *adc = iio_priv(indio_dev);
 
 	if (adc->wakeup1_enable || adc->wakeup2_enable)

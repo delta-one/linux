@@ -29,7 +29,10 @@ struct malidp_error_stats {
 };
 
 struct malidp_drm {
+<<<<<<< HEAD
 	struct drm_device base;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct malidp_hw_device *dev;
 	struct drm_crtc crtc;
 	struct drm_writeback_connector mw_connector;
@@ -45,7 +48,10 @@ struct malidp_drm {
 #endif
 };
 
+<<<<<<< HEAD
 #define drm_to_malidp(x) container_of(x, struct malidp_drm, base)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define crtc_to_malidp_device(x) container_of(x, struct malidp_drm, crtc)
 
 struct malidp_plane {

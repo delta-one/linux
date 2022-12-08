@@ -134,6 +134,11 @@ err_no_lock:
 static int soc_compr_open_fe(struct snd_compr_stream *cstream)
 {
 	struct snd_soc_pcm_runtime *fe = cstream->private_data;
+<<<<<<< HEAD
+=======
+	struct snd_pcm_substream *fe_substream =
+		 fe->pcm->streams[cstream->direction].substream;
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(fe, 0);
 	struct snd_soc_dpcm *dpcm;
 	struct snd_soc_dapm_widget_list *list;
@@ -141,15 +146,25 @@ static int soc_compr_open_fe(struct snd_compr_stream *cstream)
 	int ret;
 
 	mutex_lock_nested(&fe->card->mutex, SND_SOC_CARD_CLASS_RUNTIME);
+<<<<<<< HEAD
+=======
+	fe->dpcm[stream].runtime = fe_substream->runtime;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = dpcm_path_get(fe, stream, &list);
 	if (ret < 0)
 		goto be_err;
 
+<<<<<<< HEAD
 	mutex_lock_nested(&fe->card->pcm_mutex, fe->card->pcm_subclass);
 
 	/* calculate valid and active FE <-> BE dpcms */
 	dpcm_process_paths(fe, stream, &list, 1);
+=======
+	/* calculate valid and active FE <-> BE dpcms */
+	dpcm_process_paths(fe, stream, &list, 1);
+	fe->dpcm[stream].runtime = fe_substream->runtime;
+>>>>>>> b7ba80a49124 (Commit)
 
 	fe->dpcm[stream].runtime_update = SND_SOC_DPCM_UPDATE_FE;
 
@@ -160,6 +175,10 @@ static int soc_compr_open_fe(struct snd_compr_stream *cstream)
 			dpcm->state = SND_SOC_DPCM_LINK_STATE_FREE;
 
 		dpcm_be_disconnect(fe, stream);
+<<<<<<< HEAD
+=======
+		fe->dpcm[stream].runtime = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -181,6 +200,10 @@ static int soc_compr_open_fe(struct snd_compr_stream *cstream)
 	fe->dpcm[stream].state = SND_SOC_DPCM_STATE_OPEN;
 	fe->dpcm[stream].runtime_update = SND_SOC_DPCM_UPDATE_NO;
 
+<<<<<<< HEAD
+=======
+	mutex_lock_nested(&fe->card->pcm_mutex, fe->card->pcm_subclass);
+>>>>>>> b7ba80a49124 (Commit)
 	snd_soc_runtime_activate(fe, stream);
 	mutex_unlock(&fe->card->pcm_mutex);
 
@@ -211,6 +234,10 @@ static int soc_compr_free_fe(struct snd_compr_stream *cstream)
 
 	mutex_lock_nested(&fe->card->pcm_mutex, fe->card->pcm_subclass);
 	snd_soc_runtime_deactivate(fe, stream);
+<<<<<<< HEAD
+=======
+	mutex_unlock(&fe->card->pcm_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	fe->dpcm[stream].runtime_update = SND_SOC_DPCM_UPDATE_FE;
 
@@ -229,7 +256,11 @@ static int soc_compr_free_fe(struct snd_compr_stream *cstream)
 
 	dpcm_be_disconnect(fe, stream);
 
+<<<<<<< HEAD
 	mutex_unlock(&fe->card->pcm_mutex);
+=======
+	fe->dpcm[stream].runtime = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	snd_soc_link_compr_shutdown(cstream, 0);
 
@@ -404,9 +435,14 @@ static int soc_compr_set_params_fe(struct snd_compr_stream *cstream,
 	ret = snd_soc_link_compr_set_params(cstream);
 	if (ret < 0)
 		goto out;
+<<<<<<< HEAD
 	mutex_lock_nested(&fe->card->pcm_mutex, fe->card->pcm_subclass);
 	dpcm_dapm_stream_event(fe, stream, SND_SOC_DAPM_STREAM_START);
 	mutex_unlock(&fe->card->pcm_mutex);
+=======
+
+	dpcm_dapm_stream_event(fe, stream, SND_SOC_DAPM_STREAM_START);
+>>>>>>> b7ba80a49124 (Commit)
 	fe->dpcm[stream].state = SND_SOC_DPCM_STATE_PREPARE;
 
 out:
@@ -619,7 +655,11 @@ int snd_soc_new_compress(struct snd_soc_pcm_runtime *rtd, int num)
 		rtd->fe_compr = 1;
 		if (rtd->dai_link->dpcm_playback)
 			be_pcm->streams[SNDRV_PCM_STREAM_PLAYBACK].substream->private_data = rtd;
+<<<<<<< HEAD
 		if (rtd->dai_link->dpcm_capture)
+=======
+		else if (rtd->dai_link->dpcm_capture)
+>>>>>>> b7ba80a49124 (Commit)
 			be_pcm->streams[SNDRV_PCM_STREAM_CAPTURE].substream->private_data = rtd;
 		memcpy(compr->ops, &soc_compr_dyn_ops, sizeof(soc_compr_dyn_ops));
 	} else {

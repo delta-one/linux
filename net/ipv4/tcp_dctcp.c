@@ -54,7 +54,10 @@ struct dctcp {
 	u32 next_seq;
 	u32 ce_state;
 	u32 loss_cwnd;
+<<<<<<< HEAD
 	struct tcp_plb_state plb;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static unsigned int dctcp_shift_g __read_mostly = 4; /* g = 1/2^4 */
@@ -75,7 +78,11 @@ static void dctcp_reset(const struct tcp_sock *tp, struct dctcp *ca)
 	ca->old_delivered_ce = tp->delivered_ce;
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static void dctcp_init(struct sock *sk)
+=======
+static void dctcp_init(struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct tcp_sock *tp = tcp_sk(sk);
 
@@ -92,8 +99,11 @@ __bpf_kfunc static void dctcp_init(struct sock *sk)
 		ca->ce_state = 0;
 
 		dctcp_reset(tp, ca);
+<<<<<<< HEAD
 		tcp_plb_init(sk, &ca->plb);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -104,7 +114,11 @@ __bpf_kfunc static void dctcp_init(struct sock *sk)
 	INET_ECN_dontxmit(sk);
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static u32 dctcp_ssthresh(struct sock *sk)
+=======
+static u32 dctcp_ssthresh(struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dctcp *ca = inet_csk_ca(sk);
 	struct tcp_sock *tp = tcp_sk(sk);
@@ -113,13 +127,18 @@ __bpf_kfunc static u32 dctcp_ssthresh(struct sock *sk)
 	return max(tcp_snd_cwnd(tp) - ((tcp_snd_cwnd(tp) * ca->dctcp_alpha) >> 11U), 2U);
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static void dctcp_update_alpha(struct sock *sk, u32 flags)
+=======
+static void dctcp_update_alpha(struct sock *sk, u32 flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct tcp_sock *tp = tcp_sk(sk);
 	struct dctcp *ca = inet_csk_ca(sk);
 
 	/* Expired RTT */
 	if (!before(tp->snd_una, ca->next_seq)) {
+<<<<<<< HEAD
 		u32 delivered = tp->delivered - ca->old_delivered;
 		u32 delivered_ce = tp->delivered_ce - ca->old_delivered_ce;
 		u32 alpha = ca->dctcp_alpha;
@@ -137,11 +156,19 @@ __bpf_kfunc static void dctcp_update_alpha(struct sock *sk, u32 flags)
 			tcp_plb_update_state(sk, &ca->plb, (int)ce_ratio);
 			tcp_plb_check_rehash(sk, &ca->plb);
 		}
+=======
+		u32 delivered_ce = tp->delivered_ce - ca->old_delivered_ce;
+		u32 alpha = ca->dctcp_alpha;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* alpha = (1 - g) * alpha + g * F */
 
 		alpha -= min_not_zero(alpha, alpha >> dctcp_shift_g);
 		if (delivered_ce) {
+<<<<<<< HEAD
+=======
+			u32 delivered = tp->delivered - ca->old_delivered;
+>>>>>>> b7ba80a49124 (Commit)
 
 			/* If dctcp_shift_g == 1, a 32bit value would overflow
 			 * after 8 M packets.
@@ -169,7 +196,11 @@ static void dctcp_react_to_loss(struct sock *sk)
 	tp->snd_ssthresh = max(tcp_snd_cwnd(tp) >> 1U, 2U);
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static void dctcp_state(struct sock *sk, u8 new_state)
+=======
+static void dctcp_state(struct sock *sk, u8 new_state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (new_state == TCP_CA_Recovery &&
 	    new_state != inet_csk(sk)->icsk_ca_state)
@@ -179,7 +210,11 @@ __bpf_kfunc static void dctcp_state(struct sock *sk, u8 new_state)
 	 */
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static void dctcp_cwnd_event(struct sock *sk, enum tcp_ca_event ev)
+=======
+static void dctcp_cwnd_event(struct sock *sk, enum tcp_ca_event ev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dctcp *ca = inet_csk_ca(sk);
 
@@ -189,12 +224,17 @@ __bpf_kfunc static void dctcp_cwnd_event(struct sock *sk, enum tcp_ca_event ev)
 		dctcp_ece_ack_update(sk, ev, &ca->prior_rcv_nxt, &ca->ce_state);
 		break;
 	case CA_EVENT_LOSS:
+<<<<<<< HEAD
 		tcp_plb_update_state_upon_rto(sk, &ca->plb);
 		dctcp_react_to_loss(sk);
 		break;
 	case CA_EVENT_TX_START:
 		tcp_plb_check_rehash(sk, &ca->plb); /* Maybe rehash when inflight is 0 */
 		break;
+=======
+		dctcp_react_to_loss(sk);
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		/* Don't care for the rest. */
 		break;
@@ -229,7 +269,11 @@ static size_t dctcp_get_info(struct sock *sk, u32 ext, int *attr,
 	return 0;
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static u32 dctcp_cwnd_undo(struct sock *sk)
+=======
+static u32 dctcp_cwnd_undo(struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct dctcp *ca = inet_csk_ca(sk);
 	struct tcp_sock *tp = tcp_sk(sk);

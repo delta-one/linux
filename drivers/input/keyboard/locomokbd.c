@@ -310,7 +310,11 @@ static void locomokbd_remove(struct locomo_dev *dev)
 
 	free_irq(dev->irq[0], locomokbd);
 
+<<<<<<< HEAD
 	timer_shutdown_sync(&locomokbd->timer);
+=======
+	del_timer_sync(&locomokbd->timer);
+>>>>>>> b7ba80a49124 (Commit)
 
 	input_unregister_device(locomokbd->input);
 	locomo_set_drvdata(dev, NULL);

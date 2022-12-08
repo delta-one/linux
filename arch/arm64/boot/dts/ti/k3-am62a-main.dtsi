@@ -48,6 +48,7 @@
 		#address-cells = <1>;
 		#size-cells = <1>;
 		ranges = <0x00 0x00 0x00100000 0x20000>;
+<<<<<<< HEAD
 
 		phy_gmii_sel: phy@4044 {
 			compatible = "ti,am654-phy-gmii-sel";
@@ -60,6 +61,8 @@
 			reg = <0x4130 0x4>;
 			#clock-cells = <1>;
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	dmss: bus@48000000 {
@@ -81,6 +84,7 @@
 			interrupt-names = "rx_012";
 			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
 		};
+<<<<<<< HEAD
 
 		inta_main_dmss: interrupt-controller@48000000 {
 			compatible = "ti,sci-inta";
@@ -142,6 +146,8 @@
 						<0x2e>, /* FLOW_SAUL_RX_0/1_CHAN */
 						<0x32>; /* FLOW_SAUL_RX_2/3_CHAN */
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	dmsc: system-controller@44043000 {
@@ -295,6 +301,7 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
 	main_spi0: spi@20100000 {
 		compatible = "ti,am654-mcspi", "ti,omap4-mcspi";
 		reg = <0x00 0x20100000 0x00 0x400>;
@@ -328,6 +335,8 @@
 		status = "disabled";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	main_gpio_intr: interrupt-controller@a00000 {
 		compatible = "ti,sci-intr";
 		reg = <0x00 0x00a00000 0x00 0x800>;
@@ -401,6 +410,7 @@
 		no-1-8-v;
 		status = "disabled";
 	};
+<<<<<<< HEAD
 
 	usbss0: dwc3-usb@f900000 {
 		compatible = "ti,am62-usb";
@@ -660,4 +670,6 @@
 		clock-names = "fck";
 		status = "disabled";
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

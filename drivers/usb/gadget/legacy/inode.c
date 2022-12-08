@@ -229,7 +229,10 @@ static void put_ep (struct ep_data *data)
  */
 
 static const char *CHIP;
+<<<<<<< HEAD
 static DEFINE_MUTEX(sb_mutex);		/* Serialize superblock operations */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*----------------------------------------------------------------------*/
 
@@ -2011,6 +2014,7 @@ gadgetfs_fill_super (struct super_block *sb, struct fs_context *fc)
 {
 	struct inode	*inode;
 	struct dev_data	*dev;
+<<<<<<< HEAD
 	int		rc;
 
 	mutex_lock(&sb_mutex);
@@ -2025,6 +2029,15 @@ gadgetfs_fill_super (struct super_block *sb, struct fs_context *fc)
 		rc = -ENODEV;
 		goto Done;
 	}
+=======
+
+	if (the_device)
+		return -ESRCH;
+
+	CHIP = usb_get_gadget_udc_name();
+	if (!CHIP)
+		return -ENODEV;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* superblock */
 	sb->s_blocksize = PAGE_SIZE;
@@ -2061,6 +2074,7 @@ gadgetfs_fill_super (struct super_block *sb, struct fs_context *fc)
 	 * from binding to a controller.
 	 */
 	the_device = dev;
+<<<<<<< HEAD
 	rc = 0;
 	goto Done;
 
@@ -2072,6 +2086,15 @@ gadgetfs_fill_super (struct super_block *sb, struct fs_context *fc)
  Done:
 	mutex_unlock(&sb_mutex);
 	return rc;
+=======
+	return 0;
+
+Enomem:
+	kfree(CHIP);
+	CHIP = NULL;
+
+	return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* "mount -t gadgetfs path /dev/gadget" ends up here */
@@ -2093,7 +2116,10 @@ static int gadgetfs_init_fs_context(struct fs_context *fc)
 static void
 gadgetfs_kill_sb (struct super_block *sb)
 {
+<<<<<<< HEAD
 	mutex_lock(&sb_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kill_litter_super (sb);
 	if (the_device) {
 		put_dev (the_device);
@@ -2101,7 +2127,10 @@ gadgetfs_kill_sb (struct super_block *sb)
 	}
 	kfree(CHIP);
 	CHIP = NULL;
+<<<<<<< HEAD
 	mutex_unlock(&sb_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*----------------------------------------------------------------------*/

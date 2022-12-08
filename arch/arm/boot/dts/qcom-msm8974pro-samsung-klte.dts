@@ -7,8 +7,12 @@
 
 / {
 	model = "Samsung Galaxy S5";
+<<<<<<< HEAD
 	compatible = "samsung,klte", "qcom,msm8974pro", "qcom,msm8974";
 	chassis-type = "handset";
+=======
+	compatible = "samsung,klte", "qcom,msm8974";
+>>>>>>> b7ba80a49124 (Commit)
 
 	aliases {
 		serial0 = &blsp1_uart1;
@@ -376,6 +380,31 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
+=======
+&otg {
+	status = "okay";
+
+	phys = <&usb_hs1_phy>;
+	phy-select = <&tcsr 0xb000 0>;
+
+	hnp-disable;
+	srp-disable;
+	adp-disable;
+
+	ulpi {
+		phy@a {
+			status = "okay";
+
+			v1p8-supply = <&pma8084_l6>;
+			v3p3-supply = <&pma8084_l24>;
+
+			qcom,init-seq = /bits/ 8 <0x1 0x64>;
+		};
+	};
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &pma8084_gpios {
 	gpio_keys_pin_a: gpio-keys-active-state {
 		pins = "gpio2", "gpio3", "gpio5";
@@ -449,7 +478,11 @@
 };
 
 &rpm_requests {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pma8084-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pma8084-regulators";
 
 		pma8084_s1: s1 {
@@ -685,57 +718,91 @@
 
 &tlmm {
 	/* This seems suspicious, but somebody with this device should look into it. */
+<<<<<<< HEAD
 	blsp2_uart2_pins_active: blsp2-uart2-pins-active-state {
+=======
+	blsp2_uart2_pins_active: blsp2-uart2-pins-active {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio45", "gpio46", "gpio47", "gpio48";
 		function = "blsp_uart8";
 		drive-strength = <8>;
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	blsp2_uart2_pins_sleep: blsp2-uart2-pins-sleep-state {
+=======
+	blsp2_uart2_pins_sleep: blsp2-uart2-pins-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio45", "gpio46", "gpio47", "gpio48";
 		function = "gpio";
 		drive-strength = <2>;
 		bias-pull-down;
 	};
 
+<<<<<<< HEAD
 	bt_pins: bt-pins-state {
 		hostwake-pins {
+=======
+	bt_pins: bt-pins {
+		hostwake {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio75";
 			function = "gpio";
 			drive-strength = <16>;
 			input-enable;
 		};
 
+<<<<<<< HEAD
 		devwake-pins {
+=======
+		devwake {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio91";
 			function = "gpio";
 			drive-strength = <2>;
 		};
 	};
 
+<<<<<<< HEAD
 	sdc1_on: sdhc1-on-state {
 		clk-pins {
+=======
+	sdc1_on: sdhc1-on {
+		clk {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc1_clk";
 			drive-strength = <4>;
 			bias-disable;
 		};
 
+<<<<<<< HEAD
 		cmd-data-pins {
+=======
+		cmd-data {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc1_cmd", "sdc1_data";
 			drive-strength = <4>;
 			bias-pull-up;
 		};
 	};
 
+<<<<<<< HEAD
 	sdc3_on: sdc3-on-state {
+=======
+	sdc3_on: sdc3-on {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio35", "gpio36", "gpio37", "gpio38", "gpio39", "gpio40";
 		function = "sdc3";
 		drive-strength = <8>;
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	sdhc3_cd_pin: sdc3-cd-on-state {
+=======
+	sdhc3_cd_pin: sdc3-cd-on {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio62";
 		function = "gpio";
 
@@ -743,55 +810,85 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	sdc2_on: sdhc2-on-state {
 		clk-pins {
+=======
+	sdc2_on: sdhc2-on {
+		clk {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_clk";
 			drive-strength = <6>;
 			bias-disable;
 		};
 
+<<<<<<< HEAD
 		cmd-data-pins {
+=======
+		cmd-data {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_cmd", "sdc2_data";
 			drive-strength = <6>;
 			bias-pull-up;
 		};
 	};
 
+<<<<<<< HEAD
 	i2c_touchkey_pins: i2c-touchkey-state {
+=======
+	i2c_touchkey_pins: i2c-touchkey {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio95", "gpio96";
 		function = "gpio";
 		input-enable;
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	i2c_led_gpioex_pins: i2c-led-gpioex-state {
+=======
+	i2c_led_gpioex_pins: i2c-led-gpioex {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio120", "gpio121";
 		function = "gpio";
 		input-enable;
 		bias-pull-down;
 	};
 
+<<<<<<< HEAD
 	gpioex_pin: gpioex-state {
+=======
+	gpioex_pin: gpioex {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio145";
 		function = "gpio";
 		bias-pull-up;
 		drive-strength = <2>;
 	};
 
+<<<<<<< HEAD
 	wifi_pin: wifi-state {
+=======
+	wifi_pin: wifi {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio92";
 		function = "gpio";
 		input-enable;
 		bias-pull-down;
 	};
 
+<<<<<<< HEAD
 	panel_te_pin: panel-state {
+=======
+	panel_te_pin: panel {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio12";
 		function = "mdp_vsync";
 		drive-strength = <2>;
 		bias-disable;
 	};
 };
+<<<<<<< HEAD
 
 &usb {
 	status = "okay";
@@ -812,3 +909,5 @@
 
 	qcom,init-seq = /bits/ 8 <0x1 0x64>;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

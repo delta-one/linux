@@ -257,10 +257,20 @@ gsc_hwmon_get_devtree_pdata(struct device *dev)
 	if (nchannels == 0)
 		return ERR_PTR(-ENODEV);
 
+<<<<<<< HEAD
 	pdata = devm_kzalloc(dev, struct_size(pdata, channels, nchannels),
 			     GFP_KERNEL);
 	if (!pdata)
 		return ERR_PTR(-ENOMEM);
+=======
+	pdata = devm_kzalloc(dev,
+			     sizeof(*pdata) + nchannels * sizeof(*ch),
+			     GFP_KERNEL);
+	if (!pdata)
+		return ERR_PTR(-ENOMEM);
+	ch = (struct gsc_hwmon_channel *)(pdata + 1);
+	pdata->channels = ch;
+>>>>>>> b7ba80a49124 (Commit)
 	pdata->nchannels = nchannels;
 
 	/* fan controller base address */
@@ -274,7 +284,10 @@ gsc_hwmon_get_devtree_pdata(struct device *dev)
 
 	of_node_put(fan);
 
+<<<<<<< HEAD
 	ch = pdata->channels;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* allocate structures for channels and count instances of each type */
 	device_for_each_child_node(dev, child) {
 		if (fwnode_property_read_string(child, "label", &ch->name)) {

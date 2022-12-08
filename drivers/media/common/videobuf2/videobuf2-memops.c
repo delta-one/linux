@@ -26,7 +26,10 @@
  * vb2_create_framevec() - map virtual addresses to pfns
  * @start:	Virtual user address where we start mapping
  * @length:	Length of a range to map
+<<<<<<< HEAD
  * @write:	Should we map for writing into the area
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This function allocates and fills in a vector with pfns corresponding to
  * virtual address range passed in arguments. If pfns have corresponding pages,
@@ -35,8 +38,12 @@
  * failure. Returned vector needs to be freed via vb2_destroy_pfnvec().
  */
 struct frame_vector *vb2_create_framevec(unsigned long start,
+<<<<<<< HEAD
 					 unsigned long length,
 					 bool write)
+=======
+					 unsigned long length)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 	unsigned long first, last;
@@ -49,7 +56,11 @@ struct frame_vector *vb2_create_framevec(unsigned long start,
 	vec = frame_vector_create(nr);
 	if (!vec)
 		return ERR_PTR(-ENOMEM);
+<<<<<<< HEAD
 	ret = get_vaddr_frames(start & PAGE_MASK, nr, write, vec);
+=======
+	ret = get_vaddr_frames(start & PAGE_MASK, nr, vec);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		goto out_destroy;
 	/* We accept only complete set of PFNs */

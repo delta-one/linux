@@ -23,9 +23,12 @@ static int cs35l45_spi_probe(struct spi_device *spi)
 	if (cs35l45 == NULL)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	spi->max_speed_hz = CS35L45_SPI_MAX_FREQ;
 	spi_setup(spi);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spi_set_drvdata(spi, cs35l45);
 	cs35l45->regmap = devm_regmap_init_spi(spi, &cs35l45_spi_regmap);
 	if (IS_ERR(cs35l45->regmap)) {
@@ -35,8 +38,11 @@ static int cs35l45_spi_probe(struct spi_device *spi)
 	}
 
 	cs35l45->dev = dev;
+<<<<<<< HEAD
 	cs35l45->irq = spi->irq;
 	cs35l45->bus_type = CONTROL_BUS_SPI;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return cs35l45_probe(cs35l45);
 }
@@ -76,3 +82,7 @@ MODULE_DESCRIPTION("SPI CS35L45 driver");
 MODULE_AUTHOR("James Schulman, Cirrus Logic Inc, <james.schulman@cirrus.com>");
 MODULE_LICENSE("Dual BSD/GPL");
 MODULE_IMPORT_NS(SND_SOC_CS35L45);
+<<<<<<< HEAD
+=======
+MODULE_IMPORT_NS(SND_SOC_CS35L45_TABLES);
+>>>>>>> b7ba80a49124 (Commit)

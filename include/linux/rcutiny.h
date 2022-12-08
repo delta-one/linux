@@ -98,16 +98,24 @@ static inline void synchronize_rcu_expedited(void)
  */
 extern void kvfree(const void *addr);
 
+<<<<<<< HEAD
 static inline void __kvfree_call_rcu(struct rcu_head *head, void *ptr)
 {
 	if (head) {
 		call_rcu(head, (rcu_callback_t) ((void *) head - ptr));
+=======
+static inline void __kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+{
+	if (head) {
+		call_rcu(head, func);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
 	// kvfree_rcu(one_arg) call.
 	might_sleep();
 	synchronize_rcu();
+<<<<<<< HEAD
 	kvfree(ptr);
 }
 
@@ -117,6 +125,17 @@ void kvfree_call_rcu(struct rcu_head *head, void *ptr);
 static inline void kvfree_call_rcu(struct rcu_head *head, void *ptr)
 {
 	__kvfree_call_rcu(head, ptr);
+=======
+	kvfree((void *) func);
+}
+
+#ifdef CONFIG_KASAN_GENERIC
+void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func);
+#else
+static inline void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+{
+	__kvfree_call_rcu(head, func);
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif
 
@@ -146,13 +165,26 @@ static inline void rcu_virt_note_context_switch(void) { }
 static inline void rcu_cpu_stall_reset(void) { }
 static inline int rcu_jiffies_till_stall_check(void) { return 21 * HZ; }
 static inline void rcu_irq_exit_check_preempt(void) { }
+<<<<<<< HEAD
+=======
+#define rcu_is_idle_cpu(cpu) \
+	(is_idle_task(current) && !in_nmi() && !in_hardirq() && !in_serving_softirq())
+>>>>>>> b7ba80a49124 (Commit)
 static inline void exit_rcu(void) { }
 static inline bool rcu_preempt_need_deferred_qs(struct task_struct *t)
 {
 	return false;
 }
 static inline void rcu_preempt_deferred_qs(struct task_struct *t) { }
+<<<<<<< HEAD
 void rcu_scheduler_starting(void);
+=======
+#ifdef CONFIG_SRCU
+void rcu_scheduler_starting(void);
+#else /* #ifndef CONFIG_SRCU */
+static inline void rcu_scheduler_starting(void) { }
+#endif /* #else #ifndef CONFIG_SRCU */
+>>>>>>> b7ba80a49124 (Commit)
 static inline void rcu_end_inkernel_boot(void) { }
 static inline bool rcu_inkernel_boot_has_ended(void) { return true; }
 static inline bool rcu_is_watching(void) { return true; }

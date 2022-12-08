@@ -768,7 +768,10 @@ struct cec_event {
 #define CEC_OP_FEAT_DEV_HAS_SET_AUDIO_RATE		0x08
 #define CEC_OP_FEAT_DEV_SINK_HAS_ARC_TX			0x04
 #define CEC_OP_FEAT_DEV_SOURCE_HAS_ARC_RX		0x02
+<<<<<<< HEAD
 #define CEC_OP_FEAT_DEV_HAS_SET_AUDIO_VOLUME_LEVEL	0x01
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define CEC_MSG_GIVE_FEATURES				0xa5	/* HDMI 2.0 */
 
@@ -1060,7 +1063,10 @@ struct cec_event {
 #define CEC_OP_AUD_FMT_ID_CEA861			0
 #define CEC_OP_AUD_FMT_ID_CEA861_CXT			1
 
+<<<<<<< HEAD
 #define CEC_MSG_SET_AUDIO_VOLUME_LEVEL			0x73
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Audio Rate Control Feature */
 #define CEC_MSG_SET_AUDIO_RATE				0x9a

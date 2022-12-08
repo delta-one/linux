@@ -5,16 +5,25 @@
  *  Copyright (c) 2009 Jiri Kosina
  *  Copyright (c) 2009 Tomas Hanak
  *  Copyright (c) 2012 Nikolai Kondrashov
+<<<<<<< HEAD
  *  Copyright (c) 2023 David Yang
  */
 
 #include <asm-generic/unaligned.h>
+=======
+ */
+
+/*
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/device.h>
 #include <linux/hid.h>
 #include <linux/module.h>
 
 #include "hid-ids.h"
 
+<<<<<<< HEAD
 static const __u8 easypen_m610x_control_rdesc[] = {
 	0x05, 0x0C,        /*  Usage Page (Consumer),       */
 	0x09, 0x01,        /*  Usage (Consumer Control),    */
@@ -79,11 +88,356 @@ static const __u8 easypen_m406xe_control_rdesc[] = {
 
 /* Fix indexes in kye_tablet_report_fixup if you change this */
 static const __u8 kye_tablet_rdesc[] = {
+=======
+/* Original EasyPen i405X report descriptor size */
+#define EASYPEN_I405X_RDESC_ORIG_SIZE	476
+
+/* Fixed EasyPen i405X report descriptor */
+static __u8 easypen_i405x_rdesc_fixed[] = {
+	0x06, 0x00, 0xFF, /*  Usage Page (FF00h),             */
+	0x09, 0x01,       /*  Usage (01h),                    */
+	0xA1, 0x01,       /*  Collection (Application),       */
+	0x85, 0x05,       /*    Report ID (5),                */
+	0x09, 0x01,       /*    Usage (01h),                  */
+	0x15, 0x80,       /*    Logical Minimum (-128),       */
+	0x25, 0x7F,       /*    Logical Maximum (127),        */
+	0x75, 0x08,       /*    Report Size (8),              */
+	0x95, 0x07,       /*    Report Count (7),             */
+	0xB1, 0x02,       /*    Feature (Variable),           */
+	0xC0,             /*  End Collection,                 */
+	0x05, 0x0D,       /*  Usage Page (Digitizer),         */
+	0x09, 0x01,       /*  Usage (Digitizer),              */
+	0xA1, 0x01,       /*  Collection (Application),       */
+	0x85, 0x10,       /*    Report ID (16),               */
+	0x09, 0x20,       /*    Usage (Stylus),               */
+	0xA0,             /*    Collection (Physical),        */
+	0x14,             /*      Logical Minimum (0),        */
+	0x25, 0x01,       /*      Logical Maximum (1),        */
+	0x75, 0x01,       /*      Report Size (1),            */
+	0x09, 0x42,       /*      Usage (Tip Switch),         */
+	0x09, 0x44,       /*      Usage (Barrel Switch),      */
+	0x09, 0x46,       /*      Usage (Tablet Pick),        */
+	0x95, 0x03,       /*      Report Count (3),           */
+	0x81, 0x02,       /*      Input (Variable),           */
+	0x95, 0x04,       /*      Report Count (4),           */
+	0x81, 0x03,       /*      Input (Constant, Variable), */
+	0x09, 0x32,       /*      Usage (In Range),           */
+	0x95, 0x01,       /*      Report Count (1),           */
+	0x81, 0x02,       /*      Input (Variable),           */
+	0x75, 0x10,       /*      Report Size (16),           */
+	0x95, 0x01,       /*      Report Count (1),           */
+	0xA4,             /*      Push,                       */
+	0x05, 0x01,       /*      Usage Page (Desktop),       */
+	0x55, 0xFD,       /*      Unit Exponent (-3),         */
+	0x65, 0x13,       /*      Unit (Inch),                */
+	0x34,             /*      Physical Minimum (0),       */
+	0x09, 0x30,       /*      Usage (X),                  */
+	0x46, 0x7C, 0x15, /*      Physical Maximum (5500),    */
+	0x26, 0x00, 0x37, /*      Logical Maximum (14080),    */
+	0x81, 0x02,       /*      Input (Variable),           */
+	0x09, 0x31,       /*      Usage (Y),                  */
+	0x46, 0xA0, 0x0F, /*      Physical Maximum (4000),    */
+	0x26, 0x00, 0x28, /*      Logical Maximum (10240),    */
+	0x81, 0x02,       /*      Input (Variable),           */
+	0xB4,             /*      Pop,                        */
+	0x09, 0x30,       /*      Usage (Tip Pressure),       */
+	0x26, 0xFF, 0x03, /*      Logical Maximum (1023),     */
+	0x81, 0x02,       /*      Input (Variable),           */
+	0xC0,             /*    End Collection,               */
+	0xC0              /*  End Collection                  */
+};
+
+/* Original MousePen i608X report descriptor size */
+#define MOUSEPEN_I608X_RDESC_ORIG_SIZE	476
+
+/* Fixed MousePen i608X report descriptor */
+static __u8 mousepen_i608x_rdesc_fixed[] = {
+	0x06, 0x00, 0xFF, /*  Usage Page (FF00h),             */
+	0x09, 0x01,       /*  Usage (01h),                    */
+	0xA1, 0x01,       /*  Collection (Application),       */
+	0x85, 0x05,       /*    Report ID (5),                */
+	0x09, 0x01,       /*    Usage (01h),                  */
+	0x15, 0x80,       /*    Logical Minimum (-128),       */
+	0x25, 0x7F,       /*    Logical Maximum (127),        */
+	0x75, 0x08,       /*    Report Size (8),              */
+	0x95, 0x07,       /*    Report Count (7),             */
+	0xB1, 0x02,       /*    Feature (Variable),           */
+	0xC0,             /*  End Collection,                 */
+	0x05, 0x0D,       /*  Usage Page (Digitizer),         */
+	0x09, 0x01,       /*  Usage (Digitizer),              */
+	0xA1, 0x01,       /*  Collection (Application),       */
+	0x85, 0x10,       /*    Report ID (16),               */
+	0x09, 0x20,       /*    Usage (Stylus),               */
+	0xA0,             /*    Collection (Physical),        */
+	0x14,             /*      Logical Minimum (0),        */
+	0x25, 0x01,       /*      Logical Maximum (1),        */
+	0x75, 0x01,       /*      Report Size (1),            */
+	0x09, 0x42,       /*      Usage (Tip Switch),         */
+	0x09, 0x44,       /*      Usage (Barrel Switch),      */
+	0x09, 0x46,       /*      Usage (Tablet Pick),        */
+	0x95, 0x03,       /*      Report Count (3),           */
+	0x81, 0x02,       /*      Input (Variable),           */
+	0x95, 0x04,       /*      Report Count (4),           */
+	0x81, 0x03,       /*      Input (Constant, Variable), */
+	0x09, 0x32,       /*      Usage (In Range),           */
+	0x95, 0x01,       /*      Report Count (1),           */
+	0x81, 0x02,       /*      Input (Variable),           */
+	0x75, 0x10,       /*      Report Size (16),           */
+	0x95, 0x01,       /*      Report Count (1),           */
+	0xA4,             /*      Push,                       */
+	0x05, 0x01,       /*      Usage Page (Desktop),       */
+	0x55, 0xFD,       /*      Unit Exponent (-3),         */
+	0x65, 0x13,       /*      Unit (Inch),                */
+	0x34,             /*      Physical Minimum (0),       */
+	0x09, 0x30,       /*      Usage (X),                  */
+	0x46, 0x40, 0x1F, /*      Physical Maximum (8000),    */
+	0x26, 0x00, 0x50, /*      Logical Maximum (20480),    */
+	0x81, 0x02,       /*      Input (Variable),           */
+	0x09, 0x31,       /*      Usage (Y),                  */
+	0x46, 0x70, 0x17, /*      Physical Maximum (6000),    */
+	0x26, 0x00, 0x3C, /*      Logical Maximum (15360),    */
+	0x81, 0x02,       /*      Input (Variable),           */
+	0xB4,             /*      Pop,                        */
+	0x09, 0x30,       /*      Usage (Tip Pressure),       */
+	0x26, 0xFF, 0x03, /*      Logical Maximum (1023),     */
+	0x81, 0x02,       /*      Input (Variable),           */
+	0xC0,             /*    End Collection,               */
+	0xC0,             /*  End Collection,                 */
+	0x05, 0x01,       /*  Usage Page (Desktop),           */
+	0x09, 0x02,       /*  Usage (Mouse),                  */
+	0xA1, 0x01,       /*  Collection (Application),       */
+	0x85, 0x11,       /*    Report ID (17),               */
+	0x09, 0x01,       /*    Usage (Pointer),              */
+	0xA0,             /*    Collection (Physical),        */
+	0x14,             /*      Logical Minimum (0),        */
+	0xA4,             /*      Push,                       */
+	0x05, 0x09,       /*      Usage Page (Button),        */
+	0x75, 0x01,       /*      Report Size (1),            */
+	0x19, 0x01,       /*      Usage Minimum (01h),        */
+	0x29, 0x03,       /*      Usage Maximum (03h),        */
+	0x25, 0x01,       /*      Logical Maximum (1),        */
+	0x95, 0x03,       /*      Report Count (3),           */
+	0x81, 0x02,       /*      Input (Variable),           */
+	0x95, 0x05,       /*      Report Count (5),           */
+	0x81, 0x01,       /*      Input (Constant),           */
+	0xB4,             /*      Pop,                        */
+	0x95, 0x01,       /*      Report Count (1),           */
+	0xA4,             /*      Push,                       */
+	0x55, 0xFD,       /*      Unit Exponent (-3),         */
+	0x65, 0x13,       /*      Unit (Inch),                */
+	0x34,             /*      Physical Minimum (0),       */
+	0x75, 0x10,       /*      Report Size (16),           */
+	0x09, 0x30,       /*      Usage (X),                  */
+	0x46, 0x40, 0x1F, /*      Physical Maximum (8000),    */
+	0x26, 0x00, 0x50, /*      Logical Maximum (20480),    */
+	0x81, 0x02,       /*      Input (Variable),           */
+	0x09, 0x31,       /*      Usage (Y),                  */
+	0x46, 0x70, 0x17, /*      Physical Maximum (6000),    */
+	0x26, 0x00, 0x3C, /*      Logical Maximum (15360),    */
+	0x81, 0x02,       /*      Input (Variable),           */
+	0xB4,             /*      Pop,                        */
+	0x75, 0x08,       /*      Report Size (8),            */
+	0x09, 0x38,       /*      Usage (Wheel),              */
+	0x15, 0xFF,       /*      Logical Minimum (-1),       */
+	0x25, 0x01,       /*      Logical Maximum (1),        */
+	0x81, 0x06,       /*      Input (Variable, Relative), */
+	0x81, 0x01,       /*      Input (Constant),           */
+	0xC0,             /*    End Collection,               */
+	0xC0              /*  End Collection                  */
+};
+
+/* Original MousePen i608X v2 report descriptor size */
+#define MOUSEPEN_I608X_V2_RDESC_ORIG_SIZE	482
+
+/* Fixed MousePen i608X v2 report descriptor */
+static __u8 mousepen_i608x_v2_rdesc_fixed[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	0x06, 0x00, 0xFF,             /*  Usage Page (FF00h),             */
 	0x09, 0x01,                   /*  Usage (01h),                    */
 	0xA1, 0x01,                   /*  Collection (Application),       */
 	0x85, 0x05,                   /*    Report ID (5),                */
 	0x09, 0x01,                   /*    Usage (01h),                  */
+<<<<<<< HEAD
+=======
+	0x15, 0x80,                   /*    Logical Minimum (-128),       */
+	0x25, 0x7F,                   /*    Logical Maximum (127),        */
+	0x75, 0x08,                   /*    Report Size (8),              */
+	0x95, 0x07,                   /*    Report Count (7),             */
+	0xB1, 0x02,                   /*    Feature (Variable),           */
+	0xC0,                         /*  End Collection,                 */
+	0x05, 0x0D,                   /*  Usage Page (Digitizer),         */
+	0x09, 0x01,                   /*  Usage (Digitizer),              */
+	0xA1, 0x01,                   /*  Collection (Application),       */
+	0x85, 0x10,                   /*    Report ID (16),               */
+	0x09, 0x20,                   /*    Usage (Stylus),               */
+	0xA0,                         /*    Collection (Physical),        */
+	0x14,                         /*      Logical Minimum (0),        */
+	0x25, 0x01,                   /*      Logical Maximum (1),        */
+	0x75, 0x01,                   /*      Report Size (1),            */
+	0x09, 0x42,                   /*      Usage (Tip Switch),         */
+	0x09, 0x44,                   /*      Usage (Barrel Switch),      */
+	0x09, 0x46,                   /*      Usage (Tablet Pick),        */
+	0x95, 0x03,                   /*      Report Count (3),           */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0x95, 0x04,                   /*      Report Count (4),           */
+	0x81, 0x03,                   /*      Input (Constant, Variable), */
+	0x09, 0x32,                   /*      Usage (In Range),           */
+	0x95, 0x01,                   /*      Report Count (1),           */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0x75, 0x10,                   /*      Report Size (16),           */
+	0x95, 0x01,                   /*      Report Count (1),           */
+	0xA4,                         /*      Push,                       */
+	0x05, 0x01,                   /*      Usage Page (Desktop),       */
+	0x55, 0xFD,                   /*      Unit Exponent (-3),         */
+	0x65, 0x13,                   /*      Unit (Inch),                */
+	0x34,                         /*      Physical Minimum (0),       */
+	0x09, 0x30,                   /*      Usage (X),                  */
+	0x46, 0x40, 0x1F,             /*      Physical Maximum (8000),    */
+	0x27, 0x00, 0xA0, 0x00, 0x00, /*      Logical Maximum (40960),    */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0x09, 0x31,                   /*      Usage (Y),                  */
+	0x46, 0x70, 0x17,             /*      Physical Maximum (6000),    */
+	0x26, 0x00, 0x78,             /*      Logical Maximum (30720),    */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0xB4,                         /*      Pop,                        */
+	0x09, 0x30,                   /*      Usage (Tip Pressure),       */
+	0x26, 0xFF, 0x07,             /*      Logical Maximum (2047),     */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0xC0,                         /*    End Collection,               */
+	0xC0,                         /*  End Collection,                 */
+	0x05, 0x01,                   /*  Usage Page (Desktop),           */
+	0x09, 0x02,                   /*  Usage (Mouse),                  */
+	0xA1, 0x01,                   /*  Collection (Application),       */
+	0x85, 0x11,                   /*    Report ID (17),               */
+	0x09, 0x01,                   /*    Usage (Pointer),              */
+	0xA0,                         /*    Collection (Physical),        */
+	0x14,                         /*      Logical Minimum (0),        */
+	0xA4,                         /*      Push,                       */
+	0x05, 0x09,                   /*      Usage Page (Button),        */
+	0x75, 0x01,                   /*      Report Size (1),            */
+	0x19, 0x01,                   /*      Usage Minimum (01h),        */
+	0x29, 0x03,                   /*      Usage Maximum (03h),        */
+	0x25, 0x01,                   /*      Logical Maximum (1),        */
+	0x95, 0x03,                   /*      Report Count (3),           */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0x95, 0x05,                   /*      Report Count (5),           */
+	0x81, 0x01,                   /*      Input (Constant),           */
+	0xB4,                         /*      Pop,                        */
+	0x95, 0x01,                   /*      Report Count (1),           */
+	0xA4,                         /*      Push,                       */
+	0x55, 0xFD,                   /*      Unit Exponent (-3),         */
+	0x65, 0x13,                   /*      Unit (Inch),                */
+	0x34,                         /*      Physical Minimum (0),       */
+	0x75, 0x10,                   /*      Report Size (16),           */
+	0x09, 0x30,                   /*      Usage (X),                  */
+	0x46, 0x40, 0x1F,             /*      Physical Maximum (8000),    */
+	0x27, 0x00, 0xA0, 0x00, 0x00, /*      Logical Maximum (40960),    */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0x09, 0x31,                   /*      Usage (Y),                  */
+	0x46, 0x70, 0x17,             /*      Physical Maximum (6000),    */
+	0x26, 0x00, 0x78,             /*      Logical Maximum (30720),    */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0xB4,                         /*      Pop,                        */
+	0x75, 0x08,                   /*      Report Size (8),            */
+	0x09, 0x38,                   /*      Usage (Wheel),              */
+	0x15, 0xFF,                   /*      Logical Minimum (-1),       */
+	0x25, 0x01,                   /*      Logical Maximum (1),        */
+	0x81, 0x06,                   /*      Input (Variable, Relative), */
+	0x81, 0x01,                   /*      Input (Constant),           */
+	0xC0,                         /*    End Collection,               */
+	0xC0                          /*  End Collection                  */
+};
+
+/* Original EasyPen M610X report descriptor size */
+#define EASYPEN_M610X_RDESC_ORIG_SIZE	476
+
+/* Fixed EasyPen M610X report descriptor */
+static __u8 easypen_m610x_rdesc_fixed[] = {
+	0x06, 0x00, 0xFF,             /*  Usage Page (FF00h),             */
+	0x09, 0x01,                   /*  Usage (01h),                    */
+	0xA1, 0x01,                   /*  Collection (Application),       */
+	0x85, 0x05,                   /*    Report ID (5),                */
+	0x09, 0x01,                   /*    Usage (01h),                  */
+	0x15, 0x80,                   /*    Logical Minimum (-128),       */
+	0x25, 0x7F,                   /*    Logical Maximum (127),        */
+	0x75, 0x08,                   /*    Report Size (8),              */
+	0x95, 0x07,                   /*    Report Count (7),             */
+	0xB1, 0x02,                   /*    Feature (Variable),           */
+	0xC0,                         /*  End Collection,                 */
+	0x05, 0x0D,                   /*  Usage Page (Digitizer),         */
+	0x09, 0x01,                   /*  Usage (Digitizer),              */
+	0xA1, 0x01,                   /*  Collection (Application),       */
+	0x85, 0x10,                   /*    Report ID (16),               */
+	0x09, 0x20,                   /*    Usage (Stylus),               */
+	0xA0,                         /*    Collection (Physical),        */
+	0x14,                         /*      Logical Minimum (0),        */
+	0x25, 0x01,                   /*      Logical Maximum (1),        */
+	0x75, 0x01,                   /*      Report Size (1),            */
+	0x09, 0x42,                   /*      Usage (Tip Switch),         */
+	0x09, 0x44,                   /*      Usage (Barrel Switch),      */
+	0x09, 0x46,                   /*      Usage (Tablet Pick),        */
+	0x95, 0x03,                   /*      Report Count (3),           */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0x95, 0x04,                   /*      Report Count (4),           */
+	0x81, 0x03,                   /*      Input (Constant, Variable), */
+	0x09, 0x32,                   /*      Usage (In Range),           */
+	0x95, 0x01,                   /*      Report Count (1),           */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0x75, 0x10,                   /*      Report Size (16),           */
+	0x95, 0x01,                   /*      Report Count (1),           */
+	0xA4,                         /*      Push,                       */
+	0x05, 0x01,                   /*      Usage Page (Desktop),       */
+	0x55, 0xFD,                   /*      Unit Exponent (-3),         */
+	0x65, 0x13,                   /*      Unit (Inch),                */
+	0x34,                         /*      Physical Minimum (0),       */
+	0x09, 0x30,                   /*      Usage (X),                  */
+	0x46, 0x10, 0x27,             /*      Physical Maximum (10000),   */
+	0x27, 0x00, 0xA0, 0x00, 0x00, /*      Logical Maximum (40960),    */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0x09, 0x31,                   /*      Usage (Y),                  */
+	0x46, 0x6A, 0x18,             /*      Physical Maximum (6250),    */
+	0x26, 0x00, 0x64,             /*      Logical Maximum (25600),    */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0xB4,                         /*      Pop,                        */
+	0x09, 0x30,                   /*      Usage (Tip Pressure),       */
+	0x26, 0xFF, 0x03,             /*      Logical Maximum (1023),     */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0xC0,                         /*    End Collection,               */
+	0xC0,                         /*  End Collection,                 */
+	0x05, 0x0C,                   /*  Usage Page (Consumer),          */
+	0x09, 0x01,                   /*  Usage (Consumer Control),       */
+	0xA1, 0x01,                   /*  Collection (Application),       */
+	0x85, 0x12,                   /*    Report ID (18),               */
+	0x14,                         /*    Logical Minimum (0),          */
+	0x25, 0x01,                   /*    Logical Maximum (1),          */
+	0x75, 0x01,                   /*    Report Size (1),              */
+	0x95, 0x04,                   /*    Report Count (4),             */
+	0x0A, 0x1A, 0x02,             /*    Usage (AC Undo),              */
+	0x0A, 0x79, 0x02,             /*    Usage (AC Redo Or Repeat),    */
+	0x0A, 0x2D, 0x02,             /*    Usage (AC Zoom In),           */
+	0x0A, 0x2E, 0x02,             /*    Usage (AC Zoom Out),          */
+	0x81, 0x02,                   /*    Input (Variable),             */
+	0x95, 0x01,                   /*    Report Count (1),             */
+	0x75, 0x14,                   /*    Report Size (20),             */
+	0x81, 0x03,                   /*    Input (Constant, Variable),   */
+	0x75, 0x20,                   /*    Report Size (32),             */
+	0x81, 0x03,                   /*    Input (Constant, Variable),   */
+	0xC0                          /*  End Collection                  */
+};
+
+
+/* Original PenSketch M912 report descriptor size */
+#define PENSKETCH_M912_RDESC_ORIG_SIZE	482
+
+/* Fixed PenSketch M912 report descriptor */
+static __u8 pensketch_m912_rdesc_fixed[] = {
+	0x05, 0x01,                   /*  Usage Page (Desktop),           */
+	0x08,                         /*  Usage (00h),                    */
+	0xA1, 0x01,                   /*  Collection (Application),       */
+	0x85, 0x05,                   /*    Report ID (5),                */
+	0x06, 0x00, 0xFF,             /*    Usage Page (FF00h),           */
+	0x09, 0x01,                   /*    Usage (01h),                  */
+>>>>>>> b7ba80a49124 (Commit)
 	0x15, 0x81,                   /*    Logical Minimum (-127),       */
 	0x25, 0x7F,                   /*    Logical Maximum (127),        */
 	0x75, 0x08,                   /*    Report Size (8),              */
@@ -105,11 +459,16 @@ static const __u8 kye_tablet_rdesc[] = {
 	0x95, 0x03,                   /*      Report Count (3),           */
 	0x81, 0x02,                   /*      Input (Variable),           */
 	0x95, 0x04,                   /*      Report Count (4),           */
+<<<<<<< HEAD
 	0x81, 0x01,                   /*      Input (Constant),           */
+=======
+	0x81, 0x03,                   /*      Input (Constant, Variable), */
+>>>>>>> b7ba80a49124 (Commit)
 	0x09, 0x32,                   /*      Usage (In Range),           */
 	0x95, 0x01,                   /*      Report Count (1),           */
 	0x81, 0x02,                   /*      Input (Variable),           */
 	0x75, 0x10,                   /*      Report Size (16),           */
+<<<<<<< HEAD
 	0xA4,                         /*      Push,                       */
 	0x05, 0x01,                   /*      Usage Page (Desktop),       */
 	0x09, 0x30,                   /*      Usage (X),                  */
@@ -128,6 +487,27 @@ static const __u8 kye_tablet_rdesc[] = {
 	0x05, 0x0D,                   /*      Usage Page (Digitizer),     */
 	0x09, 0x30,                   /*      Usage (Tip Pressure),       */
 	0x27, 0xFF, 0x07, 0x00, 0x00, /*      Logical Maximum (2047),     */
+=======
+	0x95, 0x01,                   /*      Report Count (1),           */
+	0xA4,                         /*      Push,                       */
+	0x05, 0x01,                   /*      Usage Page (Desktop),       */
+	0x55, 0xFD,                   /*      Unit Exponent (-3),         */
+	0x65, 0x13,                   /*      Unit (Inch),                */
+	0x14,                         /*      Logical Minimum (0),        */
+	0x34,                         /*      Physical Minimum (0),       */
+	0x09, 0x30,                   /*      Usage (X),                  */
+	0x27, 0x00, 0xF0, 0x00, 0x00, /*      Logical Maximum (61440),    */
+	0x46, 0xE0, 0x2E,             /*      Physical Maximum (12000),   */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0x09, 0x31,                   /*      Usage (Y),                  */
+	0x27, 0x00, 0xB4, 0x00, 0x00, /*      Logical Maximum (46080),    */
+	0x46, 0x28, 0x23,             /*      Physical Maximum (9000),    */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0xB4,                         /*      Pop,                        */
+	0x09, 0x30,                   /*      Usage (Tip Pressure),       */
+	0x14,                         /*      Logical Minimum (0),        */
+	0x26, 0xFF, 0x07,             /*      Logical Maximum (2047),     */
+>>>>>>> b7ba80a49124 (Commit)
 	0x81, 0x02,                   /*      Input (Variable),           */
 	0xC0,                         /*    End Collection,               */
 	0xC0,                         /*  End Collection,                 */
@@ -138,15 +518,23 @@ static const __u8 kye_tablet_rdesc[] = {
 	0x09, 0x21,                   /*    Usage (Puck),                 */
 	0xA0,                         /*    Collection (Physical),        */
 	0x05, 0x09,                   /*      Usage Page (Button),        */
+<<<<<<< HEAD
+=======
+	0x75, 0x01,                   /*      Report Size (1),            */
+>>>>>>> b7ba80a49124 (Commit)
 	0x19, 0x01,                   /*      Usage Minimum (01h),        */
 	0x29, 0x03,                   /*      Usage Maximum (03h),        */
 	0x14,                         /*      Logical Minimum (0),        */
 	0x25, 0x01,                   /*      Logical Maximum (1),        */
+<<<<<<< HEAD
 	0x75, 0x01,                   /*      Report Size (1),            */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	0x95, 0x03,                   /*      Report Count (3),           */
 	0x81, 0x02,                   /*      Input (Variable),           */
 	0x95, 0x04,                   /*      Report Count (4),           */
 	0x81, 0x01,                   /*      Input (Constant),           */
+<<<<<<< HEAD
 	0x05, 0x0D,                   /*      Usage Page (Digitizer),     */
 	0x09, 0x32,                   /*      Usage (In Range),           */
 	0x95, 0x01,                   /*      Report Count (1),           */
@@ -210,6 +598,139 @@ static const struct kye_tablet_info {
 static __u8 *kye_consumer_control_fixup(struct hid_device *hdev, __u8 *rdesc,
 		unsigned int *rsize, int offset, const char *device_name)
 {
+=======
+	0x95, 0x01,                   /*      Report Count (1),           */
+	0x0B, 0x32, 0x00, 0x0D, 0x00, /*      Usage (Digitizer In Range), */
+	0x14,                         /*      Logical Minimum (0),        */
+	0x25, 0x01,                   /*      Logical Maximum (1),        */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0xA4,                         /*      Push,                       */
+	0x05, 0x01,                   /*      Usage Page (Desktop),       */
+	0x75, 0x10,                   /*      Report Size (16),           */
+	0x95, 0x01,                   /*      Report Count (1),           */
+	0x55, 0xFD,                   /*      Unit Exponent (-3),         */
+	0x65, 0x13,                   /*      Unit (Inch),                */
+	0x14,                         /*      Logical Minimum (0),        */
+	0x34,                         /*      Physical Minimum (0),       */
+	0x09, 0x30,                   /*      Usage (X),                  */
+	0x27, 0x00, 0xF0, 0x00, 0x00, /*      Logical Maximum (61440),    */
+	0x46, 0xE0, 0x2E,             /*      Physical Maximum (12000),   */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0x09, 0x31,                   /*      Usage (Y),                  */
+	0x27, 0x00, 0xB4, 0x00, 0x00, /*      Logical Maximum (46080),    */
+	0x46, 0x28, 0x23,             /*      Physical Maximum (9000),    */
+	0x81, 0x02,                   /*      Input (Variable),           */
+	0x09, 0x38,                   /*      Usage (Wheel),              */
+	0x75, 0x08,                   /*      Report Size (8),            */
+	0x95, 0x01,                   /*      Report Count (1),           */
+	0x15, 0xFF,                   /*      Logical Minimum (-1),       */
+	0x25, 0x01,                   /*      Logical Maximum (1),        */
+	0x34,                         /*      Physical Minimum (0),       */
+	0x44,                         /*      Physical Maximum (0),       */
+	0x81, 0x06,                   /*      Input (Variable, Relative), */
+	0xB4,                         /*      Pop,                        */
+	0xC0,                         /*    End Collection,               */
+	0xC0,                         /*  End Collection,                 */
+	0x05, 0x0C,                   /*  Usage Page (Consumer),          */
+	0x09, 0x01,                   /*  Usage (Consumer Control),       */
+	0xA1, 0x01,                   /*  Collection (Application),       */
+	0x85, 0x12,                   /*    Report ID (18),               */
+	0x14,                         /*    Logical Minimum (0),          */
+	0x25, 0x01,                   /*    Logical Maximum (1),          */
+	0x75, 0x01,                   /*    Report Size (1),              */
+	0x95, 0x08,                   /*    Report Count (8),             */
+	0x05, 0x0C,                   /*    Usage Page (Consumer),        */
+	0x0A, 0x6A, 0x02,             /*    Usage (AC Delete),            */
+	0x0A, 0x1A, 0x02,             /*    Usage (AC Undo),              */
+	0x0A, 0x01, 0x02,             /*    Usage (AC New),               */
+	0x0A, 0x2F, 0x02,             /*    Usage (AC Zoom),              */
+	0x0A, 0x25, 0x02,             /*    Usage (AC Forward),           */
+	0x0A, 0x24, 0x02,             /*    Usage (AC Back),              */
+	0x0A, 0x2D, 0x02,             /*    Usage (AC Zoom In),           */
+	0x0A, 0x2E, 0x02,             /*    Usage (AC Zoom Out),          */
+	0x81, 0x02,                   /*    Input (Variable),             */
+	0x95, 0x30,                   /*    Report Count (48),            */
+	0x81, 0x03,                   /*    Input (Constant, Variable),   */
+	0xC0                          /*  End Collection                  */
+};
+
+/* Original EasyPen M406XE report descriptor size */
+#define EASYPEN_M406XE_RDESC_ORIG_SIZE	476
+
+/* Fixed EasyPen M406XE  report descriptor */
+static __u8 easypen_m406xe_rdesc_fixed[] = {
+	0x05, 0x01,         /*  Usage Page (Desktop),               */
+	0x09, 0x01,         /*  Usage (01h),                        */
+	0xA1, 0x01,         /*  Collection (Application),           */
+	0x85, 0x05,         /*      Report ID (5),                  */
+	0x09, 0x01,         /*      Usage (01h),                    */
+	0x15, 0x80,         /*      Logical Minimum (-128),         */
+	0x25, 0x7F,         /*      Logical Maximum (127),          */
+	0x75, 0x08,         /*      Report Size (8),                */
+	0x95, 0x07,         /*      Report Count (7),               */
+	0xB1, 0x02,         /*      Feature (Variable),             */
+	0xC0,               /*  End Collection,                     */
+	0x05, 0x0D,         /*  Usage Page (Digitizer),             */
+	0x09, 0x01,         /*  Usage (Digitizer),                  */
+	0xA1, 0x01,         /*  Collection (Application),           */
+	0x85, 0x10,         /*      Report ID (16),                 */
+	0x09, 0x20,         /*      Usage (Stylus),                 */
+	0xA0,               /*      Collection (Physical),          */
+	0x14,               /*          Logical Minimum (0),        */
+	0x25, 0x01,         /*          Logical Maximum (1),        */
+	0x75, 0x01,         /*          Report Size (1),            */
+	0x09, 0x42,         /*          Usage (Tip Switch),         */
+	0x09, 0x44,         /*          Usage (Barrel Switch),      */
+	0x09, 0x46,         /*          Usage (Tablet Pick),        */
+	0x95, 0x03,         /*          Report Count (3),           */
+	0x81, 0x02,         /*          Input (Variable),           */
+	0x95, 0x04,         /*          Report Count (4),           */
+	0x81, 0x03,         /*          Input (Constant, Variable), */
+	0x09, 0x32,         /*          Usage (In Range),           */
+	0x95, 0x01,         /*          Report Count (1),           */
+	0x81, 0x02,         /*          Input (Variable),           */
+	0x75, 0x10,         /*          Report Size (16),           */
+	0x95, 0x01,         /*          Report Count (1),           */
+	0xA4,               /*          Push,                       */
+	0x05, 0x01,         /*          Usage Page (Desktop),       */
+	0x55, 0xFD,         /*          Unit Exponent (-3),         */
+	0x65, 0x13,         /*          Unit (Inch),                */
+	0x34,               /*          Physical Minimum (0),       */
+	0x09, 0x30,         /*          Usage (X),                  */
+	0x46, 0x70, 0x17,   /*          Physical Maximum (6000),    */
+	0x26, 0x00, 0x3C,   /*          Logical Maximum (15360),    */
+	0x81, 0x02,         /*          Input (Variable),           */
+	0x09, 0x31,         /*          Usage (Y),                  */
+	0x46, 0xA0, 0x0F,   /*          Physical Maximum (4000),    */
+	0x26, 0x00, 0x28,   /*          Logical Maximum (10240),    */
+	0x81, 0x02,         /*          Input (Variable),           */
+	0xB4,               /*          Pop,                        */
+	0x09, 0x30,         /*          Usage (Tip Pressure),       */
+	0x26, 0xFF, 0x03,   /*          Logical Maximum (1023),     */
+	0x81, 0x02,         /*          Input (Variable),           */
+	0xC0,               /*      End Collection,                 */
+	0xC0,               /*  End Collection                      */
+	0x05, 0x0C,         /*  Usage Page (Consumer),              */
+	0x09, 0x01,         /*  Usage (Consumer Control),           */
+	0xA1, 0x01,         /*  Collection (Application),           */
+	0x85, 0x12,         /*      Report ID (18),                 */
+	0x14,               /*      Logical Minimum (0),            */
+	0x25, 0x01,         /*      Logical Maximum (1),            */
+	0x75, 0x01,         /*      Report Size (1),                */
+	0x95, 0x04,         /*      Report Count (4),               */
+	0x0A, 0x79, 0x02,   /*      Usage (AC Redo Or Repeat),      */
+	0x0A, 0x1A, 0x02,   /*      Usage (AC Undo),                */
+	0x0A, 0x2D, 0x02,   /*      Usage (AC Zoom In),             */
+	0x0A, 0x2E, 0x02,   /*      Usage (AC Zoom Out),            */
+	0x81, 0x02,         /*      Input (Variable),               */
+	0x95, 0x34,         /*      Report Count (52),              */
+	0x81, 0x03,         /*      Input (Constant, Variable),     */
+	0xC0                /*  End Collection                      */
+};
+
+static __u8 *kye_consumer_control_fixup(struct hid_device *hdev, __u8 *rdesc,
+		unsigned int *rsize, int offset, const char *device_name) {
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * the fixup that need to be done:
 	 *   - change Usage Maximum in the Consumer Control
@@ -228,6 +749,7 @@ static __u8 *kye_consumer_control_fixup(struct hid_device *hdev, __u8 *rdesc,
 	return rdesc;
 }
 
+<<<<<<< HEAD
 /*
  * Fix tablet descriptor of so-called "DataFormat 2".
  *
@@ -301,6 +823,8 @@ static __u8 *kye_tablet_fixup(struct hid_device *hdev, __u8 *rdesc, unsigned int
 	return rdesc;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static __u8 *kye_report_fixup(struct hid_device *hdev, __u8 *rdesc,
 		unsigned int *rsize)
 {
@@ -329,18 +853,61 @@ static __u8 *kye_report_fixup(struct hid_device *hdev, __u8 *rdesc,
 			rdesc[74] = 0x08;
 		}
 		break;
+<<<<<<< HEAD
+=======
+	case USB_DEVICE_ID_KYE_EASYPEN_I405X:
+		if (*rsize == EASYPEN_I405X_RDESC_ORIG_SIZE) {
+			rdesc = easypen_i405x_rdesc_fixed;
+			*rsize = sizeof(easypen_i405x_rdesc_fixed);
+		}
+		break;
+	case USB_DEVICE_ID_KYE_MOUSEPEN_I608X:
+		if (*rsize == MOUSEPEN_I608X_RDESC_ORIG_SIZE) {
+			rdesc = mousepen_i608x_rdesc_fixed;
+			*rsize = sizeof(mousepen_i608x_rdesc_fixed);
+		}
+		break;
+	case USB_DEVICE_ID_KYE_MOUSEPEN_I608X_V2:
+		if (*rsize == MOUSEPEN_I608X_V2_RDESC_ORIG_SIZE) {
+			rdesc = mousepen_i608x_v2_rdesc_fixed;
+			*rsize = sizeof(mousepen_i608x_v2_rdesc_fixed);
+		}
+		break;
+	case USB_DEVICE_ID_KYE_EASYPEN_M610X:
+		if (*rsize == EASYPEN_M610X_RDESC_ORIG_SIZE) {
+			rdesc = easypen_m610x_rdesc_fixed;
+			*rsize = sizeof(easypen_m610x_rdesc_fixed);
+		}
+		break;
+	case USB_DEVICE_ID_KYE_EASYPEN_M406XE:
+		if (*rsize == EASYPEN_M406XE_RDESC_ORIG_SIZE) {
+			rdesc = easypen_m406xe_rdesc_fixed;
+			*rsize = sizeof(easypen_m406xe_rdesc_fixed);
+		}
+		break;
+	case USB_DEVICE_ID_KYE_PENSKETCH_M912:
+		if (*rsize == PENSKETCH_M912_RDESC_ORIG_SIZE) {
+			rdesc = pensketch_m912_rdesc_fixed;
+			*rsize = sizeof(pensketch_m912_rdesc_fixed);
+		}
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	case USB_DEVICE_ID_GENIUS_GILA_GAMING_MOUSE:
 		rdesc = kye_consumer_control_fixup(hdev, rdesc, rsize, 104,
 					"Genius Gila Gaming Mouse");
 		break;
+<<<<<<< HEAD
 	case USB_DEVICE_ID_GENIUS_MANTICORE:
 		rdesc = kye_consumer_control_fixup(hdev, rdesc, rsize, 104,
 					"Genius Manticore Keyboard");
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case USB_DEVICE_ID_GENIUS_GX_IMPERATOR:
 		rdesc = kye_consumer_control_fixup(hdev, rdesc, rsize, 83,
 					"Genius Gx Imperator Keyboard");
 		break;
+<<<<<<< HEAD
 	case USB_DEVICE_ID_KYE_EASYPEN_I405X:
 	case USB_DEVICE_ID_KYE_MOUSEPEN_I608X:
 	case USB_DEVICE_ID_KYE_MOUSEPEN_I608X_V2:
@@ -348,11 +915,27 @@ static __u8 *kye_report_fixup(struct hid_device *hdev, __u8 *rdesc,
 	case USB_DEVICE_ID_KYE_EASYPEN_M406XE:
 	case USB_DEVICE_ID_KYE_PENSKETCH_M912:
 		rdesc = kye_tablet_fixup(hdev, rdesc, rsize);
+=======
+	case USB_DEVICE_ID_GENIUS_MANTICORE:
+		rdesc = kye_consumer_control_fixup(hdev, rdesc, rsize, 104,
+					"Genius Manticore Keyboard");
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 	return rdesc;
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * kye_tablet_enable() - Enable fully-functional tablet mode by setting a special feature report.
+ *
+ * @hdev:	HID device
+ *
+ * The specific report ID and data were discovered by sniffing the
+ * Windows driver traffic.
+ */
+>>>>>>> b7ba80a49124 (Commit)
 static int kye_tablet_enable(struct hid_device *hdev)
 {
 	struct list_head *list;
@@ -379,6 +962,7 @@ static int kye_tablet_enable(struct hid_device *hdev)
 
 	value = report->field[0]->value;
 
+<<<<<<< HEAD
 	/*
 	 * The code is for DataFormat 2 of config xml. They have no obvious
 	 * meaning (at least not configurable in Windows driver) except enabling
@@ -388,6 +972,8 @@ static int kye_tablet_enable(struct hid_device *hdev)
 	 * Though there're magic codes for DataFormat 3 and 4, no devices use
 	 * these DataFormats.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	value[0] = 0x12;
 	value[1] = 0x10;
 	value[2] = 0x11;
@@ -417,6 +1003,21 @@ static int kye_probe(struct hid_device *hdev, const struct hid_device_id *id)
 	}
 
 	switch (id->product) {
+<<<<<<< HEAD
+=======
+	case USB_DEVICE_ID_KYE_EASYPEN_I405X:
+	case USB_DEVICE_ID_KYE_MOUSEPEN_I608X:
+	case USB_DEVICE_ID_KYE_MOUSEPEN_I608X_V2:
+	case USB_DEVICE_ID_KYE_EASYPEN_M610X:
+	case USB_DEVICE_ID_KYE_EASYPEN_M406XE:
+	case USB_DEVICE_ID_KYE_PENSKETCH_M912:
+		ret = kye_tablet_enable(hdev);
+		if (ret) {
+			hid_err(hdev, "tablet enabling failed\n");
+			goto enabling_err;
+		}
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	case USB_DEVICE_ID_GENIUS_MANTICORE:
 		/*
 		 * The manticore keyboard needs to have all the interfaces
@@ -425,6 +1026,7 @@ static int kye_probe(struct hid_device *hdev, const struct hid_device_id *id)
 		if (hid_hw_open(hdev))
 			hid_hw_close(hdev);
 		break;
+<<<<<<< HEAD
 	case USB_DEVICE_ID_KYE_EASYPEN_I405X:
 	case USB_DEVICE_ID_KYE_MOUSEPEN_I608X:
 	case USB_DEVICE_ID_KYE_EASYPEN_M610X:
@@ -437,6 +1039,8 @@ static int kye_probe(struct hid_device *hdev, const struct hid_device_id *id)
 			goto enabling_err;
 		}
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -449,16 +1053,20 @@ err:
 static const struct hid_device_id kye_devices[] = {
 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_ERGO_525V) },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+<<<<<<< HEAD
 				USB_DEVICE_ID_GENIUS_GILA_GAMING_MOUSE) },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
 				USB_DEVICE_ID_GENIUS_MANTICORE) },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
 				USB_DEVICE_ID_GENIUS_GX_IMPERATOR) },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				USB_DEVICE_ID_KYE_EASYPEN_I405X) },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
 				USB_DEVICE_ID_KYE_MOUSEPEN_I608X) },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+<<<<<<< HEAD
 				USB_DEVICE_ID_KYE_EASYPEN_M610X) },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
 				USB_DEVICE_ID_KYE_PENSKETCH_M912) },
@@ -466,6 +1074,21 @@ static const struct hid_device_id kye_devices[] = {
 				USB_DEVICE_ID_KYE_EASYPEN_M406XE) },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
 				USB_DEVICE_ID_KYE_MOUSEPEN_I608X_V2) },
+=======
+				USB_DEVICE_ID_KYE_MOUSEPEN_I608X_V2) },
+	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+				USB_DEVICE_ID_KYE_EASYPEN_M610X) },
+	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+				USB_DEVICE_ID_KYE_EASYPEN_M406XE) },
+	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+				USB_DEVICE_ID_GENIUS_GILA_GAMING_MOUSE) },
+	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+				USB_DEVICE_ID_GENIUS_GX_IMPERATOR) },
+	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+				USB_DEVICE_ID_GENIUS_MANTICORE) },
+	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+				USB_DEVICE_ID_KYE_PENSKETCH_M912) },
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(hid, kye_devices);

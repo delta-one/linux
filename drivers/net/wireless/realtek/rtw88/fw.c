@@ -311,10 +311,17 @@ EXPORT_SYMBOL(rtw_fw_c2h_cmd_isr);
 static void rtw_fw_send_h2c_command(struct rtw_dev *rtwdev,
 				    u8 *h2c)
 {
+<<<<<<< HEAD
 	struct rtw_h2c_cmd *h2c_cmd = (struct rtw_h2c_cmd *)h2c;
 	u8 box;
 	u8 box_state;
 	u32 box_reg, box_ex_reg;
+=======
+	u8 box;
+	u8 box_state;
+	u32 box_reg, box_ex_reg;
+	int idx;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	rtw_dbg(rtwdev, RTW_DBG_FW,
@@ -322,7 +329,11 @@ static void rtw_fw_send_h2c_command(struct rtw_dev *rtwdev,
 		h2c[3], h2c[2], h2c[1], h2c[0],
 		h2c[7], h2c[6], h2c[5], h2c[4]);
 
+<<<<<<< HEAD
 	lockdep_assert_held(&rtwdev->mutex);
+=======
+	spin_lock(&rtwdev->h2c.lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	box = rtwdev->h2c.last_box_num;
 	switch (box) {
@@ -344,7 +355,11 @@ static void rtw_fw_send_h2c_command(struct rtw_dev *rtwdev,
 		break;
 	default:
 		WARN(1, "invalid h2c mail box number\n");
+<<<<<<< HEAD
 		return;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = read_poll_timeout_atomic(rtw_read8, box_state,
@@ -353,6 +368,7 @@ static void rtw_fw_send_h2c_command(struct rtw_dev *rtwdev,
 
 	if (ret) {
 		rtw_err(rtwdev, "failed to send h2c command\n");
+<<<<<<< HEAD
 		return;
 	}
 
@@ -361,6 +377,21 @@ static void rtw_fw_send_h2c_command(struct rtw_dev *rtwdev,
 
 	if (++rtwdev->h2c.last_box_num >= 4)
 		rtwdev->h2c.last_box_num = 0;
+=======
+		goto out;
+	}
+
+	for (idx = 0; idx < 4; idx++)
+		rtw_write8(rtwdev, box_reg + idx, h2c[idx]);
+	for (idx = 0; idx < 4; idx++)
+		rtw_write8(rtwdev, box_ex_reg + idx, h2c[idx + 4]);
+
+	if (++rtwdev->h2c.last_box_num >= 4)
+		rtwdev->h2c.last_box_num = 0;
+
+out:
+	spin_unlock(&rtwdev->h2c.lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void rtw_fw_h2c_cmd_dbg(struct rtw_dev *rtwdev, u8 *h2c)
@@ -372,13 +403,22 @@ static void rtw_fw_send_h2c_packet(struct rtw_dev *rtwdev, u8 *h2c_pkt)
 {
 	int ret;
 
+<<<<<<< HEAD
 	lockdep_assert_held(&rtwdev->mutex);
+=======
+	spin_lock(&rtwdev->h2c.lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	FW_OFFLOAD_H2C_SET_SEQ_NUM(h2c_pkt, rtwdev->h2c.seq);
 	ret = rtw_hci_write_data_h2c(rtwdev, h2c_pkt, H2C_PKT_SIZE);
 	if (ret)
 		rtw_err(rtwdev, "failed to send h2c packet\n");
 	rtwdev->h2c.seq++;
+<<<<<<< HEAD
+=======
+
+	spin_unlock(&rtwdev->h2c.lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void
@@ -817,6 +857,7 @@ void rtw_fw_set_nlo_info(struct rtw_dev *rtwdev, bool enable)
 	rtw_fw_send_h2c_command(rtwdev, h2c_pkt);
 }
 
+<<<<<<< HEAD
 void rtw_fw_set_recover_bt_device(struct rtw_dev *rtwdev)
 {
 	u8 h2c_pkt[H2C_PKT_SIZE] = {0};
@@ -827,6 +868,8 @@ void rtw_fw_set_recover_bt_device(struct rtw_dev *rtwdev)
 	rtw_fw_send_h2c_command(rtwdev, h2c_pkt);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void rtw_fw_set_pg_info(struct rtw_dev *rtwdev)
 {
 	struct rtw_lps_conf *conf = &rtwdev->lps_conf;

@@ -514,6 +514,10 @@ static void malidp_crtc_disable_vblank(struct drm_crtc *crtc)
 }
 
 static const struct drm_crtc_funcs malidp_crtc_funcs = {
+<<<<<<< HEAD
+=======
+	.destroy = drm_crtc_cleanup,
+>>>>>>> b7ba80a49124 (Commit)
 	.set_config = drm_atomic_helper_set_config,
 	.page_flip = drm_atomic_helper_page_flip,
 	.reset = malidp_crtc_reset,
@@ -525,7 +529,11 @@ static const struct drm_crtc_funcs malidp_crtc_funcs = {
 
 int malidp_crtc_init(struct drm_device *drm)
 {
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_plane *primary = NULL, *plane;
 	int ret;
 
@@ -547,8 +555,13 @@ int malidp_crtc_init(struct drm_device *drm)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	ret = drmm_crtc_init_with_planes(drm, &malidp->crtc, primary, NULL,
 					 &malidp_crtc_funcs, NULL);
+=======
+	ret = drm_crtc_init_with_planes(drm, &malidp->crtc, primary, NULL,
+					&malidp_crtc_funcs, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 

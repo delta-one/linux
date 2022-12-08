@@ -28,6 +28,10 @@
 #include <linux/pm_runtime.h>
 #include <linux/slab.h>
 #include <linux/spinlock.h>
+<<<<<<< HEAD
+=======
+#include <linux/sys_soc.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/reset.h>
 #include <linux/math64.h>
 
@@ -840,7 +844,11 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
 				napi_gro_receive(&priv->napi[q],
 						 priv->rx_1st_skb);
 				stats->rx_packets++;
+<<<<<<< HEAD
 				stats->rx_bytes += pkt_len;
+=======
+				stats->rx_bytes += priv->rx_1st_skb->len;
+>>>>>>> b7ba80a49124 (Commit)
 				break;
 			}
 		}
@@ -1100,14 +1108,22 @@ static void ravb_error_interrupt(struct net_device *ndev)
 	ravb_write(ndev, ~(EIS_QFS | EIS_RESERVED), EIS);
 	if (eis & EIS_QFS) {
 		ris2 = ravb_read(ndev, RIS2);
+<<<<<<< HEAD
 		ravb_write(ndev, ~(RIS2_QFF0 | RIS2_QFF1 | RIS2_RFFF | RIS2_RESERVED),
+=======
+		ravb_write(ndev, ~(RIS2_QFF0 | RIS2_RFFF | RIS2_RESERVED),
+>>>>>>> b7ba80a49124 (Commit)
 			   RIS2);
 
 		/* Receive Descriptor Empty int */
 		if (ris2 & RIS2_QFF0)
 			priv->stats[RAVB_BE].rx_over_errors++;
 
+<<<<<<< HEAD
 		/* Receive Descriptor Empty int */
+=======
+		    /* Receive Descriptor Empty int */
+>>>>>>> b7ba80a49124 (Commit)
 		if (ris2 & RIS2_QFF1)
 			priv->stats[RAVB_NC].rx_over_errors++;
 
@@ -1389,6 +1405,14 @@ static void ravb_adjust_link(struct net_device *ndev)
 		phy_print_status(phydev);
 }
 
+<<<<<<< HEAD
+=======
+static const struct soc_device_attribute r8a7795es10[] = {
+	{ .soc_id = "r8a7795", .revision = "ES1.0", },
+	{ /* sentinel */ }
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* PHY init function */
 static int ravb_phy_init(struct net_device *ndev)
 {
@@ -1428,6 +1452,18 @@ static int ravb_phy_init(struct net_device *ndev)
 		goto err_deregister_fixed_link;
 	}
 
+<<<<<<< HEAD
+=======
+	/* This driver only support 10/100Mbit speeds on R-Car H3 ES1.0
+	 * at this time.
+	 */
+	if (soc_device_match(r8a7795es10)) {
+		phy_set_max_speed(phydev, SPEED_100);
+
+		netdev_info(ndev, "limited PHY to 100Mbit/s\n");
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!info->half_duplex) {
 		/* 10BASE, Pause and Asym Pause is not supported */
 		phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_10baseT_Half_BIT);
@@ -1440,6 +1476,11 @@ static int ravb_phy_init(struct net_device *ndev)
 		phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_100baseT_Half_BIT);
 	}
 
+<<<<<<< HEAD
+=======
+	/* Indicate that the MAC is responsible for managing PHY PM */
+	phydev->mac_managed_pm = true;
+>>>>>>> b7ba80a49124 (Commit)
 	phy_attached_info(phydev);
 
 	return 0;
@@ -2362,8 +2403,11 @@ static int ravb_mdio_init(struct ravb_private *priv)
 {
 	struct platform_device *pdev = priv->pdev;
 	struct device *dev = &pdev->dev;
+<<<<<<< HEAD
 	struct phy_device *phydev;
 	struct device_node *pn;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int error;
 
 	/* Bitbang init */
@@ -2385,6 +2429,7 @@ static int ravb_mdio_init(struct ravb_private *priv)
 	if (error)
 		goto out_free_bus;
 
+<<<<<<< HEAD
 	pn = of_parse_phandle(dev->of_node, "phy-handle", 0);
 	phydev = of_phy_find_device(pn);
 	if (phydev) {
@@ -2393,6 +2438,8 @@ static int ravb_mdio_init(struct ravb_private *priv)
 	}
 	of_node_put(pn);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 out_free_bus:
@@ -2834,9 +2881,15 @@ static int ravb_probe(struct platform_device *pdev)
 		goto out_dma_free;
 	}
 
+<<<<<<< HEAD
 	netif_napi_add(ndev, &priv->napi[RAVB_BE], ravb_poll);
 	if (info->nc_queues)
 		netif_napi_add(ndev, &priv->napi[RAVB_NC], ravb_poll);
+=======
+	netif_napi_add(ndev, &priv->napi[RAVB_BE], ravb_poll, 64);
+	if (info->nc_queues)
+		netif_napi_add(ndev, &priv->napi[RAVB_NC], ravb_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Network device register */
 	error = register_netdev(ndev);
@@ -2896,12 +2949,19 @@ static int ravb_remove(struct platform_device *pdev)
 			  priv->desc_bat_dma);
 	/* Set reset mode */
 	ravb_write(ndev, CCC_OPC_RESET, CCC);
+<<<<<<< HEAD
+=======
+	pm_runtime_put_sync(&pdev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	unregister_netdev(ndev);
 	if (info->nc_queues)
 		netif_napi_del(&priv->napi[RAVB_NC]);
 	netif_napi_del(&priv->napi[RAVB_BE]);
 	ravb_mdio_release(priv);
+<<<<<<< HEAD
 	pm_runtime_put_sync(&pdev->dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_disable(&pdev->dev);
 	reset_control_assert(priv->rstc);
 	free_netdev(ndev);
@@ -2966,9 +3026,12 @@ static int __maybe_unused ravb_suspend(struct device *dev)
 	else
 		ret = ravb_close(ndev);
 
+<<<<<<< HEAD
 	if (priv->info->ccc_gac)
 		ravb_ptp_stop(ndev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -3007,9 +3070,12 @@ static int __maybe_unused ravb_resume(struct device *dev)
 	/* Restore descriptor base address table */
 	ravb_write(ndev, priv->desc_bat_dma, DBAT);
 
+<<<<<<< HEAD
 	if (priv->info->ccc_gac)
 		ravb_ptp_init(ndev, priv->pdev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (netif_running(ndev)) {
 		if (priv->wol_enabled) {
 			ret = ravb_wol_restore(ndev);
@@ -3019,7 +3085,10 @@ static int __maybe_unused ravb_resume(struct device *dev)
 		ret = ravb_open(ndev);
 		if (ret < 0)
 			return ret;
+<<<<<<< HEAD
 		ravb_set_rx_mode(ndev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		netif_device_attach(ndev);
 	}
 

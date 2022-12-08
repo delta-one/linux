@@ -58,7 +58,11 @@ static int spi_xcomm_sync_config(struct spi_xcomm *spi_xcomm, unsigned int len)
 static void spi_xcomm_chipselect(struct spi_xcomm *spi_xcomm,
 	struct spi_device *spi, int is_active)
 {
+<<<<<<< HEAD
 	unsigned long cs = spi_get_chipselect(spi, 0);
+=======
+	unsigned long cs = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 	uint16_t chipselect = spi_xcomm->chipselect;
 
 	if (is_active)
@@ -202,7 +206,12 @@ static int spi_xcomm_transfer_one(struct spi_master *master,
 	return status;
 }
 
+<<<<<<< HEAD
 static int spi_xcomm_probe(struct i2c_client *i2c)
+=======
+static int spi_xcomm_probe(struct i2c_client *i2c,
+	const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_xcomm *spi_xcomm;
 	struct spi_master *master;
@@ -241,7 +250,11 @@ static struct i2c_driver spi_xcomm_driver = {
 		.name	= "spi-xcomm",
 	},
 	.id_table	= spi_xcomm_ids,
+<<<<<<< HEAD
 	.probe_new	= spi_xcomm_probe,
+=======
+	.probe		= spi_xcomm_probe,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_i2c_driver(spi_xcomm_driver);
 

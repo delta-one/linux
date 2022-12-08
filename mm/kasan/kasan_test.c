@@ -5,12 +5,17 @@
  * Author: Andrey Ryabinin <a.ryabinin@samsung.com>
  */
 
+<<<<<<< HEAD
 #define pr_fmt(fmt) "kasan_test: " fmt
 
 #include <kunit/test.h>
 #include <linux/bitops.h>
 #include <linux/delay.h>
 #include <linux/io.h>
+=======
+#include <linux/bitops.h>
+#include <linux/delay.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kasan.h>
 #include <linux/kernel.h>
 #include <linux/mm.h>
@@ -18,6 +23,7 @@
 #include <linux/module.h>
 #include <linux/printk.h>
 #include <linux/random.h>
+<<<<<<< HEAD
 #include <linux/set_memory.h>
 #include <linux/slab.h>
 #include <linux/string.h>
@@ -28,10 +34,24 @@
 
 #include <asm/page.h>
 
+=======
+#include <linux/slab.h>
+#include <linux/string.h>
+#include <linux/uaccess.h>
+#include <linux/io.h>
+#include <linux/vmalloc.h>
+#include <linux/set_memory.h>
+
+#include <asm/page.h>
+
+#include <kunit/test.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #include "kasan.h"
 
 #define OOB_TAG_OFF (IS_ENABLED(CONFIG_KASAN_GENERIC) ? 0 : KASAN_GRANULE_SIZE)
 
+<<<<<<< HEAD
 static bool multishot;
 
 /* Fields set based on lines observed in the console. */
@@ -40,6 +60,8 @@ static struct {
 	bool async_fault;
 } test_status;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Some tests use these global variables to store return values from function
  * calls that could otherwise be eliminated by the compiler as dead code.
@@ -47,6 +69,7 @@ static struct {
 void *kasan_ptr_result;
 int kasan_int_result;
 
+<<<<<<< HEAD
 /* Probe for console output: obtains test_status lines of interest. */
 static void probe_console(void *ignore, const char *buf, size_t len)
 {
@@ -106,6 +129,37 @@ static void kasan_suite_exit(struct kunit_suite *suite)
 static void kasan_test_exit(struct kunit *test)
 {
 	KUNIT_EXPECT_FALSE(test, READ_ONCE(test_status.report_found));
+=======
+static struct kunit_resource resource;
+static struct kunit_kasan_status test_status;
+static bool multishot;
+
+/*
+ * Temporarily enable multi-shot mode. Otherwise, KASAN would only report the
+ * first detected bug and panic the kernel if panic_on_warn is enabled. For
+ * hardware tag-based KASAN also allow tag checking to be reenabled for each
+ * test, see the comment for KUNIT_EXPECT_KASAN_FAIL().
+ */
+static int kasan_test_init(struct kunit *test)
+{
+	if (!kasan_enabled()) {
+		kunit_err(test, "can't run KASAN tests with KASAN disabled");
+		return -1;
+	}
+
+	multishot = kasan_save_enable_multi_shot();
+	test_status.report_found = false;
+	test_status.sync_fault = false;
+	kunit_add_named_resource(test, NULL, NULL, &resource,
+					"kasan_status", &test_status);
+	return 0;
+}
+
+static void kasan_test_exit(struct kunit *test)
+{
+	kasan_restore_multi_shot(multishot);
+	KUNIT_EXPECT_FALSE(test, test_status.report_found);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -147,12 +201,20 @@ static void kasan_test_exit(struct kunit *test)
 	if (IS_ENABLED(CONFIG_KASAN_HW_TAGS) &&				\
 	    kasan_sync_fault_possible()) {				\
 		if (READ_ONCE(test_status.report_found) &&		\
+<<<<<<< HEAD
 		    !READ_ONCE(test_status.async_fault))		\
 			kasan_enable_hw_tags();				\
 		migrate_enable();					\
 	}								\
 	WRITE_ONCE(test_status.report_found, false);			\
 	WRITE_ONCE(test_status.async_fault, false);			\
+=======
+		    READ_ONCE(test_status.sync_fault))			\
+			kasan_enable_tagging();				\
+		migrate_enable();					\
+	}								\
+	WRITE_ONCE(test_status.report_found, false);			\
+>>>>>>> b7ba80a49124 (Commit)
 } while (0)
 
 #define KASAN_TEST_NEEDS_CONFIG_ON(test, config) do {			\
@@ -165,6 +227,7 @@ static void kasan_test_exit(struct kunit *test)
 		kunit_skip((test), "Test requires " #config "=n");	\
 } while (0)
 
+<<<<<<< HEAD
 #define KASAN_TEST_NEEDS_CHECKED_MEMINTRINSICS(test) do {		\
 	if (IS_ENABLED(CONFIG_KASAN_HW_TAGS))				\
 		break;  /* No compiler instrumentation. */		\
@@ -174,6 +237,8 @@ static void kasan_test_exit(struct kunit *test)
 		kunit_skip((test), "Test requires checked mem*()");	\
 } while (0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void kmalloc_oob_right(struct kunit *test)
 {
 	char *ptr;
@@ -346,9 +411,12 @@ static void krealloc_more_oob_helper(struct kunit *test,
 	ptr2 = krealloc(ptr1, size2, GFP_KERNEL);
 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr2);
 
+<<<<<<< HEAD
 	/* Suppress -Warray-bounds warnings. */
 	OPTIMIZER_HIDE_VAR(ptr2);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* All offsets up to size2 must be accessible. */
 	ptr2[size1 - 1] = 'x';
 	ptr2[size1] = 'x';
@@ -381,9 +449,12 @@ static void krealloc_less_oob_helper(struct kunit *test,
 	ptr2 = krealloc(ptr1, size2, GFP_KERNEL);
 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr2);
 
+<<<<<<< HEAD
 	/* Suppress -Warray-bounds warnings. */
 	OPTIMIZER_HIDE_VAR(ptr2);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Must be accessible for all modes. */
 	ptr2[size2 - 1] = 'x';
 
@@ -463,8 +534,11 @@ static void kmalloc_oob_16(struct kunit *test)
 		u64 words[2];
 	} *ptr1, *ptr2;
 
+<<<<<<< HEAD
 	KASAN_TEST_NEEDS_CHECKED_MEMINTRINSICS(test);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* This test is specifically crafted for the generic mode. */
 	KASAN_TEST_NEEDS_CONFIG_ON(test, CONFIG_KASAN_GENERIC);
 
@@ -487,8 +561,11 @@ static void kmalloc_uaf_16(struct kunit *test)
 		u64 words[2];
 	} *ptr1, *ptr2;
 
+<<<<<<< HEAD
 	KASAN_TEST_NEEDS_CHECKED_MEMINTRINSICS(test);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ptr1 = kmalloc(sizeof(*ptr1), GFP_KERNEL);
 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr1);
 
@@ -511,8 +588,11 @@ static void kmalloc_oob_memset_2(struct kunit *test)
 	char *ptr;
 	size_t size = 128 - KASAN_GRANULE_SIZE;
 
+<<<<<<< HEAD
 	KASAN_TEST_NEEDS_CHECKED_MEMINTRINSICS(test);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ptr = kmalloc(size, GFP_KERNEL);
 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
 
@@ -526,8 +606,11 @@ static void kmalloc_oob_memset_4(struct kunit *test)
 	char *ptr;
 	size_t size = 128 - KASAN_GRANULE_SIZE;
 
+<<<<<<< HEAD
 	KASAN_TEST_NEEDS_CHECKED_MEMINTRINSICS(test);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ptr = kmalloc(size, GFP_KERNEL);
 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
 
@@ -541,8 +624,11 @@ static void kmalloc_oob_memset_8(struct kunit *test)
 	char *ptr;
 	size_t size = 128 - KASAN_GRANULE_SIZE;
 
+<<<<<<< HEAD
 	KASAN_TEST_NEEDS_CHECKED_MEMINTRINSICS(test);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ptr = kmalloc(size, GFP_KERNEL);
 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
 
@@ -556,8 +642,11 @@ static void kmalloc_oob_memset_16(struct kunit *test)
 	char *ptr;
 	size_t size = 128 - KASAN_GRANULE_SIZE;
 
+<<<<<<< HEAD
 	KASAN_TEST_NEEDS_CHECKED_MEMINTRINSICS(test);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ptr = kmalloc(size, GFP_KERNEL);
 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
 
@@ -571,8 +660,11 @@ static void kmalloc_oob_in_memset(struct kunit *test)
 	char *ptr;
 	size_t size = 128 - KASAN_GRANULE_SIZE;
 
+<<<<<<< HEAD
 	KASAN_TEST_NEEDS_CHECKED_MEMINTRINSICS(test);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ptr = kmalloc(size, GFP_KERNEL);
 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
 
@@ -589,8 +681,11 @@ static void kmalloc_memmove_negative_size(struct kunit *test)
 	size_t size = 64;
 	size_t invalid_size = -2;
 
+<<<<<<< HEAD
 	KASAN_TEST_NEEDS_CHECKED_MEMINTRINSICS(test);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Hardware tag-based mode doesn't check memmove for negative size.
 	 * As a result, this test introduces a side-effect memory corruption,
@@ -613,16 +708,23 @@ static void kmalloc_memmove_invalid_size(struct kunit *test)
 {
 	char *ptr;
 	size_t size = 64;
+<<<<<<< HEAD
 	size_t invalid_size = size;
 
 	KASAN_TEST_NEEDS_CHECKED_MEMINTRINSICS(test);
+=======
+	volatile size_t invalid_size = size;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ptr = kmalloc(size, GFP_KERNEL);
 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
 
 	memset((char *)ptr, 0, 64);
 	OPTIMIZER_HIDE_VAR(ptr);
+<<<<<<< HEAD
 	OPTIMIZER_HIDE_VAR(invalid_size);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	KUNIT_EXPECT_KASAN_FAIL(test,
 		memmove((char *)ptr, (char *)ptr + 4, invalid_size));
 	kfree(ptr);
@@ -645,8 +747,11 @@ static void kmalloc_uaf_memset(struct kunit *test)
 	char *ptr;
 	size_t size = 33;
 
+<<<<<<< HEAD
 	KASAN_TEST_NEEDS_CHECKED_MEMINTRINSICS(test);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Only generic KASAN uses quarantine, which is required to avoid a
 	 * kernel memory corruption this test causes.
@@ -854,6 +959,7 @@ static void kasan_global_oob_left(struct kunit *test)
 	KUNIT_EXPECT_KASAN_FAIL(test, *(volatile char *)p);
 }
 
+<<<<<<< HEAD
 /* Check that ksize() does NOT unpoison whole object. */
 static void ksize_unpoisons_memory(struct kunit *test)
 {
@@ -878,6 +984,25 @@ static void ksize_unpoisons_memory(struct kunit *test)
 		KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[size]);
 	KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[size + 5]);
 	KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size - 1]);
+=======
+/* Check that ksize() makes the whole object accessible. */
+static void ksize_unpoisons_memory(struct kunit *test)
+{
+	char *ptr;
+	size_t size = 123, real_size;
+
+	ptr = kmalloc(size, GFP_KERNEL);
+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+	real_size = ksize(ptr);
+
+	OPTIMIZER_HIDE_VAR(ptr);
+
+	/* This access shouldn't trigger a KASAN report. */
+	ptr[size] = 'x';
+
+	/* This one must. */
+	KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(ptr);
 }
@@ -1181,6 +1306,7 @@ static void kmalloc_double_kzfree(struct kunit *test)
 	KUNIT_EXPECT_KASAN_FAIL(test, kfree_sensitive(ptr));
 }
 
+<<<<<<< HEAD
 /*
  * The two tests below check that Generic KASAN prints auxiliary stack traces
  * for RCU callbacks and workqueues. The reports need to be inspected manually.
@@ -1242,6 +1368,8 @@ static void workqueue_uaf(struct kunit *test)
 		((volatile struct work_struct *)work)->data);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void vmalloc_helpers_tags(struct kunit *test)
 {
 	void *ptr;
@@ -1438,7 +1566,11 @@ static void match_all_not_assigned(struct kunit *test)
 	KASAN_TEST_NEEDS_CONFIG_OFF(test, CONFIG_KASAN_GENERIC);
 
 	for (i = 0; i < 256; i++) {
+<<<<<<< HEAD
 		size = get_random_u32_inclusive(1, 1024);
+=======
+		size = (get_random_int() % 1024) + 1;
+>>>>>>> b7ba80a49124 (Commit)
 		ptr = kmalloc(size, GFP_KERNEL);
 		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
 		KUNIT_EXPECT_GE(test, (u8)get_tag(ptr), (u8)KASAN_TAG_MIN);
@@ -1447,7 +1579,11 @@ static void match_all_not_assigned(struct kunit *test)
 	}
 
 	for (i = 0; i < 256; i++) {
+<<<<<<< HEAD
 		order = get_random_u32_inclusive(1, 4);
+=======
+		order = (get_random_int() % 4) + 1;
+>>>>>>> b7ba80a49124 (Commit)
 		pages = alloc_pages(GFP_KERNEL, order);
 		ptr = page_address(pages);
 		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
@@ -1460,7 +1596,11 @@ static void match_all_not_assigned(struct kunit *test)
 		return;
 
 	for (i = 0; i < 256; i++) {
+<<<<<<< HEAD
 		size = get_random_u32_inclusive(1, 1024);
+=======
+		size = (get_random_int() % 1024) + 1;
+>>>>>>> b7ba80a49124 (Commit)
 		ptr = vmalloc(size);
 		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
 		KUNIT_EXPECT_GE(test, (u8)get_tag(ptr), (u8)KASAN_TAG_MIN);
@@ -1573,8 +1713,11 @@ static struct kunit_case kasan_kunit_test_cases[] = {
 	KUNIT_CASE(kasan_bitops_generic),
 	KUNIT_CASE(kasan_bitops_tags),
 	KUNIT_CASE(kmalloc_double_kzfree),
+<<<<<<< HEAD
 	KUNIT_CASE(rcu_uaf),
 	KUNIT_CASE(workqueue_uaf),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	KUNIT_CASE(vmalloc_helpers_tags),
 	KUNIT_CASE(vmalloc_oob),
 	KUNIT_CASE(vmap_tags),
@@ -1588,10 +1731,16 @@ static struct kunit_case kasan_kunit_test_cases[] = {
 
 static struct kunit_suite kasan_kunit_test_suite = {
 	.name = "kasan",
+<<<<<<< HEAD
 	.test_cases = kasan_kunit_test_cases,
 	.exit = kasan_test_exit,
 	.suite_init = kasan_suite_init,
 	.suite_exit = kasan_suite_exit,
+=======
+	.init = kasan_test_init,
+	.test_cases = kasan_kunit_test_cases,
+	.exit = kasan_test_exit,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 kunit_test_suite(kasan_kunit_test_suite);

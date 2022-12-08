@@ -33,6 +33,7 @@ void *get_auxv_entry(int type);
 
 int pick_online_cpu(void);
 
+<<<<<<< HEAD
 int parse_intmax(const char *buffer, size_t count, intmax_t *result, int base);
 int parse_uintmax(const char *buffer, size_t count, uintmax_t *result, int base);
 int parse_int(const char *buffer, size_t count, int *result, int base);
@@ -51,6 +52,10 @@ int read_debugfs_file(const char *debugfs_file, char *buf, size_t count);
 int write_debugfs_file(const char *debugfs_file, const char *buf, size_t count);
 int read_debugfs_int(const char *debugfs_file, int *result);
 int write_debugfs_int(const char *debugfs_file, int result);
+=======
+int read_debugfs_file(char *debugfs_file, int *result);
+int write_debugfs_file(char *debugfs_file, int result);
+>>>>>>> b7ba80a49124 (Commit)
 int read_sysfs_file(char *debugfs_file, char *result, size_t result_size);
 int perf_event_open_counter(unsigned int type,
 			    unsigned long config, int group_fd);

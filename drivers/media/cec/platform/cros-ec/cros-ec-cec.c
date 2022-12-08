@@ -44,8 +44,11 @@ static void handle_cec_message(struct cros_ec_cec *cros_ec_cec)
 	uint8_t *cec_message = cros_ec->event_data.data.cec_message;
 	unsigned int len = cros_ec->event_size;
 
+<<<<<<< HEAD
 	if (len > CEC_MAX_MSG_SIZE)
 		len = CEC_MAX_MSG_SIZE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cros_ec_cec->rx_msg.len = len;
 	memcpy(cros_ec_cec->rx_msg.msg, cec_message, len);
 
@@ -223,6 +226,7 @@ static const struct cec_dmi_match cec_dmi_match_table[] = {
 	{ "Google", "Moli", "0000:00:02.0", "Port B" },
 	/* Google Kinox */
 	{ "Google", "Kinox", "0000:00:02.0", "Port B" },
+<<<<<<< HEAD
 	/* Google Kuldax */
 	{ "Google", "Kuldax", "0000:00:02.0", "Port B" },
 	/* Google Aurash */
@@ -231,6 +235,8 @@ static const struct cec_dmi_match cec_dmi_match_table[] = {
 	{ "Google", "Gladios", "0000:00:02.0", "Port B" },
 	/* Google Lisbon */
 	{ "Google", "Lisbon", "0000:00:02.0", "Port B" },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct device *cros_ec_cec_find_hdmi_dev(struct device *dev,

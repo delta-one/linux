@@ -113,6 +113,7 @@
 	(PHY_AUX_CNTL__AUX## cd ##_PAD_RXSEL## mask_sh),\
 	(DC_GPIO_AUX_CTRL_5__DDC_PAD## cd ##_I2CMODE## mask_sh)}
 
+<<<<<<< HEAD
 #define DDC_MASK_SH_LIST_DCN2_VGA(mask_sh) \
 	{DDC_MASK_SH_LIST_COMMON(mask_sh),\
 	0,\
@@ -120,6 +121,8 @@
 	0,\
 	0}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ddc_registers {
 	struct gpio_registers gpio;
 	uint32_t ddc_setup;

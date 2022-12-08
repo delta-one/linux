@@ -228,7 +228,11 @@ struct hpt_iop_request_scsi_command {
 	u8     pad1;
 	u8     cdb[16];
 	__le32 dataxfer_length;
+<<<<<<< HEAD
 	struct hpt_iopsg sg_list[];
+=======
+	struct hpt_iopsg sg_list[1];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct hpt_iop_request_ioctl_command {
@@ -237,7 +241,11 @@ struct hpt_iop_request_ioctl_command {
 	__le32 inbuf_size;
 	__le32 outbuf_size;
 	__le32 bytes_returned;
+<<<<<<< HEAD
 	u8     buf[];
+=======
+	u8     buf[1];
+>>>>>>> b7ba80a49124 (Commit)
 	/* out data should be put at buf[(inbuf_size+3)&~3] */
 };
 

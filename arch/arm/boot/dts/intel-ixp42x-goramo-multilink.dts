@@ -82,7 +82,11 @@
 		};
 
 		pci@c0000000 {
+<<<<<<< HEAD
 			status = "okay";
+=======
+			status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 
 			/*
 			 * The device has 4 slots (IDSEL) with one dedicated IRQ per slot.
@@ -148,7 +152,11 @@
 
 		/* EthB */
 		ethernet@c8009000 {
+<<<<<<< HEAD
 			status = "okay";
+=======
+			status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 			queue-rx = <&qmgr 3>;
 			queue-txready = <&qmgr 32>;
 			phy-mode = "rgmii";
@@ -170,7 +178,11 @@
 
 		/* EthC */
 		ethernet@c800a000 {
+<<<<<<< HEAD
 			status = "okay";
+=======
+			status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 			queue-rx = <&qmgr 4>;
 			queue-txready = <&qmgr 33>;
 			phy-mode = "rgmii";

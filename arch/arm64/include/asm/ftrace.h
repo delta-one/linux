@@ -23,17 +23,29 @@
  */
 #define HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
 
+<<<<<<< HEAD
 #ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
 #define ARCH_SUPPORTS_FTRACE_OPS 1
 #else
 #define MCOUNT_ADDR		((unsigned long)_mcount)
+=======
+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+#define ARCH_SUPPORTS_FTRACE_OPS 1
+#else
+#define MCOUNT_ADDR		((unsigned long)function_nocfi(_mcount))
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 /* The BL at the callsite's adjusted rec->ip */
 #define MCOUNT_INSN_SIZE	AARCH64_INSN_SIZE
 
 #define FTRACE_PLT_IDX		0
+<<<<<<< HEAD
 #define NR_FTRACE_PLTS		1
+=======
+#define FTRACE_REGS_PLT_IDX	1
+#define NR_FTRACE_PLTS		2
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Currently, gcc tends to save the link register after the local variables
@@ -62,6 +74,7 @@ extern unsigned long ftrace_graph_call;
 
 extern void return_to_handler(void);
 
+<<<<<<< HEAD
 unsigned long ftrace_call_adjust(unsigned long addr);
 
 #ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
@@ -129,6 +142,27 @@ ftrace_override_function_with_return(struct ftrace_regs *fregs)
 }
 
 int ftrace_regs_query_register_offset(const char *name);
+=======
+static inline unsigned long ftrace_call_adjust(unsigned long addr)
+{
+	/*
+	 * Adjust addr to point at the BL in the callsite.
+	 * See ftrace_init_nop() for the callsite sequence.
+	 */
+	if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_REGS))
+		return addr + AARCH64_INSN_SIZE;
+	/*
+	 * addr is the address of the mcount call instruction.
+	 * recordmcount does the necessary offset calculation.
+	 */
+	return addr;
+}
+
+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+struct dyn_ftrace;
+struct ftrace_ops;
+struct ftrace_regs;
+>>>>>>> b7ba80a49124 (Commit)
 
 int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
 #define ftrace_init_nop ftrace_init_nop

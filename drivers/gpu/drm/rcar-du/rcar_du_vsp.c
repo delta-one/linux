@@ -139,6 +139,7 @@ static const u32 rcar_du_vsp_formats[] = {
 	DRM_FORMAT_YVU444,
 };
 
+<<<<<<< HEAD
 /*
  * Gen4 supports the same formats as above, and additionally 2-10-10-10 RGB
  * formats and Y210 & Y212 formats.
@@ -176,6 +177,8 @@ static const u32 rcar_du_vsp_formats_gen4[] = {
 	DRM_FORMAT_Y212,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void rcar_du_vsp_plane_setup(struct rcar_du_vsp_plane *plane)
 {
 	struct rcar_du_vsp_plane_state *state =
@@ -473,6 +476,7 @@ int rcar_du_vsp_init(struct rcar_du_vsp *vsp, struct device_node *np,
 					 ? DRM_PLANE_TYPE_PRIMARY
 					 : DRM_PLANE_TYPE_OVERLAY;
 		struct rcar_du_vsp_plane *plane = &vsp->planes[i];
+<<<<<<< HEAD
 		unsigned int num_formats;
 		const u32 *formats;
 
@@ -483,13 +487,20 @@ int rcar_du_vsp_init(struct rcar_du_vsp *vsp, struct device_node *np,
 			num_formats = ARRAY_SIZE(rcar_du_vsp_formats_gen4);
 			formats = rcar_du_vsp_formats_gen4;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		plane->vsp = vsp;
 		plane->index = i;
 
 		ret = drm_universal_plane_init(&rcdu->ddev, &plane->plane,
 					       crtcs, &rcar_du_vsp_plane_funcs,
+<<<<<<< HEAD
 					       formats, num_formats,
+=======
+					       rcar_du_vsp_formats,
+					       ARRAY_SIZE(rcar_du_vsp_formats),
+>>>>>>> b7ba80a49124 (Commit)
 					       NULL, type, NULL);
 		if (ret < 0)
 			return ret;

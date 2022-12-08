@@ -775,8 +775,11 @@ struct iwl_imr_data {
  * @periodic_trig_list: periodic triggers list
  * @domains_bitmap: bitmap of active domains other than &IWL_FW_INI_DOMAIN_ALWAYS_ON
  * @ucode_preset: preset based on ucode
+<<<<<<< HEAD
  * @dump_file_name_ext: dump file name extension
  * @dump_file_name_ext_valid: dump file name extension if valid or not
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct iwl_trans_debug {
 	u8 n_dest_reg;
@@ -815,8 +818,11 @@ struct iwl_trans_debug {
 	bool restart_required;
 	u32 last_tp_resetfw;
 	struct iwl_imr_data imr_data;
+<<<<<<< HEAD
 	u8 dump_file_name_ext[IWL_FW_INI_MAX_NAME];
 	bool dump_file_name_ext_valid;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct iwl_dma_ptr {
@@ -980,8 +986,11 @@ struct iwl_trans_txqs {
  * @max_skb_frags: maximum number of fragments an SKB can have when transmitted.
  *	0 indicates that frag SKBs (NETIF_F_SG) aren't supported.
  * @hw_rf_id a u32 with the device RF ID
+<<<<<<< HEAD
  * @hw_crf_id a u32 with the device CRF ID
  * @hw_cdb_id a u32 with the device CDB ID
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @hw_id: a u32 with the ID of the device / sub-device.
  *	Set during transport allocation.
  * @hw_id_str: a string with info about HW ID. Set during transport allocation.
@@ -1005,8 +1014,11 @@ struct iwl_trans_txqs {
  *	This mode is set dynamically, depending on the WoWLAN values
  *	configured from the userspace at runtime.
  * @iwl_trans_txqs: transport tx queues data.
+<<<<<<< HEAD
  * @mbx_addr_0_step: step address data 0
  * @mbx_addr_1_step: step address data 1
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct iwl_trans {
 	bool csme_own;
@@ -1023,8 +1035,11 @@ struct iwl_trans {
 	u32 hw_rev;
 	u32 hw_rev_step;
 	u32 hw_rf_id;
+<<<<<<< HEAD
 	u32 hw_crf_id;
 	u32 hw_cdb_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 hw_id;
 	char hw_id_str[52];
 	u32 sku_id[3];
@@ -1063,8 +1078,11 @@ struct iwl_trans {
 
 	const char *name;
 	struct iwl_trans_txqs txqs;
+<<<<<<< HEAD
 	u32 mbx_addr_0_step;
 	u32 mbx_addr_1_step;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* pointer to trans specific struct */
 	/*Ensure that this pointer will always be aligned to sizeof pointer */
@@ -1554,6 +1572,9 @@ void iwl_trans_free(struct iwl_trans *trans);
 ******************************************************/
 int __must_check iwl_pci_register_driver(void);
 void iwl_pci_unregister_driver(void);
+<<<<<<< HEAD
 void iwl_trans_pcie_remove(struct iwl_trans *trans, bool rescan);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __iwl_trans_h__ */

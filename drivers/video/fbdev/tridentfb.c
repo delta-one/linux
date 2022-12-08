@@ -1128,6 +1128,14 @@ static inline void shadowmode_on(struct tridentfb_par *par)
 	write3CE(par, CyberControl, read3CE(par, CyberControl) | 0x81);
 }
 
+<<<<<<< HEAD
+=======
+static inline void shadowmode_off(struct tridentfb_par *par)
+{
+	write3CE(par, CyberControl, read3CE(par, CyberControl) & 0x7E);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Set the hardware to the requested video mode */
 static int tridentfb_set_par(struct fb_info *info)
 {
@@ -1470,7 +1478,11 @@ static int trident_pci_probe(struct pci_dev *dev,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	err = pcim_enable_device(dev);
+=======
+	err = pci_enable_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 
@@ -1710,10 +1722,18 @@ out_unmap2:
 	kfree(info->pixmap.addr);
 	if (info->screen_base)
 		iounmap(info->screen_base);
+<<<<<<< HEAD
+=======
+	release_mem_region(tridentfb_fix.smem_start, tridentfb_fix.smem_len);
+>>>>>>> b7ba80a49124 (Commit)
 	disable_mmio(info->par);
 out_unmap1:
 	if (default_par->io_virt)
 		iounmap(default_par->io_virt);
+<<<<<<< HEAD
+=======
+	release_mem_region(tridentfb_fix.mmio_start, tridentfb_fix.mmio_len);
+>>>>>>> b7ba80a49124 (Commit)
 	framebuffer_release(info);
 	return err;
 }
@@ -1728,6 +1748,11 @@ static void trident_pci_remove(struct pci_dev *dev)
 		i2c_del_adapter(&par->ddc_adapter);
 	iounmap(par->io_virt);
 	iounmap(info->screen_base);
+<<<<<<< HEAD
+=======
+	release_mem_region(tridentfb_fix.smem_start, tridentfb_fix.smem_len);
+	release_mem_region(tridentfb_fix.mmio_start, tridentfb_fix.mmio_len);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(info->pixmap.addr);
 	fb_dealloc_cmap(&info->cmap);
 	framebuffer_release(info);
@@ -1811,12 +1836,16 @@ static int __init tridentfb_init(void)
 {
 #ifndef MODULE
 	char *option = NULL;
+<<<<<<< HEAD
 #endif
 
 	if (fb_modesetting_disabled("tridentfb"))
 		return -ENODEV;
 
 #ifndef MODULE
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (fb_get_options("tridentfb", &option))
 		return -ENODEV;
 	tridentfb_setup(option);

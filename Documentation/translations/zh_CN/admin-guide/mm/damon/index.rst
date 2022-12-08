@@ -22,7 +22,10 @@
    start
    usage
    reclaim
+<<<<<<< HEAD
    lru_sort
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 
 

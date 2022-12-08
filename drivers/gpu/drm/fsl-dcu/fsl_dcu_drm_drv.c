@@ -20,7 +20,11 @@
 
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_dma.h>
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_gem_dma_helper.h>
 #include <drm/drm_modeset_helper.h>
 #include <drm/drm_module.h>
@@ -333,7 +337,11 @@ static int fsl_dcu_drm_probe(struct platform_device *pdev)
 	if (ret < 0)
 		goto put;
 
+<<<<<<< HEAD
 	drm_fbdev_dma_setup(drm, legacyfb_depth);
+=======
+	drm_fbdev_generic_setup(drm, legacyfb_depth);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 

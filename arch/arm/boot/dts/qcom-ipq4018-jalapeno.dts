@@ -7,7 +7,11 @@
 
 / {
 	model = "8devices Jalapeno";
+<<<<<<< HEAD
 	compatible = "8dev,jalapeno", "qcom,ipq4018";
+=======
+	compatible = "8dev,jalapeno";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &tlmm {

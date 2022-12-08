@@ -19,7 +19,10 @@
 #include <linux/bitops.h>
 #include <linux/i2c.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/rtc.h>
 
@@ -520,9 +523,15 @@ static const struct attribute_group rx8025_attr_group = {
 	.attrs	= rx8025_attrs,
 };
 
+<<<<<<< HEAD
 static int rx8025_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_match_id(rx8025_id, client);
+=======
+static int rx8025_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct i2c_adapter *adapter = client->adapter;
 	struct rx8025_data *rx8025;
 	int err = 0;
@@ -581,7 +590,11 @@ static struct i2c_driver rx8025_driver = {
 	.driver = {
 		.name = "rtc-rx8025",
 	},
+<<<<<<< HEAD
 	.probe_new	= rx8025_probe,
+=======
+	.probe		= rx8025_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= rx8025_id,
 };
 

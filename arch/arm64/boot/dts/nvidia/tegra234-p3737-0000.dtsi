@@ -2,6 +2,7 @@
 
 / {
 	compatible = "nvidia,p3737-0000";
+<<<<<<< HEAD
 
 	bus@0 {
 		i2c@3160000 {
@@ -40,4 +41,6 @@
 		regulator-max-microvolt = <1800000>;
 		regulator-always-on;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

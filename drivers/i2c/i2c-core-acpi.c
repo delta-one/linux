@@ -26,7 +26,11 @@ struct gsb_buffer {
 	union {
 		u16	wdata;
 		u8	bdata;
+<<<<<<< HEAD
 		DECLARE_FLEX_ARRAY(u8, data);
+=======
+		u8	data[0];
+>>>>>>> b7ba80a49124 (Commit)
 	};
 } __packed;
 
@@ -137,11 +141,14 @@ static const struct acpi_device_id i2c_acpi_ignored_device_ids[] = {
 	{}
 };
 
+<<<<<<< HEAD
 struct i2c_acpi_irq_context {
 	int irq;
 	bool wake_capable;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int i2c_acpi_do_lookup(struct acpi_device *adev,
 			      struct i2c_acpi_lookup *lookup)
 {
@@ -173,6 +180,7 @@ static int i2c_acpi_do_lookup(struct acpi_device *adev,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int i2c_acpi_add_irq_resource(struct acpi_resource *ares, void *data)
 {
 	struct i2c_acpi_irq_context *irq_ctx = data;
@@ -186,6 +194,15 @@ static int i2c_acpi_add_irq_resource(struct acpi_resource *ares, void *data)
 
 	irq_ctx->irq = i2c_dev_irq_from_resources(&r, 1);
 	irq_ctx->wake_capable = r.flags & IORESOURCE_IRQ_WAKECAPABLE;
+=======
+static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
+{
+	int *irq = data;
+	struct resource r;
+
+	if (*irq <= 0 && acpi_dev_resource_interrupt(ares, 0, &r))
+		*irq = i2c_dev_irq_from_resources(&r, 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 1; /* No need to add resource to the list */
 }
@@ -193,12 +210,16 @@ static int i2c_acpi_add_irq_resource(struct acpi_resource *ares, void *data)
 /**
  * i2c_acpi_get_irq - get device IRQ number from ACPI
  * @client: Pointer to the I2C client device
+<<<<<<< HEAD
  * @wake_capable: Set to true if the IRQ is wake capable
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Find the IRQ number used by a specific client device.
  *
  * Return: The IRQ number or an error code.
  */
+<<<<<<< HEAD
 int i2c_acpi_get_irq(struct i2c_client *client, bool *wake_capable)
 {
 	struct acpi_device *adev = ACPI_COMPANION(&client->dev);
@@ -206,17 +227,29 @@ int i2c_acpi_get_irq(struct i2c_client *client, bool *wake_capable)
 	struct i2c_acpi_irq_context irq_ctx = {
 		.irq = -ENOENT,
 	};
+=======
+int i2c_acpi_get_irq(struct i2c_client *client)
+{
+	struct acpi_device *adev = ACPI_COMPANION(&client->dev);
+	struct list_head resource_list;
+	int irq = -ENOENT;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	INIT_LIST_HEAD(&resource_list);
 
 	ret = acpi_dev_get_resources(adev, &resource_list,
+<<<<<<< HEAD
 				     i2c_acpi_add_irq_resource, &irq_ctx);
+=======
+				     i2c_acpi_add_resource, &irq);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
 	acpi_dev_free_resource_list(&resource_list);
 
+<<<<<<< HEAD
 	if (irq_ctx.irq == -ENOENT)
 		irq_ctx.irq = acpi_dev_gpio_irq_wake_get(adev, 0, &irq_ctx.wake_capable);
 
@@ -227,6 +260,12 @@ int i2c_acpi_get_irq(struct i2c_client *client, bool *wake_capable)
 		*wake_capable = irq_ctx.wake_capable;
 
 	return irq_ctx.irq;
+=======
+	if (irq == -ENOENT)
+		irq = acpi_dev_gpio_irq_get(adev, 0);
+
+	return irq;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int i2c_acpi_get_info(struct acpi_device *adev,
@@ -442,7 +481,22 @@ EXPORT_SYMBOL_GPL(i2c_acpi_find_adapter_by_handle);
 
 static struct i2c_client *i2c_acpi_find_client_by_adev(struct acpi_device *adev)
 {
+<<<<<<< HEAD
 	return i2c_find_device_by_fwnode(acpi_fwnode_handle(adev));
+=======
+	struct device *dev;
+	struct i2c_client *client;
+
+	dev = bus_find_device_by_acpi_dev(&i2c_bus_type, adev);
+	if (!dev)
+		return NULL;
+
+	client = i2c_verify_client(dev);
+	if (!client)
+		put_device(dev);
+
+	return client;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int i2c_acpi_notify(struct notifier_block *nb, unsigned long value,

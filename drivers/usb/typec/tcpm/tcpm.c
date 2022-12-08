@@ -36,7 +36,10 @@
 #define FOREACH_STATE(S)			\
 	S(INVALID_STATE),			\
 	S(TOGGLING),			\
+<<<<<<< HEAD
 	S(CHECK_CONTAMINANT),			\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	S(SRC_UNATTACHED),			\
 	S(SRC_ATTACH_WAIT),			\
 	S(SRC_ATTACHED),			\
@@ -250,7 +253,10 @@ enum frs_typec_current {
 #define TCPM_RESET_EVENT	BIT(2)
 #define TCPM_FRS_EVENT		BIT(3)
 #define TCPM_SOURCING_VBUS	BIT(4)
+<<<<<<< HEAD
 #define TCPM_PORT_CLEAN		BIT(5)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define LOG_BUFFER_ENTRIES	1024
 #define LOG_BUFFER_ENTRY_SIZE	128
@@ -485,6 +491,7 @@ struct tcpm_port {
 	 * SNK_READY for non-pd link.
 	 */
 	bool slow_charger_loop;
+<<<<<<< HEAD
 
 	/*
 	 * When true indicates that the lower level drivers indicate potential presence
@@ -492,6 +499,8 @@ struct tcpm_port {
 	 * transitions.
 	 */
 	bool potential_contaminant;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_DEBUG_FS
 	struct dentry *dentry;
 	struct mutex logbuffer_lock;	/* log buffer access lock */
@@ -656,7 +665,11 @@ static void tcpm_log(struct tcpm_port *port, const char *fmt, ...)
 	/* Do not log while disconnected and unattached */
 	if (tcpm_port_is_disconnected(port) &&
 	    (port->state == SRC_UNATTACHED || port->state == SNK_UNATTACHED ||
+<<<<<<< HEAD
 	     port->state == TOGGLING || port->state == CHECK_CONTAMINANT))
+=======
+	     port->state == TOGGLING))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	va_start(args, fmt);
@@ -1445,6 +1458,7 @@ static int tcpm_ams_start(struct tcpm_port *port, enum tcpm_ams ams)
 static void tcpm_queue_vdm(struct tcpm_port *port, const u32 header,
 			   const u32 *data, int cnt)
 {
+<<<<<<< HEAD
 	u32 vdo_hdr = port->vdo_data[0];
 
 	WARN_ON(!mutex_is_locked(&port->lock));
@@ -1457,6 +1471,12 @@ static void tcpm_queue_vdm(struct tcpm_port *port, const u32 header,
 		/* Make sure we are not still processing a previous VDM packet */
 		WARN_ON(port->vdm_state > VDM_STATE_DONE);
 	}
+=======
+	WARN_ON(!mutex_is_locked(&port->lock));
+
+	/* Make sure we are not still processing a previous VDM packet */
+	WARN_ON(port->vdm_state > VDM_STATE_DONE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	port->vdo_count = cnt + 1;
 	port->vdo_data[0] = header;
@@ -1710,11 +1730,22 @@ static int tcpm_pd_svdm(struct tcpm_port *port, struct typec_altmode *adev,
 			}
 			break;
 		case CMD_ENTER_MODE:
+<<<<<<< HEAD
 			if (adev && pdev)
 				*adev_action = ADEV_QUEUE_VDM_SEND_EXIT_MODE_ON_FAIL;
 			return 0;
 		case CMD_EXIT_MODE:
 			if (adev && pdev) {
+=======
+			if (adev && pdev) {
+				typec_altmode_update_active(pdev, true);
+				*adev_action = ADEV_QUEUE_VDM_SEND_EXIT_MODE_ON_FAIL;
+			}
+			return 0;
+		case CMD_EXIT_MODE:
+			if (adev && pdev) {
+				typec_altmode_update_active(pdev, false);
+>>>>>>> b7ba80a49124 (Commit)
 				/* Back to USB Operation */
 				*adev_action = ADEV_NOTIFY_USB_AND_QUEUE_VDM;
 				return 0;
@@ -1956,6 +1987,7 @@ static void vdm_run_state_machine(struct tcpm_port *port)
 			switch (PD_VDO_CMD(vdo_hdr)) {
 			case CMD_DISCOVER_IDENT:
 				res = tcpm_ams_start(port, DISCOVER_IDENTITY);
+<<<<<<< HEAD
 				if (res == 0) {
 					port->send_discover = false;
 				} else if (res == -EAGAIN) {
@@ -1963,6 +1995,13 @@ static void vdm_run_state_machine(struct tcpm_port *port)
 					mod_send_discover_delayed_work(port,
 								       SEND_DISCOVER_RETRY_MS);
 				}
+=======
+				if (res == 0)
+					port->send_discover = false;
+				else if (res == -EAGAIN)
+					mod_send_discover_delayed_work(port,
+								       SEND_DISCOVER_RETRY_MS);
+>>>>>>> b7ba80a49124 (Commit)
 				break;
 			case CMD_DISCOVER_SVID:
 				res = tcpm_ams_start(port, DISCOVER_SVIDS);
@@ -2045,7 +2084,10 @@ static void vdm_run_state_machine(struct tcpm_port *port)
 			unsigned long timeout;
 
 			port->vdm_retries = 0;
+<<<<<<< HEAD
 			port->vdo_data[0] = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			port->vdm_state = VDM_STATE_BUSY;
 			timeout = vdm_ready_timeout(vdo_hdr);
 			mod_vdm_delayed_work(port, timeout);
@@ -3921,28 +3963,37 @@ static void run_state_machine(struct tcpm_port *port)
 	unsigned int msecs;
 	enum tcpm_state upcoming_state;
 
+<<<<<<< HEAD
 	if (port->tcpc->check_contaminant && port->state != CHECK_CONTAMINANT)
 		port->potential_contaminant = ((port->enter_state == SRC_ATTACH_WAIT &&
 						port->state == SRC_UNATTACHED) ||
 					       (port->enter_state == SNK_ATTACH_WAIT &&
 						port->state == SNK_UNATTACHED));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	port->enter_state = port->state;
 	switch (port->state) {
 	case TOGGLING:
 		break;
+<<<<<<< HEAD
 	case CHECK_CONTAMINANT:
 		port->tcpc->check_contaminant(port->tcpc);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* SRC states */
 	case SRC_UNATTACHED:
 		if (!port->non_pd_role_swap)
 			tcpm_swap_complete(port, -ENOTCONN);
 		tcpm_src_detach(port);
+<<<<<<< HEAD
 		if (port->potential_contaminant) {
 			tcpm_set_state(port, CHECK_CONTAMINANT, 0);
 			break;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (tcpm_start_toggling(port, tcpm_rp_cc(port))) {
 			tcpm_set_state(port, TOGGLING, 0);
 			break;
@@ -4180,10 +4231,13 @@ static void run_state_machine(struct tcpm_port *port)
 			tcpm_swap_complete(port, -ENOTCONN);
 		tcpm_pps_complete(port, -ENOTCONN);
 		tcpm_snk_detach(port);
+<<<<<<< HEAD
 		if (port->potential_contaminant) {
 			tcpm_set_state(port, CHECK_CONTAMINANT, 0);
 			break;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (tcpm_start_toggling(port, TYPEC_CC_RD)) {
 			tcpm_set_state(port, TOGGLING, 0);
 			break;
@@ -4581,9 +4635,12 @@ static void run_state_machine(struct tcpm_port *port)
 	case SOFT_RESET:
 		port->message_id = 0;
 		port->rx_msgid = -1;
+<<<<<<< HEAD
 		/* remove existing capabilities */
 		usb_power_delivery_unregister_capabilities(port->partner_source_caps);
 		port->partner_source_caps = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		tcpm_pd_send_control(port, PD_CTRL_ACCEPT);
 		tcpm_ams_finish(port);
 		if (port->pwr_role == TYPEC_SOURCE) {
@@ -4603,9 +4660,12 @@ static void run_state_machine(struct tcpm_port *port)
 	case SOFT_RESET_SEND:
 		port->message_id = 0;
 		port->rx_msgid = -1;
+<<<<<<< HEAD
 		/* remove existing capabilities */
 		usb_power_delivery_unregister_capabilities(port->partner_source_caps);
 		port->partner_source_caps = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (tcpm_pd_send_control(port, PD_CTRL_SOFT_RESET))
 			tcpm_set_state_cond(port, hard_reset_state(port), 0);
 		else
@@ -4634,6 +4694,7 @@ static void run_state_machine(struct tcpm_port *port)
 		tcpm_set_state(port, ready_state(port), 0);
 		break;
 	case DR_SWAP_CHANGE_DR:
+<<<<<<< HEAD
 		tcpm_unregister_altmodes(port);
 		if (port->data_role == TYPEC_HOST)
 			tcpm_set_roles(port, true, port->pwr_role,
@@ -4641,6 +4702,16 @@ static void run_state_machine(struct tcpm_port *port)
 		else
 			tcpm_set_roles(port, true, port->pwr_role,
 				       TYPEC_HOST);
+=======
+		if (port->data_role == TYPEC_HOST) {
+			tcpm_unregister_altmodes(port);
+			tcpm_set_roles(port, true, port->pwr_role,
+				       TYPEC_DEVICE);
+		} else {
+			tcpm_set_roles(port, true, port->pwr_role,
+				       TYPEC_HOST);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		tcpm_ams_finish(port);
 		tcpm_set_state(port, ready_state(port), 0);
 		break;
@@ -4735,9 +4806,12 @@ static void run_state_machine(struct tcpm_port *port)
 		tcpm_set_state(port, SNK_STARTUP, 0);
 		break;
 	case PR_SWAP_SNK_SRC_SINK_OFF:
+<<<<<<< HEAD
 		/* will be source, remove existing capabilities */
 		usb_power_delivery_unregister_capabilities(port->partner_source_caps);
 		port->partner_source_caps = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Prevent vbus discharge circuit from turning on during PR_SWAP
 		 * as this is not a disconnect.
@@ -4968,9 +5042,12 @@ static void _tcpm_cc_change(struct tcpm_port *port, enum typec_cc_status cc1,
 		else if (tcpm_port_is_sink(port))
 			tcpm_set_state(port, SNK_ATTACH_WAIT, 0);
 		break;
+<<<<<<< HEAD
 	case CHECK_CONTAMINANT:
 		/* Wait for Toggling to be resumed */
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case SRC_UNATTACHED:
 	case ACC_UNATTACHED:
 		if (tcpm_port_is_debug(port) || tcpm_port_is_audio(port) ||
@@ -5470,6 +5547,7 @@ static void tcpm_pd_event_handler(struct kthread_work *work)
 			port->vbus_source = true;
 			_tcpm_pd_vbus_on(port);
 		}
+<<<<<<< HEAD
 		if (events & TCPM_PORT_CLEAN) {
 			tcpm_log(port, "port clean");
 			if (port->state == CHECK_CONTAMINANT) {
@@ -5479,6 +5557,8 @@ static void tcpm_pd_event_handler(struct kthread_work *work)
 					tcpm_set_state(port, tcpm_default_state(port), 0);
 			}
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		spin_lock(&port->pd_event_lock);
 	}
@@ -5531,6 +5611,7 @@ void tcpm_sourcing_vbus(struct tcpm_port *port)
 }
 EXPORT_SYMBOL_GPL(tcpm_sourcing_vbus);
 
+<<<<<<< HEAD
 void tcpm_port_clean(struct tcpm_port *port)
 {
 	spin_lock(&port->pd_event_lock);
@@ -5546,6 +5627,8 @@ bool tcpm_port_is_toggling(struct tcpm_port *port)
 }
 EXPORT_SYMBOL_GPL(tcpm_port_is_toggling);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void tcpm_enable_frs_work(struct kthread_work *work)
 {
 	struct tcpm_port *port = container_of(work, struct tcpm_port, enable_frs);

@@ -7,8 +7,17 @@
 #include <bpf/bpf_core_read.h>
 #include "bpf_misc.h"
 
+<<<<<<< HEAD
 int kprobe2_res = 0;
 int kretprobe2_res = 0;
+=======
+int kprobe_res = 0;
+int kprobe2_res = 0;
+int kretprobe_res = 0;
+int kretprobe2_res = 0;
+int uprobe_res = 0;
+int uretprobe_res = 0;
+>>>>>>> b7ba80a49124 (Commit)
 int uprobe_byname_res = 0;
 int uretprobe_byname_res = 0;
 int uprobe_byname2_res = 0;
@@ -19,6 +28,16 @@ int uretprobe_byname3_sleepable_res = 0;
 int uretprobe_byname3_res = 0;
 void *user_ptr = 0;
 
+<<<<<<< HEAD
+=======
+SEC("kprobe")
+int handle_kprobe(struct pt_regs *ctx)
+{
+	kprobe_res = 1;
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 SEC("ksyscall/nanosleep")
 int BPF_KSYSCALL(handle_kprobe_auto, struct __kernel_timespec *req, struct __kernel_timespec *rem)
 {
@@ -26,6 +45,27 @@ int BPF_KSYSCALL(handle_kprobe_auto, struct __kernel_timespec *req, struct __ker
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * This program will be manually made sleepable on the userspace side
+ * and should thus be unattachable.
+ */
+SEC("kprobe/" SYS_PREFIX "sys_nanosleep")
+int handle_kprobe_sleepable(struct pt_regs *ctx)
+{
+	kprobe_res = 2;
+	return 0;
+}
+
+SEC("kretprobe")
+int handle_kretprobe(struct pt_regs *ctx)
+{
+	kretprobe_res = 2;
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 SEC("kretsyscall/nanosleep")
 int BPF_KRETPROBE(handle_kretprobe_auto, int ret)
 {
@@ -34,14 +74,26 @@ int BPF_KRETPROBE(handle_kretprobe_auto, int ret)
 }
 
 SEC("uprobe")
+<<<<<<< HEAD
 int handle_uprobe_ref_ctr(struct pt_regs *ctx)
 {
+=======
+int handle_uprobe(struct pt_regs *ctx)
+{
+	uprobe_res = 3;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 SEC("uretprobe")
+<<<<<<< HEAD
 int handle_uretprobe_ref_ctr(struct pt_regs *ctx)
 {
+=======
+int handle_uretprobe(struct pt_regs *ctx)
+{
+	uretprobe_res = 4;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -61,6 +113,7 @@ int handle_uretprobe_byname(struct pt_regs *ctx)
 }
 
 SEC("uprobe")
+<<<<<<< HEAD
 int BPF_UPROBE(handle_uprobe_byname2, const char *pathname, const char *mode)
 {
 	char mode_buf[2] = {};
@@ -68,12 +121,24 @@ int BPF_UPROBE(handle_uprobe_byname2, const char *pathname, const char *mode)
 	/* verify fopen mode */
 	bpf_probe_read_user(mode_buf, sizeof(mode_buf), mode);
 	if (mode_buf[0] == 'r' && mode_buf[1] == 0)
+=======
+int handle_uprobe_byname2(struct pt_regs *ctx)
+{
+	unsigned int size = PT_REGS_PARM1(ctx);
+
+	/* verify malloc size */
+	if (size == 1)
+>>>>>>> b7ba80a49124 (Commit)
 		uprobe_byname2_res = 7;
 	return 0;
 }
 
 SEC("uretprobe")
+<<<<<<< HEAD
 int BPF_URETPROBE(handle_uretprobe_byname2, void *ret)
+=======
+int handle_uretprobe_byname2(struct pt_regs *ctx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	uretprobe_byname2_res = 8;
 	return 0;

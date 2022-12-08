@@ -388,9 +388,12 @@ void mtu3_qmu_stop(struct mtu3_ep *mep)
 	}
 	mtu3_writel(mbase, qcsr, QMU_Q_STOP);
 
+<<<<<<< HEAD
 	if (mep->is_in)
 		mtu3_setbits(mbase, MU3D_EP_TXCR0(epnum), TX_FLUSHFIFO);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = readl_poll_timeout_atomic(mbase + qcsr, value,
 			!(value & QMU_Q_ACTIVE), 1, 1000);
 	if (ret) {
@@ -398,10 +401,13 @@ void mtu3_qmu_stop(struct mtu3_ep *mep)
 		return;
 	}
 
+<<<<<<< HEAD
 	/* flush fifo again to make sure the fifo is empty */
 	if (mep->is_in)
 		mtu3_setbits(mbase, MU3D_EP_TXCR0(epnum), TX_FLUSHFIFO);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev_dbg(mtu->dev, "%s's qmu stop now!\n", mep->name);
 }
 

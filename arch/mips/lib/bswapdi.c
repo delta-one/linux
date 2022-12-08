@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0
 #include <linux/export.h>
 #include <linux/compiler.h>
+<<<<<<< HEAD
 #include <uapi/linux/swab.h>
 
 /* To silence -Wmissing-prototypes. */
@@ -10,4 +11,19 @@ unsigned long long notrace __bswapdi2(unsigned long long u)
 {
 	return ___constant_swab64(u);
 }
+=======
+
+unsigned long long notrace __bswapdi2(unsigned long long u)
+{
+	return (((u) & 0xff00000000000000ull) >> 56) |
+	       (((u) & 0x00ff000000000000ull) >> 40) |
+	       (((u) & 0x0000ff0000000000ull) >> 24) |
+	       (((u) & 0x000000ff00000000ull) >>  8) |
+	       (((u) & 0x00000000ff000000ull) <<  8) |
+	       (((u) & 0x0000000000ff0000ull) << 24) |
+	       (((u) & 0x000000000000ff00ull) << 40) |
+	       (((u) & 0x00000000000000ffull) << 56);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL(__bswapdi2);

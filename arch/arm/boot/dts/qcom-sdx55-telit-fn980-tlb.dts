@@ -98,7 +98,11 @@
 };
 
 &apps_rsc {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pmx55-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pmx55-rpmh-regulators";
 		qcom,pmic-id = "e";
 
@@ -233,6 +237,7 @@
 };
 
 &blsp1_uart3 {
+<<<<<<< HEAD
 	status = "okay";
 };
 
@@ -243,6 +248,18 @@
 };
 
 &pcie_phy {
+=======
+	status = "ok";
+};
+
+&ipa {
+	status = "okay";
+
+	memory-region = <&ipa_fw_mem>;
+};
+
+&pcie0_phy {
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 
 	vdda-phy-supply = <&vreg_l1e_bb_1p2>;
@@ -258,11 +275,19 @@
 };
 
 &qpic_bam {
+<<<<<<< HEAD
 	status = "okay";
 };
 
 &qpic_nand {
 	status = "okay";
+=======
+	status = "ok";
+};
+
+&qpic_nand {
+	status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 
 	nand@0 {
 		reg = <0>;
@@ -282,6 +307,7 @@
 };
 
 &tlmm {
+<<<<<<< HEAD
 	pcie_ep_clkreq_default: pcie-ep-clkreq-default-state {
 		pins = "gpio56";
 		function = "pcie_clkreq";
@@ -301,6 +327,42 @@
 		function = "gpio";
 		drive-strength = <2>;
 		bias-disable;
+=======
+	pcie_ep_clkreq_default: pcie_ep_clkreq_default {
+		mux {
+			pins = "gpio56";
+			function = "pcie_clkreq";
+		};
+		config {
+			pins = "gpio56";
+			drive-strength = <2>;
+			bias-disable;
+		};
+	};
+
+	pcie_ep_perst_default: pcie_ep_perst_default {
+		mux {
+			pins = "gpio57";
+			function = "gpio";
+		};
+		config {
+			pins = "gpio57";
+			drive-strength = <2>;
+			bias-pull-down;
+		};
+	};
+
+	pcie_ep_wake_default: pcie_ep_wake_default {
+		mux {
+			pins = "gpio53";
+			function = "gpio";
+		};
+		config {
+			pins = "gpio53";
+			drive-strength = <2>;
+			bias-disable;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 

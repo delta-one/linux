@@ -3615,7 +3615,11 @@ typedef struct _ATOM_FAKE_EDID_PATCH_RECORD
 {
   UCHAR ucRecordType;
   UCHAR ucFakeEDIDLength;
+<<<<<<< HEAD
   UCHAR ucFakeEDIDString[];    // This actually has ucFakeEdidLength elements.
+=======
+  UCHAR ucFakeEDIDString[1];    // This actually has ucFakeEdidLength elements.
+>>>>>>> b7ba80a49124 (Commit)
 } ATOM_FAKE_EDID_PATCH_RECORD;
 
 typedef struct  _ATOM_PANEL_RESOLUTION_PATCH_RECORD
@@ -4020,7 +4024,11 @@ typedef struct  _ATOM_DISPLAY_OBJECT_PATH
   USHORT    usSize;                                        //the size of ATOM_DISPLAY_OBJECT_PATH
   USHORT    usConnObjectId;                                //Connector Object ID 
   USHORT    usGPUObjectId;                                 //GPU ID 
+<<<<<<< HEAD
   USHORT    usGraphicObjIds[];                             //1st Encoder Obj source from GPU to last Graphic Obj destinate to connector.
+=======
+  USHORT    usGraphicObjIds[1];                             //1st Encoder Obj source from GPU to last Graphic Obj destinate to connector.
+>>>>>>> b7ba80a49124 (Commit)
 }ATOM_DISPLAY_OBJECT_PATH;
 
 typedef struct  _ATOM_DISPLAY_EXTERNAL_OBJECT_PATH
@@ -4037,7 +4045,11 @@ typedef struct _ATOM_DISPLAY_OBJECT_PATH_TABLE
   UCHAR                           ucNumOfDispPath;
   UCHAR                           ucVersion;
   UCHAR                           ucPadding[2];
+<<<<<<< HEAD
   ATOM_DISPLAY_OBJECT_PATH        asDispPath[];
+=======
+  ATOM_DISPLAY_OBJECT_PATH        asDispPath[1];
+>>>>>>> b7ba80a49124 (Commit)
 }ATOM_DISPLAY_OBJECT_PATH_TABLE;
 
 
@@ -4053,7 +4065,11 @@ typedef struct _ATOM_OBJECT_TABLE                         //Above 4 object table
 {
   UCHAR               ucNumberOfObjects;
   UCHAR               ucPadding[3];
+<<<<<<< HEAD
   ATOM_OBJECT         asObjects[];
+=======
+  ATOM_OBJECT         asObjects[1];
+>>>>>>> b7ba80a49124 (Commit)
 }ATOM_OBJECT_TABLE;
 
 typedef struct _ATOM_SRC_DST_TABLE_FOR_ONE_OBJECT         //usSrcDstTableOffset pointing to this structure
@@ -4615,7 +4631,11 @@ typedef struct  _ATOM_GPIO_VOLTAGE_OBJECT_V3
    UCHAR    ucPhaseDelay;                // phase delay in unit of micro second
    UCHAR    ucReserved;   
    ULONG    ulGpioMaskVal;               // GPIO Mask value
+<<<<<<< HEAD
    VOLTAGE_LUT_ENTRY_V2 asVolGpioLut[];
+=======
+   VOLTAGE_LUT_ENTRY_V2 asVolGpioLut[1];   
+>>>>>>> b7ba80a49124 (Commit)
 }ATOM_GPIO_VOLTAGE_OBJECT_V3;
 
 typedef struct  _ATOM_LEAKAGE_VOLTAGE_OBJECT_V3
@@ -7964,7 +7984,11 @@ typedef struct {
 
 typedef struct {
   VFCT_IMAGE_HEADER	VbiosHeader;
+<<<<<<< HEAD
   UCHAR	VbiosContent[];
+=======
+  UCHAR	VbiosContent[1];
+>>>>>>> b7ba80a49124 (Commit)
 }GOP_VBIOS_CONTENT;
 
 typedef struct {

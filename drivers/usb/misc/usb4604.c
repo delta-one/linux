@@ -97,7 +97,12 @@ static int usb4604_probe(struct usb4604 *hub)
 	return usb4604_switch_mode(hub, hub->mode);
 }
 
+<<<<<<< HEAD
 static int usb4604_i2c_probe(struct i2c_client *i2c)
+=======
+static int usb4604_i2c_probe(struct i2c_client *i2c,
+			     const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct usb4604 *hub;
 
@@ -154,7 +159,11 @@ static struct i2c_driver usb4604_i2c_driver = {
 		.pm = pm_ptr(&usb4604_i2c_pm_ops),
 		.of_match_table = of_match_ptr(usb4604_of_match),
 	},
+<<<<<<< HEAD
 	.probe_new	= usb4604_i2c_probe,
+=======
+	.probe		= usb4604_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= usb4604_id,
 };
 module_i2c_driver(usb4604_i2c_driver);

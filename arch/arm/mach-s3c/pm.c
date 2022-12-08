@@ -100,7 +100,11 @@ static int s3c_pm_enter(suspend_state_t state)
 		samsung_pm_saved_gpios();
 	}
 
+<<<<<<< HEAD
 	s3c_pm_save_uarts(false);
+=======
+	s3c_pm_save_uarts(soc_is_s3c2410());
+>>>>>>> b7ba80a49124 (Commit)
 	s3c_pm_save_core();
 
 	/* set the irq configuration for wake */
@@ -137,7 +141,11 @@ static int s3c_pm_enter(suspend_state_t state)
 	/* restore the system state */
 
 	s3c_pm_restore_core();
+<<<<<<< HEAD
 	s3c_pm_restore_uarts(false);
+=======
+	s3c_pm_restore_uarts(soc_is_s3c2410());
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!of_have_populated_dt()) {
 		samsung_pm_restore_gpios();
@@ -152,6 +160,12 @@ static int s3c_pm_enter(suspend_state_t state)
 
 	S3C_PMDBG("%s: post sleep, preparing to return\n", __func__);
 
+<<<<<<< HEAD
+=======
+	/* LEDs should now be 1110 */
+	s3c_pm_debug_smdkled(1 << 1, 0);
+
+>>>>>>> b7ba80a49124 (Commit)
 	s3c_pm_check_restore();
 
 	/* ok, let's return from sleep */

@@ -11,7 +11,10 @@
 #include "processor.h"
 
 #include <assert.h>
+<<<<<<< HEAD
 #include <sched.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -51,6 +54,7 @@ int open_kvm_dev_path_or_exit(void)
 	return _open_kvm_dev_path_or_exit(O_RDONLY);
 }
 
+<<<<<<< HEAD
 static bool get_module_param_bool(const char *module_name, const char *param)
 {
 	const int path_size = 128;
@@ -90,6 +94,8 @@ bool get_kvm_amd_param_bool(const char *param)
 	return get_module_param_bool("kvm_amd", param);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Capability
  *
@@ -122,10 +128,14 @@ unsigned int kvm_check_cap(long cap)
 
 void vm_enable_dirty_ring(struct kvm_vm *vm, uint32_t ring_size)
 {
+<<<<<<< HEAD
 	if (vm_check_cap(vm, KVM_CAP_DIRTY_LOG_RING_ACQ_REL))
 		vm_enable_cap(vm, KVM_CAP_DIRTY_LOG_RING_ACQ_REL, ring_size);
 	else
 		vm_enable_cap(vm, KVM_CAP_DIRTY_LOG_RING, ring_size);
+=======
+	vm_enable_cap(vm, KVM_CAP_DIRTY_LOG_RING, ring_size);
+>>>>>>> b7ba80a49124 (Commit)
 	vm->dirty_ring_size = ring_size;
 }
 
@@ -186,6 +196,7 @@ const struct vm_guest_mode_params vm_guest_mode_params[] = {
 _Static_assert(sizeof(vm_guest_mode_params)/sizeof(struct vm_guest_mode_params) == NUM_VM_MODES,
 	       "Missing new mode params?");
 
+<<<<<<< HEAD
 /*
  * Initializes vm->vpages_valid to match the canonical VA space of the
  * architecture.
@@ -208,6 +219,15 @@ struct kvm_vm *____vm_create(enum vm_guest_mode mode)
 {
 	struct kvm_vm *vm;
 
+=======
+struct kvm_vm *____vm_create(enum vm_guest_mode mode, uint64_t nr_pages)
+{
+	struct kvm_vm *vm;
+
+	pr_debug("%s: mode='%s' pages='%ld'\n", __func__,
+		 vm_guest_mode_string(mode), nr_pages);
+
+>>>>>>> b7ba80a49124 (Commit)
 	vm = calloc(1, sizeof(*vm));
 	TEST_ASSERT(vm != NULL, "Insufficient Memory");
 
@@ -292,13 +312,27 @@ struct kvm_vm *____vm_create(enum vm_guest_mode mode)
 
 	/* Limit to VA-bit canonical virtual addresses. */
 	vm->vpages_valid = sparsebit_alloc();
+<<<<<<< HEAD
 	vm_vaddr_populate_bitmap(vm);
+=======
+	sparsebit_set_num(vm->vpages_valid,
+		0, (1ULL << (vm->va_bits - 1)) >> vm->page_shift);
+	sparsebit_set_num(vm->vpages_valid,
+		(~((1ULL << (vm->va_bits - 1)) - 1)) >> vm->page_shift,
+		(1ULL << (vm->va_bits - 1)) >> vm->page_shift);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Limit physical addresses to PA-bits. */
 	vm->max_gfn = vm_compute_max_gfn(vm);
 
 	/* Allocate and setup memory for guest. */
 	vm->vpages_mapped = sparsebit_alloc();
+<<<<<<< HEAD
+=======
+	if (nr_pages != 0)
+		vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
+					    0, 0, nr_pages, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return vm;
 }
@@ -343,6 +377,7 @@ struct kvm_vm *__vm_create(enum vm_guest_mode mode, uint32_t nr_runnable_vcpus,
 {
 	uint64_t nr_pages = vm_nr_pages_required(mode, nr_runnable_vcpus,
 						 nr_extra_pages);
+<<<<<<< HEAD
 	struct userspace_mem_region *slot0;
 	struct kvm_vm *vm;
 	int i;
@@ -369,6 +404,17 @@ struct kvm_vm *__vm_create(enum vm_guest_mode mode, uint32_t nr_runnable_vcpus,
 
 	kvm_arch_vm_post_create(vm);
 
+=======
+	struct kvm_vm *vm;
+
+	vm = ____vm_create(mode, nr_pages);
+
+	kvm_vm_elf_load(vm, program_invocation_name);
+
+#ifdef __x86_64__
+	vm_create_irqchip(vm);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	return vm;
 }
 
@@ -469,6 +515,7 @@ struct kvm_vcpu *vm_recreate_with_one_vcpu(struct kvm_vm *vm)
 	return vm_vcpu_recreate(vm, 0);
 }
 
+<<<<<<< HEAD
 void kvm_pin_this_task_to_pcpu(uint32_t pcpu)
 {
 	cpu_set_t mask;
@@ -522,6 +569,8 @@ void kvm_parse_vcpu_pinning(const char *pcpus_string, uint32_t vcpu_to_pcpu[],
 	free(cpu_list);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Userspace Memory Region Find
  *
@@ -665,12 +714,15 @@ static void __vm_mem_region_delete(struct kvm_vm *vm,
 	sparsebit_free(&region->unused_phy_pages);
 	ret = munmap(region->mmap_start, region->mmap_size);
 	TEST_ASSERT(!ret, __KVM_SYSCALL_ERROR("munmap()", ret));
+<<<<<<< HEAD
 	if (region->fd >= 0) {
 		/* There's an extra map when using shared memory. */
 		ret = munmap(region->mmap_alias, region->mmap_size);
 		TEST_ASSERT(!ret, __KVM_SYSCALL_ERROR("munmap()", ret));
 		close(region->fd);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	free(region);
 }
@@ -1008,7 +1060,10 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
 			    vm_mem_backing_src_alias(src_type)->name);
 	}
 
+<<<<<<< HEAD
 	region->backing_src_type = src_type;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	region->unused_phy_pages = sparsebit_alloc();
 	sparsebit_set_num(region->unused_phy_pages,
 		guest_paddr >> vm->page_shift, npages);
@@ -1237,8 +1292,13 @@ struct kvm_vcpu *__vm_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id)
  * TEST_ASSERT failure occurs for invalid input or no area of at least
  * sz unallocated bytes >= vaddr_min is available.
  */
+<<<<<<< HEAD
 vm_vaddr_t vm_vaddr_unused_gap(struct kvm_vm *vm, size_t sz,
 			       vm_vaddr_t vaddr_min)
+=======
+static vm_vaddr_t vm_vaddr_unused_gap(struct kvm_vm *vm, size_t sz,
+				      vm_vaddr_t vaddr_min)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	uint64_t pages = (sz + vm->page_size - 1) >> vm->page_shift;
 
@@ -1303,6 +1363,7 @@ va_found:
 	return pgidx_start * vm->page_size;
 }
 
+<<<<<<< HEAD
 vm_vaddr_t __vm_vaddr_alloc(struct kvm_vm *vm, size_t sz, vm_vaddr_t vaddr_min,
 			    enum kvm_mem_region_type type)
 {
@@ -1331,6 +1392,8 @@ vm_vaddr_t __vm_vaddr_alloc(struct kvm_vm *vm, size_t sz, vm_vaddr_t vaddr_min,
 	return vaddr_start;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * VM Virtual Address Allocate
  *
@@ -1348,11 +1411,41 @@ vm_vaddr_t __vm_vaddr_alloc(struct kvm_vm *vm, size_t sz, vm_vaddr_t vaddr_min,
  * given by vm.  The allocated bytes are mapped to a virtual address >=
  * the address given by vaddr_min.  Note that each allocation uses a
  * a unique set of pages, with the minimum real allocation being at least
+<<<<<<< HEAD
  * a page. The allocated physical space comes from the TEST_DATA memory region.
  */
 vm_vaddr_t vm_vaddr_alloc(struct kvm_vm *vm, size_t sz, vm_vaddr_t vaddr_min)
 {
 	return __vm_vaddr_alloc(vm, sz, vaddr_min, MEM_REGION_TEST_DATA);
+=======
+ * a page.
+ */
+vm_vaddr_t vm_vaddr_alloc(struct kvm_vm *vm, size_t sz, vm_vaddr_t vaddr_min)
+{
+	uint64_t pages = (sz >> vm->page_shift) + ((sz % vm->page_size) != 0);
+
+	virt_pgd_alloc(vm);
+	vm_paddr_t paddr = vm_phy_pages_alloc(vm, pages,
+					      KVM_UTIL_MIN_PFN * vm->page_size, 0);
+
+	/*
+	 * Find an unused range of virtual page addresses of at least
+	 * pages in length.
+	 */
+	vm_vaddr_t vaddr_start = vm_vaddr_unused_gap(vm, sz, vaddr_min);
+
+	/* Map the virtual pages. */
+	for (vm_vaddr_t vaddr = vaddr_start; pages > 0;
+		pages--, vaddr += vm->page_size, paddr += vm->page_size) {
+
+		virt_pg_map(vm, vaddr, paddr);
+
+		sparsebit_set(vm->vpages_mapped,
+			vaddr >> vm->page_shift);
+	}
+
+	return vaddr_start;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1374,11 +1467,14 @@ vm_vaddr_t vm_vaddr_alloc_pages(struct kvm_vm *vm, int nr_pages)
 	return vm_vaddr_alloc(vm, nr_pages * getpagesize(), KVM_UTIL_MIN_VADDR);
 }
 
+<<<<<<< HEAD
 vm_vaddr_t __vm_vaddr_alloc_page(struct kvm_vm *vm, enum kvm_mem_region_type type)
 {
 	return __vm_vaddr_alloc(vm, getpagesize(), KVM_UTIL_MIN_VADDR, type);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * VM Virtual Address Allocate Page
  *
@@ -1425,8 +1521,11 @@ void virt_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
 
 	while (npages--) {
 		virt_pg_map(vm, vaddr, paddr);
+<<<<<<< HEAD
 		sparsebit_set(vm->vpages_mapped, vaddr >> vm->page_shift);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		vaddr += page_size;
 		paddr += page_size;
 	}
@@ -1605,7 +1704,11 @@ struct kvm_reg_list *vcpu_get_reg_list(struct kvm_vcpu *vcpu)
 
 void *vcpu_map_dirty_ring(struct kvm_vcpu *vcpu)
 {
+<<<<<<< HEAD
 	uint32_t page_size = getpagesize();
+=======
+	uint32_t page_size = vcpu->vm->page_size;
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t size = vcpu->vm->dirty_ring_size;
 
 	TEST_ASSERT(size > 0, "Should enable dirty ring first");
@@ -1815,13 +1918,17 @@ void vm_dump(FILE *stream, struct kvm_vm *vm, uint8_t indent)
 		vcpu_dump(stream, vcpu, indent + 2);
 }
 
+<<<<<<< HEAD
 #define KVM_EXIT_STRING(x) {KVM_EXIT_##x, #x}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Known KVM exit reasons */
 static struct exit_reason {
 	unsigned int reason;
 	const char *name;
 } exit_reasons_known[] = {
+<<<<<<< HEAD
 	KVM_EXIT_STRING(UNKNOWN),
 	KVM_EXIT_STRING(EXCEPTION),
 	KVM_EXIT_STRING(IO),
@@ -1862,6 +1969,34 @@ static struct exit_reason {
 	KVM_EXIT_STRING(NOTIFY),
 #ifdef KVM_EXIT_MEMORY_NOT_PRESENT
 	KVM_EXIT_STRING(MEMORY_NOT_PRESENT),
+=======
+	{KVM_EXIT_UNKNOWN, "UNKNOWN"},
+	{KVM_EXIT_EXCEPTION, "EXCEPTION"},
+	{KVM_EXIT_IO, "IO"},
+	{KVM_EXIT_HYPERCALL, "HYPERCALL"},
+	{KVM_EXIT_DEBUG, "DEBUG"},
+	{KVM_EXIT_HLT, "HLT"},
+	{KVM_EXIT_MMIO, "MMIO"},
+	{KVM_EXIT_IRQ_WINDOW_OPEN, "IRQ_WINDOW_OPEN"},
+	{KVM_EXIT_SHUTDOWN, "SHUTDOWN"},
+	{KVM_EXIT_FAIL_ENTRY, "FAIL_ENTRY"},
+	{KVM_EXIT_INTR, "INTR"},
+	{KVM_EXIT_SET_TPR, "SET_TPR"},
+	{KVM_EXIT_TPR_ACCESS, "TPR_ACCESS"},
+	{KVM_EXIT_S390_SIEIC, "S390_SIEIC"},
+	{KVM_EXIT_S390_RESET, "S390_RESET"},
+	{KVM_EXIT_DCR, "DCR"},
+	{KVM_EXIT_NMI, "NMI"},
+	{KVM_EXIT_INTERNAL_ERROR, "INTERNAL_ERROR"},
+	{KVM_EXIT_OSI, "OSI"},
+	{KVM_EXIT_PAPR_HCALL, "PAPR_HCALL"},
+	{KVM_EXIT_DIRTY_RING_FULL, "DIRTY_RING_FULL"},
+	{KVM_EXIT_X86_RDMSR, "RDMSR"},
+	{KVM_EXIT_X86_WRMSR, "WRMSR"},
+	{KVM_EXIT_XEN, "XEN"},
+#ifdef KVM_EXIT_MEMORY_NOT_PRESENT
+	{KVM_EXIT_MEMORY_NOT_PRESENT, "MEMORY_NOT_PRESENT"},
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 };
 
@@ -1957,10 +2092,19 @@ vm_paddr_t vm_phy_page_alloc(struct kvm_vm *vm, vm_paddr_t paddr_min,
 	return vm_phy_pages_alloc(vm, 1, paddr_min, memslot);
 }
 
+<<<<<<< HEAD
 vm_paddr_t vm_alloc_page_table(struct kvm_vm *vm)
 {
 	return vm_phy_page_alloc(vm, KVM_GUEST_PAGE_TABLE_MIN_PADDR,
 				 vm->memslots[MEM_REGION_PT]);
+=======
+/* Arbitrary minimum physical address used for virtual translation tables. */
+#define KVM_GUEST_PAGE_TABLE_MIN_PADDR 0x180000
+
+vm_paddr_t vm_alloc_page_table(struct kvm_vm *vm)
+{
+	return vm_phy_page_alloc(vm, KVM_GUEST_PAGE_TABLE_MIN_PADDR, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -2134,6 +2278,7 @@ void __vm_get_stat(struct kvm_vm *vm, const char *stat_name, uint64_t *data,
 		break;
 	}
 }
+<<<<<<< HEAD
 
 __weak void kvm_arch_vm_post_create(struct kvm_vm *vm)
 {
@@ -2150,3 +2295,5 @@ void __attribute((constructor)) kvm_selftest_init(void)
 
 	kvm_selftest_arch_init();
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

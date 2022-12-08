@@ -89,7 +89,11 @@ static int bxt_wcove_tmu_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void bxt_wcove_tmu_remove(struct platform_device *pdev)
+=======
+static int bxt_wcove_tmu_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct wcove_tmu *wctmu = platform_get_drvdata(pdev);
 	unsigned int val;
@@ -101,6 +105,10 @@ static void bxt_wcove_tmu_remove(struct platform_device *pdev)
 	regmap_read(wctmu->regmap, BXTWC_MTMUIRQ_REG, &val);
 	regmap_write(wctmu->regmap, BXTWC_MTMUIRQ_REG,
 			val | BXTWC_TMU_ALRM_MASK);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -131,7 +139,11 @@ MODULE_DEVICE_TABLE(platform, bxt_wcove_tmu_id_table);
 
 static struct platform_driver bxt_wcove_tmu_driver = {
 	.probe = bxt_wcove_tmu_probe,
+<<<<<<< HEAD
 	.remove_new = bxt_wcove_tmu_remove,
+=======
+	.remove = bxt_wcove_tmu_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "bxt_wcove_tmu",
 		.pm     = &bxtwc_tmu_pm_ops,

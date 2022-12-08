@@ -34,9 +34,12 @@
 #define R_AX_SYS_CLK_CTRL 0x0008
 #define B_AX_CPU_CLK_EN BIT(14)
 
+<<<<<<< HEAD
 #define R_AX_SYS_SWR_CTRL1 0x0010
 #define B_AX_SYM_CTRL_SPS_PWMFREQ BIT(10)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_SYS_ADIE_PAD_PWR_CTRL 0x0018
 #define B_AX_SYM_PADPDN_WL_PTA_1P3 BIT(6)
 #define B_AX_SYM_PADPDN_WL_RFC_1P3 BIT(5)
@@ -45,9 +48,12 @@
 #define B_AX_R_DIS_PRST BIT(6)
 #define B_AX_WLOCK_1C_BIT6 BIT(5)
 
+<<<<<<< HEAD
 #define R_AX_AFE_LDO_CTRL 0x0020
 #define B_AX_AON_OFF_PC_EN BIT(23)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_EFUSE_CTRL_1 0x0038
 #define B_AX_EF_PGPD_MASK GENMASK(30, 28)
 #define B_AX_EF_RDT BIT(27)
@@ -57,6 +63,12 @@
 #define B_AX_EF_POR BIT(10)
 #define B_AX_EF_CELL_SEL_MASK GENMASK(9, 8)
 
+<<<<<<< HEAD
+=======
+#define R_AX_SPSLDO_ON_CTRL0 0x0200
+#define B_AX_OCP_L1_MASK GENMASK(15, 13)
+
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_EFUSE_CTRL 0x0030
 #define B_AX_EF_MODE_SEL_MASK GENMASK(31, 30)
 #define B_AX_EF_RDY BIT(29)
@@ -124,9 +136,12 @@
 #define B_AX_R_AX_BG_LPF BIT(2)
 #define B_AX_R_AX_BG GENMASK(1, 0)
 
+<<<<<<< HEAD
 #define R_AX_HCI_LDO_CTRL 0x007A
 #define B_AX_R_AX_VADJ_MASK GENMASK(3, 0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_PLATFORM_ENABLE 0x0088
 #define B_AX_AXIDMA_EN BIT(3)
 #define B_AX_WCPU_EN BIT(1)
@@ -134,7 +149,10 @@
 
 #define R_AX_WLLPS_CTRL 0x0090
 #define B_AX_DIS_WLBT_LPSEN_LOPC BIT(1)
+<<<<<<< HEAD
 #define SW_LPS_OPTION 0x0001A0B2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define R_AX_SCOREBOARD  0x00AC
 #define B_AX_TOGGLE BIT(31)
@@ -210,12 +228,15 @@
 #define R_AX_UDM2 0x01F8
 #define R_AX_UDM3 0x01FC
 
+<<<<<<< HEAD
 #define R_AX_SPS_DIG_ON_CTRL0 0x0200
 #define B_AX_VREFPFM_L_MASK GENMASK(25, 22)
 #define B_AX_REG_ZCDC_H_MASK GENMASK(18, 17)
 #define B_AX_OCP_L1_MASK GENMASK(15, 13)
 #define B_AX_VOL_L1_MASK GENMASK(3, 0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_LDO_AON_CTRL0 0x0218
 #define B_AX_PD_REGU_L BIT(16)
 
@@ -239,6 +260,7 @@
 
 #define R_AX_GPIO0_7_FUNC_SEL 0x02D0
 
+<<<<<<< HEAD
 #define R_AX_EECS_EESK_FUNC_SEL 0x02D8
 #define B_AX_PINMUX_EESK_FUNC_SEL_MASK GENMASK(7, 4)
 
@@ -246,6 +268,8 @@
 #define B_AX_PINMUX_EESK_FUNC_SEL_V1_MASK GENMASK(27, 24)
 #define PINMUX_EESK_FUNC_SEL_BT_LOG 0x1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_GPIO0_15_EECS_EESK_LED1_PULL_LOW_EN 0x02E4
 #define B_AX_LED1_PULL_LOW_EN BIT(18)
 #define B_AX_EESK_PULL_LOW_EN BIT(17)
@@ -266,18 +290,24 @@
 #define B_AX_USB_HCISYS_PWR_STE_MASK GENMASK(3, 2)
 #define B_AX_PCIE_HCISYS_PWR_STE_MASK GENMASK(1, 0)
 
+<<<<<<< HEAD
 #define R_AX_SPS_DIG_OFF_CTRL0 0x0400
 #define B_AX_C3_L1_MASK GENMASK(5, 4)
 #define B_AX_C1_L1_MASK GENMASK(1, 0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_AFE_OFF_CTRL1 0x0444
 #define B_AX_S1_LDO_VSEL_F_MASK GENMASK(25, 24)
 #define B_AX_S1_LDO2PWRCUT_F BIT(23)
 #define B_AX_S0_LDO_VSEL_F_MASK GENMASK(22, 21)
 
+<<<<<<< HEAD
 #define R_AX_SEC_CTRL 0x0C00
 #define B_AX_SEC_IDMEM_SIZE_CONFIG_MASK GENMASK(17, 16)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_FILTER_MODEL_ADDR 0x0C04
 
 #define R_AX_HAXI_INIT_CFG1 0x1000
@@ -329,7 +359,12 @@
 
 #define R_AX_PCIE_DBG_CTRL 0x11C0
 #define B_AX_DBG_DUMMY_MASK GENMASK(23, 16)
+<<<<<<< HEAD
 #define B_AX_PCIE_DBG_SEL_MASK GENMASK(15, 13)
+=======
+#define B_AX_DBG_SEL_MASK GENMASK(15, 13)
+#define B_AX_PCIE_DBG_SEL BIT(12)
+>>>>>>> b7ba80a49124 (Commit)
 #define B_AX_MRD_TIMEOUT_EN BIT(10)
 #define B_AX_ASFF_FULL_NO_STK BIT(1)
 #define B_AX_EN_STUCK_DBG BIT(0)
@@ -421,7 +456,10 @@
 
 #define R_AX_PHYREG_SET 0x8040
 #define PHYREG_SET_ALL_CYCLE 0x8
+<<<<<<< HEAD
 #define PHYREG_SET_XYN_CYCLE 0xE
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define R_AX_HD0IMR 0x8110
 #define B_AX_WDT_PTFM_INT_EN BIT(5)
@@ -468,7 +506,10 @@
 #define B_AX_DISPATCHER_EN BIT(18)
 #define B_AX_BBRPT_EN BIT(17)
 #define B_AX_MAC_SEC_EN BIT(16)
+<<<<<<< HEAD
 #define B_AX_DMACREG_GCKEN BIT(15)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define B_AX_MAC_UN_EN BIT(15)
 #define B_AX_H_AXIDMA_EN BIT(14)
 
@@ -547,6 +588,7 @@
 #define B_AX_WDE_EMPTY_QUE_CMAC0_MBH BIT(1)
 #define B_AX_WDE_EMPTY_QUE_CMAC0_ALL_AC BIT(0)
 
+<<<<<<< HEAD
 #define R_AX_DLE_EMPTY1 0x8434
 #define B_AX_PLE_EMPTY_QTA_DMAC_WDRLS BIT(20)
 #define B_AX_PLE_EMPTY_QTA_CMAC1_DMA_BBRPT BIT(19)
@@ -560,6 +602,8 @@
 #define B_AX_PLE_EMPTY_QUE_DMAC_HDP BIT(1)
 #define B_AX_WDE_EMPTY_QUE_DMAC_WDRLS BIT(0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_DMAC_ERR_IMR 0x8520
 #define B_AX_DLE_CPUIO_ERR_INT_EN BIT(10)
 #define B_AX_APB_BRIDGE_ERR_INT_EN BIT(9)
@@ -576,10 +620,13 @@
 #define DMAC_ERR_IMR_DIS 0
 
 #define R_AX_DMAC_ERR_ISR 0x8524
+<<<<<<< HEAD
 #define B_AX_HAXIDMA_ERR_FLAG BIT(14)
 #define B_AX_PAXIDMA_ERR_FLAG BIT(13)
 #define B_AX_HCI_BUF_ERR_FLAG BIT(12)
 #define B_AX_BBRPT_ERR_FLAG BIT(11)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define B_AX_DLE_CPUIO_ERR_FLAG BIT(10)
 #define B_AX_APB_BRIDGE_ERR_FLAG BIT(9)
 #define B_AX_DISPATCH_ERR_FLAG BIT(8)
@@ -958,6 +1005,7 @@
 				    B_AX_STF_OQT_OVERFLOW_ERR_INT_EN | \
 				    B_AX_STF_OQT_UNDERFLOW_ERR_INT_EN)
 
+<<<<<<< HEAD
 #define R_AX_DISPATCHER_DBG_PORT 0x8860
 #define B_AX_DISPATCHER_DBG_SEL_MASK GENMASK(11, 8)
 #define B_AX_DISPATCHER_INTN_SEL_MASK GENMASK(7, 4)
@@ -966,6 +1014,8 @@
 #define R_AX_RX_FUNCTION_STOP 0x8920
 #define B_AX_HDR_RX_STOP BIT(0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_HCI_FC_CTRL 0x8A00
 #define B_AX_HCI_FC_CH12_FULL_COND_MASK GENMASK(11, 10)
 #define B_AX_HCI_FC_WP_CH811_FULL_COND_MASK GENMASK(9, 8)
@@ -1047,6 +1097,7 @@
 #define R_AX_WDE_ERRFLAG_MSG 0x8C30
 #define B_AX_WDE_ERR_FLAG_MSG_MASK GENMASK(31, 0)
 
+<<<<<<< HEAD
 #define R_AX_WDE_ERR_FLAG_CFG_NUM1 0x8C34
 #define B_AX_WDE_ERR_FLAG_NUM1_VLD BIT(31)
 #define B_AX_WDE_ERR_FLAG_NUM1_MSTIDX_MASK GENMASK(27, 24)
@@ -1054,6 +1105,9 @@
 #define B_AX_WDE_DATCHN_FRZTMR_MODE BIT(2)
 #define B_AX_WDE_QUEMGN_FRZTMR_MODE BIT(1)
 #define B_AX_WDE_BUFMGN_FRZTMR_MODE BIT(0)
+=======
+#define R_AX_WDE_ERR_FLAG_CFG 0x8C34
+>>>>>>> b7ba80a49124 (Commit)
 
 #define R_AX_WDE_ERR_IMR 0x8C38
 #define B_AX_WDE_DATCHN_RRDY_ERR_INT_EN BIT(27)
@@ -1237,6 +1291,7 @@
 #define B_AX_PLE_START_BOUND_MASK GENMASK(13, 8)
 #define B_AX_PLE_PAGE_SEL_MASK GENMASK(1, 0)
 #define B_AX_PLE_FREE_PAGE_NUM_MASK GENMASK(28, 16)
+<<<<<<< HEAD
 
 #define R_AX_PLE_DBGERR_LOCKEN 0x9020
 #define B_AX_PLE_LOCKEN_DLEPIF07 BIT(7)
@@ -1290,6 +1345,9 @@
 #define B_AX_PLE_BUFREQ_UNAVAL_ERR_V1 BIT(3)
 #define B_AX_PLE_BUFREQ_SIZELMT_ERR BIT(2)
 #define B_AX_PLE_BUFREQ_SIZE0_ERR BIT(1)
+=======
+#define R_AX_PLE_ERR_FLAG_CFG 0x9034
+>>>>>>> b7ba80a49124 (Commit)
 
 #define R_AX_PLE_ERR_IMR 0x9038
 #define B_AX_PLE_DATCHN_RRDY_ERR_INT_EN BIT(27)
@@ -1500,6 +1558,7 @@
 #define B_AX_BBRPT_COM_NULL_PLPKTID_ERR BIT(16)
 #define B_AX_BBRPT_COM_NULL_PLPKTID_ERR_INT_EN BIT(0)
 
+<<<<<<< HEAD
 #define R_AX_BBRPT_COM_ERR_ISR 0x960C
 #define B_AX_BBRPT_COM_NULL_PLPKTID_ERR_INT_V1 BIT(0)
 
@@ -1513,6 +1572,8 @@
 #define B_AX_BBPRT_CHIF_OVF_ERR_V1 BIT(1)
 #define B_AX_BBPRT_CHIF_BB_TO_ERR_V1 BIT(0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_BBRPT_CHINFO_ERR_IMR 0x9628
 #define B_AX_BBPRT_CHIF_TO_ERR_INT_EN BIT(7)
 #define B_AX_BBPRT_CHIF_NULL_ERR_INT_EN BIT(6)
@@ -1564,9 +1625,12 @@
 #define B_AX_BBRPT_DFS_TO_ERR BIT(16)
 #define B_AX_BBRPT_DFS_TO_ERR_INT_EN BIT(0)
 
+<<<<<<< HEAD
 #define R_AX_BBRPT_DFS_ERR_ISR 0x963C
 #define B_AX_BBRPT_DFS_TO_ERR_V1 BIT(0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_LA_ERRFLAG 0x966C
 #define B_AX_LA_ISR_DATA_LOSS_ERR BIT(16)
 #define B_AX_LA_IMR_DATA_LOSS_ERR BIT(0)
@@ -1658,8 +1722,11 @@
 #define R_AX_ACTION_FWD0 0x9C04
 #define TRXCFG_MPDU_PROC_ACT_FRWD 0x02A95A95
 
+<<<<<<< HEAD
 #define R_AX_ACTION_FWD1 0x9C08
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_TF_FWD 0x9C14
 #define TRXCFG_MPDU_PROC_TF_FRWD 0x0000AA55
 
@@ -1671,9 +1738,12 @@
 #define R_AX_CUT_AMSDU_CTRL 0x9C40
 #define TRXCFG_MPDU_PROC_CUT_CTRL	0x010E05F0
 
+<<<<<<< HEAD
 #define R_AX_WOW_CTRL 0x9C50
 #define B_AX_WOW_WOWEN BIT(1)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_MPDU_RX_ERR_ISR 0x9CF0
 #define R_AX_MPDU_RX_ERR_IMR 0x9CF4
 #define B_AX_RPT_ERR_INT_EN BIT(3)
@@ -1682,7 +1752,10 @@
 #define B_AX_MPDU_RX_IMR_SET_V1 B_AX_RPT_ERR_INT_EN
 
 #define R_AX_SEC_ENG_CTRL 0x9D00
+<<<<<<< HEAD
 #define B_AX_SEC_DBG_PORT_FIELD_MASK GENMASK(19, 16)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define B_AX_TX_PARTIAL_MODE BIT(11)
 #define B_AX_CLK_EN_CGCMP BIT(10)
 #define B_AX_CLK_EN_WAPI BIT(9)
@@ -1712,21 +1785,27 @@
 #define R_AX_SEC_TX_DEBUG 0x9D20
 #define R_AX_SEC_RX_DEBUG 0x9D24
 #define R_AX_SEC_TRX_PKT_CNT 0x9D28
+<<<<<<< HEAD
 
 #define R_AX_SEC_DEBUG2 0x9D28
 #define B_AX_DBG_READ_SH 2
 #define B_AX_DBG_READ_MSK 0x3fffffff
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_SEC_TRX_BLK_CNT 0x9D2C
 
 #define R_AX_SEC_ERROR_FLAG_IMR 0x9D2C
 #define B_AX_RX_HANG_IMR BIT(1)
 #define B_AX_TX_HANG_IMR BIT(0)
 
+<<<<<<< HEAD
 #define R_AX_SEC_ERROR_FLAG 0x9D30
 #define B_AX_RX_HANG_ERROR_V1 BIT(1)
 #define B_AX_TX_HANG_ERROR_V1 BIT(0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_SS_CTRL 0x9E10
 #define B_AX_SS_INIT_DONE_1 BIT(31)
 #define B_AX_SS_WARM_INIT_FLG BIT(29)
@@ -1861,6 +1940,7 @@
 				     B_AX_B0_IMR_ERR_PRELD_RLSPKTSZERR | \
 				     B_AX_B0_IMR_ERR_PRELD_ENTNUMCFG)
 
+<<<<<<< HEAD
 #define R_AX_TXPKTCTL_B0_ERRFLAG_ISR 0x9F7C
 #define B_AX_B0_ISR_ERR_PRELD_EVT3 BIT(23)
 #define B_AX_B0_ISR_ERR_PRELD_EVT2 BIT(22)
@@ -1883,6 +1963,8 @@
 #define B_AX_B0_ISR_ERR_USRCTL_NOINIT BIT(1)
 #define B_AX_B0_ISR_ERR_USRCTL_REINIT BIT(0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_TXPKTCTL_B1_PRELD_CFG0 0x9F88
 #define B_AX_B1_PRELD_FEN BIT(31)
 #define B_AX_B1_PRELD_USEMAXSZ_MASK GENMASK(25, 16)
@@ -1930,6 +2012,7 @@
 				     B_AX_B1_IMR_ERR_PRELD_RLSPKTSZERR | \
 				     B_AX_B1_IMR_ERR_PRELD_ENTNUMCFG)
 
+<<<<<<< HEAD
 #define R_AX_TXPKTCTL_B1_ERRFLAG_ISR 0x9FBC
 #define B_AX_B1_ISR_ERR_PRELD_EVT3 BIT(23)
 #define B_AX_B1_ISR_ERR_PRELD_EVT2 BIT(22)
@@ -1952,6 +2035,8 @@
 #define B_AX_B1_ISR_ERR_USRCTL_NOINIT BIT(1)
 #define B_AX_B1_ISR_ERR_USRCTL_REINIT BIT(0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_AFE_CTRL1 0x0024
 
 #define B_AX_R_SYM_WLCMAC1_P4_PC_EN BIT(4)
@@ -2051,6 +2136,7 @@
 #define B_AX_PTCL_TOP_ERR_IND BIT(1)
 #define B_AX_SCHEDULE_TOP_ERR_IND BIT(0)
 
+<<<<<<< HEAD
 #define R_AX_PORT0_TSF_SYNC 0xC2A0
 #define R_AX_PORT0_TSF_SYNC_C1 0xE2A0
 #define R_AX_PORT1_TSF_SYNC 0xC2A4
@@ -2068,6 +2154,8 @@
 #define B_AX_SYNC_PORT_OFFSET_SIGN BIT(18)
 #define B_AX_SYNC_PORT_OFFSET_VAL GENMASK(17, 0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_MACID_SLEEP_0 0xC2C0
 #define R_AX_MACID_SLEEP_0_C1 0xE2C0
 #define B_AX_MACID31_0_SLEEP_SH 0
@@ -2479,7 +2567,10 @@
 #define B_AX_F2PCMDRPT_FULL_DROP_ERR_INT_EN BIT(8)
 #define B_AX_FSM1_TIMEOUT_ERR_INT_EN BIT(1)
 #define B_AX_FSM_TIMEOUT_ERR_INT_EN BIT(0)
+<<<<<<< HEAD
 #define B_AX_PTCL_IMR_CLR_ALL GENMASK(31, 0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define B_AX_PTCL_IMR_CLR (B_AX_FSM_TIMEOUT_ERR_INT_EN | \
 			   B_AX_F2PCMDRPT_FULL_DROP_ERR_INT_EN | \
 			   B_AX_TXPRT_FULL_DROP_ERR_INT_EN | \
@@ -2537,6 +2628,7 @@
 #define B_AX_DLE_IMR_SET (B_AX_RXSTS_FSM_HANG_ERROR_IMR | \
 			  B_AX_RXDATA_FSM_HANG_ERROR_IMR)
 
+<<<<<<< HEAD
 #define R_AX_RX_ERR_FLAG 0xC800
 #define R_AX_RX_ERR_FLAG_C1 0xE800
 #define B_AX_RX_GET_NO_PAGE_ERR BIT(31)
@@ -2572,6 +2664,8 @@
 #define B_AX_RXSTS_ENQUE_ORDER_ERR BIT(1)
 #define B_AX_RX_CSI_PKT_NUM_ERR BIT(0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_RXDMA_CTRL_0 0xC804
 #define R_AX_RXDMA_CTRL_0_C1 0xE804
 #define B_AX_RXDMA_DBGOUT_EN BIT(31)
@@ -2594,6 +2688,7 @@
 		      B_AX_RU2_PTR_FULL_MODE | B_AX_RU3_PTR_FULL_MODE | \
 		      B_AX_CSI_PTR_FULL_MODE | B_AX_RXSTS_PTR_FULL_MODE)
 
+<<<<<<< HEAD
 #define R_AX_RX_CTRL0 0xC808
 #define R_AX_RX_CTRL0_C1 0xE808
 #define B_AX_DLE_CLOCK_FORCE_V1 BIT(31)
@@ -2637,6 +2732,8 @@
 #define B_AX_ERR_INDICATOR BIT(5)
 #define B_AX_TXRPT_CS_MASK GENMASK(4, 0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_RXDMA_PKT_INFO_0 0xC814
 #define R_AX_RXDMA_PKT_INFO_1 0xC818
 #define R_AX_RXDMA_PKT_INFO_2 0xC81C
@@ -2944,6 +3041,7 @@
 			      B_AX_TMAC_MIMO_CTRL | \
 			      B_AX_RMAC_FTM)
 
+<<<<<<< HEAD
 #define R_AX_TRXPTCL_ERROR_INDICA 0xCCC0
 #define R_AX_TRXPTCL_ERROR_INDICA_C1 0xECC0
 #define B_AX_FTM_ERROR_FLAG_CLR BIT(8)
@@ -2956,6 +3054,8 @@
 #define B_AX_TXCTL_ERROR_FLAG_CLR BIT(1)
 #define B_AX_MACTX_ERROR_FLAG_CLR BIT(0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_AX_WMAC_TX_TF_INFO_0 0xCCD0
 #define R_AX_WMAC_TX_TF_INFO_0_C1 0xECD0
 #define B_AX_WMAC_TX_TF_INFO_SEL_MASK GENMASK(2, 0)
@@ -3056,8 +3156,11 @@
 #define R_AX_BFMEE_RESP_OPTION_C1 0xED80
 #define B_AX_BFMEE_NDP_RX_STANDBY_TIMER_MASK GENMASK(31, 24)
 #define B_AX_BFMEE_BFRP_RX_STANDBY_TIMER_MASK GENMASK(23, 20)
+<<<<<<< HEAD
 #define BFRP_RX_STANDBY_TIMER_KEEP 0x0
 #define BFRP_RX_STANDBY_TIMER_RELEASE 0x1
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define B_AX_MU_BFRPTSEG_SEL_MASK GENMASK(18, 17)
 #define B_AX_BFMEE_NDP_RXSTDBY_SEL BIT(16)
 #define BFRP_RX_STANDBY_TIMER		0x0
@@ -3282,7 +3385,10 @@
 
 #define R_AX_PWR_RATE_CTRL 0xD200
 #define R_AX_PWR_RATE_CTRL_C1 0xF200
+<<<<<<< HEAD
 #define B_AX_PWR_REF GENMASK(27, 10)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define B_AX_FORCE_PWR_BY_RATE_EN BIT(9)
 #define B_AX_FORCE_PWR_BY_RATE_VALUE_MASK GENMASK(8, 0)
 
@@ -3420,7 +3526,10 @@
 #define BTC_BREAK_PARAM 0xf0ffffff
 
 #define R_BTC_BT_COEX_MSK_TABLE 0xDA30
+<<<<<<< HEAD
 #define B_BTC_PRI_MASK_RXCCK_V1 BIT(28)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define B_BTC_PRI_MASK_TX_RESP_V1 BIT(3)
 
 #define R_AX_BT_COEX_CFG_2 0xDA34
@@ -3564,11 +3673,16 @@
 #define RR_MOD_IQK GENMASK(19, 4)
 #define RR_MOD_DPK GENMASK(19, 5)
 #define RR_MOD_MASK GENMASK(19, 16)
+<<<<<<< HEAD
 #define RR_MOD_DCK GENMASK(14, 10)
 #define RR_MOD_RGM GENMASK(13, 4)
 #define RR_MOD_V_DOWN 0x0
 #define RR_MOD_V_STANDBY 0x1
 #define RR_TXAGC 0x10001
+=======
+#define RR_MOD_V_DOWN 0x0
+#define RR_MOD_V_STANDBY 0x1
+>>>>>>> b7ba80a49124 (Commit)
 #define RR_MOD_V_TX 0x2
 #define RR_MOD_V_RX 0x3
 #define RR_MOD_V_TXIQK 0x4
@@ -3578,7 +3692,10 @@
 #define RR_MOD_NBW GENMASK(15, 14)
 #define RR_MOD_M_RXG GENMASK(13, 4)
 #define RR_MOD_M_RXBB GENMASK(9, 5)
+<<<<<<< HEAD
 #define RR_MOD_LO_SEL BIT(1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RR_MODOPT 0x01
 #define RR_MODOPT_M_TXPWR GENMASK(5, 0)
 #define RR_WLSEL 0x02
@@ -3605,10 +3722,13 @@
 #define CFGCH_BAND1_2G 0
 #define CFGCH_BAND1_5G 1
 #define CFGCH_BAND1_6G 3
+<<<<<<< HEAD
 #define RR_CFGCH_POW_LCK BIT(15)
 #define RR_CFGCH_TRX_AH BIT(14)
 #define RR_CFGCH_BCN BIT(13)
 #define RR_CFGCH_BW2 BIT(12)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RR_CFGCH_BAND0 GENMASK(9, 8)
 #define CFGCH_BAND0_2G 0
 #define CFGCH_BAND0_5G 1
@@ -3641,11 +3761,17 @@
 #define RR_RXK_PLLEN BIT(5)
 #define RR_LUTWA 0x33
 #define RR_LUTWA_MASK GENMASK(9, 0)
+<<<<<<< HEAD
 #define RR_LUTWA_M1 GENMASK(7, 0)
 #define RR_LUTWA_M2 GENMASK(4, 0)
 #define RR_LUTWD1 0x3e
 #define RR_LUTWD0 0x3f
 #define RR_LUTWD0_MB GENMASK(11, 6)
+=======
+#define RR_LUTWA_M2 GENMASK(4, 0)
+#define RR_LUTWD1 0x3e
+#define RR_LUTWD0 0x3f
+>>>>>>> b7ba80a49124 (Commit)
 #define RR_LUTWD0_LB GENMASK(5, 0)
 #define RR_TM 0x42
 #define RR_TM_TRI BIT(19)
@@ -3662,8 +3788,11 @@
 #define RR_TXGA_TRK_EN BIT(7)
 #define RR_TXGA_LOK_EXT GENMASK(4, 0)
 #define RR_TXGA_LOK_EN BIT(0)
+<<<<<<< HEAD
 #define RR_TXGA_V1 0x10055
 #define RR_TXGA_V1_TRK_EN BIT(7)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RR_GAINTX 0x56
 #define RR_GAINTX_ALL GENMASK(15, 0)
 #define RR_GAINTX_PAD GENMASK(9, 5)
@@ -3679,8 +3808,11 @@
 #define RR_TXRSV_GAPK BIT(19)
 #define RR_BIAS 0x5e
 #define RR_BIAS_GAPK BIT(19)
+<<<<<<< HEAD
 #define RR_TXAC 0x5f
 #define RR_TXAC_IQG GENMASK(3, 0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RR_BIASA 0x60
 #define RR_BIASA_TXG GENMASK(15, 12)
 #define RR_BIASA_TXA GENMASK(19, 16)
@@ -3694,8 +3826,11 @@
 #define RR_TXA2_LDO GENMASK(19, 16)
 #define RR_TRXIQ 0x66
 #define RR_RSV6 0x6d
+<<<<<<< HEAD
 #define RR_TXVBUF 0x7c
 #define RR_TXVBUF_DACEN BIT(5)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RR_TXPOW 0x7f
 #define RR_TXPOW_TXA BIT(8)
 #define RR_TXPOW_TXAS BIT(7)
@@ -3706,7 +3841,10 @@
 #define RR_RXBB_VOBUF GENMASK(15, 12)
 #define RR_RXBB_C2G GENMASK(16, 10)
 #define RR_RXBB_C1G GENMASK(9, 8)
+<<<<<<< HEAD
 #define RR_RXBB_FATT GENMASK(7, 0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RR_RXBB_ATTR GENMASK(7, 4)
 #define RR_RXBB_ATTC GENMASK(2, 0)
 #define RR_RXG 0x84
@@ -3717,6 +3855,7 @@
 #define RR_RXAE_IQKMOD GENMASK(3, 0)
 #define RR_RXA 0x8a
 #define RR_RXA_DPK GENMASK(9, 8)
+<<<<<<< HEAD
 #define RR_RXA_LNA 0x8b
 #define RR_RXA2 0x8c
 #define RR_RAA2_SWATT GENMASK(15, 9)
@@ -3725,6 +3864,12 @@
 #define RR_RXA2_CC2 GENMASK(8, 7)
 #define RR_RXA2_IATT GENMASK(7, 4)
 #define RR_RXA2_HATT GENMASK(6, 0)
+=======
+#define RR_RXA2 0x8c
+#define RR_RXA2_C1 GENMASK(12, 10)
+#define RR_RXA2_C2 GENMASK(9, 3)
+#define RR_RXA2_IATT GENMASK(7, 4)
+>>>>>>> b7ba80a49124 (Commit)
 #define RR_RXA2_ATT GENMASK(3, 0)
 #define RR_RXIQGEN 0x8d
 #define RR_RXIQGEN_ATTL GENMASK(12, 8)
@@ -3736,17 +3881,25 @@
 #define RR_RXBB2_IDAC GENMASK(11, 9)
 #define RR_RXBB2_EBW GENMASK(6, 5)
 #define RR_XALNA2 0x90
+<<<<<<< HEAD
 #define RR_XALNA2_SW2 GENMASK(9, 8)
 #define RR_XALNA2_SW GENMASK(1, 0)
 #define RR_DCK 0x92
 #define RR_DCK_S1 GENMASK(19, 16)
 #define RR_DCK_TIA GENMASK(15, 9)
+=======
+#define RR_XALNA2_SW GENMASK(1, 0)
+#define RR_DCK 0x92
+>>>>>>> b7ba80a49124 (Commit)
 #define RR_DCK_DONE GENMASK(7, 5)
 #define RR_DCK_FINE BIT(1)
 #define RR_DCK_LV BIT(0)
 #define RR_DCK1 0x93
+<<<<<<< HEAD
 #define RR_DCK1_S1 GENMASK(19, 16)
 #define RR_DCK1_TIA GENMASK(15, 9)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RR_DCK1_DONE BIT(5)
 #define RR_DCK1_CLR GENMASK(3, 0)
 #define RR_DCK1_SEL BIT(3)
@@ -3758,11 +3911,15 @@
 #define RR_IQGEN_BIAS GENMASK(11, 8)
 #define RR_TXIQK 0x98
 #define RR_TXIQK_ATT2 GENMASK(15, 12)
+<<<<<<< HEAD
 #define RR_TXIQK_ATT1 GENMASK(6, 0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RR_TIA 0x9e
 #define RR_TIA_N6 BIT(8)
 #define RR_MIXER 0x9f
 #define RR_MIXER_GN GENMASK(4, 3)
+<<<<<<< HEAD
 #define RR_POW 0xa0
 #define RR_POW_SYN GENMASK(3, 2)
 #define RR_LOGEN 0xa3
@@ -3788,6 +3945,16 @@
 #define RR_IQKPLL_MOD GENMASK(9, 8)
 #define RR_SYNLUT 0xdd
 #define RR_SYNLUT_MOD BIT(4)
+=======
+#define RR_LOGEN 0xa3
+#define RR_LOGEN_RPT GENMASK(19, 16)
+#define RR_XTALX2 0xb8
+#define RR_MALSEL 0xbe
+#define RR_LCK_TRG 0xd3
+#define RR_LCK_TRGSEL BIT(8)
+#define RR_IQKPLL 0xdc
+#define RR_IQKPLL_MOD GENMASK(9, 8)
+>>>>>>> b7ba80a49124 (Commit)
 #define RR_RCKD 0xde
 #define RR_RCKD_POW GENMASK(19, 13)
 #define RR_RCKD_BW BIT(2)
@@ -3795,14 +3962,20 @@
 #define RR_LUTDBG 0xdf
 #define RR_LUTDBG_TIA BIT(12)
 #define RR_LUTDBG_LOK BIT(2)
+<<<<<<< HEAD
 #define RR_LUTPLL 0xec
 #define RR_CAL_RW BIT(19)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RR_LUTWE2 0xee
 #define RR_LUTWE2_RTXBW BIT(2)
 #define RR_LUTWE 0xef
 #define RR_LUTWE_LOK BIT(2)
 #define RR_RFC 0xf0
+<<<<<<< HEAD
 #define RR_WCAL BIT(16)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RR_RFC_CKEN BIT(1)
 
 #define R_UPD_P0 0x0000
@@ -3819,14 +3992,20 @@
 #define B_ANAPAR_ADCCLK BIT(30)
 #define B_ANAPAR_FLTRST BIT(22)
 #define B_ANAPAR_CRXBB GENMASK(18, 16)
+<<<<<<< HEAD
 #define B_ANAPAR_EN BIT(16)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define B_ANAPAR_14 GENMASK(15, 0)
 #define R_RFE_E_A2 0x0334
 #define R_RFE_O_SEL_A2 0x0338
 #define R_RFE_SEL0_A2 0x033C
 #define R_RFE_SEL32_A2 0x0340
+<<<<<<< HEAD
 #define R_CIRST 0x035c
 #define B_CIRST_SYN GENMASK(11, 10)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_SWSI_DATA_V1 0x0370
 #define B_SWSI_DATA_VAL_V1 GENMASK(19, 0)
 #define B_SWSI_DATA_ADDR_V1 GENMASK(27, 20)
@@ -3962,10 +4141,13 @@
 #define R_P0_RFMODE 0x12AC
 #define B_P0_RFMODE_ORI_TXRX_FTM_TX GENMASK(31, 4)
 #define B_P0_RFMODE_MUX GENMASK(11, 4)
+<<<<<<< HEAD
 #define R_P0_RFMODE_ORI_RX 0x12AC
 #define B_P0_RFMODE_ORI_RX_ALL GENMASK(23, 12)
 #define R_P0_RFMODE_FTM_RX 0x12B0
 #define B_P0_RFMODE_FTM_RX GENMASK(11, 0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_P0_NRBW 0x12B8
 #define B_P0_NRBW_DBG BIT(30)
 #define R_S0_RXDC 0x12D4
@@ -4018,9 +4200,12 @@
 #define B_TXAGC_TP GENMASK(2, 0)
 #define R_TSSI_THER 0x1C10
 #define B_TSSI_THER GENMASK(29, 24)
+<<<<<<< HEAD
 #define R_TSSI_CWRPT 0x1C18
 #define B_TSSI_CWRPT_RDY BIT(16)
 #define B_TSSI_CWRPT GENMASK(8, 0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_TXAGC_BTP 0x1CA0
 #define B_TXAGC_BTP GENMASK(31, 24)
 #define R_TXAGC_BB 0x1C60
@@ -4062,8 +4247,11 @@
 #define B_RXCCA_DIS_V1 BIT(0)
 #define R_RXSC 0x237C
 #define B_RXSC_EN BIT(0)
+<<<<<<< HEAD
 #define R_RX_RPL_OFST 0x23AC
 #define B_RX_RPL_OFST_CCK_MASK GENMASK(6, 0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_RXSCOBC 0x23B0
 #define B_RXSCOBC_TH GENMASK(18, 0)
 #define R_RXSCOCCK 0x23B4
@@ -4077,6 +4265,7 @@
 #define B_P1_EN_SOUND_WO_NDP BIT(1)
 #define R_S1_HW_SI_DIS 0x3200
 #define B_S1_HW_SI_DIS_W_R_TRIG GENMASK(30, 28)
+<<<<<<< HEAD
 #define R_P1_RXCK 0x32A0
 #define B_P1_RXCK_BW3 BIT(30)
 #define B_P1_TXCK_ALL GENMASK(19, 12)
@@ -4089,6 +4278,11 @@
 #define B_P1_RFMODE_ORI_RX_ALL GENMASK(23, 12)
 #define R_P1_RFMODE_FTM_RX 0x32B0
 #define B_P1_RFMODE_FTM_RX GENMASK(11, 0)
+=======
+#define R_P1_RFMODE 0x32AC
+#define B_P1_RFMODE_ORI_TXRX_FTM_TX GENMASK(31, 4)
+#define B_P1_RFMODE_MUX GENMASK(11, 4)
+>>>>>>> b7ba80a49124 (Commit)
 #define R_P1_DBGMOD 0x32B8
 #define B_P1_DBGMOD_ON BIT(30)
 #define R_S1_RXDC 0x32D4
@@ -4107,6 +4301,7 @@
 #define R_MUIC 0x40F8
 #define B_MUIC_EN BIT(0)
 #define R_DCFO 0x4264
+<<<<<<< HEAD
 #define B_DCFO GENMASK(7, 0)
 #define R_SEG0CSI 0x42AC
 #define B_SEG0CSI_IDX GENMASK(10, 0)
@@ -4114,6 +4309,14 @@
 #define B_SEG0CSI_EN BIT(23)
 #define R_BSS_CLR_MAP 0x43ac
 #define R_BSS_CLR_MAP_V1 0x43B0
+=======
+#define B_DCFO GENMASK(1, 0)
+#define R_SEG0CSI 0x42AC
+#define B_SEG0CSI_IDX GENMASK(11, 0)
+#define R_SEG0CSI_EN 0x42C4
+#define B_SEG0CSI_EN BIT(23)
+#define R_BSS_CLR_MAP 0x43ac
+>>>>>>> b7ba80a49124 (Commit)
 #define B_BSS_CLR_MAP_VLD0 BIT(28)
 #define B_BSS_CLR_MAP_TGT GENMASK(27, 22)
 #define B_BSS_CLR_MAP_STAID GENMASK(21, 11)
@@ -4123,10 +4326,14 @@
 #define R_T2F_GI_COMB 0x4424
 #define B_T2F_GI_COMB_EN BIT(2)
 #define R_BT_DYN_DC_EST_EN 0x441C
+<<<<<<< HEAD
 #define R_BT_DYN_DC_EST_EN_V1 0x4420
 #define B_BT_DYN_DC_EST_EN_MSK BIT(31)
 #define R_ASSIGN_SBD_OPT_V1 0x4440
 #define B_ASSIGN_SBD_OPT_EN_V1 BIT(31)
+=======
+#define B_BT_DYN_DC_EST_EN_MSK BIT(31)
+>>>>>>> b7ba80a49124 (Commit)
 #define R_ASSIGN_SBD_OPT 0x4450
 #define B_ASSIGN_SBD_OPT_EN BIT(24)
 #define R_DCFO_COMP_S0 0x448C
@@ -4135,12 +4342,17 @@
 #define B_DCFO_WEIGHT_MSK GENMASK(27, 24)
 #define R_DCFO_OPT 0x4494
 #define B_DCFO_OPT_EN BIT(29)
+<<<<<<< HEAD
 #define B_TXSHAPE_TRIANGULAR_CFG GENMASK(25, 24)
 #define R_BANDEDGE 0x4498
 #define B_BANDEDGE_EN BIT(30)
 #define R_DPD_BF 0x44a0
 #define B_DPD_BF_OFDM GENMASK(16, 12)
 #define B_DPD_BF_SCA GENMASK(6, 0)
+=======
+#define R_BANDEDGE 0x4498
+#define B_BANDEDGE_EN BIT(30)
+>>>>>>> b7ba80a49124 (Commit)
 #define R_TXPATH_SEL 0x458C
 #define B_TXPATH_SEL_MSK GENMASK(31, 28)
 #define R_TXPWR 0x4594
@@ -4271,8 +4483,11 @@
 #define R_P1_NBIIDX 0x4770
 #define B_P1_NBIIDX_VAL GENMASK(11, 0)
 #define B_P1_NBIIDX_NOTCH_EN BIT(12)
+<<<<<<< HEAD
 #define R_PKT_CTRL 0x47D4
 #define B_PKT_POP_EN BIT(8)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_SEG0R_PD 0x481C
 #define R_SEG0R_PD_V1 0x4860
 #define B_SEG0R_PD_SPATIAL_REUSE_EN_MSK_V1 BIT(30)
@@ -4281,18 +4496,27 @@
 #define R_2P4G_BAND 0x4970
 #define B_2P4G_BAND_SEL BIT(1)
 #define R_FC0_BW 0x4974
+<<<<<<< HEAD
 #define R_FC0_BW_V1 0x49C0
+=======
+#define B_FC0_BW_INV GENMASK(6, 0)
+>>>>>>> b7ba80a49124 (Commit)
 #define B_FC0_BW_SET GENMASK(31, 30)
 #define B_ANT_RX_BT_SEG0 GENMASK(25, 22)
 #define B_ANT_RX_1RCCA_SEG1 GENMASK(21, 18)
 #define B_ANT_RX_1RCCA_SEG0 GENMASK(17, 14)
+<<<<<<< HEAD
 #define B_FC0_BW_INV GENMASK(6, 0)
 #define R_CHBW_MOD 0x4978
 #define R_CHBW_MOD_V1 0x49C4
+=======
+#define R_CHBW_MOD 0x4978
+>>>>>>> b7ba80a49124 (Commit)
 #define B_BT_SHARE BIT(14)
 #define B_CHBW_MOD_SBW GENMASK(13, 12)
 #define B_CHBW_MOD_PRICH GENMASK(11, 8)
 #define B_ANT_RX_SEG0 GENMASK(3, 0)
+<<<<<<< HEAD
 #define R_P0_RPL1 0x49B0
 #define B_P0_RPL1_41_MASK GENMASK(31, 24)
 #define B_P0_RPL1_40_MASK GENMASK(23, 16)
@@ -4310,13 +4534,18 @@
 #define B_P0_RTL3_84_MASK GENMASK(23, 16)
 #define B_P0_RTL3_83_MASK GENMASK(15, 8)
 #define B_P0_RTL3_82_MASK GENMASK(7, 0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_PD_BOOST_EN 0x49E8
 #define B_PD_BOOST_EN BIT(7)
 #define R_P1_BACKOFF_IBADC_V1 0x49F0
 #define B_P1_BACKOFF_IBADC_V1 GENMASK(31, 26)
+<<<<<<< HEAD
 #define R_P1_RPL1 0x4A00
 #define R_P1_RPL2 0x4A04
 #define R_P1_RPL3 0x4A08
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_BK_FC0_INV_V1 0x4A1C
 #define B_BK_FC0_INV_MSK_V1 GENMASK(18, 0)
 #define R_CCK_FC0_INV_V1 0x4A20
@@ -4327,10 +4556,15 @@
 #define B_P1_AGC_EN BIT(31)
 #define R_PATH1_TIA_INIT_V1 0x4AA8
 #define B_PATH1_TIA_INIT_IDX_MSK_V1 BIT(9)
+<<<<<<< HEAD
 #define R_P0_AGC_RSVD 0x4ACC
 #define R_PATH0_RXBB_V1 0x4AD4
 #define B_PATH0_RXBB_MSK_V1 GENMASK(31, 0)
 #define R_P1_AGC_RSVD 0x4AD8
+=======
+#define R_PATH0_RXBB_V1 0x4AD4
+#define B_PATH0_RXBB_MSK_V1 GENMASK(31, 0)
+>>>>>>> b7ba80a49124 (Commit)
 #define R_PATH1_RXBB_V1 0x4AE0
 #define B_PATH1_RXBB_MSK_V1 GENMASK(31, 0)
 #define R_PATH0_BT_BACKOFF_V1 0x4AE4
@@ -4346,7 +4580,10 @@
 #define B_PATH0_NOTCH2_EN BIT(12)
 #define B_PATH0_NOTCH2_VAL GENMASK(11, 0)
 #define R_PATH0_5MDET 0x4C4C
+<<<<<<< HEAD
 #define R_PATH0_5MDET_V1 0x46F8
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define B_PATH0_5MDET_EN BIT(12)
 #define B_PATH0_5MDET_SB2 BIT(8)
 #define B_PATH0_5MDET_SB0 BIT(6)
@@ -4360,7 +4597,10 @@
 #define B_PATH1_NOTCH2_EN BIT(12)
 #define B_PATH1_NOTCH2_VAL GENMASK(11, 0)
 #define R_PATH1_5MDET 0x4D10
+<<<<<<< HEAD
 #define R_PATH1_5MDET_V1 0x47B8
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define B_PATH1_5MDET_EN BIT(12)
 #define B_PATH1_5MDET_SB2 BIT(8)
 #define B_PATH1_5MDET_SB0 BIT(6)
@@ -4389,6 +4629,7 @@
 #define B_CFO_COMP_VALID_BIT BIT(29)
 #define B_CFO_COMP_WEIGHT_MSK GENMASK(27, 24)
 #define B_CFO_COMP_VAL_MSK GENMASK(11, 0)
+<<<<<<< HEAD
 #define R_TSSI_PA_K1 0x5600
 #define R_TSSI_PA_K2 0x5604
 #define R_P0_TSSI_ALIM1 0x5630
@@ -4403,6 +4644,8 @@
 #define B_P0_TSSI_ALIM2 GENMASK(29, 0)
 #define R_P0_TSSI_ALIM4 0x5640
 #define R_TSSI_PA_K8 0x5644
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_UPD_CLK 0x5670
 #define B_DAC_VAL BIT(31)
 #define B_ACK_VAL GENMASK(30, 29)
@@ -4414,11 +4657,14 @@
 #define B_TXPWRB_VAL GENMASK(27, 19)
 #define R_DPD_OFT_EN 0x5800
 #define B_DPD_OFT_EN BIT(28)
+<<<<<<< HEAD
 #define B_DPD_TSSI_CW GENMASK(26, 18)
 #define B_DPD_PWR_CW GENMASK(17, 9)
 #define B_DPD_REF GENMASK(8, 0)
 #define R_P0_TSSIC 0x5814
 #define B_P0_TSSIC_BYPASS BIT(11)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_DPD_OFT_ADDR 0x5804
 #define B_DPD_OFT_ADDR GENMASK(31, 27)
 #define R_TXPWRB_H 0x580c
@@ -4427,6 +4673,7 @@
 #define B_P0_TMETER GENMASK(15, 10)
 #define B_P0_TMETER_DIS BIT(16)
 #define B_P0_TMETER_TRK BIT(24)
+<<<<<<< HEAD
 #define R_P1_TSSIC 0x7814
 #define B_P1_TSSIC_BYPASS BIT(11)
 #define R_P0_TSSI_TRK 0x5818
@@ -4439,6 +4686,15 @@
 #define B_P0_TSSI_AVG GENMASK(15, 12)
 #define R_P0_RFCTM 0x5864
 #define B_P0_RFCTM_EN BIT(29)
+=======
+#define R_P0_TSSI_TRK 0x5818
+#define B_P0_TSSI_TRK_EN BIT(30)
+#define B_P0_TSSI_OFT_EN BIT(28)
+#define B_P0_TSSI_OFT GENMASK(7, 0)
+#define R_P0_TSSI_AVG 0x5820
+#define B_P0_TSSI_AVG GENMASK(15, 12)
+#define R_P0_RFCTM 0x5864
+>>>>>>> b7ba80a49124 (Commit)
 #define B_P0_RFCTM_VAL GENMASK(25, 20)
 #define R_P0_RFCTM_RDY BIT(26)
 #define R_P0_TRSW 0x5868
@@ -4451,16 +4707,23 @@
 #define B_P0_RFM_TX_OPT BIT(6)
 #define B_P0_RFM_BT_EN BIT(5)
 #define B_P0_RFM_OUT GENMASK(4, 0)
+<<<<<<< HEAD
 #define R_P0_PATH_RST 0x58AC
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_P0_TXDPD 0x58D4
 #define B_P0_TXDPD GENMASK(31, 28)
 #define R_P0_TXPW_RSTB 0x58DC
 #define B_P0_TXPW_RSTB_MANON BIT(30)
 #define B_P0_TXPW_RSTB_TSSI BIT(31)
 #define R_P0_TSSI_MV_AVG 0x58E4
+<<<<<<< HEAD
 #define B_P0_TSSI_MV_MIX GENMASK(19, 11)
 #define B_P0_TSSI_MV_AVG GENMASK(13, 11)
 #define B_P0_TSSI_MV_CLR BIT(14)
+=======
+#define B_P0_TSSI_MV_AVG GENMASK(13, 11)
+>>>>>>> b7ba80a49124 (Commit)
 #define R_TXGAIN_SCALE 0x58F0
 #define B_TXGAIN_SCALE_EN BIT(19)
 #define B_TXGAIN_SCALE_OFT GENMASK(31, 24)
@@ -4485,6 +4748,7 @@
 #define B_S0_DACKQ8_K GENMASK(15, 8)
 #define R_RPL_BIAS_COMP1 0x6DF0
 #define B_RPL_BIAS_COMP1_MASK GENMASK(7, 0)
+<<<<<<< HEAD
 #define R_P1_TSSI_ALIM1 0x7630
 #define B_P1_TSSI_ALIM1 GENMASK(29, 0)
 #define B_P1_TSSI_ALIM11 GENMASK(29, 20)
@@ -4496,30 +4760,45 @@
 #define B_P1_TSSI_ALIM2 GENMASK(29, 0)
 #define R_P1_TSSIC 0x7814
 #define B_P1_TSSIC_BYPASS BIT(11)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_P1_TMETER 0x7810
 #define B_P1_TMETER GENMASK(15, 10)
 #define B_P1_TMETER_DIS BIT(16)
 #define B_P1_TMETER_TRK BIT(24)
 #define R_P1_TSSI_TRK 0x7818
 #define B_P1_TSSI_TRK_EN BIT(30)
+<<<<<<< HEAD
 #define B_P1_TSSI_RFC GENMASK(28, 27)
 #define B_P1_TSSI_OFT_EN BIT(28)
 #define B_P1_TSSI_OFT GENMASK(7, 0)
 #define R_P1_TSSI_AVG 0x7820
 #define B_P1_TSSI_EN BIT(31)
+=======
+#define B_P1_TSSI_OFT_EN BIT(28)
+#define B_P1_TSSI_OFT GENMASK(7, 0)
+#define R_P1_TSSI_AVG 0x7820
+>>>>>>> b7ba80a49124 (Commit)
 #define B_P1_TSSI_AVG GENMASK(15, 12)
 #define R_P1_RFCTM 0x7864
 #define R_P1_RFCTM_RDY BIT(26)
 #define B_P1_RFCTM_VAL GENMASK(25, 20)
+<<<<<<< HEAD
 #define B_P1_RFCTM_DEL GENMASK(19, 11)
 #define R_P1_PATH_RST 0x78AC
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_P1_TXPW_RSTB 0x78DC
 #define B_P1_TXPW_RSTB_MANON BIT(30)
 #define B_P1_TXPW_RSTB_TSSI BIT(31)
 #define R_P1_TSSI_MV_AVG 0x78E4
+<<<<<<< HEAD
 #define B_P1_TSSI_MV_MIX GENMASK(19, 11)
 #define B_P1_TSSI_MV_AVG GENMASK(13, 11)
 #define B_P1_TSSI_MV_CLR BIT(14)
+=======
+#define B_P1_TSSI_MV_AVG GENMASK(13, 11)
+>>>>>>> b7ba80a49124 (Commit)
 #define R_TSSI_THOF 0x7C00
 #define R_S1_DACKI 0x7E00
 #define B_S1_DACKI_AR GENMASK(31, 28)
@@ -4589,7 +4868,10 @@
 #define B_KPATH_CFG_ED GENMASK(21, 20)
 #define R_KIP_RPT1 0x80D4
 #define B_KIP_RPT1_SEL GENMASK(21, 16)
+<<<<<<< HEAD
 #define B_KIP_RPT1_SEL_V1 GENMASK(19, 16)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_SRAM_IQRX 0x80D8
 #define R_GAPK 0x80E0
 #define B_GAPK_ADR BIT(0)
@@ -4611,14 +4893,20 @@
 #define B_PRT_COM_GL GENMASK(7, 4)
 #define B_PRT_COM_CORI GENMASK(7, 0)
 #define B_PRT_COM_RXBB GENMASK(5, 0)
+<<<<<<< HEAD
 #define B_PRT_COM_RXBB_V1 GENMASK(4, 0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define B_PRT_COM_DONE BIT(0)
 #define R_COEF_SEL 0x8104
 #define B_COEF_SEL_IQC BIT(0)
 #define B_COEF_SEL_MDPD BIT(8)
 #define R_CFIR_SYS 0x8120
 #define R_IQK_RES 0x8124
+<<<<<<< HEAD
 #define B_IQK_RES_K BIT(28)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define B_IQK_RES_TXCFIR GENMASK(11, 8)
 #define B_IQK_RES_RXCFIR GENMASK(3, 0)
 #define R_TXIQC 0x8138
@@ -4650,6 +4938,7 @@
 #define B_DPD_LBK BIT(7)
 #define R_DPD_CH0 0x81AC
 #define R_DPD_BND 0x81B4
+<<<<<<< HEAD
 #define B_DPD_BND_1 GENMASK(24, 16)
 #define B_DPD_BND_0 GENMASK(8, 0)
 #define R_DPD_CH0A 0x81BC
@@ -4657,11 +4946,19 @@
 #define B_DPD_ORDER GENMASK(26, 24)
 #define B_DPD_ORDER_V1 GENMASK(26, 25)
 #define B_DPD_CFG GENMASK(22, 0)
+=======
+#define R_DPD_CH0A 0x81BC
+#define B_DPD_MEN GENMASK(31, 28)
+#define B_DPD_ORDER GENMASK(26, 24)
+>>>>>>> b7ba80a49124 (Commit)
 #define B_DPD_SEL GENMASK(13, 8)
 #define R_TXAGC_RFK 0x81C4
 #define B_TXAGC_RFK_CH0 GENMASK(5, 0)
 #define R_DPD_COM 0x81C8
+<<<<<<< HEAD
 #define B_DPD_COM_OF BIT(15)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_KIP_IQP 0x81CC
 #define B_KIP_IQP_SW GENMASK(13, 12)
 #define B_KIP_IQP_IQSW GENMASK(5, 0)
@@ -4680,9 +4977,12 @@
 #define B_RPT_PER_TSSI GENMASK(28, 16)
 #define B_RPT_PER_OF GENMASK(15, 8)
 #define B_RPT_PER_TH GENMASK(5, 0)
+<<<<<<< HEAD
 #define R_IQRSN 0x8220
 #define B_IQRSN_K1 BIT(28)
 #define B_IQRSN_K2 BIT(16)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_RXCFIR_P0C0 0x8D40
 #define R_RXCFIR_P0C1 0x8D84
 #define R_RXCFIR_P0C2 0x8DC8
@@ -4740,16 +5040,21 @@
 #define B_DACK_S0P3_OK BIT(2)
 #define R_DACK_DADCK01 0xC084
 #define B_DACK_DADCK01 GENMASK(31, 24)
+<<<<<<< HEAD
 #define R_DRCK_FH 0xC094
 #define B_DRCK_LAT BIT(9)
 #define R_DRCK 0xC0C4
 #define B_DRCK_MUL GENMASK(21, 17)
+=======
+#define R_DRCK 0xC0C4
+>>>>>>> b7ba80a49124 (Commit)
 #define B_DRCK_IDLE BIT(9)
 #define B_DRCK_EN BIT(6)
 #define B_DRCK_VAL GENMASK(4, 0)
 #define R_DRCK_RES 0xC0C8
 #define B_DRCK_RES GENMASK(19, 15)
 #define B_DRCK_POL BIT(3)
+<<<<<<< HEAD
 #define R_DRCK_V1 0xC0CC
 #define B_DRCK_V1_SEL BIT(9)
 #define B_DRCK_V1_KICK BIT(6)
@@ -4757,10 +5062,13 @@
 #define R_DRCK_RS 0xC0D0
 #define B_DRCK_RS_LPS GENMASK(19, 15)
 #define B_DRCK_RS_DONE BIT(3)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define R_PATH0_SAMPL_DLY_T_V1 0xC0D4
 #define B_PATH0_SAMPL_DLY_T_MSK_V1 GENMASK(27, 26)
 #define R_P0_CFCH_BW0 0xC0D4
 #define B_P0_CFCH_BW0 GENMASK(27, 26)
+<<<<<<< HEAD
 #define B_P0_CFCH_EN GENMASK(14, 11)
 #define B_P0_CFCH_CTL GENMASK(10, 7)
 #define R_P0_CFCH_BW1 0xC0D8
@@ -4777,6 +5085,13 @@
 #define B_ADDCK0_MAN GENMASK(5, 4)
 #define B_ADDCK0_EN BIT(4)
 #define B_ADDCK0_VAL GENMASK(3, 0)
+=======
+#define R_P0_CFCH_BW1 0xC0D8
+#define B_P0_CFCH_BW1 GENMASK(8, 5)
+#define R_ADDCK0 0xC0F4
+#define B_ADDCK0 GENMASK(9, 8)
+#define B_ADDCK0_EN BIT(4)
+>>>>>>> b7ba80a49124 (Commit)
 #define B_ADDCK0_RST BIT(2)
 #define R_ADDCK0_RL 0xC0F8
 #define B_ADDCK0_RLS GENMASK(29, 28)
@@ -4816,6 +5131,7 @@
 #define R_PATH0_BW_SEL_V1 0xC0D8
 #define B_PATH0_BW_SEL_MSK_V1 GENMASK(8, 5)
 #define R_PATH1_BW_SEL_V1 0xC1D8
+<<<<<<< HEAD
 #define B_PATH1_BW_SEL_EX BIT(13)
 #define B_PATH1_BW_SEL_MSK_V1 GENMASK(8, 5)
 #define R_ADDCK1D 0xC1F0
@@ -4825,6 +5141,11 @@
 #define B_ADDCK1_TRG BIT(11)
 #define B_ADDCK1 GENMASK(9, 8)
 #define B_ADDCK1_MAN GENMASK(5, 4)
+=======
+#define B_PATH1_BW_SEL_MSK_V1 GENMASK(8, 5)
+#define R_ADDCK1 0xC1F4
+#define B_ADDCK1 GENMASK(9, 8)
+>>>>>>> b7ba80a49124 (Commit)
 #define B_ADDCK1_EN BIT(4)
 #define B_ADDCK1_RST BIT(2)
 #define R_ADDCK1_RL 0xC1F8

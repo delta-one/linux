@@ -8,7 +8,10 @@
 #include <net/sock.h>
 #include <net/tcp.h>
 #include <net/tls.h>
+<<<<<<< HEAD
 #include <trace/events/sock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static bool sk_msg_try_coalesce_ok(struct sk_msg *msg, int elem_first_coalesce)
 {
@@ -435,10 +438,15 @@ int sk_msg_recvmsg(struct sock *sk, struct sk_psock *psock, struct msghdr *msg,
 			if (copied + copy > len)
 				copy = len - copied;
 			copy = copy_page_to_iter(page, sge->offset, copy, iter);
+<<<<<<< HEAD
 			if (!copy) {
 				copied = copied ? copied : -EFAULT;
 				goto out;
 			}
+=======
+			if (!copy)
+				return copied ? copied : -EFAULT;
+>>>>>>> b7ba80a49124 (Commit)
 
 			copied += copy;
 			if (likely(!peek)) {
@@ -458,7 +466,11 @@ int sk_msg_recvmsg(struct sock *sk, struct sk_psock *psock, struct msghdr *msg,
 				 * didn't copy the entire length lets just break.
 				 */
 				if (copy != sge->length)
+<<<<<<< HEAD
 					goto out;
+=======
+					return copied;
+>>>>>>> b7ba80a49124 (Commit)
 				sk_msg_iter_var_next(i);
 			}
 
@@ -480,9 +492,13 @@ int sk_msg_recvmsg(struct sock *sk, struct sk_psock *psock, struct msghdr *msg,
 		}
 		msg_rx = sk_psock_peek_msg(psock);
 	}
+<<<<<<< HEAD
 out:
 	if (psock->work_state.skb && copied > 0)
 		schedule_work(&psock->work);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	return copied;
 }
 EXPORT_SYMBOL_GPL(sk_msg_recvmsg);
@@ -501,11 +517,19 @@ bool sk_msg_is_readable(struct sock *sk)
 }
 EXPORT_SYMBOL_GPL(sk_msg_is_readable);
 
+<<<<<<< HEAD
 static struct sk_msg *alloc_sk_msg(gfp_t gfp)
 {
 	struct sk_msg *msg;
 
 	msg = kzalloc(sizeof(*msg), gfp | __GFP_NOWARN);
+=======
+static struct sk_msg *alloc_sk_msg(void)
+{
+	struct sk_msg *msg;
+
+	msg = kzalloc(sizeof(*msg), __GFP_NOWARN | GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(!msg))
 		return NULL;
 	sg_init_marker(msg->sg.data, NR_MSG_FRAG_IDS);
@@ -521,7 +545,11 @@ static struct sk_msg *sk_psock_create_ingress_msg(struct sock *sk,
 	if (!sk_rmem_schedule(sk, skb, skb->truesize))
 		return NULL;
 
+<<<<<<< HEAD
 	return alloc_sk_msg(GFP_KERNEL);
+=======
+	return alloc_sk_msg();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int sk_psock_skb_ingress_enqueue(struct sk_buff *skb,
@@ -598,7 +626,11 @@ static int sk_psock_skb_ingress(struct sk_psock *psock, struct sk_buff *skb,
 static int sk_psock_skb_ingress_self(struct sk_psock *psock, struct sk_buff *skb,
 				     u32 off, u32 len)
 {
+<<<<<<< HEAD
 	struct sk_msg *msg = alloc_sk_msg(GFP_ATOMIC);
+=======
+	struct sk_msg *msg = alloc_sk_msg();
+>>>>>>> b7ba80a49124 (Commit)
 	struct sock *sk = psock->sk;
 	int err;
 
@@ -804,13 +836,23 @@ static void sk_psock_link_destroy(struct sk_psock *psock)
 	}
 }
 
+<<<<<<< HEAD
 void sk_psock_stop(struct sk_psock *psock)
+=======
+void sk_psock_stop(struct sk_psock *psock, bool wait)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	spin_lock_bh(&psock->ingress_lock);
 	sk_psock_clear_state(psock, SK_PSOCK_TX_ENABLED);
 	sk_psock_cork_free(psock);
 	__sk_psock_zap_ingress(psock);
 	spin_unlock_bh(&psock->ingress_lock);
+<<<<<<< HEAD
+=======
+
+	if (wait)
+		cancel_work_sync(&psock->work);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void sk_psock_done_strp(struct sk_psock *psock);
@@ -848,7 +890,11 @@ void sk_psock_drop(struct sock *sk, struct sk_psock *psock)
 		sk_psock_stop_verdict(sk, psock);
 	write_unlock_bh(&sk->sk_callback_lock);
 
+<<<<<<< HEAD
 	sk_psock_stop(psock);
+=======
+	sk_psock_stop(psock, false);
+>>>>>>> b7ba80a49124 (Commit)
 
 	INIT_RCU_WORK(&psock->rwork, sk_psock_destroy);
 	queue_rcu_work(system_wq, &psock->rwork);
@@ -887,6 +933,7 @@ int sk_psock_msg_verdict(struct sock *sk, struct sk_psock *psock,
 	ret = sk_psock_map_verd(ret, msg->sk_redir);
 	psock->apply_bytes = msg->apply_bytes;
 	if (ret == __SK_REDIRECT) {
+<<<<<<< HEAD
 		if (psock->sk_redir) {
 			sock_put(psock->sk_redir);
 			psock->sk_redir = NULL;
@@ -897,6 +944,15 @@ int sk_psock_msg_verdict(struct sock *sk, struct sk_psock *psock,
 		}
 		psock->redir_ingress = sk_msg_to_ingress(msg);
 		psock->sk_redir = msg->sk_redir;
+=======
+		if (psock->sk_redir)
+			sock_put(psock->sk_redir);
+		psock->sk_redir = msg->sk_redir;
+		if (!psock->sk_redir) {
+			ret = __SK_DROP;
+			goto out;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		sock_hold(psock->sk_redir);
 	}
 out:
@@ -1115,8 +1171,11 @@ static void sk_psock_strp_data_ready(struct sock *sk)
 {
 	struct sk_psock *psock;
 
+<<<<<<< HEAD
 	trace_sk_data_ready(sk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_read_lock();
 	psock = sk_psock(sk);
 	if (likely(psock)) {
@@ -1213,8 +1272,11 @@ static void sk_psock_verdict_data_ready(struct sock *sk)
 {
 	struct socket *sock = sk->sk_socket;
 
+<<<<<<< HEAD
 	trace_sk_data_ready(sk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(!sock || !sock->ops || !sock->ops->read_skb))
 		return;
 	sock->ops->read_skb(sk, sk_psock_verdict_recv);

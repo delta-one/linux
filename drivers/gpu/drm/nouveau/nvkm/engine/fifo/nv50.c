@@ -21,6 +21,7 @@
  *
  * Authors: Ben Skeggs
  */
+<<<<<<< HEAD
 #include "priv.h"
 #include "cgrp.h"
 #include "chan.h"
@@ -340,6 +341,64 @@ nv50_fifo_init(struct nvkm_fifo *fifo)
 {
 	struct nvkm_runl *runl = nvkm_runl_first(fifo);
 	struct nvkm_device *device = fifo->engine.subdev.device;
+=======
+#include "nv50.h"
+#include "channv50.h"
+
+#include <core/gpuobj.h>
+
+static void
+nv50_fifo_runlist_update_locked(struct nv50_fifo *fifo)
+{
+	struct nvkm_device *device = fifo->base.engine.subdev.device;
+	struct nvkm_memory *cur;
+	int i, p;
+
+	cur = fifo->runlist[fifo->cur_runlist];
+	fifo->cur_runlist = !fifo->cur_runlist;
+
+	nvkm_kmap(cur);
+	for (i = 0, p = 0; i < fifo->base.nr; i++) {
+		if (nvkm_rd32(device, 0x002600 + (i * 4)) & 0x80000000)
+			nvkm_wo32(cur, p++ * 4, i);
+	}
+	nvkm_done(cur);
+
+	nvkm_wr32(device, 0x0032f4, nvkm_memory_addr(cur) >> 12);
+	nvkm_wr32(device, 0x0032ec, p);
+	nvkm_wr32(device, 0x002500, 0x00000101);
+}
+
+void
+nv50_fifo_runlist_update(struct nv50_fifo *fifo)
+{
+	mutex_lock(&fifo->base.mutex);
+	nv50_fifo_runlist_update_locked(fifo);
+	mutex_unlock(&fifo->base.mutex);
+}
+
+int
+nv50_fifo_oneinit(struct nvkm_fifo *base)
+{
+	struct nv50_fifo *fifo = nv50_fifo(base);
+	struct nvkm_device *device = fifo->base.engine.subdev.device;
+	int ret;
+
+	ret = nvkm_memory_new(device, NVKM_MEM_TARGET_INST, 128 * 4, 0x1000,
+			      false, &fifo->runlist[0]);
+	if (ret)
+		return ret;
+
+	return nvkm_memory_new(device, NVKM_MEM_TARGET_INST, 128 * 4, 0x1000,
+			       false, &fifo->runlist[1]);
+}
+
+void
+nv50_fifo_init(struct nvkm_fifo *base)
+{
+	struct nv50_fifo *fifo = nv50_fifo(base);
+	struct nvkm_device *device = fifo->base.engine.subdev.device;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	nvkm_mask(device, 0x000200, 0x00000100, 0x00000000);
@@ -352,15 +411,20 @@ nv50_fifo_init(struct nvkm_fifo *fifo)
 
 	for (i = 0; i < 128; i++)
 		nvkm_wr32(device, 0x002600 + (i * 4), 0x00000000);
+<<<<<<< HEAD
 
 	atomic_set(&runl->changed, 1);
 	runl->func->update(runl);
+=======
+	nv50_fifo_runlist_update_locked(fifo);
+>>>>>>> b7ba80a49124 (Commit)
 
 	nvkm_wr32(device, 0x003200, 0x00000001);
 	nvkm_wr32(device, 0x003250, 0x00000001);
 	nvkm_wr32(device, 0x002500, 0x00000001);
 }
 
+<<<<<<< HEAD
 int
 nv50_fifo_chid_ctor(struct nvkm_fifo *fifo, int nr)
 {
@@ -372,10 +436,40 @@ int
 nv50_fifo_chid_nr(struct nvkm_fifo *fifo)
 {
 	return 128;
+=======
+void *
+nv50_fifo_dtor(struct nvkm_fifo *base)
+{
+	struct nv50_fifo *fifo = nv50_fifo(base);
+	nvkm_memory_unref(&fifo->runlist[1]);
+	nvkm_memory_unref(&fifo->runlist[0]);
+	return fifo;
+}
+
+int
+nv50_fifo_new_(const struct nvkm_fifo_func *func, struct nvkm_device *device,
+	       enum nvkm_subdev_type type, int inst, struct nvkm_fifo **pfifo)
+{
+	struct nv50_fifo *fifo;
+	int ret;
+
+	if (!(fifo = kzalloc(sizeof(*fifo), GFP_KERNEL)))
+		return -ENOMEM;
+	*pfifo = &fifo->base;
+
+	ret = nvkm_fifo_ctor(func, device, type, inst, 128, &fifo->base);
+	if (ret)
+		return ret;
+
+	set_bit(0, fifo->base.mask); /* PIO channel */
+	set_bit(127, fifo->base.mask); /* inactive channel */
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct nvkm_fifo_func
 nv50_fifo = {
+<<<<<<< HEAD
 	.chid_nr = nv50_fifo_chid_nr,
 	.chid_ctor = nv50_fifo_chid_ctor,
 	.runl_ctor = nv04_fifo_runl_ctor,
@@ -388,11 +482,29 @@ nv50_fifo = {
 	.engn_sw = &nv50_engn_sw,
 	.cgrp = {{                           }, &nv04_cgrp },
 	.chan = {{ 0, 0, NV50_CHANNEL_GPFIFO }, &nv50_chan },
+=======
+	.dtor = nv50_fifo_dtor,
+	.oneinit = nv50_fifo_oneinit,
+	.init = nv50_fifo_init,
+	.intr = nv04_fifo_intr,
+	.engine_id = nv04_fifo_engine_id,
+	.id_engine = nv04_fifo_id_engine,
+	.pause = nv04_fifo_pause,
+	.start = nv04_fifo_start,
+	.chan = {
+		&nv50_fifo_gpfifo_oclass,
+		NULL
+	},
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int
 nv50_fifo_new(struct nvkm_device *device, enum nvkm_subdev_type type, int inst,
 	      struct nvkm_fifo **pfifo)
 {
+<<<<<<< HEAD
 	return nvkm_fifo_new_(&nv50_fifo, device, type, inst, pfifo);
+=======
+	return nv50_fifo_new_(&nv50_fifo, device, type, inst, pfifo);
+>>>>>>> b7ba80a49124 (Commit)
 }

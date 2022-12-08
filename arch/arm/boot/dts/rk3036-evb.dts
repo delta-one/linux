@@ -35,10 +35,18 @@
 &i2c1 {
 	status = "okay";
 
+<<<<<<< HEAD
 	hym8563: rtc@51 {
 		compatible = "haoyu,hym8563";
 		reg = <0x51>;
 		#clock-cells = <0>;
+=======
+	hym8563: hym8563@51 {
+		compatible = "haoyu,hym8563";
+		reg = <0x51>;
+		#clock-cells = <0>;
+		clock-frequency = <32768>;
+>>>>>>> b7ba80a49124 (Commit)
 		clock-output-names = "xin32k";
 	};
 };

@@ -1,6 +1,10 @@
 [
     {
         "BriefDescription": "Cycles L1D locked",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x63",
         "EventName": "CACHE_LOCK_CYCLES.L1D",
         "SampleAfterValue": "2000000",
@@ -8,6 +12,10 @@
     },
     {
         "BriefDescription": "Cycles L1D and L2 locked",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x63",
         "EventName": "CACHE_LOCK_CYCLES.L1D_L2",
         "SampleAfterValue": "2000000",
@@ -15,6 +23,10 @@
     },
     {
         "BriefDescription": "L1D cache lines replaced in M state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x51",
         "EventName": "L1D.M_EVICT",
         "SampleAfterValue": "2000000",
@@ -22,6 +34,10 @@
     },
     {
         "BriefDescription": "L1D cache lines allocated in the M state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x51",
         "EventName": "L1D.M_REPL",
         "SampleAfterValue": "2000000",
@@ -29,6 +45,10 @@
     },
     {
         "BriefDescription": "L1D snoop eviction of cache lines in M state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x51",
         "EventName": "L1D.M_SNOOP_EVICT",
         "SampleAfterValue": "2000000",
@@ -36,6 +56,10 @@
     },
     {
         "BriefDescription": "L1 data cache lines allocated",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x51",
         "EventName": "L1D.REPL",
         "SampleAfterValue": "2000000",
@@ -43,6 +67,10 @@
     },
     {
         "BriefDescription": "All references to the L1 data cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x43",
         "EventName": "L1D_ALL_REF.ANY",
         "SampleAfterValue": "2000000",
@@ -50,6 +78,10 @@
     },
     {
         "BriefDescription": "L1 data cacheable reads and writes",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x43",
         "EventName": "L1D_ALL_REF.CACHEABLE",
         "SampleAfterValue": "2000000",
@@ -57,6 +89,10 @@
     },
     {
         "BriefDescription": "L1 data cache read in E state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x40",
         "EventName": "L1D_CACHE_LD.E_STATE",
         "SampleAfterValue": "2000000",
@@ -64,6 +100,10 @@
     },
     {
         "BriefDescription": "L1 data cache read in I state (misses)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x40",
         "EventName": "L1D_CACHE_LD.I_STATE",
         "SampleAfterValue": "2000000",
@@ -71,6 +111,10 @@
     },
     {
         "BriefDescription": "L1 data cache reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x40",
         "EventName": "L1D_CACHE_LD.MESI",
         "SampleAfterValue": "2000000",
@@ -78,6 +122,10 @@
     },
     {
         "BriefDescription": "L1 data cache read in M state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x40",
         "EventName": "L1D_CACHE_LD.M_STATE",
         "SampleAfterValue": "2000000",
@@ -85,6 +133,10 @@
     },
     {
         "BriefDescription": "L1 data cache read in S state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x40",
         "EventName": "L1D_CACHE_LD.S_STATE",
         "SampleAfterValue": "2000000",
@@ -92,6 +144,10 @@
     },
     {
         "BriefDescription": "L1 data cache load locks in E state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x42",
         "EventName": "L1D_CACHE_LOCK.E_STATE",
         "SampleAfterValue": "2000000",
@@ -99,6 +155,10 @@
     },
     {
         "BriefDescription": "L1 data cache load lock hits",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x42",
         "EventName": "L1D_CACHE_LOCK.HIT",
         "SampleAfterValue": "2000000",
@@ -106,6 +166,10 @@
     },
     {
         "BriefDescription": "L1 data cache load locks in M state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x42",
         "EventName": "L1D_CACHE_LOCK.M_STATE",
         "SampleAfterValue": "2000000",
@@ -113,6 +177,10 @@
     },
     {
         "BriefDescription": "L1 data cache load locks in S state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x42",
         "EventName": "L1D_CACHE_LOCK.S_STATE",
         "SampleAfterValue": "2000000",
@@ -120,6 +188,10 @@
     },
     {
         "BriefDescription": "L1D load lock accepted in fill buffer",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x53",
         "EventName": "L1D_CACHE_LOCK_FB_HIT",
         "SampleAfterValue": "2000000",
@@ -127,6 +199,10 @@
     },
     {
         "BriefDescription": "L1D prefetch load lock accepted in fill buffer",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x52",
         "EventName": "L1D_CACHE_PREFETCH_LOCK_FB_HIT",
         "SampleAfterValue": "2000000",
@@ -134,6 +210,10 @@
     },
     {
         "BriefDescription": "L1 data cache stores in E state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x41",
         "EventName": "L1D_CACHE_ST.E_STATE",
         "SampleAfterValue": "2000000",
@@ -141,6 +221,10 @@
     },
     {
         "BriefDescription": "L1 data cache stores in M state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x41",
         "EventName": "L1D_CACHE_ST.M_STATE",
         "SampleAfterValue": "2000000",
@@ -148,6 +232,10 @@
     },
     {
         "BriefDescription": "L1 data cache stores in S state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x41",
         "EventName": "L1D_CACHE_ST.S_STATE",
         "SampleAfterValue": "2000000",
@@ -155,6 +243,10 @@
     },
     {
         "BriefDescription": "L1D hardware prefetch misses",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x4E",
         "EventName": "L1D_PREFETCH.MISS",
         "SampleAfterValue": "200000",
@@ -162,6 +254,10 @@
     },
     {
         "BriefDescription": "L1D hardware prefetch requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x4E",
         "EventName": "L1D_PREFETCH.REQUESTS",
         "SampleAfterValue": "200000",
@@ -169,6 +265,10 @@
     },
     {
         "BriefDescription": "L1D hardware prefetch requests triggered",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x4E",
         "EventName": "L1D_PREFETCH.TRIGGERS",
         "SampleAfterValue": "200000",
@@ -176,6 +276,10 @@
     },
     {
         "BriefDescription": "L1 writebacks to L2 in E state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x28",
         "EventName": "L1D_WB_L2.E_STATE",
         "SampleAfterValue": "100000",
@@ -183,6 +287,10 @@
     },
     {
         "BriefDescription": "L1 writebacks to L2 in I state (misses)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x28",
         "EventName": "L1D_WB_L2.I_STATE",
         "SampleAfterValue": "100000",
@@ -190,6 +298,10 @@
     },
     {
         "BriefDescription": "All L1 writebacks to L2",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x28",
         "EventName": "L1D_WB_L2.MESI",
         "SampleAfterValue": "100000",
@@ -197,6 +309,10 @@
     },
     {
         "BriefDescription": "L1 writebacks to L2 in M state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x28",
         "EventName": "L1D_WB_L2.M_STATE",
         "SampleAfterValue": "100000",
@@ -204,6 +320,10 @@
     },
     {
         "BriefDescription": "L1 writebacks to L2 in S state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x28",
         "EventName": "L1D_WB_L2.S_STATE",
         "SampleAfterValue": "100000",
@@ -211,6 +331,10 @@
     },
     {
         "BriefDescription": "All L2 data requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x26",
         "EventName": "L2_DATA_RQSTS.ANY",
         "SampleAfterValue": "200000",
@@ -218,6 +342,10 @@
     },
     {
         "BriefDescription": "L2 data demand loads in E state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x26",
         "EventName": "L2_DATA_RQSTS.DEMAND.E_STATE",
         "SampleAfterValue": "200000",
@@ -225,6 +353,10 @@
     },
     {
         "BriefDescription": "L2 data demand loads in I state (misses)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x26",
         "EventName": "L2_DATA_RQSTS.DEMAND.I_STATE",
         "SampleAfterValue": "200000",
@@ -232,6 +364,10 @@
     },
     {
         "BriefDescription": "L2 data demand requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x26",
         "EventName": "L2_DATA_RQSTS.DEMAND.MESI",
         "SampleAfterValue": "200000",
@@ -239,6 +375,10 @@
     },
     {
         "BriefDescription": "L2 data demand loads in M state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x26",
         "EventName": "L2_DATA_RQSTS.DEMAND.M_STATE",
         "SampleAfterValue": "200000",
@@ -246,6 +386,10 @@
     },
     {
         "BriefDescription": "L2 data demand loads in S state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x26",
         "EventName": "L2_DATA_RQSTS.DEMAND.S_STATE",
         "SampleAfterValue": "200000",
@@ -253,6 +397,10 @@
     },
     {
         "BriefDescription": "L2 data prefetches in E state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x26",
         "EventName": "L2_DATA_RQSTS.PREFETCH.E_STATE",
         "SampleAfterValue": "200000",
@@ -260,6 +408,10 @@
     },
     {
         "BriefDescription": "L2 data prefetches in the I state (misses)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x26",
         "EventName": "L2_DATA_RQSTS.PREFETCH.I_STATE",
         "SampleAfterValue": "200000",
@@ -267,6 +419,10 @@
     },
     {
         "BriefDescription": "All L2 data prefetches",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x26",
         "EventName": "L2_DATA_RQSTS.PREFETCH.MESI",
         "SampleAfterValue": "200000",
@@ -274,6 +430,10 @@
     },
     {
         "BriefDescription": "L2 data prefetches in M state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x26",
         "EventName": "L2_DATA_RQSTS.PREFETCH.M_STATE",
         "SampleAfterValue": "200000",
@@ -281,6 +441,10 @@
     },
     {
         "BriefDescription": "L2 data prefetches in the S state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x26",
         "EventName": "L2_DATA_RQSTS.PREFETCH.S_STATE",
         "SampleAfterValue": "200000",
@@ -288,6 +452,10 @@
     },
     {
         "BriefDescription": "L2 lines alloacated",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF1",
         "EventName": "L2_LINES_IN.ANY",
         "SampleAfterValue": "100000",
@@ -295,6 +463,10 @@
     },
     {
         "BriefDescription": "L2 lines allocated in the E state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF1",
         "EventName": "L2_LINES_IN.E_STATE",
         "SampleAfterValue": "100000",
@@ -302,6 +474,10 @@
     },
     {
         "BriefDescription": "L2 lines allocated in the S state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF1",
         "EventName": "L2_LINES_IN.S_STATE",
         "SampleAfterValue": "100000",
@@ -309,6 +485,10 @@
     },
     {
         "BriefDescription": "L2 lines evicted",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF2",
         "EventName": "L2_LINES_OUT.ANY",
         "SampleAfterValue": "100000",
@@ -316,6 +496,10 @@
     },
     {
         "BriefDescription": "L2 lines evicted by a demand request",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF2",
         "EventName": "L2_LINES_OUT.DEMAND_CLEAN",
         "SampleAfterValue": "100000",
@@ -323,6 +507,10 @@
     },
     {
         "BriefDescription": "L2 modified lines evicted by a demand request",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF2",
         "EventName": "L2_LINES_OUT.DEMAND_DIRTY",
         "SampleAfterValue": "100000",
@@ -330,6 +518,10 @@
     },
     {
         "BriefDescription": "L2 lines evicted by a prefetch request",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF2",
         "EventName": "L2_LINES_OUT.PREFETCH_CLEAN",
         "SampleAfterValue": "100000",
@@ -337,6 +529,10 @@
     },
     {
         "BriefDescription": "L2 modified lines evicted by a prefetch request",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF2",
         "EventName": "L2_LINES_OUT.PREFETCH_DIRTY",
         "SampleAfterValue": "100000",
@@ -344,6 +540,10 @@
     },
     {
         "BriefDescription": "L2 instruction fetches",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_RQSTS.IFETCHES",
         "SampleAfterValue": "200000",
@@ -351,6 +551,10 @@
     },
     {
         "BriefDescription": "L2 instruction fetch hits",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_RQSTS.IFETCH_HIT",
         "SampleAfterValue": "200000",
@@ -358,6 +562,10 @@
     },
     {
         "BriefDescription": "L2 instruction fetch misses",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_RQSTS.IFETCH_MISS",
         "SampleAfterValue": "200000",
@@ -365,6 +573,10 @@
     },
     {
         "BriefDescription": "L2 load hits",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_RQSTS.LD_HIT",
         "SampleAfterValue": "200000",
@@ -372,6 +584,10 @@
     },
     {
         "BriefDescription": "L2 load misses",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_RQSTS.LD_MISS",
         "SampleAfterValue": "200000",
@@ -379,6 +595,10 @@
     },
     {
         "BriefDescription": "L2 requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_RQSTS.LOADS",
         "SampleAfterValue": "200000",
@@ -386,6 +606,10 @@
     },
     {
         "BriefDescription": "All L2 misses",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_RQSTS.MISS",
         "SampleAfterValue": "200000",
@@ -393,6 +617,10 @@
     },
     {
         "BriefDescription": "All L2 prefetches",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_RQSTS.PREFETCHES",
         "SampleAfterValue": "200000",
@@ -400,6 +628,10 @@
     },
     {
         "BriefDescription": "L2 prefetch hits",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_RQSTS.PREFETCH_HIT",
         "SampleAfterValue": "200000",
@@ -407,6 +639,10 @@
     },
     {
         "BriefDescription": "L2 prefetch misses",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_RQSTS.PREFETCH_MISS",
         "SampleAfterValue": "200000",
@@ -414,6 +650,10 @@
     },
     {
         "BriefDescription": "All L2 requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_RQSTS.REFERENCES",
         "SampleAfterValue": "200000",
@@ -421,6 +661,10 @@
     },
     {
         "BriefDescription": "L2 RFO requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_RQSTS.RFOS",
         "SampleAfterValue": "200000",
@@ -428,6 +672,10 @@
     },
     {
         "BriefDescription": "L2 RFO hits",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_RQSTS.RFO_HIT",
         "SampleAfterValue": "200000",
@@ -435,6 +683,10 @@
     },
     {
         "BriefDescription": "L2 RFO misses",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_RQSTS.RFO_MISS",
         "SampleAfterValue": "200000",
@@ -442,6 +694,10 @@
     },
     {
         "BriefDescription": "All L2 transactions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF0",
         "EventName": "L2_TRANSACTIONS.ANY",
         "SampleAfterValue": "200000",
@@ -449,6 +705,10 @@
     },
     {
         "BriefDescription": "L2 fill transactions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF0",
         "EventName": "L2_TRANSACTIONS.FILL",
         "SampleAfterValue": "200000",
@@ -456,6 +716,10 @@
     },
     {
         "BriefDescription": "L2 instruction fetch transactions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF0",
         "EventName": "L2_TRANSACTIONS.IFETCH",
         "SampleAfterValue": "200000",
@@ -463,6 +727,10 @@
     },
     {
         "BriefDescription": "L1D writeback to L2 transactions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF0",
         "EventName": "L2_TRANSACTIONS.L1D_WB",
         "SampleAfterValue": "200000",
@@ -470,6 +738,10 @@
     },
     {
         "BriefDescription": "L2 Load transactions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF0",
         "EventName": "L2_TRANSACTIONS.LOAD",
         "SampleAfterValue": "200000",
@@ -477,6 +749,10 @@
     },
     {
         "BriefDescription": "L2 prefetch transactions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF0",
         "EventName": "L2_TRANSACTIONS.PREFETCH",
         "SampleAfterValue": "200000",
@@ -484,6 +760,10 @@
     },
     {
         "BriefDescription": "L2 RFO transactions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF0",
         "EventName": "L2_TRANSACTIONS.RFO",
         "SampleAfterValue": "200000",
@@ -491,6 +771,10 @@
     },
     {
         "BriefDescription": "L2 writeback to LLC transactions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF0",
         "EventName": "L2_TRANSACTIONS.WB",
         "SampleAfterValue": "200000",
@@ -498,6 +782,10 @@
     },
     {
         "BriefDescription": "L2 demand lock RFOs in E state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x27",
         "EventName": "L2_WRITE.LOCK.E_STATE",
         "SampleAfterValue": "100000",
@@ -505,6 +793,10 @@
     },
     {
         "BriefDescription": "All demand L2 lock RFOs that hit the cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x27",
         "EventName": "L2_WRITE.LOCK.HIT",
         "SampleAfterValue": "100000",
@@ -512,6 +804,10 @@
     },
     {
         "BriefDescription": "L2 demand lock RFOs in I state (misses)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x27",
         "EventName": "L2_WRITE.LOCK.I_STATE",
         "SampleAfterValue": "100000",
@@ -519,6 +815,10 @@
     },
     {
         "BriefDescription": "All demand L2 lock RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x27",
         "EventName": "L2_WRITE.LOCK.MESI",
         "SampleAfterValue": "100000",
@@ -526,6 +826,10 @@
     },
     {
         "BriefDescription": "L2 demand lock RFOs in M state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x27",
         "EventName": "L2_WRITE.LOCK.M_STATE",
         "SampleAfterValue": "100000",
@@ -533,6 +837,10 @@
     },
     {
         "BriefDescription": "L2 demand lock RFOs in S state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x27",
         "EventName": "L2_WRITE.LOCK.S_STATE",
         "SampleAfterValue": "100000",
@@ -540,6 +848,10 @@
     },
     {
         "BriefDescription": "All L2 demand store RFOs that hit the cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x27",
         "EventName": "L2_WRITE.RFO.HIT",
         "SampleAfterValue": "100000",
@@ -547,6 +859,10 @@
     },
     {
         "BriefDescription": "L2 demand store RFOs in I state (misses)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x27",
         "EventName": "L2_WRITE.RFO.I_STATE",
         "SampleAfterValue": "100000",
@@ -554,6 +870,10 @@
     },
     {
         "BriefDescription": "All L2 demand store RFOs",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x27",
         "EventName": "L2_WRITE.RFO.MESI",
         "SampleAfterValue": "100000",
@@ -561,6 +881,10 @@
     },
     {
         "BriefDescription": "L2 demand store RFOs in M state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x27",
         "EventName": "L2_WRITE.RFO.M_STATE",
         "SampleAfterValue": "100000",
@@ -568,6 +892,10 @@
     },
     {
         "BriefDescription": "L2 demand store RFOs in S state",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x27",
         "EventName": "L2_WRITE.RFO.S_STATE",
         "SampleAfterValue": "100000",
@@ -575,6 +903,10 @@
     },
     {
         "BriefDescription": "Longest latency cache miss",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "LONGEST_LAT_CACHE.MISS",
         "SampleAfterValue": "100000",
@@ -582,6 +914,10 @@
     },
     {
         "BriefDescription": "Longest latency cache reference",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "LONGEST_LAT_CACHE.REFERENCE",
         "SampleAfterValue": "200000",
@@ -589,15 +925,27 @@
     },
     {
         "BriefDescription": "Memory instructions retired above 0 clocks (Precise Event)",
+<<<<<<< HEAD
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_0",
         "MSRIndex": "0x3F6",
+=======
+        "Counter": "3",
+        "EventCode": "0xB",
+        "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_0",
+        "MSRIndex": "0x3F6",
+        "MSRValue": "0x0",
+>>>>>>> b7ba80a49124 (Commit)
         "PEBS": "2",
         "SampleAfterValue": "2000000",
         "UMask": "0x10"
     },
     {
         "BriefDescription": "Memory instructions retired above 1024 clocks (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_1024",
         "MSRIndex": "0x3F6",
@@ -608,6 +956,10 @@
     },
     {
         "BriefDescription": "Memory instructions retired above 128 clocks (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_128",
         "MSRIndex": "0x3F6",
@@ -618,6 +970,10 @@
     },
     {
         "BriefDescription": "Memory instructions retired above 16 clocks (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_16",
         "MSRIndex": "0x3F6",
@@ -628,6 +984,10 @@
     },
     {
         "BriefDescription": "Memory instructions retired above 16384 clocks (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_16384",
         "MSRIndex": "0x3F6",
@@ -638,6 +998,10 @@
     },
     {
         "BriefDescription": "Memory instructions retired above 2048 clocks (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_2048",
         "MSRIndex": "0x3F6",
@@ -648,6 +1012,10 @@
     },
     {
         "BriefDescription": "Memory instructions retired above 256 clocks (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_256",
         "MSRIndex": "0x3F6",
@@ -658,6 +1026,10 @@
     },
     {
         "BriefDescription": "Memory instructions retired above 32 clocks (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_32",
         "MSRIndex": "0x3F6",
@@ -668,6 +1040,10 @@
     },
     {
         "BriefDescription": "Memory instructions retired above 32768 clocks (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_32768",
         "MSRIndex": "0x3F6",
@@ -678,6 +1054,10 @@
     },
     {
         "BriefDescription": "Memory instructions retired above 4 clocks (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_4",
         "MSRIndex": "0x3F6",
@@ -688,6 +1068,10 @@
     },
     {
         "BriefDescription": "Memory instructions retired above 4096 clocks (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_4096",
         "MSRIndex": "0x3F6",
@@ -698,6 +1082,10 @@
     },
     {
         "BriefDescription": "Memory instructions retired above 512 clocks (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_512",
         "MSRIndex": "0x3F6",
@@ -708,6 +1096,10 @@
     },
     {
         "BriefDescription": "Memory instructions retired above 64 clocks (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_64",
         "MSRIndex": "0x3F6",
@@ -718,6 +1110,10 @@
     },
     {
         "BriefDescription": "Memory instructions retired above 8 clocks (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_8",
         "MSRIndex": "0x3F6",
@@ -728,6 +1124,10 @@
     },
     {
         "BriefDescription": "Memory instructions retired above 8192 clocks (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_8192",
         "MSRIndex": "0x3F6",
@@ -738,6 +1138,10 @@
     },
     {
         "BriefDescription": "Instructions retired which contains a load (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.LOADS",
         "PEBS": "1",
@@ -746,6 +1150,10 @@
     },
     {
         "BriefDescription": "Instructions retired which contains a store (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB",
         "EventName": "MEM_INST_RETIRED.STORES",
         "PEBS": "1",
@@ -754,6 +1162,10 @@
     },
     {
         "BriefDescription": "Retired loads that miss L1D and hit an previously allocated LFB (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xCB",
         "EventName": "MEM_LOAD_RETIRED.HIT_LFB",
         "PEBS": "1",
@@ -762,6 +1174,10 @@
     },
     {
         "BriefDescription": "Retired loads that hit the L1 data cache (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xCB",
         "EventName": "MEM_LOAD_RETIRED.L1D_HIT",
         "PEBS": "1",
@@ -770,6 +1186,10 @@
     },
     {
         "BriefDescription": "Retired loads that hit the L2 cache (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xCB",
         "EventName": "MEM_LOAD_RETIRED.L2_HIT",
         "PEBS": "1",
@@ -778,6 +1198,10 @@
     },
     {
         "BriefDescription": "Retired loads that miss the LLC cache (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xCB",
         "EventName": "MEM_LOAD_RETIRED.LLC_MISS",
         "PEBS": "1",
@@ -786,6 +1210,10 @@
     },
     {
         "BriefDescription": "Retired loads that hit valid versions in the LLC cache (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xCB",
         "EventName": "MEM_LOAD_RETIRED.LLC_UNSHARED_HIT",
         "PEBS": "1",
@@ -794,6 +1222,10 @@
     },
     {
         "BriefDescription": "Retired loads that hit sibling core's L2 in modified or unmodified states (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xCB",
         "EventName": "MEM_LOAD_RETIRED.OTHER_CORE_L2_HIT_HITM",
         "PEBS": "1",
@@ -802,6 +1234,10 @@
     },
     {
         "BriefDescription": "Offcore L1 data cache writebacks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB0",
         "EventName": "OFFCORE_REQUESTS.L1D_WRITEBACK",
         "SampleAfterValue": "100000",
@@ -809,6 +1245,10 @@
     },
     {
         "BriefDescription": "Offcore requests blocked due to Super Queue full",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB2",
         "EventName": "OFFCORE_REQUESTS_SQ_FULL",
         "SampleAfterValue": "100000",
@@ -816,1833 +1256,3461 @@
     },
     {
         "BriefDescription": "Offcore data reads satisfied by any cache or DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7F11",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "All offcore data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFF11",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads satisfied by the IO, CSR, MMIO unit",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8011",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads satisfied by the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x111",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads satisfied by the LLC and HIT in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.LLC_HIT_OTHER_CORE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x211",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads satisfied by the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x411",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads satisfied by the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x711",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads satisfied by the LLC or local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4711",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads satisfied by a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1811",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads satisfied by a remote cache or remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x3811",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1011",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x811",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code reads satisfied by any cache or DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7F44",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "All offcore code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFF44",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code reads satisfied by the IO, CSR, MMIO unit",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8044",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code reads satisfied by the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x144",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code reads satisfied by the LLC and HIT in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LLC_HIT_OTHER_CORE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x244",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code reads satisfied by the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x444",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code reads satisfied by the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x744",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code reads satisfied by the LLC or local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4744",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code reads satisfied by a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1844",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code reads satisfied by a remote cache or remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x3844",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code reads that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1044",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code reads that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x844",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore requests satisfied by any cache or DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7FFF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "All offcore requests",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFFFF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore requests satisfied by the IO, CSR, MMIO unit",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x80FF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore requests satisfied by the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1FF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore requests satisfied by the LLC and HIT in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LLC_HIT_OTHER_CORE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x2FF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore requests satisfied by the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4FF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore requests satisfied by the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7FF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore requests satisfied by the LLC or local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x47FF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore requests satisfied by a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x18FF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore requests satisfied by a remote cache or remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x38FF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore requests that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x10FF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore requests that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8FF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore RFO requests satisfied by any cache or DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7F22",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "All offcore RFO requests",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFF22",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore RFO requests satisfied by the IO, CSR, MMIO unit",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8022",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore RFO requests satisfied by the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore RFO requests satisfied by the LLC and HIT in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.LLC_HIT_OTHER_CORE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x222",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore RFO requests satisfied by the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x422",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore RFO requests satisfied by the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x722",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore RFO requests satisfied by the LLC or local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4722",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore RFO requests satisfied by a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1822",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore RFO requests satisfied by a remote cache or remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x3822",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore RFO requests that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1022",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore RFO requests that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x822",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore writebacks to any cache or DRAM.",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.COREWB.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7F08",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "All offcore writebacks",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.COREWB.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFF08",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore writebacks to the IO, CSR, MMIO unit.",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.COREWB.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore writebacks to the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.COREWB.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x108",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore writebacks to the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.COREWB.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x408",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore writebacks to the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.COREWB.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x708",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore writebacks to the LLC or local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.COREWB.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4708",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore writebacks to a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.COREWB.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1808",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore writebacks to a remote cache or remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.COREWB.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x3808",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore writebacks that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.COREWB.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore writebacks that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.COREWB.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x808",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code or data read requests satisfied by any cache or DRAM.",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7F77",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "All offcore code or data read requests",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFF77",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code or data read requests satisfied by the IO, CSR, MMIO unit.",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8077",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code or data read requests satisfied by the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x177",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code or data read requests satisfied by the LLC and HIT in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LLC_HIT_OTHER_CORE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x277",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code or data read requests satisfied by the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x477",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code or data read requests satisfied by the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x777",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code or data read requests satisfied by the LLC or local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4777",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code or data read requests satisfied by a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1877",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code or data read requests satisfied by a remote cache or remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x3877",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code or data read requests that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1077",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code or data read requests that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x877",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore request = all data, response = any cache_dram",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7F33",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore request = all data, response = any location",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFF33",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the IO, CSR, MMIO unit",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8033",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x133",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the LLC and HIT in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.LLC_HIT_OTHER_CORE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x233",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x433",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore request = all data, response = local cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x733",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore request = all data, response = local cache or dram",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4733",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore request = all data, response = remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1833",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore request = all data, response = remote cache or dram",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x3833",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads, RFOs, and prefetches that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1033",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads, RFOs, and prefetches that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x833",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data requests satisfied by any cache or DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7F03",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "All offcore demand data requests",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFF03",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data requests satisfied by the IO, CSR, MMIO unit.",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8003",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data requests satisfied by the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x103",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data requests satisfied by the LLC and HIT in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LLC_HIT_OTHER_CORE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x203",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data requests satisfied by the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x403",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data requests satisfied by the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x703",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data requests satisfied by the LLC or local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4703",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data requests satisfied by a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1803",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data requests satisfied by a remote cache or remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x3803",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data requests that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1003",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data requests that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x803",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data reads satisfied by any cache or DRAM.",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7F01",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "All offcore demand data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFF01",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data reads satisfied by the IO, CSR, MMIO unit",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data reads satisfied by the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x101",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data reads satisfied by the LLC and HIT in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_HIT_OTHER_CORE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x201",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data reads satisfied by the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x401",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data reads satisfied by the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x701",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data reads satisfied by the LLC or local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4701",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data reads satisfied by a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1801",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data reads satisfied by a remote cache or remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x3801",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data reads that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data reads that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x801",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand code reads satisfied by any cache or DRAM.",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7F04",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "All offcore demand code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFF04",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand code reads satisfied by the IO, CSR, MMIO unit",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand code reads satisfied by the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x104",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand code reads satisfied by the LLC and HIT in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LLC_HIT_OTHER_CORE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x204",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand code reads satisfied by the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x404",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand code reads satisfied by the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x704",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand code reads satisfied by the LLC or local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4704",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand code reads satisfied by a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1804",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand code reads satisfied by a remote cache or remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x3804",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand code reads that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand code reads that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x804",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand RFO requests satisfied by any cache or DRAM.",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7F02",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "All offcore demand RFO requests",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFF02",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand RFO requests satisfied by the IO, CSR, MMIO unit",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand RFO requests satisfied by the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x102",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand RFO requests satisfied by the LLC and HIT in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT_OTHER_CORE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x202",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand RFO requests satisfied by the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x402",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand RFO requests satisfied by the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x702",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand RFO requests satisfied by the LLC or local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4702",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand RFO requests satisfied by a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1802",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand RFO requests satisfied by a remote cache or remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x3802",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand RFO requests that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand RFO requests that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x802",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore other requests satisfied by any cache or DRAM.",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.OTHER.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7F80",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "All offcore other requests",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.OTHER.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFF80",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore other requests satisfied by the IO, CSR, MMIO unit",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.OTHER.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore other requests satisfied by the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.OTHER.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x180",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore other requests satisfied by the LLC and HIT in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.OTHER.LLC_HIT_OTHER_CORE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x280",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore other requests satisfied by the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.OTHER.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x480",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore other requests satisfied by the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.OTHER.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x780",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore other requests satisfied by the LLC or local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.OTHER.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4780",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore other requests satisfied by a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.OTHER.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1880",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore other requests satisfied by a remote cache or remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.OTHER.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x3880",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore other requests that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.OTHER.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore other requests that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.OTHER.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x880",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data requests satisfied by any cache or DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7F30",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "All offcore prefetch data requests",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFF30",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data requests satisfied by the IO, CSR, MMIO unit.",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8030",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data requests satisfied by the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x130",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data requests satisfied by the LLC and HIT in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.LLC_HIT_OTHER_CORE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x230",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data requests satisfied by the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x430",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data requests satisfied by the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x730",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data requests satisfied by the LLC or local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4730",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data requests satisfied by a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1830",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data requests satisfied by a remote cache or remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x3830",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data requests that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1030",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data requests that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x830",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data reads satisfied by any cache or DRAM.",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7F10",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "All offcore prefetch data reads",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFF10",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data reads satisfied by the IO, CSR, MMIO unit",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data reads satisfied by the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x110",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data reads satisfied by the LLC and HIT in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LLC_HIT_OTHER_CORE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x210",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data reads satisfied by the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x410",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data reads satisfied by the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x710",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data reads satisfied by the LLC or local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4710",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data reads satisfied by a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1810",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data reads satisfied by a remote cache or remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x3810",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data reads that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data reads that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x810",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch code reads satisfied by any cache or DRAM.",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7F40",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "All offcore prefetch code reads",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFF40",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch code reads satisfied by the IO, CSR, MMIO unit",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch code reads satisfied by the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x140",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch code reads satisfied by the LLC and HIT in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LLC_HIT_OTHER_CORE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x240",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch code reads satisfied by the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x440",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch code reads satisfied by the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x740",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch code reads satisfied by the LLC or local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4740",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch code reads satisfied by a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1840",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch code reads satisfied by a remote cache or remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x3840",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch code reads that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch code reads that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x840",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch RFO requests satisfied by any cache or DRAM.",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7F20",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "All offcore prefetch RFO requests",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFF20",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch RFO requests satisfied by the IO, CSR, MMIO unit",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch RFO requests satisfied by the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch RFO requests satisfied by the LLC and HIT in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.LLC_HIT_OTHER_CORE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x220",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch RFO requests satisfied by the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x420",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch RFO requests satisfied by the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x720",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch RFO requests satisfied by the LLC or local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4720",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch RFO requests satisfied by a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1820",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch RFO requests satisfied by a remote cache or remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x3820",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch RFO requests that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch RFO requests that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x820",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch requests satisfied by any cache or DRAM.",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.ANY_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x7F70",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "All offcore prefetch requests",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.ANY_LOCATION",
         "MSRIndex": "0x1A6",
         "MSRValue": "0xFF70",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch requests satisfied by the IO, CSR, MMIO unit",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.IO_CSR_MMIO",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x8070",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch requests satisfied by the LLC and not found in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.LLC_HIT_NO_OTHER_CORE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x170",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch requests satisfied by the LLC and HIT in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.LLC_HIT_OTHER_CORE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x270",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch requests satisfied by the LLC  and HITM in a sibling core",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.LLC_HIT_OTHER_CORE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x470",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch requests satisfied by the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.LOCAL_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x770",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch requests satisfied by the LLC or local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.LOCAL_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x4770",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch requests satisfied by a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.REMOTE_CACHE",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1870",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch requests satisfied by a remote cache or remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.REMOTE_CACHE_DRAM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x3870",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch requests that HIT in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.REMOTE_CACHE_HIT",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x1070",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch requests that HITM in a remote cache",
+<<<<<<< HEAD
+=======
+        "Counter": "2",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.REMOTE_CACHE_HITM",
         "MSRIndex": "0x1A6",
         "MSRValue": "0x870",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Super Queue lock splits across a cache line",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF4",
         "EventName": "SQ_MISC.SPLIT_LOCK",
         "SampleAfterValue": "2000000",
@@ -2650,6 +4718,10 @@
     },
     {
         "BriefDescription": "Loads delayed with at-Retirement block code",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x6",
         "EventName": "STORE_BLOCKS.AT_RET",
         "SampleAfterValue": "200000",
@@ -2657,6 +4729,10 @@
     },
     {
         "BriefDescription": "Cacheable loads delayed with L1D block code",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x6",
         "EventName": "STORE_BLOCKS.L1D_BLOCK",
         "SampleAfterValue": "200000",

@@ -2,9 +2,12 @@
 #ifndef LINUX_MMC_HSQ_H
 #define LINUX_MMC_HSQ_H
 
+<<<<<<< HEAD
 #define HSQ_NUM_SLOTS	64
 #define HSQ_INVALID_TAG	HSQ_NUM_SLOTS
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct hsq_slot {
 	struct mmc_request *mrq;
 };
@@ -20,8 +23,11 @@ struct mmc_hsq {
 	int next_tag;
 	int num_slots;
 	int qcnt;
+<<<<<<< HEAD
 	int tail_tag;
 	int tag_slot[HSQ_NUM_SLOTS];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	bool enabled;
 	bool waiting_for_idle;

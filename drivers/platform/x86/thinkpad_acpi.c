@@ -263,7 +263,12 @@ enum tpacpi_hkey_event_t {
 #define TPACPI_DBG_BRGHT	0x0020
 #define TPACPI_DBG_MIXER	0x0040
 
+<<<<<<< HEAD
 #define FAN_NOT_PRESENT		65535
+=======
+#define strlencmp(a, b) (strncmp((a), (b), strlen(b)))
+
+>>>>>>> b7ba80a49124 (Commit)
 
 /****************************************************************************
  * Driver-wide structs and misc. variables
@@ -1332,9 +1337,15 @@ static int tpacpi_rfk_procfs_write(const enum tpacpi_rfk_id id, char *buf)
 		return -ENODEV;
 
 	while ((cmd = strsep(&buf, ","))) {
+<<<<<<< HEAD
 		if (strstarts(cmd, "enable"))
 			status = TPACPI_RFK_RADIO_ON;
 		else if (strstarts(cmd, "disable"))
+=======
+		if (strlencmp(cmd, "enable") == 0)
+			status = TPACPI_RFK_RADIO_ON;
+		else if (strlencmp(cmd, "disable") == 0)
+>>>>>>> b7ba80a49124 (Commit)
 			status = TPACPI_RFK_RADIO_OFF;
 		else
 			return -EINVAL;
@@ -4195,12 +4206,21 @@ static int hotkey_write(char *buf)
 
 	res = 0;
 	while ((cmd = strsep(&buf, ","))) {
+<<<<<<< HEAD
 		if (strstarts(cmd, "enable")) {
 			hotkey_enabledisable_warn(1);
 		} else if (strstarts(cmd, "disable")) {
 			hotkey_enabledisable_warn(0);
 			res = -EPERM;
 		} else if (strstarts(cmd, "reset")) {
+=======
+		if (strlencmp(cmd, "enable") == 0) {
+			hotkey_enabledisable_warn(1);
+		} else if (strlencmp(cmd, "disable") == 0) {
+			hotkey_enabledisable_warn(0);
+			res = -EPERM;
+		} else if (strlencmp(cmd, "reset") == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 			mask = (hotkey_all_mask | hotkey_source_mask)
 				& ~hotkey_reserved_mask;
 		} else if (sscanf(cmd, "0x%x", &mask) == 1) {
@@ -4494,6 +4514,7 @@ static const struct dmi_system_id fwbug_list[] __initconst = {
 			DMI_MATCH(DMI_PRODUCT_NAME, "21A0"),
 		}
 	},
+<<<<<<< HEAD
 	{
 		.ident = "P14s Gen2 AMD",
 		.driver_data = &quirk_s2idle_bug,
@@ -4502,6 +4523,8 @@ static const struct dmi_system_id fwbug_list[] __initconst = {
 			DMI_MATCH(DMI_PRODUCT_NAME, "21A1"),
 		}
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 
@@ -5230,6 +5253,7 @@ static int video_write(char *buf)
 	disable = 0;
 
 	while ((cmd = strsep(&buf, ","))) {
+<<<<<<< HEAD
 		if (strstarts(cmd, "lcd_enable")) {
 			enable |= TP_ACPI_VIDEO_S_LCD;
 		} else if (strstarts(cmd, "lcd_disable")) {
@@ -5257,6 +5281,35 @@ static int video_write(char *buf)
 			if (res)
 				return res;
 		} else if (strstarts(cmd, "expand_toggle")) {
+=======
+		if (strlencmp(cmd, "lcd_enable") == 0) {
+			enable |= TP_ACPI_VIDEO_S_LCD;
+		} else if (strlencmp(cmd, "lcd_disable") == 0) {
+			disable |= TP_ACPI_VIDEO_S_LCD;
+		} else if (strlencmp(cmd, "crt_enable") == 0) {
+			enable |= TP_ACPI_VIDEO_S_CRT;
+		} else if (strlencmp(cmd, "crt_disable") == 0) {
+			disable |= TP_ACPI_VIDEO_S_CRT;
+		} else if (video_supported == TPACPI_VIDEO_NEW &&
+			   strlencmp(cmd, "dvi_enable") == 0) {
+			enable |= TP_ACPI_VIDEO_S_DVI;
+		} else if (video_supported == TPACPI_VIDEO_NEW &&
+			   strlencmp(cmd, "dvi_disable") == 0) {
+			disable |= TP_ACPI_VIDEO_S_DVI;
+		} else if (strlencmp(cmd, "auto_enable") == 0) {
+			res = video_autosw_set(1);
+			if (res)
+				return res;
+		} else if (strlencmp(cmd, "auto_disable") == 0) {
+			res = video_autosw_set(0);
+			if (res)
+				return res;
+		} else if (strlencmp(cmd, "video_switch") == 0) {
+			res = video_outputsw_cycle();
+			if (res)
+				return res;
+		} else if (strlencmp(cmd, "expand_toggle") == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 			res = video_expand_toggle();
 			if (res)
 				return res;
@@ -5563,13 +5616,20 @@ static int light_sysfs_set(struct led_classdev *led_cdev,
 
 static enum led_brightness light_sysfs_get(struct led_classdev *led_cdev)
 {
+<<<<<<< HEAD
 	return (light_get_status() == 1) ? LED_ON : LED_OFF;
+=======
+	return (light_get_status() == 1) ? LED_FULL : LED_OFF;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct tpacpi_led_classdev tpacpi_led_thinklight = {
 	.led_classdev = {
 		.name		= "tpacpi::thinklight",
+<<<<<<< HEAD
 		.max_brightness	= 1,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.brightness_set_blocking = &light_sysfs_set,
 		.brightness_get	= &light_sysfs_get,
 	}
@@ -5650,9 +5710,15 @@ static int light_write(char *buf)
 		return -ENODEV;
 
 	while ((cmd = strsep(&buf, ","))) {
+<<<<<<< HEAD
 		if (strstarts(cmd, "on")) {
 			newstatus = 1;
 		} else if (strstarts(cmd, "off")) {
+=======
+		if (strlencmp(cmd, "on") == 0) {
+			newstatus = 1;
+		} else if (strlencmp(cmd, "off") == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 			newstatus = 0;
 		} else
 			return -EINVAL;
@@ -7123,10 +7189,17 @@ static int brightness_write(char *buf)
 		return level;
 
 	while ((cmd = strsep(&buf, ","))) {
+<<<<<<< HEAD
 		if (strstarts(cmd, "up")) {
 			if (level < bright_maxlvl)
 				level++;
 		} else if (strstarts(cmd, "down")) {
+=======
+		if (strlencmp(cmd, "up") == 0) {
+			if (level < bright_maxlvl)
+				level++;
+		} else if (strlencmp(cmd, "down") == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (level > 0)
 				level--;
 		} else if (sscanf(cmd, "level %d", &level) == 1 &&
@@ -7875,13 +7948,21 @@ static int volume_write(char *buf)
 
 	while ((cmd = strsep(&buf, ","))) {
 		if (!tp_features.mixer_no_level_control) {
+<<<<<<< HEAD
 			if (strstarts(cmd, "up")) {
+=======
+			if (strlencmp(cmd, "up") == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 				if (new_mute)
 					new_mute = 0;
 				else if (new_level < TP_EC_VOLUME_MAX)
 					new_level++;
 				continue;
+<<<<<<< HEAD
 			} else if (strstarts(cmd, "down")) {
+=======
+			} else if (strlencmp(cmd, "down") == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 				if (new_mute)
 					new_mute = 0;
 				else if (new_level > 0)
@@ -7893,9 +7974,15 @@ static int volume_write(char *buf)
 				continue;
 			}
 		}
+<<<<<<< HEAD
 		if (strstarts(cmd, "mute"))
 			new_mute = TP_EC_AUDIO_MUTESW_MSK;
 		else if (strstarts(cmd, "unmute"))
+=======
+		if (strlencmp(cmd, "mute") == 0)
+			new_mute = TP_EC_AUDIO_MUTESW_MSK;
+		else if (strlencmp(cmd, "unmute") == 0)
+>>>>>>> b7ba80a49124 (Commit)
 			new_mute = 0;
 		else
 			return -EINVAL;
@@ -8884,7 +8971,11 @@ static int __init fan_init(struct ibm_init_struct *iibm)
 			/* Try and probe the 2nd fan */
 			tp_features.second_fan = 1; /* needed for get_speed to work */
 			res = fan2_get_speed(&speed);
+<<<<<<< HEAD
 			if (res >= 0 && speed != FAN_NOT_PRESENT) {
+=======
+			if (res >= 0) {
+>>>>>>> b7ba80a49124 (Commit)
 				/* It responded - so let's assume it's there */
 				tp_features.second_fan = 1;
 				tp_features.second_fan_ctl = 1;
@@ -9118,9 +9209,16 @@ static int fan_write_cmd_level(const char *cmd, int *rc)
 {
 	int level;
 
+<<<<<<< HEAD
 	if (strstarts(cmd, "level auto"))
 		level = TP_EC_FAN_AUTO;
 	else if (strstarts(cmd, "level disengaged") || strstarts(cmd, "level full-speed"))
+=======
+	if (strlencmp(cmd, "level auto") == 0)
+		level = TP_EC_FAN_AUTO;
+	else if ((strlencmp(cmd, "level disengaged") == 0) ||
+			(strlencmp(cmd, "level full-speed") == 0))
+>>>>>>> b7ba80a49124 (Commit)
 		level = TP_EC_FAN_FULLSPEED;
 	else if (sscanf(cmd, "level %d", &level) != 1)
 		return 0;
@@ -9138,7 +9236,11 @@ static int fan_write_cmd_level(const char *cmd, int *rc)
 
 static int fan_write_cmd_enable(const char *cmd, int *rc)
 {
+<<<<<<< HEAD
 	if (!strstarts(cmd, "enable"))
+=======
+	if (strlencmp(cmd, "enable") != 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	*rc = fan_set_enable();
@@ -9153,7 +9255,11 @@ static int fan_write_cmd_enable(const char *cmd, int *rc)
 
 static int fan_write_cmd_disable(const char *cmd, int *rc)
 {
+<<<<<<< HEAD
 	if (!strstarts(cmd, "disable"))
+=======
+	if (strlencmp(cmd, "disable") != 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	*rc = fan_set_disable();
@@ -9904,7 +10010,11 @@ ATTRIBUTE_GROUPS(tpacpi_battery);
 
 /* ACPI battery hooking */
 
+<<<<<<< HEAD
 static int tpacpi_battery_add(struct power_supply *battery, struct acpi_battery_hook *hook)
+=======
+static int tpacpi_battery_add(struct power_supply *battery)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int batteryid = tpacpi_battery_get_id(battery->desc->name);
 
@@ -9915,7 +10025,11 @@ static int tpacpi_battery_add(struct power_supply *battery, struct acpi_battery_
 	return 0;
 }
 
+<<<<<<< HEAD
 static int tpacpi_battery_remove(struct power_supply *battery, struct acpi_battery_hook *hook)
+=======
+static int tpacpi_battery_remove(struct power_supply *battery)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	device_remove_groups(&battery->dev, tpacpi_battery_groups);
 	return 0;
@@ -10311,11 +10425,17 @@ static DEFINE_MUTEX(dytc_mutex);
 static int dytc_capabilities;
 static bool dytc_mmc_get_available;
 
+<<<<<<< HEAD
 static int convert_dytc_to_profile(int funcmode, int dytcmode,
 		enum platform_profile_option *profile)
 {
 	switch (funcmode) {
 	case DYTC_FUNCTION_MMC:
+=======
+static int convert_dytc_to_profile(int dytcmode, enum platform_profile_option *profile)
+{
+	if (dytc_capabilities & BIT(DYTC_FC_MMC)) {
+>>>>>>> b7ba80a49124 (Commit)
 		switch (dytcmode) {
 		case DYTC_MODE_MMC_LOWPOWER:
 			*profile = PLATFORM_PROFILE_LOW_POWER;
@@ -10331,7 +10451,12 @@ static int convert_dytc_to_profile(int funcmode, int dytcmode,
 			return -EINVAL;
 		}
 		return 0;
+<<<<<<< HEAD
 	case DYTC_FUNCTION_PSC:
+=======
+	}
+	if (dytc_capabilities & BIT(DYTC_FC_PSC)) {
+>>>>>>> b7ba80a49124 (Commit)
 		switch (dytcmode) {
 		case DYTC_MODE_PSC_LOWPOWER:
 			*profile = PLATFORM_PROFILE_LOW_POWER;
@@ -10345,6 +10470,7 @@ static int convert_dytc_to_profile(int funcmode, int dytcmode,
 		default: /* Unknown mode */
 			return -EINVAL;
 		}
+<<<<<<< HEAD
 		return 0;
 	case DYTC_FUNCTION_AMT:
 		/* For now return balanced. It's the closest we have to 'auto' */
@@ -10353,6 +10479,8 @@ static int convert_dytc_to_profile(int funcmode, int dytcmode,
 	default:
 		/* Unknown function */
 		return -EOPNOTSUPP;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return 0;
 }
@@ -10496,11 +10624,19 @@ static int dytc_profile_set(struct platform_profile_handler *pprof,
 			if (err)
 				goto unlock;
 		}
+<<<<<<< HEAD
 	} else if (dytc_capabilities & BIT(DYTC_FC_PSC)) {
 		err = dytc_command(DYTC_SET_COMMAND(DYTC_FUNCTION_PSC, perfmode, 1), &output);
 		if (err)
 			goto unlock;
 
+=======
+	}
+	if (dytc_capabilities & BIT(DYTC_FC_PSC)) {
+		err = dytc_command(DYTC_SET_COMMAND(DYTC_FUNCTION_PSC, perfmode, 1), &output);
+		if (err)
+			goto unlock;
+>>>>>>> b7ba80a49124 (Commit)
 		/* system supports AMT, activate it when on balanced */
 		if (dytc_capabilities & BIT(DYTC_FC_AMT))
 			dytc_control_amt(profile == PLATFORM_PROFILE_BALANCED);
@@ -10516,7 +10652,11 @@ static void dytc_profile_refresh(void)
 {
 	enum platform_profile_option profile;
 	int output, err = 0;
+<<<<<<< HEAD
 	int perfmode, funcmode;
+=======
+	int perfmode;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&dytc_mutex);
 	if (dytc_capabilities & BIT(DYTC_FC_MMC)) {
@@ -10524,18 +10664,28 @@ static void dytc_profile_refresh(void)
 			err = dytc_command(DYTC_CMD_MMC_GET, &output);
 		else
 			err = dytc_cql_command(DYTC_CMD_GET, &output);
+<<<<<<< HEAD
 		funcmode = DYTC_FUNCTION_MMC;
 	} else if (dytc_capabilities & BIT(DYTC_FC_PSC)) {
 		err = dytc_command(DYTC_CMD_GET, &output);
 		/* Check if we are PSC mode, or have AMT enabled */
 		funcmode = (output >> DYTC_GET_FUNCTION_BIT) & 0xF;
 	}
+=======
+	} else if (dytc_capabilities & BIT(DYTC_FC_PSC))
+		err = dytc_command(DYTC_CMD_GET, &output);
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&dytc_mutex);
 	if (err)
 		return;
 
 	perfmode = (output >> DYTC_GET_MODE_BIT) & 0xF;
+<<<<<<< HEAD
 	convert_dytc_to_profile(funcmode, perfmode, &profile);
+=======
+	convert_dytc_to_profile(perfmode, &profile);
+>>>>>>> b7ba80a49124 (Commit)
 	if (profile != dytc_current_profile) {
 		dytc_current_profile = profile;
 		platform_profile_notify();
@@ -11734,7 +11884,11 @@ static int __init thinkpad_acpi_module_init(void)
 		tp_features.quirks = dmi_id->driver_data;
 
 	/* Device initialization */
+<<<<<<< HEAD
 	tpacpi_pdev = platform_device_register_simple(TPACPI_DRVR_NAME, PLATFORM_DEVID_NONE,
+=======
+	tpacpi_pdev = platform_device_register_simple(TPACPI_DRVR_NAME, -1,
+>>>>>>> b7ba80a49124 (Commit)
 							NULL, 0);
 	if (IS_ERR(tpacpi_pdev)) {
 		ret = PTR_ERR(tpacpi_pdev);
@@ -11745,7 +11899,11 @@ static int __init thinkpad_acpi_module_init(void)
 	}
 	tpacpi_sensors_pdev = platform_device_register_simple(
 						TPACPI_HWMON_DRVR_NAME,
+<<<<<<< HEAD
 						PLATFORM_DEVID_NONE, NULL, 0);
+=======
+						-1, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(tpacpi_sensors_pdev)) {
 		ret = PTR_ERR(tpacpi_sensors_pdev);
 		tpacpi_sensors_pdev = NULL;

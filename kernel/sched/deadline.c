@@ -644,8 +644,13 @@ static inline bool need_pull_dl_task(struct rq *rq, struct task_struct *prev)
 	return rq->online && dl_task(prev);
 }
 
+<<<<<<< HEAD
 static DEFINE_PER_CPU(struct balance_callback, dl_push_head);
 static DEFINE_PER_CPU(struct balance_callback, dl_pull_head);
+=======
+static DEFINE_PER_CPU(struct callback_head, dl_push_head);
+static DEFINE_PER_CPU(struct callback_head, dl_pull_head);
+>>>>>>> b7ba80a49124 (Commit)
 
 static void push_dl_tasks(struct rq *);
 static void pull_dl_task(struct rq *);
@@ -2485,7 +2490,12 @@ static void task_woken_dl(struct rq *rq, struct task_struct *p)
 }
 
 static void set_cpus_allowed_dl(struct task_struct *p,
+<<<<<<< HEAD
 				struct affinity_context *ctx)
+=======
+				const struct cpumask *new_mask,
+				u32 flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct root_domain *src_rd;
 	struct rq *rq;
@@ -2500,7 +2510,11 @@ static void set_cpus_allowed_dl(struct task_struct *p,
 	 * update. We already made space for us in the destination
 	 * domain (see cpuset_can_attach()).
 	 */
+<<<<<<< HEAD
 	if (!cpumask_intersects(src_rd->span, ctx->new_mask)) {
+=======
+	if (!cpumask_intersects(src_rd->span, new_mask)) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct dl_bw *src_dl_b;
 
 		src_dl_b = dl_bw_of(cpu_of(rq));
@@ -2514,7 +2528,11 @@ static void set_cpus_allowed_dl(struct task_struct *p,
 		raw_spin_unlock(&src_dl_b->lock);
 	}
 
+<<<<<<< HEAD
 	set_cpus_allowed_common(p, ctx);
+=======
+	set_cpus_allowed_common(p, new_mask, flags);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Assumes rq->lock is held */
@@ -2663,6 +2681,7 @@ static void switched_to_dl(struct rq *rq, struct task_struct *p)
 static void prio_changed_dl(struct rq *rq, struct task_struct *p,
 			    int oldprio)
 {
+<<<<<<< HEAD
 	if (!task_on_rq_queued(p))
 		return;
 
@@ -2677,6 +2696,19 @@ static void prio_changed_dl(struct rq *rq, struct task_struct *p,
 		deadline_queue_pull_task(rq);
 
 	if (task_current(rq, p)) {
+=======
+	if (task_on_rq_queued(p) || task_current(rq, p)) {
+#ifdef CONFIG_SMP
+		/*
+		 * This might be too much, but unfortunately
+		 * we don't have the old deadline value, and
+		 * we can't argue if the task is increasing
+		 * or lowering its prio, so...
+		 */
+		if (!rq->dl.overloaded)
+			deadline_queue_pull_task(rq);
+
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * If we now have a earlier deadline task than p,
 		 * then reschedule, provided p is still on this
@@ -2684,6 +2716,7 @@ static void prio_changed_dl(struct rq *rq, struct task_struct *p,
 		 */
 		if (dl_time_before(rq->dl.earliest_dl.curr, p->dl.deadline))
 			resched_curr(rq);
+<<<<<<< HEAD
 	} else {
 		/*
 		 * Current may not be deadline in case p was throttled but we
@@ -2711,6 +2744,19 @@ static int task_is_throttled_dl(struct task_struct *p, int cpu)
 }
 #endif
 
+=======
+#else
+		/*
+		 * Again, we don't know if p has a earlier
+		 * or later deadline, so let's blindly set a
+		 * (maybe not needed) rescheduling point.
+		 */
+		resched_curr(rq);
+#endif /* CONFIG_SMP */
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 DEFINE_SCHED_CLASS(dl) = {
 
 	.enqueue_task		= enqueue_task_dl,
@@ -2743,9 +2789,12 @@ DEFINE_SCHED_CLASS(dl) = {
 	.switched_to		= switched_to_dl,
 
 	.update_curr		= update_curr_dl,
+<<<<<<< HEAD
 #ifdef CONFIG_SCHED_CORE
 	.task_is_throttled	= task_is_throttled_dl,
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Used for dl_bw check and update, used under sched_rt_handler()::mutex */

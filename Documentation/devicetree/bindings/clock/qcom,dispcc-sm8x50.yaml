@@ -4,12 +4,17 @@
 $id: http://devicetree.org/schemas/clock/qcom,dispcc-sm8x50.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Qualcomm Display Clock & Reset Controller on SM8150/SM8250/SM8350
+=======
+title: Qualcomm Display Clock & Reset Controller Binding for SM8150/SM8250/SM8350
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Jonathan Marek <jonathan@marek.ca>
 
 description: |
+<<<<<<< HEAD
   Qualcomm display clock control module provides the clocks, resets and power
   domains on SM8150/SM8250/SM8350.
 
@@ -17,6 +22,15 @@ description: |
     include/dt-bindings/clock/qcom,dispcc-sm8150.h
     include/dt-bindings/clock/qcom,dispcc-sm8250.h
     include/dt-bindings/clock/qcom,dispcc-sm8350.h
+=======
+  Qualcomm display clock control module which supports the clocks, resets and
+  power domains on SM8150/SM8250/SM8350.
+
+  See also:
+    dt-bindings/clock/qcom,dispcc-sm8150.h
+    dt-bindings/clock/qcom,dispcc-sm8250.h
+    dt-bindings/clock/qcom,dispcc-sm8350.h
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

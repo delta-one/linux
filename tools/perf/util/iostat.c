@@ -48,7 +48,11 @@ __weak void iostat_print_counters(struct evlist *evlist __maybe_unused,
 				  struct perf_stat_config *config __maybe_unused,
 				  struct timespec *ts __maybe_unused,
 				  char *prefix __maybe_unused,
+<<<<<<< HEAD
 				  iostat_print_counter_t print_cnt_cb __maybe_unused,
 				  void *arg __maybe_unused)
+=======
+				  iostat_print_counter_t print_cnt_cb __maybe_unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }

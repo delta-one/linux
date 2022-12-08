@@ -112,13 +112,17 @@ static int resize_finish(struct rxe_queue *q, struct rxe_queue *new_q,
 			 unsigned int num_elem)
 {
 	enum queue_type type = q->type;
+<<<<<<< HEAD
 	u32 new_prod;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 prod;
 	u32 cons;
 
 	if (!queue_empty(q, q->type) && (num_elem < queue_count(q, type)))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	new_prod = queue_get_producer(new_q, type);
 	prod = queue_get_producer(q, type);
 	cons = queue_get_consumer(q, type);
@@ -131,6 +135,19 @@ static int resize_finish(struct rxe_queue *q, struct rxe_queue *new_q,
 	}
 
 	new_q->buf->producer_index = new_prod;
+=======
+	prod = queue_get_producer(new_q, type);
+	cons = queue_get_consumer(q, type);
+
+	while (!queue_empty(q, type)) {
+		memcpy(queue_addr_from_index(new_q, prod),
+		       queue_addr_from_index(q, cons), new_q->elem_size);
+		prod = queue_next_index(new_q, prod);
+		cons = queue_next_index(q, cons);
+	}
+
+	new_q->buf->producer_index = prod;
+>>>>>>> b7ba80a49124 (Commit)
 	q->buf->consumer_index = cons;
 
 	/* update private index copies */

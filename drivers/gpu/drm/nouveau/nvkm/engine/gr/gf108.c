@@ -125,13 +125,19 @@ gf108_gr = {
 	.init_419eb4 = gf100_gr_init_419eb4,
 	.init_tex_hww_esr = gf100_gr_init_tex_hww_esr,
 	.init_shader_exceptions = gf100_gr_init_shader_exceptions,
+<<<<<<< HEAD
 	.init_rop_exceptions = gf100_gr_init_rop_exceptions,
 	.init_exception2 = gf100_gr_init_exception2,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.init_400054 = gf100_gr_init_400054,
 	.trap_mp = gf100_gr_trap_mp,
 	.mmio = gf108_gr_pack_mmio,
 	.fecs.ucode = &gf100_gr_fecs_ucode,
+<<<<<<< HEAD
 	.fecs.reset = gf100_gr_fecs_reset,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.gpccs.ucode = &gf100_gr_gpccs_ucode,
 	.rops = gf100_gr_rops,
 	.grctx = &gf108_grctx,

@@ -1016,6 +1016,7 @@ static void smu8_reset_acp_boot_level(struct pp_hwmgr *hwmgr)
 	data->acp_boot_level = 0xff;
 }
 
+<<<<<<< HEAD
 static void smu8_populate_umdpstate_clocks(struct pp_hwmgr *hwmgr)
 {
 	struct phm_clock_voltage_dependency_table *table =
@@ -1028,6 +1029,8 @@ static void smu8_populate_umdpstate_clocks(struct pp_hwmgr *hwmgr)
 	hwmgr->pstate_mclk_peak = 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int smu8_enable_dpm_tasks(struct pp_hwmgr *hwmgr)
 {
 	smu8_program_voting_clients(hwmgr);
@@ -1036,8 +1039,11 @@ static int smu8_enable_dpm_tasks(struct pp_hwmgr *hwmgr)
 	smu8_program_bootup_state(hwmgr);
 	smu8_reset_acp_boot_level(hwmgr);
 
+<<<<<<< HEAD
 	smu8_populate_umdpstate_clocks(hwmgr);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1181,6 +1187,11 @@ static int smu8_phm_unforce_dpm_levels(struct pp_hwmgr *hwmgr)
 
 	data->sclk_dpm.soft_min_clk = table->entries[0].clk;
 	data->sclk_dpm.hard_min_clk = table->entries[0].clk;
+<<<<<<< HEAD
+=======
+	hwmgr->pstate_sclk = table->entries[0].clk;
+	hwmgr->pstate_mclk = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	level = smu8_get_max_sclk_level(hwmgr) - 1;
 

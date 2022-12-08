@@ -56,8 +56,12 @@ static int nft_fwd_netdev_init(const struct nft_ctx *ctx,
 				       sizeof(int));
 }
 
+<<<<<<< HEAD
 static int nft_fwd_netdev_dump(struct sk_buff *skb,
 			       const struct nft_expr *expr, bool reset)
+=======
+static int nft_fwd_netdev_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nft_fwd_netdev *priv = nft_expr_priv(expr);
 
@@ -187,8 +191,12 @@ static int nft_fwd_neigh_init(const struct nft_ctx *ctx,
 				       addr_len);
 }
 
+<<<<<<< HEAD
 static int nft_fwd_neigh_dump(struct sk_buff *skb,
 			      const struct nft_expr *expr, bool reset)
+=======
+static int nft_fwd_neigh_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nft_fwd_neigh *priv = nft_expr_priv(expr);
 

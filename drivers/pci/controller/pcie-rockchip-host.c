@@ -28,6 +28,10 @@
 #include <linux/of_device.h>
 #include <linux/of_pci.h>
 #include <linux/of_platform.h>
+<<<<<<< HEAD
+=======
+#include <linux/of_irq.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pci.h>
 #include <linux/pci_ids.h>
 #include <linux/phy/phy.h>

@@ -200,6 +200,7 @@ static irqreturn_t pseries_vas_fault_thread_fn(int irq, void *data)
 	struct vas_user_win_ref *tsk_ref;
 	int rc;
 
+<<<<<<< HEAD
 	while (atomic_read(&txwin->pending_faults)) {
 		rc = h_get_nx_fault(txwin->vas_win.winid, (u64)virt_to_phys(&crb));
 		if (!rc) {
@@ -208,12 +209,20 @@ static irqreturn_t pseries_vas_fault_thread_fn(int irq, void *data)
 			vas_update_csb(&crb, tsk_ref);
 		}
 		atomic_dec(&txwin->pending_faults);
+=======
+	rc = h_get_nx_fault(txwin->vas_win.winid, (u64)virt_to_phys(&crb));
+	if (!rc) {
+		tsk_ref = &txwin->vas_win.task_ref;
+		vas_dump_crb(&crb);
+		vas_update_csb(&crb, tsk_ref);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return IRQ_HANDLED;
 }
 
 /*
+<<<<<<< HEAD
  * irq_default_primary_handler() can be used only with IRQF_ONESHOT
  * which disables IRQ before executing the thread handler and enables
  * it after. But this disabling interrupt sets the VAS IRQ OFF
@@ -236,6 +245,8 @@ static irqreturn_t pseries_vas_irq_handler(int irq, void *data)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Allocate window and setup IRQ mapping.
  */
 static int allocate_setup_window(struct pseries_vas_window *txwin,
@@ -265,9 +276,14 @@ static int allocate_setup_window(struct pseries_vas_window *txwin,
 		goto out_irq;
 	}
 
+<<<<<<< HEAD
 	rc = request_threaded_irq(txwin->fault_virq,
 				  pseries_vas_irq_handler,
 				  pseries_vas_fault_thread_fn, 0,
+=======
+	rc = request_threaded_irq(txwin->fault_virq, NULL,
+				  pseries_vas_fault_thread_fn, IRQF_ONESHOT,
+>>>>>>> b7ba80a49124 (Commit)
 				  txwin->name, txwin);
 	if (rc) {
 		pr_err("VAS-Window[%d]: Request IRQ(%u) failed with %d\n",
@@ -359,7 +375,11 @@ static struct vas_window *vas_allocate_window(int vas_id, u64 flags,
 		 * So no unpacking needs to be done.
 		 */
 		rc = plpar_hcall9(H_HOME_NODE_ASSOCIATIVITY, domain,
+<<<<<<< HEAD
 				  VPHN_FLAG_VCPU, hard_smp_processor_id());
+=======
+				  VPHN_FLAG_VCPU, smp_processor_id());
+>>>>>>> b7ba80a49124 (Commit)
 		if (rc != H_SUCCESS) {
 			pr_err("H_HOME_NODE_ASSOCIATIVITY error: %d\n", rc);
 			goto out;
@@ -527,10 +547,21 @@ static const struct vas_user_win_ops vops_pseries = {
 int vas_register_api_pseries(struct module *mod, enum vas_cop_type cop_type,
 			     const char *name)
 {
+<<<<<<< HEAD
 	if (!copypaste_feat)
 		return -ENOTSUPP;
 
 	return vas_register_coproc_api(mod, cop_type, name, &vops_pseries);
+=======
+	int rc;
+
+	if (!copypaste_feat)
+		return -ENOTSUPP;
+
+	rc = vas_register_coproc_api(mod, cop_type, name, &vops_pseries);
+
+	return rc;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(vas_register_api_pseries);
 
@@ -760,7 +791,12 @@ static int reconfig_close_windows(struct vas_caps *vcap, int excess_creds,
 		 * is done before the original mmap() and after the ioctl.
 		 */
 		if (vma)
+<<<<<<< HEAD
 			zap_vma_pages(vma);
+=======
+			zap_page_range(vma, vma->vm_start,
+					vma->vm_end - vma->vm_start);
+>>>>>>> b7ba80a49124 (Commit)
 
 		mmap_write_unlock(task_ref->mm);
 		mutex_unlock(&task_ref->mmap_mutex);
@@ -851,6 +887,7 @@ int vas_reconfig_capabilties(u8 type, int new_nr_creds)
 	mutex_unlock(&vas_pseries_mutex);
 	return rc;
 }
+<<<<<<< HEAD
 
 int pseries_vas_dlpar_cpu(void)
 {
@@ -870,6 +907,8 @@ int pseries_vas_dlpar_cpu(void)
 	return rc;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Total number of default credits available (target_credits)
  * in LPAR depends on number of cores configured. It varies based on
@@ -884,6 +923,7 @@ static int pseries_vas_notifier(struct notifier_block *nb,
 	struct of_reconfig_data *rd = data;
 	struct device_node *dn = rd->dn;
 	const __be32 *intserv = NULL;
+<<<<<<< HEAD
 	int len;
 
 	/*
@@ -893,6 +933,9 @@ static int pseries_vas_notifier(struct notifier_block *nb,
 	 */
 	if (is_shared_processor())
 		return NOTIFY_OK;
+=======
+	int new_nr_creds, len, rc = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if ((action == OF_RECONFIG_ATTACH_NODE) ||
 		(action == OF_RECONFIG_DETACH_NODE))
@@ -904,7 +947,23 @@ static int pseries_vas_notifier(struct notifier_block *nb,
 	if (!intserv)
 		return NOTIFY_OK;
 
+<<<<<<< HEAD
 	return pseries_vas_dlpar_cpu();
+=======
+	rc = h_query_vas_capabilities(H_QUERY_VAS_CAPABILITIES,
+					vascaps[VAS_GZIP_DEF_FEAT_TYPE].feat,
+					(u64)virt_to_phys(&hv_cop_caps));
+	if (!rc) {
+		new_nr_creds = be16_to_cpu(hv_cop_caps.target_lpar_creds);
+		rc = vas_reconfig_capabilties(VAS_GZIP_DEF_FEAT_TYPE,
+						new_nr_creds);
+	}
+
+	if (rc)
+		pr_err("Failed reconfig VAS capabilities with DLPAR\n");
+
+	return rc;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct notifier_block pseries_vas_nb = {

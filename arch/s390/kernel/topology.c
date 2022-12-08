@@ -637,16 +637,32 @@ static struct ctl_table topology_ctl_table[] = {
 	{ },
 };
 
+<<<<<<< HEAD
 static int __init topology_init(void)
 {
 	struct device *dev_root;
 	int rc = 0;
 
+=======
+static struct ctl_table topology_dir_table[] = {
+	{
+		.procname	= "s390",
+		.maxlen		= 0,
+		.mode		= 0555,
+		.child		= topology_ctl_table,
+	},
+	{ },
+};
+
+static int __init topology_init(void)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	timer_setup(&topology_timer, topology_timer_fn, TIMER_DEFERRABLE);
 	if (MACHINE_HAS_TOPOLOGY)
 		set_topology_timer();
 	else
 		topology_update_polarization_simple();
+<<<<<<< HEAD
 	register_sysctl("s390", topology_ctl_table);
 
 	dev_root = bus_get_dev_root(&cpu_subsys);
@@ -655,5 +671,9 @@ static int __init topology_init(void)
 		put_device(dev_root);
 	}
 	return rc;
+=======
+	register_sysctl_table(topology_dir_table);
+	return device_create_file(cpu_subsys.dev_root, &dev_attr_dispatching);
+>>>>>>> b7ba80a49124 (Commit)
 }
 device_initcall(topology_init);

@@ -6,11 +6,15 @@
 #include <linux/bitops.h>
 #include <linux/magic.h>
 
+<<<<<<< HEAD
 /*
  * Even UDF 2.6 media should have version <= 0x250 but apparently there are
  * some broken filesystems with version set to 0x260. Accommodate those.
  */
 #define UDF_MAX_READ_VERSION		0x0260
+=======
+#define UDF_MAX_READ_VERSION		0x0250
+>>>>>>> b7ba80a49124 (Commit)
 #define UDF_MAX_WRITE_VERSION		0x0201
 
 #define UDF_FLAG_USE_EXTENDED_FE	0
@@ -23,6 +27,10 @@
 #define UDF_FLAG_STRICT			5
 #define UDF_FLAG_UNDELETE		6
 #define UDF_FLAG_UNHIDE			7
+<<<<<<< HEAD
+=======
+#define UDF_FLAG_VARCONV		8
+>>>>>>> b7ba80a49124 (Commit)
 #define UDF_FLAG_UID_FORGET     11    /* save -1 for uid to disk */
 #define UDF_FLAG_GID_FORGET     12
 #define UDF_FLAG_UID_SET	13
@@ -54,8 +62,11 @@
 #define MF_DUPLICATE_MD		0x01
 #define MF_MIRROR_FE_LOADED	0x02
 
+<<<<<<< HEAD
 #define EFSCORRUPTED EUCLEAN
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct udf_meta_data {
 	__u32	s_meta_file_loc;
 	__u32	s_mirror_file_loc;

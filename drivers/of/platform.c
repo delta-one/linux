@@ -115,14 +115,23 @@ struct platform_device *of_device_alloc(struct device_node *np,
 {
 	struct platform_device *dev;
 	int rc, i, num_reg = 0;
+<<<<<<< HEAD
 	struct resource *res;
+=======
+	struct resource *res, temp_res;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev = platform_device_alloc("", PLATFORM_DEVID_NONE);
 	if (!dev)
 		return NULL;
 
 	/* count the io resources */
+<<<<<<< HEAD
 	num_reg = of_address_count(np);
+=======
+	while (of_address_to_resource(np, num_reg, &temp_res) == 0)
+		num_reg++;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Populate the resource table */
 	if (num_reg) {
@@ -222,6 +231,10 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
 						 struct device *parent)
 {
 	struct amba_device *dev;
+<<<<<<< HEAD
+=======
+	const void *prop;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	pr_debug("Creating amba device %pOF\n", node);
@@ -249,7 +262,13 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
 		of_device_make_bus_id(&dev->dev);
 
 	/* Allow the HW Peripheral ID to be overridden */
+<<<<<<< HEAD
 	of_property_read_u32(node, "arm,primecell-periphid", &dev->periphid);
+=======
+	prop = of_get_property(node, "arm,primecell-periphid", NULL);
+	if (prop)
+		dev->periphid = of_read_ulong(prop, 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = of_address_to_resource(node, 0, &dev->res);
 	if (ret) {
@@ -522,11 +541,18 @@ static int __init of_platform_default_populate_init(void)
 	if (IS_ENABLED(CONFIG_PPC)) {
 		struct device_node *boot_display = NULL;
 		struct platform_device *dev;
+<<<<<<< HEAD
 		int display_number = 0;
 		int ret;
 
 		/* Check if we have a MacOS display without a node spec */
 		if (of_property_present(of_chosen, "linux,bootx-noscreen")) {
+=======
+		int ret;
+
+		/* Check if we have a MacOS display without a node spec */
+		if (of_get_property(of_chosen, "linux,bootx-noscreen", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 			/*
 			 * The old code tried to work out which node was the MacOS
 			 * display based on the address. I'm dropping that since the
@@ -553,6 +579,7 @@ static int __init of_platform_default_populate_init(void)
 			if (!of_get_property(node, "linux,opened", NULL) ||
 			    !of_get_property(node, "linux,boot-display", NULL))
 				continue;
+<<<<<<< HEAD
 			dev = of_platform_device_create(node, "of-display.0", NULL);
 			of_node_put(node);
 			if (WARN_ON(!dev))
@@ -570,6 +597,18 @@ static int __init of_platform_default_populate_init(void)
 			ret = snprintf(buf, sizeof(buf), of_display_format, display_number++);
 			if (ret < sizeof(buf))
 				of_platform_device_create(node, buf, NULL);
+=======
+			dev = of_platform_device_create(node, "of-display", NULL);
+			if (WARN_ON(!dev))
+				return -ENOMEM;
+			boot_display = node;
+			break;
+		}
+		for_each_node_by_type(node, "display") {
+			if (!of_get_property(node, "linux,opened", NULL) || node == boot_display)
+				continue;
+			of_platform_device_create(node, "of-display", NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 	} else {

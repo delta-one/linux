@@ -43,6 +43,7 @@
 
 static struct proc_dir_entry *proc_scsi;
 
+<<<<<<< HEAD
 /* Protects scsi_proc_list */
 static DEFINE_MUTEX(global_host_template_mutex);
 static LIST_HEAD(scsi_proc_list);
@@ -60,6 +61,10 @@ struct scsi_proc_entry {
 	struct proc_dir_entry	*proc_dir;
 	unsigned int		present;
 };
+=======
+/* Protect sht->present and sht->proc_dir */
+static DEFINE_MUTEX(global_host_template_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 static ssize_t proc_scsi_host_write(struct file *file, const char __user *buf,
                            size_t count, loff_t *ppos)
@@ -98,6 +103,7 @@ static int proc_scsi_host_open(struct inode *inode, struct file *file)
 				4 * PAGE_SIZE);
 }
 
+<<<<<<< HEAD
 static struct scsi_proc_entry *
 __scsi_lookup_proc_entry(const struct scsi_host_template *sht)
 {
@@ -137,6 +143,8 @@ scsi_template_proc_dir(const struct scsi_host_template *sht)
 }
 EXPORT_SYMBOL_GPL(scsi_template_proc_dir);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct proc_ops proc_scsi_ops = {
 	.proc_open	= proc_scsi_host_open,
 	.proc_release	= single_release,
@@ -151,6 +159,7 @@ static const struct proc_ops proc_scsi_ops = {
  *
  * Sets sht->proc_dir to the new directory.
  */
+<<<<<<< HEAD
 int scsi_proc_hostdir_add(const struct scsi_host_template *sht)
 {
 	struct scsi_proc_entry *e;
@@ -187,25 +196,52 @@ unlock:
 
 	kfree(e);
 	return ret;
+=======
+
+void scsi_proc_hostdir_add(struct scsi_host_template *sht)
+{
+	if (!sht->show_info)
+		return;
+
+	mutex_lock(&global_host_template_mutex);
+	if (!sht->present++) {
+		sht->proc_dir = proc_mkdir(sht->proc_name, proc_scsi);
+        	if (!sht->proc_dir)
+			printk(KERN_ERR "%s: proc_mkdir failed for %s\n",
+			       __func__, sht->proc_name);
+	}
+	mutex_unlock(&global_host_template_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
  * scsi_proc_hostdir_rm - remove directory in /proc for a scsi host
  * @sht: owner of directory
  */
+<<<<<<< HEAD
 void scsi_proc_hostdir_rm(const struct scsi_host_template *sht)
 {
 	struct scsi_proc_entry *e;
 
+=======
+void scsi_proc_hostdir_rm(struct scsi_host_template *sht)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	if (!sht->show_info)
 		return;
 
 	mutex_lock(&global_host_template_mutex);
+<<<<<<< HEAD
 	e = __scsi_lookup_proc_entry(sht);
 	if (e && !--e->present) {
 		remove_proc_entry(sht->proc_name, proc_scsi);
 		list_del(&e->entry);
 		kfree(e);
+=======
+	if (!--sht->present && sht->proc_dir) {
+		remove_proc_entry(sht->proc_name, proc_scsi);
+		sht->proc_dir = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	mutex_unlock(&global_host_template_mutex);
 }
@@ -217,6 +253,7 @@ void scsi_proc_hostdir_rm(const struct scsi_host_template *sht)
  */
 void scsi_proc_host_add(struct Scsi_Host *shost)
 {
+<<<<<<< HEAD
 	const struct scsi_host_template *sht = shost->hostt;
 	struct scsi_proc_entry *e;
 	struct proc_dir_entry *p;
@@ -240,6 +277,22 @@ err:
 	shost_printk(KERN_ERR, shost,
 		     "%s: Failed to register host (%s failed)\n", __func__,
 		     e ? "proc_create_data()" : "scsi_proc_hostdir_add()");
+=======
+	struct scsi_host_template *sht = shost->hostt;
+	struct proc_dir_entry *p;
+	char name[10];
+
+	if (!sht->proc_dir)
+		return;
+
+	sprintf(name,"%d", shost->host_no);
+	p = proc_create_data(name, S_IRUGO | S_IWUSR,
+		sht->proc_dir, &proc_scsi_ops, shost);
+	if (!p)
+		printk(KERN_ERR "%s: Failed to register host %d in"
+		       "%s\n", __func__, shost->host_no,
+		       sht->proc_name);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -248,6 +301,7 @@ err:
  */
 void scsi_proc_host_rm(struct Scsi_Host *shost)
 {
+<<<<<<< HEAD
 	const struct scsi_host_template *sht = shost->hostt;
 	struct scsi_proc_entry *e;
 	char name[10];
@@ -261,6 +315,15 @@ void scsi_proc_host_rm(struct Scsi_Host *shost)
 
 	sprintf(name,"%d", shost->host_no);
 	remove_proc_entry(name, e->proc_dir);
+=======
+	char name[10];
+
+	if (!shost->hostt->proc_dir)
+		return;
+
+	sprintf(name,"%d", shost->host_no);
+	remove_proc_entry(name, shost->hostt->proc_dir);
+>>>>>>> b7ba80a49124 (Commit)
 }
 /**
  * proc_print_scsidevice - return data about this host

@@ -186,6 +186,7 @@ static void rtw89_pci_ctrl_txdma_ch_pcie(struct rtw89_dev *rtwdev, bool enable)
 	}
 }
 
+<<<<<<< HEAD
 static void rtw89_pci_ctrl_txdma_fw_ch_pcie(struct rtw89_dev *rtwdev, bool enable)
 {
 	const struct rtw89_pci_info *info = rtwdev->pci_info;
@@ -197,6 +198,8 @@ static void rtw89_pci_ctrl_txdma_fw_ch_pcie(struct rtw89_dev *rtwdev, bool enabl
 		rtw89_write32_set(rtwdev, dma_stop1->addr, B_AX_STOP_CH12);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool
 rtw89_skb_put_rx_data(struct rtw89_dev *rtwdev, bool fs, bool ls,
 		      struct sk_buff *new,
@@ -267,7 +270,11 @@ static u32 rtw89_pci_rxbd_deliver_skbs(struct rtw89_dev *rtwdev,
 
 		rtw89_core_query_rxdesc(rtwdev, desc_info, skb->data, rxinfo_size);
 
+<<<<<<< HEAD
 		new = rtw89_alloc_skb_for_rx(rtwdev, desc_info->pkt_size);
+=======
+		new = dev_alloc_skb(desc_info->pkt_size);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!new)
 			goto err_sync_device;
 
@@ -971,10 +978,15 @@ static u32 __rtw89_pci_check_and_reclaim_tx_resource(struct rtw89_dev *rtwdev,
 	struct rtw89_pci *rtwpci = (struct rtw89_pci *)rtwdev->priv;
 	struct rtw89_pci_tx_ring *tx_ring = &rtwpci->tx_rings[txch];
 	struct rtw89_pci_tx_wd_ring *wd_ring = &tx_ring->wd_ring;
+<<<<<<< HEAD
 	const struct rtw89_chip_info *chip = rtwdev->chip;
 	u32 bd_cnt, wd_cnt, min_cnt = 0;
 	struct rtw89_pci_rx_ring *rx_ring;
 	enum rtw89_debug_mask debug_mask;
+=======
+	u32 bd_cnt, wd_cnt, min_cnt = 0;
+	struct rtw89_pci_rx_ring *rx_ring;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 cnt;
 
 	rx_ring = &rtwpci->rx_rings[RTW89_RXCH_RPQ];
@@ -998,6 +1010,7 @@ static u32 __rtw89_pci_check_and_reclaim_tx_resource(struct rtw89_dev *rtwdev,
 	bd_cnt = rtw89_pci_get_avail_txbd_num(tx_ring);
 	wd_cnt = wd_ring->curr_num;
 	min_cnt = min(bd_cnt, wd_cnt);
+<<<<<<< HEAD
 	if (min_cnt == 0) {
 		/* This message can be frequently shown in low power mode or
 		 * high traffic with 8852B, and we have recognized it as normal
@@ -1012,6 +1025,12 @@ static u32 __rtw89_pci_check_and_reclaim_tx_resource(struct rtw89_dev *rtwdev,
 			    "still no tx resource after reclaim: wd_cnt=%d bd_cnt=%d\n",
 			    wd_cnt, bd_cnt);
 	}
+=======
+	if (min_cnt == 0)
+		rtw89_debug(rtwdev, rtwpci->low_power ? RTW89_DBG_TXRX : RTW89_DBG_UNEXP,
+			    "still no tx resource after reclaim: wd_cnt=%d bd_cnt=%d\n",
+			    wd_cnt, bd_cnt);
+>>>>>>> b7ba80a49124 (Commit)
 
 out_unlock:
 	spin_unlock_bh(&rtwpci->trx_lock);
@@ -1116,15 +1135,21 @@ static void __pci_flush_txch(struct rtw89_dev *rtwdev, u8 txch, bool drop)
 static void __rtw89_pci_ops_flush_txchs(struct rtw89_dev *rtwdev, u32 txchs,
 					bool drop)
 {
+<<<<<<< HEAD
 	const struct rtw89_pci_info *info = rtwdev->pci_info;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8 i;
 
 	for (i = 0; i < RTW89_TXCH_NUM; i++) {
 		/* It may be unnecessary to flush FWCMD queue. */
 		if (i == RTW89_TXCH_CH12)
 			continue;
+<<<<<<< HEAD
 		if (info->tx_dma_ch_mask & BIT(i))
 			continue;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (txchs & BIT(i))
 			__pci_flush_txch(rtwdev, i, drop);
@@ -1384,7 +1409,11 @@ static int rtw89_pci_ops_tx_write(struct rtw89_dev *rtwdev, struct rtw89_core_tx
 	return 0;
 }
 
+<<<<<<< HEAD
 const struct rtw89_pci_bd_ram rtw89_bd_ram_table_dual[RTW89_TXCH_NUM] = {
+=======
+static const struct rtw89_pci_bd_ram bd_ram_table[RTW89_TXCH_NUM] = {
+>>>>>>> b7ba80a49124 (Commit)
 	[RTW89_TXCH_ACH0] = {.start_idx = 0,  .max_num = 5, .min_num = 2},
 	[RTW89_TXCH_ACH1] = {.start_idx = 5,  .max_num = 5, .min_num = 2},
 	[RTW89_TXCH_ACH2] = {.start_idx = 10, .max_num = 5, .min_num = 2},
@@ -1399,6 +1428,7 @@ const struct rtw89_pci_bd_ram rtw89_bd_ram_table_dual[RTW89_TXCH_NUM] = {
 	[RTW89_TXCH_CH11] = {.start_idx = 55, .max_num = 5, .min_num = 1},
 	[RTW89_TXCH_CH12] = {.start_idx = 60, .max_num = 4, .min_num = 1},
 };
+<<<<<<< HEAD
 EXPORT_SYMBOL(rtw89_bd_ram_table_dual);
 
 const struct rtw89_pci_bd_ram rtw89_bd_ram_table_single[RTW89_TXCH_NUM] = {
@@ -1411,12 +1441,17 @@ const struct rtw89_pci_bd_ram rtw89_bd_ram_table_single[RTW89_TXCH_NUM] = {
 	[RTW89_TXCH_CH12] = {.start_idx = 28, .max_num = 4, .min_num = 1},
 };
 EXPORT_SYMBOL(rtw89_bd_ram_table_single);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void rtw89_pci_reset_trx_rings(struct rtw89_dev *rtwdev)
 {
 	struct rtw89_pci *rtwpci = (struct rtw89_pci *)rtwdev->priv;
+<<<<<<< HEAD
 	const struct rtw89_pci_info *info = rtwdev->pci_info;
 	const struct rtw89_pci_bd_ram *bd_ram_table = *info->bd_ram_table;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct rtw89_pci_tx_ring *tx_ring;
 	struct rtw89_pci_rx_ring *rx_ring;
 	struct rtw89_pci_dma_ring *bd_ring;
@@ -1428,9 +1463,12 @@ static void rtw89_pci_reset_trx_rings(struct rtw89_dev *rtwdev)
 	int i;
 
 	for (i = 0; i < RTW89_TXCH_NUM; i++) {
+<<<<<<< HEAD
 		if (info->tx_dma_ch_mask & BIT(i))
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		tx_ring = &rtwpci->tx_rings[i];
 		bd_ring = &tx_ring->bd_ring;
 		bd_ram = &bd_ram_table[i];
@@ -1474,15 +1512,21 @@ static void rtw89_pci_release_tx_ring(struct rtw89_dev *rtwdev,
 static void rtw89_pci_ops_reset(struct rtw89_dev *rtwdev)
 {
 	struct rtw89_pci *rtwpci = (struct rtw89_pci *)rtwdev->priv;
+<<<<<<< HEAD
 	const struct rtw89_pci_info *info = rtwdev->pci_info;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int txch;
 
 	rtw89_pci_reset_trx_rings(rtwdev);
 
 	spin_lock_bh(&rtwpci->trx_lock);
 	for (txch = 0; txch < RTW89_TXCH_NUM; txch++) {
+<<<<<<< HEAD
 		if (info->tx_dma_ch_mask & BIT(txch))
 			continue;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (txch == RTW89_TXCH_CH12) {
 			rtw89_pci_release_fwcmd(rtwdev, rtwpci,
 						skb_queue_len(&rtwpci->h2c_queue), true);
@@ -1910,6 +1954,7 @@ __get_target(struct rtw89_dev *rtwdev, u16 *target, enum rtw89_pcie_phy phy_rate
 	return 0;
 }
 
+<<<<<<< HEAD
 static int rtw89_pci_autok_x(struct rtw89_dev *rtwdev)
 {
 	int ret;
@@ -1922,6 +1967,8 @@ static int rtw89_pci_autok_x(struct rtw89_dev *rtwdev)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int rtw89_pci_auto_refclk_cal(struct rtw89_dev *rtwdev, bool autook_en)
 {
 	enum rtw89_pcie_phy phy_rate;
@@ -2135,7 +2182,11 @@ static u32 rtw89_pci_l2_rxen_lat(struct rtw89_dev *rtwdev)
 
 static void rtw89_pci_aphy_pwrcut(struct rtw89_dev *rtwdev)
 {
+<<<<<<< HEAD
 	if (rtwdev->chip->chip_id != RTL8852A && rtwdev->chip->chip_id != RTL8852B)
+=======
+	if (rtwdev->chip->chip_id != RTL8852A)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	rtw89_write32_clr(rtwdev, R_AX_SYS_PW_CTRL, B_AX_PSUS_OFF_CAPC_EN);
@@ -2320,19 +2371,32 @@ static int rtw89_poll_txdma_ch_idle_pcie(struct rtw89_dev *rtwdev)
 {
 	const struct rtw89_pci_info *info = rtwdev->pci_info;
 	u32 ret, check, dma_busy;
+<<<<<<< HEAD
 	u32 dma_busy1 = info->dma_busy1.addr;
 	u32 dma_busy2 = info->dma_busy2_reg;
 
 	check = info->dma_busy1.mask;
+=======
+	u32 dma_busy1 = info->dma_busy1_reg;
+	u32 dma_busy2 = info->dma_busy2_reg;
+
+	check = B_AX_ACH0_BUSY | B_AX_ACH1_BUSY | B_AX_ACH2_BUSY |
+		B_AX_ACH3_BUSY | B_AX_ACH4_BUSY | B_AX_ACH5_BUSY |
+		B_AX_ACH6_BUSY | B_AX_ACH7_BUSY | B_AX_CH8_BUSY |
+		B_AX_CH9_BUSY | B_AX_CH12_BUSY;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = read_poll_timeout(rtw89_read32, dma_busy, (dma_busy & check) == 0,
 				10, 100, false, rtwdev, dma_busy1);
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (!dma_busy2)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	check = B_AX_CH10_BUSY | B_AX_CH11_BUSY;
 
 	ret = read_poll_timeout(rtw89_read32, dma_busy, (dma_busy & check) == 0,
@@ -2500,12 +2564,15 @@ static int rtw89_pci_ops_mac_pre_init(struct rtw89_dev *rtwdev)
 	rtw89_pci_hci_ldo(rtwdev);
 	rtw89_pci_dphy_delay(rtwdev);
 
+<<<<<<< HEAD
 	ret = rtw89_pci_autok_x(rtwdev);
 	if (ret) {
 		rtw89_err(rtwdev, "[ERR] pcie autok_x fail %d\n", ret);
 		return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = rtw89_pci_auto_refclk_cal(rtwdev, false);
 	if (ret) {
 		rtw89_err(rtwdev, "[ERR] pcie autok fail %d\n", ret);
@@ -2549,7 +2616,11 @@ static int rtw89_pci_ops_mac_pre_init(struct rtw89_dev *rtwdev)
 
 	/* disable all channels except to FW CMD channel to download firmware */
 	rtw89_pci_ctrl_txdma_ch_pcie(rtwdev, false);
+<<<<<<< HEAD
 	rtw89_pci_ctrl_txdma_fw_ch_pcie(rtwdev, true);
+=======
+	rtw89_write32_clr(rtwdev, info->dma_stop1.addr, B_AX_STOP_CH12);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* start DMA activities */
 	rtw89_pci_ctrl_dma_all(rtwdev, true);
@@ -2786,13 +2857,19 @@ static void rtw89_pci_free_tx_rings(struct rtw89_dev *rtwdev,
 				    struct pci_dev *pdev)
 {
 	struct rtw89_pci *rtwpci = (struct rtw89_pci *)rtwdev->priv;
+<<<<<<< HEAD
 	const struct rtw89_pci_info *info = rtwdev->pci_info;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct rtw89_pci_tx_ring *tx_ring;
 	int i;
 
 	for (i = 0; i < RTW89_TXCH_NUM; i++) {
+<<<<<<< HEAD
 		if (info->tx_dma_ch_mask & BIT(i))
 			continue;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		tx_ring = &rtwpci->tx_rings[i];
 		rtw89_pci_free_tx_wd_ring(rtwdev, pdev, tx_ring);
 		rtw89_pci_free_tx_ring(rtwdev, pdev, tx_ring);
@@ -2980,7 +3057,10 @@ static int rtw89_pci_alloc_tx_rings(struct rtw89_dev *rtwdev,
 				    struct pci_dev *pdev)
 {
 	struct rtw89_pci *rtwpci = (struct rtw89_pci *)rtwdev->priv;
+<<<<<<< HEAD
 	const struct rtw89_pci_info *info = rtwdev->pci_info;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct rtw89_pci_tx_ring *tx_ring;
 	u32 desc_size;
 	u32 len;
@@ -2988,8 +3068,11 @@ static int rtw89_pci_alloc_tx_rings(struct rtw89_dev *rtwdev,
 	int ret;
 
 	for (i = 0; i < RTW89_TXCH_NUM; i++) {
+<<<<<<< HEAD
 		if (info->tx_dma_ch_mask & BIT(i))
 			continue;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		tx_ring = &rtwpci->tx_rings[i];
 		desc_size = sizeof(struct rtw89_pci_tx_bd_32);
 		len = RTW89_PCI_TXBD_NUM_MAX;
@@ -3398,7 +3481,11 @@ static void rtw89_pci_clkreq_set(struct rtw89_dev *rtwdev, bool enable)
 	if (ret)
 		rtw89_err(rtwdev, "failed to set CLKREQ Delay\n");
 
+<<<<<<< HEAD
 	if (chip_id == RTL8852A || chip_id == RTL8852B) {
+=======
+	if (chip_id == RTL8852A) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (enable)
 			ret = rtw89_pci_config_byte_set(rtwdev,
 							RTW89_PCIE_L1_CTRL,
@@ -3807,6 +3894,7 @@ static const struct rtw89_hci_ops rtw89_pci_ops = {
 
 	.recovery_start = rtw89_pci_ops_recovery_start,
 	.recovery_complete = rtw89_pci_ops_recovery_complete,
+<<<<<<< HEAD
 
 	.ctrl_txdma_ch	= rtw89_pci_ctrl_txdma_ch_pcie,
 	.ctrl_txdma_fw_ch = rtw89_pci_ctrl_txdma_fw_ch_pcie,
@@ -3817,6 +3905,8 @@ static const struct rtw89_hci_ops rtw89_pci_ops = {
 	.disable_intr	= rtw89_pci_disable_intr_lock,
 	.enable_intr	= rtw89_pci_enable_intr_lock,
 	.rst_bdram	= rtw89_pci_rst_bdram_pcie,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int rtw89_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)

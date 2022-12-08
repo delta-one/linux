@@ -128,15 +128,21 @@ static int dw_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
 
 	dw_spi_dma_sg_burst_init(dws);
 
+<<<<<<< HEAD
 	pci_dev_put(dma_dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 free_rxchan:
 	dma_release_channel(dws->rxchan);
 	dws->rxchan = NULL;
 err_exit:
+<<<<<<< HEAD
 	pci_dev_put(dma_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return -EBUSY;
 }
 

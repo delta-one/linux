@@ -22,10 +22,13 @@ int kvm_arch_ptp_init(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 void kvm_arch_ptp_exit(void)
 {
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int kvm_arch_ptp_get_clock(struct timespec64 *ts)
 {
 	return kvm_arch_ptp_get_crosststamp(NULL, ts, NULL);

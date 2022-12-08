@@ -36,6 +36,7 @@ static const struct nla_policy can_tdc_policy[IFLA_CAN_TDC_MAX + 1] = {
 	[IFLA_CAN_TDC_TDCF] = { .type = NLA_U32 },
 };
 
+<<<<<<< HEAD
 static int can_validate_bittiming(const struct can_bittiming *bt,
 				  struct netlink_ext_ack *extack)
 {
@@ -49,11 +50,16 @@ static int can_validate_bittiming(const struct can_bittiming *bt,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int can_validate(struct nlattr *tb[], struct nlattr *data[],
 			struct netlink_ext_ack *extack)
 {
 	bool is_can_fd = false;
+<<<<<<< HEAD
 	int err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Make sure that valid CAN FD configurations always consist of
 	 * - nominal/arbitration bittiming
@@ -65,6 +71,7 @@ static int can_validate(struct nlattr *tb[], struct nlattr *data[],
 	if (!data)
 		return 0;
 
+<<<<<<< HEAD
 	if (data[IFLA_CAN_BITTIMING]) {
 		struct can_bittiming bt;
 
@@ -74,6 +81,8 @@ static int can_validate(struct nlattr *tb[], struct nlattr *data[],
 			return err;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (data[IFLA_CAN_CTRLMODE]) {
 		struct can_ctrlmode *cm = nla_data(data[IFLA_CAN_CTRLMODE]);
 		u32 tdc_flags = cm->flags & CAN_CTRLMODE_TDC_MASK;
@@ -94,6 +103,10 @@ static int can_validate(struct nlattr *tb[], struct nlattr *data[],
 		 */
 		if (data[IFLA_CAN_TDC]) {
 			struct nlattr *tb_tdc[IFLA_CAN_TDC_MAX + 1];
+<<<<<<< HEAD
+=======
+			int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 			err = nla_parse_nested(tb_tdc, IFLA_CAN_TDC_MAX,
 					       data[IFLA_CAN_TDC],
@@ -124,6 +137,7 @@ static int can_validate(struct nlattr *tb[], struct nlattr *data[],
 			return -EOPNOTSUPP;
 	}
 
+<<<<<<< HEAD
 	if (data[IFLA_CAN_DATA_BITTIMING]) {
 		struct can_bittiming bt;
 
@@ -133,6 +147,8 @@ static int can_validate(struct nlattr *tb[], struct nlattr *data[],
 			return err;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -215,15 +231,24 @@ static int can_changelink(struct net_device *dev, struct nlattr *tb[],
 		err = can_get_bittiming(dev, &bt,
 					priv->bittiming_const,
 					priv->bitrate_const,
+<<<<<<< HEAD
 					priv->bitrate_const_cnt,
 					extack);
+=======
+					priv->bitrate_const_cnt);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			return err;
 
 		if (priv->bitrate_max && bt.bitrate > priv->bitrate_max) {
+<<<<<<< HEAD
 			NL_SET_ERR_MSG_FMT(extack,
 					   "arbitration bitrate %u bps surpasses transceiver capabilities of %u bps",
 					   bt.bitrate, priv->bitrate_max);
+=======
+			netdev_err(dev, "arbitration bitrate surpasses transceiver capabilities of %d bps\n",
+				   priv->bitrate_max);
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 
@@ -321,15 +346,24 @@ static int can_changelink(struct net_device *dev, struct nlattr *tb[],
 		err = can_get_bittiming(dev, &dbt,
 					priv->data_bittiming_const,
 					priv->data_bitrate_const,
+<<<<<<< HEAD
 					priv->data_bitrate_const_cnt,
 					extack);
+=======
+					priv->data_bitrate_const_cnt);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			return err;
 
 		if (priv->bitrate_max && dbt.bitrate > priv->bitrate_max) {
+<<<<<<< HEAD
 			NL_SET_ERR_MSG_FMT(extack,
 					   "CANFD data bitrate %u bps surpasses transceiver capabilities of %u bps",
 					   dbt.bitrate, priv->bitrate_max);
+=======
+			netdev_err(dev, "canfd data bitrate surpasses transceiver capabilities of %d bps\n",
+				   priv->bitrate_max);
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 

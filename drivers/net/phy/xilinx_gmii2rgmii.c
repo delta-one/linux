@@ -105,7 +105,10 @@ static int xgmiitorgmii_probe(struct mdio_device *mdiodev)
 
 	if (!priv->phy_dev->drv) {
 		dev_info(dev, "Attached phy not ready\n");
+<<<<<<< HEAD
 		put_device(&priv->phy_dev->mdio.dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return -EPROBE_DEFER;
 	}
 

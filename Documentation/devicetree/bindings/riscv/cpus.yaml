@@ -4,12 +4,19 @@
 $id: http://devicetree.org/schemas/riscv/cpus.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: RISC-V CPUs
+=======
+title: RISC-V bindings for 'cpus' DT nodes
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Paul Walmsley <paul.walmsley@sifive.com>
   - Palmer Dabbelt <palmer@sifive.com>
+<<<<<<< HEAD
   - Conor Dooley <conor@kernel.org>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 description: |
   This document uses some terminology common to the RISC-V community
@@ -28,12 +35,17 @@ properties:
     oneOf:
       - items:
           - enum:
+<<<<<<< HEAD
               - andestech,ax45mp
               - canaan,k210
+=======
+              - sifive,rocket0
+>>>>>>> b7ba80a49124 (Commit)
               - sifive,bullet0
               - sifive,e5
               - sifive,e7
               - sifive,e71
+<<<<<<< HEAD
               - sifive,rocket0
               - sifive,u5
               - sifive,u54
@@ -42,6 +54,14 @@ properties:
               - sifive,u74-mc
               - thead,c906
               - thead,c910
+=======
+              - sifive,u74-mc
+              - sifive,u54
+              - sifive,u74
+              - sifive,u5
+              - sifive,u7
+              - canaan,k210
+>>>>>>> b7ba80a49124 (Commit)
           - const: riscv
       - items:
           - enum:
@@ -72,11 +92,14 @@ properties:
     description:
       The blocksize in bytes for the Zicbom cache operations.
 
+<<<<<<< HEAD
   riscv,cboz-block-size:
     $ref: /schemas/types.yaml#/definitions/uint32
     description:
       The blocksize in bytes for the Zicboz cache operations.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   riscv,isa:
     description:
       Identifies the specific RISC-V instruction set architecture
@@ -88,7 +111,13 @@ properties:
       insensitive, letters in the riscv,isa string must be all
       lowercase to simplify parsing.
     $ref: "/schemas/types.yaml#/definitions/string"
+<<<<<<< HEAD
     pattern: ^rv(?:64|32)imaf?d?q?c?b?k?j?p?v?h?(?:[hsxz](?:[a-z])+)?(?:_[hsxz](?:[a-z])+)*$
+=======
+    enum:
+      - rv64imac
+      - rv64imafdc
+>>>>>>> b7ba80a49124 (Commit)
 
   # RISC-V requires 'timebase-frequency' in /cpus, so disallow it here
   timebase-frequency: false
@@ -119,12 +148,15 @@ properties:
       List of phandles to idle state nodes supported
       by this hart (see ./idle-states.yaml).
 
+<<<<<<< HEAD
   capacity-dmips-mhz:
     description:
       u32 value representing CPU capacity (see ../cpu/cpu-capacity.txt) in
       DMIPS/MHz, relative to highest capacity-dmips-mhz
       in the system.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - riscv,isa
   - interrupt-controller

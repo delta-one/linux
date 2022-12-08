@@ -1301,6 +1301,11 @@ static int ppl_validate_rdev(struct md_rdev *rdev)
 
 static void ppl_init_child_log(struct ppl_log *log, struct md_rdev *rdev)
 {
+<<<<<<< HEAD
+=======
+	struct request_queue *q;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if ((rdev->ppl.size << 9) >= (PPL_SPACE_SIZE +
 				      PPL_HEADER_SIZE) * 2) {
 		log->use_multippl = true;
@@ -1314,7 +1319,12 @@ static void ppl_init_child_log(struct ppl_log *log, struct md_rdev *rdev)
 	}
 	log->next_io_sector = rdev->ppl.sector;
 
+<<<<<<< HEAD
 	if (bdev_write_cache(rdev->bdev))
+=======
+	q = bdev_get_queue(rdev->bdev);
+	if (test_bit(QUEUE_FLAG_WC, &q->queue_flags))
+>>>>>>> b7ba80a49124 (Commit)
 		log->wb_cache_on = true;
 }
 

@@ -1,6 +1,10 @@
 #ifndef __NOUVEAU_MEM_H__
 #define __NOUVEAU_MEM_H__
+<<<<<<< HEAD
 #include <drm/ttm/ttm_bo.h>
+=======
+#include <drm/ttm/ttm_bo_api.h>
+>>>>>>> b7ba80a49124 (Commit)
 struct ttm_tt;
 
 #include <nvif/mem.h>

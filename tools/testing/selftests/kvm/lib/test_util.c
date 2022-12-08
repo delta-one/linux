@@ -18,6 +18,7 @@
 #include "test_util.h"
 
 /*
+<<<<<<< HEAD
  * Random number generator that is usable from guest code. This is the
  * Park-Miller LCG using standard constants.
  */
@@ -35,6 +36,8 @@ uint32_t guest_random_u32(struct guest_random_state *state)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Parses "[0-9]+[kmgt]?".
  */
 size_t parse_size(const char *size)
@@ -165,14 +168,19 @@ size_t get_trans_hugepagesz(void)
 size_t get_def_hugetlb_pagesz(void)
 {
 	char buf[64];
+<<<<<<< HEAD
 	const char *hugepagesize = "Hugepagesize:";
 	const char *hugepages_total = "HugePages_Total:";
+=======
+	const char *tag = "Hugepagesize:";
+>>>>>>> b7ba80a49124 (Commit)
 	FILE *f;
 
 	f = fopen("/proc/meminfo", "r");
 	TEST_ASSERT(f != NULL, "Error in opening /proc/meminfo");
 
 	while (fgets(buf, sizeof(buf), f) != NULL) {
+<<<<<<< HEAD
 		if (strstr(buf, hugepages_total) == buf) {
 			unsigned long long total = strtoull(buf + strlen(hugepages_total), NULL, 10);
 			if (!total) {
@@ -192,6 +200,21 @@ size_t get_def_hugetlb_pagesz(void)
 	}
 
 	TEST_FAIL("Error in reading /proc/meminfo");
+=======
+		if (strstr(buf, tag) == buf) {
+			fclose(f);
+			return strtoull(buf + strlen(tag), NULL, 10) << 10;
+		}
+	}
+
+	if (feof(f))
+		TEST_FAIL("HUGETLB is not configured in host kernel");
+	else
+		TEST_FAIL("Error in reading /proc/meminfo");
+
+	fclose(f);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define ANON_FLAGS	(MAP_PRIVATE | MAP_ANONYMOUS)
@@ -358,6 +381,7 @@ long get_run_delay(void)
 
 	return val[1];
 }
+<<<<<<< HEAD
 
 int atoi_paranoid(const char *num_str)
 {
@@ -377,3 +401,5 @@ int atoi_paranoid(const char *num_str)
 
 	return num;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

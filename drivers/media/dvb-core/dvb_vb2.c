@@ -354,12 +354,15 @@ int dvb_vb2_reqbufs(struct dvb_vb2_ctx *ctx, struct dmx_requestbuffers *req)
 
 int dvb_vb2_querybuf(struct dvb_vb2_ctx *ctx, struct dmx_buffer *b)
 {
+<<<<<<< HEAD
 	struct vb2_queue *q = &ctx->vb_q;
 
 	if (b->index >= q->num_buffers) {
 		dprintk(1, "[%s] buffer index out of range\n", ctx->name);
 		return -EINVAL;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vb2_core_querybuf(&ctx->vb_q, b->index, b);
 	dprintk(3, "[%s] index=%d\n", ctx->name, b->index);
 	return 0;
@@ -384,6 +387,7 @@ int dvb_vb2_expbuf(struct dvb_vb2_ctx *ctx, struct dmx_exportbuffer *exp)
 
 int dvb_vb2_qbuf(struct dvb_vb2_ctx *ctx, struct dmx_buffer *b)
 {
+<<<<<<< HEAD
 	struct vb2_queue *q = &ctx->vb_q;
 	int ret;
 
@@ -391,6 +395,10 @@ int dvb_vb2_qbuf(struct dvb_vb2_ctx *ctx, struct dmx_buffer *b)
 		dprintk(1, "[%s] buffer index out of range\n", ctx->name);
 		return -EINVAL;
 	}
+=======
+	int ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = vb2_core_qbuf(&ctx->vb_q, b->index, b, NULL);
 	if (ret) {
 		dprintk(1, "[%s] index=%d errno=%d\n", ctx->name,

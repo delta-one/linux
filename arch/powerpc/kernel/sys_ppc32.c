@@ -1,11 +1,16 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /*
+<<<<<<< HEAD
  * sys_ppc32.c: 32-bit system calls with complex calling conventions.
+=======
+ * sys_ppc32.c: Conversion between 32bit and 64bit native syscalls.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Copyright (C) 2001 IBM
  * Copyright (C) 1997,1998 Jakub Jelinek (jj@sunsite.mff.cuni.cz)
  * Copyright (C) 1997 David S. Miller (davem@caip.rutgers.edu)
  *
+<<<<<<< HEAD
  * 32-bit system calls with 64-bit arguments pass those in register pairs.
  * This must be specially dealt with on 64-bit kernels. The compat_arg_u64_dual
  * in generic compat syscalls is not always usable because the register
@@ -18,6 +23,10 @@
  * arguments.
  *
  * This file contains these system calls.
+=======
+ * These routines maintain argument size conversion between 32bit and 64bit
+ * environment.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/kernel.h>
@@ -35,6 +44,10 @@
 #include <linux/poll.h>
 #include <linux/personality.h>
 #include <linux/stat.h>
+<<<<<<< HEAD
+=======
+#include <linux/mman.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/in.h>
 #include <linux/syscalls.h>
 #include <linux/unistd.h>
@@ -57,6 +70,7 @@
 #include <asm/syscalls.h>
 #include <asm/switch_to.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC32
 #define PPC32_SYSCALL_DEFINE4	SYSCALL_DEFINE4
 #define PPC32_SYSCALL_DEFINE5	SYSCALL_DEFINE5
@@ -71,57 +85,119 @@ PPC32_SYSCALL_DEFINE6(ppc_pread64,
 		       unsigned int, fd,
 		       char __user *, ubuf, compat_size_t, count,
 		       u32, reg6, u32, pos1, u32, pos2)
+=======
+unsigned long compat_sys_mmap2(unsigned long addr, size_t len,
+			  unsigned long prot, unsigned long flags,
+			  unsigned long fd, unsigned long pgoff)
+{
+	/* This should remain 12 even if PAGE_SIZE changes */
+	return sys_mmap(addr, len, prot, flags, fd, pgoff << 12);
+}
+
+/* 
+ * long long munging:
+ * The 32 bit ABI passes long longs in an odd even register pair.
+ * High and low parts are swapped depending on endian mode,
+ * so define a macro (similar to mips linux32) to handle that.
+ */
+#ifdef __LITTLE_ENDIAN__
+#define merge_64(low, high) ((u64)high << 32) | low
+#else
+#define merge_64(high, low) ((u64)high << 32) | low
+#endif
+
+compat_ssize_t compat_sys_pread64(unsigned int fd, char __user *ubuf, compat_size_t count,
+			     u32 reg6, u32 pos1, u32 pos2)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return ksys_pread64(fd, ubuf, count, merge_64(pos1, pos2));
 }
 
+<<<<<<< HEAD
 PPC32_SYSCALL_DEFINE6(ppc_pwrite64,
 		       unsigned int, fd,
 		       const char __user *, ubuf, compat_size_t, count,
 		       u32, reg6, u32, pos1, u32, pos2)
+=======
+compat_ssize_t compat_sys_pwrite64(unsigned int fd, const char __user *ubuf, compat_size_t count,
+			      u32 reg6, u32 pos1, u32 pos2)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return ksys_pwrite64(fd, ubuf, count, merge_64(pos1, pos2));
 }
 
+<<<<<<< HEAD
 PPC32_SYSCALL_DEFINE5(ppc_readahead,
 		       int, fd, u32, r4,
 		       u32, offset1, u32, offset2, u32, count)
+=======
+compat_ssize_t compat_sys_readahead(int fd, u32 r4, u32 offset1, u32 offset2, u32 count)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return ksys_readahead(fd, merge_64(offset1, offset2), count);
 }
 
+<<<<<<< HEAD
 PPC32_SYSCALL_DEFINE4(ppc_truncate64,
 		       const char __user *, path, u32, reg4,
 		       unsigned long, len1, unsigned long, len2)
+=======
+asmlinkage int compat_sys_truncate64(const char __user * path, u32 reg4,
+				unsigned long len1, unsigned long len2)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return ksys_truncate(path, merge_64(len1, len2));
 }
 
+<<<<<<< HEAD
 PPC32_SYSCALL_DEFINE4(ppc_ftruncate64,
 		       unsigned int, fd, u32, reg4,
 		       unsigned long, len1, unsigned long, len2)
+=======
+asmlinkage long compat_sys_fallocate(int fd, int mode, u32 offset1, u32 offset2,
+				     u32 len1, u32 len2)
+{
+	return ksys_fallocate(fd, mode, ((loff_t)offset1 << 32) | offset2,
+			     merge_64(len1, len2));
+}
+
+asmlinkage int compat_sys_ftruncate64(unsigned int fd, u32 reg4, unsigned long len1,
+				 unsigned long len2)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return ksys_ftruncate(fd, merge_64(len1, len2));
 }
 
+<<<<<<< HEAD
 PPC32_SYSCALL_DEFINE6(ppc32_fadvise64,
 		       int, fd, u32, unused, u32, offset1, u32, offset2,
 		       size_t, len, int, advice)
+=======
+long ppc32_fadvise64(int fd, u32 unused, u32 offset1, u32 offset2,
+		     size_t len, int advice)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return ksys_fadvise64_64(fd, merge_64(offset1, offset2), len,
 				 advice);
 }
 
+<<<<<<< HEAD
 PPC32_SYSCALL_DEFINE6(ppc_sync_file_range2,
 		       int, fd, unsigned int, flags,
 		       unsigned int, offset1, unsigned int, offset2,
 		       unsigned int, nbytes1, unsigned int, nbytes2)
+=======
+asmlinkage long compat_sys_sync_file_range2(int fd, unsigned int flags,
+				   unsigned offset1, unsigned offset2,
+				   unsigned nbytes1, unsigned nbytes2)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	loff_t offset = merge_64(offset1, offset2);
 	loff_t nbytes = merge_64(nbytes1, nbytes2);
 
 	return ksys_sync_file_range(fd, offset, nbytes, flags);
 }
+<<<<<<< HEAD
 
 #ifdef CONFIG_PPC32
 SYSCALL_DEFINE6(ppc_fallocate,
@@ -133,3 +209,5 @@ SYSCALL_DEFINE6(ppc_fallocate,
 			      merge_64(len1, len2));
 }
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)

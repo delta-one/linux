@@ -2,7 +2,10 @@
 #include <linux/slab.h>
 #include <linux/pci.h>
 #include <asm/apicdef.h>
+<<<<<<< HEAD
 #include <asm/intel-family.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/io-64-nonatomic-lo-hi.h>
 
 #include <linux/perf_event.h>
@@ -34,8 +37,11 @@
 
 #define UNCORE_EVENT_CONSTRAINT(c, n) EVENT_CONSTRAINT(c, n, 0xff)
 
+<<<<<<< HEAD
 #define UNCORE_IGNORE_END		-1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct pci_extra_dev {
 	struct pci_dev *dev[UNCORE_EXTRA_PCI_DEV_MAX];
 };
@@ -91,12 +97,20 @@ struct intel_uncore_type {
 	 * to identify which platform component each PMON block of that type is
 	 * supposed to monitor.
 	 */
+<<<<<<< HEAD
 	struct intel_uncore_topology **topology;
+=======
+	struct intel_uncore_topology *topology;
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Optional callbacks for managing mapping of Uncore units to PMONs
 	 */
 	int (*get_topology)(struct intel_uncore_type *type);
+<<<<<<< HEAD
 	void (*set_mapping)(struct intel_uncore_type *type);
+=======
+	int (*set_mapping)(struct intel_uncore_type *type);
+>>>>>>> b7ba80a49124 (Commit)
 	void (*cleanup_mapping)(struct intel_uncore_type *type);
 };
 
@@ -181,6 +195,7 @@ struct freerunning_counters {
 	unsigned *box_offsets;
 };
 
+<<<<<<< HEAD
 struct uncore_iio_topology {
 	int pci_bus_no;
 	int segment;
@@ -199,6 +214,11 @@ struct intel_uncore_topology {
 		struct uncore_iio_topology *iio;
 		struct uncore_upi_topology *upi;
 	};
+=======
+struct intel_uncore_topology {
+	u64 configuration;
+	int segment;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct pci2phy_map {
@@ -210,7 +230,10 @@ struct pci2phy_map {
 struct pci2phy_map *__find_pci2phy_map(int segment);
 int uncore_pcibus_to_dieid(struct pci_bus *bus);
 int uncore_die_to_segment(int die);
+<<<<<<< HEAD
 int uncore_device_to_die(struct pci_dev *dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 ssize_t uncore_event_show(struct device *dev,
 			  struct device_attribute *attr, char *buf);
@@ -592,7 +615,10 @@ extern raw_spinlock_t pci2phy_map_lock;
 extern struct list_head pci2phy_map_head;
 extern struct pci_extra_dev *uncore_extra_pci_dev;
 extern struct event_constraint uncore_constraint_empty;
+<<<<<<< HEAD
 extern int spr_uncore_units_ignore[];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* uncore_snb.c */
 int snb_uncore_pci_init(void);
@@ -606,7 +632,10 @@ void skl_uncore_cpu_init(void);
 void icl_uncore_cpu_init(void);
 void tgl_uncore_cpu_init(void);
 void adl_uncore_cpu_init(void);
+<<<<<<< HEAD
 void mtl_uncore_cpu_init(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void tgl_uncore_mmio_init(void);
 void tgl_l_uncore_mmio_init(void);
 void adl_uncore_mmio_init(void);

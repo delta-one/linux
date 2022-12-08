@@ -11,7 +11,10 @@
 #define LOCKD_XDR_H
 
 #include <linux/fs.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/nfs.h>
 #include <linux/sunrpc/xdr.h>
 

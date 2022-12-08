@@ -266,6 +266,10 @@ int main(int ac, char **av)
 	gpages = vm_calc_num_guest_pages(VM_MODE_DEFAULT, STEAL_TIME_SIZE * NR_VCPUS);
 	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS, ST_GPA_BASE, 1, gpages, 0);
 	virt_map(vm, ST_GPA_BASE, ST_GPA_BASE, gpages);
+<<<<<<< HEAD
+=======
+	ucall_init(vm, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	TEST_REQUIRE(is_steal_time_supported(vcpus[0]));
 

@@ -202,6 +202,7 @@ static const struct dmi_system_id sof_sdw_quirk_table[] = {
 					SOF_SDW_PCH_DMIC |
 					RT711_JD1),
 	},
+<<<<<<< HEAD
 	{
 		/* NUC15 LAPBC710 skews */
 		.callback = sof_sdw_quirk_cb,
@@ -224,6 +225,8 @@ static const struct dmi_system_id sof_sdw_quirk_table[] = {
 					SOF_SDW_PCH_DMIC |
 					RT711_JD2_100K),
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* TigerLake-SDCA devices */
 	{
 		.callback = sof_sdw_quirk_cb,
@@ -366,6 +369,7 @@ static const struct dmi_system_id sof_sdw_quirk_table[] = {
 		.driver_data = (void *)(SOF_SDW_TGL_HDMI |
 					RT711_JD2),
 	},
+<<<<<<< HEAD
 	/* RaptorLake devices */
 	{
 		.callback = sof_sdw_quirk_cb,
@@ -407,6 +411,8 @@ static const struct dmi_system_id sof_sdw_quirk_table[] = {
 					RT711_JD2 |
 					SOF_SDW_FOUR_SPK),
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* MeteorLake devices */
 	{
 		.callback = sof_sdw_quirk_cb,
@@ -561,14 +567,19 @@ static struct sof_sdw_codec_info codec_info_list[] = {
 		.direction = {true, false},
 		.dai_name = "rt1308-aif",
 		.ops = &sof_sdw_rt1308_i2s_ops,
+<<<<<<< HEAD
 		.init = sof_sdw_rt_amp_init,
 		.exit = sof_sdw_rt_amp_exit,
+=======
+		.init = sof_sdw_rt1308_init,
+>>>>>>> b7ba80a49124 (Commit)
 		.codec_type = SOF_SDW_CODEC_TYPE_AMP,
 	},
 	{
 		.part_id = 0x1316,
 		.direction = {true, true},
 		.dai_name = "rt1316-aif",
+<<<<<<< HEAD
 		.init = sof_sdw_rt_amp_init,
 		.exit = sof_sdw_rt_amp_exit,
 		.codec_type = SOF_SDW_CODEC_TYPE_AMP,
@@ -578,6 +589,9 @@ static struct sof_sdw_codec_info codec_info_list[] = {
 		.direction = {true, true},
 		.dai_name = "rt1318-aif",
 		.init = sof_sdw_rt_amp_init,
+=======
+		.init = sof_sdw_rt1316_init,
+>>>>>>> b7ba80a49124 (Commit)
 		.codec_type = SOF_SDW_CODEC_TYPE_AMP,
 	},
 	{
@@ -1613,11 +1627,20 @@ static int mc_probe(struct platform_device *pdev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void mc_remove(struct platform_device *pdev)
+=======
+static int mc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 
 	mc_dailink_exit_loop(card);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver sof_sdw_driver = {
@@ -1626,7 +1649,11 @@ static struct platform_driver sof_sdw_driver = {
 		.pm = &snd_soc_pm_ops,
 	},
 	.probe = mc_probe,
+<<<<<<< HEAD
 	.remove_new = mc_remove,
+=======
+	.remove = mc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(sof_sdw_driver);

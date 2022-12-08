@@ -13,7 +13,10 @@
 #include <linux/perf_event.h>
 #include <linux/ring_buffer.h>
 #include "test_ringbuf.lskel.h"
+<<<<<<< HEAD
 #include "test_ringbuf_map_key.lskel.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define EDONE 7777
 
@@ -59,7 +62,10 @@ static int process_sample(void *ctx, void *data, size_t len)
 	}
 }
 
+<<<<<<< HEAD
 static struct test_ringbuf_map_key_lskel *skel_map_key;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct test_ringbuf_lskel *skel;
 static struct ring_buffer *ringbuf;
 
@@ -83,7 +89,11 @@ static void *poll_thread(void *input)
 	return (void *)(long)ring_buffer__poll(ringbuf, timeout);
 }
 
+<<<<<<< HEAD
 static void ringbuf_subtest(void)
+=======
+void test_ringbuf(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const size_t rec_sz = BPF_RINGBUF_HDR_SZ + sizeof(struct sample);
 	pthread_t thread;
@@ -299,6 +309,7 @@ cleanup:
 	ring_buffer__free(ringbuf);
 	test_ringbuf_lskel__destroy(skel);
 }
+<<<<<<< HEAD
 
 static int process_map_key_sample(void *ctx, void *data, size_t len)
 {
@@ -361,3 +372,5 @@ void test_ringbuf(void)
 	if (test__start_subtest("ringbuf_map_key"))
 		ringbuf_map_key_subtest();
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

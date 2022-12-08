@@ -588,7 +588,11 @@ void tsc200x_remove(struct device *dev)
 }
 EXPORT_SYMBOL_GPL(tsc200x_remove);
 
+<<<<<<< HEAD
 static int tsc200x_suspend(struct device *dev)
+=======
+static int __maybe_unused tsc200x_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tsc200x *ts = dev_get_drvdata(dev);
 
@@ -604,7 +608,11 @@ static int tsc200x_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int tsc200x_resume(struct device *dev)
+=======
+static int __maybe_unused tsc200x_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tsc200x *ts = dev_get_drvdata(dev);
 
@@ -620,7 +628,12 @@ static int tsc200x_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 EXPORT_GPL_SIMPLE_DEV_PM_OPS(tsc200x_pm_ops, tsc200x_suspend, tsc200x_resume);
+=======
+SIMPLE_DEV_PM_OPS(tsc200x_pm_ops, tsc200x_suspend, tsc200x_resume);
+EXPORT_SYMBOL_GPL(tsc200x_pm_ops);
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_AUTHOR("Lauri Leukkunen <lauri.leukkunen@nokia.com>");
 MODULE_DESCRIPTION("TSC200x Touchscreen Driver Core");

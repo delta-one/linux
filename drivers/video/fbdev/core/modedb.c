@@ -620,7 +620,10 @@ int fb_find_mode(struct fb_var_screeninfo *var,
 		 const struct fb_videomode *default_mode,
 		 unsigned int default_bpp)
 {
+<<<<<<< HEAD
 	char *mode_option_buf = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	/* Set up defaults */
@@ -636,10 +639,15 @@ int fb_find_mode(struct fb_var_screeninfo *var,
 		default_bpp = 8;
 
 	/* Did the user specify a video mode? */
+<<<<<<< HEAD
 	if (!mode_option) {
 		fb_get_options(NULL, &mode_option_buf);
 		mode_option = mode_option_buf;
 	}
+=======
+	if (!mode_option)
+		mode_option = fb_mode_option;
+>>>>>>> b7ba80a49124 (Commit)
 	if (mode_option) {
 		const char *name = mode_option;
 		unsigned int namelen = strlen(name);
@@ -718,7 +726,10 @@ int fb_find_mode(struct fb_var_screeninfo *var,
 			res_specified = 1;
 		}
 done:
+<<<<<<< HEAD
 		kfree(mode_option_buf);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (cvt) {
 			struct fb_videomode cvt_mode;
 			int ret;

@@ -77,6 +77,7 @@ mei_pxp_receive_message(struct device *dev, void *buffer, size_t size)
 	return byte;
 }
 
+<<<<<<< HEAD
 /**
  * mei_pxp_gsc_command() - sends a gsc command, by sending
  * a sgl mei message to gsc and receiving reply from gsc
@@ -101,11 +102,16 @@ static ssize_t mei_pxp_gsc_command(struct device *dev, u8 client_id, u32 fence_i
 	return mei_cldev_send_gsc_command(cldev, client_id, fence_id, sg_in, total_in_len, sg_out);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct i915_pxp_component_ops mei_pxp_ops = {
 	.owner = THIS_MODULE,
 	.send = mei_pxp_send_message,
 	.recv = mei_pxp_receive_message,
+<<<<<<< HEAD
 	.gsc_command = mei_pxp_gsc_command,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int mei_component_master_bind(struct device *dev)
@@ -156,14 +162,18 @@ static int mei_pxp_component_match(struct device *dev, int subcomponent,
 {
 	struct device *base = data;
 
+<<<<<<< HEAD
 	if (!dev)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!dev->driver || strcmp(dev->driver->name, "i915") ||
 	    subcomponent != I915_COMPONENT_PXP)
 		return 0;
 
 	base = base->parent;
+<<<<<<< HEAD
 	if (!base) /* mei device */
 		return 0;
 
@@ -174,6 +184,14 @@ static int mei_pxp_component_match(struct device *dev, int subcomponent,
 
 	/* for pch */
 	dev = dev->parent;
+=======
+	if (!base)
+		return 0;
+
+	base = base->parent;
+	dev = dev->parent;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return (base && dev && dev == base);
 }
 
@@ -238,8 +256,13 @@ static void mei_pxp_remove(struct mei_cl_device *cldev)
 }
 
 /* fbf6fcf1-96cf-4e2e-a6a6-1bab8cbe36b1 : PAVP GUID*/
+<<<<<<< HEAD
 #define MEI_GUID_PXP UUID_LE(0xfbf6fcf1, 0x96cf, 0x4e2e, 0xA6, \
 			     0xa6, 0x1b, 0xab, 0x8c, 0xbe, 0x36, 0xb1)
+=======
+#define MEI_GUID_PXP GUID_INIT(0xfbf6fcf1, 0x96cf, 0x4e2e, 0xA6, \
+			       0xa6, 0x1b, 0xab, 0x8c, 0xbe, 0x36, 0xb1)
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct mei_cl_device_id mei_pxp_tbl[] = {
 	{ .uuid = MEI_GUID_PXP, .version = MEI_CL_VERSION_ANY },

@@ -27,7 +27,11 @@ int zcomp_cpu_dead(unsigned int cpu, struct hlist_node *node);
 ssize_t zcomp_available_show(const char *comp, char *buf);
 bool zcomp_available_algorithm(const char *comp);
 
+<<<<<<< HEAD
 struct zcomp *zcomp_create(const char *alg);
+=======
+struct zcomp *zcomp_create(const char *comp);
+>>>>>>> b7ba80a49124 (Commit)
 void zcomp_destroy(struct zcomp *comp);
 
 struct zcomp_strm *zcomp_stream_get(struct zcomp *comp);

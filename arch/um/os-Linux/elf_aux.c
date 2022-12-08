@@ -2,7 +2,11 @@
 /*
  *  arch/um/kernel/elf_aux.c
  *
+<<<<<<< HEAD
  *  Scan the ELF auxiliary vector provided by the host to extract
+=======
+ *  Scan the Elf auxiliary vector provided by the host to extract
+>>>>>>> b7ba80a49124 (Commit)
  *  information about vsyscall-page, etc.
  *
  *  Copyright (C) 2004 Fujitsu Siemens Computers GmbH

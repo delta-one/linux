@@ -509,6 +509,7 @@ static int rproc_handle_vdev(struct rproc *rproc, void *ptr,
 	rvdev_data.rsc_offset = offset;
 	rvdev_data.rsc = rsc;
 
+<<<<<<< HEAD
 	/*
 	 * When there is more than one remote processor, rproc->nb_vdev number is
 	 * same for each separate instances of "rproc". If rvdev_data.index is used
@@ -516,6 +517,9 @@ static int rproc_handle_vdev(struct rproc *rproc, void *ptr,
 	 * PLATFORM_DEVID_AUTO to auto select device id.
 	 */
 	pdev = platform_device_register_data(dev, "rproc-virtio", PLATFORM_DEVID_AUTO, &rvdev_data,
+=======
+	pdev = platform_device_register_data(dev, "rproc-virtio", rvdev_data.index, &rvdev_data,
+>>>>>>> b7ba80a49124 (Commit)
 					     sizeof(rvdev_data));
 	if (IS_ERR(pdev)) {
 		dev_err(dev, "failed to create rproc-virtio device\n");
@@ -643,8 +647,12 @@ static int rproc_handle_devmem(struct rproc *rproc, void *ptr,
 	if (!mapping)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	ret = iommu_map(rproc->domain, rsc->da, rsc->pa, rsc->len, rsc->flags,
 			GFP_KERNEL);
+=======
+	ret = iommu_map(rproc->domain, rsc->da, rsc->pa, rsc->len, rsc->flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(dev, "failed to map devmem: %d\n", ret);
 		goto out;
@@ -738,7 +746,11 @@ static int rproc_alloc_carveout(struct rproc *rproc,
 		}
 
 		ret = iommu_map(rproc->domain, mem->da, dma, mem->len,
+<<<<<<< HEAD
 				mem->flags, GFP_KERNEL);
+=======
+				mem->flags);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret) {
 			dev_err(dev, "iommu_map failed: %d\n", ret);
 			goto free_mapping;
@@ -1777,6 +1789,7 @@ static int __rproc_detach(struct rproc *rproc)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int rproc_attach_recovery(struct rproc *rproc)
 {
 	int ret;
@@ -1816,6 +1829,8 @@ static int rproc_boot_recovery(struct rproc *rproc)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * rproc_trigger_recovery() - recover a remoteproc
  * @rproc: the remote processor
@@ -1830,6 +1845,10 @@ static int rproc_boot_recovery(struct rproc *rproc)
  */
 int rproc_trigger_recovery(struct rproc *rproc)
 {
+<<<<<<< HEAD
+=======
+	const struct firmware *firmware_p;
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = &rproc->dev;
 	int ret;
 
@@ -1843,10 +1862,31 @@ int rproc_trigger_recovery(struct rproc *rproc)
 
 	dev_err(dev, "recovering %s\n", rproc->name);
 
+<<<<<<< HEAD
 	if (rproc_has_feature(rproc, RPROC_FEAT_ATTACH_ON_RECOVERY))
 		ret = rproc_attach_recovery(rproc);
 	else
 		ret = rproc_boot_recovery(rproc);
+=======
+	ret = rproc_stop(rproc, true);
+	if (ret)
+		goto unlock_mutex;
+
+	/* generate coredump */
+	rproc->ops->coredump(rproc);
+
+	/* load firmware */
+	ret = request_firmware(&firmware_p, rproc->firmware, dev);
+	if (ret < 0) {
+		dev_err(dev, "request_firmware failed: %d\n", ret);
+		goto unlock_mutex;
+	}
+
+	/* boot the remote processor up again */
+	ret = rproc_start(rproc, firmware_p);
+
+	release_firmware(firmware_p);
+>>>>>>> b7ba80a49124 (Commit)
 
 unlock_mutex:
 	mutex_unlock(&rproc->lock);
@@ -1869,18 +1909,25 @@ static void rproc_crash_handler_work(struct work_struct *work)
 
 	mutex_lock(&rproc->lock);
 
+<<<<<<< HEAD
 	if (rproc->state == RPROC_CRASHED) {
+=======
+	if (rproc->state == RPROC_CRASHED || rproc->state == RPROC_OFFLINE) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* handle only the first crash detected */
 		mutex_unlock(&rproc->lock);
 		return;
 	}
 
+<<<<<<< HEAD
 	if (rproc->state == RPROC_OFFLINE) {
 		/* Don't recover if the remote processor was stopped */
 		mutex_unlock(&rproc->lock);
 		goto out;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rproc->state = RPROC_CRASHED;
 	dev_err(dev, "handling crash #%u in %s\n", ++rproc->crash_cnt,
 		rproc->name);
@@ -1890,7 +1937,10 @@ static void rproc_crash_handler_work(struct work_struct *work)
 	if (!rproc->recovery_disabled)
 		rproc_trigger_recovery(rproc);
 
+<<<<<<< HEAD
 out:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pm_relax(rproc->dev.parent);
 }
 
@@ -2120,7 +2170,11 @@ struct rproc *rproc_get_by_phandle(phandle phandle)
 
 	rcu_read_lock();
 	list_for_each_entry_rcu(r, &rproc_list, node) {
+<<<<<<< HEAD
 		if (r->dev.parent && device_match_of_node(r->dev.parent, np)) {
+=======
+		if (r->dev.parent && r->dev.parent->of_node == np) {
+>>>>>>> b7ba80a49124 (Commit)
 			/* prevent underlying implementation from being removed */
 			if (!try_module_get(r->dev.parent->driver->owner)) {
 				dev_err(&r->dev, "can't get owner\n");
@@ -2766,4 +2820,8 @@ static void __exit remoteproc_exit(void)
 }
 module_exit(remoteproc_exit);
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_DESCRIPTION("Generic Remote Processor Framework");

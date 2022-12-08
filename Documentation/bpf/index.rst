@@ -20,11 +20,15 @@ that goes into great technical depth about the BPF Architecture.
    syscall_api
    helpers
    kfuncs
+<<<<<<< HEAD
    cpumasks
+=======
+>>>>>>> b7ba80a49124 (Commit)
    programs
    maps
    bpf_prog_run
    classic_vs_extended.rst
+<<<<<<< HEAD
    bpf_iterators
    bpf_licensing
    test_debug
@@ -32,6 +36,11 @@ that goes into great technical depth about the BPF Architecture.
    linux-notes
    other
    redirect
+=======
+   bpf_licensing
+   test_debug
+   other
+>>>>>>> b7ba80a49124 (Commit)
 
 .. only::  subproject and html
 

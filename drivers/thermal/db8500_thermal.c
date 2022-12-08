@@ -60,7 +60,11 @@ struct db8500_thermal_zone {
 /* Callback to get current temperature */
 static int db8500_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	struct db8500_thermal_zone *th = thermal_zone_device_priv(tz);
+=======
+	struct db8500_thermal_zone *th = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * TODO: There is no PRCMU interface to get temperature data currently,

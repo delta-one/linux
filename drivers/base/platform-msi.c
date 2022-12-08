@@ -138,7 +138,10 @@ struct irq_domain *platform_msi_create_irq_domain(struct fwnode_handle *fwnode,
 
 	return domain;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(platform_msi_create_irq_domain);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int platform_msi_alloc_priv_data(struct device *dev, unsigned int nvec,
 					irq_write_msi_msg_t write_msi_msg)
@@ -213,7 +216,11 @@ int platform_msi_domain_alloc_irqs(struct device *dev, unsigned int nvec,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	err = msi_domain_alloc_irqs_range(dev, MSI_DEFAULT_DOMAIN, 0, nvec - 1);
+=======
+	err = msi_domain_alloc_irqs(dev->msi.domain, dev, nvec);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		platform_msi_free_priv_data(dev);
 
@@ -227,7 +234,11 @@ EXPORT_SYMBOL_GPL(platform_msi_domain_alloc_irqs);
  */
 void platform_msi_domain_free_irqs(struct device *dev)
 {
+<<<<<<< HEAD
 	msi_domain_free_irqs_all(dev, MSI_DEFAULT_DOMAIN);
+=======
+	msi_domain_free_irqs(dev->msi.domain, dev);
+>>>>>>> b7ba80a49124 (Commit)
 	platform_msi_free_priv_data(dev);
 }
 EXPORT_SYMBOL_GPL(platform_msi_domain_free_irqs);
@@ -324,9 +335,14 @@ void platform_msi_device_domain_free(struct irq_domain *domain, unsigned int vir
 	struct platform_msi_priv_data *data = domain->host_data;
 
 	msi_lock_descs(data->dev);
+<<<<<<< HEAD
 	msi_domain_depopulate_descs(data->dev, virq, nr_irqs);
 	irq_domain_free_irqs_common(domain, virq, nr_irqs);
 	msi_free_msi_descs_range(data->dev, virq, virq + nr_irqs - 1);
+=======
+	irq_domain_free_irqs_common(domain, virq, nr_irqs);
+	msi_free_msi_descs_range(data->dev, MSI_DESC_ALL, virq, virq + nr_irqs - 1);
+>>>>>>> b7ba80a49124 (Commit)
 	msi_unlock_descs(data->dev);
 }
 

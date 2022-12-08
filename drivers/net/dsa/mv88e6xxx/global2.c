@@ -739,6 +739,7 @@ static int mv88e6xxx_g2_smi_phy_read_data_c45(struct mv88e6xxx_chip *chip,
 	return mv88e6xxx_g2_read(chip, MV88E6XXX_G2_SMI_PHY_DATA, data);
 }
 
+<<<<<<< HEAD
 static int _mv88e6xxx_g2_smi_phy_read_c45(struct mv88e6xxx_chip *chip,
 					  bool external, int port, int devad,
 					  int reg, u16 *data)
@@ -751,6 +752,22 @@ static int _mv88e6xxx_g2_smi_phy_read_c45(struct mv88e6xxx_chip *chip,
 		return err;
 
 	return mv88e6xxx_g2_smi_phy_read_data_c45(chip, external, port, devad,
+=======
+static int mv88e6xxx_g2_smi_phy_read_c45(struct mv88e6xxx_chip *chip,
+					 bool external, int port, int reg,
+					 u16 *data)
+{
+	int dev = (reg >> 16) & 0x1f;
+	int addr = reg & 0xffff;
+	int err;
+
+	err = mv88e6xxx_g2_smi_phy_write_addr_c45(chip, external, port, dev,
+						  addr);
+	if (err)
+		return err;
+
+	return mv88e6xxx_g2_smi_phy_read_data_c45(chip, external, port, dev,
+>>>>>>> b7ba80a49124 (Commit)
 						  data);
 }
 
@@ -769,6 +786,7 @@ static int mv88e6xxx_g2_smi_phy_write_data_c45(struct mv88e6xxx_chip *chip,
 	return mv88e6xxx_g2_smi_phy_access_c45(chip, external, op, port, dev);
 }
 
+<<<<<<< HEAD
 static int _mv88e6xxx_g2_smi_phy_write_c45(struct mv88e6xxx_chip *chip,
 					   bool external, int port, int devad,
 					   int reg, u16 data)
@@ -787,21 +805,55 @@ static int _mv88e6xxx_g2_smi_phy_write_c45(struct mv88e6xxx_chip *chip,
 int mv88e6xxx_g2_smi_phy_read_c22(struct mv88e6xxx_chip *chip,
 				  struct mii_bus *bus,
 				  int addr, int reg, u16 *val)
+=======
+static int mv88e6xxx_g2_smi_phy_write_c45(struct mv88e6xxx_chip *chip,
+					  bool external, int port, int reg,
+					  u16 data)
+{
+	int dev = (reg >> 16) & 0x1f;
+	int addr = reg & 0xffff;
+	int err;
+
+	err = mv88e6xxx_g2_smi_phy_write_addr_c45(chip, external, port, dev,
+						  addr);
+	if (err)
+		return err;
+
+	return mv88e6xxx_g2_smi_phy_write_data_c45(chip, external, port, dev,
+						   data);
+}
+
+int mv88e6xxx_g2_smi_phy_read(struct mv88e6xxx_chip *chip, struct mii_bus *bus,
+			      int addr, int reg, u16 *val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mv88e6xxx_mdio_bus *mdio_bus = bus->priv;
 	bool external = mdio_bus->external;
 
+<<<<<<< HEAD
+=======
+	if (reg & MII_ADDR_C45)
+		return mv88e6xxx_g2_smi_phy_read_c45(chip, external, addr, reg,
+						     val);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return mv88e6xxx_g2_smi_phy_read_data_c22(chip, external, addr, reg,
 						  val);
 }
 
+<<<<<<< HEAD
 int mv88e6xxx_g2_smi_phy_read_c45(struct mv88e6xxx_chip *chip,
 				  struct mii_bus *bus, int addr, int devad,
 				  int reg, u16 *val)
+=======
+int mv88e6xxx_g2_smi_phy_write(struct mv88e6xxx_chip *chip, struct mii_bus *bus,
+			       int addr, int reg, u16 val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mv88e6xxx_mdio_bus *mdio_bus = bus->priv;
 	bool external = mdio_bus->external;
 
+<<<<<<< HEAD
 	return _mv88e6xxx_g2_smi_phy_read_c45(chip, external, addr, devad, reg,
 					      val);
 }
@@ -812,11 +864,17 @@ int mv88e6xxx_g2_smi_phy_write_c22(struct mv88e6xxx_chip *chip,
 {
 	struct mv88e6xxx_mdio_bus *mdio_bus = bus->priv;
 	bool external = mdio_bus->external;
+=======
+	if (reg & MII_ADDR_C45)
+		return mv88e6xxx_g2_smi_phy_write_c45(chip, external, addr, reg,
+						      val);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return mv88e6xxx_g2_smi_phy_write_data_c22(chip, external, addr, reg,
 						   val);
 }
 
+<<<<<<< HEAD
 int mv88e6xxx_g2_smi_phy_write_c45(struct mv88e6xxx_chip *chip,
 				   struct mii_bus *bus, int addr, int devad,
 				   int reg, u16 val)
@@ -828,6 +886,8 @@ int mv88e6xxx_g2_smi_phy_write_c45(struct mv88e6xxx_chip *chip,
 					       val);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Offset 0x1B: Watchdog Control */
 static int mv88e6097_watchdog_action(struct mv88e6xxx_chip *chip, int irq)
 {
@@ -1176,6 +1236,7 @@ out:
 int mv88e6xxx_g2_irq_mdio_setup(struct mv88e6xxx_chip *chip,
 				struct mii_bus *bus)
 {
+<<<<<<< HEAD
 	int phy, irq;
 
 	for (phy = 0; phy < chip->info->num_internal_phys; phy++) {
@@ -1186,9 +1247,36 @@ int mv88e6xxx_g2_irq_mdio_setup(struct mv88e6xxx_chip *chip,
 		bus->irq[chip->info->phy_base_addr + phy] = irq;
 	}
 	return 0;
+=======
+	int phy, irq, err, err_phy;
+
+	for (phy = 0; phy < chip->info->num_internal_phys; phy++) {
+		irq = irq_find_mapping(chip->g2_irq.domain, phy);
+		if (irq < 0) {
+			err = irq;
+			goto out;
+		}
+		bus->irq[chip->info->phy_base_addr + phy] = irq;
+	}
+	return 0;
+out:
+	err_phy = phy;
+
+	for (phy = 0; phy < err_phy; phy++)
+		irq_dispose_mapping(bus->irq[phy]);
+
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void mv88e6xxx_g2_irq_mdio_free(struct mv88e6xxx_chip *chip,
 				struct mii_bus *bus)
 {
+<<<<<<< HEAD
+=======
+	int phy;
+
+	for (phy = 0; phy < chip->info->num_internal_phys; phy++)
+		irq_dispose_mapping(bus->irq[phy]);
+>>>>>>> b7ba80a49124 (Commit)
 }

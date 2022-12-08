@@ -151,6 +151,9 @@ int test_signal_vmx(void)
 
 int main(int argc, char *argv[])
 {
+<<<<<<< HEAD
 	test_harness_set_timeout(360);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return test_harness(test_signal_vmx, "vmx_signal");
 }

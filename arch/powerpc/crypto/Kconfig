@@ -94,6 +94,7 @@ config CRYPTO_AES_PPC_SPE
 	  architecture specific assembler implementations that work on 1KB
 	  tables or 256 bytes S-boxes.
 
+<<<<<<< HEAD
 config CRYPTO_AES_GCM_P10
 	tristate "Stitched AES/GCM acceleration support on P10 or later CPU (PPC)"
 	depends on PPC64 && POWER10_CPU && CPU_LITTLE_ENDIAN
@@ -111,4 +112,6 @@ config CRYPTO_AES_GCM_P10
 	  Support for cryptographic acceleration instructions on Power10 or
 	  later CPU. This module supports stitched acceleration for AES/GCM.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endmenu

@@ -1,6 +1,10 @@
 /*
  * Copyright (c) 2017		Intel Deutschland GmbH
+<<<<<<< HEAD
  * Copyright (c) 2018-2019, 2021-2022 Intel Corporation
+=======
+ * Copyright (c) 2018-2019, 2021 Intel Corporation
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -82,14 +86,21 @@ enum ieee80211_radiotap_presence {
 	IEEE80211_RADIOTAP_HE_MU = 24,
 	IEEE80211_RADIOTAP_ZERO_LEN_PSDU = 26,
 	IEEE80211_RADIOTAP_LSIG = 27,
+<<<<<<< HEAD
 	IEEE80211_RADIOTAP_TLV = 28,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* valid in every it_present bitmap, even vendor namespaces */
 	IEEE80211_RADIOTAP_RADIOTAP_NAMESPACE = 29,
 	IEEE80211_RADIOTAP_VENDOR_NAMESPACE = 30,
+<<<<<<< HEAD
 	IEEE80211_RADIOTAP_EXT = 31,
 	IEEE80211_RADIOTAP_EHT_USIG = 33,
 	IEEE80211_RADIOTAP_EHT = 34,
+=======
+	IEEE80211_RADIOTAP_EXT = 31
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* for IEEE80211_RADIOTAP_FLAGS */
@@ -363,6 +374,7 @@ enum ieee80211_radiotap_zero_len_psdu_type {
 	IEEE80211_RADIOTAP_ZERO_LEN_PSDU_VENDOR			= 0xff,
 };
 
+<<<<<<< HEAD
 struct ieee80211_radiotap_tlv {
 	__le16 type;
 	__le16 len;
@@ -571,6 +583,8 @@ enum ieee80211_radiotap_eht_usig_tb {
 	IEEE80211_RADIOTAP_EHT_USIG2_TB_B20_B25_TAIL		= 0xfc000000,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * ieee80211_get_radiotap_len - get radiotap header length
  */

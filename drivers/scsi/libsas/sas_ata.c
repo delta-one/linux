@@ -101,7 +101,11 @@ static void sas_ata_task_done(struct sas_task *task)
 
 	spin_lock_irqsave(ap->lock, flags);
 	/* check if we lost the race with libata/sas_ata_post_internal() */
+<<<<<<< HEAD
 	if (unlikely(ata_port_is_frozen(ap))) {
+=======
+	if (unlikely(ap->pflags & ATA_PFLAG_FROZEN)) {
+>>>>>>> b7ba80a49124 (Commit)
 		spin_unlock_irqrestore(ap->lock, flags);
 		if (qc->scsicmd)
 			goto qc_already_gone;
@@ -125,7 +129,11 @@ static void sas_ata_task_done(struct sas_task *task)
 		} else {
 			link->eh_info.err_mask |= ac_err_mask(dev->sata_dev.fis[2]);
 			if (unlikely(link->eh_info.err_mask))
+<<<<<<< HEAD
 				qc->flags |= ATA_QCFLAG_EH;
+=======
+				qc->flags |= ATA_QCFLAG_FAILED;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	} else {
 		ac = sas_to_ata_err(stat);
@@ -136,11 +144,19 @@ static void sas_ata_task_done(struct sas_task *task)
 				qc->err_mask = ac;
 			} else {
 				link->eh_info.err_mask |= AC_ERR_DEV;
+<<<<<<< HEAD
 				qc->flags |= ATA_QCFLAG_EH;
 			}
 
 			dev->sata_dev.fis[2] = ATA_ERR | ATA_DRDY; /* tf status */
 			dev->sata_dev.fis[3] = ATA_ABORTED; /* tf error */
+=======
+				qc->flags |= ATA_QCFLAG_FAILED;
+			}
+
+			dev->sata_dev.fis[3] = 0x04; /* status err */
+			dev->sata_dev.fis[2] = ATA_ERR;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -226,11 +242,19 @@ static unsigned int sas_ata_qc_issue(struct ata_queued_cmd *qc)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void sas_ata_qc_fill_rtf(struct ata_queued_cmd *qc)
+=======
+static bool sas_ata_qc_fill_rtf(struct ata_queued_cmd *qc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct domain_device *dev = qc->ap->private_data;
 
 	ata_tf_from_fis(dev->sata_dev.fis, &qc->result_tf);
+<<<<<<< HEAD
+=======
+	return true;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct sas_internal *dev_to_sas_internal(struct domain_device *dev)
@@ -238,6 +262,7 @@ static struct sas_internal *dev_to_sas_internal(struct domain_device *dev)
 	return to_sas_internal(dev->port->ha->core.shost->transportt);
 }
 
+<<<<<<< HEAD
 static int sas_get_ata_command_set(struct domain_device *dev)
 {
 	struct ata_taskfile tf;
@@ -249,6 +274,9 @@ static int sas_get_ata_command_set(struct domain_device *dev)
 
 	return ata_dev_classify(&tf);
 }
+=======
+static int sas_get_ata_command_set(struct domain_device *dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 int sas_get_ata_info(struct domain_device *dev, struct ex_phy *phy)
 {
@@ -296,6 +324,7 @@ static int sas_ata_clear_pending(struct domain_device *dev, struct ex_phy *phy)
 		return 1;
 }
 
+<<<<<<< HEAD
 int smp_ata_check_ready_type(struct ata_link *link)
 {
 	struct domain_device *dev = link->ap->private_data;
@@ -321,6 +350,8 @@ int smp_ata_check_ready_type(struct ata_link *link)
 }
 EXPORT_SYMBOL_GPL(smp_ata_check_ready_type);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int smp_ata_check_ready(struct ata_link *link)
 {
 	int res;
@@ -392,7 +423,11 @@ static int sas_ata_printk(const char *level, const struct domain_device *ddev,
 	return r;
 }
 
+<<<<<<< HEAD
 static int sas_ata_wait_after_reset(struct domain_device *dev, unsigned long deadline)
+=======
+int sas_ata_wait_after_reset(struct domain_device *dev, unsigned long deadline)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sata_device *sata_dev = &dev->sata_dev;
 	int (*check_ready)(struct ata_link *link);
@@ -414,6 +449,10 @@ static int sas_ata_wait_after_reset(struct domain_device *dev, unsigned long dea
 
 	return ret;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(sas_ata_wait_after_reset);
+>>>>>>> b7ba80a49124 (Commit)
 
 static int sas_ata_hard_reset(struct ata_link *link, unsigned int *class,
 			      unsigned long deadline)
@@ -485,7 +524,11 @@ static void sas_ata_internal_abort(struct sas_task *task)
 
 static void sas_ata_post_internal(struct ata_queued_cmd *qc)
 {
+<<<<<<< HEAD
 	if (qc->flags & ATA_QCFLAG_EH)
+=======
+	if (qc->flags & ATA_QCFLAG_FAILED)
+>>>>>>> b7ba80a49124 (Commit)
 		qc->err_mask |= AC_ERR_OTHER;
 
 	if (qc->err_mask) {
@@ -640,12 +683,33 @@ void sas_ata_task_abort(struct sas_task *task)
 
 	/* Internal command, fake a timeout and complete. */
 	qc->flags &= ~ATA_QCFLAG_ACTIVE;
+<<<<<<< HEAD
 	qc->flags |= ATA_QCFLAG_EH;
+=======
+	qc->flags |= ATA_QCFLAG_FAILED;
+>>>>>>> b7ba80a49124 (Commit)
 	qc->err_mask |= AC_ERR_TIMEOUT;
 	waiting = qc->private_data;
 	complete(waiting);
 }
 
+<<<<<<< HEAD
+=======
+static int sas_get_ata_command_set(struct domain_device *dev)
+{
+	struct dev_to_host_fis *fis =
+		(struct dev_to_host_fis *) dev->frame_rcvd;
+	struct ata_taskfile tf;
+
+	if (dev->dev_type == SAS_SATA_PENDING)
+		return ATA_DEV_UNKNOWN;
+
+	ata_tf_from_fis((const u8 *)fis, &tf);
+
+	return ata_dev_classify(&tf);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 void sas_probe_sata(struct asd_sas_port *port)
 {
 	struct domain_device *dev, *n;
@@ -674,6 +738,7 @@ void sas_probe_sata(struct asd_sas_port *port)
 
 }
 
+<<<<<<< HEAD
 int sas_ata_add_dev(struct domain_device *parent, struct ex_phy *phy,
 		    struct domain_device *child, int phy_id)
 {
@@ -736,6 +801,8 @@ int sas_ata_add_dev(struct domain_device *parent, struct ex_phy *phy,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void sas_ata_flush_pm_eh(struct asd_sas_port *port, const char *func)
 {
 	struct domain_device *dev, *n;
@@ -942,6 +1009,7 @@ void sas_ata_wait_eh(struct domain_device *dev)
 	ata_port_wait_eh(ap);
 }
 
+<<<<<<< HEAD
 void sas_ata_device_link_abort(struct domain_device *device, bool force_reset)
 {
 	struct ata_port *ap = device->sata_dev.ap;
@@ -960,6 +1028,8 @@ void sas_ata_device_link_abort(struct domain_device *device, bool force_reset)
 }
 EXPORT_SYMBOL_GPL(sas_ata_device_link_abort);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int sas_execute_ata_cmd(struct domain_device *device, u8 *fis, int force_phy_id)
 {
 	struct sas_tmf_task tmf_task = {};

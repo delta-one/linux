@@ -571,7 +571,11 @@ struct nfsd4_copy {
 	struct task_struct	*copy_task;
 	refcount_t		refcount;
 
+<<<<<<< HEAD
 	struct nfsd4_ssc_umount_item *ss_nsui;
+=======
+	struct vfsmount		*ss_mnt;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nfs_fh		c_fh;
 	nfs4_stateid		stateid;
 };
@@ -896,10 +900,13 @@ struct nfsd4_operation {
 			union nfsd4_op_u *);
 };
 
+<<<<<<< HEAD
 struct nfsd4_cb_recall_any {
 	struct nfsd4_callback	ra_cb;
 	u32			ra_keep;
 	u32			ra_bmval[1];
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

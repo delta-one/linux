@@ -6,7 +6,11 @@
 #ifndef __VLV_DSI_REGS_H__
 #define __VLV_DSI_REGS_H__
 
+<<<<<<< HEAD
 #include "intel_display_reg_defs.h"
+=======
+#include "i915_reg_defs.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define VLV_MIPI_BASE			VLV_DISPLAY_BASE
 #define BXT_MIPI_BASE			0x60000

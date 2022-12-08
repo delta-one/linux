@@ -4,7 +4,10 @@
 #include <linux/module.h>
 #include <net/ip.h>
 #include <linux/ipv6.h>
+<<<<<<< HEAD
 #include <linux/icmp.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/ipv6.h>
 #include <net/tcp.h>
 #include <net/udp.h>
@@ -21,8 +24,11 @@ MODULE_ALIAS("ipt_udp");
 MODULE_ALIAS("ipt_tcp");
 MODULE_ALIAS("ip6t_udp");
 MODULE_ALIAS("ip6t_tcp");
+<<<<<<< HEAD
 MODULE_ALIAS("ipt_icmp");
 MODULE_ALIAS("ip6t_icmp6");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Returns 1 if the port is matched by the range, 0 otherwise */
 static inline bool
@@ -164,6 +170,7 @@ static int udp_mt_check(const struct xt_mtchk_param *par)
 	return (udpinfo->invflags & ~XT_UDP_INV_MASK) ? -EINVAL : 0;
 }
 
+<<<<<<< HEAD
 /* Returns 1 if the type and code is matched by the range, 0 otherwise */
 static bool type_code_in_range(u8 test_type, u8 min_code, u8 max_code,
 			       u8 type, u8 code)
@@ -253,6 +260,8 @@ static int icmp6_checkentry(const struct xt_mtchk_param *par)
 	return (icmpinfo->invflags & ~IP6T_ICMP_INV) ? -EINVAL : 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct xt_match tcpudp_mt_reg[] __read_mostly = {
 	{
 		.name		= "tcp",
@@ -308,6 +317,7 @@ static struct xt_match tcpudp_mt_reg[] __read_mostly = {
 		.proto		= IPPROTO_UDPLITE,
 		.me		= THIS_MODULE,
 	},
+<<<<<<< HEAD
 	{
 		.name       = "icmp",
 		.match      = icmp_match,
@@ -326,6 +336,8 @@ static struct xt_match tcpudp_mt_reg[] __read_mostly = {
 		.family     = NFPROTO_IPV6,
 		.me	    = THIS_MODULE,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init tcpudp_mt_init(void)

@@ -260,7 +260,10 @@
 	compatible = "marvell,armada-xp-wdt";
 	clocks = <&coreclk 2>, <&refclk>;
 	clock-names = "nbclk", "fixed";
+<<<<<<< HEAD
 	interrupts = <93>, <38>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &cpurst {

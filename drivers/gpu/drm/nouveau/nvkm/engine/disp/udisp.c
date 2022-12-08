@@ -21,7 +21,10 @@
  */
 #include "priv.h"
 #include "conn.h"
+<<<<<<< HEAD
 #include "head.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "outp.h"
 
 #include <nvif/class.h>
@@ -44,12 +47,15 @@ nvkm_udisp_sclass(struct nvkm_object *object, int index, struct nvkm_oclass *scl
 		return 0;
 	}
 
+<<<<<<< HEAD
 	if (index-- == 0) {
 		sclass->base = (struct nvkm_sclass) { 0, 0, NVIF_CLASS_HEAD };
 		sclass->ctor = nvkm_uhead_new;
 		return 0;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (disp->func->user[index].ctor) {
 		sclass->base = disp->func->user[index].base;
 		sclass->ctor = disp->func->user[index].ctor;
@@ -59,6 +65,20 @@ nvkm_udisp_sclass(struct nvkm_object *object, int index, struct nvkm_oclass *scl
 	return -EINVAL;
 }
 
+<<<<<<< HEAD
+=======
+static int
+nvkm_udisp_mthd(struct nvkm_object *object, u32 mthd, void *argv, u32 argc)
+{
+	struct nvkm_disp *disp = nvkm_udisp(object);
+
+	if (disp->engine.subdev.device->card_type >= NV_50)
+		return nv50_disp_root_mthd_(object, mthd, argv, argc);
+
+	return nv04_disp_mthd(object, mthd, argv, argc);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void *
 nvkm_udisp_dtor(struct nvkm_object *object)
 {
@@ -74,6 +94,11 @@ nvkm_udisp_dtor(struct nvkm_object *object)
 static const struct nvkm_object_func
 nvkm_udisp = {
 	.dtor = nvkm_udisp_dtor,
+<<<<<<< HEAD
+=======
+	.mthd = nvkm_udisp_mthd,
+	.ntfy = nvkm_disp_ntfy,
+>>>>>>> b7ba80a49124 (Commit)
 	.sclass = nvkm_udisp_sclass,
 };
 
@@ -83,7 +108,10 @@ nvkm_udisp_new(const struct nvkm_oclass *oclass, void *argv, u32 argc, struct nv
 	struct nvkm_disp *disp = nvkm_disp(oclass->engine);
 	struct nvkm_conn *conn;
 	struct nvkm_outp *outp;
+<<<<<<< HEAD
 	struct nvkm_head *head;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	union nvif_disp_args *args = argv;
 
 	if (argc != sizeof(args->v0) || args->v0.version != 0)
@@ -106,9 +134,12 @@ nvkm_udisp_new(const struct nvkm_oclass *oclass, void *argv, u32 argc, struct nv
 	list_for_each_entry(outp, &disp->outps, head)
 		args->v0.outp_mask |= BIT(outp->index);
 
+<<<<<<< HEAD
 	args->v0.head_mask = 0;
 	list_for_each_entry(head, &disp->heads, head)
 		args->v0.head_mask |= BIT(head->id);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }

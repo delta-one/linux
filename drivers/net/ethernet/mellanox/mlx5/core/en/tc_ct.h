@@ -28,8 +28,11 @@ struct mlx5_ct_attr {
 	struct mlx5_ct_flow *ct_flow;
 	struct nf_flowtable *nf_ft;
 	u32 ct_labels_id;
+<<<<<<< HEAD
 	u32 act_miss_mapping;
 	u64 act_miss_cookie;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define zone_to_reg_ct {\

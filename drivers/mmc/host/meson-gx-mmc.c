@@ -150,11 +150,19 @@ struct sd_emmc_desc {
 
 struct meson_host {
 	struct	device		*dev;
+<<<<<<< HEAD
 	const struct meson_mmc_data *data;
+=======
+	struct	meson_mmc_data *data;
+>>>>>>> b7ba80a49124 (Commit)
 	struct	mmc_host	*mmc;
 	struct	mmc_command	*cmd;
 
 	void __iomem *regs;
+<<<<<<< HEAD
+=======
+	struct clk *core_clk;
+>>>>>>> b7ba80a49124 (Commit)
 	struct clk *mux_clk;
 	struct clk *mmc_clk;
 	unsigned long req_rate;
@@ -174,6 +182,10 @@ struct meson_host {
 
 	int irq;
 
+<<<<<<< HEAD
+=======
+	bool vqmmc_enabled;
+>>>>>>> b7ba80a49124 (Commit)
 	bool needs_pre_post_req;
 
 	spinlock_t lock;
@@ -433,8 +445,12 @@ static int meson_mmc_clk_init(struct meson_host *host)
 	clk_reg |= FIELD_PREP(CLK_CORE_PHASE_MASK, CLK_PHASE_180);
 	clk_reg |= FIELD_PREP(CLK_TX_PHASE_MASK, CLK_PHASE_0);
 	clk_reg |= FIELD_PREP(CLK_RX_PHASE_MASK, CLK_PHASE_0);
+<<<<<<< HEAD
 	if (host->mmc->caps & MMC_CAP_SDIO_IRQ)
 		clk_reg |= CLK_IRQ_SDIO_SLEEP(host);
+=======
+	clk_reg |= CLK_IRQ_SDIO_SLEEP(host);
+>>>>>>> b7ba80a49124 (Commit)
 	writel(clk_reg, host->regs + SD_EMMC_CLOCK);
 
 	/* get the mux parents */
@@ -603,18 +619,45 @@ static void meson_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
 	 */
 	switch (ios->power_mode) {
 	case MMC_POWER_OFF:
+<<<<<<< HEAD
 		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, 0);
 		mmc_regulator_disable_vqmmc(mmc);
+=======
+		if (!IS_ERR(mmc->supply.vmmc))
+			mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, 0);
+
+		if (!IS_ERR(mmc->supply.vqmmc) && host->vqmmc_enabled) {
+			regulator_disable(mmc->supply.vqmmc);
+			host->vqmmc_enabled = false;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		break;
 
 	case MMC_POWER_UP:
+<<<<<<< HEAD
 		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, ios->vdd);
+=======
+		if (!IS_ERR(mmc->supply.vmmc))
+			mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, ios->vdd);
+>>>>>>> b7ba80a49124 (Commit)
 
 		break;
 
 	case MMC_POWER_ON:
+<<<<<<< HEAD
 		mmc_regulator_enable_vqmmc(mmc);
+=======
+		if (!IS_ERR(mmc->supply.vqmmc) && !host->vqmmc_enabled) {
+			int ret = regulator_enable(mmc->supply.vqmmc);
+
+			if (ret < 0)
+				dev_err(host->dev,
+					"failed to enable vqmmc regulator\n");
+			else
+				host->vqmmc_enabled = true;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		break;
 	}
@@ -933,6 +976,7 @@ static irqreturn_t meson_mmc_irq(int irq, void *dev_id)
 {
 	struct meson_host *host = dev_id;
 	struct mmc_command *cmd;
+<<<<<<< HEAD
 	u32 status, raw_status, irq_mask = IRQ_EN_MASK;
 	irqreturn_t ret = IRQ_NONE;
 
@@ -945,6 +989,18 @@ static irqreturn_t meson_mmc_irq(int irq, void *dev_id)
 		dev_dbg(host->dev,
 			"Unexpected IRQ! irq_en 0x%08x - status 0x%08x\n",
 			 irq_mask, raw_status);
+=======
+	u32 status, raw_status;
+	irqreturn_t ret = IRQ_NONE;
+
+	raw_status = readl(host->regs + SD_EMMC_STATUS);
+	status = raw_status & (IRQ_EN_MASK | IRQ_SDIO);
+
+	if (!status) {
+		dev_dbg(host->dev,
+			"Unexpected IRQ! irq_en 0x%08lx - status 0x%08x\n",
+			 IRQ_EN_MASK | IRQ_SDIO, raw_status);
+>>>>>>> b7ba80a49124 (Commit)
 		return IRQ_NONE;
 	}
 
@@ -1067,6 +1123,23 @@ static irqreturn_t meson_mmc_irq_thread(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * NOTE: we only need this until the GPIO/pinctrl driver can handle
+ * interrupts.  For now, the MMC core will use this for polling.
+ */
+static int meson_mmc_get_cd(struct mmc_host *mmc)
+{
+	int status = mmc_gpio_get_cd(mmc);
+
+	if (status == -ENOSYS)
+		return 1; /* assume present */
+
+	return status;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void meson_mmc_cfg_init(struct meson_host *host)
 {
 	u32 cfg = 0;
@@ -1135,7 +1208,11 @@ static void meson_mmc_ack_sdio_irq(struct mmc_host *mmc)
 static const struct mmc_host_ops meson_mmc_ops = {
 	.request	= meson_mmc_request,
 	.set_ios	= meson_mmc_set_ios,
+<<<<<<< HEAD
 	.get_cd         = mmc_gpio_get_cd,
+=======
+	.get_cd         = meson_mmc_get_cd,
+>>>>>>> b7ba80a49124 (Commit)
 	.pre_req	= meson_mmc_pre_req,
 	.post_req	= meson_mmc_post_req,
 	.execute_tuning = meson_mmc_resampling_tuning,
@@ -1150,10 +1227,16 @@ static int meson_mmc_probe(struct platform_device *pdev)
 	struct resource *res;
 	struct meson_host *host;
 	struct mmc_host *mmc;
+<<<<<<< HEAD
 	struct clk *core_clk;
 	int cd_irq, ret;
 
 	mmc = devm_mmc_alloc_host(&pdev->dev, sizeof(struct meson_host));
+=======
+	int ret;
+
+	mmc = mmc_alloc_host(sizeof(struct meson_host), &pdev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!mmc)
 		return -ENOMEM;
 	host = mmc_priv(mmc);
@@ -1166,6 +1249,7 @@ static int meson_mmc_probe(struct platform_device *pdev)
 					"amlogic,dram-access-quirk");
 
 	/* Get regulators and the supported OCR mask */
+<<<<<<< HEAD
 	ret = mmc_regulator_get_supply(mmc);
 	if (ret)
 		return ret;
@@ -1201,6 +1285,51 @@ static int meson_mmc_probe(struct platform_device *pdev)
 	host->pinctrl = devm_pinctrl_get(&pdev->dev);
 	if (IS_ERR(host->pinctrl))
 		return PTR_ERR(host->pinctrl);
+=======
+	host->vqmmc_enabled = false;
+	ret = mmc_regulator_get_supply(mmc);
+	if (ret)
+		goto free_host;
+
+	ret = mmc_of_parse(mmc);
+	if (ret) {
+		if (ret != -EPROBE_DEFER)
+			dev_warn(&pdev->dev, "error parsing DT: %d\n", ret);
+		goto free_host;
+	}
+
+	host->data = (struct meson_mmc_data *)
+		of_device_get_match_data(&pdev->dev);
+	if (!host->data) {
+		ret = -EINVAL;
+		goto free_host;
+	}
+
+	ret = device_reset_optional(&pdev->dev);
+	if (ret) {
+		dev_err_probe(&pdev->dev, ret, "device reset failed\n");
+		goto free_host;
+	}
+
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	host->regs = devm_ioremap_resource(&pdev->dev, res);
+	if (IS_ERR(host->regs)) {
+		ret = PTR_ERR(host->regs);
+		goto free_host;
+	}
+
+	host->irq = platform_get_irq(pdev, 0);
+	if (host->irq <= 0) {
+		ret = -EINVAL;
+		goto free_host;
+	}
+
+	host->pinctrl = devm_pinctrl_get(&pdev->dev);
+	if (IS_ERR(host->pinctrl)) {
+		ret = PTR_ERR(host->pinctrl);
+		goto free_host;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	host->pins_clk_gate = pinctrl_lookup_state(host->pinctrl,
 						   "clk-gate");
@@ -1210,6 +1339,7 @@ static int meson_mmc_probe(struct platform_device *pdev)
 		host->pins_clk_gate = NULL;
 	}
 
+<<<<<<< HEAD
 	core_clk = devm_clk_get_enabled(&pdev->dev, "core");
 	if (IS_ERR(core_clk))
 		return PTR_ERR(core_clk);
@@ -1217,6 +1347,21 @@ static int meson_mmc_probe(struct platform_device *pdev)
 	ret = meson_mmc_clk_init(host);
 	if (ret)
 		return ret;
+=======
+	host->core_clk = devm_clk_get(&pdev->dev, "core");
+	if (IS_ERR(host->core_clk)) {
+		ret = PTR_ERR(host->core_clk);
+		goto free_host;
+	}
+
+	ret = clk_prepare_enable(host->core_clk);
+	if (ret)
+		goto free_host;
+
+	ret = meson_mmc_clk_init(host);
+	if (ret)
+		goto err_core_clk;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* set config to sane default */
 	meson_mmc_cfg_init(host);
@@ -1237,6 +1382,14 @@ static int meson_mmc_probe(struct platform_device *pdev)
 
 	spin_lock_init(&host->lock);
 
+<<<<<<< HEAD
+=======
+	mmc->caps |= MMC_CAP_CMD23;
+
+	if (mmc->caps & MMC_CAP_SDIO_IRQ)
+		mmc->caps2 |= MMC_CAP2_SDIO_IRQ_NOTHREAD;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (host->dram_access_quirk) {
 		/* Limit segments to 1 due to low available sram memory */
 		mmc->max_segs = 1;
@@ -1290,9 +1443,13 @@ static int meson_mmc_probe(struct platform_device *pdev)
 	}
 
 	mmc->ops = &meson_mmc_ops;
+<<<<<<< HEAD
 	ret = mmc_add_host(mmc);
 	if (ret)
 		goto err_free_irq;
+=======
+	mmc_add_host(mmc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -1300,6 +1457,13 @@ err_free_irq:
 	free_irq(host->irq, host);
 err_init_clk:
 	clk_disable_unprepare(host->mmc_clk);
+<<<<<<< HEAD
+=======
+err_core_clk:
+	clk_disable_unprepare(host->core_clk);
+free_host:
+	mmc_free_host(mmc);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -1314,7 +1478,13 @@ static int meson_mmc_remove(struct platform_device *pdev)
 	free_irq(host->irq, host);
 
 	clk_disable_unprepare(host->mmc_clk);
+<<<<<<< HEAD
 
+=======
+	clk_disable_unprepare(host->core_clk);
+
+	mmc_free_host(host->mmc);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

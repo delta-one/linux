@@ -26,7 +26,11 @@ static struct cgroup_rstat_cpu *cgroup_rstat_cpu(struct cgroup *cgrp, int cpu)
  * rstat_cpu->updated_children list.  See the comment on top of
  * cgroup_rstat_cpu definition for details.
  */
+<<<<<<< HEAD
 __bpf_kfunc void cgroup_rstat_updated(struct cgroup *cgrp, int cpu)
+=======
+void cgroup_rstat_updated(struct cgroup *cgrp, int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	raw_spinlock_t *cpu_lock = per_cpu_ptr(&cgroup_rstat_cpu_lock, cpu);
 	unsigned long flags;
@@ -231,7 +235,11 @@ static void cgroup_rstat_flush_locked(struct cgroup *cgrp, bool may_sleep)
  *
  * This function may block.
  */
+<<<<<<< HEAD
 __bpf_kfunc void cgroup_rstat_flush(struct cgroup *cgrp)
+=======
+void cgroup_rstat_flush(struct cgroup *cgrp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	might_sleep();
 
@@ -457,7 +465,13 @@ static void root_cgroup_cputime(struct cgroup_base_stat *bstat)
 	struct task_cputime *cputime = &bstat->cputime;
 	int i;
 
+<<<<<<< HEAD
 	memset(bstat, 0, sizeof(*bstat));
+=======
+	cputime->stime = 0;
+	cputime->utime = 0;
+	cputime->sum_exec_runtime = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	for_each_possible_cpu(i) {
 		struct kernel_cpustat kcpustat;
 		u64 *cpustat = kcpustat.cpustat;

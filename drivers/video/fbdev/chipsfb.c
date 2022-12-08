@@ -358,12 +358,17 @@ static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
 	rc = pci_enable_device(dp);
 	if (rc < 0) {
+=======
+	if (pci_enable_device(dp) < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(&dp->dev, "Cannot enable PCI device\n");
 		goto err_out;
 	}
 
+<<<<<<< HEAD
 	if ((dp->resource[0].flags & IORESOURCE_MEM) == 0) {
 		rc = -ENODEV;
 		goto err_disable;
@@ -373,6 +378,13 @@ static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
 		rc = -ENODEV;
 		goto err_disable;
 	}
+=======
+	if ((dp->resource[0].flags & IORESOURCE_MEM) == 0)
+		goto err_disable;
+	addr = pci_resource_start(dp, 0);
+	if (addr == 0)
+		goto err_disable;
+>>>>>>> b7ba80a49124 (Commit)
 
 	p = framebuffer_alloc(0, &dp->dev);
 	if (p == NULL) {
@@ -422,8 +434,12 @@ static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
 
 	init_chips(p, addr);
 
+<<<<<<< HEAD
 	rc = register_framebuffer(p);
 	if (rc < 0) {
+=======
+	if (register_framebuffer(p) < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(&dp->dev,"C&T 65550 framebuffer failed to register\n");
 		goto err_unmap;
 	}
@@ -512,9 +528,12 @@ static struct pci_driver chipsfb_driver = {
 
 int __init chips_init(void)
 {
+<<<<<<< HEAD
 	if (fb_modesetting_disabled("chipsfb"))
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (fb_get_options("chipsfb", NULL))
 		return -ENODEV;
 

@@ -75,7 +75,10 @@ void xen_init_lock_cpu(int cpu)
 	     cpu, per_cpu(lock_kicker_irq, cpu));
 
 	name = kasprintf(GFP_KERNEL, "spinlock%d", cpu);
+<<<<<<< HEAD
 	per_cpu(irq_name, cpu) = name;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	irq = bind_ipi_to_irqhandler(XEN_SPIN_UNLOCK_VECTOR,
 				     cpu,
 				     dummy_handler,
@@ -86,6 +89,10 @@ void xen_init_lock_cpu(int cpu)
 	if (irq >= 0) {
 		disable_irq(irq); /* make sure it's never delivered */
 		per_cpu(lock_kicker_irq, cpu) = irq;
+<<<<<<< HEAD
+=======
+		per_cpu(irq_name, cpu) = name;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	printk("cpu %d spinlock event irq %d\n", cpu, irq);
@@ -98,8 +105,11 @@ void xen_uninit_lock_cpu(int cpu)
 	if (!xen_pvspin)
 		return;
 
+<<<<<<< HEAD
 	kfree(per_cpu(irq_name, cpu));
 	per_cpu(irq_name, cpu) = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * When booting the kernel with 'mitigations=auto,nosmt', the secondary
 	 * CPUs are not activated, and lock_kicker_irq is not initialized.
@@ -110,6 +120,11 @@ void xen_uninit_lock_cpu(int cpu)
 
 	unbind_from_irqhandler(irq, NULL);
 	per_cpu(lock_kicker_irq, cpu) = -1;
+<<<<<<< HEAD
+=======
+	kfree(per_cpu(irq_name, cpu));
+	per_cpu(irq_name, cpu) = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 PV_CALLEE_SAVE_REGS_THUNK(xen_vcpu_stolen);

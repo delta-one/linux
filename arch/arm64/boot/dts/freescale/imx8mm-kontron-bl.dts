@@ -13,8 +13,11 @@
 
 	aliases {
 		ethernet1 = &usbnet;
+<<<<<<< HEAD
 		rtc0 = &rx8900;
 		rtc1 = &snvs_rtc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	/* fixed crystal dedicated to mcp2515 */
@@ -138,7 +141,11 @@
 	pinctrl-0 = <&pinctrl_i2c4>;
 	status = "okay";
 
+<<<<<<< HEAD
 	rx8900: rtc@32 {
+=======
+	rtc@32 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "epson,rx8900";
 		reg = <0x32>;
 	};

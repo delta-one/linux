@@ -26,7 +26,10 @@ enum {
 #define REQUEST_FILE "../hv-gpci-requests.h"
 #define NAME_LOWER hv_gpci
 #define NAME_UPPER HV_GPCI
+<<<<<<< HEAD
 #define ENABLE_EVENTS_COUNTERINFO_V6
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "req-gen/perf.h"
 #undef REQUEST_FILE
 #undef NAME_LOWER

@@ -177,7 +177,11 @@ typedef struct sg_device { /* holds the state of each scsi generic device */
 } Sg_device;
 
 /* tasklet or soft irq callback */
+<<<<<<< HEAD
 static enum rq_end_io_ret sg_rq_end_io(struct request *rq, blk_status_t status);
+=======
+static void sg_rq_end_io(struct request *rq, blk_status_t status);
+>>>>>>> b7ba80a49124 (Commit)
 static int sg_start_req(Sg_request *srp, unsigned char *cmd);
 static int sg_finish_rem_req(Sg_request * srp);
 static int sg_build_indirect(Sg_scatter_hold * schp, Sg_fd * sfp, int buff_size);
@@ -1288,7 +1292,11 @@ sg_mmap(struct file *filp, struct vm_area_struct *vma)
 	}
 
 	sfp->mmap_called = 1;
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_IO | VM_DONTEXPAND | VM_DONTDUMP);
+=======
+	vma->vm_flags |= VM_IO | VM_DONTEXPAND | VM_DONTDUMP;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_private_data = sfp;
 	vma->vm_ops = &sg_mmap_vm_ops;
 out:
@@ -1311,7 +1319,11 @@ sg_rq_end_io_usercontext(struct work_struct *work)
  * This function is a "bottom half" handler that is called by the mid
  * level when a command is completed (or has failed).
  */
+<<<<<<< HEAD
 static enum rq_end_io_ret
+=======
+static void
+>>>>>>> b7ba80a49124 (Commit)
 sg_rq_end_io(struct request *rq, blk_status_t status)
 {
 	struct scsi_cmnd *scmd = blk_mq_rq_to_pdu(rq);
@@ -1324,11 +1336,19 @@ sg_rq_end_io(struct request *rq, blk_status_t status)
 	int result, resid, done = 1;
 
 	if (WARN_ON(srp->done != 0))
+<<<<<<< HEAD
 		return RQ_END_IO_NONE;
 
 	sfp = srp->parentfp;
 	if (WARN_ON(sfp == NULL))
 		return RQ_END_IO_NONE;
+=======
+		return;
+
+	sfp = srp->parentfp;
+	if (WARN_ON(sfp == NULL))
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	sdp = sfp->parentdp;
 	if (unlikely(atomic_read(&sdp->detaching)))
@@ -1349,7 +1369,11 @@ sg_rq_end_io(struct request *rq, blk_status_t status)
 		struct scsi_sense_hdr sshdr;
 
 		srp->header.status = 0xff & result;
+<<<<<<< HEAD
 		srp->header.masked_status = sg_status_byte(result);
+=======
+		srp->header.masked_status = status_byte(result);
+>>>>>>> b7ba80a49124 (Commit)
 		srp->header.msg_status = COMMAND_COMPLETE;
 		srp->header.host_status = host_byte(result);
 		srp->header.driver_status = driver_byte(result);
@@ -1406,7 +1430,10 @@ sg_rq_end_io(struct request *rq, blk_status_t status)
 		INIT_WORK(&srp->ew.work, sg_rq_end_io_usercontext);
 		schedule_work(&srp->ew.work);
 	}
+<<<<<<< HEAD
 	return RQ_END_IO_NONE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct file_operations sg_fops = {
@@ -1677,7 +1704,11 @@ init_sg(void)
 				    SG_MAX_DEVS, "sg");
 	if (rc)
 		return rc;
+<<<<<<< HEAD
         sg_sysfs_class = class_create("scsi_generic");
+=======
+        sg_sysfs_class = class_create(THIS_MODULE, "scsi_generic");
+>>>>>>> b7ba80a49124 (Commit)
         if ( IS_ERR(sg_sysfs_class) ) {
 		rc = PTR_ERR(sg_sysfs_class);
 		goto err_out;
@@ -1726,7 +1757,11 @@ sg_start_req(Sg_request *srp, unsigned char *cmd)
 	Sg_scatter_hold *rsv_schp = &sfp->reserve;
 	struct request_queue *q = sfp->parentdp->device->request_queue;
 	struct rq_map_data *md, map_data;
+<<<<<<< HEAD
 	int rw = hp->dxfer_direction == SG_DXFER_TO_DEV ? ITER_SOURCE : ITER_DEST;
+=======
+	int rw = hp->dxfer_direction == SG_DXFER_TO_DEV ? WRITE : READ;
+>>>>>>> b7ba80a49124 (Commit)
 	struct scsi_cmnd *scmd;
 
 	SCSI_LOG_TIMEOUT(4, sg_printk(KERN_INFO, sfp->parentdp,
@@ -1804,8 +1839,31 @@ sg_start_req(Sg_request *srp, unsigned char *cmd)
 			md->from_user = 0;
 	}
 
+<<<<<<< HEAD
 	res = blk_rq_map_user_io(rq, md, hp->dxferp, hp->dxfer_len,
 			GFP_ATOMIC, iov_count, iov_count, 1, rw);
+=======
+	if (iov_count) {
+		struct iovec *iov = NULL;
+		struct iov_iter i;
+
+		res = import_iovec(rw, hp->dxferp, iov_count, 0, &iov, &i);
+		if (res < 0)
+			return res;
+
+		iov_iter_truncate(&i, hp->dxfer_len);
+		if (!iov_iter_count(&i)) {
+			kfree(iov);
+			return -EINVAL;
+		}
+
+		res = blk_rq_map_user_iov(q, rq, md, &i, GFP_ATOMIC);
+		kfree(iov);
+	} else
+		res = blk_rq_map_user(q, rq, md, hp->dxferp,
+				      hp->dxfer_len, GFP_ATOMIC);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!res) {
 		srp->bio = rq->bio;
 

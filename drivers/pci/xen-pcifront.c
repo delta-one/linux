@@ -521,14 +521,33 @@ static int pcifront_rescan_root(struct pcifront_device *pdev,
 	int err;
 	struct pci_bus *b;
 
+<<<<<<< HEAD
+=======
+#ifndef CONFIG_PCI_DOMAINS
+	if (domain != 0) {
+		dev_err(&pdev->xdev->dev,
+			"PCI Root in non-zero PCI Domain! domain=%d\n", domain);
+		dev_err(&pdev->xdev->dev,
+			"Please compile with CONFIG_PCI_DOMAINS\n");
+		return -EINVAL;
+	}
+#endif
+
+	dev_info(&pdev->xdev->dev, "Rescanning PCI Frontend Bus %04x:%02x\n",
+		 domain, bus);
+
+>>>>>>> b7ba80a49124 (Commit)
 	b = pci_find_bus(domain, bus);
 	if (!b)
 		/* If the bus is unknown, create it. */
 		return pcifront_scan_root(pdev, domain, bus);
 
+<<<<<<< HEAD
 	dev_info(&pdev->xdev->dev, "Rescanning PCI Frontend Bus %04x:%02x\n",
 		 domain, bus);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = pcifront_scan_bus(pdev, domain, bus, b);
 
 	/* Claim resources before going "live" with our devices */
@@ -809,18 +828,41 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static void pcifront_connect(struct pcifront_device *pdev)
 {
 	int err;
+=======
+static int pcifront_try_connect(struct pcifront_device *pdev)
+{
+	int err = -EFAULT;
+>>>>>>> b7ba80a49124 (Commit)
 	int i, num_roots, len;
 	char str[64];
 	unsigned int domain, bus;
 
+<<<<<<< HEAD
+=======
+
+	/* Only connect once */
+	if (xenbus_read_driver_state(pdev->xdev->nodename) !=
+	    XenbusStateInitialised)
+		goto out;
+
+	err = pcifront_connect_and_init_dma(pdev);
+	if (err && err != -EEXIST) {
+		xenbus_dev_fatal(pdev->xdev, err,
+				 "Error setting up PCI Frontend");
+		goto out;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = xenbus_scanf(XBT_NIL, pdev->xdev->otherend,
 			   "root_num", "%d", &num_roots);
 	if (err == -ENOENT) {
 		xenbus_dev_error(pdev->xdev, err,
 				 "No PCI Roots found, trying 0000:00");
+<<<<<<< HEAD
 		err = pcifront_rescan_root(pdev, 0, 0);
 		if (err) {
 			xenbus_dev_fatal(pdev->xdev, err,
@@ -832,26 +874,60 @@ static void pcifront_connect(struct pcifront_device *pdev)
 		xenbus_dev_fatal(pdev->xdev, err >= 0 ? -EINVAL : err,
 				 "Error reading number of PCI roots");
 		return;
+=======
+		err = pcifront_scan_root(pdev, 0, 0);
+		if (err) {
+			xenbus_dev_fatal(pdev->xdev, err,
+					 "Error scanning PCI root 0000:00");
+			goto out;
+		}
+		num_roots = 0;
+	} else if (err != 1) {
+		if (err == 0)
+			err = -EINVAL;
+		xenbus_dev_fatal(pdev->xdev, err,
+				 "Error reading number of PCI roots");
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (i = 0; i < num_roots; i++) {
 		len = snprintf(str, sizeof(str), "root-%d", i);
+<<<<<<< HEAD
 		if (unlikely(len >= (sizeof(str) - 1)))
 			return;
+=======
+		if (unlikely(len >= (sizeof(str) - 1))) {
+			err = -ENOMEM;
+			goto out;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		err = xenbus_scanf(XBT_NIL, pdev->xdev->otherend, str,
 				   "%x:%x", &domain, &bus);
 		if (err != 2) {
+<<<<<<< HEAD
 			xenbus_dev_fatal(pdev->xdev, err >= 0 ? -EINVAL : err,
 					 "Error reading PCI root %d", i);
 			return;
 		}
 
 		err = pcifront_rescan_root(pdev, domain, bus);
+=======
+			if (err >= 0)
+				err = -EINVAL;
+			xenbus_dev_fatal(pdev->xdev, err,
+					 "Error reading PCI root %d", i);
+			goto out;
+		}
+
+		err = pcifront_scan_root(pdev, domain, bus);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err) {
 			xenbus_dev_fatal(pdev->xdev, err,
 					 "Error scanning PCI root %04x:%02x",
 					 domain, bus);
+<<<<<<< HEAD
 			return;
 		}
 	}
@@ -876,6 +952,16 @@ static void pcifront_try_connect(struct pcifront_device *pdev)
 	}
 
 	pcifront_connect(pdev);
+=======
+			goto out;
+		}
+	}
+
+	err = xenbus_switch_state(pdev->xdev, XenbusStateConnected);
+
+out:
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int pcifront_try_disconnect(struct pcifront_device *pdev)
@@ -901,22 +987,90 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static void pcifront_attach_devices(struct pcifront_device *pdev)
 {
 	if (xenbus_read_driver_state(pdev->xdev->nodename) ==
 	    XenbusStateReconfiguring)
 		pcifront_connect(pdev);
+=======
+static int pcifront_attach_devices(struct pcifront_device *pdev)
+{
+	int err = -EFAULT;
+	int i, num_roots, len;
+	unsigned int domain, bus;
+	char str[64];
+
+	if (xenbus_read_driver_state(pdev->xdev->nodename) !=
+	    XenbusStateReconfiguring)
+		goto out;
+
+	err = xenbus_scanf(XBT_NIL, pdev->xdev->otherend,
+			   "root_num", "%d", &num_roots);
+	if (err == -ENOENT) {
+		xenbus_dev_error(pdev->xdev, err,
+				 "No PCI Roots found, trying 0000:00");
+		err = pcifront_rescan_root(pdev, 0, 0);
+		if (err) {
+			xenbus_dev_fatal(pdev->xdev, err,
+					 "Error scanning PCI root 0000:00");
+			goto out;
+		}
+		num_roots = 0;
+	} else if (err != 1) {
+		if (err == 0)
+			err = -EINVAL;
+		xenbus_dev_fatal(pdev->xdev, err,
+				 "Error reading number of PCI roots");
+		goto out;
+	}
+
+	for (i = 0; i < num_roots; i++) {
+		len = snprintf(str, sizeof(str), "root-%d", i);
+		if (unlikely(len >= (sizeof(str) - 1))) {
+			err = -ENOMEM;
+			goto out;
+		}
+
+		err = xenbus_scanf(XBT_NIL, pdev->xdev->otherend, str,
+				   "%x:%x", &domain, &bus);
+		if (err != 2) {
+			if (err >= 0)
+				err = -EINVAL;
+			xenbus_dev_fatal(pdev->xdev, err,
+					 "Error reading PCI root %d", i);
+			goto out;
+		}
+
+		err = pcifront_rescan_root(pdev, domain, bus);
+		if (err) {
+			xenbus_dev_fatal(pdev->xdev, err,
+					 "Error scanning PCI root %04x:%02x",
+					 domain, bus);
+			goto out;
+		}
+	}
+
+	xenbus_switch_state(pdev->xdev, XenbusStateConnected);
+
+out:
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int pcifront_detach_devices(struct pcifront_device *pdev)
 {
 	int err = 0;
 	int i, num_devs;
+<<<<<<< HEAD
 	enum xenbus_state state;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int domain, bus, slot, func;
 	struct pci_dev *pci_dev;
 	char str[64];
 
+<<<<<<< HEAD
 	state = xenbus_read_driver_state(pdev->xdev->nodename);
 	if (state == XenbusStateInitialised) {
 		dev_dbg(&pdev->xdev->dev, "Handle skipped connect.\n");
@@ -932,6 +1086,11 @@ static int pcifront_detach_devices(struct pcifront_device *pdev)
 	} else if (state != XenbusStateConnected) {
 		goto out;
 	}
+=======
+	if (xenbus_read_driver_state(pdev->xdev->nodename) !=
+	    XenbusStateConnected)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = xenbus_scanf(XBT_NIL, pdev->xdev->otherend, "num_devs", "%d",
 			   &num_devs);
@@ -992,7 +1151,10 @@ static int pcifront_detach_devices(struct pcifront_device *pdev)
 			domain, bus, slot, func);
 	}
 
+<<<<<<< HEAD
  out_switch_state:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = xenbus_switch_state(pdev->xdev, XenbusStateReconfiguring);
 
 out:
@@ -1055,12 +1217,21 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static void pcifront_xenbus_remove(struct xenbus_device *xdev)
+=======
+static int pcifront_xenbus_remove(struct xenbus_device *xdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pcifront_device *pdev = dev_get_drvdata(&xdev->dev);
 
 	if (pdev)
 		free_pdev(pdev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct xenbus_device_id xenpci_ids[] = {

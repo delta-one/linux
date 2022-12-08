@@ -130,6 +130,12 @@ static u8 const clock_table[] = { F81232_CLK_1_846_MHZ, F81232_CLK_14_77_MHZ,
 
 static int calc_baud_divisor(speed_t baudrate, speed_t clockrate)
 {
+<<<<<<< HEAD
+=======
+	if (!baudrate)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return DIV_ROUND_CLOSEST(clockrate, baudrate);
 }
 
@@ -495,6 +501,7 @@ static void f81232_set_baudrate(struct tty_struct *tty,
 	speed_t baud_list[] = { baudrate, old_baudrate, F81232_DEF_BAUDRATE };
 
 	for (i = 0; i < ARRAY_SIZE(baud_list); ++i) {
+<<<<<<< HEAD
 		baudrate = baud_list[i];
 		if (baudrate == 0) {
 			tty_encode_baud_rate(tty, 0, 0);
@@ -503,6 +510,11 @@ static void f81232_set_baudrate(struct tty_struct *tty,
 
 		idx = f81232_find_clk(baudrate);
 		if (idx >= 0) {
+=======
+		idx = f81232_find_clk(baud_list[i]);
+		if (idx >= 0) {
+			baudrate = baud_list[i];
+>>>>>>> b7ba80a49124 (Commit)
 			tty_encode_baud_rate(tty, baudrate, baudrate);
 			break;
 		}

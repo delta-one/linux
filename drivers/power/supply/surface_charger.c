@@ -260,7 +260,11 @@ static const struct spwr_psy_properties spwr_psy_props_adp1 = {
 };
 
 static const struct ssam_device_id surface_ac_match[] = {
+<<<<<<< HEAD
 	{ SSAM_SDEV(BAT, SAM, 0x01, 0x01), (unsigned long)&spwr_psy_props_adp1 },
+=======
+	{ SSAM_SDEV(BAT, 0x01, 0x01, 0x01), (unsigned long)&spwr_psy_props_adp1 },
+>>>>>>> b7ba80a49124 (Commit)
 	{ },
 };
 MODULE_DEVICE_TABLE(ssam, surface_ac_match);

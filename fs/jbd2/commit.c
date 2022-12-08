@@ -63,12 +63,23 @@ static void journal_end_buffer_io_sync(struct buffer_head *bh, int uptodate)
 static void release_buffer_page(struct buffer_head *bh)
 {
 	struct folio *folio;
+<<<<<<< HEAD
+=======
+	struct page *page;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (buffer_dirty(bh))
 		goto nope;
 	if (atomic_read(&bh->b_count) != 1)
 		goto nope;
+<<<<<<< HEAD
 	folio = bh->b_folio;
+=======
+	page = bh->b_page;
+	if (!page)
+		goto nope;
+	folio = page_folio(page);
+>>>>>>> b7ba80a49124 (Commit)
 	if (folio->mapping)
 		goto nope;
 
@@ -118,8 +129,13 @@ static int journal_submit_commit_record(journal_t *journal,
 {
 	struct commit_header *tmp;
 	struct buffer_head *bh;
+<<<<<<< HEAD
 	struct timespec64 now;
 	blk_opf_t write_flags = REQ_OP_WRITE | REQ_SYNC;
+=======
+	int ret;
+	struct timespec64 now;
+>>>>>>> b7ba80a49124 (Commit)
 
 	*cbh = NULL;
 
@@ -151,11 +167,21 @@ static int journal_submit_commit_record(journal_t *journal,
 
 	if (journal->j_flags & JBD2_BARRIER &&
 	    !jbd2_has_feature_async_commit(journal))
+<<<<<<< HEAD
 		write_flags |= REQ_PREFLUSH | REQ_FUA;
 
 	submit_bh(write_flags, bh);
 	*cbh = bh;
 	return 0;
+=======
+		ret = submit_bh(REQ_OP_WRITE | REQ_SYNC | REQ_PREFLUSH |
+				REQ_FUA, bh);
+	else
+		ret = submit_bh(REQ_OP_WRITE | REQ_SYNC, bh);
+
+	*cbh = bh;
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -177,14 +203,50 @@ static int journal_wait_on_commit_record(journal_t *journal,
 	return ret;
 }
 
+<<<<<<< HEAD
 /* Send all the data buffers related to an inode */
 int jbd2_submit_inode_data(journal_t *journal, struct jbd2_inode *jinode)
 {
+=======
+/*
+ * write the filemap data using writepage() address_space_operations.
+ * We don't do block allocation here even for delalloc. We don't
+ * use writepages() because with delayed allocation we may be doing
+ * block allocation in writepages().
+ */
+int jbd2_journal_submit_inode_data_buffers(struct jbd2_inode *jinode)
+{
+	struct address_space *mapping = jinode->i_vfs_inode->i_mapping;
+	struct writeback_control wbc = {
+		.sync_mode =  WB_SYNC_ALL,
+		.nr_to_write = mapping->nrpages * 2,
+		.range_start = jinode->i_dirty_start,
+		.range_end = jinode->i_dirty_end,
+	};
+
+	/*
+	 * submit the inode data buffers. We use writepage
+	 * instead of writepages. Because writepages can do
+	 * block allocation with delalloc. We need to write
+	 * only allocated blocks here.
+	 */
+	return generic_writepages(mapping, &wbc);
+}
+
+/* Send all the data buffers related to an inode */
+int jbd2_submit_inode_data(struct jbd2_inode *jinode)
+{
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!jinode || !(jinode->i_flags & JI_WRITE_DATA))
 		return 0;
 
 	trace_jbd2_submit_inode_data(jinode->i_vfs_inode);
+<<<<<<< HEAD
 	return journal->j_submit_inode_data_buffers(jinode);
+=======
+	return jbd2_journal_submit_inode_data_buffers(jinode);
+>>>>>>> b7ba80a49124 (Commit)
 
 }
 EXPORT_SYMBOL(jbd2_submit_inode_data);
@@ -538,7 +600,11 @@ void jbd2_journal_commit_transaction(journal_t *journal)
 	journal->j_running_transaction = NULL;
 	start_time = ktime_get();
 	commit_transaction->t_log_start = journal->j_head;
+<<<<<<< HEAD
 	wake_up_all(&journal->j_wait_transaction_locked);
+=======
+	wake_up(&journal->j_wait_transaction_locked);
+>>>>>>> b7ba80a49124 (Commit)
 	write_unlock(&journal->j_state_lock);
 
 	jbd2_debug(3, "JBD2: commit phase 2a\n");
@@ -1011,7 +1077,11 @@ restart_loop:
 			 * already detached from the mapping and buffers cannot
 			 * get reused.
 			 */
+<<<<<<< HEAD
 			mapping = READ_ONCE(bh->b_folio->mapping);
+=======
+			mapping = READ_ONCE(bh->b_page->mapping);
+>>>>>>> b7ba80a49124 (Commit)
 			if (mapping && !sb_is_blkdev_sb(mapping->host->i_sb)) {
 				clear_buffer_mapped(bh);
 				clear_buffer_new(bh);

@@ -2,7 +2,11 @@
 /*
  * Performance event support for s390x - CPU-measurement Counter Facility
  *
+<<<<<<< HEAD
  *  Copyright IBM Corp. 2012, 2023
+=======
+ *  Copyright IBM Corp. 2012, 2021
+>>>>>>> b7ba80a49124 (Commit)
  *  Author(s): Hendrik Brueckner <brueckner@linux.ibm.com>
  *	       Thomas Richter <tmricht@linux.ibm.com>
  */
@@ -16,6 +20,7 @@
 #include <linux/init.h>
 #include <linux/export.h>
 #include <linux/miscdevice.h>
+<<<<<<< HEAD
 #include <linux/perf_event.h>
 
 #include <asm/cpu_mf.h>
@@ -92,6 +97,13 @@ struct cpu_cf_events {
 /* Per-CPU event structure for the counter facility */
 static DEFINE_PER_CPU(struct cpu_cf_events, cpu_cf_events);
 
+=======
+
+#include <asm/cpu_mcf.h>
+#include <asm/hwctrset.h>
+#include <asm/debug.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned int cfdiag_cpu_speed;	/* CPU speed for CF_DIAG trailer */
 static debug_info_t *cf_dbg;
 
@@ -183,6 +195,7 @@ static void cfdiag_trailer(struct cf_trailer_entry *te)
 	te->timestamp = get_tod_clock_fast();
 }
 
+<<<<<<< HEAD
 /*
  * Return the maximum possible counter set size (in number of 8 byte counters)
  * depending on type and model number.
@@ -230,6 +243,8 @@ static size_t cpum_cf_ctrset_size(enum cpumf_ctr_set ctrset,
 	return ctrset_size;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Read a counter set. The counter set number determines the counter set and
  * the CPUM-CF first and second version number determine the number of
  * available counters in each counter set.
@@ -506,6 +521,7 @@ static void cpumf_pmu_disable(struct pmu *pmu)
 	cpuhw->flags &= ~PMU_F_ENABLED;
 }
 
+<<<<<<< HEAD
 #define PMC_INIT      0UL
 #define PMC_RELEASE   1UL
 
@@ -547,6 +563,8 @@ static void __kernel_cpumcf_end(void)
 	on_each_cpu(cpum_cf_setup_cpu, (void *)PMC_RELEASE, 1);
 	irq_subclass_unregister(IRQ_SUBCLASS_MEASUREMENT_ALERT);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Number of perf events counting hardware events */
 static atomic_t num_events = ATOMIC_INIT(0);
@@ -556,10 +574,19 @@ static DEFINE_MUTEX(pmc_reserve_mutex);
 /* Release the PMU if event is the last perf event */
 static void hw_perf_event_destroy(struct perf_event *event)
 {
+<<<<<<< HEAD
 	mutex_lock(&pmc_reserve_mutex);
 	if (atomic_dec_return(&num_events) == 0)
 		__kernel_cpumcf_end();
 	mutex_unlock(&pmc_reserve_mutex);
+=======
+	if (!atomic_add_unless(&num_events, -1, 1)) {
+		mutex_lock(&pmc_reserve_mutex);
+		if (atomic_dec_return(&num_events) == 0)
+			__kernel_cpumcf_end();
+		mutex_unlock(&pmc_reserve_mutex);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* CPUMF <-> perf event mappings for kernel+userspace (basic set) */
@@ -591,12 +618,15 @@ static void cpumf_hw_inuse(void)
 	mutex_unlock(&pmc_reserve_mutex);
 }
 
+<<<<<<< HEAD
 static int is_userspace_event(u64 ev)
 {
 	return cpumf_generic_events_user[PERF_COUNT_HW_CPU_CYCLES] == ev ||
 	       cpumf_generic_events_user[PERF_COUNT_HW_INSTRUCTIONS] == ev;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __hw_perf_event_init(struct perf_event *event, unsigned int type)
 {
 	struct perf_event_attr *attr = &event->attr;
@@ -619,6 +649,7 @@ static int __hw_perf_event_init(struct perf_event *event, unsigned int type)
 		if (is_sampling_event(event))	/* No sampling support */
 			return -ENOENT;
 		ev = attr->config;
+<<<<<<< HEAD
 		if (!attr->exclude_user && attr->exclude_kernel) {
 			/*
 			 * Count user space (problem-state) only
@@ -639,6 +670,21 @@ static int __hw_perf_event_init(struct perf_event *event, unsigned int type)
 					return -EOPNOTSUPP;
 				ev = cpumf_generic_events_basic[ev];
 			}
+=======
+		/* Count user space (problem-state) only */
+		if (!attr->exclude_user && attr->exclude_kernel) {
+			if (ev >= ARRAY_SIZE(cpumf_generic_events_user))
+				return -EOPNOTSUPP;
+			ev = cpumf_generic_events_user[ev];
+
+		/* No support for kernel space counters only */
+		} else if (!attr->exclude_kernel && attr->exclude_user) {
+			return -EOPNOTSUPP;
+		} else {	/* Count user and kernel space */
+			if (ev >= ARRAY_SIZE(cpumf_generic_events_basic))
+				return -EOPNOTSUPP;
+			ev = cpumf_generic_events_basic[ev];
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		break;
 
@@ -832,7 +878,12 @@ static int cfdiag_push_sample(struct perf_event *event,
 	if (event->attr.sample_type & PERF_SAMPLE_RAW) {
 		raw.frag.size = cpuhw->usedss;
 		raw.frag.data = cpuhw->stop;
+<<<<<<< HEAD
 		perf_sample_save_raw_data(&data, &raw);
+=======
+		raw.size = raw.frag.size;
+		data.raw = &raw;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	overflow = perf_event_overflow(event, &data, &regs);
@@ -931,6 +982,7 @@ static struct pmu cpumf_pmu = {
 	.read	      = cpumf_pmu_read,
 };
 
+<<<<<<< HEAD
 static int cpum_cf_setup(unsigned int cpu, unsigned long flags)
 {
 	local_irq_disable();
@@ -995,11 +1047,14 @@ static void cpumf_measurement_alert(struct ext_code ext_code,
 			smp_processor_id());
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int cfset_init(void);
 static int __init cpumf_pmu_init(void)
 {
 	int rc;
 
+<<<<<<< HEAD
 	if (!cpum_cf_avail())
 		return -ENODEV;
 
@@ -1017,18 +1072,28 @@ static int __init cpumf_pmu_init(void)
 		return rc;
 	}
 
+=======
+	if (!kernel_cpumcf_avail())
+		return -ENODEV;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Setup s390dbf facility */
 	cf_dbg = debug_register(KMSG_COMPONENT, 2, 1, 128);
 	if (!cf_dbg) {
 		pr_err("Registration of s390dbf(cpum_cf) failed\n");
+<<<<<<< HEAD
 		rc = -ENOMEM;
 		goto out1;
+=======
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	debug_register_view(cf_dbg, &debug_sprintf_view);
 
 	cpumf_pmu.attr_groups = cpumf_cf_event_group();
 	rc = perf_pmu_register(&cpumf_pmu, "cpum_cf", -1);
 	if (rc) {
+<<<<<<< HEAD
 		pr_err("Registering the cpum_cf PMU failed with rc=%i\n", rc);
 		goto out2;
 	} else if (stccm_avail()) {	/* Setup counter set device */
@@ -1045,6 +1110,14 @@ out2:
 	debug_unregister(cf_dbg);
 out1:
 	unregister_external_irq(EXT_IRQ_MEASURE_ALERT, cpumf_measurement_alert);
+=======
+		debug_unregister_view(cf_dbg, &debug_sprintf_view);
+		debug_unregister(cf_dbg);
+		pr_err("Registering the cpum_cf PMU failed with rc=%i\n", rc);
+	} else if (stccm_avail()) {	/* Setup counter set device */
+		cfset_init();
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -1262,6 +1335,10 @@ static int cfset_all_start(struct cfset_request *req)
 	return rc;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Return the maximum required space for all possible CPUs in case one
  * CPU will be onlined during the START, READ, STOP cycles.
  * To find out the size of the counter sets, any one CPU will do. They
@@ -1524,7 +1601,11 @@ static struct miscdevice cfset_dev = {
 /* Hotplug add of a CPU. Scan through all active processes and add
  * that CPU to the list of CPUs supplied with ioctl(..., START, ...).
  */
+<<<<<<< HEAD
 static int cfset_online_cpu(unsigned int cpu)
+=======
+int cfset_online_cpu(unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cfset_call_on_cpu_parm p;
 	struct cfset_request *rp;
@@ -1544,7 +1625,11 @@ static int cfset_online_cpu(unsigned int cpu)
 /* Hotplug remove of a CPU. Scan through all active processes and clear
  * that CPU from the list of CPUs supplied with ioctl(..., START, ...).
  */
+<<<<<<< HEAD
 static int cfset_offline_cpu(unsigned int cpu)
+=======
+int cfset_offline_cpu(unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cfset_call_on_cpu_parm p;
 	struct cfset_request *rp;

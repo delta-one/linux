@@ -207,7 +207,12 @@ static const struct regmap_config lp3952_regmap = {
 	.cache_type = REGCACHE_RBTREE,
 };
 
+<<<<<<< HEAD
 static int lp3952_probe(struct i2c_client *client)
+=======
+static int lp3952_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int status;
 	struct lp3952_led_array *priv;
@@ -273,7 +278,11 @@ static struct i2c_driver lp3952_i2c_driver = {
 	.driver = {
 			.name = LP3952_NAME,
 	},
+<<<<<<< HEAD
 	.probe_new = lp3952_probe,
+=======
+	.probe = lp3952_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = lp3952_remove,
 	.id_table = lp3952_id,
 };

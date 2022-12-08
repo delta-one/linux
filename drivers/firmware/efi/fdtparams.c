@@ -30,13 +30,19 @@ static __initconst const char name[][22] = {
 
 static __initconst const struct {
 	const char	path[17];
+<<<<<<< HEAD
 	u8		paravirt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const char	params[PARAMCOUNT][26];
 } dt_params[] = {
 	{
 #ifdef CONFIG_XEN    //  <-------17------>
 		.path = "/hypervisor/uefi",
+<<<<<<< HEAD
 		.paravirt = 1,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.params = {
 			[SYSTAB] = "xen,uefi-system-table",
 			[MMBASE] = "xen,uefi-mmap-start",
@@ -123,8 +129,11 @@ u64 __init efi_get_fdt_params(struct efi_memory_map_data *mm)
 			pr_err("Can't find property '%s' in DT!\n", pname);
 			return 0;
 		}
+<<<<<<< HEAD
 		if (dt_params[i].paravirt)
 			set_bit(EFI_PARAVIRT, &efi.flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return systab;
 	}
 notfound:

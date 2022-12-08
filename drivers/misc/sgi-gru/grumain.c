@@ -152,7 +152,11 @@ static int gru_assign_asid(struct gru_state *gru)
  * Optionally, build an array of chars that contain the bit numbers allocated.
  */
 static unsigned long reserve_resources(unsigned long *p, int n, int mmax,
+<<<<<<< HEAD
 				       signed char *idx)
+=======
+				       char *idx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long bits = 0;
 	int i;
@@ -170,14 +174,22 @@ static unsigned long reserve_resources(unsigned long *p, int n, int mmax,
 }
 
 unsigned long gru_reserve_cb_resources(struct gru_state *gru, int cbr_au_count,
+<<<<<<< HEAD
 				       signed char *cbmap)
+=======
+				       char *cbmap)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return reserve_resources(&gru->gs_cbr_map, cbr_au_count, GRU_CBR_AU,
 				 cbmap);
 }
 
 unsigned long gru_reserve_ds_resources(struct gru_state *gru, int dsr_au_count,
+<<<<<<< HEAD
 				       signed char *dsmap)
+=======
+				       char *dsmap)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return reserve_resources(&gru->gs_dsr_map, dsr_au_count, GRU_DSR_AU,
 				 dsmap);
@@ -716,10 +728,16 @@ static int gru_check_chiplet_assignment(struct gru_state *gru,
  * chiplet. Misassignment can occur if the process migrates to a different
  * blade or if the user changes the selected blade/chiplet.
  */
+<<<<<<< HEAD
 int gru_check_context_placement(struct gru_thread_state *gts)
 {
 	struct gru_state *gru;
 	int ret = 0;
+=======
+void gru_check_context_placement(struct gru_thread_state *gts)
+{
+	struct gru_state *gru;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * If the current task is the context owner, verify that the
@@ -727,6 +745,7 @@ int gru_check_context_placement(struct gru_thread_state *gts)
 	 * references. Pthread apps use non-owner references to the CBRs.
 	 */
 	gru = gts->ts_gru;
+<<<<<<< HEAD
 	/*
 	 * If gru or gts->ts_tgid_owner isn't initialized properly, return
 	 * success to indicate that the caller does not need to unload the
@@ -744,6 +763,17 @@ int gru_check_context_placement(struct gru_thread_state *gts)
 	}
 
 	return ret;
+=======
+	if (!gru || gts->ts_tgid_owner != current->tgid)
+		return;
+
+	if (!gru_check_chiplet_assignment(gru, gts)) {
+		STAT(check_context_unload);
+		gru_unload_context(gts, 1);
+	} else if (gru_retarget_intr(gts)) {
+		STAT(check_context_retarget_intr);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 
@@ -943,12 +973,16 @@ again:
 	mutex_lock(&gts->ts_ctxlock);
 	preempt_disable();
 
+<<<<<<< HEAD
 	if (gru_check_context_placement(gts)) {
 		preempt_enable();
 		mutex_unlock(&gts->ts_ctxlock);
 		gru_unload_context(gts, 1);
 		return VM_FAULT_NOPAGE;
 	}
+=======
+	gru_check_context_placement(gts);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!gts->ts_gru) {
 		STAT(load_user_context);

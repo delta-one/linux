@@ -416,7 +416,11 @@ void VFP_bounce(u32 trigger, u32 fpexc, struct pt_regs *regs)
 	if (exceptions)
 		vfp_raise_exceptions(exceptions, trigger, orig_fpscr, regs);
  exit:
+<<<<<<< HEAD
 	local_bh_enable();
+=======
+	preempt_enable();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void vfp_enable(void *unused)
@@ -517,8 +521,11 @@ void vfp_sync_hwstate(struct thread_info *thread)
 {
 	unsigned int cpu = get_cpu();
 
+<<<<<<< HEAD
 	local_bh_disable();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (vfp_state_in_hw(cpu, thread)) {
 		u32 fpexc = fmrx(FPEXC);
 
@@ -530,7 +537,10 @@ void vfp_sync_hwstate(struct thread_info *thread)
 		fmxr(FPEXC, fpexc);
 	}
 
+<<<<<<< HEAD
 	local_bh_enable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	put_cpu();
 }
 
@@ -720,6 +730,7 @@ void kernel_neon_begin(void)
 	unsigned int cpu;
 	u32 fpexc;
 
+<<<<<<< HEAD
 	local_bh_disable();
 
 	/*
@@ -729,6 +740,15 @@ void kernel_neon_begin(void)
 	 */
 	BUG_ON(in_hardirq());
 	cpu = __smp_processor_id();
+=======
+	/*
+	 * Kernel mode NEON is only allowed outside of interrupt context
+	 * with preemption disabled. This will make sure that the kernel
+	 * mode NEON register contents never need to be preserved.
+	 */
+	BUG_ON(in_interrupt());
+	cpu = get_cpu();
+>>>>>>> b7ba80a49124 (Commit)
 
 	fpexc = fmrx(FPEXC) | FPEXC_EN;
 	fmxr(FPEXC, fpexc);
@@ -751,7 +771,11 @@ void kernel_neon_end(void)
 {
 	/* Disable the NEON/VFP unit. */
 	fmxr(FPEXC, fmrx(FPEXC) & ~FPEXC_EN);
+<<<<<<< HEAD
 	local_bh_enable();
+=======
+	put_cpu();
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(kernel_neon_end);
 
@@ -779,7 +803,10 @@ static int __init vfp_init(void)
 {
 	unsigned int vfpsid;
 	unsigned int cpu_arch = cpu_architecture();
+<<<<<<< HEAD
 	unsigned int isar6;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Enable the access to the VFP on all online CPUs so the
@@ -837,6 +864,7 @@ static int __init vfp_init(void)
 
 			if ((fmrx(MVFR1) & 0xf0000000) == 0x10000000)
 				elf_hwcap |= HWCAP_VFPv4;
+<<<<<<< HEAD
 			if (((fmrx(MVFR1) & MVFR1_ASIMDHP_MASK) >> MVFR1_ASIMDHP_BIT) == 0x2)
 				elf_hwcap |= HWCAP_ASIMDHP;
 			if (((fmrx(MVFR1) & MVFR1_FPHP_MASK) >> MVFR1_FPHP_BIT) == 0x3)
@@ -869,6 +897,9 @@ static int __init vfp_init(void)
 		if (cpuid_feature_extract_field(isar6, 24) == 0x1)
 			elf_hwcap |= HWCAP_I8MM;
 
+=======
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	/* Extract the architecture version on pre-cpuid scheme */
 	} else {
 		if (vfpsid & FPSID_NODOUBLE) {

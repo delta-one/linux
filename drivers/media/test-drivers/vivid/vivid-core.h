@@ -22,6 +22,11 @@
 #define dprintk(dev, level, fmt, arg...) \
 	v4l2_dbg(level, vivid_debug, &dev->v4l2_dev, fmt, ## arg)
 
+<<<<<<< HEAD
+=======
+/* The maximum number of clip rectangles */
+#define MAX_CLIPS  16
+>>>>>>> b7ba80a49124 (Commit)
 /* The maximum number of inputs */
 #define MAX_INPUTS 16
 /* The maximum number of outputs */
@@ -343,6 +348,20 @@ struct vivid_dev {
 
 	u32				power_present;
 
+<<<<<<< HEAD
+=======
+	/* Capture Overlay */
+	struct v4l2_framebuffer		fb_cap;
+	struct v4l2_fh			*overlay_cap_owner;
+	void				*fb_vbase_cap;
+	int				overlay_cap_top, overlay_cap_left;
+	enum v4l2_field			overlay_cap_field;
+	void				*bitmap_cap;
+	struct v4l2_clip		clips_cap[MAX_CLIPS];
+	struct v4l2_clip		try_clips_cap[MAX_CLIPS];
+	unsigned			clipcount_cap;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Output */
 	unsigned			output;
 	v4l2_std_id			std_out;
@@ -370,6 +389,13 @@ struct vivid_dev {
 	void				*fb_vbase_out;
 	bool				overlay_out_enabled;
 	int				overlay_out_top, overlay_out_left;
+<<<<<<< HEAD
+=======
+	void				*bitmap_out;
+	struct v4l2_clip		clips_out[MAX_CLIPS];
+	struct v4l2_clip		try_clips_out[MAX_CLIPS];
+	unsigned			clipcount_out;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned			fbuf_out_flags;
 	u32				chromakey_out;
 	u8				global_alpha_out;

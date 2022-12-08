@@ -42,7 +42,10 @@
 #define OUTPUT_ENABLE_OFF		23
 #define SW_CNTRL_IN_OFF			24
 #define SW_CNTRL_EN_OFF			25
+<<<<<<< HEAD
 #define WAKECNTRL_Z_OFF			27
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define INTERRUPT_STS_OFF		28
 #define WAKE_STS_OFF			29
 

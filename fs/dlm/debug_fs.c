@@ -170,7 +170,11 @@ static void print_format2_lock(struct seq_file *s, struct dlm_lkb *lkb,
 	u64 xid = 0;
 	u64 us;
 
+<<<<<<< HEAD
 	if (test_bit(DLM_DFL_USER_BIT, &lkb->lkb_dflags)) {
+=======
+	if (lkb->lkb_flags & DLM_IFL_USER) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (lkb->lkb_ua)
 			xid = lkb->lkb_ua->xid;
 	}
@@ -188,7 +192,11 @@ static void print_format2_lock(struct seq_file *s, struct dlm_lkb *lkb,
 		   lkb->lkb_ownpid,
 		   (unsigned long long)xid,
 		   lkb->lkb_exflags,
+<<<<<<< HEAD
 		   dlm_iflags_val(lkb),
+=======
+		   lkb->lkb_flags,
+>>>>>>> b7ba80a49124 (Commit)
 		   lkb->lkb_status,
 		   lkb->lkb_grmode,
 		   lkb->lkb_rqmode,
@@ -230,7 +238,11 @@ static void print_format3_lock(struct seq_file *s, struct dlm_lkb *lkb,
 {
 	u64 xid = 0;
 
+<<<<<<< HEAD
 	if (test_bit(DLM_DFL_USER_BIT, &lkb->lkb_dflags)) {
+=======
+	if (lkb->lkb_flags & DLM_IFL_USER) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (lkb->lkb_ua)
 			xid = lkb->lkb_ua->xid;
 	}
@@ -242,11 +254,19 @@ static void print_format3_lock(struct seq_file *s, struct dlm_lkb *lkb,
 		   lkb->lkb_ownpid,
 		   (unsigned long long)xid,
 		   lkb->lkb_exflags,
+<<<<<<< HEAD
 		   dlm_iflags_val(lkb),
 		   lkb->lkb_status,
 		   lkb->lkb_grmode,
 		   lkb->lkb_rqmode,
 		   lkb->lkb_last_bast_mode,
+=======
+		   lkb->lkb_flags,
+		   lkb->lkb_status,
+		   lkb->lkb_grmode,
+		   lkb->lkb_rqmode,
+		   lkb->lkb_last_bast.mode,
+>>>>>>> b7ba80a49124 (Commit)
 		   rsb_lookup,
 		   lkb->lkb_wait_type,
 		   lkb->lkb_lvbseq,

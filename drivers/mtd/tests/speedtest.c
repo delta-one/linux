@@ -223,7 +223,11 @@ static int __init mtd_speedtest_init(void)
 	if (!iobuf)
 		goto out;
 
+<<<<<<< HEAD
 	get_random_bytes(iobuf, mtd->erasesize);
+=======
+	prandom_bytes(iobuf, mtd->erasesize);
+>>>>>>> b7ba80a49124 (Commit)
 
 	bbt = kzalloc(ebcnt, GFP_KERNEL);
 	if (!bbt)

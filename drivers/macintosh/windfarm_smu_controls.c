@@ -266,11 +266,20 @@ static int __init smu_controls_init(void)
 		return -ENODEV;
 
 	/* Look for RPM fans */
+<<<<<<< HEAD
 	for_each_child_of_node(smu, fans)
 		if (of_node_name_eq(fans, "rpm-fans") ||
 		    of_device_is_compatible(fans, "smu-rpm-fans"))
 			break;
 	for_each_child_of_node(fans, fan) {
+=======
+	for (fans = NULL; (fans = of_get_next_child(smu, fans)) != NULL;)
+		if (of_node_name_eq(fans, "rpm-fans") ||
+		    of_device_is_compatible(fans, "smu-rpm-fans"))
+			break;
+	for (fan = NULL;
+	     fans && (fan = of_get_next_child(fans, fan)) != NULL;) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct smu_fan_control *fct;
 
 		fct = smu_fan_create(fan, 0);
@@ -285,10 +294,18 @@ static int __init smu_controls_init(void)
 
 
 	/* Look for PWM fans */
+<<<<<<< HEAD
 	for_each_child_of_node(smu, fans)
 		if (of_node_name_eq(fans, "pwm-fans"))
 			break;
 	for_each_child_of_node(fans, fan) {
+=======
+	for (fans = NULL; (fans = of_get_next_child(smu, fans)) != NULL;)
+		if (of_node_name_eq(fans, "pwm-fans"))
+			break;
+	for (fan = NULL;
+	     fans && (fan = of_get_next_child(fans, fan)) != NULL;) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct smu_fan_control *fct;
 
 		fct = smu_fan_create(fan, 1);

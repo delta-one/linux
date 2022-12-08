@@ -40,6 +40,7 @@
 #define PCI_DEVICE_ID_INTEL_TGPLP		0xa0ee
 #define PCI_DEVICE_ID_INTEL_TGPH		0x43ee
 #define PCI_DEVICE_ID_INTEL_JSP			0x4dee
+<<<<<<< HEAD
 #define PCI_DEVICE_ID_INTEL_ADL			0x460e
 #define PCI_DEVICE_ID_INTEL_ADL_PCH		0x51ee
 #define PCI_DEVICE_ID_INTEL_ADLN		0x465e
@@ -48,6 +49,14 @@
 #define PCI_DEVICE_ID_INTEL_RPL			0xa70e
 #define PCI_DEVICE_ID_INTEL_RPLS		0x7a61
 #define PCI_DEVICE_ID_INTEL_MTLM		0x7eb1
+=======
+#define PCI_DEVICE_ID_INTEL_ADL			0x465e
+#define PCI_DEVICE_ID_INTEL_ADLP		0x51ee
+#define PCI_DEVICE_ID_INTEL_ADLM		0x54ee
+#define PCI_DEVICE_ID_INTEL_ADLS		0x7ae1
+#define PCI_DEVICE_ID_INTEL_RPL			0x460e
+#define PCI_DEVICE_ID_INTEL_RPLS		0x7a61
+>>>>>>> b7ba80a49124 (Commit)
 #define PCI_DEVICE_ID_INTEL_MTLP		0x7ec1
 #define PCI_DEVICE_ID_INTEL_MTL			0x7e7e
 #define PCI_DEVICE_ID_INTEL_TGL			0x9a15
@@ -450,6 +459,7 @@ static const struct pci_device_id dwc3_pci_id_table[] = {
 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_ADL),
 	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
 
+<<<<<<< HEAD
 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_ADL_PCH),
 	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
 
@@ -457,6 +467,12 @@ static const struct pci_device_id dwc3_pci_id_table[] = {
 	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
 
 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_ADLN_PCH),
+=======
+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_ADLP),
+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
+
+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_ADLM),
+>>>>>>> b7ba80a49124 (Commit)
 	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
 
 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_ADLS),
@@ -468,9 +484,12 @@ static const struct pci_device_id dwc3_pci_id_table[] = {
 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_RPLS),
 	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
 
+<<<<<<< HEAD
 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_MTLM),
 	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_MTLP),
 	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
 

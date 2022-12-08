@@ -14,6 +14,10 @@
 #include <linux/string.h>
 #include <linux/sched.h>
 #include <linux/inet.h>
+<<<<<<< HEAD
+=======
+#include <linux/idr.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/uio.h>
 #include <linux/fscache.h>
@@ -108,7 +112,11 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
 			struct iov_iter to;
 			int n;
 
+<<<<<<< HEAD
 			iov_iter_kvec(&to, ITER_DEST, &kvec, 1, buflen);
+=======
+			iov_iter_kvec(&to, READ, &kvec, 1, buflen);
+>>>>>>> b7ba80a49124 (Commit)
 			n = p9_client_read(file->private_data, ctx->pos, &to,
 					   &err);
 			if (err)
@@ -197,9 +205,15 @@ static int v9fs_dir_readdir_dotl(struct file *file, struct dir_context *ctx)
 
 
 /**
+<<<<<<< HEAD
  * v9fs_dir_release - close a directory or a file
  * @inode: inode of the directory or file
  * @filp: file pointer to a directory or file
+=======
+ * v9fs_dir_release - close a directory
+ * @inode: inode of the directory
+ * @filp: file pointer to a directory
+>>>>>>> b7ba80a49124 (Commit)
  *
  */
 
@@ -209,11 +223,15 @@ int v9fs_dir_release(struct inode *inode, struct file *filp)
 	struct p9_fid *fid;
 	__le32 version;
 	loff_t i_size;
+<<<<<<< HEAD
 	int retval = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	fid = filp->private_data;
 	p9_debug(P9_DEBUG_VFS, "inode: %p filp: %p fid: %d\n",
 		 inode, filp, fid ? fid->fid : -1);
+<<<<<<< HEAD
 
 	if (fid) {
 		if ((S_ISREG(inode->i_mode)) && (filp->f_mode & FMODE_WRITE))
@@ -223,6 +241,13 @@ int v9fs_dir_release(struct inode *inode, struct file *filp)
 		hlist_del(&fid->ilist);
 		spin_unlock(&inode->i_lock);
 		retval = p9_fid_put(fid);
+=======
+	if (fid) {
+		spin_lock(&inode->i_lock);
+		hlist_del(&fid->ilist);
+		spin_unlock(&inode->i_lock);
+		p9_fid_put(fid);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if ((filp->f_mode & FMODE_WRITE)) {
@@ -233,7 +258,11 @@ int v9fs_dir_release(struct inode *inode, struct file *filp)
 	} else {
 		fscache_unuse_cookie(v9fs_inode_cookie(v9inode), NULL, NULL);
 	}
+<<<<<<< HEAD
 	return retval;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 const struct file_operations v9fs_dir_operations = {

@@ -8,7 +8,10 @@
 #include "debug.h"
 #include "fw.h"
 #include "mac.h"
+<<<<<<< HEAD
 #include "pci.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "ps.h"
 #include "reg.h"
 #include "sar.h"
@@ -52,6 +55,7 @@ struct rtw89_debugfs_priv {
 	};
 };
 
+<<<<<<< HEAD
 static const u16 rtw89_rate_info_bw_to_mhz_map[] = {
 	[RATE_INFO_BW_20] = 20,
 	[RATE_INFO_BW_40] = 40,
@@ -68,6 +72,8 @@ static u16 rtw89_rate_info_bw_to_mhz(enum rate_info_bw bw)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int rtw89_debugfs_single_show(struct seq_file *m, void *v)
 {
 	struct rtw89_debugfs_priv *debugfs_priv = m->private;
@@ -481,7 +487,11 @@ static const struct txpwr_map __txpwr_map_lmt_ru = {
 };
 
 static u8 __print_txpwr_ent(struct seq_file *m, const struct txpwr_ent *ent,
+<<<<<<< HEAD
 			    const s8 *buf, const u8 cur)
+=======
+			    const u8 *buf, const u8 cur)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	char *fmt;
 
@@ -510,9 +520,14 @@ static int __print_txpwr_map(struct seq_file *m, struct rtw89_dev *rtwdev,
 			     const struct txpwr_map *map)
 {
 	u8 fct = rtwdev->chip->txpwr_factor_mac;
+<<<<<<< HEAD
 	u32 val, addr;
 	s8 *buf, tmp;
 	u8 cur, i;
+=======
+	u8 *buf, cur, i;
+	u32 val, addr;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	buf = vzalloc(map->addr_to - map->addr_from + 4);
@@ -525,11 +540,16 @@ static int __print_txpwr_map(struct seq_file *m, struct rtw89_dev *rtwdev,
 			val = MASKDWORD;
 
 		cur = addr - map->addr_from;
+<<<<<<< HEAD
 		for (i = 0; i < 4; i++, val >>= 8) {
 			/* signed 7 bits, and reserved BIT(7) */
 			tmp = sign_extend32(val, 6);
 			buf[cur + i] = tmp >> fct;
 		}
+=======
+		for (i = 0; i < 4; i++, val >>= 8)
+			buf[cur + i] = FIELD_GET(MASKBYTE0, val) >> fct;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (cur = 0, i = 0; i < map->size; i++)
@@ -615,7 +635,10 @@ rtw89_debug_priv_mac_reg_dump_select(struct file *filp,
 	struct seq_file *m = (struct seq_file *)filp->private_data;
 	struct rtw89_debugfs_priv *debugfs_priv = m->private;
 	struct rtw89_dev *rtwdev = debugfs_priv->rtwdev;
+<<<<<<< HEAD
 	const struct rtw89_chip_info *chip = rtwdev->chip;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	char buf[32];
 	size_t buf_size;
 	int sel;
@@ -635,12 +658,15 @@ rtw89_debug_priv_mac_reg_dump_select(struct file *filp,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if (sel == RTW89_DBG_SEL_MAC_30 && chip->chip_id != RTL8852C) {
 		rtw89_info(rtwdev, "sel %d is address hole on chip %d\n", sel,
 			   chip->chip_id);
 		return -EINVAL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	debugfs_priv->cb_data = sel;
 	rtw89_info(rtwdev, "select mac page dump %d\n", debugfs_priv->cb_data);
 
@@ -798,6 +824,7 @@ rtw89_debug_priv_mac_mem_dump_get(struct seq_file *m, void *v)
 {
 	struct rtw89_debugfs_priv *debugfs_priv = m->private;
 	struct rtw89_dev *rtwdev = debugfs_priv->rtwdev;
+<<<<<<< HEAD
 	bool grant_read = false;
 
 	if (debugfs_priv->mac_mem.sel >= RTW89_MAC_MEM_NUM)
@@ -820,12 +847,20 @@ rtw89_debug_priv_mac_mem_dump_get(struct seq_file *m, void *v)
 	rtw89_leave_ps_mode(rtwdev);
 	if (grant_read)
 		rtw89_write32_set(rtwdev, R_AX_TCR1, B_AX_TCR_FORCE_READ_TXDFIFO);
+=======
+
+	mutex_lock(&rtwdev->mutex);
+	rtw89_leave_ps_mode(rtwdev);
+>>>>>>> b7ba80a49124 (Commit)
 	rtw89_debug_dump_mac_mem(m, rtwdev,
 				 debugfs_priv->mac_mem.sel,
 				 debugfs_priv->mac_mem.start,
 				 debugfs_priv->mac_mem.len);
+<<<<<<< HEAD
 	if (grant_read)
 		rtw89_write32_clr(rtwdev, R_AX_TCR1, B_AX_TCR_FORCE_READ_TXDFIFO);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&rtwdev->mutex);
 
 	return 0;
@@ -996,9 +1031,13 @@ static int rtw89_debug_mac_dump_dle_dbg(struct rtw89_dev *rtwdev,
 static int rtw89_debug_mac_dump_dmac_dbg(struct rtw89_dev *rtwdev,
 					 struct seq_file *m)
 {
+<<<<<<< HEAD
 	const struct rtw89_chip_info *chip = rtwdev->chip;
 	u32 dmac_err;
 	int i, ret;
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = rtw89_mac_check_mac_en(rtwdev, 0, RTW89_DMAC_SEL);
 	if (ret) {
@@ -1006,6 +1045,7 @@ static int rtw89_debug_mac_dump_dmac_dbg(struct rtw89_dev *rtwdev,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	dmac_err = rtw89_read32(rtwdev, R_AX_DMAC_ERR_ISR);
 	seq_printf(m, "R_AX_DMAC_ERR_ISR=0x%08x\n", dmac_err);
 	seq_printf(m, "R_AX_DMAC_ERR_IMR=0x%08x\n",
@@ -1337,6 +1377,46 @@ static int rtw89_debug_mac_dump_cmac_err(struct rtw89_dev *rtwdev,
 
 	seq_printf(m, "R_AX_CMAC_ERR_IMR [%d]=0x%08x\n", band,
 		   rtw89_read32(rtwdev, R_AX_CMAC_ERR_IMR + offset));
+=======
+	seq_printf(m, "R_AX_DMAC_ERR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_DMAC_ERR_ISR));
+	seq_printf(m, "[0]R_AX_WDRLS_ERR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_WDRLS_ERR_ISR));
+	seq_printf(m, "[1]R_AX_SEC_ERR_IMR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_SEC_ERR_IMR_ISR));
+	seq_printf(m, "[2.1]R_AX_MPDU_TX_ERR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_MPDU_TX_ERR_ISR));
+	seq_printf(m, "[2.2]R_AX_MPDU_RX_ERR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_MPDU_RX_ERR_ISR));
+	seq_printf(m, "[3]R_AX_STA_SCHEDULER_ERR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_STA_SCHEDULER_ERR_ISR));
+	seq_printf(m, "[4]R_AX_WDE_ERR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_WDE_ERR_ISR));
+	seq_printf(m, "[5.1]R_AX_TXPKTCTL_ERR_IMR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_TXPKTCTL_ERR_IMR_ISR));
+	seq_printf(m, "[5.2]R_AX_TXPKTCTL_ERR_IMR_ISR_B1=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_TXPKTCTL_ERR_IMR_ISR_B1));
+	seq_printf(m, "[6]R_AX_PLE_ERR_FLAG_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_PLE_ERR_FLAG_ISR));
+	seq_printf(m, "[7]R_AX_PKTIN_ERR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_PKTIN_ERR_ISR));
+	seq_printf(m, "[8.1]R_AX_OTHER_DISPATCHER_ERR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_OTHER_DISPATCHER_ERR_ISR));
+	seq_printf(m, "[8.2]R_AX_HOST_DISPATCHER_ERR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_HOST_DISPATCHER_ERR_ISR));
+	seq_printf(m, "[8.3]R_AX_CPU_DISPATCHER_ERR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_CPU_DISPATCHER_ERR_ISR));
+	seq_printf(m, "[10]R_AX_CPUIO_ERR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_CPUIO_ERR_ISR));
+	seq_printf(m, "[11.1]R_AX_BBRPT_COM_ERR_IMR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_BBRPT_COM_ERR_IMR_ISR));
+	seq_printf(m, "[11.2]R_AX_BBRPT_CHINFO_ERR_IMR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_BBRPT_CHINFO_ERR_IMR_ISR));
+	seq_printf(m, "[11.3]R_AX_BBRPT_DFS_ERR_IMR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_BBRPT_DFS_ERR_IMR_ISR));
+	seq_printf(m, "[11.4]R_AX_LA_ERRFLAG=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_LA_ERRFLAG));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1344,9 +1424,59 @@ static int rtw89_debug_mac_dump_cmac_err(struct rtw89_dev *rtwdev,
 static int rtw89_debug_mac_dump_cmac_dbg(struct rtw89_dev *rtwdev,
 					 struct seq_file *m)
 {
+<<<<<<< HEAD
 	rtw89_debug_mac_dump_cmac_err(rtwdev, m, RTW89_MAC_0);
 	if (rtwdev->dbcc_en)
 		rtw89_debug_mac_dump_cmac_err(rtwdev, m, RTW89_MAC_1);
+=======
+	int ret;
+
+	ret = rtw89_mac_check_mac_en(rtwdev, 0, RTW89_CMAC_SEL);
+	if (ret) {
+		seq_puts(m, "[CMAC] : CMAC 0 not enabled\n");
+		return ret;
+	}
+
+	seq_printf(m, "R_AX_CMAC_ERR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_CMAC_ERR_ISR));
+	seq_printf(m, "[0]R_AX_SCHEDULE_ERR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_SCHEDULE_ERR_ISR));
+	seq_printf(m, "[1]R_AX_PTCL_ISR0=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_PTCL_ISR0));
+	seq_printf(m, "[3]R_AX_DLE_CTRL=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_DLE_CTRL));
+	seq_printf(m, "[4]R_AX_PHYINFO_ERR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_PHYINFO_ERR_ISR));
+	seq_printf(m, "[5]R_AX_TXPWR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_TXPWR_ISR));
+	seq_printf(m, "[6]R_AX_RMAC_ERR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_RMAC_ERR_ISR));
+	seq_printf(m, "[7]R_AX_TMAC_ERR_IMR_ISR=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_TMAC_ERR_IMR_ISR));
+
+	ret = rtw89_mac_check_mac_en(rtwdev, 1, RTW89_CMAC_SEL);
+	if (ret) {
+		seq_puts(m, "[CMAC] : CMAC 1 not enabled\n");
+		return ret;
+	}
+
+	seq_printf(m, "R_AX_CMAC_ERR_ISR_C1=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_CMAC_ERR_ISR_C1));
+	seq_printf(m, "[0]R_AX_SCHEDULE_ERR_ISR_C1=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_SCHEDULE_ERR_ISR_C1));
+	seq_printf(m, "[1]R_AX_PTCL_ISR0_C1=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_PTCL_ISR0_C1));
+	seq_printf(m, "[3]R_AX_DLE_CTRL_C1=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_DLE_CTRL_C1));
+	seq_printf(m, "[4]R_AX_PHYINFO_ERR_ISR_C1=0x%02x\n",
+		   rtw89_read32(rtwdev, R_AX_PHYINFO_ERR_ISR_C1));
+	seq_printf(m, "[5]R_AX_TXPWR_ISR_C1=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_TXPWR_ISR_C1));
+	seq_printf(m, "[6]R_AX_RMAC_ERR_ISR_C1=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_RMAC_ERR_ISR_C1));
+	seq_printf(m, "[7]R_AX_TMAC_ERR_IMR_ISR_C1=0x%08x\n",
+		   rtw89_read32(rtwdev, R_AX_TMAC_ERR_IMR_ISR_C1));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1373,6 +1503,7 @@ static const struct rtw89_mac_dbg_port_info dbg_port_ptcl_c1 = {
 	.rd_msk = B_AX_PTCL_DBG_INFO_MASK
 };
 
+<<<<<<< HEAD
 static const struct rtw89_mac_dbg_port_info dbg_port_dspt_hdt_tx0_5 = {
 	.sel_addr = R_AX_DISPATCHER_DBG_PORT,
 	.sel_byte = 2,
@@ -1670,6 +1801,8 @@ static const struct rtw89_mac_dbg_port_info dbg_port_dspt_flow_ctrl = {
 	.rd_msk = B_AX_DEBUG_ST_MASK
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct rtw89_mac_dbg_port_info dbg_port_sch_c0 = {
 	.sel_addr = R_AX_SCH_DBG_SEL,
 	.sel_byte = 1,
@@ -2080,7 +2213,11 @@ static const struct rtw89_mac_dbg_port_info dbg_port_pktinfo = {
 static const struct rtw89_mac_dbg_port_info dbg_port_pcie_txdma = {
 	.sel_addr = R_AX_PCIE_DBG_CTRL,
 	.sel_byte = 2,
+<<<<<<< HEAD
 	.sel_msk = B_AX_PCIE_DBG_SEL_MASK,
+=======
+	.sel_msk = B_AX_DBG_SEL_MASK,
+>>>>>>> b7ba80a49124 (Commit)
 	.srt = 0x00,
 	.end = 0x03,
 	.rd_addr = R_AX_DBG_PORT_SEL,
@@ -2091,7 +2228,11 @@ static const struct rtw89_mac_dbg_port_info dbg_port_pcie_txdma = {
 static const struct rtw89_mac_dbg_port_info dbg_port_pcie_rxdma = {
 	.sel_addr = R_AX_PCIE_DBG_CTRL,
 	.sel_byte = 2,
+<<<<<<< HEAD
 	.sel_msk = B_AX_PCIE_DBG_SEL_MASK,
+=======
+	.sel_msk = B_AX_DBG_SEL_MASK,
+>>>>>>> b7ba80a49124 (Commit)
 	.srt = 0x00,
 	.end = 0x04,
 	.rd_addr = R_AX_DBG_PORT_SEL,
@@ -2102,7 +2243,11 @@ static const struct rtw89_mac_dbg_port_info dbg_port_pcie_rxdma = {
 static const struct rtw89_mac_dbg_port_info dbg_port_pcie_cvt = {
 	.sel_addr = R_AX_PCIE_DBG_CTRL,
 	.sel_byte = 2,
+<<<<<<< HEAD
 	.sel_msk = B_AX_PCIE_DBG_SEL_MASK,
+=======
+	.sel_msk = B_AX_DBG_SEL_MASK,
+>>>>>>> b7ba80a49124 (Commit)
 	.srt = 0x00,
 	.end = 0x01,
 	.rd_addr = R_AX_DBG_PORT_SEL,
@@ -2113,7 +2258,11 @@ static const struct rtw89_mac_dbg_port_info dbg_port_pcie_cvt = {
 static const struct rtw89_mac_dbg_port_info dbg_port_pcie_cxpl = {
 	.sel_addr = R_AX_PCIE_DBG_CTRL,
 	.sel_byte = 2,
+<<<<<<< HEAD
 	.sel_msk = B_AX_PCIE_DBG_SEL_MASK,
+=======
+	.sel_msk = B_AX_DBG_SEL_MASK,
+>>>>>>> b7ba80a49124 (Commit)
 	.srt = 0x00,
 	.end = 0x05,
 	.rd_addr = R_AX_DBG_PORT_SEL,
@@ -2124,7 +2273,11 @@ static const struct rtw89_mac_dbg_port_info dbg_port_pcie_cxpl = {
 static const struct rtw89_mac_dbg_port_info dbg_port_pcie_io = {
 	.sel_addr = R_AX_PCIE_DBG_CTRL,
 	.sel_byte = 2,
+<<<<<<< HEAD
 	.sel_msk = B_AX_PCIE_DBG_SEL_MASK,
+=======
+	.sel_msk = B_AX_DBG_SEL_MASK,
+>>>>>>> b7ba80a49124 (Commit)
 	.srt = 0x00,
 	.end = 0x05,
 	.rd_addr = R_AX_DBG_PORT_SEL,
@@ -2135,7 +2288,11 @@ static const struct rtw89_mac_dbg_port_info dbg_port_pcie_io = {
 static const struct rtw89_mac_dbg_port_info dbg_port_pcie_misc = {
 	.sel_addr = R_AX_PCIE_DBG_CTRL,
 	.sel_byte = 2,
+<<<<<<< HEAD
 	.sel_msk = B_AX_PCIE_DBG_SEL_MASK,
+=======
+	.sel_msk = B_AX_DBG_SEL_MASK,
+>>>>>>> b7ba80a49124 (Commit)
 	.srt = 0x00,
 	.end = 0x06,
 	.rd_addr = R_AX_DBG_PORT_SEL,
@@ -2159,7 +2316,10 @@ rtw89_debug_mac_dbg_port_sel(struct seq_file *m,
 			     struct rtw89_dev *rtwdev, u32 sel)
 {
 	const struct rtw89_mac_dbg_port_info *info;
+<<<<<<< HEAD
 	u32 index;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 val32;
 	u16 val16;
 	u8 val8;
@@ -2435,6 +2595,7 @@ rtw89_debug_mac_dbg_port_sel(struct seq_file *m,
 		info = &dbg_port_pktinfo;
 		seq_puts(m, "Enable pktinfo dump.\n");
 		break;
+<<<<<<< HEAD
 	case RTW89_DBG_PORT_SEL_DSPT_HDT_TX0:
 		rtw89_write32_mask(rtwdev, R_AX_DBG_CTRL,
 				   B_AX_DBG_SEL0, 0x80);
@@ -2664,6 +2825,8 @@ rtw89_debug_mac_dbg_port_sel(struct seq_file *m,
 				  B_AX_DISPATCHER_INTN_SEL_MASK, 8);
 		seq_puts(m, "Enable Dispatcher flow control dump.\n");
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case RTW89_DBG_PORT_SEL_PCIE_TXDMA:
 		info = &dbg_port_pcie_txdma;
 		val32 = rtw89_read32(rtwdev, R_AX_DBG_CTRL);
@@ -2716,7 +2879,11 @@ rtw89_debug_mac_dbg_port_sel(struct seq_file *m,
 		info = &dbg_port_pcie_misc2;
 		val16 = rtw89_read16(rtwdev, R_AX_PCIE_DBG_CTRL);
 		val16 = u16_replace_bits(val16, PCIE_MISC2_DBG_SEL,
+<<<<<<< HEAD
 					 B_AX_PCIE_DBG_SEL_MASK);
+=======
+					 B_AX_DBG_SEL_MASK);
+>>>>>>> b7ba80a49124 (Commit)
 		rtw89_write16(rtwdev, R_AX_PCIE_DBG_CTRL, val16);
 		seq_puts(m, "Enable pcie misc2 dump.\n");
 		break;
@@ -2742,10 +2909,13 @@ static bool is_dbg_port_valid(struct rtw89_dev *rtwdev, u32 sel)
 	    sel >= RTW89_DBG_PORT_SEL_WDE_BUFMGN_FREEPG &&
 	    sel <= RTW89_DBG_PORT_SEL_PKTINFO)
 		return false;
+<<<<<<< HEAD
 	if (rtw89_mac_check_mac_en(rtwdev, 0, RTW89_DMAC_SEL) &&
 	    sel >= RTW89_DBG_PORT_SEL_DSPT_HDT_TX0 &&
 	    sel <= RTW89_DBG_PORT_SEL_DSPT_FLOW_CTRL)
 		return false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (rtw89_mac_check_mac_en(rtwdev, 0, RTW89_CMAC_SEL) &&
 	    sel >= RTW89_DBG_PORT_SEL_PTCL_C0 &&
 	    sel <= RTW89_DBG_PORT_SEL_TXTF_INFOH_C0)
@@ -2816,6 +2986,7 @@ static int rtw89_debug_mac_dbg_port_dump(struct rtw89_dev *rtwdev,
 	case_DBG_SEL(PLE_QUEMGN_QLNKTBL);
 	case_DBG_SEL(PLE_QUEMGN_QEMPTY);
 	case_DBG_SEL(PKTINFO);
+<<<<<<< HEAD
 	case_DBG_SEL(DSPT_HDT_TX0);
 	case_DBG_SEL(DSPT_HDT_TX1);
 	case_DBG_SEL(DSPT_HDT_TX2);
@@ -2860,6 +3031,8 @@ static int rtw89_debug_mac_dbg_port_dump(struct rtw89_dev *rtwdev,
 	case_DBG_SEL(DSPT_WDE_INTF);
 	case_DBG_SEL(DSPT_PLE_INTF);
 	case_DBG_SEL(DSPT_FLOW_CTRL);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case_DBG_SEL(PCIE_TXDMA);
 	case_DBG_SEL(PCIE_RXDMA);
 	case_DBG_SEL(PCIE_CVT);
@@ -3229,7 +3402,10 @@ static void rtw89_sta_info_get_iter(void *data, struct ieee80211_sta *sta)
 	else
 		seq_printf(m, "Legacy %d", rate->legacy);
 	seq_printf(m, "%s", rtwsta->ra_report.might_fallback_legacy ? " FB_G" : "");
+<<<<<<< HEAD
 	seq_printf(m, " BW:%u", rtw89_rate_info_bw_to_mhz(rate->bw));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	seq_printf(m, "\t(hw_rate=0x%x)", rtwsta->ra_report.hw_rate);
 	seq_printf(m, "\t==> agg_wait=%d (%d)\n", rtwsta->max_agg_wait,
 		   sta->deflink.agg.max_rc_amsdu_len);
@@ -3255,7 +3431,10 @@ static void rtw89_sta_info_get_iter(void *data, struct ieee80211_sta *sta)
 			   he_gi_str[rate->he_gi] : "N/A");
 		break;
 	}
+<<<<<<< HEAD
 	seq_printf(m, " BW:%u", rtw89_rate_info_bw_to_mhz(status->bw));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	seq_printf(m, "\t(hw_rate=0x%x)\n", rtwsta->rx_hw_rate);
 
 	rssi = ewma_rssi_read(&rtwsta->avg_rssi);
@@ -3354,6 +3533,7 @@ static void rtw89_dump_addr_cam(struct seq_file *m,
 	}
 }
 
+<<<<<<< HEAD
 __printf(3, 4)
 static void rtw89_dump_pkt_offload(struct seq_file *m, struct list_head *pkt_list,
 				   const char *fmt, ...)
@@ -3379,6 +3559,8 @@ static void rtw89_dump_pkt_offload(struct seq_file *m, struct list_head *pkt_lis
 	seq_puts(m, "\n");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static
 void rtw89_vif_ids_get_iter(void *data, u8 *mac, struct ieee80211_vif *vif)
 {
@@ -3389,7 +3571,10 @@ void rtw89_vif_ids_get_iter(void *data, u8 *mac, struct ieee80211_vif *vif)
 	seq_printf(m, "VIF [%d] %pM\n", rtwvif->mac_id, rtwvif->mac_addr);
 	seq_printf(m, "\tbssid_cam_idx=%u\n", bssid_cam->bssid_cam_idx);
 	rtw89_dump_addr_cam(m, &rtwvif->addr_cam);
+<<<<<<< HEAD
 	rtw89_dump_pkt_offload(m, &rtwvif->general_pkt_list, "\tpkt_ofld[GENERAL]: ");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void rtw89_dump_ba_cam(struct seq_file *m, struct rtw89_sta *rtwsta)
@@ -3428,7 +3613,10 @@ static int rtw89_debug_priv_stations_get(struct seq_file *m, void *v)
 	struct rtw89_debugfs_priv *debugfs_priv = m->private;
 	struct rtw89_dev *rtwdev = debugfs_priv->rtwdev;
 	struct rtw89_cam_info *cam_info = &rtwdev->cam_info;
+<<<<<<< HEAD
 	u8 idx;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&rtwdev->mutex);
 
@@ -3443,6 +3631,7 @@ static int rtw89_debug_priv_stations_get(struct seq_file *m, void *v)
 		   cam_info->sec_cam_map);
 	seq_printf(m, "\tba_cam:    %*ph\n", (int)sizeof(cam_info->ba_cam_map),
 		   cam_info->ba_cam_map);
+<<<<<<< HEAD
 	seq_printf(m, "\tpkt_ofld:  %*ph\n", (int)sizeof(rtwdev->pkt_offload),
 		   rtwdev->pkt_offload);
 
@@ -3452,6 +3641,8 @@ static int rtw89_debug_priv_stations_get(struct seq_file *m, void *v)
 		rtw89_dump_pkt_offload(m, &rtwdev->scan_info.pkt_list[idx],
 				       "\t\t[SCAN %u]: ", idx);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ieee80211_iterate_active_interfaces_atomic(rtwdev->hw,
 		IEEE80211_IFACE_ITER_NORMAL, rtw89_vif_ids_get_iter, m);

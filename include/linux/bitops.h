@@ -248,6 +248,7 @@ static inline unsigned long __ffs64(u64 word)
 }
 
 /**
+<<<<<<< HEAD
  * fns - find N'th set bit in a word
  * @word: The word to search
  * @n: Bit to find
@@ -267,6 +268,8 @@ static inline unsigned long fns(unsigned long word, unsigned int n)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * assign_bit - Assign value to a bit in memory
  * @nr: the bit to set
  * @addr: the address to start counting from

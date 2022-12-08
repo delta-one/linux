@@ -1,8 +1,13 @@
 # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 %YAML 1.2
 ---
+<<<<<<< HEAD
 $id: http://devicetree.org/schemas/net/marvell-bluetooth.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
+=======
+$id: "http://devicetree.org/schemas/net/marvell-bluetooth.yaml#"
+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 title: Marvell Bluetooth chips
 
@@ -15,16 +20,21 @@ maintainers:
 
 properties:
   compatible:
+<<<<<<< HEAD
     enum:
       - mrvl,88w8897
       - mrvl,88w8997
 
   max-speed:
     description: see Documentation/devicetree/bindings/serial/serial.yaml
+=======
+    const: mrvl,88w8897
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible
 
+<<<<<<< HEAD
 allOf:
   - if:
       properties:
@@ -38,6 +48,8 @@ allOf:
       properties:
         max-speed: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 additionalProperties: false
 
 examples:

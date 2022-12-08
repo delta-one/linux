@@ -20,11 +20,16 @@
 #define PXA168_CLK_PLL1_2_1_5		19
 #define PXA168_CLK_PLL1_3_16		20
 #define PXA168_CLK_PLL1_192		21
+<<<<<<< HEAD
 #define PXA168_CLK_PLL1_2_1_10		22
 #define PXA168_CLK_PLL1_2_3_16		23
 #define PXA168_CLK_UART_PLL		27
 #define PXA168_CLK_USB_PLL		28
 #define PXA168_CLK_CLK32_2		50
+=======
+#define PXA168_CLK_UART_PLL		27
+#define PXA168_CLK_USB_PLL		28
+>>>>>>> b7ba80a49124 (Commit)
 
 /* apb peripherals */
 #define PXA168_CLK_TWSI0		60
@@ -59,9 +64,12 @@
 #define PXA168_CLK_CCIC0		107
 #define PXA168_CLK_CCIC0_PHY		108
 #define PXA168_CLK_CCIC0_SPHY		109
+<<<<<<< HEAD
 #define PXA168_CLK_SDH3			110
 #define PXA168_CLK_SDH01_AXI		111
 #define PXA168_CLK_SDH23_AXI		112
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define PXA168_NR_CLKS			200
 #endif

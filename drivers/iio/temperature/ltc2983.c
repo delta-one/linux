@@ -25,12 +25,18 @@
 #define LTC2983_STATUS_REG			0x0000
 #define LTC2983_TEMP_RES_START_REG		0x0010
 #define LTC2983_TEMP_RES_END_REG		0x005F
+<<<<<<< HEAD
 #define LTC2983_EEPROM_KEY_REG			0x00B0
 #define LTC2983_EEPROM_READ_STATUS_REG		0x00D0
 #define LTC2983_GLOBAL_CONFIG_REG		0x00F0
 #define LTC2983_MULT_CHANNEL_START_REG		0x00F4
 #define LTC2983_MULT_CHANNEL_END_REG		0x00F7
 #define LTC2986_EEPROM_STATUS_REG		0x00F9
+=======
+#define LTC2983_GLOBAL_CONFIG_REG		0x00F0
+#define LTC2983_MULT_CHANNEL_START_REG		0x00F4
+#define LTC2983_MULT_CHANNEL_END_REG		0x00F7
+>>>>>>> b7ba80a49124 (Commit)
 #define LTC2983_MUX_CONFIG_REG			0x00FF
 #define LTC2983_CHAN_ASSIGN_START_REG		0x0200
 #define LTC2983_CHAN_ASSIGN_END_REG		0x024F
@@ -38,12 +44,17 @@
 #define LTC2983_CUST_SENS_TBL_END_REG		0x03CF
 
 #define LTC2983_DIFFERENTIAL_CHAN_MIN		2
+<<<<<<< HEAD
+=======
+#define LTC2983_MAX_CHANNELS_NR			20
+>>>>>>> b7ba80a49124 (Commit)
 #define LTC2983_MIN_CHANNELS_NR			1
 #define LTC2983_SLEEP				0x97
 #define LTC2983_CUSTOM_STEINHART_SIZE		24
 #define LTC2983_CUSTOM_SENSOR_ENTRY_SZ		6
 #define LTC2983_CUSTOM_STEINHART_ENTRY_SZ	4
 
+<<<<<<< HEAD
 #define LTC2983_EEPROM_KEY			0xA53C0F5A
 #define LTC2983_EEPROM_WRITE_CMD		0x15
 #define LTC2983_EEPROM_READ_CMD			0x16
@@ -53,6 +64,8 @@
 #define LTC2983_EEPROM_WRITE_TIME_MS		2600
 #define LTC2983_EEPROM_READ_TIME_MS		20
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define LTC2983_CHAN_START_ADDR(chan) \
 			(((chan - 1) * 4) + LTC2983_CHAN_ASSIGN_START_REG)
 #define LTC2983_CHAN_RES_ADDR(chan) \
@@ -182,7 +195,10 @@ enum {
 	LTC2983_SENSOR_DIODE = 28,
 	LTC2983_SENSOR_SENSE_RESISTOR = 29,
 	LTC2983_SENSOR_DIRECT_ADC = 30,
+<<<<<<< HEAD
 	LTC2983_SENSOR_ACTIVE_TEMP = 31,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define to_thermocouple(_sensor) \
@@ -203,6 +219,7 @@ enum {
 #define to_adc(_sensor) \
 		container_of(_sensor, struct ltc2983_adc, sensor)
 
+<<<<<<< HEAD
 #define to_temp(_sensor) \
 		container_of(_sensor, struct ltc2983_temp, sensor)
 
@@ -214,6 +231,9 @@ struct ltc2983_chip_info {
 
 struct ltc2983_data {
 	const struct ltc2983_chip_info *info;
+=======
+struct ltc2983_data {
+>>>>>>> b7ba80a49124 (Commit)
 	struct regmap *regmap;
 	struct spi_device *spi;
 	struct mutex lock;
@@ -231,8 +251,11 @@ struct ltc2983_data {
 	 * Holds the converted temperature
 	 */
 	__be32 temp __aligned(IIO_DMA_MINALIGN);
+<<<<<<< HEAD
 	__be32 chan_val;
 	__be32 eeprom_key;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ltc2983_sensor {
@@ -295,12 +318,15 @@ struct ltc2983_adc {
 	bool single_ended;
 };
 
+<<<<<<< HEAD
 struct ltc2983_temp {
 	struct ltc2983_sensor sensor;
 	struct ltc2983_custom_sensor *custom;
 	bool single_ended;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Convert to Q format numbers. These number's are integers where
  * the number of integer and fractional bits are specified. The resolution
@@ -343,18 +369,32 @@ static int __ltc2983_fault_handler(const struct ltc2983_data *st,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int __ltc2983_chan_assign_common(struct ltc2983_data *st,
+=======
+static int __ltc2983_chan_assign_common(const struct ltc2983_data *st,
+>>>>>>> b7ba80a49124 (Commit)
 					const struct ltc2983_sensor *sensor,
 					u32 chan_val)
 {
 	u32 reg = LTC2983_CHAN_START_ADDR(sensor->chan);
+<<<<<<< HEAD
+=======
+	__be32 __chan_val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	chan_val |= LTC2983_CHAN_TYPE(sensor->type);
 	dev_dbg(&st->spi->dev, "Assign reg:0x%04X, val:0x%08X\n", reg,
 		chan_val);
+<<<<<<< HEAD
 	st->chan_val = cpu_to_be32(chan_val);
 	return regmap_bulk_write(st->regmap, reg, &st->chan_val,
 				 sizeof(st->chan_val));
+=======
+	__chan_val = cpu_to_be32(chan_val);
+	return regmap_bulk_write(st->regmap, reg, &__chan_val,
+				 sizeof(__chan_val));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __ltc2983_chan_custom_sensor_assign(struct ltc2983_data *st,
@@ -635,6 +675,7 @@ static int ltc2983_adc_assign_chan(struct ltc2983_data *st,
 	return __ltc2983_chan_assign_common(st, sensor, chan_val);
 }
 
+<<<<<<< HEAD
 static int ltc2983_temp_assign_chan(struct ltc2983_data *st,
 				    const struct ltc2983_sensor *sensor)
 {
@@ -651,6 +692,8 @@ static int ltc2983_temp_assign_chan(struct ltc2983_data *st,
 	return __ltc2983_chan_assign_common(st, sensor, chan_val);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct ltc2983_sensor *
 ltc2983_thermocouple_new(const struct fwnode_handle *child, struct ltc2983_data *st,
 			 const struct ltc2983_sensor *sensor)
@@ -816,10 +859,17 @@ ltc2983_rtd_new(const struct fwnode_handle *child, struct ltc2983_data *st,
 	if (rtd->sensor_config & LTC2983_RTD_4_WIRE_MASK) {
 		/* 4-wire */
 		u8 min = LTC2983_DIFFERENTIAL_CHAN_MIN,
+<<<<<<< HEAD
 			max = st->info->max_channels_nr;
 
 		if (rtd->sensor_config & LTC2983_RTD_ROTATION_MASK)
 			max = st->info->max_channels_nr - 1;
+=======
+			max = LTC2983_MAX_CHANNELS_NR;
+
+		if (rtd->sensor_config & LTC2983_RTD_ROTATION_MASK)
+			max = LTC2983_MAX_CHANNELS_NR - 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (((rtd->sensor_config & LTC2983_RTD_KELVIN_R_SENSE_MASK)
 		     == LTC2983_RTD_KELVIN_R_SENSE_MASK) &&
@@ -1188,6 +1238,7 @@ static struct ltc2983_sensor *ltc2983_adc_new(struct fwnode_handle *child,
 	return &adc->sensor;
 }
 
+<<<<<<< HEAD
 static struct ltc2983_sensor *ltc2983_temp_new(struct fwnode_handle *child,
 					       struct ltc2983_data *st,
 					       const struct ltc2983_sensor *sensor)
@@ -1220,6 +1271,8 @@ static struct ltc2983_sensor *ltc2983_temp_new(struct fwnode_handle *child,
 	return &temp->sensor;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ltc2983_chan_read(struct ltc2983_data *st,
 			const struct ltc2983_sensor *sensor, int *val)
 {
@@ -1379,10 +1432,17 @@ static int ltc2983_parse_dt(struct ltc2983_data *st)
 
 		/* check if we have a valid channel */
 		if (sensor.chan < LTC2983_MIN_CHANNELS_NR ||
+<<<<<<< HEAD
 		    sensor.chan > st->info->max_channels_nr) {
 			ret = -EINVAL;
 			dev_err(dev, "chan:%d must be from %u to %u\n", sensor.chan,
 				LTC2983_MIN_CHANNELS_NR, st->info->max_channels_nr);
+=======
+		    sensor.chan > LTC2983_MAX_CHANNELS_NR) {
+			ret = -EINVAL;
+			dev_err(dev, "chan:%d must be from %u to %u\n", sensor.chan,
+				LTC2983_MIN_CHANNELS_NR, LTC2983_MAX_CHANNELS_NR);
+>>>>>>> b7ba80a49124 (Commit)
 			goto put_child;
 		} else if (channel_avail_mask & BIT(sensor.chan)) {
 			ret = -EINVAL;
@@ -1422,9 +1482,12 @@ static int ltc2983_parse_dt(struct ltc2983_data *st)
 			st->iio_channels--;
 		} else if (sensor.type == LTC2983_SENSOR_DIRECT_ADC) {
 			st->sensors[chan] = ltc2983_adc_new(child, st, &sensor);
+<<<<<<< HEAD
 		} else if (st->info->has_temp &&
 			   sensor.type == LTC2983_SENSOR_ACTIVE_TEMP) {
 			st->sensors[chan] = ltc2983_temp_new(child, st, &sensor);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			dev_err(dev, "Unknown sensor type %d\n", sensor.type);
 			ret = -EINVAL;
@@ -1451,6 +1514,7 @@ put_child:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int ltc2983_eeprom_cmd(struct ltc2983_data *st, unsigned int cmd,
 			      unsigned int wait_time, unsigned int status_reg,
 			      unsigned long status_fail_mask)
@@ -1490,6 +1554,8 @@ static int ltc2983_eeprom_cmd(struct ltc2983_data *st, unsigned int cmd,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ltc2983_setup(struct ltc2983_data *st, bool assign_iio)
 {
 	u32 iio_chan_t = 0, iio_chan_v = 0, chan, iio_idx = 0, status;
@@ -1504,6 +1570,16 @@ static int ltc2983_setup(struct ltc2983_data *st, bool assign_iio)
 		return ret;
 	}
 
+<<<<<<< HEAD
+=======
+	st->iio_chan = devm_kzalloc(&st->spi->dev,
+				    st->iio_channels * sizeof(*st->iio_chan),
+				    GFP_KERNEL);
+
+	if (!st->iio_chan)
+		return -ENOMEM;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = regmap_update_bits(st->regmap, LTC2983_GLOBAL_CONFIG_REG,
 				 LTC2983_NOTCH_FREQ_MASK,
 				 LTC2983_NOTCH_FREQ(st->filter_notch_freq));
@@ -1515,6 +1591,7 @@ static int ltc2983_setup(struct ltc2983_data *st, bool assign_iio)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (st->info->has_eeprom && !assign_iio) {
 		ret = ltc2983_eeprom_cmd(st, LTC2983_EEPROM_READ_CMD,
 					 LTC2983_EEPROM_READ_TIME_MS,
@@ -1524,6 +1601,8 @@ static int ltc2983_setup(struct ltc2983_data *st, bool assign_iio)
 			return 0;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (chan = 0; chan < st->num_channels; chan++) {
 		u32 chan_type = 0, *iio_chan;
 
@@ -1563,6 +1642,7 @@ static int ltc2983_setup(struct ltc2983_data *st, bool assign_iio)
 static const struct regmap_range ltc2983_reg_ranges[] = {
 	regmap_reg_range(LTC2983_STATUS_REG, LTC2983_STATUS_REG),
 	regmap_reg_range(LTC2983_TEMP_RES_START_REG, LTC2983_TEMP_RES_END_REG),
+<<<<<<< HEAD
 	regmap_reg_range(LTC2983_EEPROM_KEY_REG, LTC2983_EEPROM_KEY_REG),
 	regmap_reg_range(LTC2983_EEPROM_READ_STATUS_REG,
 			 LTC2983_EEPROM_READ_STATUS_REG),
@@ -1570,6 +1650,11 @@ static const struct regmap_range ltc2983_reg_ranges[] = {
 	regmap_reg_range(LTC2983_MULT_CHANNEL_START_REG,
 			 LTC2983_MULT_CHANNEL_END_REG),
 	regmap_reg_range(LTC2986_EEPROM_STATUS_REG, LTC2986_EEPROM_STATUS_REG),
+=======
+	regmap_reg_range(LTC2983_GLOBAL_CONFIG_REG, LTC2983_GLOBAL_CONFIG_REG),
+	regmap_reg_range(LTC2983_MULT_CHANNEL_START_REG,
+			 LTC2983_MULT_CHANNEL_END_REG),
+>>>>>>> b7ba80a49124 (Commit)
 	regmap_reg_range(LTC2983_MUX_CONFIG_REG, LTC2983_MUX_CONFIG_REG),
 	regmap_reg_range(LTC2983_CHAN_ASSIGN_START_REG,
 			 LTC2983_CHAN_ASSIGN_END_REG),
@@ -1614,12 +1699,15 @@ static int ltc2983_probe(struct spi_device *spi)
 
 	st = iio_priv(indio_dev);
 
+<<<<<<< HEAD
 	st->info = device_get_match_data(&spi->dev);
 	if (!st->info)
 		st->info = (void *)spi_get_device_id(spi)->driver_data;
 	if (!st->info)
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	st->regmap = devm_regmap_init_spi(spi, &ltc2983_regmap_config);
 	if (IS_ERR(st->regmap)) {
 		dev_err(&spi->dev, "Failed to initialize regmap\n");
@@ -1629,7 +1717,10 @@ static int ltc2983_probe(struct spi_device *spi)
 	mutex_init(&st->lock);
 	init_completion(&st->completion);
 	st->spi = spi;
+<<<<<<< HEAD
 	st->eeprom_key = cpu_to_be32(LTC2983_EEPROM_KEY);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spi_set_drvdata(spi, st);
 
 	ret = ltc2983_parse_dt(st);
@@ -1646,12 +1737,15 @@ static int ltc2983_probe(struct spi_device *spi)
 		gpiod_set_value_cansleep(gpio, 0);
 	}
 
+<<<<<<< HEAD
 	st->iio_chan = devm_kzalloc(&spi->dev,
 				    st->iio_channels * sizeof(*st->iio_chan),
 				    GFP_KERNEL);
 	if (!st->iio_chan)
 		return -ENOMEM;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ltc2983_setup(st, true);
 	if (ret)
 		return ret;
@@ -1663,6 +1757,7 @@ static int ltc2983_probe(struct spi_device *spi)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	if (st->info->has_eeprom) {
 		ret = ltc2983_eeprom_cmd(st, LTC2983_EEPROM_WRITE_CMD,
 					 LTC2983_EEPROM_WRITE_TIME_MS,
@@ -1672,6 +1767,8 @@ static int ltc2983_probe(struct spi_device *spi)
 			return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	indio_dev->name = name;
 	indio_dev->num_channels = st->iio_channels;
 	indio_dev->channels = st->iio_chan;
@@ -1702,6 +1799,7 @@ static int ltc2983_suspend(struct device *dev)
 static DEFINE_SIMPLE_DEV_PM_OPS(ltc2983_pm_ops, ltc2983_suspend,
 				ltc2983_resume);
 
+<<<<<<< HEAD
 static const struct ltc2983_chip_info ltc2983_chip_info_data = {
 	.max_channels_nr = 20,
 };
@@ -1722,15 +1820,23 @@ static const struct spi_device_id ltc2983_id_table[] = {
 	{ "ltc2984", (kernel_ulong_t)&ltc2984_chip_info_data },
 	{ "ltc2986", (kernel_ulong_t)&ltc2986_chip_info_data },
 	{ "ltm2985", (kernel_ulong_t)&ltc2986_chip_info_data },
+=======
+static const struct spi_device_id ltc2983_id_table[] = {
+	{ "ltc2983" },
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 MODULE_DEVICE_TABLE(spi, ltc2983_id_table);
 
 static const struct of_device_id ltc2983_of_match[] = {
+<<<<<<< HEAD
 	{ .compatible = "adi,ltc2983", .data = &ltc2983_chip_info_data },
 	{ .compatible = "adi,ltc2984", .data = &ltc2984_chip_info_data },
 	{ .compatible = "adi,ltc2986", .data = &ltc2986_chip_info_data },
 	{ .compatible = "adi,ltm2985", .data = &ltc2986_chip_info_data },
+=======
+	{ .compatible = "adi,ltc2983" },
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 MODULE_DEVICE_TABLE(of, ltc2983_of_match);

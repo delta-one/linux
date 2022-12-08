@@ -1131,6 +1131,7 @@ static const struct panel_init_cmd auo_b101uan08_3_init_cmd[] = {
 	{},
 };
 
+<<<<<<< HEAD
 static const struct panel_init_cmd starry_qfh032011_53g_init_cmd[] = {
 	_INIT_DCS_CMD(0xB0, 0x01),
 	_INIT_DCS_CMD(0xC3, 0x4F),
@@ -1228,6 +1229,8 @@ static const struct panel_init_cmd starry_qfh032011_53g_init_cmd[] = {
 	{},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct boe_panel *to_boe_panel(struct drm_panel *panel)
 {
 	return container_of(panel, struct boe_panel, base);
@@ -1290,11 +1293,21 @@ static int boe_panel_enter_sleep_mode(struct boe_panel *boe)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int boe_panel_disable(struct drm_panel *panel)
+=======
+static int boe_panel_unprepare(struct drm_panel *panel)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct boe_panel *boe = to_boe_panel(panel);
 	int ret;
 
+<<<<<<< HEAD
+=======
+	if (!boe->prepared)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = boe_panel_enter_sleep_mode(boe);
 	if (ret < 0) {
 		dev_err(panel->dev, "failed to set panel off: %d\n", ret);
@@ -1303,6 +1316,7 @@ static int boe_panel_disable(struct drm_panel *panel)
 
 	msleep(150);
 
+<<<<<<< HEAD
 	return 0;
 }
 
@@ -1313,6 +1327,8 @@ static int boe_panel_unprepare(struct drm_panel *panel)
 	if (!boe->prepared)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (boe->desc->discharge_on_disable) {
 		regulator_disable(boe->avee);
 		regulator_disable(boe->avdd);
@@ -1594,6 +1610,7 @@ static const struct panel_desc boe_tv105wum_nw0_desc = {
 	.init_cmds = boe_init_cmd,
 };
 
+<<<<<<< HEAD
 static const struct drm_display_mode starry_qfh032011_53g_default_mode = {
 	.clock = 165731,
 	.hdisplay = 1200,
@@ -1620,6 +1637,8 @@ static const struct panel_desc starry_qfh032011_53g_desc = {
 	.init_cmds = starry_qfh032011_53g_init_cmd,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int boe_panel_get_modes(struct drm_panel *panel,
 			       struct drm_connector *connector)
 {
@@ -1658,7 +1677,10 @@ static enum drm_panel_orientation boe_panel_get_orientation(struct drm_panel *pa
 }
 
 static const struct drm_panel_funcs boe_panel_funcs = {
+<<<<<<< HEAD
 	.disable = boe_panel_disable,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.unprepare = boe_panel_unprepare,
 	.prepare = boe_panel_prepare,
 	.enable = boe_panel_enable,
@@ -1790,9 +1812,12 @@ static const struct of_device_id boe_of_match[] = {
 	{ .compatible = "innolux,hj110iz-01a",
 	  .data = &inx_hj110iz_desc
 	},
+<<<<<<< HEAD
 	{ .compatible = "starry,2081101qfh032011-53g",
 	  .data = &starry_qfh032011_53g_desc
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ /* sentinel */ }
 };
 MODULE_DEVICE_TABLE(of, boe_of_match);

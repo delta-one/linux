@@ -68,6 +68,7 @@
 
 int distribute_irqs = 1;
 
+<<<<<<< HEAD
 static inline void next_interrupt(struct pt_regs *regs)
 {
 	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG)) {
@@ -95,14 +96,27 @@ static inline bool irq_happened_test_and_clear(u8 irq)
 }
 
 static __no_kcsan void __replay_soft_interrupts(void)
+=======
+void replay_soft_interrupts(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pt_regs regs;
 
 	/*
+<<<<<<< HEAD
+=======
+	 * Be careful here, calling these interrupt handlers can cause
+	 * softirqs to be raised, which they may run when calling irq_exit,
+	 * which will cause local_irq_enable() to be run, which can then
+	 * recurse into this function. Don't keep any state across
+	 * interrupt handler calls which may change underneath us.
+	 *
+>>>>>>> b7ba80a49124 (Commit)
 	 * We use local_paca rather than get_paca() to avoid all the
 	 * debug_smp_processor_id() business in this low level function.
 	 */
 
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG)) {
 		WARN_ON_ONCE(mfmsr() & MSR_EE);
 		WARN_ON(!(local_paca->irq_happened & PACA_IRQ_HARD_DIS));
@@ -116,10 +130,19 @@ static __no_kcsan void __replay_soft_interrupts(void)
 	 */
 	local_paca->irq_happened |= PACA_IRQ_REPLAYING;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ppc_save_regs(&regs);
 	regs.softe = IRQS_ENABLED;
 	regs.msr |= MSR_EE;
 
+<<<<<<< HEAD
+=======
+again:
+	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
+		WARN_ON_ONCE(mfmsr() & MSR_EE);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Force the delivery of pending soft-disabled interrupts on PS3.
 	 * Any HV call will have this side effect.
@@ -134,6 +157,7 @@ static __no_kcsan void __replay_soft_interrupts(void)
 	 * This is a higher priority interrupt than the others, so
 	 * replay it first.
 	 */
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_PPC_BOOK3S) &&
 	    irq_happened_test_and_clear(PACA_IRQ_HMI)) {
 		regs.trap = INTERRUPT_HMI;
@@ -180,6 +204,62 @@ __no_kcsan void replay_soft_interrupts(void)
 
 #if defined(CONFIG_PPC_BOOK3S_64) && defined(CONFIG_PPC_KUAP)
 static inline __no_kcsan void replay_soft_interrupts_irqrestore(void)
+=======
+	if (IS_ENABLED(CONFIG_PPC_BOOK3S) && (local_paca->irq_happened & PACA_IRQ_HMI)) {
+		local_paca->irq_happened &= ~PACA_IRQ_HMI;
+		regs.trap = INTERRUPT_HMI;
+		handle_hmi_exception(&regs);
+		if (!(local_paca->irq_happened & PACA_IRQ_HARD_DIS))
+			hard_irq_disable();
+	}
+
+	if (local_paca->irq_happened & PACA_IRQ_DEC) {
+		local_paca->irq_happened &= ~PACA_IRQ_DEC;
+		regs.trap = INTERRUPT_DECREMENTER;
+		timer_interrupt(&regs);
+		if (!(local_paca->irq_happened & PACA_IRQ_HARD_DIS))
+			hard_irq_disable();
+	}
+
+	if (local_paca->irq_happened & PACA_IRQ_EE) {
+		local_paca->irq_happened &= ~PACA_IRQ_EE;
+		regs.trap = INTERRUPT_EXTERNAL;
+		do_IRQ(&regs);
+		if (!(local_paca->irq_happened & PACA_IRQ_HARD_DIS))
+			hard_irq_disable();
+	}
+
+	if (IS_ENABLED(CONFIG_PPC_DOORBELL) && (local_paca->irq_happened & PACA_IRQ_DBELL)) {
+		local_paca->irq_happened &= ~PACA_IRQ_DBELL;
+		regs.trap = INTERRUPT_DOORBELL;
+		doorbell_exception(&regs);
+		if (!(local_paca->irq_happened & PACA_IRQ_HARD_DIS))
+			hard_irq_disable();
+	}
+
+	/* Book3E does not support soft-masking PMI interrupts */
+	if (IS_ENABLED(CONFIG_PPC_BOOK3S) && (local_paca->irq_happened & PACA_IRQ_PMI)) {
+		local_paca->irq_happened &= ~PACA_IRQ_PMI;
+		regs.trap = INTERRUPT_PERFMON;
+		performance_monitor_exception(&regs);
+		if (!(local_paca->irq_happened & PACA_IRQ_HARD_DIS))
+			hard_irq_disable();
+	}
+
+	if (local_paca->irq_happened & ~PACA_IRQ_HARD_DIS) {
+		/*
+		 * We are responding to the next interrupt, so interrupt-off
+		 * latencies should be reset here.
+		 */
+		trace_hardirqs_on();
+		trace_hardirqs_off();
+		goto again;
+	}
+}
+
+#if defined(CONFIG_PPC_BOOK3S_64) && defined(CONFIG_PPC_KUAP)
+static inline void replay_soft_interrupts_irqrestore(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long kuap_state = get_kuap();
 
@@ -194,16 +274,27 @@ static inline __no_kcsan void replay_soft_interrupts_irqrestore(void)
 	if (kuap_state != AMR_KUAP_BLOCKED)
 		set_kuap(AMR_KUAP_BLOCKED);
 
+<<<<<<< HEAD
 	__replay_soft_interrupts();
+=======
+	replay_soft_interrupts();
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (kuap_state != AMR_KUAP_BLOCKED)
 		set_kuap(kuap_state);
 }
 #else
+<<<<<<< HEAD
 #define replay_soft_interrupts_irqrestore() __replay_soft_interrupts()
 #endif
 
 notrace __no_kcsan void arch_local_irq_restore(unsigned long mask)
+=======
+#define replay_soft_interrupts_irqrestore() replay_soft_interrupts()
+#endif
+
+notrace void arch_local_irq_restore(unsigned long mask)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned char irq_happened;
 
@@ -213,6 +304,7 @@ notrace __no_kcsan void arch_local_irq_restore(unsigned long mask)
 		return;
 	}
 
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG)) {
 		WARN_ON_ONCE(in_nmi());
 		WARN_ON_ONCE(in_hardirq());
@@ -220,6 +312,11 @@ notrace __no_kcsan void arch_local_irq_restore(unsigned long mask)
 	}
 
 again:
+=======
+	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
+		WARN_ON_ONCE(in_nmi() || in_hardirq());
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * After the stb, interrupts are unmasked and there are no interrupts
 	 * pending replay. The restart sequence makes this atomic with
@@ -246,12 +343,15 @@ again:
 	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
 		WARN_ON_ONCE(!(mfmsr() & MSR_EE));
 
+<<<<<<< HEAD
 	/*
 	 * If we came here from the replay below, we might have a preempt
 	 * pending (due to preempt_enable_no_resched()). Have to check now.
 	 */
 	preempt_check_resched();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return;
 
 happened:
@@ -265,7 +365,10 @@ happened:
 		irq_soft_mask_set(IRQS_ENABLED);
 		local_paca->irq_happened = 0;
 		__hard_irq_enable();
+<<<<<<< HEAD
 		preempt_check_resched();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -301,6 +404,7 @@ happened:
 	irq_soft_mask_set(IRQS_ALL_DISABLED);
 	trace_hardirqs_off();
 
+<<<<<<< HEAD
 	/*
 	 * Now enter interrupt context. The interrupt handlers themselves
 	 * also call irq_enter/exit (which is okay, they can nest). But call
@@ -334,6 +438,13 @@ happened:
 	trace_hardirqs_on();
 	irq_soft_mask_set(IRQS_ENABLED);
 	local_paca->irq_happened = 0;
+=======
+	replay_soft_interrupts_irqrestore();
+	local_paca->irq_happened = 0;
+
+	trace_hardirqs_on();
+	irq_soft_mask_set(IRQS_ENABLED);
+>>>>>>> b7ba80a49124 (Commit)
 	__hard_irq_enable();
 	preempt_enable();
 }

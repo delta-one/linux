@@ -127,6 +127,7 @@ void kunit_binary_assert_format(const struct kunit_assert *assert,
 			  binary_assert->text->right_text);
 	if (!is_literal(stream->test, binary_assert->text->left_text,
 			binary_assert->left_value, stream->gfp))
+<<<<<<< HEAD
 		string_stream_add(stream, KUNIT_SUBSUBTEST_INDENT "%s == %lld (0x%llx)\n",
 				  binary_assert->text->left_text,
 				  binary_assert->left_value,
@@ -136,6 +137,15 @@ void kunit_binary_assert_format(const struct kunit_assert *assert,
 		string_stream_add(stream, KUNIT_SUBSUBTEST_INDENT "%s == %lld (0x%llx)",
 				  binary_assert->text->right_text,
 				  binary_assert->right_value,
+=======
+		string_stream_add(stream, KUNIT_SUBSUBTEST_INDENT "%s == %lld\n",
+				  binary_assert->text->left_text,
+				  binary_assert->left_value);
+	if (!is_literal(stream->test, binary_assert->text->right_text,
+			binary_assert->right_value, stream->gfp))
+		string_stream_add(stream, KUNIT_SUBSUBTEST_INDENT "%s == %lld",
+				  binary_assert->text->right_text,
+>>>>>>> b7ba80a49124 (Commit)
 				  binary_assert->right_value);
 	kunit_assert_print_msg(message, stream);
 }
@@ -206,6 +216,7 @@ void kunit_binary_str_assert_format(const struct kunit_assert *assert,
 	kunit_assert_print_msg(message, stream);
 }
 EXPORT_SYMBOL_GPL(kunit_binary_str_assert_format);
+<<<<<<< HEAD
 
 /* Adds a hexdump of a buffer to a string_stream comparing it with
  * a second buffer. The different bytes are marked with <>.
@@ -272,3 +283,5 @@ void kunit_mem_assert_format(const struct kunit_assert *assert,
 	}
 }
 EXPORT_SYMBOL_GPL(kunit_mem_assert_format);
+=======
+>>>>>>> b7ba80a49124 (Commit)

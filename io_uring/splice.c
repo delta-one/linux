@@ -34,7 +34,10 @@ static int __io_splice_prep(struct io_kiocb *req,
 	if (unlikely(sp->flags & ~valid_flags))
 		return -EINVAL;
 	sp->splice_fd_in = READ_ONCE(sqe->splice_fd_in);
+<<<<<<< HEAD
 	req->flags |= REQ_F_FORCE_ASYNC;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -53,7 +56,12 @@ int io_tee(struct io_kiocb *req, unsigned int issue_flags)
 	struct file *in;
 	long ret = 0;
 
+<<<<<<< HEAD
 	WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK);
+=======
+	if (issue_flags & IO_URING_F_NONBLOCK)
+		return -EAGAIN;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (sp->flags & SPLICE_F_FD_IN_FIXED)
 		in = io_file_get_fixed(req, sp->splice_fd_in, issue_flags);
@@ -94,7 +102,12 @@ int io_splice(struct io_kiocb *req, unsigned int issue_flags)
 	struct file *in;
 	long ret = 0;
 
+<<<<<<< HEAD
 	WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK);
+=======
+	if (issue_flags & IO_URING_F_NONBLOCK)
+		return -EAGAIN;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (sp->flags & SPLICE_F_FD_IN_FIXED)
 		in = io_file_get_fixed(req, sp->splice_fd_in, issue_flags);

@@ -17,6 +17,10 @@
 
 #include "i915_drv.h"
 #include "i915_pmu.h"
+<<<<<<< HEAD
+=======
+#include "intel_pm.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Frequency for the sampling timer for events which need it. */
 #define FREQUENCY 200
@@ -147,6 +151,7 @@ static u64 __get_rc6(struct intel_gt *gt)
 	struct drm_i915_private *i915 = gt->i915;
 	u64 val;
 
+<<<<<<< HEAD
 	val = intel_rc6_residency_ns(&gt->rc6, INTEL_RC6_RES_RC6);
 
 	if (HAS_RC6p(i915))
@@ -154,6 +159,15 @@ static u64 __get_rc6(struct intel_gt *gt)
 
 	if (HAS_RC6pp(i915))
 		val += intel_rc6_residency_ns(&gt->rc6, INTEL_RC6_RES_RC6pp);
+=======
+	val = intel_rc6_residency_ns(&gt->rc6, GEN6_GT_GFX_RC6);
+
+	if (HAS_RC6p(i915))
+		val += intel_rc6_residency_ns(&gt->rc6, GEN6_GT_GFX_RC6p);
+
+	if (HAS_RC6pp(i915))
+		val += intel_rc6_residency_ns(&gt->rc6, GEN6_GT_GFX_RC6pp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return val;
 }
@@ -370,6 +384,10 @@ static void
 frequency_sample(struct intel_gt *gt, unsigned int period_ns)
 {
 	struct drm_i915_private *i915 = gt->i915;
+<<<<<<< HEAD
+=======
+	struct intel_uncore *uncore = gt->uncore;
+>>>>>>> b7ba80a49124 (Commit)
 	struct i915_pmu *pmu = &i915->pmu;
 	struct intel_rps *rps = &gt->rps;
 
@@ -392,7 +410,11 @@ frequency_sample(struct intel_gt *gt, unsigned int period_ns)
 		 * case we assume the system is running at the intended
 		 * frequency. Fortunately, the read should rarely fail!
 		 */
+<<<<<<< HEAD
 		val = intel_rps_read_rpstat_fw(rps);
+=======
+		val = intel_uncore_read_fw(uncore, GEN6_RPSTAT1);
+>>>>>>> b7ba80a49124 (Commit)
 		if (val)
 			val = intel_rps_get_cagf(rps, val);
 		else

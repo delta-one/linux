@@ -273,7 +273,11 @@ static int tls_strp_read_copyin(struct tls_strparser *strp)
 	return desc.error;
 }
 
+<<<<<<< HEAD
 static int tls_strp_read_copy(struct tls_strparser *strp, bool qshort)
+=======
+static int tls_strp_read_short(struct tls_strparser *strp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct skb_shared_info *shinfo;
 	struct page *page;
@@ -283,7 +287,11 @@ static int tls_strp_read_copy(struct tls_strparser *strp, bool qshort)
 	 * to read the data out. Otherwise the connection will stall.
 	 * Without pressure threshold of INT_MAX will never be ready.
 	 */
+<<<<<<< HEAD
 	if (likely(qshort && !tcp_epollin_ready(strp->sk, INT_MAX)))
+=======
+	if (likely(!tcp_epollin_ready(strp->sk, INT_MAX)))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	shinfo = skb_shinfo(strp->anchor);
@@ -315,6 +323,7 @@ static int tls_strp_read_copy(struct tls_strparser *strp, bool qshort)
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool tls_strp_check_no_dup(struct tls_strparser *strp)
 {
 	unsigned int len = strp->stm.offset + strp->stm.full_len;
@@ -336,6 +345,8 @@ static bool tls_strp_check_no_dup(struct tls_strparser *strp)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void tls_strp_load_anchor_with_queue(struct tls_strparser *strp, int len)
 {
 	struct tcp_sock *tp = tcp_sk(strp->sk);
@@ -394,7 +405,11 @@ static int tls_strp_read_sock(struct tls_strparser *strp)
 		return tls_strp_read_copyin(strp);
 
 	if (inq < strp->stm.full_len)
+<<<<<<< HEAD
 		return tls_strp_read_copy(strp, true);
+=======
+		return tls_strp_read_short(strp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!strp->stm.full_len) {
 		tls_strp_load_anchor_with_queue(strp, inq);
@@ -408,12 +423,18 @@ static int tls_strp_read_sock(struct tls_strparser *strp)
 		strp->stm.full_len = sz;
 
 		if (!strp->stm.full_len || inq < strp->stm.full_len)
+<<<<<<< HEAD
 			return tls_strp_read_copy(strp, true);
 	}
 
 	if (!tls_strp_check_no_dup(strp))
 		return tls_strp_read_copy(strp, false);
 
+=======
+			return tls_strp_read_short(strp);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	strp->msg_ready = 1;
 	tls_rx_msg_ready(strp);
 

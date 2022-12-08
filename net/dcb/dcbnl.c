@@ -166,7 +166,10 @@ static const struct nla_policy dcbnl_ieee_policy[DCB_ATTR_IEEE_MAX + 1] = {
 	[DCB_ATTR_IEEE_QCN]         = {.len = sizeof(struct ieee_qcn)},
 	[DCB_ATTR_IEEE_QCN_STATS]   = {.len = sizeof(struct ieee_qcn_stats)},
 	[DCB_ATTR_DCB_BUFFER]       = {.len = sizeof(struct dcbnl_buffer)},
+<<<<<<< HEAD
 	[DCB_ATTR_DCB_APP_TRUST_TABLE] = {.type = NLA_NESTED},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* DCB number of traffic classes nested attributes. */
@@ -178,6 +181,7 @@ static const struct nla_policy dcbnl_featcfg_nest[DCB_FEATCFG_ATTR_MAX + 1] = {
 };
 
 static LIST_HEAD(dcb_app_list);
+<<<<<<< HEAD
 static LIST_HEAD(dcb_rewr_list);
 static DEFINE_SPINLOCK(dcb_lock);
 
@@ -213,6 +217,10 @@ static bool dcbnl_app_selector_validate(enum ieee_attrs_app type, u8 selector)
 	return dcbnl_app_attr_type_get(selector) == type;
 }
 
+=======
+static DEFINE_SPINLOCK(dcb_lock);
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct sk_buff *dcbnl_newmsg(int type, u8 cmd, u32 port, u32 seq,
 				    u32 flags, struct nlmsghdr **nlhp)
 {
@@ -1061,6 +1069,7 @@ nla_put_failure:
 	return err;
 }
 
+<<<<<<< HEAD
 static int dcbnl_getapptrust(struct net_device *netdev, struct sk_buff *skb)
 {
 	const struct dcbnl_rtnl_ops *ops = netdev->dcbnl_ops;
@@ -1141,6 +1150,14 @@ static int dcbnl_ieee_fill(struct sk_buff *skb, struct net_device *netdev)
 	const struct dcbnl_rtnl_ops *ops = netdev->dcbnl_ops;
 	struct nlattr *ieee, *app, *rewr;
 	struct dcb_app_type *itr;
+=======
+/* Handle IEEE 802.1Qaz/802.1Qau/802.1Qbb GET commands. */
+static int dcbnl_ieee_fill(struct sk_buff *skb, struct net_device *netdev)
+{
+	struct nlattr *ieee, *app;
+	struct dcb_app_type *itr;
+	const struct dcbnl_rtnl_ops *ops = netdev->dcbnl_ops;
+>>>>>>> b7ba80a49124 (Commit)
 	int dcbx;
 	int err;
 
@@ -1224,9 +1241,14 @@ static int dcbnl_ieee_fill(struct sk_buff *skb, struct net_device *netdev)
 	spin_lock_bh(&dcb_lock);
 	list_for_each_entry(itr, &dcb_app_list, list) {
 		if (itr->ifindex == netdev->ifindex) {
+<<<<<<< HEAD
 			enum ieee_attrs_app type =
 				dcbnl_app_attr_type_get(itr->app.selector);
 			err = nla_put(skb, type, sizeof(itr->app), &itr->app);
+=======
+			err = nla_put(skb, DCB_ATTR_IEEE_APP, sizeof(itr->app),
+					 &itr->app);
+>>>>>>> b7ba80a49124 (Commit)
 			if (err) {
 				spin_unlock_bh(&dcb_lock);
 				return -EMSGSIZE;
@@ -1242,6 +1264,7 @@ static int dcbnl_ieee_fill(struct sk_buff *skb, struct net_device *netdev)
 	spin_unlock_bh(&dcb_lock);
 	nla_nest_end(skb, app);
 
+<<<<<<< HEAD
 	rewr = nla_nest_start(skb, DCB_ATTR_DCB_REWR_TABLE);
 	if (!rewr)
 		return -EMSGSIZE;
@@ -1269,6 +1292,8 @@ static int dcbnl_ieee_fill(struct sk_buff *skb, struct net_device *netdev)
 			return err;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* get peer info if available */
 	if (ops->ieee_peer_getets) {
 		struct ieee_ets ets;
@@ -1624,6 +1649,7 @@ static int dcbnl_ieee_set(struct net_device *netdev, struct nlmsghdr *nlh,
 			goto err;
 	}
 
+<<<<<<< HEAD
 	if (ieee[DCB_ATTR_DCB_REWR_TABLE]) {
 		err = dcbnl_app_table_setdel(ieee[DCB_ATTR_DCB_REWR_TABLE],
 					     netdev,
@@ -1685,6 +1711,31 @@ static int dcbnl_ieee_set(struct net_device *netdev, struct nlmsghdr *nlh,
 		err = ops->dcbnl_setapptrust(netdev, selectors, nselectors);
 		if (err)
 			goto err;
+=======
+	if (ieee[DCB_ATTR_IEEE_APP_TABLE]) {
+		struct nlattr *attr;
+		int rem;
+
+		nla_for_each_nested(attr, ieee[DCB_ATTR_IEEE_APP_TABLE], rem) {
+			struct dcb_app *app_data;
+
+			if (nla_type(attr) != DCB_ATTR_IEEE_APP)
+				continue;
+
+			if (nla_len(attr) < sizeof(struct dcb_app)) {
+				err = -ERANGE;
+				goto err;
+			}
+
+			app_data = nla_data(attr);
+			if (ops->ieee_setapp)
+				err = ops->ieee_setapp(netdev, app_data);
+			else
+				err = dcb_ieee_setapp(netdev, app_data);
+			if (err)
+				goto err;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 err:
@@ -1724,6 +1775,7 @@ static int dcbnl_ieee_del(struct net_device *netdev, struct nlmsghdr *nlh,
 		return err;
 
 	if (ieee[DCB_ATTR_IEEE_APP_TABLE]) {
+<<<<<<< HEAD
 		err = dcbnl_app_table_setdel(ieee[DCB_ATTR_IEEE_APP_TABLE],
 					     netdev, ops->ieee_delapp ?:
 					     dcb_ieee_delapp);
@@ -1737,6 +1789,24 @@ static int dcbnl_ieee_del(struct net_device *netdev, struct nlmsghdr *nlh,
 					     ops->dcbnl_delrewr ?: dcb_delrewr);
 		if (err)
 			goto err;
+=======
+		struct nlattr *attr;
+		int rem;
+
+		nla_for_each_nested(attr, ieee[DCB_ATTR_IEEE_APP_TABLE], rem) {
+			struct dcb_app *app_data;
+
+			if (nla_type(attr) != DCB_ATTR_IEEE_APP)
+				continue;
+			app_data = nla_data(attr);
+			if (ops->ieee_delapp)
+				err = ops->ieee_delapp(netdev, app_data);
+			else
+				err = dcb_ieee_delapp(netdev, app_data);
+			if (err)
+				goto err;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 err:
@@ -1967,6 +2037,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static struct dcb_app_type *dcb_rewr_lookup(const struct dcb_app *app,
 					    int ifindex, int proto)
 {
@@ -1983,6 +2054,8 @@ static struct dcb_app_type *dcb_rewr_lookup(const struct dcb_app *app,
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct dcb_app_type *dcb_app_lookup(const struct dcb_app *app,
 					   int ifindex, int prio)
 {
@@ -1999,8 +2072,12 @@ static struct dcb_app_type *dcb_app_lookup(const struct dcb_app *app,
 	return NULL;
 }
 
+<<<<<<< HEAD
 static int dcb_app_add(struct list_head *list, const struct dcb_app *app,
 		       int ifindex)
+=======
+static int dcb_app_add(const struct dcb_app *app, int ifindex)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dcb_app_type *entry;
 
@@ -2010,7 +2087,11 @@ static int dcb_app_add(struct list_head *list, const struct dcb_app *app,
 
 	memcpy(&entry->app, app, sizeof(*app));
 	entry->ifindex = ifindex;
+<<<<<<< HEAD
 	list_add(&entry->list, list);
+=======
+	list_add(&entry->list, &dcb_app_list);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -2073,7 +2154,11 @@ int dcb_setapp(struct net_device *dev, struct dcb_app *new)
 	}
 	/* App type does not exist add new application type */
 	if (new->priority)
+<<<<<<< HEAD
 		err = dcb_app_add(&dcb_app_list, new, dev->ifindex);
+=======
+		err = dcb_app_add(new, dev->ifindex);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	spin_unlock_bh(&dcb_lock);
 	if (!err)
@@ -2106,6 +2191,7 @@ u8 dcb_ieee_getapp_mask(struct net_device *dev, struct dcb_app *app)
 }
 EXPORT_SYMBOL(dcb_ieee_getapp_mask);
 
+<<<<<<< HEAD
 /* Get protocol value from rewrite entry. */
 u16 dcb_getrewr(struct net_device *dev, struct dcb_app *app)
 {
@@ -2163,6 +2249,8 @@ int dcb_delrewr(struct net_device *dev, struct dcb_app *del)
 }
 EXPORT_SYMBOL(dcb_delrewr);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * dcb_ieee_setapp - add IEEE dcb application data to app list
  * @dev: network interface
@@ -2190,7 +2278,11 @@ int dcb_ieee_setapp(struct net_device *dev, struct dcb_app *new)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	err = dcb_app_add(&dcb_app_list, new, dev->ifindex);
+=======
+	err = dcb_app_add(new, dev->ifindex);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	spin_unlock_bh(&dcb_lock);
 	if (!err)
@@ -2232,6 +2324,7 @@ int dcb_ieee_delapp(struct net_device *dev, struct dcb_app *del)
 }
 EXPORT_SYMBOL(dcb_ieee_delapp);
 
+<<<<<<< HEAD
 /* dcb_getrewr_prio_pcp_mask_map - For a given device, find mapping from
  * priorities to the PCP and DEI values assigned to that priority.
  */
@@ -2284,6 +2377,8 @@ void dcb_getrewr_prio_dscp_mask_map(const struct net_device *dev,
 }
 EXPORT_SYMBOL(dcb_getrewr_prio_dscp_mask_map);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * dcb_ieee_getapp_prio_dscp_mask_map - For a given device, find mapping from
  * priorities to the DSCP values assigned to that priority. Initialize p_map

@@ -4,8 +4,11 @@
 #
 obj-$(CONFIG_QUICC_ENGINE)+= qe.o qe_common.o qe_ic.o qe_io.o
 obj-$(CONFIG_CPM)	+= qe_common.o
+<<<<<<< HEAD
 obj-$(CONFIG_CPM_TSA)	+= tsa.o
 obj-$(CONFIG_CPM_QMC)	+= qmc.o
+=======
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_UCC)	+= ucc.o
 obj-$(CONFIG_UCC_SLOW)	+= ucc_slow.o
 obj-$(CONFIG_UCC_FAST)	+= ucc_fast.o

@@ -65,8 +65,13 @@ static void sprd_pwm_write(struct sprd_pwm_chip *spc, u32 hwid,
 	writel_relaxed(val, spc->base + offset);
 }
 
+<<<<<<< HEAD
 static int sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 			      struct pwm_state *state)
+=======
+static void sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+			       struct pwm_state *state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sprd_pwm_chip *spc =
 		container_of(chip, struct sprd_pwm_chip, chip);
@@ -83,7 +88,11 @@ static int sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 	if (ret) {
 		dev_err(spc->dev, "failed to enable pwm%u clocks\n",
 			pwm->hwpwm);
+<<<<<<< HEAD
 		return ret;
+=======
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_ENABLE);
@@ -113,8 +122,11 @@ static int sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 	/* Disable PWM clocks if the PWM channel is not in enable state. */
 	if (!state->enabled)
 		clk_bulk_disable_unprepare(SPRD_PWM_CHN_CLKS_NUM, chn->clks);
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int sprd_pwm_config(struct sprd_pwm_chip *spc, struct pwm_device *pwm,

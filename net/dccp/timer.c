@@ -19,7 +19,11 @@ int  sysctl_dccp_retries2		__read_mostly = TCP_RETR2;
 
 static void dccp_write_err(struct sock *sk)
 {
+<<<<<<< HEAD
 	sk->sk_err = READ_ONCE(sk->sk_err_soft) ? : ETIMEDOUT;
+=======
+	sk->sk_err = sk->sk_err_soft ? : ETIMEDOUT;
+>>>>>>> b7ba80a49124 (Commit)
 	sk_error_report(sk);
 
 	dccp_send_reset(sk, DCCP_RESET_CODE_ABORTED);

@@ -35,8 +35,11 @@
 #include <net/bluetooth/l2cap.h>
 #include <net/bluetooth/rfcomm.h>
 
+<<<<<<< HEAD
 #include <trace/events/sock.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define VERSION "1.11"
 
 static bool disable_cfc;
@@ -188,8 +191,11 @@ static void rfcomm_l2state_change(struct sock *sk)
 
 static void rfcomm_l2data_ready(struct sock *sk)
 {
+<<<<<<< HEAD
 	trace_sk_data_ready(sk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BT_DBG("%p", sk);
 	rfcomm_schedule();
 }
@@ -594,7 +600,11 @@ int rfcomm_dlc_send(struct rfcomm_dlc *d, struct sk_buff *skb)
 
 		ret = rfcomm_dlc_send_frag(d, frag);
 		if (ret < 0) {
+<<<<<<< HEAD
 			dev_kfree_skb_irq(frag);
+=======
+			kfree_skb(frag);
+>>>>>>> b7ba80a49124 (Commit)
 			goto unlock;
 		}
 

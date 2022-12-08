@@ -26,8 +26,12 @@
 /*				3    Comments support added */
 /*				4    Forceadd support added */
 /*				5    skbinfo support added */
+<<<<<<< HEAD
 /*				6    bucketsize, initval support added */
 #define IPSET_TYPE_REV_MAX	7 /* bitmask support added */
+=======
+#define IPSET_TYPE_REV_MAX	6 /* bucketsize, initval support added */
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Jozsef Kadlecsik <kadlec@netfilter.org>");
@@ -36,8 +40,11 @@ MODULE_ALIAS("ip_set_hash:ip,port");
 
 /* Type specific function prefix */
 #define HTYPE		hash_ipport
+<<<<<<< HEAD
 #define IP_SET_HASH_WITH_NETMASK
 #define IP_SET_HASH_WITH_BITMASK
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* IPv4 variant */
 
@@ -95,16 +102,22 @@ hash_ipport4_kadt(struct ip_set *set, const struct sk_buff *skb,
 	ipset_adtfn adtfn = set->variant->adt[adt];
 	struct hash_ipport4_elem e = { .ip = 0 };
 	struct ip_set_ext ext = IP_SET_INIT_KEXT(skb, opt, set);
+<<<<<<< HEAD
 	const struct MTYPE *h = set->data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!ip_set_get_ip4_port(skb, opt->flags & IPSET_DIM_TWO_SRC,
 				 &e.port, &e.proto))
 		return -EINVAL;
 
 	ip4addrptr(skb, opt->flags & IPSET_DIM_ONE_SRC, &e.ip);
+<<<<<<< HEAD
 	e.ip &= h->bitmask.ip;
 	if (e.ip == 0)
 		return -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return adtfn(set, &e, &ext, &opt->ext, opt->cmdflags);
 }
 
@@ -112,11 +125,19 @@ static int
 hash_ipport4_uadt(struct ip_set *set, struct nlattr *tb[],
 		  enum ipset_adt adt, u32 *lineno, u32 flags, bool retried)
 {
+<<<<<<< HEAD
 	struct hash_ipport4 *h = set->data;
 	ipset_adtfn adtfn = set->variant->adt[adt];
 	struct hash_ipport4_elem e = { .ip = 0 };
 	struct ip_set_ext ext = IP_SET_INIT_UEXT(set);
 	u32 ip, ip_to = 0, p = 0, port, port_to, i = 0;
+=======
+	const struct hash_ipport4 *h = set->data;
+	ipset_adtfn adtfn = set->variant->adt[adt];
+	struct hash_ipport4_elem e = { .ip = 0 };
+	struct ip_set_ext ext = IP_SET_INIT_UEXT(set);
+	u32 ip, ip_to = 0, p = 0, port, port_to;
+>>>>>>> b7ba80a49124 (Commit)
 	bool with_ports = false;
 	int ret;
 
@@ -136,10 +157,13 @@ hash_ipport4_uadt(struct ip_set *set, struct nlattr *tb[],
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	e.ip &= h->bitmask.ip;
 	if (e.ip == 0)
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	e.port = nla_get_be16(tb[IPSET_ATTR_PORT]);
 
 	if (tb[IPSET_ATTR_PROTO]) {
@@ -184,11 +208,18 @@ hash_ipport4_uadt(struct ip_set *set, struct nlattr *tb[],
 			swap(port, port_to);
 	}
 
+<<<<<<< HEAD
+=======
+	if (((u64)ip_to - ip + 1)*(port_to - port + 1) > IPSET_MAX_RANGE)
+		return -ERANGE;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (retried)
 		ip = ntohl(h->next.ip);
 	for (; ip <= ip_to; ip++) {
 		p = retried && ip == ntohl(h->next.ip) ? ntohs(h->next.port)
 						       : port;
+<<<<<<< HEAD
 		for (; p <= port_to; p++, i++) {
 			e.ip = htonl(ip);
 			e.port = htons(p);
@@ -196,6 +227,11 @@ hash_ipport4_uadt(struct ip_set *set, struct nlattr *tb[],
 				hash_ipport4_data_next(&h->next, &e);
 				return -ERANGE;
 			}
+=======
+		for (; p <= port_to; p++) {
+			e.ip = htonl(ip);
+			e.port = htons(p);
+>>>>>>> b7ba80a49124 (Commit)
 			ret = adtfn(set, &e, &ext, &ext, flags);
 
 			if (ret && !ip_set_eexist(ret, flags))
@@ -265,17 +301,23 @@ hash_ipport6_kadt(struct ip_set *set, const struct sk_buff *skb,
 	ipset_adtfn adtfn = set->variant->adt[adt];
 	struct hash_ipport6_elem e = { .ip = { .all = { 0 } } };
 	struct ip_set_ext ext = IP_SET_INIT_KEXT(skb, opt, set);
+<<<<<<< HEAD
 	const struct MTYPE *h = set->data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!ip_set_get_ip6_port(skb, opt->flags & IPSET_DIM_TWO_SRC,
 				 &e.port, &e.proto))
 		return -EINVAL;
 
 	ip6addrptr(skb, opt->flags & IPSET_DIM_ONE_SRC, &e.ip.in6);
+<<<<<<< HEAD
 	nf_inet_addr_mask_inplace(&e.ip, &h->bitmask);
 	if (ipv6_addr_any(&e.ip.in6))
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return adtfn(set, &e, &ext, &opt->ext, opt->cmdflags);
 }
 
@@ -315,10 +357,13 @@ hash_ipport6_uadt(struct ip_set *set, struct nlattr *tb[],
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	nf_inet_addr_mask_inplace(&e.ip, &h->bitmask);
 	if (ipv6_addr_any(&e.ip.in6))
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	e.port = nla_get_be16(tb[IPSET_ATTR_PORT]);
 
 	if (tb[IPSET_ATTR_PROTO]) {
@@ -377,8 +422,11 @@ static struct ip_set_type hash_ipport_type __read_mostly = {
 		[IPSET_ATTR_PROTO]	= { .type = NLA_U8 },
 		[IPSET_ATTR_TIMEOUT]	= { .type = NLA_U32 },
 		[IPSET_ATTR_CADT_FLAGS]	= { .type = NLA_U32 },
+<<<<<<< HEAD
 		[IPSET_ATTR_NETMASK]	= { .type = NLA_U8 },
 		[IPSET_ATTR_BITMASK]	= { .type = NLA_NESTED },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.adt_policy	= {
 		[IPSET_ATTR_IP]		= { .type = NLA_NESTED },

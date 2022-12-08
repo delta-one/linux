@@ -18,8 +18,11 @@
 #include <linux/err.h>
 #include <linux/sys.h>
 #include <linux/threads.h>
+<<<<<<< HEAD
 #include <linux/linkage.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/reg.h>
 #include <asm/page.h>
 #include <asm/mmu.h>
@@ -51,7 +54,11 @@
  */
 	.align	12
 
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_BOOK3S_32) || defined(CONFIG_PPC_E500)
+=======
+#if defined(CONFIG_PPC_BOOK3S_32) || defined(CONFIG_E500)
+>>>>>>> b7ba80a49124 (Commit)
 	.globl	prepare_transfer_to_handler
 prepare_transfer_to_handler:
 	/* if from kernel, check interrupted DOZE/NAP mode */
@@ -70,6 +77,7 @@ prepare_transfer_to_handler:
 	lwz	r9,_MSR(r11)		/* if sleeping, clear MSR.EE */
 	rlwinm	r9,r9,0,~MSR_EE
 	lwz	r12,_LINK(r11)		/* and return to address in LR */
+<<<<<<< HEAD
 	REST_GPR(2, r11)
 	b	fast_exception_return
 _ASM_NOKPROBE_SYMBOL(prepare_transfer_to_handler)
@@ -83,11 +91,29 @@ SYM_FUNC_START(__kuep_lock)
 SYM_FUNC_END(__kuep_lock)
 
 SYM_FUNC_START_LOCAL(__kuep_unlock)
+=======
+	lwz	r2, GPR2(r11)
+	b	fast_exception_return
+_ASM_NOKPROBE_SYMBOL(prepare_transfer_to_handler)
+#endif /* CONFIG_PPC_BOOK3S_32 || CONFIG_E500 */
+
+#if defined(CONFIG_PPC_KUEP) && defined(CONFIG_PPC_BOOK3S_32)
+	.globl	__kuep_lock
+__kuep_lock:
+	lwz	r9, THREAD+THSR0(r2)
+	update_user_segments_by_4 r9, r10, r11, r12
+	blr
+
+__kuep_unlock:
+>>>>>>> b7ba80a49124 (Commit)
 	lwz	r9, THREAD+THSR0(r2)
 	rlwinm  r9,r9,0,~SR_NX
 	update_user_segments_by_4 r9, r10, r11, r12
 	blr
+<<<<<<< HEAD
 SYM_FUNC_END(__kuep_unlock)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 .macro	kuep_lock
 	bl	__kuep_lock
@@ -104,7 +130,10 @@ SYM_FUNC_END(__kuep_unlock)
 
 	.globl	transfer_to_syscall
 transfer_to_syscall:
+<<<<<<< HEAD
 	stw	r3, ORIG_GPR3(r1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	stw	r11, GPR1(r1)
 	stw	r11, 0(r1)
 	mflr	r12
@@ -117,7 +146,11 @@ transfer_to_syscall:
 	addi	r12,r12,STACK_FRAME_REGS_MARKER@l
 	stw	r9,_MSR(r1)
 	li	r2, INTERRUPT_SYSCALL
+<<<<<<< HEAD
 	stw	r12,STACK_INT_FRAME_MARKER(r1)
+=======
+	stw	r12,8(r1)
+>>>>>>> b7ba80a49124 (Commit)
 	stw	r2,_TRAP(r1)
 	SAVE_GPR(0, r1)
 	SAVE_GPRS(3, 8, r1)
@@ -125,6 +158,7 @@ transfer_to_syscall:
 	SAVE_NVGPRS(r1)
 	kuep_lock
 
+<<<<<<< HEAD
 	/* Calling convention has r3 = regs, r4 = orig r0 */
 	addi	r3,r1,STACK_INT_FRAME_REGS
 	mr	r4,r0
@@ -132,6 +166,15 @@ transfer_to_syscall:
 
 ret_from_syscall:
 	addi    r4,r1,STACK_INT_FRAME_REGS
+=======
+	/* Calling convention has r9 = orig r0, r10 = regs */
+	addi	r10,r1,STACK_FRAME_OVERHEAD
+	mr	r9,r0
+	bl	system_call_exception
+
+ret_from_syscall:
+	addi    r4,r1,STACK_FRAME_OVERHEAD
+>>>>>>> b7ba80a49124 (Commit)
 	li	r5,0
 	bl	syscall_exit_prepare
 #ifdef CONFIG_PPC_47x
@@ -147,7 +190,11 @@ ret_from_syscall:
 	lwz	r7,_NIP(r1)
 	lwz	r8,_MSR(r1)
 	cmpwi	r3,0
+<<<<<<< HEAD
 	REST_GPR(3, r1)
+=======
+	lwz	r3,GPR3(r1)
+>>>>>>> b7ba80a49124 (Commit)
 syscall_exit_finish:
 	mtspr	SPRN_SRR0,r7
 	mtspr	SPRN_SRR1,r8
@@ -155,8 +202,13 @@ syscall_exit_finish:
 	bne	3f
 	mtcr	r5
 
+<<<<<<< HEAD
 1:	REST_GPR(2, r1)
 	REST_GPR(1, r1)
+=======
+1:	lwz	r2,GPR2(r1)
+	lwz	r1,GPR1(r1)
+>>>>>>> b7ba80a49124 (Commit)
 	rfi
 #ifdef CONFIG_40x
 	b .	/* Prevent prefetch past rfi */
@@ -168,8 +220,15 @@ syscall_exit_finish:
 	REST_NVGPRS(r1)
 	mtctr	r4
 	mtxer	r5
+<<<<<<< HEAD
 	REST_GPR(0, r1)
 	REST_GPRS(3, 12, r1)
+=======
+	lwz	r0,GPR0(r1)
+	lwz	r3,GPR3(r1)
+	REST_GPRS(4, 11, r1)
+	lwz	r12,GPR12(r1)
+>>>>>>> b7ba80a49124 (Commit)
 	b	1b
 
 #ifdef CONFIG_44x
@@ -218,9 +277,15 @@ ret_from_kernel_thread:
  * in arch/ppc/kernel/process.c
  */
 _GLOBAL(_switch)
+<<<<<<< HEAD
 	stwu	r1,-SWITCH_FRAME_SIZE(r1)
 	mflr	r0
 	stw	r0,SWITCH_FRAME_SIZE+4(r1)
+=======
+	stwu	r1,-INT_FRAME_SIZE(r1)
+	mflr	r0
+	stw	r0,INT_FRAME_SIZE+4(r1)
+>>>>>>> b7ba80a49124 (Commit)
 	/* r3-r12 are caller saved -- Cort */
 	SAVE_NVGPRS(r1)
 	stw	r0,_NIP(r1)	/* Return to switch caller */
@@ -251,7 +316,11 @@ _GLOBAL(_switch)
 
 	lwz	r4,_NIP(r1)	/* Return to _switch caller in new task */
 	mtlr	r4
+<<<<<<< HEAD
 	addi	r1,r1,SWITCH_FRAME_SIZE
+=======
+	addi	r1,r1,INT_FRAME_SIZE
+>>>>>>> b7ba80a49124 (Commit)
 	blr
 
 	.globl	fast_exception_return
@@ -261,12 +330,22 @@ fast_exception_return:
 	beq	3f			/* if not, we've got problems */
 #endif
 
+<<<<<<< HEAD
 2:	lwz	r10,_CCR(r11)
 	REST_GPRS(1, 6, r11)
 	mtcr	r10
 	lwz	r10,_LINK(r11)
 	mtlr	r10
 	/* Clear the exception marker on the stack to avoid confusing stacktrace */
+=======
+2:	REST_GPRS(3, 6, r11)
+	lwz	r10,_CCR(r11)
+	REST_GPRS(1, 2, r11)
+	mtcr	r10
+	lwz	r10,_LINK(r11)
+	mtlr	r10
+	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
+>>>>>>> b7ba80a49124 (Commit)
 	li	r10, 0
 	stw	r10, 8(r11)
 	REST_GPR(10, r11)
@@ -277,7 +356,11 @@ fast_exception_return:
 	mtspr	SPRN_SRR0,r12
 	REST_GPR(9, r11)
 	REST_GPR(12, r11)
+<<<<<<< HEAD
 	REST_GPR(11, r11)
+=======
+	lwz	r11,GPR11(r11)
+>>>>>>> b7ba80a49124 (Commit)
 	rfi
 #ifdef CONFIG_40x
 	b .	/* Prevent prefetch past rfi */
@@ -296,7 +379,11 @@ _ASM_NOKPROBE_SYMBOL(fast_exception_return)
 	.globl interrupt_return
 interrupt_return:
 	lwz	r4,_MSR(r1)
+<<<<<<< HEAD
 	addi	r3,r1,STACK_INT_FRAME_REGS
+=======
+	addi	r3,r1,STACK_FRAME_OVERHEAD
+>>>>>>> b7ba80a49124 (Commit)
 	andi.	r0,r4,MSR_PR
 	beq	.Lkernel_interrupt_return
 	bl	interrupt_exit_user_prepare
@@ -323,7 +410,11 @@ ALT_FTR_SECTION_END_IFCLR(CPU_FTR_STCX_CHECKS_ADDRESS)
 	li	r0,0
 
 	/*
+<<<<<<< HEAD
 	 * Leaving a stale exception marker on the stack can confuse
+=======
+	 * Leaving a stale exception_marker on the stack can confuse
+>>>>>>> b7ba80a49124 (Commit)
 	 * the reliable stack unwinder later on. Clear it.
 	 */
 	stw	r0,8(r1)
@@ -375,7 +466,11 @@ ALT_FTR_SECTION_END_IFCLR(CPU_FTR_STCX_CHECKS_ADDRESS)
 	mtspr	SPRN_XER,r5
 
 	/*
+<<<<<<< HEAD
 	 * Leaving a stale exception marker on the stack can confuse
+=======
+	 * Leaving a stale exception_marker on the stack can confuse
+>>>>>>> b7ba80a49124 (Commit)
 	 * the reliable stack unwinder later on. Clear it.
 	 */
 	stw	r0,8(r1)
@@ -454,8 +549,14 @@ _ASM_NOKPROBE_SYMBOL(interrupt_return)
 	lwz	r3,_MSR(r1);						\
 	andi.	r3,r3,MSR_PR;						\
 	bne	interrupt_return;					\
+<<<<<<< HEAD
 	REST_GPR(0, r1);						\
 	REST_GPRS(2, 8, r1);						\
+=======
+	lwz	r0,GPR0(r1);						\
+	lwz	r2,GPR2(r1);						\
+	REST_GPRS(3, 8, r1);						\
+>>>>>>> b7ba80a49124 (Commit)
 	lwz	r10,_XER(r1);						\
 	lwz	r11,_CTR(r1);						\
 	mtspr	SPRN_XER,r10;						\
@@ -474,8 +575,16 @@ _ASM_NOKPROBE_SYMBOL(interrupt_return)
 	lwz	r12,_MSR(r1);						\
 	mtspr	exc_lvl_srr0,r11;					\
 	mtspr	exc_lvl_srr1,r12;					\
+<<<<<<< HEAD
 	REST_GPRS(9, 12, r1);						\
 	REST_GPR(1, r1);						\
+=======
+	lwz	r9,GPR9(r1);						\
+	lwz	r12,GPR12(r1);						\
+	lwz	r10,GPR10(r1);						\
+	lwz	r11,GPR11(r1);						\
+	lwz	r1,GPR1(r1);						\
+>>>>>>> b7ba80a49124 (Commit)
 	exc_lvl_rfi;							\
 	b	.;		/* prevent prefetch past exc_lvl_rfi */
 
@@ -485,7 +594,11 @@ _ASM_NOKPROBE_SYMBOL(interrupt_return)
 	mtspr	SPRN_##exc_lvl_srr0,r9;					\
 	mtspr	SPRN_##exc_lvl_srr1,r10;
 
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_E500)
+=======
+#if defined(CONFIG_PPC_BOOK3E_MMU)
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PHYS_64BIT
 #define	RESTORE_MAS7							\
 	lwz	r11,MAS7(r1);						\

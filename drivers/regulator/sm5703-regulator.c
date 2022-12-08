@@ -155,7 +155,10 @@ MODULE_DEVICE_TABLE(platform, sm5703_regulator_id);
 static struct platform_driver sm5703_regulator_driver = {
 	.driver = {
 		.name = "sm5703-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe	= sm5703_regulator_probe,
 	.id_table	= sm5703_regulator_id,

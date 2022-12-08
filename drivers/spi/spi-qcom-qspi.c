@@ -311,7 +311,11 @@ static int qcom_qspi_prepare_message(struct spi_master *master,
 
 	mstr_cfg = readl(ctrl->base + MSTR_CONFIG);
 	mstr_cfg &= ~CHIP_SELECT_NUM;
+<<<<<<< HEAD
 	if (spi_get_chipselect(message->spi, 0))
+=======
+	if (message->spi->chip_select)
+>>>>>>> b7ba80a49124 (Commit)
 		mstr_cfg |= CHIP_SELECT_NUM;
 
 	mstr_cfg |= FB_CLK_EN | PIN_WPN | PIN_HOLDN | SBL_EN | FULL_CYCLE_MODE;
@@ -552,7 +556,11 @@ static int qcom_qspi_probe(struct platform_device *pdev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void qcom_qspi_remove(struct platform_device *pdev)
+=======
+static int qcom_qspi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 
@@ -560,6 +568,11 @@ static void qcom_qspi_remove(struct platform_device *pdev)
 	spi_unregister_master(master);
 
 	pm_runtime_disable(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused qcom_qspi_runtime_suspend(struct device *dev)
@@ -653,7 +666,11 @@ static struct platform_driver qcom_qspi_driver = {
 		.of_match_table = qcom_qspi_dt_match,
 	},
 	.probe = qcom_qspi_probe,
+<<<<<<< HEAD
 	.remove_new = qcom_qspi_remove,
+=======
+	.remove = qcom_qspi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(qcom_qspi_driver);
 

@@ -406,14 +406,23 @@ static const struct clk_ops hdmi_pll_ops = {
 	.set_rate = hdmi_pll_set_rate,
 };
 
+<<<<<<< HEAD
 static const struct clk_parent_data hdmi_pll_parents[] = {
 	{ .fw_name = "pxo", .name = "pxo_board" },
+=======
+static const char * const hdmi_pll_parents[] = {
+	"pxo",
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct clk_init_data pll_init = {
 	.name = "hdmi_pll",
 	.ops = &hdmi_pll_ops,
+<<<<<<< HEAD
 	.parent_data = hdmi_pll_parents,
+=======
+	.parent_names = hdmi_pll_parents,
+>>>>>>> b7ba80a49124 (Commit)
 	.num_parents = ARRAY_SIZE(hdmi_pll_parents),
 	.flags = CLK_IGNORE_UNUSED,
 };
@@ -422,7 +431,12 @@ int msm_hdmi_pll_8960_init(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 	struct hdmi_pll_8960 *pll;
+<<<<<<< HEAD
 	int i, ret;
+=======
+	struct clk *clk;
+	int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* sanity check: */
 	for (i = 0; i < (ARRAY_SIZE(freqtbl) - 1); i++)
@@ -442,6 +456,7 @@ int msm_hdmi_pll_8960_init(struct platform_device *pdev)
 	pll->pdev = pdev;
 	pll->clk_hw.init = &pll_init;
 
+<<<<<<< HEAD
 	ret = devm_clk_hw_register(dev, &pll->clk_hw);
 	if (ret < 0) {
 		DRM_DEV_ERROR(dev, "failed to register pll clock\n");
@@ -452,6 +467,12 @@ int msm_hdmi_pll_8960_init(struct platform_device *pdev)
 	if (ret) {
 		DRM_DEV_ERROR(dev, "%s: failed to register clk provider: %d\n", __func__, ret);
 		return ret;
+=======
+	clk = devm_clk_register(dev, &pll->clk_hw);
+	if (IS_ERR(clk)) {
+		DRM_DEV_ERROR(dev, "failed to register pll clock\n");
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;

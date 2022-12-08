@@ -32,7 +32,11 @@ static u32 i40iw_regs[IRDMA_MAX_REGS] = {
 	0xffffffff      /* PFINT_RATEN not used in FPK */
 };
 
+<<<<<<< HEAD
 static u32 i40iw_stat_offsets[] = {
+=======
+static u32 i40iw_stat_offsets_32[IRDMA_HW_STAT_INDEX_MAX_32] = {
+>>>>>>> b7ba80a49124 (Commit)
 	I40E_GLPES_PFIP4RXDISCARD(0),
 	I40E_GLPES_PFIP4RXTRUNC(0),
 	I40E_GLPES_PFIP4TXNOROUTE(0),
@@ -42,8 +46,15 @@ static u32 i40iw_stat_offsets[] = {
 	I40E_GLPES_PFTCPRTXSEG(0),
 	I40E_GLPES_PFTCPRXOPTERR(0),
 	I40E_GLPES_PFTCPRXPROTOERR(0),
+<<<<<<< HEAD
 	I40E_GLPES_PFRXVLANERR(0),
 
+=======
+	I40E_GLPES_PFRXVLANERR(0)
+};
+
+static u32 i40iw_stat_offsets_64[IRDMA_HW_STAT_INDEX_MAX_64] = {
+>>>>>>> b7ba80a49124 (Commit)
 	I40E_GLPES_PFIP4RXOCTSLO(0),
 	I40E_GLPES_PFIP4RXPKTSLO(0),
 	I40E_GLPES_PFIP4RXFRAGSLO(0),
@@ -156,6 +167,7 @@ static const struct irdma_irq_ops i40iw_irq_ops = {
 	.irdma_en_irq = i40iw_ena_irq,
 };
 
+<<<<<<< HEAD
 static const struct irdma_hw_stat_map i40iw_hw_stat_map[] = {
 	[IRDMA_HW_STAT_INDEX_RXVLANERR]	=	{   0,  0, IRDMA_MAX_STATS_24 },
 	[IRDMA_HW_STAT_INDEX_IP4RXOCTS] =	{   8,  0, IRDMA_MAX_STATS_48 },
@@ -201,6 +213,8 @@ static const struct irdma_hw_stat_map i40iw_hw_stat_map[] = {
 	[IRDMA_HW_STAT_INDEX_UDPTXPKTS] =       { 328,  0, IRDMA_MAX_STATS_48 },
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void i40iw_init_hw(struct irdma_sc_dev *dev)
 {
 	int i;
@@ -215,8 +229,16 @@ void i40iw_init_hw(struct irdma_sc_dev *dev)
 		dev->hw_regs[i] = (u32 __iomem *)(i40iw_regs[i] + hw_addr);
 	}
 
+<<<<<<< HEAD
 	for (i = 0; i < IRDMA_HW_STAT_INDEX_MAX_GEN_1; ++i)
 		dev->hw_stats_regs[i] = i40iw_stat_offsets[i];
+=======
+	for (i = 0; i < IRDMA_HW_STAT_INDEX_MAX_32; ++i)
+		dev->hw_stats_regs_32[i] = i40iw_stat_offsets_32[i];
+
+	for (i = 0; i < IRDMA_HW_STAT_INDEX_MAX_64; ++i)
+		dev->hw_stats_regs_64[i] = i40iw_stat_offsets_64[i];
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev->hw_attrs.first_hw_vf_fpm_id = I40IW_FIRST_VF_FPM_ID;
 	dev->hw_attrs.max_hw_vf_fpm_id = IRDMA_MAX_VF_FPM_ID;
@@ -235,7 +257,10 @@ void i40iw_init_hw(struct irdma_sc_dev *dev)
 	dev->ceq_itr_mask_db = NULL;
 	dev->aeq_itr_mask_db = NULL;
 	dev->irq_ops = &i40iw_irq_ops;
+<<<<<<< HEAD
 	dev->hw_stats_map = i40iw_hw_stat_map;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Setup the hardware limits, hmc may limit further */
 	dev->hw_attrs.uk_attrs.max_hw_wq_frags = I40IW_MAX_WQ_FRAGMENT_COUNT;
@@ -251,7 +276,10 @@ void i40iw_init_hw(struct irdma_sc_dev *dev)
 	dev->hw_attrs.uk_attrs.max_hw_sq_chunk = I40IW_MAX_QUANTA_PER_WR;
 	dev->hw_attrs.max_hw_pds = I40IW_MAX_PDS;
 	dev->hw_attrs.max_stat_inst = I40IW_MAX_STATS_COUNT;
+<<<<<<< HEAD
 	dev->hw_attrs.max_stat_idx = IRDMA_HW_STAT_INDEX_MAX_GEN_1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev->hw_attrs.max_hw_outbound_msg_size = I40IW_MAX_OUTBOUND_MSG_SIZE;
 	dev->hw_attrs.max_hw_inbound_msg_size = I40IW_MAX_INBOUND_MSG_SIZE;
 	dev->hw_attrs.max_qp_wr = I40IW_MAX_QP_WRS;

@@ -26,7 +26,10 @@
 
 #include <xen/interface/xen.h>
 #include <xen/interface/platform.h>
+<<<<<<< HEAD
 #include <xen/page.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <xen/xen.h>
 #include <xen/xen-ops.h>
 
@@ -293,6 +296,7 @@ void __init xen_efi_runtime_setup(void)
 	efi.get_next_high_mono_count	= xen_efi_get_next_high_mono_count;
 	efi.reset_system		= xen_efi_reset_system;
 }
+<<<<<<< HEAD
 
 int efi_mem_desc_lookup(u64 phys_addr, efi_memory_desc_t *out_md)
 {
@@ -353,3 +357,5 @@ bool __init xen_efi_config_table_is_usable(const efi_guid_t *guid,
 		return false;
 	}
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

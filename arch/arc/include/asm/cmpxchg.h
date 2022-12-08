@@ -85,7 +85,11 @@
  */
 #ifdef CONFIG_ARC_HAS_LLSC
 
+<<<<<<< HEAD
 #define __arch_xchg(ptr, val)						\
+=======
+#define __xchg(ptr, val)						\
+>>>>>>> b7ba80a49124 (Commit)
 ({									\
 	__asm__ __volatile__(						\
 	"	ex  %0, [%1]	\n"	/* set new value */	        \
@@ -102,7 +106,11 @@
 									\
 	switch(sizeof(*(_p_))) {					\
 	case 4:								\
+<<<<<<< HEAD
 		_val_ = __arch_xchg(_p_, _val_);			\
+=======
+		_val_ = __xchg(_p_, _val_);				\
+>>>>>>> b7ba80a49124 (Commit)
 		break;							\
 	default:							\
 		BUILD_BUG();						\

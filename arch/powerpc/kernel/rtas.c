@@ -7,6 +7,7 @@
  * Copyright (C) 2001 IBM.
  */
 
+<<<<<<< HEAD
 #define pr_fmt(fmt)	"rtas: " fmt
 
 #include <linux/bsearch.h>
@@ -547,10 +548,49 @@ static const struct rtas_function *rtas_token_to_function(s32 token)
 
 	return func;
 }
+=======
+#include <linux/stdarg.h>
+#include <linux/kernel.h>
+#include <linux/types.h>
+#include <linux/spinlock.h>
+#include <linux/export.h>
+#include <linux/init.h>
+#include <linux/capability.h>
+#include <linux/delay.h>
+#include <linux/cpu.h>
+#include <linux/sched.h>
+#include <linux/smp.h>
+#include <linux/completion.h>
+#include <linux/cpumask.h>
+#include <linux/memblock.h>
+#include <linux/slab.h>
+#include <linux/reboot.h>
+#include <linux/syscalls.h>
+#include <linux/of.h>
+#include <linux/of_fdt.h>
+
+#include <asm/interrupt.h>
+#include <asm/rtas.h>
+#include <asm/hvcall.h>
+#include <asm/machdep.h>
+#include <asm/firmware.h>
+#include <asm/page.h>
+#include <asm/param.h>
+#include <asm/delay.h>
+#include <linux/uaccess.h>
+#include <asm/udbg.h>
+#include <asm/syscalls.h>
+#include <asm/smp.h>
+#include <linux/atomic.h>
+#include <asm/time.h>
+#include <asm/mmu.h>
+#include <asm/topology.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 /* This is here deliberately so it's only used in this file */
 void enter_rtas(unsigned long);
 
+<<<<<<< HEAD
 static void __do_enter_rtas(struct rtas_args *args)
 {
 	enter_rtas(__pa(args));
@@ -601,16 +641,27 @@ static void do_enter_rtas(struct rtas_args *args)
 	const unsigned long mask = MSR_IR | MSR_DR;
 	const bool can_trace = likely(cpu_online(raw_smp_processor_id()) &&
 				      (msr & mask) == mask);
+=======
+static inline void do_enter_rtas(unsigned long args)
+{
+	unsigned long msr;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Make sure MSR[RI] is currently enabled as it will be forced later
 	 * in enter_rtas.
 	 */
+<<<<<<< HEAD
+=======
+	msr = mfmsr();
+>>>>>>> b7ba80a49124 (Commit)
 	BUG_ON(!(msr & MSR_RI));
 
 	BUG_ON(!irqs_disabled());
 
 	hard_irq_disable(); /* Ensure MSR[EE] is disabled on PPC64 */
 
+<<<<<<< HEAD
 	if (can_trace)
 		__do_enter_rtas_trace(args);
 	else
@@ -634,6 +685,23 @@ EXPORT_SYMBOL_GPL(rtas_data_buf_lock);
 
 char rtas_data_buf[RTAS_DATA_BUF_SIZE] __aligned(SZ_4K);
 EXPORT_SYMBOL_GPL(rtas_data_buf);
+=======
+	enter_rtas(args);
+
+	srr_regs_clobbered(); /* rtas uses SRRs, invalidate */
+}
+
+struct rtas_t rtas = {
+	.lock = __ARCH_SPIN_LOCK_UNLOCKED
+};
+EXPORT_SYMBOL(rtas);
+
+DEFINE_SPINLOCK(rtas_data_buf_lock);
+EXPORT_SYMBOL(rtas_data_buf_lock);
+
+char rtas_data_buf[RTAS_DATA_BUF_SIZE] __cacheline_aligned;
+EXPORT_SYMBOL(rtas_data_buf);
+>>>>>>> b7ba80a49124 (Commit)
 
 unsigned long rtas_rmo_buf;
 
@@ -642,7 +710,33 @@ unsigned long rtas_rmo_buf;
  * This is done like this so rtas_flash can be a module.
  */
 void (*rtas_flash_term_hook)(int);
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(rtas_flash_term_hook);
+=======
+EXPORT_SYMBOL(rtas_flash_term_hook);
+
+/* RTAS use home made raw locking instead of spin_lock_irqsave
+ * because those can be called from within really nasty contexts
+ * such as having the timebase stopped which would lockup with
+ * normal locks and spinlock debugging enabled
+ */
+static unsigned long lock_rtas(void)
+{
+	unsigned long flags;
+
+	local_irq_save(flags);
+	preempt_disable();
+	arch_spin_lock(&rtas.lock);
+	return flags;
+}
+
+static void unlock_rtas(unsigned long flags)
+{
+	arch_spin_unlock(&rtas.lock);
+	local_irq_restore(flags);
+	preempt_enable();
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * call_rtas_display_status and call_rtas_display_status_delay
@@ -651,14 +745,24 @@ EXPORT_SYMBOL_GPL(rtas_flash_term_hook);
  */
 static void call_rtas_display_status(unsigned char c)
 {
+<<<<<<< HEAD
 	unsigned long flags;
+=======
+	unsigned long s;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!rtas.base)
 		return;
 
+<<<<<<< HEAD
 	raw_spin_lock_irqsave(&rtas_lock, flags);
 	rtas_call_unlocked(&rtas_args, 10, 1, 1, NULL, c);
 	raw_spin_unlock_irqrestore(&rtas_lock, flags);
+=======
+	s = lock_rtas();
+	rtas_call_unlocked(&rtas.args, 10, 1, 1, NULL, c);
+	unlock_rtas(s);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void call_rtas_display_status_delay(char c)
@@ -782,8 +886,13 @@ void rtas_progress(char *s, unsigned short hex)
 					"ibm,display-truncation-length", NULL);
 			of_node_put(root);
 		}
+<<<<<<< HEAD
 		display_character = rtas_function_token(RTAS_FN_DISPLAY_CHARACTER);
 		set_indicator = rtas_function_token(RTAS_FN_SET_INDICATOR);
+=======
+		display_character = rtas_token("display-character");
+		set_indicator = rtas_token("set-indicator");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (display_character == RTAS_UNKNOWN_SERVICE) {
@@ -868,6 +977,7 @@ void rtas_progress(char *s, unsigned short hex)
  
 	spin_unlock(&progress_lock);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(rtas_progress);		/* needed by rtas_flash module */
 
 int rtas_token(const char *service)
@@ -895,16 +1005,35 @@ int rtas_token(const char *service)
 	return tokp ? be32_to_cpu(*tokp) : RTAS_UNKNOWN_SERVICE;
 }
 EXPORT_SYMBOL_GPL(rtas_token);
+=======
+EXPORT_SYMBOL(rtas_progress);		/* needed by rtas_flash module */
+
+int rtas_token(const char *service)
+{
+	const __be32 *tokp;
+	if (rtas.dev == NULL)
+		return RTAS_UNKNOWN_SERVICE;
+	tokp = of_get_property(rtas.dev, service, NULL);
+	return tokp ? be32_to_cpu(*tokp) : RTAS_UNKNOWN_SERVICE;
+}
+EXPORT_SYMBOL(rtas_token);
+>>>>>>> b7ba80a49124 (Commit)
 
 int rtas_service_present(const char *service)
 {
 	return rtas_token(service) != RTAS_UNKNOWN_SERVICE;
 }
+<<<<<<< HEAD
 
 #ifdef CONFIG_RTAS_ERROR_LOGGING
 
 static u32 rtas_error_log_max __ro_after_init = RTAS_ERROR_LOG_MAX;
 
+=======
+EXPORT_SYMBOL(rtas_service_present);
+
+#ifdef CONFIG_RTAS_ERROR_LOGGING
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Return the firmware-specified size of the error log buffer
  *  for all rtas calls that require an error buffer argument.
@@ -912,6 +1041,7 @@ static u32 rtas_error_log_max __ro_after_init = RTAS_ERROR_LOG_MAX;
  */
 int rtas_get_error_log_max(void)
 {
+<<<<<<< HEAD
 	return rtas_error_log_max;
 }
 
@@ -937,32 +1067,68 @@ static void __init init_error_log_max(void)
 
 
 static char rtas_err_buf[RTAS_ERROR_LOG_MAX];
+=======
+	static int rtas_error_log_max;
+	if (rtas_error_log_max)
+		return rtas_error_log_max;
+
+	rtas_error_log_max = rtas_token ("rtas-error-log-max");
+	if ((rtas_error_log_max == RTAS_UNKNOWN_SERVICE) ||
+	    (rtas_error_log_max > RTAS_ERROR_LOG_MAX)) {
+		printk (KERN_WARNING "RTAS: bad log buffer size %d\n",
+			rtas_error_log_max);
+		rtas_error_log_max = RTAS_ERROR_LOG_MAX;
+	}
+	return rtas_error_log_max;
+}
+EXPORT_SYMBOL(rtas_get_error_log_max);
+
+
+static char rtas_err_buf[RTAS_ERROR_LOG_MAX];
+static int rtas_last_error_token;
+>>>>>>> b7ba80a49124 (Commit)
 
 /** Return a copy of the detailed error text associated with the
  *  most recent failed call to rtas.  Because the error text
  *  might go stale if there are any other intervening rtas calls,
  *  this routine must be called atomically with whatever produced
+<<<<<<< HEAD
  *  the error (i.e. with rtas_lock still held from the previous call).
  */
 static char *__fetch_rtas_last_error(char *altbuf)
 {
 	const s32 token = rtas_function_token(RTAS_FN_RTAS_LAST_ERROR);
+=======
+ *  the error (i.e. with rtas.lock still held from the previous call).
+ */
+static char *__fetch_rtas_last_error(char *altbuf)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct rtas_args err_args, save_args;
 	u32 bufsz;
 	char *buf = NULL;
 
+<<<<<<< HEAD
 	if (token == -1)
+=======
+	if (rtas_last_error_token == -1)
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	bufsz = rtas_get_error_log_max();
 
+<<<<<<< HEAD
 	err_args.token = cpu_to_be32(token);
+=======
+	err_args.token = cpu_to_be32(rtas_last_error_token);
+>>>>>>> b7ba80a49124 (Commit)
 	err_args.nargs = cpu_to_be32(2);
 	err_args.nret = cpu_to_be32(1);
 	err_args.args[0] = cpu_to_be32(__pa(rtas_err_buf));
 	err_args.args[1] = cpu_to_be32(bufsz);
 	err_args.args[2] = 0;
 
+<<<<<<< HEAD
 	save_args = rtas_args;
 	rtas_args = err_args;
 
@@ -970,6 +1136,15 @@ static char *__fetch_rtas_last_error(char *altbuf)
 
 	err_args = rtas_args;
 	rtas_args = save_args;
+=======
+	save_args = rtas.args;
+	rtas.args = err_args;
+
+	do_enter_rtas(__pa(&rtas.args));
+
+	err_args = rtas.args;
+	rtas.args = save_args;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Log the error in the unlikely case that there was one. */
 	if (unlikely(err_args.args[2] == 0)) {
@@ -992,7 +1167,10 @@ static char *__fetch_rtas_last_error(char *altbuf)
 #else /* CONFIG_RTAS_ERROR_LOGGING */
 #define __fetch_rtas_last_error(x)	NULL
 #define get_errorlog_buffer()		NULL
+<<<<<<< HEAD
 static void __init init_error_log_max(void) {}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 
@@ -1013,7 +1191,11 @@ va_rtas_call_unlocked(struct rtas_args *args, int token, int nargs, int nret,
 	for (i = 0; i < nret; ++i)
 		args->rets[i] = 0;
 
+<<<<<<< HEAD
 	do_enter_rtas(args);
+=======
+	do_enter_rtas(__pa(args));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void rtas_call_unlocked(struct rtas_args *args, int token, int nargs, int nret, ...)
@@ -1025,6 +1207,7 @@ void rtas_call_unlocked(struct rtas_args *args, int token, int nargs, int nret, 
 	va_end(list);
 }
 
+<<<<<<< HEAD
 static bool token_is_restricted_errinjct(s32 token)
 {
 	return token == rtas_function_token(RTAS_FN_IBM_OPEN_ERRINJCT) ||
@@ -1089,18 +1272,26 @@ static bool token_is_restricted_errinjct(s32 token)
  * * Additional negative values - Function-specific error.
  * * Additional positive values - Function-specific success.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int rtas_call(int token, int nargs, int nret, int *outputs, ...)
 {
 	va_list list;
 	int i;
+<<<<<<< HEAD
 	unsigned long flags;
 	struct rtas_args *args;
+=======
+	unsigned long s;
+	struct rtas_args *rtas_args;
+>>>>>>> b7ba80a49124 (Commit)
 	char *buff_copy = NULL;
 	int ret;
 
 	if (!rtas.entry || token == RTAS_UNKNOWN_SERVICE)
 		return -1;
 
+<<<<<<< HEAD
 	if (token_is_restricted_errinjct(token)) {
 		/*
 		 * It would be nicer to not discard the error value
@@ -1111,30 +1302,53 @@ int rtas_call(int token, int nargs, int nret, int *outputs, ...)
 			return -1;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if ((mfmsr() & (MSR_IR|MSR_DR)) != (MSR_IR|MSR_DR)) {
 		WARN_ON_ONCE(1);
 		return -1;
 	}
 
+<<<<<<< HEAD
 	raw_spin_lock_irqsave(&rtas_lock, flags);
 	/* We use the global rtas args buffer */
 	args = &rtas_args;
 
 	va_start(list, outputs);
 	va_rtas_call_unlocked(args, token, nargs, nret, list);
+=======
+	s = lock_rtas();
+
+	/* We use the global rtas args buffer */
+	rtas_args = &rtas.args;
+
+	va_start(list, outputs);
+	va_rtas_call_unlocked(rtas_args, token, nargs, nret, list);
+>>>>>>> b7ba80a49124 (Commit)
 	va_end(list);
 
 	/* A -1 return code indicates that the last command couldn't
 	   be completed due to a hardware error. */
+<<<<<<< HEAD
 	if (be32_to_cpu(args->rets[0]) == -1)
+=======
+	if (be32_to_cpu(rtas_args->rets[0]) == -1)
+>>>>>>> b7ba80a49124 (Commit)
 		buff_copy = __fetch_rtas_last_error(NULL);
 
 	if (nret > 1 && outputs != NULL)
 		for (i = 0; i < nret-1; ++i)
+<<<<<<< HEAD
 			outputs[i] = be32_to_cpu(args->rets[i + 1]);
 	ret = (nret > 0) ? be32_to_cpu(args->rets[0]) : 0;
 
 	raw_spin_unlock_irqrestore(&rtas_lock, flags);
+=======
+			outputs[i] = be32_to_cpu(rtas_args->rets[i+1]);
+	ret = (nret > 0)? be32_to_cpu(rtas_args->rets[0]): 0;
+
+	unlock_rtas(s);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (buff_copy) {
 		log_error(buff_copy, ERR_TYPE_RTAS_LOG, 0);
@@ -1143,7 +1357,11 @@ int rtas_call(int token, int nargs, int nret, int *outputs, ...)
 	}
 	return ret;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(rtas_call);
+=======
+EXPORT_SYMBOL(rtas_call);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * rtas_busy_delay_time() - From an RTAS status value, calculate the
@@ -1181,6 +1399,7 @@ unsigned int rtas_busy_delay_time(int status)
 
 	return ms;
 }
+<<<<<<< HEAD
 
 /*
  * Early boot fallback for rtas_busy_delay().
@@ -1222,6 +1441,9 @@ static bool __init rtas_busy_delay_early(int status)
 
 	return retry;
 }
+=======
+EXPORT_SYMBOL(rtas_busy_delay_time);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * rtas_busy_delay() - helper for RTAS busy and extended delay statuses
@@ -1241,17 +1463,24 @@ static bool __init rtas_busy_delay_early(int status)
  * * false - @status is not @RTAS_BUSY nor an extended delay hint. The
  *           caller is responsible for handling @status.
  */
+<<<<<<< HEAD
 bool __ref rtas_busy_delay(int status)
+=======
+bool rtas_busy_delay(int status)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int ms;
 	bool ret;
 
+<<<<<<< HEAD
 	/*
 	 * Can't do timed sleeps before timekeeping is up.
 	 */
 	if (system_state < SYSTEM_SCHEDULING)
 		return rtas_busy_delay_early(status);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	switch (status) {
 	case RTAS_EXTENDED_DELAY_MIN...RTAS_EXTENDED_DELAY_MAX:
 		ret = true;
@@ -1301,7 +1530,11 @@ bool __ref rtas_busy_delay(int status)
 
 	return ret;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(rtas_busy_delay);
+=======
+EXPORT_SYMBOL(rtas_busy_delay);
+>>>>>>> b7ba80a49124 (Commit)
 
 static int rtas_error_rc(int rtas_rc)
 {
@@ -1324,7 +1557,12 @@ static int rtas_error_rc(int rtas_rc)
 			rc = -ENODEV;
 			break;
 		default:
+<<<<<<< HEAD
 			pr_err("%s: unexpected error %d\n", __func__, rtas_rc);
+=======
+			printk(KERN_ERR "%s: unexpected RTAS error %d\n",
+					__func__, rtas_rc);
+>>>>>>> b7ba80a49124 (Commit)
 			rc = -ERANGE;
 			break;
 	}
@@ -1333,7 +1571,11 @@ static int rtas_error_rc(int rtas_rc)
 
 int rtas_get_power_level(int powerdomain, int *level)
 {
+<<<<<<< HEAD
 	int token = rtas_function_token(RTAS_FN_GET_POWER_LEVEL);
+=======
+	int token = rtas_token("get-power-level");
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	if (token == RTAS_UNKNOWN_SERVICE)
@@ -1346,11 +1588,19 @@ int rtas_get_power_level(int powerdomain, int *level)
 		return rtas_error_rc(rc);
 	return rc;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(rtas_get_power_level);
 
 int rtas_set_power_level(int powerdomain, int level, int *setlevel)
 {
 	int token = rtas_function_token(RTAS_FN_SET_POWER_LEVEL);
+=======
+EXPORT_SYMBOL(rtas_get_power_level);
+
+int rtas_set_power_level(int powerdomain, int level, int *setlevel)
+{
+	int token = rtas_token("set-power-level");
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	if (token == RTAS_UNKNOWN_SERVICE)
@@ -1364,11 +1614,19 @@ int rtas_set_power_level(int powerdomain, int level, int *setlevel)
 		return rtas_error_rc(rc);
 	return rc;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(rtas_set_power_level);
 
 int rtas_get_sensor(int sensor, int index, int *state)
 {
 	int token = rtas_function_token(RTAS_FN_GET_SENSOR_STATE);
+=======
+EXPORT_SYMBOL(rtas_set_power_level);
+
+int rtas_get_sensor(int sensor, int index, int *state)
+{
+	int token = rtas_token("get-sensor-state");
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	if (token == RTAS_UNKNOWN_SERVICE)
@@ -1382,11 +1640,19 @@ int rtas_get_sensor(int sensor, int index, int *state)
 		return rtas_error_rc(rc);
 	return rc;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(rtas_get_sensor);
 
 int rtas_get_sensor_fast(int sensor, int index, int *state)
 {
 	int token = rtas_function_token(RTAS_FN_GET_SENSOR_STATE);
+=======
+EXPORT_SYMBOL(rtas_get_sensor);
+
+int rtas_get_sensor_fast(int sensor, int index, int *state)
+{
+	int token = rtas_token("get-sensor-state");
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	if (token == RTAS_UNKNOWN_SERVICE)
@@ -1425,10 +1691,18 @@ bool rtas_indicator_present(int token, int *maxindex)
 
 	return false;
 }
+<<<<<<< HEAD
 
 int rtas_set_indicator(int indicator, int index, int new_value)
 {
 	int token = rtas_function_token(RTAS_FN_SET_INDICATOR);
+=======
+EXPORT_SYMBOL(rtas_indicator_present);
+
+int rtas_set_indicator(int indicator, int index, int new_value)
+{
+	int token = rtas_token("set-indicator");
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	if (token == RTAS_UNKNOWN_SERVICE)
@@ -1442,15 +1716,24 @@ int rtas_set_indicator(int indicator, int index, int new_value)
 		return rtas_error_rc(rc);
 	return rc;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(rtas_set_indicator);
+=======
+EXPORT_SYMBOL(rtas_set_indicator);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Ignoring RTAS extended delay
  */
 int rtas_set_indicator_fast(int indicator, int index, int new_value)
 {
+<<<<<<< HEAD
 	int token = rtas_function_token(RTAS_FN_SET_INDICATOR);
 	int rc;
+=======
+	int rc;
+	int token = rtas_token("set-indicator");
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (token == RTAS_UNKNOWN_SERVICE)
 		return -ENOENT;
@@ -1492,11 +1775,18 @@ int rtas_set_indicator_fast(int indicator, int index, int new_value)
  */
 int rtas_ibm_suspend_me(int *fw_status)
 {
+<<<<<<< HEAD
 	int token = rtas_function_token(RTAS_FN_IBM_SUSPEND_ME);
 	int fwrc;
 	int ret;
 
 	fwrc = rtas_call(token, 0, 1, NULL);
+=======
+	int fwrc;
+	int ret;
+
+	fwrc = rtas_call(rtas_token("ibm,suspend-me"), 0, 1, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (fwrc) {
 	case 0:
@@ -1528,8 +1818,13 @@ void __noreturn rtas_restart(char *cmd)
 {
 	if (rtas_flash_term_hook)
 		rtas_flash_term_hook(SYS_RESTART);
+<<<<<<< HEAD
 	pr_emerg("system-reboot returned %d\n",
 		 rtas_call(rtas_function_token(RTAS_FN_SYSTEM_REBOOT), 0, 1, NULL));
+=======
+	printk("RTAS system-reboot returned %d\n",
+	       rtas_call(rtas_token("system-reboot"), 0, 1, NULL));
+>>>>>>> b7ba80a49124 (Commit)
 	for (;;);
 }
 
@@ -1538,8 +1833,13 @@ void rtas_power_off(void)
 	if (rtas_flash_term_hook)
 		rtas_flash_term_hook(SYS_POWER_OFF);
 	/* allow power on only with power button press */
+<<<<<<< HEAD
 	pr_emerg("power-off returned %d\n",
 		 rtas_call(rtas_function_token(RTAS_FN_POWER_OFF), 2, 1, NULL, -1, -1));
+=======
+	printk("RTAS power-off returned %d\n",
+	       rtas_call(rtas_token("power-off"), 2, 1, NULL, -1, -1));
+>>>>>>> b7ba80a49124 (Commit)
 	for (;;);
 }
 
@@ -1548,18 +1848,29 @@ void __noreturn rtas_halt(void)
 	if (rtas_flash_term_hook)
 		rtas_flash_term_hook(SYS_HALT);
 	/* allow power on only with power button press */
+<<<<<<< HEAD
 	pr_emerg("power-off returned %d\n",
 		 rtas_call(rtas_function_token(RTAS_FN_POWER_OFF), 2, 1, NULL, -1, -1));
+=======
+	printk("RTAS power-off returned %d\n",
+	       rtas_call(rtas_token("power-off"), 2, 1, NULL, -1, -1));
+>>>>>>> b7ba80a49124 (Commit)
 	for (;;);
 }
 
 /* Must be in the RMO region, so we place it here */
 static char rtas_os_term_buf[2048];
+<<<<<<< HEAD
 static bool ibm_extended_os_term;
 
 void rtas_os_term(char *str)
 {
 	s32 token = rtas_function_token(RTAS_FN_IBM_OS_TERM);
+=======
+
+void rtas_os_term(char *str)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	int status;
 
 	/*
@@ -1568,12 +1879,18 @@ void rtas_os_term(char *str)
 	 * this property may terminate the partition which we want to avoid
 	 * since it interferes with panic_timeout.
 	 */
+<<<<<<< HEAD
 
 	if (token == RTAS_UNKNOWN_SERVICE || !ibm_extended_os_term)
+=======
+	if (RTAS_UNKNOWN_SERVICE == rtas_token("ibm,os-term") ||
+	    RTAS_UNKNOWN_SERVICE == rtas_token("ibm,extended-os-term"))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	snprintf(rtas_os_term_buf, 2048, "OS panic: %s", str);
 
+<<<<<<< HEAD
 	/*
 	 * Keep calling as long as RTAS returns a "try again" status,
 	 * but don't use rtas_busy_delay(), which potentially
@@ -1585,6 +1902,15 @@ void rtas_os_term(char *str)
 
 	if (status != 0)
 		pr_emerg("ibm,os-term call failed %d\n", status);
+=======
+	do {
+		status = rtas_call(rtas_token("ibm,os-term"), 1, 1, NULL,
+				   __pa(rtas_os_term_buf));
+	} while (rtas_busy_delay(status));
+
+	if (status != 0)
+		printk(KERN_EMERG "ibm,os-term call failed %d\n", status);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1600,9 +1926,16 @@ void rtas_os_term(char *str)
  */
 void rtas_activate_firmware(void)
 {
+<<<<<<< HEAD
 	int token = rtas_function_token(RTAS_FN_IBM_ACTIVATE_FIRMWARE);
 	int fwrc;
 
+=======
+	int token;
+	int fwrc;
+
+	token = rtas_token("ibm,activate-firmware");
+>>>>>>> b7ba80a49124 (Commit)
 	if (token == RTAS_UNKNOWN_SERVICE) {
 		pr_notice("ibm,activate-firmware method unavailable\n");
 		return;
@@ -1654,6 +1987,11 @@ noinstr struct pseries_errorlog *get_pseries_errorlog(struct rtas_error_log *log
 	return NULL;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PPC_RTAS_FILTER
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The sys_rtas syscall, as originally designed, allows root to pass
  * arbitrary physical addresses to RTAS calls. A number of RTAS calls
@@ -1667,12 +2005,65 @@ noinstr struct pseries_errorlog *get_pseries_errorlog(struct rtas_error_log *log
  *
  * Accordingly, we filter RTAS requests to check that the call is
  * permitted, and that provided pointers fall within the RMO buffer.
+<<<<<<< HEAD
  * If a function is allowed to be invoked via the syscall, then its
  * entry in the rtas_functions table points to a rtas_filter that
  * describes its constraints, with the indexes of the parameters which
  * are expected to contain addresses and sizes of buffers allocated
  * inside the RMO buffer.
  */
+=======
+ * The rtas_filters list contains an entry for each permitted call,
+ * with the indexes of the parameters which are expected to contain
+ * addresses and sizes of buffers allocated inside the RMO buffer.
+ */
+struct rtas_filter {
+	const char *name;
+	int token;
+	/* Indexes into the args buffer, -1 if not used */
+	int buf_idx1;
+	int size_idx1;
+	int buf_idx2;
+	int size_idx2;
+
+	int fixed_size;
+};
+
+static struct rtas_filter rtas_filters[] __ro_after_init = {
+	{ "ibm,activate-firmware", -1, -1, -1, -1, -1 },
+	{ "ibm,configure-connector", -1, 0, -1, 1, -1, 4096 },	/* Special cased */
+	{ "display-character", -1, -1, -1, -1, -1 },
+	{ "ibm,display-message", -1, 0, -1, -1, -1 },
+	{ "ibm,errinjct", -1, 2, -1, -1, -1, 1024 },
+	{ "ibm,close-errinjct", -1, -1, -1, -1, -1 },
+	{ "ibm,open-errinjct", -1, -1, -1, -1, -1 },
+	{ "ibm,get-config-addr-info2", -1, -1, -1, -1, -1 },
+	{ "ibm,get-dynamic-sensor-state", -1, 1, -1, -1, -1 },
+	{ "ibm,get-indices", -1, 2, 3, -1, -1 },
+	{ "get-power-level", -1, -1, -1, -1, -1 },
+	{ "get-sensor-state", -1, -1, -1, -1, -1 },
+	{ "ibm,get-system-parameter", -1, 1, 2, -1, -1 },
+	{ "get-time-of-day", -1, -1, -1, -1, -1 },
+	{ "ibm,get-vpd", -1, 0, -1, 1, 2 },
+	{ "ibm,lpar-perftools", -1, 2, 3, -1, -1 },
+	{ "ibm,platform-dump", -1, 4, 5, -1, -1 },		/* Special cased */
+	{ "ibm,read-slot-reset-state", -1, -1, -1, -1, -1 },
+	{ "ibm,scan-log-dump", -1, 0, 1, -1, -1 },
+	{ "ibm,set-dynamic-indicator", -1, 2, -1, -1, -1 },
+	{ "ibm,set-eeh-option", -1, -1, -1, -1, -1 },
+	{ "set-indicator", -1, -1, -1, -1, -1 },
+	{ "set-power-level", -1, -1, -1, -1, -1 },
+	{ "set-time-for-power-on", -1, -1, -1, -1, -1 },
+	{ "ibm,set-system-parameter", -1, 1, -1, -1, -1 },
+	{ "set-time-of-day", -1, -1, -1, -1, -1 },
+#ifdef CONFIG_CPU_BIG_ENDIAN
+	{ "ibm,suspend-me", -1, -1, -1, -1, -1 },
+	{ "ibm,update-nodes", -1, 0, -1, -1, -1, 4096 },
+	{ "ibm,update-properties", -1, 0, -1, -1, -1, 4096 },
+#endif
+	{ "ibm,physical-attestation", -1, 0, 1, -1, -1 },
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static bool in_rmo_buf(u32 base, u32 end)
 {
@@ -1686,6 +2077,7 @@ static bool in_rmo_buf(u32 base, u32 end)
 static bool block_rtas_call(int token, int nargs,
 			    struct rtas_args *args)
 {
+<<<<<<< HEAD
 	const struct rtas_function *func;
 	const struct rtas_filter *f;
 	const bool is_platform_dump = token == rtas_function_token(RTAS_FN_IBM_PLATFORM_DUMP);
@@ -1755,6 +2147,65 @@ static bool block_rtas_call(int token, int nargs,
 	}
 
 	return false;
+=======
+	int i;
+
+	for (i = 0; i < ARRAY_SIZE(rtas_filters); i++) {
+		struct rtas_filter *f = &rtas_filters[i];
+		u32 base, size, end;
+
+		if (token != f->token)
+			continue;
+
+		if (f->buf_idx1 != -1) {
+			base = be32_to_cpu(args->args[f->buf_idx1]);
+			if (f->size_idx1 != -1)
+				size = be32_to_cpu(args->args[f->size_idx1]);
+			else if (f->fixed_size)
+				size = f->fixed_size;
+			else
+				size = 1;
+
+			end = base + size - 1;
+
+			/*
+			 * Special case for ibm,platform-dump - NULL buffer
+			 * address is used to indicate end of dump processing
+			 */
+			if (!strcmp(f->name, "ibm,platform-dump") &&
+			    base == 0)
+				return false;
+
+			if (!in_rmo_buf(base, end))
+				goto err;
+		}
+
+		if (f->buf_idx2 != -1) {
+			base = be32_to_cpu(args->args[f->buf_idx2]);
+			if (f->size_idx2 != -1)
+				size = be32_to_cpu(args->args[f->size_idx2]);
+			else if (f->fixed_size)
+				size = f->fixed_size;
+			else
+				size = 1;
+			end = base + size - 1;
+
+			/*
+			 * Special case for ibm,configure-connector where the
+			 * address can be 0
+			 */
+			if (!strcmp(f->name, "ibm,configure-connector") &&
+			    base == 0)
+				return false;
+
+			if (!in_rmo_buf(base, end))
+				goto err;
+		}
+
+		return false;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 err:
 	pr_err_ratelimited("sys_rtas: RTAS call blocked - exploit attempt?\n");
 	pr_err_ratelimited("sys_rtas: token=0x%x, nargs=%d (called by %s)\n",
@@ -1762,6 +2213,31 @@ err:
 	return true;
 }
 
+<<<<<<< HEAD
+=======
+static void __init rtas_syscall_filter_init(void)
+{
+	unsigned int i;
+
+	for (i = 0; i < ARRAY_SIZE(rtas_filters); i++)
+		rtas_filters[i].token = rtas_token(rtas_filters[i].name);
+}
+
+#else
+
+static bool block_rtas_call(int token, int nargs,
+			    struct rtas_args *args)
+{
+	return false;
+}
+
+static void __init rtas_syscall_filter_init(void)
+{
+}
+
+#endif /* CONFIG_PPC_RTAS_FILTER */
+
+>>>>>>> b7ba80a49124 (Commit)
 /* We assume to be passed big endian arguments */
 SYSCALL_DEFINE1(rtas, struct rtas_args __user *, uargs)
 {
@@ -1802,6 +2278,7 @@ SYSCALL_DEFINE1(rtas, struct rtas_args __user *, uargs)
 	if (block_rtas_call(token, nargs, &args))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (token_is_restricted_errinjct(token)) {
 		int err;
 
@@ -1812,6 +2289,10 @@ SYSCALL_DEFINE1(rtas, struct rtas_args __user *, uargs)
 
 	/* Need to handle ibm,suspend_me call specially */
 	if (token == rtas_function_token(RTAS_FN_IBM_SUSPEND_ME)) {
+=======
+	/* Need to handle ibm,suspend_me call specially */
+	if (token == rtas_token("ibm,suspend-me")) {
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * rtas_ibm_suspend_me assumes the streamid handle is in cpu
@@ -1832,18 +2313,30 @@ SYSCALL_DEFINE1(rtas, struct rtas_args __user *, uargs)
 
 	buff_copy = get_errorlog_buffer();
 
+<<<<<<< HEAD
 	raw_spin_lock_irqsave(&rtas_lock, flags);
 
 	rtas_args = args;
 	do_enter_rtas(&rtas_args);
 	args = rtas_args;
+=======
+	flags = lock_rtas();
+
+	rtas.args = args;
+	do_enter_rtas(__pa(&rtas.args));
+	args = rtas.args;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* A -1 return code indicates that the last command couldn't
 	   be completed due to a hardware error. */
 	if (be32_to_cpu(args.rets[0]) == -1)
 		errbuf = __fetch_rtas_last_error(buff_copy);
 
+<<<<<<< HEAD
 	raw_spin_unlock_irqrestore(&rtas_lock, flags);
+=======
+	unlock_rtas(flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (buff_copy) {
 		if (errbuf)
@@ -1861,6 +2354,7 @@ SYSCALL_DEFINE1(rtas, struct rtas_args __user *, uargs)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void __init rtas_function_table_init(void)
 {
 	struct property *prop;
@@ -1909,6 +2403,8 @@ static void __init rtas_function_table_init(void)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Call early during boot, before mem init, to retrieve the RTAS
  * information from the device-tree and allocate the RMO buffer for userland
@@ -1940,6 +2436,7 @@ void __init rtas_initialize(void)
 	no_entry = of_property_read_u32(rtas.dev, "linux,rtas-entry", &entry);
 	rtas.entry = no_entry ? rtas.base : entry;
 
+<<<<<<< HEAD
 	init_error_log_max();
 
 	/* Must be called before any function token lookups */
@@ -1951,6 +2448,8 @@ void __init rtas_initialize(void)
 	 */
 	ibm_extended_os_term = of_property_read_bool(rtas.dev, "ibm,extended-os-term");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* If RTAS was found, allocate the RMO buffer for it and look for
 	 * the stop-self token if any
 	 */
@@ -1964,7 +2463,15 @@ void __init rtas_initialize(void)
 		panic("ERROR: RTAS: Failed to allocate %lx bytes below %pa\n",
 		      PAGE_SIZE, &rtas_region);
 
+<<<<<<< HEAD
 	rtas_work_area_reserve_arena(rtas_region);
+=======
+#ifdef CONFIG_RTAS_ERROR_LOGGING
+	rtas_last_error_token = rtas_token("rtas-last-error");
+#endif
+
+	rtas_syscall_filter_init();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int __init early_init_dt_scan_rtas(unsigned long node,
@@ -2010,13 +2517,18 @@ int __init early_init_dt_scan_rtas(unsigned long node,
 	return 1;
 }
 
+<<<<<<< HEAD
 static DEFINE_RAW_SPINLOCK(timebase_lock);
+=======
+static arch_spinlock_t timebase_lock;
+>>>>>>> b7ba80a49124 (Commit)
 static u64 timebase = 0;
 
 void rtas_give_timebase(void)
 {
 	unsigned long flags;
 
+<<<<<<< HEAD
 	raw_spin_lock_irqsave(&timebase_lock, flags);
 	hard_irq_disable();
 	rtas_call(rtas_function_token(RTAS_FN_FREEZE_TIME_BASE), 0, 1, NULL);
@@ -2026,6 +2538,18 @@ void rtas_give_timebase(void)
 	while (timebase)
 		barrier();
 	rtas_call(rtas_function_token(RTAS_FN_THAW_TIME_BASE), 0, 1, NULL);
+=======
+	local_irq_save(flags);
+	hard_irq_disable();
+	arch_spin_lock(&timebase_lock);
+	rtas_call(rtas_token("freeze-time-base"), 0, 1, NULL);
+	timebase = get_tb();
+	arch_spin_unlock(&timebase_lock);
+
+	while (timebase)
+		barrier();
+	rtas_call(rtas_token("thaw-time-base"), 0, 1, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	local_irq_restore(flags);
 }
 
@@ -2033,8 +2557,15 @@ void rtas_take_timebase(void)
 {
 	while (!timebase)
 		barrier();
+<<<<<<< HEAD
 	raw_spin_lock(&timebase_lock);
 	set_tb(timebase >> 32, timebase & 0xffffffff);
 	timebase = 0;
 	raw_spin_unlock(&timebase_lock);
+=======
+	arch_spin_lock(&timebase_lock);
+	set_tb(timebase >> 32, timebase & 0xffffffff);
+	timebase = 0;
+	arch_spin_unlock(&timebase_lock);
+>>>>>>> b7ba80a49124 (Commit)
 }

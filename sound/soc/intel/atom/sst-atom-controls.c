@@ -1327,6 +1327,7 @@ static bool is_sst_dapm_widget(struct snd_soc_dapm_widget *w)
 int sst_send_pipe_gains(struct snd_soc_dai *dai, int stream, int mute)
 {
 	struct sst_data *drv = snd_soc_dai_get_drvdata(dai);
+<<<<<<< HEAD
 	struct snd_soc_dapm_widget *w = snd_soc_dai_get_widget(dai, stream);
 	struct snd_soc_dapm_path *p;
 
@@ -1334,6 +1335,17 @@ int sst_send_pipe_gains(struct snd_soc_dai *dai, int stream, int mute)
 	dev_dbg(dai->dev, "Stream name=%s\n", w->name);
 
 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
+=======
+	struct snd_soc_dapm_widget *w;
+	struct snd_soc_dapm_path *p;
+
+	dev_dbg(dai->dev, "enter, dai-name=%s dir=%d\n", dai->name, stream);
+
+	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
+		dev_dbg(dai->dev, "Stream name=%s\n",
+				dai->playback_widget->name);
+		w = dai->playback_widget;
+>>>>>>> b7ba80a49124 (Commit)
 		snd_soc_dapm_widget_for_each_sink_path(w, p) {
 			if (p->connected && !p->connected(w, p->sink))
 				continue;
@@ -1350,6 +1362,12 @@ int sst_send_pipe_gains(struct snd_soc_dai *dai, int stream, int mute)
 			}
 		}
 	} else {
+<<<<<<< HEAD
+=======
+		dev_dbg(dai->dev, "Stream name=%s\n",
+				dai->capture_widget->name);
+		w = dai->capture_widget;
+>>>>>>> b7ba80a49124 (Commit)
 		snd_soc_dapm_widget_for_each_source_path(w, p) {
 			if (p->connected && !p->connected(w, p->source))
 				continue;

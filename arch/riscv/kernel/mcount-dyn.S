@@ -13,8 +13,13 @@
 
 	.text
 
+<<<<<<< HEAD
 #define FENTRY_RA_OFFSET	8
 #define ABI_SIZE_ON_STACK	80
+=======
+#define FENTRY_RA_OFFSET	12
+#define ABI_SIZE_ON_STACK	72
+>>>>>>> b7ba80a49124 (Commit)
 #define ABI_A0			0
 #define ABI_A1			8
 #define ABI_A2			16
@@ -23,10 +28,17 @@
 #define ABI_A5			40
 #define ABI_A6			48
 #define ABI_A7			56
+<<<<<<< HEAD
 #define ABI_T0			64
 #define ABI_RA			72
 
 	.macro SAVE_ABI
+=======
+#define ABI_RA			64
+
+	.macro SAVE_ABI
+	addi	sp, sp, -SZREG
+>>>>>>> b7ba80a49124 (Commit)
 	addi	sp, sp, -ABI_SIZE_ON_STACK
 
 	REG_S	a0, ABI_A0(sp)
@@ -37,7 +49,10 @@
 	REG_S	a5, ABI_A5(sp)
 	REG_S	a6, ABI_A6(sp)
 	REG_S	a7, ABI_A7(sp)
+<<<<<<< HEAD
 	REG_S	t0, ABI_T0(sp)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	REG_S	ra, ABI_RA(sp)
 	.endm
 
@@ -50,18 +65,38 @@
 	REG_L	a5, ABI_A5(sp)
 	REG_L	a6, ABI_A6(sp)
 	REG_L	a7, ABI_A7(sp)
+<<<<<<< HEAD
 	REG_L	t0, ABI_T0(sp)
 	REG_L	ra, ABI_RA(sp)
 
 	addi	sp, sp, ABI_SIZE_ON_STACK
+=======
+	REG_L	ra, ABI_RA(sp)
+
+	addi	sp, sp, ABI_SIZE_ON_STACK
+	addi	sp, sp, SZREG
+>>>>>>> b7ba80a49124 (Commit)
 	.endm
 
 #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
 	.macro SAVE_ALL
+<<<<<<< HEAD
 	addi	sp, sp, -PT_SIZE_ON_STACK
 
 	REG_S t0,  PT_EPC(sp)
 	REG_S x1,  PT_RA(sp)
+=======
+	addi	sp, sp, -SZREG
+	addi	sp, sp, -PT_SIZE_ON_STACK
+
+	REG_S x1,  PT_EPC(sp)
+	addi	sp, sp, PT_SIZE_ON_STACK
+	REG_L x1,  (sp)
+	addi	sp, sp, -PT_SIZE_ON_STACK
+	REG_S x1,  PT_RA(sp)
+	REG_L x1,  PT_EPC(sp)
+
+>>>>>>> b7ba80a49124 (Commit)
 	REG_S x2,  PT_SP(sp)
 	REG_S x3,  PT_GP(sp)
 	REG_S x4,  PT_TP(sp)
@@ -95,11 +130,23 @@
 	.endm
 
 	.macro RESTORE_ALL
+<<<<<<< HEAD
 	REG_L t0,  PT_EPC(sp)
 	REG_L x1,  PT_RA(sp)
 	REG_L x2,  PT_SP(sp)
 	REG_L x3,  PT_GP(sp)
 	REG_L x4,  PT_TP(sp)
+=======
+	REG_L x1,  PT_RA(sp)
+	addi	sp, sp, PT_SIZE_ON_STACK
+	REG_S x1,  (sp)
+	addi	sp, sp, -PT_SIZE_ON_STACK
+	REG_L x1,  PT_EPC(sp)
+	REG_L x2,  PT_SP(sp)
+	REG_L x3,  PT_GP(sp)
+	REG_L x4,  PT_TP(sp)
+	REG_L x5,  PT_T0(sp)
+>>>>>>> b7ba80a49124 (Commit)
 	REG_L x6,  PT_T1(sp)
 	REG_L x7,  PT_T2(sp)
 	REG_L x8,  PT_S0(sp)
@@ -128,16 +175,27 @@
 	REG_L x31, PT_T6(sp)
 
 	addi	sp, sp, PT_SIZE_ON_STACK
+<<<<<<< HEAD
+=======
+	addi	sp, sp, SZREG
+>>>>>>> b7ba80a49124 (Commit)
 	.endm
 #endif /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
 
 ENTRY(ftrace_caller)
 	SAVE_ABI
 
+<<<<<<< HEAD
 	addi	a0, t0, -FENTRY_RA_OFFSET
 	la	a1, function_trace_op
 	REG_L	a2, 0(a1)
 	mv	a1, ra
+=======
+	addi	a0, ra, -FENTRY_RA_OFFSET
+	la	a1, function_trace_op
+	REG_L	a2, 0(a1)
+	REG_L	a1, ABI_SIZE_ON_STACK(sp)
+>>>>>>> b7ba80a49124 (Commit)
 	mv	a3, sp
 
 ftrace_call:
@@ -145,8 +203,13 @@ ftrace_call:
 	call	ftrace_stub
 
 #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+<<<<<<< HEAD
 	addi	a0, sp, ABI_RA
 	REG_L	a1, ABI_T0(sp)
+=======
+	addi	a0, sp, ABI_SIZE_ON_STACK
+	REG_L	a1, ABI_RA(sp)
+>>>>>>> b7ba80a49124 (Commit)
 	addi	a1, a1, -FENTRY_RA_OFFSET
 #ifdef HAVE_FUNCTION_GRAPH_FP_TEST
 	mv	a2, s0
@@ -156,17 +219,28 @@ ftrace_graph_call:
 	call	ftrace_stub
 #endif
 	RESTORE_ABI
+<<<<<<< HEAD
 	jr t0
+=======
+	ret
+>>>>>>> b7ba80a49124 (Commit)
 ENDPROC(ftrace_caller)
 
 #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
 ENTRY(ftrace_regs_caller)
 	SAVE_ALL
 
+<<<<<<< HEAD
 	addi	a0, t0, -FENTRY_RA_OFFSET
 	la	a1, function_trace_op
 	REG_L	a2, 0(a1)
 	mv	a1, ra
+=======
+	addi	a0, ra, -FENTRY_RA_OFFSET
+	la	a1, function_trace_op
+	REG_L	a2, 0(a1)
+	REG_L	a1, PT_SIZE_ON_STACK(sp)
+>>>>>>> b7ba80a49124 (Commit)
 	mv	a3, sp
 
 ftrace_regs_call:
@@ -186,6 +260,10 @@ ftrace_graph_regs_call:
 #endif
 
 	RESTORE_ALL
+<<<<<<< HEAD
 	jr t0
+=======
+	ret
+>>>>>>> b7ba80a49124 (Commit)
 ENDPROC(ftrace_regs_caller)
 #endif /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */

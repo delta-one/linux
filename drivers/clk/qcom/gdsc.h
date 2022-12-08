@@ -30,6 +30,10 @@ struct reset_controller_dev;
  * @resets: ids of resets associated with this gdsc
  * @reset_count: number of @resets
  * @rcdev: reset controller
+<<<<<<< HEAD
+=======
+ * @dev: the device holding the GDSC, used for pm_runtime calls
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct gdsc {
 	struct generic_pm_domain	pd;
@@ -48,11 +52,14 @@ struct gdsc {
 	const u8			pwrsts;
 /* Powerdomain allowable state bitfields */
 #define PWRSTS_OFF		BIT(0)
+<<<<<<< HEAD
 /*
  * There is no SW control to transition a GDSC into
  * PWRSTS_RET. This happens in HW when the parent
  * domain goes down to a low power state
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PWRSTS_RET		BIT(1)
 #define PWRSTS_ON		BIT(2)
 #define PWRSTS_OFF_ON		(PWRSTS_OFF | PWRSTS_ON)
@@ -73,6 +80,10 @@ struct gdsc {
 
 	const char 			*supply;
 	struct regulator		*rsupply;
+<<<<<<< HEAD
+=======
+	struct device			*dev;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct gdsc_desc {

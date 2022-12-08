@@ -5,7 +5,10 @@
 
 #include <linux/mfd/syscon.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/seq_file.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/string.h>
 #include "../core.h"
@@ -93,6 +96,7 @@ static int aspeed_sig_expr_enable(struct aspeed_pinmux_data *ctx,
 static int aspeed_sig_expr_disable(struct aspeed_pinmux_data *ctx,
 				   const struct aspeed_sig_expr *expr)
 {
+<<<<<<< HEAD
 	int ret;
 
 	pr_debug("Disabling signal %s for %s\n", expr->signal,
@@ -106,6 +110,12 @@ static int aspeed_sig_expr_disable(struct aspeed_pinmux_data *ctx,
 		return aspeed_sig_expr_set(ctx, expr, false);
 
 	return 0;
+=======
+	pr_debug("Disabling signal %s for %s\n", expr->signal,
+		 expr->function);
+
+	return aspeed_sig_expr_set(ctx, expr, false);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -123,7 +133,11 @@ static int aspeed_disable_sig(struct aspeed_pinmux_data *ctx,
 	int ret = 0;
 
 	if (!exprs)
+<<<<<<< HEAD
 		return -EINVAL;
+=======
+		return true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (*exprs && !ret) {
 		ret = aspeed_sig_expr_disable(ctx, *exprs);

@@ -56,6 +56,7 @@ int mlx5dr_domain_get_recalc_cs_ft_addr(struct mlx5dr_domain *dmn,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int dr_domain_init_mem_resources(struct mlx5dr_domain *dmn)
 {
 	int ret;
@@ -120,6 +121,8 @@ static void dr_domain_uninit_mem_resources(struct mlx5dr_domain *dmn)
 	kmem_cache_destroy(dmn->chunks_kmem_cache);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int dr_domain_init_resources(struct mlx5dr_domain *dmn)
 {
 	int ret;
@@ -143,6 +146,7 @@ static int dr_domain_init_resources(struct mlx5dr_domain *dmn)
 		goto clean_pd;
 	}
 
+<<<<<<< HEAD
 	ret = dr_domain_init_mem_resources(dmn);
 	if (ret) {
 		mlx5dr_err(dmn, "Couldn't create domain memory resources\n");
@@ -153,12 +157,39 @@ static int dr_domain_init_resources(struct mlx5dr_domain *dmn)
 	if (ret) {
 		mlx5dr_err(dmn, "Couldn't create send-ring\n");
 		goto clean_mem_resources;
+=======
+	dmn->ste_icm_pool = mlx5dr_icm_pool_create(dmn, DR_ICM_TYPE_STE);
+	if (!dmn->ste_icm_pool) {
+		mlx5dr_err(dmn, "Couldn't get icm memory\n");
+		ret = -ENOMEM;
+		goto clean_uar;
+	}
+
+	dmn->action_icm_pool = mlx5dr_icm_pool_create(dmn, DR_ICM_TYPE_MODIFY_ACTION);
+	if (!dmn->action_icm_pool) {
+		mlx5dr_err(dmn, "Couldn't get action icm memory\n");
+		ret = -ENOMEM;
+		goto free_ste_icm_pool;
+	}
+
+	ret = mlx5dr_send_ring_alloc(dmn);
+	if (ret) {
+		mlx5dr_err(dmn, "Couldn't create send-ring\n");
+		goto free_action_icm_pool;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
 
+<<<<<<< HEAD
 clean_mem_resources:
 	dr_domain_uninit_mem_resources(dmn);
+=======
+free_action_icm_pool:
+	mlx5dr_icm_pool_destroy(dmn->action_icm_pool);
+free_ste_icm_pool:
+	mlx5dr_icm_pool_destroy(dmn->ste_icm_pool);
+>>>>>>> b7ba80a49124 (Commit)
 clean_uar:
 	mlx5_put_uars_page(dmn->mdev, dmn->uar);
 clean_pd:
@@ -170,7 +201,12 @@ clean_pd:
 static void dr_domain_uninit_resources(struct mlx5dr_domain *dmn)
 {
 	mlx5dr_send_ring_free(dmn, dmn->send_ring);
+<<<<<<< HEAD
 	dr_domain_uninit_mem_resources(dmn);
+=======
+	mlx5dr_icm_pool_destroy(dmn->action_icm_pool);
+	mlx5dr_icm_pool_destroy(dmn->ste_icm_pool);
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5_put_uars_page(dmn->mdev, dmn->uar);
 	mlx5_core_dealloc_pd(dmn->mdev, dmn->pdn);
 }
@@ -425,11 +461,18 @@ mlx5dr_domain_create(struct mlx5_core_dev *mdev, enum mlx5dr_domain_type type)
 	refcount_set(&dmn->refcount, 1);
 	mutex_init(&dmn->info.rx.mutex);
 	mutex_init(&dmn->info.tx.mutex);
+<<<<<<< HEAD
 	xa_init(&dmn->definers_xa);
 
 	if (dr_domain_caps_init(mdev, dmn)) {
 		mlx5dr_err(dmn, "Failed init domain, no caps\n");
 		goto def_xa_destroy;
+=======
+
+	if (dr_domain_caps_init(mdev, dmn)) {
+		mlx5dr_err(dmn, "Failed init domain, no caps\n");
+		goto free_domain;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	dmn->info.max_log_action_icm_sz = DR_CHUNK_SIZE_4K;
@@ -454,8 +497,12 @@ mlx5dr_domain_create(struct mlx5_core_dev *mdev, enum mlx5dr_domain_type type)
 
 uninit_caps:
 	dr_domain_caps_uninit(dmn);
+<<<<<<< HEAD
 def_xa_destroy:
 	xa_destroy(&dmn->definers_xa);
+=======
+free_domain:
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(dmn);
 	return NULL;
 }
@@ -495,7 +542,10 @@ int mlx5dr_domain_destroy(struct mlx5dr_domain *dmn)
 	dr_domain_uninit_csum_recalc_fts(dmn);
 	dr_domain_uninit_resources(dmn);
 	dr_domain_caps_uninit(dmn);
+<<<<<<< HEAD
 	xa_destroy(&dmn->definers_xa);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_destroy(&dmn->info.tx.mutex);
 	mutex_destroy(&dmn->info.rx.mutex);
 	kfree(dmn);

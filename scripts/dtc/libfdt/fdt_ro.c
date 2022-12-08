@@ -481,12 +481,19 @@ const void *fdt_getprop_by_offset(const void *fdt, int offset,
 		if (!can_assume(VALID_INPUT)) {
 			name = fdt_get_string(fdt, fdt32_ld_(&prop->nameoff),
 					      &namelen);
+<<<<<<< HEAD
 			*namep = name;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			if (!name) {
 				if (lenp)
 					*lenp = namelen;
 				return NULL;
 			}
+<<<<<<< HEAD
+=======
+			*namep = name;
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			*namep = fdt_string(fdt, fdt32_ld_(&prop->nameoff));
 		}

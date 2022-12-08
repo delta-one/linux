@@ -39,7 +39,10 @@ static struct dfl_afu_mmio_region *get_region_by_index(struct dfl_afu *afu,
 /**
  * afu_mmio_region_add - add a mmio region to given feature dev.
  *
+<<<<<<< HEAD
  * @pdata: afu platform device's pdata.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @region_index: region index.
  * @region_size: region size.
  * @phys: region's physical address of this region.

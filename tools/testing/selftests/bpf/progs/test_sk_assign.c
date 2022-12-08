@@ -15,6 +15,7 @@
 #include <sys/socket.h>
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_endian.h>
+<<<<<<< HEAD
 #include "bpf_misc.h"
 
 #if defined(IPROUTE2_HAVE_LIBBPF)
@@ -27,6 +28,9 @@ struct {
 	__uint(max_entries, 1);
 } server_map SEC(".maps");
 #else
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Pin map under /sys/fs/bpf/tc/globals/<map name> */
 #define PIN_GLOBAL_NS 2
 
@@ -46,7 +50,10 @@ struct {
 	.max_elem = 1,
 	.pinning = PIN_GLOBAL_NS,
 };
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 char _license[] SEC("license") = "GPL";
 
@@ -58,6 +65,10 @@ get_tuple(struct __sk_buff *skb, bool *ipv4, bool *tcp)
 	void *data = (void *)(long)skb->data;
 	struct bpf_sock_tuple *result;
 	struct ethhdr *eth;
+<<<<<<< HEAD
+=======
+	__u64 tuple_len;
+>>>>>>> b7ba80a49124 (Commit)
 	__u8 proto = 0;
 	__u64 ihl_len;
 
@@ -94,7 +105,10 @@ get_tuple(struct __sk_buff *skb, bool *ipv4, bool *tcp)
 		return NULL;
 
 	*tcp = (proto == IPPROTO_TCP);
+<<<<<<< HEAD
 	__sink(ihl_len);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return result;
 }
 
@@ -174,6 +188,10 @@ int bpf_sk_assign_test(struct __sk_buff *skb)
 	struct bpf_sock_tuple *tuple;
 	bool ipv4 = false;
 	bool tcp = false;
+<<<<<<< HEAD
+=======
+	int tuple_len;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 
 	tuple = get_tuple(skb, &ipv4, &tcp);

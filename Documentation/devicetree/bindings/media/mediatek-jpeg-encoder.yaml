@@ -19,7 +19,10 @@ properties:
           - mediatek,mt2701-jpgenc
           - mediatek,mt8183-jpgenc
           - mediatek,mt8186-jpgenc
+<<<<<<< HEAD
           - mediatek,mt8188-jpgenc
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - const: mediatek,mtk-jpgenc
   reg:
     maxItems: 1

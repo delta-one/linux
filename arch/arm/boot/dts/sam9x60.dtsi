@@ -170,6 +170,7 @@
 				#size-cells = <1>;
 				ranges = <0x0 0xf0000000 0x800>;
 				status = "disabled";
+<<<<<<< HEAD
 
 				uart4: serial@200 {
 					compatible = "microchip,sam9x60-dbgu", "microchip,sam9x60-usart", "atmel,at91sam9260-dbgu", "atmel,at91sam9260-usart";
@@ -228,6 +229,8 @@
 					atmel,fifo-size = <16>;
 					status = "disabled";
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			flx5: flexcom@f0004000 {
@@ -238,6 +241,7 @@
 				#size-cells = <1>;
 				ranges = <0x0 0xf0004000 0x800>;
 				status = "disabled";
+<<<<<<< HEAD
 
 				uart5: serial@200 {
 					compatible = "microchip,sam9x60-dbgu", "microchip,sam9x60-usart", "atmel,at91sam9260-dbgu", "atmel,at91sam9260-usart";
@@ -297,6 +301,8 @@
 					atmel,fifo-size = <16>;
 					status = "disabled";
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			dma0: dma-controller@f0008000 {
@@ -368,6 +374,7 @@
 				#size-cells = <1>;
 				ranges = <0x0 0xf0020000 0x800>;
 				status = "disabled";
+<<<<<<< HEAD
 
 				uart11: serial@200 {
 					compatible = "microchip,sam9x60-dbgu", "microchip,sam9x60-usart", "atmel,at91sam9260-dbgu", "atmel,at91sam9260-usart";
@@ -407,6 +414,8 @@
 					atmel,fifo-size = <16>;
 					status = "disabled";
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			flx12: flexcom@f0024000 {
@@ -417,6 +426,7 @@
 				#size-cells = <1>;
 				ranges = <0x0 0xf0024000 0x800>;
 				status = "disabled";
+<<<<<<< HEAD
 
 				uart12: serial@200 {
 					compatible = "microchip,sam9x60-dbgu", "microchip,sam9x60-usart", "atmel,at91sam9260-dbgu", "atmel,at91sam9260-usart";
@@ -456,6 +466,8 @@
 					atmel,fifo-size = <16>;
 					status = "disabled";
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			pit64b: timer@f0028000 {
@@ -574,6 +586,7 @@
 				#size-cells = <1>;
 				ranges = <0x0 0xf8010000 0x800>;
 				status = "disabled";
+<<<<<<< HEAD
 
 				uart6: serial@200 {
 					compatible = "microchip,sam9x60-dbgu", "microchip,sam9x60-usart", "atmel,at91sam9260-dbgu", "atmel,at91sam9260-usart";
@@ -613,6 +626,8 @@
 					atmel,fifo-size = <16>;
 					status = "disabled";
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			flx7: flexcom@f8014000 {
@@ -623,6 +638,7 @@
 				#size-cells = <1>;
 				ranges = <0x0 0xf8014000 0x800>;
 				status = "disabled";
+<<<<<<< HEAD
 
 				uart7: serial@200 {
 					compatible = "microchip,sam9x60-dbgu", "microchip,sam9x60-usart", "atmel,at91sam9260-dbgu", "atmel,at91sam9260-usart";
@@ -662,6 +678,8 @@
 					atmel,fifo-size = <16>;
 					status = "disabled";
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			flx8: flexcom@f8018000 {
@@ -672,6 +690,7 @@
 				#size-cells = <1>;
 				ranges = <0x0 0xf8018000 0x800>;
 				status = "disabled";
+<<<<<<< HEAD
 
 				uart8: serial@200 {
 					compatible = "microchip,sam9x60-dbgu", "microchip,sam9x60-usart", "atmel,at91sam9260-dbgu", "atmel,at91sam9260-usart";
@@ -711,6 +730,8 @@
 					atmel,fifo-size = <16>;
 					status = "disabled";
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			flx0: flexcom@f801c000 {
@@ -721,6 +742,7 @@
 				#size-cells = <1>;
 				ranges = <0x0 0xf801c000 0x800>;
 				status = "disabled";
+<<<<<<< HEAD
 
 				uart0: serial@200 {
 					compatible = "microchip,sam9x60-dbgu", "microchip,sam9x60-usart", "atmel,at91sam9260-dbgu", "atmel,at91sam9260-usart";
@@ -779,6 +801,8 @@
 					atmel,fifo-size = <16>;
 					status = "disabled";
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			flx1: flexcom@f8020000 {
@@ -789,6 +813,7 @@
 				#size-cells = <1>;
 				ranges = <0x0 0xf8020000 0x800>;
 				status = "disabled";
+<<<<<<< HEAD
 
 				uart1: serial@200 {
 					compatible = "microchip,sam9x60-dbgu", "microchip,sam9x60-usart", "atmel,at91sam9260-dbgu", "atmel,at91sam9260-usart";
@@ -847,6 +872,8 @@
 					atmel,fifo-size = <16>;
 					status = "disabled";
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			flx2: flexcom@f8024000 {
@@ -857,6 +884,7 @@
 				#size-cells = <1>;
 				ranges = <0x0 0xf8024000 0x800>;
 				status = "disabled";
+<<<<<<< HEAD
 
 				uart2: serial@200 {
 					compatible = "microchip,sam9x60-dbgu", "microchip,sam9x60-usart", "atmel,at91sam9260-dbgu", "atmel,at91sam9260-usart";
@@ -915,6 +943,8 @@
 					atmel,fifo-size = <16>;
 					status = "disabled";
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			flx3: flexcom@f8028000 {
@@ -925,6 +955,7 @@
 				#size-cells = <1>;
 				ranges = <0x0 0xf8028000 0x800>;
 				status = "disabled";
+<<<<<<< HEAD
 
 				uart3: serial@200 {
 					compatible = "microchip,sam9x60-dbgu", "microchip,sam9x60-usart", "atmel,at91sam9260-dbgu", "atmel,at91sam9260-usart";
@@ -983,6 +1014,8 @@
 					atmel,fifo-size = <16>;
 					status = "disabled";
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			macb0: ethernet@f802c000 {
@@ -1048,6 +1081,7 @@
 				#size-cells = <1>;
 				ranges = <0x0 0xf8040000 0x800>;
 				status = "disabled";
+<<<<<<< HEAD
 
 				uart9: serial@200 {
 					compatible = "microchip,sam9x60-dbgu", "microchip,sam9x60-usart", "atmel,at91sam9260-dbgu", "atmel,at91sam9260-usart";
@@ -1087,6 +1121,8 @@
 					atmel,fifo-size = <16>;
 					status = "disabled";
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			flx10: flexcom@f8044000 {
@@ -1097,6 +1133,7 @@
 				#size-cells = <1>;
 				ranges = <0x0 0xf8044000 0x800>;
 				status = "disabled";
+<<<<<<< HEAD
 
 				uart10: serial@200 {
 					compatible = "microchip,sam9x60-dbgu", "microchip,sam9x60-usart", "atmel,at91sam9260-dbgu", "atmel,at91sam9260-usart";
@@ -1136,6 +1173,8 @@
 					atmel,fifo-size = <16>;
 					status = "disabled";
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			isi: isi@f8048000 {
@@ -1186,7 +1225,11 @@
 			mpddrc: mpddrc@ffffe800 {
 				compatible = "microchip,sam9x60-ddramc", "atmel,sama5d3-ddramc";
 				reg = <0xffffe800 0x200>;
+<<<<<<< HEAD
 				clocks = <&pmc PMC_TYPE_SYSTEM 2>, <&pmc PMC_TYPE_PERIPHERAL 49>;
+=======
+				clocks = <&pmc PMC_TYPE_SYSTEM 2>, <&pmc PMC_TYPE_CORE PMC_MCK>;
+>>>>>>> b7ba80a49124 (Commit)
 				clock-names = "ddrck", "mpddr";
 			};
 

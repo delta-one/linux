@@ -44,6 +44,7 @@ static inline s32 s32_div_u32_round_closest(s32 dividend, u32 divisor)
 	return s32_div_u32_round_down(dividend + divisor / 2, divisor, NULL);
 }
 
+<<<<<<< HEAD
 static inline void ether_addr_copy_mask(u8 *dst, const u8 *src, u8 mask)
 {
 	int i;
@@ -55,4 +56,6 @@ static inline void ether_addr_copy_mask(u8 *dst, const u8 *src, u8 mask)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

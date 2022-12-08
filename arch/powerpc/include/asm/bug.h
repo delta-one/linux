@@ -99,8 +99,12 @@
 	__label__ __label_warn_on;				\
 								\
 	WARN_ENTRY("twi 31, 0, 0", BUGFLAG_WARNING | (flags), __label_warn_on); \
+<<<<<<< HEAD
 	barrier_before_unreachable();				\
 	__builtin_unreachable();				\
+=======
+	unreachable();						\
+>>>>>>> b7ba80a49124 (Commit)
 								\
 __label_warn_on:						\
 	break;							\

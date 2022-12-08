@@ -28,7 +28,10 @@ static int mx27_read_cpu_rev(void)
 
 	np = of_find_compatible_node(NULL, NULL, "fsl,imx27-ccm");
 	ccm_base = of_iomap(np, 0);
+<<<<<<< HEAD
 	of_node_put(np);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BUG_ON(!ccm_base);
 	/*
 	 * now we have access to the IO registers. As we need

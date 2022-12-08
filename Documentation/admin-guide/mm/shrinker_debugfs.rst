@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _shrinker_debugfs:
+
+>>>>>>> b7ba80a49124 (Commit)
 ==========================
 Shrinker Debugfs Interface
 ==========================

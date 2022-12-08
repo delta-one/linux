@@ -3894,19 +3894,33 @@ static void sky2_get_stats(struct net_device *dev,
 	u64 _bytes, _packets;
 
 	do {
+<<<<<<< HEAD
 		start = u64_stats_fetch_begin(&sky2->rx_stats.syncp);
 		_bytes = sky2->rx_stats.bytes;
 		_packets = sky2->rx_stats.packets;
 	} while (u64_stats_fetch_retry(&sky2->rx_stats.syncp, start));
+=======
+		start = u64_stats_fetch_begin_irq(&sky2->rx_stats.syncp);
+		_bytes = sky2->rx_stats.bytes;
+		_packets = sky2->rx_stats.packets;
+	} while (u64_stats_fetch_retry_irq(&sky2->rx_stats.syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 	stats->rx_packets = _packets;
 	stats->rx_bytes = _bytes;
 
 	do {
+<<<<<<< HEAD
 		start = u64_stats_fetch_begin(&sky2->tx_stats.syncp);
 		_bytes = sky2->tx_stats.bytes;
 		_packets = sky2->tx_stats.packets;
 	} while (u64_stats_fetch_retry(&sky2->tx_stats.syncp, start));
+=======
+		start = u64_stats_fetch_begin_irq(&sky2->tx_stats.syncp);
+		_bytes = sky2->tx_stats.bytes;
+		_packets = sky2->tx_stats.packets;
+	} while (u64_stats_fetch_retry_irq(&sky2->tx_stats.syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 	stats->tx_packets = _packets;
 	stats->tx_bytes = _bytes;
@@ -4937,7 +4951,11 @@ static int sky2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 		}
 	}
 
+<<<<<<< HEAD
 	netif_napi_add(dev, &hw->napi, sky2_poll);
+=======
+	netif_napi_add(dev, &hw->napi, sky2_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = register_netdev(dev);
 	if (err) {
@@ -5013,7 +5031,11 @@ static void sky2_remove(struct pci_dev *pdev)
 	if (!hw)
 		return;
 
+<<<<<<< HEAD
 	timer_shutdown_sync(&hw->watchdog_timer);
+=======
+	del_timer_sync(&hw->watchdog_timer);
+>>>>>>> b7ba80a49124 (Commit)
 	cancel_work_sync(&hw->restart_work);
 
 	for (i = hw->ports-1; i >= 0; --i)

@@ -70,7 +70,15 @@ static struct afs_volume *afs_alloc_volume(struct afs_fs_context *params,
 {
 	struct afs_server_list *slist;
 	struct afs_volume *volume;
+<<<<<<< HEAD
 	int ret = -ENOMEM;
+=======
+	int ret = -ENOMEM, nr_servers = 0, i;
+
+	for (i = 0; i < vldb->nr_servers; i++)
+		if (vldb->fs_mask[i] & type_mask)
+			nr_servers++;
+>>>>>>> b7ba80a49124 (Commit)
 
 	volume = kzalloc(sizeof(struct afs_volume), GFP_KERNEL);
 	if (!volume)

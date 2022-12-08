@@ -14,7 +14,10 @@
 #include <linux/types.h>
 #include <linux/errno.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/io.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/ccwdev.h>
 #include <asm/cio.h>
 
@@ -141,7 +144,11 @@ static void spid_build_cp(struct ccw_device *cdev, u8 fn)
 
 	pgid->inf.fc	= fn;
 	cp->cmd_code	= CCW_CMD_SET_PGID;
+<<<<<<< HEAD
 	cp->cda		= (u32)virt_to_phys(pgid);
+=======
+	cp->cda		= (u32) (addr_t) pgid;
+>>>>>>> b7ba80a49124 (Commit)
 	cp->count	= sizeof(*pgid);
 	cp->flags	= CCW_FLAG_SLI;
 	req->cp		= cp;
@@ -442,7 +449,11 @@ static void snid_build_cp(struct ccw_device *cdev)
 
 	/* Channel program setup. */
 	cp->cmd_code	= CCW_CMD_SENSE_PGID;
+<<<<<<< HEAD
 	cp->cda		= (u32)virt_to_phys(&cdev->private->dma_area->pgid[i]);
+=======
+	cp->cda		= (u32) (addr_t) &cdev->private->dma_area->pgid[i];
+>>>>>>> b7ba80a49124 (Commit)
 	cp->count	= sizeof(struct pgid);
 	cp->flags	= CCW_FLAG_SLI;
 	req->cp		= cp;
@@ -632,11 +643,19 @@ static void stlck_build_cp(struct ccw_device *cdev, void *buf1, void *buf2)
 	struct ccw1 *cp = cdev->private->dma_area->iccws;
 
 	cp[0].cmd_code = CCW_CMD_STLCK;
+<<<<<<< HEAD
 	cp[0].cda = (u32)virt_to_phys(buf1);
 	cp[0].count = 32;
 	cp[0].flags = CCW_FLAG_CC;
 	cp[1].cmd_code = CCW_CMD_RELEASE;
 	cp[1].cda = (u32)virt_to_phys(buf2);
+=======
+	cp[0].cda = (u32) (addr_t) buf1;
+	cp[0].count = 32;
+	cp[0].flags = CCW_FLAG_CC;
+	cp[1].cmd_code = CCW_CMD_RELEASE;
+	cp[1].cda = (u32) (addr_t) buf2;
+>>>>>>> b7ba80a49124 (Commit)
 	cp[1].count = 32;
 	cp[1].flags = 0;
 	req->cp = cp;
@@ -699,7 +718,11 @@ int ccw_device_stlck(struct ccw_device *cdev)
 	init_completion(&data.done);
 	data.rc = -EIO;
 	spin_lock_irq(sch->lock);
+<<<<<<< HEAD
 	rc = cio_enable_subchannel(sch, (u32)virt_to_phys(sch));
+=======
+	rc = cio_enable_subchannel(sch, (u32) (addr_t) sch);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		goto out_unlock;
 	/* Perform operation. */

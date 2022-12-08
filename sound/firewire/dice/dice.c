@@ -382,6 +382,7 @@ static const struct ieee1394_device_id dice_id_table[] = {
 		.model_id	= 0x000001,
 		.driver_data	= (kernel_ulong_t)snd_dice_detect_harman_formats,
 	},
+<<<<<<< HEAD
 	// Focusrite Saffire Pro 40 with TCD3070-CH.
 	// The model has quirk in its GUID, in which model field is 0x000013 and different from
 	// model ID (0x0000de) in its root/unit directory.
@@ -392,6 +393,8 @@ static const struct ieee1394_device_id dice_id_table[] = {
 		.model_id	= 0x0000de,
 		.driver_data	= (kernel_ulong_t)snd_dice_detect_focusrite_pro40_tcd3070_formats,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.match_flags = IEEE1394_MATCH_VERSION,
 		.version     = DICE_INTERFACE,

@@ -254,7 +254,11 @@ static struct attribute *system76_battery_attrs[] = {
 
 ATTRIBUTE_GROUPS(system76_battery);
 
+<<<<<<< HEAD
 static int system76_battery_add(struct power_supply *battery, struct acpi_battery_hook *hook)
+=======
+static int system76_battery_add(struct power_supply *battery)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	// System76 EC only supports 1 battery
 	if (strcmp(battery->desc->name, "BAT0") != 0)
@@ -266,7 +270,11 @@ static int system76_battery_add(struct power_supply *battery, struct acpi_batter
 	return 0;
 }
 
+<<<<<<< HEAD
 static int system76_battery_remove(struct power_supply *battery, struct acpi_battery_hook *hook)
+=======
+static int system76_battery_remove(struct power_supply *battery)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	device_remove_groups(&battery->dev, system76_battery_groups);
 	return 0;
@@ -744,7 +752,11 @@ error:
 }
 
 // Remove a System76 ACPI device
+<<<<<<< HEAD
 static void system76_remove(struct acpi_device *acpi_dev)
+=======
+static int system76_remove(struct acpi_device *acpi_dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct system76_data *data;
 
@@ -760,6 +772,11 @@ static void system76_remove(struct acpi_device *acpi_dev)
 	devm_led_classdev_unregister(&acpi_dev->dev, &data->kb_led);
 
 	system76_get(data, "FINI");
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct acpi_driver system76_driver = {

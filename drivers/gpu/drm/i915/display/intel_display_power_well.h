@@ -7,8 +7,13 @@
 
 #include <linux/types.h>
 
+<<<<<<< HEAD
 #include "intel_display_power.h"
 #include "intel_dpio_phy.h"
+=======
+#include "intel_display.h"
+#include "intel_display_power.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 struct drm_i915_private;
 struct i915_power_well;

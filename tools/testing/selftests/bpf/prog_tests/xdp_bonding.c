@@ -141,6 +141,7 @@ static const char * const xmit_policy_names[] = {
 static int bonding_setup(struct skeletons *skeletons, int mode, int xmit_policy,
 			 int bond_both_attach)
 {
+<<<<<<< HEAD
 	SYS(fail, "ip netns add ns_dst");
 	SYS(fail, "ip link add veth1_1 type veth peer name veth2_1 netns ns_dst");
 	SYS(fail, "ip link add veth1_2 type veth peer name veth2_2 netns ns_dst");
@@ -157,17 +158,52 @@ static int bonding_setup(struct skeletons *skeletons, int mode, int xmit_policy,
 		SYS(fail, "ip link set veth1_2 master bond1");
 	} else {
 		SYS(fail, "ip link set veth1_2 up addrgenmode none");
+=======
+#define SYS(fmt, ...)						\
+	({							\
+		char cmd[1024];					\
+		snprintf(cmd, sizeof(cmd), fmt, ##__VA_ARGS__);	\
+		if (!ASSERT_OK(system(cmd), cmd))		\
+			return -1;				\
+	})
+
+	SYS("ip netns add ns_dst");
+	SYS("ip link add veth1_1 type veth peer name veth2_1 netns ns_dst");
+	SYS("ip link add veth1_2 type veth peer name veth2_2 netns ns_dst");
+
+	SYS("ip link add bond1 type bond mode %s xmit_hash_policy %s",
+	    mode_names[mode], xmit_policy_names[xmit_policy]);
+	SYS("ip link set bond1 up address " BOND1_MAC_STR " addrgenmode none");
+	SYS("ip -netns ns_dst link add bond2 type bond mode %s xmit_hash_policy %s",
+	    mode_names[mode], xmit_policy_names[xmit_policy]);
+	SYS("ip -netns ns_dst link set bond2 up address " BOND2_MAC_STR " addrgenmode none");
+
+	SYS("ip link set veth1_1 master bond1");
+	if (bond_both_attach == BOND_BOTH_AND_ATTACH) {
+		SYS("ip link set veth1_2 master bond1");
+	} else {
+		SYS("ip link set veth1_2 up addrgenmode none");
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (xdp_attach(skeletons, skeletons->xdp_dummy->progs.xdp_dummy_prog, "veth1_2"))
 			return -1;
 	}
 
+<<<<<<< HEAD
 	SYS(fail, "ip -netns ns_dst link set veth2_1 master bond2");
 
 	if (bond_both_attach == BOND_BOTH_AND_ATTACH)
 		SYS(fail, "ip -netns ns_dst link set veth2_2 master bond2");
 	else
 		SYS(fail, "ip -netns ns_dst link set veth2_2 up addrgenmode none");
+=======
+	SYS("ip -netns ns_dst link set veth2_1 master bond2");
+
+	if (bond_both_attach == BOND_BOTH_AND_ATTACH)
+		SYS("ip -netns ns_dst link set veth2_2 master bond2");
+	else
+		SYS("ip -netns ns_dst link set veth2_2 up addrgenmode none");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Load a dummy program on sending side as with veth peer needs to have a
 	 * XDP program loaded as well.
@@ -186,8 +222,13 @@ static int bonding_setup(struct skeletons *skeletons, int mode, int xmit_policy,
 	}
 
 	return 0;
+<<<<<<< HEAD
 fail:
 	return -1;
+=======
+
+#undef SYS
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void bonding_cleanup(struct skeletons *skeletons)

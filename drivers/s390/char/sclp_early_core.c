@@ -10,14 +10,22 @@
 #include <asm/ebcdic.h>
 #include <asm/irq.h>
 #include <asm/sections.h>
+<<<<<<< HEAD
 #include <asm/physmem_info.h>
+=======
+#include <asm/mem_detect.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/facility.h>
 #include "sclp.h"
 #include "sclp_rw.h"
 
 static struct read_info_sccb __bootdata(sclp_info_sccb);
 static int __bootdata(sclp_info_sccb_valid);
+<<<<<<< HEAD
 char *__bootdata_preserved(sclp_early_sccb);
+=======
+char *__bootdata(sclp_early_sccb);
+>>>>>>> b7ba80a49124 (Commit)
 int sclp_init_state = sclp_init_state_uninitialized;
 /*
  * Used to keep track of the size of the event masks. Qemu until version 2.11
@@ -241,6 +249,7 @@ void sclp_early_printk(const char *str)
 }
 
 /*
+<<<<<<< HEAD
  * Use sclp_emergency_printk() to print a string when the system is in a
  * state where regular console drivers cannot be assumed to work anymore.
  *
@@ -265,6 +274,8 @@ void sclp_emergency_printk(const char *str)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * We can't pass sclp_info_sccb to sclp_early_cmd() here directly,
  * because it might not fulfil the requiremets for a SCLP communication buffer:
  *   - lie below 2G in memory
@@ -336,7 +347,11 @@ int __init sclp_early_get_hsa_size(unsigned long *hsa_size)
 
 #define SCLP_STORAGE_INFO_FACILITY     0x0000400000000000UL
 
+<<<<<<< HEAD
 void __weak __init add_physmem_online_range(u64 start, u64 end) {}
+=======
+void __weak __init add_mem_detect_block(u64 start, u64 end) {}
+>>>>>>> b7ba80a49124 (Commit)
 int __init sclp_early_read_storage_info(void)
 {
 	struct read_storage_sccb *sccb = (struct read_storage_sccb *)sclp_early_sccb;
@@ -369,7 +384,11 @@ int __init sclp_early_read_storage_info(void)
 				if (!sccb->entries[sn])
 					continue;
 				rn = sccb->entries[sn] >> 16;
+<<<<<<< HEAD
 				add_physmem_online_range((rn - 1) * rzm, rn * rzm);
+=======
+				add_mem_detect_block((rn - 1) * rzm, rn * rzm);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			break;
 		case 0x0310:
@@ -382,6 +401,10 @@ int __init sclp_early_read_storage_info(void)
 
 	return 0;
 fail:
+<<<<<<< HEAD
 	physmem_info.range_count = 0;
+=======
+	mem_detect.count = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	return -EIO;
 }

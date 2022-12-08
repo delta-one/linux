@@ -254,7 +254,11 @@ Media selection
 A number of the older NICs such as the 3c590 and 3c900 series have
 10base2 and AUI interfaces.
 
+<<<<<<< HEAD
 Prior to January, 2001 this driver would autoselect the 10base2 or AUI
+=======
+Prior to January, 2001 this driver would autoeselect the 10base2 or AUI
+>>>>>>> b7ba80a49124 (Commit)
 port if it didn't detect activity on the 10baseT port.  It would then
 get stuck on the 10base2 port and a driver reload was necessary to
 switch back to 10baseT.  This behaviour could not be prevented with a

@@ -14,7 +14,10 @@ BUILD_BUG_ON(1)
  * to make a definition optional, but in this case the default will
  * be __static_call_return0.
  */
+<<<<<<< HEAD
 KVM_X86_OP(check_processor_compatibility)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 KVM_X86_OP(hardware_enable)
 KVM_X86_OP(hardware_disable)
 KVM_X86_OP(hardware_unsetup)
@@ -68,9 +71,13 @@ KVM_X86_OP(get_interrupt_shadow)
 KVM_X86_OP(patch_hypercall)
 KVM_X86_OP(inject_irq)
 KVM_X86_OP(inject_nmi)
+<<<<<<< HEAD
 KVM_X86_OP_OPTIONAL_RET0(is_vnmi_pending)
 KVM_X86_OP_OPTIONAL_RET0(set_vnmi_pending)
 KVM_X86_OP(inject_exception)
+=======
+KVM_X86_OP(queue_exception)
+>>>>>>> b7ba80a49124 (Commit)
 KVM_X86_OP(cancel_injection)
 KVM_X86_OP(interrupt_allowed)
 KVM_X86_OP(nmi_allowed)
@@ -79,6 +86,10 @@ KVM_X86_OP(set_nmi_mask)
 KVM_X86_OP(enable_nmi_window)
 KVM_X86_OP(enable_irq_window)
 KVM_X86_OP_OPTIONAL(update_cr8_intercept)
+<<<<<<< HEAD
+=======
+KVM_X86_OP(check_apicv_inhibit_reasons)
+>>>>>>> b7ba80a49124 (Commit)
 KVM_X86_OP(refresh_apicv_exec_ctrl)
 KVM_X86_OP_OPTIONAL(hwapic_irr_update)
 KVM_X86_OP_OPTIONAL(hwapic_isr_update)
@@ -112,12 +123,18 @@ KVM_X86_OP_OPTIONAL_RET0(dy_apicv_has_pending_interrupt)
 KVM_X86_OP_OPTIONAL(set_hv_timer)
 KVM_X86_OP_OPTIONAL(cancel_hv_timer)
 KVM_X86_OP(setup_mce)
+<<<<<<< HEAD
 #ifdef CONFIG_KVM_SMM
+=======
+>>>>>>> b7ba80a49124 (Commit)
 KVM_X86_OP(smi_allowed)
 KVM_X86_OP(enter_smm)
 KVM_X86_OP(leave_smm)
 KVM_X86_OP(enable_smi_window)
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 KVM_X86_OP_OPTIONAL(mem_enc_ioctl)
 KVM_X86_OP_OPTIONAL(mem_enc_register_region)
 KVM_X86_OP_OPTIONAL(mem_enc_unregister_region)
@@ -127,7 +144,11 @@ KVM_X86_OP_OPTIONAL(guest_memory_reclaimed)
 KVM_X86_OP(get_msr_feature)
 KVM_X86_OP(can_emulate_instruction)
 KVM_X86_OP(apic_init_signal_blocked)
+<<<<<<< HEAD
 KVM_X86_OP_OPTIONAL(enable_l2_tlb_flush)
+=======
+KVM_X86_OP_OPTIONAL(enable_direct_tlbflush)
+>>>>>>> b7ba80a49124 (Commit)
 KVM_X86_OP_OPTIONAL(migrate_timers)
 KVM_X86_OP(msr_filter_changed)
 KVM_X86_OP(complete_emulated_msr)

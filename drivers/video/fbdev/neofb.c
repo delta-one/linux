@@ -2209,12 +2209,16 @@ static int __init neofb_init(void)
 {
 #ifndef MODULE
 	char *option = NULL;
+<<<<<<< HEAD
 #endif
 
 	if (fb_modesetting_disabled("neofb"))
 		return -ENODEV;
 
 #ifndef MODULE
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (fb_get_options("neofb", &option))
 		return -ENODEV;
 	neofb_setup(option);

@@ -270,7 +270,11 @@ static int at91wdt_remove(struct platform_device *pdev)
 	misc_deregister(&at91wdt_miscdev);
 	at91wdt_miscdev.parent = NULL;
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return res;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void at91wdt_shutdown(struct platform_device *pdev)
@@ -278,6 +282,11 @@ static void at91wdt_shutdown(struct platform_device *pdev)
 	at91_wdt_stop();
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM
+
+>>>>>>> b7ba80a49124 (Commit)
 static int at91wdt_suspend(struct platform_device *pdev, pm_message_t message)
 {
 	at91_wdt_stop();
@@ -291,6 +300,14 @@ static int at91wdt_resume(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#else
+#define at91wdt_suspend NULL
+#define at91wdt_resume	NULL
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id at91_wdt_dt_ids[] = {
 	{ .compatible = "atmel,at91rm9200-wdt" },
 	{ /* sentinel */ }
@@ -301,8 +318,13 @@ static struct platform_driver at91wdt_driver = {
 	.probe		= at91wdt_probe,
 	.remove		= at91wdt_remove,
 	.shutdown	= at91wdt_shutdown,
+<<<<<<< HEAD
 	.suspend	= pm_ptr(at91wdt_suspend),
 	.resume		= pm_ptr(at91wdt_resume),
+=======
+	.suspend	= at91wdt_suspend,
+	.resume		= at91wdt_resume,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "atmel_st_watchdog",
 		.of_match_table = at91_wdt_dt_ids,

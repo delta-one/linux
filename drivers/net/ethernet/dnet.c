@@ -550,11 +550,19 @@ static netdev_tx_t dnet_start_xmit(struct sk_buff *skb, struct net_device *dev)
 
 	skb_tx_timestamp(skb);
 
+<<<<<<< HEAD
 	spin_unlock_irqrestore(&bp->lock, flags);
 
 	/* free the buffer */
 	dev_kfree_skb(skb);
 
+=======
+	/* free the buffer */
+	dev_kfree_skb(skb);
+
+	spin_unlock_irqrestore(&bp->lock, flags);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return NETDEV_TX_OK;
 }
 
@@ -788,7 +796,11 @@ static int dnet_probe(struct platform_device *pdev)
 	}
 
 	dev->netdev_ops = &dnet_netdev_ops;
+<<<<<<< HEAD
 	netif_napi_add(dev, &bp->napi, dnet_poll);
+=======
+	netif_napi_add(dev, &bp->napi, dnet_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 	dev->ethtool_ops = &dnet_ethtool_ops;
 
 	dev->base_addr = (unsigned long)bp->regs;

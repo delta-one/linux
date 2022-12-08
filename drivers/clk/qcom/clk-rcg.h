@@ -167,7 +167,10 @@ struct clk_rcg2_gfx3d {
 
 extern const struct clk_ops clk_rcg2_ops;
 extern const struct clk_ops clk_rcg2_floor_ops;
+<<<<<<< HEAD
 extern const struct clk_ops clk_rcg2_mux_closest_ops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern const struct clk_ops clk_edp_pixel_ops;
 extern const struct clk_ops clk_byte_ops;
 extern const struct clk_ops clk_byte2_ops;

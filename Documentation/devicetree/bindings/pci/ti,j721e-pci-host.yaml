@@ -66,6 +66,7 @@ properties:
     const: 0x104c
 
   device-id:
+<<<<<<< HEAD
     enum:
       - 0xb00d
       - 0xb00f
@@ -94,6 +95,18 @@ properties:
       interrupts:
         maxItems: 1
 
+=======
+    oneOf:
+      - items:
+          - const: 0xb00d
+      - items:
+          - const: 0xb00f
+      - items:
+          - const: 0xb010
+
+  msi-map: true
+
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg

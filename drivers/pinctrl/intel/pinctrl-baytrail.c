@@ -637,18 +637,31 @@ static const char *byt_get_function_name(struct pinctrl_dev *pctldev,
 {
 	struct intel_pinctrl *vg = pinctrl_dev_get_drvdata(pctldev);
 
+<<<<<<< HEAD
 	return vg->soc->functions[selector].func.name;
+=======
+	return vg->soc->functions[selector].name;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int byt_get_function_groups(struct pinctrl_dev *pctldev,
 				   unsigned int selector,
 				   const char * const **groups,
+<<<<<<< HEAD
 				   unsigned int *ngroups)
 {
 	struct intel_pinctrl *vg = pinctrl_dev_get_drvdata(pctldev);
 
 	*groups		= vg->soc->functions[selector].func.groups;
 	*ngroups	= vg->soc->functions[selector].func.ngroups;
+=======
+				   unsigned int *num_groups)
+{
+	struct intel_pinctrl *vg = pinctrl_dev_get_drvdata(pctldev);
+
+	*groups		= vg->soc->functions[selector].groups;
+	*num_groups	= vg->soc->functions[selector].ngroups;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -722,7 +735,11 @@ static int byt_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
 
 	if (group.modes)
 		byt_set_group_mixed_mux(vg, group, group.modes);
+<<<<<<< HEAD
 	else if (!strcmp(func.func.name, "gpio"))
+=======
+	else if (!strcmp(func.name, "gpio"))
+>>>>>>> b7ba80a49124 (Commit)
 		byt_set_group_simple_mux(vg, group, BYT_DEFAULT_GPIO_MUX);
 	else
 		byt_set_group_simple_mux(vg, group, group.mode);

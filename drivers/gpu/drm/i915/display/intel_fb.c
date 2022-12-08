@@ -174,7 +174,11 @@ static const struct intel_modifier_desc intel_modifiers[] = {
 		.plane_caps = INTEL_PLANE_CAP_TILING_4 | INTEL_PLANE_CAP_CCS_RC,
 	}, {
 		.modifier = I915_FORMAT_MOD_4_TILED,
+<<<<<<< HEAD
 		.display_ver = { 13, -1 },
+=======
+		.display_ver = { 13, 13 },
+>>>>>>> b7ba80a49124 (Commit)
 		.plane_caps = INTEL_PLANE_CAP_TILING_4,
 	}, {
 		.modifier = I915_FORMAT_MOD_Y_TILED_GEN12_MC_CCS,
@@ -301,6 +305,7 @@ static bool plane_caps_contain_all(u8 caps, u8 mask)
 }
 
 /**
+<<<<<<< HEAD
  * intel_fb_is_tiled_modifier: Check if a modifier is a tiled modifier type
  * @modifier: Modifier to check
  *
@@ -314,6 +319,8 @@ bool intel_fb_is_tiled_modifier(u64 modifier)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * intel_fb_is_ccs_modifier: Check if a modifier is a CCS modifier type
  * @modifier: Modifier to check
  *
@@ -2007,7 +2014,10 @@ int intel_framebuffer_init(struct intel_framebuffer *intel_fb,
 
 		vm = intel_dpt_create(intel_fb);
 		if (IS_ERR(vm)) {
+<<<<<<< HEAD
 			drm_dbg_kms(&dev_priv->drm, "failed to create DPT\n");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			ret = PTR_ERR(vm);
 			goto err;
 		}
@@ -2018,14 +2028,21 @@ int intel_framebuffer_init(struct intel_framebuffer *intel_fb,
 	ret = drm_framebuffer_init(&dev_priv->drm, fb, &intel_fb_funcs);
 	if (ret) {
 		drm_err(&dev_priv->drm, "framebuffer init failed %d\n", ret);
+<<<<<<< HEAD
 		goto err_free_dpt;
+=======
+		goto err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
 
+<<<<<<< HEAD
 err_free_dpt:
 	if (intel_fb_uses_dpt(fb))
 		intel_dpt_destroy(intel_fb->dpt_vm);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err:
 	intel_frontbuffer_put(intel_fb->frontbuffer);
 	return ret;
@@ -2050,7 +2067,10 @@ intel_user_framebuffer_create(struct drm_device *dev,
 	if (HAS_LMEM(i915) && !i915_gem_object_can_migrate(obj, INTEL_REGION_LMEM_0)) {
 		/* object is "remote", not in local memory */
 		i915_gem_object_put(obj);
+<<<<<<< HEAD
 		drm_dbg_kms(&i915->drm, "framebuffer must reside in local memory\n");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return ERR_PTR(-EREMOTE);
 	}
 

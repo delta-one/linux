@@ -921,9 +921,15 @@ static const struct iio_trigger_ops bma180_trigger_ops = {
 	.reenable = bma180_trig_reen,
 };
 
+<<<<<<< HEAD
 static int bma180_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int bma180_probe(struct i2c_client *client,
+		const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = &client->dev;
 	struct bma180_data *data;
 	struct iio_dev *indio_dev;
@@ -1134,7 +1140,11 @@ static struct i2c_driver bma180_driver = {
 		.pm	= pm_sleep_ptr(&bma180_pm_ops),
 		.of_match_table = bma180_of_match,
 	},
+<<<<<<< HEAD
 	.probe_new	= bma180_probe,
+=======
+	.probe		= bma180_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= bma180_remove,
 	.id_table	= bma180_ids,
 };

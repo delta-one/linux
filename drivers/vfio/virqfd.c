@@ -12,12 +12,23 @@
 #include <linux/file.h>
 #include <linux/module.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include "vfio.h"
+=======
+
+#define DRIVER_VERSION  "0.1"
+#define DRIVER_AUTHOR   "Alex Williamson <alex.williamson@redhat.com>"
+#define DRIVER_DESC     "IRQFD support for VFIO bus drivers"
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct workqueue_struct *vfio_irqfd_cleanup_wq;
 static DEFINE_SPINLOCK(virqfd_lock);
 
+<<<<<<< HEAD
 int __init vfio_virqfd_init(void)
+=======
+static int __init vfio_virqfd_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	vfio_irqfd_cleanup_wq =
 		create_singlethread_workqueue("vfio-irqfd-cleanup");
@@ -27,7 +38,11 @@ int __init vfio_virqfd_init(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 void vfio_virqfd_exit(void)
+=======
+static void __exit vfio_virqfd_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	destroy_workqueue(vfio_irqfd_cleanup_wq);
 }
@@ -112,7 +127,11 @@ int vfio_virqfd_enable(void *opaque,
 	int ret = 0;
 	__poll_t events;
 
+<<<<<<< HEAD
 	virqfd = kzalloc(sizeof(*virqfd), GFP_KERNEL_ACCOUNT);
+=======
+	virqfd = kzalloc(sizeof(*virqfd), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!virqfd)
 		return -ENOMEM;
 
@@ -213,3 +232,14 @@ void vfio_virqfd_disable(struct virqfd **pvirqfd)
 	flush_workqueue(vfio_irqfd_cleanup_wq);
 }
 EXPORT_SYMBOL_GPL(vfio_virqfd_disable);
+<<<<<<< HEAD
+=======
+
+module_init(vfio_virqfd_init);
+module_exit(vfio_virqfd_exit);
+
+MODULE_VERSION(DRIVER_VERSION);
+MODULE_LICENSE("GPL v2");
+MODULE_AUTHOR(DRIVER_AUTHOR);
+MODULE_DESCRIPTION(DRIVER_DESC);
+>>>>>>> b7ba80a49124 (Commit)

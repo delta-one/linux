@@ -8,9 +8,15 @@
 
 / {
 	vddvario: regulator-vddvario {
+<<<<<<< HEAD
 		compatible = "regulator-fixed";
 		regulator-name = "vddvario";
 		regulator-always-on;
+=======
+		  compatible = "regulator-fixed";
+		  regulator-name = "vddvario";
+		  regulator-always-on;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	vdd33a: regulator-vdd33a {

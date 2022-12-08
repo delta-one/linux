@@ -8,6 +8,11 @@
 #ifndef _NFCMRVL_H_
 #define _NFCMRVL_H_
 
+<<<<<<< HEAD
+=======
+#include <linux/platform_data/nfcmrvl.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #include "fw_dnld.h"
 
 /* Define private flags: */
@@ -48,6 +53,7 @@ enum nfcmrvl_phy {
 	NFCMRVL_PHY_SPI		= 3,
 };
 
+<<<<<<< HEAD
 struct nfcmrvl_platform_data {
 	/*
 	 * Generic
@@ -76,6 +82,8 @@ struct nfcmrvl_platform_data {
 	unsigned int irq_polarity;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct nfcmrvl_private {
 
 	unsigned long flags;

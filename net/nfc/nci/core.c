@@ -24,7 +24,10 @@
 #include <linux/sched.h>
 #include <linux/bitops.h>
 #include <linux/skbuff.h>
+<<<<<<< HEAD
 #include <linux/kcov.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "../nfc.h"
 #include <net/nfc/nci.h>
@@ -543,7 +546,11 @@ static int nci_open_device(struct nci_dev *ndev)
 		skb_queue_purge(&ndev->tx_q);
 
 		ndev->ops->close(ndev);
+<<<<<<< HEAD
 		ndev->flags &= BIT(NCI_UNREG);
+=======
+		ndev->flags = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 done:
@@ -1473,7 +1480,10 @@ static void nci_tx_work(struct work_struct *work)
 		skb = skb_dequeue(&ndev->tx_q);
 		if (!skb)
 			return;
+<<<<<<< HEAD
 		kcov_remote_start_common(skb_get_kcov_handle(skb));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Check if data flow control is used */
 		if (atomic_read(&conn_info->credits_cnt) !=
@@ -1489,7 +1499,10 @@ static void nci_tx_work(struct work_struct *work)
 
 		mod_timer(&ndev->data_timer,
 			  jiffies + msecs_to_jiffies(NCI_DATA_TIMEOUT));
+<<<<<<< HEAD
 		kcov_remote_stop();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -1500,8 +1513,12 @@ static void nci_rx_work(struct work_struct *work)
 	struct nci_dev *ndev = container_of(work, struct nci_dev, rx_work);
 	struct sk_buff *skb;
 
+<<<<<<< HEAD
 	for (; (skb = skb_dequeue(&ndev->rx_q)); kcov_remote_stop()) {
 		kcov_remote_start_common(skb_get_kcov_handle(skb));
+=======
+	while ((skb = skb_dequeue(&ndev->rx_q))) {
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Send copy to sniffer */
 		nfc_send_to_raw_sock(ndev->nfc_dev, skb,
@@ -1555,7 +1572,10 @@ static void nci_cmd_work(struct work_struct *work)
 		if (!skb)
 			return;
 
+<<<<<<< HEAD
 		kcov_remote_start_common(skb_get_kcov_handle(skb));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		atomic_dec(&ndev->cmd_cnt);
 
 		pr_debug("NCI TX: MT=cmd, PBF=%d, GID=0x%x, OID=0x%x, plen=%d\n",
@@ -1568,7 +1588,10 @@ static void nci_cmd_work(struct work_struct *work)
 
 		mod_timer(&ndev->cmd_timer,
 			  jiffies + msecs_to_jiffies(NCI_CMD_TIMEOUT));
+<<<<<<< HEAD
 		kcov_remote_stop();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

@@ -1342,6 +1342,7 @@
 			pinctrl-names = "default";
 			pinctrl-0 = <&max77620_default>;
 
+<<<<<<< HEAD
 			fps {
 				#address-cells = <1>;
 				#size-cells = <0>;
@@ -1371,6 +1372,9 @@
 			};
 
 			max77620_default: pinmux {
+=======
+			max77620_default: pinmux@0 {
+>>>>>>> b7ba80a49124 (Commit)
 				gpio0 {
 					pins = "gpio0";
 					function = "gpio";
@@ -1411,6 +1415,37 @@
 				};
 			};
 
+<<<<<<< HEAD
+=======
+			hog-0 {
+				gpio-hog;
+				output-high;
+				gpios = <2 GPIO_ACTIVE_HIGH>,
+					<7 GPIO_ACTIVE_HIGH>;
+			};
+
+			fps {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				fps0 {
+					reg = <0>;
+					maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN0>;
+				};
+
+				fps1 {
+					reg = <1>;
+					maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN1>;
+					maxim,device-state-on-disabled-event = <MAX77620_FPS_INACTIVE_STATE_SLEEP>;
+				};
+
+				fps2 {
+					reg = <2>;
+					maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN0>;
+				};
+			};
+
+>>>>>>> b7ba80a49124 (Commit)
 			regulators {
 				in-ldo0-1-supply = <&max77620_sd2>;
 				in-ldo7-8-supply = <&max77620_sd2>;
@@ -1592,6 +1627,23 @@
 		#clock-cells = <0>;
 	};
 
+<<<<<<< HEAD
+=======
+	gpio-keys {
+		compatible = "gpio-keys";
+		status = "okay";
+
+		key-power {
+			debounce-interval = <30>;
+			gpios = <&gpio TEGRA_GPIO(X, 7) GPIO_ACTIVE_LOW>;
+			label = "Power";
+			linux,code = <KEY_POWER>;
+			wakeup-event-action = <EV_ACT_ASSERTED>;
+			wakeup-source;
+		};
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	cpus {
 		cpu@0 {
 			enable-method = "psci";
@@ -1616,6 +1668,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	gpio-keys {
 		compatible = "gpio-keys";
 		status = "okay";
@@ -1630,6 +1683,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	psci {
 		compatible = "arm,psci-1.0";
 		method = "smc";

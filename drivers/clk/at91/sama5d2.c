@@ -40,6 +40,7 @@ static const struct clk_pcr_layout sama5d2_pcr_layout = {
 static const struct {
 	char *n;
 	char *p;
+<<<<<<< HEAD
 	unsigned long flags;
 	u8 id;
 } sama5d2_systemck[] = {
@@ -48,6 +49,11 @@ static const struct {
 	 * to keep it enabled in case there is no Linux consumer for it.
 	 */
 	{ .n = "ddrck", .p = "masterck_div", .id = 2, .flags = CLK_IS_CRITICAL },
+=======
+	u8 id;
+} sama5d2_systemck[] = {
+	{ .n = "ddrck", .p = "masterck_div", .id = 2 },
+>>>>>>> b7ba80a49124 (Commit)
 	{ .n = "lcdck", .p = "masterck_div", .id = 3 },
 	{ .n = "uhpck", .p = "usbck",        .id = 6 },
 	{ .n = "udpck", .p = "usbck",        .id = 7 },
@@ -102,7 +108,10 @@ static const struct {
 
 static const struct {
 	char *n;
+<<<<<<< HEAD
 	unsigned long flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8 id;
 } sama5d2_periphck[] = {
 	{ .n = "dma0_clk",    .id = 6, },
@@ -110,11 +119,15 @@ static const struct {
 	{ .n = "aes_clk",     .id = 9, },
 	{ .n = "aesb_clk",    .id = 10, },
 	{ .n = "sha_clk",     .id = 12, },
+<<<<<<< HEAD
 	/*
 	 * mpddr_clk feeds DDR controller and is enabled by bootloader thus we
 	 * need to keep it enabled in case there is no Linux consumer for it.
 	 */
 	{ .n = "mpddr_clk",   .id = 13, .flags = CLK_IS_CRITICAL },
+=======
+	{ .n = "mpddr_clk",   .id = 13, },
+>>>>>>> b7ba80a49124 (Commit)
 	{ .n = "matrix0_clk", .id = 15, },
 	{ .n = "sdmmc0_hclk", .id = 31, },
 	{ .n = "sdmmc1_hclk", .id = 32, },
@@ -312,8 +325,12 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
 	for (i = 0; i < ARRAY_SIZE(sama5d2_systemck); i++) {
 		hw = at91_clk_register_system(regmap, sama5d2_systemck[i].n,
 					      sama5d2_systemck[i].p,
+<<<<<<< HEAD
 					      sama5d2_systemck[i].id,
 					      sama5d2_systemck[i].flags);
+=======
+					      sama5d2_systemck[i].id);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(hw))
 			goto err_free;
 
@@ -326,8 +343,12 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
 							 sama5d2_periphck[i].n,
 							 "masterck_div",
 							 sama5d2_periphck[i].id,
+<<<<<<< HEAD
 							 &range, INT_MIN,
 							 sama5d2_periphck[i].flags);
+=======
+							 &range, INT_MIN);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(hw))
 			goto err_free;
 
@@ -341,7 +362,11 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
 							 "h32mxck",
 							 sama5d2_periph32ck[i].id,
 							 &sama5d2_periph32ck[i].r,
+<<<<<<< HEAD
 							 INT_MIN, 0);
+=======
+							 INT_MIN);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(hw))
 			goto err_free;
 

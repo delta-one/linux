@@ -272,6 +272,7 @@ void __init collect_boot_cpu_data(void)
 		printk(KERN_INFO "capabilities 0x%lx\n",
 			boot_cpu_data.pdc.capabilities);
 
+<<<<<<< HEAD
 	if (pdc_model_sysmodel(OS_ID_HPUX, boot_cpu_data.pdc.sys_model_name) == PDC_OK)
 		pr_info("HP-UX model name: %s\n",
 			boot_cpu_data.pdc.sys_model_name);
@@ -281,6 +282,12 @@ void __init collect_boot_cpu_data(void)
 		serial_no[0])
 		pr_info("MPE/iX model name: %s\n", serial_no);
 
+=======
+	if (pdc_model_sysmodel(boot_cpu_data.pdc.sys_model_name) == PDC_OK)
+		printk(KERN_INFO "model %s\n",
+			boot_cpu_data.pdc.sys_model_name);
+
+>>>>>>> b7ba80a49124 (Commit)
 	dump_stack_set_arch_desc("%s", boot_cpu_data.pdc.sys_model_name);
 
 	boot_cpu_data.hversion =  boot_cpu_data.pdc.model.hversion;

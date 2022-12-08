@@ -13,12 +13,20 @@
  *
  * The following locks and mutexes are used by kmemleak:
  *
+<<<<<<< HEAD
  * - kmemleak_lock (raw_spinlock_t): protects the object_list as well as
  *   del_state modifications and accesses to the object_tree_root (or
  *   object_phys_tree_root). The object_list is the main list holding the
  *   metadata (struct kmemleak_object) for the allocated memory blocks.
  *   The object_tree_root and object_phys_tree_root are red
  *   black trees used to look-up metadata based on a pointer to the
+=======
+ * - kmemleak_lock (raw_spinlock_t): protects the object_list modifications and
+ *   accesses to the object_tree_root (or object_phys_tree_root). The
+ *   object_list is the main list holding the metadata (struct kmemleak_object)
+ *   for the allocated memory blocks. The object_tree_root and object_phys_tree_root
+ *   are red black trees used to look-up metadata based on a pointer to the
+>>>>>>> b7ba80a49124 (Commit)
  *   corresponding memory block. The object_phys_tree_root is for objects
  *   allocated with physical address. The kmemleak_object structures are
  *   added to the object_list and object_tree_root (or object_phys_tree_root)
@@ -80,7 +88,10 @@
 #include <linux/mutex.h>
 #include <linux/rcupdate.h>
 #include <linux/stacktrace.h>
+<<<<<<< HEAD
 #include <linux/stackdepot.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/cache.h>
 #include <linux/percpu.h>
 #include <linux/memblock.h>
@@ -149,7 +160,10 @@ struct kmemleak_object {
 	struct rcu_head rcu;		/* object_list lockless traversal */
 	/* object usage count; object freed when use_count == 0 */
 	atomic_t use_count;
+<<<<<<< HEAD
 	unsigned int del_state;		/* deletion state */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long pointer;
 	size_t size;
 	/* pass surplus references to this pointer */
@@ -162,7 +176,12 @@ struct kmemleak_object {
 	u32 checksum;
 	/* memory ranges to be scanned inside an object (empty for all) */
 	struct hlist_head area_list;
+<<<<<<< HEAD
 	depot_stack_handle_t trace_handle;
+=======
+	unsigned long trace[MAX_TRACE];
+	unsigned int trace_len;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long jiffies;		/* creation timestamp */
 	pid_t pid;			/* pid of the current task */
 	char comm[TASK_COMM_LEN];	/* executable name */
@@ -179,11 +198,14 @@ struct kmemleak_object {
 /* flag set for object allocated with physical address */
 #define OBJECT_PHYS		(1 << 4)
 
+<<<<<<< HEAD
 /* set when __remove_object() called */
 #define DELSTATE_REMOVED	(1 << 0)
 /* set to temporarily prevent deletion from object_list */
 #define DELSTATE_NO_DELETE	(1 << 1)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define HEX_PREFIX		"    "
 /* number of bytes to print per line; must be 16 or 32 */
 #define HEX_ROW_SIZE		16
@@ -353,6 +375,7 @@ static void print_unreferenced(struct seq_file *seq,
 			       struct kmemleak_object *object)
 {
 	int i;
+<<<<<<< HEAD
 	unsigned long *entries;
 	unsigned int nr_entries;
 	unsigned int msecs_age = jiffies_to_msecs(jiffies - object->jiffies);
@@ -369,6 +392,21 @@ static void print_unreferenced(struct seq_file *seq,
 	for (i = 0; i < nr_entries; i++) {
 		void *ptr = (void *)entries[i];
 		warn_or_seq_printf(seq, "    [<%pK>] %pS\n", ptr, ptr);
+=======
+	unsigned int msecs_age = jiffies_to_msecs(jiffies - object->jiffies);
+
+	warn_or_seq_printf(seq, "unreferenced object 0x%08lx (size %zu):\n",
+		   object->pointer, object->size);
+	warn_or_seq_printf(seq, "  comm \"%s\", pid %d, jiffies %lu (age %d.%03ds)\n",
+		   object->comm, object->pid, object->jiffies,
+		   msecs_age / 1000, msecs_age % 1000);
+	hex_dump_object(seq, object);
+	warn_or_seq_printf(seq, "  backtrace:\n");
+
+	for (i = 0; i < object->trace_len; i++) {
+		void *ptr = (void *)object->trace[i];
+		warn_or_seq_printf(seq, "    [<%p>] %pS\n", ptr, ptr);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -380,16 +418,26 @@ static void print_unreferenced(struct seq_file *seq,
 static void dump_object_info(struct kmemleak_object *object)
 {
 	pr_notice("Object 0x%08lx (size %zu):\n",
+<<<<<<< HEAD
 			object->pointer, object->size);
 	pr_notice("  comm \"%s\", pid %d, jiffies %lu\n",
 			object->comm, object->pid, object->jiffies);
+=======
+		  object->pointer, object->size);
+	pr_notice("  comm \"%s\", pid %d, jiffies %lu\n",
+		  object->comm, object->pid, object->jiffies);
+>>>>>>> b7ba80a49124 (Commit)
 	pr_notice("  min_count = %d\n", object->min_count);
 	pr_notice("  count = %d\n", object->count);
 	pr_notice("  flags = 0x%x\n", object->flags);
 	pr_notice("  checksum = %u\n", object->checksum);
 	pr_notice("  backtrace:\n");
+<<<<<<< HEAD
 	if (object->trace_handle)
 		stack_depot_print(object->trace_handle);
+=======
+	stack_trace_print(object->trace, object->trace_len, 4);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -578,9 +626,13 @@ static void __remove_object(struct kmemleak_object *object)
 	rb_erase(&object->rb_node, object->flags & OBJECT_PHYS ?
 				   &object_phys_tree_root :
 				   &object_tree_root);
+<<<<<<< HEAD
 	if (!(object->del_state & DELSTATE_NO_DELETE))
 		list_del_rcu(&object->object_list);
 	object->del_state |= DELSTATE_REMOVED;
+=======
+	list_del_rcu(&object->object_list);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -604,6 +656,7 @@ static struct kmemleak_object *find_and_remove_object(unsigned long ptr, int ali
 	return object;
 }
 
+<<<<<<< HEAD
 static noinline depot_stack_handle_t set_track_prepare(void)
 {
 	depot_stack_handle_t trace_handle;
@@ -616,6 +669,14 @@ static noinline depot_stack_handle_t set_track_prepare(void)
 	trace_handle = stack_depot_save(entries, nr_entries, GFP_NOWAIT);
 
 	return trace_handle;
+=======
+/*
+ * Save stack trace to the given array of MAX_TRACE size.
+ */
+static int __save_stack_trace(unsigned long *trace)
+{
+	return stack_trace_save(trace, MAX_TRACE, 2);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -652,7 +713,10 @@ static void __create_object(unsigned long ptr, size_t size,
 	object->count = 0;			/* white color initially */
 	object->jiffies = jiffies;
 	object->checksum = 0;
+<<<<<<< HEAD
 	object->del_state = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* task information */
 	if (in_hardirq()) {
@@ -673,7 +737,11 @@ static void __create_object(unsigned long ptr, size_t size,
 	}
 
 	/* kernel backtrace */
+<<<<<<< HEAD
 	object->trace_handle = set_track_prepare();
+=======
+	object->trace_len = __save_stack_trace(object->trace);
+>>>>>>> b7ba80a49124 (Commit)
 
 	raw_spin_lock_irqsave(&kmemleak_lock, flags);
 
@@ -712,6 +780,10 @@ static void __create_object(unsigned long ptr, size_t size,
 	rb_link_node(&object->rb_node, rb_parent, link);
 	rb_insert_color(&object->rb_node, is_phys ? &object_phys_tree_root :
 					  &object_tree_root);
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	list_add_tail_rcu(&object->object_list, &object_list);
 out:
 	raw_spin_unlock_irqrestore(&kmemleak_lock, flags);
@@ -1110,7 +1182,11 @@ void __ref kmemleak_update_trace(const void *ptr)
 	}
 
 	raw_spin_lock_irqsave(&object->lock, flags);
+<<<<<<< HEAD
 	object->trace_handle = set_track_prepare();
+=======
+	object->trace_len = __save_stack_trace(object->trace);
+>>>>>>> b7ba80a49124 (Commit)
 	raw_spin_unlock_irqrestore(&object->lock, flags);
 
 	put_object(object);
@@ -1480,6 +1556,7 @@ static void scan_gray_list(void)
 }
 
 /*
+<<<<<<< HEAD
  * Conditionally call resched() in an object iteration loop while making sure
  * that the given object won't go away without RCU read lock by performing a
  * get_object() if necessaary.
@@ -1509,6 +1586,8 @@ unlock_put:
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Scan data sections and all the referenced memory blocks allocated via the
  * kernel's standard allocators. This function must be called with the
  * scan_mutex held.
@@ -1519,12 +1598,22 @@ static void kmemleak_scan(void)
 	struct zone *zone;
 	int __maybe_unused i;
 	int new_leaks = 0;
+<<<<<<< HEAD
+=======
+	int loop1_cnt = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	jiffies_last_scan = jiffies;
 
 	/* prepare the kmemleak_object's */
 	rcu_read_lock();
 	list_for_each_entry_rcu(object, &object_list, object_list) {
+<<<<<<< HEAD
+=======
+		bool obj_pinned = false;
+
+		loop1_cnt++;
+>>>>>>> b7ba80a49124 (Commit)
 		raw_spin_lock_irq(&object->lock);
 #ifdef DEBUG
 		/*
@@ -1550,6 +1639,7 @@ static void kmemleak_scan(void)
 
 		/* reset the reference count (whiten the object) */
 		object->count = 0;
+<<<<<<< HEAD
 		if (color_gray(object) && get_object(object))
 			list_add_tail(&object->gray_list, &gray_list);
 
@@ -1557,6 +1647,34 @@ static void kmemleak_scan(void)
 
 		if (need_resched())
 			kmemleak_cond_resched(object);
+=======
+		if (color_gray(object) && get_object(object)) {
+			list_add_tail(&object->gray_list, &gray_list);
+			obj_pinned = true;
+		}
+
+		raw_spin_unlock_irq(&object->lock);
+
+		/*
+		 * Do a cond_resched() to avoid soft lockup every 64k objects.
+		 * Make sure a reference has been taken so that the object
+		 * won't go away without RCU read lock.
+		 */
+		if (!(loop1_cnt & 0xffff)) {
+			if (!obj_pinned && !get_object(object)) {
+				/* Try the next object instead */
+				loop1_cnt--;
+				continue;
+			}
+
+			rcu_read_unlock();
+			cond_resched();
+			rcu_read_lock();
+
+			if (!obj_pinned)
+				put_object(object);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	rcu_read_unlock();
 
@@ -1624,9 +1742,12 @@ static void kmemleak_scan(void)
 	 */
 	rcu_read_lock();
 	list_for_each_entry_rcu(object, &object_list, object_list) {
+<<<<<<< HEAD
 		if (need_resched())
 			kmemleak_cond_resched(object);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * This is racy but we can save the overhead of lock/unlock
 		 * calls. The missed objects, if any, should be caught in
@@ -1661,9 +1782,12 @@ static void kmemleak_scan(void)
 	 */
 	rcu_read_lock();
 	list_for_each_entry_rcu(object, &object_list, object_list) {
+<<<<<<< HEAD
 		if (need_resched())
 			kmemleak_cond_resched(object);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * This is racy but we can save the overhead of lock/unlock
 		 * calls. The missed objects, if any, should be caught in
@@ -2069,10 +2193,15 @@ static int __init kmemleak_boot_config(char *str)
 		return -EINVAL;
 	if (strcmp(str, "off") == 0)
 		kmemleak_disable();
+<<<<<<< HEAD
 	else if (strcmp(str, "on") == 0) {
 		kmemleak_skip_disable = 1;
 		stack_depot_request_early_init();
 	}
+=======
+	else if (strcmp(str, "on") == 0)
+		kmemleak_skip_disable = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		return -EINVAL;
 	return 0;

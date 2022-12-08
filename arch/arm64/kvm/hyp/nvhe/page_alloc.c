@@ -93,16 +93,22 @@ static inline struct hyp_page *node_to_page(struct list_head *node)
 static void __hyp_attach_page(struct hyp_pool *pool,
 			      struct hyp_page *p)
 {
+<<<<<<< HEAD
 	phys_addr_t phys = hyp_page_to_phys(p);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned short order = p->order;
 	struct hyp_page *buddy;
 
 	memset(hyp_page_to_virt(p), 0, PAGE_SIZE << p->order);
 
+<<<<<<< HEAD
 	/* Skip coalescing for 'external' pages being freed into the pool. */
 	if (phys < pool->range_start || phys >= pool->range_end)
 		goto insert;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Only the first struct hyp_page of a high-order page (otherwise known
 	 * as the 'head') should have p->order set. The non-head pages should
@@ -110,7 +116,11 @@ static void __hyp_attach_page(struct hyp_pool *pool,
 	 * after coalescing, so make sure to mark it HYP_NO_ORDER proactively.
 	 */
 	p->order = HYP_NO_ORDER;
+<<<<<<< HEAD
 	for (; (order + 1) <= pool->max_order; order++) {
+=======
+	for (; (order + 1) < pool->max_order; order++) {
+>>>>>>> b7ba80a49124 (Commit)
 		buddy = __find_buddy_avail(pool, p, order);
 		if (!buddy)
 			break;
@@ -121,7 +131,10 @@ static void __hyp_attach_page(struct hyp_pool *pool,
 		p = min(p, buddy);
 	}
 
+<<<<<<< HEAD
 insert:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Mark the new head, and insert it */
 	p->order = order;
 	page_add_to_list(p, &pool->free_area[order]);
@@ -150,6 +163,28 @@ static struct hyp_page *__hyp_extract_page(struct hyp_pool *pool,
 	return p;
 }
 
+<<<<<<< HEAD
+=======
+static inline void hyp_page_ref_inc(struct hyp_page *p)
+{
+	BUG_ON(p->refcount == USHRT_MAX);
+	p->refcount++;
+}
+
+static inline int hyp_page_ref_dec_and_test(struct hyp_page *p)
+{
+	BUG_ON(!p->refcount);
+	p->refcount--;
+	return (p->refcount == 0);
+}
+
+static inline void hyp_set_page_refcounted(struct hyp_page *p)
+{
+	BUG_ON(p->refcount);
+	p->refcount = 1;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void __hyp_put_page(struct hyp_pool *pool, struct hyp_page *p)
 {
 	if (hyp_page_ref_dec_and_test(p))
@@ -203,9 +238,15 @@ void *hyp_alloc_pages(struct hyp_pool *pool, unsigned short order)
 	hyp_spin_lock(&pool->lock);
 
 	/* Look for a high-enough-order page */
+<<<<<<< HEAD
 	while (i <= pool->max_order && list_empty(&pool->free_area[i]))
 		i++;
 	if (i > pool->max_order) {
+=======
+	while (i < pool->max_order && list_empty(&pool->free_area[i]))
+		i++;
+	if (i >= pool->max_order) {
+>>>>>>> b7ba80a49124 (Commit)
 		hyp_spin_unlock(&pool->lock);
 		return NULL;
 	}
@@ -228,16 +269,28 @@ int hyp_pool_init(struct hyp_pool *pool, u64 pfn, unsigned int nr_pages,
 	int i;
 
 	hyp_spin_lock_init(&pool->lock);
+<<<<<<< HEAD
 	pool->max_order = min(MAX_ORDER, get_order(nr_pages << PAGE_SHIFT));
 	for (i = 0; i <= pool->max_order; i++)
+=======
+	pool->max_order = min(MAX_ORDER, get_order((nr_pages + 1) << PAGE_SHIFT));
+	for (i = 0; i < pool->max_order; i++)
+>>>>>>> b7ba80a49124 (Commit)
 		INIT_LIST_HEAD(&pool->free_area[i]);
 	pool->range_start = phys;
 	pool->range_end = phys + (nr_pages << PAGE_SHIFT);
 
 	/* Init the vmemmap portion */
 	p = hyp_phys_to_page(phys);
+<<<<<<< HEAD
 	for (i = 0; i < nr_pages; i++)
 		hyp_set_page_refcounted(&p[i]);
+=======
+	for (i = 0; i < nr_pages; i++) {
+		p[i].order = 0;
+		hyp_set_page_refcounted(&p[i]);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Attach the unused pages to the buddy tree */
 	for (i = reserved_pages; i < nr_pages; i++)

@@ -365,7 +365,11 @@ xchk_dinode(
 	 * pagecache can't cache all the blocks in this file due to
 	 * overly large offsets, flag the inode for admin review.
 	 */
+<<<<<<< HEAD
 	if (isize > mp->m_super->s_maxbytes)
+=======
+	if (isize >= mp->m_super->s_maxbytes)
+>>>>>>> b7ba80a49124 (Commit)
 		xchk_ino_set_warning(sc, ino);
 
 	/* di_nblocks */

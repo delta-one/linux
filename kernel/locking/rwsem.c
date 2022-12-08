@@ -256,6 +256,7 @@ static inline bool rwsem_read_trylock(struct rw_semaphore *sem, long *cntp)
 static inline bool rwsem_write_trylock(struct rw_semaphore *sem)
 {
 	long tmp = RWSEM_UNLOCKED_VALUE;
+<<<<<<< HEAD
 
 	if (atomic_long_try_cmpxchg_acquire(&sem->count, &tmp, RWSEM_WRITER_LOCKED)) {
 		rwsem_set_owner(sem);
@@ -263,6 +264,18 @@ static inline bool rwsem_write_trylock(struct rw_semaphore *sem)
 	}
 
 	return false;
+=======
+	bool ret = false;
+
+	preempt_disable();
+	if (atomic_long_try_cmpxchg_acquire(&sem->count, &tmp, RWSEM_WRITER_LOCKED)) {
+		rwsem_set_owner(sem);
+		ret = true;
+	}
+
+	preempt_enable();
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -621,16 +634,29 @@ static inline bool rwsem_try_write_lock(struct rw_semaphore *sem,
 			 */
 			if (first->handoff_set && (waiter != first))
 				return false;
+<<<<<<< HEAD
+=======
+
+			/*
+			 * First waiter can inherit a previously set handoff
+			 * bit and spin on rwsem if lock acquisition fails.
+			 */
+			if (waiter == first)
+				waiter->handoff_set = true;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		new = count;
 
 		if (count & RWSEM_LOCK_MASK) {
+<<<<<<< HEAD
 			/*
 			 * A waiter (first or not) can set the handoff bit
 			 * if it is an RT task or wait in the wait queue
 			 * for too long.
 			 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			if (has_handoff || (!rt_task(waiter->task) &&
 					    !time_after(jiffies, waiter->timeout)))
 				return false;
@@ -646,12 +672,20 @@ static inline bool rwsem_try_write_lock(struct rw_semaphore *sem,
 	} while (!atomic_long_try_cmpxchg_acquire(&sem->count, &count, new));
 
 	/*
+<<<<<<< HEAD
 	 * We have either acquired the lock with handoff bit cleared or set
 	 * the handoff bit. Only the first waiter can have its handoff_set
 	 * set here to enable optimistic spinning in slowpath loop.
 	 */
 	if (new & RWSEM_FLAG_HANDOFF) {
 		first->handoff_set = true;
+=======
+	 * We have either acquired the lock with handoff bit cleared or
+	 * set the handoff bit.
+	 */
+	if (new & RWSEM_FLAG_HANDOFF) {
+		waiter->handoff_set = true;
+>>>>>>> b7ba80a49124 (Commit)
 		lockevent_inc(rwsem_wlock_handoff);
 		return false;
 	}
@@ -713,6 +747,10 @@ static inline bool rwsem_can_spin_on_owner(struct rw_semaphore *sem)
 		return false;
 	}
 
+<<<<<<< HEAD
+=======
+	preempt_disable();
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Disable preemption is equal to the RCU read-side crital section,
 	 * thus the task_strcut structure won't go away.
@@ -724,6 +762,10 @@ static inline bool rwsem_can_spin_on_owner(struct rw_semaphore *sem)
 	if ((flags & RWSEM_NONSPINNABLE) ||
 	    (owner && !(flags & RWSEM_READER_OWNED) && !owner_on_cpu(owner)))
 		ret = false;
+<<<<<<< HEAD
+=======
+	preempt_enable();
+>>>>>>> b7ba80a49124 (Commit)
 
 	lockevent_cond_inc(rwsem_opt_fail, !ret);
 	return ret;
@@ -823,6 +865,11 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
 	int loop = 0;
 	u64 rspin_threshold = 0;
 
+<<<<<<< HEAD
+=======
+	preempt_disable();
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* sem->wait_lock should not be held when doing optimistic spinning */
 	if (!osq_lock(&sem->osq))
 		goto done;
@@ -930,6 +977,10 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
 	}
 	osq_unlock(&sem->osq);
 done:
+<<<<<<< HEAD
+=======
+	preempt_enable();
+>>>>>>> b7ba80a49124 (Commit)
 	lockevent_cond_inc(rwsem_opt_fail, !taken);
 	return taken;
 }
@@ -1083,7 +1134,11 @@ queue:
 			/* Ordered by sem->wait_lock against rwsem_mark_wake(). */
 			break;
 		}
+<<<<<<< HEAD
 		schedule_preempt_disabled();
+=======
+		schedule();
+>>>>>>> b7ba80a49124 (Commit)
 		lockevent_inc(rwsem_sleep_reader);
 	}
 
@@ -1170,12 +1225,23 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
 		if (waiter.handoff_set) {
 			enum owner_state owner_state;
 
+<<<<<<< HEAD
 			owner_state = rwsem_spin_on_owner(sem);
+=======
+			preempt_disable();
+			owner_state = rwsem_spin_on_owner(sem);
+			preempt_enable();
+
+>>>>>>> b7ba80a49124 (Commit)
 			if (owner_state == OWNER_NULL)
 				goto trylock_again;
 		}
 
+<<<<<<< HEAD
 		schedule_preempt_disabled();
+=======
+		schedule();
+>>>>>>> b7ba80a49124 (Commit)
 		lockevent_inc(rwsem_sleep_writer);
 		set_current_state(state);
 trylock_again:
@@ -1242,6 +1308,7 @@ static struct rw_semaphore *rwsem_downgrade_wake(struct rw_semaphore *sem)
  */
 static inline int __down_read_common(struct rw_semaphore *sem, int state)
 {
+<<<<<<< HEAD
 	int ret = 0;
 	long count;
 
@@ -1256,6 +1323,16 @@ static inline int __down_read_common(struct rw_semaphore *sem, int state)
 out:
 	preempt_enable();
 	return ret;
+=======
+	long count;
+
+	if (!rwsem_read_trylock(sem, &count)) {
+		if (IS_ERR(rwsem_down_read_slowpath(sem, count, state)))
+			return -EINTR;
+		DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
+	}
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void __down_read(struct rw_semaphore *sem)
@@ -1275,23 +1352,36 @@ static inline int __down_read_killable(struct rw_semaphore *sem)
 
 static inline int __down_read_trylock(struct rw_semaphore *sem)
 {
+<<<<<<< HEAD
 	int ret = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	long tmp;
 
 	DEBUG_RWSEMS_WARN_ON(sem->magic != sem, sem);
 
+<<<<<<< HEAD
 	preempt_disable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tmp = atomic_long_read(&sem->count);
 	while (!(tmp & RWSEM_READ_FAILED_MASK)) {
 		if (atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
 						    tmp + RWSEM_READER_BIAS)) {
 			rwsem_set_reader_owned(sem);
+<<<<<<< HEAD
 			ret = 1;
 			break;
 		}
 	}
 	preempt_enable();
 	return ret;
+=======
+			return 1;
+		}
+	}
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1299,6 +1389,7 @@ static inline int __down_read_trylock(struct rw_semaphore *sem)
  */
 static inline int __down_write_common(struct rw_semaphore *sem, int state)
 {
+<<<<<<< HEAD
 	int ret = 0;
 
 	preempt_disable();
@@ -1308,6 +1399,14 @@ static inline int __down_write_common(struct rw_semaphore *sem, int state)
 	}
 	preempt_enable();
 	return ret;
+=======
+	if (unlikely(!rwsem_write_trylock(sem))) {
+		if (IS_ERR(rwsem_down_write_slowpath(sem, state)))
+			return -EINTR;
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void __down_write(struct rw_semaphore *sem)
@@ -1322,6 +1421,7 @@ static inline int __down_write_killable(struct rw_semaphore *sem)
 
 static inline int __down_write_trylock(struct rw_semaphore *sem)
 {
+<<<<<<< HEAD
 	int ret;
 
 	preempt_disable();
@@ -1330,6 +1430,10 @@ static inline int __down_write_trylock(struct rw_semaphore *sem)
 	preempt_enable();
 
 	return ret;
+=======
+	DEBUG_RWSEMS_WARN_ON(sem->magic != sem, sem);
+	return rwsem_write_trylock(sem);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1342,7 +1446,10 @@ static inline void __up_read(struct rw_semaphore *sem)
 	DEBUG_RWSEMS_WARN_ON(sem->magic != sem, sem);
 	DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
 
+<<<<<<< HEAD
 	preempt_disable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rwsem_clear_reader_owned(sem);
 	tmp = atomic_long_add_return_release(-RWSEM_READER_BIAS, &sem->count);
 	DEBUG_RWSEMS_WARN_ON(tmp < 0, sem);
@@ -1351,7 +1458,10 @@ static inline void __up_read(struct rw_semaphore *sem)
 		clear_nonspinnable(sem);
 		rwsem_wake(sem);
 	}
+<<<<<<< HEAD
 	preempt_enable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1372,9 +1482,15 @@ static inline void __up_write(struct rw_semaphore *sem)
 	preempt_disable();
 	rwsem_clear_owner(sem);
 	tmp = atomic_long_fetch_add_release(-RWSEM_WRITER_LOCKED, &sem->count);
+<<<<<<< HEAD
 	if (unlikely(tmp & RWSEM_FLAG_WAITERS))
 		rwsem_wake(sem);
 	preempt_enable();
+=======
+	preempt_enable();
+	if (unlikely(tmp & RWSEM_FLAG_WAITERS))
+		rwsem_wake(sem);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1392,13 +1508,19 @@ static inline void __downgrade_write(struct rw_semaphore *sem)
 	 * write side. As such, rely on RELEASE semantics.
 	 */
 	DEBUG_RWSEMS_WARN_ON(rwsem_owner(sem) != current, sem);
+<<<<<<< HEAD
 	preempt_disable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tmp = atomic_long_fetch_add_release(
 		-RWSEM_WRITER_LOCKED+RWSEM_READER_BIAS, &sem->count);
 	rwsem_set_reader_owned(sem);
 	if (tmp & RWSEM_FLAG_WAITERS)
 		rwsem_downgrade_wake(sem);
+<<<<<<< HEAD
 	preempt_enable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #else /* !CONFIG_PREEMPT_RT */
@@ -1673,12 +1795,15 @@ void down_read_non_owner(struct rw_semaphore *sem)
 {
 	might_sleep();
 	__down_read(sem);
+<<<<<<< HEAD
 	/*
 	 * The owner value for a reader-owned lock is mostly for debugging
 	 * purpose only and is not critical to the correct functioning of
 	 * rwsem. So it is perfectly fine to set it in a preempt-enabled
 	 * context here.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__rwsem_set_reader_owned(sem, NULL);
 }
 EXPORT_SYMBOL(down_read_non_owner);

@@ -18,6 +18,7 @@ typedef union {
 	};
 	pteval_t pte;
 } pte_t;
+<<<<<<< HEAD
 
 typedef union {
 	struct {
@@ -25,6 +26,8 @@ typedef union {
 	};
 	pmdval_t pmd;
 } pmd_t;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif	/* !__ASSEMBLY__ */
 
 #define SHARED_KERNEL_PMD	(!static_cpu_has(X86_FEATURE_PTI))

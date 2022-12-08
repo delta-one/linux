@@ -28,7 +28,10 @@
 
 	.arm
 	.align 3
+<<<<<<< HEAD
 	.arch armv7-a
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 ENTRY(ti_emif_sram)
 

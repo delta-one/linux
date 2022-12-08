@@ -235,8 +235,15 @@ send:
 	if (work->sess && work->sess->enc && work->encrypted &&
 	    conn->ops->encrypt_resp) {
 		rc = conn->ops->encrypt_resp(work);
+<<<<<<< HEAD
 		if (rc < 0)
 			conn->ops->set_rsp_status(work, STATUS_DATA_ERROR);
+=======
+		if (rc < 0) {
+			conn->ops->set_rsp_status(work, STATUS_DATA_ERROR);
+			goto send;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ksmbd_conn_write(work);
@@ -432,9 +439,17 @@ static ssize_t stats_show(struct class *class, struct class_attribute *attr,
 		"reset",
 		"shutdown"
 	};
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d %s %d %lu\n", stats_version,
 			  state[server_conf.state], server_conf.tcp_port,
 			  server_conf.ipc_last_active / HZ);
+=======
+
+	ssize_t sz = scnprintf(buf, PAGE_SIZE, "%d %s %d %lu\n", stats_version,
+			       state[server_conf.state], server_conf.tcp_port,
+			       server_conf.ipc_last_active / HZ);
+	return sz;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t kill_server_store(struct class *class,
@@ -466,6 +481,7 @@ static ssize_t debug_show(struct class *class, struct class_attribute *attr,
 
 	for (i = 0; i < ARRAY_SIZE(debug_type_strings); i++) {
 		if ((ksmbd_debug_types >> i) & 1) {
+<<<<<<< HEAD
 			pos = sysfs_emit_at(buf, sz, "[%s] ", debug_type_strings[i]);
 		} else {
 			pos = sysfs_emit_at(buf, sz, "%s ", debug_type_strings[i]);
@@ -473,6 +489,21 @@ static ssize_t debug_show(struct class *class, struct class_attribute *attr,
 		sz += pos;
 	}
 	sz += sysfs_emit_at(buf, sz, "\n");
+=======
+			pos = scnprintf(buf + sz,
+					PAGE_SIZE - sz,
+					"[%s] ",
+					debug_type_strings[i]);
+		} else {
+			pos = scnprintf(buf + sz,
+					PAGE_SIZE - sz,
+					"%s ",
+					debug_type_strings[i]);
+		}
+		sz += pos;
+	}
+	sz += scnprintf(buf + sz, PAGE_SIZE - sz, "\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return sz;
 }
 
@@ -516,6 +547,10 @@ ATTRIBUTE_GROUPS(ksmbd_control_class);
 
 static struct class ksmbd_control_class = {
 	.name		= "ksmbd-control",
+<<<<<<< HEAD
+=======
+	.owner		= THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.class_groups	= ksmbd_control_class_groups,
 };
 

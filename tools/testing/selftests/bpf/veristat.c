@@ -15,9 +15,12 @@
 #include <sys/sysinfo.h>
 #include <sys/stat.h>
 #include <bpf/libbpf.h>
+<<<<<<< HEAD
 #include <libelf.h>
 #include <gelf.h>
 #include <float.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum stat_id {
 	VERDICT,
@@ -35,6 +38,7 @@ enum stat_id {
 	NUM_STATS_CNT = FILE_NAME - VERDICT,
 };
 
+<<<<<<< HEAD
 /* In comparison mode each stat can specify up to four different values:
  *   - A side value;
  *   - B side value;
@@ -74,6 +78,8 @@ enum stat_variant {
 	VARIANT_PCT,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct verif_stats {
 	char *file_name;
 	char *prog_name;
@@ -81,6 +87,7 @@ struct verif_stats {
 	long stats[NUM_STATS_CNT];
 };
 
+<<<<<<< HEAD
 /* joined comparison mode stats */
 struct verif_stats_join {
 	char *file_name;
@@ -94,6 +101,11 @@ struct stat_specs {
 	int spec_cnt;
 	enum stat_id ids[ALL_STATS_CNT];
 	enum stat_variant variants[ALL_STATS_CNT];
+=======
+struct stat_specs {
+	int spec_cnt;
+	enum stat_id ids[ALL_STATS_CNT];
+>>>>>>> b7ba80a49124 (Commit)
 	bool asc[ALL_STATS_CNT];
 	int lens[ALL_STATS_CNT * 3]; /* 3x for comparison mode */
 };
@@ -104,6 +116,7 @@ enum resfmt {
 	RESFMT_CSV,
 };
 
+<<<<<<< HEAD
 enum filter_kind {
 	FILTER_NAME,
 	FILTER_STAT,
@@ -129,21 +142,32 @@ struct filter {
 	int stat_id;
 	enum stat_variant stat_var;
 	long value;
+=======
+struct filter {
+	char *file_glob;
+	char *prog_glob;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct env {
 	char **filenames;
 	int filename_cnt;
 	bool verbose;
+<<<<<<< HEAD
 	bool quiet;
 	int log_level;
 	enum resfmt out_fmt;
 	bool comparison_mode;
 	bool replay_mode;
+=======
+	enum resfmt out_fmt;
+	bool comparison_mode;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct verif_stats *prog_stats;
 	int prog_stat_cnt;
 
+<<<<<<< HEAD
 	/* baseline_stats is allocated and used only in comparison mode */
 	struct verif_stats *baseline_stats;
 	int baseline_stat_cnt;
@@ -151,6 +175,12 @@ static struct env {
 	struct verif_stats_join *join_stats;
 	int join_stat_cnt;
 
+=======
+	/* baseline_stats is allocated and used only in comparsion mode */
+	struct verif_stats *baseline_stats;
+	int baseline_stat_cnt;
+
+>>>>>>> b7ba80a49124 (Commit)
 	struct stat_specs output_spec;
 	struct stat_specs sort_spec;
 
@@ -158,11 +188,14 @@ static struct env {
 	struct filter *deny_filters;
 	int allow_filter_cnt;
 	int deny_filter_cnt;
+<<<<<<< HEAD
 
 	int files_processed;
 	int files_skipped;
 	int progs_processed;
 	int progs_skipped;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } env;
 
 static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va_list args)
@@ -185,13 +218,19 @@ const char argp_program_doc[] =
 static const struct argp_option opts[] = {
 	{ NULL, 'h', NULL, OPTION_HIDDEN, "Show the full help" },
 	{ "verbose", 'v', NULL, 0, "Verbose mode" },
+<<<<<<< HEAD
 	{ "log-level", 'l', "LEVEL", 0, "Verifier log level (default 0 for normal mode, 1 for verbose mode)" },
 	{ "quiet", 'q', NULL, 0, "Quiet mode" },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ "emit", 'e', "SPEC", 0, "Specify stats to be emitted" },
 	{ "sort", 's', "SPEC", 0, "Specify sort order" },
 	{ "output-format", 'o', "FMT", 0, "Result output format (table, csv), default is table." },
 	{ "compare", 'C', NULL, 0, "Comparison mode" },
+<<<<<<< HEAD
 	{ "replay", 'R', NULL, 0, "Replay mode" },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ "filter", 'f', "FILTER", 0, "Filter expressions (or @filename for file with expressions)." },
 	{},
 };
@@ -212,9 +251,12 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 	case 'v':
 		env.verbose = true;
 		break;
+<<<<<<< HEAD
 	case 'q':
 		env.quiet = true;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case 'e':
 		err = parse_stats(arg, &env.output_spec);
 		if (err)
@@ -235,6 +277,7 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 			return -EINVAL;
 		}
 		break;
+<<<<<<< HEAD
 	case 'l':
 		errno = 0;
 		env.log_level = strtol(arg, NULL, 10);
@@ -249,6 +292,11 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 	case 'R':
 		env.replay_mode = true;
 		break;
+=======
+	case 'C':
+		env.comparison_mode = true;
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	case 'f':
 		if (arg[0] == '@')
 			err = append_filter_file(arg + 1);
@@ -306,6 +354,7 @@ static bool glob_matches(const char *str, const char *pat)
 	return !*str && !*pat;
 }
 
+<<<<<<< HEAD
 static bool is_bpf_obj_file(const char *path) {
 	Elf64_Ehdr *ehdr;
 	int fd, err = -EINVAL;
@@ -409,13 +458,72 @@ static struct {
 };
 
 static bool parse_stat_id_var(const char *name, size_t len, int *id, enum stat_variant *var);
+=======
+static bool should_process_file(const char *filename)
+{
+	int i;
+
+	if (env.deny_filter_cnt > 0) {
+		for (i = 0; i < env.deny_filter_cnt; i++) {
+			if (glob_matches(filename, env.deny_filters[i].file_glob))
+				return false;
+		}
+	}
+
+	if (env.allow_filter_cnt == 0)
+		return true;
+
+	for (i = 0; i < env.allow_filter_cnt; i++) {
+		if (glob_matches(filename, env.allow_filters[i].file_glob))
+			return true;
+	}
+
+	return false;
+}
+
+static bool should_process_prog(const char *filename, const char *prog_name)
+{
+	int i;
+
+	if (env.deny_filter_cnt > 0) {
+		for (i = 0; i < env.deny_filter_cnt; i++) {
+			if (glob_matches(filename, env.deny_filters[i].file_glob))
+				return false;
+			if (!env.deny_filters[i].prog_glob)
+				continue;
+			if (glob_matches(prog_name, env.deny_filters[i].prog_glob))
+				return false;
+		}
+	}
+
+	if (env.allow_filter_cnt == 0)
+		return true;
+
+	for (i = 0; i < env.allow_filter_cnt; i++) {
+		if (!glob_matches(filename, env.allow_filters[i].file_glob))
+			continue;
+		/* if filter specifies only filename glob part, it implicitly
+		 * allows all progs within that file
+		 */
+		if (!env.allow_filters[i].prog_glob)
+			return true;
+		if (glob_matches(prog_name, env.allow_filters[i].prog_glob))
+			return true;
+	}
+
+	return false;
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 static int append_filter(struct filter **filters, int *cnt, const char *str)
 {
 	struct filter *f;
 	void *tmp;
 	const char *p;
+<<<<<<< HEAD
 	int i;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	tmp = realloc(*filters, (*cnt + 1) * sizeof(**filters));
 	if (!tmp)
@@ -423,6 +531,7 @@ static int append_filter(struct filter **filters, int *cnt, const char *str)
 	*filters = tmp;
 
 	f = &(*filters)[*cnt];
+<<<<<<< HEAD
 	memset(f, 0, sizeof(*f));
 
 	/* First, let's check if it's a stats filter of the following form:
@@ -525,6 +634,28 @@ static int append_filter(struct filter **filters, int *cnt, const char *str)
 	}
 
 	*cnt += 1;
+=======
+	f->file_glob = f->prog_glob = NULL;
+
+	/* filter can be specified either as "<obj-glob>" or "<obj-glob>/<prog-glob>" */
+	p = strchr(str, '/');
+	if (!p) {
+		f->file_glob = strdup(str);
+		if (!f->file_glob)
+			return -ENOMEM;
+	} else {
+		f->file_glob = strndup(str, p - str);
+		f->prog_glob = strdup(p + 1);
+		if (!f->file_glob || !f->prog_glob) {
+			free(f->file_glob);
+			free(f->prog_glob);
+			f->file_glob = f->prog_glob = NULL;
+			return -ENOMEM;
+		}
+	}
+
+	*cnt = *cnt + 1;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -537,7 +668,11 @@ static int append_filter_file(const char *path)
 	f = fopen(path, "r");
 	if (!f) {
 		err = -errno;
+<<<<<<< HEAD
 		fprintf(stderr, "Failed to open filters in '%s': %d\n", path, err);
+=======
+		fprintf(stderr, "Failed to open '%s': %d\n", path, err);
+>>>>>>> b7ba80a49124 (Commit)
 		return err;
 	}
 
@@ -567,6 +702,7 @@ static const struct stat_specs default_output_spec = {
 	},
 };
 
+<<<<<<< HEAD
 static const struct stat_specs default_csv_output_spec = {
 	.spec_cnt = 9,
 	.ids = {
@@ -576,6 +712,8 @@ static const struct stat_specs default_csv_output_spec = {
 	},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct stat_specs default_sort_spec = {
 	.spec_cnt = 2,
 	.ids = {
@@ -584,6 +722,7 @@ static const struct stat_specs default_sort_spec = {
 	.asc = { true, true, },
 };
 
+<<<<<<< HEAD
 /* sorting for comparison mode to join two data sets */
 static const struct stat_specs join_sort_spec = {
 	.spec_cnt = 2,
@@ -593,10 +732,13 @@ static const struct stat_specs join_sort_spec = {
 	.asc = { true, true, },
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct stat_def {
 	const char *header;
 	const char *names[4];
 	bool asc_by_default;
+<<<<<<< HEAD
 	bool left_aligned;
 } stat_defs[] = {
 	[FILE_NAME] = { "File", {"file_name", "filename", "file"}, true /* asc */, true /* left */ },
@@ -605,11 +747,21 @@ static struct stat_def {
 	[DURATION] = { "Duration (us)", {"duration", "dur"}, },
 	[TOTAL_INSNS] = { "Insns", {"total_insns", "insns"}, },
 	[TOTAL_STATES] = { "States", {"total_states", "states"}, },
+=======
+} stat_defs[] = {
+	[FILE_NAME] = { "File", {"file_name", "filename", "file"}, true /* asc */ },
+	[PROG_NAME] = { "Program", {"prog_name", "progname", "prog"}, true /* asc */ },
+	[VERDICT] = { "Verdict", {"verdict"}, true /* asc: failure, success */ },
+	[DURATION] = { "Duration (us)", {"duration", "dur"}, },
+	[TOTAL_INSNS] = { "Total insns", {"total_insns", "insns"}, },
+	[TOTAL_STATES] = { "Total states", {"total_states", "states"}, },
+>>>>>>> b7ba80a49124 (Commit)
 	[PEAK_STATES] = { "Peak states", {"peak_states"}, },
 	[MAX_STATES_PER_INSN] = { "Max states per insn", {"max_states_per_insn"}, },
 	[MARK_READ_MAX_LEN] = { "Max mark read length", {"max_mark_read_len", "mark_read"}, },
 };
 
+<<<<<<< HEAD
 static bool parse_stat_id_var(const char *name, size_t len, int *id, enum stat_variant *var)
 {
 	static const char *var_sfxs[] = {
@@ -678,12 +830,18 @@ static int parse_stat(const char *stat_name, struct stat_specs *specs)
 	bool has_order = false, is_asc = false;
 	size_t len = strlen(stat_name);
 	enum stat_variant var;
+=======
+static int parse_stat(const char *stat_name, struct stat_specs *specs)
+{
+	int id, i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (specs->spec_cnt >= ARRAY_SIZE(specs->ids)) {
 		fprintf(stderr, "Can't specify more than %zd stats\n", ARRAY_SIZE(specs->ids));
 		return -E2BIG;
 	}
 
+<<<<<<< HEAD
 	if (len > 1 && (is_asc_sym(stat_name[len - 1]) || is_desc_sym(stat_name[len - 1]))) {
 		has_order = true;
 		is_asc = is_asc_sym(stat_name[len - 1]);
@@ -701,6 +859,25 @@ static int parse_stat(const char *stat_name, struct stat_specs *specs)
 	specs->spec_cnt++;
 
 	return 0;
+=======
+	for (id = 0; id < ARRAY_SIZE(stat_defs); id++) {
+		struct stat_def *def = &stat_defs[id];
+
+		for (i = 0; i < ARRAY_SIZE(stat_defs[id].names); i++) {
+			if (!def->names[i] || strcmp(def->names[i], stat_name) != 0)
+				continue;
+
+			specs->ids[specs->spec_cnt] = id;
+			specs->asc[specs->spec_cnt] = def->asc_by_default;
+			specs->spec_cnt++;
+
+			return 0;
+		}
+	}
+
+	fprintf(stderr, "Unrecognized stat name '%s'\n", stat_name);
+	return -ESRCH;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int parse_stats(const char *stats_str, struct stat_specs *specs)
@@ -737,6 +914,7 @@ static void free_verif_stats(struct verif_stats *stats, size_t stat_cnt)
 
 static char verif_log_buf[64 * 1024];
 
+<<<<<<< HEAD
 #define MAX_PARSED_LOG_LINES 100
 
 static int parse_verif_log(char * const buf, size_t buf_sz, struct verif_stats *s)
@@ -761,6 +939,21 @@ static int parse_verif_log(char * const buf, size_t buf_sz, struct verif_stats *
 		if (1 == sscanf(cur, "verification time %ld usec\n", &s->stats[DURATION]))
 			continue;
 		if (6 == sscanf(cur, "processed %ld insns (limit %*d) max_states_per_insn %ld total_states %ld peak_states %ld mark_read %ld",
+=======
+static int parse_verif_log(const char *buf, size_t buf_sz, struct verif_stats *s)
+{
+	const char *next;
+	int pos;
+
+	for (pos = 0; buf[0]; buf = next) {
+		if (buf[0] == '\n')
+			buf++;
+		next = strchrnul(&buf[pos], '\n');
+
+		if (1 == sscanf(buf, "verification time %ld usec\n", &s->stats[DURATION]))
+			continue;
+		if (6 == sscanf(buf, "processed %ld insns (limit %*d) max_states_per_insn %ld total_states %ld peak_states %ld mark_read %ld",
+>>>>>>> b7ba80a49124 (Commit)
 				&s->stats[TOTAL_INSNS],
 				&s->stats[MAX_STATES_PER_INSN],
 				&s->stats[TOTAL_STATES],
@@ -772,6 +965,7 @@ static int parse_verif_log(char * const buf, size_t buf_sz, struct verif_stats *
 	return 0;
 }
 
+<<<<<<< HEAD
 static void fixup_obj(struct bpf_object *obj)
 {
 	struct bpf_map *map;
@@ -794,6 +988,8 @@ static void fixup_obj(struct bpf_object *obj)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int process_prog(const char *filename, struct bpf_object *obj, struct bpf_program *prog)
 {
 	const char *prog_name = bpf_program__name(prog);
@@ -803,10 +999,15 @@ static int process_prog(const char *filename, struct bpf_object *obj, struct bpf
 	int err = 0;
 	void *tmp;
 
+<<<<<<< HEAD
 	if (!should_process_file_prog(basename(filename), bpf_program__name(prog))) {
 		env.progs_skipped++;
 		return 0;
 	}
+=======
+	if (!should_process_prog(basename(filename), bpf_program__name(prog)))
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	tmp = realloc(env.prog_stats, (env.prog_stat_cnt + 1) * sizeof(*env.prog_stats));
 	if (!tmp)
@@ -821,18 +1022,26 @@ static int process_prog(const char *filename, struct bpf_object *obj, struct bpf
 		if (!buf)
 			return -ENOMEM;
 		bpf_program__set_log_buf(prog, buf, buf_sz);
+<<<<<<< HEAD
 		bpf_program__set_log_level(prog, env.log_level | 4); /* stats + log */
+=======
+		bpf_program__set_log_level(prog, 1 | 4); /* stats + log */
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		bpf_program__set_log_buf(prog, buf, buf_sz);
 		bpf_program__set_log_level(prog, 4); /* only verifier stats */
 	}
 	verif_log_buf[0] = '\0';
 
+<<<<<<< HEAD
 	/* increase chances of successful BPF object loading */
 	fixup_obj(obj);
 
 	err = bpf_object__load(obj);
 	env.progs_processed++;
+=======
+	err = bpf_object__load(obj);
+>>>>>>> b7ba80a49124 (Commit)
 
 	stats->file_name = strdup(basename(filename));
 	stats->prog_name = strdup(bpf_program__name(prog));
@@ -859,6 +1068,7 @@ static int process_obj(const char *filename)
 	LIBBPF_OPTS(bpf_object_open_opts, opts);
 	int err = 0, prog_cnt = 0;
 
+<<<<<<< HEAD
 	if (!should_process_file_prog(basename(filename), NULL)) {
 		if (env.verbose)
 			printf("Skipping '%s' due to filters...\n", filename);
@@ -892,6 +1102,20 @@ static int process_obj(const char *filename)
 
 	env.files_processed++;
 
+=======
+	if (!should_process_file(basename(filename)))
+		return 0;
+
+	old_libbpf_print_fn = libbpf_set_print(libbpf_print_fn);
+
+	obj = bpf_object__open_file(filename, &opts);
+	if (!obj) {
+		err = -errno;
+		fprintf(stderr, "Failed to open '%s': %d\n", filename, err);
+		goto cleanup;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	bpf_object__for_each_program(prog, obj) {
 		prog_cnt++;
 	}
@@ -979,6 +1203,7 @@ static int cmp_prog_stats(const void *v1, const void *v2)
 			return cmp;
 	}
 
+<<<<<<< HEAD
 	/* always disambiguate with file+prog, which are unique */
 	cmp = strcmp(s1->file_name, s2->file_name);
 	if (cmp != 0)
@@ -1079,6 +1304,9 @@ static int cmp_join_stats(const void *v1, const void *v2)
 	if (cmp != 0)
 		return cmp;
 	return strcmp(s1->prog_name, s2->prog_name);
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define HEADER_CHAR '-'
@@ -1100,7 +1328,10 @@ static void output_header_underlines(void)
 
 static void output_headers(enum resfmt fmt)
 {
+<<<<<<< HEAD
 	const char *fmt_str;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i, len;
 
 	for (i = 0; i < env.output_spec.spec_cnt; i++) {
@@ -1114,8 +1345,12 @@ static void output_headers(enum resfmt fmt)
 				*max_len = len;
 			break;
 		case RESFMT_TABLE:
+<<<<<<< HEAD
 			fmt_str = stat_defs[id].left_aligned ? "%s%-*s" : "%s%*s";
 			printf(fmt_str, i == 0 ? "" : COLUMN_SEP,  *max_len, stat_defs[id].header);
+=======
+			printf("%s%-*s", i == 0 ? "" : COLUMN_SEP,  *max_len, stat_defs[id].header);
+>>>>>>> b7ba80a49124 (Commit)
 			if (i == env.output_spec.spec_cnt - 1)
 				printf("\n");
 			break;
@@ -1136,6 +1371,7 @@ static void prepare_value(const struct verif_stats *s, enum stat_id id,
 {
 	switch (id) {
 	case FILE_NAME:
+<<<<<<< HEAD
 		*str = s ? s->file_name : "N/A";
 		break;
 	case PROG_NAME:
@@ -1146,6 +1382,15 @@ static void prepare_value(const struct verif_stats *s, enum stat_id id,
 			*str = "N/A";
 		else
 			*str = s->stats[VERDICT] ? "success" : "failure";
+=======
+		*str = s->file_name;
+		break;
+	case PROG_NAME:
+		*str = s->prog_name;
+		break;
+	case VERDICT:
+		*str = s->stats[VERDICT] ? "success" : "failure";
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case DURATION:
 	case TOTAL_INSNS:
@@ -1153,7 +1398,11 @@ static void prepare_value(const struct verif_stats *s, enum stat_id id,
 	case PEAK_STATES:
 	case MAX_STATES_PER_INSN:
 	case MARK_READ_MAX_LEN:
+<<<<<<< HEAD
 		*val = s ? s->stats[id] : 0;
+=======
+		*val = s->stats[id];
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		fprintf(stderr, "Unrecognized stat #%d\n", id);
@@ -1203,11 +1452,55 @@ static void output_stats(const struct verif_stats *s, enum resfmt fmt, bool last
 
 	if (last && fmt == RESFMT_TABLE) {
 		output_header_underlines();
+<<<<<<< HEAD
 		printf("Done. Processed %d files, %d programs. Skipped %d files, %d programs.\n",
 		       env.files_processed, env.files_skipped, env.progs_processed, env.progs_skipped);
 	}
 }
 
+=======
+		printf("Done. Processed %d object files, %d programs.\n",
+		       env.filename_cnt, env.prog_stat_cnt);
+	}
+}
+
+static int handle_verif_mode(void)
+{
+	int i, err;
+
+	if (env.filename_cnt == 0) {
+		fprintf(stderr, "Please provide path to BPF object file!\n");
+		argp_help(&argp, stderr, ARGP_HELP_USAGE, "veristat");
+		return -EINVAL;
+	}
+
+	for (i = 0; i < env.filename_cnt; i++) {
+		err = process_obj(env.filenames[i]);
+		if (err) {
+			fprintf(stderr, "Failed to process '%s': %d\n", env.filenames[i], err);
+			return err;
+		}
+	}
+
+	qsort(env.prog_stats, env.prog_stat_cnt, sizeof(*env.prog_stats), cmp_prog_stats);
+
+	if (env.out_fmt == RESFMT_TABLE) {
+		/* calculate column widths */
+		output_headers(RESFMT_TABLE_CALCLEN);
+		for (i = 0; i < env.prog_stat_cnt; i++)
+			output_stats(&env.prog_stats[i], RESFMT_TABLE_CALCLEN, false);
+	}
+
+	/* actually output the table */
+	output_headers(env.out_fmt);
+	for (i = 0; i < env.prog_stat_cnt; i++) {
+		output_stats(&env.prog_stats[i], env.out_fmt, i == env.prog_stat_cnt - 1);
+	}
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int parse_stat_value(const char *str, enum stat_id id, struct verif_stats *st)
 {
 	switch (id) {
@@ -1339,7 +1632,11 @@ static int parse_stats_csv(const char *filename, struct stat_specs *specs,
 		 * parsed entire line; if row should be ignored we pretend we
 		 * never parsed it
 		 */
+<<<<<<< HEAD
 		if (!should_process_file_prog(st->file_name, st->prog_name)) {
+=======
+		if (!should_process_prog(st->file_name, st->prog_name)) {
+>>>>>>> b7ba80a49124 (Commit)
 			free(st->file_name);
 			free(st->prog_name);
 			*stat_cntp -= 1;
@@ -1428,11 +1725,17 @@ static void output_comp_headers(enum resfmt fmt)
 		output_comp_header_underlines();
 }
 
+<<<<<<< HEAD
 static void output_comp_stats(const struct verif_stats_join *join_stats,
 			      enum resfmt fmt, bool last)
 {
 	const struct verif_stats *base = join_stats->stats_a;
 	const struct verif_stats *comp = join_stats->stats_b;
+=======
+static void output_comp_stats(const struct verif_stats *base, const struct verif_stats *comp,
+			      enum resfmt fmt, bool last)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	char base_buf[1024] = {}, comp_buf[1024] = {}, diff_buf[1024] = {};
 	int i;
 
@@ -1450,20 +1753,29 @@ static void output_comp_stats(const struct verif_stats_join *join_stats,
 		/* normalize all the outputs to be in string buffers for simplicity */
 		if (is_key_stat(id)) {
 			/* key stats (file and program name) are always strings */
+<<<<<<< HEAD
 			if (base)
+=======
+			if (base != &fallback_stats)
+>>>>>>> b7ba80a49124 (Commit)
 				snprintf(base_buf, sizeof(base_buf), "%s", base_str);
 			else
 				snprintf(base_buf, sizeof(base_buf), "%s", comp_str);
 		} else if (base_str) {
 			snprintf(base_buf, sizeof(base_buf), "%s", base_str);
 			snprintf(comp_buf, sizeof(comp_buf), "%s", comp_str);
+<<<<<<< HEAD
 			if (!base || !comp)
 				snprintf(diff_buf, sizeof(diff_buf), "%s", "N/A");
 			else if (strcmp(base_str, comp_str) == 0)
+=======
+			if (strcmp(base_str, comp_str) == 0)
+>>>>>>> b7ba80a49124 (Commit)
 				snprintf(diff_buf, sizeof(diff_buf), "%s", "MATCH");
 			else
 				snprintf(diff_buf, sizeof(diff_buf), "%s", "MISMATCH");
 		} else {
+<<<<<<< HEAD
 			double p = 0.0;
 
 			if (base)
@@ -1488,6 +1800,18 @@ static void output_comp_stats(const struct verif_stats_join *join_stats,
 					 p = diff_val * 100.0 / base_val;
 				}
 				snprintf(diff_buf, sizeof(diff_buf), "%+ld (%+.2lf%%)", diff_val, p);
+=======
+			snprintf(base_buf, sizeof(base_buf), "%ld", base_val);
+			snprintf(comp_buf, sizeof(comp_buf), "%ld", comp_val);
+
+			diff_val = comp_val - base_val;
+			if (base == &fallback_stats || comp == &fallback_stats || base_val == 0) {
+				snprintf(diff_buf, sizeof(diff_buf), "%+ld (%+.2lf%%)",
+					 diff_val, comp_val < base_val ? -100.0 : 100.0);
+			} else {
+				snprintf(diff_buf, sizeof(diff_buf), "%+ld (%+.2lf%%)",
+					 diff_val, diff_val * 100.0 / base_val);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 
@@ -1544,6 +1868,7 @@ static int cmp_stats_key(const struct verif_stats *base, const struct verif_stat
 	return strcmp(base->prog_name, comp->prog_name);
 }
 
+<<<<<<< HEAD
 static bool is_join_stat_filter_matched(struct filter *f, const struct verif_stats_join *stats)
 {
 	static const double eps = 1e-9;
@@ -1602,6 +1927,16 @@ static int handle_comparison_mode(void)
 
 	if (env.filename_cnt != 2) {
 		fprintf(stderr, "Comparison mode expects exactly two input CSV files!\n\n");
+=======
+static int handle_comparison_mode(void)
+{
+	struct stat_specs base_specs = {}, comp_specs = {};
+	enum resfmt cur_fmt;
+	int err, i, j;
+
+	if (env.filename_cnt != 2) {
+		fprintf(stderr, "Comparison mode expects exactly two input CSV files!\n");
+>>>>>>> b7ba80a49124 (Commit)
 		argp_help(&argp, stderr, ARGP_HELP_USAGE, "veristat");
 		return -EINVAL;
 	}
@@ -1639,6 +1974,7 @@ static int handle_comparison_mode(void)
 		}
 	}
 
+<<<<<<< HEAD
 	/* Replace user-specified sorting spec with file+prog sorting rule to
 	 * be able to join two datasets correctly. Once we are done, we will
 	 * restore the original sort spec.
@@ -1659,6 +1995,33 @@ static int handle_comparison_mode(void)
 		const struct verif_stats *base, *comp;
 		struct verif_stats_join *join;
 		void *tmp;
+=======
+	qsort(env.prog_stats, env.prog_stat_cnt, sizeof(*env.prog_stats), cmp_prog_stats);
+	qsort(env.baseline_stats, env.baseline_stat_cnt, sizeof(*env.baseline_stats), cmp_prog_stats);
+
+	/* for human-readable table output we need to do extra pass to
+	 * calculate column widths, so we substitute current output format
+	 * with RESFMT_TABLE_CALCLEN and later revert it back to RESFMT_TABLE
+	 * and do everything again.
+	 */
+	if (env.out_fmt == RESFMT_TABLE)
+		cur_fmt = RESFMT_TABLE_CALCLEN;
+	else
+		cur_fmt = env.out_fmt;
+
+one_more_time:
+	output_comp_headers(cur_fmt);
+
+	/* If baseline and comparison datasets have different subset of rows
+	 * (we match by 'object + prog' as a unique key) then assume
+	 * empty/missing/zero value for rows that are missing in the opposite
+	 * data set
+	 */
+	i = j = 0;
+	while (i < env.baseline_stat_cnt || j < env.prog_stat_cnt) {
+		bool last = (i == env.baseline_stat_cnt - 1) || (j == env.prog_stat_cnt - 1);
+		const struct verif_stats *base, *comp;
+>>>>>>> b7ba80a49124 (Commit)
 		int r;
 
 		base = i < env.baseline_stat_cnt ? &env.baseline_stats[i] : &fallback_stats;
@@ -1675,6 +2038,7 @@ static int handle_comparison_mode(void)
 			return -EINVAL;
 		}
 
+<<<<<<< HEAD
 		tmp = realloc(env.join_stats, (env.join_stat_cnt + 1) * sizeof(*env.join_stats));
 		if (!tmp)
 			return -ENOMEM;
@@ -1733,6 +2097,20 @@ one_more_time:
 			last_idx = i;
 
 		output_comp_stats(join, cur_fmt, i == last_idx);
+=======
+		r = cmp_stats_key(base, comp);
+		if (r == 0) {
+			output_comp_stats(base, comp, cur_fmt, last);
+			i++;
+			j++;
+		} else if (comp == &fallback_stats || r < 0) {
+			output_comp_stats(base, &fallback_stats, cur_fmt, last);
+			i++;
+		} else {
+			output_comp_stats(&fallback_stats, comp, cur_fmt, last);
+			j++;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (cur_fmt == RESFMT_TABLE_CALCLEN) {
@@ -1743,6 +2121,7 @@ one_more_time:
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool is_stat_filter_matched(struct filter *f, const struct verif_stats *stats)
 {
 	long value = stats->stats[f->stat_id];
@@ -1865,6 +2244,8 @@ static int handle_replay_mode(void)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int main(int argc, char **argv)
 {
 	int err = 0, i;
@@ -1872,6 +2253,7 @@ int main(int argc, char **argv)
 	if (argp_parse(&argp, argc, argv, 0, NULL, NULL))
 		return 1;
 
+<<<<<<< HEAD
 	if (env.verbose && env.quiet) {
 		fprintf(stderr, "Verbose and quiet modes are incompatible, please specify just one or neither!\n\n");
 		argp_help(&argp, stderr, ARGP_HELP_USAGE, "veristat");
@@ -1899,23 +2281,41 @@ int main(int argc, char **argv)
 		err = handle_comparison_mode();
 	else if (env.replay_mode)
 		err = handle_replay_mode();
+=======
+	if (env.output_spec.spec_cnt == 0)
+		env.output_spec = default_output_spec;
+	if (env.sort_spec.spec_cnt == 0)
+		env.sort_spec = default_sort_spec;
+
+	if (env.comparison_mode)
+		err = handle_comparison_mode();
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		err = handle_verif_mode();
 
 	free_verif_stats(env.prog_stats, env.prog_stat_cnt);
 	free_verif_stats(env.baseline_stats, env.baseline_stat_cnt);
+<<<<<<< HEAD
 	free(env.join_stats);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < env.filename_cnt; i++)
 		free(env.filenames[i]);
 	free(env.filenames);
 	for (i = 0; i < env.allow_filter_cnt; i++) {
+<<<<<<< HEAD
 		free(env.allow_filters[i].any_glob);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		free(env.allow_filters[i].file_glob);
 		free(env.allow_filters[i].prog_glob);
 	}
 	free(env.allow_filters);
 	for (i = 0; i < env.deny_filter_cnt; i++) {
+<<<<<<< HEAD
 		free(env.deny_filters[i].any_glob);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		free(env.deny_filters[i].file_glob);
 		free(env.deny_filters[i].prog_glob);
 	}

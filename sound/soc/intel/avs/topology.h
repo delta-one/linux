@@ -138,8 +138,11 @@ struct avs_tplg_path_template_id {
 struct avs_tplg_path_template {
 	u32 id;
 
+<<<<<<< HEAD
 	struct snd_soc_dapm_widget *w;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head path_list;
 
 	struct avs_tplg *owner;
@@ -182,7 +185,10 @@ struct avs_tplg_module {
 	u8 core_id;
 	u8 domain;
 	struct avs_tplg_modcfg_ext *cfg_ext;
+<<<<<<< HEAD
 	u32 ctl_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct avs_tplg_pipeline *owner;
 	/* Pipeline modules management. */

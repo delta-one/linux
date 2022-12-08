@@ -13,13 +13,19 @@
 #include "pmk8350.dtsi"
 
 #include "sc7280-chrome-common.dtsi"
+<<<<<<< HEAD
 #include "sc7280-herobrine-lte-sku.dtsi"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	aliases {
 		bluetooth0 = &bluetooth;
 		serial1 = &uart7;
+<<<<<<< HEAD
 		wifi0 = &wifi;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	max98360a: audio-codec-0 {
@@ -36,7 +42,11 @@
 		pinctrl-0 = <&wcd_reset_n>;
 		pinctrl-1 = <&wcd_reset_n_sleep>;
 
+<<<<<<< HEAD
 		reset-gpios = <&tlmm 83 GPIO_ACTIVE_LOW>;
+=======
+		reset-gpios = <&tlmm 83 GPIO_ACTIVE_HIGH>;
+>>>>>>> b7ba80a49124 (Commit)
 
 		qcom,rx-device = <&wcd_rx>;
 		qcom,tx-device = <&wcd_tx>;
@@ -70,7 +80,11 @@
 			gpios = <&pm7325_gpios 6 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
 			linux,code = <KEY_VOLUMEUP>;
+<<<<<<< HEAD
 			wakeup-source;
+=======
+			gpio-key,wakeup;
+>>>>>>> b7ba80a49124 (Commit)
 			debounce-interval = <15>;
 			linux,can-disable;
 		};
@@ -113,8 +127,17 @@
 			"TX SWR_DMIC6", "DMIC7_OUTPUT",
 			"TX SWR_DMIC7", "DMIC8_OUTPUT";
 
+<<<<<<< HEAD
 		#address-cells = <1>;
 		#size-cells = <0>;
+=======
+		qcom,msm-mbhc-hphl-swh = <1>;
+		qcom,msm-mbhc-gnd-swh = <1>;
+
+		#address-cells = <1>;
+		#size-cells = <0>;
+		#sound-dai-cells = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 
 		dai-link@0 {
 			link-name = "MAX98360A";
@@ -373,6 +396,14 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
+=======
+&ipa {
+	status = "okay";
+	modem-init;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &lpass_cpu {
 	status = "okay";
 
@@ -515,12 +546,15 @@
 	vdda-pll-supply = <&vreg_l10c_0p8>;
 	vdda33-supply = <&vreg_l2b_3p0>;
 	vdda18-supply = <&vreg_l1c_1p8>;
+<<<<<<< HEAD
 	qcom,hs-rise-fall-time-bp = <0>;
 	qcom,squelch-detector-bp = <(-2090)>;
 	qcom,hs-disconnect-bp = <1743>;
 	qcom,hs-amplitude-bp = <1780>;
 	qcom,hs-crossover-voltage-microvolt = <(-31000)>;
 	qcom,hs-output-impedance-micro-ohms = <2600000>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &usb_1_qmpphy {
@@ -568,6 +602,13 @@
 	bias-disable;
 };
 
+<<<<<<< HEAD
+=======
+&lpass_dmic01_clk_sleep {
+	drive-strength = <2>;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &lpass_dmic01_data {
 	bias-pull-down;
 };
@@ -577,6 +618,13 @@
 	bias-disable;
 };
 
+<<<<<<< HEAD
+=======
+&lpass_dmic23_clk_sleep {
+	drive-strength = <2>;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &lpass_dmic23_data {
 	bias-pull-down;
 };
@@ -587,18 +635,39 @@
 	bias-disable;
 };
 
+<<<<<<< HEAD
+=======
+&lpass_rx_swr_clk_sleep {
+	bias-pull-down;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &lpass_rx_swr_data {
 	drive-strength = <2>;
 	slew-rate = <1>;
 	bias-bus-hold;
 };
 
+<<<<<<< HEAD
+=======
+&lpass_rx_swr_data_sleep {
+	bias-pull-down;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &lpass_tx_swr_clk {
 	drive-strength = <2>;
 	slew-rate = <1>;
 	bias-disable;
 };
 
+<<<<<<< HEAD
+=======
+&lpass_tx_swr_clk_sleep {
+	bias-pull-down;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &lpass_tx_swr_data {
 	drive-strength = <2>;
 	slew-rate = <1>;
@@ -726,25 +795,42 @@
 };
 
 &tlmm {
+<<<<<<< HEAD
 	amp_en: amp-en-state {
 		pins = "gpio63";
 		function = "gpio";
+=======
+	amp_en: amp-en {
+		pins = "gpio63";
+>>>>>>> b7ba80a49124 (Commit)
 		bias-pull-down;
 		drive-strength = <2>;
 	};
 
+<<<<<<< HEAD
 	bt_en: bt-en-state {
+=======
+	bt_en: bt-en-pins {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio85";
 		function = "gpio";
 		output-low;
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	nvme_pwren: nvme-pwren-state {
 		function = "gpio";
 	};
 
 	pcie1_reset_n: pcie1-reset-n-state {
+=======
+	nvme_pwren: nvme-pwren-pins {
+		function = "gpio";
+	};
+
+	pcie1_reset_n: pcie1-reset-n-pins {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio2";
 		function = "gpio";
 
@@ -753,7 +839,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	pcie1_wake_n: pcie1-wake-n-state {
+=======
+	pcie1_wake_n: pcie1-wake-n-pins {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio3";
 		function = "gpio";
 
@@ -761,7 +851,11 @@
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	qup_uart7_sleep_cts: qup-uart7-sleep-cts-state {
+=======
+	qup_uart7_sleep_cts: qup-uart7-sleep-cts-pins {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio28";
 		function = "gpio";
 		/*
@@ -774,7 +868,11 @@
 		bias-bus-hold;
 	};
 
+<<<<<<< HEAD
 	qup_uart7_sleep_rts: qup-uart7-sleep-rts-state {
+=======
+	qup_uart7_sleep_rts: qup-uart7-sleep-rts-pins {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio29";
 		function = "gpio";
 		/*
@@ -786,7 +884,11 @@
 		bias-pull-down;
 	};
 
+<<<<<<< HEAD
 	qup_uart7_sleep_tx: qup-uart7-sleep-tx-state {
+=======
+	qup_uart7_sleep_tx: qup-uart7-sleep-tx-pins {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio30";
 		function = "gpio";
 		/*
@@ -796,7 +898,11 @@
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	qup_uart7_sleep_rx: qup-uart7-sleep-rx-state {
+=======
+	qup_uart7_sleep_rx: qup-uart7-sleep-rx-pins {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio31";
 		function = "gpio";
 		/*
@@ -807,25 +913,41 @@
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	sd_cd: sd-cd-state {
+=======
+	sd_cd: sd-cd-pins {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio91";
 		function = "gpio";
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	sw_ctrl: sw-ctrl-state {
+=======
+	sw_ctrl: sw-ctrl-pins {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio86";
 		function = "gpio";
 		bias-pull-down;
 	};
 
+<<<<<<< HEAD
 	wcd_reset_n: wcd-reset-n-state {
+=======
+	wcd_reset_n: wcd-reset-n {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio83";
 		function = "gpio";
 		drive-strength = <8>;
 	};
 
+<<<<<<< HEAD
 	wcd_reset_n_sleep: wcd-reset-n-sleep-state {
+=======
+	wcd_reset_n_sleep: wcd-reset-n-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio83";
 		function = "gpio";
 		drive-strength = <8>;

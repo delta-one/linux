@@ -56,6 +56,7 @@ static const struct snd_soc_acpi_adr_device rt711_sdca_0_adr[] = {
 	}
 };
 
+<<<<<<< HEAD
 static const struct snd_soc_acpi_adr_device rt711_sdca_2_adr[] = {
 	{
 		.adr = 0x000230025D071101ull,
@@ -65,6 +66,8 @@ static const struct snd_soc_acpi_adr_device rt711_sdca_2_adr[] = {
 	}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_soc_acpi_adr_device rt1316_1_group1_adr[] = {
 	{
 		.adr = 0x000131025D131601ull, /* unique ID is set for some reason */
@@ -74,6 +77,7 @@ static const struct snd_soc_acpi_adr_device rt1316_1_group1_adr[] = {
 	}
 };
 
+<<<<<<< HEAD
 static const struct snd_soc_acpi_adr_device rt1316_2_group1_adr[] = {
 	{
 		.adr = 0x000230025D131601ull,
@@ -83,6 +87,8 @@ static const struct snd_soc_acpi_adr_device rt1316_2_group1_adr[] = {
 	}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_soc_acpi_adr_device rt1316_3_group1_adr[] = {
 	{
 		.adr = 0x000330025D131601ull,
@@ -92,6 +98,7 @@ static const struct snd_soc_acpi_adr_device rt1316_3_group1_adr[] = {
 	}
 };
 
+<<<<<<< HEAD
 static const struct snd_soc_acpi_adr_device rt1316_0_group2_adr[] = {
 	{
 		.adr = 0x000030025D131601ull,
@@ -137,6 +144,8 @@ static const struct snd_soc_acpi_adr_device rt714_0_adr[] = {
 	}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_soc_acpi_adr_device rt714_2_adr[] = {
 	{
 		.adr = 0x000230025D071401ull,
@@ -146,6 +155,7 @@ static const struct snd_soc_acpi_adr_device rt714_2_adr[] = {
 	}
 };
 
+<<<<<<< HEAD
 static const struct snd_soc_acpi_adr_device rt714_3_adr[] = {
 	{
 		.adr = 0x000330025D071401ull,
@@ -155,6 +165,8 @@ static const struct snd_soc_acpi_adr_device rt714_3_adr[] = {
 	}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_soc_acpi_link_adr rpl_sdca_3_in_1[] = {
 	{
 		.mask = BIT(0),
@@ -179,6 +191,7 @@ static const struct snd_soc_acpi_link_adr rpl_sdca_3_in_1[] = {
 	{}
 };
 
+<<<<<<< HEAD
 static const struct snd_soc_acpi_link_adr rpl_sdw_rt711_link2_rt1316_link01_rt714_link3[] = {
 	{
 		.mask = BIT(2),
@@ -284,6 +297,8 @@ static const struct snd_soc_acpi_link_adr rpl_sdw_rt1316_link12_rt714_link0[] = 
 	{}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct snd_soc_acpi_mach snd_soc_acpi_intel_rpl_machines[] = {
 	{},
 };
@@ -298,6 +313,7 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_rpl_sdw_machines[] = {
 		.sof_tplg_filename = "sof-rpl-rt711-l0-rt1316-l13-rt714-l2.tplg",
 	},
 	{
+<<<<<<< HEAD
 		.link_mask = 0xF, /* 4 active links required */
 		.links = rpl_sdw_rt711_link2_rt1316_link01_rt714_link3,
 		.drv_name = "sof_sdw",
@@ -328,6 +344,8 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_rpl_sdw_machines[] = {
 		.sof_tplg_filename = "sof-rpl-rt711-l2-rt1316-l01.tplg",
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.link_mask = 0x1, /* link0 required */
 		.links = rpl_rvp,
 		.drv_name = "sof_sdw",

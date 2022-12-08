@@ -58,7 +58,13 @@ u64 mlx4_en_get_cqe_ts(struct mlx4_cqe *cqe)
 	return hi | lo;
 }
 
+<<<<<<< HEAD
 u64 mlx4_en_get_hwtstamp(struct mlx4_en_dev *mdev, u64 timestamp)
+=======
+void mlx4_en_fill_hwtstamps(struct mlx4_en_dev *mdev,
+			    struct skb_shared_hwtstamps *hwts,
+			    u64 timestamp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int seq;
 	u64 nsec;
@@ -68,6 +74,7 @@ u64 mlx4_en_get_hwtstamp(struct mlx4_en_dev *mdev, u64 timestamp)
 		nsec = timecounter_cyc2time(&mdev->clock, timestamp);
 	} while (read_seqretry(&mdev->clock_lock, seq));
 
+<<<<<<< HEAD
 	return ns_to_ktime(nsec);
 }
 
@@ -77,6 +84,10 @@ void mlx4_en_fill_hwtstamps(struct mlx4_en_dev *mdev,
 {
 	memset(hwts, 0, sizeof(struct skb_shared_hwtstamps));
 	hwts->hwtstamp = mlx4_en_get_hwtstamp(mdev, timestamp);
+=======
+	memset(hwts, 0, sizeof(struct skb_shared_hwtstamps));
+	hwts->hwtstamp = ns_to_ktime(nsec);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -116,6 +127,7 @@ void mlx4_en_ptp_overflow_check(struct mlx4_en_dev *mdev)
 }
 
 /**
+<<<<<<< HEAD
  * mlx4_en_phc_adjfine - adjust the frequency of the hardware clock
  * @ptp: ptp clock structure
  * @scaled_ppm: Desired frequency change in scaled parts per million
@@ -128,15 +140,44 @@ void mlx4_en_ptp_overflow_check(struct mlx4_en_dev *mdev)
 static int mlx4_en_phc_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
 {
 	u32 mult;
+=======
+ * mlx4_en_phc_adjfreq - adjust the frequency of the hardware clock
+ * @ptp: ptp clock structure
+ * @delta: Desired frequency change in parts per billion
+ *
+ * Adjust the frequency of the PHC cycle counter by the indicated delta from
+ * the base frequency.
+ **/
+static int mlx4_en_phc_adjfreq(struct ptp_clock_info *ptp, s32 delta)
+{
+	u64 adj;
+	u32 diff, mult;
+	int neg_adj = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flags;
 	struct mlx4_en_dev *mdev = container_of(ptp, struct mlx4_en_dev,
 						ptp_clock_info);
 
+<<<<<<< HEAD
 	mult = (u32)adjust_by_scaled_ppm(mdev->nominal_c_mult, scaled_ppm);
 
 	write_seqlock_irqsave(&mdev->clock_lock, flags);
 	timecounter_read(&mdev->clock);
 	mdev->cycles.mult = mult;
+=======
+	if (delta < 0) {
+		neg_adj = 1;
+		delta = -delta;
+	}
+	mult = mdev->nominal_c_mult;
+	adj = mult;
+	adj *= delta;
+	diff = div_u64(adj, 1000000000ULL);
+
+	write_seqlock_irqsave(&mdev->clock_lock, flags);
+	timecounter_read(&mdev->clock);
+	mdev->cycles.mult = neg_adj ? mult - diff : mult + diff;
+>>>>>>> b7ba80a49124 (Commit)
 	write_sequnlock_irqrestore(&mdev->clock_lock, flags);
 
 	return 0;
@@ -235,7 +276,11 @@ static const struct ptp_clock_info mlx4_en_ptp_clock_info = {
 	.n_per_out	= 0,
 	.n_pins		= 0,
 	.pps		= 0,
+<<<<<<< HEAD
 	.adjfine	= mlx4_en_phc_adjfine,
+=======
+	.adjfreq	= mlx4_en_phc_adjfreq,
+>>>>>>> b7ba80a49124 (Commit)
 	.adjtime	= mlx4_en_phc_adjtime,
 	.gettime64	= mlx4_en_phc_gettime,
 	.settime64	= mlx4_en_phc_settime,

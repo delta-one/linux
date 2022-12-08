@@ -264,7 +264,11 @@ disable_rtc_clk:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void lpc24xx_rtc_remove(struct platform_device *pdev)
+=======
+static int lpc24xx_rtc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lpc24xx_rtc *rtc = platform_get_drvdata(pdev);
 
@@ -276,6 +280,11 @@ static void lpc24xx_rtc_remove(struct platform_device *pdev)
 
 	clk_disable_unprepare(rtc->clk_rtc);
 	clk_disable_unprepare(rtc->clk_reg);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id lpc24xx_rtc_match[] = {
@@ -286,7 +295,11 @@ MODULE_DEVICE_TABLE(of, lpc24xx_rtc_match);
 
 static struct platform_driver lpc24xx_rtc_driver = {
 	.probe	= lpc24xx_rtc_probe,
+<<<<<<< HEAD
 	.remove_new = lpc24xx_rtc_remove,
+=======
+	.remove	= lpc24xx_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name = "lpc24xx-rtc",
 		.of_match_table	= lpc24xx_rtc_match,

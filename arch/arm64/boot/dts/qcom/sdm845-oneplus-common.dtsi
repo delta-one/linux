@@ -9,11 +9,16 @@
 
 #include <dt-bindings/input/linux-event-codes.h>
 #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+<<<<<<< HEAD
 #include <dt-bindings/sound/qcom,q6afe.h>
 #include <dt-bindings/sound/qcom,q6asm.h>
 
 #include "sdm845.dtsi"
 #include "sdm845-wcd9340.dtsi"
+=======
+
+#include "sdm845.dtsi"
+>>>>>>> b7ba80a49124 (Commit)
 #include "pm8998.dtsi"
 #include "pmi8998.dtsi"
 
@@ -22,13 +27,18 @@
 / {
 	aliases {
 		serial0 = &uart9;
+<<<<<<< HEAD
 		serial1 = &uart6;
+=======
+		hsuart0 = &uart6;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	chosen {
 		stdout-path = "serial0:115200n8";
 	};
 
+<<<<<<< HEAD
 	gpio-hall-sensor {
 		compatible = "gpio-keys";
 		label = "Hall effect sensor";
@@ -46,6 +56,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gpio-keys {
 		compatible = "gpio-keys";
 		label = "Volume keys";
@@ -57,21 +69,33 @@
 		key-vol-down {
 			label = "Volume down";
 			linux,code = <KEY_VOLUMEDOWN>;
+<<<<<<< HEAD
 			gpios = <&pm8998_gpios 5 GPIO_ACTIVE_LOW>;
+=======
+			gpios = <&pm8998_gpio 5 GPIO_ACTIVE_LOW>;
+>>>>>>> b7ba80a49124 (Commit)
 			debounce-interval = <15>;
 		};
 
 		key-vol-up {
 			label = "Volume up";
 			linux,code = <KEY_VOLUMEUP>;
+<<<<<<< HEAD
 			gpios = <&pm8998_gpios 6 GPIO_ACTIVE_LOW>;
+=======
+			gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
+>>>>>>> b7ba80a49124 (Commit)
 			debounce-interval = <15>;
 		};
 	};
 
 	reserved-memory {
+<<<<<<< HEAD
 		/*
 		 * The rmtfs_mem needs to be guarded due to "XPU limitations"
+=======
+		/* The rmtfs_mem needs to be guarded due to "XPU limitations"
+>>>>>>> b7ba80a49124 (Commit)
 		 * it is otherwise possible for an allocation adjacent to the
 		 * rmtfs_mem region to trigger an XPU violation, causing a crash.
 		 */
@@ -165,7 +189,11 @@
 };
 
 &apps_rsc {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pm8998-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8998-rpmh-regulators";
 		qcom,pmic-id = "a";
 
@@ -301,7 +329,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-1 {
+=======
+	pmi8998-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pmi8998-rpmh-regulators";
 		qcom,pmic-id = "b";
 
@@ -315,7 +347,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-2 {
+=======
+	pm8005-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8005-rpmh-regulators";
 		qcom,pmic-id = "c";
 
@@ -444,23 +480,38 @@
 };
 
 &ipa {
+<<<<<<< HEAD
 	qcom,gsi-loader = "self";
 	memory-region = <&ipa_fw_mem>;
 	firmware-name = "qcom/sdm845/oneplus6/ipa_fws.mbn";
 	status = "okay";
+=======
+	status = "okay";
+
+	memory-region = <&ipa_fw_mem>;
+	firmware-name = "qcom/sdm845/oneplus6/ipa_fws.mbn";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &mdss {
 	status = "okay";
 };
 
+<<<<<<< HEAD
 /* Modem/wifi */
+=======
+/* Modem/wifi*/
+>>>>>>> b7ba80a49124 (Commit)
 &mss_pil {
 	status = "okay";
 	firmware-name = "qcom/sdm845/oneplus6/mba.mbn", "qcom/sdm845/oneplus6/modem.mbn";
 };
 
+<<<<<<< HEAD
 &pm8998_gpios {
+=======
+&pm8998_gpio {
+>>>>>>> b7ba80a49124 (Commit)
 	volume_down_gpio: pm8998-gpio5-state {
 		pinconf {
 			pins = "gpio5";
@@ -482,6 +533,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &pmi8998_rradc {
 	status = "okay";
 };
@@ -524,6 +576,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &qupv3_id_1 {
 	status = "okay";
 };
@@ -532,6 +586,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &qup_i2c10_default {
 	drive-strength = <2>;
 	bias-disable;
@@ -684,14 +739,73 @@
 		codec {
 			sound-dai = <&wcd9340 5>; /* AIF3_CAP */
 		};
+=======
+&qup_i2c12_default {
+	mux {
+		pins = "gpio49", "gpio50";
+		function = "qup12";
+		drive-strength = <2>;
+		bias-disable;
+	};
+};
+
+&qup_i2c10_default {
+	pinconf {
+		pins = "gpio55", "gpio56";
+		drive-strength = <2>;
+		bias-disable;
+	};
+};
+
+&qup_uart9_default {
+	pinconf-tx {
+		pins = "gpio4";
+		drive-strength = <2>;
+		bias-disable;
+	};
+
+	pinconf-rx {
+		pins = "gpio5";
+		drive-strength = <2>;
+		bias-pull-up;
+	};
+};
+
+/*
+ * Prevent garbage data on bluetooth UART lines
+ */
+&qup_uart6_default {
+	pinmux {
+		pins = "gpio45", "gpio46", "gpio47", "gpio48";
+		function = "qup6";
+	};
+
+	cts {
+		pins = "gpio45";
+		bias-pull-down;
+	};
+
+	rts-tx {
+		pins = "gpio46", "gpio47";
+		drive-strength = <2>;
+		bias-disable;
+	};
+
+	rx {
+		pins = "gpio48";
+		bias-pull-up;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
 &uart6 {
 	status = "okay";
 
+<<<<<<< HEAD
 	pinctrl-0 = <&qup_uart6_4pin>;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bluetooth {
 		compatible = "qcom,wcn3990-bt";
 
@@ -770,6 +884,7 @@
 &tlmm {
 	gpio-reserved-ranges = <0 4>, <81 4>;
 
+<<<<<<< HEAD
 	hall_sensor_default: hall-sensor-default-state {
 		pins = "gpio124";
 		function = "gpio";
@@ -822,6 +937,52 @@
 			drive-strength = <16>;
 			bias-pull-up;
 			output-high;
+=======
+	tri_state_key_default: tri_state_key_default {
+		mux {
+			pins = "gpio40", "gpio42", "gpio26";
+			function = "gpio";
+			drive-strength = <2>;
+			bias-disable;
+		};
+	};
+
+	ts_default_pins: ts-int {
+		mux {
+			pins = "gpio99", "gpio125";
+			function = "gpio";
+			drive-strength = <16>;
+			bias-pull-up;
+		};
+	};
+
+	panel_reset_pins: panel-reset {
+		mux {
+			pins = "gpio6", "gpio25", "gpio26";
+			function = "gpio";
+			drive-strength = <8>;
+			bias-disable;
+		};
+	};
+
+	panel_te_pin: panel-te {
+		mux {
+			pins = "gpio10";
+			function = "mdp_vsync";
+			drive-strength = <2>;
+			bias-disable;
+			input-enable;
+		};
+	};
+
+	panel_esd_pin: panel-esd {
+		mux {
+			pins = "gpio30";
+			function = "gpio";
+			drive-strength = <2>;
+			bias-pull-down;
+			input-enable;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };
@@ -831,6 +992,7 @@
 	firmware-name = "qcom/sdm845/oneplus6/venus.mbn";
 };
 
+<<<<<<< HEAD
 &wcd9340 {
 	pinctrl-0 = <&wcd_intr_default>;
 	pinctrl-names = "default";
@@ -842,6 +1004,8 @@
 	vdd-io-supply = <&vreg_s4a_1p8>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &wifi {
 	status = "okay";
 	vdd-0.8-cx-mx-supply = <&vreg_l5a_0p8>;

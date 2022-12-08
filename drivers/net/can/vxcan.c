@@ -236,7 +236,11 @@ static int vxcan_newlink(struct net *net, struct net_device *dev,
 
 	netif_carrier_off(peer);
 
+<<<<<<< HEAD
 	err = rtnl_configure_link(peer, ifmp, 0, NULL);
+=======
+	err = rtnl_configure_link(peer, ifmp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err < 0)
 		goto unregister_network_device;
 

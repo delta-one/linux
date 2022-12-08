@@ -27,7 +27,10 @@ unsigned int nr_pure_ack = 0;
 unsigned int nr_data = 0;
 unsigned int nr_syn = 0;
 unsigned int nr_fin = 0;
+<<<<<<< HEAD
 unsigned int nr_hwtstamp = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Check the header received from the active side */
 static int __check_active_hdr_in(struct bpf_sock_ops *skops, bool check_syn)
@@ -147,9 +150,12 @@ static int check_active_hdr_in(struct bpf_sock_ops *skops)
 	if (th->ack && !th->fin && tcp_hdrlen(th) == skops->skb_len)
 		nr_pure_ack++;
 
+<<<<<<< HEAD
 	if (skops->skb_hwtstamp)
 		nr_hwtstamp++;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return CG_OK;
 }
 

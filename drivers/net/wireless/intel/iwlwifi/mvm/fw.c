@@ -21,7 +21,10 @@
 #include "iwl-phy-db.h"
 #include "iwl-modparams.h"
 #include "iwl-nvm-parse.h"
+<<<<<<< HEAD
 #include "time-sync.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MVM_UCODE_ALIVE_TIMEOUT	(HZ)
 #define MVM_UCODE_CALIB_TIMEOUT	(2 * HZ)
@@ -124,7 +127,10 @@ static bool iwl_alive_fn(struct iwl_notif_wait_data *notif_wait,
 					      UCODE_ALIVE_NTFY, 0);
 	u32 i;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (version == 6) {
 		struct iwl_alive_ntf_v6 *palive;
 
@@ -356,6 +362,7 @@ static int iwl_mvm_load_ucode_wait_alive(struct iwl_mvm *mvm,
 	 */
 	ret = iwl_wait_notification(&mvm->notif_wait, &alive_wait,
 				    MVM_UCODE_ALIVE_TIMEOUT);
+<<<<<<< HEAD
 
 	if (mvm->trans->trans_cfg->device_family ==
 	    IWL_DEVICE_FAMILY_AX210) {
@@ -370,6 +377,8 @@ static int iwl_mvm_load_ucode_wait_alive(struct iwl_mvm *mvm,
 			 iwl_read_prph(mvm->trans, CNVI_SCU_SEQ_DATA_DW9));
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		struct iwl_trans *trans = mvm->trans;
 
@@ -406,7 +415,11 @@ static int iwl_mvm_load_ucode_wait_alive(struct iwl_mvm *mvm,
 						UREG_LMAC2_CURRENT_PC));
 		}
 
+<<<<<<< HEAD
 		if (ret == -ETIMEDOUT && !mvm->pldr_sync)
+=======
+		if (ret == -ETIMEDOUT)
+>>>>>>> b7ba80a49124 (Commit)
 			iwl_fw_dbg_error_collect(&mvm->fwrt,
 						 FW_DBG_TRIGGER_ALIVE_TIMEOUT);
 
@@ -420,9 +433,12 @@ static int iwl_mvm_load_ucode_wait_alive(struct iwl_mvm *mvm,
 		return -EIO;
 	}
 
+<<<<<<< HEAD
 	/* if reached this point, Alive notification was received */
 	iwl_mei_alive_notif(true);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = iwl_pnvm_load(mvm->trans, &mvm->notif_wait);
 	if (ret) {
 		IWL_ERR(mvm, "Timeout waiting for PNVM load!\n");
@@ -1038,7 +1054,11 @@ int iwl_mvm_ppag_send_cmd(struct iwl_mvm *mvm)
 
 	ret = iwl_read_ppag_table(&mvm->fwrt, &cmd, &cmd_size);
 	/* Not supporting PPAG table is a valid scenario */
+<<<<<<< HEAD
 	if (ret < 0)
+=======
+	if(ret < 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	IWL_DEBUG_RADIO(mvm, "Sending PER_PLATFORM_ANT_GAIN_CMD\n");
@@ -1082,21 +1102,27 @@ static const struct dmi_system_id dmi_tas_approved_list[] = {
 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
 		},
 	},
+<<<<<<< HEAD
 	{ .ident = "MSFT",
 	  .matches = {
 			DMI_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
 		},
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* keep last */
 	{}
 };
 
+<<<<<<< HEAD
 bool iwl_mvm_is_vendor_in_approved_list(void)
 {
 	return dmi_check_system(dmi_tas_approved_list);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool iwl_mvm_add_to_tas_block_list(__le32 *list, __le32 *le_size, unsigned int mcc)
 {
 	int i;
@@ -1376,11 +1402,14 @@ static void iwl_mvm_lari_cfg(struct iwl_mvm *mvm)
 {
 }
 
+<<<<<<< HEAD
 bool iwl_mvm_is_vendor_in_approved_list(void)
 {
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static u8 iwl_mvm_eval_dsm_rfi(struct iwl_mvm *mvm)
 {
 	return DSM_VALUE_RFI_DISABLE;
@@ -1490,7 +1519,10 @@ int iwl_mvm_up(struct iwl_mvm *mvm)
 	struct ieee80211_channel *chan;
 	struct cfg80211_chan_def chandef;
 	struct ieee80211_supported_band *sband = NULL;
+<<<<<<< HEAD
 	u32 sb_cfg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	lockdep_assert_held(&mvm->mutex);
 
@@ -1498,6 +1530,7 @@ int iwl_mvm_up(struct iwl_mvm *mvm)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	sb_cfg = iwl_read_umac_prph(mvm->trans, SB_MODIFY_CFG_FLAG);
 	mvm->pldr_sync = !(sb_cfg & SB_CFG_RESIDES_IN_OTP_MASK);
 	if (mvm->pldr_sync && iwl_mei_pldr_req())
@@ -1507,14 +1540,23 @@ int iwl_mvm_up(struct iwl_mvm *mvm)
 	if (ret) {
 		IWL_ERR(mvm, "Failed to start RT ucode: %d\n", ret);
 		if (ret != -ERFKILL && !mvm->pldr_sync)
+=======
+	ret = iwl_mvm_load_rt_fw(mvm);
+	if (ret) {
+		IWL_ERR(mvm, "Failed to start RT ucode: %d\n", ret);
+		if (ret != -ERFKILL)
+>>>>>>> b7ba80a49124 (Commit)
 			iwl_fw_dbg_error_collect(&mvm->fwrt,
 						 FW_DBG_TRIGGER_DRIVER);
 		goto error;
 	}
 
+<<<<<<< HEAD
 	/* FW loaded successfully */
 	mvm->pldr_sync = false;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	iwl_get_shared_mem_conf(&mvm->fwrt);
 
 	ret = iwl_mvm_sf_update(mvm, NULL, false);
@@ -1677,6 +1719,7 @@ int iwl_mvm_up(struct iwl_mvm *mvm)
 			goto error;
 	}
 
+<<<<<<< HEAD
 	if (test_bit(IWL_MVM_STATUS_IN_HW_RESTART, &mvm->status)) {
 		iwl_mvm_send_recovery_cmd(mvm, ERROR_RECOVERY_UPDATE_DB);
 		iwl_mvm_time_sync_config(mvm, mvm->time_sync.peer_addr,
@@ -1686,6 +1729,10 @@ int iwl_mvm_up(struct iwl_mvm *mvm)
 
 	if (!mvm->ptp_data.ptp_clock)
 		iwl_mvm_ptp_init(mvm);
+=======
+	if (test_bit(IWL_MVM_STATUS_IN_HW_RESTART, &mvm->status))
+		iwl_mvm_send_recovery_cmd(mvm, ERROR_RECOVERY_UPDATE_DB);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (iwl_acpi_get_eckv(mvm->dev, &mvm->ext_clock_valid))
 		IWL_DEBUG_INFO(mvm, "ECKV table doesn't exist in BIOS\n");
@@ -1715,8 +1762,11 @@ int iwl_mvm_up(struct iwl_mvm *mvm)
 			iwl_rfi_send_config_cmd(mvm, NULL);
 	}
 
+<<<<<<< HEAD
 	iwl_mvm_mei_device_state(mvm, true);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	IWL_DEBUG_INFO(mvm, "RT uCode started.\n");
 	return 0;
  error:

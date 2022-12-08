@@ -197,7 +197,11 @@ struct ip_set_region {
 };
 
 /* Max range where every element is added/deleted in one step */
+<<<<<<< HEAD
 #define IPSET_MAX_RANGE		(1<<14)
+=======
+#define IPSET_MAX_RANGE		(1<<20)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* The max revision number supported by any set type + 1 */
 #define IPSET_REVISION_MAX	9
@@ -515,6 +519,7 @@ ip_set_init_skbinfo(struct ip_set_skbinfo *skbinfo,
 	*skbinfo = ext->skbinfo;
 }
 
+<<<<<<< HEAD
 static inline void
 nf_inet_addr_mask_inplace(union nf_inet_addr *a1,
 			  const union nf_inet_addr *mask)
@@ -525,6 +530,8 @@ nf_inet_addr_mask_inplace(union nf_inet_addr *a1,
 	a1->all[3] &= mask->all[3];
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define IP_SET_INIT_KEXT(skb, opt, set)			\
 	{ .bytes = (skb)->len, .packets = 1, .target = true,\
 	  .timeout = ip_set_adt_opt_timeout(opt, set) }

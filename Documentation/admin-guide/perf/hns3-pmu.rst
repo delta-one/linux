@@ -53,7 +53,11 @@ two events have same value of bits 0~15 of config, that means they are
 event pair. And the bit 16 of config indicates getting counter 0 or
 counter 1 of hardware event.
 
+<<<<<<< HEAD
 After getting two values of event pair in userspace, the formula of
+=======
+After getting two values of event pair in usersapce, the formula of
+>>>>>>> b7ba80a49124 (Commit)
 computation to calculate real performance data is:::
 
   counter 0 / counter 1

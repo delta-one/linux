@@ -53,7 +53,11 @@ properties:
         const: 0
 
     patternProperties:
+<<<<<<< HEAD
       "power-domain@[0-9a-f]+$":
+=======
+      "power-domain@[0-9]$":
+>>>>>>> b7ba80a49124 (Commit)
         type: object
         additionalProperties: false
 
@@ -81,9 +85,12 @@ properties:
 
           power-supply: true
 
+<<<<<<< HEAD
           power-domains:
             maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
           resets:
             description: |
               A number of phandles to resets that need to be asserted during

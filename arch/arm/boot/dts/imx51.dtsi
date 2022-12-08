@@ -124,9 +124,12 @@
 		iram: sram@1ffe0000 {
 			compatible = "mmio-sram";
 			reg = <0x1ffe0000 0x20000>;
+<<<<<<< HEAD
 			ranges = <0 0x1ffe0000 0x20000>;
 			#address-cells = <1>;
 			#size-cells = <1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		gpu: gpu@30000000 {

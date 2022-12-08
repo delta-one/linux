@@ -230,7 +230,11 @@ struct snd_rme9652 {
 	int last_spdif_sample_rate;	/* so that we can catch externally ... */
 	int last_adat_sample_rate;	/* ... induced rate changes            */
 
+<<<<<<< HEAD
 	const signed char *channel_map;
+=======
+	const char *channel_map;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct snd_card *card;
 	struct snd_pcm *pcm;
@@ -247,12 +251,20 @@ struct snd_rme9652 {
    where the data for that channel can be read/written from/to.
 */
 
+<<<<<<< HEAD
 static const signed char channel_map_9652_ss[26] = {
+=======
+static const char channel_map_9652_ss[26] = {
+>>>>>>> b7ba80a49124 (Commit)
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
 	18, 19, 20, 21, 22, 23, 24, 25
 };
 
+<<<<<<< HEAD
 static const signed char channel_map_9636_ss[26] = {
+=======
+static const char channel_map_9636_ss[26] = {
+>>>>>>> b7ba80a49124 (Commit)
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 
 	/* channels 16 and 17 are S/PDIF */
 	24, 25,
@@ -260,7 +272,11 @@ static const signed char channel_map_9636_ss[26] = {
 	-1, -1, -1, -1, -1, -1, -1, -1
 };
 
+<<<<<<< HEAD
 static const signed char channel_map_9652_ds[26] = {
+=======
+static const char channel_map_9652_ds[26] = {
+>>>>>>> b7ba80a49124 (Commit)
 	/* ADAT channels are remapped */
 	1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23,
 	/* channels 12 and 13 are S/PDIF */
@@ -269,7 +285,11 @@ static const signed char channel_map_9652_ds[26] = {
 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
 };
 
+<<<<<<< HEAD
 static const signed char channel_map_9636_ds[26] = {
+=======
+static const char channel_map_9636_ds[26] = {
+>>>>>>> b7ba80a49124 (Commit)
 	/* ADAT channels are remapped */
 	1, 3, 5, 7, 9, 11, 13, 15,
 	/* channels 8 and 9 are S/PDIF */
@@ -1819,7 +1839,11 @@ static snd_pcm_uframes_t snd_rme9652_hw_pointer(struct snd_pcm_substream *substr
 	return rme9652_hw_pointer(rme9652);
 }
 
+<<<<<<< HEAD
 static signed char *rme9652_channel_buffer_location(struct snd_rme9652 *rme9652,
+=======
+static char *rme9652_channel_buffer_location(struct snd_rme9652 *rme9652,
+>>>>>>> b7ba80a49124 (Commit)
 					     int stream,
 					     int channel)
 
@@ -1847,7 +1871,11 @@ static int snd_rme9652_playback_copy(struct snd_pcm_substream *substream,
 				     void __user *src, unsigned long count)
 {
 	struct snd_rme9652 *rme9652 = snd_pcm_substream_chip(substream);
+<<<<<<< HEAD
 	signed char *channel_buf;
+=======
+	char *channel_buf;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (snd_BUG_ON(pos + count > RME9652_CHANNEL_BUFFER_BYTES))
 		return -EINVAL;
@@ -1867,7 +1895,11 @@ static int snd_rme9652_playback_copy_kernel(struct snd_pcm_substream *substream,
 					    void *src, unsigned long count)
 {
 	struct snd_rme9652 *rme9652 = snd_pcm_substream_chip(substream);
+<<<<<<< HEAD
 	signed char *channel_buf;
+=======
+	char *channel_buf;
+>>>>>>> b7ba80a49124 (Commit)
 
 	channel_buf = rme9652_channel_buffer_location(rme9652,
 						      substream->pstr->stream,
@@ -1883,7 +1915,11 @@ static int snd_rme9652_capture_copy(struct snd_pcm_substream *substream,
 				    void __user *dst, unsigned long count)
 {
 	struct snd_rme9652 *rme9652 = snd_pcm_substream_chip(substream);
+<<<<<<< HEAD
 	signed char *channel_buf;
+=======
+	char *channel_buf;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (snd_BUG_ON(pos + count > RME9652_CHANNEL_BUFFER_BYTES))
 		return -EINVAL;
@@ -1903,7 +1939,11 @@ static int snd_rme9652_capture_copy_kernel(struct snd_pcm_substream *substream,
 					   void *dst, unsigned long count)
 {
 	struct snd_rme9652 *rme9652 = snd_pcm_substream_chip(substream);
+<<<<<<< HEAD
 	signed char *channel_buf;
+=======
+	char *channel_buf;
+>>>>>>> b7ba80a49124 (Commit)
 
 	channel_buf = rme9652_channel_buffer_location(rme9652,
 						      substream->pstr->stream,
@@ -1919,7 +1959,11 @@ static int snd_rme9652_hw_silence(struct snd_pcm_substream *substream,
 				  unsigned long count)
 {
 	struct snd_rme9652 *rme9652 = snd_pcm_substream_chip(substream);
+<<<<<<< HEAD
 	signed char *channel_buf;
+=======
+	char *channel_buf;
+>>>>>>> b7ba80a49124 (Commit)
 
 	channel_buf = rme9652_channel_buffer_location (rme9652,
 						       substream->pstr->stream,

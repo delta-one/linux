@@ -14,7 +14,10 @@ ALL_TESTS="
 	ingress_stp_filter_test
 	port_list_is_empty_test
 	port_loopback_filter_test
+<<<<<<< HEAD
 	locked_port_test
+=======
+>>>>>>> b7ba80a49124 (Commit)
 "
 NUM_NETIFS=4
 source $lib_dir/tc_common.sh
@@ -421,6 +424,7 @@ port_loopback_filter_test()
 	port_loopback_filter_uc_test
 }
 
+<<<<<<< HEAD
 locked_port_miss_test()
 {
 	local trap_name="locked_port"
@@ -525,6 +529,8 @@ locked_port_test()
 	locked_port_mismatch_test
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 trap cleanup EXIT
 
 setup_prepare

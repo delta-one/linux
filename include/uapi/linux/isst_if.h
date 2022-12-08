@@ -163,6 +163,7 @@ struct isst_if_msr_cmds {
 	struct isst_if_msr_cmd msr_cmd[1];
 };
 
+<<<<<<< HEAD
 /**
  * struct isst_core_power - Structure to get/set core_power feature
  * @get_set:	0: Get, 1: Set
@@ -451,12 +452,15 @@ struct isst_turbo_freq_info {
 	__u16 trl_freq_mhz[TRL_MAX_LEVELS][TRL_MAX_BUCKETS];
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ISST_IF_MAGIC			0xFE
 #define ISST_IF_GET_PLATFORM_INFO	_IOR(ISST_IF_MAGIC, 0, struct isst_if_platform_info *)
 #define ISST_IF_GET_PHY_ID		_IOWR(ISST_IF_MAGIC, 1, struct isst_if_cpu_map *)
 #define ISST_IF_IO_CMD		_IOW(ISST_IF_MAGIC, 2, struct isst_if_io_regs *)
 #define ISST_IF_MBOX_COMMAND	_IOWR(ISST_IF_MAGIC, 3, struct isst_if_mbox_cmds *)
 #define ISST_IF_MSR_COMMAND	_IOWR(ISST_IF_MAGIC, 4, struct isst_if_msr_cmds *)
+<<<<<<< HEAD
 
 #define ISST_IF_COUNT_TPMI_INSTANCES	_IOR(ISST_IF_MAGIC, 5, struct isst_tpmi_instance_count *)
 #define ISST_IF_CORE_POWER_STATE _IOWR(ISST_IF_MAGIC, 6, struct isst_core_power *)
@@ -472,4 +476,6 @@ struct isst_turbo_freq_info {
 #define ISST_IF_GET_BASE_FREQ_CPU_MASK	_IOR(ISST_IF_MAGIC, 15, struct isst_perf_level_cpu_mask *)
 #define ISST_IF_GET_TURBO_FREQ_INFO	_IOR(ISST_IF_MAGIC, 16, struct isst_turbo_freq_info *)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

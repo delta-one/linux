@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2011 Red Hat, Inc.
  *
@@ -40,7 +43,11 @@ static int node_check(struct dm_block_validator *v,
 	uint32_t flags, nr_entries, max_entries;
 
 	if (dm_block_location(b) != le64_to_cpu(h->blocknr)) {
+<<<<<<< HEAD
 		DMERR_LIMIT("%s failed: blocknr %llu != wanted %llu", __func__,
+=======
+		DMERR_LIMIT("node_check failed: blocknr %llu != wanted %llu",
+>>>>>>> b7ba80a49124 (Commit)
 			    le64_to_cpu(h->blocknr), dm_block_location(b));
 		return -ENOTBLK;
 	}
@@ -49,7 +56,11 @@ static int node_check(struct dm_block_validator *v,
 					       block_size - sizeof(__le32),
 					       BTREE_CSUM_XOR));
 	if (csum_disk != h->csum) {
+<<<<<<< HEAD
 		DMERR_LIMIT("%s failed: csum %u != wanted %u", __func__,
+=======
+		DMERR_LIMIT("node_check failed: csum %u != wanted %u",
+>>>>>>> b7ba80a49124 (Commit)
 			    le32_to_cpu(csum_disk), le32_to_cpu(h->csum));
 		return -EILSEQ;
 	}
@@ -60,12 +71,20 @@ static int node_check(struct dm_block_validator *v,
 
 	if (sizeof(struct node_header) +
 	    (sizeof(__le64) + value_size) * max_entries > block_size) {
+<<<<<<< HEAD
 		DMERR_LIMIT("%s failed: max_entries too large", __func__);
+=======
+		DMERR_LIMIT("node_check failed: max_entries too large");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EILSEQ;
 	}
 
 	if (nr_entries > max_entries) {
+<<<<<<< HEAD
 		DMERR_LIMIT("%s failed: too many entries", __func__);
+=======
+		DMERR_LIMIT("node_check failed: too many entries");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EILSEQ;
 	}
 
@@ -74,7 +93,11 @@ static int node_check(struct dm_block_validator *v,
 	 */
 	flags = le32_to_cpu(h->flags);
 	if (!(flags & INTERNAL_NODE) && !(flags & LEAF_NODE)) {
+<<<<<<< HEAD
 		DMERR_LIMIT("%s failed: node is neither INTERNAL or LEAF", __func__);
+=======
+		DMERR_LIMIT("node_check failed: node is neither INTERNAL or LEAF");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EILSEQ;
 	}
 
@@ -133,8 +156,14 @@ void exit_ro_spine(struct ro_spine *s)
 {
 	int i;
 
+<<<<<<< HEAD
 	for (i = 0; i < s->count; i++)
 		unlock_block(s->info, s->nodes[i]);
+=======
+	for (i = 0; i < s->count; i++) {
+		unlock_block(s->info, s->nodes[i]);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int ro_step(struct ro_spine *s, dm_block_t new_child)
@@ -183,8 +212,14 @@ void exit_shadow_spine(struct shadow_spine *s)
 {
 	int i;
 
+<<<<<<< HEAD
 	for (i = 0; i < s->count; i++)
 		unlock_block(s->info, s->nodes[i]);
+=======
+	for (i = 0; i < s->count; i++) {
+		unlock_block(s->info, s->nodes[i]);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int shadow_step(struct shadow_spine *s, dm_block_t b,
@@ -233,12 +268,20 @@ dm_block_t shadow_root(struct shadow_spine *s)
 	return s->root;
 }
 
+<<<<<<< HEAD
 static void le64_inc(void *context, const void *value_le, unsigned int count)
+=======
+static void le64_inc(void *context, const void *value_le, unsigned count)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	dm_tm_with_runs(context, value_le, count, dm_tm_inc_range);
 }
 
+<<<<<<< HEAD
 static void le64_dec(void *context, const void *value_le, unsigned int count)
+=======
+static void le64_dec(void *context, const void *value_le, unsigned count)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	dm_tm_with_runs(context, value_le, count, dm_tm_dec_range);
 }

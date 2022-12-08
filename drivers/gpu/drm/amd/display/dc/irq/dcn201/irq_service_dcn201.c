@@ -28,19 +28,33 @@
 #include "include/logger_interface.h"
 
 #include "../dce110/irq_service_dce110.h"
+<<<<<<< HEAD
 #include "irq_service_dcn201.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "dcn/dcn_2_0_3_offset.h"
 #include "dcn/dcn_2_0_3_sh_mask.h"
 
 #include "cyan_skillfish_ip_offset.h"
 #include "soc15_hw_ip.h"
+<<<<<<< HEAD
 #include "ivsrcid/dcn/irqsrcs_dcn_1_0.h"
 
 static enum dc_irq_source to_dal_irq_source_dcn201(
 		struct irq_service *irq_service,
 		uint32_t src_id,
 		uint32_t ext_id)
+=======
+
+#include "irq_service_dcn201.h"
+
+#include "ivsrcid/dcn/irqsrcs_dcn_1_0.h"
+
+static enum dc_irq_source to_dal_irq_source_dcn201(struct irq_service *irq_service,
+						   uint32_t src_id,
+						   uint32_t ext_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (src_id) {
 	case DCN_1_0__SRCID__DC_D1_OTG_VSTARTUP:
@@ -78,6 +92,10 @@ static enum dc_irq_source to_dal_irq_source_dcn201(
 	default:
 		return DC_IRQ_SOURCE_INVALID;
 	}
+<<<<<<< HEAD
+=======
+	return DC_IRQ_SOURCE_INVALID;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool hpd_ack(

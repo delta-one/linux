@@ -1,15 +1,22 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #include <linux/linkage.h>
 #include <asm/asm.h>
+<<<<<<< HEAD
 #include <asm/asm-offsets.h>
 #include <asm/bitsperlong.h>
 #include <asm/kvm_vcpu_regs.h>
 #include <asm/nospec-branch.h>
 #include "kvm-asm-offsets.h"
+=======
+#include <asm/bitsperlong.h>
+#include <asm/kvm_vcpu_regs.h>
+#include <asm/nospec-branch.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define WORD_SIZE (BITS_PER_LONG / 8)
 
 /* Intentionally omit RAX as it's context switched by hardware */
+<<<<<<< HEAD
 #define VCPU_RCX	(SVM_vcpu_arch_regs + __VCPU_REGS_RCX * WORD_SIZE)
 #define VCPU_RDX	(SVM_vcpu_arch_regs + __VCPU_REGS_RDX * WORD_SIZE)
 #define VCPU_RBX	(SVM_vcpu_arch_regs + __VCPU_REGS_RBX * WORD_SIZE)
@@ -96,6 +103,33 @@
  * __svm_vcpu_run - Run a vCPU via a transition to SVM guest mode
  * @svm:	struct vcpu_svm *
  * @spec_ctrl_intercepted: bool
+=======
+#define VCPU_RCX	__VCPU_REGS_RCX * WORD_SIZE
+#define VCPU_RDX	__VCPU_REGS_RDX * WORD_SIZE
+#define VCPU_RBX	__VCPU_REGS_RBX * WORD_SIZE
+/* Intentionally omit RSP as it's context switched by hardware */
+#define VCPU_RBP	__VCPU_REGS_RBP * WORD_SIZE
+#define VCPU_RSI	__VCPU_REGS_RSI * WORD_SIZE
+#define VCPU_RDI	__VCPU_REGS_RDI * WORD_SIZE
+
+#ifdef CONFIG_X86_64
+#define VCPU_R8		__VCPU_REGS_R8  * WORD_SIZE
+#define VCPU_R9		__VCPU_REGS_R9  * WORD_SIZE
+#define VCPU_R10	__VCPU_REGS_R10 * WORD_SIZE
+#define VCPU_R11	__VCPU_REGS_R11 * WORD_SIZE
+#define VCPU_R12	__VCPU_REGS_R12 * WORD_SIZE
+#define VCPU_R13	__VCPU_REGS_R13 * WORD_SIZE
+#define VCPU_R14	__VCPU_REGS_R14 * WORD_SIZE
+#define VCPU_R15	__VCPU_REGS_R15 * WORD_SIZE
+#endif
+
+.section .noinstr.text, "ax"
+
+/**
+ * __svm_vcpu_run - Run a vCPU via a transition to SVM guest mode
+ * @vmcb_pa:	unsigned long
+ * @regs:	unsigned long * (to guest registers)
+>>>>>>> b7ba80a49124 (Commit)
  */
 SYM_FUNC_START(__svm_vcpu_run)
 	push %_ASM_BP
@@ -110,6 +144,7 @@ SYM_FUNC_START(__svm_vcpu_run)
 #endif
 	push %_ASM_BX
 
+<<<<<<< HEAD
 	/*
 	 * Save variables needed after vmexit on the stack, in inverse
 	 * order compared to when they are needed.
@@ -166,15 +201,59 @@ SYM_FUNC_START(__svm_vcpu_run)
 	mov VCPU_R15(%_ASM_DI), %r15
 #endif
 	mov VCPU_RDI(%_ASM_DI), %_ASM_DI
+=======
+	/* Save @regs. */
+	push %_ASM_ARG2
+
+	/* Save @vmcb. */
+	push %_ASM_ARG1
+
+	/* Move @regs to RAX. */
+	mov %_ASM_ARG2, %_ASM_AX
+
+	/* Load guest registers. */
+	mov VCPU_RCX(%_ASM_AX), %_ASM_CX
+	mov VCPU_RDX(%_ASM_AX), %_ASM_DX
+	mov VCPU_RBX(%_ASM_AX), %_ASM_BX
+	mov VCPU_RBP(%_ASM_AX), %_ASM_BP
+	mov VCPU_RSI(%_ASM_AX), %_ASM_SI
+	mov VCPU_RDI(%_ASM_AX), %_ASM_DI
+#ifdef CONFIG_X86_64
+	mov VCPU_R8 (%_ASM_AX),  %r8
+	mov VCPU_R9 (%_ASM_AX),  %r9
+	mov VCPU_R10(%_ASM_AX), %r10
+	mov VCPU_R11(%_ASM_AX), %r11
+	mov VCPU_R12(%_ASM_AX), %r12
+	mov VCPU_R13(%_ASM_AX), %r13
+	mov VCPU_R14(%_ASM_AX), %r14
+	mov VCPU_R15(%_ASM_AX), %r15
+#endif
+
+	/* "POP" @vmcb to RAX. */
+	pop %_ASM_AX
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Enter guest mode */
 	sti
 
+<<<<<<< HEAD
 3:	vmrun %_ASM_AX
 4:
 	cli
 
 	/* Pop @svm to RAX while it's the only available register. */
+=======
+1:	vmrun %_ASM_AX
+
+2:	cli
+
+#ifdef CONFIG_RETPOLINE
+	/* IMPORTANT: Stuff the RSB immediately after VM-Exit, before RET! */
+	FILL_RETURN_BUFFER %_ASM_AX, RSB_CLEAR_LOOPS, X86_FEATURE_RETPOLINE
+#endif
+
+	/* "POP" @regs to RAX. */
+>>>>>>> b7ba80a49124 (Commit)
 	pop %_ASM_AX
 
 	/* Save all guest registers.  */
@@ -195,6 +274,7 @@ SYM_FUNC_START(__svm_vcpu_run)
 	mov %r15, VCPU_R15(%_ASM_AX)
 #endif
 
+<<<<<<< HEAD
 	/* @svm can stay in RDI from now on.  */
 	mov %_ASM_AX, %_ASM_DI
 
@@ -215,6 +295,8 @@ SYM_FUNC_START(__svm_vcpu_run)
 	/* Clobbers RAX, RCX, RDX.  */
 	RESTORE_HOST_SPEC_CTRL
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Mitigate RETBleed for AMD/Hygon Zen uarch. RET should be
 	 * untrained as soon as we exit the VM and are back to the
@@ -250,9 +332,12 @@ SYM_FUNC_START(__svm_vcpu_run)
 	xor %r15d, %r15d
 #endif
 
+<<<<<<< HEAD
 	/* "Pop" @spec_ctrl_intercepted.  */
 	pop %_ASM_BX
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pop %_ASM_BX
 
 #ifdef CONFIG_X86_64
@@ -267,6 +352,7 @@ SYM_FUNC_START(__svm_vcpu_run)
 	pop %_ASM_BP
 	RET
 
+<<<<<<< HEAD
 	RESTORE_GUEST_SPEC_CTRL_BODY
 	RESTORE_HOST_SPEC_CTRL_BODY
 
@@ -287,13 +373,24 @@ SYM_FUNC_START(__svm_vcpu_run)
 	_ASM_EXTABLE(3b, 30b)
 	_ASM_EXTABLE(5b, 50b)
 	_ASM_EXTABLE(7b, 70b)
+=======
+3:	cmpb $0, kvm_rebooting
+	jne 2b
+	ud2
+
+	_ASM_EXTABLE(1b, 3b)
+>>>>>>> b7ba80a49124 (Commit)
 
 SYM_FUNC_END(__svm_vcpu_run)
 
 /**
  * __svm_sev_es_vcpu_run - Run a SEV-ES vCPU via a transition to SVM guest mode
+<<<<<<< HEAD
  * @svm:	struct vcpu_svm *
  * @spec_ctrl_intercepted: bool
+=======
+ * @vmcb_pa:	unsigned long
+>>>>>>> b7ba80a49124 (Commit)
  */
 SYM_FUNC_START(__svm_sev_es_vcpu_run)
 	push %_ASM_BP
@@ -308,6 +405,7 @@ SYM_FUNC_START(__svm_sev_es_vcpu_run)
 #endif
 	push %_ASM_BX
 
+<<<<<<< HEAD
 	/*
 	 * Save variables needed after vmexit on the stack, in inverse
 	 * order compared to when they are needed.
@@ -333,6 +431,10 @@ SYM_FUNC_START(__svm_sev_es_vcpu_run)
 	/* Get svm->current_vmcb->pa into RAX. */
 	mov SVM_current_vmcb(%_ASM_DI), %_ASM_AX
 	mov KVM_VMCB_pa(%_ASM_AX), %_ASM_AX
+=======
+	/* Move @vmcb to RAX. */
+	mov %_ASM_ARG1, %_ASM_AX
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Enter guest mode */
 	sti
@@ -341,17 +443,23 @@ SYM_FUNC_START(__svm_sev_es_vcpu_run)
 
 2:	cli
 
+<<<<<<< HEAD
 	/* Pop @svm to RDI, guest registers have been saved already. */
 	pop %_ASM_DI
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_RETPOLINE
 	/* IMPORTANT: Stuff the RSB immediately after VM-Exit, before RET! */
 	FILL_RETURN_BUFFER %_ASM_AX, RSB_CLEAR_LOOPS, X86_FEATURE_RETPOLINE
 #endif
 
+<<<<<<< HEAD
 	/* Clobbers RAX, RCX, RDX.  */
 	RESTORE_HOST_SPEC_CTRL
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Mitigate RETBleed for AMD/Hygon Zen uarch. RET should be
 	 * untrained as soon as we exit the VM and are back to the
@@ -361,9 +469,12 @@ SYM_FUNC_START(__svm_sev_es_vcpu_run)
 	 */
 	UNTRAIN_RET
 
+<<<<<<< HEAD
 	/* "Pop" @spec_ctrl_intercepted.  */
 	pop %_ASM_BX
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pop %_ASM_BX
 
 #ifdef CONFIG_X86_64
@@ -378,9 +489,12 @@ SYM_FUNC_START(__svm_sev_es_vcpu_run)
 	pop %_ASM_BP
 	RET
 
+<<<<<<< HEAD
 	RESTORE_GUEST_SPEC_CTRL_BODY
 	RESTORE_HOST_SPEC_CTRL_BODY
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 3:	cmpb $0, kvm_rebooting
 	jne 2b
 	ud2

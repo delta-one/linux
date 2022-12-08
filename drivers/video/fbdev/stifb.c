@@ -922,6 +922,7 @@ SETUP_HCRX(struct stifb_info *fb)
 /* ------------------- driver specific functions --------------------------- */
 
 static int
+<<<<<<< HEAD
 stifb_check_var(struct fb_var_screeninfo *var, struct fb_info *info)
 {
 	struct stifb_info *fb = container_of(info, struct stifb_info, info);
@@ -944,6 +945,8 @@ stifb_check_var(struct fb_var_screeninfo *var, struct fb_info *info)
 }
 
 static int
+=======
+>>>>>>> b7ba80a49124 (Commit)
 stifb_setcolreg(u_int regno, u_int red, u_int green,
 	      u_int blue, u_int transp, struct fb_info *info)
 {
@@ -1077,8 +1080,12 @@ stifb_fillrect(struct fb_info *info, const struct fb_fillrect *rect)
 {
 	struct stifb_info *fb = container_of(info, struct stifb_info, info);
 
+<<<<<<< HEAD
 	if (rect->rop != ROP_COPY ||
 	    (fb->id == S9000_ID_HCRX && fb->info.var.bits_per_pixel == 32))
+=======
+	if (rect->rop != ROP_COPY)
+>>>>>>> b7ba80a49124 (Commit)
 		return cfb_fillrect(info, rect);
 
 	SETUP_HW(fb);
@@ -1167,7 +1174,10 @@ stifb_init_display(struct stifb_info *fb)
 
 static const struct fb_ops stifb_ops = {
 	.owner		= THIS_MODULE,
+<<<<<<< HEAD
 	.fb_check_var	= stifb_check_var,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.fb_setcolreg	= stifb_setcolreg,
 	.fb_blank	= stifb_blank,
 	.fb_fillrect	= stifb_fillrect,
@@ -1187,7 +1197,10 @@ static int __init stifb_init_fb(struct sti_struct *sti, int bpp_pref)
 	struct stifb_info *fb;
 	struct fb_info *info;
 	unsigned long sti_rom_address;
+<<<<<<< HEAD
 	char modestr[32];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	char *dev_name;
 	int bpp, xres, yres;
 
@@ -1323,7 +1336,11 @@ static int __init stifb_init_fb(struct sti_struct *sti, int bpp_pref)
 	
 	/* limit fbsize to max visible screen size */
 	if (fix->smem_len > yres*fix->line_length)
+<<<<<<< HEAD
 		fix->smem_len = ALIGN(yres*fix->line_length, 4*1024*1024);
+=======
+		fix->smem_len = yres*fix->line_length;
+>>>>>>> b7ba80a49124 (Commit)
 	
 	fix->accel = FB_ACCEL_NONE;
 
@@ -1366,9 +1383,12 @@ static int __init stifb_init_fb(struct sti_struct *sti, int bpp_pref)
 	info->flags = FBINFO_HWACCEL_COPYAREA | FBINFO_HWACCEL_FILLRECT;
 	info->pseudo_palette = &fb->pseudo_palette;
 
+<<<<<<< HEAD
 	scnprintf(modestr, sizeof(modestr), "%dx%d-%d", xres, yres, bpp);
 	fb_find_mode(&info->var, info, modestr, NULL, 0, NULL, bpp);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* This has to be done !!! */
 	if (fb_alloc_cmap(&info->cmap, NR_PALETTE, 0))
 		goto out_err1;

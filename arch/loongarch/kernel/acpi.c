@@ -12,7 +12,10 @@
 #include <linux/irq.h>
 #include <linux/irqdomain.h>
 #include <linux/memblock.h>
+<<<<<<< HEAD
 #include <linux/of_fdt.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/serial_core.h>
 #include <asm/io.h>
 #include <asm/numa.h>
@@ -57,6 +60,26 @@ void __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size)
 		return ioremap_cache(phys, size);
 }
 
+<<<<<<< HEAD
+=======
+void __init acpi_boot_table_init(void)
+{
+	/*
+	 * If acpi_disabled, bail out
+	 */
+	if (acpi_disabled)
+		return;
+
+	/*
+	 * Initialize the ACPI boot-time table parser.
+	 */
+	if (acpi_table_init()) {
+		disable_acpi();
+		return;
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SMP
 static int set_processor_mask(u32 id, u32 flags)
 {
@@ -140,6 +163,7 @@ static void __init acpi_process_madt(void)
 	loongson_sysconf.nr_cpus = num_processors;
 }
 
+<<<<<<< HEAD
 #ifndef CONFIG_SUSPEND
 int (*acpi_suspend_lowlevel)(void);
 #else
@@ -147,11 +171,15 @@ int (*acpi_suspend_lowlevel)(void) = loongarch_acpi_suspend;
 #endif
 
 void __init acpi_boot_table_init(void)
+=======
+int __init acpi_boot_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/*
 	 * If acpi_disabled, bail out
 	 */
 	if (acpi_disabled)
+<<<<<<< HEAD
 		goto fdt_earlycon;
 
 	/*
@@ -161,6 +189,9 @@ void __init acpi_boot_table_init(void)
 		disable_acpi();
 		goto fdt_earlycon;
 	}
+=======
+		return -1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	loongson_sysconf.boot_cpu_id = read_csr_cpuid();
 
@@ -172,11 +203,15 @@ void __init acpi_boot_table_init(void)
 	/* Do not enable ACPI SPCR console by default */
 	acpi_parse_spcr(earlycon_acpi_spcr_enable, false);
 
+<<<<<<< HEAD
 	return;
 
 fdt_earlycon:
 	if (earlycon_acpi_spcr_enable)
 		early_init_dt_scan_chosen_stdout();
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_ACPI_NUMA

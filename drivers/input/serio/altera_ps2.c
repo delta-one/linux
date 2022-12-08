@@ -78,6 +78,10 @@ static void altera_ps2_close(struct serio *io)
 static int altera_ps2_probe(struct platform_device *pdev)
 {
 	struct ps2if *ps2if;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	struct serio *serio;
 	int error, irq;
 
@@ -85,7 +89,12 @@ static int altera_ps2_probe(struct platform_device *pdev)
 	if (!ps2if)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	ps2if->base = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	ps2if->base = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(ps2if->base))
 		return PTR_ERR(ps2if->base);
 

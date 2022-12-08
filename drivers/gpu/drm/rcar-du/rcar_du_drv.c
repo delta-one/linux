@@ -16,12 +16,19 @@
 #include <linux/platform_device.h>
 #include <linux/pm.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/sys_soc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/wait.h>
 
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_generic.h>
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_gem_dma_helper.h>
 #include <drm/drm_managed.h>
 #include <drm/drm_probe_helper.h>
@@ -387,6 +394,7 @@ static const struct rcar_du_device_info rcar_du_r8a7795_info = {
 	.dpll_mask =  BIT(2) | BIT(1),
 };
 
+<<<<<<< HEAD
 static const struct rcar_du_device_info rcar_du_r8a7795_es1_info = {
 	.gen = 3,
 	.features = RCAR_DU_FEATURE_CRTC_IRQ
@@ -424,6 +432,8 @@ static const struct rcar_du_device_info rcar_du_r8a7795_es1_info = {
 	.dpll_mask =  BIT(2) | BIT(1),
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct rcar_du_device_info rcar_du_r8a7796_info = {
 	.gen = 3,
 	.features = RCAR_DU_FEATURE_CRTC_IRQ
@@ -542,7 +552,11 @@ static const struct rcar_du_device_info rcar_du_r8a7799x_info = {
 };
 
 static const struct rcar_du_device_info rcar_du_r8a779a0_info = {
+<<<<<<< HEAD
 	.gen = 4,
+=======
+	.gen = 3,
+>>>>>>> b7ba80a49124 (Commit)
 	.features = RCAR_DU_FEATURE_CRTC_IRQ
 		  | RCAR_DU_FEATURE_VSP1_SOURCE
 		  | RCAR_DU_FEATURE_NO_BLENDING,
@@ -562,6 +576,7 @@ static const struct rcar_du_device_info rcar_du_r8a779a0_info = {
 	.dsi_clk_mask =  BIT(1) | BIT(0),
 };
 
+<<<<<<< HEAD
 static const struct rcar_du_device_info rcar_du_r8a779g0_info = {
 	.gen = 4,
 	.features = RCAR_DU_FEATURE_CRTC_IRQ
@@ -583,6 +598,8 @@ static const struct rcar_du_device_info rcar_du_r8a779g0_info = {
 	.dsi_clk_mask =  BIT(1) | BIT(0),
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id rcar_du_of_table[] = {
 	{ .compatible = "renesas,du-r8a7742", .data = &rcar_du_r8a7790_info },
 	{ .compatible = "renesas,du-r8a7743", .data = &rzg1_du_r8a7743_info },
@@ -608,17 +625,23 @@ static const struct of_device_id rcar_du_of_table[] = {
 	{ .compatible = "renesas,du-r8a77990", .data = &rcar_du_r8a7799x_info },
 	{ .compatible = "renesas,du-r8a77995", .data = &rcar_du_r8a7799x_info },
 	{ .compatible = "renesas,du-r8a779a0", .data = &rcar_du_r8a779a0_info },
+<<<<<<< HEAD
 	{ .compatible = "renesas,du-r8a779g0", .data = &rcar_du_r8a779g0_info },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 
 MODULE_DEVICE_TABLE(of, rcar_du_of_table);
 
+<<<<<<< HEAD
 static const struct soc_device_attribute rcar_du_soc_table[] = {
 	{ .soc_id = "r8a7795", .revision = "ES1.*", .data = &rcar_du_r8a7795_es1_info },
 	{ /* sentinel */ }
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const char *rcar_du_output_name(enum rcar_du_output output)
 {
 	static const char * const names[] = {
@@ -664,6 +687,10 @@ static const struct drm_driver rcar_du_driver = {
  * Power management
  */
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int rcar_du_pm_suspend(struct device *dev)
 {
 	struct rcar_du_device *rcdu = dev_get_drvdata(dev);
@@ -677,9 +704,17 @@ static int rcar_du_pm_resume(struct device *dev)
 
 	return drm_mode_config_helper_resume(&rcdu->ddev);
 }
+<<<<<<< HEAD
 
 static DEFINE_SIMPLE_DEV_PM_OPS(rcar_du_pm_ops,
 				rcar_du_pm_suspend, rcar_du_pm_resume);
+=======
+#endif
+
+static const struct dev_pm_ops rcar_du_pm_ops = {
+	SET_SYSTEM_SLEEP_PM_OPS(rcar_du_pm_suspend, rcar_du_pm_resume)
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 /* -----------------------------------------------------------------------------
  * Platform driver
@@ -707,7 +742,10 @@ static void rcar_du_shutdown(struct platform_device *pdev)
 
 static int rcar_du_probe(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	const struct soc_device_attribute *soc_attr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct rcar_du_device *rcdu;
 	unsigned int mask;
 	int ret;
@@ -722,6 +760,7 @@ static int rcar_du_probe(struct platform_device *pdev)
 		return PTR_ERR(rcdu);
 
 	rcdu->dev = &pdev->dev;
+<<<<<<< HEAD
 
 	rcdu->info = of_device_get_match_data(rcdu->dev);
 
@@ -729,6 +768,10 @@ static int rcar_du_probe(struct platform_device *pdev)
 	if (soc_attr)
 		rcdu->info = soc_attr->data;
 
+=======
+	rcdu->info = of_device_get_match_data(rcdu->dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	platform_set_drvdata(pdev, rcdu);
 
 	/* I/O resources */
@@ -780,7 +823,11 @@ static struct platform_driver rcar_du_platform_driver = {
 	.shutdown	= rcar_du_shutdown,
 	.driver		= {
 		.name	= "rcar-du",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&rcar_du_pm_ops),
+=======
+		.pm	= &rcar_du_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = rcar_du_of_table,
 	},
 };

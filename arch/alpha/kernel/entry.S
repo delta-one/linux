@@ -17,7 +17,11 @@
 
 /* Stack offsets.  */
 #define SP_OFF			184
+<<<<<<< HEAD
 #define SWITCH_STACK_SIZE	64
+=======
+#define SWITCH_STACK_SIZE	320
+>>>>>>> b7ba80a49124 (Commit)
 
 .macro	CFI_START_OSF_FRAME	func
 	.align	4
@@ -159,6 +163,10 @@
 	.cfi_rel_offset	$13, 32
 	.cfi_rel_offset	$14, 40
 	.cfi_rel_offset	$15, 48
+<<<<<<< HEAD
+=======
+	/* We don't really care about the FP registers for debugging.  */
+>>>>>>> b7ba80a49124 (Commit)
 .endm
 
 .macro	UNDO_SWITCH_STACK
@@ -453,7 +461,11 @@ entSys:
 	SAVE_ALL
 	lda	$8, 0x3fff
 	bic	$sp, $8, $8
+<<<<<<< HEAD
 	lda	$4, NR_syscalls($31)
+=======
+	lda	$4, NR_SYSCALLS($31)
+>>>>>>> b7ba80a49124 (Commit)
 	stq	$16, SP_OFF+24($sp)
 	lda	$5, sys_call_table
 	lda	$27, sys_ni_syscall
@@ -468,16 +480,24 @@ entSys:
 #ifdef CONFIG_AUDITSYSCALL
 	lda     $6, _TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT
 	and     $3, $6, $3
+<<<<<<< HEAD
 	bne     $3, strace
 #else
 	blbs    $3, strace		/* check for SYSCALL_TRACE in disguise */
 #endif
+=======
+#endif
+	bne     $3, strace
+>>>>>>> b7ba80a49124 (Commit)
 	beq	$4, 1f
 	ldq	$27, 0($5)
 1:	jsr	$26, ($27), sys_ni_syscall
 	ldgp	$gp, 0($26)
 	blt	$0, $syscall_error	/* the call failed */
+<<<<<<< HEAD
 $ret_success:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	stq	$0, 0($sp)
 	stq	$31, 72($sp)		/* a3=0 => no error */
 
@@ -497,10 +517,13 @@ ret_to_user:
 	and	$17, _TIF_WORK_MASK, $2
 	bne	$2, work_pending
 restore_all:
+<<<<<<< HEAD
 	ldl	$2, TI_STATUS($8)
 	and	$2, TS_SAVED_FP | TS_RESTORE_FP, $3
 	bne	$3, restore_fpu
 restore_other:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.cfi_remember_state
 	RESTORE_ALL
 	call_pal PAL_rti
@@ -509,7 +532,11 @@ ret_to_kernel:
 	.cfi_restore_state
 	lda	$16, 7
 	call_pal PAL_swpipl
+<<<<<<< HEAD
 	br restore_other
+=======
+	br restore_all
+>>>>>>> b7ba80a49124 (Commit)
 
 	.align 3
 $syscall_error:
@@ -531,6 +558,14 @@ $syscall_error:
 	stq	$1, 72($sp)	/* a3 for return */
 	br	ret_from_sys_call
 
+<<<<<<< HEAD
+=======
+$ret_success:
+	stq	$0, 0($sp)
+	stq	$31, 72($sp)	/* a3=0 => no error */
+	br	ret_from_sys_call
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Do all cleanup when returning from all interrupts and system calls.
  *
@@ -573,6 +608,7 @@ $work_notifysig:
 	.type	strace, @function
 strace:
 	/* set up signal stack, call syscall_trace */
+<<<<<<< HEAD
 	// NB: if anyone adds preemption, this block will need to be protected
 	ldl	$1, TI_STATUS($8)
 	and	$1, TS_SAVED_FP, $3
@@ -581,6 +617,8 @@ strace:
 	stl	$2, TI_STATUS($8)
 	bsr	$26, __save_fpu
 1:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	DO_SWITCH_STACK
 	jsr	$26, syscall_trace_enter /* returns the syscall number */
 	UNDO_SWITCH_STACK
@@ -594,7 +632,11 @@ strace:
 	ldq	$21, 88($sp)
 
 	/* get the system call pointer.. */
+<<<<<<< HEAD
 	lda	$1, NR_syscalls($31)
+=======
+	lda	$1, NR_SYSCALLS($31)
+>>>>>>> b7ba80a49124 (Commit)
 	lda	$2, sys_call_table
 	lda	$27, sys_ni_syscall
 	cmpult	$0, $1, $1
@@ -607,8 +649,13 @@ ret_from_straced:
 
 	/* check return.. */
 	blt	$0, $strace_error	/* the call failed */
+<<<<<<< HEAD
 $strace_success:
 	stq	$31, 72($sp)		/* a3=0 => no error */
+=======
+	stq	$31, 72($sp)		/* a3=0 => no error */
+$strace_success:
+>>>>>>> b7ba80a49124 (Commit)
 	stq	$0, 0($sp)		/* save return value */
 
 	DO_SWITCH_STACK
@@ -660,6 +707,43 @@ do_switch_stack:
 	stq	$14, 40($sp)
 	stq	$15, 48($sp)
 	stq	$26, 56($sp)
+<<<<<<< HEAD
+=======
+	stt	$f0, 64($sp)
+	stt	$f1, 72($sp)
+	stt	$f2, 80($sp)
+	stt	$f3, 88($sp)
+	stt	$f4, 96($sp)
+	stt	$f5, 104($sp)
+	stt	$f6, 112($sp)
+	stt	$f7, 120($sp)
+	stt	$f8, 128($sp)
+	stt	$f9, 136($sp)
+	stt	$f10, 144($sp)
+	stt	$f11, 152($sp)
+	stt	$f12, 160($sp)
+	stt	$f13, 168($sp)
+	stt	$f14, 176($sp)
+	stt	$f15, 184($sp)
+	stt	$f16, 192($sp)
+	stt	$f17, 200($sp)
+	stt	$f18, 208($sp)
+	stt	$f19, 216($sp)
+	stt	$f20, 224($sp)
+	stt	$f21, 232($sp)
+	stt	$f22, 240($sp)
+	stt	$f23, 248($sp)
+	stt	$f24, 256($sp)
+	stt	$f25, 264($sp)
+	stt	$f26, 272($sp)
+	stt	$f27, 280($sp)
+	mf_fpcr	$f0		# get fpcr
+	stt	$f28, 288($sp)
+	stt	$f29, 296($sp)
+	stt	$f30, 304($sp)
+	stt	$f0, 312($sp)	# save fpcr in slot of $f31
+	ldt	$f0, 64($sp)	# dont let "do_switch_stack" change fp state.
+>>>>>>> b7ba80a49124 (Commit)
 	ret	$31, ($1), 1
 	.cfi_endproc
 	.size	do_switch_stack, .-do_switch_stack
@@ -678,10 +762,47 @@ undo_switch_stack:
 	ldq	$14, 40($sp)
 	ldq	$15, 48($sp)
 	ldq	$26, 56($sp)
+<<<<<<< HEAD
+=======
+	ldt	$f30, 312($sp)	# get saved fpcr
+	ldt	$f0, 64($sp)
+	ldt	$f1, 72($sp)
+	ldt	$f2, 80($sp)
+	ldt	$f3, 88($sp)
+	mt_fpcr	$f30		# install saved fpcr
+	ldt	$f4, 96($sp)
+	ldt	$f5, 104($sp)
+	ldt	$f6, 112($sp)
+	ldt	$f7, 120($sp)
+	ldt	$f8, 128($sp)
+	ldt	$f9, 136($sp)
+	ldt	$f10, 144($sp)
+	ldt	$f11, 152($sp)
+	ldt	$f12, 160($sp)
+	ldt	$f13, 168($sp)
+	ldt	$f14, 176($sp)
+	ldt	$f15, 184($sp)
+	ldt	$f16, 192($sp)
+	ldt	$f17, 200($sp)
+	ldt	$f18, 208($sp)
+	ldt	$f19, 216($sp)
+	ldt	$f20, 224($sp)
+	ldt	$f21, 232($sp)
+	ldt	$f22, 240($sp)
+	ldt	$f23, 248($sp)
+	ldt	$f24, 256($sp)
+	ldt	$f25, 264($sp)
+	ldt	$f26, 272($sp)
+	ldt	$f27, 280($sp)
+	ldt	$f28, 288($sp)
+	ldt	$f29, 296($sp)
+	ldt	$f30, 304($sp)
+>>>>>>> b7ba80a49124 (Commit)
 	lda	$sp, SWITCH_STACK_SIZE($sp)
 	ret	$31, ($1), 1
 	.cfi_endproc
 	.size	undo_switch_stack, .-undo_switch_stack
+<<<<<<< HEAD
 
 #define FR(n) n * 8 + TI_FP($8)
 	.align	4
@@ -724,16 +845,23 @@ restore_fpu:
 	br restore_other
 #undef V
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * The meat of the context switch code.
  */
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	.align	4
 	.globl	alpha_switch_to
 	.type	alpha_switch_to, @function
 	.cfi_startproc
 alpha_switch_to:
 	DO_SWITCH_STACK
+<<<<<<< HEAD
 	ldl	$1, TI_STATUS($8)
 	and	$1, TS_RESTORE_FP, $3
 	bne	$3, 1f
@@ -743,6 +871,8 @@ alpha_switch_to:
 	bne	$3, 1f
 	bsr	$26, __save_fpu
 1:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	call_pal PAL_swpctx
 	lda	$8, 0x3fff
 	UNDO_SWITCH_STACK
@@ -760,7 +890,11 @@ alpha_switch_to:
 	.align	4
 	.ent	ret_from_fork
 ret_from_fork:
+<<<<<<< HEAD
 	lda	$26, ret_to_user
+=======
+	lda	$26, ret_from_sys_call
+>>>>>>> b7ba80a49124 (Commit)
 	mov	$17, $16
 	jmp	$31, schedule_tail
 .end ret_from_fork
@@ -793,6 +927,7 @@ ret_from_kernel_thread:
 alpha_\name:
 	.prologue 0
 	bsr	$1, do_switch_stack
+<<<<<<< HEAD
 	// NB: if anyone adds preemption, this block will need to be protected
 	ldl	$1, TI_STATUS($8)
 	and	$1, TS_SAVED_FP, $3
@@ -801,6 +936,8 @@ alpha_\name:
 	stl	$2, TI_STATUS($8)
 	bsr	$26, __save_fpu
 1:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	jsr	$26, sys_\name
 	ldq	$26, 56($sp)
 	lda	$sp, SWITCH_STACK_SIZE($sp)

@@ -1,8 +1,14 @@
 .. SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
 =================
 PCI Bus Subsystem
 =================
+=======
+=======================
+Linux PCI Bus Subsystem
+=======================
+>>>>>>> b7ba80a49124 (Commit)
 
 .. toctree::
    :maxdepth: 2

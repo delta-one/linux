@@ -70,7 +70,10 @@ Function Reference
     vidioc-subdev-g-crop
     vidioc-subdev-g-fmt
     vidioc-subdev-g-frame-interval
+<<<<<<< HEAD
     vidioc-subdev-g-routing
+=======
+>>>>>>> b7ba80a49124 (Commit)
     vidioc-subdev-g-selection
     vidioc-subdev-querycap
     vidioc-subscribe-event

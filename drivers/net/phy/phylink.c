@@ -77,7 +77,10 @@ struct phylink {
 
 	struct sfp_bus *sfp_bus;
 	bool sfp_may_have_phy;
+<<<<<<< HEAD
 	DECLARE_PHY_INTERFACE_MASK(sfp_interfaces);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__ETHTOOL_DECLARE_LINK_MODE_MASK(sfp_support);
 	u8 sfp_port;
 };
@@ -156,6 +159,7 @@ static const char *phylink_an_mode_str(unsigned int mode)
 	return mode < ARRAY_SIZE(modestr) ? modestr[mode] : "unknown";
 }
 
+<<<<<<< HEAD
 /**
  * phylink_interface_max_speed() - get the maximum speed of a phy interface
  * @interface: phy interface mode defined by &typedef phy_interface_t
@@ -234,6 +238,10 @@ static int phylink_interface_max_speed(phy_interface_t interface)
  * supported by the @caps. @linkmodes must have been initialised previously.
  */
 void phylink_caps_to_linkmodes(unsigned long *linkmodes, unsigned long caps)
+=======
+static void phylink_caps_to_linkmodes(unsigned long *linkmodes,
+				      unsigned long caps)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (caps & MAC_SYM_PAUSE)
 		__set_bit(ETHTOOL_LINK_MODE_Pause_BIT, linkmodes);
@@ -241,16 +249,24 @@ void phylink_caps_to_linkmodes(unsigned long *linkmodes, unsigned long caps)
 	if (caps & MAC_ASYM_PAUSE)
 		__set_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT, linkmodes);
 
+<<<<<<< HEAD
 	if (caps & MAC_10HD) {
 		__set_bit(ETHTOOL_LINK_MODE_10baseT_Half_BIT, linkmodes);
 		__set_bit(ETHTOOL_LINK_MODE_10baseT1S_Half_BIT, linkmodes);
 		__set_bit(ETHTOOL_LINK_MODE_10baseT1S_P2MP_Half_BIT, linkmodes);
 	}
+=======
+	if (caps & MAC_10HD)
+		__set_bit(ETHTOOL_LINK_MODE_10baseT_Half_BIT, linkmodes);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (caps & MAC_10FD) {
 		__set_bit(ETHTOOL_LINK_MODE_10baseT_Full_BIT, linkmodes);
 		__set_bit(ETHTOOL_LINK_MODE_10baseT1L_Full_BIT, linkmodes);
+<<<<<<< HEAD
 		__set_bit(ETHTOOL_LINK_MODE_10baseT1S_Full_BIT, linkmodes);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (caps & MAC_100HD) {
@@ -376,6 +392,7 @@ void phylink_caps_to_linkmodes(unsigned long *linkmodes, unsigned long caps)
 		__set_bit(ETHTOOL_LINK_MODE_400000baseCR4_Full_BIT, linkmodes);
 	}
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(phylink_caps_to_linkmodes);
 
 static struct {
@@ -442,6 +459,23 @@ unsigned long phylink_get_capabilities(phy_interface_t interface,
 	int max_speed = phylink_interface_max_speed(interface);
 	unsigned long caps = MAC_SYM_PAUSE | MAC_ASYM_PAUSE;
 	unsigned long matched_caps = 0;
+=======
+
+/**
+ * phylink_get_linkmodes() - get acceptable link modes
+ * @linkmodes: ethtool linkmode mask (must be already initialised)
+ * @interface: phy interface mode defined by &typedef phy_interface_t
+ * @mac_capabilities: bitmask of MAC capabilities
+ *
+ * Set all possible pause, speed and duplex linkmodes in @linkmodes that
+ * are supported by the @interface mode and @mac_capabilities. @linkmodes
+ * must have been initialised previously.
+ */
+void phylink_get_linkmodes(unsigned long *linkmodes, phy_interface_t interface,
+			   unsigned long mac_capabilities)
+{
+	unsigned long caps = MAC_SYM_PAUSE | MAC_ASYM_PAUSE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (interface) {
 	case PHY_INTERFACE_MODE_USXGMII:
@@ -515,6 +549,7 @@ unsigned long phylink_get_capabilities(phy_interface_t interface,
 		break;
 	}
 
+<<<<<<< HEAD
 	switch (rate_matching) {
 	case RATE_MATCH_OPEN_LOOP:
 		/* TODO */
@@ -592,6 +627,11 @@ void phylink_validate_mask_caps(unsigned long *supported,
 	linkmode_and(state->advertising, state->advertising, mask);
 }
 EXPORT_SYMBOL_GPL(phylink_validate_mask_caps);
+=======
+	phylink_caps_to_linkmodes(linkmodes, caps & mac_capabilities);
+}
+EXPORT_SYMBOL_GPL(phylink_get_linkmodes);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * phylink_generic_validate() - generic validate() callback implementation
@@ -601,12 +641,27 @@ EXPORT_SYMBOL_GPL(phylink_validate_mask_caps);
  *
  * Generic implementation of the validate() callback that MAC drivers can
  * use when they pass the range of supported interfaces and MAC capabilities.
+<<<<<<< HEAD
+=======
+ * This makes use of phylink_get_linkmodes().
+>>>>>>> b7ba80a49124 (Commit)
  */
 void phylink_generic_validate(struct phylink_config *config,
 			      unsigned long *supported,
 			      struct phylink_link_state *state)
 {
+<<<<<<< HEAD
 	phylink_validate_mask_caps(supported, state, config->mac_capabilities);
+=======
+	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+
+	phylink_set_port_modes(mask);
+	phylink_set(mask, Autoneg);
+	phylink_get_linkmodes(mask, state->interface, config->mac_capabilities);
+
+	linkmode_and(supported, supported, mask);
+	linkmode_and(state->advertising, state->advertising, mask);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(phylink_generic_validate);
 
@@ -653,17 +708,26 @@ static int phylink_validate_mac_and_pcs(struct phylink *pl,
 	}
 
 	/* Then validate the link parameters with the MAC */
+<<<<<<< HEAD
 	if (pl->mac_ops->validate)
 		pl->mac_ops->validate(pl->config, supported, state);
 	else
 		phylink_generic_validate(pl->config, supported, state);
+=======
+	pl->mac_ops->validate(pl->config, supported, state);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return phylink_is_empty_linkmode(supported) ? -EINVAL : 0;
 }
 
+<<<<<<< HEAD
 static int phylink_validate_mask(struct phylink *pl, unsigned long *supported,
 				 struct phylink_link_state *state,
 				 const unsigned long *interfaces)
+=======
+static int phylink_validate_any(struct phylink *pl, unsigned long *supported,
+				struct phylink_link_state *state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	__ETHTOOL_DECLARE_LINK_MODE_MASK(all_adv) = { 0, };
 	__ETHTOOL_DECLARE_LINK_MODE_MASK(all_s) = { 0, };
@@ -672,7 +736,11 @@ static int phylink_validate_mask(struct phylink *pl, unsigned long *supported,
 	int intf;
 
 	for (intf = 0; intf < PHY_INTERFACE_MODE_MAX; intf++) {
+<<<<<<< HEAD
 		if (test_bit(intf, interfaces)) {
+=======
+		if (test_bit(intf, pl->config->supported_interfaces)) {
+>>>>>>> b7ba80a49124 (Commit)
 			linkmode_copy(s, supported);
 
 			t = *state;
@@ -693,6 +761,7 @@ static int phylink_validate_mask(struct phylink *pl, unsigned long *supported,
 static int phylink_validate(struct phylink *pl, unsigned long *supported,
 			    struct phylink_link_state *state)
 {
+<<<<<<< HEAD
 	const unsigned long *interfaces = pl->config->supported_interfaces;
 
 	if (!phy_interface_empty(interfaces)) {
@@ -701,6 +770,14 @@ static int phylink_validate(struct phylink *pl, unsigned long *supported,
 						     interfaces);
 
 		if (!test_bit(state->interface, interfaces))
+=======
+	if (!phy_interface_empty(pl->config->supported_interfaces)) {
+		if (state->interface == PHY_INTERFACE_MODE_NA)
+			return phylink_validate_any(pl, supported, state);
+
+		if (!test_bit(state->interface,
+			      pl->config->supported_interfaces))
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 	}
 
@@ -711,7 +788,10 @@ static int phylink_parse_fixedlink(struct phylink *pl,
 				   struct fwnode_handle *fwnode)
 {
 	struct fwnode_handle *fixed_node;
+<<<<<<< HEAD
 	bool pause, asym_pause, autoneg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const struct phy_setting *s;
 	struct gpio_desc *desc;
 	u32 speed;
@@ -784,13 +864,17 @@ static int phylink_parse_fixedlink(struct phylink *pl,
 	linkmode_copy(pl->link_config.advertising, pl->supported);
 	phylink_validate(pl, pl->supported, &pl->link_config);
 
+<<<<<<< HEAD
 	pause = phylink_test(pl->supported, Pause);
 	asym_pause = phylink_test(pl->supported, Asym_Pause);
 	autoneg = phylink_test(pl->supported, Autoneg);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	s = phy_lookup_setting(pl->link_config.speed, pl->link_config.duplex,
 			       pl->supported, true);
 	linkmode_zero(pl->supported);
 	phylink_set(pl->supported, MII);
+<<<<<<< HEAD
 
 	if (pause)
 		phylink_set(pl->supported, Pause);
@@ -801,6 +885,11 @@ static int phylink_parse_fixedlink(struct phylink *pl,
 	if (autoneg)
 		phylink_set(pl->supported, Autoneg);
 
+=======
+	phylink_set(pl->supported, Pause);
+	phylink_set(pl->supported, Asym_Pause);
+	phylink_set(pl->supported, Autoneg);
+>>>>>>> b7ba80a49124 (Commit)
 	if (s) {
 		__set_bit(s->bit, pl->supported);
 		__set_bit(s->bit, pl->link_config.lp_advertising);
@@ -843,6 +932,10 @@ static int phylink_parse_mode(struct phylink *pl, struct fwnode_handle *fwnode)
 		phylink_set(pl->supported, Autoneg);
 		phylink_set(pl->supported, Asym_Pause);
 		phylink_set(pl->supported, Pause);
+<<<<<<< HEAD
+=======
+		pl->link_config.an_enabled = true;
+>>>>>>> b7ba80a49124 (Commit)
 		pl->cfg_link_an_mode = MLO_AN_INBAND;
 
 		switch (pl->link_config.interface) {
@@ -944,6 +1037,12 @@ static int phylink_parse_mode(struct phylink *pl, struct fwnode_handle *fwnode)
 				    "failed to validate link configuration for in-band status\n");
 			return -EINVAL;
 		}
+<<<<<<< HEAD
+=======
+
+		/* Check if MAC/PCS also supports Autoneg. */
+		pl->link_config.an_enabled = phylink_test(pl->supported, Autoneg);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -953,8 +1052,12 @@ static void phylink_apply_manual_flow(struct phylink *pl,
 				      struct phylink_link_state *state)
 {
 	/* If autoneg is disabled, pause AN is also disabled */
+<<<<<<< HEAD
 	if (!linkmode_test_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
 			       state->advertising))
+=======
+	if (!state->an_enabled)
+>>>>>>> b7ba80a49124 (Commit)
 		state->pause &= ~MLO_PAUSE_AN;
 
 	/* Manual configuration of pause modes */
@@ -994,22 +1097,35 @@ static void phylink_mac_config(struct phylink *pl,
 			       const struct phylink_link_state *state)
 {
 	phylink_dbg(pl,
+<<<<<<< HEAD
 		    "%s: mode=%s/%s/%s/%s/%s adv=%*pb pause=%02x link=%u\n",
+=======
+		    "%s: mode=%s/%s/%s/%s adv=%*pb pause=%02x link=%u an=%u\n",
+>>>>>>> b7ba80a49124 (Commit)
 		    __func__, phylink_an_mode_str(pl->cur_link_an_mode),
 		    phy_modes(state->interface),
 		    phy_speed_to_str(state->speed),
 		    phy_duplex_to_str(state->duplex),
+<<<<<<< HEAD
 		    phy_rate_matching_to_str(state->rate_matching),
 		    __ETHTOOL_LINK_MODE_MASK_NBITS, state->advertising,
 		    state->pause, state->link);
+=======
+		    __ETHTOOL_LINK_MODE_MASK_NBITS, state->advertising,
+		    state->pause, state->link, state->an_enabled);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pl->mac_ops->mac_config(pl->config, pl->cur_link_an_mode, state);
 }
 
 static void phylink_mac_pcs_an_restart(struct phylink *pl)
 {
+<<<<<<< HEAD
 	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
 			      pl->link_config.advertising) &&
+=======
+	if (pl->link_config.an_enabled &&
+>>>>>>> b7ba80a49124 (Commit)
 	    phy_interface_mode_is_8023z(pl->link_config.interface) &&
 	    phylink_autoneg_inband(pl->cur_link_an_mode)) {
 		if (pl->pcs)
@@ -1136,9 +1252,14 @@ static void phylink_mac_pcs_get_state(struct phylink *pl,
 	linkmode_copy(state->advertising, pl->link_config.advertising);
 	linkmode_zero(state->lp_advertising);
 	state->interface = pl->link_config.interface;
+<<<<<<< HEAD
 	state->rate_matching = pl->link_config.rate_matching;
 	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
 			      state->advertising)) {
+=======
+	state->an_enabled = pl->link_config.an_enabled;
+	if  (state->an_enabled) {
+>>>>>>> b7ba80a49124 (Commit)
 		state->speed = SPEED_UNKNOWN;
 		state->duplex = DUPLEX_UNKNOWN;
 		state->pause = MLO_PAUSE_NONE;
@@ -1221,6 +1342,7 @@ static void phylink_link_up(struct phylink *pl,
 			    struct phylink_link_state link_state)
 {
 	struct net_device *ndev = pl->netdev;
+<<<<<<< HEAD
 	int speed, duplex;
 	bool rx_pause;
 
@@ -1248,16 +1370,29 @@ static void phylink_link_up(struct phylink *pl,
 		duplex = DUPLEX_HALF;
 		break;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	pl->cur_interface = link_state.interface;
 
 	if (pl->pcs && pl->pcs->ops->pcs_link_up)
 		pl->pcs->ops->pcs_link_up(pl->pcs, pl->cur_link_an_mode,
+<<<<<<< HEAD
 					  pl->cur_interface, speed, duplex);
 
 	pl->mac_ops->mac_link_up(pl->config, pl->phydev, pl->cur_link_an_mode,
 				 pl->cur_interface, speed, duplex,
 				 !!(link_state.pause & MLO_PAUSE_TX), rx_pause);
+=======
+					 pl->cur_interface,
+					 link_state.speed, link_state.duplex);
+
+	pl->mac_ops->mac_link_up(pl->config, pl->phydev,
+				 pl->cur_link_an_mode, pl->cur_interface,
+				 link_state.speed, link_state.duplex,
+				 !!(link_state.pause & MLO_PAUSE_TX),
+				 !!(link_state.pause & MLO_PAUSE_RX));
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ndev)
 		netif_carrier_on(ndev);
@@ -1349,6 +1484,7 @@ static void phylink_resolve(struct work_struct *w)
 				}
 				link_state.interface = pl->phy_state.interface;
 
+<<<<<<< HEAD
 				/* If we are doing rate matching, then the
 				 * link speed/duplex comes from the PHY
 				 */
@@ -1360,6 +1496,8 @@ static void phylink_resolve(struct work_struct *w)
 						pl->phy_state.duplex;
 				}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				/* If we have a PHY, we need to update with
 				 * the PHY flow control bits.
 				 */
@@ -1529,6 +1667,10 @@ struct phylink *phylink_create(struct phylink_config *config,
 	pl->link_config.pause = MLO_PAUSE_AN;
 	pl->link_config.speed = SPEED_UNKNOWN;
 	pl->link_config.duplex = DUPLEX_UNKNOWN;
+<<<<<<< HEAD
+=======
+	pl->link_config.an_enabled = true;
+>>>>>>> b7ba80a49124 (Commit)
 	pl->mac_ops = mac_ops;
 	__set_bit(PHYLINK_DISABLE_STOPPED, &pl->phylink_disable_state);
 	timer_setup(&pl->link_poll, phylink_fixed_poll, 0);
@@ -1593,7 +1735,10 @@ static void phylink_phy_change(struct phy_device *phydev, bool up)
 	mutex_lock(&pl->state_mutex);
 	pl->phy_state.speed = phydev->speed;
 	pl->phy_state.duplex = phydev->duplex;
+<<<<<<< HEAD
 	pl->phy_state.rate_matching = phydev->rate_matching;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pl->phy_state.pause = MLO_PAUSE_NONE;
 	if (tx_pause)
 		pl->phy_state.pause |= MLO_PAUSE_TX;
@@ -1605,11 +1750,18 @@ static void phylink_phy_change(struct phy_device *phydev, bool up)
 
 	phylink_run_resolve(pl);
 
+<<<<<<< HEAD
 	phylink_dbg(pl, "phy link %s %s/%s/%s/%s/%s\n", up ? "up" : "down",
 		    phy_modes(phydev->interface),
 		    phy_speed_to_str(phydev->speed),
 		    phy_duplex_to_str(phydev->duplex),
 		    phy_rate_matching_to_str(phydev->rate_matching),
+=======
+	phylink_dbg(pl, "phy link %s %s/%s/%s/%s\n", up ? "up" : "down",
+		    phy_modes(phydev->interface),
+		    phy_speed_to_str(phydev->speed),
+		    phy_duplex_to_str(phydev->duplex),
+>>>>>>> b7ba80a49124 (Commit)
 		    phylink_pause_to_str(pl->phy_state.pause));
 }
 
@@ -1634,6 +1786,7 @@ static int phylink_bringup_phy(struct phylink *pl, struct phy_device *phy,
 	linkmode_copy(supported, phy->supported);
 	linkmode_copy(config.advertising, phy->advertising);
 
+<<<<<<< HEAD
 	/* Check whether we would use rate matching for the proposed interface
 	 * mode.
 	 */
@@ -1651,6 +1804,14 @@ static int phylink_bringup_phy(struct phylink *pl, struct phy_device *phy,
 	 * modes being advertised than are actually supported.
 	 */
 	if (phy->is_c45 && config.rate_matching == RATE_MATCH_NONE &&
+=======
+	/* Clause 45 PHYs switch their Serdes lane between several different
+	 * modes, normally 10GBASE-R, SGMII. Some use 2500BASE-X for 2.5G
+	 * speeds. We really need to know which interface modes the PHY and
+	 * MAC supports to properly work out which linkmodes can be supported.
+	 */
+	if (phy->is_c45 &&
+>>>>>>> b7ba80a49124 (Commit)
 	    interface != PHY_INTERFACE_MODE_RXAUI &&
 	    interface != PHY_INTERFACE_MODE_XAUI &&
 	    interface != PHY_INTERFACE_MODE_USXGMII)
@@ -1684,7 +1845,10 @@ static int phylink_bringup_phy(struct phylink *pl, struct phy_device *phy,
 	pl->phy_state.pause = MLO_PAUSE_NONE;
 	pl->phy_state.speed = SPEED_UNKNOWN;
 	pl->phy_state.duplex = DUPLEX_UNKNOWN;
+<<<<<<< HEAD
 	pl->phy_state.rate_matching = RATE_MATCH_NONE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	linkmode_copy(pl->supported, supported);
 	linkmode_copy(pl->link_config.advertising, config.advertising);
 
@@ -1702,9 +1866,12 @@ static int phylink_bringup_phy(struct phylink *pl, struct phy_device *phy,
 	if (phy_interrupt_is_valid(phy))
 		phy_request_interrupt(phy);
 
+<<<<<<< HEAD
 	if (pl->config->mac_managed_pm)
 		phy->mac_managed_pm = true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1713,7 +1880,11 @@ static int phylink_attach_phy(struct phylink *pl, struct phy_device *phy,
 {
 	if (WARN_ON(pl->cfg_link_an_mode == MLO_AN_FIXED ||
 		    (pl->cfg_link_an_mode == MLO_AN_INBAND &&
+<<<<<<< HEAD
 		     phy_interface_mode_is_8023z(interface) && !pl->sfp_bus)))
+=======
+		     phy_interface_mode_is_8023z(interface))))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (pl->phydev)
@@ -1824,9 +1995,16 @@ int phylink_fwnode_phy_connect(struct phylink *pl,
 
 	ret = phy_attach_direct(pl->netdev, phy_dev, flags,
 				pl->link_interface);
+<<<<<<< HEAD
 	phy_device_free(phy_dev);
 	if (ret)
 		return ret;
+=======
+	if (ret) {
+		phy_device_free(phy_dev);
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = phylink_bringup_phy(pl, phy_dev, pl->link_config.interface);
 	if (ret)
@@ -2129,6 +2307,7 @@ static void phylink_get_ksettings(const struct phylink_link_state *state,
 {
 	phylink_merge_link_mode(kset->link_modes.advertising, state->advertising);
 	linkmode_copy(kset->link_modes.lp_advertising, state->lp_advertising);
+<<<<<<< HEAD
 	if (kset->base.rate_matching == RATE_MATCH_NONE) {
 		kset->base.speed = state->speed;
 		kset->base.duplex = state->duplex;
@@ -2136,6 +2315,12 @@ static void phylink_get_ksettings(const struct phylink_link_state *state,
 	kset->base.autoneg = linkmode_test_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
 					       state->advertising) ?
 				AUTONEG_ENABLE : AUTONEG_DISABLE;
+=======
+	kset->base.speed = state->speed;
+	kset->base.duplex = state->duplex;
+	kset->base.autoneg = state->an_enabled ? AUTONEG_ENABLE :
+				AUTONEG_DISABLE;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -2282,8 +2467,14 @@ int phylink_ethtool_ksettings_set(struct phylink *pl,
 	/* We have ruled out the case with a PHY attached, and the
 	 * fixed-link cases.  All that is left are in-band links.
 	 */
+<<<<<<< HEAD
 	linkmode_mod_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, config.advertising,
 			 kset->base.autoneg == AUTONEG_ENABLE);
+=======
+	config.an_enabled = kset->base.autoneg == AUTONEG_ENABLE;
+	linkmode_mod_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, config.advertising,
+			 config.an_enabled);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* If this link is with an SFP, ensure that changes to advertised modes
 	 * also cause the associated interface to be selected such that the
@@ -2317,14 +2508,22 @@ int phylink_ethtool_ksettings_set(struct phylink *pl,
 	}
 
 	/* If autonegotiation is enabled, we must have an advertisement */
+<<<<<<< HEAD
 	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
 			      config.advertising) &&
 	    phylink_is_empty_linkmode(config.advertising))
+=======
+	if (config.an_enabled && phylink_is_empty_linkmode(config.advertising))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	mutex_lock(&pl->state_mutex);
 	pl->link_config.speed = config.speed;
 	pl->link_config.duplex = config.duplex;
+<<<<<<< HEAD
+=======
+	pl->link_config.an_enabled = config.an_enabled;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (pl->link_config.interface != config.interface) {
 		/* The interface changed, e.g. 1000base-X <-> 2500base-X */
@@ -2847,6 +3046,7 @@ static void phylink_sfp_detach(void *upstream, struct sfp_bus *bus)
 	pl->netdev->sfp_bus = NULL;
 }
 
+<<<<<<< HEAD
 static const phy_interface_t phylink_sfp_interface_preference[] = {
 	PHY_INTERFACE_MODE_25GBASER,
 	PHY_INTERFACE_MODE_USXGMII,
@@ -2915,21 +3115,40 @@ static void phylink_sfp_set_config(struct phylink *pl, u8 mode,
 
 static int phylink_sfp_config_phy(struct phylink *pl, u8 mode,
 				  struct phy_device *phy)
+=======
+static int phylink_sfp_config(struct phylink *pl, u8 mode,
+			      const unsigned long *supported,
+			      const unsigned long *advertising)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	__ETHTOOL_DECLARE_LINK_MODE_MASK(support1);
 	__ETHTOOL_DECLARE_LINK_MODE_MASK(support);
 	struct phylink_link_state config;
 	phy_interface_t iface;
+<<<<<<< HEAD
 	int ret;
 
 	linkmode_copy(support, phy->supported);
 
 	memset(&config, 0, sizeof(config));
 	linkmode_copy(config.advertising, phy->advertising);
+=======
+	bool changed;
+	int ret;
+
+	linkmode_copy(support, supported);
+
+	memset(&config, 0, sizeof(config));
+	linkmode_copy(config.advertising, advertising);
+>>>>>>> b7ba80a49124 (Commit)
 	config.interface = PHY_INTERFACE_MODE_NA;
 	config.speed = SPEED_UNKNOWN;
 	config.duplex = DUPLEX_UNKNOWN;
 	config.pause = MLO_PAUSE_AN;
+<<<<<<< HEAD
+=======
+	config.an_enabled = pl->link_config.an_enabled;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Ignore errors if we're expecting a PHY to attach later */
 	ret = phylink_validate(pl, support, &config);
@@ -2961,6 +3180,7 @@ static int phylink_sfp_config_phy(struct phylink *pl, u8 mode,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	pl->link_port = pl->sfp_port;
 
 	phylink_sfp_set_config(pl, mode, support, &config);
@@ -3027,19 +3247,55 @@ static int phylink_sfp_config_optical(struct phylink *pl)
 			    __ETHTOOL_LINK_MODE_MASK_NBITS, support,
 			    ERR_PTR(ret));
 		return ret;
+=======
+	phylink_dbg(pl, "requesting link mode %s/%s with support %*pb\n",
+		    phylink_an_mode_str(mode), phy_modes(config.interface),
+		    __ETHTOOL_LINK_MODE_MASK_NBITS, support);
+
+	if (phy_interface_mode_is_8023z(iface) && pl->phydev)
+		return -EINVAL;
+
+	changed = !linkmode_equal(pl->supported, support) ||
+		  !linkmode_equal(pl->link_config.advertising,
+				  config.advertising);
+	if (changed) {
+		linkmode_copy(pl->supported, support);
+		linkmode_copy(pl->link_config.advertising, config.advertising);
+	}
+
+	if (pl->cur_link_an_mode != mode ||
+	    pl->link_config.interface != config.interface) {
+		pl->link_config.interface = config.interface;
+		pl->cur_link_an_mode = mode;
+
+		changed = true;
+
+		phylink_info(pl, "switched to %s/%s link mode\n",
+			     phylink_an_mode_str(mode),
+			     phy_modes(config.interface));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	pl->link_port = pl->sfp_port;
 
+<<<<<<< HEAD
 	phylink_sfp_set_config(pl, MLO_AN_INBAND, pl->sfp_support, &config);
 
 	return 0;
+=======
+	if (changed && !test_bit(PHYLINK_DISABLE_STOPPED,
+				 &pl->phylink_disable_state))
+		phylink_mac_initial_config(pl, false);
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int phylink_sfp_module_insert(void *upstream,
 				     const struct sfp_eeprom_id *id)
 {
 	struct phylink *pl = upstream;
+<<<<<<< HEAD
 
 	ASSERT_RTNL();
 
@@ -3047,13 +3303,26 @@ static int phylink_sfp_module_insert(void *upstream,
 	phy_interface_zero(pl->sfp_interfaces);
 	sfp_parse_support(pl->sfp_bus, id, pl->sfp_support, pl->sfp_interfaces);
 	pl->sfp_port = sfp_parse_port(pl->sfp_bus, id, pl->sfp_support);
+=======
+	unsigned long *support = pl->sfp_support;
+
+	ASSERT_RTNL();
+
+	linkmode_zero(support);
+	sfp_parse_support(pl->sfp_bus, id, support);
+	pl->sfp_port = sfp_parse_port(pl->sfp_bus, id, support);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* If this module may have a PHY connecting later, defer until later */
 	pl->sfp_may_have_phy = sfp_may_have_phy(pl->sfp_bus, id);
 	if (pl->sfp_may_have_phy)
 		return 0;
 
+<<<<<<< HEAD
 	return phylink_sfp_config_optical(pl);
+=======
+	return phylink_sfp_config(pl, MLO_AN_INBAND, support, support);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int phylink_sfp_module_start(void *upstream)
@@ -3072,7 +3341,12 @@ static int phylink_sfp_module_start(void *upstream)
 	if (!pl->sfp_may_have_phy)
 		return 0;
 
+<<<<<<< HEAD
 	return phylink_sfp_config_optical(pl);
+=======
+	return phylink_sfp_config(pl, MLO_AN_INBAND,
+				  pl->sfp_support, pl->sfp_support);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void phylink_sfp_module_stop(void *upstream)
@@ -3132,12 +3406,17 @@ static int phylink_sfp_connect_phy(void *upstream, struct phy_device *phy)
 	else
 		mode = MLO_AN_INBAND;
 
+<<<<<<< HEAD
 	/* Set the PHY's host supported interfaces */
 	phy_interface_and(phy->host_interfaces, phylink_sfp_interfaces,
 			  pl->config->supported_interfaces);
 
 	/* Do the initial configuration */
 	ret = phylink_sfp_config_phy(pl, mode, phy);
+=======
+	/* Do the initial configuration */
+	ret = phylink_sfp_config(pl, mode, phy->supported, phy->advertising);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -3296,8 +3575,12 @@ void phylink_mii_c22_pcs_decode_state(struct phylink_link_state *state,
 	/* If there is no link or autonegotiation is disabled, the LP advertisement
 	 * data is not meaningful, so don't go any further.
 	 */
+<<<<<<< HEAD
 	if (!state->link || !linkmode_test_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
 					       state->advertising))
+=======
+	if (!state->link || !state->an_enabled)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	switch (state->interface) {
@@ -3490,6 +3773,7 @@ void phylink_mii_c45_pcs_get_state(struct mdio_device *pcs,
 }
 EXPORT_SYMBOL_GPL(phylink_mii_c45_pcs_get_state);
 
+<<<<<<< HEAD
 static int __init phylink_init(void)
 {
 	for (int i = 0; i < ARRAY_SIZE(phylink_sfp_interface_preference); ++i)
@@ -3501,4 +3785,6 @@ static int __init phylink_init(void)
 
 module_init(phylink_init);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_LICENSE("GPL v2");

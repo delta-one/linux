@@ -4,7 +4,11 @@
 
 #include <linux/swap.h>
 
+<<<<<<< HEAD
 #if defined(CONFIG_MEMCG) && defined(CONFIG_SWAP)
+=======
+#ifdef CONFIG_MEMCG_SWAP
+>>>>>>> b7ba80a49124 (Commit)
 
 extern unsigned short swap_cgroup_cmpxchg(swp_entry_t ent,
 					unsigned short old, unsigned short new);
@@ -40,6 +44,10 @@ static inline void swap_cgroup_swapoff(int type)
 	return;
 }
 
+<<<<<<< HEAD
 #endif
+=======
+#endif /* CONFIG_MEMCG_SWAP */
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __LINUX_SWAP_CGROUP_H */

@@ -736,7 +736,11 @@ void update_siblings_masks(unsigned int cpuid)
 
 	ret = detect_cache_attributes(cpuid);
 	if (ret && ret != -ENOENT)
+<<<<<<< HEAD
 		pr_info("Early cacheinfo allocation failed, ret = %d\n", ret);
+=======
+		pr_info("Early cacheinfo failed, ret = %d\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* update core and thread sibling masks */
 	for_each_online_cpu(cpu) {
@@ -825,7 +829,11 @@ __weak int __init parse_acpi_topology(void)
 #if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
 void __init init_cpu_topology(void)
 {
+<<<<<<< HEAD
 	int cpu, ret;
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	reset_cpu_topology();
 	ret = parse_acpi_topology();
@@ -840,6 +848,7 @@ void __init init_cpu_topology(void)
 		reset_cpu_topology();
 		return;
 	}
+<<<<<<< HEAD
 
 	for_each_possible_cpu(cpu) {
 		ret = fetch_cache_info(cpu);
@@ -848,6 +857,8 @@ void __init init_cpu_topology(void)
 			break;
 		}
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void store_cpu_topology(unsigned int cpuid)

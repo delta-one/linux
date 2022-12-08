@@ -21,6 +21,12 @@
 struct zpool {
 	struct zpool_driver *driver;
 	void *pool;
+<<<<<<< HEAD
+=======
+	const struct zpool_ops *ops;
+	bool evictable;
+	bool can_sleep_mapped;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static LIST_HEAD(drivers_head);
@@ -174,6 +180,12 @@ struct zpool *zpool_create_pool(const char *type, const char *name, gfp_t gfp,
 
 	zpool->driver = driver;
 	zpool->pool = driver->create(name, gfp, ops, zpool);
+<<<<<<< HEAD
+=======
+	zpool->ops = ops;
+	zpool->evictable = driver->shrink && ops && ops->evict;
+	zpool->can_sleep_mapped = driver->sleep_mapped;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!zpool->pool) {
 		pr_err("couldn't create %s pool\n", type);
@@ -374,13 +386,18 @@ u64 zpool_get_total_size(struct zpool *zpool)
  */
 bool zpool_evictable(struct zpool *zpool)
 {
+<<<<<<< HEAD
 	return zpool->driver->shrink;
+=======
+	return zpool->evictable;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
  * zpool_can_sleep_mapped - Test if zpool can sleep when do mapped.
  * @zpool:	The zpool to test
  *
+<<<<<<< HEAD
  * Some allocators enter non-preemptible context in ->map() callback (e.g.
  * disable pagefaults) and exit that context in ->unmap(), which limits what
  * we can do with the mapped object. For instance, we cannot wait for
@@ -388,12 +405,21 @@ bool zpool_evictable(struct zpool *zpool)
  * since those will call into the scheduler. This function tells us whether
  * we use such an allocator.
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Returns: true if zpool can sleep; false otherwise.
  */
 bool zpool_can_sleep_mapped(struct zpool *zpool)
 {
+<<<<<<< HEAD
 	return zpool->driver->sleep_mapped;
 }
 
+=======
+	return zpool->can_sleep_mapped;
+}
+
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("Dan Streetman <ddstreet@ieee.org>");
 MODULE_DESCRIPTION("Common API for compressed memory storage");

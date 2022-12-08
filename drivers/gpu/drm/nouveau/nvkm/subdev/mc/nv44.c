@@ -40,9 +40,16 @@ nv44_mc_init(struct nvkm_mc *mc)
 static const struct nvkm_mc_func
 nv44_mc = {
 	.init = nv44_mc_init,
+<<<<<<< HEAD
 	.intr = &nv04_mc_intr,
 	.intrs = nv17_mc_intrs,
 	.device = &nv04_mc_device,
+=======
+	.intr = nv17_mc_intr,
+	.intr_unarm = nv04_mc_intr_unarm,
+	.intr_rearm = nv04_mc_intr_rearm,
+	.intr_stat = nv04_mc_intr_stat,
+>>>>>>> b7ba80a49124 (Commit)
 	.reset = nv17_mc_reset,
 };
 

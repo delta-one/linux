@@ -6,14 +6,23 @@
 struct nvkm_mc {
 	const struct nvkm_mc_func *func;
 	struct nvkm_subdev subdev;
+<<<<<<< HEAD
 
 	struct nvkm_intr intr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void nvkm_mc_enable(struct nvkm_device *, enum nvkm_subdev_type, int);
 void nvkm_mc_disable(struct nvkm_device *, enum nvkm_subdev_type, int);
 bool nvkm_mc_enabled(struct nvkm_device *, enum nvkm_subdev_type, int);
 void nvkm_mc_reset(struct nvkm_device *, enum nvkm_subdev_type, int);
+<<<<<<< HEAD
+=======
+void nvkm_mc_intr(struct nvkm_device *, bool *handled);
+void nvkm_mc_intr_unarm(struct nvkm_device *);
+void nvkm_mc_intr_rearm(struct nvkm_device *);
+>>>>>>> b7ba80a49124 (Commit)
 void nvkm_mc_intr_mask(struct nvkm_device *, enum nvkm_subdev_type, int, bool enable);
 void nvkm_mc_unk260(struct nvkm_device *, u32 data);
 
@@ -30,5 +39,9 @@ int gk104_mc_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct n
 int gk20a_mc_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_mc **);
 int gp100_mc_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_mc **);
 int gp10b_mc_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_mc **);
+<<<<<<< HEAD
+=======
+int tu102_mc_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_mc **);
+>>>>>>> b7ba80a49124 (Commit)
 int ga100_mc_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_mc **);
 #endif

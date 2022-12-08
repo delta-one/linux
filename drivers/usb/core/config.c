@@ -61,7 +61,11 @@ static void usb_parse_ssp_isoc_endpoint_companion(struct device *ddev,
 	desc = (struct usb_ssp_isoc_ep_comp_descriptor *) buffer;
 	if (desc->bDescriptorType != USB_DT_SSP_ISOC_ENDPOINT_COMP ||
 	    size < USB_DT_SSP_ISOC_EP_COMP_SIZE) {
+<<<<<<< HEAD
 		dev_notice(ddev, "Invalid SuperSpeedPlus isoc endpoint companion"
+=======
+		dev_warn(ddev, "Invalid SuperSpeedPlus isoc endpoint companion"
+>>>>>>> b7ba80a49124 (Commit)
 			 "for config %d interface %d altsetting %d ep %d.\n",
 			 cfgno, inum, asnum, ep->desc.bEndpointAddress);
 		return;
@@ -83,7 +87,11 @@ static void usb_parse_ss_endpoint_companion(struct device *ddev, int cfgno,
 
 	if (desc->bDescriptorType != USB_DT_SS_ENDPOINT_COMP ||
 			size < USB_DT_SS_EP_COMP_SIZE) {
+<<<<<<< HEAD
 		dev_notice(ddev, "No SuperSpeed endpoint companion for config %d "
+=======
+		dev_warn(ddev, "No SuperSpeed endpoint companion for config %d "
+>>>>>>> b7ba80a49124 (Commit)
 				" interface %d altsetting %d ep %d: "
 				"using minimum values\n",
 				cfgno, inum, asnum, ep->desc.bEndpointAddress);
@@ -109,13 +117,21 @@ static void usb_parse_ss_endpoint_companion(struct device *ddev, int cfgno,
 
 	/* Check the various values */
 	if (usb_endpoint_xfer_control(&ep->desc) && desc->bMaxBurst != 0) {
+<<<<<<< HEAD
 		dev_notice(ddev, "Control endpoint with bMaxBurst = %d in "
+=======
+		dev_warn(ddev, "Control endpoint with bMaxBurst = %d in "
+>>>>>>> b7ba80a49124 (Commit)
 				"config %d interface %d altsetting %d ep %d: "
 				"setting to zero\n", desc->bMaxBurst,
 				cfgno, inum, asnum, ep->desc.bEndpointAddress);
 		ep->ss_ep_comp.bMaxBurst = 0;
 	} else if (desc->bMaxBurst > 15) {
+<<<<<<< HEAD
 		dev_notice(ddev, "Endpoint with bMaxBurst = %d in "
+=======
+		dev_warn(ddev, "Endpoint with bMaxBurst = %d in "
+>>>>>>> b7ba80a49124 (Commit)
 				"config %d interface %d altsetting %d ep %d: "
 				"setting to 15\n", desc->bMaxBurst,
 				cfgno, inum, asnum, ep->desc.bEndpointAddress);
@@ -125,7 +141,11 @@ static void usb_parse_ss_endpoint_companion(struct device *ddev, int cfgno,
 	if ((usb_endpoint_xfer_control(&ep->desc) ||
 			usb_endpoint_xfer_int(&ep->desc)) &&
 				desc->bmAttributes != 0) {
+<<<<<<< HEAD
 		dev_notice(ddev, "%s endpoint with bmAttributes = %d in "
+=======
+		dev_warn(ddev, "%s endpoint with bmAttributes = %d in "
+>>>>>>> b7ba80a49124 (Commit)
 				"config %d interface %d altsetting %d ep %d: "
 				"setting to zero\n",
 				usb_endpoint_xfer_control(&ep->desc) ? "Control" : "Bulk",
@@ -134,7 +154,11 @@ static void usb_parse_ss_endpoint_companion(struct device *ddev, int cfgno,
 		ep->ss_ep_comp.bmAttributes = 0;
 	} else if (usb_endpoint_xfer_bulk(&ep->desc) &&
 			desc->bmAttributes > 16) {
+<<<<<<< HEAD
 		dev_notice(ddev, "Bulk endpoint with more than 65536 streams in "
+=======
+		dev_warn(ddev, "Bulk endpoint with more than 65536 streams in "
+>>>>>>> b7ba80a49124 (Commit)
 				"config %d interface %d altsetting %d ep %d: "
 				"setting to max\n",
 				cfgno, inum, asnum, ep->desc.bEndpointAddress);
@@ -142,7 +166,11 @@ static void usb_parse_ss_endpoint_companion(struct device *ddev, int cfgno,
 	} else if (usb_endpoint_xfer_isoc(&ep->desc) &&
 		   !USB_SS_SSP_ISOC_COMP(desc->bmAttributes) &&
 		   USB_SS_MULT(desc->bmAttributes) > 3) {
+<<<<<<< HEAD
 		dev_notice(ddev, "Isoc endpoint has Mult of %d in "
+=======
+		dev_warn(ddev, "Isoc endpoint has Mult of %d in "
+>>>>>>> b7ba80a49124 (Commit)
 				"config %d interface %d altsetting %d ep %d: "
 				"setting to 3\n",
 				USB_SS_MULT(desc->bmAttributes),
@@ -160,7 +188,11 @@ static void usb_parse_ss_endpoint_companion(struct device *ddev, int cfgno,
 	else
 		max_tx = 999999;
 	if (le16_to_cpu(desc->wBytesPerInterval) > max_tx) {
+<<<<<<< HEAD
 		dev_notice(ddev, "%s endpoint with wBytesPerInterval of %d in "
+=======
+		dev_warn(ddev, "%s endpoint with wBytesPerInterval of %d in "
+>>>>>>> b7ba80a49124 (Commit)
 				"config %d interface %d altsetting %d ep %d: "
 				"setting to %d\n",
 				usb_endpoint_xfer_isoc(&ep->desc) ? "Isoc" : "Int",
@@ -273,7 +305,11 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
 	else if (d->bLength >= USB_DT_ENDPOINT_SIZE)
 		n = USB_DT_ENDPOINT_SIZE;
 	else {
+<<<<<<< HEAD
 		dev_notice(ddev, "config %d interface %d altsetting %d has an "
+=======
+		dev_warn(ddev, "config %d interface %d altsetting %d has an "
+>>>>>>> b7ba80a49124 (Commit)
 		    "invalid endpoint descriptor of length %d, skipping\n",
 		    cfgno, inum, asnum, d->bLength);
 		goto skip_to_next_endpoint_or_interface_descriptor;
@@ -281,7 +317,11 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
 
 	i = d->bEndpointAddress & ~USB_ENDPOINT_DIR_MASK;
 	if (i >= 16 || i == 0) {
+<<<<<<< HEAD
 		dev_notice(ddev, "config %d interface %d altsetting %d has an "
+=======
+		dev_warn(ddev, "config %d interface %d altsetting %d has an "
+>>>>>>> b7ba80a49124 (Commit)
 		    "invalid endpoint with address 0x%X, skipping\n",
 		    cfgno, inum, asnum, d->bEndpointAddress);
 		goto skip_to_next_endpoint_or_interface_descriptor;
@@ -293,7 +333,11 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
 
 	/* Check for duplicate endpoint addresses */
 	if (config_endpoint_is_duplicate(config, inum, asnum, d)) {
+<<<<<<< HEAD
 		dev_notice(ddev, "config %d interface %d altsetting %d has a duplicate endpoint with address 0x%X, skipping\n",
+=======
+		dev_warn(ddev, "config %d interface %d altsetting %d has a duplicate endpoint with address 0x%X, skipping\n",
+>>>>>>> b7ba80a49124 (Commit)
 				cfgno, inum, asnum, d->bEndpointAddress);
 		goto skip_to_next_endpoint_or_interface_descriptor;
 	}
@@ -301,7 +345,11 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
 	/* Ignore some endpoints */
 	if (udev->quirks & USB_QUIRK_ENDPOINT_IGNORE) {
 		if (usb_endpoint_is_ignored(udev, ifp, d)) {
+<<<<<<< HEAD
 			dev_notice(ddev, "config %d interface %d altsetting %d has an ignored endpoint with address 0x%X, skipping\n",
+=======
+			dev_warn(ddev, "config %d interface %d altsetting %d has an ignored endpoint with address 0x%X, skipping\n",
+>>>>>>> b7ba80a49124 (Commit)
 					cfgno, inum, asnum,
 					d->bEndpointAddress);
 			goto skip_to_next_endpoint_or_interface_descriptor;
@@ -378,7 +426,11 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
 		}
 	}
 	if (d->bInterval < i || d->bInterval > j) {
+<<<<<<< HEAD
 		dev_notice(ddev, "config %d interface %d altsetting %d "
+=======
+		dev_warn(ddev, "config %d interface %d altsetting %d "
+>>>>>>> b7ba80a49124 (Commit)
 		    "endpoint 0x%X has an invalid bInterval %d, "
 		    "changing to %d\n",
 		    cfgno, inum, asnum,
@@ -391,7 +443,11 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
 	 * them usable, we will try treating them as Interrupt endpoints.
 	 */
 	if (udev->speed == USB_SPEED_LOW && usb_endpoint_xfer_bulk(d)) {
+<<<<<<< HEAD
 		dev_notice(ddev, "config %d interface %d altsetting %d "
+=======
+		dev_warn(ddev, "config %d interface %d altsetting %d "
+>>>>>>> b7ba80a49124 (Commit)
 		    "endpoint 0x%X is Bulk; changing to Interrupt\n",
 		    cfgno, inum, asnum, d->bEndpointAddress);
 		endpoint->desc.bmAttributes = USB_ENDPOINT_XFER_INT;
@@ -408,7 +464,11 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
 	 */
 	maxp = le16_to_cpu(endpoint->desc.wMaxPacketSize);
 	if (maxp == 0 && !(usb_endpoint_xfer_isoc(d) && asnum == 0)) {
+<<<<<<< HEAD
 		dev_notice(ddev, "config %d interface %d altsetting %d endpoint 0x%X has invalid wMaxPacketSize 0\n",
+=======
+		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has invalid wMaxPacketSize 0\n",
+>>>>>>> b7ba80a49124 (Commit)
 		    cfgno, inum, asnum, d->bEndpointAddress);
 	}
 
@@ -439,7 +499,11 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
 	j = maxpacket_maxes[usb_endpoint_type(&endpoint->desc)];
 
 	if (maxp > j) {
+<<<<<<< HEAD
 		dev_notice(ddev, "config %d interface %d altsetting %d endpoint 0x%X has invalid maxpacket %d, setting to %d\n",
+=======
+		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has invalid maxpacket %d, setting to %d\n",
+>>>>>>> b7ba80a49124 (Commit)
 		    cfgno, inum, asnum, d->bEndpointAddress, maxp, j);
 		maxp = j;
 		endpoint->desc.wMaxPacketSize = cpu_to_le16(i | maxp);
@@ -452,7 +516,11 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
 	 */
 	if (udev->speed == USB_SPEED_HIGH && usb_endpoint_xfer_bulk(d)) {
 		if (maxp != 512)
+<<<<<<< HEAD
 			dev_notice(ddev, "config %d interface %d altsetting %d "
+=======
+			dev_warn(ddev, "config %d interface %d altsetting %d "
+>>>>>>> b7ba80a49124 (Commit)
 				"bulk endpoint 0x%X has invalid maxpacket %d\n",
 				cfgno, inum, asnum, d->bEndpointAddress,
 				maxp);
@@ -533,7 +601,11 @@ static int usb_parse_interface(struct device *ddev, int cfgno,
 	      i < intfc->num_altsetting;
 	     (++i, ++alt)) {
 		if (alt->desc.bAlternateSetting == asnum) {
+<<<<<<< HEAD
 			dev_notice(ddev, "Duplicate descriptor for config %d "
+=======
+			dev_warn(ddev, "Duplicate descriptor for config %d "
+>>>>>>> b7ba80a49124 (Commit)
 			    "interface %d altsetting %d, skipping\n",
 			    cfgno, inum, asnum);
 			goto skip_to_next_interface_descriptor;
@@ -559,7 +631,11 @@ static int usb_parse_interface(struct device *ddev, int cfgno,
 	num_ep = num_ep_orig = alt->desc.bNumEndpoints;
 	alt->desc.bNumEndpoints = 0;		/* Use as a counter */
 	if (num_ep > USB_MAXENDPOINTS) {
+<<<<<<< HEAD
 		dev_notice(ddev, "too many endpoints for config %d interface %d "
+=======
+		dev_warn(ddev, "too many endpoints for config %d interface %d "
+>>>>>>> b7ba80a49124 (Commit)
 		    "altsetting %d: %d, using maximum allowed: %d\n",
 		    cfgno, inum, asnum, num_ep, USB_MAXENDPOINTS);
 		num_ep = USB_MAXENDPOINTS;
@@ -590,7 +666,11 @@ static int usb_parse_interface(struct device *ddev, int cfgno,
 	}
 
 	if (n != num_ep_orig)
+<<<<<<< HEAD
 		dev_notice(ddev, "config %d interface %d altsetting %d has %d "
+=======
+		dev_warn(ddev, "config %d interface %d altsetting %d has %d "
+>>>>>>> b7ba80a49124 (Commit)
 		    "endpoint descriptor%s, different from the interface "
 		    "descriptor's value: %d\n",
 		    cfgno, inum, asnum, n, plural(n), num_ep_orig);
@@ -625,7 +705,11 @@ static int usb_parse_configuration(struct usb_device *dev, int cfgidx,
 	if (config->desc.bDescriptorType != USB_DT_CONFIG ||
 	    config->desc.bLength < USB_DT_CONFIG_SIZE ||
 	    config->desc.bLength > size) {
+<<<<<<< HEAD
 		dev_notice(ddev, "invalid descriptor for config index %d: "
+=======
+		dev_err(ddev, "invalid descriptor for config index %d: "
+>>>>>>> b7ba80a49124 (Commit)
 		    "type = 0x%X, length = %d\n", cfgidx,
 		    config->desc.bDescriptorType, config->desc.bLength);
 		return -EINVAL;
@@ -636,7 +720,11 @@ static int usb_parse_configuration(struct usb_device *dev, int cfgidx,
 	size -= config->desc.bLength;
 
 	if (nintf > USB_MAXINTERFACES) {
+<<<<<<< HEAD
 		dev_notice(ddev, "config %d has too many interfaces: %d, "
+=======
+		dev_warn(ddev, "config %d has too many interfaces: %d, "
+>>>>>>> b7ba80a49124 (Commit)
 		    "using maximum allowed: %d\n",
 		    cfgno, nintf, USB_MAXINTERFACES);
 		nintf = USB_MAXINTERFACES;
@@ -650,7 +738,11 @@ static int usb_parse_configuration(struct usb_device *dev, int cfgidx,
 	     (buffer2 += header->bLength, size2 -= header->bLength)) {
 
 		if (size2 < sizeof(struct usb_descriptor_header)) {
+<<<<<<< HEAD
 			dev_notice(ddev, "config %d descriptor has %d excess "
+=======
+			dev_warn(ddev, "config %d descriptor has %d excess "
+>>>>>>> b7ba80a49124 (Commit)
 			    "byte%s, ignoring\n",
 			    cfgno, size2, plural(size2));
 			break;
@@ -658,7 +750,11 @@ static int usb_parse_configuration(struct usb_device *dev, int cfgidx,
 
 		header = (struct usb_descriptor_header *) buffer2;
 		if ((header->bLength > size2) || (header->bLength < 2)) {
+<<<<<<< HEAD
 			dev_notice(ddev, "config %d has an invalid descriptor "
+=======
+			dev_warn(ddev, "config %d has an invalid descriptor "
+>>>>>>> b7ba80a49124 (Commit)
 			    "of length %d, skipping remainder of the config\n",
 			    cfgno, header->bLength);
 			break;
@@ -670,7 +766,11 @@ static int usb_parse_configuration(struct usb_device *dev, int cfgidx,
 
 			d = (struct usb_interface_descriptor *) header;
 			if (d->bLength < USB_DT_INTERFACE_SIZE) {
+<<<<<<< HEAD
 				dev_notice(ddev, "config %d has an invalid "
+=======
+				dev_warn(ddev, "config %d has an invalid "
+>>>>>>> b7ba80a49124 (Commit)
 				    "interface descriptor of length %d, "
 				    "skipping\n", cfgno, d->bLength);
 				continue;
@@ -680,7 +780,11 @@ static int usb_parse_configuration(struct usb_device *dev, int cfgidx,
 
 			if ((dev->quirks & USB_QUIRK_HONOR_BNUMINTERFACES) &&
 			    n >= nintf_orig) {
+<<<<<<< HEAD
 				dev_notice(ddev, "config %d has more interface "
+=======
+				dev_warn(ddev, "config %d has more interface "
+>>>>>>> b7ba80a49124 (Commit)
 				    "descriptors, than it declares in "
 				    "bNumInterfaces, ignoring interface "
 				    "number: %d\n", cfgno, inum);
@@ -688,7 +792,11 @@ static int usb_parse_configuration(struct usb_device *dev, int cfgidx,
 			}
 
 			if (inum >= nintf_orig)
+<<<<<<< HEAD
 				dev_notice(ddev, "config %d has an invalid "
+=======
+				dev_warn(ddev, "config %d has an invalid "
+>>>>>>> b7ba80a49124 (Commit)
 				    "interface number: %d but max is %d\n",
 				    cfgno, inum, nintf_orig - 1);
 
@@ -713,14 +821,22 @@ static int usb_parse_configuration(struct usb_device *dev, int cfgidx,
 
 			d = (struct usb_interface_assoc_descriptor *)header;
 			if (d->bLength < USB_DT_INTERFACE_ASSOCIATION_SIZE) {
+<<<<<<< HEAD
 				dev_notice(ddev,
+=======
+				dev_warn(ddev,
+>>>>>>> b7ba80a49124 (Commit)
 					 "config %d has an invalid interface association descriptor of length %d, skipping\n",
 					 cfgno, d->bLength);
 				continue;
 			}
 
 			if (iad_num == USB_MAXIADS) {
+<<<<<<< HEAD
 				dev_notice(ddev, "found more Interface "
+=======
+				dev_warn(ddev, "found more Interface "
+>>>>>>> b7ba80a49124 (Commit)
 					       "Association Descriptors "
 					       "than allocated for in "
 					       "configuration %d\n", cfgno);
@@ -731,7 +847,11 @@ static int usb_parse_configuration(struct usb_device *dev, int cfgidx,
 
 		} else if (header->bDescriptorType == USB_DT_DEVICE ||
 			    header->bDescriptorType == USB_DT_CONFIG)
+<<<<<<< HEAD
 			dev_notice(ddev, "config %d contains an unexpected "
+=======
+			dev_warn(ddev, "config %d contains an unexpected "
+>>>>>>> b7ba80a49124 (Commit)
 			    "descriptor of type 0x%X, skipping\n",
 			    cfgno, header->bDescriptorType);
 
@@ -740,11 +860,19 @@ static int usb_parse_configuration(struct usb_device *dev, int cfgidx,
 	config->desc.wTotalLength = cpu_to_le16(buffer2 - buffer0);
 
 	if (n != nintf)
+<<<<<<< HEAD
 		dev_notice(ddev, "config %d has %d interface%s, different from "
 		    "the descriptor's value: %d\n",
 		    cfgno, n, plural(n), nintf_orig);
 	else if (n == 0)
 		dev_notice(ddev, "config %d has no interfaces?\n", cfgno);
+=======
+		dev_warn(ddev, "config %d has %d interface%s, different from "
+		    "the descriptor's value: %d\n",
+		    cfgno, n, plural(n), nintf_orig);
+	else if (n == 0)
+		dev_warn(ddev, "config %d has no interfaces?\n", cfgno);
+>>>>>>> b7ba80a49124 (Commit)
 	config->desc.bNumInterfaces = nintf = n;
 
 	/* Check for missing interface numbers */
@@ -754,7 +882,11 @@ static int usb_parse_configuration(struct usb_device *dev, int cfgidx,
 				break;
 		}
 		if (j >= nintf)
+<<<<<<< HEAD
 			dev_notice(ddev, "config %d has no interface number "
+=======
+			dev_warn(ddev, "config %d has no interface number "
+>>>>>>> b7ba80a49124 (Commit)
 			    "%d\n", cfgno, i);
 	}
 
@@ -762,7 +894,11 @@ static int usb_parse_configuration(struct usb_device *dev, int cfgidx,
 	for (i = 0; i < nintf; ++i) {
 		j = nalts[i];
 		if (j > USB_MAXALTSETTING) {
+<<<<<<< HEAD
 			dev_notice(ddev, "too many alternate settings for "
+=======
+			dev_warn(ddev, "too many alternate settings for "
+>>>>>>> b7ba80a49124 (Commit)
 			    "config %d interface %d: %d, "
 			    "using maximum allowed: %d\n",
 			    cfgno, inums[i], j, USB_MAXALTSETTING);
@@ -811,7 +947,11 @@ static int usb_parse_configuration(struct usb_device *dev, int cfgidx,
 					break;
 			}
 			if (n >= intfc->num_altsetting)
+<<<<<<< HEAD
 				dev_notice(ddev, "config %d interface %d has no "
+=======
+				dev_warn(ddev, "config %d interface %d has no "
+>>>>>>> b7ba80a49124 (Commit)
 				    "altsetting %d\n", cfgno, inums[i], j);
 		}
 	}
@@ -868,7 +1008,11 @@ int usb_get_configuration(struct usb_device *dev)
 	int result;
 
 	if (ncfg > USB_MAXCONFIG) {
+<<<<<<< HEAD
 		dev_notice(ddev, "too many configurations: %d, "
+=======
+		dev_warn(ddev, "too many configurations: %d, "
+>>>>>>> b7ba80a49124 (Commit)
 		    "using maximum allowed: %d\n", ncfg, USB_MAXCONFIG);
 		dev->descriptor.bNumConfigurations = ncfg = USB_MAXCONFIG;
 	}
@@ -902,7 +1046,11 @@ int usb_get_configuration(struct usb_device *dev)
 			    "descriptor/%s: %d\n", cfgno, "start", result);
 			if (result != -EPIPE)
 				goto err;
+<<<<<<< HEAD
 			dev_notice(ddev, "chopping to %d config(s)\n", cfgno);
+=======
+			dev_err(ddev, "chopping to %d config(s)\n", cfgno);
+>>>>>>> b7ba80a49124 (Commit)
 			dev->descriptor.bNumConfigurations = cfgno;
 			break;
 		} else if (result < 4) {
@@ -934,7 +1082,11 @@ int usb_get_configuration(struct usb_device *dev)
 			goto err;
 		}
 		if (result < length) {
+<<<<<<< HEAD
 			dev_notice(ddev, "config index %d descriptor too short "
+=======
+			dev_warn(ddev, "config index %d descriptor too short "
+>>>>>>> b7ba80a49124 (Commit)
 			    "(expected %i, got %i)\n", cfgno, length, result);
 			length = result;
 		}
@@ -993,7 +1145,11 @@ int usb_get_bos_descriptor(struct usb_device *dev)
 	/* Get BOS descriptor */
 	ret = usb_get_descriptor(dev, USB_DT_BOS, 0, bos, USB_DT_BOS_SIZE);
 	if (ret < USB_DT_BOS_SIZE || bos->bLength < USB_DT_BOS_SIZE) {
+<<<<<<< HEAD
 		dev_notice(ddev, "unable to get BOS descriptor or descriptor too short\n");
+=======
+		dev_err(ddev, "unable to get BOS descriptor or descriptor too short\n");
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret >= 0)
 			ret = -ENOMSG;
 		kfree(bos);
@@ -1021,7 +1177,11 @@ int usb_get_bos_descriptor(struct usb_device *dev)
 
 	ret = usb_get_descriptor(dev, USB_DT_BOS, 0, buffer, total_len);
 	if (ret < total_len) {
+<<<<<<< HEAD
 		dev_notice(ddev, "unable to get BOS descriptor set\n");
+=======
+		dev_err(ddev, "unable to get BOS descriptor set\n");
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret >= 0)
 			ret = -ENOMSG;
 		goto err;
@@ -1046,7 +1206,11 @@ int usb_get_bos_descriptor(struct usb_device *dev)
 		}
 
 		if (cap->bDescriptorType != USB_DT_DEVICE_CAPABILITY) {
+<<<<<<< HEAD
 			dev_notice(ddev, "descriptor type invalid, skip\n");
+=======
+			dev_warn(ddev, "descriptor type invalid, skip\n");
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		}
 

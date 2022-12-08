@@ -78,11 +78,19 @@
 	};
 
 	clocks {
+<<<<<<< HEAD
 		g762_clk: g762-oscillator {
 			compatible = "fixed-clock";
 			#clock-cells = <0>;
 			clock-frequency = <32768>;
 		};
+=======
+	       g762_clk: g762-oscillator {
+			 compatible = "fixed-clock";
+			 #clock-cells = <0>;
+			 clock-frequency = <32768>;
+	       };
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	netxbig-leds {

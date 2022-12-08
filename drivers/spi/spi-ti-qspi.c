@@ -533,10 +533,17 @@ static void ti_qspi_enable_memory_map(struct spi_device *spi)
 	if (qspi->ctrl_base) {
 		regmap_update_bits(qspi->ctrl_base, qspi->ctrl_reg,
 				   MEM_CS_MASK,
+<<<<<<< HEAD
 				   MEM_CS_EN(spi_get_chipselect(spi, 0)));
 	}
 	qspi->mmap_enabled = true;
 	qspi->current_cs = spi_get_chipselect(spi, 0);
+=======
+				   MEM_CS_EN(spi->chip_select));
+	}
+	qspi->mmap_enabled = true;
+	qspi->current_cs = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ti_qspi_disable_memory_map(struct spi_device *spi)
@@ -572,7 +579,11 @@ static void ti_qspi_setup_mmap_read(struct spi_device *spi, u8 opcode,
 	memval |= ((addr_width - 1) << QSPI_SETUP_ADDR_SHIFT |
 		   dummy_bytes << QSPI_SETUP_DUMMY_SHIFT);
 	ti_qspi_write(qspi, memval,
+<<<<<<< HEAD
 		      QSPI_SPI_SETUP_REG(spi_get_chipselect(spi, 0)));
+=======
+		      QSPI_SPI_SETUP_REG(spi->chip_select));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ti_qspi_adjust_op_size(struct spi_mem *mem, struct spi_mem_op *op)
@@ -623,7 +634,11 @@ static int ti_qspi_exec_mem_op(struct spi_mem *mem,
 
 	mutex_lock(&qspi->list_lock);
 
+<<<<<<< HEAD
 	if (!qspi->mmap_enabled || qspi->current_cs != spi_get_chipselect(mem->spi, 0)) {
+=======
+	if (!qspi->mmap_enabled || qspi->current_cs != mem->spi->chip_select) {
+>>>>>>> b7ba80a49124 (Commit)
 		ti_qspi_setup_clk(qspi, mem->spi->max_speed_hz);
 		ti_qspi_enable_memory_map(mem->spi);
 	}
@@ -673,11 +688,19 @@ static int ti_qspi_start_transfer_one(struct spi_master *master,
 	qspi->dc = 0;
 
 	if (spi->mode & SPI_CPHA)
+<<<<<<< HEAD
 		qspi->dc |= QSPI_CKPHA(spi_get_chipselect(spi, 0));
 	if (spi->mode & SPI_CPOL)
 		qspi->dc |= QSPI_CKPOL(spi_get_chipselect(spi, 0));
 	if (spi->mode & SPI_CS_HIGH)
 		qspi->dc |= QSPI_CSPOL(spi_get_chipselect(spi, 0));
+=======
+		qspi->dc |= QSPI_CKPHA(spi->chip_select);
+	if (spi->mode & SPI_CPOL)
+		qspi->dc |= QSPI_CKPOL(spi->chip_select);
+	if (spi->mode & SPI_CS_HIGH)
+		qspi->dc |= QSPI_CSPOL(spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	frame_len_words = 0;
 	list_for_each_entry(t, &m->transfers, transfer_list)
@@ -686,7 +709,11 @@ static int ti_qspi_start_transfer_one(struct spi_master *master,
 
 	/* setup command reg */
 	qspi->cmd = 0;
+<<<<<<< HEAD
 	qspi->cmd |= QSPI_EN_CS(spi_get_chipselect(spi, 0));
+=======
+	qspi->cmd |= QSPI_EN_CS(spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 	qspi->cmd |= QSPI_FLEN(frame_len_words);
 
 	ti_qspi_write(qspi, qspi->dc, QSPI_SPI_DC_REG);

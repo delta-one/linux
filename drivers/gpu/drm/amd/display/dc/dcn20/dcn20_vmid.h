@@ -28,6 +28,15 @@
 
 #include "vmid.h"
 
+<<<<<<< HEAD
+=======
+#define BASE_INNER(seg) \
+	DCE_BASE__INST0_SEG ## seg
+
+#define BASE(seg) \
+	BASE_INNER(seg)
+
+>>>>>>> b7ba80a49124 (Commit)
 #define DCN20_VMID_REG_LIST(id)\
 	SRI(CNTL, DCN_VM_CONTEXT, id),\
 	SRI(PAGE_TABLE_BASE_ADDR_HI32, DCN_VM_CONTEXT, id),\

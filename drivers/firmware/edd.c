@@ -608,7 +608,11 @@ static void edd_release(struct kobject * kobj)
 	kfree(dev);
 }
 
+<<<<<<< HEAD
 static const struct kobj_type edd_ktype = {
+=======
+static struct kobj_type edd_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release	= edd_release,
 	.sysfs_ops	= &edd_attr_ops,
 };

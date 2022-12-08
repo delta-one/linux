@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
 #include <linux/hw_breakpoint.h>
 #include <linux/err.h>
+<<<<<<< HEAD
 #include <linux/list_sort.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/zalloc.h>
 #include <dirent.h>
 #include <errno.h>
@@ -28,9 +31,13 @@
 #include "perf.h"
 #include "util/parse-events-hybrid.h"
 #include "util/pmu-hybrid.h"
+<<<<<<< HEAD
 #include "util/bpf-filter.h"
 #include "tracepoint.h"
 #include "thread_map.h"
+=======
+#include "tracepoint.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MAX_NAME_LEN 100
 
@@ -152,6 +159,7 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
 	},
 };
 
+<<<<<<< HEAD
 bool is_event_supported(u8 type, u64 config)
 {
 	bool ret = true;
@@ -189,6 +197,15 @@ bool is_event_supported(u8 type, u64 config)
 	perf_thread_map__put(tmap);
 	return ret;
 }
+=======
+#define __PERF_EVENT_FIELD(config, name) \
+	((config & PERF_EVENT_##name##_MASK) >> PERF_EVENT_##name##_SHIFT)
+
+#define PERF_EVENT_RAW(config)		__PERF_EVENT_FIELD(config, RAW)
+#define PERF_EVENT_CONFIG(config)	__PERF_EVENT_FIELD(config, CONFIG)
+#define PERF_EVENT_TYPE(config)		__PERF_EVENT_FIELD(config, TYPE)
+#define PERF_EVENT_ID(config)		__PERF_EVENT_FIELD(config, EVENT)
+>>>>>>> b7ba80a49124 (Commit)
 
 const char *event_type(int type)
 {
@@ -248,9 +265,12 @@ __add_event(struct list_head *list, int *idx,
 	struct perf_cpu_map *cpus = pmu ? perf_cpu_map__get(pmu->cpus) :
 			       cpu_list ? perf_cpu_map__new(cpu_list) : NULL;
 
+<<<<<<< HEAD
 	if (pmu)
 		perf_pmu__warn_invalid_formats(pmu);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (pmu && attr->type == PERF_TYPE_RAW)
 		perf_pmu__warn_invalid_config(pmu, attr->config, name);
 
@@ -268,7 +288,10 @@ __add_event(struct list_head *list, int *idx,
 	evsel->core.own_cpus = perf_cpu_map__get(cpus);
 	evsel->core.requires_cpu = pmu ? pmu->is_uncore : false;
 	evsel->auto_merge_stats = auto_merge_stats;
+<<<<<<< HEAD
 	evsel->pmu = pmu;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (name)
 		evsel->name = strdup(name);
@@ -447,7 +470,10 @@ out_free_terms:
 	return ret;
 }
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void tracepoint_error(struct parse_events_error *e, int err,
 			     const char *sys, const char *name)
 {
@@ -596,7 +622,10 @@ static int add_tracepoint_multi_sys(struct list_head *list, int *idx,
 	closedir(events_dir);
 	return ret;
 }
+<<<<<<< HEAD
 #endif /* HAVE_LIBTRACEEVENT */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef HAVE_LIBBPF_SUPPORT
 struct __add_bpf_event_param {
@@ -1147,7 +1176,10 @@ static int config_term_pmu(struct perf_event_attr *attr,
 		return config_term_common(attr, term, err);
 }
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int config_term_tracepoint(struct perf_event_attr *attr,
 				  struct parse_events_term *term,
 				  struct parse_events_error *err)
@@ -1175,7 +1207,10 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
 
 	return 0;
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int config_attr(struct perf_event_attr *attr,
 		       struct list_head *head,
@@ -1331,7 +1366,10 @@ int parse_events_add_tracepoint(struct list_head *list, int *idx,
 				struct parse_events_error *err,
 				struct list_head *head_config)
 {
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (head_config) {
 		struct perf_event_attr attr;
 
@@ -1346,6 +1384,7 @@ int parse_events_add_tracepoint(struct list_head *list, int *idx,
 	else
 		return add_tracepoint_event(list, idx, sys, event,
 					    err, head_config);
+<<<<<<< HEAD
 #else
 	(void)list;
 	(void)idx;
@@ -1356,6 +1395,8 @@ int parse_events_add_tracepoint(struct list_head *list, int *idx,
 				strdup("libtraceevent is necessary for tracepoint support"));
 	return -1;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int parse_events_add_numeric(struct parse_events_state *parse_state,
@@ -1446,13 +1487,22 @@ static int parse_events__inside_hybrid_pmu(struct parse_events_state *parse_stat
 int parse_events_add_pmu(struct parse_events_state *parse_state,
 			 struct list_head *list, char *name,
 			 struct list_head *head_config,
+<<<<<<< HEAD
 			 bool auto_merge_stats)
+=======
+			 bool auto_merge_stats,
+			 bool use_alias)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct perf_event_attr attr;
 	struct perf_pmu_info info;
 	struct perf_pmu *pmu;
 	struct evsel *evsel;
 	struct parse_events_error *err = parse_state->error;
+<<<<<<< HEAD
+=======
+	bool use_uncore_alias;
+>>>>>>> b7ba80a49124 (Commit)
 	LIST_HEAD(config_terms);
 
 	pmu = parse_state->fake_pmu ?: perf_pmu__find(name);
@@ -1487,6 +1537,11 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
 		memset(&attr, 0, sizeof(attr));
 	}
 
+<<<<<<< HEAD
+=======
+	use_uncore_alias = (pmu->is_uncore && use_alias);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!head_config) {
 		attr.type = pmu->type;
 		evsel = __add_event(list, &parse_state->idx, &attr,
@@ -1496,6 +1551,10 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
 				    /*cpu_list=*/NULL);
 		if (evsel) {
 			evsel->pmu_name = name ? strdup(name) : NULL;
+<<<<<<< HEAD
+=======
+			evsel->use_uncore_alias = use_uncore_alias;
+>>>>>>> b7ba80a49124 (Commit)
 			return 0;
 		} else {
 			return -ENOMEM;
@@ -1556,6 +1615,10 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
 		evsel->use_config_name = true;
 
 	evsel->pmu_name = name ? strdup(name) : NULL;
+<<<<<<< HEAD
+=======
+	evsel->use_uncore_alias = use_uncore_alias;
+>>>>>>> b7ba80a49124 (Commit)
 	evsel->percore = config_term_percore(&evsel->config_terms);
 
 	if (parse_state->fake_pmu)
@@ -1566,6 +1629,11 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
 	evsel->scale = info.scale;
 	evsel->per_pkg = info.per_pkg;
 	evsel->snapshot = info.snapshot;
+<<<<<<< HEAD
+=======
+	evsel->metric_expr = info.metric_expr;
+	evsel->metric_name = info.metric_name;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1617,7 +1685,11 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
 				parse_events_copy_term_list(head, &orig_head);
 				if (!parse_events_add_pmu(parse_state, list,
 							  pmu->name, orig_head,
+<<<<<<< HEAD
 							  /*auto_merge_stats=*/true)) {
+=======
+							  true, true)) {
+>>>>>>> b7ba80a49124 (Commit)
 					pr_debug("%s -> %s/%s/\n", str,
 						 pmu->name, alias->str);
 					ok++;
@@ -1629,7 +1701,11 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
 
 	if (parse_state->fake_pmu) {
 		if (!parse_events_add_pmu(parse_state, list, str, head,
+<<<<<<< HEAD
 					  /*auto_merge_stats=*/true)) {
+=======
+					  true, true)) {
+>>>>>>> b7ba80a49124 (Commit)
 			pr_debug("%s -> %s/%s/\n", str, "fake_pmu", str);
 			ok++;
 		}
@@ -1651,7 +1727,128 @@ int parse_events__modifier_group(struct list_head *list,
 	return parse_events__modifier_event(list, event_mod, true);
 }
 
+<<<<<<< HEAD
 void parse_events__set_leader(char *name, struct list_head *list)
+=======
+/*
+ * Check if the two uncore PMUs are from the same uncore block
+ * The format of the uncore PMU name is uncore_#blockname_#pmuidx
+ */
+static bool is_same_uncore_block(const char *pmu_name_a, const char *pmu_name_b)
+{
+	char *end_a, *end_b;
+
+	end_a = strrchr(pmu_name_a, '_');
+	end_b = strrchr(pmu_name_b, '_');
+
+	if (!end_a || !end_b)
+		return false;
+
+	if ((end_a - pmu_name_a) != (end_b - pmu_name_b))
+		return false;
+
+	return (strncmp(pmu_name_a, pmu_name_b, end_a - pmu_name_a) == 0);
+}
+
+static int
+parse_events__set_leader_for_uncore_aliase(char *name, struct list_head *list,
+					   struct parse_events_state *parse_state)
+{
+	struct evsel *evsel, *leader;
+	uintptr_t *leaders;
+	bool is_leader = true;
+	int i, nr_pmu = 0, total_members, ret = 0;
+
+	leader = list_first_entry(list, struct evsel, core.node);
+	evsel = list_last_entry(list, struct evsel, core.node);
+	total_members = evsel->core.idx - leader->core.idx + 1;
+
+	leaders = calloc(total_members, sizeof(uintptr_t));
+	if (WARN_ON(!leaders))
+		return 0;
+
+	/*
+	 * Going through the whole group and doing sanity check.
+	 * All members must use alias, and be from the same uncore block.
+	 * Also, storing the leader events in an array.
+	 */
+	__evlist__for_each_entry(list, evsel) {
+
+		/* Only split the uncore group which members use alias */
+		if (!evsel->use_uncore_alias)
+			goto out;
+
+		/* The events must be from the same uncore block */
+		if (!is_same_uncore_block(leader->pmu_name, evsel->pmu_name))
+			goto out;
+
+		if (!is_leader)
+			continue;
+		/*
+		 * If the event's PMU name starts to repeat, it must be a new
+		 * event. That can be used to distinguish the leader from
+		 * other members, even they have the same event name.
+		 */
+		if ((leader != evsel) &&
+		    !strcmp(leader->pmu_name, evsel->pmu_name)) {
+			is_leader = false;
+			continue;
+		}
+
+		/* Store the leader event for each PMU */
+		leaders[nr_pmu++] = (uintptr_t) evsel;
+	}
+
+	/* only one event alias */
+	if (nr_pmu == total_members) {
+		parse_state->nr_groups--;
+		goto handled;
+	}
+
+	/*
+	 * An uncore event alias is a joint name which means the same event
+	 * runs on all PMUs of a block.
+	 * Perf doesn't support mixed events from different PMUs in the same
+	 * group. The big group has to be split into multiple small groups
+	 * which only include the events from the same PMU.
+	 *
+	 * Here the uncore event aliases must be from the same uncore block.
+	 * The number of PMUs must be same for each alias. The number of new
+	 * small groups equals to the number of PMUs.
+	 * Setting the leader event for corresponding members in each group.
+	 */
+	i = 0;
+	__evlist__for_each_entry(list, evsel) {
+		if (i >= nr_pmu)
+			i = 0;
+		evsel__set_leader(evsel, (struct evsel *) leaders[i++]);
+	}
+
+	/* The number of members and group name are same for each group */
+	for (i = 0; i < nr_pmu; i++) {
+		evsel = (struct evsel *) leaders[i];
+		evsel->core.nr_members = total_members / nr_pmu;
+		evsel->group_name = name ? strdup(name) : NULL;
+	}
+
+	/* Take the new small groups into account */
+	parse_state->nr_groups += nr_pmu - 1;
+
+handled:
+	ret = 1;
+out:
+	free(leaders);
+	return ret;
+}
+
+__weak struct evsel *arch_evlist__leader(struct list_head *list)
+{
+	return list_first_entry(list, struct evsel, core.node);
+}
+
+void parse_events__set_leader(char *name, struct list_head *list,
+			      struct parse_events_state *parse_state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct evsel *leader;
 
@@ -1660,9 +1857,19 @@ void parse_events__set_leader(char *name, struct list_head *list)
 		return;
 	}
 
+<<<<<<< HEAD
 	leader = list_first_entry(list, struct evsel, core.node);
 	__perf_evlist__set_leader(list, &leader->core);
 	leader->group_name = name;
+=======
+	if (parse_events__set_leader_for_uncore_aliase(name, list, parse_state))
+		return;
+
+	leader = arch_evlist__leader(list);
+	__perf_evlist__set_leader(list, &leader->core);
+	leader->group_name = name ? strdup(name) : NULL;
+	list_move(&leader->core.node, list);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* list_event is assumed to point to malloc'ed memory */
@@ -2119,6 +2326,7 @@ static int parse_events__with_hybrid_pmu(struct parse_events_state *parse_state,
 	return ret;
 }
 
+<<<<<<< HEAD
 __weak int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
 {
 	/* Order by insertion index. */
@@ -2249,6 +2457,10 @@ static bool parse_events__sort_events_and_fix_groups(struct list_head *list)
 int __parse_events(struct evlist *evlist, const char *str,
 		   struct parse_events_error *err, struct perf_pmu *fake_pmu,
 		   bool warn_if_reordered)
+=======
+int __parse_events(struct evlist *evlist, const char *str,
+		   struct parse_events_error *err, struct perf_pmu *fake_pmu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct parse_events_state parse_state = {
 		.list	  = LIST_HEAD_INIT(parse_state.list),
@@ -2268,10 +2480,13 @@ int __parse_events(struct evlist *evlist, const char *str,
 		return -1;
 	}
 
+<<<<<<< HEAD
 	if (parse_events__sort_events_and_fix_groups(&parse_state.list) &&
 	    warn_if_reordered && !parse_state.wild_card_pmus)
 		pr_warning("WARNING: events were regrouped to match PMUs\n");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Add list to the evlist even with errors to allow callers to clean up.
 	 */
@@ -2280,6 +2495,10 @@ int __parse_events(struct evlist *evlist, const char *str,
 	if (!ret) {
 		struct evsel *last;
 
+<<<<<<< HEAD
+=======
+		evlist->core.nr_groups += parse_state.nr_groups;
+>>>>>>> b7ba80a49124 (Commit)
 		last = evlist__last(evlist);
 		last->cmdline_group_boundary = true;
 
@@ -2543,8 +2762,16 @@ static int set_filter(struct evsel *evsel, const void *arg)
 		perf_pmu__scan_file(pmu, "nr_addr_filters",
 				    "%d", &nr_addr_filters);
 
+<<<<<<< HEAD
 	if (!nr_addr_filters)
 		return perf_bpf_filter__parse(&evsel->bpf_filters, str);
+=======
+	if (!nr_addr_filters) {
+		fprintf(stderr,
+			"This CPU does not support address filtering\n");
+		return -1;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (evsel__append_addr_filter(evsel, str) < 0) {
 		fprintf(stderr,

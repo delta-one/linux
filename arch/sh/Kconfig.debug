@@ -15,7 +15,11 @@ config SH_STANDARD_BIOS
 
 config STACK_DEBUG
 	bool "Check for stack overflows"
+<<<<<<< HEAD
 	depends on DEBUG_KERNEL && PRINTK
+=======
+	depends on DEBUG_KERNEL
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This option will cause messages to be printed if free stack space
 	  drops below a certain limit. Saying Y here will add overhead to

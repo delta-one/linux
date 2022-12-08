@@ -15,6 +15,7 @@ Date:		Dec 2014
 KernelVersion:	4.0
 Description:	Control descriptors
 
+<<<<<<< HEAD
 		All attributes read only except enable_interrupt_ep:
 
 		===================	=============================
@@ -23,6 +24,14 @@ Description:	Control descriptors
 		enable_interrupt_ep	flag to enable the interrupt
 					endpoint for the VC interface
 		===================	=============================
+=======
+		All attributes read only:
+
+		================	=============================
+		bInterfaceNumber	USB interface number for this
+					streaming interface
+		================	=============================
+>>>>>>> b7ba80a49124 (Commit)
 
 What:		/config/usb-gadget/gadget/functions/uvc.name/control/class
 Date:		Dec 2014
@@ -54,7 +63,11 @@ Date:		Dec 2014
 KernelVersion:	4.0
 Description:	Default output terminal descriptors
 
+<<<<<<< HEAD
 		All attributes read only except bSourceID:
+=======
+		All attributes read only:
+>>>>>>> b7ba80a49124 (Commit)
 
 		==============	=============================================
 		iTerminal	index of string descriptor
@@ -113,6 +126,7 @@ Description:	Default processing unit descriptors
 		bUnitID		a non-zero id of this unit
 		===============	========================================
 
+<<<<<<< HEAD
 What:		/config/usb-gadget/gadget/functions/uvc.name/control/extensions
 Date:		Nov 2022
 KernelVersion:	6.1
@@ -141,6 +155,8 @@ Description:	Extension Unit (XU) Descriptor
 					this extension unit
 		=================	========================================
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 What:		/config/usb-gadget/gadget/functions/uvc.name/control/header
 Date:		Dec 2014
 KernelVersion:	4.0
@@ -195,6 +211,7 @@ Date:		Dec 2014
 KernelVersion:	4.0
 Description:	Default color matching descriptors
 
+<<<<<<< HEAD
 		All attributes read/write:
 
 		========================  ======================================
@@ -213,6 +230,9 @@ KernelVersion:	6.3
 Description:	Additional color matching descriptors
 
 		All attributes read/write:
+=======
+		All attributes read only:
+>>>>>>> b7ba80a49124 (Commit)
 
 		========================  ======================================
 		bMatrixCoefficients	  matrix used to compute luma and
@@ -244,7 +264,11 @@ Description:	Specific MJPEG format descriptors
 					read-only
 		bmaControls		this format's data for bmaControls in
 					the streaming header
+<<<<<<< HEAD
 		bmInterlaceFlags	specifies interlace information,
+=======
+		bmInterfaceFlags	specifies interlace information,
+>>>>>>> b7ba80a49124 (Commit)
 					read-only
 		bAspectRatioY		the X dimension of the picture aspect
 					ratio, read-only
@@ -300,7 +324,11 @@ Description:	Specific uncompressed format descriptors
 					read-only
 		bmaControls		this format's data for bmaControls in
 					the streaming header
+<<<<<<< HEAD
 		bmInterlaceFlags	specifies interlace information,
+=======
+		bmInterfaceFlags	specifies interlace information,
+>>>>>>> b7ba80a49124 (Commit)
 					read-only
 		bAspectRatioY		the X dimension of the picture aspect
 					ratio, read-only

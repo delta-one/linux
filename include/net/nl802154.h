@@ -72,6 +72,7 @@ enum nl802154_commands {
 	NL802154_CMD_NEW_SEC_LEVEL,
 	NL802154_CMD_DEL_SEC_LEVEL,
 
+<<<<<<< HEAD
 	NL802154_CMD_SCAN_EVENT,
 	NL802154_CMD_TRIGGER_SCAN,
 	NL802154_CMD_ABORT_SCAN,
@@ -79,6 +80,8 @@ enum nl802154_commands {
 	NL802154_CMD_SEND_BEACONS,
 	NL802154_CMD_STOP_BEACONS,
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* add new commands above here */
 
 	/* used to define NL802154_CMD_MAX below */
@@ -138,6 +141,7 @@ enum nl802154_attrs {
 	NL802154_ATTR_PID,
 	NL802154_ATTR_NETNS_FD,
 
+<<<<<<< HEAD
 	NL802154_ATTR_COORDINATOR,
 	NL802154_ATTR_SCAN_TYPE,
 	NL802154_ATTR_SCAN_FLAGS,
@@ -148,6 +152,8 @@ enum nl802154_attrs {
 	NL802154_ATTR_SCAN_DONE_REASON,
 	NL802154_ATTR_BEACON_INTERVAL,
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* add attributes here, update the policy in nl802154.c */
 
 #ifdef CONFIG_IEEE802154_NL802154_EXPERIMENTAL
@@ -234,6 +240,7 @@ enum nl802154_wpan_phy_capability_attr {
 };
 
 /**
+<<<<<<< HEAD
  * enum nl802154_coord - Netlink attributes for a coord
  *
  * @__NL802154_COORD_INVALID: invalid
@@ -321,6 +328,8 @@ enum nl802154_scan_done_reasons {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * enum nl802154_cca_modes - cca modes
  *
  * @__NL802154_CCA_INVALID: cca mode number 0 is reserved

@@ -23,13 +23,21 @@
  * Rob Clark <robdclark@gmail.com>
  */
 
+<<<<<<< HEAD
+=======
+#define DEBUG /* for pr_debug() */
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/stdarg.h>
 
 #include <linux/io.h>
 #include <linux/moduleparam.h>
 #include <linux/seq_file.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/dynamic_debug.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <drm/drm.h>
 #include <drm/drm_drv.h>
@@ -39,7 +47,11 @@
  * __drm_debug: Enable debug output.
  * Bitmask of DRM_UT_x. See include/drm/drm_print.h for details.
  */
+<<<<<<< HEAD
 unsigned long __drm_debug;
+=======
+unsigned int __drm_debug;
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL(__drm_debug);
 
 MODULE_PARM_DESC(debug, "Enable debug output, where each bit enables a debug category.\n"
@@ -51,6 +63,7 @@ MODULE_PARM_DESC(debug, "Enable debug output, where each bit enables a debug cat
 "\t\tBit 5 (0x20)  will enable VBL messages (vblank code)\n"
 "\t\tBit 7 (0x80)  will enable LEASE messages (leasing code)\n"
 "\t\tBit 8 (0x100) will enable DP messages (displayport code)");
+<<<<<<< HEAD
 
 #if !defined(CONFIG_DRM_USE_DYNAMIC_DEBUG)
 module_param_named(debug, __drm_debug, ulong, 0600);
@@ -75,6 +88,9 @@ static struct ddebug_class_param drm_debug_bitmap = {
 };
 module_param_cb(debug, &param_ops_dyndbg_classes, &drm_debug_bitmap, 0600);
 #endif
+=======
+module_param_named(debug, __drm_debug, int, 0600);
+>>>>>>> b7ba80a49124 (Commit)
 
 void __drm_puts_coredump(struct drm_printer *p, const char *str)
 {
@@ -184,8 +200,12 @@ EXPORT_SYMBOL(__drm_printfn_info);
 
 void __drm_printfn_debug(struct drm_printer *p, struct va_format *vaf)
 {
+<<<<<<< HEAD
 	/* pr_debug callsite decorations are unhelpful here */
 	printk(KERN_DEBUG "%s %pV", p->prefix, vaf);
+=======
+	pr_debug("%s %pV", p->prefix, vaf);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(__drm_printfn_debug);
 
@@ -279,16 +299,27 @@ void drm_dev_printk(const struct device *dev, const char *level,
 }
 EXPORT_SYMBOL(drm_dev_printk);
 
+<<<<<<< HEAD
 void __drm_dev_dbg(struct _ddebug *desc, const struct device *dev,
 		   enum drm_debug_category category, const char *format, ...)
+=======
+void drm_dev_dbg(const struct device *dev, enum drm_debug_category category,
+		 const char *format, ...)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct va_format vaf;
 	va_list args;
 
+<<<<<<< HEAD
 	if (!__drm_debug_enabled(category))
 		return;
 
 	/* we know we are printing for either syslog, tracefs, or both */
+=======
+	if (!drm_debug_enabled(category))
+		return;
+
+>>>>>>> b7ba80a49124 (Commit)
 	va_start(args, format);
 	vaf.fmt = format;
 	vaf.va = &args;
@@ -302,14 +333,24 @@ void __drm_dev_dbg(struct _ddebug *desc, const struct device *dev,
 
 	va_end(args);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(__drm_dev_dbg);
 
 void ___drm_dbg(struct _ddebug *desc, enum drm_debug_category category, const char *format, ...)
+=======
+EXPORT_SYMBOL(drm_dev_dbg);
+
+void __drm_dbg(enum drm_debug_category category, const char *format, ...)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct va_format vaf;
 	va_list args;
 
+<<<<<<< HEAD
 	if (!__drm_debug_enabled(category))
+=======
+	if (!drm_debug_enabled(category))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	va_start(args, format);
@@ -321,7 +362,11 @@ void ___drm_dbg(struct _ddebug *desc, enum drm_debug_category category, const ch
 
 	va_end(args);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(___drm_dbg);
+=======
+EXPORT_SYMBOL(__drm_dbg);
+>>>>>>> b7ba80a49124 (Commit)
 
 void __drm_err(const char *format, ...)
 {

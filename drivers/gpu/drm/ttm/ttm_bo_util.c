@@ -29,6 +29,7 @@
  * Authors: Thomas Hellstrom <thellstrom-at-vmware-dot-com>
  */
 
+<<<<<<< HEAD
 #include <linux/vmalloc.h>
 
 #include <drm/ttm/ttm_bo.h>
@@ -36,6 +37,20 @@
 #include <drm/ttm/ttm_tt.h>
 
 #include <drm/drm_cache.h>
+=======
+#include <drm/ttm/ttm_bo_driver.h>
+#include <drm/ttm/ttm_placement.h>
+#include <drm/drm_cache.h>
+#include <drm/drm_vma_manager.h>
+#include <linux/iosys-map.h>
+#include <linux/io.h>
+#include <linux/highmem.h>
+#include <linux/wait.h>
+#include <linux/slab.h>
+#include <linux/vmalloc.h>
+#include <linux/module.h>
+#include <linux/dma-resv.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 struct ttm_transfer_obj {
 	struct ttm_buffer_object base;
@@ -123,6 +138,7 @@ void ttm_move_memcpy(bool clear,
 }
 EXPORT_SYMBOL(ttm_move_memcpy);
 
+<<<<<<< HEAD
 /**
  * ttm_bo_move_memcpy
  *
@@ -139,6 +155,8 @@ EXPORT_SYMBOL(ttm_move_memcpy);
  * Returns:
  * !0: Failure.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ttm_bo_move_memcpy(struct ttm_buffer_object *bo,
 		       struct ttm_operation_ctx *ctx,
 		       struct ttm_resource *dst_mem)
@@ -157,8 +175,13 @@ int ttm_bo_move_memcpy(struct ttm_buffer_object *bo,
 	bool clear;
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (WARN_ON(!src_mem))
 		return -EINVAL;
+=======
+	if (!src_mem)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	src_man = ttm_manager_type(bdev, src_mem->mem_type);
 	if (ttm && ((ttm->page_flags & TTM_TT_FLAG_SWAPPED) ||
@@ -184,7 +207,11 @@ int ttm_bo_move_memcpy(struct ttm_buffer_object *bo,
 
 	clear = src_iter->ops->maps_tt && (!ttm || !ttm_tt_is_populated(ttm));
 	if (!(clear && ttm && !(ttm->page_flags & TTM_TT_FLAG_ZERO_ALLOC)))
+<<<<<<< HEAD
 		ttm_move_memcpy(clear, PFN_UP(dst_mem->size), dst_iter, src_iter);
+=======
+		ttm_move_memcpy(clear, dst_mem->num_pages, dst_iter, src_iter);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!src_iter->ops->maps_tt)
 		ttm_kmap_iter_linear_io_fini(&_src_iter.io, bdev, src_mem);
@@ -241,6 +268,10 @@ static int ttm_buffer_object_transfer(struct ttm_buffer_object *bo,
 	 */
 
 	atomic_inc(&ttm_glob.bo_count);
+<<<<<<< HEAD
+=======
+	INIT_LIST_HEAD(&fbo->base.ddestroy);
+>>>>>>> b7ba80a49124 (Commit)
 	drm_vma_node_reset(&fbo->base.base.vma_node);
 
 	kref_init(&fbo->base.kref);
@@ -277,6 +308,7 @@ static int ttm_buffer_object_transfer(struct ttm_buffer_object *bo,
 	return 0;
 }
 
+<<<<<<< HEAD
 /**
  * ttm_io_prot
  *
@@ -287,6 +319,8 @@ static int ttm_buffer_object_transfer(struct ttm_buffer_object *bo,
  * Utility function that returns the pgprot_t that should be used for
  * setting up a PTE with the caching model indicated by @c_state.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 pgprot_t ttm_io_prot(struct ttm_buffer_object *bo, struct ttm_resource *res,
 		     pgprot_t tmp)
 {
@@ -368,6 +402,7 @@ static int ttm_bo_kmap_ttm(struct ttm_buffer_object *bo,
 	return (!map->virtual) ? -ENOMEM : 0;
 }
 
+<<<<<<< HEAD
 /**
  * ttm_bo_kmap
  *
@@ -384,6 +419,8 @@ static int ttm_bo_kmap_ttm(struct ttm_buffer_object *bo,
  * -ENOMEM: Out of memory.
  * -EINVAL: Invalid range.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ttm_bo_kmap(struct ttm_buffer_object *bo,
 		unsigned long start_page, unsigned long num_pages,
 		struct ttm_bo_kmap_obj *map)
@@ -393,9 +430,15 @@ int ttm_bo_kmap(struct ttm_buffer_object *bo,
 
 	map->virtual = NULL;
 	map->bo = bo;
+<<<<<<< HEAD
 	if (num_pages > PFN_UP(bo->resource->size))
 		return -EINVAL;
 	if ((start_page + num_pages) > PFN_UP(bo->resource->size))
+=======
+	if (num_pages > bo->resource->num_pages)
+		return -EINVAL;
+	if ((start_page + num_pages) > bo->resource->num_pages)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	ret = ttm_mem_io_reserve(bo->bdev, bo->resource);
@@ -411,6 +454,7 @@ int ttm_bo_kmap(struct ttm_buffer_object *bo,
 }
 EXPORT_SYMBOL(ttm_bo_kmap);
 
+<<<<<<< HEAD
 /**
  * ttm_bo_kunmap
  *
@@ -418,6 +462,8 @@ EXPORT_SYMBOL(ttm_bo_kmap);
  *
  * Unmaps a kernel map set up by ttm_bo_kmap.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map)
 {
 	if (!map->virtual)
@@ -443,6 +489,7 @@ void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map)
 }
 EXPORT_SYMBOL(ttm_bo_kunmap);
 
+<<<<<<< HEAD
 /**
  * ttm_bo_vmap
  *
@@ -457,13 +504,18 @@ EXPORT_SYMBOL(ttm_bo_kunmap);
  * -ENOMEM: Out of memory.
  * -EINVAL: Invalid range.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ttm_bo_vmap(struct ttm_buffer_object *bo, struct iosys_map *map)
 {
 	struct ttm_resource *mem = bo->resource;
 	int ret;
 
+<<<<<<< HEAD
 	dma_resv_assert_held(bo->base.resv);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ttm_mem_io_reserve(bo->bdev, mem);
 	if (ret)
 		return ret;
@@ -518,6 +570,7 @@ int ttm_bo_vmap(struct ttm_buffer_object *bo, struct iosys_map *map)
 }
 EXPORT_SYMBOL(ttm_bo_vmap);
 
+<<<<<<< HEAD
 /**
  * ttm_bo_vunmap
  *
@@ -526,12 +579,17 @@ EXPORT_SYMBOL(ttm_bo_vmap);
  *
  * Unmaps a kernel map set up by ttm_bo_vmap().
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void ttm_bo_vunmap(struct ttm_buffer_object *bo, struct iosys_map *map)
 {
 	struct ttm_resource *mem = bo->resource;
 
+<<<<<<< HEAD
 	dma_resv_assert_held(bo->base.resv);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (iosys_map_is_null(map))
 		return;
 
@@ -548,6 +606,7 @@ EXPORT_SYMBOL(ttm_bo_vunmap);
 static int ttm_bo_wait_free_node(struct ttm_buffer_object *bo,
 				 bool dst_use_tt)
 {
+<<<<<<< HEAD
 	long ret;
 
 	ret = dma_resv_wait_timeout(bo->base.resv, DMA_RESV_USAGE_BOOKKEEP,
@@ -555,6 +614,11 @@ static int ttm_bo_wait_free_node(struct ttm_buffer_object *bo,
 	if (ret == 0)
 		return -EBUSY;
 	if (ret < 0)
+=======
+	int ret;
+	ret = ttm_bo_wait(bo, false, false);
+	if (ret)
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 
 	if (!dst_use_tt)
@@ -623,6 +687,7 @@ static void ttm_bo_move_pipeline_evict(struct ttm_buffer_object *bo,
 	ttm_resource_free(bo, &bo->resource);
 }
 
+<<<<<<< HEAD
 /**
  * ttm_bo_move_accel_cleanup - cleanup helper for hw copies
  *
@@ -639,6 +704,8 @@ static void ttm_bo_move_pipeline_evict(struct ttm_buffer_object *bo,
  * destroyed when the move is complete. This will help pipeline
  * buffer moves.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ttm_bo_move_accel_cleanup(struct ttm_buffer_object *bo,
 			      struct dma_fence *fence,
 			      bool evict,
@@ -667,6 +734,7 @@ int ttm_bo_move_accel_cleanup(struct ttm_buffer_object *bo,
 }
 EXPORT_SYMBOL(ttm_bo_move_accel_cleanup);
 
+<<<<<<< HEAD
 /**
  * ttm_bo_move_sync_cleanup - cleanup by waiting for the move to finish
  *
@@ -676,6 +744,8 @@ EXPORT_SYMBOL(ttm_bo_move_accel_cleanup);
  * Special case of ttm_bo_move_accel_cleanup where the bo is guaranteed
  * by the caller to be idle. Typically used after memcpy buffer moves.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void ttm_bo_move_sync_cleanup(struct ttm_buffer_object *bo,
 			      struct ttm_resource *new_mem)
 {
@@ -704,23 +774,47 @@ EXPORT_SYMBOL(ttm_bo_move_sync_cleanup);
  */
 int ttm_bo_pipeline_gutting(struct ttm_buffer_object *bo)
 {
+<<<<<<< HEAD
 	struct ttm_buffer_object *ghost;
 	struct ttm_tt *ttm;
 	int ret;
 
 	/* If already idle, no need for ghost object dance. */
 	if (dma_resv_test_signaled(bo->base.resv, DMA_RESV_USAGE_BOOKKEEP)) {
+=======
+	static const struct ttm_place sys_mem = { .mem_type = TTM_PL_SYSTEM };
+	struct ttm_buffer_object *ghost;
+	struct ttm_resource *sys_res;
+	struct ttm_tt *ttm;
+	int ret;
+
+	ret = ttm_resource_alloc(bo, &sys_mem, &sys_res);
+	if (ret)
+		return ret;
+
+	/* If already idle, no need for ghost object dance. */
+	ret = ttm_bo_wait(bo, false, true);
+	if (ret != -EBUSY) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!bo->ttm) {
 			/* See comment below about clearing. */
 			ret = ttm_tt_create(bo, true);
 			if (ret)
+<<<<<<< HEAD
 				return ret;
+=======
+				goto error_free_sys_mem;
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			ttm_tt_unpopulate(bo->bdev, bo->ttm);
 			if (bo->type == ttm_bo_type_device)
 				ttm_tt_mark_for_clear(bo->ttm);
 		}
 		ttm_resource_free(bo, &bo->resource);
+<<<<<<< HEAD
+=======
+		ttm_bo_assign_mem(bo, sys_res);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
@@ -737,7 +831,11 @@ int ttm_bo_pipeline_gutting(struct ttm_buffer_object *bo)
 	ret = ttm_tt_create(bo, true);
 	swap(bo->ttm, ttm);
 	if (ret)
+<<<<<<< HEAD
 		return ret;
+=======
+		goto error_free_sys_mem;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = ttm_buffer_object_transfer(bo, &ghost);
 	if (ret)
@@ -745,17 +843,32 @@ int ttm_bo_pipeline_gutting(struct ttm_buffer_object *bo)
 
 	ret = dma_resv_copy_fences(&ghost->base._resv, bo->base.resv);
 	/* Last resort, wait for the BO to be idle when we are OOM */
+<<<<<<< HEAD
 	if (ret) {
 		dma_resv_wait_timeout(bo->base.resv, DMA_RESV_USAGE_BOOKKEEP,
 				      false, MAX_SCHEDULE_TIMEOUT);
 	}
+=======
+	if (ret)
+		ttm_bo_wait(bo, false, false);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dma_resv_unlock(&ghost->base._resv);
 	ttm_bo_put(ghost);
 	bo->ttm = ttm;
+<<<<<<< HEAD
+=======
+	ttm_bo_assign_mem(bo, sys_res);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 error_destroy_tt:
 	ttm_tt_destroy(bo->bdev, ttm);
+<<<<<<< HEAD
+=======
+
+error_free_sys_mem:
+	ttm_resource_free(bo, &sys_res);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }

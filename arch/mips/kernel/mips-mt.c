@@ -234,7 +234,11 @@ static int __init mips_mt_init(void)
 {
 	struct class *mtc;
 
+<<<<<<< HEAD
 	mtc = class_create("mt");
+=======
+	mtc = class_create(THIS_MODULE, "mt");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(mtc))
 		return PTR_ERR(mtc);
 

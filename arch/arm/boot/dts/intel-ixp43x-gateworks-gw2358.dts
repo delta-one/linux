@@ -121,7 +121,11 @@
 		};
 
 		pci@c0000000 {
+<<<<<<< HEAD
 			status = "okay";
+=======
+			status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 
 			/*
 			 * In the boardfile for the Cambria from OpenWRT the interrupts
@@ -167,7 +171,11 @@
 		};
 
 		ethernet@c800a000 {
+<<<<<<< HEAD
 			status = "okay";
+=======
+			status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 			queue-rx = <&qmgr 4>;
 			queue-txready = <&qmgr 21>;
 			phy-mode = "rgmii";
@@ -188,7 +196,11 @@
 		};
 
 		ethernet@c800c000 {
+<<<<<<< HEAD
 			status = "okay";
+=======
+			status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 			queue-rx = <&qmgr 2>;
 			queue-txready = <&qmgr 19>;
 			phy-mode = "rgmii";

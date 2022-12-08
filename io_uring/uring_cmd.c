@@ -4,12 +4,18 @@
 #include <linux/file.h>
 #include <linux/io_uring.h>
 #include <linux/security.h>
+<<<<<<< HEAD
 #include <linux/nospec.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <uapi/linux/io_uring.h>
 
 #include "io_uring.h"
+<<<<<<< HEAD
 #include "rsrc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "uring_cmd.h"
 
 static void io_uring_cmd_work(struct io_kiocb *req, bool *locked)
@@ -56,7 +62,11 @@ void io_uring_cmd_done(struct io_uring_cmd *ioucmd, ssize_t ret, ssize_t res2)
 		/* order with io_iopoll_req_issued() checking ->iopoll_complete */
 		smp_store_release(&req->iopoll_completed, 1);
 	else
+<<<<<<< HEAD
 		io_req_complete_post(req, 0);
+=======
+		__io_req_complete(req, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(io_uring_cmd_done);
 
@@ -78,6 +88,7 @@ int io_uring_cmd_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
 {
 	struct io_uring_cmd *ioucmd = io_kiocb_to_cmd(req, struct io_uring_cmd);
 
+<<<<<<< HEAD
 	if (sqe->__pad1)
 		return -EINVAL;
 
@@ -96,6 +107,10 @@ int io_uring_cmd_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
 		req->imu = ctx->user_bufs[index];
 		io_req_set_rsrc_node(req, ctx, 0);
 	}
+=======
+	if (sqe->rw_flags || sqe->__pad1)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	ioucmd->cmd = sqe->cmd;
 	ioucmd->cmd_op = READ_ONCE(sqe->cmd_op);
 	return 0;
@@ -108,7 +123,11 @@ int io_uring_cmd(struct io_kiocb *req, unsigned int issue_flags)
 	struct file *file = req->file;
 	int ret;
 
+<<<<<<< HEAD
 	if (!file->f_op->uring_cmd)
+=======
+	if (!req->file->f_op->uring_cmd)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOPNOTSUPP;
 
 	ret = security_uring_cmd(ioucmd);
@@ -120,8 +139,11 @@ int io_uring_cmd(struct io_kiocb *req, unsigned int issue_flags)
 	if (ctx->flags & IORING_SETUP_CQE32)
 		issue_flags |= IO_URING_F_CQE32;
 	if (ctx->flags & IORING_SETUP_IOPOLL) {
+<<<<<<< HEAD
 		if (!file->f_op->uring_cmd_iopoll)
 			return -EOPNOTSUPP;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		issue_flags |= IO_URING_F_IOPOLL;
 		req->iopoll_completed = 0;
 		WRITE_ONCE(ioucmd->cookie, NULL);
@@ -149,6 +171,7 @@ int io_uring_cmd(struct io_kiocb *req, unsigned int issue_flags)
 
 	return IOU_ISSUE_SKIP_COMPLETE;
 }
+<<<<<<< HEAD
 
 int io_uring_cmd_import_fixed(u64 ubuf, unsigned long len, int rw,
 			      struct iov_iter *iter, void *ioucmd)
@@ -158,3 +181,5 @@ int io_uring_cmd_import_fixed(u64 ubuf, unsigned long len, int rw,
 	return io_import_fixed(rw, iter, req->imu, ubuf, len);
 }
 EXPORT_SYMBOL_GPL(io_uring_cmd_import_fixed);
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -11,9 +11,15 @@
 #include <linux/tracepoint.h>
 #include <linux/iversion.h>
 
+<<<<<<< HEAD
 #include <trace/misc/fs.h>
 #include <trace/misc/nfs.h>
 #include <trace/misc/sunrpc.h>
+=======
+#include <trace/events/fs.h>
+#include <trace/events/nfs.h>
+#include <trace/events/sunrpc_base.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define nfs_show_cache_validity(v) \
 	__print_flags(v, "|", \
@@ -152,6 +158,11 @@ DEFINE_NFS_INODE_EVENT(nfs_getattr_enter);
 DEFINE_NFS_INODE_EVENT_DONE(nfs_getattr_exit);
 DEFINE_NFS_INODE_EVENT(nfs_setattr_enter);
 DEFINE_NFS_INODE_EVENT_DONE(nfs_setattr_exit);
+<<<<<<< HEAD
+=======
+DEFINE_NFS_INODE_EVENT(nfs_writeback_page_enter);
+DEFINE_NFS_INODE_EVENT_DONE(nfs_writeback_page_exit);
+>>>>>>> b7ba80a49124 (Commit)
 DEFINE_NFS_INODE_EVENT(nfs_writeback_inode_enter);
 DEFINE_NFS_INODE_EVENT_DONE(nfs_writeback_inode_exit);
 DEFINE_NFS_INODE_EVENT(nfs_fsync_enter);
@@ -931,6 +942,7 @@ TRACE_EVENT(nfs_sillyrename_unlink,
 		)
 );
 
+<<<<<<< HEAD
 DECLARE_EVENT_CLASS(nfs_folio_event,
 		TP_PROTO(
 			const struct inode *inode,
@@ -938,6 +950,15 @@ DECLARE_EVENT_CLASS(nfs_folio_event,
 		),
 
 		TP_ARGS(inode, folio),
+=======
+TRACE_EVENT(nfs_aop_readpage,
+		TP_PROTO(
+			const struct inode *inode,
+			struct page *page
+		),
+
+		TP_ARGS(inode, page),
+>>>>>>> b7ba80a49124 (Commit)
 
 		TP_STRUCT__entry(
 			__field(dev_t, dev)
@@ -945,7 +966,10 @@ DECLARE_EVENT_CLASS(nfs_folio_event,
 			__field(u64, fileid)
 			__field(u64, version)
 			__field(loff_t, offset)
+<<<<<<< HEAD
 			__field(u32, count)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		),
 
 		TP_fast_assign(
@@ -955,6 +979,7 @@ DECLARE_EVENT_CLASS(nfs_folio_event,
 			__entry->fileid = nfsi->fileid;
 			__entry->fhandle = nfs_fhandle_hash(&nfsi->fh);
 			__entry->version = inode_peek_iversion_raw(inode);
+<<<<<<< HEAD
 			__entry->offset = folio_file_pos(folio);
 			__entry->count = nfs_folio_length(folio);
 		),
@@ -985,6 +1010,28 @@ DECLARE_EVENT_CLASS(nfs_folio_event_done,
 		),
 
 		TP_ARGS(inode, folio, ret),
+=======
+			__entry->offset = page_index(page) << PAGE_SHIFT;
+		),
+
+		TP_printk(
+			"fileid=%02x:%02x:%llu fhandle=0x%08x version=%llu offset=%lld",
+			MAJOR(__entry->dev), MINOR(__entry->dev),
+			(unsigned long long)__entry->fileid,
+			__entry->fhandle, __entry->version,
+			__entry->offset
+		)
+);
+
+TRACE_EVENT(nfs_aop_readpage_done,
+		TP_PROTO(
+			const struct inode *inode,
+			struct page *page,
+			int ret
+		),
+
+		TP_ARGS(inode, page, ret),
+>>>>>>> b7ba80a49124 (Commit)
 
 		TP_STRUCT__entry(
 			__field(dev_t, dev)
@@ -993,7 +1040,10 @@ DECLARE_EVENT_CLASS(nfs_folio_event_done,
 			__field(u64, fileid)
 			__field(u64, version)
 			__field(loff_t, offset)
+<<<<<<< HEAD
 			__field(u32, count)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		),
 
 		TP_fast_assign(
@@ -1003,12 +1053,17 @@ DECLARE_EVENT_CLASS(nfs_folio_event_done,
 			__entry->fileid = nfsi->fileid;
 			__entry->fhandle = nfs_fhandle_hash(&nfsi->fh);
 			__entry->version = inode_peek_iversion_raw(inode);
+<<<<<<< HEAD
 			__entry->offset = folio_file_pos(folio);
 			__entry->count = nfs_folio_length(folio);
+=======
+			__entry->offset = page_index(page) << PAGE_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 			__entry->ret = ret;
 		),
 
 		TP_printk(
+<<<<<<< HEAD
 			"fileid=%02x:%02x:%llu fhandle=0x%08x version=%llu "
 			"offset=%lld count=%u ret=%d",
 			MAJOR(__entry->dev), MINOR(__entry->dev),
@@ -1036,6 +1091,16 @@ DEFINE_NFS_FOLIO_EVENT_DONE(nfs_writeback_folio_done);
 DEFINE_NFS_FOLIO_EVENT(nfs_invalidate_folio);
 DEFINE_NFS_FOLIO_EVENT_DONE(nfs_launder_folio_done);
 
+=======
+			"fileid=%02x:%02x:%llu fhandle=0x%08x version=%llu offset=%lld ret=%d",
+			MAJOR(__entry->dev), MINOR(__entry->dev),
+			(unsigned long long)__entry->fileid,
+			__entry->fhandle, __entry->version,
+			__entry->offset, __entry->ret
+		)
+);
+
+>>>>>>> b7ba80a49124 (Commit)
 TRACE_EVENT(nfs_aop_readahead,
 		TP_PROTO(
 			const struct inode *inode,

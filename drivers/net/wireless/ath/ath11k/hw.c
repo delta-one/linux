@@ -201,7 +201,10 @@ static void ath11k_init_wmi_config_ipq8074(struct ath11k_base *ab,
 	config->twt_ap_pdev_count = ab->num_radios;
 	config->twt_ap_sta_count = 1000;
 	config->flag1 |= WMI_RSRC_CFG_FLAG1_BSS_CHANNEL_INFO_64;
+<<<<<<< HEAD
 	config->flag1 |= WMI_RSRC_CFG_FLAG1_ACK_RSSI;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ath11k_hw_mac_id_to_pdev_id_ipq8074(struct ath11k_hw_params *hw,
@@ -792,6 +795,7 @@ static void ath11k_hw_wcn6855_reo_setup(struct ath11k_base *ab)
 			   ring_hash_map);
 }
 
+<<<<<<< HEAD
 static void ath11k_hw_ipq5018_reo_setup(struct ath11k_base *ab)
 {
 	u32 reo_base = HAL_SEQ_WCSS_UMAC_REO_REG;
@@ -835,6 +839,8 @@ static void ath11k_hw_ipq5018_reo_setup(struct ath11k_base *ab)
 			   ring_hash_map);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static u16 ath11k_hw_ipq8074_mpdu_info_get_peerid(u8 *tlv_data)
 {
 	u16 peer_id = 0;
@@ -864,6 +870,7 @@ static bool ath11k_hw_wcn6855_rx_desc_get_ldpc_support(struct hal_rx_desc *desc)
 			 __le32_to_cpu(desc->u.wcn6855.msdu_start.info2));
 }
 
+<<<<<<< HEAD
 static u32 ath11k_hw_ipq8074_get_tcl_ring_selector(struct sk_buff *skb)
 {
 	/* Let the default ring selection be based on current processor
@@ -888,6 +895,8 @@ static u32 ath11k_hw_wcn6750_get_tcl_ring_selector(struct sk_buff *skb)
 	return skb_get_hash(skb);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct ath11k_hw_ops ipq8074_ops = {
 	.get_hw_mac_from_pdev_id = ath11k_hw_ipq8074_mac_from_pdev_id,
 	.wmi_init_config = ath11k_init_wmi_config_ipq8074,
@@ -925,7 +934,10 @@ const struct ath11k_hw_ops ipq8074_ops = {
 	.mpdu_info_get_peerid = ath11k_hw_ipq8074_mpdu_info_get_peerid,
 	.rx_desc_mac_addr2_valid = ath11k_hw_ipq8074_rx_desc_mac_addr2_valid,
 	.rx_desc_mpdu_start_addr2 = ath11k_hw_ipq8074_rx_desc_mpdu_start_addr2,
+<<<<<<< HEAD
 	.get_ring_selector = ath11k_hw_ipq8074_get_tcl_ring_selector,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 const struct ath11k_hw_ops ipq6018_ops = {
@@ -965,7 +977,10 @@ const struct ath11k_hw_ops ipq6018_ops = {
 	.mpdu_info_get_peerid = ath11k_hw_ipq8074_mpdu_info_get_peerid,
 	.rx_desc_mac_addr2_valid = ath11k_hw_ipq8074_rx_desc_mac_addr2_valid,
 	.rx_desc_mpdu_start_addr2 = ath11k_hw_ipq8074_rx_desc_mpdu_start_addr2,
+<<<<<<< HEAD
 	.get_ring_selector = ath11k_hw_ipq8074_get_tcl_ring_selector,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 const struct ath11k_hw_ops qca6390_ops = {
@@ -1005,7 +1020,10 @@ const struct ath11k_hw_ops qca6390_ops = {
 	.mpdu_info_get_peerid = ath11k_hw_ipq8074_mpdu_info_get_peerid,
 	.rx_desc_mac_addr2_valid = ath11k_hw_ipq8074_rx_desc_mac_addr2_valid,
 	.rx_desc_mpdu_start_addr2 = ath11k_hw_ipq8074_rx_desc_mpdu_start_addr2,
+<<<<<<< HEAD
 	.get_ring_selector = ath11k_hw_ipq8074_get_tcl_ring_selector,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 const struct ath11k_hw_ops qcn9074_ops = {
@@ -1045,7 +1063,10 @@ const struct ath11k_hw_ops qcn9074_ops = {
 	.mpdu_info_get_peerid = ath11k_hw_ipq8074_mpdu_info_get_peerid,
 	.rx_desc_mac_addr2_valid = ath11k_hw_ipq9074_rx_desc_mac_addr2_valid,
 	.rx_desc_mpdu_start_addr2 = ath11k_hw_ipq9074_rx_desc_mpdu_start_addr2,
+<<<<<<< HEAD
 	.get_ring_selector = ath11k_hw_ipq8074_get_tcl_ring_selector,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 const struct ath11k_hw_ops wcn6855_ops = {
@@ -1085,7 +1106,10 @@ const struct ath11k_hw_ops wcn6855_ops = {
 	.mpdu_info_get_peerid = ath11k_hw_wcn6855_mpdu_info_get_peerid,
 	.rx_desc_mac_addr2_valid = ath11k_hw_wcn6855_rx_desc_mac_addr2_valid,
 	.rx_desc_mpdu_start_addr2 = ath11k_hw_wcn6855_rx_desc_mpdu_start_addr2,
+<<<<<<< HEAD
 	.get_ring_selector = ath11k_hw_ipq8074_get_tcl_ring_selector,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 const struct ath11k_hw_ops wcn6750_ops = {
@@ -1125,6 +1149,7 @@ const struct ath11k_hw_ops wcn6750_ops = {
 	.mpdu_info_get_peerid = ath11k_hw_ipq8074_mpdu_info_get_peerid,
 	.rx_desc_mac_addr2_valid = ath11k_hw_ipq9074_rx_desc_mac_addr2_valid,
 	.rx_desc_mpdu_start_addr2 = ath11k_hw_ipq9074_rx_desc_mpdu_start_addr2,
+<<<<<<< HEAD
 	.get_ring_selector = ath11k_hw_wcn6750_get_tcl_ring_selector,
 };
 
@@ -1174,6 +1199,13 @@ const struct ath11k_hw_ops ipq5018_ops = {
 #define ATH11K_TX_RING_MASK_2 BIT(2)
 #define ATH11K_TX_RING_MASK_3 BIT(3)
 #define ATH11K_TX_RING_MASK_4 BIT(4)
+=======
+};
+
+#define ATH11K_TX_RING_MASK_0 0x1
+#define ATH11K_TX_RING_MASK_1 0x2
+#define ATH11K_TX_RING_MASK_2 0x4
+>>>>>>> b7ba80a49124 (Commit)
 
 #define ATH11K_RX_RING_MASK_0 0x1
 #define ATH11K_RX_RING_MASK_1 0x2
@@ -2020,6 +2052,7 @@ const struct ath11k_hw_ring_mask ath11k_hw_ring_mask_qcn9074 = {
 	},
 };
 
+<<<<<<< HEAD
 const struct ath11k_hw_ring_mask ath11k_hw_ring_mask_wcn6750 = {
 	.tx  = {
 		ATH11K_TX_RING_MASK_0,
@@ -2265,6 +2298,8 @@ const struct ce_remap ath11k_ce_remap_ipq5018 = {
 	.size = HAL_IPQ5018_CE_SIZE,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct ath11k_hw_regs ipq8074_regs = {
 	/* SW2TCL(x) R0 ring configuration address */
 	.hal_tcl1_ring_base_lsb = 0x00000510,
@@ -2694,6 +2729,7 @@ const struct ath11k_hw_regs wcn6750_regs = {
 	.hal_reo1_misc_ctl = 0x000005d8,
 };
 
+<<<<<<< HEAD
 static const struct ath11k_hw_tcl2wbm_rbm_map ath11k_hw_tcl2wbm_rbm_map_ipq8074[] = {
 	{
 		.tcl_ring_num = 0,
@@ -2812,16 +2848,23 @@ const struct ath11k_hw_regs ipq5018_regs = {
 const struct ath11k_hw_hal_params ath11k_hw_hal_params_ipq8074 = {
 	.rx_buf_rbm = HAL_RX_BUF_RBM_SW3_BM,
 	.tcl2wbm_rbm_map = ath11k_hw_tcl2wbm_rbm_map_ipq8074,
+=======
+const struct ath11k_hw_hal_params ath11k_hw_hal_params_ipq8074 = {
+	.rx_buf_rbm = HAL_RX_BUF_RBM_SW3_BM,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 const struct ath11k_hw_hal_params ath11k_hw_hal_params_qca6390 = {
 	.rx_buf_rbm = HAL_RX_BUF_RBM_SW1_BM,
+<<<<<<< HEAD
 	.tcl2wbm_rbm_map = ath11k_hw_tcl2wbm_rbm_map_ipq8074,
 };
 
 const struct ath11k_hw_hal_params ath11k_hw_hal_params_wcn6750 = {
 	.rx_buf_rbm = HAL_RX_BUF_RBM_SW1_BM,
 	.tcl2wbm_rbm_map = ath11k_hw_tcl2wbm_rbm_map_wcn6750,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct cfg80211_sar_freq_ranges ath11k_hw_sar_freq_ranges_wcn6855[] = {

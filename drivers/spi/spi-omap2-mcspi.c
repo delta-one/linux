@@ -379,7 +379,11 @@ static void omap2_mcspi_rx_callback(void *data)
 {
 	struct spi_device *spi = data;
 	struct omap2_mcspi *mcspi = spi_master_get_devdata(spi->master);
+<<<<<<< HEAD
 	struct omap2_mcspi_dma *mcspi_dma = &mcspi->dma_channels[spi_get_chipselect(spi, 0)];
+=======
+	struct omap2_mcspi_dma *mcspi_dma = &mcspi->dma_channels[spi->chip_select];
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* We must disable the DMA RX request */
 	omap2_mcspi_set_dma_req(spi, 1, 0);
@@ -391,7 +395,11 @@ static void omap2_mcspi_tx_callback(void *data)
 {
 	struct spi_device *spi = data;
 	struct omap2_mcspi *mcspi = spi_master_get_devdata(spi->master);
+<<<<<<< HEAD
 	struct omap2_mcspi_dma *mcspi_dma = &mcspi->dma_channels[spi_get_chipselect(spi, 0)];
+=======
+	struct omap2_mcspi_dma *mcspi_dma = &mcspi->dma_channels[spi->chip_select];
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* We must disable the DMA TX request */
 	omap2_mcspi_set_dma_req(spi, 0, 0);
@@ -408,7 +416,11 @@ static void omap2_mcspi_tx_dma(struct spi_device *spi,
 	struct dma_async_tx_descriptor *tx;
 
 	mcspi = spi_master_get_devdata(spi->master);
+<<<<<<< HEAD
 	mcspi_dma = &mcspi->dma_channels[spi_get_chipselect(spi, 0)];
+=======
+	mcspi_dma = &mcspi->dma_channels[spi->chip_select];
+>>>>>>> b7ba80a49124 (Commit)
 
 	dmaengine_slave_config(mcspi_dma->dma_tx, &cfg);
 
@@ -446,7 +458,11 @@ omap2_mcspi_rx_dma(struct spi_device *spi, struct spi_transfer *xfer,
 	struct dma_async_tx_descriptor *tx;
 
 	mcspi = spi_master_get_devdata(spi->master);
+<<<<<<< HEAD
 	mcspi_dma = &mcspi->dma_channels[spi_get_chipselect(spi, 0)];
+=======
+	mcspi_dma = &mcspi->dma_channels[spi->chip_select];
+>>>>>>> b7ba80a49124 (Commit)
 	count = xfer->len;
 
 	/*
@@ -591,7 +607,11 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
 	int			wait_res;
 
 	mcspi = spi_master_get_devdata(spi->master);
+<<<<<<< HEAD
 	mcspi_dma = &mcspi->dma_channels[spi_get_chipselect(spi, 0)];
+=======
+	mcspi_dma = &mcspi->dma_channels[spi->chip_select];
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (cs->word_len <= 8) {
 		width = DMA_SLAVE_BUSWIDTH_1_BYTE;
@@ -1062,8 +1082,13 @@ static int omap2_mcspi_setup(struct spi_device *spi)
 		cs = kzalloc(sizeof(*cs), GFP_KERNEL);
 		if (!cs)
 			return -ENOMEM;
+<<<<<<< HEAD
 		cs->base = mcspi->base + spi_get_chipselect(spi, 0) * 0x14;
 		cs->phys = mcspi->phys + spi_get_chipselect(spi, 0) * 0x14;
+=======
+		cs->base = mcspi->base + spi->chip_select * 0x14;
+		cs->phys = mcspi->phys + spi->chip_select * 0x14;
+>>>>>>> b7ba80a49124 (Commit)
 		cs->mode = 0;
 		cs->chconf0 = 0;
 		cs->chctrl0 = 0;
@@ -1142,7 +1167,11 @@ static int omap2_mcspi_transfer_one(struct spi_master *master,
 	u32				chconf;
 
 	mcspi = spi_master_get_devdata(master);
+<<<<<<< HEAD
 	mcspi_dma = mcspi->dma_channels + spi_get_chipselect(spi, 0);
+=======
+	mcspi_dma = mcspi->dma_channels + spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 	cs = spi->controller_state;
 	cd = spi->controller_data;
 
@@ -1158,7 +1187,11 @@ static int omap2_mcspi_transfer_one(struct spi_master *master,
 
 	omap2_mcspi_set_enable(spi, 0);
 
+<<<<<<< HEAD
 	if (spi_get_csgpiod(spi, 0))
+=======
+	if (spi->cs_gpiod)
+>>>>>>> b7ba80a49124 (Commit)
 		omap2_mcspi_set_cs(spi, spi->mode & SPI_CS_HIGH);
 
 	if (par_override ||
@@ -1247,7 +1280,11 @@ out:
 
 	omap2_mcspi_set_enable(spi, 0);
 
+<<<<<<< HEAD
 	if (spi_get_csgpiod(spi, 0))
+=======
+	if (spi->cs_gpiod)
+>>>>>>> b7ba80a49124 (Commit)
 		omap2_mcspi_set_cs(spi, !(spi->mode & SPI_CS_HIGH));
 
 	if (mcspi->fifo_depth > 0 && t)
@@ -1289,7 +1326,11 @@ static bool omap2_mcspi_can_dma(struct spi_master *master,
 {
 	struct omap2_mcspi *mcspi = spi_master_get_devdata(spi->master);
 	struct omap2_mcspi_dma *mcspi_dma =
+<<<<<<< HEAD
 		&mcspi->dma_channels[spi_get_chipselect(spi, 0)];
+=======
+		&mcspi->dma_channels[spi->chip_select];
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!mcspi_dma->dma_rx || !mcspi_dma->dma_tx)
 		return false;
@@ -1307,7 +1348,11 @@ static size_t omap2_mcspi_max_xfer_size(struct spi_device *spi)
 {
 	struct omap2_mcspi *mcspi = spi_master_get_devdata(spi->master);
 	struct omap2_mcspi_dma *mcspi_dma =
+<<<<<<< HEAD
 		&mcspi->dma_channels[spi_get_chipselect(spi, 0)];
+=======
+		&mcspi->dma_channels[spi->chip_select];
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (mcspi->max_xfer_len && mcspi_dma->dma_rx)
 		return mcspi->max_xfer_len;
@@ -1464,7 +1509,11 @@ static int omap2_mcspi_probe(struct platform_device *pdev)
 
 		of_property_read_u32(node, "ti,spi-num-cs", &num_cs);
 		master->num_chipselect = num_cs;
+<<<<<<< HEAD
 		if (of_property_read_bool(node, "ti,pindir-d0-out-d1-in"))
+=======
+		if (of_get_property(node, "ti,pindir-d0-out-d1-in", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 			mcspi->pin_dir = MCSPI_PINDIR_D0_OUT_D1_IN;
 	} else {
 		pdata = dev_get_platdata(&pdev->dev);
@@ -1546,7 +1595,11 @@ free_master:
 	return status;
 }
 
+<<<<<<< HEAD
 static void omap2_mcspi_remove(struct platform_device *pdev)
+=======
+static int omap2_mcspi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct omap2_mcspi *mcspi = spi_master_get_devdata(master);
@@ -1556,6 +1609,11 @@ static void omap2_mcspi_remove(struct platform_device *pdev)
 	pm_runtime_dont_use_autosuspend(mcspi->dev);
 	pm_runtime_put_sync(mcspi->dev);
 	pm_runtime_disable(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* work with hotplug and coldplug */
@@ -1608,7 +1666,11 @@ static struct platform_driver omap2_mcspi_driver = {
 		.of_match_table = omap_mcspi_of_match,
 	},
 	.probe =	omap2_mcspi_probe,
+<<<<<<< HEAD
 	.remove_new =	omap2_mcspi_remove,
+=======
+	.remove =	omap2_mcspi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(omap2_mcspi_driver);

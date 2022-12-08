@@ -20,8 +20,12 @@ soundwire-cadence-y := cadence_master.o
 obj-$(CONFIG_SOUNDWIRE_CADENCE) += soundwire-cadence.o
 
 #Intel driver
+<<<<<<< HEAD
 soundwire-intel-y :=	intel.o intel_auxdevice.o intel_init.o dmi-quirks.o \
 			intel_bus_common.o
+=======
+soundwire-intel-y :=	intel.o intel_init.o dmi-quirks.o
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_SOUNDWIRE_INTEL) += soundwire-intel.o
 
 #Qualcomm driver

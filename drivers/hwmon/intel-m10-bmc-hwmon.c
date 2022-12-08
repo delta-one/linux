@@ -340,6 +340,7 @@ static const struct m10bmc_hwmon_board_data n5010bmc_hwmon_bdata = {
 	.hinfo = n5010bmc_hinfo,
 };
 
+<<<<<<< HEAD
 static const struct m10bmc_sdata n6000bmc_temp_tbl[] = {
 	{ 0x444, 0x448, 0x44c, 0x0, 0x0, 500, "FPGA E-TILE Temperature #1" },
 	{ 0x450, 0x454, 0x458, 0x0, 0x0, 500, "FPGA E-TILE Temperature #2" },
@@ -565,6 +566,8 @@ static const struct m10bmc_hwmon_board_data n6000bmc_hwmon_bdata = {
 	.hinfo = n6000bmc_hinfo,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static umode_t
 m10bmc_hwmon_is_visible(const void *data, enum hwmon_sensor_types type,
 			u32 attr, int channel)
@@ -774,10 +777,13 @@ static const struct platform_device_id intel_m10bmc_hwmon_ids[] = {
 		.name = "n5010bmc-hwmon",
 		.driver_data = (unsigned long)&n5010bmc_hwmon_bdata,
 	},
+<<<<<<< HEAD
 	{
 		.name = "n6000bmc-hwmon",
 		.driver_data = (unsigned long)&n6000bmc_hwmon_bdata,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 

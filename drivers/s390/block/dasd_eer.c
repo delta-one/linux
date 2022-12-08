@@ -491,7 +491,11 @@ int dasd_eer_enable(struct dasd_device *device)
 	ccw->cmd_code = DASD_ECKD_CCW_SNSS;
 	ccw->count = SNSS_DATA_SIZE;
 	ccw->flags = 0;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(cqr->data);
+=======
+	ccw->cda = (__u32)(addr_t) cqr->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cqr->buildclk = get_tod_clock();
 	cqr->status = DASD_CQR_FILLED;

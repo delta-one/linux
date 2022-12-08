@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2014-2022, NVIDIA CORPORATION.  All rights reserved.
+=======
+ * Copyright (c) 2014-2020, NVIDIA CORPORATION.  All rights reserved.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #ifndef ABI_BPMP_ABI_H
@@ -74,6 +78,7 @@
 
 /**
  * @ingroup MRQ_Format
+<<<<<<< HEAD
  * Request an answer from the peer.
  * This should be set in mrq_request::flags for all requests targetted
  * at BPMP. For requests originating in BPMP, this flag is optional except
@@ -100,6 +105,8 @@
 
 /**
  * @ingroup MRQ_Format
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @brief Header for an MRQ message
  *
  * Provides the MRQ number for the MRQ message: #mrq. The remainder of
@@ -111,6 +118,7 @@ struct mrq_request {
 	uint32_t mrq;
 
 	/**
+<<<<<<< HEAD
 	 * @brief 32bit word containing a number of fields as follows:
 	 *
 	 * 	struct {
@@ -244,6 +252,14 @@ struct mrq_request {
 	 *		return calc_crc_digest(0x4657, data, size);
 	 *	}
 	 * @endcode
+=======
+	 * @brief Flags providing follow up directions to the receiver
+	 *
+	 * | Bit | Description                                |
+	 * |-----|--------------------------------------------|
+	 * | 1   | ring the sender's doorbell when responding |
+	 * | 0   | should be 1                                |
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	uint32_t flags;
 } BPMP_ABI_PACKED;
@@ -260,6 +276,7 @@ struct mrq_request {
 struct mrq_response {
 	/** @brief Error code for the MRQ request itself */
 	int32_t err;
+<<<<<<< HEAD
 
 	/**
 	 * @brief 32bit word containing a number of fields as follows:
@@ -289,6 +306,9 @@ struct mrq_response {
 	 * including this header. However the crc16 field is considered to be set to 0 when
 	 * calculating the CRC. Only used when #BPMP_MAIL_CRC_PRESENT is set.
 	 */
+=======
+	/** @brief Reserved for future use */
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t flags;
 } BPMP_ABI_PACKED;
 
@@ -312,16 +332,34 @@ struct mrq_response {
 
 #define MRQ_PING		0U
 #define MRQ_QUERY_TAG		1U
+<<<<<<< HEAD
 #define MRQ_THREADED_PING	9U
+=======
+#define MRQ_MODULE_LOAD		4U
+#define MRQ_MODULE_UNLOAD	5U
+#define MRQ_TRACE_MODIFY	7U
+#define MRQ_WRITE_TRACE		8U
+#define MRQ_THREADED_PING	9U
+#define MRQ_MODULE_MAIL		11U
+>>>>>>> b7ba80a49124 (Commit)
 #define MRQ_DEBUGFS		19U
 #define MRQ_RESET		20U
 #define MRQ_I2C			21U
 #define MRQ_CLK			22U
 #define MRQ_QUERY_ABI		23U
+<<<<<<< HEAD
+=======
+#define MRQ_PG_READ_STATE	25U
+#define MRQ_PG_UPDATE_STATE	26U
+>>>>>>> b7ba80a49124 (Commit)
 #define MRQ_THERMAL		27U
 #define MRQ_CPU_VHINT		28U
 #define MRQ_ABI_RATCHET		29U
 #define MRQ_EMC_DVFS_LATENCY	31U
+<<<<<<< HEAD
+=======
+#define MRQ_TRACE_ITER		64U
+>>>>>>> b7ba80a49124 (Commit)
 #define MRQ_RINGBUF_CONSOLE	65U
 #define MRQ_PG			66U
 #define MRQ_CPU_NDIV_LIMITS	67U
@@ -332,6 +370,7 @@ struct mrq_response {
 #define MRQ_FMON		72U
 #define MRQ_EC			73U
 #define MRQ_DEBUG		75U
+<<<<<<< HEAD
 #define MRQ_EMC_DVFS_EMCHUB	76U
 #define MRQ_BWMGR		77U
 #define MRQ_ISO_CLIENT		78U
@@ -366,6 +405,8 @@ struct mrq_response {
 #define MRQ_RESERVED_64		64U
 #define MRQ_RESERVED_74		74U
 /** @endcond DEPRECATED */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /** @} */
 
@@ -374,7 +415,11 @@ struct mrq_response {
  * @brief Maximum MRQ code to be sent by CPU software to
  * BPMP. Subject to change in future
  */
+<<<<<<< HEAD
 #define MAX_CPU_MRQ_ID		84U
+=======
+#define MAX_CPU_MRQ_ID		75U
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @addtogroup MRQ_Payloads
@@ -390,11 +435,16 @@ struct mrq_response {
  *   @defgroup ABI_info ABI Info
  *   @defgroup Powergating Power Gating
  *   @defgroup Thermal Thermal
+<<<<<<< HEAD
  *   @defgroup OC_status OC status
  *   @defgroup Vhint CPU Voltage hint
  *   @defgroup EMC EMC
  *   @defgroup BWMGR BWMGR
  *   @defgroup ISO_CLIENT ISO_CLIENT
+=======
+ *   @defgroup Vhint CPU Voltage hint
+ *   @defgroup EMC EMC
+>>>>>>> b7ba80a49124 (Commit)
  *   @defgroup CPU NDIV Limits
  *   @defgroup RingbufConsole Ring Buffer Console
  *   @defgroup Strap Straps
@@ -402,11 +452,16 @@ struct mrq_response {
  *   @defgroup CC3 Auto-CC3
  *   @defgroup FMON FMON
  *   @defgroup EC EC
+<<<<<<< HEAD
  *   @defgroup Telemetry Telemetry
  *   @defgroup Pwrlimit PWR_LIMIT
  *   @defgroup Gears Gears
  *   @defgroup BWMGR_INT Bandwidth Manager Integrated
  * @} MRQ_Payloads
+=======
+ *   @defgroup Fbvolt_status Fuse Burn Voltage Status
+ * @}
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 /**
@@ -517,6 +572,193 @@ struct mrq_query_fw_tag_response {
 	uint8_t tag[32];
 } BPMP_ABI_PACKED;
 
+<<<<<<< HEAD
+=======
+/**
+ * @ingroup MRQ_Codes
+ * @def MRQ_MODULE_LOAD
+ * @brief Dynamically load a BPMP code module
+ *
+ * * Platforms: T210, T210B01, T186
+ * @cond (bpmp_t210 || bpmp_t210b01 || bpmp_t186)
+ * * Initiators: CCPLEX
+ * * Targets: BPMP
+ * * Request Payload: @ref mrq_module_load_request
+ * * Response Payload: @ref mrq_module_load_response
+ *
+ * @note This MRQ is disabled on production systems
+ *
+ */
+
+/**
+ * @ingroup Module
+ * @brief Request with #MRQ_MODULE_LOAD
+ *
+ * Used by #MRQ_MODULE_LOAD calls to ask the recipient to dynamically
+ * load the code located at #phys_addr and having size #size
+ * bytes. #phys_addr is treated as a void pointer.
+ *
+ * The recipient copies the code from #phys_addr to locally allocated
+ * memory prior to responding to this message.
+ *
+ * @todo document the module header format
+ *
+ * The sender is responsible for ensuring that the code is mapped in
+ * the recipient's address map.
+ *
+ */
+struct mrq_module_load_request {
+	/** @brief Base address of the code to load */
+	uint32_t phys_addr;
+	/** @brief Size in bytes of code to load */
+	uint32_t size;
+} BPMP_ABI_PACKED;
+
+/**
+ * @ingroup Module
+ * @brief Response to #MRQ_MODULE_LOAD
+ *
+ * @todo document mrq_response::err
+ */
+struct mrq_module_load_response {
+	/** @brief Handle to the loaded module */
+	uint32_t base;
+} BPMP_ABI_PACKED;
+/** @endcond*/
+
+/**
+ * @ingroup MRQ_Codes
+ * @def MRQ_MODULE_UNLOAD
+ * @brief Unload a previously loaded code module
+ *
+ * * Platforms: T210, T210B01, T186
+ * @cond (bpmp_t210 || bpmp_t210b01 || bpmp_t186)
+ * * Initiators: CCPLEX
+ * * Targets: BPMP
+ * * Request Payload: @ref mrq_module_unload_request
+ * * Response Payload: N/A
+ *
+ * @note This MRQ is disabled on production systems
+ */
+
+/**
+ * @ingroup Module
+ * @brief Request with #MRQ_MODULE_UNLOAD
+ *
+ * Used by #MRQ_MODULE_UNLOAD calls to request that a previously loaded
+ * module be unloaded.
+ */
+struct mrq_module_unload_request {
+	/** @brief Handle of the module to unload */
+	uint32_t base;
+} BPMP_ABI_PACKED;
+/** @endcond*/
+
+/**
+ * @ingroup MRQ_Codes
+ * @def MRQ_TRACE_MODIFY
+ * @brief Modify the set of enabled trace events
+ *
+ * @deprecated
+ *
+ * * Platforms: All
+ * * Initiators: CCPLEX
+ * * Targets: BPMP
+ * * Request Payload: @ref mrq_trace_modify_request
+ * * Response Payload: @ref mrq_trace_modify_response
+ *
+ * @note This MRQ is disabled on production systems
+ */
+
+/**
+ * @ingroup Trace
+ * @brief Request with #MRQ_TRACE_MODIFY
+ *
+ * Used by %MRQ_TRACE_MODIFY calls to enable or disable specify trace
+ * events.  #set takes precedence for any bit set in both #set and
+ * #clr.
+ */
+struct mrq_trace_modify_request {
+	/** @brief Bit mask of trace events to disable */
+	uint32_t clr;
+	/** @brief Bit mask of trace events to enable */
+	uint32_t set;
+} BPMP_ABI_PACKED;
+
+/**
+ * @ingroup Trace
+ * @brief Response to #MRQ_TRACE_MODIFY
+ *
+ * Sent in repsonse to an #MRQ_TRACE_MODIFY message. #mask reflects the
+ * state of which events are enabled after the recipient acted on the
+ * message.
+ *
+ */
+struct mrq_trace_modify_response {
+	/** @brief Bit mask of trace event enable states */
+	uint32_t mask;
+} BPMP_ABI_PACKED;
+
+/**
+ * @ingroup MRQ_Codes
+ * @def MRQ_WRITE_TRACE
+ * @brief Write trace data to a buffer
+ *
+ * @deprecated
+ *
+ * * Platforms: All
+ * * Initiators: CCPLEX
+ * * Targets: BPMP
+ * * Request Payload: @ref mrq_write_trace_request
+ * * Response Payload: @ref mrq_write_trace_response
+ *
+ * mrq_response::err depends on the @ref mrq_write_trace_request field
+ * values. err is -#BPMP_EINVAL if size is zero or area is NULL or
+ * area is in an illegal range. A positive value for err indicates the
+ * number of bytes written to area.
+ *
+ * @note This MRQ is disabled on production systems
+ */
+
+/**
+ * @ingroup Trace
+ * @brief Request with #MRQ_WRITE_TRACE
+ *
+ * Used by MRQ_WRITE_TRACE calls to ask the recipient to copy trace
+ * data from the recipient's local buffer to the output buffer. #area
+ * is treated as a byte-aligned pointer in the recipient's address
+ * space.
+ *
+ * The sender is responsible for ensuring that the output
+ * buffer is mapped in the recipient's address map. The recipient is
+ * responsible for protecting its own code and data from accidental
+ * overwrites.
+ */
+struct mrq_write_trace_request {
+	/** @brief Base address of output buffer */
+	uint32_t area;
+	/** @brief Size in bytes of the output buffer */
+	uint32_t size;
+} BPMP_ABI_PACKED;
+
+/**
+ * @ingroup Trace
+ * @brief Response to #MRQ_WRITE_TRACE
+ *
+ * Once this response is sent, the respondent will not access the
+ * output buffer further.
+ */
+struct mrq_write_trace_response {
+	/**
+	 * @brief Flag whether more data remains in local buffer
+	 *
+	 * Value is 1 if the entire local trace buffer has been
+	 * drained to the outputbuffer. Value is 0 otherwise.
+	 */
+	uint32_t eof;
+} BPMP_ABI_PACKED;
+
+>>>>>>> b7ba80a49124 (Commit)
 /** @private */
 struct mrq_threaded_ping_request {
 	uint32_t challenge;
@@ -529,6 +771,53 @@ struct mrq_threaded_ping_response {
 
 /**
  * @ingroup MRQ_Codes
+<<<<<<< HEAD
+=======
+ * @def MRQ_MODULE_MAIL
+ * @brief Send a message to a loadable module
+ *
+ * * Platforms: T210, T210B01, T186
+ * @cond (bpmp_t210 || bpmp_t210b01 || bpmp_t186)
+ * * Initiators: Any
+ * * Targets: BPMP
+ * * Request Payload: @ref mrq_module_mail_request
+ * * Response Payload: @ref mrq_module_mail_response
+ *
+ * @note This MRQ is disabled on production systems
+ */
+
+/**
+ * @ingroup Module
+ * @brief Request with #MRQ_MODULE_MAIL
+ */
+struct mrq_module_mail_request {
+	/** @brief Handle to the previously loaded module */
+	uint32_t base;
+	/** @brief Module-specific mail payload
+	 *
+	 * The length of data[ ] is unknown to the BPMP core firmware
+	 * but it is limited to the size of an IPC message.
+	 */
+	uint8_t data[BPMP_ABI_EMPTY_ARRAY];
+} BPMP_ABI_PACKED;
+
+/**
+ * @ingroup Module
+ * @brief Response to #MRQ_MODULE_MAIL
+ */
+struct mrq_module_mail_response {
+	/** @brief Module-specific mail payload
+	 *
+	 * The length of data[ ] is unknown to the BPMP core firmware
+	 * but it is limited to the size of an IPC message.
+	 */
+	uint8_t data[BPMP_ABI_EMPTY_ARRAY];
+} BPMP_ABI_PACKED;
+/** @endcond */
+
+/**
+ * @ingroup MRQ_Codes
+>>>>>>> b7ba80a49124 (Commit)
  * @def MRQ_DEBUGFS
  * @brief Interact with BPMP's debugfs file nodes
  *
@@ -671,7 +960,11 @@ struct mrq_debugfs_response {
 #define DEBUGFS_S_ISDIR	(1 << 9)
 #define DEBUGFS_S_IRUSR	(1 << 8)
 #define DEBUGFS_S_IWUSR	(1 << 7)
+<<<<<<< HEAD
 /** @} Debugfs */
+=======
+/** @} */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @ingroup MRQ_Codes
@@ -916,7 +1209,11 @@ enum mrq_reset_commands {
  * @brief Request with MRQ_RESET
  *
  * Used by the sender of an #MRQ_RESET message to request BPMP to
+<<<<<<< HEAD
  * assert or or deassert a given reset line.
+=======
+ * assert or deassert a given reset line.
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct mrq_reset_request {
 	/** @brief Reset action to perform (@ref mrq_reset_commands) */
@@ -955,7 +1252,11 @@ struct mrq_reset_response {
 	} BPMP_UNION_ANON;
 } BPMP_ABI_PACKED;
 
+<<<<<<< HEAD
 /** @} Reset */
+=======
+/** @} */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @ingroup MRQ_Codes
@@ -1017,6 +1318,7 @@ struct serial_i2c_request {
  * @brief Trigger one or more i2c transactions
  */
 struct cmd_i2c_xfer_request {
+<<<<<<< HEAD
 	/**
 	 * @brief Tegra PWR_I2C bus identifier
 	 *
@@ -1028,6 +1330,9 @@ struct cmd_i2c_xfer_request {
 	 * @endcond bpmp_th500
 	 *
 	 */
+=======
+	/** @brief Valid bus number from @ref bpmp_i2c_ids*/
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t bus_id;
 
 	/** @brief Count of valid bytes in #data_buf*/
@@ -1079,7 +1384,11 @@ struct mrq_i2c_response {
 	struct cmd_i2c_xfer_response xfer;
 } BPMP_ABI_PACKED;
 
+<<<<<<< HEAD
 /** @} I2C */
+=======
+/** @} */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @ingroup MRQ_Codes
@@ -1104,6 +1413,7 @@ enum {
 	CMD_CLK_IS_ENABLED = 6,
 	CMD_CLK_ENABLE = 7,
 	CMD_CLK_DISABLE = 8,
+<<<<<<< HEAD
 /** @cond DEPRECATED */
 	CMD_CLK_PROPERTIES = 9,
 	CMD_CLK_POSSIBLE_PARENTS = 10,
@@ -1111,6 +1421,8 @@ enum {
 	CMD_CLK_GET_POSSIBLE_PARENT = 12,
 	CMD_CLK_RESET_REFCOUNTS = 13,
 /** @endcond DEPRECATED */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	CMD_CLK_GET_ALL_INFO = 14,
 	CMD_CLK_GET_MAX_CLK_ID = 15,
 	CMD_CLK_GET_FMAX_AT_VMIN = 16,
@@ -1121,6 +1433,7 @@ enum {
 #define BPMP_CLK_HAS_SET_RATE	(1U << 1U)
 #define BPMP_CLK_IS_ROOT	(1U << 2U)
 #define BPMP_CLK_IS_VAR_ROOT	(1U << 3U)
+<<<<<<< HEAD
 /**
  * @brief Protection against rate and parent changes
  *
@@ -1136,6 +1449,8 @@ enum {
  * -#BPMP_EACCES.
  */
 #define BPMP_CLK_STATE_CHANGE_DENIED (1U << 31)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MRQ_CLK_NAME_MAXLEN	40U
 #define MRQ_CLK_MAX_PARENTS	16U
@@ -1227,6 +1542,7 @@ struct cmd_clk_disable_response {
 	BPMP_ABI_EMPTY
 } BPMP_ABI_PACKED;
 
+<<<<<<< HEAD
 /** @cond DEPRECATED */
 /** @private */
 struct cmd_clk_properties_request {
@@ -1267,6 +1583,8 @@ struct cmd_clk_get_possible_parent_response {
 } BPMP_ABI_PACKED;
 /** @endcond DEPRECATED */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /** @private */
 struct cmd_clk_get_all_info_request {
 	BPMP_ABI_EMPTY
@@ -1298,7 +1616,10 @@ struct cmd_clk_get_fmax_at_vmin_response {
 	int64_t rate;
 } BPMP_ABI_PACKED;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * @ingroup Clocks
  * @brief Request with #MRQ_CLK
@@ -1325,6 +1646,7 @@ struct cmd_clk_get_fmax_at_vmin_response {
  *
  */
 
+<<<<<<< HEAD
 /** @cond DEPRECATED
  *
  * Older versions of firmware also supported following sub-commands:
@@ -1336,6 +1658,8 @@ struct cmd_clk_get_fmax_at_vmin_response {
  *
  * @endcond DEPRECATED */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mrq_clk_request {
 	/** @brief Sub-command and clock id concatenated to 32-bit word.
 	 * - bits[31..24] is the sub-cmd.
@@ -1357,6 +1681,7 @@ struct mrq_clk_request {
 		struct cmd_clk_disable_request clk_disable;
 		/** @private */
 		struct cmd_clk_is_enabled_request clk_is_enabled;
+<<<<<<< HEAD
 		/** @cond DEPRECATED */
 		/** @private */
 		struct cmd_clk_properties_request clk_properties;
@@ -1366,6 +1691,8 @@ struct mrq_clk_request {
 		struct cmd_clk_num_possible_parents_request clk_num_possible_parents;
 		struct cmd_clk_get_possible_parent_request clk_get_possible_parent;
 		/** @endcond DEPRECATED */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/** @private */
 		struct cmd_clk_get_all_info_request clk_get_all_info;
 		/** @private */
@@ -1399,6 +1726,7 @@ struct mrq_clk_request {
  *
  */
 
+<<<<<<< HEAD
 /** @cond DEPRECATED
  *
  * Older versions of firmware also supported following sub-commands:
@@ -1410,6 +1738,8 @@ struct mrq_clk_request {
  *
  * @endcond DEPRECATED */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mrq_clk_response {
 	union {
 		struct cmd_clk_get_rate_response clk_get_rate;
@@ -1422,19 +1752,26 @@ struct mrq_clk_response {
 		/** @private */
 		struct cmd_clk_disable_response clk_disable;
 		struct cmd_clk_is_enabled_response clk_is_enabled;
+<<<<<<< HEAD
 		/** @cond DEPRECATED */
 		struct cmd_clk_properties_response clk_properties;
 		struct cmd_clk_possible_parents_response clk_possible_parents;
 		struct cmd_clk_num_possible_parents_response clk_num_possible_parents;
 		struct cmd_clk_get_possible_parent_response clk_get_possible_parent;
 		/** @endcond DEPRECATED */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		struct cmd_clk_get_all_info_response clk_get_all_info;
 		struct cmd_clk_get_max_clk_id_response clk_get_max_clk_id;
 		struct cmd_clk_get_fmax_at_vmin_response clk_get_fmax_at_vmin;
 	} BPMP_UNION_ANON;
 } BPMP_ABI_PACKED;
 
+<<<<<<< HEAD
 /** @} Clocks */
+=======
+/** @} */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @ingroup MRQ_Codes
@@ -1473,13 +1810,108 @@ struct mrq_query_abi_response {
 } BPMP_ABI_PACKED;
 
 /**
+<<<<<<< HEAD
  *
+=======
+ * @ingroup MRQ_Codes
+ * @def MRQ_PG_READ_STATE
+ * @brief Read the power-gating state of a partition
+ *
+ * * Platforms: T186
+ * @cond bpmp_t186
+ * * Initiators: Any
+ * * Targets: BPMP
+ * * Request Payload: @ref mrq_pg_read_state_request
+ * * Response Payload: @ref mrq_pg_read_state_response
+ */
+
+/**
+ * @ingroup Powergating
+ * @brief Request with #MRQ_PG_READ_STATE
+ *
+ * Used by MRQ_PG_READ_STATE call to read the current state of a
+ * partition.
+ */
+struct mrq_pg_read_state_request {
+	/** @brief ID of partition */
+	uint32_t partition_id;
+} BPMP_ABI_PACKED;
+
+/**
+ * @ingroup Powergating
+ * @brief Response to MRQ_PG_READ_STATE
+ * @todo define possible errors.
+ */
+struct mrq_pg_read_state_response {
+	/** @brief Read as don't care */
+	uint32_t sram_state;
+	/** @brief State of power partition
+	 * * 0 : off
+	 * * 1 : on
+	 */
+	uint32_t logic_state;
+} BPMP_ABI_PACKED;
+/** @endcond*/
+/** @} */
+
+/**
+ * @ingroup MRQ_Codes
+ * @def MRQ_PG_UPDATE_STATE
+ * @brief Modify the power-gating state of a partition. In contrast to
+ * MRQ_PG calls, the operations that change state (on/off) of power
+ * partition are reference counted.
+ *
+ * * Platforms: T186
+ * @cond bpmp_t186
+ * * Initiators: Any
+ * * Targets: BPMP
+ * * Request Payload: @ref mrq_pg_update_state_request
+ * * Response Payload: N/A
+ */
+
+/**
+ * @ingroup Powergating
+ * @brief Request with mrq_pg_update_state_request
+ *
+ * Used by #MRQ_PG_UPDATE_STATE call to request BPMP to change the
+ * state of a power partition #partition_id.
+ */
+struct mrq_pg_update_state_request {
+	/** @brief ID of partition */
+	uint32_t partition_id;
+	/** @brief Secondary control of power partition
+	 *  @details Ignored by many versions of the BPMP
+	 *  firmware. For maximum compatibility, set the value
+	 *  according to @ref logic_state
+	 * *  0x1: power ON partition (@ref logic_state == 0x3)
+	 * *  0x3: power OFF partition (@ref logic_state == 0x1)
+	 */
+	uint32_t sram_state;
+	/** @brief Controls state of power partition, legal values are
+	 * *  0x1 : power OFF partition
+	 * *  0x3 : power ON partition
+	 */
+	uint32_t logic_state;
+	/** @brief Change state of clocks of the power partition, legal values
+	 * *  0x0 : do not change clock state
+	 * *  0x1 : disable partition clocks (only applicable when
+	 *          @ref logic_state == 0x1)
+	 * *  0x3 : enable partition clocks (only applicable when
+	 *          @ref logic_state == 0x3)
+	 */
+	uint32_t clock_state;
+} BPMP_ABI_PACKED;
+/** @endcond*/
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * @ingroup MRQ_Codes
  * @def MRQ_PG
  * @brief Control power-gating state of a partition. In contrast to
  * MRQ_PG_UPDATE_STATE, operations that change the power partition
  * state are NOT reference counted
  *
+<<<<<<< HEAD
  * @cond (bpmp_t194 || bpmp_t186)
  * @note On T194 and earlier BPMP-FW forcefully turns off some partitions as
  * part of SC7 entry because their state cannot be adequately restored on exit.
@@ -1487,6 +1919,12 @@ struct mrq_query_abi_response {
  * entry.
  * See @ref bpmp_pdomain_ids for further detail.
  * @endcond (bpmp_t194 || bpmp_t186)
+=======
+ * @note BPMP-FW forcefully turns off some partitions as part of SC7 entry
+ * because their state cannot be adequately restored on exit. Therefore,
+ * it is recommended to power off all domains via MRQ_PG prior to SC7 entry.
+ * See @ref bpmp_pdomain_ids for further detail.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * * Platforms: T186, T194
  * * Initiators: Any
@@ -1651,7 +2089,11 @@ struct mrq_pg_response {
 	} BPMP_UNION_ANON;
 } BPMP_ABI_PACKED;
 
+<<<<<<< HEAD
 /** @} Powergating */
+=======
+/** @} */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @ingroup MRQ_Codes
@@ -1897,6 +2339,7 @@ union mrq_thermal_bpmp_to_host_response {
 	struct cmd_thermal_get_thermtrip_response get_thermtrip;
 	struct cmd_thermal_get_num_zones_response get_num_zones;
 } BPMP_ABI_PACKED;
+<<<<<<< HEAD
 
 /** @} Thermal */
 
@@ -1935,6 +2378,9 @@ struct mrq_oc_status_response {
 
 /** @} OC_status */
 /** @endcond bpmp_t234 */
+=======
+/** @} */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @ingroup MRQ_Codes
@@ -1993,9 +2439,14 @@ struct cpu_vhint_data {
 	/** reserved for future use */
 	uint16_t reserved[328];
 } BPMP_ABI_PACKED;
+<<<<<<< HEAD
 
 /** @} Vhint */
 /** @endcond bpmp_t186 */
+=======
+/** @endcond */
+/** @} */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @ingroup MRQ_Codes
@@ -2062,15 +2513,23 @@ struct mrq_abi_ratchet_response {
 	/** @brief BPMP's ratchet value */
 	uint16_t ratchet;
 };
+<<<<<<< HEAD
 
 /** @} ABI_info */
+=======
+/** @} */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @ingroup MRQ_Codes
  * @def MRQ_EMC_DVFS_LATENCY
  * @brief Query frequency dependent EMC DVFS latency
  *
+<<<<<<< HEAD
  * * Platforms: T186, T194, T234
+=======
+ * * Platforms: T186, T194
+>>>>>>> b7ba80a49124 (Commit)
  * * Initiators: CCPLEX
  * * Targets: BPMP
  * * Request Payload: N/A
@@ -2100,6 +2559,7 @@ struct mrq_emc_dvfs_latency_response {
 	struct emc_dvfs_latency pairs[EMC_DVFS_LATENCY_MAX_SIZE];
 } BPMP_ABI_PACKED;
 
+<<<<<<< HEAD
 /** @} EMC */
 
 /**
@@ -2637,6 +3097,9 @@ struct mrq_iso_client_response {
 
 /** @} ISO_CLIENT */
 /** @endcond (bpmp_t234 || bpmp_t239 || bpmp_th500) */
+=======
+/** @} */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @ingroup MRQ_Codes
@@ -2644,7 +3107,11 @@ struct mrq_iso_client_response {
  * @brief CPU freq. limits in ndiv
  *
  * * Platforms: T194 onwards
+<<<<<<< HEAD
  * @cond (bpmp_t194 || bpmp_t234 || bpmp_t239 || bpmp_th500)
+=======
+ * @cond bpmp_t194
+>>>>>>> b7ba80a49124 (Commit)
  * * Initiators: CCPLEX
  * * Targets: BPMP
  * * Request Payload: @ref mrq_cpu_ndiv_limits_request
@@ -2677,15 +3144,24 @@ struct mrq_cpu_ndiv_limits_response {
 	uint16_t ndiv_min;
 } BPMP_ABI_PACKED;
 
+<<<<<<< HEAD
 /** @} CPU */
 /** @endcond (bpmp_t194 || bpmp_t234 || bpmp_t239 || bpmp_th500) */
+=======
+/** @} */
+/** @endcond */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @ingroup MRQ_Codes
  * @def MRQ_CPU_AUTO_CC3
  * @brief Query CPU cluster auto-CC3 configuration
  *
+<<<<<<< HEAD
  * * Platforms: T194
+=======
+ * * Platforms: T194 onwards
+>>>>>>> b7ba80a49124 (Commit)
  * @cond bpmp_t194
  * * Initiators: CCPLEX
  * * Targets: BPMP
@@ -2723,8 +3199,45 @@ struct mrq_cpu_auto_cc3_response {
 	uint32_t auto_cc3_config;
 } BPMP_ABI_PACKED;
 
+<<<<<<< HEAD
 /** @} CC3 */
 /** @endcond bpmp_t194 */
+=======
+/** @} */
+/** @endcond */
+
+/**
+ * @ingroup MRQ_Codes
+ * @def MRQ_TRACE_ITER
+ * @brief Manage the trace iterator
+ *
+ * @deprecated
+ *
+ * * Platforms: All
+ * * Initiators: CCPLEX
+ * * Targets: BPMP
+ * * Request Payload: N/A
+ * * Response Payload: @ref mrq_trace_iter_request
+ * @addtogroup Trace
+ * @{
+ */
+enum {
+	/** @brief (re)start the tracing now. Ignore older events */
+	TRACE_ITER_INIT = 0,
+	/** @brief Clobber all events in the trace buffer */
+	TRACE_ITER_CLEAN = 1
+};
+
+/**
+ * @brief Request with #MRQ_TRACE_ITER
+ */
+struct mrq_trace_iter_request {
+	/** @brief TRACE_ITER_INIT or TRACE_ITER_CLEAN */
+	uint32_t cmd;
+} BPMP_ABI_PACKED;
+
+/** @} */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @ingroup MRQ_Codes
@@ -2902,8 +3415,12 @@ union mrq_ringbuf_console_bpmp_to_host_response {
 	struct cmd_ringbuf_console_write_resp write;
 	struct cmd_ringbuf_console_get_fifo_resp get_fifo;
 } BPMP_ABI_PACKED;
+<<<<<<< HEAD
 
 /** @} RingbufConsole */
+=======
+/** @} */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @ingroup MRQ_Codes
@@ -2911,7 +3428,11 @@ union mrq_ringbuf_console_bpmp_to_host_response {
  * @brief Set a strap value controlled by BPMP
  *
  * * Platforms: T194 onwards
+<<<<<<< HEAD
  * @cond (bpmp_t194 || bpmp_t234 || bpmp_t239 || bpmp_th500)
+=======
+ * @cond bpmp_t194
+>>>>>>> b7ba80a49124 (Commit)
  * * Initiators: CCPLEX
  * * Targets: BPMP
  * * Request Payload: @ref mrq_strap_request
@@ -2942,14 +3463,26 @@ enum mrq_strap_cmd {
 struct mrq_strap_request {
 	/** @brief @ref mrq_strap_cmd */
 	uint32_t cmd;
+<<<<<<< HEAD
 	/** @brief Strap ID from @ref Strap_Identifiers */
+=======
+	/** @brief Strap ID from @ref Strap_Ids */
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t id;
 	/** @brief Desired value for strap (if cmd is #STRAP_SET) */
 	uint32_t value;
 } BPMP_ABI_PACKED;
 
+<<<<<<< HEAD
 /** @} Strap */
 /** @endcond (bpmp_t194 || bpmp_t234 || bpmp_t239 || bpmp_th500) */
+=======
+/**
+ * @defgroup Strap_Ids Strap Identifiers
+ * @}
+ */
+/** @endcond */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @ingroup MRQ_Codes
@@ -2957,7 +3490,11 @@ struct mrq_strap_request {
  * @brief Perform a UPHY operation
  *
  * * Platforms: T194 onwards
+<<<<<<< HEAD
  * @cond (bpmp_t194 || bpmp_t234 || bpmp_t239 || bpmp_th500)
+=======
+ * @cond bpmp_t194
+>>>>>>> b7ba80a49124 (Commit)
  * * Initiators: CCPLEX
  * * Targets: BPMP
  * * Request Payload: @ref mrq_uphy_request
@@ -2972,9 +3509,12 @@ enum {
 	CMD_UPHY_PCIE_EP_CONTROLLER_PLL_INIT = 3,
 	CMD_UPHY_PCIE_CONTROLLER_STATE = 4,
 	CMD_UPHY_PCIE_EP_CONTROLLER_PLL_OFF = 5,
+<<<<<<< HEAD
 	CMD_UPHY_DISPLAY_PORT_INIT = 6,
 	CMD_UPHY_DISPLAY_PORT_OFF = 7,
 	CMD_UPHY_XUSB_DYN_LANES_RESTORE = 8,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	CMD_UPHY_MAX,
 };
 
@@ -2997,17 +3537,26 @@ struct cmd_uphy_margin_status_response {
 } BPMP_ABI_PACKED;
 
 struct cmd_uphy_ep_controller_pll_init_request {
+<<<<<<< HEAD
 	/** @brief EP controller number, T194 valid: 0, 4, 5; T234 valid: 5, 6, 7, 10; T239 valid: 0 */
+=======
+	/** @brief EP controller number, valid: 0, 4, 5 */
+>>>>>>> b7ba80a49124 (Commit)
 	uint8_t ep_controller;
 } BPMP_ABI_PACKED;
 
 struct cmd_uphy_pcie_controller_state_request {
+<<<<<<< HEAD
 	/** @brief PCIE controller number, T194 valid: 0-4; T234 valid: 0-10; T239 valid: 0-3 */
+=======
+	/** @brief PCIE controller number, valid: 0, 1, 2, 3, 4 */
+>>>>>>> b7ba80a49124 (Commit)
 	uint8_t pcie_controller;
 	uint8_t enable;
 } BPMP_ABI_PACKED;
 
 struct cmd_uphy_ep_controller_pll_off_request {
+<<<<<<< HEAD
 	/** @brief EP controller number, T194 valid: 0, 4, 5; T234 valid: 5, 6, 7, 10; T239 valid: 0 */
 	uint8_t ep_controller;
 } BPMP_ABI_PACKED;
@@ -3024,14 +3573,26 @@ struct cmd_uphy_xusb_dyn_lanes_restore_request {
 	uint16_t lanes_bitmap;
 } BPMP_ABI_PACKED;
 
+=======
+	/** @brief EP controller number, valid: 0, 4, 5 */
+	uint8_t ep_controller;
+} BPMP_ABI_PACKED;
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * @ingroup UPHY
  * @brief Request with #MRQ_UPHY
  *
+<<<<<<< HEAD
  * Used by the sender of an #MRQ_UPHY message to control UPHY.
  * The uphy_request is split into several sub-commands. CMD_UPHY_PCIE_LANE_MARGIN_STATUS
  * requires no additional data. Others have a sub-command specific payload. Below table
  * shows sub-commands with their corresponding payload data.
+=======
+ * Used by the sender of an #MRQ_UPHY message to control UPHY Lane RX margining.
+ * The uphy_request is split into several sub-commands. Some sub-commands
+ * require no additional data. Others have a sub-command specific payload
+>>>>>>> b7ba80a49124 (Commit)
  *
  * |sub-command                          |payload                                 |
  * |------------------------------------ |----------------------------------------|
@@ -3040,9 +3601,12 @@ struct cmd_uphy_xusb_dyn_lanes_restore_request {
  * |CMD_UPHY_PCIE_EP_CONTROLLER_PLL_INIT |cmd_uphy_ep_controller_pll_init_request |
  * |CMD_UPHY_PCIE_CONTROLLER_STATE       |cmd_uphy_pcie_controller_state_request  |
  * |CMD_UPHY_PCIE_EP_CONTROLLER_PLL_OFF  |cmd_uphy_ep_controller_pll_off_request  |
+<<<<<<< HEAD
  * |CMD_UPHY_PCIE_DISPLAY_PORT_INIT      |cmd_uphy_display_port_init_request      |
  * |CMD_UPHY_PCIE_DISPLAY_PORT_OFF       |                                        |
  * |CMD_UPHY_XUSB_DYN_LANES_RESTORE      |cmd_uphy_xusb_dyn_lanes_restore_request |
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  */
 
@@ -3057,8 +3621,11 @@ struct mrq_uphy_request {
 		struct cmd_uphy_ep_controller_pll_init_request ep_ctrlr_pll_init;
 		struct cmd_uphy_pcie_controller_state_request controller_state;
 		struct cmd_uphy_ep_controller_pll_off_request ep_ctrlr_pll_off;
+<<<<<<< HEAD
 		struct cmd_uphy_display_port_init_request display_port_init;
 		struct cmd_uphy_xusb_dyn_lanes_restore_request xusb_dyn_lanes_restore;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} BPMP_UNION_ANON;
 } BPMP_ABI_PACKED;
 
@@ -3083,8 +3650,13 @@ struct mrq_uphy_response {
 	} BPMP_UNION_ANON;
 } BPMP_ABI_PACKED;
 
+<<<<<<< HEAD
 /** @} UPHY */
 /** @endcond (bpmp_t194 || bpmp_t234 || bpmp_t239 || bpmp_th500) */
+=======
+/** @} */
+/** @endcond */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @ingroup MRQ_Codes
@@ -3092,16 +3664,26 @@ struct mrq_uphy_response {
  * @brief Perform a frequency monitor configuration operations
  *
  * * Platforms: T194 onwards
+<<<<<<< HEAD
  * @cond (bpmp_t194 || bpmp_t234 || bpmp_t239 || bpmp_th500)
+=======
+ * @cond bpmp_t194
+>>>>>>> b7ba80a49124 (Commit)
  * * Initiators: CCPLEX
  * * Targets: BPMP
  * * Request Payload: @ref mrq_fmon_request
  * * Response Payload: @ref mrq_fmon_response
+<<<<<<< HEAD
  * @endcond (bpmp_t194 || bpmp_t234 || bpmp_t239 || bpmp_th500)
  *
  * @addtogroup FMON
  * @{
  * @cond (bpmp_t194 || bpmp_t234)
+=======
+ *
+ * @addtogroup FMON
+ * @{
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum {
 	/**
@@ -3110,6 +3692,7 @@ enum {
 	 * The monitored clock must be running for clamp to succeed. If
 	 * clamped, FMON configuration is preserved when clock rate
 	 * and/or state is changed.
+<<<<<<< HEAD
 	 *
 	 * mrq_response::err is 0 if the operation was successful, or @n
 	 * -#BPMP_EACCES: FMON access error @n
@@ -3124,6 +3707,8 @@ enum {
 	 * -#BPMP_ENOTSUP: avfs config not set @n
 	 * -#BPMP_ENOSYS: clamp FMON on cluster clock w/ no NAFLL @n
 	 * -#BPMP_ETIMEDOUT: operation timed out @n
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	CMD_FMON_GEAR_CLAMP = 1,
 	/**
@@ -3131,6 +3716,7 @@ enum {
 	 *
 	 * Allow FMON configuration to follow monitored clock rate
 	 * and/or state changes.
+<<<<<<< HEAD
 	 *
 	 * mrq_response::err is 0 if the operation was successful, or @n
 	 * -#BPMP_EBADCMD if subcommand is not supported @n
@@ -3138,6 +3724,8 @@ enum {
 	 * -#BPMP_ENOENT: no calibration data, uninitialized @n
 	 * -#BPMP_ENOTSUP: avfs config not set @n
 	 * -#BPMP_EOPNOTSUPP: not in production mode @n
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	CMD_FMON_GEAR_FREE = 2,
 	/**
@@ -3146,6 +3734,7 @@ enum {
 	 *
 	 * Inherently racy, since clamp state can be changed
 	 * concurrently. Useful for testing.
+<<<<<<< HEAD
 	 *
 	 * mrq_response::err is 0 if the operation was successful, or @n
 	 * -#BPMP_EBADCMD if subcommand is not supported @n
@@ -3194,6 +3783,13 @@ enum {
 /** @} fmon_fault_type */
 
 
+=======
+	 */
+	CMD_FMON_GEAR_GET = 3,
+	CMD_FMON_NUM,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct cmd_fmon_gear_clamp_request {
 	int32_t unused;
 	int64_t rate;
@@ -3223,6 +3819,7 @@ struct cmd_fmon_gear_get_response {
 	int64_t rate;
 } BPMP_ABI_PACKED;
 
+<<<<<<< HEAD
 struct cmd_fmon_fault_sts_get_request {
 	uint32_t fault_type;	/**< @ref fmon_fault_type */
 } BPMP_ABI_PACKED;
@@ -3231,6 +3828,8 @@ struct cmd_fmon_fault_sts_get_response {
 	uint32_t fault_sts;
 } BPMP_ABI_PACKED;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * @ingroup FMON
  * @brief Request with #MRQ_FMON
@@ -3245,9 +3844,15 @@ struct cmd_fmon_fault_sts_get_response {
  * |CMD_FMON_GEAR_CLAMP         |fmon_gear_clamp        |
  * |CMD_FMON_GEAR_FREE          |-                      |
  * |CMD_FMON_GEAR_GET           |-                      |
+<<<<<<< HEAD
  * |CMD_FMON_FAULT_STS_GET      |fmon_fault_sts_get     |
  *
  */
+=======
+ *
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 struct mrq_fmon_request {
 	/** @brief Sub-command and clock id concatenated to 32-bit word.
 	 * - bits[31..24] is the sub-cmd.
@@ -3262,7 +3867,10 @@ struct mrq_fmon_request {
 		struct cmd_fmon_gear_free_request fmon_gear_free;
 		/** @private */
 		struct cmd_fmon_gear_get_request fmon_gear_get;
+<<<<<<< HEAD
 		struct cmd_fmon_fault_sts_get_request fmon_fault_sts_get;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} BPMP_UNION_ANON;
 } BPMP_ABI_PACKED;
 
@@ -3278,7 +3886,10 @@ struct mrq_fmon_request {
  * |CMD_FMON_GEAR_CLAMP         |-                       |
  * |CMD_FMON_GEAR_FREE          |-                       |
  * |CMD_FMON_GEAR_GET           |fmon_gear_get           |
+<<<<<<< HEAD
  * |CMD_FMON_FAULT_STS_GET      |fmon_fault_sts_get      |
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  */
 
@@ -3289,12 +3900,20 @@ struct mrq_fmon_response {
 		/** @private */
 		struct cmd_fmon_gear_free_response fmon_gear_free;
 		struct cmd_fmon_gear_get_response fmon_gear_get;
+<<<<<<< HEAD
 		struct cmd_fmon_fault_sts_get_response fmon_fault_sts_get;
 	} BPMP_UNION_ANON;
 } BPMP_ABI_PACKED;
 
 /** @endcond (bpmp_t194 || bpmp_t234) */
 /** @} FMON */
+=======
+	} BPMP_UNION_ANON;
+} BPMP_ABI_PACKED;
+
+/** @} */
+/** @endcond */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @ingroup MRQ_Codes
@@ -3302,7 +3921,11 @@ struct mrq_fmon_response {
  * @brief Provide status information on faults reported by Error
  *        Collator (EC) to HSM.
  *
+<<<<<<< HEAD
  * * Platforms: T194
+=======
+ * * Platforms: T194 onwards
+>>>>>>> b7ba80a49124 (Commit)
  * @cond bpmp_t194
  * * Initiators: CCPLEX
  * * Targets: BPMP
@@ -3311,10 +3934,15 @@ struct mrq_fmon_response {
  *
  * @note This MRQ ABI is under construction, and subject to change
  *
+<<<<<<< HEAD
  * @endcond bpmp_t194
  * @addtogroup EC
  * @{
  * @cond bpmp_t194
+=======
+ * @addtogroup EC
+ * @{
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum {
 	/**
@@ -3325,7 +3953,11 @@ enum {
 	 * -#BPMP_ENODEV if target EC is not owned by BPMP @n
 	 * -#BPMP_EACCES if target EC power domain is turned off @n
 	 * -#BPMP_EBADCMD if subcommand is not supported
+<<<<<<< HEAD
 	 * @endcond DEPRECATED
+=======
+	 * @endcond
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	CMD_EC_STATUS_GET = 1,	/* deprecated */
 
@@ -3436,8 +4068,12 @@ enum ec_registers_group {
 #define EC_STATUS_FLAG_LAST_ERROR	0x0002U
 /** @brief EC latent error flag */
 #define EC_STATUS_FLAG_LATENT_ERROR	0x0004U
+<<<<<<< HEAD
 
 /** @} bpmp_ec_status_flags */
+=======
+/** @} */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @defgroup bpmp_ec_desc_flags EC Descriptor Flags
@@ -3448,8 +4084,12 @@ enum ec_registers_group {
 #define EC_DESC_FLAG_RESOLVED		0x0001U
 /** @brief EC descriptor failed to retrieve id flag */
 #define EC_DESC_FLAG_NO_ID		0x0002U
+<<<<<<< HEAD
 
 /** @} bpmp_ec_desc_flags */
+=======
+/** @} */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * |error type                       | fmon_clk_id values        |
@@ -3461,18 +4101,26 @@ struct ec_err_fmon_desc {
 	uint16_t desc_flags;
 	/** @brief FMON monitored clock id */
 	uint16_t fmon_clk_id;
+<<<<<<< HEAD
 	/**
 	 * @brief Bitmask of fault flags
 	 *
 	 * @ref bpmp_fmon_faults_flags
 	 */
+=======
+	/** @brief Bitmask of @ref bpmp_fmon_faults_flags */
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t fmon_faults;
 	/** @brief FMON faults access error */
 	int32_t fmon_access_error;
 } BPMP_ABI_PACKED;
 
 /**
+<<<<<<< HEAD
  * | error type                      | vmon_adc_id values        |
+=======
+ * |error type                       | vmon_adc_id values        |
+>>>>>>> b7ba80a49124 (Commit)
  * |---------------------------------|---------------------------|
  * |@ref EC_ERR_TYPE_VOLTAGE_MONITOR |@ref bpmp_adc_ids          |
  */
@@ -3481,16 +4129,26 @@ struct ec_err_vmon_desc {
 	uint16_t desc_flags;
 	/** @brief VMON rail adc id */
 	uint16_t vmon_adc_id;
+<<<<<<< HEAD
 	/** @brief Bitmask of bpmp_vmon_faults_flags */
+=======
+	/** @brief Bitmask of @ref bpmp_vmon_faults_flags */
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t vmon_faults;
 	/** @brief VMON faults access error */
 	int32_t vmon_access_error;
 } BPMP_ABI_PACKED;
 
 /**
+<<<<<<< HEAD
  * |error type                       | reg_id values         |
  * |---------------------------------|-----------------------|
  * |@ref EC_ERR_TYPE_REGISTER_PARITY | bpmp_ec_registers_ids |
+=======
+ * |error type                       | reg_id values             |
+ * |---------------------------------|---------------------------|
+ * |@ref EC_ERR_TYPE_REGISTER_PARITY |@ref bpmp_ec_registers_ids |
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct ec_err_reg_parity_desc {
 	/** @brief Bitmask of @ref bpmp_ec_desc_flags  */
@@ -3502,10 +4160,17 @@ struct ec_err_reg_parity_desc {
 } BPMP_ABI_PACKED;
 
 /**
+<<<<<<< HEAD
  * |error type                        | err_source_id values |
  * |--------------------------------- |----------------------|
  * |@ref EC_ERR_TYPE_SW_CORRECTABLE   | bpmp_ec_ce_swd_ids   |
  * |@ref EC_ERR_TYPE_SW_UNCORRECTABLE | bpmp_ec_ue_swd_ids   |
+=======
+ * |error type                        | err_source_id values     |
+ * |--------------------------------- |--------------------------|
+ * |@ref EC_ERR_TYPE_SW_CORRECTABLE   | @ref bpmp_ec_ce_swd_ids  |
+ * |@ref EC_ERR_TYPE_SW_UNCORRECTABLE | @ref bpmp_ec_ue_swd_ids  |
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct ec_err_sw_error_desc {
 	/** @brief Bitmask of @ref bpmp_ec_desc_flags  */
@@ -3517,6 +4182,7 @@ struct ec_err_sw_error_desc {
 } BPMP_ABI_PACKED;
 
 /**
+<<<<<<< HEAD
  * |error type                              | err_source_id values   |
  * |----------------------------------------|------------------------|
  * |@ref EC_ERR_TYPE_PARITY_INTERNAL        |  bpmp_ec_ipath_ids     |
@@ -3526,6 +4192,17 @@ struct ec_err_sw_error_desc {
  * |@ref EC_ERR_TYPE_OTHER_HW_CORRECTABLE   |  bpmp_ec_misc_hwd_ids  |
  * |@ref EC_ERR_TYPE_OTHER_HW_UNCORRECTABLE |  bpmp_ec_misc_hwd_ids  |
  * |@ref EC_ERR_TYPE_PARITY_SRAM            |  bpmp_clock_ids        |
+=======
+ * |error type                              | err_source_id values      |
+ * |----------------------------------------|---------------------------|
+ * |@ref EC_ERR_TYPE_PARITY_INTERNAL        |@ref bpmp_ec_ipath_ids     |
+ * |@ref EC_ERR_TYPE_ECC_SEC_INTERNAL       |@ref bpmp_ec_ipath_ids     |
+ * |@ref EC_ERR_TYPE_ECC_DED_INTERNAL       |@ref bpmp_ec_ipath_ids     |
+ * |@ref EC_ERR_TYPE_COMPARATOR             |@ref bpmp_ec_comparator_ids|
+ * |@ref EC_ERR_TYPE_PARITY_SRAM            |@ref bpmp_clock_ids        |
+ * |@ref EC_ERR_TYPE_OTHER_HW_CORRECTABLE   |@ref bpmp_ec_misc_hwd_ids  |
+ * |@ref EC_ERR_TYPE_OTHER_HW_UNCORRECTABLE |@ref bpmp_ec_misc_hwd_ids  |
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct ec_err_simple_desc {
 	/** @brief Bitmask of @ref bpmp_ec_desc_flags  */
@@ -3572,7 +4249,11 @@ struct cmd_ec_status_get_response {
 	/** @brief  EC error descriptors */
 	union ec_err_desc error_descs[EC_ERR_STATUS_DESC_MAX_NUM];
 } BPMP_ABI_PACKED;
+<<<<<<< HEAD
 /** @endcond DEPRECATED */
+=======
+/** @endcond */
+>>>>>>> b7ba80a49124 (Commit)
 
 struct cmd_ec_status_ex_get_response {
 	/** @brief Target EC id (the same id received with request). */
@@ -3610,7 +4291,11 @@ struct cmd_ec_status_ex_get_response {
  * |sub-command                 |payload                |
  * |----------------------------|-----------------------|
  * |@ref CMD_EC_STATUS_GET      |ec_status_get          |
+<<<<<<< HEAD
  * @endcond DEPRECATED
+=======
+ * @endcond
+>>>>>>> b7ba80a49124 (Commit)
  *
  * |sub-command                 |payload                |
  * |----------------------------|-----------------------|
@@ -3638,7 +4323,11 @@ struct mrq_ec_request {
  * |sub-command                 |payload                 |
  * |----------------------------|------------------------|
  * |@ref CMD_EC_STATUS_GET      |ec_status_get           |
+<<<<<<< HEAD
  * @endcond DEPRECATED
+=======
+ * @endcond
+>>>>>>> b7ba80a49124 (Commit)
  *
  * |sub-command                 |payload                 |
  * |----------------------------|------------------------|
@@ -3652,11 +4341,16 @@ struct mrq_ec_response {
 		 * @cond DEPRECATED
 		 */
 		struct cmd_ec_status_get_response ec_status_get;
+<<<<<<< HEAD
 		/** @endcond DEPRECATED */
+=======
+		/** @endcond */
+>>>>>>> b7ba80a49124 (Commit)
 		struct cmd_ec_status_ex_get_response ec_status_ex_get;
 	} BPMP_UNION_ANON;
 } BPMP_ABI_PACKED;
 
+<<<<<<< HEAD
 /** @endcond bpmp_t194 */
 /** @} EC */
 
@@ -3910,6 +4604,10 @@ struct mrq_gears_response {
 
 /** @} Gears */
 /** @endcond bpmp_th500 */
+=======
+/** @} */
+/** @endcond */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * @addtogroup Error_Codes
@@ -3953,18 +4651,25 @@ struct mrq_gears_response {
 #define BPMP_ENOSYS	38
 /** @brief Invalid slot */
 #define BPMP_EBADSLT	57
+<<<<<<< HEAD
 /** @brief Invalid message */
 #define BPMP_EBADMSG	77
 /** @brief Operation not supported */
 #define BPMP_EOPNOTSUPP 95
 /** @brief Targeted resource not available */
 #define BPMP_ENAVAIL	119
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /** @brief Not supported */
 #define BPMP_ENOTSUP	134
 /** @brief No such device or address */
 #define BPMP_ENXIO	140
 
+<<<<<<< HEAD
 /** @} Error_Codes */
+=======
+/** @} */
+>>>>>>> b7ba80a49124 (Commit)
 
 #if defined(BPMP_ABI_CHECKS)
 #include "bpmp_abi_checks.h"

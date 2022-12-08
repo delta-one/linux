@@ -263,6 +263,7 @@ int damon_set_regions(struct damon_target *t, struct damon_addr_range *ranges,
 	return 0;
 }
 
+<<<<<<< HEAD
 struct damos_filter *damos_new_filter(enum damos_filter_type type,
 		bool matching)
 {
@@ -297,6 +298,8 @@ void damos_destroy_filter(struct damos_filter *f)
 	damos_free_filter(f);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* initialize private fields of damos_quota and return the pointer */
 static struct damos_quota *damos_quota_init_priv(struct damos_quota *quota)
 {
@@ -321,7 +324,10 @@ struct damos *damon_new_scheme(struct damos_access_pattern *pattern,
 		return NULL;
 	scheme->pattern = *pattern;
 	scheme->action = action;
+<<<<<<< HEAD
 	INIT_LIST_HEAD(&scheme->filters);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	scheme->stat = (struct damos_stat){};
 	INIT_LIST_HEAD(&scheme->list);
 
@@ -350,10 +356,13 @@ static void damon_free_scheme(struct damos *s)
 
 void damon_destroy_scheme(struct damos *s)
 {
+<<<<<<< HEAD
 	struct damos_filter *f, *next;
 
 	damos_for_each_filter_safe(f, next, s)
 		damos_destroy_filter(f);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	damon_del_scheme(s);
 	damon_free_scheme(s);
 }
@@ -374,7 +383,10 @@ struct damon_target *damon_new_target(void)
 	t->pid = NULL;
 	t->nr_regions = 0;
 	INIT_LIST_HEAD(&t->regions_list);
+<<<<<<< HEAD
 	INIT_LIST_HEAD(&t->list);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return t;
 }
@@ -465,6 +477,7 @@ void damon_destroy_ctx(struct damon_ctx *ctx)
 	kfree(ctx);
 }
 
+<<<<<<< HEAD
 static unsigned int damon_age_for_new_attrs(unsigned int age,
 		struct damon_attrs *old_attrs, struct damon_attrs *new_attrs)
 {
@@ -535,6 +548,8 @@ static void damon_update_monitoring_results(struct damon_ctx *ctx,
 					r, old_attrs, new_attrs);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * damon_set_attrs() - Set attributes for the monitoring.
  * @ctx:		monitoring context
@@ -552,7 +567,10 @@ int damon_set_attrs(struct damon_ctx *ctx, struct damon_attrs *attrs)
 	if (attrs->min_nr_regions > attrs->max_nr_regions)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	damon_update_monitoring_results(ctx, attrs);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ctx->attrs = *attrs;
 	return 0;
 }
@@ -601,7 +619,11 @@ static unsigned long damon_region_sz_limit(struct damon_ctx *ctx)
 
 	damon_for_each_target(t, ctx) {
 		damon_for_each_region(r, t)
+<<<<<<< HEAD
 			sz += damon_sz_region(r);
+=======
+			sz += r->ar.end - r->ar.start;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (ctx->attrs.min_nr_regions)
@@ -784,7 +806,11 @@ static bool __damos_valid_target(struct damon_region *r, struct damos *s)
 {
 	unsigned long sz;
 
+<<<<<<< HEAD
 	sz = damon_sz_region(r);
+=======
+	sz = r->ar.end - r->ar.start;
+>>>>>>> b7ba80a49124 (Commit)
 	return s->pattern.min_sz_region <= sz &&
 		sz <= s->pattern.max_sz_region &&
 		s->pattern.min_nr_accesses <= r->nr_accesses &&
@@ -804,6 +830,7 @@ static bool damos_valid_target(struct damon_ctx *c, struct damon_target *t,
 	return c->ops.get_scheme_score(c, t, r, s) >= s->quota.min_score;
 }
 
+<<<<<<< HEAD
 /*
  * damos_skip_charged_region() - Check if the given region or starting part of
  * it is already charged for the DAMOS quota.
@@ -913,6 +940,8 @@ update_stat:
 	damos_update_stat(s, sz, sz_applied);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void damon_do_apply_schemes(struct damon_ctx *c,
 				   struct damon_target *t,
 				   struct damon_region *r)
@@ -921,6 +950,12 @@ static void damon_do_apply_schemes(struct damon_ctx *c,
 
 	damon_for_each_scheme(s, c) {
 		struct damos_quota *quota = &s->quota;
+<<<<<<< HEAD
+=======
+		unsigned long sz = r->ar.end - r->ar.start;
+		struct timespec64 begin, end;
+		unsigned long sz_applied = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!s->wmarks.activated)
 			continue;
@@ -929,13 +964,79 @@ static void damon_do_apply_schemes(struct damon_ctx *c,
 		if (quota->esz && quota->charged_sz >= quota->esz)
 			continue;
 
+<<<<<<< HEAD
 		if (damos_skip_charged_region(t, &r, s))
 			continue;
+=======
+		/* Skip previously charged regions */
+		if (quota->charge_target_from) {
+			if (t != quota->charge_target_from)
+				continue;
+			if (r == damon_last_region(t)) {
+				quota->charge_target_from = NULL;
+				quota->charge_addr_from = 0;
+				continue;
+			}
+			if (quota->charge_addr_from &&
+					r->ar.end <= quota->charge_addr_from)
+				continue;
+
+			if (quota->charge_addr_from && r->ar.start <
+					quota->charge_addr_from) {
+				sz = ALIGN_DOWN(quota->charge_addr_from -
+						r->ar.start, DAMON_MIN_REGION);
+				if (!sz) {
+					if (r->ar.end - r->ar.start <=
+							DAMON_MIN_REGION)
+						continue;
+					sz = DAMON_MIN_REGION;
+				}
+				damon_split_region_at(t, r, sz);
+				r = damon_next_region(r);
+				sz = r->ar.end - r->ar.start;
+			}
+			quota->charge_target_from = NULL;
+			quota->charge_addr_from = 0;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!damos_valid_target(c, t, r, s))
 			continue;
 
+<<<<<<< HEAD
 		damos_apply_scheme(c, t, r, s);
+=======
+		/* Apply the scheme */
+		if (c->ops.apply_scheme) {
+			if (quota->esz &&
+					quota->charged_sz + sz > quota->esz) {
+				sz = ALIGN_DOWN(quota->esz - quota->charged_sz,
+						DAMON_MIN_REGION);
+				if (!sz)
+					goto update_stat;
+				damon_split_region_at(t, r, sz);
+			}
+			ktime_get_coarse_ts64(&begin);
+			sz_applied = c->ops.apply_scheme(c, t, r, s);
+			ktime_get_coarse_ts64(&end);
+			quota->total_charged_ns += timespec64_to_ns(&end) -
+				timespec64_to_ns(&begin);
+			quota->charged_sz += sz;
+			if (quota->esz && quota->charged_sz >= quota->esz) {
+				quota->charge_target_from = t;
+				quota->charge_addr_from = r->ar.end + 1;
+			}
+		}
+		if (s->action != DAMOS_STAT)
+			r->age = 0;
+
+update_stat:
+		s->stat.nr_tried++;
+		s->stat.sz_tried += sz;
+		if (sz_applied)
+			s->stat.nr_applied++;
+		s->stat.sz_applied += sz_applied;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -962,6 +1063,7 @@ static void damos_set_effective_quota(struct damos_quota *quota)
 	quota->esz = esz;
 }
 
+<<<<<<< HEAD
 static void damos_adjust_quota(struct damon_ctx *c, struct damos *s)
 {
 	struct damos_quota *quota = &s->quota;
@@ -1009,6 +1111,8 @@ static void damos_adjust_quota(struct damon_ctx *c, struct damos *s)
 	quota->min_score = score;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void kdamond_apply_schemes(struct damon_ctx *c)
 {
 	struct damon_target *t;
@@ -1016,10 +1120,60 @@ static void kdamond_apply_schemes(struct damon_ctx *c)
 	struct damos *s;
 
 	damon_for_each_scheme(s, c) {
+<<<<<<< HEAD
 		if (!s->wmarks.activated)
 			continue;
 
 		damos_adjust_quota(c, s);
+=======
+		struct damos_quota *quota = &s->quota;
+		unsigned long cumulated_sz;
+		unsigned int score, max_score = 0;
+
+		if (!s->wmarks.activated)
+			continue;
+
+		if (!quota->ms && !quota->sz)
+			continue;
+
+		/* New charge window starts */
+		if (time_after_eq(jiffies, quota->charged_from +
+					msecs_to_jiffies(
+						quota->reset_interval))) {
+			if (quota->esz && quota->charged_sz >= quota->esz)
+				s->stat.qt_exceeds++;
+			quota->total_charged_sz += quota->charged_sz;
+			quota->charged_from = jiffies;
+			quota->charged_sz = 0;
+			damos_set_effective_quota(quota);
+		}
+
+		if (!c->ops.get_scheme_score)
+			continue;
+
+		/* Fill up the score histogram */
+		memset(quota->histogram, 0, sizeof(quota->histogram));
+		damon_for_each_target(t, c) {
+			damon_for_each_region(r, t) {
+				if (!__damos_valid_target(r, s))
+					continue;
+				score = c->ops.get_scheme_score(
+						c, t, r, s);
+				quota->histogram[score] +=
+					r->ar.end - r->ar.start;
+				if (score > max_score)
+					max_score = score;
+			}
+		}
+
+		/* Set the min score limit */
+		for (cumulated_sz = 0, score = max_score; ; score--) {
+			cumulated_sz += quota->histogram[score];
+			if (cumulated_sz >= quota->esz || !score)
+				break;
+		}
+		quota->min_score = score;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	damon_for_each_target(t, c) {
@@ -1028,13 +1182,25 @@ static void kdamond_apply_schemes(struct damon_ctx *c)
 	}
 }
 
+<<<<<<< HEAD
+=======
+static inline unsigned long sz_damon_region(struct damon_region *r)
+{
+	return r->ar.end - r->ar.start;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Merge two adjacent regions into one region
  */
 static void damon_merge_two_regions(struct damon_target *t,
 		struct damon_region *l, struct damon_region *r)
 {
+<<<<<<< HEAD
 	unsigned long sz_l = damon_sz_region(l), sz_r = damon_sz_region(r);
+=======
+	unsigned long sz_l = sz_damon_region(l), sz_r = sz_damon_region(r);
+>>>>>>> b7ba80a49124 (Commit)
 
 	l->nr_accesses = (l->nr_accesses * sz_l + r->nr_accesses * sz_r) /
 			(sz_l + sz_r);
@@ -1063,7 +1229,11 @@ static void damon_merge_regions_of(struct damon_target *t, unsigned int thres,
 
 		if (prev && prev->ar.end == r->ar.start &&
 		    abs(prev->nr_accesses - r->nr_accesses) <= thres &&
+<<<<<<< HEAD
 		    damon_sz_region(prev) + damon_sz_region(r) <= sz_limit)
+=======
+		    sz_damon_region(prev) + sz_damon_region(r) <= sz_limit)
+>>>>>>> b7ba80a49124 (Commit)
 			damon_merge_two_regions(t, prev, r);
 		else
 			prev = r;
@@ -1121,7 +1291,11 @@ static void damon_split_regions_of(struct damon_target *t, int nr_subs)
 	int i;
 
 	damon_for_each_region_safe(r, next, t) {
+<<<<<<< HEAD
 		sz_region = damon_sz_region(r);
+=======
+		sz_region = r->ar.end - r->ar.start;
+>>>>>>> b7ba80a49124 (Commit)
 
 		for (i = 0; i < nr_subs - 1 &&
 				sz_region > 2 * DAMON_MIN_REGION; i++) {
@@ -1340,8 +1514,12 @@ static int kdamond_fn(void *data)
 			if (ctx->callback.after_aggregation &&
 					ctx->callback.after_aggregation(ctx))
 				break;
+<<<<<<< HEAD
 			if (!list_empty(&ctx->schemes))
 				kdamond_apply_schemes(ctx);
+=======
+			kdamond_apply_schemes(ctx);
+>>>>>>> b7ba80a49124 (Commit)
 			kdamond_reset_aggregated(ctx);
 			kdamond_split_regions(ctx);
 			if (ctx->ops.reset_aggregated)

@@ -27,6 +27,7 @@ static const struct mtk_gate ipu_core1_clks[] = {
 	GATE_IPU_CORE1(CLK_IPU_CORE1_IPU, "ipu_core1_ipu", "dsp_sel", 2),
 };
 
+<<<<<<< HEAD
 static const struct mtk_clk_desc ipu_core1_desc = {
 	.clks = ipu_core1_clks,
 	.num_clks = ARRAY_SIZE(ipu_core1_clks),
@@ -45,10 +46,37 @@ MODULE_DEVICE_TABLE(of, of_match_clk_mt8183_ipu_core1);
 static struct platform_driver clk_mt8183_ipu_core1_drv = {
 	.probe = mtk_clk_simple_probe,
 	.remove = mtk_clk_simple_remove,
+=======
+static int clk_mt8183_ipu_core1_probe(struct platform_device *pdev)
+{
+	struct clk_hw_onecell_data *clk_data;
+	struct device_node *node = pdev->dev.of_node;
+
+	clk_data = mtk_alloc_clk_data(CLK_IPU_CORE1_NR_CLK);
+
+	mtk_clk_register_gates(node, ipu_core1_clks, ARRAY_SIZE(ipu_core1_clks),
+			clk_data);
+
+	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+}
+
+static const struct of_device_id of_match_clk_mt8183_ipu_core1[] = {
+	{ .compatible = "mediatek,mt8183-ipu_core1", },
+	{}
+};
+
+static struct platform_driver clk_mt8183_ipu_core1_drv = {
+	.probe = clk_mt8183_ipu_core1_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "clk-mt8183-ipu_core1",
 		.of_match_table = of_match_clk_mt8183_ipu_core1,
 	},
 };
+<<<<<<< HEAD
 module_platform_driver(clk_mt8183_ipu_core1_drv);
 MODULE_LICENSE("GPL");
+=======
+
+builtin_platform_driver(clk_mt8183_ipu_core1_drv);
+>>>>>>> b7ba80a49124 (Commit)

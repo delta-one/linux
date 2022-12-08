@@ -872,12 +872,15 @@ static ssize_t lg4ff_alternate_modes_store(struct device *dev, struct device_att
 		return -ENOMEM;
 
 	i = strlen(lbuf);
+<<<<<<< HEAD
 
 	if (i == 0) {
 		kfree(lbuf);
 		return -EINVAL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (lbuf[i-1] == '\n') {
 		if (i == 1) {
 			kfree(lbuf);

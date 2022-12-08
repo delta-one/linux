@@ -25,7 +25,10 @@
 #include <linux/platform_device.h>
 #include <linux/sched/cputime.h>
 
+<<<<<<< HEAD
 #include <asm/cputime.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/delay.h>
 #include <asm/efi.h>
 #include <asm/hw_irq.h>

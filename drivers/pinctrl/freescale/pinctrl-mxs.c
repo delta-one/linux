@@ -7,15 +7,23 @@
 #include <linux/io.h>
 #include <linux/of.h>
 #include <linux/of_address.h>
+<<<<<<< HEAD
 #include <linux/platform_device.h>
 #include <linux/seq_file.h>
 #include <linux/slab.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pinctrl/machine.h>
 #include <linux/pinctrl/pinconf.h>
 #include <linux/pinctrl/pinctrl.h>
 #include <linux/pinctrl/pinmux.h>
+<<<<<<< HEAD
 
+=======
+#include <linux/platform_device.h>
+#include <linux/slab.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include "../core.h"
 #include "pinctrl-mxs.h"
 
@@ -269,9 +277,15 @@ static int mxs_pinconf_group_set(struct pinctrl_dev *pctldev,
 	for (n = 0; n < num_configs; n++) {
 		config = configs[n];
 
+<<<<<<< HEAD
 		ma = PIN_CONFIG_TO_MA(config);
 		vol = PIN_CONFIG_TO_VOL(config);
 		pull = PIN_CONFIG_TO_PULL(config);
+=======
+		ma = CONFIG_TO_MA(config);
+		vol = CONFIG_TO_VOL(config);
+		pull = CONFIG_TO_PULL(config);
+>>>>>>> b7ba80a49124 (Commit)
 
 		for (i = 0; i < g->npins; i++) {
 			bank = PINID_TO_BANK(g->pins[i]);

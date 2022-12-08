@@ -8,6 +8,7 @@ http://github.com/freedreno/envytools/
 git clone https://github.com/freedreno/envytools.git
 
 The rules-ng-ng source files this header was generated from are:
+<<<<<<< HEAD
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/adreno.xml                     (    594 bytes, from 2023-03-10 18:32:52)
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/freedreno_copyright.xml        (   1572 bytes, from 2022-07-23 20:21:46)
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/adreno/a2xx.xml                (  91929 bytes, from 2023-02-28 23:52:27)
@@ -21,6 +22,21 @@ The rules-ng-ng source files this header was generated from are:
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/adreno/ocmem.xml               (   1773 bytes, from 2022-08-02 16:38:43)
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/adreno/adreno_control_regs.xml (   9055 bytes, from 2023-03-10 18:32:52)
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/adreno/adreno_pipe_regs.xml    (   2976 bytes, from 2023-03-10 18:32:52)
+=======
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno.xml                     (    594 bytes, from 2021-01-30 18:25:22)
+- /home/robclark/tmp/mesa/src/freedreno/registers/freedreno_copyright.xml        (   1572 bytes, from 2020-12-31 19:26:32)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a2xx.xml                (  90810 bytes, from 2021-06-21 15:24:24)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/adreno_common.xml       (  14609 bytes, from 2021-11-24 23:05:10)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/adreno_pm4.xml          (  69086 bytes, from 2022-03-03 16:41:33)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a3xx.xml                (  84231 bytes, from 2021-11-24 23:05:10)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a4xx.xml                ( 113358 bytes, from 2022-01-31 23:06:21)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a5xx.xml                ( 149512 bytes, from 2022-01-31 23:06:21)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a6xx.xml                ( 184954 bytes, from 2022-03-03 16:41:33)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a6xx_gmu.xml            (  11331 bytes, from 2021-07-22 15:21:56)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/ocmem.xml               (   1773 bytes, from 2021-01-30 18:25:22)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/adreno_control_regs.xml (   6038 bytes, from 2021-07-22 15:21:56)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/adreno_pipe_regs.xml    (   2924 bytes, from 2021-07-22 15:21:56)
+>>>>>>> b7ba80a49124 (Commit)
 
 Copyright (C) 2013-2022 by the following authors:
 - Rob Clark <robdclark@gmail.com> (robclark)
@@ -3159,6 +3175,7 @@ static inline uint32_t A4XX_TPL1_TP_TEX_COUNT_GS(uint32_t val)
 #define REG_A4XX_TPL1_TP_GS_BORDER_COLOR_BASE_ADDR		0x0000238d
 
 #define REG_A4XX_TPL1_TP_FS_TEX_COUNT				0x000023a0
+<<<<<<< HEAD
 #define A4XX_TPL1_TP_FS_TEX_COUNT_FS__MASK			0x000000ff
 #define A4XX_TPL1_TP_FS_TEX_COUNT_FS__SHIFT			0
 static inline uint32_t A4XX_TPL1_TP_FS_TEX_COUNT_FS(uint32_t val)
@@ -3171,6 +3188,8 @@ static inline uint32_t A4XX_TPL1_TP_FS_TEX_COUNT_CS(uint32_t val)
 {
 	return ((val) << A4XX_TPL1_TP_FS_TEX_COUNT_CS__SHIFT) & A4XX_TPL1_TP_FS_TEX_COUNT_CS__MASK;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define REG_A4XX_TPL1_TP_FS_BORDER_COLOR_BASE_ADDR		0x000023a1
 

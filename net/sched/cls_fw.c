@@ -21,7 +21,10 @@
 #include <net/act_api.h>
 #include <net/pkt_cls.h>
 #include <net/sch_generic.h>
+<<<<<<< HEAD
 #include <net/tc_wrapper.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define HTSIZE 256
 
@@ -48,9 +51,14 @@ static u32 fw_hash(u32 handle)
 	return handle % HTSIZE;
 }
 
+<<<<<<< HEAD
 TC_INDIRECT_SCOPE int fw_classify(struct sk_buff *skb,
 				  const struct tcf_proto *tp,
 				  struct tcf_result *res)
+=======
+static int fw_classify(struct sk_buff *skb, const struct tcf_proto *tp,
+		       struct tcf_result *res)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fw_head *head = rcu_dereference_bh(tp->root);
 	struct fw_filter *f;
@@ -418,7 +426,16 @@ static void fw_bind_class(void *fh, u32 classid, unsigned long cl, void *q,
 {
 	struct fw_filter *f = fh;
 
+<<<<<<< HEAD
 	tc_cls_bind_class(classid, cl, q, &f->res, base);
+=======
+	if (f && f->res.classid == classid) {
+		if (cl)
+			__tcf_bind_filter(q, &f->res, base);
+		else
+			__tcf_unbind_filter(q, &f->res);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct tcf_proto_ops cls_fw_ops __read_mostly = {

@@ -2913,6 +2913,7 @@ xfs_btree_split_worker(
 }
 
 /*
+<<<<<<< HEAD
  * BMBT split requests often come in with little stack to work on so we push
  * them off to a worker thread so there is lots of stack to use. For the other
  * btree types, just call directly to avoid the context switch overhead here.
@@ -2929,6 +2930,11 @@ xfs_btree_split_worker(
  * locked is unwritten extent conversion at IO completion, but that has already
  * been offloaded to a worker thread and hence has no stack consumption issues
  * we have to worry about.
+=======
+ * BMBT split requests often come in with little stack to work on. Push
+ * them off to a worker thread so there is lots of stack to use. For the other
+ * btree types, just call directly to avoid the context switch overhead here.
+>>>>>>> b7ba80a49124 (Commit)
  */
 STATIC int					/* error */
 xfs_btree_split(
@@ -2942,8 +2948,12 @@ xfs_btree_split(
 	struct xfs_btree_split_args	args;
 	DECLARE_COMPLETION_ONSTACK(done);
 
+<<<<<<< HEAD
 	if (cur->bc_btnum != XFS_BTNUM_BMAP ||
 	    cur->bc_tp->t_highest_agno == NULLAGNUMBER)
+=======
+	if (cur->bc_btnum != XFS_BTNUM_BMAP)
+>>>>>>> b7ba80a49124 (Commit)
 		return __xfs_btree_split(cur, level, ptrp, key, curp, stat);
 
 	args.cur = cur;
@@ -4680,12 +4690,16 @@ xfs_btree_space_to_height(
 	const unsigned int	*limits,
 	unsigned long long	leaf_blocks)
 {
+<<<<<<< HEAD
 	/*
 	 * The root btree block can have fewer than minrecs pointers in it
 	 * because the tree might not be big enough to require that amount of
 	 * fanout. Hence it has a minimum size of 2 pointers, not limits[1].
 	 */
 	unsigned long long	node_blocks = 2;
+=======
+	unsigned long long	node_blocks = limits[1];
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long long	blocks_left = leaf_blocks - 1;
 	unsigned int		height = 1;
 

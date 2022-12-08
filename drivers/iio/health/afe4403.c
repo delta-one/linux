@@ -245,14 +245,22 @@ static int afe4403_read_raw(struct iio_dev *indio_dev,
 			    int *val, int *val2, long mask)
 {
 	struct afe4403_data *afe = iio_priv(indio_dev);
+<<<<<<< HEAD
 	unsigned int reg, field;
+=======
+	unsigned int reg = afe4403_channel_values[chan->address];
+	unsigned int field = afe4403_channel_leds[chan->address];
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	switch (chan->type) {
 	case IIO_INTENSITY:
 		switch (mask) {
 		case IIO_CHAN_INFO_RAW:
+<<<<<<< HEAD
 			reg = afe4403_channel_values[chan->address];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			ret = afe4403_read(afe, reg, val);
 			if (ret)
 				return ret;
@@ -262,7 +270,10 @@ static int afe4403_read_raw(struct iio_dev *indio_dev,
 	case IIO_CURRENT:
 		switch (mask) {
 		case IIO_CHAN_INFO_RAW:
+<<<<<<< HEAD
 			field = afe4403_channel_leds[chan->address];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			ret = regmap_field_read(afe->fields[field], val);
 			if (ret)
 				return ret;

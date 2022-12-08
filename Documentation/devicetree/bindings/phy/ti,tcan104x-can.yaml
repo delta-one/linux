@@ -15,7 +15,10 @@ properties:
 
   compatible:
     enum:
+<<<<<<< HEAD
       - nxp,tjr1443
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - ti,tcan1042
       - ti,tcan1043
 

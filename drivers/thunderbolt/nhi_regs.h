@@ -77,13 +77,21 @@ struct ring_desc {
 
 /*
  * three bitfields: tx, rx, rx overflow
+<<<<<<< HEAD
  * Every bitfield contains one bit for every hop (REG_HOP_COUNT).
  * New interrupts are fired only after ALL registers have been
+=======
+ * Every bitfield contains one bit for every hop (REG_HOP_COUNT). Registers are
+ * cleared on read. New interrupts are fired only after ALL registers have been
+>>>>>>> b7ba80a49124 (Commit)
  * read (even those containing only disabled rings).
  */
 #define REG_RING_NOTIFY_BASE	0x37800
 #define RING_NOTIFY_REG_COUNT(nhi) ((31 + 3 * nhi->hop_count) / 32)
+<<<<<<< HEAD
 #define REG_RING_INT_CLEAR	0x37808
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * two bitfields: rx, tx
@@ -106,7 +114,10 @@ struct ring_desc {
 
 #define REG_DMA_MISC			0x39864
 #define REG_DMA_MISC_INT_AUTO_CLEAR     BIT(2)
+<<<<<<< HEAD
 #define REG_DMA_MISC_DISABLE_AUTO_CLEAR	BIT(17)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define REG_INMAIL_DATA			0x39900
 

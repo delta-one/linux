@@ -410,7 +410,11 @@ int ntb_transport_register_client_dev(char *device_name)
 
 		rc = device_register(dev);
 		if (rc) {
+<<<<<<< HEAD
 			put_device(dev);
+=======
+			kfree(client_dev);
+>>>>>>> b7ba80a49124 (Commit)
 			goto err;
 		}
 

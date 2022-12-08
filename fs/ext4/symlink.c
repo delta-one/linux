@@ -55,12 +55,20 @@ static const char *ext4_encrypted_get_link(struct dentry *dentry,
 	return paddr;
 }
 
+<<<<<<< HEAD
 static int ext4_encrypted_symlink_getattr(struct mnt_idmap *idmap,
+=======
+static int ext4_encrypted_symlink_getattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 					  const struct path *path,
 					  struct kstat *stat, u32 request_mask,
 					  unsigned int query_flags)
 {
+<<<<<<< HEAD
 	ext4_getattr(idmap, path, stat, request_mask, query_flags);
+=======
+	ext4_getattr(mnt_userns, path, stat, request_mask, query_flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return fscrypt_symlink_getattr(path, stat);
 }

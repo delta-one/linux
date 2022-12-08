@@ -1110,6 +1110,7 @@ exit_free:
 	return err;
 }
 
+<<<<<<< HEAD
 static inline void ext4_set_block_group_nr(struct super_block *sb, char *data,
 					   ext4_group_t group)
 {
@@ -1120,6 +1121,8 @@ static inline void ext4_set_block_group_nr(struct super_block *sb, char *data,
 		es->s_checksum = ext4_superblock_csum(sb, es);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Update the backup copies of the ext4 metadata.  These don't need to be part
  * of the main resize transaction, because e2fsck will re-write them if there
@@ -1168,8 +1171,11 @@ static void update_backups(struct super_block *sb, sector_t blk_off, char *data,
 	while (group < sbi->s_groups_count) {
 		struct buffer_head *bh;
 		ext4_fsblk_t backup_block;
+<<<<<<< HEAD
 		int has_super = ext4_bg_has_super(sb, group);
 		ext4_fsblk_t first_block = ext4_group_first_block_no(sb, group);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Out of journal space, and can't get more - abort - so sad */
 		err = ext4_resize_ensure_credits_batch(handle, 1);
@@ -1179,7 +1185,12 @@ static void update_backups(struct super_block *sb, sector_t blk_off, char *data,
 		if (meta_bg == 0)
 			backup_block = ((ext4_fsblk_t)group) * bpg + blk_off;
 		else
+<<<<<<< HEAD
 			backup_block = first_block + has_super;
+=======
+			backup_block = (ext4_group_first_block_no(sb, group) +
+					ext4_bg_has_super(sb, group));
+>>>>>>> b7ba80a49124 (Commit)
 
 		bh = sb_getblk(sb, backup_block);
 		if (unlikely(!bh)) {
@@ -1197,8 +1208,11 @@ static void update_backups(struct super_block *sb, sector_t blk_off, char *data,
 		memcpy(bh->b_data, data, size);
 		if (rest)
 			memset(bh->b_data + size, 0, rest);
+<<<<<<< HEAD
 		if (has_super && (backup_block == first_block))
 			ext4_set_block_group_nr(sb, bh->b_data, group);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		set_buffer_uptodate(bh);
 		unlock_buffer(bh);
 		err = ext4_handle_dirty_metadata(handle, NULL, bh);
@@ -1306,6 +1320,10 @@ static struct buffer_head *ext4_get_bitmap(struct super_block *sb, __u64 block)
 }
 
 static int ext4_set_bitmap_checksums(struct super_block *sb,
+<<<<<<< HEAD
+=======
+				     ext4_group_t group,
+>>>>>>> b7ba80a49124 (Commit)
 				     struct ext4_group_desc *gdp,
 				     struct ext4_new_group_data *group_data)
 {
@@ -1317,14 +1335,22 @@ static int ext4_set_bitmap_checksums(struct super_block *sb,
 	bh = ext4_get_bitmap(sb, group_data->inode_bitmap);
 	if (!bh)
 		return -EIO;
+<<<<<<< HEAD
 	ext4_inode_bitmap_csum_set(sb, gdp, bh,
+=======
+	ext4_inode_bitmap_csum_set(sb, group, gdp, bh,
+>>>>>>> b7ba80a49124 (Commit)
 				   EXT4_INODES_PER_GROUP(sb) / 8);
 	brelse(bh);
 
 	bh = ext4_get_bitmap(sb, group_data->block_bitmap);
 	if (!bh)
 		return -EIO;
+<<<<<<< HEAD
 	ext4_block_bitmap_csum_set(sb, gdp, bh);
+=======
+	ext4_block_bitmap_csum_set(sb, group, gdp, bh);
+>>>>>>> b7ba80a49124 (Commit)
 	brelse(bh);
 
 	return 0;
@@ -1362,7 +1388,11 @@ static int ext4_setup_new_descs(handle_t *handle, struct super_block *sb,
 		memset(gdp, 0, EXT4_DESC_SIZE(sb));
 		ext4_block_bitmap_set(sb, gdp, group_data->block_bitmap);
 		ext4_inode_bitmap_set(sb, gdp, group_data->inode_bitmap);
+<<<<<<< HEAD
 		err = ext4_set_bitmap_checksums(sb, gdp, group_data);
+=======
+		err = ext4_set_bitmap_checksums(sb, group, gdp, group_data);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err) {
 			ext4_std_error(sb, err);
 			break;
@@ -1483,6 +1513,11 @@ static void ext4_update_super(struct super_block *sb,
 	 * active. */
 	ext4_r_blocks_count_set(es, ext4_r_blocks_count(es) +
 				reserved_blocks);
+<<<<<<< HEAD
+=======
+	ext4_superblock_csum_set(sb);
+	unlock_buffer(sbi->s_sbh);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Update the free space counts */
 	percpu_counter_add(&sbi->s_freeclusters_counter,
@@ -1518,8 +1553,11 @@ static void ext4_update_super(struct super_block *sb,
 		ext4_calculate_overhead(sb);
 	es->s_overhead_clusters = cpu_to_le32(sbi->s_overhead);
 
+<<<<<<< HEAD
 	ext4_superblock_csum_set(sb);
 	unlock_buffer(sbi->s_sbh);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (test_opt(sb, DEBUG))
 		printk(KERN_DEBUG "EXT4-fs: added group %u:"
 		       "%llu blocks(%llu free %llu reserved)\n", flex_gd->count,
@@ -1603,8 +1641,13 @@ exit_journal:
 		int meta_bg = ext4_has_feature_meta_bg(sb);
 		sector_t old_gdb = 0;
 
+<<<<<<< HEAD
 		update_backups(sb, ext4_group_first_block_no(sb, 0),
 			       (char *)es, sizeof(struct ext4_super_block), 0);
+=======
+		update_backups(sb, sbi->s_sbh->b_blocknr, (char *)es,
+			       sizeof(struct ext4_super_block), 0);
+>>>>>>> b7ba80a49124 (Commit)
 		for (; gdb_num <= gdb_num_end; gdb_num++) {
 			struct buffer_head *gdb_bh;
 
@@ -1815,7 +1858,11 @@ errout:
 		if (test_opt(sb, DEBUG))
 			printk(KERN_DEBUG "EXT4-fs: extended group to %llu "
 			       "blocks\n", ext4_blocks_count(es));
+<<<<<<< HEAD
 		update_backups(sb, ext4_group_first_block_no(sb, 0),
+=======
+		update_backups(sb, EXT4_SB(sb)->s_sbh->b_blocknr,
+>>>>>>> b7ba80a49124 (Commit)
 			       (char *)es, sizeof(struct ext4_super_block), 0);
 	}
 	return err;
@@ -1838,6 +1885,10 @@ int ext4_group_extend(struct super_block *sb, struct ext4_super_block *es,
 	ext4_grpblk_t last;
 	ext4_grpblk_t add;
 	struct buffer_head *bh;
+<<<<<<< HEAD
+=======
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 	ext4_group_t group;
 
 	o_blocks_count = ext4_blocks_count(es);
@@ -1892,7 +1943,12 @@ int ext4_group_extend(struct super_block *sb, struct ext4_super_block *es,
 	}
 	brelse(bh);
 
+<<<<<<< HEAD
 	return ext4_group_extend_no_check(sb, o_blocks_count, add);
+=======
+	err = ext4_group_extend_no_check(sb, o_blocks_count, add);
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 } /* ext4_group_extend */
 
 
@@ -2132,7 +2188,11 @@ retry:
 			goto out;
 	}
 
+<<<<<<< HEAD
 	if (ext4_blocks_count(es) == n_blocks_count && n_blocks_count_retry == 0)
+=======
+	if (ext4_blocks_count(es) == n_blocks_count)
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	err = ext4_alloc_flex_bg_array(sb, n_group + 1);

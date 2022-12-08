@@ -19,6 +19,7 @@
 # pylint: disable=missing-function-docstring
 
 from __future__ import print_function
+<<<<<<< HEAD
 import argparse
 import hashlib
 import io
@@ -47,6 +48,14 @@ minimal_html = """<head>
   </script>
 </body>
 """
+=======
+import sys
+import os
+import io
+import argparse
+import json
+import subprocess
+>>>>>>> b7ba80a49124 (Commit)
 
 # pylint: disable=too-few-public-methods
 class Node:
@@ -72,6 +81,19 @@ class FlameGraphCLI:
         self.args = args
         self.stack = Node("all", "root")
 
+<<<<<<< HEAD
+=======
+        if self.args.format == "html" and \
+                not os.path.isfile(self.args.template):
+            print("Flame Graph template {} does not exist. Please install "
+                  "the js-d3-flame-graph (RPM) or libjs-d3-flame-graph (deb) "
+                  "package, specify an existing flame graph template "
+                  "(--template PATH) or another output format "
+                  "(--format FORMAT).".format(self.args.template),
+                  file=sys.stderr)
+            sys.exit(1)
+
+>>>>>>> b7ba80a49124 (Commit)
     @staticmethod
     def get_libtype_from_dso(dso):
         """
@@ -140,6 +162,7 @@ class FlameGraphCLI:
             }
             options_json = json.dumps(options)
 
+<<<<<<< HEAD
             template_md5sum = None
             if self.args.format == "html":
                 if os.path.isfile(self.args.template):
@@ -197,6 +220,18 @@ continue?[yn] """).lower()
             output_str = output_str.replace("/** @options_json **/", options_json)
             output_str = output_str.replace("/** @flamegraph_json **/", stacks_json)
 
+=======
+            try:
+                with io.open(self.args.template, encoding="utf-8") as template:
+                    output_str = (
+                        template.read()
+                        .replace("/** @options_json **/", options_json)
+                        .replace("/** @flamegraph_json **/", stacks_json)
+                    )
+            except IOError as err:
+                print("Error reading template file: {}".format(err), file=sys.stderr)
+                sys.exit(1)
+>>>>>>> b7ba80a49124 (Commit)
             output_fn = self.args.output or "flamegraph.html"
         else:
             output_str = stacks_json
@@ -231,10 +266,13 @@ if __name__ == "__main__":
                         choices=["blue-green", "orange"])
     parser.add_argument("-i", "--input",
                         help=argparse.SUPPRESS)
+<<<<<<< HEAD
     parser.add_argument("--allow-download",
                         default=False,
                         action="store_true",
                         help="allow unprompted downloading of HTML template")
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
     cli_args = parser.parse_args()
     cli = FlameGraphCLI(cli_args)

@@ -191,15 +191,23 @@ xrep_agf_init_header(
 	struct xfs_agf		*old_agf)
 {
 	struct xfs_mount	*mp = sc->mp;
+<<<<<<< HEAD
 	struct xfs_perag	*pag = sc->sa.pag;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfs_agf		*agf = agf_bp->b_addr;
 
 	memcpy(old_agf, agf, sizeof(*old_agf));
 	memset(agf, 0, BBTOB(agf_bp->b_length));
 	agf->agf_magicnum = cpu_to_be32(XFS_AGF_MAGIC);
 	agf->agf_versionnum = cpu_to_be32(XFS_AGF_VERSION);
+<<<<<<< HEAD
 	agf->agf_seqno = cpu_to_be32(pag->pag_agno);
 	agf->agf_length = cpu_to_be32(pag->block_count);
+=======
+	agf->agf_seqno = cpu_to_be32(sc->sa.pag->pag_agno);
+	agf->agf_length = cpu_to_be32(sc->sa.pag->block_count);
+>>>>>>> b7ba80a49124 (Commit)
 	agf->agf_flfirst = old_agf->agf_flfirst;
 	agf->agf_fllast = old_agf->agf_fllast;
 	agf->agf_flcount = old_agf->agf_flcount;
@@ -207,8 +215,13 @@ xrep_agf_init_header(
 		uuid_copy(&agf->agf_uuid, &mp->m_sb.sb_meta_uuid);
 
 	/* Mark the incore AGF data stale until we're done fixing things. */
+<<<<<<< HEAD
 	ASSERT(xfs_perag_initialised_agf(pag));
 	clear_bit(XFS_AGSTATE_AGF_INIT, &pag->pag_opstate);
+=======
+	ASSERT(sc->sa.pag->pagf_init);
+	sc->sa.pag->pagf_init = 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Set btree root information in an AGF. */
@@ -334,7 +347,11 @@ xrep_agf_commit_new(
 	pag->pagf_levels[XFS_BTNUM_RMAPi] =
 			be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAPi]);
 	pag->pagf_refcount_level = be32_to_cpu(agf->agf_refcount_level);
+<<<<<<< HEAD
 	set_bit(XFS_AGSTATE_AGF_INIT, &pag->pag_opstate);
+=======
+	pag->pagf_init = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -435,7 +452,11 @@ xrep_agf(
 
 out_revert:
 	/* Mark the incore AGF state stale and revert the AGF. */
+<<<<<<< HEAD
 	clear_bit(XFS_AGSTATE_AGF_INIT, &sc->sa.pag->pag_opstate);
+=======
+	sc->sa.pag->pagf_init = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(agf, &old_agf, sizeof(old_agf));
 	return error;
 }
@@ -443,18 +464,24 @@ out_revert:
 /* AGFL */
 
 struct xrep_agfl {
+<<<<<<< HEAD
 	/* Bitmap of alleged AGFL blocks that we're not going to add. */
 	struct xbitmap		crossed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Bitmap of other OWN_AG metadata blocks. */
 	struct xbitmap		agmetablocks;
 
 	/* Bitmap of free space. */
 	struct xbitmap		*freesp;
 
+<<<<<<< HEAD
 	/* rmapbt cursor for finding crosslinked blocks */
 	struct xfs_btree_cur	*rmap_cur;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfs_scrub	*sc;
 };
 
@@ -484,6 +511,7 @@ xrep_agfl_walk_rmap(
 	return xbitmap_set_btcur_path(&ra->agmetablocks, cur);
 }
 
+<<<<<<< HEAD
 /* Strike out the blocks that are cross-linked according to the rmapbt. */
 STATIC int
 xrep_agfl_check_extent(
@@ -519,6 +547,8 @@ xrep_agfl_check_extent(
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Map out all the non-AGFL OWN_AG space in this AG so that we can deduce
  * which blocks belong to the AGFL.
@@ -538,42 +568,68 @@ xrep_agfl_collect_blocks(
 	struct xrep_agfl	ra;
 	struct xfs_mount	*mp = sc->mp;
 	struct xfs_btree_cur	*cur;
+<<<<<<< HEAD
 	struct xbitmap_range	*br, *n;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int			error;
 
 	ra.sc = sc;
 	ra.freesp = agfl_extents;
 	xbitmap_init(&ra.agmetablocks);
+<<<<<<< HEAD
 	xbitmap_init(&ra.crossed);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Find all space used by the free space btrees & rmapbt. */
 	cur = xfs_rmapbt_init_cursor(mp, sc->tp, agf_bp, sc->sa.pag);
 	error = xfs_rmap_query_all(cur, xrep_agfl_walk_rmap, &ra);
+<<<<<<< HEAD
 	xfs_btree_del_cursor(cur, error);
 	if (error)
 		goto out_bmp;
+=======
+	if (error)
+		goto err;
+	xfs_btree_del_cursor(cur, error);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Find all blocks currently being used by the bnobt. */
 	cur = xfs_allocbt_init_cursor(mp, sc->tp, agf_bp,
 			sc->sa.pag, XFS_BTNUM_BNO);
 	error = xbitmap_set_btblocks(&ra.agmetablocks, cur);
+<<<<<<< HEAD
 	xfs_btree_del_cursor(cur, error);
 	if (error)
 		goto out_bmp;
+=======
+	if (error)
+		goto err;
+	xfs_btree_del_cursor(cur, error);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Find all blocks currently being used by the cntbt. */
 	cur = xfs_allocbt_init_cursor(mp, sc->tp, agf_bp,
 			sc->sa.pag, XFS_BTNUM_CNT);
 	error = xbitmap_set_btblocks(&ra.agmetablocks, cur);
+<<<<<<< HEAD
 	xfs_btree_del_cursor(cur, error);
 	if (error)
 		goto out_bmp;
+=======
+	if (error)
+		goto err;
+
+	xfs_btree_del_cursor(cur, error);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Drop the freesp meta blocks that are in use by btrees.
 	 * The remaining blocks /should/ be AGFL blocks.
 	 */
 	error = xbitmap_disunion(agfl_extents, &ra.agmetablocks);
+<<<<<<< HEAD
 	if (error)
 		goto out_bmp;
 
@@ -590,6 +646,11 @@ xrep_agfl_collect_blocks(
 	error = xbitmap_disunion(agfl_extents, &ra.crossed);
 	if (error)
 		goto out_bmp;
+=======
+	xbitmap_destroy(&ra.agmetablocks);
+	if (error)
+		return error;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Calculate the new AGFL size.  If we found more blocks than fit in
@@ -597,10 +658,18 @@ xrep_agfl_collect_blocks(
 	 */
 	*flcount = min_t(uint64_t, xbitmap_hweight(agfl_extents),
 			 xfs_agfl_size(mp));
+<<<<<<< HEAD
 
 out_bmp:
 	xbitmap_destroy(&ra.crossed);
 	xbitmap_destroy(&ra.agmetablocks);
+=======
+	return 0;
+
+err:
+	xbitmap_destroy(&ra.agmetablocks);
+	xfs_btree_del_cursor(cur, error);
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }
 
@@ -619,7 +688,11 @@ xrep_agfl_update_agf(
 	xfs_force_summary_recalc(sc->mp);
 
 	/* Update the AGF counters. */
+<<<<<<< HEAD
 	if (xfs_perag_initialised_agf(sc->sa.pag))
+=======
+	if (sc->sa.pag->pagf_init)
+>>>>>>> b7ba80a49124 (Commit)
 		sc->sa.pag->pagf_flcount = flcount;
 	agf->agf_flfirst = cpu_to_be32(0);
 	agf->agf_flcount = cpu_to_be32(flcount);
@@ -686,7 +759,11 @@ xrep_agfl_init_header(
 		if (br->len)
 			break;
 		list_del(&br->list);
+<<<<<<< HEAD
 		kfree(br);
+=======
+		kmem_free(br);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Write new AGFL to disk. */
@@ -752,6 +829,10 @@ xrep_agfl(
 	 * freespace overflow to the freespace btrees.
 	 */
 	sc->sa.agf_bp = agf_bp;
+<<<<<<< HEAD
+=======
+	sc->sa.agfl_bp = agfl_bp;
+>>>>>>> b7ba80a49124 (Commit)
 	error = xrep_roll_ag_trans(sc);
 	if (error)
 		goto err;
@@ -823,15 +904,23 @@ xrep_agi_init_header(
 	struct xfs_agi		*old_agi)
 {
 	struct xfs_agi		*agi = agi_bp->b_addr;
+<<<<<<< HEAD
 	struct xfs_perag	*pag = sc->sa.pag;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfs_mount	*mp = sc->mp;
 
 	memcpy(old_agi, agi, sizeof(*old_agi));
 	memset(agi, 0, BBTOB(agi_bp->b_length));
 	agi->agi_magicnum = cpu_to_be32(XFS_AGI_MAGIC);
 	agi->agi_versionnum = cpu_to_be32(XFS_AGI_VERSION);
+<<<<<<< HEAD
 	agi->agi_seqno = cpu_to_be32(pag->pag_agno);
 	agi->agi_length = cpu_to_be32(pag->block_count);
+=======
+	agi->agi_seqno = cpu_to_be32(sc->sa.pag->pag_agno);
+	agi->agi_length = cpu_to_be32(sc->sa.pag->block_count);
+>>>>>>> b7ba80a49124 (Commit)
 	agi->agi_newino = cpu_to_be32(NULLAGINO);
 	agi->agi_dirino = cpu_to_be32(NULLAGINO);
 	if (xfs_has_crc(mp))
@@ -842,8 +931,13 @@ xrep_agi_init_header(
 			sizeof(agi->agi_unlinked));
 
 	/* Mark the incore AGF data stale until we're done fixing things. */
+<<<<<<< HEAD
 	ASSERT(xfs_perag_initialised_agi(pag));
 	clear_bit(XFS_AGSTATE_AGI_INIT, &pag->pag_opstate);
+=======
+	ASSERT(sc->sa.pag->pagi_init);
+	sc->sa.pag->pagi_init = 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Set btree root information in an AGI. */
@@ -875,7 +969,12 @@ xrep_agi_calc_from_btrees(
 	xfs_agino_t		freecount;
 	int			error;
 
+<<<<<<< HEAD
 	cur = xfs_inobt_init_cursor(sc->sa.pag, sc->tp, agi_bp, XFS_BTNUM_INO);
+=======
+	cur = xfs_inobt_init_cursor(mp, sc->tp, agi_bp,
+			sc->sa.pag, XFS_BTNUM_INO);
+>>>>>>> b7ba80a49124 (Commit)
 	error = xfs_ialloc_count_inodes(cur, &count, &freecount);
 	if (error)
 		goto err;
@@ -895,8 +994,13 @@ xrep_agi_calc_from_btrees(
 	if (xfs_has_finobt(mp) && xfs_has_inobtcounts(mp)) {
 		xfs_agblock_t	blocks;
 
+<<<<<<< HEAD
 		cur = xfs_inobt_init_cursor(sc->sa.pag, sc->tp, agi_bp,
 				XFS_BTNUM_FINO);
+=======
+		cur = xfs_inobt_init_cursor(mp, sc->tp, agi_bp,
+				sc->sa.pag, XFS_BTNUM_FINO);
+>>>>>>> b7ba80a49124 (Commit)
 		error = xfs_btree_count_blocks(cur, &blocks);
 		if (error)
 			goto err;
@@ -930,7 +1034,11 @@ xrep_agi_commit_new(
 	pag = sc->sa.pag;
 	pag->pagi_count = be32_to_cpu(agi->agi_count);
 	pag->pagi_freecount = be32_to_cpu(agi->agi_freecount);
+<<<<<<< HEAD
 	set_bit(XFS_AGSTATE_AGI_INIT, &pag->pag_opstate);
+=======
+	pag->pagi_init = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -995,7 +1103,11 @@ xrep_agi(
 
 out_revert:
 	/* Mark the incore AGI state stale and revert the AGI. */
+<<<<<<< HEAD
 	clear_bit(XFS_AGSTATE_AGI_INIT, &sc->sa.pag->pag_opstate);
+=======
+	sc->sa.pag->pagi_init = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(agi, &old_agi, sizeof(old_agi));
 	return error;
 }

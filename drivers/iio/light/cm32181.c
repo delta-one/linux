@@ -429,6 +429,7 @@ static const struct iio_info cm32181_info = {
 	.attrs			= &cm32181_attribute_group,
 };
 
+<<<<<<< HEAD
 static void cm32181_unregister_dummy_client(void *data)
 {
 	struct i2c_client *client = data;
@@ -437,6 +438,8 @@ static void cm32181_unregister_dummy_client(void *data)
 	i2c_unregister_device(client);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int cm32181_probe(struct i2c_client *client)
 {
 	struct device *dev = &client->dev;
@@ -448,8 +451,11 @@ static int cm32181_probe(struct i2c_client *client)
 	if (!indio_dev)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	i2c_set_clientdata(client, indio_dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Some ACPI systems list 2 I2C resources for the CM3218 sensor, the
 	 * SMBus Alert Response Address (ARA, 0x0c) and the actual I2C address.
@@ -468,12 +474,19 @@ static int cm32181_probe(struct i2c_client *client)
 		client = i2c_acpi_new_device(dev, 1, &board_info);
 		if (IS_ERR(client))
 			return PTR_ERR(client);
+<<<<<<< HEAD
 
 		ret = devm_add_action_or_reset(dev, cm32181_unregister_dummy_client, client);
 		if (ret)
 			return ret;
 	}
 
+=======
+	}
+
+	i2c_set_clientdata(client, indio_dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	cm32181 = iio_priv(indio_dev);
 	cm32181->client = client;
 	cm32181->dev = dev;
@@ -502,8 +515,12 @@ static int cm32181_probe(struct i2c_client *client)
 
 static int cm32181_suspend(struct device *dev)
 {
+<<<<<<< HEAD
 	struct cm32181_chip *cm32181 = iio_priv(dev_get_drvdata(dev));
 	struct i2c_client *client = cm32181->client;
+=======
+	struct i2c_client *client = to_i2c_client(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return i2c_smbus_write_word_data(client, CM32181_REG_ADDR_CMD,
 					 CM32181_CMD_ALS_DISABLE);
@@ -511,8 +528,13 @@ static int cm32181_suspend(struct device *dev)
 
 static int cm32181_resume(struct device *dev)
 {
+<<<<<<< HEAD
 	struct cm32181_chip *cm32181 = iio_priv(dev_get_drvdata(dev));
 	struct i2c_client *client = cm32181->client;
+=======
+	struct i2c_client *client = to_i2c_client(dev);
+	struct cm32181_chip *cm32181 = iio_priv(dev_get_drvdata(dev));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return i2c_smbus_write_word_data(client, CM32181_REG_ADDR_CMD,
 					 cm32181->conf_regs[CM32181_REG_ADDR_CMD]);

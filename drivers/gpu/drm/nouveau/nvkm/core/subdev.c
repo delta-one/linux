@@ -54,7 +54,11 @@ int
 nvkm_subdev_fini(struct nvkm_subdev *subdev, bool suspend)
 {
 	struct nvkm_device *device = subdev->device;
+<<<<<<< HEAD
 	const char *action = suspend ? "suspend" : subdev->use.enabled ? "fini" : "reset";
+=======
+	const char *action = suspend ? "suspend" : "fini";
+>>>>>>> b7ba80a49124 (Commit)
 	s64 time;
 
 	nvkm_trace(subdev, "%s running...\n", action);
@@ -68,7 +72,10 @@ nvkm_subdev_fini(struct nvkm_subdev *subdev, bool suspend)
 				return ret;
 		}
 	}
+<<<<<<< HEAD
 	subdev->use.enabled = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	nvkm_mc_reset(device, subdev->type, subdev->inst);
 
@@ -98,12 +105,18 @@ nvkm_subdev_preinit(struct nvkm_subdev *subdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int
 nvkm_subdev_oneinit_(struct nvkm_subdev *subdev)
+=======
+int
+nvkm_subdev_init(struct nvkm_subdev *subdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	s64 time;
 	int ret;
 
+<<<<<<< HEAD
 	if (!subdev->func->oneinit || subdev->oneinit)
 		return 0;
 
@@ -140,6 +153,25 @@ nvkm_subdev_init_(struct nvkm_subdev *subdev)
 		return ret;
 
 	subdev->use.enabled = true;
+=======
+	nvkm_trace(subdev, "init running...\n");
+	time = ktime_to_us(ktime_get());
+
+	if (subdev->func->oneinit && !subdev->oneinit) {
+		s64 time;
+		nvkm_trace(subdev, "one-time init running...\n");
+		time = ktime_to_us(ktime_get());
+		ret = subdev->func->oneinit(subdev);
+		if (ret) {
+			nvkm_error(subdev, "one-time init failed, %d\n", ret);
+			return ret;
+		}
+
+		subdev->oneinit = true;
+		time = ktime_to_us(ktime_get()) - time;
+		nvkm_trace(subdev, "one-time init completed in %lldus\n", time);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (subdev->func->init) {
 		ret = subdev->func->init(subdev);
@@ -154,6 +186,7 @@ nvkm_subdev_init_(struct nvkm_subdev *subdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 int
 nvkm_subdev_init(struct nvkm_subdev *subdev)
 {
@@ -212,6 +245,8 @@ nvkm_subdev_ref(struct nvkm_subdev *subdev)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void
 nvkm_subdev_del(struct nvkm_subdev **psubdev)
 {
@@ -224,7 +259,10 @@ nvkm_subdev_del(struct nvkm_subdev **psubdev)
 		list_del(&subdev->head);
 		if (subdev->func->dtor)
 			*psubdev = subdev->func->dtor(subdev);
+<<<<<<< HEAD
 		mutex_destroy(&subdev->use.mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		time = ktime_to_us(ktime_get()) - time;
 		nvkm_trace(subdev, "destroy completed in %lldus\n", time);
 		kfree(*psubdev);
@@ -246,8 +284,13 @@ nvkm_subdev_disable(struct nvkm_device *device, enum nvkm_subdev_type type, int 
 }
 
 void
+<<<<<<< HEAD
 __nvkm_subdev_ctor(const struct nvkm_subdev_func *func, struct nvkm_device *device,
 		   enum nvkm_subdev_type type, int inst, struct nvkm_subdev *subdev)
+=======
+nvkm_subdev_ctor(const struct nvkm_subdev_func *func, struct nvkm_device *device,
+		 enum nvkm_subdev_type type, int inst, struct nvkm_subdev *subdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	subdev->func = func;
 	subdev->device = device;
@@ -259,8 +302,11 @@ __nvkm_subdev_ctor(const struct nvkm_subdev_func *func, struct nvkm_device *devi
 	else
 		strscpy(subdev->name, nvkm_subdev_type[type], sizeof(subdev->name));
 	subdev->debug = nvkm_dbgopt(device->dbgopt, subdev->name);
+<<<<<<< HEAD
 
 	refcount_set(&subdev->use.refcount, 1);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	list_add_tail(&subdev->head, &device->subdev);
 }
 

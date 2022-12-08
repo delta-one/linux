@@ -75,7 +75,11 @@ static int wait_order(int ctl_fd)
 
 		if (ret)
 			break;
+<<<<<<< HEAD
 	}
+=======
+	};
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 

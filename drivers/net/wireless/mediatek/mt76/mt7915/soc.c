@@ -278,7 +278,10 @@ static int mt7986_wmac_coninfra_setup(struct mt7915_dev *dev)
 		return -EINVAL;
 
 	rmem = of_reserved_mem_lookup(np);
+<<<<<<< HEAD
 	of_node_put(np);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!rmem)
 		return -EINVAL;
 
@@ -883,8 +886,11 @@ static int mt7986_wmac_wm_enable(struct mt7915_dev *dev, bool enable)
 {
 	u32 cur;
 
+<<<<<<< HEAD
 	mt76_wr(dev, MT_CONNINFRA_SKU_DEC_ADDR, 0);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mt76_rmw_field(dev, MT7986_TOP_WM_RESET,
 		       MT7986_TOP_WM_RESET_MASK, enable);
 	if (!enable)
@@ -1175,6 +1181,13 @@ static int mt7986_wmac_probe(struct platform_device *pdev)
 
 	chip_id = (uintptr_t)of_device_get_match_data(&pdev->dev);
 
+<<<<<<< HEAD
+=======
+	irq = platform_get_irq(pdev, 0);
+	if (irq < 0)
+		return irq;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mem_base = devm_platform_ioremap_resource(pdev, 0);
 	if (IS_ERR(mem_base)) {
 		dev_err(&pdev->dev, "Failed to get memory resource\n");
@@ -1186,6 +1199,7 @@ static int mt7986_wmac_probe(struct platform_device *pdev)
 		return PTR_ERR(dev);
 
 	mdev = &dev->mt76;
+<<<<<<< HEAD
 	ret = mt7915_mmio_wed_init(dev, pdev, false, &irq);
 	if (ret < 0)
 		goto free_device;
@@ -1198,6 +1212,8 @@ static int mt7986_wmac_probe(struct platform_device *pdev)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = devm_request_irq(mdev->dev, irq, mt7915_irq_handler,
 			       IRQF_SHARED, KBUILD_MODNAME, dev);
 	if (ret)
@@ -1217,10 +1233,16 @@ static int mt7986_wmac_probe(struct platform_device *pdev)
 
 free_irq:
 	devm_free_irq(mdev->dev, irq, dev);
+<<<<<<< HEAD
 free_device:
 	if (mtk_wed_device_active(&mdev->mmio.wed))
 		mtk_wed_device_detach(&mdev->mmio.wed);
 	mt76_free_device(mdev);
+=======
+
+free_device:
+	mt76_free_device(&dev->mt76);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }

@@ -14,6 +14,7 @@
  * code that will combine entry/exit in a strace like way.
  */
 
+<<<<<<< HEAD
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
 #include <linux/limits.h>
@@ -36,30 +37,59 @@ struct __augmented_syscalls__ {
 	__type(value, __u32);
 	__uint(max_entries, __NR_CPUS__);
 } __augmented_syscalls__ SEC(".maps");
+=======
+#include <unistd.h>
+#include <linux/limits.h>
+#include <linux/socket.h>
+#include <pid_filter.h>
+
+/* bpf-output associated map */
+bpf_map(__augmented_syscalls__, PERF_EVENT_ARRAY, int, u32, __NR_CPUS__);
+
+/*
+ * string_args_len: one per syscall arg, 0 means not a string or don't copy it,
+ * 		    PATH_MAX for copying everything, any other value to limit
+ * 		    it a la 'strace -s strsize'.
+ */
+struct syscall {
+	bool	enabled;
+	u16	string_args_len[6];
+};
+
+bpf_map(syscalls, ARRAY, int, struct syscall, 512);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * What to augment at entry?
  *
  * Pointer arg payloads (filenames, etc) passed from userspace to the kernel
  */
+<<<<<<< HEAD
 struct syscalls_sys_enter {
 	__uint(type, BPF_MAP_TYPE_PROG_ARRAY);
 	__type(key, __u32);
 	__type(value, __u32);
 	__uint(max_entries, 512);
 } syscalls_sys_enter SEC(".maps");
+=======
+bpf_map(syscalls_sys_enter, PROG_ARRAY, u32, u32, 512);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * What to augment at exit?
  *
  * Pointer arg payloads returned from the kernel (struct stat, etc) to userspace.
  */
+<<<<<<< HEAD
 struct syscalls_sys_exit {
 	__uint(type, BPF_MAP_TYPE_PROG_ARRAY);
 	__type(key, __u32);
 	__type(value, __u32);
 	__uint(max_entries, 512);
 } syscalls_sys_exit SEC(".maps");
+=======
+bpf_map(syscalls_sys_exit, PROG_ARRAY, u32, u32, 512);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct syscall_enter_args {
 	unsigned long long common_tp_fields;
@@ -79,6 +109,7 @@ struct augmented_arg {
 	char		value[PATH_MAX];
 };
 
+<<<<<<< HEAD
 struct pids_filtered {
 	__uint(type, BPF_MAP_TYPE_HASH);
 	__type(key, pid_t);
@@ -111,6 +142,9 @@ struct sockaddr_storage {
 		void *__align; /* implementation specific desired alignment */
 	};
 };
+=======
+pid_filter(pids_filtered);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct augmented_args_payload {
        struct syscall_enter_args args;
@@ -119,17 +153,24 @@ struct augmented_args_payload {
 			struct augmented_arg arg, arg2;
 		};
 		struct sockaddr_storage saddr;
+<<<<<<< HEAD
 		char   __data[sizeof(struct augmented_arg)];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
 // We need more tmp space than the BPF stack can give us
+<<<<<<< HEAD
 struct augmented_args_tmp {
 	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
 	__type(key, int);
 	__type(value, struct augmented_args_payload);
 	__uint(max_entries, 1);
 } augmented_args_tmp SEC(".maps");
+=======
+bpf_map(augmented_args_tmp, PERCPU_ARRAY, int, struct augmented_args_payload, 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline struct augmented_args_payload *augmented_args_payload(void)
 {
@@ -140,14 +181,22 @@ static inline struct augmented_args_payload *augmented_args_payload(void)
 static inline int augmented__output(void *ctx, struct augmented_args_payload *args, int len)
 {
 	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
+<<<<<<< HEAD
 	return bpf_perf_event_output(ctx, &__augmented_syscalls__, BPF_F_CURRENT_CPU, args, len);
+=======
+	return perf_event_output(ctx, &__augmented_syscalls__, BPF_F_CURRENT_CPU, args, len);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline
 unsigned int augmented_arg__read_str(struct augmented_arg *augmented_arg, const void *arg, unsigned int arg_len)
 {
 	unsigned int augmented_len = sizeof(*augmented_arg);
+<<<<<<< HEAD
 	int string_len = bpf_probe_read_str(&augmented_arg->value, arg_len, arg);
+=======
+	int string_len = probe_read_str(&augmented_arg->value, arg_len, arg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	augmented_arg->size = augmented_arg->err = 0;
 	/*
@@ -196,7 +245,11 @@ int sys_enter_connect(struct syscall_enter_args *args)
 	if (socklen > sizeof(augmented_args->saddr))
 		socklen = sizeof(augmented_args->saddr);
 
+<<<<<<< HEAD
 	bpf_probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
+=======
+	probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return augmented__output(args, augmented_args, len + socklen);
 }
@@ -215,7 +268,11 @@ int sys_enter_sendto(struct syscall_enter_args *args)
 	if (socklen > sizeof(augmented_args->saddr))
 		socklen = sizeof(augmented_args->saddr);
 
+<<<<<<< HEAD
 	bpf_probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
+=======
+	probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return augmented__output(args, augmented_args, len + socklen);
 }
@@ -284,6 +341,7 @@ int sys_enter_renameat(struct syscall_enter_args *args)
 	return augmented__output(args, augmented_args, len);
 }
 
+<<<<<<< HEAD
 #define PERF_ATTR_SIZE_VER0     64      /* sizeof first published struct */
 
 // we need just the start, get the size to then copy it
@@ -358,6 +416,8 @@ static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
 	return bpf_map_lookup_elem(pids, &pid) != NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 SEC("raw_syscalls:sys_enter")
 int sys_enter(struct syscall_enter_args *args)
 {
@@ -372,6 +432,10 @@ int sys_enter(struct syscall_enter_args *args)
 	 * initial, non-augmented raw_syscalls:sys_enter payload.
 	 */
 	unsigned int len = sizeof(augmented_args->args);
+<<<<<<< HEAD
+=======
+	struct syscall *syscall;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (pid_filter__has(&pids_filtered, getpid()))
 		return 0;
@@ -380,7 +444,11 @@ int sys_enter(struct syscall_enter_args *args)
 	if (augmented_args == NULL)
 		return 1;
 
+<<<<<<< HEAD
 	bpf_probe_read(&augmented_args->args, sizeof(augmented_args->args), args);
+=======
+	probe_read(&augmented_args->args, sizeof(augmented_args->args), args);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Jump to syscall specific augmenter, even if the default one,
@@ -401,7 +469,11 @@ int sys_exit(struct syscall_exit_args *args)
 	if (pid_filter__has(&pids_filtered, getpid()))
 		return 0;
 
+<<<<<<< HEAD
 	bpf_probe_read(&exit_args, sizeof(exit_args), args);
+=======
+	probe_read(&exit_args, sizeof(exit_args), args);
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Jump to syscall specific return augmenter, even if the default one,
 	 * "!raw_syscalls:unaugmented" that will just return 1 to return the
@@ -414,4 +486,8 @@ int sys_exit(struct syscall_exit_args *args)
 	return 0;
 }
 
+<<<<<<< HEAD
 char _license[] SEC("license") = "GPL";
+=======
+license(GPL);
+>>>>>>> b7ba80a49124 (Commit)

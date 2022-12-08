@@ -89,6 +89,10 @@
 		compatible = "haoyu,hym8563";
 		reg = <0x51>;
 		#clock-cells = <0>;
+<<<<<<< HEAD
+=======
+		clock-frequency = <32768>;
+>>>>>>> b7ba80a49124 (Commit)
 		clock-output-names = "xin32k";
 		wakeup-source;
 	};

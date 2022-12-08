@@ -15,7 +15,10 @@
 #include <asm/fcx.h>
 #include <asm/irq.h>
 #include <asm/schid.h>
+<<<<<<< HEAD
 #include <linux/mutex.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* structs from asm/cio.h */
 struct irb;
@@ -88,7 +91,10 @@ struct ccw_device {
 	spinlock_t *ccwlock;
 /* private: */
 	struct ccw_device_private *private;	/* cio private information */
+<<<<<<< HEAD
 	struct mutex reg_mutex;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* public: */
 	struct ccw_device_id id;
 	struct ccw_driver *drv;
@@ -216,6 +222,10 @@ extern struct ccw_device *ccw_device_create_console(struct ccw_driver *);
 extern void ccw_device_destroy_console(struct ccw_device *);
 extern int ccw_device_enable_console(struct ccw_device *);
 extern void ccw_device_wait_idle(struct ccw_device *);
+<<<<<<< HEAD
+=======
+extern int ccw_device_force_console(struct ccw_device *);
+>>>>>>> b7ba80a49124 (Commit)
 
 extern void *ccw_device_dma_zalloc(struct ccw_device *cdev, size_t size);
 extern void ccw_device_dma_free(struct ccw_device *cdev,

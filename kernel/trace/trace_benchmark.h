@@ -14,6 +14,7 @@ extern void trace_benchmark_unreg(void);
 
 TRACE_EVENT_FN(benchmark_event,
 
+<<<<<<< HEAD
 	TP_PROTO(const char *str, u64 delta),
 
 	TP_ARGS(str, delta),
@@ -21,14 +22,28 @@ TRACE_EVENT_FN(benchmark_event,
 	TP_STRUCT__entry(
 		__array(	char,	str,	BENCHMARK_EVENT_STRLEN	)
 		__field(	u64,	delta)
+=======
+	TP_PROTO(const char *str),
+
+	TP_ARGS(str),
+
+	TP_STRUCT__entry(
+		__array(	char,	str,	BENCHMARK_EVENT_STRLEN	)
+>>>>>>> b7ba80a49124 (Commit)
 	),
 
 	TP_fast_assign(
 		memcpy(__entry->str, str, BENCHMARK_EVENT_STRLEN);
+<<<<<<< HEAD
 		__entry->delta = delta;
 	),
 
 	TP_printk("%s delta=%llu", __entry->str, __entry->delta),
+=======
+	),
+
+	TP_printk("%s", __entry->str),
+>>>>>>> b7ba80a49124 (Commit)
 
 	trace_benchmark_reg, trace_benchmark_unreg
 );

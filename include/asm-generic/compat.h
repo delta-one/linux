@@ -14,6 +14,7 @@
 #define COMPAT_OFF_T_MAX	0x7fffffff
 #endif
 
+<<<<<<< HEAD
 #ifndef compat_arg_u64
 #ifndef CONFIG_CPU_BIG_ENDIAN
 #define compat_arg_u64(name)		u32  name##_lo, u32  name##_hi
@@ -25,6 +26,14 @@
 #define compat_arg_u64_glue(name)	(((u64)name##_lo & 0xffffffffUL) | \
 					 ((u64)name##_hi << 32))
 #endif /* compat_arg_u64 */
+=======
+#if !defined(compat_arg_u64) && !defined(CONFIG_CPU_BIG_ENDIAN)
+#define compat_arg_u64(name)		u32  name##_lo, u32  name##_hi
+#define compat_arg_u64_dual(name)	u32, name##_lo, u32, name##_hi
+#define compat_arg_u64_glue(name)	(((u64)name##_lo & 0xffffffffUL) | \
+					 ((u64)name##_hi << 32))
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 /* These types are common across all compat ABIs */
 typedef u32 compat_size_t;

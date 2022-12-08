@@ -34,7 +34,10 @@
 #include <linux/of.h>
 #include <linux/of_fdt.h>
 
+<<<<<<< HEAD
 #include <asm/asm-prototypes.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/kvm_guest.h>
 #include <asm/io.h>
 #include <asm/kdump.h>
@@ -87,7 +90,11 @@ struct ppc64_caches ppc64_caches = {
 };
 EXPORT_SYMBOL_GPL(ppc64_caches);
 
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_BOOK3E_64) && defined(CONFIG_SMP)
+=======
+#if defined(CONFIG_PPC_BOOK3E) && defined(CONFIG_SMP)
+>>>>>>> b7ba80a49124 (Commit)
 void __init setup_tlb_core_data(void)
 {
 	int cpu;
@@ -177,6 +184,7 @@ early_param("smt-enabled", early_smt_enabled);
 #endif /* CONFIG_SMP */
 
 /** Fix up paca fields required for the boot cpu */
+<<<<<<< HEAD
 static void __init fixup_boot_paca(struct paca_struct *boot_paca)
 {
 	/* The boot cpu is started */
@@ -197,6 +205,16 @@ static void __init fixup_boot_paca(struct paca_struct *boot_paca)
 	boot_paca->irq_soft_mask = IRQS_DISABLED;
 	boot_paca->irq_happened = PACA_IRQ_HARD_DIS;
 	WARN_ON(mfmsr() & MSR_EE);
+=======
+static void __init fixup_boot_paca(void)
+{
+	/* The boot cpu is started */
+	get_paca()->cpu_start = 1;
+	/* Allow percpu accesses to work until we setup percpu data */
+	get_paca()->data_offset = 0;
+	/* Mark interrupts disabled in PACA */
+	irq_soft_mask_set(IRQS_DISABLED);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __init configure_exceptions(void)
@@ -363,6 +381,7 @@ void __init early_setup(unsigned long dt_ptr)
 	 * what CPU we are on.
 	 */
 	initialise_paca(&boot_paca, 0);
+<<<<<<< HEAD
 	fixup_boot_paca(&boot_paca);
 	WARN_ON(local_paca != 0);
 	setup_paca(&boot_paca); /* install the paca into registers */
@@ -372,6 +391,13 @@ void __init early_setup(unsigned long dt_ptr)
 	if (IS_ENABLED(CONFIG_PPC_BOOK3S_64) && (mfmsr() & MSR_HV))
 		enable_machine_check();
 
+=======
+	setup_paca(&boot_paca);
+	fixup_boot_paca();
+
+	/* -------- printk is now safe to use ------- */
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Try new device tree based feature discovery ... */
 	if (!dt_cpu_ftrs_init(__va(dt_ptr)))
 		/* Otherwise use the old style CPU table */
@@ -385,6 +411,7 @@ void __init early_setup(unsigned long dt_ptr)
 	/*
 	 * Do early initialization using the flattened device
 	 * tree, such as retrieving the physical memory map or
+<<<<<<< HEAD
 	 * calculating/retrieving the hash table size, discover
 	 * boot_cpuid and boot_cpu_hwid.
 	 */
@@ -400,6 +427,19 @@ void __init early_setup(unsigned long dt_ptr)
 #ifdef CONFIG_SMP
 	task_thread_info(current)->cpu = boot_cpuid; // fix task_cpu(current)
 #endif
+=======
+	 * calculating/retrieving the hash table size.
+	 */
+	early_init_devtree(__va(dt_ptr));
+
+	/* Now we know the logical id of our boot cpu, setup the paca. */
+	if (boot_cpuid != 0) {
+		/* Poison paca_ptrs[0] again if it's not the boot cpu */
+		memset(&paca_ptrs[0], 0x88, sizeof(paca_ptrs[0]));
+	}
+	setup_paca(paca_ptrs[boot_cpuid]);
+	fixup_boot_paca();
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Configure exception handlers. This include setting up trampolines
@@ -694,7 +734,11 @@ void __init initialize_cache_info(void)
  */
 __init u64 ppc64_bolted_size(void)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	/* Freescale BookE bolts the entire linear mapping */
 	/* XXX: BookE ppc64_rma_limit setup seems to disagree? */
 	if (early_mmu_has_feature(MMU_FTR_TYPE_FSL_E))
@@ -744,7 +788,11 @@ void __init irqstack_early_init(void)
 	}
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 void __init exc_lvl_early_init(void)
 {
 	unsigned int i;
@@ -846,7 +894,11 @@ void __init setup_per_cpu_areas(void)
 	/*
 	 * BookE and BookS radix are historical values and should be revisited.
 	 */
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_PPC_BOOK3E_64)) {
+=======
+	if (IS_ENABLED(CONFIG_PPC_BOOK3E)) {
+>>>>>>> b7ba80a49124 (Commit)
 		atom_size = SZ_1M;
 	} else if (radix_enabled()) {
 		atom_size = PAGE_SIZE;

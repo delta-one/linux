@@ -22,13 +22,23 @@
 #
 # Makefile for Display Core (dc) component.
 
+<<<<<<< HEAD
 DC_LIBS = basics bios dml clk_mgr dce gpio irq link virtual dsc
 
 ifdef CONFIG_DRM_AMD_DC_FP
+=======
+DC_LIBS = basics bios dml clk_mgr dce gpio irq link virtual
+
+ifdef CONFIG_DRM_AMD_DC_DCN
+>>>>>>> b7ba80a49124 (Commit)
 
 KCOV_INSTRUMENT := n
 
 DC_LIBS += dcn20
+<<<<<<< HEAD
+=======
+DC_LIBS += dsc
+>>>>>>> b7ba80a49124 (Commit)
 DC_LIBS += dcn10
 DC_LIBS += dcn21
 DC_LIBS += dcn201
@@ -55,14 +65,26 @@ ifdef CONFIG_DRM_AMD_DC_SI
 DC_LIBS += dce60
 endif
 
+<<<<<<< HEAD
 DC_LIBS += hdcp
+=======
+ifdef CONFIG_DRM_AMD_DC_HDCP
+DC_LIBS += hdcp
+endif
+>>>>>>> b7ba80a49124 (Commit)
 
 AMD_DC = $(addsuffix /Makefile, $(addprefix $(FULL_AMD_DISPLAY_PATH)/dc/,$(DC_LIBS)))
 
 include $(AMD_DC)
 
+<<<<<<< HEAD
 DISPLAY_CORE = dc.o dc_stat.o dc_resource.o dc_hw_sequencer.o dc_sink.o \
 dc_surface.o dc_debug.o dc_stream.o dc_link_enc_cfg.o dc_link_exports.o
+=======
+DISPLAY_CORE = dc.o  dc_stat.o dc_link.o dc_resource.o dc_hw_sequencer.o dc_sink.o \
+dc_surface.o dc_link_dp.o dc_link_ddc.o dc_debug.o dc_stream.o \
+dc_link_enc_cfg.o dc_link_dpia.o dc_link_dpcd.o
+>>>>>>> b7ba80a49124 (Commit)
 
 DISPLAY_CORE += dc_vm_helper.o
 

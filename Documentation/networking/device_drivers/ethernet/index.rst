@@ -31,6 +31,10 @@ Contents:
    intel/fm10k
    intel/igb
    intel/igbvf
+<<<<<<< HEAD
+=======
+   intel/ixgb
+>>>>>>> b7ba80a49124 (Commit)
    intel/ixgbe
    intel/ixgbevf
    intel/i40e
@@ -38,7 +42,11 @@ Contents:
    intel/ice
    marvell/octeontx2
    marvell/octeon_ep
+<<<<<<< HEAD
    mellanox/mlx5/index
+=======
+   mellanox/mlx5
+>>>>>>> b7ba80a49124 (Commit)
    microsoft/netvsc
    neterion/s2io
    netronome/nfp

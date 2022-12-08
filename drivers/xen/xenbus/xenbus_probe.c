@@ -1066,3 +1066,7 @@ out_error:
 
 postcore_initcall(xenbus_init);
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

@@ -93,6 +93,7 @@
 #define DEV_MAC_STICKY_TX_FRM_LEN_OVR_STICKY              BIT(1)
 #define DEV_MAC_STICKY_TX_ABORT_STICKY                    BIT(0)
 
+<<<<<<< HEAD
 #define DEV_MM_CONFIG_ENABLE_CONFIG_MM_RX_ENA             BIT(0)
 #define DEV_MM_CONFIG_ENABLE_CONFIG_MM_TX_ENA             BIT(4)
 #define DEV_MM_CONFIG_ENABLE_CONFIG_KEEP_S_AFTER_D        BIT(8)
@@ -116,6 +117,8 @@
 #define DEV_MM_STAT_MM_STATUS_MM_TX_FRAME_STATUS          BIT(24)
 #define DEV_MM_STAT_MM_STATUS_MM_TX_PRMPT_STATUS          BIT(28)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PCS1G_CFG_LINK_STATUS_TYPE                        BIT(4)
 #define PCS1G_CFG_AN_LINK_CTRL_ENA                        BIT(1)
 #define PCS1G_CFG_PCS_ENA                                 BIT(0)

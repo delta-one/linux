@@ -497,7 +497,12 @@ nfs4_alloc_state_owner(struct nfs_server *server,
 	sp = kzalloc(sizeof(*sp), gfp_flags);
 	if (!sp)
 		return NULL;
+<<<<<<< HEAD
 	sp->so_seqid.owner_id = ida_alloc(&server->openowner_id, gfp_flags);
+=======
+	sp->so_seqid.owner_id = ida_simple_get(&server->openowner_id, 0, 0,
+						gfp_flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (sp->so_seqid.owner_id < 0) {
 		kfree(sp);
 		return NULL;
@@ -533,7 +538,11 @@ static void nfs4_free_state_owner(struct nfs4_state_owner *sp)
 {
 	nfs4_destroy_seqid_counter(&sp->so_seqid);
 	put_cred(sp->so_cred);
+<<<<<<< HEAD
 	ida_free(&sp->so_server->openowner_id, sp->so_seqid.owner_id);
+=======
+	ida_simple_remove(&sp->so_server->openowner_id, sp->so_seqid.owner_id);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(sp);
 }
 
@@ -876,7 +885,12 @@ static struct nfs4_lock_state *nfs4_alloc_lock_state(struct nfs4_state *state, f
 	refcount_set(&lsp->ls_count, 1);
 	lsp->ls_state = state;
 	lsp->ls_owner = fl_owner;
+<<<<<<< HEAD
 	lsp->ls_seqid.owner_id = ida_alloc(&server->lockowner_id, GFP_KERNEL_ACCOUNT);
+=======
+	lsp->ls_seqid.owner_id = ida_simple_get(&server->lockowner_id,
+						0, 0, GFP_KERNEL_ACCOUNT);
+>>>>>>> b7ba80a49124 (Commit)
 	if (lsp->ls_seqid.owner_id < 0)
 		goto out_free;
 	INIT_LIST_HEAD(&lsp->ls_locks);
@@ -888,7 +902,11 @@ out_free:
 
 void nfs4_free_lock_state(struct nfs_server *server, struct nfs4_lock_state *lsp)
 {
+<<<<<<< HEAD
 	ida_free(&server->lockowner_id, lsp->ls_seqid.owner_id);
+=======
+	ida_simple_remove(&server->lockowner_id, lsp->ls_seqid.owner_id);
+>>>>>>> b7ba80a49124 (Commit)
 	nfs4_destroy_seqid_counter(&lsp->ls_seqid);
 	kfree(lsp);
 }
@@ -1230,8 +1248,11 @@ void nfs4_schedule_state_manager(struct nfs_client *clp)
 	if (IS_ERR(task)) {
 		printk(KERN_ERR "%s: kthread_run: %ld\n",
 			__func__, PTR_ERR(task));
+<<<<<<< HEAD
 		if (!nfs_client_init_is_complete(clp))
 			nfs_mark_client_ready(clp, PTR_ERR(task));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		nfs4_clear_state_manager_bit(clp);
 		clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state);
 		nfs_put_client(clp);
@@ -1503,7 +1524,11 @@ static int nfs4_reclaim_locks(struct nfs4_state *state, const struct nfs4_state_
 	struct file_lock *fl;
 	struct nfs4_lock_state *lsp;
 	int status = 0;
+<<<<<<< HEAD
 	struct file_lock_context *flctx = locks_inode_context(inode);
+=======
+	struct file_lock_context *flctx = inode->i_flctx;
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head *list;
 
 	if (flctx == NULL)
@@ -1621,8 +1646,12 @@ static int __nfs4_reclaim_open_state(struct nfs4_state_owner *sp, struct nfs4_st
 		spin_lock(&state->state_lock);
 		list_for_each_entry(lock, &state->lock_states, ls_locks) {
 			trace_nfs4_state_lock_reclaim(state, lock);
+<<<<<<< HEAD
 			if (!test_bit(NFS_LOCK_INITIALIZED, &lock->ls_flags) &&
 			    !test_bit(NFS_LOCK_UNLOCKING, &lock->ls_flags))
+=======
+			if (!test_bit(NFS_LOCK_INITIALIZED, &lock->ls_flags))
+>>>>>>> b7ba80a49124 (Commit)
 				*lost_locks += 1;
 		}
 		spin_unlock(&state->state_lock);
@@ -1789,7 +1818,10 @@ static void nfs4_state_mark_reclaim_helper(struct nfs_client *clp,
 
 static void nfs4_state_start_reclaim_reboot(struct nfs_client *clp)
 {
+<<<<<<< HEAD
 	set_bit(NFS4CLNT_RECLAIM_REBOOT, &clp->cl_state);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Mark all delegations for reclaim */
 	nfs_delegation_mark_reclaim(clp);
 	nfs4_state_mark_reclaim_helper(clp, nfs4_state_mark_reclaim_reboot);
@@ -2674,7 +2706,10 @@ static void nfs4_state_manager(struct nfs_client *clp)
 			if (status < 0)
 				goto out_error;
 			nfs4_state_end_reclaim_reboot(clp);
+<<<<<<< HEAD
 			continue;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		/* Detect expired delegations... */

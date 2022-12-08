@@ -89,6 +89,11 @@ static ulg output_ptr;
 static ulg bytes_out;
 
 static void error(char *m);
+<<<<<<< HEAD
+=======
+static void gzip_mark(void **);
+static void gzip_release(void **);
+>>>>>>> b7ba80a49124 (Commit)
 
 extern int end;
 static ulg free_mem_ptr;

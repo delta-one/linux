@@ -38,6 +38,11 @@ static struct rcar_sysc_area r8a7795_areas[] __initdata = {
 	{ "a3vp",	0x340, 0, R8A7795_PD_A3VP,	R8A7795_PD_ALWAYS_ON },
 	{ "cr7",	0x240, 0, R8A7795_PD_CR7,	R8A7795_PD_ALWAYS_ON },
 	{ "a3vc",	0x380, 0, R8A7795_PD_A3VC,	R8A7795_PD_ALWAYS_ON },
+<<<<<<< HEAD
+=======
+	/* A2VC0 exists on ES1.x only */
+	{ "a2vc0",	0x3c0, 0, R8A7795_PD_A2VC0,	R8A7795_PD_A3VC },
+>>>>>>> b7ba80a49124 (Commit)
 	{ "a2vc1",	0x3c0, 1, R8A7795_PD_A2VC1,	R8A7795_PD_A3VC },
 	{ "3dg-a",	0x100, 0, R8A7795_PD_3DG_A,	R8A7795_PD_ALWAYS_ON },
 	{ "3dg-b",	0x100, 1, R8A7795_PD_3DG_B,	R8A7795_PD_3DG_A },
@@ -52,10 +57,20 @@ static struct rcar_sysc_area r8a7795_areas[] __initdata = {
 	 * Fixups for R-Car H3 revisions
 	 */
 
+<<<<<<< HEAD
+=======
+#define HAS_A2VC0	BIT(0)		/* Power domain A2VC0 is present */
+>>>>>>> b7ba80a49124 (Commit)
 #define NO_EXTMASK	BIT(1)		/* Missing SYSCEXTMASK register */
 
 static const struct soc_device_attribute r8a7795_quirks_match[] __initconst = {
 	{
+<<<<<<< HEAD
+=======
+		.soc_id = "r8a7795", .revision = "ES1.*",
+		.data = (void *)(HAS_A2VC0 | NO_EXTMASK),
+	}, {
+>>>>>>> b7ba80a49124 (Commit)
 		.soc_id = "r8a7795", .revision = "ES2.*",
 		.data = (void *)(NO_EXTMASK),
 	},
@@ -71,6 +86,13 @@ static int __init r8a7795_sysc_init(void)
 	if (attr)
 		quirks = (uintptr_t)attr->data;
 
+<<<<<<< HEAD
+=======
+	if (!(quirks & HAS_A2VC0))
+		rcar_sysc_nullify(r8a7795_areas, ARRAY_SIZE(r8a7795_areas),
+				  R8A7795_PD_A2VC0);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (quirks & NO_EXTMASK)
 		r8a7795_sysc_info.extmask_val = 0;
 

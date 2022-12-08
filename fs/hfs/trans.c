@@ -109,7 +109,11 @@ void hfs_asc2mac(struct super_block *sb, struct hfs_name *out, const struct qstr
 	if (nls_io) {
 		wchar_t ch;
 
+<<<<<<< HEAD
 		while (srclen > 0 && dstlen > 0) {
+=======
+		while (srclen > 0) {
+>>>>>>> b7ba80a49124 (Commit)
 			size = nls_io->char2uni(src, srclen, &ch);
 			if (size < 0) {
 				ch = '?';

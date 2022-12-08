@@ -36,11 +36,19 @@ Usage Quick Reference
 ::
 
 	$ mount -t debugfs debugfs /sys/kernel/debug
+<<<<<<< HEAD
 	$ echo mmiotrace > /sys/kernel/tracing/current_tracer
 	$ cat /sys/kernel/tracing/trace_pipe > mydump.txt &
 	Start X or whatever.
 	$ echo "X is up" > /sys/kernel/tracing/trace_marker
 	$ echo nop > /sys/kernel/tracing/current_tracer
+=======
+	$ echo mmiotrace > /sys/kernel/debug/tracing/current_tracer
+	$ cat /sys/kernel/debug/tracing/trace_pipe > mydump.txt &
+	Start X or whatever.
+	$ echo "X is up" > /sys/kernel/debug/tracing/trace_marker
+	$ echo nop > /sys/kernel/debug/tracing/current_tracer
+>>>>>>> b7ba80a49124 (Commit)
 	Check for lost events.
 
 
@@ -56,11 +64,19 @@ Check that the driver you are about to trace is not loaded.
 
 Activate mmiotrace (requires root privileges)::
 
+<<<<<<< HEAD
 	$ echo mmiotrace > /sys/kernel/tracing/current_tracer
 
 Start storing the trace::
 
 	$ cat /sys/kernel/tracing/trace_pipe > mydump.txt &
+=======
+	$ echo mmiotrace > /sys/kernel/debug/tracing/current_tracer
+
+Start storing the trace::
+
+	$ cat /sys/kernel/debug/tracing/trace_pipe > mydump.txt &
+>>>>>>> b7ba80a49124 (Commit)
 
 The 'cat' process should stay running (sleeping) in the background.
 
@@ -68,14 +84,22 @@ Load the driver you want to trace and use it. Mmiotrace will only catch MMIO
 accesses to areas that are ioremapped while mmiotrace is active.
 
 During tracing you can place comments (markers) into the trace by
+<<<<<<< HEAD
 $ echo "X is up" > /sys/kernel/tracing/trace_marker
+=======
+$ echo "X is up" > /sys/kernel/debug/tracing/trace_marker
+>>>>>>> b7ba80a49124 (Commit)
 This makes it easier to see which part of the (huge) trace corresponds to
 which action. It is recommended to place descriptive markers about what you
 do.
 
 Shut down mmiotrace (requires root privileges)::
 
+<<<<<<< HEAD
 	$ echo nop > /sys/kernel/tracing/current_tracer
+=======
+	$ echo nop > /sys/kernel/debug/tracing/current_tracer
+>>>>>>> b7ba80a49124 (Commit)
 
 The 'cat' process exits. If it does not, kill it by issuing 'fg' command and
 pressing ctrl+c.
@@ -93,12 +117,20 @@ events were lost, the trace is incomplete. You should enlarge the buffers and
 try again. Buffers are enlarged by first seeing how large the current buffers
 are::
 
+<<<<<<< HEAD
 	$ cat /sys/kernel/tracing/buffer_size_kb
+=======
+	$ cat /sys/kernel/debug/tracing/buffer_size_kb
+>>>>>>> b7ba80a49124 (Commit)
 
 gives you a number. Approximately double this number and write it back, for
 instance::
 
+<<<<<<< HEAD
 	$ echo 128000 > /sys/kernel/tracing/buffer_size_kb
+=======
+	$ echo 128000 > /sys/kernel/debug/tracing/buffer_size_kb
+>>>>>>> b7ba80a49124 (Commit)
 
 Then start again from the top.
 

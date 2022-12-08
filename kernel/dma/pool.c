@@ -84,8 +84,13 @@ static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
 	void *addr;
 	int ret = -ENOMEM;
 
+<<<<<<< HEAD
 	/* Cannot allocate larger than MAX_ORDER */
 	order = min(get_order(pool_size), MAX_ORDER);
+=======
+	/* Cannot allocate larger than MAX_ORDER-1 */
+	order = min(get_order(pool_size), MAX_ORDER-1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	do {
 		pool_size = 1 << (PAGE_SHIFT + order);
@@ -190,7 +195,11 @@ static int __init dma_atomic_pool_init(void)
 
 	/*
 	 * If coherent_pool was not used on the command line, default the pool
+<<<<<<< HEAD
 	 * sizes to 128KB per 1GB of memory, min 128KB, max MAX_ORDER.
+=======
+	 * sizes to 128KB per 1GB of memory, min 128KB, max MAX_ORDER-1.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	if (!atomic_pool_size) {
 		unsigned long pages = totalram_pages() / (SZ_1G / SZ_128K);

@@ -13,7 +13,10 @@
 #include <dt-bindings/phy/phy.h>
 #include <dt-bindings/pinctrl/mt8195-pinfunc.h>
 #include <dt-bindings/power/mt8195-power.h>
+<<<<<<< HEAD
 #include <dt-bindings/reset/mt8195-resets.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	compatible = "mediatek,mt8195";
@@ -37,6 +40,7 @@
 			enable-method = "psci";
 			performance-domains = <&performance 0>;
 			clock-frequency = <1701000000>;
+<<<<<<< HEAD
 			capacity-dmips-mhz = <308>;
 			cpu-idle-states = <&cpu_ret_l &cpu_off_l>;
 			i-cache-size = <32768>;
@@ -45,6 +49,10 @@
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+			capacity-dmips-mhz = <578>;
+			cpu-idle-states = <&cpu_off_l &cluster_off_l>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 			#cooling-cells = <2>;
 		};
@@ -56,6 +64,7 @@
 			enable-method = "psci";
 			performance-domains = <&performance 0>;
 			clock-frequency = <1701000000>;
+<<<<<<< HEAD
 			capacity-dmips-mhz = <308>;
 			cpu-idle-states = <&cpu_ret_l &cpu_off_l>;
 			i-cache-size = <32768>;
@@ -64,6 +73,10 @@
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+			capacity-dmips-mhz = <578>;
+			cpu-idle-states = <&cpu_off_l &cluster_off_l>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 			#cooling-cells = <2>;
 		};
@@ -75,6 +88,7 @@
 			enable-method = "psci";
 			performance-domains = <&performance 0>;
 			clock-frequency = <1701000000>;
+<<<<<<< HEAD
 			capacity-dmips-mhz = <308>;
 			cpu-idle-states = <&cpu_ret_l &cpu_off_l>;
 			i-cache-size = <32768>;
@@ -83,6 +97,10 @@
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+			capacity-dmips-mhz = <578>;
+			cpu-idle-states = <&cpu_off_l &cluster_off_l>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 			#cooling-cells = <2>;
 		};
@@ -94,6 +112,7 @@
 			enable-method = "psci";
 			performance-domains = <&performance 0>;
 			clock-frequency = <1701000000>;
+<<<<<<< HEAD
 			capacity-dmips-mhz = <308>;
 			cpu-idle-states = <&cpu_ret_l &cpu_off_l>;
 			i-cache-size = <32768>;
@@ -102,6 +121,10 @@
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+			capacity-dmips-mhz = <578>;
+			cpu-idle-states = <&cpu_off_l &cluster_off_l>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 			#cooling-cells = <2>;
 		};
@@ -114,6 +137,7 @@
 			performance-domains = <&performance 1>;
 			clock-frequency = <2171000000>;
 			capacity-dmips-mhz = <1024>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_b &cpu_off_b>;
 			i-cache-size = <65536>;
 			i-cache-line-size = <64>;
@@ -121,6 +145,9 @@
 			d-cache-size = <65536>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <256>;
+=======
+			cpu-idle-states = <&cpu_off_b &cluster_off_b>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_1>;
 			#cooling-cells = <2>;
 		};
@@ -133,6 +160,7 @@
 			performance-domains = <&performance 1>;
 			clock-frequency = <2171000000>;
 			capacity-dmips-mhz = <1024>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_b &cpu_off_b>;
 			i-cache-size = <65536>;
 			i-cache-line-size = <64>;
@@ -140,6 +168,9 @@
 			d-cache-size = <65536>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <256>;
+=======
+			cpu-idle-states = <&cpu_off_b &cluster_off_b>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_1>;
 			#cooling-cells = <2>;
 		};
@@ -152,6 +183,7 @@
 			performance-domains = <&performance 1>;
 			clock-frequency = <2171000000>;
 			capacity-dmips-mhz = <1024>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_b &cpu_off_b>;
 			i-cache-size = <65536>;
 			i-cache-line-size = <64>;
@@ -159,6 +191,9 @@
 			d-cache-size = <65536>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <256>;
+=======
+			cpu-idle-states = <&cpu_off_b &cluster_off_b>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_1>;
 			#cooling-cells = <2>;
 		};
@@ -171,6 +206,7 @@
 			performance-domains = <&performance 1>;
 			clock-frequency = <2171000000>;
 			capacity-dmips-mhz = <1024>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_b &cpu_off_b>;
 			i-cache-size = <65536>;
 			i-cache-line-size = <64>;
@@ -178,6 +214,9 @@
 			d-cache-size = <65536>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <256>;
+=======
+			cpu-idle-states = <&cpu_off_b &cluster_off_b>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_1>;
 			#cooling-cells = <2>;
 		};
@@ -199,6 +238,7 @@
 				core3 {
 					cpu = <&cpu3>;
 				};
+<<<<<<< HEAD
 
 				core4 {
 					cpu = <&cpu4>;
@@ -213,6 +253,24 @@
 				};
 
 				core7 {
+=======
+			};
+
+			cluster1 {
+				core0 {
+					cpu = <&cpu4>;
+				};
+
+				core1 {
+					cpu = <&cpu5>;
+				};
+
+				core2 {
+					cpu = <&cpu6>;
+				};
+
+				core3 {
+>>>>>>> b7ba80a49124 (Commit)
 					cpu = <&cpu7>;
 				};
 			};
@@ -221,7 +279,11 @@
 		idle-states {
 			entry-method = "psci";
 
+<<<<<<< HEAD
 			cpu_ret_l: cpu-retention-l {
+=======
+			cpu_off_l: cpu-off-l {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "arm,idle-state";
 				arm,psci-suspend-param = <0x00010001>;
 				local-timer-stop;
@@ -230,7 +292,11 @@
 				min-residency-us = <580>;
 			};
 
+<<<<<<< HEAD
 			cpu_ret_b: cpu-retention-b {
+=======
+			cpu_off_b: cpu-off-b {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "arm,idle-state";
 				arm,psci-suspend-param = <0x00010001>;
 				local-timer-stop;
@@ -239,7 +305,11 @@
 				min-residency-us = <740>;
 			};
 
+<<<<<<< HEAD
 			cpu_off_l: cpu-off-l {
+=======
+			cluster_off_l: cluster-off-l {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "arm,idle-state";
 				arm,psci-suspend-param = <0x01010002>;
 				local-timer-stop;
@@ -248,7 +318,11 @@
 				min-residency-us = <840>;
 			};
 
+<<<<<<< HEAD
 			cpu_off_b: cpu-off-b {
+=======
+			cluster_off_b: cluster-off-b {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "arm,idle-state";
 				arm,psci-suspend-param = <0x01010002>;
 				local-timer-stop;
@@ -260,29 +334,38 @@
 
 		l2_0: l2-cache0 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
 			cache-size = <131072>;
 			cache-line-size = <64>;
 			cache-sets = <512>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l3_0>;
 		};
 
 		l2_1: l2-cache1 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
 			cache-size = <262144>;
 			cache-line-size = <64>;
 			cache-sets = <512>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l3_0>;
 		};
 
 		l3_0: l3-cache {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <3>;
 			cache-size = <2097152>;
 			cache-line-size = <64>;
 			cache-sets = <2048>;
 			cache-unified;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -304,6 +387,7 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
 	clk13m: fixed-factor-clock-13m {
 		compatible = "fixed-factor-clock";
 		#clock-cells = <0>;
@@ -313,6 +397,8 @@
 		clock-output-names = "clk13m";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	clk26m: oscillator-26m {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
@@ -752,7 +838,12 @@
 		};
 
 		watchdog: watchdog@10007000 {
+<<<<<<< HEAD
 			compatible = "mediatek,mt8195-wdt";
+=======
+			compatible = "mediatek,mt8195-wdt",
+				     "mediatek,mt6589-wdt";
+>>>>>>> b7ba80a49124 (Commit)
 			mediatek,disable-extrst;
 			reg = <0 0x10007000 0 0x100>;
 			#reset-cells = <1>;
@@ -769,7 +860,11 @@
 				     "mediatek,mt6765-timer";
 			reg = <0 0x10017000 0 0x1000>;
 			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH 0>;
+<<<<<<< HEAD
 			clocks = <&clk13m>;
+=======
+			clocks = <&topckgen CLK_TOP_CLK26M_D2>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		pwrap: pwrap@10024000 {
@@ -1110,6 +1205,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		eth: ethernet@11021000 {
 			compatible = "mediatek,mt8195-gmac", "snps,dwmac-5.10a";
 			reg = <0 0x11021000 0 0x4000>;
@@ -1202,6 +1298,8 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		xhci0: usb@11200000 {
 			compatible = "mediatek,mt8195-xhci",
 				     "mediatek,mtk-xhci";
@@ -1342,6 +1440,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		pcie0: pcie@112f0000 {
 			compatible = "mediatek,mt8195-pcie",
 				     "mediatek,mt8192-pcie";
@@ -1446,6 +1545,8 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		nor_flash: spi@1132c000 {
 			compatible = "mediatek,mt8195-nor",
 				     "mediatek,mt8173-nor";
@@ -1505,6 +1606,7 @@
 				reg = <0x189 0x2>;
 				bits = <7 5>;
 			};
+<<<<<<< HEAD
 			pciephy_rx_ln1: pciephy-rx-ln1@190,1 {
 				reg = <0x190 0x1>;
 				bits = <0 4>;
@@ -1542,6 +1644,8 @@
 			lvts_efuse_data2: lvts2-calib@1d0 {
 				reg = <0x1d0 0x38>;
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		u3phy2: t-phy@11c40000 {
@@ -1711,7 +1815,10 @@
 			#address-cells = <1>;
 			#size-cells = <1>;
 			ranges = <0 0 0x11e30000 0xe00>;
+<<<<<<< HEAD
 			power-domains = <&spm MT8195_POWER_DOMAIN_SSUSB_PCIE_PHY>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 
 			u2port1: usb-phy@0 {
@@ -1763,6 +1870,7 @@
 			};
 		};
 
+<<<<<<< HEAD
 		pciephy: phy@11e80000 {
 			compatible = "mediatek,mt8195-pcie-phy";
 			reg = <0 0x11e80000 0 0x10000>;
@@ -1780,6 +1888,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ufsphy: ufs-phy@11fa0000 {
 			compatible = "mediatek,mt8195-ufsphy", "mediatek,mt8183-ufsphy";
 			reg = <0 0x11fa0000 0 0xc000>;
@@ -1795,12 +1905,18 @@
 			#clock-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		vppsys0: syscon@14000000 {
 			compatible = "mediatek,mt8195-vppsys0", "syscon";
+=======
+		vppsys0: clock-controller@14000000 {
+			compatible = "mediatek,mt8195-vppsys0";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0 0x14000000 0 0x1000>;
 			#clock-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		mutex@1400f000 {
 			compatible = "mediatek,mt8195-vpp-mutex";
 			reg = <0 0x1400f000 0 0x1000>;
@@ -1810,6 +1926,8 @@
 			power-domains = <&spm MT8195_POWER_DOMAIN_VPPSYS0>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		smi_sub_common_vpp0_vpp1_2x1: smi@14010000 {
 			compatible = "mediatek,mt8195-smi-sub-common";
 			reg = <0 0x14010000 0 0x1000>;
@@ -1909,12 +2027,18 @@
 			power-domains = <&spm MT8195_POWER_DOMAIN_WPESYS>;
 		};
 
+<<<<<<< HEAD
 		vppsys1: syscon@14f00000 {
 			compatible = "mediatek,mt8195-vppsys1", "syscon";
+=======
+		vppsys1: clock-controller@14f00000 {
+			compatible = "mediatek,mt8195-vppsys1";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0 0x14f00000 0 0x1000>;
 			#clock-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		mutex@14f01000 {
 			compatible = "mediatek,mt8195-vpp-mutex";
 			reg = <0 0x14f01000 0 0x1000>;
@@ -1924,6 +2048,8 @@
 			power-domains = <&spm MT8195_POWER_DOMAIN_VPPSYS1>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		larb5: larb@14f02000 {
 			compatible = "mediatek,mt8195-smi-larb";
 			reg = <0 0x14f02000 0 0x1000>;
@@ -2296,6 +2422,7 @@
 			power-domains = <&spm MT8195_POWER_DOMAIN_VENC>;
 		};
 
+<<<<<<< HEAD
 		venc: video-codec@1a020000 {
 			compatible = "mediatek,mt8195-vcodec-enc";
 			reg = <0 0x1a020000 0 0x10000>;
@@ -2380,6 +2507,8 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		vencsys_core1: clock-controller@1b000000 {
 			compatible = "mediatek,mt8195-vencsys_core1";
 			reg = <0 0x1b000000 0 0x1000>;
@@ -2387,12 +2516,17 @@
 		};
 
 		vdosys0: syscon@1c01a000 {
+<<<<<<< HEAD
 			compatible = "mediatek,mt8195-vdosys0", "mediatek,mt8195-mmsys", "syscon";
+=======
+			compatible = "mediatek,mt8195-mmsys", "syscon";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0 0x1c01a000 0 0x1000>;
 			mboxes = <&gce0 0 CMDQ_THR_PRIO_4>;
 			#clock-cells = <1>;
 		};
 
+<<<<<<< HEAD
 
 		jpgenc-master {
 			compatible = "mediatek,mt8195-jpgenc";
@@ -2433,6 +2567,8 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		larb20: larb@1b010000 {
 			compatible = "mediatek,mt8195-smi-larb";
 			reg = <0 0x1b010000 0 0x1000>;
@@ -2528,6 +2664,7 @@
 			mediatek,gce-client-reg = <&gce0 SUBSYS_1c01XXXX 0x4000 0x1000>;
 		};
 
+<<<<<<< HEAD
 		dp_intf0: dp-intf@1c015000 {
 			compatible = "mediatek,mt8195-dp-intf";
 			reg = <0 0x1c015000 0 0x1000>;
@@ -2539,6 +2676,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		mutex: mutex@1c016000 {
 			compatible = "mediatek,mt8195-disp-mutex";
 			reg = <0 0x1c016000 0 0x1000>;
@@ -2573,7 +2712,11 @@
 		};
 
 		vdosys1: syscon@1c100000 {
+<<<<<<< HEAD
 			compatible = "mediatek,mt8195-vdosys1", "syscon";
+=======
+			compatible = "mediatek,mt8195-mmsys", "syscon";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0 0x1c100000 0 0x1000>;
 			#clock-cells = <1>;
 		};
@@ -2627,6 +2770,7 @@
 			clock-names = "apb", "smi", "gals";
 			power-domains = <&spm MT8195_POWER_DOMAIN_VDOSYS1>;
 		};
+<<<<<<< HEAD
 
 		dp_intf1: dp-intf@1c113000 {
 			compatible = "mediatek,mt8195-dp-intf";
@@ -2661,5 +2805,7 @@
 			max-linkrate-mhz = <8100>;
 			status = "disabled";
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };

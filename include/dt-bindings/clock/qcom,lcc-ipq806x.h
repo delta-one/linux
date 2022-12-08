@@ -19,6 +19,9 @@
 #define SPDIF_CLK			10
 #define AHBIX_CLK			11
 
+<<<<<<< HEAD
 #define LCC_PCM_RESET			0
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

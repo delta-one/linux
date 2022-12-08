@@ -90,7 +90,11 @@ aflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mlittle-endian
 
 ifeq ($(HAS_BIARCH),y)
 KBUILD_CFLAGS	+= -m$(BITS)
+<<<<<<< HEAD
 KBUILD_AFLAGS	+= -m$(BITS)
+=======
+KBUILD_AFLAGS	+= -m$(BITS) -Wl,-a$(BITS)
+>>>>>>> b7ba80a49124 (Commit)
 KBUILD_LDFLAGS	+= -m elf$(BITS)$(LDEMULATION)
 endif
 
@@ -123,12 +127,23 @@ endif
 endif
 
 CFLAGS-$(CONFIG_PPC64)	:= $(call cc-option,-mtraceback=no)
+<<<<<<< HEAD
 ifdef CONFIG_PPC64_ELF_ABI_V2
 CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2,$(call cc-option,-mcall-aixdesc))
 else
 ifndef CONFIG_CC_IS_CLANG
 CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
 CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcall-aixdesc)
+=======
+ifndef CONFIG_CC_IS_CLANG
+ifdef CONFIG_PPC64_ELF_ABI_V2
+CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2,$(call cc-option,-mcall-aixdesc))
+AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2)
+else
+CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
+CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcall-aixdesc)
+AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
+>>>>>>> b7ba80a49124 (Commit)
 endif
 endif
 CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcmodel=medium,$(call cc-option,-mminimal-toc))
@@ -144,6 +159,21 @@ CFLAGS-$(CONFIG_PPC32)	+= $(call cc-option, $(MULTIPLEWORD))
 
 CFLAGS-$(CONFIG_PPC32)	+= $(call cc-option,-mno-readonly-in-sdata)
 
+<<<<<<< HEAD
+=======
+ifdef CONFIG_PPC_BOOK3S_64
+ifdef CONFIG_CPU_LITTLE_ENDIAN
+CFLAGS-$(CONFIG_GENERIC_CPU) += -mcpu=power8
+CFLAGS-$(CONFIG_GENERIC_CPU) += $(call cc-option,-mtune=power9,-mtune=power8)
+else
+CFLAGS-$(CONFIG_GENERIC_CPU) += $(call cc-option,-mtune=power7,$(call cc-option,-mtune=power5))
+CFLAGS-$(CONFIG_GENERIC_CPU) += $(call cc-option,-mcpu=power5,-mcpu=power4)
+endif
+else ifdef CONFIG_PPC_BOOK3E_64
+CFLAGS-$(CONFIG_GENERIC_CPU) += -mcpu=powerpc64
+endif
+
+>>>>>>> b7ba80a49124 (Commit)
 ifdef CONFIG_FUNCTION_TRACER
 CC_FLAGS_FTRACE := -pg
 ifdef CONFIG_MPROFILE_KERNEL
@@ -151,12 +181,20 @@ CC_FLAGS_FTRACE += -mprofile-kernel
 endif
 endif
 
+<<<<<<< HEAD
 CFLAGS-$(CONFIG_TARGET_CPU_BOOL) += -mcpu=$(CONFIG_TARGET_CPU)
 AFLAGS-$(CONFIG_TARGET_CPU_BOOL) += -mcpu=$(CONFIG_TARGET_CPU)
 
 CFLAGS-$(CONFIG_POWERPC64_CPU) += $(call cc-option,-mtune=power10,	\
 				  $(call cc-option,-mtune=power9,	\
 				  $(call cc-option,-mtune=power8)))
+=======
+CFLAGS-$(CONFIG_TARGET_CPU_BOOL) += $(call cc-option,-mcpu=$(CONFIG_TARGET_CPU))
+AFLAGS-$(CONFIG_TARGET_CPU_BOOL) += $(call cc-option,-mcpu=$(CONFIG_TARGET_CPU))
+
+CFLAGS-$(CONFIG_E5500_CPU) += $(call cc-option,-mcpu=e500mc64,-mcpu=powerpc64)
+CFLAGS-$(CONFIG_E6500_CPU) += $(call cc-option,-mcpu=e6500,$(E5500_CPU))
+>>>>>>> b7ba80a49124 (Commit)
 
 asinstr := $(call as-instr,lis 9$(comma)foo@high,-DHAVE_AS_ATHIGH=1)
 
@@ -178,6 +216,7 @@ ifdef CONFIG_476FPE_ERR46
 		-T $(srctree)/arch/powerpc/platforms/44x/ppc476_modules.lds
 endif
 
+<<<<<<< HEAD
 # No prefix or pcrel
 KBUILD_CFLAGS += $(call cc-option,-mno-prefixed)
 KBUILD_CFLAGS += $(call cc-option,-mno-pcrel)
@@ -186,6 +225,11 @@ KBUILD_CFLAGS += $(call cc-option,-mno-pcrel)
 KBUILD_CFLAGS += $(call cc-option,-mno-altivec)
 KBUILD_CFLAGS += $(call cc-option,-mno-vsx)
 KBUILD_CFLAGS += $(call cc-option,-mno-mma)
+=======
+# No AltiVec or VSX instructions when building kernel
+KBUILD_CFLAGS += $(call cc-option,-mno-altivec)
+KBUILD_CFLAGS += $(call cc-option,-mno-vsx)
+>>>>>>> b7ba80a49124 (Commit)
 
 # No SPE instruction when building kernel
 # (We use all available options to help semi-broken compilers)
@@ -199,7 +243,14 @@ KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
 # often slow when they are implemented at all
 KBUILD_CFLAGS		+= $(call cc-option,-mno-string)
 
+<<<<<<< HEAD
 cpu-as-$(CONFIG_ALTIVEC)	+= $(call as-option,-Wa$(comma)-maltivec)
+=======
+cpu-as-$(CONFIG_40x)		+= -Wa,-m405
+cpu-as-$(CONFIG_44x)		+= -Wa,-m440
+cpu-as-$(CONFIG_ALTIVEC)	+= $(call as-option,-Wa$(comma)-maltivec)
+cpu-as-$(CONFIG_E500)		+= -Wa,-me500
+>>>>>>> b7ba80a49124 (Commit)
 
 # When using '-many -mpower4' gas will first try and find a matching power4
 # mnemonic and failing that it will allow any valid mnemonic that GAS knows
@@ -207,6 +258,10 @@ cpu-as-$(CONFIG_ALTIVEC)	+= $(call as-option,-Wa$(comma)-maltivec)
 # LLVM IAS doesn't understand either flag: https://github.com/ClangBuiltLinux/linux/issues/675
 # but LLVM IAS only supports ISA >= 2.06 for Book3S 64 anyway...
 cpu-as-$(CONFIG_PPC_BOOK3S_64)	+= $(call as-option,-Wa$(comma)-mpower4) $(call as-option,-Wa$(comma)-many)
+<<<<<<< HEAD
+=======
+cpu-as-$(CONFIG_PPC_E500MC)	+= $(call as-option,-Wa$(comma)-me500mc)
+>>>>>>> b7ba80a49124 (Commit)
 
 KBUILD_AFLAGS += $(cpu-as-y)
 KBUILD_CFLAGS += $(cpu-as-y)
@@ -235,7 +290,21 @@ PHONY += bootwrapper_install
 bootwrapper_install:
 	$(Q)$(MAKE) $(build)=$(boot) $(patsubst %,$(boot)/%,$@)
 
+<<<<<<< HEAD
 include $(srctree)/scripts/Makefile.defconf
+=======
+# Used to create 'merged defconfigs'
+# To use it $(call) it with the first argument as the base defconfig
+# and the second argument as a space separated list of .config files to merge,
+# without the .config suffix.
+define merge_into_defconfig
+	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh \
+		-m -O $(objtree) $(srctree)/arch/$(ARCH)/configs/$(1) \
+		$(foreach config,$(2),$(srctree)/arch/$(ARCH)/configs/$(config).config)
+	+$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
+endef
+
+>>>>>>> b7ba80a49124 (Commit)
 PHONY += pseries_le_defconfig
 pseries_le_defconfig:
 	$(call merge_into_defconfig,pseries_defconfig,le)

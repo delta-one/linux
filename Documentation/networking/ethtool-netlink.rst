@@ -106,7 +106,11 @@ modifying a bitmap, the former changes the bit set in mask to values set in
 value and preserves the rest; the latter sets the bits set in the bitmap and
 clears the rest.
 
+<<<<<<< HEAD
 Compact form: nested (bitset) attribute contents:
+=======
+Compact form: nested (bitset) atrribute contents:
+>>>>>>> b7ba80a49124 (Commit)
 
   ============================  ======  ============================
   ``ETHTOOL_A_BITSET_NOMASK``   flag    no mask, only a list
@@ -220,11 +224,14 @@ Userspace to kernel:
   ``ETHTOOL_MSG_PHC_VCLOCKS_GET``       get PHC virtual clocks info
   ``ETHTOOL_MSG_MODULE_SET``            set transceiver module parameters
   ``ETHTOOL_MSG_MODULE_GET``            get transceiver module parameters
+<<<<<<< HEAD
   ``ETHTOOL_MSG_PSE_SET``               set PSE parameters
   ``ETHTOOL_MSG_PSE_GET``               get PSE parameters
   ``ETHTOOL_MSG_RSS_GET``               get RSS settings
   ``ETHTOOL_MSG_MM_GET``                get MAC merge layer state
   ``ETHTOOL_MSG_MM_SET``                set MAC merge layer parameters
+=======
+>>>>>>> b7ba80a49124 (Commit)
   ===================================== =================================
 
 Kernel to userspace:
@@ -265,9 +272,12 @@ Kernel to userspace:
   ``ETHTOOL_MSG_STATS_GET_REPLY``          standard statistics
   ``ETHTOOL_MSG_PHC_VCLOCKS_GET_REPLY``    PHC virtual clocks info
   ``ETHTOOL_MSG_MODULE_GET_REPLY``         transceiver module parameters
+<<<<<<< HEAD
   ``ETHTOOL_MSG_PSE_GET_REPLY``            PSE parameters
   ``ETHTOOL_MSG_RSS_GET_REPLY``            RSS settings
   ``ETHTOOL_MSG_MM_GET_REPLY``             MAC merge layer status
+=======
+>>>>>>> b7ba80a49124 (Commit)
   ======================================== =================================
 
 ``GET`` requests are sent by userspace applications to retrieve device
@@ -434,7 +444,10 @@ Kernel response contents:
   ``ETHTOOL_A_LINKMODES_DUPLEX``              u8      duplex mode
   ``ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG``    u8      Master/slave port mode
   ``ETHTOOL_A_LINKMODES_MASTER_SLAVE_STATE``  u8      Master/slave port state
+<<<<<<< HEAD
   ``ETHTOOL_A_LINKMODES_RATE_MATCHING``       u8      PHY rate matching
+=======
+>>>>>>> b7ba80a49124 (Commit)
   ==========================================  ======  ==========================
 
 For ``ETHTOOL_A_LINKMODES_OURS``, value represents advertised modes and mask
@@ -458,7 +471,10 @@ Request contents:
   ``ETHTOOL_A_LINKMODES_SPEED``               u32     link speed (Mb/s)
   ``ETHTOOL_A_LINKMODES_DUPLEX``              u8      duplex mode
   ``ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG``    u8      Master/slave port mode
+<<<<<<< HEAD
   ``ETHTOOL_A_LINKMODES_RATE_MATCHING``       u8      PHY rate matching
+=======
+>>>>>>> b7ba80a49124 (Commit)
   ``ETHTOOL_A_LINKMODES_LANES``               u32     lanes
   ==========================================  ======  ==========================
 
@@ -496,7 +512,10 @@ Kernel response contents:
   ``ETHTOOL_A_LINKSTATE_SQI_MAX``       u32     Max support SQI value
   ``ETHTOOL_A_LINKSTATE_EXT_STATE``     u8      link extended state
   ``ETHTOOL_A_LINKSTATE_EXT_SUBSTATE``  u8      link extended substate
+<<<<<<< HEAD
   ``ETHTOOL_A_LINKSTATE_EXT_DOWN_CNT``  u32     count of link down events
+=======
+>>>>>>> b7ba80a49124 (Commit)
   ====================================  ======  ============================
 
 For most NIC drivers, the value of ``ETHTOOL_A_LINKSTATE_LINK`` returns
@@ -783,7 +802,11 @@ Kernel response contents:
   ``ETHTOOL_A_FEATURES_ACTIVE``         bitset  diff old vs. new active
   ====================================  ======  ==========================
 
+<<<<<<< HEAD
 Request contains only one bitset which can be either value/mask pair (request
+=======
+Request constains only one bitset which can be either value/mask pair (request
+>>>>>>> b7ba80a49124 (Commit)
 to change specific feature bits and leave the rest) or only a value (request
 to set all features to specified set).
 
@@ -874,7 +897,10 @@ Kernel response contents:
   ``ETHTOOL_A_RINGS_TCP_DATA_SPLIT``    u8      TCP header / data split
   ``ETHTOOL_A_RINGS_CQE_SIZE``          u32     Size of TX/RX CQE
   ``ETHTOOL_A_RINGS_TX_PUSH``           u8      flag of TX Push mode
+<<<<<<< HEAD
   ``ETHTOOL_A_RINGS_RX_PUSH``           u8      flag of RX Push mode
+=======
+>>>>>>> b7ba80a49124 (Commit)
   ====================================  ======  ===========================
 
 ``ETHTOOL_A_RINGS_TCP_DATA_SPLIT`` indicates whether the device is usable with
@@ -884,8 +910,13 @@ separate buffers. The device configuration must make it possible to receive
 full memory pages of data, for example because MTU is high enough or through
 HW-GRO.
 
+<<<<<<< HEAD
 ``ETHTOOL_A_RINGS_[RX|TX]_PUSH`` flag is used to enable descriptor fast
 path to send or receive packets. In ordinary path, driver fills descriptors in DRAM and
+=======
+``ETHTOOL_A_RINGS_TX_PUSH`` flag is used to enable descriptor fast
+path to send packets. In ordinary path, driver fills descriptors in DRAM and
+>>>>>>> b7ba80a49124 (Commit)
 notifies NIC hardware. In fast path, driver pushes descriptors to the device
 through MMIO writes, thus reducing the latency. However, enabling this feature
 may increase the CPU cost. Drivers may enforce additional per-packet
@@ -907,7 +938,10 @@ Request contents:
   ``ETHTOOL_A_RINGS_RX_BUF_LEN``        u32     size of buffers on the ring
   ``ETHTOOL_A_RINGS_CQE_SIZE``          u32     Size of TX/RX CQE
   ``ETHTOOL_A_RINGS_TX_PUSH``           u8      flag of TX Push mode
+<<<<<<< HEAD
   ``ETHTOOL_A_RINGS_RX_PUSH``           u8      flag of RX Push mode
+=======
+>>>>>>> b7ba80a49124 (Commit)
   ====================================  ======  ===========================
 
 Kernel checks that requested ring sizes do not exceed limits reported by
@@ -1009,9 +1043,12 @@ Kernel response contents:
   ``ETHTOOL_A_COALESCE_RATE_SAMPLE_INTERVAL``  u32     rate sampling interval
   ``ETHTOOL_A_COALESCE_USE_CQE_TX``            bool    timer reset mode, Tx
   ``ETHTOOL_A_COALESCE_USE_CQE_RX``            bool    timer reset mode, Rx
+<<<<<<< HEAD
   ``ETHTOOL_A_COALESCE_TX_AGGR_MAX_BYTES``     u32     max aggr size, Tx
   ``ETHTOOL_A_COALESCE_TX_AGGR_MAX_FRAMES``    u32     max aggr packets, Tx
   ``ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS``    u32     time (us), aggr, Tx
+=======
+>>>>>>> b7ba80a49124 (Commit)
   ===========================================  ======  =======================
 
 Attributes are only included in reply if their value is not zero or the
@@ -1030,6 +1067,7 @@ each packet event resets the timer. In this mode timer is used to force
 the interrupt if queue goes idle, while busy queues depend on the packet
 limit to trigger interrupts.
 
+<<<<<<< HEAD
 Tx aggregation consists of copying frames into a contiguous buffer so that they
 can be submitted as a single IO operation. ``ETHTOOL_A_COALESCE_TX_AGGR_MAX_BYTES``
 describes the maximum size in bytes for the submitted buffer.
@@ -1041,6 +1079,8 @@ block should be sent.
 This feature is mainly of interest for specific USB devices which does not cope
 well with frequent small-sized URBs transmissions.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 COALESCE_SET
 ============
 
@@ -1074,9 +1114,12 @@ Request contents:
   ``ETHTOOL_A_COALESCE_RATE_SAMPLE_INTERVAL``  u32     rate sampling interval
   ``ETHTOOL_A_COALESCE_USE_CQE_TX``            bool    timer reset mode, Tx
   ``ETHTOOL_A_COALESCE_USE_CQE_RX``            bool    timer reset mode, Rx
+<<<<<<< HEAD
   ``ETHTOOL_A_COALESCE_TX_AGGR_MAX_BYTES``     u32     max aggr size, Tx
   ``ETHTOOL_A_COALESCE_TX_AGGR_MAX_FRAMES``    u32     max aggr packets, Tx
   ``ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS``    u32     time (us), aggr, Tx
+=======
+>>>>>>> b7ba80a49124 (Commit)
   ===========================================  ======  =======================
 
 Request is rejected if it attributes declared as unsupported by driver (i.e.
@@ -1094,6 +1137,7 @@ Request contents:
 
   =====================================  ======  ==========================
   ``ETHTOOL_A_PAUSE_HEADER``             nested  request header
+<<<<<<< HEAD
   ``ETHTOOL_A_PAUSE_STATS_SRC``          u32     source of statistics
   =====================================  ======  ==========================
 
@@ -1106,6 +1150,10 @@ If absent from the request, stats will be provided with
 an ``ETHTOOL_A_PAUSE_STATS_SRC`` attribute in the response equal to
 ``ETHTOOL_MAC_STATS_SRC_AGGREGATE``.
 
+=======
+  =====================================  ======  ==========================
+
+>>>>>>> b7ba80a49124 (Commit)
 Kernel response contents:
 
   =====================================  ======  ==========================
@@ -1520,7 +1568,10 @@ Request contents:
 
   =======================================  ======  ==========================
   ``ETHTOOL_A_STATS_HEADER``               nested  request header
+<<<<<<< HEAD
   ``ETHTOOL_A_STATS_SRC``                  u32     source of statistics
+=======
+>>>>>>> b7ba80a49124 (Commit)
   ``ETHTOOL_A_STATS_GROUPS``               bitset  requested groups of stats
   =======================================  ======  ==========================
 
@@ -1529,8 +1580,11 @@ Kernel response contents:
  +-----------------------------------+--------+--------------------------------+
  | ``ETHTOOL_A_STATS_HEADER``        | nested | reply header                   |
  +-----------------------------------+--------+--------------------------------+
+<<<<<<< HEAD
  | ``ETHTOOL_A_STATS_SRC``           | u32    | source of statistics           |
  +-----------------------------------+--------+--------------------------------+
+=======
+>>>>>>> b7ba80a49124 (Commit)
  | ``ETHTOOL_A_STATS_GRP``           | nested | one or more group of stats     |
  +-+---------------------------------+--------+--------------------------------+
  | | ``ETHTOOL_A_STATS_GRP_ID``      | u32    | group ID - ``ETHTOOL_STATS_*`` |
@@ -1592,11 +1646,14 @@ Low and high bounds are inclusive, for example:
  etherStatsPkts512to1023Octets 512  1023
  ============================= ==== ====
 
+<<<<<<< HEAD
 ``ETHTOOL_A_STATS_SRC`` is optional. Similar to ``PAUSE_GET``, it takes values
 from ``enum ethtool_mac_stats_src``. If absent from the request, stats will be
 provided with an ``ETHTOOL_A_STATS_SRC`` attribute in the response equal to
 ``ETHTOOL_MAC_STATS_SRC_AGGREGATE``.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 PHC_VCLOCKS_GET
 ===============
 
@@ -1673,6 +1730,7 @@ For SFF-8636 modules, low power mode is forced by the host according to table
 For CMIS modules, low power mode is forced by the host according to table 6-12
 in revision 5.0 of the specification.
 
+<<<<<<< HEAD
 PSE_GET
 =======
 
@@ -1975,6 +2033,8 @@ The attributes are propagated to the driver through the following structure:
 .. kernel-doc:: include/linux/ethtool.h
     :identifiers: ethtool_mm_cfg
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Request translation
 ===================
 
@@ -2056,7 +2116,11 @@ are netlink only.
   ``ETHTOOL_GMODULEEEPROM``           ``ETHTOOL_MSG_MODULE_EEPROM_GET``
   ``ETHTOOL_GEEE``                    ``ETHTOOL_MSG_EEE_GET``
   ``ETHTOOL_SEEE``                    ``ETHTOOL_MSG_EEE_SET``
+<<<<<<< HEAD
   ``ETHTOOL_GRSSH``                   ``ETHTOOL_MSG_RSS_GET``
+=======
+  ``ETHTOOL_GRSSH``                   n/a
+>>>>>>> b7ba80a49124 (Commit)
   ``ETHTOOL_SRSSH``                   n/a
   ``ETHTOOL_GTUNABLE``                n/a
   ``ETHTOOL_STUNABLE``                n/a
@@ -2076,9 +2140,12 @@ are netlink only.
   n/a                                 ``ETHTOOL_MSG_PHC_VCLOCKS_GET``
   n/a                                 ``ETHTOOL_MSG_MODULE_GET``
   n/a                                 ``ETHTOOL_MSG_MODULE_SET``
+<<<<<<< HEAD
   n/a                                 ``ETHTOOL_MSG_PLCA_GET_CFG``
   n/a                                 ``ETHTOOL_MSG_PLCA_SET_CFG``
   n/a                                 ``ETHTOOL_MSG_PLCA_GET_STATUS``
   n/a                                 ``ETHTOOL_MSG_MM_GET``
   n/a                                 ``ETHTOOL_MSG_MM_SET``
+=======
+>>>>>>> b7ba80a49124 (Commit)
   =================================== =====================================

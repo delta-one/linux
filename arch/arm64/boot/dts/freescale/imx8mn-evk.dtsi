@@ -36,7 +36,10 @@
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
 		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+<<<<<<< HEAD
 		off-on-delay-us = <12000>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		enable-active-high;
 	};
 
@@ -160,11 +163,16 @@
 
 &i2c2 {
 	clock-frequency = <400000>;
+<<<<<<< HEAD
 	pinctrl-names = "default", "gpio";
 	pinctrl-0 = <&pinctrl_i2c2>;
 	pinctrl-1 = <&pinctrl_i2c2_gpio>;
 	scl-gpios = <&gpio5 16 GPIO_ACTIVE_HIGH>;
 	sda-gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;
+=======
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_i2c2>;
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 
 	ptn5110: tcpc@50 {
@@ -199,11 +207,16 @@
 
 &i2c3 {
 	clock-frequency = <400000>;
+<<<<<<< HEAD
 	pinctrl-names = "default", "gpio";
 	pinctrl-0 = <&pinctrl_i2c3>;
 	pinctrl-1 = <&pinctrl_i2c3_gpio>;
 	scl-gpios = <&gpio5 18 GPIO_ACTIVE_HIGH>;
 	sda-gpios = <&gpio5 19 GPIO_ACTIVE_HIGH>;
+=======
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_i2c3>;
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 
 	pca6416: gpio@20 {
@@ -247,6 +260,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &uart1 { /* BT */
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_uart1>;
@@ -256,6 +270,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &uart2 { /* console */
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_uart2>;
@@ -271,10 +287,13 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &usbphynop1 {
 	wakeup-source;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &usbotg1 {
 	dr_mode = "otg";
 	hnp-disable;
@@ -389,6 +408,7 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_i2c2_gpio: i2c2grp-gpio {
 		fsl,pins = <
 			MX8MN_IOMUXC_I2C2_SCL_GPIO5_IO16	0x1c3
@@ -396,6 +416,8 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_i2c3: i2c3grp {
 		fsl,pins = <
 			MX8MN_IOMUXC_I2C3_SCL_I2C3_SCL		0x400001c3
@@ -403,6 +425,7 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_i2c3_gpio: i2c3grp-gpio {
 		fsl,pins = <
 			MX8MN_IOMUXC_I2C3_SCL_GPIO5_IO18	0x1c3
@@ -410,6 +433,8 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_pmic: pmicirqgrp {
 		fsl,pins = <
 			MX8MN_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x141
@@ -453,6 +478,7 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_uart1: uart1grp {
 		fsl,pins = <
 			MX8MN_IOMUXC_UART1_RXD_UART1_DCE_RX	0x140
@@ -462,6 +488,8 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_uart2: uart2grp {
 		fsl,pins = <
 			MX8MN_IOMUXC_UART2_RXD_UART2_DCE_RX	0x140

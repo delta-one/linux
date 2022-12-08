@@ -855,6 +855,14 @@ struct csc_coef_yuv2rgb {
 	bool full_range;
 };
 
+<<<<<<< HEAD
+=======
+struct csc_coef_rgb2yuv {
+	int yr, yg, yb, cbr, cbg, cbb, crr, crg, crb;
+	bool full_range;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static void dispc_ovl_write_color_conv_coef(struct dispc_device *dispc,
 					    enum omap_plane_id plane,
 					    const struct csc_coef_yuv2rgb *ct)

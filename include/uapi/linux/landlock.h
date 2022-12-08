@@ -26,7 +26,11 @@ struct landlock_ruleset_attr {
 	 * Landlock filesystem access rights that are not part of
 	 * handled_access_fs are allowed.  This is needed for backward
 	 * compatibility reasons.  One exception is the
+<<<<<<< HEAD
 	 * %LANDLOCK_ACCESS_FS_REFER access right, which is always implicitly
+=======
+	 * LANDLOCK_ACCESS_FS_REFER access right, which is always implicitly
+>>>>>>> b7ba80a49124 (Commit)
 	 * handled, but must still be explicitly handled to add new rules with
 	 * this access right.
 	 */
@@ -96,18 +100,28 @@ struct landlock_path_beneath_attr {
  *
  * - %LANDLOCK_ACCESS_FS_EXECUTE: Execute a file.
  * - %LANDLOCK_ACCESS_FS_WRITE_FILE: Open a file with write access. Note that
+<<<<<<< HEAD
  *   you might additionally need the %LANDLOCK_ACCESS_FS_TRUNCATE right in order
  *   to overwrite files with :manpage:`open(2)` using ``O_TRUNC`` or
+=======
+ *   you might additionally need the `LANDLOCK_ACCESS_FS_TRUNCATE` right in
+ *   order to overwrite files with :manpage:`open(2)` using `O_TRUNC` or
+>>>>>>> b7ba80a49124 (Commit)
  *   :manpage:`creat(2)`.
  * - %LANDLOCK_ACCESS_FS_READ_FILE: Open a file with read access.
  * - %LANDLOCK_ACCESS_FS_TRUNCATE: Truncate a file with :manpage:`truncate(2)`,
  *   :manpage:`ftruncate(2)`, :manpage:`creat(2)`, or :manpage:`open(2)` with
+<<<<<<< HEAD
  *   ``O_TRUNC``. Whether an opened file can be truncated with
  *   :manpage:`ftruncate(2)` is determined during :manpage:`open(2)`, in the
  *   same way as read and write permissions are checked during
  *   :manpage:`open(2)` using %LANDLOCK_ACCESS_FS_READ_FILE and
  *   %LANDLOCK_ACCESS_FS_WRITE_FILE. This access right is available since the
  *   third version of the Landlock ABI.
+=======
+ *   `O_TRUNC`.  This access right is available since the third version of the
+ *   Landlock ABI.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * A directory can receive access rights related to files or directories.  The
  * following access right is applied to the directory itself, and the
@@ -130,6 +144,7 @@ struct landlock_path_beneath_attr {
  * - %LANDLOCK_ACCESS_FS_MAKE_BLOCK: Create (or rename or link) a block device.
  * - %LANDLOCK_ACCESS_FS_MAKE_SYM: Create (or rename or link) a symbolic link.
  * - %LANDLOCK_ACCESS_FS_REFER: Link or rename a file from or to a different
+<<<<<<< HEAD
  *   directory (i.e. reparent a file hierarchy).
  *
  *   This access right is available since the second version of the Landlock
@@ -161,6 +176,23 @@ struct landlock_path_beneath_attr {
  *
  *   If multiple requirements are not met, the ``EACCES`` error code takes
  *   precedence over ``EXDEV``.
+=======
+ *   directory (i.e. reparent a file hierarchy).  This access right is
+ *   available since the second version of the Landlock ABI.  This is also the
+ *   only access right which is always considered handled by any ruleset in
+ *   such a way that reparenting a file hierarchy is always denied by default.
+ *   To avoid privilege escalation, it is not enough to add a rule with this
+ *   access right.  When linking or renaming a file, the destination directory
+ *   hierarchy must also always have the same or a superset of restrictions of
+ *   the source hierarchy.  If it is not the case, or if the domain doesn't
+ *   handle this access right, such actions are denied by default with errno
+ *   set to EXDEV.  Linking also requires a LANDLOCK_ACCESS_FS_MAKE_* access
+ *   right on the destination directory, and renaming also requires a
+ *   LANDLOCK_ACCESS_FS_REMOVE_* access right on the source's (file or
+ *   directory) parent.  Otherwise, such actions are denied with errno set to
+ *   EACCES.  The EACCES errno prevails over EXDEV to let user space
+ *   efficiently deal with an unrecoverable error.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * .. warning::
  *

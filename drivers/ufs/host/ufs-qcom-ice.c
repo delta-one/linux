@@ -8,7 +8,11 @@
 
 #include <linux/delay.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/firmware/qcom/qcom_scm.h>
+=======
+#include <linux/qcom_scm.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "ufs-qcom.h"
 
@@ -118,6 +122,10 @@ int ufs_qcom_ice_init(struct ufs_qcom_host *host)
 	host->ice_mmio = devm_ioremap_resource(dev, res);
 	if (IS_ERR(host->ice_mmio)) {
 		err = PTR_ERR(host->ice_mmio);
+<<<<<<< HEAD
+=======
+		dev_err(dev, "Failed to map ICE registers; err=%d\n", err);
+>>>>>>> b7ba80a49124 (Commit)
 		return err;
 	}
 

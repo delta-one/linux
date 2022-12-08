@@ -46,6 +46,7 @@
 #define MLX4_BF_QP_SKIP_MASK	0xc0
 #define MLX4_MAX_BF_QP_RANGE	0x40
 
+<<<<<<< HEAD
 void mlx4_put_qp(struct mlx4_qp *qp)
 {
 	if (refcount_dec_and_test(&qp->refcount))
@@ -53,6 +54,8 @@ void mlx4_put_qp(struct mlx4_qp *qp)
 }
 EXPORT_SYMBOL_GPL(mlx4_put_qp);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void mlx4_qp_event(struct mlx4_dev *dev, u32 qpn, int event_type)
 {
 	struct mlx4_qp_table *qp_table = &mlx4_priv(dev)->qp_table;
@@ -71,8 +74,15 @@ void mlx4_qp_event(struct mlx4_dev *dev, u32 qpn, int event_type)
 		return;
 	}
 
+<<<<<<< HEAD
 	/* Need to call mlx4_put_qp() in event handler */
 	qp->event(qp, event_type);
+=======
+	qp->event(qp, event_type);
+
+	if (refcount_dec_and_test(&qp->refcount))
+		complete(&qp->free);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* used for INIT/CLOSE port logic */
@@ -528,7 +538,12 @@ EXPORT_SYMBOL_GPL(mlx4_qp_remove);
 
 void mlx4_qp_free(struct mlx4_dev *dev, struct mlx4_qp *qp)
 {
+<<<<<<< HEAD
 	mlx4_put_qp(qp);
+=======
+	if (refcount_dec_and_test(&qp->refcount))
+		complete(&qp->free);
+>>>>>>> b7ba80a49124 (Commit)
 	wait_for_completion(&qp->free);
 
 	mlx4_qp_free_icm(dev, qp->qpn);
@@ -701,8 +716,12 @@ static int mlx4_create_zones(struct mlx4_dev *dev,
 			err = mlx4_bitmap_init(*bitmap + k, 1,
 					       MLX4_QP_TABLE_RAW_ETH_SIZE - 1, 0,
 					       0);
+<<<<<<< HEAD
 			if (!err)
 				mlx4_bitmap_alloc_range(*bitmap + k, 1, 1, 0);
+=======
+			mlx4_bitmap_alloc_range(*bitmap + k, 1, 1, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (err)

@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2020 Red Hat GmbH
  *
@@ -242,7 +245,11 @@ static void __ebs_process_bios(struct work_struct *ws)
  * <offset>: offset in 512 bytes sectors into <dev_path>
  * <ebs>: emulated block size in units of 512 bytes exposed to the upper layer
  * [<ubs>]: underlying block size in units of 512 bytes imposed on the lower layer;
+<<<<<<< HEAD
  *	    optional, if not supplied, retrieve logical block size from underlying device
+=======
+ * 	    optional, if not supplied, retrieve logical block size from underlying device
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int ebs_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 {
@@ -391,7 +398,11 @@ static int ebs_map(struct dm_target *ti, struct bio *bio)
 }
 
 static void ebs_status(struct dm_target *ti, status_type_t type,
+<<<<<<< HEAD
 		       unsigned int status_flags, char *result, unsigned int maxlen)
+=======
+		       unsigned status_flags, char *result, unsigned maxlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ebs_c *ec = ti->private;
 

@@ -850,9 +850,12 @@
 		ocram: sram@f8000000 {
 			compatible = "mmio-sram";
 			reg = <0xf8000000 0x20000>;
+<<<<<<< HEAD
 			ranges = <0 0xf8000000 0x20000>;
 			#address-cells = <1>;
 			#size-cells = <1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			clocks = <&clks IMX5_CLK_OCRAM>;
 		};
 	};

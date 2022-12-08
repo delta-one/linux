@@ -183,7 +183,10 @@ SYM_CODE_START_LOCAL(__kvm_hyp_init_cpu)
 
 	/* Initialize EL2 CPU state to sane values. */
 	init_el2_state				// Clobbers x0..x2
+<<<<<<< HEAD
 	finalise_el2_state
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Enable MMU, set vectors and stack. */
 	mov	x0, x28

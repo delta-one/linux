@@ -10,7 +10,10 @@
 #include <rdma/ib_mad.h>
 #include <rdma/ib_umem.h>
 #include <rdma/mana-abi.h>
+<<<<<<< HEAD
 #include <rdma/uverbs_ioctl.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <net/mana/mana.h>
 
@@ -19,6 +22,7 @@
 	 SZ_512K | SZ_1M | SZ_2M)
 
 /* MANA doesn't have any limit for MR size */
+<<<<<<< HEAD
 #define MANA_IB_MAX_MR_SIZE	U64_MAX
 
 /*
@@ -26,6 +30,9 @@
  * that can possibly represent in 24 bits
  */
 #define MANA_IB_MAX_MR		0xFFFFFFu
+=======
+#define MANA_IB_MAX_MR_SIZE ((u64)(~(0ULL)))
+>>>>>>> b7ba80a49124 (Commit)
 
 struct mana_ib_dev {
 	struct ib_device ib_dev;
@@ -93,7 +100,11 @@ struct mana_ib_rwq_ind_table {
 };
 
 int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
+<<<<<<< HEAD
 				 mana_handle_t *gdma_region);
+=======
+				 mana_handle_t *gdma_region, u64 page_sz);
+>>>>>>> b7ba80a49124 (Commit)
 
 int mana_ib_gd_destroy_dma_region(struct mana_ib_dev *dev,
 				  mana_handle_t gdma_region);
@@ -139,6 +150,19 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
 
 int mana_ib_destroy_cq(struct ib_cq *ibcq, struct ib_udata *udata);
 
+<<<<<<< HEAD
+=======
+int mana_ib_gd_create_pd(struct mana_ib_dev *dev, u64 *pd_handle, u32 *pd_id,
+			 enum gdma_pd_flags flags);
+
+int mana_ib_gd_destroy_pd(struct mana_ib_dev *dev, u64 pd_handle);
+
+int mana_ib_gd_create_mr(struct mana_ib_dev *dev, struct mana_ib_mr *mr,
+			 struct gdma_create_mr_params *mr_params);
+
+int mana_ib_gd_destroy_mr(struct mana_ib_dev *dev, mana_handle_t mr_handle);
+
+>>>>>>> b7ba80a49124 (Commit)
 int mana_ib_alloc_pd(struct ib_pd *ibpd, struct ib_udata *udata);
 int mana_ib_dealloc_pd(struct ib_pd *ibpd, struct ib_udata *udata);
 

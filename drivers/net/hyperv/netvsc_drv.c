@@ -1264,12 +1264,20 @@ static void netvsc_get_vf_stats(struct net_device *net,
 		unsigned int start;
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&stats->syncp);
+=======
+			start = u64_stats_fetch_begin_irq(&stats->syncp);
+>>>>>>> b7ba80a49124 (Commit)
 			rx_packets = stats->rx_packets;
 			tx_packets = stats->tx_packets;
 			rx_bytes = stats->rx_bytes;
 			tx_bytes = stats->tx_bytes;
+<<<<<<< HEAD
 		} while (u64_stats_fetch_retry(&stats->syncp, start));
+=======
+		} while (u64_stats_fetch_retry_irq(&stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		tot->rx_packets += rx_packets;
 		tot->tx_packets += tx_packets;
@@ -1294,12 +1302,20 @@ static void netvsc_get_pcpu_stats(struct net_device *net,
 		unsigned int start;
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&stats->syncp);
+=======
+			start = u64_stats_fetch_begin_irq(&stats->syncp);
+>>>>>>> b7ba80a49124 (Commit)
 			this_tot->vf_rx_packets = stats->rx_packets;
 			this_tot->vf_tx_packets = stats->tx_packets;
 			this_tot->vf_rx_bytes = stats->rx_bytes;
 			this_tot->vf_tx_bytes = stats->tx_bytes;
+<<<<<<< HEAD
 		} while (u64_stats_fetch_retry(&stats->syncp, start));
+=======
+		} while (u64_stats_fetch_retry_irq(&stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 		this_tot->rx_packets = this_tot->vf_rx_packets;
 		this_tot->tx_packets = this_tot->vf_tx_packets;
 		this_tot->rx_bytes   = this_tot->vf_rx_bytes;
@@ -1318,20 +1334,34 @@ static void netvsc_get_pcpu_stats(struct net_device *net,
 
 		tx_stats = &nvchan->tx_stats;
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&tx_stats->syncp);
 			packets = tx_stats->packets;
 			bytes = tx_stats->bytes;
 		} while (u64_stats_fetch_retry(&tx_stats->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&tx_stats->syncp);
+			packets = tx_stats->packets;
+			bytes = tx_stats->bytes;
+		} while (u64_stats_fetch_retry_irq(&tx_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		this_tot->tx_bytes	+= bytes;
 		this_tot->tx_packets	+= packets;
 
 		rx_stats = &nvchan->rx_stats;
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&rx_stats->syncp);
 			packets = rx_stats->packets;
 			bytes = rx_stats->bytes;
 		} while (u64_stats_fetch_retry(&rx_stats->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&rx_stats->syncp);
+			packets = rx_stats->packets;
+			bytes = rx_stats->bytes;
+		} while (u64_stats_fetch_retry_irq(&rx_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		this_tot->rx_bytes	+= bytes;
 		this_tot->rx_packets	+= packets;
@@ -1370,21 +1400,36 @@ static void netvsc_get_stats64(struct net_device *net,
 
 		tx_stats = &nvchan->tx_stats;
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&tx_stats->syncp);
 			packets = tx_stats->packets;
 			bytes = tx_stats->bytes;
 		} while (u64_stats_fetch_retry(&tx_stats->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&tx_stats->syncp);
+			packets = tx_stats->packets;
+			bytes = tx_stats->bytes;
+		} while (u64_stats_fetch_retry_irq(&tx_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		t->tx_bytes	+= bytes;
 		t->tx_packets	+= packets;
 
 		rx_stats = &nvchan->rx_stats;
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&rx_stats->syncp);
 			packets = rx_stats->packets;
 			bytes = rx_stats->bytes;
 			multicast = rx_stats->multicast + rx_stats->broadcast;
 		} while (u64_stats_fetch_retry(&rx_stats->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&rx_stats->syncp);
+			packets = rx_stats->packets;
+			bytes = rx_stats->bytes;
+			multicast = rx_stats->multicast + rx_stats->broadcast;
+		} while (u64_stats_fetch_retry_irq(&rx_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		t->rx_bytes	+= bytes;
 		t->rx_packets	+= packets;
@@ -1527,24 +1572,40 @@ static void netvsc_get_ethtool_stats(struct net_device *dev,
 		tx_stats = &nvdev->chan_table[j].tx_stats;
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&tx_stats->syncp);
 			packets = tx_stats->packets;
 			bytes = tx_stats->bytes;
 			xdp_xmit = tx_stats->xdp_xmit;
 		} while (u64_stats_fetch_retry(&tx_stats->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&tx_stats->syncp);
+			packets = tx_stats->packets;
+			bytes = tx_stats->bytes;
+			xdp_xmit = tx_stats->xdp_xmit;
+		} while (u64_stats_fetch_retry_irq(&tx_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 		data[i++] = packets;
 		data[i++] = bytes;
 		data[i++] = xdp_xmit;
 
 		rx_stats = &nvdev->chan_table[j].rx_stats;
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&rx_stats->syncp);
+=======
+			start = u64_stats_fetch_begin_irq(&rx_stats->syncp);
+>>>>>>> b7ba80a49124 (Commit)
 			packets = rx_stats->packets;
 			bytes = rx_stats->bytes;
 			xdp_drop = rx_stats->xdp_drop;
 			xdp_redirect = rx_stats->xdp_redirect;
 			xdp_tx = rx_stats->xdp_tx;
+<<<<<<< HEAD
 		} while (u64_stats_fetch_retry(&rx_stats->syncp, start));
+=======
+		} while (u64_stats_fetch_retry_irq(&rx_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 		data[i++] = packets;
 		data[i++] = bytes;
 		data[i++] = xdp_drop;
@@ -2313,6 +2374,7 @@ static struct net_device *get_netvsc_byslot(const struct net_device *vf_netdev)
 
 	}
 
+<<<<<<< HEAD
 	/* Fallback path to check synthetic vf with
 	 * help of mac addr
 	 */
@@ -2325,6 +2387,8 @@ static struct net_device *get_netvsc_byslot(const struct net_device *vf_netdev)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	netdev_notice(vf_netdev,
 		      "no netdev found for vf serial:%u\n", serial);
 	return NULL;
@@ -2421,11 +2485,14 @@ static int netvsc_vf_changed(struct net_device *vf_netdev, unsigned long event)
 	if (net_device_ctx->data_path_is_vf == vf_is_up)
 		return NOTIFY_OK;
 
+<<<<<<< HEAD
 	if (vf_is_up && !net_device_ctx->vf_alloc) {
 		netdev_info(ndev, "Waiting for the VF association from host\n");
 		wait_for_completion(&net_device_ctx->vf_add);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = netvsc_switch_datapath(ndev, vf_is_up);
 
 	if (ret) {
@@ -2457,7 +2524,10 @@ static int netvsc_unregister_vf(struct net_device *vf_netdev)
 
 	netvsc_vf_setxdp(vf_netdev, NULL);
 
+<<<<<<< HEAD
 	reinit_completion(&net_device_ctx->vf_add);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	netdev_rx_handler_unregister(vf_netdev);
 	netdev_upper_dev_unlink(vf_netdev, ndev);
 	RCU_INIT_POINTER(net_device_ctx->vf_netdev, NULL);
@@ -2497,7 +2567,10 @@ static int netvsc_probe(struct hv_device *dev,
 
 	INIT_DELAYED_WORK(&net_device_ctx->dwork, netvsc_link_change);
 
+<<<<<<< HEAD
 	init_completion(&net_device_ctx->vf_add);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_init(&net_device_ctx->lock);
 	INIT_LIST_HEAD(&net_device_ctx->reconfig_events);
 	INIT_DELAYED_WORK(&net_device_ctx->vf_takeover, netvsc_vf_setup);
@@ -2559,9 +2632,12 @@ static int netvsc_probe(struct hv_device *dev,
 
 	netdev_lockdep_set_classes(net);
 
+<<<<<<< HEAD
 	net->xdp_features = NETDEV_XDP_ACT_BASIC | NETDEV_XDP_ACT_REDIRECT |
 			    NETDEV_XDP_ACT_NDO_XMIT;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* MTU range: 68 - 1500 or 65521 */
 	net->min_mtu = NETVSC_MTU_MIN;
 	if (nvdev->nvsp_version >= NVSP_PROTOCOL_VERSION_2)
@@ -2597,7 +2673,11 @@ no_net:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void netvsc_remove(struct hv_device *dev)
+=======
+static int netvsc_remove(struct hv_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct net_device_context *ndev_ctx;
 	struct net_device *vf_netdev, *net;
@@ -2606,7 +2686,11 @@ static void netvsc_remove(struct hv_device *dev)
 	net = hv_get_drvdata(dev);
 	if (net == NULL) {
 		dev_err(&dev->device, "No net device to remove\n");
+<<<<<<< HEAD
 		return;
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ndev_ctx = netdev_priv(net);
@@ -2640,6 +2724,10 @@ static void netvsc_remove(struct hv_device *dev)
 
 	free_percpu(ndev_ctx->vf_stats);
 	free_netdev(net);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int netvsc_suspend(struct hv_device *dev)

@@ -142,7 +142,12 @@ static int bcm63138_smp_boot_secondary(unsigned int cpu,
 	 */
 	ret = bcm63xx_pmb_power_on_cpu(dn);
 	of_node_put(dn);
+<<<<<<< HEAD
 
+=======
+	if (ret)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	iounmap(bootlut_base);
 

@@ -21,10 +21,13 @@
 	};
 };
 
+<<<<<<< HEAD
 &bluetooth0 {
 	brcm,board-type = "apple,atlantisb";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &wifi0 {
 	brcm,board-type = "apple,atlantisb";
 };

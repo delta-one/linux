@@ -9,10 +9,18 @@
 #include <linux/delay.h>
 #include <linux/dma-mapping.h>
 #include <linux/workqueue.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/fs.h>
 #include <linux/io-64-nonatomic-lo-hi.h>
 #include <linux/device.h>
 #include <linux/idr.h>
+<<<<<<< HEAD
+=======
+#include <linux/intel-svm.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/iommu.h>
 #include <uapi/linux/idxd.h>
 #include <linux/dmaengine.h>
@@ -149,12 +157,15 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
 	if (!idxd->wqs)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	idxd->wq_enable_map = bitmap_zalloc_node(idxd->max_wqs, GFP_KERNEL, dev_to_node(dev));
 	if (!idxd->wq_enable_map) {
 		kfree(idxd->wqs);
 		return -ENOMEM;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < idxd->max_wqs; i++) {
 		wq = kzalloc_node(sizeof(*wq), GFP_KERNEL, dev_to_node(dev));
 		if (!wq) {
@@ -181,7 +192,11 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
 		init_completion(&wq->wq_dead);
 		init_completion(&wq->wq_resurrect);
 		wq->max_xfer_bytes = WQ_DEFAULT_MAX_XFER;
+<<<<<<< HEAD
 		idxd_wq_set_max_batch_size(idxd->data->type, wq, WQ_DEFAULT_MAX_BATCH);
+=======
+		wq->max_batch_size = WQ_DEFAULT_MAX_BATCH;
+>>>>>>> b7ba80a49124 (Commit)
 		wq->enqcmds_retries = IDXD_ENQCMDS_RETRIES;
 		wq->wqcfg = kzalloc_node(idxd->wqcfg_size, GFP_KERNEL, dev_to_node(dev));
 		if (!wq->wqcfg) {
@@ -189,6 +204,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
 			rc = -ENOMEM;
 			goto err;
 		}
+<<<<<<< HEAD
 
 		if (idxd->hw.wq_cap.op_config) {
 			wq->opcap_bmap = bitmap_zalloc(IDXD_MAX_OPCAP_BITS, GFP_KERNEL);
@@ -199,6 +215,8 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
 			}
 			bitmap_copy(wq->opcap_bmap, idxd->opcap_bmap, IDXD_MAX_OPCAP_BITS);
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		idxd->wqs[i] = wq;
 	}
 
@@ -294,18 +312,25 @@ static int idxd_setup_groups(struct idxd_device *idxd)
 		}
 
 		idxd->groups[i] = group;
+<<<<<<< HEAD
 		if (idxd->hw.version <= DEVICE_VERSION_2 && !tc_override) {
+=======
+		if (idxd->hw.version < DEVICE_VERSION_2 && !tc_override) {
+>>>>>>> b7ba80a49124 (Commit)
 			group->tc_a = 1;
 			group->tc_b = 1;
 		} else {
 			group->tc_a = -1;
 			group->tc_b = -1;
 		}
+<<<<<<< HEAD
 		/*
 		 * The default value is the same as the value of
 		 * total read buffers in GRPCAP.
 		 */
 		group->rdbufs_allowed = idxd->max_rdbufs;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -388,6 +413,7 @@ static void idxd_read_table_offsets(struct idxd_device *idxd)
 	dev_dbg(dev, "IDXD Perfmon Offset: %#x\n", idxd->perfmon_offset);
 }
 
+<<<<<<< HEAD
 static void multi_u64_to_bmap(unsigned long *bmap, u64 *val, int count)
 {
 	int i, j, nr;
@@ -401,6 +427,8 @@ static void multi_u64_to_bmap(unsigned long *bmap, u64 *val, int count)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void idxd_read_caps(struct idxd_device *idxd)
 {
 	struct device *dev = &idxd->pdev->dev;
@@ -421,7 +449,11 @@ static void idxd_read_caps(struct idxd_device *idxd)
 
 	idxd->max_xfer_bytes = 1ULL << idxd->hw.gen_cap.max_xfer_shift;
 	dev_dbg(dev, "max xfer size: %llu bytes\n", idxd->max_xfer_bytes);
+<<<<<<< HEAD
 	idxd_set_max_batch_size(idxd->data->type, idxd, 1U << idxd->hw.gen_cap.max_batch_shift);
+=======
+	idxd->max_batch_size = 1U << idxd->hw.gen_cap.max_batch_shift;
+>>>>>>> b7ba80a49124 (Commit)
 	dev_dbg(dev, "max batch size: %u\n", idxd->max_batch_size);
 	if (idxd->hw.gen_cap.config_en)
 		set_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags);
@@ -459,7 +491,10 @@ static void idxd_read_caps(struct idxd_device *idxd)
 				IDXD_OPCAP_OFFSET + i * sizeof(u64));
 		dev_dbg(dev, "opcap[%d]: %#llx\n", i, idxd->hw.opcap.bits[i]);
 	}
+<<<<<<< HEAD
 	multi_u64_to_bmap(idxd->opcap_bmap, &idxd->hw.opcap.bits[0], 4);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_data *data)
@@ -481,12 +516,15 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
 	if (idxd->id < 0)
 		return NULL;
 
+<<<<<<< HEAD
 	idxd->opcap_bmap = bitmap_zalloc_node(IDXD_MAX_OPCAP_BITS, GFP_KERNEL, dev_to_node(dev));
 	if (!idxd->opcap_bmap) {
 		ida_free(&idxd_ida, idxd->id);
 		return NULL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	device_initialize(conf_dev);
 	conf_dev->parent = dev;
 	conf_dev->bus = &dsa_bus_type;
@@ -505,7 +543,33 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
 
 static int idxd_enable_system_pasid(struct idxd_device *idxd)
 {
+<<<<<<< HEAD
 	return -EOPNOTSUPP;
+=======
+	int flags;
+	unsigned int pasid;
+	struct iommu_sva *sva;
+
+	flags = SVM_FLAG_SUPERVISOR_MODE;
+
+	sva = iommu_sva_bind_device(&idxd->pdev->dev, NULL, &flags);
+	if (IS_ERR(sva)) {
+		dev_warn(&idxd->pdev->dev,
+			 "iommu sva bind failed: %ld\n", PTR_ERR(sva));
+		return PTR_ERR(sva);
+	}
+
+	pasid = iommu_sva_get_pasid(sva);
+	if (pasid == IOMMU_PASID_INVALID) {
+		iommu_sva_unbind_device(sva);
+		return -ENODEV;
+	}
+
+	idxd->sva = sva;
+	idxd->pasid = pasid;
+	dev_dbg(&idxd->pdev->dev, "system pasid: %u\n", pasid);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void idxd_disable_system_pasid(struct idxd_device *idxd)

@@ -538,7 +538,11 @@
 };
 
 &mdio3 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+	status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 	phy64: ethernet-phy@64 {
 		reg = <28>;
 	};

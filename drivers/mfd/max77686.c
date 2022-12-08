@@ -226,6 +226,10 @@ static int max77686_i2c_probe(struct i2c_client *i2c)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int max77686_suspend(struct device *dev)
 {
 	struct i2c_client *i2c = to_i2c_client(dev);
@@ -260,13 +264,23 @@ static int max77686_resume(struct device *dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 static DEFINE_SIMPLE_DEV_PM_OPS(max77686_pm, max77686_suspend, max77686_resume);
+=======
+#endif /* CONFIG_PM_SLEEP */
+
+static SIMPLE_DEV_PM_OPS(max77686_pm, max77686_suspend, max77686_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct i2c_driver max77686_i2c_driver = {
 	.driver = {
 		   .name = "max77686",
+<<<<<<< HEAD
 		   .pm = pm_sleep_ptr(&max77686_pm),
+=======
+		   .pm = &max77686_pm,
+>>>>>>> b7ba80a49124 (Commit)
 		   .of_match_table = max77686_pmic_dt_match,
 	},
 	.probe_new = max77686_i2c_probe,

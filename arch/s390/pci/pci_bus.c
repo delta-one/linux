@@ -41,7 +41,13 @@ static int zpci_nb_devices;
  */
 static int zpci_bus_prepare_device(struct zpci_dev *zdev)
 {
+<<<<<<< HEAD
 	int rc, i;
+=======
+	struct resource_entry *window, *n;
+	struct resource *res;
+	int rc;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!zdev_enabled(zdev)) {
 		rc = zpci_enable_device(zdev);
@@ -55,10 +61,17 @@ static int zpci_bus_prepare_device(struct zpci_dev *zdev)
 	}
 
 	if (!zdev->has_resources) {
+<<<<<<< HEAD
 		zpci_setup_bus_resources(zdev);
 		for (i = 0; i < PCI_STD_NUM_BARS; i++) {
 			if (zdev->bars[i].res)
 				pci_bus_add_resource(zdev->zbus->bus, zdev->bars[i].res, 0);
+=======
+		zpci_setup_bus_resources(zdev, &zdev->zbus->resources);
+		resource_list_for_each_entry_safe(window, n, &zdev->zbus->resources) {
+			res = window->res;
+			pci_bus_add_resource(zdev->zbus->bus, res, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -85,8 +98,14 @@ int zpci_bus_scan_device(struct zpci_dev *zdev)
 	if (!pdev)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	pci_lock_rescan_remove();
 	pci_bus_add_device(pdev);
+=======
+	pci_bus_add_device(pdev);
+	pci_lock_rescan_remove();
+	pci_bus_add_devices(zdev->zbus->bus);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_unlock_rescan_remove();
 
 	return 0;
@@ -129,8 +148,16 @@ void zpci_bus_remove_device(struct zpci_dev *zdev, bool set_error)
  * @zbus: the zbus to be scanned
  *
  * Enables and scans all PCI functions on the bus making them available to the
+<<<<<<< HEAD
  * common PCI code. If a PCI function fails to be initialized an error will be
  * returned but attempts will still be made for all other functions on the bus.
+=======
+ * common PCI code. If there is no function 0 on the zbus nothing is scanned. If
+ * a function does not have a slot yet because it was added to the zbus before
+ * function 0 the slot is created. If a PCI function fails to be initialized
+ * an error will be returned but attempts will still be made for all other
+ * functions on the bus.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Return: 0 on success, an error value otherwise
  */
@@ -207,6 +234,10 @@ static int zpci_bus_create_pci_bus(struct zpci_bus *zbus, struct zpci_dev *fr, s
 	}
 
 	zbus->bus = bus;
+<<<<<<< HEAD
+=======
+	pci_bus_add_devices(bus);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

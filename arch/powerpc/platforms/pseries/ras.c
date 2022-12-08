@@ -155,7 +155,11 @@ static int __init init_ras_IRQ(void)
 {
 	struct device_node *np;
 
+<<<<<<< HEAD
 	ras_check_exception_token = rtas_function_token(RTAS_FN_CHECK_EXCEPTION);
+=======
+	ras_check_exception_token = rtas_token("check-exception");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Internal Errors */
 	np = of_find_node_by_path("/event-sources/internal-errors");

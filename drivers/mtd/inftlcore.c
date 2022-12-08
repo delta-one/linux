@@ -356,7 +356,11 @@ static u16 INFTL_foldchain(struct INFTLrecord *inftl, unsigned thisVUC, unsigned
 	 * Newest unit in chain now contains data from _all_ older units.
 	 * So go through and erase each unit in chain, oldest first. (This
 	 * is important, by doing oldest first if we crash/reboot then it
+<<<<<<< HEAD
 	 * is relatively simple to clean up the mess).
+=======
+	 * it is relatively simple to clean up the mess).
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	pr_debug("INFTL: want to erase virtual chain %d\n", thisVUC);
 

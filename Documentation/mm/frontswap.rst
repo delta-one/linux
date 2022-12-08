@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _frontswap:
+
+>>>>>>> b7ba80a49124 (Commit)
 =========
 Frontswap
 =========

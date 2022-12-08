@@ -119,18 +119,31 @@ static int hp680bl_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void hp680bl_remove(struct platform_device *pdev)
+=======
+static int hp680bl_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct backlight_device *bd = platform_get_drvdata(pdev);
 
 	bd->props.brightness = 0;
 	bd->props.power = 0;
 	hp680bl_send_intensity(bd);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver hp680bl_driver = {
 	.probe		= hp680bl_probe,
+<<<<<<< HEAD
 	.remove_new	= hp680bl_remove,
+=======
+	.remove		= hp680bl_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "hp680-bl",
 		.pm	= &hp680bl_pm_ops,

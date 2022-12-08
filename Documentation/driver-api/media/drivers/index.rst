@@ -13,8 +13,15 @@ Video4Linux (V4L) drivers
 	:maxdepth: 5
 
 	bttv-devel
+<<<<<<< HEAD
 	cx2341x-devel
 	cx88-devel
+=======
+	cpia2_devel
+	cx2341x-devel
+	cx88-devel
+	davinci-vpbe-devel
+>>>>>>> b7ba80a49124 (Commit)
 	fimc-devel
 	pvrusb2
 	pxa_camera

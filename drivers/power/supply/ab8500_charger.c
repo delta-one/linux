@@ -1940,7 +1940,11 @@ static int ab8500_charger_get_ext_psy_data(struct device *dev, void *data)
  *
  * Due to a asic bug it is necessary to lower the input current to the vbus
  * charger when charging with at some specific levels. This issue is only valid
+<<<<<<< HEAD
  * for below a certain battery voltage. This function makes sure that
+=======
+ * for below a certain battery voltage. This function makes sure that the
+>>>>>>> b7ba80a49124 (Commit)
  * the allowed current limit isn't exceeded.
  */
 static void ab8500_charger_check_vbat_work(struct work_struct *work)
@@ -3719,6 +3723,7 @@ static int __init ab8500_charger_init(void)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = platform_driver_register(&ab8500_charger_driver);
 	if (ret) {
 		platform_unregister_drivers(ab8500_charger_component_drivers,
@@ -3727,6 +3732,9 @@ static int __init ab8500_charger_init(void)
 	}
 
 	return 0;
+=======
+	return platform_driver_register(&ab8500_charger_driver);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __exit ab8500_charger_exit(void)

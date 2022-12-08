@@ -6,6 +6,10 @@
 
 obj-$(CONFIG_TXGBE) += txgbe.o
 
+<<<<<<< HEAD
 txgbe-objs := txgbe_main.o \
               txgbe_hw.o \
               txgbe_ethtool.o
+=======
+txgbe-objs := txgbe_main.o
+>>>>>>> b7ba80a49124 (Commit)

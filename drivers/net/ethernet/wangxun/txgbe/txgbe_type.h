@@ -4,6 +4,18 @@
 #ifndef _TXGBE_TYPE_H_
 #define _TXGBE_TYPE_H_
 
+<<<<<<< HEAD
+=======
+#include <linux/types.h>
+#include <linux/netdevice.h>
+
+/************ txgbe_register.h ************/
+/* Vendor ID */
+#ifndef PCI_VENDOR_ID_WANGXUN
+#define PCI_VENDOR_ID_WANGXUN                   0x8088
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Device IDs */
 #define TXGBE_DEV_ID_SP1000                     0x1001
 #define TXGBE_DEV_ID_WX1820                     0x2001
@@ -33,12 +45,22 @@
 #define TXGBE_ID_WX1820_MAC_SGMII               0x2060
 #define TXGBE_ID_MAC_SGMII                      0x60
 
+<<<<<<< HEAD
+=======
+#define TXGBE_NCSI_SUP                          0x8000
+#define TXGBE_NCSI_MASK                         0x8000
+#define TXGBE_WOL_SUP                           0x4000
+#define TXGBE_WOL_MASK                          0x4000
+#define TXGBE_DEV_MASK                          0xf0
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Combined interface*/
 #define TXGBE_ID_SFI_XAUI			0x50
 
 /* Revision ID */
 #define TXGBE_SP_MPW  1
 
+<<<<<<< HEAD
 /**************** SP Registers ****************************/
 /* chip control Registers */
 #define TXGBE_MIS_PRB_CTL                       0x10010
@@ -99,4 +121,6 @@
 
 extern char txgbe_driver_name[];
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _TXGBE_TYPE_H_ */

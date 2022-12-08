@@ -2,8 +2,13 @@
 #ifndef _ASM_X86_DEBUGREG_H
 #define _ASM_X86_DEBUGREG_H
 
+<<<<<<< HEAD
 #include <linux/bug.h>
 #include <linux/percpu.h>
+=======
+
+#include <linux/bug.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <uapi/asm/debugreg.h>
 
 DECLARE_PER_CPU(unsigned long, cpu_dr7);
@@ -39,6 +44,7 @@ static __always_inline unsigned long native_get_debugreg(int regno)
 		asm("mov %%db6, %0" :"=r" (val));
 		break;
 	case 7:
+<<<<<<< HEAD
 		/*
 		 * Apply __FORCE_ORDER to DR7 reads to forbid re-ordering them
 		 * with other code.
@@ -53,6 +59,9 @@ static __always_inline unsigned long native_get_debugreg(int regno)
 		 * causing stack recursion.
 		 */
 		asm volatile("mov %%db7, %0" : "=r" (val) : __FORCE_ORDER);
+=======
+		asm("mov %%db7, %0" :"=r" (val));
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		BUG();
@@ -79,6 +88,7 @@ static __always_inline void native_set_debugreg(int regno, unsigned long value)
 		asm("mov %0, %%db6"	::"r" (value));
 		break;
 	case 7:
+<<<<<<< HEAD
 		/*
 		 * Apply __FORCE_ORDER to DR7 writes to forbid re-ordering them
 		 * with other code.
@@ -89,6 +99,9 @@ static __always_inline void native_set_debugreg(int regno, unsigned long value)
 		 * future.
 		 */
 		asm volatile("mov %0, %%db7"	::"r" (value), __FORCE_ORDER);
+=======
+		asm("mov %0, %%db7"	::"r" (value));
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		BUG();
@@ -148,6 +161,7 @@ static __always_inline void local_db_restore(unsigned long dr7)
 }
 
 #ifdef CONFIG_CPU_SUP_AMD
+<<<<<<< HEAD
 extern void amd_set_dr_addr_mask(unsigned long mask, unsigned int dr);
 extern unsigned long amd_get_dr_addr_mask(unsigned int dr);
 #else
@@ -156,6 +170,11 @@ static inline unsigned long amd_get_dr_addr_mask(unsigned int dr)
 {
 	return 0;
 }
+=======
+extern void set_dr_addr_mask(unsigned long mask, int dr);
+#else
+static inline void set_dr_addr_mask(unsigned long mask, int dr) { }
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #endif /* _ASM_X86_DEBUGREG_H */

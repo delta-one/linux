@@ -332,7 +332,10 @@ struct iosm_mux *ipc_mux_init(struct ipc_mux_config *mux_cfg,
 			if (!ipc_mux->ul_adb.pp_qlt[i]) {
 				for (j = i - 1; j >= 0; j--)
 					kfree(ipc_mux->ul_adb.pp_qlt[j]);
+<<<<<<< HEAD
 				kfree(ipc_mux);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				return NULL;
 			}
 		}

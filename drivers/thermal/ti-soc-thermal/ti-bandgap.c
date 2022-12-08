@@ -878,7 +878,11 @@ static struct ti_bandgap *ti_bandgap_build(struct platform_device *pdev)
  */
 static const struct soc_device_attribute soc_no_cpu_notifier[] = {
 	{ .machine = "OMAP4430" },
+<<<<<<< HEAD
 	{ /* sentinel */ }
+=======
+	{ /* sentinel */ },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /***   Device driver call backs   ***/

@@ -185,6 +185,7 @@ err_rhashtable_init:
 	return ERR_PTR(err);
 }
 
+<<<<<<< HEAD
 int prestera_acl_ruleset_keymask_set(struct prestera_acl_ruleset *ruleset,
 				     void *keymask)
 {
@@ -193,6 +194,12 @@ int prestera_acl_ruleset_keymask_set(struct prestera_acl_ruleset *ruleset,
 		return -ENOMEM;
 
 	return 0;
+=======
+void prestera_acl_ruleset_keymask_set(struct prestera_acl_ruleset *ruleset,
+				      void *keymask)
+{
+	ruleset->keymask = kmemdup(keymask, ACL_KEYMASK_SIZE, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int prestera_acl_ruleset_offload(struct prestera_acl_ruleset *ruleset)

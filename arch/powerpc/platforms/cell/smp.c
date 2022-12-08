@@ -81,7 +81,11 @@ static inline int smp_startup_cpu(unsigned int lcpu)
 	 * If the RTAS start-cpu token does not exist then presume the
 	 * cpu is already spinning.
 	 */
+<<<<<<< HEAD
 	start_cpu = rtas_function_token(RTAS_FN_START_CPU);
+=======
+	start_cpu = rtas_token("start-cpu");
+>>>>>>> b7ba80a49124 (Commit)
 	if (start_cpu == RTAS_UNKNOWN_SERVICE)
 		return 1;
 
@@ -152,7 +156,11 @@ void __init smp_init_cell(void)
 	cpumask_clear_cpu(boot_cpuid, &of_spin_map);
 
 	/* Non-lpar has additional take/give timebase */
+<<<<<<< HEAD
 	if (rtas_function_token(RTAS_FN_FREEZE_TIME_BASE) != RTAS_UNKNOWN_SERVICE) {
+=======
+	if (rtas_token("freeze-time-base") != RTAS_UNKNOWN_SERVICE) {
+>>>>>>> b7ba80a49124 (Commit)
 		smp_ops->give_timebase = rtas_give_timebase;
 		smp_ops->take_timebase = rtas_take_timebase;
 	}

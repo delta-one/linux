@@ -18,11 +18,19 @@
 #define TSNEP "tsnep"
 
 #define TSNEP_RING_SIZE 256
+<<<<<<< HEAD
 #define TSNEP_RING_RX_REFILL 16
 #define TSNEP_RING_RX_REUSE (TSNEP_RING_SIZE - TSNEP_RING_SIZE / 4)
 #define TSNEP_RING_ENTRIES_PER_PAGE (PAGE_SIZE / TSNEP_DESC_SIZE)
 #define TSNEP_RING_PAGE_COUNT (TSNEP_RING_SIZE / TSNEP_RING_ENTRIES_PER_PAGE)
 
+=======
+#define TSNEP_RING_ENTRIES_PER_PAGE (PAGE_SIZE / TSNEP_DESC_SIZE)
+#define TSNEP_RING_PAGE_COUNT (TSNEP_RING_SIZE / TSNEP_RING_ENTRIES_PER_PAGE)
+
+#define TSNEP_QUEUES 1
+
+>>>>>>> b7ba80a49124 (Commit)
 struct tsnep_gcl {
 	void __iomem *addr;
 
@@ -39,6 +47,7 @@ struct tsnep_gcl {
 	bool change;
 };
 
+<<<<<<< HEAD
 enum tsnep_rxnfc_filter_type {
 	TSNEP_RXNFC_ETHER_TYPE,
 };
@@ -57,6 +66,8 @@ struct tsnep_rxnfc_rule {
 	int location;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct tsnep_tx_entry {
 	struct tsnep_tx_desc *desc;
 	struct tsnep_tx_desc_wb *desc_wb;
@@ -65,11 +76,15 @@ struct tsnep_tx_entry {
 
 	u32 properties;
 
+<<<<<<< HEAD
 	u32 type;
 	union {
 		struct sk_buff *skb;
 		struct xdp_frame *xdpf;
 	};
+=======
+	struct sk_buff *skb;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t len;
 	DEFINE_DMA_UNMAP_ADDR(dma);
 };
@@ -77,11 +92,19 @@ struct tsnep_tx_entry {
 struct tsnep_tx {
 	struct tsnep_adapter *adapter;
 	void __iomem *addr;
+<<<<<<< HEAD
 	int queue_index;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	void *page[TSNEP_RING_PAGE_COUNT];
 	dma_addr_t page_dma[TSNEP_RING_PAGE_COUNT];
 
+<<<<<<< HEAD
+=======
+	/* TX ring lock */
+	spinlock_t lock;
+>>>>>>> b7ba80a49124 (Commit)
 	struct tsnep_tx_entry entry[TSNEP_RING_SIZE];
 	int write;
 	int read;
@@ -100,49 +123,74 @@ struct tsnep_rx_entry {
 
 	u32 properties;
 
+<<<<<<< HEAD
 	struct page *page;
 	size_t len;
 	dma_addr_t dma;
+=======
+	struct sk_buff *skb;
+	size_t len;
+	DEFINE_DMA_UNMAP_ADDR(dma);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct tsnep_rx {
 	struct tsnep_adapter *adapter;
 	void __iomem *addr;
 	int queue_index;
+<<<<<<< HEAD
 	int tx_queue_index;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	void *page[TSNEP_RING_PAGE_COUNT];
 	dma_addr_t page_dma[TSNEP_RING_PAGE_COUNT];
 
 	struct tsnep_rx_entry entry[TSNEP_RING_SIZE];
+<<<<<<< HEAD
 	int write;
 	int read;
 	u32 owner_counter;
 	int increment_owner_counter;
 	struct page_pool *page_pool;
+=======
+	int read;
+	u32 owner_counter;
+	int increment_owner_counter;
+>>>>>>> b7ba80a49124 (Commit)
 
 	u32 packets;
 	u32 bytes;
 	u32 dropped;
 	u32 multicast;
+<<<<<<< HEAD
 	u32 alloc_failed;
 
 	struct xdp_rxq_info xdp_rxq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct tsnep_queue {
 	struct tsnep_adapter *adapter;
+<<<<<<< HEAD
 	char name[IFNAMSIZ + 9];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct tsnep_tx *tx;
 	struct tsnep_rx *rx;
 
 	struct napi_struct napi;
 
+<<<<<<< HEAD
 	int irq;
 	u32 irq_mask;
 	void __iomem *irq_delay_addr;
 	u8 irq_delay;
+=======
+	u32 irq_mask;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct tsnep_adapter {
@@ -157,6 +205,10 @@ struct tsnep_adapter {
 	struct platform_device *pdev;
 	struct device *dmadev;
 	void __iomem *addr;
+<<<<<<< HEAD
+=======
+	int irq;
+>>>>>>> b7ba80a49124 (Commit)
 
 	bool gate_control;
 	/* gate control lock */
@@ -171,6 +223,7 @@ struct tsnep_adapter {
 	/* ptp clock lock */
 	spinlock_t ptp_lock;
 
+<<<<<<< HEAD
 	/* RX flow classification rules lock */
 	struct mutex rxnfc_lock;
 	struct list_head rxnfc_rules;
@@ -179,6 +232,8 @@ struct tsnep_adapter {
 
 	struct bpf_prog *xdp_prog;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int num_tx_queues;
 	struct tsnep_tx tx[TSNEP_MAX_QUEUES];
 	int num_rx_queues;
@@ -199,6 +254,7 @@ void tsnep_tc_cleanup(struct tsnep_adapter *adapter);
 int tsnep_tc_setup(struct net_device *netdev, enum tc_setup_type type,
 		   void *type_data);
 
+<<<<<<< HEAD
 int tsnep_rxnfc_init(struct tsnep_adapter *adapter);
 void tsnep_rxnfc_cleanup(struct tsnep_adapter *adapter);
 int tsnep_rxnfc_get_rule(struct tsnep_adapter *adapter,
@@ -214,6 +270,8 @@ int tsnep_rxnfc_del_rule(struct tsnep_adapter *adapter,
 int tsnep_xdp_setup_prog(struct tsnep_adapter *adapter, struct bpf_prog *prog,
 			 struct netlink_ext_ack *extack);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if IS_ENABLED(CONFIG_TSNEP_SELFTESTS)
 int tsnep_ethtool_get_test_count(void);
 void tsnep_ethtool_get_test_strings(u8 *data);
@@ -239,7 +297,10 @@ static inline void tsnep_ethtool_self_test(struct net_device *dev,
 #endif /* CONFIG_TSNEP_SELFTESTS */
 
 void tsnep_get_system_time(struct tsnep_adapter *adapter, u64 *time);
+<<<<<<< HEAD
 int tsnep_set_irq_coalesce(struct tsnep_queue *queue, u32 usecs);
 u32 tsnep_get_irq_coalesce(struct tsnep_queue *queue);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _TSNEP_H */

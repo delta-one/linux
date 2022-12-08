@@ -36,7 +36,11 @@ struct nvkm_acr {
 	const struct nvkm_acr_func *func;
 	struct nvkm_subdev subdev;
 
+<<<<<<< HEAD
 	struct list_head hsfw;
+=======
+	struct list_head hsfw, hsf;
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head lsfw, lsf;
 
 	u64 managed_falcons;
@@ -50,7 +54,10 @@ struct nvkm_acr {
 	struct nvkm_vmm *vmm;
 
 	bool done;
+<<<<<<< HEAD
 	struct nvkm_acr_lsf *rtos;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	const struct firmware *wpr_fw;
 	bool wpr_comp;
@@ -65,9 +72,13 @@ int gm20b_acr_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct 
 int gp102_acr_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_acr **);
 int gp108_acr_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_acr **);
 int gp10b_acr_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_acr **);
+<<<<<<< HEAD
 int gv100_acr_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_acr **);
 int tu102_acr_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_acr **);
 int ga102_acr_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_acr **);
+=======
+int tu102_acr_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_acr **);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct nvkm_acr_lsfw {
 	const struct nvkm_acr_lsf_func *func;
@@ -80,7 +91,10 @@ struct nvkm_acr_lsfw {
 
 	const struct firmware *sig;
 
+<<<<<<< HEAD
 	bool secure_bootloader;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 bootloader_size;
 	u32 bootloader_imem_offset;
 
@@ -91,12 +105,16 @@ struct nvkm_acr_lsfw {
 	u32 app_resident_code_size;
 	u32 app_resident_data_offset;
 	u32 app_resident_data_size;
+<<<<<<< HEAD
 	u32 app_imem_offset;
 	u32 app_dmem_offset;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	u32 ucode_size;
 	u32 data_size;
 
+<<<<<<< HEAD
 	u32 fuse_ver;
 	u32 engine_id;
 	u32 ucode_id;
@@ -104,6 +122,8 @@ struct nvkm_acr_lsfw {
 	u32 sig_nr;
 	u8 *sigs;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct {
 		u32 lsb;
 		u32 img;
@@ -118,10 +138,17 @@ struct nvkm_acr_lsf_func {
 #define NVKM_ACR_LSF_DMACTL_REQ_CTX                                  0x00000004
 #define NVKM_ACR_LSF_FORCE_PRIV_LOAD                                 0x00000008
 	u32 flags;
+<<<<<<< HEAD
 	u32 bl_entry;
 	u32 bld_size;
 	void (*bld_write)(struct nvkm_acr *, u32 bld, struct nvkm_acr_lsfw *);
 	void (*bld_patch)(struct nvkm_acr *, u32 bld, s64 adjust);
+=======
+	u32 bld_size;
+	void (*bld_write)(struct nvkm_acr *, u32 bld, struct nvkm_acr_lsfw *);
+	void (*bld_patch)(struct nvkm_acr *, u32 bld, s64 adjust);
+	int (*boot)(struct nvkm_falcon *);
+>>>>>>> b7ba80a49124 (Commit)
 	u64 bootstrap_falcons;
 	int (*bootstrap_falcon)(struct nvkm_falcon *, enum nvkm_acr_lsf_id);
 	int (*bootstrap_multiple_falcons)(struct nvkm_falcon *, u32 mask);
@@ -135,20 +162,26 @@ int
 nvkm_acr_lsfw_load_sig_image_desc_v1(struct nvkm_subdev *, struct nvkm_falcon *,
 				     enum nvkm_acr_lsf_id, const char *path,
 				     int ver, const struct nvkm_acr_lsf_func *);
+<<<<<<< HEAD
 
 int
 nvkm_acr_lsfw_load_sig_image_desc_v2(struct nvkm_subdev *, struct nvkm_falcon *,
 				     enum nvkm_acr_lsf_id, const char *path,
 				     int ver, const struct nvkm_acr_lsf_func *);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int
 nvkm_acr_lsfw_load_bl_inst_data_sig(struct nvkm_subdev *, struct nvkm_falcon *,
 				    enum nvkm_acr_lsf_id, const char *path,
 				    int ver, const struct nvkm_acr_lsf_func *);
+<<<<<<< HEAD
 
 int
 nvkm_acr_lsfw_load_bl_sig_net(struct nvkm_subdev *, struct nvkm_falcon *,
 				    enum nvkm_acr_lsf_id, const char *path,
 				    int ver, const struct nvkm_acr_lsf_func *,
 				    const void *, u32, const void *, u32);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

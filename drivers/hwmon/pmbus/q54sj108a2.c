@@ -8,7 +8,10 @@
 
 #include <linux/debugfs.h>
 #include <linux/i2c.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/of_device.h>
 #include "pmbus.h"

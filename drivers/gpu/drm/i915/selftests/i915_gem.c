@@ -44,7 +44,11 @@ static void trash_stolen(struct drm_i915_private *i915)
 {
 	struct i915_ggtt *ggtt = to_gt(i915)->ggtt;
 	const u64 slot = ggtt->error_capture.start;
+<<<<<<< HEAD
 	const resource_size_t size = resource_size(&i915->dsm.stolen);
+=======
+	const resource_size_t size = resource_size(&i915->dsm);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long page;
 	u32 prng = 0x12345678;
 
@@ -53,7 +57,11 @@ static void trash_stolen(struct drm_i915_private *i915)
 		return;
 
 	for (page = 0; page < size; page += PAGE_SIZE) {
+<<<<<<< HEAD
 		const dma_addr_t dma = i915->dsm.stolen.start + page;
+=======
+		const dma_addr_t dma = i915->dsm.start + page;
+>>>>>>> b7ba80a49124 (Commit)
 		u32 __iomem *s;
 		int x;
 
@@ -127,8 +135,11 @@ static void igt_pm_resume(struct drm_i915_private *i915)
 	 */
 	with_intel_runtime_pm(&i915->runtime_pm, wakeref) {
 		i915_ggtt_resume(to_gt(i915)->ggtt);
+<<<<<<< HEAD
 		if (GRAPHICS_VER(i915) >= 8)
 			setup_private_pat(to_gt(i915));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		i915_gem_resume(i915);
 	}
 }

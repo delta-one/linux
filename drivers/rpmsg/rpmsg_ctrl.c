@@ -194,12 +194,18 @@ static void rpmsg_ctrldev_remove(struct rpmsg_device *rpdev)
 	struct rpmsg_ctrldev *ctrldev = dev_get_drvdata(&rpdev->dev);
 	int ret;
 
+<<<<<<< HEAD
 	mutex_lock(&ctrldev->ctrl_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Destroy all endpoints */
 	ret = device_for_each_child(&ctrldev->dev, NULL, rpmsg_chrdev_eptdev_destroy);
 	if (ret)
 		dev_warn(&rpdev->dev, "failed to nuke endpoints: %d\n", ret);
+<<<<<<< HEAD
 	mutex_unlock(&ctrldev->ctrl_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	cdev_device_del(&ctrldev->cdev, &ctrldev->dev);
 	put_device(&ctrldev->dev);

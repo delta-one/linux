@@ -6,7 +6,13 @@
 # Heavily based on the vDSO Makefiles for other archs.
 #
 
+<<<<<<< HEAD
 # Include the generic Makefile to check the built vdso.
+=======
+# Absolute relocation type $(ARCH_REL_TYPE_ABS) needs to be defined before
+# the inclusion of generic Makefile.
+ARCH_REL_TYPE_ABS := R_AARCH64_JUMP_SLOT|R_AARCH64_GLOB_DAT|R_AARCH64_ABS64
+>>>>>>> b7ba80a49124 (Commit)
 include $(srctree)/lib/vdso/Makefile
 
 obj-vdso := vgettimeofday.o note.o sigreturn.o
@@ -25,7 +31,11 @@ ldflags-y := -shared -soname=linux-vdso.so.1 --hash-style=sysv	\
 	     -Bsymbolic --build-id=sha1 -n $(btildflags-y)
 
 ifdef CONFIG_LD_ORPHAN_WARN
+<<<<<<< HEAD
   ldflags-y += --orphan-handling=$(CONFIG_LD_ORPHAN_WARN_LEVEL)
+=======
+  ldflags-y += --orphan-handling=warn
+>>>>>>> b7ba80a49124 (Commit)
 endif
 
 ldflags-y += -T
@@ -38,8 +48,12 @@ ccflags-y += -DDISABLE_BRANCH_PROFILING -DBUILD_VDSO
 # kernel with CONFIG_WERROR enabled.
 CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) -Os $(CC_FLAGS_SCS) \
 				$(RANDSTRUCT_CFLAGS) $(GCC_PLUGINS_CFLAGS) \
+<<<<<<< HEAD
 				$(CC_FLAGS_LTO) $(CC_FLAGS_CFI) \
 				-Wmissing-prototypes -Wmissing-declarations
+=======
+				$(CC_FLAGS_LTO) -Wmissing-prototypes -Wmissing-declarations
+>>>>>>> b7ba80a49124 (Commit)
 KASAN_SANITIZE			:= n
 KCSAN_SANITIZE			:= n
 UBSAN_SANITIZE			:= n

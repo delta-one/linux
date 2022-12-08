@@ -2,7 +2,10 @@
 #include <linux/types.h>
 #include <linux/string.h>
 #include <linux/zalloc.h>
+<<<<<<< HEAD
 #include <stdlib.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "../../../util/event.h"
 #include "../../../util/synthetic-events.h"
@@ -10,7 +13,10 @@
 #include "../../../util/tool.h"
 #include "../../../util/map.h"
 #include "../../../util/debug.h"
+<<<<<<< HEAD
 #include "util/sample.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #if defined(__x86_64__)
 
@@ -89,7 +95,10 @@ void arch_perf_parse_sample_weight(struct perf_sample *data,
 	else {
 		data->weight = weight.var1_dw;
 		data->ins_lat = weight.var2_w;
+<<<<<<< HEAD
 		data->retire_lat = weight.var3_w;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -101,6 +110,7 @@ void arch_perf_synthesize_sample_weight(const struct perf_sample *data,
 	if (type & PERF_SAMPLE_WEIGHT_STRUCT) {
 		*array &= 0xffffffff;
 		*array |= ((u64)data->ins_lat << 32);
+<<<<<<< HEAD
 		*array |= ((u64)data->retire_lat << 48);
 	}
 }
@@ -123,3 +133,7 @@ int arch_support_sort_key(const char *sort_key)
 		return 1;
 	return 0;
 }
+=======
+	}
+}
+>>>>>>> b7ba80a49124 (Commit)

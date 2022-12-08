@@ -497,6 +497,10 @@ static const struct pm_irq_data pm8821_data = {
 };
 
 static const struct of_device_id pm8xxx_id_table[] = {
+<<<<<<< HEAD
+=======
+	{ .compatible = "qcom,pm8018", .data = &pm8xxx_data},
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "qcom,pm8058", .data = &pm8xxx_data},
 	{ .compatible = "qcom,pm8821", .data = &pm8821_data},
 	{ .compatible = "qcom,pm8921", .data = &pm8xxx_data},
@@ -510,6 +514,10 @@ static int pm8xxx_probe(struct platform_device *pdev)
 	struct regmap *regmap;
 	int irq, rc;
 	unsigned int val;
+<<<<<<< HEAD
+=======
+	u32 rev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct pm_irq_chip *chip;
 
 	data = of_device_get_match_data(&pdev->dev);
@@ -534,6 +542,10 @@ static int pm8xxx_probe(struct platform_device *pdev)
 		return rc;
 	}
 	pr_info("PMIC revision 1: %02X\n", val);
+<<<<<<< HEAD
+=======
+	rev = val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Read PMIC chip revision 2 */
 	rc = regmap_read(regmap, REG_HWREV_2, &val);
@@ -543,6 +555,10 @@ static int pm8xxx_probe(struct platform_device *pdev)
 		return rc;
 	}
 	pr_info("PMIC revision 2: %02X\n", val);
+<<<<<<< HEAD
+=======
+	rev |= val << BITS_PER_BYTE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	chip = devm_kzalloc(&pdev->dev,
 			    struct_size(chip, config, data->num_irqs),

@@ -117,6 +117,7 @@ static struct mutex *bp_constraints_lock(struct perf_event *bp)
 	struct mutex *tsk_mtx = get_task_bps_mutex(bp);
 
 	if (tsk_mtx) {
+<<<<<<< HEAD
 		/*
 		 * Fully analogous to the perf_try_init_event() nesting
 		 * argument in the comment near perf_event_ctx_lock_nested();
@@ -128,6 +129,9 @@ static struct mutex *bp_constraints_lock(struct perf_event *bp)
 		 * ->perf_event_list.
 		 */
 		mutex_lock_nested(tsk_mtx, SINGLE_DEPTH_NESTING);
+=======
+		mutex_lock(tsk_mtx);
+>>>>>>> b7ba80a49124 (Commit)
 		percpu_down_read(&bp_cpuinfo_sem);
 	} else {
 		percpu_down_write(&bp_cpuinfo_sem);

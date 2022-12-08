@@ -167,7 +167,11 @@ static void sun4i_spi_set_cs(struct spi_device *spi, bool enable)
 	reg = sun4i_spi_read(sspi, SUN4I_CTL_REG);
 
 	reg &= ~SUN4I_CTL_CS_MASK;
+<<<<<<< HEAD
 	reg |= SUN4I_CTL_CS(spi_get_chipselect(spi, 0));
+=======
+	reg |= SUN4I_CTL_CS(spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* We want to control the chip select manually */
 	reg |= SUN4I_CTL_CS_MANUAL;
@@ -516,9 +520,17 @@ err_free_master:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void sun4i_spi_remove(struct platform_device *pdev)
 {
 	pm_runtime_force_suspend(&pdev->dev);
+=======
+static int sun4i_spi_remove(struct platform_device *pdev)
+{
+	pm_runtime_force_suspend(&pdev->dev);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id sun4i_spi_match[] = {
@@ -534,7 +546,11 @@ static const struct dev_pm_ops sun4i_spi_pm_ops = {
 
 static struct platform_driver sun4i_spi_driver = {
 	.probe	= sun4i_spi_probe,
+<<<<<<< HEAD
 	.remove_new = sun4i_spi_remove,
+=======
+	.remove	= sun4i_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name		= "sun4i-spi",
 		.of_match_table	= sun4i_spi_match,

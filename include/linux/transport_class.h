@@ -70,6 +70,7 @@ void transport_destroy_device(struct device *);
 static inline int
 transport_register_device(struct device *dev)
 {
+<<<<<<< HEAD
 	int ret;
 
 	transport_setup_device(dev);
@@ -78,6 +79,10 @@ transport_register_device(struct device *dev)
 		transport_destroy_device(dev);
 
 	return ret;
+=======
+	transport_setup_device(dev);
+	return transport_add_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void

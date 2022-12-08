@@ -19,12 +19,49 @@
 
 #include "fan.h"
 
+<<<<<<< HEAD
+=======
+MODULE_AUTHOR("Paul Diefenbaugh");
+MODULE_DESCRIPTION("ACPI Fan Driver");
+MODULE_LICENSE("GPL");
+
+static int acpi_fan_probe(struct platform_device *pdev);
+static int acpi_fan_remove(struct platform_device *pdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct acpi_device_id fan_device_ids[] = {
 	ACPI_FAN_DEVICE_IDS,
 	{"", 0},
 };
 MODULE_DEVICE_TABLE(acpi, fan_device_ids);
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+static int acpi_fan_suspend(struct device *dev);
+static int acpi_fan_resume(struct device *dev);
+static const struct dev_pm_ops acpi_fan_pm = {
+	.resume = acpi_fan_resume,
+	.freeze = acpi_fan_suspend,
+	.thaw = acpi_fan_resume,
+	.restore = acpi_fan_resume,
+};
+#define FAN_PM_OPS_PTR (&acpi_fan_pm)
+#else
+#define FAN_PM_OPS_PTR NULL
+#endif
+
+static struct platform_driver acpi_fan_driver = {
+	.probe = acpi_fan_probe,
+	.remove = acpi_fan_remove,
+	.driver = {
+		.name = "acpi-fan",
+		.acpi_match_table = fan_device_ids,
+		.pm = FAN_PM_OPS_PTR,
+	},
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* thermal cooling device callbacks */
 static int fan_get_max_state(struct thermal_cooling_device *cdev, unsigned long
 			     *state)
@@ -236,7 +273,10 @@ static int acpi_fan_get_fif(struct acpi_device *device)
 	if (ACPI_FAILURE(status)) {
 		dev_err(&device->dev, "Invalid _FIF element\n");
 		status = -EINVAL;
+<<<<<<< HEAD
 		goto err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	fan->fif.revision = fields[0];
@@ -429,6 +469,7 @@ static int acpi_fan_resume(struct device *dev)
 
 	return result;
 }
+<<<<<<< HEAD
 
 static const struct dev_pm_ops acpi_fan_pm = {
 	.resume = acpi_fan_resume,
@@ -459,3 +500,8 @@ module_platform_driver(acpi_fan_driver);
 MODULE_AUTHOR("Paul Diefenbaugh");
 MODULE_DESCRIPTION("ACPI Fan Driver");
 MODULE_LICENSE("GPL");
+=======
+#endif
+
+module_platform_driver(acpi_fan_driver);
+>>>>>>> b7ba80a49124 (Commit)

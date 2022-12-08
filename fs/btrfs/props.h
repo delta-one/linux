@@ -8,7 +8,11 @@
 
 #include "ctree.h"
 
+<<<<<<< HEAD
 int __init btrfs_props_init(void);
+=======
+void __init btrfs_props_init(void);
+>>>>>>> b7ba80a49124 (Commit)
 
 int btrfs_set_prop(struct btrfs_trans_handle *trans, struct inode *inode,
 		   const char *name, const char *value, size_t value_len,

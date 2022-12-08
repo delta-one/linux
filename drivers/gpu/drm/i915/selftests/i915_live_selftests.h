@@ -25,7 +25,10 @@ selftest(gt_lrc, intel_lrc_live_selftests)
 selftest(gt_mocs, intel_mocs_live_selftests)
 selftest(gt_pm, intel_gt_pm_live_selftests)
 selftest(gt_heartbeat, intel_heartbeat_live_selftests)
+<<<<<<< HEAD
 selftest(gt_tlb, intel_tlb_live_selftests)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 selftest(requests, i915_request_live_selftests)
 selftest(migrate, intel_migrate_live_selftests)
 selftest(active, i915_active_live_selftests)

@@ -10,6 +10,7 @@
 
 #define in_range(b, first, len) ((b) >= (first) && (b) < (first) + (len))
 
+<<<<<<< HEAD
 /*
  * Enumerate bits using enum autoincrement. Define the @name as the n-th bit.
  */
@@ -18,6 +19,8 @@
 	name = (1U << __ ## name ## _BIT),              \
 	__ ## name ## _SEQ = __ ## name ## _BIT
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void cond_wake_up(struct wait_queue_head *wq)
 {
 	/*
@@ -40,10 +43,29 @@ static inline void cond_wake_up_nomb(struct wait_queue_head *wq)
 		wake_up(wq);
 }
 
+<<<<<<< HEAD
 static inline u64 mult_perc(u64 num, u32 percent)
 {
 	return div_u64(num * percent, 100);
 }
+=======
+static inline u64 div_factor(u64 num, int factor)
+{
+	if (factor == 10)
+		return num;
+	num *= factor;
+	return div_u64(num, 10);
+}
+
+static inline u64 div_factor_fine(u64 num, int factor)
+{
+	if (factor == 100)
+		return num;
+	num *= factor;
+	return div_u64(num, 100);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Copy of is_power_of_two that is 64bit safe */
 static inline bool is_power_of_two_u64(u64 n)
 {

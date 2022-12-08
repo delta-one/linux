@@ -1003,7 +1003,12 @@ static int spi_qup_probe(struct platform_device *pdev)
 	int ret, irq, size;
 
 	dev = &pdev->dev;
+<<<<<<< HEAD
 	base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	base = devm_ioremap_resource(dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(base))
 		return PTR_ERR(base);
 
@@ -1056,8 +1061,11 @@ static int spi_qup_probe(struct platform_device *pdev)
 	else
 		master->num_chipselect = num_cs;
 
+<<<<<<< HEAD
 	master->use_gpio_descriptors = true;
 	master->max_native_cs = SPI_NUM_CHIPSELECTS;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	master->bus_num = pdev->id;
 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH | SPI_LOOP;
 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(4, 32);

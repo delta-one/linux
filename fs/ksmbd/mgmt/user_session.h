@@ -21,6 +21,10 @@ struct ksmbd_file_table;
 struct channel {
 	__u8			smb3signingkey[SMB3_SIGN_KEY_SIZE];
 	struct ksmbd_conn	*conn;
+<<<<<<< HEAD
+=======
+	struct list_head	chann_list;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct preauth_session {
@@ -49,10 +53,18 @@ struct ksmbd_session {
 	char				sess_key[CIFS_KEY_SIZE];
 
 	struct hlist_node		hlist;
+<<<<<<< HEAD
 	struct xarray			ksmbd_chann_list;
 	struct xarray			tree_conns;
 	struct ida			tree_conn_ida;
 	struct xarray			rpc_handle_list;
+=======
+	rwlock_t			chann_lock;
+	struct list_head		ksmbd_chann_list;
+	struct xarray			tree_conns;
+	struct ida			tree_conn_ida;
+	struct list_head		rpc_handle_list;
+>>>>>>> b7ba80a49124 (Commit)
 
 	__u8				smb3encryptionkey[SMB3_ENC_DEC_KEY_SIZE];
 	__u8				smb3decryptionkey[SMB3_ENC_DEC_KEY_SIZE];

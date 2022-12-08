@@ -12,6 +12,10 @@
 #include <linux/pm.h>
 #include <linux/i2c.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/gcd.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <sound/core.h>
 #include <sound/pcm.h>

@@ -5,13 +5,19 @@
 #include <perf/cpumap.h>
 
 #include "debug.h"
+<<<<<<< HEAD
 #include "event.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "evlist.h"
 #include "evsel.h"
 #include "thread_map.h"
 #include "tests.h"
 #include "util/mmap.h"
+<<<<<<< HEAD
 #include "util/sample.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/err.h>
 #include <linux/kernel.h>
 #include <linux/string.h>
@@ -114,7 +120,12 @@ static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest 
 
 	for (i = 0; i < nsyscalls; ++i)
 		for (j = 0; j < expected_nr_events[i]; ++j) {
+<<<<<<< HEAD
 			syscalls[i]();
+=======
+			int foo = syscalls[i]();
+			++foo;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 	md = &evlist->mmap[0];

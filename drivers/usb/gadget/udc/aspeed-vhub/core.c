@@ -21,6 +21,10 @@
 #include <linux/clk.h>
 #include <linux/usb/gadget.h>
 #include <linux/of.h>
+<<<<<<< HEAD
+=======
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regmap.h>
 #include <linux/dma-mapping.h>
 
@@ -36,7 +40,11 @@ void ast_vhub_done(struct ast_vhub_ep *ep, struct ast_vhub_req *req,
 
 	list_del_init(&req->queue);
 
+<<<<<<< HEAD
 	if ((req->req.status == -EINPROGRESS) ||  (status == -EOVERFLOW))
+=======
+	if (req->req.status == -EINPROGRESS)
+>>>>>>> b7ba80a49124 (Commit)
 		req->req.status = status;
 
 	if (req->req.dma) {

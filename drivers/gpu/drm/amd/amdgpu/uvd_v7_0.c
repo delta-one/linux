@@ -213,7 +213,11 @@ static int uvd_v7_0_enc_ring_test_ring(struct amdgpu_ring *ring)
  *
  * Open up a stream for HW test
  */
+<<<<<<< HEAD
 static int uvd_v7_0_enc_get_create_msg(struct amdgpu_ring *ring, u32 handle,
+=======
+static int uvd_v7_0_enc_get_create_msg(struct amdgpu_ring *ring, uint32_t handle,
+>>>>>>> b7ba80a49124 (Commit)
 				       struct amdgpu_bo *bo,
 				       struct dma_fence **fence)
 {
@@ -224,8 +228,13 @@ static int uvd_v7_0_enc_get_create_msg(struct amdgpu_ring *ring, u32 handle,
 	uint64_t addr;
 	int i, r;
 
+<<<<<<< HEAD
 	r = amdgpu_job_alloc_with_ib(ring->adev, NULL, NULL, ib_size_dw * 4,
 				     AMDGPU_IB_POOL_DIRECT, &job);
+=======
+	r = amdgpu_job_alloc_with_ib(ring->adev, ib_size_dw * 4,
+					AMDGPU_IB_POOL_DIRECT, &job);
+>>>>>>> b7ba80a49124 (Commit)
 	if (r)
 		return r;
 
@@ -276,7 +285,11 @@ err:
  *
  * Close up a stream for HW test or if userspace failed to do so
  */
+<<<<<<< HEAD
 static int uvd_v7_0_enc_get_destroy_msg(struct amdgpu_ring *ring, u32 handle,
+=======
+static int uvd_v7_0_enc_get_destroy_msg(struct amdgpu_ring *ring, uint32_t handle,
+>>>>>>> b7ba80a49124 (Commit)
 					struct amdgpu_bo *bo,
 					struct dma_fence **fence)
 {
@@ -287,8 +300,13 @@ static int uvd_v7_0_enc_get_destroy_msg(struct amdgpu_ring *ring, u32 handle,
 	uint64_t addr;
 	int i, r;
 
+<<<<<<< HEAD
 	r = amdgpu_job_alloc_with_ib(ring->adev, NULL, NULL, ib_size_dw * 4,
 				     AMDGPU_IB_POOL_DIRECT, &job);
+=======
+	r = amdgpu_job_alloc_with_ib(ring->adev, ib_size_dw * 4,
+					AMDGPU_IB_POOL_DIRECT, &job);
+>>>>>>> b7ba80a49124 (Commit)
 	if (r)
 		return r;
 

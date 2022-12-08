@@ -470,6 +470,7 @@ u64 alarm_forward(struct alarm *alarm, ktime_t now, ktime_t interval)
 }
 EXPORT_SYMBOL_GPL(alarm_forward);
 
+<<<<<<< HEAD
 static u64 __alarm_forward_now(struct alarm *alarm, ktime_t interval, bool throttle)
 {
 	struct alarm_base *base = &alarm_bases[alarm->type];
@@ -499,6 +500,13 @@ static u64 __alarm_forward_now(struct alarm *alarm, ktime_t interval, bool throt
 u64 alarm_forward_now(struct alarm *alarm, ktime_t interval)
 {
 	return __alarm_forward_now(alarm, interval, false);
+=======
+u64 alarm_forward_now(struct alarm *alarm, ktime_t interval)
+{
+	struct alarm_base *base = &alarm_bases[alarm->type];
+
+	return alarm_forward(alarm, base->get_ktime(), interval);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(alarm_forward_now);
 
@@ -575,10 +583,16 @@ static enum alarmtimer_restart alarm_handle_timer(struct alarm *alarm,
 	if (posix_timer_event(ptr, si_private) && ptr->it_interval) {
 		/*
 		 * Handle ignored signals and rearm the timer. This will go
+<<<<<<< HEAD
 		 * away once we handle ignored signals proper. Ensure that
 		 * small intervals cannot starve the system.
 		 */
 		ptr->it_overrun += __alarm_forward_now(alarm, ptr->it_interval, true);
+=======
+		 * away once we handle ignored signals proper.
+		 */
+		ptr->it_overrun += alarm_forward_now(alarm, ptr->it_interval);
+>>>>>>> b7ba80a49124 (Commit)
 		++ptr->it_requeue_pending;
 		ptr->it_active = 1;
 		result = ALARMTIMER_RESTART;

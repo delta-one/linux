@@ -144,7 +144,12 @@ static struct net_device *mlx4_ib_get_netdev(struct ib_device *device,
 			}
 		}
 	}
+<<<<<<< HEAD
 	dev_hold(dev);
+=======
+	if (dev)
+		dev_hold(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rcu_read_unlock();
 	return dev;
@@ -1306,7 +1311,12 @@ int mlx4_ib_add_mc(struct mlx4_ib_dev *mdev, struct mlx4_ib_qp *mqp,
 
 	spin_lock_bh(&mdev->iboe.lock);
 	ndev = mdev->iboe.netdevs[mqp->port - 1];
+<<<<<<< HEAD
 	dev_hold(ndev);
+=======
+	if (ndev)
+		dev_hold(ndev);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_bh(&mdev->iboe.lock);
 
 	if (ndev) {
@@ -1953,9 +1963,17 @@ static int mlx4_ib_mcg_detach(struct ib_qp *ibqp, union ib_gid *gid, u16 lid)
 	if (ge) {
 		spin_lock_bh(&mdev->iboe.lock);
 		ndev = ge->added ? mdev->iboe.netdevs[ge->port - 1] : NULL;
+<<<<<<< HEAD
 		dev_hold(ndev);
 		spin_unlock_bh(&mdev->iboe.lock);
 		dev_put(ndev);
+=======
+		if (ndev)
+			dev_hold(ndev);
+		spin_unlock_bh(&mdev->iboe.lock);
+		if (ndev)
+			dev_put(ndev);
+>>>>>>> b7ba80a49124 (Commit)
 		list_del(&ge->list);
 		kfree(ge);
 	} else
@@ -3303,10 +3321,13 @@ static int __init mlx4_ib_init(void)
 	if (!wq)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	err = mlx4_ib_qp_event_init();
 	if (err)
 		goto clean_qp_event;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = mlx4_ib_cm_init();
 	if (err)
 		goto clean_wq;
@@ -3328,9 +3349,12 @@ clean_cm:
 	mlx4_ib_cm_destroy();
 
 clean_wq:
+<<<<<<< HEAD
 	mlx4_ib_qp_event_cleanup();
 
 clean_qp_event:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	destroy_workqueue(wq);
 	return err;
 }
@@ -3340,7 +3364,10 @@ static void __exit mlx4_ib_cleanup(void)
 	mlx4_unregister_interface(&mlx4_ib_interface);
 	mlx4_ib_mcg_destroy();
 	mlx4_ib_cm_destroy();
+<<<<<<< HEAD
 	mlx4_ib_qp_event_cleanup();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	destroy_workqueue(wq);
 }
 

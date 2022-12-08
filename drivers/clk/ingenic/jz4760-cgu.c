@@ -58,7 +58,11 @@ jz4760_cgu_calc_m_n_od(const struct ingenic_cgu_pll_info *pll_info,
 		       unsigned long rate, unsigned long parent_rate,
 		       unsigned int *pm, unsigned int *pn, unsigned int *pod)
 {
+<<<<<<< HEAD
 	unsigned int m, n, od, m_max = (1 << pll_info->m_bits) - 1;
+=======
+	unsigned int m, n, od, m_max = (1 << pll_info->m_bits) - 2;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* The frequency after the N divider must be between 1 and 50 MHz. */
 	n = parent_rate / (1 * MHZ);
@@ -66,6 +70,7 @@ jz4760_cgu_calc_m_n_od(const struct ingenic_cgu_pll_info *pll_info,
 	/* The N divider must be >= 2. */
 	n = clamp_val(n, 2, 1 << pll_info->n_bits);
 
+<<<<<<< HEAD
 	rate /= MHZ;
 	parent_rate /= MHZ;
 
@@ -77,6 +82,21 @@ jz4760_cgu_calc_m_n_od(const struct ingenic_cgu_pll_info *pll_info,
 
 	*pm = m;
 	*pn = n + 1;
+=======
+	for (;; n >>= 1) {
+		od = (unsigned int)-1;
+
+		do {
+			m = (rate / MHZ) * (1 << ++od) * n / (parent_rate / MHZ);
+		} while ((m > m_max || m & 1) && (od < 4));
+
+		if (od < 4 && m >= 4 && m <= m_max)
+			break;
+	}
+
+	*pm = m;
+	*pn = n;
+>>>>>>> b7ba80a49124 (Commit)
 	*pod = 1 << od;
 }
 

@@ -93,6 +93,14 @@ static void HPIMSGX__cleanup(u16 adapter_index, void *h_owner);
 #pragma pack(push, 1)
 #endif
 
+<<<<<<< HEAD
+=======
+struct hpi_subsys_response {
+	struct hpi_response_header h;
+	struct hpi_subsys_res s;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct hpi_adapter_response {
 	struct hpi_response_header h;
 	struct hpi_adapter_res a;

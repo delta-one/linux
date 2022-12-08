@@ -5,6 +5,7 @@
 
 #define msix_table_size(flags)	((flags & PCI_MSIX_FLAGS_QSIZE) + 1)
 
+<<<<<<< HEAD
 int pci_msi_setup_msi_irqs(struct pci_dev *dev, int nvec, int type);
 void pci_msi_teardown_msi_irqs(struct pci_dev *dev);
 
@@ -69,6 +70,26 @@ static inline void __pci_msi_unmask_desc(struct msi_desc *desc, u32 mask)
 	else
 		pci_msi_unmask(desc, mask);
 }
+=======
+extern int pci_msi_setup_msi_irqs(struct pci_dev *dev, int nvec, int type);
+extern void pci_msi_teardown_msi_irqs(struct pci_dev *dev);
+
+#ifdef CONFIG_PCI_MSI_ARCH_FALLBACKS
+extern int pci_msi_legacy_setup_msi_irqs(struct pci_dev *dev, int nvec, int type);
+extern void pci_msi_legacy_teardown_msi_irqs(struct pci_dev *dev);
+#else
+static inline int pci_msi_legacy_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+{
+	WARN_ON_ONCE(1);
+	return -ENODEV;
+}
+
+static inline void pci_msi_legacy_teardown_msi_irqs(struct pci_dev *dev)
+{
+	WARN_ON_ONCE(1);
+}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * PCI 2.3 does not specify mask bits for each MSI interrupt.  Attempting to
@@ -83,6 +104,7 @@ static inline __attribute_const__ u32 msi_multi_mask(struct msi_desc *desc)
 		return 0xffffffff;
 	return (1 << (1 << desc->pci.msi_attrib.multi_cap)) - 1;
 }
+<<<<<<< HEAD
 
 void msix_prepare_msi_desc(struct pci_dev *dev, struct msi_desc *desc);
 
@@ -127,3 +149,5 @@ static inline void pci_msi_legacy_teardown_msi_irqs(struct pci_dev *dev)
 	WARN_ON_ONCE(1);
 }
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -54,7 +54,11 @@ static int genregs_set(struct task_struct *target,
 
 #define REG_IGNORE_RANGE(START, END)		\
 	if (!ret)					\
+<<<<<<< HEAD
 		user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, \
+=======
+		ret = user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, \
+>>>>>>> b7ba80a49124 (Commit)
 			START * 4, (END * 4) + 4);
 
 #define REG_IN_ONE(PTR, LOC)	\
@@ -80,8 +84,13 @@ static int genregs_set(struct task_struct *target,
 	REG_IN_ONE(&regs->ra, PTR_RA);
 	REG_IN_ONE(&regs->ea, PTR_PC); /* use ea for PC */
 	if (!ret)
+<<<<<<< HEAD
 		user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
 					  PTR_STATUS * 4, -1);
+=======
+		ret = user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+					 PTR_STATUS * 4, -1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }

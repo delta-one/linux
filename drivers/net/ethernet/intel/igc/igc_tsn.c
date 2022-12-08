@@ -2,7 +2,10 @@
 /* Copyright (c)  2019 Intel Corporation */
 
 #include "igc.h"
+<<<<<<< HEAD
 #include "igc_hw.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "igc_tsn.h"
 
 static bool is_any_launchtime(struct igc_adapter *adapter)
@@ -37,7 +40,11 @@ static unsigned int igc_tsn_new_flags(struct igc_adapter *adapter)
 {
 	unsigned int new_flags = adapter->flags & ~IGC_FLAG_TSN_ANY_ENABLED;
 
+<<<<<<< HEAD
 	if (adapter->qbv_enable)
+=======
+	if (adapter->base_time)
+>>>>>>> b7ba80a49124 (Commit)
 		new_flags |= IGC_FLAG_TSN_QBV_ENABLED;
 
 	if (is_any_launchtime(adapter))
@@ -49,6 +56,7 @@ static unsigned int igc_tsn_new_flags(struct igc_adapter *adapter)
 	return new_flags;
 }
 
+<<<<<<< HEAD
 void igc_tsn_adjust_txtime_offset(struct igc_adapter *adapter)
 {
 	struct igc_hw *hw = &adapter->hw;
@@ -78,6 +86,8 @@ void igc_tsn_adjust_txtime_offset(struct igc_adapter *adapter)
 	wr32(IGC_GTXOFFSET, txoffset);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Returns the TSN specific registers to their default values after
  * the adapter is reset.
  */
@@ -87,14 +97,21 @@ static int igc_tsn_disable_offload(struct igc_adapter *adapter)
 	u32 tqavctrl;
 	int i;
 
+<<<<<<< HEAD
 	wr32(IGC_GTXOFFSET, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	wr32(IGC_TXPBS, I225_TXPBSIZE_DEFAULT);
 	wr32(IGC_DTXMXPKTSZ, IGC_DTXMXPKTSZ_DEFAULT);
 
 	tqavctrl = rd32(IGC_TQAVCTRL);
 	tqavctrl &= ~(IGC_TQAVCTRL_TRANSMIT_MODE_TSN |
+<<<<<<< HEAD
 		      IGC_TQAVCTRL_ENHANCED_QAV | IGC_TQAVCTRL_FUTSCDDIS);
 
+=======
+		      IGC_TQAVCTRL_ENHANCED_QAV);
+>>>>>>> b7ba80a49124 (Commit)
 	wr32(IGC_TQAVCTRL, tqavctrl);
 
 	for (i = 0; i < adapter->num_tx_queues; i++) {
@@ -114,16 +131,35 @@ static int igc_tsn_disable_offload(struct igc_adapter *adapter)
 static int igc_tsn_enable_offload(struct igc_adapter *adapter)
 {
 	struct igc_hw *hw = &adapter->hw;
+<<<<<<< HEAD
 	bool tsn_mode_reconfig = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 tqavctrl, baset_l, baset_h;
 	u32 sec, nsec, cycle;
 	ktime_t base_time, systim;
 	int i;
 
+<<<<<<< HEAD
+=======
+	cycle = adapter->cycle_time;
+	base_time = adapter->base_time;
+
+>>>>>>> b7ba80a49124 (Commit)
 	wr32(IGC_TSAUXC, 0);
 	wr32(IGC_DTXMXPKTSZ, IGC_DTXMXPKTSZ_TSN);
 	wr32(IGC_TXPBS, IGC_TXPBSIZE_TSN);
 
+<<<<<<< HEAD
+=======
+	tqavctrl = rd32(IGC_TQAVCTRL);
+	tqavctrl |= IGC_TQAVCTRL_TRANSMIT_MODE_TSN | IGC_TQAVCTRL_ENHANCED_QAV;
+	wr32(IGC_TQAVCTRL, tqavctrl);
+
+	wr32(IGC_QBVCYCLET_S, cycle);
+	wr32(IGC_QBVCYCLET, cycle);
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < adapter->num_tx_queues; i++) {
 		struct igc_ring *ring = adapter->tx_ring[i];
 		u32 txqctl = 0;
@@ -133,8 +169,20 @@ static int igc_tsn_enable_offload(struct igc_adapter *adapter)
 		wr32(IGC_STQT(i), ring->start_time);
 		wr32(IGC_ENDQT(i), ring->end_time);
 
+<<<<<<< HEAD
 		txqctl |= IGC_TXQCTL_STRICT_CYCLE |
 			IGC_TXQCTL_STRICT_END;
+=======
+		if (adapter->base_time) {
+			/* If we have a base_time we are in "taprio"
+			 * mode and we need to be strict about the
+			 * cycles: only transmit a packet if it can be
+			 * completed during that cycle.
+			 */
+			txqctl |= IGC_TXQCTL_STRICT_CYCLE |
+				IGC_TXQCTL_STRICT_END;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (ring->launchtime_enable)
 			txqctl |= IGC_TXQCTL_QUEUE_MODE_LAUNCHT;
@@ -226,6 +274,7 @@ skip_cbs:
 		wr32(IGC_TXQCTL(i), txqctl);
 	}
 
+<<<<<<< HEAD
 	tqavctrl = rd32(IGC_TQAVCTRL) & ~IGC_TQAVCTRL_FUTSCDDIS;
 
 	if (tqavctrl & IGC_TQAVCTRL_TRANSMIT_MODE_TSN)
@@ -236,10 +285,13 @@ skip_cbs:
 	cycle = adapter->cycle_time;
 	base_time = adapter->base_time;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	nsec = rd32(IGC_SYSTIML);
 	sec = rd32(IGC_SYSTIMH);
 
 	systim = ktime_set(sec, nsec);
+<<<<<<< HEAD
 	if (ktime_compare(systim, base_time) > 0) {
 		s64 n = div64_s64(ktime_sub_ns(systim, base_time), cycle);
 
@@ -277,6 +329,19 @@ skip_cbs:
 	 */
 	if (tqavctrl & IGC_TQAVCTRL_FUTSCDDIS)
 		wr32(IGC_BASET_L, 0);
+=======
+
+	if (ktime_compare(systim, base_time) > 0) {
+		s64 n;
+
+		n = div64_s64(ktime_sub_ns(systim, base_time), cycle);
+		base_time = ktime_add_ns(base_time, (n + 1) * cycle);
+	}
+
+	baset_h = div_s64_rem(base_time, NSEC_PER_SEC, &baset_l);
+
+	wr32(IGC_BASET_H, baset_h);
+>>>>>>> b7ba80a49124 (Commit)
 	wr32(IGC_BASET_L, baset_l);
 
 	return 0;
@@ -303,14 +368,28 @@ int igc_tsn_reset(struct igc_adapter *adapter)
 
 int igc_tsn_offload_apply(struct igc_adapter *adapter)
 {
+<<<<<<< HEAD
 	struct igc_hw *hw = &adapter->hw;
 
 	if (netif_running(adapter->netdev) && igc_is_device_id_i225(hw)) {
+=======
+	int err;
+
+	if (netif_running(adapter->netdev)) {
+>>>>>>> b7ba80a49124 (Commit)
 		schedule_work(&adapter->reset_task);
 		return 0;
 	}
 
+<<<<<<< HEAD
 	igc_tsn_reset(adapter);
 
+=======
+	err = igc_tsn_enable_offload(adapter);
+	if (err < 0)
+		return err;
+
+	adapter->flags = igc_tsn_new_flags(adapter);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }

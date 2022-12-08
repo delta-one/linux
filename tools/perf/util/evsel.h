@@ -10,6 +10,11 @@
 #include <internal/evsel.h>
 #include <perf/evsel.h>
 #include "symbol_conf.h"
+<<<<<<< HEAD
+=======
+#include <internal/cpumap.h>
+#include <perf/cpumap.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 struct bpf_object;
 struct cgroup;
@@ -72,9 +77,13 @@ struct evsel {
 		char			*name;
 		char			*group_name;
 		const char		*pmu_name;
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 		struct tep_event	*tp_format;
 #endif
+=======
+		struct tep_event	*tp_format;
+>>>>>>> b7ba80a49124 (Commit)
 		char			*filter;
 		unsigned long		max_events;
 		double			scale;
@@ -89,6 +98,10 @@ struct evsel {
 		bool			per_pkg;
 		bool			percore;
 		bool			precise_max;
+<<<<<<< HEAD
+=======
+		bool			use_uncore_alias;
+>>>>>>> b7ba80a49124 (Commit)
 		bool			is_libpfm_event;
 		bool			auto_merge_stats;
 		bool			collect_stat;
@@ -104,6 +117,11 @@ struct evsel {
 	 * metric fields are similar, but needs more care as they can have
 	 * references to other metric (evsel).
 	 */
+<<<<<<< HEAD
+=======
+	const char *		metric_expr;
+	const char *		metric_name;
+>>>>>>> b7ba80a49124 (Commit)
 	struct evsel		**metric_events;
 	struct evsel		*metric_leader;
 
@@ -150,10 +168,15 @@ struct evsel {
 	 */
 	struct bpf_counter_ops	*bpf_counter_ops;
 
+<<<<<<< HEAD
 	union {
 		struct list_head	bpf_counter_list; /* for perf-stat -b */
 		struct list_head	bpf_filters; /* for perf-record --filter */
 	};
+=======
+	/* for perf-stat -b */
+	struct list_head	bpf_counter_list;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* for perf-stat --use-bpf */
 	int			bperf_leader_prog_fd;
@@ -161,7 +184,10 @@ struct evsel {
 	union {
 		struct bperf_leader_bpf *leader_skel;
 		struct bperf_follower_bpf *follower_skel;
+<<<<<<< HEAD
 		void *bpf_skel;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	unsigned long		open_flags;
 	int			precise_ip_original;
@@ -214,8 +240,13 @@ int evsel__object_config(size_t object_size,
 			 int (*init)(struct evsel *evsel),
 			 void (*fini)(struct evsel *evsel));
 
+<<<<<<< HEAD
 struct perf_pmu *evsel__find_pmu(const struct evsel *evsel);
 bool evsel__is_aux_event(const struct evsel *evsel);
+=======
+struct perf_pmu *evsel__find_pmu(struct evsel *evsel);
+bool evsel__is_aux_event(struct evsel *evsel);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx);
 
@@ -225,14 +256,21 @@ static inline struct evsel *evsel__new(struct perf_event_attr *attr)
 }
 
 struct evsel *evsel__clone(struct evsel *orig);
+<<<<<<< HEAD
+=======
+struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx);
+>>>>>>> b7ba80a49124 (Commit)
 
 int copy_config_terms(struct list_head *dst, struct list_head *src);
 void free_config_terms(struct list_head *config_terms);
 
+<<<<<<< HEAD
 
 #ifdef HAVE_LIBTRACEEVENT
 struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Returns pointer with encoded error via <linux/err.h> interface.
  */
@@ -240,6 +278,7 @@ static inline struct evsel *evsel__newtp(const char *sys, const char *name)
 {
 	return evsel__newtp_idx(sys, name, 0);
 }
+<<<<<<< HEAD
 #endif
 
 struct evsel *evsel__new_cycles(bool precise, __u32 type, __u64 config);
@@ -247,6 +286,12 @@ struct evsel *evsel__new_cycles(bool precise, __u32 type, __u64 config);
 #ifdef HAVE_LIBTRACEEVENT
 struct tep_event *event_format__new(const char *sys, const char *name);
 #endif
+=======
+
+struct evsel *evsel__new_cycles(bool precise, __u32 type, __u64 config);
+
+struct tep_event *event_format__new(const char *sys, const char *name);
+>>>>>>> b7ba80a49124 (Commit)
 
 void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx);
 void evsel__exit(struct evsel *evsel);
@@ -282,7 +327,10 @@ int arch_evsel__hw_name(struct evsel *evsel, char *bf, size_t size);
 
 int __evsel__hw_cache_type_op_res_name(u8 type, u8 op, u8 result, char *bf, size_t size);
 const char *evsel__name(struct evsel *evsel);
+<<<<<<< HEAD
 const char *evsel__group_pmu_name(const struct evsel *evsel);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const char *evsel__metric_id(const struct evsel *evsel);
 
 static inline bool evsel__is_tool(const struct evsel *evsel)
@@ -332,7 +380,10 @@ bool evsel__precise_ip_fallback(struct evsel *evsel);
 
 struct perf_sample;
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void *evsel__rawptr(struct evsel *evsel, struct perf_sample *sample, const char *name);
 u64 evsel__intval(struct evsel *evsel, struct perf_sample *sample, const char *name);
 
@@ -340,7 +391,10 @@ static inline char *evsel__strval(struct evsel *evsel, struct perf_sample *sampl
 {
 	return evsel__rawptr(evsel, sample, name);
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct tep_format_field;
 
@@ -439,7 +493,11 @@ static inline bool evsel__is_bpf_output(struct evsel *evsel)
 	return evsel__match(evsel, SOFTWARE, SW_BPF_OUTPUT);
 }
 
+<<<<<<< HEAD
 static inline bool evsel__is_clock(const struct evsel *evsel)
+=======
+static inline bool evsel__is_clock(struct evsel *evsel)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return evsel__match(evsel, SOFTWARE, SW_CPU_CLOCK) ||
 	       evsel__match(evsel, SOFTWARE, SW_TASK_CLOCK);
@@ -507,8 +565,13 @@ struct perf_env *evsel__env(struct evsel *evsel);
 int evsel__store_ids(struct evsel *evsel, struct evlist *evlist);
 
 void evsel__zero_per_pkg(struct evsel *evsel);
+<<<<<<< HEAD
 bool evsel__is_hybrid(const struct evsel *evsel);
 struct evsel *evsel__leader(const struct evsel *evsel);
+=======
+bool evsel__is_hybrid(struct evsel *evsel);
+struct evsel *evsel__leader(struct evsel *evsel);
+>>>>>>> b7ba80a49124 (Commit)
 bool evsel__has_leader(struct evsel *evsel, struct evsel *leader);
 bool evsel__is_leader(struct evsel *evsel);
 void evsel__set_leader(struct evsel *evsel, struct evsel *leader);

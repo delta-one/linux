@@ -50,6 +50,7 @@ void __init exynos_sysram_init(void)
 	struct device_node *node;
 
 	for_each_compatible_node(node, NULL, "samsung,exynos4210-sysram") {
+<<<<<<< HEAD
 		struct resource res;
 		if (!of_device_is_available(node))
 			continue;
@@ -57,6 +58,13 @@ void __init exynos_sysram_init(void)
 		of_address_to_resource(node, 0, &res);
 		sysram_base_addr = ioremap(res.start, resource_size(&res));
 		sysram_base_phys = res.start;
+=======
+		if (!of_device_is_available(node))
+			continue;
+		sysram_base_addr = of_iomap(node, 0);
+		sysram_base_phys = of_translate_address(node,
+					   of_get_address(node, 0, NULL, NULL));
+>>>>>>> b7ba80a49124 (Commit)
 		of_node_put(node);
 		break;
 	}

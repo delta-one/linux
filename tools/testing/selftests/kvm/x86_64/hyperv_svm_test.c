@@ -23,6 +23,7 @@
 
 #define L2_GUEST_STACK_SIZE 256
 
+<<<<<<< HEAD
 /* Exit to L1 from L2 with RDMSR instruction */
 static inline void rdmsr_from_l2(uint32_t msr)
 {
@@ -36,11 +37,34 @@ void l2_guest_code(void)
 {
 	u64 unused;
 
+=======
+struct hv_enlightenments {
+	struct __packed hv_enlightenments_control {
+		u32 nested_flush_hypercall:1;
+		u32 msr_bitmap:1;
+		u32 enlightened_npt_tlb: 1;
+		u32 reserved:29;
+	} __packed hv_enlightenments_control;
+	u32 hv_vp_id;
+	u64 hv_vm_id;
+	u64 partition_assist_page;
+	u64 reserved;
+} __packed;
+
+/*
+ * Hyper-V uses the software reserved clean bit in VMCB
+ */
+#define VMCB_HV_NESTED_ENLIGHTENMENTS (1U << 31)
+
+void l2_guest_code(void)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	GUEST_SYNC(3);
 	/* Exit to L1 */
 	vmmcall();
 
 	/* MSR-Bitmap tests */
+<<<<<<< HEAD
 	rdmsr_from_l2(MSR_FS_BASE); /* intercepted */
 	rdmsr_from_l2(MSR_FS_BASE); /* intercepted */
 	rdmsr_from_l2(MSR_GS_BASE); /* not intercepted */
@@ -64,10 +88,21 @@ void l2_guest_code(void)
 			   HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES |
 			   HV_FLUSH_ALL_PROCESSORS, &unused);
 
+=======
+	rdmsr(MSR_FS_BASE); /* intercepted */
+	rdmsr(MSR_FS_BASE); /* intercepted */
+	rdmsr(MSR_GS_BASE); /* not intercepted */
+	vmmcall();
+	rdmsr(MSR_GS_BASE); /* intercepted */
+
+	GUEST_SYNC(5);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Done, exit to L1 and never come back.  */
 	vmmcall();
 }
 
+<<<<<<< HEAD
 static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm,
 						    struct hyperv_test_pages *hv_pages,
 						    vm_vaddr_t pgs_gpa)
@@ -81,12 +116,25 @@ static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm,
 	wrmsr(HV_X64_MSR_GUEST_OS_ID, HYPERV_LINUX_OS_ID);
 	wrmsr(HV_X64_MSR_HYPERCALL, pgs_gpa);
 	enable_vp_assist(hv_pages->vp_assist_gpa, hv_pages->vp_assist);
+=======
+static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm)
+{
+	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
+	struct vmcb *vmcb = svm->vmcb;
+	struct hv_enlightenments *hve =
+		(struct hv_enlightenments *)vmcb->control.reserved_sw;
+
+	GUEST_SYNC(1);
+
+	wrmsr(HV_X64_MSR_GUEST_OS_ID, (u64)0x8100 << 48);
+>>>>>>> b7ba80a49124 (Commit)
 
 	GUEST_ASSERT(svm->vmcb_gpa);
 	/* Prepare for L2 execution. */
 	generic_svm_setup(svm, l2_guest_code,
 			  &l2_guest_stack[L2_GUEST_STACK_SIZE]);
 
+<<<<<<< HEAD
 	/* L2 TLB flush setup */
 	hve->partition_assist_page = hv_pages->partition_assist_gpa;
 	hve->hv_enlightenments_control.nested_flush_hypercall = 1;
@@ -95,6 +143,8 @@ static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm,
 	current_vp_assist->nested_control.features.directhypercall = 1;
 	*(u32 *)(hv_pages->partition_assist) = 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	GUEST_SYNC(2);
 	run_guest(vmcb, svm->vmcb_gpa);
 	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
@@ -103,7 +153,11 @@ static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm,
 
 	/* Intercept RDMSR 0xc0000100 */
 	vmcb->control.intercept |= 1ULL << INTERCEPT_MSR_PROT;
+<<<<<<< HEAD
 	__set_bit(2 * (MSR_FS_BASE & 0x1fff), svm->msr + 0x800);
+=======
+	set_bit(2 * (MSR_FS_BASE & 0x1fff), svm->msr + 0x800);
+>>>>>>> b7ba80a49124 (Commit)
 	run_guest(vmcb, svm->vmcb_gpa);
 	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_MSR);
 	vmcb->save.rip += 2; /* rdmsr */
@@ -115,20 +169,31 @@ static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm,
 	vmcb->save.rip += 2; /* rdmsr */
 
 	/* Intercept RDMSR 0xc0000101 without telling KVM about it */
+<<<<<<< HEAD
 	__set_bit(2 * (MSR_GS_BASE & 0x1fff), svm->msr + 0x800);
 	/* Make sure HV_VMX_ENLIGHTENED_CLEAN_FIELD_MSR_BITMAP is set */
 	vmcb->control.clean |= HV_VMCB_NESTED_ENLIGHTENMENTS;
+=======
+	set_bit(2 * (MSR_GS_BASE & 0x1fff), svm->msr + 0x800);
+	/* Make sure HV_VMX_ENLIGHTENED_CLEAN_FIELD_MSR_BITMAP is set */
+	vmcb->control.clean |= VMCB_HV_NESTED_ENLIGHTENMENTS;
+>>>>>>> b7ba80a49124 (Commit)
 	run_guest(vmcb, svm->vmcb_gpa);
 	/* Make sure we don't see SVM_EXIT_MSR here so eMSR bitmap works */
 	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
 	vmcb->save.rip += 3; /* vmcall */
 
 	/* Now tell KVM we've changed MSR-Bitmap */
+<<<<<<< HEAD
 	vmcb->control.clean &= ~HV_VMCB_NESTED_ENLIGHTENMENTS;
+=======
+	vmcb->control.clean &= ~VMCB_HV_NESTED_ENLIGHTENMENTS;
+>>>>>>> b7ba80a49124 (Commit)
 	run_guest(vmcb, svm->vmcb_gpa);
 	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_MSR);
 	vmcb->save.rip += 2; /* rdmsr */
 
+<<<<<<< HEAD
 
 	/*
 	 * L2 TLB flush test. First VMCALL should be handled directly by L0,
@@ -143,6 +208,8 @@ static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm,
 	GUEST_ASSERT(vmcb->control.exit_code == HV_SVM_EXITCODE_ENL);
 	GUEST_ASSERT(vmcb->control.exit_info_1 == HV_SVM_ENL_EXITCODE_TRAP_AFTER_FLUSH);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	run_guest(vmcb, svm->vmcb_gpa);
 	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
 	GUEST_SYNC(6);
@@ -152,10 +219,18 @@ static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm,
 
 int main(int argc, char *argv[])
 {
+<<<<<<< HEAD
 	vm_vaddr_t nested_gva = 0, hv_pages_gva = 0;
 	vm_vaddr_t hcall_page;
 	struct kvm_vcpu *vcpu;
 	struct kvm_vm *vm;
+=======
+	vm_vaddr_t nested_gva = 0;
+
+	struct kvm_vcpu *vcpu;
+	struct kvm_vm *vm;
+	struct kvm_run *run;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ucall uc;
 	int stage;
 
@@ -164,6 +239,7 @@ int main(int argc, char *argv[])
 	/* Create VM */
 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
 	vcpu_set_hv_cpuid(vcpu);
+<<<<<<< HEAD
 	vcpu_alloc_svm(vm, &nested_gva);
 	vcpu_alloc_hyperv_test_pages(vm, &hv_pages_gva);
 
@@ -176,6 +252,18 @@ int main(int argc, char *argv[])
 	for (stage = 1;; stage++) {
 		vcpu_run(vcpu);
 		TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+=======
+	run = vcpu->run;
+	vcpu_alloc_svm(vm, &nested_gva);
+	vcpu_args_set(vcpu, 1, nested_gva);
+
+	for (stage = 1;; stage++) {
+		vcpu_run(vcpu);
+		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+			    "Stage %d: unexpected exit reason: %u (%s),\n",
+			    stage, run->exit_reason,
+			    exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 
 		switch (get_ucall(vcpu, &uc)) {
 		case UCALL_ABORT:

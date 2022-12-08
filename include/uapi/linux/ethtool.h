@@ -159,10 +159,15 @@ static inline __u32 ethtool_cmd_speed(const struct ethtool_cmd *ep)
  *	in its bus driver structure (e.g. pci_driver::name).  Must
  *	not be an empty string.
  * @version: Driver version string; may be an empty string
+<<<<<<< HEAD
  * @fw_version: Firmware version string; driver defined; may be an
  *	empty string
  * @erom_version: Expansion ROM version string; driver defined; may be
  *	an empty string
+=======
+ * @fw_version: Firmware version string; may be an empty string
+ * @erom_version: Expansion ROM version string; may be an empty string
+>>>>>>> b7ba80a49124 (Commit)
  * @bus_info: Device bus address.  This should match the dev_name()
  *	string for the underlying bus device, if there is one.  May be
  *	an empty string.
@@ -181,6 +186,13 @@ static inline __u32 ethtool_cmd_speed(const struct ethtool_cmd *ep)
  *
  * Users can use the %ETHTOOL_GSSET_INFO command to get the number of
  * strings in any string set (from Linux 2.6.34).
+<<<<<<< HEAD
+=======
+ *
+ * Drivers should set at most @driver, @version, @fw_version and
+ * @bus_info in their get_drvinfo() implementation.  The ethtool
+ * core fills in the other fields using other driver operations.
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct ethtool_drvinfo {
 	__u32	cmd;
@@ -712,6 +724,7 @@ enum ethtool_stringset {
 };
 
 /**
+<<<<<<< HEAD
  * enum ethtool_mac_stats_src - source of ethtool MAC statistics
  * @ETHTOOL_MAC_STATS_SRC_AGGREGATE:
  *	if device supports a MAC merge layer, this retrieves the aggregate
@@ -730,6 +743,8 @@ enum ethtool_mac_stats_src {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * enum ethtool_module_power_mode_policy - plug-in module power mode policy
  * @ETHTOOL_MODULE_POWER_MODE_POLICY_HIGH: Module is always in high power mode.
  * @ETHTOOL_MODULE_POWER_MODE_POLICY_AUTO: Module is transitioned by the host
@@ -753,6 +768,7 @@ enum ethtool_module_power_mode {
 };
 
 /**
+<<<<<<< HEAD
  * enum ethtool_podl_pse_admin_state - operational state of the PoDL PSE
  *	functions. IEEE 802.3-2018 30.15.1.1.2 aPoDLPSEAdminState
  * @ETHTOOL_PODL_PSE_ADMIN_STATE_UNKNOWN: state of PoDL PSE functions are
@@ -823,6 +839,8 @@ enum ethtool_mm_verify_status {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct ethtool_gstrings - string set for data tagging
  * @cmd: Command number = %ETHTOOL_GSTRINGS
  * @string_set: String set ID; one of &enum ethtool_stringset
@@ -1226,7 +1244,11 @@ struct ethtool_rxnfc {
 		__u32			rule_cnt;
 		__u32			rss_context;
 	};
+<<<<<<< HEAD
 	__u32				rule_locs[];
+=======
+	__u32				rule_locs[0];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 
@@ -1778,6 +1800,7 @@ enum ethtool_link_mode_bit_indices {
 	ETHTOOL_LINK_MODE_100baseFX_Half_BIT		 = 90,
 	ETHTOOL_LINK_MODE_100baseFX_Full_BIT		 = 91,
 	ETHTOOL_LINK_MODE_10baseT1L_Full_BIT		 = 92,
+<<<<<<< HEAD
 	ETHTOOL_LINK_MODE_800000baseCR8_Full_BIT	 = 93,
 	ETHTOOL_LINK_MODE_800000baseKR8_Full_BIT	 = 94,
 	ETHTOOL_LINK_MODE_800000baseDR8_Full_BIT	 = 95,
@@ -1788,6 +1811,8 @@ enum ethtool_link_mode_bit_indices {
 	ETHTOOL_LINK_MODE_10baseT1S_Half_BIT		 = 100,
 	ETHTOOL_LINK_MODE_10baseT1S_P2MP_Half_BIT	 = 101,
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* must be last entry */
 	__ETHTOOL_LINK_MODE_MASK_NBITS
 };
@@ -1899,7 +1924,10 @@ enum ethtool_link_mode_bit_indices {
 #define SPEED_100000		100000
 #define SPEED_200000		200000
 #define SPEED_400000		400000
+<<<<<<< HEAD
 #define SPEED_800000		800000
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SPEED_UNKNOWN		-1
 
@@ -1937,6 +1965,7 @@ static inline int ethtool_validate_duplex(__u8 duplex)
 #define MASTER_SLAVE_STATE_SLAVE		3
 #define MASTER_SLAVE_STATE_ERR			4
 
+<<<<<<< HEAD
 /* These are used to throttle the rate of data on the phy interface when the
  * native speed of the interface is higher than the link speed. These should
  * not be used for phy interfaces which natively support multiple speeds (e.g.
@@ -1951,6 +1980,8 @@ static inline int ethtool_validate_duplex(__u8 duplex)
 /* The MAC is programmed with a sufficiently-large IPG. */
 #define RATE_MATCH_OPEN_LOOP	3
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Which connector port. */
 #define PORT_TP			0x00
 #define PORT_AUI		0x01
@@ -2144,8 +2175,13 @@ enum ethtool_reset_flags {
  *	reported consistently by PHYLIB.  Read-only.
  * @master_slave_cfg: Master/slave port mode.
  * @master_slave_state: Master/slave port state.
+<<<<<<< HEAD
  * @rate_matching: Rate adaptation performed by the PHY
  * @reserved: Reserved for future use; see the note on reserved space.
+=======
+ * @reserved: Reserved for future use; see the note on reserved space.
+ * @reserved1: Reserved for future use; see the note on reserved space.
+>>>>>>> b7ba80a49124 (Commit)
  * @link_mode_masks: Variable length bitmaps.
  *
  * If autonegotiation is disabled, the speed and @duplex represent the
@@ -2196,7 +2232,11 @@ struct ethtool_link_settings {
 	__u8	transceiver;
 	__u8	master_slave_cfg;
 	__u8	master_slave_state;
+<<<<<<< HEAD
 	__u8	rate_matching;
+=======
+	__u8	reserved1[1];
+>>>>>>> b7ba80a49124 (Commit)
 	__u32	reserved[7];
 	__u32	link_mode_masks[];
 	/* layout of link_mode_masks fields:

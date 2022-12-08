@@ -535,6 +535,15 @@ const struct fw_address_region fw_unit_space_region =
 	{ .start = 0xfffff0000900ULL, .end = 0x1000000000000ULL, };
 #endif  /*  0  */
 
+<<<<<<< HEAD
+=======
+static bool is_in_fcp_region(u64 offset, size_t length)
+{
+	return offset >= (CSR_REGISTER_BASE | CSR_FCP_COMMAND) &&
+		offset + length <= (CSR_REGISTER_BASE | CSR_FCP_END);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * fw_core_add_address_handler() - register for incoming requests
  * @handler:	callback
@@ -611,7 +620,10 @@ void fw_core_remove_address_handler(struct fw_address_handler *handler)
 EXPORT_SYMBOL(fw_core_remove_address_handler);
 
 struct fw_request {
+<<<<<<< HEAD
 	struct kref kref;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct fw_packet response;
 	u32 request_header[4];
 	int ack;
@@ -620,6 +632,7 @@ struct fw_request {
 	u32 data[];
 };
 
+<<<<<<< HEAD
 void fw_request_get(struct fw_request *request)
 {
 	kref_get(&request->kref);
@@ -647,6 +660,15 @@ static void free_response_callback(struct fw_packet *packet,
 
 	// Decrease the reference count to release the object.
 	fw_request_put(request);
+=======
+static void free_response_callback(struct fw_packet *packet,
+				   struct fw_card *card, int status)
+{
+	struct fw_request *request;
+
+	request = container_of(packet, struct fw_request, response);
+	kfree(request);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int fw_get_response_length(struct fw_request *r)
@@ -797,7 +819,10 @@ static struct fw_request *allocate_request(struct fw_card *card,
 	request = kmalloc(sizeof(*request) + length, GFP_ATOMIC);
 	if (request == NULL)
 		return NULL;
+<<<<<<< HEAD
 	kref_init(&request->kref);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	request->response.speed = p->speed;
 	request->response.timestamp =
@@ -816,6 +841,7 @@ static struct fw_request *allocate_request(struct fw_card *card,
 	return request;
 }
 
+<<<<<<< HEAD
 /**
  * fw_send_response: - send response packet for asynchronous transaction.
  * @card:	interface to send the response at.
@@ -832,6 +858,18 @@ void fw_send_response(struct fw_card *card,
 	if (request->ack != ACK_PENDING ||
 	    HEADER_DESTINATION_IS_BROADCAST(request->request_header[0])) {
 		fw_request_put(request);
+=======
+void fw_send_response(struct fw_card *card,
+		      struct fw_request *request, int rcode)
+{
+	if (WARN_ONCE(!request, "invalid for FCP address handlers"))
+		return;
+
+	/* unified transaction or broadcast transaction: don't respond */
+	if (request->ack != ACK_PENDING ||
+	    HEADER_DESTINATION_IS_BROADCAST(request->request_header[0])) {
+		kfree(request);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -843,9 +881,12 @@ void fw_send_response(struct fw_card *card,
 		fw_fill_response(&request->response, request->request_header,
 				 rcode, NULL, 0);
 
+<<<<<<< HEAD
 	// Increase the reference count so that the object is kept during in-flight.
 	fw_request_get(request);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	card->driver->send_response(card, &request->response);
 }
 EXPORT_SYMBOL(fw_send_response);
@@ -935,7 +976,11 @@ static void handle_fcp_region_request(struct fw_card *card,
 	rcu_read_lock();
 	list_for_each_entry_rcu(handler, &address_handler_list, link) {
 		if (is_enclosing_handler(handler, offset, request->length))
+<<<<<<< HEAD
 			handler->address_callback(card, request, tcode,
+=======
+			handler->address_callback(card, NULL, tcode,
+>>>>>>> b7ba80a49124 (Commit)
 						  destination, source,
 						  p->generation, offset,
 						  request->data,

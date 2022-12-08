@@ -7,7 +7,10 @@
 #ifndef INCLUDE__UTIL_PERF_CS_ETM_H__
 #define INCLUDE__UTIL_PERF_CS_ETM_H__
 
+<<<<<<< HEAD
 #include "debug.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "util/event.h"
 #include <linux/bits.h>
 
@@ -71,7 +74,10 @@ enum {
 	CS_ETMV4_TRCIDR2,
 	CS_ETMV4_TRCIDR8,
 	CS_ETMV4_TRCAUTHSTATUS,
+<<<<<<< HEAD
 	CS_ETMV4_TS_SOURCE,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	CS_ETMV4_PRIV_MAX,
 };
 
@@ -83,6 +89,7 @@ enum {
  * added in header V1
  */
 enum {
+<<<<<<< HEAD
 	/* Dynamic, configurable parameters */
 	CS_ETE_TRCCONFIGR = CS_ETM_COMMON_BLK_MAX_V1,
 	CS_ETE_TRCTRACEIDR,
@@ -94,6 +101,9 @@ enum {
 	CS_ETE_TRCAUTHSTATUS,
 	CS_ETE_TRCDEVARCH,
 	CS_ETE_TS_SOURCE,
+=======
+	CS_ETE_TRCDEVARCH = CS_ETMV4_PRIV_MAX,
+>>>>>>> b7ba80a49124 (Commit)
 	CS_ETE_PRIV_MAX
 };
 
@@ -192,7 +202,11 @@ struct cs_etm_packet_queue {
 	u32 head;
 	u32 tail;
 	u32 instr_count;
+<<<<<<< HEAD
 	u64 cs_timestamp; /* Timestamp from trace data, converted to ns if possible */
+=======
+	u64 cs_timestamp;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 next_cs_timestamp;
 	struct cs_etm_packet packet_buffer[CS_ETM_PACKET_MAX_BUFFER];
 };
@@ -213,6 +227,7 @@ struct cs_etm_packet_queue {
 #define CS_ETMV4_PRIV_SIZE (CS_ETMV4_PRIV_MAX * sizeof(u64))
 #define CS_ETE_PRIV_SIZE (CS_ETE_PRIV_MAX * sizeof(u64))
 
+<<<<<<< HEAD
 #define INFO_HEADER_SIZE (sizeof(((struct perf_record_auxtrace_info *)0)->type) + \
 			  sizeof(((struct perf_record_auxtrace_info *)0)->reserved__))
 
@@ -220,6 +235,11 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
 				  struct perf_session *session);
 
 #ifdef HAVE_CSTRACE_SUPPORT
+=======
+#ifdef HAVE_CSTRACE_SUPPORT
+int cs_etm__process_auxtrace_info(union perf_event *event,
+				  struct perf_session *session);
+>>>>>>> b7ba80a49124 (Commit)
 int cs_etm__get_cpu(u8 trace_chan_id, int *cpu);
 int cs_etm__get_pid_fmt(u8 trace_chan_id, u64 *pid_fmt);
 int cs_etm__etmq_set_tid(struct cs_etm_queue *etmq,
@@ -229,6 +249,7 @@ void cs_etm__etmq_set_traceid_queue_timestamp(struct cs_etm_queue *etmq,
 					      u8 trace_chan_id);
 struct cs_etm_packet_queue
 *cs_etm__etmq_get_packet_queue(struct cs_etm_queue *etmq, u8 trace_chan_id);
+<<<<<<< HEAD
 int cs_etm__process_auxtrace_info_full(union perf_event *event __maybe_unused,
 				       struct perf_session *session __maybe_unused);
 u64 cs_etm__convert_sample_time(struct cs_etm_queue *etmq, u64 cs_timestamp);
@@ -240,6 +261,47 @@ cs_etm__process_auxtrace_info_full(union perf_event *event __maybe_unused,
 	pr_err("\nCS ETM Trace: OpenCSD is not linked in, please recompile with CORESIGHT=1\n");
 	return -1;
 }
+=======
+#else
+static inline int
+cs_etm__process_auxtrace_info(union perf_event *event __maybe_unused,
+			      struct perf_session *session __maybe_unused)
+{
+	return -1;
+}
+
+static inline int cs_etm__get_cpu(u8 trace_chan_id __maybe_unused,
+				  int *cpu __maybe_unused)
+{
+	return -1;
+}
+
+static inline int cs_etm__etmq_set_tid(
+				struct cs_etm_queue *etmq __maybe_unused,
+				pid_t tid __maybe_unused,
+				u8 trace_chan_id __maybe_unused)
+{
+	return -1;
+}
+
+static inline bool cs_etm__etmq_is_timeless(
+				struct cs_etm_queue *etmq __maybe_unused)
+{
+	/* What else to return? */
+	return true;
+}
+
+static inline void cs_etm__etmq_set_traceid_queue_timestamp(
+				struct cs_etm_queue *etmq __maybe_unused,
+				u8 trace_chan_id __maybe_unused) {}
+
+static inline struct cs_etm_packet_queue *cs_etm__etmq_get_packet_queue(
+				struct cs_etm_queue *etmq __maybe_unused,
+				u8 trace_chan_id __maybe_unused)
+{
+	return NULL;
+}
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #endif

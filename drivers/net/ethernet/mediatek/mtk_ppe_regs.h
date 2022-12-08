@@ -58,12 +58,15 @@
 #define MTK_PPE_TB_CFG_SCAN_MODE		GENMASK(17, 16)
 #define MTK_PPE_TB_CFG_HASH_DEBUG		GENMASK(19, 18)
 #define MTK_PPE_TB_CFG_INFO_SEL			BIT(20)
+<<<<<<< HEAD
 #define MTK_PPE_TB_TICK_SEL			BIT(24)
 
 #define MTK_PPE_BIND_LMT1			0x230
 #define MTK_PPE_NTU_KEEPALIVE			GENMASK(23, 16)
 
 #define MTK_PPE_KEEPALIVE			0x234
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum {
 	MTK_PPE_SCAN_MODE_DISABLED,
@@ -149,6 +152,7 @@ enum {
 
 #define MTK_PPE_MIB_TB_BASE			0x338
 
+<<<<<<< HEAD
 #define MTK_PPE_MIB_SER_CR			0x33C
 #define MTK_PPE_MIB_SER_CR_ST			BIT(16)
 #define MTK_PPE_MIB_SER_CR_ADDR			GENMASK(13, 0)
@@ -163,6 +167,8 @@ enum {
 #define MTK_PPE_MIB_SER_R2			0x348
 #define MTK_PPE_MIB_SER_R2_PKT_CNT_HIGH		GENMASK(23, 0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MTK_PPE_MIB_CACHE_CTL			0x350
 #define MTK_PPE_MIB_CACHE_CTL_EN		BIT(0)
 #define MTK_PPE_MIB_CACHE_CTL_FLUSH		BIT(2)

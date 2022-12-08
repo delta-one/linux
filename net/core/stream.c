@@ -123,7 +123,11 @@ int sk_stream_wait_memory(struct sock *sk, long *timeo_p)
 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
 
 	if (sk_stream_memory_free(sk))
+<<<<<<< HEAD
 		current_timeo = vm_wait = get_random_u32_below(HZ / 5) + 2;
+=======
+		current_timeo = vm_wait = (prandom_u32() % (HZ / 5)) + 2;
+>>>>>>> b7ba80a49124 (Commit)
 
 	add_wait_queue(sk_sleep(sk), &wait);
 
@@ -159,8 +163,12 @@ int sk_stream_wait_memory(struct sock *sk, long *timeo_p)
 		*timeo_p = current_timeo;
 	}
 out:
+<<<<<<< HEAD
 	if (!sock_flag(sk, SOCK_DEAD))
 		remove_wait_queue(sk_sleep(sk), &wait);
+=======
+	remove_wait_queue(sk_sleep(sk), &wait);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 
 do_error:
@@ -196,12 +204,15 @@ void sk_stream_kill_queues(struct sock *sk)
 	/* First the read buffer. */
 	__skb_queue_purge(&sk->sk_receive_queue);
 
+<<<<<<< HEAD
 	/* Next, the error queue.
 	 * We need to use queue lock, because other threads might
 	 * add packets to the queue without socket lock being held.
 	 */
 	skb_queue_purge(&sk->sk_error_queue);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Next, the write queue. */
 	WARN_ON_ONCE(!skb_queue_empty(&sk->sk_write_queue));
 
@@ -209,6 +220,10 @@ void sk_stream_kill_queues(struct sock *sk)
 	sk_mem_reclaim_final(sk);
 
 	WARN_ON_ONCE(sk->sk_wmem_queued);
+<<<<<<< HEAD
+=======
+	WARN_ON_ONCE(sk->sk_forward_alloc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* It is _impossible_ for the backlog to contain anything
 	 * when we get here.  All user references to this socket

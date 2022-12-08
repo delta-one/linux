@@ -209,7 +209,11 @@ leave:
  *
  * Control bits for previous samples is 32-bit field, containing 16 x 2-bit
  * numbers. This results one 2-bit number for 8 samples. It is likely used for
+<<<<<<< HEAD
  * bit shifting sample by given bits, increasing actual sampling resolution.
+=======
+ * for bit shifting sample by given bits, increasing actual sampling resolution.
+>>>>>>> b7ba80a49124 (Commit)
  * Number 2 (0b10) was never seen.
  *
  * 6 * 16 * 2 * 4 = 768 samples. 768 * 4 = 3072 bytes

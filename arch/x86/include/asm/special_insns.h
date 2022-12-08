@@ -115,11 +115,29 @@ static inline void wrpkru(u32 pkru)
 }
 #endif
 
+<<<<<<< HEAD
 static __always_inline void native_wbinvd(void)
+=======
+static inline void native_wbinvd(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	asm volatile("wbinvd": : :"memory");
 }
 
+<<<<<<< HEAD
+=======
+extern asmlinkage void asm_load_gs_index(unsigned int selector);
+
+static inline void native_load_gs_index(unsigned int selector)
+{
+	unsigned long flags;
+
+	local_irq_save(flags);
+	asm_load_gs_index(selector);
+	local_irq_restore(flags);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline unsigned long __read_cr4(void)
 {
 	return native_read_cr4();
@@ -168,14 +186,34 @@ static inline void __write_cr4(unsigned long x)
 	native_write_cr4(x);
 }
 
+<<<<<<< HEAD
 static __always_inline void wbinvd(void)
+=======
+static inline void wbinvd(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	native_wbinvd();
 }
 
+<<<<<<< HEAD
 #endif /* CONFIG_PARAVIRT_XXL */
 
 static __always_inline void clflush(volatile void *__p)
+=======
+
+static inline void load_gs_index(unsigned int selector)
+{
+#ifdef CONFIG_X86_64
+	native_load_gs_index(selector);
+#else
+	loadsegment(gs, selector);
+#endif
+}
+
+#endif /* CONFIG_PARAVIRT_XXL */
+
+static inline void clflush(volatile void *__p)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	asm volatile("clflush %0" : "+m" (*(volatile char __force *)__p));
 }
@@ -202,6 +240,7 @@ static inline void clwb(volatile void *__p)
 		: [pax] "a" (p));
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_X86_USER_SHADOW_STACK
 static inline int write_user_shstk_64(u64 __user *addr, u64 val)
 {
@@ -215,6 +254,8 @@ fail:
 }
 #endif /* CONFIG_X86_USER_SHADOW_STACK */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define nop() asm volatile ("nop")
 
 static inline void serialize(void)
@@ -287,7 +328,11 @@ static inline int enqcmds(void __iomem *dst, const void *src)
 	return 0;
 }
 
+<<<<<<< HEAD
 static __always_inline void tile_release(void)
+=======
+static inline void tile_release(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/*
 	 * Instruction opcode for TILERELEASE; supported in binutils

@@ -7,7 +7,10 @@
 #include <linux/module.h>
 #include <linux/device.h>
 #include <linux/err.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/powercap.h>
 
@@ -447,7 +450,11 @@ static ssize_t enabled_store(struct device *dev,
 {
 	bool mode;
 
+<<<<<<< HEAD
 	if (kstrtobool(buf, &mode))
+=======
+	if (strtobool(buf, &mode))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	if (dev->parent) {
 		struct powercap_zone *power_zone = to_powercap_zone(dev);
@@ -530,6 +537,12 @@ struct powercap_zone *powercap_register_zone(
 	power_zone->name = kstrdup(name, GFP_KERNEL);
 	if (!power_zone->name)
 		goto err_name_alloc;
+<<<<<<< HEAD
+=======
+	dev_set_name(&power_zone->dev, "%s:%x",
+					dev_name(power_zone->dev.parent),
+					power_zone->id);
+>>>>>>> b7ba80a49124 (Commit)
 	power_zone->constraints = kcalloc(nr_constraints,
 					  sizeof(*power_zone->constraints),
 					  GFP_KERNEL);
@@ -552,6 +565,7 @@ struct powercap_zone *powercap_register_zone(
 	power_zone->dev_attr_groups[0] = &power_zone->dev_zone_attr_group;
 	power_zone->dev_attr_groups[1] = NULL;
 	power_zone->dev.groups = power_zone->dev_attr_groups;
+<<<<<<< HEAD
 	dev_set_name(&power_zone->dev, "%s:%x",
 					dev_name(power_zone->dev.parent),
 					power_zone->id);
@@ -562,6 +576,11 @@ struct powercap_zone *powercap_register_zone(
 
 		return ERR_PTR(result);
 	}
+=======
+	result = device_register(&power_zone->dev);
+	if (result)
+		goto err_dev_ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	control_type->nr_zones++;
 	mutex_unlock(&control_type->lock);
@@ -679,3 +698,7 @@ fs_initcall(powercap_init);
 
 MODULE_DESCRIPTION("PowerCap sysfs Driver");
 MODULE_AUTHOR("Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

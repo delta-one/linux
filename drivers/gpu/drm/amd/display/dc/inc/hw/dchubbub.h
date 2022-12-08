@@ -46,7 +46,11 @@ struct dcn_hubbub_wm_set {
 	uint32_t pte_meta_urgent;
 	uint32_t sr_enter;
 	uint32_t sr_exit;
+<<<<<<< HEAD
 	uint32_t dram_clk_change;
+=======
+	uint32_t dram_clk_chanage;
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t usr_retrain;
 	uint32_t fclk_pstate_change;
 };
@@ -167,6 +171,7 @@ struct hubbub_funcs {
 	void (*force_pstate_change_control)(struct hubbub *hubbub, bool force, bool allow);
 
 	void (*init_watermarks)(struct hubbub *hubbub);
+<<<<<<< HEAD
 
 	/**
 	 * @program_det_size:
@@ -182,12 +187,17 @@ struct hubbub_funcs {
 	 * Configurable Return Buffer (CRB) segments which can be allocated to
 	 * compressed or detiled buffers.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void (*program_det_size)(struct hubbub *hubbub, int hubp_inst, unsigned det_buffer_size_in_kbyte);
 	void (*program_compbuf_size)(struct hubbub *hubbub, unsigned compbuf_size_kb, bool safe_to_increase);
 	void (*init_crb)(struct hubbub *hubbub);
 	void (*force_usr_retraining_allow)(struct hubbub *hubbub, bool allow);
+<<<<<<< HEAD
 	void (*set_request_limit)(struct hubbub *hubbub, int memory_channel_count, int words_per_channel);
 	void (*dchubbub_init)(struct hubbub *hubbub);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct hubbub {

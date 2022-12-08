@@ -40,10 +40,13 @@
 #define ECC_IDLE_REG(op)	((op) == ECC_ENCODE ? ECC_ENCIDLE : ECC_DECIDLE)
 #define ECC_CTL_REG(op)		((op) == ECC_ENCODE ? ECC_ENCCON : ECC_DECCON)
 
+<<<<<<< HEAD
 #define ECC_ERRMASK_MT7622	GENMASK(4, 0)
 #define ECC_ERRMASK_MT2701	GENMASK(5, 0)
 #define ECC_ERRMASK_MT2712	GENMASK(6, 0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mtk_ecc_caps {
 	u32 err_mask;
 	u32 err_shift;
@@ -83,10 +86,13 @@ static const u8 ecc_strength_mt7622[] = {
 	4, 6, 8, 10, 12
 };
 
+<<<<<<< HEAD
 static const u8 ecc_strength_mt7986[] = {
 	4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum mtk_ecc_regs {
 	ECC_ENCPAR00,
 	ECC_ENCIRQ_EN,
@@ -459,7 +465,11 @@ unsigned int mtk_ecc_get_parity_bits(struct mtk_ecc *ecc)
 EXPORT_SYMBOL(mtk_ecc_get_parity_bits);
 
 static const struct mtk_ecc_caps mtk_ecc_caps_mt2701 = {
+<<<<<<< HEAD
 	.err_mask = ECC_ERRMASK_MT2701,
+=======
+	.err_mask = 0x3f,
+>>>>>>> b7ba80a49124 (Commit)
 	.err_shift = 8,
 	.ecc_strength = ecc_strength_mt2701,
 	.ecc_regs = mt2701_ecc_regs,
@@ -470,7 +480,11 @@ static const struct mtk_ecc_caps mtk_ecc_caps_mt2701 = {
 };
 
 static const struct mtk_ecc_caps mtk_ecc_caps_mt2712 = {
+<<<<<<< HEAD
 	.err_mask = ECC_ERRMASK_MT2712,
+=======
+	.err_mask = 0x7f,
+>>>>>>> b7ba80a49124 (Commit)
 	.err_shift = 8,
 	.ecc_strength = ecc_strength_mt2712,
 	.ecc_regs = mt2712_ecc_regs,
@@ -481,7 +495,11 @@ static const struct mtk_ecc_caps mtk_ecc_caps_mt2712 = {
 };
 
 static const struct mtk_ecc_caps mtk_ecc_caps_mt7622 = {
+<<<<<<< HEAD
 	.err_mask = ECC_ERRMASK_MT7622,
+=======
+	.err_mask = 0x1f,
+>>>>>>> b7ba80a49124 (Commit)
 	.err_shift = 5,
 	.ecc_strength = ecc_strength_mt7622,
 	.ecc_regs = mt7622_ecc_regs,
@@ -491,6 +509,7 @@ static const struct mtk_ecc_caps mtk_ecc_caps_mt7622 = {
 	.pg_irq_sel = 0,
 };
 
+<<<<<<< HEAD
 static const struct mtk_ecc_caps mtk_ecc_caps_mt7986 = {
 	.err_mask = ECC_ERRMASK_MT7622,
 	.err_shift = 8,
@@ -502,6 +521,8 @@ static const struct mtk_ecc_caps mtk_ecc_caps_mt7986 = {
 	.pg_irq_sel = 1,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id mtk_ecc_dt_match[] = {
 	{
 		.compatible = "mediatek,mt2701-ecc",
@@ -512,9 +533,12 @@ static const struct of_device_id mtk_ecc_dt_match[] = {
 	}, {
 		.compatible = "mediatek,mt7622-ecc",
 		.data = &mtk_ecc_caps_mt7622,
+<<<<<<< HEAD
 	}, {
 		.compatible = "mediatek,mt7986-ecc",
 		.data = &mtk_ecc_caps_mt7986,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{},
 };

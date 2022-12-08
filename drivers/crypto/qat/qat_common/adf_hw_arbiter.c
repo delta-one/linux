@@ -36,7 +36,11 @@ int adf_init_arb(struct adf_accel_dev *accel_dev)
 		WRITE_CSR_ARB_SARCONFIG(csr, arb_off, arb, arb_cfg);
 
 	/* Map worker threads to service arbiters */
+<<<<<<< HEAD
 	thd_2_arb_cfg = hw_data->get_arb_mapping(accel_dev);
+=======
+	thd_2_arb_cfg = hw_data->get_arb_mapping();
+>>>>>>> b7ba80a49124 (Commit)
 
 	for_each_set_bit(i, &ae_mask, hw_data->num_engines)
 		WRITE_CSR_ARB_WT2SAM(csr, arb_off, wt_off, i, thd_2_arb_cfg[i]);

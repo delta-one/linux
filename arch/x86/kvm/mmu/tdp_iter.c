@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "mmu_internal.h"
 #include "tdp_iter.h"
@@ -16,6 +19,14 @@ static void tdp_iter_refresh_sptep(struct tdp_iter *iter)
 	iter->old_spte = kvm_tdp_mmu_read_spte(iter->sptep);
 }
 
+<<<<<<< HEAD
+=======
+static gfn_t round_gfn_for_level(gfn_t gfn, int level)
+{
+	return gfn & -KVM_PAGES_PER_HPAGE(level);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Return the TDP iterator to the root PT and allow it to continue its
  * traversal over the paging structure from there.
@@ -26,7 +37,11 @@ void tdp_iter_restart(struct tdp_iter *iter)
 	iter->yielded_gfn = iter->next_last_level_gfn;
 	iter->level = iter->root_level;
 
+<<<<<<< HEAD
 	iter->gfn = gfn_round_for_level(iter->next_last_level_gfn, iter->level);
+=======
+	iter->gfn = round_gfn_for_level(iter->next_last_level_gfn, iter->level);
+>>>>>>> b7ba80a49124 (Commit)
 	tdp_iter_refresh_sptep(iter);
 
 	iter->valid = true;
@@ -93,7 +108,11 @@ static bool try_step_down(struct tdp_iter *iter)
 
 	iter->level--;
 	iter->pt_path[iter->level - 1] = child_pt;
+<<<<<<< HEAD
 	iter->gfn = gfn_round_for_level(iter->next_last_level_gfn, iter->level);
+=======
+	iter->gfn = round_gfn_for_level(iter->next_last_level_gfn, iter->level);
+>>>>>>> b7ba80a49124 (Commit)
 	tdp_iter_refresh_sptep(iter);
 
 	return true;
@@ -135,7 +154,11 @@ static bool try_step_up(struct tdp_iter *iter)
 		return false;
 
 	iter->level++;
+<<<<<<< HEAD
 	iter->gfn = gfn_round_for_level(iter->gfn, iter->level);
+=======
+	iter->gfn = round_gfn_for_level(iter->gfn, iter->level);
+>>>>>>> b7ba80a49124 (Commit)
 	tdp_iter_refresh_sptep(iter);
 
 	return true;

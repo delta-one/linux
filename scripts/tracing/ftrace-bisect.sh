@@ -12,7 +12,11 @@
 #   (note, if this is a problem with function_graph tracing, then simply
 #    replace "function" with "function_graph" in the following steps).
 #
+<<<<<<< HEAD
 #  # cd /sys/kernel/tracing
+=======
+#  # cd /sys/kernel/debug/tracing
+>>>>>>> b7ba80a49124 (Commit)
 #  # echo schedule > set_ftrace_filter
 #  # echo function > current_tracer
 #
@@ -20,6 +24,7 @@
 #
 #  # echo nop > current_tracer
 #
+<<<<<<< HEAD
 # Starting with v5.1 this can be done with numbers, making it much faster:
 #
 # The old (slow) way, for kernels before v5.1.
@@ -47,13 +52,28 @@
 #  # ftrace-bisect ~/full-file ~/test-file ~/non-test-file
 #  # cat ~/test-file > set_ftrace_filter
 #
+=======
+#  # cat available_filter_functions > ~/full-file
+#  # ftrace-bisect ~/full-file ~/test-file ~/non-test-file
+#  # cat ~/test-file > set_ftrace_filter
+#
+# *** Note *** this will take several minutes. Setting multiple functions is
+# an O(n^2) operation, and we are dealing with thousands of functions. So go
+# have  coffee, talk with your coworkers, read facebook. And eventually, this
+# operation will end.
+#
+>>>>>>> b7ba80a49124 (Commit)
 #  # echo function > current_tracer
 #
 # If it crashes, we know that ~/test-file has a bad function.
 #
 #   Reboot back to test kernel.
 #
+<<<<<<< HEAD
 #     # cd /sys/kernel/tracing
+=======
+#     # cd /sys/kernel/debug/tracing
+>>>>>>> b7ba80a49124 (Commit)
 #     # mv ~/test-file ~/full-file
 #
 # If it didn't crash.

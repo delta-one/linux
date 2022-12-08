@@ -303,7 +303,11 @@ static int gud_connector_atomic_check(struct drm_connector *connector,
 	    old_state->tv.margins.right != new_state->tv.margins.right ||
 	    old_state->tv.margins.top != new_state->tv.margins.top ||
 	    old_state->tv.margins.bottom != new_state->tv.margins.bottom ||
+<<<<<<< HEAD
 	    old_state->tv.legacy_mode != new_state->tv.legacy_mode ||
+=======
+	    old_state->tv.mode != new_state->tv.mode ||
+>>>>>>> b7ba80a49124 (Commit)
 	    old_state->tv.brightness != new_state->tv.brightness ||
 	    old_state->tv.contrast != new_state->tv.contrast ||
 	    old_state->tv.flicker_reduction != new_state->tv.flicker_reduction ||
@@ -355,7 +359,11 @@ static void gud_connector_reset(struct drm_connector *connector)
 	drm_atomic_helper_connector_reset(connector);
 	connector->state->tv = gconn->initial_tv_state;
 	/* Set margins from command line */
+<<<<<<< HEAD
 	drm_atomic_helper_connector_tv_margins_reset(connector);
+=======
+	drm_atomic_helper_connector_tv_reset(connector);
+>>>>>>> b7ba80a49124 (Commit)
 	if (gconn->initial_brightness >= 0)
 		connector->state->tv.brightness = gconn->initial_brightness;
 }
@@ -400,7 +408,11 @@ static int gud_connector_add_tv_mode(struct gud_device *gdrm, struct drm_connect
 	for (i = 0; i < num_modes; i++)
 		modes[i] = &buf[i * GUD_CONNECTOR_TV_MODE_NAME_LEN];
 
+<<<<<<< HEAD
 	ret = drm_mode_create_tv_properties_legacy(connector->dev, num_modes, modes);
+=======
+	ret = drm_mode_create_tv_properties(connector->dev, num_modes, modes);
+>>>>>>> b7ba80a49124 (Commit)
 free:
 	kfree(buf);
 	if (ret < 0)
@@ -424,7 +436,11 @@ gud_connector_property_lookup(struct drm_connector *connector, u16 prop)
 	case GUD_PROPERTY_TV_BOTTOM_MARGIN:
 		return config->tv_bottom_margin_property;
 	case GUD_PROPERTY_TV_MODE:
+<<<<<<< HEAD
 		return config->legacy_tv_mode_property;
+=======
+		return config->tv_mode_property;
+>>>>>>> b7ba80a49124 (Commit)
 	case GUD_PROPERTY_TV_BRIGHTNESS:
 		return config->tv_brightness_property;
 	case GUD_PROPERTY_TV_CONTRAST:
@@ -454,7 +470,11 @@ static unsigned int *gud_connector_tv_state_val(u16 prop, struct drm_tv_connecto
 	case GUD_PROPERTY_TV_BOTTOM_MARGIN:
 		return &state->margins.bottom;
 	case GUD_PROPERTY_TV_MODE:
+<<<<<<< HEAD
 		return &state->legacy_mode;
+=======
+		return &state->mode;
+>>>>>>> b7ba80a49124 (Commit)
 	case GUD_PROPERTY_TV_BRIGHTNESS:
 		return &state->brightness;
 	case GUD_PROPERTY_TV_CONTRAST:
@@ -539,7 +559,11 @@ static int gud_connector_add_properties(struct gud_device *gdrm, struct gud_conn
 			fallthrough;
 		case GUD_PROPERTY_TV_HUE:
 			/* This is a no-op if already added. */
+<<<<<<< HEAD
 			ret = drm_mode_create_tv_properties_legacy(drm, 0, NULL);
+=======
+			ret = drm_mode_create_tv_properties(drm, 0, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret)
 				goto out;
 			break;

@@ -236,7 +236,11 @@ MODULE_DEVICE_TABLE(of, sama5d2_piobu_ids);
 static struct platform_driver sama5d2_piobu_driver = {
 	.driver = {
 		.name		= "sama5d2-piobu",
+<<<<<<< HEAD
 		.of_match_table	= sama5d2_piobu_ids,
+=======
+		.of_match_table	= of_match_ptr(sama5d2_piobu_ids)
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = sama5d2_piobu_probe,
 };

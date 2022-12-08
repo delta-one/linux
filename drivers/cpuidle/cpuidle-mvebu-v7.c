@@ -25,9 +25,15 @@
 
 static int (*mvebu_v7_cpu_suspend)(int);
 
+<<<<<<< HEAD
 static __cpuidle int mvebu_v7_enter_idle(struct cpuidle_device *dev,
 					 struct cpuidle_driver *drv,
 					 int index)
+=======
+static int mvebu_v7_enter_idle(struct cpuidle_device *dev,
+				struct cpuidle_driver *drv,
+				int index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 	bool deepidle = false;
@@ -36,10 +42,14 @@ static __cpuidle int mvebu_v7_enter_idle(struct cpuidle_device *dev,
 	if (drv->states[index].flags & MVEBU_V7_FLAG_DEEP_IDLE)
 		deepidle = true;
 
+<<<<<<< HEAD
 	ct_cpuidle_enter();
 	ret = mvebu_v7_cpu_suspend(deepidle);
 	ct_cpuidle_exit();
 
+=======
+	ret = mvebu_v7_cpu_suspend(deepidle);
+>>>>>>> b7ba80a49124 (Commit)
 	cpu_pm_exit();
 
 	if (ret)
@@ -56,7 +66,10 @@ static struct cpuidle_driver armadaxp_idle_driver = {
 		.exit_latency		= 100,
 		.power_usage		= 50,
 		.target_residency	= 1000,
+<<<<<<< HEAD
 		.flags			= CPUIDLE_FLAG_RCU_IDLE,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.name			= "MV CPU IDLE",
 		.desc			= "CPU power down",
 	},
@@ -65,7 +78,11 @@ static struct cpuidle_driver armadaxp_idle_driver = {
 		.exit_latency		= 1000,
 		.power_usage		= 5,
 		.target_residency	= 10000,
+<<<<<<< HEAD
 		.flags			= MVEBU_V7_FLAG_DEEP_IDLE | CPUIDLE_FLAG_RCU_IDLE,
+=======
+		.flags			= MVEBU_V7_FLAG_DEEP_IDLE,
+>>>>>>> b7ba80a49124 (Commit)
 		.name			= "MV CPU DEEP IDLE",
 		.desc			= "CPU and L2 Fabric power down",
 	},
@@ -80,7 +97,11 @@ static struct cpuidle_driver armada370_idle_driver = {
 		.exit_latency		= 100,
 		.power_usage		= 5,
 		.target_residency	= 1000,
+<<<<<<< HEAD
 		.flags			= MVEBU_V7_FLAG_DEEP_IDLE | CPUIDLE_FLAG_RCU_IDLE,
+=======
+		.flags			= MVEBU_V7_FLAG_DEEP_IDLE,
+>>>>>>> b7ba80a49124 (Commit)
 		.name			= "Deep Idle",
 		.desc			= "CPU and L2 Fabric power down",
 	},
@@ -95,7 +116,10 @@ static struct cpuidle_driver armada38x_idle_driver = {
 		.exit_latency		= 10,
 		.power_usage		= 5,
 		.target_residency	= 100,
+<<<<<<< HEAD
 		.flags			= CPUIDLE_FLAG_RCU_IDLE,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.name			= "Idle",
 		.desc			= "CPU and SCU power down",
 	},

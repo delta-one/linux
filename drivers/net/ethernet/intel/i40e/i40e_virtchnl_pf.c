@@ -17,7 +17,11 @@
  **/
 static void i40e_vc_vf_broadcast(struct i40e_pf *pf,
 				 enum virtchnl_ops v_opcode,
+<<<<<<< HEAD
 				 int v_retval, u8 *msg,
+=======
+				 i40e_status v_retval, u8 *msg,
+>>>>>>> b7ba80a49124 (Commit)
 				 u16 msglen)
 {
 	struct i40e_hw *hw = &pf->hw;
@@ -441,6 +445,7 @@ irq_list_done:
 }
 
 /**
+<<<<<<< HEAD
  * i40e_release_rdma_qvlist
  * @vf: pointer to the VF.
  *
@@ -449,6 +454,16 @@ static void i40e_release_rdma_qvlist(struct i40e_vf *vf)
 {
 	struct i40e_pf *pf = vf->pf;
 	struct virtchnl_rdma_qvlist_info *qvlist_info = vf->qvlist_info;
+=======
+ * i40e_release_iwarp_qvlist
+ * @vf: pointer to the VF.
+ *
+ **/
+static void i40e_release_iwarp_qvlist(struct i40e_vf *vf)
+{
+	struct i40e_pf *pf = vf->pf;
+	struct virtchnl_iwarp_qvlist_info *qvlist_info = vf->qvlist_info;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 msix_vf;
 	u32 i;
 
@@ -457,7 +472,11 @@ static void i40e_release_rdma_qvlist(struct i40e_vf *vf)
 
 	msix_vf = pf->hw.func_caps.num_msix_vectors_vf;
 	for (i = 0; i < qvlist_info->num_vectors; i++) {
+<<<<<<< HEAD
 		struct virtchnl_rdma_qv_info *qv_info;
+=======
+		struct virtchnl_iwarp_qv_info *qv_info;
+>>>>>>> b7ba80a49124 (Commit)
 		u32 next_q_index, next_q_type;
 		struct i40e_hw *hw = &pf->hw;
 		u32 v_idx, reg_idx, reg;
@@ -491,12 +510,17 @@ static void i40e_release_rdma_qvlist(struct i40e_vf *vf)
 }
 
 /**
+<<<<<<< HEAD
  * i40e_config_rdma_qvlist
+=======
+ * i40e_config_iwarp_qvlist
+>>>>>>> b7ba80a49124 (Commit)
  * @vf: pointer to the VF info
  * @qvlist_info: queue and vector list
  *
  * Return 0 on success or < 0 on error
  **/
+<<<<<<< HEAD
 static int
 i40e_config_rdma_qvlist(struct i40e_vf *vf,
 			struct virtchnl_rdma_qvlist_info *qvlist_info)
@@ -504,6 +528,14 @@ i40e_config_rdma_qvlist(struct i40e_vf *vf,
 	struct i40e_pf *pf = vf->pf;
 	struct i40e_hw *hw = &pf->hw;
 	struct virtchnl_rdma_qv_info *qv_info;
+=======
+static int i40e_config_iwarp_qvlist(struct i40e_vf *vf,
+				    struct virtchnl_iwarp_qvlist_info *qvlist_info)
+{
+	struct i40e_pf *pf = vf->pf;
+	struct i40e_hw *hw = &pf->hw;
+	struct virtchnl_iwarp_qv_info *qv_info;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 v_idx, i, reg_idx, reg;
 	u32 next_q_idx, next_q_type;
 	u32 msix_vf;
@@ -1247,6 +1279,7 @@ err:
  * @vl: List of VLANs - apply filter for given VLANs
  * @num_vlans: Number of elements in @vl
  **/
+<<<<<<< HEAD
 static int
 i40e_set_vsi_promisc(struct i40e_vf *vf, u16 seid, bool multi_enable,
 		     bool unicast_enable, s16 *vl, u16 num_vlans)
@@ -1254,6 +1287,15 @@ i40e_set_vsi_promisc(struct i40e_vf *vf, u16 seid, bool multi_enable,
 	struct i40e_pf *pf = vf->pf;
 	struct i40e_hw *hw = &pf->hw;
 	int aq_ret, aq_tmp = 0;
+=======
+static i40e_status
+i40e_set_vsi_promisc(struct i40e_vf *vf, u16 seid, bool multi_enable,
+		     bool unicast_enable, s16 *vl, u16 num_vlans)
+{
+	i40e_status aq_ret, aq_tmp = 0;
+	struct i40e_pf *pf = vf->pf;
+	struct i40e_hw *hw = &pf->hw;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	/* No VLAN to set promisc on, set on VSI */
@@ -1265,9 +1307,15 @@ i40e_set_vsi_promisc(struct i40e_vf *vf, u16 seid, bool multi_enable,
 			int aq_err = pf->hw.aq.asq_last_status;
 
 			dev_err(&pf->pdev->dev,
+<<<<<<< HEAD
 				"VF %d failed to set multicast promiscuous mode err %pe aq_err %s\n",
 				vf->vf_id,
 				ERR_PTR(aq_ret),
+=======
+				"VF %d failed to set multicast promiscuous mode err %s aq_err %s\n",
+				vf->vf_id,
+				i40e_stat_str(&pf->hw, aq_ret),
+>>>>>>> b7ba80a49124 (Commit)
 				i40e_aq_str(&pf->hw, aq_err));
 
 			return aq_ret;
@@ -1281,9 +1329,15 @@ i40e_set_vsi_promisc(struct i40e_vf *vf, u16 seid, bool multi_enable,
 			int aq_err = pf->hw.aq.asq_last_status;
 
 			dev_err(&pf->pdev->dev,
+<<<<<<< HEAD
 				"VF %d failed to set unicast promiscuous mode err %pe aq_err %s\n",
 				vf->vf_id,
 				ERR_PTR(aq_ret),
+=======
+				"VF %d failed to set unicast promiscuous mode err %s aq_err %s\n",
+				vf->vf_id,
+				i40e_stat_str(&pf->hw, aq_ret),
+>>>>>>> b7ba80a49124 (Commit)
 				i40e_aq_str(&pf->hw, aq_err));
 		}
 
@@ -1298,9 +1352,15 @@ i40e_set_vsi_promisc(struct i40e_vf *vf, u16 seid, bool multi_enable,
 			int aq_err = pf->hw.aq.asq_last_status;
 
 			dev_err(&pf->pdev->dev,
+<<<<<<< HEAD
 				"VF %d failed to set multicast promiscuous mode err %pe aq_err %s\n",
 				vf->vf_id,
 				ERR_PTR(aq_ret),
+=======
+				"VF %d failed to set multicast promiscuous mode err %s aq_err %s\n",
+				vf->vf_id,
+				i40e_stat_str(&pf->hw, aq_ret),
+>>>>>>> b7ba80a49124 (Commit)
 				i40e_aq_str(&pf->hw, aq_err));
 
 			if (!aq_tmp)
@@ -1314,9 +1374,15 @@ i40e_set_vsi_promisc(struct i40e_vf *vf, u16 seid, bool multi_enable,
 			int aq_err = pf->hw.aq.asq_last_status;
 
 			dev_err(&pf->pdev->dev,
+<<<<<<< HEAD
 				"VF %d failed to set unicast promiscuous mode err %pe aq_err %s\n",
 				vf->vf_id,
 				ERR_PTR(aq_ret),
+=======
+				"VF %d failed to set unicast promiscuous mode err %s aq_err %s\n",
+				vf->vf_id,
+				i40e_stat_str(&pf->hw, aq_ret),
+>>>>>>> b7ba80a49124 (Commit)
 				i40e_aq_str(&pf->hw, aq_err));
 
 			if (!aq_tmp)
@@ -1340,6 +1406,7 @@ i40e_set_vsi_promisc(struct i40e_vf *vf, u16 seid, bool multi_enable,
  * Called from the VF to configure the promiscuous mode of
  * VF vsis and from the VF reset path to reset promiscuous mode.
  **/
+<<<<<<< HEAD
 static int i40e_config_vf_promiscuous_mode(struct i40e_vf *vf,
 					   u16 vsi_id,
 					   bool allmulti,
@@ -1347,6 +1414,15 @@ static int i40e_config_vf_promiscuous_mode(struct i40e_vf *vf,
 {
 	struct i40e_pf *pf = vf->pf;
 	int aq_ret = I40E_SUCCESS;
+=======
+static i40e_status i40e_config_vf_promiscuous_mode(struct i40e_vf *vf,
+						   u16 vsi_id,
+						   bool allmulti,
+						   bool alluni)
+{
+	i40e_status aq_ret = I40E_SUCCESS;
+	struct i40e_pf *pf = vf->pf;
+>>>>>>> b7ba80a49124 (Commit)
 	struct i40e_vsi *vsi;
 	u16 num_vlans;
 	s16 *vl;
@@ -1537,12 +1613,19 @@ bool i40e_reset_vf(struct i40e_vf *vf, bool flr)
 	if (test_bit(__I40E_VF_RESETS_DISABLED, pf->state))
 		return true;
 
+<<<<<<< HEAD
 	/* Bail out if VFs are disabled. */
 	if (test_bit(__I40E_VF_DISABLE, pf->state))
 		return true;
 
 	/* If VF is being reset already we don't need to continue. */
 	if (test_and_set_bit(I40E_VF_STATE_RESETTING, &vf->vf_states))
+=======
+	/* If the VFs have been disabled, this means something else is
+	 * resetting the VF, so we shouldn't continue.
+	 */
+	if (test_and_set_bit(__I40E_VF_DISABLE, pf->state))
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 
 	i40e_trigger_vf_reset(vf, flr);
@@ -1579,8 +1662,12 @@ bool i40e_reset_vf(struct i40e_vf *vf, bool flr)
 	i40e_cleanup_reset_vf(vf);
 
 	i40e_flush(hw);
+<<<<<<< HEAD
 	usleep_range(20000, 40000);
 	clear_bit(I40E_VF_STATE_RESETTING, &vf->vf_states);
+=======
+	clear_bit(__I40E_VF_DISABLE, pf->state);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return true;
 }
@@ -1613,12 +1700,17 @@ bool i40e_reset_all_vfs(struct i40e_pf *pf, bool flr)
 		return false;
 
 	/* Begin reset on all VFs at once */
+<<<<<<< HEAD
 	for (v = 0; v < pf->num_alloc_vfs; v++) {
 		vf = &pf->vf[v];
 		/* If VF is being reset no need to trigger reset again */
 		if (!test_bit(I40E_VF_STATE_RESETTING, &vf->vf_states))
 			i40e_trigger_vf_reset(&pf->vf[v], flr);
 	}
+=======
+	for (v = 0; v < pf->num_alloc_vfs; v++)
+		i40e_trigger_vf_reset(&pf->vf[v], flr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* HW requires some time to make sure it can flush the FIFO for a VF
 	 * when it resets it. Poll the VPGEN_VFRSTAT register for each VF in
@@ -1634,11 +1726,17 @@ bool i40e_reset_all_vfs(struct i40e_pf *pf, bool flr)
 		 */
 		while (v < pf->num_alloc_vfs) {
 			vf = &pf->vf[v];
+<<<<<<< HEAD
 			if (!test_bit(I40E_VF_STATE_RESETTING, &vf->vf_states)) {
 				reg = rd32(hw, I40E_VPGEN_VFRSTAT(vf->vf_id));
 				if (!(reg & I40E_VPGEN_VFRSTAT_VFRD_MASK))
 					break;
 			}
+=======
+			reg = rd32(hw, I40E_VPGEN_VFRSTAT(vf->vf_id));
+			if (!(reg & I40E_VPGEN_VFRSTAT_VFRD_MASK))
+				break;
+>>>>>>> b7ba80a49124 (Commit)
 
 			/* If the current VF has finished resetting, move on
 			 * to the next VF in sequence.
@@ -1666,10 +1764,13 @@ bool i40e_reset_all_vfs(struct i40e_pf *pf, bool flr)
 		if (pf->vf[v].lan_vsi_idx == 0)
 			continue;
 
+<<<<<<< HEAD
 		/* If VF is reset in another thread just continue */
 		if (test_bit(I40E_VF_STATE_RESETTING, &vf->vf_states))
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		i40e_vsi_stop_rings_no_wait(pf->vsi[pf->vf[v].lan_vsi_idx]);
 	}
 
@@ -1681,10 +1782,13 @@ bool i40e_reset_all_vfs(struct i40e_pf *pf, bool flr)
 		if (pf->vf[v].lan_vsi_idx == 0)
 			continue;
 
+<<<<<<< HEAD
 		/* If VF is reset in another thread just continue */
 		if (test_bit(I40E_VF_STATE_RESETTING, &vf->vf_states))
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		i40e_vsi_wait_queues_disabled(pf->vsi[pf->vf[v].lan_vsi_idx]);
 	}
 
@@ -1694,6 +1798,7 @@ bool i40e_reset_all_vfs(struct i40e_pf *pf, bool flr)
 	mdelay(50);
 
 	/* Finish the reset on each VF */
+<<<<<<< HEAD
 	for (v = 0; v < pf->num_alloc_vfs; v++) {
 		/* If VF is reset in another thread just continue */
 		if (test_bit(I40E_VF_STATE_RESETTING, &vf->vf_states))
@@ -1704,6 +1809,12 @@ bool i40e_reset_all_vfs(struct i40e_pf *pf, bool flr)
 
 	i40e_flush(hw);
 	usleep_range(20000, 40000);
+=======
+	for (v = 0; v < pf->num_alloc_vfs; v++)
+		i40e_cleanup_reset_vf(&pf->vf[v]);
+
+	i40e_flush(hw);
+>>>>>>> b7ba80a49124 (Commit)
 	clear_bit(__I40E_VF_DISABLE, pf->state);
 
 	return true;
@@ -1956,7 +2067,11 @@ static int i40e_vc_send_msg_to_vf(struct i40e_vf *vf, u32 v_opcode,
 	struct i40e_pf *pf;
 	struct i40e_hw *hw;
 	int abs_vf_id;
+<<<<<<< HEAD
 	int aq_ret;
+=======
+	i40e_status aq_ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* validate the request */
 	if (!vf || vf->vf_id >= vf->pf->num_alloc_vfs)
@@ -1988,7 +2103,11 @@ static int i40e_vc_send_msg_to_vf(struct i40e_vf *vf, u32 v_opcode,
  **/
 static int i40e_vc_send_resp_to_vf(struct i40e_vf *vf,
 				   enum virtchnl_ops opcode,
+<<<<<<< HEAD
 				   int retval)
+=======
+				   i40e_status retval)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return i40e_vc_send_msg_to_vf(vf, opcode, retval, NULL, 0);
 }
@@ -2092,9 +2211,15 @@ static int i40e_vc_get_vf_resources_msg(struct i40e_vf *vf, u8 *msg)
 {
 	struct virtchnl_vf_resource *vfres = NULL;
 	struct i40e_pf *pf = vf->pf;
+<<<<<<< HEAD
 	struct i40e_vsi *vsi;
 	int num_vsis = 1;
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+	struct i40e_vsi *vsi;
+	int num_vsis = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t len = 0;
 	int ret;
 
@@ -2124,11 +2249,19 @@ static int i40e_vc_get_vf_resources_msg(struct i40e_vf *vf, u8 *msg)
 		vfres->vf_cap_flags |= VIRTCHNL_VF_OFFLOAD_VLAN;
 
 	if (i40e_vf_client_capable(pf, vf->vf_id) &&
+<<<<<<< HEAD
 	    (vf->driver_caps & VIRTCHNL_VF_OFFLOAD_RDMA)) {
 		vfres->vf_cap_flags |= VIRTCHNL_VF_OFFLOAD_RDMA;
 		set_bit(I40E_VF_STATE_RDMAENA, &vf->vf_states);
 	} else {
 		clear_bit(I40E_VF_STATE_RDMAENA, &vf->vf_states);
+=======
+	    (vf->driver_caps & VIRTCHNL_VF_OFFLOAD_IWARP)) {
+		vfres->vf_cap_flags |= VIRTCHNL_VF_OFFLOAD_IWARP;
+		set_bit(I40E_VF_STATE_IWARPENA, &vf->vf_states);
+	} else {
+		clear_bit(I40E_VF_STATE_IWARPENA, &vf->vf_states);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (vf->driver_caps & VIRTCHNL_VF_OFFLOAD_RSS_PF) {
@@ -2222,9 +2355,15 @@ static int i40e_vc_config_promiscuous_mode_msg(struct i40e_vf *vf, u8 *msg)
 	struct virtchnl_promisc_info *info =
 	    (struct virtchnl_promisc_info *)msg;
 	struct i40e_pf *pf = vf->pf;
+<<<<<<< HEAD
 	bool allmulti = false;
 	bool alluni = false;
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+	bool allmulti = false;
+	bool alluni = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE)) {
 		aq_ret = I40E_ERR_PARAM;
@@ -2309,10 +2448,17 @@ static int i40e_vc_config_queues_msg(struct i40e_vf *vf, u8 *msg)
 	struct virtchnl_queue_pair_info *qpi;
 	u16 vsi_id, vsi_queue_id = 0;
 	struct i40e_pf *pf = vf->pf;
+<<<<<<< HEAD
 	int i, j = 0, idx = 0;
 	struct i40e_vsi *vsi;
 	u16 num_qps_all = 0;
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+	int i, j = 0, idx = 0;
+	struct i40e_vsi *vsi;
+	u16 num_qps_all = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE)) {
 		aq_ret = I40E_ERR_PARAM;
@@ -2459,8 +2605,13 @@ static int i40e_vc_config_irq_map_msg(struct i40e_vf *vf, u8 *msg)
 	struct virtchnl_irq_map_info *irqmap_info =
 	    (struct virtchnl_irq_map_info *)msg;
 	struct virtchnl_vector_map *map;
+<<<<<<< HEAD
 	int aq_ret = 0;
 	u16 vsi_id;
+=======
+	u16 vsi_id;
+	i40e_status aq_ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE)) {
@@ -2575,7 +2726,11 @@ static int i40e_vc_enable_queues_msg(struct i40e_vf *vf, u8 *msg)
 	struct virtchnl_queue_select *vqs =
 	    (struct virtchnl_queue_select *)msg;
 	struct i40e_pf *pf = vf->pf;
+<<<<<<< HEAD
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	if (!test_bit(I40E_VF_STATE_ACTIVE, &vf->vf_states)) {
@@ -2633,7 +2788,11 @@ static int i40e_vc_disable_queues_msg(struct i40e_vf *vf, u8 *msg)
 	struct virtchnl_queue_select *vqs =
 	    (struct virtchnl_queue_select *)msg;
 	struct i40e_pf *pf = vf->pf;
+<<<<<<< HEAD
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE)) {
 		aq_ret = I40E_ERR_PARAM;
@@ -2784,7 +2943,11 @@ static int i40e_vc_get_stats_msg(struct i40e_vf *vf, u8 *msg)
 	    (struct virtchnl_queue_select *)msg;
 	struct i40e_pf *pf = vf->pf;
 	struct i40e_eth_stats stats;
+<<<<<<< HEAD
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct i40e_vsi *vsi;
 
 	memset(&stats, 0, sizeof(struct i40e_eth_stats));
@@ -2927,7 +3090,11 @@ static int i40e_vc_add_mac_addr_msg(struct i40e_vf *vf, u8 *msg)
 	    (struct virtchnl_ether_addr_list *)msg;
 	struct i40e_pf *pf = vf->pf;
 	struct i40e_vsi *vsi = NULL;
+<<<<<<< HEAD
 	int ret = 0;
+=======
+	i40e_status ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE) ||
@@ -2999,7 +3166,11 @@ static int i40e_vc_del_mac_addr_msg(struct i40e_vf *vf, u8 *msg)
 	bool was_unimac_deleted = false;
 	struct i40e_pf *pf = vf->pf;
 	struct i40e_vsi *vsi = NULL;
+<<<<<<< HEAD
 	int ret = 0;
+=======
+	i40e_status ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE) ||
@@ -3072,7 +3243,11 @@ static int i40e_vc_add_vlan_msg(struct i40e_vf *vf, u8 *msg)
 	    (struct virtchnl_vlan_filter_list *)msg;
 	struct i40e_pf *pf = vf->pf;
 	struct i40e_vsi *vsi = NULL;
+<<<<<<< HEAD
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	if ((vf->num_vlan >= I40E_VC_MAX_VLAN_PER_VF) &&
@@ -3143,7 +3318,11 @@ static int i40e_vc_remove_vlan_msg(struct i40e_vf *vf, u8 *msg)
 	    (struct virtchnl_vlan_filter_list *)msg;
 	struct i40e_pf *pf = vf->pf;
 	struct i40e_vsi *vsi = NULL;
+<<<<<<< HEAD
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE) ||
@@ -3188,13 +3367,18 @@ error_param:
 }
 
 /**
+<<<<<<< HEAD
  * i40e_vc_rdma_msg
+=======
+ * i40e_vc_iwarp_msg
+>>>>>>> b7ba80a49124 (Commit)
  * @vf: pointer to the VF info
  * @msg: pointer to the msg buffer
  * @msglen: msg length
  *
  * called from the VF for the iwarp msgs
  **/
+<<<<<<< HEAD
 static int i40e_vc_rdma_msg(struct i40e_vf *vf, u8 *msg, u16 msglen)
 {
 	struct i40e_pf *pf = vf->pf;
@@ -3203,6 +3387,16 @@ static int i40e_vc_rdma_msg(struct i40e_vf *vf, u8 *msg, u16 msglen)
 
 	if (!test_bit(I40E_VF_STATE_ACTIVE, &vf->vf_states) ||
 	    !test_bit(I40E_VF_STATE_RDMAENA, &vf->vf_states)) {
+=======
+static int i40e_vc_iwarp_msg(struct i40e_vf *vf, u8 *msg, u16 msglen)
+{
+	struct i40e_pf *pf = vf->pf;
+	int abs_vf_id = vf->vf_id + pf->hw.func_caps.vf_base_id;
+	i40e_status aq_ret = 0;
+
+	if (!test_bit(I40E_VF_STATE_ACTIVE, &vf->vf_states) ||
+	    !test_bit(I40E_VF_STATE_IWARPENA, &vf->vf_states)) {
+>>>>>>> b7ba80a49124 (Commit)
 		aq_ret = I40E_ERR_PARAM;
 		goto error_param;
 	}
@@ -3212,18 +3406,27 @@ static int i40e_vc_rdma_msg(struct i40e_vf *vf, u8 *msg, u16 msglen)
 
 error_param:
 	/* send the response to the VF */
+<<<<<<< HEAD
 	return i40e_vc_send_resp_to_vf(vf, VIRTCHNL_OP_RDMA,
+=======
+	return i40e_vc_send_resp_to_vf(vf, VIRTCHNL_OP_IWARP,
+>>>>>>> b7ba80a49124 (Commit)
 				       aq_ret);
 }
 
 /**
+<<<<<<< HEAD
  * i40e_vc_rdma_qvmap_msg
+=======
+ * i40e_vc_iwarp_qvmap_msg
+>>>>>>> b7ba80a49124 (Commit)
  * @vf: pointer to the VF info
  * @msg: pointer to the msg buffer
  * @config: config qvmap or release it
  *
  * called from the VF for the iwarp msgs
  **/
+<<<<<<< HEAD
 static int i40e_vc_rdma_qvmap_msg(struct i40e_vf *vf, u8 *msg, bool config)
 {
 	struct virtchnl_rdma_qvlist_info *qvlist_info =
@@ -3232,22 +3435,44 @@ static int i40e_vc_rdma_qvmap_msg(struct i40e_vf *vf, u8 *msg, bool config)
 
 	if (!test_bit(I40E_VF_STATE_ACTIVE, &vf->vf_states) ||
 	    !test_bit(I40E_VF_STATE_RDMAENA, &vf->vf_states)) {
+=======
+static int i40e_vc_iwarp_qvmap_msg(struct i40e_vf *vf, u8 *msg, bool config)
+{
+	struct virtchnl_iwarp_qvlist_info *qvlist_info =
+				(struct virtchnl_iwarp_qvlist_info *)msg;
+	i40e_status aq_ret = 0;
+
+	if (!test_bit(I40E_VF_STATE_ACTIVE, &vf->vf_states) ||
+	    !test_bit(I40E_VF_STATE_IWARPENA, &vf->vf_states)) {
+>>>>>>> b7ba80a49124 (Commit)
 		aq_ret = I40E_ERR_PARAM;
 		goto error_param;
 	}
 
 	if (config) {
+<<<<<<< HEAD
 		if (i40e_config_rdma_qvlist(vf, qvlist_info))
 			aq_ret = I40E_ERR_PARAM;
 	} else {
 		i40e_release_rdma_qvlist(vf);
+=======
+		if (i40e_config_iwarp_qvlist(vf, qvlist_info))
+			aq_ret = I40E_ERR_PARAM;
+	} else {
+		i40e_release_iwarp_qvlist(vf);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 error_param:
 	/* send the response to the VF */
 	return i40e_vc_send_resp_to_vf(vf,
+<<<<<<< HEAD
 			       config ? VIRTCHNL_OP_CONFIG_RDMA_IRQ_MAP :
 			       VIRTCHNL_OP_RELEASE_RDMA_IRQ_MAP,
+=======
+			       config ? VIRTCHNL_OP_CONFIG_IWARP_IRQ_MAP :
+			       VIRTCHNL_OP_RELEASE_IWARP_IRQ_MAP,
+>>>>>>> b7ba80a49124 (Commit)
 			       aq_ret);
 }
 
@@ -3264,7 +3489,11 @@ static int i40e_vc_config_rss_key(struct i40e_vf *vf, u8 *msg)
 		(struct virtchnl_rss_key *)msg;
 	struct i40e_pf *pf = vf->pf;
 	struct i40e_vsi *vsi = NULL;
+<<<<<<< HEAD
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE) ||
 	    !i40e_vc_isvalid_vsi_id(vf, vrk->vsi_id) ||
@@ -3294,7 +3523,11 @@ static int i40e_vc_config_rss_lut(struct i40e_vf *vf, u8 *msg)
 		(struct virtchnl_rss_lut *)msg;
 	struct i40e_pf *pf = vf->pf;
 	struct i40e_vsi *vsi = NULL;
+<<<<<<< HEAD
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	u16 i;
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE) ||
@@ -3329,7 +3562,11 @@ static int i40e_vc_get_rss_hena(struct i40e_vf *vf, u8 *msg)
 {
 	struct virtchnl_rss_hena *vrh = NULL;
 	struct i40e_pf *pf = vf->pf;
+<<<<<<< HEAD
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int len = 0;
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE)) {
@@ -3366,7 +3603,11 @@ static int i40e_vc_set_rss_hena(struct i40e_vf *vf, u8 *msg)
 		(struct virtchnl_rss_hena *)msg;
 	struct i40e_pf *pf = vf->pf;
 	struct i40e_hw *hw = &pf->hw;
+<<<<<<< HEAD
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE)) {
 		aq_ret = I40E_ERR_PARAM;
@@ -3390,8 +3631,13 @@ err:
  **/
 static int i40e_vc_enable_vlan_stripping(struct i40e_vf *vf, u8 *msg)
 {
+<<<<<<< HEAD
 	struct i40e_vsi *vsi;
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+	struct i40e_vsi *vsi;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE)) {
 		aq_ret = I40E_ERR_PARAM;
@@ -3416,8 +3662,13 @@ err:
  **/
 static int i40e_vc_disable_vlan_stripping(struct i40e_vf *vf, u8 *msg)
 {
+<<<<<<< HEAD
 	struct i40e_vsi *vsi;
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+	struct i40e_vsi *vsi;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE)) {
 		aq_ret = I40E_ERR_PARAM;
@@ -3616,8 +3867,13 @@ static void i40e_del_all_cloud_filters(struct i40e_vf *vf)
 			ret = i40e_add_del_cloud_filter(vsi, cfilter, false);
 		if (ret)
 			dev_err(&pf->pdev->dev,
+<<<<<<< HEAD
 				"VF %d: Failed to delete cloud filter, err %pe aq_err %s\n",
 				vf->vf_id, ERR_PTR(ret),
+=======
+				"VF %d: Failed to delete cloud filter, err %s aq_err %s\n",
+				vf->vf_id, i40e_stat_str(&pf->hw, ret),
+>>>>>>> b7ba80a49124 (Commit)
 				i40e_aq_str(&pf->hw,
 					    pf->hw.aq.asq_last_status));
 
@@ -3643,7 +3899,11 @@ static int i40e_vc_del_cloud_filter(struct i40e_vf *vf, u8 *msg)
 	struct i40e_pf *pf = vf->pf;
 	struct i40e_vsi *vsi = NULL;
 	struct hlist_node *node;
+<<<<<<< HEAD
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int i, ret;
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE)) {
@@ -3719,8 +3979,13 @@ static int i40e_vc_del_cloud_filter(struct i40e_vf *vf, u8 *msg)
 		ret = i40e_add_del_cloud_filter(vsi, &cfilter, false);
 	if (ret) {
 		dev_err(&pf->pdev->dev,
+<<<<<<< HEAD
 			"VF %d: Failed to delete cloud filter, err %pe aq_err %s\n",
 			vf->vf_id, ERR_PTR(ret),
+=======
+			"VF %d: Failed to delete cloud filter, err %s aq_err %s\n",
+			vf->vf_id, i40e_stat_str(&pf->hw, ret),
+>>>>>>> b7ba80a49124 (Commit)
 			i40e_aq_str(&pf->hw, pf->hw.aq.asq_last_status));
 		goto err;
 	}
@@ -3774,7 +4039,11 @@ static int i40e_vc_add_cloud_filter(struct i40e_vf *vf, u8 *msg)
 	struct i40e_cloud_filter *cfilter = NULL;
 	struct i40e_pf *pf = vf->pf;
 	struct i40e_vsi *vsi = NULL;
+<<<<<<< HEAD
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int i, ret;
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE)) {
@@ -3853,8 +4122,13 @@ static int i40e_vc_add_cloud_filter(struct i40e_vf *vf, u8 *msg)
 		ret = i40e_add_del_cloud_filter(vsi, cfilter, true);
 	if (ret) {
 		dev_err(&pf->pdev->dev,
+<<<<<<< HEAD
 			"VF %d: Failed to add cloud filter, err %pe aq_err %s\n",
 			vf->vf_id, ERR_PTR(ret),
+=======
+			"VF %d: Failed to add cloud filter, err %s aq_err %s\n",
+			vf->vf_id, i40e_stat_str(&pf->hw, ret),
+>>>>>>> b7ba80a49124 (Commit)
 			i40e_aq_str(&pf->hw, pf->hw.aq.asq_last_status));
 		goto err_free;
 	}
@@ -3883,7 +4157,11 @@ static int i40e_vc_add_qch_msg(struct i40e_vf *vf, u8 *msg)
 	struct i40e_pf *pf = vf->pf;
 	struct i40e_link_status *ls = &pf->hw.phy.link_info;
 	int i, adq_request_qps = 0;
+<<<<<<< HEAD
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 speed = 0;
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE)) {
@@ -3995,7 +4273,11 @@ err:
 static int i40e_vc_del_qch_msg(struct i40e_vf *vf, u8 *msg)
 {
 	struct i40e_pf *pf = vf->pf;
+<<<<<<< HEAD
 	int aq_ret = 0;
+=======
+	i40e_status aq_ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!i40e_sync_vf_state(vf, I40E_VF_STATE_ACTIVE)) {
 		aq_ret = I40E_ERR_PARAM;
@@ -4113,6 +4395,7 @@ int i40e_vc_process_vf_msg(struct i40e_pf *pf, s16 vf_id, u32 v_opcode,
 	case VIRTCHNL_OP_GET_STATS:
 		ret = i40e_vc_get_stats_msg(vf, msg);
 		break;
+<<<<<<< HEAD
 	case VIRTCHNL_OP_RDMA:
 		ret = i40e_vc_rdma_msg(vf, msg, msglen);
 		break;
@@ -4121,6 +4404,16 @@ int i40e_vc_process_vf_msg(struct i40e_pf *pf, s16 vf_id, u32 v_opcode,
 		break;
 	case VIRTCHNL_OP_RELEASE_RDMA_IRQ_MAP:
 		ret = i40e_vc_rdma_qvmap_msg(vf, msg, false);
+=======
+	case VIRTCHNL_OP_IWARP:
+		ret = i40e_vc_iwarp_msg(vf, msg, msglen);
+		break;
+	case VIRTCHNL_OP_CONFIG_IWARP_IRQ_MAP:
+		ret = i40e_vc_iwarp_qvmap_msg(vf, msg, true);
+		break;
+	case VIRTCHNL_OP_RELEASE_IWARP_IRQ_MAP:
+		ret = i40e_vc_iwarp_qvmap_msg(vf, msg, false);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case VIRTCHNL_OP_CONFIG_RSS_KEY:
 		ret = i40e_vc_config_rss_key(vf, msg);

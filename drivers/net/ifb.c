@@ -162,18 +162,32 @@ static void ifb_stats64(struct net_device *dev,
 
 	for (i = 0; i < dev->num_tx_queues; i++,txp++) {
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&txp->rx_stats.sync);
 			packets = txp->rx_stats.packets;
 			bytes = txp->rx_stats.bytes;
 		} while (u64_stats_fetch_retry(&txp->rx_stats.sync, start));
+=======
+			start = u64_stats_fetch_begin_irq(&txp->rx_stats.sync);
+			packets = txp->rx_stats.packets;
+			bytes = txp->rx_stats.bytes;
+		} while (u64_stats_fetch_retry_irq(&txp->rx_stats.sync, start));
+>>>>>>> b7ba80a49124 (Commit)
 		stats->rx_packets += packets;
 		stats->rx_bytes += bytes;
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&txp->tx_stats.sync);
 			packets = txp->tx_stats.packets;
 			bytes = txp->tx_stats.bytes;
 		} while (u64_stats_fetch_retry(&txp->tx_stats.sync, start));
+=======
+			start = u64_stats_fetch_begin_irq(&txp->tx_stats.sync);
+			packets = txp->tx_stats.packets;
+			bytes = txp->tx_stats.bytes;
+		} while (u64_stats_fetch_retry_irq(&txp->tx_stats.sync, start));
+>>>>>>> b7ba80a49124 (Commit)
 		stats->tx_packets += packets;
 		stats->tx_bytes += bytes;
 	}
@@ -245,12 +259,20 @@ static void ifb_fill_stats_data(u64 **data,
 	int j;
 
 	do {
+<<<<<<< HEAD
 		start = u64_stats_fetch_begin(&q_stats->sync);
+=======
+		start = u64_stats_fetch_begin_irq(&q_stats->sync);
+>>>>>>> b7ba80a49124 (Commit)
 		for (j = 0; j < IFB_Q_STATS_LEN; j++) {
 			offset = ifb_q_stats_desc[j].offset;
 			(*data)[j] = *(u64 *)(stats_base + offset);
 		}
+<<<<<<< HEAD
 	} while (u64_stats_fetch_retry(&q_stats->sync, start));
+=======
+	} while (u64_stats_fetch_retry_irq(&q_stats->sync, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 	*data += IFB_Q_STATS_LEN;
 }

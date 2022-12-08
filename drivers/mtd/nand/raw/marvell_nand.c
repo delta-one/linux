@@ -114,7 +114,10 @@
 #define GENCONF_SOC_DEVICE_MUX_ECC_CLK_RST BIT(20)
 #define GENCONF_SOC_DEVICE_MUX_ECC_CORE_RST BIT(21)
 #define GENCONF_SOC_DEVICE_MUX_NFC_INT_EN BIT(25)
+<<<<<<< HEAD
 #define GENCONF_SOC_DEVICE_MUX_NFC_DEVBUS_ARB_EN BIT(27)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define GENCONF_CLK_GATING_CTRL	0x220
 #define GENCONF_CLK_GATING_CTRL_ND_GATE BIT(2)
 #define GENCONF_ND_CLK_CTRL	0x700
@@ -288,6 +291,7 @@ static const struct marvell_hw_ecc_layout marvell_nfc_layouts[] = {
 	MARVELL_LAYOUT( 2048,   512,  1,  1,  1, 2048, 40, 24,  0,  0,  0),
 	MARVELL_LAYOUT( 2048,   512,  4,  1,  1, 2048, 32, 30,  0,  0,  0),
 	MARVELL_LAYOUT( 2048,   512,  8,  2,  1, 1024,  0, 30,1024,32, 30),
+<<<<<<< HEAD
 	MARVELL_LAYOUT( 2048,   512,  8,  2,  1, 1024,  0, 30,1024,64, 30),
 	MARVELL_LAYOUT( 2048,   512,  12, 3,  2, 704,   0, 30,640,  0, 30),
 	MARVELL_LAYOUT( 2048,   512,  16, 5,  4, 512,   0, 30,  0, 32, 30),
@@ -299,6 +303,12 @@ static const struct marvell_hw_ecc_layout marvell_nfc_layouts[] = {
 	MARVELL_LAYOUT( 8192,   512,  8,  9,  8, 1024,  0, 30,  0, 160, 30),
 	MARVELL_LAYOUT( 8192,   512,  12, 12, 11, 704,  0, 30,448,  64, 30),
 	MARVELL_LAYOUT( 8192,   512,  16, 17, 16, 512,  0, 30,  0,  32, 30),
+=======
+	MARVELL_LAYOUT( 4096,   512,  4,  2,  2, 2048, 32, 30,  0,  0,  0),
+	MARVELL_LAYOUT( 4096,   512,  8,  5,  4, 1024,  0, 30,  0, 64, 30),
+	MARVELL_LAYOUT( 8192,   512,  4,  4,  4, 2048,  0, 30,  0,  0,  0),
+	MARVELL_LAYOUT( 8192,   512,  8,  9,  8, 1024,  0, 30,  0, 160, 30),
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -2686,7 +2696,11 @@ static int marvell_nand_chip_init(struct device *dev, struct marvell_nfc *nfc,
 	chip->controller = &nfc->controller;
 	nand_set_flash_node(chip, np);
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "marvell,nand-keep-config"))
+=======
+	if (!of_property_read_bool(np, "marvell,nand-keep-config"))
+>>>>>>> b7ba80a49124 (Commit)
 		chip->options |= NAND_KEEP_TIMINGS;
 
 	mtd = nand_to_mtd(chip);
@@ -2888,8 +2902,12 @@ static int marvell_nfc_init(struct marvell_nfc *nfc)
 			     GENCONF_SOC_DEVICE_MUX_NFC_EN |
 			     GENCONF_SOC_DEVICE_MUX_ECC_CLK_RST |
 			     GENCONF_SOC_DEVICE_MUX_ECC_CORE_RST |
+<<<<<<< HEAD
 			     GENCONF_SOC_DEVICE_MUX_NFC_INT_EN |
 			     GENCONF_SOC_DEVICE_MUX_NFC_DEVBUS_ARB_EN);
+=======
+			     GENCONF_SOC_DEVICE_MUX_NFC_INT_EN);
+>>>>>>> b7ba80a49124 (Commit)
 
 		regmap_update_bits(sysctrl_base, GENCONF_CLK_GATING_CTRL,
 				   GENCONF_CLK_GATING_CTRL_ND_GATE,

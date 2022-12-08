@@ -39,8 +39,11 @@
 #include "panel_cntl.h"
 
 #define MAX_CLOCK_SOURCES 7
+<<<<<<< HEAD
 #define MAX_SVP_PHANTOM_STREAMS 2
 #define MAX_SVP_PHANTOM_PLANES 2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void enable_surface_flip_reporting(struct dc_plane_state *plane_state,
 		uint32_t controller_id);
@@ -51,9 +54,44 @@ void enable_surface_flip_reporting(struct dc_plane_state *plane_state,
 #include "clock_source.h"
 #include "audio.h"
 #include "dm_pp_smu.h"
+<<<<<<< HEAD
 #include "dm_cp_psp.h"
 #include "link_hwss.h"
 
+=======
+#ifdef CONFIG_DRM_AMD_DC_HDCP
+#include "dm_cp_psp.h"
+#endif
+#include "link_hwss.h"
+
+/************ link *****************/
+struct link_init_data {
+	const struct dc *dc;
+	struct dc_context *ctx; /* TODO: remove 'dal' when DC is complete. */
+	uint32_t connector_index; /* this will be mapped to the HPD pins */
+	uint32_t link_index; /* this is mapped to DAL display_index
+				TODO: remove it when DC is complete. */
+	bool is_dpia_link;
+};
+
+struct dc_link *link_create(const struct link_init_data *init_params);
+void link_destroy(struct dc_link **link);
+
+enum dc_status dc_link_validate_mode_timing(
+		const struct dc_stream_state *stream,
+		struct dc_link *link,
+		const struct dc_crtc_timing *timing);
+
+void core_link_resume(struct dc_link *link);
+
+void core_link_enable_stream(
+		struct dc_state *state,
+		struct pipe_ctx *pipe_ctx);
+
+void core_link_disable_stream(struct pipe_ctx *pipe_ctx);
+
+void core_link_set_avmute(struct pipe_ctx *pipe_ctx, bool enable);
+>>>>>>> b7ba80a49124 (Commit)
 /********** DAL Core*********************/
 #include "transform.h"
 #include "dpp.h"
@@ -86,6 +124,7 @@ struct resource_funcs {
 				int vlevel);
 	void (*update_soc_for_wm_a)(
 				struct dc *dc, struct dc_state *context);
+<<<<<<< HEAD
 
 	/**
 	 * @populate_dml_pipes - Populate pipe data struct
@@ -93,6 +132,8 @@ struct resource_funcs {
 	 * Returns:
 	 * Total of pipes available in the specific ASIC.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int (*populate_dml_pipes)(
 		struct dc *dc,
 		struct dc_state *context,
@@ -211,11 +252,15 @@ struct resource_funcs {
 			unsigned int pipe_cnt,
             unsigned int index);
 
+<<<<<<< HEAD
 	bool (*remove_phantom_pipes)(struct dc *dc, struct dc_state *context, bool fast_update);
 	void (*retain_phantom_pipes)(struct dc *dc, struct dc_state *context);
 	void (*get_panel_config_defaults)(struct dc_panel_config *panel_config);
 	void (*save_mall_state)(struct dc *dc, struct dc_state *context, struct mall_temp_config *temp_config);
 	void (*restore_mall_state)(struct dc *dc, struct dc_state *context, struct mall_temp_config *temp_config);
+=======
+	bool (*remove_phantom_pipes)(struct dc *dc, struct dc_state *context);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct audio_support{
@@ -394,10 +439,14 @@ struct pipe_ctx {
 
 	struct pll_settings pll_settings;
 
+<<<<<<< HEAD
 	/**
 	 * @link_config:
 	 *
 	 * link config records software decision for what link config should be
+=======
+	/* link config records software decision for what link config should be
+>>>>>>> b7ba80a49124 (Commit)
 	 * enabled given current link capability and stream during hw resource
 	 * mapping. This is to decouple the dependency on link capability during
 	 * dc commit or update.
@@ -421,11 +470,19 @@ struct pipe_ctx {
 	struct _vcs_dpi_display_e2e_pipe_params_st dml_input;
 	int det_buffer_size_kb;
 	bool unbounded_req;
+<<<<<<< HEAD
 	unsigned int surface_size_in_mall_bytes;
 
 	struct dwbc *dwbc;
 	struct mcif_wb *mcif_wb;
 	union pipe_update_flags update_flags;
+=======
+
+	union pipe_update_flags update_flags;
+	struct dwbc *dwbc;
+	struct mcif_wb *mcif_wb;
+	bool vtp_locked;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Data used for dynamic link encoder assignment.
@@ -479,11 +536,14 @@ struct dcn_bw_output {
 	struct dcn_watermark_set watermarks;
 	struct dcn_bw_writeback bw_writeback;
 	int compbuf_size_kb;
+<<<<<<< HEAD
 	unsigned int mall_ss_size_bytes;
 	unsigned int mall_ss_psr_active_size_bytes;
 	unsigned int mall_subvp_size_bytes;
 	unsigned int legacy_svp_drr_stream_index;
 	bool legacy_svp_drr_stream_index_valid;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 union bw_output {
@@ -495,6 +555,7 @@ struct bw_context {
 	union bw_output bw;
 	struct display_mode_lib dml;
 };
+<<<<<<< HEAD
 
 /**
  * struct dc_state - The full description of a state requested by users
@@ -531,10 +592,36 @@ struct dc_state {
 	 * @dcn_bw_vars: non-stack memory to support bandwidth calculations
 	 * Note: this is a big struct, do *not* put on stack!
 	 */
+=======
+/**
+ * struct dc_state - The full description of a state requested by a user
+ *
+ * @streams: Stream properties
+ * @stream_status: The planes on a given stream
+ * @res_ctx: Persistent state of resources
+ * @bw_ctx: The output from bandwidth and watermark calculations and the DML
+ * @pp_display_cfg: PowerPlay clocks and settings
+ * @dcn_bw_vars: non-stack memory to support bandwidth calculations
+ *
+ */
+struct dc_state {
+	struct dc_stream_state *streams[MAX_PIPES];
+	struct dc_stream_status stream_status[MAX_PIPES];
+	uint8_t stream_count;
+	uint8_t stream_mask;
+
+	struct resource_context res_ctx;
+
+	struct bw_context bw_ctx;
+
+	/* Note: these are big structures, do *not* put on stack! */
+	struct dm_pp_display_configuration pp_display_cfg;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dcn_bw_internal_vars dcn_bw_vars;
 
 	struct clk_mgr *clk_mgr;
 
+<<<<<<< HEAD
 	/**
 	 * @bw_ctx: The output from bandwidth and watermark calculations and the DML
 	 *
@@ -551,6 +638,8 @@ struct dc_state {
 	 * context, so we need to pass it everywhere. That's why we want to use
 	 * kref in this struct.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct kref refcount;
 
 	struct {

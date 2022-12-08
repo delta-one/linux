@@ -164,7 +164,11 @@ free_exit:
 
 /**
  * dfl_fme_create_mgr - create fpga mgr platform device as child device
+<<<<<<< HEAD
  * @feature: sub feature info
+=======
+ *
+>>>>>>> b7ba80a49124 (Commit)
  * @pdata: fme platform_device's pdata
  *
  * Return: mgr platform device if successful, and error code otherwise.
@@ -273,7 +277,11 @@ static void dfl_fme_destroy_bridge(struct dfl_fme_bridge *fme_br)
 }
 
 /**
+<<<<<<< HEAD
  * dfl_fme_destroy_bridges - destroy all fpga bridge platform device
+=======
+ * dfl_fme_destroy_bridge - destroy all fpga bridge platform device
+>>>>>>> b7ba80a49124 (Commit)
  * @pdata: fme platform device's pdata
  */
 static void dfl_fme_destroy_bridges(struct dfl_feature_platform_data *pdata)

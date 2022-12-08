@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0-only */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Internal header file _only_ for device mapper core
  *
@@ -120,7 +123,11 @@ struct mapped_device {
 	struct dm_stats stats;
 
 	/* the number of internal suspends */
+<<<<<<< HEAD
 	unsigned int internal_suspend_count;
+=======
+	unsigned internal_suspend_count;
+>>>>>>> b7ba80a49124 (Commit)
 
 	int swap_bios;
 	struct semaphore swap_bios_semaphore;
@@ -217,7 +224,11 @@ struct dm_table {
 	struct list_head devices;
 
 	/* events get handed up using this callback */
+<<<<<<< HEAD
 	void (*event_fn)(void *data);
+=======
+	void (*event_fn)(void *);
+>>>>>>> b7ba80a49124 (Commit)
 	void *event_context;
 
 	struct dm_md_mempools *mempools;
@@ -327,9 +338,15 @@ static inline struct completion *dm_get_completion_from_kobject(struct kobject *
 	return &container_of(kobj, struct dm_kobject_holder, kobj)->completion;
 }
 
+<<<<<<< HEAD
 unsigned int __dm_get_module_param(unsigned int *module_param, unsigned int def, unsigned int max);
 
 static inline bool dm_message_test_buffer_overflow(char *result, unsigned int maxlen)
+=======
+unsigned __dm_get_module_param(unsigned *module_param, unsigned def, unsigned max);
+
+static inline bool dm_message_test_buffer_overflow(char *result, unsigned maxlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return !maxlen || strlen(result) + 1 >= maxlen;
 }

@@ -122,6 +122,7 @@ static int btqcomsmd_setup(struct hci_dev *hdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int btqcomsmd_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr)
 {
 	int ret;
@@ -137,6 +138,8 @@ static int btqcomsmd_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int btqcomsmd_probe(struct platform_device *pdev)
 {
 	struct btqcomsmd *btq;
@@ -177,7 +180,11 @@ static int btqcomsmd_probe(struct platform_device *pdev)
 	hdev->close = btqcomsmd_close;
 	hdev->send = btqcomsmd_send;
 	hdev->setup = btqcomsmd_setup;
+<<<<<<< HEAD
 	hdev->set_bdaddr = btqcomsmd_set_bdaddr;
+=======
+	hdev->set_bdaddr = qca_set_bdaddr_rome;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = hci_register_dev(hdev);
 	if (ret < 0)

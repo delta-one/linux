@@ -3,7 +3,10 @@
 
 #include <net/fib_notifier.h>
 #include <net/nexthop.h>
+<<<<<<< HEAD
 #include <net/ip_tunnels.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "tc_tun_encap.h"
 #include "en_tc.h"
 #include "tc_tun.h"
@@ -223,13 +226,23 @@ void mlx5e_tc_encap_flows_del(struct mlx5e_priv *priv,
 	int err;
 
 	list_for_each_entry(flow, flow_list, tmp_list) {
+<<<<<<< HEAD
 		if (!mlx5e_is_offloaded_flow(flow))
 			continue;
+=======
+		if (!mlx5e_is_offloaded_flow(flow) || flow_flag_test(flow, SLOW))
+			continue;
+		spec = &flow->attr->parse_attr->spec;
+
+		/* update from encap rule to slow path rule */
+		rule = mlx5e_tc_offload_to_slow_path(esw, flow, spec);
+>>>>>>> b7ba80a49124 (Commit)
 
 		attr = mlx5e_tc_get_encap_attr(flow);
 		esw_attr = attr->esw_attr;
 		/* mark the flow's encap dest as non-valid */
 		esw_attr->dests[flow->tmp_entry_index].flags &= ~MLX5_ESW_DEST_ENCAP_VALID;
+<<<<<<< HEAD
 		esw_attr->dests[flow->tmp_entry_index].pkt_reformat = NULL;
 
 		/* Clear pkt_reformat before checking slow path flag. Because
@@ -242,6 +255,8 @@ void mlx5e_tc_encap_flows_del(struct mlx5e_priv *priv,
 		/* update from encap rule to slow path rule */
 		spec = &flow->attr->parse_attr->spec;
 		rule = mlx5e_tc_offload_to_slow_path(esw, flow, spec);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (IS_ERR(rule)) {
 			err = PTR_ERR(rule);
@@ -260,7 +275,10 @@ void mlx5e_tc_encap_flows_del(struct mlx5e_priv *priv,
 	/* we know that the encap is valid */
 	e->flags &= ~MLX5_ENCAP_ENTRY_VALID;
 	mlx5_packet_reformat_dealloc(priv->mdev, e->pkt_reformat);
+<<<<<<< HEAD
 	e->pkt_reformat = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mlx5e_take_tmp_flow(struct mlx5e_tc_flow *flow,
@@ -572,6 +590,7 @@ bool mlx5e_tc_tun_encap_info_equal_generic(struct mlx5e_encap_key *a,
 		a->tc_tunnel->tunnel_type == b->tc_tunnel->tunnel_type;
 }
 
+<<<<<<< HEAD
 bool mlx5e_tc_tun_encap_info_equal_options(struct mlx5e_encap_key *a,
 					   struct mlx5e_encap_key *b,
 					   __be16 tun_flags)
@@ -603,6 +622,8 @@ bool mlx5e_tc_tun_encap_info_equal_options(struct mlx5e_encap_key *a,
 		       a_info->options_len);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int cmp_decap_info(struct mlx5e_decap_key *a,
 			  struct mlx5e_decap_key *b)
 {
@@ -803,7 +824,12 @@ int mlx5e_attach_encap(struct mlx5e_priv *priv,
 		       struct net_device *mirred_dev,
 		       int out_index,
 		       struct netlink_ext_ack *extack,
+<<<<<<< HEAD
 		       struct net_device **encap_dev)
+=======
+		       struct net_device **encap_dev,
+		       bool *encap_valid)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mlx5_eswitch *esw = priv->mdev->priv.eswitch;
 	struct mlx5e_tc_flow_parse_attr *parse_attr;
@@ -918,8 +944,14 @@ attach_flow:
 	if (e->flags & MLX5_ENCAP_ENTRY_VALID) {
 		attr->esw_attr->dests[out_index].pkt_reformat = e->pkt_reformat;
 		attr->esw_attr->dests[out_index].flags |= MLX5_ESW_DEST_ENCAP_VALID;
+<<<<<<< HEAD
 	} else {
 		flow_flag_set(flow, SLOW);
+=======
+		*encap_valid = true;
+	} else {
+		*encap_valid = false;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	mutex_unlock(&esw->offloads.encap_tbl_lock);
 
@@ -1381,8 +1413,12 @@ static void mlx5e_invalidate_encap(struct mlx5e_priv *priv,
 			mlx5e_tc_unoffload_from_slow_path(esw, flow);
 		else
 			mlx5e_tc_unoffload_fdb_rules(esw, flow, flow->attr);
+<<<<<<< HEAD
 
 		mlx5e_tc_detach_mod_hdr(priv, flow, attr);
+=======
+		mlx5_modify_header_dealloc(priv->mdev, attr->modify_hdr);
+>>>>>>> b7ba80a49124 (Commit)
 		attr->modify_hdr = NULL;
 
 		esw_attr->dests[flow->tmp_entry_index].flags &=
@@ -1438,7 +1474,11 @@ static void mlx5e_reoffload_encap(struct mlx5e_priv *priv,
 			continue;
 		}
 
+<<<<<<< HEAD
 		err = mlx5e_tc_attach_mod_hdr(priv, flow, attr);
+=======
+		err = mlx5e_tc_add_flow_mod_hdr(priv, flow, attr);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err) {
 			mlx5_core_warn(priv->mdev, "Failed to update flow mod_hdr err=%d",
 				       err);

@@ -7,6 +7,7 @@
 #define _INTEL_HUC_H_
 
 #include "i915_reg_defs.h"
+<<<<<<< HEAD
 #include "i915_sw_fence.h"
 #include "intel_uc_fw.h"
 #include "intel_huc_fw.h"
@@ -22,6 +23,11 @@ enum intel_huc_delayed_load_status {
 	INTEL_HUC_DELAYED_LOAD_ERROR,
 };
 
+=======
+#include "intel_uc_fw.h"
+#include "intel_huc_fw.h"
+
+>>>>>>> b7ba80a49124 (Commit)
 struct intel_huc {
 	/* Generic uC firmware management */
 	struct intel_uc_fw fw;
@@ -32,6 +38,7 @@ struct intel_huc {
 		u32 mask;
 		u32 value;
 	} status;
+<<<<<<< HEAD
 
 	struct {
 		struct i915_sw_fence fence;
@@ -39,11 +46,14 @@ struct intel_huc {
 		struct notifier_block nb;
 		enum intel_huc_delayed_load_status status;
 	} delayed_load;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void intel_huc_init_early(struct intel_huc *huc);
 int intel_huc_init(struct intel_huc *huc);
 void intel_huc_fini(struct intel_huc *huc);
+<<<<<<< HEAD
 void intel_huc_suspend(struct intel_huc *huc);
 int intel_huc_auth(struct intel_huc *huc);
 int intel_huc_wait_for_auth_complete(struct intel_huc *huc);
@@ -53,6 +63,11 @@ bool intel_huc_is_authenticated(struct intel_huc *huc);
 
 void intel_huc_register_gsc_notifier(struct intel_huc *huc, struct bus_type *bus);
 void intel_huc_unregister_gsc_notifier(struct intel_huc *huc, struct bus_type *bus);
+=======
+int intel_huc_auth(struct intel_huc *huc);
+int intel_huc_check_status(struct intel_huc *huc);
+void intel_huc_update_auth_status(struct intel_huc *huc);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline int intel_huc_sanitize(struct intel_huc *huc)
 {
@@ -81,12 +96,15 @@ static inline bool intel_huc_is_loaded_by_gsc(const struct intel_huc *huc)
 	return huc->fw.loaded_via_gsc;
 }
 
+<<<<<<< HEAD
 static inline bool intel_huc_wait_required(struct intel_huc *huc)
 {
 	return intel_huc_is_used(huc) && intel_huc_is_loaded_by_gsc(huc) &&
 	       !intel_huc_is_authenticated(huc);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void intel_huc_load_status(struct intel_huc *huc, struct drm_printer *p);
 
 #endif

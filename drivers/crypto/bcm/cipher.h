@@ -339,12 +339,23 @@ struct iproc_reqctx_s {
 	/* hmac context */
 	bool is_sw_hmac;
 
+<<<<<<< HEAD
+=======
+	/* aead context */
+	struct crypto_tfm *old_tfm;
+	crypto_completion_t old_complete;
+	void *old_data;
+
+>>>>>>> b7ba80a49124 (Commit)
 	gfp_t gfp;
 
 	/* Buffers used to build SPU request and response messages */
 	struct spu_msg_buf msg_buf;
+<<<<<<< HEAD
 
 	struct aead_request req;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*

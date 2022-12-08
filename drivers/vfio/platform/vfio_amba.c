@@ -95,6 +95,10 @@ static void vfio_amba_release_dev(struct vfio_device *core_vdev)
 
 	vfio_platform_release_common(vdev);
 	kfree(vdev->name);
+<<<<<<< HEAD
+=======
+	vfio_free_device(core_vdev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void vfio_amba_remove(struct amba_device *adev)
@@ -116,9 +120,12 @@ static const struct vfio_device_ops vfio_amba_ops = {
 	.read		= vfio_platform_read,
 	.write		= vfio_platform_write,
 	.mmap		= vfio_platform_mmap,
+<<<<<<< HEAD
 	.bind_iommufd	= vfio_iommufd_physical_bind,
 	.unbind_iommufd	= vfio_iommufd_physical_unbind,
 	.attach_ioas	= vfio_iommufd_physical_attach_ioas,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct amba_id pl330_ids[] = {

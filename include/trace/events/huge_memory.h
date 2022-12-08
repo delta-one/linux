@@ -36,8 +36,12 @@
 	EM( SCAN_ALLOC_HUGE_PAGE_FAIL,	"alloc_huge_page_failed")	\
 	EM( SCAN_CGROUP_CHARGE_FAIL,	"ccgroup_charge_failed")	\
 	EM( SCAN_TRUNCATED,		"truncated")			\
+<<<<<<< HEAD
 	EM( SCAN_PAGE_HAS_PRIVATE,	"page_has_private")		\
 	EMe(SCAN_COPY_MC,		"copy_poisoned_page")		\
+=======
+	EMe(SCAN_PAGE_HAS_PRIVATE,	"page_has_private")		\
+>>>>>>> b7ba80a49124 (Commit)
 
 #undef EM
 #undef EMe
@@ -172,15 +176,26 @@ TRACE_EVENT(mm_collapse_huge_page_swapin,
 
 TRACE_EVENT(mm_khugepaged_scan_file,
 
+<<<<<<< HEAD
 	TP_PROTO(struct mm_struct *mm, struct page *page, struct file *file,
 		 int present, int swap, int result),
 
 	TP_ARGS(mm, page, file, present, swap, result),
+=======
+	TP_PROTO(struct mm_struct *mm, struct page *page, const char *filename,
+		 int present, int swap, int result),
+
+	TP_ARGS(mm, page, filename, present, swap, result),
+>>>>>>> b7ba80a49124 (Commit)
 
 	TP_STRUCT__entry(
 		__field(struct mm_struct *, mm)
 		__field(unsigned long, pfn)
+<<<<<<< HEAD
 		__string(filename, file->f_path.dentry->d_iname)
+=======
+		__string(filename, filename)
+>>>>>>> b7ba80a49124 (Commit)
 		__field(int, present)
 		__field(int, swap)
 		__field(int, result)
@@ -189,7 +204,11 @@ TRACE_EVENT(mm_khugepaged_scan_file,
 	TP_fast_assign(
 		__entry->mm = mm;
 		__entry->pfn = page ? page_to_pfn(page) : -1;
+<<<<<<< HEAD
 		__assign_str(filename, file->f_path.dentry->d_iname);
+=======
+		__assign_str(filename, filename);
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->present = present;
 		__entry->swap = swap;
 		__entry->result = result;
@@ -204,6 +223,7 @@ TRACE_EVENT(mm_khugepaged_scan_file,
 		__print_symbolic(__entry->result, SCAN_STATUS))
 );
 
+<<<<<<< HEAD
 TRACE_EVENT(mm_khugepaged_collapse_file,
 	TP_PROTO(struct mm_struct *mm, struct page *hpage, pgoff_t index,
 			bool is_shmem, unsigned long addr, struct file *file,
@@ -242,5 +262,7 @@ TRACE_EVENT(mm_khugepaged_collapse_file,
 		__print_symbolic(__entry->result, SCAN_STATUS))
 );
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __HUGE_MEMORY_H */
 #include <trace/define_trace.h>

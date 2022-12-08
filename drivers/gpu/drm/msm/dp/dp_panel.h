@@ -34,11 +34,14 @@ struct dp_panel_in {
 	struct dp_catalog *catalog;
 };
 
+<<<<<<< HEAD
 struct dp_panel_psr {
 	u8 version;
 	u8 capabilities;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct dp_panel {
 	/* dpcd raw data */
 	u8 dpcd[DP_RECEIVER_CAP_SIZE + 1];
@@ -51,12 +54,18 @@ struct dp_panel {
 	struct edid *edid;
 	struct drm_connector *connector;
 	struct dp_display_mode dp_mode;
+<<<<<<< HEAD
 	struct dp_panel_psr psr_cap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool video_test;
 
 	u32 vic;
 	u32 max_dp_lanes;
+<<<<<<< HEAD
 	u32 max_dp_link_rate;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	u32 max_bw_code;
 };

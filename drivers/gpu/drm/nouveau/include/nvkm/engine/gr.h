@@ -54,5 +54,8 @@ int gp108_gr_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct n
 int gp10b_gr_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_gr **);
 int gv100_gr_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_gr **);
 int tu102_gr_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_gr **);
+<<<<<<< HEAD
 int ga102_gr_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_gr **);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

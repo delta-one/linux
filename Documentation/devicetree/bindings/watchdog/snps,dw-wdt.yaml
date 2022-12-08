@@ -20,7 +20,10 @@ properties:
           - enum:
               - rockchip,px30-wdt
               - rockchip,rk3066-wdt
+<<<<<<< HEAD
               - rockchip,rk3128-wdt
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - rockchip,rk3188-wdt
               - rockchip,rk3228-wdt
               - rockchip,rk3288-wdt

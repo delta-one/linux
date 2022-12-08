@@ -257,11 +257,21 @@ static int deferred_devs_show(struct seq_file *s, void *data)
 DEFINE_SHOW_ATTRIBUTE(deferred_devs);
 
 #ifdef CONFIG_MODULES
+<<<<<<< HEAD
 static int driver_deferred_probe_timeout = 10;
 #else
 static int driver_deferred_probe_timeout;
 #endif
 
+=======
+int driver_deferred_probe_timeout = 10;
+#else
+int driver_deferred_probe_timeout;
+#endif
+
+EXPORT_SYMBOL_GPL(driver_deferred_probe_timeout);
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __init deferred_probe_timeout_setup(char *str)
 {
 	int timeout;
@@ -315,8 +325,11 @@ static void deferred_probe_timeout_work_func(struct work_struct *work)
 	list_for_each_entry(p, &deferred_probe_pending_list, deferred_probe)
 		dev_info(p->device, "deferred probe pending\n");
 	mutex_unlock(&deferred_probe_mutex);
+<<<<<<< HEAD
 
 	fw_devlink_probing_done();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DECLARE_DELAYED_WORK(deferred_probe_timeout_work, deferred_probe_timeout_work_func);
 
@@ -366,17 +379,24 @@ static int deferred_probe_initcall(void)
 		schedule_delayed_work(&deferred_probe_timeout_work,
 			driver_deferred_probe_timeout * HZ);
 	}
+<<<<<<< HEAD
 
 	if (!IS_ENABLED(CONFIG_MODULES))
 		fw_devlink_probing_done();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 late_initcall(deferred_probe_initcall);
 
 static void __exit deferred_probe_exit(void)
 {
+<<<<<<< HEAD
 	debugfs_lookup_and_remove("devices_deferred", NULL);
+=======
+	debugfs_remove_recursive(debugfs_lookup("devices_deferred", NULL));
+>>>>>>> b7ba80a49124 (Commit)
 }
 __exitcall(deferred_probe_exit);
 
@@ -417,7 +437,14 @@ static void driver_bound(struct device *dev)
 	driver_deferred_probe_del(dev);
 	driver_deferred_probe_trigger();
 
+<<<<<<< HEAD
 	bus_notify(dev, BUS_NOTIFY_BOUND_DRIVER);
+=======
+	if (dev->bus)
+		blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
+					     BUS_NOTIFY_BOUND_DRIVER, dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	kobject_uevent(&dev->kobj, KOBJ_BIND);
 }
 
@@ -436,7 +463,13 @@ static int driver_sysfs_add(struct device *dev)
 {
 	int ret;
 
+<<<<<<< HEAD
 	bus_notify(dev, BUS_NOTIFY_BIND_DRIVER);
+=======
+	if (dev->bus)
+		blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
+					     BUS_NOTIFY_BIND_DRIVER, dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = sysfs_create_link(&dev->driver->p->kobj, &dev->kobj,
 				kobject_name(&dev->kobj));
@@ -501,8 +534,14 @@ int device_bind_driver(struct device *dev)
 		device_links_force_bind(dev);
 		driver_bound(dev);
 	}
+<<<<<<< HEAD
 	else
 		bus_notify(dev, BUS_NOTIFY_DRIVER_NOT_BOUND);
+=======
+	else if (dev->bus)
+		blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
+					     BUS_NOTIFY_DRIVER_NOT_BOUND, dev);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 EXPORT_SYMBOL_GPL(device_bind_driver);
@@ -510,6 +549,7 @@ EXPORT_SYMBOL_GPL(device_bind_driver);
 static atomic_t probe_count = ATOMIC_INIT(0);
 static DECLARE_WAIT_QUEUE_HEAD(probe_waitqueue);
 
+<<<<<<< HEAD
 static ssize_t state_synced_store(struct device *dev,
 				  struct device_attribute *attr,
 				  const char *buf, size_t count)
@@ -531,6 +571,8 @@ static ssize_t state_synced_store(struct device *dev,
 	return ret ? ret : count;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t state_synced_show(struct device *dev,
 				 struct device_attribute *attr, char *buf)
 {
@@ -542,7 +584,11 @@ static ssize_t state_synced_show(struct device *dev,
 
 	return sysfs_emit(buf, "%u\n", val);
 }
+<<<<<<< HEAD
 static DEVICE_ATTR_RW(state_synced);
+=======
+static DEVICE_ATTR_RO(state_synced);
+>>>>>>> b7ba80a49124 (Commit)
 
 static void device_unbind_cleanup(struct device *dev)
 {
@@ -714,7 +760,13 @@ dev_groups_failed:
 probe_failed:
 	driver_sysfs_remove(dev);
 sysfs_failed:
+<<<<<<< HEAD
 	bus_notify(dev, BUS_NOTIFY_DRIVER_NOT_BOUND);
+=======
+	if (dev->bus)
+		blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
+					     BUS_NOTIFY_DRIVER_NOT_BOUND, dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (dev->bus && dev->bus->dma_cleanup)
 		dev->bus->dma_cleanup(dev);
 pinctrl_bind_failed:
@@ -860,7 +912,11 @@ static int __init save_async_options(char *buf)
 }
 __setup("driver_async_probe=", save_async_options);
 
+<<<<<<< HEAD
 static bool driver_allows_async_probing(struct device_driver *drv)
+=======
+bool driver_allows_async_probing(struct device_driver *drv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (drv->probe_type) {
 	case PROBE_PREFER_ASYNCHRONOUS:
@@ -1179,11 +1235,15 @@ static int __driver_attach(struct device *dev, void *data)
 		return 0;
 	} else if (ret < 0) {
 		dev_dbg(dev, "Bus failed to match device: %d\n", ret);
+<<<<<<< HEAD
 		/*
 		 * Driver could not match with device, but may match with
 		 * another device on the bus.
 		 */
 		return 0;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	} /* ret > 0 means positive match */
 
 	if (driver_allows_async_probing(drv)) {
@@ -1260,7 +1320,14 @@ static void __device_release_driver(struct device *dev, struct device *parent)
 
 		driver_sysfs_remove(dev);
 
+<<<<<<< HEAD
 		bus_notify(dev, BUS_NOTIFY_UNBIND_DRIVER);
+=======
+		if (dev->bus)
+			blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
+						     BUS_NOTIFY_UNBIND_DRIVER,
+						     dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 		pm_runtime_put_sync(dev);
 
@@ -1274,8 +1341,16 @@ static void __device_release_driver(struct device *dev, struct device *parent)
 
 		klist_remove(&dev->p->knode_driver);
 		device_pm_check_callbacks(dev);
+<<<<<<< HEAD
 
 		bus_notify(dev, BUS_NOTIFY_UNBOUND_DRIVER);
+=======
+		if (dev->bus)
+			blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
+						     BUS_NOTIFY_UNBOUND_DRIVER,
+						     dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 		kobject_uevent(&dev->kobj, KOBJ_UNBIND);
 	}
 }

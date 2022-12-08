@@ -32,6 +32,10 @@
 #include <linux/io.h>
 #include <linux/math64.h>
 #include <linux/module.h>
+<<<<<<< HEAD
+=======
+#include <linux/rational.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "clk-regmap.h"
 #include "clk-pll.h"
@@ -276,6 +280,7 @@ static int meson_clk_pll_wait_lock(struct clk_hw *hw)
 {
 	struct clk_regmap *clk = to_clk_regmap(hw);
 	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
+<<<<<<< HEAD
 	int delay = 5000;
 
 	do {
@@ -285,6 +290,17 @@ static int meson_clk_pll_wait_lock(struct clk_hw *hw)
 
 		udelay(20);
 	} while (--delay);
+=======
+	int delay = 24000000;
+
+	do {
+		/* Is the clock locked now ? */
+		if (meson_parm_read(clk->map, &pll->l))
+			return 0;
+
+		delay--;
+	} while (delay > 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return -ETIMEDOUT;
 }
@@ -319,6 +335,7 @@ static int meson_clk_pll_is_enabled(struct clk_hw *hw)
 
 static int meson_clk_pcie_pll_enable(struct clk_hw *hw)
 {
+<<<<<<< HEAD
 	int retries = 10;
 
 	do {
@@ -329,6 +346,14 @@ static int meson_clk_pcie_pll_enable(struct clk_hw *hw)
 	} while (--retries);
 
 	return -EIO;
+=======
+	meson_clk_pll_init(hw);
+
+	if (meson_clk_pll_wait_lock(hw))
+		return -EIO;
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int meson_clk_pll_enable(struct clk_hw *hw)

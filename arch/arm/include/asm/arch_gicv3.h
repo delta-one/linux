@@ -252,10 +252,13 @@ static inline void gic_arch_enable_irqs(void)
 	WARN_ON_ONCE(true);
 }
 
+<<<<<<< HEAD
 static inline bool gic_has_relaxed_pmr_sync(void)
 {
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* !__ASSEMBLY__ */
 #endif /* !__ASM_ARCH_GICV3_H */

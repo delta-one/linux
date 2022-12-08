@@ -116,7 +116,10 @@ static struct device_attribute mpic_attributes = __ATTR(timer_wakeup, 0644,
 
 static int __init fsl_wakeup_sys_init(void)
 {
+<<<<<<< HEAD
 	struct device *dev_root;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	fsl_wakeup = kzalloc(sizeof(struct fsl_mpic_timer_wakeup), GFP_KERNEL);
@@ -125,6 +128,7 @@ static int __init fsl_wakeup_sys_init(void)
 
 	INIT_WORK(&fsl_wakeup->free_work, fsl_free_resource);
 
+<<<<<<< HEAD
 	dev_root = bus_get_dev_root(&mpic_subsys);
 	if (dev_root) {
 		ret = device_create_file(dev_root, &mpic_attributes);
@@ -132,12 +136,18 @@ static int __init fsl_wakeup_sys_init(void)
 		if (ret)
 			kfree(fsl_wakeup);
 	}
+=======
+	ret = device_create_file(mpic_subsys.dev_root, &mpic_attributes);
+	if (ret)
+		kfree(fsl_wakeup);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
 
 static void __exit fsl_wakeup_sys_exit(void)
 {
+<<<<<<< HEAD
 	struct device *dev_root;
 
 	dev_root = bus_get_dev_root(&mpic_subsys);
@@ -145,6 +155,9 @@ static void __exit fsl_wakeup_sys_exit(void)
 		device_remove_file(dev_root, &mpic_attributes);
 		put_device(dev_root);
 	}
+=======
+	device_remove_file(mpic_subsys.dev_root, &mpic_attributes);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&sysfs_lock);
 

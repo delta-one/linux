@@ -4,12 +4,20 @@
 
 /* unsigned long xmon_mfspr(sprn, default_value) */
 _GLOBAL(xmon_mfspr)
+<<<<<<< HEAD
 	LOAD_REG_ADDR(r5, .Lmfspr_table)
+=======
+	PPC_LL	r5, .Lmfspr_table@got(r2)
+>>>>>>> b7ba80a49124 (Commit)
 	b	xmon_mxspr
 
 /* void xmon_mtspr(sprn, new_value) */
 _GLOBAL(xmon_mtspr)
+<<<<<<< HEAD
 	LOAD_REG_ADDR(r5, .Lmtspr_table)
+=======
+	PPC_LL	r5, .Lmtspr_table@got(r2)
+>>>>>>> b7ba80a49124 (Commit)
 	b	xmon_mxspr
 
 /*

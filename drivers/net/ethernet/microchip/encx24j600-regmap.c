@@ -359,7 +359,11 @@ static int regmap_encx24j600_phy_reg_read(void *context, unsigned int reg,
 		goto err_out;
 
 	usleep_range(26, 100);
+<<<<<<< HEAD
 	while (((ret = regmap_read(ctx->regmap, MISTAT, &mistat)) == 0) &&
+=======
+	while ((ret = regmap_read(ctx->regmap, MISTAT, &mistat) != 0) &&
+>>>>>>> b7ba80a49124 (Commit)
 	       (mistat & BUSY))
 		cpu_relax();
 
@@ -397,7 +401,11 @@ static int regmap_encx24j600_phy_reg_write(void *context, unsigned int reg,
 		goto err_out;
 
 	usleep_range(26, 100);
+<<<<<<< HEAD
 	while (((ret = regmap_read(ctx->regmap, MISTAT, &mistat)) == 0) &&
+=======
+	while ((ret = regmap_read(ctx->regmap, MISTAT, &mistat) != 0) &&
+>>>>>>> b7ba80a49124 (Commit)
 	       (mistat & BUSY))
 		cpu_relax();
 

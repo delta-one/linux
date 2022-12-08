@@ -413,11 +413,19 @@ static int dcp_chan_thread_aes(void *data)
 		set_current_state(TASK_RUNNING);
 
 		if (backlog)
+<<<<<<< HEAD
 			crypto_request_complete(backlog, -EINPROGRESS);
 
 		if (arq) {
 			ret = mxs_dcp_aes_block_crypt(arq);
 			crypto_request_complete(arq, ret);
+=======
+			backlog->complete(backlog, -EINPROGRESS);
+
+		if (arq) {
+			ret = mxs_dcp_aes_block_crypt(arq);
+			arq->complete(arq, ret);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -709,11 +717,19 @@ static int dcp_chan_thread_sha(void *data)
 		set_current_state(TASK_RUNNING);
 
 		if (backlog)
+<<<<<<< HEAD
 			crypto_request_complete(backlog, -EINPROGRESS);
 
 		if (arq) {
 			ret = dcp_sha_req_to_buf(arq);
 			crypto_request_complete(arq, ret);
+=======
+			backlog->complete(backlog, -EINPROGRESS);
+
+		if (arq) {
+			ret = dcp_sha_req_to_buf(arq);
+			arq->complete(arq, ret);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 

@@ -59,12 +59,15 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
 		"(For people who want to keep Windows PC keyboard muscle memory. "
 		"[0] = as-is, Mac layout. 1 = swapped, Windows layout.)");
 
+<<<<<<< HEAD
 static unsigned int swap_ctrl_cmd;
 module_param(swap_ctrl_cmd, uint, 0644);
 MODULE_PARM_DESC(swap_ctrl_cmd, "Swap the Control (\"Ctrl\") and Command (\"Flag\") keys. "
 		"(For people who are used to Mac shortcuts involving Command instead of Control. "
 		"[0] = No change. 1 = Swapped.)");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned int swap_fn_leftctrl;
 module_param(swap_fn_leftctrl, uint, 0644);
 MODULE_PARM_DESC(swap_fn_leftctrl, "Swap the Fn and left Control keys. "
@@ -314,6 +317,7 @@ static const struct apple_key_translation swapped_option_cmd_keys[] = {
 	{ KEY_LEFTALT,	KEY_LEFTMETA },
 	{ KEY_LEFTMETA,	KEY_LEFTALT },
 	{ KEY_RIGHTALT,	KEY_RIGHTMETA },
+<<<<<<< HEAD
 	{ KEY_RIGHTMETA, KEY_RIGHTALT },
 	{ }
 };
@@ -323,12 +327,18 @@ static const struct apple_key_translation swapped_ctrl_cmd_keys[] = {
 	{ KEY_LEFTMETA,	KEY_LEFTCTRL },
 	{ KEY_RIGHTCTRL, KEY_RIGHTMETA },
 	{ KEY_RIGHTMETA, KEY_RIGHTCTRL },
+=======
+	{ KEY_RIGHTMETA,KEY_RIGHTALT },
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 
 static const struct apple_key_translation swapped_fn_leftctrl_keys[] = {
 	{ KEY_FN, KEY_LEFTCTRL },
+<<<<<<< HEAD
 	{ KEY_LEFTCTRL, KEY_FN },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 
@@ -390,15 +400,31 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
 	struct apple_sc *asc = hid_get_drvdata(hid);
 	const struct apple_key_translation *trans, *table;
 	bool do_translate;
+<<<<<<< HEAD
 	u16 code = usage->code;
 	unsigned int real_fnmode;
 
+=======
+	u16 code = 0;
+	unsigned int real_fnmode;
+
+	u16 fn_keycode = (swap_fn_leftctrl) ? (KEY_LEFTCTRL) : (KEY_FN);
+
+	if (usage->code == fn_keycode) {
+		asc->fn_on = !!value;
+		input_event_with_scancode(input, usage->type, KEY_FN,
+				usage->hid, value);
+		return 1;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (fnmode == 3) {
 		real_fnmode = (asc->quirks & APPLE_IS_NON_APPLE) ? 2 : 1;
 	} else {
 		real_fnmode = fnmode;
 	}
 
+<<<<<<< HEAD
 	if (swap_fn_leftctrl) {
 		trans = apple_find_translation(swapped_fn_leftctrl_keys, code);
 
@@ -431,6 +457,8 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
 	if (code == KEY_FN)
 		asc->fn_on = !!value;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (real_fnmode) {
 		if (hid->product == USB_DEVICE_ID_APPLE_ALU_WIRELESS_ANSI ||
 		    hid->product == USB_DEVICE_ID_APPLE_ALU_WIRELESS_ISO ||
@@ -468,6 +496,7 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
 		else
 			table = apple_fn_keys;
 
+<<<<<<< HEAD
 		trans = apple_find_translation(table, code);
 
 		if (trans) {
@@ -480,6 +509,17 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
 				code = trans->to;
 
 			if (!(from_is_set || to_is_set)) {
+=======
+		trans = apple_find_translation (table, usage->code);
+
+		if (trans) {
+			if (test_bit(trans->from, input->key))
+				code = trans->from;
+			else if (test_bit(trans->to, input->key))
+				code = trans->to;
+
+			if (!code) {
+>>>>>>> b7ba80a49124 (Commit)
 				if (trans->flags & APPLE_FLAG_FKEY) {
 					switch (real_fnmode) {
 					case 1:
@@ -496,6 +536,7 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
 					do_translate = asc->fn_on;
 				}
 
+<<<<<<< HEAD
 				if (do_translate)
 					code = trans->to;
 			}
@@ -521,6 +562,64 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
 		input_event_with_scancode(input, usage->type, code, usage->hid, value);
 
 		return 1;
+=======
+				code = do_translate ? trans->to : trans->from;
+			}
+
+			input_event_with_scancode(input, usage->type, code,
+					usage->hid, value);
+			return 1;
+		}
+
+		if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
+				(test_bit(usage->code, asc->pressed_numlock) ||
+				test_bit(LED_NUML, input->led))) {
+			trans = apple_find_translation(powerbook_numlock_keys,
+					usage->code);
+
+			if (trans) {
+				if (value)
+					set_bit(usage->code,
+							asc->pressed_numlock);
+				else
+					clear_bit(usage->code,
+							asc->pressed_numlock);
+
+				input_event_with_scancode(input, usage->type,
+						trans->to, usage->hid, value);
+			}
+
+			return 1;
+		}
+	}
+
+	if (iso_layout > 0 || (iso_layout < 0 && (asc->quirks & APPLE_ISO_TILDE_QUIRK) &&
+			hid->country == HID_COUNTRY_INTERNATIONAL_ISO)) {
+		trans = apple_find_translation(apple_iso_keyboard, usage->code);
+		if (trans) {
+			input_event_with_scancode(input, usage->type,
+					trans->to, usage->hid, value);
+			return 1;
+		}
+	}
+
+	if (swap_opt_cmd) {
+		trans = apple_find_translation(swapped_option_cmd_keys, usage->code);
+		if (trans) {
+			input_event_with_scancode(input, usage->type,
+					trans->to, usage->hid, value);
+			return 1;
+		}
+	}
+
+	if (swap_fn_leftctrl) {
+		trans = apple_find_translation(swapped_fn_leftctrl_keys, usage->code);
+		if (trans) {
+			input_event_with_scancode(input, usage->type,
+					trans->to, usage->hid, value);
+			return 1;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -650,6 +749,12 @@ static void apple_setup_input(struct input_dev *input)
 	apple_setup_key_translation(input, apple2021_fn_keys);
 	apple_setup_key_translation(input, macbookpro_no_esc_fn_keys);
 	apple_setup_key_translation(input, macbookpro_dedicated_esc_fn_keys);
+<<<<<<< HEAD
+=======
+
+	if (swap_fn_leftctrl)
+		apple_setup_key_translation(input, swapped_fn_leftctrl_keys);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int apple_input_mapping(struct hid_device *hdev, struct hid_input *hi,
@@ -882,8 +987,12 @@ static const struct hid_device_id apple_devices[] = {
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_GEYSER4_ANSI),
 		.driver_data = APPLE_NUMLOCK_EMULATION | APPLE_HAS_FN },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_GEYSER4_ISO),
+<<<<<<< HEAD
 		.driver_data = APPLE_NUMLOCK_EMULATION | APPLE_HAS_FN |
 			APPLE_ISO_TILDE_QUIRK },
+=======
+		.driver_data = APPLE_NUMLOCK_EMULATION | APPLE_HAS_FN },
+>>>>>>> b7ba80a49124 (Commit)
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_GEYSER4_JIS),
 		.driver_data = APPLE_NUMLOCK_EMULATION | APPLE_HAS_FN |
 			APPLE_RDESC_JIS },
@@ -902,8 +1011,12 @@ static const struct hid_device_id apple_devices[] = {
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_GEYSER4_HF_ANSI),
 		.driver_data = APPLE_NUMLOCK_EMULATION | APPLE_HAS_FN },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_GEYSER4_HF_ISO),
+<<<<<<< HEAD
 		.driver_data = APPLE_NUMLOCK_EMULATION | APPLE_HAS_FN |
 			APPLE_ISO_TILDE_QUIRK },
+=======
+		.driver_data = APPLE_NUMLOCK_EMULATION | APPLE_HAS_FN },
+>>>>>>> b7ba80a49124 (Commit)
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_GEYSER4_HF_JIS),
 		.driver_data = APPLE_NUMLOCK_EMULATION | APPLE_HAS_FN |
 			APPLE_RDESC_JIS },
@@ -944,31 +1057,51 @@ static const struct hid_device_id apple_devices[] = {
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING_ANSI),
 		.driver_data = APPLE_HAS_FN },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING_ISO),
+<<<<<<< HEAD
 		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
+=======
+		.driver_data = APPLE_HAS_FN },
+>>>>>>> b7ba80a49124 (Commit)
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING_JIS),
 		.driver_data = APPLE_HAS_FN | APPLE_RDESC_JIS },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING2_ANSI),
 		.driver_data = APPLE_HAS_FN },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING2_ISO),
+<<<<<<< HEAD
 		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
+=======
+		.driver_data = APPLE_HAS_FN },
+>>>>>>> b7ba80a49124 (Commit)
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING2_JIS),
 		.driver_data = APPLE_HAS_FN | APPLE_RDESC_JIS },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING3_ANSI),
 		.driver_data = APPLE_HAS_FN },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING3_ISO),
+<<<<<<< HEAD
 		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
+=======
+		.driver_data = APPLE_HAS_FN },
+>>>>>>> b7ba80a49124 (Commit)
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING3_JIS),
 		.driver_data = APPLE_HAS_FN | APPLE_RDESC_JIS },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING4_ANSI),
 		.driver_data = APPLE_HAS_FN },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING4_ISO),
+<<<<<<< HEAD
 		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
+=======
+		.driver_data = APPLE_HAS_FN },
+>>>>>>> b7ba80a49124 (Commit)
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING4_JIS),
 		.driver_data = APPLE_HAS_FN | APPLE_RDESC_JIS },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING4A_ANSI),
 		.driver_data = APPLE_HAS_FN },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING4A_ISO),
+<<<<<<< HEAD
 		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
+=======
+		.driver_data = APPLE_HAS_FN },
+>>>>>>> b7ba80a49124 (Commit)
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING4A_JIS),
 		.driver_data = APPLE_HAS_FN | APPLE_RDESC_JIS },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING5_ANSI),
@@ -1020,6 +1153,7 @@ static const struct hid_device_id apple_devices[] = {
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRING9_JIS),
 		.driver_data = APPLE_HAS_FN | APPLE_RDESC_JIS },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRINGT2_J140K),
+<<<<<<< HEAD
 		.driver_data = APPLE_HAS_FN | APPLE_BACKLIGHT_CTL | APPLE_ISO_TILDE_QUIRK },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRINGT2_J132),
 		.driver_data = APPLE_HAS_FN | APPLE_BACKLIGHT_CTL | APPLE_ISO_TILDE_QUIRK },
@@ -1035,6 +1169,23 @@ static const struct hid_device_id apple_devices[] = {
 		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRINGT2_J152F),
 		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
+=======
+		.driver_data = APPLE_HAS_FN | APPLE_BACKLIGHT_CTL },
+	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRINGT2_J132),
+		.driver_data = APPLE_HAS_FN | APPLE_BACKLIGHT_CTL },
+	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRINGT2_J680),
+		.driver_data = APPLE_HAS_FN | APPLE_BACKLIGHT_CTL },
+	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRINGT2_J213),
+		.driver_data = APPLE_HAS_FN | APPLE_BACKLIGHT_CTL },
+	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRINGT2_J214K),
+		.driver_data = APPLE_HAS_FN },
+	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRINGT2_J223),
+		.driver_data = APPLE_HAS_FN },
+	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRINGT2_J230K),
+		.driver_data = APPLE_HAS_FN },
+	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_WELLSPRINGT2_J152F),
+		.driver_data = APPLE_HAS_FN },
+>>>>>>> b7ba80a49124 (Commit)
 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_ALU_WIRELESS_2009_ANSI),
 		.driver_data = APPLE_NUMLOCK_EMULATION | APPLE_HAS_FN },
 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_ALU_WIRELESS_2009_ISO),

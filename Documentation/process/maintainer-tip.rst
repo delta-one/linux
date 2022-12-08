@@ -128,8 +128,13 @@ uppercase letter and should be written in imperative tone.
 Changelog
 ^^^^^^^^^
 
+<<<<<<< HEAD
 The general rules about changelogs in the :ref:`Submitting patches guide
 <describe_changes>`, apply.
+=======
+The general rules about changelogs in the process documentation, see
+:ref:`Documentation/process/ <submittingpatches>`, apply.
+>>>>>>> b7ba80a49124 (Commit)
 
 The tip tree maintainers set value on following these rules, especially on
 the request to write changelogs in imperative mood and not impersonating

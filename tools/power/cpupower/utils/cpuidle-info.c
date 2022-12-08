@@ -176,9 +176,15 @@ int cmd_idle_info(int argc, char **argv)
 		cpuidle_exit(EXIT_FAILURE);
 	}
 
+<<<<<<< HEAD
 	/* Default is: show output of base_cpu only */
 	if (bitmask_isallclear(cpus_chosen))
 		bitmask_setbit(cpus_chosen, base_cpu);
+=======
+	/* Default is: show output of CPU 0 only */
+	if (bitmask_isallclear(cpus_chosen))
+		bitmask_setbit(cpus_chosen, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (output_param == 0)
 		cpuidle_general_output();

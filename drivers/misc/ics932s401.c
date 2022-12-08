@@ -89,7 +89,12 @@ struct ics932s401_data {
 	u8			regs[NUM_REGS];
 };
 
+<<<<<<< HEAD
 static int ics932s401_probe(struct i2c_client *client);
+=======
+static int ics932s401_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id);
+>>>>>>> b7ba80a49124 (Commit)
 static int ics932s401_detect(struct i2c_client *client,
 			  struct i2c_board_info *info);
 static void ics932s401_remove(struct i2c_client *client);
@@ -105,7 +110,11 @@ static struct i2c_driver ics932s401_driver = {
 	.driver = {
 		.name	= "ics932s401",
 	},
+<<<<<<< HEAD
 	.probe_new	= ics932s401_probe,
+=======
+	.probe		= ics932s401_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= ics932s401_remove,
 	.id_table	= ics932s401_id,
 	.detect		= ics932s401_detect,
@@ -428,7 +437,12 @@ static int ics932s401_detect(struct i2c_client *client,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ics932s401_probe(struct i2c_client *client)
+=======
+static int ics932s401_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ics932s401_data *data;
 	int err;

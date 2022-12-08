@@ -336,7 +336,11 @@
 	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
 	.fixup_map_kptr = { 1 },
 	.result = REJECT,
+<<<<<<< HEAD
 	.errstr = "R1 type=rcu_ptr_or_null_ expected=percpu_ptr_",
+=======
+	.errstr = "R1 type=untrusted_ptr_or_null_ expected=percpu_ptr_",
+>>>>>>> b7ba80a49124 (Commit)
 },
 {
 	"map_kptr: ref: reject off != 0",

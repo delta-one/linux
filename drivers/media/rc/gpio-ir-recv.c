@@ -74,9 +74,19 @@ static int gpio_ir_recv_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	gpio_dev->gpiod = devm_gpiod_get(dev, NULL, GPIOD_IN);
+<<<<<<< HEAD
 	if (IS_ERR(gpio_dev->gpiod))
 		return dev_err_probe(dev, PTR_ERR(gpio_dev->gpiod),
 				     "error getting gpio\n");
+=======
+	if (IS_ERR(gpio_dev->gpiod)) {
+		rc = PTR_ERR(gpio_dev->gpiod);
+		/* Just try again if this happens */
+		if (rc != -EPROBE_DEFER)
+			dev_err(dev, "error getting gpio (%d)\n", rc);
+		return rc;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	gpio_dev->irq = gpiod_to_irq(gpio_dev->gpiod);
 	if (gpio_dev->irq < 0)
 		return gpio_dev->irq;
@@ -126,6 +136,7 @@ static int gpio_ir_recv_probe(struct platform_device *pdev)
 				"gpio-ir-recv-irq", gpio_dev);
 }
 
+<<<<<<< HEAD
 static int gpio_ir_recv_remove(struct platform_device *pdev)
 {
 	struct gpio_rc_dev *gpio_dev = platform_get_drvdata(pdev);
@@ -143,6 +154,8 @@ static int gpio_ir_recv_remove(struct platform_device *pdev)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PM
 static int gpio_ir_recv_suspend(struct device *dev)
 {
@@ -202,7 +215,10 @@ MODULE_DEVICE_TABLE(of, gpio_ir_recv_of_match);
 
 static struct platform_driver gpio_ir_recv_driver = {
 	.probe  = gpio_ir_recv_probe,
+<<<<<<< HEAD
 	.remove = gpio_ir_recv_remove,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name   = KBUILD_MODNAME,
 		.of_match_table = of_match_ptr(gpio_ir_recv_of_match),

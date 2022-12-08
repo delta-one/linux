@@ -61,8 +61,12 @@ static int syscon_led_probe(struct platform_device *pdev)
 	struct device *parent;
 	struct regmap *map;
 	struct syscon_led *sled;
+<<<<<<< HEAD
 	enum led_default_state state;
 	u32 value;
+=======
+	const char *state;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	parent = dev->parent;
@@ -87,6 +91,7 @@ static int syscon_led_probe(struct platform_device *pdev)
 	if (of_property_read_u32(np, "mask", &sled->mask))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	init_data.fwnode = of_fwnode_handle(np);
 
 	state = led_init_default_state_get(init_data.fwnode);
@@ -111,6 +116,36 @@ static int syscon_led_probe(struct platform_device *pdev)
 	}
 	sled->cdev.brightness_set = syscon_led_set;
 
+=======
+	state = of_get_property(np, "default-state", NULL);
+	if (state) {
+		if (!strcmp(state, "keep")) {
+			u32 val;
+
+			ret = regmap_read(map, sled->offset, &val);
+			if (ret < 0)
+				return ret;
+			sled->state = !!(val & sled->mask);
+		} else if (!strcmp(state, "on")) {
+			sled->state = true;
+			ret = regmap_update_bits(map, sled->offset,
+						 sled->mask,
+						 sled->mask);
+			if (ret < 0)
+				return ret;
+		} else {
+			sled->state = false;
+			ret = regmap_update_bits(map, sled->offset,
+						 sled->mask, 0);
+			if (ret < 0)
+				return ret;
+		}
+	}
+	sled->cdev.brightness_set = syscon_led_set;
+
+	init_data.fwnode = of_fwnode_handle(np);
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = devm_led_classdev_register_ext(dev, &sled->cdev, &init_data);
 	if (ret < 0)
 		return ret;

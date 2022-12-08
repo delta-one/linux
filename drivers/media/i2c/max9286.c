@@ -72,7 +72,11 @@
 #define MAX9286_DATATYPE_USER_YUV_12BIT	(10 << 0)
 #define MAX9286_DATATYPE_USER_24BIT	(9 << 0)
 #define MAX9286_DATATYPE_RAW14		(8 << 0)
+<<<<<<< HEAD
 #define MAX9286_DATATYPE_RAW12		(7 << 0)
+=======
+#define MAX9286_DATATYPE_RAW11		(7 << 0)
+>>>>>>> b7ba80a49124 (Commit)
 #define MAX9286_DATATYPE_RAW10		(6 << 0)
 #define MAX9286_DATATYPE_RAW8		(5 << 0)
 #define MAX9286_DATATYPE_YUV422_10BIT	(4 << 0)
@@ -81,6 +85,7 @@
 #define MAX9286_DATATYPE_RGB565		(1 << 0)
 #define MAX9286_DATATYPE_RGB888		(0 << 0)
 /* Register 0x15 */
+<<<<<<< HEAD
 #define MAX9286_CSI_IMAGE_TYP		BIT(7)
 #define MAX9286_VC(n)			((n) << 5)
 #define MAX9286_VCTYPE			BIT(4)
@@ -96,6 +101,15 @@
 #define MAX9286_I2CSEL			BIT(2)
 #define MAX9286_HIBW			BIT(1)
 #define MAX9286_BWS			BIT(0)
+=======
+#define MAX9286_VC(n)			((n) << 5)
+#define MAX9286_VCTYPE			BIT(4)
+#define MAX9286_CSIOUTEN		BIT(3)
+#define MAX9286_0X15_RESV		(3 << 0)
+/* Register 0x1b */
+#define MAX9286_SWITCHIN(n)		(1 << ((n) + 4))
+#define MAX9286_ENEQ(n)			(1 << (n))
+>>>>>>> b7ba80a49124 (Commit)
 /* Register 0x27 */
 #define MAX9286_LOCKED			BIT(7)
 /* Register 0x31 */
@@ -144,6 +158,7 @@
 #define MAX9286_N_PADS			5
 #define MAX9286_SRC_PAD			4
 
+<<<<<<< HEAD
 struct max9286_format_info {
 	u32 code;
 	u8 datatype;
@@ -158,6 +173,11 @@ struct max9286_source {
 	struct v4l2_subdev *sd;
 	struct fwnode_handle *fwnode;
 	struct regulator *regulator;
+=======
+struct max9286_source {
+	struct v4l2_subdev *sd;
+	struct fwnode_handle *fwnode;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct max9286_asd {
@@ -187,6 +207,7 @@ struct max9286_priv {
 	/* The initial reverse control channel amplitude. */
 	u32 init_rev_chan_mv;
 	u32 rev_chan_mv;
+<<<<<<< HEAD
 	u8 i2c_mstbt;
 	u32 bus_width;
 
@@ -199,6 +220,15 @@ struct max9286_priv {
 
 	struct v4l2_mbus_framefmt fmt[MAX9286_N_SINKS];
 	struct v4l2_fract interval;
+=======
+
+	u32 gpio_poc[2];
+
+	struct v4l2_ctrl_handler ctrls;
+	struct v4l2_ctrl *pixelrate;
+
+	struct v4l2_mbus_framefmt fmt[MAX9286_N_SINKS];
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Protects controls and fmt structures */
 	struct mutex mutex;
@@ -238,6 +268,7 @@ static inline struct max9286_priv *sd_to_max9286(struct v4l2_subdev *sd)
 	return container_of(sd, struct max9286_priv, sd);
 }
 
+<<<<<<< HEAD
 static const struct max9286_format_info max9286_formats[] = {
 	{
 		.code = MEDIA_BUS_FMT_UYVY8_1X16,
@@ -277,6 +308,8 @@ static const struct max9286_i2c_speed max9286_i2c_speeds[] = {
 	{ .rate = 837000, .mstbt = MAX9286_I2CMSTBT_837KBPS },
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* -----------------------------------------------------------------------------
  * I2C IO
  */
@@ -397,7 +430,11 @@ error:
 static void max9286_configure_i2c(struct max9286_priv *priv, bool localack)
 {
 	u8 config = MAX9286_I2CSLVSH_469NS_234NS | MAX9286_I2CSLVTO_1024US |
+<<<<<<< HEAD
 		    priv->i2c_mstbt;
+=======
+		    MAX9286_I2CMSTBT_105KBPS;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (localack)
 		config |= MAX9286_I2CLOCACK;
@@ -538,6 +575,7 @@ static int max9286_check_config_link(struct max9286_priv *priv,
 	return 0;
 }
 
+<<<<<<< HEAD
 static void max9286_set_video_format(struct max9286_priv *priv,
 				     const struct v4l2_mbus_framefmt *format)
 {
@@ -609,6 +647,8 @@ static void max9286_set_fsync_period(struct max9286_priv *priv)
 	max9286_write(priv, 0x08, (fsync >> 16) & 0xff);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* -----------------------------------------------------------------------------
  * V4L2 Subdev
  */
@@ -647,13 +687,20 @@ static int max9286_set_pixelrate(struct max9286_priv *priv)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	priv->pixelrate = pixelrate;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * The CSI-2 transmitter pixel rate is the single source rate multiplied
 	 * by the number of available sources.
 	 */
+<<<<<<< HEAD
 	return v4l2_ctrl_s_ctrl_int64(priv->pixelrate_ctrl,
+=======
+	return v4l2_ctrl_s_ctrl_int64(priv->pixelrate,
+>>>>>>> b7ba80a49124 (Commit)
 				      pixelrate * priv->nsources);
 }
 
@@ -793,6 +840,7 @@ static int max9286_s_stream(struct v4l2_subdev *sd, int enable)
 	int ret;
 
 	if (enable) {
+<<<<<<< HEAD
 		const struct v4l2_mbus_framefmt *format;
 
 		/*
@@ -804,6 +852,8 @@ static int max9286_s_stream(struct v4l2_subdev *sd, int enable)
 		max9286_set_video_format(priv, format);
 		max9286_set_fsync_period(priv);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * The frame sync between cameras is transmitted across the
 		 * reverse channel as GPIO. We must open all channels while
@@ -845,6 +895,7 @@ static int max9286_s_stream(struct v4l2_subdev *sd, int enable)
 		}
 
 		/*
+<<<<<<< HEAD
 		 * Configure the CSI-2 output to line interleaved mode (W x (N
 		 * x H), as opposed to the (N x W) x H mode that outputs the
 		 * images stitched side-by-side) and enable it.
@@ -856,6 +907,15 @@ static int max9286_s_stream(struct v4l2_subdev *sd, int enable)
 		max9286_write(priv, 0x15, MAX9286_VCTYPE |
 			      MAX9286_EN_CCBSYB_CLK_STR |
 			      MAX9286_EN_GPI_CCBSYB);
+=======
+		 * Enable CSI output, VC set according to link number.
+		 * Bit 7 must be set (chip manual says it's 0 and reserved).
+		 */
+		max9286_write(priv, 0x15, 0x80 | MAX9286_VCTYPE |
+			      MAX9286_CSIOUTEN | MAX9286_0X15_RESV);
+	} else {
+		max9286_write(priv, 0x15, MAX9286_VCTYPE | MAX9286_0X15_RESV);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Stop all cameras. */
 		for_each_source(priv, source)
@@ -867,6 +927,7 @@ static int max9286_s_stream(struct v4l2_subdev *sd, int enable)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int max9286_g_frame_interval(struct v4l2_subdev *sd,
 				    struct v4l2_subdev_frame_interval *interval)
 {
@@ -893,6 +954,8 @@ static int max9286_s_frame_interval(struct v4l2_subdev *sd,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int max9286_enum_mbus_code(struct v4l2_subdev *sd,
 				  struct v4l2_subdev_state *sd_state,
 				  struct v4l2_subdev_mbus_code_enum *code)
@@ -926,11 +989,15 @@ static int max9286_set_fmt(struct v4l2_subdev *sd,
 {
 	struct max9286_priv *priv = sd_to_max9286(sd);
 	struct v4l2_mbus_framefmt *cfg_fmt;
+<<<<<<< HEAD
 	unsigned int i;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (format->pad == MAX9286_SRC_PAD)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/* Validate the format. */
 	for (i = 0; i < ARRAY_SIZE(max9286_formats); ++i) {
 		if (max9286_formats[i].code == format->format.code)
@@ -940,6 +1007,20 @@ static int max9286_set_fmt(struct v4l2_subdev *sd,
 	if (i == ARRAY_SIZE(max9286_formats))
 		format->format.code = max9286_formats[0].code;
 
+=======
+	/* Refuse non YUV422 formats as we hardcode DT to 8 bit YUV422 */
+	switch (format->format.code) {
+	case MEDIA_BUS_FMT_UYVY8_1X16:
+	case MEDIA_BUS_FMT_VYUY8_1X16:
+	case MEDIA_BUS_FMT_YUYV8_1X16:
+	case MEDIA_BUS_FMT_YVYU8_1X16:
+		break;
+	default:
+		format->format.code = MEDIA_BUS_FMT_UYVY8_1X16;
+		break;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	cfg_fmt = max9286_get_pad_format(priv, sd_state, format->pad,
 					 format->which);
 	if (!cfg_fmt)
@@ -982,8 +1063,11 @@ static int max9286_get_fmt(struct v4l2_subdev *sd,
 
 static const struct v4l2_subdev_video_ops max9286_video_ops = {
 	.s_stream	= max9286_s_stream,
+<<<<<<< HEAD
 	.g_frame_interval = max9286_g_frame_interval,
 	.s_frame_interval = max9286_s_frame_interval,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct v4l2_subdev_pad_ops max9286_pad_ops = {
@@ -997,6 +1081,7 @@ static const struct v4l2_subdev_ops max9286_subdev_ops = {
 	.pad		= &max9286_pad_ops,
 };
 
+<<<<<<< HEAD
 static const struct v4l2_mbus_framefmt max9286_default_format = {
 	.width		= 1280,
 	.height		= 800,
@@ -1011,6 +1096,18 @@ static const struct v4l2_mbus_framefmt max9286_default_format = {
 static void max9286_init_format(struct v4l2_mbus_framefmt *fmt)
 {
 	*fmt = max9286_default_format;
+=======
+static void max9286_init_format(struct v4l2_mbus_framefmt *fmt)
+{
+	fmt->width		= 1280;
+	fmt->height		= 800;
+	fmt->code		= MEDIA_BUS_FMT_UYVY8_1X16;
+	fmt->colorspace		= V4L2_COLORSPACE_SRGB;
+	fmt->field		= V4L2_FIELD_NONE;
+	fmt->ycbcr_enc		= V4L2_YCBCR_ENC_DEFAULT;
+	fmt->quantization	= V4L2_QUANTIZATION_DEFAULT;
+	fmt->xfer_func		= V4L2_XFER_FUNC_DEFAULT;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int max9286_open(struct v4l2_subdev *subdev, struct v4l2_subdev_fh *fh)
@@ -1072,10 +1169,17 @@ static int max9286_v4l2_register(struct max9286_priv *priv)
 	priv->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
 
 	v4l2_ctrl_handler_init(&priv->ctrls, 1);
+<<<<<<< HEAD
 	priv->pixelrate_ctrl = v4l2_ctrl_new_std(&priv->ctrls,
 						 &max9286_ctrl_ops,
 						 V4L2_CID_PIXEL_RATE,
 						 1, INT_MAX, 1, 50000000);
+=======
+	priv->pixelrate = v4l2_ctrl_new_std(&priv->ctrls,
+					    &max9286_ctrl_ops,
+					    V4L2_CID_PIXEL_RATE,
+					    1, INT_MAX, 1, 50000000);
+>>>>>>> b7ba80a49124 (Commit)
 
 	priv->sd.ctrl_handler = &priv->ctrls;
 	ret = priv->ctrls.error;
@@ -1113,7 +1217,10 @@ static int max9286_v4l2_register(struct max9286_priv *priv)
 err_put_node:
 	fwnode_handle_put(ep);
 err_async:
+<<<<<<< HEAD
 	v4l2_ctrl_handler_free(&priv->ctrls);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	max9286_v4l2_notifier_unregister(priv);
 
 	return ret;
@@ -1122,7 +1229,10 @@ err_async:
 static void max9286_v4l2_unregister(struct max9286_priv *priv)
 {
 	fwnode_handle_put(priv->sd.fwnode);
+<<<<<<< HEAD
 	v4l2_ctrl_handler_free(&priv->ctrls);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	v4l2_async_unregister_subdev(&priv->sd);
 	max9286_v4l2_notifier_unregister(priv);
 }
@@ -1158,7 +1268,10 @@ static int max9286_setup(struct max9286_priv *priv)
 		(2 << 6) | (1 << 4) | (0 << 2) | (3 << 0), /* 210x */
 		(3 << 6) | (2 << 4) | (1 << 2) | (0 << 0), /* 3210 */
 	};
+<<<<<<< HEAD
 	int cfg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Set the I2C bus speed.
@@ -1177,6 +1290,7 @@ static int max9286_setup(struct max9286_priv *priv)
 	max9286_write(priv, 0x0b, link_order[priv->route_mask]);
 	max9286_write(priv, 0x69, (0xf & ~priv->route_mask));
 
+<<<<<<< HEAD
 	max9286_set_video_format(priv, &max9286_default_format);
 	max9286_set_fsync_period(priv);
 
@@ -1198,6 +1312,26 @@ static int max9286_setup(struct max9286_priv *priv)
 
 		max9286_write(priv, 0x1c, cfg);
 	}
+=======
+	/*
+	 * Video format setup:
+	 * Disable CSI output, VC is set according to Link number.
+	 */
+	max9286_write(priv, 0x15, MAX9286_VCTYPE | MAX9286_0X15_RESV);
+
+	/* Enable CSI-2 Lane D0-D3 only, DBL mode, YUV422 8-bit. */
+	max9286_write(priv, 0x12, MAX9286_CSIDBL | MAX9286_DBL |
+		      MAX9286_CSILANECNT(priv->csi2_data_lanes) |
+		      MAX9286_DATATYPE_YUV422_8BIT);
+
+	/* Automatic: FRAMESYNC taken from the slowest Link. */
+	max9286_write(priv, 0x01, MAX9286_FSYNCMODE_INT_HIZ |
+		      MAX9286_FSYNCMETH_AUTO);
+
+	/* Enable HS/VS encoding, use D14/15 for HS/VS, invert VS. */
+	max9286_write(priv, 0x0c, MAX9286_HVEN | MAX9286_INVVS |
+		      MAX9286_HVSRC_D14);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * The overlap window seems to provide additional validation by tracking
@@ -1275,6 +1409,12 @@ static int max9286_parse_gpios(struct max9286_priv *priv)
 	struct device *dev = &priv->client->dev;
 	int ret;
 
+<<<<<<< HEAD
+=======
+	/* GPIO values default to high */
+	priv->gpio_state = BIT(0) | BIT(1);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Parse the "gpio-poc" vendor property. If the property is not
 	 * specified the camera power is controlled by a regulator.
@@ -1286,7 +1426,22 @@ static int max9286_parse_gpios(struct max9286_priv *priv)
 		 * If gpio lines are not used for the camera power, register
 		 * a gpio controller for consumers.
 		 */
+<<<<<<< HEAD
 		return max9286_register_gpio(priv);
+=======
+		ret = max9286_register_gpio(priv);
+		if (ret)
+			return ret;
+
+		priv->regulator = devm_regulator_get(dev, "poc");
+		if (IS_ERR(priv->regulator)) {
+			return dev_err_probe(dev, PTR_ERR(priv->regulator),
+					     "Unable to get PoC regulator (%ld)\n",
+					     PTR_ERR(priv->regulator));
+		}
+
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* If the property is specified make sure it is well formed. */
@@ -1297,6 +1452,7 @@ static int max9286_parse_gpios(struct max9286_priv *priv)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	priv->use_gpio_poc = true;
 	return 0;
 }
@@ -1358,14 +1514,30 @@ static int max9286_poc_power_off(struct max9286_priv *priv)
 	return ret;
 }
 
+=======
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int max9286_poc_enable(struct max9286_priv *priv, bool enable)
 {
 	int ret;
 
+<<<<<<< HEAD
 	if (enable)
 		ret = max9286_poc_power_on(priv);
 	else
 		ret = max9286_poc_power_off(priv);
+=======
+	/* If the regulator is not available, use gpio to control power. */
+	if (!priv->regulator)
+		ret = max9286_gpio_set(priv, priv->gpio_poc[0],
+				       enable ^ priv->gpio_poc[1]);
+	else if (enable)
+		ret = regulator_enable(priv->regulator);
+	else
+		ret = regulator_disable(priv->regulator);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ret < 0)
 		dev_err(&priv->client->dev, "Unable to turn power %s\n",
@@ -1435,8 +1607,11 @@ static int max9286_parse_dt(struct max9286_priv *priv)
 	struct device_node *node = NULL;
 	unsigned int i2c_mux_mask = 0;
 	u32 reverse_channel_microvolt;
+<<<<<<< HEAD
 	u32 i2c_clk_freq = 105000;
 	unsigned int i;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Balance the of_node_put() performed by of_find_node_by_name(). */
 	of_node_get(dev->of_node);
@@ -1527,6 +1702,7 @@ static int max9286_parse_dt(struct max9286_priv *priv)
 	}
 	of_node_put(node);
 
+<<<<<<< HEAD
 	of_property_read_u32(dev->of_node, "maxim,bus-width", &priv->bus_width);
 	switch (priv->bus_width) {
 	case 0:
@@ -1561,6 +1737,8 @@ static int max9286_parse_dt(struct max9286_priv *priv)
 		return -EINVAL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Parse the initial value of the reverse channel amplitude from
 	 * the firmware interface and convert it to millivolts.
@@ -1580,6 +1758,7 @@ static int max9286_parse_dt(struct max9286_priv *priv)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int max9286_get_poc_supplies(struct max9286_priv *priv)
 {
 	struct device *dev = &priv->client->dev;
@@ -1618,6 +1797,8 @@ static int max9286_get_poc_supplies(struct max9286_priv *priv)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int max9286_probe(struct i2c_client *client)
 {
 	struct max9286_priv *priv;
@@ -1631,6 +1812,7 @@ static int max9286_probe(struct i2c_client *client)
 
 	priv->client = client;
 
+<<<<<<< HEAD
 	/* GPIO values default to high */
 	priv->gpio_state = BIT(0) | BIT(1);
 
@@ -1644,6 +1826,12 @@ static int max9286_probe(struct i2c_client *client)
 		ret = PTR_ERR(priv->gpiod_pwdn);
 		goto err_cleanup_dt;
 	}
+=======
+	priv->gpiod_pwdn = devm_gpiod_get_optional(&client->dev, "enable",
+						   GPIOD_OUT_HIGH);
+	if (IS_ERR(priv->gpiod_pwdn))
+		return PTR_ERR(priv->gpiod_pwdn);
+>>>>>>> b7ba80a49124 (Commit)
 
 	gpiod_set_consumer_name(priv->gpiod_pwdn, "max9286-pwdn");
 	gpiod_set_value_cansleep(priv->gpiod_pwdn, 1);
@@ -1670,11 +1858,17 @@ static int max9286_probe(struct i2c_client *client)
 	if (ret)
 		goto err_powerdown;
 
+<<<<<<< HEAD
 	if (!priv->use_gpio_poc) {
 		ret = max9286_get_poc_supplies(priv);
 		if (ret)
 			goto err_cleanup_dt;
 	}
+=======
+	ret = max9286_parse_dt(priv);
+	if (ret)
+		goto err_powerdown;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = max9286_init(priv);
 	if (ret < 0)
@@ -1682,10 +1876,17 @@ static int max9286_probe(struct i2c_client *client)
 
 	return 0;
 
+<<<<<<< HEAD
 err_powerdown:
 	gpiod_set_value_cansleep(priv->gpiod_pwdn, 0);
 err_cleanup_dt:
 	max9286_cleanup_dt(priv);
+=======
+err_cleanup_dt:
+	max9286_cleanup_dt(priv);
+err_powerdown:
+	gpiod_set_value_cansleep(priv->gpiod_pwdn, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }

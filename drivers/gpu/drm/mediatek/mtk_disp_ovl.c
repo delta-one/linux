@@ -19,7 +19,10 @@
 #include "mtk_disp_drv.h"
 #include "mtk_drm_crtc.h"
 #include "mtk_drm_ddp_comp.h"
+<<<<<<< HEAD
 #include "mtk_drm_drv.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DISP_REG_OVL_INTEN			0x0004
 #define OVL_FME_CPL_INT					BIT(1)
@@ -30,22 +33,31 @@
 #define DISP_REG_OVL_DATAPATH_CON		0x0024
 #define OVL_LAYER_SMI_ID_EN				BIT(0)
 #define OVL_BGCLR_SEL_IN				BIT(2)
+<<<<<<< HEAD
 #define OVL_LAYER_AFBC_EN(n)				BIT(4+n)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DISP_REG_OVL_ROI_BGCLR			0x0028
 #define DISP_REG_OVL_SRC_CON			0x002c
 #define DISP_REG_OVL_CON(n)			(0x0030 + 0x20 * (n))
 #define DISP_REG_OVL_SRC_SIZE(n)		(0x0038 + 0x20 * (n))
 #define DISP_REG_OVL_OFFSET(n)			(0x003c + 0x20 * (n))
+<<<<<<< HEAD
 #define DISP_REG_OVL_PITCH_MSB(n)		(0x0040 + 0x20 * (n))
 #define OVL_PITCH_MSB_2ND_SUBBUF			BIT(16)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DISP_REG_OVL_PITCH(n)			(0x0044 + 0x20 * (n))
 #define DISP_REG_OVL_RDMA_CTRL(n)		(0x00c0 + 0x20 * (n))
 #define DISP_REG_OVL_RDMA_GMC(n)		(0x00c8 + 0x20 * (n))
 #define DISP_REG_OVL_ADDR_MT2701		0x0040
 #define DISP_REG_OVL_ADDR_MT8173		0x0f40
 #define DISP_REG_OVL_ADDR(ovl, n)		((ovl)->data->addr + 0x20 * (n))
+<<<<<<< HEAD
 #define DISP_REG_OVL_HDR_ADDR(ovl, n)		((ovl)->data->addr + 0x20 * (n) + 0x04)
 #define DISP_REG_OVL_HDR_PITCH(ovl, n)		((ovl)->data->addr + 0x20 * (n) + 0x08)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define GMC_THRESHOLD_BITS	16
 #define GMC_THRESHOLD_HIGH	((1 << GMC_THRESHOLD_BITS) / 4)
@@ -73,7 +85,10 @@ struct mtk_disp_ovl_data {
 	unsigned int layer_nr;
 	bool fmt_rgb565_is_0;
 	bool smi_id_en;
+<<<<<<< HEAD
 	bool supports_afbc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -179,6 +194,7 @@ void mtk_ovl_stop(struct device *dev)
 		reg = reg & ~OVL_LAYER_SMI_ID_EN;
 		writel_relaxed(reg, ovl->regs + DISP_REG_OVL_DATAPATH_CON);
 	}
+<<<<<<< HEAD
 }
 
 static void mtk_ovl_set_afbc(struct mtk_disp_ovl *ovl, struct cmdq_pkt *cmdq_pkt,
@@ -187,6 +203,9 @@ static void mtk_ovl_set_afbc(struct mtk_disp_ovl *ovl, struct cmdq_pkt *cmdq_pkt
 	mtk_ddp_write_mask(cmdq_pkt, enabled ? OVL_LAYER_AFBC_EN(idx) : 0,
 			   &ovl->cmdq_reg, ovl->regs,
 			   DISP_REG_OVL_DATAPATH_CON, OVL_LAYER_AFBC_EN(idx));
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void mtk_ovl_config(struct device *dev, unsigned int w,
@@ -324,13 +343,18 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
 	struct mtk_disp_ovl *ovl = dev_get_drvdata(dev);
 	struct mtk_plane_pending_state *pending = &state->pending;
 	unsigned int addr = pending->addr;
+<<<<<<< HEAD
 	unsigned int hdr_addr = pending->hdr_addr;
 	unsigned int pitch = pending->pitch;
 	unsigned int hdr_pitch = pending->hdr_pitch;
+=======
+	unsigned int pitch = pending->pitch & 0xffff;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int fmt = pending->format;
 	unsigned int offset = (pending->y << 16) | pending->x;
 	unsigned int src_size = (pending->height << 16) | pending->width;
 	unsigned int con;
+<<<<<<< HEAD
 	bool is_afbc = pending->modifier != DRM_FORMAT_MOD_LINEAR;
 	union overlay_pitch {
 		struct split_pitch {
@@ -341,6 +365,8 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
 	} overlay_pitch;
 
 	overlay_pitch.pitch = pitch;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!pending->enable) {
 		mtk_ovl_layer_off(dev, idx, cmdq_pkt);
@@ -361,12 +387,18 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
 		addr += pending->pitch - 1;
 	}
 
+<<<<<<< HEAD
 	if (ovl->data->supports_afbc)
 		mtk_ovl_set_afbc(ovl, cmdq_pkt, idx, is_afbc);
 
 	mtk_ddp_write_relaxed(cmdq_pkt, con, &ovl->cmdq_reg, ovl->regs,
 			      DISP_REG_OVL_CON(idx));
 	mtk_ddp_write_relaxed(cmdq_pkt, overlay_pitch.split_pitch.lsb, &ovl->cmdq_reg, ovl->regs,
+=======
+	mtk_ddp_write_relaxed(cmdq_pkt, con, &ovl->cmdq_reg, ovl->regs,
+			      DISP_REG_OVL_CON(idx));
+	mtk_ddp_write_relaxed(cmdq_pkt, pitch, &ovl->cmdq_reg, ovl->regs,
+>>>>>>> b7ba80a49124 (Commit)
 			      DISP_REG_OVL_PITCH(idx));
 	mtk_ddp_write_relaxed(cmdq_pkt, src_size, &ovl->cmdq_reg, ovl->regs,
 			      DISP_REG_OVL_SRC_SIZE(idx));
@@ -375,6 +407,7 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
 	mtk_ddp_write_relaxed(cmdq_pkt, addr, &ovl->cmdq_reg, ovl->regs,
 			      DISP_REG_OVL_ADDR(ovl, idx));
 
+<<<<<<< HEAD
 	if (is_afbc) {
 		mtk_ddp_write_relaxed(cmdq_pkt, hdr_addr, &ovl->cmdq_reg, ovl->regs,
 				      DISP_REG_OVL_HDR_ADDR(ovl, idx));
@@ -389,6 +422,8 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
 				      &ovl->cmdq_reg, ovl->regs, DISP_REG_OVL_PITCH_MSB(idx));
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mtk_ovl_layer_on(dev, idx, cmdq_pkt);
 }
 
@@ -535,6 +570,7 @@ static const struct mtk_disp_ovl_data mt8192_ovl_2l_driver_data = {
 	.smi_id_en = true,
 };
 
+<<<<<<< HEAD
 static const struct mtk_disp_ovl_data mt8195_ovl_driver_data = {
 	.addr = DISP_REG_OVL_ADDR_MT8173,
 	.gmc_bits = 10,
@@ -544,6 +580,8 @@ static const struct mtk_disp_ovl_data mt8195_ovl_driver_data = {
 	.supports_afbc = true,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id mtk_disp_ovl_driver_dt_match[] = {
 	{ .compatible = "mediatek,mt2701-disp-ovl",
 	  .data = &mt2701_ovl_driver_data},
@@ -557,8 +595,11 @@ static const struct of_device_id mtk_disp_ovl_driver_dt_match[] = {
 	  .data = &mt8192_ovl_driver_data},
 	{ .compatible = "mediatek,mt8192-disp-ovl-2l",
 	  .data = &mt8192_ovl_2l_driver_data},
+<<<<<<< HEAD
 	{ .compatible = "mediatek,mt8195-disp-ovl",
 	  .data = &mt8195_ovl_driver_data},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 MODULE_DEVICE_TABLE(of, mtk_disp_ovl_driver_dt_match);

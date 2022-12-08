@@ -641,26 +641,36 @@ static const struct counter_desc vnic_env_stats_dev_oob_desc[] = {
 		VNIC_ENV_OFF(vport_env.internal_rq_out_of_buffer) },
 };
 
+<<<<<<< HEAD
 static const struct counter_desc vnic_env_stats_drop_desc[] = {
 	{ "rx_oversize_pkts_buffer",
 		VNIC_ENV_OFF(vport_env.eth_wqe_too_small) },
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define NUM_VNIC_ENV_STEER_COUNTERS(dev) \
 	(MLX5_CAP_GEN(dev, nic_receive_steering_discard) ? \
 	 ARRAY_SIZE(vnic_env_stats_steer_desc) : 0)
 #define NUM_VNIC_ENV_DEV_OOB_COUNTERS(dev) \
 	(MLX5_CAP_GEN(dev, vnic_env_int_rq_oob) ? \
 	 ARRAY_SIZE(vnic_env_stats_dev_oob_desc) : 0)
+<<<<<<< HEAD
 #define NUM_VNIC_ENV_DROP_COUNTERS(dev) \
 	(MLX5_CAP_GEN(dev, eth_wqe_too_small) ? \
 	 ARRAY_SIZE(vnic_env_stats_drop_desc) : 0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static MLX5E_DECLARE_STATS_GRP_OP_NUM_STATS(vnic_env)
 {
 	return NUM_VNIC_ENV_STEER_COUNTERS(priv->mdev) +
+<<<<<<< HEAD
 	       NUM_VNIC_ENV_DEV_OOB_COUNTERS(priv->mdev) +
 	       NUM_VNIC_ENV_DROP_COUNTERS(priv->mdev);
+=======
+		NUM_VNIC_ENV_DEV_OOB_COUNTERS(priv->mdev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static MLX5E_DECLARE_STATS_GRP_OP_FILL_STRS(vnic_env)
@@ -674,11 +684,14 @@ static MLX5E_DECLARE_STATS_GRP_OP_FILL_STRS(vnic_env)
 	for (i = 0; i < NUM_VNIC_ENV_DEV_OOB_COUNTERS(priv->mdev); i++)
 		strcpy(data + (idx++) * ETH_GSTRING_LEN,
 		       vnic_env_stats_dev_oob_desc[i].format);
+<<<<<<< HEAD
 
 	for (i = 0; i < NUM_VNIC_ENV_DROP_COUNTERS(priv->mdev); i++)
 		strcpy(data + (idx++) * ETH_GSTRING_LEN,
 		       vnic_env_stats_drop_desc[i].format);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return idx;
 }
 
@@ -693,11 +706,14 @@ static MLX5E_DECLARE_STATS_GRP_OP_FILL_STATS(vnic_env)
 	for (i = 0; i < NUM_VNIC_ENV_DEV_OOB_COUNTERS(priv->mdev); i++)
 		data[idx++] = MLX5E_READ_CTR32_BE(priv->stats.vnic.query_vnic_env_out,
 						  vnic_env_stats_dev_oob_desc, i);
+<<<<<<< HEAD
 
 	for (i = 0; i < NUM_VNIC_ENV_DROP_COUNTERS(priv->mdev); i++)
 		data[idx++] = MLX5E_READ_CTR32_BE(priv->stats.vnic.query_vnic_env_out,
 						  vnic_env_stats_drop_desc, i);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return idx;
 }
 
@@ -1241,6 +1257,7 @@ static MLX5E_DECLARE_STATS_GRP_OP_UPDATE_STATS(phy)
 	mlx5_core_access_reg(mdev, in, sz, out, sz, MLX5_REG_PPCNT, 0, 0);
 }
 
+<<<<<<< HEAD
 void mlx5e_get_link_ext_stats(struct net_device *dev,
 			      struct ethtool_link_ext_stats *stats)
 {
@@ -1258,6 +1275,8 @@ void mlx5e_get_link_ext_stats(struct net_device *dev,
 					   counter_set.phys_layer_cntrs.link_down_events);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int fec_num_lanes(struct mlx5_core_dev *dev)
 {
 	u32 out[MLX5_ST_SZ_DW(pmlp_reg)] = {};
@@ -2138,7 +2157,10 @@ static const struct counter_desc ptp_cq_stats_desc[] = {
 	{ MLX5E_DECLARE_PTP_CQ_STAT(struct mlx5e_ptp_cq_stats, abort_abs_diff_ns) },
 	{ MLX5E_DECLARE_PTP_CQ_STAT(struct mlx5e_ptp_cq_stats, resync_cqe) },
 	{ MLX5E_DECLARE_PTP_CQ_STAT(struct mlx5e_ptp_cq_stats, resync_event) },
+<<<<<<< HEAD
 	{ MLX5E_DECLARE_PTP_CQ_STAT(struct mlx5e_ptp_cq_stats, ooo_cqe_drop) },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct counter_desc ptp_rq_stats_desc[] = {
@@ -2481,7 +2503,10 @@ mlx5e_stats_grp_t mlx5e_nic_stats_grps[] = {
 	&MLX5E_STATS_GRP(per_prio),
 	&MLX5E_STATS_GRP(pme),
 #ifdef CONFIG_MLX5_EN_IPSEC
+<<<<<<< HEAD
 	&MLX5E_STATS_GRP(ipsec_hw),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	&MLX5E_STATS_GRP(ipsec_sw),
 #endif
 	&MLX5E_STATS_GRP(tls),

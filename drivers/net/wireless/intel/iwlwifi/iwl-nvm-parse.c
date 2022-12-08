@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
 /*
+<<<<<<< HEAD
  * Copyright (C) 2005-2014, 2018-2022 Intel Corporation
+=======
+ * Copyright (C) 2005-2014, 2018-2021 Intel Corporation
+>>>>>>> b7ba80a49124 (Commit)
  * Copyright (C) 2013-2015 Intel Mobile Communications GmbH
  * Copyright (C) 2016-2017 Intel Deutschland GmbH
  */
@@ -81,7 +85,11 @@ static const u16 iwl_nvm_channels[] = {
 	/* 2.4 GHz */
 	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
 	/* 5 GHz */
+<<<<<<< HEAD
 	36, 40, 44, 48, 52, 56, 60, 64,
+=======
+	36, 40, 44 , 48, 52, 56, 60, 64,
+>>>>>>> b7ba80a49124 (Commit)
 	100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144,
 	149, 153, 157, 161, 165
 };
@@ -546,7 +554,11 @@ static const u8 iwl_vendor_caps[] = {
 	0x00
 };
 
+<<<<<<< HEAD
 static const struct ieee80211_sband_iftype_data iwl_he_eht_capa[] = {
+=======
+static const struct ieee80211_sband_iftype_data iwl_he_capa[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.types_mask = BIT(NL80211_IFTYPE_STATION),
 		.he_cap = {
@@ -571,6 +583,13 @@ static const struct ieee80211_sband_iftype_data iwl_he_eht_capa[] = {
 					IEEE80211_HE_MAC_CAP5_UL_2x996_TONE_RU |
 					IEEE80211_HE_MAC_CAP5_HE_DYNAMIC_SM_PS |
 					IEEE80211_HE_MAC_CAP5_HT_VHT_TRIG_FRAME_RX,
+<<<<<<< HEAD
+=======
+				.phy_cap_info[0] =
+					IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_40MHZ_IN_2G |
+					IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_40MHZ_80MHZ_IN_5G |
+					IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_160MHZ_IN_5G,
+>>>>>>> b7ba80a49124 (Commit)
 				.phy_cap_info[1] =
 					IEEE80211_HE_PHY_CAP1_PREAMBLE_PUNC_RX_MASK |
 					IEEE80211_HE_PHY_CAP1_DEVICE_CLASS_A |
@@ -627,6 +646,7 @@ static const struct ieee80211_sband_iftype_data iwl_he_eht_capa[] = {
 			 */
 			.ppe_thres = {0x61, 0x1c, 0xc7, 0x71},
 		},
+<<<<<<< HEAD
 		.eht_cap = {
 			.has_eht = true,
 			.eht_cap_elem = {
@@ -699,6 +719,8 @@ static const struct ieee80211_sband_iftype_data iwl_he_eht_capa[] = {
 			 */
 			.eht_ppe_thres = {0xc1, 0x0e, 0xe0 }
 		},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.types_mask = BIT(NL80211_IFTYPE_AP),
@@ -712,6 +734,12 @@ static const struct ieee80211_sband_iftype_data iwl_he_eht_capa[] = {
 					IEEE80211_HE_MAC_CAP1_MULTI_TID_AGG_RX_QOS_8,
 				.mac_cap_info[3] =
 					IEEE80211_HE_MAC_CAP3_OMI_CONTROL,
+<<<<<<< HEAD
+=======
+				.phy_cap_info[0] =
+					IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_40MHZ_IN_2G |
+					IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_40MHZ_80MHZ_IN_5G,
+>>>>>>> b7ba80a49124 (Commit)
 				.phy_cap_info[1] =
 					IEEE80211_HE_PHY_CAP1_LDPC_CODING_IN_PAYLOAD,
 				.phy_cap_info[2] =
@@ -752,6 +780,7 @@ static const struct ieee80211_sband_iftype_data iwl_he_eht_capa[] = {
 			 */
 			.ppe_thres = {0x61, 0x1c, 0xc7, 0x71},
 		},
+<<<<<<< HEAD
 		.eht_cap = {
 			.has_eht = true,
 			.eht_cap_elem = {
@@ -795,6 +824,8 @@ static const struct ieee80211_sband_iftype_data iwl_he_eht_capa[] = {
 			 */
 			.eht_ppe_thres = {0xc1, 0x0e, 0xe0 }
 		},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 
@@ -846,7 +877,10 @@ static void iwl_init_he_6ghz_capa(struct iwl_trans *trans,
 
 static void
 iwl_nvm_fixup_sband_iftd(struct iwl_trans *trans,
+<<<<<<< HEAD
 			 struct iwl_nvm_data *data,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			 struct ieee80211_supported_band *sband,
 			 struct ieee80211_sband_iftype_data *iftype_data,
 			 u8 tx_chains, u8 rx_chains,
@@ -854,9 +888,12 @@ iwl_nvm_fixup_sband_iftd(struct iwl_trans *trans,
 {
 	bool is_ap = iftype_data->types_mask & BIT(NL80211_IFTYPE_AP);
 
+<<<<<<< HEAD
 	if (!data->sku_cap_11be_enable || iwlwifi_mod_params.disable_11be)
 		iftype_data->eht_cap.has_eht = false;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Advertise an A-MPDU exponent extension based on
 	 * operating band
 	 */
@@ -867,6 +904,7 @@ iwl_nvm_fixup_sband_iftd(struct iwl_trans *trans,
 		iftype_data->he_cap.he_cap_elem.mac_cap_info[3] |=
 			IEEE80211_HE_MAC_CAP3_MAX_AMPDU_LEN_EXP_EXT_3;
 
+<<<<<<< HEAD
 	switch (sband->band) {
 	case NL80211_BAND_2GHZ:
 		iftype_data->he_cap.he_cap_elem.phy_cap_info[0] |=
@@ -891,6 +929,11 @@ iwl_nvm_fixup_sband_iftd(struct iwl_trans *trans,
 		WARN_ON(1);
 		break;
 	}
+=======
+	if (is_ap && iwlwifi_mod_params.nvm_file)
+		iftype_data->he_cap.he_cap_elem.phy_cap_info[0] |=
+			IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_160MHZ_IN_5G;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if ((tx_chains & rx_chains) == ANT_AB) {
 		iftype_data->he_cap.he_cap_elem.phy_cap_info[2] |=
@@ -898,6 +941,7 @@ iwl_nvm_fixup_sband_iftd(struct iwl_trans *trans,
 		iftype_data->he_cap.he_cap_elem.phy_cap_info[5] |=
 			IEEE80211_HE_PHY_CAP5_BEAMFORMEE_NUM_SND_DIM_UNDER_80MHZ_2 |
 			IEEE80211_HE_PHY_CAP5_BEAMFORMEE_NUM_SND_DIM_ABOVE_80MHZ_2;
+<<<<<<< HEAD
 		if (!is_ap) {
 			iftype_data->he_cap.he_cap_elem.phy_cap_info[7] |=
 				IEEE80211_HE_PHY_CAP7_MAX_NC_2;
@@ -936,6 +980,21 @@ iwl_nvm_fixup_sband_iftd(struct iwl_trans *trans,
 			iftype_data->he_cap.he_cap_elem.phy_cap_info[7] |=
 				IEEE80211_HE_PHY_CAP7_MAX_NC_1;
 		}
+=======
+		if (!is_ap)
+			iftype_data->he_cap.he_cap_elem.phy_cap_info[7] |=
+				IEEE80211_HE_PHY_CAP7_MAX_NC_2;
+	} else if (!is_ap) {
+		/* If not 2x2, we need to indicate 1x1 in the
+		 * Midamble RX Max NSTS - but not for AP mode
+		 */
+		iftype_data->he_cap.he_cap_elem.phy_cap_info[1] &=
+			~IEEE80211_HE_PHY_CAP1_MIDAMBLE_RX_TX_MAX_NSTS;
+		iftype_data->he_cap.he_cap_elem.phy_cap_info[2] &=
+			~IEEE80211_HE_PHY_CAP2_MIDAMBLE_RX_TX_MAX_NSTS;
+		iftype_data->he_cap.he_cap_elem.phy_cap_info[7] |=
+			IEEE80211_HE_PHY_CAP7_MAX_NC_1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	switch (CSR_HW_RFID_TYPE(trans->hw_rf_id)) {
@@ -950,6 +1009,7 @@ iwl_nvm_fixup_sband_iftd(struct iwl_trans *trans,
 		break;
 	}
 
+<<<<<<< HEAD
 	if (CSR_HW_REV_TYPE(trans->hw_rev) == IWL_CFG_MAC_TYPE_GL &&
 	    iftype_data->eht_cap.has_eht) {
 		iftype_data->eht_cap.eht_cap_elem.mac_cap_info[0] &=
@@ -973,6 +1033,8 @@ iwl_nvm_fixup_sband_iftd(struct iwl_trans *trans,
 			  IEEE80211_EHT_PHY_CAP6_EHT_DUP_6GHZ_SUPP);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (fw_has_capa(&fw->ucode_capa, IWL_UCODE_TLV_CAPA_BROADCAST_TWT))
 		iftype_data->he_cap.he_cap_elem.mac_cap_info[2] |=
 			IEEE80211_HE_MAC_CAP2_BCAST_TWT;
@@ -997,8 +1059,13 @@ static void iwl_init_he_hw_capab(struct iwl_trans *trans,
 	if (WARN_ON(sband->iftype_data))
 		return;
 
+<<<<<<< HEAD
 	BUILD_BUG_ON(sizeof(data->iftd.low) != sizeof(iwl_he_eht_capa));
 	BUILD_BUG_ON(sizeof(data->iftd.high) != sizeof(iwl_he_eht_capa));
+=======
+	BUILD_BUG_ON(sizeof(data->iftd.low) != sizeof(iwl_he_capa));
+	BUILD_BUG_ON(sizeof(data->iftd.high) != sizeof(iwl_he_capa));
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (sband->band) {
 	case NL80211_BAND_2GHZ:
@@ -1013,6 +1080,7 @@ static void iwl_init_he_hw_capab(struct iwl_trans *trans,
 		return;
 	}
 
+<<<<<<< HEAD
 	memcpy(iftype_data, iwl_he_eht_capa, sizeof(iwl_he_eht_capa));
 
 	sband->iftype_data = iftype_data;
@@ -1020,6 +1088,15 @@ static void iwl_init_he_hw_capab(struct iwl_trans *trans,
 
 	for (i = 0; i < sband->n_iftype_data; i++)
 		iwl_nvm_fixup_sband_iftd(trans, data, sband, &iftype_data[i],
+=======
+	memcpy(iftype_data, iwl_he_capa, sizeof(iwl_he_capa));
+
+	sband->iftype_data = iftype_data;
+	sband->n_iftype_data = ARRAY_SIZE(iwl_he_capa);
+
+	for (i = 0; i < sband->n_iftype_data; i++)
+		iwl_nvm_fixup_sband_iftd(trans, sband, &iftype_data[i],
+>>>>>>> b7ba80a49124 (Commit)
 					 tx_chains, rx_chains, fw);
 
 	iwl_init_he_6ghz_capa(trans, data, sband, tx_chains, rx_chains);
@@ -1964,8 +2041,11 @@ struct iwl_nvm_data *iwl_get_nvm(struct iwl_trans *trans,
 		!!(mac_flags & NVM_MAC_SKU_FLAGS_BAND_5_2_ENABLED);
 	nvm->sku_cap_mimo_disabled =
 		!!(mac_flags & NVM_MAC_SKU_FLAGS_MIMO_DISABLED);
+<<<<<<< HEAD
 	if (CSR_HW_RFID_TYPE(trans->hw_rf_id) == IWL_CFG_RF_TYPE_FM)
 		nvm->sku_cap_11be_enable = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Initialize PHY sku data */
 	nvm->valid_tx_ant = (u8)le32_to_cpu(rsp->phy_sku.tx_chains);

@@ -96,7 +96,11 @@ static int get_map_fd_by_prog_id(int prog_id, bool *xdp)
 	info.nr_map_ids = 1;
 	info.map_ids = (__u64)(unsigned long)map_ids;
 
+<<<<<<< HEAD
 	if (bpf_prog_get_info_by_fd(prog_fd, &info, &info_len)) {
+=======
+	if (bpf_obj_get_info_by_fd(prog_fd, &info, &info_len)) {
+>>>>>>> b7ba80a49124 (Commit)
 		log_err("Failed to get info by prog fd %d", prog_fd);
 		goto err;
 	}

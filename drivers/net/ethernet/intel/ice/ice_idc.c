@@ -6,8 +6,11 @@
 #include "ice_lib.h"
 #include "ice_dcb_lib.h"
 
+<<<<<<< HEAD
 static DEFINE_XARRAY_ALLOC1(ice_aux_id);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * ice_get_auxiliary_drv - retrieve iidc_auxiliary_drv struct
  * @pf: pointer to PF struct
@@ -248,6 +251,7 @@ static int ice_reserve_rdma_qvector(struct ice_pf *pf)
 }
 
 /**
+<<<<<<< HEAD
  * ice_free_rdma_qvector - free vector resources reserved for RDMA driver
  * @pf: board private structure to initialize
  */
@@ -259,6 +263,8 @@ static void ice_free_rdma_qvector(struct ice_pf *pf)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ice_adev_release - function to be mapped to AUX dev's release op
  * @dev: pointer to device to free
  */
@@ -344,6 +350,7 @@ int ice_init_rdma(struct ice_pf *pf)
 	struct device *dev = &pf->pdev->dev;
 	int ret;
 
+<<<<<<< HEAD
 	if (!ice_is_rdma_ena(pf)) {
 		dev_warn(dev, "RDMA is not supported on this device\n");
 		return 0;
@@ -356,10 +363,13 @@ int ice_init_rdma(struct ice_pf *pf)
 		return -ENOMEM;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Reserve vector resources */
 	ret = ice_reserve_rdma_qvector(pf);
 	if (ret < 0) {
 		dev_err(dev, "failed to reserve vectors for RDMA\n");
+<<<<<<< HEAD
 		goto err_reserve_rdma_qvector;
 	}
 	pf->rdma_mode |= IIDC_RDMA_PROTOCOL_ROCEV2;
@@ -388,4 +398,10 @@ void ice_deinit_rdma(struct ice_pf *pf)
 	ice_unplug_aux_dev(pf);
 	ice_free_rdma_qvector(pf);
 	xa_erase(&ice_aux_id, pf->aux_idx);
+=======
+		return ret;
+	}
+	pf->rdma_mode |= IIDC_RDMA_PROTOCOL_ROCEV2;
+	return ice_plug_aux_dev(pf);
+>>>>>>> b7ba80a49124 (Commit)
 }

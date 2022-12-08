@@ -677,10 +677,15 @@ mt8183_mt6358_ts3a227_max98357_dev_probe(struct platform_device *pdev)
 	}
 
 	card = (struct snd_soc_card *)of_device_get_match_data(&pdev->dev);
+<<<<<<< HEAD
 	if (!card) {
 		of_node_put(platform_node);
 		return -EINVAL;
 	}
+=======
+	if (!card)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	card->dev = &pdev->dev;
 
 	ec_codec = of_parse_phandle(pdev->dev.of_node, "mediatek,ec-codec", 0);
@@ -769,10 +774,15 @@ mt8183_mt6358_ts3a227_max98357_dev_probe(struct platform_device *pdev)
 	}
 
 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+<<<<<<< HEAD
 	if (!priv) {
 		ret = -ENOMEM;
 		goto out;
 	}
+=======
+	if (!priv)
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	snd_soc_card_set_drvdata(card, priv);
 
@@ -780,8 +790,12 @@ mt8183_mt6358_ts3a227_max98357_dev_probe(struct platform_device *pdev)
 	if (IS_ERR(priv->pinctrl)) {
 		dev_err(&pdev->dev, "%s devm_pinctrl_get failed\n",
 			__func__);
+<<<<<<< HEAD
 		ret = PTR_ERR(priv->pinctrl);
 		goto out;
+=======
+		return PTR_ERR(priv->pinctrl);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (i = 0; i < PIN_STATE_MAX; i++) {
@@ -814,7 +828,10 @@ mt8183_mt6358_ts3a227_max98357_dev_probe(struct platform_device *pdev)
 
 	ret = devm_snd_soc_register_card(&pdev->dev, card);
 
+<<<<<<< HEAD
 out:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	of_node_put(platform_node);
 	of_node_put(ec_codec);
 	of_node_put(hdmi_codec);
@@ -841,7 +858,10 @@ static const struct of_device_id mt8183_mt6358_ts3a227_max98357_dt_match[] = {
 	},
 	{}
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(of, mt8183_mt6358_ts3a227_max98357_dt_match);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 static struct platform_driver mt8183_mt6358_ts3a227_max98357_driver = {

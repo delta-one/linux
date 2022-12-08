@@ -1142,7 +1142,10 @@ afunc_bind(struct usb_configuration *cfg, struct usb_function *fn)
 		}
 		std_as_out_if0_desc.bInterfaceNumber = ret;
 		std_as_out_if1_desc.bInterfaceNumber = ret;
+<<<<<<< HEAD
 		std_as_out_if1_desc.bNumEndpoints = 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		uac2->as_out_intf = ret;
 		uac2->as_out_alt = 0;
 

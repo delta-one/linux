@@ -27,7 +27,11 @@ struct drm_printer;
  * is only relevant to pre-Xe_HP platforms (Xe_HP and beyond use the
  * I915_MAX_SS_FUSE_BITS value below).
  */
+<<<<<<< HEAD
 #define GEN_MAX_SS_PER_HSW_SLICE	8
+=======
+#define GEN_MAX_SS_PER_HSW_SLICE	6
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Maximum number of 32-bit registers used by hardware to express the

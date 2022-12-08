@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0
 
 /* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (C) 2018-2022 Linaro Ltd.
+=======
+ * Copyright (C) 2018-2021 Linaro Ltd.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/clk.h>
@@ -181,6 +185,7 @@ static int ipa_suspend(struct device *dev)
 
 	__set_bit(IPA_POWER_FLAG_SYSTEM, ipa->power->flags);
 
+<<<<<<< HEAD
 	/* Increment the disable depth to ensure that the IRQ won't
 	 * be re-enabled until the matching _enable call in
 	 * ipa_resume(). We do this to ensure that the interrupt
@@ -192,6 +197,8 @@ static int ipa_suspend(struct device *dev)
 	 */
 	ipa_interrupt_irq_disable(ipa);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return pm_runtime_force_suspend(dev);
 }
 
@@ -204,12 +211,15 @@ static int ipa_resume(struct device *dev)
 
 	__clear_bit(IPA_POWER_FLAG_SYSTEM, ipa->power->flags);
 
+<<<<<<< HEAD
 	/* Now that PM runtime is enabled again it's safe
 	 * to turn the IRQ back on and process any data
 	 * that was received during suspend.
 	 */
 	ipa_interrupt_irq_enable(ipa);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -219,7 +229,21 @@ u32 ipa_core_clock_rate(struct ipa *ipa)
 	return ipa->power ? (u32)clk_get_rate(ipa->power->core) : 0;
 }
 
+<<<<<<< HEAD
 void ipa_power_suspend_handler(struct ipa *ipa, enum ipa_irq_id irq_id)
+=======
+/**
+ * ipa_suspend_handler() - Handle the suspend IPA interrupt
+ * @ipa:	IPA pointer
+ * @irq_id:	IPA interrupt type (unused)
+ *
+ * If an RX endpoint is suspended, and the IPA has a packet destined for
+ * that endpoint, the IPA generates a SUSPEND interrupt to inform the AP
+ * that it should resume the endpoint.  If we get one of these interrupts
+ * we just wake up the system.
+ */
+static void ipa_suspend_handler(struct ipa *ipa, enum ipa_irq_id irq_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* To handle an IPA interrupt we will have resumed the hardware
 	 * just to handle the interrupt, so we're done.  If we are in a
@@ -342,11 +366,20 @@ int ipa_power_setup(struct ipa *ipa)
 {
 	int ret;
 
+<<<<<<< HEAD
 	ipa_interrupt_enable(ipa, IPA_IRQ_TX_SUSPEND);
 
 	ret = device_init_wakeup(&ipa->pdev->dev, true);
 	if (ret)
 		ipa_interrupt_disable(ipa, IPA_IRQ_TX_SUSPEND);
+=======
+	ipa_interrupt_add(ipa->interrupt, IPA_IRQ_TX_SUSPEND,
+			  ipa_suspend_handler);
+
+	ret = device_init_wakeup(&ipa->pdev->dev, true);
+	if (ret)
+		ipa_interrupt_remove(ipa->interrupt, IPA_IRQ_TX_SUSPEND);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -354,7 +387,11 @@ int ipa_power_setup(struct ipa *ipa)
 void ipa_power_teardown(struct ipa *ipa)
 {
 	(void)device_init_wakeup(&ipa->pdev->dev, false);
+<<<<<<< HEAD
 	ipa_interrupt_disable(ipa, IPA_IRQ_TX_SUSPEND);
+=======
+	ipa_interrupt_remove(ipa->interrupt, IPA_IRQ_TX_SUSPEND);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Initialize IPA power management */

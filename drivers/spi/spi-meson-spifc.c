@@ -355,7 +355,11 @@ out_err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void meson_spifc_remove(struct platform_device *pdev)
+=======
+static int meson_spifc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct meson_spifc *spifc = spi_master_get_devdata(master);
@@ -363,6 +367,11 @@ static void meson_spifc_remove(struct platform_device *pdev)
 	pm_runtime_get_sync(&pdev->dev);
 	clk_disable_unprepare(spifc->clk);
 	pm_runtime_disable(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -440,7 +449,11 @@ MODULE_DEVICE_TABLE(of, meson_spifc_dt_match);
 
 static struct platform_driver meson_spifc_driver = {
 	.probe	= meson_spifc_probe,
+<<<<<<< HEAD
 	.remove_new = meson_spifc_remove,
+=======
+	.remove	= meson_spifc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name		= "meson-spifc",
 		.of_match_table	= of_match_ptr(meson_spifc_dt_match),

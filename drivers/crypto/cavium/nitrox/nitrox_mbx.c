@@ -195,7 +195,10 @@ int nitrox_mbox_init(struct nitrox_device *ndev)
 	ndev->iov.pf2vf_wq = alloc_workqueue("nitrox_pf2vf", 0, 0);
 	if (!ndev->iov.pf2vf_wq) {
 		kfree(ndev->iov.vfdev);
+<<<<<<< HEAD
 		ndev->iov.vfdev = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOMEM;
 	}
 	/* enable pf2vf mailbox interrupts */

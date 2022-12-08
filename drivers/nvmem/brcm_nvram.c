@@ -3,7 +3,10 @@
  * Copyright (C) 2021 Rafał Miłecki <rafal@milecki.pl>
  */
 
+<<<<<<< HEAD
 #include <linux/bcm47xx_nvram.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/io.h>
 #include <linux/mod_devicetable.h>
 #include <linux/module.h>
@@ -98,9 +101,12 @@ static int brcm_nvram_parse(struct brcm_nvram *priv)
 	len = le32_to_cpu(header.len);
 
 	data = kzalloc(len, GFP_KERNEL);
+<<<<<<< HEAD
 	if (!data)
 		return -ENOMEM;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy_fromio(data, priv->base, len);
 	data[len - 1] = '\0';
 
@@ -140,8 +146,11 @@ static int brcm_nvram_probe(struct platform_device *pdev)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	bcm47xx_nvram_init_from_iomem(priv->base, resource_size(res));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	config.dev = dev;
 	config.cells = priv->cells;
 	config.ncells = priv->ncells;

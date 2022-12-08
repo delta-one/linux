@@ -22,7 +22,11 @@ extern unsigned long __xchg64(unsigned long, volatile unsigned long *);
 
 /* optimizer better get rid of switch since size is a constant */
 static inline unsigned long
+<<<<<<< HEAD
 __arch_xchg(unsigned long x, volatile void *ptr, int size)
+=======
+__xchg(unsigned long x, volatile void *ptr, int size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (size) {
 #ifdef CONFIG_64BIT
@@ -49,7 +53,11 @@ __arch_xchg(unsigned long x, volatile void *ptr, int size)
 	__typeof__(*(ptr)) __ret;					\
 	__typeof__(*(ptr)) _x_ = (x);					\
 	__ret = (__typeof__(*(ptr)))					\
+<<<<<<< HEAD
 		__arch_xchg((unsigned long)_x_, (ptr), sizeof(*(ptr)));	\
+=======
+		__xchg((unsigned long)_x_, (ptr), sizeof(*(ptr)));	\
+>>>>>>> b7ba80a49124 (Commit)
 	__ret;								\
 })
 

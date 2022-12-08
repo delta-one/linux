@@ -563,7 +563,11 @@ int nilfs_mdt_freeze_buffer(struct inode *inode, struct buffer_head *bh)
 	struct page *page;
 	int blkbits = inode->i_blkbits;
 
+<<<<<<< HEAD
 	page = grab_cache_page(shadow->inode->i_mapping, bh->b_folio->index);
+=======
+	page = grab_cache_page(shadow->inode->i_mapping, bh->b_page->index);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!page)
 		return -ENOMEM;
 
@@ -595,7 +599,11 @@ nilfs_mdt_get_frozen_buffer(struct inode *inode, struct buffer_head *bh)
 	struct page *page;
 	int n;
 
+<<<<<<< HEAD
 	page = find_lock_page(shadow->inode->i_mapping, bh->b_folio->index);
+=======
+	page = find_lock_page(shadow->inode->i_mapping, bh->b_page->index);
+>>>>>>> b7ba80a49124 (Commit)
 	if (page) {
 		if (page_has_buffers(page)) {
 			n = bh_offset(bh) >> inode->i_blkbits;

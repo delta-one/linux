@@ -69,11 +69,32 @@ static void __init socrates_setup_arch(void)
 
 machine_arch_initcall(socrates, mpc85xx_common_publish_devices);
 
+<<<<<<< HEAD
 define_machine(socrates) {
 	.name			= "Socrates",
 	.compatible		= "abb,socrates",
 	.setup_arch		= socrates_setup_arch,
 	.init_IRQ		= socrates_pic_init,
 	.get_irq		= mpic_get_irq,
+=======
+/*
+ * Called very early, device-tree isn't unflattened
+ */
+static int __init socrates_probe(void)
+{
+	if (of_machine_is_compatible("abb,socrates"))
+		return 1;
+
+	return 0;
+}
+
+define_machine(socrates) {
+	.name			= "Socrates",
+	.probe			= socrates_probe,
+	.setup_arch		= socrates_setup_arch,
+	.init_IRQ		= socrates_pic_init,
+	.get_irq		= mpic_get_irq,
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.progress		= udbg_progress,
 };

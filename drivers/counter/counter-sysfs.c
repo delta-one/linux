@@ -91,11 +91,14 @@ static const char *const counter_count_mode_str[] = {
 	[COUNTER_COUNT_MODE_MODULO_N] = "modulo-n"
 };
 
+<<<<<<< HEAD
 static const char *const counter_signal_polarity_str[] = {
 	[COUNTER_SIGNAL_POLARITY_POSITIVE] = "positive",
 	[COUNTER_SIGNAL_POLARITY_NEGATIVE] = "negative"
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t counter_comp_u8_show(struct device *dev,
 				    struct device_attribute *attr, char *buf)
 {
@@ -206,8 +209,11 @@ static ssize_t counter_comp_u32_show(struct device *dev,
 		return sysfs_emit(buf, "%s\n", counter_count_direction_str[data]);
 	case COUNTER_COMP_COUNT_MODE:
 		return sysfs_emit(buf, "%s\n", counter_count_mode_str[data]);
+<<<<<<< HEAD
 	case COUNTER_COMP_SIGNAL_POLARITY:
 		return sysfs_emit(buf, "%s\n", counter_signal_polarity_str[data]);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return sysfs_emit(buf, "%u\n", (unsigned int)data);
 	}
@@ -259,10 +265,13 @@ static ssize_t counter_comp_u32_store(struct device *dev,
 		err = counter_find_enum(&data, avail->enums, avail->num_items,
 					buf, counter_count_mode_str);
 		break;
+<<<<<<< HEAD
 	case COUNTER_COMP_SIGNAL_POLARITY:
 		err = counter_find_enum(&data, avail->enums, avail->num_items,
 					buf, counter_signal_polarity_str);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		err = kstrtou32(buf, 0, &data);
 		break;
@@ -352,6 +361,7 @@ static ssize_t counter_comp_u64_store(struct device *dev,
 	return len;
 }
 
+<<<<<<< HEAD
 static ssize_t counter_comp_array_u32_show(struct device *dev,
 					   struct device_attribute *attr,
 					   char *buf)
@@ -470,6 +480,8 @@ static ssize_t counter_comp_array_u64_store(struct device *dev,
 	return len;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t enums_available_show(const u32 *const enums,
 				    const size_t num_enums,
 				    const char *const strs[], char *buf)
@@ -564,7 +576,10 @@ static int counter_attr_create(struct device *const dev,
 			       const enum counter_scope scope,
 			       void *const parent)
 {
+<<<<<<< HEAD
 	const struct counter_array *const array = comp->priv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct counter_attribute *counter_attr;
 	struct device_attribute *dev_attr;
 
@@ -599,7 +614,10 @@ static int counter_attr_create(struct device *const dev,
 	case COUNTER_COMP_ENUM:
 	case COUNTER_COMP_COUNT_DIRECTION:
 	case COUNTER_COMP_COUNT_MODE:
+<<<<<<< HEAD
 	case COUNTER_COMP_SIGNAL_POLARITY:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (comp->device_u32_read) {
 			dev_attr->attr.mode |= 0444;
 			dev_attr->show = counter_comp_u32_show;
@@ -619,6 +637,7 @@ static int counter_attr_create(struct device *const dev,
 			dev_attr->store = counter_comp_u64_store;
 		}
 		break;
+<<<<<<< HEAD
 	case COUNTER_COMP_ARRAY:
 		switch (array->type) {
 		case COUNTER_COMP_SIGNAL_POLARITY:
@@ -645,6 +664,8 @@ static int counter_attr_create(struct device *const dev,
 			return -EINVAL;
 		}
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -EINVAL;
 	}
@@ -737,6 +758,7 @@ static int counter_comp_id_attr_create(struct device *const dev,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int counter_ext_attrs_create(struct device *const dev,
 				    struct counter_attribute_group *const group,
 				    const struct counter_comp *const ext,
@@ -826,6 +848,8 @@ static int counter_sysfs_exts_add(struct device *const dev,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct counter_comp counter_signal_comp = {
 	.type = COUNTER_COMP_SIGNAL_LEVEL,
 	.name = "signal",
@@ -839,6 +863,11 @@ static int counter_signal_attrs_create(struct counter_device *const counter,
 	struct device *const dev = &counter->dev;
 	int err;
 	struct counter_comp comp;
+<<<<<<< HEAD
+=======
+	size_t i;
+	struct counter_comp *ext;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Create main Signal attribute */
 	comp = counter_signal_comp;
@@ -852,9 +881,27 @@ static int counter_signal_attrs_create(struct counter_device *const counter,
 	if (err < 0)
 		return err;
 
+<<<<<<< HEAD
 	/* Add Signal extensions */
 	return counter_sysfs_exts_add(dev, cattr_group, signal->ext,
 				      signal->num_ext, scope, signal);
+=======
+	/* Create an attribute for each extension */
+	for (i = 0; i < signal->num_ext; i++) {
+		ext = &signal->ext[i];
+
+		err = counter_attr_create(dev, cattr_group, ext, scope, signal);
+		if (err < 0)
+			return err;
+
+		err = counter_comp_id_attr_create(dev, cattr_group, ext->name,
+						  i);
+		if (err < 0)
+			return err;
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int counter_sysfs_signals_add(struct counter_device *const counter,
@@ -939,6 +986,11 @@ static int counter_count_attrs_create(struct counter_device *const counter,
 	struct device *const dev = &counter->dev;
 	int err;
 	struct counter_comp comp;
+<<<<<<< HEAD
+=======
+	size_t i;
+	struct counter_comp *ext;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Create main Count attribute */
 	comp = counter_count_comp;
@@ -961,9 +1013,27 @@ static int counter_count_attrs_create(struct counter_device *const counter,
 	if (err < 0)
 		return err;
 
+<<<<<<< HEAD
 	/* Add Count extensions */
 	return counter_sysfs_exts_add(dev, cattr_group, count->ext,
 				      count->num_ext, scope, count);
+=======
+	/* Create an attribute for each extension */
+	for (i = 0; i < count->num_ext; i++) {
+		ext = &count->ext[i];
+
+		err = counter_attr_create(dev, cattr_group, ext, scope, count);
+		if (err < 0)
+			return err;
+
+		err = counter_comp_id_attr_create(dev, cattr_group, ext->name,
+						  i);
+		if (err < 0)
+			return err;
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int counter_sysfs_counts_add(struct counter_device *const counter,
@@ -1056,6 +1126,11 @@ static int counter_sysfs_attr_add(struct counter_device *const counter,
 	const enum counter_scope scope = COUNTER_SCOPE_DEVICE;
 	struct device *const dev = &counter->dev;
 	int err;
+<<<<<<< HEAD
+=======
+	size_t i;
+	struct counter_comp *ext;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Add Signals sysfs attributes */
 	err = counter_sysfs_signals_add(counter, cattr_group);
@@ -1092,9 +1167,25 @@ static int counter_sysfs_attr_add(struct counter_device *const counter,
 	if (err < 0)
 		return err;
 
+<<<<<<< HEAD
 	/* Add device extensions */
 	return counter_sysfs_exts_add(dev, cattr_group, counter->ext,
 				      counter->num_ext, scope, NULL);
+=======
+	/* Create an attribute for each extension */
+	for (i = 0; i < counter->num_ext; i++) {
+		ext = &counter->ext[i];
+
+		err = counter_attr_create(dev, cattr_group, ext, scope, NULL);
+		if (err < 0)
+			return err;
+
+		err = counter_comp_id_attr_create(dev, cattr_group, ext->name,
+						  i);
+		if (err < 0)
+			return err;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

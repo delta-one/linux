@@ -23,7 +23,10 @@ struct mmc_gpio {
 	char *ro_label;
 	char *cd_label;
 	u32 cd_debounce_delay_ms;
+<<<<<<< HEAD
 	int cd_irq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static irqreturn_t mmc_gpio_cd_irqt(int irq, void *dev_id)
@@ -54,13 +57,17 @@ int mmc_gpio_alloc(struct mmc_host *host)
 	ctx->ro_label = devm_kasprintf(host->parent, GFP_KERNEL, "%s ro", devname);
 	if (!ctx->ro_label)
 		return -ENOMEM;
+<<<<<<< HEAD
 	ctx->cd_irq = -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	host->slot.handler_priv = ctx;
 	host->slot.cd_irq = -EINVAL;
 
 	return 0;
 }
 
+<<<<<<< HEAD
 void mmc_gpio_set_cd_irq(struct mmc_host *host, int irq)
 {
 	struct mmc_gpio *ctx = host->slot.handler_priv;
@@ -72,6 +79,8 @@ void mmc_gpio_set_cd_irq(struct mmc_host *host, int irq)
 }
 EXPORT_SYMBOL(mmc_gpio_set_cd_irq);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int mmc_gpio_get_ro(struct mmc_host *host)
 {
 	struct mmc_gpio *ctx = host->slot.handler_priv;
@@ -111,9 +120,13 @@ void mmc_gpiod_request_cd_irq(struct mmc_host *host)
 	 * Do not use IRQ if the platform prefers to poll, e.g., because that
 	 * IRQ number is already used by another unit and cannot be shared.
 	 */
+<<<<<<< HEAD
 	if (ctx->cd_irq >= 0)
 		irq = ctx->cd_irq;
 	else if (!(host->caps & MMC_CAP_NEEDS_POLL))
+=======
+	if (!(host->caps & MMC_CAP_NEEDS_POLL))
+>>>>>>> b7ba80a49124 (Commit)
 		irq = gpiod_to_irq(ctx->cd_gpio);
 
 	if (irq >= 0) {

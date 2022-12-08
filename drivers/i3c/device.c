@@ -51,6 +51,7 @@ int i3c_device_do_priv_xfers(struct i3c_device *dev,
 EXPORT_SYMBOL_GPL(i3c_device_do_priv_xfers);
 
 /**
+<<<<<<< HEAD
  * i3c_device_do_setdasa() - do I3C dynamic address assignement with
  *                           static address
  *
@@ -71,6 +72,8 @@ int i3c_device_do_setdasa(struct i3c_device *dev)
 EXPORT_SYMBOL_GPL(i3c_device_do_setdasa);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * i3c_device_get_info() - get I3C device information
  *
  * @dev: device we want information on
@@ -78,7 +81,11 @@ EXPORT_SYMBOL_GPL(i3c_device_do_setdasa);
  *
  * Retrieve I3C dev info.
  */
+<<<<<<< HEAD
 void i3c_device_get_info(const struct i3c_device *dev,
+=======
+void i3c_device_get_info(struct i3c_device *dev,
+>>>>>>> b7ba80a49124 (Commit)
 			 struct i3c_device_info *info)
 {
 	if (!info)
@@ -209,6 +216,21 @@ struct device *i3cdev_to_dev(struct i3c_device *i3cdev)
 EXPORT_SYMBOL_GPL(i3cdev_to_dev);
 
 /**
+<<<<<<< HEAD
+=======
+ * dev_to_i3cdev() - Returns the I3C device containing @dev
+ * @dev: device object
+ *
+ * Return: a pointer to an I3C device object.
+ */
+struct i3c_device *dev_to_i3cdev(struct device *dev)
+{
+	return container_of(dev, struct i3c_device, dev);
+}
+EXPORT_SYMBOL_GPL(dev_to_i3cdev);
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * i3c_device_match_id() - Returns the i3c_device_id entry matching @i3cdev
  * @i3cdev: I3C device
  * @id_table: I3C device match table

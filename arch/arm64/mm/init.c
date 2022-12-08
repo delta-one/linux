@@ -96,8 +96,11 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
 #define CRASH_ADDR_LOW_MAX		arm64_dma_phys_limit
 #define CRASH_ADDR_HIGH_MAX		(PHYS_MASK + 1)
 
+<<<<<<< HEAD
 #define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __init reserve_crashkernel_low(unsigned long long low_size)
 {
 	unsigned long long low_base;
@@ -132,7 +135,10 @@ static void __init reserve_crashkernel(void)
 	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
 	char *cmdline = boot_command_line;
 	int ret;
+<<<<<<< HEAD
 	bool fixed_base = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
 		return;
@@ -150,9 +156,13 @@ static void __init reserve_crashkernel(void)
 		 * is not allowed.
 		 */
 		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
+<<<<<<< HEAD
 		if (ret == -ENOENT)
 			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
 		else if (ret)
+=======
+		if (ret && (ret != -ENOENT))
+>>>>>>> b7ba80a49124 (Commit)
 			return;
 
 		crash_max = CRASH_ADDR_HIGH_MAX;
@@ -164,6 +174,7 @@ static void __init reserve_crashkernel(void)
 	crash_size = PAGE_ALIGN(crash_size);
 
 	/* User specifies base address explicitly. */
+<<<<<<< HEAD
 	if (crash_base) {
 		fixed_base = true;
 		crash_max = crash_base + crash_size;
@@ -184,12 +195,24 @@ retry:
 			goto retry;
 		}
 
+=======
+	if (crash_base)
+		crash_max = crash_base + crash_size;
+
+	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
+					       crash_base, crash_max);
+	if (!crash_base) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
 			crash_size);
 		return;
 	}
 
+<<<<<<< HEAD
 	if ((crash_base > CRASH_ADDR_LOW_MAX - crash_low_size) &&
+=======
+	if ((crash_base >= CRASH_ADDR_LOW_MAX) &&
+>>>>>>> b7ba80a49124 (Commit)
 	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
 		memblock_phys_free(crash_base, crash_size);
 		return;

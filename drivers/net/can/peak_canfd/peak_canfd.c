@@ -651,7 +651,11 @@ static netdev_tx_t peak_canfd_start_xmit(struct sk_buff *skb,
 	int room_left;
 	u8 len;
 
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(ndev, skb))
+=======
+	if (can_dropped_invalid_skb(ndev, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	msg_size = ALIGN(sizeof(*msg) + cf->len, 4);

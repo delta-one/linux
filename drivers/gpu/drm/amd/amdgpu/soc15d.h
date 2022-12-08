@@ -162,7 +162,10 @@
 		 * 2 - Bypass
 		 */
 #define     INDIRECT_BUFFER_PRE_ENB(x)		 ((x) << 21)
+<<<<<<< HEAD
 #define     INDIRECT_BUFFER_PRE_RESUME(x)               ((x) << 30)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define	PACKET3_COPY_DATA				0x40
 #define	PACKET3_PFP_SYNC_ME				0x42
 #define	PACKET3_COND_WRITE				0x45
@@ -185,7 +188,10 @@
 #define		EOP_TC_ACTION_EN                        (1 << 17) /* L2 */
 #define		EOP_TC_NC_ACTION_EN			(1 << 19)
 #define		EOP_TC_MD_ACTION_EN			(1 << 21) /* L2 metadata */
+<<<<<<< HEAD
 #define		EOP_EXEC				(1 << 28) /* For Trailing Fence */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define		DATA_SEL(x)                             ((x) << 29)
 		/* 0 - discard

@@ -806,9 +806,12 @@ static struct ceph_mds_session *register_session(struct ceph_mds_client *mdsc,
 {
 	struct ceph_mds_session *s;
 
+<<<<<<< HEAD
 	if (READ_ONCE(mdsc->fsc->mount_state) == CEPH_MOUNT_FENCE_IO)
 		return ERR_PTR(-EIO);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (mds >= mdsc->mdsmap->possible_max_rank)
 		return ERR_PTR(-EINVAL);
 
@@ -1481,9 +1484,12 @@ static int __open_session(struct ceph_mds_client *mdsc,
 	int mstate;
 	int mds = session->s_mds;
 
+<<<<<<< HEAD
 	if (READ_ONCE(mdsc->fsc->mount_state) == CEPH_MOUNT_FENCE_IO)
 		return -EIO;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* wait for mds to go active? */
 	mstate = ceph_mdsmap_get_state(mdsc->mdsmap, mds);
 	dout("open_session to mds%d (%s)\n", mds,
@@ -2324,7 +2330,10 @@ ceph_mdsc_create_request(struct ceph_mds_client *mdsc, int op, int mode)
 	INIT_LIST_HEAD(&req->r_unsafe_dir_item);
 	INIT_LIST_HEAD(&req->r_unsafe_target_item);
 	req->r_fmode = -1;
+<<<<<<< HEAD
 	req->r_feature_needed = -1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kref_init(&req->r_kref);
 	RB_CLEAR_NODE(&req->r_node);
 	INIT_LIST_HEAD(&req->r_wait);
@@ -2866,11 +2875,14 @@ static void __do_request(struct ceph_mds_client *mdsc,
 		return;
 	}
 
+<<<<<<< HEAD
 	if (READ_ONCE(mdsc->fsc->mount_state) == CEPH_MOUNT_FENCE_IO) {
 		dout("do_request metadata corrupted\n");
 		err = -EIO;
 		goto finish;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (req->r_timeout &&
 	    time_after_eq(jiffies, req->r_started + req->r_timeout)) {
 		dout("do_request timed out\n");
@@ -2928,6 +2940,7 @@ static void __do_request(struct ceph_mds_client *mdsc,
 
 	dout("do_request mds%d session %p state %s\n", mds, session,
 	     ceph_session_state_name(session->s_state));
+<<<<<<< HEAD
 
 	/*
 	 * The old ceph will crash the MDSs when see unknown OPs
@@ -2938,6 +2951,8 @@ static void __do_request(struct ceph_mds_client *mdsc,
 		goto out_session;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (session->s_state != CEPH_MDS_SESSION_OPEN &&
 	    session->s_state != CEPH_MDS_SESSION_HUNG) {
 		/*
@@ -3256,7 +3271,10 @@ static void handle_reply(struct ceph_mds_session *session, struct ceph_msg *msg)
 	u64 tid;
 	int err, result;
 	int mds = session->s_mds;
+<<<<<<< HEAD
 	bool close_sessions = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (msg->front.iov_len < sizeof(*head)) {
 		pr_err("mdsc_handle_reply got corrupt (short) reply\n");
@@ -3363,6 +3381,7 @@ static void handle_reply(struct ceph_mds_session *session, struct ceph_msg *msg)
 	realm = NULL;
 	if (rinfo->snapblob_len) {
 		down_write(&mdsc->snap_rwsem);
+<<<<<<< HEAD
 		err = ceph_update_snap_trace(mdsc, rinfo->snapblob,
 				rinfo->snapblob + rinfo->snapblob_len,
 				le32_to_cpu(head->op) == CEPH_MDS_OP_RMSNAP,
@@ -3374,6 +3393,12 @@ static void handle_reply(struct ceph_mds_session *session, struct ceph_msg *msg)
 				ceph_msg_dump(msg);
 			goto out_err;
 		}
+=======
+		ceph_update_snap_trace(mdsc, rinfo->snapblob,
+				rinfo->snapblob + rinfo->snapblob_len,
+				le32_to_cpu(head->op) == CEPH_MDS_OP_RMSNAP,
+				&realm);
+>>>>>>> b7ba80a49124 (Commit)
 		downgrade_write(&mdsc->snap_rwsem);
 	} else {
 		down_read(&mdsc->snap_rwsem);
@@ -3431,10 +3456,13 @@ out_err:
 				     req->r_end_latency, err);
 out:
 	ceph_mdsc_put_request(req);
+<<<<<<< HEAD
 
 	/* Defer closing the sessions after s_mutex lock being released */
 	if (close_sessions)
 		ceph_mdsc_close_sessions(mdsc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return;
 }
 
@@ -3685,12 +3713,15 @@ static void handle_session(struct ceph_mds_session *session,
 		break;
 
 	case CEPH_SESSION_FLUSHMSG:
+<<<<<<< HEAD
 		/* flush cap releases */
 		spin_lock(&session->s_cap_lock);
 		if (session->s_num_cap_releases)
 			ceph_flush_cap_releases(mdsc, session);
 		spin_unlock(&session->s_cap_lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		send_flushmsg_ack(mdsc, session, seq);
 		break;
 
@@ -5040,7 +5071,11 @@ static bool done_closing_sessions(struct ceph_mds_client *mdsc, int skipped)
 }
 
 /*
+<<<<<<< HEAD
  * called after sb is ro or when metadata corrupted.
+=======
+ * called after sb is ro.
+>>>>>>> b7ba80a49124 (Commit)
  */
 void ceph_mdsc_close_sessions(struct ceph_mds_client *mdsc)
 {
@@ -5330,8 +5365,12 @@ static void mds_peer_reset(struct ceph_connection *con)
 	struct ceph_mds_client *mdsc = s->s_mdsc;
 
 	pr_warn("mds%d closed our session\n", s->s_mds);
+<<<<<<< HEAD
 	if (READ_ONCE(mdsc->fsc->mount_state) != CEPH_MOUNT_FENCE_IO)
 		send_mds_reconnect(mdsc, s);
+=======
+	send_mds_reconnect(mdsc, s);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mds_dispatch(struct ceph_connection *con, struct ceph_msg *msg)

@@ -30,12 +30,27 @@
 #ifndef DRM_FB_HELPER_H
 #define DRM_FB_HELPER_H
 
+<<<<<<< HEAD
 struct drm_clip_rect;
 struct drm_fb_helper;
 
 #include <linux/fb.h>
 
 #include <drm/drm_client.h>
+=======
+struct drm_fb_helper;
+
+#include <drm/drm_client.h>
+#include <drm/drm_crtc.h>
+#include <drm/drm_device.h>
+#include <linux/fb.h>
+#include <linux/kgdb.h>
+
+enum mode_set_atomic {
+	LEAVE_ATOMIC_MODE_SET,
+	ENTER_ATOMIC_MODE_SET,
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct drm_fb_helper_surface_size - describes fbdev size and scanout surface size
@@ -85,6 +100,7 @@ struct drm_fb_helper_funcs {
 	 */
 	int (*fb_probe)(struct drm_fb_helper *helper,
 			struct drm_fb_helper_surface_size *sizes);
+<<<<<<< HEAD
 
 	/**
 	 * @fb_dirty:
@@ -99,6 +115,8 @@ struct drm_fb_helper_funcs {
 	 * 0 on success, or an error code otherwise.
 	 */
 	int (*fb_dirty)(struct drm_fb_helper *helper, struct drm_clip_rect *clip);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -106,7 +124,11 @@ struct drm_fb_helper_funcs {
  * @fb: Scanout framebuffer object
  * @dev: DRM device
  * @funcs: driver callbacks for fb helper
+<<<<<<< HEAD
  * @info: emulated fbdev device info struct
+=======
+ * @fbdev: emulated fbdev device info struct
+>>>>>>> b7ba80a49124 (Commit)
  * @pseudo_palette: fake palette of 16 colors
  * @damage_clip: clip rectangle used with deferred_io to accumulate damage to
  *                the screen buffer
@@ -137,7 +159,11 @@ struct drm_fb_helper {
 	struct drm_framebuffer *fb;
 	struct drm_device *dev;
 	const struct drm_fb_helper_funcs *funcs;
+<<<<<<< HEAD
 	struct fb_info *info;
+=======
+	struct fb_info *fbdev;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 pseudo_palette[17];
 	struct drm_clip_rect damage_clip;
 	spinlock_t damage_lock;
@@ -194,6 +220,7 @@ struct drm_fb_helper {
 	 * See also: @deferred_setup
 	 */
 	int preferred_bpp;
+<<<<<<< HEAD
 
 #ifdef CONFIG_FB_DEFERRED_IO
 	/**
@@ -206,6 +233,8 @@ struct drm_fb_helper {
 	 */
 	struct fb_deferred_io fbdefio;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct drm_fb_helper *
@@ -232,9 +261,13 @@ drm_fb_helper_from_client(struct drm_client_dev *client)
 
 #ifdef CONFIG_DRM_FBDEV_EMULATION
 void drm_fb_helper_prepare(struct drm_device *dev, struct drm_fb_helper *helper,
+<<<<<<< HEAD
 			   unsigned int preferred_bpp,
 			   const struct drm_fb_helper_funcs *funcs);
 void drm_fb_helper_unprepare(struct drm_fb_helper *fb_helper);
+=======
+			   const struct drm_fb_helper_funcs *funcs);
+>>>>>>> b7ba80a49124 (Commit)
 int drm_fb_helper_init(struct drm_device *dev, struct drm_fb_helper *helper);
 void drm_fb_helper_fini(struct drm_fb_helper *helper);
 int drm_fb_helper_blank(int blank, struct fb_info *info);
@@ -246,9 +279,14 @@ int drm_fb_helper_check_var(struct fb_var_screeninfo *var,
 
 int drm_fb_helper_restore_fbdev_mode_unlocked(struct drm_fb_helper *fb_helper);
 
+<<<<<<< HEAD
 struct fb_info *drm_fb_helper_alloc_info(struct drm_fb_helper *fb_helper);
 void drm_fb_helper_release_info(struct drm_fb_helper *fb_helper);
 void drm_fb_helper_unregister_info(struct drm_fb_helper *fb_helper);
+=======
+struct fb_info *drm_fb_helper_alloc_fbi(struct drm_fb_helper *fb_helper);
+void drm_fb_helper_unregister_fbi(struct drm_fb_helper *fb_helper);
+>>>>>>> b7ba80a49124 (Commit)
 void drm_fb_helper_fill_info(struct fb_info *info,
 			     struct drm_fb_helper *fb_helper,
 			     struct drm_fb_helper_surface_size *sizes);
@@ -267,11 +305,14 @@ void drm_fb_helper_sys_copyarea(struct fb_info *info,
 void drm_fb_helper_sys_imageblit(struct fb_info *info,
 				 const struct fb_image *image);
 
+<<<<<<< HEAD
 ssize_t drm_fb_helper_cfb_read(struct fb_info *info, char __user *buf,
 			       size_t count, loff_t *ppos);
 ssize_t drm_fb_helper_cfb_write(struct fb_info *info, const char __user *buf,
 				size_t count, loff_t *ppos);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void drm_fb_helper_cfb_fillrect(struct fb_info *info,
 				const struct fb_fillrect *rect);
 void drm_fb_helper_cfb_copyarea(struct fb_info *info,
@@ -289,12 +330,17 @@ int drm_fb_helper_ioctl(struct fb_info *info, unsigned int cmd,
 			unsigned long arg);
 
 int drm_fb_helper_hotplug_event(struct drm_fb_helper *fb_helper);
+<<<<<<< HEAD
 int drm_fb_helper_initial_config(struct drm_fb_helper *fb_helper);
+=======
+int drm_fb_helper_initial_config(struct drm_fb_helper *fb_helper, int bpp_sel);
+>>>>>>> b7ba80a49124 (Commit)
 int drm_fb_helper_debug_enter(struct fb_info *info);
 int drm_fb_helper_debug_leave(struct fb_info *info);
 
 void drm_fb_helper_lastclose(struct drm_device *dev);
 void drm_fb_helper_output_poll_changed(struct drm_device *dev);
+<<<<<<< HEAD
 #else
 static inline void drm_fb_helper_prepare(struct drm_device *dev,
 					 struct drm_fb_helper *helper,
@@ -304,6 +350,15 @@ static inline void drm_fb_helper_prepare(struct drm_device *dev,
 }
 
 static inline void drm_fb_helper_unprepare(struct drm_fb_helper *fb_helper)
+=======
+
+void drm_fbdev_generic_setup(struct drm_device *dev,
+			     unsigned int preferred_bpp);
+#else
+static inline void drm_fb_helper_prepare(struct drm_device *dev,
+					struct drm_fb_helper *helper,
+					const struct drm_fb_helper_funcs *funcs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 
@@ -352,16 +407,24 @@ drm_fb_helper_restore_fbdev_mode_unlocked(struct drm_fb_helper *fb_helper)
 }
 
 static inline struct fb_info *
+<<<<<<< HEAD
 drm_fb_helper_alloc_info(struct drm_fb_helper *fb_helper)
+=======
+drm_fb_helper_alloc_fbi(struct drm_fb_helper *fb_helper)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return NULL;
 }
 
+<<<<<<< HEAD
 static inline void drm_fb_helper_release_info(struct drm_fb_helper *fb_helper)
 {
 }
 
 static inline void drm_fb_helper_unregister_info(struct drm_fb_helper *fb_helper)
+=======
+static inline void drm_fb_helper_unregister_fbi(struct drm_fb_helper *fb_helper)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 
@@ -423,6 +486,7 @@ static inline void drm_fb_helper_sys_imageblit(struct fb_info *info,
 {
 }
 
+<<<<<<< HEAD
 static inline ssize_t drm_fb_helper_cfb_read(struct fb_info *info, char __user *buf,
 					     size_t count, loff_t *ppos)
 {
@@ -435,6 +499,8 @@ static inline ssize_t drm_fb_helper_cfb_write(struct fb_info *info, const char _
 	return -ENODEV;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void drm_fb_helper_cfb_fillrect(struct fb_info *info,
 					      const struct fb_fillrect *rect)
 {
@@ -465,7 +531,12 @@ static inline int drm_fb_helper_hotplug_event(struct drm_fb_helper *fb_helper)
 	return 0;
 }
 
+<<<<<<< HEAD
 static inline int drm_fb_helper_initial_config(struct drm_fb_helper *fb_helper)
+=======
+static inline int drm_fb_helper_initial_config(struct drm_fb_helper *fb_helper,
+					       int bpp_sel)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return 0;
 }
@@ -487,6 +558,15 @@ static inline void drm_fb_helper_lastclose(struct drm_device *dev)
 static inline void drm_fb_helper_output_poll_changed(struct drm_device *dev)
 {
 }
+<<<<<<< HEAD
+=======
+
+static inline void
+drm_fbdev_generic_setup(struct drm_device *dev, unsigned int preferred_bpp)
+{
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #endif

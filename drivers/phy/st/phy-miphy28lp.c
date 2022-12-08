@@ -9,7 +9,10 @@
 
 #include <linux/platform_device.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/iopoll.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/of.h>
@@ -485,11 +488,27 @@ static inline void miphy28lp_pcie_config_gen(struct miphy28lp_phy *miphy_phy)
 
 static inline int miphy28lp_wait_compensation(struct miphy28lp_phy *miphy_phy)
 {
+<<<<<<< HEAD
 	u8 val;
 
 	/* Waiting for Compensation to complete */
 	return readb_relaxed_poll_timeout(miphy_phy->base + MIPHY_COMP_FSM_6,
 					  val, val & COMP_DONE, 1, 5 * USEC_PER_SEC);
+=======
+	unsigned long finish = jiffies + 5 * HZ;
+	u8 val;
+
+	/* Waiting for Compensation to complete */
+	do {
+		val = readb_relaxed(miphy_phy->base + MIPHY_COMP_FSM_6);
+
+		if (time_after_eq(jiffies, finish))
+			return -EBUSY;
+		cpu_relax();
+	} while (!(val & COMP_DONE));
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 
@@ -798,6 +817,10 @@ static inline void miphy28lp_configure_usb3(struct miphy28lp_phy *miphy_phy)
 
 static inline int miphy_is_ready(struct miphy28lp_phy *miphy_phy)
 {
+<<<<<<< HEAD
+=======
+	unsigned long finish = jiffies + 5 * HZ;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 mask = HFC_PLL | HFC_RDY;
 	u8 val;
 
@@ -808,14 +831,30 @@ static inline int miphy_is_ready(struct miphy28lp_phy *miphy_phy)
 	if (miphy_phy->type == PHY_TYPE_SATA)
 		mask |= PHY_RDY;
 
+<<<<<<< HEAD
 	return readb_relaxed_poll_timeout(miphy_phy->base + MIPHY_STATUS_1,
 					  val, (val & mask) == mask, 1,
 					  5 * USEC_PER_SEC);
+=======
+	do {
+		val = readb_relaxed(miphy_phy->base + MIPHY_STATUS_1);
+		if ((val & mask) != mask)
+			cpu_relax();
+		else
+			return 0;
+	} while (!time_after_eq(jiffies, finish));
+
+	return -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int miphy_osc_is_ready(struct miphy28lp_phy *miphy_phy)
 {
 	struct miphy28lp_dev *miphy_dev = miphy_phy->phydev;
+<<<<<<< HEAD
+=======
+	unsigned long finish = jiffies + 5 * HZ;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 val;
 
 	if (!miphy_phy->osc_rdy)
@@ -824,10 +863,24 @@ static int miphy_osc_is_ready(struct miphy28lp_phy *miphy_phy)
 	if (!miphy_phy->syscfg_reg[SYSCFG_STATUS])
 		return -EINVAL;
 
+<<<<<<< HEAD
 	return regmap_read_poll_timeout(miphy_dev->regmap,
 					miphy_phy->syscfg_reg[SYSCFG_STATUS],
 					val, val & MIPHY_OSC_RDY, 1,
 					5 * USEC_PER_SEC);
+=======
+	do {
+		regmap_read(miphy_dev->regmap,
+				miphy_phy->syscfg_reg[SYSCFG_STATUS], &val);
+
+		if ((val & MIPHY_OSC_RDY) != MIPHY_OSC_RDY)
+			cpu_relax();
+		else
+			return 0;
+	} while (!time_after_eq(jiffies, finish));
+
+	return -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int miphy28lp_get_resource_byname(struct device_node *child,

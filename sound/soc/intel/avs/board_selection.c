@@ -29,12 +29,15 @@ static const struct dmi_system_id kbl_dmi_table[] = {
 			DMI_MATCH(DMI_BOARD_NAME, "Skylake Y LPDDR3 RVP3"),
 		},
 	},
+<<<<<<< HEAD
 	{
 		.matches = {
 			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
 			DMI_MATCH(DMI_BOARD_NAME, "AmberLake Y"),
 		},
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 
@@ -128,6 +131,7 @@ static struct snd_soc_acpi_mach avs_kbl_i2s_machines[] = {
 		.tplg_filename = "rt298-tplg.bin",
 	},
 	{
+<<<<<<< HEAD
 		.id = "MX98927",
 		.drv_name = "avs_max98927",
 		.mach_params = {
@@ -136,6 +140,8 @@ static struct snd_soc_acpi_mach avs_kbl_i2s_machines[] = {
 		.tplg_filename = "max98927-tplg.bin",
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.id = "MX98373",
 		.drv_name = "avs_max98373",
 		.mach_params = {
@@ -144,6 +150,7 @@ static struct snd_soc_acpi_mach avs_kbl_i2s_machines[] = {
 		.tplg_filename = "max98373-tplg.bin",
 	},
 	{
+<<<<<<< HEAD
 		.id = "MX98357A",
 		.drv_name = "avs_max98357a",
 		.mach_params = {
@@ -152,6 +159,8 @@ static struct snd_soc_acpi_mach avs_kbl_i2s_machines[] = {
 		.tplg_filename = "max98357a-tplg.bin",
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.id = "DLGS7219",
 		.drv_name = "avs_da7219",
 		.mach_params = {
@@ -291,6 +300,7 @@ static void board_pdev_unregister(void *data)
 	platform_device_unregister(data);
 }
 
+<<<<<<< HEAD
 static int __maybe_unused avs_register_probe_board(struct avs_dev *adev)
 {
 	struct platform_device *board;
@@ -318,6 +328,8 @@ static int __maybe_unused avs_register_probe_board(struct avs_dev *adev)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int avs_register_dmic_board(struct avs_dev *adev)
 {
 	struct platform_device *codec, *board;
@@ -527,12 +539,15 @@ int avs_register_all_boards(struct avs_dev *adev)
 {
 	int ret;
 
+<<<<<<< HEAD
 #ifdef CONFIG_DEBUG_FS
 	ret = avs_register_probe_board(adev);
 	if (ret < 0)
 		dev_warn(adev->dev, "enumerate PROBE endpoints failed: %d\n", ret);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = avs_register_dmic_board(adev);
 	if (ret < 0)
 		dev_warn(adev->dev, "enumerate DMIC endpoints failed: %d\n",

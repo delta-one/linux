@@ -8,10 +8,17 @@
 
 #include "gem/i915_gem_internal.h"
 #include "gem/i915_gem_lmem.h"
+<<<<<<< HEAD
 
 #include "i915_drv.h"
 #include "i915_perf_oa_regs.h"
 #include "i915_reg.h"
+=======
+#include "pxp/intel_pxp.h"
+
+#include "i915_drv.h"
+#include "i915_perf_oa_regs.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_context.h"
 #include "intel_engine_pm.h"
 #include "intel_engine_regs.h"
@@ -22,12 +29,19 @@
 #include "intel_gt_debugfs.h"
 #include "intel_gt_mcr.h"
 #include "intel_gt_pm.h"
+<<<<<<< HEAD
 #include "intel_gt_print.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_gt_regs.h"
 #include "intel_gt_requests.h"
 #include "intel_migrate.h"
 #include "intel_mocs.h"
 #include "intel_pci_config.h"
+<<<<<<< HEAD
+=======
+#include "intel_pm.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_rc6.h"
 #include "intel_renderstate.h"
 #include "intel_rps.h"
@@ -40,6 +54,11 @@ void intel_gt_common_init_early(struct intel_gt *gt)
 {
 	spin_lock_init(gt->irq_lock);
 
+<<<<<<< HEAD
+=======
+	INIT_LIST_HEAD(&gt->lmem_userfault_list);
+	mutex_init(&gt->lmem_userfault_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_LIST_HEAD(&gt->closed_vma);
 	spin_lock_init(&gt->closed_lock);
 
@@ -54,7 +73,10 @@ void intel_gt_common_init_early(struct intel_gt *gt)
 	seqcount_mutex_init(&gt->tlb.seqno, &gt->tlb.invalidate_lock);
 	intel_gt_pm_init_early(gt);
 
+<<<<<<< HEAD
 	intel_wopcm_init_early(&gt->wopcm);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	intel_uc_init_early(&gt->uc);
 	intel_rps_init_early(&gt->rps);
 }
@@ -89,8 +111,14 @@ static int intel_gt_probe_lmem(struct intel_gt *gt)
 		if (err == -ENODEV)
 			return 0;
 
+<<<<<<< HEAD
 		gt_err(gt, "Failed to setup region(%d) type=%d\n",
 		       err, INTEL_MEMORY_LOCAL);
+=======
+		drm_err(&i915->drm,
+			"Failed to setup region(%d) type=%d\n",
+			err, INTEL_MEMORY_LOCAL);
+>>>>>>> b7ba80a49124 (Commit)
 		return err;
 	}
 
@@ -108,6 +136,7 @@ static int intel_gt_probe_lmem(struct intel_gt *gt)
 
 int intel_gt_assign_ggtt(struct intel_gt *gt)
 {
+<<<<<<< HEAD
 	/* Media GT shares primary GT's GGTT */
 	if (gt->type == GT_MEDIA) {
 		gt->ggtt = to_gt(gt->i915)->ggtt;
@@ -120,6 +149,11 @@ int intel_gt_assign_ggtt(struct intel_gt *gt)
 	list_add_tail(&gt->ggtt_link, &gt->ggtt->gt_list);
 
 	return 0;
+=======
+	gt->ggtt = drmm_kzalloc(&gt->i915->drm, sizeof(*gt->ggtt), GFP_KERNEL);
+
+	return gt->ggtt ? 0 : -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int intel_gt_init_mmio(struct intel_gt *gt)
@@ -199,14 +233,22 @@ int intel_gt_init_hw(struct intel_gt *gt)
 
 	ret = i915_ppgtt_init_hw(gt);
 	if (ret) {
+<<<<<<< HEAD
 		gt_err(gt, "Enabling PPGTT failed (%d)\n", ret);
+=======
+		DRM_ERROR("Enabling PPGTT failed (%d)\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
 	/* We can't enable contexts until all firmware is loaded */
 	ret = intel_uc_init_hw(&gt->uc);
 	if (ret) {
+<<<<<<< HEAD
 		gt_probe_error(gt, "Enabling uc failed (%d)\n", ret);
+=======
+		i915_probe_error(i915, "Enabling uc failed (%d)\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -217,12 +259,31 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static void rmw_set(struct intel_uncore *uncore, i915_reg_t reg, u32 set)
+{
+	intel_uncore_rmw(uncore, reg, 0, set);
+}
+
+static void rmw_clear(struct intel_uncore *uncore, i915_reg_t reg, u32 clr)
+{
+	intel_uncore_rmw(uncore, reg, clr, 0);
+}
+
+static void clear_register(struct intel_uncore *uncore, i915_reg_t reg)
+{
+	intel_uncore_rmw(uncore, reg, 0, 0);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void gen6_clear_engine_error_register(struct intel_engine_cs *engine)
 {
 	GEN6_RING_FAULT_REG_RMW(engine, RING_FAULT_VALID, 0);
 	GEN6_RING_FAULT_REG_POSTING_READ(engine);
 }
 
+<<<<<<< HEAD
 i915_reg_t intel_gt_perf_limit_reasons_reg(struct intel_gt *gt)
 {
 	/* GT0_PERF_LIMIT_REASONS is available only for Gen11+ */
@@ -233,6 +294,8 @@ i915_reg_t intel_gt_perf_limit_reasons_reg(struct intel_gt *gt)
 		MTL_MEDIA_PERF_LIMIT_REASONS : GT0_PERF_LIMIT_REASONS;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void
 intel_gt_clear_error_registers(struct intel_gt *gt,
 			       intel_engine_mask_t engine_mask)
@@ -242,6 +305,7 @@ intel_gt_clear_error_registers(struct intel_gt *gt,
 	u32 eir;
 
 	if (GRAPHICS_VER(i915) != 2)
+<<<<<<< HEAD
 		intel_uncore_write(uncore, PGTBL_ER, 0);
 
 	if (GRAPHICS_VER(i915) < 4)
@@ -250,18 +314,34 @@ intel_gt_clear_error_registers(struct intel_gt *gt,
 		intel_uncore_write(uncore, IPEIR_I965, 0);
 
 	intel_uncore_write(uncore, EIR, 0);
+=======
+		clear_register(uncore, PGTBL_ER);
+
+	if (GRAPHICS_VER(i915) < 4)
+		clear_register(uncore, IPEIR(RENDER_RING_BASE));
+	else
+		clear_register(uncore, IPEIR_I965);
+
+	clear_register(uncore, EIR);
+>>>>>>> b7ba80a49124 (Commit)
 	eir = intel_uncore_read(uncore, EIR);
 	if (eir) {
 		/*
 		 * some errors might have become stuck,
 		 * mask them.
 		 */
+<<<<<<< HEAD
 		gt_dbg(gt, "EIR stuck: 0x%08x, masking\n", eir);
 		intel_uncore_rmw(uncore, EMR, 0, eir);
+=======
+		DRM_DEBUG_DRIVER("EIR stuck: 0x%08x, masking\n", eir);
+		rmw_set(uncore, EMR, eir);
+>>>>>>> b7ba80a49124 (Commit)
 		intel_uncore_write(uncore, GEN2_IIR,
 				   I915_MASTER_ERROR_INTERRUPT);
 	}
 
+<<<<<<< HEAD
 	if (GRAPHICS_VER_FULL(i915) >= IP_VER(12, 50)) {
 		intel_gt_mcr_multicast_rmw(gt, XEHP_RING_FAULT_REG,
 					   RING_FAULT_VALID, 0);
@@ -271,6 +351,13 @@ intel_gt_clear_error_registers(struct intel_gt *gt,
 		intel_uncore_posting_read(uncore, GEN12_RING_FAULT_REG);
 	} else if (GRAPHICS_VER(i915) >= 8) {
 		intel_uncore_rmw(uncore, GEN8_RING_FAULT_REG, RING_FAULT_VALID, 0);
+=======
+	if (GRAPHICS_VER(i915) >= 12) {
+		rmw_clear(uncore, GEN12_RING_FAULT_REG, RING_FAULT_VALID);
+		intel_uncore_posting_read(uncore, GEN12_RING_FAULT_REG);
+	} else if (GRAPHICS_VER(i915) >= 8) {
+		rmw_clear(uncore, GEN8_RING_FAULT_REG, RING_FAULT_VALID);
+>>>>>>> b7ba80a49124 (Commit)
 		intel_uncore_posting_read(uncore, GEN8_RING_FAULT_REG);
 	} else if (GRAPHICS_VER(i915) >= 6) {
 		struct intel_engine_cs *engine;
@@ -290,6 +377,7 @@ static void gen6_check_faults(struct intel_gt *gt)
 	for_each_engine(engine, gt, id) {
 		fault = GEN6_RING_FAULT_REG_READ(engine);
 		if (fault & RING_FAULT_VALID) {
+<<<<<<< HEAD
 			gt_dbg(gt, "Unexpected fault\n"
 			       "\tAddr: 0x%08lx\n"
 			       "\tAddress space: %s\n"
@@ -300,10 +388,23 @@ static void gen6_check_faults(struct intel_gt *gt)
 			       "GGTT" : "PPGTT",
 			       RING_FAULT_SRCID(fault),
 			       RING_FAULT_FAULT_TYPE(fault));
+=======
+			drm_dbg(&engine->i915->drm, "Unexpected fault\n"
+				"\tAddr: 0x%08lx\n"
+				"\tAddress space: %s\n"
+				"\tSource ID: %d\n"
+				"\tType: %d\n",
+				fault & PAGE_MASK,
+				fault & RING_FAULT_GTTSEL_MASK ?
+				"GGTT" : "PPGTT",
+				RING_FAULT_SRCID(fault),
+				RING_FAULT_FAULT_TYPE(fault));
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }
 
+<<<<<<< HEAD
 static void xehp_check_faults(struct intel_gt *gt)
 {
 	u32 fault;
@@ -340,6 +441,8 @@ static void xehp_check_faults(struct intel_gt *gt)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void gen8_check_faults(struct intel_gt *gt)
 {
 	struct intel_uncore *uncore = gt->uncore;
@@ -367,6 +470,7 @@ static void gen8_check_faults(struct intel_gt *gt)
 		fault_addr = ((u64)(fault_data1 & FAULT_VA_HIGH_BITS) << 44) |
 			     ((u64)fault_data0 << 12);
 
+<<<<<<< HEAD
 		gt_dbg(gt, "Unexpected fault\n"
 		       "\tAddr: 0x%08x_%08x\n"
 		       "\tAddress space: %s\n"
@@ -378,6 +482,19 @@ static void gen8_check_faults(struct intel_gt *gt)
 		       GEN8_RING_FAULT_ENGINE_ID(fault),
 		       RING_FAULT_SRCID(fault),
 		       RING_FAULT_FAULT_TYPE(fault));
+=======
+		drm_dbg(&uncore->i915->drm, "Unexpected fault\n"
+			"\tAddr: 0x%08x_%08x\n"
+			"\tAddress space: %s\n"
+			"\tEngine ID: %d\n"
+			"\tSource ID: %d\n"
+			"\tType: %d\n",
+			upper_32_bits(fault_addr), lower_32_bits(fault_addr),
+			fault_data1 & FAULT_GTT_SEL ? "GGTT" : "PPGTT",
+			GEN8_RING_FAULT_ENGINE_ID(fault),
+			RING_FAULT_SRCID(fault),
+			RING_FAULT_FAULT_TYPE(fault));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -386,9 +503,13 @@ void intel_gt_check_and_clear_faults(struct intel_gt *gt)
 	struct drm_i915_private *i915 = gt->i915;
 
 	/* From GEN8 onwards we only have one 'All Engine Fault Register' */
+<<<<<<< HEAD
 	if (GRAPHICS_VER_FULL(i915) >= IP_VER(12, 50))
 		xehp_check_faults(gt);
 	else if (GRAPHICS_VER(i915) >= 8)
+=======
+	if (GRAPHICS_VER(i915) >= 8)
+>>>>>>> b7ba80a49124 (Commit)
 		gen8_check_faults(gt);
 	else if (GRAPHICS_VER(i915) >= 6)
 		gen6_check_faults(gt);
@@ -471,7 +592,11 @@ static int intel_gt_init_scratch(struct intel_gt *gt, unsigned int size)
 	if (IS_ERR(obj))
 		obj = i915_gem_object_create_internal(i915, size);
 	if (IS_ERR(obj)) {
+<<<<<<< HEAD
 		gt_err(gt, "Failed to allocate scratch page\n");
+=======
+		drm_err(&i915->drm, "Failed to allocate scratch page\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return PTR_ERR(obj);
 	}
 
@@ -669,6 +794,7 @@ int intel_gt_wait_for_idle(struct intel_gt *gt, long timeout)
 			return -EINTR;
 	}
 
+<<<<<<< HEAD
 	if (timeout)
 		return timeout;
 
@@ -676,6 +802,10 @@ int intel_gt_wait_for_idle(struct intel_gt *gt, long timeout)
 		remaining_timeout = 0;
 
 	return intel_uc_wait_for_idle(&gt->uc, remaining_timeout);
+=======
+	return timeout ? timeout : intel_uc_wait_for_idle(&gt->uc,
+							  remaining_timeout);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int intel_gt_init(struct intel_gt *gt)
@@ -726,7 +856,12 @@ int intel_gt_init(struct intel_gt *gt)
 
 	err = intel_gt_init_hwconfig(gt);
 	if (err)
+<<<<<<< HEAD
 		gt_err(gt, "Failed to retrieve hwconfig table: %pe\n", ERR_PTR(err));
+=======
+		drm_err(&gt->i915->drm, "Failed to retrieve hwconfig table: %pe\n",
+			ERR_PTR(err));
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = __engines_record_defaults(gt);
 	if (err)
@@ -736,14 +871,26 @@ int intel_gt_init(struct intel_gt *gt)
 	if (err)
 		goto err_gt;
 
+<<<<<<< HEAD
+=======
+	intel_uc_init_late(&gt->uc);
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = i915_inject_probe_error(gt->i915, -EIO);
 	if (err)
 		goto err_gt;
 
+<<<<<<< HEAD
 	intel_uc_init_late(&gt->uc);
 
 	intel_migrate_init(&gt->migrate, gt);
 
+=======
+	intel_migrate_init(&gt->migrate, gt);
+
+	intel_pxp_init(&gt->pxp);
+
+>>>>>>> b7ba80a49124 (Commit)
 	goto out_fw;
 err_gt:
 	__intel_gt_disable(gt);
@@ -752,7 +899,11 @@ err_uc_init:
 	intel_uc_fini(&gt->uc);
 err_engines:
 	intel_engines_release(gt);
+<<<<<<< HEAD
 	i915_vm_put(__xchg(&gt->vm, 0));
+=======
+	i915_vm_put(fetch_and_zero(&gt->vm));
+>>>>>>> b7ba80a49124 (Commit)
 err_pm:
 	intel_gt_pm_fini(gt);
 	intel_gt_fini_scratch(gt);
@@ -783,6 +934,7 @@ void intel_gt_driver_unregister(struct intel_gt *gt)
 	intel_rps_driver_unregister(&gt->rps);
 	intel_gsc_fini(&gt->gsc);
 
+<<<<<<< HEAD
 	/*
 	 * If we unload the driver and wedge before the GSC worker is complete,
 	 * the worker will hit an error on its submission to the GSC engine and
@@ -805,6 +957,9 @@ void intel_gt_driver_unregister(struct intel_gt *gt)
 	 * scenarios.
 	 */
 	intel_gsc_uc_flush_work(&gt->uc.gsc);
+=======
+	intel_pxp_fini(&gt->pxp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Upon unregistering the device to prevent any new users, cancel
@@ -822,7 +977,11 @@ void intel_gt_driver_release(struct intel_gt *gt)
 {
 	struct i915_address_space *vm;
 
+<<<<<<< HEAD
 	vm = __xchg(&gt->vm, 0);
+=======
+	vm = fetch_and_zero(&gt->vm);
+>>>>>>> b7ba80a49124 (Commit)
 	if (vm) /* FIXME being called twice on error paths :( */
 		i915_vm_put(vm);
 
@@ -874,6 +1033,10 @@ static int intel_gt_tile_setup(struct intel_gt *gt, phys_addr_t phys_addr)
 	}
 
 	intel_uncore_init_early(gt->uncore, gt);
+<<<<<<< HEAD
+=======
+	intel_wakeref_auto_init(&gt->userfault_wakeref, gt->uncore->rpm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = intel_uncore_setup_mmio(gt->uncore, phys_addr);
 	if (ret)
@@ -894,7 +1057,11 @@ int intel_gt_probe_all(struct drm_i915_private *i915)
 	unsigned int i;
 	int ret;
 
+<<<<<<< HEAD
 	mmio_bar = intel_mmio_bar(GRAPHICS_VER(i915));
+=======
+	mmio_bar = GRAPHICS_VER(i915) == 2 ? GEN2_GTTMMADR_BAR : GTTMMADR_BAR;
+>>>>>>> b7ba80a49124 (Commit)
 	phys_addr = pci_resource_start(pdev, mmio_bar);
 
 	/*
@@ -906,7 +1073,11 @@ int intel_gt_probe_all(struct drm_i915_private *i915)
 	gt->name = "Primary GT";
 	gt->info.engine_mask = RUNTIME_INFO(i915)->platform_engine_mask;
 
+<<<<<<< HEAD
 	gt_dbg(gt, "Setting up %s\n", gt->name);
+=======
+	drm_dbg(&i915->drm, "Setting up %s\n", gt->name);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = intel_gt_tile_setup(gt, phys_addr);
 	if (ret)
 		return ret;
@@ -931,7 +1102,11 @@ int intel_gt_probe_all(struct drm_i915_private *i915)
 		gt->info.engine_mask = gtdef->engine_mask;
 		gt->info.id = i;
 
+<<<<<<< HEAD
 		gt_dbg(gt, "Setting up %s\n", gt->name);
+=======
+		drm_dbg(&i915->drm, "Setting up %s\n", gt->name);
+>>>>>>> b7ba80a49124 (Commit)
 		if (GEM_WARN_ON(range_overflows_t(resource_size_t,
 						  gtdef->mapping_base,
 						  SZ_16M,
@@ -1004,6 +1179,7 @@ void intel_gt_info_print(const struct intel_gt_info *info,
 	intel_sseu_dump(&info->sseu, p);
 }
 
+<<<<<<< HEAD
 /*
  * HW architecture suggest typical invalidation time at 40us,
  * with pessimistic cases up to 100us and a recommendation to
@@ -1034,22 +1210,84 @@ static int wait_for_invalidate(struct intel_engine_cs *engine)
 						    TLB_INVAL_TIMEOUT_US,
 						    TLB_INVAL_TIMEOUT_MS,
 						    NULL);
+=======
+struct reg_and_bit {
+	i915_reg_t reg;
+	u32 bit;
+};
+
+static struct reg_and_bit
+get_reg_and_bit(const struct intel_engine_cs *engine, const bool gen8,
+		const i915_reg_t *regs, const unsigned int num)
+{
+	const unsigned int class = engine->class;
+	struct reg_and_bit rb = { };
+
+	if (drm_WARN_ON_ONCE(&engine->i915->drm,
+			     class >= num || !regs[class].reg))
+		return rb;
+
+	rb.reg = regs[class];
+	if (gen8 && class == VIDEO_DECODE_CLASS)
+		rb.reg.reg += 4 * engine->instance; /* GEN8_M2TCR */
+	else
+		rb.bit = engine->instance;
+
+	rb.bit = BIT(rb.bit);
+
+	return rb;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mmio_invalidate_full(struct intel_gt *gt)
 {
+<<<<<<< HEAD
+=======
+	static const i915_reg_t gen8_regs[] = {
+		[RENDER_CLASS]			= GEN8_RTCR,
+		[VIDEO_DECODE_CLASS]		= GEN8_M1TCR, /* , GEN8_M2TCR */
+		[VIDEO_ENHANCEMENT_CLASS]	= GEN8_VTCR,
+		[COPY_ENGINE_CLASS]		= GEN8_BTCR,
+	};
+	static const i915_reg_t gen12_regs[] = {
+		[RENDER_CLASS]			= GEN12_GFX_TLB_INV_CR,
+		[VIDEO_DECODE_CLASS]		= GEN12_VD_TLB_INV_CR,
+		[VIDEO_ENHANCEMENT_CLASS]	= GEN12_VE_TLB_INV_CR,
+		[COPY_ENGINE_CLASS]		= GEN12_BLT_TLB_INV_CR,
+		[COMPUTE_CLASS]			= GEN12_COMPCTX_TLB_INV_CR,
+	};
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_i915_private *i915 = gt->i915;
 	struct intel_uncore *uncore = gt->uncore;
 	struct intel_engine_cs *engine;
 	intel_engine_mask_t awake, tmp;
 	enum intel_engine_id id;
+<<<<<<< HEAD
 	unsigned long flags;
 
 	if (GRAPHICS_VER(i915) < 8)
+=======
+	const i915_reg_t *regs;
+	unsigned int num = 0;
+
+	if (GRAPHICS_VER(i915) == 12) {
+		regs = gen12_regs;
+		num = ARRAY_SIZE(gen12_regs);
+	} else if (GRAPHICS_VER(i915) >= 8 && GRAPHICS_VER(i915) <= 11) {
+		regs = gen8_regs;
+		num = ARRAY_SIZE(gen8_regs);
+	} else if (GRAPHICS_VER(i915) < 8) {
+		return;
+	}
+
+	if (drm_WARN_ONCE(&i915->drm, !num,
+			  "Platform does not implement TLB invalidation!"))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	intel_uncore_forcewake_get(uncore, FORCEWAKE_ALL);
 
+<<<<<<< HEAD
 	intel_gt_mcr_lock(gt, &flags);
 	spin_lock(&uncore->lock); /* serialise invalidate with GT reset */
 
@@ -1067,6 +1305,22 @@ static void mmio_invalidate_full(struct intel_gt *gt)
 					      engine->tlb_inv.reg.reg,
 					      engine->tlb_inv.request);
 
+=======
+	spin_lock_irq(&uncore->lock); /* serialise invalidate with GT reset */
+
+	awake = 0;
+	for_each_engine(engine, gt, id) {
+		struct reg_and_bit rb;
+
+		if (!intel_engine_pm_is_awake(engine))
+			continue;
+
+		rb = get_reg_and_bit(engine, regs == gen8_regs, regs, num);
+		if (!i915_mmio_reg_offset(rb.reg))
+			continue;
+
+		intel_uncore_write_fw(uncore, rb.reg, rb.bit);
+>>>>>>> b7ba80a49124 (Commit)
 		awake |= engine->mask;
 	}
 
@@ -1081,6 +1335,7 @@ static void mmio_invalidate_full(struct intel_gt *gt)
 	     IS_ALDERLAKE_P(i915)))
 		intel_uncore_write_fw(uncore, GEN12_OA_TLB_INV_CR, 1);
 
+<<<<<<< HEAD
 	spin_unlock(&uncore->lock);
 	intel_gt_mcr_unlock(gt, flags);
 
@@ -1089,6 +1344,29 @@ static void mmio_invalidate_full(struct intel_gt *gt)
 			gt_err_ratelimited(gt,
 					   "%s TLB invalidation did not complete in %ums!\n",
 					   engine->name, TLB_INVAL_TIMEOUT_MS);
+=======
+	spin_unlock_irq(&uncore->lock);
+
+	for_each_engine_masked(engine, gt, awake, tmp) {
+		struct reg_and_bit rb;
+
+		/*
+		 * HW architecture suggest typical invalidation time at 40us,
+		 * with pessimistic cases up to 100us and a recommendation to
+		 * cap at 1ms. We go a bit higher just in case.
+		 */
+		const unsigned int timeout_us = 100;
+		const unsigned int timeout_ms = 4;
+
+		rb = get_reg_and_bit(engine, regs == gen8_regs, regs, num);
+		if (__intel_wait_for_register_fw(uncore,
+						 rb.reg, rb.bit, 0,
+						 timeout_us, timeout_ms,
+						 NULL))
+			drm_err_ratelimited(&gt->i915->drm,
+					    "%s TLB invalidation did not complete in %ums!\n",
+					    engine->name, timeout_ms);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -1133,7 +1411,10 @@ unlock:
 		mutex_unlock(&gt->tlb.invalidate_lock);
 	}
 }
+<<<<<<< HEAD
 
 #if IS_ENABLED(CONFIG_DRM_I915_SELFTEST)
 #include "selftest_tlb.c"
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)

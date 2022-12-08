@@ -175,7 +175,11 @@ vfp_hw_state_valid:
 					@ else it's one 32-bit instruction, so
 					@ always subtract 4 from the following
 					@ instruction address.
+<<<<<<< HEAD
 	local_bh_enable_ti r10, r4
+=======
+	dec_preempt_count_ti r10, r4
+>>>>>>> b7ba80a49124 (Commit)
 	ret	r9			@ we think we have handled things
 
 
@@ -200,7 +204,11 @@ skip:
 	@ not recognised by VFP
 
 	DBGSTR	"not VFP"
+<<<<<<< HEAD
 	local_bh_enable_ti r10, r4
+=======
+	dec_preempt_count_ti r10, r4
+>>>>>>> b7ba80a49124 (Commit)
 	ret	lr
 
 process_exception:

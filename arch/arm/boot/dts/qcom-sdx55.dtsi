@@ -62,6 +62,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	firmware {
 		scm {
 			compatible = "qcom,scm-sdx55", "qcom,scm";
@@ -69,6 +70,9 @@
 	};
 
 	cpu_opp_table: opp-table-cpu {
+=======
+	cpu_opp_table: cpu-opp-table {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "operating-points-v2";
 		opp-shared;
 
@@ -93,6 +97,15 @@
 		};
 	};
 
+<<<<<<< HEAD
+=======
+	firmware {
+		scm {
+			compatible = "qcom,scm-sdx55", "qcom,scm";
+		};
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	psci {
 		compatible = "arm,psci-1.0";
 		method = "smc";
@@ -214,8 +227,12 @@
 		};
 
 		usb_hsphy: phy@ff4000 {
+<<<<<<< HEAD
 			compatible = "qcom,sdx55-usb-hs-phy",
 				     "qcom,usb-snps-hs-7nm-phy";
+=======
+			compatible = "qcom,usb-snps-hs-7nm-phy";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0x00ff4000 0x114>;
 			status = "disabled";
 			#phy-cells = <0>;
@@ -304,6 +321,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		pcie_rc: pcie@1c00000 {
 			compatible = "qcom,pcie-sdx55";
 			reg = <0x01c00000 0x3000>,
@@ -435,6 +453,9 @@
 		};
 
 		pcie_phy: phy@1c07000 {
+=======
+		pcie0_phy: phy@1c07000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,sdx55-qmp-pcie-phy";
 			reg = <0x01c07000 0x1c4>;
 			#address-cells = <1>;
@@ -444,10 +465,14 @@
 				 <&gcc GCC_PCIE_CFG_AHB_CLK>,
 				 <&gcc GCC_PCIE_0_CLKREF_CLK>,
 				 <&gcc GCC_PCIE_RCHNG_PHY_CLK>;
+<<<<<<< HEAD
 			clock-names = "aux",
 				      "cfg_ahb",
 				      "ref",
 				      "refgen";
+=======
+			clock-names = "aux", "cfg_ahb", "ref", "refgen";
+>>>>>>> b7ba80a49124 (Commit)
 
 			resets = <&gcc GCC_PCIE_PHY_BCR>;
 			reset-names = "phy";
@@ -457,7 +482,11 @@
 
 			status = "disabled";
 
+<<<<<<< HEAD
 			pcie_lane: lanes@1c06000 {
+=======
+			pcie0_lane: lanes@1c06000 {
+>>>>>>> b7ba80a49124 (Commit)
 				reg = <0x01c06000 0x104>, /* tx0 */
 				      <0x01c06200 0x328>, /* rx0 */
 				      <0x01c07200 0x1e8>, /* pcs */
@@ -518,7 +547,11 @@
 		};
 
 		tcsr: syscon@1fcb000 {
+<<<<<<< HEAD
 			compatible = "qcom,sdx55-tcsr", "syscon";
+=======
+			compatible = "syscon";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0x01fc0000 0x1000>;
 		};
 
@@ -534,6 +567,48 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
+=======
+		pcie_ep: pcie-ep@40000000 {
+			compatible = "qcom,sdx55-pcie-ep";
+			reg = <0x01c00000 0x3000>,
+			      <0x40000000 0xf1d>,
+			      <0x40000f20 0xc8>,
+			      <0x40001000 0x1000>,
+			      <0x40200000 0x100000>,
+			      <0x01c03000 0x3000>;
+			reg-names = "parf", "dbi", "elbi", "atu", "addr_space",
+				    "mmio";
+
+			qcom,perst-regs = <&tcsr 0xb258 0xb270>;
+
+			clocks = <&gcc GCC_PCIE_AUX_CLK>,
+				 <&gcc GCC_PCIE_CFG_AHB_CLK>,
+				 <&gcc GCC_PCIE_MSTR_AXI_CLK>,
+				 <&gcc GCC_PCIE_SLV_AXI_CLK>,
+				 <&gcc GCC_PCIE_SLV_Q2A_AXI_CLK>,
+				 <&gcc GCC_PCIE_SLEEP_CLK>,
+				 <&gcc GCC_PCIE_0_CLKREF_CLK>;
+			clock-names = "aux", "cfg", "bus_master", "bus_slave",
+				      "slave_q2a", "sleep", "ref";
+
+			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>,
+				     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
+			interrupt-names = "global", "doorbell";
+			reset-gpios = <&tlmm 57 GPIO_ACTIVE_LOW>;
+			wake-gpios = <&tlmm 53 GPIO_ACTIVE_LOW>;
+			resets = <&gcc GCC_PCIE_BCR>;
+			reset-names = "core";
+			power-domains = <&gcc PCIE_GDSC>;
+			phys = <&pcie0_lane>;
+			phy-names = "pciephy";
+			max-link-speed = <3>;
+			num-lanes = <2>;
+
+			status = "disabled";
+		};
+
+>>>>>>> b7ba80a49124 (Commit)
 		remoteproc_mpss: remoteproc@4080000 {
 			compatible = "qcom,sdx55-mpss-pas";
 			reg = <0x04080000 0x4040>;
@@ -654,7 +729,10 @@
 			#gpio-cells = <2>;
 			interrupt-controller;
 			#interrupt-cells = <2>;
+<<<<<<< HEAD
 			gpio-ranges = <&tlmm 0 0 108>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		sram@1468f000 {
@@ -673,7 +751,11 @@
 		};
 
 		apps_smmu: iommu@15000000 {
+<<<<<<< HEAD
 			compatible = "qcom,sdx55-smmu-500", "qcom,smmu-500", "arm,mmu-500";
+=======
+			compatible = "qcom,sdx55-smmu-500", "arm,mmu-500";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0x15000000 0x20000>;
 			#iommu-cells = <2>;
 			#global-interrupts = <1>;

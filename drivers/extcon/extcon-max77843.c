@@ -189,7 +189,12 @@ static const struct regmap_irq max77843_muic_irq[] = {
 static const struct regmap_irq_chip max77843_muic_irq_chip = {
 	.name           = "max77843-muic",
 	.status_base    = MAX77843_MUIC_REG_INT1,
+<<<<<<< HEAD
 	.unmask_base    = MAX77843_MUIC_REG_INTMASK1,
+=======
+	.mask_base      = MAX77843_MUIC_REG_INTMASK1,
+	.mask_invert    = true,
+>>>>>>> b7ba80a49124 (Commit)
 	.num_regs       = 3,
 	.irqs           = max77843_muic_irq,
 	.num_irqs       = ARRAY_SIZE(max77843_muic_irq),

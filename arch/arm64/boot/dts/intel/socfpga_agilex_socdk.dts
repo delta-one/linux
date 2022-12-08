@@ -83,7 +83,10 @@
 	cap-sd-highspeed;
 	broken-cd;
 	bus-width = <4>;
+<<<<<<< HEAD
 	clk-phase-sd-hs = <0>, <135>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &osc1 {

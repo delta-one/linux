@@ -75,12 +75,19 @@ int kvm_arch_vcpu_run_map_fp(struct kvm_vcpu *vcpu)
 void kvm_arch_vcpu_load_fp(struct kvm_vcpu *vcpu)
 {
 	BUG_ON(!current->mm);
+<<<<<<< HEAD
+=======
+	BUG_ON(test_thread_flag(TIF_SVE));
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!system_supports_fpsimd())
 		return;
 
+<<<<<<< HEAD
 	fpsimd_kvm_prepare();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vcpu->arch.fp_state = FP_STATE_HOST_OWNED;
 
 	vcpu_clear_flag(vcpu, HOST_SVE_ENABLED);
@@ -130,16 +137,23 @@ void kvm_arch_vcpu_ctxflush_fp(struct kvm_vcpu *vcpu)
  */
 void kvm_arch_vcpu_ctxsync_fp(struct kvm_vcpu *vcpu)
 {
+<<<<<<< HEAD
 	struct cpu_fp_state fp_state;
 
 	WARN_ON_ONCE(!irqs_disabled());
 
 	if (vcpu->arch.fp_state == FP_STATE_GUEST_OWNED) {
 
+=======
+	WARN_ON_ONCE(!irqs_disabled());
+
+	if (vcpu->arch.fp_state == FP_STATE_GUEST_OWNED) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Currently we do not support SME guests so SVCR is
 		 * always 0 and we just need a variable to point to.
 		 */
+<<<<<<< HEAD
 		fp_state.st = &vcpu->arch.ctxt.fp_regs;
 		fp_state.sve_state = vcpu->arch.sve_state;
 		fp_state.sve_vl = vcpu->arch.sve_max_vl;
@@ -155,6 +169,15 @@ void kvm_arch_vcpu_ctxsync_fp(struct kvm_vcpu *vcpu)
 		fpsimd_bind_state_to_cpu(&fp_state);
 
 		clear_thread_flag(TIF_FOREIGN_FPSTATE);
+=======
+		fpsimd_bind_state_to_cpu(&vcpu->arch.ctxt.fp_regs,
+					 vcpu->arch.sve_state,
+					 vcpu->arch.sve_max_vl,
+					 NULL, 0, &vcpu->arch.svcr);
+
+		clear_thread_flag(TIF_FOREIGN_FPSTATE);
+		update_thread_flag(TIF_SVE, vcpu_has_sve(vcpu));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -184,7 +207,10 @@ void kvm_arch_vcpu_put_fp(struct kvm_vcpu *vcpu)
 			sysreg_clear_set(CPACR_EL1,
 					 CPACR_EL1_SMEN_EL0EN,
 					 CPACR_EL1_SMEN_EL1EN);
+<<<<<<< HEAD
 		isb();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (vcpu->arch.fp_state == FP_STATE_GUEST_OWNED) {
@@ -212,5 +238,10 @@ void kvm_arch_vcpu_put_fp(struct kvm_vcpu *vcpu)
 			sysreg_clear_set(CPACR_EL1, CPACR_EL1_ZEN_EL0EN, 0);
 	}
 
+<<<<<<< HEAD
+=======
+	update_thread_flag(TIF_SVE, 0);
+
+>>>>>>> b7ba80a49124 (Commit)
 	local_irq_restore(flags);
 }

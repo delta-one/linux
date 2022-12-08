@@ -17,8 +17,11 @@
 /* Handle ro_after_init data on our own. */
 #define RO_AFTER_INIT_DATA
 
+<<<<<<< HEAD
 #define RUNTIME_DISCARD_EXIT
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define EMITS_PT_NOTE
 
 #include <asm-generic/vmlinux.lds.h>
@@ -44,6 +47,10 @@ SECTIONS
 		HEAD_TEXT
 		TEXT_TEXT
 		SCHED_TEXT
+<<<<<<< HEAD
+=======
+		CPUIDLE_TEXT
+>>>>>>> b7ba80a49124 (Commit)
 		LOCK_TEXT
 		KPROBES_TEXT
 		IRQENTRY_TEXT
@@ -80,7 +87,10 @@ SECTIONS
 		_end_amode31_refs = .;
 	}
 
+<<<<<<< HEAD
 	. = ALIGN(PAGE_SIZE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	_edata = .;		/* End of data section */
 
 	/* will be freed after init */
@@ -195,7 +205,10 @@ SECTIONS
 
 	BSS_SECTION(PAGE_SIZE, 4 * PAGE_SIZE, PAGE_SIZE)
 
+<<<<<<< HEAD
 	. = ALIGN(PAGE_SIZE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	_end = . ;
 
 	/*
@@ -216,6 +229,7 @@ SECTIONS
 		QUAD(__rela_dyn_start)				/* rela_dyn_start */
 		QUAD(__rela_dyn_end)				/* rela_dyn_end */
 		QUAD(_eamode31 - _samode31)			/* amode31_size */
+<<<<<<< HEAD
 		QUAD(init_mm)
 		QUAD(swapper_pg_dir)
 		QUAD(invalid_pg_dir)
@@ -226,6 +240,8 @@ SECTIONS
 		QUAD(kasan_early_shadow_pud)
 		QUAD(kasan_early_shadow_p4d)
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} :NONE
 
 	/* Debugging sections.	*/
@@ -237,6 +253,9 @@ SECTIONS
 	DISCARDS
 	/DISCARD/ : {
 		*(.eh_frame)
+<<<<<<< HEAD
 		*(.interp)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }

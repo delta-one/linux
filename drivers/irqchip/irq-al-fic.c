@@ -26,6 +26,10 @@
 
 MODULE_AUTHOR("Talel Shenhar");
 MODULE_DESCRIPTION("Amazon's Annapurna Labs Interrupt Controller Driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 
 enum al_fic_state {
 	AL_FIC_UNCONFIGURED = 0,

@@ -53,7 +53,11 @@ static inline u32 host1x_uclass_incr_syncpt_cond_f(u32 v)
 	host1x_uclass_incr_syncpt_cond_f(v)
 static inline u32 host1x_uclass_incr_syncpt_indx_f(u32 v)
 {
+<<<<<<< HEAD
 	return (v & 0x3ff) << 0;
+=======
+	return (v & 0xff) << 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 #define HOST1X_UCLASS_INCR_SYNCPT_INDX_F(v) \
 	host1x_uclass_incr_syncpt_indx_f(v)

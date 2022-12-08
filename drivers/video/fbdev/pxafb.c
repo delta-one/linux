@@ -2327,6 +2327,10 @@ static int pxafb_probe(struct platform_device *dev)
 
 	irq = platform_get_irq(dev, 0);
 	if (irq < 0) {
+<<<<<<< HEAD
+=======
+		dev_err(&dev->dev, "no IRQ defined\n");
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -ENODEV;
 		goto failed_free_mem;
 	}
@@ -2396,13 +2400,21 @@ failed:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void pxafb_remove(struct platform_device *dev)
+=======
+static int pxafb_remove(struct platform_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pxafb_info *fbi = platform_get_drvdata(dev);
 	struct fb_info *info;
 
 	if (!fbi)
+<<<<<<< HEAD
 		return;
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	info = &fbi->fb;
 
@@ -2418,6 +2430,11 @@ static void pxafb_remove(struct platform_device *dev)
 
 	dma_free_coherent(&dev->dev, fbi->dma_buff_size, fbi->dma_buff,
 			  fbi->dma_buff_phys);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id pxafb_of_dev_id[] = {
@@ -2430,7 +2447,11 @@ MODULE_DEVICE_TABLE(of, pxafb_of_dev_id);
 
 static struct platform_driver pxafb_driver = {
 	.probe		= pxafb_probe,
+<<<<<<< HEAD
 	.remove_new 	= pxafb_remove,
+=======
+	.remove 	= pxafb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "pxa2xx-fb",
 		.of_match_table = pxafb_of_dev_id,

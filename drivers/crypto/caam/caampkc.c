@@ -16,8 +16,11 @@
 #include "desc_constr.h"
 #include "sg_sw_sec4.h"
 #include "caampkc.h"
+<<<<<<< HEAD
 #include <linux/dma-mapping.h>
 #include <linux/kernel.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DESC_RSA_PUB_LEN	(2 * CAAM_CMD_SZ + SIZEOF_RSA_PUB_PDB)
 #define DESC_RSA_PRIV_F1_LEN	(2 * CAAM_CMD_SZ + \
@@ -59,7 +62,11 @@ static void rsa_pub_unmap(struct device *dev, struct rsa_edesc *edesc,
 			  struct akcipher_request *req)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct caam_rsa_key *key = &ctx->key;
 	struct rsa_pub_pdb *pdb = &edesc->pdb.pub;
 
@@ -71,7 +78,11 @@ static void rsa_priv_f1_unmap(struct device *dev, struct rsa_edesc *edesc,
 			      struct akcipher_request *req)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct caam_rsa_key *key = &ctx->key;
 	struct rsa_priv_f1_pdb *pdb = &edesc->pdb.priv_f1;
 
@@ -83,7 +94,11 @@ static void rsa_priv_f2_unmap(struct device *dev, struct rsa_edesc *edesc,
 			      struct akcipher_request *req)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct caam_rsa_key *key = &ctx->key;
 	struct rsa_priv_f2_pdb *pdb = &edesc->pdb.priv_f2;
 	size_t p_sz = key->p_sz;
@@ -100,7 +115,11 @@ static void rsa_priv_f3_unmap(struct device *dev, struct rsa_edesc *edesc,
 			      struct akcipher_request *req)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct caam_rsa_key *key = &ctx->key;
 	struct rsa_priv_f3_pdb *pdb = &edesc->pdb.priv_f3;
 	size_t p_sz = key->p_sz;
@@ -151,7 +170,11 @@ static void rsa_priv_f_done(struct device *dev, u32 *desc, u32 err,
 	struct akcipher_request *req = context;
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
 	struct caam_drv_private_jr *jrp = dev_get_drvdata(dev);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct caam_rsa_key *key = &ctx->key;
 	struct caam_rsa_req_ctx *req_ctx = akcipher_request_ctx(req);
 	struct rsa_edesc *edesc;
@@ -244,7 +267,11 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
 					 size_t desclen)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = ctx->dev;
 	struct caam_rsa_req_ctx *req_ctx = akcipher_request_ctx(req);
 	struct caam_rsa_key *key = &ctx->key;
@@ -312,7 +339,12 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
 	sec4_sg_bytes = sec4_sg_len * sizeof(struct sec4_sg_entry);
 
 	/* allocate space for base edesc, hw desc commands and link tables */
+<<<<<<< HEAD
 	edesc = kzalloc(sizeof(*edesc) + desclen + sec4_sg_bytes, flags);
+=======
+	edesc = kzalloc(sizeof(*edesc) + desclen + sec4_sg_bytes,
+			GFP_DMA | flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!edesc)
 		goto dst_fail;
 
@@ -372,7 +404,11 @@ static int akcipher_do_one_req(struct crypto_engine *engine, void *areq)
 						    base);
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
 	struct caam_rsa_req_ctx *req_ctx = akcipher_request_ctx(req);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *jrdev = ctx->dev;
 	u32 *desc = req_ctx->edesc->hw_desc;
 	int ret;
@@ -400,7 +436,11 @@ static int set_rsa_pub_pdb(struct akcipher_request *req,
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
 	struct caam_rsa_req_ctx *req_ctx = akcipher_request_ctx(req);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct caam_rsa_key *key = &ctx->key;
 	struct device *dev = ctx->dev;
 	struct rsa_pub_pdb *pdb = &edesc->pdb.pub;
@@ -445,7 +485,11 @@ static int set_rsa_priv_f1_pdb(struct akcipher_request *req,
 			       struct rsa_edesc *edesc)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct caam_rsa_key *key = &ctx->key;
 	struct device *dev = ctx->dev;
 	struct rsa_priv_f1_pdb *pdb = &edesc->pdb.priv_f1;
@@ -492,7 +536,11 @@ static int set_rsa_priv_f2_pdb(struct akcipher_request *req,
 			       struct rsa_edesc *edesc)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct caam_rsa_key *key = &ctx->key;
 	struct device *dev = ctx->dev;
 	struct rsa_priv_f2_pdb *pdb = &edesc->pdb.priv_f2;
@@ -569,7 +617,11 @@ static int set_rsa_priv_f3_pdb(struct akcipher_request *req,
 			       struct rsa_edesc *edesc)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct caam_rsa_key *key = &ctx->key;
 	struct device *dev = ctx->dev;
 	struct rsa_priv_f3_pdb *pdb = &edesc->pdb.priv_f3;
@@ -665,7 +717,11 @@ static int akcipher_enqueue_req(struct device *jrdev,
 {
 	struct caam_drv_private_jr *jrpriv = dev_get_drvdata(jrdev);
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct caam_rsa_key *key = &ctx->key;
 	struct caam_rsa_req_ctx *req_ctx = akcipher_request_ctx(req);
 	struct rsa_edesc *edesc = req_ctx->edesc;
@@ -708,7 +764,11 @@ static int akcipher_enqueue_req(struct device *jrdev,
 static int caam_rsa_enc(struct akcipher_request *req)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct caam_rsa_key *key = &ctx->key;
 	struct device *jrdev = ctx->dev;
 	struct rsa_edesc *edesc;
@@ -747,7 +807,11 @@ init_fail:
 static int caam_rsa_dec_priv_f1(struct akcipher_request *req)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *jrdev = ctx->dev;
 	struct rsa_edesc *edesc;
 	int ret;
@@ -776,7 +840,11 @@ init_fail:
 static int caam_rsa_dec_priv_f2(struct akcipher_request *req)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *jrdev = ctx->dev;
 	struct rsa_edesc *edesc;
 	int ret;
@@ -805,7 +873,11 @@ init_fail:
 static int caam_rsa_dec_priv_f3(struct akcipher_request *req)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *jrdev = ctx->dev;
 	struct rsa_edesc *edesc;
 	int ret;
@@ -834,7 +906,11 @@ init_fail:
 static int caam_rsa_dec(struct akcipher_request *req)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct caam_rsa_key *key = &ctx->key;
 	int ret;
 
@@ -899,7 +975,11 @@ static u8 *caam_read_rsa_crt(const u8 *ptr, size_t nbytes, size_t dstlen)
 	if (!nbytes)
 		return NULL;
 
+<<<<<<< HEAD
 	dst = kzalloc(dstlen, GFP_KERNEL);
+=======
+	dst = kzalloc(dstlen, GFP_DMA | GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!dst)
 		return NULL;
 
@@ -911,7 +991,11 @@ static u8 *caam_read_rsa_crt(const u8 *ptr, size_t nbytes, size_t dstlen)
 /**
  * caam_read_raw_data - Read a raw byte stream as a positive integer.
  * The function skips buffer's leading zeros, copies the remained data
+<<<<<<< HEAD
  * to a buffer allocated in the GFP_KERNEL zone and returns
+=======
+ * to a buffer allocated in the GFP_DMA | GFP_KERNEL zone and returns
+>>>>>>> b7ba80a49124 (Commit)
  * the address of the new buffer.
  *
  * @buf   : The data to read
@@ -924,7 +1008,11 @@ static inline u8 *caam_read_raw_data(const u8 *buf, size_t *nbytes)
 	if (!*nbytes)
 		return NULL;
 
+<<<<<<< HEAD
 	return kmemdup(buf, *nbytes, GFP_KERNEL);
+=======
+	return kmemdup(buf, *nbytes, GFP_DMA | GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int caam_rsa_check_key_length(unsigned int len)
@@ -937,7 +1025,11 @@ static int caam_rsa_check_key_length(unsigned int len)
 static int caam_rsa_set_pub_key(struct crypto_akcipher *tfm, const void *key,
 				unsigned int keylen)
 {
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct rsa_key raw_key = {NULL};
 	struct caam_rsa_key *rsa_key = &ctx->key;
 	int ret;
@@ -950,13 +1042,21 @@ static int caam_rsa_set_pub_key(struct crypto_akcipher *tfm, const void *key,
 		return ret;
 
 	/* Copy key in DMA zone */
+<<<<<<< HEAD
 	rsa_key->e = kmemdup(raw_key.e, raw_key.e_sz, GFP_KERNEL);
+=======
+	rsa_key->e = kmemdup(raw_key.e, raw_key.e_sz, GFP_DMA | GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!rsa_key->e)
 		goto err;
 
 	/*
 	 * Skip leading zeros and copy the positive integer to a buffer
+<<<<<<< HEAD
 	 * allocated in the GFP_KERNEL zone. The decryption descriptor
+=======
+	 * allocated in the GFP_DMA | GFP_KERNEL zone. The decryption descriptor
+>>>>>>> b7ba80a49124 (Commit)
 	 * expects a positive integer for the RSA modulus and uses its length as
 	 * decryption output length.
 	 */
@@ -984,7 +1084,10 @@ static void caam_rsa_set_priv_key_form(struct caam_rsa_ctx *ctx,
 	struct caam_rsa_key *rsa_key = &ctx->key;
 	size_t p_sz = raw_key->p_sz;
 	size_t q_sz = raw_key->q_sz;
+<<<<<<< HEAD
 	unsigned aligned_size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	rsa_key->p = caam_read_raw_data(raw_key->p, &p_sz);
 	if (!rsa_key->p)
@@ -996,6 +1099,7 @@ static void caam_rsa_set_priv_key_form(struct caam_rsa_ctx *ctx,
 		goto free_p;
 	rsa_key->q_sz = q_sz;
 
+<<<<<<< HEAD
 	aligned_size = ALIGN(raw_key->p_sz, dma_get_cache_alignment());
 	rsa_key->tmp1 = kzalloc(aligned_size, GFP_KERNEL);
 	if (!rsa_key->tmp1)
@@ -1003,6 +1107,13 @@ static void caam_rsa_set_priv_key_form(struct caam_rsa_ctx *ctx,
 
 	aligned_size = ALIGN(raw_key->q_sz, dma_get_cache_alignment());
 	rsa_key->tmp2 = kzalloc(aligned_size, GFP_KERNEL);
+=======
+	rsa_key->tmp1 = kzalloc(raw_key->p_sz, GFP_DMA | GFP_KERNEL);
+	if (!rsa_key->tmp1)
+		goto free_q;
+
+	rsa_key->tmp2 = kzalloc(raw_key->q_sz, GFP_DMA | GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!rsa_key->tmp2)
 		goto free_tmp1;
 
@@ -1042,7 +1153,11 @@ free_p:
 static int caam_rsa_set_priv_key(struct crypto_akcipher *tfm, const void *key,
 				 unsigned int keylen)
 {
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct rsa_key raw_key = {NULL};
 	struct caam_rsa_key *rsa_key = &ctx->key;
 	int ret;
@@ -1055,17 +1170,29 @@ static int caam_rsa_set_priv_key(struct crypto_akcipher *tfm, const void *key,
 		return ret;
 
 	/* Copy key in DMA zone */
+<<<<<<< HEAD
 	rsa_key->d = kmemdup(raw_key.d, raw_key.d_sz, GFP_KERNEL);
 	if (!rsa_key->d)
 		goto err;
 
 	rsa_key->e = kmemdup(raw_key.e, raw_key.e_sz, GFP_KERNEL);
+=======
+	rsa_key->d = kmemdup(raw_key.d, raw_key.d_sz, GFP_DMA | GFP_KERNEL);
+	if (!rsa_key->d)
+		goto err;
+
+	rsa_key->e = kmemdup(raw_key.e, raw_key.e_sz, GFP_DMA | GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!rsa_key->e)
 		goto err;
 
 	/*
 	 * Skip leading zeros and copy the positive integer to a buffer
+<<<<<<< HEAD
 	 * allocated in the GFP_KERNEL zone. The decryption descriptor
+=======
+	 * allocated in the GFP_DMA | GFP_KERNEL zone. The decryption descriptor
+>>>>>>> b7ba80a49124 (Commit)
 	 * expects a positive integer for the RSA modulus and uses its length as
 	 * decryption output length.
 	 */
@@ -1093,7 +1220,11 @@ err:
 
 static unsigned int caam_rsa_max_size(struct crypto_akcipher *tfm)
 {
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ctx->key.n_sz;
 }
@@ -1101,9 +1232,13 @@ static unsigned int caam_rsa_max_size(struct crypto_akcipher *tfm)
 /* Per session pkc's driver context creation function */
 static int caam_rsa_init_tfm(struct crypto_akcipher *tfm)
 {
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
 
 	akcipher_set_reqsize(tfm, sizeof(struct caam_rsa_req_ctx));
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctx->dev = caam_jr_alloc();
 
@@ -1129,7 +1264,11 @@ static int caam_rsa_init_tfm(struct crypto_akcipher *tfm)
 /* Per session pkc's driver context cleanup function */
 static void caam_rsa_exit_tfm(struct crypto_akcipher *tfm)
 {
+<<<<<<< HEAD
 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct caam_rsa_key *key = &ctx->key;
 
 	dma_unmap_single(ctx->dev, ctx->padding_dma, CAAM_RSA_MAX_INPUT_SIZE -
@@ -1147,13 +1286,21 @@ static struct caam_akcipher_alg caam_rsa = {
 		.max_size = caam_rsa_max_size,
 		.init = caam_rsa_init_tfm,
 		.exit = caam_rsa_exit_tfm,
+<<<<<<< HEAD
+=======
+		.reqsize = sizeof(struct caam_rsa_req_ctx),
+>>>>>>> b7ba80a49124 (Commit)
 		.base = {
 			.cra_name = "rsa",
 			.cra_driver_name = "rsa-caam",
 			.cra_priority = 3000,
 			.cra_module = THIS_MODULE,
+<<<<<<< HEAD
 			.cra_ctxsize = sizeof(struct caam_rsa_ctx) +
 				       CRYPTO_DMA_PADDING,
+=======
+			.cra_ctxsize = sizeof(struct caam_rsa_ctx),
+>>>>>>> b7ba80a49124 (Commit)
 		},
 	}
 };
@@ -1189,7 +1336,12 @@ int caam_pkc_init(struct device *ctrldev)
 		return 0;
 
 	/* allocate zero buffer, used for padding input */
+<<<<<<< HEAD
 	zero_buffer = kzalloc(CAAM_RSA_MAX_INPUT_SIZE - 1, GFP_KERNEL);
+=======
+	zero_buffer = kzalloc(CAAM_RSA_MAX_INPUT_SIZE - 1, GFP_DMA |
+			      GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!zero_buffer)
 		return -ENOMEM;
 

@@ -222,6 +222,7 @@ read_end:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int imx_ocotp_cell_pp(void *context, const char *id, int index,
 			     unsigned int offset, void *data, size_t bytes)
 {
@@ -232,6 +233,23 @@ static int imx_ocotp_cell_pp(void *context, const char *id, int index,
 	if (id && !strcmp(id, "mac-address"))
 		for (i = 0; i < bytes / 2; i++)
 			swap(buf[i], buf[bytes - i - 1]);
+=======
+static int imx_ocotp_cell_pp(void *context, const char *id, unsigned int offset,
+			     void *data, size_t bytes)
+{
+	struct ocotp_priv *priv = context;
+
+	/* Deal with some post processing of nvmem cell data */
+	if (id && !strcmp(id, "mac-address")) {
+		if (priv->params->reverse_mac_address) {
+			u8 *buf = data;
+			int i;
+
+			for (i = 0; i < bytes/2; i++)
+				swap(buf[i], buf[bytes - i - 1]);
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -483,6 +501,10 @@ static struct nvmem_config imx_ocotp_nvmem_config = {
 	.stride = 1,
 	.reg_read = imx_ocotp_read,
 	.reg_write = imx_ocotp_write,
+<<<<<<< HEAD
+=======
+	.cell_post_process = imx_ocotp_cell_pp,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct ocotp_params imx6q_params = {
@@ -589,6 +611,7 @@ static const struct of_device_id imx_ocotp_dt_ids[] = {
 };
 MODULE_DEVICE_TABLE(of, imx_ocotp_dt_ids);
 
+<<<<<<< HEAD
 static void imx_ocotp_fixup_cell_info(struct nvmem_device *nvmem,
 				      struct nvmem_layout *layout,
 				      struct nvmem_cell_info *cell)
@@ -600,6 +623,8 @@ struct nvmem_layout imx_ocotp_layout = {
 	.fixup_cell_info = imx_ocotp_fixup_cell_info,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int imx_ocotp_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
@@ -624,9 +649,12 @@ static int imx_ocotp_probe(struct platform_device *pdev)
 	imx_ocotp_nvmem_config.size = 4 * priv->params->nregs;
 	imx_ocotp_nvmem_config.dev = dev;
 	imx_ocotp_nvmem_config.priv = priv;
+<<<<<<< HEAD
 	if (priv->params->reverse_mac_address)
 		imx_ocotp_nvmem_config.layout = &imx_ocotp_layout;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	priv->config = &imx_ocotp_nvmem_config;
 
 	clk_prepare_enable(priv->clk);

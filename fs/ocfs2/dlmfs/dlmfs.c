@@ -188,18 +188,30 @@ static int dlmfs_file_release(struct inode *inode,
  * We do ->setattr() just to override size changes.  Our size is the size
  * of the LVB and nothing else.
  */
+<<<<<<< HEAD
 static int dlmfs_file_setattr(struct mnt_idmap *idmap,
+=======
+static int dlmfs_file_setattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			      struct dentry *dentry, struct iattr *attr)
 {
 	int error;
 	struct inode *inode = d_inode(dentry);
 
 	attr->ia_valid &= ~ATTR_SIZE;
+<<<<<<< HEAD
 	error = setattr_prepare(&nop_mnt_idmap, dentry, attr);
 	if (error)
 		return error;
 
 	setattr_copy(&nop_mnt_idmap, inode, attr);
+=======
+	error = setattr_prepare(&init_user_ns, dentry, attr);
+	if (error)
+		return error;
+
+	setattr_copy(&init_user_ns, inode, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	mark_inode_dirty(inode);
 	return 0;
 }
@@ -336,7 +348,11 @@ static struct inode *dlmfs_get_root_inode(struct super_block *sb)
 
 	if (inode) {
 		inode->i_ino = get_next_ino();
+<<<<<<< HEAD
 		inode_init_owner(&nop_mnt_idmap, inode, NULL, mode);
+=======
+		inode_init_owner(&init_user_ns, inode, NULL, mode);
+>>>>>>> b7ba80a49124 (Commit)
 		inode->i_atime = inode->i_mtime = inode->i_ctime = current_time(inode);
 		inc_nlink(inode);
 
@@ -359,7 +375,11 @@ static struct inode *dlmfs_get_inode(struct inode *parent,
 		return NULL;
 
 	inode->i_ino = get_next_ino();
+<<<<<<< HEAD
 	inode_init_owner(&nop_mnt_idmap, inode, parent, mode);
+=======
+	inode_init_owner(&init_user_ns, inode, parent, mode);
+>>>>>>> b7ba80a49124 (Commit)
 	inode->i_atime = inode->i_mtime = inode->i_ctime = current_time(inode);
 
 	ip = DLMFS_I(inode);
@@ -402,7 +422,11 @@ static struct inode *dlmfs_get_inode(struct inode *parent,
  * File creation. Allocate an inode, and we're done..
  */
 /* SMP-safe */
+<<<<<<< HEAD
 static int dlmfs_mkdir(struct mnt_idmap * idmap,
+=======
+static int dlmfs_mkdir(struct user_namespace * mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct inode * dir,
 		       struct dentry * dentry,
 		       umode_t mode)
@@ -451,7 +475,11 @@ bail:
 	return status;
 }
 
+<<<<<<< HEAD
 static int dlmfs_create(struct mnt_idmap *idmap,
+=======
+static int dlmfs_create(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			struct inode *dir,
 			struct dentry *dentry,
 			umode_t mode,

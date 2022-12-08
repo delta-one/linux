@@ -39,6 +39,10 @@ extern asmlinkage void ret_from_kernel_thread(void);
 void arch_cpu_idle(void)
 {
 	cpu_do_idle();
+<<<<<<< HEAD
+=======
+	raw_local_irq_enable();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void __show_regs(struct pt_regs *regs)
@@ -104,7 +108,11 @@ static int __init compat_mode_detect(void)
 	csr_write(CSR_STATUS, tmp);
 
 	pr_info("riscv: ELF compat mode %s",
+<<<<<<< HEAD
 			compat_mode_supported ? "supported" : "unsupported");
+=======
+			compat_mode_supported ? "supported" : "failed");
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -163,8 +171,11 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
 	unsigned long tls = args->tls;
 	struct pt_regs *childregs = task_pt_regs(p);
 
+<<<<<<< HEAD
 	memset(&p->thread.s, 0, sizeof(p->thread.s));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* p->thread holds context to be restored by __switch_to() */
 	if (unlikely(args->fn)) {
 		/* Kernel thread */

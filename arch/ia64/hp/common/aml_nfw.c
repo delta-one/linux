@@ -187,9 +187,15 @@ static int aml_nfw_add(struct acpi_device *device)
 	return aml_nfw_add_global_handler();
 }
 
+<<<<<<< HEAD
 static void aml_nfw_remove(struct acpi_device *device)
 {
 	aml_nfw_remove_global_handler();
+=======
+static int aml_nfw_remove(struct acpi_device *device)
+{
+	return aml_nfw_remove_global_handler();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id aml_nfw_ids[] = {

@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2003 Sistina Software Limited.
  * Copyright (C) 2005-2008 Red Hat, Inc. All rights reserved.
@@ -20,8 +23,11 @@
 #include <linux/dm-kcopyd.h>
 #include <linux/dm-region-hash.h>
 
+<<<<<<< HEAD
 static struct workqueue_struct *dm_raid1_wq;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DM_MSG_PREFIX "raid1"
 
 #define MAX_RECOVERY 1	/* Maximum number of regions recovered in parallel. */
@@ -35,11 +41,17 @@ static struct workqueue_struct *dm_raid1_wq;
 
 static DECLARE_WAIT_QUEUE_HEAD(_kmirrord_recovery_stopped);
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
  * Mirror set structures.
  *---------------------------------------------------------------
  */
+=======
+/*-----------------------------------------------------------------
+ * Mirror set structures.
+ *---------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 enum dm_raid1_error {
 	DM_RAID1_WRITE_ERROR,
 	DM_RAID1_FLUSH_ERROR,
@@ -87,7 +99,11 @@ struct mirror_set {
 
 	struct work_struct trigger_event;
 
+<<<<<<< HEAD
 	unsigned int nr_mirrors;
+=======
+	unsigned nr_mirrors;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mirror mirror[];
 };
 
@@ -241,8 +257,13 @@ static void fail_mirror(struct mirror *m, enum dm_raid1_error error_type)
 		 * Better to issue requests to same failing device
 		 * than to risk returning corrupt data.
 		 */
+<<<<<<< HEAD
 		DMERR("Primary mirror (%s) failed while out-of-sync: Reads may fail.",
 		      m->dev->name);
+=======
+		DMERR("Primary mirror (%s) failed while out-of-sync: "
+		      "Reads may fail.", m->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -253,7 +274,11 @@ static void fail_mirror(struct mirror *m, enum dm_raid1_error error_type)
 		DMWARN("All sides of mirror have failed.");
 
 out:
+<<<<<<< HEAD
 	queue_work(dm_raid1_wq, &ms->trigger_event);
+=======
+	schedule_work(&ms->trigger_event);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mirror_flush(struct dm_target *ti)
@@ -290,15 +315,23 @@ static int mirror_flush(struct dm_target *ti)
 	return 0;
 }
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
+=======
+/*-----------------------------------------------------------------
+>>>>>>> b7ba80a49124 (Commit)
  * Recovery.
  *
  * When a mirror is first activated we may find that some regions
  * are in the no-sync state.  We have to recover these by
  * recopying from the default mirror to all the others.
+<<<<<<< HEAD
  *---------------------------------------------------------------
  */
+=======
+ *---------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 static void recovery_complete(int read_err, unsigned long write_err,
 			      void *context)
 {
@@ -334,7 +367,11 @@ static void recovery_complete(int read_err, unsigned long write_err,
 
 static void recover(struct mirror_set *ms, struct dm_region *reg)
 {
+<<<<<<< HEAD
 	unsigned int i;
+=======
+	unsigned i;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_io_region from, to[DM_KCOPYD_MAX_REGIONS], *dest;
 	struct mirror *m;
 	unsigned long flags = 0;
@@ -415,11 +452,17 @@ static void do_recovery(struct mirror_set *ms)
 	}
 }
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
  * Reads
  *---------------------------------------------------------------
  */
+=======
+/*-----------------------------------------------------------------
+ * Reads
+ *---------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 static struct mirror *choose_mirror(struct mirror_set *ms, sector_t sector)
 {
 	struct mirror *m = get_default_mirror(ms);
@@ -507,11 +550,17 @@ static void hold_bio(struct mirror_set *ms, struct bio *bio)
 	spin_unlock_irq(&ms->lock);
 }
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
  * Reads
  *---------------------------------------------------------------
  */
+=======
+/*-----------------------------------------------------------------
+ * Reads
+ *---------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 static void read_callback(unsigned long error, void *context)
 {
 	struct bio *bio = context;
@@ -528,7 +577,12 @@ static void read_callback(unsigned long error, void *context)
 	fail_mirror(m, DM_RAID1_READ_ERROR);
 
 	if (likely(default_ok(m)) || mirror_available(m->ms, bio)) {
+<<<<<<< HEAD
 		DMWARN_LIMIT("Read failure on mirror device %s. Trying alternative device.",
+=======
+		DMWARN_LIMIT("Read failure on mirror device %s.  "
+			     "Trying alternative device.",
+>>>>>>> b7ba80a49124 (Commit)
 			     m->dev->name);
 		queue_bio(m->ms, bio, bio_data_dir(bio));
 		return;
@@ -589,13 +643,18 @@ static void do_reads(struct mirror_set *ms, struct bio_list *reads)
 	}
 }
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------------
+=======
+/*-----------------------------------------------------------------
+>>>>>>> b7ba80a49124 (Commit)
  * Writes.
  *
  * We do different things with the write io depending on the
  * state of the region that it's in:
  *
+<<<<<<< HEAD
  * SYNC:	increment pending, use kcopyd to write to *all* mirrors
  * RECOVERING:	delay the io until recovery completes
  * NOSYNC:	increment pending, just write to the default mirror
@@ -604,6 +663,17 @@ static void do_reads(struct mirror_set *ms, struct bio_list *reads)
 static void write_callback(unsigned long error, void *context)
 {
 	unsigned int i;
+=======
+ * SYNC: 	increment pending, use kcopyd to write to *all* mirrors
+ * RECOVERING:	delay the io until recovery completes
+ * NOSYNC:	increment pending, just write to the default mirror
+ *---------------------------------------------------------------*/
+
+
+static void write_callback(unsigned long error, void *context)
+{
+	unsigned i;
+>>>>>>> b7ba80a49124 (Commit)
 	struct bio *bio = (struct bio *) context;
 	struct mirror_set *ms;
 	int should_wake = 0;
@@ -852,11 +922,17 @@ static void trigger_event(struct work_struct *work)
 	dm_table_event(ms->ti->table);
 }
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
  * kmirrord
  *---------------------------------------------------------------
  */
+=======
+/*-----------------------------------------------------------------
+ * kmirrord
+ *---------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 static void do_mirror(struct work_struct *work)
 {
 	struct mirror_set *ms = container_of(work, struct mirror_set,
@@ -880,11 +956,17 @@ static void do_mirror(struct work_struct *work)
 	do_failures(ms, &failures);
 }
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
  * Target functions
  *---------------------------------------------------------------
  */
+=======
+/*-----------------------------------------------------------------
+ * Target functions
+ *---------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 static struct mirror_set *alloc_context(unsigned int nr_mirrors,
 					uint32_t region_size,
 					struct dm_target *ti,
@@ -917,7 +999,11 @@ static struct mirror_set *alloc_context(unsigned int nr_mirrors,
 	if (IS_ERR(ms->io_client)) {
 		ti->error = "Error creating dm_io client";
 		kfree(ms);
+<<<<<<< HEAD
 		return NULL;
+=======
+ 		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ms->rh = dm_region_hash_create(ms, dispatch_bios, wakeup_mirrord,
@@ -977,10 +1063,17 @@ static int get_mirror(struct mirror_set *ms, struct dm_target *ti,
  * Create dirty log: log_type #log_params <log_params>
  */
 static struct dm_dirty_log *create_dirty_log(struct dm_target *ti,
+<<<<<<< HEAD
 					     unsigned int argc, char **argv,
 					     unsigned int *args_used)
 {
 	unsigned int param_count;
+=======
+					     unsigned argc, char **argv,
+					     unsigned *args_used)
+{
+	unsigned param_count;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_dirty_log *dl;
 	char dummy;
 
@@ -1011,10 +1104,17 @@ static struct dm_dirty_log *create_dirty_log(struct dm_target *ti,
 	return dl;
 }
 
+<<<<<<< HEAD
 static int parse_features(struct mirror_set *ms, unsigned int argc, char **argv,
 			  unsigned int *args_used)
 {
 	unsigned int num_features;
+=======
+static int parse_features(struct mirror_set *ms, unsigned argc, char **argv,
+			  unsigned *args_used)
+{
+	unsigned num_features;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_target *ti = ms->ti;
 	char dummy;
 	int i;
@@ -1403,7 +1503,11 @@ static char device_status_char(struct mirror *m)
 
 
 static void mirror_status(struct dm_target *ti, status_type_t type,
+<<<<<<< HEAD
 			  unsigned int status_flags, char *result, unsigned int maxlen)
+=======
+			  unsigned status_flags, char *result, unsigned maxlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int m, sz = 0;
 	int num_feature_args = 0;
@@ -1472,7 +1576,11 @@ static int mirror_iterate_devices(struct dm_target *ti,
 {
 	struct mirror_set *ms = ti->private;
 	int ret = 0;
+<<<<<<< HEAD
 	unsigned int i;
+=======
+	unsigned i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; !ret && i < ms->nr_mirrors; i++)
 		ret = fn(ti, ms->mirror[i].dev,
@@ -1498,6 +1606,7 @@ static struct target_type mirror_target = {
 
 static int __init dm_mirror_init(void)
 {
+<<<<<<< HEAD
 	int r = -ENOMEM;
 
 	dm_raid1_wq = alloc_workqueue("dm_raid1_wq", 0, 0);
@@ -1507,19 +1616,32 @@ static int __init dm_mirror_init(void)
 	r = dm_register_target(&mirror_target);
 	if (r < 0) {
 		destroy_workqueue(dm_raid1_wq);
+=======
+	int r;
+
+	r = dm_register_target(&mirror_target);
+	if (r < 0) {
+		DMERR("Failed to register mirror target");
+>>>>>>> b7ba80a49124 (Commit)
 		goto bad_target;
 	}
 
 	return 0;
 
 bad_target:
+<<<<<<< HEAD
 	DMERR("Failed to register mirror target");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return r;
 }
 
 static void __exit dm_mirror_exit(void)
 {
+<<<<<<< HEAD
 	destroy_workqueue(dm_raid1_wq);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dm_unregister_target(&mirror_target);
 }
 

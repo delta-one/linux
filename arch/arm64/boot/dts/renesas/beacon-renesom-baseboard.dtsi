@@ -367,7 +367,11 @@
 
 		assigned-clocks = <&versaclock6_bb 1>, <&versaclock6_bb 2>,
 				  <&versaclock6_bb 3>, <&versaclock6_bb 4>;
+<<<<<<< HEAD
 		assigned-clock-rates = <24000000>, <24000000>, <24576000>,
+=======
+		assigned-clock-rates = <24000000>, <24000000>, <24000000>,
+>>>>>>> b7ba80a49124 (Commit)
 				       <24576000>;
 
 		OUT1 {
@@ -437,6 +441,23 @@
 		};
 	};
 
+<<<<<<< HEAD
+=======
+	/* 0 - lcd_reset */
+	/* 1 - lcd_pwr */
+	/* 2 - lcd_select */
+	/* 3 - backlight-enable */
+	/* 4 - Touch_shdwn */
+	/* 5 - LCD_H_pol */
+	/* 6 - lcd_V_pol */
+	gpio_exp1: gpio@20 {
+		compatible = "onnn,pca9654";
+		reg = <0x20>;
+		gpio-controller;
+		#gpio-cells = <2>;
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	touchscreen@26 {
 		compatible = "ilitek,ili2117";
 		reg = <0x26>;
@@ -468,6 +489,7 @@
 			};
 		};
 	};
+<<<<<<< HEAD
 
 	gpio_exp1: gpio@70 {
 		compatible = "nxp,pca9538";
@@ -478,6 +500,8 @@
 				  "backlight-enable", "Touch_shdwn",
 				  "LCD_H_pol", "lcd_V_pol";
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lvds0 {
@@ -634,6 +658,7 @@
 	#clock-cells = <1>;
 	clock-frequency = <11289600>;
 
+<<<<<<< HEAD
 	/* Reference versaclock instead of audio_clk_a */
 	clocks = <&cpg CPG_MOD 1005>,
 		 <&cpg CPG_MOD 1006>, <&cpg CPG_MOD 1007>,
@@ -653,6 +678,8 @@
 		 <&audio_clk_c>,
 		 <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 
 	ports {

@@ -18,10 +18,13 @@
 #include <linux/gpio.h>
 #include <linux/platform_device.h>
 
+<<<<<<< HEAD
 static bool use_low_level_irq;
 module_param(use_low_level_irq, bool, 0444);
 MODULE_PARM_DESC(use_low_level_irq, "Use low-level triggered IRQ instead of edge triggered");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct soc_button_info {
 	const char *name;
 	int acpi_index;
@@ -78,6 +81,7 @@ static const struct dmi_system_id dmi_use_low_level_irq[] = {
 		},
 	},
 	{
+<<<<<<< HEAD
 		/* Acer Switch V 10 SW5-017, same issue as Acer Switch 10 SW5-012. */
 		.matches = {
 			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
@@ -85,6 +89,8 @@ static const struct dmi_system_id dmi_use_low_level_irq[] = {
 		},
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Acer One S1003. _LID method messes with power-button GPIO
 		 * IRQ settings, leading to a non working power-button.
@@ -175,8 +181,12 @@ soc_button_device_create(struct platform_device *pdev,
 		}
 
 		/* See dmi_use_low_level_irq[] comment */
+<<<<<<< HEAD
 		if (!autorepeat && (use_low_level_irq ||
 				    dmi_check_system(dmi_use_low_level_irq))) {
+=======
+		if (!autorepeat && dmi_check_system(dmi_use_low_level_irq)) {
+>>>>>>> b7ba80a49124 (Commit)
 			irq_set_irq_type(irq, IRQ_TYPE_LEVEL_LOW);
 			gpio_keys[n_buttons].irq = irq;
 			gpio_keys[n_buttons].gpio = -ENOENT;

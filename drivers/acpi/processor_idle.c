@@ -109,8 +109,13 @@ static const struct dmi_system_id processor_power_dmi_table[] = {
 static void __cpuidle acpi_safe_halt(void)
 {
 	if (!tif_need_resched()) {
+<<<<<<< HEAD
 		raw_safe_halt();
 		raw_local_irq_disable();
+=======
+		safe_halt();
+		local_irq_disable();
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -147,7 +152,11 @@ static void lapic_timer_check_state(int state, struct acpi_processor *pr,
 
 static void __lapic_timer_propagate_broadcast(void *arg)
 {
+<<<<<<< HEAD
 	struct acpi_processor *pr = arg;
+=======
+	struct acpi_processor *pr = (struct acpi_processor *) arg;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (pr->power.timer_broadcast_on_state < INT_MAX)
 		tick_broadcast_enable();
@@ -324,7 +333,11 @@ static void acpi_processor_power_verify_c3(struct acpi_processor *pr,
 	 * the erratum), but this is known to disrupt certain ISA
 	 * devices thus we take the conservative approach.
 	 */
+<<<<<<< HEAD
 	if (errata.piix4.fdma) {
+=======
+	else if (errata.piix4.fdma) {
+>>>>>>> b7ba80a49124 (Commit)
 		acpi_handle_debug(pr->handle,
 				  "C3 not supported on PIIX4 with Type-F DMA\n");
 		return;
@@ -384,6 +397,11 @@ static void acpi_processor_power_verify_c3(struct acpi_processor *pr,
 	 * handle BM_RLD is to set it and leave it set.
 	 */
 	acpi_write_bit_register(ACPI_BITREG_BUS_MASTER_RLD, 1);
+<<<<<<< HEAD
+=======
+
+	return;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int acpi_cst_latency_cmp(const void *a, const void *b)
@@ -457,7 +475,11 @@ static int acpi_processor_power_verify(struct acpi_processor *pr)
 
 	lapic_timer_propagate_broadcast(pr);
 
+<<<<<<< HEAD
 	return working;
+=======
+	return (working);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int acpi_processor_get_cstate_info(struct acpi_processor *pr)
@@ -523,15 +545,21 @@ static int acpi_idle_bm_check(void)
 	return bm_status;
 }
 
+<<<<<<< HEAD
 static __cpuidle void io_idle(unsigned long addr)
 {
 	/* IO port based C-state */
 	inb(addr);
 
+=======
+static void wait_for_freeze(void)
+{
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef	CONFIG_X86
 	/* No delay is needed if we are in guest */
 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
 		return;
+<<<<<<< HEAD
 	/*
 	 * Modern (>=Nehalem) Intel systems use ACPI via intel_idle,
 	 * not this code.  Assume that any Intel systems using this
@@ -553,6 +581,12 @@ static __cpuidle void io_idle(unsigned long addr)
 	 * consider moving your system to a more modern idle
 	 * mechanism.
 	 */
+=======
+#endif
+	/* Dummy wait op - must do something useless after P_LVL2 read
+	   because chipsets cannot guarantee that STPCLK# signal
+	   gets asserted in time to freeze execution properly. */
+>>>>>>> b7ba80a49124 (Commit)
 	inl(acpi_gbl_FADT.xpm_timer_block.address);
 }
 
@@ -572,7 +606,13 @@ static void __cpuidle acpi_idle_do_entry(struct acpi_processor_cx *cx)
 	} else if (cx->entry_method == ACPI_CSTATE_HALT) {
 		acpi_safe_halt();
 	} else {
+<<<<<<< HEAD
 		io_idle(cx->address);
+=======
+		/* IO port based C-state */
+		inb(cx->address);
+		wait_for_freeze();
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	perf_lopwr_cb(false);
@@ -594,7 +634,12 @@ static int acpi_idle_play_dead(struct cpuidle_device *dev, int index)
 		if (cx->entry_method == ACPI_CSTATE_HALT)
 			safe_halt();
 		else if (cx->entry_method == ACPI_CSTATE_SYSTEMIO) {
+<<<<<<< HEAD
 			io_idle(cx->address);
+=======
+			inb(cx->address);
+			wait_for_freeze();
+>>>>>>> b7ba80a49124 (Commit)
 		} else
 			return -ENODEV;
 
@@ -607,7 +652,11 @@ static int acpi_idle_play_dead(struct cpuidle_device *dev, int index)
 	return 0;
 }
 
+<<<<<<< HEAD
 static __always_inline bool acpi_idle_fallback_to_c1(struct acpi_processor *pr)
+=======
+static bool acpi_idle_fallback_to_c1(struct acpi_processor *pr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return IS_ENABLED(CONFIG_HOTPLUG_CPU) && !pr->flags.has_cst &&
 		!(acpi_gbl_FADT.flags & ACPI_FADT_C2_MP_SUPPORTED);
@@ -642,8 +691,11 @@ static int __cpuidle acpi_idle_enter_bm(struct cpuidle_driver *drv,
 	 */
 	bool dis_bm = pr->flags.bm_control;
 
+<<<<<<< HEAD
 	instrumentation_begin();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* If we can skip BM, demote to a safe state. */
 	if (!cx->bm_sts_skip && acpi_idle_bm_check()) {
 		dis_bm = false;
@@ -665,11 +717,19 @@ static int __cpuidle acpi_idle_enter_bm(struct cpuidle_driver *drv,
 		raw_spin_unlock(&c3_lock);
 	}
 
+<<<<<<< HEAD
 	ct_cpuidle_enter();
 
 	acpi_idle_do_entry(cx);
 
 	ct_cpuidle_exit();
+=======
+	ct_idle_enter();
+
+	acpi_idle_do_entry(cx);
+
+	ct_idle_exit();
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Re-enable bus master arbitration */
 	if (dis_bm) {
@@ -679,8 +739,11 @@ static int __cpuidle acpi_idle_enter_bm(struct cpuidle_driver *drv,
 		raw_spin_unlock(&c3_lock);
 	}
 
+<<<<<<< HEAD
 	instrumentation_end();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return index;
 }
 
@@ -1136,9 +1199,12 @@ static int acpi_processor_get_lpi_info(struct acpi_processor *pr)
 	status = acpi_get_parent(handle, &pr_ahandle);
 	while (ACPI_SUCCESS(status)) {
 		d = acpi_fetch_acpi_dev(pr_ahandle);
+<<<<<<< HEAD
 		if (!d)
 			break;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		handle = pr_ahandle;
 
 		if (strcmp(acpi_device_hid(d), ACPI_PROCESSOR_CONTAINER_HID))
@@ -1223,8 +1289,11 @@ static int acpi_processor_setup_lpi_states(struct acpi_processor *pr)
 		state->target_residency = lpi->min_residency;
 		if (lpi->arch_flags)
 			state->flags |= CPUIDLE_FLAG_TIMER_STOP;
+<<<<<<< HEAD
 		if (i != 0 && lpi->entry_method == ACPI_CSTATE_FFH)
 			state->flags |= CPUIDLE_FLAG_RCU_IDLE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		state->enter = acpi_idle_lpi_enter;
 		drv->safe_state_index = i;
 	}

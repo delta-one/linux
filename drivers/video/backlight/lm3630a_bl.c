@@ -491,7 +491,12 @@ static int lm3630a_parse_node(struct lm3630a_chip *pchip,
 	return ret;
 }
 
+<<<<<<< HEAD
 static int lm3630a_probe(struct i2c_client *client)
+=======
+static int lm3630a_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lm3630a_platform_data *pdata = dev_get_platdata(&client->dev);
 	struct lm3630a_chip *pchip;
@@ -616,7 +621,11 @@ static struct i2c_driver lm3630a_i2c_driver = {
 		   .name = LM3630A_NAME,
 		   .of_match_table = lm3630a_match_table,
 		   },
+<<<<<<< HEAD
 	.probe_new = lm3630a_probe,
+=======
+	.probe = lm3630a_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = lm3630a_remove,
 	.id_table = lm3630a_id,
 };

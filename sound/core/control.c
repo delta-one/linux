@@ -753,6 +753,7 @@ int snd_ctl_rename_id(struct snd_card *card, struct snd_ctl_elem_id *src_id,
 }
 EXPORT_SYMBOL(snd_ctl_rename_id);
 
+<<<<<<< HEAD
 /**
  * snd_ctl_rename - rename the control on the card
  * @card: the card instance
@@ -776,6 +777,8 @@ void snd_ctl_rename(struct snd_card *card, struct snd_kcontrol *kctl,
 }
 EXPORT_SYMBOL(snd_ctl_rename);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef CONFIG_SND_CTL_FAST_LOOKUP
 static struct snd_kcontrol *
 snd_ctl_find_numid_slow(struct snd_card *card, unsigned int numid)
@@ -1203,6 +1206,7 @@ static int snd_ctl_elem_read(struct snd_card *card,
 	const u32 pattern = 0xdeadbeef;
 	int ret;
 
+<<<<<<< HEAD
 	down_read(&card->controls_rwsem);
 	kctl = snd_ctl_find_id(card, &control->id);
 	if (kctl == NULL) {
@@ -1216,6 +1220,16 @@ static int snd_ctl_elem_read(struct snd_card *card,
 		ret = -EPERM;
 		goto unlock;
 	}
+=======
+	kctl = snd_ctl_find_id(card, &control->id);
+	if (kctl == NULL)
+		return -ENOENT;
+
+	index_offset = snd_ctl_get_ioff(kctl, &control->id);
+	vd = &kctl->vd[index_offset];
+	if (!(vd->access & SNDRV_CTL_ELEM_ACCESS_READ) || kctl->get == NULL)
+		return -EPERM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	snd_ctl_build_ioff(&control->id, kctl, index_offset);
 
@@ -1225,7 +1239,11 @@ static int snd_ctl_elem_read(struct snd_card *card,
 	info.id = control->id;
 	ret = __snd_ctl_elem_info(card, kctl, &info, NULL);
 	if (ret < 0)
+<<<<<<< HEAD
 		goto unlock;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	if (!snd_ctl_skip_validation(&info))
@@ -1235,7 +1253,11 @@ static int snd_ctl_elem_read(struct snd_card *card,
 		ret = kctl->get(kctl, control);
 	snd_power_unref(card);
 	if (ret < 0)
+<<<<<<< HEAD
 		goto unlock;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	if (!snd_ctl_skip_validation(&info) &&
 	    sanity_check_elem_value(card, control, &info, pattern) < 0) {
 		dev_err(card->dev,
@@ -1243,11 +1265,16 @@ static int snd_ctl_elem_read(struct snd_card *card,
 			control->id.iface, control->id.device,
 			control->id.subdevice, control->id.name,
 			control->id.index);
+<<<<<<< HEAD
 		ret = -EINVAL;
 		goto unlock;
 	}
 unlock:
 	up_read(&card->controls_rwsem);
+=======
+		return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -1261,7 +1288,13 @@ static int snd_ctl_elem_read_user(struct snd_card *card,
 	if (IS_ERR(control))
 		return PTR_ERR(control);
 
+<<<<<<< HEAD
 	result = snd_ctl_elem_read(card, control);
+=======
+	down_read(&card->controls_rwsem);
+	result = snd_ctl_elem_read(card, control);
+	up_read(&card->controls_rwsem);
+>>>>>>> b7ba80a49124 (Commit)
 	if (result < 0)
 		goto error;
 

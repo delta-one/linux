@@ -29,6 +29,7 @@ MODULE_PARM_DESC(cache_size, "Send and receive side cache size limit (in MB)");
 bool hfi1_can_pin_pages(struct hfi1_devdata *dd, struct mm_struct *mm,
 			u32 nlocked, u32 npages)
 {
+<<<<<<< HEAD
 	unsigned long ulimit_pages;
 	unsigned long cache_limit_pages;
 	unsigned int usr_ctxts;
@@ -75,6 +76,35 @@ bool hfi1_can_pin_pages(struct hfi1_devdata *dd, struct mm_struct *mm,
 		return false;
 
 	return true;
+=======
+	unsigned long ulimit = rlimit(RLIMIT_MEMLOCK), pinned, cache_limit,
+		size = (cache_size * (1UL << 20)); /* convert to bytes */
+	unsigned int usr_ctxts =
+			dd->num_rcv_contexts - dd->first_dyn_alloc_ctxt;
+	bool can_lock = capable(CAP_IPC_LOCK);
+
+	/*
+	 * Calculate per-cache size. The calculation below uses only a quarter
+	 * of the available per-context limit. This leaves space for other
+	 * pinning. Should we worry about shared ctxts?
+	 */
+	cache_limit = (ulimit / usr_ctxts) / 4;
+
+	/* If ulimit isn't set to "unlimited" and is smaller than cache_size. */
+	if (ulimit != (-1UL) && size > cache_limit)
+		size = cache_limit;
+
+	/* Convert to number of pages */
+	size = DIV_ROUND_UP(size, PAGE_SIZE);
+
+	pinned = atomic64_read(&mm->pinned_vm);
+
+	/* First, check the absolute limit against all pinned pages. */
+	if (pinned + npages >= ulimit && !can_lock)
+		return false;
+
+	return ((nlocked + npages) <= size) || can_lock;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int hfi1_acquire_user_pages(struct mm_struct *mm, unsigned long vaddr, size_t npages,

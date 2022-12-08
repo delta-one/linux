@@ -1008,6 +1008,7 @@ static bool hubbub31_verify_allow_pstate_change_high(struct hubbub *hubbub)
 	return false;
 }
 
+<<<<<<< HEAD
 void hubbub31_init(struct hubbub *hubbub)
 {
 	struct dcn20_hubbub *hubbub2 = TO_DCN20_HUBBUB(hubbub);
@@ -1026,6 +1027,8 @@ void hubbub31_init(struct hubbub *hubbub)
 	*/
 	REG_UPDATE(DCHUBBUB_SDPIF_CFG0,	SDPIF_PORT_CONTROL, 1);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct hubbub_funcs hubbub31_funcs = {
 	.update_dchub = hubbub2_update_dchub,
 	.init_dchub_sys_ctx = hubbub31_init_dchub_sys_ctx,

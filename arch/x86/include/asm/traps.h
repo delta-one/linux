@@ -47,6 +47,7 @@ void __noreturn handle_stack_overflow(struct pt_regs *regs,
 				      struct stack_info *info);
 #endif
 
+<<<<<<< HEAD
 static inline void cond_local_irq_enable(struct pt_regs *regs)
 {
 	if (regs->flags & X86_EFLAGS_IF)
@@ -59,4 +60,6 @@ static inline void cond_local_irq_disable(struct pt_regs *regs)
 		local_irq_disable();
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_X86_TRAPS_H */

@@ -46,7 +46,10 @@
 #define CDC_TX_TOP_CSR_SWR_AMIC1_CTL	(0x00D4)
 #define CDC_TX_INP_MUX_ADC_MUXn_CFG0(n)	(0x0100 + 0x8 * n)
 #define CDC_TX_MACRO_SWR_MIC_MUX_SEL_MASK GENMASK(3, 0)
+<<<<<<< HEAD
 #define CDC_TX_MACRO_DMIC_MUX_SEL_MASK GENMASK(7, 4)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CDC_TX_INP_MUX_ADC_MUX0_CFG0	(0x0100)
 #define CDC_TX_INP_MUX_ADC_MUXn_CFG1(n)	(0x0104 + 0x8 * n)
 #define CDC_TX_INP_MUX_ADC_MUX0_CFG1	(0x0104)
@@ -203,7 +206,11 @@
 #define TX_MACRO_AMIC_UNMUTE_DELAY_MS	100
 #define TX_MACRO_DMIC_HPF_DELAY_MS	300
 #define TX_MACRO_AMIC_HPF_DELAY_MS	300
+<<<<<<< HEAD
 #define MCLK_FREQ		19200000
+=======
+#define MCLK_FREQ		9600000
+>>>>>>> b7ba80a49124 (Commit)
 
 enum {
 	TX_MACRO_AIF_INVALID = 0,
@@ -242,7 +249,11 @@ enum {
 
 struct tx_mute_work {
 	struct tx_macro *tx;
+<<<<<<< HEAD
 	u8 decimator;
+=======
+	u32 decimator;
+>>>>>>> b7ba80a49124 (Commit)
 	struct delayed_work dwork;
 };
 
@@ -260,7 +271,11 @@ struct tx_macro {
 	struct tx_mute_work tx_mute_dwork[NUM_DECIMATORS];
 	unsigned long active_ch_mask[TX_MACRO_MAX_DAIS];
 	unsigned long active_ch_cnt[TX_MACRO_MAX_DAIS];
+<<<<<<< HEAD
 	int active_decimator[TX_MACRO_MAX_DAIS];
+=======
+	unsigned long active_decimator[TX_MACRO_MAX_DAIS];
+>>>>>>> b7ba80a49124 (Commit)
 	struct regmap *regmap;
 	struct clk *mclk;
 	struct clk *npl;
@@ -269,6 +284,10 @@ struct tx_macro {
 	struct clk *fsgen;
 	struct clk_hw hw;
 	bool dec_active[NUM_DECIMATORS];
+<<<<<<< HEAD
+=======
+	bool reset_swr;
+>>>>>>> b7ba80a49124 (Commit)
 	int tx_mclk_users;
 	u16 dmic_clk_div;
 	bool bcs_enable;
@@ -635,7 +654,11 @@ exit:
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool is_amic_enabled(struct snd_soc_component *component, u8 decimator)
+=======
+static bool is_amic_enabled(struct snd_soc_component *component, int decimator)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u16 adc_mux_reg, adc_reg, adc_n;
 
@@ -775,10 +798,14 @@ static int tx_macro_put_dec_enum(struct snd_kcontrol *kcontrol,
 	}
 
 	if (val != 0) {
+<<<<<<< HEAD
 		if (widget->shift) { /* MSM DMIC */
 			snd_soc_component_write_field(component, mic_sel_reg,
 						      CDC_TXn_ADC_DMIC_SEL_MASK, 1);
 		} else if (val < 5) {
+=======
+		if (val < 5) {
+>>>>>>> b7ba80a49124 (Commit)
 			snd_soc_component_write_field(component, mic_sel_reg,
 						      CDC_TXn_ADC_DMIC_SEL_MASK, 0);
 		} else {
@@ -826,30 +853,44 @@ static int tx_macro_tx_mixer_put(struct snd_kcontrol *kcontrol,
 	struct tx_macro *tx = snd_soc_component_get_drvdata(component);
 
 	if (enable) {
+<<<<<<< HEAD
 		if (tx->active_decimator[dai_id] == dec_id)
 			return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		set_bit(dec_id, &tx->active_ch_mask[dai_id]);
 		tx->active_ch_cnt[dai_id]++;
 		tx->active_decimator[dai_id] = dec_id;
 	} else {
+<<<<<<< HEAD
 		if (tx->active_decimator[dai_id] == -1)
 			return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		tx->active_ch_cnt[dai_id]--;
 		clear_bit(dec_id, &tx->active_ch_mask[dai_id]);
 		tx->active_decimator[dai_id] = -1;
 	}
 	snd_soc_dapm_mixer_update_power(widget->dapm, kcontrol, enable, update);
 
+<<<<<<< HEAD
 	return 1;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int tx_macro_enable_dec(struct snd_soc_dapm_widget *w,
 			       struct snd_kcontrol *kcontrol, int event)
 {
 	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
+<<<<<<< HEAD
 	u8 decimator;
+=======
+	unsigned int decimator;
+>>>>>>> b7ba80a49124 (Commit)
 	u16 tx_vol_ctl_reg, dec_cfg_reg, hpf_gate_reg, tx_gain_ctl_reg;
 	u8 hpf_cut_off_freq;
 	int hpf_delay = TX_MACRO_DMIC_HPF_DELAY_MS;
@@ -1028,12 +1069,18 @@ static int tx_macro_dec_mode_put(struct snd_kcontrol *kcontrol,
 	int path = e->shift_l;
 	struct tx_macro *tx = snd_soc_component_get_drvdata(component);
 
+<<<<<<< HEAD
 	if (tx->dec_mode[path] == value)
 		return 0;
 
 	tx->dec_mode[path] = value;
 
 	return 1;
+=======
+	tx->dec_mode[path] = value;
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int tx_macro_get_bcs(struct snd_kcontrol *kcontrol,
@@ -1064,8 +1111,12 @@ static int tx_macro_hw_params(struct snd_pcm_substream *substream,
 			      struct snd_soc_dai *dai)
 {
 	struct snd_soc_component *component = dai->component;
+<<<<<<< HEAD
 	u32 sample_rate;
 	u8 decimator;
+=======
+	u32 decimator, sample_rate;
+>>>>>>> b7ba80a49124 (Commit)
 	int tx_fs_rate;
 	struct tx_macro *tx = snd_soc_component_get_drvdata(component);
 
@@ -1129,11 +1180,15 @@ static int tx_macro_digital_mute(struct snd_soc_dai *dai, int mute, int stream)
 {
 	struct snd_soc_component *component = dai->component;
 	struct tx_macro *tx = snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
 	u8 decimator;
 
 	/* active decimator not set yet */
 	if (tx->active_decimator[dai->id] == -1)
 		return 0;
+=======
+	u16 decimator;
+>>>>>>> b7ba80a49124 (Commit)
 
 	decimator = tx->active_decimator[dai->id];
 
@@ -1277,6 +1332,7 @@ static const struct snd_kcontrol_new tx_smic6_mux = SOC_DAPM_ENUM_EXT("tx_smic6"
 static const struct snd_kcontrol_new tx_smic7_mux = SOC_DAPM_ENUM_EXT("tx_smic7", tx_smic7_enum,
 			snd_soc_dapm_get_enum_double, tx_macro_put_dec_enum);
 
+<<<<<<< HEAD
 static const char * const dmic_mux_text[] = {
 	"ZERO", "DMIC0", "DMIC1", "DMIC2", "DMIC3",
 	"DMIC4", "DMIC5", "DMIC6", "DMIC7"
@@ -1323,6 +1379,8 @@ static const struct snd_kcontrol_new tx_dmic6_mux = SOC_DAPM_ENUM_EXT("tx_dmic6"
 static const struct snd_kcontrol_new tx_dmic7_mux = SOC_DAPM_ENUM_EXT("tx_dmic7", tx_dmic7_enum,
 			snd_soc_dapm_get_enum_double, tx_macro_put_dec_enum);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const char * const dec_mode_mux_text[] = {
 	"ADC_DEFAULT", "ADC_LOW_PWR", "ADC_HIGH_PERF",
 };
@@ -1431,6 +1489,7 @@ static const struct snd_soc_dapm_widget tx_macro_dapm_widgets[] = {
 	SND_SOC_DAPM_MUX("TX SMIC MUX6", SND_SOC_NOPM, 0, 0, &tx_smic6_mux),
 	SND_SOC_DAPM_MUX("TX SMIC MUX7", SND_SOC_NOPM, 0, 0, &tx_smic7_mux),
 
+<<<<<<< HEAD
 	SND_SOC_DAPM_MUX("TX DMIC MUX0", SND_SOC_NOPM, 4, 0, &tx_dmic0_mux),
 	SND_SOC_DAPM_MUX("TX DMIC MUX1", SND_SOC_NOPM, 4, 0, &tx_dmic1_mux),
 	SND_SOC_DAPM_MUX("TX DMIC MUX2", SND_SOC_NOPM, 4, 0, &tx_dmic2_mux),
@@ -1440,6 +1499,8 @@ static const struct snd_soc_dapm_widget tx_macro_dapm_widgets[] = {
 	SND_SOC_DAPM_MUX("TX DMIC MUX6", SND_SOC_NOPM, 4, 0, &tx_dmic6_mux),
 	SND_SOC_DAPM_MUX("TX DMIC MUX7", SND_SOC_NOPM, 4, 0, &tx_dmic7_mux),
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SND_SOC_DAPM_INPUT("TX SWR_ADC0"),
 	SND_SOC_DAPM_INPUT("TX SWR_ADC1"),
 	SND_SOC_DAPM_INPUT("TX SWR_ADC2"),
@@ -1452,6 +1513,7 @@ static const struct snd_soc_dapm_widget tx_macro_dapm_widgets[] = {
 	SND_SOC_DAPM_INPUT("TX SWR_DMIC5"),
 	SND_SOC_DAPM_INPUT("TX SWR_DMIC6"),
 	SND_SOC_DAPM_INPUT("TX SWR_DMIC7"),
+<<<<<<< HEAD
 	SND_SOC_DAPM_INPUT("TX DMIC0"),
 	SND_SOC_DAPM_INPUT("TX DMIC1"),
 	SND_SOC_DAPM_INPUT("TX DMIC2"),
@@ -1460,6 +1522,8 @@ static const struct snd_soc_dapm_widget tx_macro_dapm_widgets[] = {
 	SND_SOC_DAPM_INPUT("TX DMIC5"),
 	SND_SOC_DAPM_INPUT("TX DMIC6"),
 	SND_SOC_DAPM_INPUT("TX DMIC7"),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	SND_SOC_DAPM_MUX_E("TX DEC0 MUX", SND_SOC_NOPM,
 			   TX_MACRO_DEC0, 0,
@@ -1563,6 +1627,7 @@ static const struct snd_soc_dapm_route tx_audio_map[] = {
 	{"TX DEC6 MUX", NULL, "TX_MCLK"},
 	{"TX DEC7 MUX", NULL, "TX_MCLK"},
 
+<<<<<<< HEAD
 	{"TX DEC0 MUX", "MSM_DMIC", "TX DMIC MUX0"},
 	{"TX DMIC MUX0", "DMIC0", "TX DMIC0"},
 	{"TX DMIC MUX0", "DMIC1", "TX DMIC1"},
@@ -1573,6 +1638,8 @@ static const struct snd_soc_dapm_route tx_audio_map[] = {
 	{"TX DMIC MUX0", "DMIC6", "TX DMIC6"},
 	{"TX DMIC MUX0", "DMIC7", "TX DMIC7"},
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{"TX DEC0 MUX", "SWR_MIC", "TX SMIC MUX0"},
 	{"TX SMIC MUX0", NULL, "TX_SWR_CLK"},
 	{"TX SMIC MUX0", "ADC0", "TX SWR_ADC0"},
@@ -1588,6 +1655,7 @@ static const struct snd_soc_dapm_route tx_audio_map[] = {
 	{"TX SMIC MUX0", "SWR_DMIC6", "TX SWR_DMIC6"},
 	{"TX SMIC MUX0", "SWR_DMIC7", "TX SWR_DMIC7"},
 
+<<<<<<< HEAD
 	{"TX DEC1 MUX", "MSM_DMIC", "TX DMIC MUX1"},
 	{"TX DMIC MUX1", "DMIC0", "TX DMIC0"},
 	{"TX DMIC MUX1", "DMIC1", "TX DMIC1"},
@@ -1598,6 +1666,8 @@ static const struct snd_soc_dapm_route tx_audio_map[] = {
 	{"TX DMIC MUX1", "DMIC6", "TX DMIC6"},
 	{"TX DMIC MUX1", "DMIC7", "TX DMIC7"},
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{"TX DEC1 MUX", "SWR_MIC", "TX SMIC MUX1"},
 	{"TX SMIC MUX1", NULL, "TX_SWR_CLK"},
 	{"TX SMIC MUX1", "ADC0", "TX SWR_ADC0"},
@@ -1613,6 +1683,7 @@ static const struct snd_soc_dapm_route tx_audio_map[] = {
 	{"TX SMIC MUX1", "SWR_DMIC6", "TX SWR_DMIC6"},
 	{"TX SMIC MUX1", "SWR_DMIC7", "TX SWR_DMIC7"},
 
+<<<<<<< HEAD
 	{"TX DEC2 MUX", "MSM_DMIC", "TX DMIC MUX2"},
 	{"TX DMIC MUX2", "DMIC0", "TX DMIC0"},
 	{"TX DMIC MUX2", "DMIC1", "TX DMIC1"},
@@ -1623,6 +1694,8 @@ static const struct snd_soc_dapm_route tx_audio_map[] = {
 	{"TX DMIC MUX2", "DMIC6", "TX DMIC6"},
 	{"TX DMIC MUX2", "DMIC7", "TX DMIC7"},
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{"TX DEC2 MUX", "SWR_MIC", "TX SMIC MUX2"},
 	{"TX SMIC MUX2", NULL, "TX_SWR_CLK"},
 	{"TX SMIC MUX2", "ADC0", "TX SWR_ADC0"},
@@ -1638,6 +1711,7 @@ static const struct snd_soc_dapm_route tx_audio_map[] = {
 	{"TX SMIC MUX2", "SWR_DMIC6", "TX SWR_DMIC6"},
 	{"TX SMIC MUX2", "SWR_DMIC7", "TX SWR_DMIC7"},
 
+<<<<<<< HEAD
 	{"TX DEC3 MUX", "MSM_DMIC", "TX DMIC MUX3"},
 	{"TX DMIC MUX3", "DMIC0", "TX DMIC0"},
 	{"TX DMIC MUX3", "DMIC1", "TX DMIC1"},
@@ -1648,6 +1722,8 @@ static const struct snd_soc_dapm_route tx_audio_map[] = {
 	{"TX DMIC MUX3", "DMIC6", "TX DMIC6"},
 	{"TX DMIC MUX3", "DMIC7", "TX DMIC7"},
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{"TX DEC3 MUX", "SWR_MIC", "TX SMIC MUX3"},
 	{"TX SMIC MUX3", NULL, "TX_SWR_CLK"},
 	{"TX SMIC MUX3", "ADC0", "TX SWR_ADC0"},
@@ -1663,6 +1739,7 @@ static const struct snd_soc_dapm_route tx_audio_map[] = {
 	{"TX SMIC MUX3", "SWR_DMIC6", "TX SWR_DMIC6"},
 	{"TX SMIC MUX3", "SWR_DMIC7", "TX SWR_DMIC7"},
 
+<<<<<<< HEAD
 	{"TX DEC4 MUX", "MSM_DMIC", "TX DMIC MUX4"},
 	{"TX DMIC MUX4", "DMIC0", "TX DMIC0"},
 	{"TX DMIC MUX4", "DMIC1", "TX DMIC1"},
@@ -1673,6 +1750,8 @@ static const struct snd_soc_dapm_route tx_audio_map[] = {
 	{"TX DMIC MUX4", "DMIC6", "TX DMIC6"},
 	{"TX DMIC MUX4", "DMIC7", "TX DMIC7"},
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{"TX DEC4 MUX", "SWR_MIC", "TX SMIC MUX4"},
 	{"TX SMIC MUX4", NULL, "TX_SWR_CLK"},
 	{"TX SMIC MUX4", "ADC0", "TX SWR_ADC0"},
@@ -1688,6 +1767,7 @@ static const struct snd_soc_dapm_route tx_audio_map[] = {
 	{"TX SMIC MUX4", "SWR_DMIC6", "TX SWR_DMIC6"},
 	{"TX SMIC MUX4", "SWR_DMIC7", "TX SWR_DMIC7"},
 
+<<<<<<< HEAD
 	{"TX DEC5 MUX", "MSM_DMIC", "TX DMIC MUX5"},
 	{"TX DMIC MUX5", "DMIC0", "TX DMIC0"},
 	{"TX DMIC MUX5", "DMIC1", "TX DMIC1"},
@@ -1698,6 +1778,8 @@ static const struct snd_soc_dapm_route tx_audio_map[] = {
 	{"TX DMIC MUX5", "DMIC6", "TX DMIC6"},
 	{"TX DMIC MUX5", "DMIC7", "TX DMIC7"},
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{"TX DEC5 MUX", "SWR_MIC", "TX SMIC MUX5"},
 	{"TX SMIC MUX5", NULL, "TX_SWR_CLK"},
 	{"TX SMIC MUX5", "ADC0", "TX SWR_ADC0"},
@@ -1713,6 +1795,7 @@ static const struct snd_soc_dapm_route tx_audio_map[] = {
 	{"TX SMIC MUX5", "SWR_DMIC6", "TX SWR_DMIC6"},
 	{"TX SMIC MUX5", "SWR_DMIC7", "TX SWR_DMIC7"},
 
+<<<<<<< HEAD
 	{"TX DEC6 MUX", "MSM_DMIC", "TX DMIC MUX6"},
 	{"TX DMIC MUX6", "DMIC0", "TX DMIC0"},
 	{"TX DMIC MUX6", "DMIC1", "TX DMIC1"},
@@ -1723,6 +1806,8 @@ static const struct snd_soc_dapm_route tx_audio_map[] = {
 	{"TX DMIC MUX6", "DMIC6", "TX DMIC6"},
 	{"TX DMIC MUX6", "DMIC7", "TX DMIC7"},
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{"TX DEC6 MUX", "SWR_MIC", "TX SMIC MUX6"},
 	{"TX SMIC MUX6", NULL, "TX_SWR_CLK"},
 	{"TX SMIC MUX6", "ADC0", "TX SWR_ADC0"},
@@ -1738,6 +1823,7 @@ static const struct snd_soc_dapm_route tx_audio_map[] = {
 	{"TX SMIC MUX6", "SWR_DMIC6", "TX SWR_DMIC6"},
 	{"TX SMIC MUX6", "SWR_DMIC7", "TX SWR_DMIC7"},
 
+<<<<<<< HEAD
 	{"TX DEC7 MUX", "MSM_DMIC", "TX DMIC MUX7"},
 	{"TX DMIC MUX7", "DMIC0", "TX DMIC0"},
 	{"TX DMIC MUX7", "DMIC1", "TX DMIC1"},
@@ -1748,6 +1834,8 @@ static const struct snd_soc_dapm_route tx_audio_map[] = {
 	{"TX DMIC MUX7", "DMIC6", "TX DMIC6"},
 	{"TX DMIC MUX7", "DMIC7", "TX DMIC7"},
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{"TX DEC7 MUX", "SWR_MIC", "TX SMIC MUX7"},
 	{"TX SMIC MUX7", NULL, "TX_SWR_CLK"},
 	{"TX SMIC MUX7", "ADC0", "TX SWR_ADC0"},
@@ -1862,10 +1950,25 @@ static int swclk_gate_enable(struct clk_hw *hw)
 	}
 
 	tx_macro_mclk_enable(tx, true);
+<<<<<<< HEAD
+=======
+	if (tx->reset_swr)
+		regmap_update_bits(regmap, CDC_TX_CLK_RST_CTRL_SWR_CONTROL,
+				   CDC_TX_SWR_RESET_MASK,
+				   CDC_TX_SWR_RESET_ENABLE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	regmap_update_bits(regmap, CDC_TX_CLK_RST_CTRL_SWR_CONTROL,
 			   CDC_TX_SWR_CLK_EN_MASK,
 			   CDC_TX_SWR_CLK_ENABLE);
+<<<<<<< HEAD
+=======
+	if (tx->reset_swr)
+		regmap_update_bits(regmap, CDC_TX_CLK_RST_CTRL_SWR_CONTROL,
+				   CDC_TX_SWR_RESET_MASK, 0x0);
+	tx->reset_swr = false;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -2006,11 +2109,19 @@ static int tx_macro_probe(struct platform_device *pdev)
 
 	dev_set_drvdata(dev, tx);
 
+<<<<<<< HEAD
+=======
+	tx->reset_swr = true;
+>>>>>>> b7ba80a49124 (Commit)
 	tx->dev = dev;
 
 	/* set MCLK and NPL rates */
 	clk_set_rate(tx->mclk, MCLK_FREQ);
+<<<<<<< HEAD
 	clk_set_rate(tx->npl, MCLK_FREQ);
+=======
+	clk_set_rate(tx->npl, 2 * MCLK_FREQ);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = clk_prepare_enable(tx->macro);
 	if (ret)
@@ -2032,6 +2143,7 @@ static int tx_macro_probe(struct platform_device *pdev)
 	if (ret)
 		goto err_fsgen;
 
+<<<<<<< HEAD
 	/* reset soundwire block */
 	regmap_update_bits(tx->regmap, CDC_TX_CLK_RST_CTRL_SWR_CONTROL,
 			   CDC_TX_SWR_RESET_MASK, CDC_TX_SWR_RESET_ENABLE);
@@ -2041,6 +2153,11 @@ static int tx_macro_probe(struct platform_device *pdev)
 			   CDC_TX_SWR_CLK_ENABLE);
 	regmap_update_bits(tx->regmap, CDC_TX_CLK_RST_CTRL_SWR_CONTROL,
 			   CDC_TX_SWR_RESET_MASK, 0x0);
+=======
+	ret = tx_macro_register_mclk_output(tx);
+	if (ret)
+		goto err_clkout;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = devm_snd_soc_register_component(dev, &tx_macro_component_drv,
 					      tx_macro_dai,
@@ -2054,10 +2171,13 @@ static int tx_macro_probe(struct platform_device *pdev)
 	pm_runtime_set_active(dev);
 	pm_runtime_enable(dev);
 
+<<<<<<< HEAD
 	ret = tx_macro_register_mclk_output(tx);
 	if (ret)
 		goto err_clkout;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_clkout:
@@ -2076,7 +2196,11 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void tx_macro_remove(struct platform_device *pdev)
+=======
+static int tx_macro_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tx_macro *tx = dev_get_drvdata(&pdev->dev);
 
@@ -2087,6 +2211,11 @@ static void tx_macro_remove(struct platform_device *pdev)
 	clk_disable_unprepare(tx->fsgen);
 
 	lpass_macro_pds_exit(tx->pds);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused tx_macro_runtime_suspend(struct device *dev)
@@ -2096,9 +2225,15 @@ static int __maybe_unused tx_macro_runtime_suspend(struct device *dev)
 	regcache_cache_only(tx->regmap, true);
 	regcache_mark_dirty(tx->regmap);
 
+<<<<<<< HEAD
 	clk_disable_unprepare(tx->fsgen);
 	clk_disable_unprepare(tx->npl);
 	clk_disable_unprepare(tx->mclk);
+=======
+	clk_disable_unprepare(tx->mclk);
+	clk_disable_unprepare(tx->npl);
+	clk_disable_unprepare(tx->fsgen);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -2128,6 +2263,10 @@ static int __maybe_unused tx_macro_runtime_resume(struct device *dev)
 
 	regcache_cache_only(tx->regmap, false);
 	regcache_sync(tx->regmap);
+<<<<<<< HEAD
+=======
+	tx->reset_swr = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 err_fsgen:
@@ -2145,8 +2284,11 @@ static const struct dev_pm_ops tx_macro_pm_ops = {
 static const struct of_device_id tx_macro_dt_match[] = {
 	{ .compatible = "qcom,sc7280-lpass-tx-macro" },
 	{ .compatible = "qcom,sm8250-lpass-tx-macro" },
+<<<<<<< HEAD
 	{ .compatible = "qcom,sm8450-lpass-tx-macro" },
 	{ .compatible = "qcom,sc8280xp-lpass-tx-macro" },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(of, tx_macro_dt_match);
@@ -2158,7 +2300,11 @@ static struct platform_driver tx_macro_driver = {
 		.pm = &tx_macro_pm_ops,
 	},
 	.probe = tx_macro_probe,
+<<<<<<< HEAD
 	.remove_new = tx_macro_remove,
+=======
+	.remove = tx_macro_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(tx_macro_driver);

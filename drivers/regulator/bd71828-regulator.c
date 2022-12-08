@@ -750,20 +750,38 @@ static int bd71828_probe(struct platform_device *pdev)
 		rd = &bd71828_rdata[i];
 		rdev = devm_regulator_register(&pdev->dev,
 					       &rd->desc, &config);
+<<<<<<< HEAD
 		if (IS_ERR(rdev))
 			return dev_err_probe(&pdev->dev, PTR_ERR(rdev),
 					     "failed to register %s regulator\n",
 					     rd->desc.name);
 
+=======
+		if (IS_ERR(rdev)) {
+			dev_err(&pdev->dev,
+				"failed to register %s regulator\n",
+				rd->desc.name);
+			return PTR_ERR(rdev);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		for (j = 0; j < rd->reg_init_amnt; j++) {
 			ret = regmap_update_bits(config.regmap,
 						 rd->reg_inits[j].reg,
 						 rd->reg_inits[j].mask,
 						 rd->reg_inits[j].val);
+<<<<<<< HEAD
 			if (ret)
 				return dev_err_probe(&pdev->dev, ret,
 						     "regulator %s init failed\n",
 						     rd->desc.name);
+=======
+			if (ret) {
+				dev_err(&pdev->dev,
+					"regulator %s init failed\n",
+					rd->desc.name);
+				return ret;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 	return 0;
@@ -771,8 +789,12 @@ static int bd71828_probe(struct platform_device *pdev)
 
 static struct platform_driver bd71828_regulator = {
 	.driver = {
+<<<<<<< HEAD
 		.name = "bd71828-pmic",
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+		.name = "bd71828-pmic"
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = bd71828_probe,
 };

@@ -28,7 +28,10 @@
 #include <sound/core.h>
 #include <sound/pcm.h>
 #include <sound/pcm_params.h>
+<<<<<<< HEAD
 #include <sound/sdw.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <sound/soc.h>
 #include <sound/soc-dapm.h>
 #include <sound/initval.h>
@@ -204,12 +207,21 @@ static int rt715_set_main_switch_put(struct snd_kcontrol *kcontrol,
 	struct snd_soc_dapm_context *dapm =
 		snd_soc_component_get_dapm(component);
 	struct rt715_priv *rt715 = snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
 	static const unsigned int capture_reg_H[] = {
 		RT715_SET_GAIN_MIC_ADC_H, RT715_SET_GAIN_LINE_ADC_H,
 		RT715_SET_GAIN_MIX_ADC_H, RT715_SET_GAIN_MIX_ADC2_H };
 	static const unsigned int capture_reg_L[] = {
 		RT715_SET_GAIN_MIC_ADC_L, RT715_SET_GAIN_LINE_ADC_L,
 		RT715_SET_GAIN_MIX_ADC_L, RT715_SET_GAIN_MIX_ADC2_L };
+=======
+	unsigned int capture_reg_H[] = {RT715_SET_GAIN_MIC_ADC_H,
+		RT715_SET_GAIN_LINE_ADC_H, RT715_SET_GAIN_MIX_ADC_H,
+		RT715_SET_GAIN_MIX_ADC2_H};
+	unsigned int capture_reg_L[] = {RT715_SET_GAIN_MIC_ADC_L,
+		RT715_SET_GAIN_LINE_ADC_L, RT715_SET_GAIN_MIX_ADC_L,
+		RT715_SET_GAIN_MIX_ADC2_L};
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int addr_h, addr_l, val_h = 0x0, val_ll, val_lr;
 	unsigned int k_shift = RT715_DIR_IN_SFT, k_changed = 0;
 	unsigned int read_ll, read_rl, i, j, loop_cnt = 4;
@@ -284,12 +296,21 @@ static int rt715_set_main_switch_get(struct snd_kcontrol *kcontrol,
 {
 	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
 	struct rt715_priv *rt715 = snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
 	static const unsigned int capture_reg_H[] = {
 		RT715_SET_GAIN_MIC_ADC_H, RT715_SET_GAIN_LINE_ADC_H,
 		RT715_SET_GAIN_MIX_ADC_H, RT715_SET_GAIN_MIX_ADC2_H };
 	static const unsigned int capture_reg_L[] = {
 		RT715_SET_GAIN_MIC_ADC_L, RT715_SET_GAIN_LINE_ADC_L,
 		RT715_SET_GAIN_MIX_ADC_L, RT715_SET_GAIN_MIX_ADC2_L };
+=======
+	unsigned int capture_reg_H[] = {RT715_SET_GAIN_MIC_ADC_H,
+		RT715_SET_GAIN_LINE_ADC_H, RT715_SET_GAIN_MIX_ADC_H,
+		RT715_SET_GAIN_MIX_ADC2_H};
+	unsigned int capture_reg_L[] = {RT715_SET_GAIN_MIC_ADC_L,
+		RT715_SET_GAIN_LINE_ADC_L, RT715_SET_GAIN_MIX_ADC_L,
+		RT715_SET_GAIN_MIX_ADC2_L};
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int addr_h, addr_l, val_h = 0x0, i, loop_cnt = 4;
 	unsigned int read_ll, read_rl;
 
@@ -312,12 +333,21 @@ static int rt715_set_main_vol_put(struct snd_kcontrol *kcontrol,
 	struct snd_soc_dapm_context *dapm =
 		snd_soc_component_get_dapm(component);
 	struct rt715_priv *rt715 = snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
 	static const unsigned int capture_reg_H[] = {
 		RT715_SET_GAIN_MIC_ADC_H, RT715_SET_GAIN_LINE_ADC_H,
 		RT715_SET_GAIN_MIX_ADC_H, RT715_SET_GAIN_MIX_ADC2_H };
 	static const unsigned int capture_reg_L[] = {
 		RT715_SET_GAIN_MIC_ADC_L, RT715_SET_GAIN_LINE_ADC_L,
 		RT715_SET_GAIN_MIX_ADC_L, RT715_SET_GAIN_MIX_ADC2_L};
+=======
+	unsigned int capture_reg_H[] = {RT715_SET_GAIN_MIC_ADC_H,
+		RT715_SET_GAIN_LINE_ADC_H, RT715_SET_GAIN_MIX_ADC_H,
+		RT715_SET_GAIN_MIX_ADC2_H};
+	unsigned int capture_reg_L[] = {RT715_SET_GAIN_MIC_ADC_L,
+		RT715_SET_GAIN_LINE_ADC_L, RT715_SET_GAIN_MIX_ADC_L,
+		RT715_SET_GAIN_MIX_ADC2_L};
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int addr_h, addr_l, val_h = 0x0, val_ll, val_lr;
 	unsigned int read_ll, read_rl, i, j, loop_cnt = 4, k_changed = 0;
 	unsigned int k_shift = RT715_DIR_IN_SFT, k_max = 0x3f;
@@ -393,12 +423,21 @@ static int rt715_set_main_vol_get(struct snd_kcontrol *kcontrol,
 {
 	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
 	struct rt715_priv *rt715 = snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
 	static const unsigned int capture_reg_H[] = {
 		RT715_SET_GAIN_MIC_ADC_H, RT715_SET_GAIN_LINE_ADC_H,
 		RT715_SET_GAIN_MIX_ADC_H, RT715_SET_GAIN_MIX_ADC2_H };
 	static const unsigned int capture_reg_L[] = {
 		RT715_SET_GAIN_MIC_ADC_L, RT715_SET_GAIN_LINE_ADC_L,
 		RT715_SET_GAIN_MIX_ADC_L, RT715_SET_GAIN_MIX_ADC2_L };
+=======
+	unsigned int capture_reg_H[] = {RT715_SET_GAIN_MIC_ADC_H,
+		RT715_SET_GAIN_LINE_ADC_H, RT715_SET_GAIN_MIX_ADC_H,
+		RT715_SET_GAIN_MIX_ADC2_H};
+	unsigned int capture_reg_L[] = {RT715_SET_GAIN_MIC_ADC_L,
+		RT715_SET_GAIN_LINE_ADC_L, RT715_SET_GAIN_MIX_ADC_L,
+		RT715_SET_GAIN_MIX_ADC2_L};
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int addr_h, addr_l, val_h = 0x0, i, loop_cnt = 4;
 	unsigned int read_ll, read_rl;
 
@@ -777,7 +816,14 @@ static int rt715_set_sdw_stream(struct snd_soc_dai *dai, void *sdw_stream,
 	stream->sdw_stream = sdw_stream;
 
 	/* Use tx_mask or rx_mask to configure stream tag and set dma_data */
+<<<<<<< HEAD
 	snd_soc_dai_dma_data_set(dai, direction, stream);
+=======
+	if (direction == SNDRV_PCM_STREAM_PLAYBACK)
+		dai->playback_dma_data = stream;
+	else
+		dai->capture_dma_data = stream;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -799,10 +845,18 @@ static int rt715_pcm_hw_params(struct snd_pcm_substream *substream,
 {
 	struct snd_soc_component *component = dai->component;
 	struct rt715_priv *rt715 = snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
 	struct sdw_stream_config stream_config = {0};
 	struct sdw_port_config port_config = {0};
 	struct sdw_stream_data *stream;
 	int retval;
+=======
+	struct sdw_stream_config stream_config;
+	struct sdw_port_config port_config;
+	enum sdw_data_direction direction;
+	struct sdw_stream_data *stream;
+	int retval, port, num_channels;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int val = 0;
 
 	stream = snd_soc_dai_get_dma_data(dai, substream);
@@ -813,6 +867,7 @@ static int rt715_pcm_hw_params(struct snd_pcm_substream *substream,
 	if (!rt715->slave)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	snd_sdw_params_to_config(substream, params, &stream_config, &port_config);
 
 	switch (dai->id) {
@@ -822,6 +877,17 @@ static int rt715_pcm_hw_params(struct snd_pcm_substream *substream,
 		break;
 	case RT715_AIF2:
 		port_config.num = 4;
+=======
+	switch (dai->id) {
+	case RT715_AIF1:
+		direction = SDW_DATA_DIR_TX;
+		port = 6;
+		rt715_index_write(rt715->regmap, RT715_SDW_INPUT_SEL, 0xa500);
+		break;
+	case RT715_AIF2:
+		direction = SDW_DATA_DIR_TX;
+		port = 4;
+>>>>>>> b7ba80a49124 (Commit)
 		rt715_index_write(rt715->regmap, RT715_SDW_INPUT_SEL, 0xa000);
 		break;
 	default:
@@ -829,6 +895,18 @@ static int rt715_pcm_hw_params(struct snd_pcm_substream *substream,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	stream_config.frame_rate =  params_rate(params);
+	stream_config.ch_count = params_channels(params);
+	stream_config.bps = snd_pcm_format_width(params_format(params));
+	stream_config.direction = direction;
+
+	num_channels = params_channels(params);
+	port_config.ch_mask = (1 << (num_channels)) - 1;
+	port_config.num = port;
+
+>>>>>>> b7ba80a49124 (Commit)
 	retval = sdw_stream_add_slave(rt715->slave, &stream_config,
 					&port_config, 1, stream->sdw_stream);
 	if (retval) {

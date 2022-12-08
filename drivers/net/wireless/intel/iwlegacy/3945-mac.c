@@ -1202,6 +1202,11 @@ il3945_rx_handle(struct il_priv *il)
 		D_RX("r = %d, i = %d\n", r, i);
 
 	while (i != r) {
+<<<<<<< HEAD
+=======
+		int len;
+
+>>>>>>> b7ba80a49124 (Commit)
 		rxb = rxq->queue[i];
 
 		/* If an RXB doesn't have a Rx queue slot associated with it,
@@ -1215,6 +1220,13 @@ il3945_rx_handle(struct il_priv *il)
 			       PAGE_SIZE << il->hw_params.rx_page_order,
 			       DMA_FROM_DEVICE);
 		pkt = rxb_addr(rxb);
+<<<<<<< HEAD
+=======
+
+		len = le32_to_cpu(pkt->len_n_flags) & IL_RX_FRAME_SIZE_MSK;
+		len += sizeof(u32);	/* account for status word */
+
+>>>>>>> b7ba80a49124 (Commit)
 		reclaim = il_need_reclaim(il, pkt);
 
 		/* Based on type of command response or notification,
@@ -3372,12 +3384,19 @@ static DEVICE_ATTR(dump_errors, 0200, NULL, il3945_dump_error_log);
  *
  *****************************************************************************/
 
+<<<<<<< HEAD
 static int
 il3945_setup_deferred_work(struct il_priv *il)
 {
 	il->workqueue = create_singlethread_workqueue(DRV_NAME);
 	if (!il->workqueue)
 		return -ENOMEM;
+=======
+static void
+il3945_setup_deferred_work(struct il_priv *il)
+{
+	il->workqueue = create_singlethread_workqueue(DRV_NAME);
+>>>>>>> b7ba80a49124 (Commit)
 
 	init_waitqueue_head(&il->wait_command_queue);
 
@@ -3394,8 +3413,11 @@ il3945_setup_deferred_work(struct il_priv *il)
 	timer_setup(&il->watchdog, il_bg_watchdog, 0);
 
 	tasklet_setup(&il->irq_tasklet, il3945_irq_tasklet);
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -3433,7 +3455,10 @@ static const struct attribute_group il3945_attribute_group = {
 
 static struct ieee80211_ops il3945_mac_ops __ro_after_init = {
 	.tx = il3945_mac_tx,
+<<<<<<< HEAD
 	.wake_tx_queue = ieee80211_handle_wake_tx_queue,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.start = il3945_mac_start,
 	.stop = il3945_mac_stop,
 	.add_interface = il_mac_add_interface,
@@ -3716,10 +3741,14 @@ il3945_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	}
 
 	il_set_rxon_channel(il, &il->bands[NL80211_BAND_2GHZ].channels[5]);
+<<<<<<< HEAD
 	err = il3945_setup_deferred_work(il);
 	if (err)
 		goto out_remove_sysfs;
 
+=======
+	il3945_setup_deferred_work(il);
+>>>>>>> b7ba80a49124 (Commit)
 	il3945_setup_handlers(il);
 	il_power_initialize(il);
 
@@ -3731,7 +3760,11 @@ il3945_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 
 	err = il3945_setup_mac(il);
 	if (err)
+<<<<<<< HEAD
 		goto out_destroy_workqueue;
+=======
+		goto out_remove_sysfs;
+>>>>>>> b7ba80a49124 (Commit)
 
 	il_dbgfs_register(il, DRV_NAME);
 
@@ -3740,10 +3773,16 @@ il3945_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 
 	return 0;
 
+<<<<<<< HEAD
 out_destroy_workqueue:
 	destroy_workqueue(il->workqueue);
 	il->workqueue = NULL;
 out_remove_sysfs:
+=======
+out_remove_sysfs:
+	destroy_workqueue(il->workqueue);
+	il->workqueue = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	sysfs_remove_group(&pdev->dev.kobj, &il3945_attribute_group);
 out_release_irq:
 	free_irq(il->pci_dev->irq, il);

@@ -29,7 +29,10 @@
 #include "dcn321_fpu.h"
 #include "dcn32/dcn32_resource.h"
 #include "dcn321/dcn321_resource.h"
+<<<<<<< HEAD
 #include "dml/dcn32/display_mode_vba_util_32.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DCN3_2_DEFAULT_DET_SIZE 256
 
@@ -120,15 +123,26 @@ struct _vcs_dpi_soc_bounding_box_st dcn3_21_soc = {
 		},
 	},
 	.num_states = 1,
+<<<<<<< HEAD
 	.sr_exit_time_us = 19.95,
 	.sr_enter_plus_exit_time_us = 24.36,
+=======
+	.sr_exit_time_us = 12.36,
+	.sr_enter_plus_exit_time_us = 16.72,
+>>>>>>> b7ba80a49124 (Commit)
 	.sr_exit_z8_time_us = 285.0,
 	.sr_enter_plus_exit_z8_time_us = 320,
 	.writeback_latency_us = 12.0,
 	.round_trip_ping_latency_dcfclk_cycles = 263,
+<<<<<<< HEAD
 	.urgent_latency_pixel_data_only_us = 4,
 	.urgent_latency_pixel_mixed_with_vm_data_us = 4,
 	.urgent_latency_vm_data_only_us = 4,
+=======
+	.urgent_latency_pixel_data_only_us = 4.0,
+	.urgent_latency_pixel_mixed_with_vm_data_us = 4.0,
+	.urgent_latency_vm_data_only_us = 4.0,
+>>>>>>> b7ba80a49124 (Commit)
 	.fclk_change_latency_us = 20,
 	.usr_retraining_latency_us = 2,
 	.smn_latency_us = 2,
@@ -136,7 +150,11 @@ struct _vcs_dpi_soc_bounding_box_st dcn3_21_soc = {
 	.urgent_out_of_order_return_per_channel_pixel_only_bytes = 4096,
 	.urgent_out_of_order_return_per_channel_pixel_and_vm_bytes = 4096,
 	.urgent_out_of_order_return_per_channel_vm_only_bytes = 4096,
+<<<<<<< HEAD
 	.pct_ideal_sdp_bw_after_urgent = 90.0,
+=======
+	.pct_ideal_sdp_bw_after_urgent = 100.0,
+>>>>>>> b7ba80a49124 (Commit)
 	.pct_ideal_fabric_bw_after_urgent = 67.0,
 	.pct_ideal_dram_sdp_bw_after_urgent_pixel_only = 20.0,
 	.pct_ideal_dram_sdp_bw_after_urgent_pixel_and_vm = 60.0, // N/A, for now keep as is until DML implemented
@@ -156,7 +174,11 @@ struct _vcs_dpi_soc_bounding_box_st dcn3_21_soc = {
 	.dispclk_dppclk_vco_speed_mhz = 4300.0,
 	.do_urgent_latency_adjustment = true,
 	.urgent_latency_adjustment_fabric_clock_component_us = 1.0,
+<<<<<<< HEAD
 	.urgent_latency_adjustment_fabric_clock_reference_mhz = 3000,
+=======
+	.urgent_latency_adjustment_fabric_clock_reference_mhz = 1000,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void get_optimal_ntuple(struct _vcs_dpi_voltage_scaling_st *entry)
@@ -294,9 +316,12 @@ static int build_synthetic_soc_states(struct clk_bw_params *bw_params,
 			num_dcfclk_dpms++;
 	}
 
+<<<<<<< HEAD
 	if (num_dcfclk_dpms > 0 && bw_params->clk_table.entries[0].fclk_mhz > min_fclk_mhz)
 		min_fclk_mhz = bw_params->clk_table.entries[0].fclk_mhz;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!max_dcfclk_mhz || !max_dispclk_mhz || !max_dtbclk_mhz)
 		return -1;
 
@@ -405,6 +430,10 @@ static int build_synthetic_soc_states(struct clk_bw_params *bw_params,
 		for (i = *num_entries - 1; i >= 0 ; i--) {
 			if (table[i].fabricclk_mhz < min_fclk_mhz) {
 				table[i].fabricclk_mhz = min_fclk_mhz;
+<<<<<<< HEAD
+=======
+				break;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 	}
@@ -413,6 +442,10 @@ static int build_synthetic_soc_states(struct clk_bw_params *bw_params,
 	for (i = *num_entries - 1; i >= 0 ; i--) {
 		if (table[i].dcfclk_mhz < min_dcfclk_mhz) {
 			table[i].dcfclk_mhz = min_dcfclk_mhz;
+<<<<<<< HEAD
+=======
+			break;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -535,6 +568,7 @@ void dcn321_update_bw_bounding_box_fpu(struct dc *dc, struct clk_bw_params *bw_p
 		}
 
 		/* Override from VBIOS for num_chan */
+<<<<<<< HEAD
 		if (dc->ctx->dc_bios->vram_info.num_chans) {
 			dcn3_21_soc.num_chans = dc->ctx->dc_bios->vram_info.num_chans;
 			dcn3_21_soc.mall_allocated_for_dcn_mbytes = (double)(dcn32_calc_num_avail_chans_for_mall(dc,
@@ -550,6 +584,16 @@ void dcn321_update_bw_bounding_box_fpu(struct dc *dc, struct clk_bw_params *bw_p
 
 	dcn3_21_ip.min_prefetch_in_strobe_us = dc->debug.min_prefetch_in_strobe_ns / 1000.0;
 
+=======
+		if (dc->ctx->dc_bios->vram_info.num_chans)
+			dcn3_21_soc.num_chans = dc->ctx->dc_bios->vram_info.num_chans;
+
+		if (dc->ctx->dc_bios->vram_info.dram_channel_width_bytes)
+			dcn3_21_soc.dram_channel_width_bytes = dc->ctx->dc_bios->vram_info.dram_channel_width_bytes;
+
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Override dispclk_dppclk_vco_speed_mhz from Clk Mgr */
 	dcn3_21_soc.dispclk_dppclk_vco_speed_mhz = dc->clk_mgr->dentist_vco_freq_khz / 1000.0;
 	dc->dml.soc.dispclk_dppclk_vco_speed_mhz = dc->clk_mgr->dentist_vco_freq_khz / 1000.0;

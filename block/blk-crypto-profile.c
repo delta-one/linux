@@ -32,7 +32,10 @@
 #include <linux/wait.h>
 #include <linux/blkdev.h>
 #include <linux/blk-integrity.h>
+<<<<<<< HEAD
 #include "blk-crypto-internal.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct blk_crypto_keyslot {
 	atomic_t slot_refs;
@@ -227,13 +230,22 @@ EXPORT_SYMBOL_GPL(blk_crypto_keyslot_index);
  * @profile: the crypto profile of the device the key will be used on
  * @key: the key that will be used
  * @slot_ptr: If a keyslot is allocated, an opaque pointer to the keyslot struct
+<<<<<<< HEAD
  *	      will be stored here.  blk_crypto_put_keyslot() must be called
  *	      later to release it.  Otherwise, NULL will be stored here.
+=======
+ *	      will be stored here; otherwise NULL will be stored here.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * If the device has keyslots, this gets a keyslot that's been programmed with
  * the specified key.  If the key is already in a slot, this reuses it;
  * otherwise this waits for a slot to become idle and programs the key into it.
  *
+<<<<<<< HEAD
+=======
+ * This must be paired with a call to blk_crypto_put_keyslot().
+ *
+>>>>>>> b7ba80a49124 (Commit)
  * Context: Process context. Takes and releases profile->lock.
  * Return: BLK_STS_OK on success, meaning that either a keyslot was allocated or
  *	   one wasn't needed; or a blk_status_t error on failure.
@@ -311,15 +323,30 @@ success:
 
 /**
  * blk_crypto_put_keyslot() - Release a reference to a keyslot
+<<<<<<< HEAD
  * @slot: The keyslot to release the reference of
+=======
+ * @slot: The keyslot to release the reference of (may be NULL).
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Context: Any context.
  */
 void blk_crypto_put_keyslot(struct blk_crypto_keyslot *slot)
 {
+<<<<<<< HEAD
 	struct blk_crypto_profile *profile = slot->profile;
 	unsigned long flags;
 
+=======
+	struct blk_crypto_profile *profile;
+	unsigned long flags;
+
+	if (!slot)
+		return;
+
+	profile = slot->profile;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (atomic_dec_and_lock_irqsave(&slot->slot_refs,
 					&profile->idle_slots_lock, flags)) {
 		list_add_tail(&slot->idle_slot_node, &profile->idle_slots);
@@ -348,16 +375,39 @@ bool __blk_crypto_cfg_supported(struct blk_crypto_profile *profile,
 	return true;
 }
 
+<<<<<<< HEAD
 /*
  * This is an internal function that evicts a key from an inline encryption
  * device that can be either a real device or the blk-crypto-fallback "device".
  * It is used only by blk_crypto_evict_key(); see that function for details.
+=======
+/**
+ * __blk_crypto_evict_key() - Evict a key from a device.
+ * @profile: the crypto profile of the device
+ * @key: the key to evict.  It must not still be used in any I/O.
+ *
+ * If the device has keyslots, this finds the keyslot (if any) that contains the
+ * specified key and calls the driver's keyslot_evict function to evict it.
+ *
+ * Otherwise, this just calls the driver's keyslot_evict function if it is
+ * implemented, passing just the key (without any particular keyslot).  This
+ * allows layered devices to evict the key from their underlying devices.
+ *
+ * Context: Process context. Takes and releases profile->lock.
+ * Return: 0 on success or if there's no keyslot with the specified key, -EBUSY
+ *	   if the keyslot is still in use, or another -errno value on other
+ *	   error.
+>>>>>>> b7ba80a49124 (Commit)
  */
 int __blk_crypto_evict_key(struct blk_crypto_profile *profile,
 			   const struct blk_crypto_key *key)
 {
 	struct blk_crypto_keyslot *slot;
+<<<<<<< HEAD
 	int err;
+=======
+	int err = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (profile->num_slots == 0) {
 		if (profile->ll_ops.keyslot_evict) {
@@ -371,6 +421,7 @@ int __blk_crypto_evict_key(struct blk_crypto_profile *profile,
 
 	blk_crypto_hw_enter(profile);
 	slot = blk_crypto_find_keyslot(profile, key);
+<<<<<<< HEAD
 	if (!slot) {
 		/*
 		 * Not an error, since a key not in use by I/O is not guaranteed
@@ -395,6 +446,24 @@ out_remove:
 	hlist_del(&slot->hash_node);
 	slot->key = NULL;
 out:
+=======
+	if (!slot)
+		goto out_unlock;
+
+	if (WARN_ON_ONCE(atomic_read(&slot->slot_refs) != 0)) {
+		err = -EBUSY;
+		goto out_unlock;
+	}
+	err = profile->ll_ops.keyslot_evict(profile, key,
+					    blk_crypto_keyslot_index(slot));
+	if (err)
+		goto out_unlock;
+
+	hlist_del(&slot->hash_node);
+	slot->key = NULL;
+	err = 0;
+out_unlock:
+>>>>>>> b7ba80a49124 (Commit)
 	blk_crypto_hw_exit(profile);
 	return err;
 }

@@ -564,7 +564,10 @@ static struct platform_driver lp8788_dldo_driver = {
 	.probe = lp8788_dldo_probe,
 	.driver = {
 		.name = LP8788_DEV_DLDO,
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 
@@ -612,7 +615,10 @@ static struct platform_driver lp8788_aldo_driver = {
 	.probe = lp8788_aldo_probe,
 	.driver = {
 		.name = LP8788_DEV_ALDO,
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

@@ -389,9 +389,12 @@ static int __init intelfb_init(void)
 	if (idonly)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	if (fb_modesetting_disabled("intelfb"))
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef MODULE
 	if (fb_get_options("intelfb", &option))
 		return -ENODEV;
@@ -1222,9 +1225,12 @@ static int intelfb_check_var(struct fb_var_screeninfo *var,
 
 	dinfo = GET_DINFO(info);
 
+<<<<<<< HEAD
 	if (!var->pixclock)
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* update the pitch */
 	if (intelfbhw_validate_mode(dinfo, var) != 0)
 		return -EINVAL;

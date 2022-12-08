@@ -22,9 +22,14 @@ description: |
   The standard defines the following interface signals for type C:
   - Power:
     - Vdd: Power supply for display module
+<<<<<<< HEAD
       Called power-supply in this binding.
     - Vddi: Logic level supply for interface signals
       Called io-supply in this binding.
+=======
+    - Vddi: Logic level supply for interface signals
+    Combined into one in this binding called: power-supply
+>>>>>>> b7ba80a49124 (Commit)
   - Interface:
     - CSx: Chip select
     - SCL: Serial clock
@@ -81,11 +86,14 @@ properties:
       Controller data/command selection (D/CX) in 4-line SPI mode.
       If not set, the controller is in 3-line SPI mode.
 
+<<<<<<< HEAD
   io-supply:
     description: |
       Logic level supply for interface signals (Vddi).
       No need to set if this is the same as power-supply.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg

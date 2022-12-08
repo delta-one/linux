@@ -18,9 +18,15 @@
 #include <linux/user_namespace.h>
 #include <linux/net_namespace.h>
 #include <linux/sched/task.h>
+<<<<<<< HEAD
 #include <linux/uidgid.h>
 #include <linux/cookie.h>
 #include <linux/proc_fs.h>
+=======
+#include <linux/sched/mm.h>
+#include <linux/uidgid.h>
+#include <linux/cookie.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <net/sock.h>
 #include <net/netlink.h>
@@ -118,7 +124,10 @@ static int net_assign_generic(struct net *net, unsigned int id, void *data)
 
 static int ops_init(const struct pernet_operations *ops, struct net *net)
 {
+<<<<<<< HEAD
 	struct net_generic *ng;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err = -ENOMEM;
 	void *data = NULL;
 
@@ -137,12 +146,15 @@ static int ops_init(const struct pernet_operations *ops, struct net *net)
 	if (!err)
 		return 0;
 
+<<<<<<< HEAD
 	if (ops->id && ops->size) {
 		ng = rcu_dereference_protected(net->gen,
 					       lockdep_is_held(&pernet_ops_rwsem));
 		ng->ptr[*ops->id] = NULL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 cleanup:
 	kfree(data);
 
@@ -305,12 +317,15 @@ struct net *get_net_ns_by_id(const struct net *net, int id)
 }
 EXPORT_SYMBOL_GPL(get_net_ns_by_id);
 
+<<<<<<< HEAD
 /* init code that must occur even if setup_net() is not called. */
 static __net_init void preinit_net(struct net *net)
 {
 	ref_tracker_dir_init(&net->notrefcnt_tracker, 128);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * setup_net runs the initializers for the network namespace object.
  */
@@ -443,10 +458,13 @@ static void net_free(struct net *net)
 {
 	if (refcount_dec_and_test(&net->passive)) {
 		kfree(rcu_access_pointer(net->gen));
+<<<<<<< HEAD
 
 		/* There should not be any trackers left there. */
 		ref_tracker_dir_exit(&net->notrefcnt_tracker);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		kmem_cache_free(net_cachep, net);
 	}
 }
@@ -478,8 +496,11 @@ struct net *copy_net_ns(unsigned long flags,
 		rv = -ENOMEM;
 		goto dec_ucounts;
 	}
+<<<<<<< HEAD
 
 	preinit_net(net);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	refcount_set(&net->passive, 1);
 	net->ucounts = ucounts;
 	get_user_ns(user_ns);
@@ -677,6 +698,7 @@ EXPORT_SYMBOL_GPL(get_net_ns);
 
 struct net *get_net_ns_by_fd(int fd)
 {
+<<<<<<< HEAD
 	struct fd f = fdget(fd);
 	struct net *net = ERR_PTR(-EINVAL);
 
@@ -690,6 +712,23 @@ struct net *get_net_ns_by_fd(int fd)
 	}
 	fdput(f);
 
+=======
+	struct file *file;
+	struct ns_common *ns;
+	struct net *net;
+
+	file = proc_ns_fget(fd);
+	if (IS_ERR(file))
+		return ERR_CAST(file);
+
+	ns = get_proc_ns(file_inode(file));
+	if (ns->ops == &netns_operations)
+		net = get_net(container_of(ns, struct net, ns));
+	else
+		net = ERR_PTR(-EINVAL);
+
+	fput(file);
+>>>>>>> b7ba80a49124 (Commit)
 	return net;
 }
 EXPORT_SYMBOL_GPL(get_net_ns_by_fd);
@@ -1124,7 +1163,10 @@ void __init net_ns_init(void)
 	init_net.key_domain = &init_net_key_domain;
 #endif
 	down_write(&pernet_ops_rwsem);
+<<<<<<< HEAD
 	preinit_net(&init_net);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (setup_net(&init_net, &init_user_ns))
 		panic("Could not setup the initial network namespace");
 
@@ -1162,7 +1204,17 @@ static int __register_pernet_operations(struct list_head *list,
 		 * setup_net() and cleanup_net() are not possible.
 		 */
 		for_each_net(net) {
+<<<<<<< HEAD
 			error = ops_init(ops, net);
+=======
+			struct mem_cgroup *old, *memcg;
+
+			memcg = mem_cgroup_or_root(get_mem_cgroup_from_obj(net));
+			old = set_active_memcg(memcg);
+			error = ops_init(ops, net);
+			set_active_memcg(old);
+			mem_cgroup_put(memcg);
+>>>>>>> b7ba80a49124 (Commit)
 			if (error)
 				goto out_undo;
 			list_add_tail(&net->exit_list, &net_exit_list);

@@ -7,6 +7,7 @@
 
 #include "a8293.h"
 
+<<<<<<< HEAD
 #define A8293_FLAG_ODT			0x10
 
 struct a8293_dev {
@@ -141,14 +142,27 @@ err:
 
 static int a8293_set_voltage_noslew(struct dvb_frontend *fe,
 				    enum fe_sec_voltage fe_sec_voltage)
+=======
+struct a8293_dev {
+	struct i2c_client *client;
+	u8 reg[2];
+};
+
+static int a8293_set_voltage(struct dvb_frontend *fe,
+			     enum fe_sec_voltage fe_sec_voltage)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct a8293_dev *dev = fe->sec_priv;
 	struct i2c_client *client = dev->client;
 	int ret;
 	u8 reg0, reg1;
 
+<<<<<<< HEAD
 	dev_dbg(&client->dev, "set_voltage_noslew fe_sec_voltage=%d\n",
 		fe_sec_voltage);
+=======
+	dev_dbg(&client->dev, "fe_sec_voltage=%d\n", fe_sec_voltage);
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (fe_sec_voltage) {
 	case SEC_VOLTAGE_OFF:
@@ -190,6 +204,7 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int a8293_set_voltage(struct dvb_frontend *fe,
 			     enum fe_sec_voltage fe_sec_voltage)
 {
@@ -211,6 +226,10 @@ static int a8293_set_voltage(struct dvb_frontend *fe,
 }
 
 static int a8293_probe(struct i2c_client *client)
+=======
+static int a8293_probe(struct i2c_client *client,
+		       const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct a8293_dev *dev;
 	struct a8293_platform_data *pdata = client->dev.platform_data;
@@ -225,7 +244,10 @@ static int a8293_probe(struct i2c_client *client)
 	}
 
 	dev->client = client;
+<<<<<<< HEAD
 	dev->volt_slew_nanos_per_mv = pdata->volt_slew_nanos_per_mv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* check if the SEC is there */
 	ret = i2c_master_recv(client, buf, 2);
@@ -266,7 +288,11 @@ static struct i2c_driver a8293_driver = {
 		.name	= "a8293",
 		.suppress_bind_attrs = true,
 	},
+<<<<<<< HEAD
 	.probe_new	= a8293_probe,
+=======
+	.probe		= a8293_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= a8293_remove,
 	.id_table	= a8293_id_table,
 };

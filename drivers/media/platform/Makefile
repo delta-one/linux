@@ -15,7 +15,10 @@ obj-y += chips-media/
 obj-y += intel/
 obj-y += marvell/
 obj-y += mediatek/
+<<<<<<< HEAD
 obj-y += microchip/
+=======
+>>>>>>> b7ba80a49124 (Commit)
 obj-y += nvidia/
 obj-y += nxp/
 obj-y += qcom/

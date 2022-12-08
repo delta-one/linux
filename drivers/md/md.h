@@ -315,7 +315,11 @@ struct mddev {
 	unsigned long			sb_flags;
 
 	int				suspended;
+<<<<<<< HEAD
 	struct percpu_ref		active_io;
+=======
+	atomic_t			active_io;
+>>>>>>> b7ba80a49124 (Commit)
 	int				ro;
 	int				sysfs_active; /* set when sysfs deletes
 						       * are happening, so run/
@@ -710,10 +714,16 @@ struct md_thread {
 };
 
 struct md_io_acct {
+<<<<<<< HEAD
 	struct mddev	*mddev;
 	struct bio	*orig_bio;
 	unsigned long	start_time;
 	struct bio	bio_clone;
+=======
+	struct bio *orig_bio;
+	unsigned long start_time;
+	struct bio bio_clone;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define THREAD_WAKEUP  0
@@ -783,6 +793,10 @@ extern void mddev_resume(struct mddev *mddev);
 
 extern void md_reload_sb(struct mddev *mddev, int raid_disk);
 extern void md_update_sb(struct mddev *mddev, int force);
+<<<<<<< HEAD
+=======
+extern void md_kick_rdev_from_array(struct md_rdev * rdev);
+>>>>>>> b7ba80a49124 (Commit)
 extern void mddev_create_serial_pool(struct mddev *mddev, struct md_rdev *rdev,
 				     bool is_suspend);
 extern void mddev_destroy_serial_pool(struct mddev *mddev, struct md_rdev *rdev,

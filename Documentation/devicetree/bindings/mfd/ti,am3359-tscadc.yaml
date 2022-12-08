@@ -52,9 +52,12 @@ properties:
     type: object
     description: Magnetic reader
 
+<<<<<<< HEAD
   power-domains:
     maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg

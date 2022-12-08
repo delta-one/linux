@@ -48,6 +48,10 @@ SECTIONS {
 		IRQENTRY_TEXT
 		SOFTIRQENTRY_TEXT
 		SCHED_TEXT
+<<<<<<< HEAD
+=======
+		CPUIDLE_TEXT
+>>>>>>> b7ba80a49124 (Commit)
 		LOCK_TEXT
 		*(.fixup)
 		. = ALIGN(16);

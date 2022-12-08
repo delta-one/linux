@@ -268,7 +268,11 @@ unregister:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void exynos_audss_clk_remove(struct platform_device *pdev)
+=======
+static int exynos_audss_clk_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	of_clk_del_provider(pdev->dev.of_node);
 
@@ -277,6 +281,11 @@ static void exynos_audss_clk_remove(struct platform_device *pdev)
 
 	if (!IS_ERR(epll))
 		clk_disable_unprepare(epll);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct dev_pm_ops exynos_audss_clk_pm_ops = {
@@ -293,7 +302,11 @@ static struct platform_driver exynos_audss_clk_driver = {
 		.pm = &exynos_audss_clk_pm_ops,
 	},
 	.probe = exynos_audss_clk_probe,
+<<<<<<< HEAD
 	.remove_new = exynos_audss_clk_remove,
+=======
+	.remove = exynos_audss_clk_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(exynos_audss_clk_driver);

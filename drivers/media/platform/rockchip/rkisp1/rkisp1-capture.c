@@ -913,7 +913,11 @@ static void rkisp1_cap_stream_disable(struct rkisp1_capture *cap)
  *
  * Call s_stream(false) in the reverse order from
  * rkisp1_pipeline_stream_enable() and disable the DMA engine.
+<<<<<<< HEAD
  * Should be called before video_device_pipeline_stop()
+=======
+ * Should be called before media_pipeline_stop()
+>>>>>>> b7ba80a49124 (Commit)
  */
 static void rkisp1_pipeline_stream_disable(struct rkisp1_capture *cap)
 	__must_hold(&cap->rkisp1->stream_lock)
@@ -926,7 +930,11 @@ static void rkisp1_pipeline_stream_disable(struct rkisp1_capture *cap)
 	 * If the other capture is streaming, isp and sensor nodes shouldn't
 	 * be disabled, skip them.
 	 */
+<<<<<<< HEAD
 	if (rkisp1->pipe.start_count < 2)
+=======
+	if (rkisp1->pipe.streaming_count < 2)
+>>>>>>> b7ba80a49124 (Commit)
 		v4l2_subdev_call(&rkisp1->isp.sd, video, s_stream, false);
 
 	v4l2_subdev_call(&rkisp1->resizer_devs[cap->id].sd, video, s_stream,
@@ -937,7 +945,11 @@ static void rkisp1_pipeline_stream_disable(struct rkisp1_capture *cap)
  * rkisp1_pipeline_stream_enable - enable nodes in the pipeline
  *
  * Enable the DMA Engine and call s_stream(true) through the pipeline.
+<<<<<<< HEAD
  * Should be called after video_device_pipeline_start()
+=======
+ * Should be called after media_pipeline_start()
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int rkisp1_pipeline_stream_enable(struct rkisp1_capture *cap)
 	__must_hold(&cap->rkisp1->stream_lock)
@@ -956,7 +968,11 @@ static int rkisp1_pipeline_stream_enable(struct rkisp1_capture *cap)
 	 * If the other capture is streaming, isp and sensor nodes are already
 	 * enabled, skip them.
 	 */
+<<<<<<< HEAD
 	if (rkisp1->pipe.start_count > 1)
+=======
+	if (rkisp1->pipe.streaming_count > 1)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	ret = v4l2_subdev_call(&rkisp1->isp.sd, video, s_stream, true);
@@ -994,7 +1010,11 @@ static void rkisp1_vb2_stop_streaming(struct vb2_queue *queue)
 
 	rkisp1_dummy_buf_destroy(cap);
 
+<<<<<<< HEAD
 	video_device_pipeline_stop(&node->vdev);
+=======
+	media_pipeline_stop(&node->vdev.entity);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&cap->rkisp1->stream_lock);
 }
@@ -1008,7 +1028,11 @@ rkisp1_vb2_start_streaming(struct vb2_queue *queue, unsigned int count)
 
 	mutex_lock(&cap->rkisp1->stream_lock);
 
+<<<<<<< HEAD
 	ret = video_device_pipeline_start(&cap->vnode.vdev, &cap->rkisp1->pipe);
+=======
+	ret = media_pipeline_start(entity, &cap->rkisp1->pipe);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(cap->rkisp1->dev, "start pipeline failed %d\n", ret);
 		goto err_ret_buffers;
@@ -1044,7 +1068,11 @@ err_pipe_pm_put:
 err_destroy_dummy:
 	rkisp1_dummy_buf_destroy(cap);
 err_pipeline_stop:
+<<<<<<< HEAD
 	video_device_pipeline_stop(&cap->vnode.vdev);
+=======
+	media_pipeline_stop(entity);
+>>>>>>> b7ba80a49124 (Commit)
 err_ret_buffers:
 	rkisp1_return_all_buffers(cap, VB2_BUF_STATE_QUEUED);
 	mutex_unlock(&cap->rkisp1->stream_lock);
@@ -1131,12 +1159,19 @@ static void rkisp1_try_fmt(const struct rkisp1_capture *cap,
 	const struct rkisp1_capture_config *config = cap->config;
 	const struct rkisp1_capture_fmt_cfg *fmt;
 	const struct v4l2_format_info *info;
+<<<<<<< HEAD
 	static const unsigned int max_widths[] = {
 		RKISP1_RSZ_MP_SRC_MAX_WIDTH, RKISP1_RSZ_SP_SRC_MAX_WIDTH
 	};
 	static const unsigned int max_heights[] = {
 		RKISP1_RSZ_MP_SRC_MAX_HEIGHT, RKISP1_RSZ_SP_SRC_MAX_HEIGHT
 	};
+=======
+	const unsigned int max_widths[] = { RKISP1_RSZ_MP_SRC_MAX_WIDTH,
+					    RKISP1_RSZ_SP_SRC_MAX_WIDTH };
+	const unsigned int max_heights[] = { RKISP1_RSZ_MP_SRC_MAX_HEIGHT,
+					     RKISP1_RSZ_SP_SRC_MAX_HEIGHT};
+>>>>>>> b7ba80a49124 (Commit)
 
 	fmt = rkisp1_find_fmt_cfg(cap, pixm->pixelformat);
 	if (!fmt) {
@@ -1275,12 +1310,20 @@ static int rkisp1_capture_link_validate(struct media_link *link)
 	struct rkisp1_capture *cap = video_get_drvdata(vdev);
 	const struct rkisp1_capture_fmt_cfg *fmt =
 		rkisp1_find_fmt_cfg(cap, cap->pix.fmt.pixelformat);
+<<<<<<< HEAD
 	struct v4l2_subdev_format sd_fmt = {
 		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
 		.pad = link->source->index,
 	};
 	int ret;
 
+=======
+	struct v4l2_subdev_format sd_fmt;
+	int ret;
+
+	sd_fmt.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+	sd_fmt.pad = link->source->index;
+>>>>>>> b7ba80a49124 (Commit)
 	ret = v4l2_subdev_call(sd, pad, get_fmt, NULL, &sd_fmt);
 	if (ret)
 		return ret;
@@ -1338,9 +1381,14 @@ void rkisp1_capture_devs_unregister(struct rkisp1_device *rkisp1)
 
 static int rkisp1_register_capture(struct rkisp1_capture *cap)
 {
+<<<<<<< HEAD
 	static const char * const dev_names[] = {
 		RKISP1_MP_DEV_NAME, RKISP1_SP_DEV_NAME
 	};
+=======
+	const char * const dev_names[] = {RKISP1_MP_DEV_NAME,
+					  RKISP1_SP_DEV_NAME};
+>>>>>>> b7ba80a49124 (Commit)
 	struct v4l2_device *v4l2_dev = &cap->rkisp1->v4l2_dev;
 	struct video_device *vdev = &cap->vnode.vdev;
 	struct rkisp1_vdev_node *node;

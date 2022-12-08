@@ -247,7 +247,12 @@ static struct tps51632_regulator_platform_data *
 }
 #endif
 
+<<<<<<< HEAD
 static int tps51632_probe(struct i2c_client *client)
+=======
+static int tps51632_probe(struct i2c_client *client,
+				const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tps51632_regulator_platform_data *pdata;
 	struct regulator_dev *rdev;
@@ -351,10 +356,16 @@ MODULE_DEVICE_TABLE(i2c, tps51632_id);
 static struct i2c_driver tps51632_i2c_driver = {
 	.driver = {
 		.name = "tps51632",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 		.of_match_table = of_match_ptr(tps51632_of_match),
 	},
 	.probe_new = tps51632_probe,
+=======
+		.of_match_table = of_match_ptr(tps51632_of_match),
+	},
+	.probe = tps51632_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = tps51632_id,
 };
 

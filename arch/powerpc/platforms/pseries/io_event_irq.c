@@ -143,7 +143,11 @@ static int __init ioei_init(void)
 {
 	struct device_node *np;
 
+<<<<<<< HEAD
 	ioei_check_exception_token = rtas_function_token(RTAS_FN_CHECK_EXCEPTION);
+=======
+	ioei_check_exception_token = rtas_token("check-exception");
+>>>>>>> b7ba80a49124 (Commit)
 	if (ioei_check_exception_token == RTAS_UNKNOWN_SERVICE)
 		return -ENODEV;
 

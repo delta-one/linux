@@ -493,12 +493,16 @@ of_at91_clk_periph_setup(struct device_node *np, u8 type)
 							  parent_name, id);
 		} else {
 			struct clk_range range = CLK_RANGE(0, 0);
+<<<<<<< HEAD
 			unsigned long flags = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 			of_at91_get_clk_range(periphclknp,
 					      "atmel,clk-output-range",
 					      &range);
 
+<<<<<<< HEAD
 			/*
 			 * mpddr_clk feed DDR controller and is enabled by
 			 * bootloader thus we need to keep it enabled in case
@@ -507,14 +511,20 @@ of_at91_clk_periph_setup(struct device_node *np, u8 type)
 			if (!strcmp(periphclknp->name, "mpddr_clk"))
 				flags = CLK_IS_CRITICAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			hw = at91_clk_register_sam9x5_peripheral(regmap,
 								 &pmc_pcr_lock,
 								 &dt_pcr_layout,
 								 name,
 								 parent_name,
 								 id, &range,
+<<<<<<< HEAD
 								 INT_MIN,
 								 flags);
+=======
+								 INT_MIN);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (IS_ERR(hw))
@@ -889,8 +899,11 @@ static void __init of_at91rm9200_clk_sys_setup(struct device_node *np)
 		return;
 
 	for_each_child_of_node(np, sysclknp) {
+<<<<<<< HEAD
 		unsigned long flags = 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (of_property_read_u32(sysclknp, "reg", &id))
 			continue;
 
@@ -899,6 +912,7 @@ static void __init of_at91rm9200_clk_sys_setup(struct device_node *np)
 
 		parent_name = of_clk_get_parent_name(sysclknp, 0);
 
+<<<<<<< HEAD
 		/*
 		 * ddrck feeds DDR controller and is enabled by bootloader thus
 		 * we need to keep it enabled in case there is no Linux consumer
@@ -909,6 +923,9 @@ static void __init of_at91rm9200_clk_sys_setup(struct device_node *np)
 
 		hw = at91_clk_register_system(regmap, name, parent_name, id,
 					      flags);
+=======
+		hw = at91_clk_register_system(regmap, name, parent_name, id);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(hw))
 			continue;
 

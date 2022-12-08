@@ -1050,10 +1050,15 @@ static struct cal_ctx *cal_ctx_create(struct cal_dev *cal, int inst)
 	ctx->cport = inst;
 
 	ret = cal_ctx_v4l2_init(ctx);
+<<<<<<< HEAD
 	if (ret) {
 		kfree(ctx);
 		return NULL;
 	}
+=======
+	if (ret)
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ctx;
 }

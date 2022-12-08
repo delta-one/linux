@@ -40,9 +40,15 @@ static struct kmem_cache *ntfs_enode_cachep;
 
 int __init ntfs3_init_bitmap(void)
 {
+<<<<<<< HEAD
 	ntfs_enode_cachep = kmem_cache_create("ntfs3_enode_cache",
 					      sizeof(struct e_node), 0,
 					      SLAB_RECLAIM_ACCOUNT, NULL);
+=======
+	ntfs_enode_cachep =
+		kmem_cache_create("ntfs3_enode_cache", sizeof(struct e_node), 0,
+				  SLAB_RECLAIM_ACCOUNT, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	return ntfs_enode_cachep ? 0 : -ENOMEM;
 }
 
@@ -59,14 +65,22 @@ void ntfs3_exit_bitmap(void)
  *
  * Return: -1 if not found.
  */
+<<<<<<< HEAD
 static size_t wnd_scan(const void *buf, size_t wbit, u32 wpos, u32 wend,
+=======
+static size_t wnd_scan(const ulong *buf, size_t wbit, u32 wpos, u32 wend,
+>>>>>>> b7ba80a49124 (Commit)
 		       size_t to_alloc, size_t *prev_tail, size_t *b_pos,
 		       size_t *b_len)
 {
 	while (wpos < wend) {
 		size_t free_len;
 		u32 free_bits, end;
+<<<<<<< HEAD
 		u32 used = find_next_zero_bit_le(buf, wend, wpos);
+=======
+		u32 used = find_next_zero_bit(buf, wend, wpos);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (used >= wend) {
 			if (*b_len < *prev_tail) {
@@ -92,7 +106,11 @@ static size_t wnd_scan(const void *buf, size_t wbit, u32 wpos, u32 wend,
 		 * Now we have a fragment [wpos, wend) staring with 0.
 		 */
 		end = wpos + to_alloc - *prev_tail;
+<<<<<<< HEAD
 		free_bits = find_next_bit_le(buf, min(end, wend), wpos);
+=======
+		free_bits = find_next_bit(buf, min(end, wend), wpos);
+>>>>>>> b7ba80a49124 (Commit)
 
 		free_len = *prev_tail + free_bits - wpos;
 
@@ -286,9 +304,15 @@ static void wnd_add_free_ext(struct wnd_bitmap *wnd, size_t bit, size_t len,
 		if (wnd->uptodated != 1) {
 			/* Check bits before 'bit'. */
 			ib = wnd->zone_bit == wnd->zone_end ||
+<<<<<<< HEAD
 					     bit < wnd->zone_end ?
 					   0 :
 					   wnd->zone_end;
+=======
+					     bit < wnd->zone_end
+				     ? 0
+				     : wnd->zone_end;
+>>>>>>> b7ba80a49124 (Commit)
 
 			while (bit > ib && wnd_is_free_hlp(wnd, bit - 1, 1)) {
 				bit -= 1;
@@ -297,9 +321,15 @@ static void wnd_add_free_ext(struct wnd_bitmap *wnd, size_t bit, size_t len,
 
 			/* Check bits after 'end_in'. */
 			ib = wnd->zone_bit == wnd->zone_end ||
+<<<<<<< HEAD
 					     end_in > wnd->zone_bit ?
 					   wnd->nbits :
 					   wnd->zone_bit;
+=======
+					     end_in > wnd->zone_bit
+				     ? wnd->nbits
+				     : wnd->zone_bit;
+>>>>>>> b7ba80a49124 (Commit)
 
 			while (end_in < ib && wnd_is_free_hlp(wnd, end_in, 1)) {
 				end_in += 1;
@@ -417,8 +447,13 @@ static void wnd_remove_free_ext(struct wnd_bitmap *wnd, size_t bit, size_t len)
 			return;
 		n3 = rb_first(&wnd->count_tree);
 		wnd->extent_max =
+<<<<<<< HEAD
 			n3 ? rb_entry(n3, struct e_node, count.node)->count.key :
 				   0;
+=======
+			n3 ? rb_entry(n3, struct e_node, count.node)->count.key
+			   : 0;
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -504,6 +539,10 @@ static int wnd_rescan(struct wnd_bitmap *wnd)
 	u8 cluster_bits = sbi->cluster_bits;
 	u32 wbits = 8 * sb->s_blocksize;
 	u32 used, frb;
+<<<<<<< HEAD
+=======
+	const ulong *buf;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t wpos, wbit, iw, vbo;
 	struct buffer_head *bh = NULL;
 	CLST lcn, clen;
@@ -557,7 +596,13 @@ static int wnd_rescan(struct wnd_bitmap *wnd)
 			goto out;
 		}
 
+<<<<<<< HEAD
 		used = ntfs_bitmap_weight_le(bh->b_data, wbits);
+=======
+		buf = (ulong *)bh->b_data;
+
+		used = __bitmap_weight(buf, wbits);
+>>>>>>> b7ba80a49124 (Commit)
 		if (used < wbits) {
 			frb = wbits - used;
 			wnd->free_bits[iw] = frb;
@@ -571,7 +616,11 @@ static int wnd_rescan(struct wnd_bitmap *wnd)
 			wbits = wnd->nbits - wbit;
 
 		do {
+<<<<<<< HEAD
 			used = find_next_zero_bit_le(bh->b_data, wbits, wpos);
+=======
+			used = find_next_zero_bit(buf, wbits, wpos);
+>>>>>>> b7ba80a49124 (Commit)
 
 			if (used > wpos && prev_tail) {
 				wnd_add_free_ext(wnd, wbit + wpos - prev_tail,
@@ -587,7 +636,11 @@ static int wnd_rescan(struct wnd_bitmap *wnd)
 				break;
 			}
 
+<<<<<<< HEAD
 			frb = find_next_bit_le(bh->b_data, wbits, wpos);
+=======
+			frb = find_next_bit(buf, wbits, wpos);
+>>>>>>> b7ba80a49124 (Commit)
 			if (frb >= wbits) {
 				/* Keep last free block. */
 				prev_tail += frb - wpos;
@@ -658,8 +711,12 @@ int wnd_init(struct wnd_bitmap *wnd, struct super_block *sb, size_t nbits)
 	if (!wnd->bits_last)
 		wnd->bits_last = wbits;
 
+<<<<<<< HEAD
 	wnd->free_bits =
 		kcalloc(wnd->nwnd, sizeof(u16), GFP_NOFS | __GFP_NOWARN);
+=======
+	wnd->free_bits = kcalloc(wnd->nwnd, sizeof(u16), GFP_NOFS);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!wnd->free_bits)
 		return -ENOMEM;
 
@@ -716,6 +773,10 @@ int wnd_set_free(struct wnd_bitmap *wnd, size_t bit, size_t bits)
 
 	while (iw < wnd->nwnd && bits) {
 		u32 tail, op;
+<<<<<<< HEAD
+=======
+		ulong *buf;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (iw + 1 == wnd->nwnd)
 			wbits = wnd->bits_last;
@@ -729,9 +790,17 @@ int wnd_set_free(struct wnd_bitmap *wnd, size_t bit, size_t bits)
 			break;
 		}
 
+<<<<<<< HEAD
 		lock_buffer(bh);
 
 		ntfs_bitmap_clear_le(bh->b_data, wbit, op);
+=======
+		buf = (ulong *)bh->b_data;
+
+		lock_buffer(bh);
+
+		__bitmap_clear(buf, wbit, op);
+>>>>>>> b7ba80a49124 (Commit)
 
 		wnd->free_bits[iw] += op;
 
@@ -766,6 +835,10 @@ int wnd_set_used(struct wnd_bitmap *wnd, size_t bit, size_t bits)
 
 	while (iw < wnd->nwnd && bits) {
 		u32 tail, op;
+<<<<<<< HEAD
+=======
+		ulong *buf;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (unlikely(iw + 1 == wnd->nwnd))
 			wbits = wnd->bits_last;
@@ -778,10 +851,18 @@ int wnd_set_used(struct wnd_bitmap *wnd, size_t bit, size_t bits)
 			err = PTR_ERR(bh);
 			break;
 		}
+<<<<<<< HEAD
 
 		lock_buffer(bh);
 
 		ntfs_bitmap_set_le(bh->b_data, wbit, op);
+=======
+		buf = (ulong *)bh->b_data;
+
+		lock_buffer(bh);
+
+		__bitmap_set(buf, wbit, op);
+>>>>>>> b7ba80a49124 (Commit)
 		wnd->free_bits[iw] -= op;
 
 		set_buffer_uptodate(bh);
@@ -802,6 +883,7 @@ int wnd_set_used(struct wnd_bitmap *wnd, size_t bit, size_t bits)
 }
 
 /*
+<<<<<<< HEAD
  * wnd_set_used_safe - Mark the bits range from bit to bit + bits as used.
  *
  * Unlikely wnd_set_used/wnd_set_free this function is not full trusted.
@@ -840,6 +922,8 @@ int wnd_set_used_safe(struct wnd_bitmap *wnd, size_t bit, size_t bits,
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * wnd_is_free_hlp
  *
  * Return: True if all clusters [bit, bit+bits) are free (bitmap only).
@@ -867,7 +951,11 @@ static bool wnd_is_free_hlp(struct wnd_bitmap *wnd, size_t bit, size_t bits)
 			if (IS_ERR(bh))
 				return false;
 
+<<<<<<< HEAD
 			ret = are_bits_clear(bh->b_data, wbit, op);
+=======
+			ret = are_bits_clear((ulong *)bh->b_data, wbit, op);
+>>>>>>> b7ba80a49124 (Commit)
 
 			put_bh(bh);
 			if (!ret)
@@ -959,7 +1047,11 @@ use_wnd:
 			if (IS_ERR(bh))
 				goto out;
 
+<<<<<<< HEAD
 			ret = are_bits_set(bh->b_data, wbit, op);
+=======
+			ret = are_bits_set((ulong *)bh->b_data, wbit, op);
+>>>>>>> b7ba80a49124 (Commit)
 			put_bh(bh);
 			if (!ret)
 				goto out;
@@ -990,6 +1082,10 @@ size_t wnd_find(struct wnd_bitmap *wnd, size_t to_alloc, size_t hint,
 	size_t fnd, max_alloc, b_len, b_pos;
 	size_t iw, prev_tail, nwnd, wbit, ebit, zbit, zend;
 	size_t to_alloc0 = to_alloc;
+<<<<<<< HEAD
+=======
+	const ulong *buf;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct e_node *e;
 	const struct rb_node *pr, *cr;
 	u8 log2_bits;
@@ -1215,6 +1311,7 @@ Again:
 					continue;
 				}
 
+<<<<<<< HEAD
 				/* Scan range [wbit, zbit). */
 				if (wpos < wzbit) {
 					/* Scan range [wpos, zbit). */
@@ -1222,6 +1319,16 @@ Again:
 						       wzbit, to_alloc,
 						       &prev_tail, &b_pos,
 						       &b_len);
+=======
+				buf = (ulong *)bh->b_data;
+
+				/* Scan range [wbit, zbit). */
+				if (wpos < wzbit) {
+					/* Scan range [wpos, zbit). */
+					fnd = wnd_scan(buf, wbit, wpos, wzbit,
+						       to_alloc, &prev_tail,
+						       &b_pos, &b_len);
+>>>>>>> b7ba80a49124 (Commit)
 					if (fnd != MINUS_ONE_T) {
 						put_bh(bh);
 						goto found;
@@ -1232,7 +1339,11 @@ Again:
 
 				/* Scan range [zend, ebit). */
 				if (wzend < wbits) {
+<<<<<<< HEAD
 					fnd = wnd_scan(bh->b_data, wbit,
+=======
+					fnd = wnd_scan(buf, wbit,
+>>>>>>> b7ba80a49124 (Commit)
 						       max(wzend, wpos), wbits,
 						       to_alloc, &prev_tail,
 						       &b_pos, &b_len);
@@ -1271,9 +1382,17 @@ Again:
 			continue;
 		}
 
+<<<<<<< HEAD
 		/* Scan range [wpos, eBits). */
 		fnd = wnd_scan(bh->b_data, wbit, wpos, wbits, to_alloc,
 			       &prev_tail, &b_pos, &b_len);
+=======
+		buf = (ulong *)bh->b_data;
+
+		/* Scan range [wpos, eBits). */
+		fnd = wnd_scan(buf, wbit, wpos, wbits, to_alloc, &prev_tail,
+			       &b_pos, &b_len);
+>>>>>>> b7ba80a49124 (Commit)
 		put_bh(bh);
 		if (fnd != MINUS_ONE_T)
 			goto found;
@@ -1351,7 +1470,11 @@ int wnd_extend(struct wnd_bitmap *wnd, size_t new_bits)
 		new_last = wbits;
 
 	if (new_wnd != wnd->nwnd) {
+<<<<<<< HEAD
 		new_free = kmalloc_array(new_wnd, sizeof(u16), GFP_NOFS);
+=======
+		new_free = kmalloc(new_wnd * sizeof(u16), GFP_NOFS);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!new_free)
 			return -ENOMEM;
 
@@ -1371,6 +1494,10 @@ int wnd_extend(struct wnd_bitmap *wnd, size_t new_bits)
 		size_t frb;
 		u64 vbo, lbo, bytes;
 		struct buffer_head *bh;
+<<<<<<< HEAD
+=======
+		ulong *buf;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (iw + 1 == new_wnd)
 			wbits = new_last;
@@ -1387,9 +1514,16 @@ int wnd_extend(struct wnd_bitmap *wnd, size_t new_bits)
 			return -EIO;
 
 		lock_buffer(bh);
+<<<<<<< HEAD
 
 		ntfs_bitmap_clear_le(bh->b_data, b0, blocksize * 8 - b0);
 		frb = wbits - ntfs_bitmap_weight_le(bh->b_data, wbits);
+=======
+		buf = (ulong *)bh->b_data;
+
+		__bitmap_clear(buf, b0, blocksize * 8 - b0);
+		frb = wbits - __bitmap_weight(buf, wbits);
+>>>>>>> b7ba80a49124 (Commit)
 		wnd->total_zeroes += frb - wnd->free_bits[iw];
 		wnd->free_bits[iw] = frb;
 
@@ -1436,6 +1570,10 @@ int ntfs_trim_fs(struct ntfs_sb_info *sbi, struct fstrim_range *range)
 	CLST lcn_from = bytes_to_cluster(sbi, range->start);
 	size_t iw = lcn_from >> (sb->s_blocksize_bits + 3);
 	u32 wbit = lcn_from & (wbits - 1);
+<<<<<<< HEAD
+=======
+	const ulong *buf;
+>>>>>>> b7ba80a49124 (Commit)
 	CLST lcn_to;
 
 	if (!minlen)
@@ -1448,7 +1586,11 @@ int ntfs_trim_fs(struct ntfs_sb_info *sbi, struct fstrim_range *range)
 
 	down_read_nested(&wnd->rw_lock, BITMAP_MUTEX_CLUSTERS);
 
+<<<<<<< HEAD
 	for (; iw < wnd->nwnd; iw++, wbit = 0) {
+=======
+	for (; iw < wnd->nbits; iw++, wbit = 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		CLST lcn_wnd = iw * wbits;
 		struct buffer_head *bh;
 
@@ -1470,8 +1612,15 @@ int ntfs_trim_fs(struct ntfs_sb_info *sbi, struct fstrim_range *range)
 			break;
 		}
 
+<<<<<<< HEAD
 		for (; wbit < wbits; wbit++) {
 			if (!test_bit_le(wbit, bh->b_data)) {
+=======
+		buf = (ulong *)bh->b_data;
+
+		for (; wbit < wbits; wbit++) {
+			if (!test_bit(wbit, buf)) {
+>>>>>>> b7ba80a49124 (Commit)
 				if (!len)
 					lcn = lcn_wnd + wbit;
 				len += 1;
@@ -1503,6 +1652,7 @@ out:
 
 	return err;
 }
+<<<<<<< HEAD
 
 #if BITS_PER_LONG == 64
 typedef __le64 bitmap_ulong;
@@ -1570,3 +1720,5 @@ unsigned int ntfs_bitmap_weight_le(const void *bitmap, int bits)
 
 	return w;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

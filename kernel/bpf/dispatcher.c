@@ -4,7 +4,10 @@
 #include <linux/hash.h>
 #include <linux/bpf.h>
 #include <linux/filter.h>
+<<<<<<< HEAD
 #include <linux/static_call.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* The BPF dispatcher is a multiway branch code generator. The
  * dispatcher is a mechanism to avoid the performance penalty of an
@@ -86,12 +89,20 @@ static bool bpf_dispatcher_remove_prog(struct bpf_dispatcher *d,
 	return false;
 }
 
+<<<<<<< HEAD
 int __weak arch_prepare_bpf_dispatcher(void *image, void *buf, s64 *funcs, int num_funcs)
+=======
+int __weak arch_prepare_bpf_dispatcher(void *image, s64 *funcs, int num_funcs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return -ENOTSUPP;
 }
 
+<<<<<<< HEAD
 static int bpf_dispatcher_prepare(struct bpf_dispatcher *d, void *image, void *buf)
+=======
+static int bpf_dispatcher_prepare(struct bpf_dispatcher *d, void *image)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	s64 ips[BPF_DISPATCHER_MAX] = {}, *ipsp = &ips[0];
 	int i;
@@ -100,11 +111,16 @@ static int bpf_dispatcher_prepare(struct bpf_dispatcher *d, void *image, void *b
 		if (d->progs[i].prog)
 			*ipsp++ = (s64)(uintptr_t)d->progs[i].prog->bpf_func;
 	}
+<<<<<<< HEAD
 	return arch_prepare_bpf_dispatcher(image, buf, &ips[0], d->num_progs);
+=======
+	return arch_prepare_bpf_dispatcher(image, &ips[0], d->num_progs);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void bpf_dispatcher_update(struct bpf_dispatcher *d, int prev_num_progs)
 {
+<<<<<<< HEAD
 	void *new, *tmp;
 	u32 noff = 0;
 
@@ -132,6 +148,31 @@ static void bpf_dispatcher_update(struct bpf_dispatcher *d, int prev_num_progs)
 
 	if (new)
 		d->image_off = noff;
+=======
+	void *old, *new;
+	u32 noff;
+	int err;
+
+	if (!prev_num_progs) {
+		old = NULL;
+		noff = 0;
+	} else {
+		old = d->image + d->image_off;
+		noff = d->image_off ^ (PAGE_SIZE / 2);
+	}
+
+	new = d->num_progs ? d->image + noff : NULL;
+	if (new) {
+		if (bpf_dispatcher_prepare(d, new))
+			return;
+	}
+
+	err = bpf_arch_text_poke(d->func, BPF_MOD_JUMP, old, new);
+	if (err || !new)
+		return;
+
+	d->image_off = noff;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void bpf_dispatcher_change_prog(struct bpf_dispatcher *d, struct bpf_prog *from,
@@ -145,6 +186,7 @@ void bpf_dispatcher_change_prog(struct bpf_dispatcher *d, struct bpf_prog *from,
 
 	mutex_lock(&d->mutex);
 	if (!d->image) {
+<<<<<<< HEAD
 		d->image = bpf_prog_pack_alloc(PAGE_SIZE, bpf_jit_fill_hole_with_zero);
 		if (!d->image)
 			goto out;
@@ -157,6 +199,11 @@ void bpf_dispatcher_change_prog(struct bpf_dispatcher *d, struct bpf_prog *from,
 			d->image = NULL;
 			goto out;
 		}
+=======
+		d->image = bpf_jit_alloc_exec_page();
+		if (!d->image)
+			goto out;
+>>>>>>> b7ba80a49124 (Commit)
 		bpf_image_ksym_add(d->image, &d->ksym);
 	}
 

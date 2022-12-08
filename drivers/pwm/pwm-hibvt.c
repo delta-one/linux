@@ -128,8 +128,13 @@ static void hibvt_pwm_set_polarity(struct pwm_chip *chip,
 				PWM_POLARITY_MASK, (0x0 << PWM_POLARITY_SHIFT));
 }
 
+<<<<<<< HEAD
 static int hibvt_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 			       struct pwm_state *state)
+=======
+static void hibvt_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+				struct pwm_state *state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hibvt_pwm_chip *hi_pwm_chip = to_hibvt_pwm_chip(chip);
 	void __iomem *base;
@@ -146,8 +151,11 @@ static int hibvt_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 
 	value = readl(base + PWM_CTRL_ADDR(pwm->hwpwm));
 	state->enabled = (PWM_ENABLE_MASK & value);
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int hibvt_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,

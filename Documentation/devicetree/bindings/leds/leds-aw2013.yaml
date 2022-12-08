@@ -33,7 +33,10 @@ patternProperties:
   "^led@[0-2]$":
     type: object
     $ref: common.yaml#
+<<<<<<< HEAD
     unevaluatedProperties: false
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
     properties:
       reg:
@@ -54,7 +57,11 @@ examples:
     #include <dt-bindings/gpio/gpio.h>
     #include <dt-bindings/leds/common.h>
 
+<<<<<<< HEAD
     i2c {
+=======
+    i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 

@@ -34,14 +34,37 @@
 #ifndef __MLX5E_IPSEC_H__
 #define __MLX5E_IPSEC_H__
 
+<<<<<<< HEAD
 #include <linux/mlx5/device.h>
 #include <net/xfrm.h>
 #include <linux/idr.h>
 #include "lib/aso.h"
+=======
+#ifdef CONFIG_MLX5_EN_IPSEC
+
+#include <linux/mlx5/device.h>
+#include <net/xfrm.h>
+#include <linux/idr.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MLX5E_IPSEC_SADB_RX_BITS 10
 #define MLX5E_IPSEC_ESN_SCOPE_MID 0x80000000L
 
+<<<<<<< HEAD
+=======
+enum mlx5_accel_esp_flags {
+	MLX5_ACCEL_ESP_FLAGS_TUNNEL            = 0,    /* Default */
+	MLX5_ACCEL_ESP_FLAGS_TRANSPORT         = 1UL << 0,
+	MLX5_ACCEL_ESP_FLAGS_ESN_TRIGGERED     = 1UL << 1,
+	MLX5_ACCEL_ESP_FLAGS_ESN_STATE_OVERLAP = 1UL << 2,
+};
+
+enum mlx5_accel_esp_action {
+	MLX5_ACCEL_ESP_ACTION_DECRYPT,
+	MLX5_ACCEL_ESP_ACTION_ENCRYPT,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct aes_gcm_keymat {
 	u64   seq_iv;
 
@@ -52,6 +75,7 @@ struct aes_gcm_keymat {
 	u32   aes_key[256 / 32];
 };
 
+<<<<<<< HEAD
 struct upspec {
 	u16 dport;
 	u16 dport_mask;
@@ -61,6 +85,10 @@ struct upspec {
 };
 
 struct mlx5_accel_esp_xfrm_attrs {
+=======
+struct mlx5_accel_esp_xfrm_attrs {
+	enum mlx5_accel_esp_action action;
+>>>>>>> b7ba80a49124 (Commit)
 	u32   esn;
 	u32   spi;
 	u32   flags;
@@ -76,6 +104,7 @@ struct mlx5_accel_esp_xfrm_attrs {
 		__be32 a6[4];
 	} daddr;
 
+<<<<<<< HEAD
 	struct upspec upspec;
 	u8 dir : 2;
 	u8 esn_overlap : 1;
@@ -87,18 +116,25 @@ struct mlx5_accel_esp_xfrm_attrs {
 	u32 reqid;
 	u64 hard_packet_limit;
 	u64 soft_packet_limit;
+=======
+	u8 is_ipv6;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum mlx5_ipsec_cap {
 	MLX5_IPSEC_CAP_CRYPTO		= 1 << 0,
 	MLX5_IPSEC_CAP_ESN		= 1 << 1,
+<<<<<<< HEAD
 	MLX5_IPSEC_CAP_PACKET_OFFLOAD	= 1 << 2,
 	MLX5_IPSEC_CAP_ROCE             = 1 << 3,
 	MLX5_IPSEC_CAP_PRIO             = 1 << 4,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlx5e_priv;
 
+<<<<<<< HEAD
 struct mlx5e_ipsec_hw_stats {
 	u64 ipsec_rx_pkts;
 	u64 ipsec_rx_bytes;
@@ -110,6 +146,8 @@ struct mlx5e_ipsec_hw_stats {
 	u64 ipsec_tx_drop_bytes;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mlx5e_ipsec_sw_stats {
 	atomic64_t ipsec_rx_drop_sp_alloc;
 	atomic64_t ipsec_rx_drop_sadb_miss;
@@ -120,6 +158,7 @@ struct mlx5e_ipsec_sw_stats {
 	atomic64_t ipsec_tx_drop_trailer;
 };
 
+<<<<<<< HEAD
 struct mlx5e_ipsec_rx;
 struct mlx5e_ipsec_tx;
 
@@ -150,6 +189,19 @@ struct mlx5e_ipsec {
 	struct mlx5e_ipsec_aso *aso;
 	struct notifier_block nb;
 	struct mlx5_ipsec_fs *roce;
+=======
+struct mlx5e_accel_fs_esp;
+struct mlx5e_ipsec_tx;
+
+struct mlx5e_ipsec {
+	struct mlx5_core_dev *mdev;
+	DECLARE_HASHTABLE(sadb_rx, MLX5E_IPSEC_SADB_RX_BITS);
+	spinlock_t sadb_rx_lock; /* Protects sadb_rx */
+	struct mlx5e_ipsec_sw_stats sw_stats;
+	struct workqueue_struct *wq;
+	struct mlx5e_accel_fs_esp *rx_fs;
+	struct mlx5e_ipsec_tx *tx_fs;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlx5e_ipsec_esn_state {
@@ -160,9 +212,13 @@ struct mlx5e_ipsec_esn_state {
 
 struct mlx5e_ipsec_rule {
 	struct mlx5_flow_handle *rule;
+<<<<<<< HEAD
 	struct mlx5_modify_hdr *modify_hdr;
 	struct mlx5_pkt_reformat *pkt_reformat;
 	struct mlx5_fc *fc;
+=======
+	struct mlx5_modify_hdr *set_modify_hdr;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlx5e_ipsec_modify_state_work {
@@ -171,7 +227,13 @@ struct mlx5e_ipsec_modify_state_work {
 };
 
 struct mlx5e_ipsec_sa_entry {
+<<<<<<< HEAD
 	struct mlx5e_ipsec_esn_state esn_state;
+=======
+	struct hlist_node hlist; /* Item in SADB_RX hashtable */
+	struct mlx5e_ipsec_esn_state esn_state;
+	unsigned int handle; /* Handle in SADB_RX */
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfrm_state *x;
 	struct mlx5e_ipsec *ipsec;
 	struct mlx5_accel_esp_xfrm_attrs attrs;
@@ -183,6 +245,7 @@ struct mlx5e_ipsec_sa_entry {
 	struct mlx5e_ipsec_modify_state_work modify_work;
 };
 
+<<<<<<< HEAD
 struct mlx5_accel_pol_xfrm_attrs {
 	union {
 		__be32 a4;
@@ -222,6 +285,21 @@ int mlx5e_accel_ipsec_fs_add_rule(struct mlx5e_ipsec_sa_entry *sa_entry);
 void mlx5e_accel_ipsec_fs_del_rule(struct mlx5e_ipsec_sa_entry *sa_entry);
 int mlx5e_accel_ipsec_fs_add_pol(struct mlx5e_ipsec_pol_entry *pol_entry);
 void mlx5e_accel_ipsec_fs_del_pol(struct mlx5e_ipsec_pol_entry *pol_entry);
+=======
+int mlx5e_ipsec_init(struct mlx5e_priv *priv);
+void mlx5e_ipsec_cleanup(struct mlx5e_priv *priv);
+void mlx5e_ipsec_build_netdev(struct mlx5e_priv *priv);
+
+struct xfrm_state *mlx5e_ipsec_sadb_rx_lookup(struct mlx5e_ipsec *dev,
+					      unsigned int handle);
+
+void mlx5e_accel_ipsec_fs_cleanup(struct mlx5e_ipsec *ipsec);
+int mlx5e_accel_ipsec_fs_init(struct mlx5e_ipsec *ipsec);
+int mlx5e_accel_ipsec_fs_add_rule(struct mlx5e_priv *priv,
+				  struct mlx5e_ipsec_sa_entry *sa_entry);
+void mlx5e_accel_ipsec_fs_del_rule(struct mlx5e_priv *priv,
+				   struct mlx5e_ipsec_sa_entry *sa_entry);
+>>>>>>> b7ba80a49124 (Commit)
 
 int mlx5_ipsec_create_sa_ctx(struct mlx5e_ipsec_sa_entry *sa_entry);
 void mlx5_ipsec_free_sa_ctx(struct mlx5e_ipsec_sa_entry *sa_entry);
@@ -231,6 +309,7 @@ u32 mlx5_ipsec_device_caps(struct mlx5_core_dev *mdev);
 void mlx5_accel_esp_modify_xfrm(struct mlx5e_ipsec_sa_entry *sa_entry,
 				const struct mlx5_accel_esp_xfrm_attrs *attrs);
 
+<<<<<<< HEAD
 int mlx5e_ipsec_aso_init(struct mlx5e_ipsec *ipsec);
 void mlx5e_ipsec_aso_cleanup(struct mlx5e_ipsec *ipsec);
 
@@ -241,11 +320,14 @@ void mlx5e_accel_ipsec_fs_read_stats(struct mlx5e_priv *priv,
 
 void mlx5e_ipsec_build_accel_xfrm_attrs(struct mlx5e_ipsec_sa_entry *sa_entry,
 					struct mlx5_accel_esp_xfrm_attrs *attrs);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct mlx5_core_dev *
 mlx5e_ipsec_sa2dev(struct mlx5e_ipsec_sa_entry *sa_entry)
 {
 	return sa_entry->ipsec->mdev;
 }
+<<<<<<< HEAD
 
 static inline struct mlx5_core_dev *
 mlx5e_ipsec_pol2dev(struct mlx5e_ipsec_pol_entry *pol_entry)
@@ -262,6 +344,12 @@ static inline bool addr6_all_zero(__be32 *addr6)
 #else
 static inline void mlx5e_ipsec_init(struct mlx5e_priv *priv)
 {
+=======
+#else
+static inline int mlx5e_ipsec_init(struct mlx5e_priv *priv)
+{
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void mlx5e_ipsec_cleanup(struct mlx5e_priv *priv)

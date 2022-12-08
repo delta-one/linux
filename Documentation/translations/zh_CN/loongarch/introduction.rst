@@ -70,8 +70,13 @@ LA64中每个寄存器为64位宽。 ``$r0`` 的内容总是固定为0，而其�
 ================= ================== =================== ==========
 
 .. note::
+<<<<<<< HEAD
     注意：在一些遗留代码中有时可能见到 ``$fv0`` 和 ``$fv1`` ，它们是
     ``$fa0`` 和 ``$fa1`` 的别名，属于已经废弃的用法。
+=======
+    注意：在一些遗留代码中有时可能见到 ``$v0`` 和 ``$v1`` ，它们是
+    ``$a0`` 和 ``$a1`` 的别名，属于已经废弃的用法。
+>>>>>>> b7ba80a49124 (Commit)
 
 
 向量寄存器
@@ -338,6 +343,7 @@ Loongson与LoongArch的开发者网站（软件与文档资源）：
 
 LoongArch指令集架构的文档：
 
+<<<<<<< HEAD
   https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-Vol1-v1.02-CN.pdf （中文版）
 
   https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-Vol1-v1.02-EN.pdf （英文版）
@@ -347,6 +353,17 @@ LoongArch的ELF psABI文档：
   https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-ELF-ABI-v2.00-CN.pdf （中文版）
 
   https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-ELF-ABI-v2.00-EN.pdf （英文版）
+=======
+  https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-Vol1-v1.00-CN.pdf （中文版）
+
+  https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-Vol1-v1.00-EN.pdf （英文版）
+
+LoongArch的ELF psABI文档：
+
+  https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-ELF-ABI-v1.00-CN.pdf （中文版）
+
+  https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-ELF-ABI-v1.00-EN.pdf （英文版）
+>>>>>>> b7ba80a49124 (Commit)
 
 Loongson与LoongArch的Linux内核源码仓库：
 

@@ -59,11 +59,20 @@ static irqreturn_t dir685_tk_irq_thread(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static int dir685_tk_probe(struct i2c_client *client)
 {
 	static const u8 bl_data[] = { 0xa7, 0x40 };
 	struct device *dev = &client->dev;
 	struct dir685_touchkeys *tk;
+=======
+static int dir685_tk_probe(struct i2c_client *client,
+			   const struct i2c_device_id *id)
+{
+	struct dir685_touchkeys *tk;
+	struct device *dev = &client->dev;
+	u8 bl_data[] = { 0xa7, 0x40 };
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 	int i;
 
@@ -145,7 +154,11 @@ static struct i2c_driver dir685_tk_i2c_driver = {
 		.name	= "dlink-dir685-touchkeys",
 		.of_match_table = of_match_ptr(dir685_tk_of_match),
 	},
+<<<<<<< HEAD
 	.probe_new	= dir685_tk_probe,
+=======
+	.probe		= dir685_tk_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= dir685_tk_id,
 };
 module_i2c_driver(dir685_tk_i2c_driver);

@@ -70,6 +70,7 @@ void amdgpu_mca_query_ras_error_count(struct amdgpu_device *adev,
 
 	amdgpu_mca_reset_error_count(adev, mc_status_addr);
 }
+<<<<<<< HEAD
 
 int amdgpu_mca_mp0_ras_sw_init(struct amdgpu_device *adev)
 {
@@ -142,3 +143,5 @@ int amdgpu_mca_mpio_ras_sw_init(struct amdgpu_device *adev)
 
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

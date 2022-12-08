@@ -6,8 +6,14 @@
 #ifndef __BPF_PROLOGUE_H
 #define __BPF_PROLOGUE_H
 
+<<<<<<< HEAD
 struct probe_trace_arg;
 struct bpf_insn;
+=======
+#include <linux/compiler.h>
+#include <linux/filter.h>
+#include "probe-event.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define BPF_PROLOGUE_MAX_ARGS 3
 #define BPF_PROLOGUE_START_ARG_REG BPF_REG_3
@@ -18,7 +24,10 @@ int bpf__gen_prologue(struct probe_trace_arg *args, int nargs,
 		      struct bpf_insn *new_prog, size_t *new_cnt,
 		      size_t cnt_space);
 #else
+<<<<<<< HEAD
 #include <linux/compiler.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <errno.h>
 
 static inline int

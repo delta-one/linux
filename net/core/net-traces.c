@@ -41,7 +41,10 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(br_fdb_add);
 EXPORT_TRACEPOINT_SYMBOL_GPL(br_fdb_external_learn_add);
 EXPORT_TRACEPOINT_SYMBOL_GPL(fdb_delete);
 EXPORT_TRACEPOINT_SYMBOL_GPL(br_fdb_update);
+<<<<<<< HEAD
 EXPORT_TRACEPOINT_SYMBOL_GPL(br_mdb_full);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #if IS_ENABLED(CONFIG_PAGE_POOL)
@@ -62,5 +65,8 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(napi_poll);
 
 EXPORT_TRACEPOINT_SYMBOL_GPL(tcp_send_reset);
 EXPORT_TRACEPOINT_SYMBOL_GPL(tcp_bad_csum);
+<<<<<<< HEAD
 
 EXPORT_TRACEPOINT_SYMBOL_GPL(sk_data_ready);
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -295,7 +295,11 @@ static void bbr_set_pacing_rate(struct sock *sk, u32 bw, int gain)
 }
 
 /* override sysctl_tcp_min_tso_segs */
+<<<<<<< HEAD
 __bpf_kfunc static u32 bbr_min_tso_segs(struct sock *sk)
+=======
+static u32 bbr_min_tso_segs(struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return sk->sk_pacing_rate < (bbr_min_tso_rate >> 3) ? 1 : 2;
 }
@@ -328,7 +332,11 @@ static void bbr_save_cwnd(struct sock *sk)
 		bbr->prior_cwnd = max(bbr->prior_cwnd, tcp_snd_cwnd(tp));
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static void bbr_cwnd_event(struct sock *sk, enum tcp_ca_event event)
+=======
+static void bbr_cwnd_event(struct sock *sk, enum tcp_ca_event event)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tcp_sock *tp = tcp_sk(sk);
 	struct bbr *bbr = inet_csk_ca(sk);
@@ -618,7 +626,11 @@ static void bbr_reset_probe_bw_mode(struct sock *sk)
 	struct bbr *bbr = inet_csk_ca(sk);
 
 	bbr->mode = BBR_PROBE_BW;
+<<<<<<< HEAD
 	bbr->cycle_idx = CYCLE_LEN - 1 - get_random_u32_below(bbr_cycle_rand);
+=======
+	bbr->cycle_idx = CYCLE_LEN - 1 - prandom_u32_max(bbr_cycle_rand);
+>>>>>>> b7ba80a49124 (Commit)
 	bbr_advance_cycle_phase(sk);	/* flip to next phase of gain cycle */
 }
 
@@ -1023,7 +1035,11 @@ static void bbr_update_model(struct sock *sk, const struct rate_sample *rs)
 	bbr_update_gains(sk);
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static void bbr_main(struct sock *sk, const struct rate_sample *rs)
+=======
+static void bbr_main(struct sock *sk, const struct rate_sample *rs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bbr *bbr = inet_csk_ca(sk);
 	u32 bw;
@@ -1035,7 +1051,11 @@ __bpf_kfunc static void bbr_main(struct sock *sk, const struct rate_sample *rs)
 	bbr_set_cwnd(sk, rs, rs->acked_sacked, bw, bbr->cwnd_gain);
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static void bbr_init(struct sock *sk)
+=======
+static void bbr_init(struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tcp_sock *tp = tcp_sk(sk);
 	struct bbr *bbr = inet_csk_ca(sk);
@@ -1077,7 +1097,11 @@ __bpf_kfunc static void bbr_init(struct sock *sk)
 	cmpxchg(&sk->sk_pacing_status, SK_PACING_NONE, SK_PACING_NEEDED);
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static u32 bbr_sndbuf_expand(struct sock *sk)
+=======
+static u32 bbr_sndbuf_expand(struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* Provision 3 * cwnd since BBR may slow-start even during recovery. */
 	return 3;
@@ -1086,7 +1110,11 @@ __bpf_kfunc static u32 bbr_sndbuf_expand(struct sock *sk)
 /* In theory BBR does not need to undo the cwnd since it does not
  * always reduce cwnd on losses (see bbr_main()). Keep it for now.
  */
+<<<<<<< HEAD
 __bpf_kfunc static u32 bbr_undo_cwnd(struct sock *sk)
+=======
+static u32 bbr_undo_cwnd(struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bbr *bbr = inet_csk_ca(sk);
 
@@ -1097,7 +1125,11 @@ __bpf_kfunc static u32 bbr_undo_cwnd(struct sock *sk)
 }
 
 /* Entering loss recovery, so save cwnd for when we exit or undo recovery. */
+<<<<<<< HEAD
 __bpf_kfunc static u32 bbr_ssthresh(struct sock *sk)
+=======
+static u32 bbr_ssthresh(struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	bbr_save_cwnd(sk);
 	return tcp_sk(sk)->snd_ssthresh;
@@ -1125,7 +1157,11 @@ static size_t bbr_get_info(struct sock *sk, u32 ext, int *attr,
 	return 0;
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static void bbr_set_state(struct sock *sk, u8 new_state)
+=======
+static void bbr_set_state(struct sock *sk, u8 new_state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bbr *bbr = inet_csk_ca(sk);
 

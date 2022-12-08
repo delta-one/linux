@@ -3,7 +3,10 @@
 
 #include "ice_dcb_lib.h"
 #include "ice_dcb_nl.h"
+<<<<<<< HEAD
 #include "ice_devlink.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * ice_dcb_get_ena_tc - return bitmap of enabled TCs
@@ -365,12 +368,15 @@ int ice_pf_dcb_cfg(struct ice_pf *pf, struct ice_dcbx_cfg *new_cfg, bool locked)
 	/* Enable DCB tagging only when more than one TC */
 	if (ice_dcb_get_num_tc(new_cfg) > 1) {
 		dev_dbg(dev, "DCB tagging enabled (num TC > 1)\n");
+<<<<<<< HEAD
 		if (pf->hw.port_info->is_custom_tx_enabled) {
 			dev_err(dev, "Custom Tx scheduler feature enabled, can't configure DCB\n");
 			return -EBUSY;
 		}
 		ice_tear_down_devlink_rate_tree(pf);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		set_bit(ICE_FLAG_DCB_ENA, pf->flags);
 	} else {
 		dev_dbg(dev, "DCB tagging disabled (num TC = 1)\n");
@@ -441,7 +447,11 @@ int ice_pf_dcb_cfg(struct ice_pf *pf, struct ice_dcbx_cfg *new_cfg, bool locked)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	ice_pf_dcb_recfg(pf, false);
+=======
+	ice_pf_dcb_recfg(pf);
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	/* enable previously downed VSIs */
@@ -731,13 +741,20 @@ static int ice_dcb_noncontig_cfg(struct ice_pf *pf)
 /**
  * ice_pf_dcb_recfg - Reconfigure all VEBs and VSIs
  * @pf: pointer to the PF struct
+<<<<<<< HEAD
  * @locked: is adev device lock held
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Assumed caller has already disabled all VSIs before
  * calling this function. Reconfiguring DCB based on
  * local_dcbx_cfg.
  */
+<<<<<<< HEAD
 void ice_pf_dcb_recfg(struct ice_pf *pf, bool locked)
+=======
+void ice_pf_dcb_recfg(struct ice_pf *pf)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ice_dcbx_cfg *dcbcfg = &pf->hw.port_info->qos_cfg.local_dcbx_cfg;
 	struct iidc_event *event;
@@ -784,6 +801,7 @@ void ice_pf_dcb_recfg(struct ice_pf *pf, bool locked)
 		if (vsi->type == ICE_VSI_PF)
 			ice_dcbnl_set_all(vsi);
 	}
+<<<<<<< HEAD
 	if (!locked) {
 		/* Notify the AUX drivers that TC change is finished */
 		event = kzalloc(sizeof(*event), GFP_KERNEL);
@@ -794,6 +812,16 @@ void ice_pf_dcb_recfg(struct ice_pf *pf, bool locked)
 		ice_send_event_to_aux(pf, event);
 		kfree(event);
 	}
+=======
+	/* Notify the AUX drivers that TC change is finished */
+	event = kzalloc(sizeof(*event), GFP_KERNEL);
+	if (!event)
+		return;
+
+	set_bit(IIDC_EVENT_AFTER_TC_CHANGE, event->type);
+	ice_send_event_to_aux(pf, event);
+	kfree(event);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -862,7 +890,11 @@ int ice_init_pf_dcb(struct ice_pf *pf, bool locked)
 	if (err)
 		goto dcb_init_err;
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 dcb_init_err:
 	dev_err(dev, "DCB init failed\n");
@@ -884,9 +916,12 @@ void ice_update_dcb_stats(struct ice_pf *pf)
 	prev_ps = &pf->stats_prev;
 	cur_ps = &pf->stats;
 
+<<<<<<< HEAD
 	if (ice_is_reset_in_progress(pf->state))
 		pf->stat_prev_loaded = false;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < 8; i++) {
 		ice_stat_update32(hw, GLPRT_PXOFFRXC(port, i),
 				  pf->stat_prev_loaded,
@@ -947,6 +982,7 @@ ice_tx_prepare_vlan_flags_dcb(struct ice_tx_ring *tx_ring,
 }
 
 /**
+<<<<<<< HEAD
  * ice_dcb_is_mib_change_pending - Check if MIB change is pending
  * @state: MIB change state
  */
@@ -957,6 +993,8 @@ static bool ice_dcb_is_mib_change_pending(u8 state)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ice_dcb_process_lldp_set_mib_change - Process MIB change
  * @pf: ptr to ice_pf
  * @event: pointer to the admin queue receive event
@@ -969,7 +1007,10 @@ ice_dcb_process_lldp_set_mib_change(struct ice_pf *pf,
 	struct device *dev = ice_pf_to_dev(pf);
 	struct ice_aqc_lldp_get_mib *mib;
 	struct ice_dcbx_cfg tmp_dcbx_cfg;
+<<<<<<< HEAD
 	bool pending_handled = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool need_reconfig = false;
 	struct ice_port_info *pi;
 	u8 mib_type;
@@ -986,13 +1027,20 @@ ice_dcb_process_lldp_set_mib_change(struct ice_pf *pf,
 
 	pi = pf->hw.port_info;
 	mib = (struct ice_aqc_lldp_get_mib *)&event->desc.params.raw;
+<<<<<<< HEAD
 
 	/* Ignore if event is not for Nearest Bridge */
 	mib_type = FIELD_GET(ICE_AQ_LLDP_BRID_TYPE_M, mib->type);
+=======
+	/* Ignore if event is not for Nearest Bridge */
+	mib_type = ((mib->type >> ICE_AQ_LLDP_BRID_TYPE_S) &
+		    ICE_AQ_LLDP_BRID_TYPE_M);
+>>>>>>> b7ba80a49124 (Commit)
 	dev_dbg(dev, "LLDP event MIB bridge type 0x%x\n", mib_type);
 	if (mib_type != ICE_AQ_LLDP_BRID_TYPE_NEAREST_BRID)
 		return;
 
+<<<<<<< HEAD
 	/* A pending change event contains accurate config information, and
 	 * the FW setting has not been updaed yet, so detect if change is
 	 * pending to determine where to pull config information from
@@ -1024,12 +1072,33 @@ ice_dcb_process_lldp_set_mib_change(struct ice_pf *pf,
 
 	/* store the old configuration */
 	tmp_dcbx_cfg = pi->qos_cfg.local_dcbx_cfg;
+=======
+	/* Check MIB Type and return if event for Remote MIB update */
+	mib_type = mib->type & ICE_AQ_LLDP_MIB_TYPE_M;
+	dev_dbg(dev, "LLDP event mib type %s\n", mib_type ? "remote" : "local");
+	if (mib_type == ICE_AQ_LLDP_MIB_REMOTE) {
+		/* Update the remote cached instance and return */
+		ret = ice_aq_get_dcb_cfg(pi->hw, ICE_AQ_LLDP_MIB_REMOTE,
+					 ICE_AQ_LLDP_BRID_TYPE_NEAREST_BRID,
+					 &pi->qos_cfg.remote_dcbx_cfg);
+		if (ret) {
+			dev_err(dev, "Failed to get remote DCB config\n");
+			return;
+		}
+	}
+
+	mutex_lock(&pf->tc_mutex);
+
+	/* store the old configuration */
+	tmp_dcbx_cfg = pf->hw.port_info->qos_cfg.local_dcbx_cfg;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Reset the old DCBX configuration data */
 	memset(&pi->qos_cfg.local_dcbx_cfg, 0,
 	       sizeof(pi->qos_cfg.local_dcbx_cfg));
 
 	/* Get updated DCBX data from firmware */
+<<<<<<< HEAD
 	if (!pending_handled) {
 		ice_get_dcb_cfg_from_mib_change(pi, event);
 	} else {
@@ -1038,6 +1107,12 @@ ice_dcb_process_lldp_set_mib_change(struct ice_pf *pf,
 			dev_err(dev, "Failed to get DCB config\n");
 			goto out;
 		}
+=======
+	ret = ice_get_dcb_cfg(pf->hw.port_info);
+	if (ret) {
+		dev_err(dev, "Failed to get DCB config\n");
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* No change detected in DCBX configs */
@@ -1064,24 +1139,35 @@ ice_dcb_process_lldp_set_mib_change(struct ice_pf *pf,
 		clear_bit(ICE_FLAG_DCB_ENA, pf->flags);
 	}
 
+<<<<<<< HEAD
 	/* Send Execute Pending MIB Change event if it is a Pending event */
 	if (!pending_handled) {
 		ice_lldp_execute_pending_mib(&pf->hw);
 		pending_handled = true;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rtnl_lock();
 	/* disable VSIs affected by DCB changes */
 	ice_dcb_ena_dis_vsi(pf, false, true);
 
+<<<<<<< HEAD
 	ret = ice_query_port_ets(pi, &buf, sizeof(buf), NULL);
+=======
+	ret = ice_query_port_ets(pf->hw.port_info, &buf, sizeof(buf), NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(dev, "Query Port ETS failed\n");
 		goto unlock_rtnl;
 	}
 
 	/* changes in configuration update VSI */
+<<<<<<< HEAD
 	ice_pf_dcb_recfg(pf, false);
+=======
+	ice_pf_dcb_recfg(pf);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* enable previously downed VSIs */
 	ice_dcb_ena_dis_vsi(pf, true, true);
@@ -1089,8 +1175,11 @@ unlock_rtnl:
 	rtnl_unlock();
 out:
 	mutex_unlock(&pf->tc_mutex);
+<<<<<<< HEAD
 
 	/* Send Execute Pending MIB Change event if it is a Pending event */
 	if (!pending_handled)
 		ice_lldp_execute_pending_mib(&pf->hw);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

@@ -11,7 +11,10 @@
 
 #include <linux/kernel.h>
 #include <linux/highmem.h>
+<<<<<<< HEAD
 #include <linux/non-atomic/xchg.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/uprobes.h>
 #include <linux/uaccess.h>
 #include <linux/sched.h> /* For struct task_struct */
@@ -311,5 +314,13 @@ unsigned long
 arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
 				  struct pt_regs *regs)
 {
+<<<<<<< HEAD
 	return __xchg(&regs->u_regs[UREG_I7], trampoline_vaddr - 8) + 8;
+=======
+	unsigned long orig_ret_vaddr = regs->u_regs[UREG_I7];
+
+	regs->u_regs[UREG_I7] = trampoline_vaddr-8;
+
+	return orig_ret_vaddr + 8;
+>>>>>>> b7ba80a49124 (Commit)
 }

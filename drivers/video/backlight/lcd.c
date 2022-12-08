@@ -323,7 +323,11 @@ static void __exit lcd_class_exit(void)
 
 static int __init lcd_class_init(void)
 {
+<<<<<<< HEAD
 	lcd_class = class_create("lcd");
+=======
+	lcd_class = class_create(THIS_MODULE, "lcd");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(lcd_class)) {
 		pr_warn("Unable to create backlight class; errno = %ld\n",
 			PTR_ERR(lcd_class));

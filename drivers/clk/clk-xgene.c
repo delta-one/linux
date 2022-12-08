@@ -522,10 +522,17 @@ static int xgene_clk_is_enabled(struct clk_hw *hw)
 		pr_debug("%s clock is %s\n", clk_hw_get_name(hw),
 			data & pclk->param.reg_clk_mask ? "enabled" :
 							"disabled");
+<<<<<<< HEAD
 	} else {
 		return 1;
 	}
 
+=======
+	}
+
+	if (!pclk->param.csr_reg)
+		return 1;
+>>>>>>> b7ba80a49124 (Commit)
 	return data & pclk->param.reg_clk_mask ? 1 : 0;
 }
 

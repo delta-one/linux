@@ -25,7 +25,11 @@ Documentation written by Tom Zanussi
 
         hist:keys=<field1[,field2,...]>[:values=<field1[,field2,...]>]
           [:sort=<field1[,field2,...]>][:size=#entries][:pause][:continue]
+<<<<<<< HEAD
           [:clear][:name=histname1][:nohitcount][:<handler>.<action>] [if <filter>]
+=======
+          [:clear][:name=histname1][:<handler>.<action>] [if <filter>]
+>>>>>>> b7ba80a49124 (Commit)
 
   When a matching event is hit, an entry is added to a hash table
   using the key(s) and value(s) named.  Keys and values correspond to
@@ -39,7 +43,11 @@ Documentation written by Tom Zanussi
   will use the event's kernel stacktrace as the key.  The keywords
   'keys' or 'key' can be used to specify keys, and the keywords
   'values', 'vals', or 'val' can be used to specify values.  Compound
+<<<<<<< HEAD
   keys consisting of up to three fields can be specified by the 'keys'
+=======
+  keys consisting of up to two fields can be specified by the 'keys'
+>>>>>>> b7ba80a49124 (Commit)
   keyword.  Hashing a compound key produces a unique entry in the
   table for each unique combination of component keys, and can be
   useful for providing more fine-grained summaries of event data.
@@ -79,9 +87,12 @@ Documentation written by Tom Zanussi
 	.log2          display log2 value rather than raw number
 	.buckets=size  display grouping of values rather than raw number
 	.usecs         display a common_timestamp in microseconds
+<<<<<<< HEAD
         .percent       display a number of percentage value
         .graph         display a bar-graph of a value
 	.stacktrace    display as a stacktrace (must by a long[] type)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	=============  =================================================
 
   Note that in general the semantics of a given field aren't
@@ -103,12 +114,21 @@ Documentation written by Tom Zanussi
   trigger, read its current contents, and then turn it off::
 
     # echo 'hist:keys=skbaddr.hex:vals=len' > \
+<<<<<<< HEAD
       /sys/kernel/tracing/events/net/netif_rx/trigger
 
     # cat /sys/kernel/tracing/events/net/netif_rx/hist
 
     # echo '!hist:keys=skbaddr.hex:vals=len' > \
       /sys/kernel/tracing/events/net/netif_rx/trigger
+=======
+      /sys/kernel/debug/tracing/events/net/netif_rx/trigger
+
+    # cat /sys/kernel/debug/tracing/events/net/netif_rx/hist
+
+    # echo '!hist:keys=skbaddr.hex:vals=len' > \
+      /sys/kernel/debug/tracing/events/net/netif_rx/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   The trigger file itself can be read to show the details of the
   currently attached hist trigger.  This information is also displayed
@@ -140,12 +160,15 @@ Documentation written by Tom Zanussi
   existing trigger, rather than via the '>' operator, which will cause
   the trigger to be removed through truncation.
 
+<<<<<<< HEAD
   The 'nohitcount' (or NOHC) parameter will suppress display of
   raw hitcount in the histogram. This option requires at least one
   value field which is not a 'raw hitcount'. For example,
   'hist:...:vals=hitcount:nohitcount' is rejected, but
   'hist:...:vals=hitcount.percent:nohitcount' is OK.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 - enable_hist/disable_hist
 
   The enable_hist and disable_hist triggers can be used to have one
@@ -170,6 +193,7 @@ Documentation written by Tom Zanussi
   aggregation on and off when conditions of interest are hit::
 
    # echo 'hist:keys=skbaddr.hex:vals=len:pause' > \
+<<<<<<< HEAD
       /sys/kernel/tracing/events/net/netif_receive_skb/trigger
 
     # echo 'enable_hist:net:netif_receive_skb if filename==/usr/bin/wget' > \
@@ -177,6 +201,15 @@ Documentation written by Tom Zanussi
 
     # echo 'disable_hist:net:netif_receive_skb if comm==wget' > \
       /sys/kernel/tracing/events/sched/sched_process_exit/trigger
+=======
+      /sys/kernel/debug/tracing/events/net/netif_receive_skb/trigger
+
+    # echo 'enable_hist:net:netif_receive_skb if filename==/usr/bin/wget' > \
+      /sys/kernel/debug/tracing/events/sched/sched_process_exec/trigger
+
+    # echo 'disable_hist:net:netif_receive_skb if comm==wget' > \
+      /sys/kernel/debug/tracing/events/sched/sched_process_exit/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   The above sets up an initially paused hist trigger which is unpaused
   and starts aggregating events when a given program is executed, and
@@ -219,7 +252,11 @@ Extended error information
   event.  The fields that can be used for the hist trigger are listed
   in the kmalloc event's format file::
 
+<<<<<<< HEAD
     # cat /sys/kernel/tracing/events/kmem/kmalloc/format
+=======
+    # cat /sys/kernel/debug/tracing/events/kmem/kmalloc/format
+>>>>>>> b7ba80a49124 (Commit)
     name: kmalloc
     ID: 374
     format:
@@ -239,7 +276,11 @@ Extended error information
   the kernel that made one or more calls to kmalloc::
 
     # echo 'hist:key=call_site:val=bytes_req.buckets=32' > \
+<<<<<<< HEAD
             /sys/kernel/tracing/events/kmem/kmalloc/trigger
+=======
+            /sys/kernel/debug/tracing/events/kmem/kmalloc/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   This tells the tracing system to create a 'hist' trigger using the
   call_site field of the kmalloc event as the key for the table, which
@@ -253,7 +294,11 @@ Extended error information
   file in the kmalloc event's subdirectory (for readability, a number
   of entries have been omitted)::
 
+<<<<<<< HEAD
     # cat /sys/kernel/tracing/events/kmem/kmalloc/hist
+=======
+    # cat /sys/kernel/debug/tracing/events/kmem/kmalloc/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=call_site:vals=bytes_req:sort=hitcount:size=2048 [active]
 
     { call_site: 18446744072106379007 } hitcount:          1  bytes_req:        176
@@ -293,7 +338,11 @@ Extended error information
   the trigger info, which can also be displayed by reading the
   'trigger' file::
 
+<<<<<<< HEAD
     # cat /sys/kernel/tracing/events/kmem/kmalloc/trigger
+=======
+    # cat /sys/kernel/debug/tracing/events/kmem/kmalloc/trigger
+>>>>>>> b7ba80a49124 (Commit)
     hist:keys=call_site:vals=bytes_req:sort=hitcount:size=2048 [active]
 
   At the end of the output are a few lines that display the overall
@@ -324,7 +373,11 @@ Extended error information
   command history and re-execute it with a '!' prepended::
 
     # echo '!hist:key=call_site:val=bytes_req' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/kmem/kmalloc/trigger
+=======
+           /sys/kernel/debug/tracing/events/kmem/kmalloc/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   Finally, notice that the call_site as displayed in the output above
   isn't really very useful.  It's an address, but normally addresses
@@ -332,9 +385,15 @@ Extended error information
   value, simply append '.hex' to the field name in the trigger::
 
     # echo 'hist:key=call_site.hex:val=bytes_req' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/kmem/kmalloc/trigger
 
     # cat /sys/kernel/tracing/events/kmem/kmalloc/hist
+=======
+           /sys/kernel/debug/tracing/events/kmem/kmalloc/trigger
+
+    # cat /sys/kernel/debug/tracing/events/kmem/kmalloc/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=call_site.hex:vals=bytes_req:sort=hitcount:size=2048 [active]
 
     { call_site: ffffffffa026b291 } hitcount:          1  bytes_req:        433
@@ -377,9 +436,15 @@ Extended error information
   trigger::
 
     # echo 'hist:key=call_site.sym:val=bytes_req' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/kmem/kmalloc/trigger
 
     # cat /sys/kernel/tracing/events/kmem/kmalloc/hist
+=======
+           /sys/kernel/debug/tracing/events/kmem/kmalloc/trigger
+
+    # cat /sys/kernel/debug/tracing/events/kmem/kmalloc/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=call_site.sym:vals=bytes_req:sort=hitcount:size=2048 [active]
 
     { call_site: [ffffffff810adcb9] syslog_print_all                              } hitcount:          1  bytes_req:       1024
@@ -427,9 +492,15 @@ Extended error information
   the 'sort' parameter, along with the 'descending' modifier::
 
     # echo 'hist:key=call_site.sym:val=bytes_req:sort=bytes_req.descending' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/kmem/kmalloc/trigger
 
     # cat /sys/kernel/tracing/events/kmem/kmalloc/hist
+=======
+           /sys/kernel/debug/tracing/events/kmem/kmalloc/trigger
+
+    # cat /sys/kernel/debug/tracing/events/kmem/kmalloc/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=call_site.sym:vals=bytes_req:sort=bytes_req.descending:size=2048 [active]
 
     { call_site: [ffffffffa046041c] i915_gem_execbuffer2 [i915]                   } hitcount:       2186  bytes_req:    3397464
@@ -468,9 +539,15 @@ Extended error information
   name, just use 'sym-offset' instead::
 
     # echo 'hist:key=call_site.sym-offset:val=bytes_req:sort=bytes_req.descending' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/kmem/kmalloc/trigger
 
     # cat /sys/kernel/tracing/events/kmem/kmalloc/hist
+=======
+           /sys/kernel/debug/tracing/events/kmem/kmalloc/trigger
+
+    # cat /sys/kernel/debug/tracing/events/kmem/kmalloc/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=call_site.sym-offset:vals=bytes_req:sort=bytes_req.descending:size=2048 [active]
 
     { call_site: [ffffffffa046041c] i915_gem_execbuffer2+0x6c/0x2c0 [i915]                  } hitcount:       4569  bytes_req:    3163720
@@ -507,9 +584,15 @@ Extended error information
   allocated in a descending order::
 
     # echo 'hist:keys=call_site.sym:values=bytes_req,bytes_alloc:sort=bytes_alloc.descending' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/kmem/kmalloc/trigger
 
     # cat /sys/kernel/tracing/events/kmem/kmalloc/hist
+=======
+           /sys/kernel/debug/tracing/events/kmem/kmalloc/trigger
+
+    # cat /sys/kernel/debug/tracing/events/kmem/kmalloc/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=call_site.sym:vals=bytes_req,bytes_alloc:sort=bytes_alloc.descending:size=2048 [active]
 
     { call_site: [ffffffffa046041c] i915_gem_execbuffer2 [i915]                   } hitcount:       7403  bytes_req:    4084360  bytes_alloc:    5958016
@@ -550,7 +633,11 @@ Extended error information
   value 'stacktrace' for the key parameter::
 
     # echo 'hist:keys=stacktrace:values=bytes_req,bytes_alloc:sort=bytes_alloc' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/kmem/kmalloc/trigger
+=======
+           /sys/kernel/debug/tracing/events/kmem/kmalloc/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   The above trigger will use the kernel stack trace in effect when an
   event is triggered as the key for the hash table.  This allows the
@@ -560,7 +647,11 @@ Extended error information
   every callpath in the system that led up to a kmalloc (in this case
   every callpath to a kmalloc for a kernel compile)::
 
+<<<<<<< HEAD
     # cat /sys/kernel/tracing/events/kmem/kmalloc/hist
+=======
+    # cat /sys/kernel/debug/tracing/events/kmem/kmalloc/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=stacktrace:vals=bytes_req,bytes_alloc:sort=bytes_alloc:size=2048 [active]
 
     { stacktrace:
@@ -659,9 +750,15 @@ Extended error information
   keeps a per-process sum of total bytes read::
 
     # echo 'hist:key=common_pid.execname:val=count:sort=count.descending' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/syscalls/sys_enter_read/trigger
 
     # cat /sys/kernel/tracing/events/syscalls/sys_enter_read/hist
+=======
+           /sys/kernel/debug/tracing/events/syscalls/sys_enter_read/trigger
+
+    # cat /sys/kernel/debug/tracing/events/syscalls/sys_enter_read/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=common_pid.execname:vals=count:sort=count.descending:size=2048 [active]
 
     { common_pid: gnome-terminal  [      3196] } hitcount:        280  count:    1093512
@@ -700,9 +797,15 @@ Extended error information
   counts for the system during the run::
 
     # echo 'hist:key=id.syscall:val=hitcount' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/raw_syscalls/sys_enter/trigger
 
     # cat /sys/kernel/tracing/events/raw_syscalls/sys_enter/hist
+=======
+           /sys/kernel/debug/tracing/events/raw_syscalls/sys_enter/trigger
+
+    # cat /sys/kernel/debug/tracing/events/raw_syscalls/sys_enter/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=id.syscall:vals=hitcount:sort=hitcount:size=2048 [active]
 
     { id: sys_fsync                     [ 74] } hitcount:          1
@@ -754,9 +857,15 @@ Extended error information
   hitcount sum as the secondary key::
 
     # echo 'hist:key=id.syscall,common_pid.execname:val=hitcount:sort=id,hitcount' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/raw_syscalls/sys_enter/trigger
 
     # cat /sys/kernel/tracing/events/raw_syscalls/sys_enter/hist
+=======
+           /sys/kernel/debug/tracing/events/raw_syscalls/sys_enter/trigger
+
+    # cat /sys/kernel/debug/tracing/events/raw_syscalls/sys_enter/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=id.syscall,common_pid.execname:vals=hitcount:sort=id.syscall,hitcount:size=2048 [active]
 
     { id: sys_read                      [  0], common_pid: rtkit-daemon    [      1877] } hitcount:          1
@@ -804,9 +913,15 @@ Extended error information
   can use that to filter out all the other syscalls::
 
     # echo 'hist:key=id.syscall,common_pid.execname:val=hitcount:sort=id,hitcount if id == 16' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/raw_syscalls/sys_enter/trigger
 
     # cat /sys/kernel/tracing/events/raw_syscalls/sys_enter/hist
+=======
+           /sys/kernel/debug/tracing/events/raw_syscalls/sys_enter/trigger
+
+    # cat /sys/kernel/debug/tracing/events/raw_syscalls/sys_enter/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=id.syscall,common_pid.execname:vals=hitcount:sort=id.syscall,hitcount:size=2048 if id == 16 [active]
 
     { id: sys_ioctl                     [ 16], common_pid: gmain           [      2769] } hitcount:          1
@@ -847,9 +962,15 @@ Extended error information
   each process::
 
     # echo 'hist:key=common_pid.execname,size:val=hitcount:sort=common_pid,size' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/syscalls/sys_enter_recvfrom/trigger
 
     # cat /sys/kernel/tracing/events/syscalls/sys_enter_recvfrom/hist
+=======
+           /sys/kernel/debug/tracing/events/syscalls/sys_enter_recvfrom/trigger
+
+    # cat /sys/kernel/debug/tracing/events/syscalls/sys_enter_recvfrom/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=common_pid.execname,size:vals=hitcount:sort=common_pid.execname,size:size=2048 [active]
 
     { common_pid: smbd            [       784], size:          4 } hitcount:          1
@@ -900,9 +1021,15 @@ Extended error information
   much smaller number, say 256::
 
     # echo 'hist:key=child_comm:val=hitcount:size=256' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/sched/sched_process_fork/trigger
 
     # cat /sys/kernel/tracing/events/sched/sched_process_fork/hist
+=======
+           /sys/kernel/debug/tracing/events/sched/sched_process_fork/trigger
+
+    # cat /sys/kernel/debug/tracing/events/sched/sched_process_fork/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=child_comm:vals=hitcount:sort=hitcount:size=256 [active]
 
     { child_comm: dconf worker                        } hitcount:          1
@@ -936,9 +1063,15 @@ Extended error information
   displays as [paused]::
 
     # echo 'hist:key=child_comm:val=hitcount:size=256:pause' >> \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/sched/sched_process_fork/trigger
 
     # cat /sys/kernel/tracing/events/sched/sched_process_fork/hist
+=======
+           /sys/kernel/debug/tracing/events/sched/sched_process_fork/trigger
+
+    # cat /sys/kernel/debug/tracing/events/sched/sched_process_fork/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=child_comm:vals=hitcount:sort=hitcount:size=256 [paused]
 
     { child_comm: dconf worker                        } hitcount:          1
@@ -973,9 +1106,15 @@ Extended error information
   again, and the data has changed::
 
     # echo 'hist:key=child_comm:val=hitcount:size=256:cont' >> \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/sched/sched_process_fork/trigger
 
     # cat /sys/kernel/tracing/events/sched/sched_process_fork/hist
+=======
+           /sys/kernel/debug/tracing/events/sched/sched_process_fork/trigger
+
+    # cat /sys/kernel/debug/tracing/events/sched/sched_process_fork/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=child_comm:vals=hitcount:sort=hitcount:size=256 [active]
 
     { child_comm: dconf worker                        } hitcount:          1
@@ -1027,7 +1166,11 @@ Extended error information
   netif_receive_skb event::
 
     # echo 'hist:key=stacktrace:vals=len:pause' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/net/netif_receive_skb/trigger
+=======
+           /sys/kernel/debug/tracing/events/net/netif_receive_skb/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   Next, we set up an 'enable_hist' trigger on the sched_process_exec
   event, with an 'if filename==/usr/bin/wget' filter.  The effect of
@@ -1038,7 +1181,11 @@ Extended error information
   hash table keyed on stacktrace::
 
     # echo 'enable_hist:net:netif_receive_skb if filename==/usr/bin/wget' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/sched/sched_process_exec/trigger
+=======
+           /sys/kernel/debug/tracing/events/sched/sched_process_exec/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   The aggregation continues until the netif_receive_skb is paused
   again, which is what the following disable_hist event does by
@@ -1046,7 +1193,11 @@ Extended error information
   filter 'comm==wget'::
 
     # echo 'disable_hist:net:netif_receive_skb if comm==wget' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/sched/sched_process_exit/trigger
+=======
+           /sys/kernel/debug/tracing/events/sched/sched_process_exit/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   Whenever a process exits and the comm field of the disable_hist
   trigger filter matches 'comm==wget', the netif_receive_skb hist
@@ -1059,7 +1210,11 @@ Extended error information
 
     $ wget https://www.kernel.org/pub/linux/kernel/v3.x/patch-3.19.xz
 
+<<<<<<< HEAD
     # cat /sys/kernel/tracing/events/net/netif_receive_skb/hist
+=======
+    # cat /sys/kernel/debug/tracing/events/net/netif_receive_skb/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=stacktrace:vals=len:sort=hitcount:size=2048 [paused]
 
     { stacktrace:
@@ -1143,12 +1298,20 @@ Extended error information
   again, we can just clear the histogram first::
 
     # echo 'hist:key=stacktrace:vals=len:clear' >> \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/net/netif_receive_skb/trigger
+=======
+           /sys/kernel/debug/tracing/events/net/netif_receive_skb/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   Just to verify that it is in fact cleared, here's what we now see in
   the hist file::
 
+<<<<<<< HEAD
     # cat /sys/kernel/tracing/events/net/netif_receive_skb/hist
+=======
+    # cat /sys/kernel/debug/tracing/events/net/netif_receive_skb/hist
+>>>>>>> b7ba80a49124 (Commit)
     # trigger info: hist:keys=stacktrace:vals=len:sort=hitcount:size=2048 [paused]
 
     Totals:
@@ -1163,21 +1326,36 @@ Extended error information
   sched_process_exit events as such::
 
     # echo 'enable_event:net:netif_receive_skb if filename==/usr/bin/wget' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/sched/sched_process_exec/trigger
 
     # echo 'disable_event:net:netif_receive_skb if comm==wget' > \
            /sys/kernel/tracing/events/sched/sched_process_exit/trigger
+=======
+           /sys/kernel/debug/tracing/events/sched/sched_process_exec/trigger
+
+    # echo 'disable_event:net:netif_receive_skb if comm==wget' > \
+           /sys/kernel/debug/tracing/events/sched/sched_process_exit/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   If you read the trigger files for the sched_process_exec and
   sched_process_exit triggers, you should see two triggers for each:
   one enabling/disabling the hist aggregation and the other
   enabling/disabling the logging of events::
 
+<<<<<<< HEAD
     # cat /sys/kernel/tracing/events/sched/sched_process_exec/trigger
     enable_event:net:netif_receive_skb:unlimited if filename==/usr/bin/wget
     enable_hist:net:netif_receive_skb:unlimited if filename==/usr/bin/wget
 
     # cat /sys/kernel/tracing/events/sched/sched_process_exit/trigger
+=======
+    # cat /sys/kernel/debug/tracing/events/sched/sched_process_exec/trigger
+    enable_event:net:netif_receive_skb:unlimited if filename==/usr/bin/wget
+    enable_hist:net:netif_receive_skb:unlimited if filename==/usr/bin/wget
+
+    # cat /sys/kernel/debug/tracing/events/sched/sched_process_exit/trigger
+>>>>>>> b7ba80a49124 (Commit)
     enable_event:net:netif_receive_skb:unlimited if comm==wget
     disable_hist:net:netif_receive_skb:unlimited if comm==wget
 
@@ -1193,7 +1371,11 @@ Extended error information
   saw in the last run, but this time you should also see the
   individual events in the trace file::
 
+<<<<<<< HEAD
     # cat /sys/kernel/tracing/trace
+=======
+    # cat /sys/kernel/debug/tracing/trace
+>>>>>>> b7ba80a49124 (Commit)
 
     # tracer: nop
     #
@@ -1227,6 +1409,7 @@ Extended error information
   other things::
 
     # echo 'hist:keys=skbaddr.hex:vals=len if len < 0' >> \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/net/netif_receive_skb/trigger
     # echo 'hist:keys=skbaddr.hex:vals=len if len > 4096' >> \
            /sys/kernel/tracing/events/net/netif_receive_skb/trigger
@@ -1236,6 +1419,17 @@ Extended error information
            /sys/kernel/tracing/events/net/netif_receive_skb/trigger
     # echo 'hist:keys=len:vals=common_preempt_count' >> \
            /sys/kernel/tracing/events/net/netif_receive_skb/trigger
+=======
+           /sys/kernel/debug/tracing/events/net/netif_receive_skb/trigger
+    # echo 'hist:keys=skbaddr.hex:vals=len if len > 4096' >> \
+           /sys/kernel/debug/tracing/events/net/netif_receive_skb/trigger
+    # echo 'hist:keys=skbaddr.hex:vals=len if len == 256' >> \
+           /sys/kernel/debug/tracing/events/net/netif_receive_skb/trigger
+    # echo 'hist:keys=skbaddr.hex:vals=len' >> \
+           /sys/kernel/debug/tracing/events/net/netif_receive_skb/trigger
+    # echo 'hist:keys=len:vals=common_preempt_count' >> \
+           /sys/kernel/debug/tracing/events/net/netif_receive_skb/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   The above set of commands create four triggers differing only in
   their filters, along with a completely different though fairly
@@ -1247,7 +1441,11 @@ Extended error information
   Displaying the contents of the 'hist' file for the event shows the
   contents of all five histograms::
 
+<<<<<<< HEAD
     # cat /sys/kernel/tracing/events/net/netif_receive_skb/hist
+=======
+    # cat /sys/kernel/debug/tracing/events/net/netif_receive_skb/hist
+>>>>>>> b7ba80a49124 (Commit)
 
     # event histogram
     #
@@ -1368,15 +1566,26 @@ Extended error information
   field in the shared 'foo' histogram data::
 
     # echo 'hist:name=foo:keys=skbaddr.hex:vals=len' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/net/netif_receive_skb/trigger
     # echo 'hist:name=foo:keys=skbaddr.hex:vals=len' > \
            /sys/kernel/tracing/events/net/netif_rx/trigger
+=======
+           /sys/kernel/debug/tracing/events/net/netif_receive_skb/trigger
+    # echo 'hist:name=foo:keys=skbaddr.hex:vals=len' > \
+           /sys/kernel/debug/tracing/events/net/netif_rx/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   You can see that they're updating common histogram data by reading
   each event's hist files at the same time::
 
+<<<<<<< HEAD
     # cat /sys/kernel/tracing/events/net/netif_receive_skb/hist;
       cat /sys/kernel/tracing/events/net/netif_rx/hist
+=======
+    # cat /sys/kernel/debug/tracing/events/net/netif_receive_skb/hist;
+      cat /sys/kernel/debug/tracing/events/net/netif_rx/hist
+>>>>>>> b7ba80a49124 (Commit)
 
     # event histogram
     #
@@ -1489,15 +1698,26 @@ Extended error information
   couple of triggers named 'bar' using those fields::
 
     # echo 'hist:name=bar:key=stacktrace:val=hitcount' > \
+<<<<<<< HEAD
            /sys/kernel/tracing/events/sched/sched_process_fork/trigger
     # echo 'hist:name=bar:key=stacktrace:val=hitcount' > \
           /sys/kernel/tracing/events/net/netif_rx/trigger
+=======
+           /sys/kernel/debug/tracing/events/sched/sched_process_fork/trigger
+    # echo 'hist:name=bar:key=stacktrace:val=hitcount' > \
+          /sys/kernel/debug/tracing/events/net/netif_rx/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   And displaying the output of either shows some interesting if
   somewhat confusing output::
 
+<<<<<<< HEAD
     # cat /sys/kernel/tracing/events/sched/sched_process_fork/hist
     # cat /sys/kernel/tracing/events/net/netif_rx/hist
+=======
+    # cat /sys/kernel/debug/tracing/events/sched/sched_process_fork/hist
+    # cat /sys/kernel/debug/tracing/events/net/netif_rx/hist
+>>>>>>> b7ba80a49124 (Commit)
 
     # event histogram
     #
@@ -1787,8 +2007,11 @@ or assigned to a variable and referenced in a subsequent expression::
   # echo 'hist:keys=next_pid:us_per_sec=1000000 ...' >> event/trigger
   # echo 'hist:keys=next_pid:timestamp_secs=common_timestamp/$us_per_sec ...' >> event/trigger
 
+<<<<<<< HEAD
 Variables can even hold stacktraces, which are useful with synthetic events.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 2.2.2 Synthetic Events
 ----------------------
 
@@ -1829,19 +2052,31 @@ variable reference to a variable on another event::
           u64 lat; \
           pid_t pid; \
 	  int prio' >> \
+<<<<<<< HEAD
 	  /sys/kernel/tracing/synthetic_events
+=======
+	  /sys/kernel/debug/tracing/synthetic_events
+>>>>>>> b7ba80a49124 (Commit)
 
 Reading the tracing/synthetic_events file lists all the currently
 defined synthetic events, in this case the event defined above::
 
+<<<<<<< HEAD
   # cat /sys/kernel/tracing/synthetic_events
+=======
+  # cat /sys/kernel/debug/tracing/synthetic_events
+>>>>>>> b7ba80a49124 (Commit)
     wakeup_latency u64 lat; pid_t pid; int prio
 
 An existing synthetic event definition can be removed by prepending
 the command that defined it with a '!'::
 
   # echo '!wakeup_latency u64 lat pid_t pid int prio' >> \
+<<<<<<< HEAD
     /sys/kernel/tracing/synthetic_events
+=======
+    /sys/kernel/debug/tracing/synthetic_events
+>>>>>>> b7ba80a49124 (Commit)
 
 At this point, there isn't yet an actual 'wakeup_latency' event
 instantiated in the event subsystem - for this to happen, a 'hist
@@ -1853,20 +2088,34 @@ done, the 'wakeup_latency' synthetic event instance is created.
 The new event is created under the tracing/events/synthetic/ directory
 and looks and behaves just like any other event::
 
+<<<<<<< HEAD
   # ls /sys/kernel/tracing/events/synthetic/wakeup_latency
+=======
+  # ls /sys/kernel/debug/tracing/events/synthetic/wakeup_latency
+>>>>>>> b7ba80a49124 (Commit)
         enable  filter  format  hist  id  trigger
 
 A histogram can now be defined for the new synthetic event::
 
   # echo 'hist:keys=pid,prio,lat.log2:sort=lat' >> \
+<<<<<<< HEAD
         /sys/kernel/tracing/events/synthetic/wakeup_latency/trigger
+=======
+        /sys/kernel/debug/tracing/events/synthetic/wakeup_latency/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
 The above shows the latency "lat" in a power of 2 grouping.
 
 Like any other event, once a histogram is enabled for the event, the
+<<<<<<< HEAD
 output can be displayed by reading the event's 'hist' file::
 
   # cat /sys/kernel/tracing/events/synthetic/wakeup_latency/hist
+=======
+output can be displayed by reading the event's 'hist' file.
+
+  # cat /sys/kernel/debug/tracing/events/synthetic/wakeup_latency/hist
+>>>>>>> b7ba80a49124 (Commit)
 
   # event histogram
   #
@@ -1911,10 +2160,17 @@ output can be displayed by reading the event's 'hist' file::
 
 
 The latency values can also be grouped linearly by a given size with
+<<<<<<< HEAD
 the ".buckets" modifier and specify a size (in this case groups of 10)::
 
   # echo 'hist:keys=pid,prio,lat.buckets=10:sort=lat' >> \
         /sys/kernel/tracing/events/synthetic/wakeup_latency/trigger
+=======
+the ".buckets" modifier and specify a size (in this case groups of 10).
+
+  # echo 'hist:keys=pid,prio,lat.buckets=10:sort=lat' >> \
+        /sys/kernel/debug/tracing/events/synthetic/wakeup_latency/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   # event histogram
   #
@@ -1943,6 +2199,7 @@ the ".buckets" modifier and specify a size (in this case groups of 10)::
       Entries: 16
       Dropped: 0
 
+<<<<<<< HEAD
 To save stacktraces, create a synthetic event with a field of type "unsigned long[]"
 or even just "long[]". For example, to see how long a task is blocked in an
 uninterruptible state::
@@ -2094,6 +2351,8 @@ histogram::
     Entries: 7
     Dropped: 0
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 2.2.3 Hist trigger 'handlers' and 'actions'
 -------------------------------------------
 
@@ -2193,9 +2452,15 @@ The following commonly-used handler.action pairs are available:
     event::
 
       # echo 'wakeup_new_test pid_t pid' >> \
+<<<<<<< HEAD
              /sys/kernel/tracing/synthetic_events
 
       # cat /sys/kernel/tracing/synthetic_events
+=======
+             /sys/kernel/debug/tracing/synthetic_events
+
+      # cat /sys/kernel/debug/tracing/synthetic_events
+>>>>>>> b7ba80a49124 (Commit)
             wakeup_new_test pid_t pid
 
     The following hist trigger both defines the missing testpid
@@ -2206,6 +2471,7 @@ The following commonly-used handler.action pairs are available:
 
       # echo 'hist:keys=$testpid:testpid=pid:onmatch(sched.sched_wakeup_new).\
               wakeup_new_test($testpid) if comm=="cyclictest"' >> \
+<<<<<<< HEAD
               /sys/kernel/tracing/events/sched/sched_wakeup_new/trigger
 
     Or, equivalently, using the 'trace' keyword syntax::
@@ -2213,19 +2479,36 @@ The following commonly-used handler.action pairs are available:
       # echo 'hist:keys=$testpid:testpid=pid:onmatch(sched.sched_wakeup_new).\
               trace(wakeup_new_test,$testpid) if comm=="cyclictest"' >> \
               /sys/kernel/tracing/events/sched/sched_wakeup_new/trigger
+=======
+              /sys/kernel/debug/tracing/events/sched/sched_wakeup_new/trigger
+
+    Or, equivalently, using the 'trace' keyword syntax:
+
+    # echo 'hist:keys=$testpid:testpid=pid:onmatch(sched.sched_wakeup_new).\
+            trace(wakeup_new_test,$testpid) if comm=="cyclictest"' >> \
+            /sys/kernel/debug/tracing/events/sched/sched_wakeup_new/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
     Creating and displaying a histogram based on those events is now
     just a matter of using the fields and new synthetic event in the
     tracing/events/synthetic directory, as usual::
 
       # echo 'hist:keys=pid:sort=pid' >> \
+<<<<<<< HEAD
              /sys/kernel/tracing/events/synthetic/wakeup_new_test/trigger
+=======
+             /sys/kernel/debug/tracing/events/synthetic/wakeup_new_test/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
     Running 'cyclictest' should cause wakeup_new events to generate
     wakeup_new_test synthetic events which should result in histogram
     output in the wakeup_new_test event's hist file::
 
+<<<<<<< HEAD
       # cat /sys/kernel/tracing/events/synthetic/wakeup_new_test/hist
+=======
+      # cat /sys/kernel/debug/tracing/events/synthetic/wakeup_new_test/hist
+>>>>>>> b7ba80a49124 (Commit)
 
     A more typical usage would be to use two events to calculate a
     latency.  The following example uses a set of hist triggers to
@@ -2234,14 +2517,22 @@ The following commonly-used handler.action pairs are available:
     First, we define a 'wakeup_latency' synthetic event::
 
       # echo 'wakeup_latency u64 lat; pid_t pid; int prio' >> \
+<<<<<<< HEAD
               /sys/kernel/tracing/synthetic_events
+=======
+              /sys/kernel/debug/tracing/synthetic_events
+>>>>>>> b7ba80a49124 (Commit)
 
     Next, we specify that whenever we see a sched_waking event for a
     cyclictest thread, save the timestamp in a 'ts0' variable::
 
       # echo 'hist:keys=$saved_pid:saved_pid=pid:ts0=common_timestamp.usecs \
               if comm=="cyclictest"' >> \
+<<<<<<< HEAD
 	      /sys/kernel/tracing/events/sched/sched_waking/trigger
+=======
+	      /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
     Then, when the corresponding thread is actually scheduled onto the
     CPU by a sched_switch event (saved_pid matches next_pid), calculate
@@ -2251,19 +2542,31 @@ The following commonly-used handler.action pairs are available:
       # echo 'hist:keys=next_pid:wakeup_lat=common_timestamp.usecs-$ts0:\
               onmatch(sched.sched_waking).wakeup_latency($wakeup_lat,\
 	              $saved_pid,next_prio) if next_comm=="cyclictest"' >> \
+<<<<<<< HEAD
 	      /sys/kernel/tracing/events/sched/sched_switch/trigger
+=======
+	      /sys/kernel/debug/tracing/events/sched/sched_switch/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
     We also need to create a histogram on the wakeup_latency synthetic
     event in order to aggregate the generated synthetic event data::
 
       # echo 'hist:keys=pid,prio,lat:sort=pid,lat' >> \
+<<<<<<< HEAD
               /sys/kernel/tracing/events/synthetic/wakeup_latency/trigger
+=======
+              /sys/kernel/debug/tracing/events/synthetic/wakeup_latency/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
     Finally, once we've run cyclictest to actually generate some
     events, we can see the output by looking at the wakeup_latency
     synthetic event's hist file::
 
+<<<<<<< HEAD
       # cat /sys/kernel/tracing/events/synthetic/wakeup_latency/hist
+=======
+      # cat /sys/kernel/debug/tracing/events/synthetic/wakeup_latency/hist
+>>>>>>> b7ba80a49124 (Commit)
 
   - onmax(var).save(field,..	.)
 
@@ -2289,19 +2592,31 @@ The following commonly-used handler.action pairs are available:
 
       # echo 'hist:keys=pid:ts0=common_timestamp.usecs \
               if comm=="cyclictest"' >> \
+<<<<<<< HEAD
               /sys/kernel/tracing/events/sched/sched_waking/trigger
+=======
+              /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
       # echo 'hist:keys=next_pid:\
               wakeup_lat=common_timestamp.usecs-$ts0:\
               onmax($wakeup_lat).save(next_comm,prev_pid,prev_prio,prev_comm) \
               if next_comm=="cyclictest"' >> \
+<<<<<<< HEAD
               /sys/kernel/tracing/events/sched/sched_switch/trigger
+=======
+              /sys/kernel/debug/tracing/events/sched/sched_switch/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
     When the histogram is displayed, the max value and the saved
     values corresponding to the max are displayed following the rest
     of the fields::
 
+<<<<<<< HEAD
       # cat /sys/kernel/tracing/events/sched/sched_switch/hist
+=======
+      # cat /sys/kernel/debug/tracing/events/sched/sched_switch/hist
+>>>>>>> b7ba80a49124 (Commit)
         { next_pid:       2255 } hitcount:        239
           common_timestamp-ts0:          0
           max:         27
@@ -2345,6 +2660,7 @@ The following commonly-used handler.action pairs are available:
     resulting latency, stored in wakeup_lat, exceeds the current
     maximum latency, a snapshot is taken.  As part of the setup, all
     the scheduler events are also enabled, which are the events that
+<<<<<<< HEAD
     will show up in the snapshot when it is taken at some point::
 
       # echo 1 > /sys/kernel/tracing/events/sched/enable
@@ -2358,12 +2674,28 @@ The following commonly-used handler.action pairs are available:
 	      prev_comm):onmax($wakeup_lat).snapshot() \
 	      if next_comm=="cyclictest"' >> \
 	      /sys/kernel/tracing/events/sched/sched_switch/trigger
+=======
+    will show up in the snapshot when it is taken at some point:
+
+    # echo 1 > /sys/kernel/debug/tracing/events/sched/enable
+
+    # echo 'hist:keys=pid:ts0=common_timestamp.usecs \
+            if comm=="cyclictest"' >> \
+            /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
+
+    # echo 'hist:keys=next_pid:wakeup_lat=common_timestamp.usecs-$ts0: \
+            onmax($wakeup_lat).save(next_prio,next_comm,prev_pid,prev_prio, \
+	    prev_comm):onmax($wakeup_lat).snapshot() \
+	    if next_comm=="cyclictest"' >> \
+	    /sys/kernel/debug/tracing/events/sched/sched_switch/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
     When the histogram is displayed, for each bucket the max value
     and the saved values corresponding to the max are displayed
     following the rest of the fields.
 
     If a snapshot was taken, there is also a message indicating that,
+<<<<<<< HEAD
     along with the value and event that triggered the global maximum::
 
       # cat /sys/kernel/tracing/events/sched/sched_switch/hist
@@ -2387,6 +2719,31 @@ The following commonly-used handler.action pairs are available:
           Hits: 3508
           Entries: 3
           Dropped: 0
+=======
+    along with the value and event that triggered the global maximum:
+
+    # cat /sys/kernel/debug/tracing/events/sched/sched_switch/hist
+      { next_pid:       2101 } hitcount:        200
+	max:         52  next_prio:        120  next_comm: cyclictest \
+        prev_pid:          0  prev_prio:        120  prev_comm: swapper/6
+
+      { next_pid:       2103 } hitcount:       1326
+	max:        572  next_prio:         19  next_comm: cyclictest \
+        prev_pid:          0  prev_prio:        120  prev_comm: swapper/1
+
+      { next_pid:       2102 } hitcount:       1982 \
+	max:         74  next_prio:         19  next_comm: cyclictest \
+        prev_pid:          0  prev_prio:        120  prev_comm: swapper/5
+
+    Snapshot taken (see tracing/snapshot).  Details:
+	triggering value { onmax($wakeup_lat) }:        572	\
+	triggered by event with key: { next_pid:       2103 }
+
+    Totals:
+        Hits: 3508
+        Entries: 3
+        Dropped: 0
+>>>>>>> b7ba80a49124 (Commit)
 
     In the above case, the event that triggered the global maximum has
     the key with next_pid == 2103.  If you look at the bucket that has
@@ -2401,7 +2758,11 @@ The following commonly-used handler.action pairs are available:
     sched_switch events, which should match the time displayed in the
     global maximum)::
 
+<<<<<<< HEAD
      # cat /sys/kernel/tracing/snapshot
+=======
+     # cat /sys/kernel/debug/tracing/snapshot
+>>>>>>> b7ba80a49124 (Commit)
 
          <...>-2103  [005] d..3   309.873125: sched_switch: prev_comm=cyclictest prev_pid=2103 prev_prio=19 prev_state=D ==> next_comm=swapper/5 next_pid=0 next_prio=120
          <idle>-0     [005] d.h3   309.873611: sched_waking: comm=cyclictest pid=2102 prio=19 target_cpu=005
@@ -2464,6 +2825,7 @@ The following commonly-used handler.action pairs are available:
     $cwnd variable.  If the value has changed, a snapshot is taken.
     As part of the setup, all the scheduler and tcp events are also
     enabled, which are the events that will show up in the snapshot
+<<<<<<< HEAD
     when it is taken at some point::
 
       # echo 1 > /sys/kernel/tracing/events/sched/enable
@@ -2473,6 +2835,17 @@ The following commonly-used handler.action pairs are available:
               onchange($cwnd).save(snd_wnd,srtt,rcv_wnd): \
 	      onchange($cwnd).snapshot()' >> \
 	      /sys/kernel/tracing/events/tcp/tcp_probe/trigger
+=======
+    when it is taken at some point:
+
+    # echo 1 > /sys/kernel/debug/tracing/events/sched/enable
+    # echo 1 > /sys/kernel/debug/tracing/events/tcp/enable
+
+    # echo 'hist:keys=dport:cwnd=snd_cwnd: \
+            onchange($cwnd).save(snd_wnd,srtt,rcv_wnd): \
+	    onchange($cwnd).snapshot()' >> \
+	    /sys/kernel/debug/tracing/events/tcp/tcp_probe/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
     When the histogram is displayed, for each bucket the tracked value
     and the saved values corresponding to that value are displayed
@@ -2481,7 +2854,11 @@ The following commonly-used handler.action pairs are available:
     If a snapshot was taken, there is also a message indicating that,
     along with the value and event that triggered the snapshot::
 
+<<<<<<< HEAD
       # cat /sys/kernel/tracing/events/tcp/tcp_probe/hist
+=======
+      # cat /sys/kernel/debug/tracing/events/tcp/tcp_probe/hist
+>>>>>>> b7ba80a49124 (Commit)
 
       { dport:       1521 } hitcount:          8
 	changed:         10  snd_wnd:      35456  srtt:     154262  rcv_wnd:      42112
@@ -2495,10 +2872,17 @@ The following commonly-used handler.action pairs are available:
       { dport:        443 } hitcount:        211
 	changed:         10  snd_wnd:      26960  srtt:      17379  rcv_wnd:      28800
 
+<<<<<<< HEAD
       Snapshot taken (see tracing/snapshot).  Details:
 
           triggering value { onchange($cwnd) }:         10
           triggered by event with key: { dport:         80 }
+=======
+    Snapshot taken (see tracing/snapshot).  Details::
+
+        triggering value { onchange($cwnd) }:         10
+        triggered by event with key: { dport:         80 }
+>>>>>>> b7ba80a49124 (Commit)
 
       Totals:
           Hits: 414
@@ -2515,7 +2899,11 @@ The following commonly-used handler.action pairs are available:
     And finally, looking at the snapshot data should show at or near
     the end the event that triggered the snapshot::
 
+<<<<<<< HEAD
       # cat /sys/kernel/tracing/snapshot
+=======
+      # cat /sys/kernel/debug/tracing/snapshot
+>>>>>>> b7ba80a49124 (Commit)
 
          gnome-shell-1261  [006] dN.3    49.823113: sched_stat_runtime: comm=gnome-shell pid=1261 runtime=49347 [ns] vruntime=1835730389 [ns]
        kworker/u16:4-773   [003] d..3    49.823114: sched_switch: prev_comm=kworker/u16:4 prev_pid=773 prev_prio=120 prev_state=R+ ==> next_comm=kworker/3:2 next_pid=135 next_prio=120

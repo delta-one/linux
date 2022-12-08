@@ -13,6 +13,7 @@
 / {
 	model = "Renesas White Hawk CPU and Breakout boards based on r8a779g0";
 	compatible = "renesas,white-hawk-breakout", "renesas,white-hawk-cpu", "renesas,r8a779g0";
+<<<<<<< HEAD
 
 	can_transceiver0: can-phy0 {
 		compatible = "nxp,tjr1443";
@@ -40,6 +41,8 @@
 	channel1 {
 		status = "okay";
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &i2c0 {
@@ -50,6 +53,7 @@
 		pagesize = <8>;
 	};
 };
+<<<<<<< HEAD
 
 &pfc {
 	can_clk_pins: can-clk {
@@ -67,3 +71,5 @@
 		function = "canfd1";
 	};
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

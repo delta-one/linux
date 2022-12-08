@@ -188,7 +188,11 @@ mtk_flow_set_output_device(struct mtk_eth *eth, struct mtk_foe_entry *foe,
 			   int *wed_index)
 {
 	struct mtk_wdma_info info = {};
+<<<<<<< HEAD
 	int pse_port, dsa_port, queue;
+=======
+	int pse_port, dsa_port;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (mtk_flow_get_wdma_info(dev, dest_mac, &info) == 0) {
 		mtk_foe_entry_set_wdma(eth, foe, info.wdma_idx, info.queue,
@@ -212,6 +216,11 @@ mtk_flow_set_output_device(struct mtk_eth *eth, struct mtk_foe_entry *foe,
 	}
 
 	dsa_port = mtk_flow_get_dsa_port(&dev);
+<<<<<<< HEAD
+=======
+	if (dsa_port >= 0)
+		mtk_foe_entry_set_dsa(eth, foe, dsa_port);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dev == eth->netdev[0])
 		pse_port = 1;
@@ -220,6 +229,7 @@ mtk_flow_set_output_device(struct mtk_eth *eth, struct mtk_foe_entry *foe,
 	else
 		return -EOPNOTSUPP;
 
+<<<<<<< HEAD
 	if (dsa_port >= 0) {
 		mtk_foe_entry_set_dsa(eth, foe, dsa_port);
 		queue = 3 + dsa_port;
@@ -228,6 +238,8 @@ mtk_flow_set_output_device(struct mtk_eth *eth, struct mtk_foe_entry *foe,
 	}
 	mtk_foe_entry_set_queue(eth, foe, queue);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	mtk_foe_entry_set_pse_port(eth, foe, pse_port);
 
@@ -497,7 +509,10 @@ static int
 mtk_flow_offload_stats(struct mtk_eth *eth, struct flow_cls_offload *f)
 {
 	struct mtk_flow_entry *entry;
+<<<<<<< HEAD
 	struct mtk_foe_accounting diff;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 idle;
 
 	entry = rhashtable_lookup(&eth->flow_table, &f->cookie,
@@ -508,6 +523,7 @@ mtk_flow_offload_stats(struct mtk_eth *eth, struct flow_cls_offload *f)
 	idle = mtk_foe_entry_idle_time(eth->ppe[entry->ppe_index], entry);
 	f->stats.lastused = jiffies - idle * HZ;
 
+<<<<<<< HEAD
 	if (entry->hash != 0xFFFF &&
 	    mtk_foe_entry_get_mib(eth->ppe[entry->ppe_index], entry->hash,
 				  &diff)) {
@@ -515,6 +531,8 @@ mtk_flow_offload_stats(struct mtk_eth *eth, struct flow_cls_offload *f)
 		f->stats.bytes += diff.bytes;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

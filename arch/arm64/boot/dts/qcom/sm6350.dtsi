@@ -6,6 +6,7 @@
 
 #include <dt-bindings/clock/qcom,gcc-sm6350.h>
 #include <dt-bindings/clock/qcom,rpmh.h>
+<<<<<<< HEAD
 #include <dt-bindings/clock/qcom,sm6350-camcc.h>
 #include <dt-bindings/dma/qcom-gpi.h>
 #include <dt-bindings/gpio/gpio.h>
@@ -15,6 +16,13 @@
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/mailbox/qcom-ipcc.h>
 #include <dt-bindings/phy/phy-qcom-qmp.h>
+=======
+#include <dt-bindings/dma/qcom-gpi.h>
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interconnect/qcom,sm6350.h>
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/mailbox/qcom-ipcc.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <dt-bindings/power/qcom-rpmpd.h>
 #include <dt-bindings/soc/qcom,rpmh-rsc.h>
 
@@ -46,12 +54,16 @@
 			device_type = "cpu";
 			compatible = "qcom,kryo560";
 			reg = <0x0 0x0>;
+<<<<<<< HEAD
 			clocks = <&cpufreq_hw 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <1024>;
 			dynamic-power-coefficient = <100>;
 			next-level-cache = <&L2_0>;
 			qcom,freq-domain = <&cpufreq_hw 0>;
+<<<<<<< HEAD
 			operating-points-v2 = <&cpu0_opp_table>;
 			interconnects = <&gem_noc MASTER_AMPSS_M0 QCOM_ICC_TAG_ACTIVE_ONLY
 					 &clk_virt SLAVE_EBI_CH0 QCOM_ICC_TAG_ACTIVE_ONLY>,
@@ -64,6 +76,14 @@
 				L3_0: l3-cache {
 					compatible = "cache";
 					cache-level = <3>;
+=======
+			#cooling-cells = <2>;
+			L2_0: l2-cache {
+				compatible = "cache";
+				next-level-cache = <&L3_0>;
+				L3_0: l3-cache {
+					compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
 				};
 			};
 		};
@@ -72,12 +92,16 @@
 			device_type = "cpu";
 			compatible = "qcom,kryo560";
 			reg = <0x0 0x100>;
+<<<<<<< HEAD
 			clocks = <&cpufreq_hw 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <1024>;
 			dynamic-power-coefficient = <100>;
 			next-level-cache = <&L2_100>;
 			qcom,freq-domain = <&cpufreq_hw 0>;
+<<<<<<< HEAD
 			operating-points-v2 = <&cpu0_opp_table>;
 			interconnects = <&gem_noc MASTER_AMPSS_M0 QCOM_ICC_TAG_ACTIVE_ONLY
 					 &clk_virt SLAVE_EBI_CH0 QCOM_ICC_TAG_ACTIVE_ONLY>,
@@ -86,6 +110,11 @@
 			L2_100: l2-cache {
 				compatible = "cache";
 				cache-level = <2>;
+=======
+			#cooling-cells = <2>;
+			L2_100: l2-cache {
+				compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
@@ -94,12 +123,16 @@
 			device_type = "cpu";
 			compatible = "qcom,kryo560";
 			reg = <0x0 0x200>;
+<<<<<<< HEAD
 			clocks = <&cpufreq_hw 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <1024>;
 			dynamic-power-coefficient = <100>;
 			next-level-cache = <&L2_200>;
 			qcom,freq-domain = <&cpufreq_hw 0>;
+<<<<<<< HEAD
 			operating-points-v2 = <&cpu0_opp_table>;
 			interconnects = <&gem_noc MASTER_AMPSS_M0 QCOM_ICC_TAG_ACTIVE_ONLY
 					 &clk_virt SLAVE_EBI_CH0 QCOM_ICC_TAG_ACTIVE_ONLY>,
@@ -108,6 +141,11 @@
 			L2_200: l2-cache {
 				compatible = "cache";
 				cache-level = <2>;
+=======
+			#cooling-cells = <2>;
+			L2_200: l2-cache {
+				compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
@@ -116,12 +154,16 @@
 			device_type = "cpu";
 			compatible = "qcom,kryo560";
 			reg = <0x0 0x300>;
+<<<<<<< HEAD
 			clocks = <&cpufreq_hw 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <1024>;
 			dynamic-power-coefficient = <100>;
 			next-level-cache = <&L2_300>;
 			qcom,freq-domain = <&cpufreq_hw 0>;
+<<<<<<< HEAD
 			operating-points-v2 = <&cpu0_opp_table>;
 			interconnects = <&gem_noc MASTER_AMPSS_M0 QCOM_ICC_TAG_ACTIVE_ONLY
 					 &clk_virt SLAVE_EBI_CH0 QCOM_ICC_TAG_ACTIVE_ONLY>,
@@ -130,6 +172,11 @@
 			L2_300: l2-cache {
 				compatible = "cache";
 				cache-level = <2>;
+=======
+			#cooling-cells = <2>;
+			L2_300: l2-cache {
+				compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
@@ -138,12 +185,16 @@
 			device_type = "cpu";
 			compatible = "qcom,kryo560";
 			reg = <0x0 0x400>;
+<<<<<<< HEAD
 			clocks = <&cpufreq_hw 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <1024>;
 			dynamic-power-coefficient = <100>;
 			next-level-cache = <&L2_400>;
 			qcom,freq-domain = <&cpufreq_hw 0>;
+<<<<<<< HEAD
 			operating-points-v2 = <&cpu0_opp_table>;
 			interconnects = <&gem_noc MASTER_AMPSS_M0 QCOM_ICC_TAG_ACTIVE_ONLY
 					 &clk_virt SLAVE_EBI_CH0 QCOM_ICC_TAG_ACTIVE_ONLY>,
@@ -152,6 +203,11 @@
 			L2_400: l2-cache {
 				compatible = "cache";
 				cache-level = <2>;
+=======
+			#cooling-cells = <2>;
+			L2_400: l2-cache {
+				compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
@@ -160,12 +216,16 @@
 			device_type = "cpu";
 			compatible = "qcom,kryo560";
 			reg = <0x0 0x500>;
+<<<<<<< HEAD
 			clocks = <&cpufreq_hw 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <1024>;
 			dynamic-power-coefficient = <100>;
 			next-level-cache = <&L2_500>;
 			qcom,freq-domain = <&cpufreq_hw 0>;
+<<<<<<< HEAD
 			operating-points-v2 = <&cpu0_opp_table>;
 			interconnects = <&gem_noc MASTER_AMPSS_M0 QCOM_ICC_TAG_ACTIVE_ONLY
 					 &clk_virt SLAVE_EBI_CH0 QCOM_ICC_TAG_ACTIVE_ONLY>,
@@ -176,18 +236,30 @@
 				cache-level = <2>;
 				next-level-cache = <&L3_0>;
 			};
+=======
+			#cooling-cells = <2>;
+			L2_500: l2-cache {
+				compatible = "cache";
+				next-level-cache = <&L3_0>;
+			};
+
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		CPU6: cpu@600 {
 			device_type = "cpu";
 			compatible = "qcom,kryo560";
 			reg = <0x0 0x600>;
+<<<<<<< HEAD
 			clocks = <&cpufreq_hw 1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <1894>;
 			dynamic-power-coefficient = <703>;
 			next-level-cache = <&L2_600>;
 			qcom,freq-domain = <&cpufreq_hw 1>;
+<<<<<<< HEAD
 			operating-points-v2 = <&cpu6_opp_table>;
 			interconnects = <&gem_noc MASTER_AMPSS_M0 QCOM_ICC_TAG_ACTIVE_ONLY
 					 &clk_virt SLAVE_EBI_CH0 QCOM_ICC_TAG_ACTIVE_ONLY>,
@@ -196,6 +268,11 @@
 			L2_600: l2-cache {
 				compatible = "cache";
 				cache-level = <2>;
+=======
+			#cooling-cells = <2>;
+			L2_600: l2-cache {
+				compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
@@ -204,12 +281,16 @@
 			device_type = "cpu";
 			compatible = "qcom,kryo560";
 			reg = <0x0 0x700>;
+<<<<<<< HEAD
 			clocks = <&cpufreq_hw 1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <1894>;
 			dynamic-power-coefficient = <703>;
 			next-level-cache = <&L2_700>;
 			qcom,freq-domain = <&cpufreq_hw 1>;
+<<<<<<< HEAD
 			operating-points-v2 = <&cpu6_opp_table>;
 			interconnects = <&gem_noc MASTER_AMPSS_M0 QCOM_ICC_TAG_ACTIVE_ONLY
 					 &clk_virt SLAVE_EBI_CH0 QCOM_ICC_TAG_ACTIVE_ONLY>,
@@ -218,6 +299,11 @@
 			L2_700: l2-cache {
 				compatible = "cache";
 				cache-level = <2>;
+=======
+			#cooling-cells = <2>;
+			L2_700: l2-cache {
+				compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
@@ -272,6 +358,7 @@
 		reg = <0x0 0x80000000 0x0 0x0>;
 	};
 
+<<<<<<< HEAD
 	cpu0_opp_table: opp-table-cpu0 {
 		compatible = "operating-points-v2";
 		opp-shared;
@@ -378,6 +465,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pmu {
 		compatible = "arm,armv8-pmuv3";
 		interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_LOW>;
@@ -500,12 +589,22 @@
 		};
 
 		ramoops: ramoops@ffc00000 {
+<<<<<<< HEAD
 			compatible = "ramoops";
 			reg = <0 0xffc00000 0 0x100000>;
 			record-size = <0x1000>;
 			console-size = <0x40000>;
 			msg-size = <0x20000 0x20000>;
 			ecc-size = <16>;
+=======
+			compatible = "removed-dma-pool", "ramoops";
+			reg = <0 0xffc00000 0 0x00100000>;
+			record-size = <0x1000>;
+			console-size = <0x40000>;
+			ftrace-size = <0x0>;
+			msg-size = <0x20000 0x20000>;
+			cc-size = <0x0>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
@@ -589,6 +688,7 @@
 
 		modem_smp2p_in: slave-kernel {
 			qcom,entry-name = "slave-kernel";
+<<<<<<< HEAD
 			interrupt-controller;
 			#interrupt-cells = <2>;
 		};
@@ -600,6 +700,9 @@
 
 		ipa_smp2p_in: ipa-modem-to-ap {
 			qcom,entry-name = "ipa";
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 			interrupt-controller;
 			#interrupt-cells = <2>;
 		};
@@ -652,13 +755,19 @@
 			interrupts = <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH>;
 			interrupt-names = "hc_irq", "pwr_irq";
+<<<<<<< HEAD
 			iommus = <&apps_smmu 0x60 0x0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 			clocks = <&gcc GCC_SDCC1_AHB_CLK>,
 				 <&gcc GCC_SDCC1_APPS_CLK>,
 				 <&rpmhcc RPMH_CXO_CLK>;
 			clock-names = "iface", "core", "xo";
+<<<<<<< HEAD
 			resets = <&gcc GCC_SDCC1_BCR>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			qcom,dll-config = <0x000f642c>;
 			qcom,ddr-config = <0x80040868>;
 			power-domains = <&rpmhpd SM6350_CX>;
@@ -711,7 +820,11 @@
 
 		qupv3_id_0: geniqup@8c0000 {
 			compatible = "qcom,geni-se-qup";
+<<<<<<< HEAD
 			reg = <0x0 0x008c0000 0x0 0x2000>;
+=======
+			reg = <0x0 0x8c0000 0x0 0x2000>;
+>>>>>>> b7ba80a49124 (Commit)
 			clock-names = "m-ahb", "s-ahb";
 			clocks = <&gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
 				 <&gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
@@ -784,7 +897,11 @@
 
 		qupv3_id_1: geniqup@9c0000 {
 			compatible = "qcom,geni-se-qup";
+<<<<<<< HEAD
 			reg = <0x0 0x009c0000 0x0 0x2000>;
+=======
+			reg = <0x0 0x9c0000 0x0 0x2000>;
+>>>>>>> b7ba80a49124 (Commit)
 			clock-names = "m-ahb", "s-ahb";
 			clocks = <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
 				 <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
@@ -856,7 +973,11 @@
 
 			uart9: serial@98c000 {
 				compatible = "qcom,geni-debug-uart";
+<<<<<<< HEAD
 				reg = <0 0x0098c000 0 0x4000>;
+=======
+				reg = <0 0x98c000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP1_S3_CLK>;
 				pinctrl-names = "default";
@@ -887,6 +1008,10 @@
 				interconnect-names = "qup-core", "qup-config", "qup-memory";
 				status = "disabled";
 			};
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		config_noc: interconnect@1500000 {
@@ -1013,6 +1138,7 @@
 			};
 		};
 
+<<<<<<< HEAD
 		ipa: ipa@1e40000 {
 			compatible = "qcom,sm6350-ipa";
 
@@ -1050,6 +1176,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		tcsr_mutex: hwlock@1f40000 {
 			compatible = "qcom,tcsr-mutex";
 			reg = <0x0 0x01f40000 0x0 0x40000>;
@@ -1268,21 +1396,30 @@
 			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
 			interrupt-names = "hc_irq", "pwr_irq";
+<<<<<<< HEAD
 			iommus = <&apps_smmu 0x560 0x0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 			clocks = <&gcc GCC_SDCC2_AHB_CLK>,
 				 <&gcc GCC_SDCC2_APPS_CLK>,
 				 <&rpmhcc RPMH_CXO_CLK>;
 			clock-names = "iface", "core", "xo";
+<<<<<<< HEAD
 			resets = <&gcc GCC_SDCC2_BCR>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			interconnects = <&aggre2_noc MASTER_SDCC_2 0 &clk_virt SLAVE_EBI_CH0 0>,
 					<&gem_noc MASTER_AMPSS_M0 0 &config_noc SLAVE_SDCC_2 0>;
 			interconnect-names = "sdhc-ddr", "cpu-sdhc";
 
+<<<<<<< HEAD
 			pinctrl-0 = <&sdc2_on_state>;
 			pinctrl-1 = <&sdc2_off_state>;
 			pinctrl-names = "default", "sleep";
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			qcom,dll-config = <0x0007642c>;
 			qcom,ddr-config = <0x80040868>;
 			power-domains = <&rpmhpd SM6350_CX>;
@@ -1322,6 +1459,7 @@
 			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
 		};
 
+<<<<<<< HEAD
 		usb_1_qmpphy: phy@88e8000 {
 			compatible = "qcom,sm6350-qmp-usb3-dp-phy";
 			reg = <0 0x088e8000 0 0x3000>;
@@ -1342,6 +1480,55 @@
 			#phy-cells = <1>;
 
 			status = "disabled";
+=======
+		usb_1_qmpphy: phy@88e9000 {
+			compatible = "qcom,sc7180-qmp-usb3-dp-phy";
+			reg = <0 0x088e9000 0 0x200>,
+			      <0 0x088e8000 0 0x40>,
+			      <0 0x088ea000 0 0x200>;
+			status = "disabled";
+			#address-cells = <2>;
+			#size-cells = <2>;
+			ranges;
+
+			clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
+				 <&xo_board>,
+				 <&rpmhcc RPMH_QLINK_CLK>,
+				 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
+			clock-names = "aux", "cfg_ahb", "ref", "com_aux";
+
+			resets = <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
+				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
+			reset-names = "phy", "common";
+
+			usb_1_ssphy: usb3-phy@88e9200 {
+				reg = <0 0x088e9200 0 0x200>,
+				      <0 0x088e9400 0 0x200>,
+				      <0 0x088e9c00 0 0x400>,
+				      <0 0x088e9600 0 0x200>,
+				      <0 0x088e9800 0 0x200>,
+				      <0 0x088e9a00 0 0x100>;
+				#clock-cells = <0>;
+				#phy-cells = <0>;
+				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
+				clock-names = "pipe0";
+				clock-output-names = "usb3_phy_pipe_clk_src";
+			};
+
+			dp_phy: dp-phy@88ea200 {
+				reg = <0 0x088ea200 0 0x200>,
+				      <0 0x088ea400 0 0x200>,
+				      <0 0x088eac00 0 0x400>,
+				      <0 0x088ea600 0 0x200>,
+				      <0 0x088ea800 0 0x200>,
+				      <0 0x088eaa00 0 0x100>;
+				#phy-cells = <0>;
+				#clock-cells = <1>;
+				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
+				clock-names = "pipe0";
+				clock-output-names = "usb3_phy_pipe_clk_src";
+			};
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		dc_noc: interconnect@9160000 {
@@ -1354,7 +1541,11 @@
 		system-cache-controller@9200000 {
 			compatible = "qcom,sm6350-llcc";
 			reg = <0 0x09200000 0 0x50000>, <0 0x09600000 0 0x50000>;
+<<<<<<< HEAD
 			reg-names = "llcc0_base", "llcc_broadcast_base";
+=======
+			reg-names = "llcc_base", "llcc_broadcast_base";
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		gem_noc: interconnect@9680000 {
@@ -1415,11 +1606,16 @@
 				snps,dis_enblslpm_quirk;
 				snps,has-lpm-erratum;
 				snps,hird-threshold = /bits/ 8 <0x10>;
+<<<<<<< HEAD
 				phys = <&usb_1_hsphy>, <&usb_1_qmpphy QMP_USB43DP_USB3_PHY>;
+=======
+				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
+>>>>>>> b7ba80a49124 (Commit)
 				phy-names = "usb2-phy", "usb3-phy";
 			};
 		};
 
+<<<<<<< HEAD
 		cci0: cci@ac4a000 {
 			compatible = "qcom,sm6350-cci", "qcom,msm8996-cci";
 			reg = <0 0x0ac4a000 0 0x1000>;
@@ -1518,6 +1714,8 @@
 			#power-domain-cells = <1>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pdc: interrupt-controller@b220000 {
 			compatible = "qcom,sm6350-pdc", "qcom,pdc";
 			reg = <0 0x0b220000 0 0x30000>, <0 0x17c000f0 0 0x64>;
@@ -1550,7 +1748,11 @@
 			#thermal-sensor-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		aoss_qmp: power-management@c300000 {
+=======
+		aoss_qmp: power-controller@c300000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,sm6350-aoss-qmp", "qcom,aoss-qmp";
 			reg = <0 0x0c300000 0 0x1000>;
 			interrupts-extended = <&ipcc IPCC_CLIENT_AOP IPCC_MPROC_SIGNAL_GLINK_QMP
@@ -1562,11 +1764,19 @@
 
 		spmi_bus: spmi@c440000 {
 			compatible = "qcom,spmi-pmic-arb";
+<<<<<<< HEAD
 			reg = <0 0x0c440000 0 0x1100>,
 			      <0 0x0c600000 0 0x2000000>,
 			      <0 0x0e600000 0 0x100000>,
 			      <0 0x0e700000 0 0xa0000>,
 			      <0 0x0c40a000 0 0x26000>;
+=======
+			reg = <0 0xc440000 0 0x1100>,
+			      <0 0xc600000 0 0x2000000>,
+			      <0 0xe600000 0 0x100000>,
+			      <0 0xe700000 0 0xa0000>,
+			      <0 0xc40a000 0 0x26000>;
+>>>>>>> b7ba80a49124 (Commit)
 			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
 			interrupt-names = "periph_irq";
 			interrupts-extended = <&pdc 1 IRQ_TYPE_LEVEL_HIGH>;
@@ -1596,6 +1806,7 @@
 			#interrupt-cells = <2>;
 			gpio-ranges = <&tlmm 0 0 157>;
 
+<<<<<<< HEAD
 			cci0_default: cci0-default-state {
 				pins = "gpio39", "gpio40";
 				function = "cci_i2c";
@@ -1678,6 +1889,8 @@
 				};
 			};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			qup_uart9_default: qup-uart9-default-state {
 				pins = "gpio25", "gpio26";
 				function = "qup13_f2";
@@ -1990,6 +2203,7 @@
 			};
 		};
 
+<<<<<<< HEAD
 		osm_l3: interconnect@18321000 {
 			compatible = "qcom,sm6350-osm-l3", "qcom,osm-l3";
 			reg = <0x0 0x18321000 0x0 0x1000>;
@@ -2002,13 +2216,20 @@
 
 		cpufreq_hw: cpufreq@18323000 {
 			compatible = "qcom,sm6350-cpufreq-hw", "qcom,cpufreq-hw";
+=======
+		cpufreq_hw: cpufreq@18323000 {
+			compatible = "qcom,cpufreq-hw";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0 0x18323000 0 0x1000>, <0 0x18325800 0 0x1000>;
 			reg-names = "freq-domain0", "freq-domain1";
 			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
 			clock-names = "xo", "alternate";
 
 			#freq-domain-cells = <1>;
+<<<<<<< HEAD
 			#clock-cells = <1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 

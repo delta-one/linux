@@ -4,7 +4,11 @@
 $id: "http://devicetree.org/schemas/mailbox/qcom,apcs-kpss-global.yaml#"
 $schema: "http://devicetree.org/meta-schemas/core.yaml#"
 
+<<<<<<< HEAD
 title: Qualcomm APCS global block
+=======
+title: Qualcomm APCS global block bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 description:
   This binding describes the APCS "global" block found in various Qualcomm
@@ -18,12 +22,18 @@ properties:
     oneOf:
       - items:
           - enum:
+<<<<<<< HEAD
               - qcom,ipq5332-apcs-apps-global
           - const: qcom,ipq6018-apcs-apps-global
       - items:
           - enum:
               - qcom,ipq6018-apcs-apps-global
               - qcom,ipq8074-apcs-apps-global
+=======
+              - qcom,ipq6018-apcs-apps-global
+              - qcom,ipq8074-apcs-apps-global
+              - qcom,msm8976-apcs-kpss-global
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,msm8996-apcs-hmss-global
               - qcom,msm8998-apcs-hmss-global
               - qcom,qcm2290-apcs-hmss-global
@@ -31,7 +41,10 @@ properties:
               - qcom,sc8180x-apss-shared
               - qcom,sdm660-apcs-hmss-global
               - qcom,sdm845-apss-shared
+<<<<<<< HEAD
               - qcom,sm4250-apcs-hmss-global
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,sm6125-apcs-hmss-global
               - qcom,sm6115-apcs-hmss-global
               - qcom,sm8150-apss-shared
@@ -40,10 +53,15 @@ properties:
               - qcom,msm8916-apcs-kpss-global
               - qcom,msm8939-apcs-kpss-global
               - qcom,msm8953-apcs-kpss-global
+<<<<<<< HEAD
               - qcom,msm8976-apcs-kpss-global
               - qcom,msm8994-apcs-kpss-global
               - qcom,qcs404-apcs-apps-global
               - qcom,sdx55-apcs-gcc
+=======
+              - qcom,msm8994-apcs-kpss-global
+              - qcom,qcs404-apcs-apps-global
+>>>>>>> b7ba80a49124 (Commit)
           - const: syscon
   reg:
     maxItems: 1
@@ -51,17 +69,35 @@ properties:
   clocks:
     description: phandles to the parent clocks of the clock driver
     minItems: 2
+<<<<<<< HEAD
     maxItems: 3
+=======
+    items:
+      - description: primary pll parent of the clock driver
+      - description: auxiliary parent
+      - description: reference clock
+>>>>>>> b7ba80a49124 (Commit)
 
   '#mbox-cells':
     const: 1
 
   '#clock-cells':
+<<<<<<< HEAD
     enum: [0, 1]
 
   clock-names:
     minItems: 2
     maxItems: 3
+=======
+    const: 0
+
+  clock-names:
+    minItems: 2
+    items:
+      - const: pll
+      - const: aux
+      - const: ref
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible
@@ -75,6 +111,7 @@ allOf:
       properties:
         compatible:
           enum:
+<<<<<<< HEAD
             - qcom,msm8916-apcs-kpss-global
             - qcom,msm8939-apcs-kpss-global
             - qcom,qcs404-apcs-apps-global
@@ -88,6 +125,24 @@ allOf:
           items:
             - const: pll
             - const: aux
+=======
+            - qcom,ipq6018-apcs-apps-global
+            - qcom,ipq8074-apcs-apps-global
+            - qcom,msm8916-apcs-kpss-global
+            - qcom,msm8994-apcs-kpss-global
+            - qcom,msm8996-apcs-hmss-global
+            - qcom,msm8998-apcs-hmss-global
+            - qcom,qcs404-apcs-apps-global
+            - qcom,sc7180-apss-shared
+            - qcom,sdm660-apcs-hmss-global
+            - qcom,sdm845-apss-shared
+            - qcom,sm6125-apcs-hmss-global
+            - qcom,sm8150-apss-shared
+    then:
+      properties:
+        clocks:
+          maxItems: 2
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -96,6 +151,7 @@ allOf:
     then:
       properties:
         clocks:
+<<<<<<< HEAD
           items:
             - description: primary pll parent of the clock driver
             - description: auxiliary parent
@@ -162,6 +218,9 @@ allOf:
         '#clock-cells':
           const: 0
 
+=======
+          maxItems: 3
+>>>>>>> b7ba80a49124 (Commit)
 examples:
 
   # Example apcs with msm8996
@@ -172,7 +231,10 @@ examples:
         reg = <0x9820000 0x1000>;
 
         #mbox-cells = <1>;
+<<<<<<< HEAD
         #clock-cells = <0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
     };
 
     rpm-glink {
@@ -180,6 +242,10 @@ examples:
         interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
         qcom,rpm-msg-ram = <&rpm_msg_ram>;
         mboxes = <&apcs_glb 0>;
+<<<<<<< HEAD
+=======
+        mbox-names = "rpm_hlos";
+>>>>>>> b7ba80a49124 (Commit)
     };
 
   # Example apcs with qcs404

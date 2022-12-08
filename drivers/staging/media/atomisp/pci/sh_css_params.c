@@ -98,6 +98,7 @@
 #include "sh_css_frac.h"
 #include "ia_css_bufq.h"
 
+<<<<<<< HEAD
 static size_t fpntbl_bytes(const struct ia_css_binary *binary)
 {
 	return array3_size(sizeof(char),
@@ -119,6 +120,19 @@ static size_t morph_plane_bytes(const struct ia_css_binary *binary)
 			   binary->morph_tbl_aligned_width,
 			   binary->morph_tbl_height);
 }
+=======
+#define FPNTBL_BYTES(binary) \
+	(sizeof(char) * (binary)->in_frame_info.res.height * \
+	 (binary)->in_frame_info.padded_width)
+
+#define SCTBL_BYTES(binary) \
+	(sizeof(unsigned short) * (binary)->sctbl_height * \
+	 (binary)->sctbl_aligned_width_per_color * IA_CSS_SC_NUM_COLORS)
+
+#define MORPH_PLANE_BYTES(binary) \
+	(SH_CSS_MORPH_TABLE_ELEM_BYTES * (binary)->morph_tbl_aligned_width * \
+	 (binary)->morph_tbl_height)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* We keep a second copy of the ptr struct for the SP to access.
    Again, this would not be necessary on the chip. */
@@ -946,8 +960,13 @@ sh_css_set_black_frame(struct ia_css_stream *stream,
 	assert(raw_black_frame);
 
 	params = stream->isp_params_configs;
+<<<<<<< HEAD
 	height = raw_black_frame->frame_info.res.height;
 	width = raw_black_frame->frame_info.padded_width;
+=======
+	height = raw_black_frame->info.res.height;
+	width = raw_black_frame->info.padded_width;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ptr = raw_black_frame->data
 	+ raw_black_frame->planes.raw.offset;
@@ -960,8 +979,13 @@ sh_css_set_black_frame(struct ia_css_stream *stream,
 		params->fpn_config.data = NULL;
 	}
 	if (!params->fpn_config.data) {
+<<<<<<< HEAD
 		params->fpn_config.data = kvmalloc(array3_size(height, width, sizeof(short)),
 						   GFP_KERNEL);
+=======
+		params->fpn_config.data = kvmalloc(height * width *
+						   sizeof(short), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!params->fpn_config.data) {
 			IA_CSS_ERROR("out of memory");
 			IA_CSS_LEAVE_ERR_PRIVATE(-ENOMEM);
@@ -1197,6 +1221,7 @@ ia_css_process_zoom_and_motion(
 			const struct sh_css_binary_args *args = &stage->args;
 			const struct ia_css_frame_info *out_infos[IA_CSS_BINARY_MAX_OUTPUT_PORTS] = {NULL};
 
+<<<<<<< HEAD
 			out_infos[0] = ia_css_frame_get_info(args->out_frame[0]);
 
 			info = &stage->firmware->info.isp;
@@ -1206,6 +1231,18 @@ ia_css_process_zoom_and_motion(
 						NULL,
 						out_infos,
 						ia_css_frame_get_info(args->out_vf_frame),
+=======
+			if (args->out_frame[0])
+				out_infos[0] = &args->out_frame[0]->info;
+			info = &stage->firmware->info.isp;
+			ia_css_binary_fill_info(info, false, false,
+						ATOMISP_INPUT_FORMAT_RAW_10,
+						args->in_frame  ? &args->in_frame->info  : NULL,
+						NULL,
+						out_infos,
+						args->out_vf_frame ? &args->out_vf_frame->info
+						: NULL,
+>>>>>>> b7ba80a49124 (Commit)
 						&tmp_binary,
 						NULL,
 						-1, true);
@@ -3289,7 +3326,11 @@ sh_css_params_write_to_ddr_internal(
 	if (binary->info->sp.enable.fpnr) {
 		buff_realloced = reallocate_buffer(&ddr_map->fpn_tbl,
 						   &ddr_map_size->fpn_tbl,
+<<<<<<< HEAD
 						   fpntbl_bytes(binary),
+=======
+						   (size_t)(FPNTBL_BYTES(binary)),
+>>>>>>> b7ba80a49124 (Commit)
 						   params->config_changed[IA_CSS_FPN_ID],
 						   &err);
 		if (err) {
@@ -3314,7 +3355,11 @@ sh_css_params_write_to_ddr_internal(
 
 		buff_realloced = reallocate_buffer(&ddr_map->sc_tbl,
 						   &ddr_map_size->sc_tbl,
+<<<<<<< HEAD
 						   sctbl_bytes(binary),
+=======
+						   SCTBL_BYTES(binary),
+>>>>>>> b7ba80a49124 (Commit)
 						   params->sc_table_changed,
 						   &err);
 		if (err) {
@@ -3470,10 +3515,17 @@ sh_css_params_write_to_ddr_internal(
 			if (stage->args.delay_frames[0]) {
 				/*When delay frames are present(as in case of video),
 				they are used for dvs. Configure DVS using those params*/
+<<<<<<< HEAD
 				dvs_in_frame_info = &stage->args.delay_frames[0]->frame_info;
 			} else {
 				/*Otherwise, use input frame to configure DVS*/
 				dvs_in_frame_info = &stage->args.in_frame->frame_info;
+=======
+				dvs_in_frame_info = &stage->args.delay_frames[0]->info;
+			} else {
+				/*Otherwise, use input frame to configure DVS*/
+				dvs_in_frame_info = &stage->args.in_frame->info;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 
 			/* Generate default DVS unity table on start up*/
@@ -3548,7 +3600,12 @@ sh_css_params_write_to_ddr_internal(
 			buff_realloced |=
 			    reallocate_buffer(virt_addr_tetra_x[i],
 					    virt_size_tetra_x[i],
+<<<<<<< HEAD
 					    morph_plane_bytes(binary),
+=======
+					    (size_t)
+					    (MORPH_PLANE_BYTES(binary)),
+>>>>>>> b7ba80a49124 (Commit)
 					    params->morph_table_changed,
 					    &err);
 			if (err) {
@@ -3558,7 +3615,12 @@ sh_css_params_write_to_ddr_internal(
 			buff_realloced |=
 			    reallocate_buffer(virt_addr_tetra_y[i],
 					    virt_size_tetra_y[i],
+<<<<<<< HEAD
 					    morph_plane_bytes(binary),
+=======
+					    (size_t)
+					    (MORPH_PLANE_BYTES(binary)),
+>>>>>>> b7ba80a49124 (Commit)
 					    params->morph_table_changed,
 					    &err);
 			if (err) {

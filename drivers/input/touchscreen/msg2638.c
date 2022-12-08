@@ -21,22 +21,30 @@
 #include <linux/kernel.h>
 #include <linux/mod_devicetable.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/property.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regulator/consumer.h>
 #include <linux/slab.h>
 
 #define MODE_DATA_RAW			0x5A
 
+<<<<<<< HEAD
 #define MSG2138_MAX_FINGERS		2
 #define MSG2638_MAX_FINGERS		5
 
 #define MAX_BUTTONS			4
+=======
+#define MAX_SUPPORTED_FINGER_NUM	5
+>>>>>>> b7ba80a49124 (Commit)
 
 #define CHIP_ON_DELAY_MS		15
 #define FIRMWARE_ON_DELAY_MS		50
 #define RESET_DELAY_MIN_US		10000
 #define RESET_DELAY_MAX_US		11000
 
+<<<<<<< HEAD
 struct msg_chip_data {
 	irq_handler_t irq_handler;
 	unsigned int max_fingers;
@@ -55,15 +63,24 @@ struct msg2138_touch_event {
 };
 
 struct msg2638_packet {
+=======
+struct packet {
+>>>>>>> b7ba80a49124 (Commit)
 	u8	xy_hi; /* higher bits of x and y coordinates */
 	u8	x_low;
 	u8	y_low;
 	u8	pressure;
 };
 
+<<<<<<< HEAD
 struct msg2638_touch_event {
 	u8	mode;
 	struct	msg2638_packet pkt[MSG2638_MAX_FINGERS];
+=======
+struct touch_event {
+	u8	mode;
+	struct	packet pkt[MAX_SUPPORTED_FINGER_NUM];
+>>>>>>> b7ba80a49124 (Commit)
 	u8	proximity;
 	u8	checksum;
 };
@@ -74,9 +91,12 @@ struct msg2638_ts_data {
 	struct touchscreen_properties prop;
 	struct regulator_bulk_data supplies[2];
 	struct gpio_desc *reset_gpiod;
+<<<<<<< HEAD
 	int max_fingers;
 	u32 keycodes[MAX_BUTTONS];
 	int num_keycodes;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static u8 msg2638_checksum(u8 *data, u32 length)
@@ -90,6 +110,7 @@ static u8 msg2638_checksum(u8 *data, u32 length)
 	return (u8)((-sum) & 0xFF);
 }
 
+<<<<<<< HEAD
 static void msg2138_report_keys(struct msg2638_ts_data *msg2638, u8 keys)
 {
 	int i;
@@ -180,12 +201,18 @@ out:
 	return IRQ_HANDLED;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static irqreturn_t msg2638_ts_irq_handler(int irq, void *msg2638_handler)
 {
 	struct msg2638_ts_data *msg2638 = msg2638_handler;
 	struct i2c_client *client = msg2638->client;
 	struct input_dev *input = msg2638->input_dev;
+<<<<<<< HEAD
 	struct msg2638_touch_event touch_event;
+=======
+	struct touch_event touch_event;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 len = sizeof(touch_event);
 	struct i2c_msg msg[] = {
 		{
@@ -195,7 +222,11 @@ static irqreturn_t msg2638_ts_irq_handler(int irq, void *msg2638_handler)
 			.buf	= (u8 *)&touch_event,
 		},
 	};
+<<<<<<< HEAD
 	struct msg2638_packet *p;
+=======
+	struct packet *p;
+>>>>>>> b7ba80a49124 (Commit)
 	u16 x, y;
 	int ret;
 	int i;
@@ -217,7 +248,11 @@ static irqreturn_t msg2638_ts_irq_handler(int irq, void *msg2638_handler)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	for (i = 0; i < msg2638->max_fingers; i++) {
+=======
+	for (i = 0; i < MAX_SUPPORTED_FINGER_NUM; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		p = &touch_event.pkt[i];
 
 		/* Ignore non-pressed finger data */
@@ -304,7 +339,10 @@ static int msg2638_init_input_dev(struct msg2638_ts_data *msg2638)
 	struct device *dev = &msg2638->client->dev;
 	struct input_dev *input_dev;
 	int error;
+<<<<<<< HEAD
 	int i;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	input_dev = devm_input_allocate_device(dev);
 	if (!input_dev) {
@@ -321,6 +359,7 @@ static int msg2638_init_input_dev(struct msg2638_ts_data *msg2638)
 	input_dev->open = msg2638_input_open;
 	input_dev->close = msg2638_input_close;
 
+<<<<<<< HEAD
 	if (msg2638->num_keycodes) {
 		input_dev->keycode = msg2638->keycodes;
 		input_dev->keycodemax = msg2638->num_keycodes;
@@ -330,6 +369,8 @@ static int msg2638_init_input_dev(struct msg2638_ts_data *msg2638)
 					     EV_KEY, msg2638->keycodes[i]);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	input_set_capability(input_dev, EV_ABS, ABS_MT_POSITION_X);
 	input_set_capability(input_dev, EV_ABS, ABS_MT_POSITION_Y);
 
@@ -339,7 +380,11 @@ static int msg2638_init_input_dev(struct msg2638_ts_data *msg2638)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	error = input_mt_init_slots(input_dev, msg2638->max_fingers,
+=======
+	error = input_mt_init_slots(input_dev, MAX_SUPPORTED_FINGER_NUM,
+>>>>>>> b7ba80a49124 (Commit)
 				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
 	if (error) {
 		dev_err(dev, "Failed to initialize MT slots: %d\n", error);
@@ -357,7 +402,10 @@ static int msg2638_init_input_dev(struct msg2638_ts_data *msg2638)
 
 static int msg2638_ts_probe(struct i2c_client *client)
 {
+<<<<<<< HEAD
 	const struct msg_chip_data *chip_data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = &client->dev;
 	struct msg2638_ts_data *msg2638;
 	int error;
@@ -374,6 +422,7 @@ static int msg2638_ts_probe(struct i2c_client *client)
 	msg2638->client = client;
 	i2c_set_clientdata(client, msg2638);
 
+<<<<<<< HEAD
 	chip_data = device_get_match_data(&client->dev);
 	if (!chip_data || !chip_data->max_fingers) {
 		dev_err(dev, "Invalid or missing chip data\n");
@@ -382,6 +431,8 @@ static int msg2638_ts_probe(struct i2c_client *client)
 
 	msg2638->max_fingers = chip_data->max_fingers;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	msg2638->supplies[0].supply = "vdd";
 	msg2638->supplies[1].supply = "vddio";
 	error = devm_regulator_bulk_get(dev, ARRAY_SIZE(msg2638->supplies),
@@ -398,6 +449,7 @@ static int msg2638_ts_probe(struct i2c_client *client)
 		return error;
 	}
 
+<<<<<<< HEAD
 	msg2638->num_keycodes = device_property_count_u32(dev,
 							  "linux,keycodes");
 	if (msg2638->num_keycodes == -EINVAL) {
@@ -425,6 +477,16 @@ static int msg2638_ts_probe(struct i2c_client *client)
 
 	error = devm_request_threaded_irq(dev, client->irq,
 					  NULL, chip_data->irq_handler,
+=======
+	error = msg2638_init_input_dev(msg2638);
+	if (error) {
+		dev_err(dev, "Failed to initialize input device: %d\n", error);
+		return error;
+	}
+
+	error = devm_request_threaded_irq(dev, client->irq,
+					  NULL, msg2638_ts_irq_handler,
+>>>>>>> b7ba80a49124 (Commit)
 					  IRQF_ONESHOT | IRQF_NO_AUTOEN,
 					  client->name, msg2638);
 	if (error) {
@@ -432,6 +494,7 @@ static int msg2638_ts_probe(struct i2c_client *client)
 		return error;
 	}
 
+<<<<<<< HEAD
 	error = msg2638_init_input_dev(msg2638);
 	if (error) {
 		dev_err(dev, "Failed to initialize input device: %d\n", error);
@@ -442,6 +505,12 @@ static int msg2638_ts_probe(struct i2c_client *client)
 }
 
 static int msg2638_suspend(struct device *dev)
+=======
+	return 0;
+}
+
+static int __maybe_unused msg2638_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct msg2638_ts_data *msg2638 = i2c_get_clientdata(client);
@@ -456,7 +525,11 @@ static int msg2638_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int msg2638_resume(struct device *dev)
+=======
+static int __maybe_unused msg2638_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct msg2638_ts_data *msg2638 = i2c_get_clientdata(client);
@@ -472,6 +545,7 @@ static int msg2638_resume(struct device *dev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(msg2638_pm_ops, msg2638_suspend, msg2638_resume);
 
 static const struct msg_chip_data msg2138_data = {
@@ -487,6 +561,12 @@ static const struct msg_chip_data msg2638_data = {
 static const struct of_device_id msg2638_of_match[] = {
 	{ .compatible = "mstar,msg2138", .data = &msg2138_data },
 	{ .compatible = "mstar,msg2638", .data = &msg2638_data },
+=======
+static SIMPLE_DEV_PM_OPS(msg2638_pm_ops, msg2638_suspend, msg2638_resume);
+
+static const struct of_device_id msg2638_of_match[] = {
+	{ .compatible = "mstar,msg2638" },
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(of, msg2638_of_match);
@@ -495,7 +575,11 @@ static struct i2c_driver msg2638_ts_driver = {
 	.probe_new = msg2638_ts_probe,
 	.driver = {
 		.name = "MStar-TS",
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&msg2638_pm_ops),
+=======
+		.pm = &msg2638_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = msg2638_of_match,
 	},
 };

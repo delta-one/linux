@@ -115,6 +115,7 @@
 	SYM_ALIAS(alias, name, SYM_T_FUNC, SYM_L_WEAK)
 #endif
 
+<<<<<<< HEAD
 // In the kernel sources (include/linux/cfi_types.h), this has a different
 // definition when CONFIG_CFI_CLANG is used, for tools/ just use the !clang
 // definition:
@@ -128,4 +129,6 @@
         SYM_TYPED_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif	/* PERF_LINUX_LINKAGE_H_ */

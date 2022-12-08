@@ -57,11 +57,16 @@ static int psp_v3_1_ring_stop(struct psp_context *psp,
 static int psp_v3_1_init_microcode(struct psp_context *psp)
 {
 	struct amdgpu_device *adev = psp->adev;
+<<<<<<< HEAD
 	char ucode_prefix[30];
+=======
+	const char *chip_name;
+>>>>>>> b7ba80a49124 (Commit)
 	int err = 0;
 
 	DRM_DEBUG("\n");
 
+<<<<<<< HEAD
 	amdgpu_ucode_ip_version_decode(adev, MP0_HWIP, ucode_prefix, sizeof(ucode_prefix));
 
 	err = psp_init_sos_microcode(psp, ucode_prefix);
@@ -69,6 +74,23 @@ static int psp_v3_1_init_microcode(struct psp_context *psp)
 		return err;
 
 	err = psp_init_asd_microcode(psp, ucode_prefix);
+=======
+	switch (adev->asic_type) {
+	case CHIP_VEGA10:
+		chip_name = "vega10";
+		break;
+	case CHIP_VEGA12:
+		chip_name = "vega12";
+		break;
+	default: BUG();
+	}
+
+	err = psp_init_sos_microcode(psp, chip_name);
+	if (err)
+		return err;
+
+	err = psp_init_asd_microcode(psp, chip_name);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 
@@ -152,6 +174,35 @@ static int psp_v3_1_bootloader_load_sos(struct psp_context *psp)
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static int psp_v3_1_ring_init(struct psp_context *psp,
+			      enum psp_ring_type ring_type)
+{
+	int ret = 0;
+	struct psp_ring *ring;
+	struct amdgpu_device *adev = psp->adev;
+
+	ring = &psp->km_ring;
+
+	ring->ring_type = ring_type;
+
+	/* allocate 4k Page of Local Frame Buffer memory for ring */
+	ring->ring_size = 0x1000;
+	ret = amdgpu_bo_create_kernel(adev, ring->ring_size, PAGE_SIZE,
+				      AMDGPU_GEM_DOMAIN_VRAM,
+				      &adev->firmware.rbuf,
+				      &ring->ring_mem_mc_addr,
+				      (void **)&ring->ring_mem);
+	if (ret) {
+		ring->ring_size = 0;
+		return ret;
+	}
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void psp_v3_1_reroute_ih(struct psp_context *psp)
 {
 	struct amdgpu_device *adev = psp->adev;
@@ -367,6 +418,10 @@ static const struct psp_funcs psp_v3_1_funcs = {
 	.init_microcode = psp_v3_1_init_microcode,
 	.bootloader_load_sysdrv = psp_v3_1_bootloader_load_sysdrv,
 	.bootloader_load_sos = psp_v3_1_bootloader_load_sos,
+<<<<<<< HEAD
+=======
+	.ring_init = psp_v3_1_ring_init,
+>>>>>>> b7ba80a49124 (Commit)
 	.ring_create = psp_v3_1_ring_create,
 	.ring_stop = psp_v3_1_ring_stop,
 	.ring_destroy = psp_v3_1_ring_destroy,

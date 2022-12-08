@@ -50,6 +50,7 @@
 	compatible = "x-powers,axp809";
 	interrupt-controller;
 	#interrupt-cells = <1>;
+<<<<<<< HEAD
 
 	axp_gpio: gpio {
 		compatible = "x-powers,axp809-gpio",
@@ -57,4 +58,6 @@
 		gpio-controller;
 		#gpio-cells = <2>;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

@@ -14,9 +14,13 @@ allOf:
 
 properties:
   compatible:
+<<<<<<< HEAD
     enum:
       - xlnx,axi-iic-2.1
       - xlnx,xps-iic-2.00.a
+=======
+    const: xlnx,xps-iic-2.00.a
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -32,6 +36,7 @@ properties:
     description: |
       Input clock name.
 
+<<<<<<< HEAD
   clock-frequency:
     description:
       Optional I2C SCL clock frequency. If not specified, do not configure
@@ -39,6 +44,8 @@ properties:
     default: 100000
     enum: [ 100000, 400000, 1000000 ]
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg

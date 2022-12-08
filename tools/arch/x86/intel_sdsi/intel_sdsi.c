@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
+<<<<<<< HEAD
  * sdsi: Intel On Demand (formerly Software Defined Silicon) tool for
  * provisioning certificates and activation payloads on supported cpus.
+=======
+ * sdsi: Intel Software Defined Silicon tool for provisioning certificates
+ * and activation payloads on supported cpus.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * See https://github.com/intel/intel-sdsi/blob/master/os-interface.rst
  * for register descriptions.
@@ -22,6 +27,7 @@
 
 #include <sys/types.h>
 
+<<<<<<< HEAD
 #ifndef __packed
 #define __packed __attribute__((packed))
 #endif
@@ -44,10 +50,18 @@
 #define STATE_MAX_NUM_LICENSES	16
 #define STATE_MAX_NUM_IN_BUNDLE	(uint32_t)8
 #define METER_MAX_NUM_BUNDLES	8
+=======
+#define SDSI_DEV		"intel_vsec.sdsi"
+#define AUX_DEV_PATH		"/sys/bus/auxiliary/devices/"
+#define SDSI_PATH		(AUX_DEV_DIR SDSI_DEV)
+#define GUID			0x6dd191
+#define REGISTERS_MIN_SIZE	72
+>>>>>>> b7ba80a49124 (Commit)
 
 #define __round_mask(x, y) ((__typeof__(x))((y) - 1))
 #define round_up(x, y) ((((x) - 1) | __round_mask(x, y)) + 1)
 
+<<<<<<< HEAD
 struct nvram_content_auth_err_sts {
 	uint64_t reserved:3;
 	uint64_t sdsi_content_auth_err:1;
@@ -70,6 +84,12 @@ struct key_provision_status {
 	uint64_t reserved:1;
 	uint64_t license_key_provisioned:1;
 	uint64_t reserved2:62;
+=======
+struct enabled_features {
+	uint64_t reserved:3;
+	uint64_t sdsi:1;
+	uint64_t reserved1:60;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct auth_fail_count {
@@ -84,6 +104,7 @@ struct availability {
 	uint64_t reserved:48;
 	uint64_t available:3;
 	uint64_t threshold:3;
+<<<<<<< HEAD
 	uint64_t reserved2:10;
 };
 
@@ -93,10 +114,13 @@ struct nvram_update_limit {
 	uint64_t sdsi_75_pct:1;
 	uint64_t sdsi_90_pct:1;
 	uint64_t reserved2:49;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct sdsi_regs {
 	uint64_t ppin;
+<<<<<<< HEAD
 	struct nvram_content_auth_err_sts auth_err_sts;
 	struct enabled_features en_features;
 	struct key_provision_status key_prov_sts;
@@ -166,10 +190,21 @@ struct meter_certificate {
 struct bundle_encoding_counter {
 	uint32_t encoding;
 	uint32_t counter;
+=======
+	uint64_t reserved;
+	struct enabled_features en_features;
+	uint64_t reserved1;
+	struct auth_fail_count auth_fail_count;
+	struct availability prov_avail;
+	uint64_t reserved2;
+	uint64_t reserved3;
+	uint64_t socket_id;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct sdsi_dev {
 	struct sdsi_regs regs;
+<<<<<<< HEAD
 	struct state_certificate sc;
 	char *dev_name;
 	char *dev_path;
@@ -180,6 +215,17 @@ enum command {
 	CMD_SOCKET_INFO,
 	CMD_METER_CERT,
 	CMD_STATE_CERT,
+=======
+	char *dev_name;
+	char *dev_path;
+	int guid;
+};
+
+enum command {
+	CMD_NONE,
+	CMD_SOCKET_INFO,
+	CMD_DUMP_CERT,
+>>>>>>> b7ba80a49124 (Commit)
 	CMD_PROV_AKC,
 	CMD_PROV_CAP,
 };
@@ -204,7 +250,11 @@ static void sdsi_list_devices(void)
 	}
 
 	if (!found)
+<<<<<<< HEAD
 		fprintf(stderr, "No On Demand devices found.\n");
+=======
+		fprintf(stderr, "No sdsi devices found.\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int sdsi_update_registers(struct sdsi_dev *s)
@@ -227,7 +277,11 @@ static int sdsi_update_registers(struct sdsi_dev *s)
 		return -1;
 	}
 
+<<<<<<< HEAD
 	if (s->guid != GUID_V1 && s->guid != GUID_V2) {
+=======
+	if (s->guid != GUID) {
+>>>>>>> b7ba80a49124 (Commit)
 		fprintf(stderr, "Unrecognized guid, 0x%x\n", s->guid);
 		fclose(regs_ptr);
 		return -1;
@@ -235,8 +289,12 @@ static int sdsi_update_registers(struct sdsi_dev *s)
 
 	/* Update register info for this guid */
 	ret = fread(&s->regs, sizeof(uint8_t), sizeof(s->regs), regs_ptr);
+<<<<<<< HEAD
 	if ((s->guid == GUID_V1 && ret != REGS_SIZE_GUID_V1) ||
 	    (s->guid == GUID_V2 && ret != REGS_SIZE_GUID_V2)) {
+=======
+	if (ret != sizeof(s->regs)) {
+>>>>>>> b7ba80a49124 (Commit)
 		fprintf(stderr, "Could not read 'registers' file\n");
 		fclose(regs_ptr);
 		return -1;
@@ -260,6 +318,7 @@ static int sdsi_read_reg(struct sdsi_dev *s)
 	printf("Socket information for device %s\n", s->dev_name);
 	printf("\n");
 	printf("PPIN:                           0x%lx\n", s->regs.ppin);
+<<<<<<< HEAD
 	printf("NVRAM Content Authorization Error Status\n");
 	printf("    SDSi Auth Err Sts:          %s\n", !!s->regs.auth_err_sts.sdsi_content_auth_err ? "Error" : "Okay");
 
@@ -272,6 +331,10 @@ static int sdsi_read_reg(struct sdsi_dev *s)
 	printf("    On Demand:                  %s\n", !!s->regs.en_features.sdsi ? "Enabled" : "Disabled");
 	printf("    Metering:                   %s\n", !!s->regs.en_features.metering ? "Enabled" : "Disabled");
 	printf("License Key (AKC) Provisioned:  %s\n", !!s->regs.key_prov_sts.license_key_provisioned ? "Yes" : "No");
+=======
+	printf("Enabled Features\n");
+	printf("    SDSi:                       %s\n", !!s->regs.en_features.sdsi ? "Enabled" : "Disabled");
+>>>>>>> b7ba80a49124 (Commit)
 	printf("Authorization Failure Count\n");
 	printf("    AKC Failure Count:          %d\n", s->regs.auth_fail_count.key_failure_count);
 	printf("    AKC Failure Threshold:      %d\n", s->regs.auth_fail_count.key_failure_threshold);
@@ -280,6 +343,7 @@ static int sdsi_read_reg(struct sdsi_dev *s)
 	printf("Provisioning Availability\n");
 	printf("    Updates Available:          %d\n", s->regs.prov_avail.available);
 	printf("    Updates Threshold:          %d\n", s->regs.prov_avail.threshold);
+<<<<<<< HEAD
 	printf("NVRAM Udate Limit\n");
 	printf("    50%% Limit Reached:          %s\n", !!s->regs.limits.sdsi_50_pct ? "Yes" : "No");
 	printf("    75%% Limit Reached:          %s\n", !!s->regs.limits.sdsi_75_pct ? "Yes" : "No");
@@ -288,10 +352,14 @@ static int sdsi_read_reg(struct sdsi_dev *s)
 		printf("Socket ID:                      %ld\n", s->regs.extra.v1.socket_id & 0xF);
 	else
 		printf("Socket ID:                      %ld\n", s->regs.extra.v2.socket_id & 0xF);
+=======
+	printf("Socket ID:                      %ld\n", s->regs.socket_id & 0xF);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static char *license_blob_type(uint32_t type)
 {
 	switch (type) {
@@ -334,12 +402,22 @@ static int sdsi_meter_cert_show(struct sdsi_dev *s)
 	uint32_t count = 0;
 	FILE *cert_ptr;
 	int ret, size;
+=======
+static int sdsi_certificate_dump(struct sdsi_dev *s)
+{
+	uint64_t state_certificate[512] = {0};
+	bool first_instance;
+	uint64_t previous;
+	FILE *cert_ptr;
+	int i, ret, size;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = sdsi_update_registers(s);
 	if (ret)
 		return ret;
 
 	if (!s->regs.en_features.sdsi) {
+<<<<<<< HEAD
 		fprintf(stderr, "SDSi feature is present but not enabled.\n");
 		fprintf(stderr, " Unable to read meter certificate\n");
 		return -1;
@@ -422,6 +500,9 @@ static int sdsi_state_cert_show(struct sdsi_dev *s)
 
 	if (!s->regs.en_features.sdsi) {
 		fprintf(stderr, "On Demand feature is present but not enabled.");
+=======
+		fprintf(stderr, "SDSi feature is present but not enabled.");
+>>>>>>> b7ba80a49124 (Commit)
 		fprintf(stderr, " Unable to read state certificate");
 		return -1;
 	}
@@ -438,12 +519,17 @@ static int sdsi_state_cert_show(struct sdsi_dev *s)
 		return -1;
 	}
 
+<<<<<<< HEAD
 	size = fread(buf, 1, sizeof(buf), cert_ptr);
+=======
+	size = fread(state_certificate, 1, sizeof(state_certificate), cert_ptr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!size) {
 		fprintf(stderr, "Could not read 'state_certificate' file\n");
 		fclose(cert_ptr);
 		return -1;
 	}
+<<<<<<< HEAD
 	fclose(cert_ptr);
 
 	sc = (struct state_certificate *)buf;
@@ -506,6 +592,28 @@ static int sdsi_state_cert_show(struct sdsi_dev *s)
 
 		offset += blob_size;
 	};
+=======
+
+	printf("%3d: 0x%lx\n", 0, state_certificate[0]);
+	previous = state_certificate[0];
+	first_instance = true;
+
+	for (i = 1; i < (int)(round_up(size, sizeof(uint64_t))/sizeof(uint64_t)); i++) {
+		if (state_certificate[i] == previous) {
+			if (first_instance) {
+				puts("*");
+				first_instance = false;
+			}
+			continue;
+		}
+		printf("%3d: 0x%lx\n", i, state_certificate[i]);
+		previous = state_certificate[i];
+		first_instance = true;
+	}
+	printf("%3d\n", i);
+
+	fclose(cert_ptr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -513,7 +621,11 @@ static int sdsi_state_cert_show(struct sdsi_dev *s)
 static int sdsi_provision(struct sdsi_dev *s, char *bin_file, enum command command)
 {
 	int bin_fd, prov_fd, size, ret;
+<<<<<<< HEAD
 	char buf[STATE_CERT_MAX_SIZE] = { 0 };
+=======
+	char buf[4096] = { 0 };
+>>>>>>> b7ba80a49124 (Commit)
 	char cap[] = "provision_cap";
 	char akc[] = "provision_akc";
 	char *prov_file;
@@ -548,7 +660,11 @@ static int sdsi_provision(struct sdsi_dev *s, char *bin_file, enum command comma
 	}
 
 	/* Read the binary file into the buffer */
+<<<<<<< HEAD
 	size = read(bin_fd, buf, STATE_CERT_MAX_SIZE);
+=======
+	size = read(bin_fd, buf, 4096);
+>>>>>>> b7ba80a49124 (Commit)
 	if (size == -1) {
 		close(bin_fd);
 		close(prov_fd);
@@ -580,7 +696,11 @@ static int sdsi_provision_akc(struct sdsi_dev *s, char *bin_file)
 		return ret;
 
 	if (!s->regs.en_features.sdsi) {
+<<<<<<< HEAD
 		fprintf(stderr, "On Demand feature is present but not enabled. Unable to provision");
+=======
+		fprintf(stderr, "SDSi feature is present but not enabled. Unable to provision");
+>>>>>>> b7ba80a49124 (Commit)
 		return -1;
 	}
 
@@ -610,7 +730,11 @@ static int sdsi_provision_cap(struct sdsi_dev *s, char *bin_file)
 		return ret;
 
 	if (!s->regs.en_features.sdsi) {
+<<<<<<< HEAD
 		fprintf(stderr, "On Demand feature is present but not enabled. Unable to provision");
+=======
+		fprintf(stderr, "SDSi feature is present but not enabled. Unable to provision");
+>>>>>>> b7ba80a49124 (Commit)
 		return -1;
 	}
 
@@ -725,12 +849,17 @@ static void sdsi_free_dev(struct sdsi_dev *s)
 
 static void usage(char *prog)
 {
+<<<<<<< HEAD
 	printf("Usage: %s [-l] [-d DEVNO [-i] [-s] [-m] [-a FILE] [-c FILE]]\n", prog);
+=======
+	printf("Usage: %s [-l] [-d DEVNO [-iD] [-a FILE] [-c FILE]]\n", prog);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void show_help(void)
 {
 	printf("Commands:\n");
+<<<<<<< HEAD
 	printf("  %-18s\t%s\n", "-l, --list",           "list available On Demand devices");
 	printf("  %-18s\t%s\n", "-d, --devno DEVNO",    "On Demand device number");
 	printf("  %-18s\t%s\n", "-i, --info",           "show socket information");
@@ -738,14 +867,27 @@ static void show_help(void)
 	printf("  %-18s\t%s\n", "-m, --meter",          "show meter certificate");
 	printf("  %-18s\t%s\n", "-a, --akc FILE",       "provision socket with AKC FILE");
 	printf("  %-18s\t%s\n", "-c, --cap FILE>",      "provision socket with CAP FILE");
+=======
+	printf("  %-18s\t%s\n", "-l, --list",		"list available sdsi devices");
+	printf("  %-18s\t%s\n", "-d, --devno DEVNO",	"sdsi device number");
+	printf("  %-18s\t%s\n", "-i --info",		"show socket information");
+	printf("  %-18s\t%s\n", "-D --dump",		"dump state certificate data");
+	printf("  %-18s\t%s\n", "-a --akc FILE",	"provision socket with AKC FILE");
+	printf("  %-18s\t%s\n", "-c --cap FILE>",	"provision socket with CAP FILE");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int main(int argc, char *argv[])
 {
 	char bin_file[PATH_MAX], *dev_no = NULL;
+<<<<<<< HEAD
 	bool device_selected = false;
 	char *progname;
 	enum command command = -1;
+=======
+	char *progname;
+	enum command command = CMD_NONE;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sdsi_dev *s;
 	int ret = 0, opt;
 	int option_index = 0;
@@ -754,23 +896,37 @@ int main(int argc, char *argv[])
 		{"akc",		required_argument,	0, 'a'},
 		{"cap",		required_argument,	0, 'c'},
 		{"devno",	required_argument,	0, 'd'},
+<<<<<<< HEAD
 		{"help",	no_argument,		0, 'h'},
 		{"info",	no_argument,		0, 'i'},
 		{"list",	no_argument,		0, 'l'},
 		{"meter",	no_argument,		0, 'm'},
 		{"state",	no_argument,		0, 's'},
+=======
+		{"dump",	no_argument,		0, 'D'},
+		{"help",	no_argument,		0, 'h'},
+		{"info",	no_argument,		0, 'i'},
+		{"list",	no_argument,		0, 'l'},
+>>>>>>> b7ba80a49124 (Commit)
 		{0,		0,			0, 0 }
 	};
 
 
 	progname = argv[0];
 
+<<<<<<< HEAD
 	while ((opt = getopt_long_only(argc, argv, "+a:c:d:hilms", long_options,
+=======
+	while ((opt = getopt_long_only(argc, argv, "+a:c:d:Da:c:h", long_options,
+>>>>>>> b7ba80a49124 (Commit)
 			&option_index)) != -1) {
 		switch (opt) {
 		case 'd':
 			dev_no = optarg;
+<<<<<<< HEAD
 			device_selected = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 'l':
 			sdsi_list_devices();
@@ -778,11 +934,16 @@ int main(int argc, char *argv[])
 		case 'i':
 			command = CMD_SOCKET_INFO;
 			break;
+<<<<<<< HEAD
 		case 'm':
 			command = CMD_METER_CERT;
 			break;
 		case 's':
 			command = CMD_STATE_CERT;
+=======
+		case 'D':
+			command = CMD_DUMP_CERT;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 'a':
 		case 'c':
@@ -809,6 +970,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
+<<<<<<< HEAD
 	if (device_selected) {
 		s = sdsi_create_dev(dev_no);
 		if (!s)
@@ -842,5 +1004,41 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+=======
+	if (!dev_no) {
+		if (command != CMD_NONE)
+			fprintf(stderr, "Missing device number, DEVNO, for this command\n");
+		usage(progname);
+		return -1;
+	}
+
+	s = sdsi_create_dev(dev_no);
+	if (!s)
+		return -1;
+
+	/* Run the command */
+	switch (command) {
+	case CMD_NONE:
+		fprintf(stderr, "Missing command for device %s\n", dev_no);
+		usage(progname);
+		break;
+	case CMD_SOCKET_INFO:
+		ret = sdsi_read_reg(s);
+		break;
+	case CMD_DUMP_CERT:
+		ret = sdsi_certificate_dump(s);
+		break;
+	case CMD_PROV_AKC:
+		ret = sdsi_provision_akc(s, bin_file);
+		break;
+	case CMD_PROV_CAP:
+		ret = sdsi_provision_cap(s, bin_file);
+		break;
+	}
+
+
+	sdsi_free_dev(s);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }

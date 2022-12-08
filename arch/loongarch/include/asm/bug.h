@@ -2,6 +2,7 @@
 #ifndef __ASM_BUG_H
 #define __ASM_BUG_H
 
+<<<<<<< HEAD
 #include <asm/break.h>
 #include <linux/stringify.h>
 
@@ -56,6 +57,24 @@ do {								\
 
 #define HAVE_ARCH_BUG
 
+=======
+#include <linux/compiler.h>
+
+#ifdef CONFIG_BUG
+
+#include <asm/break.h>
+
+static inline void __noreturn BUG(void)
+{
+	__asm__ __volatile__("break %0" : : "i" (BRK_BUG));
+	unreachable();
+}
+
+#define HAVE_ARCH_BUG
+
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm-generic/bug.h>
 
 #endif /* __ASM_BUG_H */

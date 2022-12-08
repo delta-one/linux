@@ -50,6 +50,7 @@
 		_pd_reg, _pd_shift, _tuner_reg, _pcw_reg, _pcw_shift,	\
 		NULL, "clk20m")
 
+<<<<<<< HEAD
 #define GATE_APMIXED(_id, _name, _parent, _shift)			\
 	GATE_MTK(_id, _name, _parent, &apmixed_cg_regs, _shift, &mtk_clk_gate_ops_no_setclr_inv)
 
@@ -61,6 +62,43 @@
 
 #define GATE_PERI1(_id, _name, _parent, _shift)				\
 	GATE_MTK(_id, _name, _parent, &peri1_cg_regs, _shift, &mtk_clk_gate_ops_setclr)
+=======
+#define GATE_APMIXED(_id, _name, _parent, _shift) {	\
+		.id = _id,				\
+		.name = _name,				\
+		.parent_name = _parent,			\
+		.regs = &apmixed_cg_regs,		\
+		.shift = _shift,			\
+		.ops = &mtk_clk_gate_ops_no_setclr_inv,	\
+	}
+
+#define GATE_INFRA(_id, _name, _parent, _shift) {	\
+		.id = _id,				\
+		.name = _name,				\
+		.parent_name = _parent,			\
+		.regs = &infra_cg_regs,			\
+		.shift = _shift,			\
+		.ops = &mtk_clk_gate_ops_setclr,	\
+	}
+
+#define GATE_PERI0(_id, _name, _parent, _shift) {	\
+		.id = _id,				\
+		.name = _name,				\
+		.parent_name = _parent,			\
+		.regs = &peri0_cg_regs,			\
+		.shift = _shift,			\
+		.ops = &mtk_clk_gate_ops_setclr,	\
+	}
+
+#define GATE_PERI1(_id, _name, _parent, _shift) {	\
+		.id = _id,				\
+		.name = _name,				\
+		.parent_name = _parent,			\
+		.regs = &peri1_cg_regs,			\
+		.shift = _shift,			\
+		.ops = &mtk_clk_gate_ops_setclr,	\
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 static DEFINE_SPINLOCK(mt7629_clk_lock);
 
@@ -564,9 +602,14 @@ static int mtk_topckgen_init(struct platform_device *pdev)
 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs),
 				 clk_data);
 
+<<<<<<< HEAD
 	mtk_clk_register_composites(&pdev->dev, top_muxes,
 				    ARRAY_SIZE(top_muxes), base,
 				    &mt7629_clk_lock, clk_data);
+=======
+	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes),
+				    base, &mt7629_clk_lock, clk_data);
+>>>>>>> b7ba80a49124 (Commit)
 
 	clk_prepare_enable(clk_data->hws[CLK_TOP_AXI_SEL]->clk);
 	clk_prepare_enable(clk_data->hws[CLK_TOP_MEM_SEL]->clk);
@@ -582,11 +625,19 @@ static int mtk_infrasys_init(struct platform_device *pdev)
 
 	clk_data = mtk_alloc_clk_data(CLK_INFRA_NR_CLK);
 
+<<<<<<< HEAD
 	mtk_clk_register_gates(&pdev->dev, node, infra_clks,
 			       ARRAY_SIZE(infra_clks), clk_data);
 
 	mtk_clk_register_cpumuxes(&pdev->dev, node, infra_muxes,
 				  ARRAY_SIZE(infra_muxes), clk_data);
+=======
+	mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks),
+			       clk_data);
+
+	mtk_clk_register_cpumuxes(node, infra_muxes, ARRAY_SIZE(infra_muxes),
+				  clk_data);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get,
 				      clk_data);
@@ -605,11 +656,18 @@ static int mtk_pericfg_init(struct platform_device *pdev)
 
 	clk_data = mtk_alloc_clk_data(CLK_PERI_NR_CLK);
 
+<<<<<<< HEAD
 	mtk_clk_register_gates(&pdev->dev, node, peri_clks,
 			       ARRAY_SIZE(peri_clks), clk_data);
 
 	mtk_clk_register_composites(&pdev->dev, peri_muxes,
 				    ARRAY_SIZE(peri_muxes), base,
+=======
+	mtk_clk_register_gates(node, peri_clks, ARRAY_SIZE(peri_clks),
+			       clk_data);
+
+	mtk_clk_register_composites(peri_muxes, ARRAY_SIZE(peri_muxes), base,
+>>>>>>> b7ba80a49124 (Commit)
 				    &mt7629_clk_lock, clk_data);
 
 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
@@ -633,7 +691,11 @@ static int mtk_apmixedsys_init(struct platform_device *pdev)
 	mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls),
 			      clk_data);
 
+<<<<<<< HEAD
 	mtk_clk_register_gates(&pdev->dev, node, apmixed_clks,
+=======
+	mtk_clk_register_gates(node, apmixed_clks,
+>>>>>>> b7ba80a49124 (Commit)
 			       ARRAY_SIZE(apmixed_clks), clk_data);
 
 	clk_prepare_enable(clk_data->hws[CLK_APMIXED_ARMPLL]->clk);
@@ -660,7 +722,10 @@ static const struct of_device_id of_match_clk_mt7629[] = {
 		/* sentinel */
 	}
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(of, of_match_clk_mt7629);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int clk_mt7629_probe(struct platform_device *pdev)
 {
@@ -694,4 +759,7 @@ static int clk_mt7629_init(void)
 }
 
 arch_initcall(clk_mt7629_init);
+<<<<<<< HEAD
 MODULE_LICENSE("GPL");
+=======
+>>>>>>> b7ba80a49124 (Commit)

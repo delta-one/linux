@@ -10,7 +10,10 @@
 #define SELFTEST_KVM_EVMCS_H
 
 #include <stdint.h>
+<<<<<<< HEAD
 #include "hyperv.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "vmx.h"
 
 #define u16 uint16_t
@@ -21,6 +24,18 @@
 
 extern bool enable_evmcs;
 
+<<<<<<< HEAD
+=======
+struct hv_vp_assist_page {
+	__u32 apic_assist;
+	__u32 reserved;
+	__u64 vtl_control[2];
+	__u64 nested_enlightenments_control[2];
+	__u32 enlighten_vmentry;
+	__u64 current_nested_vmcs;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct hv_enlightened_vmcs {
 	u32 revision_id;
 	u32 abort;
@@ -33,8 +48,11 @@ struct hv_enlightened_vmcs {
 	u16 host_gs_selector;
 	u16 host_tr_selector;
 
+<<<<<<< HEAD
 	u16 padding16_1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 host_ia32_pat;
 	u64 host_ia32_efer;
 
@@ -153,7 +171,11 @@ struct hv_enlightened_vmcs {
 	u64 ept_pointer;
 
 	u16 virtual_processor_id;
+<<<<<<< HEAD
 	u16 padding16_2[3];
+=======
+	u16 padding16[3];
+>>>>>>> b7ba80a49124 (Commit)
 
 	u64 padding64_2[5];
 	u64 guest_physical_address;
@@ -189,19 +211,30 @@ struct hv_enlightened_vmcs {
 	u64 guest_rip;
 
 	u32 hv_clean_fields;
+<<<<<<< HEAD
 	u32 padding32_1;
+=======
+	u32 hv_padding_32;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 hv_synthetic_controls;
 	struct {
 		u32 nested_flush_hypercall:1;
 		u32 msr_bitmap:1;
 		u32 reserved:30;
+<<<<<<< HEAD
 	}  __packed hv_enlightenments_control;
 	u32 hv_vp_id;
 	u32 padding32_2;
+=======
+	} hv_enlightenments_control;
+	u32 hv_vp_id;
+
+>>>>>>> b7ba80a49124 (Commit)
 	u64 hv_vm_id;
 	u64 partition_assist_page;
 	u64 padding64_4[4];
 	u64 guest_bndcfgs;
+<<<<<<< HEAD
 	u64 guest_ia32_perf_global_ctrl;
 	u64 guest_ia32_s_cet;
 	u64 guest_ssp;
@@ -217,6 +250,12 @@ struct hv_enlightened_vmcs {
 	u64 host_ia32_int_ssp_table_addr;
 	u64 padding64_6;
 } __packed;
+=======
+	u64 padding64_5[7];
+	u64 xss_exit_bitmap;
+	u64 padding64_6[7];
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 #define HV_VMX_ENLIGHTENED_CLEAN_FIELD_NONE                     0
 #define HV_VMX_ENLIGHTENED_CLEAN_FIELD_IO_BITMAP                BIT(0)
@@ -237,6 +276,7 @@ struct hv_enlightened_vmcs {
 #define HV_VMX_ENLIGHTENED_CLEAN_FIELD_ENLIGHTENMENTSCONTROL    BIT(15)
 #define HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL                      0xFFFF
 
+<<<<<<< HEAD
 #define HV_VMX_SYNTHETIC_EXIT_REASON_TRAP_AFTER_FLUSH 0x10000031
 
 extern struct hv_enlightened_vmcs *current_evmcs;
@@ -246,6 +286,31 @@ int vcpu_enable_evmcs(struct kvm_vcpu *vcpu);
 static inline void evmcs_enable(void)
 {
 	enable_evmcs = true;
+=======
+#define HV_X64_MSR_VP_ASSIST_PAGE		0x40000073
+#define HV_X64_MSR_VP_ASSIST_PAGE_ENABLE	0x00000001
+#define HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT	12
+#define HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_MASK	\
+		(~((1ull << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT) - 1))
+
+extern struct hv_enlightened_vmcs *current_evmcs;
+extern struct hv_vp_assist_page *current_vp_assist;
+
+int vcpu_enable_evmcs(struct kvm_vcpu *vcpu);
+
+static inline int enable_vp_assist(uint64_t vp_assist_pa, void *vp_assist)
+{
+	u64 val = (vp_assist_pa & HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_MASK) |
+		HV_X64_MSR_VP_ASSIST_PAGE_ENABLE;
+
+	wrmsr(HV_X64_MSR_VP_ASSIST_PAGE, val);
+
+	current_vp_assist = vp_assist;
+
+	enable_evmcs = true;
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline int evmcs_vmptrld(uint64_t vmcs_pa, void *vmcs)
@@ -258,6 +323,7 @@ static inline int evmcs_vmptrld(uint64_t vmcs_pa, void *vmcs)
 	return 0;
 }
 
+<<<<<<< HEAD
 static inline bool load_evmcs(struct hyperv_test_pages *hv)
 {
 	if (evmcs_vmptrld(hv->enlightened_vmcs_gpa, hv->enlightened_vmcs))
@@ -268,6 +334,8 @@ static inline bool load_evmcs(struct hyperv_test_pages *hv)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int evmcs_vmptrst(uint64_t *value)
 {
 	*value = current_vp_assist->current_nested_vmcs &
@@ -657,6 +725,7 @@ static inline int evmcs_vmread(uint64_t encoding, uint64_t *value)
 	case VIRTUAL_PROCESSOR_ID:
 		*value = current_evmcs->virtual_processor_id;
 		break;
+<<<<<<< HEAD
 	case HOST_IA32_PERF_GLOBAL_CTRL:
 		*value = current_evmcs->host_ia32_perf_global_ctrl;
 		break;
@@ -669,6 +738,8 @@ static inline int evmcs_vmread(uint64_t encoding, uint64_t *value)
 	case TSC_MULTIPLIER:
 		*value = current_evmcs->tsc_multiplier;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default: return 1;
 	}
 
@@ -1182,6 +1253,7 @@ static inline int evmcs_vmwrite(uint64_t encoding, uint64_t value)
 		current_evmcs->virtual_processor_id = value;
 		current_evmcs->hv_clean_fields &= ~HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_XLAT;
 		break;
+<<<<<<< HEAD
 	case HOST_IA32_PERF_GLOBAL_CTRL:
 		current_evmcs->host_ia32_perf_global_ctrl = value;
 		current_evmcs->hv_clean_fields &= ~HV_VMX_ENLIGHTENED_CLEAN_FIELD_HOST_GRP1;
@@ -1198,6 +1270,8 @@ static inline int evmcs_vmwrite(uint64_t encoding, uint64_t value)
 		current_evmcs->tsc_multiplier = value;
 		current_evmcs->hv_clean_fields &= ~HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_GRP2;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default: return 1;
 	}
 

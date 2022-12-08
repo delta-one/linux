@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
 /* Copyright 2014-2016 Freescale Semiconductor Inc.
+<<<<<<< HEAD
  * Copyright 2016-2022 NXP
+=======
+ * Copyright 2016 NXP
+ * Copyright 2020 NXP
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/net_tstamp.h>
@@ -85,6 +90,7 @@ static void dpaa2_eth_get_drvinfo(struct net_device *net_dev,
 static int dpaa2_eth_nway_reset(struct net_device *net_dev)
 {
 	struct dpaa2_eth_priv *priv = netdev_priv(net_dev);
+<<<<<<< HEAD
 	int err = -EOPNOTSUPP;
 
 	mutex_lock(&priv->mac_lock);
@@ -95,6 +101,13 @@ static int dpaa2_eth_nway_reset(struct net_device *net_dev)
 	mutex_unlock(&priv->mac_lock);
 
 	return err;
+=======
+
+	if (dpaa2_eth_is_type_phy(priv))
+		return phylink_ethtool_nway_reset(priv->mac->phylink);
+
+	return -EOPNOTSUPP;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int
@@ -102,6 +115,7 @@ dpaa2_eth_get_link_ksettings(struct net_device *net_dev,
 			     struct ethtool_link_ksettings *link_settings)
 {
 	struct dpaa2_eth_priv *priv = netdev_priv(net_dev);
+<<<<<<< HEAD
 	int err;
 
 	mutex_lock(&priv->mac_lock);
@@ -114,6 +128,12 @@ dpaa2_eth_get_link_ksettings(struct net_device *net_dev,
 	}
 
 	mutex_unlock(&priv->mac_lock);
+=======
+
+	if (dpaa2_eth_is_type_phy(priv))
+		return phylink_ethtool_ksettings_get(priv->mac->phylink,
+						     link_settings);
+>>>>>>> b7ba80a49124 (Commit)
 
 	link_settings->base.autoneg = AUTONEG_DISABLE;
 	if (!(priv->link_state.options & DPNI_LINK_OPT_HALF_DUPLEX))
@@ -128,6 +148,7 @@ dpaa2_eth_set_link_ksettings(struct net_device *net_dev,
 			     const struct ethtool_link_ksettings *link_settings)
 {
 	struct dpaa2_eth_priv *priv = netdev_priv(net_dev);
+<<<<<<< HEAD
 	int err = -EOPNOTSUPP;
 
 	mutex_lock(&priv->mac_lock);
@@ -139,6 +160,13 @@ dpaa2_eth_set_link_ksettings(struct net_device *net_dev,
 	mutex_unlock(&priv->mac_lock);
 
 	return err;
+=======
+
+	if (!dpaa2_eth_is_type_phy(priv))
+		return -ENOTSUPP;
+
+	return phylink_ethtool_ksettings_set(priv->mac->phylink, link_settings);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void dpaa2_eth_get_pauseparam(struct net_device *net_dev,
@@ -147,6 +175,7 @@ static void dpaa2_eth_get_pauseparam(struct net_device *net_dev,
 	struct dpaa2_eth_priv *priv = netdev_priv(net_dev);
 	u64 link_options = priv->link_state.options;
 
+<<<<<<< HEAD
 	mutex_lock(&priv->mac_lock);
 
 	if (dpaa2_eth_is_type_phy(priv)) {
@@ -157,6 +186,13 @@ static void dpaa2_eth_get_pauseparam(struct net_device *net_dev,
 
 	mutex_unlock(&priv->mac_lock);
 
+=======
+	if (dpaa2_eth_is_type_phy(priv)) {
+		phylink_ethtool_get_pauseparam(priv->mac->phylink, pause);
+		return;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	pause->rx_pause = dpaa2_eth_rx_pause_enabled(link_options);
 	pause->tx_pause = dpaa2_eth_tx_pause_enabled(link_options);
 	pause->autoneg = AUTONEG_DISABLE;
@@ -175,6 +211,7 @@ static int dpaa2_eth_set_pauseparam(struct net_device *net_dev,
 		return -EOPNOTSUPP;
 	}
 
+<<<<<<< HEAD
 	mutex_lock(&priv->mac_lock);
 
 	if (dpaa2_eth_is_type_phy(priv)) {
@@ -186,6 +223,11 @@ static int dpaa2_eth_set_pauseparam(struct net_device *net_dev,
 
 	mutex_unlock(&priv->mac_lock);
 
+=======
+	if (dpaa2_eth_is_type_phy(priv))
+		return phylink_ethtool_set_pauseparam(priv->mac->phylink,
+						      pause);
+>>>>>>> b7ba80a49124 (Commit)
 	if (pause->autoneg)
 		return -EOPNOTSUPP;
 
@@ -217,6 +259,10 @@ static int dpaa2_eth_set_pauseparam(struct net_device *net_dev,
 static void dpaa2_eth_get_strings(struct net_device *netdev, u32 stringset,
 				  u8 *data)
 {
+<<<<<<< HEAD
+=======
+	struct dpaa2_eth_priv *priv = netdev_priv(netdev);
+>>>>>>> b7ba80a49124 (Commit)
 	u8 *p = data;
 	int i;
 
@@ -230,17 +276,33 @@ static void dpaa2_eth_get_strings(struct net_device *netdev, u32 stringset,
 			strscpy(p, dpaa2_ethtool_extras[i], ETH_GSTRING_LEN);
 			p += ETH_GSTRING_LEN;
 		}
+<<<<<<< HEAD
 		dpaa2_mac_get_strings(p);
+=======
+		if (dpaa2_eth_has_mac(priv))
+			dpaa2_mac_get_strings(p);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 }
 
 static int dpaa2_eth_get_sset_count(struct net_device *net_dev, int sset)
 {
+<<<<<<< HEAD
 	switch (sset) {
 	case ETH_SS_STATS: /* ethtool_get_stats(), ethtool_get_drvinfo() */
 		return DPAA2_ETH_NUM_STATS + DPAA2_ETH_NUM_EXTRA_STATS +
 		       dpaa2_mac_get_sset_count();
+=======
+	int num_ss_stats = DPAA2_ETH_NUM_STATS + DPAA2_ETH_NUM_EXTRA_STATS;
+	struct dpaa2_eth_priv *priv = netdev_priv(net_dev);
+
+	switch (sset) {
+	case ETH_SS_STATS: /* ethtool_get_stats(), ethtool_get_drvinfo() */
+		if (dpaa2_eth_has_mac(priv))
+			num_ss_stats += dpaa2_mac_get_sset_count();
+		return num_ss_stats;
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -EOPNOTSUPP;
 	}
@@ -252,8 +314,22 @@ static void dpaa2_eth_get_ethtool_stats(struct net_device *net_dev,
 					struct ethtool_stats *stats,
 					u64 *data)
 {
+<<<<<<< HEAD
 	struct dpaa2_eth_priv *priv = netdev_priv(net_dev);
 	union dpni_statistics dpni_stats;
+=======
+	int i = 0;
+	int j, k, err;
+	int num_cnt;
+	union dpni_statistics dpni_stats;
+	u32 fcnt, bcnt;
+	u32 fcnt_rx_total = 0, fcnt_tx_total = 0;
+	u32 bcnt_rx_total = 0, bcnt_tx_total = 0;
+	u32 buf_cnt;
+	struct dpaa2_eth_priv *priv = netdev_priv(net_dev);
+	struct dpaa2_eth_drv_stats *extras;
+	struct dpaa2_eth_ch_stats *ch_stats;
+>>>>>>> b7ba80a49124 (Commit)
 	int dpni_stats_page_size[DPNI_STATISTICS_CNT] = {
 		sizeof(dpni_stats.page_0),
 		sizeof(dpni_stats.page_1),
@@ -263,6 +339,7 @@ static void dpaa2_eth_get_ethtool_stats(struct net_device *net_dev,
 		sizeof(dpni_stats.page_5),
 		sizeof(dpni_stats.page_6),
 	};
+<<<<<<< HEAD
 	u32 fcnt_rx_total = 0, fcnt_tx_total = 0;
 	u32 bcnt_rx_total = 0, bcnt_tx_total = 0;
 	struct dpaa2_eth_ch_stats *ch_stats;
@@ -270,6 +347,8 @@ static void dpaa2_eth_get_ethtool_stats(struct net_device *net_dev,
 	u32 buf_cnt, buf_cnt_total = 0;
 	int j, k, err, num_cnt, i = 0;
 	u32 fcnt, bcnt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(data, 0,
 	       sizeof(u64) * (DPAA2_ETH_NUM_STATS + DPAA2_ETH_NUM_EXTRA_STATS));
@@ -331,6 +410,7 @@ static void dpaa2_eth_get_ethtool_stats(struct net_device *net_dev,
 	*(data + i++) = fcnt_tx_total;
 	*(data + i++) = bcnt_tx_total;
 
+<<<<<<< HEAD
 	for (j = 0; j < priv->num_bps; j++) {
 		err = dpaa2_io_query_bp_count(NULL, priv->bp[j]->bpid, &buf_cnt);
 		if (err) {
@@ -347,6 +427,17 @@ static void dpaa2_eth_get_ethtool_stats(struct net_device *net_dev,
 		dpaa2_mac_get_ethtool_stats(priv->mac, data + i);
 
 	mutex_unlock(&priv->mac_lock);
+=======
+	err = dpaa2_io_query_bp_count(NULL, priv->bpid, &buf_cnt);
+	if (err) {
+		netdev_warn(net_dev, "Buffer count query error %d\n", err);
+		return;
+	}
+	*(data + i++) = buf_cnt;
+
+	if (dpaa2_eth_has_mac(priv))
+		dpaa2_mac_get_ethtool_stats(priv->mac, data + i);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int dpaa2_eth_prep_eth_rule(struct ethhdr *eth_value, struct ethhdr *eth_mask,
@@ -906,6 +997,7 @@ restore_rx_usecs:
 	return err;
 }
 
+<<<<<<< HEAD
 static void dpaa2_eth_get_channels(struct net_device *net_dev,
 				   struct ethtool_channels *channels)
 {
@@ -929,6 +1021,8 @@ static void dpaa2_eth_get_channels(struct net_device *net_dev,
 				   channels->other_count;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct ethtool_ops dpaa2_ethtool_ops = {
 	.supported_coalesce_params = ETHTOOL_COALESCE_RX_USECS |
 				     ETHTOOL_COALESCE_USE_ADAPTIVE_RX,
@@ -949,5 +1043,8 @@ const struct ethtool_ops dpaa2_ethtool_ops = {
 	.set_tunable = dpaa2_eth_set_tunable,
 	.get_coalesce = dpaa2_eth_get_coalesce,
 	.set_coalesce = dpaa2_eth_set_coalesce,
+<<<<<<< HEAD
 	.get_channels = dpaa2_eth_get_channels,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

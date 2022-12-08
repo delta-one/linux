@@ -6,7 +6,11 @@
 $id: http://devicetree.org/schemas/dma/ti/k3-udma.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Texas Instruments K3 NAVSS Unified DMA
+=======
+title: Texas Instruments K3 NAVSS Unified DMA Device Tree Bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Peter Ujfalusi <peter.ujfalusi@gmail.com>
@@ -44,7 +48,10 @@ description: |
 
 allOf:
   - $ref: "../dma-controller.yaml#"
+<<<<<<< HEAD
   - $ref: /schemas/arm/keystone/ti,k3-sci-common.yaml#
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   "#dma-cells":
@@ -79,6 +86,17 @@ properties:
 
   msi-parent: true
 
+<<<<<<< HEAD
+=======
+  ti,sci:
+    description: phandle to TI-SCI compatible System controller node
+    $ref: /schemas/types.yaml#/definitions/phandle
+
+  ti,sci-dev-id:
+    description: TI-SCI device id of UDMAP
+    $ref: /schemas/types.yaml#/definitions/uint32
+
+>>>>>>> b7ba80a49124 (Commit)
   ti,ringacc:
     description: phandle to the ring accelerator node
     $ref: /schemas/types.yaml#/definitions/phandle

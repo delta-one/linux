@@ -185,11 +185,19 @@ err_put_of_nodes:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void arndale_audio_remove(struct platform_device *pdev)
+=======
+static int arndale_audio_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 
 	arndale_put_of_nodes(card);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id arndale_audio_of_match[] = {
@@ -207,7 +215,11 @@ static struct platform_driver arndale_audio_driver = {
 		.of_match_table = arndale_audio_of_match,
 	},
 	.probe = arndale_audio_probe,
+<<<<<<< HEAD
 	.remove_new = arndale_audio_remove,
+=======
+	.remove = arndale_audio_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(arndale_audio_driver);

@@ -9,7 +9,10 @@
 
 #include <linux/module.h>
 #include <linux/init.h>
+<<<<<<< HEAD
 #include <linux/io.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/ccwdev.h>
 #include <asm/cio.h>
@@ -332,7 +335,11 @@ ccw_device_do_sense(struct ccw_device *cdev, struct irb *irb)
 	 */
 	sense_ccw = &to_io_private(sch)->dma_area->sense_ccw;
 	sense_ccw->cmd_code = CCW_CMD_BASIC_SENSE;
+<<<<<<< HEAD
 	sense_ccw->cda = virt_to_phys(cdev->private->dma_area->irb.ecw);
+=======
+	sense_ccw->cda = (__u32) __pa(cdev->private->dma_area->irb.ecw);
+>>>>>>> b7ba80a49124 (Commit)
 	sense_ccw->count = SENSE_MAX_COUNT;
 	sense_ccw->flags = CCW_FLAG_SLI;
 

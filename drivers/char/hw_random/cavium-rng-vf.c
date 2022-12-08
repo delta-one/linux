@@ -225,6 +225,10 @@ static int cavium_rng_probe_vf(struct	pci_dev		*pdev,
 		return -ENOMEM;
 
 	rng->ops.read    = cavium_rng_read;
+<<<<<<< HEAD
+=======
+	rng->ops.quality = 1000;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pci_set_drvdata(pdev, rng);
 

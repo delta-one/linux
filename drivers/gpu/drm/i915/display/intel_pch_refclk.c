@@ -3,7 +3,10 @@
  * Copyright © 2021 Intel Corporation
  */
 
+<<<<<<< HEAD
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_de.h"
 #include "intel_display_types.h"
 #include "intel_panel.h"
@@ -12,13 +15,27 @@
 
 static void lpt_fdi_reset_mphy(struct drm_i915_private *dev_priv)
 {
+<<<<<<< HEAD
 	intel_de_rmw(dev_priv, SOUTH_CHICKEN2, 0, FDI_MPHY_IOSFSB_RESET_CTL);
+=======
+	u32 tmp;
+
+	tmp = intel_de_read(dev_priv, SOUTH_CHICKEN2);
+	tmp |= FDI_MPHY_IOSFSB_RESET_CTL;
+	intel_de_write(dev_priv, SOUTH_CHICKEN2, tmp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (wait_for_us(intel_de_read(dev_priv, SOUTH_CHICKEN2) &
 			FDI_MPHY_IOSFSB_RESET_STATUS, 100))
 		drm_err(&dev_priv->drm, "FDI mPHY reset assert timeout\n");
 
+<<<<<<< HEAD
 	intel_de_rmw(dev_priv, SOUTH_CHICKEN2, FDI_MPHY_IOSFSB_RESET_CTL, 0);
+=======
+	tmp = intel_de_read(dev_priv, SOUTH_CHICKEN2);
+	tmp &= ~FDI_MPHY_IOSFSB_RESET_CTL;
+	intel_de_write(dev_priv, SOUTH_CHICKEN2, tmp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (wait_for_us((intel_de_read(dev_priv, SOUTH_CHICKEN2) &
 			 FDI_MPHY_IOSFSB_RESET_STATUS) == 0, 100))
@@ -461,24 +478,43 @@ static void lpt_init_pch_refclk(struct drm_i915_private *dev_priv)
 	 * clock hierarchy. That would also allow us to do
 	 * clock bending finally.
 	 */
+<<<<<<< HEAD
 	dev_priv->display.dpll.pch_ssc_use = 0;
 
 	if (spll_uses_pch_ssc(dev_priv)) {
 		drm_dbg_kms(&dev_priv->drm, "SPLL using PCH SSC\n");
 		dev_priv->display.dpll.pch_ssc_use |= BIT(DPLL_ID_SPLL);
+=======
+	dev_priv->pch_ssc_use = 0;
+
+	if (spll_uses_pch_ssc(dev_priv)) {
+		drm_dbg_kms(&dev_priv->drm, "SPLL using PCH SSC\n");
+		dev_priv->pch_ssc_use |= BIT(DPLL_ID_SPLL);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (wrpll_uses_pch_ssc(dev_priv, DPLL_ID_WRPLL1)) {
 		drm_dbg_kms(&dev_priv->drm, "WRPLL1 using PCH SSC\n");
+<<<<<<< HEAD
 		dev_priv->display.dpll.pch_ssc_use |= BIT(DPLL_ID_WRPLL1);
+=======
+		dev_priv->pch_ssc_use |= BIT(DPLL_ID_WRPLL1);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (wrpll_uses_pch_ssc(dev_priv, DPLL_ID_WRPLL2)) {
 		drm_dbg_kms(&dev_priv->drm, "WRPLL2 using PCH SSC\n");
+<<<<<<< HEAD
 		dev_priv->display.dpll.pch_ssc_use |= BIT(DPLL_ID_WRPLL2);
 	}
 
 	if (dev_priv->display.dpll.pch_ssc_use)
+=======
+		dev_priv->pch_ssc_use |= BIT(DPLL_ID_WRPLL2);
+	}
+
+	if (dev_priv->pch_ssc_use)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	if (has_fdi) {

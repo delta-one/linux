@@ -121,6 +121,10 @@ int main(void)
 
 	vm = vm_create_with_one_vcpu(&vcpu, guest_main);
 	check_preconditions(vcpu);
+<<<<<<< HEAD
+=======
+	ucall_init(vm, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	enter_guest(vcpu);
 	kvm_vm_free(vm);

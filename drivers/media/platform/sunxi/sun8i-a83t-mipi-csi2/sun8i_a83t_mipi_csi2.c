@@ -220,8 +220,12 @@ static int sun8i_a83t_mipi_csi2_s_stream(struct v4l2_subdev *subdev, int on)
 		return -ENODEV;
 
 	if (!on) {
+<<<<<<< HEAD
 		v4l2_subdev_call(source_subdev, video, s_stream, 0);
 		ret = 0;
+=======
+		ret = v4l2_subdev_call(source_subdev, video, s_stream, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		goto disable;
 	}
 
@@ -313,6 +317,11 @@ static int sun8i_a83t_mipi_csi2_s_stream(struct v4l2_subdev *subdev, int on)
 	return 0;
 
 disable:
+<<<<<<< HEAD
+=======
+	if (!on)
+		ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	phy_power_off(dphy);
 	sun8i_a83t_mipi_csi2_disable(csi2_dev);
 
@@ -535,7 +544,10 @@ sun8i_a83t_mipi_csi2_bridge_setup(struct sun8i_a83t_mipi_csi2_device *csi2_dev)
 	struct v4l2_async_notifier *notifier = &bridge->notifier;
 	struct media_pad *pads = bridge->pads;
 	struct device *dev = csi2_dev->dev;
+<<<<<<< HEAD
 	bool notifier_registered = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	mutex_init(&bridge->lock);
@@ -557,10 +569,15 @@ sun8i_a83t_mipi_csi2_bridge_setup(struct sun8i_a83t_mipi_csi2_device *csi2_dev)
 
 	/* Media Pads */
 
+<<<<<<< HEAD
 	pads[SUN8I_A83T_MIPI_CSI2_PAD_SINK].flags = MEDIA_PAD_FL_SINK |
 						    MEDIA_PAD_FL_MUST_CONNECT;
 	pads[SUN8I_A83T_MIPI_CSI2_PAD_SOURCE].flags = MEDIA_PAD_FL_SOURCE |
 						      MEDIA_PAD_FL_MUST_CONNECT;
+=======
+	pads[SUN8I_A83T_MIPI_CSI2_PAD_SINK].flags = MEDIA_PAD_FL_SINK;
+	pads[SUN8I_A83T_MIPI_CSI2_PAD_SOURCE].flags = MEDIA_PAD_FL_SOURCE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = media_entity_pads_init(&subdev->entity,
 				     SUN8I_A83T_MIPI_CSI2_PAD_COUNT, pads);
@@ -573,6 +590,7 @@ sun8i_a83t_mipi_csi2_bridge_setup(struct sun8i_a83t_mipi_csi2_device *csi2_dev)
 	notifier->ops = &sun8i_a83t_mipi_csi2_notifier_ops;
 
 	ret = sun8i_a83t_mipi_csi2_bridge_source_setup(csi2_dev);
+<<<<<<< HEAD
 	if (ret && ret != -ENODEV)
 		goto error_v4l2_notifier_cleanup;
 
@@ -584,6 +602,14 @@ sun8i_a83t_mipi_csi2_bridge_setup(struct sun8i_a83t_mipi_csi2_device *csi2_dev)
 
 		notifier_registered = true;
 	}
+=======
+	if (ret)
+		goto error_v4l2_notifier_cleanup;
+
+	ret = v4l2_async_subdev_nf_register(subdev, notifier);
+	if (ret < 0)
+		goto error_v4l2_notifier_cleanup;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* V4L2 Subdev */
 
@@ -594,8 +620,12 @@ sun8i_a83t_mipi_csi2_bridge_setup(struct sun8i_a83t_mipi_csi2_device *csi2_dev)
 	return 0;
 
 error_v4l2_notifier_unregister:
+<<<<<<< HEAD
 	if (notifier_registered)
 		v4l2_async_nf_unregister(notifier);
+=======
+	v4l2_async_nf_unregister(notifier);
+>>>>>>> b7ba80a49124 (Commit)
 
 error_v4l2_notifier_cleanup:
 	v4l2_async_nf_cleanup(notifier);
@@ -727,15 +757,23 @@ sun8i_a83t_mipi_csi2_resources_setup(struct sun8i_a83t_mipi_csi2_device *csi2_de
 	csi2_dev->clock_mipi = devm_clk_get(dev, "mipi");
 	if (IS_ERR(csi2_dev->clock_mipi)) {
 		dev_err(dev, "failed to acquire mipi clock\n");
+<<<<<<< HEAD
 		ret = PTR_ERR(csi2_dev->clock_mipi);
 		goto error_clock_rate_exclusive;
+=======
+		return PTR_ERR(csi2_dev->clock_mipi);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	csi2_dev->clock_misc = devm_clk_get(dev, "misc");
 	if (IS_ERR(csi2_dev->clock_misc)) {
 		dev_err(dev, "failed to acquire misc clock\n");
+<<<<<<< HEAD
 		ret = PTR_ERR(csi2_dev->clock_misc);
 		goto error_clock_rate_exclusive;
+=======
+		return PTR_ERR(csi2_dev->clock_misc);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Reset */
@@ -743,8 +781,12 @@ sun8i_a83t_mipi_csi2_resources_setup(struct sun8i_a83t_mipi_csi2_device *csi2_de
 	csi2_dev->reset = devm_reset_control_get_shared(dev, NULL);
 	if (IS_ERR(csi2_dev->reset)) {
 		dev_err(dev, "failed to get reset controller\n");
+<<<<<<< HEAD
 		ret = PTR_ERR(csi2_dev->reset);
 		goto error_clock_rate_exclusive;
+=======
+		return PTR_ERR(csi2_dev->reset);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* D-PHY */
@@ -752,7 +794,11 @@ sun8i_a83t_mipi_csi2_resources_setup(struct sun8i_a83t_mipi_csi2_device *csi2_de
 	ret = sun8i_a83t_dphy_register(csi2_dev);
 	if (ret) {
 		dev_err(dev, "failed to initialize MIPI D-PHY\n");
+<<<<<<< HEAD
 		goto error_clock_rate_exclusive;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Runtime PM */
@@ -760,11 +806,14 @@ sun8i_a83t_mipi_csi2_resources_setup(struct sun8i_a83t_mipi_csi2_device *csi2_de
 	pm_runtime_enable(dev);
 
 	return 0;
+<<<<<<< HEAD
 
 error_clock_rate_exclusive:
 	clk_rate_exclusive_put(csi2_dev->clock_mod);
 
 	return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -794,6 +843,7 @@ static int sun8i_a83t_mipi_csi2_probe(struct platform_device *platform_dev)
 
 	ret = sun8i_a83t_mipi_csi2_bridge_setup(csi2_dev);
 	if (ret)
+<<<<<<< HEAD
 		goto error_resources;
 
 	return 0;
@@ -802,6 +852,11 @@ error_resources:
 	sun8i_a83t_mipi_csi2_resources_cleanup(csi2_dev);
 
 	return ret;
+=======
+		return ret;
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int sun8i_a83t_mipi_csi2_remove(struct platform_device *platform_dev)

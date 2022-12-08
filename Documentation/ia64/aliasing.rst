@@ -61,7 +61,11 @@ Memory Map
     The efi_memmap table is preserved unmodified because the original
     boot-time information is required for kexec.
 
+<<<<<<< HEAD
 Kernel Identity Mappings
+=======
+Kernel Identify Mappings
+>>>>>>> b7ba80a49124 (Commit)
 ========================
 
     Linux/ia64 identity mappings are done with large pages, currently

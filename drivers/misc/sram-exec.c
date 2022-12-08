@@ -10,9 +10,15 @@
 #include <linux/genalloc.h>
 #include <linux/mm.h>
 #include <linux/sram.h>
+<<<<<<< HEAD
 #include <linux/set_memory.h>
 
 #include <asm/fncpy.h>
+=======
+
+#include <asm/fncpy.h>
+#include <asm/set_memory.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "sram.h"
 
@@ -106,7 +112,14 @@ void *sram_exec_copy(struct gen_pool *pool, void *dst, void *src,
 
 	dst_cpy = fncpy(dst, src, size);
 
+<<<<<<< HEAD
 	ret = set_memory_rox((unsigned long)base, pages);
+=======
+	ret = set_memory_ro((unsigned long)base, pages);
+	if (ret)
+		goto error_out;
+	ret = set_memory_x((unsigned long)base, pages);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto error_out;
 

@@ -9,7 +9,10 @@ enum insn_type {
 	NOP = 1,  /* site cond-call */
 	JMP = 2,  /* tramp / site tail-call */
 	RET = 3,  /* tramp / site cond-tail-call */
+<<<<<<< HEAD
 	JCC = 4,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -26,6 +29,7 @@ static const u8 xor5rax[] = { 0x2e, 0x2e, 0x2e, 0x31, 0xc0 };
 
 static const u8 retinsn[] = { RET_INSN_OPCODE, 0xcc, 0xcc, 0xcc, 0xcc };
 
+<<<<<<< HEAD
 static u8 __is_Jcc(u8 *insn) /* Jcc.d32 */
 {
 	u8 ret = 0;
@@ -50,12 +54,15 @@ asm (".global __static_call_return\n\t"
      "ret; int3\n\t"
      ".size __static_call_return, . - __static_call_return \n\t");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void __ref __static_call_transform(void *insn, enum insn_type type,
 					  void *func, bool modinit)
 {
 	const void *emulate = NULL;
 	int size = CALL_INSN_SIZE;
 	const void *code;
+<<<<<<< HEAD
 	u8 op, buf[6];
 
 	if ((type == JMP || type == RET) && (op = __is_Jcc(insn)))
@@ -64,6 +71,11 @@ static void __ref __static_call_transform(void *insn, enum insn_type type,
 	switch (type) {
 	case CALL:
 		func = callthunks_translate_call_dest(func);
+=======
+
+	switch (type) {
+	case CALL:
+>>>>>>> b7ba80a49124 (Commit)
 		code = text_gen_insn(CALL_INSN_OPCODE, insn, func);
 		if (func == &__static_call_return0) {
 			emulate = code;
@@ -82,6 +94,7 @@ static void __ref __static_call_transform(void *insn, enum insn_type type,
 
 	case RET:
 		if (cpu_feature_enabled(X86_FEATURE_RETHUNK))
+<<<<<<< HEAD
 			code = text_gen_insn(JMP32_INSN_OPCODE, insn, x86_return_thunk);
 		else
 			code = &retinsn;
@@ -100,6 +113,12 @@ static void __ref __static_call_transform(void *insn, enum insn_type type,
 		size = 6;
 
 		break;
+=======
+			code = text_gen_insn(JMP32_INSN_OPCODE, insn, &__x86_return_thunk);
+		else
+			code = &retinsn;
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (memcmp(insn, code, size) == 0)
@@ -111,9 +130,15 @@ static void __ref __static_call_transform(void *insn, enum insn_type type,
 	text_poke_bp(insn, code, size, emulate);
 }
 
+<<<<<<< HEAD
 static void __static_call_validate(u8 *insn, bool tail, bool tramp)
 {
 	u8 opcode = insn[0];
+=======
+static void __static_call_validate(void *insn, bool tail, bool tramp)
+{
+	u8 opcode = *(u8 *)insn;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (tramp && memcmp(insn+5, tramp_ud, 3)) {
 		pr_err("trampoline signature fail");
@@ -122,8 +147,12 @@ static void __static_call_validate(u8 *insn, bool tail, bool tramp)
 
 	if (tail) {
 		if (opcode == JMP32_INSN_OPCODE ||
+<<<<<<< HEAD
 		    opcode == RET_INSN_OPCODE ||
 		    __is_Jcc(insn))
+=======
+		    opcode == RET_INSN_OPCODE)
+>>>>>>> b7ba80a49124 (Commit)
 			return;
 	} else {
 		if (opcode == CALL_INSN_OPCODE ||

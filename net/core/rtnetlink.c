@@ -53,15 +53,22 @@
 #include <net/fib_rules.h>
 #include <net/rtnetlink.h>
 #include <net/net_namespace.h>
+<<<<<<< HEAD
 #include <net/devlink.h>
 #if IS_ENABLED(CONFIG_IPV6)
 #include <net/addrconf.h>
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "dev.h"
 
 #define RTNL_MAX_TYPE		50
+<<<<<<< HEAD
 #define RTNL_SLAVE_MAX_TYPE	42
+=======
+#define RTNL_SLAVE_MAX_TYPE	40
+>>>>>>> b7ba80a49124 (Commit)
 
 struct rtnl_link {
 	rtnl_doit_func		doit;
@@ -764,7 +771,11 @@ int rtnl_unicast(struct sk_buff *skb, struct net *net, u32 pid)
 EXPORT_SYMBOL(rtnl_unicast);
 
 void rtnl_notify(struct sk_buff *skb, struct net *net, u32 pid, u32 group,
+<<<<<<< HEAD
 		 const struct nlmsghdr *nlh, gfp_t flags)
+=======
+		 struct nlmsghdr *nlh, gfp_t flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sock *rtnl = net->rtnl;
 
@@ -1042,6 +1053,7 @@ static size_t rtnl_proto_down_size(const struct net_device *dev)
 	return size;
 }
 
+<<<<<<< HEAD
 static size_t rtnl_devlink_port_size(const struct net_device *dev)
 {
 	size_t size = nla_total_size(0); /* nest IFLA_DEVLINK_PORT */
@@ -1052,6 +1064,8 @@ static size_t rtnl_devlink_port_size(const struct net_device *dev)
 	return size;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static noinline size_t if_nlmsg_size(const struct net_device *dev,
 				     u32 ext_filter_mask)
 {
@@ -1077,8 +1091,11 @@ static noinline size_t if_nlmsg_size(const struct net_device *dev,
 	       + nla_total_size(4) /* IFLA_GSO_MAX_SEGS */
 	       + nla_total_size(4) /* IFLA_GSO_MAX_SIZE */
 	       + nla_total_size(4) /* IFLA_GRO_MAX_SIZE */
+<<<<<<< HEAD
 	       + nla_total_size(4) /* IFLA_GSO_IPV4_MAX_SIZE */
 	       + nla_total_size(4) /* IFLA_GRO_IPV4_MAX_SIZE */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	       + nla_total_size(4) /* IFLA_TSO_MAX_SIZE */
 	       + nla_total_size(4) /* IFLA_TSO_MAX_SEGS */
 	       + nla_total_size(1) /* IFLA_OPERSTATE */
@@ -1107,7 +1124,10 @@ static noinline size_t if_nlmsg_size(const struct net_device *dev,
 	       + nla_total_size(4)  /* IFLA_MAX_MTU */
 	       + rtnl_prop_list_size(dev)
 	       + nla_total_size(MAX_ADDR_LEN) /* IFLA_PERM_ADDRESS */
+<<<<<<< HEAD
 	       + rtnl_devlink_port_size(dev)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	       + 0;
 }
 
@@ -1745,6 +1765,7 @@ nla_put_failure:
 	return -EMSGSIZE;
 }
 
+<<<<<<< HEAD
 static int rtnl_fill_devlink_port(struct sk_buff *skb,
 				  const struct net_device *dev)
 {
@@ -1769,6 +1790,8 @@ nest_cancel:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int rtnl_fill_ifinfo(struct sk_buff *skb,
 			    struct net_device *dev, struct net *src_net,
 			    int type, u32 pid, u32 seq, u32 change,
@@ -1812,8 +1835,11 @@ static int rtnl_fill_ifinfo(struct sk_buff *skb,
 	    nla_put_u32(skb, IFLA_GSO_MAX_SEGS, dev->gso_max_segs) ||
 	    nla_put_u32(skb, IFLA_GSO_MAX_SIZE, dev->gso_max_size) ||
 	    nla_put_u32(skb, IFLA_GRO_MAX_SIZE, dev->gro_max_size) ||
+<<<<<<< HEAD
 	    nla_put_u32(skb, IFLA_GSO_IPV4_MAX_SIZE, dev->gso_ipv4_max_size) ||
 	    nla_put_u32(skb, IFLA_GRO_IPV4_MAX_SIZE, dev->gro_ipv4_max_size) ||
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	    nla_put_u32(skb, IFLA_TSO_MAX_SIZE, dev->tso_max_size) ||
 	    nla_put_u32(skb, IFLA_TSO_MAX_SEGS, dev->tso_max_segs) ||
 #ifdef CONFIG_RPS
@@ -1908,9 +1934,12 @@ static int rtnl_fill_ifinfo(struct sk_buff *skb,
 			   dev->dev.parent->bus->name))
 		goto nla_put_failure;
 
+<<<<<<< HEAD
 	if (rtnl_fill_devlink_port(skb, dev))
 		goto nla_put_failure;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	nlmsg_end(skb, nlh);
 	return 0;
 
@@ -1975,8 +2004,11 @@ static const struct nla_policy ifla_policy[IFLA_MAX+1] = {
 	[IFLA_TSO_MAX_SIZE]	= { .type = NLA_REJECT },
 	[IFLA_TSO_MAX_SEGS]	= { .type = NLA_REJECT },
 	[IFLA_ALLMULTI]		= { .type = NLA_REJECT },
+<<<<<<< HEAD
 	[IFLA_GSO_IPV4_MAX_SIZE]	= { .type = NLA_U32 },
 	[IFLA_GRO_IPV4_MAX_SIZE]	= { .type = NLA_U32 },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct nla_policy ifla_info_policy[IFLA_INFO_MAX+1] = {
@@ -2892,6 +2924,7 @@ static int do_setlink(const struct sk_buff *skb,
 		}
 	}
 
+<<<<<<< HEAD
 	if (tb[IFLA_GSO_IPV4_MAX_SIZE]) {
 		u32 max_size = nla_get_u32(tb[IFLA_GSO_IPV4_MAX_SIZE]);
 
@@ -2915,6 +2948,8 @@ static int do_setlink(const struct sk_buff *skb,
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (tb[IFLA_OPERSTATE])
 		set_operstate(dev, nla_get_u8(tb[IFLA_OPERSTATE]));
 
@@ -3181,7 +3216,11 @@ static int rtnl_group_dellink(const struct net *net, int group)
 	return 0;
 }
 
+<<<<<<< HEAD
 int rtnl_delete_link(struct net_device *dev, u32 portid, const struct nlmsghdr *nlh)
+=======
+int rtnl_delete_link(struct net_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct rtnl_link_ops *ops;
 	LIST_HEAD(list_kill);
@@ -3191,7 +3230,11 @@ int rtnl_delete_link(struct net_device *dev, u32 portid, const struct nlmsghdr *
 		return -EOPNOTSUPP;
 
 	ops->dellink(dev, &list_kill);
+<<<<<<< HEAD
 	unregister_netdevice_many_notify(&list_kill, portid, nlh);
+=======
+	unregister_netdevice_many(&list_kill);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -3201,7 +3244,10 @@ static int rtnl_dellink(struct sk_buff *skb, struct nlmsghdr *nlh,
 			struct netlink_ext_ack *extack)
 {
 	struct net *net = sock_net(skb->sk);
+<<<<<<< HEAD
 	u32 portid = NETLINK_CB(skb).portid;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct net *tgt_net = net;
 	struct net_device *dev = NULL;
 	struct ifinfomsg *ifm;
@@ -3243,7 +3289,11 @@ static int rtnl_dellink(struct sk_buff *skb, struct nlmsghdr *nlh,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	err = rtnl_delete_link(dev, portid, nlh);
+=======
+	err = rtnl_delete_link(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	if (netnsid >= 0)
@@ -3252,8 +3302,12 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 int rtnl_configure_link(struct net_device *dev, const struct ifinfomsg *ifm,
 			u32 portid, const struct nlmsghdr *nlh)
+=======
+int rtnl_configure_link(struct net_device *dev, const struct ifinfomsg *ifm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int old_flags;
 	int err;
@@ -3267,10 +3321,17 @@ int rtnl_configure_link(struct net_device *dev, const struct ifinfomsg *ifm,
 	}
 
 	if (dev->rtnl_link_state == RTNL_LINK_INITIALIZED) {
+<<<<<<< HEAD
 		__dev_notify_flags(dev, old_flags, (old_flags ^ dev->flags), portid, nlh);
 	} else {
 		dev->rtnl_link_state = RTNL_LINK_INITIALIZED;
 		__dev_notify_flags(dev, old_flags, ~0U, portid, nlh);
+=======
+		__dev_notify_flags(dev, old_flags, (old_flags ^ dev->flags));
+	} else {
+		dev->rtnl_link_state = RTNL_LINK_INITIALIZED;
+		__dev_notify_flags(dev, old_flags, ~0U);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return 0;
 }
@@ -3357,10 +3418,13 @@ struct net_device *rtnl_create_link(struct net *net, const char *ifname,
 		netif_set_gso_max_segs(dev, nla_get_u32(tb[IFLA_GSO_MAX_SEGS]));
 	if (tb[IFLA_GRO_MAX_SIZE])
 		netif_set_gro_max_size(dev, nla_get_u32(tb[IFLA_GRO_MAX_SIZE]));
+<<<<<<< HEAD
 	if (tb[IFLA_GSO_IPV4_MAX_SIZE])
 		netif_set_gso_ipv4_max_size(dev, nla_get_u32(tb[IFLA_GSO_IPV4_MAX_SIZE]));
 	if (tb[IFLA_GRO_IPV4_MAX_SIZE])
 		netif_set_gro_ipv4_max_size(dev, nla_get_u32(tb[IFLA_GRO_IPV4_MAX_SIZE]));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return dev;
 }
@@ -3388,13 +3452,19 @@ static int rtnl_group_changelink(const struct sk_buff *skb,
 
 static int rtnl_newlink_create(struct sk_buff *skb, struct ifinfomsg *ifm,
 			       const struct rtnl_link_ops *ops,
+<<<<<<< HEAD
 			       const struct nlmsghdr *nlh,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			       struct nlattr **tb, struct nlattr **data,
 			       struct netlink_ext_ack *extack)
 {
 	unsigned char name_assign_type = NET_NAME_USER;
 	struct net *net = sock_net(skb->sk);
+<<<<<<< HEAD
 	u32 portid = NETLINK_CB(skb).portid;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct net *dest_net, *link_net;
 	struct net_device *dev;
 	char ifname[IFNAMSIZ];
@@ -3448,7 +3518,11 @@ static int rtnl_newlink_create(struct sk_buff *skb, struct ifinfomsg *ifm,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	err = rtnl_configure_link(dev, ifm, portid, nlh);
+=======
+	err = rtnl_configure_link(dev, ifm);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err < 0)
 		goto out_unregister;
 	if (link_net) {
@@ -3657,7 +3731,11 @@ replay:
 		return -EOPNOTSUPP;
 	}
 
+<<<<<<< HEAD
 	return rtnl_newlink_create(skb, ifm, ops, nlh, tb, data, extack);
+=======
+	return rtnl_newlink_create(skb, ifm, ops, tb, data, extack);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int rtnl_newlink(struct sk_buff *skb, struct nlmsghdr *nlh,
@@ -3975,7 +4053,11 @@ static int rtnl_dump_all(struct sk_buff *skb, struct netlink_callback *cb)
 struct sk_buff *rtmsg_ifinfo_build_skb(int type, struct net_device *dev,
 				       unsigned int change,
 				       u32 event, gfp_t flags, int *new_nsid,
+<<<<<<< HEAD
 				       int new_ifindex, u32 portid, u32 seq)
+=======
+				       int new_ifindex)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct net *net = dev_net(dev);
 	struct sk_buff *skb;
@@ -3986,7 +4068,11 @@ struct sk_buff *rtmsg_ifinfo_build_skb(int type, struct net_device *dev,
 		goto errout;
 
 	err = rtnl_fill_ifinfo(skb, dev, dev_net(dev),
+<<<<<<< HEAD
 			       type, portid, seq, change, 0, 0, event,
+=======
+			       type, 0, 0, change, 0, 0, event,
+>>>>>>> b7ba80a49124 (Commit)
 			       new_nsid, new_ifindex, -1, flags);
 	if (err < 0) {
 		/* -EMSGSIZE implies BUG in if_nlmsg_size() */
@@ -4001,18 +4087,30 @@ errout:
 	return NULL;
 }
 
+<<<<<<< HEAD
 void rtmsg_ifinfo_send(struct sk_buff *skb, struct net_device *dev, gfp_t flags,
 		       u32 portid, const struct nlmsghdr *nlh)
 {
 	struct net *net = dev_net(dev);
 
 	rtnl_notify(skb, net, portid, RTNLGRP_LINK, nlh, flags);
+=======
+void rtmsg_ifinfo_send(struct sk_buff *skb, struct net_device *dev, gfp_t flags)
+{
+	struct net *net = dev_net(dev);
+
+	rtnl_notify(skb, net, 0, RTNLGRP_LINK, NULL, flags);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void rtmsg_ifinfo_event(int type, struct net_device *dev,
 			       unsigned int change, u32 event,
+<<<<<<< HEAD
 			       gfp_t flags, int *new_nsid, int new_ifindex,
 			       u32 portid, const struct nlmsghdr *nlh)
+=======
+			       gfp_t flags, int *new_nsid, int new_ifindex)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sk_buff *skb;
 
@@ -4020,6 +4118,7 @@ static void rtmsg_ifinfo_event(int type, struct net_device *dev,
 		return;
 
 	skb = rtmsg_ifinfo_build_skb(type, dev, change, event, flags, new_nsid,
+<<<<<<< HEAD
 				     new_ifindex, portid, nlmsg_seq(nlh));
 	if (skb)
 		rtmsg_ifinfo_send(skb, dev, flags, portid, nlh);
@@ -4030,13 +4129,29 @@ void rtmsg_ifinfo(int type, struct net_device *dev, unsigned int change,
 {
 	rtmsg_ifinfo_event(type, dev, change, rtnl_get_event(0), flags,
 			   NULL, 0, portid, nlh);
+=======
+				     new_ifindex);
+	if (skb)
+		rtmsg_ifinfo_send(skb, dev, flags);
+}
+
+void rtmsg_ifinfo(int type, struct net_device *dev, unsigned int change,
+		  gfp_t flags)
+{
+	rtmsg_ifinfo_event(type, dev, change, rtnl_get_event(0), flags,
+			   NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void rtmsg_ifinfo_newnet(int type, struct net_device *dev, unsigned int change,
 			 gfp_t flags, int *new_nsid, int new_ifindex)
 {
 	rtmsg_ifinfo_event(type, dev, change, rtnl_get_event(0), flags,
+<<<<<<< HEAD
 			   new_nsid, new_ifindex, 0, NULL);
+=======
+			   new_nsid, new_ifindex);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int nlmsg_populate_fdb_fill(struct sk_buff *skb,
@@ -4126,11 +4241,14 @@ int ndo_dflt_fdb_add(struct ndmsg *ndm,
 		return err;
 	}
 
+<<<<<<< HEAD
 	if (tb[NDA_FLAGS_EXT]) {
 		netdev_info(dev, "invalid flags given to default FDB implementation\n");
 		return err;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (vid) {
 		netdev_info(dev, "vlans aren't supported yet for dev_uc|mc_add()\n");
 		return err;
@@ -6066,6 +6184,7 @@ static int rtnl_stats_set(struct sk_buff *skb, struct nlmsghdr *nlh,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int rtnl_mdb_valid_dump_req(const struct nlmsghdr *nlh,
 				   struct netlink_ext_ack *extack)
 {
@@ -6277,6 +6396,8 @@ static int rtnl_mdb_del(struct sk_buff *skb, struct nlmsghdr *nlh,
 	return dev->netdev_ops->ndo_mdb_del(dev, tb, extack);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Process one rtnetlink message. */
 
 static int rtnetlink_rcv_msg(struct sk_buff *skb, struct nlmsghdr *nlh,
@@ -6437,7 +6558,11 @@ static int rtnetlink_event(struct notifier_block *this, unsigned long event, voi
 	case NETDEV_CHANGELOWERSTATE:
 	case NETDEV_CHANGE_TX_QUEUE_LEN:
 		rtmsg_ifinfo_event(RTM_NEWLINK, dev, 0, rtnl_get_event(event),
+<<<<<<< HEAD
 				   GFP_KERNEL, NULL, 0, 0, NULL);
+=======
+				   GFP_KERNEL, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		break;
@@ -6511,8 +6636,11 @@ void __init rtnetlink_init(void)
 	rtnl_register(PF_UNSPEC, RTM_GETSTATS, rtnl_stats_get, rtnl_stats_dump,
 		      0);
 	rtnl_register(PF_UNSPEC, RTM_SETSTATS, rtnl_stats_set, NULL, 0);
+<<<<<<< HEAD
 
 	rtnl_register(PF_BRIDGE, RTM_GETMDB, NULL, rtnl_mdb_dump, 0);
 	rtnl_register(PF_BRIDGE, RTM_NEWMDB, rtnl_mdb_add, NULL, 0);
 	rtnl_register(PF_BRIDGE, RTM_DELMDB, rtnl_mdb_del, NULL, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

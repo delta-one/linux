@@ -206,8 +206,13 @@
 		ldoin-supply = <&reg_vcc_3v3>;
 	};
 
+<<<<<<< HEAD
 	sensor1: temperator-sensor@1f {
 		compatible = "nxp,se97b", "jedec,jc-42.4-temp";
+=======
+	sensor1: sensor@1f {
+		compatible = "nxp,se97", "jedec,jc-42.4-temp";
+>>>>>>> b7ba80a49124 (Commit)
 		reg = <0x1f>;
 	};
 
@@ -215,7 +220,10 @@
 		compatible = "nxp,se97b", "atmel,24c02";
 		reg = <0x57>;
 		pagesize = <16>;
+<<<<<<< HEAD
 		vcc-supply = <&reg_vcc_3v3>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 

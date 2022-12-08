@@ -23,7 +23,10 @@
 #include <net/act_api.h>
 #include <net/netlink.h>
 #include <net/flow_offload.h>
+<<<<<<< HEAD
 #include <net/tc_wrapper.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_INET
 DEFINE_STATIC_KEY_FALSE(tcf_frag_xmit_count);
@@ -125,7 +128,11 @@ static void free_tcf(struct tc_action *p)
 	free_percpu(p->cpu_bstats_hw);
 	free_percpu(p->cpu_qstats);
 
+<<<<<<< HEAD
 	tcf_set_action_cookie(&p->user_cookie, NULL);
+=======
+	tcf_set_action_cookie(&p->act_cookie, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (chain)
 		tcf_chain_put_by_act(chain);
 
@@ -169,6 +176,14 @@ static bool tc_act_skip_sw(u32 flags)
 	return (flags & TCA_ACT_FLAGS_SKIP_SW) ? true : false;
 }
 
+<<<<<<< HEAD
+=======
+static bool tc_act_in_hw(struct tc_action *act)
+{
+	return !!act->in_hw_count;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* SKIP_HW and SKIP_SW are mutually exclusive flags. */
 static bool tc_act_flags_valid(u32 flags)
 {
@@ -187,7 +202,10 @@ static int offload_action_init(struct flow_offload_action *fl_action,
 	fl_action->extack = extack;
 	fl_action->command = cmd;
 	fl_action->index = act->tcfa_index;
+<<<<<<< HEAD
 	fl_action->cookie = (unsigned long)act;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (act->ops->offload_act_setup) {
 		spin_lock_bh(&act->tcfa_lock);
@@ -268,7 +286,11 @@ static int tcf_action_offload_add_ex(struct tc_action *action,
 	if (err)
 		goto fl_err;
 
+<<<<<<< HEAD
 	err = tc_setup_action(&fl_action->action, actions, 0, extack);
+=======
+	err = tc_setup_action(&fl_action->action, actions, extack);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		NL_SET_ERR_MSG_MOD(extack,
 				   "Failed to setup tc actions for offload");
@@ -303,6 +325,12 @@ int tcf_action_update_hw_stats(struct tc_action *action)
 	struct flow_offload_action fl_act = {};
 	int err;
 
+<<<<<<< HEAD
+=======
+	if (!tc_act_in_hw(action))
+		return -EOPNOTSUPP;
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = offload_action_init(&fl_act, action, FLOW_ACT_STATS, NULL);
 	if (err)
 		return err;
@@ -431,6 +459,7 @@ EXPORT_SYMBOL(tcf_idr_release);
 
 static size_t tcf_action_shared_attrs_size(const struct tc_action *act)
 {
+<<<<<<< HEAD
 	struct tc_cookie *user_cookie;
 	u32 cookie_len = 0;
 
@@ -439,6 +468,16 @@ static size_t tcf_action_shared_attrs_size(const struct tc_action *act)
 
 	if (user_cookie)
 		cookie_len = nla_total_size(user_cookie->len);
+=======
+	struct tc_cookie *act_cookie;
+	u32 cookie_len = 0;
+
+	rcu_read_lock();
+	act_cookie = rcu_dereference(act->act_cookie);
+
+	if (act_cookie)
+		cookie_len = nla_total_size(act_cookie->len);
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_read_unlock();
 
 	return  nla_total_size(0) /* action number nested */
@@ -453,7 +492,11 @@ static size_t tcf_action_shared_attrs_size(const struct tc_action *act)
 		+ nla_total_size_64bit(sizeof(u64))
 		/* TCA_STATS_QUEUE */
 		+ nla_total_size_64bit(sizeof(struct gnet_stats_queue))
+<<<<<<< HEAD
 		+ nla_total_size(0) /* TCA_ACT_OPTIONS nested */
+=======
+		+ nla_total_size(0) /* TCA_OPTIONS nested */
+>>>>>>> b7ba80a49124 (Commit)
 		+ nla_total_size(sizeof(struct tcf_t)); /* TCA_GACT_TM */
 }
 
@@ -480,7 +523,11 @@ tcf_action_dump_terse(struct sk_buff *skb, struct tc_action *a, bool from_act)
 	unsigned char *b = skb_tail_pointer(skb);
 	struct tc_cookie *cookie;
 
+<<<<<<< HEAD
 	if (nla_put_string(skb, TCA_ACT_KIND, a->ops->kind))
+=======
+	if (nla_put_string(skb, TCA_KIND, a->ops->kind))
+>>>>>>> b7ba80a49124 (Commit)
 		goto nla_put_failure;
 	if (tcf_action_copy_stats(skb, a, 0))
 		goto nla_put_failure;
@@ -488,7 +535,11 @@ tcf_action_dump_terse(struct sk_buff *skb, struct tc_action *a, bool from_act)
 		goto nla_put_failure;
 
 	rcu_read_lock();
+<<<<<<< HEAD
 	cookie = rcu_dereference(a->user_cookie);
+=======
+	cookie = rcu_dereference(a->act_cookie);
+>>>>>>> b7ba80a49124 (Commit)
 	if (cookie) {
 		if (nla_put(skb, TCA_ACT_COOKIE, cookie->len, cookie->data)) {
 			rcu_read_unlock();
@@ -532,8 +583,11 @@ static int tcf_dump_walker(struct tcf_idrinfo *idrinfo, struct sk_buff *skb,
 			       (unsigned long)p->tcfa_tm.lastuse))
 			continue;
 
+<<<<<<< HEAD
 		tcf_action_update_hw_stats(p);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		nest = nla_nest_start_noflag(skb, n_i);
 		if (!nest) {
 			index--;
@@ -598,7 +652,11 @@ static int tcf_del_walker(struct tcf_idrinfo *idrinfo, struct sk_buff *skb,
 	nest = nla_nest_start_noflag(skb, 0);
 	if (nest == NULL)
 		goto nla_put_failure;
+<<<<<<< HEAD
 	if (nla_put_string(skb, TCA_ACT_KIND, ops->kind))
+=======
+	if (nla_put_string(skb, TCA_KIND, ops->kind))
+>>>>>>> b7ba80a49124 (Commit)
 		goto nla_put_failure;
 
 	ret = 0;
@@ -1076,7 +1134,11 @@ restart_act_graph:
 
 		repeat_ttl = 32;
 repeat:
+<<<<<<< HEAD
 		ret = tc_act(skb, a, res);
+=======
+		ret = a->ops->act(skb, a, res);
+>>>>>>> b7ba80a49124 (Commit)
 		if (unlikely(ret == TC_ACT_REPEAT)) {
 			if (--repeat_ttl != 0)
 				goto repeat;
@@ -1189,7 +1251,11 @@ tcf_action_dump_1(struct sk_buff *skb, struct tc_action *a, int bind, int ref)
 	if (nla_put_u32(skb, TCA_ACT_IN_HW_COUNT, a->in_hw_count))
 		goto nla_put_failure;
 
+<<<<<<< HEAD
 	nest = nla_nest_start_noflag(skb, TCA_ACT_OPTIONS);
+=======
+	nest = nla_nest_start_noflag(skb, TCA_OPTIONS);
+>>>>>>> b7ba80a49124 (Commit)
 	if (nest == NULL)
 		goto nla_put_failure;
 	err = tcf_action_dump_old(skb, a, bind, ref);
@@ -1362,9 +1428,15 @@ struct tc_action *tcf_action_init_1(struct net *net, struct tcf_proto *tp,
 {
 	bool police = flags & TCA_ACT_FLAGS_POLICE;
 	struct nla_bitfield32 userflags = { 0, 0 };
+<<<<<<< HEAD
 	struct tc_cookie *user_cookie = NULL;
 	u8 hw_stats = TCA_ACT_HW_STATS_ANY;
 	struct nlattr *tb[TCA_ACT_MAX + 1];
+=======
+	u8 hw_stats = TCA_ACT_HW_STATS_ANY;
+	struct nlattr *tb[TCA_ACT_MAX + 1];
+	struct tc_cookie *cookie = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	struct tc_action *a;
 	int err;
 
@@ -1375,8 +1447,13 @@ struct tc_action *tcf_action_init_1(struct net *net, struct tcf_proto *tp,
 		if (err < 0)
 			return ERR_PTR(err);
 		if (tb[TCA_ACT_COOKIE]) {
+<<<<<<< HEAD
 			user_cookie = nla_memdup_cookie(tb);
 			if (!user_cookie) {
+=======
+			cookie = nla_memdup_cookie(tb);
+			if (!cookie) {
+>>>>>>> b7ba80a49124 (Commit)
 				NL_SET_ERR_MSG(extack, "No memory to generate TC cookie");
 				err = -ENOMEM;
 				goto err_out;
@@ -1402,7 +1479,11 @@ struct tc_action *tcf_action_init_1(struct net *net, struct tcf_proto *tp,
 	*init_res = err;
 
 	if (!police && tb[TCA_ACT_COOKIE])
+<<<<<<< HEAD
 		tcf_set_action_cookie(&a->user_cookie, user_cookie);
+=======
+		tcf_set_action_cookie(&a->act_cookie, cookie);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!police)
 		a->hw_stats = hw_stats;
@@ -1410,9 +1491,15 @@ struct tc_action *tcf_action_init_1(struct net *net, struct tcf_proto *tp,
 	return a;
 
 err_out:
+<<<<<<< HEAD
 	if (user_cookie) {
 		kfree(user_cookie->data);
 		kfree(user_cookie);
+=======
+	if (cookie) {
+		kfree(cookie->data);
+		kfree(cookie);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ERR_PTR(err);
 }
@@ -1534,6 +1621,12 @@ int tcf_action_copy_stats(struct sk_buff *skb, struct tc_action *p,
 	if (p == NULL)
 		goto errout;
 
+<<<<<<< HEAD
+=======
+	/* update hw stats for this action */
+	tcf_action_update_hw_stats(p);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* compat_mode being true specifies a call that is supposed
 	 * to add additional backward compatibility statistic TLVs.
 	 */
@@ -1574,7 +1667,11 @@ errout:
 
 static int tca_get_fill(struct sk_buff *skb, struct tc_action *actions[],
 			u32 portid, u32 seq, u16 flags, int event, int bind,
+<<<<<<< HEAD
 			int ref, struct netlink_ext_ack *extack)
+=======
+			int ref)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tcamsg *t;
 	struct nlmsghdr *nlh;
@@ -1589,10 +1686,13 @@ static int tca_get_fill(struct sk_buff *skb, struct tc_action *actions[],
 	t->tca__pad1 = 0;
 	t->tca__pad2 = 0;
 
+<<<<<<< HEAD
 	if (extack && extack->_msg &&
 	    nla_put_string(skb, TCA_ROOT_EXT_WARN_MSG, extack->_msg))
 		goto out_nlmsg_trim;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	nest = nla_nest_start_noflag(skb, TCA_ACT_TAB);
 	if (!nest)
 		goto out_nlmsg_trim;
@@ -1603,7 +1703,10 @@ static int tca_get_fill(struct sk_buff *skb, struct tc_action *actions[],
 	nla_nest_end(skb, nest);
 
 	nlh->nlmsg_len = skb_tail_pointer(skb) - b;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return skb->len;
 
 out_nlmsg_trim:
@@ -1622,7 +1725,11 @@ tcf_get_notify(struct net *net, u32 portid, struct nlmsghdr *n,
 	if (!skb)
 		return -ENOBUFS;
 	if (tca_get_fill(skb, actions, portid, n->nlmsg_seq, 0, event,
+<<<<<<< HEAD
 			 0, 1, NULL) <= 0) {
+=======
+			 0, 1) <= 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		NL_SET_ERR_MSG(extack, "Failed to fill netlink attributes while adding TC action");
 		kfree_skb(skb);
 		return -EINVAL;
@@ -1796,7 +1903,11 @@ tcf_reoffload_del_notify(struct net *net, struct tc_action *action)
 	if (!skb)
 		return -ENOBUFS;
 
+<<<<<<< HEAD
 	if (tca_get_fill(skb, actions, 0, 0, 0, RTM_DELACTION, 0, 1, NULL) <= 0) {
+=======
+	if (tca_get_fill(skb, actions, 0, 0, 0, RTM_DELACTION, 0, 1) <= 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		kfree_skb(skb);
 		return -EINVAL;
 	}
@@ -1883,7 +1994,11 @@ tcf_del_notify(struct net *net, struct nlmsghdr *n, struct tc_action *actions[],
 		return -ENOBUFS;
 
 	if (tca_get_fill(skb, actions, portid, n->nlmsg_seq, 0, RTM_DELACTION,
+<<<<<<< HEAD
 			 0, 2, extack) <= 0) {
+=======
+			 0, 2) <= 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		NL_SET_ERR_MSG(extack, "Failed to fill netlink TC action attributes");
 		kfree_skb(skb);
 		return -EINVAL;
@@ -1962,7 +2077,11 @@ tcf_add_notify(struct net *net, struct nlmsghdr *n, struct tc_action *actions[],
 		return -ENOBUFS;
 
 	if (tca_get_fill(skb, actions, portid, n->nlmsg_seq, n->nlmsg_flags,
+<<<<<<< HEAD
 			 RTM_NEWACTION, 0, 0, extack) <= 0) {
+=======
+			 RTM_NEWACTION, 0, 0) <= 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		NL_SET_ERR_MSG(extack, "Failed to fill netlink attributes while adding TC action");
 		kfree_skb(skb);
 		return -EINVAL;

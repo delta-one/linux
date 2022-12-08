@@ -2403,6 +2403,7 @@ static const struct wiimod_ops wiimod_guitar = {
 	.in_ext = wiimod_guitar_in_ext,
 };
 
+<<<<<<< HEAD
 /* 
  * Turntable
  * DJ Hero came with a Turntable Controller that was plugged in
@@ -2627,6 +2628,8 @@ static const struct wiimod_ops wiimod_turntable = {
 	.in_ext = wiimod_turntable_in_ext,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Builtin Motion Plus
  * This module simply sets the WIIPROTO_FLAG_BUILTIN_MP protocol flag which
@@ -2881,5 +2884,8 @@ const struct wiimod_ops *wiimod_ext_table[WIIMOTE_EXT_NUM] = {
 	[WIIMOTE_EXT_PRO_CONTROLLER] = &wiimod_pro,
 	[WIIMOTE_EXT_DRUMS] = &wiimod_drums,
 	[WIIMOTE_EXT_GUITAR] = &wiimod_guitar,
+<<<<<<< HEAD
 	[WIIMOTE_EXT_TURNTABLE] = &wiimod_turntable,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

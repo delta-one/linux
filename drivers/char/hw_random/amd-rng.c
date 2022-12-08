@@ -143,6 +143,7 @@ static int __init amd_rng_mod_init(void)
 found:
 	err = pci_read_config_dword(pdev, 0x58, &pmbase);
 	if (err)
+<<<<<<< HEAD
 		goto put_dev;
 
 	pmbase &= 0x0000FF00;
@@ -156,6 +157,17 @@ found:
 		err = -ENOMEM;
 		goto put_dev;
 	}
+=======
+		return err;
+
+	pmbase &= 0x0000FF00;
+	if (pmbase == 0)
+		return -EIO;
+
+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+	if (!priv)
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!request_region(pmbase + PMBASE_OFFSET, PMBASE_SIZE, DRV_NAME)) {
 		dev_err(&pdev->dev, DRV_NAME " region 0x%x already in use!\n",
@@ -189,8 +201,11 @@ err_iomap:
 	release_region(pmbase + PMBASE_OFFSET, PMBASE_SIZE);
 out:
 	kfree(priv);
+<<<<<<< HEAD
 put_dev:
 	pci_dev_put(pdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -206,8 +221,11 @@ static void __exit amd_rng_mod_exit(void)
 
 	release_region(priv->pmbase + PMBASE_OFFSET, PMBASE_SIZE);
 
+<<<<<<< HEAD
 	pci_dev_put(priv->pcidev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(priv);
 }
 

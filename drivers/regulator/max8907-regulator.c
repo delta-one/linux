@@ -372,7 +372,10 @@ static int max8907_regulator_probe(struct platform_device *pdev)
 static struct platform_driver max8907_regulator_driver = {
 	.driver = {
 		   .name = "max8907-regulator",
+<<<<<<< HEAD
 		   .probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		   },
 	.probe = max8907_regulator_probe,
 };

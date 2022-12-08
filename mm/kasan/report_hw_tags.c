@@ -17,6 +17,7 @@
 
 void *kasan_find_first_bad_addr(void *addr, size_t size)
 {
+<<<<<<< HEAD
 	/*
 	 * Hardware Tag-Based KASAN only calls this function for normal memory
 	 * accesses, and thus addr points precisely to the first bad address
@@ -54,6 +55,12 @@ size_t kasan_get_alloc_size(void *object, struct kmem_cache *cache)
 	return cache->object_size;
 }
 
+=======
+	/* Return the same value regardless of whether addr_has_metadata(). */
+	return kasan_reset_tag(addr);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 void kasan_metadata_fetch_row(char *buffer, void *row)
 {
 	int i;

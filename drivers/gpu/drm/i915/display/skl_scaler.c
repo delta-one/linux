@@ -2,8 +2,11 @@
 /*
  * Copyright © 2020 Intel Corporation
  */
+<<<<<<< HEAD
 
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_de.h"
 #include "intel_display_types.h"
 #include "intel_fb.h"
@@ -87,6 +90,7 @@ static u16 skl_scaler_calc_phase(int sub, int scale, bool chroma_cosited)
 #define ICL_MAX_SRC_H 4096
 #define ICL_MAX_DST_W 5120
 #define ICL_MAX_DST_H 4096
+<<<<<<< HEAD
 #define TGL_MAX_SRC_W 5120
 #define TGL_MAX_SRC_H 8192
 #define TGL_MAX_DST_W 8192
@@ -95,6 +99,8 @@ static u16 skl_scaler_calc_phase(int sub, int scale, bool chroma_cosited)
 #define MTL_MAX_SRC_H 8192
 #define MTL_MAX_DST_W 8192
 #define MTL_MAX_DST_H 8192
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define SKL_MIN_YUV_420_SRC_W 16
 #define SKL_MIN_YUV_420_SRC_H 16
 
@@ -111,8 +117,11 @@ skl_update_scaler(struct intel_crtc_state *crtc_state, bool force_detach,
 	struct drm_i915_private *dev_priv = to_i915(crtc->base.dev);
 	const struct drm_display_mode *adjusted_mode =
 		&crtc_state->hw.adjusted_mode;
+<<<<<<< HEAD
 	int min_src_w, min_src_h, min_dst_w, min_dst_h;
 	int max_src_w, max_src_h, max_dst_w, max_dst_h;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Src coordinates are already rotated by 270 degrees for
@@ -167,6 +176,7 @@ skl_update_scaler(struct intel_crtc_state *crtc_state, bool force_detach,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	min_src_w = SKL_MIN_SRC_W;
 	min_src_h = SKL_MIN_SRC_H;
 	min_dst_w = SKL_MIN_DST_W;
@@ -199,6 +209,17 @@ skl_update_scaler(struct intel_crtc_state *crtc_state, bool force_detach,
 	    dst_w < min_dst_w || dst_h < min_dst_h ||
 	    src_w > max_src_w || src_h > max_src_h ||
 	    dst_w > max_dst_w || dst_h > max_dst_h) {
+=======
+	/* range checks */
+	if (src_w < SKL_MIN_SRC_W || src_h < SKL_MIN_SRC_H ||
+	    dst_w < SKL_MIN_DST_W || dst_h < SKL_MIN_DST_H ||
+	    (DISPLAY_VER(dev_priv) >= 11 &&
+	     (src_w > ICL_MAX_SRC_W || src_h > ICL_MAX_SRC_H ||
+	      dst_w > ICL_MAX_DST_W || dst_h > ICL_MAX_DST_H)) ||
+	    (DISPLAY_VER(dev_priv) < 11 &&
+	     (src_w > SKL_MAX_SRC_W || src_h > SKL_MAX_SRC_H ||
+	      dst_w > SKL_MAX_DST_W || dst_h > SKL_MAX_DST_H)))	{
+>>>>>>> b7ba80a49124 (Commit)
 		drm_dbg_kms(&dev_priv->drm,
 			    "scaler_user index %u.%u: src %ux%u dst %ux%u "
 			    "size is out of scaler range\n",

@@ -37,7 +37,11 @@ static int uvc_mc_create_links(struct uvc_video_chain *chain,
 			continue;
 
 		remote = uvc_entity_by_id(chain->dev, entity->baSourceID[i]);
+<<<<<<< HEAD
 		if (remote == NULL || remote->num_pads == 0)
+=======
+		if (remote == NULL)
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 
 		source = (UVC_ENTITY_TYPE(remote) == UVC_TT_STREAMING)

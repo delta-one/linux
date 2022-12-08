@@ -19,6 +19,7 @@
 
 #ifndef _UAPI_LINUX_BTRFS_H
 #define _UAPI_LINUX_BTRFS_H
+<<<<<<< HEAD
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,6 +28,10 @@ extern "C" {
 #include <linux/types.h>
 #include <linux/ioctl.h>
 #include <linux/fs.h>
+=======
+#include <linux/types.h>
+#include <linux/ioctl.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define BTRFS_IOCTL_MAGIC 0x94
 #define BTRFS_VOL_NAME_MAX 255
@@ -245,6 +250,7 @@ struct btrfs_ioctl_dev_info_args {
 	__u8 uuid[BTRFS_UUID_SIZE];		/* in/out */
 	__u64 bytes_used;			/* out */
 	__u64 total_bytes;			/* out */
+<<<<<<< HEAD
 	/*
 	 * Optional, out.
 	 *
@@ -256,6 +262,9 @@ struct btrfs_ioctl_dev_info_args {
 	 */
 	__u8 fsid[BTRFS_UUID_SIZE];
 	__u64 unused[377];			/* pad to 4k */
+=======
+	__u64 unused[379];			/* pad to 4k */
+>>>>>>> b7ba80a49124 (Commit)
 	__u8 path[BTRFS_DEVICE_PATH_NAME_MAX];	/* out */
 };
 
@@ -349,12 +358,15 @@ struct btrfs_ioctl_feature_flags {
  */
 struct btrfs_balance_args {
 	__u64 profiles;
+<<<<<<< HEAD
 
 	/*
 	 * usage filter
 	 * BTRFS_BALANCE_ARGS_USAGE with a single value means '0..N'
 	 * BTRFS_BALANCE_ARGS_USAGE_RANGE - range syntax, min..max
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	union {
 		__u64 usage;
 		struct {
@@ -571,7 +583,11 @@ struct btrfs_ioctl_search_header {
 	__u64 offset;
 	__u32 type;
 	__u32 len;
+<<<<<<< HEAD
 } __attribute__ ((__may_alias__));
+=======
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 #define BTRFS_SEARCH_ARGS_BUFSIZE (4096 - sizeof(struct btrfs_ioctl_search_key))
 /*
@@ -584,10 +600,13 @@ struct btrfs_ioctl_search_args {
 	char buf[BTRFS_SEARCH_ARGS_BUFSIZE];
 };
 
+<<<<<<< HEAD
 /*
  * Extended version of TREE_SEARCH ioctl that can return more than 4k of bytes.
  * The allocated size of the buffer is set in buf_size.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct btrfs_ioctl_search_args_v2 {
 	struct btrfs_ioctl_search_key key; /* in/out - search parameters */
 	__u64 buf_size;		   /* in - size of buffer
@@ -596,11 +615,18 @@ struct btrfs_ioctl_search_args_v2 {
 	__u64 buf[];                       /* out - found items */
 };
 
+<<<<<<< HEAD
 /* With a @src_length of zero, the range from @src_offset->EOF is cloned! */
 struct btrfs_ioctl_clone_range_args {
 	__s64 src_fd;
 	__u64 src_offset, src_length;
 	__u64 dest_offset;
+=======
+struct btrfs_ioctl_clone_range_args {
+  __s64 src_fd;
+  __u64 src_offset, src_length;
+  __u64 dest_offset;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -704,11 +730,16 @@ struct btrfs_ioctl_logical_ino_args {
 	/* struct btrfs_data_container	*inodes;	out   */
 	__u64				inodes;
 };
+<<<<<<< HEAD
 
 /*
  * Return every ref to the extent, not just those containing logical block.
  * Requires logical == extent bytenr.
  */
+=======
+/* Return every ref to the extent, not just those containing logical block.
+ * Requires logical == extent bytenr. */
+>>>>>>> b7ba80a49124 (Commit)
 #define BTRFS_LOGICAL_INO_ARGS_IGNORE_OFFSET	(1ULL << 0)
 
 enum btrfs_dev_stat_values {
@@ -1174,8 +1205,11 @@ enum btrfs_err_code {
 #define BTRFS_IOC_ENCODED_WRITE _IOW(BTRFS_IOCTL_MAGIC, 64, \
 				     struct btrfs_ioctl_encoded_io_args)
 
+<<<<<<< HEAD
 #ifdef __cplusplus
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _UAPI_LINUX_BTRFS_H */

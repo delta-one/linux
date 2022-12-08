@@ -59,6 +59,7 @@ EXPORT_SYMBOL_GPL(kasan_mode);
 /* Whether to enable vmalloc tagging. */
 DEFINE_STATIC_KEY_TRUE(kasan_flag_vmalloc);
 
+<<<<<<< HEAD
 #define PAGE_ALLOC_SAMPLE_DEFAULT	1
 #define PAGE_ALLOC_SAMPLE_ORDER_DEFAULT	3
 
@@ -77,6 +78,8 @@ unsigned int kasan_page_alloc_sample_order = PAGE_ALLOC_SAMPLE_ORDER_DEFAULT;
 
 DEFINE_PER_CPU(long, kasan_page_alloc_skip);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* kasan=off/on */
 static int __init early_kasan_flag(char *arg)
 {
@@ -140,6 +143,7 @@ static inline const char *kasan_mode_info(void)
 		return "sync";
 }
 
+<<<<<<< HEAD
 /* kasan.page_alloc.sample=<sampling interval> */
 static int __init early_kasan_flag_page_alloc_sample(char *arg)
 {
@@ -182,6 +186,8 @@ static int __init early_kasan_flag_page_alloc_sample_order(char *arg)
 }
 early_param("kasan.page_alloc.sample.order", early_kasan_flag_page_alloc_sample_order);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * kasan_init_hw_tags_cpu() is called for each CPU.
  * Not marked as __init as a CPU can be hot-plugged after boot.
@@ -205,7 +211,11 @@ void kasan_init_hw_tags_cpu(void)
 	 * Enable async or asymm modes only when explicitly requested
 	 * through the command line.
 	 */
+<<<<<<< HEAD
 	kasan_enable_hw_tags();
+=======
+	kasan_enable_tagging();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* kasan_init_hw_tags() is called once on boot CPU. */
@@ -318,7 +328,11 @@ void *__kasan_unpoison_vmalloc(const void *start, unsigned long size,
 	 * Thus, for VM_ALLOC mappings, hardware tag-based KASAN only tags
 	 * the first virtual mapping, which is created by vmalloc().
 	 * Tagging the page_alloc memory backing that vmalloc() allocation is
+<<<<<<< HEAD
 	 * skipped, see ___GFP_SKIP_KASAN.
+=======
+	 * skipped, see ___GFP_SKIP_KASAN_UNPOISON.
+>>>>>>> b7ba80a49124 (Commit)
 	 *
 	 * For non-VM_ALLOC allocations, page_alloc memory is tagged as usual.
 	 */
@@ -373,6 +387,7 @@ void __kasan_poison_vmalloc(const void *start, unsigned long size)
 
 #endif
 
+<<<<<<< HEAD
 void kasan_enable_hw_tags(void)
 {
 	if (kasan_arg_mode == KASAN_ARG_MODE_ASYNC)
@@ -381,11 +396,25 @@ void kasan_enable_hw_tags(void)
 		hw_enable_tag_checks_asymm();
 	else
 		hw_enable_tag_checks_sync();
+=======
+void kasan_enable_tagging(void)
+{
+	if (kasan_arg_mode == KASAN_ARG_MODE_ASYNC)
+		hw_enable_tagging_async();
+	else if (kasan_arg_mode == KASAN_ARG_MODE_ASYMM)
+		hw_enable_tagging_asymm();
+	else
+		hw_enable_tagging_sync();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #if IS_ENABLED(CONFIG_KASAN_KUNIT_TEST)
 
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(kasan_enable_hw_tags);
+=======
+EXPORT_SYMBOL_GPL(kasan_enable_tagging);
+>>>>>>> b7ba80a49124 (Commit)
 
 void kasan_force_async_fault(void)
 {

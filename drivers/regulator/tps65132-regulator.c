@@ -270,7 +270,10 @@ MODULE_DEVICE_TABLE(i2c, tps65132_id);
 static struct i2c_driver tps65132_i2c_driver = {
 	.driver = {
 		.name = "tps65132",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe_new = tps65132_probe,
 	.id_table = tps65132_id,

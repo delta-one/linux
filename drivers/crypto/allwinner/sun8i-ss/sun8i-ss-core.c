@@ -16,7 +16,10 @@
 #include <linux/interrupt.h>
 #include <linux/io.h>
 #include <linux/irq.h>
+<<<<<<< HEAD
 #include <linux/kernel.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/of.h>
 #include <linux/of_device.h>
@@ -528,7 +531,11 @@ static int allocate_flows(struct sun8i_ss_dev *ss)
 		init_completion(&ss->flows[i].complete);
 
 		ss->flows[i].biv = devm_kmalloc(ss->dev, AES_BLOCK_SIZE,
+<<<<<<< HEAD
 						GFP_KERNEL);
+=======
+						GFP_KERNEL | GFP_DMA);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!ss->flows[i].biv) {
 			err = -ENOMEM;
 			goto error_engine;
@@ -536,7 +543,11 @@ static int allocate_flows(struct sun8i_ss_dev *ss)
 
 		for (j = 0; j < MAX_SG; j++) {
 			ss->flows[i].iv[j] = devm_kmalloc(ss->dev, AES_BLOCK_SIZE,
+<<<<<<< HEAD
 							  GFP_KERNEL);
+=======
+							  GFP_KERNEL | GFP_DMA);
+>>>>>>> b7ba80a49124 (Commit)
 			if (!ss->flows[i].iv[j]) {
 				err = -ENOMEM;
 				goto error_engine;
@@ -545,15 +556,24 @@ static int allocate_flows(struct sun8i_ss_dev *ss)
 
 		/* the padding could be up to two block. */
 		ss->flows[i].pad = devm_kmalloc(ss->dev, MAX_PAD_SIZE,
+<<<<<<< HEAD
 						GFP_KERNEL);
+=======
+						GFP_KERNEL | GFP_DMA);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!ss->flows[i].pad) {
 			err = -ENOMEM;
 			goto error_engine;
 		}
+<<<<<<< HEAD
 		ss->flows[i].result =
 			devm_kmalloc(ss->dev, max(SHA256_DIGEST_SIZE,
 						  dma_get_cache_alignment()),
 				     GFP_KERNEL);
+=======
+		ss->flows[i].result = devm_kmalloc(ss->dev, SHA256_DIGEST_SIZE,
+						   GFP_KERNEL | GFP_DMA);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!ss->flows[i].result) {
 			err = -ENOMEM;
 			goto error_engine;

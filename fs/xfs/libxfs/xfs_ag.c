@@ -44,15 +44,27 @@ xfs_perag_get(
 	xfs_agnumber_t		agno)
 {
 	struct xfs_perag	*pag;
+<<<<<<< HEAD
+=======
+	int			ref = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rcu_read_lock();
 	pag = radix_tree_lookup(&mp->m_perag_tree, agno);
 	if (pag) {
+<<<<<<< HEAD
 		trace_xfs_perag_get(pag, _RET_IP_);
 		ASSERT(atomic_read(&pag->pag_ref) >= 0);
 		atomic_inc(&pag->pag_ref);
 	}
 	rcu_read_unlock();
+=======
+		ASSERT(atomic_read(&pag->pag_ref) >= 0);
+		ref = atomic_inc_return(&pag->pag_ref);
+	}
+	rcu_read_unlock();
+	trace_xfs_perag_get(mp, agno, ref, _RET_IP_);
+>>>>>>> b7ba80a49124 (Commit)
 	return pag;
 }
 
@@ -67,6 +79,10 @@ xfs_perag_get_tag(
 {
 	struct xfs_perag	*pag;
 	int			found;
+<<<<<<< HEAD
+=======
+	int			ref;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rcu_read_lock();
 	found = radix_tree_gang_lookup_tag(&mp->m_perag_tree,
@@ -75,9 +91,15 @@ xfs_perag_get_tag(
 		rcu_read_unlock();
 		return NULL;
 	}
+<<<<<<< HEAD
 	trace_xfs_perag_get_tag(pag, _RET_IP_);
 	atomic_inc(&pag->pag_ref);
 	rcu_read_unlock();
+=======
+	ref = atomic_inc_return(&pag->pag_ref);
+	rcu_read_unlock();
+	trace_xfs_perag_get_tag(mp, pag->pag_agno, ref, _RET_IP_);
+>>>>>>> b7ba80a49124 (Commit)
 	return pag;
 }
 
@@ -85,6 +107,7 @@ void
 xfs_perag_put(
 	struct xfs_perag	*pag)
 {
+<<<<<<< HEAD
 	trace_xfs_perag_put(pag, _RET_IP_);
 	ASSERT(atomic_read(&pag->pag_ref) > 0);
 	atomic_dec(&pag->pag_ref);
@@ -147,6 +170,13 @@ xfs_perag_rele(
 	trace_xfs_perag_rele(pag, _RET_IP_);
 	if (atomic_dec_and_test(&pag->pag_active_ref))
 		wake_up(&pag->pag_active_wq);
+=======
+	int	ref;
+
+	ASSERT(atomic_read(&pag->pag_ref) > 0);
+	ref = atomic_dec_return(&pag->pag_ref);
+	trace_xfs_perag_put(pag->pag_mount, pag->pag_agno, ref, _RET_IP_);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -251,10 +281,13 @@ xfs_free_perag(
 		cancel_delayed_work_sync(&pag->pag_blockgc_work);
 		xfs_buf_hash_destroy(pag);
 
+<<<<<<< HEAD
 		/* drop the mount's active reference */
 		xfs_perag_rele(pag);
 		XFS_IS_CORRUPT(pag->pag_mount,
 				atomic_read(&pag->pag_active_ref) != 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		call_rcu(&pag->rcu_head, __xfs_free_perag);
 	}
 }
@@ -373,7 +406,10 @@ xfs_initialize_perag(
 		INIT_DELAYED_WORK(&pag->pag_blockgc_work, xfs_blockgc_worker);
 		INIT_RADIX_TREE(&pag->pag_ici_root, GFP_ATOMIC);
 		init_waitqueue_head(&pag->pagb_wait);
+<<<<<<< HEAD
 		init_waitqueue_head(&pag->pag_active_wq);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pag->pagb_count = 0;
 		pag->pagb_tree = RB_ROOT;
 #endif /* __KERNEL__ */
@@ -382,9 +418,12 @@ xfs_initialize_perag(
 		if (error)
 			goto out_remove_pag;
 
+<<<<<<< HEAD
 		/* Active ref owned by mount indicates AG is online. */
 		atomic_set(&pag->pag_active_ref, 1);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* first new pag is fully initialized */
 		if (first_initialised == NULLAGNUMBER)
 			first_initialised = index;
@@ -887,7 +926,11 @@ xfs_ag_shrink_space(
 	struct xfs_alloc_arg	args = {
 		.tp	= *tpp,
 		.mp	= mp,
+<<<<<<< HEAD
 		.pag	= pag,
+=======
+		.type	= XFS_ALLOCTYPE_THIS_BNO,
+>>>>>>> b7ba80a49124 (Commit)
 		.minlen = delta,
 		.maxlen = delta,
 		.oinfo	= XFS_RMAP_OINFO_SKIP_UPDATE,
@@ -919,11 +962,21 @@ xfs_ag_shrink_space(
 	if (delta >= aglen)
 		return -EINVAL;
 
+<<<<<<< HEAD
+=======
+	args.fsbno = XFS_AGB_TO_FSB(mp, pag->pag_agno, aglen - delta);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Make sure that the last inode cluster cannot overlap with the new
 	 * end of the AG, even if it's sparse.
 	 */
+<<<<<<< HEAD
 	error = xfs_ialloc_check_shrink(pag, *tpp, agibp, aglen - delta);
+=======
+	error = xfs_ialloc_check_shrink(*tpp, pag->pag_agno, agibp,
+			aglen - delta);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		return error;
 
@@ -936,8 +989,12 @@ xfs_ag_shrink_space(
 		return error;
 
 	/* internal log shouldn't also show up in the free space btrees */
+<<<<<<< HEAD
 	error = xfs_alloc_vextent_exact_bno(&args,
 			XFS_AGB_TO_FSB(mp, pag->pag_agno, aglen - delta));
+=======
+	error = xfs_alloc_vextent(&args);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!error && args.agbno == NULLAGBLOCK)
 		error = -ENOSPC;
 

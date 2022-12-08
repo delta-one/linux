@@ -76,8 +76,13 @@ struct {
 
 /*
  * The trace events for cpu_idle and cpu_frequency are taken from:
+<<<<<<< HEAD
  * /sys/kernel/tracing/events/power/cpu_idle/format
  * /sys/kernel/tracing/events/power/cpu_frequency/format
+=======
+ * /sys/kernel/debug/tracing/events/power/cpu_idle/format
+ * /sys/kernel/debug/tracing/events/power/cpu_frequency/format
+>>>>>>> b7ba80a49124 (Commit)
  *
  * These two events have same format, so define one common structure.
  */

@@ -104,7 +104,11 @@ static void guest_main(struct ms_hyperv_tsc_page *tsc_page, vm_paddr_t tsc_page_
 
 	/* Set Guest OS id to enable Hyper-V emulation */
 	GUEST_SYNC(1);
+<<<<<<< HEAD
 	wrmsr(HV_X64_MSR_GUEST_OS_ID, HYPERV_LINUX_OS_ID);
+=======
+	wrmsr(HV_X64_MSR_GUEST_OS_ID, (u64)0x8100 << 48);
+>>>>>>> b7ba80a49124 (Commit)
 	GUEST_SYNC(2);
 
 	check_tsc_msr_rdtsc();
@@ -207,11 +211,19 @@ int main(void)
 {
 	struct kvm_vcpu *vcpu;
 	struct kvm_vm *vm;
+<<<<<<< HEAD
+=======
+	struct kvm_run *run;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ucall uc;
 	vm_vaddr_t tsc_page_gva;
 	int stage;
 
 	vm = vm_create_with_one_vcpu(&vcpu, guest_main);
+<<<<<<< HEAD
+=======
+	run = vcpu->run;
+>>>>>>> b7ba80a49124 (Commit)
 
 	vcpu_set_hv_cpuid(vcpu);
 
@@ -225,7 +237,14 @@ int main(void)
 
 	for (stage = 1;; stage++) {
 		vcpu_run(vcpu);
+<<<<<<< HEAD
 		TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+=======
+		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+			    "Stage %d: unexpected exit reason: %u (%s),\n",
+			    stage, run->exit_reason,
+			    exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 
 		switch (get_ucall(vcpu, &uc)) {
 		case UCALL_ABORT:

@@ -384,7 +384,10 @@ static int sctp_prsctp_prune_unsent(struct sctp_association *asoc,
 {
 	struct sctp_outq *q = &asoc->outqueue;
 	struct sctp_chunk *chk, *temp;
+<<<<<<< HEAD
 	struct sctp_stream_out *sout;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	q->sched->unsched_all(&asoc->stream);
 
@@ -399,6 +402,7 @@ static int sctp_prsctp_prune_unsent(struct sctp_association *asoc,
 		sctp_sched_dequeue_common(q, chk);
 		asoc->sent_cnt_removable--;
 		asoc->abandoned_unsent[SCTP_PR_INDEX(PRIO)]++;
+<<<<<<< HEAD
 
 		sout = SCTP_SO(&asoc->stream, chk->sinfo.sinfo_stream);
 		sout->ext->abandoned_unsent[SCTP_PR_INDEX(PRIO)]++;
@@ -407,6 +411,14 @@ static int sctp_prsctp_prune_unsent(struct sctp_association *asoc,
 		if (asoc->stream.out_curr == sout &&
 		    list_is_last(&chk->frag_list, &chk->msg->chunks))
 			asoc->stream.out_curr = NULL;
+=======
+		if (chk->sinfo.sinfo_stream < asoc->stream.outcnt) {
+			struct sctp_stream_out *streamout =
+				SCTP_SO(&asoc->stream, chk->sinfo.sinfo_stream);
+
+			streamout->ext->abandoned_unsent[SCTP_PR_INDEX(PRIO)]++;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		msg_len -= chk->skb->truesize + sizeof(struct sctp_chunk);
 		sctp_chunk_free(chk);

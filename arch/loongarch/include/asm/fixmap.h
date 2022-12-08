@@ -10,6 +10,7 @@
 
 #define NR_FIX_BTMAPS 64
 
+<<<<<<< HEAD
 enum fixed_addresses {
 	FIX_HOLE,
 	FIX_EARLYCON_MEM_BASE,
@@ -25,4 +26,6 @@ extern void __set_fixmap(enum fixed_addresses idx,
 
 #include <asm-generic/fixmap.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

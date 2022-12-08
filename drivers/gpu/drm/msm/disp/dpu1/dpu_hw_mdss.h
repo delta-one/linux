@@ -120,8 +120,11 @@ enum dpu_sspp {
 	SSPP_DMA1,
 	SSPP_DMA2,
 	SSPP_DMA3,
+<<<<<<< HEAD
 	SSPP_DMA4,
 	SSPP_DMA5,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SSPP_CURSOR0,
 	SSPP_CURSOR1,
 	SSPP_MAX
@@ -197,8 +200,11 @@ enum dpu_pingpong {
 	PINGPONG_3,
 	PINGPONG_4,
 	PINGPONG_5,
+<<<<<<< HEAD
 	PINGPONG_6,
 	PINGPONG_7,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	PINGPONG_S0,
 	PINGPONG_MAX
 };
@@ -207,7 +213,10 @@ enum dpu_merge_3d {
 	MERGE_3D_0 = 1,
 	MERGE_3D_1,
 	MERGE_3D_2,
+<<<<<<< HEAD
 	MERGE_3D_3,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	MERGE_3D_MAX
 };
 
@@ -219,8 +228,11 @@ enum dpu_intf {
 	INTF_4,
 	INTF_5,
 	INTF_6,
+<<<<<<< HEAD
 	INTF_7,
 	INTF_8,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	INTF_MAX
 };
 

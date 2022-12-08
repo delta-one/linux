@@ -32,10 +32,13 @@ struct tegra_fuse_soc {
 
 	const struct nvmem_cell_lookup *lookups;
 	unsigned int num_lookups;
+<<<<<<< HEAD
 	const struct nvmem_cell_info *cells;
 	unsigned int num_cells;
 	const struct nvmem_keepout *keepouts;
 	unsigned int num_keepouts;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	const struct attribute_group *soc_attr_group;
 

@@ -29,7 +29,12 @@ static const struct regmap_config lan9303_i2c_regmap_config = {
 	.cache_type = REGCACHE_NONE,
 };
 
+<<<<<<< HEAD
 static int lan9303_i2c_probe(struct i2c_client *client)
+=======
+static int lan9303_i2c_probe(struct i2c_client *client,
+			     const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lan9303_i2c *sw_dev;
 	int ret;
@@ -72,6 +77,11 @@ static void lan9303_i2c_remove(struct i2c_client *client)
 		return;
 
 	lan9303_remove(&sw_dev->chip);
+<<<<<<< HEAD
+=======
+
+	i2c_set_clientdata(client, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void lan9303_i2c_shutdown(struct i2c_client *client)
@@ -103,9 +113,15 @@ MODULE_DEVICE_TABLE(of, lan9303_i2c_of_match);
 static struct i2c_driver lan9303_i2c_driver = {
 	.driver = {
 		.name = "LAN9303_I2C",
+<<<<<<< HEAD
 		.of_match_table = lan9303_i2c_of_match,
 	},
 	.probe_new = lan9303_i2c_probe,
+=======
+		.of_match_table = of_match_ptr(lan9303_i2c_of_match),
+	},
+	.probe = lan9303_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = lan9303_i2c_remove,
 	.shutdown = lan9303_i2c_shutdown,
 	.id_table = lan9303_i2c_id,

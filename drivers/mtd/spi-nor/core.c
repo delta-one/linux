@@ -9,6 +9,7 @@
 
 #include <linux/err.h>
 #include <linux/errno.h>
+<<<<<<< HEAD
 #include <linux/delay.h>
 #include <linux/device.h>
 #include <linux/math64.h>
@@ -21,6 +22,20 @@
 #include <linux/sizes.h>
 #include <linux/slab.h>
 #include <linux/spi/flash.h>
+=======
+#include <linux/module.h>
+#include <linux/device.h>
+#include <linux/mutex.h>
+#include <linux/math64.h>
+#include <linux/sizes.h>
+#include <linux/slab.h>
+
+#include <linux/mtd/mtd.h>
+#include <linux/of_platform.h>
+#include <linux/sched/task_stack.h>
+#include <linux/spi/flash.h>
+#include <linux/mtd/spi-nor.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "core.h"
 
@@ -1184,8 +1199,11 @@ spi_nor_find_best_erase_type(const struct spi_nor_erase_map *map,
 			continue;
 
 		erase = &map->erase_type[i];
+<<<<<<< HEAD
 		if (!erase->size)
 			continue;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Alignment is not mandatory for overlaid regions */
 		if (region->offset & SNOR_OVERLAID_REGION &&
@@ -1634,6 +1652,7 @@ static const struct spi_nor_manufacturer *manufacturers[] = {
 	&spi_nor_xmc,
 };
 
+<<<<<<< HEAD
 static const struct flash_info spi_nor_generic_flash = {
 	.name = "spi-nor-generic",
 	/*
@@ -1644,6 +1663,8 @@ static const struct flash_info spi_nor_generic_flash = {
 	.parse_sfdp = true,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct flash_info *spi_nor_match_id(struct spi_nor *nor,
 						 const u8 *id)
 {
@@ -1676,6 +1697,7 @@ static const struct flash_info *spi_nor_detect(struct spi_nor *nor)
 		return ERR_PTR(ret);
 	}
 
+<<<<<<< HEAD
 	/* Cache the complete flash ID. */
 	nor->id = devm_kmemdup(nor->dev, id, SPI_NOR_MAX_ID_LEN, GFP_KERNEL);
 	if (!nor->id)
@@ -1690,6 +1712,9 @@ static const struct flash_info *spi_nor_detect(struct spi_nor *nor)
 			info = &spi_nor_generic_flash;
 	}
 
+=======
+	info = spi_nor_match_id(nor, id);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!info) {
 		dev_err(nor->dev, "unrecognized JEDEC id bytes: %*ph\n",
 			SPI_NOR_MAX_ID_LEN, id);
@@ -1939,8 +1964,12 @@ static int spi_nor_spimem_check_readop(struct spi_nor *nor,
 	spi_nor_spimem_setup_op(nor, &op, read->proto);
 
 	/* convert the dummy cycles to the number of bytes */
+<<<<<<< HEAD
 	op.dummy.nbytes = (read->num_mode_clocks + read->num_wait_states) *
 			  op.dummy.buswidth / 8;
+=======
+	op.dummy.nbytes = (nor->read_dummy * op.dummy.buswidth) / 8;
+>>>>>>> b7ba80a49124 (Commit)
 	if (spi_nor_protocol_is_dtr(nor->read_proto))
 		op.dummy.nbytes *= 2;
 
@@ -2026,6 +2055,7 @@ void spi_nor_set_erase_type(struct spi_nor_erase_type *erase, u32 size,
 }
 
 /**
+<<<<<<< HEAD
  * spi_nor_mask_erase_type() - mask out a SPI NOR erase type
  * @erase:	pointer to a structure that describes a SPI NOR erase type
  */
@@ -2035,6 +2065,8 @@ void spi_nor_mask_erase_type(struct spi_nor_erase_type *erase)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * spi_nor_init_uniform_erase_map() - Initialize uniform erase map
  * @map:		the erase map of the SPI NOR
  * @erase_mask:		bitmask encoding erase types that can erase the entire
@@ -2126,12 +2158,17 @@ static int spi_nor_select_pp(struct spi_nor *nor,
  * spi_nor_select_uniform_erase() - select optimum uniform erase type
  * @map:		the erase map of the SPI NOR
  * @wanted_size:	the erase type size to search for. Contains the value of
+<<<<<<< HEAD
  *			info->sector_size, the "small sector" size in case
  *			CONFIG_MTD_SPI_NOR_USE_4K_SECTORS is defined or 0 if
  *			there is no information about the sector size. The
  *			latter is the case if the flash parameters are parsed
  *			solely by SFDP, then the largest supported erase type
  *			is selected.
+=======
+ *			info->sector_size or of the "small sector" size in case
+ *			CONFIG_MTD_SPI_NOR_USE_4K_SECTORS is defined.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Once the optimum uniform sector erase command is found, disable all the
  * other.
@@ -2152,10 +2189,13 @@ spi_nor_select_uniform_erase(struct spi_nor_erase_map *map,
 
 		tested_erase = &map->erase_type[i];
 
+<<<<<<< HEAD
 		/* Skip masked erase types. */
 		if (!tested_erase->size)
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * If the current erase size is the one, stop here:
 		 * we have found the right uniform Sector Erase command.
@@ -2608,12 +2648,15 @@ static void spi_nor_init_default_params(struct spi_nor *nor)
 	params->hwcaps.mask |= SNOR_HWCAPS_PP;
 	spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP],
 				SPINOR_OP_PP, SNOR_PROTO_1_1_1);
+<<<<<<< HEAD
 
 	if (info->flags & SPI_NOR_QUAD_PP) {
 		params->hwcaps.mask |= SNOR_HWCAPS_PP_1_1_4;
 		spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP_1_1_4],
 					SPINOR_OP_PP_1_1_4, SNOR_PROTO_1_1_4);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -2773,9 +2816,13 @@ static int spi_nor_init(struct spi_nor *nor)
 		 */
 		WARN_ONCE(nor->flags & SNOR_F_BROKEN_RESET,
 			  "enabling reset hack; may not recover from unexpected reboots\n");
+<<<<<<< HEAD
 		err = nor->params->set_4byte_addr_mode(nor, true);
 		if (err && err != -ENOTSUPP)
 			return err;
+=======
+		return nor->params->set_4byte_addr_mode(nor, true);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -2889,6 +2936,7 @@ static void spi_nor_put_device(struct mtd_info *mtd)
 
 void spi_nor_restore(struct spi_nor *nor)
 {
+<<<<<<< HEAD
 	int ret;
 
 	/* restore the addressing mode */
@@ -2903,6 +2951,12 @@ void spi_nor_restore(struct spi_nor *nor)
 			 */
 			dev_err(nor->dev, "Failed to exit 4-byte address mode, err = %d\n", ret);
 	}
+=======
+	/* restore the addressing mode */
+	if (nor->addr_nbytes == 4 && !(nor->flags & SNOR_F_4B_OPCODES) &&
+	    nor->flags & SNOR_F_BROKEN_RESET)
+		nor->params->set_4byte_addr_mode(nor, false);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (nor->flags & SNOR_F_SOFT_RESET)
 		spi_nor_soft_reset(nor);
@@ -2994,6 +3048,7 @@ static void spi_nor_set_mtd_info(struct spi_nor *nor)
 	mtd->_put_device = spi_nor_put_device;
 }
 
+<<<<<<< HEAD
 static int spi_nor_hw_reset(struct spi_nor *nor)
 {
 	struct gpio_desc *reset;
@@ -3015,6 +3070,8 @@ static int spi_nor_hw_reset(struct spi_nor *nor)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int spi_nor_scan(struct spi_nor *nor, const char *name,
 		 const struct spi_nor_hwcaps *hwcaps)
 {
@@ -3047,10 +3104,13 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
 	if (!nor->bouncebuf)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	ret = spi_nor_hw_reset(nor);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	info = spi_nor_get_flash_info(nor, name);
 	if (IS_ERR(info))
 		return PTR_ERR(info);
@@ -3343,6 +3403,7 @@ static struct spi_mem_driver spi_nor_driver = {
 	.remove = spi_nor_remove,
 	.shutdown = spi_nor_shutdown,
 };
+<<<<<<< HEAD
 
 static int __init spi_nor_module_init(void)
 {
@@ -3356,6 +3417,9 @@ static void __exit spi_nor_module_exit(void)
 	spi_nor_debugfs_shutdown();
 }
 module_exit(spi_nor_module_exit);
+=======
+module_spi_mem_driver(spi_nor_driver);
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Huang Shijie <shijie8@gmail.com>");

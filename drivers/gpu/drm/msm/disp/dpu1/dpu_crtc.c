@@ -21,7 +21,10 @@
 #include <drm/drm_probe_helper.h>
 #include <drm/drm_rect.h>
 #include <drm/drm_vblank.h>
+<<<<<<< HEAD
 #include <drm/drm_self_refresh_helper.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "dpu_kms.h"
 #include "dpu_hw_lm.h"
@@ -749,7 +752,11 @@ static void _dpu_crtc_setup_cp_blocks(struct drm_crtc *crtc)
 	int i;
 
 
+<<<<<<< HEAD
 	if (!state->color_mgmt_changed && !drm_atomic_crtc_needs_modeset(state))
+=======
+	if (!state->color_mgmt_changed)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	for (i = 0; i < cstate->num_mixers; i++) {
@@ -969,10 +976,14 @@ static void dpu_crtc_reset(struct drm_crtc *crtc)
 	if (crtc->state)
 		dpu_crtc_destroy_state(crtc, crtc->state);
 
+<<<<<<< HEAD
 	if (cstate)
 		__drm_atomic_helper_crtc_reset(crtc, &cstate->base);
 	else
 		__drm_atomic_helper_crtc_reset(crtc, NULL);
+=======
+	__drm_atomic_helper_crtc_reset(crtc, &cstate->base);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1022,6 +1033,7 @@ static void dpu_crtc_disable(struct drm_crtc *crtc,
 
 	DRM_DEBUG_KMS("crtc%d\n", crtc->base.id);
 
+<<<<<<< HEAD
 	/* If disable is triggered while in self refresh mode,
 	 * reset the encoder software state so that in enable
 	 * it won't trigger a warn while assigning crtc.
@@ -1034,6 +1046,8 @@ static void dpu_crtc_disable(struct drm_crtc *crtc,
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Disable/save vblank irq handling */
 	drm_crtc_vblank_off(crtc);
 
@@ -1045,6 +1059,7 @@ static void dpu_crtc_disable(struct drm_crtc *crtc,
 		 */
 		if (dpu_encoder_get_intf_mode(encoder) == INTF_MODE_VIDEO)
 			release_bandwidth = true;
+<<<<<<< HEAD
 
 		/*
 		 * If disable is triggered during psr active(e.g: screen dim in PSR),
@@ -1053,6 +1068,9 @@ static void dpu_crtc_disable(struct drm_crtc *crtc,
 		 */
 		if (!crtc->state->self_refresh_active)
 			dpu_encoder_assign_crtc(encoder, NULL);
+=======
+		dpu_encoder_assign_crtc(encoder, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* wait for frame_event_done completion */
@@ -1100,9 +1118,12 @@ static void dpu_crtc_enable(struct drm_crtc *crtc,
 	struct dpu_crtc *dpu_crtc = to_dpu_crtc(crtc);
 	struct drm_encoder *encoder;
 	bool request_bandwidth = false;
+<<<<<<< HEAD
 	struct drm_crtc_state *old_crtc_state;
 
 	old_crtc_state = drm_atomic_get_old_crtc_state(state, crtc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	pm_runtime_get_sync(crtc->dev->dev);
 
@@ -1125,10 +1146,15 @@ static void dpu_crtc_enable(struct drm_crtc *crtc,
 	trace_dpu_crtc_enable(DRMID(crtc), true, dpu_crtc);
 	dpu_crtc->enabled = true;
 
+<<<<<<< HEAD
 	if (!old_crtc_state->self_refresh_active) {
 		drm_for_each_encoder_mask(encoder, crtc->dev, crtc->state->encoder_mask)
 			dpu_encoder_assign_crtc(encoder, crtc);
 	}
+=======
+	drm_for_each_encoder_mask(encoder, crtc->dev, crtc->state->encoder_mask)
+		dpu_encoder_assign_crtc(encoder, crtc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Enable/restore vblank irq handling */
 	drm_crtc_vblank_on(crtc);
@@ -1178,8 +1204,11 @@ static int dpu_crtc_atomic_check(struct drm_crtc *crtc,
 	bool needs_dirtyfb = dpu_crtc_needs_dirtyfb(crtc_state);
 
 	pstates = kzalloc(sizeof(*pstates) * DPU_STAGE_MAX * 4, GFP_KERNEL);
+<<<<<<< HEAD
 	if (!pstates)
 		return -ENOMEM;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!crtc_state->enable || !crtc_state->active) {
 		DRM_DEBUG_ATOMIC("crtc%d -> enable %d, active %d, skip atomic_check\n",
@@ -1547,12 +1576,25 @@ DEFINE_SHOW_ATTRIBUTE(dpu_crtc_debugfs_state);
 static int _dpu_crtc_init_debugfs(struct drm_crtc *crtc)
 {
 	struct dpu_crtc *dpu_crtc = to_dpu_crtc(crtc);
+<<<<<<< HEAD
 
 	debugfs_create_file("status", 0400,
 			crtc->debugfs_entry,
 			dpu_crtc, &_dpu_debugfs_status_fops);
 	debugfs_create_file("state", 0600,
 			crtc->debugfs_entry,
+=======
+	struct dentry *debugfs_root;
+
+	debugfs_root = debugfs_create_dir(dpu_crtc->name,
+			crtc->dev->primary->debugfs_root);
+
+	debugfs_create_file("status", 0400,
+			debugfs_root,
+			dpu_crtc, &_dpu_debugfs_status_fops);
+	debugfs_create_file("state", 0600,
+			debugfs_root,
+>>>>>>> b7ba80a49124 (Commit)
 			&dpu_crtc->base,
 			&dpu_crtc_debugfs_state_fops);
 
@@ -1602,7 +1644,11 @@ struct drm_crtc *dpu_crtc_init(struct drm_device *dev, struct drm_plane *plane,
 {
 	struct drm_crtc *crtc = NULL;
 	struct dpu_crtc *dpu_crtc = NULL;
+<<<<<<< HEAD
 	int i, ret;
+=======
+	int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dpu_crtc = kzalloc(sizeof(*dpu_crtc), GFP_KERNEL);
 	if (!dpu_crtc)
@@ -1639,6 +1685,7 @@ struct drm_crtc *dpu_crtc_init(struct drm_device *dev, struct drm_plane *plane,
 	/* initialize event handling */
 	spin_lock_init(&dpu_crtc->event_lock);
 
+<<<<<<< HEAD
 	ret = drm_self_refresh_helper_init(crtc);
 	if (ret) {
 		DPU_ERROR("Failed to initialize %s with self-refresh helpers %d\n",
@@ -1646,6 +1693,8 @@ struct drm_crtc *dpu_crtc_init(struct drm_device *dev, struct drm_plane *plane,
 		return ERR_PTR(ret);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	DRM_DEBUG_KMS("%s: successfully initialized crtc\n", dpu_crtc->name);
 	return crtc;
 }

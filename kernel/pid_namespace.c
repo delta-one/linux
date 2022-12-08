@@ -23,7 +23,10 @@
 #include <linux/sched/task.h>
 #include <linux/sched/signal.h>
 #include <linux/idr.h>
+<<<<<<< HEAD
 #include "pid_sysctl.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static DEFINE_MUTEX(pid_caches_mutex);
 static struct kmem_cache *pid_ns_cachep;
@@ -111,8 +114,11 @@ static struct pid_namespace *create_pid_namespace(struct user_namespace *user_ns
 	ns->ucounts = ucounts;
 	ns->pid_allocated = PIDNS_ADDING;
 
+<<<<<<< HEAD
 	initialize_memfd_noexec_scope(ns);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ns;
 
 out_free_idr:
@@ -247,6 +253,7 @@ void zap_pid_ns_processes(struct pid_namespace *pid_ns)
 		set_current_state(TASK_INTERRUPTIBLE);
 		if (pid_ns->pid_allocated == init_pids)
 			break;
+<<<<<<< HEAD
 		/*
 		 * Release tasks_rcu_exit_srcu to avoid following deadlock:
 		 *
@@ -265,6 +272,9 @@ void zap_pid_ns_processes(struct pid_namespace *pid_ns)
 		exit_tasks_rcu_stop();
 		schedule();
 		exit_tasks_rcu_start();
+=======
+		schedule();
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	__set_current_state(TASK_RUNNING);
 
@@ -475,8 +485,11 @@ static __init int pid_namespaces_init(void)
 #ifdef CONFIG_CHECKPOINT_RESTORE
 	register_sysctl_paths(kern_path, pid_ns_ctl_table);
 #endif
+<<<<<<< HEAD
 
 	register_pid_ns_sysctl_table_vm();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

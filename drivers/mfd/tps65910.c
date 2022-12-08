@@ -441,9 +441,15 @@ static void tps65910_power_off(void)
 			   DEVCTRL_DEV_OFF_MASK);
 }
 
+<<<<<<< HEAD
 static int tps65910_i2c_probe(struct i2c_client *i2c)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(i2c);
+=======
+static int tps65910_i2c_probe(struct i2c_client *i2c,
+			      const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct tps65910 *tps65910;
 	struct tps65910_board *pmic_plat_data;
 	struct tps65910_board *of_pmic_plat_data = NULL;
@@ -535,7 +541,11 @@ static struct i2c_driver tps65910_i2c_driver = {
 		   .name = "tps65910",
 		   .of_match_table = of_match_ptr(tps65910_of_match),
 	},
+<<<<<<< HEAD
 	.probe_new = tps65910_i2c_probe,
+=======
+	.probe = tps65910_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = tps65910_i2c_id,
 };
 

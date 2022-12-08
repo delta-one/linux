@@ -7,8 +7,13 @@ workflows related to reporting bugs, submitting patches, and queueing
 patches for stable kernels.
 
 For general information about submitting patches, please refer to
+<<<<<<< HEAD
 Documentation/process/submitting-patches.rst. This document only describes
 additional specifics related to BPF.
+=======
+`Documentation/process/`_. This document only describes additional specifics
+related to BPF.
+>>>>>>> b7ba80a49124 (Commit)
 
 .. contents::
     :local:
@@ -44,6 +49,7 @@ is a guarantee that the reported issue will be overlooked.**
 Submitting patches
 ==================
 
+<<<<<<< HEAD
 Q: How do I run BPF CI on my changes before sending them out for review?
 ------------------------------------------------------------------------
 A: BPF CI is GitHub based and hosted at https://github.com/kernel-patches/bpf.
@@ -71,6 +77,8 @@ such, your patch set will automatically (be attempted to) be rebased as well.
 This behavior can result in a CI run being aborted and restarted with the new
 base line.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Q: To which mailing list do I need to submit my BPF patches?
 ------------------------------------------------------------
 A: Please submit your BPF patches to the bpf kernel mailing list:
@@ -128,8 +136,12 @@ into the bpf-next tree will make their way into net-next tree. net and
 net-next are both run by David S. Miller. From there, they will go
 into the kernel mainline tree run by Linus Torvalds. To read up on the
 process of net and net-next being merged into the mainline tree, see
+<<<<<<< HEAD
 the documentation on netdev subsystem at
 Documentation/process/maintainer-netdev.rst.
+=======
+the :ref:`netdev-FAQ`
+>>>>>>> b7ba80a49124 (Commit)
 
 
 
@@ -148,8 +160,12 @@ request)::
 Q: How do I indicate which tree (bpf vs. bpf-next) my patch should be applied to?
 ---------------------------------------------------------------------------------
 
+<<<<<<< HEAD
 A: The process is the very same as described in the netdev subsystem
 documentation at Documentation/process/maintainer-netdev.rst,
+=======
+A: The process is the very same as described in the :ref:`netdev-FAQ`,
+>>>>>>> b7ba80a49124 (Commit)
 so please read up on it. The subject line must indicate whether the
 patch is a fix or rather "next-like" content in order to let the
 maintainers know whether it is targeted at bpf or bpf-next.
@@ -208,9 +224,14 @@ ii) run extensive BPF test suite and
 Once the BPF pull request was accepted by David S. Miller, then
 the patches end up in net or net-next tree, respectively, and
 make their way from there further into mainline. Again, see the
+<<<<<<< HEAD
 documentation for netdev subsystem at
 Documentation/process/maintainer-netdev.rst for additional information
 e.g. on how often they are merged to mainline.
+=======
+:ref:`netdev-FAQ` for additional information e.g. on how often they are
+merged to mainline.
+>>>>>>> b7ba80a49124 (Commit)
 
 Q: How long do I need to wait for feedback on my BPF patches?
 -------------------------------------------------------------
@@ -233,8 +254,12 @@ Q: Are patches applied to bpf-next when the merge window is open?
 -----------------------------------------------------------------
 A: For the time when the merge window is open, bpf-next will not be
 processed. This is roughly analogous to net-next patch processing,
+<<<<<<< HEAD
 so feel free to read up on the netdev docs at
 Documentation/process/maintainer-netdev.rst about further details.
+=======
+so feel free to read up on the :ref:`netdev-FAQ` about further details.
+>>>>>>> b7ba80a49124 (Commit)
 
 During those two weeks of merge window, we might ask you to resend
 your patch series once bpf-next is open again. Once Linus released
@@ -398,8 +423,12 @@ netdev kernel mailing list in Cc and ask for the fix to be queued up:
   netdev@vger.kernel.org
 
 The process in general is the same as on netdev itself, see also the
+<<<<<<< HEAD
 the documentation on networking subsystem at
 Documentation/process/maintainer-netdev.rst.
+=======
+:ref:`netdev-FAQ`.
+>>>>>>> b7ba80a49124 (Commit)
 
 Q: Do you also backport to kernels not currently maintained as stable?
 ----------------------------------------------------------------------
@@ -415,7 +444,11 @@ Q: The BPF patch I am about to submit needs to go to stable as well
 What should I do?
 
 A: The same rules apply as with netdev patch submissions in general, see
+<<<<<<< HEAD
 the netdev docs at Documentation/process/maintainer-netdev.rst.
+=======
+the :ref:`netdev-FAQ`.
+>>>>>>> b7ba80a49124 (Commit)
 
 Never add "``Cc: stable@vger.kernel.org``" to the patch description, but
 ask the BPF maintainers to queue the patches instead. This can be done
@@ -466,15 +499,24 @@ needed::
 
   $ sudo make run_tests
 
+<<<<<<< HEAD
 See :doc:`kernel selftest documentation </dev-tools/kselftest>`
 for details.
+=======
+See the kernels selftest `Documentation/dev-tools/kselftest.rst`_
+document for further documentation.
+>>>>>>> b7ba80a49124 (Commit)
 
 To maximize the number of tests passing, the .config of the kernel
 under test should match the config file fragment in
 tools/testing/selftests/bpf as closely as possible.
 
 Finally to ensure support for latest BPF Type Format features -
+<<<<<<< HEAD
 discussed in Documentation/bpf/btf.rst - pahole version 1.16
+=======
+discussed in `Documentation/bpf/btf.rst`_ - pahole version 1.16
+>>>>>>> b7ba80a49124 (Commit)
 is required for kernels built with CONFIG_DEBUG_INFO_BTF=y.
 pahole is delivered in the dwarves package or can be built
 from source at
@@ -689,7 +731,17 @@ when:
 
 
 .. Links
+<<<<<<< HEAD
 .. _selftests:
    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/testing/selftests/bpf/
+=======
+.. _Documentation/process/: https://www.kernel.org/doc/html/latest/process/
+.. _netdev-FAQ: Documentation/process/maintainer-netdev.rst
+.. _selftests:
+   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/testing/selftests/bpf/
+.. _Documentation/dev-tools/kselftest.rst:
+   https://www.kernel.org/doc/html/latest/dev-tools/kselftest.html
+.. _Documentation/bpf/btf.rst: btf.rst
+>>>>>>> b7ba80a49124 (Commit)
 
 Happy BPF hacking!

@@ -6,6 +6,7 @@
 	model = "NVIDIA Jetson AGX Orin";
 	compatible = "nvidia,p3701-0000", "nvidia,tegra234";
 
+<<<<<<< HEAD
 	bus@0 {
 		i2c@3160000 {
 			status = "okay";
@@ -89,6 +90,8 @@
 		regulator-boot-on;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vdd_1v8_ls: regulator-vdd-1v8-ls {
 		compatible = "regulator-fixed";
 		regulator-name = "VDD_1V8_LS";
@@ -97,6 +100,7 @@
 		regulator-always-on;
 	};
 
+<<<<<<< HEAD
 	vdd_1v8_hs: regulator-vdd-1v8-hs {
 		compatible = "regulator-fixed";
 		regulator-name = "VDD_1V8_HS";
@@ -105,6 +109,8 @@
 		regulator-always-on;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vdd_1v8_ao: regulator-vdd-1v8-ao {
 		compatible = "regulator-fixed";
 		regulator-name = "VDD_1V8_AO";
@@ -113,6 +119,7 @@
 		regulator-always-on;
 	};
 
+<<<<<<< HEAD
 	vdd_3v3_ao: regulator-vdd-3v3-ao {
 		compatible = "regulator-fixed";
 		regulator-name = "VDD_3V3_AO";
@@ -121,6 +128,8 @@
 		regulator-always-on;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vdd_3v3_pcie: regulator-vdd-3v3-pcie {
 		compatible = "regulator-fixed";
 		regulator-name = "VDD_3V3_PCIE";
@@ -138,5 +147,37 @@
 		regulator-max-microvolt = <12000000>;
 		gpio = <&gpio TEGRA234_MAIN_GPIO(A, 1) GPIO_ACTIVE_LOW>;
 		regulator-boot-on;
+<<<<<<< HEAD
+=======
+		enable-active-low;
+	};
+
+	bus@0 {
+		spi@3270000 {
+			status = "okay";
+
+			flash@0 {
+				compatible = "jedec,spi-nor";
+				reg = <0>;
+				spi-max-frequency = <102000000>;
+				spi-tx-bus-width = <4>;
+				spi-rx-bus-width = <4>;
+			};
+		};
+
+		mmc@3460000 {
+			status = "okay";
+			bus-width = <8>;
+			non-removable;
+		};
+
+		rtc@c2a0000 {
+			status = "okay";
+		};
+
+		pmc@c360000 {
+			nvidia,invert-interrupt;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };

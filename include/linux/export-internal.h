@@ -10,6 +10,10 @@
 #include <linux/compiler.h>
 #include <linux/types.h>
 
+<<<<<<< HEAD
+=======
+/* __used is needed to keep __crc_* for LTO */
+>>>>>>> b7ba80a49124 (Commit)
 #define SYMBOL_CRC(sym, crc, sec)   \
 	asm(".section \"___kcrctab" sec "+" #sym "\",\"a\""	"\n" \
 	    "__crc_" #sym ":"					"\n" \

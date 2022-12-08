@@ -5,6 +5,7 @@
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_tracing.h>
 
+<<<<<<< HEAD
 #ifndef EBUSY
 #define EBUSY 16
 #endif
@@ -12,6 +13,9 @@
 char _license[] SEC("license") = "GPL";
 int nr_del_errs = 0;
 int test_pid = 0;
+=======
+char _license[] SEC("license") = "GPL";
+>>>>>>> b7ba80a49124 (Commit)
 
 struct {
 	__uint(type, BPF_MAP_TYPE_TASK_STORAGE);
@@ -32,6 +36,7 @@ int BPF_PROG(on_lookup)
 {
 	struct task_struct *task = bpf_get_current_task_btf();
 
+<<<<<<< HEAD
 	if (!test_pid || task->pid != test_pid)
 		return 0;
 
@@ -39,6 +44,8 @@ int BPF_PROG(on_lookup)
 	 * bpf_local_storage_lookup.  The prog->active will
 	 * stop the recursion.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bpf_task_storage_delete(&map_a, task);
 	bpf_task_storage_delete(&map_b, task);
 	return 0;
@@ -50,6 +57,7 @@ int BPF_PROG(on_update)
 	struct task_struct *task = bpf_get_current_task_btf();
 	long *ptr;
 
+<<<<<<< HEAD
 	if (!test_pid || task->pid != test_pid)
 		return 0;
 
@@ -76,6 +84,13 @@ int BPF_PROG(on_update)
 	 * deadlock is detected and it will fail to create
 	 * new storage.
 	 */
+=======
+	ptr = bpf_task_storage_get(&map_a, task, 0,
+				   BPF_LOCAL_STORAGE_GET_F_CREATE);
+	if (ptr)
+		*ptr += 1;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ptr = bpf_task_storage_get(&map_b, task, 0,
 				   BPF_LOCAL_STORAGE_GET_F_CREATE);
 	if (ptr)
@@ -91,17 +106,27 @@ int BPF_PROG(on_enter, struct pt_regs *regs, long id)
 	long *ptr;
 
 	task = bpf_get_current_task_btf();
+<<<<<<< HEAD
 	if (!test_pid || task->pid != test_pid)
 		return 0;
 
 	ptr = bpf_task_storage_get(&map_a, task, 0,
 				   BPF_LOCAL_STORAGE_GET_F_CREATE);
 	if (ptr && !*ptr)
+=======
+	ptr = bpf_task_storage_get(&map_a, task, 0,
+				   BPF_LOCAL_STORAGE_GET_F_CREATE);
+	if (ptr)
+>>>>>>> b7ba80a49124 (Commit)
 		*ptr = 200;
 
 	ptr = bpf_task_storage_get(&map_b, task, 0,
 				   BPF_LOCAL_STORAGE_GET_F_CREATE);
+<<<<<<< HEAD
 	if (ptr && !*ptr)
+=======
+	if (ptr)
+>>>>>>> b7ba80a49124 (Commit)
 		*ptr = 100;
 	return 0;
 }

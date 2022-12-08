@@ -2,7 +2,11 @@
  * Ricoh RS5C313 RTC device/driver
  *  Copyright (C) 2007 Nobuhiro Iwamatsu
  *
+<<<<<<< HEAD
  *  2005-09-19 modified by kogiidena
+=======
+ *  2005-09-19 modifed by kogiidena
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Based on the old drivers/char/rs5c313_rtc.c  by:
  *  Copyright (C) 2000 Philipp Rumpf <prumpf@tux.org>
@@ -36,7 +40,11 @@
  *      1.11a   Daniele Bellucci: Audit create_proc_read_entry in rtc_init
  *	1.12	Venkatesh Pallipadi: Hooks for emulating rtc on HPET base-timer
  *		CONFIG_HPET_EMULATE_RTC
+<<<<<<< HEAD
  *	1.13	Nobuhiro Iwamatsu: Update driver.
+=======
+ *	1.13	Nobuhiro Iwamatsu: Updata driver.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
@@ -280,7 +288,11 @@ static int rs5c313_rtc_set_time(struct device *dev, struct rtc_time *tm)
 	while (1) {
 		RS5C313_CEENABLE;	/* CE:H */
 
+<<<<<<< HEAD
 		/* Initialize control reg. 24 hour */
+=======
+		/* Initiatlize control reg. 24 hour */
+>>>>>>> b7ba80a49124 (Commit)
 		rs5c313_write_cntreg(0x04);
 
 		if (!(rs5c313_read_cntreg() & RS5C313_CNTREG_ADJ_BSY))

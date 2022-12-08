@@ -20,6 +20,10 @@
 
 #include <linux/init.h>
 #include <linux/mc146818rtc.h>
+<<<<<<< HEAD
+=======
+#include <linux/bcd.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/io.h>
 
 #include "common.h"

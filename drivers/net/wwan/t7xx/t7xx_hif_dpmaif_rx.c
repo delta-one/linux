@@ -45,7 +45,10 @@
 #include "t7xx_dpmaif.h"
 #include "t7xx_hif_dpmaif.h"
 #include "t7xx_hif_dpmaif_rx.h"
+<<<<<<< HEAD
 #include "t7xx_netdev.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "t7xx_pci.h"
 
 #define DPMAIF_BAT_COUNT		8192
@@ -77,6 +80,46 @@ static unsigned int t7xx_normal_pit_bid(const struct dpmaif_pit *pit_info)
 	return value;
 }
 
+<<<<<<< HEAD
+=======
+static int t7xx_dpmaif_net_rx_push_thread(void *arg)
+{
+	struct dpmaif_rx_queue *q = arg;
+	struct dpmaif_ctrl *hif_ctrl;
+	struct dpmaif_callbacks *cb;
+
+	hif_ctrl = q->dpmaif_ctrl;
+	cb = hif_ctrl->callbacks;
+
+	while (!kthread_should_stop()) {
+		struct sk_buff *skb;
+		unsigned long flags;
+
+		if (skb_queue_empty(&q->skb_list)) {
+			if (wait_event_interruptible(q->rx_wq,
+						     !skb_queue_empty(&q->skb_list) ||
+						     kthread_should_stop()))
+				continue;
+
+			if (kthread_should_stop())
+				break;
+		}
+
+		spin_lock_irqsave(&q->skb_list.lock, flags);
+		skb = __skb_dequeue(&q->skb_list);
+		spin_unlock_irqrestore(&q->skb_list.lock, flags);
+
+		if (!skb)
+			continue;
+
+		cb->recv_skb(hif_ctrl->t7xx_dev, skb);
+		cond_resched();
+	}
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int t7xx_dpmaif_update_bat_wr_idx(struct dpmaif_ctrl *dpmaif_ctrl,
 					 const unsigned int q_num, const unsigned int bat_cnt)
 {
@@ -690,10 +733,28 @@ static int t7xx_dpmaifq_rx_notify_hw(struct dpmaif_rx_queue *rxq)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void t7xx_dpmaif_rx_skb(struct dpmaif_rx_queue *rxq,
 			       struct dpmaif_cur_rx_skb_info *skb_info)
 {
 	struct dpmaif_ctrl *dpmaif_ctrl = rxq->dpmaif_ctrl;
+=======
+static void t7xx_dpmaif_rx_skb_enqueue(struct dpmaif_rx_queue *rxq, struct sk_buff *skb)
+{
+	unsigned long flags;
+
+	spin_lock_irqsave(&rxq->skb_list.lock, flags);
+	if (rxq->skb_list.qlen < rxq->skb_list_max_len)
+		__skb_queue_tail(&rxq->skb_list, skb);
+	else
+		dev_kfree_skb_any(skb);
+	spin_unlock_irqrestore(&rxq->skb_list.lock, flags);
+}
+
+static void t7xx_dpmaif_rx_skb(struct dpmaif_rx_queue *rxq,
+			       struct dpmaif_cur_rx_skb_info *skb_info)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct sk_buff *skb = skb_info->cur_skb;
 	struct t7xx_skb_cb *skb_cb;
 	u8 netif_id;
@@ -711,11 +772,19 @@ static void t7xx_dpmaif_rx_skb(struct dpmaif_rx_queue *rxq,
 	skb_cb = T7XX_SKB_CB(skb);
 	skb_cb->netif_idx = netif_id;
 	skb_cb->rx_pkt_type = skb_info->pkt_type;
+<<<<<<< HEAD
 	dpmaif_ctrl->callbacks->recv_skb(dpmaif_ctrl->t7xx_dev->ccmni_ctlb, skb, &rxq->napi);
 }
 
 static int t7xx_dpmaif_rx_start(struct dpmaif_rx_queue *rxq, const unsigned int pit_cnt,
 				const unsigned int budget, int *once_more)
+=======
+	t7xx_dpmaif_rx_skb_enqueue(rxq, skb);
+}
+
+static int t7xx_dpmaif_rx_start(struct dpmaif_rx_queue *rxq, const unsigned int pit_cnt,
+				const unsigned long timeout)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int cur_pit, pit_len, rx_cnt, recv_skb_cnt = 0;
 	struct device *dev = rxq->dpmaif_ctrl->dev;
@@ -730,14 +799,22 @@ static int t7xx_dpmaif_rx_start(struct dpmaif_rx_queue *rxq, const unsigned int 
 		struct dpmaif_pit *pkt_info;
 		u32 val;
 
+<<<<<<< HEAD
 		if (!skb_info->msg_pit_received && recv_skb_cnt >= budget)
+=======
+		if (!skb_info->msg_pit_received && time_after_eq(jiffies, timeout))
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		pkt_info = (struct dpmaif_pit *)rxq->pit_base + cur_pit;
 		if (t7xx_dpmaif_check_pit_seq(rxq, pkt_info)) {
 			dev_err_ratelimited(dev, "RXQ%u checks PIT SEQ fail\n", rxq->index);
+<<<<<<< HEAD
 			*once_more = 1;
 			return recv_skb_cnt;
+=======
+			return -EAGAIN;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		val = FIELD_GET(PD_PIT_PACKET_TYPE, le32_to_cpu(pkt_info->header));
@@ -771,7 +848,16 @@ static int t7xx_dpmaif_rx_start(struct dpmaif_rx_queue *rxq, const unsigned int 
 				}
 
 				memset(skb_info, 0, sizeof(*skb_info));
+<<<<<<< HEAD
 				recv_skb_cnt++;
+=======
+
+				recv_skb_cnt++;
+				if (!(recv_skb_cnt & DPMAIF_RX_PUSH_THRESHOLD_MASK)) {
+					wake_up_all(&rxq->rx_wq);
+					recv_skb_cnt = 0;
+				}
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 
@@ -786,13 +872,23 @@ static int t7xx_dpmaif_rx_start(struct dpmaif_rx_queue *rxq, const unsigned int 
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	if (recv_skb_cnt)
+		wake_up_all(&rxq->rx_wq);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ret)
 		ret = t7xx_dpmaifq_rx_notify_hw(rxq);
 
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	return recv_skb_cnt;
+=======
+	return rx_cnt;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static unsigned int t7xx_dpmaifq_poll_pit(struct dpmaif_rx_queue *rxq)
@@ -809,6 +905,7 @@ static unsigned int t7xx_dpmaifq_poll_pit(struct dpmaif_rx_queue *rxq)
 	return pit_cnt;
 }
 
+<<<<<<< HEAD
 static int t7xx_dpmaif_napi_rx_data_collect(struct dpmaif_ctrl *dpmaif_ctrl,
 					    const unsigned int q_num,
 					    const unsigned int budget, int *once_more)
@@ -833,6 +930,55 @@ int t7xx_dpmaif_napi_rx_poll(struct napi_struct *napi, const int budget)
 	struct dpmaif_rx_queue *rxq = container_of(napi, struct dpmaif_rx_queue, napi);
 	struct t7xx_pci_dev *t7xx_dev = rxq->dpmaif_ctrl->t7xx_dev;
 	int ret, once_more = 0, work_done = 0;
+=======
+static int t7xx_dpmaif_rx_data_collect(struct dpmaif_ctrl *dpmaif_ctrl,
+				       const unsigned int q_num, const unsigned int budget)
+{
+	struct dpmaif_rx_queue *rxq = &dpmaif_ctrl->rxq[q_num];
+	unsigned long time_limit;
+	unsigned int cnt;
+
+	time_limit = jiffies + msecs_to_jiffies(DPMAIF_WQ_TIME_LIMIT_MS);
+
+	while ((cnt = t7xx_dpmaifq_poll_pit(rxq))) {
+		unsigned int rd_cnt;
+		int real_cnt;
+
+		rd_cnt = min(cnt, budget);
+
+		real_cnt = t7xx_dpmaif_rx_start(rxq, rd_cnt, time_limit);
+		if (real_cnt < 0)
+			return real_cnt;
+
+		if (real_cnt < cnt)
+			return -EAGAIN;
+	}
+
+	return 0;
+}
+
+static void t7xx_dpmaif_do_rx(struct dpmaif_ctrl *dpmaif_ctrl, struct dpmaif_rx_queue *rxq)
+{
+	struct dpmaif_hw_info *hw_info = &dpmaif_ctrl->hw_info;
+	int ret;
+
+	ret = t7xx_dpmaif_rx_data_collect(dpmaif_ctrl, rxq->index, rxq->budget);
+	if (ret < 0) {
+		/* Try one more time */
+		queue_work(rxq->worker, &rxq->dpmaif_rxq_work);
+		t7xx_dpmaif_clr_ip_busy_sts(hw_info);
+	} else {
+		t7xx_dpmaif_clr_ip_busy_sts(hw_info);
+		t7xx_dpmaif_dlq_unmask_rx_done(hw_info, rxq->index);
+	}
+}
+
+static void t7xx_dpmaif_rxq_work(struct work_struct *work)
+{
+	struct dpmaif_rx_queue *rxq = container_of(work, struct dpmaif_rx_queue, dpmaif_rxq_work);
+	struct dpmaif_ctrl *dpmaif_ctrl = rxq->dpmaif_ctrl;
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	atomic_set(&rxq->rx_processing, 1);
 	/* Ensure rx_processing is changed to 1 before actually begin RX flow */
@@ -840,6 +986,7 @@ int t7xx_dpmaif_napi_rx_poll(struct napi_struct *napi, const int budget)
 
 	if (!rxq->que_started) {
 		atomic_set(&rxq->rx_processing, 0);
+<<<<<<< HEAD
 		pm_runtime_put_autosuspend(rxq->dpmaif_ctrl->dev);
 		dev_err(rxq->dpmaif_ctrl->dev, "Work RXQ: %d has not been started\n", rxq->index);
 		return work_done;
@@ -884,13 +1031,35 @@ int t7xx_dpmaif_napi_rx_poll(struct napi_struct *napi, const int budget)
 	}
 
 	return work_done;
+=======
+		dev_err(dpmaif_ctrl->dev, "Work RXQ: %d has not been started\n", rxq->index);
+		return;
+	}
+
+	ret = pm_runtime_resume_and_get(dpmaif_ctrl->dev);
+	if (ret < 0 && ret != -EACCES)
+		return;
+
+	t7xx_pci_disable_sleep(dpmaif_ctrl->t7xx_dev);
+	if (t7xx_pci_sleep_disable_complete(dpmaif_ctrl->t7xx_dev))
+		t7xx_dpmaif_do_rx(dpmaif_ctrl, rxq);
+
+	t7xx_pci_enable_sleep(dpmaif_ctrl->t7xx_dev);
+	pm_runtime_mark_last_busy(dpmaif_ctrl->dev);
+	pm_runtime_put_autosuspend(dpmaif_ctrl->dev);
+	atomic_set(&rxq->rx_processing, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void t7xx_dpmaif_irq_rx_done(struct dpmaif_ctrl *dpmaif_ctrl, const unsigned int que_mask)
 {
 	struct dpmaif_rx_queue *rxq;
+<<<<<<< HEAD
 	struct dpmaif_ctrl *ctrl;
 	int qno, ret;
+=======
+	int qno;
+>>>>>>> b7ba80a49124 (Commit)
 
 	qno = ffs(que_mask) - 1;
 	if (qno < 0 || qno > DPMAIF_RXQ_NUM - 1) {
@@ -899,6 +1068,7 @@ void t7xx_dpmaif_irq_rx_done(struct dpmaif_ctrl *dpmaif_ctrl, const unsigned int
 	}
 
 	rxq = &dpmaif_ctrl->rxq[qno];
+<<<<<<< HEAD
 	ctrl = rxq->dpmaif_ctrl;
 	/* We need to make sure that the modem has been resumed before
 	 * calling napi. This can't be done inside the polling function
@@ -912,6 +1082,9 @@ void t7xx_dpmaif_irq_rx_done(struct dpmaif_ctrl *dpmaif_ctrl, const unsigned int
 		return;
 	}
 	napi_schedule(&rxq->napi);
+=======
+	queue_work(rxq->worker, &rxq->dpmaif_rxq_work);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void t7xx_dpmaif_base_free(const struct dpmaif_ctrl *dpmaif_ctrl,
@@ -1046,14 +1219,58 @@ int t7xx_dpmaif_rxq_init(struct dpmaif_rx_queue *queue)
 	int ret;
 
 	ret = t7xx_dpmaif_rx_alloc(queue);
+<<<<<<< HEAD
 	if (ret < 0)
 		dev_err(queue->dpmaif_ctrl->dev, "Failed to allocate RX buffers: %d\n", ret);
+=======
+	if (ret < 0) {
+		dev_err(queue->dpmaif_ctrl->dev, "Failed to allocate RX buffers: %d\n", ret);
+		return ret;
+	}
+
+	INIT_WORK(&queue->dpmaif_rxq_work, t7xx_dpmaif_rxq_work);
+
+	queue->worker = alloc_workqueue("dpmaif_rx%d_worker",
+					WQ_UNBOUND | WQ_MEM_RECLAIM | WQ_HIGHPRI, 1, queue->index);
+	if (!queue->worker) {
+		ret = -ENOMEM;
+		goto err_free_rx_buffer;
+	}
+
+	init_waitqueue_head(&queue->rx_wq);
+	skb_queue_head_init(&queue->skb_list);
+	queue->skb_list_max_len = queue->bat_req->pkt_buf_sz;
+	queue->rx_thread = kthread_run(t7xx_dpmaif_net_rx_push_thread,
+				       queue, "dpmaif_rx%d_push", queue->index);
+
+	ret = PTR_ERR_OR_ZERO(queue->rx_thread);
+	if (ret)
+		goto err_free_workqueue;
+
+	return 0;
+
+err_free_workqueue:
+	destroy_workqueue(queue->worker);
+
+err_free_rx_buffer:
+	t7xx_dpmaif_rx_buf_free(queue);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
 
 void t7xx_dpmaif_rxq_free(struct dpmaif_rx_queue *queue)
 {
+<<<<<<< HEAD
+=======
+	if (queue->worker)
+		destroy_workqueue(queue->worker);
+
+	if (queue->rx_thread)
+		kthread_stop(queue->rx_thread);
+
+	skb_queue_purge(&queue->skb_list);
+>>>>>>> b7ba80a49124 (Commit)
 	t7xx_dpmaif_rx_buf_free(queue);
 }
 
@@ -1116,6 +1333,11 @@ void t7xx_dpmaif_rx_stop(struct dpmaif_ctrl *dpmaif_ctrl)
 		struct dpmaif_rx_queue *rxq = &dpmaif_ctrl->rxq[i];
 		int timeout, value;
 
+<<<<<<< HEAD
+=======
+		flush_work(&rxq->dpmaif_rxq_work);
+
+>>>>>>> b7ba80a49124 (Commit)
 		timeout = readx_poll_timeout_atomic(atomic_read, &rxq->rx_processing, value,
 						    !value, 0, DPMAIF_CHECK_INIT_TIMEOUT_US);
 		if (timeout)
@@ -1131,6 +1353,10 @@ static void t7xx_dpmaif_stop_rxq(struct dpmaif_rx_queue *rxq)
 {
 	int cnt, j = 0;
 
+<<<<<<< HEAD
+=======
+	flush_work(&rxq->dpmaif_rxq_work);
+>>>>>>> b7ba80a49124 (Commit)
 	rxq->que_started = false;
 
 	do {

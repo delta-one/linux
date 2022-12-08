@@ -667,6 +667,11 @@ static int b53_srab_remove(struct platform_device *pdev)
 	b53_srab_intr_set(dev->priv, false);
 	b53_switch_remove(dev);
 
+<<<<<<< HEAD
+=======
+	platform_set_drvdata(pdev, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

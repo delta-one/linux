@@ -115,13 +115,27 @@ unsigned long __weak memory_block_size_bytes(void)
 }
 EXPORT_SYMBOL_GPL(memory_block_size_bytes);
 
+<<<<<<< HEAD
 /* Show the memory block ID, relative to the memory block size */
+=======
+/*
+ * Show the first physical section index (number) of this memory block.
+ */
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t phys_index_show(struct device *dev,
 			       struct device_attribute *attr, char *buf)
 {
 	struct memory_block *mem = to_memory_block(dev);
+<<<<<<< HEAD
 
 	return sysfs_emit(buf, "%08lx\n", memory_block_id(mem->start_section_nr));
+=======
+	unsigned long phys_index;
+
+	phys_index = mem->start_section_nr / sections_per_block;
+
+	return sysfs_emit(buf, "%08lx\n", phys_index);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -170,6 +184,7 @@ int memory_notify(unsigned long val, void *v)
 	return blocking_notifier_call_chain(&memory_chain, val, v);
 }
 
+<<<<<<< HEAD
 #if defined(CONFIG_MEMORY_FAILURE) && defined(CONFIG_MEMORY_HOTPLUG)
 static unsigned long memblk_nr_poison(struct memory_block *mem);
 #else
@@ -179,6 +194,8 @@ static inline unsigned long memblk_nr_poison(struct memory_block *mem)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int memory_block_online(struct memory_block *mem)
 {
 	unsigned long start_pfn = section_nr_to_pfn(mem->start_section_nr);
@@ -187,8 +204,15 @@ static int memory_block_online(struct memory_block *mem)
 	struct zone *zone;
 	int ret;
 
+<<<<<<< HEAD
 	if (memblk_nr_poison(mem))
 		return -EHWPOISON;
+=======
+#ifdef CONFIG_MEMORY_FAILURE
+	if (atomic_long_read(&mem->nr_hwpoison))
+		return -EHWPOISON;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	zone = zone_for_pfn_range(mem->online_type, mem->nid, mem->group,
 				  start_pfn, nr_pages);
@@ -871,7 +895,13 @@ void remove_memory_block_devices(unsigned long start, unsigned long size)
 		mem = find_memory_block_by_id(block_id);
 		if (WARN_ON_ONCE(!mem))
 			continue;
+<<<<<<< HEAD
 		num_poisoned_pages_sub(-1UL, memblk_nr_poison(mem));
+=======
+#ifdef CONFIG_MEMORY_FAILURE
+		clear_hwpoisoned_pages(atomic_long_read(&mem->nr_hwpoison));
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 		unregister_memory_block_under_nodes(mem);
 		remove_memory_block(mem);
 	}
@@ -1173,7 +1203,12 @@ int walk_dynamic_memory_groups(int nid, walk_memory_groups_func_t func,
 	return ret;
 }
 
+<<<<<<< HEAD
 #if defined(CONFIG_MEMORY_FAILURE) && defined(CONFIG_MEMORY_HOTPLUG)
+=======
+#ifdef CONFIG_MEMORY_FAILURE
+
+>>>>>>> b7ba80a49124 (Commit)
 void memblk_nr_poison_inc(unsigned long pfn)
 {
 	const unsigned long block_id = pfn_to_block_id(pfn);
@@ -1192,8 +1227,21 @@ void memblk_nr_poison_sub(unsigned long pfn, long i)
 		atomic_long_sub(i, &mem->nr_hwpoison);
 }
 
+<<<<<<< HEAD
 static unsigned long memblk_nr_poison(struct memory_block *mem)
 {
 	return atomic_long_read(&mem->nr_hwpoison);
 }
+=======
+unsigned long memblk_nr_poison(unsigned long pfn)
+{
+	const unsigned long block_id = pfn_to_block_id(pfn);
+	struct memory_block *mem = find_memory_block_by_id(block_id);
+
+	if (mem)
+		return atomic_long_read(&mem->nr_hwpoison);
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif

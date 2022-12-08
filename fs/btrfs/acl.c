@@ -11,10 +11,17 @@
 #include <linux/sched.h>
 #include <linux/sched/mm.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include "ctree.h"
 #include "btrfs_inode.h"
 #include "xattr.h"
 #include "acl.h"
+=======
+
+#include "ctree.h"
+#include "btrfs_inode.h"
+#include "xattr.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 struct posix_acl *btrfs_get_acl(struct inode *inode, int type, bool rcu)
 {
@@ -110,6 +117,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 int btrfs_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
 		  struct posix_acl *acl, int type)
 {
@@ -119,6 +127,16 @@ int btrfs_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
 
 	if (type == ACL_TYPE_ACCESS && acl) {
 		ret = posix_acl_update_mode(idmap, inode,
+=======
+int btrfs_set_acl(struct user_namespace *mnt_userns, struct inode *inode,
+		  struct posix_acl *acl, int type)
+{
+	int ret;
+	umode_t old_mode = inode->i_mode;
+
+	if (type == ACL_TYPE_ACCESS && acl) {
+		ret = posix_acl_update_mode(mnt_userns, inode,
+>>>>>>> b7ba80a49124 (Commit)
 					    &inode->i_mode, &acl);
 		if (ret)
 			return ret;

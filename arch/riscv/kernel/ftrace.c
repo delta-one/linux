@@ -15,6 +15,7 @@
 void ftrace_arch_code_modify_prepare(void) __acquires(&text_mutex)
 {
 	mutex_lock(&text_mutex);
+<<<<<<< HEAD
 
 	/*
 	 * The code sequences we use for ftrace can't be patched while the
@@ -23,11 +24,16 @@ void ftrace_arch_code_modify_prepare(void) __acquires(&text_mutex)
 	 * to elide the check.
 	 */
 	riscv_patch_in_stop_machine = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void ftrace_arch_code_modify_post_process(void) __releases(&text_mutex)
 {
+<<<<<<< HEAD
 	riscv_patch_in_stop_machine = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&text_mutex);
 }
 
@@ -64,15 +70,23 @@ static int ftrace_check_current_call(unsigned long hook_pos,
 }
 
 static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target,
+<<<<<<< HEAD
 				bool enable, bool ra)
+=======
+				bool enable)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int call[2];
 	unsigned int nops[2] = {NOP4, NOP4};
 
+<<<<<<< HEAD
 	if (ra)
 		make_call_ra(hook_pos, target, call);
 	else
 		make_call_t0(hook_pos, target, call);
+=======
+	make_call(hook_pos, target, call);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Replace the auipc-jalr pair at once. Return -EPERM on write error. */
 	if (patch_text_nosync
@@ -82,6 +96,7 @@ static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target,
 	return 0;
 }
 
+<<<<<<< HEAD
 int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
 {
 	unsigned int call[2];
@@ -89,6 +104,44 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
 	make_call_t0(rec->ip, addr, call);
 
 	if (patch_text_nosync((void *)rec->ip, call, MCOUNT_INSN_SIZE))
+=======
+/*
+ * Put 5 instructions with 16 bytes at the front of function within
+ * patchable function entry nops' area.
+ *
+ * 0: REG_S  ra, -SZREG(sp)
+ * 1: auipc  ra, 0x?
+ * 2: jalr   -?(ra)
+ * 3: REG_L  ra, -SZREG(sp)
+ *
+ * So the opcodes is:
+ * 0: 0xfe113c23 (sd)/0xfe112e23 (sw)
+ * 1: 0x???????? -> auipc
+ * 2: 0x???????? -> jalr
+ * 3: 0xff813083 (ld)/0xffc12083 (lw)
+ */
+#if __riscv_xlen == 64
+#define INSN0	0xfe113c23
+#define INSN3	0xff813083
+#elif __riscv_xlen == 32
+#define INSN0	0xfe112e23
+#define INSN3	0xffc12083
+#endif
+
+#define FUNC_ENTRY_SIZE	16
+#define FUNC_ENTRY_JMP	4
+
+int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+{
+	unsigned int call[4] = {INSN0, 0, 0, INSN3};
+	unsigned long target = addr;
+	unsigned long caller = rec->ip + FUNC_ENTRY_JMP;
+
+	call[1] = to_auipc_insn((unsigned int)(target - caller));
+	call[2] = to_jalr_insn((unsigned int)(target - caller));
+
+	if (patch_text_nosync((void *)rec->ip, call, FUNC_ENTRY_SIZE))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EPERM;
 
 	return 0;
@@ -97,14 +150,24 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
 int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
 		    unsigned long addr)
 {
+<<<<<<< HEAD
 	unsigned int nops[2] = {NOP4, NOP4};
 
 	if (patch_text_nosync((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
+=======
+	unsigned int nops[4] = {NOP4, NOP4, NOP4, NOP4};
+
+	if (patch_text_nosync((void *)rec->ip, nops, FUNC_ENTRY_SIZE))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EPERM;
 
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This is called early on, and isn't wrapped by
  * ftrace_arch_code_modify_{prepare,post_process}() and therefor doesn't hold
@@ -116,9 +179,15 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
 {
 	int out;
 
+<<<<<<< HEAD
 	mutex_lock(&text_mutex);
 	out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
 	mutex_unlock(&text_mutex);
+=======
+	ftrace_arch_code_modify_prepare();
+	out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
+	ftrace_arch_code_modify_post_process();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return out;
 }
@@ -126,10 +195,17 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
 int ftrace_update_ftrace_func(ftrace_func_t func)
 {
 	int ret = __ftrace_modify_call((unsigned long)&ftrace_call,
+<<<<<<< HEAD
 				       (unsigned long)func, true, true);
 	if (!ret) {
 		ret = __ftrace_modify_call((unsigned long)&ftrace_regs_call,
 					   (unsigned long)func, true, true);
+=======
+				       (unsigned long)func, true);
+	if (!ret) {
+		ret = __ftrace_modify_call((unsigned long)&ftrace_regs_call,
+					   (unsigned long)func, true);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;
@@ -141,16 +217,27 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
 		       unsigned long addr)
 {
 	unsigned int call[2];
+<<<<<<< HEAD
 	unsigned long caller = rec->ip;
 	int ret;
 
 	make_call_t0(caller, old_addr, call);
+=======
+	unsigned long caller = rec->ip + FUNC_ENTRY_JMP;
+	int ret;
+
+	make_call(caller, old_addr, call);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ftrace_check_current_call(caller, call);
 
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	return __ftrace_modify_call(caller, addr, true, false);
+=======
+	return __ftrace_modify_call(caller, addr, true);
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif
 
@@ -185,12 +272,20 @@ int ftrace_enable_ftrace_graph_caller(void)
 	int ret;
 
 	ret = __ftrace_modify_call((unsigned long)&ftrace_graph_call,
+<<<<<<< HEAD
 				    (unsigned long)&prepare_ftrace_return, true, true);
+=======
+				    (unsigned long)&prepare_ftrace_return, true);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
 	return __ftrace_modify_call((unsigned long)&ftrace_graph_regs_call,
+<<<<<<< HEAD
 				    (unsigned long)&prepare_ftrace_return, true, true);
+=======
+				    (unsigned long)&prepare_ftrace_return, true);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int ftrace_disable_ftrace_graph_caller(void)
@@ -198,12 +293,20 @@ int ftrace_disable_ftrace_graph_caller(void)
 	int ret;
 
 	ret = __ftrace_modify_call((unsigned long)&ftrace_graph_call,
+<<<<<<< HEAD
 				    (unsigned long)&prepare_ftrace_return, false, true);
+=======
+				    (unsigned long)&prepare_ftrace_return, false);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
 	return __ftrace_modify_call((unsigned long)&ftrace_graph_regs_call,
+<<<<<<< HEAD
 				    (unsigned long)&prepare_ftrace_return, false, true);
+=======
+				    (unsigned long)&prepare_ftrace_return, false);
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif /* CONFIG_DYNAMIC_FTRACE */
 #endif /* CONFIG_FUNCTION_GRAPH_TRACER */

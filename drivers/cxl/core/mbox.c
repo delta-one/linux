@@ -3,13 +3,19 @@
 #include <linux/io-64-nonatomic-lo-hi.h>
 #include <linux/security.h>
 #include <linux/debugfs.h>
+<<<<<<< HEAD
 #include <linux/ktime.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mutex.h>
 #include <cxlmem.h>
 #include <cxl.h>
 
 #include "core.h"
+<<<<<<< HEAD
 #include "trace.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static bool cxl_raw_allow_all;
 
@@ -142,9 +148,19 @@ static const char *cxl_mem_opcode_to_name(u16 opcode)
 }
 
 /**
+<<<<<<< HEAD
  * cxl_internal_send_cmd() - Kernel internal interface to send a mailbox command
  * @cxlds: The device data for the operation
  * @mbox_cmd: initialized command to execute
+=======
+ * cxl_mbox_send_cmd() - Send a mailbox command to a device.
+ * @cxlds: The device data for the operation
+ * @opcode: Opcode for the mailbox command.
+ * @in: The input payload for the mailbox command.
+ * @in_size: The length of the input payload
+ * @out: Caller allocated buffer for the output.
+ * @out_size: Expected size of output.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Context: Any context.
  * Return:
@@ -159,6 +175,7 @@ static const char *cxl_mem_opcode_to_name(u16 opcode)
  * error. While this distinction can be useful for commands from userspace, the
  * kernel will only be able to use results when both are successful.
  */
+<<<<<<< HEAD
 int cxl_internal_send_cmd(struct cxl_dev_state *cxlds,
 			  struct cxl_mbox_cmd *mbox_cmd)
 {
@@ -199,6 +216,42 @@ int cxl_internal_send_cmd(struct cxl_dev_state *cxlds,
 	return 0;
 }
 EXPORT_SYMBOL_NS_GPL(cxl_internal_send_cmd, CXL);
+=======
+int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, u16 opcode, void *in,
+		      size_t in_size, void *out, size_t out_size)
+{
+	const struct cxl_mem_command *cmd = cxl_mem_find_command(opcode);
+	struct cxl_mbox_cmd mbox_cmd = {
+		.opcode = opcode,
+		.payload_in = in,
+		.size_in = in_size,
+		.size_out = out_size,
+		.payload_out = out,
+	};
+	int rc;
+
+	if (out_size > cxlds->payload_size)
+		return -E2BIG;
+
+	rc = cxlds->mbox_send(cxlds, &mbox_cmd);
+	if (rc)
+		return rc;
+
+	if (mbox_cmd.return_code != CXL_MBOX_CMD_RC_SUCCESS)
+		return cxl_mbox_cmd_rc2errno(&mbox_cmd);
+
+	/*
+	 * Variable sized commands can't be validated and so it's up to the
+	 * caller to do that if they wish.
+	 */
+	if (cmd->info.size_out != CXL_VARIABLE_PAYLOAD) {
+		if (mbox_cmd.size_out != out_size)
+			return -EIO;
+	}
+	return 0;
+}
+EXPORT_SYMBOL_NS_GPL(cxl_mbox_send_cmd, CXL);
+>>>>>>> b7ba80a49124 (Commit)
 
 static bool cxl_mem_raw_command_allowed(u16 opcode)
 {
@@ -453,6 +506,7 @@ int cxl_query_cmd(struct cxl_memdev *cxlmd,
 	 * structures.
 	 */
 	cxl_for_each_cmd(cmd) {
+<<<<<<< HEAD
 		struct cxl_command_info info = cmd->info;
 
 		if (test_bit(info.id, cxlmd->cxlds->enabled_cmds))
@@ -461,6 +515,11 @@ int cxl_query_cmd(struct cxl_memdev *cxlmd,
 			info.flags |= CXL_MEM_COMMAND_FLAG_EXCLUSIVE;
 
 		if (copy_to_user(&q->commands[j++], &info, sizeof(info)))
+=======
+		const struct cxl_command_info *info = &cmd->info;
+
+		if (copy_to_user(&q->commands[j++], info, sizeof(*info)))
+>>>>>>> b7ba80a49124 (Commit)
 			return -EFAULT;
 
 		if (j == n_commands)
@@ -563,13 +622,20 @@ int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 *size, u8 *out)
 {
 	u32 remaining = *size;
+=======
+static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 size, u8 *out)
+{
+	u32 remaining = size;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 offset = 0;
 
 	while (remaining) {
 		u32 xfer_size = min_t(u32, remaining, cxlds->payload_size);
+<<<<<<< HEAD
 		struct cxl_mbox_cmd mbox_cmd;
 		struct cxl_mbox_get_log log;
 		int rc;
@@ -600,6 +666,17 @@ static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 *size, u8
 			break;
 		}
 
+=======
+		struct cxl_mbox_get_log log = {
+			.uuid = *uuid,
+			.offset = cpu_to_le32(offset),
+			.length = cpu_to_le32(xfer_size)
+		};
+		int rc;
+
+		rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_LOG, &log, sizeof(log),
+				       out, xfer_size);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rc < 0)
 			return rc;
 
@@ -608,8 +685,11 @@ static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 *size, u8
 		offset += xfer_size;
 	}
 
+<<<<<<< HEAD
 	*size = offset;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -636,25 +716,36 @@ static void cxl_walk_cel(struct cxl_dev_state *cxlds, size_t size, u8 *cel)
 
 		if (!cmd) {
 			dev_dbg(cxlds->dev,
+<<<<<<< HEAD
 				"Opcode 0x%04x unsupported by driver\n", opcode);
+=======
+				"Opcode 0x%04x unsupported by driver", opcode);
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		}
 
 		set_bit(cmd->info.id, cxlds->enabled_cmds);
+<<<<<<< HEAD
 		dev_dbg(cxlds->dev, "Opcode 0x%04x enabled\n", opcode);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
 static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_dev_state *cxlds)
 {
 	struct cxl_mbox_get_supported_logs *ret;
+<<<<<<< HEAD
 	struct cxl_mbox_cmd mbox_cmd;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	ret = kvmalloc(cxlds->payload_size, GFP_KERNEL);
 	if (!ret)
 		return ERR_PTR(-ENOMEM);
 
+<<<<<<< HEAD
 	mbox_cmd = (struct cxl_mbox_cmd) {
 		.opcode = CXL_MBOX_OP_GET_SUPPORTED_LOGS,
 		.size_out = cxlds->payload_size,
@@ -663,12 +754,19 @@ static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_dev_state *cxl
 		.min_out = 2,
 	};
 	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
+=======
+	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_SUPPORTED_LOGS, NULL, 0, ret,
+			       cxlds->payload_size);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc < 0) {
 		kvfree(ret);
 		return ERR_PTR(rc);
 	}
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -721,7 +819,11 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
 			goto out;
 		}
 
+<<<<<<< HEAD
 		rc = cxl_xfer_log(cxlds, &uuid, &size, log);
+=======
+		rc = cxl_xfer_log(cxlds, &uuid, size, log);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rc) {
 			kvfree(log);
 			goto out;
@@ -738,12 +840,17 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
 		/* Found the required CEL */
 		rc = 0;
 	}
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	kvfree(gsl);
 	return rc;
 }
 EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
 
+<<<<<<< HEAD
 /*
  * General Media Event Record
  * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
@@ -941,6 +1048,8 @@ void cxl_mem_get_event_records(struct cxl_dev_state *cxlds, u32 status)
 }
 EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, CXL);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * cxl_mem_get_partition_info - Get partition info
  * @cxlds: The device data for the operation
@@ -956,6 +1065,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, CXL);
 static int cxl_mem_get_partition_info(struct cxl_dev_state *cxlds)
 {
 	struct cxl_mbox_get_partition_info pi;
+<<<<<<< HEAD
 	struct cxl_mbox_cmd mbox_cmd;
 	int rc;
 
@@ -965,6 +1075,13 @@ static int cxl_mem_get_partition_info(struct cxl_dev_state *cxlds)
 		.payload_out = &pi,
 	};
 	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
+=======
+	int rc;
+
+	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_PARTITION_INFO, NULL, 0,
+			       &pi, sizeof(pi));
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 
@@ -993,6 +1110,7 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
 {
 	/* See CXL 2.0 Table 175 Identify Memory Device Output Payload */
 	struct cxl_mbox_identify id;
+<<<<<<< HEAD
 	struct cxl_mbox_cmd mbox_cmd;
 	int rc;
 
@@ -1002,6 +1120,12 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
 		.payload_out = &id,
 	};
 	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
+=======
+	int rc;
+
+	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_IDENTIFY, NULL, 0, &id,
+			       sizeof(id));
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc < 0)
 		return rc;
 
@@ -1081,6 +1205,7 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds)
 }
 EXPORT_SYMBOL_NS_GPL(cxl_mem_create_range_info, CXL);
 
+<<<<<<< HEAD
 int cxl_set_timestamp(struct cxl_dev_state *cxlds)
 {
 	struct cxl_mbox_cmd mbox_cmd;
@@ -1107,6 +1232,8 @@ int cxl_set_timestamp(struct cxl_dev_state *cxlds)
 }
 EXPORT_SYMBOL_NS_GPL(cxl_set_timestamp, CXL);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct cxl_dev_state *cxl_dev_state_create(struct device *dev)
 {
 	struct cxl_dev_state *cxlds;
@@ -1118,7 +1245,10 @@ struct cxl_dev_state *cxl_dev_state_create(struct device *dev)
 	}
 
 	mutex_init(&cxlds->mbox_mutex);
+<<<<<<< HEAD
 	mutex_init(&cxlds->event.log_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cxlds->dev = dev;
 
 	return cxlds;

@@ -93,6 +93,15 @@ struct btrfs_inode {
 	/* the io_tree does range state (DIRTY, LOCKED etc) */
 	struct extent_io_tree io_tree;
 
+<<<<<<< HEAD
+=======
+	/* special utility tree used to record which mirrors have already been
+	 * tried when checksums fail for a given block
+	 */
+	struct rb_root io_failure_tree;
+	spinlock_t io_failure_lock;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Keep track of where the inode has extent items mapped in order to
 	 * make sure the i_size adjustments are accurate
@@ -405,6 +414,7 @@ static inline void btrfs_inode_split_flags(u64 inode_item_flags,
 #define CSUM_FMT				"0x%*phN"
 #define CSUM_FMT_VALUE(size, bytes)		size, bytes
 
+<<<<<<< HEAD
 int btrfs_check_sector_csum(struct btrfs_fs_info *fs_info, struct page *page,
 			    u32 pgoff, u8 *csum, const u8 * const csum_expected);
 blk_status_t btrfs_extract_ordered_extent(struct btrfs_bio *bbio);
@@ -532,5 +542,31 @@ void btrfs_inode_unlock(struct btrfs_inode *inode, unsigned int ilock_flags);
 void btrfs_update_inode_bytes(struct btrfs_inode *inode, const u64 add_bytes,
 			      const u64 del_bytes);
 void btrfs_assert_inode_range_clean(struct btrfs_inode *inode, u64 start, u64 end);
+=======
+static inline void btrfs_print_data_csum_error(struct btrfs_inode *inode,
+		u64 logical_start, u8 *csum, u8 *csum_expected, int mirror_num)
+{
+	struct btrfs_root *root = inode->root;
+	const u32 csum_size = root->fs_info->csum_size;
+
+	/* Output minus objectid, which is more meaningful */
+	if (root->root_key.objectid >= BTRFS_LAST_FREE_OBJECTID)
+		btrfs_warn_rl(root->fs_info,
+"csum failed root %lld ino %lld off %llu csum " CSUM_FMT " expected csum " CSUM_FMT " mirror %d",
+			root->root_key.objectid, btrfs_ino(inode),
+			logical_start,
+			CSUM_FMT_VALUE(csum_size, csum),
+			CSUM_FMT_VALUE(csum_size, csum_expected),
+			mirror_num);
+	else
+		btrfs_warn_rl(root->fs_info,
+"csum failed root %llu ino %llu off %llu csum " CSUM_FMT " expected csum " CSUM_FMT " mirror %d",
+			root->root_key.objectid, btrfs_ino(inode),
+			logical_start,
+			CSUM_FMT_VALUE(csum_size, csum),
+			CSUM_FMT_VALUE(csum_size, csum_expected),
+			mirror_num);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

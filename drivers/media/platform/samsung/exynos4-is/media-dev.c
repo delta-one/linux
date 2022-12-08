@@ -1380,7 +1380,13 @@ static int subdev_notifier_bound(struct v4l2_async_notifier *notifier,
 
 	/* Find platform data for this sensor subdev */
 	for (i = 0; i < ARRAY_SIZE(fmd->sensor); i++)
+<<<<<<< HEAD
 		if (fmd->sensor[i].asd == asd)
+=======
+		if (fmd->sensor[i].asd &&
+		    fmd->sensor[i].asd->match.fwnode ==
+		    of_fwnode_handle(subdev->dev->of_node))
+>>>>>>> b7ba80a49124 (Commit)
 			si = &fmd->sensor[i];
 
 	if (si == NULL)
@@ -1440,10 +1446,13 @@ static int fimc_md_probe(struct platform_device *pdev)
 	if (!fmd)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
 	if (ret < 0)
 		return -ENOMEM;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_init(&fmd->slock);
 	INIT_LIST_HEAD(&fmd->pipelines);
 	fmd->pdev = pdev;
@@ -1474,8 +1483,17 @@ static int fimc_md_probe(struct platform_device *pdev)
 		goto err_v4l2dev;
 
 	pinctrl = devm_pinctrl_get(dev);
+<<<<<<< HEAD
 	if (IS_ERR(pinctrl))
 		dev_dbg(dev, "Failed to get pinctrl: %pe\n", pinctrl);
+=======
+	if (IS_ERR(pinctrl)) {
+		ret = PTR_ERR(pinctrl);
+		if (ret != EPROBE_DEFER)
+			dev_err(dev, "Failed to get pinctrl: %d\n", ret);
+		goto err_clk;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	platform_set_drvdata(pdev, fmd);
 
@@ -1584,11 +1602,15 @@ static int __init fimc_md_init(void)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = platform_driver_register(&fimc_md_driver);
 	if (ret)
 		fimc_unregister_driver();
 
 	return ret;
+=======
+	return platform_driver_register(&fimc_md_driver);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __exit fimc_md_exit(void)

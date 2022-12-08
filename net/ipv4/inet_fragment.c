@@ -133,7 +133,10 @@ static void inet_frags_free_cb(void *ptr, void *arg)
 	count = del_timer_sync(&fq->timer) ? 1 : 0;
 
 	spin_lock_bh(&fq->lock);
+<<<<<<< HEAD
 	fq->flags |= INET_FRAG_DROP;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!(fq->flags & INET_FRAG_COMPLETE)) {
 		fq->flags |= INET_FRAG_COMPLETE;
 		count++;
@@ -261,8 +264,12 @@ static void inet_frag_destroy_rcu(struct rcu_head *head)
 	kmem_cache_free(f->frags_cachep, q);
 }
 
+<<<<<<< HEAD
 unsigned int inet_frag_rbtree_purge(struct rb_root *root,
 				    enum skb_drop_reason reason)
+=======
+unsigned int inet_frag_rbtree_purge(struct rb_root *root)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rb_node *p = rb_first(root);
 	unsigned int sum = 0;
@@ -276,7 +283,11 @@ unsigned int inet_frag_rbtree_purge(struct rb_root *root,
 			struct sk_buff *next = FRAG_CB(skb)->next_frag;
 
 			sum += skb->truesize;
+<<<<<<< HEAD
 			kfree_skb_reason(skb, reason);
+=======
+			kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 			skb = next;
 		}
 	}
@@ -286,6 +297,7 @@ EXPORT_SYMBOL(inet_frag_rbtree_purge);
 
 void inet_frag_destroy(struct inet_frag_queue *q)
 {
+<<<<<<< HEAD
 	unsigned int sum, sum_truesize = 0;
 	enum skb_drop_reason reason;
 	struct inet_frags *f;
@@ -295,12 +307,23 @@ void inet_frag_destroy(struct inet_frag_queue *q)
 	reason = (q->flags & INET_FRAG_DROP) ?
 			SKB_DROP_REASON_FRAG_REASM_TIMEOUT :
 			SKB_CONSUMED;
+=======
+	struct fqdir *fqdir;
+	unsigned int sum, sum_truesize = 0;
+	struct inet_frags *f;
+
+	WARN_ON(!(q->flags & INET_FRAG_COMPLETE));
+>>>>>>> b7ba80a49124 (Commit)
 	WARN_ON(del_timer(&q->timer) != 0);
 
 	/* Release all fragment data. */
 	fqdir = q->fqdir;
 	f = fqdir->f;
+<<<<<<< HEAD
 	sum_truesize = inet_frag_rbtree_purge(&q->rb_fragments, reason);
+=======
+	sum_truesize = inet_frag_rbtree_purge(&q->rb_fragments);
+>>>>>>> b7ba80a49124 (Commit)
 	sum = sum_truesize + f->qsize;
 
 	call_rcu(&q->rcu, inet_frag_destroy_rcu);

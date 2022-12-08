@@ -80,11 +80,18 @@ bs_die:
 	ljmp	$0xf000,$0xfff0
 
 #ifdef CONFIG_EFI_STUB
+<<<<<<< HEAD
 	.org	0x38
 	#
 	# Offset to the PE header.
 	#
 	.long	LINUX_PE_MAGIC
+=======
+	.org	0x3c
+	#
+	# Offset to the PE header.
+	#
+>>>>>>> b7ba80a49124 (Commit)
 	.long	pe_header
 #endif /* CONFIG_EFI_STUB */
 
@@ -407,7 +414,11 @@ xloadflags:
 # define XLF1 0
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_EFI_HANDOVER_PROTOCOL
+=======
+#ifdef CONFIG_EFI_STUB
+>>>>>>> b7ba80a49124 (Commit)
 # ifdef CONFIG_EFI_MIXED
 #  define XLF23 (XLF_EFI_HANDOVER_32|XLF_EFI_HANDOVER_64)
 # else

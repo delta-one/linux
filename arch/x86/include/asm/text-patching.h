@@ -45,7 +45,10 @@ extern void *text_poke(void *addr, const void *opcode, size_t len);
 extern void text_poke_sync(void);
 extern void *text_poke_kgdb(void *addr, const void *opcode, size_t len);
 extern void *text_poke_copy(void *addr, const void *opcode, size_t len);
+<<<<<<< HEAD
 extern void *text_poke_copy_locked(void *addr, const void *opcode, size_t len, bool core_ok);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern void *text_poke_set(void *addr, int c, size_t len);
 extern int poke_int3_handler(struct pt_regs *regs);
 extern void text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate);
@@ -184,6 +187,7 @@ void int3_emulate_ret(struct pt_regs *regs)
 	unsigned long ip = int3_emulate_pop(regs);
 	int3_emulate_jmp(regs, ip);
 }
+<<<<<<< HEAD
 
 static __always_inline
 void int3_emulate_jcc(struct pt_regs *regs, u8 cc, unsigned long ip, unsigned long disp)
@@ -215,6 +219,8 @@ void int3_emulate_jcc(struct pt_regs *regs, u8 cc, unsigned long ip, unsigned lo
 	int3_emulate_jmp(regs, ip);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* !CONFIG_UML_X86 */
 
 #endif /* _ASM_X86_TEXT_PATCHING_H */

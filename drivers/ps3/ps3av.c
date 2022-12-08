@@ -11,14 +11,21 @@
 #include <linux/delay.h>
 #include <linux/notifier.h>
 #include <linux/ioctl.h>
+<<<<<<< HEAD
+=======
+#include <linux/fb.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 
 #include <asm/firmware.h>
 #include <asm/ps3av.h>
 #include <asm/ps3.h>
 
+<<<<<<< HEAD
 #include <video/cmdline.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "vuart.h"
 
 #define BUFSIZE          4096	/* vuart buf size */
@@ -922,7 +929,10 @@ EXPORT_SYMBOL_GPL(ps3av_audio_mute);
 
 static int ps3av_probe(struct ps3_system_bus_device *dev)
 {
+<<<<<<< HEAD
 	const char *mode_option;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int res;
 	int id;
 
@@ -970,9 +980,16 @@ static int ps3av_probe(struct ps3_system_bus_device *dev)
 
 	ps3av_get_hw_conf(ps3av);
 
+<<<<<<< HEAD
 	mode_option = video_get_options(NULL);
 	if (mode_option && !strcmp(mode_option, "safe"))
 		safe_mode = 1;
+=======
+#ifdef CONFIG_FB
+	if (fb_mode_option && !strcmp(fb_mode_option, "safe"))
+		safe_mode = 1;
+#endif /* CONFIG_FB */
+>>>>>>> b7ba80a49124 (Commit)
 	id = ps3av_auto_videomode(&ps3av->av_hw_conf);
 	if (id < 0) {
 		printk(KERN_ERR "%s: invalid id :%d\n", __func__, id);

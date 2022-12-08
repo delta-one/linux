@@ -4,21 +4,31 @@
 $id: http://devicetree.org/schemas/sound/qcom,lpass-rx-macro.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: LPASS(Low Power Audio Subsystem) RX Macro audio codec
+=======
+title: LPASS(Low Power Audio Subsystem) RX Macro audio codec DT bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     enum:
       - qcom,sc7280-lpass-rx-macro
       - qcom,sm8250-lpass-rx-macro
+<<<<<<< HEAD
       - qcom,sm8450-lpass-rx-macro
       - qcom,sc8280xp-lpass-rx-macro
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -34,19 +44,32 @@ properties:
 
   clock-names:
     oneOf:
+<<<<<<< HEAD
       - items:   # for ADSP based platforms
+=======
+      - items:   #for ADSP based platforms
+>>>>>>> b7ba80a49124 (Commit)
           - const: mclk
           - const: npl
           - const: macro
           - const: dcodec
           - const: fsgen
+<<<<<<< HEAD
       - items:   # for ADSP bypass based platforms
+=======
+      - items:   #for ADSP bypass based platforms
+>>>>>>> b7ba80a49124 (Commit)
           - const: mclk
           - const: npl
           - const: fsgen
 
   clock-output-names:
+<<<<<<< HEAD
     maxItems: 1
+=======
+    items:
+      - const: mclk
+>>>>>>> b7ba80a49124 (Commit)
 
   power-domains:
     maxItems: 2
@@ -61,7 +84,11 @@ required:
   - reg
   - "#sound-dai-cells"
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

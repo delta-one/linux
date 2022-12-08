@@ -52,7 +52,10 @@
 
 #include <linux/device.h>
 #include <linux/init.h>
+<<<<<<< HEAD
 #include <linux/completion.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/interrupt.h>
 #include <linux/kernel.h>
 #include <linux/kref.h>
@@ -286,7 +289,10 @@ struct hvcs_struct {
 	char p_location_code[HVCS_CLC_LENGTH + 1]; /* CLC + Null Term */
 	struct list_head next; /* list management */
 	struct vio_dev *vdev;
+<<<<<<< HEAD
 	struct completion *destroyed;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static LIST_HEAD(hvcs_structs);
@@ -434,7 +440,11 @@ static ssize_t hvcs_index_show(struct device *dev, struct device_attribute *attr
 
 static DEVICE_ATTR(index, S_IRUGO, hvcs_index_show, NULL);
 
+<<<<<<< HEAD
 static struct attribute *hvcs_dev_attrs[] = {
+=======
+static struct attribute *hvcs_attrs[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	&dev_attr_partner_vtys.attr,
 	&dev_attr_partner_clcs.attr,
 	&dev_attr_current_vty.attr,
@@ -443,7 +453,13 @@ static struct attribute *hvcs_dev_attrs[] = {
 	NULL,
 };
 
+<<<<<<< HEAD
 ATTRIBUTE_GROUPS(hvcs_dev);
+=======
+static struct attribute_group hvcs_attr_group = {
+	.attrs = hvcs_attrs,
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static ssize_t rescan_show(struct device_driver *ddp, char *buf)
 {
@@ -468,6 +484,7 @@ static ssize_t rescan_store(struct device_driver *ddp, const char * buf,
 
 static DRIVER_ATTR_RW(rescan);
 
+<<<<<<< HEAD
 static struct attribute *hvcs_attrs[] = {
 	&driver_attr_rescan.attr,
 	NULL,
@@ -475,6 +492,8 @@ static struct attribute *hvcs_attrs[] = {
 
 ATTRIBUTE_GROUPS(hvcs);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void hvcs_kick(void)
 {
 	hvcs_kicked = 1;
@@ -665,13 +684,19 @@ static void hvcs_destruct_port(struct tty_port *p)
 {
 	struct hvcs_struct *hvcsd = container_of(p, struct hvcs_struct, port);
 	struct vio_dev *vdev;
+<<<<<<< HEAD
 	struct completion *comp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flags;
 
 	spin_lock(&hvcs_structs_lock);
 	spin_lock_irqsave(&hvcsd->lock, flags);
 
+<<<<<<< HEAD
 	comp = hvcsd->destroyed;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* the list_del poisons the pointers */
 	list_del(&(hvcsd->next));
 
@@ -691,16 +716,25 @@ static void hvcs_destruct_port(struct tty_port *p)
 
 	hvcsd->p_unit_address = 0;
 	hvcsd->p_partition_ID = 0;
+<<<<<<< HEAD
 	hvcsd->destroyed = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hvcs_return_index(hvcsd->index);
 	memset(&hvcsd->p_location_code[0], 0x00, HVCS_CLC_LENGTH + 1);
 
 	spin_unlock_irqrestore(&hvcsd->lock, flags);
 	spin_unlock(&hvcs_structs_lock);
 
+<<<<<<< HEAD
 	kfree(hvcsd);
 	if (comp)
 		complete(comp);
+=======
+	sysfs_remove_group(&vdev->dev.kobj, &hvcs_attr_group);
+
+	kfree(hvcsd);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct tty_port_operations hvcs_port_ops = {
@@ -731,6 +765,10 @@ static int hvcs_probe(
 {
 	struct hvcs_struct *hvcsd;
 	int index, rc;
+<<<<<<< HEAD
+=======
+	int retval;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!dev || !id) {
 		printk(KERN_ERR "HVCS: probed with invalid parameter.\n");
@@ -787,6 +825,16 @@ static int hvcs_probe(
 	list_add_tail(&(hvcsd->next), &hvcs_structs);
 	spin_unlock(&hvcs_structs_lock);
 
+<<<<<<< HEAD
+=======
+	retval = sysfs_create_group(&dev->dev.kobj, &hvcs_attr_group);
+	if (retval) {
+		printk(KERN_ERR "HVCS: Can't create sysfs attrs for vty-server@%X\n",
+		       hvcsd->vdev->unit_address);
+		return retval;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	printk(KERN_INFO "HVCS: vty-server@%X added to the vio bus.\n", dev->unit_address);
 
 	/*
@@ -799,7 +847,10 @@ static int hvcs_probe(
 static void hvcs_remove(struct vio_dev *dev)
 {
 	struct hvcs_struct *hvcsd = dev_get_drvdata(&dev->dev);
+<<<<<<< HEAD
 	DECLARE_COMPLETION_ONSTACK(comp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flags;
 	struct tty_struct *tty;
 
@@ -807,12 +858,17 @@ static void hvcs_remove(struct vio_dev *dev)
 
 	spin_lock_irqsave(&hvcsd->lock, flags);
 
+<<<<<<< HEAD
 	hvcsd->destroyed = &comp;
 	tty = tty_port_tty_get(&hvcsd->port);
+=======
+	tty = hvcsd->port.tty;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_unlock_irqrestore(&hvcsd->lock, flags);
 
 	/*
+<<<<<<< HEAD
 	 * The tty should always be valid at this time unless a
 	 * simultaneous tty close already cleaned up the hvcs_struct.
 	 */
@@ -823,6 +879,21 @@ static void hvcs_remove(struct vio_dev *dev)
 
 	tty_port_put(&hvcsd->port);
 	wait_for_completion(&comp);
+=======
+	 * Let the last holder of this object cause it to be removed, which
+	 * would probably be tty_hangup below.
+	 */
+	tty_port_put(&hvcsd->port);
+
+	/*
+	 * The hangup is a scheduled function which will auto chain call
+	 * hvcs_hangup.  The tty should always be valid at this time unless a
+	 * simultaneous tty close already cleaned up the hvcs_struct.
+	 */
+	if (tty)
+		tty_hangup(tty);
+
+>>>>>>> b7ba80a49124 (Commit)
 	printk(KERN_INFO "HVCS: vty-server@%X removed from the"
 			" vio bus.\n", dev->unit_address);
 };
@@ -832,10 +903,13 @@ static struct vio_driver hvcs_vio_driver = {
 	.probe		= hvcs_probe,
 	.remove		= hvcs_remove,
 	.name		= hvcs_driver_name,
+<<<<<<< HEAD
 	.driver = {
 		.groups = hvcs_groups,
 		.dev_groups = hvcs_dev_groups,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Only called from hvcs_get_pi please */
@@ -1176,10 +1250,14 @@ static void hvcs_close(struct tty_struct *tty, struct file *filp)
 	hvcsd = tty->driver_data;
 
 	spin_lock_irqsave(&hvcsd->lock, flags);
+<<<<<<< HEAD
 	if (hvcsd->port.count == 0) {
 		spin_unlock_irqrestore(&hvcsd->lock, flags);
 		return;
 	} else if (--hvcsd->port.count == 0) {
+=======
+	if (--hvcsd->port.count == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 
 		vio_disable_interrupts(hvcsd->vdev);
 
@@ -1223,9 +1301,18 @@ static void hvcs_hangup(struct tty_struct * tty)
 {
 	struct hvcs_struct *hvcsd = tty->driver_data;
 	unsigned long flags;
+<<<<<<< HEAD
 	int irq;
 
 	spin_lock_irqsave(&hvcsd->lock, flags);
+=======
+	int temp_open_count;
+	int irq;
+
+	spin_lock_irqsave(&hvcsd->lock, flags);
+	/* Preserve this so that we know how many kref refs to put */
+	temp_open_count = hvcsd->port.count;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Don't kref put inside the spinlock because the destruction
@@ -1235,7 +1322,15 @@ static void hvcs_hangup(struct tty_struct * tty)
 	vio_disable_interrupts(hvcsd->vdev);
 
 	hvcsd->todo_mask = 0;
+<<<<<<< HEAD
 	hvcsd->port.tty = NULL;
+=======
+
+	/* I don't think the tty needs the hvcs_struct pointer after a hangup */
+	tty->driver_data = NULL;
+	hvcsd->port.tty = NULL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	hvcsd->port.count = 0;
 
 	/* This will drop any buffered data on the floor which is OK in a hangup
@@ -1248,6 +1343,24 @@ static void hvcs_hangup(struct tty_struct * tty)
 	spin_unlock_irqrestore(&hvcsd->lock, flags);
 
 	free_irq(irq, hvcsd);
+<<<<<<< HEAD
+=======
+
+	/*
+	 * We need to kref_put() for every open_count we have since the
+	 * tty_hangup() function doesn't invoke a close per open connection on a
+	 * non-console device.
+	 */
+	while(temp_open_count) {
+		--temp_open_count;
+		/*
+		 * The final put will trigger destruction of the hvcs_struct.
+		 * NOTE:  If this hangup was signaled from user space then the
+		 * final put will never happen.
+		 */
+		tty_port_put(&hvcsd->port);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1511,6 +1624,16 @@ static int __init hvcs_module_init(void)
 
 	pr_info("HVCS: Driver registered.\n");
 
+<<<<<<< HEAD
+=======
+	/* This needs to be done AFTER the vio_register_driver() call or else
+	 * the kobjects won't be initialized properly.
+	 */
+	rc = driver_create_file(&(hvcs_vio_driver.driver), &driver_attr_rescan);
+	if (rc)
+		pr_warn("HVCS: Failed to create rescan file (err %d)\n", rc);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1535,6 +1658,11 @@ static void __exit hvcs_module_exit(void)
 	hvcs_pi_buff = NULL;
 	spin_unlock(&hvcs_pi_lock);
 
+<<<<<<< HEAD
+=======
+	driver_remove_file(&hvcs_vio_driver.driver, &driver_attr_rescan);
+
+>>>>>>> b7ba80a49124 (Commit)
 	tty_unregister_driver(hvcs_tty_driver);
 
 	hvcs_free_index_list();

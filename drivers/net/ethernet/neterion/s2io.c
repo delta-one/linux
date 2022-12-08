@@ -2386,7 +2386,11 @@ static void free_tx_buffers(struct s2io_nic *nic)
 			skb = s2io_txdl_getskb(&mac_control->fifos[i], txdp, j);
 			if (skb) {
 				swstats->mem_freed += skb->truesize;
+<<<<<<< HEAD
 				dev_kfree_skb_irq(skb);
+=======
+				dev_kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 				cnt++;
 			}
 		}
@@ -7128,8 +7132,14 @@ static int s2io_card_up(struct s2io_nic *sp)
 		if (ret) {
 			DBG_PRINT(ERR_DBG, "%s: Out of memory in Open\n",
 				  dev->name);
+<<<<<<< HEAD
 			ret = -ENOMEM;
 			goto err_fill_buff;
+=======
+			s2io_reset(sp);
+			free_rx_buffers(sp);
+			return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		DBG_PRINT(INFO_DBG, "Buf in ring:%d is %d:\n", i,
 			  ring->rx_bufs_left);
@@ -7167,16 +7177,28 @@ static int s2io_card_up(struct s2io_nic *sp)
 	/* Enable Rx Traffic and interrupts on the NIC */
 	if (start_nic(sp)) {
 		DBG_PRINT(ERR_DBG, "%s: Starting NIC failed\n", dev->name);
+<<<<<<< HEAD
 		ret = -ENODEV;
 		goto err_out;
+=======
+		s2io_reset(sp);
+		free_rx_buffers(sp);
+		return -ENODEV;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Add interrupt service routine */
 	if (s2io_add_isr(sp) != 0) {
 		if (sp->config.intr_type == MSI_X)
 			s2io_rem_isr(sp);
+<<<<<<< HEAD
 		ret = -ENODEV;
 		goto err_out;
+=======
+		s2io_reset(sp);
+		free_rx_buffers(sp);
+		return -ENODEV;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	timer_setup(&sp->alarm_timer, s2io_alarm_handle, 0);
@@ -7196,6 +7218,7 @@ static int s2io_card_up(struct s2io_nic *sp)
 	}
 
 	return 0;
+<<<<<<< HEAD
 
 err_out:
 	if (config->napi) {
@@ -7210,6 +7233,8 @@ err_fill_buff:
 	s2io_reset(sp);
 	free_rx_buffers(sp);
 	return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -7370,9 +7395,16 @@ static int rx_osm_handler(struct ring_info *ring_data, struct RxD_t * rxdp)
 		int get_off = ring_data->rx_curr_get_info.offset;
 		int buf0_len = RXD_GET_BUFFER0_SIZE_3(rxdp->Control_2);
 		int buf2_len = RXD_GET_BUFFER2_SIZE_3(rxdp->Control_2);
+<<<<<<< HEAD
 
 		struct buffAdd *ba = &ring_data->ba[get_block][get_off];
 		skb_put_data(skb, ba->ba_0, buf0_len);
+=======
+		unsigned char *buff = skb_push(skb, buf0_len);
+
+		struct buffAdd *ba = &ring_data->ba[get_block][get_off];
+		memcpy(buff, ba->ba_0, buf0_len);
+>>>>>>> b7ba80a49124 (Commit)
 		skb_put(skb, buf2_len);
 	}
 
@@ -7915,10 +7947,17 @@ s2io_init_nic(struct pci_dev *pdev, const struct pci_device_id *pre)
 		for (i = 0; i < config->rx_ring_num ; i++) {
 			struct ring_info *ring = &mac_control->rings[i];
 
+<<<<<<< HEAD
 			netif_napi_add(dev, &ring->napi, s2io_poll_msix);
 		}
 	} else {
 		netif_napi_add(dev, &sp->napi, s2io_poll_inta);
+=======
+			netif_napi_add(dev, &ring->napi, s2io_poll_msix, 64);
+		}
+	} else {
+		netif_napi_add(dev, &sp->napi, s2io_poll_inta, 64);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Not needed for Herc */

@@ -8,17 +8,28 @@
  * Copyright (c) 2015 Herbert Xu <herbert@gondor.apana.org.au>
  */
 
+<<<<<<< HEAD
 #include <crypto/internal/rng.h>
 #include <linux/atomic.h>
 #include <linux/cryptouser.h>
 #include <linux/err.h>
 #include <linux/kernel.h>
+=======
+#include <linux/atomic.h>
+#include <crypto/internal/rng.h>
+#include <linux/err.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/mutex.h>
 #include <linux/random.h>
 #include <linux/seq_file.h>
 #include <linux/slab.h>
 #include <linux/string.h>
+<<<<<<< HEAD
+=======
+#include <linux/cryptouser.h>
+#include <linux/compiler.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/netlink.h>
 
 #include "internal.h"
@@ -30,6 +41,7 @@ static int crypto_default_rng_refcnt;
 
 int crypto_rng_reset(struct crypto_rng *tfm, const u8 *seed, unsigned int slen)
 {
+<<<<<<< HEAD
 	struct rng_alg *alg = crypto_rng_alg(tfm);
 	u8 *buf = NULL;
 	int err;
@@ -54,6 +66,29 @@ free_buf:
 	kfree_sensitive(buf);
 out:
 	return crypto_rng_errstat(alg, err);
+=======
+	struct crypto_alg *alg = tfm->base.__crt_alg;
+	u8 *buf = NULL;
+	int err;
+
+	if (!seed && slen) {
+		buf = kmalloc(slen, GFP_KERNEL);
+		if (!buf)
+			return -ENOMEM;
+
+		err = get_random_bytes_wait(buf, slen);
+		if (err)
+			goto out;
+		seed = buf;
+	}
+
+	crypto_stats_get(alg);
+	err = crypto_rng_alg(tfm)->seed(tfm, seed, slen);
+	crypto_stats_rng_seed(alg, err);
+out:
+	kfree_sensitive(buf);
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(crypto_rng_reset);
 
@@ -69,8 +104,13 @@ static unsigned int seedsize(struct crypto_alg *alg)
 	return ralg->seedsize;
 }
 
+<<<<<<< HEAD
 static int __maybe_unused crypto_rng_report(
 	struct sk_buff *skb, struct crypto_alg *alg)
+=======
+#ifdef CONFIG_NET
+static int crypto_rng_report(struct sk_buff *skb, struct crypto_alg *alg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct crypto_report_rng rrng;
 
@@ -82,6 +122,15 @@ static int __maybe_unused crypto_rng_report(
 
 	return nla_put(skb, CRYPTOCFGA_REPORT_RNG, sizeof(rrng), &rrng);
 }
+<<<<<<< HEAD
+=======
+#else
+static int crypto_rng_report(struct sk_buff *skb, struct crypto_alg *alg)
+{
+	return -ENOSYS;
+}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static void crypto_rng_show(struct seq_file *m, struct crypto_alg *alg)
 	__maybe_unused;
@@ -91,6 +140,7 @@ static void crypto_rng_show(struct seq_file *m, struct crypto_alg *alg)
 	seq_printf(m, "seedsize     : %u\n", seedsize(alg));
 }
 
+<<<<<<< HEAD
 static int __maybe_unused crypto_rng_report_stat(
 	struct sk_buff *skb, struct crypto_alg *alg)
 {
@@ -112,18 +162,24 @@ static int __maybe_unused crypto_rng_report_stat(
 	return nla_put(skb, CRYPTOCFGA_STAT_RNG, sizeof(rrng), &rrng);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct crypto_type crypto_rng_type = {
 	.extsize = crypto_alg_extsize,
 	.init_tfm = crypto_rng_init_tfm,
 #ifdef CONFIG_PROC_FS
 	.show = crypto_rng_show,
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_USER
 	.report = crypto_rng_report,
 #endif
 #ifdef CONFIG_CRYPTO_STATS
 	.report_stat = crypto_rng_report_stat,
 #endif
+=======
+	.report = crypto_rng_report,
+>>>>>>> b7ba80a49124 (Commit)
 	.maskclear = ~CRYPTO_ALG_TYPE_MASK,
 	.maskset = CRYPTO_ALG_TYPE_MASK,
 	.type = CRYPTO_ALG_TYPE_RNG,
@@ -199,7 +255,10 @@ EXPORT_SYMBOL_GPL(crypto_del_default_rng);
 
 int crypto_register_rng(struct rng_alg *alg)
 {
+<<<<<<< HEAD
 	struct crypto_istat_rng *istat = rng_get_stat(alg);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct crypto_alg *base = &alg->base;
 
 	if (alg->seedsize > PAGE_SIZE / 8)
@@ -209,9 +268,12 @@ int crypto_register_rng(struct rng_alg *alg)
 	base->cra_flags &= ~CRYPTO_ALG_TYPE_MASK;
 	base->cra_flags |= CRYPTO_ALG_TYPE_RNG;
 
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_CRYPTO_STATS))
 		memset(istat, 0, sizeof(*istat));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return crypto_register_alg(base);
 }
 EXPORT_SYMBOL_GPL(crypto_register_rng);

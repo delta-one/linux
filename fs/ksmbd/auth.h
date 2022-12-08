@@ -33,10 +33,16 @@
 
 struct ksmbd_session;
 struct ksmbd_conn;
+<<<<<<< HEAD
 struct ksmbd_work;
 struct kvec;
 
 int ksmbd_crypt_message(struct ksmbd_work *work, struct kvec *iov,
+=======
+struct kvec;
+
+int ksmbd_crypt_message(struct ksmbd_conn *conn, struct kvec *iov,
+>>>>>>> b7ba80a49124 (Commit)
 			unsigned int nvec, int enc);
 void ksmbd_copy_gss_neg_header(void *buf);
 int ksmbd_auth_ntlmv2(struct ksmbd_conn *conn, struct ksmbd_session *sess,

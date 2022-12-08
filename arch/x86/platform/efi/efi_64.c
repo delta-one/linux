@@ -389,6 +389,7 @@ static int __init efi_update_mappings(efi_memory_desc_t *md, unsigned long pf)
 	return err1 || err2;
 }
 
+<<<<<<< HEAD
 bool efi_disable_ibt_for_runtime __ro_after_init = true;
 
 static int __init efi_update_mem_attr(struct mm_struct *mm, efi_memory_desc_t *md,
@@ -398,6 +399,12 @@ static int __init efi_update_mem_attr(struct mm_struct *mm, efi_memory_desc_t *m
 
 	efi_disable_ibt_for_runtime |= !has_ibt;
 
+=======
+static int __init efi_update_mem_attr(struct mm_struct *mm, efi_memory_desc_t *md)
+{
+	unsigned long pf = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (md->attribute & EFI_MEMORY_XP)
 		pf |= _PAGE_NX;
 
@@ -419,7 +426,10 @@ void __init efi_runtime_update_mappings(void)
 	 * exists, since it is intended to supersede EFI_PROPERTIES_TABLE.
 	 */
 	if (efi_enabled(EFI_MEM_ATTR)) {
+<<<<<<< HEAD
 		efi_disable_ibt_for_runtime = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		efi_memattr_apply_permissions(NULL, efi_update_mem_attr);
 		return;
 	}

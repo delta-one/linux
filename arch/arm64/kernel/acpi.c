@@ -13,7 +13,10 @@
 #define pr_fmt(fmt) "ACPI: " fmt
 
 #include <linux/acpi.h>
+<<<<<<< HEAD
 #include <linux/arm-smccc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/cpumask.h>
 #include <linux/efi.h>
 #include <linux/efi-bgrt.h>
@@ -412,6 +415,7 @@ void arch_reserve_mem_area(acpi_physical_address addr, size_t size)
 {
 	memblock_mark_nomap(addr, size);
 }
+<<<<<<< HEAD
 
 #ifdef CONFIG_ACPI_FFH
 /*
@@ -517,3 +521,5 @@ int acpi_ffh_address_space_arch_handler(acpi_integer *value, void *region_contex
 	return ret;
 }
 #endif /* CONFIG_ACPI_FFH */
+=======
+>>>>>>> b7ba80a49124 (Commit)

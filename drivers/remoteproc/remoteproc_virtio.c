@@ -13,8 +13,13 @@
 #include <linux/dma-map-ops.h>
 #include <linux/dma-mapping.h>
 #include <linux/export.h>
+<<<<<<< HEAD
 #include <linux/of_reserved_mem.h>
 #include <linux/platform_device.h>
+=======
+#include <linux/of_platform.h>
+#include <linux/of_reserved_mem.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/remoteproc.h>
 #include <linux/virtio.h>
 #include <linux/virtio_config.h>
@@ -593,11 +598,23 @@ static int rproc_virtio_remove(struct platform_device *pdev)
 }
 
 /* Platform driver */
+<<<<<<< HEAD
+=======
+static const struct of_device_id rproc_virtio_match[] = {
+	{ .compatible = "virtio,rproc" },
+	{},
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver rproc_virtio_driver = {
 	.probe		= rproc_virtio_probe,
 	.remove		= rproc_virtio_remove,
 	.driver		= {
 		.name	= "rproc-virtio",
+<<<<<<< HEAD
+=======
+		.of_match_table	= rproc_virtio_match,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 builtin_platform_driver(rproc_virtio_driver);

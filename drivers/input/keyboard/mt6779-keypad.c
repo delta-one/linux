@@ -5,7 +5,10 @@
  */
 #include <linux/bitops.h>
 #include <linux/clk.h>
+<<<<<<< HEAD
 #include <linux/input.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/input/matrix_keypad.h>
 #include <linux/interrupt.h>
 #include <linux/module.h>

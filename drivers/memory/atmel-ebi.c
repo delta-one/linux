@@ -598,7 +598,11 @@ static int atmel_ebi_probe(struct platform_device *pdev)
 	reg_cells += val;
 
 	for_each_available_child_of_node(np, child) {
+<<<<<<< HEAD
 		if (!of_property_present(child, "reg"))
+=======
+		if (!of_find_property(child, "reg", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		ret = atmel_ebi_dev_setup(ebi, child, reg_cells);

@@ -131,7 +131,11 @@ Phonet resources, as follow::
 Subscription is similarly cancelled using the SIOCPNDELRESOURCE I/O
 control request, or when the socket is closed.
 
+<<<<<<< HEAD
 Note that no more than one socket can be subscribed to any given
+=======
+Note that no more than one socket can be subcribed to any given
+>>>>>>> b7ba80a49124 (Commit)
 resource at a time. If not, ioctl() will return EBUSY.
 
 

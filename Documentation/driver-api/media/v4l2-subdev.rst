@@ -321,7 +321,11 @@ response to video node operations. This hides the complexity of the underlying
 hardware from applications. For complex devices, finer-grained control of the
 device than what the video nodes offer may be required. In those cases, bridge
 drivers that implement :ref:`the media controller API <media_controller>` may
+<<<<<<< HEAD
 opt for making the subdevice operations directly accessible from userspace.
+=======
+opt for making the subdevice operations directly accessible from userpace.
+>>>>>>> b7ba80a49124 (Commit)
 
 Device nodes named ``v4l-subdev``\ *X* can be created in ``/dev`` to access
 sub-devices directly. If a sub-device supports direct userspace configuration
@@ -574,7 +578,11 @@ issues with subdevice drivers that let the V4L2 core manage the active state,
 as they expect to receive the appropriate state as a parameter. To help the
 conversion of subdevice drivers to a managed active state without having to
 convert all callers at the same time, an additional wrapper layer has been
+<<<<<<< HEAD
 added to v4l2_subdev_call(), which handles the NULL case by getting and locking
+=======
+added to v4l2_subdev_call(), which handles the NULL case by geting and locking
+>>>>>>> b7ba80a49124 (Commit)
 the callee's active state with :c:func:`v4l2_subdev_lock_and_get_active_state()`,
 and unlocking the state after the call.
 
@@ -593,6 +601,7 @@ before calling v4l2_subdev_init_finalize():
 
 This shares the driver's private mutex between the controls and the states.
 
+<<<<<<< HEAD
 Streams, multiplexed media pads and internal routing
 ----------------------------------------------------
 
@@ -601,6 +610,8 @@ the V4L2_SUBDEV_FL_STREAMS subdev flag and implementing support for
 centrally managed subdev active state, routing and stream based
 configuration.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 V4L2 sub-device functions and data structures
 ---------------------------------------------
 

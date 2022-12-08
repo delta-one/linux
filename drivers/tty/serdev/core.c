@@ -42,7 +42,11 @@ static struct attribute *serdev_device_attrs[] = {
 };
 ATTRIBUTE_GROUPS(serdev_device);
 
+<<<<<<< HEAD
 static int serdev_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
+=======
+static int serdev_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int rc;
 
@@ -366,7 +370,11 @@ int serdev_device_set_parity(struct serdev_device *serdev,
 	struct serdev_controller *ctrl = serdev->ctrl;
 
 	if (!ctrl || !ctrl->ops->set_parity)
+<<<<<<< HEAD
 		return -EOPNOTSUPP;
+=======
+		return -ENOTSUPP;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ctrl->ops->set_parity(ctrl, parity);
 }
@@ -388,7 +396,11 @@ int serdev_device_get_tiocm(struct serdev_device *serdev)
 	struct serdev_controller *ctrl = serdev->ctrl;
 
 	if (!ctrl || !ctrl->ops->get_tiocm)
+<<<<<<< HEAD
 		return -EOPNOTSUPP;
+=======
+		return -ENOTSUPP;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ctrl->ops->get_tiocm(ctrl);
 }
@@ -399,12 +411,17 @@ int serdev_device_set_tiocm(struct serdev_device *serdev, int set, int clear)
 	struct serdev_controller *ctrl = serdev->ctrl;
 
 	if (!ctrl || !ctrl->ops->set_tiocm)
+<<<<<<< HEAD
 		return -EOPNOTSUPP;
+=======
+		return -ENOTSUPP;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ctrl->ops->set_tiocm(ctrl, set, clear);
 }
 EXPORT_SYMBOL_GPL(serdev_device_set_tiocm);
 
+<<<<<<< HEAD
 int serdev_device_break_ctl(struct serdev_device *serdev, int break_state)
 {
 	struct serdev_controller *ctrl = serdev->ctrl;
@@ -416,6 +433,8 @@ int serdev_device_break_ctl(struct serdev_device *serdev, int break_state)
 }
 EXPORT_SYMBOL_GPL(serdev_device_break_ctl);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int serdev_drv_probe(struct device *dev)
 {
 	const struct serdev_device_driver *sdrv = to_serdev_device_driver(dev->driver);
@@ -545,7 +564,11 @@ static int of_serdev_register_devices(struct serdev_controller *ctrl)
 		if (!serdev)
 			continue;
 
+<<<<<<< HEAD
 		device_set_node(&serdev->dev, of_fwnode_handle(node));
+=======
+		serdev->dev.of_node = node;
+>>>>>>> b7ba80a49124 (Commit)
 
 		err = serdev_device_add(serdev);
 		if (err) {

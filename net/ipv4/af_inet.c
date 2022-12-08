@@ -156,6 +156,10 @@ void inet_sock_destruct(struct sock *sk)
 	kfree(rcu_dereference_protected(inet->inet_opt, 1));
 	dst_release(rcu_dereference_protected(sk->sk_dst_cache, 1));
 	dst_release(rcu_dereference_protected(sk->sk_rx_dst, 1));
+<<<<<<< HEAD
+=======
+	sk_refcnt_debug_dec(sk);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(inet_sock_destruct);
 
@@ -346,7 +350,10 @@ lookup_protocol:
 	sk->sk_destruct	   = inet_sock_destruct;
 	sk->sk_protocol	   = protocol;
 	sk->sk_backlog_rcv = sk->sk_prot->backlog_rcv;
+<<<<<<< HEAD
 	sk->sk_txrehash = READ_ONCE(net->core.sysctl_txrehash);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	inet->uc_ttl	= -1;
 	inet->mc_loop	= 1;
@@ -356,6 +363,11 @@ lookup_protocol:
 	inet->mc_list	= NULL;
 	inet->rcv_tos	= 0;
 
+<<<<<<< HEAD
+=======
+	sk_refcnt_debug_inc(sk);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (inet->inet_num) {
 		/* It assumes that any protocol which allows
 		 * the user to assign a number at socket
@@ -520,9 +532,15 @@ int __inet_bind(struct sock *sk, struct sockaddr *uaddr, int addr_len,
 	/* Make sure we are allowed to bind here. */
 	if (snum || !(inet->bind_address_no_port ||
 		      (flags & BIND_FORCE_ADDRESS_NO_PORT))) {
+<<<<<<< HEAD
 		err = sk->sk_prot->get_port(sk, snum);
 		if (err) {
 			inet->inet_saddr = inet->inet_rcv_saddr = 0;
+=======
+		if (sk->sk_prot->get_port(sk, snum)) {
+			inet->inet_saddr = inet->inet_rcv_saddr = 0;
+			err = -EADDRINUSE;
+>>>>>>> b7ba80a49124 (Commit)
 			goto out_release_sock;
 		}
 		if (!(flags & BIND_FROM_BPF)) {
@@ -556,11 +574,15 @@ int inet_dgram_connect(struct socket *sock, struct sockaddr *uaddr,
 		       int addr_len, int flags)
 {
 	struct sock *sk = sock->sk;
+<<<<<<< HEAD
 	const struct proto *prot;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	if (addr_len < sizeof(uaddr->sa_family))
 		return -EINVAL;
+<<<<<<< HEAD
 
 	/* IPV6_ADDRFORM can change sk->sk_prot under us. */
 	prot = READ_ONCE(sk->sk_prot);
@@ -570,13 +592,24 @@ int inet_dgram_connect(struct socket *sock, struct sockaddr *uaddr,
 
 	if (BPF_CGROUP_PRE_CONNECT_ENABLED(sk)) {
 		err = prot->pre_connect(sk, uaddr, addr_len);
+=======
+	if (uaddr->sa_family == AF_UNSPEC)
+		return sk->sk_prot->disconnect(sk, flags);
+
+	if (BPF_CGROUP_PRE_CONNECT_ENABLED(sk)) {
+		err = sk->sk_prot->pre_connect(sk, uaddr, addr_len);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			return err;
 	}
 
 	if (data_race(!inet_sk(sk)->inet_num) && inet_autobind(sk))
 		return -EAGAIN;
+<<<<<<< HEAD
 	return prot->connect(sk, uaddr, addr_len);
+=======
+	return sk->sk_prot->connect(sk, uaddr, addr_len);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(inet_dgram_connect);
 
@@ -737,11 +770,18 @@ EXPORT_SYMBOL(inet_stream_connect);
 int inet_accept(struct socket *sock, struct socket *newsock, int flags,
 		bool kern)
 {
+<<<<<<< HEAD
 	struct sock *sk1 = sock->sk, *sk2;
 	int err = -EINVAL;
 
 	/* IPV6_ADDRFORM can change sk->sk_prot under us. */
 	sk2 = READ_ONCE(sk1->sk_prot)->accept(sk1, flags, &err, kern);
+=======
+	struct sock *sk1 = sock->sk;
+	int err = -EINVAL;
+	struct sock *sk2 = sk1->sk_prot->accept(sk1, flags, &err, kern);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!sk2)
 		goto do_err;
 
@@ -752,8 +792,11 @@ int inet_accept(struct socket *sock, struct socket *newsock, int flags,
 		  (TCPF_ESTABLISHED | TCPF_SYN_RECV |
 		  TCPF_CLOSE_WAIT | TCPF_CLOSE)));
 
+<<<<<<< HEAD
 	if (test_bit(SOCK_SUPPORT_ZC, &sock->flags))
 		set_bit(SOCK_SUPPORT_ZC, &newsock->flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sock_graft(sk2, newsock);
 
 	newsock->state = SS_CONNECTED;
@@ -831,15 +874,23 @@ ssize_t inet_sendpage(struct socket *sock, struct page *page, int offset,
 		      size_t size, int flags)
 {
 	struct sock *sk = sock->sk;
+<<<<<<< HEAD
 	const struct proto *prot;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unlikely(inet_send_prepare(sk)))
 		return -EAGAIN;
 
+<<<<<<< HEAD
 	/* IPV6_ADDRFORM can change sk->sk_prot under us. */
 	prot = READ_ONCE(sk->sk_prot);
 	if (prot->sendpage)
 		return prot->sendpage(sk, page, offset, size, flags);
+=======
+	if (sk->sk_prot->sendpage)
+		return sk->sk_prot->sendpage(sk, page, offset, size, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	return sock_no_sendpage(sock, page, offset, size, flags);
 }
 EXPORT_SYMBOL(inet_sendpage);
@@ -1228,6 +1279,10 @@ EXPORT_SYMBOL(inet_unregister_protosw);
 
 static int inet_sk_reselect_saddr(struct sock *sk)
 {
+<<<<<<< HEAD
+=======
+	struct inet_bind_hashbucket *prev_addr_hashbucket;
+>>>>>>> b7ba80a49124 (Commit)
 	struct inet_sock *inet = inet_sk(sk);
 	__be32 old_saddr = inet->inet_saddr;
 	__be32 daddr = inet->inet_daddr;
@@ -1257,8 +1312,21 @@ static int inet_sk_reselect_saddr(struct sock *sk)
 		return 0;
 	}
 
+<<<<<<< HEAD
 	err = inet_bhash2_update_saddr(sk, &new_saddr, AF_INET);
 	if (err) {
+=======
+	prev_addr_hashbucket =
+		inet_bhashfn_portaddr(tcp_or_dccp_get_hashinfo(sk), sk,
+				      sock_net(sk), inet->inet_num);
+
+	inet->inet_saddr = inet->inet_rcv_saddr = new_saddr;
+
+	err = inet_bhash2_update_saddr(prev_addr_hashbucket, sk);
+	if (err) {
+		inet->inet_saddr = old_saddr;
+		inet->inet_rcv_saddr = old_saddr;
+>>>>>>> b7ba80a49124 (Commit)
 		ip_rt_put(rt);
 		return err;
 	}
@@ -1322,7 +1390,11 @@ int inet_sk_rebuild_header(struct sock *sk)
 		    sk->sk_state != TCP_SYN_SENT ||
 		    (sk->sk_userlocks & SOCK_BINDADDR_LOCK) ||
 		    (err = inet_sk_reselect_saddr(sk)) != 0)
+<<<<<<< HEAD
 			WRITE_ONCE(sk->sk_err_soft, -err);
+=======
+			sk->sk_err_soft = -err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return err;
@@ -1483,7 +1555,10 @@ struct sk_buff *inet_gro_receive(struct list_head *head, struct sk_buff *skb)
 	if (unlikely(ip_fast_csum((u8 *)iph, 5)))
 		goto out;
 
+<<<<<<< HEAD
 	NAPI_GRO_CB(skb)->proto = proto;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	id = ntohl(*(__be32 *)&iph->id);
 	flush = (u16)((ntohl(*(__be32 *)iph) ^ skb_gro_len(skb)) | (id & ~IP_DF));
 	id >>= 16;
@@ -1617,9 +1692,15 @@ int inet_recv_error(struct sock *sk, struct msghdr *msg, int len, int *addr_len)
 
 int inet_gro_complete(struct sk_buff *skb, int nhoff)
 {
+<<<<<<< HEAD
 	struct iphdr *iph = (struct iphdr *)(skb->data + nhoff);
 	const struct net_offload *ops;
 	__be16 totlen = iph->tot_len;
+=======
+	__be16 newlen = htons(skb->len - nhoff);
+	struct iphdr *iph = (struct iphdr *)(skb->data + nhoff);
+	const struct net_offload *ops;
+>>>>>>> b7ba80a49124 (Commit)
 	int proto = iph->protocol;
 	int err = -ENOSYS;
 
@@ -1628,8 +1709,13 @@ int inet_gro_complete(struct sk_buff *skb, int nhoff)
 		skb_set_inner_network_header(skb, nhoff);
 	}
 
+<<<<<<< HEAD
 	iph_set_totlen(iph, skb->len - nhoff);
 	csum_replace2(&iph->check, totlen, iph->tot_len);
+=======
+	csum_replace2(&iph->check, iph->tot_len, newlen);
+	iph->tot_len = newlen;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ops = rcu_dereference(inet_offloads[proto]);
 	if (WARN_ON(!ops || !ops->callbacks.gro_complete))
@@ -1664,7 +1750,10 @@ int inet_ctl_sock_create(struct sock **sk, unsigned short family,
 	if (rc == 0) {
 		*sk = sock->sk;
 		(*sk)->sk_allocation = GFP_ATOMIC;
+<<<<<<< HEAD
 		(*sk)->sk_use_task_frag = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Unhash it so that IP input processing does not even see it,
 		 * we do not wish this socket to see incoming packets.
@@ -1699,9 +1788,15 @@ u64 snmp_get_cpu_field64(void __percpu *mib, int cpu, int offt,
 	bhptr = per_cpu_ptr(mib, cpu);
 	syncp = (struct u64_stats_sync *)(bhptr + syncp_offset);
 	do {
+<<<<<<< HEAD
 		start = u64_stats_fetch_begin(syncp);
 		v = *(((u64 *)bhptr) + offt);
 	} while (u64_stats_fetch_retry(syncp, start));
+=======
+		start = u64_stats_fetch_begin_irq(syncp);
+		v = *(((u64 *)bhptr) + offt);
+	} while (u64_stats_fetch_retry_irq(syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return v;
 }

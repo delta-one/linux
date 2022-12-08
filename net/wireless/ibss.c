@@ -45,7 +45,12 @@ void __cfg80211_ibss_joined(struct net_device *dev, const u8 *bssid,
 	cfg80211_hold_bss(bss_from_pub(bss));
 	wdev->u.ibss.current_bss = bss_from_pub(bss);
 
+<<<<<<< HEAD
 	cfg80211_upload_connect_keys(wdev);
+=======
+	if (!(wdev->wiphy->flags & WIPHY_FLAG_HAS_STATIC_WEP))
+		cfg80211_upload_connect_keys(wdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	nl80211_send_ibss_bssid(wiphy_to_rdev(wdev->wiphy), dev, bssid,
 				GFP_KERNEL);
@@ -293,7 +298,11 @@ int cfg80211_ibss_wext_join(struct cfg80211_registered_device *rdev,
 		ck = kmemdup(wdev->wext.keys, sizeof(*ck), GFP_KERNEL);
 		if (!ck)
 			return -ENOMEM;
+<<<<<<< HEAD
 		for (i = 0; i < 4; i++)
+=======
+		for (i = 0; i < CFG80211_MAX_WEP_KEYS; i++)
+>>>>>>> b7ba80a49124 (Commit)
 			ck->params[i].key = ck->data[i];
 	}
 	err = __cfg80211_join_ibss(rdev, wdev->netdev,

@@ -28,6 +28,7 @@ void *memset(void *dst, int c, size_t len)
 	efi_bs_call(set_mem, dst, len, c & U8_MAX);
 	return dst;
 }
+<<<<<<< HEAD
 
 /**
  * memcmp - Compare two areas of memory
@@ -46,3 +47,5 @@ int memcmp(const void *cs, const void *ct, size_t count)
 			break;
 	return res;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

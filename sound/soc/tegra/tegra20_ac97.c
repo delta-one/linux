@@ -212,8 +212,13 @@ static int tegra20_ac97_probe(struct snd_soc_dai *dai)
 {
 	struct tegra20_ac97 *ac97 = snd_soc_dai_get_drvdata(dai);
 
+<<<<<<< HEAD
 	snd_soc_dai_init_dma_data(dai,	&ac97->playback_dma_data,
 					&ac97->capture_dma_data);
+=======
+	dai->capture_dma_data = &ac97->capture_dma_data;
+	dai->playback_dma_data = &ac97->playback_dma_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -429,7 +434,11 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void tegra20_ac97_platform_remove(struct platform_device *pdev)
+=======
+static int tegra20_ac97_platform_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tegra20_ac97 *ac97 = dev_get_drvdata(&pdev->dev);
 
@@ -439,6 +448,11 @@ static void tegra20_ac97_platform_remove(struct platform_device *pdev)
 	clk_disable_unprepare(ac97->clk_ac97);
 
 	snd_soc_set_ac97_ops(NULL);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id tegra20_ac97_of_match[] = {
@@ -452,7 +466,11 @@ static struct platform_driver tegra20_ac97_driver = {
 		.of_match_table = tegra20_ac97_of_match,
 	},
 	.probe = tegra20_ac97_platform_probe,
+<<<<<<< HEAD
 	.remove_new = tegra20_ac97_platform_remove,
+=======
+	.remove = tegra20_ac97_platform_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(tegra20_ac97_driver);
 

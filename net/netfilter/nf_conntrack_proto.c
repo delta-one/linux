@@ -121,6 +121,7 @@ const struct nf_conntrack_l4proto *nf_ct_l4proto_find(u8 l4proto)
 };
 EXPORT_SYMBOL_GPL(nf_ct_l4proto_find);
 
+<<<<<<< HEAD
 static bool in_vrf_postrouting(const struct nf_hook_state *state)
 {
 #if IS_ENABLED(CONFIG_NET_L3_MASTER_DEV)
@@ -174,11 +175,23 @@ unsigned int nf_confirm(void *priv,
 		return nf_conntrack_confirm(skb);
 	}
 
+=======
+unsigned int nf_confirm(struct sk_buff *skb, unsigned int protoff,
+			struct nf_conn *ct, enum ip_conntrack_info ctinfo)
+{
+	const struct nf_conn_help *help;
+
+	help = nfct_help(ct);
+>>>>>>> b7ba80a49124 (Commit)
 	if (help) {
 		const struct nf_conntrack_helper *helper;
 		int ret;
 
+<<<<<<< HEAD
 		/* rcu_read_lock()ed by nf_hook */
+=======
+		/* rcu_read_lock()ed by nf_hook_thresh */
+>>>>>>> b7ba80a49124 (Commit)
 		helper = rcu_dereference(help->helper);
 		if (helper) {
 			ret = helper->help(skb,
@@ -189,10 +202,19 @@ unsigned int nf_confirm(void *priv,
 		}
 	}
 
+<<<<<<< HEAD
 	if (seqadj_needed &&
 	    !nf_ct_seq_adjust(skb, ct, ctinfo, protoff)) {
 		NF_CT_STAT_INC_ATOMIC(nf_ct_net(ct), drop);
 		return NF_DROP;
+=======
+	if (test_bit(IPS_SEQ_ADJUST_BIT, &ct->status) &&
+	    !nf_is_loopback_packet(skb)) {
+		if (!nf_ct_seq_adjust(skb, ct, ctinfo, protoff)) {
+			NF_CT_STAT_INC_ATOMIC(nf_ct_net(ct), drop);
+			return NF_DROP;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* We've seen it coming out the other side: confirm it */
@@ -200,6 +222,38 @@ unsigned int nf_confirm(void *priv,
 }
 EXPORT_SYMBOL_GPL(nf_confirm);
 
+<<<<<<< HEAD
+=======
+static bool in_vrf_postrouting(const struct nf_hook_state *state)
+{
+#if IS_ENABLED(CONFIG_NET_L3_MASTER_DEV)
+	if (state->hook == NF_INET_POST_ROUTING &&
+	    netif_is_l3_master(state->out))
+		return true;
+#endif
+	return false;
+}
+
+static unsigned int ipv4_confirm(void *priv,
+				 struct sk_buff *skb,
+				 const struct nf_hook_state *state)
+{
+	enum ip_conntrack_info ctinfo;
+	struct nf_conn *ct;
+
+	ct = nf_ct_get(skb, &ctinfo);
+	if (!ct || ctinfo == IP_CT_RELATED_REPLY)
+		return nf_conntrack_confirm(skb);
+
+	if (in_vrf_postrouting(state))
+		return NF_ACCEPT;
+
+	return nf_confirm(skb,
+			  skb_network_offset(skb) + ip_hdrlen(skb),
+			  ct, ctinfo);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned int ipv4_conntrack_in(void *priv,
 				      struct sk_buff *skb,
 				      const struct nf_hook_state *state)
@@ -246,13 +300,21 @@ static const struct nf_hook_ops ipv4_conntrack_ops[] = {
 		.priority	= NF_IP_PRI_CONNTRACK,
 	},
 	{
+<<<<<<< HEAD
 		.hook		= nf_confirm,
+=======
+		.hook		= ipv4_confirm,
+>>>>>>> b7ba80a49124 (Commit)
 		.pf		= NFPROTO_IPV4,
 		.hooknum	= NF_INET_POST_ROUTING,
 		.priority	= NF_IP_PRI_CONNTRACK_CONFIRM,
 	},
 	{
+<<<<<<< HEAD
 		.hook		= nf_confirm,
+=======
+		.hook		= ipv4_confirm,
+>>>>>>> b7ba80a49124 (Commit)
 		.pf		= NFPROTO_IPV4,
 		.hooknum	= NF_INET_LOCAL_IN,
 		.priority	= NF_IP_PRI_CONNTRACK_CONFIRM,
@@ -284,11 +346,24 @@ getorigdst(struct sock *sk, int optval, void __user *user, int *len)
 
 	/* We only do TCP and SCTP at the moment: is there a better way? */
 	if (tuple.dst.protonum != IPPROTO_TCP &&
+<<<<<<< HEAD
 	    tuple.dst.protonum != IPPROTO_SCTP)
 		return -ENOPROTOOPT;
 
 	if ((unsigned int)*len < sizeof(struct sockaddr_in))
 		return -EINVAL;
+=======
+	    tuple.dst.protonum != IPPROTO_SCTP) {
+		pr_debug("SO_ORIGINAL_DST: Not a TCP/SCTP socket\n");
+		return -ENOPROTOOPT;
+	}
+
+	if ((unsigned int)*len < sizeof(struct sockaddr_in)) {
+		pr_debug("SO_ORIGINAL_DST: len %d not %zu\n",
+			 *len, sizeof(struct sockaddr_in));
+		return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	h = nf_conntrack_find_get(sock_net(sk), &nf_ct_zone_dflt, &tuple);
 	if (h) {
@@ -302,12 +377,23 @@ getorigdst(struct sock *sk, int optval, void __user *user, int *len)
 			.tuple.dst.u3.ip;
 		memset(sin.sin_zero, 0, sizeof(sin.sin_zero));
 
+<<<<<<< HEAD
+=======
+		pr_debug("SO_ORIGINAL_DST: %pI4 %u\n",
+			 &sin.sin_addr.s_addr, ntohs(sin.sin_port));
+>>>>>>> b7ba80a49124 (Commit)
 		nf_ct_put(ct);
 		if (copy_to_user(user, &sin, sizeof(sin)) != 0)
 			return -EFAULT;
 		else
 			return 0;
 	}
+<<<<<<< HEAD
+=======
+	pr_debug("SO_ORIGINAL_DST: Can't find %pI4/%u-%pI4/%u.\n",
+		 &tuple.src.u3.ip, ntohs(tuple.src.u.tcp.port),
+		 &tuple.dst.u3.ip, ntohs(tuple.dst.u.tcp.port));
+>>>>>>> b7ba80a49124 (Commit)
 	return -ENOENT;
 }
 
@@ -350,8 +436,17 @@ ipv6_getorigdst(struct sock *sk, int optval, void __user *user, int *len)
 		return -EINVAL;
 
 	h = nf_conntrack_find_get(sock_net(sk), &nf_ct_zone_dflt, &tuple);
+<<<<<<< HEAD
 	if (!h)
 		return -ENOENT;
+=======
+	if (!h) {
+		pr_debug("IP6T_SO_ORIGINAL_DST: Can't find %pI6c/%u-%pI6c/%u.\n",
+			 &tuple.src.u3.ip6, ntohs(tuple.src.u.tcp.port),
+			 &tuple.dst.u3.ip6, ntohs(tuple.dst.u.tcp.port));
+		return -ENOENT;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ct = nf_ct_tuplehash_to_ctrack(h);
 
@@ -375,6 +470,36 @@ static struct nf_sockopt_ops so_getorigdst6 = {
 	.owner		= THIS_MODULE,
 };
 
+<<<<<<< HEAD
+=======
+static unsigned int ipv6_confirm(void *priv,
+				 struct sk_buff *skb,
+				 const struct nf_hook_state *state)
+{
+	struct nf_conn *ct;
+	enum ip_conntrack_info ctinfo;
+	unsigned char pnum = ipv6_hdr(skb)->nexthdr;
+	__be16 frag_off;
+	int protoff;
+
+	ct = nf_ct_get(skb, &ctinfo);
+	if (!ct || ctinfo == IP_CT_RELATED_REPLY)
+		return nf_conntrack_confirm(skb);
+
+	if (in_vrf_postrouting(state))
+		return NF_ACCEPT;
+
+	protoff = ipv6_skip_exthdr(skb, sizeof(struct ipv6hdr), &pnum,
+				   &frag_off);
+	if (protoff < 0 || (frag_off & htons(~0x7)) != 0) {
+		pr_debug("proto header not found\n");
+		return nf_conntrack_confirm(skb);
+	}
+
+	return nf_confirm(skb, protoff, ct, ctinfo);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned int ipv6_conntrack_in(void *priv,
 				      struct sk_buff *skb,
 				      const struct nf_hook_state *state)
@@ -403,13 +528,21 @@ static const struct nf_hook_ops ipv6_conntrack_ops[] = {
 		.priority	= NF_IP6_PRI_CONNTRACK,
 	},
 	{
+<<<<<<< HEAD
 		.hook		= nf_confirm,
+=======
+		.hook		= ipv6_confirm,
+>>>>>>> b7ba80a49124 (Commit)
 		.pf		= NFPROTO_IPV6,
 		.hooknum	= NF_INET_POST_ROUTING,
 		.priority	= NF_IP6_PRI_LAST,
 	},
 	{
+<<<<<<< HEAD
 		.hook		= nf_confirm,
+=======
+		.hook		= ipv6_confirm,
+>>>>>>> b7ba80a49124 (Commit)
 		.pf		= NFPROTO_IPV6,
 		.hooknum	= NF_INET_LOCAL_IN,
 		.priority	= NF_IP6_PRI_LAST - 1,

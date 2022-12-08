@@ -54,7 +54,10 @@
 #define _GNU_SOURCE
 #endif
 #include <asm/types.h>
+<<<<<<< HEAD
 #include <ctype.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <errno.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -986,6 +989,7 @@ void __wait_for_test(struct __test_metadata *t)
 	}
 }
 
+<<<<<<< HEAD
 static void test_harness_list_tests(void)
 {
 	struct __fixture_variant_metadata *v;
@@ -1107,6 +1111,8 @@ static bool test_enabled(int argc, char **argv,
 	return !has_positive;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void __run_test(struct __fixture_metadata *f,
 		struct __fixture_variant_metadata *variant,
 		struct __test_metadata *t)
@@ -1154,18 +1160,28 @@ void __run_test(struct __fixture_metadata *f,
 			f->name, variant->name[0] ? "." : "", variant->name, t->name);
 }
 
+<<<<<<< HEAD
 static int test_harness_run(int argc, char **argv)
+=======
+static int test_harness_run(int __attribute__((unused)) argc,
+			    char __attribute__((unused)) **argv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct __fixture_variant_metadata no_variant = { .name = "", };
 	struct __fixture_variant_metadata *v;
 	struct __fixture_metadata *f;
 	struct __test_results *results;
 	struct __test_metadata *t;
+<<<<<<< HEAD
 	int ret;
+=======
+	int ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int case_count = 0, test_count = 0;
 	unsigned int count = 0;
 	unsigned int pass_count = 0;
 
+<<<<<<< HEAD
 	ret = test_harness_argv_check(argc, argv);
 	if (ret != KSFT_PASS)
 		return ret;
@@ -1180,6 +1196,13 @@ static int test_harness_run(int argc, char **argv)
 
 			if (old_tests != test_count)
 				case_count++;
+=======
+	for (f = __fixture_list; f; f = f->next) {
+		for (v = f->variant ?: &no_variant; v; v = v->next) {
+			case_count++;
+			for (t = f->tests; t; t = t->next)
+				test_count++;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -1193,8 +1216,11 @@ static int test_harness_run(int argc, char **argv)
 	for (f = __fixture_list; f; f = f->next) {
 		for (v = f->variant ?: &no_variant; v; v = v->next) {
 			for (t = f->tests; t; t = t->next) {
+<<<<<<< HEAD
 				if (!test_enabled(argc, argv, f, v, t))
 					continue;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				count++;
 				t->results = results;
 				__run_test(f, v, t);

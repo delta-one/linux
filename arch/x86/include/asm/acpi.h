@@ -14,7 +14,10 @@
 #include <asm/mmu.h>
 #include <asm/mpspec.h>
 #include <asm/x86_init.h>
+<<<<<<< HEAD
 #include <asm/cpufeature.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_ACPI_APEI
 # include <asm/pgtable_types.h>
@@ -64,6 +67,7 @@ extern int (*acpi_suspend_lowlevel)(void);
 /* Physical address to resume after wakeup */
 unsigned long acpi_get_wakeup_address(void);
 
+<<<<<<< HEAD
 static inline bool acpi_skip_set_wakeup_address(void)
 {
 	return cpu_feature_enabled(X86_FEATURE_XENPV);
@@ -71,6 +75,8 @@ static inline bool acpi_skip_set_wakeup_address(void)
 
 #define acpi_skip_set_wakeup_address acpi_skip_set_wakeup_address
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Check if the CPU can handle C2 and deeper
  */

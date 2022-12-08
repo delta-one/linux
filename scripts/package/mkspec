@@ -1,7 +1,11 @@
 #!/bin/sh
 #
 #	Output a simple RPM spec file.
+<<<<<<< HEAD
 #	This version assumes a minimum of RPM 4.13
+=======
+#	This version assumes a minimum of RPM 4.0.3.
+>>>>>>> b7ba80a49124 (Commit)
 #
 #	The only gothic bit here is redefining install_post to avoid
 #	stripping the symbols from files in the kernel which we want
@@ -15,6 +19,7 @@ if [ "$1" = prebuilt ]; then
 	MAKE="$MAKE -f $srctree/Makefile"
 else
 	S=
+<<<<<<< HEAD
 
 	mkdir -p rpmbuild/SOURCES
 	cp linux.tar.gz rpmbuild/SOURCES
@@ -24,12 +29,21 @@ else
 fi
 
 if grep -q CONFIG_MODULES=y include/config/auto.conf; then
+=======
+fi
+
+if grep -q CONFIG_MODULES=y .config; then
+>>>>>>> b7ba80a49124 (Commit)
 	M=
 else
 	M=DEL
 fi
 
+<<<<<<< HEAD
 if grep -q CONFIG_DRM=y include/config/auto.conf; then
+=======
+if grep -q CONFIG_DRM=y .config; then
+>>>>>>> b7ba80a49124 (Commit)
 	PROVIDES=kernel-drm
 fi
 
@@ -53,6 +67,7 @@ sed -e '/^DEL/d' -e 's/^\t*//' <<EOF
 	Group: System Environment/Kernel
 	Vendor: The Linux Community
 	URL: https://www.kernel.org
+<<<<<<< HEAD
 $S	Source0: linux.tar.gz
 $S	Source1: config
 $S	Source2: diff.patch
@@ -62,6 +77,10 @@ $S	BuildRequires: bc binutils bison dwarves
 $S	BuildRequires: (elfutils-libelf-devel or libelf-devel) flex
 $S	BuildRequires: gcc make openssl openssl-devel perl python3 rsync
 
+=======
+$S	Source: kernel-$__KERNELRELEASE.tar.gz
+	Provides: $PROVIDES
+>>>>>>> b7ba80a49124 (Commit)
 	# $UTS_MACHINE as a fallback of _arch in case
 	# /usr/lib/rpm/platform/*/macros was not included.
 	%define _arch %{?_arch:$UTS_MACHINE}
@@ -92,6 +111,7 @@ $S$M	This package provides kernel headers and makefiles sufficient to build modu
 $S$M	against the $__KERNELRELEASE kernel package.
 $S$M
 $S	%prep
+<<<<<<< HEAD
 $S	%setup -q -n linux
 $S	cp %{SOURCE1} .config
 $S	if [ -s %{SOURCE2} ]; then
@@ -103,20 +123,38 @@ $S	fi
 $S
 $S	%build
 $S	$MAKE %{?_smp_mflags} KERNELRELEASE=$KERNELRELEASE KBUILD_BUILD_VERSION=%{release}
+=======
+$S	%setup -q
+$S
+$S	%build
+$S	$MAKE %{?_smp_mflags} KBUILD_BUILD_VERSION=%{release}
+>>>>>>> b7ba80a49124 (Commit)
 $S
 	%install
 	mkdir -p %{buildroot}/boot
 	%ifarch ia64
 	mkdir -p %{buildroot}/boot/efi
+<<<<<<< HEAD
 	cp \$($MAKE -s image_name) %{buildroot}/boot/efi/vmlinuz-$KERNELRELEASE
 	ln -s efi/vmlinuz-$KERNELRELEASE %{buildroot}/boot/
 	%else
 	cp \$($MAKE -s image_name) %{buildroot}/boot/vmlinuz-$KERNELRELEASE
+=======
+	cp \$($MAKE image_name) %{buildroot}/boot/efi/vmlinuz-$KERNELRELEASE
+	ln -s efi/vmlinuz-$KERNELRELEASE %{buildroot}/boot/
+	%else
+	cp \$($MAKE image_name) %{buildroot}/boot/vmlinuz-$KERNELRELEASE
+>>>>>>> b7ba80a49124 (Commit)
 	%endif
 $M	$MAKE %{?_smp_mflags} INSTALL_MOD_PATH=%{buildroot} modules_install
 	$MAKE %{?_smp_mflags} INSTALL_HDR_PATH=%{buildroot}/usr headers_install
 	cp System.map %{buildroot}/boot/System.map-$KERNELRELEASE
 	cp .config %{buildroot}/boot/config-$KERNELRELEASE
+<<<<<<< HEAD
+=======
+	bzip2 -9 --keep vmlinux
+	mv vmlinux.bz2 %{buildroot}/boot/vmlinux-$KERNELRELEASE.bz2
+>>>>>>> b7ba80a49124 (Commit)
 $S$M	rm -f %{buildroot}/lib/modules/$KERNELRELEASE/build
 $S$M	rm -f %{buildroot}/lib/modules/$KERNELRELEASE/source
 $S$M	mkdir -p %{buildroot}/usr/src/kernels/$KERNELRELEASE

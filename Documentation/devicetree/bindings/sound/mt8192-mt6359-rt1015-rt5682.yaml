@@ -21,11 +21,19 @@ properties:
       - mediatek,mt8192_mt6359_rt1015p_rt5682s
 
   mediatek,platform:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/phandle
     description: The phandle of MT8192 ASoC platform.
 
   mediatek,hdmi-codec:
     $ref: /schemas/types.yaml#/definitions/phandle
+=======
+    $ref: "/schemas/types.yaml#/definitions/phandle"
+    description: The phandle of MT8192 ASoC platform.
+
+  mediatek,hdmi-codec:
+    $ref: "/schemas/types.yaml#/definitions/phandle"
+>>>>>>> b7ba80a49124 (Commit)
     description: The phandle of HDMI codec.
 
   headset-codec:
@@ -34,7 +42,11 @@ properties:
 
     properties:
       sound-dai:
+<<<<<<< HEAD
         maxItems: 1
+=======
+        $ref: /schemas/types.yaml#/definitions/phandle
+>>>>>>> b7ba80a49124 (Commit)
     required:
       - sound-dai
 
@@ -48,6 +60,10 @@ properties:
         maxItems: 2
         items:
           maxItems: 1
+<<<<<<< HEAD
+=======
+        $ref: /schemas/types.yaml#/definitions/phandle-array
+>>>>>>> b7ba80a49124 (Commit)
     required:
       - sound-dai
 

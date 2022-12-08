@@ -20,6 +20,7 @@ static int dbgfs_nr_ctxs;
 static struct dentry **dbgfs_dirs;
 static DEFINE_MUTEX(damon_dbgfs_lock);
 
+<<<<<<< HEAD
 static void damon_dbgfs_warn_deprecation(void)
 {
 	pr_warn_once("DAMON debugfs interface is deprecated, "
@@ -28,6 +29,8 @@ static void damon_dbgfs_warn_deprecation(void)
 		     "linux-mm@kvack.org.\n");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Returns non-empty string on success, negative error code otherwise.
  */
@@ -719,8 +722,11 @@ out:
 
 static int damon_dbgfs_open(struct inode *inode, struct file *file)
 {
+<<<<<<< HEAD
 	damon_dbgfs_warn_deprecation();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	file->private_data = inode->i_private;
 
 	return nonseekable_open(inode, file);
@@ -900,7 +906,10 @@ out:
 static int dbgfs_rm_context(char *name)
 {
 	struct dentry *root, *dir, **new_dirs;
+<<<<<<< HEAD
 	struct inode *inode;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct damon_ctx **new_ctxs;
 	int i, j;
 	int ret = 0;
@@ -916,12 +925,15 @@ static int dbgfs_rm_context(char *name)
 	if (!dir)
 		return -ENOENT;
 
+<<<<<<< HEAD
 	inode = d_inode(dir);
 	if (!S_ISDIR(inode->i_mode)) {
 		ret = -EINVAL;
 		goto out_dput;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	new_dirs = kmalloc_array(dbgfs_nr_ctxs - 1, sizeof(*dbgfs_dirs),
 			GFP_KERNEL);
 	if (!new_dirs) {
@@ -1049,6 +1061,7 @@ static ssize_t dbgfs_monitor_on_write(struct file *file,
 	return ret;
 }
 
+<<<<<<< HEAD
 static int damon_dbgfs_static_file_open(struct inode *inode, struct file *file)
 {
 	damon_dbgfs_warn_deprecation();
@@ -1057,16 +1070,25 @@ static int damon_dbgfs_static_file_open(struct inode *inode, struct file *file)
 
 static const struct file_operations mk_contexts_fops = {
 	.open = damon_dbgfs_static_file_open,
+=======
+static const struct file_operations mk_contexts_fops = {
+>>>>>>> b7ba80a49124 (Commit)
 	.write = dbgfs_mk_context_write,
 };
 
 static const struct file_operations rm_contexts_fops = {
+<<<<<<< HEAD
 	.open = damon_dbgfs_static_file_open,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.write = dbgfs_rm_context_write,
 };
 
 static const struct file_operations monitor_on_fops = {
+<<<<<<< HEAD
 	.open = damon_dbgfs_static_file_open,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.read = dbgfs_monitor_on_read,
 	.write = dbgfs_monitor_on_write,
 };

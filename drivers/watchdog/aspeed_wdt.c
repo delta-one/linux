@@ -5,6 +5,7 @@
  * Joel Stanley <joel@jms.id.au>
  */
 
+<<<<<<< HEAD
 #include <linux/bits.h>
 #include <linux/delay.h>
 #include <linux/interrupt.h>
@@ -14,6 +15,13 @@
 #include <linux/module.h>
 #include <linux/of.h>
 #include <linux/of_irq.h>
+=======
+#include <linux/delay.h>
+#include <linux/io.h>
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/of.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <linux/watchdog.h>
 
@@ -22,27 +30,41 @@ module_param(nowayout, bool, 0);
 MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
 				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
 
+<<<<<<< HEAD
 struct aspeed_wdt_config {
 	u32 ext_pulse_width_mask;
 	u32 irq_shift;
 	u32 irq_mask;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct aspeed_wdt {
 	struct watchdog_device	wdd;
 	void __iomem		*base;
 	u32			ctrl;
+<<<<<<< HEAD
 	const struct aspeed_wdt_config *cfg;
+=======
+};
+
+struct aspeed_wdt_config {
+	u32 ext_pulse_width_mask;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct aspeed_wdt_config ast2400_config = {
 	.ext_pulse_width_mask = 0xff,
+<<<<<<< HEAD
 	.irq_shift = 0,
 	.irq_mask = 0,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct aspeed_wdt_config ast2500_config = {
 	.ext_pulse_width_mask = 0xfffff,
+<<<<<<< HEAD
 	.irq_shift = 12,
 	.irq_mask = GENMASK(31, 12),
 };
@@ -51,12 +73,18 @@ static const struct aspeed_wdt_config ast2600_config = {
 	.ext_pulse_width_mask = 0xfffff,
 	.irq_shift = 0,
 	.irq_mask = GENMASK(31, 10),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct of_device_id aspeed_wdt_of_table[] = {
 	{ .compatible = "aspeed,ast2400-wdt", .data = &ast2400_config },
 	{ .compatible = "aspeed,ast2500-wdt", .data = &ast2500_config },
+<<<<<<< HEAD
 	{ .compatible = "aspeed,ast2600-wdt", .data = &ast2600_config },
+=======
+	{ .compatible = "aspeed,ast2600-wdt", .data = &ast2500_config },
+>>>>>>> b7ba80a49124 (Commit)
 	{ },
 };
 MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
@@ -75,7 +103,10 @@ MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
 #define   WDT_CTRL_RESET_SYSTEM		BIT(1)
 #define   WDT_CTRL_ENABLE		BIT(0)
 #define WDT_TIMEOUT_STATUS	0x10
+<<<<<<< HEAD
 #define   WDT_TIMEOUT_STATUS_IRQ		BIT(2)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define   WDT_TIMEOUT_STATUS_BOOT_SECONDARY	BIT(1)
 #define WDT_CLEAR_TIMEOUT_STATUS	0x14
 #define   WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION	BIT(0)
@@ -178,6 +209,7 @@ static int aspeed_wdt_set_timeout(struct watchdog_device *wdd,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int aspeed_wdt_set_pretimeout(struct watchdog_device *wdd,
 				     unsigned int pretimeout)
 {
@@ -198,6 +230,8 @@ static int aspeed_wdt_set_pretimeout(struct watchdog_device *wdd,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int aspeed_wdt_restart(struct watchdog_device *wdd,
 			      unsigned long action, void *data)
 {
@@ -270,7 +304,10 @@ static const struct watchdog_ops aspeed_wdt_ops = {
 	.stop		= aspeed_wdt_stop,
 	.ping		= aspeed_wdt_ping,
 	.set_timeout	= aspeed_wdt_set_timeout,
+<<<<<<< HEAD
 	.set_pretimeout = aspeed_wdt_set_pretimeout,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.restart	= aspeed_wdt_restart,
 	.owner		= THIS_MODULE,
 };
@@ -282,6 +319,7 @@ static const struct watchdog_info aspeed_wdt_info = {
 	.identity	= KBUILD_MODNAME,
 };
 
+<<<<<<< HEAD
 static const struct watchdog_info aspeed_wdt_pretimeout_info = {
 	.options	= WDIOF_KEEPALIVEPING
 			| WDIOF_PRETIMEOUT
@@ -305,6 +343,12 @@ static irqreturn_t aspeed_wdt_irq(int irq, void *arg)
 static int aspeed_wdt_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
+=======
+static int aspeed_wdt_probe(struct platform_device *pdev)
+{
+	struct device *dev = &pdev->dev;
+	const struct aspeed_wdt_config *config;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct of_device_id *ofdid;
 	struct aspeed_wdt *wdt;
 	struct device_node *np;
@@ -317,6 +361,7 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
 	if (!wdt)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	np = dev->of_node;
 
 	ofdid = of_match_node(aspeed_wdt_of_table, np);
@@ -324,11 +369,14 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
 		return -EINVAL;
 	wdt->cfg = ofdid->data;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	wdt->base = devm_platform_ioremap_resource(pdev, 0);
 	if (IS_ERR(wdt->base))
 		return PTR_ERR(wdt->base);
 
 	wdt->wdd.info = &aspeed_wdt_info;
+<<<<<<< HEAD
 
 	if (wdt->cfg->irq_mask) {
 		int irq = platform_get_irq_optional(pdev, 0);
@@ -344,6 +392,8 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	wdt->wdd.ops = &aspeed_wdt_ops;
 	wdt->wdd.max_hw_heartbeat_ms = WDT_MAX_TIMEOUT_MS;
 	wdt->wdd.parent = dev;
@@ -353,6 +403,16 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
 
 	watchdog_set_nowayout(&wdt->wdd, nowayout);
 
+<<<<<<< HEAD
+=======
+	np = dev->of_node;
+
+	ofdid = of_match_node(aspeed_wdt_of_table, np);
+	if (!ofdid)
+		return -EINVAL;
+	config = ofdid->data;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * On clock rates:
 	 *  - ast2400 wdt can run at PCLK, or 1MHz
@@ -404,6 +464,7 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
 		(of_device_is_compatible(np, "aspeed,ast2600-wdt"))) {
 		u32 reg = readl(wdt->base + WDT_RESET_WIDTH);
 
+<<<<<<< HEAD
 		reg &= wdt->cfg->ext_pulse_width_mask;
 		if (of_property_read_bool(np, "aspeed,ext-active-high"))
 			reg |= WDT_ACTIVE_HIGH_MAGIC;
@@ -413,16 +474,34 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
 		writel(reg, wdt->base + WDT_RESET_WIDTH);
 
 		reg &= wdt->cfg->ext_pulse_width_mask;
+=======
+		reg &= config->ext_pulse_width_mask;
+>>>>>>> b7ba80a49124 (Commit)
 		if (of_property_read_bool(np, "aspeed,ext-push-pull"))
 			reg |= WDT_PUSH_PULL_MAGIC;
 		else
 			reg |= WDT_OPEN_DRAIN_MAGIC;
 
 		writel(reg, wdt->base + WDT_RESET_WIDTH);
+<<<<<<< HEAD
 	}
 
 	if (!of_property_read_u32(np, "aspeed,ext-pulse-duration", &duration)) {
 		u32 max_duration = wdt->cfg->ext_pulse_width_mask + 1;
+=======
+
+		reg &= config->ext_pulse_width_mask;
+		if (of_property_read_bool(np, "aspeed,ext-active-high"))
+			reg |= WDT_ACTIVE_HIGH_MAGIC;
+		else
+			reg |= WDT_ACTIVE_LOW_MAGIC;
+
+		writel(reg, wdt->base + WDT_RESET_WIDTH);
+	}
+
+	if (!of_property_read_u32(np, "aspeed,ext-pulse-duration", &duration)) {
+		u32 max_duration = config->ext_pulse_width_mask + 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (duration == 0 || duration > max_duration) {
 			dev_err(dev, "Invalid pulse duration: %uus\n",

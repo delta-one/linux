@@ -175,7 +175,12 @@ static void dmard10_shutdown_cleanup(void *client)
 	dmard10_shutdown(client);
 }
 
+<<<<<<< HEAD
 static int dmard10_probe(struct i2c_client *client)
+=======
+static int dmard10_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 	struct iio_dev *indio_dev;
@@ -241,7 +246,11 @@ static struct i2c_driver dmard10_driver = {
 		.name = "dmard10",
 		.pm = pm_sleep_ptr(&dmard10_pm_ops),
 	},
+<<<<<<< HEAD
 	.probe_new	= dmard10_probe,
+=======
+	.probe		= dmard10_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= dmard10_i2c_id,
 };
 

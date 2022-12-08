@@ -95,7 +95,10 @@ config ARCH_TEGRA_210_SOC
 
 config ARCH_TEGRA_186_SOC
 	bool "NVIDIA Tegra186 SoC"
+<<<<<<< HEAD
 	depends on !CPU_BIG_ENDIAN
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select MAILBOX
 	select TEGRA_BPMP
 	select TEGRA_HSP_MBOX
@@ -111,7 +114,10 @@ config ARCH_TEGRA_186_SOC
 
 config ARCH_TEGRA_194_SOC
 	bool "NVIDIA Tegra194 SoC"
+<<<<<<< HEAD
 	depends on !CPU_BIG_ENDIAN
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select MAILBOX
 	select PINCTRL_TEGRA194
 	select TEGRA_BPMP
@@ -123,7 +129,10 @@ config ARCH_TEGRA_194_SOC
 
 config ARCH_TEGRA_234_SOC
 	bool "NVIDIA Tegra234 SoC"
+<<<<<<< HEAD
 	depends on !CPU_BIG_ENDIAN
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select MAILBOX
 	select TEGRA_BPMP
 	select TEGRA_HSP_MBOX
@@ -146,7 +155,10 @@ config SOC_TEGRA_FLOWCTRL
 config SOC_TEGRA_PMC
 	bool
 	select GENERIC_PINCONF
+<<<<<<< HEAD
 	select IRQ_DOMAIN_HIERARCHY
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select PM_OPP
 	select PM_GENERIC_DOMAINS
 	select REGMAP

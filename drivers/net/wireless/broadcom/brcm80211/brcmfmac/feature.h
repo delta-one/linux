@@ -29,8 +29,11 @@
  * DOT11H: firmware supports 802.11h
  * SAE: simultaneous authentication of equals
  * FWAUTH: Firmware authenticator
+<<<<<<< HEAD
  * DUMP_OBSS: Firmware has capable to dump obss info to support ACS
  * SCAN_V2: Version 2 scan params
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 #define BRCMF_FEAT_LIST \
 	BRCMF_FEAT_DEF(MBSS) \
@@ -53,11 +56,15 @@
 	BRCMF_FEAT_DEF(MONITOR_FMT_HW_RX_HDR) \
 	BRCMF_FEAT_DEF(DOT11H) \
 	BRCMF_FEAT_DEF(SAE) \
+<<<<<<< HEAD
 	BRCMF_FEAT_DEF(FWAUTH) \
 	BRCMF_FEAT_DEF(DUMP_OBSS) \
 	BRCMF_FEAT_DEF(SCAN_V2) \
 	BRCMF_FEAT_DEF(PMKID_V2) \
 	BRCMF_FEAT_DEF(PMKID_V3)
+=======
+	BRCMF_FEAT_DEF(FWAUTH)
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Quirks:

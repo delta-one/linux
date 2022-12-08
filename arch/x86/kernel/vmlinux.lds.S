@@ -129,14 +129,28 @@ SECTIONS
 		HEAD_TEXT
 		TEXT_TEXT
 		SCHED_TEXT
+<<<<<<< HEAD
 		LOCK_TEXT
 		KPROBES_TEXT
 		SOFTIRQENTRY_TEXT
+=======
+		CPUIDLE_TEXT
+		LOCK_TEXT
+		KPROBES_TEXT
+		ALIGN_ENTRY_TEXT_BEGIN
+		ENTRY_TEXT
+		ALIGN_ENTRY_TEXT_END
+		SOFTIRQENTRY_TEXT
+		STATIC_CALL_TEXT
+		*(.gnu.warning)
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_RETPOLINE
 		__indirect_thunk_start = .;
 		*(.text.__x86.*)
 		__indirect_thunk_end = .;
 #endif
+<<<<<<< HEAD
 		STATIC_CALL_TEXT
 
 		ALIGN_ENTRY_TEXT_BEGIN
@@ -144,6 +158,8 @@ SECTIONS
 		ALIGN_ENTRY_TEXT_END
 		*(.gnu.warning)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} :text =0xcccc
 
 	/* End of text section, which should occupy whole number of pages */
@@ -290,6 +306,7 @@ SECTIONS
 		*(.return_sites)
 		__return_sites_end = .;
 	}
+<<<<<<< HEAD
 
 	. = ALIGN(8);
 	.call_sites : AT(ADDR(.call_sites) - LOAD_OFFSET) {
@@ -297,6 +314,8 @@ SECTIONS
 		*(.call_sites)
 		__call_sites_end = .;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #ifdef CONFIG_X86_KERNEL_IBT
@@ -308,6 +327,7 @@ SECTIONS
 	}
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_FINEIBT
 	. = ALIGN(8);
 	.cfi_sites : AT(ADDR(.cfi_sites) - LOAD_OFFSET) {
@@ -317,6 +337,8 @@ SECTIONS
 	}
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * struct alt_inst entries. From the header (alternative.h):
 	 * "Alternative instructions for different CPU types or capabilities"
@@ -509,3 +531,14 @@ INIT_PER_CPU(irq_stack_backing_store);
 #endif
 
 #endif /* CONFIG_X86_64 */
+<<<<<<< HEAD
+=======
+
+#ifdef CONFIG_KEXEC_CORE
+#include <asm/kexec.h>
+
+. = ASSERT(kexec_control_code_size <= KEXEC_CONTROL_CODE_MAX_SIZE,
+           "kexec control code size is too big");
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)

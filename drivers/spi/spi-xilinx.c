@@ -83,7 +83,11 @@ struct xilinx_spi {
 	void __iomem	*regs;	/* virt. address of the control registers */
 
 	int		irq;
+<<<<<<< HEAD
 	bool force_irq;		/* force irq to setup master inhibit */
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	u8 *rx_ptr;		/* pointer in the Tx buffer */
 	const u8 *tx_ptr;	/* pointer in the Rx buffer */
 	u8 bytes_per_word;
@@ -213,7 +217,11 @@ static void xilinx_spi_chipselect(struct spi_device *spi, int is_on)
 	 */
 
 	cs = xspi->cs_inactive;
+<<<<<<< HEAD
 	cs ^= BIT(spi_get_chipselect(spi, 0));
+=======
+	cs ^= BIT(spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Activate the chip select */
 	xspi->write_fn(cs, xspi->regs + XSPI_SSR_OFFSET);
@@ -228,9 +236,15 @@ static int xilinx_spi_setup_transfer(struct spi_device *spi,
 	struct xilinx_spi *xspi = spi_master_get_devdata(spi->master);
 
 	if (spi->mode & SPI_CS_HIGH)
+<<<<<<< HEAD
 		xspi->cs_inactive &= ~BIT(spi_get_chipselect(spi, 0));
 	else
 		xspi->cs_inactive |= BIT(spi_get_chipselect(spi, 0));
+=======
+		xspi->cs_inactive &= ~BIT(spi->chip_select);
+	else
+		xspi->cs_inactive |= BIT(spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -248,8 +262,12 @@ static int xilinx_spi_txrx_bufs(struct spi_device *spi, struct spi_transfer *t)
 	xspi->rx_ptr = t->rx_buf;
 	remaining_words = t->len / xspi->bytes_per_word;
 
+<<<<<<< HEAD
 	if (xspi->irq >= 0 &&
 	    (xspi->force_irq || remaining_words > xspi->buffer_size)) {
+=======
+	if (xspi->irq >= 0 &&  remaining_words > xspi->buffer_size) {
+>>>>>>> b7ba80a49124 (Commit)
 		u32 isr;
 		use_irq = true;
 		/* Inhibit irq to avoid spurious irqs on tx_empty*/
@@ -394,7 +412,10 @@ static int xilinx_spi_probe(struct platform_device *pdev)
 	struct resource *res;
 	int ret, num_cs = 0, bits_per_word;
 	struct spi_master *master;
+<<<<<<< HEAD
 	bool force_irq = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 tmp;
 	u8 i;
 
@@ -402,7 +423,10 @@ static int xilinx_spi_probe(struct platform_device *pdev)
 	if (pdata) {
 		num_cs = pdata->num_chipselect;
 		bits_per_word = pdata->bits_per_word;
+<<<<<<< HEAD
 		force_irq = pdata->force_irq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		of_property_read_u32(pdev->dev.of_node, "xlnx,num-ss-bits",
 					  &num_cs);
@@ -424,7 +448,11 @@ static int xilinx_spi_probe(struct platform_device *pdev)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	master = devm_spi_alloc_master(&pdev->dev, sizeof(struct xilinx_spi));
+=======
+	master = spi_alloc_master(&pdev->dev, sizeof(struct xilinx_spi));
+>>>>>>> b7ba80a49124 (Commit)
 	if (!master)
 		return -ENODEV;
 
@@ -442,8 +470,15 @@ static int xilinx_spi_probe(struct platform_device *pdev)
 
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	xspi->regs = devm_ioremap_resource(&pdev->dev, res);
+<<<<<<< HEAD
 	if (IS_ERR(xspi->regs))
 		return PTR_ERR(xspi->regs);
+=======
+	if (IS_ERR(xspi->regs)) {
+		ret = PTR_ERR(xspi->regs);
+		goto put_master;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	master->bus_num = pdev->id;
 	master->num_chipselect = num_cs;
@@ -473,15 +508,24 @@ static int xilinx_spi_probe(struct platform_device *pdev)
 
 	xspi->irq = platform_get_irq(pdev, 0);
 	if (xspi->irq < 0 && xspi->irq != -ENXIO) {
+<<<<<<< HEAD
 		return xspi->irq;
+=======
+		ret = xspi->irq;
+		goto put_master;
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (xspi->irq >= 0) {
 		/* Register for SPI Interrupt */
 		ret = devm_request_irq(&pdev->dev, xspi->irq, xilinx_spi_irq, 0,
 				dev_name(&pdev->dev), xspi);
 		if (ret)
+<<<<<<< HEAD
 			return ret;
 
 		xspi->force_irq = force_irq;
+=======
+			goto put_master;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* SPI controller initializations */
@@ -490,7 +534,11 @@ static int xilinx_spi_probe(struct platform_device *pdev)
 	ret = spi_bitbang_start(&xspi->bitbang);
 	if (ret) {
 		dev_err(&pdev->dev, "spi_bitbang_start FAILED\n");
+<<<<<<< HEAD
 		return ret;
+=======
+		goto put_master;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	dev_info(&pdev->dev, "at %pR, irq=%d\n", res, xspi->irq);
@@ -502,9 +550,20 @@ static int xilinx_spi_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, master);
 	return 0;
+<<<<<<< HEAD
 }
 
 static void xilinx_spi_remove(struct platform_device *pdev)
+=======
+
+put_master:
+	spi_master_put(master);
+
+	return ret;
+}
+
+static int xilinx_spi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct xilinx_spi *xspi = spi_master_get_devdata(master);
@@ -518,6 +577,11 @@ static void xilinx_spi_remove(struct platform_device *pdev)
 	xspi->write_fn(0, regs_base + XIPIF_V123B_DGIER_OFFSET);
 
 	spi_master_put(xspi->bitbang.master);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* work with hotplug and coldplug */
@@ -525,7 +589,11 @@ MODULE_ALIAS("platform:" XILINX_SPI_NAME);
 
 static struct platform_driver xilinx_spi_driver = {
 	.probe = xilinx_spi_probe,
+<<<<<<< HEAD
 	.remove_new = xilinx_spi_remove,
+=======
+	.remove = xilinx_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = XILINX_SPI_NAME,
 		.of_match_table = xilinx_spi_of_match,

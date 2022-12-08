@@ -425,7 +425,10 @@ MODULE_DEVICE_TABLE(of, rtmv20_of_id);
 static struct i2c_driver rtmv20_driver = {
 	.driver = {
 		.name = "rtmv20",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = of_match_ptr(rtmv20_of_id),
 		.pm = &rtmv20_pm,
 	},

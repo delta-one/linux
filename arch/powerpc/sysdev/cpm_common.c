@@ -31,7 +31,11 @@
 #include <mm/mmu_decl.h>
 
 #if defined(CONFIG_CPM2) || defined(CONFIG_8xx_GPIO)
+<<<<<<< HEAD
 #include <linux/gpio/legacy-of-mm-gpiochip.h>
+=======
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 static int __init cpm_init(void)

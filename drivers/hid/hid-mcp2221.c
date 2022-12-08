@@ -10,14 +10,20 @@
 #include <linux/module.h>
 #include <linux/err.h>
 #include <linux/mutex.h>
+<<<<<<< HEAD
 #include <linux/bitfield.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/completion.h>
 #include <linux/delay.h>
 #include <linux/hid.h>
 #include <linux/hidraw.h>
 #include <linux/i2c.h>
 #include <linux/gpio/driver.h>
+<<<<<<< HEAD
 #include <linux/iio/iio.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "hid-ids.h"
 
 /* Commands codes in a raw output report */
@@ -32,9 +38,12 @@ enum {
 	MCP2221_I2C_CANCEL = 0x10,
 	MCP2221_GPIO_SET = 0x50,
 	MCP2221_GPIO_GET = 0x51,
+<<<<<<< HEAD
 	MCP2221_SET_SRAM_SETTINGS = 0x60,
 	MCP2221_GET_SRAM_SETTINGS = 0x61,
 	MCP2221_READ_FLASH_DATA = 0xb0,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Response codes in a raw input report */
@@ -94,7 +103,10 @@ struct mcp2221 {
 	struct i2c_adapter adapter;
 	struct mutex lock;
 	struct completion wait_in_report;
+<<<<<<< HEAD
 	struct delayed_work init_work;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8 *rxbuf;
 	u8 txbuf[64];
 	int rxbuf_idx;
@@ -103,6 +115,7 @@ struct mcp2221 {
 	struct gpio_chip *gc;
 	u8 gp_idx;
 	u8 gpio_dir;
+<<<<<<< HEAD
 	u8 mode[4];
 #if IS_REACHABLE(CONFIG_IIO)
 	struct iio_chan_spec iio_channels[3];
@@ -115,6 +128,8 @@ struct mcp2221 {
 
 struct mcp2221_iio {
 	struct mcp2221 *mcp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -585,7 +600,10 @@ static const struct i2c_algorithm mcp_i2c_algo = {
 	.functionality = mcp_i2c_func,
 };
 
+<<<<<<< HEAD
 #if IS_REACHABLE(CONFIG_GPIOLIB)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mcp_gpio_get(struct gpio_chip *gc,
 				unsigned int offset)
 {
@@ -689,7 +707,10 @@ static int mcp_gpio_get_direction(struct gpio_chip *gc,
 
 	return GPIO_LINE_DIRECTION_OUT;
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Gives current state of i2c engine inside mcp2221 */
 static int mcp_get_i2c_eng_state(struct mcp2221 *mcp,
@@ -765,9 +786,12 @@ static int mcp2221_raw_event(struct hid_device *hdev,
 				break;
 			}
 			mcp->status = mcp_get_i2c_eng_state(mcp, data, 8);
+<<<<<<< HEAD
 #if IS_REACHABLE(CONFIG_IIO)
 			memcpy(&mcp->adc_values, &data[50], sizeof(mcp->adc_values));
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		default:
 			mcp->status = -EIO;
@@ -839,6 +863,7 @@ static int mcp2221_raw_event(struct hid_device *hdev,
 		complete(&mcp->wait_in_report);
 		break;
 
+<<<<<<< HEAD
 	case MCP2221_SET_SRAM_SETTINGS:
 		switch (data[1]) {
 		case MCP2221_SUCCESS:
@@ -902,6 +927,8 @@ static int mcp2221_raw_event(struct hid_device *hdev,
 		complete(&mcp->wait_in_report);
 		break;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		mcp->status = -EIO;
 		complete(&mcp->wait_in_report);
@@ -910,6 +937,7 @@ static int mcp2221_raw_event(struct hid_device *hdev,
 	return 1;
 }
 
+<<<<<<< HEAD
 /* Device resource managed function for HID unregistration */
 static void mcp2221_hid_unregister(void *ptr)
 {
@@ -1097,6 +1125,8 @@ reschedule_task:
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mcp2221_probe(struct hid_device *hdev,
 					const struct hid_device_id *id)
 {
@@ -1113,16 +1143,21 @@ static int mcp2221_probe(struct hid_device *hdev,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * This driver uses the .raw_event callback and therefore does not need any
 	 * HID_CONNECT_xxx flags.
 	 */
 	ret = hid_hw_start(hdev, 0);
+=======
+	ret = hid_hw_start(hdev, HID_CONNECT_HIDRAW);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		hid_err(hdev, "can't start hardware\n");
 		return ret;
 	}
 
+<<<<<<< HEAD
 	hid_info(hdev, "USB HID v%x.%02x Device [%s] on %s\n", hdev->version >> 8,
 			hdev->version & 0xff, hdev->name, hdev->phys);
 
@@ -1131,6 +1166,12 @@ static int mcp2221_probe(struct hid_device *hdev,
 		hid_err(hdev, "can't open device\n");
 		hid_hw_stop(hdev);
 		return ret;
+=======
+	ret = hid_hw_open(hdev);
+	if (ret) {
+		hid_err(hdev, "can't open device\n");
+		goto err_hstop;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	mutex_init(&mcp->lock);
@@ -1138,10 +1179,13 @@ static int mcp2221_probe(struct hid_device *hdev,
 	hid_set_drvdata(hdev, mcp);
 	mcp->hdev = hdev;
 
+<<<<<<< HEAD
 	ret = devm_add_action_or_reset(&hdev->dev, mcp2221_hid_unregister, hdev);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Set I2C bus clock diviser */
 	if (i2c_clk_freq > 400)
 		i2c_clk_freq = 400;
@@ -1155,6 +1199,7 @@ static int mcp2221_probe(struct hid_device *hdev,
 	mcp->adapter.retries = 1;
 	mcp->adapter.dev.parent = &hdev->dev;
 	snprintf(mcp->adapter.name, sizeof(mcp->adapter.name),
+<<<<<<< HEAD
 			"MCP2221 usb-i2c bridge");
 
 	ret = devm_i2c_add_adapter(&hdev->dev, &mcp->adapter);
@@ -1169,6 +1214,24 @@ static int mcp2221_probe(struct hid_device *hdev,
 	mcp->gc = devm_kzalloc(&hdev->dev, sizeof(*mcp->gc), GFP_KERNEL);
 	if (!mcp->gc)
 		return -ENOMEM;
+=======
+			"MCP2221 usb-i2c bridge on hidraw%d",
+			((struct hidraw *)hdev->hidraw)->minor);
+
+	ret = i2c_add_adapter(&mcp->adapter);
+	if (ret) {
+		hid_err(hdev, "can't add usb-i2c adapter: %d\n", ret);
+		goto err_i2c;
+	}
+	i2c_set_adapdata(&mcp->adapter, mcp);
+
+	/* Setup GPIO chip */
+	mcp->gc = devm_kzalloc(&hdev->dev, sizeof(*mcp->gc), GFP_KERNEL);
+	if (!mcp->gc) {
+		ret = -ENOMEM;
+		goto err_gc;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	mcp->gc->label = "mcp2221_gpio";
 	mcp->gc->direction_input = mcp_gpio_direction_input;
@@ -1183,6 +1246,7 @@ static int mcp2221_probe(struct hid_device *hdev,
 
 	ret = devm_gpiochip_add_data(&hdev->dev, mcp->gc, mcp);
 	if (ret)
+<<<<<<< HEAD
 		return ret;
 #endif
 
@@ -1192,6 +1256,28 @@ static int mcp2221_probe(struct hid_device *hdev,
 #endif
 
 	return 0;
+=======
+		goto err_gc;
+
+	return 0;
+
+err_gc:
+	i2c_del_adapter(&mcp->adapter);
+err_i2c:
+	hid_hw_close(mcp->hdev);
+err_hstop:
+	hid_hw_stop(mcp->hdev);
+	return ret;
+}
+
+static void mcp2221_remove(struct hid_device *hdev)
+{
+	struct mcp2221 *mcp = hid_get_drvdata(hdev);
+
+	i2c_del_adapter(&mcp->adapter);
+	hid_hw_close(mcp->hdev);
+	hid_hw_stop(mcp->hdev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct hid_device_id mcp2221_devices[] = {

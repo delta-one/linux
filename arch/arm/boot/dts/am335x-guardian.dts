@@ -103,9 +103,14 @@
 
 	};
 
+<<<<<<< HEAD
 	guardian_beeper: pwm-7 {
 		compatible = "ti,omap-dmtimer-pwm";
 		#pwm-cells = <3>;
+=======
+	guardian_beeper: dmtimer-pwm@7 {
+		compatible = "ti,omap-dmtimer-pwm";
+>>>>>>> b7ba80a49124 (Commit)
 		ti,timers = <&timer7>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&guardian_beeper_pins>;

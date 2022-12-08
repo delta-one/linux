@@ -55,6 +55,7 @@ static uint64_t pte_index(struct kvm_vm *vm, vm_vaddr_t gva, int level)
 
 void virt_arch_pgd_alloc(struct kvm_vm *vm)
 {
+<<<<<<< HEAD
 	size_t nr_pages = page_align(vm, ptrs_per_pte(vm) * 8) / vm->page_size;
 
 	if (vm->pgd_created)
@@ -64,6 +65,15 @@ void virt_arch_pgd_alloc(struct kvm_vm *vm)
 				     KVM_GUEST_PAGE_TABLE_MIN_PADDR,
 				     vm->memslots[MEM_REGION_PT]);
 	vm->pgd_created = true;
+=======
+	if (!vm->pgd_created) {
+		vm_paddr_t paddr = vm_phy_pages_alloc(vm,
+			page_align(vm, ptrs_per_pte(vm) * 8) / vm->page_size,
+			KVM_GUEST_PAGE_TABLE_MIN_PADDR, 0);
+		vm->pgd = paddr;
+		vm->pgd_created = true;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void virt_arch_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr)
@@ -281,18 +291,29 @@ struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
 				  void *guest_code)
 {
 	int r;
+<<<<<<< HEAD
 	size_t stack_size;
 	unsigned long stack_vaddr;
+=======
+	size_t stack_size = vm->page_size == 4096 ?
+					DEFAULT_STACK_PGS * vm->page_size :
+					vm->page_size;
+	unsigned long stack_vaddr = vm_vaddr_alloc(vm, stack_size,
+					DEFAULT_RISCV_GUEST_STACK_VADDR_MIN);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long current_gp = 0;
 	struct kvm_mp_state mps;
 	struct kvm_vcpu *vcpu;
 
+<<<<<<< HEAD
 	stack_size = vm->page_size == 4096 ? DEFAULT_STACK_PGS * vm->page_size :
 					     vm->page_size;
 	stack_vaddr = __vm_vaddr_alloc(vm, stack_size,
 				       DEFAULT_RISCV_GUEST_STACK_VADDR_MIN,
 				       MEM_REGION_DATA);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vcpu = __vm_vcpu_add(vm, vcpu_id);
 	riscv_vcpu_mmu_setup(vcpu);
 

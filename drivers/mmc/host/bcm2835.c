@@ -327,6 +327,10 @@ static void bcm2835_dma_complete(void *param)
 
 static void bcm2835_transfer_block_pio(struct bcm2835_host *host, bool is_read)
 {
+<<<<<<< HEAD
+=======
+	unsigned long flags;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t blksize;
 	unsigned long wait_max;
 
@@ -334,6 +338,11 @@ static void bcm2835_transfer_block_pio(struct bcm2835_host *host, bool is_read)
 
 	wait_max = jiffies + msecs_to_jiffies(500);
 
+<<<<<<< HEAD
+=======
+	local_irq_save(flags);
+
+>>>>>>> b7ba80a49124 (Commit)
 	while (blksize) {
 		int copy_words;
 		u32 hsts = 0;
@@ -418,6 +427,11 @@ static void bcm2835_transfer_block_pio(struct bcm2835_host *host, bool is_read)
 	}
 
 	sg_miter_stop(&host->sg_miter);
+<<<<<<< HEAD
+=======
+
+	local_irq_restore(flags);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void bcm2835_transfer_pio(struct bcm2835_host *host)
@@ -1063,6 +1077,10 @@ static void bcm2835_dma_complete_work(struct work_struct *work)
 	}
 
 	if (host->drain_words) {
+<<<<<<< HEAD
+=======
+		unsigned long flags;
+>>>>>>> b7ba80a49124 (Commit)
 		void *page;
 		u32 *buf;
 
@@ -1070,7 +1088,12 @@ static void bcm2835_dma_complete_work(struct work_struct *work)
 			host->drain_page += host->drain_offset >> PAGE_SHIFT;
 			host->drain_offset &= ~PAGE_MASK;
 		}
+<<<<<<< HEAD
 		page = kmap_local_page(host->drain_page);
+=======
+		local_irq_save(flags);
+		page = kmap_atomic(host->drain_page);
+>>>>>>> b7ba80a49124 (Commit)
 		buf = page + host->drain_offset;
 
 		while (host->drain_words) {
@@ -1081,7 +1104,12 @@ static void bcm2835_dma_complete_work(struct work_struct *work)
 			host->drain_words--;
 		}
 
+<<<<<<< HEAD
 		kunmap_local(page);
+=======
+		kunmap_atomic(page);
+		local_irq_restore(flags);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	bcm2835_finish_data(host);

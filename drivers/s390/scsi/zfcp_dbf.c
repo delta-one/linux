@@ -4,7 +4,11 @@
  *
  * Debug traces for zfcp.
  *
+<<<<<<< HEAD
  * Copyright IBM Corp. 2002, 2023
+=======
+ * Copyright IBM Corp. 2002, 2020
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #define KMSG_COMPONENT "zfcp"
@@ -146,6 +150,7 @@ void zfcp_dbf_hba_fsf_fces(char *tag, const struct zfcp_fsf_req *req, u64 wwpn,
 }
 
 /**
+<<<<<<< HEAD
  * zfcp_dbf_hba_fsf_reqid - trace only the tag and a request ID
  * @tag: tag documenting the source
  * @level: trace level
@@ -188,6 +193,8 @@ void zfcp_dbf_hba_fsf_reqid(const char *const tag, const int level,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * zfcp_dbf_hba_fsf_uss - trace event for an unsolicited status buffer
  * @tag: tag indicating which kind of unsolicited status has been received
  * @req: request providing the unsolicited status
@@ -691,7 +698,11 @@ void zfcp_dbf_scsi_common(char *tag, int level, struct scsi_device *sdev,
 		rec->scsi_id = sc->device->id;
 		rec->scsi_lun = (u32)sc->device->lun;
 		rec->scsi_lun_64_hi = (u32)(sc->device->lun >> 32);
+<<<<<<< HEAD
 		rec->host_scribble = (u64)sc->host_scribble;
+=======
+		rec->host_scribble = (unsigned long)sc->host_scribble;
+>>>>>>> b7ba80a49124 (Commit)
 
 		memcpy(rec->scsi_opcode, sc->cmnd,
 		       min_t(int, sc->cmd_len, ZFCP_DBF_SCSI_OPCODE));

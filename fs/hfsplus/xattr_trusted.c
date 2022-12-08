@@ -22,7 +22,11 @@ static int hfsplus_trusted_getxattr(const struct xattr_handler *handler,
 }
 
 static int hfsplus_trusted_setxattr(const struct xattr_handler *handler,
+<<<<<<< HEAD
 				    struct mnt_idmap *idmap,
+=======
+				    struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				    struct dentry *unused, struct inode *inode,
 				    const char *name, const void *buffer,
 				    size_t size, int flags)

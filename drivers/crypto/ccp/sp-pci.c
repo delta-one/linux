@@ -342,6 +342,7 @@ static int __maybe_unused sp_pci_resume(struct device *dev)
 
 #ifdef CONFIG_CRYPTO_DEV_SP_PSP
 static const struct sev_vdata sevv1 = {
+<<<<<<< HEAD
 	.cmdresp_reg		= 0x10580,	/* C2PMSG_32 */
 	.cmdbuff_addr_lo_reg	= 0x105e0,	/* C2PMSG_56 */
 	.cmdbuff_addr_hi_reg	= 0x105e4,	/* C2PMSG_57 */
@@ -367,24 +368,56 @@ static const struct platform_access_vdata pa_v1 = {
 	.cmdbuff_addr_hi_reg	= 0x10578,	/* C2PMSG_30 */
 	.doorbell_button_reg	= 0x10a24,	/* C2PMSG_73 */
 	.doorbell_cmd_reg	= 0x10a40,	/* C2PMSG_80 */
+=======
+	.cmdresp_reg		= 0x10580,
+	.cmdbuff_addr_lo_reg	= 0x105e0,
+	.cmdbuff_addr_hi_reg	= 0x105e4,
+};
+
+static const struct sev_vdata sevv2 = {
+	.cmdresp_reg		= 0x10980,
+	.cmdbuff_addr_lo_reg	= 0x109e0,
+	.cmdbuff_addr_hi_reg	= 0x109e4,
+};
+
+static const struct tee_vdata teev1 = {
+	.cmdresp_reg		= 0x10544,
+	.cmdbuff_addr_lo_reg	= 0x10548,
+	.cmdbuff_addr_hi_reg	= 0x1054c,
+	.ring_wptr_reg          = 0x10550,
+	.ring_rptr_reg          = 0x10554,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct psp_vdata pspv1 = {
 	.sev			= &sevv1,
+<<<<<<< HEAD
 	.feature_reg		= 0x105fc,	/* C2PMSG_63 */
 	.inten_reg		= 0x10610,	/* P2CMSG_INTEN */
 	.intsts_reg		= 0x10614,	/* P2CMSG_INTSTS */
+=======
+	.feature_reg		= 0x105fc,
+	.inten_reg		= 0x10610,
+	.intsts_reg		= 0x10614,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct psp_vdata pspv2 = {
 	.sev			= &sevv2,
+<<<<<<< HEAD
 	.feature_reg		= 0x109fc,	/* C2PMSG_63 */
 	.inten_reg		= 0x10690,	/* P2CMSG_INTEN */
 	.intsts_reg		= 0x10694,	/* P2CMSG_INTSTS */
+=======
+	.feature_reg		= 0x109fc,
+	.inten_reg		= 0x10690,
+	.intsts_reg		= 0x10694,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct psp_vdata pspv3 = {
 	.tee			= &teev1,
+<<<<<<< HEAD
 	.platform_access	= &pa_v1,
 	.feature_reg		= 0x109fc,	/* C2PMSG_63 */
 	.inten_reg		= 0x10690,	/* P2CMSG_INTEN */
@@ -399,6 +432,12 @@ static const struct psp_vdata pspv4 = {
 	.intsts_reg		= 0x10694,	/* P2CMSG_INTSTS */
 };
 
+=======
+	.feature_reg		= 0x109fc,
+	.inten_reg		= 0x10690,
+	.intsts_reg		= 0x10694,
+};
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 static const struct sp_dev_vdata dev_vdata[] = {
@@ -444,7 +483,11 @@ static const struct sp_dev_vdata dev_vdata[] = {
 	{	/* 5 */
 		.bar = 2,
 #ifdef CONFIG_CRYPTO_DEV_SP_PSP
+<<<<<<< HEAD
 		.psp_vdata = &pspv4,
+=======
+		.psp_vdata = &pspv2,
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	},
 	{	/* 6 */

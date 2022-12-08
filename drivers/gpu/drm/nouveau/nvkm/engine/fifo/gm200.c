@@ -21,11 +21,17 @@
  *
  * Authors: Ben Skeggs
  */
+<<<<<<< HEAD
 #include "priv.h"
+=======
+#include "gk104.h"
+#include "changk104.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <nvif/class.h>
 
 int
+<<<<<<< HEAD
 gm200_fifo_runq_nr(struct nvkm_fifo *fifo)
 {
 	return nvkm_rd32(fifo->engine.subdev.device, 0x002004) & 0x000000ff;
@@ -56,11 +62,41 @@ gm200_fifo = {
 	.engn_ce = &gk104_engn_ce,
 	.cgrp = {{ 0, 0,  KEPLER_CHANNEL_GROUP_A  }, &gk110_cgrp },
 	.chan = {{ 0, 0, MAXWELL_CHANNEL_GPFIFO_A }, &gm107_chan },
+=======
+gm200_fifo_pbdma_nr(struct gk104_fifo *fifo)
+{
+	struct nvkm_device *device = fifo->base.engine.subdev.device;
+	return nvkm_rd32(device, 0x002004) & 0x000000ff;
+}
+
+const struct gk104_fifo_pbdma_func
+gm200_fifo_pbdma = {
+	.nr = gm200_fifo_pbdma_nr,
+	.init = gk104_fifo_pbdma_init,
+	.init_timeout = gk208_fifo_pbdma_init_timeout,
+};
+
+static const struct gk104_fifo_func
+gm200_fifo = {
+	.intr.fault = gm107_fifo_intr_fault,
+	.pbdma = &gm200_fifo_pbdma,
+	.fault.access = gk104_fifo_fault_access,
+	.fault.engine = gm107_fifo_fault_engine,
+	.fault.reason = gk104_fifo_fault_reason,
+	.fault.hubclient = gk104_fifo_fault_hubclient,
+	.fault.gpcclient = gk104_fifo_fault_gpcclient,
+	.runlist = &gm107_fifo_runlist,
+	.chan = {{0,0,MAXWELL_CHANNEL_GPFIFO_A}, gk104_fifo_gpfifo_new },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int
 gm200_fifo_new(struct nvkm_device *device, enum nvkm_subdev_type type, int inst,
 	       struct nvkm_fifo **pfifo)
 {
+<<<<<<< HEAD
 	return nvkm_fifo_new_(&gm200_fifo, device, type, inst, pfifo);
+=======
+	return gk104_fifo_new_(&gm200_fifo, device, type, inst, 4096, pfifo);
+>>>>>>> b7ba80a49124 (Commit)
 }

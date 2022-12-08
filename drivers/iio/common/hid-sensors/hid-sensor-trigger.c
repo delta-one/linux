@@ -75,9 +75,15 @@ static IIO_DEVICE_ATTR(hwfifo_timeout, 0644,
 static IIO_DEVICE_ATTR(hwfifo_enabled, 0444,
 		       _hid_sensor_get_fifo_state, NULL, 0);
 
+<<<<<<< HEAD
 static const struct iio_dev_attr *hid_sensor_fifo_attributes[] = {
 	&iio_dev_attr_hwfifo_timeout,
 	&iio_dev_attr_hwfifo_enabled,
+=======
+static const struct attribute *hid_sensor_fifo_attributes[] = {
+	&iio_dev_attr_hwfifo_timeout.dev_attr.attr,
+	&iio_dev_attr_hwfifo_enabled.dev_attr.attr,
+>>>>>>> b7ba80a49124 (Commit)
 	NULL,
 };
 
@@ -231,7 +237,11 @@ static const struct iio_trigger_ops hid_sensor_trigger_ops = {
 int hid_sensor_setup_trigger(struct iio_dev *indio_dev, const char *name,
 				struct hid_sensor_common *attrb)
 {
+<<<<<<< HEAD
 	const struct iio_dev_attr **fifo_attrs;
+=======
+	const struct attribute **fifo_attrs;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 	struct iio_trigger *trig;
 

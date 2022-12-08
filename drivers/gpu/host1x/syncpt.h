@@ -14,7 +14,10 @@
 #include <linux/kref.h>
 #include <linux/sched.h>
 
+<<<<<<< HEAD
 #include "fence.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intr.h"
 
 struct host1x;
@@ -40,7 +43,11 @@ struct host1x_syncpt {
 	struct host1x_syncpt_base *base;
 
 	/* interrupt data */
+<<<<<<< HEAD
 	struct host1x_fence_list fences;
+=======
+	struct host1x_syncpt_intr intr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * If a submission incrementing this syncpoint fails, lock it so that

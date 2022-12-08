@@ -546,6 +546,47 @@ static void omap_modeset_fini(struct drm_device *ddev)
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * Enable the HPD in external components if supported
+ */
+static void omap_modeset_enable_external_hpd(struct drm_device *ddev)
+{
+	struct omap_drm_private *priv = ddev->dev_private;
+	unsigned int i;
+
+	for (i = 0; i < priv->num_pipes; i++) {
+		struct drm_connector *connector = priv->pipes[i].connector;
+
+		if (!connector)
+			continue;
+
+		if (priv->pipes[i].output->bridge)
+			drm_bridge_connector_enable_hpd(connector);
+	}
+}
+
+/*
+ * Disable the HPD in external components if supported
+ */
+static void omap_modeset_disable_external_hpd(struct drm_device *ddev)
+{
+	struct omap_drm_private *priv = ddev->dev_private;
+	unsigned int i;
+
+	for (i = 0; i < priv->num_pipes; i++) {
+		struct drm_connector *connector = priv->pipes[i].connector;
+
+		if (!connector)
+			continue;
+
+		if (priv->pipes[i].output->bridge)
+			drm_bridge_connector_disable_hpd(connector);
+	}
+}
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * drm ioctl funcs
  */
 
@@ -744,6 +785,10 @@ static int omapdrm_init(struct omap_drm_private *priv, struct device *dev)
 	omap_fbdev_init(ddev);
 
 	drm_kms_helper_poll_init(ddev);
+<<<<<<< HEAD
+=======
+	omap_modeset_enable_external_hpd(ddev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Register the DRM device with the core and the connectors with
@@ -756,6 +801,10 @@ static int omapdrm_init(struct omap_drm_private *priv, struct device *dev)
 	return 0;
 
 err_cleanup_helpers:
+<<<<<<< HEAD
+=======
+	omap_modeset_disable_external_hpd(ddev);
+>>>>>>> b7ba80a49124 (Commit)
 	drm_kms_helper_poll_fini(ddev);
 
 	omap_fbdev_fini(ddev);
@@ -782,6 +831,10 @@ static void omapdrm_cleanup(struct omap_drm_private *priv)
 
 	drm_dev_unregister(ddev);
 
+<<<<<<< HEAD
+=======
+	omap_modeset_disable_external_hpd(ddev);
+>>>>>>> b7ba80a49124 (Commit)
 	drm_kms_helper_poll_fini(ddev);
 
 	omap_fbdev_fini(ddev);

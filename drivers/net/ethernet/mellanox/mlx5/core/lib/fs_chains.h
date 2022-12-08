@@ -17,9 +17,14 @@ enum mlx5_chains_flags {
 
 struct mlx5_chains_attr {
 	enum mlx5_flow_namespace_type ns;
+<<<<<<< HEAD
 	int fs_base_prio;
 	int fs_base_level;
 	u32 flags;
+=======
+	u32 flags;
+	u32 max_ft_sz;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 max_grp_num;
 	struct mlx5_flow_table *default_ft;
 	struct mapping_ctx *mapping;
@@ -69,8 +74,11 @@ void mlx5_chains_destroy(struct mlx5_fs_chains *chains);
 void
 mlx5_chains_set_end_ft(struct mlx5_fs_chains *chains,
 		       struct mlx5_flow_table *ft);
+<<<<<<< HEAD
 void
 mlx5_chains_print_info(struct mlx5_fs_chains *chains);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #else /* CONFIG_MLX5_CLS_ACT */
 
@@ -92,9 +100,13 @@ static inline struct mlx5_fs_chains *
 mlx5_chains_create(struct mlx5_core_dev *dev, struct mlx5_chains_attr *attr)
 { return NULL; }
 static inline void
+<<<<<<< HEAD
 mlx5_chains_destroy(struct mlx5_fs_chains *chains) {}
 static inline void
 mlx5_chains_print_info(struct mlx5_fs_chains *chains) {}
+=======
+mlx5_chains_destroy(struct mlx5_fs_chains *chains) {};
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* CONFIG_MLX5_CLS_ACT */
 

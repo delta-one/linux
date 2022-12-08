@@ -335,9 +335,13 @@ ssize_t dvb_ringbuffer_pkt_next(struct dvb_ringbuffer *rbuf, size_t idx, size_t*
 		idx = (idx + curpktlen + DVB_RINGBUFFER_PKTHDRSIZE) % rbuf->size;
 	}
 
+<<<<<<< HEAD
 	consumed = (idx - rbuf->pread);
 	if (consumed < 0)
 		consumed += rbuf->size;
+=======
+	consumed = (idx - rbuf->pread) % rbuf->size;
+>>>>>>> b7ba80a49124 (Commit)
 
 	while((dvb_ringbuffer_avail(rbuf) - consumed) > DVB_RINGBUFFER_PKTHDRSIZE) {
 

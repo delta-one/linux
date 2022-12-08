@@ -143,7 +143,11 @@ static void twl4030_vibra_close(struct input_dev *input)
 }
 
 /*** Module ***/
+<<<<<<< HEAD
 static int twl4030_vibra_suspend(struct device *dev)
+=======
+static int __maybe_unused twl4030_vibra_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *pdev = to_platform_device(dev);
 	struct vibra_info *info = platform_get_drvdata(pdev);
@@ -154,12 +158,17 @@ static int twl4030_vibra_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int twl4030_vibra_resume(struct device *dev)
+=======
+static int __maybe_unused twl4030_vibra_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	vibra_disable_leds();
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(twl4030_vibra_pm_ops,
 				twl4030_vibra_suspend, twl4030_vibra_resume);
 
@@ -167,6 +176,19 @@ static bool twl4030_vibra_check_coexist(struct device_node *parent)
 {
 	struct device_node *node;
 
+=======
+static SIMPLE_DEV_PM_OPS(twl4030_vibra_pm_ops,
+			 twl4030_vibra_suspend, twl4030_vibra_resume);
+
+static bool twl4030_vibra_check_coexist(struct twl4030_vibra_data *pdata,
+			      struct device_node *parent)
+{
+	struct device_node *node;
+
+	if (pdata && pdata->coexist)
+		return true;
+
+>>>>>>> b7ba80a49124 (Commit)
 	node = of_get_child_by_name(parent, "codec");
 	if (node) {
 		of_node_put(node);
@@ -178,12 +200,21 @@ static bool twl4030_vibra_check_coexist(struct device_node *parent)
 
 static int twl4030_vibra_probe(struct platform_device *pdev)
 {
+<<<<<<< HEAD
+=======
+	struct twl4030_vibra_data *pdata = dev_get_platdata(&pdev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	struct device_node *twl4030_core_node = pdev->dev.parent->of_node;
 	struct vibra_info *info;
 	int ret;
 
+<<<<<<< HEAD
 	if (!twl4030_core_node) {
 		dev_dbg(&pdev->dev, "twl4030 OF node is missing\n");
+=======
+	if (!pdata && !twl4030_core_node) {
+		dev_dbg(&pdev->dev, "platform_data not available\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -192,7 +223,11 @@ static int twl4030_vibra_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	info->dev = &pdev->dev;
+<<<<<<< HEAD
 	info->coexist = twl4030_vibra_check_coexist(twl4030_core_node);
+=======
+	info->coexist = twl4030_vibra_check_coexist(pdata, twl4030_core_node);
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_WORK(&info->play_work, vibra_play_work);
 
 	info->input_dev = devm_input_allocate_device(&pdev->dev);
@@ -234,7 +269,11 @@ static struct platform_driver twl4030_vibra_driver = {
 	.probe		= twl4030_vibra_probe,
 	.driver		= {
 		.name	= "twl4030-vibra",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&twl4030_vibra_pm_ops),
+=======
+		.pm	= &twl4030_vibra_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 module_platform_driver(twl4030_vibra_driver);

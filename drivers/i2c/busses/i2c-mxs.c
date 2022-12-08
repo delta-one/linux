@@ -171,7 +171,11 @@ static void mxs_i2c_dma_irq_callback(void *param)
 }
 
 static int mxs_i2c_dma_setup_xfer(struct i2c_adapter *adap,
+<<<<<<< HEAD
 			struct i2c_msg *msg, u8 *buf, uint32_t flags)
+=======
+			struct i2c_msg *msg, uint32_t flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dma_async_tx_descriptor *desc;
 	struct mxs_i2c_dev *i2c = i2c_get_adapdata(adap);
@@ -226,7 +230,11 @@ static int mxs_i2c_dma_setup_xfer(struct i2c_adapter *adap,
 		}
 
 		/* Queue the DMA data transfer. */
+<<<<<<< HEAD
 		sg_init_one(&i2c->sg_io[1], buf, msg->len);
+=======
+		sg_init_one(&i2c->sg_io[1], msg->buf, msg->len);
+>>>>>>> b7ba80a49124 (Commit)
 		dma_map_sg(i2c->dev, &i2c->sg_io[1], 1, DMA_FROM_DEVICE);
 		desc = dmaengine_prep_slave_sg(i2c->dmach, &i2c->sg_io[1], 1,
 					DMA_DEV_TO_MEM,
@@ -259,7 +267,11 @@ static int mxs_i2c_dma_setup_xfer(struct i2c_adapter *adap,
 		/* Queue the DMA data transfer. */
 		sg_init_table(i2c->sg_io, 2);
 		sg_set_buf(&i2c->sg_io[0], &i2c->addr_data, 1);
+<<<<<<< HEAD
 		sg_set_buf(&i2c->sg_io[1], buf, msg->len);
+=======
+		sg_set_buf(&i2c->sg_io[1], msg->buf, msg->len);
+>>>>>>> b7ba80a49124 (Commit)
 		dma_map_sg(i2c->dev, i2c->sg_io, 2, DMA_TO_DEVICE);
 		desc = dmaengine_prep_slave_sg(i2c->dmach, i2c->sg_io, 2,
 					DMA_MEM_TO_DEV,
@@ -563,7 +575,10 @@ static int mxs_i2c_xfer_msg(struct i2c_adapter *adap, struct i2c_msg *msg,
 	struct mxs_i2c_dev *i2c = i2c_get_adapdata(adap);
 	int ret;
 	int flags;
+<<<<<<< HEAD
 	u8 *dma_buf;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int use_pio = 0;
 	unsigned long time_left;
 
@@ -589,6 +604,7 @@ static int mxs_i2c_xfer_msg(struct i2c_adapter *adap, struct i2c_msg *msg,
 		if (ret && (ret != -ENXIO))
 			mxs_i2c_reset(i2c);
 	} else {
+<<<<<<< HEAD
 		dma_buf = i2c_get_dma_safe_msg_buf(msg, 1);
 		if (!dma_buf)
 			return -ENOMEM;
@@ -603,6 +619,15 @@ static int mxs_i2c_xfer_msg(struct i2c_adapter *adap, struct i2c_msg *msg,
 		time_left = wait_for_completion_timeout(&i2c->cmd_complete,
 						msecs_to_jiffies(1000));
 		i2c_put_dma_safe_msg_buf(dma_buf, msg, true);
+=======
+		reinit_completion(&i2c->cmd_complete);
+		ret = mxs_i2c_dma_setup_xfer(adap, msg, flags);
+		if (ret)
+			return ret;
+
+		time_left = wait_for_completion_timeout(&i2c->cmd_complete,
+						msecs_to_jiffies(1000));
+>>>>>>> b7ba80a49124 (Commit)
 		if (!time_left)
 			goto timeout;
 
@@ -834,8 +859,13 @@ static int mxs_i2c_probe(struct platform_device *pdev)
 	/* Setup the DMA */
 	i2c->dmach = dma_request_chan(dev, "rx-tx");
 	if (IS_ERR(i2c->dmach)) {
+<<<<<<< HEAD
 		return dev_err_probe(dev, PTR_ERR(i2c->dmach),
 				     "Failed to request dma\n");
+=======
+		dev_err(dev, "Failed to request dma\n");
+		return PTR_ERR(i2c->dmach);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	platform_set_drvdata(pdev, i2c);

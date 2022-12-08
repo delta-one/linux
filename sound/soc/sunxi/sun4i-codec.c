@@ -1821,7 +1821,11 @@ err_clk_disable:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void sun4i_codec_remove(struct platform_device *pdev)
+=======
+static int sun4i_codec_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 	struct sun4i_codec *scodec = snd_soc_card_get_drvdata(card);
@@ -1830,6 +1834,11 @@ static void sun4i_codec_remove(struct platform_device *pdev)
 	if (scodec->rst)
 		reset_control_assert(scodec->rst);
 	clk_disable_unprepare(scodec->clk_apb);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver sun4i_codec_driver = {
@@ -1838,7 +1847,11 @@ static struct platform_driver sun4i_codec_driver = {
 		.of_match_table = sun4i_codec_of_match,
 	},
 	.probe = sun4i_codec_probe,
+<<<<<<< HEAD
 	.remove_new = sun4i_codec_remove,
+=======
+	.remove = sun4i_codec_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(sun4i_codec_driver);
 

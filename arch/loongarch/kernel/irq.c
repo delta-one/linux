@@ -117,7 +117,11 @@ void __init init_IRQ(void)
 	if (ipi_irq < 0)
 		panic("IPI IRQ mapping failed\n");
 	irq_set_percpu_devid(ipi_irq);
+<<<<<<< HEAD
 	r = request_percpu_irq(ipi_irq, loongson_ipi_interrupt, "IPI", &ipi_dummy_dev);
+=======
+	r = request_percpu_irq(ipi_irq, loongson3_ipi_interrupt, "IPI", &ipi_dummy_dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (r < 0)
 		panic("IPI IRQ request failed\n");
 #endif

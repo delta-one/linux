@@ -12,7 +12,10 @@ Translations
    it_IT/index
    ko_KR/index
    ja_JP/index
+<<<<<<< HEAD
    sp_SP/index
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 
 .. _translations_disclaimer:

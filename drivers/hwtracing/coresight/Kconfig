@@ -201,6 +201,7 @@ config CORESIGHT_TRBE
 
 	  To compile this driver as a module, choose M here: the module will be
 	  called coresight-trbe.
+<<<<<<< HEAD
 
 config ULTRASOC_SMB
 	tristate "Ultrasoc system memory buffer drivers"
@@ -236,4 +237,6 @@ config CORESIGHT_TPDA
 
 	  To compile this driver as a module, choose M here: the module will be
 	  called coresight-tpda.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endif

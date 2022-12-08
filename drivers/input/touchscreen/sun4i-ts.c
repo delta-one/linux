@@ -194,7 +194,11 @@ static int sun4i_get_temp(const struct sun4i_ts_data *ts, int *temp)
 
 static int sun4i_get_tz_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	return sun4i_get_temp(thermal_zone_device_priv(tz), temp);
+=======
+	return sun4i_get_temp(tz->devdata, temp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct thermal_zone_device_ops sun4i_ts_tz_ops = {
@@ -400,7 +404,11 @@ MODULE_DEVICE_TABLE(of, sun4i_ts_of_match);
 static struct platform_driver sun4i_ts_driver = {
 	.driver = {
 		.name	= "sun4i-ts",
+<<<<<<< HEAD
 		.of_match_table = sun4i_ts_of_match,
+=======
+		.of_match_table = of_match_ptr(sun4i_ts_of_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe	= sun4i_ts_probe,
 	.remove	= sun4i_ts_remove,

@@ -74,6 +74,7 @@ static u32 get_function(u16 func_id, bool ec_function)
 	return (u32)func_id | (ec_function << 16);
 }
 
+<<<<<<< HEAD
 static u16 func_id_to_type(struct mlx5_core_dev *dev, u16 func_id, bool ec_function)
 {
 	if (!func_id)
@@ -92,6 +93,8 @@ static u32 mlx5_get_func_id(u32 function)
 	return function & 0xffff;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct rb_root *page_root_per_function(struct mlx5_core_dev *dev, u32 function)
 {
 	struct rb_root *root;
@@ -229,8 +232,12 @@ static int alloc_4k(struct mlx5_core_dev *dev, u64 *addr, u32 function)
 
 	n = find_first_bit(&fp->bitmask, 8 * sizeof(fp->bitmask));
 	if (n >= MLX5_NUM_4K_IN_PAGE) {
+<<<<<<< HEAD
 		mlx5_core_warn(dev, "alloc 4k bug: fw page = 0x%llx, n = %u, bitmask: %lu, max num of 4K pages: %d\n",
 			       fp->addr, n, fp->bitmask,  MLX5_NUM_4K_IN_PAGE);
+=======
+		mlx5_core_warn(dev, "alloc 4k bug\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOENT;
 	}
 	clear_bit(n, &fp->bitmask);
@@ -351,7 +358,10 @@ static int give_pages(struct mlx5_core_dev *dev, u16 func_id, int npages,
 	u32 out[MLX5_ST_SZ_DW(manage_pages_out)] = {0};
 	int inlen = MLX5_ST_SZ_BYTES(manage_pages_in);
 	int notify_fail = event;
+<<<<<<< HEAD
 	u16 func_type;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 addr;
 	int err;
 	u32 *in;
@@ -403,9 +413,17 @@ retry:
 		goto out_dropped;
 	}
 
+<<<<<<< HEAD
 	func_type = func_id_to_type(dev, func_id, ec_function);
 	dev->priv.page_counters[func_type] += npages;
 	dev->priv.fw_pages += npages;
+=======
+	dev->priv.fw_pages += npages;
+	if (func_id)
+		dev->priv.vfs_pages += npages;
+	else if (mlx5_core_is_ecpf(dev) && !ec_function)
+		dev->priv.host_pf_pages += npages;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mlx5_core_dbg(dev, "npages %d, ec_function %d, func_id 0x%x, err %d\n",
 		      npages, ec_function, func_id, err);
@@ -432,7 +450,10 @@ static void release_all_pages(struct mlx5_core_dev *dev, u16 func_id,
 	struct rb_root *root;
 	struct rb_node *p;
 	int npages = 0;
+<<<<<<< HEAD
 	u16 func_type;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	root = xa_load(&dev->priv.page_root_xa, function);
 	if (WARN_ON_ONCE(!root))
@@ -447,9 +468,17 @@ static void release_all_pages(struct mlx5_core_dev *dev, u16 func_id,
 		free_fwp(dev, fwp, fwp->free_count);
 	}
 
+<<<<<<< HEAD
 	func_type = func_id_to_type(dev, func_id, ec_function);
 	dev->priv.page_counters[func_type] -= npages;
 	dev->priv.fw_pages -= npages;
+=======
+	dev->priv.fw_pages -= npages;
+	if (func_id)
+		dev->priv.vfs_pages -= npages;
+	else if (mlx5_core_is_ecpf(dev) && !ec_function)
+		dev->priv.host_pf_pages -= npages;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mlx5_core_dbg(dev, "npages %d, ec_function %d, func_id 0x%x\n",
 		      npages, ec_function, func_id);
@@ -515,7 +544,10 @@ static int reclaim_pages(struct mlx5_core_dev *dev, u16 func_id, int npages,
 	int outlen = MLX5_ST_SZ_BYTES(manage_pages_out);
 	u32 in[MLX5_ST_SZ_DW(manage_pages_in)] = {};
 	int num_claimed;
+<<<<<<< HEAD
 	u16 func_type;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 *out;
 	int err;
 	int i;
@@ -567,9 +599,17 @@ static int reclaim_pages(struct mlx5_core_dev *dev, u16 func_id, int npages,
 	if (nclaimed)
 		*nclaimed = num_claimed;
 
+<<<<<<< HEAD
 	func_type = func_id_to_type(dev, func_id, ec_function);
 	dev->priv.page_counters[func_type] -= num_claimed;
 	dev->priv.fw_pages -= num_claimed;
+=======
+	dev->priv.fw_pages -= num_claimed;
+	if (func_id)
+		dev->priv.vfs_pages -= num_claimed;
+	else if (mlx5_core_is_ecpf(dev) && !ec_function)
+		dev->priv.host_pf_pages -= num_claimed;
+>>>>>>> b7ba80a49124 (Commit)
 
 out_free:
 	kvfree(out);
@@ -675,12 +715,17 @@ static int optimal_reclaimed_pages(void)
 }
 
 static int mlx5_reclaim_root_pages(struct mlx5_core_dev *dev,
+<<<<<<< HEAD
 				   struct rb_root *root, u32 function)
+=======
+				   struct rb_root *root, u16 func_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u64 recl_pages_to_jiffies = msecs_to_jiffies(mlx5_tout_ms(dev, RECLAIM_PAGES));
 	unsigned long end = jiffies + recl_pages_to_jiffies;
 
 	while (!RB_EMPTY_ROOT(root)) {
+<<<<<<< HEAD
 		u32 ec_function = mlx5_get_ec_function(function);
 		u32 function_id = mlx5_get_func_id(function);
 		int nclaimed;
@@ -691,6 +736,16 @@ static int mlx5_reclaim_root_pages(struct mlx5_core_dev *dev,
 		if (err) {
 			mlx5_core_warn(dev, "reclaim_pages err (%d) func_id=0x%x ec_func=0x%x\n",
 				       err, function_id, ec_function);
+=======
+		int nclaimed;
+		int err;
+
+		err = reclaim_pages(dev, func_id, optimal_reclaimed_pages(),
+				    &nclaimed, false, mlx5_core_is_ecpf(dev));
+		if (err) {
+			mlx5_core_warn(dev, "failed reclaiming pages (%d) for func id 0x%x\n",
+				       err, func_id);
+>>>>>>> b7ba80a49124 (Commit)
 			return err;
 		}
 
@@ -724,12 +779,21 @@ int mlx5_reclaim_startup_pages(struct mlx5_core_dev *dev)
 	WARN(dev->priv.fw_pages,
 	     "FW pages counter is %d after reclaiming all pages\n",
 	     dev->priv.fw_pages);
+<<<<<<< HEAD
 	WARN(dev->priv.page_counters[MLX5_VF],
 	     "VFs FW pages counter is %d after reclaiming all pages\n",
 	     dev->priv.page_counters[MLX5_VF]);
 	WARN(dev->priv.page_counters[MLX5_HOST_PF],
 	     "External host PF FW pages counter is %d after reclaiming all pages\n",
 	     dev->priv.page_counters[MLX5_HOST_PF]);
+=======
+	WARN(dev->priv.vfs_pages,
+	     "VFs FW pages counter is %d after reclaiming all pages\n",
+	     dev->priv.vfs_pages);
+	WARN(dev->priv.host_pf_pages,
+	     "External host PF FW pages counter is %d after reclaiming all pages\n",
+	     dev->priv.host_pf_pages);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

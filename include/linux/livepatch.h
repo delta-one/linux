@@ -13,7 +13,10 @@
 #include <linux/ftrace.h>
 #include <linux/completion.h>
 #include <linux/list.h>
+<<<<<<< HEAD
 #include <linux/livepatch_sched.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #if IS_ENABLED(CONFIG_LIVEPATCH)
 

@@ -9,6 +9,12 @@ title: Cadence UART Controller
 maintainers:
   - Michal Simek <michal.simek@xilinx.com>
 
+<<<<<<< HEAD
+=======
+allOf:
+  - $ref: /schemas/serial.yaml#
+
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     oneOf:
@@ -43,9 +49,12 @@ properties:
       port does not use this pin.
     type: boolean
 
+<<<<<<< HEAD
   power-domains:
     maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg
@@ -53,6 +62,7 @@ required:
   - clocks
   - clock-names
 
+<<<<<<< HEAD
 allOf:
   - $ref: serial.yaml#
   - if:
@@ -64,14 +74,24 @@ allOf:
       properties:
         power-domains: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 unevaluatedProperties: false
 
 examples:
   - |
     uart0: serial@e0000000 {
+<<<<<<< HEAD
         compatible = "xlnx,xuartps", "cdns,uart-r1p8";
         clocks = <&clkc 23>, <&clkc 40>;
         clock-names = "uart_clk", "pclk";
         reg = <0xe0000000 0x1000>;
         interrupts = <0 27 4>;
+=======
+      compatible = "xlnx,xuartps", "cdns,uart-r1p8";
+      clocks = <&clkc 23>, <&clkc 40>;
+      clock-names = "uart_clk", "pclk";
+      reg = <0xE0000000 0x1000>;
+      interrupts = <0 27 4>;
+>>>>>>> b7ba80a49124 (Commit)
     };

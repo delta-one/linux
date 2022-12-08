@@ -117,6 +117,27 @@ static inline void dmadesc_set(struct bcmgenet_priv *priv,
 	dmadesc_set_length_status(priv, d, val);
 }
 
+<<<<<<< HEAD
+=======
+static inline dma_addr_t dmadesc_get_addr(struct bcmgenet_priv *priv,
+					  void __iomem *d)
+{
+	dma_addr_t addr;
+
+	addr = bcmgenet_readl(d + DMA_DESC_ADDRESS_LO);
+
+	/* Register writes to GISB bus can take couple hundred nanoseconds
+	 * and are done for each packet, save these expensive writes unless
+	 * the platform is explicitly configured for 64-bits/LPAE.
+	 */
+#ifdef CONFIG_PHYS_ADDR_T_64BIT
+	if (priv->hw_params->flags & GENET_HAS_40BITS)
+		addr |= (u64)bcmgenet_readl(d + DMA_DESC_ADDRESS_HI) << 32;
+#endif
+	return addr;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #define GENET_VER_FMT	"%1d.%1d EPHY: 0x%04x"
 
 #define GENET_MSG_DEFAULT	(NETIF_MSG_DRV | NETIF_MSG_PROBE | \
@@ -1369,8 +1390,12 @@ static int bcmgenet_validate_flow(struct net_device *dev,
 	struct ethtool_usrip4_spec *l4_mask;
 	struct ethhdr *eth_mask;
 
+<<<<<<< HEAD
 	if (cmd->fs.location >= MAX_NUM_OF_FS_RULES &&
 	    cmd->fs.location != RX_CLS_LOC_ANY) {
+=======
+	if (cmd->fs.location >= MAX_NUM_OF_FS_RULES) {
+>>>>>>> b7ba80a49124 (Commit)
 		netdev_err(dev, "rxnfc: Invalid location (%d)\n",
 			   cmd->fs.location);
 		return -EINVAL;
@@ -1435,7 +1460,11 @@ static int bcmgenet_insert_flow(struct net_device *dev,
 {
 	struct bcmgenet_priv *priv = netdev_priv(dev);
 	struct bcmgenet_rxnfc_rule *loc_rule;
+<<<<<<< HEAD
 	int err, i;
+=======
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (priv->hw_params->hfb_filter_size < 128) {
 		netdev_err(dev, "rxnfc: Not supported by this device\n");
@@ -1453,6 +1482,7 @@ static int bcmgenet_insert_flow(struct net_device *dev,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	if (cmd->fs.location == RX_CLS_LOC_ANY) {
 		list_for_each_entry(loc_rule, &priv->rxnfc_list, list) {
 			cmd->fs.location = loc_rule->fs.location;
@@ -1476,6 +1506,9 @@ static int bcmgenet_insert_flow(struct net_device *dev,
 	} else {
 		loc_rule = &priv->rxnfc_rules[cmd->fs.location];
 	}
+=======
+	loc_rule = &priv->rxnfc_rules[cmd->fs.location];
+>>>>>>> b7ba80a49124 (Commit)
 	if (loc_rule->state == BCMGENET_RXNFC_STATE_ENABLED)
 		bcmgenet_hfb_disable_filter(priv, cmd->fs.location);
 	if (loc_rule->state != BCMGENET_RXNFC_STATE_UNUSED) {
@@ -1588,7 +1621,11 @@ static int bcmgenet_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
 		break;
 	case ETHTOOL_GRXCLSRLCNT:
 		cmd->rule_cnt = bcmgenet_get_num_flows(priv);
+<<<<<<< HEAD
 		cmd->data = MAX_NUM_OF_FS_RULES | RX_CLS_LOC_SPECIAL;
+=======
+		cmd->data = MAX_NUM_OF_FS_RULES;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case ETHTOOL_GRXCLSRULE:
 		err = bcmgenet_get_flow(dev, cmd, cmd->fs.location);
@@ -2316,6 +2353,7 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
 			  __func__, p_index, ring->c_index,
 			  ring->read_ptr, dma_length_status);
 
+<<<<<<< HEAD
 		if (unlikely(len > RX_BUF_LENGTH)) {
 			netif_err(priv, rx_status, dev, "oversized packet\n");
 			dev->stats.rx_length_errors++;
@@ -2324,6 +2362,8 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
 			goto next;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (unlikely(!(dma_flag & DMA_EOP) || !(dma_flag & DMA_SOP))) {
 			netif_err(priv, rx_status, dev,
 				  "dropping fragmented packet!\n");
@@ -2720,7 +2760,12 @@ static int bcmgenet_init_rx_ring(struct bcmgenet_priv *priv,
 	bcmgenet_init_rx_coalesce(ring);
 
 	/* Initialize Rx NAPI */
+<<<<<<< HEAD
 	netif_napi_add(priv->dev, &ring->napi, bcmgenet_rx_poll);
+=======
+	netif_napi_add(priv->dev, &ring->napi, bcmgenet_rx_poll,
+		       NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	bcmgenet_rdma_ring_writel(priv, index, 0, RDMA_PROD_INDEX);
 	bcmgenet_rdma_ring_writel(priv, index, 0, RDMA_CONS_INDEX);

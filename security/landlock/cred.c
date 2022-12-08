@@ -34,7 +34,11 @@ static void hook_cred_free(struct cred *const cred)
 		landlock_put_ruleset_deferred(dom);
 }
 
+<<<<<<< HEAD
 static struct security_hook_list landlock_hooks[] __ro_after_init = {
+=======
+static struct security_hook_list landlock_hooks[] __lsm_ro_after_init = {
+>>>>>>> b7ba80a49124 (Commit)
 	LSM_HOOK_INIT(cred_prepare, hook_cred_prepare),
 	LSM_HOOK_INIT(cred_free, hook_cred_free),
 };

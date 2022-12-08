@@ -21,9 +21,15 @@
 #include <linux/mfd/wm831x/core.h>
 #include <linux/mfd/wm831x/pdata.h>
 
+<<<<<<< HEAD
 static int wm831x_i2c_probe(struct i2c_client *i2c)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(i2c);
+=======
+static int wm831x_i2c_probe(struct i2c_client *i2c,
+			    const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct wm831x_pdata *pdata = dev_get_platdata(&i2c->dev);
 	const struct of_device_id *of_id;
 	struct wm831x *wm831x;
@@ -102,7 +108,11 @@ static struct i2c_driver wm831x_i2c_driver = {
 		.of_match_table = of_match_ptr(wm831x_of_match),
 		.suppress_bind_attrs = true,
 	},
+<<<<<<< HEAD
 	.probe_new = wm831x_i2c_probe,
+=======
+	.probe = wm831x_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = wm831x_i2c_id,
 };
 

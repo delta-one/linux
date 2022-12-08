@@ -332,7 +332,11 @@ zero come risultato::
 
 Il valore di ``size`` nell'ultima riga sarà ``zero``, quando uno
 invece si aspetterebbe che il suo valore sia la dimensione totale in
+<<<<<<< HEAD
 byte dell'allocazione dinamica che abbiamo appena fatto per l'array
+=======
+byte dell'allocazione dynamica che abbiamo appena fatto per l'array
+>>>>>>> b7ba80a49124 (Commit)
 ``items``. Qui un paio di esempi reali del problema: `collegamento 1
 <https://git.kernel.org/linus/f2cd32a443da694ac4e28fbf4ac6f9d5cc63a539>`_,
 `collegamento 2
@@ -381,6 +385,7 @@ combinazione con struct_size() e flex_array_size()::
         instance = kmalloc(struct_size(instance, items, count), GFP_KERNEL);
         instance->count = count;
 
+<<<<<<< HEAD
         memcpy(instance->items, source, flex_array_size(instance, items, instance->count));
 
 Ci sono due casi speciali dove è necessario usare la macro DECLARE_FLEX_ARRAY()
@@ -407,3 +412,6 @@ La macro di supporto dev'essere usata::
             DECLARE_FLEX_ARRAY(struct type2, two);
         };
     };
+=======
+	memcpy(instance->items, source, flex_array_size(instance, items, instance->count));
+>>>>>>> b7ba80a49124 (Commit)

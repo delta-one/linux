@@ -120,6 +120,7 @@ static irqreturn_t isr(int irq, void *priv)
  * PTP clock operations
  */
 
+<<<<<<< HEAD
 static int ptp_ixp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
 {
 	u32 addend;
@@ -127,6 +128,26 @@ static int ptp_ixp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
 	struct ixp46x_ts_regs *regs = ixp_clock->regs;
 
 	addend = adjust_by_scaled_ppm(DEFAULT_ADDEND, scaled_ppm);
+=======
+static int ptp_ixp_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
+{
+	u64 adj;
+	u32 diff, addend;
+	int neg_adj = 0;
+	struct ixp_clock *ixp_clock = container_of(ptp, struct ixp_clock, caps);
+	struct ixp46x_ts_regs *regs = ixp_clock->regs;
+
+	if (ppb < 0) {
+		neg_adj = 1;
+		ppb = -ppb;
+	}
+	addend = DEFAULT_ADDEND;
+	adj = addend;
+	adj *= ppb;
+	diff = div_u64(adj, 1000000000ULL);
+
+	addend = neg_adj ? addend - diff : addend + diff;
+>>>>>>> b7ba80a49124 (Commit)
 
 	__raw_writel(addend, &regs->addend);
 
@@ -219,7 +240,11 @@ static const struct ptp_clock_info ptp_ixp_caps = {
 	.n_ext_ts	= N_EXT_TS,
 	.n_pins		= 0,
 	.pps		= 0,
+<<<<<<< HEAD
 	.adjfine	= ptp_ixp_adjfine,
+=======
+	.adjfreq	= ptp_ixp_adjfreq,
+>>>>>>> b7ba80a49124 (Commit)
 	.adjtime	= ptp_ixp_adjtime,
 	.gettime64	= ptp_ixp_gettime,
 	.settime64	= ptp_ixp_settime,

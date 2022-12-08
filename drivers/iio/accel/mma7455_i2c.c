@@ -10,9 +10,15 @@
 
 #include "mma7455.h"
 
+<<<<<<< HEAD
 static int mma7455_i2c_probe(struct i2c_client *i2c)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(i2c);
+=======
+static int mma7455_i2c_probe(struct i2c_client *i2c,
+			     const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct regmap *regmap;
 	const char *name = NULL;
 
@@ -46,7 +52,11 @@ static const struct of_device_id mma7455_of_match[] = {
 MODULE_DEVICE_TABLE(of, mma7455_of_match);
 
 static struct i2c_driver mma7455_i2c_driver = {
+<<<<<<< HEAD
 	.probe_new = mma7455_i2c_probe,
+=======
+	.probe = mma7455_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = mma7455_i2c_remove,
 	.id_table = mma7455_i2c_ids,
 	.driver = {

@@ -476,8 +476,12 @@ static int __hwrm_send(struct bnxt *bp, struct bnxt_hwrm_ctx *ctx)
 		memset(ctx->resp, 0, PAGE_SIZE);
 
 	req_type = le16_to_cpu(ctx->req->req_type);
+<<<<<<< HEAD
 	if (BNXT_NO_FW_ACCESS(bp) &&
 	    (req_type != HWRM_FUNC_RESET && req_type != HWRM_VER_GET)) {
+=======
+	if (BNXT_NO_FW_ACCESS(bp) && req_type != HWRM_FUNC_RESET) {
+>>>>>>> b7ba80a49124 (Commit)
 		netdev_dbg(bp->dev, "hwrm req_type 0x%x skipped, FW channel down\n",
 			   req_type);
 		goto exit;

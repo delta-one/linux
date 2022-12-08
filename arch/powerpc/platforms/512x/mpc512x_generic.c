@@ -47,5 +47,9 @@ define_machine(mpc512x_generic) {
 	.setup_arch		= mpc512x_setup_arch,
 	.init_IRQ		= mpc512x_init_IRQ,
 	.get_irq		= ipic_get_irq,
+<<<<<<< HEAD
+=======
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.restart		= mpc512x_restart,
 };

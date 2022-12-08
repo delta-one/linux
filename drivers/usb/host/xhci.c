@@ -292,6 +292,7 @@ static void xhci_zero_64b_regs(struct xhci_hcd *xhci)
 		xhci_info(xhci, "Fault detected\n");
 }
 
+<<<<<<< HEAD
 static int xhci_enable_interrupter(struct xhci_interrupter *ir)
 {
 	u32 iman;
@@ -318,6 +319,8 @@ static int xhci_disable_interrupter(struct xhci_interrupter *ir)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_USB_PCI
 /*
  * Set up MSI
@@ -636,9 +639,15 @@ static int xhci_init(struct usb_hcd *hcd)
 
 /*-------------------------------------------------------------------------*/
 
+<<<<<<< HEAD
 static int xhci_run_finished(struct xhci_hcd *xhci)
 {
 	struct xhci_interrupter *ir = xhci->interrupter;
+=======
+
+static int xhci_run_finished(struct xhci_hcd *xhci)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long	flags;
 	u32		temp;
 
@@ -654,7 +663,12 @@ static int xhci_run_finished(struct xhci_hcd *xhci)
 	writel(temp, &xhci->op_regs->command);
 
 	xhci_dbg_trace(xhci, trace_xhci_dbg_init, "Enable primary interrupter");
+<<<<<<< HEAD
 	xhci_enable_interrupter(ir);
+=======
+	temp = readl(&xhci->ir_set->irq_pending);
+	writel(ER_IRQ_ENABLE(temp), &xhci->ir_set->irq_pending);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (xhci_start(xhci)) {
 		xhci_halt(xhci);
@@ -690,7 +704,11 @@ int xhci_run(struct usb_hcd *hcd)
 	u64 temp_64;
 	int ret;
 	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
+<<<<<<< HEAD
 	struct xhci_interrupter *ir = xhci->interrupter;
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Start the xHCI host controller running only after the USB 2.0 roothub
 	 * is setup.
 	 */
@@ -705,17 +723,28 @@ int xhci_run(struct usb_hcd *hcd)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	temp_64 = xhci_read_64(xhci, &ir->ir_set->erst_dequeue);
+=======
+	temp_64 = xhci_read_64(xhci, &xhci->ir_set->erst_dequeue);
+>>>>>>> b7ba80a49124 (Commit)
 	temp_64 &= ~ERST_PTR_MASK;
 	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
 			"ERST deq = 64'h%0lx", (long unsigned int) temp_64);
 
 	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
 			"// Set the interrupt modulation register");
+<<<<<<< HEAD
 	temp = readl(&ir->ir_set->irq_control);
 	temp &= ~ER_IRQ_INTERVAL_MASK;
 	temp |= (xhci->imod_interval / 250) & ER_IRQ_INTERVAL_MASK;
 	writel(temp, &ir->ir_set->irq_control);
+=======
+	temp = readl(&xhci->ir_set->irq_control);
+	temp &= ~ER_IRQ_INTERVAL_MASK;
+	temp |= (xhci->imod_interval / 250) & ER_IRQ_INTERVAL_MASK;
+	writel(temp, &xhci->ir_set->irq_control);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (xhci->quirks & XHCI_NEC_HOST) {
 		struct xhci_command *command;
@@ -758,7 +787,10 @@ static void xhci_stop(struct usb_hcd *hcd)
 {
 	u32 temp;
 	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
+<<<<<<< HEAD
 	struct xhci_interrupter *ir = xhci->interrupter;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&xhci->mutex);
 
@@ -795,7 +827,12 @@ static void xhci_stop(struct usb_hcd *hcd)
 			"// Disabling event ring interrupts");
 	temp = readl(&xhci->op_regs->status);
 	writel((temp & ~0x1fff) | STS_EINT, &xhci->op_regs->status);
+<<<<<<< HEAD
 	xhci_disable_interrupter(ir);
+=======
+	temp = readl(&xhci->ir_set->irq_pending);
+	writel(ER_IRQ_DISABLE(temp), &xhci->ir_set->irq_pending);
+>>>>>>> b7ba80a49124 (Commit)
 
 	xhci_dbg_trace(xhci, trace_xhci_dbg_init, "cleaning up memory");
 	xhci_mem_cleanup(xhci);
@@ -835,6 +872,7 @@ void xhci_shutdown(struct usb_hcd *hcd)
 
 	spin_lock_irq(&xhci->lock);
 	xhci_halt(xhci);
+<<<<<<< HEAD
 
 	/*
 	 * Workaround for spurious wakeps at shutdown with HSW, and for boot
@@ -844,6 +882,11 @@ void xhci_shutdown(struct usb_hcd *hcd)
 	    xhci->quirks & XHCI_RESET_TO_DEFAULT)
 		xhci_reset(xhci, XHCI_RESET_SHORT_USEC);
 
+=======
+	/* Workaround for spurious wakeups at shutdown with HSW */
+	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
+		xhci_reset(xhci, XHCI_RESET_SHORT_USEC);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irq(&xhci->lock);
 
 	xhci_cleanup_msix(xhci);
@@ -857,12 +900,16 @@ EXPORT_SYMBOL_GPL(xhci_shutdown);
 #ifdef CONFIG_PM
 static void xhci_save_registers(struct xhci_hcd *xhci)
 {
+<<<<<<< HEAD
 	struct xhci_interrupter *ir = xhci->interrupter;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	xhci->s3.command = readl(&xhci->op_regs->command);
 	xhci->s3.dev_nt = readl(&xhci->op_regs->dev_notification);
 	xhci->s3.dcbaa_ptr = xhci_read_64(xhci, &xhci->op_regs->dcbaa_ptr);
 	xhci->s3.config_reg = readl(&xhci->op_regs->config_reg);
+<<<<<<< HEAD
 
 	if (!ir)
 		return;
@@ -872,21 +919,39 @@ static void xhci_save_registers(struct xhci_hcd *xhci)
 	ir->s3_erst_dequeue = xhci_read_64(xhci, &ir->ir_set->erst_dequeue);
 	ir->s3_irq_pending = readl(&ir->ir_set->irq_pending);
 	ir->s3_irq_control = readl(&ir->ir_set->irq_control);
+=======
+	xhci->s3.erst_size = readl(&xhci->ir_set->erst_size);
+	xhci->s3.erst_base = xhci_read_64(xhci, &xhci->ir_set->erst_base);
+	xhci->s3.erst_dequeue = xhci_read_64(xhci, &xhci->ir_set->erst_dequeue);
+	xhci->s3.irq_pending = readl(&xhci->ir_set->irq_pending);
+	xhci->s3.irq_control = readl(&xhci->ir_set->irq_control);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void xhci_restore_registers(struct xhci_hcd *xhci)
 {
+<<<<<<< HEAD
 	struct xhci_interrupter *ir = xhci->interrupter;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	writel(xhci->s3.command, &xhci->op_regs->command);
 	writel(xhci->s3.dev_nt, &xhci->op_regs->dev_notification);
 	xhci_write_64(xhci, xhci->s3.dcbaa_ptr, &xhci->op_regs->dcbaa_ptr);
 	writel(xhci->s3.config_reg, &xhci->op_regs->config_reg);
+<<<<<<< HEAD
 	writel(ir->s3_erst_size, &ir->ir_set->erst_size);
 	xhci_write_64(xhci, ir->s3_erst_base, &ir->ir_set->erst_base);
 	xhci_write_64(xhci, ir->s3_erst_dequeue, &ir->ir_set->erst_dequeue);
 	writel(ir->s3_irq_pending, &ir->ir_set->irq_pending);
 	writel(ir->s3_irq_control, &ir->ir_set->irq_control);
+=======
+	writel(xhci->s3.erst_size, &xhci->ir_set->erst_size);
+	xhci_write_64(xhci, xhci->s3.erst_base, &xhci->ir_set->erst_base);
+	xhci_write_64(xhci, xhci->s3.erst_dequeue, &xhci->ir_set->erst_dequeue);
+	writel(xhci->s3.irq_pending, &xhci->ir_set->irq_pending);
+	writel(xhci->s3.irq_control, &xhci->ir_set->irq_control);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void xhci_set_cmd_ring_deq(struct xhci_hcd *xhci)
@@ -1222,8 +1287,12 @@ int xhci_resume(struct xhci_hcd *xhci, bool hibernated)
 	/* re-initialize the HC on Restore Error, or Host Controller Error */
 	if (temp & (STS_SRE | STS_HCE)) {
 		reinit_xhc = true;
+<<<<<<< HEAD
 		if (!xhci->broken_suspend)
 			xhci_warn(xhci, "xHC error in resume, USBSTS 0x%x, Reinit\n", temp);
+=======
+		xhci_warn(xhci, "xHC error in resume, USBSTS 0x%x, Reinit\n", temp);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (reinit_xhc) {
@@ -1251,7 +1320,12 @@ int xhci_resume(struct xhci_hcd *xhci, bool hibernated)
 		xhci_dbg(xhci, "// Disabling event ring interrupts\n");
 		temp = readl(&xhci->op_regs->status);
 		writel((temp & ~0x1fff) | STS_EINT, &xhci->op_regs->status);
+<<<<<<< HEAD
 		xhci_disable_interrupter(xhci->interrupter);
+=======
+		temp = readl(&xhci->ir_set->irq_pending);
+		writel(ER_IRQ_DISABLE(temp), &xhci->ir_set->irq_pending);
+>>>>>>> b7ba80a49124 (Commit)
 
 		xhci_dbg(xhci, "cleaning up memory\n");
 		xhci_mem_cleanup(xhci);
@@ -4006,7 +4080,10 @@ static void xhci_free_dev(struct usb_hcd *hcd, struct usb_device *udev)
 	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
 	struct xhci_virt_device *virt_dev;
 	struct xhci_slot_ctx *slot_ctx;
+<<<<<<< HEAD
 	unsigned long flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i, ret;
 
 	/*
@@ -4033,11 +4110,15 @@ static void xhci_free_dev(struct usb_hcd *hcd, struct usb_device *udev)
 		virt_dev->eps[i].ep_state &= ~EP_STOP_CMD_PENDING;
 	virt_dev->udev = NULL;
 	xhci_disable_slot(xhci, udev->slot_id);
+<<<<<<< HEAD
 
 	spin_lock_irqsave(&xhci->lock, flags);
 	xhci_free_virt_device(xhci, udev->slot_id);
 	spin_unlock_irqrestore(&xhci->lock, flags);
 
+=======
+	xhci_free_virt_device(xhci, udev->slot_id);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int xhci_disable_slot(struct xhci_hcd *xhci, u32 slot_id)
@@ -4139,8 +4220,12 @@ int xhci_alloc_dev(struct usb_hcd *hcd, struct usb_device *udev)
 	slot_id = command->slot_id;
 
 	if (!slot_id || command->status != COMP_SUCCESS) {
+<<<<<<< HEAD
 		xhci_err(xhci, "Error while assigning device slot ID: %s\n",
 			 xhci_trb_comp_code_string(command->status));
+=======
+		xhci_err(xhci, "Error while assigning device slot ID\n");
+>>>>>>> b7ba80a49124 (Commit)
 		xhci_err(xhci, "Max number of devices this xHCI host supports is %u.\n",
 				HCS_MAX_SLOTS(
 					readl(&xhci->cap_regs->hcs_params1)));
@@ -5081,7 +5166,10 @@ static int xhci_enable_usb3_lpm_timeout(struct usb_hcd *hcd,
 			struct usb_device *udev, enum usb3_link_state state)
 {
 	struct xhci_hcd	*xhci;
+<<<<<<< HEAD
 	struct xhci_port *port;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 hub_encoded_timeout;
 	int mel;
 	int ret;
@@ -5098,6 +5186,7 @@ static int xhci_enable_usb3_lpm_timeout(struct usb_hcd *hcd,
 	if (xhci_check_tier_policy(xhci, udev, state) < 0)
 		return USB3_LPM_DISABLED;
 
+<<<<<<< HEAD
 	/* If connected to root port then check port can handle lpm */
 	if (udev->parent && !udev->parent->parent) {
 		port = xhci->usb3_rhub.ports[udev->portnum - 1];
@@ -5105,6 +5194,8 @@ static int xhci_enable_usb3_lpm_timeout(struct usb_hcd *hcd,
 			return USB3_LPM_DISABLED;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hub_encoded_timeout = xhci_calculate_lpm_timeout(hcd, udev, state);
 	mel = calculate_max_exit_latency(udev, state, hub_encoded_timeout);
 	if (mel < 0) {
@@ -5164,7 +5255,11 @@ static int xhci_disable_usb3_lpm_timeout(struct usb_hcd *hcd,
 /* Once a hub descriptor is fetched for a device, we need to update the xHC's
  * internal data structures for the device.
  */
+<<<<<<< HEAD
 int xhci_update_hub_device(struct usb_hcd *hcd, struct usb_device *hdev,
+=======
+static int xhci_update_hub_device(struct usb_hcd *hcd, struct usb_device *hdev,
+>>>>>>> b7ba80a49124 (Commit)
 			struct usb_tt *tt, gfp_t mem_flags)
 {
 	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
@@ -5264,7 +5359,10 @@ int xhci_update_hub_device(struct usb_hcd *hcd, struct usb_device *hdev,
 	xhci_free_command(xhci, config_cmd);
 	return ret;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(xhci_update_hub_device);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int xhci_get_frame(struct usb_hcd *hcd)
 {
@@ -5366,11 +5464,14 @@ int xhci_gen_setup(struct usb_hcd *hcd, xhci_get_quirks_t get_quirks)
 	if (xhci->hci_version > 0x100)
 		xhci->hcc_params2 = readl(&xhci->cap_regs->hcc_params2);
 
+<<<<<<< HEAD
 	/* xhci-plat or xhci-pci might have set max_interrupters already */
 	if ((!xhci->max_interrupters) ||
 	    xhci->max_interrupters > HCS_MAX_INTRS(xhci->hcs_params1))
 		xhci->max_interrupters = HCS_MAX_INTRS(xhci->hcs_params1);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	xhci->quirks |= quirks;
 
 	get_quirks(dev, xhci);
@@ -5553,10 +5654,13 @@ void xhci_init_driver(struct hc_driver *drv,
 			drv->check_bandwidth = over->check_bandwidth;
 		if (over->reset_bandwidth)
 			drv->reset_bandwidth = over->reset_bandwidth;
+<<<<<<< HEAD
 		if (over->update_hub_device)
 			drv->update_hub_device = over->update_hub_device;
 		if (over->hub_control)
 			drv->hub_control = over->hub_control;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 EXPORT_SYMBOL_GPL(xhci_init_driver);

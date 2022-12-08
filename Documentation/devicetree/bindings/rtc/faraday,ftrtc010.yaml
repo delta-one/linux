@@ -38,8 +38,13 @@ properties:
 
   clock-names:
     items:
+<<<<<<< HEAD
       - const: PCLK
       - const: EXTCLK
+=======
+      - const: "PCLK"
+      - const: "EXTCLK"
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible

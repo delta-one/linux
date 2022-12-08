@@ -579,18 +579,31 @@ err_dis_cclk:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void s3c_pcm_dev_remove(struct platform_device *pdev)
+=======
+static int s3c_pcm_dev_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct s3c_pcm_info *pcm = &s3c_pcm[pdev->id];
 
 	pm_runtime_disable(&pdev->dev);
 	clk_disable_unprepare(pcm->cclk);
 	clk_disable_unprepare(pcm->pclk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver s3c_pcm_driver = {
 	.probe  = s3c_pcm_dev_probe,
+<<<<<<< HEAD
 	.remove_new = s3c_pcm_dev_remove,
+=======
+	.remove = s3c_pcm_dev_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "samsung-pcm",
 	},

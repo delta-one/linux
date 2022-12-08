@@ -83,6 +83,7 @@ unsigned int aperfmperf_get_khz(int cpu);
 extern void x86_spec_ctrl_setup_ap(void);
 extern void update_srbds_msr(void);
 
+<<<<<<< HEAD
 extern enum spectre_v2_mitigation spectre_v2_enabled;
 
 static inline bool spectre_v2_in_eibrs_mode(enum spectre_v2_mitigation mode)
@@ -91,4 +92,8 @@ static inline bool spectre_v2_in_eibrs_mode(enum spectre_v2_mitigation mode)
 	       mode == SPECTRE_V2_EIBRS_RETPOLINE ||
 	       mode == SPECTRE_V2_EIBRS_LFENCE;
 }
+=======
+extern u64 x86_read_arch_cap_msr(void);
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* ARCH_X86_CPU_H */

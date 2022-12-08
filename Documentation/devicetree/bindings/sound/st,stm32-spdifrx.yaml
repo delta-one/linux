@@ -13,9 +13,12 @@ description: |
   The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
   IEC-60958 and IEC-61937.
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     enum:
@@ -60,7 +63,11 @@ required:
   - dmas
   - dma-names
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

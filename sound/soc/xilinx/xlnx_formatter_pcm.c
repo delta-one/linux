@@ -687,7 +687,11 @@ clk_err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void xlnx_formatter_pcm_remove(struct platform_device *pdev)
+=======
+static int xlnx_formatter_pcm_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret = 0;
 	struct xlnx_pcm_drv_data *adata = dev_get_drvdata(&pdev->dev);
@@ -703,6 +707,10 @@ static void xlnx_formatter_pcm_remove(struct platform_device *pdev)
 		dev_err(&pdev->dev, "audio formatter reset failed\n");
 
 	clk_disable_unprepare(adata->axi_clk);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id xlnx_formatter_pcm_of_match[] = {
@@ -713,7 +721,11 @@ MODULE_DEVICE_TABLE(of, xlnx_formatter_pcm_of_match);
 
 static struct platform_driver xlnx_formatter_pcm_driver = {
 	.probe	= xlnx_formatter_pcm_probe,
+<<<<<<< HEAD
 	.remove_new = xlnx_formatter_pcm_remove,
+=======
+	.remove	= xlnx_formatter_pcm_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name	= DRV_NAME,
 		.of_match_table	= xlnx_formatter_pcm_of_match,

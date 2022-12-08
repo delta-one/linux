@@ -78,7 +78,11 @@ static void acpi_data_node_release(struct kobject *kobj)
 	complete(&dn->kobj_done);
 }
 
+<<<<<<< HEAD
 static const struct kobj_type acpi_data_node_ktype = {
+=======
+static struct kobj_type acpi_data_node_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops = &acpi_data_node_sysfs_ops,
 	.default_groups = acpi_data_node_default_groups,
 	.release = acpi_data_node_release,
@@ -133,7 +137,11 @@ static void acpi_hide_nondev_subnodes(struct acpi_device_data *data)
  *         -EINVAL: output error
  *         -ENOMEM: output is truncated
  */
+<<<<<<< HEAD
 static int create_pnp_modalias(const struct acpi_device *acpi_dev, char *modalias,
+=======
+static int create_pnp_modalias(struct acpi_device *acpi_dev, char *modalias,
+>>>>>>> b7ba80a49124 (Commit)
 			       int size)
 {
 	int len;
@@ -191,7 +199,11 @@ static int create_pnp_modalias(const struct acpi_device *acpi_dev, char *modalia
  * only be called for devices having ACPI_DT_NAMESPACE_HID in their list of
  * ACPI/PNP IDs.
  */
+<<<<<<< HEAD
 static int create_of_modalias(const struct acpi_device *acpi_dev, char *modalias,
+=======
+static int create_of_modalias(struct acpi_device *acpi_dev, char *modalias,
+>>>>>>> b7ba80a49124 (Commit)
 			      int size)
 {
 	struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER };
@@ -239,7 +251,11 @@ static int create_of_modalias(const struct acpi_device *acpi_dev, char *modalias
 	return len;
 }
 
+<<<<<<< HEAD
 int __acpi_device_uevent_modalias(const struct acpi_device *adev,
+=======
+int __acpi_device_uevent_modalias(struct acpi_device *adev,
+>>>>>>> b7ba80a49124 (Commit)
 				  struct kobj_uevent_env *env)
 {
 	int len;
@@ -277,7 +293,11 @@ int __acpi_device_uevent_modalias(const struct acpi_device *adev,
  * Because other buses do not support ACPI HIDs & CIDs, e.g. for a device with
  * hid:IBM0001 and cid:ACPI0001 you get: "acpi:IBM0001:ACPI0001".
  */
+<<<<<<< HEAD
 int acpi_device_uevent_modalias(const struct device *dev, struct kobj_uevent_env *env)
+=======
+int acpi_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return __acpi_device_uevent_modalias(acpi_companion_match(dev), env);
 }

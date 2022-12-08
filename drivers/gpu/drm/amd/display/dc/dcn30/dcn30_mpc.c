@@ -1399,7 +1399,11 @@ static void mpc3_set_mpc_mem_lp_mode(struct mpc *mpc)
 	}
 }
 
+<<<<<<< HEAD
 static const struct mpc_funcs dcn30_mpc_funcs = {
+=======
+const struct mpc_funcs dcn30_mpc_funcs = {
+>>>>>>> b7ba80a49124 (Commit)
 	.read_mpcc_state = mpc1_read_mpcc_state,
 	.insert_plane = mpc1_insert_plane,
 	.remove_mpcc = mpc1_remove_mpcc,

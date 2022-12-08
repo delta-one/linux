@@ -48,7 +48,11 @@
 #include "dcn31/dcn31_clk_mgr.h"
 
 #include "dc_dmub_srv.h"
+<<<<<<< HEAD
 #include "link.h"
+=======
+#include "dc_link_dp.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "dcn314_smu.h"
 
 
@@ -108,11 +112,14 @@ static int dcn314_get_active_display_cnt_wa(
 				stream->signal == SIGNAL_TYPE_DVI_SINGLE_LINK ||
 				stream->signal == SIGNAL_TYPE_DVI_DUAL_LINK)
 			tmds_present = true;
+<<<<<<< HEAD
 
 		/* Checking stream / link detection ensuring that PHY is active*/
 		if (dc_is_dp_signal(stream->signal) && !stream->dpms_off)
 			display_count++;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (i = 0; i < dc->link_count; i++) {
@@ -142,6 +149,7 @@ static void dcn314_disable_otg_wa(struct clk_mgr *clk_mgr_base, struct dc_state 
 		if (pipe->top_pipe || pipe->prev_odm_pipe)
 			continue;
 		if (pipe->stream && (pipe->stream->dpms_off || dc_is_virtual_signal(pipe->stream->signal))) {
+<<<<<<< HEAD
 			struct stream_encoder *stream_enc = pipe->stream_res.stream_enc;
 
 			if (disable) {
@@ -156,6 +164,13 @@ static void dcn314_disable_otg_wa(struct clk_mgr *clk_mgr_base, struct dc_state 
 				if (stream_enc && stream_enc->funcs->enable_fifo)
 					pipe->stream_res.stream_enc->funcs->enable_fifo(stream_enc);
 			}
+=======
+			if (disable) {
+				pipe->stream_res.tg->funcs->immediate_disable_crtc(pipe->stream_res.tg);
+				reset_sync_context_for_pipe(dc, context, i);
+			} else
+				pipe->stream_res.tg->funcs->enable_crtc(pipe->stream_res.tg);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }
@@ -368,32 +383,52 @@ static struct wm_table ddr5_wm_table = {
 			.wm_inst = WM_A,
 			.wm_type = WM_TYPE_PSTATE_CHG,
 			.pstate_latency_us = 11.72,
+<<<<<<< HEAD
 			.sr_exit_time_us = 12.5,
 			.sr_enter_plus_exit_time_us = 14.5,
+=======
+			.sr_exit_time_us = 9,
+			.sr_enter_plus_exit_time_us = 11,
+>>>>>>> b7ba80a49124 (Commit)
 			.valid = true,
 		},
 		{
 			.wm_inst = WM_B,
 			.wm_type = WM_TYPE_PSTATE_CHG,
 			.pstate_latency_us = 11.72,
+<<<<<<< HEAD
 			.sr_exit_time_us = 12.5,
 			.sr_enter_plus_exit_time_us = 14.5,
+=======
+			.sr_exit_time_us = 9,
+			.sr_enter_plus_exit_time_us = 11,
+>>>>>>> b7ba80a49124 (Commit)
 			.valid = true,
 		},
 		{
 			.wm_inst = WM_C,
 			.wm_type = WM_TYPE_PSTATE_CHG,
 			.pstate_latency_us = 11.72,
+<<<<<<< HEAD
 			.sr_exit_time_us = 12.5,
 			.sr_enter_plus_exit_time_us = 14.5,
+=======
+			.sr_exit_time_us = 9,
+			.sr_enter_plus_exit_time_us = 11,
+>>>>>>> b7ba80a49124 (Commit)
 			.valid = true,
 		},
 		{
 			.wm_inst = WM_D,
 			.wm_type = WM_TYPE_PSTATE_CHG,
 			.pstate_latency_us = 11.72,
+<<<<<<< HEAD
 			.sr_exit_time_us = 12.5,
 			.sr_enter_plus_exit_time_us = 14.5,
+=======
+			.sr_exit_time_us = 9,
+			.sr_enter_plus_exit_time_us = 11,
+>>>>>>> b7ba80a49124 (Commit)
 			.valid = true,
 		},
 	}
@@ -405,32 +440,52 @@ static struct wm_table lpddr5_wm_table = {
 			.wm_inst = WM_A,
 			.wm_type = WM_TYPE_PSTATE_CHG,
 			.pstate_latency_us = 11.65333,
+<<<<<<< HEAD
 			.sr_exit_time_us = 16.5,
 			.sr_enter_plus_exit_time_us = 18.5,
+=======
+			.sr_exit_time_us = 11.5,
+			.sr_enter_plus_exit_time_us = 14.5,
+>>>>>>> b7ba80a49124 (Commit)
 			.valid = true,
 		},
 		{
 			.wm_inst = WM_B,
 			.wm_type = WM_TYPE_PSTATE_CHG,
 			.pstate_latency_us = 11.65333,
+<<<<<<< HEAD
 			.sr_exit_time_us = 16.5,
 			.sr_enter_plus_exit_time_us = 18.5,
+=======
+			.sr_exit_time_us = 11.5,
+			.sr_enter_plus_exit_time_us = 14.5,
+>>>>>>> b7ba80a49124 (Commit)
 			.valid = true,
 		},
 		{
 			.wm_inst = WM_C,
 			.wm_type = WM_TYPE_PSTATE_CHG,
 			.pstate_latency_us = 11.65333,
+<<<<<<< HEAD
 			.sr_exit_time_us = 16.5,
 			.sr_enter_plus_exit_time_us = 18.5,
+=======
+			.sr_exit_time_us = 11.5,
+			.sr_enter_plus_exit_time_us = 14.5,
+>>>>>>> b7ba80a49124 (Commit)
 			.valid = true,
 		},
 		{
 			.wm_inst = WM_D,
 			.wm_type = WM_TYPE_PSTATE_CHG,
 			.pstate_latency_us = 11.65333,
+<<<<<<< HEAD
 			.sr_exit_time_us = 16.5,
 			.sr_enter_plus_exit_time_us = 18.5,
+=======
+			.sr_exit_time_us = 11.5,
+			.sr_enter_plus_exit_time_us = 14.5,
+>>>>>>> b7ba80a49124 (Commit)
 			.valid = true,
 		},
 	}

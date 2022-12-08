@@ -203,7 +203,10 @@ void svm_range_list_lock_and_flush_work(struct svm_range_list *svms, struct mm_s
 void svm_range_bo_unref_async(struct svm_range_bo *svm_bo);
 
 void svm_range_set_max_pages(struct amdgpu_device *adev);
+<<<<<<< HEAD
 int svm_range_switch_xnack_reserve_mem(struct kfd_process *p, bool xnack_enabled);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #else
 

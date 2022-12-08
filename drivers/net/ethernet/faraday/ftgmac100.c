@@ -1506,7 +1506,11 @@ static int ftgmac100_open(struct net_device *netdev)
 		goto err_hw;
 
 	/* Initialize NAPI */
+<<<<<<< HEAD
 	netif_napi_add(netdev, &priv->napi, ftgmac100_poll);
+=======
+	netif_napi_add(netdev, &priv->napi, ftgmac100_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Grab our interrupt */
 	err = request_irq(netdev->irq, ftgmac100_interrupt, 0, netdev->name, netdev);

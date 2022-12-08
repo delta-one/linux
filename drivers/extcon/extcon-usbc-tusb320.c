@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * drivers/extcon/extcon-tusb320.c - TUSB320 extcon driver
  *
  * Copyright (C) 2020 National Instruments Corporation
@@ -15,8 +19,11 @@
 #include <linux/module.h>
 #include <linux/regmap.h>
 #include <linux/usb/typec.h>
+<<<<<<< HEAD
 #include <linux/usb/typec_altmode.h>
 #include <linux/usb/role.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define TUSB320_REG8				0x8
 #define TUSB320_REG8_CURRENT_MODE_ADVERTISE	GENMASK(7, 6)
@@ -28,6 +35,7 @@
 #define TUSB320_REG8_CURRENT_MODE_DETECT_MED	0x1
 #define TUSB320_REG8_CURRENT_MODE_DETECT_ACC	0x2
 #define TUSB320_REG8_CURRENT_MODE_DETECT_HI	0x3
+<<<<<<< HEAD
 #define TUSB320_REG8_ACCESSORY_CONNECTED	GENMASK(3, 1)
 #define TUSB320_REG8_ACCESSORY_CONNECTED_NONE	0x0
 #define TUSB320_REG8_ACCESSORY_CONNECTED_AUDIO	0x4
@@ -38,6 +46,18 @@
 
 #define TUSB320_REG9				0x9
 #define TUSB320_REG9_ATTACHED_STATE		GENMASK(7, 6)
+=======
+#define TUSB320_REG8_ACCESSORY_CONNECTED	GENMASK(3, 2)
+#define TUSB320_REG8_ACCESSORY_CONNECTED_NONE	0x0
+#define TUSB320_REG8_ACCESSORY_CONNECTED_AUDIO	0x4
+#define TUSB320_REG8_ACCESSORY_CONNECTED_ACC	0x5
+#define TUSB320_REG8_ACCESSORY_CONNECTED_DEBUG	0x6
+#define TUSB320_REG8_ACTIVE_CABLE_DETECTION	BIT(0)
+
+#define TUSB320_REG9				0x9
+#define TUSB320_REG9_ATTACHED_STATE_SHIFT	6
+#define TUSB320_REG9_ATTACHED_STATE_MASK	0x3
+>>>>>>> b7ba80a49124 (Commit)
 #define TUSB320_REG9_CABLE_DIRECTION		BIT(5)
 #define TUSB320_REG9_INTERRUPT_STATUS		BIT(4)
 
@@ -80,8 +100,11 @@ struct tusb320_priv {
 	struct typec_capability	cap;
 	enum typec_port_type port_type;
 	enum typec_pwr_opmode pwr_opmode;
+<<<<<<< HEAD
 	struct fwnode_handle *connector_fwnode;
 	struct usb_role_switch *role_sw;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const char * const tusb_attached_states[] = {
@@ -253,7 +276,12 @@ static void tusb320_extcon_irq_handler(struct tusb320_priv *priv, u8 reg)
 {
 	int state, polarity;
 
+<<<<<<< HEAD
 	state = FIELD_GET(TUSB320_REG9_ATTACHED_STATE, reg);
+=======
+	state = (reg >> TUSB320_REG9_ATTACHED_STATE_SHIFT) &
+		TUSB320_REG9_ATTACHED_STATE_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 	polarity = !!(reg & TUSB320_REG9_CABLE_DIRECTION);
 
 	dev_dbg(priv->dev, "attached state: %s, polarity: %d\n",
@@ -279,6 +307,7 @@ static void tusb320_typec_irq_handler(struct tusb320_priv *priv, u8 reg9)
 {
 	struct typec_port *port = priv->port;
 	struct device *dev = priv->dev;
+<<<<<<< HEAD
 	int typec_mode;
 	enum usb_role usb_role;
 	enum typec_role pwr_role;
@@ -287,12 +316,35 @@ static void tusb320_typec_irq_handler(struct tusb320_priv *priv, u8 reg9)
 	int ret, reg8;
 	bool ori;
 
+=======
+	u8 mode, role, state;
+	int ret, reg8;
+	bool ori;
+
+	ori = reg9 & TUSB320_REG9_CABLE_DIRECTION;
+	typec_set_orientation(port, ori ? TYPEC_ORIENTATION_REVERSE :
+					  TYPEC_ORIENTATION_NORMAL);
+
+	state = (reg9 >> TUSB320_REG9_ATTACHED_STATE_SHIFT) &
+		TUSB320_REG9_ATTACHED_STATE_MASK;
+	if (state == TUSB320_ATTACHED_STATE_DFP)
+		role = TYPEC_SOURCE;
+	else
+		role = TYPEC_SINK;
+
+	typec_set_vconn_role(port, role);
+	typec_set_pwr_role(port, role);
+	typec_set_data_role(port, role == TYPEC_SOURCE ?
+				  TYPEC_HOST : TYPEC_DEVICE);
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = regmap_read(priv->regmap, TUSB320_REG8, &reg8);
 	if (ret) {
 		dev_err(dev, "error during reg8 i2c read, ret=%d!\n", ret);
 		return;
 	}
 
+<<<<<<< HEAD
 	ori = reg9 & TUSB320_REG9_CABLE_DIRECTION;
 	typec_set_orientation(port, ori ? TYPEC_ORIENTATION_REVERSE :
 					  TYPEC_ORIENTATION_NORMAL);
@@ -359,6 +411,8 @@ static void tusb320_typec_irq_handler(struct tusb320_priv *priv, u8 reg9)
 	typec_set_mode(port, typec_mode);
 	usb_role_switch_set_role(priv->role_sw, usb_role);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mode = FIELD_GET(TUSB320_REG8_CURRENT_MODE_DETECT, reg8);
 	if (mode == TUSB320_REG8_CURRENT_MODE_DETECT_DEF)
 		typec_set_pwr_opmode(port, TYPEC_PWR_MODE_USB);
@@ -370,9 +424,15 @@ static void tusb320_typec_irq_handler(struct tusb320_priv *priv, u8 reg9)
 		typec_set_pwr_opmode(port, TYPEC_PWR_MODE_USB);
 }
 
+<<<<<<< HEAD
 static irqreturn_t tusb320_state_update_handler(struct tusb320_priv *priv,
 						bool force_update)
 {
+=======
+static irqreturn_t tusb320_irq_handler(int irq, void *dev_id)
+{
+	struct tusb320_priv *priv = dev_id;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int reg;
 
 	if (regmap_read(priv->regmap, TUSB320_REG9, &reg)) {
@@ -380,6 +440,7 @@ static irqreturn_t tusb320_state_update_handler(struct tusb320_priv *priv,
 		return IRQ_NONE;
 	}
 
+<<<<<<< HEAD
 	if (!force_update && !(reg & TUSB320_REG9_INTERRUPT_STATUS))
 		return IRQ_NONE;
 
@@ -391,12 +452,20 @@ static irqreturn_t tusb320_state_update_handler(struct tusb320_priv *priv,
 	 */
 	if (priv->port)
 		tusb320_typec_irq_handler(priv, reg);
+=======
+	if (!(reg & TUSB320_REG9_INTERRUPT_STATUS))
+		return IRQ_NONE;
+
+	tusb320_extcon_irq_handler(priv, reg);
+	tusb320_typec_irq_handler(priv, reg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	regmap_write(priv->regmap, TUSB320_REG9, reg);
 
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static irqreturn_t tusb320_irq_handler(int irq, void *dev_id)
 {
 	struct tusb320_priv *priv = dev_id;
@@ -404,6 +473,8 @@ static irqreturn_t tusb320_irq_handler(int irq, void *dev_id)
 	return tusb320_state_update_handler(priv, false);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct regmap_config tusb320_regmap_config = {
 	.reg_bits = 8,
 	.val_bits = 8,
@@ -448,25 +519,43 @@ static int tusb320_typec_probe(struct i2c_client *client,
 	/* Type-C connector found. */
 	ret = typec_get_fw_cap(&priv->cap, connector);
 	if (ret)
+<<<<<<< HEAD
 		goto err_put;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	priv->port_type = priv->cap.type;
 
 	/* This goes into register 0x8 field CURRENT_MODE_ADVERTISE */
 	ret = fwnode_property_read_string(connector, "typec-power-opmode", &cap_str);
 	if (ret)
+<<<<<<< HEAD
 		goto err_put;
 
 	ret = typec_find_pwr_opmode(cap_str);
 	if (ret < 0)
 		goto err_put;
+=======
+		return ret;
+
+	ret = typec_find_pwr_opmode(cap_str);
+	if (ret < 0)
+		return ret;
+	if (ret == TYPEC_PWR_MODE_PD)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	priv->pwr_opmode = ret;
 
 	/* Initialize the hardware with the devicetree settings. */
 	ret = tusb320_set_adv_pwr_mode(priv);
 	if (ret)
+<<<<<<< HEAD
 		goto err_put;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	priv->cap.revision		= USB_TYPEC_REV_1_1;
 	priv->cap.accessory[0]		= TYPEC_ACCESSORY_AUDIO;
@@ -477,6 +566,7 @@ static int tusb320_typec_probe(struct i2c_client *client,
 	priv->cap.fwnode		= connector;
 
 	priv->port = typec_register_port(&client->dev, &priv->cap);
+<<<<<<< HEAD
 	if (IS_ERR(priv->port)) {
 		ret = PTR_ERR(priv->port);
 		goto err_put;
@@ -510,6 +600,16 @@ static void tusb320_typec_remove(struct tusb320_priv *priv)
 }
 
 static int tusb320_probe(struct i2c_client *client)
+=======
+	if (IS_ERR(priv->port))
+		return PTR_ERR(priv->port);
+
+	return 0;
+}
+
+static int tusb320_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tusb320_priv *priv;
 	const void *match_data;
@@ -519,9 +619,13 @@ static int tusb320_probe(struct i2c_client *client)
 	priv = devm_kzalloc(&client->dev, sizeof(*priv), GFP_KERNEL);
 	if (!priv)
 		return -ENOMEM;
+<<<<<<< HEAD
 
 	priv->dev = &client->dev;
 	i2c_set_clientdata(client, priv);
+=======
+	priv->dev = &client->dev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	priv->regmap = devm_regmap_init_i2c(client, &tusb320_regmap_config);
 	if (IS_ERR(priv->regmap))
@@ -555,7 +659,11 @@ static int tusb320_probe(struct i2c_client *client)
 		return ret;
 
 	/* update initial state */
+<<<<<<< HEAD
 	tusb320_state_update_handler(priv, true);
+=======
+	tusb320_irq_handler(client->irq, priv);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Reset chip to its default state */
 	ret = tusb320_reset(priv);
@@ -566,18 +674,26 @@ static int tusb320_probe(struct i2c_client *client)
 		 * State and polarity might change after a reset, so update
 		 * them again and make sure the interrupt status bit is cleared.
 		 */
+<<<<<<< HEAD
 		tusb320_state_update_handler(priv, true);
+=======
+		tusb320_irq_handler(client->irq, priv);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = devm_request_threaded_irq(priv->dev, client->irq, NULL,
 					tusb320_irq_handler,
 					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
 					client->name, priv);
+<<<<<<< HEAD
 	if (ret)
 		tusb320_typec_remove(priv);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
 
+<<<<<<< HEAD
 static void tusb320_remove(struct i2c_client *client)
 {
 	struct tusb320_priv *priv = i2c_get_clientdata(client);
@@ -585,6 +701,8 @@ static void tusb320_remove(struct i2c_client *client)
 	tusb320_typec_remove(priv);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id tusb320_extcon_dt_match[] = {
 	{ .compatible = "ti,tusb320", .data = &tusb320_ops, },
 	{ .compatible = "ti,tusb320l", .data = &tusb320l_ops, },
@@ -593,8 +711,12 @@ static const struct of_device_id tusb320_extcon_dt_match[] = {
 MODULE_DEVICE_TABLE(of, tusb320_extcon_dt_match);
 
 static struct i2c_driver tusb320_extcon_driver = {
+<<<<<<< HEAD
 	.probe_new	= tusb320_probe,
 	.remove		= tusb320_remove,
+=======
+	.probe		= tusb320_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "extcon-tusb320",
 		.of_match_table = tusb320_extcon_dt_match,

@@ -25,12 +25,16 @@ properties:
               - mediatek,mt2712-mmsys
               - mediatek,mt6765-mmsys
               - mediatek,mt6779-mmsys
+<<<<<<< HEAD
               - mediatek,mt6795-mmsys
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - mediatek,mt6797-mmsys
               - mediatek,mt8167-mmsys
               - mediatek,mt8173-mmsys
               - mediatek,mt8183-mmsys
               - mediatek,mt8186-mmsys
+<<<<<<< HEAD
               - mediatek,mt8188-vdosys0
               - mediatek,mt8192-mmsys
               - mediatek,mt8195-vdosys1
@@ -46,16 +50,25 @@ properties:
           - const: mediatek,mt8195-mmsys
           - const: syscon
 
+=======
+              - mediatek,mt8192-mmsys
+              - mediatek,mt8195-mmsys
+              - mediatek,mt8365-mmsys
+          - const: syscon
+>>>>>>> b7ba80a49124 (Commit)
       - items:
           - const: mediatek,mt7623-mmsys
           - const: mediatek,mt2701-mmsys
           - const: syscon
 
+<<<<<<< HEAD
       - items:
           - const: mediatek,mt8195-vdosys0
           - const: mediatek,mt8195-mmsys
           - const: syscon
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   reg:
     maxItems: 1
 
@@ -69,8 +82,12 @@ properties:
     description:
       Using mailbox to communicate with GCE, it should have this
       property and list of phandle, mailbox specifiers. See
+<<<<<<< HEAD
       Documentation/devicetree/bindings/mailbox/mediatek,gce-mailbox.yaml
       for details.
+=======
+      Documentation/devicetree/bindings/mailbox/mtk-gce.txt for details.
+>>>>>>> b7ba80a49124 (Commit)
     $ref: /schemas/types.yaml#/definitions/phandle-array
 
   mediatek,gce-client-reg:

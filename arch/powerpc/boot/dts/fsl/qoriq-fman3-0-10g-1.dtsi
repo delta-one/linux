@@ -52,6 +52,7 @@ fman@400000 {
 		compatible = "fsl,fman-memac";
 		reg = <0xf2000 0x1000>;
 		fsl,fman-ports = <&fman0_rx_0x11 &fman0_tx_0x31>;
+<<<<<<< HEAD
 		pcsphy-handle = <&pcsphy7>, <&qsgmiib_pcs3>, <&pcsphy7>;
 		pcs-handle-names = "sgmii", "qsgmii", "xfi";
 	};
@@ -61,6 +62,9 @@ fman@400000 {
 			compatible = "fsl,lynx-pcs";
 			reg = <3>;
 		};
+=======
+		pcsphy-handle = <&pcsphy7>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	mdio@f3000 {

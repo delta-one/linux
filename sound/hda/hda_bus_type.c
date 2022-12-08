@@ -65,7 +65,11 @@ static int hda_bus_match(struct device *dev, struct device_driver *drv)
 	return 1;
 }
 
+<<<<<<< HEAD
 static int hda_uevent(const struct device *dev, struct kobj_uevent_env *env)
+=======
+static int hda_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	char modalias[32];
 

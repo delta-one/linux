@@ -27,6 +27,10 @@ struct sram_dev {
 	bool no_memory_wc;
 
 	struct gen_pool *pool;
+<<<<<<< HEAD
+=======
+	struct clk *clk;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct sram_partition *partition;
 	u32 partitions;

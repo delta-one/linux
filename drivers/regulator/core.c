@@ -1002,7 +1002,11 @@ static int drms_uA_update(struct regulator_dev *rdev)
 		/* get input voltage */
 		input_uV = 0;
 		if (rdev->supply)
+<<<<<<< HEAD
 			input_uV = regulator_get_voltage_rdev(rdev->supply->rdev);
+=======
+			input_uV = regulator_get_voltage(rdev->supply);
+>>>>>>> b7ba80a49124 (Commit)
 		if (input_uV <= 0)
 			input_uV = rdev->constraints->input_uV;
 
@@ -1583,6 +1587,12 @@ static int set_machine_constraints(struct regulator_dev *rdev)
 			rdev->constraints->always_on = true;
 	}
 
+<<<<<<< HEAD
+=======
+	if (rdev->desc->off_on_delay)
+		rdev->last_off = ktime_get();
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* If the constraints say the regulator should be on at this point
 	 * and we have control then make sure it is enabled.
 	 */
@@ -1593,6 +1603,7 @@ static int set_machine_constraints(struct regulator_dev *rdev)
 		if (rdev->supply_name && !rdev->supply)
 			return -EPROBE_DEFER;
 
+<<<<<<< HEAD
 		/* If supplying regulator has already been enabled,
 		 * it's not intended to have use_count increment
 		 * when rdev is only boot-on.
@@ -1600,6 +1611,9 @@ static int set_machine_constraints(struct regulator_dev *rdev)
 		if (rdev->supply &&
 		    (rdev->constraints->always_on ||
 		     !regulator_is_enabled(rdev->supply))) {
+=======
+		if (rdev->supply) {
+>>>>>>> b7ba80a49124 (Commit)
 			ret = regulator_enable(rdev->supply);
 			if (ret < 0) {
 				_regulator_put(rdev->supply);
@@ -1616,8 +1630,11 @@ static int set_machine_constraints(struct regulator_dev *rdev)
 
 		if (rdev->constraints->always_on)
 			rdev->use_count++;
+<<<<<<< HEAD
 	} else if (rdev->desc->off_on_delay) {
 		rdev->last_off = ktime_get();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	print_constraints(rdev);
@@ -1645,7 +1662,10 @@ static int set_supply(struct regulator_dev *rdev,
 
 	rdev->supply = create_regulator(supply_rdev, &rdev->dev, "SUPPLY");
 	if (rdev->supply == NULL) {
+<<<<<<< HEAD
 		module_put(supply_rdev->owner);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		err = -ENOMEM;
 		return err;
 	}
@@ -1819,7 +1839,11 @@ static struct regulator *create_regulator(struct regulator_dev *rdev,
 
 	regulator = kzalloc(sizeof(*regulator), GFP_KERNEL);
 	if (regulator == NULL) {
+<<<<<<< HEAD
 		kfree_const(supply_name);
+=======
+		kfree(supply_name);
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 	}
 
@@ -1949,7 +1973,10 @@ static struct regulator_dev *regulator_dev_lookup(struct device *dev,
 		node = of_get_regulator(dev, supply);
 		if (node) {
 			r = of_find_regulator_by_node(node);
+<<<<<<< HEAD
 			of_node_put(node);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			if (r)
 				return r;
 
@@ -2667,12 +2694,20 @@ static int _regulator_do_enable(struct regulator_dev *rdev)
 
 	trace_regulator_enable(rdev_get_name(rdev));
 
+<<<<<<< HEAD
 	if (rdev->desc->off_on_delay) {
+=======
+	if (rdev->desc->off_on_delay && rdev->last_off) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* if needed, keep a distance of off_on_delay from last time
 		 * this regulator was disabled.
 		 */
 		ktime_t end = ktime_add_us(rdev->last_off, rdev->desc->off_on_delay);
+<<<<<<< HEAD
 		s64 remaining = ktime_us_delta(end, ktime_get_boottime());
+=======
+		s64 remaining = ktime_us_delta(end, ktime_get());
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (remaining > 0)
 			_regulator_delay_helper(remaining);
@@ -2911,7 +2946,11 @@ static int _regulator_do_disable(struct regulator_dev *rdev)
 	}
 
 	if (rdev->desc->off_on_delay)
+<<<<<<< HEAD
 		rdev->last_off = ktime_get_boottime();
+=======
+		rdev->last_off = ktime_get();
+>>>>>>> b7ba80a49124 (Commit)
 
 	trace_regulator_disable_complete(rdev_get_name(rdev));
 
@@ -4785,8 +4824,27 @@ static int _notifier_call_chain(struct regulator_dev *rdev,
 	return blocking_notifier_call_chain(&rdev->notifier, event, data);
 }
 
+<<<<<<< HEAD
 int _regulator_bulk_get(struct device *dev, int num_consumers,
 			struct regulator_bulk_data *consumers, enum regulator_get_type get_type)
+=======
+/**
+ * regulator_bulk_get - get multiple regulator consumers
+ *
+ * @dev:           Device to supply
+ * @num_consumers: Number of consumers to register
+ * @consumers:     Configuration of consumers; clients are stored here.
+ *
+ * @return 0 on success, an errno on failure.
+ *
+ * This helper function allows drivers to get several regulator
+ * consumers in one operation.  If any of the regulators cannot be
+ * acquired then any regulators that were allocated will be freed
+ * before returning to the caller.
+ */
+int regulator_bulk_get(struct device *dev, int num_consumers,
+		       struct regulator_bulk_data *consumers)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 	int ret;
@@ -4795,8 +4853,13 @@ int _regulator_bulk_get(struct device *dev, int num_consumers,
 		consumers[i].consumer = NULL;
 
 	for (i = 0; i < num_consumers; i++) {
+<<<<<<< HEAD
 		consumers[i].consumer = _regulator_get(dev,
 						       consumers[i].supply, get_type);
+=======
+		consumers[i].consumer = regulator_get(dev,
+						      consumers[i].supply);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(consumers[i].consumer)) {
 			ret = dev_err_probe(dev, PTR_ERR(consumers[i].consumer),
 					    "Failed to get supply '%s'",
@@ -4823,6 +4886,7 @@ err:
 
 	return ret;
 }
+<<<<<<< HEAD
 
 /**
  * regulator_bulk_get - get multiple regulator consumers
@@ -4843,6 +4907,8 @@ int regulator_bulk_get(struct device *dev, int num_consumers,
 {
 	return _regulator_bulk_get(dev, num_consumers, consumers, NORMAL_GET);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL_GPL(regulator_bulk_get);
 
 static void regulator_bulk_enable_async(void *data, async_cookie_t cookie)
@@ -5167,7 +5233,10 @@ static void regulator_dev_release(struct device *dev)
 {
 	struct regulator_dev *rdev = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	debugfs_remove_recursive(rdev->debugfs);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(rdev->constraints);
 	of_node_put(rdev->dev.of_node);
 	kfree(rdev);
@@ -5409,7 +5478,10 @@ static struct regulator_coupler generic_regulator_coupler = {
 
 /**
  * regulator_register - register regulator
+<<<<<<< HEAD
  * @dev: the device that drive the regulator
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @regulator_desc: regulator to register
  * @cfg: runtime configuration for regulator
  *
@@ -5418,8 +5490,12 @@ static struct regulator_coupler generic_regulator_coupler = {
  * or an ERR_PTR() on error.
  */
 struct regulator_dev *
+<<<<<<< HEAD
 regulator_register(struct device *dev,
 		   const struct regulator_desc *regulator_desc,
+=======
+regulator_register(const struct regulator_desc *regulator_desc,
+>>>>>>> b7ba80a49124 (Commit)
 		   const struct regulator_config *cfg)
 {
 	const struct regulator_init_data *init_data;
@@ -5428,6 +5504,10 @@ regulator_register(struct device *dev,
 	struct regulator_dev *rdev;
 	bool dangling_cfg_gpiod = false;
 	bool dangling_of_gpiod = false;
+<<<<<<< HEAD
+=======
+	struct device *dev;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret, i;
 	bool resolved_early = false;
 
@@ -5440,7 +5520,12 @@ regulator_register(struct device *dev,
 		goto rinse;
 	}
 
+<<<<<<< HEAD
 	WARN_ON(!dev || !cfg->dev);
+=======
+	dev = cfg->dev;
+	WARN_ON(!dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (regulator_desc->name == NULL || regulator_desc->ops == NULL) {
 		ret = -EINVAL;
@@ -5539,7 +5624,11 @@ regulator_register(struct device *dev,
 
 	/* register with sysfs */
 	rdev->dev.class = &regulator_class;
+<<<<<<< HEAD
 	rdev->dev.parent = config->dev;
+=======
+	rdev->dev.parent = dev;
+>>>>>>> b7ba80a49124 (Commit)
 	dev_set_name(&rdev->dev, "regulator.%lu",
 		    (unsigned long) atomic_inc_return(&regulator_no));
 	dev_set_drvdata(&rdev->dev, rdev);
@@ -5654,11 +5743,15 @@ unset_supplies:
 	regulator_remove_coupling(rdev);
 	mutex_unlock(&regulator_list_mutex);
 wash:
+<<<<<<< HEAD
 	regulator_put(rdev->supply);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(rdev->coupling_desc.coupled_rdevs);
 	mutex_lock(&regulator_list_mutex);
 	regulator_ena_gpio_free(rdev);
 	mutex_unlock(&regulator_list_mutex);
+<<<<<<< HEAD
 	put_device(&rdev->dev);
 	rdev = NULL;
 clean:
@@ -5668,6 +5761,13 @@ clean:
 		of_node_put(rdev->dev.of_node);
 	kfree(rdev);
 	kfree(config);
+=======
+clean:
+	if (dangling_of_gpiod)
+		gpiod_put(config->ena_gpiod);
+	kfree(config);
+	put_device(&rdev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 rinse:
 	if (dangling_cfg_gpiod)
 		gpiod_put(cfg->ena_gpiod);
@@ -5696,6 +5796,10 @@ void regulator_unregister(struct regulator_dev *rdev)
 
 	mutex_lock(&regulator_list_mutex);
 
+<<<<<<< HEAD
+=======
+	debugfs_remove_recursive(rdev->debugfs);
+>>>>>>> b7ba80a49124 (Commit)
 	WARN_ON(rdev->open_count);
 	regulator_remove_coupling(rdev);
 	unset_regulator_supplies(rdev);

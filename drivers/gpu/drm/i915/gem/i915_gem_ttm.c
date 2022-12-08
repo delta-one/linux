@@ -5,8 +5,13 @@
 
 #include <linux/shmem_fs.h>
 
+<<<<<<< HEAD
 #include <drm/ttm/ttm_placement.h>
 #include <drm/ttm/ttm_tt.h>
+=======
+#include <drm/ttm/ttm_bo_driver.h>
+#include <drm/ttm/ttm_placement.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_buddy.h>
 
 #include "i915_drv.h"
@@ -140,16 +145,23 @@ i915_ttm_place_from_region(const struct intel_memory_region *mr,
 	if (flags & I915_BO_ALLOC_CONTIGUOUS)
 		place->flags |= TTM_PL_FLAG_CONTIGUOUS;
 	if (offset != I915_BO_INVALID_OFFSET) {
+<<<<<<< HEAD
 		WARN_ON(overflows_type(offset >> PAGE_SHIFT, place->fpfn));
 		place->fpfn = offset >> PAGE_SHIFT;
 		WARN_ON(overflows_type(place->fpfn + (size >> PAGE_SHIFT), place->lpfn));
+=======
+		place->fpfn = offset >> PAGE_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 		place->lpfn = place->fpfn + (size >> PAGE_SHIFT);
 	} else if (mr->io_size && mr->io_size < mr->total) {
 		if (flags & I915_BO_ALLOC_GPU_ONLY) {
 			place->flags |= TTM_PL_FLAG_TOPDOWN;
 		} else {
 			place->fpfn = 0;
+<<<<<<< HEAD
 			WARN_ON(overflows_type(mr->io_size >> PAGE_SHIFT, place->lpfn));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			place->lpfn = mr->io_size >> PAGE_SHIFT;
 		}
 	}
@@ -192,7 +204,11 @@ static int i915_ttm_tt_shmem_populate(struct ttm_device *bdev,
 	struct drm_i915_private *i915 = container_of(bdev, typeof(*i915), bdev);
 	struct intel_memory_region *mr = i915->mm.regions[INTEL_MEMORY_SYSTEM];
 	struct i915_ttm_tt *i915_tt = container_of(ttm, typeof(*i915_tt), ttm);
+<<<<<<< HEAD
 	const unsigned int max_segment = i915_sg_segment_size(i915->drm.dev);
+=======
+	const unsigned int max_segment = i915_sg_segment_size();
+>>>>>>> b7ba80a49124 (Commit)
 	const size_t size = (size_t)ttm->num_pages << PAGE_SHIFT;
 	struct file *filp = i915_tt->filp;
 	struct sgt_iter sgt_iter;
@@ -274,21 +290,35 @@ static struct ttm_tt *i915_ttm_tt_create(struct ttm_buffer_object *bo,
 {
 	struct drm_i915_private *i915 = container_of(bo->bdev, typeof(*i915),
 						     bdev);
+<<<<<<< HEAD
+=======
+	struct ttm_resource_manager *man =
+		ttm_manager_type(bo->bdev, bo->resource->mem_type);
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_i915_gem_object *obj = i915_ttm_to_gem(bo);
 	unsigned long ccs_pages = 0;
 	enum ttm_caching caching;
 	struct i915_ttm_tt *i915_tt;
 	int ret;
 
+<<<<<<< HEAD
 	if (i915_ttm_is_ghost_object(bo))
+=======
+	if (!obj)
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	i915_tt = kzalloc(sizeof(*i915_tt), GFP_KERNEL);
 	if (!i915_tt)
 		return NULL;
 
+<<<<<<< HEAD
 	if (obj->flags & I915_BO_ALLOC_CPU_CLEAR && (!bo->resource ||
 	    ttm_manager_type(bo->bdev, bo->resource->mem_type)->use_tt))
+=======
+	if (obj->flags & I915_BO_ALLOC_CPU_CLEAR &&
+	    man->use_tt)
+>>>>>>> b7ba80a49124 (Commit)
 		page_flags |= TTM_TT_FLAG_ZERO_ALLOC;
 
 	caching = i915_ttm_select_tt_caching(obj);
@@ -363,7 +393,11 @@ static bool i915_ttm_eviction_valuable(struct ttm_buffer_object *bo,
 {
 	struct drm_i915_gem_object *obj = i915_ttm_to_gem(bo);
 
+<<<<<<< HEAD
 	if (i915_ttm_is_ghost_object(bo))
+=======
+	if (!obj)
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	/*
@@ -472,7 +506,11 @@ static int i915_ttm_shrink(struct drm_i915_gem_object *obj, unsigned int flags)
 	struct ttm_placement place = {};
 	int ret;
 
+<<<<<<< HEAD
 	if (!bo->ttm || i915_ttm_cpu_maps_iomem(bo->resource))
+=======
+	if (!bo->ttm || bo->resource->mem_type != TTM_PL_SYSTEM)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	GEM_BUG_ON(!i915_tt->is_shmem);
@@ -510,6 +548,7 @@ static int i915_ttm_shrink(struct drm_i915_gem_object *obj, unsigned int flags)
 static void i915_ttm_delete_mem_notify(struct ttm_buffer_object *bo)
 {
 	struct drm_i915_gem_object *obj = i915_ttm_to_gem(bo);
+<<<<<<< HEAD
 
 	/*
 	 * This gets called twice by ttm, so long as we have a ttm resource or
@@ -519,6 +558,20 @@ static void i915_ttm_delete_mem_notify(struct ttm_buffer_object *bo)
 	 */
 	if ((bo->resource || bo->ttm) && !i915_ttm_is_ghost_object(bo)) {
 		__i915_gem_object_pages_fini(obj);
+=======
+	intel_wakeref_t wakeref = 0;
+
+	if (likely(obj)) {
+		/* ttm_bo_release() already has dma_resv_lock */
+		if (i915_ttm_cpu_maps_iomem(bo->resource))
+			wakeref = intel_runtime_pm_get(&to_i915(obj->base.dev)->runtime_pm);
+
+		__i915_gem_object_pages_fini(obj);
+
+		if (wakeref)
+			intel_runtime_pm_put(&to_i915(obj->base.dev)->runtime_pm, wakeref);
+
+>>>>>>> b7ba80a49124 (Commit)
 		i915_ttm_free_cached_io_rsgt(obj);
 	}
 }
@@ -536,7 +589,11 @@ static struct i915_refct_sgt *i915_ttm_tt_get_st(struct ttm_tt *ttm)
 	ret = sg_alloc_table_from_pages_segment(st,
 			ttm->pages, ttm->num_pages,
 			0, (unsigned long)ttm->num_pages << PAGE_SHIFT,
+<<<<<<< HEAD
 			i915_sg_segment_size(i915_tt->dev), GFP_KERNEL);
+=======
+			i915_sg_segment_size(), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		st->sgl = NULL;
 		return ERR_PTR(ret);
@@ -606,6 +663,7 @@ i915_ttm_resource_get_st(struct drm_i915_gem_object *obj,
 static int i915_ttm_truncate(struct drm_i915_gem_object *obj)
 {
 	struct ttm_buffer_object *bo = i915_gem_to_ttm(obj);
+<<<<<<< HEAD
 	long err;
 
 	WARN_ON_ONCE(obj->mm.madv == I915_MADV_WILLNEED);
@@ -617,6 +675,12 @@ static int i915_ttm_truncate(struct drm_i915_gem_object *obj)
 	if (err == 0)
 		return -EBUSY;
 
+=======
+	int err;
+
+	WARN_ON_ONCE(obj->mm.madv == I915_MADV_WILLNEED);
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = i915_ttm_move_notify(bo);
 	if (err)
 		return err;
@@ -629,7 +693,11 @@ static void i915_ttm_swap_notify(struct ttm_buffer_object *bo)
 	struct drm_i915_gem_object *obj = i915_ttm_to_gem(bo);
 	int ret;
 
+<<<<<<< HEAD
 	if (i915_ttm_is_ghost_object(bo))
+=======
+	if (!obj)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	ret = i915_ttm_move_notify(bo);
@@ -654,7 +722,11 @@ bool i915_ttm_resource_mappable(struct ttm_resource *res)
 	if (!i915_ttm_cpu_maps_iomem(res))
 		return true;
 
+<<<<<<< HEAD
 	return bman_res->used_visible_size == PFN_UP(bman_res->base.size);
+=======
+	return bman_res->used_visible_size == bman_res->base.num_pages;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int i915_ttm_io_mem_reserve(struct ttm_device *bdev, struct ttm_resource *mem)
@@ -662,7 +734,11 @@ static int i915_ttm_io_mem_reserve(struct ttm_device *bdev, struct ttm_resource 
 	struct drm_i915_gem_object *obj = i915_ttm_to_gem(mem->bo);
 	bool unknown_state;
 
+<<<<<<< HEAD
 	if (i915_ttm_is_ghost_object(mem->bo))
+=======
+	if (!obj)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (!kref_get_unless_zero(&obj->base.refcount))
@@ -695,15 +771,24 @@ static unsigned long i915_ttm_io_mem_pfn(struct ttm_buffer_object *bo,
 	unsigned long base;
 	unsigned int ofs;
 
+<<<<<<< HEAD
 	GEM_BUG_ON(i915_ttm_is_ghost_object(bo));
 	GEM_WARN_ON(bo->ttm);
 
 	base = obj->mm.region->iomap.base - obj->mm.region->region.start;
 	sg = i915_gem_object_page_iter_get_sg(obj, &obj->ttm.get_io_page, page_offset, &ofs);
+=======
+	GEM_BUG_ON(!obj);
+	GEM_WARN_ON(bo->ttm);
+
+	base = obj->mm.region->iomap.base - obj->mm.region->region.start;
+	sg = __i915_gem_object_get_sg(obj, &obj->ttm.get_io_page, page_offset, &ofs, true);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ((base + sg_dma_address(sg)) >> PAGE_SHIFT) + ofs;
 }
 
+<<<<<<< HEAD
 static int i915_ttm_access_memory(struct ttm_buffer_object *bo,
 				  unsigned long offset, void *buf,
 				  int len, int write)
@@ -748,6 +833,8 @@ static int i915_ttm_access_memory(struct ttm_buffer_object *bo,
 	return len;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * All callbacks need to take care not to downcast a struct ttm_buffer_object
  * without checking its subclass, since it might be a TTM ghost object.
@@ -764,7 +851,10 @@ static struct ttm_device_funcs i915_ttm_bo_driver = {
 	.delete_mem_notify = i915_ttm_delete_mem_notify,
 	.io_mem_reserve = i915_ttm_io_mem_reserve,
 	.io_mem_pfn = i915_ttm_io_mem_pfn,
+<<<<<<< HEAD
 	.access_memory = i915_ttm_access_memory,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -829,7 +919,12 @@ static int __i915_ttm_get_pages(struct drm_i915_gem_object *obj,
 
 		GEM_BUG_ON(obj->mm.rsgt);
 		obj->mm.rsgt = rsgt;
+<<<<<<< HEAD
 		__i915_gem_object_set_pages(obj, &rsgt->table);
+=======
+		__i915_gem_object_set_pages(obj, &rsgt->table,
+					    i915_sg_dma_sizes(rsgt->table.sgl));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	GEM_BUG_ON(bo->ttm && ((obj->base.size >> PAGE_SHIFT) < bo->ttm->num_pages));
@@ -842,10 +937,13 @@ static int i915_ttm_get_pages(struct drm_i915_gem_object *obj)
 	struct ttm_place requested, busy[I915_TTM_MAX_PLACEMENTS];
 	struct ttm_placement placement;
 
+<<<<<<< HEAD
 	/* restricted by sg_alloc_table */
 	if (overflows_type(obj->base.size >> PAGE_SHIFT, unsigned int))
 		return -E2BIG;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	GEM_BUG_ON(obj->mm.n_placements > I915_TTM_MAX_PLACEMENTS);
 
 	/* Move to the requested placement. */
@@ -901,10 +999,16 @@ static int __i915_ttm_migrate(struct drm_i915_gem_object *obj,
 }
 
 static int i915_ttm_migrate(struct drm_i915_gem_object *obj,
+<<<<<<< HEAD
 			    struct intel_memory_region *mr,
 			    unsigned int flags)
 {
 	return __i915_ttm_migrate(obj, mr, flags);
+=======
+			    struct intel_memory_region *mr)
+{
+	return __i915_ttm_migrate(obj, mr, obj->flags);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void i915_ttm_put_pages(struct drm_i915_gem_object *obj,
@@ -1043,11 +1147,22 @@ static vm_fault_t vm_fault_ttm(struct vm_fault *vmf)
 	struct vm_area_struct *area = vmf->vma;
 	struct ttm_buffer_object *bo = area->vm_private_data;
 	struct drm_device *dev = bo->base.dev;
+<<<<<<< HEAD
 	struct drm_i915_gem_object *obj = i915_ttm_to_gem(bo);
+=======
+	struct drm_i915_gem_object *obj;
+>>>>>>> b7ba80a49124 (Commit)
 	intel_wakeref_t wakeref = 0;
 	vm_fault_t ret;
 	int idx;
 
+<<<<<<< HEAD
+=======
+	obj = i915_ttm_to_gem(bo);
+	if (!obj)
+		return VM_FAULT_SIGBUS;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Sanity check that we allow writing into this object */
 	if (unlikely(i915_gem_object_is_readonly(obj) &&
 		     area->vm_flags & VM_WRITE))
@@ -1062,6 +1177,7 @@ static vm_fault_t vm_fault_ttm(struct vm_fault *vmf)
 		return VM_FAULT_SIGBUS;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * This must be swapped out with shmem ttm_tt (pipeline-gutting).
 	 * Calling ttm_bo_validate() here with TTM_PL_SYSTEM should only go as
@@ -1083,6 +1199,12 @@ static vm_fault_t vm_fault_ttm(struct vm_fault *vmf)
 			return VM_FAULT_SIGBUS;
 		}
 	} else if (!i915_ttm_resource_mappable(bo->resource)) {
+=======
+	if (i915_ttm_cpu_maps_iomem(bo->resource))
+		wakeref = intel_runtime_pm_get(&to_i915(obj->base.dev)->runtime_pm);
+
+	if (!i915_ttm_resource_mappable(bo->resource)) {
+>>>>>>> b7ba80a49124 (Commit)
 		int err = -ENODEV;
 		int i;
 
@@ -1101,17 +1223,24 @@ static vm_fault_t vm_fault_ttm(struct vm_fault *vmf)
 		}
 
 		if (err) {
+<<<<<<< HEAD
 			drm_dbg(dev, "Unable to make resource CPU accessible(err = %pe)\n",
 				ERR_PTR(err));
+=======
+			drm_dbg(dev, "Unable to make resource CPU accessible\n");
+>>>>>>> b7ba80a49124 (Commit)
 			dma_resv_unlock(bo->base.resv);
 			ret = VM_FAULT_SIGBUS;
 			goto out_rpm;
 		}
 	}
 
+<<<<<<< HEAD
 	if (i915_ttm_cpu_maps_iomem(bo->resource))
 		wakeref = intel_runtime_pm_get(&to_i915(obj->base.dev)->runtime_pm);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (drm_dev_enter(dev, &idx)) {
 		ret = ttm_bo_vm_fault_reserved(vmf, vmf->vma->vm_page_prot,
 					       TTM_BO_VM_NUM_PREFAULT);
@@ -1123,6 +1252,7 @@ static vm_fault_t vm_fault_ttm(struct vm_fault *vmf)
 	if (ret == VM_FAULT_RETRY && !(vmf->flags & FAULT_FLAG_RETRY_NOWAIT))
 		goto out_rpm;
 
+<<<<<<< HEAD
 	/*
 	 * ttm_bo_vm_reserve() already has dma_resv_lock.
 	 * userfault_count is protected by dma_resv lock and rpm wakeref.
@@ -1138,6 +1268,18 @@ static vm_fault_t vm_fault_ttm(struct vm_fault *vmf)
 
 	if (wakeref & CONFIG_DRM_I915_USERFAULT_AUTOSUSPEND)
 		intel_wakeref_auto(&to_i915(obj->base.dev)->runtime_pm.userfault_wakeref,
+=======
+	/* ttm_bo_vm_reserve() already has dma_resv_lock */
+	if (ret == VM_FAULT_NOPAGE && wakeref && !obj->userfault_count) {
+		obj->userfault_count = 1;
+		mutex_lock(&to_gt(to_i915(obj->base.dev))->lmem_userfault_lock);
+		list_add(&obj->userfault_link, &to_gt(to_i915(obj->base.dev))->lmem_userfault_list);
+		mutex_unlock(&to_gt(to_i915(obj->base.dev))->lmem_userfault_lock);
+	}
+
+	if (wakeref & CONFIG_DRM_I915_USERFAULT_AUTOSUSPEND)
+		intel_wakeref_auto(&to_gt(to_i915(obj->base.dev))->userfault_wakeref,
+>>>>>>> b7ba80a49124 (Commit)
 				   msecs_to_jiffies_timeout(CONFIG_DRM_I915_USERFAULT_AUTOSUSPEND));
 
 	i915_ttm_adjust_lru(obj);
@@ -1169,7 +1311,11 @@ static void ttm_vm_open(struct vm_area_struct *vma)
 	struct drm_i915_gem_object *obj =
 		i915_ttm_to_gem(vma->vm_private_data);
 
+<<<<<<< HEAD
 	GEM_BUG_ON(i915_ttm_is_ghost_object(vma->vm_private_data));
+=======
+	GEM_BUG_ON(!obj);
+>>>>>>> b7ba80a49124 (Commit)
 	i915_gem_object_get(obj);
 }
 
@@ -1178,7 +1324,11 @@ static void ttm_vm_close(struct vm_area_struct *vma)
 	struct drm_i915_gem_object *obj =
 		i915_ttm_to_gem(vma->vm_private_data);
 
+<<<<<<< HEAD
 	GEM_BUG_ON(i915_ttm_is_ghost_object(vma->vm_private_data));
+=======
+	GEM_BUG_ON(!obj);
+>>>>>>> b7ba80a49124 (Commit)
 	i915_gem_object_put(obj);
 }
 
@@ -1199,6 +1349,7 @@ static u64 i915_ttm_mmap_offset(struct drm_i915_gem_object *obj)
 
 static void i915_ttm_unmap_virtual(struct drm_i915_gem_object *obj)
 {
+<<<<<<< HEAD
 	struct ttm_buffer_object *bo = i915_gem_to_ttm(obj);
 	intel_wakeref_t wakeref = 0;
 
@@ -1222,6 +1373,9 @@ static void i915_ttm_unmap_virtual(struct drm_i915_gem_object *obj)
 
 	if (wakeref)
 		intel_runtime_pm_put(&to_i915(obj->base.dev)->runtime_pm, wakeref);
+=======
+	ttm_bo_unmap_virtual(i915_gem_to_ttm(obj));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct drm_i915_gem_object_ops i915_gem_ttm_obj_ops = {
@@ -1336,6 +1490,7 @@ int __i915_gem_ttm_object_init(struct intel_memory_region *mem,
 	ret = ttm_bo_init_reserved(&i915->bdev, i915_gem_to_ttm(obj), bo_type,
 				   &i915_sys_placement, page_size >> PAGE_SHIFT,
 				   &ctx, NULL, NULL, i915_ttm_bo_destroy);
+<<<<<<< HEAD
 
 	/*
 	 * XXX: The ttm_bo_init_reserved() functions returns -ENOSPC if the size
@@ -1347,6 +1502,8 @@ int __i915_gem_ttm_object_init(struct intel_memory_region *mem,
 	if (size >> PAGE_SHIFT > INT_MAX && ret == -ENOSPC)
 		ret = -E2BIG;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return i915_ttm_err_to_gem(ret);
 

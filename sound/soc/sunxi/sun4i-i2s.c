@@ -1606,7 +1606,11 @@ err_pm_disable:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void sun4i_i2s_remove(struct platform_device *pdev)
+=======
+static int sun4i_i2s_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sun4i_i2s *i2s = dev_get_drvdata(&pdev->dev);
 
@@ -1616,6 +1620,11 @@ static void sun4i_i2s_remove(struct platform_device *pdev)
 
 	if (!IS_ERR(i2s->rst))
 		reset_control_assert(i2s->rst);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id sun4i_i2s_match[] = {
@@ -1658,7 +1667,11 @@ static const struct dev_pm_ops sun4i_i2s_pm_ops = {
 
 static struct platform_driver sun4i_i2s_driver = {
 	.probe	= sun4i_i2s_probe,
+<<<<<<< HEAD
 	.remove_new = sun4i_i2s_remove,
+=======
+	.remove	= sun4i_i2s_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name		= "sun4i-i2s",
 		.of_match_table	= sun4i_i2s_match,

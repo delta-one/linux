@@ -672,7 +672,11 @@ static int xge_probe(struct platform_device *pdev)
 	if (ret)
 		goto err;
 
+<<<<<<< HEAD
 	netif_napi_add(ndev, &pdata->napi, xge_napi);
+=======
+	netif_napi_add(ndev, &pdata->napi, xge_napi, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = register_netdev(ndev);
 	if (ret) {

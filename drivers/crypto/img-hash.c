@@ -157,9 +157,15 @@ static inline void img_hash_write(struct img_hash_dev *hdev,
 	writel_relaxed(value, hdev->io_base + offset);
 }
 
+<<<<<<< HEAD
 static inline __be32 img_hash_read_result_queue(struct img_hash_dev *hdev)
 {
 	return cpu_to_be32(img_hash_read(hdev, CR_RESULT_QUEUE));
+=======
+static inline u32 img_hash_read_result_queue(struct img_hash_dev *hdev)
+{
+	return be32_to_cpu(img_hash_read(hdev, CR_RESULT_QUEUE));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void img_hash_start(struct img_hash_dev *hdev, bool dma)
@@ -283,10 +289,17 @@ static int img_hash_finish(struct ahash_request *req)
 static void img_hash_copy_hash(struct ahash_request *req)
 {
 	struct img_hash_request_ctx *ctx = ahash_request_ctx(req);
+<<<<<<< HEAD
 	__be32 *hash = (__be32 *)ctx->digest;
 	int i;
 
 	for (i = (ctx->digsize / sizeof(*hash)) - 1; i >= 0; i--)
+=======
+	u32 *hash = (u32 *)ctx->digest;
+	int i;
+
+	for (i = (ctx->digsize / sizeof(u32)) - 1; i >= 0; i--)
+>>>>>>> b7ba80a49124 (Commit)
 		hash[i] = img_hash_read_result_queue(ctx->hdev);
 }
 
@@ -308,7 +321,11 @@ static void img_hash_finish_req(struct ahash_request *req, int err)
 		DRIVER_FLAGS_CPU | DRIVER_FLAGS_BUSY | DRIVER_FLAGS_FINAL);
 
 	if (req->base.complete)
+<<<<<<< HEAD
 		ahash_request_complete(req, err);
+=======
+		req->base.complete(&req->base, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int img_hash_write_via_dma(struct img_hash_dev *hdev)
@@ -358,16 +375,24 @@ static int img_hash_dma_init(struct img_hash_dev *hdev)
 static void img_hash_dma_task(unsigned long d)
 {
 	struct img_hash_dev *hdev = (struct img_hash_dev *)d;
+<<<<<<< HEAD
 	struct img_hash_request_ctx *ctx;
+=======
+	struct img_hash_request_ctx *ctx = ahash_request_ctx(hdev->req);
+>>>>>>> b7ba80a49124 (Commit)
 	u8 *addr;
 	size_t nbytes, bleft, wsend, len, tbc;
 	struct scatterlist tsg;
 
+<<<<<<< HEAD
 	if (!hdev->req)
 		return;
 
 	ctx = ahash_request_ctx(hdev->req);
 	if (!ctx->sg)
+=======
+	if (!hdev->req || !ctx->sg)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	addr = sg_virt(ctx->sg);
@@ -526,7 +551,11 @@ static int img_hash_handle_queue(struct img_hash_dev *hdev,
 		return res;
 
 	if (backlog)
+<<<<<<< HEAD
 		crypto_request_complete(backlog, -EINPROGRESS);
+=======
+		backlog->complete(backlog, -EINPROGRESS);
+>>>>>>> b7ba80a49124 (Commit)
 
 	req = ahash_request_cast(async_req);
 	hdev->req = req;

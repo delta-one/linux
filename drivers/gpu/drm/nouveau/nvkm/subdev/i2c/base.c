@@ -26,6 +26,10 @@
 #include "bus.h"
 #include "pad.h"
 
+<<<<<<< HEAD
+=======
+#include <core/notify.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <core/option.h>
 #include <subdev/bios.h>
 #include <subdev/bios/dcb.h>
@@ -103,8 +107,28 @@ nvkm_i2c_intr_init(struct nvkm_event *event, int type, int id)
 		i2c->func->aux_mask(i2c, type, aux->intr, aux->intr);
 }
 
+<<<<<<< HEAD
 static const struct nvkm_event_func
 nvkm_i2c_intr_func = {
+=======
+static int
+nvkm_i2c_intr_ctor(struct nvkm_object *object, void *data, u32 size,
+		   struct nvkm_notify *notify)
+{
+	struct nvkm_i2c_ntfy_req *req = data;
+	if (!WARN_ON(size != sizeof(*req))) {
+		notify->size  = sizeof(struct nvkm_i2c_ntfy_rep);
+		notify->types = req->mask;
+		notify->index = req->port;
+		return 0;
+	}
+	return -EINVAL;
+}
+
+static const struct nvkm_event_func
+nvkm_i2c_intr_func = {
+	.ctor = nvkm_i2c_intr_ctor,
+>>>>>>> b7ba80a49124 (Commit)
 	.init = nvkm_i2c_intr_init,
 	.fini = nvkm_i2c_intr_fini,
 };
@@ -129,8 +153,18 @@ nvkm_i2c_intr(struct nvkm_subdev *subdev)
 		if (lo & aux->intr) mask |= NVKM_I2C_UNPLUG;
 		if (rq & aux->intr) mask |= NVKM_I2C_IRQ;
 		if (tx & aux->intr) mask |= NVKM_I2C_DONE;
+<<<<<<< HEAD
 		if (mask)
 			nvkm_event_ntfy(&i2c->event, aux->id, mask);
+=======
+		if (mask) {
+			struct nvkm_i2c_ntfy_rep rep = {
+				.mask = mask,
+			};
+			nvkm_event_send(&i2c->event, rep.mask, aux->id,
+					&rep, sizeof(rep));
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -406,5 +440,9 @@ nvkm_i2c_new_(const struct nvkm_i2c_func *func, struct nvkm_device *device,
 		}
 	}
 
+<<<<<<< HEAD
 	return nvkm_event_init(&nvkm_i2c_intr_func, &i2c->subdev, 4, i, &i2c->event);
+=======
+	return nvkm_event_init(&nvkm_i2c_intr_func, 4, i, &i2c->event);
+>>>>>>> b7ba80a49124 (Commit)
 }

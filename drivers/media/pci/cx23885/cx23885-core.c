@@ -1325,9 +1325,13 @@ void cx23885_free_buffer(struct cx23885_dev *dev, struct cx23885_buffer *buf)
 {
 	struct cx23885_riscmem *risc = &buf->risc;
 
+<<<<<<< HEAD
 	if (risc->cpu)
 		dma_free_coherent(&dev->pci->dev, risc->size, risc->cpu, risc->dma);
 	memset(risc, 0, sizeof(*risc));
+=======
+	dma_free_coherent(&dev->pci->dev, risc->size, risc->cpu, risc->dma);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void cx23885_tsport_reg_dump(struct cx23885_tsport *port)

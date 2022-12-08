@@ -4,7 +4,10 @@
 
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/pinctrl/rockchip.h>
+<<<<<<< HEAD
 #include <dt-bindings/soc/rockchip,vop2.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "rk3566.dtsi"
 
 / {
@@ -29,6 +32,7 @@
 		#clock-cells = <0>;
 	};
 
+<<<<<<< HEAD
 	hdmi-con {
 		compatible = "hdmi-connector";
 		type = "a";
@@ -40,6 +44,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	leds {
 		compatible = "gpio-leds";
 
@@ -195,6 +201,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &gpu {
 	mali-supply = <&vdd_gpu>;
 	status = "okay";
@@ -222,6 +229,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &i2c0 {
 	status = "okay";
 
@@ -246,7 +255,11 @@
 		compatible = "rockchip,rk809";
 		reg = <0x20>;
 		interrupt-parent = <&gpio0>;
+<<<<<<< HEAD
 		interrupts = <RK_PA3 IRQ_TYPE_LEVEL_LOW>;
+=======
+		interrupts = <RK_PA7 IRQ_TYPE_LEVEL_LOW>;
+>>>>>>> b7ba80a49124 (Commit)
 		assigned-clocks = <&cru I2S1_MCLKOUT_TX>;
 		assigned-clock-parents = <&cru CLK_I2S1_8CH_TX>;
 		clock-names = "mclk";
@@ -495,10 +508,13 @@
 	status = "disabled";
 };
 
+<<<<<<< HEAD
 &i2s0_8ch {
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &i2s1_8ch {
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2s1m0_sclktx
@@ -720,6 +736,7 @@
 &usb_host0_ohci {
 	status = "okay";
 };
+<<<<<<< HEAD
 
 &vop {
 	assigned-clocks = <&cru DCLK_VOP0>, <&cru DCLK_VOP1>;
@@ -737,3 +754,5 @@
 		remote-endpoint = <&hdmi_in_vp0>;
 	};
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

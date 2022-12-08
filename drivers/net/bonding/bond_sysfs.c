@@ -47,10 +47,17 @@ static ssize_t bonding_show_bonds(struct class *cls,
 			/* not enough space for another interface name */
 			if ((PAGE_SIZE - res) > 10)
 				res = PAGE_SIZE - 10;
+<<<<<<< HEAD
 			res += sysfs_emit_at(buf, res, "++more++ ");
 			break;
 		}
 		res += sysfs_emit_at(buf, res, "%s ", bond->dev->name);
+=======
+			res += sprintf(buf + res, "++more++ ");
+			break;
+		}
+		res += sprintf(buf + res, "%s ", bond->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (res)
 		buf[res-1] = '\n'; /* eat the leftover space */
@@ -178,10 +185,17 @@ static ssize_t bonding_show_slaves(struct device *d,
 			/* not enough space for another interface name */
 			if ((PAGE_SIZE - res) > 10)
 				res = PAGE_SIZE - 10;
+<<<<<<< HEAD
 			res += sysfs_emit_at(buf, res, "++more++ ");
 			break;
 		}
 		res += sysfs_emit_at(buf, res, "%s ", slave->dev->name);
+=======
+			res += sprintf(buf + res, "++more++ ");
+			break;
+		}
+		res += sprintf(buf + res, "%s ", slave->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	rtnl_unlock();
@@ -203,7 +217,11 @@ static ssize_t bonding_show_mode(struct device *d,
 
 	val = bond_opt_get_val(BOND_OPT_MODE, BOND_MODE(bond));
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s %d\n", val->string, BOND_MODE(bond));
+=======
+	return sprintf(buf, "%s %d\n", val->string, BOND_MODE(bond));
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(mode, 0644, bonding_show_mode, bonding_sysfs_store_option);
 
@@ -217,7 +235,11 @@ static ssize_t bonding_show_xmit_hash(struct device *d,
 
 	val = bond_opt_get_val(BOND_OPT_XMIT_HASH, bond->params.xmit_policy);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s %d\n", val->string, bond->params.xmit_policy);
+=======
+	return sprintf(buf, "%s %d\n", val->string, bond->params.xmit_policy);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(xmit_hash_policy, 0644,
 		   bonding_show_xmit_hash, bonding_sysfs_store_option);
@@ -233,7 +255,11 @@ static ssize_t bonding_show_arp_validate(struct device *d,
 	val = bond_opt_get_val(BOND_OPT_ARP_VALIDATE,
 			       bond->params.arp_validate);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s %d\n", val->string, bond->params.arp_validate);
+=======
+	return sprintf(buf, "%s %d\n", val->string, bond->params.arp_validate);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(arp_validate, 0644, bonding_show_arp_validate,
 		   bonding_sysfs_store_option);
@@ -248,7 +274,11 @@ static ssize_t bonding_show_arp_all_targets(struct device *d,
 
 	val = bond_opt_get_val(BOND_OPT_ARP_ALL_TARGETS,
 			       bond->params.arp_all_targets);
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s %d\n",
+=======
+	return sprintf(buf, "%s %d\n",
+>>>>>>> b7ba80a49124 (Commit)
 		       val->string, bond->params.arp_all_targets);
 }
 static DEVICE_ATTR(arp_all_targets, 0644,
@@ -265,7 +295,11 @@ static ssize_t bonding_show_fail_over_mac(struct device *d,
 	val = bond_opt_get_val(BOND_OPT_FAIL_OVER_MAC,
 			       bond->params.fail_over_mac);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s %d\n", val->string, bond->params.fail_over_mac);
+=======
+	return sprintf(buf, "%s %d\n", val->string, bond->params.fail_over_mac);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(fail_over_mac, 0644,
 		   bonding_show_fail_over_mac, bonding_sysfs_store_option);
@@ -277,7 +311,11 @@ static ssize_t bonding_show_arp_interval(struct device *d,
 {
 	struct bonding *bond = to_bond(d);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", bond->params.arp_interval);
+=======
+	return sprintf(buf, "%d\n", bond->params.arp_interval);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(arp_interval, 0644,
 		   bonding_show_arp_interval, bonding_sysfs_store_option);
@@ -292,8 +330,13 @@ static ssize_t bonding_show_arp_targets(struct device *d,
 
 	for (i = 0; i < BOND_MAX_ARP_TARGETS; i++) {
 		if (bond->params.arp_targets[i])
+<<<<<<< HEAD
 			res += sysfs_emit_at(buf, res, "%pI4 ",
 					     &bond->params.arp_targets[i]);
+=======
+			res += sprintf(buf + res, "%pI4 ",
+				       &bond->params.arp_targets[i]);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (res)
 		buf[res-1] = '\n'; /* eat the leftover space */
@@ -310,7 +353,11 @@ static ssize_t bonding_show_missed_max(struct device *d,
 {
 	struct bonding *bond = to_bond(d);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", bond->params.missed_max);
+=======
+	return sprintf(buf, "%u\n", bond->params.missed_max);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(arp_missed_max, 0644,
 		   bonding_show_missed_max, bonding_sysfs_store_option);
@@ -322,7 +369,11 @@ static ssize_t bonding_show_downdelay(struct device *d,
 {
 	struct bonding *bond = to_bond(d);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", bond->params.downdelay * bond->params.miimon);
+=======
+	return sprintf(buf, "%d\n", bond->params.downdelay * bond->params.miimon);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(downdelay, 0644,
 		   bonding_show_downdelay, bonding_sysfs_store_option);
@@ -333,7 +384,11 @@ static ssize_t bonding_show_updelay(struct device *d,
 {
 	struct bonding *bond = to_bond(d);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", bond->params.updelay * bond->params.miimon);
+=======
+	return sprintf(buf, "%d\n", bond->params.updelay * bond->params.miimon);
+>>>>>>> b7ba80a49124 (Commit)
 
 }
 static DEVICE_ATTR(updelay, 0644,
@@ -345,8 +400,13 @@ static ssize_t bonding_show_peer_notif_delay(struct device *d,
 {
 	struct bonding *bond = to_bond(d);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n",
 			  bond->params.peer_notif_delay * bond->params.miimon);
+=======
+	return sprintf(buf, "%d\n",
+		       bond->params.peer_notif_delay * bond->params.miimon);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(peer_notif_delay, 0644,
 		   bonding_show_peer_notif_delay, bonding_sysfs_store_option);
@@ -361,7 +421,11 @@ static ssize_t bonding_show_lacp_active(struct device *d,
 
 	val = bond_opt_get_val(BOND_OPT_LACP_ACTIVE, bond->params.lacp_active);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s %d\n", val->string, bond->params.lacp_active);
+=======
+	return sprintf(buf, "%s %d\n", val->string, bond->params.lacp_active);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(lacp_active, 0644,
 		   bonding_show_lacp_active, bonding_sysfs_store_option);
@@ -375,7 +439,11 @@ static ssize_t bonding_show_lacp_rate(struct device *d,
 
 	val = bond_opt_get_val(BOND_OPT_LACP_RATE, bond->params.lacp_fast);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s %d\n", val->string, bond->params.lacp_fast);
+=======
+	return sprintf(buf, "%s %d\n", val->string, bond->params.lacp_fast);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(lacp_rate, 0644,
 		   bonding_show_lacp_rate, bonding_sysfs_store_option);
@@ -386,7 +454,11 @@ static ssize_t bonding_show_min_links(struct device *d,
 {
 	struct bonding *bond = to_bond(d);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", bond->params.min_links);
+=======
+	return sprintf(buf, "%u\n", bond->params.min_links);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(min_links, 0644,
 		   bonding_show_min_links, bonding_sysfs_store_option);
@@ -400,7 +472,11 @@ static ssize_t bonding_show_ad_select(struct device *d,
 
 	val = bond_opt_get_val(BOND_OPT_AD_SELECT, bond->params.ad_select);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s %d\n", val->string, bond->params.ad_select);
+=======
+	return sprintf(buf, "%s %d\n", val->string, bond->params.ad_select);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(ad_select, 0644,
 		   bonding_show_ad_select, bonding_sysfs_store_option);
@@ -412,7 +488,11 @@ static ssize_t bonding_show_num_peer_notif(struct device *d,
 {
 	struct bonding *bond = to_bond(d);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", bond->params.num_peer_notif);
+=======
+	return sprintf(buf, "%d\n", bond->params.num_peer_notif);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(num_grat_arp, 0644,
 		   bonding_show_num_peer_notif, bonding_sysfs_store_option);
@@ -426,7 +506,11 @@ static ssize_t bonding_show_miimon(struct device *d,
 {
 	struct bonding *bond = to_bond(d);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", bond->params.miimon);
+=======
+	return sprintf(buf, "%d\n", bond->params.miimon);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(miimon, 0644,
 		   bonding_show_miimon, bonding_sysfs_store_option);
@@ -443,7 +527,11 @@ static ssize_t bonding_show_primary(struct device *d,
 	rcu_read_lock();
 	primary = rcu_dereference(bond->primary_slave);
 	if (primary)
+<<<<<<< HEAD
 		count = sysfs_emit(buf, "%s\n", primary->dev->name);
+=======
+		count = sprintf(buf, "%s\n", primary->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_read_unlock();
 
 	return count;
@@ -462,8 +550,13 @@ static ssize_t bonding_show_primary_reselect(struct device *d,
 	val = bond_opt_get_val(BOND_OPT_PRIMARY_RESELECT,
 			       bond->params.primary_reselect);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s %d\n",
 			  val->string, bond->params.primary_reselect);
+=======
+	return sprintf(buf, "%s %d\n",
+		       val->string, bond->params.primary_reselect);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(primary_reselect, 0644,
 		   bonding_show_primary_reselect, bonding_sysfs_store_option);
@@ -475,7 +568,11 @@ static ssize_t bonding_show_carrier(struct device *d,
 {
 	struct bonding *bond = to_bond(d);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", bond->params.use_carrier);
+=======
+	return sprintf(buf, "%d\n", bond->params.use_carrier);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(use_carrier, 0644,
 		   bonding_show_carrier, bonding_sysfs_store_option);
@@ -493,7 +590,11 @@ static ssize_t bonding_show_active_slave(struct device *d,
 	rcu_read_lock();
 	slave_dev = bond_option_active_slave_get_rcu(bond);
 	if (slave_dev)
+<<<<<<< HEAD
 		count = sysfs_emit(buf, "%s\n", slave_dev->name);
+=======
+		count = sprintf(buf, "%s\n", slave_dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_read_unlock();
 
 	return count;
@@ -509,7 +610,11 @@ static ssize_t bonding_show_mii_status(struct device *d,
 	struct bonding *bond = to_bond(d);
 	bool active = netif_carrier_ok(bond->dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", active ? "up" : "down");
+=======
+	return sprintf(buf, "%s\n", active ? "up" : "down");
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(mii_status, 0444, bonding_show_mii_status, NULL);
 
@@ -524,9 +629,15 @@ static ssize_t bonding_show_ad_aggregator(struct device *d,
 	if (BOND_MODE(bond) == BOND_MODE_8023AD) {
 		struct ad_info ad_info;
 
+<<<<<<< HEAD
 		count = sysfs_emit(buf, "%d\n",
 				   bond_3ad_get_active_agg_info(bond, &ad_info)
 				   ?  0 : ad_info.aggregator_id);
+=======
+		count = sprintf(buf, "%d\n",
+				bond_3ad_get_active_agg_info(bond, &ad_info)
+				?  0 : ad_info.aggregator_id);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return count;
@@ -545,9 +656,15 @@ static ssize_t bonding_show_ad_num_ports(struct device *d,
 	if (BOND_MODE(bond) == BOND_MODE_8023AD) {
 		struct ad_info ad_info;
 
+<<<<<<< HEAD
 		count = sysfs_emit(buf, "%d\n",
 				   bond_3ad_get_active_agg_info(bond, &ad_info)
 				   ?  0 : ad_info.ports);
+=======
+		count = sprintf(buf, "%d\n",
+				bond_3ad_get_active_agg_info(bond, &ad_info)
+				?  0 : ad_info.ports);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return count;
@@ -566,9 +683,15 @@ static ssize_t bonding_show_ad_actor_key(struct device *d,
 	if (BOND_MODE(bond) == BOND_MODE_8023AD && capable(CAP_NET_ADMIN)) {
 		struct ad_info ad_info;
 
+<<<<<<< HEAD
 		count = sysfs_emit(buf, "%d\n",
 				   bond_3ad_get_active_agg_info(bond, &ad_info)
 				   ?  0 : ad_info.actor_key);
+=======
+		count = sprintf(buf, "%d\n",
+				bond_3ad_get_active_agg_info(bond, &ad_info)
+				?  0 : ad_info.actor_key);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return count;
@@ -587,9 +710,15 @@ static ssize_t bonding_show_ad_partner_key(struct device *d,
 	if (BOND_MODE(bond) == BOND_MODE_8023AD && capable(CAP_NET_ADMIN)) {
 		struct ad_info ad_info;
 
+<<<<<<< HEAD
 		count = sysfs_emit(buf, "%d\n",
 				   bond_3ad_get_active_agg_info(bond, &ad_info)
 				   ?  0 : ad_info.partner_key);
+=======
+		count = sprintf(buf, "%d\n",
+				bond_3ad_get_active_agg_info(bond, &ad_info)
+				?  0 : ad_info.partner_key);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return count;
@@ -609,7 +738,11 @@ static ssize_t bonding_show_ad_partner_mac(struct device *d,
 		struct ad_info ad_info;
 
 		if (!bond_3ad_get_active_agg_info(bond, &ad_info))
+<<<<<<< HEAD
 			count = sysfs_emit(buf, "%pM\n", ad_info.partner_system);
+=======
+			count = sprintf(buf, "%pM\n", ad_info.partner_system);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return count;
@@ -634,11 +767,19 @@ static ssize_t bonding_show_queue_id(struct device *d,
 			/* not enough space for another interface_name:queue_id pair */
 			if ((PAGE_SIZE - res) > 10)
 				res = PAGE_SIZE - 10;
+<<<<<<< HEAD
 			res += sysfs_emit_at(buf, res, "++more++ ");
 			break;
 		}
 		res += sysfs_emit_at(buf, res, "%s:%d ",
 				     slave->dev->name, slave->queue_id);
+=======
+			res += sprintf(buf + res, "++more++ ");
+			break;
+		}
+		res += sprintf(buf + res, "%s:%d ",
+			       slave->dev->name, slave->queue_id);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (res)
 		buf[res-1] = '\n'; /* eat the leftover space */
@@ -658,7 +799,11 @@ static ssize_t bonding_show_slaves_active(struct device *d,
 {
 	struct bonding *bond = to_bond(d);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", bond->params.all_slaves_active);
+=======
+	return sprintf(buf, "%d\n", bond->params.all_slaves_active);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(all_slaves_active, 0644,
 		   bonding_show_slaves_active, bonding_sysfs_store_option);
@@ -670,7 +815,11 @@ static ssize_t bonding_show_resend_igmp(struct device *d,
 {
 	struct bonding *bond = to_bond(d);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", bond->params.resend_igmp);
+=======
+	return sprintf(buf, "%d\n", bond->params.resend_igmp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(resend_igmp, 0644,
 		   bonding_show_resend_igmp, bonding_sysfs_store_option);
@@ -682,7 +831,11 @@ static ssize_t bonding_show_lp_interval(struct device *d,
 {
 	struct bonding *bond = to_bond(d);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", bond->params.lp_interval);
+=======
+	return sprintf(buf, "%d\n", bond->params.lp_interval);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(lp_interval, 0644,
 		   bonding_show_lp_interval, bonding_sysfs_store_option);
@@ -693,7 +846,11 @@ static ssize_t bonding_show_tlb_dynamic_lb(struct device *d,
 {
 	struct bonding *bond = to_bond(d);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", bond->params.tlb_dynamic_lb);
+=======
+	return sprintf(buf, "%d\n", bond->params.tlb_dynamic_lb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(tlb_dynamic_lb, 0644,
 		   bonding_show_tlb_dynamic_lb, bonding_sysfs_store_option);
@@ -705,7 +862,11 @@ static ssize_t bonding_show_packets_per_slave(struct device *d,
 	struct bonding *bond = to_bond(d);
 	unsigned int packets_per_slave = bond->params.packets_per_slave;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", packets_per_slave);
+=======
+	return sprintf(buf, "%u\n", packets_per_slave);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(packets_per_slave, 0644,
 		   bonding_show_packets_per_slave, bonding_sysfs_store_option);
@@ -717,7 +878,11 @@ static ssize_t bonding_show_ad_actor_sys_prio(struct device *d,
 	struct bonding *bond = to_bond(d);
 
 	if (BOND_MODE(bond) == BOND_MODE_8023AD && capable(CAP_NET_ADMIN))
+<<<<<<< HEAD
 		return sysfs_emit(buf, "%hu\n", bond->params.ad_actor_sys_prio);
+=======
+		return sprintf(buf, "%hu\n", bond->params.ad_actor_sys_prio);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -731,7 +896,11 @@ static ssize_t bonding_show_ad_actor_system(struct device *d,
 	struct bonding *bond = to_bond(d);
 
 	if (BOND_MODE(bond) == BOND_MODE_8023AD && capable(CAP_NET_ADMIN))
+<<<<<<< HEAD
 		return sysfs_emit(buf, "%pM\n", bond->params.ad_actor_system);
+=======
+		return sprintf(buf, "%pM\n", bond->params.ad_actor_system);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -746,7 +915,11 @@ static ssize_t bonding_show_ad_user_port_key(struct device *d,
 	struct bonding *bond = to_bond(d);
 
 	if (BOND_MODE(bond) == BOND_MODE_8023AD && capable(CAP_NET_ADMIN))
+<<<<<<< HEAD
 		return sysfs_emit(buf, "%hu\n", bond->params.ad_user_port_key);
+=======
+		return sprintf(buf, "%hu\n", bond->params.ad_user_port_key);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

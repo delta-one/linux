@@ -28,9 +28,17 @@ properties:
           - mediatek,mt8195-imp_iic_wrap_s
           - mediatek,mt8195-imp_iic_wrap_w
           - mediatek,mt8195-mfgcfg
+<<<<<<< HEAD
           - mediatek,mt8195-wpesys
           - mediatek,mt8195-wpesys_vpp0
           - mediatek,mt8195-wpesys_vpp1
+=======
+          - mediatek,mt8195-vppsys0
+          - mediatek,mt8195-wpesys
+          - mediatek,mt8195-wpesys_vpp0
+          - mediatek,mt8195-wpesys_vpp1
+          - mediatek,mt8195-vppsys1
+>>>>>>> b7ba80a49124 (Commit)
           - mediatek,mt8195-imgsys
           - mediatek,mt8195-imgsys1_dip_top
           - mediatek,mt8195-imgsys1_dip_nr
@@ -91,6 +99,16 @@ examples:
     };
 
   - |
+<<<<<<< HEAD
+=======
+    vppsys0: clock-controller@14000000 {
+        compatible = "mediatek,mt8195-vppsys0";
+        reg = <0x14000000 0x1000>;
+        #clock-cells = <1>;
+    };
+
+  - |
+>>>>>>> b7ba80a49124 (Commit)
     wpesys: clock-controller@14e00000 {
         compatible = "mediatek,mt8195-wpesys";
         reg = <0x14e00000 0x1000>;
@@ -112,6 +130,16 @@ examples:
     };
 
   - |
+<<<<<<< HEAD
+=======
+    vppsys1: clock-controller@14f00000 {
+        compatible = "mediatek,mt8195-vppsys1";
+        reg = <0x14f00000 0x1000>;
+        #clock-cells = <1>;
+    };
+
+  - |
+>>>>>>> b7ba80a49124 (Commit)
     imgsys: clock-controller@15000000 {
         compatible = "mediatek,mt8195-imgsys";
         reg = <0x15000000 0x1000>;

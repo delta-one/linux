@@ -10,7 +10,11 @@ maintainers:
   - Christopher Ruehl chris.ruehl@gtsys.com.hk
 
 description: |
+<<<<<<< HEAD
   The SHTC1, SHTW1 and SHTC3 are digital humidity and temperature sensors
+=======
+  The SHTC1, SHTW1 and SHTC3 are digital humidity and temperature sensor
+>>>>>>> b7ba80a49124 (Commit)
   designed especially for battery-driven high-volume consumer electronics
   applications.
   For further information refere to Documentation/hwmon/shtc1.rst
@@ -31,13 +35,22 @@ properties:
   sensirion,blocking-io:
     $ref: /schemas/types.yaml#/definitions/flag
     description:
+<<<<<<< HEAD
       If set, the driver holds the i2c bus until the measurement is finished.
+=======
+      If set, the driver hold the i2c bus until measurement is finished.
+>>>>>>> b7ba80a49124 (Commit)
 
   sensirion,low-precision:
     $ref: /schemas/types.yaml#/definitions/flag
     description:
+<<<<<<< HEAD
       If set, the sensor acquires data with low precision (not recommended).
       The driver acquires data with high precision by default.
+=======
+      If set, the sensor aquire data with low precision (not recommended).
+      The driver aquire data with high precision by default.
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible

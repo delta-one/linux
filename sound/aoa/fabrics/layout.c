@@ -1094,7 +1094,11 @@ static int aoa_fabric_layout_probe(struct soundbus_dev *sdev)
 	return -ENODEV;
 }
 
+<<<<<<< HEAD
 static void aoa_fabric_layout_remove(struct soundbus_dev *sdev)
+=======
+static int aoa_fabric_layout_remove(struct soundbus_dev *sdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct layout_dev *ldev = dev_get_drvdata(&sdev->ofdev.dev);
 	int i;
@@ -1123,6 +1127,10 @@ static void aoa_fabric_layout_remove(struct soundbus_dev *sdev)
 	kfree(ldev);
 	sdev->pcmid = -1;
 	sdev->pcmname = NULL;
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP

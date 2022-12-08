@@ -58,7 +58,11 @@ There are a couple of variants of perf kvm:
   events.
 
   'perf kvm stat report' reports statistical data which includes events
+<<<<<<< HEAD
   handled sample, percent_sample, time, percent_time, max_t, min_t, mean_t.
+=======
+  handled time, samples, and so on.
+>>>>>>> b7ba80a49124 (Commit)
 
   'perf kvm stat live' reports statistical data in a live mode (similar to
   record + report but with statistical data updated live at a given display
@@ -82,8 +86,11 @@ OPTIONS
 :GMEXAMPLESUBCMD: top
 include::guest-files.txt[]
 
+<<<<<<< HEAD
 --stdio:: Use the stdio interface.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 -v::
 --verbose::
 	Be more verbose (show counter open errors, etc).
@@ -99,10 +106,14 @@ STAT REPORT OPTIONS
 -k::
 --key=<value>::
        Sorting key. Possible values: sample (default, sort by samples
+<<<<<<< HEAD
        number), percent_sample (sort by sample percentage), time
        (sort by average time), precent_time (sort by time percentage),
        max_t (sort by maximum time), min_t (sort by minimum time), mean_t
        (sort by mean time).
+=======
+       number), time (sort by average time).
+>>>>>>> b7ba80a49124 (Commit)
 -p::
 --pid=::
     Analyze events only for given process ID(s) (comma separated list).

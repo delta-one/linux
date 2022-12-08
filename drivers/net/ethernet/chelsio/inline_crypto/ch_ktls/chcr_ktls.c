@@ -1839,7 +1839,13 @@ static int chcr_short_record_handler(struct chcr_ktls_info *tx_info,
 		 */
 		if (prior_data_len) {
 			int i = 0;
+<<<<<<< HEAD
 			skb_frag_t *f;
+=======
+			u8 *data = NULL;
+			skb_frag_t *f;
+			u8 *vaddr;
+>>>>>>> b7ba80a49124 (Commit)
 			int frag_size = 0, frag_delta = 0;
 
 			while (remaining > 0) {
@@ -1851,6 +1857,7 @@ static int chcr_short_record_handler(struct chcr_ktls_info *tx_info,
 				i++;
 			}
 			f = &record->frags[i];
+<<<<<<< HEAD
 			frag_delta = skb_frag_size(f) - remaining;
 
 			if (frag_delta >= prior_data_len) {
@@ -1869,6 +1876,26 @@ static int chcr_short_record_handler(struct chcr_ktls_info *tx_info,
 						 skb_frag_page(f),
 						 skb_frag_off(f),
 						 prior_data_len - frag_delta);
+=======
+			vaddr = kmap_atomic(skb_frag_page(f));
+
+			data = vaddr + skb_frag_off(f)  + remaining;
+			frag_delta = skb_frag_size(f) - remaining;
+
+			if (frag_delta >= prior_data_len) {
+				memcpy(prior_data, data, prior_data_len);
+				kunmap_atomic(vaddr);
+			} else {
+				memcpy(prior_data, data, frag_delta);
+				kunmap_atomic(vaddr);
+				/* get the next page */
+				f = &record->frags[i + 1];
+				vaddr = kmap_atomic(skb_frag_page(f));
+				data = vaddr + skb_frag_off(f);
+				memcpy(prior_data + frag_delta,
+				       data, (prior_data_len - frag_delta));
+				kunmap_atomic(vaddr);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			/* reset tcp_seq as per the prior_data_required len */
 			tcp_seq -= prior_data_len;

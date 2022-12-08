@@ -9,8 +9,11 @@
 
 #include <linux/types.h>
 
+<<<<<<< HEAD
 #include "i915_vma.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct i915_request;
 struct i915_gem_context;
 struct i915_vma;
@@ -31,6 +34,7 @@ int igt_gpu_fill_dw(struct intel_context *ce,
 		    struct i915_vma *vma, u64 offset,
 		    unsigned long count, u32 val);
 
+<<<<<<< HEAD
 static inline int __must_check
 igt_vma_move_to_active_unlocked(struct i915_vma *vma, struct i915_request *rq,
 				unsigned int flags)
@@ -43,4 +47,6 @@ igt_vma_move_to_active_unlocked(struct i915_vma *vma, struct i915_request *rq,
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __IGT_GEM_UTILS_H__ */

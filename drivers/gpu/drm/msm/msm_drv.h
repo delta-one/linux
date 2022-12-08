@@ -11,7 +11,10 @@
 #include <linux/kernel.h>
 #include <linux/clk.h>
 #include <linux/cpufreq.h>
+<<<<<<< HEAD
 #include <linux/devfreq.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/component.h>
 #include <linux/platform_device.h>
@@ -62,7 +65,10 @@ enum msm_dp_controller {
 	MSM_DP_CONTROLLER_0,
 	MSM_DP_CONTROLLER_1,
 	MSM_DP_CONTROLLER_2,
+<<<<<<< HEAD
 	MSM_DP_CONTROLLER_3,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	MSM_DP_CONTROLLER_COUNT,
 };
 
@@ -84,12 +90,20 @@ enum msm_event_wait {
 /**
  * struct msm_display_topology - defines a display topology pipeline
  * @num_lm:       number of layer mixers used
+<<<<<<< HEAD
+=======
+ * @num_enc:      number of compression encoder blocks used
+>>>>>>> b7ba80a49124 (Commit)
  * @num_intf:     number of interfaces the panel is mounted on
  * @num_dspp:     number of dspp blocks used
  * @num_dsc:      number of Display Stream Compression (DSC) blocks used
  */
 struct msm_display_topology {
 	u32 num_lm;
+<<<<<<< HEAD
+=======
+	u32 num_enc;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 num_intf;
 	u32 num_dspp;
 	u32 num_dsc;
@@ -224,6 +238,7 @@ struct msm_drm_private {
 
 	struct drm_atomic_state *pm_state;
 
+<<<<<<< HEAD
 	/**
 	 * hangcheck_period: For hang detection, in ms
 	 *
@@ -241,6 +256,11 @@ struct msm_drm_private {
 	 */
 	bool gpu_clamp_to_idle;
 
+=======
+	/* For hang detection, in ms */
+	unsigned int hangcheck_period;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/**
 	 * disable_err_irq:
 	 *

@@ -85,6 +85,12 @@ static inline int zd_rf_should_patch_cck_gain(struct zd_rf *rf)
 	return rf->patch_cck_gain;
 }
 
+<<<<<<< HEAD
+=======
+int zd_rf_patch_6m_band_edge(struct zd_rf *rf, u8 channel);
+int zd_rf_generic_patch_6m(struct zd_rf *rf, u8 channel);
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Functions for individual RF chips */
 
 int zd_rf_init_rf2959(struct zd_rf *rf);

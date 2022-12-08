@@ -17,7 +17,11 @@
 #include "vpu_helpers.h"
 
 static const u8 colorprimaries[] = {
+<<<<<<< HEAD
 	V4L2_COLORSPACE_LAST,
+=======
+	0,
+>>>>>>> b7ba80a49124 (Commit)
 	V4L2_COLORSPACE_REC709,         /*Rec. ITU-R BT.709-6*/
 	0,
 	0,
@@ -31,7 +35,11 @@ static const u8 colorprimaries[] = {
 };
 
 static const u8 colortransfers[] = {
+<<<<<<< HEAD
 	V4L2_XFER_FUNC_LAST,
+=======
+	0,
+>>>>>>> b7ba80a49124 (Commit)
 	V4L2_XFER_FUNC_709,             /*Rec. ITU-R BT.709-6*/
 	0,
 	0,
@@ -53,7 +61,11 @@ static const u8 colortransfers[] = {
 };
 
 static const u8 colormatrixcoefs[] = {
+<<<<<<< HEAD
 	V4L2_YCBCR_ENC_LAST,
+=======
+	0,
+>>>>>>> b7ba80a49124 (Commit)
 	V4L2_YCBCR_ENC_709,              /*Rec. ITU-R BT.709-6*/
 	0,
 	0,

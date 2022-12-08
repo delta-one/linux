@@ -3,7 +3,10 @@
 #include <stddef.h>
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
+<<<<<<< HEAD
 #include "bpf_misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 __attribute__ ((noinline))
 int f1(struct __sk_buff *skb)
@@ -26,8 +29,12 @@ int f3(int val, struct __sk_buff *skb)
 }
 
 SEC("tc")
+<<<<<<< HEAD
 __failure __msg("modified ctx ptr R2")
 int global_func6(struct __sk_buff *skb)
+=======
+int test_cls(struct __sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return f1(skb) + f2(2, skb) + f3(3, skb);
 }

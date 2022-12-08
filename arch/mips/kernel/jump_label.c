@@ -56,7 +56,11 @@ void arch_jump_label_transform(struct jump_entry *e,
 			 * The branch offset must fit in the instruction's 26
 			 * bit field.
 			 */
+<<<<<<< HEAD
 			WARN_ON((offset >= (long)BIT(25)) ||
+=======
+			WARN_ON((offset >= BIT(25)) ||
+>>>>>>> b7ba80a49124 (Commit)
 				(offset < -(long)BIT(25)));
 
 			insn.j_format.opcode = bc6_op;

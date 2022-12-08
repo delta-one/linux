@@ -510,9 +510,12 @@ mlxsw_sp_trap_policer_items_arr[] = {
 	{
 		.policer = MLXSW_SP_TRAP_POLICER(20, 10240, 4096),
 	},
+<<<<<<< HEAD
 	{
 		.policer = MLXSW_SP_TRAP_POLICER(21, 128, 128),
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct mlxsw_sp_trap_group_item mlxsw_sp_trap_group_items_arr[] = {
@@ -631,11 +634,14 @@ static const struct mlxsw_sp_trap_group_item mlxsw_sp_trap_group_items_arr[] = {
 		.hw_group_id = MLXSW_REG_HTGT_TRAP_GROUP_SP_FLOW_LOGGING,
 		.priority = 4,
 	},
+<<<<<<< HEAD
 	{
 		.group = DEVLINK_TRAP_GROUP_GENERIC(EAPOL, 21),
 		.hw_group_id = MLXSW_REG_HTGT_TRAP_GROUP_SP_EAPOL,
 		.priority = 5,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct mlxsw_sp_trap_item mlxsw_sp_trap_items_arr[] = {
@@ -1168,6 +1174,7 @@ static const struct mlxsw_sp_trap_item mlxsw_sp_trap_items_arr[] = {
 			MLXSW_SP_RXL_DISCARD(ROUTER3, L3_DISCARDS),
 		},
 	},
+<<<<<<< HEAD
 	{
 		.trap = MLXSW_SP_TRAP_CONTROL(EAPOL, EAPOL, TRAP),
 		.listeners_arr = {
@@ -1185,6 +1192,8 @@ static const struct mlxsw_sp_trap_item mlxsw_sp_trap_items_arr[] = {
 				      SP_L2_DISCARDS, DISCARD, SP_L2_DISCARDS),
 		},
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct mlxsw_sp_trap_policer_item *

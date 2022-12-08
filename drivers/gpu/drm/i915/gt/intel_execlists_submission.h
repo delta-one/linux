@@ -32,10 +32,13 @@ void intel_execlists_show_requests(struct intel_engine_cs *engine,
 							int indent),
 				   unsigned int max);
 
+<<<<<<< HEAD
 void intel_execlists_dump_active_requests(struct intel_engine_cs *engine,
 					  struct i915_request *hung_rq,
 					  struct drm_printer *m);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool
 intel_engine_in_execlists_submission_mode(const struct intel_engine_cs *engine);
 

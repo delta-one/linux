@@ -8,13 +8,20 @@
 
 #include <linux/delay.h>
 #include <linux/idr.h>
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/nvmem-provider.h>
 #include <linux/pm_runtime.h>
 #include <linux/sched/signal.h>
 #include <linux/sizes.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/string_helpers.h>
+=======
+#include <linux/module.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "tb.h"
 
@@ -513,17 +520,28 @@ int tb_wait_for_port(struct tb_port *port, bool wait_if_unplugged)
 
 	while (retries--) {
 		state = tb_port_state(port);
+<<<<<<< HEAD
 		switch (state) {
 		case TB_PORT_DISABLED:
 			tb_port_dbg(port, "is disabled (state: 0)\n");
 			return 0;
 
 		case TB_PORT_UNPLUGGED:
+=======
+		if (state < 0)
+			return state;
+		if (state == TB_PORT_DISABLED) {
+			tb_port_dbg(port, "is disabled (state: 0)\n");
+			return 0;
+		}
+		if (state == TB_PORT_UNPLUGGED) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (wait_if_unplugged) {
 				/* used during resume */
 				tb_port_dbg(port,
 					    "is unplugged (state: 7), retrying...\n");
 				msleep(100);
+<<<<<<< HEAD
 				break;
 			}
 			tb_port_dbg(port, "is unplugged (state: 7)\n");
@@ -551,6 +569,26 @@ int tb_wait_for_port(struct tb_port *port, bool wait_if_unplugged)
 			msleep(100);
 		}
 
+=======
+				continue;
+			}
+			tb_port_dbg(port, "is unplugged (state: 7)\n");
+			return 0;
+		}
+		if (state == TB_PORT_UP) {
+			tb_port_dbg(port, "is connected, link is up (state: 2)\n");
+			return 1;
+		}
+
+		/*
+		 * After plug-in the state is TB_PORT_CONNECTING. Give it some
+		 * time.
+		 */
+		tb_port_dbg(port,
+			    "is connected, link is not up (state: %d), retrying...\n",
+			    state);
+		msleep(100);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	tb_port_warn(port,
 		     "failed to reach state TB_PORT_UP. Ignoring port...\n");
@@ -653,7 +691,11 @@ static int __tb_port_enable(struct tb_port *port, bool enable)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	tb_port_dbg(port, "lane %s\n", str_enabled_disabled(enable));
+=======
+	tb_port_dbg(port, "lane %sabled\n", enable ? "en" : "dis");
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1703,7 +1745,11 @@ static ssize_t authorized_show(struct device *dev,
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", sw->authorized);
+=======
+	return sprintf(buf, "%u\n", sw->authorized);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int disapprove_switch(struct device *dev, void *not_used)
@@ -1813,7 +1859,11 @@ static ssize_t boot_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", sw->boot);
+=======
+	return sprintf(buf, "%u\n", sw->boot);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(boot);
 
@@ -1822,7 +1872,11 @@ static ssize_t device_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%#x\n", sw->device);
+=======
+	return sprintf(buf, "%#x\n", sw->device);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(device);
 
@@ -1831,7 +1885,11 @@ device_name_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", sw->device_name ?: "");
+=======
+	return sprintf(buf, "%s\n", sw->device_name ? sw->device_name : "");
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(device_name);
 
@@ -1840,7 +1898,11 @@ generation_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", sw->generation);
+=======
+	return sprintf(buf, "%u\n", sw->generation);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(generation);
 
@@ -1854,9 +1916,15 @@ static ssize_t key_show(struct device *dev, struct device_attribute *attr,
 		return restart_syscall();
 
 	if (sw->key)
+<<<<<<< HEAD
 		ret = sysfs_emit(buf, "%*phN\n", TB_SWITCH_KEY_SIZE, sw->key);
 	else
 		ret = sysfs_emit(buf, "\n");
+=======
+		ret = sprintf(buf, "%*phN\n", TB_SWITCH_KEY_SIZE, sw->key);
+	else
+		ret = sprintf(buf, "\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&sw->tb->lock);
 	return ret;
@@ -1901,7 +1969,11 @@ static ssize_t speed_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u.0 Gb/s\n", sw->link_speed);
+=======
+	return sprintf(buf, "%u.0 Gb/s\n", sw->link_speed);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1916,7 +1988,11 @@ static ssize_t lanes_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", sw->link_width);
+=======
+	return sprintf(buf, "%u\n", sw->link_width);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1933,7 +2009,11 @@ static ssize_t nvm_authenticate_show(struct device *dev,
 	u32 status;
 
 	nvm_get_auth_status(sw, &status);
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%#x\n", status);
+=======
+	return sprintf(buf, "%#x\n", status);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t nvm_authenticate_sysfs(struct device *dev, const char *buf,
@@ -2042,7 +2122,11 @@ static ssize_t nvm_version_show(struct device *dev,
 	else if (!sw->nvm)
 		ret = -EAGAIN;
 	else
+<<<<<<< HEAD
 		ret = sysfs_emit(buf, "%x.%x\n", sw->nvm->major, sw->nvm->minor);
+=======
+		ret = sprintf(buf, "%x.%x\n", sw->nvm->major, sw->nvm->minor);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&sw->tb->lock);
 
@@ -2055,7 +2139,11 @@ static ssize_t vendor_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%#x\n", sw->vendor);
+=======
+	return sprintf(buf, "%#x\n", sw->vendor);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(vendor);
 
@@ -2064,7 +2152,11 @@ vendor_name_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", sw->vendor_name ?: "");
+=======
+	return sprintf(buf, "%s\n", sw->vendor_name ? sw->vendor_name : "");
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(vendor_name);
 
@@ -2073,7 +2165,11 @@ static ssize_t unique_id_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%pUb\n", sw->uuid);
+=======
+	return sprintf(buf, "%pUb\n", sw->uuid);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(unique_id);
 
@@ -2184,9 +2280,15 @@ static void tb_switch_release(struct device *dev)
 	kfree(sw);
 }
 
+<<<<<<< HEAD
 static int tb_switch_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct tb_switch *sw = tb_to_switch(dev);
+=======
+static int tb_switch_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct tb_switch *sw = tb_to_switch(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	const char *type;
 
 	if (sw->config.thunderbolt_version == USB4_VERSION_1_0) {
@@ -2910,6 +3012,7 @@ static void tb_switch_credits_init(struct tb_switch *sw)
 		tb_sw_info(sw, "failed to determine preferred buffer allocation, using defaults\n");
 }
 
+<<<<<<< HEAD
 static int tb_switch_port_hotplug_enable(struct tb_switch *sw)
 {
 	struct tb_port *port;
@@ -2930,6 +3033,8 @@ static int tb_switch_port_hotplug_enable(struct tb_switch *sw)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * tb_switch_add() - Add a switch to the domain
  * @sw: Switch to add
@@ -2968,6 +3073,11 @@ int tb_switch_add(struct tb_switch *sw)
 			dev_warn(&sw->dev, "reading DROM failed: %d\n", ret);
 		tb_sw_dbg(sw, "uid: %#llx\n", sw->uid);
 
+<<<<<<< HEAD
+=======
+		tb_check_quirks(sw);
+
+>>>>>>> b7ba80a49124 (Commit)
 		ret = tb_switch_set_uuid(sw);
 		if (ret) {
 			dev_err(&sw->dev, "failed to set UUID\n");
@@ -2986,8 +3096,11 @@ int tb_switch_add(struct tb_switch *sw)
 			}
 		}
 
+<<<<<<< HEAD
 		tb_check_quirks(sw);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		tb_switch_default_link_ports(sw);
 
 		ret = tb_switch_update_link_attributes(sw);
@@ -2999,10 +3112,13 @@ int tb_switch_add(struct tb_switch *sw)
 			return ret;
 	}
 
+<<<<<<< HEAD
 	ret = tb_switch_port_hotplug_enable(sw);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = device_add(&sw->dev);
 	if (ret) {
 		dev_err(&sw->dev, "failed to add device: %d\n", ret);

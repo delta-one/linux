@@ -11,7 +11,10 @@
 #define __DA7219_AAD_H
 
 #include <linux/timer.h>
+<<<<<<< HEAD
 #include <linux/mutex.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <sound/soc.h>
 #include <sound/jack.h>
 #include <sound/da7219-aad.h>
@@ -188,7 +191,10 @@ enum da7219_aad_event_regs {
 struct da7219_aad_priv {
 	struct snd_soc_component *component;
 	int irq;
+<<<<<<< HEAD
 	int gnd_switch_delay;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	u8 micbias_pulse_lvl;
 	u32 micbias_pulse_time;
@@ -197,9 +203,12 @@ struct da7219_aad_priv {
 
 	struct work_struct btn_det_work;
 	struct work_struct hptest_work;
+<<<<<<< HEAD
 	struct work_struct jack_det_work;
 
 	struct mutex  jack_det_mutex;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct snd_soc_jack *jack;
 	bool micbias_resume_enable;

@@ -123,7 +123,11 @@ static inline void mlx5_wq_cyc_push(struct mlx5_wq_cyc *wq)
 	wq->cur_sz++;
 }
 
+<<<<<<< HEAD
 static inline void mlx5_wq_cyc_push_n(struct mlx5_wq_cyc *wq, u16 n)
+=======
+static inline void mlx5_wq_cyc_push_n(struct mlx5_wq_cyc *wq, u8 n)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	wq->wqe_ctr += n;
 	wq->cur_sz += n;
@@ -243,6 +247,7 @@ static inline struct mlx5_cqe64 *mlx5_cqwq_get_cqe(struct mlx5_cqwq *wq)
 	return cqe;
 }
 
+<<<<<<< HEAD
 static inline
 struct mlx5_cqe64 *mlx5_cqwq_get_cqe_enahnced_comp(struct mlx5_cqwq *wq)
 {
@@ -260,6 +265,8 @@ struct mlx5_cqe64 *mlx5_cqwq_get_cqe_enahnced_comp(struct mlx5_cqwq *wq)
 	return cqe;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline u32 mlx5_wq_ll_get_size(struct mlx5_wq_ll *wq)
 {
 	return (u32)wq->fbc.sz_m1 + 1;

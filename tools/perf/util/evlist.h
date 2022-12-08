@@ -9,7 +9,10 @@
 #include <api/fd/array.h>
 #include <internal/evlist.h>
 #include <internal/evsel.h>
+<<<<<<< HEAD
 #include <perf/evlist.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "events_stats.h"
 #include "evsel.h"
 #include <pthread.h>
@@ -120,7 +123,11 @@ int arch_evlist__add_default_attrs(struct evlist *evlist,
 #define evlist__add_default_attrs(evlist, array) \
 	arch_evlist__add_default_attrs(evlist, array, ARRAY_SIZE(array))
 
+<<<<<<< HEAD
 int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs);
+=======
+struct evsel *arch_evlist__leader(struct list_head *list);
+>>>>>>> b7ba80a49124 (Commit)
 
 int evlist__add_dummy(struct evlist *evlist);
 struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide);
@@ -128,9 +135,12 @@ static inline struct evsel *evlist__add_dummy_on_all_cpus(struct evlist *evlist)
 {
 	return evlist__add_aux_dummy(evlist, true);
 }
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 struct evsel *evlist__add_sched_switch(struct evlist *evlist, bool system_wide);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int evlist__add_sb_event(struct evlist *evlist, struct perf_event_attr *attr,
 			 evsel__sb_cb_t cb, void *data);
@@ -138,9 +148,13 @@ void evlist__set_cb(struct evlist *evlist, evsel__sb_cb_t cb, void *data);
 int evlist__start_sb_thread(struct evlist *evlist, struct target *target);
 void evlist__stop_sb_thread(struct evlist *evlist);
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 int evlist__add_newtp(struct evlist *evlist, const char *sys, const char *name, void *handler);
 #endif
+=======
+int evlist__add_newtp(struct evlist *evlist, const char *sys, const char *name, void *handler);
+>>>>>>> b7ba80a49124 (Commit)
 
 int __evlist__set_tracepoints_handlers(struct evlist *evlist,
 				       const struct evsel_str_handler *assocs,
@@ -222,6 +236,11 @@ void evlist__set_selected(struct evlist *evlist, struct evsel *evsel);
 int evlist__create_maps(struct evlist *evlist, struct target *target);
 int evlist__apply_filters(struct evlist *evlist, struct evsel **err_evsel);
 
+<<<<<<< HEAD
+=======
+void evlist__set_leader(struct evlist *evlist);
+
+>>>>>>> b7ba80a49124 (Commit)
 u64 __evlist__combined_sample_type(struct evlist *evlist);
 u64 evlist__combined_sample_type(struct evlist *evlist);
 u64 evlist__combined_branch_type(struct evlist *evlist);
@@ -256,11 +275,14 @@ static inline struct evsel *evlist__last(struct evlist *evlist)
 	return container_of(evsel, struct evsel, core);
 }
 
+<<<<<<< HEAD
 static inline int evlist__nr_groups(struct evlist *evlist)
 {
 	return perf_evlist__nr_groups(&evlist->core);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int evlist__strerror_open(struct evlist *evlist, int err, char *buf, size_t size);
 int evlist__strerror_mmap(struct evlist *evlist, int err, char *buf, size_t size);
 

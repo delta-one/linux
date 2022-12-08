@@ -384,7 +384,11 @@ static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, lo
 
 	init_sync_kiocb(&kiocb, filp);
 	kiocb.ki_pos = (ppos ? *ppos : 0);
+<<<<<<< HEAD
 	iov_iter_ubuf(&iter, ITER_DEST, buf, len);
+=======
+	iov_iter_ubuf(&iter, READ, buf, len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = call_read_iter(filp, &kiocb, &iter);
 	BUG_ON(ret == -EIOCBQUEUED);
@@ -424,7 +428,11 @@ ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
 
 	init_sync_kiocb(&kiocb, file);
 	kiocb.ki_pos = pos ? *pos : 0;
+<<<<<<< HEAD
 	iov_iter_kvec(&iter, ITER_DEST, &iov, 1, iov.iov_len);
+=======
+	iov_iter_kvec(&iter, READ, &iov, 1, iov.iov_len);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = file->f_op->read_iter(&kiocb, &iter);
 	if (ret > 0) {
 		if (pos)
@@ -486,7 +494,11 @@ static ssize_t new_sync_write(struct file *filp, const char __user *buf, size_t 
 
 	init_sync_kiocb(&kiocb, filp);
 	kiocb.ki_pos = (ppos ? *ppos : 0);
+<<<<<<< HEAD
 	iov_iter_ubuf(&iter, ITER_SOURCE, (void __user *)buf, len);
+=======
+	iov_iter_ubuf(&iter, WRITE, (void __user *)buf, len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = call_write_iter(filp, &kiocb, &iter);
 	BUG_ON(ret == -EIOCBQUEUED);
@@ -496,9 +508,20 @@ static ssize_t new_sync_write(struct file *filp, const char __user *buf, size_t 
 }
 
 /* caller is responsible for file_start_write/file_end_write */
+<<<<<<< HEAD
 ssize_t __kernel_write_iter(struct file *file, struct iov_iter *from, loff_t *pos)
 {
 	struct kiocb kiocb;
+=======
+ssize_t __kernel_write(struct file *file, const void *buf, size_t count, loff_t *pos)
+{
+	struct kvec iov = {
+		.iov_base	= (void *)buf,
+		.iov_len	= min_t(size_t, count, MAX_RW_COUNT),
+	};
+	struct kiocb kiocb;
+	struct iov_iter iter;
+>>>>>>> b7ba80a49124 (Commit)
 	ssize_t ret;
 
 	if (WARN_ON_ONCE(!(file->f_mode & FMODE_WRITE)))
@@ -514,7 +537,12 @@ ssize_t __kernel_write_iter(struct file *file, struct iov_iter *from, loff_t *po
 
 	init_sync_kiocb(&kiocb, file);
 	kiocb.ki_pos = pos ? *pos : 0;
+<<<<<<< HEAD
 	ret = file->f_op->write_iter(&kiocb, from);
+=======
+	iov_iter_kvec(&iter, WRITE, &iov, 1, iov.iov_len);
+	ret = file->f_op->write_iter(&kiocb, &iter);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret > 0) {
 		if (pos)
 			*pos = kiocb.ki_pos;
@@ -524,6 +552,7 @@ ssize_t __kernel_write_iter(struct file *file, struct iov_iter *from, loff_t *po
 	inc_syscw(current);
 	return ret;
 }
+<<<<<<< HEAD
 
 /* caller is responsible for file_start_write/file_end_write */
 ssize_t __kernel_write(struct file *file, const void *buf, size_t count, loff_t *pos)
@@ -536,6 +565,8 @@ ssize_t __kernel_write(struct file *file, const void *buf, size_t count, loff_t 
 	iov_iter_kvec(&iter, ITER_SOURCE, &iov, 1, iov.iov_len);
 	return __kernel_write_iter(file, &iter, pos);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This "EXPORT_SYMBOL_GPL()" is more of a "EXPORT_SYMBOL_DONTUSE()",
  * but autofs is one of the few internal kernel users that actually
@@ -911,7 +942,11 @@ static ssize_t vfs_readv(struct file *file, const struct iovec __user *vec,
 	struct iov_iter iter;
 	ssize_t ret;
 
+<<<<<<< HEAD
 	ret = import_iovec(ITER_DEST, vec, vlen, ARRAY_SIZE(iovstack), &iov, &iter);
+=======
+	ret = import_iovec(READ, vec, vlen, ARRAY_SIZE(iovstack), &iov, &iter);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret >= 0) {
 		ret = do_iter_read(file, &iter, pos, flags);
 		kfree(iov);
@@ -928,7 +963,11 @@ static ssize_t vfs_writev(struct file *file, const struct iovec __user *vec,
 	struct iov_iter iter;
 	ssize_t ret;
 
+<<<<<<< HEAD
 	ret = import_iovec(ITER_SOURCE, vec, vlen, ARRAY_SIZE(iovstack), &iov, &iter);
+=======
+	ret = import_iovec(WRITE, vec, vlen, ARRAY_SIZE(iovstack), &iov, &iter);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret >= 0) {
 		file_start_write(file);
 		ret = do_iter_write(file, &iter, pos, flags);
@@ -1388,8 +1427,11 @@ ssize_t generic_copy_file_range(struct file *file_in, loff_t pos_in,
 				struct file *file_out, loff_t pos_out,
 				size_t len, unsigned int flags)
 {
+<<<<<<< HEAD
 	lockdep_assert(sb_write_started(file_inode(file_out)->i_sb));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return do_splice_direct(file_in, &pos_in, file_out, &pos_out,
 				len > MAX_RW_COUNT ? MAX_RW_COUNT : len, 0);
 }
@@ -1426,9 +1468,13 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
 	 * and several different sets of file_operations, but they all end up
 	 * using the same ->copy_file_range() function pointer.
 	 */
+<<<<<<< HEAD
 	if (flags & COPY_FILE_SPLICE) {
 		/* cross sb splice is allowed */
 	} else if (file_out->f_op->copy_file_range) {
+=======
+	if (file_out->f_op->copy_file_range) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (file_in->f_op->copy_file_range !=
 		    file_out->f_op->copy_file_range)
 			return -EXDEV;
@@ -1478,9 +1524,14 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
 			    size_t len, unsigned int flags)
 {
 	ssize_t ret;
+<<<<<<< HEAD
 	bool splice = flags & COPY_FILE_SPLICE;
 
 	if (flags & ~COPY_FILE_SPLICE)
+=======
+
+	if (flags != 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	ret = generic_copy_file_checks(file_in, pos_in, file_out, pos_out, &len,
@@ -1506,14 +1557,22 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
 	 * same sb using clone, but for filesystems where both clone and copy
 	 * are supported (e.g. nfs,cifs), we only call the copy method.
 	 */
+<<<<<<< HEAD
 	if (!splice && file_out->f_op->copy_file_range) {
+=======
+	if (file_out->f_op->copy_file_range) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = file_out->f_op->copy_file_range(file_in, pos_in,
 						      file_out, pos_out,
 						      len, flags);
 		goto done;
 	}
 
+<<<<<<< HEAD
 	if (!splice && file_in->f_op->remap_file_range &&
+=======
+	if (file_in->f_op->remap_file_range &&
+>>>>>>> b7ba80a49124 (Commit)
 	    file_inode(file_in)->i_sb == file_inode(file_out)->i_sb) {
 		ret = file_in->f_op->remap_file_range(file_in, pos_in,
 				file_out, pos_out,
@@ -1533,8 +1592,11 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
 	 * consistent story about which filesystems support copy_file_range()
 	 * and which filesystems do not, that will allow userspace tools to
 	 * make consistent desicions w.r.t using copy_file_range().
+<<<<<<< HEAD
 	 *
 	 * We also get here if caller (e.g. nfsd) requested COPY_FILE_SPLICE.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	ret = generic_copy_file_range(file_in, pos_in, file_out, pos_out, len,
 				      flags);
@@ -1589,10 +1651,13 @@ SYSCALL_DEFINE6(copy_file_range, int, fd_in, loff_t __user *, off_in,
 		pos_out = f_out.file->f_pos;
 	}
 
+<<<<<<< HEAD
 	ret = -EINVAL;
 	if (flags != 0)
 		goto out;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = vfs_copy_file_range(f_in.file, pos_in, f_out.file, pos_out, len,
 				  flags);
 	if (ret > 0) {

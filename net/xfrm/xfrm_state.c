@@ -84,6 +84,7 @@ static unsigned int xfrm_seq_hash(struct net *net, u32 seq)
 	return __xfrm_seq_hash(seq, net->xfrm.state_hmask);
 }
 
+<<<<<<< HEAD
 #define XFRM_STATE_INSERT(by, _n, _h, _type)                               \
 	{                                                                  \
 		struct xfrm_state *_x = NULL;                              \
@@ -103,6 +104,8 @@ static unsigned int xfrm_seq_hash(struct net *net, u32 seq)
 			hlist_add_before_rcu(_n, &_x->by);                 \
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void xfrm_hash_transfer(struct hlist_head *list,
 			       struct hlist_head *ndsttable,
 			       struct hlist_head *nsrctable,
@@ -119,25 +122,41 @@ static void xfrm_hash_transfer(struct hlist_head *list,
 		h = __xfrm_dst_hash(&x->id.daddr, &x->props.saddr,
 				    x->props.reqid, x->props.family,
 				    nhashmask);
+<<<<<<< HEAD
 		XFRM_STATE_INSERT(bydst, &x->bydst, ndsttable + h, x->xso.type);
+=======
+		hlist_add_head_rcu(&x->bydst, ndsttable + h);
+>>>>>>> b7ba80a49124 (Commit)
 
 		h = __xfrm_src_hash(&x->id.daddr, &x->props.saddr,
 				    x->props.family,
 				    nhashmask);
+<<<<<<< HEAD
 		XFRM_STATE_INSERT(bysrc, &x->bysrc, nsrctable + h, x->xso.type);
+=======
+		hlist_add_head_rcu(&x->bysrc, nsrctable + h);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (x->id.spi) {
 			h = __xfrm_spi_hash(&x->id.daddr, x->id.spi,
 					    x->id.proto, x->props.family,
 					    nhashmask);
+<<<<<<< HEAD
 			XFRM_STATE_INSERT(byspi, &x->byspi, nspitable + h,
 					  x->xso.type);
+=======
+			hlist_add_head_rcu(&x->byspi, nspitable + h);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (x->km.seq) {
 			h = __xfrm_seq_hash(x->km.seq, nhashmask);
+<<<<<<< HEAD
 			XFRM_STATE_INSERT(byseq, &x->byseq, nseqtable + h,
 					  x->xso.type);
+=======
+			hlist_add_head_rcu(&x->byseq, nseqtable + h);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }
@@ -570,14 +589,21 @@ static enum hrtimer_restart xfrm_timer_handler(struct hrtimer *me)
 	int err = 0;
 
 	spin_lock(&x->lock);
+<<<<<<< HEAD
 	xfrm_dev_state_update_curlft(x);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (x->km.state == XFRM_STATE_DEAD)
 		goto out;
 	if (x->km.state == XFRM_STATE_EXPIRED)
 		goto expired;
 	if (x->lft.hard_add_expires_seconds) {
+<<<<<<< HEAD
 		time64_t tmo = x->lft.hard_add_expires_seconds +
+=======
+		long tmo = x->lft.hard_add_expires_seconds +
+>>>>>>> b7ba80a49124 (Commit)
 			x->curlft.add_time - now;
 		if (tmo <= 0) {
 			if (x->xflags & XFRM_SOFT_EXPIRE) {
@@ -594,8 +620,13 @@ static enum hrtimer_restart xfrm_timer_handler(struct hrtimer *me)
 			next = tmo;
 	}
 	if (x->lft.hard_use_expires_seconds) {
+<<<<<<< HEAD
 		time64_t tmo = x->lft.hard_use_expires_seconds +
 			(READ_ONCE(x->curlft.use_time) ? : now) - now;
+=======
+		long tmo = x->lft.hard_use_expires_seconds +
+			(x->curlft.use_time ? : now) - now;
+>>>>>>> b7ba80a49124 (Commit)
 		if (tmo <= 0)
 			goto expired;
 		if (tmo < next)
@@ -604,7 +635,11 @@ static enum hrtimer_restart xfrm_timer_handler(struct hrtimer *me)
 	if (x->km.dying)
 		goto resched;
 	if (x->lft.soft_add_expires_seconds) {
+<<<<<<< HEAD
 		time64_t tmo = x->lft.soft_add_expires_seconds +
+=======
+		long tmo = x->lft.soft_add_expires_seconds +
+>>>>>>> b7ba80a49124 (Commit)
 			x->curlft.add_time - now;
 		if (tmo <= 0) {
 			warn = 1;
@@ -616,8 +651,13 @@ static enum hrtimer_restart xfrm_timer_handler(struct hrtimer *me)
 		}
 	}
 	if (x->lft.soft_use_expires_seconds) {
+<<<<<<< HEAD
 		time64_t tmo = x->lft.soft_use_expires_seconds +
 			(READ_ONCE(x->curlft.use_time) ? : now) - now;
+=======
+		long tmo = x->lft.soft_use_expires_seconds +
+			(x->curlft.use_time ? : now) - now;
+>>>>>>> b7ba80a49124 (Commit)
 		if (tmo <= 0)
 			warn = 1;
 		else if (tmo < next)
@@ -974,6 +1014,7 @@ xfrm_init_tempstate(struct xfrm_state *x, const struct flowi *fl,
 	x->props.family = tmpl->encap_family;
 }
 
+<<<<<<< HEAD
 static struct xfrm_state *__xfrm_state_lookup_all(struct net *net, u32 mark,
 						  const xfrm_address_t *daddr,
 						  __be32 spi, u8 proto,
@@ -1017,6 +1058,8 @@ static struct xfrm_state *__xfrm_state_lookup_all(struct net *net, u32 mark,
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct xfrm_state *__xfrm_state_lookup(struct net *net, u32 mark,
 					      const xfrm_address_t *daddr,
 					      __be32 spi, u8 proto,
@@ -1158,6 +1201,7 @@ xfrm_state_find(const xfrm_address_t *daddr, const xfrm_address_t *saddr,
 	rcu_read_lock();
 	h = xfrm_dst_hash(net, daddr, saddr, tmpl->reqid, encap_family);
 	hlist_for_each_entry_rcu(x, net->xfrm.state_bydst + h, bydst) {
+<<<<<<< HEAD
 #ifdef CONFIG_XFRM_OFFLOAD
 		if (pol->xdo.type == XFRM_DEV_OFFLOAD_PACKET) {
 			if (x->xso.type != XFRM_DEV_OFFLOAD_PACKET)
@@ -1175,6 +1219,8 @@ xfrm_state_find(const xfrm_address_t *daddr, const xfrm_address_t *saddr,
 			/* Skip HW policy for SW lookups */
 			continue;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (x->props.family == encap_family &&
 		    x->props.reqid == tmpl->reqid &&
 		    (mark & x->mark.m) == x->mark.v &&
@@ -1192,6 +1238,7 @@ xfrm_state_find(const xfrm_address_t *daddr, const xfrm_address_t *saddr,
 
 	h_wildcard = xfrm_dst_hash(net, daddr, &saddr_wildcard, tmpl->reqid, encap_family);
 	hlist_for_each_entry_rcu(x, net->xfrm.state_bydst + h_wildcard, bydst) {
+<<<<<<< HEAD
 #ifdef CONFIG_XFRM_OFFLOAD
 		if (pol->xdo.type == XFRM_DEV_OFFLOAD_PACKET) {
 			if (x->xso.type != XFRM_DEV_OFFLOAD_PACKET)
@@ -1209,6 +1256,8 @@ xfrm_state_find(const xfrm_address_t *daddr, const xfrm_address_t *saddr,
 			/* Skip HW policy for SW lookups */
 			continue;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (x->props.family == encap_family &&
 		    x->props.reqid == tmpl->reqid &&
 		    (mark & x->mark.m) == x->mark.v &&
@@ -1226,10 +1275,15 @@ found:
 	x = best;
 	if (!x && !error && !acquire_in_progress) {
 		if (tmpl->id.spi &&
+<<<<<<< HEAD
 		    (x0 = __xfrm_state_lookup_all(net, mark, daddr,
 						  tmpl->id.spi, tmpl->id.proto,
 						  encap_family,
 						  &pol->xdo)) != NULL) {
+=======
+		    (x0 = __xfrm_state_lookup(net, mark, daddr, tmpl->id.spi,
+					      tmpl->id.proto, encap_family)) != NULL) {
+>>>>>>> b7ba80a49124 (Commit)
 			to_put = x0;
 			error = -EEXIST;
 			goto out;
@@ -1263,6 +1317,7 @@ found:
 			x = NULL;
 			goto out;
 		}
+<<<<<<< HEAD
 #ifdef CONFIG_XFRM_OFFLOAD
 		if (pol->xdo.type == XFRM_DEV_OFFLOAD_PACKET) {
 			struct xfrm_dev_offload *xdo = &pol->xdo;
@@ -1289,10 +1344,14 @@ found:
 			}
 		}
 #endif
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (km_query(x, tmpl, pol) == 0) {
 			spin_lock_bh(&net->xfrm.xfrm_state_lock);
 			x->km.state = XFRM_STATE_ACQ;
 			list_add(&x->km.all, &net->xfrm.state_all);
+<<<<<<< HEAD
 			XFRM_STATE_INSERT(bydst, &x->bydst,
 					  net->xfrm.state_bydst + h,
 					  x->xso.type);
@@ -1311,6 +1370,18 @@ found:
 				XFRM_STATE_INSERT(byseq, &x->byseq,
 						  net->xfrm.state_byseq + h,
 						  x->xso.type);
+=======
+			hlist_add_head_rcu(&x->bydst, net->xfrm.state_bydst + h);
+			h = xfrm_src_hash(net, daddr, saddr, encap_family);
+			hlist_add_head_rcu(&x->bysrc, net->xfrm.state_bysrc + h);
+			if (x->id.spi) {
+				h = xfrm_spi_hash(net, &x->id.daddr, x->id.spi, x->id.proto, encap_family);
+				hlist_add_head_rcu(&x->byspi, net->xfrm.state_byspi + h);
+			}
+			if (x->km.seq) {
+				h = xfrm_seq_hash(net, x->km.seq);
+				hlist_add_head_rcu(&x->byseq, net->xfrm.state_byseq + h);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			x->lft.hard_add_expires_seconds = net->xfrm.sysctl_acq_expires;
 			hrtimer_start(&x->mtimer,
@@ -1320,6 +1391,7 @@ found:
 			xfrm_hash_grow_check(net, x->bydst.next != NULL);
 			spin_unlock_bh(&net->xfrm.xfrm_state_lock);
 		} else {
+<<<<<<< HEAD
 #ifdef CONFIG_XFRM_OFFLOAD
 			struct xfrm_dev_offload *xso = &x->xso;
 
@@ -1332,6 +1404,8 @@ found:
 				xso->type = XFRM_DEV_OFFLOAD_UNSPECIFIED;
 			}
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			x->km.state = XFRM_STATE_DEAD;
 			to_put = x;
 			x = NULL;
@@ -1427,26 +1501,41 @@ static void __xfrm_state_insert(struct xfrm_state *x)
 
 	h = xfrm_dst_hash(net, &x->id.daddr, &x->props.saddr,
 			  x->props.reqid, x->props.family);
+<<<<<<< HEAD
 	XFRM_STATE_INSERT(bydst, &x->bydst, net->xfrm.state_bydst + h,
 			  x->xso.type);
 
 	h = xfrm_src_hash(net, &x->id.daddr, &x->props.saddr, x->props.family);
 	XFRM_STATE_INSERT(bysrc, &x->bysrc, net->xfrm.state_bysrc + h,
 			  x->xso.type);
+=======
+	hlist_add_head_rcu(&x->bydst, net->xfrm.state_bydst + h);
+
+	h = xfrm_src_hash(net, &x->id.daddr, &x->props.saddr, x->props.family);
+	hlist_add_head_rcu(&x->bysrc, net->xfrm.state_bysrc + h);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (x->id.spi) {
 		h = xfrm_spi_hash(net, &x->id.daddr, x->id.spi, x->id.proto,
 				  x->props.family);
 
+<<<<<<< HEAD
 		XFRM_STATE_INSERT(byspi, &x->byspi, net->xfrm.state_byspi + h,
 				  x->xso.type);
+=======
+		hlist_add_head_rcu(&x->byspi, net->xfrm.state_byspi + h);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (x->km.seq) {
 		h = xfrm_seq_hash(net, x->km.seq);
 
+<<<<<<< HEAD
 		XFRM_STATE_INSERT(byseq, &x->byseq, net->xfrm.state_byseq + h,
 				  x->xso.type);
+=======
+		hlist_add_head_rcu(&x->byseq, net->xfrm.state_byseq + h);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	hrtimer_start(&x->mtimer, ktime_set(1, 0), HRTIMER_MODE_REL_SOFT);
@@ -1560,11 +1649,17 @@ static struct xfrm_state *__find_acq_core(struct net *net,
 			      ktime_set(net->xfrm.sysctl_acq_expires, 0),
 			      HRTIMER_MODE_REL_SOFT);
 		list_add(&x->km.all, &net->xfrm.state_all);
+<<<<<<< HEAD
 		XFRM_STATE_INSERT(bydst, &x->bydst, net->xfrm.state_bydst + h,
 				  x->xso.type);
 		h = xfrm_src_hash(net, daddr, saddr, family);
 		XFRM_STATE_INSERT(bysrc, &x->bysrc, net->xfrm.state_bysrc + h,
 				  x->xso.type);
+=======
+		hlist_add_head_rcu(&x->bydst, net->xfrm.state_bydst + h);
+		h = xfrm_src_hash(net, daddr, saddr, family);
+		hlist_add_head_rcu(&x->bysrc, net->xfrm.state_bysrc + h);
+>>>>>>> b7ba80a49124 (Commit)
 
 		net->xfrm.state_num++;
 
@@ -1907,7 +2002,11 @@ out:
 
 		hrtimer_start(&x1->mtimer, ktime_set(1, 0),
 			      HRTIMER_MODE_REL_SOFT);
+<<<<<<< HEAD
 		if (READ_ONCE(x1->curlft.use_time))
+=======
+		if (x1->curlft.use_time)
+>>>>>>> b7ba80a49124 (Commit)
 			xfrm_state_check_expire(x1);
 
 		if (x->props.smark.m || x->props.smark.v || x->if_id) {
@@ -1939,10 +2038,15 @@ EXPORT_SYMBOL(xfrm_state_update);
 
 int xfrm_state_check_expire(struct xfrm_state *x)
 {
+<<<<<<< HEAD
 	xfrm_dev_state_update_curlft(x);
 
 	if (!READ_ONCE(x->curlft.use_time))
 		WRITE_ONCE(x->curlft.use_time, ktime_get_real_seconds());
+=======
+	if (!x->curlft.use_time)
+		x->curlft.use_time = ktime_get_real_seconds();
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (x->curlft.bytes >= x->lft.hard_byte_limit ||
 	    x->curlft.packets >= x->lft.hard_packet_limit) {
@@ -2172,7 +2276,11 @@ u32 xfrm_get_acqseq(void)
 }
 EXPORT_SYMBOL(xfrm_get_acqseq);
 
+<<<<<<< HEAD
 int verify_spi_info(u8 proto, u32 min, u32 max, struct netlink_ext_ack *extack)
+=======
+int verify_spi_info(u8 proto, u32 min, u32 max)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (proto) {
 	case IPPROTO_AH:
@@ -2181,6 +2289,7 @@ int verify_spi_info(u8 proto, u32 min, u32 max, struct netlink_ext_ack *extack)
 
 	case IPPROTO_COMP:
 		/* IPCOMP spi is 16-bits. */
+<<<<<<< HEAD
 		if (max >= 0x10000) {
 			NL_SET_ERR_MSG(extack, "IPCOMP SPI must be <= 65535");
 			return -EINVAL;
@@ -2196,13 +2305,29 @@ int verify_spi_info(u8 proto, u32 min, u32 max, struct netlink_ext_ack *extack)
 		NL_SET_ERR_MSG(extack, "Invalid SPI range: min > max");
 		return -EINVAL;
 	}
+=======
+		if (max >= 0x10000)
+			return -EINVAL;
+		break;
+
+	default:
+		return -EINVAL;
+	}
+
+	if (min > max)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 EXPORT_SYMBOL(verify_spi_info);
 
+<<<<<<< HEAD
 int xfrm_alloc_spi(struct xfrm_state *x, u32 low, u32 high,
 		   struct netlink_ext_ack *extack)
+=======
+int xfrm_alloc_spi(struct xfrm_state *x, u32 low, u32 high)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct net *net = xs_net(x);
 	unsigned int h;
@@ -2214,10 +2339,15 @@ int xfrm_alloc_spi(struct xfrm_state *x, u32 low, u32 high,
 	u32 mark = x->mark.v & x->mark.m;
 
 	spin_lock_bh(&x->lock);
+<<<<<<< HEAD
 	if (x->km.state == XFRM_STATE_DEAD) {
 		NL_SET_ERR_MSG(extack, "Target ACQUIRE is in DEAD state");
 		goto unlock;
 	}
+=======
+	if (x->km.state == XFRM_STATE_DEAD)
+		goto unlock;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = 0;
 	if (x->id.spi)
@@ -2228,7 +2358,10 @@ int xfrm_alloc_spi(struct xfrm_state *x, u32 low, u32 high,
 	if (minspi == maxspi) {
 		x0 = xfrm_state_lookup(net, mark, &x->id.daddr, minspi, x->id.proto, x->props.family);
 		if (x0) {
+<<<<<<< HEAD
 			NL_SET_ERR_MSG(extack, "Requested SPI is already in use");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			xfrm_state_put(x0);
 			goto unlock;
 		}
@@ -2236,7 +2369,11 @@ int xfrm_alloc_spi(struct xfrm_state *x, u32 low, u32 high,
 	} else {
 		u32 spi = 0;
 		for (h = 0; h < high-low+1; h++) {
+<<<<<<< HEAD
 			spi = get_random_u32_inclusive(low, high);
+=======
+			spi = low + prandom_u32()%(high-low+1);
+>>>>>>> b7ba80a49124 (Commit)
 			x0 = xfrm_state_lookup(net, mark, &x->id.daddr, htonl(spi), x->id.proto, x->props.family);
 			if (x0 == NULL) {
 				newspi = htonl(spi);
@@ -2249,6 +2386,7 @@ int xfrm_alloc_spi(struct xfrm_state *x, u32 low, u32 high,
 		spin_lock_bh(&net->xfrm.xfrm_state_lock);
 		x->id.spi = newspi;
 		h = xfrm_spi_hash(net, &x->id.daddr, x->id.spi, x->id.proto, x->props.family);
+<<<<<<< HEAD
 		XFRM_STATE_INSERT(byspi, &x->byspi, net->xfrm.state_byspi + h,
 				  x->xso.type);
 		spin_unlock_bh(&net->xfrm.xfrm_state_lock);
@@ -2256,6 +2394,12 @@ int xfrm_alloc_spi(struct xfrm_state *x, u32 low, u32 high,
 		err = 0;
 	} else {
 		NL_SET_ERR_MSG(extack, "No SPI available in the requested range");
+=======
+		hlist_add_head_rcu(&x->byspi, net->xfrm.state_byspi + h);
+		spin_unlock_bh(&net->xfrm.xfrm_state_lock);
+
+		err = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 unlock:
@@ -2778,8 +2922,12 @@ u32 xfrm_state_mtu(struct xfrm_state *x, int mtu)
 }
 EXPORT_SYMBOL_GPL(xfrm_state_mtu);
 
+<<<<<<< HEAD
 int __xfrm_init_state(struct xfrm_state *x, bool init_replay, bool offload,
 		      struct netlink_ext_ack *extack)
+=======
+int __xfrm_init_state(struct xfrm_state *x, bool init_replay, bool offload)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct xfrm_mode *inner_mode;
 	const struct xfrm_mode *outer_mode;
@@ -2794,6 +2942,7 @@ int __xfrm_init_state(struct xfrm_state *x, bool init_replay, bool offload,
 
 	if (x->sel.family != AF_UNSPEC) {
 		inner_mode = xfrm_get_mode(x->props.mode, x->sel.family);
+<<<<<<< HEAD
 		if (inner_mode == NULL) {
 			NL_SET_ERR_MSG(extack, "Requested mode not found");
 			goto error;
@@ -2804,6 +2953,14 @@ int __xfrm_init_state(struct xfrm_state *x, bool init_replay, bool offload,
 			NL_SET_ERR_MSG(extack, "Only tunnel modes can accommodate a change of family");
 			goto error;
 		}
+=======
+		if (inner_mode == NULL)
+			goto error;
+
+		if (!(inner_mode->flags & XFRM_MODE_FLAG_TUNNEL) &&
+		    family != x->sel.family)
+			goto error;
+>>>>>>> b7ba80a49124 (Commit)
 
 		x->inner_mode = *inner_mode;
 	} else {
@@ -2811,10 +2968,18 @@ int __xfrm_init_state(struct xfrm_state *x, bool init_replay, bool offload,
 		int iafamily = AF_INET;
 
 		inner_mode = xfrm_get_mode(x->props.mode, x->props.family);
+<<<<<<< HEAD
 		if (inner_mode == NULL) {
 			NL_SET_ERR_MSG(extack, "Requested mode not found");
 			goto error;
 		}
+=======
+		if (inner_mode == NULL)
+			goto error;
+
+		if (!(inner_mode->flags & XFRM_MODE_FLAG_TUNNEL))
+			goto error;
+>>>>>>> b7ba80a49124 (Commit)
 
 		x->inner_mode = *inner_mode;
 
@@ -2829,6 +2994,7 @@ int __xfrm_init_state(struct xfrm_state *x, bool init_replay, bool offload,
 	}
 
 	x->type = xfrm_get_type(x->id.proto, family);
+<<<<<<< HEAD
 	if (x->type == NULL) {
 		NL_SET_ERR_MSG(extack, "Requested type not found");
 		goto error;
@@ -2837,19 +3003,34 @@ int __xfrm_init_state(struct xfrm_state *x, bool init_replay, bool offload,
 	x->type_offload = xfrm_get_type_offload(x->id.proto, family, offload);
 
 	err = x->type->init_state(x, extack);
+=======
+	if (x->type == NULL)
+		goto error;
+
+	x->type_offload = xfrm_get_type_offload(x->id.proto, family, offload);
+
+	err = x->type->init_state(x);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto error;
 
 	outer_mode = xfrm_get_mode(x->props.mode, family);
 	if (!outer_mode) {
+<<<<<<< HEAD
 		NL_SET_ERR_MSG(extack, "Requested mode not found");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EPROTONOSUPPORT;
 		goto error;
 	}
 
 	x->outer_mode = *outer_mode;
 	if (init_replay) {
+<<<<<<< HEAD
 		err = xfrm_init_replay(x, extack);
+=======
+		err = xfrm_init_replay(x);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			goto error;
 	}
@@ -2864,7 +3045,11 @@ int xfrm_init_state(struct xfrm_state *x)
 {
 	int err;
 
+<<<<<<< HEAD
 	err = __xfrm_init_state(x, true, false, NULL);
+=======
+	err = __xfrm_init_state(x, true, false);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!err)
 		x->km.state = XFRM_STATE_VALID;
 

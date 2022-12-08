@@ -31,15 +31,25 @@
 
 #include <drm/drm_aperture.h>
 #include <drm/drm_atomic_helper.h>
+<<<<<<< HEAD
 #include <drm/drm_drv.h>
 #include <drm/drm_fbdev_generic.h>
 #include <drm/drm_gem_shmem_helper.h>
+=======
+#include <drm/drm_crtc_helper.h>
+#include <drm/drm_drv.h>
+#include <drm/drm_gem_vram_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_module.h>
 #include <drm/drm_probe_helper.h>
 
 #include "ast_drv.h"
 
+<<<<<<< HEAD
 static int ast_modeset = -1;
+=======
+int ast_modeset = -1;
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_PARM_DESC(modeset, "Disable/Enable modesetting");
 module_param_named(modeset, ast_modeset, int, 0400);
@@ -63,7 +73,11 @@ static const struct drm_driver ast_driver = {
 	.minor = DRIVER_MINOR,
 	.patchlevel = DRIVER_PATCHLEVEL,
 
+<<<<<<< HEAD
 	DRM_GEM_SHMEM_DRIVER_OPS
+=======
+	DRM_GEM_VRAM_DRIVER
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -105,7 +119,11 @@ static int ast_remove_conflicting_framebuffers(struct pci_dev *pdev)
 
 static int ast_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 {
+<<<<<<< HEAD
 	struct ast_device *ast;
+=======
+	struct ast_private *ast;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_device *dev;
 	int ret;
 

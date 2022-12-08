@@ -142,17 +142,24 @@ struct inode *gfs2_inode_lookup(struct super_block *sb, unsigned int type,
 		if (unlikely(error))
 			goto fail;
 
+<<<<<<< HEAD
 		/*
 		 * The only caller that sets @blktype to GFS2_BLKST_UNLINKED is
 		 * delete_work_func().  Make sure not to cancel the delete work
 		 * from within itself here.
 		 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (blktype == GFS2_BLKST_UNLINKED)
 			extra_flags |= LM_FLAG_TRY;
 		else
 			gfs2_cancel_delete_work(io_gl);
 		error = gfs2_glock_nq_init(io_gl, LM_ST_SHARED,
+<<<<<<< HEAD
 					   GL_EXACT | GL_NOPID | extra_flags,
+=======
+					   GL_EXACT | extra_flags,
+>>>>>>> b7ba80a49124 (Commit)
 					   &ip->i_iopen_gh);
 		gfs2_glock_put(io_gl);
 		if (unlikely(error))
@@ -225,10 +232,13 @@ fail:
 		gfs2_glock_dq_uninit(&ip->i_iopen_gh);
 	if (gfs2_holder_initialized(&i_gh))
 		gfs2_glock_dq_uninit(&i_gh);
+<<<<<<< HEAD
 	if (ip->i_gl) {
 		gfs2_glock_put(ip->i_gl);
 		ip->i_gl = NULL;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	iget_failed(inode);
 	return ERR_PTR(error);
 }
@@ -324,7 +334,11 @@ struct inode *gfs2_lookupi(struct inode *dir, const struct qstr *name,
 	}
 
 	if (!is_root) {
+<<<<<<< HEAD
 		error = gfs2_permission(&nop_mnt_idmap, dir, MAY_EXEC);
+=======
+		error = gfs2_permission(&init_user_ns, dir, MAY_EXEC);
+>>>>>>> b7ba80a49124 (Commit)
 		if (error)
 			goto out;
 	}
@@ -354,7 +368,11 @@ static int create_ok(struct gfs2_inode *dip, const struct qstr *name,
 {
 	int error;
 
+<<<<<<< HEAD
 	error = gfs2_permission(&nop_mnt_idmap, &dip->i_inode,
+=======
+	error = gfs2_permission(&init_user_ns, &dip->i_inode,
+>>>>>>> b7ba80a49124 (Commit)
 				MAY_WRITE | MAY_EXEC);
 	if (error)
 		return error;
@@ -412,6 +430,7 @@ static int alloc_dinode(struct gfs2_inode *ip, u32 flags, unsigned *dblocks)
 		goto out_ipreserv;
 
 	error = gfs2_alloc_blocks(ip, &ip->i_no_addr, dblocks, 1, &ip->i_generation);
+<<<<<<< HEAD
 	if (error)
 		goto out_trans_end;
 
@@ -423,6 +442,14 @@ static int alloc_dinode(struct gfs2_inode *ip, u32 flags, unsigned *dblocks)
 
 out_trans_end:
 	gfs2_trans_end(sdp);
+=======
+	ip->i_no_formal_ino = ip->i_generation;
+	ip->i_inode.i_ino = ip->i_no_addr;
+	ip->i_goal = ip->i_no_addr;
+
+	gfs2_trans_end(sdp);
+
+>>>>>>> b7ba80a49124 (Commit)
 out_ipreserv:
 	gfs2_inplace_release(ip);
 out_quota:
@@ -600,12 +627,15 @@ static int gfs2_initxattrs(struct inode *inode, const struct xattr *xattr_array,
  * @size: The initial size of the inode (ignored for directories)
  * @excl: Force fail if inode exists
  *
+<<<<<<< HEAD
  * FIXME: Change to allocate the disk blocks and write them out in the same
  * transaction.  That way, we can no longer end up in a situation in which an
  * inode is allocated, the node crashes, and the block looks like a valid
  * inode.  (With atomic creates in place, we will also no longer need to zero
  * the link count and dirty the inode here on failure.)
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Returns: 0 on success, or error code
  */
 
@@ -616,12 +646,20 @@ static int gfs2_create_inode(struct inode *dir, struct dentry *dentry,
 {
 	const struct qstr *name = &dentry->d_name;
 	struct posix_acl *default_acl, *acl;
+<<<<<<< HEAD
 	struct gfs2_holder d_gh, gh;
+=======
+	struct gfs2_holder ghs[2];
+>>>>>>> b7ba80a49124 (Commit)
 	struct inode *inode = NULL;
 	struct gfs2_inode *dip = GFS2_I(dir), *ip;
 	struct gfs2_sbd *sdp = GFS2_SB(&dip->i_inode);
 	struct gfs2_glock *io_gl;
+<<<<<<< HEAD
 	int error;
+=======
+	int error, free_vfs_inode = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 aflags = 0;
 	unsigned blocks = 1;
 	struct gfs2_diradd da = { .bh = NULL, .save_loc = 1, };
@@ -637,10 +675,17 @@ static int gfs2_create_inode(struct inode *dir, struct dentry *dentry,
 	if (error)
 		goto fail;
 
+<<<<<<< HEAD
 	error = gfs2_glock_nq_init(dip->i_gl, LM_ST_EXCLUSIVE, 0, &d_gh);
 	if (error)
 		goto fail;
 	gfs2_holder_mark_uninitialized(&gh);
+=======
+	error = gfs2_glock_nq_init(dip->i_gl, LM_ST_EXCLUSIVE, 0, ghs);
+	if (error)
+		goto fail;
+	gfs2_holder_mark_uninitialized(ghs + 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	error = create_ok(dip, name, mode);
 	if (error)
@@ -662,7 +707,11 @@ static int gfs2_create_inode(struct inode *dir, struct dentry *dentry,
 			else
 				error = finish_no_open(file, NULL);
 		}
+<<<<<<< HEAD
 		gfs2_glock_dq_uninit(&d_gh);
+=======
+		gfs2_glock_dq_uninit(ghs);
+>>>>>>> b7ba80a49124 (Commit)
 		goto fail;
 	} else if (error != -ENOENT) {
 		goto fail_gunlock;
@@ -676,12 +725,19 @@ static int gfs2_create_inode(struct inode *dir, struct dentry *dentry,
 	error = -ENOMEM;
 	if (!inode)
 		goto fail_gunlock;
+<<<<<<< HEAD
 	ip = GFS2_I(inode);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	error = posix_acl_create(dir, &mode, &default_acl, &acl);
 	if (error)
 		goto fail_gunlock;
 
+<<<<<<< HEAD
+=======
+	ip = GFS2_I(inode);
+>>>>>>> b7ba80a49124 (Commit)
 	error = gfs2_qa_get(ip);
 	if (error)
 		goto fail_free_acls;
@@ -743,6 +799,7 @@ static int gfs2_create_inode(struct inode *dir, struct dentry *dentry,
 		goto fail_free_inode;
 	gfs2_cancel_delete_work(io_gl);
 
+<<<<<<< HEAD
 retry:
 	error = insert_inode_locked4(inode, ip->i_no_addr, iget_test, &ip->i_no_addr);
 	if (error == -EBUSY)
@@ -756,6 +813,16 @@ retry:
 		goto fail_gunlock2;
 
 	error = gfs2_glock_nq_init(ip->i_gl, LM_ST_EXCLUSIVE, GL_SKIP, &gh);
+=======
+	error = insert_inode_locked4(inode, ip->i_no_addr, iget_test, &ip->i_no_addr);
+	BUG_ON(error);
+
+	error = gfs2_glock_nq_init(io_gl, LM_ST_SHARED, GL_EXACT, &ip->i_iopen_gh);
+	if (error)
+		goto fail_gunlock2;
+
+	error = gfs2_glock_nq_init(ip->i_gl, LM_ST_EXCLUSIVE, GL_SKIP, ghs + 1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		goto fail_gunlock3;
 
@@ -763,8 +830,15 @@ retry:
 	if (error)
 		goto fail_gunlock3;
 
+<<<<<<< HEAD
 	if (blocks > 1)
 		gfs2_init_xattr(ip);
+=======
+	if (blocks > 1) {
+		ip->i_eattr = ip->i_no_addr + 1;
+		gfs2_init_xattr(ip);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	init_dinode(dip, ip, symname);
 	gfs2_trans_end(sdp);
 
@@ -772,6 +846,12 @@ retry:
 	glock_set_object(io_gl, ip);
 	gfs2_set_iop(inode);
 
+<<<<<<< HEAD
+=======
+	free_vfs_inode = 0; /* After this point, the inode is no longer
+			       considered free. Any failures need to undo
+			       the gfs2 structures. */
+>>>>>>> b7ba80a49124 (Commit)
 	if (default_acl) {
 		error = __gfs2_set_acl(inode, default_acl, ACL_TYPE_DEFAULT);
 		if (error)
@@ -804,9 +884,15 @@ retry:
 		file->f_mode |= FMODE_CREATED;
 		error = finish_open(file, dentry, gfs2_open_common);
 	}
+<<<<<<< HEAD
 	gfs2_glock_dq_uninit(&d_gh);
 	gfs2_qa_put(ip);
 	gfs2_glock_dq_uninit(&gh);
+=======
+	gfs2_glock_dq_uninit(ghs);
+	gfs2_qa_put(ip);
+	gfs2_glock_dq_uninit(ghs + 1);
+>>>>>>> b7ba80a49124 (Commit)
 	gfs2_glock_put(io_gl);
 	gfs2_qa_put(dip);
 	unlock_new_inode(inode);
@@ -821,8 +907,13 @@ fail_gunlock2:
 	gfs2_glock_put(io_gl);
 fail_free_inode:
 	if (ip->i_gl) {
+<<<<<<< HEAD
 		gfs2_glock_put(ip->i_gl);
 		ip->i_gl = NULL;
+=======
+		if (free_vfs_inode) /* else evict will do the put for us */
+			gfs2_glock_put(ip->i_gl);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	gfs2_rs_deltree(&ip->i_res);
 	gfs2_qa_put(ip);
@@ -831,19 +922,34 @@ fail_free_acls:
 	posix_acl_release(acl);
 fail_gunlock:
 	gfs2_dir_no_add(&da);
+<<<<<<< HEAD
 	gfs2_glock_dq_uninit(&d_gh);
 	if (!IS_ERR_OR_NULL(inode)) {
 		set_bit(GIF_ALLOC_FAILED, &ip->i_flags);
 		clear_nlink(inode);
 		if (ip->i_no_addr)
 			mark_inode_dirty(inode);
+=======
+	gfs2_glock_dq_uninit(ghs);
+	if (!IS_ERR_OR_NULL(inode)) {
+		clear_nlink(inode);
+		if (!free_vfs_inode)
+			mark_inode_dirty(inode);
+		set_bit(free_vfs_inode ? GIF_FREE_VFS_INODE : GIF_ALLOC_FAILED,
+			&GFS2_I(inode)->i_flags);
+>>>>>>> b7ba80a49124 (Commit)
 		if (inode->i_state & I_NEW)
 			iget_failed(inode);
 		else
 			iput(inode);
 	}
+<<<<<<< HEAD
 	if (gfs2_holder_initialized(&gh))
 		gfs2_glock_dq_uninit(&gh);
+=======
+	if (gfs2_holder_initialized(ghs + 1))
+		gfs2_glock_dq_uninit(ghs + 1);
+>>>>>>> b7ba80a49124 (Commit)
 fail:
 	gfs2_qa_put(dip);
 	return error;
@@ -851,7 +957,11 @@ fail:
 
 /**
  * gfs2_create - Create a file
+<<<<<<< HEAD
  * @idmap: idmap of the mount the inode was found from
+=======
+ * @mnt_userns: User namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @dir: The directory in which to create the file
  * @dentry: The dentry of the new file
  * @mode: The mode of the new file
@@ -860,7 +970,11 @@ fail:
  * Returns: errno
  */
 
+<<<<<<< HEAD
 static int gfs2_create(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int gfs2_create(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct dentry *dentry, umode_t mode, bool excl)
 {
 	return gfs2_create_inode(dir, dentry, NULL, S_IFREG | mode, 0, NULL, 0, excl);
@@ -968,7 +1082,11 @@ static int gfs2_link(struct dentry *old_dentry, struct inode *dir,
 	if (inode->i_nlink == 0)
 		goto out_gunlock;
 
+<<<<<<< HEAD
 	error = gfs2_permission(&nop_mnt_idmap, dir, MAY_WRITE | MAY_EXEC);
+=======
+	error = gfs2_permission(&init_user_ns, dir, MAY_WRITE | MAY_EXEC);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		goto out_gunlock;
 
@@ -1086,7 +1204,11 @@ static int gfs2_unlink_ok(struct gfs2_inode *dip, const struct qstr *name,
 	if (IS_APPEND(&dip->i_inode))
 		return -EPERM;
 
+<<<<<<< HEAD
 	error = gfs2_permission(&nop_mnt_idmap, &dip->i_inode,
+=======
+	error = gfs2_permission(&init_user_ns, &dip->i_inode,
+>>>>>>> b7ba80a49124 (Commit)
 				MAY_WRITE | MAY_EXEC);
 	if (error)
 		return error;
@@ -1215,7 +1337,11 @@ out_inodes:
 
 /**
  * gfs2_symlink - Create a symlink
+<<<<<<< HEAD
  * @idmap: idmap of the mount the inode was found from
+=======
+ * @mnt_userns: User namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @dir: The directory to create the symlink in
  * @dentry: The dentry to put the symlink in
  * @symname: The thing which the link points to
@@ -1223,7 +1349,11 @@ out_inodes:
  * Returns: errno
  */
 
+<<<<<<< HEAD
 static int gfs2_symlink(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int gfs2_symlink(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 			struct dentry *dentry, const char *symname)
 {
 	unsigned int size;
@@ -1237,7 +1367,11 @@ static int gfs2_symlink(struct mnt_idmap *idmap, struct inode *dir,
 
 /**
  * gfs2_mkdir - Make a directory
+<<<<<<< HEAD
  * @idmap: idmap of the mount the inode was found from
+=======
+ * @mnt_userns: User namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @dir: The parent directory of the new one
  * @dentry: The dentry of the new directory
  * @mode: The mode of the new directory
@@ -1245,7 +1379,11 @@ static int gfs2_symlink(struct mnt_idmap *idmap, struct inode *dir,
  * Returns: errno
  */
 
+<<<<<<< HEAD
 static int gfs2_mkdir(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int gfs2_mkdir(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *dentry, umode_t mode)
 {
 	unsigned dsize = gfs2_max_stuffed_size(GFS2_I(dir));
@@ -1254,7 +1392,11 @@ static int gfs2_mkdir(struct mnt_idmap *idmap, struct inode *dir,
 
 /**
  * gfs2_mknod - Make a special file
+<<<<<<< HEAD
  * @idmap: idmap of the mount the inode was found from
+=======
+ * @mnt_userns: User namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @dir: The directory in which the special file will reside
  * @dentry: The dentry of the special file
  * @mode: The mode of the special file
@@ -1262,7 +1404,11 @@ static int gfs2_mkdir(struct mnt_idmap *idmap, struct inode *dir,
  *
  */
 
+<<<<<<< HEAD
 static int gfs2_mknod(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int gfs2_mknod(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *dentry, umode_t mode, dev_t dev)
 {
 	return gfs2_create_inode(dir, dentry, NULL, mode, dev, NULL, 0, 0);
@@ -1512,7 +1658,11 @@ static int gfs2_rename(struct inode *odir, struct dentry *odentry,
 			}
 		}
 	} else {
+<<<<<<< HEAD
 		error = gfs2_permission(&nop_mnt_idmap, ndir,
+=======
+		error = gfs2_permission(&init_user_ns, ndir,
+>>>>>>> b7ba80a49124 (Commit)
 					MAY_WRITE | MAY_EXEC);
 		if (error)
 			goto out_gunlock;
@@ -1549,7 +1699,11 @@ static int gfs2_rename(struct inode *odir, struct dentry *odentry,
 	/* Check out the dir to be renamed */
 
 	if (dir_rename) {
+<<<<<<< HEAD
 		error = gfs2_permission(&nop_mnt_idmap, d_inode(odentry),
+=======
+		error = gfs2_permission(&init_user_ns, d_inode(odentry),
+>>>>>>> b7ba80a49124 (Commit)
 					MAY_WRITE);
 		if (error)
 			goto out_gunlock;
@@ -1713,13 +1867,21 @@ static int gfs2_exchange(struct inode *odir, struct dentry *odentry,
 		goto out_gunlock;
 
 	if (S_ISDIR(old_mode)) {
+<<<<<<< HEAD
 		error = gfs2_permission(&nop_mnt_idmap, odentry->d_inode,
+=======
+		error = gfs2_permission(&init_user_ns, odentry->d_inode,
+>>>>>>> b7ba80a49124 (Commit)
 					MAY_WRITE);
 		if (error)
 			goto out_gunlock;
 	}
 	if (S_ISDIR(new_mode)) {
+<<<<<<< HEAD
 		error = gfs2_permission(&nop_mnt_idmap, ndentry->d_inode,
+=======
+		error = gfs2_permission(&init_user_ns, ndentry->d_inode,
+>>>>>>> b7ba80a49124 (Commit)
 					MAY_WRITE);
 		if (error)
 			goto out_gunlock;
@@ -1774,7 +1936,11 @@ out:
 	return error;
 }
 
+<<<<<<< HEAD
 static int gfs2_rename2(struct mnt_idmap *idmap, struct inode *odir,
+=======
+static int gfs2_rename2(struct user_namespace *mnt_userns, struct inode *odir,
+>>>>>>> b7ba80a49124 (Commit)
 			struct dentry *odentry, struct inode *ndir,
 			struct dentry *ndentry, unsigned int flags)
 {
@@ -1849,7 +2015,11 @@ out:
 
 /**
  * gfs2_permission
+<<<<<<< HEAD
  * @idmap: idmap of the mount the inode was found from
+=======
+ * @mnt_userns: User namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @inode: The inode
  * @mask: The mask to be tested
  *
@@ -1860,7 +2030,11 @@ out:
  * Returns: errno
  */
 
+<<<<<<< HEAD
 int gfs2_permission(struct mnt_idmap *idmap, struct inode *inode,
+=======
+int gfs2_permission(struct user_namespace *mnt_userns, struct inode *inode,
+>>>>>>> b7ba80a49124 (Commit)
 		    int mask)
 {
 	struct gfs2_inode *ip;
@@ -1880,7 +2054,11 @@ int gfs2_permission(struct mnt_idmap *idmap, struct inode *inode,
 	if ((mask & MAY_WRITE) && IS_IMMUTABLE(inode))
 		error = -EPERM;
 	else
+<<<<<<< HEAD
 		error = generic_permission(&nop_mnt_idmap, inode, mask);
+=======
+		error = generic_permission(&init_user_ns, inode, mask);
+>>>>>>> b7ba80a49124 (Commit)
 	if (gfs2_holder_initialized(&i_gh))
 		gfs2_glock_dq_uninit(&i_gh);
 
@@ -1889,7 +2067,11 @@ int gfs2_permission(struct mnt_idmap *idmap, struct inode *inode,
 
 static int __gfs2_setattr_simple(struct inode *inode, struct iattr *attr)
 {
+<<<<<<< HEAD
 	setattr_copy(&nop_mnt_idmap, inode, attr);
+=======
+	setattr_copy(&init_user_ns, inode, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	mark_inode_dirty(inode);
 	return 0;
 }
@@ -1974,7 +2156,11 @@ out:
 
 /**
  * gfs2_setattr - Change attributes on an inode
+<<<<<<< HEAD
  * @idmap: idmap of the mount the inode was found from
+=======
+ * @mnt_userns: User namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @dentry: The dentry which is changing
  * @attr: The structure describing the change
  *
@@ -1984,7 +2170,11 @@ out:
  * Returns: errno
  */
 
+<<<<<<< HEAD
 static int gfs2_setattr(struct mnt_idmap *idmap,
+=======
+static int gfs2_setattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			struct dentry *dentry, struct iattr *attr)
 {
 	struct inode *inode = d_inode(dentry);
@@ -2000,11 +2190,19 @@ static int gfs2_setattr(struct mnt_idmap *idmap,
 	if (error)
 		goto out;
 
+<<<<<<< HEAD
 	error = may_setattr(&nop_mnt_idmap, inode, attr->ia_valid);
 	if (error)
 		goto error;
 
 	error = setattr_prepare(&nop_mnt_idmap, dentry, attr);
+=======
+	error = may_setattr(&init_user_ns, inode, attr->ia_valid);
+	if (error)
+		goto error;
+
+	error = setattr_prepare(&init_user_ns, dentry, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		goto error;
 
@@ -2015,7 +2213,11 @@ static int gfs2_setattr(struct mnt_idmap *idmap,
 	else {
 		error = gfs2_setattr_simple(inode, attr);
 		if (!error && attr->ia_valid & ATTR_MODE)
+<<<<<<< HEAD
 			error = posix_acl_chmod(&nop_mnt_idmap, dentry,
+=======
+			error = posix_acl_chmod(&init_user_ns, inode,
+>>>>>>> b7ba80a49124 (Commit)
 						inode->i_mode);
 	}
 
@@ -2030,7 +2232,11 @@ out:
 
 /**
  * gfs2_getattr - Read out an inode's attributes
+<<<<<<< HEAD
  * @idmap: idmap of the mount the inode was found from
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @path: Object to query
  * @stat: The inode's stats
  * @request_mask: Mask of STATX_xxx flags indicating the caller's interests
@@ -2045,7 +2251,11 @@ out:
  * Returns: errno
  */
 
+<<<<<<< HEAD
 static int gfs2_getattr(struct mnt_idmap *idmap,
+=======
+static int gfs2_getattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			const struct path *path, struct kstat *stat,
 			u32 request_mask, unsigned int flags)
 {
@@ -2074,7 +2284,11 @@ static int gfs2_getattr(struct mnt_idmap *idmap,
 				  STATX_ATTR_IMMUTABLE |
 				  STATX_ATTR_NODUMP);
 
+<<<<<<< HEAD
 	generic_fillattr(&nop_mnt_idmap, inode, stat);
+=======
+	generic_fillattr(&init_user_ns, inode, stat);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (gfs2_holder_initialized(&gh))
 		gfs2_glock_dq_uninit(&gh);
@@ -2167,7 +2381,11 @@ static const struct inode_operations gfs2_file_iops = {
 	.getattr = gfs2_getattr,
 	.listxattr = gfs2_listxattr,
 	.fiemap = gfs2_fiemap,
+<<<<<<< HEAD
 	.get_inode_acl = gfs2_get_acl,
+=======
+	.get_acl = gfs2_get_acl,
+>>>>>>> b7ba80a49124 (Commit)
 	.set_acl = gfs2_set_acl,
 	.update_time = gfs2_update_time,
 	.fileattr_get = gfs2_fileattr_get,
@@ -2189,7 +2407,11 @@ static const struct inode_operations gfs2_dir_iops = {
 	.getattr = gfs2_getattr,
 	.listxattr = gfs2_listxattr,
 	.fiemap = gfs2_fiemap,
+<<<<<<< HEAD
 	.get_inode_acl = gfs2_get_acl,
+=======
+	.get_acl = gfs2_get_acl,
+>>>>>>> b7ba80a49124 (Commit)
 	.set_acl = gfs2_set_acl,
 	.update_time = gfs2_update_time,
 	.atomic_open = gfs2_atomic_open,

@@ -953,12 +953,24 @@ relock:
 	return err;
 }
 
+<<<<<<< HEAD
+=======
+static int twl4030_power_remove(struct platform_device *pdev)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver twl4030_power_driver = {
 	.driver = {
 		.name	= "twl4030_power",
 		.of_match_table = of_match_ptr(twl4030_power_of_match),
 	},
 	.probe		= twl4030_power_probe,
+<<<<<<< HEAD
+=======
+	.remove		= twl4030_power_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(twl4030_power_driver);

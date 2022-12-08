@@ -1144,7 +1144,12 @@ static const struct dvb_frontend_ops si2165_ops = {
 	.read_ber          = si2165_read_ber,
 };
 
+<<<<<<< HEAD
 static int si2165_probe(struct i2c_client *client)
+=======
+static int si2165_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct si2165_state *state = NULL;
 	struct si2165_platform_data *pdata = client->dev.platform_data;
@@ -1292,7 +1297,11 @@ static struct i2c_driver si2165_driver = {
 	.driver = {
 		.name	= "si2165",
 	},
+<<<<<<< HEAD
 	.probe_new	= si2165_probe,
+=======
+	.probe		= si2165_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= si2165_remove,
 	.id_table	= si2165_id_table,
 };

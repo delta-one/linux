@@ -21,6 +21,7 @@
 
 #define CCU_SYS_SATA_REF_RST		0
 #define CCU_SYS_APB_RST			1
+<<<<<<< HEAD
 #define CCU_SYS_DDR_FULL_RST		2
 #define CCU_SYS_DDR_INIT_RST		3
 #define CCU_SYS_PCIE_PCS_PHY_RST	4
@@ -30,5 +31,7 @@
 #define CCU_SYS_PCIE_STICKY_RST		8
 #define CCU_SYS_PCIE_NSTICKY_RST	9
 #define CCU_SYS_PCIE_HOT_RST		10
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __DT_BINDINGS_RESET_BT1_CCU_H */

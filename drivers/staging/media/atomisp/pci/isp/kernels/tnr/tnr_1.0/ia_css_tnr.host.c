@@ -79,11 +79,19 @@ int ia_css_tnr_config(struct sh_css_isp_tnr_isp_config *to,
 	unsigned int i;
 	int ret;
 
+<<<<<<< HEAD
 	ret = ia_css_dma_configure_from_info(&to->port_b, &from->tnr_frames[0]->frame_info);
 	if (ret)
 		return ret;
 	to->width_a_over_b = elems_a / to->port_b.elems;
 	to->frame_height = from->tnr_frames[0]->frame_info.res.height;
+=======
+	ret = ia_css_dma_configure_from_info(&to->port_b, &from->tnr_frames[0]->info);
+	if (ret)
+		return ret;
+	to->width_a_over_b = elems_a / to->port_b.elems;
+	to->frame_height = from->tnr_frames[0]->info.res.height;
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < NUM_VIDEO_TNR_FRAMES; i++) {
 		to->tnr_frame_addr[i] = from->tnr_frames[i]->data +
 					from->tnr_frames[i]->planes.yuyv.offset;

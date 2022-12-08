@@ -1261,7 +1261,11 @@ static struct xfrm_state * pfkey_msg2xfrm_state(struct net *net,
 		const struct sadb_x_nat_t_type* n_type;
 		struct xfrm_encap_tmpl *natt;
 
+<<<<<<< HEAD
 		x->encap = kzalloc(sizeof(*x->encap), GFP_KERNEL);
+=======
+		x->encap = kmalloc(sizeof(*x->encap), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!x->encap) {
 			err = -ENOMEM;
 			goto out;
@@ -1377,13 +1381,21 @@ static int pfkey_getspi(struct sock *sk, struct sk_buff *skb, const struct sadb_
 		max_spi = range->sadb_spirange_max;
 	}
 
+<<<<<<< HEAD
 	err = verify_spi_info(x->id.proto, min_spi, max_spi, NULL);
+=======
+	err = verify_spi_info(x->id.proto, min_spi, max_spi);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		xfrm_state_put(x);
 		return err;
 	}
 
+<<<<<<< HEAD
 	err = xfrm_alloc_spi(x, min_spi, max_spi, NULL);
+=======
+	err = xfrm_alloc_spi(x, min_spi, max_spi);
+>>>>>>> b7ba80a49124 (Commit)
 	resp_skb = err ? ERR_PTR(err) : pfkey_xfrm_state2msg(x);
 
 	if (IS_ERR(resp_skb)) {
@@ -2626,7 +2638,11 @@ static int pfkey_migrate(struct sock *sk, struct sk_buff *skb,
 	}
 
 	return xfrm_migrate(&sel, dir, XFRM_POLICY_TYPE_MAIN, m, i,
+<<<<<<< HEAD
 			    kma ? &k : NULL, net, NULL, 0, NULL);
+=======
+			    kma ? &k : NULL, net, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
  out:
 	return err;
@@ -2905,7 +2921,11 @@ static int count_ah_combs(const struct xfrm_tmpl *t)
 			break;
 		if (!aalg->pfkey_supported)
 			continue;
+<<<<<<< HEAD
 		if (aalg_tmpl_set(t, aalg))
+=======
+		if (aalg_tmpl_set(t, aalg) && aalg->available)
+>>>>>>> b7ba80a49124 (Commit)
 			sz += sizeof(struct sadb_comb);
 	}
 	return sz + sizeof(struct sadb_prop);
@@ -2923,7 +2943,11 @@ static int count_esp_combs(const struct xfrm_tmpl *t)
 		if (!ealg->pfkey_supported)
 			continue;
 
+<<<<<<< HEAD
 		if (!(ealg_tmpl_set(t, ealg)))
+=======
+		if (!(ealg_tmpl_set(t, ealg) && ealg->available))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		for (k = 1; ; k++) {
@@ -2934,17 +2958,27 @@ static int count_esp_combs(const struct xfrm_tmpl *t)
 			if (!aalg->pfkey_supported)
 				continue;
 
+<<<<<<< HEAD
 			if (aalg_tmpl_set(t, aalg))
+=======
+			if (aalg_tmpl_set(t, aalg) && aalg->available)
+>>>>>>> b7ba80a49124 (Commit)
 				sz += sizeof(struct sadb_comb);
 		}
 	}
 	return sz + sizeof(struct sadb_prop);
 }
 
+<<<<<<< HEAD
 static int dump_ah_combs(struct sk_buff *skb, const struct xfrm_tmpl *t)
 {
 	struct sadb_prop *p;
 	int sz = 0;
+=======
+static void dump_ah_combs(struct sk_buff *skb, const struct xfrm_tmpl *t)
+{
+	struct sadb_prop *p;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	p = skb_put(skb, sizeof(struct sadb_prop));
@@ -2972,6 +3006,7 @@ static int dump_ah_combs(struct sk_buff *skb, const struct xfrm_tmpl *t)
 			c->sadb_comb_soft_addtime = 20*60*60;
 			c->sadb_comb_hard_usetime = 8*60*60;
 			c->sadb_comb_soft_usetime = 7*60*60;
+<<<<<<< HEAD
 			sz += sizeof(*c);
 		}
 	}
@@ -2983,6 +3018,15 @@ static int dump_esp_combs(struct sk_buff *skb, const struct xfrm_tmpl *t)
 {
 	struct sadb_prop *p;
 	int sz = 0;
+=======
+		}
+	}
+}
+
+static void dump_esp_combs(struct sk_buff *skb, const struct xfrm_tmpl *t)
+{
+	struct sadb_prop *p;
+>>>>>>> b7ba80a49124 (Commit)
 	int i, k;
 
 	p = skb_put(skb, sizeof(struct sadb_prop));
@@ -3024,11 +3068,16 @@ static int dump_esp_combs(struct sk_buff *skb, const struct xfrm_tmpl *t)
 			c->sadb_comb_soft_addtime = 20*60*60;
 			c->sadb_comb_hard_usetime = 8*60*60;
 			c->sadb_comb_soft_usetime = 7*60*60;
+<<<<<<< HEAD
 			sz += sizeof(*c);
 		}
 	}
 
 	return sz + sizeof(*p);
+=======
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int key_notify_policy_expire(struct xfrm_policy *xp, const struct km_event *c)
@@ -3158,7 +3207,10 @@ static int pfkey_send_acquire(struct xfrm_state *x, struct xfrm_tmpl *t, struct 
 	struct sadb_x_sec_ctx *sec_ctx;
 	struct xfrm_sec_ctx *xfrm_ctx;
 	int ctx_size = 0;
+<<<<<<< HEAD
 	int alg_size = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	sockaddr_size = pfkey_sockaddr_size(x->props.family);
 	if (!sockaddr_size)
@@ -3170,16 +3222,26 @@ static int pfkey_send_acquire(struct xfrm_state *x, struct xfrm_tmpl *t, struct 
 		sizeof(struct sadb_x_policy);
 
 	if (x->id.proto == IPPROTO_AH)
+<<<<<<< HEAD
 		alg_size = count_ah_combs(t);
 	else if (x->id.proto == IPPROTO_ESP)
 		alg_size = count_esp_combs(t);
+=======
+		size += count_ah_combs(t);
+	else if (x->id.proto == IPPROTO_ESP)
+		size += count_esp_combs(t);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if ((xfrm_ctx = x->security)) {
 		ctx_size = PFKEY_ALIGN8(xfrm_ctx->ctx_len);
 		size +=  sizeof(struct sadb_x_sec_ctx) + ctx_size;
 	}
 
+<<<<<<< HEAD
 	skb =  alloc_skb(size + alg_size + 16, GFP_ATOMIC);
+=======
+	skb =  alloc_skb(size + 16, GFP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 	if (skb == NULL)
 		return -ENOMEM;
 
@@ -3233,6 +3295,7 @@ static int pfkey_send_acquire(struct xfrm_state *x, struct xfrm_tmpl *t, struct 
 	pol->sadb_x_policy_priority = xp->priority;
 
 	/* Set sadb_comb's. */
+<<<<<<< HEAD
 	alg_size = 0;
 	if (x->id.proto == IPPROTO_AH)
 		alg_size = dump_ah_combs(skb, t);
@@ -3240,6 +3303,12 @@ static int pfkey_send_acquire(struct xfrm_state *x, struct xfrm_tmpl *t, struct 
 		alg_size = dump_esp_combs(skb, t);
 
 	hdr->sadb_msg_len += alg_size / 8;
+=======
+	if (x->id.proto == IPPROTO_AH)
+		dump_ah_combs(skb, t);
+	else if (x->id.proto == IPPROTO_ESP)
+		dump_esp_combs(skb, t);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* security context */
 	if (xfrm_ctx) {
@@ -3394,7 +3463,11 @@ static int pfkey_send_new_mapping(struct xfrm_state *x, xfrm_address_t *ipaddr, 
 	hdr->sadb_msg_len = size / sizeof(uint64_t);
 	hdr->sadb_msg_errno = 0;
 	hdr->sadb_msg_reserved = 0;
+<<<<<<< HEAD
 	hdr->sadb_msg_seq = x->km.seq;
+=======
+	hdr->sadb_msg_seq = x->km.seq = get_acqseq();
+>>>>>>> b7ba80a49124 (Commit)
 	hdr->sadb_msg_pid = 0;
 
 	/* SA */

@@ -59,6 +59,10 @@ struct target_fabric_configfs {
 extern struct t10_alua_lu_gp *default_lu_gp;
 
 /* target_core_device.c */
+<<<<<<< HEAD
+=======
+int	core_alloc_rtpi(struct se_lun *lun, struct se_device *dev);
+>>>>>>> b7ba80a49124 (Commit)
 struct se_dev_entry *core_get_se_deve_from_rtpi(struct se_node_acl *, u16);
 void	target_pr_kref_release(struct kref *);
 void	core_free_device_list_for_node(struct se_node_acl *,
@@ -88,7 +92,10 @@ int	target_configure_device(struct se_device *dev);
 void	target_free_device(struct se_device *);
 int	target_for_each_device(int (*fn)(struct se_device *dev, void *data),
 			       void *data);
+<<<<<<< HEAD
 void	target_dev_ua_allocate(struct se_device *dev, u8 asc, u8 ascq);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* target_core_configfs.c */
 extern struct configfs_item_operations target_core_dev_item_ops;
@@ -131,8 +138,11 @@ void core_tpg_remove_lun(struct se_portal_group *, struct se_lun *);
 struct se_node_acl *core_tpg_add_initiator_node_acl(struct se_portal_group *tpg,
 		const char *initiatorname);
 void core_tpg_del_initiator_node_acl(struct se_node_acl *acl);
+<<<<<<< HEAD
 int target_tpg_enable(struct se_portal_group *se_tpg);
 int target_tpg_disable(struct se_portal_group *se_tpg);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* target_core_transport.c */
 int	init_se_kmem_caches(void);

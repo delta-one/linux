@@ -133,11 +133,19 @@ int tegra_output_probe(struct tegra_output *output)
 		}
 	}
 
+<<<<<<< HEAD
 	output->hpd_gpio = devm_fwnode_gpiod_get(output->dev,
 					of_fwnode_handle(output->of_node),
 					"nvidia,hpd",
 					GPIOD_IN,
 					"HDMI hotplug detect");
+=======
+	output->hpd_gpio = devm_gpiod_get_from_of_node(output->dev,
+						       output->of_node,
+						       "nvidia,hpd-gpio", 0,
+						       GPIOD_IN,
+						       "HDMI hotplug detect");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(output->hpd_gpio)) {
 		if (PTR_ERR(output->hpd_gpio) != -ENOENT)
 			return PTR_ERR(output->hpd_gpio);

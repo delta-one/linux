@@ -1388,7 +1388,10 @@ static int cx8800_initdev(struct pci_dev *pci_dev,
 	}
 		fallthrough;
 	case CX88_BOARD_DVICO_FUSIONHDTV_5_PCI_NANO:
+<<<<<<< HEAD
 	case CX88_BOARD_NOTONLYTV_LV3H:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		request_module("ir-kbd-i2c");
 	}
 

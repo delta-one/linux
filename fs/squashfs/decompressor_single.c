@@ -24,7 +24,11 @@ struct squashfs_stream {
 	struct mutex	mutex;
 };
 
+<<<<<<< HEAD
 static void *squashfs_decompressor_create(struct squashfs_sb_info *msblk,
+=======
+void *squashfs_decompressor_create(struct squashfs_sb_info *msblk,
+>>>>>>> b7ba80a49124 (Commit)
 						void *comp_opts)
 {
 	struct squashfs_stream *stream;
@@ -49,7 +53,11 @@ out:
 	return ERR_PTR(err);
 }
 
+<<<<<<< HEAD
 static void squashfs_decompressor_destroy(struct squashfs_sb_info *msblk)
+=======
+void squashfs_decompressor_destroy(struct squashfs_sb_info *msblk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct squashfs_stream *stream = msblk->stream;
 
@@ -59,7 +67,11 @@ static void squashfs_decompressor_destroy(struct squashfs_sb_info *msblk)
 	}
 }
 
+<<<<<<< HEAD
 static int squashfs_decompress(struct squashfs_sb_info *msblk, struct bio *bio,
+=======
+int squashfs_decompress(struct squashfs_sb_info *msblk, struct bio *bio,
+>>>>>>> b7ba80a49124 (Commit)
 			int offset, int length,
 			struct squashfs_page_actor *output)
 {
@@ -78,6 +90,7 @@ static int squashfs_decompress(struct squashfs_sb_info *msblk, struct bio *bio,
 	return res;
 }
 
+<<<<<<< HEAD
 static int squashfs_max_decompressors(void)
 {
 	return 1;
@@ -89,3 +102,9 @@ const struct squashfs_decompressor_thread_ops squashfs_decompressor_single = {
 	.decompress = squashfs_decompress,
 	.max_decompressors = squashfs_max_decompressors,
 };
+=======
+int squashfs_max_decompressors(void)
+{
+	return 1;
+}
+>>>>>>> b7ba80a49124 (Commit)

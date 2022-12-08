@@ -6,6 +6,7 @@
  */
 
 /dts-v1/;
+<<<<<<< HEAD
 
 /*
  * DIP-Switch SW1 setting on SoM
@@ -37,6 +38,9 @@
 
 #include "r9a07g044c2.dtsi"
 #include "rzg2lc-smarc-som.dtsi"
+=======
+#include "r9a07g044c2.dtsi"
+>>>>>>> b7ba80a49124 (Commit)
 #include "rzg2lc-smarc.dtsi"
 
 / {

@@ -236,7 +236,10 @@ xfs_extent_busy_update_extent(
 		 *
 		 */
 		busyp->bno = fend;
+<<<<<<< HEAD
 		busyp->length = bend - fend;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (bbno < fbno) {
 		/*
 		 * Case 8:

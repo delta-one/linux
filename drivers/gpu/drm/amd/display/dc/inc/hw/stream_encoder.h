@@ -30,6 +30,10 @@
 
 #include "audio_types.h"
 #include "hw_shared.h"
+<<<<<<< HEAD
+=======
+#include "dc_link.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 struct dc_bios;
 struct dc_context;
@@ -71,12 +75,15 @@ enum dynamic_metadata_mode {
 	dmdata_dolby_vision
 };
 
+<<<<<<< HEAD
 struct enc_sdp_line_num {
 	/* Adaptive Sync SDP */
 	bool adaptive_sync_line_num_valid;
 	uint32_t adaptive_sync_line_num;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct encoder_info_frame {
 	/* auxiliary video information */
 	struct dc_info_packet avi;
@@ -90,9 +97,12 @@ struct encoder_info_frame {
 	struct dc_info_packet vsc;
 	/* HDR Static MetaData */
 	struct dc_info_packet hdrsmd;
+<<<<<<< HEAD
 	/* Adaptive Sync SDP*/
 	struct dc_info_packet adaptive_sync;
 	struct enc_sdp_line_num sdp_line_num;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct encoder_unblank_param {
@@ -162,10 +172,13 @@ struct stream_encoder_funcs {
 	void (*stop_hdmi_info_packets)(
 		struct stream_encoder *enc);
 
+<<<<<<< HEAD
 	void (*update_dp_info_packets_sdp_line_num)(
 		struct stream_encoder *enc,
 		struct encoder_info_frame *info_frame);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void (*update_dp_info_packets)(
 		struct stream_encoder *enc,
 		const struct encoder_info_frame *info_frame);
@@ -255,9 +268,12 @@ struct stream_encoder_funcs {
 			uint32_t hubp_requestor_id,
 			enum dynamic_metadata_mode dmdata_mode);
 
+<<<<<<< HEAD
 	/**
 	 * @dp_set_odm_combine: Sets up DP stream encoder for ODM.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void (*dp_set_odm_combine)(
 		struct stream_encoder *enc,
 		bool odm_combine);
@@ -314,10 +330,13 @@ struct hpo_dp_stream_encoder_funcs {
 		bool compressed_format,
 		bool double_buffer_en);
 
+<<<<<<< HEAD
 	void (*update_dp_info_packets_sdp_line_num)(
 		struct hpo_dp_stream_encoder *enc,
 		struct encoder_info_frame *info_frame);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void (*update_dp_info_packets)(
 		struct hpo_dp_stream_encoder *enc,
 		const struct encoder_info_frame *info_frame);
@@ -336,6 +355,12 @@ struct hpo_dp_stream_encoder_funcs {
 			uint32_t stream_enc_inst,
 			uint32_t link_enc_inst);
 
+<<<<<<< HEAD
+=======
+	void (*audio_mute_control)(
+			struct hpo_dp_stream_encoder *enc, bool mute);
+
+>>>>>>> b7ba80a49124 (Commit)
 	void (*dp_audio_setup)(
 			struct hpo_dp_stream_encoder *enc,
 			unsigned int az_inst,

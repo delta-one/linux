@@ -2,7 +2,10 @@
 #include <stddef.h>
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
+<<<<<<< HEAD
 #include "bpf_misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct S {
 	int x;
@@ -75,8 +78,12 @@ __noinline int quuz(int **p)
 }
 
 SEC("cgroup_skb/ingress")
+<<<<<<< HEAD
 __success
 int global_func9(struct __sk_buff *skb)
+=======
+int test_cls(struct __sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int result = 0;
 

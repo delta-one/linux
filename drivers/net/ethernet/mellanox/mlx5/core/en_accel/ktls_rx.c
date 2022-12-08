@@ -43,14 +43,22 @@ struct mlx5e_ktls_rx_resync_ctx {
 };
 
 struct mlx5e_ktls_offload_context_rx {
+<<<<<<< HEAD
 	union mlx5e_crypto_info crypto_info;
+=======
+	struct tls12_crypto_info_aes_gcm_128 crypto_info;
+>>>>>>> b7ba80a49124 (Commit)
 	struct accel_rule rule;
 	struct sock *sk;
 	struct mlx5e_rq_stats *rq_stats;
 	struct mlx5e_tls_sw_stats *sw_stats;
 	struct completion add_ctx;
 	struct mlx5e_tir tir;
+<<<<<<< HEAD
 	struct mlx5_crypto_dek *dek;
+=======
+	u32 key_id;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 rxq;
 	DECLARE_BITMAP(flags, MLX5E_NUM_PRIV_RX_FLAGS);
 
@@ -136,20 +144,35 @@ static struct mlx5_wqe_ctrl_seg *
 post_static_params(struct mlx5e_icosq *sq,
 		   struct mlx5e_ktls_offload_context_rx *priv_rx)
 {
+<<<<<<< HEAD
 	struct mlx5e_set_tls_static_params_wqe *wqe;
 	struct mlx5e_icosq_wqe_info wi;
 	u16 pi, num_wqebbs;
 
 	num_wqebbs = MLX5E_TLS_SET_STATIC_PARAMS_WQEBBS;
+=======
+	struct mlx5e_set_transport_static_params_wqe *wqe;
+	struct mlx5e_icosq_wqe_info wi;
+	u16 pi, num_wqebbs;
+
+	num_wqebbs = MLX5E_TRANSPORT_SET_STATIC_PARAMS_WQEBBS;
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(!mlx5e_icosq_can_post_wqe(sq, num_wqebbs)))
 		return ERR_PTR(-ENOSPC);
 
 	pi = mlx5e_icosq_get_next_pi(sq, num_wqebbs);
+<<<<<<< HEAD
 	wqe = MLX5E_TLS_FETCH_SET_STATIC_PARAMS_WQE(sq, pi);
 	mlx5e_ktls_build_static_params(wqe, sq->pc, sq->sqn, &priv_rx->crypto_info,
 				       mlx5e_tir_get_tirn(&priv_rx->tir),
 				       mlx5_crypto_dek_get_id(priv_rx->dek),
 				       priv_rx->resync.seq, false,
+=======
+	wqe = MLX5E_TRANSPORT_FETCH_SET_STATIC_PARAMS_WQE(sq, pi);
+	mlx5e_ktls_build_static_params(wqe, sq->pc, sq->sqn, &priv_rx->crypto_info,
+				       mlx5e_tir_get_tirn(&priv_rx->tir),
+				       priv_rx->key_id, priv_rx->resync.seq, false,
+>>>>>>> b7ba80a49124 (Commit)
 				       TLS_OFFLOAD_CTX_DIR_RX);
 	wi = (struct mlx5e_icosq_wqe_info) {
 		.wqe_type = MLX5E_ICOSQ_WQE_UMR_TLS,
@@ -363,6 +386,10 @@ static void resync_init(struct mlx5e_ktls_rx_resync_ctx *resync,
 static void resync_handle_seq_match(struct mlx5e_ktls_offload_context_rx *priv_rx,
 				    struct mlx5e_channel *c)
 {
+<<<<<<< HEAD
+=======
+	struct tls12_crypto_info_aes_gcm_128 *info = &priv_rx->crypto_info;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mlx5e_ktls_resync_resp *ktls_resync;
 	struct mlx5e_icosq *sq;
 	bool trigger_poll;
@@ -373,6 +400,7 @@ static void resync_handle_seq_match(struct mlx5e_ktls_offload_context_rx *priv_r
 
 	spin_lock_bh(&ktls_resync->lock);
 	spin_lock_bh(&priv_rx->lock);
+<<<<<<< HEAD
 	switch (priv_rx->crypto_info.crypto_info.cipher_type) {
 	case TLS_CIPHER_AES_GCM_128: {
 		struct tls12_crypto_info_aes_gcm_128 *info =
@@ -398,6 +426,9 @@ static void resync_handle_seq_match(struct mlx5e_ktls_offload_context_rx *priv_r
 		return;
 	}
 
+=======
+	memcpy(info->rec_seq, &priv_rx->resync.sw_rcd_sn_be, sizeof(info->rec_seq));
+>>>>>>> b7ba80a49124 (Commit)
 	if (list_empty(&priv_rx->list)) {
 		list_add_tail(&priv_rx->list, &ktls_resync->list);
 		trigger_poll = !test_and_set_bit(MLX5E_SQ_STATE_PENDING_TLS_RX_RESYNC, &sq->state);
@@ -611,16 +642,25 @@ int mlx5e_ktls_add_rx(struct net_device *netdev, struct sock *sk,
 	struct mlx5e_ktls_offload_context_rx *priv_rx;
 	struct mlx5e_ktls_rx_resync_ctx *resync;
 	struct tls_context *tls_ctx;
+<<<<<<< HEAD
 	struct mlx5_crypto_dek *dek;
+=======
+	struct mlx5_core_dev *mdev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mlx5e_priv *priv;
 	int rxq, err;
 
 	tls_ctx = tls_get_ctx(sk);
 	priv = netdev_priv(netdev);
+<<<<<<< HEAD
+=======
+	mdev = priv->mdev;
+>>>>>>> b7ba80a49124 (Commit)
 	priv_rx = kzalloc(sizeof(*priv_rx), GFP_KERNEL);
 	if (unlikely(!priv_rx))
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	switch (crypto_info->cipher_type) {
 	case TLS_CIPHER_AES_GCM_128:
 		priv_rx->crypto_info.crypto_info_128 =
@@ -646,6 +686,16 @@ int mlx5e_ktls_add_rx(struct net_device *netdev, struct sock *sk,
 
 	INIT_LIST_HEAD(&priv_rx->list);
 	spin_lock_init(&priv_rx->lock);
+=======
+	err = mlx5_ktls_create_key(mdev, crypto_info, &priv_rx->key_id);
+	if (err)
+		goto err_create_key;
+
+	INIT_LIST_HEAD(&priv_rx->list);
+	spin_lock_init(&priv_rx->lock);
+	priv_rx->crypto_info  =
+		*(struct tls12_crypto_info_aes_gcm_128 *)crypto_info;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rxq = mlx5e_ktls_sk_get_rxq(sk);
 	priv_rx->rxq = rxq;
@@ -678,8 +728,13 @@ int mlx5e_ktls_add_rx(struct net_device *netdev, struct sock *sk,
 err_post_wqes:
 	mlx5e_tir_destroy(&priv_rx->tir);
 err_create_tir:
+<<<<<<< HEAD
 	mlx5_ktls_destroy_key(priv->tls->dek_pool, priv_rx->dek);
 err_cipher_type:
+=======
+	mlx5_ktls_destroy_key(mdev, priv_rx->key_id);
+err_create_key:
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(priv_rx);
 	return err;
 }
@@ -688,9 +743,17 @@ void mlx5e_ktls_del_rx(struct net_device *netdev, struct tls_context *tls_ctx)
 {
 	struct mlx5e_ktls_offload_context_rx *priv_rx;
 	struct mlx5e_ktls_rx_resync_ctx *resync;
+<<<<<<< HEAD
 	struct mlx5e_priv *priv;
 
 	priv = netdev_priv(netdev);
+=======
+	struct mlx5_core_dev *mdev;
+	struct mlx5e_priv *priv;
+
+	priv = netdev_priv(netdev);
+	mdev = priv->mdev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	priv_rx = mlx5e_get_ktls_rx_priv_ctx(tls_ctx);
 	set_bit(MLX5E_PRIV_RX_FLAG_DELETING, priv_rx->flags);
@@ -710,7 +773,11 @@ void mlx5e_ktls_del_rx(struct net_device *netdev, struct tls_context *tls_ctx)
 		mlx5e_accel_fs_del_sk(priv_rx->rule.rule);
 
 	mlx5e_tir_destroy(&priv_rx->tir);
+<<<<<<< HEAD
 	mlx5_ktls_destroy_key(priv->tls->dek_pool, priv_rx->dek);
+=======
+	mlx5_ktls_destroy_key(mdev, priv_rx->key_id);
+>>>>>>> b7ba80a49124 (Commit)
 	/* priv_rx should normally be freed here, but if there is an outstanding
 	 * GET_PSV, deallocation will be delayed until the CQE for GET_PSV is
 	 * processed.

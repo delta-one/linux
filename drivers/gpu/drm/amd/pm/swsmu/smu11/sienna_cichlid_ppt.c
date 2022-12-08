@@ -377,6 +377,7 @@ static void sienna_cichlid_check_bxco_support(struct smu_context *smu)
 		if (((adev->pdev->device == 0x73A1) &&
 		    (adev->pdev->revision == 0x00)) ||
 		    ((adev->pdev->device == 0x73BF) &&
+<<<<<<< HEAD
 		    (adev->pdev->revision == 0xCF)) ||
 		    ((adev->pdev->device == 0x7422) &&
 		    (adev->pdev->revision == 0x00)) ||
@@ -384,6 +385,9 @@ static void sienna_cichlid_check_bxco_support(struct smu_context *smu)
 		    (adev->pdev->revision == 0x00)) ||
 		    ((adev->pdev->device == 0x73E3) &&
 		    (adev->pdev->revision == 0x00)))
+=======
+		    (adev->pdev->revision == 0xCF)))
+>>>>>>> b7ba80a49124 (Commit)
 			smu_baco->platform_support = false;
 
 	}
@@ -2143,9 +2147,22 @@ static int sienna_cichlid_set_default_od_settings(struct smu_context *smu)
 		(OverDriveTable_t *)smu->smu_table.boot_overdrive_table;
 	OverDriveTable_t *user_od_table =
 		(OverDriveTable_t *)smu->smu_table.user_overdrive_table;
+<<<<<<< HEAD
 	OverDriveTable_t user_od_table_bak;
 	int ret = 0;
 
+=======
+	int ret = 0;
+
+	/*
+	 * For S3/S4/Runpm resume, no need to setup those overdrive tables again as
+	 *   - either they already have the default OD settings got during cold bootup
+	 *   - or they have some user customized OD settings which cannot be overwritten
+	 */
+	if (smu->adev->in_suspend)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = smu_cmn_update_table(smu, SMU_TABLE_OVERDRIVE,
 				   0, (void *)boot_od_table, false);
 	if (ret) {
@@ -2156,6 +2173,7 @@ static int sienna_cichlid_set_default_od_settings(struct smu_context *smu)
 	sienna_cichlid_dump_od_table(smu, boot_od_table);
 
 	memcpy(od_table, boot_od_table, sizeof(OverDriveTable_t));
+<<<<<<< HEAD
 
 	/*
 	 * For S3/S4/Runpm resume, we need to setup those overdrive tables again,
@@ -2173,6 +2191,9 @@ static int sienna_cichlid_set_default_od_settings(struct smu_context *smu)
 		user_od_table->UclkFmax = user_od_table_bak.UclkFmax;
 		user_od_table->VddGfxOffset = user_od_table_bak.VddGfxOffset;
 	}
+=======
+	memcpy(user_od_table, boot_od_table, sizeof(OverDriveTable_t));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -2382,6 +2403,7 @@ static int sienna_cichlid_od_edit_dpm_table(struct smu_context *smu,
 	return ret;
 }
 
+<<<<<<< HEAD
 static int sienna_cichlid_restore_user_od_settings(struct smu_context *smu)
 {
 	struct smu_table_context *table_context = &smu->smu_table;
@@ -2396,6 +2418,8 @@ static int sienna_cichlid_restore_user_od_settings(struct smu_context *smu)
 	return res;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int sienna_cichlid_run_btc(struct smu_context *smu)
 {
 	int res;
@@ -4423,7 +4447,11 @@ static const struct pptable_funcs sienna_cichlid_ppt_funcs = {
 	.set_soft_freq_limited_range = smu_v11_0_set_soft_freq_limited_range,
 	.set_default_od_settings = sienna_cichlid_set_default_od_settings,
 	.od_edit_dpm_table = sienna_cichlid_od_edit_dpm_table,
+<<<<<<< HEAD
 	.restore_user_od_settings = sienna_cichlid_restore_user_od_settings,
+=======
+	.restore_user_od_settings = smu_v11_0_restore_user_od_settings,
+>>>>>>> b7ba80a49124 (Commit)
 	.run_btc = sienna_cichlid_run_btc,
 	.set_power_source = smu_v11_0_set_power_source,
 	.get_pp_feature_mask = smu_cmn_get_pp_feature_mask,

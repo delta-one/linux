@@ -16,6 +16,7 @@ config NET_VENDOR_WANGXUN
 
 if NET_VENDOR_WANGXUN
 
+<<<<<<< HEAD
 config LIBWX
 	tristate
 	select PAGE_POOL
@@ -27,6 +28,11 @@ config NGBE
 	depends on PCI
 	select LIBWX
 	select PHYLIB
+=======
+config NGBE
+	tristate "Wangxun(R) GbE PCI Express adapters support"
+	depends on PCI
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This driver supports Wangxun(R) GbE PCI Express family of
 	  adapters.
@@ -40,7 +46,10 @@ config NGBE
 config TXGBE
 	tristate "Wangxun(R) 10GbE PCI Express adapters support"
 	depends on PCI
+<<<<<<< HEAD
 	select LIBWX
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This driver supports Wangxun(R) 10GbE PCI Express family of
 	  adapters.

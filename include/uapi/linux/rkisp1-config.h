@@ -117,6 +117,7 @@
 /*
  * Defect Pixel Cluster Correction
  */
+<<<<<<< HEAD
 #define RKISP1_CIF_ISP_DPCC_METHODS_MAX				3
 
 #define RKISP1_CIF_ISP_DPCC_MODE_STAGE1_ENABLE			(1U << 2)
@@ -157,6 +158,9 @@
 
 #define RKISP1_CIF_ISP_DPCC_RND_OFFS_n_G(n, v)			((v) << ((n) * 4))
 #define RKISP1_CIF_ISP_DPCC_RND_OFFS_n_RB(n, v)			((v) << ((n) * 4 + 2))
+=======
+#define RKISP1_CIF_ISP_DPCC_METHODS_MAX       3
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Denoising pre filter
@@ -288,6 +292,7 @@ struct rkisp1_cif_isp_bls_config {
 };
 
 /**
+<<<<<<< HEAD
  * struct rkisp1_cif_isp_dpcc_methods_config - DPCC methods set configuration
  *
  * This structure stores the configuration of one set of methods for the DPCC
@@ -302,6 +307,18 @@ struct rkisp1_cif_isp_bls_config {
  * @pg_fac: Peak gradient factor (RKISP1_CIF_ISP_DPCC_PG_FAC_*)
  * @rnd_thresh: Rank Neighbor Difference threshold (RKISP1_CIF_ISP_DPCC_RND_THRESH_*)
  * @rg_fac: Rank gradient factor (RKISP1_CIF_ISP_DPCC_RG_FAC_*)
+=======
+ * struct rkisp1_cif_isp_dpcc_methods_config - Methods Configuration used by DPCC
+ *
+ * Methods Configuration used by Defect Pixel Cluster Correction
+ *
+ * @method: Method enable bits
+ * @line_thresh: Line threshold
+ * @line_mad_fac: Line MAD factor
+ * @pg_fac: Peak gradient factor
+ * @rnd_thresh: Rank Neighbor Difference threshold
+ * @rg_fac: Rank gradient factor
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct rkisp1_cif_isp_dpcc_methods_config {
 	__u32 method;
@@ -315,6 +332,7 @@ struct rkisp1_cif_isp_dpcc_methods_config {
 /**
  * struct rkisp1_cif_isp_dpcc_config - Configuration used by DPCC
  *
+<<<<<<< HEAD
  * Configuration used by Defect Pixel Cluster Correction. Three sets of methods
  * can be configured and selected through the @set_use field. The result is the
  * logical OR of all enabled sets.
@@ -325,6 +343,16 @@ struct rkisp1_cif_isp_dpcc_methods_config {
  * @methods: Methods sets configuration
  * @ro_limits: Rank order limits (RKISP1_CIF_ISP_DPCC_RO_LIMITS_*)
  * @rnd_offs: Differential rank offsets for rank neighbor difference (RKISP1_CIF_ISP_DPCC_RND_OFFS_*)
+=======
+ * Configuration used by Defect Pixel Cluster Correction
+ *
+ * @mode: dpcc output mode
+ * @output_mode: whether use hard coded methods
+ * @set_use: stage1 methods set
+ * @methods: methods config
+ * @ro_limits: rank order limits
+ * @rnd_offs: differential rank offsets for rank neighbor difference
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct rkisp1_cif_isp_dpcc_config {
 	__u32 mode;

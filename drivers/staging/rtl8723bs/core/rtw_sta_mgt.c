@@ -551,7 +551,11 @@ u8 rtw_access_ctrl(struct adapter *padapter, u8 *mac_addr)
 	else if (pacl_list->mode == 2)/* deny unless in accept list */
 		res = match;
 	else
+<<<<<<< HEAD
 		res = true;
+=======
+		 res = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return res;
 }

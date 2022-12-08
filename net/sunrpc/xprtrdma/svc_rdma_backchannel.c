@@ -119,12 +119,20 @@ xprt_rdma_bc_allocate(struct rpc_task *task)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	page = alloc_page(GFP_NOIO | __GFP_NOWARN);
+=======
+	page = alloc_page(RPCRDMA_DEF_GFP);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!page)
 		return -ENOMEM;
 	rqst->rq_buffer = page_address(page);
 
+<<<<<<< HEAD
 	rqst->rq_rbuffer = kmalloc(rqst->rq_rcvsize, GFP_NOIO | __GFP_NOWARN);
+=======
+	rqst->rq_rbuffer = kmalloc(rqst->rq_rcvsize, RPCRDMA_DEF_GFP);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!rqst->rq_rbuffer) {
 		put_page(page);
 		return -ENOMEM;

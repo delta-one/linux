@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
 /* Author: Dan Scally <djrscally@gmail.com> */
 
+<<<<<<< HEAD
 #include <linux/acpi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/i2c.h>
 #include <linux/kernel.h>
 #include <linux/mfd/core.h>
@@ -96,6 +99,7 @@ static int skl_int3472_tps68470_calc_type(struct acpi_device *adev)
 	return DESIGNED_FOR_WINDOWS;
 }
 
+<<<<<<< HEAD
 /*
  * Return the size of the flexible array member, because we'll need that later
  * on to pass .pdata_size to cells.
@@ -140,10 +144,13 @@ skl_int3472_fill_clk_pdata(struct device *dev, struct tps68470_clk_platform_data
 	return n_consumers;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int skl_int3472_tps68470_probe(struct i2c_client *client)
 {
 	struct acpi_device *adev = ACPI_COMPANION(&client->dev);
 	const struct int3472_tps68470_board_data *board_data;
+<<<<<<< HEAD
 	struct tps68470_clk_platform_data *clk_pdata;
 	struct mfd_cell *cells;
 	struct regmap *regmap;
@@ -155,6 +162,18 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
 	n_consumers = skl_int3472_fill_clk_pdata(&client->dev, &clk_pdata);
 	if (n_consumers < 0)
 		return n_consumers;
+=======
+	struct tps68470_clk_platform_data clk_pdata = {};
+	struct mfd_cell *cells;
+	struct regmap *regmap;
+	int device_type;
+	int ret;
+
+	ret = skl_int3472_get_sensor_adev_and_name(&client->dev, NULL,
+						   &clk_pdata.consumer_dev_name);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	regmap = devm_regmap_init_i2c(client, &tps68470_regmap_config);
 	if (IS_ERR(regmap)) {
@@ -188,25 +207,39 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
 		 * the clk + regulators must be ready when this happens.
 		 */
 		cells[0].name = "tps68470-clk";
+<<<<<<< HEAD
 		cells[0].platform_data = clk_pdata;
 		cells[0].pdata_size = struct_size(clk_pdata, consumers, n_consumers);
+=======
+		cells[0].platform_data = &clk_pdata;
+		cells[0].pdata_size = sizeof(clk_pdata);
+>>>>>>> b7ba80a49124 (Commit)
 		cells[1].name = "tps68470-regulator";
 		cells[1].platform_data = (void *)board_data->tps68470_regulator_pdata;
 		cells[1].pdata_size = sizeof(struct tps68470_regulator_platform_data);
 		cells[2].name = "tps68470-gpio";
 
+<<<<<<< HEAD
 		for (i = 0; i < board_data->n_gpiod_lookups; i++)
 			gpiod_add_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
+=======
+		gpiod_add_lookup_table(board_data->tps68470_gpio_lookup_table);
+>>>>>>> b7ba80a49124 (Commit)
 
 		ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_NONE,
 					   cells, TPS68470_WIN_MFD_CELL_COUNT,
 					   NULL, 0, NULL);
 		kfree(cells);
 
+<<<<<<< HEAD
 		if (ret) {
 			for (i = 0; i < board_data->n_gpiod_lookups; i++)
 				gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
 		}
+=======
+		if (ret)
+			gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_table);
+>>>>>>> b7ba80a49124 (Commit)
 
 		break;
 	case DESIGNED_FOR_CHROMEOS:
@@ -230,6 +263,7 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
 static void skl_int3472_tps68470_remove(struct i2c_client *client)
 {
 	const struct int3472_tps68470_board_data *board_data;
+<<<<<<< HEAD
 	int i;
 
 	board_data = int3472_tps68470_get_board_data(dev_name(&client->dev));
@@ -237,6 +271,12 @@ static void skl_int3472_tps68470_remove(struct i2c_client *client)
 		for (i = 0; i < board_data->n_gpiod_lookups; i++)
 			gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
 	}
+=======
+
+	board_data = int3472_tps68470_get_board_data(dev_name(&client->dev));
+	if (board_data)
+		gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_table);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id int3472_device_id[] = {

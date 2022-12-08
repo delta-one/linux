@@ -65,6 +65,12 @@
 #define	check_bo_null_return_void(bo)	\
 	check_null_return_void(bo, "NULL hmm buffer object.\n")
 
+<<<<<<< HEAD
+=======
+#define	HMM_MAX_ORDER		3
+#define	HMM_MIN_ORDER		0
+
+>>>>>>> b7ba80a49124 (Commit)
 #define	ISP_VM_START	0x0
 #define	ISP_VM_SIZE	(0x7FFFFFFF)	/* 2G address space */
 #define	ISP_PTR_NULL	NULL
@@ -73,7 +79,11 @@
 
 enum hmm_bo_type {
 	HMM_BO_PRIVATE,
+<<<<<<< HEAD
 	HMM_BO_VMALLOC,
+=======
+	HMM_BO_USER,
+>>>>>>> b7ba80a49124 (Commit)
 	HMM_BO_LAST,
 };
 
@@ -86,6 +96,11 @@ enum hmm_bo_type {
 #define	HMM_BO_VMAPED		0x10
 #define	HMM_BO_VMAPED_CACHED	0x20
 #define	HMM_BO_ACTIVE		0x1000
+<<<<<<< HEAD
+=======
+#define	HMM_BO_MEM_TYPE_USER     0x1
+#define	HMM_BO_MEM_TYPE_PFN      0x2
+>>>>>>> b7ba80a49124 (Commit)
 
 struct hmm_bo_device {
 	struct isp_mmu		mmu;
@@ -121,6 +136,10 @@ struct hmm_buffer_object {
 	enum hmm_bo_type	type;
 	int		mmap_count;
 	int		status;
+<<<<<<< HEAD
+=======
+	int		mem_type;
+>>>>>>> b7ba80a49124 (Commit)
 	void		*vmap_addr; /* kernel virtual address by vmap */
 
 	struct rb_node	node;
@@ -207,7 +226,11 @@ int hmm_bo_allocated(struct hmm_buffer_object *bo);
  */
 int hmm_bo_alloc_pages(struct hmm_buffer_object *bo,
 		       enum hmm_bo_type type,
+<<<<<<< HEAD
 		       void *vmalloc_addr);
+=======
+		       const void __user *userptr);
+>>>>>>> b7ba80a49124 (Commit)
 void hmm_bo_free_pages(struct hmm_buffer_object *bo);
 int hmm_bo_page_allocated(struct hmm_buffer_object *bo);
 

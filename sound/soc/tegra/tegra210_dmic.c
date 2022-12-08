@@ -534,9 +534,17 @@ static int tegra210_dmic_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void tegra210_dmic_remove(struct platform_device *pdev)
 {
 	pm_runtime_disable(&pdev->dev);
+=======
+static int tegra210_dmic_remove(struct platform_device *pdev)
+{
+	pm_runtime_disable(&pdev->dev);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct dev_pm_ops tegra210_dmic_pm_ops = {
@@ -559,7 +567,11 @@ static struct platform_driver tegra210_dmic_driver = {
 		.pm = &tegra210_dmic_pm_ops,
 	},
 	.probe = tegra210_dmic_probe,
+<<<<<<< HEAD
 	.remove_new = tegra210_dmic_remove,
+=======
+	.remove = tegra210_dmic_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(tegra210_dmic_driver)
 

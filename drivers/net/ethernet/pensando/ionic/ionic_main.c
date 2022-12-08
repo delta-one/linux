@@ -289,6 +289,7 @@ static void ionic_adminq_cb(struct ionic_queue *q,
 	complete_all(&ctx->work);
 }
 
+<<<<<<< HEAD
 bool ionic_adminq_poke_doorbell(struct ionic_queue *q)
 {
 	struct ionic_lif *lif = q->lif;
@@ -318,6 +319,8 @@ bool ionic_adminq_poke_doorbell(struct ionic_queue *q)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ionic_adminq_post(struct ionic_lif *lif, struct ionic_admin_ctx *ctx)
 {
 	struct ionic_desc_info *desc_info;
@@ -388,7 +391,11 @@ int ionic_adminq_wait(struct ionic_lif *lif, struct ionic_admin_ctx *ctx,
 			break;
 
 		/* force a check of FW status and break out if FW reset */
+<<<<<<< HEAD
 		ionic_heartbeat_check(lif->ionic);
+=======
+		(void)ionic_heartbeat_check(lif->ionic);
+>>>>>>> b7ba80a49124 (Commit)
 		if ((test_bit(IONIC_LIF_F_FW_RESET, lif->state) &&
 		     !lif->ionic->idev.fw_status_ready) ||
 		    test_bit(IONIC_LIF_F_FW_STOPPING, lif->state)) {
@@ -562,7 +569,11 @@ int ionic_identify(struct ionic *ionic)
 	sz = min(sizeof(ident->drv), sizeof(idev->dev_cmd_regs->data));
 	memcpy_toio(&idev->dev_cmd_regs->data, &ident->drv, sz);
 
+<<<<<<< HEAD
 	ionic_dev_cmd_identify(idev, IONIC_DEV_IDENTITY_VERSION_2);
+=======
+	ionic_dev_cmd_identify(idev, IONIC_IDENTITY_VERSION_1);
+>>>>>>> b7ba80a49124 (Commit)
 	err = ionic_dev_cmd_wait(ionic, DEVCMD_TIMEOUT);
 	if (!err) {
 		sz = min(sizeof(ident->dev), sizeof(idev->dev_cmd_regs->data));
@@ -676,7 +687,11 @@ int ionic_port_init(struct ionic *ionic)
 	err = ionic_dev_cmd_wait(ionic, DEVCMD_TIMEOUT);
 
 	ionic_dev_cmd_port_state(&ionic->idev, IONIC_PORT_ADMIN_STATE_UP);
+<<<<<<< HEAD
 	ionic_dev_cmd_wait(ionic, DEVCMD_TIMEOUT);
+=======
+	(void)ionic_dev_cmd_wait(ionic, DEVCMD_TIMEOUT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&ionic->dev_cmd_lock);
 	if (err) {
@@ -716,6 +731,7 @@ int ionic_port_reset(struct ionic *ionic)
 
 static int __init ionic_init_module(void)
 {
+<<<<<<< HEAD
 	int ret;
 
 	ionic_debugfs_create();
@@ -724,6 +740,10 @@ static int __init ionic_init_module(void)
 		ionic_debugfs_destroy();
 
 	return ret;
+=======
+	ionic_debugfs_create();
+	return ionic_bus_register_driver();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __exit ionic_cleanup_module(void)

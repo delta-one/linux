@@ -464,12 +464,20 @@ void drm_atomic_helper_connector_reset(struct drm_connector *connector)
 EXPORT_SYMBOL(drm_atomic_helper_connector_reset);
 
 /**
+<<<<<<< HEAD
  * drm_atomic_helper_connector_tv_margins_reset - Resets TV connector properties
+=======
+ * drm_atomic_helper_connector_tv_reset - Resets TV connector properties
+>>>>>>> b7ba80a49124 (Commit)
  * @connector: DRM connector
  *
  * Resets the TV-related properties attached to a connector.
  */
+<<<<<<< HEAD
 void drm_atomic_helper_connector_tv_margins_reset(struct drm_connector *connector)
+=======
+void drm_atomic_helper_connector_tv_reset(struct drm_connector *connector)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drm_cmdline_mode *cmdline = &connector->cmdline_mode;
 	struct drm_connector_state *state = connector->state;
@@ -479,6 +487,7 @@ void drm_atomic_helper_connector_tv_margins_reset(struct drm_connector *connecto
 	state->tv.margins.top = cmdline->tv_margins.top;
 	state->tv.margins.bottom = cmdline->tv_margins.bottom;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(drm_atomic_helper_connector_tv_margins_reset);
 
 /**
@@ -606,6 +615,11 @@ int drm_atomic_helper_connector_tv_check(struct drm_connector *connector,
 EXPORT_SYMBOL(drm_atomic_helper_connector_tv_check);
 
 /**
+=======
+EXPORT_SYMBOL(drm_atomic_helper_connector_tv_reset);
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * __drm_atomic_helper_connector_duplicate_state - copy atomic connector state
  * @connector: connector object
  * @state: atomic connector state

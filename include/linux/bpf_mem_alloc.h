@@ -14,6 +14,7 @@ struct bpf_mem_alloc {
 	struct work_struct work;
 };
 
+<<<<<<< HEAD
 /* 'size != 0' is for bpf_mem_alloc which manages fixed-size objects.
  * Alloc and free are done with bpf_mem_cache_{alloc,free}().
  *
@@ -21,6 +22,8 @@ struct bpf_mem_alloc {
  * Alloc and free are done with bpf_mem_{alloc,free}() and the size of
  * the returned object is given by the size argument of bpf_mem_alloc().
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int bpf_mem_alloc_init(struct bpf_mem_alloc *ma, int size, bool percpu);
 void bpf_mem_alloc_destroy(struct bpf_mem_alloc *ma);
 

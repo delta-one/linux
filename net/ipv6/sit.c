@@ -694,7 +694,11 @@ static int ipip6_rcv(struct sk_buff *skb)
 		skb->dev = tunnel->dev;
 
 		if (packet_is_spoofed(skb, iph, tunnel)) {
+<<<<<<< HEAD
 			DEV_STATS_INC(tunnel->dev, rx_errors);
+=======
+			tunnel->dev->stats.rx_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 		}
 
@@ -714,8 +718,13 @@ static int ipip6_rcv(struct sk_buff *skb)
 				net_info_ratelimited("non-ECT from %pI4 with TOS=%#x\n",
 						     &iph->saddr, iph->tos);
 			if (err > 1) {
+<<<<<<< HEAD
 				DEV_STATS_INC(tunnel->dev, rx_frame_errors);
 				DEV_STATS_INC(tunnel->dev, rx_errors);
+=======
+				++tunnel->dev->stats.rx_frame_errors;
+				++tunnel->dev->stats.rx_errors;
+>>>>>>> b7ba80a49124 (Commit)
 				goto out;
 			}
 		}
@@ -942,7 +951,11 @@ static netdev_tx_t ipip6_tunnel_xmit(struct sk_buff *skb,
 	if (!rt) {
 		rt = ip_route_output_flow(tunnel->net, &fl4, NULL);
 		if (IS_ERR(rt)) {
+<<<<<<< HEAD
 			DEV_STATS_INC(dev, tx_carrier_errors);
+=======
+			dev->stats.tx_carrier_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 			goto tx_error_icmp;
 		}
 		dst_cache_set_ip4(&tunnel->dst_cache, &rt->dst, fl4.saddr);
@@ -950,14 +963,22 @@ static netdev_tx_t ipip6_tunnel_xmit(struct sk_buff *skb,
 
 	if (rt->rt_type != RTN_UNICAST && rt->rt_type != RTN_LOCAL) {
 		ip_rt_put(rt);
+<<<<<<< HEAD
 		DEV_STATS_INC(dev, tx_carrier_errors);
+=======
+		dev->stats.tx_carrier_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 		goto tx_error_icmp;
 	}
 	tdev = rt->dst.dev;
 
 	if (tdev == dev) {
 		ip_rt_put(rt);
+<<<<<<< HEAD
 		DEV_STATS_INC(dev, collisions);
+=======
+		dev->stats.collisions++;
+>>>>>>> b7ba80a49124 (Commit)
 		goto tx_error;
 	}
 
@@ -970,7 +991,11 @@ static netdev_tx_t ipip6_tunnel_xmit(struct sk_buff *skb,
 		mtu = dst_mtu(&rt->dst) - t_hlen;
 
 		if (mtu < IPV4_MIN_MTU) {
+<<<<<<< HEAD
 			DEV_STATS_INC(dev, collisions);
+=======
+			dev->stats.collisions++;
+>>>>>>> b7ba80a49124 (Commit)
 			ip_rt_put(rt);
 			goto tx_error;
 		}
@@ -1009,7 +1034,11 @@ static netdev_tx_t ipip6_tunnel_xmit(struct sk_buff *skb,
 		struct sk_buff *new_skb = skb_realloc_headroom(skb, max_headroom);
 		if (!new_skb) {
 			ip_rt_put(rt);
+<<<<<<< HEAD
 			DEV_STATS_INC(dev, tx_dropped);
+=======
+			dev->stats.tx_dropped++;
+>>>>>>> b7ba80a49124 (Commit)
 			kfree_skb(skb);
 			return NETDEV_TX_OK;
 		}
@@ -1039,7 +1068,11 @@ tx_error_icmp:
 	dst_link_failure(skb);
 tx_error:
 	kfree_skb(skb);
+<<<<<<< HEAD
 	DEV_STATS_INC(dev, tx_errors);
+=======
+	dev->stats.tx_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 	return NETDEV_TX_OK;
 }
 
@@ -1058,7 +1091,11 @@ static netdev_tx_t sit_tunnel_xmit__(struct sk_buff *skb,
 	return NETDEV_TX_OK;
 tx_error:
 	kfree_skb(skb);
+<<<<<<< HEAD
 	DEV_STATS_INC(dev, tx_errors);
+=======
+	dev->stats.tx_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 	return NETDEV_TX_OK;
 }
 
@@ -1087,7 +1124,11 @@ static netdev_tx_t sit_tunnel_xmit(struct sk_buff *skb,
 	return NETDEV_TX_OK;
 
 tx_err:
+<<<<<<< HEAD
 	DEV_STATS_INC(dev, tx_errors);
+=======
+	dev->stats.tx_errors++;
+>>>>>>> b7ba80a49124 (Commit)
 	kfree_skb(skb);
 	return NETDEV_TX_OK;
 
@@ -1124,12 +1165,19 @@ static void ipip6_tunnel_bind_dev(struct net_device *dev)
 
 	if (tdev && !netif_is_l3_master(tdev)) {
 		int t_hlen = tunnel->hlen + sizeof(struct iphdr);
+<<<<<<< HEAD
 		int mtu;
 
 		mtu = tdev->mtu - t_hlen;
 		if (mtu < IPV6_MIN_MTU)
 			mtu = IPV6_MIN_MTU;
 		WRITE_ONCE(dev->mtu, mtu);
+=======
+
+		dev->mtu = tdev->mtu - t_hlen;
+		if (dev->mtu < IPV6_MIN_MTU)
+			dev->mtu = IPV6_MIN_MTU;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -1505,12 +1553,78 @@ static void ipip6_netlink_parms(struct nlattr *data[],
 	if (!data)
 		return;
 
+<<<<<<< HEAD
 	ip_tunnel_netlink_parms(data, parms);
+=======
+	if (data[IFLA_IPTUN_LINK])
+		parms->link = nla_get_u32(data[IFLA_IPTUN_LINK]);
+
+	if (data[IFLA_IPTUN_LOCAL])
+		parms->iph.saddr = nla_get_be32(data[IFLA_IPTUN_LOCAL]);
+
+	if (data[IFLA_IPTUN_REMOTE])
+		parms->iph.daddr = nla_get_be32(data[IFLA_IPTUN_REMOTE]);
+
+	if (data[IFLA_IPTUN_TTL]) {
+		parms->iph.ttl = nla_get_u8(data[IFLA_IPTUN_TTL]);
+		if (parms->iph.ttl)
+			parms->iph.frag_off = htons(IP_DF);
+	}
+
+	if (data[IFLA_IPTUN_TOS])
+		parms->iph.tos = nla_get_u8(data[IFLA_IPTUN_TOS]);
+
+	if (!data[IFLA_IPTUN_PMTUDISC] || nla_get_u8(data[IFLA_IPTUN_PMTUDISC]))
+		parms->iph.frag_off = htons(IP_DF);
+
+	if (data[IFLA_IPTUN_FLAGS])
+		parms->i_flags = nla_get_be16(data[IFLA_IPTUN_FLAGS]);
+
+	if (data[IFLA_IPTUN_PROTO])
+		parms->iph.protocol = nla_get_u8(data[IFLA_IPTUN_PROTO]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (data[IFLA_IPTUN_FWMARK])
 		*fwmark = nla_get_u32(data[IFLA_IPTUN_FWMARK]);
 }
 
+<<<<<<< HEAD
+=======
+/* This function returns true when ENCAP attributes are present in the nl msg */
+static bool ipip6_netlink_encap_parms(struct nlattr *data[],
+				      struct ip_tunnel_encap *ipencap)
+{
+	bool ret = false;
+
+	memset(ipencap, 0, sizeof(*ipencap));
+
+	if (!data)
+		return ret;
+
+	if (data[IFLA_IPTUN_ENCAP_TYPE]) {
+		ret = true;
+		ipencap->type = nla_get_u16(data[IFLA_IPTUN_ENCAP_TYPE]);
+	}
+
+	if (data[IFLA_IPTUN_ENCAP_FLAGS]) {
+		ret = true;
+		ipencap->flags = nla_get_u16(data[IFLA_IPTUN_ENCAP_FLAGS]);
+	}
+
+	if (data[IFLA_IPTUN_ENCAP_SPORT]) {
+		ret = true;
+		ipencap->sport = nla_get_be16(data[IFLA_IPTUN_ENCAP_SPORT]);
+	}
+
+	if (data[IFLA_IPTUN_ENCAP_DPORT]) {
+		ret = true;
+		ipencap->dport = nla_get_be16(data[IFLA_IPTUN_ENCAP_DPORT]);
+	}
+
+	return ret;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_IPV6_SIT_6RD
 /* This function returns true when 6RD attributes are present in the nl msg */
 static bool ipip6_netlink_6rd_parms(struct nlattr *data[],
@@ -1562,7 +1676,11 @@ static int ipip6_newlink(struct net *src_net, struct net_device *dev,
 
 	nt = netdev_priv(dev);
 
+<<<<<<< HEAD
 	if (ip_tunnel_netlink_encap_parms(data, &ipencap)) {
+=======
+	if (ipip6_netlink_encap_parms(data, &ipencap)) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = ip_tunnel_encap_setup(nt, &ipencap);
 		if (err < 0)
 			return err;
@@ -1614,7 +1732,11 @@ static int ipip6_changelink(struct net_device *dev, struct nlattr *tb[],
 	if (dev == sitn->fb_tunnel_dev)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (ip_tunnel_netlink_encap_parms(data, &ipencap)) {
+=======
+	if (ipip6_netlink_encap_parms(data, &ipencap)) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = ip_tunnel_encap_setup(t, &ipencap);
 		if (err < 0)
 			return err;

@@ -2213,7 +2213,11 @@ idt77252_init_ubr(struct idt77252_dev *card, struct vc_map *vc,
 	}
 	spin_unlock_irqrestore(&vc->lock, flags);
 	if (est) {
+<<<<<<< HEAD
 		timer_shutdown_sync(&est->timer);
+=======
+		del_timer_sync(&est->timer);
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(est);
 	}
 
@@ -2530,7 +2534,11 @@ done:
 		vc->tx_vcc = NULL;
 
 		if (vc->estimator) {
+<<<<<<< HEAD
 			timer_shutdown(&vc->estimator->timer);
+=======
+			del_timer(&vc->estimator->timer);
+>>>>>>> b7ba80a49124 (Commit)
 			kfree(vc->estimator);
 			vc->estimator = NULL;
 		}
@@ -2909,7 +2917,10 @@ close_card_oam(struct idt77252_dev *card)
 
 				recycle_rx_pool_skb(card, &vc->rcv.rx_pool);
 			}
+<<<<<<< HEAD
 			kfree(vc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }
@@ -2953,6 +2964,7 @@ open_card_ubr0(struct idt77252_dev *card)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void
 close_card_ubr0(struct idt77252_dev *card)
 {
@@ -2962,6 +2974,8 @@ close_card_ubr0(struct idt77252_dev *card)
 	kfree(vc);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int
 idt77252_dev_open(struct idt77252_dev *card)
 {
@@ -3011,7 +3025,10 @@ static void idt77252_dev_close(struct atm_dev *dev)
 	struct idt77252_dev *card = dev->dev_data;
 	u32 conf;
 
+<<<<<<< HEAD
 	close_card_ubr0(card);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	close_card_oam(card);
 
 	conf = SAR_CFG_RXPTH |	/* enable receive path           */
@@ -3763,7 +3780,11 @@ static void __exit idt77252_exit(void)
 		card = idt77252_chain;
 		dev = card->atmdev;
 		idt77252_chain = card->next;
+<<<<<<< HEAD
 		timer_shutdown_sync(&card->tst_timer);
+=======
+		del_timer_sync(&card->tst_timer);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (dev->phy->stop)
 			dev->phy->stop(dev);

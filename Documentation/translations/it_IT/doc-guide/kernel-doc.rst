@@ -3,8 +3,11 @@
 .. note:: Per leggere la documentazione originale in inglese:
 	  :ref:`Documentation/doc-guide/index.rst <doc_guide>`
 
+<<<<<<< HEAD
 .. title:: Commenti in kernel-doc
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 .. _it_kernel_doc:
 
 =================================

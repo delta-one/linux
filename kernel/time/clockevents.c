@@ -76,7 +76,11 @@ static u64 cev_delta2ns(unsigned long latch, struct clock_event_device *evt,
 }
 
 /**
+<<<<<<< HEAD
  * clockevent_delta2ns - Convert a latch value (device ticks) to nanoseconds
+=======
+ * clockevents_delta2ns - Convert a latch value (device ticks) to nanoseconds
+>>>>>>> b7ba80a49124 (Commit)
  * @latch:	value to convert
  * @evt:	pointer to clock event device descriptor
  *

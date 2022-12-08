@@ -146,7 +146,11 @@ static unsigned int get_symbol_offset(unsigned long pos)
 	return name - kallsyms_names;
 }
 
+<<<<<<< HEAD
 unsigned long kallsyms_sym_address(int idx)
+=======
+static unsigned long kallsyms_sym_address(int idx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!IS_ENABLED(CONFIG_KALLSYMS_BASE_RELATIVE))
 		return kallsyms_addresses[idx];
@@ -177,6 +181,10 @@ static bool cleanup_symbol_name(char *s)
 	 * character in an identifier in C. Suffixes observed:
 	 * - foo.llvm.[0-9a-f]+
 	 * - foo.[0-9a-f]+
+<<<<<<< HEAD
+=======
+	 * - foo.[0-9a-f]+.cfi_jt
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	res = strchr(s, '.');
 	if (res) {
@@ -184,6 +192,7 @@ static bool cleanup_symbol_name(char *s)
 		return true;
 	}
 
+<<<<<<< HEAD
 	return false;
 }
 
@@ -272,15 +281,54 @@ unsigned long kallsyms_lookup_name(const char *name)
 {
 	int ret;
 	unsigned int i;
+=======
+	if (!IS_ENABLED(CONFIG_CFI_CLANG) ||
+	    !IS_ENABLED(CONFIG_LTO_CLANG_THIN) ||
+	    CONFIG_CLANG_VERSION >= 130000)
+		return false;
+
+	/*
+	 * Prior to LLVM 13, the following suffixes were observed when thinLTO
+	 * and CFI are both enabled:
+	 * - foo$[0-9]+
+	 */
+	res = strrchr(s, '$');
+	if (res) {
+		*res = '\0';
+		return true;
+	}
+
+	return false;
+}
+
+/* Lookup the address for this symbol. Returns 0 if not found. */
+unsigned long kallsyms_lookup_name(const char *name)
+{
+	char namebuf[KSYM_NAME_LEN];
+	unsigned long i;
+	unsigned int off;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Skip the search for empty string. */
 	if (!*name)
 		return 0;
 
+<<<<<<< HEAD
 	ret = kallsyms_lookup_names(name, &i, NULL);
 	if (!ret)
 		return kallsyms_sym_address(get_symbol_seq(i));
 
+=======
+	for (i = 0, off = 0; i < kallsyms_num_syms; i++) {
+		off = kallsyms_expand_symbol(off, namebuf, ARRAY_SIZE(namebuf));
+
+		if (strcmp(namebuf, name) == 0)
+			return kallsyms_sym_address(i);
+
+		if (cleanup_symbol_name(namebuf) && strcmp(namebuf, name) == 0)
+			return kallsyms_sym_address(i);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return module_kallsyms_lookup_name(name);
 }
 
@@ -288,7 +336,12 @@ unsigned long kallsyms_lookup_name(const char *name)
  * Iterate over all symbols in vmlinux.  For symbols from modules use
  * module_kallsyms_on_each_symbol instead.
  */
+<<<<<<< HEAD
 int kallsyms_on_each_symbol(int (*fn)(void *, const char *, unsigned long),
+=======
+int kallsyms_on_each_symbol(int (*fn)(void *, const char *, struct module *,
+				      unsigned long),
+>>>>>>> b7ba80a49124 (Commit)
 			    void *data)
 {
 	char namebuf[KSYM_NAME_LEN];
@@ -298,7 +351,11 @@ int kallsyms_on_each_symbol(int (*fn)(void *, const char *, unsigned long),
 
 	for (i = 0, off = 0; i < kallsyms_num_syms; i++) {
 		off = kallsyms_expand_symbol(off, namebuf, ARRAY_SIZE(namebuf));
+<<<<<<< HEAD
 		ret = fn(data, namebuf, kallsyms_sym_address(i));
+=======
+		ret = fn(data, namebuf, NULL, kallsyms_sym_address(i));
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret != 0)
 			return ret;
 		cond_resched();
@@ -306,6 +363,7 @@ int kallsyms_on_each_symbol(int (*fn)(void *, const char *, unsigned long),
 	return 0;
 }
 
+<<<<<<< HEAD
 int kallsyms_on_each_match_symbol(int (*fn)(void *, unsigned long),
 				  const char *name, void *data)
 {
@@ -324,6 +382,8 @@ int kallsyms_on_each_match_symbol(int (*fn)(void *, unsigned long),
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned long get_symbol_pos(unsigned long addr,
 				    unsigned long *symbolsize,
 				    unsigned long *offset)

@@ -83,7 +83,11 @@ struct neigh_parms {
 	struct rcu_head rcu_head;
 
 	int	reachable_time;
+<<<<<<< HEAD
 	u32	qlen;
+=======
+	int	qlen;
+>>>>>>> b7ba80a49124 (Commit)
 	int	data[NEIGH_VAR_DATA_MAX];
 	DECLARE_BITMAP(data_state, NEIGH_VAR_DATA_MAX);
 };
@@ -276,6 +280,14 @@ static inline void *neighbour_priv(const struct neighbour *n)
 
 extern const struct nla_policy nda_policy[];
 
+<<<<<<< HEAD
+=======
+static inline bool neigh_key_eq16(const struct neighbour *n, const void *pkey)
+{
+	return *(const u16 *)n->primary_key == *(const u16 *)pkey;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool neigh_key_eq32(const struct neighbour *n, const void *pkey)
 {
 	return *(const u32 *)n->primary_key == *(const u32 *)pkey;
@@ -299,14 +311,24 @@ static inline struct neighbour *___neigh_lookup_noref(
 	const void *pkey,
 	struct net_device *dev)
 {
+<<<<<<< HEAD
 	struct neigh_hash_table *nht = rcu_dereference(tbl->nht);
+=======
+	struct neigh_hash_table *nht = rcu_dereference_bh(tbl->nht);
+>>>>>>> b7ba80a49124 (Commit)
 	struct neighbour *n;
 	u32 hash_val;
 
 	hash_val = hash(pkey, dev, nht->hash_rnd) >> (32 - nht->hash_shift);
+<<<<<<< HEAD
 	for (n = rcu_dereference(nht->hash_buckets[hash_val]);
 	     n != NULL;
 	     n = rcu_dereference(n->next)) {
+=======
+	for (n = rcu_dereference_bh(nht->hash_buckets[hash_val]);
+	     n != NULL;
+	     n = rcu_dereference_bh(n->next)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (n->dev == dev && key_eq(n, pkey))
 			return n;
 	}
@@ -336,6 +358,11 @@ void neigh_table_init(int index, struct neigh_table *tbl);
 int neigh_table_clear(int index, struct neigh_table *tbl);
 struct neighbour *neigh_lookup(struct neigh_table *tbl, const void *pkey,
 			       struct net_device *dev);
+<<<<<<< HEAD
+=======
+struct neighbour *neigh_lookup_nodev(struct neigh_table *tbl, struct net *net,
+				     const void *pkey);
+>>>>>>> b7ba80a49124 (Commit)
 struct neighbour *__neigh_create(struct neigh_table *tbl, const void *pkey,
 				 struct net_device *dev, bool want_ref);
 static inline struct neighbour *neigh_create(struct neigh_table *tbl,
@@ -464,7 +491,11 @@ static __always_inline int neigh_event_send_probe(struct neighbour *neigh,
 
 	if (READ_ONCE(neigh->used) != now)
 		WRITE_ONCE(neigh->used, now);
+<<<<<<< HEAD
 	if (!(READ_ONCE(neigh->nud_state) & (NUD_CONNECTED | NUD_DELAY | NUD_PROBE)))
+=======
+	if (!(neigh->nud_state & (NUD_CONNECTED | NUD_DELAY | NUD_PROBE)))
+>>>>>>> b7ba80a49124 (Commit)
 		return __neigh_event_send(neigh, skb, immediate_ok);
 	return 0;
 }

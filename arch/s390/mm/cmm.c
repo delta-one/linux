@@ -335,6 +335,19 @@ static struct ctl_table cmm_table[] = {
 	{ }
 };
 
+<<<<<<< HEAD
+=======
+static struct ctl_table cmm_dir_table[] = {
+	{
+		.procname	= "vm",
+		.maxlen		= 0,
+		.mode		= 0555,
+		.child		= cmm_table,
+	},
+	{ }
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_CMM_IUCV
 #define SMSG_PREFIX "CMM"
 static void cmm_smsg_target(const char *from, char *msg)
@@ -379,7 +392,11 @@ static int __init cmm_init(void)
 {
 	int rc = -ENOMEM;
 
+<<<<<<< HEAD
 	cmm_sysctl_header = register_sysctl("vm", cmm_table);
+=======
+	cmm_sysctl_header = register_sysctl_table(cmm_dir_table);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!cmm_sysctl_header)
 		goto out_sysctl;
 #ifdef CONFIG_CMM_IUCV

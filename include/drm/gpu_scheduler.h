@@ -32,6 +32,7 @@
 
 #define MAX_WAIT_SCHED_ENTITY_Q_EMPTY msecs_to_jiffies(1000)
 
+<<<<<<< HEAD
 /**
  * DRM_SCHED_FENCE_DONT_PIPELINE - Prefent dependency pipelining
  *
@@ -43,13 +44,18 @@
 
 enum dma_resv_usage;
 struct dma_resv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct drm_gem_object;
 
 struct drm_gpu_scheduler;
 struct drm_sched_rq;
 
+<<<<<<< HEAD
 struct drm_file;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* These are often used as an (initial) index
  * to an array, and as such should start at 0.
  */
@@ -63,12 +69,15 @@ enum drm_sched_priority {
 	DRM_SCHED_PRIORITY_UNSET = -2
 };
 
+<<<<<<< HEAD
 /* Used to chose between FIFO and RR jobs scheduling */
 extern int drm_sched_policy;
 
 #define DRM_SCHED_POLICY_RR    0
 #define DRM_SCHED_POLICY_FIFO  1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct drm_sched_entity - A wrapper around a job queue (typically
  * attached to the DRM file_priv).
@@ -215,6 +224,7 @@ struct drm_sched_entity {
 	 * drm_sched_entity_fini().
 	 */
 	struct completion		entity_idle;
+<<<<<<< HEAD
 
 	/**
 	 * @oldest_job_waiting:
@@ -237,6 +247,8 @@ struct drm_sched_entity {
 	 * on the GPU.
 	 */
 	uint64_t elapsed_ns;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -246,7 +258,10 @@ struct drm_sched_entity {
  * @sched: the scheduler to which this rq belongs to.
  * @entities: list of the entities to be scheduled.
  * @current_entity: the entity which is to be scheduled.
+<<<<<<< HEAD
  * @rb_tree_root: root of time based priory queue of entities for FIFO scheduling
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Run queue is a set of entities scheduling command submissions for
  * one specific ring. It implements the scheduling policy that selects
@@ -257,7 +272,10 @@ struct drm_sched_rq {
 	struct drm_gpu_scheduler	*sched;
 	struct list_head		entities;
 	struct drm_sched_entity		*current_entity;
+<<<<<<< HEAD
 	struct rb_root_cached		rb_tree_root;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -338,7 +356,11 @@ struct drm_sched_job {
 	 */
 	union {
 		struct dma_fence_cb		finish_cb;
+<<<<<<< HEAD
 		struct work_struct		work;
+=======
+		struct work_struct 		work;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	uint64_t			id;
@@ -357,6 +379,7 @@ struct drm_sched_job {
 
 	/** @last_dependency: tracks @dependencies as they signal */
 	unsigned long			last_dependency;
+<<<<<<< HEAD
 
 	/**
 	 * @submit_ts:
@@ -364,6 +387,8 @@ struct drm_sched_job {
 	 * When the job was pushed into the entity queue.
 	 */
 	ktime_t                         submit_ts;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline bool drm_sched_invalidate_job(struct drm_sched_job *s_job,
@@ -386,17 +411,30 @@ enum drm_gpu_sched_stat {
  */
 struct drm_sched_backend_ops {
 	/**
+<<<<<<< HEAD
 	 * @prepare_job:
+=======
+	 * @dependency:
+>>>>>>> b7ba80a49124 (Commit)
 	 *
 	 * Called when the scheduler is considering scheduling this job next, to
 	 * get another struct dma_fence for this job to block on.  Once it
 	 * returns NULL, run_job() may be called.
 	 *
+<<<<<<< HEAD
 	 * Can be NULL if no additional preparation to the dependencies are
 	 * necessary. Skipped when jobs are killed instead of run.
 	 */
 	struct dma_fence *(*prepare_job)(struct drm_sched_job *sched_job,
 					 struct drm_sched_entity *s_entity);
+=======
+	 * If a driver exclusively uses drm_sched_job_add_dependency() and
+	 * drm_sched_job_add_implicit_dependencies() this can be ommitted and
+	 * left as NULL.
+	 */
+	struct dma_fence *(*dependency)(struct drm_sched_job *sched_job,
+					struct drm_sched_entity *s_entity);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/**
          * @run_job: Called to execute the job once all of the dependencies
@@ -524,6 +562,7 @@ int drm_sched_job_init(struct drm_sched_job *job,
 void drm_sched_job_arm(struct drm_sched_job *job);
 int drm_sched_job_add_dependency(struct drm_sched_job *job,
 				 struct dma_fence *fence);
+<<<<<<< HEAD
 int drm_sched_job_add_syncobj_dependency(struct drm_sched_job *job,
 					 struct drm_file *file,
 					 u32 handle,
@@ -531,6 +570,8 @@ int drm_sched_job_add_syncobj_dependency(struct drm_sched_job *job,
 int drm_sched_job_add_resv_dependencies(struct drm_sched_job *job,
 					struct dma_resv *resv,
 					enum dma_resv_usage usage);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int drm_sched_job_add_implicit_dependencies(struct drm_sched_job *job,
 					    struct drm_gem_object *obj,
 					    bool write);
@@ -545,20 +586,31 @@ void drm_sched_wakeup(struct drm_gpu_scheduler *sched);
 void drm_sched_stop(struct drm_gpu_scheduler *sched, struct drm_sched_job *bad);
 void drm_sched_start(struct drm_gpu_scheduler *sched, bool full_recovery);
 void drm_sched_resubmit_jobs(struct drm_gpu_scheduler *sched);
+<<<<<<< HEAD
+=======
+void drm_sched_resubmit_jobs_ext(struct drm_gpu_scheduler *sched, int max);
+>>>>>>> b7ba80a49124 (Commit)
 void drm_sched_increase_karma(struct drm_sched_job *bad);
 void drm_sched_reset_karma(struct drm_sched_job *bad);
 void drm_sched_increase_karma_ext(struct drm_sched_job *bad, int type);
 bool drm_sched_dependency_optimized(struct dma_fence* fence,
 				    struct drm_sched_entity *entity);
 void drm_sched_fault(struct drm_gpu_scheduler *sched);
+<<<<<<< HEAD
+=======
+void drm_sched_job_kickout(struct drm_sched_job *s_job);
+>>>>>>> b7ba80a49124 (Commit)
 
 void drm_sched_rq_add_entity(struct drm_sched_rq *rq,
 			     struct drm_sched_entity *entity);
 void drm_sched_rq_remove_entity(struct drm_sched_rq *rq,
 				struct drm_sched_entity *entity);
 
+<<<<<<< HEAD
 void drm_sched_rq_update_fifo(struct drm_sched_entity *entity, ktime_t ts);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int drm_sched_entity_init(struct drm_sched_entity *entity,
 			  enum drm_sched_priority priority,
 			  struct drm_gpu_scheduler **sched_list,

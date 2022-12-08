@@ -958,7 +958,11 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
 	};
 
 	if (!zpool_can_sleep_mapped(pool)) {
+<<<<<<< HEAD
 		tmp = kmalloc(PAGE_SIZE, GFP_KERNEL);
+=======
+		tmp = kmalloc(PAGE_SIZE, GFP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!tmp)
 			return -ENOMEM;
 	}
@@ -968,7 +972,10 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
 	swpentry = zhdr->swpentry; /* here */
 	tree = zswap_trees[swp_type(swpentry)];
 	offset = swp_offset(swpentry);
+<<<<<<< HEAD
 	zpool_unmap_handle(pool, handle);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* find and ref zswap entry */
 	spin_lock(&tree->lock);
@@ -976,12 +983,26 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
 	if (!entry) {
 		/* entry was invalidated */
 		spin_unlock(&tree->lock);
+<<<<<<< HEAD
+=======
+		zpool_unmap_handle(pool, handle);
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(tmp);
 		return 0;
 	}
 	spin_unlock(&tree->lock);
 	BUG_ON(offset != entry->offset);
 
+<<<<<<< HEAD
+=======
+	src = (u8 *)zhdr + sizeof(struct zswap_header);
+	if (!zpool_can_sleep_mapped(pool)) {
+		memcpy(tmp, src, entry->length);
+		src = tmp;
+		zpool_unmap_handle(pool, handle);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* try to allocate swap cache page */
 	switch (zswap_get_swap_cache_page(swpentry, &page)) {
 	case ZSWAP_SWAPCACHE_FAIL: /* no memory or invalidate happened */
@@ -999,6 +1020,7 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
 		acomp_ctx = raw_cpu_ptr(entry->pool->acomp_ctx);
 		dlen = PAGE_SIZE;
 
+<<<<<<< HEAD
 		zhdr = zpool_map_handle(pool, handle, ZPOOL_MM_RO);
 		src = (u8 *)zhdr + sizeof(struct zswap_header);
 		if (!zpool_can_sleep_mapped(pool)) {
@@ -1007,6 +1029,8 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
 			zpool_unmap_handle(pool, handle);
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		mutex_lock(acomp_ctx->mutex);
 		sg_init_one(&input, src, entry->length);
 		sg_init_table(&output, 1);
@@ -1016,11 +1040,14 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
 		dlen = acomp_ctx->req->dlen;
 		mutex_unlock(acomp_ctx->mutex);
 
+<<<<<<< HEAD
 		if (!zpool_can_sleep_mapped(pool))
 			kfree(tmp);
 		else
 			zpool_unmap_handle(pool, handle);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		BUG_ON(ret);
 		BUG_ON(dlen != PAGE_SIZE);
 
@@ -1051,11 +1078,15 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
 		zswap_entry_put(tree, entry);
 	spin_unlock(&tree->lock);
 
+<<<<<<< HEAD
 	return ret;
 
 fail:
 	if (!zpool_can_sleep_mapped(pool))
 		kfree(tmp);
+=======
+	goto end;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	* if we get here due to ZSWAP_SWAPCACHE_EXIST
@@ -1064,15 +1095,29 @@ fail:
 	* if we free the entry in the following put
 	* it is also okay to return !0
 	*/
+<<<<<<< HEAD
+=======
+fail:
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock(&tree->lock);
 	zswap_entry_put(tree, entry);
 	spin_unlock(&tree->lock);
 
+<<<<<<< HEAD
+=======
+end:
+	if (zpool_can_sleep_mapped(pool))
+		zpool_unmap_handle(pool, handle);
+	else
+		kfree(tmp);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
 static int zswap_is_page_same_filled(void *ptr, unsigned long *value)
 {
+<<<<<<< HEAD
 	unsigned long *page;
 	unsigned long val;
 	unsigned int pos, last_pos = PAGE_SIZE / sizeof(*page) - 1;
@@ -1090,6 +1135,17 @@ static int zswap_is_page_same_filled(void *ptr, unsigned long *value)
 
 	*value = val;
 
+=======
+	unsigned int pos;
+	unsigned long *page;
+
+	page = (unsigned long *)ptr;
+	for (pos = 1; pos < PAGE_SIZE / sizeof(*page); pos++) {
+		if (page[pos] != page[0])
+			return 0;
+	}
+	*value = page[0];
+>>>>>>> b7ba80a49124 (Commit)
 	return 1;
 }
 
@@ -1322,7 +1378,11 @@ static int zswap_frontswap_load(unsigned type, pgoff_t offset,
 	}
 
 	if (!zpool_can_sleep_mapped(entry->pool->zpool)) {
+<<<<<<< HEAD
 		tmp = kmalloc(entry->length, GFP_KERNEL);
+=======
+		tmp = kmalloc(entry->length, GFP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!tmp) {
 			ret = -ENOMEM;
 			goto freeentry;
@@ -1548,5 +1608,9 @@ cache_fail:
 /* must be late so crypto has time to come up */
 late_initcall(init_zswap);
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("Seth Jennings <sjennings@variantweb.net>");
 MODULE_DESCRIPTION("Compressed cache for swap pages");

@@ -249,7 +249,10 @@ static void kvmppc_fast_vcpu_kick_hv(struct kvm_vcpu *vcpu)
 
 /*
  * We use the vcpu_load/put functions to measure stolen time.
+<<<<<<< HEAD
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Stolen time is counted as time when either the vcpu is able to
  * run as part of a virtual core, but the task running the vcore
  * is preempted or sleeping, or when the vcpu needs something done
@@ -279,12 +282,15 @@ static void kvmppc_fast_vcpu_kick_hv(struct kvm_vcpu *vcpu)
  * lock.  The stolen times are measured in units of timebase ticks.
  * (Note that the != TB_NIL checks below are purely defensive;
  * they should never fail.)
+<<<<<<< HEAD
  *
  * The POWER9 path is simpler, one vcpu per virtual core so the
  * former case does not exist. If a vcpu is preempted when it is
  * BUSY_IN_HOST and not ceded or otherwise blocked, then accumulate
  * the stolen cycles in busy_stolen. RUNNING is not a preemptible
  * state in the P9 path.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 static void kvmppc_core_start_stolen(struct kvmppc_vcore *vc, u64 tb)
@@ -318,6 +324,7 @@ static void kvmppc_core_vcpu_load_hv(struct kvm_vcpu *vcpu, int cpu)
 	unsigned long flags;
 	u64 now;
 
+<<<<<<< HEAD
 	if (cpu_has_feature(CPU_FTR_ARCH_300)) {
 		if (vcpu->arch.busy_preempt != TB_NIL) {
 			WARN_ON_ONCE(vcpu->arch.state != KVMPPC_VCPU_BUSY_IN_HOST);
@@ -326,6 +333,10 @@ static void kvmppc_core_vcpu_load_hv(struct kvm_vcpu *vcpu, int cpu)
 		}
 		return;
 	}
+=======
+	if (cpu_has_feature(CPU_FTR_ARCH_300))
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	now = mftb();
 
@@ -353,6 +364,7 @@ static void kvmppc_core_vcpu_put_hv(struct kvm_vcpu *vcpu)
 	unsigned long flags;
 	u64 now;
 
+<<<<<<< HEAD
 	if (cpu_has_feature(CPU_FTR_ARCH_300)) {
 		/*
 		 * In the P9 path, RUNNABLE is not preemptible
@@ -368,6 +380,10 @@ static void kvmppc_core_vcpu_put_hv(struct kvm_vcpu *vcpu)
 			vcpu->arch.busy_preempt = mftb();
 		return;
 	}
+=======
+	if (cpu_has_feature(CPU_FTR_ARCH_300))
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	now = mftb();
 
@@ -733,15 +749,27 @@ static u64 vcore_stolen_time(struct kvmppc_vcore *vc, u64 now)
 }
 
 static void __kvmppc_create_dtl_entry(struct kvm_vcpu *vcpu,
+<<<<<<< HEAD
 					struct lppaca *vpa,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 					unsigned int pcpu, u64 now,
 					unsigned long stolen)
 {
 	struct dtl_entry *dt;
+<<<<<<< HEAD
 
 	dt = vcpu->arch.dtl_ptr;
 
 	if (!dt)
+=======
+	struct lppaca *vpa;
+
+	dt = vcpu->arch.dtl_ptr;
+	vpa = vcpu->arch.vpa.pinned_addr;
+
+	if (!dt || !vpa)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	dt->dispatch_reason = 7;
@@ -762,6 +790,7 @@ static void __kvmppc_create_dtl_entry(struct kvm_vcpu *vcpu,
 	/* order writing *dt vs. writing vpa->dtl_idx */
 	smp_wmb();
 	vpa->dtl_idx = cpu_to_be64(++vcpu->arch.dtl_index);
+<<<<<<< HEAD
 
 	/* vcpu->arch.dtl.dirty is set by the caller */
 }
@@ -770,15 +799,26 @@ static void kvmppc_update_vpa_dispatch(struct kvm_vcpu *vcpu,
 				       struct kvmppc_vcore *vc)
 {
 	struct lppaca *vpa;
+=======
+	vcpu->arch.dtl.dirty = true;
+}
+
+static void kvmppc_create_dtl_entry(struct kvm_vcpu *vcpu,
+				    struct kvmppc_vcore *vc)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long stolen;
 	unsigned long core_stolen;
 	u64 now;
 	unsigned long flags;
 
+<<<<<<< HEAD
 	vpa = vcpu->arch.vpa.pinned_addr;
 	if (!vpa)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	now = mftb();
 
 	core_stolen = vcore_stolen_time(vc, now);
@@ -789,6 +829,7 @@ static void kvmppc_update_vpa_dispatch(struct kvm_vcpu *vcpu,
 	vcpu->arch.busy_stolen = 0;
 	spin_unlock_irqrestore(&vcpu->arch.tbacct_lock, flags);
 
+<<<<<<< HEAD
 	vpa->enqueue_dispatch_tb = cpu_to_be64(be64_to_cpu(vpa->enqueue_dispatch_tb) + stolen);
 
 	__kvmppc_create_dtl_entry(vcpu, vpa, vc->pcpu, now + vc->tb_offset, stolen);
@@ -817,6 +858,9 @@ static void kvmppc_update_vpa_dispatch_p9(struct kvm_vcpu *vcpu,
 	__kvmppc_create_dtl_entry(vcpu, vpa, vc->pcpu, now, stolen_delta);
 
 	vcpu->arch.vpa.dirty = true;
+=======
+	__kvmppc_create_dtl_entry(vcpu, vc->pcpu, now + vc->tb_offset, stolen);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* See if there is a doorbell interrupt pending for a vcpu */
@@ -2575,6 +2619,7 @@ static int kvmppc_set_one_reg_hv(struct kvm_vcpu *vcpu, u64 id,
 		r = set_vpa(vcpu, &vcpu->arch.dtl, addr, len);
 		break;
 	case KVM_REG_PPC_TB_OFFSET:
+<<<<<<< HEAD
 	{
 		/* round up to multiple of 2^24 */
 		u64 tb_offset = ALIGN(set_reg_val(id, *val), 1UL << 24);
@@ -2593,6 +2638,12 @@ static int kvmppc_set_one_reg_hv(struct kvm_vcpu *vcpu, u64 id,
 		vcpu->arch.vcore->tb_offset = tb_offset;
 		break;
 	}
+=======
+		/* round up to multiple of 2^24 */
+		vcpu->arch.vcore->tb_offset =
+			ALIGN(set_reg_val(id, *val), 1UL << 24);
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	case KVM_REG_PPC_LPCR:
 		kvmppc_set_lpcr(vcpu, set_reg_val(id, *val), true);
 		break;
@@ -3872,7 +3923,11 @@ static noinline void kvmppc_run_core(struct kvmppc_vcore *vc)
 			 * kvmppc_core_prepare_to_enter.
 			 */
 			kvmppc_start_thread(vcpu, pvc);
+<<<<<<< HEAD
 			kvmppc_update_vpa_dispatch(vcpu, pvc);
+=======
+			kvmppc_create_dtl_entry(vcpu, pvc);
+>>>>>>> b7ba80a49124 (Commit)
 			trace_kvm_guest_enter(vcpu);
 			if (!vcpu->arch.ptid)
 				thr0_done = true;
@@ -3912,6 +3967,7 @@ static noinline void kvmppc_run_core(struct kvmppc_vcore *vc)
 	for (sub = 0; sub < core_info.n_subcores; ++sub)
 		spin_unlock(&core_info.vc[sub]->lock);
 
+<<<<<<< HEAD
 	guest_timing_enter_irqoff();
 
 	srcu_idx = srcu_read_lock(&vc->kvm->srcu);
@@ -3923,6 +3979,25 @@ static noinline void kvmppc_run_core(struct kvmppc_vcore *vc)
 
 	this_cpu_enable_ftrace();
 	guest_state_exit_irqoff();
+=======
+	guest_enter_irqoff();
+
+	srcu_idx = srcu_read_lock(&vc->kvm->srcu);
+
+	this_cpu_disable_ftrace();
+
+	/*
+	 * Interrupts will be enabled once we get into the guest,
+	 * so tell lockdep that we're about to enable interrupts.
+	 */
+	trace_hardirqs_on();
+
+	trap = __kvmppc_vcore_entry();
+
+	trace_hardirqs_off();
+
+	this_cpu_enable_ftrace();
+>>>>>>> b7ba80a49124 (Commit)
 
 	srcu_read_unlock(&vc->kvm->srcu, srcu_idx);
 
@@ -3957,10 +4032,18 @@ static noinline void kvmppc_run_core(struct kvmppc_vcore *vc)
 
 	kvmppc_set_host_core(pcpu);
 
+<<<<<<< HEAD
 	if (!vtime_accounting_enabled_this_cpu()) {
 		local_irq_enable();
 		/*
 		 * Service IRQs here before guest_timing_exit_irqoff() so any
+=======
+	context_tracking_guest_exit();
+	if (!vtime_accounting_enabled_this_cpu()) {
+		local_irq_enable();
+		/*
+		 * Service IRQs here before vtime_account_guest_exit() so any
+>>>>>>> b7ba80a49124 (Commit)
 		 * ticks that occurred while running the guest are accounted to
 		 * the guest. If vtime accounting is enabled, accounting uses
 		 * TB rather than ticks, so it can be done without enabling
@@ -3969,7 +4052,11 @@ static noinline void kvmppc_run_core(struct kvmppc_vcore *vc)
 		 */
 		local_irq_disable();
 	}
+<<<<<<< HEAD
 	guest_timing_exit_irqoff();
+=======
+	vtime_account_guest_exit();
+>>>>>>> b7ba80a49124 (Commit)
 
 	local_irq_enable();
 
@@ -4469,7 +4556,11 @@ static int kvmppc_run_vcpu(struct kvm_vcpu *vcpu)
 		if ((vc->vcore_state == VCORE_PIGGYBACK ||
 		     vc->vcore_state == VCORE_RUNNING) &&
 			   !VCORE_IS_EXITING(vc)) {
+<<<<<<< HEAD
 			kvmppc_update_vpa_dispatch(vcpu, vc);
+=======
+			kvmppc_create_dtl_entry(vcpu, vc);
+>>>>>>> b7ba80a49124 (Commit)
 			kvmppc_start_thread(vcpu, vc);
 			trace_kvm_guest_enter(vcpu);
 		} else if (vc->vcore_state == VCORE_SLEEPING) {
@@ -4585,6 +4676,10 @@ int kvmhv_run_single_vcpu(struct kvm_vcpu *vcpu, u64 time_limit,
 	vc = vcpu->arch.vcore;
 	vcpu->arch.ceded = 0;
 	vcpu->arch.run_task = current;
+<<<<<<< HEAD
+=======
+	vcpu->arch.state = KVMPPC_VCPU_RUNNABLE;
+>>>>>>> b7ba80a49124 (Commit)
 	vcpu->arch.last_inst = KVM_INST_FETCH_FAILED;
 
 	/* See if the MMU is ready to go */
@@ -4611,8 +4706,11 @@ int kvmhv_run_single_vcpu(struct kvm_vcpu *vcpu, u64 time_limit,
 	/* flags save not required, but irq_pmu has no disable/enable API */
 	powerpc_local_irq_pmu_save(flags);
 
+<<<<<<< HEAD
 	vcpu->arch.state = KVMPPC_VCPU_RUNNABLE;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (signal_pending(current))
 		goto sigpend;
 	if (need_resched() || !kvm->arch.mmu_ready)
@@ -4657,6 +4755,7 @@ int kvmhv_run_single_vcpu(struct kvm_vcpu *vcpu, u64 time_limit,
 
 	tb = mftb();
 
+<<<<<<< HEAD
 	kvmppc_update_vpa_dispatch_p9(vcpu, vc, tb + vc->tb_offset);
 
 	trace_kvm_guest_enter(vcpu);
@@ -4673,11 +4772,33 @@ int kvmhv_run_single_vcpu(struct kvm_vcpu *vcpu, u64 time_limit,
 
 	this_cpu_enable_ftrace();
 	guest_state_exit_irqoff();
+=======
+	__kvmppc_create_dtl_entry(vcpu, pcpu, tb + vc->tb_offset, 0);
+
+	trace_kvm_guest_enter(vcpu);
+
+	guest_enter_irqoff();
+
+	srcu_idx = srcu_read_lock(&kvm->srcu);
+
+	this_cpu_disable_ftrace();
+
+	/* Tell lockdep that we're about to enable interrupts */
+	trace_hardirqs_on();
+
+	trap = kvmhv_p9_guest_entry(vcpu, time_limit, lpcr, &tb);
+	vcpu->arch.trap = trap;
+
+	trace_hardirqs_off();
+
+	this_cpu_enable_ftrace();
+>>>>>>> b7ba80a49124 (Commit)
 
 	srcu_read_unlock(&kvm->srcu, srcu_idx);
 
 	set_irq_happened(trap);
 
+<<<<<<< HEAD
 	vcpu->cpu = -1;
 	vcpu->arch.thread_cpu = -1;
 	vcpu->arch.state = KVMPPC_VCPU_BUSY_IN_HOST;
@@ -4686,15 +4807,31 @@ int kvmhv_run_single_vcpu(struct kvm_vcpu *vcpu, u64 time_limit,
 		powerpc_local_irq_pmu_restore(flags);
 		/*
 		 * Service IRQs here before guest_timing_exit_irqoff() so any
+=======
+	context_tracking_guest_exit();
+	if (!vtime_accounting_enabled_this_cpu()) {
+		local_irq_enable();
+		/*
+		 * Service IRQs here before vtime_account_guest_exit() so any
+>>>>>>> b7ba80a49124 (Commit)
 		 * ticks that occurred while running the guest are accounted to
 		 * the guest. If vtime accounting is enabled, accounting uses
 		 * TB rather than ticks, so it can be done without enabling
 		 * interrupts here, which has the problem that it accounts
 		 * interrupt processing overhead to the host.
 		 */
+<<<<<<< HEAD
 		powerpc_local_irq_pmu_save(flags);
 	}
 	guest_timing_exit_irqoff();
+=======
+		local_irq_disable();
+	}
+	vtime_account_guest_exit();
+
+	vcpu->cpu = -1;
+	vcpu->arch.thread_cpu = -1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	powerpc_local_irq_pmu_restore(flags);
 
@@ -4757,7 +4894,10 @@ int kvmhv_run_single_vcpu(struct kvm_vcpu *vcpu, u64 time_limit,
  out:
 	vcpu->cpu = -1;
 	vcpu->arch.thread_cpu = -1;
+<<<<<<< HEAD
 	vcpu->arch.state = KVMPPC_VCPU_BUSY_IN_HOST;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	powerpc_local_irq_pmu_restore(flags);
 	preempt_enable();
 	goto done;
@@ -5779,12 +5919,21 @@ static void kvmppc_irq_bypass_del_producer_hv(struct irq_bypass_consumer *cons,
 }
 #endif
 
+<<<<<<< HEAD
 static int kvm_arch_vm_ioctl_hv(struct file *filp,
 				unsigned int ioctl, unsigned long arg)
 {
 	struct kvm *kvm __maybe_unused = filp->private_data;
 	void __user *argp = (void __user *)arg;
 	int r;
+=======
+static long kvm_arch_vm_ioctl_hv(struct file *filp,
+				 unsigned int ioctl, unsigned long arg)
+{
+	struct kvm *kvm __maybe_unused = filp->private_data;
+	void __user *argp = (void __user *)arg;
+	long r;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (ioctl) {
 

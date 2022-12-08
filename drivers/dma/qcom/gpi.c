@@ -1150,9 +1150,15 @@ static void gpi_ev_tasklet(unsigned long data)
 {
 	struct gpii *gpii = (struct gpii *)data;
 
+<<<<<<< HEAD
 	read_lock(&gpii->pm_lock);
 	if (!REG_ACCESS_VALID(gpii->pm_state)) {
 		read_unlock(&gpii->pm_lock);
+=======
+	read_lock_bh(&gpii->pm_lock);
+	if (!REG_ACCESS_VALID(gpii->pm_state)) {
+		read_unlock_bh(&gpii->pm_lock);
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(gpii->gpi_dev->dev, "not processing any events, pm_state:%s\n",
 			TO_GPI_PM_STR(gpii->pm_state));
 		return;
@@ -1163,7 +1169,11 @@ static void gpi_ev_tasklet(unsigned long data)
 
 	/* enable IEOB, switching back to interrupts */
 	gpi_config_interrupts(gpii, MASK_IEOB_SETTINGS, 1);
+<<<<<<< HEAD
 	read_unlock(&gpii->pm_lock);
+=======
+	read_unlock_bh(&gpii->pm_lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* marks all pending events for the channel as stale */
@@ -1756,7 +1766,10 @@ static int gpi_create_spi_tre(struct gchan *chan, struct gpi_desc *desc,
 		tre->dword[3] = u32_encode_bits(TRE_TYPE_GO, TRE_FLAGS_TYPE);
 		if (spi->cmd == SPI_RX) {
 			tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_IEOB);
+<<<<<<< HEAD
 			tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_LINK);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		} else if (spi->cmd == SPI_TX) {
 			tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_CHAIN);
 		} else { /* SPI_DUPLEX */
@@ -2287,6 +2300,7 @@ static int gpi_probe(struct platform_device *pdev)
 }
 
 static const struct of_device_id gpi_of_match[] = {
+<<<<<<< HEAD
 	{ .compatible = "qcom,sdm845-gpi-dma", .data = (void *)0x0 },
 	{ .compatible = "qcom,sm6350-gpi-dma", .data = (void *)0x10000 },
 	/*
@@ -2295,6 +2309,11 @@ static const struct of_device_id gpi_of_match[] = {
 	 * (for ee_offset = 0x10000).
 	 */
 	{ .compatible = "qcom,sc7280-gpi-dma", .data = (void *)0x10000 },
+=======
+	{ .compatible = "qcom,sc7280-gpi-dma", .data = (void *)0x10000 },
+	{ .compatible = "qcom,sdm845-gpi-dma", .data = (void *)0x0 },
+	{ .compatible = "qcom,sm6350-gpi-dma", .data = (void *)0x10000 },
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "qcom,sm8150-gpi-dma", .data = (void *)0x0 },
 	{ .compatible = "qcom,sm8250-gpi-dma", .data = (void *)0x0 },
 	{ .compatible = "qcom,sm8350-gpi-dma", .data = (void *)0x10000 },

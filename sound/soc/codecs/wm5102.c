@@ -2142,13 +2142,20 @@ err_dsp_irq:
 	arizona_set_irq_wake(arizona, ARIZONA_IRQ_DSP_IRQ1, 0);
 	arizona_free_irq(arizona, ARIZONA_IRQ_DSP_IRQ1, wm5102);
 err_jack_codec_dev:
+<<<<<<< HEAD
 	pm_runtime_disable(&pdev->dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	arizona_jack_codec_dev_remove(&wm5102->core);
 
 	return ret;
 }
 
+<<<<<<< HEAD
 static void wm5102_remove(struct platform_device *pdev)
+=======
+static int wm5102_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct wm5102_priv *wm5102 = platform_get_drvdata(pdev);
 	struct arizona *arizona = wm5102->core.arizona;
@@ -2163,6 +2170,11 @@ static void wm5102_remove(struct platform_device *pdev)
 	arizona_free_irq(arizona, ARIZONA_IRQ_DSP_IRQ1, wm5102);
 
 	arizona_jack_codec_dev_remove(&wm5102->core);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver wm5102_codec_driver = {
@@ -2170,7 +2182,11 @@ static struct platform_driver wm5102_codec_driver = {
 		.name = "wm5102-codec",
 	},
 	.probe = wm5102_probe,
+<<<<<<< HEAD
 	.remove_new = wm5102_remove,
+=======
+	.remove = wm5102_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(wm5102_codec_driver);

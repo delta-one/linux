@@ -790,7 +790,10 @@ static int nix_aq_enqueue_wait(struct rvu *rvu, struct rvu_block *block,
 	struct nix_aq_res_s *result;
 	int timeout = 1000;
 	u64 reg, head;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	result = (struct nix_aq_res_s *)aq->res->base;
 
@@ -814,6 +817,7 @@ static int nix_aq_enqueue_wait(struct rvu *rvu, struct rvu_block *block,
 			return -EBUSY;
 	}
 
+<<<<<<< HEAD
 	if (result->compcode != NIX_AQ_COMP_GOOD) {
 		/* TODO: Replace this with some error code */
 		if (result->compcode == NIX_AQ_COMP_CTX_FAULT ||
@@ -830,6 +834,11 @@ static int nix_aq_enqueue_wait(struct rvu *rvu, struct rvu_block *block,
 
 		return -EBUSY;
 	}
+=======
+	if (result->compcode != NIX_AQ_COMP_GOOD)
+		/* TODO: Replace this with some error code */
+		return -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -2072,6 +2081,7 @@ static int nix_smq_flush(struct rvu *rvu, int blkaddr,
 	int err, restore_tx_en = 0;
 	u64 cfg;
 
+<<<<<<< HEAD
 	if (!is_rvu_otx2(rvu)) {
 		/* Skip SMQ flush if pkt count is zero */
 		cfg = rvu_read64(rvu, blkaddr, NIX_AF_MDQX_IN_MD_COUNT(smq));
@@ -2079,6 +2089,8 @@ static int nix_smq_flush(struct rvu *rvu, int blkaddr,
 			return 0;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* enable cgx tx if disabled */
 	if (is_pf_cgxmapped(rvu, pf)) {
 		rvu_get_cgx_lmac_id(rvu->pf2cgxlmac_map[pf], &cgx_id, &lmac_id);
@@ -3218,12 +3230,17 @@ static void rvu_get_lbk_link_max_frs(struct rvu *rvu,  u16 *max_mtu)
 
 static void rvu_get_lmac_link_max_frs(struct rvu *rvu, u16 *max_mtu)
 {
+<<<<<<< HEAD
 	int fifo_size = rvu_cgx_get_fifolen(rvu);
 
 	/* RPM supports FIFO len 128 KB and RPM2 supports double the
 	 * FIFO len to accommodate 8 LMACS
 	 */
 	if (fifo_size == 0x20000 || fifo_size == 0x40000)
+=======
+	/* RPM supports FIFO len 128 KB */
+	if (rvu_cgx_get_fifolen(rvu) == 0x20000)
+>>>>>>> b7ba80a49124 (Commit)
 		*max_mtu = CN10K_LMAC_LINK_MAX_FRS;
 	else
 		*max_mtu = NIC_HW_MAX_FRS;
@@ -4134,7 +4151,11 @@ static void nix_link_config(struct rvu *rvu, int blkaddr,
 
 		/* Get LMAC id's from bitmap */
 		lmac_bmap = cgx_get_lmac_bmap(rvu_cgx_pdata(cgx, rvu));
+<<<<<<< HEAD
 		for_each_set_bit(iter, &lmac_bmap, rvu->hw->lmac_per_cgx) {
+=======
+		for_each_set_bit(iter, &lmac_bmap, MAX_LMAC_PER_CGX) {
+>>>>>>> b7ba80a49124 (Commit)
 			lmac_fifo_len = rvu_cgx_get_lmac_fifolen(rvu, cgx, iter);
 			if (!lmac_fifo_len) {
 				dev_err(rvu->dev,
@@ -4330,9 +4351,12 @@ static int rvu_nix_block_init(struct rvu *rvu, struct nix_hw *nix_hw)
 
 	rvu_write64(rvu, blkaddr, NIX_AF_SEB_CFG, cfg);
 
+<<<<<<< HEAD
 	if (!is_rvu_otx2(rvu))
 		rvu_nix_block_cn10k_init(rvu, nix_hw);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (is_block_implemented(hw, blkaddr)) {
 		err = nix_setup_txschq(rvu, nix_hw, blkaddr);
 		if (err)
@@ -4755,10 +4779,13 @@ int rvu_mbox_handler_nix_lso_format_cfg(struct rvu *rvu,
 #define CPT_INST_QSEL_PF_FUNC GENMASK_ULL(23, 8)
 #define CPT_INST_QSEL_SLOT    GENMASK_ULL(7, 0)
 
+<<<<<<< HEAD
 #define CPT_INST_CREDIT_TH    GENMASK_ULL(53, 32)
 #define CPT_INST_CREDIT_BPID  GENMASK_ULL(30, 22)
 #define CPT_INST_CREDIT_CNT   GENMASK_ULL(21, 0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void nix_inline_ipsec_cfg(struct rvu *rvu, struct nix_inline_ipsec_cfg *req,
 				 int blkaddr)
 {
@@ -4795,6 +4822,7 @@ static void nix_inline_ipsec_cfg(struct rvu *rvu, struct nix_inline_ipsec_cfg *r
 			    val);
 
 		/* Set CPT credit */
+<<<<<<< HEAD
 		val = rvu_read64(rvu, blkaddr, NIX_AF_RX_CPTX_CREDIT(cpt_idx));
 		if ((val & 0x3FFFFF) != 0x3FFFFF)
 			rvu_write64(rvu, blkaddr, NIX_AF_RX_CPTX_CREDIT(cpt_idx),
@@ -4804,14 +4832,23 @@ static void nix_inline_ipsec_cfg(struct rvu *rvu, struct nix_inline_ipsec_cfg *r
 		val |= FIELD_PREP(CPT_INST_CREDIT_BPID, req->bpid);
 		val |= FIELD_PREP(CPT_INST_CREDIT_TH, req->credit_th);
 		rvu_write64(rvu, blkaddr, NIX_AF_RX_CPTX_CREDIT(cpt_idx), val);
+=======
+		rvu_write64(rvu, blkaddr, NIX_AF_RX_CPTX_CREDIT(cpt_idx),
+			    req->cpt_credit);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		rvu_write64(rvu, blkaddr, NIX_AF_RX_IPSEC_GEN_CFG, 0x0);
 		rvu_write64(rvu, blkaddr, NIX_AF_RX_CPTX_INST_QSEL(cpt_idx),
 			    0x0);
+<<<<<<< HEAD
 		val = rvu_read64(rvu, blkaddr, NIX_AF_RX_CPTX_CREDIT(cpt_idx));
 		if ((val & 0x3FFFFF) != 0x3FFFFF)
 			rvu_write64(rvu, blkaddr, NIX_AF_RX_CPTX_CREDIT(cpt_idx),
 				    0x3FFFFF - val);
+=======
+		rvu_write64(rvu, blkaddr, NIX_AF_RX_CPTX_CREDIT(cpt_idx),
+			    0x3FFFFF);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -4829,6 +4866,7 @@ int rvu_mbox_handler_nix_inline_ipsec_cfg(struct rvu *rvu,
 	return 0;
 }
 
+<<<<<<< HEAD
 int rvu_mbox_handler_nix_read_inline_ipsec_cfg(struct rvu *rvu,
 					       struct msg_req *req,
 					       struct nix_inline_ipsec_cfg *rsp)
@@ -4853,6 +4891,8 @@ int rvu_mbox_handler_nix_read_inline_ipsec_cfg(struct rvu *rvu,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int rvu_mbox_handler_nix_inline_ipsec_lf_cfg(struct rvu *rvu,
 					     struct nix_inline_ipsec_lf_cfg *req,
 					     struct msg_rsp *rsp)
@@ -4896,7 +4936,10 @@ int rvu_mbox_handler_nix_inline_ipsec_lf_cfg(struct rvu *rvu,
 
 	return 0;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void rvu_nix_reset_mac(struct rvu_pfvf *pfvf, int pcifunc)
 {
 	bool from_vf = !!(pcifunc & RVU_PFVF_FUNC_MASK);
@@ -5051,8 +5094,11 @@ static int nix_setup_ipolicers(struct rvu *rvu,
 		ipolicer->ref_count = devm_kcalloc(rvu->dev,
 						   ipolicer->band_prof.max,
 						   sizeof(u16), GFP_KERNEL);
+<<<<<<< HEAD
 		if (!ipolicer->ref_count)
 			return -ENOMEM;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Set policer timeunit to 2us ie  (19 + 1) * 100 nsec = 2us */

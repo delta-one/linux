@@ -252,7 +252,11 @@ static void imx_set_alarm_temp(struct imx_thermal_data *data,
 
 static int imx_get_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	struct imx_thermal_data *data = thermal_zone_device_priv(tz);
+=======
+	struct imx_thermal_data *data = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct thermal_soc_data *soc_data = data->socdata;
 	struct regmap *map = data->tempmon;
 	unsigned int n_meas;
@@ -265,8 +269,15 @@ static int imx_get_temp(struct thermal_zone_device *tz, int *temp)
 
 	regmap_read(map, soc_data->temp_data, &val);
 
+<<<<<<< HEAD
 	if ((val & soc_data->temp_valid_mask) == 0)
 		return -EAGAIN;
+=======
+	if ((val & soc_data->temp_valid_mask) == 0) {
+		dev_dbg(&tz->device, "temp measurement never finished\n");
+		return -EAGAIN;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	n_meas = (val & soc_data->temp_value_mask)
 		>> soc_data->temp_value_shift;
@@ -285,13 +296,21 @@ static int imx_get_temp(struct thermal_zone_device *tz, int *temp)
 		if (data->alarm_temp == trips[IMX_TRIP_CRITICAL].temperature &&
 			*temp < trips[IMX_TRIP_PASSIVE].temperature) {
 			imx_set_alarm_temp(data, trips[IMX_TRIP_PASSIVE].temperature);
+<<<<<<< HEAD
 			dev_dbg(data->dev, "thermal alarm off: T < %d\n",
+=======
+			dev_dbg(&tz->device, "thermal alarm off: T < %d\n",
+>>>>>>> b7ba80a49124 (Commit)
 				data->alarm_temp / 1000);
 		}
 	}
 
 	if (*temp != data->last_temp) {
+<<<<<<< HEAD
 		dev_dbg(data->dev, "millicelsius: %d\n", *temp);
+=======
+		dev_dbg(&tz->device, "millicelsius: %d\n", *temp);
+>>>>>>> b7ba80a49124 (Commit)
 		data->last_temp = *temp;
 	}
 
@@ -309,7 +328,11 @@ static int imx_get_temp(struct thermal_zone_device *tz, int *temp)
 static int imx_change_mode(struct thermal_zone_device *tz,
 			   enum thermal_device_mode mode)
 {
+<<<<<<< HEAD
 	struct imx_thermal_data *data = thermal_zone_device_priv(tz);
+=======
+	struct imx_thermal_data *data = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (mode == THERMAL_DEVICE_ENABLED) {
 		pm_runtime_get(data->dev);
@@ -340,7 +363,11 @@ static int imx_get_crit_temp(struct thermal_zone_device *tz, int *temp)
 static int imx_set_trip_temp(struct thermal_zone_device *tz, int trip,
 			     int temp)
 {
+<<<<<<< HEAD
 	struct imx_thermal_data *data = thermal_zone_device_priv(tz);
+=======
+	struct imx_thermal_data *data = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	ret = pm_runtime_resume_and_get(data->dev);
@@ -367,16 +394,47 @@ static int imx_set_trip_temp(struct thermal_zone_device *tz, int trip,
 static int imx_bind(struct thermal_zone_device *tz,
 		    struct thermal_cooling_device *cdev)
 {
+<<<<<<< HEAD
 	return thermal_zone_bind_cooling_device(tz, IMX_TRIP_PASSIVE, cdev,
 						THERMAL_NO_LIMIT,
 						THERMAL_NO_LIMIT,
 						THERMAL_WEIGHT_DEFAULT);
+=======
+	int ret;
+
+	ret = thermal_zone_bind_cooling_device(tz, IMX_TRIP_PASSIVE, cdev,
+					       THERMAL_NO_LIMIT,
+					       THERMAL_NO_LIMIT,
+					       THERMAL_WEIGHT_DEFAULT);
+	if (ret) {
+		dev_err(&tz->device,
+			"binding zone %s with cdev %s failed:%d\n",
+			tz->type, cdev->type, ret);
+		return ret;
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int imx_unbind(struct thermal_zone_device *tz,
 		      struct thermal_cooling_device *cdev)
 {
+<<<<<<< HEAD
 	return thermal_zone_unbind_cooling_device(tz, IMX_TRIP_PASSIVE, cdev);
+=======
+	int ret;
+
+	ret = thermal_zone_unbind_cooling_device(tz, IMX_TRIP_PASSIVE, cdev);
+	if (ret) {
+		dev_err(&tz->device,
+			"unbinding zone %s with cdev %s failed:%d\n",
+			tz->type, cdev->type, ret);
+		return ret;
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct thermal_zone_device_ops imx_tz_ops = {
@@ -538,7 +596,12 @@ static irqreturn_t imx_thermal_alarm_irq_thread(int irq, void *dev)
 {
 	struct imx_thermal_data *data = dev;
 
+<<<<<<< HEAD
 	dev_dbg(data->dev, "THERMAL ALARM: T > %d\n", data->alarm_temp / 1000);
+=======
+	dev_dbg(&data->tz->device, "THERMAL ALARM: T > %d\n",
+		data->alarm_temp / 1000);
+>>>>>>> b7ba80a49124 (Commit)
 
 	thermal_zone_device_update(data->tz, THERMAL_EVENT_UNSPECIFIED);
 

@@ -61,10 +61,17 @@ static ssize_t pm8001_ctl_mpi_interface_rev_show(struct device *cdev,
 	struct pm8001_hba_info *pm8001_ha = sha->lldd_ha;
 
 	if (pm8001_ha->chip_id == chip_8001) {
+<<<<<<< HEAD
 		return sysfs_emit(buf, "%d\n",
 			pm8001_ha->main_cfg_tbl.pm8001_tbl.interface_rev);
 	} else {
 		return sysfs_emit(buf, "%d\n",
+=======
+		return snprintf(buf, PAGE_SIZE, "%d\n",
+			pm8001_ha->main_cfg_tbl.pm8001_tbl.interface_rev);
+	} else {
+		return snprintf(buf, PAGE_SIZE, "%d\n",
+>>>>>>> b7ba80a49124 (Commit)
 			pm8001_ha->main_cfg_tbl.pm80xx_tbl.interface_rev);
 	}
 }
@@ -86,7 +93,11 @@ static ssize_t controller_fatal_error_show(struct device *cdev,
 	struct sas_ha_struct *sha = SHOST_TO_SAS_HA(shost);
 	struct pm8001_hba_info *pm8001_ha = sha->lldd_ha;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n",
+=======
+	return snprintf(buf, PAGE_SIZE, "%d\n",
+>>>>>>> b7ba80a49124 (Commit)
 			pm8001_ha->controller_fatal_error);
 }
 static DEVICE_ATTR_RO(controller_fatal_error);
@@ -107,13 +118,21 @@ static ssize_t pm8001_ctl_fw_version_show(struct device *cdev,
 	struct pm8001_hba_info *pm8001_ha = sha->lldd_ha;
 
 	if (pm8001_ha->chip_id == chip_8001) {
+<<<<<<< HEAD
 		return sysfs_emit(buf, "%02x.%02x.%02x.%02x\n",
+=======
+		return snprintf(buf, PAGE_SIZE, "%02x.%02x.%02x.%02x\n",
+>>>>>>> b7ba80a49124 (Commit)
 		(u8)(pm8001_ha->main_cfg_tbl.pm8001_tbl.firmware_rev >> 24),
 		(u8)(pm8001_ha->main_cfg_tbl.pm8001_tbl.firmware_rev >> 16),
 		(u8)(pm8001_ha->main_cfg_tbl.pm8001_tbl.firmware_rev >> 8),
 		(u8)(pm8001_ha->main_cfg_tbl.pm8001_tbl.firmware_rev));
 	} else {
+<<<<<<< HEAD
 		return sysfs_emit(buf, "%02x.%02x.%02x.%02x\n",
+=======
+		return snprintf(buf, PAGE_SIZE, "%02x.%02x.%02x.%02x\n",
+>>>>>>> b7ba80a49124 (Commit)
 		(u8)(pm8001_ha->main_cfg_tbl.pm80xx_tbl.firmware_rev >> 24),
 		(u8)(pm8001_ha->main_cfg_tbl.pm80xx_tbl.firmware_rev >> 16),
 		(u8)(pm8001_ha->main_cfg_tbl.pm80xx_tbl.firmware_rev >> 8),
@@ -138,7 +157,11 @@ static ssize_t pm8001_ctl_ila_version_show(struct device *cdev,
 	struct pm8001_hba_info *pm8001_ha = sha->lldd_ha;
 
 	if (pm8001_ha->chip_id != chip_8001) {
+<<<<<<< HEAD
 		return sysfs_emit(buf, "%02x.%02x.%02x.%02x\n",
+=======
+		return snprintf(buf, PAGE_SIZE, "%02x.%02x.%02x.%02x\n",
+>>>>>>> b7ba80a49124 (Commit)
 		(u8)(pm8001_ha->main_cfg_tbl.pm80xx_tbl.ila_version >> 24),
 		(u8)(pm8001_ha->main_cfg_tbl.pm80xx_tbl.ila_version >> 16),
 		(u8)(pm8001_ha->main_cfg_tbl.pm80xx_tbl.ila_version >> 8),
@@ -164,7 +187,11 @@ static ssize_t pm8001_ctl_inactive_fw_version_show(struct device *cdev,
 	struct pm8001_hba_info *pm8001_ha = sha->lldd_ha;
 
 	if (pm8001_ha->chip_id != chip_8001) {
+<<<<<<< HEAD
 		return sysfs_emit(buf, "%02x.%02x.%02x.%02x\n",
+=======
+		return snprintf(buf, PAGE_SIZE, "%02x.%02x.%02x.%02x\n",
+>>>>>>> b7ba80a49124 (Commit)
 		(u8)(pm8001_ha->main_cfg_tbl.pm80xx_tbl.inc_fw_version >> 24),
 		(u8)(pm8001_ha->main_cfg_tbl.pm80xx_tbl.inc_fw_version >> 16),
 		(u8)(pm8001_ha->main_cfg_tbl.pm80xx_tbl.inc_fw_version >> 8),
@@ -191,10 +218,17 @@ static ssize_t pm8001_ctl_max_out_io_show(struct device *cdev,
 	struct pm8001_hba_info *pm8001_ha = sha->lldd_ha;
 
 	if (pm8001_ha->chip_id == chip_8001) {
+<<<<<<< HEAD
 		return sysfs_emit(buf, "%d\n",
 			pm8001_ha->main_cfg_tbl.pm8001_tbl.max_out_io);
 	} else {
 		return sysfs_emit(buf, "%d\n",
+=======
+		return snprintf(buf, PAGE_SIZE, "%d\n",
+			pm8001_ha->main_cfg_tbl.pm8001_tbl.max_out_io);
+	} else {
+		return snprintf(buf, PAGE_SIZE, "%d\n",
+>>>>>>> b7ba80a49124 (Commit)
 			pm8001_ha->main_cfg_tbl.pm80xx_tbl.max_out_io);
 	}
 }
@@ -215,11 +249,21 @@ static ssize_t pm8001_ctl_max_devices_show(struct device *cdev,
 	struct pm8001_hba_info *pm8001_ha = sha->lldd_ha;
 
 	if (pm8001_ha->chip_id == chip_8001) {
+<<<<<<< HEAD
 		return sysfs_emit(buf, "%04d\n",
 			(u16)(pm8001_ha->main_cfg_tbl.pm8001_tbl.max_sgl >> 16));
 	} else {
 		return sysfs_emit(buf, "%04d\n",
 			(u16)(pm8001_ha->main_cfg_tbl.pm80xx_tbl.max_sgl >> 16));
+=======
+		return snprintf(buf, PAGE_SIZE, "%04d\n",
+			(u16)(pm8001_ha->main_cfg_tbl.pm8001_tbl.max_sgl >> 16)
+			);
+	} else {
+		return snprintf(buf, PAGE_SIZE, "%04d\n",
+			(u16)(pm8001_ha->main_cfg_tbl.pm80xx_tbl.max_sgl >> 16)
+			);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 static DEVICE_ATTR(max_devices, S_IRUGO, pm8001_ctl_max_devices_show, NULL);
@@ -240,11 +284,21 @@ static ssize_t pm8001_ctl_max_sg_list_show(struct device *cdev,
 	struct pm8001_hba_info *pm8001_ha = sha->lldd_ha;
 
 	if (pm8001_ha->chip_id == chip_8001) {
+<<<<<<< HEAD
 		return sysfs_emit(buf, "%04d\n",
 			pm8001_ha->main_cfg_tbl.pm8001_tbl.max_sgl & 0x0000FFFF);
 	} else {
 		return sysfs_emit(buf, "%04d\n",
 			pm8001_ha->main_cfg_tbl.pm80xx_tbl.max_sgl & 0x0000FFFF);
+=======
+		return snprintf(buf, PAGE_SIZE, "%04d\n",
+			pm8001_ha->main_cfg_tbl.pm8001_tbl.max_sgl & 0x0000FFFF
+			);
+	} else {
+		return snprintf(buf, PAGE_SIZE, "%04d\n",
+			pm8001_ha->main_cfg_tbl.pm80xx_tbl.max_sgl & 0x0000FFFF
+			);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 static DEVICE_ATTR(max_sg_list, S_IRUGO, pm8001_ctl_max_sg_list_show, NULL);
@@ -311,7 +365,11 @@ static ssize_t pm8001_ctl_host_sas_address_show(struct device *cdev,
 	struct Scsi_Host *shost = class_to_shost(cdev);
 	struct sas_ha_struct *sha = SHOST_TO_SAS_HA(shost);
 	struct pm8001_hba_info *pm8001_ha = sha->lldd_ha;
+<<<<<<< HEAD
 	return sysfs_emit(buf, "0x%016llx\n",
+=======
+	return snprintf(buf, PAGE_SIZE, "0x%016llx\n",
+>>>>>>> b7ba80a49124 (Commit)
 			be64_to_cpu(*(__be64 *)pm8001_ha->sas_addr));
 }
 static DEVICE_ATTR(host_sas_address, S_IRUGO,
@@ -332,7 +390,11 @@ static ssize_t pm8001_ctl_logging_level_show(struct device *cdev,
 	struct sas_ha_struct *sha = SHOST_TO_SAS_HA(shost);
 	struct pm8001_hba_info *pm8001_ha = sha->lldd_ha;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%08xh\n", pm8001_ha->logging_level);
+=======
+	return snprintf(buf, PAGE_SIZE, "%08xh\n", pm8001_ha->logging_level);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t pm8001_ctl_logging_level_store(struct device *cdev,
@@ -513,7 +575,11 @@ static ssize_t event_log_size_show(struct device *cdev,
 	struct sas_ha_struct *sha = SHOST_TO_SAS_HA(shost);
 	struct pm8001_hba_info *pm8001_ha = sha->lldd_ha;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n",
+=======
+	return snprintf(buf, PAGE_SIZE, "%d\n",
+>>>>>>> b7ba80a49124 (Commit)
 		pm8001_ha->main_cfg_tbl.pm80xx_tbl.event_log_size);
 }
 static DEVICE_ATTR_RO(event_log_size);
@@ -600,7 +666,11 @@ static ssize_t non_fatal_count_show(struct device *cdev,
 	struct sas_ha_struct *sha = SHOST_TO_SAS_HA(shost);
 	struct pm8001_hba_info *pm8001_ha = sha->lldd_ha;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%08x\n",
+=======
+	return snprintf(buf, PAGE_SIZE, "%08x",
+>>>>>>> b7ba80a49124 (Commit)
 			pm8001_ha->non_fatal_count);
 }
 

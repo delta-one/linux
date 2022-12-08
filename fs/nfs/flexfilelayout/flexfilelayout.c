@@ -30,20 +30,29 @@
 #define FF_LAYOUT_POLL_RETRY_MAX     (15*HZ)
 #define FF_LAYOUTRETURN_MAXERR 20
 
+<<<<<<< HEAD
 enum nfs4_ff_op_type {
 	NFS4_FF_OP_LAYOUTSTATS,
 	NFS4_FF_OP_LAYOUTRETURN,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned short io_maxretrans;
 
 static const struct pnfs_commit_ops ff_layout_commit_ops;
 static void ff_layout_read_record_layoutstats_done(struct rpc_task *task,
 		struct nfs_pgio_header *hdr);
+<<<<<<< HEAD
 static int
 ff_layout_mirror_prepare_stats(struct pnfs_layout_hdr *lo,
 			       struct nfs42_layoutstat_devinfo *devinfo,
 			       int dev_limit, enum nfs4_ff_op_type type);
+=======
+static int ff_layout_mirror_prepare_stats(struct pnfs_layout_hdr *lo,
+			       struct nfs42_layoutstat_devinfo *devinfo,
+			       int dev_limit);
+>>>>>>> b7ba80a49124 (Commit)
 static void ff_layout_encode_ff_layoutupdate(struct xdr_stream *xdr,
 			      const struct nfs42_layoutstat_devinfo *devinfo,
 			      struct nfs4_ff_layout_mirror *mirror);
@@ -493,10 +502,17 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
 		gid = make_kgid(&init_user_ns, id);
 
 		if (gfp_flags & __GFP_FS)
+<<<<<<< HEAD
 			kcred = prepare_kernel_cred(&init_task);
 		else {
 			unsigned int nofs_flags = memalloc_nofs_save();
 			kcred = prepare_kernel_cred(&init_task);
+=======
+			kcred = prepare_kernel_cred(NULL);
+		else {
+			unsigned int nofs_flags = memalloc_nofs_save();
+			kcred = prepare_kernel_cred(NULL);
+>>>>>>> b7ba80a49124 (Commit)
 			memalloc_nofs_restore(nofs_flags);
 		}
 		rc = -ENOMEM;
@@ -1379,11 +1395,14 @@ static int ff_layout_read_prepare_common(struct rpc_task *task,
 		return -EIO;
 	}
 
+<<<<<<< HEAD
 	if (!pnfs_is_valid_lseg(hdr->lseg)) {
 		rpc_exit(task, -EAGAIN);
 		return -EAGAIN;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ff_layout_read_record_layoutstats_start(task, hdr);
 	return 0;
 }
@@ -1564,11 +1583,14 @@ static int ff_layout_write_prepare_common(struct rpc_task *task,
 		return -EIO;
 	}
 
+<<<<<<< HEAD
 	if (!pnfs_is_valid_lseg(hdr->lseg)) {
 		rpc_exit(task, -EAGAIN);
 		return -EAGAIN;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ff_layout_write_record_layoutstats_start(task, hdr);
 	return 0;
 }
@@ -1661,6 +1683,7 @@ static void ff_layout_commit_record_layoutstats_done(struct rpc_task *task,
 	set_bit(NFS_LSEG_LAYOUTRETURN, &cdata->lseg->pls_flags);
 }
 
+<<<<<<< HEAD
 static int ff_layout_commit_prepare_common(struct rpc_task *task,
 					   struct nfs_commit_data *cdata)
 {
@@ -1671,13 +1694,23 @@ static int ff_layout_commit_prepare_common(struct rpc_task *task,
 
 	ff_layout_commit_record_layoutstats_start(task, cdata);
 	return 0;
+=======
+static void ff_layout_commit_prepare_common(struct rpc_task *task,
+		struct nfs_commit_data *cdata)
+{
+	ff_layout_commit_record_layoutstats_start(task, cdata);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ff_layout_commit_prepare_v3(struct rpc_task *task, void *data)
 {
+<<<<<<< HEAD
 	if (ff_layout_commit_prepare_common(task, data))
 		return;
 
+=======
+	ff_layout_commit_prepare_common(task, data);
+>>>>>>> b7ba80a49124 (Commit)
 	rpc_call_start(task);
 }
 
@@ -1973,6 +2006,7 @@ ff_layout_commit_pagelist(struct inode *inode, struct list_head *mds_pages,
 					    ff_layout_initiate_commit);
 }
 
+<<<<<<< HEAD
 static bool ff_layout_match_rw(const struct rpc_task *task,
 			       const struct nfs_pgio_header *hdr,
 			       const struct pnfs_layout_segment *lseg)
@@ -2032,6 +2066,8 @@ static void ff_layout_cancel_io(struct pnfs_layout_segment *lseg)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct pnfs_ds_commit_info *
 ff_layout_get_ds_info(struct inode *inode)
 {
@@ -2244,9 +2280,14 @@ ff_layout_prepare_layoutreturn(struct nfs4_layoutreturn_args *args)
 			FF_LAYOUTRETURN_MAXERR);
 
 	spin_lock(&args->inode->i_lock);
+<<<<<<< HEAD
 	ff_args->num_dev = ff_layout_mirror_prepare_stats(
 		&ff_layout->generic_hdr, &ff_args->devinfo[0],
 		ARRAY_SIZE(ff_args->devinfo), NFS4_FF_OP_LAYOUTRETURN);
+=======
+	ff_args->num_dev = ff_layout_mirror_prepare_stats(&ff_layout->generic_hdr,
+			&ff_args->devinfo[0], ARRAY_SIZE(ff_args->devinfo));
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock(&args->inode->i_lock);
 
 	args->ld_private->ops = &layoutreturn_ops;
@@ -2480,7 +2521,11 @@ static const struct nfs4_xdr_opaque_ops layoutstat_ops = {
 static int
 ff_layout_mirror_prepare_stats(struct pnfs_layout_hdr *lo,
 			       struct nfs42_layoutstat_devinfo *devinfo,
+<<<<<<< HEAD
 			       int dev_limit, enum nfs4_ff_op_type type)
+=======
+			       int dev_limit)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nfs4_flexfile_layout *ff_layout = FF_LAYOUT_FROM_HDR(lo);
 	struct nfs4_ff_layout_mirror *mirror;
@@ -2492,9 +2537,13 @@ ff_layout_mirror_prepare_stats(struct pnfs_layout_hdr *lo,
 			break;
 		if (IS_ERR_OR_NULL(mirror->mirror_ds))
 			continue;
+<<<<<<< HEAD
 		if (!test_and_clear_bit(NFS4_FF_MIRROR_STAT_AVAIL,
 					&mirror->flags) &&
 		    type != NFS4_FF_OP_LAYOUTRETURN)
+=======
+		if (!test_and_clear_bit(NFS4_FF_MIRROR_STAT_AVAIL, &mirror->flags))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		/* mirror refcount put in cleanup_layoutstats */
 		if (!refcount_inc_not_zero(&mirror->ref))
@@ -2534,9 +2583,13 @@ ff_layout_prepare_layoutstats(struct nfs42_layoutstat_args *args)
 	spin_lock(&args->inode->i_lock);
 	ff_layout = FF_LAYOUT_FROM_HDR(NFS_I(args->inode)->layout);
 	args->num_dev = ff_layout_mirror_prepare_stats(&ff_layout->generic_hdr,
+<<<<<<< HEAD
 						       &args->devinfo[0],
 						       dev_count,
 						       NFS4_FF_OP_LAYOUTSTATS);
+=======
+			&args->devinfo[0], dev_count);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock(&args->inode->i_lock);
 	if (!args->num_dev) {
 		kfree(args->devinfo);
@@ -2589,7 +2642,10 @@ static struct pnfs_layoutdriver_type flexfilelayout_type = {
 	.prepare_layoutreturn   = ff_layout_prepare_layoutreturn,
 	.sync			= pnfs_nfs_generic_sync,
 	.prepare_layoutstats	= ff_layout_prepare_layoutstats,
+<<<<<<< HEAD
 	.cancel_io		= ff_layout_cancel_io,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init nfs4flexfilelayout_init(void)

@@ -21,7 +21,10 @@ static const char *names_0[] = {
 	E(EADDRNOTAVAIL),
 	E(EADV),
 	E(EAFNOSUPPORT),
+<<<<<<< HEAD
 	E(EAGAIN), /* EWOULDBLOCK */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	E(EALREADY),
 	E(EBADE),
 	E(EBADF),
@@ -32,17 +35,28 @@ static const char *names_0[] = {
 	E(EBADSLT),
 	E(EBFONT),
 	E(EBUSY),
+<<<<<<< HEAD
 	E(ECANCELED), /* ECANCELLED */
+=======
+#ifdef ECANCELLED
+	E(ECANCELLED),
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	E(ECHILD),
 	E(ECHRNG),
 	E(ECOMM),
 	E(ECONNABORTED),
+<<<<<<< HEAD
 	E(ECONNREFUSED), /* EREFUSED */
 	E(ECONNRESET),
 	E(EDEADLK), /* EDEADLOCK */
 #if EDEADLK != EDEADLOCK /* mips, sparc, powerpc */
 	E(EDEADLOCK),
 #endif
+=======
+	E(ECONNRESET),
+	E(EDEADLOCK),
+>>>>>>> b7ba80a49124 (Commit)
 	E(EDESTADDRREQ),
 	E(EDOM),
 	E(EDOTDOT),
@@ -169,6 +183,7 @@ static const char *names_0[] = {
 	E(EUSERS),
 	E(EXDEV),
 	E(EXFULL),
+<<<<<<< HEAD
 };
 #undef E
 
@@ -180,6 +195,16 @@ static_assert(ECANCELLED == ECANCELED);
 #endif
 static_assert(EAGAIN == EWOULDBLOCK); /* everywhere */
 
+=======
+
+	E(ECANCELED), /* ECANCELLED */
+	E(EAGAIN), /* EWOULDBLOCK */
+	E(ECONNREFUSED), /* EREFUSED */
+	E(EDEADLK), /* EDEADLOCK */
+};
+#undef E
+
+>>>>>>> b7ba80a49124 (Commit)
 #define E(err) [err - 512 + BUILD_BUG_ON_ZERO(err < 512 || err > 550)] = "-" #err
 static const char *names_512[] = {
 	E(ERESTARTSYS),

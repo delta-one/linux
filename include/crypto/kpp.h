@@ -8,11 +8,15 @@
 
 #ifndef _CRYPTO_KPP_
 #define _CRYPTO_KPP_
+<<<<<<< HEAD
 
 #include <linux/atomic.h>
 #include <linux/container_of.h>
 #include <linux/crypto.h>
 #include <linux/slab.h>
+=======
+#include <linux/crypto.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct kpp_request
@@ -41,6 +45,7 @@ struct kpp_request {
  * struct crypto_kpp - user-instantiated object which encapsulate
  * algorithms and core processing logic
  *
+<<<<<<< HEAD
  * @reqsize:		Request context size required by algorithm
  *			implementation
  * @base:	Common crypto API algorithm data structure
@@ -65,6 +70,14 @@ struct crypto_istat_kpp {
 	atomic64_t err_cnt;
 };
 
+=======
+ * @base:	Common crypto API algorithm data structure
+ */
+struct crypto_kpp {
+	struct crypto_tfm base;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct kpp_alg - generic key-agreement protocol primitives
  *
@@ -86,8 +99,14 @@ struct crypto_istat_kpp {
  *			put in place here.
  * @exit:		Undo everything @init did.
  *
+<<<<<<< HEAD
  * @base:		Common crypto API algorithm data structure
  * @stat:		Statistics for KPP algorithm
+=======
+ * @reqsize:		Request context size required by algorithm
+ *			implementation
+ * @base:		Common crypto API algorithm data structure
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct kpp_alg {
 	int (*set_secret)(struct crypto_kpp *tfm, const void *buffer,
@@ -100,10 +119,14 @@ struct kpp_alg {
 	int (*init)(struct crypto_kpp *tfm);
 	void (*exit)(struct crypto_kpp *tfm);
 
+<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_STATS
 	struct crypto_istat_kpp stat;
 #endif
 
+=======
+	unsigned int reqsize;
+>>>>>>> b7ba80a49124 (Commit)
 	struct crypto_alg base;
 };
 
@@ -152,7 +175,11 @@ static inline struct kpp_alg *crypto_kpp_alg(struct crypto_kpp *tfm)
 
 static inline unsigned int crypto_kpp_reqsize(struct crypto_kpp *tfm)
 {
+<<<<<<< HEAD
 	return tfm->reqsize;
+=======
+	return crypto_kpp_alg(tfm)->reqsize;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void kpp_request_set_tfm(struct kpp_request *req,
@@ -291,6 +318,7 @@ struct kpp_secret {
 	unsigned short len;
 };
 
+<<<<<<< HEAD
 static inline struct crypto_istat_kpp *kpp_get_stat(struct kpp_alg *alg)
 {
 #ifdef CONFIG_CRYPTO_STATS
@@ -311,6 +339,8 @@ static inline int crypto_kpp_errstat(struct kpp_alg *alg, int err)
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * crypto_kpp_set_secret() - Invoke kpp operation
  *
@@ -330,11 +360,21 @@ static inline int crypto_kpp_set_secret(struct crypto_kpp *tfm,
 					const void *buffer, unsigned int len)
 {
 	struct kpp_alg *alg = crypto_kpp_alg(tfm);
+<<<<<<< HEAD
 
 	if (IS_ENABLED(CONFIG_CRYPTO_STATS))
 		atomic64_inc(&kpp_get_stat(alg)->setsecret_cnt);
 
 	return crypto_kpp_errstat(alg, alg->set_secret(tfm, buffer, len));
+=======
+	struct crypto_alg *calg = tfm->base.__crt_alg;
+	int ret;
+
+	crypto_stats_get(calg);
+	ret = alg->set_secret(tfm, buffer, len);
+	crypto_stats_kpp_set_secret(calg, ret);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -354,11 +394,21 @@ static inline int crypto_kpp_generate_public_key(struct kpp_request *req)
 {
 	struct crypto_kpp *tfm = crypto_kpp_reqtfm(req);
 	struct kpp_alg *alg = crypto_kpp_alg(tfm);
+<<<<<<< HEAD
 
 	if (IS_ENABLED(CONFIG_CRYPTO_STATS))
 		atomic64_inc(&kpp_get_stat(alg)->generate_public_key_cnt);
 
 	return crypto_kpp_errstat(alg, alg->generate_public_key(req));
+=======
+	struct crypto_alg *calg = tfm->base.__crt_alg;
+	int ret;
+
+	crypto_stats_get(calg);
+	ret = alg->generate_public_key(req);
+	crypto_stats_kpp_generate_public_key(calg, ret);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -375,11 +425,21 @@ static inline int crypto_kpp_compute_shared_secret(struct kpp_request *req)
 {
 	struct crypto_kpp *tfm = crypto_kpp_reqtfm(req);
 	struct kpp_alg *alg = crypto_kpp_alg(tfm);
+<<<<<<< HEAD
 
 	if (IS_ENABLED(CONFIG_CRYPTO_STATS))
 		atomic64_inc(&kpp_get_stat(alg)->compute_shared_secret_cnt);
 
 	return crypto_kpp_errstat(alg, alg->compute_shared_secret(req));
+=======
+	struct crypto_alg *calg = tfm->base.__crt_alg;
+	int ret;
+
+	crypto_stats_get(calg);
+	ret = alg->compute_shared_secret(req);
+	crypto_stats_kpp_compute_shared_secret(calg, ret);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

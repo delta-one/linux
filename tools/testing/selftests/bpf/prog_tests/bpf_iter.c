@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0
 /* Copyright (c) 2020 Facebook */
 #include <test_progs.h>
+<<<<<<< HEAD
 #include <unistd.h>
 #include <sys/syscall.h>
 #include <task_local_storage_helpers.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "bpf_iter_ipv6_route.skel.h"
 #include "bpf_iter_netlink.skel.h"
 #include "bpf_iter_bpf_map.skel.h"
@@ -17,7 +20,10 @@
 #include "bpf_iter_udp4.skel.h"
 #include "bpf_iter_udp6.skel.h"
 #include "bpf_iter_unix.skel.h"
+<<<<<<< HEAD
 #include "bpf_iter_vma_offset.skel.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "bpf_iter_test_kern1.skel.h"
 #include "bpf_iter_test_kern2.skel.h"
 #include "bpf_iter_test_kern3.skel.h"
@@ -47,13 +53,21 @@ static void test_btf_id_or_null(void)
 	}
 }
 
+<<<<<<< HEAD
 static void do_dummy_read_opts(struct bpf_program *prog, struct bpf_iter_attach_opts *opts)
+=======
+static void do_dummy_read(struct bpf_program *prog)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_link *link;
 	char buf[16] = {};
 	int iter_fd, len;
 
+<<<<<<< HEAD
 	link = bpf_program__attach_iter(prog, opts);
+=======
+	link = bpf_program__attach_iter(prog, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ASSERT_OK_PTR(link, "attach_iter"))
 		return;
 
@@ -72,11 +86,14 @@ free_link:
 	bpf_link__destroy(link);
 }
 
+<<<<<<< HEAD
 static void do_dummy_read(struct bpf_program *prog)
 {
 	do_dummy_read_opts(prog, NULL);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void do_read_map_iter_fd(struct bpf_object_skeleton **skel, struct bpf_program *prog,
 				struct bpf_map *map)
 {
@@ -176,6 +193,7 @@ static void test_bpf_map(void)
 	bpf_iter_bpf_map__destroy(skel);
 }
 
+<<<<<<< HEAD
 static void check_bpf_link_info(const struct bpf_program *prog)
 {
 	LIBBPF_OPTS(bpf_iter_attach_opts, opts);
@@ -218,11 +236,17 @@ static void test_task_common_nocheck(struct bpf_iter_attach_opts *opts,
 	struct bpf_iter_task *skel;
 	pthread_t thread_id;
 	void *ret;
+=======
+static void test_task(void)
+{
+	struct bpf_iter_task *skel;
+>>>>>>> b7ba80a49124 (Commit)
 
 	skel = bpf_iter_task__open_and_load();
 	if (!ASSERT_OK_PTR(skel, "bpf_iter_task__open_and_load"))
 		return;
 
+<<<<<<< HEAD
 	ASSERT_OK(pthread_mutex_lock(&do_nothing_mutex), "pthread_mutex_lock");
 
 	ASSERT_OK(pthread_create(&thread_id, NULL, &do_nothing_wait, NULL),
@@ -238,10 +262,14 @@ static void test_task_common_nocheck(struct bpf_iter_attach_opts *opts,
 	ASSERT_OK(pthread_mutex_unlock(&do_nothing_mutex), "pthread_mutex_unlock");
 	ASSERT_FALSE(pthread_join(thread_id, &ret) || ret != NULL,
 		     "pthread_join");
+=======
+	do_dummy_read(skel->progs.dump_task);
+>>>>>>> b7ba80a49124 (Commit)
 
 	bpf_iter_task__destroy(skel);
 }
 
+<<<<<<< HEAD
 static void test_task_common(struct bpf_iter_attach_opts *opts, int num_unknown, int num_known)
 {
 	int num_unknown_tid, num_known_tid;
@@ -305,6 +333,8 @@ static void test_task_pidfd(void)
 	close(pidfd);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void test_task_sleepable(void)
 {
 	struct bpf_iter_task *skel;
@@ -337,11 +367,22 @@ static void test_task_stack(void)
 	bpf_iter_task_stack__destroy(skel);
 }
 
+<<<<<<< HEAD
 static void test_task_file(void)
 {
 	LIBBPF_OPTS(bpf_iter_attach_opts, opts);
 	struct bpf_iter_task_file *skel;
 	union bpf_iter_link_info linfo;
+=======
+static void *do_nothing(void *arg)
+{
+	pthread_exit(arg);
+}
+
+static void test_task_file(void)
+{
+	struct bpf_iter_task_file *skel;
+>>>>>>> b7ba80a49124 (Commit)
 	pthread_t thread_id;
 	void *ret;
 
@@ -351,6 +392,7 @@ static void test_task_file(void)
 
 	skel->bss->tgid = getpid();
 
+<<<<<<< HEAD
 	ASSERT_OK(pthread_mutex_lock(&do_nothing_mutex), "pthread_mutex_lock");
 
 	ASSERT_OK(pthread_create(&thread_id, NULL, &do_nothing_wait, NULL),
@@ -381,6 +423,21 @@ static void test_task_file(void)
 	ASSERT_OK(pthread_join(thread_id, &ret), "pthread_join");
 	ASSERT_NULL(ret, "pthread_join");
 
+=======
+	if (!ASSERT_OK(pthread_create(&thread_id, NULL, &do_nothing, NULL),
+		  "pthread_create"))
+		goto done;
+
+	do_dummy_read(skel->progs.dump_task_file);
+
+	if (!ASSERT_FALSE(pthread_join(thread_id, &ret) || ret != NULL,
+		  "pthread_join"))
+		goto done;
+
+	ASSERT_EQ(skel->bss->count, 0, "check_count");
+
+done:
+>>>>>>> b7ba80a49124 (Commit)
 	bpf_iter_task_file__destroy(skel);
 }
 
@@ -684,13 +741,21 @@ static void test_overflow(bool test_e2big_overflow, bool ret1)
 
 	/* setup filtering map_id in bpf program */
 	map_info_len = sizeof(map_info);
+<<<<<<< HEAD
 	err = bpf_map_get_info_by_fd(map1_fd, &map_info, &map_info_len);
+=======
+	err = bpf_obj_get_info_by_fd(map1_fd, &map_info, &map_info_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (CHECK(err, "get_map_info", "get map info failed: %s\n",
 		  strerror(errno)))
 		goto free_map2;
 	skel->bss->map1_id = map_info.id;
 
+<<<<<<< HEAD
 	err = bpf_map_get_info_by_fd(map2_fd, &map_info, &map_info_len);
+=======
+	err = bpf_obj_get_info_by_fd(map2_fd, &map_info, &map_info_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (CHECK(err, "get_map_info", "get map info failed: %s\n",
 		  strerror(errno)))
 		goto free_map2;
@@ -941,10 +1006,17 @@ static void test_bpf_array_map(void)
 {
 	__u64 val, expected_val = 0, res_first_val, first_val = 0;
 	DECLARE_LIBBPF_OPTS(bpf_iter_attach_opts, opts);
+<<<<<<< HEAD
 	__u32 key, expected_key = 0, res_first_key;
 	int err, i, map_fd, hash_fd, iter_fd;
 	struct bpf_iter_bpf_array_map *skel;
 	union bpf_iter_link_info linfo;
+=======
+	__u32 expected_key = 0, res_first_key;
+	struct bpf_iter_bpf_array_map *skel;
+	union bpf_iter_link_info linfo;
+	int err, i, map_fd, iter_fd;
+>>>>>>> b7ba80a49124 (Commit)
 	struct bpf_link *link;
 	char buf[64] = {};
 	int len, start;
@@ -1001,6 +1073,7 @@ static void test_bpf_array_map(void)
 	if (!ASSERT_EQ(skel->bss->val_sum, expected_val, "val_sum"))
 		goto close_iter;
 
+<<<<<<< HEAD
 	hash_fd = bpf_map__fd(skel->maps.hashmap1);
 	for (i = 0; i < bpf_map__max_entries(skel->maps.arraymap1); i++) {
 		err = bpf_map_lookup_elem(map_fd, &i, &val);
@@ -1015,6 +1088,14 @@ static void test_bpf_array_map(void)
 			goto close_iter;
 		if (!ASSERT_EQ(key, val - 4, "invalid_val hashmap1"))
 			goto close_iter;
+=======
+	for (i = 0; i < bpf_map__max_entries(skel->maps.arraymap1); i++) {
+		err = bpf_map_lookup_elem(map_fd, &i, &val);
+		if (!ASSERT_OK(err, "map_lookup"))
+			goto out;
+		if (!ASSERT_EQ(i, val, "invalid_val"))
+			goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 close_iter:
@@ -1396,7 +1477,11 @@ static void str_strip_first_line(char *str)
 	*dst = '\0';
 }
 
+<<<<<<< HEAD
 static void test_task_vma_common(struct bpf_iter_attach_opts *opts)
+=======
+static void test_task_vma(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err, iter_fd = -1, proc_maps_fd = -1;
 	struct bpf_iter_task_vma *skel;
@@ -1408,14 +1493,21 @@ static void test_task_vma_common(struct bpf_iter_attach_opts *opts)
 		return;
 
 	skel->bss->pid = getpid();
+<<<<<<< HEAD
 	skel->bss->one_task = opts ? 1 : 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = bpf_iter_task_vma__load(skel);
 	if (!ASSERT_OK(err, "bpf_iter_task_vma__load"))
 		goto out;
 
 	skel->links.proc_maps = bpf_program__attach_iter(
+<<<<<<< HEAD
 		skel->progs.proc_maps, opts);
+=======
+		skel->progs.proc_maps, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!ASSERT_OK_PTR(skel->links.proc_maps, "bpf_program__attach_iter")) {
 		skel->links.proc_maps = NULL;
@@ -1439,8 +1531,11 @@ static void test_task_vma_common(struct bpf_iter_attach_opts *opts)
 			goto out;
 		len += err;
 	}
+<<<<<<< HEAD
 	if (opts)
 		ASSERT_EQ(skel->bss->one_task_error, 0, "unexpected task");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* read CMP_BUFFER_SIZE (1kB) from /proc/pid/maps */
 	snprintf(maps_path, 64, "/proc/%u/maps", skel->bss->pid);
@@ -1456,15 +1551,19 @@ static void test_task_vma_common(struct bpf_iter_attach_opts *opts)
 	str_strip_first_line(proc_maps_output);
 
 	ASSERT_STREQ(task_vma_output, proc_maps_output, "compare_output");
+<<<<<<< HEAD
 
 	check_bpf_link_info(skel->progs.proc_maps);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	close(proc_maps_fd);
 	close(iter_fd);
 	bpf_iter_task_vma__destroy(skel);
 }
 
+<<<<<<< HEAD
 static void test_task_vma_dead_task(void)
 {
 	struct bpf_iter_task_vma *skel;
@@ -1536,6 +1635,8 @@ out:
 	bpf_iter_task_vma__destroy(skel);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void test_bpf_sockmap_map_iter_fd(void)
 {
 	struct bpf_iter_sockmap *skel;
@@ -1549,6 +1650,7 @@ void test_bpf_sockmap_map_iter_fd(void)
 	bpf_iter_sockmap__destroy(skel);
 }
 
+<<<<<<< HEAD
 static void test_task_vma(void)
 {
 	LIBBPF_OPTS(bpf_iter_attach_opts, opts);
@@ -1635,6 +1737,10 @@ void test_bpf_iter(void)
 {
 	ASSERT_OK(pthread_mutex_init(&do_nothing_mutex, NULL), "pthread_mutex_init");
 
+=======
+void test_bpf_iter(void)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	if (test__start_subtest("btf_id_or_null"))
 		test_btf_id_or_null();
 	if (test__start_subtest("ipv6_route"))
@@ -1643,12 +1749,17 @@ void test_bpf_iter(void)
 		test_netlink();
 	if (test__start_subtest("bpf_map"))
 		test_bpf_map();
+<<<<<<< HEAD
 	if (test__start_subtest("task_tid"))
 		test_task_tid();
 	if (test__start_subtest("task_pid"))
 		test_task_pid();
 	if (test__start_subtest("task_pidfd"))
 		test_task_pidfd();
+=======
+	if (test__start_subtest("task"))
+		test_task();
+>>>>>>> b7ba80a49124 (Commit)
 	if (test__start_subtest("task_sleepable"))
 		test_task_sleepable();
 	if (test__start_subtest("task_stack"))
@@ -1657,8 +1768,11 @@ void test_bpf_iter(void)
 		test_task_file();
 	if (test__start_subtest("task_vma"))
 		test_task_vma();
+<<<<<<< HEAD
 	if (test__start_subtest("task_vma_dead_task"))
 		test_task_vma_dead_task();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (test__start_subtest("task_btf"))
 		test_task_btf();
 	if (test__start_subtest("tcp4"))
@@ -1711,6 +1825,9 @@ void test_bpf_iter(void)
 		test_ksym_iter();
 	if (test__start_subtest("bpf_sockmap_map_iter_fd"))
 		test_bpf_sockmap_map_iter_fd();
+<<<<<<< HEAD
 	if (test__start_subtest("vma_offset"))
 		test_task_vma_offset();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

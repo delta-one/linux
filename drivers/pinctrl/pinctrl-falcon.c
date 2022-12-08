@@ -7,6 +7,7 @@
  *  Copyright (C) 2012 John Crispin <john@phrozen.org>
  */
 
+<<<<<<< HEAD
 #include <linux/err.h>
 #include <linux/export.h>
 #include <linux/gpio/driver.h>
@@ -19,6 +20,19 @@
 #include <linux/platform_device.h>
 #include <linux/seq_file.h>
 #include <linux/slab.h>
+=======
+#include <linux/gpio/driver.h>
+#include <linux/interrupt.h>
+#include <linux/slab.h>
+#include <linux/export.h>
+#include <linux/err.h>
+#include <linux/module.h>
+#include <linux/of.h>
+#include <linux/of_platform.h>
+#include <linux/of_address.h>
+#include <linux/of_gpio.h>
+#include <linux/platform_device.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "pinctrl-lantiq.h"
 

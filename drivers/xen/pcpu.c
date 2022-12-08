@@ -228,7 +228,11 @@ static int register_pcpu(struct pcpu *pcpu)
 
 	err = device_register(dev);
 	if (err) {
+<<<<<<< HEAD
 		put_device(dev);
+=======
+		pcpu_release(dev);
+>>>>>>> b7ba80a49124 (Commit)
 		return err;
 	}
 

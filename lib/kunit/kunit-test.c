@@ -161,6 +161,7 @@ static void kunit_resource_test_alloc_resource(struct kunit *test)
 	kunit_put_resource(res);
 }
 
+<<<<<<< HEAD
 static inline bool kunit_resource_instance_match(struct kunit *test,
 						 struct kunit_resource *res,
 						 void *match_data)
@@ -168,6 +169,8 @@ static inline bool kunit_resource_instance_match(struct kunit *test,
 	return res->data == match_data;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Note: tests below use kunit_alloc_and_get_resource(), so as a consequence
  * they have a reference to the associated resource that they must release
@@ -443,6 +446,21 @@ static struct kunit_suite kunit_resource_test_suite = {
 	.test_cases = kunit_resource_test_cases,
 };
 
+<<<<<<< HEAD
+=======
+static void kunit_log_test(struct kunit *test);
+
+static struct kunit_case kunit_log_test_cases[] = {
+	KUNIT_CASE(kunit_log_test),
+	{}
+};
+
+static struct kunit_suite kunit_log_test_suite = {
+	.name = "kunit-log-test",
+	.test_cases = kunit_log_test_cases,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static void kunit_log_test(struct kunit *test)
 {
 	struct kunit_suite suite;
@@ -469,6 +487,7 @@ static void kunit_log_test(struct kunit *test)
 #endif
 }
 
+<<<<<<< HEAD
 static void kunit_log_newline_test(struct kunit *test)
 {
 	kunit_info(test, "Add newline\n");
@@ -492,6 +511,8 @@ static struct kunit_suite kunit_log_test_suite = {
 	.test_cases = kunit_log_test_cases,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void kunit_status_set_failure_test(struct kunit *test)
 {
 	struct kunit fake;

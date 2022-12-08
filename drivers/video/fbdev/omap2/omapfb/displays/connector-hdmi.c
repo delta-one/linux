@@ -6,12 +6,19 @@
  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
  */
 
+<<<<<<< HEAD
 #include <linux/err.h>
 #include <linux/gpio/consumer.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/module.h>
 #include <linux/platform_device.h>
 #include <linux/of.h>
+<<<<<<< HEAD
+=======
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <drm/drm_edid.h>
 
@@ -42,7 +49,11 @@ struct panel_drv_data {
 
 	struct omap_video_timings timings;
 
+<<<<<<< HEAD
 	struct gpio_desc *hpd_gpio;
+=======
+	int hpd_gpio;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define to_panel_data(x) container_of(x, struct panel_drv_data, dssdev)
@@ -156,8 +167,13 @@ static bool hdmic_detect(struct omap_dss_device *dssdev)
 	struct panel_drv_data *ddata = to_panel_data(dssdev);
 	struct omap_dss_device *in = ddata->in;
 
+<<<<<<< HEAD
 	if (ddata->hpd_gpio)
 		return gpiod_get_value_cansleep(ddata->hpd_gpio);
+=======
+	if (gpio_is_valid(ddata->hpd_gpio))
+		return gpio_get_value_cansleep(ddata->hpd_gpio);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		return in->ops.hdmi->detect(in);
 }
@@ -198,6 +214,34 @@ static struct omap_dss_driver hdmic_driver = {
 	.set_hdmi_infoframe	= hdmic_set_infoframe,
 };
 
+<<<<<<< HEAD
+=======
+static int hdmic_probe_of(struct platform_device *pdev)
+{
+	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
+	struct device_node *node = pdev->dev.of_node;
+	struct omap_dss_device *in;
+	int gpio;
+
+	/* HPD GPIO */
+	gpio = of_get_named_gpio(node, "hpd-gpios", 0);
+	if (gpio_is_valid(gpio))
+		ddata->hpd_gpio = gpio;
+	else
+		ddata->hpd_gpio = -ENODEV;
+
+	in = omapdss_of_find_source_for_first_ep(node);
+	if (IS_ERR(in)) {
+		dev_err(&pdev->dev, "failed to find video source\n");
+		return PTR_ERR(in);
+	}
+
+	ddata->in = in;
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int hdmic_probe(struct platform_device *pdev)
 {
 	struct panel_drv_data *ddata;
@@ -214,6 +258,7 @@ static int hdmic_probe(struct platform_device *pdev)
 	platform_set_drvdata(pdev, ddata);
 	ddata->dev = &pdev->dev;
 
+<<<<<<< HEAD
 	ddata->hpd_gpio = devm_gpiod_get_optional(&pdev->dev, "hpd", GPIOD_IN);
 	r = PTR_ERR_OR_ZERO(ddata->hpd_gpio);
 	if (r)
@@ -226,6 +271,17 @@ static int hdmic_probe(struct platform_device *pdev)
 	if (r) {
 		dev_err(&pdev->dev, "failed to find video source\n");
 		return r;
+=======
+	r = hdmic_probe_of(pdev);
+	if (r)
+		return r;
+
+	if (gpio_is_valid(ddata->hpd_gpio)) {
+		r = devm_gpio_request_one(&pdev->dev, ddata->hpd_gpio,
+				GPIOF_DIR_IN, "hdmi_hpd");
+		if (r)
+			goto err_reg;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ddata->timings = hdmic_default_timings;

@@ -162,6 +162,7 @@ static const struct hantro_fmt imx8m_vpu_g2_postproc_fmts[] = {
 			.step_height = MB_DIM,
 		},
 	},
+<<<<<<< HEAD
 	{
 		.fourcc = V4L2_PIX_FMT_P010,
 		.codec_mode = HANTRO_MODE_NONE,
@@ -175,12 +176,15 @@ static const struct hantro_fmt imx8m_vpu_g2_postproc_fmts[] = {
 			.step_height = MB_DIM,
 		},
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct hantro_fmt imx8m_vpu_g2_dec_fmts[] = {
 	{
 		.fourcc = V4L2_PIX_FMT_NV12_4L4,
 		.codec_mode = HANTRO_MODE_NONE,
+<<<<<<< HEAD
 		.match_depth = true,
 		.frmsize = {
 			.min_width = FMT_MIN_WIDTH,
@@ -195,6 +199,8 @@ static const struct hantro_fmt imx8m_vpu_g2_dec_fmts[] = {
 		.fourcc = V4L2_PIX_FMT_P010_4L4,
 		.codec_mode = HANTRO_MODE_NONE,
 		.match_depth = true,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.frmsize = {
 			.min_width = FMT_MIN_WIDTH,
 			.max_width = FMT_UHD_WIDTH,

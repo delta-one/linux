@@ -23,7 +23,10 @@ struct ptdump_info {
 
 void ptdump_walk(struct seq_file *s, struct ptdump_info *info);
 #ifdef CONFIG_PTDUMP_DEBUGFS
+<<<<<<< HEAD
 #define EFI_RUNTIME_MAP_END	DEFAULT_MAP_WINDOW_64
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void __init ptdump_debugfs_register(struct ptdump_info *info, const char *name);
 #else
 static inline void ptdump_debugfs_register(struct ptdump_info *info,

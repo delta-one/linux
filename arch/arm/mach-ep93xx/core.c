@@ -426,8 +426,15 @@ void __init ep93xx_register_spi(struct ep93xx_spi_info *info,
 static const struct gpio_led ep93xx_led_pins[] __initconst = {
 	{
 		.name	= "platform:grled",
+<<<<<<< HEAD
 	}, {
 		.name	= "platform:rdled",
+=======
+		.gpio	= EP93XX_GPIO_LINE_GRLED,
+	}, {
+		.name	= "platform:rdled",
+		.gpio	= EP93XX_GPIO_LINE_RDLED,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 
@@ -436,6 +443,7 @@ static const struct gpio_led_platform_data ep93xx_led_data __initconst = {
 	.leds		= ep93xx_led_pins,
 };
 
+<<<<<<< HEAD
 static struct gpiod_lookup_table ep93xx_leds_gpio_table = {
 	.dev_id = "leds-gpio",
 	.table = {
@@ -446,6 +454,8 @@ static struct gpiod_lookup_table ep93xx_leds_gpio_table = {
 	},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*************************************************************************
  * EP93xx pwm peripheral handling
  *************************************************************************/
@@ -998,7 +1008,10 @@ struct device __init *ep93xx_init_devices(void)
 	platform_device_register(&ep93xx_ohci_device);
 	platform_device_register(&ep93xx_wdt_device);
 
+<<<<<<< HEAD
 	gpiod_add_lookup_table(&ep93xx_leds_gpio_table);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gpio_led_register_device(-1, &ep93xx_led_data);
 
 	return parent;

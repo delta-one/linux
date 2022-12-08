@@ -17,7 +17,10 @@
 #include <linux/clocksource.h>
 #include <linux/net_tstamp.h>
 #include <linux/pm_qos.h>
+<<<<<<< HEAD
 #include <linux/bpf.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/ptp_clock_kernel.h>
 #include <linux/timecounter.h>
 #include <dt-bindings/firmware/imx/rsrc.h>
@@ -347,10 +350,15 @@ struct bufdesc_ex {
  * the skbuffer directly.
  */
 
+<<<<<<< HEAD
 #define FEC_ENET_XDP_HEADROOM	(XDP_PACKET_HEADROOM)
 #define FEC_ENET_RX_PAGES	256
 #define FEC_ENET_RX_FRSIZE	(PAGE_SIZE - FEC_ENET_XDP_HEADROOM \
 		- SKB_DATA_ALIGN(sizeof(struct skb_shared_info)))
+=======
+#define FEC_ENET_RX_PAGES	256
+#define FEC_ENET_RX_FRSIZE	2048
+>>>>>>> b7ba80a49124 (Commit)
 #define FEC_ENET_RX_FRPPG	(PAGE_SIZE / FEC_ENET_RX_FRSIZE)
 #define RX_RING_SIZE		(FEC_ENET_RX_FRPPG * FEC_ENET_RX_PAGES)
 #define FEC_ENET_TX_FRSIZE	2048
@@ -520,6 +528,7 @@ struct bufdesc_prop {
 	unsigned char dsize_log2;
 };
 
+<<<<<<< HEAD
 struct fec_enet_priv_txrx_info {
 	int	offset;
 	struct	page *page;
@@ -539,6 +548,8 @@ enum {
 	XDP_STATS_TOTAL,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct fec_enet_priv_tx_q {
 	struct bufdesc_prop bd;
 	unsigned char *tx_bounce[TX_RING_SIZE];
@@ -554,6 +565,7 @@ struct fec_enet_priv_tx_q {
 
 struct fec_enet_priv_rx_q {
 	struct bufdesc_prop bd;
+<<<<<<< HEAD
 	struct  fec_enet_priv_txrx_info rx_skb_info[RX_RING_SIZE];
 
 	/* page_pool */
@@ -563,6 +575,9 @@ struct fec_enet_priv_rx_q {
 
 	/* rx queue number, in the range 0-7 */
 	u8 id;
+=======
+	struct  sk_buff *rx_skbuff[RX_RING_SIZE];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct fec_stop_mode_gpr {
@@ -671,6 +686,7 @@ struct fec_enet_private {
 	unsigned int reload_period;
 	int pps_enable;
 	unsigned int next_counter;
+<<<<<<< HEAD
 	struct hrtimer perout_timer;
 	u64 perout_stime;
 
@@ -679,6 +695,11 @@ struct fec_enet_private {
 	/* XDP BPF Program */
 	struct bpf_prog *xdp_prog;
 
+=======
+
+	struct imx_sc_ipc *ipc_handle;
+
+>>>>>>> b7ba80a49124 (Commit)
 	u64 ethtool_stats[];
 };
 

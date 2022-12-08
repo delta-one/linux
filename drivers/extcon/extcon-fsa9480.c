@@ -257,7 +257,12 @@ static irqreturn_t fsa9480_irq_handler(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static int fsa9480_probe(struct i2c_client *client)
+=======
+static int fsa9480_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fsa9480_usbsw *info;
 	int ret;
@@ -369,7 +374,11 @@ static struct i2c_driver fsa9480_i2c_driver = {
 		.pm		= &fsa9480_pm_ops,
 		.of_match_table = fsa9480_of_match,
 	},
+<<<<<<< HEAD
 	.probe_new		= fsa9480_probe,
+=======
+	.probe			= fsa9480_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table		= fsa9480_id,
 };
 

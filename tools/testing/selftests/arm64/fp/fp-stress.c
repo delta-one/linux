@@ -39,12 +39,19 @@ struct child_data {
 
 static int epoll_fd;
 static struct child_data *children;
+<<<<<<< HEAD
 static struct epoll_event *evs;
 static int tests;
 static int num_children;
 static bool terminate;
 
 static int startup_pipe[2];
+=======
+static int num_children;
+static bool terminate;
+
+static void drain_output(bool flush);
+>>>>>>> b7ba80a49124 (Commit)
 
 static int num_processors(void)
 {
@@ -84,6 +91,7 @@ static void child_start(struct child_data *child, const char *program)
 		}
 
 		/*
+<<<<<<< HEAD
 		 * Duplicate the read side of the startup pipe to
 		 * FD 3 so we can close everything else.
 		 */
@@ -114,6 +122,14 @@ static void child_start(struct child_data *child, const char *program)
 				ret);
 		close(3);
 
+=======
+		 * Very dumb mechanism to clean open FDs other than
+		 * stdio. We don't want O_CLOEXEC for the pipes...
+		 */
+		for (i = 3; i < 8192; i++)
+			close(i);
+
+>>>>>>> b7ba80a49124 (Commit)
 		ret = execl(program, program, NULL);
 		fprintf(stderr, "execl(%s) failed: %d (%s)\n",
 			program, errno, strerror(errno));
@@ -138,6 +154,7 @@ static void child_start(struct child_data *child, const char *program)
 			ksft_exit_fail_msg("%s EPOLL_CTL_ADD failed: %s (%d)\n",
 					   child->name, strerror(errno), errno);
 		}
+<<<<<<< HEAD
 	}
 }
 
@@ -203,6 +220,64 @@ static void child_output(struct child_data *child, uint32_t events,
 		do {
 			read_more = child_output_read(child);
 		} while (read_more);
+=======
+
+		/*
+		 * Keep output flowing during child startup so logs
+		 * are more timely, can help debugging.
+		 */
+		drain_output(false);
+	}
+}
+
+static void child_output(struct child_data *child, uint32_t events,
+			 bool flush)
+{
+	char read_data[1024];
+	char work[1024];
+	int ret, len, cur_work, cur_read;
+
+	if (events & EPOLLIN) {
+		ret = read(child->stdout, read_data, sizeof(read_data));
+		if (ret < 0) {
+			ksft_print_msg("%s: read() failed: %s (%d)\n",
+				       child->name, strerror(errno), errno);
+			return;
+		}
+		len = ret;
+
+		child->output_seen = true;
+
+		/* Pick up any partial read */
+		if (child->output) {
+			strncpy(work, child->output, sizeof(work) - 1);
+			cur_work = strnlen(work, sizeof(work));
+			free(child->output);
+			child->output = NULL;
+		} else {
+			cur_work = 0;
+		}
+
+		cur_read = 0;
+		while (cur_read < len) {
+			work[cur_work] = read_data[cur_read++];
+
+			if (work[cur_work] == '\n') {
+				work[cur_work] = '\0';
+				ksft_print_msg("%s: %s\n", child->name, work);
+				cur_work = 0;
+			} else {
+				cur_work++;
+			}
+		}
+
+		if (cur_work) {
+			work[cur_work] = '\0';
+			ret = asprintf(&child->output, "%s", work);
+			if (ret == -1)
+				ksft_exit_fail_msg("Out of memory\n");
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (events & EPOLLHUP) {
@@ -290,10 +365,13 @@ static void handle_exit_signal(int sig, siginfo_t *info, void *context)
 {
 	int i;
 
+<<<<<<< HEAD
 	/* If we're already exiting then don't signal again */
 	if (terminate)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ksft_print_msg("Got signal, exiting...\n");
 
 	terminate = true;
@@ -310,12 +388,20 @@ static void start_fpsimd(struct child_data *child, int cpu, int copy)
 {
 	int ret;
 
+<<<<<<< HEAD
+=======
+	child_start(child, "./fpsimd-test");
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = asprintf(&child->name, "FPSIMD-%d-%d", cpu, copy);
 	if (ret == -1)
 		ksft_exit_fail_msg("asprintf() failed\n");
 
+<<<<<<< HEAD
 	child_start(child, "./fpsimd-test");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ksft_print_msg("Started %s\n", child->name);
 }
 
@@ -327,12 +413,20 @@ static void start_sve(struct child_data *child, int vl, int cpu)
 	if (ret < 0)
 		ksft_exit_fail_msg("Failed to set SVE VL %d\n", vl);
 
+<<<<<<< HEAD
+=======
+	child_start(child, "./sve-test");
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = asprintf(&child->name, "SVE-VL-%d-%d", vl, cpu);
 	if (ret == -1)
 		ksft_exit_fail_msg("asprintf() failed\n");
 
+<<<<<<< HEAD
 	child_start(child, "./sve-test");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ksft_print_msg("Started %s\n", child->name);
 }
 
@@ -340,16 +434,26 @@ static void start_ssve(struct child_data *child, int vl, int cpu)
 {
 	int ret;
 
+<<<<<<< HEAD
 	ret = asprintf(&child->name, "SSVE-VL-%d-%d", vl, cpu);
 	if (ret == -1)
 		ksft_exit_fail_msg("asprintf() failed\n");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = prctl(PR_SME_SET_VL, vl | PR_SME_VL_INHERIT);
 	if (ret < 0)
 		ksft_exit_fail_msg("Failed to set SME VL %d\n", ret);
 
 	child_start(child, "./ssve-test");
 
+<<<<<<< HEAD
+=======
+	ret = asprintf(&child->name, "SSVE-VL-%d-%d", vl, cpu);
+	if (ret == -1)
+		ksft_exit_fail_msg("asprintf() failed\n");
+
+>>>>>>> b7ba80a49124 (Commit)
 	ksft_print_msg("Started %s\n", child->name);
 }
 
@@ -361,10 +465,16 @@ static void start_za(struct child_data *child, int vl, int cpu)
 	if (ret < 0)
 		ksft_exit_fail_msg("Failed to set SME VL %d\n", ret);
 
+<<<<<<< HEAD
+=======
+	child_start(child, "./za-test");
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = asprintf(&child->name, "ZA-VL-%d-%d", vl, cpu);
 	if (ret == -1)
 		ksft_exit_fail_msg("asprintf() failed\n");
 
+<<<<<<< HEAD
 	child_start(child, "./za-test");
 
 	ksft_print_msg("Started %s\n", child->name);
@@ -380,6 +490,8 @@ static void start_zt(struct child_data *child, int cpu)
 
 	child_start(child, "./zt-test");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ksft_print_msg("Started %s\n", child->name);
 }
 
@@ -390,7 +502,11 @@ static void probe_vls(int vls[], int *vl_count, int set_vl)
 
 	*vl_count = 0;
 
+<<<<<<< HEAD
 	for (vq = SVE_VQ_MAX; vq > 0; vq /= 2) {
+=======
+	for (vq = SVE_VQ_MAX; vq > 0; --vq) {
+>>>>>>> b7ba80a49124 (Commit)
 		vl = prctl(set_vl, vq * 16);
 		if (vl == -1)
 			ksft_exit_fail_msg("SET_VL failed: %s (%d)\n",
@@ -398,9 +514,12 @@ static void probe_vls(int vls[], int *vl_count, int set_vl)
 
 		vl &= PR_SVE_VL_LEN_MASK;
 
+<<<<<<< HEAD
 		if (*vl_count && (vl == vls[*vl_count - 1]))
 			break;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		vq = sve_vq_from_vl(vl);
 
 		vls[*vl_count] = vl;
@@ -411,11 +530,19 @@ static void probe_vls(int vls[], int *vl_count, int set_vl)
 /* Handle any pending output without blocking */
 static void drain_output(bool flush)
 {
+<<<<<<< HEAD
 	int ret = 1;
 	int i;
 
 	while (ret > 0) {
 		ret = epoll_wait(epoll_fd, evs, tests, 0);
+=======
+	struct epoll_event ev;
+	int ret = 1;
+
+	while (ret > 0) {
+		ret = epoll_wait(epoll_fd, &ev, 1, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret < 0) {
 			if (errno == EINTR)
 				continue;
@@ -423,8 +550,13 @@ static void drain_output(bool flush)
 				       strerror(errno), errno);
 		}
 
+<<<<<<< HEAD
 		for (i = 0; i < ret; i++)
 			child_output(evs[i].data.ptr, evs[i].events, flush);
+=======
+		if (ret == 1)
+			child_output(ev.data.ptr, ev.events, flush);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -437,12 +569,19 @@ int main(int argc, char **argv)
 {
 	int ret;
 	int timeout = 10;
+<<<<<<< HEAD
 	int cpus, i, j, c;
 	int sve_vl_count, sme_vl_count, fpsimd_per_cpu;
 	bool all_children_started = false;
 	int seen_children;
 	int sve_vls[MAX_VLS], sme_vls[MAX_VLS];
 	bool have_sme2;
+=======
+	int cpus, tests, i, j, c;
+	int sve_vl_count, sme_vl_count, fpsimd_per_cpu;
+	int sve_vls[MAX_VLS], sme_vls[MAX_VLS];
+	struct epoll_event ev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sigaction sa;
 
 	while ((c = getopt_long(argc, argv, "t:", options, NULL)) != -1) {
@@ -475,6 +614,7 @@ int main(int argc, char **argv)
 		sme_vl_count = 0;
 	}
 
+<<<<<<< HEAD
 	if (getauxval(AT_HWCAP2) & HWCAP2_SME2) {
 		tests += cpus;
 		have_sme2 = true;
@@ -482,6 +622,8 @@ int main(int argc, char **argv)
 		have_sme2 = false;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Force context switching if we only have FPSIMD */
 	if (!sve_vl_count && !sme_vl_count)
 		fpsimd_per_cpu = 2;
@@ -492,9 +634,14 @@ int main(int argc, char **argv)
 	ksft_print_header();
 	ksft_set_plan(tests);
 
+<<<<<<< HEAD
 	ksft_print_msg("%d CPUs, %d SVE VLs, %d SME VLs, SME2 %s\n",
 		       cpus, sve_vl_count, sme_vl_count,
 		       have_sme2 ? "present" : "absent");
+=======
+	ksft_print_msg("%d CPUs, %d SVE VLs, %d SME VLs\n",
+		       cpus, sve_vl_count, sme_vl_count);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (timeout > 0)
 		ksft_print_msg("Will run for %ds\n", timeout);
@@ -511,12 +658,15 @@ int main(int argc, char **argv)
 				   strerror(errno), ret);
 	epoll_fd = ret;
 
+<<<<<<< HEAD
 	/* Create a pipe which children will block on before execing */
 	ret = pipe(startup_pipe);
 	if (ret != 0)
 		ksft_exit_fail_msg("Failed to create startup pipe: %s (%d)\n",
 				   strerror(errno), errno);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Get signal handers ready before we start any children */
 	memset(&sa, 0, sizeof(sa));
 	sa.sa_sigaction = handle_exit_signal;
@@ -536,11 +686,14 @@ int main(int argc, char **argv)
 		ksft_print_msg("Failed to install SIGCHLD handler: %s (%d)\n",
 			       strerror(errno), errno);
 
+<<<<<<< HEAD
 	evs = calloc(tests, sizeof(*evs));
 	if (!evs)
 		ksft_exit_fail_msg("Failed to allocated %d epoll events\n",
 				   tests);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < cpus; i++) {
 		for (j = 0; j < fpsimd_per_cpu; j++)
 			start_fpsimd(&children[num_children++], i, j);
@@ -552,6 +705,7 @@ int main(int argc, char **argv)
 			start_ssve(&children[num_children++], sme_vls[j], i);
 			start_za(&children[num_children++], sme_vls[j], i);
 		}
+<<<<<<< HEAD
 
 		if (have_sme2)
 			start_zt(&children[num_children++], i);
@@ -564,6 +718,10 @@ int main(int argc, char **argv)
 	close(startup_pipe[0]);
 	close(startup_pipe[1]);
 
+=======
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (;;) {
 		/* Did we get a signal asking us to exit? */
 		if (terminate)
@@ -577,7 +735,11 @@ int main(int argc, char **argv)
 		 * useful in emulation where we will both be slow and
 		 * likely to have a large set of VLs.
 		 */
+<<<<<<< HEAD
 		ret = epoll_wait(epoll_fd, evs, tests, 1000);
+=======
+		ret = epoll_wait(epoll_fd, &ev, 1, 1000);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret < 0) {
 			if (errno == EINTR)
 				continue;
@@ -586,16 +748,22 @@ int main(int argc, char **argv)
 		}
 
 		/* Output? */
+<<<<<<< HEAD
 		if (ret > 0) {
 			for (i = 0; i < ret; i++) {
 				child_output(evs[i].data.ptr, evs[i].events,
 					     false);
 			}
+=======
+		if (ret == 1) {
+			child_output(ev.data.ptr, ev.events, false);
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		}
 
 		/* Otherwise epoll_wait() timed out */
 
+<<<<<<< HEAD
 		/*
 		 * If the child processes have not produced output they
 		 * aren't actually running the tests yet .
@@ -620,6 +788,8 @@ int main(int argc, char **argv)
 		ksft_print_msg("Sending signals, timeout remaining: %d\n",
 			       timeout);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		for (i = 0; i < num_children; i++)
 			child_tickle(&children[i]);
 
@@ -631,7 +801,10 @@ int main(int argc, char **argv)
 	}
 
 	ksft_print_msg("Finishing up...\n");
+<<<<<<< HEAD
 	terminate = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < tests; i++)
 		child_stop(&children[i]);

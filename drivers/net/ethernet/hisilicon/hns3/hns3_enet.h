@@ -404,7 +404,10 @@ struct hns3_rx_ptype {
 	u32 ip_summed : 2;
 	u32 l3_type : 4;
 	u32 valid : 1;
+<<<<<<< HEAD
 	u32 hash_type: 3;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ring_stats {

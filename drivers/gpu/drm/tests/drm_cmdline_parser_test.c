@@ -927,6 +927,7 @@ static const struct drm_cmdline_invalid_test drm_cmdline_invalid_tests[] = {
 		.name = "invalid_option",
 		.cmdline = "720x480,test=42",
 	},
+<<<<<<< HEAD
 	{
 		.name = "invalid_tv_option",
 		.cmdline = "720x480i,tv_mode=invalid",
@@ -935,6 +936,8 @@ static const struct drm_cmdline_invalid_test drm_cmdline_invalid_tests[] = {
 		.name = "truncated_tv_option",
 		.cmdline = "720x480i,tv_mode=NTS",
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void drm_cmdline_invalid_desc(const struct drm_cmdline_invalid_test *t,
@@ -945,6 +948,7 @@ static void drm_cmdline_invalid_desc(const struct drm_cmdline_invalid_test *t,
 
 KUNIT_ARRAY_PARAM(drm_cmdline_invalid, drm_cmdline_invalid_tests, drm_cmdline_invalid_desc);
 
+<<<<<<< HEAD
 struct drm_cmdline_tv_option_test {
 	const char *name;
 	const char *cmdline;
@@ -1004,6 +1008,8 @@ KUNIT_ARRAY_PARAM(drm_cmdline_tv_option,
 		  drm_cmdline_tv_option_tests,
 		  drm_cmdline_tv_option_desc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct kunit_case drm_cmdline_parser_tests[] = {
 	KUNIT_CASE(drm_test_cmdline_force_d_only),
 	KUNIT_CASE(drm_test_cmdline_force_D_only_dvi),
@@ -1044,7 +1050,10 @@ static struct kunit_case drm_cmdline_parser_tests[] = {
 	KUNIT_CASE(drm_test_cmdline_freestanding_force_e_and_options),
 	KUNIT_CASE(drm_test_cmdline_panel_orientation),
 	KUNIT_CASE_PARAM(drm_test_cmdline_invalid, drm_cmdline_invalid_gen_params),
+<<<<<<< HEAD
 	KUNIT_CASE_PARAM(drm_test_cmdline_tv_options, drm_cmdline_tv_option_gen_params),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 

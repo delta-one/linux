@@ -98,7 +98,10 @@ struct fsl_lpspi_data {
 	struct clk *clk_ipg;
 	struct clk *clk_per;
 	bool is_slave;
+<<<<<<< HEAD
 	u32 num_cs;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool is_only_cs1;
 	bool is_first_byte;
 
@@ -425,7 +428,11 @@ static int fsl_lpspi_setup_transfer(struct spi_controller *controller,
 	if (fsl_lpspi->is_only_cs1)
 		fsl_lpspi->config.chip_select = 1;
 	else
+<<<<<<< HEAD
 		fsl_lpspi->config.chip_select = spi_get_chipselect(spi, 0);
+=======
+		fsl_lpspi->config.chip_select = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!fsl_lpspi->config.speed_hz)
 		fsl_lpspi->config.speed_hz = spi->max_speed_hz;
@@ -841,9 +848,12 @@ static int fsl_lpspi_probe(struct platform_device *pdev)
 	fsl_lpspi->is_slave = is_slave;
 	fsl_lpspi->is_only_cs1 = of_property_read_bool((&pdev->dev)->of_node,
 						"fsl,spi-only-use-cs1-sel");
+<<<<<<< HEAD
 	if (of_property_read_u32((&pdev->dev)->of_node, "num-cs",
 				 &fsl_lpspi->num_cs))
 		fsl_lpspi->num_cs = 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	controller->bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 32);
 	controller->transfer_one = fsl_lpspi_transfer_one;
@@ -853,14 +863,22 @@ static int fsl_lpspi_probe(struct platform_device *pdev)
 	controller->flags = SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX;
 	controller->dev.of_node = pdev->dev.of_node;
 	controller->bus_num = pdev->id;
+<<<<<<< HEAD
 	controller->num_chipselect = fsl_lpspi->num_cs;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	controller->slave_abort = fsl_lpspi_slave_abort;
 	if (!fsl_lpspi->is_slave)
 		controller->use_gpio_descriptors = true;
 
 	init_completion(&fsl_lpspi->xfer_done);
 
+<<<<<<< HEAD
 	fsl_lpspi->base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	fsl_lpspi->base = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(fsl_lpspi->base)) {
 		ret = PTR_ERR(fsl_lpspi->base);
 		goto out_controller_put;
@@ -937,7 +955,11 @@ out_controller_put:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void fsl_lpspi_remove(struct platform_device *pdev)
+=======
+static int fsl_lpspi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_controller *controller = platform_get_drvdata(pdev);
 	struct fsl_lpspi_data *fsl_lpspi =
@@ -946,6 +968,10 @@ static void fsl_lpspi_remove(struct platform_device *pdev)
 	fsl_lpspi_dma_exit(controller);
 
 	pm_runtime_disable(fsl_lpspi->dev);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused fsl_lpspi_suspend(struct device *dev)
@@ -982,7 +1008,11 @@ static struct platform_driver fsl_lpspi_driver = {
 		.pm = &fsl_lpspi_pm_ops,
 	},
 	.probe = fsl_lpspi_probe,
+<<<<<<< HEAD
 	.remove_new = fsl_lpspi_remove,
+=======
+	.remove = fsl_lpspi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(fsl_lpspi_driver);
 

@@ -34,7 +34,10 @@
  */
 #define __user_swpX_asm(data, addr, res, temp, B)		\
 	__asm__ __volatile__(					\
+<<<<<<< HEAD
 	".arch armv7-a\n"					\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	"0:	ldrex"B"	%2, [%3]\n"			\
 	"1:	strex"B"	%0, %1, [%3]\n"			\
 	"	cmp		%0, #0\n"			\

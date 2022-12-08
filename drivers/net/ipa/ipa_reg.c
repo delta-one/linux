@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0
 
 /* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (C) 2019-2023 Linaro Ltd.
+=======
+ * Copyright (C) 2019-2020 Linaro Ltd.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/io.h>
@@ -9,6 +13,7 @@
 #include "ipa.h"
 #include "ipa_reg.h"
 
+<<<<<<< HEAD
 /* Is this register ID valid for the current IPA version? */
 static bool ipa_reg_id_valid(struct ipa *ipa, enum ipa_reg_id reg_id)
 {
@@ -143,6 +148,13 @@ int ipa_reg_init(struct ipa *ipa)
 	if (WARN_ON(regs->reg_count > IPA_REG_ID_COUNT))
 		return -EINVAL;
 
+=======
+int ipa_reg_init(struct ipa *ipa)
+{
+	struct device *dev = &ipa->pdev->dev;
+	struct resource *res;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Setup IPA register memory  */
 	res = platform_get_resource_byname(ipa->pdev, IORESOURCE_MEM,
 					   "ipa-reg");
@@ -156,7 +168,11 @@ int ipa_reg_init(struct ipa *ipa)
 		dev_err(dev, "unable to remap \"ipa-reg\" memory\n");
 		return -ENOMEM;
 	}
+<<<<<<< HEAD
 	ipa->regs = regs;
+=======
+	ipa->reg_addr = res->start;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

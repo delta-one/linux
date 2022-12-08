@@ -1432,6 +1432,11 @@ static int sm501_plat_probe(struct platform_device *dev)
 
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM
+
+>>>>>>> b7ba80a49124 (Commit)
 /* power management support */
 
 static void sm501_set_power(struct sm501_devdata *sm, int on)
@@ -1507,6 +1512,13 @@ static int sm501_plat_resume(struct platform_device *pdev)
 
 	return 0;
 }
+<<<<<<< HEAD
+=======
+#else
+#define sm501_plat_suspend NULL
+#define sm501_plat_resume NULL
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Initialisation data for PCI devices */
 
@@ -1708,18 +1720,27 @@ static struct platform_driver sm501_plat_driver = {
 	},
 	.probe		= sm501_plat_probe,
 	.remove		= sm501_plat_remove,
+<<<<<<< HEAD
 	.suspend	= pm_sleep_ptr(sm501_plat_suspend),
 	.resume		= pm_sleep_ptr(sm501_plat_resume),
+=======
+	.suspend	= sm501_plat_suspend,
+	.resume		= sm501_plat_resume,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init sm501_base_init(void)
 {
+<<<<<<< HEAD
 	int ret;
 
 	ret = platform_driver_register(&sm501_plat_driver);
 	if (ret < 0)
 		return ret;
 
+=======
+	platform_driver_register(&sm501_plat_driver);
+>>>>>>> b7ba80a49124 (Commit)
 	return pci_register_driver(&sm501_pci_driver);
 }
 

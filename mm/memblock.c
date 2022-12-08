@@ -500,6 +500,7 @@ static int __init_memblock memblock_double_array(struct memblock_type *type,
 /**
  * memblock_merge_regions - merge neighboring compatible regions
  * @type: memblock type to scan
+<<<<<<< HEAD
  * @start_rgn: start scanning from (@start_rgn - 1)
  * @end_rgn: end scanning at (@end_rgn - 1)
  * Scan @type and merge neighboring compatible regions in [@start_rgn - 1, @end_rgn)
@@ -513,6 +514,17 @@ static void __init_memblock memblock_merge_regions(struct memblock_type *type,
 		i = start_rgn - 1;
 	end_rgn = min(end_rgn, type->cnt - 1);
 	while (i < end_rgn) {
+=======
+ *
+ * Scan @type and merge neighboring compatible regions.
+ */
+static void __init_memblock memblock_merge_regions(struct memblock_type *type)
+{
+	int i = 0;
+
+	/* cnt never goes below 1 */
+	while (i < type->cnt - 1) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct memblock_region *this = &type->regions[i];
 		struct memblock_region *next = &type->regions[i + 1];
 
@@ -529,7 +541,10 @@ static void __init_memblock memblock_merge_regions(struct memblock_type *type,
 		/* move forward from next + 1, index of which is i + 2 */
 		memmove(next, next + 1, (type->cnt - (i + 2)) * sizeof(*next));
 		type->cnt--;
+<<<<<<< HEAD
 		end_rgn--;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -586,7 +601,11 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
 	bool insert = false;
 	phys_addr_t obase = base;
 	phys_addr_t end = base + memblock_cap_size(base, &size);
+<<<<<<< HEAD
 	int idx, nr_new, start_rgn = -1, end_rgn;
+=======
+	int idx, nr_new;
+>>>>>>> b7ba80a49124 (Commit)
 	struct memblock_region *rgn;
 
 	if (!size)
@@ -606,11 +625,19 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
 	/*
 	 * The worst case is when new range overlaps all existing regions,
 	 * then we'll need type->cnt + 1 empty regions in @type. So if
+<<<<<<< HEAD
 	 * type->cnt * 2 + 1 is less than or equal to type->max, we know
 	 * that there is enough empty regions in @type, and we can insert
 	 * regions directly.
 	 */
 	if (type->cnt * 2 + 1 <= type->max)
+=======
+	 * type->cnt * 2 + 1 is less than type->max, we know
+	 * that there is enough empty regions in @type, and we can insert
+	 * regions directly.
+	 */
+	if (type->cnt * 2 + 1 < type->max)
+>>>>>>> b7ba80a49124 (Commit)
 		insert = true;
 
 repeat:
@@ -640,6 +667,7 @@ repeat:
 #endif
 			WARN_ON(flags != rgn->flags);
 			nr_new++;
+<<<<<<< HEAD
 			if (insert) {
 				if (start_rgn == -1)
 					start_rgn = idx;
@@ -648,6 +676,12 @@ repeat:
 						       rbase - base, nid,
 						       flags);
 			}
+=======
+			if (insert)
+				memblock_insert_region(type, idx++, base,
+						       rbase - base, nid,
+						       flags);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		/* area below @rend is dealt with, forget about it */
 		base = min(rend, end);
@@ -656,6 +690,7 @@ repeat:
 	/* insert the remaining portion */
 	if (base < end) {
 		nr_new++;
+<<<<<<< HEAD
 		if (insert) {
 			if (start_rgn == -1)
 				start_rgn = idx;
@@ -663,6 +698,11 @@ repeat:
 			memblock_insert_region(type, idx, base, end - base,
 					       nid, flags);
 		}
+=======
+		if (insert)
+			memblock_insert_region(type, idx, base, end - base,
+					       nid, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (!nr_new)
@@ -679,7 +719,11 @@ repeat:
 		insert = true;
 		goto repeat;
 	} else {
+<<<<<<< HEAD
 		memblock_merge_regions(type, start_rgn, end_rgn);
+=======
+		memblock_merge_regions(type);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 }
@@ -849,7 +893,11 @@ void __init_memblock memblock_free(void *ptr, size_t size)
  * @base: phys starting address of the  boot memory block
  * @size: size of the boot memory block in bytes
  *
+<<<<<<< HEAD
  * Free boot memory block previously allocated by memblock_phys_alloc_xx() API.
+=======
+ * Free boot memory block previously allocated by memblock_alloc_xx() API.
+>>>>>>> b7ba80a49124 (Commit)
  * The freeing memory will not be released to the buddy allocator.
  */
 int __init_memblock memblock_phys_free(phys_addr_t base, phys_addr_t size)
@@ -915,7 +963,11 @@ static int __init_memblock memblock_setclr_flag(phys_addr_t base,
 			r->flags &= ~flag;
 	}
 
+<<<<<<< HEAD
 	memblock_merge_regions(type, start_rgn, end_rgn);
+=======
+	memblock_merge_regions(type);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1288,7 +1340,11 @@ int __init_memblock memblock_set_node(phys_addr_t base, phys_addr_t size,
 	for (i = start_rgn; i < end_rgn; i++)
 		memblock_set_region_node(&type->regions[i], nid);
 
+<<<<<<< HEAD
 	memblock_merge_regions(type, start_rgn, end_rgn);
+=======
+	memblock_merge_regions(type);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	return 0;
 }
@@ -2043,7 +2099,11 @@ static void __init __free_pages_memory(unsigned long start, unsigned long end)
 	int order;
 
 	while (start < end) {
+<<<<<<< HEAD
 		order = min_t(int, MAX_ORDER, __ffs(start));
+=======
+		order = min(MAX_ORDER - 1UL, __ffs(start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		while (start + (1UL << order) > end)
 			order--;

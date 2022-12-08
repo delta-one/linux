@@ -700,7 +700,11 @@ void tipc_mon_delete(struct net *net, int bearer_id)
 	}
 	mon->self = NULL;
 	write_unlock_bh(&mon->lock);
+<<<<<<< HEAD
 	timer_shutdown_sync(&mon->timer);
+=======
+	del_timer_sync(&mon->timer);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(self->domain);
 	kfree(self);
 	kfree(mon);

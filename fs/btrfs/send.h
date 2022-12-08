@@ -10,6 +10,7 @@
 #include <linux/types.h>
 
 #define BTRFS_SEND_STREAM_MAGIC "btrfs-stream"
+<<<<<<< HEAD
 /* Conditional support for the upcoming protocol version. */
 #ifdef CONFIG_BTRFS_DEBUG
 #define BTRFS_SEND_STREAM_VERSION 3
@@ -24,6 +25,15 @@
  */
 #define BTRFS_SEND_BUF_SIZE_V1				SZ_64K
 #define BTRFS_SEND_BUF_SIZE_V2	ALIGN(SZ_16K + BTRFS_MAX_COMPRESSED, PAGE_SIZE)
+=======
+#define BTRFS_SEND_STREAM_VERSION 2
+
+/*
+ * In send stream v1, no command is larger than 64K. In send stream v2, no limit
+ * should be assumed.
+ */
+#define BTRFS_SEND_BUF_SIZE_V1				SZ_64K
+>>>>>>> b7ba80a49124 (Commit)
 
 struct inode;
 struct btrfs_ioctl_send_args;

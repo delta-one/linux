@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 
 #include <linux/bitops.h>
 #include <linux/device.h>
@@ -18,12 +19,27 @@
 
 #include <linux/gpio/consumer.h>
 #include <linux/gpio/driver.h>
+=======
+#include <linux/idr.h>
+#include <linux/mutex.h>
+#include <linux/device.h>
+#include <linux/sysfs.h>
+#include <linux/gpio/consumer.h>
+#include <linux/gpio/driver.h>
+#include <linux/interrupt.h>
+#include <linux/kdev_t.h>
+#include <linux/slab.h>
+#include <linux/ctype.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "gpiolib.h"
 #include "gpiolib-sysfs.h"
 
+<<<<<<< HEAD
 struct kernfs_node;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define GPIO_IRQF_TRIGGER_NONE		0
 #define GPIO_IRQF_TRIGGER_FALLING	BIT(0)
 #define GPIO_IRQF_TRIGGER_RISING	BIT(1)
@@ -502,7 +518,11 @@ static ssize_t unexport_store(struct class *class,
 		goto done;
 
 	desc = gpio_to_desc(gpio);
+<<<<<<< HEAD
 	/* reject bogus commands (gpiod_unexport() ignores them) */
+=======
+	/* reject bogus commands (gpio_unexport ignores them) */
+>>>>>>> b7ba80a49124 (Commit)
 	if (!desc) {
 		pr_warn("%s: invalid GPIO %ld\n", __func__, gpio);
 		return -EINVAL;
@@ -534,6 +554,11 @@ ATTRIBUTE_GROUPS(gpio_class);
 
 static struct class gpio_class = {
 	.name =		"gpio",
+<<<<<<< HEAD
+=======
+	.owner =	THIS_MODULE,
+
+>>>>>>> b7ba80a49124 (Commit)
 	.class_groups = gpio_class_groups,
 };
 
@@ -799,7 +824,11 @@ static int __init gpiolib_sysfs_init(void)
 	 * early (e.g. before the class_register above was called).
 	 *
 	 * We run before arch_initcall() so chip->dev nodes can have
+<<<<<<< HEAD
 	 * registered, and so arch_initcall() can always gpiod_export().
+=======
+	 * registered, and so arch_initcall() can always gpio_export().
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	spin_lock_irqsave(&gpio_lock, flags);
 	list_for_each_entry(gdev, &gpio_devices, list) {

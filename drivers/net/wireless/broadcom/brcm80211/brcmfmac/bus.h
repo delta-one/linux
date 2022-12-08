@@ -8,7 +8,10 @@
 
 #include <linux/kernel.h>
 #include <linux/firmware.h>
+<<<<<<< HEAD
 #include <linux/device.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "debug.h"
 
 /* IDs of the 6 default common rings of msgbuf protocol */
@@ -25,6 +28,7 @@
 #define BRCMF_NROF_COMMON_MSGRINGS	(BRCMF_NROF_H2D_COMMON_MSGRINGS + \
 					 BRCMF_NROF_D2H_COMMON_MSGRINGS)
 
+<<<<<<< HEAD
 /* The interval to poll console */
 #define BRCMF_CONSOLE	10
 
@@ -40,6 +44,8 @@ enum brcmf_fwvendor {
 	BRCMF_FWVENDOR_INVALID
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* The level of bus communication with the dongle */
 enum brcmf_bus_state {
 	BRCMF_BUS_DOWN,		/* Not ready for frame transfers */
@@ -55,7 +61,10 @@ enum brcmf_bus_protocol_type {
 /* Firmware blobs that may be available */
 enum brcmf_blob_type {
 	BRCMF_BLOB_CLM,
+<<<<<<< HEAD
 	BRCMF_BLOB_TXCAP,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct brcmf_mp_device;
@@ -85,7 +94,10 @@ struct brcmf_bus_dcmd {
  * @get_ramsize: obtain size of device memory.
  * @get_memdump: obtain device memory dump in provided buffer.
  * @get_blob: obtain a firmware blob.
+<<<<<<< HEAD
  * @remove: initiate unbind of the device.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This structure provides an abstract interface towards the
  * bus specific driver. For control messages to common driver
@@ -106,7 +118,10 @@ struct brcmf_bus_ops {
 			enum brcmf_blob_type type);
 	void (*debugfs_create)(struct device *dev);
 	int (*reset)(struct device *dev);
+<<<<<<< HEAD
 	void (*remove)(struct device *dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 
@@ -154,6 +169,7 @@ struct brcmf_bus_stats {
  * @stats: statistics shared between common and bus layer.
  * @maxctl: maximum size for rxctl request message.
  * @chip: device identifier of the dongle chip.
+<<<<<<< HEAD
  * @chiprev: revision of the dongle chip.
  * @fwvid: firmware vendor-support identifier of the device.
  * @always_use_fws_queue: bus wants use queue also when fwsignal is inactive.
@@ -161,6 +177,12 @@ struct brcmf_bus_stats {
  * @ops: callbacks for this bus instance.
  * @msgbuf: msgbuf protocol parameters provided by bus layer.
  * @list: member used to add this bus instance to linked list.
+=======
+ * @always_use_fws_queue: bus wants use queue also when fwsignal is inactive.
+ * @wowl_supported: is wowl supported by bus driver.
+ * @chiprev: revision of the dongle chip.
+ * @msgbuf: msgbuf protocol parameters provided by bus layer.
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct brcmf_bus {
 	union {
@@ -176,14 +198,20 @@ struct brcmf_bus {
 	uint maxctl;
 	u32 chip;
 	u32 chiprev;
+<<<<<<< HEAD
 	enum brcmf_fwvendor fwvid;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool always_use_fws_queue;
 	bool wowl_supported;
 
 	const struct brcmf_bus_ops *ops;
 	struct brcmf_bus_msgbuf *msgbuf;
+<<<<<<< HEAD
 
 	struct list_head list;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -276,6 +304,7 @@ int brcmf_bus_reset(struct brcmf_bus *bus)
 	return bus->ops->reset(bus->dev);
 }
 
+<<<<<<< HEAD
 static inline void brcmf_bus_remove(struct brcmf_bus *bus)
 {
 	if (!bus->ops->remove) {
@@ -286,6 +315,8 @@ static inline void brcmf_bus_remove(struct brcmf_bus *bus)
 	bus->ops->remove(bus->dev);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * interface functions from common layer
  */

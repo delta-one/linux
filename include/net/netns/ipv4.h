@@ -43,7 +43,10 @@ struct tcp_fastopen_context;
 
 struct netns_ipv4 {
 	struct inet_timewait_death_row tcp_death_row;
+<<<<<<< HEAD
 	struct udp_table *udp_table;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_SYSCTL
 	struct ctl_table_header	*forw_hdr;
@@ -184,11 +187,14 @@ struct netns_ipv4 {
 	unsigned long tfo_active_disable_stamp;
 	u32 tcp_challenge_timestamp;
 	u32 tcp_challenge_count;
+<<<<<<< HEAD
 	u8 sysctl_tcp_plb_enabled;
 	u8 sysctl_tcp_plb_idle_rehash_rounds;
 	u8 sysctl_tcp_plb_rehash_rounds;
 	u8 sysctl_tcp_plb_suspend_rto_sec;
 	int sysctl_tcp_plb_cong_thresh;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	int sysctl_udp_wmem_min;
 	int sysctl_udp_rmem_min;
@@ -208,8 +214,11 @@ struct netns_ipv4 {
 
 	atomic_t dev_addr_genid;
 
+<<<<<<< HEAD
 	unsigned int sysctl_udp_child_hash_entries;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SYSCTL
 	unsigned long *sysctl_local_reserved_ports;
 	int sysctl_ip_prot_sock;

@@ -131,9 +131,15 @@ static int essiv_aead_setauthsize(struct crypto_aead *tfm,
 	return crypto_aead_setauthsize(tctx->u.aead, authsize);
 }
 
+<<<<<<< HEAD
 static void essiv_skcipher_done(void *data, int err)
 {
 	struct skcipher_request *req = data;
+=======
+static void essiv_skcipher_done(struct crypto_async_request *areq, int err)
+{
+	struct skcipher_request *req = areq->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	skcipher_request_complete(req, err);
 }
@@ -166,6 +172,7 @@ static int essiv_skcipher_decrypt(struct skcipher_request *req)
 	return essiv_skcipher_crypt(req, false);
 }
 
+<<<<<<< HEAD
 static void essiv_aead_done(void *data, int err)
 {
 	struct aead_request *req = data;
@@ -177,6 +184,14 @@ static void essiv_aead_done(void *data, int err)
 	kfree(rctx->assoc);
 
 out:
+=======
+static void essiv_aead_done(struct crypto_async_request *areq, int err)
+{
+	struct aead_request *req = areq->data;
+	struct essiv_aead_request_ctx *rctx = aead_request_ctx(req);
+
+	kfree(rctx->assoc);
+>>>>>>> b7ba80a49124 (Commit)
 	aead_request_complete(req, err);
 }
 
@@ -252,7 +267,11 @@ static int essiv_aead_crypt(struct aead_request *req, bool enc)
 	err = enc ? crypto_aead_encrypt(subreq) :
 		    crypto_aead_decrypt(subreq);
 
+<<<<<<< HEAD
 	if (rctx->assoc && err != -EINPROGRESS && err != -EBUSY)
+=======
+	if (rctx->assoc && err != -EINPROGRESS)
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(rctx->assoc);
 	return err;
 }

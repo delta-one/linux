@@ -333,6 +333,14 @@ static int em_sti_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int em_sti_remove(struct platform_device *pdev)
+{
+	return -EBUSY; /* cannot unregister clockevent and clocksource */
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id em_sti_dt_ids[] = {
 	{ .compatible = "renesas,em-sti", },
 	{},
@@ -341,10 +349,17 @@ MODULE_DEVICE_TABLE(of, em_sti_dt_ids);
 
 static struct platform_driver em_sti_device_driver = {
 	.probe		= em_sti_probe,
+<<<<<<< HEAD
 	.driver		= {
 		.name	= "em_sti",
 		.of_match_table = em_sti_dt_ids,
 		.suppress_bind_attrs = true,
+=======
+	.remove		= em_sti_remove,
+	.driver		= {
+		.name	= "em_sti",
+		.of_match_table = em_sti_dt_ids,
+>>>>>>> b7ba80a49124 (Commit)
 	}
 };
 
@@ -363,3 +378,7 @@ module_exit(em_sti_exit);
 
 MODULE_AUTHOR("Magnus Damm");
 MODULE_DESCRIPTION("Renesas Emma Mobile STI Timer Driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

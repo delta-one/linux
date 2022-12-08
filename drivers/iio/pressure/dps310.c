@@ -827,9 +827,15 @@ static const struct iio_info dps310_info = {
 	.write_raw = dps310_write_raw,
 };
 
+<<<<<<< HEAD
 static int dps310_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int dps310_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct dps310_data *data;
 	struct iio_dev *iio;
 	int rc;
@@ -887,7 +893,11 @@ static struct i2c_driver dps310_driver = {
 		.name = DPS310_DEV_NAME,
 		.acpi_match_table = dps310_acpi_match,
 	},
+<<<<<<< HEAD
 	.probe_new = dps310_probe,
+=======
+	.probe = dps310_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = dps310_id,
 };
 module_i2c_driver(dps310_driver);

@@ -354,7 +354,11 @@ static ssize_t sampling_frequency_available_show(struct device *dev, struct devi
 	ssize_t len = 0;
 
 	do {
+<<<<<<< HEAD
 		len += sysfs_emit_at(buf, len, "0.%09u ", 1000000000 / i);
+=======
+		len += scnprintf(buf + len, PAGE_SIZE - len, "0.%09u ", 1000000000 / i);
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Not all values fit PAGE_SIZE buffer hence print every 6th
 		 * (each frequency differs by 6s in time domain from the
@@ -380,7 +384,11 @@ static ssize_t calibration_auto_enable_show(struct device *dev, struct device_at
 	ret = scd30_command_read(state, CMD_ASC, &val);
 	mutex_unlock(&state->lock);
 
+<<<<<<< HEAD
 	return ret ?: sysfs_emit(buf, "%d\n", val);
+=======
+	return ret ?: sprintf(buf, "%d\n", val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t calibration_auto_enable_store(struct device *dev, struct device_attribute *attr,
@@ -414,7 +422,11 @@ static ssize_t calibration_forced_value_show(struct device *dev, struct device_a
 	ret = scd30_command_read(state, CMD_FRC, &val);
 	mutex_unlock(&state->lock);
 
+<<<<<<< HEAD
 	return ret ?: sysfs_emit(buf, "%d\n", val);
+=======
+	return ret ?: sprintf(buf, "%d\n", val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t calibration_forced_value_store(struct device *dev, struct device_attribute *attr,
@@ -642,8 +654,15 @@ static int scd30_setup_trigger(struct iio_dev *indio_dev)
 
 	trig = devm_iio_trigger_alloc(dev, "%s-dev%d", indio_dev->name,
 				      iio_device_id(indio_dev));
+<<<<<<< HEAD
 	if (!trig)
 		return dev_err_probe(dev, -ENOMEM, "failed to allocate trigger\n");
+=======
+	if (!trig) {
+		dev_err(dev, "failed to allocate trigger\n");
+		return -ENOMEM;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	trig->ops = &scd30_trigger_ops;
 	iio_trigger_set_drvdata(trig, indio_dev);
@@ -665,9 +684,15 @@ static int scd30_setup_trigger(struct iio_dev *indio_dev)
 					IRQF_NO_AUTOEN,
 					indio_dev->name, indio_dev);
 	if (ret)
+<<<<<<< HEAD
 		return dev_err_probe(dev, ret, "failed to request irq\n");
 
 	return 0;
+=======
+		dev_err(dev, "failed to request irq\n");
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
@@ -715,6 +740,7 @@ int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
 		return ret;
 
 	ret = scd30_reset(state);
+<<<<<<< HEAD
 	if (ret)
 		return dev_err_probe(dev, ret, "failed to reset device\n");
 
@@ -722,6 +748,19 @@ int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
 		ret = scd30_setup_trigger(indio_dev);
 		if (ret)
 			return dev_err_probe(dev, ret, "failed to setup trigger\n");
+=======
+	if (ret) {
+		dev_err(dev, "failed to reset device: %d\n", ret);
+		return ret;
+	}
+
+	if (state->irq > 0) {
+		ret = scd30_setup_trigger(indio_dev);
+		if (ret) {
+			dev_err(dev, "failed to setup trigger: %d\n", ret);
+			return ret;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL, scd30_trigger_handler, NULL);
@@ -729,6 +768,7 @@ int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
 		return ret;
 
 	ret = scd30_command_read(state, CMD_FW_VERSION, &val);
+<<<<<<< HEAD
 	if (ret)
 		return dev_err_probe(dev, ret, "failed to read firmware version\n");
 	dev_info(dev, "firmware version: %d.%d\n", val >> 8, (char)val);
@@ -740,6 +780,25 @@ int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
 	ret = scd30_command_write(state, CMD_START_MEAS, state->pressure_comp);
 	if (ret)
 		return dev_err_probe(dev, ret, "failed to start measurement\n");
+=======
+	if (ret) {
+		dev_err(dev, "failed to read firmware version: %d\n", ret);
+		return ret;
+	}
+	dev_info(dev, "firmware version: %d.%d\n", val >> 8, (char)val);
+
+	ret = scd30_command_write(state, CMD_MEAS_INTERVAL, state->meas_interval);
+	if (ret) {
+		dev_err(dev, "failed to set measurement interval: %d\n", ret);
+		return ret;
+	}
+
+	ret = scd30_command_write(state, CMD_START_MEAS, state->pressure_comp);
+	if (ret) {
+		dev_err(dev, "failed to start measurement: %d\n", ret);
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = devm_add_action_or_reset(dev, scd30_stop_meas, state);
 	if (ret)

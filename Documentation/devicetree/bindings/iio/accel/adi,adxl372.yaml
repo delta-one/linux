@@ -37,6 +37,7 @@ unevaluatedProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     #include <dt-bindings/gpio/gpio.h>
     #include <dt-bindings/interrupt-controller/irq.h>
     i2c {
@@ -66,3 +67,34 @@ examples:
             interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
         };
     };
+=======
+        #include <dt-bindings/gpio/gpio.h>
+        #include <dt-bindings/interrupt-controller/irq.h>
+        i2c0 {
+                #address-cells = <1>;
+                #size-cells = <0>;
+
+                /* Example for a I2C device node */
+                accelerometer@53 {
+                        compatible = "adi,adxl372";
+                        reg = <0x53>;
+                        interrupt-parent = <&gpio>;
+                        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+                };
+        };
+  - |
+        #include <dt-bindings/gpio/gpio.h>
+        #include <dt-bindings/interrupt-controller/irq.h>
+        spi0 {
+                #address-cells = <1>;
+                #size-cells = <0>;
+
+                accelerometer@0 {
+                        compatible = "adi,adxl372";
+                        reg = <0>;
+                        spi-max-frequency = <1000000>;
+                        interrupt-parent = <&gpio>;
+                        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+                };
+        };
+>>>>>>> b7ba80a49124 (Commit)

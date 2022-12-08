@@ -700,7 +700,11 @@ static int alloc_idx_lebs(struct ubifs_info *c, int cnt)
 		c->ilebs[c->ileb_cnt++] = lnum;
 		dbg_cmt("LEB %d", lnum);
 	}
+<<<<<<< HEAD
 	if (dbg_is_chk_index(c) && !get_random_u32_below(8))
+=======
+	if (dbg_is_chk_index(c) && !(prandom_u32() & 7))
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOSPC;
 	return 0;
 }

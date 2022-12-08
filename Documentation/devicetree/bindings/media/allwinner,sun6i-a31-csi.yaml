@@ -73,10 +73,13 @@ properties:
         $ref: /schemas/graph.yaml#/properties/port
         description: MIPI CSI-2 bridge input port
 
+<<<<<<< HEAD
       port@2:
         $ref: /schemas/graph.yaml#/properties/port
         description: Internal output port to the ISP
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     anyOf:
       - required:
           - port@0

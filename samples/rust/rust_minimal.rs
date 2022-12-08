@@ -6,10 +6,17 @@ use kernel::prelude::*;
 
 module! {
     type: RustMinimal,
+<<<<<<< HEAD
     name: "rust_minimal",
     author: "Rust for Linux Contributors",
     description: "Rust minimal sample",
     license: "GPL",
+=======
+    name: b"rust_minimal",
+    author: b"Rust for Linux Contributors",
+    description: b"Rust minimal sample",
+    license: b"GPL",
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct RustMinimal {

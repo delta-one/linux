@@ -126,11 +126,15 @@ enum dmub_notification_type {
 	DMUB_NOTIFICATION_HPD,
 	DMUB_NOTIFICATION_HPD_IRQ,
 	DMUB_NOTIFICATION_SET_CONFIG_REPLY,
+<<<<<<< HEAD
 	DMUB_NOTIFICATION_DPIA_NOTIFICATION,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	DMUB_NOTIFICATION_MAX
 };
 
 /**
+<<<<<<< HEAD
  * DPIA NOTIFICATION Response Type
  */
 enum dpia_notify_bw_alloc_status {
@@ -142,6 +146,8 @@ enum dpia_notify_bw_alloc_status {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct dmub_region - dmub hw memory region
  * @base: base address for region, must be 256 byte aligned
  * @top: top address for region
@@ -260,9 +266,12 @@ struct dmub_srv_hw_params {
 	bool disable_dpia;
 	bool usb4_cm_version;
 	bool fw_in_system_memory;
+<<<<<<< HEAD
 	bool dpia_hpd_int_enable_supported;
 	bool disable_clock_gate;
 	bool disallow_dispclk_dppclk_ds;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -467,7 +476,10 @@ struct dmub_srv {
  * @pending_notification: Indicates there are other pending notifications
  * @aux_reply: aux reply
  * @hpd_status: hpd status
+<<<<<<< HEAD
  * @bw_alloc_reply: BW Allocation reply from CM/DPIA
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct dmub_notification {
 	enum dmub_notification_type type;
@@ -478,10 +490,13 @@ struct dmub_notification {
 		struct aux_reply_data aux_reply;
 		enum dp_hpd_status hpd_status;
 		enum set_config_status sc_status;
+<<<<<<< HEAD
 		/**
 		 * DPIA notification command.
 		 */
 		struct dmub_rb_cmd_dpia_notification dpia_notification;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 

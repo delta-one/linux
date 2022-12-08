@@ -9,6 +9,10 @@
 #include <linux/module.h>
 #include <linux/device.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/pm_runtime.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/dmaengine.h>
 #include <linux/err.h>
 #include <linux/interrupt.h>
@@ -39,6 +43,7 @@ struct dw_edma_desc *vd2dw_edma_desc(struct virt_dma_desc *vd)
 	return container_of(vd, struct dw_edma_desc, vd);
 }
 
+<<<<<<< HEAD
 static inline
 u64 dw_edma_get_pci_address(struct dw_edma_chan *chan, phys_addr_t cpu_addr)
 {
@@ -50,6 +55,8 @@ u64 dw_edma_get_pci_address(struct dw_edma_chan *chan, phys_addr_t cpu_addr)
 	return cpu_addr;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct dw_edma_burst *dw_edma_alloc_burst(struct dw_edma_chunk *chunk)
 {
 	struct dw_edma_burst *burst;
@@ -208,6 +215,7 @@ static void dw_edma_start_transfer(struct dw_edma_chan *chan)
 	desc->chunks_alloc--;
 }
 
+<<<<<<< HEAD
 static void dw_edma_device_caps(struct dma_chan *dchan,
 				struct dma_slave_caps *caps)
 {
@@ -226,6 +234,8 @@ static void dw_edma_device_caps(struct dma_chan *dchan,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int dw_edma_device_config(struct dma_chan *dchan,
 				 struct dma_slave_config *config)
 {
@@ -356,12 +366,19 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
 {
 	struct dw_edma_chan *chan = dchan2dw_edma_chan(xfer->dchan);
 	enum dma_transfer_direction dir = xfer->direction;
+<<<<<<< HEAD
+=======
+	phys_addr_t src_addr, dst_addr;
+>>>>>>> b7ba80a49124 (Commit)
 	struct scatterlist *sg = NULL;
 	struct dw_edma_chunk *chunk;
 	struct dw_edma_burst *burst;
 	struct dw_edma_desc *desc;
+<<<<<<< HEAD
 	u64 src_addr, dst_addr;
 	size_t fsz = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 cnt = 0;
 	int i;
 
@@ -411,9 +428,15 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
 		if (xfer->xfer.sg.len < 1)
 			return NULL;
 	} else if (xfer->type == EDMA_XFER_INTERLEAVED) {
+<<<<<<< HEAD
 		if (!xfer->xfer.il->numf || xfer->xfer.il->frame_size < 1)
 			return NULL;
 		if (!xfer->xfer.il->src_inc || !xfer->xfer.il->dst_inc)
+=======
+		if (!xfer->xfer.il->numf)
+			return NULL;
+		if (xfer->xfer.il->numf > 0 && xfer->xfer.il->frame_size > 0)
+>>>>>>> b7ba80a49124 (Commit)
 			return NULL;
 	} else {
 		return NULL;
@@ -435,19 +458,29 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
 		dst_addr = chan->config.dst_addr;
 	}
 
+<<<<<<< HEAD
 	if (dir == DMA_DEV_TO_MEM)
 		src_addr = dw_edma_get_pci_address(chan, (phys_addr_t)src_addr);
 	else
 		dst_addr = dw_edma_get_pci_address(chan, (phys_addr_t)dst_addr);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (xfer->type == EDMA_XFER_CYCLIC) {
 		cnt = xfer->xfer.cyclic.cnt;
 	} else if (xfer->type == EDMA_XFER_SCATTER_GATHER) {
 		cnt = xfer->xfer.sg.len;
 		sg = xfer->xfer.sg.sgl;
 	} else if (xfer->type == EDMA_XFER_INTERLEAVED) {
+<<<<<<< HEAD
 		cnt = xfer->xfer.il->numf * xfer->xfer.il->frame_size;
 		fsz = xfer->xfer.il->frame_size;
+=======
+		if (xfer->xfer.il->numf > 0)
+			cnt = xfer->xfer.il->numf;
+		else
+			cnt = xfer->xfer.il->frame_size;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (i = 0; i < cnt; i++) {
@@ -469,7 +502,11 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
 		else if (xfer->type == EDMA_XFER_SCATTER_GATHER)
 			burst->sz = sg_dma_len(sg);
 		else if (xfer->type == EDMA_XFER_INTERLEAVED)
+<<<<<<< HEAD
 			burst->sz = xfer->xfer.il->sgl[i % fsz].size;
+=======
+			burst->sz = xfer->xfer.il->sgl[i].size;
+>>>>>>> b7ba80a49124 (Commit)
 
 		chunk->ll_region.sz += burst->sz;
 		desc->alloc_sz += burst->sz;
@@ -488,8 +525,11 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
 				 * and destination addresses are increased
 				 * by the same portion (data length)
 				 */
+<<<<<<< HEAD
 			} else if (xfer->type == EDMA_XFER_INTERLEAVED) {
 				burst->dar = dst_addr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		} else {
 			burst->dar = dst_addr;
@@ -505,13 +545,17 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
 				 * and destination addresses are increased
 				 * by the same portion (data length)
 				 */
+<<<<<<< HEAD
 			}  else if (xfer->type == EDMA_XFER_INTERLEAVED) {
 				burst->sar = src_addr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 
 		if (xfer->type == EDMA_XFER_SCATTER_GATHER) {
 			sg = sg_next(sg);
+<<<<<<< HEAD
 		} else if (xfer->type == EDMA_XFER_INTERLEAVED) {
 			struct dma_interleaved_template *il = xfer->xfer.il;
 			struct data_chunk *dc = &il->sgl[i % fsz];
@@ -523,6 +567,22 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
 			dst_addr += burst->sz;
 			if (il->dst_sgl)
 				dst_addr += dmaengine_get_dst_icg(il, dc);
+=======
+		} else if (xfer->type == EDMA_XFER_INTERLEAVED &&
+			   xfer->xfer.il->frame_size > 0) {
+			struct dma_interleaved_template *il = xfer->xfer.il;
+			struct data_chunk *dc = &il->sgl[i];
+
+			if (il->src_sgl) {
+				src_addr += burst->sz;
+				src_addr += dmaengine_get_src_icg(il, dc);
+			}
+
+			if (il->dst_sgl) {
+				dst_addr += burst->sz;
+				dst_addr += dmaengine_get_dst_icg(il, dc);
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -715,12 +775,21 @@ static int dw_edma_alloc_chan_resources(struct dma_chan *dchan)
 	if (chan->status != EDMA_ST_IDLE)
 		return -EBUSY;
 
+<<<<<<< HEAD
+=======
+	pm_runtime_get(chan->dw->chip->dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static void dw_edma_free_chan_resources(struct dma_chan *dchan)
 {
 	unsigned long timeout = jiffies + msecs_to_jiffies(5000);
+<<<<<<< HEAD
+=======
+	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	while (time_before(jiffies, timeout)) {
@@ -733,15 +802,28 @@ static void dw_edma_free_chan_resources(struct dma_chan *dchan)
 
 		cpu_relax();
 	}
+<<<<<<< HEAD
 }
 
 static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
 {
 	struct dw_edma_chip *chip = dw->chip;
+=======
+
+	pm_runtime_put(chan->dw->chip->dev);
+}
+
+static int dw_edma_channel_setup(struct dw_edma *dw, bool write,
+				 u32 wr_alloc, u32 rd_alloc)
+{
+	struct dw_edma_chip *chip = dw->chip;
+	struct dw_edma_region *dt_region;
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = chip->dev;
 	struct dw_edma_chan *chan;
 	struct dw_edma_irq *irq;
 	struct dma_device *dma;
+<<<<<<< HEAD
 	u32 i, ch_cnt;
 	u32 pos;
 
@@ -763,10 +845,45 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
 			chan->dir = EDMA_DIR_READ;
 		}
 
+=======
+	u32 alloc, off_alloc;
+	u32 i, j, cnt;
+	int err = 0;
+	u32 pos;
+
+	if (write) {
+		i = 0;
+		cnt = dw->wr_ch_cnt;
+		dma = &dw->wr_edma;
+		alloc = wr_alloc;
+		off_alloc = 0;
+	} else {
+		i = dw->wr_ch_cnt;
+		cnt = dw->rd_ch_cnt;
+		dma = &dw->rd_edma;
+		alloc = rd_alloc;
+		off_alloc = wr_alloc;
+	}
+
+	INIT_LIST_HEAD(&dma->channels);
+	for (j = 0; (alloc || dw->nr_irqs == 1) && j < cnt; j++, i++) {
+		chan = &dw->chan[i];
+
+		dt_region = devm_kzalloc(dev, sizeof(*dt_region), GFP_KERNEL);
+		if (!dt_region)
+			return -ENOMEM;
+
+		chan->vc.chan.private = dt_region;
+
+		chan->dw = dw;
+		chan->id = j;
+		chan->dir = write ? EDMA_DIR_WRITE : EDMA_DIR_READ;
+>>>>>>> b7ba80a49124 (Commit)
 		chan->configured = false;
 		chan->request = EDMA_REQ_NONE;
 		chan->status = EDMA_ST_IDLE;
 
+<<<<<<< HEAD
 		if (chan->dir == EDMA_DIR_WRITE)
 			chan->ll_max = (chip->ll_region_wr[chan->id].sz / EDMA_LL_SZ);
 		else
@@ -790,22 +907,63 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
 			irq->wr_mask |= BIT(chan->id);
 		else
 			irq->rd_mask |= BIT(chan->id);
+=======
+		if (write)
+			chan->ll_max = (chip->ll_region_wr[j].sz / EDMA_LL_SZ);
+		else
+			chan->ll_max = (chip->ll_region_rd[j].sz / EDMA_LL_SZ);
+		chan->ll_max -= 1;
+
+		dev_vdbg(dev, "L. List:\tChannel %s[%u] max_cnt=%u\n",
+			 write ? "write" : "read", j, chan->ll_max);
+
+		if (dw->nr_irqs == 1)
+			pos = 0;
+		else
+			pos = off_alloc + (j % alloc);
+
+		irq = &dw->irq[pos];
+
+		if (write)
+			irq->wr_mask |= BIT(j);
+		else
+			irq->rd_mask |= BIT(j);
+>>>>>>> b7ba80a49124 (Commit)
 
 		irq->dw = dw;
 		memcpy(&chan->msi, &irq->msi, sizeof(chan->msi));
 
 		dev_vdbg(dev, "MSI:\t\tChannel %s[%u] addr=0x%.8x%.8x, data=0x%.8x\n",
+<<<<<<< HEAD
 			 chan->dir == EDMA_DIR_WRITE  ? "write" : "read", chan->id,
+=======
+			 write ? "write" : "read", j,
+>>>>>>> b7ba80a49124 (Commit)
 			 chan->msi.address_hi, chan->msi.address_lo,
 			 chan->msi.data);
 
 		chan->vc.desc_free = vchan_free_desc;
+<<<<<<< HEAD
 		chan->vc.chan.private = chan->dir == EDMA_DIR_WRITE ?
 					&dw->chip->dt_region_wr[chan->id] :
 					&dw->chip->dt_region_rd[chan->id];
 
 		vchan_init(&chan->vc, dma);
 
+=======
+		vchan_init(&chan->vc, dma);
+
+		if (write) {
+			dt_region->paddr = chip->dt_region_wr[j].paddr;
+			dt_region->vaddr = chip->dt_region_wr[j].vaddr;
+			dt_region->sz = chip->dt_region_wr[j].sz;
+		} else {
+			dt_region->paddr = chip->dt_region_rd[j].paddr;
+			dt_region->vaddr = chip->dt_region_rd[j].vaddr;
+			dt_region->sz = chip->dt_region_rd[j].sz;
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		dw_edma_v0_core_device_config(chan);
 	}
 
@@ -815,16 +973,27 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
 	dma_cap_set(DMA_CYCLIC, dma->cap_mask);
 	dma_cap_set(DMA_PRIVATE, dma->cap_mask);
 	dma_cap_set(DMA_INTERLEAVE, dma->cap_mask);
+<<<<<<< HEAD
 	dma->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
 	dma->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
 	dma->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
 	dma->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
+=======
+	dma->directions = BIT(write ? DMA_DEV_TO_MEM : DMA_MEM_TO_DEV);
+	dma->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+	dma->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+	dma->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
+	dma->chancnt = cnt;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Set DMA channel callbacks */
 	dma->dev = chip->dev;
 	dma->device_alloc_chan_resources = dw_edma_alloc_chan_resources;
 	dma->device_free_chan_resources = dw_edma_free_chan_resources;
+<<<<<<< HEAD
 	dma->device_caps = dw_edma_device_caps;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dma->device_config = dw_edma_device_config;
 	dma->device_pause = dw_edma_device_pause;
 	dma->device_resume = dw_edma_device_resume;
@@ -838,7 +1007,13 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
 	dma_set_max_seg_size(dma->dev, U32_MAX);
 
 	/* Register DMA device */
+<<<<<<< HEAD
 	return dma_async_device_register(dma);
+=======
+	err = dma_async_device_register(dma);
+
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void dw_edma_dec_irq_alloc(int *nr_irqs, u32 *alloc, u16 cnt)
@@ -909,8 +1084,15 @@ static int dw_edma_irq_request(struct dw_edma *dw,
 						dw_edma_interrupt_read,
 					  IRQF_SHARED, dw->name,
 					  &dw->irq[i]);
+<<<<<<< HEAD
 			if (err)
 				goto err_irq_free;
+=======
+			if (err) {
+				dw->nr_irqs = i;
+				return err;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 
 			if (irq_get_msi_desc(irq))
 				get_cached_msi_msg(irq, &dw->irq[i].msi);
@@ -919,6 +1101,7 @@ static int dw_edma_irq_request(struct dw_edma *dw,
 		dw->nr_irqs = i;
 	}
 
+<<<<<<< HEAD
 	return 0;
 
 err_irq_free:
@@ -927,6 +1110,8 @@ err_irq_free:
 		free_irq(irq, &dw->irq[i]);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -973,8 +1158,12 @@ int dw_edma_probe(struct dw_edma_chip *chip)
 	if (!dw->chan)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	snprintf(dw->name, sizeof(dw->name), "dw-edma-core:%s",
 		 dev_name(chip->dev));
+=======
+	snprintf(dw->name, sizeof(dw->name), "dw-edma-core:%d", chip->id);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Disable eDMA, only to establish the ideal initial conditions */
 	dw_edma_v0_core_off(dw);
@@ -984,11 +1173,27 @@ int dw_edma_probe(struct dw_edma_chip *chip)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	/* Setup write/read channels */
 	err = dw_edma_channel_setup(dw, wr_alloc, rd_alloc);
 	if (err)
 		goto err_irq_free;
 
+=======
+	/* Setup write channels */
+	err = dw_edma_channel_setup(dw, true, wr_alloc, rd_alloc);
+	if (err)
+		goto err_irq_free;
+
+	/* Setup read channels */
+	err = dw_edma_channel_setup(dw, false, wr_alloc, rd_alloc);
+	if (err)
+		goto err_irq_free;
+
+	/* Power management */
+	pm_runtime_enable(dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Turn debugfs on */
 	dw_edma_v0_core_debugfs_on(dw);
 
@@ -1011,10 +1216,13 @@ int dw_edma_remove(struct dw_edma_chip *chip)
 	struct dw_edma *dw = chip->dw;
 	int i;
 
+<<<<<<< HEAD
 	/* Skip removal if no private data found */
 	if (!dw)
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Disable eDMA */
 	dw_edma_v0_core_off(dw);
 
@@ -1022,14 +1230,36 @@ int dw_edma_remove(struct dw_edma_chip *chip)
 	for (i = (dw->nr_irqs - 1); i >= 0; i--)
 		free_irq(chip->ops->irq_vector(dev, i), &dw->irq[i]);
 
+<<<<<<< HEAD
 	/* Deregister eDMA device */
 	dma_async_device_unregister(&dw->dma);
 	list_for_each_entry_safe(chan, _chan, &dw->dma.channels,
+=======
+	/* Power management */
+	pm_runtime_disable(dev);
+
+	/* Deregister eDMA device */
+	dma_async_device_unregister(&dw->wr_edma);
+	list_for_each_entry_safe(chan, _chan, &dw->wr_edma.channels,
+>>>>>>> b7ba80a49124 (Commit)
 				 vc.chan.device_node) {
 		tasklet_kill(&chan->vc.task);
 		list_del(&chan->vc.chan.device_node);
 	}
 
+<<<<<<< HEAD
+=======
+	dma_async_device_unregister(&dw->rd_edma);
+	list_for_each_entry_safe(chan, _chan, &dw->rd_edma.channels,
+				 vc.chan.device_node) {
+		tasklet_kill(&chan->vc.task);
+		list_del(&chan->vc.chan.device_node);
+	}
+
+	/* Turn debugfs off */
+	dw_edma_v0_core_debugfs_off(dw);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 EXPORT_SYMBOL_GPL(dw_edma_remove);

@@ -262,11 +262,17 @@ struct ena_ring {
 	bool disable_meta_caching;
 	u16 no_interrupt_event_cnt;
 
+<<<<<<< HEAD
 	/* cpu and NUMA for TPH */
 	int cpu;
 	int numa_node;
 
 	/* number of tx/rx_buffer_info's entries */
+=======
+	/* cpu for TPH */
+	int cpu;
+	 /* number of tx/rx_buffer_info's entries */
+>>>>>>> b7ba80a49124 (Commit)
 	int ring_size;
 
 	enum ena_admin_placement_policy_type tx_mem_queue_type;
@@ -394,8 +400,11 @@ int ena_update_queue_sizes(struct ena_adapter *adapter,
 
 int ena_update_queue_count(struct ena_adapter *adapter, u32 new_channel_count);
 
+<<<<<<< HEAD
 int ena_set_rx_copybreak(struct ena_adapter *adapter, u32 rx_copybreak);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ena_get_sset_count(struct net_device *netdev, int sset);
 
 static inline void ena_reset_device(struct ena_adapter *adapter,
@@ -413,6 +422,7 @@ enum ena_xdp_errors_t {
 	ENA_XDP_NO_ENOUGH_QUEUES,
 };
 
+<<<<<<< HEAD
 enum ENA_XDP_ACTIONS {
 	ENA_XDP_PASS		= 0,
 	ENA_XDP_TX		= BIT(0),
@@ -422,6 +432,8 @@ enum ENA_XDP_ACTIONS {
 
 #define ENA_XDP_FORWARDED (ENA_XDP_TX | ENA_XDP_REDIRECT)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool ena_xdp_present(struct ena_adapter *adapter)
 {
 	return !!adapter->xdp_bpf_prog;

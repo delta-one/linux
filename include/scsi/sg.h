@@ -159,7 +159,11 @@ struct compat_sg_io_hdr {
 #define TASK_ABORTED         0x20
 
 /* Obsolete status_byte() declaration */
+<<<<<<< HEAD
 #define sg_status_byte(result) (((result) >> 1) & 0x7f)
+=======
+#define status_byte(result) (((result) >> 1) & 0x7f)
+>>>>>>> b7ba80a49124 (Commit)
 
 typedef struct sg_scsi_id { /* used by SG_GET_SCSI_ID ioctl() */
     int host_no;        /* as in "scsi<n>" where 'n' is one of 0, 1, 2 etc */

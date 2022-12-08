@@ -7,7 +7,10 @@
  */
 
 #include <kunit/test.h>
+<<<<<<< HEAD
 #include <kunit/static_stub.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * This is the most fundamental element of KUnit, the test case. A test case
@@ -87,9 +90,12 @@ static void example_mark_skipped_test(struct kunit *test)
  */
 static void example_all_expect_macros_test(struct kunit *test)
 {
+<<<<<<< HEAD
 	const u32 array1[] = { 0x0F, 0xFF };
 	const u32 array2[] = { 0x1F, 0xFF };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Boolean assertions */
 	KUNIT_EXPECT_TRUE(test, true);
 	KUNIT_EXPECT_FALSE(test, false);
@@ -113,10 +119,13 @@ static void example_all_expect_macros_test(struct kunit *test)
 	KUNIT_EXPECT_STREQ(test, "hi", "hi");
 	KUNIT_EXPECT_STRNEQ(test, "hi", "bye");
 
+<<<<<<< HEAD
 	/* Memory block assertions */
 	KUNIT_EXPECT_MEMEQ(test, array1, array1, sizeof(array1));
 	KUNIT_EXPECT_MEMNEQ(test, array1, array2, sizeof(array1));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * There are also ASSERT variants of all of the above that abort test
 	 * execution if they fail. Useful for memory allocations, etc.
@@ -131,6 +140,7 @@ static void example_all_expect_macros_test(struct kunit *test)
 	KUNIT_ASSERT_GT_MSG(test, sizeof(int), 0, "Your ints are 0-bit?!");
 }
 
+<<<<<<< HEAD
 /* This is a function we'll replace with static stubs. */
 static int add_one(int i)
 {
@@ -167,6 +177,8 @@ static void example_static_stub_test(struct kunit *test)
 	KUNIT_EXPECT_EQ(test, add_one(1), 2);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Here we make a list of all the test cases we want to add to the test suite
  * below.
@@ -182,7 +194,10 @@ static struct kunit_case example_test_cases[] = {
 	KUNIT_CASE(example_skip_test),
 	KUNIT_CASE(example_mark_skipped_test),
 	KUNIT_CASE(example_all_expect_macros_test),
+<<<<<<< HEAD
 	KUNIT_CASE(example_static_stub_test),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 

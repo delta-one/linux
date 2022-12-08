@@ -236,6 +236,7 @@ enum {
 	ISCSI_SESSION_FREE,
 };
 
+<<<<<<< HEAD
 enum {
 	ISCSI_SESSION_TARGET_UNBOUND,
 	ISCSI_SESSION_TARGET_ALLOCATED,
@@ -244,6 +245,8 @@ enum {
 	ISCSI_SESSION_TARGET_MAX,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ISCSI_MAX_TARGET -1
 
 struct iscsi_cls_session {
@@ -272,7 +275,10 @@ struct iscsi_cls_session {
 	 */
 	pid_t creator;
 	int state;
+<<<<<<< HEAD
 	int target_state;			/* session target bind state */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int sid;				/* session id */
 	void *dd_data;				/* LLD private data */
 	struct device dev;	/* sysfs transport/container device */

@@ -108,12 +108,15 @@
 			reg = <0x0 0x95700000 0x0 0x100000>;
 			no-map;
 		};
+<<<<<<< HEAD
 
 		mdata_mem: mpss-metadata {
 			alloc-ranges = <0x0 0xa0000000 0x0 0x20000000>;
 			size = <0x0 0x4000>;
 			no-map;
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	clocks {
@@ -471,7 +474,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu0_crit: cpu-crit {
+=======
+				cpu0_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -492,7 +499,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu1_crit: cpu-crit {
+=======
+				cpu1_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -513,7 +524,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu2_crit: cpu-crit {
+=======
+				cpu2_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -534,7 +549,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu3_crit: cpu-crit {
+=======
+				cpu3_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -555,7 +574,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu4_crit: cpu-crit {
+=======
+				cpu4_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -576,7 +599,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu5_crit: cpu-crit {
+=======
+				cpu5_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -597,7 +624,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu6_crit: cpu-crit {
+=======
+				cpu6_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -618,7 +649,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu7_crit: cpu-crit {
+=======
+				cpu7_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -814,7 +849,11 @@
 			reg = <0x00100000 0xb0000>;
 
 			clock-names = "xo", "sleep_clk";
+<<<<<<< HEAD
 			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>, <&sleep_clk>;
+=======
+			clocks = <&xo>, <&sleep_clk>;
+>>>>>>> b7ba80a49124 (Commit)
 
 			/*
 			 * The hypervisor typically configures the memory region where these clocks
@@ -906,7 +945,11 @@
 		};
 
 		pcie0: pci@1c00000 {
+<<<<<<< HEAD
 			compatible = "qcom,pcie-msm8998", "qcom,pcie-msm8996";
+=======
+			compatible = "qcom,pcie-msm8996";
+>>>>>>> b7ba80a49124 (Commit)
 			reg =	<0x01c00000 0x2000>,
 				<0x1b000000 0xf1d>,
 				<0x1b000f20 0xa8>,
@@ -922,7 +965,11 @@
 			phy-names = "pciephy";
 			status = "disabled";
 
+<<<<<<< HEAD
 			ranges = <0x01000000 0x0 0x00000000 0x1b200000 0x0 0x100000>,
+=======
+			ranges = <0x01000000 0x0 0x1b200000 0x1b200000 0x0 0x100000>,
+>>>>>>> b7ba80a49124 (Commit)
 				 <0x02000000 0x0 0x1b300000 0x1b300000 0x0 0xd00000>;
 
 			#interrupt-cells = <1>;
@@ -935,11 +982,19 @@
 					<0 0 0 4 &intc 0 0 139 IRQ_TYPE_LEVEL_HIGH>;
 
 			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
+<<<<<<< HEAD
 				 <&gcc GCC_PCIE_0_AUX_CLK>,
 				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
 				 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
 				 <&gcc GCC_PCIE_0_SLV_AXI_CLK>;
 			clock-names = "pipe", "aux", "cfg", "bus_master", "bus_slave";
+=======
+				 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
+				 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
+				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
+				 <&gcc GCC_PCIE_0_AUX_CLK>;
+			clock-names = "pipe", "bus_master", "bus_slave", "cfg", "aux";
+>>>>>>> b7ba80a49124 (Commit)
 
 			power-domains = <&gcc PCIE_0_GDSC>;
 			iommu-map = <0x100 &anoc1_smmu 0x1480 1>;
@@ -1062,82 +1117,132 @@
 			compatible = "qcom,msm8998-pinctrl";
 			reg = <0x03400000 0xc00000>;
 			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 			gpio-ranges = <&tlmm 0 0 150>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			gpio-controller;
 			#gpio-cells = <2>;
 			interrupt-controller;
 			#interrupt-cells = <2>;
 
+<<<<<<< HEAD
 			sdc2_on: sdc2-on-state {
 				clk-pins {
+=======
+			sdc2_on: sdc2-on {
+				clk {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc2_clk";
 					drive-strength = <16>;
 					bias-disable;
 				};
 
+<<<<<<< HEAD
 				cmd-pins {
+=======
+				cmd {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc2_cmd";
 					drive-strength = <10>;
 					bias-pull-up;
 				};
 
+<<<<<<< HEAD
 				data-pins {
+=======
+				data {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc2_data";
 					drive-strength = <10>;
 					bias-pull-up;
 				};
 			};
 
+<<<<<<< HEAD
 			sdc2_off: sdc2-off-state {
 				clk-pins {
+=======
+			sdc2_off: sdc2-off {
+				clk {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc2_clk";
 					drive-strength = <2>;
 					bias-disable;
 				};
 
+<<<<<<< HEAD
 				cmd-pins {
+=======
+				cmd {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc2_cmd";
 					drive-strength = <2>;
 					bias-pull-up;
 				};
 
+<<<<<<< HEAD
 				data-pins {
+=======
+				data {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc2_data";
 					drive-strength = <2>;
 					bias-pull-up;
 				};
 			};
 
+<<<<<<< HEAD
 			sdc2_cd: sdc2-cd-state {
+=======
+			sdc2_cd: sdc2-cd {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio95";
 				function = "gpio";
 				bias-pull-up;
 				drive-strength = <2>;
 			};
 
+<<<<<<< HEAD
 			blsp1_uart3_on: blsp1-uart3-on-state {
 				tx-pins {
+=======
+			blsp1_uart3_on: blsp1-uart3-on {
+				tx {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio45";
 					function = "blsp_uart3_a";
 					drive-strength = <2>;
 					bias-disable;
 				};
 
+<<<<<<< HEAD
 				rx-pins {
+=======
+				rx {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio46";
 					function = "blsp_uart3_a";
 					drive-strength = <2>;
 					bias-disable;
 				};
 
+<<<<<<< HEAD
 				cts-pins {
+=======
+				cts {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio47";
 					function = "blsp_uart3_a";
 					drive-strength = <2>;
 					bias-disable;
 				};
 
+<<<<<<< HEAD
 				rfr-pins {
+=======
+				rfr {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio48";
 					function = "blsp_uart3_a";
 					drive-strength = <2>;
@@ -1145,168 +1250,264 @@
 				};
 			};
 
+<<<<<<< HEAD
 			blsp1_i2c1_default: blsp1-i2c1-default-state {
+=======
+			blsp1_i2c1_default: blsp1-i2c1-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio2", "gpio3";
 				function = "blsp_i2c1";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			blsp1_i2c1_sleep: blsp1-i2c1-sleep-state-state {
+=======
+			blsp1_i2c1_sleep: blsp1-i2c1-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio2", "gpio3";
 				function = "blsp_i2c1";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			blsp1_i2c2_default: blsp1-i2c2-default-state {
+=======
+			blsp1_i2c2_default: blsp1-i2c2-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio32", "gpio33";
 				function = "blsp_i2c2";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			blsp1_i2c2_sleep: blsp1-i2c2-sleep-state-state {
+=======
+			blsp1_i2c2_sleep: blsp1-i2c2-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio32", "gpio33";
 				function = "blsp_i2c2";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			blsp1_i2c3_default: blsp1-i2c3-default-state {
+=======
+			blsp1_i2c3_default: blsp1-i2c3-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio47", "gpio48";
 				function = "blsp_i2c3";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			blsp1_i2c3_sleep: blsp1-i2c3-sleep-state {
+=======
+			blsp1_i2c3_sleep: blsp1-i2c3-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio47", "gpio48";
 				function = "blsp_i2c3";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			blsp1_i2c4_default: blsp1-i2c4-default-state {
+=======
+			blsp1_i2c4_default: blsp1-i2c4-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio10", "gpio11";
 				function = "blsp_i2c4";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			blsp1_i2c4_sleep: blsp1-i2c4-sleep-state {
+=======
+			blsp1_i2c4_sleep: blsp1-i2c4-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio10", "gpio11";
 				function = "blsp_i2c4";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			blsp1_i2c5_default: blsp1-i2c5-default-state {
+=======
+			blsp1_i2c5_default: blsp1-i2c5-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio87", "gpio88";
 				function = "blsp_i2c5";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			blsp1_i2c5_sleep: blsp1-i2c5-sleep-state {
+=======
+			blsp1_i2c5_sleep: blsp1-i2c5-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio87", "gpio88";
 				function = "blsp_i2c5";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			blsp1_i2c6_default: blsp1-i2c6-default-state {
+=======
+			blsp1_i2c6_default: blsp1-i2c6-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio43", "gpio44";
 				function = "blsp_i2c6";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			blsp1_i2c6_sleep: blsp1-i2c6-sleep-state {
+=======
+			blsp1_i2c6_sleep: blsp1-i2c6-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio43", "gpio44";
 				function = "blsp_i2c6";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 			/* 6 interfaces per QUP, BLSP2 indexes are numbered (n)+6 */
+<<<<<<< HEAD
 			blsp2_i2c1_default: blsp2-i2c1-default-state {
+=======
+			blsp2_i2c1_default: blsp2-i2c1-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio55", "gpio56";
 				function = "blsp_i2c7";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			blsp2_i2c1_sleep: blsp2-i2c1-sleep-state {
+=======
+			blsp2_i2c1_sleep: blsp2-i2c1-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio55", "gpio56";
 				function = "blsp_i2c7";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			blsp2_i2c2_default: blsp2-i2c2-default-state {
+=======
+			blsp2_i2c2_default: blsp2-i2c2-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio6", "gpio7";
 				function = "blsp_i2c8";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			blsp2_i2c2_sleep: blsp2-i2c2-sleep-state {
+=======
+			blsp2_i2c2_sleep: blsp2-i2c2-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio6", "gpio7";
 				function = "blsp_i2c8";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			blsp2_i2c3_default: blsp2-i2c3-default-state {
+=======
+			blsp2_i2c3_default: blsp2-i2c3-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio51", "gpio52";
 				function = "blsp_i2c9";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			blsp2_i2c3_sleep: blsp2-i2c3-sleep-state {
+=======
+			blsp2_i2c3_sleep: blsp2-i2c3-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio51", "gpio52";
 				function = "blsp_i2c9";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			blsp2_i2c4_default: blsp2-i2c4-default-state {
+=======
+			blsp2_i2c4_default: blsp2-i2c4-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio67", "gpio68";
 				function = "blsp_i2c10";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			blsp2_i2c4_sleep: blsp2-i2c4-sleep-state {
+=======
+			blsp2_i2c4_sleep: blsp2-i2c4-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio67", "gpio68";
 				function = "blsp_i2c10";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			blsp2_i2c5_default: blsp2-i2c5-default-state {
+=======
+			blsp2_i2c5_default: blsp2-i2c5-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio60", "gpio61";
 				function = "blsp_i2c11";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			blsp2_i2c5_sleep: blsp2-i2c5-sleep-state {
+=======
+			blsp2_i2c5_sleep: blsp2-i2c5-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio60", "gpio61";
 				function = "blsp_i2c11";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			blsp2_i2c6_default: blsp2-i2c6-default-state {
+=======
+			blsp2_i2c6_default: blsp2-i2c6-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio83", "gpio84";
 				function = "blsp_i2c12";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			blsp2_i2c6_sleep: blsp2-i2c6-sleep-state {
+=======
+			blsp2_i2c6_sleep: blsp2-i2c6-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio83", "gpio84";
 				function = "blsp_i2c12";
 				drive-strength = <2>;
@@ -1363,10 +1564,13 @@
 				memory-region = <&mpss_mem>;
 			};
 
+<<<<<<< HEAD
 			metadata {
 				memory-region = <&mdata_mem>;
 			};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			glink-edge {
 				interrupts = <GIC_SPI 452 IRQ_TYPE_EDGE_RISING>;
 				label = "modem";
@@ -1404,43 +1608,71 @@
 				opp-710000097 {
 					opp-hz = /bits/ 64 <710000097>;
 					opp-level = <RPM_SMD_LEVEL_TURBO>;
+<<<<<<< HEAD
 					opp-supported-hw = <0xff>;
+=======
+					opp-supported-hw = <0xFF>;
+>>>>>>> b7ba80a49124 (Commit)
 				};
 
 				opp-670000048 {
 					opp-hz = /bits/ 64 <670000048>;
 					opp-level = <RPM_SMD_LEVEL_NOM_PLUS>;
+<<<<<<< HEAD
 					opp-supported-hw = <0xff>;
+=======
+					opp-supported-hw = <0xFF>;
+>>>>>>> b7ba80a49124 (Commit)
 				};
 
 				opp-596000097 {
 					opp-hz = /bits/ 64 <596000097>;
 					opp-level = <RPM_SMD_LEVEL_NOM>;
+<<<<<<< HEAD
 					opp-supported-hw = <0xff>;
+=======
+					opp-supported-hw = <0xFF>;
+>>>>>>> b7ba80a49124 (Commit)
 				};
 
 				opp-515000097 {
 					opp-hz = /bits/ 64 <515000097>;
 					opp-level = <RPM_SMD_LEVEL_SVS_PLUS>;
+<<<<<<< HEAD
 					opp-supported-hw = <0xff>;
+=======
+					opp-supported-hw = <0xFF>;
+>>>>>>> b7ba80a49124 (Commit)
 				};
 
 				opp-414000000 {
 					opp-hz = /bits/ 64 <414000000>;
 					opp-level = <RPM_SMD_LEVEL_SVS>;
+<<<<<<< HEAD
 					opp-supported-hw = <0xff>;
+=======
+					opp-supported-hw = <0xFF>;
+>>>>>>> b7ba80a49124 (Commit)
 				};
 
 				opp-342000000 {
 					opp-hz = /bits/ 64 <342000000>;
 					opp-level = <RPM_SMD_LEVEL_LOW_SVS>;
+<<<<<<< HEAD
 					opp-supported-hw = <0xff>;
+=======
+					opp-supported-hw = <0xFF>;
+>>>>>>> b7ba80a49124 (Commit)
 				};
 
 				opp-257000000 {
 					opp-hz = /bits/ 64 <257000000>;
 					opp-level = <RPM_SMD_LEVEL_MIN_SVS>;
+<<<<<<< HEAD
 					opp-supported-hw = <0xff>;
+=======
+					opp-supported-hw = <0xFF>;
+>>>>>>> b7ba80a49124 (Commit)
 				};
 			};
 		};
@@ -1524,7 +1756,11 @@
 			compatible = "arm,coresight-stm", "arm,primecell";
 			reg = <0x06002000 0x1000>,
 			      <0x16280000 0x180000>;
+<<<<<<< HEAD
 			reg-names = "stm-base", "stm-stimulus-base";
+=======
+			reg-names = "stm-base", "stm-data-base";
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 
 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
@@ -1914,7 +2150,11 @@
 
 			cpu = <&CPU4>;
 
+<<<<<<< HEAD
 			port {
+=======
+			port{
+>>>>>>> b7ba80a49124 (Commit)
 				etm4_out: endpoint {
 					remote-endpoint = <&apss_funnel_in4>;
 				};
@@ -1931,7 +2171,11 @@
 
 			cpu = <&CPU5>;
 
+<<<<<<< HEAD
 			port {
+=======
+			port{
+>>>>>>> b7ba80a49124 (Commit)
 				etm5_out: endpoint {
 					remote-endpoint = <&apss_funnel_in5>;
 				};
@@ -1948,7 +2192,11 @@
 
 			cpu = <&CPU6>;
 
+<<<<<<< HEAD
 			port {
+=======
+			port{
+>>>>>>> b7ba80a49124 (Commit)
 				etm6_out: endpoint {
 					remote-endpoint = <&apss_funnel_in6>;
 				};
@@ -1965,7 +2213,11 @@
 
 			cpu = <&CPU7>;
 
+<<<<<<< HEAD
 			port {
+=======
+			port{
+>>>>>>> b7ba80a49124 (Commit)
 				etm7_out: endpoint {
 					remote-endpoint = <&apss_funnel_in7>;
 				};
@@ -1993,6 +2245,10 @@
 			#size-cells = <0>;
 			interrupt-controller;
 			#interrupt-cells = <4>;
+<<<<<<< HEAD
+=======
+			cell-index = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		usb3: usb@a8f8800 {
@@ -2097,7 +2353,11 @@
 			clock-names = "iface", "core", "xo";
 			clocks = <&gcc GCC_SDCC2_AHB_CLK>,
 				 <&gcc GCC_SDCC2_APPS_CLK>,
+<<<<<<< HEAD
 				 <&rpmcc RPM_SMD_XO_CLK_SRC>;
+=======
+				 <&xo>;
+>>>>>>> b7ba80a49124 (Commit)
 			bus-width = <4>;
 			status = "disabled";
 		};
@@ -2407,7 +2667,12 @@
 				      "dsi1byte",
 				      "hdmipll",
 				      "dplink",
+<<<<<<< HEAD
 				      "dpvco";
+=======
+				      "dpvco",
+				      "core_bi_pll_test_se";
+>>>>>>> b7ba80a49124 (Commit)
 			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
 				 <&gcc GCC_MMSS_GPLL0_CLK>,
 				 <0>,
@@ -2416,6 +2681,10 @@
 				 <0>,
 				 <0>,
 				 <0>,
+<<<<<<< HEAD
+=======
+				 <0>,
+>>>>>>> b7ba80a49124 (Commit)
 				 <0>;
 		};
 

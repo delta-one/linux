@@ -74,7 +74,11 @@ static inline bool is_endbr(u32 val)
 	return val == gen_endbr();
 }
 
+<<<<<<< HEAD
 extern __noendbr u64 ibt_save(bool disable);
+=======
+extern __noendbr u64 ibt_save(void);
+>>>>>>> b7ba80a49124 (Commit)
 extern __noendbr void ibt_restore(u64 save);
 
 #else /* __ASSEMBLY__ */
@@ -100,7 +104,11 @@ extern __noendbr void ibt_restore(u64 save);
 
 static inline bool is_endbr(u32 val) { return false; }
 
+<<<<<<< HEAD
 static inline u64 ibt_save(bool disable) { return 0; }
+=======
+static inline u64 ibt_save(void) { return 0; }
+>>>>>>> b7ba80a49124 (Commit)
 static inline void ibt_restore(u64 save) { }
 
 #else /* __ASSEMBLY__ */

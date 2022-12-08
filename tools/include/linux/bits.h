@@ -6,6 +6,10 @@
 #include <vdso/bits.h>
 #include <asm/bitsperlong.h>
 
+<<<<<<< HEAD
+=======
+#define BIT_ULL(nr)		(ULL(1) << (nr))
+>>>>>>> b7ba80a49124 (Commit)
 #define BIT_MASK(nr)		(UL(1) << ((nr) % BITS_PER_LONG))
 #define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
 #define BIT_ULL_MASK(nr)	(ULL(1) << ((nr) % BITS_PER_LONG_LONG))

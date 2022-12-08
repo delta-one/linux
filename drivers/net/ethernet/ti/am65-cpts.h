@@ -18,7 +18,10 @@ struct am65_cpts_estf_cfg {
 };
 
 #if IS_ENABLED(CONFIG_TI_K3_AM65_CPTS)
+<<<<<<< HEAD
 void am65_cpts_release(struct am65_cpts *cpts);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct am65_cpts *am65_cpts_create(struct device *dev, void __iomem *regs,
 				   struct device_node *node);
 int am65_cpts_phc_index(struct am65_cpts *cpts);
@@ -29,6 +32,7 @@ u64 am65_cpts_ns_gettime(struct am65_cpts *cpts);
 int am65_cpts_estf_enable(struct am65_cpts *cpts, int idx,
 			  struct am65_cpts_estf_cfg *cfg);
 void am65_cpts_estf_disable(struct am65_cpts *cpts, int idx);
+<<<<<<< HEAD
 void am65_cpts_suspend(struct am65_cpts *cpts);
 void am65_cpts_resume(struct am65_cpts *cpts);
 #else
@@ -36,6 +40,9 @@ static inline void am65_cpts_release(struct am65_cpts *cpts)
 {
 }
 
+=======
+#else
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct am65_cpts *am65_cpts_create(struct device *dev,
 						 void __iomem *regs,
 						 struct device_node *node)
@@ -76,6 +83,7 @@ static inline int am65_cpts_estf_enable(struct am65_cpts *cpts, int idx,
 static inline void am65_cpts_estf_disable(struct am65_cpts *cpts, int idx)
 {
 }
+<<<<<<< HEAD
 
 static inline void am65_cpts_suspend(struct am65_cpts *cpts)
 {
@@ -84,6 +92,8 @@ static inline void am65_cpts_suspend(struct am65_cpts *cpts)
 static inline void am65_cpts_resume(struct am65_cpts *cpts)
 {
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #endif /* K3_CPTS_H_ */

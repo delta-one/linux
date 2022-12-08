@@ -34,10 +34,13 @@ static bool sme_get_vls(struct tdescr *td)
 
 		vl &= PR_SME_VL_LEN_MASK;
 
+<<<<<<< HEAD
 		/* Did we find the lowest supported VL? */
 		if (vq < sve_vq_from_vl(vl))
 			break;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Skip missing VLs */
 		vq = sve_vq_from_vl(vl);
 

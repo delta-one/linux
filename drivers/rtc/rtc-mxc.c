@@ -291,6 +291,17 @@ static const struct rtc_class_ops mxc_rtc_ops = {
 	.alarm_irq_enable	= mxc_rtc_alarm_irq_enable,
 };
 
+<<<<<<< HEAD
+=======
+static void mxc_rtc_action(void *p)
+{
+	struct rtc_plat_data *pdata = p;
+
+	clk_disable_unprepare(pdata->clk_ref);
+	clk_disable_unprepare(pdata->clk_ipg);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int mxc_rtc_probe(struct platform_device *pdev)
 {
 	struct rtc_device *rtc;
@@ -333,18 +344,45 @@ static int mxc_rtc_probe(struct platform_device *pdev)
 		rtc->range_max = (1 << 16) * 86400ULL - 1;
 	}
 
+<<<<<<< HEAD
 	pdata->clk_ipg = devm_clk_get_enabled(&pdev->dev, "ipg");
+=======
+	pdata->clk_ipg = devm_clk_get(&pdev->dev, "ipg");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(pdata->clk_ipg)) {
 		dev_err(&pdev->dev, "unable to get ipg clock!\n");
 		return PTR_ERR(pdata->clk_ipg);
 	}
 
+<<<<<<< HEAD
 	pdata->clk_ref = devm_clk_get_enabled(&pdev->dev, "ref");
 	if (IS_ERR(pdata->clk_ref)) {
+=======
+	ret = clk_prepare_enable(pdata->clk_ipg);
+	if (ret)
+		return ret;
+
+	pdata->clk_ref = devm_clk_get(&pdev->dev, "ref");
+	if (IS_ERR(pdata->clk_ref)) {
+		clk_disable_unprepare(pdata->clk_ipg);
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(&pdev->dev, "unable to get ref clock!\n");
 		return PTR_ERR(pdata->clk_ref);
 	}
 
+<<<<<<< HEAD
+=======
+	ret = clk_prepare_enable(pdata->clk_ref);
+	if (ret) {
+		clk_disable_unprepare(pdata->clk_ipg);
+		return ret;
+	}
+
+	ret = devm_add_action_or_reset(&pdev->dev, mxc_rtc_action, pdata);
+	if (ret)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	rate = clk_get_rate(pdata->clk_ref);
 
 	if (rate == 32768)

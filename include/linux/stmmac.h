@@ -215,7 +215,11 @@ struct plat_stmmacenet_data {
 	int unicast_filter_entries;
 	int tx_fifo_size;
 	int rx_fifo_size;
+<<<<<<< HEAD
 	u32 host_dma_width;
+=======
+	u32 addr64;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 rx_queues_to_use;
 	u32 tx_queues_to_use;
 	u8 rx_sched_algorithm;
@@ -252,7 +256,10 @@ struct plat_stmmacenet_data {
 	int rss_en;
 	int mac_port_sel_speed;
 	bool en_tx_lpi_clockgating;
+<<<<<<< HEAD
 	bool rx_clk_runs_in_lpi;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int has_xgmac;
 	bool vlan_fail_q_en;
 	u8 vlan_fail_q;
@@ -272,6 +279,9 @@ struct plat_stmmacenet_data {
 	int msi_tx_base_vec;
 	bool use_phy_wol;
 	bool sph_disable;
+<<<<<<< HEAD
 	bool serdes_up_after_phy_linkup;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 #endif

@@ -14,7 +14,10 @@
 #include "util/mmap.h"
 #include <errno.h>
 #include <perf/mmap.h>
+<<<<<<< HEAD
 #include "util/sample.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifndef O_DIRECTORY
 #define O_DIRECTORY    00200000

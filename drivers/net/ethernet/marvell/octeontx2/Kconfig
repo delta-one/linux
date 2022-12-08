@@ -36,7 +36,10 @@ config OCTEONTX2_PF
 	select DIMLIB
 	depends on PCI
 	depends on PTP_1588_CLOCK_OPTIONAL
+<<<<<<< HEAD
 	depends on MACSEC || !MACSEC
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This driver supports Marvell's OcteonTX2 NIC physical function.
 

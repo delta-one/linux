@@ -17,6 +17,7 @@
 #include "extent_io.h"
 #include "dev-replace.h"
 #include "check-integrity.h"
+<<<<<<< HEAD
 #include "raid56.h"
 #include "block-group.h"
 #include "zoned.h"
@@ -24,6 +25,12 @@
 #include "accessors.h"
 #include "file-item.h"
 #include "scrub.h"
+=======
+#include "rcu-string.h"
+#include "raid56.h"
+#include "block-group.h"
+#include "zoned.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * This is only the first step towards a full-features scrub. It reads all
@@ -59,6 +66,7 @@ struct scrub_ctx;
 
 #define SCRUB_MAX_PAGES			(DIV_ROUND_UP(BTRFS_MAX_METADATA_BLOCKSIZE, PAGE_SIZE))
 
+<<<<<<< HEAD
 /*
  * Maximum number of mirrors that can be available for all profiles counting
  * the target device of dev-replace as one. During an active device replace
@@ -70,6 +78,8 @@ struct scrub_ctx;
  */
 #define BTRFS_MAX_MIRRORS (4 + 1)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct scrub_recover {
 	refcount_t		refs;
 	struct btrfs_io_context	*bioc;
@@ -229,7 +239,11 @@ struct full_stripe_lock {
 };
 
 #ifndef CONFIG_64BIT
+<<<<<<< HEAD
 /* This structure is for architectures whose (void *) is smaller than u64 */
+=======
+/* This structure is for archtectures whose (void *) is smaller than u64 */
+>>>>>>> b7ba80a49124 (Commit)
 struct scrub_page_private {
 	u64 logical;
 };
@@ -298,7 +312,11 @@ static struct scrub_block *alloc_scrub_block(struct scrub_ctx *sctx,
  * Will also allocate new pages for @sblock if needed.
  */
 static struct scrub_sector *alloc_scrub_sector(struct scrub_block *sblock,
+<<<<<<< HEAD
 					       u64 logical)
+=======
+					       u64 logical, gfp_t gfp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const pgoff_t page_index = (logical - sblock->logical) >> PAGE_SHIFT;
 	struct scrub_sector *ssector;
@@ -306,7 +324,11 @@ static struct scrub_sector *alloc_scrub_sector(struct scrub_block *sblock,
 	/* We must never have scrub_block exceed U32_MAX in size. */
 	ASSERT(logical - sblock->logical < U32_MAX);
 
+<<<<<<< HEAD
 	ssector = kzalloc(sizeof(*ssector), GFP_KERNEL);
+=======
+	ssector = kzalloc(sizeof(*ssector), gfp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ssector)
 		return NULL;
 
@@ -314,7 +336,11 @@ static struct scrub_sector *alloc_scrub_sector(struct scrub_block *sblock,
 	if (!sblock->pages[page_index]) {
 		int ret;
 
+<<<<<<< HEAD
 		sblock->pages[page_index] = alloc_page(GFP_KERNEL);
+=======
+		sblock->pages[page_index] = alloc_page(gfp);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!sblock->pages[page_index]) {
 			kfree(ssector);
 			return NULL;
@@ -808,8 +834,13 @@ nomem:
 	return ERR_PTR(-ENOMEM);
 }
 
+<<<<<<< HEAD
 static int scrub_print_warning_inode(u64 inum, u64 offset, u64 num_bytes,
 				     u64 root, void *warn_ctx)
+=======
+static int scrub_print_warning_inode(u64 inum, u64 offset, u64 root,
+				     void *warn_ctx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 nlink;
 	int ret;
@@ -876,7 +907,11 @@ static int scrub_print_warning_inode(u64 inum, u64 offset, u64 num_bytes,
 		btrfs_warn_in_rcu(fs_info,
 "%s at logical %llu on dev %s, physical %llu, root %llu, inode %llu, offset %llu, length %u, links %u (path: %s)",
 				  swarn->errstr, swarn->logical,
+<<<<<<< HEAD
 				  btrfs_dev_name(swarn->dev),
+=======
+				  rcu_str_deref(swarn->dev->name),
+>>>>>>> b7ba80a49124 (Commit)
 				  swarn->physical,
 				  root, inum, offset,
 				  fs_info->sectorsize, nlink,
@@ -890,7 +925,11 @@ err:
 	btrfs_warn_in_rcu(fs_info,
 			  "%s at logical %llu on dev %s, physical %llu, root %llu, inode %llu, offset %llu: path resolving failed with ret=%d",
 			  swarn->errstr, swarn->logical,
+<<<<<<< HEAD
 			  btrfs_dev_name(swarn->dev),
+=======
+			  rcu_str_deref(swarn->dev->name),
+>>>>>>> b7ba80a49124 (Commit)
 			  swarn->physical,
 			  root, inum, offset, ret);
 
@@ -908,6 +947,10 @@ static void scrub_print_warning(const char *errstr, struct scrub_block *sblock)
 	struct btrfs_extent_item *ei;
 	struct scrub_warning swarn;
 	unsigned long ptr = 0;
+<<<<<<< HEAD
+=======
+	u64 extent_item_pos;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 flags = 0;
 	u64 ref_root;
 	u32 item_size;
@@ -921,7 +964,12 @@ static void scrub_print_warning(const char *errstr, struct scrub_block *sblock)
 	/* Super block error, no need to search extent tree. */
 	if (sblock->sectors[0]->flags & BTRFS_EXTENT_FLAG_SUPER) {
 		btrfs_warn_in_rcu(fs_info, "%s on device %s, physical %llu",
+<<<<<<< HEAD
 			errstr, btrfs_dev_name(dev), sblock->physical);
+=======
+			errstr, rcu_str_deref(dev->name),
+			sblock->physical);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 	path = btrfs_alloc_path();
@@ -938,6 +986,10 @@ static void scrub_print_warning(const char *errstr, struct scrub_block *sblock)
 	if (ret < 0)
 		goto out;
 
+<<<<<<< HEAD
+=======
+	extent_item_pos = swarn.logical - found_key.objectid;
+>>>>>>> b7ba80a49124 (Commit)
 	swarn.extent_item_size = found_key.offset;
 
 	eb = path->nodes[0];
@@ -952,7 +1004,11 @@ static void scrub_print_warning(const char *errstr, struct scrub_block *sblock)
 			btrfs_warn_in_rcu(fs_info,
 "%s at logical %llu on dev %s, physical %llu: metadata %s (level %d) in tree %llu",
 				errstr, swarn.logical,
+<<<<<<< HEAD
 				btrfs_dev_name(dev),
+=======
+				rcu_str_deref(dev->name),
+>>>>>>> b7ba80a49124 (Commit)
 				swarn.physical,
 				ref_level ? "node" : "leaf",
 				ret < 0 ? -1 : ref_level,
@@ -960,6 +1016,7 @@ static void scrub_print_warning(const char *errstr, struct scrub_block *sblock)
 		} while (ret != 1);
 		btrfs_release_path(path);
 	} else {
+<<<<<<< HEAD
 		struct btrfs_backref_walk_ctx ctx = { 0 };
 
 		btrfs_release_path(path);
@@ -972,6 +1029,14 @@ static void scrub_print_warning(const char *errstr, struct scrub_block *sblock)
 		swarn.dev = dev;
 
 		iterate_extent_inodes(&ctx, true, scrub_print_warning_inode, &swarn);
+=======
+		btrfs_release_path(path);
+		swarn.path = path;
+		swarn.dev = dev;
+		iterate_extent_inodes(fs_info, found_key.objectid,
+					extent_item_pos, 1,
+					scrub_print_warning_inode, &swarn, false);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 out:
@@ -1375,7 +1440,11 @@ corrected_error:
 			spin_unlock(&sctx->stat_lock);
 			btrfs_err_rl_in_rcu(fs_info,
 				"fixed up error at logical %llu on dev %s",
+<<<<<<< HEAD
 				logical, btrfs_dev_name(dev));
+=======
+				logical, rcu_str_deref(dev->name));
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	} else {
 did_not_correct_error:
@@ -1384,7 +1453,11 @@ did_not_correct_error:
 		spin_unlock(&sctx->stat_lock);
 		btrfs_err_rl_in_rcu(fs_info,
 			"unable to fixup (regular) error at logical %llu on dev %s",
+<<<<<<< HEAD
 			logical, btrfs_dev_name(dev));
+=======
+			logical, rcu_str_deref(dev->name));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 out:
@@ -1497,7 +1570,11 @@ static int scrub_setup_recheck_block(struct scrub_block *original_sblock,
 			return -EIO;
 		}
 
+<<<<<<< HEAD
 		recover = kzalloc(sizeof(struct scrub_recover), GFP_KERNEL);
+=======
+		recover = kzalloc(sizeof(struct scrub_recover), GFP_NOFS);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!recover) {
 			btrfs_put_bioc(bioc);
 			btrfs_bio_counter_dec(fs_info);
@@ -1520,7 +1597,11 @@ static int scrub_setup_recheck_block(struct scrub_block *original_sblock,
 			sblock = sblocks_for_recheck[mirror_index];
 			sblock->sctx = sctx;
 
+<<<<<<< HEAD
 			sector = alloc_scrub_sector(sblock, logical);
+=======
+			sector = alloc_scrub_sector(sblock, logical, GFP_NOFS);
+>>>>>>> b7ba80a49124 (Commit)
 			if (!sector) {
 				spin_lock(&sctx->stat_lock);
 				sctx->stat.malloc_errors++;
@@ -2053,6 +2134,7 @@ static int scrub_checksum_tree_block(struct scrub_block *sblock)
 	 * a) don't have an extent buffer and
 	 * b) the page is already kmapped
 	 */
+<<<<<<< HEAD
 	if (sblock->logical != btrfs_stack_header_bytenr(h)) {
 		sblock->header_error = 1;
 		btrfs_warn_rl(fs_info,
@@ -2080,6 +2162,22 @@ static int scrub_checksum_tree_block(struct scrub_block *sblock)
 			      h->chunk_tree_uuid, fs_info->chunk_tree_uuid);
 		goto out;
 	}
+=======
+	if (sblock->logical != btrfs_stack_header_bytenr(h))
+		sblock->header_error = 1;
+
+	if (sector->generation != btrfs_stack_header_generation(h)) {
+		sblock->header_error = 1;
+		sblock->generation_error = 1;
+	}
+
+	if (!scrub_check_fsid(h->fsid, sector))
+		sblock->header_error = 1;
+
+	if (memcmp(h->chunk_tree_uuid, fs_info->chunk_tree_uuid,
+		   BTRFS_UUID_SIZE))
+		sblock->header_error = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	shash->tfm = fs_info->csum_shash;
 	crypto_shash_init(shash);
@@ -2092,6 +2190,7 @@ static int scrub_checksum_tree_block(struct scrub_block *sblock)
 	}
 
 	crypto_shash_final(shash, calculated_csum);
+<<<<<<< HEAD
 	if (memcmp(calculated_csum, on_disk_csum, sctx->fs_info->csum_size)) {
 		sblock->checksum_error = 1;
 		btrfs_warn_rl(fs_info,
@@ -2113,6 +2212,11 @@ static int scrub_checksum_tree_block(struct scrub_block *sblock)
 	}
 
 out:
+=======
+	if (memcmp(calculated_csum, on_disk_csum, sctx->fs_info->csum_size))
+		sblock->checksum_error = 1;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return sblock->header_error || sblock->checksum_error;
 }
 
@@ -2361,14 +2465,22 @@ static void scrub_missing_raid56_worker(struct work_struct *work)
 		spin_unlock(&sctx->stat_lock);
 		btrfs_err_rl_in_rcu(fs_info,
 			"IO error rebuilding logical %llu for dev %s",
+<<<<<<< HEAD
 			logical, btrfs_dev_name(dev));
+=======
+			logical, rcu_str_deref(dev->name));
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (sblock->header_error || sblock->checksum_error) {
 		spin_lock(&sctx->stat_lock);
 		sctx->stat.uncorrectable_errors++;
 		spin_unlock(&sctx->stat_lock);
 		btrfs_err_rl_in_rcu(fs_info,
 			"failed to rebuild valid logical %llu for dev %s",
+<<<<<<< HEAD
 			logical, btrfs_dev_name(dev));
+=======
+			logical, rcu_str_deref(dev->name));
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		scrub_write_block_to_dev_replace(sblock);
 	}
@@ -2473,7 +2585,11 @@ static int scrub_sectors(struct scrub_ctx *sctx, u64 logical, u32 len,
 		 */
 		u32 l = min(sectorsize, len);
 
+<<<<<<< HEAD
 		sector = alloc_scrub_sector(sblock, logical);
+=======
+		sector = alloc_scrub_sector(sblock, logical, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!sector) {
 			spin_lock(&sctx->stat_lock);
 			sctx->stat.malloc_errors++;
@@ -2720,11 +2836,24 @@ static int scrub_extent(struct scrub_ctx *sctx, struct map_lookup *map,
 	u8 csum[BTRFS_CSUM_SIZE];
 	u32 blocksize;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Block size determines how many scrub_block will be allocated.  Here
+	 * we use BTRFS_STRIPE_LEN (64KiB) as default limit, so we won't
+	 * allocate too many scrub_block, while still won't cause too large
+	 * bios for large extents.
+	 */
+>>>>>>> b7ba80a49124 (Commit)
 	if (flags & BTRFS_EXTENT_FLAG_DATA) {
 		if (map->type & BTRFS_BLOCK_GROUP_RAID56_MASK)
 			blocksize = map->stripe_len;
 		else
+<<<<<<< HEAD
 			blocksize = sctx->fs_info->sectorsize;
+=======
+			blocksize = BTRFS_STRIPE_LEN;
+>>>>>>> b7ba80a49124 (Commit)
 		spin_lock(&sctx->stat_lock);
 		sctx->stat.data_extents_scrubbed++;
 		sctx->stat.data_bytes_scrubbed += len;
@@ -2804,7 +2933,11 @@ static int scrub_sectors_for_parity(struct scrub_parity *sparity,
 	for (index = 0; len > 0; index++) {
 		struct scrub_sector *sector;
 
+<<<<<<< HEAD
 		sector = alloc_scrub_sector(sblock, logical);
+=======
+		sector = alloc_scrub_sector(sblock, logical, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!sector) {
 			spin_lock(&sctx->stat_lock);
 			sctx->stat.malloc_errors++;
@@ -3269,9 +3402,15 @@ static int scrub_raid56_data_stripe_for_parity(struct scrub_ctx *sctx,
 		extent_dev = bioc->stripes[0].dev;
 		btrfs_put_bioc(bioc);
 
+<<<<<<< HEAD
 		ret = btrfs_lookup_csums_list(csum_root, extent_start,
 					      extent_start + extent_size - 1,
 					      &sctx->csum_list, 1, false);
+=======
+		ret = btrfs_lookup_csums_range(csum_root, extent_start,
+					       extent_start + extent_size - 1,
+					       &sctx->csum_list, 1, false);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret) {
 			scrub_parity_mark_sectors_error(sparity, extent_start,
 							extent_size);
@@ -3495,7 +3634,11 @@ static int scrub_simple_mirror(struct scrub_ctx *sctx,
 			    cur_logical;
 
 		if (extent_flags & BTRFS_EXTENT_FLAG_DATA) {
+<<<<<<< HEAD
 			ret = btrfs_lookup_csums_list(csum_root, cur_logical,
+=======
+			ret = btrfs_lookup_csums_range(csum_root, cur_logical,
+>>>>>>> b7ba80a49124 (Commit)
 					cur_logical + scrub_len - 1,
 					&sctx->csum_list, 1, false);
 			if (ret)
@@ -3959,6 +4102,10 @@ int scrub_enumerate_chunks(struct scrub_ctx *sctx,
 
 		if (sctx->is_dev_replace && btrfs_is_zoned(fs_info)) {
 			if (!test_bit(BLOCK_GROUP_FLAG_TO_COPY, &cache->runtime_flags)) {
+<<<<<<< HEAD
+=======
+				spin_unlock(&cache->lock);
+>>>>>>> b7ba80a49124 (Commit)
 				btrfs_put_block_group(cache);
 				goto skip;
 			}
@@ -4332,7 +4479,11 @@ int btrfs_scrub_dev(struct btrfs_fs_info *fs_info, u64 devid, u64 start,
 		mutex_unlock(&fs_info->fs_devices->device_list_mutex);
 		btrfs_err_in_rcu(fs_info,
 			"scrub on devid %llu: filesystem on %s is not writable",
+<<<<<<< HEAD
 				 devid, btrfs_dev_name(dev));
+=======
+				 devid, rcu_str_deref(dev->name));
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EROFS;
 		goto out;
 	}

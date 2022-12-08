@@ -213,7 +213,10 @@ static int rr_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 		pci_iounmap(pdev, rrpriv->regs);
 	if (pdev)
 		pci_release_regions(pdev);
+<<<<<<< HEAD
 	pci_disable_device(pdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
  out2:
 	free_netdev(dev);
  out3:

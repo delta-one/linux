@@ -1745,6 +1745,7 @@ static enum enable_type pci_realloc_detect(struct pci_bus *bus,
 }
 #endif
 
+<<<<<<< HEAD
 static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
 				 struct list_head *add_list,
 				 resource_size_t new_size)
@@ -2036,6 +2037,8 @@ pci_root_bus_distribute_available_resources(struct pci_bus *bus,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * First try will not touch PCI bridge res.
  * Second and later try will clear small leaf bridge res.
@@ -2075,8 +2078,11 @@ again:
 	 */
 	__pci_bus_size_bridges(bus, add_list);
 
+<<<<<<< HEAD
 	pci_root_bus_distribute_available_resources(bus, add_list);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Depth last, allocate resources and update the hardware. */
 	__pci_bus_assign_resources(bus, add_list, &fail_head);
 	if (add_list)
@@ -2151,6 +2157,198 @@ void __init pci_assign_unassigned_resources(void)
 	}
 }
 
+<<<<<<< HEAD
+=======
+static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
+				 struct list_head *add_list,
+				 resource_size_t new_size)
+{
+	resource_size_t add_size, size = resource_size(res);
+
+	if (res->parent)
+		return;
+
+	if (!new_size)
+		return;
+
+	if (new_size > size) {
+		add_size = new_size - size;
+		pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
+			&add_size);
+	} else if (new_size < size) {
+		add_size = size - new_size;
+		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
+			&add_size);
+	}
+
+	res->end = res->start + new_size - 1;
+	remove_from_list(add_list, res);
+}
+
+static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+					    struct list_head *add_list,
+					    struct resource io,
+					    struct resource mmio,
+					    struct resource mmio_pref)
+{
+	unsigned int normal_bridges = 0, hotplug_bridges = 0;
+	struct resource *io_res, *mmio_res, *mmio_pref_res;
+	struct pci_dev *dev, *bridge = bus->self;
+	resource_size_t io_per_hp, mmio_per_hp, mmio_pref_per_hp, align;
+
+	io_res = &bridge->resource[PCI_BRIDGE_IO_WINDOW];
+	mmio_res = &bridge->resource[PCI_BRIDGE_MEM_WINDOW];
+	mmio_pref_res = &bridge->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
+
+	/*
+	 * The alignment of this bridge is yet to be considered, hence it must
+	 * be done now before extending its bridge window.
+	 */
+	align = pci_resource_alignment(bridge, io_res);
+	if (!io_res->parent && align)
+		io.start = min(ALIGN(io.start, align), io.end + 1);
+
+	align = pci_resource_alignment(bridge, mmio_res);
+	if (!mmio_res->parent && align)
+		mmio.start = min(ALIGN(mmio.start, align), mmio.end + 1);
+
+	align = pci_resource_alignment(bridge, mmio_pref_res);
+	if (!mmio_pref_res->parent && align)
+		mmio_pref.start = min(ALIGN(mmio_pref.start, align),
+			mmio_pref.end + 1);
+
+	/*
+	 * Now that we have adjusted for alignment, update the bridge window
+	 * resources to fill as much remaining resource space as possible.
+	 */
+	adjust_bridge_window(bridge, io_res, add_list, resource_size(&io));
+	adjust_bridge_window(bridge, mmio_res, add_list, resource_size(&mmio));
+	adjust_bridge_window(bridge, mmio_pref_res, add_list,
+			     resource_size(&mmio_pref));
+
+	/*
+	 * Calculate how many hotplug bridges and normal bridges there
+	 * are on this bus.  We will distribute the additional available
+	 * resources between hotplug bridges.
+	 */
+	for_each_pci_bridge(dev, bus) {
+		if (dev->is_hotplug_bridge)
+			hotplug_bridges++;
+		else
+			normal_bridges++;
+	}
+
+	/*
+	 * There is only one bridge on the bus so it gets all available
+	 * resources which it can then distribute to the possible hotplug
+	 * bridges below.
+	 */
+	if (hotplug_bridges + normal_bridges == 1) {
+		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
+		if (dev->subordinate)
+			pci_bus_distribute_available_resources(dev->subordinate,
+				add_list, io, mmio, mmio_pref);
+		return;
+	}
+
+	if (hotplug_bridges == 0)
+		return;
+
+	/*
+	 * Calculate the total amount of extra resource space we can
+	 * pass to bridges below this one.  This is basically the
+	 * extra space reduced by the minimal required space for the
+	 * non-hotplug bridges.
+	 */
+	for_each_pci_bridge(dev, bus) {
+		resource_size_t used_size;
+		struct resource *res;
+
+		if (dev->is_hotplug_bridge)
+			continue;
+
+		/*
+		 * Reduce the available resource space by what the
+		 * bridge and devices below it occupy.
+		 */
+		res = &dev->resource[PCI_BRIDGE_IO_WINDOW];
+		align = pci_resource_alignment(dev, res);
+		align = align ? ALIGN(io.start, align) - io.start : 0;
+		used_size = align + resource_size(res);
+		if (!res->parent)
+			io.start = min(io.start + used_size, io.end + 1);
+
+		res = &dev->resource[PCI_BRIDGE_MEM_WINDOW];
+		align = pci_resource_alignment(dev, res);
+		align = align ? ALIGN(mmio.start, align) - mmio.start : 0;
+		used_size = align + resource_size(res);
+		if (!res->parent)
+			mmio.start = min(mmio.start + used_size, mmio.end + 1);
+
+		res = &dev->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
+		align = pci_resource_alignment(dev, res);
+		align = align ? ALIGN(mmio_pref.start, align) -
+			mmio_pref.start : 0;
+		used_size = align + resource_size(res);
+		if (!res->parent)
+			mmio_pref.start = min(mmio_pref.start + used_size,
+				mmio_pref.end + 1);
+	}
+
+	io_per_hp = div64_ul(resource_size(&io), hotplug_bridges);
+	mmio_per_hp = div64_ul(resource_size(&mmio), hotplug_bridges);
+	mmio_pref_per_hp = div64_ul(resource_size(&mmio_pref),
+		hotplug_bridges);
+
+	/*
+	 * Go over devices on this bus and distribute the remaining
+	 * resource space between hotplug bridges.
+	 */
+	for_each_pci_bridge(dev, bus) {
+		struct pci_bus *b;
+
+		b = dev->subordinate;
+		if (!b || !dev->is_hotplug_bridge)
+			continue;
+
+		/*
+		 * Distribute available extra resources equally between
+		 * hotplug-capable downstream ports taking alignment into
+		 * account.
+		 */
+		io.end = io.start + io_per_hp - 1;
+		mmio.end = mmio.start + mmio_per_hp - 1;
+		mmio_pref.end = mmio_pref.start + mmio_pref_per_hp - 1;
+
+		pci_bus_distribute_available_resources(b, add_list, io, mmio,
+						       mmio_pref);
+
+		io.start += io_per_hp;
+		mmio.start += mmio_per_hp;
+		mmio_pref.start += mmio_pref_per_hp;
+	}
+}
+
+static void pci_bridge_distribute_available_resources(struct pci_dev *bridge,
+						     struct list_head *add_list)
+{
+	struct resource available_io, available_mmio, available_mmio_pref;
+
+	if (!bridge->is_hotplug_bridge)
+		return;
+
+	/* Take the initial extra resources from the hotplug port */
+	available_io = bridge->resource[PCI_BRIDGE_IO_WINDOW];
+	available_mmio = bridge->resource[PCI_BRIDGE_MEM_WINDOW];
+	available_mmio_pref = bridge->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
+
+	pci_bus_distribute_available_resources(bridge->subordinate,
+					       add_list, available_io,
+					       available_mmio,
+					       available_mmio_pref);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
 {
 	struct pci_bus *parent = bridge->subordinate;

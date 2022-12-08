@@ -6,7 +6,10 @@
 #include <linux/module.h>
 #include <linux/slab.h>
 #include <linux/uuid.h>
+<<<<<<< HEAD
 #include <linux/sort.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/idr.h>
 #include <cxlmem.h>
 #include <cxl.h>
@@ -46,10 +49,14 @@ static ssize_t uuid_show(struct device *dev, struct device_attribute *attr,
 	rc = down_read_interruptible(&cxl_region_rwsem);
 	if (rc)
 		return rc;
+<<<<<<< HEAD
 	if (cxlr->mode != CXL_DECODER_PMEM)
 		rc = sysfs_emit(buf, "\n");
 	else
 		rc = sysfs_emit(buf, "%pUb\n", &p->uuid);
+=======
+	rc = sysfs_emit(buf, "%pUb\n", &p->uuid);
+>>>>>>> b7ba80a49124 (Commit)
 	up_read(&cxl_region_rwsem);
 
 	return rc;
@@ -135,7 +142,11 @@ static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
 		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
 		struct cxl_port *iter = cxled_to_port(cxled);
 		struct cxl_ep *ep;
+<<<<<<< HEAD
 		int rc = 0;
+=======
+		int rc;
+>>>>>>> b7ba80a49124 (Commit)
 
 		while (!is_cxl_root(to_cxl_port(iter->dev.parent)))
 			iter = to_cxl_port(iter->dev.parent);
@@ -147,8 +158,12 @@ static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
 
 			cxl_rr = cxl_rr_load(iter, cxlr);
 			cxld = cxl_rr->decoder;
+<<<<<<< HEAD
 			if (cxld->reset)
 				rc = cxld->reset(cxld);
+=======
+			rc = cxld->reset(cxld);
+>>>>>>> b7ba80a49124 (Commit)
 			if (rc)
 				return rc;
 		}
@@ -161,6 +176,7 @@ static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int commit_decoder(struct cxl_decoder *cxld)
 {
 	struct cxl_switch_decoder *cxlsd = NULL;
@@ -177,6 +193,8 @@ static int commit_decoder(struct cxl_decoder *cxld)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int cxl_region_decode_commit(struct cxl_region *cxlr)
 {
 	struct cxl_region_params *p = &cxlr->params;
@@ -195,7 +213,11 @@ static int cxl_region_decode_commit(struct cxl_region *cxlr)
 		     iter = to_cxl_port(iter->dev.parent)) {
 			cxl_rr = cxl_rr_load(iter, cxlr);
 			cxld = cxl_rr->decoder;
+<<<<<<< HEAD
 			rc = commit_decoder(cxld);
+=======
+			rc = cxld->commit(cxld);
+>>>>>>> b7ba80a49124 (Commit)
 			if (rc)
 				break;
 		}
@@ -206,8 +228,12 @@ static int cxl_region_decode_commit(struct cxl_region *cxlr)
 			     iter = ep->next, ep = cxl_ep_load(iter, cxlmd)) {
 				cxl_rr = cxl_rr_load(iter, cxlr);
 				cxld = cxl_rr->decoder;
+<<<<<<< HEAD
 				if (cxld->reset)
 					cxld->reset(cxld);
+=======
+				cxld->reset(cxld);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 
 			cxled->cxld.reset(&cxled->cxld);
@@ -306,12 +332,17 @@ static umode_t cxl_region_visible(struct kobject *kobj, struct attribute *a,
 	struct device *dev = kobj_to_dev(kobj);
 	struct cxl_region *cxlr = to_cxl_region(dev);
 
+<<<<<<< HEAD
 	/*
 	 * Support tooling that expects to find a 'uuid' attribute for all
 	 * regions regardless of mode.
 	 */
 	if (a == &dev_attr_uuid.attr && cxlr->mode != CXL_DECODER_PMEM)
 		return 0444;
+=======
+	if (a == &dev_attr_uuid.attr && cxlr->mode != CXL_DECODER_PMEM)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 	return a->mode;
 }
 
@@ -349,7 +380,11 @@ static ssize_t interleave_ways_store(struct device *dev,
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
 	rc = ways_to_eiw(val, &iw);
+=======
+	rc = ways_to_cxl(val, &iw);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 
@@ -416,7 +451,11 @@ static ssize_t interleave_granularity_store(struct device *dev,
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
 	rc = granularity_to_eig(val, &ig);
+=======
+	rc = granularity_to_cxl(val, &ig);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 
@@ -424,7 +463,11 @@ static ssize_t interleave_granularity_store(struct device *dev,
 	 * When the host-bridge is interleaved, disallow region granularity !=
 	 * root granularity. Regions with a granularity less than the root
 	 * interleave result in needing multiple endpoints to support a single
+<<<<<<< HEAD
 	 * slot in the interleave (possible to support in the future). Regions
+=======
+	 * slot in the interleave (possible to suport in the future). Regions
+>>>>>>> b7ba80a49124 (Commit)
 	 * with a granularity greater than the root interleave result in invalid
 	 * DPA translations (invalid to support).
 	 */
@@ -468,6 +511,7 @@ static ssize_t resource_show(struct device *dev, struct device_attribute *attr,
 }
 static DEVICE_ATTR_RO(resource);
 
+<<<<<<< HEAD
 static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
 			 char *buf)
 {
@@ -477,6 +521,8 @@ static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
 }
 static DEVICE_ATTR_RO(mode);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
 {
 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
@@ -527,12 +573,16 @@ static void cxl_region_iomem_release(struct cxl_region *cxlr)
 	if (device_is_registered(&cxlr->dev))
 		lockdep_assert_held_write(&cxl_region_rwsem);
 	if (p->res) {
+<<<<<<< HEAD
 		/*
 		 * Autodiscovered regions may not have been able to insert their
 		 * resource.
 		 */
 		if (p->res->parent)
 			remove_resource(p->res);
+=======
+		remove_resource(p->res);
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(p->res);
 		p->res = NULL;
 	}
@@ -609,7 +659,10 @@ static struct attribute *cxl_region_attrs[] = {
 	&dev_attr_interleave_granularity.attr,
 	&dev_attr_resource.attr,
 	&dev_attr_size.attr,
+<<<<<<< HEAD
 	&dev_attr_mode.attr,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	NULL,
 };
 
@@ -698,9 +751,12 @@ static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
 	xa_for_each(&port->regions, index, iter) {
 		struct cxl_region_params *ip = &iter->region->params;
 
+<<<<<<< HEAD
 		if (!ip->res)
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (ip->res->start > p->res->start) {
 			dev_dbg(&cxlr->dev,
 				"%s: HPA order violation %s:%pr vs %pr\n",
@@ -730,6 +786,7 @@ static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
 	return cxl_rr;
 }
 
+<<<<<<< HEAD
 static void cxl_rr_free_decoder(struct cxl_region_ref *cxl_rr)
 {
 	struct cxl_region *cxlr = cxl_rr->region;
@@ -738,11 +795,20 @@ static void cxl_rr_free_decoder(struct cxl_region_ref *cxl_rr)
 	if (!cxld)
 		return;
 
+=======
+static void free_region_ref(struct cxl_region_ref *cxl_rr)
+{
+	struct cxl_port *port = cxl_rr->port;
+	struct cxl_region *cxlr = cxl_rr->region;
+	struct cxl_decoder *cxld = cxl_rr->decoder;
+
+>>>>>>> b7ba80a49124 (Commit)
 	dev_WARN_ONCE(&cxlr->dev, cxld->region != cxlr, "region mismatch\n");
 	if (cxld->region == cxlr) {
 		cxld->region = NULL;
 		put_device(&cxlr->dev);
 	}
+<<<<<<< HEAD
 }
 
 static void free_region_ref(struct cxl_region_ref *cxl_rr)
@@ -751,6 +817,9 @@ static void free_region_ref(struct cxl_region_ref *cxl_rr)
 	struct cxl_region *cxlr = cxl_rr->region;
 
 	cxl_rr_free_decoder(cxl_rr);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	xa_erase(&port->regions, (unsigned long)cxlr);
 	xa_destroy(&cxl_rr->endpoints);
 	kfree(cxl_rr);
@@ -781,6 +850,7 @@ static int cxl_rr_ep_add(struct cxl_region_ref *cxl_rr,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int cxl_rr_alloc_decoder(struct cxl_port *port, struct cxl_region *cxlr,
 				struct cxl_endpoint_decoder *cxled,
 				struct cxl_region_ref *cxl_rr)
@@ -808,6 +878,8 @@ static int cxl_rr_alloc_decoder(struct cxl_port *port, struct cxl_region *cxlr,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * cxl_port_attach_region() - track a region's interest in a port by endpoint
  * @port: port to add a new region reference 'struct cxl_region_ref'
@@ -874,6 +946,15 @@ static int cxl_port_attach_region(struct cxl_port *port,
 			cxl_rr->nr_targets++;
 			nr_targets_inc = true;
 		}
+<<<<<<< HEAD
+=======
+
+		/*
+		 * The decoder for @cxlr was allocated when the region was first
+		 * attached to @port.
+		 */
+		cxld = cxl_rr->decoder;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		cxl_rr = alloc_region_ref(port, cxlr);
 		if (IS_ERR(cxl_rr)) {
@@ -884,11 +965,34 @@ static int cxl_port_attach_region(struct cxl_port *port,
 		}
 		nr_targets_inc = true;
 
+<<<<<<< HEAD
 		rc = cxl_rr_alloc_decoder(port, cxlr, cxled, cxl_rr);
 		if (rc)
 			goto out_erase;
 	}
 	cxld = cxl_rr->decoder;
+=======
+		if (port == cxled_to_port(cxled))
+			cxld = &cxled->cxld;
+		else
+			cxld = cxl_region_find_decoder(port, cxlr);
+		if (!cxld) {
+			dev_dbg(&cxlr->dev, "%s: no decoder available\n",
+				dev_name(&port->dev));
+			goto out_erase;
+		}
+
+		if (cxld->region) {
+			dev_dbg(&cxlr->dev, "%s: %s already attached to %s\n",
+				dev_name(&port->dev), dev_name(&cxld->dev),
+				dev_name(&cxld->region->dev));
+			rc = -EBUSY;
+			goto out_erase;
+		}
+
+		cxl_rr->decoder = cxld;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = cxl_rr_ep_add(cxl_rr, cxled);
 	if (rc) {
@@ -1030,6 +1134,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
 	if (cxl_rr->nr_targets_set) {
 		int i, distance;
 
+<<<<<<< HEAD
 		/*
 		 * Passthrough decoders impose no distance requirements between
 		 * peers
@@ -1038,6 +1143,9 @@ static int cxl_port_setup_targets(struct cxl_port *port,
 			distance = 0;
 		else
 			distance = p->nr_targets / cxl_rr->nr_targets;
+=======
+		distance = p->nr_targets / cxl_rr->nr_targets;
+>>>>>>> b7ba80a49124 (Commit)
 		for (i = 0; i < cxl_rr->nr_targets_set; i++)
 			if (ep->dport == cxlsd->target[i]) {
 				rc = check_last_peer(cxled, ep, cxl_rr,
@@ -1068,7 +1176,11 @@ static int cxl_port_setup_targets(struct cxl_port *port,
 		parent_iw = parent_cxld->interleave_ways;
 	}
 
+<<<<<<< HEAD
 	rc = granularity_to_eig(parent_ig, &peig);
+=======
+	rc = granularity_to_cxl(parent_ig, &peig);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		dev_dbg(&cxlr->dev, "%s:%s: invalid parent granularity: %d\n",
 			dev_name(parent_port->uport),
@@ -1076,7 +1188,11 @@ static int cxl_port_setup_targets(struct cxl_port *port,
 		return rc;
 	}
 
+<<<<<<< HEAD
 	rc = ways_to_eiw(parent_iw, &peiw);
+=======
+	rc = ways_to_cxl(parent_iw, &peiw);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		dev_dbg(&cxlr->dev, "%s:%s: invalid parent interleave: %d\n",
 			dev_name(parent_port->uport),
@@ -1085,7 +1201,11 @@ static int cxl_port_setup_targets(struct cxl_port *port,
 	}
 
 	iw = cxl_rr->nr_targets;
+<<<<<<< HEAD
 	rc = ways_to_eiw(iw, &eiw);
+=======
+	rc = ways_to_cxl(iw, &eiw);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		dev_dbg(&cxlr->dev, "%s:%s: invalid port interleave: %d\n",
 			dev_name(port->uport), dev_name(&port->dev), iw);
@@ -1105,7 +1225,11 @@ static int cxl_port_setup_targets(struct cxl_port *port,
 		eig = peig;
 	}
 
+<<<<<<< HEAD
 	rc = eig_to_granularity(eig, &ig);
+=======
+	rc = cxl_to_granularity(eig, &ig);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		dev_dbg(&cxlr->dev, "%s:%s: invalid interleave: %d\n",
 			dev_name(port->uport), dev_name(&port->dev),
@@ -1113,6 +1237,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
 		return rc;
 	}
 
+<<<<<<< HEAD
 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
 		if (cxld->interleave_ways != iw ||
 		    cxld->interleave_granularity != ig ||
@@ -1142,6 +1267,14 @@ static int cxl_port_setup_targets(struct cxl_port *port,
 			.end = p->res->end,
 		};
 	}
+=======
+	cxld->interleave_ways = iw;
+	cxld->interleave_granularity = ig;
+	cxld->hpa_range = (struct range) {
+		.start = p->res->start,
+		.end = p->res->end,
+	};
+>>>>>>> b7ba80a49124 (Commit)
 	dev_dbg(&cxlr->dev, "%s:%s iw: %d ig: %d\n", dev_name(port->uport),
 		dev_name(&port->dev), iw, ig);
 add_target:
@@ -1152,6 +1285,7 @@ add_target:
 			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), pos);
 		return -ENXIO;
 	}
+<<<<<<< HEAD
 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
 		if (cxlsd->target[cxl_rr->nr_targets_set] != ep->dport) {
 			dev_dbg(&cxlr->dev, "%s:%s: %s expected %s at %d\n",
@@ -1163,6 +1297,9 @@ add_target:
 		}
 	} else
 		cxlsd->target[cxl_rr->nr_targets_set] = ep->dport;
+=======
+	cxlsd->target[cxl_rr->nr_targets_set] = ep->dport;
+>>>>>>> b7ba80a49124 (Commit)
 	inc = 1;
 out_target_set:
 	cxl_rr->nr_targets_set += inc;
@@ -1204,6 +1341,7 @@ static void cxl_region_teardown_targets(struct cxl_region *cxlr)
 	struct cxl_ep *ep;
 	int i;
 
+<<<<<<< HEAD
 	/*
 	 * In the auto-discovery case skip automatic teardown since the
 	 * address space is already active
@@ -1211,6 +1349,8 @@ static void cxl_region_teardown_targets(struct cxl_region *cxlr)
 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags))
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < p->nr_targets; i++) {
 		cxled = p->targets[i];
 		cxlmd = cxled_to_memdev(cxled);
@@ -1243,8 +1383,13 @@ static int cxl_region_setup_targets(struct cxl_region *cxlr)
 			iter = to_cxl_port(iter->dev.parent);
 
 		/*
+<<<<<<< HEAD
 		 * Descend the topology tree programming / validating
 		 * targets while looking for conflicts.
+=======
+		 * Descend the topology tree programming targets while
+		 * looking for conflicts.
+>>>>>>> b7ba80a49124 (Commit)
 		 */
 		for (ep = cxl_ep_load(iter, cxlmd); iter;
 		     iter = ep->next, ep = cxl_ep_load(iter, cxlmd)) {
@@ -1259,6 +1404,7 @@ static int cxl_region_setup_targets(struct cxl_region *cxlr)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int cxl_region_validate_position(struct cxl_region *cxlr,
 					struct cxl_endpoint_decoder *cxled,
 					int pos)
@@ -1266,6 +1412,31 @@ static int cxl_region_validate_position(struct cxl_region *cxlr,
 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
 	struct cxl_region_params *p = &cxlr->params;
 	int i;
+=======
+static int cxl_region_attach(struct cxl_region *cxlr,
+			     struct cxl_endpoint_decoder *cxled, int pos)
+{
+	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+	struct cxl_port *ep_port, *root_port, *iter;
+	struct cxl_region_params *p = &cxlr->params;
+	struct cxl_dport *dport;
+	int i, rc = -ENXIO;
+
+	if (cxled->mode == CXL_DECODER_DEAD) {
+		dev_dbg(&cxlr->dev, "%s dead\n", dev_name(&cxled->cxld.dev));
+		return -ENODEV;
+	}
+
+	/* all full of members, or interleave config not established? */
+	if (p->state > CXL_CONFIG_INTERLEAVE_ACTIVE) {
+		dev_dbg(&cxlr->dev, "region already active\n");
+		return -EBUSY;
+	} else if (p->state < CXL_CONFIG_INTERLEAVE_ACTIVE) {
+		dev_dbg(&cxlr->dev, "interleave config missing\n");
+		return -ENXIO;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (pos < 0 || pos >= p->interleave_ways) {
 		dev_dbg(&cxlr->dev, "position %d out of range %d\n", pos,
@@ -1290,7 +1461,11 @@ static int cxl_region_validate_position(struct cxl_region *cxlr,
 		struct cxl_endpoint_decoder *cxled_target;
 		struct cxl_memdev *cxlmd_target;
 
+<<<<<<< HEAD
 		cxled_target = p->targets[i];
+=======
+		cxled_target = p->targets[pos];
+>>>>>>> b7ba80a49124 (Commit)
 		if (!cxled_target)
 			continue;
 
@@ -1304,6 +1479,7 @@ static int cxl_region_validate_position(struct cxl_region *cxlr,
 		}
 	}
 
+<<<<<<< HEAD
 	return 0;
 }
 
@@ -1554,6 +1730,8 @@ static int cxl_region_attach(struct cxl_region *cxlr,
 		return -ENXIO;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ep_port = cxled_to_port(cxled);
 	root_port = cxlrd_to_port(cxlrd);
 	dport = cxl_find_dport_by_dev(root_port, ep_port->host_bridge);
@@ -1564,6 +1742,16 @@ static int cxl_region_attach(struct cxl_region *cxlr,
 		return -ENXIO;
 	}
 
+<<<<<<< HEAD
+=======
+	if (cxlrd->calc_hb(cxlrd, pos) != dport) {
+		dev_dbg(&cxlr->dev, "%s:%s invalid target position for %s\n",
+			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+			dev_name(&cxlrd->cxlsd.cxld.dev));
+		return -ENXIO;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (cxled->cxld.target_type != cxlr->type) {
 		dev_dbg(&cxlr->dev, "%s:%s type mismatch: %d vs %d\n",
 			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
@@ -1587,6 +1775,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
 		int i;
 
@@ -1639,6 +1828,15 @@ static int cxl_region_attach(struct cxl_region *cxlr,
 	if (rc)
 		return rc;
 
+=======
+	for (iter = ep_port; !is_cxl_root(iter);
+	     iter = to_cxl_port(iter->dev.parent)) {
+		rc = cxl_port_attach_region(iter, cxlr, cxled, pos);
+		if (rc)
+			goto err;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	p->targets[pos] = cxled;
 	cxled->pos = pos;
 	p->nr_targets++;
@@ -1661,8 +1859,15 @@ static int cxl_region_attach(struct cxl_region *cxlr,
 
 err_decrement:
 	p->nr_targets--;
+<<<<<<< HEAD
 	cxled->pos = -1;
 	p->targets[pos] = NULL;
+=======
+err:
+	for (iter = ep_port; !is_cxl_root(iter);
+	     iter = to_cxl_port(iter->dev.parent))
+		cxl_port_detach_region(iter, cxlr, cxled);
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -1734,6 +1939,7 @@ void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled)
 	up_write(&cxl_region_rwsem);
 }
 
+<<<<<<< HEAD
 static int attach_target(struct cxl_region *cxlr,
 			 struct cxl_endpoint_decoder *cxled, int pos,
 			 unsigned int state)
@@ -1753,6 +1959,31 @@ static int attach_target(struct cxl_region *cxlr,
 		set_bit(CXL_REGION_F_INCOHERENT, &cxlr->flags);
 	up_read(&cxl_dpa_rwsem);
 	up_write(&cxl_region_rwsem);
+=======
+static int attach_target(struct cxl_region *cxlr, const char *decoder, int pos)
+{
+	struct device *dev;
+	int rc;
+
+	dev = bus_find_device_by_name(&cxl_bus_type, NULL, decoder);
+	if (!dev)
+		return -ENODEV;
+
+	if (!is_endpoint_decoder(dev)) {
+		put_device(dev);
+		return -EINVAL;
+	}
+
+	rc = down_write_killable(&cxl_region_rwsem);
+	if (rc)
+		goto out;
+	down_read(&cxl_dpa_rwsem);
+	rc = cxl_region_attach(cxlr, to_cxl_endpoint_decoder(dev), pos);
+	up_read(&cxl_dpa_rwsem);
+	up_write(&cxl_region_rwsem);
+out:
+	put_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -1790,6 +2021,7 @@ static size_t store_targetN(struct cxl_region *cxlr, const char *buf, int pos,
 
 	if (sysfs_streq(buf, "\n"))
 		rc = detach_target(cxlr, pos);
+<<<<<<< HEAD
 	else {
 		struct device *dev;
 
@@ -1807,6 +2039,10 @@ static size_t store_targetN(struct cxl_region *cxlr, const char *buf, int pos,
 out:
 		put_device(dev);
 	}
+=======
+	else
+		rc = attach_target(cxlr, buf, pos);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rc < 0)
 		return rc;
@@ -1895,6 +2131,7 @@ static const struct attribute_group *region_groups[] = {
 
 static void cxl_region_release(struct device *dev)
 {
+<<<<<<< HEAD
 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev->parent);
 	struct cxl_region *cxlr = to_cxl_region(dev);
 	int id = atomic_read(&cxlrd->region_id);
@@ -1913,6 +2150,11 @@ static void cxl_region_release(struct device *dev)
 	memregion_free(cxlr->id);
 out:
 	put_device(dev->parent);
+=======
+	struct cxl_region *cxlr = to_cxl_region(dev);
+
+	memregion_free(cxlr->id);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(cxlr);
 }
 
@@ -1940,6 +2182,7 @@ static struct cxl_region *to_cxl_region(struct device *dev)
 static void unregister_region(void *dev)
 {
 	struct cxl_region *cxlr = to_cxl_region(dev);
+<<<<<<< HEAD
 	struct cxl_region_params *p = &cxlr->params;
 	int i;
 
@@ -1953,6 +2196,10 @@ static void unregister_region(void *dev)
 	for (i = 0; i < p->interleave_ways; i++)
 		detach_target(cxlr, i);
 
+=======
+
+	device_del(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	cxl_region_iomem_release(cxlr);
 	put_device(dev);
 }
@@ -1974,11 +2221,14 @@ static struct cxl_region *cxl_region_alloc(struct cxl_root_decoder *cxlrd, int i
 	device_initialize(dev);
 	lockdep_set_class(&dev->mutex, &cxl_region_key);
 	dev->parent = &cxlrd->cxlsd.cxld.dev;
+<<<<<<< HEAD
 	/*
 	 * Keep root decoder pinned through cxl_region_release to fixup
 	 * region id allocations
 	 */
 	get_device(dev->parent);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	device_set_pm_not_required(dev);
 	dev->bus = &cxl_bus_type;
 	dev->type = &cxl_region_type;
@@ -2010,6 +2260,7 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
 	struct device *dev;
 	int rc;
 
+<<<<<<< HEAD
 	switch (mode) {
 	case CXL_DECODER_RAM:
 	case CXL_DECODER_PMEM:
@@ -2019,6 +2270,8 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
 		return ERR_PTR(-EINVAL);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cxlr = cxl_region_alloc(cxlrd, id);
 	if (IS_ERR(cxlr))
 		return cxlr;
@@ -2047,6 +2300,7 @@ err:
 	return ERR_PTR(rc);
 }
 
+<<<<<<< HEAD
 static ssize_t __create_region_show(struct cxl_root_decoder *cxlrd, char *buf)
 {
 	return sysfs_emit(buf, "region%u\n", atomic_read(&cxlrd->region_id));
@@ -2079,6 +2333,14 @@ static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
 	}
 
 	return devm_cxl_add_region(cxlrd, id, mode, CXL_DECODER_EXPANDER);
+=======
+static ssize_t create_pmem_region_show(struct device *dev,
+				       struct device_attribute *attr, char *buf)
+{
+	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
+
+	return sysfs_emit(buf, "region%u\n", atomic_read(&cxlrd->region_id));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t create_pmem_region_store(struct device *dev,
@@ -2087,13 +2349,31 @@ static ssize_t create_pmem_region_store(struct device *dev,
 {
 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
 	struct cxl_region *cxlr;
+<<<<<<< HEAD
 	int rc, id;
+=======
+	int id, rc;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = sscanf(buf, "region%d\n", &id);
 	if (rc != 1)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	cxlr = __create_region(cxlrd, CXL_DECODER_PMEM, id);
+=======
+	rc = memregion_alloc(GFP_KERNEL);
+	if (rc < 0)
+		return rc;
+
+	if (atomic_cmpxchg(&cxlrd->region_id, id, rc) != id) {
+		memregion_free(rc);
+		return -EBUSY;
+	}
+
+	cxlr = devm_cxl_add_region(cxlrd, id, CXL_DECODER_PMEM,
+				   CXL_DECODER_EXPANDER);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(cxlr))
 		return PTR_ERR(cxlr);
 
@@ -2101,6 +2381,7 @@ static ssize_t create_pmem_region_store(struct device *dev,
 }
 DEVICE_ATTR_RW(create_pmem_region);
 
+<<<<<<< HEAD
 static ssize_t create_ram_region_store(struct device *dev,
 				       struct device_attribute *attr,
 				       const char *buf, size_t len)
@@ -2121,6 +2402,8 @@ static ssize_t create_ram_region_store(struct device *dev,
 }
 DEVICE_ATTR_RW(create_ram_region);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t region_show(struct device *dev, struct device_attribute *attr,
 			   char *buf)
 {
@@ -2218,7 +2501,10 @@ static struct lock_class_key cxl_pmem_region_key;
 static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
 {
 	struct cxl_region_params *p = &cxlr->params;
+<<<<<<< HEAD
 	struct cxl_nvdimm_bridge *cxl_nvb;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct cxl_pmem_region *cxlr_pmem;
 	struct device *dev;
 	int i;
@@ -2246,6 +2532,7 @@ static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
 		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
 		struct cxl_pmem_region_mapping *m = &cxlr_pmem->mapping[i];
 
+<<<<<<< HEAD
 		/*
 		 * Regions never span CXL root devices, so by definition the
 		 * bridge for one device is the same for all.
@@ -2258,6 +2545,8 @@ static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
 			}
 			cxlr->cxl_nvb = cxl_nvb;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		m->cxlmd = cxlmd;
 		get_device(&cxlmd->dev);
 		m->start = cxled->dpa_res->start;
@@ -2267,7 +2556,10 @@ static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
 
 	dev = &cxlr_pmem->dev;
 	cxlr_pmem->cxlr = cxlr;
+<<<<<<< HEAD
 	cxlr->cxlr_pmem = cxlr_pmem;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	device_initialize(dev);
 	lockdep_set_class(&dev->mutex, &cxl_pmem_region_key);
 	device_set_pm_not_required(dev);
@@ -2280,6 +2572,7 @@ out:
 	return cxlr_pmem;
 }
 
+<<<<<<< HEAD
 static void cxl_dax_region_release(struct device *dev)
 {
 	struct cxl_dax_region *cxlr_dax = to_cxl_dax_region(dev);
@@ -2379,6 +2672,11 @@ static void cxlr_release_nvdimm(void *_cxlr)
 	device_unlock(&cxl_nvb->dev);
 	cxlr->cxl_nvb = NULL;
 	put_device(&cxl_nvb->dev);
+=======
+static void cxlr_pmem_unregister(void *dev)
+{
+	device_unregister(dev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -2390,14 +2688,20 @@ static void cxlr_release_nvdimm(void *_cxlr)
 static int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
 {
 	struct cxl_pmem_region *cxlr_pmem;
+<<<<<<< HEAD
 	struct cxl_nvdimm_bridge *cxl_nvb;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev;
 	int rc;
 
 	cxlr_pmem = cxl_pmem_region_alloc(cxlr);
 	if (IS_ERR(cxlr_pmem))
 		return PTR_ERR(cxlr_pmem);
+<<<<<<< HEAD
 	cxl_nvb = cxlr->cxl_nvb;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev = &cxlr_pmem->dev;
 	rc = dev_set_name(dev, "pmem_region%d", cxlr->id);
@@ -2411,6 +2715,7 @@ static int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
 	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
 		dev_name(dev));
 
+<<<<<<< HEAD
 	device_lock(&cxl_nvb->dev);
 	if (cxl_nvb->dev.driver)
 		rc = devm_add_action_or_reset(&cxl_nvb->dev,
@@ -2687,6 +2992,15 @@ static int is_system_ram(struct resource *res, void *arg)
 	return 1;
 }
 
+=======
+	return devm_add_action_or_reset(&cxlr->dev, cxlr_pmem_unregister, dev);
+
+err:
+	put_device(dev);
+	return rc;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int cxl_region_probe(struct device *dev)
 {
 	struct cxl_region *cxlr = to_cxl_region(dev);
@@ -2702,15 +3016,21 @@ static int cxl_region_probe(struct device *dev)
 	if (p->state < CXL_CONFIG_COMMIT) {
 		dev_dbg(&cxlr->dev, "config state: %d\n", p->state);
 		rc = -ENXIO;
+<<<<<<< HEAD
 		goto out;
 	}
 
 	rc = cxl_region_invalidate_memregion(cxlr);
 
+=======
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * From this point on any path that changes the region's state away from
 	 * CXL_CONFIG_COMMIT is also responsible for releasing the driver.
 	 */
+<<<<<<< HEAD
 out:
 	up_read(&cxl_region_rwsem);
 
@@ -2731,6 +3051,13 @@ out:
 					is_system_ram) > 0)
 			return 0;
 		return devm_cxl_add_dax_region(cxlr);
+=======
+	up_read(&cxl_region_rwsem);
+
+	switch (cxlr->mode) {
+	case CXL_DECODER_PMEM:
+		return devm_cxl_add_pmem_region(cxlr);
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n",
 			cxlr->mode);
@@ -2755,5 +3082,8 @@ void cxl_region_exit(void)
 }
 
 MODULE_IMPORT_NS(CXL);
+<<<<<<< HEAD
 MODULE_IMPORT_NS(DEVMEM);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_ALIAS_CXL(CXL_DEVICE_REGION);

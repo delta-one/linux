@@ -52,14 +52,20 @@
 #include "intel-pt.h"
 #include "intel-bts.h"
 #include "arm-spe.h"
+<<<<<<< HEAD
 #include "hisi-ptt.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "s390-cpumsf.h"
 #include "util/mmap.h"
 
 #include <linux/ctype.h>
 #include "symbol/kallsyms.h"
 #include <internal/lib.h>
+<<<<<<< HEAD
 #include "util/sample.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Make a group from 'leader' to 'last', requiring that the events were not
@@ -1133,9 +1139,12 @@ int auxtrace_queue_data(struct perf_session *session, bool samples, bool events)
 	if (auxtrace__dont_decode(session))
 		return 0;
 
+<<<<<<< HEAD
 	if (perf_data__is_pipe(session->data))
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!session->auxtrace || !session->auxtrace->queue_data)
 		return -EINVAL;
 
@@ -1325,9 +1334,12 @@ int perf_event__process_auxtrace_info(struct perf_session *session,
 	case PERF_AUXTRACE_S390_CPUMSF:
 		err = s390_cpumsf_process_auxtrace_info(event, session);
 		break;
+<<<<<<< HEAD
 	case PERF_AUXTRACE_HISI_PTT:
 		err = hisi_ptt_process_auxtrace_info(event, session);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case PERF_AUXTRACE_UNKNOWN:
 	default:
 		return -EINVAL;
@@ -1394,7 +1406,10 @@ void itrace_synth_opts__set_default(struct itrace_synth_opts *synth_opts,
 		synth_opts->calls = true;
 	} else {
 		synth_opts->instructions = true;
+<<<<<<< HEAD
 		synth_opts->cycles = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		synth_opts->period_type = PERF_ITRACE_DEFAULT_PERIOD_TYPE;
 		synth_opts->period = PERF_ITRACE_DEFAULT_PERIOD;
 	}
@@ -1483,11 +1498,15 @@ int itrace_do_parse_synth_opts(struct itrace_synth_opts *synth_opts,
 	for (p = str; *p;) {
 		switch (*p++) {
 		case 'i':
+<<<<<<< HEAD
 		case 'y':
 			if (p[-1] == 'y')
 				synth_opts->cycles = true;
 			else
 				synth_opts->instructions = true;
+=======
+			synth_opts->instructions = true;
+>>>>>>> b7ba80a49124 (Commit)
 			while (*p == ' ' || *p == ',')
 				p += 1;
 			if (isdigit(*p)) {
@@ -1646,7 +1665,11 @@ int itrace_do_parse_synth_opts(struct itrace_synth_opts *synth_opts,
 		}
 	}
 out:
+<<<<<<< HEAD
 	if (synth_opts->instructions || synth_opts->cycles) {
+=======
+	if (synth_opts->instructions) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!period_type_set)
 			synth_opts->period_type =
 					PERF_ITRACE_DEFAULT_PERIOD_TYPE;
@@ -2334,6 +2357,7 @@ struct sym_args {
 	bool		near;
 };
 
+<<<<<<< HEAD
 static bool kern_sym_name_match(const char *kname, const char *name)
 {
 	size_t n = strlen(name);
@@ -2342,11 +2366,17 @@ static bool kern_sym_name_match(const char *kname, const char *name)
 	       (!strncmp(kname, name, n) && kname[n] == '\t');
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool kern_sym_match(struct sym_args *args, const char *name, char type)
 {
 	/* A function with the same name, and global or the n'th found or any */
 	return kallsyms__is_function(type) &&
+<<<<<<< HEAD
 	       kern_sym_name_match(name, args->name) &&
+=======
+	       !strcmp(name, args->name) &&
+>>>>>>> b7ba80a49124 (Commit)
 	       ((args->global && isupper(type)) ||
 		(args->selected && ++(args->cnt) == args->idx) ||
 		(!args->global && !args->selected));
@@ -2619,7 +2649,11 @@ static int find_dso_sym(struct dso *dso, const char *sym_name, u64 *start,
 				*size = sym->start - *start;
 			if (idx > 0) {
 				if (*size)
+<<<<<<< HEAD
 					return 0;
+=======
+					return 1;
+>>>>>>> b7ba80a49124 (Commit)
 			} else if (dso_sym_match(sym, sym_name, &cnt, idx)) {
 				print_duplicate_syms(dso, sym_name);
 				return -EINVAL;

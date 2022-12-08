@@ -32,6 +32,11 @@ int	rtw_init_mlme_priv(struct adapter *padapter)
 	INIT_LIST_HEAD(&pmlmepriv->scanned_queue.queue);
 	spin_lock_init(&pmlmepriv->scanned_queue.lock);
 
+<<<<<<< HEAD
+=======
+	set_scanned_network_val(pmlmepriv, 0);
+
+>>>>>>> b7ba80a49124 (Commit)
 	memset(&pmlmepriv->assoc_ssid, 0, sizeof(struct ndis_802_11_ssid));
 
 	pbuf = vzalloc(array_size(MAX_BSS_CNT, sizeof(struct wlan_network)));
@@ -159,6 +164,11 @@ struct	wlan_network *rtw_alloc_network(struct	mlme_priv *pmlmepriv)
 	pnetwork->aid = 0;
 	pnetwork->join_res = 0;
 
+<<<<<<< HEAD
+=======
+	pmlmepriv->num_of_scanned++;
+
+>>>>>>> b7ba80a49124 (Commit)
 exit:
 	spin_unlock_bh(&free_queue->lock);
 
@@ -194,6 +204,11 @@ void _rtw_free_network(struct	mlme_priv *pmlmepriv, struct wlan_network *pnetwor
 
 	list_add_tail(&(pnetwork->list), &(free_queue->queue));
 
+<<<<<<< HEAD
+=======
+	pmlmepriv->num_of_scanned--;
+
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_bh(&free_queue->lock);
 }
 
@@ -214,6 +229,11 @@ void _rtw_free_network_nolock(struct	mlme_priv *pmlmepriv, struct wlan_network *
 
 	list_add_tail(&(pnetwork->list), get_list_head(free_queue));
 
+<<<<<<< HEAD
+=======
+	pmlmepriv->num_of_scanned--;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* spin_unlock_irqrestore(&free_queue->lock, irqL); */
 }
 
@@ -381,7 +401,11 @@ int is_same_network(struct wlan_bssid_ex *src, struct wlan_bssid_ex *dst, u8 fea
 	__le16 tmps, tmpd;
 
 	if (rtw_bug_check(dst, src, &s_cap, &d_cap) == false)
+<<<<<<< HEAD
 		return false;
+=======
+			return false;
+>>>>>>> b7ba80a49124 (Commit)
 
 	memcpy((u8 *)&tmps, rtw_get_capability_from_ie(src->ies), 2);
 	memcpy((u8 *)&tmpd, rtw_get_capability_from_ie(dst->ies), 2);
@@ -661,7 +685,11 @@ int rtw_is_desired_network(struct adapter *adapter, struct wlan_network *pnetwor
 		uint ie_len = 0;
 
 		if ((desired_encmode == Ndis802_11EncryptionDisabled) && (privacy != 0))
+<<<<<<< HEAD
 			bselected = false;
+=======
+	    bselected = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (psecuritypriv->ndisauthtype == Ndis802_11AuthModeWPA2PSK) {
 			p = rtw_get_ie(pnetwork->network.ies + _BEACON_IE_OFFSET_, WLAN_EID_RSN, &ie_len, (pnetwork->network.ie_length - _BEACON_IE_OFFSET_));
@@ -787,7 +815,11 @@ void rtw_surveydone_event_callback(struct adapter	*adapter, u8 *pbuf)
 			pmlmepriv->to_join = false;
 			s_ret = rtw_select_and_join_from_scanned_queue(pmlmepriv);
 			if (s_ret == _SUCCESS) {
+<<<<<<< HEAD
 				_set_timer(&pmlmepriv->assoc_timer, MAX_JOIN_TIMEOUT);
+=======
+			     _set_timer(&pmlmepriv->assoc_timer, MAX_JOIN_TIMEOUT);
+>>>>>>> b7ba80a49124 (Commit)
 			} else if (s_ret == 2) {/* there is no need to wait for join */
 				_clr_fwstate_(pmlmepriv, _FW_UNDER_LINKING);
 				rtw_indicate_connect(adapter);
@@ -855,6 +887,10 @@ static void free_scanqueue(struct	mlme_priv *pmlmepriv)
 		list_del_init(plist);
 		list_add_tail(plist, &free_queue->queue);
 		plist = ptemp;
+<<<<<<< HEAD
+=======
+		pmlmepriv->num_of_scanned--;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	spin_unlock_bh(&free_queue->lock);
@@ -1540,7 +1576,11 @@ void _rtw_join_timeout_handler(struct timer_list *t)
 	if (adapter->bDriverStopped || adapter->bSurpriseRemoved)
 		return;
 
+<<<<<<< HEAD
 	spin_lock_bh(&pmlmepriv->lock);
+=======
+	spin_lock_irq(&pmlmepriv->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rtw_to_roam(adapter) > 0) { /* join timeout caused by roaming */
 		while (1) {
@@ -1568,7 +1608,11 @@ void _rtw_join_timeout_handler(struct timer_list *t)
 
 	}
 
+<<<<<<< HEAD
 	spin_unlock_bh(&pmlmepriv->lock);
+=======
+	spin_unlock_irq(&pmlmepriv->lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1581,11 +1625,19 @@ void rtw_scan_timeout_handler(struct timer_list *t)
 						  mlmepriv.scan_to_timer);
 	struct	mlme_priv *pmlmepriv = &adapter->mlmepriv;
 
+<<<<<<< HEAD
 	spin_lock_bh(&pmlmepriv->lock);
 
 	_clr_fwstate_(pmlmepriv, _FW_UNDER_SURVEY);
 
 	spin_unlock_bh(&pmlmepriv->lock);
+=======
+	spin_lock_irq(&pmlmepriv->lock);
+
+	_clr_fwstate_(pmlmepriv, _FW_UNDER_SURVEY);
+
+	spin_unlock_irq(&pmlmepriv->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rtw_indicate_scan_done(adapter, true);
 }
@@ -2001,8 +2053,13 @@ int rtw_restruct_wmm_ie(struct adapter *adapter, u8 *in_ie, u8 *out_ie, uint in_
 
 		if (in_ie[i] == 0xDD && in_ie[i+2] == 0x00 && in_ie[i+3] == 0x50  && in_ie[i+4] == 0xF2 && in_ie[i+5] == 0x02 && i+5 < in_len) { /* WMM element ID and OUI */
 			for (j = i; j < i + 9; j++) {
+<<<<<<< HEAD
 				out_ie[ielength] = in_ie[j];
 				ielength++;
+=======
+					out_ie[ielength] = in_ie[j];
+					ielength++;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			out_ie[initial_out_len + 1] = 0x07;
 			out_ie[initial_out_len + 6] = 0x00;
@@ -2055,6 +2112,7 @@ static int rtw_append_pmkid(struct adapter *Adapter, int iEntry, u8 *ie, uint ie
 
 	if (ie[13] <= 20) {
 		/*  The RSN IE didn't include the PMK ID, append the PMK information */
+<<<<<<< HEAD
 		ie[ie_len] = 1;
 		ie_len++;
 		ie[ie_len] = 0;	/* PMKID count = 0x0100 */
@@ -2062,6 +2120,17 @@ static int rtw_append_pmkid(struct adapter *Adapter, int iEntry, u8 *ie, uint ie
 		memcpy(&ie[ie_len], &psecuritypriv->PMKIDList[iEntry].PMKID, 16);
 		ie_len += 16;
 		ie[13] += 18;/* PMKID length = 2+16 */
+=======
+			ie[ie_len] = 1;
+			ie_len++;
+			ie[ie_len] = 0;	/* PMKID count = 0x0100 */
+			ie_len++;
+			memcpy(&ie[ie_len], &psecuritypriv->PMKIDList[iEntry].PMKID, 16);
+
+			ie_len += 16;
+			ie[13] += 18;/* PMKID length = 2+16 */
+
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ie_len;
 }
@@ -2080,9 +2149,15 @@ signed int rtw_restruct_sec_ie(struct adapter *adapter, u8 *in_ie, u8 *out_ie, u
 	memcpy(out_ie, in_ie, 12);
 	ielength = 12;
 	if ((ndisauthmode == Ndis802_11AuthModeWPA) || (ndisauthmode == Ndis802_11AuthModeWPAPSK))
+<<<<<<< HEAD
 		authmode = WLAN_EID_VENDOR_SPECIFIC;
 	if ((ndisauthmode == Ndis802_11AuthModeWPA2) || (ndisauthmode == Ndis802_11AuthModeWPA2PSK))
 		authmode = WLAN_EID_RSN;
+=======
+			authmode = WLAN_EID_VENDOR_SPECIFIC;
+	if ((ndisauthmode == Ndis802_11AuthModeWPA2) || (ndisauthmode == Ndis802_11AuthModeWPA2PSK))
+			authmode = WLAN_EID_RSN;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (check_fwstate(pmlmepriv, WIFI_UNDER_WPS)) {
 		memcpy(out_ie+ielength, psecuritypriv->wps_ie, psecuritypriv->wps_ie_len);

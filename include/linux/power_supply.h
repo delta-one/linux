@@ -301,7 +301,10 @@ struct power_supply {
 	bool initialized;
 	bool removing;
 	atomic_t use_cnt;
+<<<<<<< HEAD
 	struct power_supply_battery_info *battery_info;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_THERMAL
 	struct thermal_zone_device *tzd;
 	struct thermal_cooling_device *tcd;
@@ -792,17 +795,23 @@ devm_power_supply_get_by_phandle(struct device *dev, const char *property)
 { return NULL; }
 #endif /* CONFIG_OF */
 
+<<<<<<< HEAD
 extern const enum power_supply_property power_supply_battery_info_properties[];
 extern const size_t power_supply_battery_info_properties_size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern int power_supply_get_battery_info(struct power_supply *psy,
 					 struct power_supply_battery_info **info_out);
 extern void power_supply_put_battery_info(struct power_supply *psy,
 					  struct power_supply_battery_info *info);
+<<<<<<< HEAD
 extern bool power_supply_battery_info_has_prop(struct power_supply_battery_info *info,
 					       enum power_supply_property psp);
 extern int power_supply_battery_info_get_prop(struct power_supply_battery_info *info,
 					      enum power_supply_property psp,
 					      union power_supply_propval *val);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern int power_supply_ocv2cap_simple(struct power_supply_battery_ocv_table *table,
 				       int table_len, int ocv);
 extern struct power_supply_battery_ocv_table *

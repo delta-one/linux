@@ -139,7 +139,11 @@ static int nft_symhash_init(const struct nft_ctx *ctx,
 }
 
 static int nft_jhash_dump(struct sk_buff *skb,
+<<<<<<< HEAD
 			  const struct nft_expr *expr, bool reset)
+=======
+			  const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_jhash *priv = nft_expr_priv(expr);
 
@@ -176,7 +180,11 @@ static bool nft_jhash_reduce(struct nft_regs_track *track,
 }
 
 static int nft_symhash_dump(struct sk_buff *skb,
+<<<<<<< HEAD
 			    const struct nft_expr *expr, bool reset)
+=======
+			    const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_symhash *priv = nft_expr_priv(expr);
 

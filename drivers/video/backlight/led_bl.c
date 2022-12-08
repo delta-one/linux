@@ -217,7 +217,11 @@ static int led_bl_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void led_bl_remove(struct platform_device *pdev)
+=======
+static int led_bl_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct led_bl_data *priv = platform_get_drvdata(pdev);
 	struct backlight_device *bl = priv->bl_dev;
@@ -228,6 +232,11 @@ static void led_bl_remove(struct platform_device *pdev)
 	led_bl_power_off(priv);
 	for (i = 0; i < priv->nb_leds; i++)
 		led_sysfs_enable(priv->leds[i]);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id led_bl_of_match[] = {
@@ -243,7 +252,11 @@ static struct platform_driver led_bl_driver = {
 		.of_match_table	= of_match_ptr(led_bl_of_match),
 	},
 	.probe		= led_bl_probe,
+<<<<<<< HEAD
 	.remove_new	= led_bl_remove,
+=======
+	.remove		= led_bl_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(led_bl_driver);

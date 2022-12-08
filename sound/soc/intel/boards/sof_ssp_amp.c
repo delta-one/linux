@@ -105,6 +105,10 @@ static int sof_card_late_probe(struct snd_soc_card *card)
 	char jack_name[NAME_SIZE];
 	struct sof_hdmi_pcm *pcm;
 	int err;
+<<<<<<< HEAD
+=======
+	int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!(sof_ssp_amp_quirk & SOF_HDMI_PLAYBACK_PRESENT))
 		return 0;
@@ -123,6 +127,10 @@ static int sof_card_late_probe(struct snd_soc_card *card)
 		return hda_dsp_hdmi_build_controls(card, component);
 	}
 
+<<<<<<< HEAD
+=======
+	i = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry(pcm, &ctx->hdmi_pcm_list, head) {
 		component = pcm->codec_dai->component;
 		snprintf(jack_name, sizeof(jack_name),
@@ -137,6 +145,11 @@ static int sof_card_late_probe(struct snd_soc_card *card)
 					  &pcm->sof_hdmi);
 		if (err < 0)
 			return err;
+<<<<<<< HEAD
+=======
+
+		i++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return hdac_hdmi_jack_port_init(component, &card->dapm);
@@ -254,12 +267,21 @@ static struct snd_soc_dai_link *sof_card_dai_links_create(struct device *dev,
 		sof_rt1308_dai_link(&links[id]);
 	} else if (sof_ssp_amp_quirk & SOF_CS35L41_SPEAKER_AMP_PRESENT) {
 		cs35l41_set_dai_link(&links[id]);
+<<<<<<< HEAD
+=======
+
+		/* feedback from amplifier */
+		links[id].dpcm_capture = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	links[id].platforms = platform_component;
 	links[id].num_platforms = ARRAY_SIZE(platform_component);
 	links[id].dpcm_playback = 1;
+<<<<<<< HEAD
 	/* feedback from amplifier or firmware-generated echo reference */
 	links[id].dpcm_capture = 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	links[id].no_pcm = 1;
 	links[id].cpus = &cpus[id];
 	links[id].num_cpus = 1;

@@ -841,7 +841,11 @@ static int __init ppdev_init(void)
 		pr_warn(CHRDEV ": unable to get major %d\n", PP_MAJOR);
 		return -EIO;
 	}
+<<<<<<< HEAD
 	ppdev_class = class_create(CHRDEV);
+=======
+	ppdev_class = class_create(THIS_MODULE, CHRDEV);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(ppdev_class)) {
 		err = PTR_ERR(ppdev_class);
 		goto out_chrdev;

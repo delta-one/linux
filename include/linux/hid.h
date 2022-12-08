@@ -26,7 +26,10 @@
 #include <linux/mutex.h>
 #include <linux/power_supply.h>
 #include <uapi/linux/hid.h>
+<<<<<<< HEAD
 #include <linux/hid_bpf.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * We parse each description item into this structure. Short items data
@@ -156,7 +159,10 @@ struct hid_item {
 #define HID_UP_DIGITIZER	0x000d0000
 #define HID_UP_PID		0x000f0000
 #define HID_UP_BATTERY		0x00850000
+<<<<<<< HEAD
 #define HID_UP_CAMERA		0x00900000
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define HID_UP_HPVENDOR         0xff7f0000
 #define HID_UP_HPVENDOR2        0xff010000
 #define HID_UP_MSVENDOR		0xff000000
@@ -314,7 +320,10 @@ struct hid_item {
 #define HID_DG_LATENCYMODE	0x000d0060
 
 #define HID_BAT_ABSOLUTESTATEOFCHARGE	0x00850065
+<<<<<<< HEAD
 #define HID_BAT_CHARGING		0x00850044
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define HID_VD_ASUS_CUSTOM_MEDIA_KEYS	0xff310076
 
@@ -598,7 +607,11 @@ struct hid_device {							/* device report descriptor */
 	struct device dev;						/* device */
 	struct hid_driver *driver;
 
+<<<<<<< HEAD
 	const struct hid_ll_driver *ll_driver;
+=======
+	struct hid_ll_driver *ll_driver;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mutex ll_open_lock;
 	unsigned int ll_open_count;
 
@@ -614,7 +627,10 @@ struct hid_device {							/* device report descriptor */
 	__s32 battery_max;
 	__s32 battery_report_type;
 	__s32 battery_report_id;
+<<<<<<< HEAD
 	__s32 battery_charge_status;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	enum hid_battery_status battery_status;
 	bool battery_avoid_query;
 	ktime_t battery_ratelimit_time;
@@ -623,7 +639,10 @@ struct hid_device {							/* device report descriptor */
 	unsigned long status;						/* see STAT flags above */
 	unsigned claimed;						/* Claimed by hidinput, hiddev? */
 	unsigned quirks;						/* Various quirks the device can pull on us */
+<<<<<<< HEAD
 	unsigned initial_quirks;					/* Initial set of quirks supplied when creating device */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool io_started;						/* If IO has started */
 
 	struct list_head inputs;					/* The list of inputs */
@@ -656,10 +675,13 @@ struct hid_device {							/* device report descriptor */
 	wait_queue_head_t debug_wait;
 
 	unsigned int id;						/* system unique id */
+<<<<<<< HEAD
 
 #ifdef CONFIG_BPF
 	struct hid_bpf bpf;						/* hid-bpf data */
 #endif /* CONFIG_BPF */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define to_hid_device(pdev) \
@@ -835,7 +857,10 @@ struct hid_driver {
  * @output_report: send output report to device
  * @idle: send idle request to device
  * @may_wakeup: return if device may act as a wakeup source during system-suspend
+<<<<<<< HEAD
  * @max_buffer_size: over-ride maximum data buffer size (default: HID_MAX_BUFFER_SIZE)
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct hid_ll_driver {
 	int (*start)(struct hid_device *hdev);
@@ -861,11 +886,31 @@ struct hid_ll_driver {
 
 	int (*idle)(struct hid_device *hdev, int report, int idle, int reqtype);
 	bool (*may_wakeup)(struct hid_device *hdev);
+<<<<<<< HEAD
 
 	unsigned int max_buffer_size;
 };
 
 extern bool hid_is_usb(const struct hid_device *hdev);
+=======
+};
+
+extern struct hid_ll_driver i2c_hid_ll_driver;
+extern struct hid_ll_driver hidp_hid_driver;
+extern struct hid_ll_driver uhid_hid_driver;
+extern struct hid_ll_driver usb_hid_driver;
+
+static inline bool hid_is_using_ll_driver(struct hid_device *hdev,
+		struct hid_ll_driver *driver)
+{
+	return hdev->ll_driver == driver;
+}
+
+static inline bool hid_is_usb(struct hid_device *hdev)
+{
+	return hid_is_using_ll_driver(hdev, &usb_hid_driver);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 #define	PM_HINT_FULLON	1<<5
 #define PM_HINT_NORMAL	1<<1
@@ -880,6 +925,11 @@ extern bool hid_is_usb(const struct hid_device *hdev);
 
 /* HID core API */
 
+<<<<<<< HEAD
+=======
+extern int hid_debug;
+
+>>>>>>> b7ba80a49124 (Commit)
 extern bool hid_ignore(struct hid_device *);
 extern int hid_add_device(struct hid_device *);
 extern void hid_destroy_device(struct hid_device *);
@@ -1187,7 +1237,15 @@ int hid_pidff_init(struct hid_device *hid);
 #define hid_pidff_init NULL
 #endif
 
+<<<<<<< HEAD
 #define dbg_hid(fmt, ...) pr_debug("%s: " fmt, __FILE__, ##__VA_ARGS__)
+=======
+#define dbg_hid(fmt, ...)						\
+do {									\
+	if (hid_debug)							\
+		printk(KERN_DEBUG "%s: " fmt, __FILE__, ##__VA_ARGS__);	\
+} while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define hid_err(hid, fmt, ...)				\
 	dev_err(&(hid)->dev, fmt, ##__VA_ARGS__)

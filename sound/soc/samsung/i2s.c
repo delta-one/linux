@@ -50,10 +50,13 @@ struct samsung_i2s_dai_data {
 	u32 quirks;
 	unsigned int pcm_rates;
 	const struct samsung_i2s_variant_regs *i2s_variant_regs;
+<<<<<<< HEAD
 	void (*fixup_early)(struct snd_pcm_substream *substream,
 					struct snd_soc_dai *dai);
 	void (*fixup_late)(struct snd_pcm_substream *substream,
 					struct snd_soc_dai *dai);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct i2s_dai {
@@ -115,10 +118,13 @@ struct samsung_i2s_priv {
 	u32 suspend_i2spsr;
 
 	const struct samsung_i2s_variant_regs *variant_regs;
+<<<<<<< HEAD
 	void (*fixup_early)(struct snd_pcm_substream *substream,
 						struct snd_soc_dai *dai);
 	void (*fixup_late)(struct snd_pcm_substream *substream,
 						struct snd_soc_dai *dai);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 quirks;
 
 	/* The clock provider's data */
@@ -948,10 +954,13 @@ static int i2s_trigger(struct snd_pcm_substream *substream,
 	case SNDRV_PCM_TRIGGER_RESUME:
 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
 		pm_runtime_get_sync(dai->dev);
+<<<<<<< HEAD
 
 		if (priv->fixup_early)
 			priv->fixup_early(substream, dai);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		spin_lock_irqsave(&priv->lock, flags);
 
 		if (config_setup(i2s)) {
@@ -959,9 +968,12 @@ static int i2s_trigger(struct snd_pcm_substream *substream,
 			return -EINVAL;
 		}
 
+<<<<<<< HEAD
 		if (priv->fixup_late)
 			priv->fixup_late(substream, dai);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (capture)
 			i2s_rxctrl(i2s, 1);
 		else
@@ -1289,7 +1301,11 @@ static int i2s_register_clock_provider(struct samsung_i2s_priv *priv)
 	int ret, i;
 
 	/* Register the clock provider only if it's expected in the DTB */
+<<<<<<< HEAD
 	if (!of_property_present(dev->of_node, "#clock-cells"))
+=======
+	if (!of_find_property(dev->of_node, "#clock-cells", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	/* Get the RCLKSRC mux clock parent clock names */
@@ -1425,8 +1441,11 @@ static int samsung_i2s_probe(struct platform_device *pdev)
 
 	if (np) {
 		priv->quirks = i2s_dai_data->quirks;
+<<<<<<< HEAD
 		priv->fixup_early = i2s_dai_data->fixup_early;
 		priv->fixup_late = i2s_dai_data->fixup_late;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		if (!i2s_pdata) {
 			dev_err(&pdev->dev, "Missing platform data\n");
@@ -1560,13 +1579,21 @@ err_disable_clk:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void samsung_i2s_remove(struct platform_device *pdev)
+=======
+static int samsung_i2s_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct samsung_i2s_priv *priv = dev_get_drvdata(&pdev->dev);
 
 	/* The secondary device has no driver data assigned */
 	if (!priv)
+<<<<<<< HEAD
 		return;
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pm_runtime_get_sync(&pdev->dev);
 	pm_runtime_disable(&pdev->dev);
@@ -1576,6 +1603,7 @@ static void samsung_i2s_remove(struct platform_device *pdev)
 	clk_disable_unprepare(priv->clk);
 
 	pm_runtime_put_noidle(&pdev->dev);
+<<<<<<< HEAD
 }
 
 static void fsd_i2s_fixup_early(struct snd_pcm_substream *substream,
@@ -1601,6 +1629,10 @@ static void fsd_i2s_fixup_late(struct snd_pcm_substream *substream,
 
 	if (!is_opened(other))
 		writel(PSR_PSVAL(2) | PSR_PSREN, priv->addr + I2SPSR);
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct samsung_i2s_variant_regs i2sv3_regs = {
@@ -1692,6 +1724,7 @@ static const struct samsung_i2s_dai_data i2sv5_dai_type_i2s1 __maybe_unused = {
 	.i2s_variant_regs = &i2sv5_i2s1_regs,
 };
 
+<<<<<<< HEAD
 static const struct samsung_i2s_dai_data fsd_dai_type __maybe_unused = {
 	.quirks = QUIRK_SEC_DAI | QUIRK_NEED_RSTCLR | QUIRK_SUPPORTS_TDM,
 	.pcm_rates = SNDRV_PCM_RATE_8000_192000,
@@ -1700,6 +1733,8 @@ static const struct samsung_i2s_dai_data fsd_dai_type __maybe_unused = {
 	.fixup_late = fsd_i2s_fixup_late,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct platform_device_id samsung_i2s_driver_ids[] = {
 	{
 		.name           = "samsung-i2s",
@@ -1726,9 +1761,12 @@ static const struct of_device_id exynos_i2s_match[] = {
 	}, {
 		.compatible = "samsung,exynos7-i2s1",
 		.data = &i2sv5_dai_type_i2s1,
+<<<<<<< HEAD
 	}, {
 		.compatible = "tesla,fsd-i2s",
 		.data = &fsd_dai_type,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{},
 };
@@ -1744,7 +1782,11 @@ static const struct dev_pm_ops samsung_i2s_pm = {
 
 static struct platform_driver samsung_i2s_driver = {
 	.probe  = samsung_i2s_probe,
+<<<<<<< HEAD
 	.remove_new = samsung_i2s_remove,
+=======
+	.remove = samsung_i2s_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = samsung_i2s_driver_ids,
 	.driver = {
 		.name = "samsung-i2s",

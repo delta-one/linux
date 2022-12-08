@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * uniphier_thermal.c - Socionext UniPhier thermal driver
  * Copyright 2014      Panasonic Corporation
  * Copyright 2016-2017 Socionext Inc.
@@ -17,6 +21,11 @@
 #include <linux/regmap.h>
 #include <linux/thermal.h>
 
+<<<<<<< HEAD
+=======
+#include "thermal_core.h"
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * block registers
  * addresses are the offset from .block_base
@@ -187,7 +196,11 @@ static void uniphier_tm_disable_sensor(struct uniphier_tm_dev *tdev)
 
 static int uniphier_tm_get_temp(struct thermal_zone_device *tz, int *out_temp)
 {
+<<<<<<< HEAD
 	struct uniphier_tm_dev *tdev = thermal_zone_device_priv(tz);
+=======
+	struct uniphier_tm_dev *tdev = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct regmap *map = tdev->regmap;
 	int ret;
 	u32 temp;

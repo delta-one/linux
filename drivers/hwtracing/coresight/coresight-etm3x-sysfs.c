@@ -85,7 +85,10 @@ static ssize_t reset_store(struct device *dev,
 		}
 
 		etm_set_default(config);
+<<<<<<< HEAD
 		etm_release_trace_id(drvdata);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		spin_unlock(&drvdata->spinlock);
 	}
 
@@ -1190,6 +1193,7 @@ static DEVICE_ATTR_RO(cpu);
 static ssize_t traceid_show(struct device *dev,
 			    struct device_attribute *attr, char *buf)
 {
+<<<<<<< HEAD
 	int trace_id;
 	struct etm_drvdata *drvdata = dev_get_drvdata(dev->parent);
 
@@ -1200,6 +1204,32 @@ static ssize_t traceid_show(struct device *dev,
 	return sysfs_emit(buf, "%#x\n", trace_id);
 }
 static DEVICE_ATTR_RO(traceid);
+=======
+	unsigned long val;
+	struct etm_drvdata *drvdata = dev_get_drvdata(dev->parent);
+
+	val = etm_get_trace_id(drvdata);
+
+	return sprintf(buf, "%#lx\n", val);
+}
+
+static ssize_t traceid_store(struct device *dev,
+			     struct device_attribute *attr,
+			     const char *buf, size_t size)
+{
+	int ret;
+	unsigned long val;
+	struct etm_drvdata *drvdata = dev_get_drvdata(dev->parent);
+
+	ret = kstrtoul(buf, 16, &val);
+	if (ret)
+		return ret;
+
+	drvdata->traceid = val & ETM_TRACEID_MASK;
+	return size;
+}
+static DEVICE_ATTR_RW(traceid);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct attribute *coresight_etm_attrs[] = {
 	&dev_attr_nr_addr_cmp.attr,

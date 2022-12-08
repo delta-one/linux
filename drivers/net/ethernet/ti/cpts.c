@@ -213,6 +213,7 @@ static void cpts_update_cur_time(struct cpts *cpts, int match,
 
 /* PTP clock operations */
 
+<<<<<<< HEAD
 static int cpts_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
 {
 	struct cpts *cpts = container_of(ptp, struct cpts, info);
@@ -220,6 +221,27 @@ static int cpts_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
 	mutex_lock(&cpts->ptp_clk_mutex);
 
 	cpts->mult_new = adjust_by_scaled_ppm(cpts->cc_mult, scaled_ppm);
+=======
+static int cpts_ptp_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
+{
+	struct cpts *cpts = container_of(ptp, struct cpts, info);
+	int neg_adj = 0;
+	u32 diff, mult;
+	u64 adj;
+
+	if (ppb < 0) {
+		neg_adj = 1;
+		ppb = -ppb;
+	}
+	mult = cpts->cc_mult;
+	adj = mult;
+	adj *= ppb;
+	diff = div_u64(adj, 1000000000ULL);
+
+	mutex_lock(&cpts->ptp_clk_mutex);
+
+	cpts->mult_new = neg_adj ? mult - diff : mult + diff;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cpts_update_cur_time(cpts, CPTS_EV_PUSH, NULL);
 
@@ -423,7 +445,11 @@ static const struct ptp_clock_info cpts_info = {
 	.n_ext_ts	= 0,
 	.n_pins		= 0,
 	.pps		= 0,
+<<<<<<< HEAD
 	.adjfine	= cpts_ptp_adjfine,
+=======
+	.adjfreq	= cpts_ptp_adjfreq,
+>>>>>>> b7ba80a49124 (Commit)
 	.adjtime	= cpts_ptp_adjtime,
 	.gettimex64	= cpts_ptp_gettimeex,
 	.settime64	= cpts_ptp_settime,
@@ -782,7 +808,11 @@ struct cpts *cpts_create(struct device *dev, void __iomem *regs,
 
 	cpts_calc_mult_shift(cpts);
 	/* save cc.mult original value as it can be modified
+<<<<<<< HEAD
 	 * by cpts_ptp_adjfine().
+=======
+	 * by cpts_ptp_adjfreq().
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	cpts->cc_mult = cpts->cc.mult;
 

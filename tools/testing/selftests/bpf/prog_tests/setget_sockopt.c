@@ -4,7 +4,10 @@
 #define _GNU_SOURCE
 #include <sched.h>
 #include <linux/socket.h>
+<<<<<<< HEAD
 #include <linux/tls.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/if.h>
 
 #include "test_progs.h"
@@ -84,6 +87,7 @@ static void test_udp(int family)
 	ASSERT_EQ(bss->nr_binddev, 1, "nr_bind");
 }
 
+<<<<<<< HEAD
 static void test_ktls(int family)
 {
 	struct tls12_crypto_info_aes_gcm_128 aes128;
@@ -154,6 +158,8 @@ err_out:
 	close(sfd);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void test_setget_sockopt(void)
 {
 	cg_fd = test__join_cgroup(CG_NAME);
@@ -189,8 +195,11 @@ void test_setget_sockopt(void)
 	test_tcp(AF_INET);
 	test_udp(AF_INET6);
 	test_udp(AF_INET);
+<<<<<<< HEAD
 	test_ktls(AF_INET6);
 	test_ktls(AF_INET);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 done:
 	setget_sockopt__destroy(skel);

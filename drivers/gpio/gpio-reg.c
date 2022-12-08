@@ -4,6 +4,7 @@
  *
  * Copyright (C) 2016 Russell King
  */
+<<<<<<< HEAD
 #include <linux/bits.h>
 #include <linux/container_of.h>
 #include <linux/device.h>
@@ -17,6 +18,13 @@
 
 #include <linux/gpio/driver.h>
 #include <linux/gpio/gpio-reg.h>
+=======
+#include <linux/gpio/driver.h>
+#include <linux/gpio/gpio-reg.h>
+#include <linux/io.h>
+#include <linux/slab.h>
+#include <linux/spinlock.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 struct gpio_reg {
 	struct gpio_chip gc;

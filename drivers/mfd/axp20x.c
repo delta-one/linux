@@ -23,7 +23,11 @@
 #include <linux/mfd/core.h>
 #include <linux/module.h>
 #include <linux/of_device.h>
+<<<<<<< HEAD
 #include <linux/reboot.h>
+=======
+#include <linux/pm_runtime.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regmap.h>
 #include <linux/regulator/consumer.h>
 
@@ -506,7 +510,12 @@ static const struct regmap_irq_chip axp152_regmap_irq_chip = {
 	.name			= "axp152_irq_chip",
 	.status_base		= AXP152_IRQ1_STATE,
 	.ack_base		= AXP152_IRQ1_STATE,
+<<<<<<< HEAD
 	.unmask_base		= AXP152_IRQ1_EN,
+=======
+	.mask_base		= AXP152_IRQ1_EN,
+	.mask_invert		= true,
+>>>>>>> b7ba80a49124 (Commit)
 	.init_ack_masked	= true,
 	.irqs			= axp152_regmap_irqs,
 	.num_irqs		= ARRAY_SIZE(axp152_regmap_irqs),
@@ -517,7 +526,12 @@ static const struct regmap_irq_chip axp20x_regmap_irq_chip = {
 	.name			= "axp20x_irq_chip",
 	.status_base		= AXP20X_IRQ1_STATE,
 	.ack_base		= AXP20X_IRQ1_STATE,
+<<<<<<< HEAD
 	.unmask_base		= AXP20X_IRQ1_EN,
+=======
+	.mask_base		= AXP20X_IRQ1_EN,
+	.mask_invert		= true,
+>>>>>>> b7ba80a49124 (Commit)
 	.init_ack_masked	= true,
 	.irqs			= axp20x_regmap_irqs,
 	.num_irqs		= ARRAY_SIZE(axp20x_regmap_irqs),
@@ -529,7 +543,12 @@ static const struct regmap_irq_chip axp22x_regmap_irq_chip = {
 	.name			= "axp22x_irq_chip",
 	.status_base		= AXP20X_IRQ1_STATE,
 	.ack_base		= AXP20X_IRQ1_STATE,
+<<<<<<< HEAD
 	.unmask_base		= AXP20X_IRQ1_EN,
+=======
+	.mask_base		= AXP20X_IRQ1_EN,
+	.mask_invert		= true,
+>>>>>>> b7ba80a49124 (Commit)
 	.init_ack_masked	= true,
 	.irqs			= axp22x_regmap_irqs,
 	.num_irqs		= ARRAY_SIZE(axp22x_regmap_irqs),
@@ -540,7 +559,12 @@ static const struct regmap_irq_chip axp288_regmap_irq_chip = {
 	.name			= "axp288_irq_chip",
 	.status_base		= AXP20X_IRQ1_STATE,
 	.ack_base		= AXP20X_IRQ1_STATE,
+<<<<<<< HEAD
 	.unmask_base		= AXP20X_IRQ1_EN,
+=======
+	.mask_base		= AXP20X_IRQ1_EN,
+	.mask_invert		= true,
+>>>>>>> b7ba80a49124 (Commit)
 	.init_ack_masked	= true,
 	.irqs			= axp288_regmap_irqs,
 	.num_irqs		= ARRAY_SIZE(axp288_regmap_irqs),
@@ -552,7 +576,12 @@ static const struct regmap_irq_chip axp803_regmap_irq_chip = {
 	.name			= "axp803",
 	.status_base		= AXP20X_IRQ1_STATE,
 	.ack_base		= AXP20X_IRQ1_STATE,
+<<<<<<< HEAD
 	.unmask_base		= AXP20X_IRQ1_EN,
+=======
+	.mask_base		= AXP20X_IRQ1_EN,
+	.mask_invert		= true,
+>>>>>>> b7ba80a49124 (Commit)
 	.init_ack_masked	= true,
 	.irqs			= axp803_regmap_irqs,
 	.num_irqs		= ARRAY_SIZE(axp803_regmap_irqs),
@@ -563,7 +592,12 @@ static const struct regmap_irq_chip axp806_regmap_irq_chip = {
 	.name			= "axp806",
 	.status_base		= AXP20X_IRQ1_STATE,
 	.ack_base		= AXP20X_IRQ1_STATE,
+<<<<<<< HEAD
 	.unmask_base		= AXP20X_IRQ1_EN,
+=======
+	.mask_base		= AXP20X_IRQ1_EN,
+	.mask_invert		= true,
+>>>>>>> b7ba80a49124 (Commit)
 	.init_ack_masked	= true,
 	.irqs			= axp806_regmap_irqs,
 	.num_irqs		= ARRAY_SIZE(axp806_regmap_irqs),
@@ -574,7 +608,12 @@ static const struct regmap_irq_chip axp809_regmap_irq_chip = {
 	.name			= "axp809",
 	.status_base		= AXP20X_IRQ1_STATE,
 	.ack_base		= AXP20X_IRQ1_STATE,
+<<<<<<< HEAD
 	.unmask_base		= AXP20X_IRQ1_EN,
+=======
+	.mask_base		= AXP20X_IRQ1_EN,
+	.mask_invert		= true,
+>>>>>>> b7ba80a49124 (Commit)
 	.init_ack_masked	= true,
 	.irqs			= axp809_regmap_irqs,
 	.num_irqs		= ARRAY_SIZE(axp809_regmap_irqs),
@@ -825,6 +864,7 @@ static const struct mfd_cell axp813_cells[] = {
 	},
 };
 
+<<<<<<< HEAD
 static int axp20x_power_off(struct sys_off_data *data)
 {
 	struct axp20x_dev *axp20x = data->cb_data;
@@ -835,6 +875,19 @@ static int axp20x_power_off(struct sys_off_data *data)
 	mdelay(500);
 
 	return NOTIFY_DONE;
+=======
+static struct axp20x_dev *axp20x_pm_power_off;
+static void axp20x_power_off(void)
+{
+	if (axp20x_pm_power_off->variant == AXP288_ID)
+		return;
+
+	regmap_write(axp20x_pm_power_off->regmap, AXP20X_OFF_CTRL,
+		     AXP20X_OFF);
+
+	/* Give capacitors etc. time to drain to avoid kernel panic msg. */
+	msleep(500);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int axp20x_match_device(struct axp20x_dev *axp20x)
@@ -1001,11 +1054,18 @@ int axp20x_device_probe(struct axp20x_dev *axp20x)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	if (axp20x->variant != AXP288_ID)
 		devm_register_sys_off_handler(axp20x->dev,
 					      SYS_OFF_MODE_POWER_OFF,
 					      SYS_OFF_PRIO_DEFAULT,
 					      axp20x_power_off, axp20x);
+=======
+	if (!pm_power_off) {
+		axp20x_pm_power_off = axp20x;
+		pm_power_off = axp20x_power_off;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_info(axp20x->dev, "AXP20X driver loaded\n");
 
@@ -1015,6 +1075,14 @@ EXPORT_SYMBOL(axp20x_device_probe);
 
 void axp20x_device_remove(struct axp20x_dev *axp20x)
 {
+<<<<<<< HEAD
+=======
+	if (axp20x == axp20x_pm_power_off) {
+		axp20x_pm_power_off = NULL;
+		pm_power_off = NULL;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	mfd_remove_devices(axp20x->dev);
 	regmap_del_irq_chip(axp20x->irq, axp20x->regmap_irqc);
 }

@@ -79,6 +79,10 @@ struct imx334_reg_list {
  * struct imx334_mode - imx334 sensor mode structure
  * @width: Frame width
  * @height: Frame height
+<<<<<<< HEAD
+=======
+ * @code: Format code
+>>>>>>> b7ba80a49124 (Commit)
  * @hblank: Horizontal blanking in lines
  * @vblank: Vertical blanking in lines
  * @vblank_min: Minimal vertical blanking in lines
@@ -90,6 +94,10 @@ struct imx334_reg_list {
 struct imx334_mode {
 	u32 width;
 	u32 height;
+<<<<<<< HEAD
+=======
+	u32 code;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 hblank;
 	u32 vblank;
 	u32 vblank_min;
@@ -117,7 +125,10 @@ struct imx334_mode {
  * @vblank: Vertical blanking in lines
  * @cur_mode: Pointer to current selected sensor mode
  * @mutex: Mutex for serializing sensor controls
+<<<<<<< HEAD
  * @cur_code: current selected format code
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @streaming: Flag indicating streaming state
  */
 struct imx334 {
@@ -139,7 +150,10 @@ struct imx334 {
 	u32 vblank;
 	const struct imx334_mode *cur_mode;
 	struct mutex mutex;
+<<<<<<< HEAD
 	u32 cur_code;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool streaming;
 };
 
@@ -147,6 +161,7 @@ static const s64 link_freq[] = {
 	IMX334_LINK_FREQ,
 };
 
+<<<<<<< HEAD
 /* Sensor mode registers for 1920x1080@30fps */
 static const struct imx334_reg mode_1920x1080_regs[] = {
 	{0x3000, 0x01},
@@ -311,6 +326,9 @@ static const struct imx334_reg mode_1920x1080_regs[] = {
 };
 
 /* Sensor mode registers for 3840x2160@30fps */
+=======
+/* Sensor mode registers */
+>>>>>>> b7ba80a49124 (Commit)
 static const struct imx334_reg mode_3840x2160_regs[] = {
 	{0x3000, 0x01},
 	{0x3002, 0x00},
@@ -329,7 +347,10 @@ static const struct imx334_reg mode_3840x2160_regs[] = {
 	{0x3288, 0x21},
 	{0x328a, 0x02},
 	{0x302c, 0x3c},
+<<<<<<< HEAD
 	{0x302d, 0x00},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{0x302e, 0x00},
 	{0x302f, 0x0f},
 	{0x3076, 0x70},
@@ -404,6 +425,7 @@ static const struct imx334_reg mode_3840x2160_regs[] = {
 	{0x3794, 0x7a},
 	{0x3796, 0xa1},
 	{0x3e04, 0x0e},
+<<<<<<< HEAD
 	{0x319e, 0x00},
 	{0x3a00, 0x01},
 	{0x3a18, 0xbf},
@@ -473,6 +495,25 @@ static const struct imx334_mode supported_modes[] = {
 			.num_of_regs = ARRAY_SIZE(mode_1920x1080_regs),
 			.regs = mode_1920x1080_regs,
 		},
+=======
+	{0x3a00, 0x01},
+};
+
+/* Supported sensor mode configurations */
+static const struct imx334_mode supported_mode = {
+	.width = 3840,
+	.height = 2160,
+	.hblank = 560,
+	.vblank = 2340,
+	.vblank_min = 90,
+	.vblank_max = 132840,
+	.pclk = 594000000,
+	.link_freq_idx = 0,
+	.code = MEDIA_BUS_FMT_SRGGB12_1X12,
+	.reg_list = {
+		.num_of_regs = ARRAY_SIZE(mode_3840x2160_regs),
+		.regs = mode_3840x2160_regs,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 
@@ -598,8 +639,12 @@ static int imx334_update_controls(struct imx334 *imx334,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = __v4l2_ctrl_modify_range(imx334->hblank_ctrl, mode->hblank,
 				       mode->hblank, 1, mode->hblank);
+=======
+	ret = __v4l2_ctrl_s_ctrl(imx334->hblank_ctrl, mode->hblank);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -698,9 +743,12 @@ static int imx334_set_ctrl(struct v4l2_ctrl *ctrl)
 		pm_runtime_put(imx334->dev);
 
 		break;
+<<<<<<< HEAD
 	case V4L2_CID_HBLANK:
 		ret = 0;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		dev_err(imx334->dev, "Invalid control %d", ctrl->id);
 		ret = -EINVAL;
@@ -714,6 +762,7 @@ static const struct v4l2_ctrl_ops imx334_ctrl_ops = {
 	.s_ctrl = imx334_set_ctrl,
 };
 
+<<<<<<< HEAD
 static int imx334_get_format_code(struct imx334 *imx334, u32 code)
 {
 	unsigned int i;
@@ -726,6 +775,8 @@ static int imx334_get_format_code(struct imx334 *imx334, u32 code)
 	return imx334_mbus_codes[0];
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * imx334_enum_mbus_code() - Enumerate V4L2 sub-device mbus codes
  * @sd: pointer to imx334 V4L2 sub-device structure
@@ -738,10 +789,17 @@ static int imx334_enum_mbus_code(struct v4l2_subdev *sd,
 				 struct v4l2_subdev_state *sd_state,
 				 struct v4l2_subdev_mbus_code_enum *code)
 {
+<<<<<<< HEAD
 	if (code->index >= ARRAY_SIZE(imx334_mbus_codes))
 		return -EINVAL;
 
 	code->code = imx334_mbus_codes[code->index];
+=======
+	if (code->index > 0)
+		return -EINVAL;
+
+	code->code = supported_mode.code;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -758,6 +816,7 @@ static int imx334_enum_frame_size(struct v4l2_subdev *sd,
 				  struct v4l2_subdev_state *sd_state,
 				  struct v4l2_subdev_frame_size_enum *fsize)
 {
+<<<<<<< HEAD
 	struct imx334 *imx334 = to_imx334(sd);
 	u32 code;
 
@@ -772,6 +831,17 @@ static int imx334_enum_frame_size(struct v4l2_subdev *sd,
 	fsize->min_width = supported_modes[fsize->index].width;
 	fsize->max_width = fsize->min_width;
 	fsize->min_height = supported_modes[fsize->index].height;
+=======
+	if (fsize->index > 0)
+		return -EINVAL;
+
+	if (fsize->code != supported_mode.code)
+		return -EINVAL;
+
+	fsize->min_width = supported_mode.width;
+	fsize->max_width = fsize->min_width;
+	fsize->min_height = supported_mode.height;
+>>>>>>> b7ba80a49124 (Commit)
 	fsize->max_height = fsize->min_height;
 
 	return 0;
@@ -790,6 +860,10 @@ static void imx334_fill_pad_format(struct imx334 *imx334,
 {
 	fmt->format.width = mode->width;
 	fmt->format.height = mode->height;
+<<<<<<< HEAD
+=======
+	fmt->format.code = mode->code;
+>>>>>>> b7ba80a49124 (Commit)
 	fmt->format.field = V4L2_FIELD_NONE;
 	fmt->format.colorspace = V4L2_COLORSPACE_RAW;
 	fmt->format.ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
@@ -819,7 +893,10 @@ static int imx334_get_pad_format(struct v4l2_subdev *sd,
 		framefmt = v4l2_subdev_get_try_format(sd, sd_state, fmt->pad);
 		fmt->format = *framefmt;
 	} else {
+<<<<<<< HEAD
 		fmt->format.code = imx334->cur_code;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		imx334_fill_pad_format(imx334, imx334->cur_mode, fmt);
 	}
 
@@ -846,6 +923,7 @@ static int imx334_set_pad_format(struct v4l2_subdev *sd,
 
 	mutex_lock(&imx334->mutex);
 
+<<<<<<< HEAD
 	mode = v4l2_find_nearest_size(supported_modes,
 				      ARRAY_SIZE(supported_modes),
 				      width, height,
@@ -853,14 +931,22 @@ static int imx334_set_pad_format(struct v4l2_subdev *sd,
 
 	imx334_fill_pad_format(imx334, mode, fmt);
 	fmt->format.code = imx334_get_format_code(imx334, fmt->format.code);
+=======
+	mode = &supported_mode;
+	imx334_fill_pad_format(imx334, mode, fmt);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
 		struct v4l2_mbus_framefmt *framefmt;
 
 		framefmt = v4l2_subdev_get_try_format(sd, sd_state, fmt->pad);
 		*framefmt = fmt->format;
+<<<<<<< HEAD
 	} else if (imx334->cur_mode != mode || imx334->cur_code != fmt->format.code) {
 		imx334->cur_code = fmt->format.code;
+=======
+	} else {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = imx334_update_controls(imx334, mode);
 		if (!ret)
 			imx334->cur_mode = mode;
@@ -885,11 +971,16 @@ static int imx334_init_pad_cfg(struct v4l2_subdev *sd,
 	struct v4l2_subdev_format fmt = { 0 };
 
 	fmt.which = sd_state ? V4L2_SUBDEV_FORMAT_TRY : V4L2_SUBDEV_FORMAT_ACTIVE;
+<<<<<<< HEAD
 	imx334_fill_pad_format(imx334, &supported_modes[0], &fmt);
+=======
+	imx334_fill_pad_format(imx334, &supported_mode, &fmt);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return imx334_set_pad_format(sd, sd_state, &fmt);
 }
 
+<<<<<<< HEAD
 static int imx334_set_framefmt(struct imx334 *imx334)
 {
 	switch (imx334->cur_code) {
@@ -905,6 +996,8 @@ static int imx334_set_framefmt(struct imx334 *imx334)
 	return -EINVAL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * imx334_start_streaming() - Start sensor stream
  * @imx334: pointer to imx334 device
@@ -925,6 +1018,7 @@ static int imx334_start_streaming(struct imx334 *imx334)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = imx334_set_framefmt(imx334);
 	if (ret) {
 		dev_err(imx334->dev, "%s failed to set frame format: %d\n",
@@ -932,6 +1026,8 @@ static int imx334_start_streaming(struct imx334 *imx334)
 		return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Setup handler will write actual exposure and gain */
 	ret =  __v4l2_ctrl_handler_setup(imx334->sd.ctrl_handler);
 	if (ret) {
@@ -1302,8 +1398,12 @@ static int imx334_probe(struct i2c_client *client)
 	}
 
 	/* Set default mode to max resolution */
+<<<<<<< HEAD
 	imx334->cur_mode = &supported_modes[0];
 	imx334->cur_code = imx334_mbus_codes[0];
+=======
+	imx334->cur_mode = &supported_mode;
+>>>>>>> b7ba80a49124 (Commit)
 	imx334->vblank = imx334->cur_mode->vblank;
 
 	ret = imx334_init_controls(imx334);

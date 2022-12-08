@@ -18,7 +18,11 @@ struct parse_events_error;
 struct option;
 struct perf_pmu;
 
+<<<<<<< HEAD
 bool is_event_supported(u8 type, u64 config);
+=======
+bool have_tracepoints(struct list_head *evlist);
+>>>>>>> b7ba80a49124 (Commit)
 
 const char *event_type(int type);
 
@@ -26,6 +30,7 @@ int parse_events_option(const struct option *opt, const char *str, int unset);
 int parse_events_option_new_evlist(const struct option *opt, const char *str, int unset);
 __attribute__((nonnull(1, 2, 3)))
 int __parse_events(struct evlist *evlist, const char *str, struct parse_events_error *error,
+<<<<<<< HEAD
 		   struct perf_pmu *fake_pmu, bool warn_if_reordered);
 
 __attribute__((nonnull(1, 2, 3)))
@@ -33,6 +38,15 @@ static inline int parse_events(struct evlist *evlist, const char *str,
 			       struct parse_events_error *err)
 {
 	return __parse_events(evlist, str, err, /*fake_pmu=*/NULL, /*warn_if_reordered=*/true);
+=======
+		   struct perf_pmu *fake_pmu);
+
+__attribute__((nonnull))
+static inline int parse_events(struct evlist *evlist, const char *str,
+			       struct parse_events_error *err)
+{
+	return __parse_events(evlist, str, err, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int parse_event(struct evlist *evlist, const char *str);
@@ -122,13 +136,20 @@ struct parse_events_error {
 struct parse_events_state {
 	struct list_head	   list;
 	int			   idx;
+<<<<<<< HEAD
+=======
+	int			   nr_groups;
+>>>>>>> b7ba80a49124 (Commit)
 	struct parse_events_error *error;
 	struct evlist		  *evlist;
 	struct list_head	  *terms;
 	int			   stoken;
 	struct perf_pmu		  *fake_pmu;
 	char			  *hybrid_pmu_name;
+<<<<<<< HEAD
 	bool			   wild_card_pmus;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void parse_events__shrink_config_terms(void);
@@ -183,7 +204,12 @@ int parse_events_add_breakpoint(struct list_head *list, int *idx,
 int parse_events_add_pmu(struct parse_events_state *parse_state,
 			 struct list_head *list, char *name,
 			 struct list_head *head_config,
+<<<<<<< HEAD
 			 bool auto_merge_stats);
+=======
+			 bool auto_merge_stats,
+			 bool use_alias);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct evsel *parse_events__add_event(int idx, struct perf_event_attr *attr,
 				      const char *name, const char *metric_id,
@@ -199,7 +225,12 @@ int parse_events_copy_term_list(struct list_head *old,
 
 enum perf_pmu_event_symbol_type
 perf_pmu__parse_check(const char *name);
+<<<<<<< HEAD
 void parse_events__set_leader(char *name, struct list_head *list);
+=======
+void parse_events__set_leader(char *name, struct list_head *list,
+			      struct parse_events_state *parse_state);
+>>>>>>> b7ba80a49124 (Commit)
 void parse_events_update_lists(struct list_head *list_event,
 			       struct list_head *list_all);
 void parse_events_evlist_error(struct parse_events_state *parse_state,

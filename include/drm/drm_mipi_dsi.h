@@ -197,7 +197,14 @@ struct mipi_dsi_device {
 
 #define MIPI_DSI_MODULE_PREFIX "mipi-dsi:"
 
+<<<<<<< HEAD
 #define to_mipi_dsi_device(__dev)	container_of_const(__dev, struct mipi_dsi_device, dev)
+=======
+static inline struct mipi_dsi_device *to_mipi_dsi_device(struct device *dev)
+{
+	return container_of(dev, struct mipi_dsi_device, dev);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * mipi_dsi_pixel_format_to_bpp - obtain the number of bits per pixel for any
@@ -293,6 +300,7 @@ int mipi_dsi_dcs_set_display_brightness(struct mipi_dsi_device *dsi,
 					u16 brightness);
 int mipi_dsi_dcs_get_display_brightness(struct mipi_dsi_device *dsi,
 					u16 *brightness);
+<<<<<<< HEAD
 int mipi_dsi_dcs_set_display_brightness_large(struct mipi_dsi_device *dsi,
 					     u16 brightness);
 int mipi_dsi_dcs_get_display_brightness_large(struct mipi_dsi_device *dsi,
@@ -315,6 +323,8 @@ int mipi_dsi_dcs_get_display_brightness_large(struct mipi_dsi_device *dsi,
 			return ret;                                            \
 		}                                                              \
 	} while (0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * mipi_dsi_dcs_write_seq - transmit a DCS command with payload
@@ -322,6 +332,7 @@ int mipi_dsi_dcs_get_display_brightness_large(struct mipi_dsi_device *dsi,
  * @cmd: Command
  * @seq: buffer containing data to be transmitted
  */
+<<<<<<< HEAD
 #define mipi_dsi_dcs_write_seq(dsi, cmd, seq...)                           \
 	do {                                                               \
 		static const u8 d[] = { cmd, seq };                        \
@@ -334,6 +345,17 @@ int mipi_dsi_dcs_get_display_brightness_large(struct mipi_dsi_device *dsi,
 				cmd, ret);                                 \
 			return ret;                                        \
 		}                                                          \
+=======
+#define mipi_dsi_dcs_write_seq(dsi, cmd, seq...) do {				\
+		static const u8 d[] = { cmd, seq };				\
+		struct device *dev = &dsi->dev;	\
+		int ret;						\
+		ret = mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));	\
+		if (ret < 0) {						\
+			dev_err_ratelimited(dev, "sending command %#02x failed: %d\n", cmd, ret); \
+			return ret;						\
+		}						\
+>>>>>>> b7ba80a49124 (Commit)
 	} while (0)
 
 /**

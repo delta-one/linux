@@ -59,12 +59,17 @@ bpf_testmod_test_struct_arg_5(void) {
 	return bpf_testmod_test_struct_arg_result;
 }
 
+<<<<<<< HEAD
 __bpf_kfunc void
+=======
+noinline void
+>>>>>>> b7ba80a49124 (Commit)
 bpf_testmod_test_mod_kfunc(int i)
 {
 	*(int *)this_cpu_ptr(&bpf_testmod_ksym_percpu) = i;
 }
 
+<<<<<<< HEAD
 __bpf_kfunc int bpf_iter_testmod_seq_new(struct bpf_iter_testmod_seq *it, s64 value, int cnt)
 {
 	if (cnt < 0) {
@@ -93,6 +98,8 @@ __bpf_kfunc void bpf_iter_testmod_seq_destroy(struct bpf_iter_testmod_seq *it)
 	it->cnt = 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct bpf_testmod_btf_type_tag_1 {
 	int a;
 };
@@ -156,6 +163,7 @@ __weak noinline struct file *bpf_testmod_return_ptr(int arg)
 	}
 }
 
+<<<<<<< HEAD
 noinline int bpf_testmod_fentry_test1(int a)
 {
 	return a + 1;
@@ -173,6 +181,8 @@ noinline int bpf_testmod_fentry_test3(char a, int b, u64 c)
 
 int bpf_testmod_fentry_ok;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 noinline ssize_t
 bpf_testmod_test_read(struct file *file, struct kobject *kobj,
 		      struct bin_attribute *bin_attr,
@@ -212,6 +222,7 @@ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
 			return snprintf(buf, len, "%d\n", writable.val);
 	}
 
+<<<<<<< HEAD
 	if (bpf_testmod_fentry_test1(1) != 2 ||
 	    bpf_testmod_fentry_test2(2, 3) != 5 ||
 	    bpf_testmod_fentry_test3(4, 5, 6) != 15)
@@ -219,6 +230,8 @@ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
 
 	bpf_testmod_fentry_ok = 1;
 out:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return -EIO; /* always fail */
 }
 EXPORT_SYMBOL(bpf_testmod_test_read);
@@ -248,6 +261,7 @@ static struct bin_attribute bin_attr_bpf_testmod_file __ro_after_init = {
 	.write = bpf_testmod_test_write,
 };
 
+<<<<<<< HEAD
 BTF_SET8_START(bpf_testmod_common_kfunc_ids)
 BTF_ID_FLAGS(func, bpf_iter_testmod_seq_new, KF_ITER_NEW)
 BTF_ID_FLAGS(func, bpf_iter_testmod_seq_next, KF_ITER_NEXT | KF_RET_NULL)
@@ -259,6 +273,8 @@ static const struct btf_kfunc_id_set bpf_testmod_common_kfunc_set = {
 	.set   = &bpf_testmod_common_kfunc_ids,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 BTF_SET8_START(bpf_testmod_check_kfunc_ids)
 BTF_ID_FLAGS(func, bpf_testmod_test_mod_kfunc)
 BTF_SET8_END(bpf_testmod_check_kfunc_ids)
@@ -268,20 +284,27 @@ static const struct btf_kfunc_id_set bpf_testmod_kfunc_set = {
 	.set   = &bpf_testmod_check_kfunc_ids,
 };
 
+<<<<<<< HEAD
 noinline int bpf_fentry_shadow_test(int a)
 {
 	return a + 2;
 }
 EXPORT_SYMBOL_GPL(bpf_fentry_shadow_test);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern int bpf_fentry_test1(int a);
 
 static int bpf_testmod_init(void)
 {
 	int ret;
 
+<<<<<<< HEAD
 	ret = register_btf_kfunc_id_set(BPF_PROG_TYPE_UNSPEC, &bpf_testmod_common_kfunc_set);
 	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_SCHED_CLS, &bpf_testmod_kfunc_set);
+=======
+	ret = register_btf_kfunc_id_set(BPF_PROG_TYPE_SCHED_CLS, &bpf_testmod_kfunc_set);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 	if (bpf_fentry_test1(0) < 0)

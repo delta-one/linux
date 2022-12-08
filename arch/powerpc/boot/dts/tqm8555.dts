@@ -7,8 +7,11 @@
 
 /dts-v1/;
 
+<<<<<<< HEAD
 /include/ "fsl/e500v1_power_isa.dtsi"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 / {
 	model = "tqc,tqm8555";
 	compatible = "tqc,tqm8555";

@@ -338,8 +338,20 @@
 	};
 };
 
+<<<<<<< HEAD
 &main_uart0 {
 	status = "okay";
+=======
+&mcu_uart0 {
+	status = "disabled";
+};
+
+&mcu_uart1 {
+	status = "disabled";
+};
+
+&main_uart0 {
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_uart0_pins_default>;
 };
@@ -349,8 +361,40 @@
 	status = "reserved";
 };
 
+<<<<<<< HEAD
 &main_i2c1 {
 	status = "okay";
+=======
+&main_uart2 {
+	status = "disabled";
+};
+
+&main_uart3 {
+	status = "disabled";
+};
+
+&main_uart4 {
+	status = "disabled";
+};
+
+&main_uart5 {
+	status = "disabled";
+};
+
+&main_uart6 {
+	status = "disabled";
+};
+
+&mcu_i2c0 {
+	status = "disabled";
+};
+
+&mcu_i2c1 {
+	status = "disabled";
+};
+
+&main_i2c1 {
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_i2c1_pins_default>;
 	clock-frequency = <400000>;
@@ -375,6 +419,21 @@
 	};
 };
 
+<<<<<<< HEAD
+=======
+&main_i2c3 {
+	status = "disabled";
+};
+
+&mcu_spi0 {
+	status = "disabled";
+};
+
+&mcu_spi1 {
+	status = "disabled";
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* mcu_gpio0 is reserved for mcu firmware usage */
 &mcu_gpio0 {
 	status = "reserved";
@@ -439,7 +498,12 @@
 
 &cpsw3g {
 	pinctrl-names = "default";
+<<<<<<< HEAD
 	pinctrl-0 = <&rgmii1_pins_default
+=======
+	pinctrl-0 = <&mdio1_pins_default
+		     &rgmii1_pins_default
+>>>>>>> b7ba80a49124 (Commit)
 		     &rgmii2_pins_default>;
 };
 
@@ -454,10 +518,13 @@
 };
 
 &cpsw3g_mdio {
+<<<<<<< HEAD
 	status = "okay";
 	pinctrl-names = "default";
 	pinctrl-0 = <&mdio1_pins_default>;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cpsw3g_phy0: ethernet-phy@0 {
 		reg = <0>;
 		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
@@ -560,9 +627,100 @@
 			<&main_r5fss1_core1_memory_region>;
 };
 
+<<<<<<< HEAD
 &ecap0 {
 	status = "okay";
+=======
+&pcie0_rc {
+	status = "disabled";
+};
+
+&pcie0_ep {
+	status = "disabled";
+};
+
+&ecap0 {
+>>>>>>> b7ba80a49124 (Commit)
 	/* PWM is available on Pin 1 of header J3 */
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_ecap0_pins_default>;
 };
+<<<<<<< HEAD
+=======
+
+&ecap1 {
+	status = "disabled";
+};
+
+&ecap2 {
+	status = "disabled";
+};
+
+&epwm0 {
+	status = "disabled";
+};
+
+&epwm1 {
+	status = "disabled";
+};
+
+&epwm2 {
+	status = "disabled";
+};
+
+&epwm3 {
+	status = "disabled";
+};
+
+&epwm4 {
+	/*
+	 * EPWM4_A, EPWM4_B is available on Pin 32 and 33 on J4 (RPi hat)
+	 * But RPi Hat will be used for other use cases, so marking epwm4 as disabled.
+	 */
+	status = "disabled";
+};
+
+&epwm5 {
+	/*
+	 * EPWM5_A, EPWM5_B is available on Pin 29 and 31 on J4 (RPi hat)
+	 * But RPi Hat will be used for other use cases, so marking epwm5 as disabled.
+	 */
+	status = "disabled";
+};
+
+&epwm6 {
+	status = "disabled";
+};
+
+&epwm7 {
+	status = "disabled";
+};
+
+&epwm8 {
+	status = "disabled";
+};
+
+&icssg0_mdio {
+	status = "disabled";
+};
+
+&icssg1_mdio {
+	status = "disabled";
+};
+
+&main_mcan0 {
+	status = "disabled";
+};
+
+&main_mcan1 {
+	status = "disabled";
+};
+
+&gpmc0 {
+	status = "disabled";
+};
+
+&elm0 {
+	status = "disabled";
+};
+>>>>>>> b7ba80a49124 (Commit)

@@ -8,7 +8,11 @@ extern struct clocksource kvm_clock;
 
 DECLARE_PER_CPU(struct pvclock_vsyscall_time_info *, hv_clock_per_cpu);
 
+<<<<<<< HEAD
 static __always_inline struct pvclock_vcpu_time_info *this_cpu_pvti(void)
+=======
+static inline struct pvclock_vcpu_time_info *this_cpu_pvti(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return &this_cpu_read(hv_clock_per_cpu)->pvti;
 }

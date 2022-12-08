@@ -39,6 +39,7 @@ static inline enum zonefs_ztype zonefs_zone_type(struct blk_zone *zone)
 	return ZONEFS_ZTYPE_SEQ;
 }
 
+<<<<<<< HEAD
 #define ZONEFS_ZONE_INIT_MODE	(1U << 0)
 #define ZONEFS_ZONE_OPEN	(1U << 1)
 #define ZONEFS_ZONE_ACTIVE	(1U << 2)
@@ -80,6 +81,10 @@ struct zonefs_zone_group {
 	unsigned int		g_nr_zones;
 	struct zonefs_zone	*g_zones;
 };
+=======
+#define ZONEFS_ZONE_OPEN	(1 << 0)
+#define ZONEFS_ZONE_ACTIVE	(1 << 1)
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * In-memory inode data.
@@ -87,6 +92,24 @@ struct zonefs_zone_group {
 struct zonefs_inode_info {
 	struct inode		i_vnode;
 
+<<<<<<< HEAD
+=======
+	/* File zone type */
+	enum zonefs_ztype	i_ztype;
+
+	/* File zone start sector (512B unit) */
+	sector_t		i_zsector;
+
+	/* File zone write pointer position (sequential zones only) */
+	loff_t			i_wpoffset;
+
+	/* File maximum size */
+	loff_t			i_max_size;
+
+	/* File zone size */
+	loff_t			i_zone_size;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * To serialise fully against both syscall and mmap based IO and
 	 * sequential file truncation, two locks are used. For serializing
@@ -104,6 +127,10 @@ struct zonefs_inode_info {
 
 	/* guarded by i_truncate_mutex */
 	unsigned int		i_wr_refcnt;
+<<<<<<< HEAD
+=======
+	unsigned int		i_flags;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct zonefs_inode_info *ZONEFS_I(struct inode *inode)
@@ -111,6 +138,7 @@ static inline struct zonefs_inode_info *ZONEFS_I(struct inode *inode)
 	return container_of(inode, struct zonefs_inode_info, i_vnode);
 }
 
+<<<<<<< HEAD
 static inline bool zonefs_zone_is_cnv(struct zonefs_zone *z)
 {
 	return z->z_flags & ZONEFS_ZONE_CNV;
@@ -136,6 +164,8 @@ static inline bool zonefs_inode_is_seq(struct inode *inode)
 	return zonefs_zone_is_seq(zonefs_inode_zone(inode));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * On-disk super block (block 0).
  */
@@ -227,7 +257,11 @@ struct zonefs_sb_info {
 	uuid_t			s_uuid;
 	unsigned int		s_zone_sectors_shift;
 
+<<<<<<< HEAD
 	struct zonefs_zone_group s_zgroup[ZONEFS_ZTYPE_MAX];
+=======
+	unsigned int		s_nr_files[ZONEFS_ZTYPE_MAX];
+>>>>>>> b7ba80a49124 (Commit)
 
 	loff_t			s_blocks;
 	loff_t			s_used_blocks;
@@ -255,6 +289,7 @@ static inline struct zonefs_sb_info *ZONEFS_SB(struct super_block *sb)
 #define zonefs_warn(sb, format, args...)	\
 	pr_warn("zonefs (%s) WARNING: " format, sb->s_id, ## args)
 
+<<<<<<< HEAD
 /* In super.c */
 void zonefs_inode_account_active(struct inode *inode);
 int zonefs_inode_zone_mgmt(struct inode *inode, enum req_op op);
@@ -281,6 +316,8 @@ extern const struct file_operations zonefs_file_operations;
 int zonefs_file_truncate(struct inode *inode, loff_t isize);
 
 /* In sysfs.c */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int zonefs_sysfs_register(struct super_block *sb);
 void zonefs_sysfs_unregister(struct super_block *sb);
 int zonefs_sysfs_init(void);

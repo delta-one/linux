@@ -51,7 +51,10 @@
 
 		L2_0: l2-cache0 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -88,12 +91,15 @@
 			clock-div = <4>;
 			clock-mult = <1>;
 		};
+<<<<<<< HEAD
 
 		hsspi_pll: hsspi-pll {
 			compatible = "fixed-clock";
 			#clock-cells = <0>;
 			clock-frequency = <200000000>;
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	psci {
@@ -125,6 +131,7 @@
 		#size-cells = <1>;
 		ranges = <0 0xff800000 0x800000>;
 
+<<<<<<< HEAD
 		hsspi: spi@1000 {
 			#address-cells = <1>;
 			#size-cells = <0>;
@@ -137,6 +144,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		uart0: serial@12000 {
 			compatible = "arm,pl011", "arm,primecell";
 			reg = <0x12000 0x1000>;

@@ -6,7 +6,10 @@
 #include "ice_devlink.h"
 #include "ice_sriov.h"
 #include "ice_tc_lib.h"
+<<<<<<< HEAD
 #include "ice_dcb_lib.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * ice_repr_get_sw_port_id - get port ID associated with representor
@@ -135,6 +138,17 @@ static int ice_repr_stop(struct net_device *netdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static struct devlink_port *
+ice_repr_get_devlink_port(struct net_device *netdev)
+{
+	struct ice_repr *repr = ice_netdev_to_repr(netdev);
+
+	return &repr->vf->devlink_port;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * ice_repr_sp_stats64 - get slow path stats for port representor
  * @dev: network interface device structure
@@ -156,13 +170,18 @@ ice_repr_sp_stats64(const struct net_device *dev,
 	u64 pkts, bytes;
 
 	tx_ring = np->vsi->tx_rings[vf_id];
+<<<<<<< HEAD
 	ice_fetch_u64_stats_per_ring(&tx_ring->ring_stats->syncp,
 				     tx_ring->ring_stats->stats,
+=======
+	ice_fetch_u64_stats_per_ring(&tx_ring->syncp, tx_ring->stats,
+>>>>>>> b7ba80a49124 (Commit)
 				     &pkts, &bytes);
 	stats->rx_packets = pkts;
 	stats->rx_bytes = bytes;
 
 	rx_ring = np->vsi->rx_rings[vf_id];
+<<<<<<< HEAD
 	ice_fetch_u64_stats_per_ring(&rx_ring->ring_stats->syncp,
 				     rx_ring->ring_stats->stats,
 				     &pkts, &bytes);
@@ -170,6 +189,14 @@ ice_repr_sp_stats64(const struct net_device *dev,
 	stats->tx_bytes = bytes;
 	stats->tx_dropped = rx_ring->ring_stats->rx_stats.alloc_page_failed +
 			    rx_ring->ring_stats->rx_stats.alloc_buf_failed;
+=======
+	ice_fetch_u64_stats_per_ring(&rx_ring->syncp, rx_ring->stats,
+				     &pkts, &bytes);
+	stats->tx_packets = pkts;
+	stats->tx_bytes = bytes;
+	stats->tx_dropped = rx_ring->rx_stats.alloc_page_failed +
+			    rx_ring->rx_stats.alloc_buf_failed;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -245,6 +272,10 @@ static const struct net_device_ops ice_repr_netdev_ops = {
 	.ndo_open = ice_repr_open,
 	.ndo_stop = ice_repr_stop,
 	.ndo_start_xmit = ice_eswitch_port_start_xmit,
+<<<<<<< HEAD
+=======
+	.ndo_get_devlink_port = ice_repr_get_devlink_port,
+>>>>>>> b7ba80a49124 (Commit)
 	.ndo_setup_tc = ice_repr_setup_tc,
 	.ndo_has_offload_stats = ice_repr_ndo_has_offload_stats,
 	.ndo_get_offload_stats = ice_repr_ndo_get_offload_stats,
@@ -333,11 +364,19 @@ static int ice_repr_add(struct ice_vf *vf)
 	repr->netdev->max_mtu = ICE_MAX_MTU;
 
 	SET_NETDEV_DEV(repr->netdev, ice_pf_to_dev(vf->pf));
+<<<<<<< HEAD
 	SET_NETDEV_DEVLINK_PORT(repr->netdev, &vf->devlink_port);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = ice_repr_reg_netdev(repr->netdev);
 	if (err)
 		goto err_netdev;
 
+<<<<<<< HEAD
+=======
+	devlink_port_type_eth_set(&vf->devlink_port, repr->netdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	ice_virtchnl_set_repr_ops(vf);
 
 	return 0;
@@ -370,10 +409,17 @@ static void ice_repr_rem(struct ice_vf *vf)
 	if (!vf->repr)
 		return;
 
+<<<<<<< HEAD
 	kfree(vf->repr->q_vector);
 	vf->repr->q_vector = NULL;
 	unregister_netdev(vf->repr->netdev);
 	ice_devlink_destroy_vf_port(vf);
+=======
+	ice_devlink_destroy_vf_port(vf);
+	kfree(vf->repr->q_vector);
+	vf->repr->q_vector = NULL;
+	unregister_netdev(vf->repr->netdev);
+>>>>>>> b7ba80a49124 (Commit)
 	free_netdev(vf->repr->netdev);
 	vf->repr->netdev = NULL;
 #ifdef CONFIG_ICE_SWITCHDEV
@@ -392,7 +438,10 @@ static void ice_repr_rem(struct ice_vf *vf)
  */
 void ice_repr_rem_from_all_vfs(struct ice_pf *pf)
 {
+<<<<<<< HEAD
 	struct devlink *devlink;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct ice_vf *vf;
 	unsigned int bkt;
 
@@ -400,6 +449,7 @@ void ice_repr_rem_from_all_vfs(struct ice_pf *pf)
 
 	ice_for_each_vf(pf, bkt, vf)
 		ice_repr_rem(vf);
+<<<<<<< HEAD
 
 	/* since all port representors are destroyed, there is
 	 * no point in keeping the nodes
@@ -408,6 +458,8 @@ void ice_repr_rem_from_all_vfs(struct ice_pf *pf)
 	devl_lock(devlink);
 	devl_rate_nodes_destroy(devlink);
 	devl_unlock(devlink);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -416,7 +468,10 @@ void ice_repr_rem_from_all_vfs(struct ice_pf *pf)
  */
 int ice_repr_add_for_all_vfs(struct ice_pf *pf)
 {
+<<<<<<< HEAD
 	struct devlink *devlink;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct ice_vf *vf;
 	unsigned int bkt;
 	int err;
@@ -429,6 +484,7 @@ int ice_repr_add_for_all_vfs(struct ice_pf *pf)
 			goto err;
 	}
 
+<<<<<<< HEAD
 	/* only export if ADQ and DCB disabled */
 	if (ice_is_adq_active(pf) || ice_is_dcb_active(pf))
 		return 0;
@@ -436,6 +492,8 @@ int ice_repr_add_for_all_vfs(struct ice_pf *pf)
 	devlink = priv_to_devlink(pf);
 	ice_devlink_rate_init_tx_topology(devlink, ice_get_main_vsi(pf));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err:

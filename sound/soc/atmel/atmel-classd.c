@@ -616,6 +616,14 @@ unregister_codec:
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static int atmel_classd_remove(struct platform_device *pdev)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver atmel_classd_driver = {
 	.driver	= {
 		.name		= "atmel-classd",
@@ -623,6 +631,10 @@ static struct platform_driver atmel_classd_driver = {
 		.pm		= &snd_soc_pm_ops,
 	},
 	.probe	= atmel_classd_probe,
+<<<<<<< HEAD
+=======
+	.remove	= atmel_classd_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(atmel_classd_driver);
 

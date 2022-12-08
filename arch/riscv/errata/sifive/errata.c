@@ -4,7 +4,10 @@
  */
 
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/memory.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/string.h>
 #include <linux/bug.h>
@@ -14,7 +17,11 @@
 #include <asm/errata_list.h>
 
 struct errata_info_t {
+<<<<<<< HEAD
 	char name[32];
+=======
+	char name[ERRATA_STRING_LENGTH_MAX];
+>>>>>>> b7ba80a49124 (Commit)
 	bool (*check_func)(unsigned long  arch_id, unsigned long impid);
 };
 
@@ -101,6 +108,7 @@ void __init_or_module sifive_errata_patch_func(struct alt_entry *begin,
 	for (alt = begin; alt < end; alt++) {
 		if (alt->vendor_id != SIFIVE_VENDOR_ID)
 			continue;
+<<<<<<< HEAD
 		if (alt->patch_id >= ERRATA_SIFIVE_NUMBER) {
 			WARN(1, "This errata id:%d is not in kernel errata list", alt->patch_id);
 			continue;
@@ -112,6 +120,16 @@ void __init_or_module sifive_errata_patch_func(struct alt_entry *begin,
 			patch_text_nosync(ALT_OLD_PTR(alt), ALT_ALT_PTR(alt),
 					  alt->alt_len);
 			mutex_unlock(&text_mutex);
+=======
+		if (alt->errata_id >= ERRATA_SIFIVE_NUMBER) {
+			WARN(1, "This errata id:%d is not in kernel errata list", alt->errata_id);
+			continue;
+		}
+
+		tmp = (1U << alt->errata_id);
+		if (cpu_req_errata & tmp) {
+			patch_text_nosync(alt->old_ptr, alt->alt_ptr, alt->alt_len);
+>>>>>>> b7ba80a49124 (Commit)
 			cpu_apply_errata |= tmp;
 		}
 	}

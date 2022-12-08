@@ -16,7 +16,10 @@ USB support
     gadget_multi
     gadget_printer
     gadget_serial
+<<<<<<< HEAD
     gadget_uvc
+=======
+>>>>>>> b7ba80a49124 (Commit)
     gadget-testing
     iuu_phoenix
     mass-storage

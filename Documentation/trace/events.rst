@@ -24,18 +24,28 @@ tracing information should be printed.
 ---------------------------------
 
 The events which are available for tracing can be found in the file
+<<<<<<< HEAD
 /sys/kernel/tracing/available_events.
 
 To enable a particular event, such as 'sched_wakeup', simply echo it
 to /sys/kernel/tracing/set_event. For example::
 
 	# echo sched_wakeup >> /sys/kernel/tracing/set_event
+=======
+/sys/kernel/debug/tracing/available_events.
+
+To enable a particular event, such as 'sched_wakeup', simply echo it
+to /sys/kernel/debug/tracing/set_event. For example::
+
+	# echo sched_wakeup >> /sys/kernel/debug/tracing/set_event
+>>>>>>> b7ba80a49124 (Commit)
 
 .. Note:: '>>' is necessary, otherwise it will firstly disable all the events.
 
 To disable an event, echo the event name to the set_event file prefixed
 with an exclamation point::
 
+<<<<<<< HEAD
 	# echo '!sched_wakeup' >> /sys/kernel/tracing/set_event
 
 To disable all events, echo an empty line to the set_event file::
@@ -45,6 +55,17 @@ To disable all events, echo an empty line to the set_event file::
 To enable all events, echo ``*:*`` or ``*:`` to the set_event file::
 
 	# echo *:* > /sys/kernel/tracing/set_event
+=======
+	# echo '!sched_wakeup' >> /sys/kernel/debug/tracing/set_event
+
+To disable all events, echo an empty line to the set_event file::
+
+	# echo > /sys/kernel/debug/tracing/set_event
+
+To enable all events, echo ``*:*`` or ``*:`` to the set_event file::
+
+	# echo *:* > /sys/kernel/debug/tracing/set_event
+>>>>>>> b7ba80a49124 (Commit)
 
 The events are organized into subsystems, such as ext4, irq, sched,
 etc., and a full event name looks like this: <subsystem>:<event>.  The
@@ -53,16 +74,25 @@ file.  All of the events in a subsystem can be specified via the syntax
 ``<subsystem>:*``; for example, to enable all irq events, you can use the
 command::
 
+<<<<<<< HEAD
 	# echo 'irq:*' > /sys/kernel/tracing/set_event
+=======
+	# echo 'irq:*' > /sys/kernel/debug/tracing/set_event
+>>>>>>> b7ba80a49124 (Commit)
 
 2.2 Via the 'enable' toggle
 ---------------------------
 
+<<<<<<< HEAD
 The events available are also listed in /sys/kernel/tracing/events/ hierarchy
+=======
+The events available are also listed in /sys/kernel/debug/tracing/events/ hierarchy
+>>>>>>> b7ba80a49124 (Commit)
 of directories.
 
 To enable event 'sched_wakeup'::
 
+<<<<<<< HEAD
 	# echo 1 > /sys/kernel/tracing/events/sched/sched_wakeup/enable
 
 To disable it::
@@ -76,6 +106,21 @@ To enable all events in sched subsystem::
 To enable all events::
 
 	# echo 1 > /sys/kernel/tracing/events/enable
+=======
+	# echo 1 > /sys/kernel/debug/tracing/events/sched/sched_wakeup/enable
+
+To disable it::
+
+	# echo 0 > /sys/kernel/debug/tracing/events/sched/sched_wakeup/enable
+
+To enable all events in sched subsystem::
+
+	# echo 1 > /sys/kernel/debug/tracing/events/sched/enable
+
+To enable all events::
+
+	# echo 1 > /sys/kernel/debug/tracing/events/enable
+>>>>>>> b7ba80a49124 (Commit)
 
 When reading one of these enable files, there are four results:
 
@@ -126,7 +171,11 @@ is the size of the data item, in bytes.
 For example, here's the information displayed for the 'sched_wakeup'
 event::
 
+<<<<<<< HEAD
 	# cat /sys/kernel/tracing/events/sched/sched_wakeup/format
+=======
+	# cat /sys/kernel/debug/tracing/events/sched/sched_wakeup/format
+>>>>>>> b7ba80a49124 (Commit)
 
 	name: sched_wakeup
 	ID: 60
@@ -207,6 +256,7 @@ field name::
 As the kernel will have to know how to retrieve the memory that the pointer
 is at from user space.
 
+<<<<<<< HEAD
 You can convert any long type to a function address and search by function name::
 
   call_site.function == security_prepare_creds
@@ -219,6 +269,8 @@ the function "security_prepare_creds" and less than the end of that function.
 The ".function" postfix can only be attached to values of size long, and can only
 be compared with "==" or "!=".
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 5.2 Setting filters
 -------------------
 
@@ -227,19 +279,31 @@ to the 'filter' file for the given event.
 
 For example::
 
+<<<<<<< HEAD
 	# cd /sys/kernel/tracing/events/sched/sched_wakeup
+=======
+	# cd /sys/kernel/debug/tracing/events/sched/sched_wakeup
+>>>>>>> b7ba80a49124 (Commit)
 	# echo "common_preempt_count > 4" > filter
 
 A slightly more involved example::
 
+<<<<<<< HEAD
 	# cd /sys/kernel/tracing/events/signal/signal_generate
+=======
+	# cd /sys/kernel/debug/tracing/events/signal/signal_generate
+>>>>>>> b7ba80a49124 (Commit)
 	# echo "((sig >= 10 && sig < 15) || sig == 17) && comm != bash" > filter
 
 If there is an error in the expression, you'll get an 'Invalid
 argument' error when setting it, and the erroneous string along with
 an error message can be seen by looking at the filter e.g.::
 
+<<<<<<< HEAD
 	# cd /sys/kernel/tracing/events/signal/signal_generate
+=======
+	# cd /sys/kernel/debug/tracing/events/signal/signal_generate
+>>>>>>> b7ba80a49124 (Commit)
 	# echo "((sig >= 10 && sig < 15) || dsig == 17) && comm != bash" > filter
 	-bash: echo: write error: Invalid argument
 	# cat filter
@@ -270,7 +334,11 @@ file.
 To clear the filters for all events in a subsystem, write a '0' to the
 subsystem's filter file.
 
+<<<<<<< HEAD
 5.4 Subsystem filters
+=======
+5.3 Subsystem filters
+>>>>>>> b7ba80a49124 (Commit)
 ---------------------
 
 For convenience, filters for every event in a subsystem can be set or
@@ -289,7 +357,11 @@ above points:
 
 Clear the filters on all events in the sched subsystem::
 
+<<<<<<< HEAD
 	# cd /sys/kernel/tracing/events/sched
+=======
+	# cd /sys/kernel/debug/tracing/events/sched
+>>>>>>> b7ba80a49124 (Commit)
 	# echo 0 > filter
 	# cat sched_switch/filter
 	none
@@ -299,7 +371,11 @@ Clear the filters on all events in the sched subsystem::
 Set a filter using only common fields for all events in the sched
 subsystem (all events end up with the same filter)::
 
+<<<<<<< HEAD
 	# cd /sys/kernel/tracing/events/sched
+=======
+	# cd /sys/kernel/debug/tracing/events/sched
+>>>>>>> b7ba80a49124 (Commit)
 	# echo common_pid == 0 > filter
 	# cat sched_switch/filter
 	common_pid == 0
@@ -310,14 +386,22 @@ Attempt to set a filter using a non-common field for all events in the
 sched subsystem (all events but those that have a prev_pid field retain
 their old filters)::
 
+<<<<<<< HEAD
 	# cd /sys/kernel/tracing/events/sched
+=======
+	# cd /sys/kernel/debug/tracing/events/sched
+>>>>>>> b7ba80a49124 (Commit)
 	# echo prev_pid == 0 > filter
 	# cat sched_switch/filter
 	prev_pid == 0
 	# cat sched_wakeup/filter
 	common_pid == 0
 
+<<<<<<< HEAD
 5.5 PID filtering
+=======
+5.4 PID filtering
+>>>>>>> b7ba80a49124 (Commit)
 -----------------
 
 The set_event_pid file in the same directory as the top events directory
@@ -325,7 +409,11 @@ exists, will filter all events from tracing any task that does not have the
 PID listed in the set_event_pid file.
 ::
 
+<<<<<<< HEAD
 	# cd /sys/kernel/tracing
+=======
+	# cd /sys/kernel/debug/tracing
+>>>>>>> b7ba80a49124 (Commit)
 	# echo $$ > set_event_pid
 	# echo 1 > events/enable
 
@@ -421,14 +509,22 @@ The following commands are supported:
   specifies that this enablement happens only once::
 
 	  # echo 'enable_event:kmem:kmalloc:1' > \
+<<<<<<< HEAD
 	      /sys/kernel/tracing/events/syscalls/sys_enter_read/trigger
+=======
+	      /sys/kernel/debug/tracing/events/syscalls/sys_enter_read/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   The following trigger causes kmalloc events to stop being traced
   when a read system call exits.  This disablement happens on every
   read system call exit::
 
 	  # echo 'disable_event:kmem:kmalloc' > \
+<<<<<<< HEAD
 	      /sys/kernel/tracing/events/syscalls/sys_exit_read/trigger
+=======
+	      /sys/kernel/debug/tracing/events/syscalls/sys_exit_read/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   The format is::
 
@@ -438,10 +534,17 @@ The following commands are supported:
   To remove the above commands::
 
 	  # echo '!enable_event:kmem:kmalloc:1' > \
+<<<<<<< HEAD
 	      /sys/kernel/tracing/events/syscalls/sys_enter_read/trigger
 
 	  # echo '!disable_event:kmem:kmalloc' > \
 	      /sys/kernel/tracing/events/syscalls/sys_exit_read/trigger
+=======
+	      /sys/kernel/debug/tracing/events/syscalls/sys_enter_read/trigger
+
+	  # echo '!disable_event:kmem:kmalloc' > \
+	      /sys/kernel/debug/tracing/events/syscalls/sys_exit_read/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   Note that there can be any number of enable/disable_event triggers
   per triggering event, but there can only be one trigger per
@@ -460,13 +563,21 @@ The following commands are supported:
   kmalloc tracepoint is hit::
 
 	  # echo 'stacktrace' > \
+<<<<<<< HEAD
 		/sys/kernel/tracing/events/kmem/kmalloc/trigger
+=======
+		/sys/kernel/debug/tracing/events/kmem/kmalloc/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   The following trigger dumps a stacktrace the first 5 times a kmalloc
   request happens with a size >= 64K::
 
 	  # echo 'stacktrace:5 if bytes_req >= 65536' > \
+<<<<<<< HEAD
 		/sys/kernel/tracing/events/kmem/kmalloc/trigger
+=======
+		/sys/kernel/debug/tracing/events/kmem/kmalloc/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   The format is::
 
@@ -475,16 +586,27 @@ The following commands are supported:
   To remove the above commands::
 
 	  # echo '!stacktrace' > \
+<<<<<<< HEAD
 		/sys/kernel/tracing/events/kmem/kmalloc/trigger
 
 	  # echo '!stacktrace:5 if bytes_req >= 65536' > \
 		/sys/kernel/tracing/events/kmem/kmalloc/trigger
+=======
+		/sys/kernel/debug/tracing/events/kmem/kmalloc/trigger
+
+	  # echo '!stacktrace:5 if bytes_req >= 65536' > \
+		/sys/kernel/debug/tracing/events/kmem/kmalloc/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   The latter can also be removed more simply by the following (without
   the filter)::
 
 	  # echo '!stacktrace:5' > \
+<<<<<<< HEAD
 		/sys/kernel/tracing/events/kmem/kmalloc/trigger
+=======
+		/sys/kernel/debug/tracing/events/kmem/kmalloc/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   Note that there can be only one stacktrace trigger per triggering
   event.
@@ -500,20 +622,35 @@ The following commands are supported:
   capture those events when the trigger event occurred::
 
 	  # echo 'snapshot if nr_rq > 1' > \
+<<<<<<< HEAD
 		/sys/kernel/tracing/events/block/block_unplug/trigger
+=======
+		/sys/kernel/debug/tracing/events/block/block_unplug/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   To only snapshot once::
 
 	  # echo 'snapshot:1 if nr_rq > 1' > \
+<<<<<<< HEAD
 		/sys/kernel/tracing/events/block/block_unplug/trigger
+=======
+		/sys/kernel/debug/tracing/events/block/block_unplug/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   To remove the above commands::
 
 	  # echo '!snapshot if nr_rq > 1' > \
+<<<<<<< HEAD
 		/sys/kernel/tracing/events/block/block_unplug/trigger
 
 	  # echo '!snapshot:1 if nr_rq > 1' > \
 		/sys/kernel/tracing/events/block/block_unplug/trigger
+=======
+		/sys/kernel/debug/tracing/events/block/block_unplug/trigger
+
+	  # echo '!snapshot:1 if nr_rq > 1' > \
+		/sys/kernel/debug/tracing/events/block/block_unplug/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   Note that there can be only one snapshot trigger per triggering
   event.
@@ -531,20 +668,35 @@ The following commands are supported:
   trigger event::
 
 	  # echo 'traceoff:1 if nr_rq > 1' > \
+<<<<<<< HEAD
 		/sys/kernel/tracing/events/block/block_unplug/trigger
+=======
+		/sys/kernel/debug/tracing/events/block/block_unplug/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   To always disable tracing when nr_rq  > 1::
 
 	  # echo 'traceoff if nr_rq > 1' > \
+<<<<<<< HEAD
 		/sys/kernel/tracing/events/block/block_unplug/trigger
+=======
+		/sys/kernel/debug/tracing/events/block/block_unplug/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   To remove the above commands::
 
 	  # echo '!traceoff:1 if nr_rq > 1' > \
+<<<<<<< HEAD
 		/sys/kernel/tracing/events/block/block_unplug/trigger
 
 	  # echo '!traceoff if nr_rq > 1' > \
 		/sys/kernel/tracing/events/block/block_unplug/trigger
+=======
+		/sys/kernel/debug/tracing/events/block/block_unplug/trigger
+
+	  # echo '!traceoff if nr_rq > 1' > \
+		/sys/kernel/debug/tracing/events/block/block_unplug/trigger
+>>>>>>> b7ba80a49124 (Commit)
 
   Note that there can be only one traceon or traceoff trigger per
   triggering event.

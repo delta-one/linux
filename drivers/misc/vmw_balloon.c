@@ -1709,7 +1709,11 @@ static void __init vmballoon_debugfs_init(struct vmballoon *b)
 static void __exit vmballoon_debugfs_exit(struct vmballoon *b)
 {
 	static_key_disable(&balloon_stat_enabled.key);
+<<<<<<< HEAD
 	debugfs_lookup_and_remove("vmmemctl", NULL);
+=======
+	debugfs_remove(debugfs_lookup("vmmemctl", NULL));
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(b->stats);
 	b->stats = NULL;
 }

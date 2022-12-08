@@ -63,9 +63,15 @@ static void pcrypt_aead_serial(struct padata_priv *padata)
 	aead_request_complete(req->base.data, padata->info);
 }
 
+<<<<<<< HEAD
 static void pcrypt_aead_done(void *data, int err)
 {
 	struct aead_request *req = data;
+=======
+static void pcrypt_aead_done(struct crypto_async_request *areq, int err)
+{
+	struct aead_request *req = areq->data;
+>>>>>>> b7ba80a49124 (Commit)
 	struct pcrypt_request *preq = aead_request_ctx(req);
 	struct padata_priv *padata = pcrypt_request_padata(preq);
 

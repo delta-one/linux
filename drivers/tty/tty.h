@@ -93,7 +93,11 @@ void tty_ldisc_release(struct tty_struct *tty);
 int __must_check tty_ldisc_init(struct tty_struct *tty);
 void tty_ldisc_deinit(struct tty_struct *tty);
 
+<<<<<<< HEAD
 extern int tty_ldisc_autoload;
+=======
+void tty_sysctl_init(void);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* tty_audit.c */
 #ifdef CONFIG_AUDIT

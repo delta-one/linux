@@ -11,7 +11,11 @@
 #ifndef __LINUX_PINCTRL_MACHINE_H
 #define __LINUX_PINCTRL_MACHINE_H
 
+<<<<<<< HEAD
 #include <linux/kernel.h>	/* ARRAY_SIZE() */
+=======
+#include <linux/bug.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/pinctrl/pinctrl-state.h>
 
@@ -149,18 +153,29 @@ struct pinctrl_map {
 #define PIN_MAP_CONFIGS_GROUP_HOG_DEFAULT(dev, grp, cfgs)		\
 	PIN_MAP_CONFIGS_GROUP(dev, PINCTRL_STATE_DEFAULT, dev, grp, cfgs)
 
+<<<<<<< HEAD
 struct pinctrl_map;
 
 #ifdef CONFIG_PINCTRL
 
 extern int pinctrl_register_mappings(const struct pinctrl_map *map,
 				     unsigned num_maps);
+=======
+#ifdef CONFIG_PINCTRL
+
+extern int pinctrl_register_mappings(const struct pinctrl_map *map,
+				unsigned num_maps);
+>>>>>>> b7ba80a49124 (Commit)
 extern void pinctrl_unregister_mappings(const struct pinctrl_map *map);
 extern void pinctrl_provide_dummies(void);
 #else
 
 static inline int pinctrl_register_mappings(const struct pinctrl_map *map,
+<<<<<<< HEAD
 					    unsigned num_maps)
+=======
+					   unsigned num_maps)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return 0;
 }

@@ -8,7 +8,10 @@
 #include <asm/addrspace.h>
 #include <asm/asm.h>
 #include <asm/asmmacro.h>
+<<<<<<< HEAD
 #include <asm/bug.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/regdef.h>
 #include <asm/loongarch.h>
 #include <asm/stackframe.h>
@@ -21,12 +24,16 @@
 
 _head:
 	.word	MZ_MAGIC		/* "MZ", MS-DOS header */
+<<<<<<< HEAD
 	.org	0x8
 	.dword	kernel_entry		/* Kernel entry point */
 	.dword	_end - _text		/* Kernel image effective size */
 	.quad	PHYS_LINK_KADDR		/* Kernel image load offset from start of RAM */
 	.org	0x38			/* 0x20 ~ 0x37 reserved */
 	.long	LINUX_PE_MAGIC
+=======
+	.org	0x3c			/* 0x04 ~ 0x3b reserved */
+>>>>>>> b7ba80a49124 (Commit)
 	.long	pe_header - _head	/* Offset to the PE header */
 
 pe_header:
@@ -40,8 +47,11 @@ SYM_DATA(kernel_offset, .long kernel_offset - _text);
 
 	__REF
 
+<<<<<<< HEAD
 	.align 12
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 SYM_CODE_START(kernel_entry)			# kernel entry point
 
 	/* Config direct window and set PG */
@@ -50,8 +60,16 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
 	li.d		t0, CSR_DMW1_INIT	# CA, PLV0, 0x9000 xxxx xxxx xxxx
 	csrwr		t0, LOONGARCH_CSR_DMWIN1
 
+<<<<<<< HEAD
 	JUMP_VIRT_ADDR	t0, t1
 
+=======
+	/* We might not get launched at the address the kernel is linked to,
+	   so we jump there.  */
+	la.abs		t0, 0f
+	jr		t0
+0:
+>>>>>>> b7ba80a49124 (Commit)
 	/* Enable PG */
 	li.w		t0, 0xb0		# PLV=0, IE=0, PG=1
 	csrwr		t0, LOONGARCH_CSR_CRMD
@@ -60,19 +78,33 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
 	li.w		t0, 0x00		# FPE=0, SXE=0, ASXE=0, BTE=0
 	csrwr		t0, LOONGARCH_CSR_EUEN
 
+<<<<<<< HEAD
 	la.pcrel	t0, __bss_start		# clear .bss
 	st.d		zero, t0, 0
 	la.pcrel	t1, __bss_stop - LONGSIZE
+=======
+	la		t0, __bss_start		# clear .bss
+	st.d		zero, t0, 0
+	la		t1, __bss_stop - LONGSIZE
+>>>>>>> b7ba80a49124 (Commit)
 1:
 	addi.d		t0, t0, LONGSIZE
 	st.d		zero, t0, 0
 	bne		t0, t1, 1b
 
+<<<<<<< HEAD
 	la.pcrel	t0, fw_arg0
 	st.d		a0, t0, 0		# firmware arguments
 	la.pcrel	t0, fw_arg1
 	st.d		a1, t0, 0
 	la.pcrel	t0, fw_arg2
+=======
+	la		t0, fw_arg0
+	st.d		a0, t0, 0		# firmware arguments
+	la		t0, fw_arg1
+	st.d		a1, t0, 0
+	la		t0, fw_arg2
+>>>>>>> b7ba80a49124 (Commit)
 	st.d		a2, t0, 0
 
 	/* KSave3 used for percpu base, initialized as 0 */
@@ -80,6 +112,7 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
 	/* GPR21 used for percpu base (runtime), initialized as 0 */
 	move		u0, zero
 
+<<<<<<< HEAD
 	la.pcrel	tp, init_thread_union
 	/* Set the SP after an empty pt_regs.  */
 	PTR_LI		sp, (_THREAD_SIZE - PT_SIZE)
@@ -105,6 +138,16 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
 
 	bl		start_kernel
 	ASM_BUG()
+=======
+	la		tp, init_thread_union
+	/* Set the SP after an empty pt_regs.  */
+	PTR_LI		sp, (_THREAD_SIZE - 32 - PT_SIZE)
+	PTR_ADD		sp, sp, tp
+	set_saved_sp	sp, t0, t1
+	PTR_ADDI	sp, sp, -4 * SZREG	# init stack pointer
+
+	bl		start_kernel
+>>>>>>> b7ba80a49124 (Commit)
 
 SYM_CODE_END(kernel_entry)
 
@@ -120,8 +163,14 @@ SYM_CODE_START(smpboot_entry)
 	li.d		t0, CSR_DMW1_INIT	# CA, PLV0
 	csrwr		t0, LOONGARCH_CSR_DMWIN1
 
+<<<<<<< HEAD
 	JUMP_VIRT_ADDR	t0, t1
 
+=======
+	la.abs		t0, 0f
+	jr		t0
+0:
+>>>>>>> b7ba80a49124 (Commit)
 	/* Enable PG */
 	li.w		t0, 0xb0		# PLV=0, IE=0, PG=1
 	csrwr		t0, LOONGARCH_CSR_CRMD
@@ -130,13 +179,20 @@ SYM_CODE_START(smpboot_entry)
 	li.w		t0, 0x00		# FPE=0, SXE=0, ASXE=0, BTE=0
 	csrwr		t0, LOONGARCH_CSR_EUEN
 
+<<<<<<< HEAD
 	la.pcrel	t0, cpuboot_data
+=======
+	la.abs		t0, cpuboot_data
+>>>>>>> b7ba80a49124 (Commit)
 	ld.d		sp, t0, CPU_BOOT_STACK
 	ld.d		tp, t0, CPU_BOOT_TINFO
 
 	bl		start_secondary
+<<<<<<< HEAD
 	ASM_BUG()
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 SYM_CODE_END(smpboot_entry)
 
 #endif /* CONFIG_SMP */

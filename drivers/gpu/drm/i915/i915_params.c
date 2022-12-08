@@ -29,6 +29,7 @@
 #include "i915_params.h"
 #include "i915_drv.h"
 
+<<<<<<< HEAD
 DECLARE_DYNDBG_CLASSMAP(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS, 0,
 			"DRM_UT_CORE",
 			"DRM_UT_DRIVER",
@@ -41,6 +42,8 @@ DECLARE_DYNDBG_CLASSMAP(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS, 0,
 			"DRM_UT_DP",
 			"DRM_UT_DRMRES");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define i915_param_named(name, T, perm, desc) \
 	module_param_named(name, i915_modparams.name, T, perm); \
 	MODULE_PARM_DESC(name, desc)
@@ -122,7 +125,11 @@ i915_param_named_unsafe(enable_psr2_sel_fetch, bool, 0400,
 	"Default: 0");
 
 i915_param_named_unsafe(force_probe, charp, 0400,
+<<<<<<< HEAD
 	"Force probe options for specified supported devices. "
+=======
+	"Force probe the driver for specified devices. "
+>>>>>>> b7ba80a49124 (Commit)
 	"See CONFIG_DRM_I915_FORCE_PROBE for details.");
 
 i915_param_named_unsafe(disable_power_well, int, 0400,
@@ -192,9 +199,12 @@ i915_param_named_unsafe(huc_firmware_path, charp, 0400,
 i915_param_named_unsafe(dmc_firmware_path, charp, 0400,
 	"DMC firmware path to use instead of the default one");
 
+<<<<<<< HEAD
 i915_param_named_unsafe(gsc_firmware_path, charp, 0400,
 	"GSC firmware path to use instead of the default one");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 i915_param_named_unsafe(enable_dp_mst, bool, 0400,
 	"Enable multi-stream transport (MST) for new DisplayPort sinks. (default: true)");
 
@@ -222,6 +232,7 @@ i915_param_named_unsafe(lmem_size, uint, 0400,
 i915_param_named_unsafe(lmem_bar_size, uint, 0400,
 			"Set the lmem bar size(in MiB).");
 
+<<<<<<< HEAD
 static void _param_print_bool(struct drm_printer *p, const char *name,
 			      bool val)
 {
@@ -260,6 +271,29 @@ static void _param_print_charp(struct drm_printer *p, const char *name,
 		 unsigned long: _param_print_ulong,		\
 		 char *: _param_print_charp)(p, name, val)
 
+=======
+static __always_inline void _print_param(struct drm_printer *p,
+					 const char *name,
+					 const char *type,
+					 const void *x)
+{
+	if (!__builtin_strcmp(type, "bool"))
+		drm_printf(p, "i915.%s=%s\n", name,
+			   str_yes_no(*(const bool *)x));
+	else if (!__builtin_strcmp(type, "int"))
+		drm_printf(p, "i915.%s=%d\n", name, *(const int *)x);
+	else if (!__builtin_strcmp(type, "unsigned int"))
+		drm_printf(p, "i915.%s=%u\n", name, *(const unsigned int *)x);
+	else if (!__builtin_strcmp(type, "unsigned long"))
+		drm_printf(p, "i915.%s=%lu\n", name, *(const unsigned long *)x);
+	else if (!__builtin_strcmp(type, "char *"))
+		drm_printf(p, "i915.%s=%s\n", name, *(const char **)x);
+	else
+		WARN_ONCE(1, "no printer defined for param type %s (i915.%s)\n",
+			  type, name);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * i915_params_dump - dump i915 modparams
  * @params: i915 modparams
@@ -269,11 +303,16 @@ static void _param_print_charp(struct drm_printer *p, const char *name,
  */
 void i915_params_dump(const struct i915_params *params, struct drm_printer *p)
 {
+<<<<<<< HEAD
 #define PRINT(T, x, ...) _param_print(p, #x, params->x);
+=======
+#define PRINT(T, x, ...) _print_param(p, #x, #T, &params->x);
+>>>>>>> b7ba80a49124 (Commit)
 	I915_PARAMS_FOR_EACH(PRINT);
 #undef PRINT
 }
 
+<<<<<<< HEAD
 static void _param_dup_charp(char **valp)
 {
 	*valp = kstrdup(*valp, GFP_ATOMIC);
@@ -292,10 +331,23 @@ void i915_params_copy(struct i915_params *dest, const struct i915_params *src)
 {
 	*dest = *src;
 #define DUP(T, x, ...) _param_dup(&dest->x);
+=======
+static __always_inline void dup_param(const char *type, void *x)
+{
+	if (!__builtin_strcmp(type, "char *"))
+		*(void **)x = kstrdup(*(void **)x, GFP_ATOMIC);
+}
+
+void i915_params_copy(struct i915_params *dest, const struct i915_params *src)
+{
+	*dest = *src;
+#define DUP(T, x, ...) dup_param(#T, &dest->x);
+>>>>>>> b7ba80a49124 (Commit)
 	I915_PARAMS_FOR_EACH(DUP);
 #undef DUP
 }
 
+<<<<<<< HEAD
 static void _param_free_charp(char **valp)
 {
 	kfree(*valp);
@@ -311,6 +363,20 @@ static void _param_free_charp(char **valp)
 void i915_params_free(struct i915_params *params)
 {
 #define FREE(T, x, ...) _param_free(&params->x);
+=======
+static __always_inline void free_param(const char *type, void *x)
+{
+	if (!__builtin_strcmp(type, "char *")) {
+		kfree(*(void **)x);
+		*(void **)x = NULL;
+	}
+}
+
+/* free the allocated members, *not* the passed in params itself */
+void i915_params_free(struct i915_params *params)
+{
+#define FREE(T, x, ...) free_param(#T, &params->x);
+>>>>>>> b7ba80a49124 (Commit)
 	I915_PARAMS_FOR_EACH(FREE);
 #undef FREE
 }

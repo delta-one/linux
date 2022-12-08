@@ -57,7 +57,12 @@ static int ad7606_par_probe(struct platform_device *pdev)
 	if (irq < 0)
 		return irq;
 
+<<<<<<< HEAD
 	addr = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	addr = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(addr))
 		return PTR_ERR(addr);
 

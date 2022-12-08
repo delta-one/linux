@@ -94,7 +94,11 @@ static void df_v1_7_update_medium_grain_clock_gating(struct amdgpu_device *adev,
 		WREG32_SOC15(DF, 0, mmDF_PIE_AON0_DfGlobalClkGater, tmp);
 	}
 
+<<<<<<< HEAD
 	/* Exit broadcast mode */
+=======
+	/* Exit boradcast mode */
+>>>>>>> b7ba80a49124 (Commit)
 	adev->df.funcs->enable_broadcast_mode(adev, false);
 }
 

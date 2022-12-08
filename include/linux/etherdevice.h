@@ -508,6 +508,7 @@ static inline void eth_addr_inc(u8 *addr)
 }
 
 /**
+<<<<<<< HEAD
  * eth_addr_add() - Add (or subtract) an offset to/from the given MAC address.
  *
  * @offset: Offset to add.
@@ -522,6 +523,8 @@ static inline void eth_addr_add(u8 *addr, long offset)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * is_etherdev_addr - Tell if given Ethernet address belongs to the device.
  * @dev: Pointer to a device structure
  * @addr: Pointer to a six-byte array containing the Ethernet address

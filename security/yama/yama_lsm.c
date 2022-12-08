@@ -421,7 +421,11 @@ static int yama_ptrace_traceme(struct task_struct *parent)
 	return rc;
 }
 
+<<<<<<< HEAD
 static struct security_hook_list yama_hooks[] __ro_after_init = {
+=======
+static struct security_hook_list yama_hooks[] __lsm_ro_after_init = {
+>>>>>>> b7ba80a49124 (Commit)
 	LSM_HOOK_INIT(ptrace_access_check, yama_ptrace_access_check),
 	LSM_HOOK_INIT(ptrace_traceme, yama_ptrace_traceme),
 	LSM_HOOK_INIT(task_prctl, yama_task_prctl),
@@ -447,6 +451,15 @@ static int yama_dointvec_minmax(struct ctl_table *table, int write,
 
 static int max_scope = YAMA_SCOPE_NO_ATTACH;
 
+<<<<<<< HEAD
+=======
+static struct ctl_path yama_sysctl_path[] = {
+	{ .procname = "kernel", },
+	{ .procname = "yama", },
+	{ }
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct ctl_table yama_sysctl_table[] = {
 	{
 		.procname       = "ptrace_scope",
@@ -461,7 +474,11 @@ static struct ctl_table yama_sysctl_table[] = {
 };
 static void __init yama_init_sysctl(void)
 {
+<<<<<<< HEAD
 	if (!register_sysctl("kernel/yama", yama_sysctl_table))
+=======
+	if (!register_sysctl_paths(yama_sysctl_path, yama_sysctl_table))
+>>>>>>> b7ba80a49124 (Commit)
 		panic("Yama: sysctl registration failed.\n");
 }
 #else

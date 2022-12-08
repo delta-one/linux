@@ -504,7 +504,11 @@ free_fb:
 	return retval;
 }
 
+<<<<<<< HEAD
 static void grvga_remove(struct platform_device *device)
+=======
+static int grvga_remove(struct platform_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = dev_get_drvdata(&device->dev);
 	struct grvga_par *par;
@@ -524,6 +528,11 @@ static void grvga_remove(struct platform_device *device)
 
 		framebuffer_release(info);
 	}
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct of_device_id svgactrl_of_match[] = {
@@ -543,7 +552,11 @@ static struct platform_driver grvga_driver = {
 		.of_match_table = svgactrl_of_match,
 	},
 	.probe		= grvga_probe,
+<<<<<<< HEAD
 	.remove_new	= grvga_remove,
+=======
+	.remove		= grvga_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(grvga_driver);

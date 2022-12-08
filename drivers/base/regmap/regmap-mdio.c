@@ -10,6 +10,7 @@
 /* Clause-45 mask includes the device type (5 bit) and actual register number (16 bit) */
 #define REGNUM_C45_MASK		GENMASK(20, 0)
 
+<<<<<<< HEAD
 static int regmap_mdio_c22_read(void *context, unsigned int reg, unsigned int *val)
 {
 	struct mdio_device *mdio_dev = context;
@@ -18,15 +19,42 @@ static int regmap_mdio_c22_read(void *context, unsigned int reg, unsigned int *v
 	if (unlikely(reg & ~REGNUM_C22_MASK))
 		return -ENXIO;
 
+=======
+static int regmap_mdio_read(struct mdio_device *mdio_dev, u32 reg, unsigned int *val)
+{
+	int ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = mdiodev_read(mdio_dev, reg);
 	if (ret < 0)
 		return ret;
 
 	*val = ret & REGVAL_MASK;
+<<<<<<< HEAD
 
 	return 0;
 }
 
+=======
+	return 0;
+}
+
+static int regmap_mdio_write(struct mdio_device *mdio_dev, u32 reg, unsigned int val)
+{
+	return mdiodev_write(mdio_dev, reg, val);
+}
+
+static int regmap_mdio_c22_read(void *context, unsigned int reg, unsigned int *val)
+{
+	struct mdio_device *mdio_dev = context;
+
+	if (unlikely(reg & ~REGNUM_C22_MASK))
+		return -ENXIO;
+
+	return regmap_mdio_read(mdio_dev, reg, val);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int regmap_mdio_c22_write(void *context, unsigned int reg, unsigned int val)
 {
 	struct mdio_device *mdio_dev = context;
@@ -45,12 +73,16 @@ static const struct regmap_bus regmap_mdio_c22_bus = {
 static int regmap_mdio_c45_read(void *context, unsigned int reg, unsigned int *val)
 {
 	struct mdio_device *mdio_dev = context;
+<<<<<<< HEAD
 	unsigned int devad;
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unlikely(reg & ~REGNUM_C45_MASK))
 		return -ENXIO;
 
+<<<<<<< HEAD
 	devad = reg >> REGMAP_MDIO_C45_DEVAD_SHIFT;
 	reg = reg & REGMAP_MDIO_C45_REGNUM_MASK;
 
@@ -61,20 +93,30 @@ static int regmap_mdio_c45_read(void *context, unsigned int reg, unsigned int *v
 	*val = ret & REGVAL_MASK;
 
 	return 0;
+=======
+	return regmap_mdio_read(mdio_dev, MII_ADDR_C45 | reg, val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int regmap_mdio_c45_write(void *context, unsigned int reg, unsigned int val)
 {
 	struct mdio_device *mdio_dev = context;
+<<<<<<< HEAD
 	unsigned int devad;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unlikely(reg & ~REGNUM_C45_MASK))
 		return -ENXIO;
 
+<<<<<<< HEAD
 	devad = reg >> REGMAP_MDIO_C45_DEVAD_SHIFT;
 	reg = reg & REGMAP_MDIO_C45_REGNUM_MASK;
 
 	return mdiodev_c45_write(mdio_dev, devad, reg, val);
+=======
+	return regmap_mdio_write(mdio_dev, MII_ADDR_C45 | reg, val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct regmap_bus regmap_mdio_c45_bus = {

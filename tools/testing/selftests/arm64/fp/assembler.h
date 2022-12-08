@@ -57,7 +57,11 @@ endfunction
 // Utility macro to print a literal string
 // Clobbers x0-x4,x8
 .macro puts string
+<<<<<<< HEAD
 	.pushsection .rodata.str1.1, "aMS", @progbits, 1
+=======
+	.pushsection .rodata.str1.1, "aMS", 1
+>>>>>>> b7ba80a49124 (Commit)
 .L__puts_literal\@: .string "\string"
 	.popsection
 

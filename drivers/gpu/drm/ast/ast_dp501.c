@@ -10,7 +10,11 @@ MODULE_FIRMWARE("ast_dp501_fw.bin");
 
 static void ast_release_firmware(void *data)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = data;
+=======
+	struct ast_private *ast = data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	release_firmware(ast->dp501_fw);
 	ast->dp501_fw = NULL;
@@ -18,7 +22,11 @@ static void ast_release_firmware(void *data)
 
 static int ast_load_dp501_microcode(struct drm_device *dev)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	ret = request_firmware(&ast->dp501_fw, "ast_dp501_fw.bin", dev->dev);
@@ -28,7 +36,11 @@ static int ast_load_dp501_microcode(struct drm_device *dev)
 	return devm_add_action_or_reset(dev->dev, ast_release_firmware, ast);
 }
 
+<<<<<<< HEAD
 static void send_ack(struct ast_device *ast)
+=======
+static void send_ack(struct ast_private *ast)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u8 sendack;
 	sendack = ast_get_index_reg_mask(ast, AST_IO_CRTC_PORT, 0x9b, 0xff);
@@ -36,7 +48,11 @@ static void send_ack(struct ast_device *ast)
 	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0x9b, 0x00, sendack);
 }
 
+<<<<<<< HEAD
 static void send_nack(struct ast_device *ast)
+=======
+static void send_nack(struct ast_private *ast)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u8 sendack;
 	sendack = ast_get_index_reg_mask(ast, AST_IO_CRTC_PORT, 0x9b, 0xff);
@@ -44,7 +60,11 @@ static void send_nack(struct ast_device *ast)
 	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0x9b, 0x00, sendack);
 }
 
+<<<<<<< HEAD
 static bool wait_ack(struct ast_device *ast)
+=======
+static bool wait_ack(struct ast_private *ast)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u8 waitack;
 	u32 retry = 0;
@@ -60,7 +80,11 @@ static bool wait_ack(struct ast_device *ast)
 		return false;
 }
 
+<<<<<<< HEAD
 static bool wait_nack(struct ast_device *ast)
+=======
+static bool wait_nack(struct ast_private *ast)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u8 waitack;
 	u32 retry = 0;
@@ -76,18 +100,30 @@ static bool wait_nack(struct ast_device *ast)
 		return false;
 }
 
+<<<<<<< HEAD
 static void set_cmd_trigger(struct ast_device *ast)
+=======
+static void set_cmd_trigger(struct ast_private *ast)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0x9b, ~0x40, 0x40);
 }
 
+<<<<<<< HEAD
 static void clear_cmd_trigger(struct ast_device *ast)
+=======
+static void clear_cmd_trigger(struct ast_private *ast)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0x9b, ~0x40, 0x00);
 }
 
 #if 0
+<<<<<<< HEAD
 static bool wait_fw_ready(struct ast_device *ast)
+=======
+static bool wait_fw_ready(struct ast_private *ast)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u8 waitready;
 	u32 retry = 0;
@@ -106,7 +142,11 @@ static bool wait_fw_ready(struct ast_device *ast)
 
 static bool ast_write_cmd(struct drm_device *dev, u8 data)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	int retry = 0;
 	if (wait_nack(ast)) {
 		send_nack(ast);
@@ -128,7 +168,11 @@ static bool ast_write_cmd(struct drm_device *dev, u8 data)
 
 static bool ast_write_data(struct drm_device *dev, u8 data)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (wait_nack(ast)) {
 		send_nack(ast);
@@ -146,7 +190,11 @@ static bool ast_write_data(struct drm_device *dev, u8 data)
 #if 0
 static bool ast_read_data(struct drm_device *dev, u8 *data)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	u8 tmp;
 
 	*data = 0;
@@ -163,7 +211,11 @@ static bool ast_read_data(struct drm_device *dev, u8 *data)
 	return true;
 }
 
+<<<<<<< HEAD
 static void clear_cmd(struct ast_device *ast)
+=======
+static void clear_cmd(struct ast_private *ast)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	send_nack(ast);
 	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0x9a, 0x00, 0x00);
@@ -178,14 +230,22 @@ void ast_set_dp501_video_output(struct drm_device *dev, u8 mode)
 	msleep(10);
 }
 
+<<<<<<< HEAD
 static u32 get_fw_base(struct ast_device *ast)
+=======
+static u32 get_fw_base(struct ast_private *ast)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return ast_mindwm(ast, 0x1e6e2104) & 0x7fffffff;
 }
 
 bool ast_backup_fw(struct drm_device *dev, u8 *addr, u32 size)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	u32 i, data;
 	u32 boot_address;
 
@@ -204,7 +264,11 @@ bool ast_backup_fw(struct drm_device *dev, u8 *addr, u32 size)
 
 static bool ast_launch_m68k(struct drm_device *dev)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	u32 i, data, len = 0;
 	u32 boot_address;
 	u8 *fw_addr = NULL;
@@ -274,7 +338,11 @@ static bool ast_launch_m68k(struct drm_device *dev)
 
 bool ast_dp501_read_edid(struct drm_device *dev, u8 *ediddata)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	u32 i, boot_address, offset, data;
 	u32 *pEDIDidx;
 
@@ -334,7 +402,11 @@ bool ast_dp501_read_edid(struct drm_device *dev, u8 *ediddata)
 
 static bool ast_init_dvo(struct drm_device *dev)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	u8 jreg;
 	u32 data;
 	ast_write32(ast, 0xf004, 0x1e6e0000);
@@ -407,7 +479,11 @@ static bool ast_init_dvo(struct drm_device *dev)
 
 static void ast_init_analog(struct drm_device *dev)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	u32 data;
 
 	/*
@@ -434,7 +510,11 @@ static void ast_init_analog(struct drm_device *dev)
 
 void ast_init_3rdtx(struct drm_device *dev)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	u8 jreg;
 
 	if (ast->chip == AST2300 || ast->chip == AST2400) {

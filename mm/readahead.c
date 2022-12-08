@@ -801,6 +801,7 @@ void readahead_expand(struct readahead_control *ractl,
 	/* Expand the leading edge downwards */
 	while (ractl->_index > new_index) {
 		unsigned long index = ractl->_index - 1;
+<<<<<<< HEAD
 		struct folio *folio = xa_load(&mapping->i_pages, index);
 
 		if (folio && !xa_is_value(folio))
@@ -820,6 +821,23 @@ void readahead_expand(struct readahead_control *ractl,
 		}
 		ractl->_nr_pages++;
 		ractl->_index = folio->index;
+=======
+		struct page *page = xa_load(&mapping->i_pages, index);
+
+		if (page && !xa_is_value(page))
+			return; /* Page apparently present */
+
+		page = __page_cache_alloc(gfp_mask);
+		if (!page)
+			return;
+		if (add_to_page_cache_lru(page, mapping, index, gfp_mask) < 0) {
+			put_page(page);
+			return;
+		}
+
+		ractl->_nr_pages++;
+		ractl->_index = page->index;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	new_len += new_start - readahead_pos(ractl);
@@ -828,6 +846,7 @@ void readahead_expand(struct readahead_control *ractl,
 	/* Expand the trailing edge upwards */
 	while (ractl->_nr_pages < new_nr_pages) {
 		unsigned long index = ractl->_index + ractl->_nr_pages;
+<<<<<<< HEAD
 		struct folio *folio = xa_load(&mapping->i_pages, index);
 
 		if (folio && !xa_is_value(folio))
@@ -842,6 +861,21 @@ void readahead_expand(struct readahead_control *ractl,
 		}
 		if (unlikely(folio_test_workingset(folio)) &&
 				!ractl->_workingset) {
+=======
+		struct page *page = xa_load(&mapping->i_pages, index);
+
+		if (page && !xa_is_value(page))
+			return; /* Page apparently present */
+
+		page = __page_cache_alloc(gfp_mask);
+		if (!page)
+			return;
+		if (add_to_page_cache_lru(page, mapping, index, gfp_mask) < 0) {
+			put_page(page);
+			return;
+		}
+		if (unlikely(PageWorkingset(page)) && !ractl->_workingset) {
+>>>>>>> b7ba80a49124 (Commit)
 			ractl->_workingset = true;
 			psi_memstall_enter(&ractl->_pflags);
 		}

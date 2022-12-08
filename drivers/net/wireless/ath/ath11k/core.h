@@ -142,7 +142,10 @@ enum ath11k_hw_rev {
 	ATH11K_HW_WCN6855_HW20,
 	ATH11K_HW_WCN6855_HW21,
 	ATH11K_HW_WCN6750_HW10,
+<<<<<<< HEAD
 	ATH11K_HW_IPQ5018_HW10,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum ath11k_firmware_mode {
@@ -231,6 +234,7 @@ struct ath11k_he {
 
 #define MAX_RADIOS 3
 
+<<<<<<< HEAD
 /* ipq5018 hw param macros */
 #define MAX_RADIOS_5018	1
 #define CE_CNT_5018	6
@@ -238,6 +242,8 @@ struct ath11k_he {
 #define SVC_CE_MAP_LEN_5018	17
 #define RXDMA_PER_PDEV_5018	1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum {
 	WMI_HOST_TP_SCALE_MAX   = 0,
 	WMI_HOST_TP_SCALE_50    = 1,
@@ -346,7 +352,10 @@ struct ath11k_vif {
 
 	bool is_started;
 	bool is_up;
+<<<<<<< HEAD
 	bool ftm_responder;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool spectral_enabled;
 	bool ps;
 	u32 aid;
@@ -507,6 +516,7 @@ struct ath11k_sta {
 
 	bool use_4addr_set;
 	u16 tcl_metadata;
+<<<<<<< HEAD
 
 	/* Protected with ar->data_lock */
 	enum ath11k_wmi_peer_ps_state peer_ps_state;
@@ -516,13 +526,20 @@ struct ath11k_sta {
 	bool peer_current_ps_valid;
 
 	u32 bw_prev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define ATH11K_MIN_5G_FREQ 4150
 #define ATH11K_MIN_6G_FREQ 5925
 #define ATH11K_MAX_6G_FREQ 7115
+<<<<<<< HEAD
 #define ATH11K_NUM_CHANS 102
 #define ATH11K_MAX_5G_CHAN 177
+=======
+#define ATH11K_NUM_CHANS 101
+#define ATH11K_MAX_5G_CHAN 173
+>>>>>>> b7ba80a49124 (Commit)
 
 enum ath11k_state {
 	ATH11K_STATE_OFF,
@@ -563,6 +580,12 @@ struct ath11k_debug {
 	struct dentry *debugfs_pdev;
 	struct ath11k_dbg_htt_stats htt_stats;
 	u32 extd_tx_stats;
+<<<<<<< HEAD
+=======
+	struct ath11k_fw_stats fw_stats;
+	struct completion fw_stats_complete;
+	bool fw_stats_done;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 extd_rx_stats;
 	u32 pktlog_filter;
 	u32 pktlog_mode;
@@ -725,6 +748,7 @@ struct ath11k {
 	u8 twt_enabled;
 	bool nlo_enabled;
 	u8 alpha2[REG_ALPHA2_LEN + 1];
+<<<<<<< HEAD
 	struct ath11k_fw_stats fw_stats;
 	struct completion fw_stats_complete;
 	bool fw_stats_done;
@@ -732,6 +756,8 @@ struct ath11k {
 	/* protected by conf_mutex */
 	bool ps_state_enable;
 	bool ps_timekeeper_enable;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ath11k_band_cap {
@@ -852,7 +878,10 @@ struct ath11k_base {
 	struct ath11k_dp dp;
 
 	void __iomem *mem;
+<<<<<<< HEAD
 	void __iomem *mem_ce;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long mem_len;
 
 	struct {
@@ -910,7 +939,11 @@ struct ath11k_base {
 
 	/* Below regd's are protected by ab->data_lock */
 	/* This is the regd set for every radio
+<<<<<<< HEAD
 	 * by the firmware during initialization
+=======
+	 * by the firmware during initializatin
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	struct ieee80211_regdomain *default_regd[MAX_RADIOS];
 	/* This regd is set during dynamic country setting
@@ -922,6 +955,10 @@ struct ath11k_base {
 	enum ath11k_dfs_region dfs_region;
 #ifdef CONFIG_ATH11K_DEBUGFS
 	struct dentry *debugfs_soc;
+<<<<<<< HEAD
+=======
+	struct dentry *debugfs_ath11k;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	struct ath11k_soc_dp_stats soc_stats;
 
@@ -1134,12 +1171,15 @@ struct ath11k_fw_stats_bcn {
 	u32 tx_bcn_outage_cnt;
 };
 
+<<<<<<< HEAD
 void ath11k_fw_stats_init(struct ath11k *ar);
 void ath11k_fw_stats_pdevs_free(struct list_head *head);
 void ath11k_fw_stats_vdevs_free(struct list_head *head);
 void ath11k_fw_stats_bcn_free(struct list_head *head);
 void ath11k_fw_stats_free(struct ath11k_fw_stats *stats);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern const struct ce_pipe_config ath11k_target_ce_config_wlan_ipq8074[];
 extern const struct service_to_pipe ath11k_target_service_to_ce_map_wlan_ipq8074[];
 extern const struct service_to_pipe ath11k_target_service_to_ce_map_wlan_ipq6018[];
@@ -1147,9 +1187,12 @@ extern const struct service_to_pipe ath11k_target_service_to_ce_map_wlan_ipq6018
 extern const struct ce_pipe_config ath11k_target_ce_config_wlan_qca6390[];
 extern const struct service_to_pipe ath11k_target_service_to_ce_map_wlan_qca6390[];
 
+<<<<<<< HEAD
 extern const struct ce_pipe_config ath11k_target_ce_config_wlan_ipq5018[];
 extern const struct service_to_pipe ath11k_target_service_to_ce_map_wlan_ipq5018[];
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern const struct ce_pipe_config ath11k_target_ce_config_wlan_qcn9074[];
 extern const struct service_to_pipe ath11k_target_service_to_ce_map_wlan_qcn9074[];
 int ath11k_core_qmi_firmware_ready(struct ath11k_base *ab);
@@ -1171,7 +1214,10 @@ int ath11k_core_check_smbios(struct ath11k_base *ab);
 void ath11k_core_halt(struct ath11k *ar);
 int ath11k_core_resume(struct ath11k_base *ab);
 int ath11k_core_suspend(struct ath11k_base *ab);
+<<<<<<< HEAD
 void ath11k_core_pre_reconfigure_recovery(struct ath11k_base *ab);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 const struct firmware *ath11k_core_firmware_request(struct ath11k_base *ab,
 						    const char *filename);

@@ -191,6 +191,10 @@ void kvm_riscv_vcpu_wfi(struct kvm_vcpu *vcpu)
 		kvm_vcpu_srcu_read_unlock(vcpu);
 		kvm_vcpu_halt(vcpu);
 		kvm_vcpu_srcu_read_lock(vcpu);
+<<<<<<< HEAD
+=======
+		kvm_clear_request(KVM_REQ_UNHALT, vcpu);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -213,9 +217,13 @@ struct csr_func {
 		    unsigned long wr_mask);
 };
 
+<<<<<<< HEAD
 static const struct csr_func csr_funcs[] = {
 	KVM_RISCV_VCPU_HPMCOUNTER_CSR_FUNCS
 };
+=======
+static const struct csr_func csr_funcs[] = { };
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * kvm_riscv_vcpu_csr_return -- Handle CSR read/write after user space

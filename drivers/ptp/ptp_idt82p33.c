@@ -27,8 +27,11 @@ MODULE_VERSION("1.0");
 MODULE_LICENSE("GPL");
 MODULE_FIRMWARE(FW_FILENAME);
 
+<<<<<<< HEAD
 #define EXTTS_PERIOD_MS (95)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Module Parameters */
 static u32 phase_snap_threshold = SNAP_THRESHOLD_NS;
 module_param(phase_snap_threshold, uint, 0);
@@ -38,8 +41,11 @@ MODULE_PARM_DESC(phase_snap_threshold,
 static char *firmware;
 module_param(firmware, charp, 0);
 
+<<<<<<< HEAD
 static struct ptp_pin_desc pin_config[MAX_PHC_PLL][MAX_TRIG_CLK];
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int idt82p33_read(struct idt82p33 *idt82p33, u16 regaddr,
 				u8 *buf, u16 count)
 {
@@ -125,6 +131,7 @@ static int idt82p33_dpll_set_mode(struct idt82p33_channel *channel,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int idt82p33_set_tod_trigger(struct idt82p33_channel *channel,
 				    u8 trigger, bool write)
 {
@@ -369,10 +376,13 @@ static u8 idt82p33_extts_enable_mask(struct idt82p33_channel *channel,
 	return extts_mask;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int _idt82p33_gettime(struct idt82p33_channel *channel,
 			     struct timespec64 *ts)
 {
 	struct idt82p33 *idt82p33 = channel->idt82p33;
+<<<<<<< HEAD
 	u8 old_mask = idt82p33->extts_mask;
 	u8 buf[TOD_BYTE_COUNT];
 	u8 new_mask = 0;
@@ -389,6 +399,22 @@ static int _idt82p33_gettime(struct idt82p33_channel *channel,
 
 	channel->discard_next_extts = true;
 
+=======
+	u8 buf[TOD_BYTE_COUNT];
+	u8 trigger;
+	int err;
+
+	trigger = TOD_TRIGGER(HW_TOD_WR_TRIG_SEL_MSB_TOD_CNFG,
+			      HW_TOD_RD_TRIG_SEL_LSB_TOD_STS);
+
+
+	err = idt82p33_write(idt82p33, channel->dpll_tod_trigger,
+			     &trigger, sizeof(trigger));
+
+	if (err)
+		return err;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (idt82p33->calculate_overhead_flag)
 		idt82p33->start_time = ktime_get_raw();
 
@@ -397,10 +423,13 @@ static int _idt82p33_gettime(struct idt82p33_channel *channel,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	/* Re-enable extts */
 	if (new_mask)
 		idt82p33_extts_enable_mask(channel, new_mask, true);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	idt82p33_byte_array_to_timespec(ts, buf);
 
 	return 0;
@@ -419,6 +448,7 @@ static int _idt82p33_settime(struct idt82p33_channel *channel,
 	struct timespec64 local_ts = *ts;
 	char buf[TOD_BYTE_COUNT];
 	s64 dynamic_overhead_ns;
+<<<<<<< HEAD
 	int err;
 	u8 i;
 
@@ -429,6 +459,21 @@ static int _idt82p33_settime(struct idt82p33_channel *channel,
 
 	channel->discard_next_extts = true;
 
+=======
+	unsigned char trigger;
+	int err;
+	u8 i;
+
+	trigger = TOD_TRIGGER(HW_TOD_WR_TRIG_SEL_MSB_TOD_CNFG,
+			      HW_TOD_RD_TRIG_SEL_LSB_TOD_STS);
+
+	err = idt82p33_write(idt82p33, channel->dpll_tod_trigger,
+			&trigger, sizeof(trigger));
+
+	if (err)
+		return err;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (idt82p33->calculate_overhead_flag) {
 		dynamic_overhead_ns = ktime_to_ns(ktime_get_raw())
 					- ktime_to_ns(idt82p33->start_time);
@@ -453,8 +498,12 @@ static int _idt82p33_settime(struct idt82p33_channel *channel,
 	return err;
 }
 
+<<<<<<< HEAD
 static int _idt82p33_adjtime_immediate(struct idt82p33_channel *channel,
 				       s64 delta_ns)
+=======
+static int _idt82p33_adjtime(struct idt82p33_channel *channel, s64 delta_ns)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct idt82p33 *idt82p33 = channel->idt82p33;
 	struct timespec64 ts;
@@ -478,6 +527,7 @@ static int _idt82p33_adjtime_immediate(struct idt82p33_channel *channel,
 	return err;
 }
 
+<<<<<<< HEAD
 static int _idt82p33_adjtime_internal_triggered(struct idt82p33_channel *channel,
 						s64 delta_ns)
 {
@@ -532,6 +582,8 @@ static void idt82p33_adjtime_workaround(struct work_struct *work)
 	mutex_unlock(idt82p33->lock);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int _idt82p33_adjfine(struct idt82p33_channel *channel, long scaled_ppm)
 {
 	struct idt82p33 *idt82p33 = channel->idt82p33;
@@ -539,6 +591,7 @@ static int _idt82p33_adjfine(struct idt82p33_channel *channel, long scaled_ppm)
 	int err, i;
 	s64 fcw;
 
+<<<<<<< HEAD
 	/*
 	 * Frequency Control Word unit is: 1.6861512 * 10^-10 ppm
 	 *
@@ -555,6 +608,27 @@ static int _idt82p33_adjfine(struct idt82p33_channel *channel, long scaled_ppm)
 
 	fcw = scaled_ppm * 762939453125ULL;
 	fcw = div_s64(fcw, 8430756LL);
+=======
+	if (scaled_ppm == channel->current_freq_ppb)
+		return 0;
+
+	/*
+	 * Frequency Control Word unit is: 1.68 * 10^-10 ppm
+	 *
+	 * adjfreq:
+	 *       ppb * 10^9
+	 * FCW = ----------
+	 *          168
+	 *
+	 * adjfine:
+	 *       scaled_ppm * 5^12
+	 * FCW = -------------
+	 *         168 * 2^4
+	 */
+
+	fcw = scaled_ppm * 244140625ULL;
+	fcw = div_s64(fcw, 2688);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < 5; i++) {
 		buf[i] = fcw & 0xff;
@@ -569,6 +643,7 @@ static int _idt82p33_adjfine(struct idt82p33_channel *channel, long scaled_ppm)
 	err = idt82p33_write(idt82p33, channel->dpll_freq_cnfg,
 			     buf, sizeof(buf));
 
+<<<<<<< HEAD
 	return err;
 }
 
@@ -635,18 +710,36 @@ static int idt82p33_start_ddco(struct idt82p33_channel *channel, s32 delta_ns)
 	return 0;
 }
 
+=======
+	if (err == 0)
+		channel->current_freq_ppb = scaled_ppm;
+
+	return err;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int idt82p33_measure_one_byte_write_overhead(
 		struct idt82p33_channel *channel, s64 *overhead_ns)
 {
 	struct idt82p33 *idt82p33 = channel->idt82p33;
 	ktime_t start, stop;
+<<<<<<< HEAD
 	u8 trigger = 0;
 	s64 total_ns;
+=======
+	s64 total_ns;
+	u8 trigger;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 	u8 i;
 
 	total_ns = 0;
 	*overhead_ns = 0;
+<<<<<<< HEAD
+=======
+	trigger = TOD_TRIGGER(HW_TOD_WR_TRIG_SEL_MSB_TOD_CNFG,
+			      HW_TOD_RD_TRIG_SEL_LSB_TOD_STS);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < MAX_MEASURMENT_COUNT; i++) {
 
@@ -668,6 +761,7 @@ static int idt82p33_measure_one_byte_write_overhead(
 	return err;
 }
 
+<<<<<<< HEAD
 static int idt82p33_measure_one_byte_read_overhead(
 		struct idt82p33_channel *channel, s64 *overhead_ns)
 {
@@ -703,6 +797,10 @@ static int idt82p33_measure_one_byte_read_overhead(
 
 static int idt82p33_measure_tod_write_9_byte_overhead(
 		struct idt82p33_channel *channel)
+=======
+static int idt82p33_measure_tod_write_9_byte_overhead(
+			struct idt82p33_channel *channel)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct idt82p33 *idt82p33 = channel->idt82p33;
 	u8 buf[TOD_BYTE_COUNT];
@@ -762,7 +860,11 @@ static int idt82p33_measure_settime_gettime_gap_overhead(
 
 static int idt82p33_measure_tod_write_overhead(struct idt82p33_channel *channel)
 {
+<<<<<<< HEAD
 	s64 trailing_overhead_ns, one_byte_write_ns, gap_ns, one_byte_read_ns;
+=======
+	s64 trailing_overhead_ns, one_byte_write_ns, gap_ns;
+>>>>>>> b7ba80a49124 (Commit)
 	struct idt82p33 *idt82p33 = channel->idt82p33;
 	int err;
 
@@ -782,19 +884,26 @@ static int idt82p33_measure_tod_write_overhead(struct idt82p33_channel *channel)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	err = idt82p33_measure_one_byte_read_overhead(channel,
 						      &one_byte_read_ns);
 
 	if (err)
 		return err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = idt82p33_measure_tod_write_9_byte_overhead(channel);
 
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	trailing_overhead_ns = gap_ns - 2 * one_byte_write_ns
 			       - one_byte_read_ns;
+=======
+	trailing_overhead_ns = gap_ns - (2 * one_byte_write_ns);
+>>>>>>> b7ba80a49124 (Commit)
 
 	idt82p33->tod_write_overhead_ns -= trailing_overhead_ns;
 
@@ -863,6 +972,7 @@ static int idt82p33_sync_tod(struct idt82p33_channel *channel, bool enable)
 			      &sync_cnfg, sizeof(sync_cnfg));
 }
 
+<<<<<<< HEAD
 static long idt82p33_work_handler(struct ptp_clock_info *ptp)
 {
 	struct idt82p33_channel *channel =
@@ -877,6 +987,8 @@ static long idt82p33_work_handler(struct ptp_clock_info *ptp)
 	return -1;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int idt82p33_output_enable(struct idt82p33_channel *channel,
 				  bool enable, unsigned int outn)
 {
@@ -895,10 +1007,46 @@ static int idt82p33_output_enable(struct idt82p33_channel *channel,
 	return idt82p33_write(idt82p33, OUT_MUX_CNFG(outn), &val, sizeof(val));
 }
 
+<<<<<<< HEAD
+=======
+static int idt82p33_output_mask_enable(struct idt82p33_channel *channel,
+				       bool enable)
+{
+	u16 mask;
+	int err;
+	u8 outn;
+
+	mask = channel->output_mask;
+	outn = 0;
+
+	while (mask) {
+		if (mask & 0x1) {
+			err = idt82p33_output_enable(channel, enable, outn);
+			if (err)
+				return err;
+		}
+
+		mask >>= 0x1;
+		outn++;
+	}
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int idt82p33_perout_enable(struct idt82p33_channel *channel,
 				  bool enable,
 				  struct ptp_perout_request *perout)
 {
+<<<<<<< HEAD
+=======
+	unsigned int flags = perout->flags;
+
+	/* Enable/disable output based on output_mask */
+	if (flags == PEROUT_ENABLE_OUTPUT_MASK)
+		return idt82p33_output_mask_enable(channel, enable);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Enable/disable individual output instead */
 	return idt82p33_output_enable(channel, enable, perout->index);
 }
@@ -931,15 +1079,24 @@ static void idt82p33_ptp_clock_unregister_all(struct idt82p33 *idt82p33)
 	u8 i;
 
 	for (i = 0; i < MAX_PHC_PLL; i++) {
+<<<<<<< HEAD
 		channel = &idt82p33->channel[i];
 		cancel_delayed_work_sync(&channel->adjtime_work);
+=======
+
+		channel = &idt82p33->channel[i];
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (channel->ptp_clock)
 			ptp_clock_unregister(channel->ptp_clock);
 	}
 }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int idt82p33_enable(struct ptp_clock_info *ptp,
 			   struct ptp_clock_request *rq, int on)
 {
@@ -950,8 +1107,12 @@ static int idt82p33_enable(struct ptp_clock_info *ptp,
 
 	mutex_lock(idt82p33->lock);
 
+<<<<<<< HEAD
 	switch (rq->type) {
 	case PTP_CLK_REQ_PEROUT:
+=======
+	if (rq->type == PTP_CLK_REQ_PEROUT) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!on)
 			err = idt82p33_perout_enable(channel, false,
 						     &rq->perout);
@@ -962,12 +1123,15 @@ static int idt82p33_enable(struct ptp_clock_info *ptp,
 		else
 			err = idt82p33_perout_enable(channel, true,
 						     &rq->perout);
+<<<<<<< HEAD
 		break;
 	case PTP_CLK_REQ_EXTTS:
 		err = idt82p33_extts_enable(channel, rq, on);
 		break;
 	default:
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	mutex_unlock(idt82p33->lock);
@@ -1027,6 +1191,7 @@ static int idt82p33_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
 	struct idt82p33 *idt82p33 = channel->idt82p33;
 	int err;
 
+<<<<<<< HEAD
 	if (channel->ddco == true)
 		return 0;
 
@@ -1043,6 +1208,15 @@ static int idt82p33_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
 	if (err)
 		dev_err(idt82p33->dev,
 			"Failed in %s with err %d!\n", __func__, err);
+=======
+	mutex_lock(idt82p33->lock);
+	err = _idt82p33_adjfine(channel, scaled_ppm);
+	mutex_unlock(idt82p33->lock);
+	if (err)
+		dev_err(idt82p33->dev,
+			"Failed in %s with err %d!\n", __func__, err);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -1053,6 +1227,7 @@ static int idt82p33_adjtime(struct ptp_clock_info *ptp, s64 delta_ns)
 	struct idt82p33 *idt82p33 = channel->idt82p33;
 	int err;
 
+<<<<<<< HEAD
 	if (channel->ddco == true)
 		return -EBUSY;
 
@@ -1068,6 +1243,16 @@ static int idt82p33_adjtime(struct ptp_clock_info *ptp, s64 delta_ns)
 	err = _idt82p33_adjtime_internal_triggered(channel, delta_ns);
 	if (err && delta_ns > IMMEDIATE_SNAP_THRESHOLD_NS)
 		err = _idt82p33_adjtime_immediate(channel, delta_ns);
+=======
+	mutex_lock(idt82p33->lock);
+
+	if (abs(delta_ns) < phase_snap_threshold) {
+		mutex_unlock(idt82p33->lock);
+		return 0;
+	}
+
+	err = _idt82p33_adjtime(channel, delta_ns);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(idt82p33->lock);
 
@@ -1112,10 +1297,15 @@ static int idt82p33_settime(struct ptp_clock_info *ptp,
 	return err;
 }
 
+<<<<<<< HEAD
 static int idt82p33_channel_init(struct idt82p33 *idt82p33, u32 index)
 {
 	struct idt82p33_channel *channel = &idt82p33->channel[index];
 
+=======
+static int idt82p33_channel_init(struct idt82p33_channel *channel, int index)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	switch (index) {
 	case 0:
 		channel->dpll_tod_cnfg = DPLL1_TOD_CNFG;
@@ -1141,14 +1331,19 @@ static int idt82p33_channel_init(struct idt82p33 *idt82p33, u32 index)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	channel->plln = index;
 	channel->current_freq = 0;
 	channel->idt82p33 = idt82p33;
 	INIT_DELAYED_WORK(&channel->adjtime_work, idt82p33_adjtime_workaround);
+=======
+	channel->current_freq_ppb = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int idt82p33_verify_pin(struct ptp_clock_info *ptp, unsigned int pin,
 			       enum ptp_pin_function func, unsigned int chan)
 {
@@ -1175,11 +1370,20 @@ static void idt82p33_caps_init(u32 index, struct ptp_clock_info *caps,
 	caps->n_ext_ts = MAX_PHC_PLL,
 	caps->n_pins = max_pins,
 	caps->adjphase = idt82p33_adjwritephase,
+=======
+static void idt82p33_caps_init(struct ptp_clock_info *caps)
+{
+	caps->owner = THIS_MODULE;
+	caps->max_adj = DCO_MAX_PPB;
+	caps->n_per_out = 11;
+	caps->adjphase = idt82p33_adjwritephase;
+>>>>>>> b7ba80a49124 (Commit)
 	caps->adjfine = idt82p33_adjfine;
 	caps->adjtime = idt82p33_adjtime;
 	caps->gettime64 = idt82p33_gettime;
 	caps->settime64 = idt82p33_settime;
 	caps->enable = idt82p33_enable;
+<<<<<<< HEAD
 	caps->verify = idt82p33_verify_pin;
 	caps->do_aux_work = idt82p33_work_handler;
 
@@ -1195,6 +1399,8 @@ static void idt82p33_caps_init(u32 index, struct ptp_clock_info *caps,
 		ppd->chan = index;
 		snprintf(ppd->name, sizeof(ppd->name), "in%d", 12 + i);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int idt82p33_enable_channel(struct idt82p33 *idt82p33, u32 index)
@@ -1207,7 +1413,11 @@ static int idt82p33_enable_channel(struct idt82p33 *idt82p33, u32 index)
 
 	channel = &idt82p33->channel[index];
 
+<<<<<<< HEAD
 	err = idt82p33_channel_init(idt82p33, index);
+=======
+	err = idt82p33_channel_init(channel, index);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		dev_err(idt82p33->dev,
 			"Channel_init failed in %s with err %d!\n",
@@ -1215,8 +1425,16 @@ static int idt82p33_enable_channel(struct idt82p33 *idt82p33, u32 index)
 		return err;
 	}
 
+<<<<<<< HEAD
 	idt82p33_caps_init(index, &channel->caps,
 			   pin_config[index], MAX_TRIG_CLK);
+=======
+	channel->idt82p33 = idt82p33;
+
+	idt82p33_caps_init(&channel->caps);
+	snprintf(channel->caps.name, sizeof(channel->caps.name),
+		 "IDT 82P33 PLL%u", index);
+>>>>>>> b7ba80a49124 (Commit)
 
 	channel->ptp_clock = ptp_clock_register(&channel->caps, NULL);
 
@@ -1251,6 +1469,7 @@ static int idt82p33_enable_channel(struct idt82p33 *idt82p33, u32 index)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int idt82p33_reset(struct idt82p33 *idt82p33, bool cold)
 {
 	int err;
@@ -1279,18 +1498,28 @@ cold_reset:
 static int idt82p33_load_firmware(struct idt82p33 *idt82p33)
 {
 	char fname[128] = FW_FILENAME;
+=======
+static int idt82p33_load_firmware(struct idt82p33 *idt82p33)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	const struct firmware *fw;
 	struct idt82p33_fwrc *rec;
 	u8 loaddr, page, val;
 	int err;
 	s32 len;
 
+<<<<<<< HEAD
 	if (firmware) /* module parameter */
 		snprintf(fname, sizeof(fname), "%s", firmware);
 
 	dev_info(idt82p33->dev, "requesting firmware '%s'\n", fname);
 
 	err = request_firmware(&fw, fname, idt82p33->dev);
+=======
+	dev_dbg(idt82p33->dev, "requesting firmware '%s'\n", FW_FILENAME);
+
+	err = request_firmware(&fw, FW_FILENAME, idt82p33->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (err) {
 		dev_err(idt82p33->dev,
@@ -1338,6 +1567,7 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static void idt82p33_extts_check(struct work_struct *work)
 {
 	struct idt82p33 *idt82p33 = container_of(work, struct idt82p33,
@@ -1378,6 +1608,8 @@ static void idt82p33_extts_check(struct work_struct *work)
 
 	mutex_unlock(idt82p33->lock);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int idt82p33_probe(struct platform_device *pdev)
 {
@@ -1400,6 +1632,7 @@ static int idt82p33_probe(struct platform_device *pdev)
 	idt82p33->pll_mask = DEFAULT_PLL_MASK;
 	idt82p33->channel[0].output_mask = DEFAULT_OUTPUT_MASK_PLL0;
 	idt82p33->channel[1].output_mask = DEFAULT_OUTPUT_MASK_PLL1;
+<<<<<<< HEAD
 	idt82p33->extts_mask = 0;
 	INIT_DELAYED_WORK(&idt82p33->extts_work, idt82p33_extts_check);
 
@@ -1409,10 +1642,18 @@ static int idt82p33_probe(struct platform_device *pdev)
 	idt82p33_reset(idt82p33, true);
 
 	err = idt82p33_load_firmware(idt82p33);
+=======
+
+	mutex_lock(idt82p33->lock);
+
+	err = idt82p33_load_firmware(idt82p33);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		dev_warn(idt82p33->dev,
 			 "loading firmware failed with %d\n", err);
 
+<<<<<<< HEAD
 	/* soft reset after loading firmware */
 	idt82p33_reset(idt82p33, false);
 
@@ -1427,6 +1668,18 @@ static int idt82p33_probe(struct platform_device *pdev)
 					"Failed in %s with err %d!\n",
 					__func__, err);
 				break;
+=======
+	if (idt82p33->pll_mask) {
+		for (i = 0; i < MAX_PHC_PLL; i++) {
+			if (idt82p33->pll_mask & (1 << i)) {
+				err = idt82p33_enable_channel(idt82p33, i);
+				if (err) {
+					dev_err(idt82p33->dev,
+						"Failed in %s with err %d!\n",
+						__func__, err);
+					break;
+				}
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 	} else {
@@ -1451,8 +1704,11 @@ static int idt82p33_remove(struct platform_device *pdev)
 {
 	struct idt82p33 *idt82p33 = platform_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	cancel_delayed_work_sync(&idt82p33->extts_work);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	idt82p33_ptp_clock_unregister_all(idt82p33);
 
 	return 0;

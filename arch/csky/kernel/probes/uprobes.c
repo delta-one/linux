@@ -3,7 +3,10 @@
  * Copyright (C) 2014-2016 Pratyush Anand <panand@redhat.com>
  */
 #include <linux/highmem.h>
+<<<<<<< HEAD
 #include <linux/non-atomic/xchg.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/ptrace.h>
 #include <linux/uprobes.h>
 #include <asm/cacheflush.h>
@@ -124,7 +127,17 @@ unsigned long
 arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
 				  struct pt_regs *regs)
 {
+<<<<<<< HEAD
 	return __xchg(&regs->lr, trampoline_vaddr);
+=======
+	unsigned long ra;
+
+	ra = regs->lr;
+
+	regs->lr = trampoline_vaddr;
+
+	return ra;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int arch_uprobe_exception_notify(struct notifier_block *self,

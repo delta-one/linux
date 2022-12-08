@@ -18,7 +18,10 @@ extern void my_tramp(void *);
 #ifdef CONFIG_X86_64
 
 #include <asm/ibt.h>
+<<<<<<< HEAD
 #include <asm/nospec-branch.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 asm (
 "	.pushsection    .text, \"ax\", @progbits\n"
@@ -28,7 +31,10 @@ asm (
 	ASM_ENDBR
 "	pushq %rbp\n"
 "	movq %rsp, %rbp\n"
+<<<<<<< HEAD
 	CALL_DEPTH_ACCOUNT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 "	pushq %rdi\n"
 "	movq 8(%rbp), %rdi\n"
 "	call my_direct_func\n"
@@ -73,12 +79,20 @@ static int __init ftrace_direct_multi_init(void)
 	ftrace_set_filter_ip(&direct, (unsigned long) wake_up_process, 0, 0);
 	ftrace_set_filter_ip(&direct, (unsigned long) schedule, 0, 0);
 
+<<<<<<< HEAD
 	return register_ftrace_direct(&direct, (unsigned long) my_tramp);
+=======
+	return register_ftrace_direct_multi(&direct, (unsigned long) my_tramp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __exit ftrace_direct_multi_exit(void)
 {
+<<<<<<< HEAD
 	unregister_ftrace_direct(&direct, (unsigned long) my_tramp, true);
+=======
+	unregister_ftrace_direct_multi(&direct, (unsigned long) my_tramp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 module_init(ftrace_direct_multi_init);

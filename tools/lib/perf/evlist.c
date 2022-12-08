@@ -40,11 +40,19 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
 	 * We already have cpus for evsel (via PMU sysfs) so
 	 * keep it, if there's no target cpu list defined.
 	 */
+<<<<<<< HEAD
 	if (evsel->system_wide) {
 		perf_cpu_map__put(evsel->cpus);
 		evsel->cpus = perf_cpu_map__new(NULL);
 	} else if (!evsel->own_cpus || evlist->has_user_cpus ||
 		   (!evsel->requires_cpu && perf_cpu_map__empty(evlist->user_requested_cpus))) {
+=======
+	if (!evsel->own_cpus ||
+	    (!evsel->system_wide && evlist->has_user_cpus) ||
+	    (!evsel->system_wide &&
+	     !evsel->requires_cpu &&
+	     perf_cpu_map__empty(evlist->user_requested_cpus))) {
+>>>>>>> b7ba80a49124 (Commit)
 		perf_cpu_map__put(evsel->cpus);
 		evsel->cpus = perf_cpu_map__get(evlist->user_requested_cpus);
 	} else if (evsel->cpus != evsel->own_cpus) {
@@ -52,10 +60,14 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
 		evsel->cpus = perf_cpu_map__get(evsel->own_cpus);
 	}
 
+<<<<<<< HEAD
 	if (evsel->system_wide) {
 		perf_thread_map__put(evsel->threads);
 		evsel->threads = perf_thread_map__new_dummy();
 	} else {
+=======
+	if (!evsel->system_wide) {
+>>>>>>> b7ba80a49124 (Commit)
 		perf_thread_map__put(evsel->threads);
 		evsel->threads = perf_thread_map__get(evlist->threads);
 	}
@@ -67,7 +79,13 @@ static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
 {
 	struct perf_evsel *evsel;
 
+<<<<<<< HEAD
 	evlist->needs_map_propagation = true;
+=======
+	/* Recomputing all_cpus, so start with a blank slate. */
+	perf_cpu_map__put(evlist->all_cpus);
+	evlist->all_cpus = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	perf_evlist__for_each_evsel(evlist, evsel)
 		__perf_evlist__propagate_maps(evlist, evsel);
@@ -79,9 +97,13 @@ void perf_evlist__add(struct perf_evlist *evlist,
 	evsel->idx = evlist->nr_entries;
 	list_add_tail(&evsel->node, &evlist->entries);
 	evlist->nr_entries += 1;
+<<<<<<< HEAD
 
 	if (evlist->needs_map_propagation)
 		__perf_evlist__propagate_maps(evlist, evsel);
+=======
+	__perf_evlist__propagate_maps(evlist, evsel);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void perf_evlist__remove(struct perf_evlist *evlist,
@@ -177,6 +199,12 @@ void perf_evlist__set_maps(struct perf_evlist *evlist,
 		evlist->threads = perf_thread_map__get(threads);
 	}
 
+<<<<<<< HEAD
+=======
+	if (!evlist->all_cpus && cpus)
+		evlist->all_cpus = perf_cpu_map__get(cpus);
+
+>>>>>>> b7ba80a49124 (Commit)
 	perf_evlist__propagate_maps(evlist);
 }
 
@@ -487,7 +515,10 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
 			if (ops->idx)
 				ops->idx(evlist, evsel, mp, idx);
 
+<<<<<<< HEAD
 			/* Debug message used by test scripts */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			pr_debug("idx %d: mmapping fd %d\n", idx, *output);
 			if (ops->mmap(map, mp, *output, evlist_cpu) < 0)
 				return -1;
@@ -497,7 +528,10 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
 			if (!idx)
 				perf_evlist__set_mmap_first(evlist, map, overwrite);
 		} else {
+<<<<<<< HEAD
 			/* Debug message used by test scripts */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			pr_debug("idx %d: set output fd %d -> %d\n", idx, fd, *output);
 			if (ioctl(fd, PERF_EVENT_IOC_SET_OUTPUT, *output) != 0)
 				return -1;
@@ -687,6 +721,7 @@ perf_evlist__next_mmap(struct perf_evlist *evlist, struct perf_mmap *map,
 
 void __perf_evlist__set_leader(struct list_head *list, struct perf_evsel *leader)
 {
+<<<<<<< HEAD
 	struct perf_evsel *evsel;
 	int n = 0;
 
@@ -695,6 +730,17 @@ void __perf_evlist__set_leader(struct list_head *list, struct perf_evsel *leader
 		n++;
 	}
 	leader->nr_members = n;
+=======
+	struct perf_evsel *first, *last, *evsel;
+
+	first = list_first_entry(list, struct perf_evsel, node);
+	last = list_last_entry(list, struct perf_evsel, node);
+
+	leader->nr_members = last->idx - first->idx + 1;
+
+	__perf_evlist__for_each_entry(list, evsel)
+		evsel->leader = leader;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void perf_evlist__set_leader(struct perf_evlist *evlist)
@@ -703,6 +749,7 @@ void perf_evlist__set_leader(struct perf_evlist *evlist)
 		struct perf_evsel *first = list_entry(evlist->entries.next,
 						struct perf_evsel, node);
 
+<<<<<<< HEAD
 		__perf_evlist__set_leader(&evlist->entries, first);
 	}
 }
@@ -723,3 +770,9 @@ int perf_evlist__nr_groups(struct perf_evlist *evlist)
 	}
 	return nr_groups;
 }
+=======
+		evlist->nr_groups = evlist->nr_entries > 1 ? 1 : 0;
+		__perf_evlist__set_leader(&evlist->entries, first);
+	}
+}
+>>>>>>> b7ba80a49124 (Commit)

@@ -52,6 +52,11 @@ struct cxd2820r_priv {
 
 /* cxd2820r_core.c */
 
+<<<<<<< HEAD
+=======
+extern int cxd2820r_debug;
+
+>>>>>>> b7ba80a49124 (Commit)
 int cxd2820r_gpio(struct dvb_frontend *fe, u8 *gpio);
 
 int cxd2820r_wr_reg_val_mask_tab(struct cxd2820r_priv *priv,

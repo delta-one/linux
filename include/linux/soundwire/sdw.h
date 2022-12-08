@@ -4,7 +4,10 @@
 #ifndef __SOUNDWIRE_H
 #define __SOUNDWIRE_H
 
+<<<<<<< HEAD
 #include <linux/bug.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mod_devicetable.h>
 #include <linux/bitfield.h>
 
@@ -366,9 +369,13 @@ struct sdw_dpn_prop {
  * @sink_dpn_prop: Sink Data Port N properties
  * @scp_int1_mask: SCP_INT1_MASK desired settings
  * @quirks: bitmask identifying deltas from the MIPI specification
+<<<<<<< HEAD
  * @clock_reg_supported: the Peripheral implements the clock base and scale
  * registers introduced with the SoundWire 1.2 specification. SDCA devices
  * do not need to set this boolean property as the registers are required.
+=======
+ * @is_sdca: the Slave supports the SDCA specification
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct sdw_slave_prop {
 	u32 mipi_revision;
@@ -392,7 +399,11 @@ struct sdw_slave_prop {
 	struct sdw_dpn_prop *sink_dpn_prop;
 	u8 scp_int1_mask;
 	u32 quirks;
+<<<<<<< HEAD
 	bool clock_reg_supported;
+=======
+	bool is_sdca;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define SDW_SLAVE_QUIRKS_INVALID_INITIAL_PARITY	BIT(0)
@@ -569,6 +580,7 @@ struct sdw_prepare_ch {
  * enum sdw_port_prep_ops: Prepare operations for Data Port
  *
  * @SDW_OPS_PORT_PRE_PREP: Pre prepare operation for the Port
+<<<<<<< HEAD
  * @SDW_OPS_PORT_PRE_DEPREP: Pre deprepare operation for the Port
  * @SDW_OPS_PORT_POST_PREP: Post prepare operation for the Port
  * @SDW_OPS_PORT_POST_DEPREP: Post deprepare operation for the Port
@@ -578,6 +590,15 @@ enum sdw_port_prep_ops {
 	SDW_OPS_PORT_PRE_DEPREP,
 	SDW_OPS_PORT_POST_PREP,
 	SDW_OPS_PORT_POST_DEPREP,
+=======
+ * @SDW_OPS_PORT_PREP: Prepare operation for the Port
+ * @SDW_OPS_PORT_POST_PREP: Post prepare operation for the Port
+ */
+enum sdw_port_prep_ops {
+	SDW_OPS_PORT_PRE_PREP = 0,
+	SDW_OPS_PORT_PREP = 1,
+	SDW_OPS_PORT_POST_PREP = 2,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -839,8 +860,13 @@ struct sdw_defer {
  * @read_prop: Read Master properties
  * @override_adr: Override value read from firmware (quirk for buggy firmware)
  * @xfer_msg: Transfer message callback
+<<<<<<< HEAD
  * @xfer_msg_defer: Defer version of transfer message callback. The message is handled with the
  * bus struct @sdw_defer
+=======
+ * @xfer_msg_defer: Defer version of transfer message callback
+ * @reset_page_addr: Reset the SCP page address registers
+>>>>>>> b7ba80a49124 (Commit)
  * @set_bus_conf: Set the bus configuration
  * @pre_bank_switch: Callback for pre bank switch
  * @post_bank_switch: Callback for post bank switch
@@ -854,7 +880,14 @@ struct sdw_master_ops {
 	enum sdw_command_response (*xfer_msg)
 			(struct sdw_bus *bus, struct sdw_msg *msg);
 	enum sdw_command_response (*xfer_msg_defer)
+<<<<<<< HEAD
 			(struct sdw_bus *bus);
+=======
+			(struct sdw_bus *bus, struct sdw_msg *msg,
+			struct sdw_defer *defer);
+	enum sdw_command_response (*reset_page_addr)
+			(struct sdw_bus *bus, unsigned int dev_num);
+>>>>>>> b7ba80a49124 (Commit)
 	int (*set_bus_conf)(struct sdw_bus *bus,
 			struct sdw_bus_params *params);
 	int (*pre_bank_switch)(struct sdw_bus *bus);
@@ -1023,8 +1056,20 @@ int sdw_stream_add_master(struct sdw_bus *bus,
 		struct sdw_port_config *port_config,
 		unsigned int num_ports,
 		struct sdw_stream_runtime *stream);
+<<<<<<< HEAD
 int sdw_stream_remove_master(struct sdw_bus *bus,
 		struct sdw_stream_runtime *stream);
+=======
+int sdw_stream_add_slave(struct sdw_slave *slave,
+		struct sdw_stream_config *stream_config,
+		struct sdw_port_config *port_config,
+		unsigned int num_ports,
+		struct sdw_stream_runtime *stream);
+int sdw_stream_remove_master(struct sdw_bus *bus,
+		struct sdw_stream_runtime *stream);
+int sdw_stream_remove_slave(struct sdw_slave *slave,
+		struct sdw_stream_runtime *stream);
+>>>>>>> b7ba80a49124 (Commit)
 int sdw_startup_stream(void *sdw_substream);
 int sdw_prepare_stream(struct sdw_stream_runtime *stream);
 int sdw_enable_stream(struct sdw_stream_runtime *stream);
@@ -1035,6 +1080,7 @@ int sdw_bus_prep_clk_stop(struct sdw_bus *bus);
 int sdw_bus_clk_stop(struct sdw_bus *bus);
 int sdw_bus_exit_clk_stop(struct sdw_bus *bus);
 
+<<<<<<< HEAD
 int sdw_compare_devid(struct sdw_slave *slave, struct sdw_slave_id id);
 void sdw_extract_slave_id(struct sdw_bus *bus, u64 addr, struct sdw_slave_id *id);
 
@@ -1049,11 +1095,16 @@ int sdw_stream_remove_slave(struct sdw_slave *slave,
 			    struct sdw_stream_runtime *stream);
 
 /* messaging and data APIs */
+=======
+/* messaging and data APIs */
+
+>>>>>>> b7ba80a49124 (Commit)
 int sdw_read(struct sdw_slave *slave, u32 addr);
 int sdw_write(struct sdw_slave *slave, u32 addr, u8 value);
 int sdw_write_no_pm(struct sdw_slave *slave, u32 addr, u8 value);
 int sdw_read_no_pm(struct sdw_slave *slave, u32 addr);
 int sdw_nread(struct sdw_slave *slave, u32 addr, size_t count, u8 *val);
+<<<<<<< HEAD
 int sdw_nread_no_pm(struct sdw_slave *slave, u32 addr, size_t count, u8 *val);
 int sdw_nwrite(struct sdw_slave *slave, u32 addr, size_t count, const u8 *val);
 int sdw_nwrite_no_pm(struct sdw_slave *slave, u32 addr, size_t count, const u8 *val);
@@ -1141,5 +1192,13 @@ static inline int sdw_update_no_pm(struct sdw_slave *slave, u32 addr, u8 mask, u
 }
 
 #endif /* CONFIG_SOUNDWIRE */
+=======
+int sdw_nwrite(struct sdw_slave *slave, u32 addr, size_t count, const u8 *val);
+int sdw_update(struct sdw_slave *slave, u32 addr, u8 mask, u8 val);
+int sdw_update_no_pm(struct sdw_slave *slave, u32 addr, u8 mask, u8 val);
+
+int sdw_compare_devid(struct sdw_slave *slave, struct sdw_slave_id id);
+void sdw_extract_slave_id(struct sdw_bus *bus, u64 addr, struct sdw_slave_id *id);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __SOUNDWIRE_H */

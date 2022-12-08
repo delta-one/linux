@@ -246,6 +246,7 @@ static int cros_typec_register_switches(struct cros_typec_switch_data *sdata)
 		port->port_num = index;
 		sdata->ports[index] = port;
 
+<<<<<<< HEAD
 		if (fwnode_property_present(fwnode, "retimer-switch")) {
 			ret = cros_typec_register_retimer(port, fwnode);
 			if (ret) {
@@ -257,6 +258,17 @@ static int cros_typec_register_switches(struct cros_typec_switch_data *sdata)
 		}
 
 		if (!fwnode_property_present(fwnode, "mode-switch"))
+=======
+		ret = cros_typec_register_retimer(port, fwnode);
+		if (ret) {
+			dev_err(dev, "Retimer switch register failed\n");
+			goto err_switch;
+		}
+
+		dev_dbg(dev, "Retimer switch registered for index %llu\n", index);
+
+		if (!device_property_present(fwnode->dev, "mode-switch"))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		ret = cros_typec_register_mode_switch(port, fwnode);

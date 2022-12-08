@@ -290,6 +290,7 @@ void __i915_gem_object_pages_fini(struct drm_i915_gem_object *obj)
 	__i915_gem_object_free_mmaps(obj);
 
 	atomic_set(&obj->mm.pages_pin_count, 0);
+<<<<<<< HEAD
 
 	/*
 	 * dma_buf_unmap_attachment() requires reservation to be
@@ -305,6 +306,9 @@ void __i915_gem_object_pages_fini(struct drm_i915_gem_object *obj)
 	if (obj->base.import_attach)
 		i915_gem_object_unlock(obj);
 
+=======
+	__i915_gem_object_put_pages(obj);
+>>>>>>> b7ba80a49124 (Commit)
 	GEM_BUG_ON(i915_gem_object_has_pages(obj));
 }
 
@@ -427,11 +431,18 @@ void __i915_gem_object_invalidate_frontbuffer(struct drm_i915_gem_object *obj,
 static void
 i915_gem_object_read_from_page_kmap(struct drm_i915_gem_object *obj, u64 offset, void *dst, int size)
 {
+<<<<<<< HEAD
 	pgoff_t idx = offset >> PAGE_SHIFT;
 	void *src_map;
 	void *src_ptr;
 
 	src_map = kmap_atomic(i915_gem_object_get_page(obj, idx));
+=======
+	void *src_map;
+	void *src_ptr;
+
+	src_map = kmap_atomic(i915_gem_object_get_page(obj, offset >> PAGE_SHIFT));
+>>>>>>> b7ba80a49124 (Commit)
 
 	src_ptr = src_map + offset_in_page(offset);
 	if (!(obj->cache_coherent & I915_BO_CACHE_COHERENT_FOR_READ))
@@ -444,10 +455,16 @@ i915_gem_object_read_from_page_kmap(struct drm_i915_gem_object *obj, u64 offset,
 static void
 i915_gem_object_read_from_page_iomap(struct drm_i915_gem_object *obj, u64 offset, void *dst, int size)
 {
+<<<<<<< HEAD
 	pgoff_t idx = offset >> PAGE_SHIFT;
 	dma_addr_t dma = i915_gem_object_get_dma_address(obj, idx);
 	void __iomem *src_map;
 	void __iomem *src_ptr;
+=======
+	void __iomem *src_map;
+	void __iomem *src_ptr;
+	dma_addr_t dma = i915_gem_object_get_dma_address(obj, offset >> PAGE_SHIFT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	src_map = io_mapping_map_wc(&obj->mm.region->iomap,
 				    dma - obj->mm.region->region.start,
@@ -460,6 +477,7 @@ i915_gem_object_read_from_page_iomap(struct drm_i915_gem_object *obj, u64 offset
 	io_mapping_unmap(src_map);
 }
 
+<<<<<<< HEAD
 static bool object_has_mappable_iomem(struct drm_i915_gem_object *obj)
 {
 	GEM_BUG_ON(!i915_gem_object_has_iomem(obj));
@@ -470,6 +488,8 @@ static bool object_has_mappable_iomem(struct drm_i915_gem_object *obj)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * i915_gem_object_read_from_page - read data from the page of a GEM object
  * @obj: GEM object to read from
@@ -486,14 +506,21 @@ static bool object_has_mappable_iomem(struct drm_i915_gem_object *obj)
  */
 int i915_gem_object_read_from_page(struct drm_i915_gem_object *obj, u64 offset, void *dst, int size)
 {
+<<<<<<< HEAD
 	GEM_BUG_ON(overflows_type(offset >> PAGE_SHIFT, pgoff_t));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	GEM_BUG_ON(offset >= obj->base.size);
 	GEM_BUG_ON(offset_in_page(offset) > PAGE_SIZE - size);
 	GEM_BUG_ON(!i915_gem_object_has_pinned_pages(obj));
 
 	if (i915_gem_object_has_struct_page(obj))
 		i915_gem_object_read_from_page_kmap(obj, offset, dst, size);
+<<<<<<< HEAD
 	else if (i915_gem_object_has_iomem(obj) && object_has_mappable_iomem(obj))
+=======
+	else if (i915_gem_object_has_iomem(obj))
+>>>>>>> b7ba80a49124 (Commit)
 		i915_gem_object_read_from_page_iomap(obj, offset, dst, size);
 	else
 		return -ENODEV;
@@ -680,6 +707,7 @@ int i915_gem_object_migrate(struct drm_i915_gem_object *obj,
 			    struct i915_gem_ww_ctx *ww,
 			    enum intel_region_id id)
 {
+<<<<<<< HEAD
 	return __i915_gem_object_migrate(obj, ww, id, obj->flags);
 }
 
@@ -715,6 +743,8 @@ int __i915_gem_object_migrate(struct drm_i915_gem_object *obj,
 			      enum intel_region_id id,
 			      unsigned int flags)
 {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_i915_private *i915 = to_i915(obj->base.dev);
 	struct intel_memory_region *mr;
 
@@ -734,7 +764,11 @@ int __i915_gem_object_migrate(struct drm_i915_gem_object *obj,
 		return 0;
 	}
 
+<<<<<<< HEAD
 	return obj->ops->migrate(obj, mr, flags);
+=======
+	return obj->ops->migrate(obj, mr);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -788,9 +822,12 @@ bool i915_gem_object_needs_ccs_pages(struct drm_i915_gem_object *obj)
 	if (!HAS_FLAT_CCS(to_i915(obj->base.dev)))
 		return false;
 
+<<<<<<< HEAD
 	if (obj->flags & I915_BO_ALLOC_CCS_AUX)
 		return true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < obj->mm.n_placements; i++) {
 		/* Compression is not allowed for the objects with smem placement */
 		if (obj->mm.placements[i]->type == INTEL_MEMORY_SYSTEM)

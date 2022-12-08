@@ -13,8 +13,13 @@ obj-y     = fork.o exec_domain.o panic.o \
 	    async.o range.o smpboot.o ucount.o regset.o
 
 obj-$(CONFIG_USERMODE_DRIVER) += usermode_driver.o
+<<<<<<< HEAD
 obj-$(CONFIG_MULTIUSER) += groups.o
 obj-$(CONFIG_VHOST_TASK) += vhost_task.o
+=======
+obj-$(CONFIG_MODULES) += kmod.o
+obj-$(CONFIG_MULTIUSER) += groups.o
+>>>>>>> b7ba80a49124 (Commit)
 
 ifdef CONFIG_FUNCTION_TRACER
 # Do not trace internal ftrace files
@@ -41,6 +46,12 @@ UBSAN_SANITIZE_kcov.o := n
 KMSAN_SANITIZE_kcov.o := n
 CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack) -fno-stack-protector
 
+<<<<<<< HEAD
+=======
+# Don't instrument error handlers
+CFLAGS_REMOVE_cfi.o := $(CC_FLAGS_CFI)
+
+>>>>>>> b7ba80a49124 (Commit)
 obj-y += sched/
 obj-y += locking/
 obj-y += power/
@@ -66,7 +77,10 @@ endif
 obj-$(CONFIG_UID16) += uid16.o
 obj-$(CONFIG_MODULE_SIG_FORMAT) += module_signature.o
 obj-$(CONFIG_KALLSYMS) += kallsyms.o
+<<<<<<< HEAD
 obj-$(CONFIG_KALLSYMS_SELFTEST) += kallsyms_selftest.o
+=======
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_BSD_PROCESS_ACCT) += acct.o
 obj-$(CONFIG_CRASH_CORE) += crash_core.o
 obj-$(CONFIG_KEXEC_CORE) += kexec_core.o

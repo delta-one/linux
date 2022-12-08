@@ -7,6 +7,7 @@
 #ifndef _LINUX_CORESIGHT_PMU_H
 #define _LINUX_CORESIGHT_PMU_H
 
+<<<<<<< HEAD
 #include <linux/bits.h>
 
 #define CORESIGHT_ETM_PMU_NAME "cs_etm"
@@ -20,6 +21,10 @@
  * b) older tools that may not update at the same time as the kernel.
  */
 #define CORESIGHT_LEGACY_CPU_TRACE_ID(cpu)  (0x10 + (cpu * 2))
+=======
+#define CORESIGHT_ETM_PMU_NAME "cs_etm"
+#define CORESIGHT_ETM_PMU_SEED  0x10
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Below are the definition of bit offsets for perf option, and works as
@@ -45,6 +50,7 @@
 #define ETM4_CFG_BIT_RETSTK	12
 #define ETM4_CFG_BIT_VMID_OPT	15
 
+<<<<<<< HEAD
 /*
  * Interpretation of the PERF_RECORD_AUX_OUTPUT_HW_ID payload.
  * Used to associate a CPU with the CoreSight Trace ID.
@@ -56,5 +62,17 @@
 #define CS_AUX_HW_ID_VERSION_MASK	GENMASK_ULL(63, 60)
 
 #define CS_AUX_HW_ID_CURR_VERSION 0
+=======
+static inline int coresight_get_trace_id(int cpu)
+{
+	/*
+	 * A trace ID of value 0 is invalid, so let's start at some
+	 * random value that fits in 7 bits and go from there.  Since
+	 * the common convention is to have data trace IDs be I(N) + 1,
+	 * set instruction trace IDs as a function of the CPU number.
+	 */
+	return (CORESIGHT_ETM_PMU_SEED + (cpu * 2));
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

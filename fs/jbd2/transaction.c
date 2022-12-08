@@ -168,7 +168,11 @@ static void wait_transaction_locked(journal_t *journal)
 	int need_to_start;
 	tid_t tid = journal->j_running_transaction->t_tid;
 
+<<<<<<< HEAD
 	prepare_to_wait_exclusive(&journal->j_wait_transaction_locked, &wait,
+=======
+	prepare_to_wait(&journal->j_wait_transaction_locked, &wait,
+>>>>>>> b7ba80a49124 (Commit)
 			TASK_UNINTERRUPTIBLE);
 	need_to_start = !tid_geq(journal->j_commit_request, tid);
 	read_unlock(&journal->j_state_lock);
@@ -194,7 +198,11 @@ static void wait_transaction_switching(journal_t *journal)
 		read_unlock(&journal->j_state_lock);
 		return;
 	}
+<<<<<<< HEAD
 	prepare_to_wait_exclusive(&journal->j_wait_transaction_locked, &wait,
+=======
+	prepare_to_wait(&journal->j_wait_transaction_locked, &wait,
+>>>>>>> b7ba80a49124 (Commit)
 			TASK_UNINTERRUPTIBLE);
 	read_unlock(&journal->j_state_lock);
 	/*
@@ -920,7 +928,11 @@ void jbd2_journal_unlock_updates (journal_t *journal)
 	write_lock(&journal->j_state_lock);
 	--journal->j_barrier_count;
 	write_unlock(&journal->j_state_lock);
+<<<<<<< HEAD
 	wake_up_all(&journal->j_wait_transaction_locked);
+=======
+	wake_up(&journal->j_wait_transaction_locked);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void warn_dirty_buffer(struct buffer_head *bh)
@@ -1010,6 +1022,7 @@ repeat:
 	 * ie. locked but not dirty) or tune2fs (which may actually have
 	 * the buffer dirtied, ugh.)  */
 
+<<<<<<< HEAD
 	if (buffer_dirty(bh) && jh->b_transaction) {
 		warn_dirty_buffer(bh);
 		/*
@@ -1032,6 +1045,38 @@ repeat:
 	if (is_handle_aborted(handle)) {
 		spin_unlock(&jh->b_state_lock);
 		unlock_buffer(bh);
+=======
+	if (buffer_dirty(bh)) {
+		/*
+		 * First question: is this buffer already part of the current
+		 * transaction or the existing committing transaction?
+		 */
+		if (jh->b_transaction) {
+			J_ASSERT_JH(jh,
+				jh->b_transaction == transaction ||
+				jh->b_transaction ==
+					journal->j_committing_transaction);
+			if (jh->b_next_transaction)
+				J_ASSERT_JH(jh, jh->b_next_transaction ==
+							transaction);
+			warn_dirty_buffer(bh);
+		}
+		/*
+		 * In any case we need to clean the dirty flag and we must
+		 * do it under the buffer lock to be sure we don't race
+		 * with running write-out.
+		 */
+		JBUFFER_TRACE(jh, "Journalling dirty buffer");
+		clear_buffer_dirty(bh);
+		set_buffer_jbddirty(bh);
+	}
+
+	unlock_buffer(bh);
+
+	error = -EROFS;
+	if (is_handle_aborted(handle)) {
+		spin_unlock(&jh->b_state_lock);
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 	error = 0;
@@ -1041,10 +1086,15 @@ repeat:
 	 * b_next_transaction points to it
 	 */
 	if (jh->b_transaction == transaction ||
+<<<<<<< HEAD
 	    jh->b_next_transaction == transaction) {
 		unlock_buffer(bh);
 		goto done;
 	}
+=======
+	    jh->b_next_transaction == transaction)
+		goto done;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * this is the first time this transaction is touching this buffer,
@@ -1068,6 +1118,7 @@ repeat:
 		 */
 		smp_wmb();
 		spin_lock(&journal->j_list_lock);
+<<<<<<< HEAD
 		if (test_clear_buffer_dirty(bh)) {
 			/*
 			 * Execute buffer dirty clearing and jh->b_transaction
@@ -1086,6 +1137,12 @@ repeat:
 	}
 	unlock_buffer(bh);
 
+=======
+		__jbd2_journal_file_buffer(jh, transaction, BJ_Reserved);
+		spin_unlock(&journal->j_list_lock);
+		goto done;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * If there is already a copy-out version of this buffer, then we don't
 	 * need to make another one

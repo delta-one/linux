@@ -222,7 +222,11 @@ static void *test_vcpu_run(void *arg)
 
 	/* Currently, any exit from guest is an indication of completion */
 	pthread_mutex_lock(&vcpu_done_map_lock);
+<<<<<<< HEAD
 	__set_bit(vcpu_idx, vcpu_done_map);
+=======
+	set_bit(vcpu_idx, vcpu_done_map);
+>>>>>>> b7ba80a49124 (Commit)
 	pthread_mutex_unlock(&vcpu_done_map_lock);
 
 	switch (get_ucall(vcpu, &uc)) {
@@ -375,6 +379,10 @@ static struct kvm_vm *test_vm_create(void)
 	for (i = 0; i < nr_vcpus; i++)
 		vcpu_init_descriptor_tables(vcpus[i]);
 
+<<<<<<< HEAD
+=======
+	ucall_init(vm, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	test_init_timer_irq(vm);
 	gic_fd = vgic_v3_setup(vm, nr_vcpus, 64, GICD_BASE_GPA, GICR_BASE_GPA);
 	__TEST_REQUIRE(gic_fd >= 0, "Failed to create vgic-v3");
@@ -413,14 +421,23 @@ static bool parse_args(int argc, char *argv[])
 	while ((opt = getopt(argc, argv, "hn:i:p:m:")) != -1) {
 		switch (opt) {
 		case 'n':
+<<<<<<< HEAD
 			test_args.nr_vcpus = atoi_positive("Number of vCPUs", optarg);
 			if (test_args.nr_vcpus > KVM_MAX_VCPUS) {
+=======
+			test_args.nr_vcpus = atoi(optarg);
+			if (test_args.nr_vcpus <= 0) {
+				pr_info("Positive value needed for -n\n");
+				goto err;
+			} else if (test_args.nr_vcpus > KVM_MAX_VCPUS) {
+>>>>>>> b7ba80a49124 (Commit)
 				pr_info("Max allowed vCPUs: %u\n",
 					KVM_MAX_VCPUS);
 				goto err;
 			}
 			break;
 		case 'i':
+<<<<<<< HEAD
 			test_args.nr_iter = atoi_positive("Number of iterations", optarg);
 			break;
 		case 'p':
@@ -428,6 +445,27 @@ static bool parse_args(int argc, char *argv[])
 			break;
 		case 'm':
 			test_args.migration_freq_ms = atoi_non_negative("Frequency", optarg);
+=======
+			test_args.nr_iter = atoi(optarg);
+			if (test_args.nr_iter <= 0) {
+				pr_info("Positive value needed for -i\n");
+				goto err;
+			}
+			break;
+		case 'p':
+			test_args.timer_period_ms = atoi(optarg);
+			if (test_args.timer_period_ms <= 0) {
+				pr_info("Positive value needed for -p\n");
+				goto err;
+			}
+			break;
+		case 'm':
+			test_args.migration_freq_ms = atoi(optarg);
+			if (test_args.migration_freq_ms < 0) {
+				pr_info("0 or positive value needed for -m\n");
+				goto err;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 'h':
 		default:
@@ -446,6 +484,12 @@ int main(int argc, char *argv[])
 {
 	struct kvm_vm *vm;
 
+<<<<<<< HEAD
+=======
+	/* Tell stdout not to buffer its content */
+	setbuf(stdout, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!parse_args(argc, argv))
 		exit(KSFT_SKIP);
 

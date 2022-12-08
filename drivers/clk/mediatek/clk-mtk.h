@@ -22,6 +22,7 @@
 
 struct platform_device;
 
+<<<<<<< HEAD
 /*
  * We need the clock IDs to start from zero but to maintain devicetree
  * backwards compatibility we can't change bindings to start from zero.
@@ -41,6 +42,8 @@ extern const struct mtk_gate_regs cg_regs_dummy;
 		.ops = &mtk_clk_dummy_ops,			\
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mtk_fixed_clk {
 	int id;
 	const char *name;
@@ -66,21 +69,32 @@ struct mtk_fixed_factor {
 	const char *parent_name;
 	int mult;
 	int div;
+<<<<<<< HEAD
 	unsigned long flags;
 };
 
 #define FACTOR_FLAGS(_id, _name, _parent, _mult, _div, _fl) {	\
+=======
+};
+
+#define FACTOR(_id, _name, _parent, _mult, _div) {	\
+>>>>>>> b7ba80a49124 (Commit)
 		.id = _id,				\
 		.name = _name,				\
 		.parent_name = _parent,			\
 		.mult = _mult,				\
 		.div = _div,				\
+<<<<<<< HEAD
 		.flags = _fl,				\
 	}
 
 #define FACTOR(_id, _name, _parent, _mult, _div)	\
 	FACTOR_FLAGS(_id, _name, _parent, _mult, _div, CLK_SET_RATE_PARENT)
 
+=======
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 int mtk_clk_register_factors(const struct mtk_fixed_factor *clks, int num,
 			     struct clk_hw_onecell_data *clk_data);
 void mtk_clk_unregister_factors(const struct mtk_fixed_factor *clks, int num,
@@ -173,8 +187,12 @@ struct mtk_composite {
 		.flags = 0,						\
 	}
 
+<<<<<<< HEAD
 int mtk_clk_register_composites(struct device *dev,
 				const struct mtk_composite *mcs, int num,
+=======
+int mtk_clk_register_composites(const struct mtk_composite *mcs, int num,
+>>>>>>> b7ba80a49124 (Commit)
 				void __iomem *base, spinlock_t *lock,
 				struct clk_hw_onecell_data *clk_data);
 void mtk_clk_unregister_composites(const struct mtk_composite *mcs, int num,
@@ -202,25 +220,36 @@ struct mtk_clk_divider {
 		.div_width = _width,				\
 }
 
+<<<<<<< HEAD
 int mtk_clk_register_dividers(struct device *dev,
 			      const struct mtk_clk_divider *mcds, int num,
+=======
+int mtk_clk_register_dividers(const struct mtk_clk_divider *mcds, int num,
+>>>>>>> b7ba80a49124 (Commit)
 			      void __iomem *base, spinlock_t *lock,
 			      struct clk_hw_onecell_data *clk_data);
 void mtk_clk_unregister_dividers(const struct mtk_clk_divider *mcds, int num,
 				 struct clk_hw_onecell_data *clk_data);
 
 struct clk_hw_onecell_data *mtk_alloc_clk_data(unsigned int clk_num);
+<<<<<<< HEAD
 struct clk_hw_onecell_data *mtk_devm_alloc_clk_data(struct device *dev,
 						    unsigned int clk_num);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void mtk_free_clk_data(struct clk_hw_onecell_data *clk_data);
 
 struct clk_hw *mtk_clk_register_ref2usb_tx(const char *name,
 			const char *parent_name, void __iomem *reg);
+<<<<<<< HEAD
 void mtk_clk_unregister_ref2usb_tx(struct clk_hw *hw);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct mtk_clk_desc {
 	const struct mtk_gate *clks;
 	size_t num_clks;
+<<<<<<< HEAD
 	const struct mtk_composite *composite_clks;
 	size_t num_composite_clks;
 	const struct mtk_clk_divider *divider_clks;
@@ -241,6 +270,11 @@ struct mtk_clk_desc {
 
 int mtk_clk_pdev_probe(struct platform_device *pdev);
 int mtk_clk_pdev_remove(struct platform_device *pdev);
+=======
+	const struct mtk_clk_rst_desc *rst_desc;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 int mtk_clk_simple_probe(struct platform_device *pdev);
 int mtk_clk_simple_remove(struct platform_device *pdev);
 

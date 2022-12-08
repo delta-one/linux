@@ -404,28 +404,44 @@ static int max31730_detect(struct i2c_client *client,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int max31730_suspend(struct device *dev)
+=======
+static int __maybe_unused max31730_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct max31730_data *data = dev_get_drvdata(dev);
 
 	return max31730_write_config(data, MAX31730_STOP, 0);
 }
 
+<<<<<<< HEAD
 static int max31730_resume(struct device *dev)
+=======
+static int __maybe_unused max31730_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct max31730_data *data = dev_get_drvdata(dev);
 
 	return max31730_write_config(data, 0, MAX31730_STOP);
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(max31730_pm_ops, max31730_suspend, max31730_resume);
+=======
+static SIMPLE_DEV_PM_OPS(max31730_pm_ops, max31730_suspend, max31730_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct i2c_driver max31730_driver = {
 	.class		= I2C_CLASS_HWMON,
 	.driver = {
 		.name	= "max31730",
 		.of_match_table = of_match_ptr(max31730_of_match),
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&max31730_pm_ops),
+=======
+		.pm	= &max31730_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe_new	= max31730_probe,
 	.id_table	= max31730_ids,

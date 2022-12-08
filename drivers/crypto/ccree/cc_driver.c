@@ -350,9 +350,15 @@ static int init_cc_resources(struct platform_device *plat_dev)
 
 	/* Get device resources */
 	/* First CC registers space */
+<<<<<<< HEAD
 	/* Map registers space */
 	new_drvdata->cc_base = devm_platform_get_and_ioremap_resource(plat_dev,
 								      0, &req_mem_cc_regs);
+=======
+	req_mem_cc_regs = platform_get_resource(plat_dev, IORESOURCE_MEM, 0);
+	/* Map registers space */
+	new_drvdata->cc_base = devm_ioremap_resource(dev, req_mem_cc_regs);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(new_drvdata->cc_base))
 		return PTR_ERR(new_drvdata->cc_base);
 
@@ -651,6 +657,7 @@ static struct platform_driver ccree_driver = {
 
 static int __init ccree_init(void)
 {
+<<<<<<< HEAD
 	int rc;
 
 	cc_debugfs_global_init();
@@ -662,6 +669,11 @@ static int __init ccree_init(void)
 	}
 
 	return 0;
+=======
+	cc_debugfs_global_init();
+
+	return platform_driver_register(&ccree_driver);
+>>>>>>> b7ba80a49124 (Commit)
 }
 module_init(ccree_init);
 

@@ -77,6 +77,7 @@ struct aux_reply_transaction_data {
 	uint8_t *data;
 };
 
+<<<<<<< HEAD
 struct aux_payload {
 	/* set following flag to read/write I2C data,
 	 * reset it to read/write DPCD data */
@@ -103,6 +104,8 @@ struct aux_payload {
 };
 #define DEFAULT_AUX_MAX_DATA_SIZE 16
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct i2c_payload {
 	bool write;
 	uint8_t address;
@@ -116,8 +119,11 @@ enum i2c_command_engine {
 	I2C_COMMAND_ENGINE_HW
 };
 
+<<<<<<< HEAD
 #define DDC_I2C_COMMAND_ENGINE I2C_COMMAND_ENGINE_SW
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct i2c_command {
 	struct i2c_payload *payloads;
 	uint8_t number_of_payloads;
@@ -178,9 +184,12 @@ enum display_dongle_type {
 	DISPLAY_DONGLE_DP_HDMI_MISMATCHED_DONGLE,
 };
 
+<<<<<<< HEAD
 #define DC_MAX_EDID_BUFFER_SIZE 2048
 #define DC_EDID_BLOCK_SIZE 128
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ddc_service {
 	struct ddc *ddc_pin;
 	struct ddc_flags flags;

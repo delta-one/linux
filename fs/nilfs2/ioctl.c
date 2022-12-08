@@ -71,7 +71,11 @@ static int nilfs_ioctl_wrap_copy(struct the_nilfs *nilfs,
 	if (argv->v_index > ~(__u64)0 - argv->v_nmembs)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	buf = (void *)get_zeroed_page(GFP_NOFS);
+=======
+	buf = (void *)__get_free_pages(GFP_NOFS, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(!buf))
 		return -ENOMEM;
 	maxmembs = PAGE_SIZE / argv->v_size;
@@ -128,7 +132,11 @@ int nilfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
 /**
  * nilfs_fileattr_set - ioctl to support chattr
  */
+<<<<<<< HEAD
 int nilfs_fileattr_set(struct mnt_idmap *idmap,
+=======
+int nilfs_fileattr_set(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct dentry *dentry, struct fileattr *fa)
 {
 	struct inode *inode = d_inode(dentry);
@@ -1114,6 +1122,7 @@ static int nilfs_ioctl_set_alloc_range(struct inode *inode, void __user *argp)
 
 	minseg = range[0] + segbytes - 1;
 	do_div(minseg, segbytes);
+<<<<<<< HEAD
 
 	if (range[1] < 4096)
 		goto out;
@@ -1122,6 +1131,9 @@ static int nilfs_ioctl_set_alloc_range(struct inode *inode, void __user *argp)
 	if (maxseg < segbytes)
 		goto out;
 
+=======
+	maxseg = NILFS_SB2_OFFSET_BYTES(range[1]);
+>>>>>>> b7ba80a49124 (Commit)
 	do_div(maxseg, segbytes);
 	maxseg--;
 

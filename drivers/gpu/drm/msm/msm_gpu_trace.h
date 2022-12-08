@@ -116,26 +116,42 @@ TRACE_EVENT(msm_gmu_freq_change,
 
 
 TRACE_EVENT(msm_gem_shrink,
+<<<<<<< HEAD
 		TP_PROTO(u32 nr_to_scan, u32 purged, u32 evicted,
 			 u32 active_purged, u32 active_evicted),
 		TP_ARGS(nr_to_scan, purged, evicted, active_purged, active_evicted),
+=======
+		TP_PROTO(u32 nr_to_scan, u32 purged, u32 evicted),
+		TP_ARGS(nr_to_scan, purged, evicted),
+>>>>>>> b7ba80a49124 (Commit)
 		TP_STRUCT__entry(
 			__field(u32, nr_to_scan)
 			__field(u32, purged)
 			__field(u32, evicted)
+<<<<<<< HEAD
 			__field(u32, active_purged)
 			__field(u32, active_evicted)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			),
 		TP_fast_assign(
 			__entry->nr_to_scan = nr_to_scan;
 			__entry->purged = purged;
 			__entry->evicted = evicted;
+<<<<<<< HEAD
 			__entry->active_purged = active_purged;
 			__entry->active_evicted = active_evicted;
 			),
 		TP_printk("nr_to_scan=%u pg, purged=%u pg, evicted=%u pg, active_purged=%u pg, active_evicted=%u pg",
 			  __entry->nr_to_scan, __entry->purged, __entry->evicted,
 			  __entry->active_purged, __entry->active_evicted)
+=======
+			),
+		TP_printk("nr_to_scan=%u pages, purged=%u pages, evicted=%u pages",
+			  __entry->nr_to_scan,
+			  __entry->purged,
+			  __entry->evicted)
+>>>>>>> b7ba80a49124 (Commit)
 );
 
 

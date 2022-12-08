@@ -406,6 +406,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &uart1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
@@ -420,6 +421,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &usb_otg {
 	dr_mode = "host";
 };

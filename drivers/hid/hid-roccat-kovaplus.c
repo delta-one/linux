@@ -638,7 +638,11 @@ static int __init kovaplus_init(void)
 {
 	int retval;
 
+<<<<<<< HEAD
 	kovaplus_class = class_create("kovaplus");
+=======
+	kovaplus_class = class_create(THIS_MODULE, "kovaplus");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(kovaplus_class))
 		return PTR_ERR(kovaplus_class);
 	kovaplus_class->dev_groups = kovaplus_groups;

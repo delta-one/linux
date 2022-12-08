@@ -36,6 +36,13 @@ struct workqueue_struct *xfs_alloc_wq;
 #define	XFSA_FIXUP_BNO_OK	1
 #define	XFSA_FIXUP_CNT_OK	2
 
+<<<<<<< HEAD
+=======
+STATIC int xfs_alloc_ag_vextent_exact(xfs_alloc_arg_t *);
+STATIC int xfs_alloc_ag_vextent_near(xfs_alloc_arg_t *);
+STATIC int xfs_alloc_ag_vextent_size(xfs_alloc_arg_t *);
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Size of the AGFL.  For CRC-enabled filesystes we steal a couple of slots in
  * the beginning of the block for a proper header with the location information
@@ -259,7 +266,15 @@ xfs_alloc_get_rec(
 		goto out_bad_rec;
 
 	/* check for valid extent range, including overflow */
+<<<<<<< HEAD
 	if (!xfs_verify_agbext(pag, *bno, *len))
+=======
+	if (!xfs_verify_agbno(pag, *bno))
+		goto out_bad_rec;
+	if (*bno > *bno + *len)
+		goto out_bad_rec;
+	if (!xfs_verify_agbno(pag, *bno + *len - 1))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_bad_rec;
 
 	return 0;
@@ -768,6 +783,11 @@ xfs_alloc_cur_setup(
 	int			error;
 	int			i;
 
+<<<<<<< HEAD
+=======
+	ASSERT(args->alignment == 1 || args->type != XFS_ALLOCTYPE_THIS_BNO);
+
+>>>>>>> b7ba80a49124 (Commit)
 	acur->cur_len = args->maxlen;
 	acur->rec_bno = 0;
 	acur->rec_len = 0;
@@ -881,6 +901,10 @@ xfs_alloc_cur_check(
 	 * We have an aligned record that satisfies minlen and beats or matches
 	 * the candidate extent size. Compare locality for near allocation mode.
 	 */
+<<<<<<< HEAD
+=======
+	ASSERT(args->type == XFS_ALLOCTYPE_NEAR_BNO);
+>>>>>>> b7ba80a49124 (Commit)
 	diff = xfs_alloc_compute_diff(args->agbno, args->len,
 				      args->alignment, args->datatype,
 				      bnoa, lena, &bnew);
@@ -1126,6 +1150,81 @@ error:
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * Allocate a variable extent in the allocation group agno.
+ * Type and bno are used to determine where in the allocation group the
+ * extent will start.
+ * Extent's length (returned in *len) will be between minlen and maxlen,
+ * and of the form k * prod + mod unless there's nothing that large.
+ * Return the starting a.g. block, or NULLAGBLOCK if we can't do it.
+ */
+STATIC int			/* error */
+xfs_alloc_ag_vextent(
+	xfs_alloc_arg_t	*args)	/* argument structure for allocation */
+{
+	int		error=0;
+
+	ASSERT(args->minlen > 0);
+	ASSERT(args->maxlen > 0);
+	ASSERT(args->minlen <= args->maxlen);
+	ASSERT(args->mod < args->prod);
+	ASSERT(args->alignment > 0);
+
+	/*
+	 * Branch to correct routine based on the type.
+	 */
+	args->wasfromfl = 0;
+	switch (args->type) {
+	case XFS_ALLOCTYPE_THIS_AG:
+		error = xfs_alloc_ag_vextent_size(args);
+		break;
+	case XFS_ALLOCTYPE_NEAR_BNO:
+		error = xfs_alloc_ag_vextent_near(args);
+		break;
+	case XFS_ALLOCTYPE_THIS_BNO:
+		error = xfs_alloc_ag_vextent_exact(args);
+		break;
+	default:
+		ASSERT(0);
+		/* NOTREACHED */
+	}
+
+	if (error || args->agbno == NULLAGBLOCK)
+		return error;
+
+	ASSERT(args->len >= args->minlen);
+	ASSERT(args->len <= args->maxlen);
+	ASSERT(!args->wasfromfl || args->resv != XFS_AG_RESV_AGFL);
+	ASSERT(args->agbno % args->alignment == 0);
+
+	/* if not file data, insert new block into the reverse map btree */
+	if (!xfs_rmap_should_skip_owner_update(&args->oinfo)) {
+		error = xfs_rmap_alloc(args->tp, args->agbp, args->pag,
+				       args->agbno, args->len, &args->oinfo);
+		if (error)
+			return error;
+	}
+
+	if (!args->wasfromfl) {
+		error = xfs_alloc_update_counters(args->tp, args->agbp,
+						  -((long)(args->len)));
+		if (error)
+			return error;
+
+		ASSERT(!xfs_extent_busy_search(args->mp, args->pag,
+					      args->agbno, args->len));
+	}
+
+	xfs_ag_resv_alloc_extent(args->pag, args->resv, args);
+
+	XFS_STATS_INC(args->mp, xs_allocx);
+	XFS_STATS_ADD(args->mp, xs_allocb, args->len);
+	return error;
+}
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * Allocate a variable extent at exactly agno/bno.
  * Extent's length (returned in *len) will be between minlen and maxlen,
  * and of the form k * prod + mod unless there's nothing that large.
@@ -1310,6 +1409,10 @@ xfs_alloc_ag_vextent_locality(
 	bool			fbinc;
 
 	ASSERT(acur->len == 0);
+<<<<<<< HEAD
+=======
+	ASSERT(args->type == XFS_ALLOCTYPE_NEAR_BNO);
+>>>>>>> b7ba80a49124 (Commit)
 
 	*stat = 0;
 
@@ -1436,7 +1539,11 @@ xfs_alloc_ag_vextent_lastblock(
 
 #ifdef DEBUG
 	/* Randomly don't execute the first algorithm. */
+<<<<<<< HEAD
 	if (get_random_u32_below(2))
+=======
+	if (prandom_u32() & 1)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 #endif
 
@@ -2355,7 +2462,11 @@ xfs_agfl_reset(
 	struct xfs_mount	*mp = tp->t_mountp;
 	struct xfs_agf		*agf = agbp->b_addr;
 
+<<<<<<< HEAD
 	ASSERT(xfs_perag_agfl_needs_reset(pag));
+=======
+	ASSERT(pag->pagf_agflreset);
+>>>>>>> b7ba80a49124 (Commit)
 	trace_xfs_agfl_reset(mp, agf, 0, _RET_IP_);
 
 	xfs_warn(mp,
@@ -2370,7 +2481,11 @@ xfs_agfl_reset(
 				    XFS_AGF_FLCOUNT);
 
 	pag->pagf_flcount = 0;
+<<<<<<< HEAD
 	clear_bit(XFS_AGSTATE_AGFL_NEEDS_RESET, &pag->pag_opstate);
+=======
+	pag->pagf_agflreset = false;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -2392,11 +2507,16 @@ xfs_defer_agfl_block(
 	struct xfs_owner_info		*oinfo)
 {
 	struct xfs_mount		*mp = tp->t_mountp;
+<<<<<<< HEAD
 	struct xfs_extent_free_item	*xefi;
+=======
+	struct xfs_extent_free_item	*new;		/* new element */
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT(xfs_extfree_item_cache != NULL);
 	ASSERT(oinfo != NULL);
 
+<<<<<<< HEAD
 	xefi = kmem_cache_zalloc(xfs_extfree_item_cache,
 			       GFP_KERNEL | __GFP_NOFAIL);
 	xefi->xefi_startblock = XFS_AGB_TO_FSB(mp, agno, agbno);
@@ -2406,6 +2526,17 @@ xfs_defer_agfl_block(
 	trace_xfs_agfl_free_defer(mp, agno, 0, agbno, 1);
 
 	xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_AGFL_FREE, &xefi->xefi_list);
+=======
+	new = kmem_cache_zalloc(xfs_extfree_item_cache,
+			       GFP_KERNEL | __GFP_NOFAIL);
+	new->xefi_startblock = XFS_AGB_TO_FSB(mp, agno, agbno);
+	new->xefi_blockcount = 1;
+	new->xefi_owner = oinfo->oi_owner;
+
+	trace_xfs_agfl_free_defer(mp, agno, 0, agbno, 1);
+
+	xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_AGFL_FREE, &new->xefi_list);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -2420,7 +2551,11 @@ __xfs_free_extent_later(
 	const struct xfs_owner_info	*oinfo,
 	bool				skip_discard)
 {
+<<<<<<< HEAD
 	struct xfs_extent_free_item	*xefi;
+=======
+	struct xfs_extent_free_item	*new;		/* new element */
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef DEBUG
 	struct xfs_mount		*mp = tp->t_mountp;
 	xfs_agnumber_t			agno;
@@ -2439,27 +2574,49 @@ __xfs_free_extent_later(
 #endif
 	ASSERT(xfs_extfree_item_cache != NULL);
 
+<<<<<<< HEAD
 	xefi = kmem_cache_zalloc(xfs_extfree_item_cache,
 			       GFP_KERNEL | __GFP_NOFAIL);
 	xefi->xefi_startblock = bno;
 	xefi->xefi_blockcount = (xfs_extlen_t)len;
 	if (skip_discard)
 		xefi->xefi_flags |= XFS_EFI_SKIP_DISCARD;
+=======
+	new = kmem_cache_zalloc(xfs_extfree_item_cache,
+			       GFP_KERNEL | __GFP_NOFAIL);
+	new->xefi_startblock = bno;
+	new->xefi_blockcount = (xfs_extlen_t)len;
+	if (skip_discard)
+		new->xefi_flags |= XFS_EFI_SKIP_DISCARD;
+>>>>>>> b7ba80a49124 (Commit)
 	if (oinfo) {
 		ASSERT(oinfo->oi_offset == 0);
 
 		if (oinfo->oi_flags & XFS_OWNER_INFO_ATTR_FORK)
+<<<<<<< HEAD
 			xefi->xefi_flags |= XFS_EFI_ATTR_FORK;
 		if (oinfo->oi_flags & XFS_OWNER_INFO_BMBT_BLOCK)
 			xefi->xefi_flags |= XFS_EFI_BMBT_BLOCK;
 		xefi->xefi_owner = oinfo->oi_owner;
 	} else {
 		xefi->xefi_owner = XFS_RMAP_OWN_NULL;
+=======
+			new->xefi_flags |= XFS_EFI_ATTR_FORK;
+		if (oinfo->oi_flags & XFS_OWNER_INFO_BMBT_BLOCK)
+			new->xefi_flags |= XFS_EFI_BMBT_BLOCK;
+		new->xefi_owner = oinfo->oi_owner;
+	} else {
+		new->xefi_owner = XFS_RMAP_OWN_NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	trace_xfs_bmap_free_defer(tp->t_mountp,
 			XFS_FSB_TO_AGNO(tp->t_mountp, bno), 0,
 			XFS_FSB_TO_AGBNO(tp->t_mountp, bno), len);
+<<<<<<< HEAD
 	xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_FREE, &xefi->xefi_list);
+=======
+	xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_FREE, &new->xefi_list);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef DEBUG
@@ -2525,7 +2682,11 @@ xfs_alloc_fix_freelist(
 	/* deferred ops (AGFL block frees) require permanent transactions */
 	ASSERT(tp->t_flags & XFS_TRANS_PERM_LOG_RES);
 
+<<<<<<< HEAD
 	if (!xfs_perag_initialised_agf(pag)) {
+=======
+	if (!pag->pagf_init) {
+>>>>>>> b7ba80a49124 (Commit)
 		error = xfs_alloc_read_agf(pag, tp, flags, &agbp);
 		if (error) {
 			/* Couldn't lock the AGF so skip this AG. */
@@ -2540,8 +2701,12 @@ xfs_alloc_fix_freelist(
 	 * somewhere else if we are not being asked to try harder at this
 	 * point
 	 */
+<<<<<<< HEAD
 	if (xfs_perag_prefers_metadata(pag) &&
 	    (args->datatype & XFS_ALLOC_USERDATA) &&
+=======
+	if (pag->pagf_metadata && (args->datatype & XFS_ALLOC_USERDATA) &&
+>>>>>>> b7ba80a49124 (Commit)
 	    (flags & XFS_ALLOC_FLAG_TRYLOCK)) {
 		ASSERT(!(flags & XFS_ALLOC_FLAG_FREEING));
 		goto out_agbp_relse;
@@ -2567,7 +2732,11 @@ xfs_alloc_fix_freelist(
 	}
 
 	/* reset a padding mismatched agfl before final free space check */
+<<<<<<< HEAD
 	if (xfs_perag_agfl_needs_reset(pag))
+=======
+	if (pag->pagf_agflreset)
+>>>>>>> b7ba80a49124 (Commit)
 		xfs_agfl_reset(tp, agbp, pag);
 
 	/* If there isn't enough total space or single-extent, reject it. */
@@ -2628,6 +2797,10 @@ xfs_alloc_fix_freelist(
 	targs.agbp = agbp;
 	targs.agno = args->agno;
 	targs.alignment = targs.minlen = targs.prod = 1;
+<<<<<<< HEAD
+=======
+	targs.type = XFS_ALLOCTYPE_THIS_AG;
+>>>>>>> b7ba80a49124 (Commit)
 	targs.pag = pag;
 	error = xfs_alloc_read_agfl(pag, tp, &agflbp);
 	if (error)
@@ -2640,7 +2813,11 @@ xfs_alloc_fix_freelist(
 		targs.resv = XFS_AG_RESV_AGFL;
 
 		/* Allocate as many blocks as possible at once. */
+<<<<<<< HEAD
 		error = xfs_alloc_ag_vextent_size(&targs);
+=======
+		error = xfs_alloc_ag_vextent(&targs);
+>>>>>>> b7ba80a49124 (Commit)
 		if (error)
 			goto out_agflbp_relse;
 
@@ -2654,6 +2831,7 @@ xfs_alloc_fix_freelist(
 				break;
 			goto out_agflbp_relse;
 		}
+<<<<<<< HEAD
 
 		if (!xfs_rmap_should_skip_owner_update(&targs.oinfo)) {
 			error = xfs_rmap_alloc(tp, agbp, pag,
@@ -2666,6 +2844,8 @@ xfs_alloc_fix_freelist(
 		if (error)
 			goto out_agflbp_relse;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Put each allocated block on the list.
 		 */
@@ -2735,7 +2915,11 @@ xfs_alloc_get_freelist(
 	if (be32_to_cpu(agf->agf_flfirst) == xfs_agfl_size(mp))
 		agf->agf_flfirst = 0;
 
+<<<<<<< HEAD
 	ASSERT(!xfs_perag_agfl_needs_reset(pag));
+=======
+	ASSERT(!pag->pagf_agflreset);
+>>>>>>> b7ba80a49124 (Commit)
 	be32_add_cpu(&agf->agf_flcount, -1);
 	pag->pagf_flcount--;
 
@@ -2824,7 +3008,11 @@ xfs_alloc_put_freelist(
 	if (be32_to_cpu(agf->agf_fllast) == xfs_agfl_size(mp))
 		agf->agf_fllast = 0;
 
+<<<<<<< HEAD
 	ASSERT(!xfs_perag_agfl_needs_reset(pag));
+=======
+	ASSERT(!pag->pagf_agflreset);
+>>>>>>> b7ba80a49124 (Commit)
 	be32_add_cpu(&agf->agf_flcount, 1);
 	pag->pagf_flcount++;
 
@@ -3031,7 +3219,11 @@ xfs_alloc_read_agf(
 		return error;
 
 	agf = agfbp->b_addr;
+<<<<<<< HEAD
 	if (!xfs_perag_initialised_agf(pag)) {
+=======
+	if (!pag->pagf_init) {
+>>>>>>> b7ba80a49124 (Commit)
 		pag->pagf_freeblks = be32_to_cpu(agf->agf_freeblks);
 		pag->pagf_btreeblks = be32_to_cpu(agf->agf_btreeblks);
 		pag->pagf_flcount = be32_to_cpu(agf->agf_flcount);
@@ -3043,8 +3235,13 @@ xfs_alloc_read_agf(
 		pag->pagf_levels[XFS_BTNUM_RMAPi] =
 			be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAPi]);
 		pag->pagf_refcount_level = be32_to_cpu(agf->agf_refcount_level);
+<<<<<<< HEAD
 		if (xfs_agfl_needs_reset(pag->pag_mount, agf))
 			set_bit(XFS_AGSTATE_AGFL_NEEDS_RESET, &pag->pag_opstate);
+=======
+		pag->pagf_init = 1;
+		pag->pagf_agflreset = xfs_agfl_needs_reset(pag->pag_mount, agf);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * Update the in-core allocbt counter. Filter out the rmapbt
@@ -3059,8 +3256,11 @@ xfs_alloc_read_agf(
 		if (allocbt_blks > 0)
 			atomic64_add(allocbt_blks,
 					&pag->pag_mount->m_allocbt_blks);
+<<<<<<< HEAD
 
 		set_bit(XFS_AGSTATE_AGF_INIT, &pag->pag_opstate);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 #ifdef DEBUG
 	else if (!xfs_is_shutdown(pag->pag_mount)) {
@@ -3082,6 +3282,7 @@ xfs_alloc_read_agf(
 }
 
 /*
+<<<<<<< HEAD
  * Pre-proces allocation arguments to set initial state that we don't require
  * callers to set up correctly, as well as bounds check the allocation args
  * that are set up.
@@ -3101,6 +3302,28 @@ xfs_alloc_vextent_check_args(
 	if (args->tp->t_highest_agno != NULLAGNUMBER)
 		*minimum_agno = args->tp->t_highest_agno;
 
+=======
+ * Allocate an extent (variable-size).
+ * Depending on the allocation type, we either look in a single allocation
+ * group or loop over the allocation groups to find the result.
+ */
+int				/* error */
+xfs_alloc_vextent(
+	struct xfs_alloc_arg	*args)	/* allocation argument structure */
+{
+	xfs_agblock_t		agsize;	/* allocation group size */
+	int			error;
+	int			flags;	/* XFS_ALLOC_FLAG_... locking flags */
+	struct xfs_mount	*mp;	/* mount structure pointer */
+	xfs_agnumber_t		sagno;	/* starting allocation group number */
+	xfs_alloctype_t		type;	/* input allocation type */
+	int			bump_rotor = 0;
+	xfs_agnumber_t		rotorstep = xfs_rotorstep; /* inode32 agf stepper */
+
+	mp = args->mp;
+	type = args->otype = args->type;
+	args->agbno = NULLAGBLOCK;
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Just fix this up, for the case where the last a.g. is shorter
 	 * (or there's only one a.g.) and the caller couldn't easily figure
@@ -3111,6 +3334,7 @@ xfs_alloc_vextent_check_args(
 		args->maxlen = agsize;
 	if (args->alignment == 0)
 		args->alignment = 1;
+<<<<<<< HEAD
 
 	ASSERT(args->minlen > 0);
 	ASSERT(args->maxlen > 0);
@@ -3553,6 +3777,170 @@ xfs_alloc_vextent_near_bno(
 		error = xfs_alloc_ag_vextent_near(args);
 
 	return xfs_alloc_vextent_finish(args, minimum_agno, error, needs_perag);
+=======
+	ASSERT(XFS_FSB_TO_AGNO(mp, args->fsbno) < mp->m_sb.sb_agcount);
+	ASSERT(XFS_FSB_TO_AGBNO(mp, args->fsbno) < agsize);
+	ASSERT(args->minlen <= args->maxlen);
+	ASSERT(args->minlen <= agsize);
+	ASSERT(args->mod < args->prod);
+	if (XFS_FSB_TO_AGNO(mp, args->fsbno) >= mp->m_sb.sb_agcount ||
+	    XFS_FSB_TO_AGBNO(mp, args->fsbno) >= agsize ||
+	    args->minlen > args->maxlen || args->minlen > agsize ||
+	    args->mod >= args->prod) {
+		args->fsbno = NULLFSBLOCK;
+		trace_xfs_alloc_vextent_badargs(args);
+		return 0;
+	}
+
+	switch (type) {
+	case XFS_ALLOCTYPE_THIS_AG:
+	case XFS_ALLOCTYPE_NEAR_BNO:
+	case XFS_ALLOCTYPE_THIS_BNO:
+		/*
+		 * These three force us into a single a.g.
+		 */
+		args->agno = XFS_FSB_TO_AGNO(mp, args->fsbno);
+		args->pag = xfs_perag_get(mp, args->agno);
+		error = xfs_alloc_fix_freelist(args, 0);
+		if (error) {
+			trace_xfs_alloc_vextent_nofix(args);
+			goto error0;
+		}
+		if (!args->agbp) {
+			trace_xfs_alloc_vextent_noagbp(args);
+			break;
+		}
+		args->agbno = XFS_FSB_TO_AGBNO(mp, args->fsbno);
+		if ((error = xfs_alloc_ag_vextent(args)))
+			goto error0;
+		break;
+	case XFS_ALLOCTYPE_START_BNO:
+		/*
+		 * Try near allocation first, then anywhere-in-ag after
+		 * the first a.g. fails.
+		 */
+		if ((args->datatype & XFS_ALLOC_INITIAL_USER_DATA) &&
+		    xfs_is_inode32(mp)) {
+			args->fsbno = XFS_AGB_TO_FSB(mp,
+					((mp->m_agfrotor / rotorstep) %
+					mp->m_sb.sb_agcount), 0);
+			bump_rotor = 1;
+		}
+		args->agbno = XFS_FSB_TO_AGBNO(mp, args->fsbno);
+		args->type = XFS_ALLOCTYPE_NEAR_BNO;
+		fallthrough;
+	case XFS_ALLOCTYPE_FIRST_AG:
+		/*
+		 * Rotate through the allocation groups looking for a winner.
+		 */
+		if (type == XFS_ALLOCTYPE_FIRST_AG) {
+			/*
+			 * Start with allocation group given by bno.
+			 */
+			args->agno = XFS_FSB_TO_AGNO(mp, args->fsbno);
+			args->type = XFS_ALLOCTYPE_THIS_AG;
+			sagno = 0;
+			flags = 0;
+		} else {
+			/*
+			 * Start with the given allocation group.
+			 */
+			args->agno = sagno = XFS_FSB_TO_AGNO(mp, args->fsbno);
+			flags = XFS_ALLOC_FLAG_TRYLOCK;
+		}
+		/*
+		 * Loop over allocation groups twice; first time with
+		 * trylock set, second time without.
+		 */
+		for (;;) {
+			args->pag = xfs_perag_get(mp, args->agno);
+			error = xfs_alloc_fix_freelist(args, flags);
+			if (error) {
+				trace_xfs_alloc_vextent_nofix(args);
+				goto error0;
+			}
+			/*
+			 * If we get a buffer back then the allocation will fly.
+			 */
+			if (args->agbp) {
+				if ((error = xfs_alloc_ag_vextent(args)))
+					goto error0;
+				break;
+			}
+
+			trace_xfs_alloc_vextent_loopfailed(args);
+
+			/*
+			 * Didn't work, figure out the next iteration.
+			 */
+			if (args->agno == sagno &&
+			    type == XFS_ALLOCTYPE_START_BNO)
+				args->type = XFS_ALLOCTYPE_THIS_AG;
+			/*
+			* For the first allocation, we can try any AG to get
+			* space.  However, if we already have allocated a
+			* block, we don't want to try AGs whose number is below
+			* sagno. Otherwise, we may end up with out-of-order
+			* locking of AGF, which might cause deadlock.
+			*/
+			if (++(args->agno) == mp->m_sb.sb_agcount) {
+				if (args->tp->t_firstblock != NULLFSBLOCK)
+					args->agno = sagno;
+				else
+					args->agno = 0;
+			}
+			/*
+			 * Reached the starting a.g., must either be done
+			 * or switch to non-trylock mode.
+			 */
+			if (args->agno == sagno) {
+				if (flags == 0) {
+					args->agbno = NULLAGBLOCK;
+					trace_xfs_alloc_vextent_allfailed(args);
+					break;
+				}
+
+				flags = 0;
+				if (type == XFS_ALLOCTYPE_START_BNO) {
+					args->agbno = XFS_FSB_TO_AGBNO(mp,
+						args->fsbno);
+					args->type = XFS_ALLOCTYPE_NEAR_BNO;
+				}
+			}
+			xfs_perag_put(args->pag);
+		}
+		if (bump_rotor) {
+			if (args->agno == sagno)
+				mp->m_agfrotor = (mp->m_agfrotor + 1) %
+					(mp->m_sb.sb_agcount * rotorstep);
+			else
+				mp->m_agfrotor = (args->agno * rotorstep + 1) %
+					(mp->m_sb.sb_agcount * rotorstep);
+		}
+		break;
+	default:
+		ASSERT(0);
+		/* NOTREACHED */
+	}
+	if (args->agbno == NULLAGBLOCK)
+		args->fsbno = NULLFSBLOCK;
+	else {
+		args->fsbno = XFS_AGB_TO_FSB(mp, args->agno, args->agbno);
+#ifdef DEBUG
+		ASSERT(args->len >= args->minlen);
+		ASSERT(args->len <= args->maxlen);
+		ASSERT(args->agbno % args->alignment == 0);
+		XFS_AG_CHECK_DADDR(mp, XFS_FSB_TO_DADDR(mp, args->fsbno),
+			args->len);
+#endif
+
+	}
+	xfs_perag_put(args->pag);
+	return 0;
+error0:
+	xfs_perag_put(args->pag);
+	return error;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Ensure that the freelist is at full capacity. */

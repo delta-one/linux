@@ -5,8 +5,11 @@
 #ifndef XSKXCEIVER_H_
 #define XSKXCEIVER_H_
 
+<<<<<<< HEAD
 #include "xsk_xdp_progs.skel.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef SOL_XDP
 #define SOL_XDP 283
 #endif
@@ -32,6 +35,10 @@
 #define TEST_CONTINUE 1
 #define MAX_INTERFACES 2
 #define MAX_INTERFACE_NAME_CHARS 16
+<<<<<<< HEAD
+=======
+#define MAX_INTERFACES_NAMESPACE_CHARS 16
+>>>>>>> b7ba80a49124 (Commit)
 #define MAX_SOCKETS 2
 #define MAX_TEST_NAME_SIZE 32
 #define MAX_TEARDOWN_ITER 10
@@ -87,8 +94,11 @@ enum test_type {
 	TEST_TYPE_STATS_RX_FULL,
 	TEST_TYPE_STATS_FILL_EMPTY,
 	TEST_TYPE_BPF_RES,
+<<<<<<< HEAD
 	TEST_TYPE_XDP_DROP_HALF,
 	TEST_TYPE_XDP_METADATA_COUNT,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	TEST_TYPE_MAX
 };
 
@@ -136,12 +146,17 @@ typedef void *(*thread_func_t)(void *arg);
 
 struct ifobject {
 	char ifname[MAX_INTERFACE_NAME_CHARS];
+<<<<<<< HEAD
+=======
+	char nsname[MAX_INTERFACES_NAMESPACE_CHARS];
+>>>>>>> b7ba80a49124 (Commit)
 	struct xsk_socket_info *xsk;
 	struct xsk_socket_info *xsk_arr;
 	struct xsk_umem_info *umem;
 	thread_func_t func_ptr;
 	validation_func_t validation_func;
 	struct pkt_stream *pkt_stream;
+<<<<<<< HEAD
 	struct xsk_xdp_progs *xdp_progs;
 	struct bpf_map *xskmap;
 	struct bpf_program *xdp_prog;
@@ -149,6 +164,13 @@ struct ifobject {
 	int ifindex;
 	u32 dst_ip;
 	u32 src_ip;
+=======
+	int ns_fd;
+	int xsk_map_fd;
+	u32 dst_ip;
+	u32 src_ip;
+	u32 xdp_flags;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 bind_flags;
 	u16 src_port;
 	u16 dst_port;
@@ -159,7 +181,10 @@ struct ifobject {
 	bool use_fill_ring;
 	bool release_rx;
 	bool shared_umem;
+<<<<<<< HEAD
 	bool use_metadata;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8 dst_mac[ETH_ALEN];
 	u8 src_mac[ETH_ALEN];
 };
@@ -169,10 +194,13 @@ struct test_spec {
 	struct ifobject *ifobj_rx;
 	struct pkt_stream *tx_pkt_stream_default;
 	struct pkt_stream *rx_pkt_stream_default;
+<<<<<<< HEAD
 	struct bpf_program *xdp_prog_rx;
 	struct bpf_program *xdp_prog_tx;
 	struct bpf_map *xskmap_rx;
 	struct bpf_map *xskmap_tx;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 total_steps;
 	u16 current_step;
 	u16 nb_sockets;

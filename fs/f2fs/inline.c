@@ -160,7 +160,10 @@ int f2fs_convert_inline_page(struct dnode_of_data *dn, struct page *page)
 		set_sbi_flag(fio.sbi, SBI_NEED_FSCK);
 		f2fs_warn(fio.sbi, "%s: corrupted inline inode ino=%lx, i_addr[0]:0x%x, run fsck to fix.",
 			  __func__, dn->inode->i_ino, dn->data_blkaddr);
+<<<<<<< HEAD
 		f2fs_handle_error(fio.sbi, ERROR_INVALID_BLKADDR);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return -EFSCORRUPTED;
 	}
 
@@ -174,6 +177,10 @@ int f2fs_convert_inline_page(struct dnode_of_data *dn, struct page *page)
 
 	/* write data page to try to make data consistent */
 	set_page_writeback(page);
+<<<<<<< HEAD
+=======
+	ClearPageError(page);
+>>>>>>> b7ba80a49124 (Commit)
 	fio.old_blkaddr = dn->data_blkaddr;
 	set_inode_flag(dn->inode, FI_HOT_DATA);
 	f2fs_outplace_write_data(dn, &fio);
@@ -412,7 +419,10 @@ static int f2fs_move_inline_dirents(struct inode *dir, struct page *ipage,
 		set_sbi_flag(F2FS_P_SB(page), SBI_NEED_FSCK);
 		f2fs_warn(F2FS_P_SB(page), "%s: corrupted inline inode ino=%lx, i_addr[0]:0x%x, run fsck to fix.",
 			  __func__, dir->i_ino, dn.data_blkaddr);
+<<<<<<< HEAD
 		f2fs_handle_error(F2FS_P_SB(page), ERROR_INVALID_BLKADDR);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EFSCORRUPTED;
 		goto out;
 	}
@@ -421,17 +431,30 @@ static int f2fs_move_inline_dirents(struct inode *dir, struct page *ipage,
 
 	dentry_blk = page_address(page);
 
+<<<<<<< HEAD
 	/*
 	 * Start by zeroing the full block, to ensure that all unused space is
 	 * zeroed and no uninitialized memory is leaked to disk.
 	 */
 	memset(dentry_blk, 0, F2FS_BLKSIZE);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	make_dentry_ptr_inline(dir, &src, inline_dentry);
 	make_dentry_ptr_block(dir, &dst, dentry_blk);
 
 	/* copy data from inline dentry block to new dentry block */
 	memcpy(dst.bitmap, src.bitmap, src.nr_bitmap);
+<<<<<<< HEAD
+=======
+	memset(dst.bitmap + src.nr_bitmap, 0, dst.nr_bitmap - src.nr_bitmap);
+	/*
+	 * we do not need to zero out remainder part of dentry and filename
+	 * field, since we have used bitmap for marking the usage status of
+	 * them, besides, we can also ignore copying/zeroing reserved space
+	 * of dentry block, because them haven't been used so far.
+	 */
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(dst.dentry, src.dentry, SIZE_OF_DIR_ENTRY * src.max);
 	memcpy(dst.filename, src.filename, src.max * F2FS_SLOT_LEN);
 

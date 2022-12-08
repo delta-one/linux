@@ -34,15 +34,25 @@
  *	mbind, mq_open, ipc, ...
  */
 
+<<<<<<< HEAD
 static const syscall_fn spu_syscall_table[] = {
 #define __SYSCALL_WITH_COMPAT(nr, entry, compat) __SYSCALL(nr, entry)
 #define __SYSCALL(nr, entry) [nr] = (void *) entry,
+=======
+static void *spu_syscall_table[] = {
+#define __SYSCALL_WITH_COMPAT(nr, entry, compat) __SYSCALL(nr, entry)
+#define __SYSCALL(nr, entry) [nr] = entry,
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/syscall_table_spu.h>
 };
 
 long spu_sys_callback(struct spu_syscall_block *s)
 {
+<<<<<<< HEAD
 	syscall_fn syscall;
+=======
+	long (*syscall)(u64 a1, u64 a2, u64 a3, u64 a4, u64 a5, u64 a6);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (s->nr_ret >= ARRAY_SIZE(spu_syscall_table)) {
 		pr_debug("%s: invalid syscall #%lld", __func__, s->nr_ret);

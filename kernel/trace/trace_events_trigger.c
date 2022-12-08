@@ -1067,6 +1067,7 @@ int set_trigger_filter(char *filter_str,
 
 	/* The filter is for the 'trigger' event, not the triggered event */
 	ret = create_event_filter(file->tr, file->event_call,
+<<<<<<< HEAD
 				  filter_str, true, &filter);
 
 	/* Only enabled set_str for error handling */
@@ -1075,6 +1076,9 @@ int set_trigger_filter(char *filter_str,
 		filter->filter_string = NULL;
 	}
 
+=======
+				  filter_str, false, &filter);
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * If create_event_filter() fails, filter still needs to be freed.
 	 * Which the calling code will do with data->filter.
@@ -1085,6 +1089,7 @@ int set_trigger_filter(char *filter_str,
 	rcu_assign_pointer(data->filter, filter);
 
 	if (tmp) {
+<<<<<<< HEAD
 		/*
 		 * Make sure the call is done with the filter.
 		 * It is possible that a filter could fail at boot up,
@@ -1093,6 +1098,10 @@ int set_trigger_filter(char *filter_str,
 		 */
 		if (system_state != SYSTEM_BOOTING)
 			tracepoint_synchronize_unregister();
+=======
+		/* Make sure the call is done with the filter */
+		tracepoint_synchronize_unregister();
+>>>>>>> b7ba80a49124 (Commit)
 		free_event_filter(tmp);
 	}
 

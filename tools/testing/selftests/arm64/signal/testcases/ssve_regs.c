@@ -34,10 +34,13 @@ static bool sme_get_vls(struct tdescr *td)
 
 		vl &= PR_SME_VL_LEN_MASK;
 
+<<<<<<< HEAD
 		/* Did we find the lowest supported VL? */
 		if (vq < sve_vq_from_vl(vl))
 			break;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Skip missing VLs */
 		vq = sve_vq_from_vl(vl);
 
@@ -96,11 +99,14 @@ static int do_one_sme_vl(struct tdescr *td, siginfo_t *si, ucontext_t *uc,
 		return 1;
 	}
 
+<<<<<<< HEAD
 	if (!(ssve->flags & SVE_SIG_FLAG_SM)) {
 		fprintf(stderr, "SVE_SIG_FLAG_SM not set in SVE record\n");
 		return 1;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* The actual size validation is done in get_current_context() */
 	fprintf(stderr, "Got expected size %u and VL %d\n",
 		head->size, ssve->vl);
@@ -125,7 +131,16 @@ static int sme_regs(struct tdescr *td, siginfo_t *si, ucontext_t *uc)
 struct tdescr tde = {
 	.name = "Streaming SVE registers",
 	.descr = "Check that we get the right Streaming SVE registers reported",
+<<<<<<< HEAD
 	.feats_required = FEAT_SME,
+=======
+	/*
+	 * We shouldn't require FA64 but things like memset() used in the
+	 * helpers might use unsupported instructions so for now disable
+	 * the test unless we've got the full instruction set.
+	 */
+	.feats_required = FEAT_SME | FEAT_SME_FA64,
+>>>>>>> b7ba80a49124 (Commit)
 	.timeout = 3,
 	.init = sme_get_vls,
 	.run = sme_regs,

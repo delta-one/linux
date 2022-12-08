@@ -1257,7 +1257,11 @@ bna_enet_mtu_get(struct bna_enet *enet)
 void
 bna_enet_enable(struct bna_enet *enet)
 {
+<<<<<<< HEAD
 	if (enet->fsm != bna_enet_sm_stopped)
+=======
+	if (enet->fsm != (bfa_sm_t)bna_enet_sm_stopped)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	enet->flags |= BNA_ENET_F_ENABLED;
@@ -1751,12 +1755,20 @@ bna_ioceth_uninit(struct bna_ioceth *ioceth)
 void
 bna_ioceth_enable(struct bna_ioceth *ioceth)
 {
+<<<<<<< HEAD
 	if (ioceth->fsm == bna_ioceth_sm_ready) {
+=======
+	if (ioceth->fsm == (bfa_fsm_t)bna_ioceth_sm_ready) {
+>>>>>>> b7ba80a49124 (Commit)
 		bnad_cb_ioceth_ready(ioceth->bna->bnad);
 		return;
 	}
 
+<<<<<<< HEAD
 	if (ioceth->fsm == bna_ioceth_sm_stopped)
+=======
+	if (ioceth->fsm == (bfa_fsm_t)bna_ioceth_sm_stopped)
+>>>>>>> b7ba80a49124 (Commit)
 		bfa_fsm_send_event(ioceth, IOCETH_E_ENABLE);
 }
 

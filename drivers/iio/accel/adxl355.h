@@ -10,6 +10,7 @@
 
 #include <linux/regmap.h>
 
+<<<<<<< HEAD
 enum adxl355_device_type {
 	ADXL355,
 	ADXL359,
@@ -35,5 +36,14 @@ extern const struct adxl355_chip_info adxl35x_chip_info[];
 
 int adxl355_core_probe(struct device *dev, struct regmap *regmap,
 		       const struct adxl355_chip_info *chip_info);
+=======
+struct device;
+
+extern const struct regmap_access_table adxl355_readable_regs_tbl;
+extern const struct regmap_access_table adxl355_writeable_regs_tbl;
+
+int adxl355_core_probe(struct device *dev, struct regmap *regmap,
+		       const char *name);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _ADXL355_H_ */

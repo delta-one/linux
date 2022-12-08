@@ -1298,7 +1298,11 @@ static void rt5665_jack_detect_handler(struct work_struct *work)
 		usleep_range(10000, 15000);
 	}
 
+<<<<<<< HEAD
 	while (!snd_soc_card_is_instantiated(rt5665->component->card)) {
+=======
+	while (!rt5665->component->card->instantiated) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_debug("%s\n", __func__);
 		usleep_range(10000, 15000);
 	}
@@ -4748,7 +4752,11 @@ static void rt5665_calibrate_handler(struct work_struct *work)
 	struct rt5665_priv *rt5665 = container_of(work, struct rt5665_priv,
 		calibrate_work.work);
 
+<<<<<<< HEAD
 	while (!snd_soc_card_is_instantiated(rt5665->component->card)) {
+=======
+	while (!rt5665->component->card->instantiated) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_debug("%s\n", __func__);
 		usleep_range(10000, 15000);
 	}

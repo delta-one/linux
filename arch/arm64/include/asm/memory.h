@@ -180,7 +180,10 @@
 #include <linux/compiler.h>
 #include <linux/mmdebug.h>
 #include <linux/types.h>
+<<<<<<< HEAD
 #include <asm/boot.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/bug.h>
 
 #if VA_BITS > 48
@@ -204,6 +207,7 @@ static inline unsigned long kaslr_offset(void)
 	return kimage_vaddr - KIMAGE_VADDR;
 }
 
+<<<<<<< HEAD
 static inline bool kaslr_enabled(void)
 {
 	/*
@@ -214,6 +218,8 @@ static inline bool kaslr_enabled(void)
 	return kaslr_offset() >= MIN_KIMG_ALIGN;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Allow all memory at the discovery stage. We will clip it later.
  */
@@ -261,11 +267,17 @@ static inline const void *__tag_set(const void *addr, u8 tag)
 }
 
 #ifdef CONFIG_KASAN_HW_TAGS
+<<<<<<< HEAD
 #define arch_enable_tag_checks_sync()		mte_enable_kernel_sync()
 #define arch_enable_tag_checks_async()		mte_enable_kernel_async()
 #define arch_enable_tag_checks_asymm()		mte_enable_kernel_asymm()
 #define arch_suppress_tag_checks_start()	__mte_enable_tco()
 #define arch_suppress_tag_checks_stop()		__mte_disable_tco()
+=======
+#define arch_enable_tagging_sync()		mte_enable_kernel_sync()
+#define arch_enable_tagging_async()		mte_enable_kernel_async()
+#define arch_enable_tagging_asymm()		mte_enable_kernel_asymm()
+>>>>>>> b7ba80a49124 (Commit)
 #define arch_force_async_tag_fault()		mte_check_tfsr_exit()
 #define arch_get_random_tag()			mte_get_random_tag()
 #define arch_get_mem_tag(addr)			mte_get_mem_tag(addr)

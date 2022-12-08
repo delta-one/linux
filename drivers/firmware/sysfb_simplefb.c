@@ -27,14 +27,20 @@ static const struct simplefb_format formats[] = SIMPLEFB_FORMATS;
 __init bool sysfb_parse_mode(const struct screen_info *si,
 			     struct simplefb_platform_data *mode)
 {
+<<<<<<< HEAD
 	__u8 type;
 	u32 bits_per_pixel;
+=======
+	const struct simplefb_format *f;
+	__u8 type;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int i;
 
 	type = si->orig_video_isVGA;
 	if (type != VIDEO_TYPE_VLFB && type != VIDEO_TYPE_EFI)
 		return false;
 
+<<<<<<< HEAD
 	/*
 	 * The meaning of depth and bpp for direct-color formats is
 	 * inconsistent:
@@ -71,12 +77,23 @@ __init bool sysfb_parse_mode(const struct screen_info *si,
 			continue; /* transparent formats are unsupported by VESA/EFI */
 
 		if (bits_per_pixel == f->bits_per_pixel &&
+=======
+	for (i = 0; i < ARRAY_SIZE(formats); ++i) {
+		f = &formats[i];
+		if (si->lfb_depth == f->bits_per_pixel &&
+>>>>>>> b7ba80a49124 (Commit)
 		    si->red_size == f->red.length &&
 		    si->red_pos == f->red.offset &&
 		    si->green_size == f->green.length &&
 		    si->green_pos == f->green.offset &&
 		    si->blue_size == f->blue.length &&
+<<<<<<< HEAD
 		    si->blue_pos == f->blue.offset) {
+=======
+		    si->blue_pos == f->blue.offset &&
+		    si->rsvd_size == f->transp.length &&
+		    si->rsvd_pos == f->transp.offset) {
+>>>>>>> b7ba80a49124 (Commit)
 			mode->format = f->name;
 			mode->width = si->lfb_width;
 			mode->height = si->lfb_height;
@@ -141,7 +158,11 @@ __init struct platform_device *sysfb_create_simplefb(const struct screen_info *s
 	if (!pd)
 		return ERR_PTR(-ENOMEM);
 
+<<<<<<< HEAD
 	sysfb_set_efifb_fwnode(pd);
+=======
+	sysfb_apply_efi_quirks(pd);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = platform_device_add_resources(pd, &res, 1);
 	if (ret)

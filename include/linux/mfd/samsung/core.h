@@ -36,6 +36,11 @@
 struct gpio_desc;
 
 enum sec_device_type {
+<<<<<<< HEAD
+=======
+	S5M8751X,
+	S5M8763X,
+>>>>>>> b7ba80a49124 (Commit)
 	S5M8767X,
 	S2MPA01,
 	S2MPS11X,

@@ -254,10 +254,13 @@ static int mt76s_tx_run_queue(struct mt76_dev *dev, struct mt76_queue *q)
 
 		if (!test_bit(MT76_STATE_MCU_RUNNING, &dev->phy.state)) {
 			__skb_put_zero(e->skb, 4);
+<<<<<<< HEAD
 			err = __skb_grow(e->skb, roundup(e->skb->len,
 							 sdio->func->cur_blksize));
 			if (err)
 				return err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			err = __mt76s_xmit_queue(dev, e->skb->data,
 						 e->skb->len);
 			if (err)

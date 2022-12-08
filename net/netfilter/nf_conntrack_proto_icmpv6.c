@@ -129,6 +129,7 @@ static void icmpv6_error_log(const struct sk_buff *skb,
 	nf_l4proto_log_invalid(skb, state, IPPROTO_ICMPV6, "%s", msg);
 }
 
+<<<<<<< HEAD
 static noinline_for_stack int
 nf_conntrack_icmpv6_redirect(struct nf_conn *tmpl, struct sk_buff *skb,
 			     unsigned int dataoff,
@@ -179,6 +180,8 @@ nf_conntrack_icmpv6_redirect(struct nf_conn *tmpl, struct sk_buff *skb,
 				       IPPROTO_ICMPV6, &outer_daddr);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int nf_conntrack_icmpv6_error(struct nf_conn *tmpl,
 			      struct sk_buff *skb,
 			      unsigned int dataoff,
@@ -209,9 +212,12 @@ int nf_conntrack_icmpv6_error(struct nf_conn *tmpl,
 		return NF_ACCEPT;
 	}
 
+<<<<<<< HEAD
 	if (icmp6h->icmp6_type == NDISC_REDIRECT)
 		return nf_conntrack_icmpv6_redirect(tmpl, skb, dataoff, state);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* is not error message ? */
 	if (icmp6h->icmp6_type >= 128)
 		return NF_ACCEPT;

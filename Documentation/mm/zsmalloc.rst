@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _zsmalloc:
+
+>>>>>>> b7ba80a49124 (Commit)
 ========
 zsmalloc
 ========
@@ -78,6 +83,7 @@ Similarly, we assign zspage to:
 * ZS_ALMOST_FULL  when n > N / f
 * ZS_EMPTY        when n == 0
 * ZS_FULL         when n == N
+<<<<<<< HEAD
 
 
 Internals
@@ -246,3 +252,5 @@ is heavy internal fragmentation and zspool compaction is unable to relocate
 objects and release zspages. In these cases, it is recommended to decrease
 the limit on the size of the zspage chains (as specified by the
 CONFIG_ZSMALLOC_CHAIN_SIZE option).
+=======
+>>>>>>> b7ba80a49124 (Commit)

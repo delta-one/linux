@@ -5,7 +5,10 @@
 #include <linux/arm-smccc.h>
 #include <linux/bug.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/irqflags.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/cpufeature.h>
 
 #define ARM_SMCCC_TRNG_MIN_VERSION	0x10000UL
@@ -59,6 +62,7 @@ static inline bool __arm64_rndrrs(unsigned long *v)
 	return ok;
 }
 
+<<<<<<< HEAD
 static __always_inline bool __cpu_has_rng(void)
 {
 	if (unlikely(!system_capabilities_finalized() && !preemptible()))
@@ -66,6 +70,8 @@ static __always_inline bool __cpu_has_rng(void)
 	return cpus_have_const_cap(ARM64_HAS_RNG);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline size_t __must_check arch_get_random_longs(unsigned long *v, size_t max_longs)
 {
 	/*
@@ -74,7 +80,11 @@ static inline size_t __must_check arch_get_random_longs(unsigned long *v, size_t
 	 * cpufeature code and with potential scheduling between CPUs
 	 * with and without the feature.
 	 */
+<<<<<<< HEAD
 	if (max_longs && __cpu_has_rng() && __arm64_rndr(v))
+=======
+	if (max_longs && cpus_have_const_cap(ARM64_HAS_RNG) && __arm64_rndr(v))
+>>>>>>> b7ba80a49124 (Commit)
 		return 1;
 	return 0;
 }
@@ -116,7 +126,11 @@ static inline size_t __must_check arch_get_random_seed_longs(unsigned long *v, s
 	 * reseeded after each invocation. This is not a 100% fit but good
 	 * enough to implement this API if no other entropy source exists.
 	 */
+<<<<<<< HEAD
 	if (__cpu_has_rng() && __arm64_rndrrs(v))
+=======
+	if (cpus_have_const_cap(ARM64_HAS_RNG) && __arm64_rndrrs(v))
+>>>>>>> b7ba80a49124 (Commit)
 		return 1;
 
 	return 0;
@@ -129,4 +143,43 @@ static inline bool __init __early_cpu_has_rndr(void)
 	return (ftr >> ID_AA64ISAR0_EL1_RNDR_SHIFT) & 0xf;
 }
 
+<<<<<<< HEAD
+=======
+static inline size_t __init __must_check
+arch_get_random_seed_longs_early(unsigned long *v, size_t max_longs)
+{
+	WARN_ON(system_state != SYSTEM_BOOTING);
+
+	if (!max_longs)
+		return 0;
+
+	if (smccc_trng_available) {
+		struct arm_smccc_res res;
+
+		max_longs = min_t(size_t, 3, max_longs);
+		arm_smccc_1_1_invoke(ARM_SMCCC_TRNG_RND64, max_longs * 64, &res);
+		if ((int)res.a0 >= 0) {
+			switch (max_longs) {
+			case 3:
+				*v++ = res.a1;
+				fallthrough;
+			case 2:
+				*v++ = res.a2;
+				fallthrough;
+			case 1:
+				*v++ = res.a3;
+				break;
+			}
+			return max_longs;
+		}
+	}
+
+	if (__early_cpu_has_rndr() && __arm64_rndr(v))
+		return 1;
+
+	return 0;
+}
+#define arch_get_random_seed_longs_early arch_get_random_seed_longs_early
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_ARCHRANDOM_H */

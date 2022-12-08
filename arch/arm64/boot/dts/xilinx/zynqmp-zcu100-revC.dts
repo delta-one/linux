@@ -86,7 +86,11 @@
 			linux,default-trigger = "bluetooth-power";
 		};
 
+<<<<<<< HEAD
 		led-vbus-det { /* U5 USB5744 VBUS detection via MIO25 */
+=======
+		vbus-det { /* U5 USB5744 VBUS detection via MIO25 */
+>>>>>>> b7ba80a49124 (Commit)
 			label = "vbus_det";
 			gpios = <&gpio 25 GPIO_ACTIVE_HIGH>;
 			default-state = "on";

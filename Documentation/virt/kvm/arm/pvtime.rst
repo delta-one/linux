@@ -23,23 +23,38 @@ the PV_TIME_FEATURES hypercall should be probed using the SMCCC 1.1
 ARCH_FEATURES mechanism before calling it.
 
 PV_TIME_FEATURES
+<<<<<<< HEAD
 
     ============= ========    =================================================
+=======
+    ============= ========    ==========
+>>>>>>> b7ba80a49124 (Commit)
     Function ID:  (uint32)    0xC5000020
     PV_call_id:   (uint32)    The function to query for support.
                               Currently only PV_TIME_ST is supported.
     Return value: (int64)     NOT_SUPPORTED (-1) or SUCCESS (0) if the relevant
                               PV-time feature is supported by the hypervisor.
+<<<<<<< HEAD
     ============= ========    =================================================
 
 PV_TIME_ST
 
     ============= ========    ==============================================
+=======
+    ============= ========    ==========
+
+PV_TIME_ST
+    ============= ========    ==========
+>>>>>>> b7ba80a49124 (Commit)
     Function ID:  (uint32)    0xC5000021
     Return value: (int64)     IPA of the stolen time data structure for this
                               VCPU. On failure:
                               NOT_SUPPORTED (-1)
+<<<<<<< HEAD
     ============= ========    ==============================================
+=======
+    ============= ========    ==========
+>>>>>>> b7ba80a49124 (Commit)
 
 The IPA returned by PV_TIME_ST should be mapped by the guest as normal memory
 with inner and outer write back caching attributes, in the inner shareable
@@ -78,5 +93,10 @@ It is advisable that one or more 64k pages are set aside for the purpose of
 these structures and not used for other purposes, this enables the guest to map
 the region using 64k pages and avoids conflicting attributes with other memory.
 
+<<<<<<< HEAD
 For the user space interface see
 :ref:`Documentation/virt/kvm/devices/vcpu.rst <kvm_arm_vcpu_pvtime_ctrl>`.
+=======
+For the user space interface see Documentation/virt/kvm/devices/vcpu.rst
+section "3. GROUP: KVM_ARM_VCPU_PVTIME_CTRL".
+>>>>>>> b7ba80a49124 (Commit)

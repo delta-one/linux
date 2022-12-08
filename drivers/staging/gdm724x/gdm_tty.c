@@ -21,10 +21,14 @@
 
 #define MUX_TX_MAX_SIZE 2048
 
+<<<<<<< HEAD
 static inline bool gdm_tty_ready(struct gdm *gdm)
 {
 	return gdm && gdm->tty_dev && gdm->port.count;
 }
+=======
+#define GDM_TTY_READY(gdm) (gdm && gdm->tty_dev && gdm->port.count)
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct tty_driver *gdm_driver[TTY_MAX_COUNT];
 static struct gdm *gdm_table[TTY_MAX_COUNT][GDM_TTY_MINOR];
@@ -116,7 +120,11 @@ static int gdm_tty_recv_complete(void *data,
 {
 	struct gdm *gdm = tty_dev->gdm[index];
 
+<<<<<<< HEAD
 	if (!gdm_tty_ready(gdm)) {
+=======
+	if (!GDM_TTY_READY(gdm)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (complete == RECV_PACKET_PROCESS_COMPLETE)
 			gdm->tty_dev->recv_func(gdm->tty_dev->priv_dev,
 						gdm_tty_recv_complete);
@@ -143,7 +151,11 @@ static void gdm_tty_send_complete(void *arg)
 {
 	struct gdm *gdm = arg;
 
+<<<<<<< HEAD
 	if (!gdm_tty_ready(gdm))
+=======
+	if (!GDM_TTY_READY(gdm))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	tty_port_tty_wakeup(&gdm->port);
@@ -157,7 +169,11 @@ static int gdm_tty_write(struct tty_struct *tty, const unsigned char *buf,
 	int sent_len = 0;
 	int sending_len = 0;
 
+<<<<<<< HEAD
 	if (!gdm_tty_ready(gdm))
+=======
+	if (!GDM_TTY_READY(gdm))
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODEV;
 
 	if (!len)
@@ -184,7 +200,11 @@ static unsigned int gdm_tty_write_room(struct tty_struct *tty)
 {
 	struct gdm *gdm = tty->driver_data;
 
+<<<<<<< HEAD
 	if (!gdm_tty_ready(gdm))
+=======
+	if (!GDM_TTY_READY(gdm))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	return WRITE_SIZE;

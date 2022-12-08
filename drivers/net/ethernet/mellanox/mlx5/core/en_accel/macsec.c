@@ -6,6 +6,7 @@
 #include <linux/xarray.h>
 
 #include "en.h"
+<<<<<<< HEAD
 #include "lib/aso.h"
 #include "lib/crypto.h"
 #include "en_accel/macsec.h"
@@ -54,6 +55,14 @@ struct mlx5e_macsec_async_work {
 	struct work_struct work;
 	u32 obj_id;
 };
+=======
+#include "lib/mlx5.h"
+#include "en_accel/macsec.h"
+#include "en_accel/macsec_fs.h"
+
+#define MLX5_MACSEC_ASO_INC_SN  0x2
+#define MLX5_MACSEC_ASO_REG_C_4_5 0x2
+>>>>>>> b7ba80a49124 (Commit)
 
 struct mlx5e_macsec_sa {
 	bool active;
@@ -62,14 +71,20 @@ struct mlx5e_macsec_sa {
 	u32 enc_key_id;
 	u32 next_pn;
 	sci_t sci;
+<<<<<<< HEAD
 	ssci_t ssci;
 	salt_t salt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct rhash_head hash;
 	u32 fs_id;
 	union mlx5e_macsec_rule *macsec_rule;
 	struct rcu_head rcu_head;
+<<<<<<< HEAD
 	struct mlx5e_macsec_epn_state epn_state;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlx5e_macsec_rx_sc;
@@ -88,6 +103,7 @@ struct mlx5e_macsec_rx_sc {
 	struct rcu_head rcu_head;
 };
 
+<<<<<<< HEAD
 struct mlx5e_macsec_umr {
 	u8 __aligned(64) ctx[MLX5_ST_SZ_BYTES(macsec_aso)];
 	dma_addr_t dma_addr;
@@ -105,6 +121,8 @@ struct mlx5e_macsec_aso {
 	u32 pdn;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct rhashtable_params rhash_sci = {
 	.key_len = sizeof_field(struct mlx5e_macsec_sa, sci),
 	.key_offset = offsetof(struct mlx5e_macsec_sa, sci),
@@ -127,6 +145,12 @@ struct mlx5e_macsec {
 	struct mlx5e_macsec_fs *macsec_fs;
 	struct mutex lock; /* Protects mlx5e_macsec internal contexts */
 
+<<<<<<< HEAD
+=======
+	/* Global PD for MACsec object ASO context */
+	u32 aso_pdn;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Tx sci -> fs id mapping handling */
 	struct rhashtable sci_hash;      /* sci -> mlx5e_macsec_sa */
 
@@ -137,12 +161,15 @@ struct mlx5e_macsec {
 
 	/* Stats manage */
 	struct mlx5e_macsec_stats stats;
+<<<<<<< HEAD
 
 	/* ASO */
 	struct mlx5e_macsec_aso aso;
 
 	struct notifier_block nb;
 	struct workqueue_struct *wq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlx5_macsec_obj_attrs {
@@ -151,6 +178,7 @@ struct mlx5_macsec_obj_attrs {
 	__be64 sci;
 	u32 enc_key_id;
 	bool encrypt;
+<<<<<<< HEAD
 	struct mlx5e_macsec_epn_state epn_state;
 	salt_t salt;
 	__be32 ssci;
@@ -252,6 +280,10 @@ static int macsec_set_replay_protection(struct mlx5_macsec_obj_attrs *attrs, voi
 	return 0;
 }
 
+=======
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static int mlx5e_macsec_create_object(struct mlx5_core_dev *mdev,
 				      struct mlx5_macsec_obj_attrs *attrs,
 				      bool is_tx,
@@ -268,6 +300,7 @@ static int mlx5e_macsec_create_object(struct mlx5_core_dev *mdev,
 
 	MLX5_SET(macsec_offload_obj, obj, confidentiality_en, attrs->encrypt);
 	MLX5_SET(macsec_offload_obj, obj, dekn, attrs->enc_key_id);
+<<<<<<< HEAD
 	MLX5_SET(macsec_offload_obj, obj, aso_return_reg, MLX5_MACSEC_ASO_REG_C_4_5);
 	MLX5_SET(macsec_offload_obj, obj, macsec_aso_access_pd, attrs->aso_pdn);
 	MLX5_SET(macsec_aso, aso_ctx, mode_parameter, attrs->next_pn);
@@ -288,14 +321,23 @@ static int mlx5e_macsec_create_object(struct mlx5_core_dev *mdev,
 	} else {
 		MLX5_SET64(macsec_offload_obj, obj, sci, (__force u64)(attrs->sci));
 	}
+=======
+	MLX5_SET64(macsec_offload_obj, obj, sci, (__force u64)(attrs->sci));
+	MLX5_SET(macsec_offload_obj, obj, aso_return_reg, MLX5_MACSEC_ASO_REG_C_4_5);
+	MLX5_SET(macsec_offload_obj, obj, macsec_aso_access_pd, attrs->aso_pdn);
+>>>>>>> b7ba80a49124 (Commit)
 
 	MLX5_SET(macsec_aso, aso_ctx, valid, 0x1);
 	if (is_tx) {
 		MLX5_SET(macsec_aso, aso_ctx, mode, MLX5_MACSEC_ASO_INC_SN);
+<<<<<<< HEAD
 	} else {
 		err = macsec_set_replay_protection(attrs, aso_ctx);
 		if (err)
 			return err;
+=======
+		MLX5_SET(macsec_aso, aso_ctx, mode_parameter, attrs->next_pn);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* general object fields set */
@@ -365,6 +407,7 @@ static int mlx5e_macsec_init_sa(struct macsec_context *ctx,
 	obj_attrs.sci = cpu_to_be64((__force u64)sa->sci);
 	obj_attrs.enc_key_id = sa->enc_key_id;
 	obj_attrs.encrypt = encrypt;
+<<<<<<< HEAD
 	obj_attrs.aso_pdn = macsec->aso.pdn;
 	obj_attrs.epn_state = sa->epn_state;
 
@@ -375,6 +418,9 @@ static int mlx5e_macsec_init_sa(struct macsec_context *ctx,
 
 	obj_attrs.replay_window = ctx->secy->replay_window;
 	obj_attrs.replay_protect = ctx->secy->replay_protect;
+=======
+	obj_attrs.aso_pdn = macsec->aso_pdn;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = mlx5e_macsec_create_object(mdev, &obj_attrs, is_tx, &sa->macsec_obj_id);
 	if (err)
@@ -423,6 +469,7 @@ mlx5e_macsec_get_rx_sc_from_sc_list(const struct list_head *list, sci_t sci)
 	return NULL;
 }
 
+<<<<<<< HEAD
 static int macsec_rx_sa_active_update(struct macsec_context *ctx,
 				      struct mlx5e_macsec_sa *rx_sa,
 				      bool active)
@@ -432,6 +479,17 @@ static int macsec_rx_sa_active_update(struct macsec_context *ctx,
 	int err = 0;
 
 	if (rx_sa->active == active)
+=======
+static int mlx5e_macsec_update_rx_sa(struct mlx5e_macsec *macsec,
+				     struct mlx5e_macsec_sa *rx_sa,
+				     bool active)
+{
+	struct mlx5_core_dev *mdev = macsec->mdev;
+	struct mlx5_macsec_obj_attrs attrs;
+	int err = 0;
+
+	if (rx_sa->active != active)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	rx_sa->active = active;
@@ -440,11 +498,21 @@ static int macsec_rx_sa_active_update(struct macsec_context *ctx,
 		return 0;
 	}
 
+<<<<<<< HEAD
 	err = mlx5e_macsec_init_sa(ctx, rx_sa, true, false);
 	if (err)
 		rx_sa->active = false;
 
 	return err;
+=======
+	attrs.sci = rx_sa->sci;
+	attrs.enc_key_id = rx_sa->enc_key_id;
+	err = mlx5e_macsec_create_object(mdev, &attrs, false, &rx_sa->macsec_obj_id);
+	if (err)
+		return err;
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool mlx5e_macsec_secy_features_validate(struct macsec_context *ctx)
@@ -470,8 +538,18 @@ static bool mlx5e_macsec_secy_features_validate(struct macsec_context *ctx)
 		return false;
 	}
 
+<<<<<<< HEAD
 	if (!ctx->secy->tx_sc.encrypt) {
 		netdev_err(netdev, "MACsec offload: encrypt off isn't supported\n");
+=======
+	if (secy->xpn) {
+		netdev_err(netdev, "MACsec offload: xpn is not supported\n");
+		return false;
+	}
+
+	if (secy->replay_protect) {
+		netdev_err(netdev, "MACsec offload: replay protection is not supported\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 	}
 
@@ -494,6 +572,7 @@ mlx5e_macsec_get_macsec_device_context(const struct mlx5e_macsec *macsec,
 	return NULL;
 }
 
+<<<<<<< HEAD
 static void update_macsec_epn(struct mlx5e_macsec_sa *sa, const struct macsec_key *key,
 			      const pn_t *next_pn_halves, ssci_t ssci)
 {
@@ -506,6 +585,8 @@ static void update_macsec_epn(struct mlx5e_macsec_sa *sa, const struct macsec_ke
 	epn_state->overlap = next_pn_halves->lower < MLX5_MACSEC_EPN_SCOPE_MID ? 0 : 1;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mlx5e_macsec_add_txsa(struct macsec_context *ctx)
 {
 	const struct macsec_tx_sc *tx_sc = &ctx->secy->tx_sc;
@@ -519,6 +600,12 @@ static int mlx5e_macsec_add_txsa(struct macsec_context *ctx)
 	struct mlx5e_macsec *macsec;
 	int err = 0;
 
+<<<<<<< HEAD
+=======
+	if (ctx->prepare)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&priv->macsec->lock);
 
 	macsec = priv->macsec;
@@ -545,11 +632,14 @@ static int mlx5e_macsec_add_txsa(struct macsec_context *ctx)
 	tx_sa->next_pn = ctx_tx_sa->next_pn_halves.lower;
 	tx_sa->sci = secy->sci;
 	tx_sa->assoc_num = assoc_num;
+<<<<<<< HEAD
 
 	if (secy->xpn)
 		update_macsec_epn(tx_sa, &ctx_tx_sa->key, &ctx_tx_sa->next_pn_halves,
 				  ctx_tx_sa->ssci);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = mlx5_create_encryption_key(mdev, ctx->sa.key, secy->key_len,
 					 MLX5_ACCEL_OBJ_MACSEC_KEY,
 					 &tx_sa->enc_key_id);
@@ -593,6 +683,12 @@ static int mlx5e_macsec_upd_txsa(struct macsec_context *ctx)
 	struct net_device *netdev;
 	int err = 0;
 
+<<<<<<< HEAD
+=======
+	if (ctx->prepare)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&priv->macsec->lock);
 
 	macsec = priv->macsec;
@@ -621,7 +717,10 @@ static int mlx5e_macsec_upd_txsa(struct macsec_context *ctx)
 	if (tx_sa->active == ctx_tx_sa->active)
 		goto out;
 
+<<<<<<< HEAD
 	tx_sa->active = ctx_tx_sa->active;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (tx_sa->assoc_num != tx_sc->encoding_sa)
 		goto out;
 
@@ -637,6 +736,11 @@ static int mlx5e_macsec_upd_txsa(struct macsec_context *ctx)
 
 		mlx5e_macsec_cleanup_sa(macsec, tx_sa, true);
 	}
+<<<<<<< HEAD
+=======
+
+	tx_sa->active = ctx_tx_sa->active;
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	mutex_unlock(&macsec->lock);
 
@@ -652,6 +756,12 @@ static int mlx5e_macsec_del_txsa(struct macsec_context *ctx)
 	struct mlx5e_macsec *macsec;
 	int err = 0;
 
+<<<<<<< HEAD
+=======
+	if (ctx->prepare)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&priv->macsec->lock);
 	macsec = priv->macsec;
 	macsec_device = mlx5e_macsec_get_macsec_device_context(macsec, ctx);
@@ -670,7 +780,11 @@ static int mlx5e_macsec_del_txsa(struct macsec_context *ctx)
 
 	mlx5e_macsec_cleanup_sa(macsec, tx_sa, true);
 	mlx5_destroy_encryption_key(macsec->mdev, tx_sa->enc_key_id);
+<<<<<<< HEAD
 	kfree_rcu_mightsleep(tx_sa);
+=======
+	kfree_rcu(tx_sa);
+>>>>>>> b7ba80a49124 (Commit)
 	macsec_device->tx_sa[assoc_num] = NULL;
 
 out:
@@ -704,6 +818,12 @@ static int mlx5e_macsec_add_rxsc(struct macsec_context *ctx)
 	struct mlx5e_macsec *macsec;
 	int err = 0;
 
+<<<<<<< HEAD
+=======
+	if (ctx->prepare)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&priv->macsec->lock);
 	macsec = priv->macsec;
 	macsec_device = mlx5e_macsec_get_macsec_device_context(macsec, ctx);
@@ -736,6 +856,7 @@ static int mlx5e_macsec_add_rxsc(struct macsec_context *ctx)
 
 	sc_xarray_element->rx_sc = rx_sc;
 	err = xa_alloc(&macsec->sc_xarray, &sc_xarray_element->fs_id, sc_xarray_element,
+<<<<<<< HEAD
 		       XA_LIMIT(1, MLX5_MACEC_RX_FS_ID_MAX), GFP_KERNEL);
 	if (err) {
 		if (err == -EBUSY)
@@ -744,6 +865,11 @@ static int mlx5e_macsec_add_rxsc(struct macsec_context *ctx)
 				   MLX5_MACEC_RX_FS_ID_MAX);
 		goto destroy_sc_xarray_elemenet;
 	}
+=======
+		       XA_LIMIT(1, USHRT_MAX), GFP_KERNEL);
+	if (err)
+		goto destroy_sc_xarray_elemenet;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rx_sc->md_dst = metadata_dst_alloc(0, METADATA_MACSEC, GFP_KERNEL);
 	if (!rx_sc->md_dst) {
@@ -786,6 +912,12 @@ static int mlx5e_macsec_upd_rxsc(struct macsec_context *ctx)
 	int i;
 	int err = 0;
 
+<<<<<<< HEAD
+=======
+	if (ctx->prepare)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&priv->macsec->lock);
 
 	macsec = priv->macsec;
@@ -803,16 +935,27 @@ static int mlx5e_macsec_upd_rxsc(struct macsec_context *ctx)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if (rx_sc->active == ctx_rx_sc->active)
 		goto out;
 
 	rx_sc->active = ctx_rx_sc->active;
+=======
+	rx_sc->active = ctx_rx_sc->active;
+	if (rx_sc->active == ctx_rx_sc->active)
+		goto out;
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < MACSEC_NUM_AN; ++i) {
 		rx_sa = rx_sc->rx_sa[i];
 		if (!rx_sa)
 			continue;
 
+<<<<<<< HEAD
 		err = macsec_rx_sa_active_update(ctx, rx_sa, rx_sa->active && ctx_rx_sc->active);
+=======
+		err = mlx5e_macsec_update_rx_sa(macsec, rx_sa, rx_sa->active && ctx_rx_sc->active);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			goto out;
 	}
@@ -823,6 +966,7 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static void macsec_del_rxsc_ctx(struct mlx5e_macsec *macsec, struct mlx5e_macsec_rx_sc *rx_sc)
 {
 	struct mlx5e_macsec_sa *rx_sa;
@@ -852,14 +996,27 @@ static void macsec_del_rxsc_ctx(struct mlx5e_macsec *macsec, struct mlx5e_macsec
 	kfree_rcu_mightsleep(rx_sc);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mlx5e_macsec_del_rxsc(struct macsec_context *ctx)
 {
 	struct mlx5e_priv *priv = netdev_priv(ctx->netdev);
 	struct mlx5e_macsec_device *macsec_device;
 	struct mlx5e_macsec_rx_sc *rx_sc;
+<<<<<<< HEAD
 	struct mlx5e_macsec *macsec;
 	struct list_head *list;
 	int err = 0;
+=======
+	struct mlx5e_macsec_sa *rx_sa;
+	struct mlx5e_macsec *macsec;
+	struct list_head *list;
+	int err = 0;
+	int i;
+
+	if (ctx->prepare)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&priv->macsec->lock);
 
@@ -881,7 +1038,35 @@ static int mlx5e_macsec_del_rxsc(struct macsec_context *ctx)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	macsec_del_rxsc_ctx(macsec, rx_sc);
+=======
+	for (i = 0; i < MACSEC_NUM_AN; ++i) {
+		rx_sa = rx_sc->rx_sa[i];
+		if (!rx_sa)
+			continue;
+
+		mlx5e_macsec_cleanup_sa(macsec, rx_sa, false);
+		mlx5_destroy_encryption_key(macsec->mdev, rx_sa->enc_key_id);
+
+		kfree(rx_sa);
+		rx_sc->rx_sa[i] = NULL;
+	}
+
+/*
+ * At this point the relevant MACsec offload Rx rule already removed at
+ * mlx5e_macsec_cleanup_sa need to wait for datapath to finish current
+ * Rx related data propagating using xa_erase which uses rcu to sync,
+ * once fs_id is erased then this rx_sc is hidden from datapath.
+ */
+	list_del_rcu(&rx_sc->rx_sc_list_element);
+	xa_erase(&macsec->sc_xarray, rx_sc->sc_xarray_element->fs_id);
+	metadata_dst_free(rx_sc->md_dst);
+	kfree(rx_sc->sc_xarray_element);
+
+	kfree_rcu(rx_sc);
+
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	mutex_unlock(&macsec->lock);
 
@@ -902,6 +1087,12 @@ static int mlx5e_macsec_add_rxsa(struct macsec_context *ctx)
 	struct list_head *list;
 	int err = 0;
 
+<<<<<<< HEAD
+=======
+	if (ctx->prepare)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&priv->macsec->lock);
 
 	macsec = priv->macsec;
@@ -942,10 +1133,13 @@ static int mlx5e_macsec_add_rxsa(struct macsec_context *ctx)
 	rx_sa->assoc_num = assoc_num;
 	rx_sa->fs_id = rx_sc->sc_xarray_element->fs_id;
 
+<<<<<<< HEAD
 	if (ctx->secy->xpn)
 		update_macsec_epn(rx_sa, &ctx_rx_sa->key, &ctx_rx_sa->next_pn_halves,
 				  ctx_rx_sa->ssci);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = mlx5_create_encryption_key(mdev, ctx->sa.key, ctx->secy->key_len,
 					 MLX5_ACCEL_OBJ_MACSEC_KEY,
 					 &rx_sa->enc_key_id);
@@ -987,6 +1181,12 @@ static int mlx5e_macsec_upd_rxsa(struct macsec_context *ctx)
 	struct list_head *list;
 	int err = 0;
 
+<<<<<<< HEAD
+=======
+	if (ctx->prepare)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&priv->macsec->lock);
 
 	macsec = priv->macsec;
@@ -1008,11 +1208,19 @@ static int mlx5e_macsec_upd_rxsa(struct macsec_context *ctx)
 	}
 
 	rx_sa = rx_sc->rx_sa[assoc_num];
+<<<<<<< HEAD
 	if (!rx_sa) {
 		netdev_err(ctx->netdev,
 			   "MACsec offload rx_sc sci %lld rx_sa %d doesn't exist\n",
 			   sci, assoc_num);
 		err = -EINVAL;
+=======
+	if (rx_sa) {
+		netdev_err(ctx->netdev,
+			   "MACsec offload rx_sc sci %lld rx_sa %d already exist\n",
+			   sci, assoc_num);
+		err = -EEXIST;
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -1024,7 +1232,11 @@ static int mlx5e_macsec_upd_rxsa(struct macsec_context *ctx)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	err = macsec_rx_sa_active_update(ctx, rx_sa, ctx_rx_sa->active);
+=======
+	err = mlx5e_macsec_update_rx_sa(macsec, rx_sa, ctx_rx_sa->active);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	mutex_unlock(&macsec->lock);
 
@@ -1043,6 +1255,12 @@ static int mlx5e_macsec_del_rxsa(struct macsec_context *ctx)
 	struct list_head *list;
 	int err = 0;
 
+<<<<<<< HEAD
+=======
+	if (ctx->prepare)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&priv->macsec->lock);
 
 	macsec = priv->macsec;
@@ -1064,11 +1282,19 @@ static int mlx5e_macsec_del_rxsa(struct macsec_context *ctx)
 	}
 
 	rx_sa = rx_sc->rx_sa[assoc_num];
+<<<<<<< HEAD
 	if (!rx_sa) {
 		netdev_err(ctx->netdev,
 			   "MACsec offload rx_sc sci %lld rx_sa %d doesn't exist\n",
 			   sci, assoc_num);
 		err = -EINVAL;
+=======
+	if (rx_sa) {
+		netdev_err(ctx->netdev,
+			   "MACsec offload rx_sc sci %lld rx_sa %d already exist\n",
+			   sci, assoc_num);
+		err = -EEXIST;
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -1092,6 +1318,12 @@ static int mlx5e_macsec_add_secy(struct macsec_context *ctx)
 	struct mlx5e_macsec *macsec;
 	int err = 0;
 
+<<<<<<< HEAD
+=======
+	if (ctx->prepare)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!mlx5e_macsec_secy_features_validate(ctx))
 		return -EINVAL;
 
@@ -1164,7 +1396,11 @@ static int macsec_upd_secy_hw_address(struct macsec_context *ctx,
 				continue;
 
 			if (rx_sa->active) {
+<<<<<<< HEAD
 				err = mlx5e_macsec_init_sa(ctx, rx_sa, true, false);
+=======
+				err = mlx5e_macsec_init_sa(ctx, rx_sa, false, false);
+>>>>>>> b7ba80a49124 (Commit)
 				if (err)
 					goto out;
 			}
@@ -1192,6 +1428,12 @@ static int mlx5e_macsec_upd_secy(struct macsec_context *ctx)
 	struct mlx5e_macsec *macsec;
 	int i, err = 0;
 
+<<<<<<< HEAD
+=======
+	if (ctx->prepare)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!mlx5e_macsec_secy_features_validate(ctx))
 		return -EINVAL;
 
@@ -1243,12 +1485,22 @@ static int mlx5e_macsec_del_secy(struct macsec_context *ctx)
 	struct mlx5e_priv *priv = netdev_priv(ctx->netdev);
 	struct mlx5e_macsec_device *macsec_device;
 	struct mlx5e_macsec_rx_sc *rx_sc, *tmp;
+<<<<<<< HEAD
+=======
+	struct mlx5e_macsec_sa *rx_sa;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mlx5e_macsec_sa *tx_sa;
 	struct mlx5e_macsec *macsec;
 	struct list_head *list;
 	int err = 0;
 	int i;
 
+<<<<<<< HEAD
+=======
+	if (ctx->prepare)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&priv->macsec->lock);
 	macsec = priv->macsec;
 	macsec_device = mlx5e_macsec_get_macsec_device_context(macsec, ctx);
@@ -1271,15 +1523,37 @@ static int mlx5e_macsec_del_secy(struct macsec_context *ctx)
 	}
 
 	list = &macsec_device->macsec_rx_sc_list_head;
+<<<<<<< HEAD
 	list_for_each_entry_safe(rx_sc, tmp, list, rx_sc_list_element)
 		macsec_del_rxsc_ctx(macsec, rx_sc);
+=======
+	list_for_each_entry_safe(rx_sc, tmp, list, rx_sc_list_element) {
+		for (i = 0; i < MACSEC_NUM_AN; ++i) {
+			rx_sa = rx_sc->rx_sa[i];
+			if (!rx_sa)
+				continue;
+
+			mlx5e_macsec_cleanup_sa(macsec, rx_sa, false);
+			mlx5_destroy_encryption_key(macsec->mdev, rx_sa->enc_key_id);
+			kfree(rx_sa);
+			rx_sc->rx_sa[i] = NULL;
+		}
+
+		list_del_rcu(&rx_sc->rx_sc_list_element);
+
+		kfree_rcu(rx_sc);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(macsec_device->dev_addr);
 	macsec_device->dev_addr = NULL;
 
 	list_del_rcu(&macsec_device->macsec_device_list_element);
 	--macsec->num_of_devices;
+<<<<<<< HEAD
 	kfree(macsec_device);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	mutex_unlock(&macsec->lock);
@@ -1287,6 +1561,7 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static void macsec_build_accel_attrs(struct mlx5e_macsec_sa *sa,
 				     struct mlx5_macsec_obj_attrs *attrs)
 {
@@ -1646,6 +1921,8 @@ static void mlx5e_macsec_aso_cleanup(struct mlx5e_macsec_aso *aso, struct mlx5_c
 	mlx5_core_dealloc_pd(mdev, aso->pdn);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool mlx5e_is_macsec_device(const struct mlx5_core_dev *mdev)
 {
 	if (!(MLX5_CAP_GEN_64(mdev, general_obj_types) &
@@ -1750,7 +2027,11 @@ void mlx5e_macsec_offload_handle_rx_skb(struct net_device *netdev,
 	if (!macsec)
 		return;
 
+<<<<<<< HEAD
 	fs_id = MLX5_MACSEC_RX_METADAT_HANDLE(macsec_meta_data);
+=======
+	fs_id = MLX5_MACSEC_METADATA_HANDLE(macsec_meta_data);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rcu_read_lock();
 	sc_xarray_element = xa_load(&macsec->sc_xarray, fs_id);
@@ -1796,10 +2077,22 @@ int mlx5e_macsec_init(struct mlx5e_priv *priv)
 	INIT_LIST_HEAD(&macsec->macsec_device_list_head);
 	mutex_init(&macsec->lock);
 
+<<<<<<< HEAD
+=======
+	err = mlx5_core_alloc_pd(mdev, &macsec->aso_pdn);
+	if (err) {
+		mlx5_core_err(mdev,
+			      "MACsec offload: Failed to alloc pd for MACsec ASO, err=%d\n",
+			      err);
+		goto err_pd;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = rhashtable_init(&macsec->sci_hash, &rhash_sci);
 	if (err) {
 		mlx5_core_err(mdev, "MACsec offload: Failed to init SCI hash table, err=%d\n",
 			      err);
+<<<<<<< HEAD
 		goto err_hash;
 	}
 
@@ -1813,6 +2106,9 @@ int mlx5e_macsec_init(struct mlx5e_priv *priv)
 	if (!macsec->wq) {
 		err = -ENOMEM;
 		goto err_wq;
+=======
+		goto err_out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	xa_init_flags(&macsec->sc_xarray, XA_FLAGS_ALLOC1);
@@ -1829,20 +2125,28 @@ int mlx5e_macsec_init(struct mlx5e_priv *priv)
 
 	macsec->macsec_fs = macsec_fs;
 
+<<<<<<< HEAD
 	macsec->nb.notifier_call = macsec_obj_change_event;
 	mlx5_notifier_register(mdev, &macsec->nb);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5_core_dbg(mdev, "MACsec attached to netdevice\n");
 
 	return 0;
 
 err_out:
+<<<<<<< HEAD
 	destroy_workqueue(macsec->wq);
 err_wq:
 	mlx5e_macsec_aso_cleanup(&macsec->aso, priv->mdev);
 err_aso:
 	rhashtable_destroy(&macsec->sci_hash);
 err_hash:
+=======
+	mlx5_core_dealloc_pd(priv->mdev, macsec->aso_pdn);
+err_pd:
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(macsec);
 	priv->macsec = NULL;
 	return err;
@@ -1851,16 +2155,32 @@ err_hash:
 void mlx5e_macsec_cleanup(struct mlx5e_priv *priv)
 {
 	struct mlx5e_macsec *macsec = priv->macsec;
+<<<<<<< HEAD
 	struct mlx5_core_dev *mdev = priv->mdev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!macsec)
 		return;
 
+<<<<<<< HEAD
 	mlx5_notifier_unregister(mdev, &macsec->nb);
 	mlx5e_macsec_fs_cleanup(macsec->macsec_fs);
 	destroy_workqueue(macsec->wq);
 	mlx5e_macsec_aso_cleanup(&macsec->aso, mdev);
 	rhashtable_destroy(&macsec->sci_hash);
 	mutex_destroy(&macsec->lock);
+=======
+	mlx5e_macsec_fs_cleanup(macsec->macsec_fs);
+
+	priv->macsec = NULL;
+
+	mlx5_core_dealloc_pd(priv->mdev, macsec->aso_pdn);
+
+	rhashtable_destroy(&macsec->sci_hash);
+
+	mutex_destroy(&macsec->lock);
+
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(macsec);
 }

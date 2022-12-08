@@ -22,6 +22,7 @@ static int ipip_xfrm_rcv(struct xfrm_state *x, struct sk_buff *skb)
 	return ip_hdr(skb)->protocol;
 }
 
+<<<<<<< HEAD
 static int ipip_init_state(struct xfrm_state *x, struct netlink_ext_ack *extack)
 {
 	if (x->props.mode != XFRM_MODE_TUNNEL) {
@@ -33,6 +34,15 @@ static int ipip_init_state(struct xfrm_state *x, struct netlink_ext_ack *extack)
 		NL_SET_ERR_MSG(extack, "IPv4 tunnel is not compatible with encapsulation");
 		return -EINVAL;
 	}
+=======
+static int ipip_init_state(struct xfrm_state *x)
+{
+	if (x->props.mode != XFRM_MODE_TUNNEL)
+		return -EINVAL;
+
+	if (x->encap)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	x->props.header_len = sizeof(struct iphdr);
 

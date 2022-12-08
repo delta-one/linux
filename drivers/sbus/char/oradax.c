@@ -323,7 +323,11 @@ static int __init dax_attach(void)
 		goto done;
 	}
 
+<<<<<<< HEAD
 	cl = class_create(DAX_NAME);
+=======
+	cl = class_create(THIS_MODULE, DAX_NAME);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(cl)) {
 		dax_err("class_create failed");
 		ret = PTR_ERR(cl);
@@ -389,7 +393,11 @@ static int dax_devmap(struct file *f, struct vm_area_struct *vma)
 	/* completion area is mapped read-only for user */
 	if (vma->vm_flags & VM_WRITE)
 		return -EPERM;
+<<<<<<< HEAD
 	vm_flags_clear(vma, VM_MAYWRITE);
+=======
+	vma->vm_flags &= ~VM_MAYWRITE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (remap_pfn_range(vma, vma->vm_start, ctx->ca_buf_ra >> PAGE_SHIFT,
 			    len, vma->vm_page_prot))

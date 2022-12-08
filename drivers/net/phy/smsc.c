@@ -44,6 +44,10 @@ static struct smsc_hw_stat smsc_hw_stats[] = {
 };
 
 struct smsc_phy_priv {
+<<<<<<< HEAD
+=======
+	u16 intmask;
+>>>>>>> b7ba80a49124 (Commit)
 	bool energy_enable;
 };
 
@@ -54,8 +58,14 @@ static int smsc_phy_ack_interrupt(struct phy_device *phydev)
 	return rc < 0 ? rc : 0;
 }
 
+<<<<<<< HEAD
 int smsc_phy_config_intr(struct phy_device *phydev)
 {
+=======
+static int smsc_phy_config_intr(struct phy_device *phydev)
+{
+	struct smsc_phy_priv *priv = phydev->priv;
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	if (phydev->interrupts == PHY_INTERRUPT_ENABLED) {
@@ -63,9 +73,20 @@ int smsc_phy_config_intr(struct phy_device *phydev)
 		if (rc)
 			return rc;
 
+<<<<<<< HEAD
 		rc = phy_write(phydev, MII_LAN83C185_IM,
 			       MII_LAN83C185_ISF_INT_PHYLIB_EVENTS);
 	} else {
+=======
+		priv->intmask = MII_LAN83C185_ISF_INT4 | MII_LAN83C185_ISF_INT6;
+		if (priv->energy_enable)
+			priv->intmask |= MII_LAN83C185_ISF_INT7;
+
+		rc = phy_write(phydev, MII_LAN83C185_IM, priv->intmask);
+	} else {
+		priv->intmask = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 		rc = phy_write(phydev, MII_LAN83C185_IM, 0);
 		if (rc)
 			return rc;
@@ -75,10 +96,17 @@ int smsc_phy_config_intr(struct phy_device *phydev)
 
 	return rc < 0 ? rc : 0;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(smsc_phy_config_intr);
 
 irqreturn_t smsc_phy_handle_interrupt(struct phy_device *phydev)
 {
+=======
+
+static irqreturn_t smsc_phy_handle_interrupt(struct phy_device *phydev)
+{
+	struct smsc_phy_priv *priv = phydev->priv;
+>>>>>>> b7ba80a49124 (Commit)
 	int irq_status;
 
 	irq_status = phy_read(phydev, MII_LAN83C185_ISF);
@@ -89,13 +117,18 @@ irqreturn_t smsc_phy_handle_interrupt(struct phy_device *phydev)
 		return IRQ_NONE;
 	}
 
+<<<<<<< HEAD
 	if (!(irq_status & MII_LAN83C185_ISF_INT_PHYLIB_EVENTS))
+=======
+	if (!(irq_status & priv->intmask))
+>>>>>>> b7ba80a49124 (Commit)
 		return IRQ_NONE;
 
 	phy_trigger_machine(phydev);
 
 	return IRQ_HANDLED;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(smsc_phy_handle_interrupt);
 
 int smsc_phy_config_init(struct phy_device *phydev)
@@ -110,6 +143,27 @@ int smsc_phy_config_init(struct phy_device *phydev)
 			    MII_LAN83C185_EDPWRDOWN);
 }
 EXPORT_SYMBOL_GPL(smsc_phy_config_init);
+=======
+
+static int smsc_phy_config_init(struct phy_device *phydev)
+{
+	struct smsc_phy_priv *priv = phydev->priv;
+	int rc;
+
+	if (!priv->energy_enable || phydev->irq != PHY_POLL)
+		return 0;
+
+	rc = phy_read(phydev, MII_LAN83C185_CTRL_STATUS);
+
+	if (rc < 0)
+		return rc;
+
+	/* Enable energy detect mode for this SMSC Transceivers */
+	rc = phy_write(phydev, MII_LAN83C185_CTRL_STATUS,
+		       rc | MII_LAN83C185_EDPWRDOWN);
+	return rc;
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 static int smsc_phy_reset(struct phy_device *phydev)
 {
@@ -166,6 +220,7 @@ static int lan87xx_config_aneg(struct phy_device *phydev)
 
 static int lan95xx_config_aneg_ext(struct phy_device *phydev)
 {
+<<<<<<< HEAD
 	if (phydev->phy_id == 0x0007c0f0) { /* LAN9500A or LAN9505A */
 		/* Extend Manual AutoMDIX timer */
 		int rc = phy_set_bits(phydev, PHY_EDPD_CONFIG,
@@ -175,6 +230,20 @@ static int lan95xx_config_aneg_ext(struct phy_device *phydev)
 			return rc;
 	}
 
+=======
+	int rc;
+
+	if (phydev->phy_id != 0x0007c0f0) /* not (LAN9500A or LAN9505A) */
+		return lan87xx_config_aneg(phydev);
+
+	/* Extend Manual AutoMDIX timer */
+	rc = phy_read(phydev, PHY_EDPD_CONFIG);
+	if (rc < 0)
+		return rc;
+
+	rc |= PHY_EDPD_CONFIG_EXT_CROSSOVER_;
+	phy_write(phydev, PHY_EDPD_CONFIG, rc);
+>>>>>>> b7ba80a49124 (Commit)
 	return lan87xx_config_aneg(phydev);
 }
 
@@ -189,6 +258,7 @@ static int lan95xx_config_aneg_ext(struct phy_device *phydev)
  * The workaround is only applicable to poll mode. Energy Detect Power-Down may
  * not be used in interrupt mode lest link change detection becomes unreliable.
  */
+<<<<<<< HEAD
 int lan87xx_read_status(struct phy_device *phydev)
 {
 	struct smsc_phy_priv *priv = phydev->priv;
@@ -200,6 +270,15 @@ int lan87xx_read_status(struct phy_device *phydev)
 
 	if (!phydev->link && priv && priv->energy_enable &&
 	    phydev->irq == PHY_POLL) {
+=======
+static int lan87xx_read_status(struct phy_device *phydev)
+{
+	struct smsc_phy_priv *priv = phydev->priv;
+
+	int err = genphy_read_status(phydev);
+
+	if (!phydev->link && priv->energy_enable && phydev->irq == PHY_POLL) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Disable EDPD to wake up PHY */
 		int rc = phy_read(phydev, MII_LAN83C185_CTRL_STATUS);
 		if (rc < 0)
@@ -233,7 +312,10 @@ int lan87xx_read_status(struct phy_device *phydev)
 
 	return err;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(lan87xx_read_status);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int smsc_get_sset_count(struct phy_device *phydev)
 {
@@ -274,9 +356,16 @@ static void smsc_get_stats(struct phy_device *phydev,
 		data[i] = smsc_get_stat(phydev, i);
 }
 
+<<<<<<< HEAD
 int smsc_phy_probe(struct phy_device *phydev)
 {
 	struct device *dev = &phydev->mdio.dev;
+=======
+static int smsc_phy_probe(struct phy_device *phydev)
+{
+	struct device *dev = &phydev->mdio.dev;
+	struct device_node *of_node = dev->of_node;
+>>>>>>> b7ba80a49124 (Commit)
 	struct smsc_phy_priv *priv;
 	struct clk *refclk;
 
@@ -286,7 +375,11 @@ int smsc_phy_probe(struct phy_device *phydev)
 
 	priv->energy_enable = true;
 
+<<<<<<< HEAD
 	if (device_property_present(dev, "smsc,disable-energy-detect"))
+=======
+	if (of_property_read_bool(of_node, "smsc,disable-energy-detect"))
+>>>>>>> b7ba80a49124 (Commit)
 		priv->energy_enable = false;
 
 	phydev->priv = priv;
@@ -299,7 +392,10 @@ int smsc_phy_probe(struct phy_device *phydev)
 
 	return clk_set_rate(refclk, 50 * 1000 * 1000);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(smsc_phy_probe);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct phy_driver smsc_phy_driver[] = {
 {

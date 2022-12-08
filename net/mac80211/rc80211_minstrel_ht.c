@@ -10,7 +10,10 @@
 #include <linux/random.h>
 #include <linux/moduleparam.h>
 #include <linux/ieee80211.h>
+<<<<<<< HEAD
 #include <linux/minmax.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/mac80211.h>
 #include "rate.h"
 #include "sta_info.h"
@@ -1551,7 +1554,10 @@ minstrel_ht_update_rates(struct minstrel_priv *mp, struct minstrel_ht_sta *mi)
 {
 	struct ieee80211_sta_rates *rates;
 	int i = 0;
+<<<<<<< HEAD
 	int max_rates = min_t(int, mp->hw->max_rates, IEEE80211_TX_RATE_TABLE_SIZE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	rates = kzalloc(sizeof(*rates), GFP_ATOMIC);
 	if (!rates)
@@ -1561,10 +1567,17 @@ minstrel_ht_update_rates(struct minstrel_priv *mp, struct minstrel_ht_sta *mi)
 	minstrel_ht_set_rate(mp, mi, rates, i++, mi->max_tp_rate[0]);
 
 	/* Fill up remaining, keep one entry for max_probe_rate */
+<<<<<<< HEAD
 	for (; i < (max_rates - 1); i++)
 		minstrel_ht_set_rate(mp, mi, rates, i, mi->max_tp_rate[i]);
 
 	if (i < max_rates)
+=======
+	for (; i < (mp->hw->max_rates - 1); i++)
+		minstrel_ht_set_rate(mp, mi, rates, i, mi->max_tp_rate[i]);
+
+	if (i < mp->hw->max_rates)
+>>>>>>> b7ba80a49124 (Commit)
 		minstrel_ht_set_rate(mp, mi, rates, i++, mi->max_prob_rate);
 
 	if (i < IEEE80211_TX_RATE_TABLE_SIZE)
@@ -1963,6 +1976,12 @@ minstrel_ht_alloc(struct ieee80211_hw *hw)
 		/* safe default, does not necessarily have to match hw properties */
 		mp->max_retry = 7;
 
+<<<<<<< HEAD
+=======
+	if (hw->max_rates >= 4)
+		mp->has_mrr = true;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mp->hw = hw;
 	mp->update_interval = HZ / 20;
 
@@ -2033,7 +2052,11 @@ static void __init init_sample_table(void)
 
 	memset(sample_table, 0xff, sizeof(sample_table));
 	for (col = 0; col < SAMPLE_COLUMNS; col++) {
+<<<<<<< HEAD
 		get_random_bytes(rnd, sizeof(rnd));
+=======
+		prandom_bytes(rnd, sizeof(rnd));
+>>>>>>> b7ba80a49124 (Commit)
 		for (i = 0; i < MCS_GROUP_RATES; i++) {
 			new_idx = (i + rnd[i]) % MCS_GROUP_RATES;
 			while (sample_table[col][new_idx] != 0xff)

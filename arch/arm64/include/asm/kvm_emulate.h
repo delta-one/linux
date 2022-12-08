@@ -33,12 +33,15 @@ enum exception_type {
 	except_type_serror	= 0x180,
 };
 
+<<<<<<< HEAD
 #define kvm_exception_type_names		\
 	{ except_type_sync,	"SYNC"   },	\
 	{ except_type_irq,	"IRQ"    },	\
 	{ except_type_fiq,	"FIQ"    },	\
 	{ except_type_serror,	"SERROR" }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool kvm_condition_valid32(const struct kvm_vcpu *vcpu);
 void kvm_skip_instr32(struct kvm_vcpu *vcpu);
 
@@ -50,10 +53,13 @@ void kvm_inject_size_fault(struct kvm_vcpu *vcpu);
 
 void kvm_vcpu_wfi(struct kvm_vcpu *vcpu);
 
+<<<<<<< HEAD
 void kvm_emulate_nested_eret(struct kvm_vcpu *vcpu);
 int kvm_inject_nested_sync(struct kvm_vcpu *vcpu, u64 esr_el2);
 int kvm_inject_nested_irq(struct kvm_vcpu *vcpu);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if defined(__KVM_VHE_HYPERVISOR__) || defined(__KVM_NVHE_HYPERVISOR__)
 static __always_inline bool vcpu_el1_is_32bit(struct kvm_vcpu *vcpu)
 {
@@ -98,6 +104,13 @@ static inline void vcpu_reset_hcr(struct kvm_vcpu *vcpu)
 	if (vcpu_el1_is_32bit(vcpu))
 		vcpu->arch.hcr_el2 &= ~HCR_RW;
 
+<<<<<<< HEAD
+=======
+	if (cpus_have_const_cap(ARM64_MISMATCHED_CACHE_TYPE) ||
+	    vcpu_el1_is_32bit(vcpu))
+		vcpu->arch.hcr_el2 |= HCR_TID2;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (kvm_has_mte(vcpu->kvm))
 		vcpu->arch.hcr_el2 |= HCR_ATA;
 }
@@ -189,6 +202,7 @@ static __always_inline void vcpu_set_reg(struct kvm_vcpu *vcpu, u8 reg_num,
 		vcpu_gp_regs(vcpu)->regs[reg_num] = val;
 }
 
+<<<<<<< HEAD
 static inline bool vcpu_is_el2_ctxt(const struct kvm_cpu_context *ctxt)
 {
 	switch (ctxt->regs.pstate & (PSR_MODE32_BIT | PSR_MODE_MASK)) {
@@ -245,6 +259,8 @@ static inline bool is_hyp_ctxt(const struct kvm_vcpu *vcpu)
 	return __is_hyp_ctxt(&vcpu->arch.ctxt);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The layout of SPSR for an AArch32 state is different when observed from an
  * AArch64 SPSR_ELx or an AArch32 SPSR_*. This function generates the AArch32
@@ -411,6 +427,7 @@ static __always_inline u8 kvm_vcpu_trap_get_fault_level(const struct kvm_vcpu *v
 static __always_inline bool kvm_vcpu_abt_issea(const struct kvm_vcpu *vcpu)
 {
 	switch (kvm_vcpu_trap_get_fault(vcpu)) {
+<<<<<<< HEAD
 	case ESR_ELx_FSC_EXTABT:
 	case ESR_ELx_FSC_SEA_TTW0:
 	case ESR_ELx_FSC_SEA_TTW1:
@@ -421,6 +438,18 @@ static __always_inline bool kvm_vcpu_abt_issea(const struct kvm_vcpu *vcpu)
 	case ESR_ELx_FSC_SECC_TTW1:
 	case ESR_ELx_FSC_SECC_TTW2:
 	case ESR_ELx_FSC_SECC_TTW3:
+=======
+	case FSC_SEA:
+	case FSC_SEA_TTW0:
+	case FSC_SEA_TTW1:
+	case FSC_SEA_TTW2:
+	case FSC_SEA_TTW3:
+	case FSC_SECC:
+	case FSC_SECC_TTW0:
+	case FSC_SECC_TTW1:
+	case FSC_SECC_TTW2:
+	case FSC_SECC_TTW3:
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 	default:
 		return false;
@@ -435,6 +464,7 @@ static __always_inline int kvm_vcpu_sys_get_rt(struct kvm_vcpu *vcpu)
 
 static inline bool kvm_is_write_fault(struct kvm_vcpu *vcpu)
 {
+<<<<<<< HEAD
 	if (kvm_vcpu_abt_iss1tw(vcpu)) {
 		/*
 		 * Only a permission fault on a S1PTW should be
@@ -455,6 +485,10 @@ static inline bool kvm_is_write_fault(struct kvm_vcpu *vcpu)
 			return false;
 		}
 	}
+=======
+	if (kvm_vcpu_abt_iss1tw(vcpu))
+		return true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (kvm_vcpu_trap_is_iabt(vcpu))
 		return false;

@@ -277,7 +277,11 @@ the following access functions:
 
 Again, only one request in a given batch need actually carry out a
 grace-period operation, which means there must be an efficient way to
+<<<<<<< HEAD
 identify which of many concurrent requests will initiate the grace
+=======
+identify which of many concurrent reqeusts will initiate the grace
+>>>>>>> b7ba80a49124 (Commit)
 period, and that there be an efficient way for the remaining requests to
 wait for that grace period to complete. However, that is the topic of
 the next section.
@@ -405,7 +409,11 @@ Use of Workqueues
 In earlier implementations, the task requesting the expedited grace
 period also drove it to completion. This straightforward approach had
 the disadvantage of needing to account for POSIX signals sent to user
+<<<<<<< HEAD
 tasks, so more recent implementations use the Linux kernel's
+=======
+tasks, so more recent implemementations use the Linux kernel's
+>>>>>>> b7ba80a49124 (Commit)
 workqueues (see Documentation/core-api/workqueue.rst).
 
 The requesting task still does counter snapshotting and funnel-lock
@@ -465,7 +473,11 @@ corresponding disadvantage that workqueues cannot be used until they are
 initialized, which does not happen until some time after the scheduler
 spawns the first task. Given that there are parts of the kernel that
 really do want to execute grace periods during this mid-boot “dead
+<<<<<<< HEAD
 zone”, expedited grace periods must do something else during this time.
+=======
+zone”, expedited grace periods must do something else during thie time.
+>>>>>>> b7ba80a49124 (Commit)
 
 What they do is to fall back to the old practice of requiring that the
 requesting task drive the expedited grace period, as was the case before

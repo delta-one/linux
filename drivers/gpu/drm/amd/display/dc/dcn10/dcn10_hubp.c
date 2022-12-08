@@ -1179,12 +1179,19 @@ void hubp1_cursor_set_position(
 		const struct dc_cursor_mi_param *param)
 {
 	struct dcn10_hubp *hubp1 = TO_DCN10_HUBP(hubp);
+<<<<<<< HEAD
 	int x_pos = pos->x - param->viewport.x;
 	int y_pos = pos->y - param->viewport.y;
 	int x_hotspot = pos->x_hotspot;
 	int y_hotspot = pos->y_hotspot;
 	int src_x_offset = x_pos - pos->x_hotspot;
 	int src_y_offset = y_pos - pos->y_hotspot;
+=======
+	int src_x_offset = pos->x - pos->x_hotspot - param->viewport.x;
+	int src_y_offset = pos->y - pos->y_hotspot - param->viewport.y;
+	int x_hotspot = pos->x_hotspot;
+	int y_hotspot = pos->y_hotspot;
+>>>>>>> b7ba80a49124 (Commit)
 	int cursor_height = (int)hubp->curs_attr.height;
 	int cursor_width = (int)hubp->curs_attr.width;
 	uint32_t dst_x_offset;
@@ -1202,6 +1209,7 @@ void hubp1_cursor_set_position(
 	if (hubp->curs_attr.address.quad_part == 0)
 		return;
 
+<<<<<<< HEAD
 	// Transform cursor width / height and hotspots for offset calculations
 	if (param->rotation == ROTATION_ANGLE_90 || param->rotation == ROTATION_ANGLE_270) {
 		swap(cursor_height, cursor_width);
@@ -1222,6 +1230,20 @@ void hubp1_cursor_set_position(
 			src_x_offset = x_pos - (cursor_width - x_hotspot);
 
 		src_y_offset = y_pos - (cursor_height - y_hotspot);
+=======
+	// Rotated cursor width/height and hotspots tweaks for offset calculation
+	if (param->rotation == ROTATION_ANGLE_90 || param->rotation == ROTATION_ANGLE_270) {
+		swap(cursor_height, cursor_width);
+		if (param->rotation == ROTATION_ANGLE_90) {
+			src_x_offset = pos->x - pos->y_hotspot - param->viewport.x;
+			src_y_offset = pos->y - pos->x_hotspot - param->viewport.y;
+		}
+	} else if (param->rotation == ROTATION_ANGLE_180) {
+		if (!param->mirror)
+			src_x_offset = pos->x - param->viewport.x;
+
+		src_y_offset = pos->y - param->viewport.y;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	dst_x_offset = (src_x_offset >= 0) ? src_x_offset : 0;
@@ -1258,8 +1280,13 @@ void hubp1_cursor_set_position(
 			CURSOR_Y_POSITION, pos->y);
 
 	REG_SET_2(CURSOR_HOT_SPOT, 0,
+<<<<<<< HEAD
 			CURSOR_HOT_SPOT_X, pos->x_hotspot,
 			CURSOR_HOT_SPOT_Y, pos->y_hotspot);
+=======
+			CURSOR_HOT_SPOT_X, x_hotspot,
+			CURSOR_HOT_SPOT_Y, y_hotspot);
+>>>>>>> b7ba80a49124 (Commit)
 
 	REG_SET(CURSOR_DST_OFFSET, 0,
 			CURSOR_DST_X_OFFSET, dst_x_offset);

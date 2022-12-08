@@ -77,16 +77,23 @@
 #include <linux/bits.h>
 #include <linux/etherdevice.h>
 
+<<<<<<< HEAD
 #include "tag.h"
+=======
+#include "dsa_priv.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Protocols supported:
  *
  * 0x04 = RTL8365MB DSA protocol
  */
 
+<<<<<<< HEAD
 #define RTL8_4_NAME			"rtl8_4"
 #define RTL8_4T_NAME			"rtl8_4t"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RTL8_4_TAG_LEN			8
 
 #define RTL8_4_PROTOCOL			GENMASK(15, 8)
@@ -237,7 +244,11 @@ static const struct dsa_device_ops rtl8_4_netdev_ops = {
 
 DSA_TAG_DRIVER(rtl8_4_netdev_ops);
 
+<<<<<<< HEAD
 MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_RTL8_4, RTL8_4_NAME);
+=======
+MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_RTL8_4);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Tail version */
 static const struct dsa_device_ops rtl8_4t_netdev_ops = {
@@ -250,7 +261,11 @@ static const struct dsa_device_ops rtl8_4t_netdev_ops = {
 
 DSA_TAG_DRIVER(rtl8_4t_netdev_ops);
 
+<<<<<<< HEAD
 MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_RTL8_4T, RTL8_4T_NAME);
+=======
+MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_RTL8_4T);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct dsa_tag_driver *dsa_tag_drivers[] = {
 	&DSA_TAG_DRIVER_NAME(rtl8_4_netdev_ops),

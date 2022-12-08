@@ -5,7 +5,11 @@
 
 #include <linux/slab.h>
 #include <linux/tee_drv.h>
+<<<<<<< HEAD
 #include <linux/psp.h>
+=======
+#include <linux/psp-sev.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include "amdtee_private.h"
 
 static int pool_op_alloc(struct tee_shm_pool *pool, struct tee_shm *shm,

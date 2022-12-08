@@ -663,7 +663,11 @@ static int mpc5121_nfc_probe(struct platform_device *op)
 	}
 
 	prv->irq = irq_of_parse_and_map(dn, 0);
+<<<<<<< HEAD
 	if (!prv->irq) {
+=======
+	if (prv->irq == NO_IRQ) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(dev, "Error mapping IRQ!\n");
 		return -EINVAL;
 	}

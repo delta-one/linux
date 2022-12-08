@@ -17,6 +17,10 @@
  */
 #include <linux/init.h>
 #include <linux/module.h>
+<<<<<<< HEAD
+=======
+#include <linux/device.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kernel.h>
 #include <linux/slab.h>
 #include <linux/vmalloc.h>
@@ -42,34 +46,59 @@
 
 MODULE_LICENSE("GPL v2");
 
+<<<<<<< HEAD
+=======
+static int max_devices = 4;
+module_param_named(count, max_devices, int, 0444);
+MODULE_PARM_DESC(count, "number of " MDPY_NAME " devices");
+
+
+>>>>>>> b7ba80a49124 (Commit)
 #define MDPY_TYPE_1 "vga"
 #define MDPY_TYPE_2 "xga"
 #define MDPY_TYPE_3 "hd"
 
+<<<<<<< HEAD
 static struct mdpy_type {
 	struct mdev_type type;
+=======
+static const struct mdpy_type {
+	const char *name;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 format;
 	u32 bytepp;
 	u32 width;
 	u32 height;
 } mdpy_types[] = {
 	{
+<<<<<<< HEAD
 		.type.sysfs_name 	= MDPY_TYPE_1,
 		.type.pretty_name	= MDPY_CLASS_NAME "-" MDPY_TYPE_1,
+=======
+		.name	= MDPY_CLASS_NAME "-" MDPY_TYPE_1,
+>>>>>>> b7ba80a49124 (Commit)
 		.format = DRM_FORMAT_XRGB8888,
 		.bytepp = 4,
 		.width	= 640,
 		.height = 480,
 	}, {
+<<<<<<< HEAD
 		.type.sysfs_name 	= MDPY_TYPE_2,
 		.type.pretty_name	= MDPY_CLASS_NAME "-" MDPY_TYPE_2,
+=======
+		.name	= MDPY_CLASS_NAME "-" MDPY_TYPE_2,
+>>>>>>> b7ba80a49124 (Commit)
 		.format = DRM_FORMAT_XRGB8888,
 		.bytepp = 4,
 		.width	= 1024,
 		.height = 768,
 	}, {
+<<<<<<< HEAD
 		.type.sysfs_name 	= MDPY_TYPE_3,
 		.type.pretty_name	= MDPY_CLASS_NAME "-" MDPY_TYPE_3,
+=======
+		.name	= MDPY_CLASS_NAME "-" MDPY_TYPE_3,
+>>>>>>> b7ba80a49124 (Commit)
 		.format = DRM_FORMAT_XRGB8888,
 		.bytepp = 4,
 		.width	= 1920,
@@ -77,17 +106,24 @@ static struct mdpy_type {
 	},
 };
 
+<<<<<<< HEAD
 static struct mdev_type *mdpy_mdev_types[] = {
 	&mdpy_types[0].type,
 	&mdpy_types[1].type,
 	&mdpy_types[2].type,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static dev_t		mdpy_devt;
 static struct class	*mdpy_class;
 static struct cdev	mdpy_cdev;
 static struct device	mdpy_dev;
+<<<<<<< HEAD
 static struct mdev_parent mdpy_parent;
+=======
+static u32		mdpy_count;
+>>>>>>> b7ba80a49124 (Commit)
 static const struct vfio_device_ops mdpy_dev_ops;
 
 /* State of each mdev device */
@@ -225,10 +261,20 @@ static int mdpy_init_dev(struct vfio_device *vdev)
 		container_of(vdev, struct mdev_state, vdev);
 	struct mdev_device *mdev = to_mdev_device(vdev->dev);
 	const struct mdpy_type *type =
+<<<<<<< HEAD
 		container_of(mdev->type, struct mdpy_type, type);
 	u32 fbsize;
 	int ret = -ENOMEM;
 
+=======
+		&mdpy_types[mdev_get_type_group_id(mdev)];
+	u32 fbsize;
+	int ret = -ENOMEM;
+
+	if (mdpy_count >= max_devices)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mdev_state->vconfig = kzalloc(MDPY_CONFIG_SPACE_SIZE, GFP_KERNEL);
 	if (!mdev_state->vconfig)
 		return ret;
@@ -246,8 +292,15 @@ static int mdpy_init_dev(struct vfio_device *vdev)
 	mdpy_create_config_space(mdev_state);
 	mdpy_reset(mdev_state);
 
+<<<<<<< HEAD
 	dev_info(vdev->dev, "%s: %s (%dx%d)\n", __func__, type->type.pretty_name,
 		 type->width, type->height);
+=======
+	dev_info(vdev->dev, "%s: %s (%dx%d)\n", __func__, type->name, type->width,
+		 type->height);
+
+	mdpy_count++;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 out_vconfig:
@@ -281,8 +334,15 @@ static void mdpy_release_dev(struct vfio_device *vdev)
 	struct mdev_state *mdev_state =
 		container_of(vdev, struct mdev_state, vdev);
 
+<<<<<<< HEAD
 	vfree(mdev_state->memblk);
 	kfree(mdev_state->vconfig);
+=======
+	mdpy_count--;
+	vfree(mdev_state->memblk);
+	kfree(mdev_state->vconfig);
+	vfio_free_device(vdev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mdpy_remove(struct mdev_device *mdev)
@@ -648,13 +708,80 @@ static const struct attribute_group *mdev_dev_groups[] = {
 	NULL,
 };
 
+<<<<<<< HEAD
 static ssize_t mdpy_show_description(struct mdev_type *mtype, char *buf)
 {
 	struct mdpy_type *type = container_of(mtype, struct mdpy_type, type);
+=======
+static ssize_t name_show(struct mdev_type *mtype,
+			 struct mdev_type_attribute *attr, char *buf)
+{
+	const struct mdpy_type *type =
+		&mdpy_types[mtype_get_type_group_id(mtype)];
+
+	return sprintf(buf, "%s\n", type->name);
+}
+static MDEV_TYPE_ATTR_RO(name);
+
+static ssize_t description_show(struct mdev_type *mtype,
+				struct mdev_type_attribute *attr, char *buf)
+{
+	const struct mdpy_type *type =
+		&mdpy_types[mtype_get_type_group_id(mtype)];
+>>>>>>> b7ba80a49124 (Commit)
 
 	return sprintf(buf, "virtual display, %dx%d framebuffer\n",
 		       type->width, type->height);
 }
+<<<<<<< HEAD
+=======
+static MDEV_TYPE_ATTR_RO(description);
+
+static ssize_t available_instances_show(struct mdev_type *mtype,
+					struct mdev_type_attribute *attr,
+					char *buf)
+{
+	return sprintf(buf, "%d\n", max_devices - mdpy_count);
+}
+static MDEV_TYPE_ATTR_RO(available_instances);
+
+static ssize_t device_api_show(struct mdev_type *mtype,
+			       struct mdev_type_attribute *attr, char *buf)
+{
+	return sprintf(buf, "%s\n", VFIO_DEVICE_API_PCI_STRING);
+}
+static MDEV_TYPE_ATTR_RO(device_api);
+
+static struct attribute *mdev_types_attrs[] = {
+	&mdev_type_attr_name.attr,
+	&mdev_type_attr_description.attr,
+	&mdev_type_attr_device_api.attr,
+	&mdev_type_attr_available_instances.attr,
+	NULL,
+};
+
+static struct attribute_group mdev_type_group1 = {
+	.name  = MDPY_TYPE_1,
+	.attrs = mdev_types_attrs,
+};
+
+static struct attribute_group mdev_type_group2 = {
+	.name  = MDPY_TYPE_2,
+	.attrs = mdev_types_attrs,
+};
+
+static struct attribute_group mdev_type_group3 = {
+	.name  = MDPY_TYPE_3,
+	.attrs = mdev_types_attrs,
+};
+
+static struct attribute_group *mdev_type_groups[] = {
+	&mdev_type_group1,
+	&mdev_type_group2,
+	&mdev_type_group3,
+	NULL,
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct vfio_device_ops mdpy_dev_ops = {
 	.init = mdpy_init_dev,
@@ -666,8 +793,11 @@ static const struct vfio_device_ops mdpy_dev_ops = {
 };
 
 static struct mdev_driver mdpy_driver = {
+<<<<<<< HEAD
 	.device_api = VFIO_DEVICE_API_PCI_STRING,
 	.max_instances = 4,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "mdpy",
 		.owner = THIS_MODULE,
@@ -676,7 +806,11 @@ static struct mdev_driver mdpy_driver = {
 	},
 	.probe = mdpy_probe,
 	.remove	= mdpy_remove,
+<<<<<<< HEAD
 	.show_description = mdpy_show_description,
+=======
+	.supported_type_groups = mdev_type_groups,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct file_operations vd_fops = {
@@ -705,7 +839,11 @@ static int __init mdpy_dev_init(void)
 	if (ret)
 		goto err_cdev;
 
+<<<<<<< HEAD
 	mdpy_class = class_create(MDPY_CLASS_NAME);
+=======
+	mdpy_class = class_create(THIS_MODULE, MDPY_CLASS_NAME);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(mdpy_class)) {
 		pr_err("Error: failed to register mdpy_dev class\n");
 		ret = PTR_ERR(mdpy_class);
@@ -717,20 +855,31 @@ static int __init mdpy_dev_init(void)
 
 	ret = device_register(&mdpy_dev);
 	if (ret)
+<<<<<<< HEAD
 		goto err_put;
 
 	ret = mdev_register_parent(&mdpy_parent, &mdpy_dev, &mdpy_driver,
 				   mdpy_mdev_types,
 				   ARRAY_SIZE(mdpy_mdev_types));
+=======
+		goto err_class;
+
+	ret = mdev_register_device(&mdpy_dev, &mdpy_driver);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto err_device;
 
 	return 0;
 
 err_device:
+<<<<<<< HEAD
 	device_del(&mdpy_dev);
 err_put:
 	put_device(&mdpy_dev);
+=======
+	device_unregister(&mdpy_dev);
+err_class:
+>>>>>>> b7ba80a49124 (Commit)
 	class_destroy(mdpy_class);
 err_driver:
 	mdev_unregister_driver(&mdpy_driver);
@@ -743,7 +892,11 @@ err_cdev:
 static void __exit mdpy_dev_exit(void)
 {
 	mdpy_dev.bus = NULL;
+<<<<<<< HEAD
 	mdev_unregister_parent(&mdpy_parent);
+=======
+	mdev_unregister_device(&mdpy_dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	device_unregister(&mdpy_dev);
 	mdev_unregister_driver(&mdpy_driver);
@@ -753,8 +906,11 @@ static void __exit mdpy_dev_exit(void)
 	mdpy_class = NULL;
 }
 
+<<<<<<< HEAD
 module_param_named(count, mdpy_driver.max_instances, int, 0444);
 MODULE_PARM_DESC(count, "number of " MDPY_NAME " devices");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 module_init(mdpy_dev_init)
 module_exit(mdpy_dev_exit)

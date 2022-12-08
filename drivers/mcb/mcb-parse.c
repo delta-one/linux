@@ -108,7 +108,11 @@ static int chameleon_parse_gdd(struct mcb_bus *bus,
 	return 0;
 
 err:
+<<<<<<< HEAD
 	put_device(&mdev->dev);
+=======
+	mcb_free_dev(mdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }

@@ -536,6 +536,7 @@ static int abeoz9_probe(struct i2c_client *client)
 	clear_bit(RTC_FEATURE_ALARM, data->rtc->features);
 
 	if (client->irq > 0) {
+<<<<<<< HEAD
 		unsigned long irqflags = IRQF_TRIGGER_LOW;
 
 		if (dev_fwnode(&client->dev))
@@ -544,6 +545,11 @@ static int abeoz9_probe(struct i2c_client *client)
 		ret = devm_request_threaded_irq(dev, client->irq, NULL,
 						abeoz9_rtc_irq,
 						irqflags | IRQF_ONESHOT,
+=======
+		ret = devm_request_threaded_irq(dev, client->irq, NULL,
+						abeoz9_rtc_irq,
+						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+>>>>>>> b7ba80a49124 (Commit)
 						dev_name(dev), dev);
 		if (ret) {
 			dev_err(dev, "failed to request alarm irq\n");

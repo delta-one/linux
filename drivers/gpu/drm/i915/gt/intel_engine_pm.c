@@ -15,6 +15,7 @@
 #include "intel_rc6.h"
 #include "intel_ring.h"
 #include "shmem_utils.h"
+<<<<<<< HEAD
 #include "intel_gt_regs.h"
 
 static void intel_gsc_idle_msg_enable(struct intel_engine_cs *engine)
@@ -31,6 +32,8 @@ static void intel_gsc_idle_msg_enable(struct intel_engine_cs *engine)
 				   0xA);
 	}
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void dbg_poison_ce(struct intel_context *ce)
 {
@@ -291,8 +294,11 @@ void intel_engine_init__pm(struct intel_engine_cs *engine)
 
 	intel_wakeref_init(&engine->wakeref, rpm, &wf_ops);
 	intel_engine_init_heartbeat(engine);
+<<<<<<< HEAD
 
 	intel_gsc_idle_msg_enable(engine);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

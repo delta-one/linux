@@ -57,9 +57,14 @@ int mlx5e_xdp_max_mtu(struct mlx5e_params *params, struct mlx5e_xsk_param *xsk)
 
 static inline bool
 mlx5e_xmit_xdp_buff(struct mlx5e_xdpsq *sq, struct mlx5e_rq *rq,
+<<<<<<< HEAD
 		    struct xdp_buff *xdp)
 {
 	struct page *page = virt_to_page(xdp->data);
+=======
+		    struct page *page, struct xdp_buff *xdp)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct skb_shared_info *sinfo = NULL;
 	struct mlx5e_xmit_data xdptxd;
 	struct mlx5e_xdp_info xdpi;
@@ -118,7 +123,11 @@ mlx5e_xmit_xdp_buff(struct mlx5e_xdpsq *sq, struct mlx5e_rq *rq,
 	xdpi.page.rq = rq;
 
 	dma_addr = page_pool_get_dma_addr(page) + (xdpf->data - (void *)xdpf);
+<<<<<<< HEAD
 	dma_sync_single_for_device(sq->pdev, dma_addr, xdptxd.len, DMA_BIDIRECTIONAL);
+=======
+	dma_sync_single_for_device(sq->pdev, dma_addr, xdptxd.len, DMA_TO_DEVICE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unlikely(xdp_frame_has_frags(xdpf))) {
 		sinfo = xdp_get_shared_info_from_frame(xdpf);
@@ -132,7 +141,11 @@ mlx5e_xmit_xdp_buff(struct mlx5e_xdpsq *sq, struct mlx5e_rq *rq,
 				skb_frag_off(frag);
 			len = skb_frag_size(frag);
 			dma_sync_single_for_device(sq->pdev, addr, len,
+<<<<<<< HEAD
 						   DMA_BIDIRECTIONAL);
+=======
+						   DMA_TO_DEVICE);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -157,6 +170,7 @@ mlx5e_xmit_xdp_buff(struct mlx5e_xdpsq *sq, struct mlx5e_rq *rq,
 	return true;
 }
 
+<<<<<<< HEAD
 static int mlx5e_xdp_rx_timestamp(const struct xdp_md *ctx, u64 *timestamp)
 {
 	const struct mlx5e_xdp_buff *_ctx = (void *)ctx;
@@ -190,6 +204,12 @@ bool mlx5e_xdp_handle(struct mlx5e_rq *rq,
 		      struct bpf_prog *prog, struct mlx5e_xdp_buff *mxbuf)
 {
 	struct xdp_buff *xdp = &mxbuf->xdp;
+=======
+/* returns true if packet was consumed by xdp */
+bool mlx5e_xdp_handle(struct mlx5e_rq *rq, struct page *page,
+		      struct bpf_prog *prog, struct xdp_buff *xdp)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	u32 act;
 	int err;
 
@@ -198,7 +218,11 @@ bool mlx5e_xdp_handle(struct mlx5e_rq *rq,
 	case XDP_PASS:
 		return false;
 	case XDP_TX:
+<<<<<<< HEAD
 		if (unlikely(!mlx5e_xmit_xdp_buff(rq->xdpsq, rq, xdp)))
+=======
+		if (unlikely(!mlx5e_xmit_xdp_buff(rq->xdpsq, rq, page, xdp)))
+>>>>>>> b7ba80a49124 (Commit)
 			goto xdp_abort;
 		__set_bit(MLX5E_RQ_FLAG_XDP_XMIT, rq->flags); /* non-atomic */
 		return true;
@@ -210,7 +234,11 @@ bool mlx5e_xdp_handle(struct mlx5e_rq *rq,
 		__set_bit(MLX5E_RQ_FLAG_XDP_XMIT, rq->flags);
 		__set_bit(MLX5E_RQ_FLAG_XDP_REDIRECT, rq->flags);
 		if (xdp->rxq->mem.type != MEM_TYPE_XSK_BUFF_POOL)
+<<<<<<< HEAD
 			mlx5e_page_dma_unmap(rq, virt_to_page(xdp->data));
+=======
+			mlx5e_page_dma_unmap(rq, page);
+>>>>>>> b7ba80a49124 (Commit)
 		rq->stats->xdp_redirect++;
 		return true;
 	default:
@@ -363,7 +391,11 @@ mlx5e_xmit_xdp_frame_mpwqe(struct mlx5e_xdpsq *sq, struct mlx5e_xmit_data *xdptx
 
 	mlx5e_xdp_mpwqe_add_dseg(sq, xdptxd, stats);
 
+<<<<<<< HEAD
 	if (unlikely(mlx5e_xdp_mpwqe_is_full(session, sq->max_sq_mpw_wqebbs)))
+=======
+	if (unlikely(mlx5e_xdp_mpqwe_is_full(session, sq->max_sq_mpw_wqebbs)))
+>>>>>>> b7ba80a49124 (Commit)
 		mlx5e_xdp_mpwqe_complete(sq);
 
 	stats->xmit++;

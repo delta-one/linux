@@ -14,6 +14,7 @@
 
 /*
  * Grace-period counter management.
+<<<<<<< HEAD
  *
  * The two least significant bits contain the control flags.
  * The most significant bits contain the grace-period sequence counter.
@@ -51,6 +52,8 @@
  *					polled GP has completed.  This value covers
  *					both the state and the counter of the
  *					grace-period sequence number.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #define RCU_SEQ_CTR_SHIFT	2
@@ -261,8 +264,11 @@ extern int rcu_cpu_stall_ftrace_dump;
 extern int rcu_cpu_stall_suppress;
 extern int rcu_cpu_stall_timeout;
 extern int rcu_exp_cpu_stall_timeout;
+<<<<<<< HEAD
 extern int rcu_cpu_stall_cputime;
 extern bool rcu_exp_stall_task_details __read_mostly;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int rcu_jiffies_till_stall_check(void);
 int rcu_exp_jiffies_till_stall_check(void);
 
@@ -325,7 +331,11 @@ void rcu_test_sync_prims(void);
  */
 extern void resched_cpu(int cpu);
 
+<<<<<<< HEAD
 #if !defined(CONFIG_TINY_RCU)
+=======
+#if defined(CONFIG_SRCU) || !defined(CONFIG_TINY_RCU)
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/rcu_node_tree.h>
 
@@ -378,6 +388,7 @@ extern void rcu_init_geometry(void);
  * specified state structure (for SRCU) or the only rcu_state structure
  * (for RCU).
  */
+<<<<<<< HEAD
 #define _rcu_for_each_node_breadth_first(sp, rnp) \
 	for ((rnp) = &(sp)->node[0]; \
 	     (rnp) < &(sp)->node[rcu_num_nodes]; (rnp)++)
@@ -385,6 +396,13 @@ extern void rcu_init_geometry(void);
 	_rcu_for_each_node_breadth_first(&rcu_state, rnp)
 #define srcu_for_each_node_breadth_first(ssp, rnp) \
 	_rcu_for_each_node_breadth_first(ssp->srcu_sup, rnp)
+=======
+#define srcu_for_each_node_breadth_first(sp, rnp) \
+	for ((rnp) = &(sp)->node[0]; \
+	     (rnp) < &(sp)->node[rcu_num_nodes]; (rnp)++)
+#define rcu_for_each_node_breadth_first(rnp) \
+	srcu_for_each_node_breadth_first(&rcu_state, rnp)
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Scan the leaves of the rcu_node hierarchy for the rcu_state structure.
@@ -416,10 +434,13 @@ extern void rcu_init_geometry(void);
 	     (cpu) <= rnp->grphi; \
 	     (cpu) = rcu_find_next_bit((rnp), (cpu) + 1 - (rnp->grplo), (mask)))
 
+<<<<<<< HEAD
 #endif /* !defined(CONFIG_TINY_RCU) */
 
 #if !defined(CONFIG_TINY_RCU) || defined(CONFIG_TASKS_RCU_GENERIC)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Wrappers for the rcu_node::lock acquire and release.
  *
@@ -482,26 +503,40 @@ do {									\
 #define raw_lockdep_assert_held_rcu_node(p)				\
 	lockdep_assert_held(&ACCESS_PRIVATE(p, lock))
 
+<<<<<<< HEAD
 #endif // #if !defined(CONFIG_TINY_RCU) || defined(CONFIG_TASKS_RCU_GENERIC)
+=======
+#endif /* #if defined(CONFIG_SRCU) || !defined(CONFIG_TINY_RCU) */
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_TINY_RCU
 /* Tiny RCU doesn't expedite, as its purpose in life is instead to be tiny. */
 static inline bool rcu_gp_is_normal(void) { return true; }
 static inline bool rcu_gp_is_expedited(void) { return false; }
+<<<<<<< HEAD
 static inline bool rcu_async_should_hurry(void) { return false; }
 static inline void rcu_expedite_gp(void) { }
 static inline void rcu_unexpedite_gp(void) { }
 static inline void rcu_async_hurry(void) { }
 static inline void rcu_async_relax(void) { }
+=======
+static inline void rcu_expedite_gp(void) { }
+static inline void rcu_unexpedite_gp(void) { }
+>>>>>>> b7ba80a49124 (Commit)
 static inline void rcu_request_urgent_qs_task(struct task_struct *t) { }
 #else /* #ifdef CONFIG_TINY_RCU */
 bool rcu_gp_is_normal(void);     /* Internal RCU use. */
 bool rcu_gp_is_expedited(void);  /* Internal RCU use. */
+<<<<<<< HEAD
 bool rcu_async_should_hurry(void);  /* Internal RCU use. */
 void rcu_expedite_gp(void);
 void rcu_unexpedite_gp(void);
 void rcu_async_hurry(void);
 void rcu_async_relax(void);
+=======
+void rcu_expedite_gp(void);
+void rcu_unexpedite_gp(void);
+>>>>>>> b7ba80a49124 (Commit)
 void rcupdate_announce_bootup_oddness(void);
 #ifdef CONFIG_TASKS_RCU_GENERIC
 void show_rcu_tasks_gp_kthreads(void);
@@ -525,6 +560,7 @@ enum rcutorture_type {
 	INVALID_RCU_FLAVOR
 };
 
+<<<<<<< HEAD
 #if defined(CONFIG_RCU_LAZY)
 unsigned long rcu_lazy_get_jiffies_till_flush(void);
 void rcu_lazy_set_jiffies_till_flush(unsigned long j);
@@ -533,6 +569,8 @@ static inline unsigned long rcu_lazy_get_jiffies_till_flush(void) { return 0; }
 static inline void rcu_lazy_set_jiffies_till_flush(unsigned long j) { }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if defined(CONFIG_TREE_RCU)
 void rcutorture_get_gp_data(enum rcutorture_type test_type, int *flags,
 			    unsigned long *gp_seq);

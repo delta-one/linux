@@ -213,7 +213,11 @@ static void igmp_stop_timer(struct ip_mc_list *im)
 /* It must be called with locked im->lock */
 static void igmp_start_timer(struct ip_mc_list *im, int max_delay)
 {
+<<<<<<< HEAD
 	int tv = get_random_u32_below(max_delay);
+=======
+	int tv = prandom_u32() % max_delay;
+>>>>>>> b7ba80a49124 (Commit)
 
 	im->tm_running = 1;
 	if (!mod_timer(&im->timer, jiffies+tv+2))
@@ -222,7 +226,11 @@ static void igmp_start_timer(struct ip_mc_list *im, int max_delay)
 
 static void igmp_gq_start_timer(struct in_device *in_dev)
 {
+<<<<<<< HEAD
 	int tv = get_random_u32_below(in_dev->mr_maxdelay);
+=======
+	int tv = prandom_u32() % in_dev->mr_maxdelay;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long exp = jiffies + tv + 2;
 
 	if (in_dev->mr_gq_running &&
@@ -236,7 +244,11 @@ static void igmp_gq_start_timer(struct in_device *in_dev)
 
 static void igmp_ifc_start_timer(struct in_device *in_dev, int delay)
 {
+<<<<<<< HEAD
 	int tv = get_random_u32_below(delay);
+=======
+	int tv = prandom_u32() % delay;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!mod_timer(&in_dev->mr_ifc_timer, jiffies+tv+2))
 		in_dev_hold(in_dev);
@@ -2638,10 +2650,17 @@ int ip_mc_gsfget(struct sock *sk, struct group_filter *gsf,
 /*
  * check if a multicast source filter allows delivery for a given <src,dst,intf>
  */
+<<<<<<< HEAD
 int ip_mc_sf_allow(const struct sock *sk, __be32 loc_addr, __be32 rmt_addr,
 		   int dif, int sdif)
 {
 	const struct inet_sock *inet = inet_sk(sk);
+=======
+int ip_mc_sf_allow(struct sock *sk, __be32 loc_addr, __be32 rmt_addr,
+		   int dif, int sdif)
+{
+	struct inet_sock *inet = inet_sk(sk);
+>>>>>>> b7ba80a49124 (Commit)
 	struct ip_mc_socklist *pmc;
 	struct ip_sf_socklist *psl;
 	int i;

@@ -554,7 +554,11 @@ void hfsplus_file_truncate(struct inode *inode)
 	if (inode->i_size > hip->phys_size) {
 		struct address_space *mapping = inode->i_mapping;
 		struct page *page;
+<<<<<<< HEAD
 		void *fsdata = NULL;
+=======
+		void *fsdata;
+>>>>>>> b7ba80a49124 (Commit)
 		loff_t size = inode->i_size;
 
 		res = hfsplus_write_begin(NULL, mapping, size, 0,

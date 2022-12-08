@@ -97,7 +97,10 @@ config AT_HDMAC
 	tristate "Atmel AHB DMA support"
 	depends on ARCH_AT91
 	select DMA_ENGINE
+<<<<<<< HEAD
 	select DMA_VIRTUAL_CHANNELS
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Support the Atmel AHB DMA controller.
 
@@ -245,7 +248,11 @@ config FSL_RAID
 
 config HISI_DMA
 	tristate "HiSilicon DMA Engine support"
+<<<<<<< HEAD
 	depends on ARCH_HISI || COMPILE_TEST
+=======
+	depends on ARM64 || COMPILE_TEST
+>>>>>>> b7ba80a49124 (Commit)
 	depends on PCI_MSI
 	select DMA_ENGINE
 	select DMA_VIRTUAL_CHANNELS
@@ -358,6 +365,17 @@ config INTEL_IOATDMA
 
 	  If unsure, say N.
 
+<<<<<<< HEAD
+=======
+config INTEL_IOP_ADMA
+	tristate "Intel IOP32x ADMA support"
+	depends on ARCH_IOP32X || COMPILE_TEST
+	select DMA_ENGINE
+	select ASYNC_TX_ENABLE_CHANNEL_SWITCH
+	help
+	  Enable support for the Intel(R) IOP Series RAID engines.
+
+>>>>>>> b7ba80a49124 (Commit)
 config K3_DMA
 	tristate "Hisilicon K3 DMA support"
 	depends on ARCH_HI3xxx || ARCH_HISI || COMPILE_TEST
@@ -455,7 +473,11 @@ config MV_XOR_V2
 	select DMA_ENGINE
 	select DMA_ENGINE_RAID
 	select ASYNC_TX_ENABLE_CHANNEL_SWITCH
+<<<<<<< HEAD
 	select GENERIC_MSI_IRQ
+=======
+	select GENERIC_MSI_IRQ_DOMAIN
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Enable support for the Marvell version 2 XOR engine.
 
@@ -610,6 +632,21 @@ config SPRD_DMA
 	help
 	  Enable support for the on-chip DMA controller on Spreadtrum platform.
 
+<<<<<<< HEAD
+=======
+config S3C24XX_DMAC
+	bool "Samsung S3C24XX DMA support"
+	depends on ARCH_S3C24XX || COMPILE_TEST
+	select DMA_ENGINE
+	select DMA_VIRTUAL_CHANNELS
+	help
+	  Support for the Samsung S3C24XX DMA controller driver. The
+	  DMA controller is having multiple DMA channels which can be
+	  configured for different peripherals like audio, UART, SPI.
+	  The DMA controller can transfer data from memory to peripheral,
+	  periphal to memory, periphal to periphal and memory to memory.
+
+>>>>>>> b7ba80a49124 (Commit)
 config TXX9_DMAC
 	tristate "Toshiba TXx9 SoC DMA support"
 	depends on MACH_TX49XX
@@ -716,6 +753,7 @@ config XILINX_DMA
 	  the scatter gather interface with multiple channels independent
 	  configuration support.
 
+<<<<<<< HEAD
 config XILINX_XDMA
 	tristate "Xilinx DMA/Bridge Subsystem DMA Engine"
 	depends on HAS_IOMEM
@@ -730,6 +768,8 @@ config XILINX_XDMA
 	  The core also provides up to 16 user interrupt wires that generate
 	  interrupts to the host.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config XILINX_ZYNQMP_DMA
 	tristate "Xilinx ZynqMP DMA Engine"
 	depends on ARCH_ZYNQ || MICROBLAZE || ARM64 || COMPILE_TEST

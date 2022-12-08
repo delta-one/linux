@@ -11,10 +11,17 @@
 #include <linux/module.h>
 #include <linux/of_device.h>
 #include <linux/pm_runtime.h>
+<<<<<<< HEAD
 #include <sound/jack.h>
 #include <sound/pcm_params.h>
 #include <sound/soc.h>
 
+=======
+#include <sound/pcm_params.h>
+#include <sound/soc.h>
+
+#include "../../codecs/da7219-aad.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "../../codecs/da7219.h"
 #include "../../codecs/mt6358.h"
 #include "../common/mtk-afe-platform-driver.h"
@@ -37,6 +44,7 @@ struct mt8186_mt6366_da7219_max98357_priv {
 	struct snd_soc_jack headset_jack, hdmi_jack;
 };
 
+<<<<<<< HEAD
 /* Headset jack detection DAPM pins */
 static struct snd_soc_jack_pin mt8186_jack_pins[] = {
 	{
@@ -49,6 +57,8 @@ static struct snd_soc_jack_pin mt8186_jack_pins[] = {
 	},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct snd_soc_codec_conf mt8186_mt6366_da7219_max98357_codec_conf[] = {
 	{
 		.dlc = COMP_CODEC_CONF("mt6358-sound"),
@@ -84,12 +94,20 @@ static int mt8186_da7219_init(struct snd_soc_pcm_runtime *rtd)
 	}
 
 	/* Enable Headset and 4 Buttons Jack detection */
+<<<<<<< HEAD
 	ret = snd_soc_card_jack_new_pins(rtd->card, "Headset Jack",
 				    SND_JACK_HEADSET | SND_JACK_BTN_0 |
 				    SND_JACK_BTN_1 | SND_JACK_BTN_2 |
 				    SND_JACK_BTN_3 | SND_JACK_LINEOUT,
 				    jack, mt8186_jack_pins,
 				    ARRAY_SIZE(mt8186_jack_pins));
+=======
+	ret = snd_soc_card_jack_new(rtd->card, "Headset Jack",
+				    SND_JACK_HEADSET | SND_JACK_BTN_0 |
+				    SND_JACK_BTN_1 | SND_JACK_BTN_2 |
+				    SND_JACK_BTN_3 | SND_JACK_LINEOUT,
+				    jack);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(rtd->dev, "Headset Jack creation failed: %d\n", ret);
 		return ret;
@@ -100,7 +118,11 @@ static int mt8186_da7219_init(struct snd_soc_pcm_runtime *rtd)
 	snd_jack_set_key(jack->jack, SND_JACK_BTN_2, KEY_VOLUMEDOWN);
 	snd_jack_set_key(jack->jack, SND_JACK_BTN_3, KEY_VOICECOMMAND);
 
+<<<<<<< HEAD
 	snd_soc_component_set_jack(cmpnt_codec, &priv->headset_jack, NULL);
+=======
+	da7219_aad_jack_det(cmpnt_codec, &priv->headset_jack);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -192,7 +214,11 @@ static int mt8186_mt6366_da7219_max98357_hdmi_init(struct snd_soc_pcm_runtime *r
 	struct mt8186_mt6366_da7219_max98357_priv *priv = soc_card_data->mach_priv;
 	int ret;
 
+<<<<<<< HEAD
 	ret = mt8186_dai_i2s_set_share(afe, "I2S2", "I2S3");
+=======
+	ret = mt8186_dai_i2s_set_share(afe, "I2S3", "I2S2");
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(rtd->dev, "Failed to set up shared clocks\n");
 		return ret;
@@ -963,8 +989,11 @@ static struct snd_soc_dai_link mt8186_mt6366_da7219_max98357_dai_links[] = {
 static const struct snd_soc_dapm_widget
 mt8186_mt6366_da7219_max98357_widgets[] = {
 	SND_SOC_DAPM_SPK("Speakers", NULL),
+<<<<<<< HEAD
 	SND_SOC_DAPM_HP("Headphones", NULL),
 	SND_SOC_DAPM_MIC("Headset Mic", NULL),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SND_SOC_DAPM_OUTPUT("HDMI1"),
 	SND_SOC_DAPM_MIXER(SOF_DMA_DL1, SND_SOC_NOPM, 0, 0, NULL, 0),
 	SND_SOC_DAPM_MIXER(SOF_DMA_DL2, SND_SOC_NOPM, 0, 0, NULL, 0),
@@ -976,10 +1005,13 @@ static const struct snd_soc_dapm_route
 mt8186_mt6366_da7219_max98357_routes[] = {
 	/* SPK */
 	{ "Speakers", NULL, "Speaker"},
+<<<<<<< HEAD
 	/* Headset */
 	{ "Headphones", NULL, "HPL" },
 	{ "Headphones", NULL, "HPR" },
 	{ "MIC", NULL, "Headset Mic" },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* HDMI */
 	{ "HDMI1", NULL, "TX"},
 	/* SOF Uplink */
@@ -995,8 +1027,11 @@ mt8186_mt6366_da7219_max98357_routes[] = {
 static const struct snd_kcontrol_new
 mt8186_mt6366_da7219_max98357_controls[] = {
 	SOC_DAPM_PIN_SWITCH("Speakers"),
+<<<<<<< HEAD
 	SOC_DAPM_PIN_SWITCH("Headphones"),
 	SOC_DAPM_PIN_SWITCH("Headset Mic"),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SOC_DAPM_PIN_SWITCH("HDMI1"),
 };
 
@@ -1161,7 +1196,10 @@ static const struct of_device_id mt8186_mt6366_da7219_max98357_dt_match[] = {
 	},
 	{}
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(of, mt8186_mt6366_da7219_max98357_dt_match);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 static struct platform_driver mt8186_mt6366_da7219_max98357_driver = {

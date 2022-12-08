@@ -15,11 +15,14 @@
 #include "../core.h"
 #include "pinctrl-imx.h"
 
+<<<<<<< HEAD
 #define IMX_SC_PAD_FUNC_GET_WAKEUP	9
 #define IMX_SC_PAD_FUNC_SET_WAKEUP	4
 #define IMX_SC_IRQ_GROUP_WAKE           3   /* Wakeup interrupts */
 #define IMX_SC_IRQ_PAD			2   /* Pad wakeup */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum pad_func_e {
 	IMX_SC_PAD_FUNC_SET = 15,
 	IMX_SC_PAD_FUNC_GET = 16,
@@ -41,18 +44,24 @@ struct imx_sc_msg_resp_pad_get {
 	u32 val;
 } __packed;
 
+<<<<<<< HEAD
 struct imx_sc_msg_gpio_set_pad_wakeup {
 	struct imx_sc_rpc_msg hdr;
 	u16 pad;
 	u8 wakeup;
 } __packed __aligned(4);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct imx_sc_ipc *pinctrl_ipc_handle;
 
 int imx_pinctrl_sc_ipc_init(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	imx_scu_irq_group_enable(IMX_SC_IRQ_GROUP_WAKE,
 					 IMX_SC_IRQ_PAD, true);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return imx_scu_get_handle(&pinctrl_ipc_handle);
 }
 EXPORT_SYMBOL_GPL(imx_pinctrl_sc_ipc_init);
@@ -94,6 +103,7 @@ int imx_pinconf_set_scu(struct pinctrl_dev *pctldev, unsigned pin_id,
 	unsigned int val;
 	int ret;
 
+<<<<<<< HEAD
 	if (num_configs == 1) {
 		struct imx_sc_msg_gpio_set_pad_wakeup wmsg;
 
@@ -111,6 +121,8 @@ int imx_pinconf_set_scu(struct pinctrl_dev *pctldev, unsigned pin_id,
 		return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Set mux and conf together in one IPC call
 	 */

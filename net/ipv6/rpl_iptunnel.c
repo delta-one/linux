@@ -13,7 +13,11 @@
 #include <net/rpl.h>
 
 struct rpl_iptunnel_encap {
+<<<<<<< HEAD
 	DECLARE_FLEX_ARRAY(struct ipv6_rpl_sr_hdr, srh);
+=======
+	struct ipv6_rpl_sr_hdr srh[0];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct rpl_lwt {

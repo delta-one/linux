@@ -1760,7 +1760,10 @@ static int adm8211_alloc_rings(struct ieee80211_hw *dev)
 
 static const struct ieee80211_ops adm8211_ops = {
 	.tx			= adm8211_tx,
+<<<<<<< HEAD
 	.wake_tx_queue		= ieee80211_handle_wake_tx_queue,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.start			= adm8211_start,
 	.stop			= adm8211_stop,
 	.add_interface		= adm8211_add_interface,

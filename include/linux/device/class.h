@@ -25,6 +25,10 @@ struct fwnode_handle;
 /**
  * struct class - device classes
  * @name:	Name of the class.
+<<<<<<< HEAD
+=======
+ * @owner:	The module owner.
+>>>>>>> b7ba80a49124 (Commit)
  * @class_groups: Default attributes of this class.
  * @dev_groups:	Default attributes of the devices that belong to the class.
  * @dev_kobj:	The kobject that represents this class and links it into the hierarchy.
@@ -52,13 +56,22 @@ struct fwnode_handle;
  */
 struct class {
 	const char		*name;
+<<<<<<< HEAD
+=======
+	struct module		*owner;
+>>>>>>> b7ba80a49124 (Commit)
 
 	const struct attribute_group	**class_groups;
 	const struct attribute_group	**dev_groups;
 	struct kobject			*dev_kobj;
 
+<<<<<<< HEAD
 	int (*dev_uevent)(const struct device *dev, struct kobj_uevent_env *env);
 	char *(*devnode)(const struct device *dev, umode_t *mode);
+=======
+	int (*dev_uevent)(struct device *dev, struct kobj_uevent_env *env);
+	char *(*devnode)(struct device *dev, umode_t *mode);
+>>>>>>> b7ba80a49124 (Commit)
 
 	void (*class_release)(struct class *class);
 	void (*dev_release)(struct device *dev);
@@ -66,9 +79,15 @@ struct class {
 	int (*shutdown_pre)(struct device *dev);
 
 	const struct kobj_ns_type_operations *ns_type;
+<<<<<<< HEAD
 	const void *(*namespace)(const struct device *dev);
 
 	void (*get_ownership)(const struct device *dev, kuid_t *uid, kgid_t *gid);
+=======
+	const void *(*namespace)(struct device *dev);
+
+	void (*get_ownership)(struct device *dev, kuid_t *uid, kgid_t *gid);
+>>>>>>> b7ba80a49124 (Commit)
 
 	const struct dev_pm_ops *pm;
 
@@ -103,17 +122,30 @@ void class_compat_remove_link(struct class_compat *cls, struct device *dev,
 			      struct device *device_link);
 
 extern void class_dev_iter_init(struct class_dev_iter *iter,
+<<<<<<< HEAD
 				const struct class *class,
 				const struct device *start,
+=======
+				struct class *class,
+				struct device *start,
+>>>>>>> b7ba80a49124 (Commit)
 				const struct device_type *type);
 extern struct device *class_dev_iter_next(struct class_dev_iter *iter);
 extern void class_dev_iter_exit(struct class_dev_iter *iter);
 
+<<<<<<< HEAD
 extern int class_for_each_device(const struct class *class, const struct device *start,
 				 void *data,
 				 int (*fn)(struct device *dev, void *data));
 extern struct device *class_find_device(const struct class *class,
 					const struct device *start, const void *data,
+=======
+extern int class_for_each_device(struct class *class, struct device *start,
+				 void *data,
+				 int (*fn)(struct device *dev, void *data));
+extern struct device *class_find_device(struct class *class,
+					struct device *start, const void *data,
+>>>>>>> b7ba80a49124 (Commit)
 					int (*match)(struct device *, const void *));
 
 /**
@@ -122,7 +154,11 @@ extern struct device *class_find_device(const struct class *class,
  * @class: class type
  * @name: name of the device to match
  */
+<<<<<<< HEAD
 static inline struct device *class_find_device_by_name(const struct class *class,
+=======
+static inline struct device *class_find_device_by_name(struct class *class,
+>>>>>>> b7ba80a49124 (Commit)
 						       const char *name)
 {
 	return class_find_device(class, NULL, name, device_match_name);
@@ -134,8 +170,13 @@ static inline struct device *class_find_device_by_name(const struct class *class
  * @class: class type
  * @np: of_node of the device to match.
  */
+<<<<<<< HEAD
 static inline struct device *class_find_device_by_of_node(const struct class *class,
 							  const struct device_node *np)
+=======
+static inline struct device *
+class_find_device_by_of_node(struct class *class, const struct device_node *np)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return class_find_device(class, NULL, np, device_match_of_node);
 }
@@ -146,8 +187,14 @@ static inline struct device *class_find_device_by_of_node(const struct class *cl
  * @class: class type
  * @fwnode: fwnode of the device to match.
  */
+<<<<<<< HEAD
 static inline struct device *class_find_device_by_fwnode(const struct class *class,
 							 const struct fwnode_handle *fwnode)
+=======
+static inline struct device *
+class_find_device_by_fwnode(struct class *class,
+			    const struct fwnode_handle *fwnode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return class_find_device(class, NULL, fwnode, device_match_fwnode);
 }
@@ -158,7 +205,11 @@ static inline struct device *class_find_device_by_fwnode(const struct class *cla
  * @class: class type
  * @devt: device type of the device to match.
  */
+<<<<<<< HEAD
 static inline struct device *class_find_device_by_devt(const struct class *class,
+=======
+static inline struct device *class_find_device_by_devt(struct class *class,
+>>>>>>> b7ba80a49124 (Commit)
 						       dev_t devt)
 {
 	return class_find_device(class, NULL, &devt, device_match_devt);
@@ -172,14 +223,24 @@ struct acpi_device;
  * @class: class type
  * @adev: ACPI_COMPANION device to match.
  */
+<<<<<<< HEAD
 static inline struct device *class_find_device_by_acpi_dev(const struct class *class,
 							   const struct acpi_device *adev)
+=======
+static inline struct device *
+class_find_device_by_acpi_dev(struct class *class, const struct acpi_device *adev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return class_find_device(class, NULL, adev, device_match_acpi_dev);
 }
 #else
+<<<<<<< HEAD
 static inline struct device *class_find_device_by_acpi_dev(const struct class *class,
 							   const void *adev)
+=======
+static inline struct device *
+class_find_device_by_acpi_dev(struct class *class, const void *adev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return NULL;
 }
@@ -200,6 +261,7 @@ struct class_attribute {
 #define CLASS_ATTR_WO(_name) \
 	struct class_attribute class_attr_##_name = __ATTR_WO(_name)
 
+<<<<<<< HEAD
 extern int __must_check class_create_file_ns(const struct class *class,
 					     const struct class_attribute *attr,
 					     const void *ns);
@@ -209,11 +271,26 @@ extern void class_remove_file_ns(const struct class *class,
 
 static inline int __must_check class_create_file(const struct class *class,
 						 const struct class_attribute *attr)
+=======
+extern int __must_check class_create_file_ns(struct class *class,
+					     const struct class_attribute *attr,
+					     const void *ns);
+extern void class_remove_file_ns(struct class *class,
+				 const struct class_attribute *attr,
+				 const void *ns);
+
+static inline int __must_check class_create_file(struct class *class,
+					const struct class_attribute *attr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return class_create_file_ns(class, attr, NULL);
 }
 
+<<<<<<< HEAD
 static inline void class_remove_file(const struct class *class,
+=======
+static inline void class_remove_file(struct class *class,
+>>>>>>> b7ba80a49124 (Commit)
 				     const struct class_attribute *attr)
 {
 	return class_remove_file_ns(class, attr, NULL);
@@ -246,7 +323,12 @@ struct class_interface {
 extern int __must_check class_interface_register(struct class_interface *);
 extern void class_interface_unregister(struct class_interface *);
 
+<<<<<<< HEAD
 extern struct class * __must_check __class_create(const char *name,
+=======
+extern struct class * __must_check __class_create(struct module *owner,
+						  const char *name,
+>>>>>>> b7ba80a49124 (Commit)
 						  struct lock_class_key *key);
 extern void class_destroy(struct class *cls);
 
@@ -255,6 +337,10 @@ extern void class_destroy(struct class *cls);
 
 /**
  * class_create - create a struct class structure
+<<<<<<< HEAD
+=======
+ * @owner: pointer to the module that is to "own" this struct class
+>>>>>>> b7ba80a49124 (Commit)
  * @name: pointer to a string for the name of this class.
  *
  * This is used to create a struct class pointer that can then be used
@@ -265,10 +351,17 @@ extern void class_destroy(struct class *cls);
  * Note, the pointer created here is to be destroyed when finished by
  * making a call to class_destroy().
  */
+<<<<<<< HEAD
 #define class_create(name)			\
 ({						\
 	static struct lock_class_key __key;	\
 	__class_create(name, &__key);		\
+=======
+#define class_create(owner, name)		\
+({						\
+	static struct lock_class_key __key;	\
+	__class_create(owner, name, &__key);	\
+>>>>>>> b7ba80a49124 (Commit)
 })
 
 

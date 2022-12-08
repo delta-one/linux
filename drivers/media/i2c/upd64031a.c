@@ -183,7 +183,12 @@ static const struct v4l2_subdev_ops upd64031a_ops = {
 
 /* i2c implementation */
 
+<<<<<<< HEAD
 static int upd64031a_probe(struct i2c_client *client)
+=======
+static int upd64031a_probe(struct i2c_client *client,
+			   const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct upd64031a_state *state;
 	struct v4l2_subdev *sd;
@@ -228,7 +233,11 @@ static struct i2c_driver upd64031a_driver = {
 	.driver = {
 		.name	= "upd64031a",
 	},
+<<<<<<< HEAD
 	.probe_new	= upd64031a_probe,
+=======
+	.probe		= upd64031a_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= upd64031a_remove,
 	.id_table	= upd64031a_id,
 };

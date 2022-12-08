@@ -156,8 +156,13 @@ int bond_alb_init_slave(struct bonding *bond, struct slave *slave);
 void bond_alb_deinit_slave(struct bonding *bond, struct slave *slave);
 void bond_alb_handle_link_change(struct bonding *bond, struct slave *slave, char link);
 void bond_alb_handle_active_change(struct bonding *bond, struct slave *new_slave);
+<<<<<<< HEAD
 netdev_tx_t bond_alb_xmit(struct sk_buff *skb, struct net_device *bond_dev);
 netdev_tx_t bond_tlb_xmit(struct sk_buff *skb, struct net_device *bond_dev);
+=======
+int bond_alb_xmit(struct sk_buff *skb, struct net_device *bond_dev);
+int bond_tlb_xmit(struct sk_buff *skb, struct net_device *bond_dev);
+>>>>>>> b7ba80a49124 (Commit)
 struct slave *bond_xmit_alb_slave_get(struct bonding *bond,
 				      struct sk_buff *skb);
 struct slave *bond_xmit_tlb_slave_get(struct bonding *bond,

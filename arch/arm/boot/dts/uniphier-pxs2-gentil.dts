@@ -99,7 +99,10 @@
 &usb1 {
 	status = "okay";
 };
+<<<<<<< HEAD
 
 &ahci {
 	status = "okay";
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

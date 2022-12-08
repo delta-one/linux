@@ -12,7 +12,10 @@
 #include <linux/kthread.h>
 #include <linux/seq_file.h>
 
+<<<<<<< HEAD
 #include <drm/drm_atomic.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_crtc.h>
 #include <drm/drm_file.h>
 #include <drm/drm_probe_helper.h>
@@ -163,7 +166,10 @@ enum dpu_enc_rc_states {
  * @vsync_event_work:		worker to handle vsync event for autorefresh
  * @topology:                   topology of the display
  * @idle_timeout:		idle timeout duration in milliseconds
+<<<<<<< HEAD
  * @wide_bus_en:		wide bus is enabled on this interface
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @dsc:			drm_dsc_config pointer, for DSC-enabled encoders
  */
 struct dpu_encoder_virt {
@@ -342,7 +348,13 @@ void dpu_encoder_helper_report_irq_timeout(struct dpu_encoder_phys *phys_enc,
 			phys_enc->intf_idx - INTF_0, phys_enc->wb_idx - WB_0,
 			phys_enc->hw_pp->idx - PINGPONG_0, intr_idx);
 
+<<<<<<< HEAD
 	dpu_encoder_frame_done_callback(phys_enc->parent, phys_enc,
+=======
+	if (phys_enc->parent_ops->handle_frame_done)
+		phys_enc->parent_ops->handle_frame_done(
+				phys_enc->parent, phys_enc,
+>>>>>>> b7ba80a49124 (Commit)
 				DPU_ENCODER_FRAME_EVENT_ERROR);
 }
 
@@ -579,6 +591,7 @@ static struct msm_display_topology dpu_encoder_get_topology(
 			topology.num_dspp = topology.num_lm;
 	}
 
+<<<<<<< HEAD
 	topology.num_intf = intf_count;
 
 	if (dpu_enc->dsc) {
@@ -591,6 +604,21 @@ static struct msm_display_topology dpu_encoder_get_topology(
 		topology.num_dsc = 2;
 		topology.num_lm = 2;
 		topology.num_intf = 1;
+=======
+	topology.num_enc = 0;
+	topology.num_intf = intf_count;
+
+	if (dpu_enc->dsc) {
+		/* In case of Display Stream Compression (DSC), we would use
+		 * 2 encoders, 2 layer mixers and 1 interface
+		 * this is power optimal and can drive up to (including) 4k
+		 * screens
+		 */
+		topology.num_enc = 2;
+		topology.num_dsc = 2;
+		topology.num_intf = 1;
+		topology.num_lm = 2;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return topology;
@@ -653,7 +681,11 @@ static int dpu_encoder_virt_atomic_check(
 		if (drm_atomic_crtc_needs_modeset(crtc_state)) {
 			dpu_rm_release(global_state, drm_enc);
 
+<<<<<<< HEAD
 			if (!crtc_state->active_changed || crtc_state->enable)
+=======
+			if (!crtc_state->active_changed || crtc_state->active)
+>>>>>>> b7ba80a49124 (Commit)
 				ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
 						drm_enc, crtc_state, topology);
 		}
@@ -1172,8 +1204,12 @@ out:
 	mutex_unlock(&dpu_enc->enc_lock);
 }
 
+<<<<<<< HEAD
 static void dpu_encoder_virt_atomic_enable(struct drm_encoder *drm_enc,
 					struct drm_atomic_state *state)
+=======
+static void dpu_encoder_virt_enable(struct drm_encoder *drm_enc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dpu_encoder_virt *dpu_enc = NULL;
 	int ret = 0;
@@ -1209,17 +1245,24 @@ out:
 	mutex_unlock(&dpu_enc->enc_lock);
 }
 
+<<<<<<< HEAD
 static void dpu_encoder_virt_atomic_disable(struct drm_encoder *drm_enc,
 					struct drm_atomic_state *state)
 {
 	struct dpu_encoder_virt *dpu_enc = NULL;
 	struct drm_crtc *crtc;
 	struct drm_crtc_state *old_state = NULL;
+=======
+static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+{
+	struct dpu_encoder_virt *dpu_enc = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	int i = 0;
 
 	dpu_enc = to_dpu_encoder_virt(drm_enc);
 	DPU_DEBUG_ENC(dpu_enc, "\n");
 
+<<<<<<< HEAD
 	crtc = drm_atomic_get_old_crtc_for_encoder(state, drm_enc);
 	if (crtc)
 		old_state = drm_atomic_get_old_crtc_state(state, crtc);
@@ -1231,6 +1274,8 @@ static void dpu_encoder_virt_atomic_disable(struct drm_encoder *drm_enc,
 	if (old_state && old_state->self_refresh_active)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&dpu_enc->enc_lock);
 	dpu_enc->enabled = false;
 
@@ -1298,7 +1343,11 @@ static enum dpu_wb dpu_encoder_get_wb(const struct dpu_mdss_cfg *catalog,
 	return WB_MAX;
 }
 
+<<<<<<< HEAD
 void dpu_encoder_vblank_callback(struct drm_encoder *drm_enc,
+=======
+static void dpu_encoder_vblank_callback(struct drm_encoder *drm_enc,
+>>>>>>> b7ba80a49124 (Commit)
 		struct dpu_encoder_phys *phy_enc)
 {
 	struct dpu_encoder_virt *dpu_enc = NULL;
@@ -1320,7 +1369,11 @@ void dpu_encoder_vblank_callback(struct drm_encoder *drm_enc,
 	DPU_ATRACE_END("encoder_vblank_callback");
 }
 
+<<<<<<< HEAD
 void dpu_encoder_underrun_callback(struct drm_encoder *drm_enc,
+=======
+static void dpu_encoder_underrun_callback(struct drm_encoder *drm_enc,
+>>>>>>> b7ba80a49124 (Commit)
 		struct dpu_encoder_phys *phy_enc)
 {
 	if (!phy_enc)
@@ -1396,7 +1449,11 @@ void dpu_encoder_register_frame_event_callback(struct drm_encoder *drm_enc,
 	spin_unlock_irqrestore(&dpu_enc->enc_spinlock, lock_flags);
 }
 
+<<<<<<< HEAD
 void dpu_encoder_frame_done_callback(
+=======
+static void dpu_encoder_frame_done_callback(
+>>>>>>> b7ba80a49124 (Commit)
 		struct drm_encoder *drm_enc,
 		struct dpu_encoder_phys *ready_phys, u32 event)
 {
@@ -1844,9 +1901,12 @@ static void dpu_encoder_dsc_pipe_cfg(struct dpu_hw_dsc *hw_dsc,
 	if (hw_pp->ops.setup_dsc)
 		hw_pp->ops.setup_dsc(hw_pp);
 
+<<<<<<< HEAD
 	if (hw_dsc->ops.dsc_bind_pingpong_blk)
 		hw_dsc->ops.dsc_bind_pingpong_blk(hw_dsc, true, hw_pp->idx);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (hw_pp->ops.enable_dsc)
 		hw_pp->ops.enable_dsc(hw_pp);
 }
@@ -2250,6 +2310,15 @@ static int dpu_encoder_virt_add_phys_encs(
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static const struct dpu_encoder_virt_ops dpu_encoder_parent_ops = {
+	.handle_vblank_virt = dpu_encoder_vblank_callback,
+	.handle_underrun_virt = dpu_encoder_underrun_callback,
+	.handle_frame_done = dpu_encoder_frame_done_callback,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static int dpu_encoder_setup_display(struct dpu_encoder_virt *dpu_enc,
 				 struct dpu_kms *dpu_kms,
 				 struct msm_display_info *disp_info)
@@ -2269,6 +2338,10 @@ static int dpu_encoder_setup_display(struct dpu_encoder_virt *dpu_enc,
 	memset(&phys_params, 0, sizeof(phys_params));
 	phys_params.dpu_kms = dpu_kms;
 	phys_params.parent = &dpu_enc->base;
+<<<<<<< HEAD
+=======
+	phys_params.parent_ops = &dpu_encoder_parent_ops;
+>>>>>>> b7ba80a49124 (Commit)
 	phys_params.enc_spinlock = &dpu_enc->enc_spinlock;
 
 	switch (disp_info->intf_type) {
@@ -2404,8 +2477,13 @@ static void dpu_encoder_frame_done_timeout(struct timer_list *t)
 
 static const struct drm_encoder_helper_funcs dpu_encoder_helper_funcs = {
 	.atomic_mode_set = dpu_encoder_virt_atomic_mode_set,
+<<<<<<< HEAD
 	.atomic_disable = dpu_encoder_virt_atomic_disable,
 	.atomic_enable = dpu_encoder_virt_atomic_enable,
+=======
+	.disable = dpu_encoder_virt_disable,
+	.enable = dpu_encoder_virt_enable,
+>>>>>>> b7ba80a49124 (Commit)
 	.atomic_check = dpu_encoder_virt_atomic_check,
 };
 

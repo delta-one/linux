@@ -9,7 +9,11 @@
 
 / {
 	model = "MediaTek MT7986b RFB";
+<<<<<<< HEAD
 	compatible = "mediatek,mt7986b-rfb", "mediatek,mt7986b";
+=======
+	compatible = "mediatek,mt7986b-rfb";
+>>>>>>> b7ba80a49124 (Commit)
 
 	aliases {
 		serial0 = &uart0;
@@ -25,7 +29,11 @@
 	};
 };
 
+<<<<<<< HEAD
 &crypto {
+=======
+&uart0 {
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 
@@ -99,6 +107,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &pio {
 	spi_flash_pins: spi-flash-pins {
 		mux {
@@ -114,6 +123,16 @@
 		};
 	};
 
+=======
+&wifi {
+	status = "okay";
+	pinctrl-names = "default", "dbdc";
+	pinctrl-0 = <&wf_2g_5g_pins>;
+	pinctrl-1 = <&wf_dbdc_pins>;
+};
+
+&pio {
+>>>>>>> b7ba80a49124 (Commit)
 	wf_2g_5g_pins: wf-2g-5g-pins {
 		mux {
 			function = "wifi";
@@ -145,6 +164,7 @@
 		};
 	};
 };
+<<<<<<< HEAD
 
 &spi0 {
 	pinctrl-names = "default";
@@ -185,3 +205,5 @@
 	pinctrl-0 = <&wf_2g_5g_pins>;
 	pinctrl-1 = <&wf_dbdc_pins>;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -22,6 +22,10 @@
  */
 #include "pp_debug.h"
 #include <linux/delay.h>
+<<<<<<< HEAD
+=======
+#include <linux/fb.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/pci.h>
 #include <linux/slab.h>
@@ -1500,6 +1504,7 @@ static int smu7_populate_edc_leakage_registers(struct pp_hwmgr *hwmgr)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void smu7_populate_umdpstate_clocks(struct pp_hwmgr *hwmgr)
 {
 	struct smu7_hwmgr *data = (struct smu7_hwmgr *)(hwmgr->backend);
@@ -1561,6 +1566,8 @@ static void smu7_populate_umdpstate_clocks(struct pp_hwmgr *hwmgr)
 	hwmgr->pstate_mclk_peak /= 100;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int smu7_enable_dpm_tasks(struct pp_hwmgr *hwmgr)
 {
 	int tmp_result = 0;
@@ -1685,8 +1692,11 @@ static int smu7_enable_dpm_tasks(struct pp_hwmgr *hwmgr)
 	PP_ASSERT_WITH_CODE((0 == tmp_result),
 			"pcie performance request failed!", result = tmp_result);
 
+<<<<<<< HEAD
 	smu7_populate_umdpstate_clocks(hwmgr);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -3205,12 +3215,23 @@ static int smu7_get_profiling_clk(struct pp_hwmgr *hwmgr, enum amd_dpm_forced_le
 		for (count = hwmgr->dyn_state.vddc_dependency_on_sclk->count-1;
 			count >= 0; count--) {
 			if (tmp_sclk >= hwmgr->dyn_state.vddc_dependency_on_sclk->entries[count].clk) {
+<<<<<<< HEAD
+=======
+				tmp_sclk = hwmgr->dyn_state.vddc_dependency_on_sclk->entries[count].clk;
+>>>>>>> b7ba80a49124 (Commit)
 				*sclk_mask = count;
 				break;
 			}
 		}
+<<<<<<< HEAD
 		if (count < 0 || level == AMD_DPM_FORCED_LEVEL_PROFILE_MIN_SCLK)
 			*sclk_mask = 0;
+=======
+		if (count < 0 || level == AMD_DPM_FORCED_LEVEL_PROFILE_MIN_SCLK) {
+			*sclk_mask = 0;
+			tmp_sclk = hwmgr->dyn_state.vddc_dependency_on_sclk->entries[0].clk;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (level == AMD_DPM_FORCED_LEVEL_PROFILE_PEAK)
 			*sclk_mask = hwmgr->dyn_state.vddc_dependency_on_sclk->count-1;
@@ -3220,12 +3241,23 @@ static int smu7_get_profiling_clk(struct pp_hwmgr *hwmgr, enum amd_dpm_forced_le
 
 		for (count = table_info->vdd_dep_on_sclk->count-1; count >= 0; count--) {
 			if (tmp_sclk >= table_info->vdd_dep_on_sclk->entries[count].clk) {
+<<<<<<< HEAD
+=======
+				tmp_sclk = table_info->vdd_dep_on_sclk->entries[count].clk;
+>>>>>>> b7ba80a49124 (Commit)
 				*sclk_mask = count;
 				break;
 			}
 		}
+<<<<<<< HEAD
 		if (count < 0 || level == AMD_DPM_FORCED_LEVEL_PROFILE_MIN_SCLK)
 			*sclk_mask = 0;
+=======
+		if (count < 0 || level == AMD_DPM_FORCED_LEVEL_PROFILE_MIN_SCLK) {
+			*sclk_mask = 0;
+			tmp_sclk =  table_info->vdd_dep_on_sclk->entries[0].clk;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (level == AMD_DPM_FORCED_LEVEL_PROFILE_PEAK)
 			*sclk_mask = table_info->vdd_dep_on_sclk->count - 1;
@@ -3237,6 +3269,11 @@ static int smu7_get_profiling_clk(struct pp_hwmgr *hwmgr, enum amd_dpm_forced_le
 		*mclk_mask = golden_dpm_table->mclk_table.count - 1;
 
 	*pcie_mask = data->dpm_table.pcie_speed_table.count - 1;
+<<<<<<< HEAD
+=======
+	hwmgr->pstate_sclk = tmp_sclk;
+	hwmgr->pstate_mclk = tmp_mclk;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -3249,6 +3286,12 @@ static int smu7_force_dpm_level(struct pp_hwmgr *hwmgr,
 	uint32_t mclk_mask = 0;
 	uint32_t pcie_mask = 0;
 
+<<<<<<< HEAD
+=======
+	if (hwmgr->pstate_sclk == 0)
+		smu7_get_profiling_clk(hwmgr, level, &sclk_mask, &mclk_mask, &pcie_mask);
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (level) {
 	case AMD_DPM_FORCED_LEVEL_HIGH:
 		ret = smu7_force_dpm_highest(hwmgr);
@@ -3654,7 +3697,11 @@ static int smu7_get_pp_table_entry_callback_func_v1(struct pp_hwmgr *hwmgr,
 			return -EINVAL);
 
 	PP_ASSERT_WITH_CODE(
+<<<<<<< HEAD
 			(smu7_power_state->performance_level_count <
+=======
+			(smu7_power_state->performance_level_count <=
+>>>>>>> b7ba80a49124 (Commit)
 					hwmgr->platform_descriptor.hardwareActivityPerformanceLevels),
 			"Performance levels exceeds Driver limit!",
 			return -EINVAL);
@@ -4204,7 +4251,11 @@ static int smu7_freeze_sclk_mclk_dpm(struct pp_hwmgr *hwmgr)
 
 	if ((0 == data->sclk_dpm_key_disabled) &&
 		(data->need_update_smu7_dpm_table &
+<<<<<<< HEAD
 			(DPMTABLE_OD_UPDATE_SCLK | DPMTABLE_UPDATE_SCLK))) {
+=======
+			(DPMTABLE_OD_UPDATE_SCLK + DPMTABLE_UPDATE_SCLK))) {
+>>>>>>> b7ba80a49124 (Commit)
 		PP_ASSERT_WITH_CODE(true == smum_is_dpm_running(hwmgr),
 				"Trying to freeze SCLK DPM when DPM is disabled",
 				);
@@ -4261,7 +4312,11 @@ static int smu7_populate_and_upload_sclk_mclk_dpm_levels(
 	}
 
 	if (data->need_update_smu7_dpm_table &
+<<<<<<< HEAD
 			(DPMTABLE_OD_UPDATE_SCLK | DPMTABLE_UPDATE_SCLK)) {
+=======
+			(DPMTABLE_OD_UPDATE_SCLK + DPMTABLE_UPDATE_SCLK)) {
+>>>>>>> b7ba80a49124 (Commit)
 		result = smum_populate_all_graphic_levels(hwmgr);
 		PP_ASSERT_WITH_CODE((0 == result),
 				"Failed to populate SCLK during PopulateNewDPMClocksStates Function!",
@@ -4269,7 +4324,11 @@ static int smu7_populate_and_upload_sclk_mclk_dpm_levels(
 	}
 
 	if (data->need_update_smu7_dpm_table &
+<<<<<<< HEAD
 			(DPMTABLE_OD_UPDATE_MCLK | DPMTABLE_UPDATE_MCLK)) {
+=======
+			(DPMTABLE_OD_UPDATE_MCLK + DPMTABLE_UPDATE_MCLK)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*populate MCLK dpm table to SMU7 */
 		result = smum_populate_all_memory_levels(hwmgr);
 		PP_ASSERT_WITH_CODE((0 == result),
@@ -4360,7 +4419,11 @@ static int smu7_unfreeze_sclk_mclk_dpm(struct pp_hwmgr *hwmgr)
 
 	if ((0 == data->sclk_dpm_key_disabled) &&
 		(data->need_update_smu7_dpm_table &
+<<<<<<< HEAD
 		(DPMTABLE_OD_UPDATE_SCLK | DPMTABLE_UPDATE_SCLK))) {
+=======
+		(DPMTABLE_OD_UPDATE_SCLK + DPMTABLE_UPDATE_SCLK))) {
+>>>>>>> b7ba80a49124 (Commit)
 
 		PP_ASSERT_WITH_CODE(true == smum_is_dpm_running(hwmgr),
 				"Trying to Unfreeze SCLK DPM when DPM is disabled",

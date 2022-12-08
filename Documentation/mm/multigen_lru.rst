@@ -89,6 +89,7 @@ variables are monotonically increasing.
 
 Generation numbers are truncated into ``order_base_2(MAX_NR_GENS+1)``
 bits in order to fit into the gen counter in ``folio->flags``. Each
+<<<<<<< HEAD
 truncated generation number is an index to ``lrugen->folios[]``. The
 sliding window technique is used to track at least ``MIN_NR_GENS`` and
 at most ``MAX_NR_GENS`` generations. The gen counter stores a value
@@ -98,13 +99,28 @@ within ``[1, MAX_NR_GENS]`` while a page is on one of
 Each generation is divided into multiple tiers. A page accessed ``N``
 times through file descriptors is in tier ``order_base_2(N)``. Unlike
 generations, tiers do not have dedicated ``lrugen->folios[]``. In
+=======
+truncated generation number is an index to ``lrugen->lists[]``. The
+sliding window technique is used to track at least ``MIN_NR_GENS`` and
+at most ``MAX_NR_GENS`` generations. The gen counter stores a value
+within ``[1, MAX_NR_GENS]`` while a page is on one of
+``lrugen->lists[]``; otherwise it stores zero.
+
+Each generation is divided into multiple tiers. A page accessed ``N``
+times through file descriptors is in tier ``order_base_2(N)``. Unlike
+generations, tiers do not have dedicated ``lrugen->lists[]``. In
+>>>>>>> b7ba80a49124 (Commit)
 contrast to moving across generations, which requires the LRU lock,
 moving across tiers only involves atomic operations on
 ``folio->flags`` and therefore has a negligible cost. A feedback loop
 modeled after the PID controller monitors refaults over all the tiers
 from anon and file types and decides which tiers from which types to
+<<<<<<< HEAD
 evict or protect. The desired effect is to balance refault percentages
 between anon and file types proportional to the swappiness level.
+=======
+evict or protect.
+>>>>>>> b7ba80a49124 (Commit)
 
 There are two conceptually independent procedures: the aging and the
 eviction. They form a closed-loop system, i.e., the page reclaim.
@@ -128,7 +144,11 @@ page mapped by this PTE to ``(max_seq%MAX_NR_GENS)+1``.
 Eviction
 --------
 The eviction consumes old generations. Given an ``lruvec``, it
+<<<<<<< HEAD
 increments ``min_seq`` when ``lrugen->folios[]`` indexed by
+=======
+increments ``min_seq`` when ``lrugen->lists[]`` indexed by
+>>>>>>> b7ba80a49124 (Commit)
 ``min_seq%MAX_NR_GENS`` becomes empty. To select a type and a tier to
 evict from, it first compares ``min_seq[]`` to select the older type.
 If both types are equally old, it selects the one whose first tier has
@@ -142,6 +162,7 @@ loop has detected outlying refaults from the tier this page is in. To
 this end, the feedback loop uses the first tier as the baseline, for
 the reason stated earlier.
 
+<<<<<<< HEAD
 Working set protection
 ----------------------
 Each generation is timestamped at birth. If ``lru_gen_min_ttl`` is
@@ -260,6 +281,17 @@ parts:
 * Page table walks via ``mm_struct`` list
 * Bloom filters for rmap/PT walk feedback
 * PID controller for refault feedback
+=======
+Summary
+-------
+The multi-gen LRU can be disassembled into the following parts:
+
+* Generations
+* Rmap walks
+* Page table walks
+* Bloom filters
+* PID controller
+>>>>>>> b7ba80a49124 (Commit)
 
 The aging and the eviction form a producer-consumer model;
 specifically, the latter drives the former by the sliding window over

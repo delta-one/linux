@@ -87,10 +87,13 @@ struct ctrl_msg_header {
 extern struct port_ops wwan_sub_port_ops;
 extern struct port_ops ctl_port_ops;
 
+<<<<<<< HEAD
 #ifdef CONFIG_WWAN_DEBUGFS
 extern struct port_ops t7xx_trace_port_ops;
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void t7xx_port_proxy_reset(struct port_proxy *port_prox);
 void t7xx_port_proxy_uninit(struct port_proxy *port_prox);
 int t7xx_port_proxy_init(struct t7xx_modem *md);

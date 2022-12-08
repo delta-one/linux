@@ -261,6 +261,10 @@ static int u2fzero_init_hwrng(struct u2fzero_device *dev,
 
 	dev->hwrng.name = dev->rng_name;
 	dev->hwrng.read = u2fzero_rng_read;
+<<<<<<< HEAD
+=======
+	dev->hwrng.quality = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return devm_hwrng_register(&dev->hdev->dev, &dev->hwrng);
 }

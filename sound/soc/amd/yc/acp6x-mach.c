@@ -49,6 +49,7 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
 		.driver_data = &acp6x_card,
 		.matches = {
 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
+<<<<<<< HEAD
 			DMI_MATCH(DMI_PRODUCT_NAME, "21D0"),
 		}
 	},
@@ -70,6 +71,8 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
 		.driver_data = &acp6x_card,
 		.matches = {
 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			DMI_MATCH(DMI_PRODUCT_NAME, "21D2"),
 		}
 	},
@@ -206,6 +209,7 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
 			DMI_MATCH(DMI_PRODUCT_NAME, "UM5302TA"),
 		}
 	},
+<<<<<<< HEAD
 	{
 		.driver_data = &acp6x_card,
 		.matches = {
@@ -276,6 +280,8 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
 			DMI_MATCH(DMI_BOARD_NAME, "8A22"),
 		}
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 

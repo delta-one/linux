@@ -15,6 +15,7 @@ description:
 
 properties:
   compatible:
+<<<<<<< HEAD
     oneOf:
       - items:
           - enum:
@@ -38,6 +39,30 @@ properties:
               - qcom,pm8917-mpp
               - qcom,pm8921-mpp
           - const: qcom,ssbi-mpp
+=======
+    items:
+      - enum:
+          - qcom,pm8018-mpp
+          - qcom,pm8019-mpp
+          - qcom,pm8038-mpp
+          - qcom,pm8058-mpp
+          - qcom,pm8226-mpp
+          - qcom,pm8821-mpp
+          - qcom,pm8841-mpp
+          - qcom,pm8916-mpp
+          - qcom,pm8917-mpp
+          - qcom,pm8921-mpp
+          - qcom,pm8941-mpp
+          - qcom,pm8950-mpp
+          - qcom,pmi8950-mpp
+          - qcom,pm8994-mpp
+          - qcom,pma8084-mpp
+          - qcom,pmi8994-mpp
+
+      - enum:
+          - qcom,spmi-mpp
+          - qcom,ssbi-mpp
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -74,7 +99,11 @@ patternProperties:
     oneOf:
       - $ref: "#/$defs/qcom-pmic-mpp-state"
       - patternProperties:
+<<<<<<< HEAD
           '-pins$':
+=======
+          "mpp":
+>>>>>>> b7ba80a49124 (Commit)
             $ref: "#/$defs/qcom-pmic-mpp-state"
         additionalProperties: false
 
@@ -179,7 +208,11 @@ examples:
       };
 
       default-state {
+<<<<<<< HEAD
         gpio-pins {
+=======
+        gpio-mpp {
+>>>>>>> b7ba80a49124 (Commit)
           pins = "mpp1", "mpp2", "mpp3", "mpp4";
           function = "digital";
           input-enable;

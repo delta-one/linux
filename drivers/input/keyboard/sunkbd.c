@@ -7,6 +7,12 @@
  * Sun keyboard driver for Linux
  */
 
+<<<<<<< HEAD
+=======
+/*
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/delay.h>
 #include <linux/sched.h>
 #include <linux/slab.h>

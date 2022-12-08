@@ -456,12 +456,21 @@ static int cdns_dphy_probe(struct platform_device *pdev)
 	return PTR_ERR_OR_ZERO(phy_provider);
 }
 
+<<<<<<< HEAD
 static void cdns_dphy_remove(struct platform_device *pdev)
+=======
+static int cdns_dphy_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cdns_dphy *dphy = dev_get_drvdata(&pdev->dev);
 
 	if (dphy->ops->remove)
 		dphy->ops->remove(dphy);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id cdns_dphy_of_match[] = {
@@ -473,7 +482,11 @@ MODULE_DEVICE_TABLE(of, cdns_dphy_of_match);
 
 static struct platform_driver cdns_dphy_platform_driver = {
 	.probe		= cdns_dphy_probe,
+<<<<<<< HEAD
 	.remove_new	= cdns_dphy_remove,
+=======
+	.remove		= cdns_dphy_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name		= "cdns-mipi-dphy",
 		.of_match_table	= cdns_dphy_of_match,

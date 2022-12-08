@@ -129,7 +129,11 @@ static void pageunmap_range(struct dev_pagemap *pgmap, int range_id)
 	}
 	mem_hotplug_done();
 
+<<<<<<< HEAD
 	untrack_pfn(NULL, PHYS_PFN(range->start), range_len(range), true);
+=======
+	untrack_pfn(NULL, PHYS_PFN(range->start), range_len(range));
+>>>>>>> b7ba80a49124 (Commit)
 	pgmap_array_delete(range);
 }
 
@@ -138,11 +142,16 @@ void memunmap_pages(struct dev_pagemap *pgmap)
 	int i;
 
 	percpu_ref_kill(&pgmap->ref);
+<<<<<<< HEAD
 	if (pgmap->type != MEMORY_DEVICE_PRIVATE &&
 	    pgmap->type != MEMORY_DEVICE_COHERENT)
 		for (i = 0; i < pgmap->nr_range; i++)
 			percpu_ref_put_many(&pgmap->ref, pfn_len(pgmap, i));
 
+=======
+	for (i = 0; i < pgmap->nr_range; i++)
+		percpu_ref_put_many(&pgmap->ref, pfn_len(pgmap, i));
+>>>>>>> b7ba80a49124 (Commit)
 	wait_for_completion(&pgmap->done);
 
 	for (i = 0; i < pgmap->nr_range; i++)
@@ -267,16 +276,24 @@ static int pagemap_range(struct dev_pagemap *pgmap, struct mhp_params *params,
 	memmap_init_zone_device(&NODE_DATA(nid)->node_zones[ZONE_DEVICE],
 				PHYS_PFN(range->start),
 				PHYS_PFN(range_len(range)), pgmap);
+<<<<<<< HEAD
 	if (pgmap->type != MEMORY_DEVICE_PRIVATE &&
 	    pgmap->type != MEMORY_DEVICE_COHERENT)
 		percpu_ref_get_many(&pgmap->ref, pfn_len(pgmap, range_id));
+=======
+	percpu_ref_get_many(&pgmap->ref, pfn_len(pgmap, range_id));
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_add_memory:
 	if (!is_private)
 		kasan_remove_zero_shadow(__va(range->start), range_len(range));
 err_kasan:
+<<<<<<< HEAD
 	untrack_pfn(NULL, PHYS_PFN(range->start), range_len(range), true);
+=======
+	untrack_pfn(NULL, PHYS_PFN(range->start), range_len(range));
+>>>>>>> b7ba80a49124 (Commit)
 err_pfn_remap:
 	pgmap_array_delete(range);
 	return error;
@@ -335,7 +352,10 @@ void *memremap_pages(struct dev_pagemap *pgmap, int nid)
 			WARN(1, "File system DAX not supported\n");
 			return ERR_PTR(-EINVAL);
 		}
+<<<<<<< HEAD
 		params.pgprot = pgprot_decrypted(params.pgprot);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case MEMORY_DEVICE_GENERIC:
 		break;
@@ -385,7 +405,11 @@ EXPORT_SYMBOL_GPL(memremap_pages);
  * @pgmap: pointer to a struct dev_pagemap
  *
  * Notes:
+<<<<<<< HEAD
  * 1/ At a minimum the range and type members of @pgmap must be initialized
+=======
+ * 1/ At a minimum the res and type members of @pgmap must be initialized
+>>>>>>> b7ba80a49124 (Commit)
  *    by the caller before passing it to this function
  *
  * 2/ The altmap field may optionally be initialized, in which case
@@ -508,6 +532,7 @@ void free_zone_device_page(struct page *page)
 	page->mapping = NULL;
 	page->pgmap->ops->page_free(page);
 
+<<<<<<< HEAD
 	if (page->pgmap->type != MEMORY_DEVICE_PRIVATE &&
 	    page->pgmap->type != MEMORY_DEVICE_COHERENT)
 		/*
@@ -530,6 +555,13 @@ void zone_device_page_init(struct page *page)
 	lock_page(page);
 }
 EXPORT_SYMBOL_GPL(zone_device_page_init);
+=======
+	/*
+	 * Reset the page count to 1 to prepare for handing out the page again.
+	 */
+	set_page_count(page, 1);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_FS_DAX
 bool __put_devmap_managed_page_refs(struct page *page, int refs)

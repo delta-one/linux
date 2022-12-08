@@ -300,8 +300,18 @@ static inline void task_sig(struct seq_file *m, struct task_struct *p)
 static void render_cap_t(struct seq_file *m, const char *header,
 			kernel_cap_t *a)
 {
+<<<<<<< HEAD
 	seq_puts(m, header);
 	seq_put_hex_ll(m, NULL, a->val, 16);
+=======
+	unsigned __capi;
+
+	seq_puts(m, header);
+	CAP_FOR_EACH_U32(__capi) {
+		seq_put_hex_ll(m, NULL,
+			   a->cap[CAP_LAST_U32 - __capi], 8);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	seq_putc(m, '\n');
 }
 
@@ -423,11 +433,14 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
 	seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
 }
 
+<<<<<<< HEAD
 __weak void arch_proc_pid_thread_features(struct seq_file *m,
 					  struct task_struct *task)
 {
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
 			struct pid *pid, struct task_struct *task)
 {
@@ -451,7 +464,10 @@ int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
 	task_cpus_allowed(m, task);
 	cpuset_task_status_allowed(m, task);
 	task_context_switch_counts(m, task);
+<<<<<<< HEAD
 	arch_proc_pid_thread_features(m, task);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

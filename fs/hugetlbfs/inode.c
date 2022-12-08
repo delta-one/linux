@@ -132,7 +132,11 @@ static int hugetlbfs_file_mmap(struct file *file, struct vm_area_struct *vma)
 	 * way when do_mmap unwinds (may be important on powerpc
 	 * and ia64).
 	 */
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_HUGETLB | VM_DONTEXPAND);
+=======
+	vma->vm_flags |= VM_HUGETLB | VM_DONTEXPAND;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_ops = &hugetlb_vm_ops;
 
 	ret = seal_check_future_write(info->seals, vma);
@@ -328,12 +332,15 @@ static ssize_t hugetlbfs_read_iter(struct kiocb *iocb, struct iov_iter *to)
 		} else {
 			unlock_page(page);
 
+<<<<<<< HEAD
 			if (PageHWPoison(page)) {
 				put_page(page);
 				retval = -EIO;
 				break;
 			}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			/*
 			 * We have the page, copy it to user space buffer.
 			 */
@@ -370,11 +377,19 @@ static int hugetlbfs_write_end(struct file *file, struct address_space *mapping,
 	return -EINVAL;
 }
 
+<<<<<<< HEAD
 static void hugetlb_delete_from_page_cache(struct folio *folio)
 {
 	folio_clear_dirty(folio);
 	folio_clear_uptodate(folio);
 	filemap_remove_folio(folio);
+=======
+static void hugetlb_delete_from_page_cache(struct page *page)
+{
+	ClearPageDirty(page);
+	ClearPageUptodate(page);
+	delete_from_page_cache(page);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -388,7 +403,13 @@ static bool hugetlb_vma_maps_page(struct vm_area_struct *vma,
 {
 	pte_t *ptep, pte;
 
+<<<<<<< HEAD
 	ptep = hugetlb_walk(vma, addr, huge_page_size(hstate_vma(vma)));
+=======
+	ptep = huge_pte_offset(vma->vm_mm, addr,
+			huge_page_size(hstate_vma(vma)));
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ptep)
 		return false;
 
@@ -410,12 +431,19 @@ static bool hugetlb_vma_maps_page(struct vm_area_struct *vma,
  */
 static unsigned long vma_offset_start(struct vm_area_struct *vma, pgoff_t start)
 {
+<<<<<<< HEAD
 	unsigned long offset = 0;
 
 	if (vma->vm_pgoff < start)
 		offset = (start - vma->vm_pgoff) << PAGE_SHIFT;
 
 	return vma->vm_start + offset;
+=======
+	if (vma->vm_pgoff < start)
+		return (start - vma->vm_pgoff) << PAGE_SHIFT;
+	else
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static unsigned long vma_offset_end(struct vm_area_struct *vma, pgoff_t end)
@@ -457,7 +485,11 @@ retry:
 		v_start = vma_offset_start(vma, start);
 		v_end = vma_offset_end(vma, end);
 
+<<<<<<< HEAD
 		if (!hugetlb_vma_maps_page(vma, v_start, page))
+=======
+		if (!hugetlb_vma_maps_page(vma, vma->vm_start + v_start, page))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		if (!hugetlb_vma_trylock_write(vma)) {
@@ -473,8 +505,13 @@ retry:
 			break;
 		}
 
+<<<<<<< HEAD
 		unmap_hugepage_range(vma, v_start, v_end, NULL,
 				     ZAP_FLAG_DROP_MARKER);
+=======
+		unmap_hugepage_range(vma, vma->vm_start + v_start, v_end,
+				NULL, ZAP_FLAG_DROP_MARKER);
+>>>>>>> b7ba80a49124 (Commit)
 		hugetlb_vma_unlock_write(vma);
 	}
 
@@ -507,9 +544,16 @@ retry:
 		 */
 		v_start = vma_offset_start(vma, start);
 		v_end = vma_offset_end(vma, end);
+<<<<<<< HEAD
 		if (hugetlb_vma_maps_page(vma, v_start, page))
 			unmap_hugepage_range(vma, v_start, v_end, NULL,
 					     ZAP_FLAG_DROP_MARKER);
+=======
+		if (hugetlb_vma_maps_page(vma, vma->vm_start + v_start, page))
+			unmap_hugepage_range(vma, vma->vm_start + v_start,
+						v_end, NULL,
+						ZAP_FLAG_DROP_MARKER);
+>>>>>>> b7ba80a49124 (Commit)
 
 		kref_put(&vma_lock->refs, hugetlb_vma_lock_release);
 		hugetlb_vma_unlock_write(vma);
@@ -539,7 +583,12 @@ hugetlb_vmdelete_list(struct rb_root_cached *root, pgoff_t start, pgoff_t end,
 		v_start = vma_offset_start(vma, start);
 		v_end = vma_offset_end(vma, end);
 
+<<<<<<< HEAD
 		unmap_hugepage_range(vma, v_start, v_end, NULL, zap_flags);
+=======
+		unmap_hugepage_range(vma, vma->vm_start + v_start, v_end,
+				     NULL, zap_flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * Note that vma lock only exists for shared/non-private
@@ -578,8 +627,13 @@ static bool remove_inode_single_folio(struct hstate *h, struct inode *inode,
 	 * map could fail.  Correspondingly, the subpool and global
 	 * reserve usage count can need to be adjusted.
 	 */
+<<<<<<< HEAD
 	VM_BUG_ON_FOLIO(folio_test_hugetlb_restore_reserve(folio), folio);
 	hugetlb_delete_from_page_cache(folio);
+=======
+	VM_BUG_ON(HPageRestoreReserve(&folio->page));
+	hugetlb_delete_from_page_cache(&folio->page);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = true;
 	if (!truncate_op) {
 		if (unlikely(hugetlb_unreserve_pages(inode, index,
@@ -697,7 +751,11 @@ static void hugetlbfs_zero_partial_page(struct hstate *h,
 	struct folio *folio;
 
 	folio = filemap_lock_folio(mapping, idx);
+<<<<<<< HEAD
 	if (IS_ERR(folio))
+=======
+	if (!folio)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	start = start & ~huge_page_mask(h);
@@ -811,7 +869,11 @@ static long hugetlbfs_fallocate(struct file *file, int mode, loff_t offset,
 	 * as input to create an allocation policy.
 	 */
 	vma_init(&pseudo_vma, mm);
+<<<<<<< HEAD
 	vm_flags_init(&pseudo_vma, VM_HUGETLB | VM_MAYSHARE | VM_SHARED);
+=======
+	pseudo_vma.vm_flags = (VM_HUGETLB | VM_MAYSHARE | VM_SHARED);
+>>>>>>> b7ba80a49124 (Commit)
 	pseudo_vma.vm_file = file;
 
 	for (index = start; index < end; index++) {
@@ -819,9 +881,14 @@ static long hugetlbfs_fallocate(struct file *file, int mode, loff_t offset,
 		 * This is supposed to be the vaddr where the page is being
 		 * faulted in, but we have no vaddr here.
 		 */
+<<<<<<< HEAD
 		struct folio *folio;
 		unsigned long addr;
 		bool present;
+=======
+		struct page *page;
+		unsigned long addr;
+>>>>>>> b7ba80a49124 (Commit)
 
 		cond_resched();
 
@@ -845,16 +912,23 @@ static long hugetlbfs_fallocate(struct file *file, int mode, loff_t offset,
 		mutex_lock(&hugetlb_fault_mutex_table[hash]);
 
 		/* See if already present in mapping to avoid alloc/free */
+<<<<<<< HEAD
 		rcu_read_lock();
 		present = page_cache_next_miss(mapping, index, 1) != index;
 		rcu_read_unlock();
 		if (present) {
+=======
+		page = find_get_page(mapping, index);
+		if (page) {
+			put_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 			mutex_unlock(&hugetlb_fault_mutex_table[hash]);
 			hugetlb_drop_vma_policy(&pseudo_vma);
 			continue;
 		}
 
 		/*
+<<<<<<< HEAD
 		 * Allocate folio without setting the avoid_reserve argument.
 		 * There certainly are no reserves associated with the
 		 * pseudo_vma.  However, there could be shared mappings with
@@ -875,12 +949,35 @@ static long hugetlbfs_fallocate(struct file *file, int mode, loff_t offset,
 		if (unlikely(error)) {
 			restore_reserve_on_error(h, &pseudo_vma, addr, folio);
 			folio_put(folio);
+=======
+		 * Allocate page without setting the avoid_reserve argument.
+		 * There certainly are no reserves associated with the
+		 * pseudo_vma.  However, there could be shared mappings with
+		 * reserves for the file at the inode level.  If we fallocate
+		 * pages in these areas, we need to consume the reserves
+		 * to keep reservation accounting consistent.
+		 */
+		page = alloc_huge_page(&pseudo_vma, addr, 0);
+		hugetlb_drop_vma_policy(&pseudo_vma);
+		if (IS_ERR(page)) {
+			mutex_unlock(&hugetlb_fault_mutex_table[hash]);
+			error = PTR_ERR(page);
+			goto out;
+		}
+		clear_huge_page(page, addr, pages_per_huge_page(h));
+		__SetPageUptodate(page);
+		error = hugetlb_add_to_page_cache(page, mapping, index);
+		if (unlikely(error)) {
+			restore_reserve_on_error(h, &pseudo_vma, addr, page);
+			put_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 			mutex_unlock(&hugetlb_fault_mutex_table[hash]);
 			goto out;
 		}
 
 		mutex_unlock(&hugetlb_fault_mutex_table[hash]);
 
+<<<<<<< HEAD
 		folio_set_hugetlb_migratable(folio);
 		/*
 		 * folio_unlock because locked by hugetlb_add_to_page_cache()
@@ -888,6 +985,15 @@ static long hugetlbfs_fallocate(struct file *file, int mode, loff_t offset,
 		 */
 		folio_unlock(folio);
 		folio_put(folio);
+=======
+		SetHPageMigratable(page);
+		/*
+		 * unlock_page because locked by hugetlb_add_to_page_cache()
+		 * put_page() due to reference from alloc_huge_page()
+		 */
+		unlock_page(page);
+		put_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (!(mode & FALLOC_FL_KEEP_SIZE) && offset + len > inode->i_size)
@@ -898,7 +1004,11 @@ out:
 	return error;
 }
 
+<<<<<<< HEAD
 static int hugetlbfs_setattr(struct mnt_idmap *idmap,
+=======
+static int hugetlbfs_setattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			     struct dentry *dentry, struct iattr *attr)
 {
 	struct inode *inode = d_inode(dentry);
@@ -907,7 +1017,11 @@ static int hugetlbfs_setattr(struct mnt_idmap *idmap,
 	unsigned int ia_valid = attr->ia_valid;
 	struct hugetlbfs_inode_info *info = HUGETLBFS_I(inode);
 
+<<<<<<< HEAD
 	error = setattr_prepare(&nop_mnt_idmap, dentry, attr);
+=======
+	error = setattr_prepare(&init_user_ns, dentry, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		return error;
 
@@ -924,7 +1038,11 @@ static int hugetlbfs_setattr(struct mnt_idmap *idmap,
 		hugetlb_vmtruncate(inode, newsize);
 	}
 
+<<<<<<< HEAD
 	setattr_copy(&nop_mnt_idmap, inode, attr);
+=======
+	setattr_copy(&init_user_ns, inode, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	mark_inode_dirty(inode);
 	return 0;
 }
@@ -980,7 +1098,11 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
 		struct hugetlbfs_inode_info *info = HUGETLBFS_I(inode);
 
 		inode->i_ino = get_next_ino();
+<<<<<<< HEAD
 		inode_init_owner(&nop_mnt_idmap, inode, dir, mode);
+=======
+		inode_init_owner(&init_user_ns, inode, dir, mode);
+>>>>>>> b7ba80a49124 (Commit)
 		lockdep_set_class(&inode->i_mapping->i_mmap_rwsem,
 				&hugetlbfs_i_mmap_rwsem_key);
 		inode->i_mapping->a_ops = &hugetlbfs_aops;
@@ -1019,6 +1141,7 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
 /*
  * File creation. Allocate an inode, and we're done..
  */
+<<<<<<< HEAD
 static int hugetlbfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
 			   struct dentry *dentry, umode_t mode, dev_t dev)
 {
@@ -1037,12 +1160,48 @@ static int hugetlbfs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
 			   struct dentry *dentry, umode_t mode)
 {
 	int retval = hugetlbfs_mknod(&nop_mnt_idmap, dir, dentry,
+=======
+static int do_hugetlbfs_mknod(struct inode *dir,
+			struct dentry *dentry,
+			umode_t mode,
+			dev_t dev,
+			bool tmpfile)
+{
+	struct inode *inode;
+	int error = -ENOSPC;
+
+	inode = hugetlbfs_get_inode(dir->i_sb, dir, mode, dev);
+	if (inode) {
+		dir->i_ctime = dir->i_mtime = current_time(dir);
+		if (tmpfile) {
+			d_tmpfile(dentry, inode);
+		} else {
+			d_instantiate(dentry, inode);
+			dget(dentry);/* Extra count - pin the dentry in core */
+		}
+		error = 0;
+	}
+	return error;
+}
+
+static int hugetlbfs_mknod(struct user_namespace *mnt_userns, struct inode *dir,
+			   struct dentry *dentry, umode_t mode, dev_t dev)
+{
+	return do_hugetlbfs_mknod(dir, dentry, mode, dev, false);
+}
+
+static int hugetlbfs_mkdir(struct user_namespace *mnt_userns, struct inode *dir,
+			   struct dentry *dentry, umode_t mode)
+{
+	int retval = hugetlbfs_mknod(&init_user_ns, dir, dentry,
+>>>>>>> b7ba80a49124 (Commit)
 				     mode | S_IFDIR, 0);
 	if (!retval)
 		inc_nlink(dir);
 	return retval;
 }
 
+<<<<<<< HEAD
 static int hugetlbfs_create(struct mnt_idmap *idmap,
 			    struct inode *dir, struct dentry *dentry,
 			    umode_t mode, bool excl)
@@ -1065,6 +1224,23 @@ static int hugetlbfs_tmpfile(struct mnt_idmap *idmap,
 }
 
 static int hugetlbfs_symlink(struct mnt_idmap *idmap,
+=======
+static int hugetlbfs_create(struct user_namespace *mnt_userns,
+			    struct inode *dir, struct dentry *dentry,
+			    umode_t mode, bool excl)
+{
+	return hugetlbfs_mknod(&init_user_ns, dir, dentry, mode | S_IFREG, 0);
+}
+
+static int hugetlbfs_tmpfile(struct user_namespace *mnt_userns,
+			     struct inode *dir, struct dentry *dentry,
+			     umode_t mode)
+{
+	return do_hugetlbfs_mknod(dir, dentry, mode | S_IFREG, 0, true);
+}
+
+static int hugetlbfs_symlink(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			     struct inode *dir, struct dentry *dentry,
 			     const char *symname)
 {
@@ -1097,10 +1273,17 @@ static int hugetlbfs_migrate_folio(struct address_space *mapping,
 	if (rc != MIGRATEPAGE_SUCCESS)
 		return rc;
 
+<<<<<<< HEAD
 	if (hugetlb_folio_subpool(src)) {
 		hugetlb_set_folio_subpool(dst,
 					hugetlb_folio_subpool(src));
 		hugetlb_set_folio_subpool(src, NULL);
+=======
+	if (hugetlb_page_subpool(&src->page)) {
+		hugetlb_set_page_subpool(&dst->page,
+					hugetlb_page_subpool(&src->page));
+		hugetlb_set_page_subpool(&src->page, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (mode != MIGRATE_SYNC_NO_COPY)
@@ -1117,6 +1300,16 @@ static int hugetlbfs_migrate_folio(struct address_space *mapping,
 static int hugetlbfs_error_remove_page(struct address_space *mapping,
 				struct page *page)
 {
+<<<<<<< HEAD
+=======
+	struct inode *inode = mapping->host;
+	pgoff_t index = page->index;
+
+	hugetlb_delete_from_page_cache(page);
+	if (unlikely(hugetlb_unreserve_pages(inode, index, index + 1, 1)))
+		hugetlb_fix_reserve_counts(inode);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1279,7 +1472,11 @@ static const struct address_space_operations hugetlbfs_aops = {
 
 static void init_once(void *foo)
 {
+<<<<<<< HEAD
 	struct hugetlbfs_inode_info *ei = foo;
+=======
+	struct hugetlbfs_inode_info *ei = (struct hugetlbfs_inode_info *)foo;
+>>>>>>> b7ba80a49124 (Commit)
 
 	inode_init_once(&ei->vfs_inode);
 }
@@ -1377,7 +1574,11 @@ static int hugetlbfs_parse_param(struct fs_context *fc, struct fs_parameter *par
 
 	case Opt_size:
 		/* memparse() will accept a K/M/G without a digit */
+<<<<<<< HEAD
 		if (!param->string || !isdigit(param->string[0]))
+=======
+		if (!isdigit(param->string[0]))
+>>>>>>> b7ba80a49124 (Commit)
 			goto bad_val;
 		ctx->max_size_opt = memparse(param->string, &rest);
 		ctx->max_val_type = SIZE_STD;
@@ -1387,7 +1588,11 @@ static int hugetlbfs_parse_param(struct fs_context *fc, struct fs_parameter *par
 
 	case Opt_nr_inodes:
 		/* memparse() will accept a K/M/G without a digit */
+<<<<<<< HEAD
 		if (!param->string || !isdigit(param->string[0]))
+=======
+		if (!isdigit(param->string[0]))
+>>>>>>> b7ba80a49124 (Commit)
 			goto bad_val;
 		ctx->nr_inodes = memparse(param->string, &rest);
 		return 0;
@@ -1403,7 +1608,11 @@ static int hugetlbfs_parse_param(struct fs_context *fc, struct fs_parameter *par
 
 	case Opt_min_size:
 		/* memparse() will accept a K/M/G without a digit */
+<<<<<<< HEAD
 		if (!param->string || !isdigit(param->string[0]))
+=======
+		if (!isdigit(param->string[0]))
+>>>>>>> b7ba80a49124 (Commit)
 			goto bad_val;
 		ctx->min_size_opt = memparse(param->string, &rest);
 		ctx->min_val_type = SIZE_STD;

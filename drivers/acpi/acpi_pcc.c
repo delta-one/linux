@@ -23,12 +23,15 @@
 
 #include <acpi/pcc.h>
 
+<<<<<<< HEAD
 /*
  * Arbitrary retries in case the remote processor is slow to respond
  * to PCC commands
  */
 #define PCC_CMD_WAIT_RETRIES_NUM	500ULL
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct pcc_data {
 	struct pcc_mbox_chan *pcc_chan;
 	void __iomem *pcc_comm_addr;
@@ -53,7 +56,10 @@ acpi_pcc_address_space_setup(acpi_handle region_handle, u32 function,
 	struct pcc_data *data;
 	struct acpi_pcc_info *ctx = handler_context;
 	struct pcc_mbox_chan *pcc_chan;
+<<<<<<< HEAD
 	static acpi_status ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	data = kzalloc(sizeof(*data), GFP_KERNEL);
 	if (!data)
@@ -70,6 +76,7 @@ acpi_pcc_address_space_setup(acpi_handle region_handle, u32 function,
 	if (IS_ERR(data->pcc_chan)) {
 		pr_err("Failed to find PCC channel for subspace %d\n",
 		       ctx->subspace_id);
+<<<<<<< HEAD
 		ret = AE_NOT_FOUND;
 		goto err_free_data;
 	}
@@ -81,17 +88,28 @@ acpi_pcc_address_space_setup(acpi_handle region_handle, u32 function,
 		ret = AE_SUPPORT;
 		goto err_free_channel;
 	}
+=======
+		return AE_NOT_FOUND;
+	}
+
+	pcc_chan = data->pcc_chan;
+>>>>>>> b7ba80a49124 (Commit)
 	data->pcc_comm_addr = acpi_os_ioremap(pcc_chan->shmem_base_addr,
 					      pcc_chan->shmem_size);
 	if (!data->pcc_comm_addr) {
 		pr_err("Failed to ioremap PCC comm region mem for %d\n",
 		       ctx->subspace_id);
+<<<<<<< HEAD
 		ret = AE_NO_MEMORY;
 		goto err_free_channel;
+=======
+		return AE_NO_MEMORY;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	*region_context = data;
 	return AE_OK;
+<<<<<<< HEAD
 
 err_free_channel:
 	pcc_mbox_free_channel(data->pcc_chan);
@@ -99,6 +117,8 @@ err_free_data:
 	kfree(data);
 
 	return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static acpi_status
@@ -108,7 +128,10 @@ acpi_pcc_address_space_handler(u32 function, acpi_physical_address addr,
 {
 	int ret;
 	struct pcc_data *data = region_context;
+<<<<<<< HEAD
 	u64 usecs_lat;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	reinit_completion(&data->done);
 
@@ -119,6 +142,7 @@ acpi_pcc_address_space_handler(u32 function, acpi_physical_address addr,
 	if (ret < 0)
 		return AE_ERROR;
 
+<<<<<<< HEAD
 	/*
 	 * pcc_chan->latency is just a Nominal value. In reality the remote
 	 * processor could be much slower to reply. So add an arbitrary
@@ -133,6 +157,12 @@ acpi_pcc_address_space_handler(u32 function, acpi_physical_address addr,
 	}
 
 	mbox_chan_txdone(data->pcc_chan->mchan, ret);
+=======
+	if (data->pcc_chan->mchan->mbox->txdone_irq)
+		wait_for_completion(&data->done);
+
+	mbox_client_txdone(data->pcc_chan->mchan, ret);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memcpy_fromio(value, data->pcc_comm_addr, data->ctx.length);
 

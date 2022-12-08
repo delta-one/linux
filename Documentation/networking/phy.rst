@@ -120,7 +120,11 @@ required delays, as defined per the RGMII standard, several options may be
 available:
 
 * Some SoCs may offer a pin pad/mux/controller capable of configuring a given
+<<<<<<< HEAD
   set of pins' strength, delays, and voltage; and it may be a suitable
+=======
+  set of pins'strength, delays, and voltage; and it may be a suitable
+>>>>>>> b7ba80a49124 (Commit)
   option to insert the expected 2ns RGMII delay.
 
 * Modifying the PCB design to include a fixed delay (e.g: using a specifically
@@ -315,7 +319,11 @@ Some of the interface modes are described below:
     only the port id, but also so-called "extensions". The only documented
     extension so-far in the specification is the inclusion of timestamps, for
     PTP-enabled PHYs. This mode isn't compatible with QSGMII, but offers the
+<<<<<<< HEAD
     same capabilities in terms of link speed and negotiation.
+=======
+    same capabilities in terms of link speed and negociation.
+>>>>>>> b7ba80a49124 (Commit)
 
 ``PHY_INTERFACE_MODE_1000BASEKX``
     This is 1000BASE-X as defined by IEEE 802.3 Clause 36 with Clause 73

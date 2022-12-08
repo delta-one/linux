@@ -10,7 +10,11 @@ maintainers:
   - Miquel Raynal <miquel.raynal@bootlin.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: nand-controller.yaml
+=======
+  - $ref: "nand-controller.yaml"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

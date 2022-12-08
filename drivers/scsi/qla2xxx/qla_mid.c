@@ -52,7 +52,11 @@ qla24xx_allocate_vp_id(scsi_qla_host_t *vha)
 	spin_unlock_irqrestore(&ha->vport_slock, flags);
 
 	spin_lock_irqsave(&ha->hardware_lock, flags);
+<<<<<<< HEAD
 	qla_update_vp_map(vha, SET_VP_IDX);
+=======
+	qlt_update_vp_map(vha, SET_VP_IDX);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irqrestore(&ha->hardware_lock, flags);
 
 	mutex_unlock(&ha->vport_lock);
@@ -80,7 +84,11 @@ qla24xx_deallocate_vp_id(scsi_qla_host_t *vha)
 		spin_lock_irqsave(&ha->vport_slock, flags);
 		if (atomic_read(&vha->vref_count) == 0) {
 			list_del(&vha->list);
+<<<<<<< HEAD
 			qla_update_vp_map(vha, RESET_VP_IDX);
+=======
+			qlt_update_vp_map(vha, RESET_VP_IDX);
+>>>>>>> b7ba80a49124 (Commit)
 			bailout = 1;
 		}
 		spin_unlock_irqrestore(&ha->vport_slock, flags);
@@ -95,7 +103,11 @@ qla24xx_deallocate_vp_id(scsi_qla_host_t *vha)
 			"vha->vref_count=%u timeout\n", vha->vref_count.counter);
 		spin_lock_irqsave(&ha->vport_slock, flags);
 		list_del(&vha->list);
+<<<<<<< HEAD
 		qla_update_vp_map(vha, RESET_VP_IDX);
+=======
+		qlt_update_vp_map(vha, RESET_VP_IDX);
+>>>>>>> b7ba80a49124 (Commit)
 		spin_unlock_irqrestore(&ha->vport_slock, flags);
 	}
 
@@ -187,7 +199,11 @@ qla24xx_disable_vp(scsi_qla_host_t *vha)
 
 	/* Remove port id from vp target map */
 	spin_lock_irqsave(&vha->hw->hardware_lock, flags);
+<<<<<<< HEAD
 	qla_update_vp_map(vha, RESET_AL_PA);
+=======
+	qlt_update_vp_map(vha, RESET_AL_PA);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irqrestore(&vha->hw->hardware_lock, flags);
 
 	qla2x00_mark_vp_devices_dead(vha);
@@ -384,6 +400,18 @@ qla2x00_do_dpc_vp(scsi_qla_host_t *vha)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	if (test_bit(FCPORT_UPDATE_NEEDED, &vha->dpc_flags)) {
+		ql_dbg(ql_dbg_dpc, vha, 0x4016,
+		    "FCPort update scheduled.\n");
+		qla2x00_update_fcports(vha);
+		clear_bit(FCPORT_UPDATE_NEEDED, &vha->dpc_flags);
+		ql_dbg(ql_dbg_dpc, vha, 0x4017,
+		    "FCPort update end.\n");
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (test_bit(RELOGIN_NEEDED, &vha->dpc_flags) &&
 	    !test_bit(LOOP_RESYNC_NEEDED, &vha->dpc_flags) &&
 	    atomic_read(&vha->loop_state) != LOOP_DOWN) {
@@ -1005,6 +1033,7 @@ done:
 	kref_put(&sp->cmd_kref, qla2x00_sp_release);
 	return rval;
 }
+<<<<<<< HEAD
 
 struct scsi_qla_host *qla_find_host_by_vp_idx(struct scsi_qla_host *vha, uint16_t vp_idx)
 {
@@ -1290,3 +1319,5 @@ void qla_adjust_buf(struct scsi_qla_host *vha)
 		}
 	}
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

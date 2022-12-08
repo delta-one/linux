@@ -1094,9 +1094,15 @@ static const struct regmap_config sx150x_regmap_config = {
 	.volatile_reg = sx150x_reg_volatile,
 };
 
+<<<<<<< HEAD
 static int sx150x_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int sx150x_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	static const u32 i2c_funcs = I2C_FUNC_SMBUS_BYTE_DATA |
 				     I2C_FUNC_SMBUS_WRITE_WORD_DATA;
 	struct device *dev = &client->dev;
@@ -1250,9 +1256,15 @@ static int sx150x_probe(struct i2c_client *client)
 static struct i2c_driver sx150x_driver = {
 	.driver = {
 		.name = "sx150x-pinctrl",
+<<<<<<< HEAD
 		.of_match_table = sx150x_of_match,
 	},
 	.probe_new = sx150x_probe,
+=======
+		.of_match_table = of_match_ptr(sx150x_of_match),
+	},
+	.probe    = sx150x_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = sx150x_id,
 };
 

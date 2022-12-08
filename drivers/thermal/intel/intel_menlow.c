@@ -179,20 +179,37 @@ static int intel_menlow_memory_add(struct acpi_device *device)
 
 }
 
+<<<<<<< HEAD
 static void intel_menlow_memory_remove(struct acpi_device *device)
+=======
+static int intel_menlow_memory_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct thermal_cooling_device *cdev;
 
 	if (!device)
+<<<<<<< HEAD
 		return;
 
 	cdev = acpi_driver_data(device);
 	if (!cdev)
 		return;
+=======
+		return -EINVAL;
+
+	cdev = acpi_driver_data(device);
+	if (!cdev)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	sysfs_remove_link(&device->dev.kobj, "thermal_cooling");
 	sysfs_remove_link(&cdev->device.kobj, "device");
 	thermal_cooling_device_unregister(cdev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id intel_menlow_memory_ids[] = {
@@ -232,9 +249,15 @@ static DEFINE_MUTEX(intel_menlow_attr_lock);
 
 /*
  * sensor_get_auxtrip - get the current auxtrip value from sensor
+<<<<<<< HEAD
  * @handle: Object handle
  * @index : GET_AUX1/GET_AUX0
  * @value : The address will be fill by the value
+=======
+ * @name: Thermalzone name
+ * @auxtype : AUX0/AUX1
+ * @buf: syfs buffer
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int sensor_get_auxtrip(acpi_handle handle, int index,
 							unsigned long long *value)
@@ -254,9 +277,15 @@ static int sensor_get_auxtrip(acpi_handle handle, int index,
 
 /*
  * sensor_set_auxtrip - set the new auxtrip value to sensor
+<<<<<<< HEAD
  * @handle: Object handle
  * @index : GET_AUX1/GET_AUX0
  * @value : The value will be set
+=======
+ * @name: Thermalzone name
+ * @auxtype : AUX0/AUX1
+ * @buf: syfs buffer
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int sensor_set_auxtrip(acpi_handle handle, int index, int value)
 {

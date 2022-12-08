@@ -45,7 +45,11 @@ static struct i2c_driver fxls8962af_driver = {
 	.driver = {
 		   .name = "fxls8962af_i2c",
 		   .of_match_table = fxls8962af_of_match,
+<<<<<<< HEAD
 		   .pm = pm_ptr(&fxls8962af_pm_ops),
+=======
+		   .pm = &fxls8962af_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		   },
 	.probe_new = fxls8962af_probe,
 	.id_table = fxls8962af_id,

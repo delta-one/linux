@@ -381,11 +381,14 @@ s64 iio_get_time_ns(const struct iio_dev *indio_dev);
 
 #define INDIO_MAX_RAW_ELEMENTS		4
 
+<<<<<<< HEAD
 struct iio_val_int_plus_micro {
 	int integer;
 	int micro;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct iio_trigger; /* forward declaration */
 
 /**
@@ -553,6 +556,11 @@ struct iio_buffer_setup_ops {
  *			and owner
  * @buffer:		[DRIVER] any buffer present
  * @scan_bytes:		[INTERN] num bytes captured to be fed to buffer demux
+<<<<<<< HEAD
+=======
+ * @mlock:		[INTERN] lock used to prevent simultaneous device state
+ *			changes
+>>>>>>> b7ba80a49124 (Commit)
  * @available_scan_masks: [DRIVER] optional array of allowed bitmasks
  * @masklength:		[INTERN] the length of the mask established from
  *			channels
@@ -577,6 +585,10 @@ struct iio_dev {
 
 	struct iio_buffer		*buffer;
 	int				scan_bytes;
+<<<<<<< HEAD
+=======
+	struct mutex			mlock;
+>>>>>>> b7ba80a49124 (Commit)
 
 	const unsigned long		*available_scan_masks;
 	unsigned			masklength;
@@ -631,8 +643,11 @@ int __devm_iio_device_register(struct device *dev, struct iio_dev *indio_dev,
 int iio_push_event(struct iio_dev *indio_dev, u64 ev_code, s64 timestamp);
 int iio_device_claim_direct_mode(struct iio_dev *indio_dev);
 void iio_device_release_direct_mode(struct iio_dev *indio_dev);
+<<<<<<< HEAD
 int iio_device_claim_buffer_mode(struct iio_dev *indio_dev);
 void iio_device_release_buffer_mode(struct iio_dev *indio_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 extern struct bus_type iio_bus_type;
 

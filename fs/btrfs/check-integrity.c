@@ -82,7 +82,10 @@
 #include <linux/mm.h>
 #include <linux/string.h>
 #include <crypto/hash.h>
+<<<<<<< HEAD
 #include "messages.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "ctree.h"
 #include "disk-io.h"
 #include "transaction.h"
@@ -93,7 +96,10 @@
 #include "check-integrity.h"
 #include "rcu-string.h"
 #include "compression.h"
+<<<<<<< HEAD
 #include "accessors.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define BTRFSIC_BLOCK_HASHTABLE_SIZE 0x10000
 #define BTRFSIC_BLOCK_LINK_HASHTABLE_SIZE 0x10000
@@ -757,7 +763,11 @@ static int btrfsic_process_superblock_dev_mirror(
 			btrfs_info_in_rcu(fs_info,
 			"new initial S-block (bdev %p, %s) @%llu (%pg/%llu/%d)",
 				     superblock_bdev,
+<<<<<<< HEAD
 				     btrfs_dev_name(device), dev_bytenr,
+=======
+				     rcu_str_deref(device->name), dev_bytenr,
+>>>>>>> b7ba80a49124 (Commit)
 				     dev_state->bdev, dev_bytenr,
 				     superblock_mirror_num);
 		list_add(&superblock_tmp->all_blocks_node,

@@ -295,7 +295,11 @@ int clk_enable(struct clk *clk)
 	int ret;
 
 	if (!clk)
+<<<<<<< HEAD
 		return 0;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irqsave(&clock_lock, flags);
 	ret = __clk_enable(clk);

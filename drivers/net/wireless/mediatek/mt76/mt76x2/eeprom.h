@@ -40,7 +40,11 @@ struct mt76x2_temp_comp {
 	unsigned int low_slope; /* J / dB */
 };
 
+<<<<<<< HEAD
 void mt76x2_get_rate_power(struct mt76x02_dev *dev, struct mt76x02_rate_power *t,
+=======
+void mt76x2_get_rate_power(struct mt76x02_dev *dev, struct mt76_rate_power *t,
+>>>>>>> b7ba80a49124 (Commit)
 			   struct ieee80211_channel *chan);
 void mt76x2_get_power_info(struct mt76x02_dev *dev,
 			   struct mt76x2_tx_power_info *t,

@@ -20,7 +20,10 @@
 #include <sys/auxv.h>
 
 #include "../kselftest.h"
+<<<<<<< HEAD
 #include "current_stack_pointer.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifndef SS_AUTODISARM
 #define SS_AUTODISARM  (1U << 31)
@@ -47,6 +50,15 @@ void my_usr1(int sig, siginfo_t *si, void *u)
 	stack_t stk;
 	struct stk_data *p;
 
+<<<<<<< HEAD
+=======
+#if __s390x__
+	register unsigned long sp asm("%15");
+#else
+	register unsigned long sp asm("sp");
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (sp < (unsigned long)sstack ||
 			sp >= (unsigned long)sstack + stack_size) {
 		ksft_exit_fail_msg("SP is not on sigaltstack\n");

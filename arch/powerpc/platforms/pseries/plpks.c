@@ -16,6 +16,7 @@
 #include <linux/slab.h>
 #include <linux/string.h>
 #include <linux/types.h>
+<<<<<<< HEAD
 #include <linux/of_fdt.h>
 #include <linux/libfdt.h>
 #include <linux/memblock.h>
@@ -23,11 +24,31 @@
 #include <asm/machdep.h>
 #include <asm/plpks.h>
 #include <asm/firmware.h>
+=======
+#include <asm/hvcall.h>
+#include <asm/machdep.h>
+
+#include "plpks.h"
+
+#define PKS_FW_OWNER	     0x1
+#define PKS_BOOTLOADER_OWNER 0x2
+#define PKS_OS_OWNER	     0x3
+
+#define LABEL_VERSION	    0
+#define MAX_LABEL_ATTR_SIZE 16
+#define MAX_NAME_SIZE	    239
+#define MAX_DATA_SIZE	    4000
+
+#define PKS_FLUSH_MAX_TIMEOUT 5000 //msec
+#define PKS_FLUSH_SLEEP	      10 //msec
+#define PKS_FLUSH_SLEEP_RANGE 400
+>>>>>>> b7ba80a49124 (Commit)
 
 static u8 *ospassword;
 static u16 ospasswordlength;
 
 // Retrieved with H_PKS_GET_CONFIG
+<<<<<<< HEAD
 static u8 version;
 static u16 objoverhead;
 static u16 maxpwsize;
@@ -38,6 +59,10 @@ static u32 usedspace;
 static u32 supportedpolicies;
 static u32 maxlargeobjectsize;
 static u64 signedupdatealgorithms;
+=======
+static u16 maxpwsize;
+static u16 maxobjsize;
+>>>>>>> b7ba80a49124 (Commit)
 
 struct plpks_auth {
 	u8 version;
@@ -58,7 +83,11 @@ struct label_attr {
 
 struct label {
 	struct label_attr attr;
+<<<<<<< HEAD
 	u8 name[PLPKS_MAX_NAME_SIZE];
+=======
+	u8 name[MAX_NAME_SIZE];
+>>>>>>> b7ba80a49124 (Commit)
 	size_t size;
 };
 
@@ -73,7 +102,11 @@ static int pseries_status_to_err(int rc)
 	case H_FUNCTION:
 		err = -ENXIO;
 		break;
+<<<<<<< HEAD
 	case H_PARAMETER:
+=======
+	case H_P1:
+>>>>>>> b7ba80a49124 (Commit)
 	case H_P2:
 	case H_P3:
 	case H_P4:
@@ -85,12 +118,15 @@ static int pseries_status_to_err(int rc)
 		err = -ENOENT;
 		break;
 	case H_BUSY:
+<<<<<<< HEAD
 	case H_LONG_BUSY_ORDER_1_MSEC:
 	case H_LONG_BUSY_ORDER_10_MSEC:
 	case H_LONG_BUSY_ORDER_100_MSEC:
 	case H_LONG_BUSY_ORDER_1_SEC:
 	case H_LONG_BUSY_ORDER_10_SEC:
 	case H_LONG_BUSY_ORDER_100_SEC:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EBUSY;
 		break;
 	case H_AUTHORITY:
@@ -115,20 +151,28 @@ static int pseries_status_to_err(int rc)
 		err = -EEXIST;
 		break;
 	case H_ABORTED:
+<<<<<<< HEAD
 		err = -EIO;
+=======
+		err = -EINTR;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		err = -EINVAL;
 	}
 
+<<<<<<< HEAD
 	pr_debug("Converted hypervisor code %d to Linux %d\n", rc, err);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
 static int plpks_gen_password(void)
 {
 	unsigned long retbuf[PLPAR_HCALL_BUFSIZE] = { 0 };
+<<<<<<< HEAD
 	u8 *password, consumer = PLPKS_OS_OWNER;
 	int rc;
 
@@ -140,6 +184,12 @@ static int plpks_gen_password(void)
 
 	// The password must not cross a page boundary, so we align to the next power of 2
 	password = kzalloc(roundup_pow_of_two(maxpwsize), GFP_KERNEL);
+=======
+	u8 *password, consumer = PKS_OS_OWNER;
+	int rc;
+
+	password = kzalloc(maxpwsize, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!password)
 		return -ENOMEM;
 
@@ -156,7 +206,11 @@ static int plpks_gen_password(void)
 		memcpy(ospassword, password, ospasswordlength);
 	} else {
 		if (rc == H_IN_USE) {
+<<<<<<< HEAD
 			pr_warn("Password already set - authenticated operations will fail\n");
+=======
+			pr_warn("Password is already set for POWER LPAR Platform KeyStore\n");
+>>>>>>> b7ba80a49124 (Commit)
 			rc = 0;
 		} else {
 			goto out;
@@ -172,20 +226,37 @@ static struct plpks_auth *construct_auth(u8 consumer)
 {
 	struct plpks_auth *auth;
 
+<<<<<<< HEAD
 	if (consumer > PLPKS_OS_OWNER)
 		return ERR_PTR(-EINVAL);
 
 	// The auth structure must not cross a page boundary and must be
 	// 16 byte aligned. We align to the next largest power of 2
 	auth = kzalloc(roundup_pow_of_two(struct_size(auth, password, maxpwsize)), GFP_KERNEL);
+=======
+	if (consumer > PKS_OS_OWNER)
+		return ERR_PTR(-EINVAL);
+
+	auth = kmalloc(struct_size(auth, password, maxpwsize), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!auth)
 		return ERR_PTR(-ENOMEM);
 
 	auth->version = 1;
 	auth->consumer = consumer;
+<<<<<<< HEAD
 
 	if (consumer == PLPKS_FW_OWNER || consumer == PLPKS_BOOTLOADER_OWNER)
 		return auth;
+=======
+	auth->rsvd0 = 0;
+	auth->rsvd1 = 0;
+
+	if (consumer == PKS_FW_OWNER || consumer == PKS_BOOTLOADER_OWNER) {
+		auth->passwordlength = 0;
+		return auth;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	memcpy(auth->password, ospassword, ospasswordlength);
 
@@ -202,6 +273,7 @@ static struct label *construct_label(char *component, u8 varos, u8 *name,
 				     u16 namelen)
 {
 	struct label *label;
+<<<<<<< HEAD
 	size_t slen = 0;
 
 	if (!name || namelen > PLPKS_MAX_NAME_SIZE)
@@ -216,15 +288,33 @@ static struct label *construct_label(char *component, u8 varos, u8 *name,
 
 	// The label structure must not cross a page boundary, so we align to the next power of 2
 	label = kzalloc(roundup_pow_of_two(sizeof(*label)), GFP_KERNEL);
+=======
+	size_t slen;
+
+	if (!name || namelen > MAX_NAME_SIZE)
+		return ERR_PTR(-EINVAL);
+
+	slen = strlen(component);
+	if (component && slen > sizeof(label->attr.prefix))
+		return ERR_PTR(-EINVAL);
+
+	label = kzalloc(sizeof(*label), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!label)
 		return ERR_PTR(-ENOMEM);
 
 	if (component)
 		memcpy(&label->attr.prefix, component, slen);
 
+<<<<<<< HEAD
 	label->attr.version = PLPKS_LABEL_VERSION;
 	label->attr.os = varos;
 	label->attr.length = PLPKS_MAX_LABEL_ATTR_SIZE;
+=======
+	label->attr.version = LABEL_VERSION;
+	label->attr.os = varos;
+	label->attr.length = MAX_LABEL_ATTR_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(&label->name, name, namelen);
 
 	label->size = sizeof(struct label_attr) + namelen;
@@ -235,17 +325,25 @@ static struct label *construct_label(char *component, u8 varos, u8 *name,
 static int _plpks_get_config(void)
 {
 	unsigned long retbuf[PLPAR_HCALL_BUFSIZE] = { 0 };
+<<<<<<< HEAD
 	struct config {
 		u8 version;
 		u8 flags;
 		__be16 rsvd0;
 		__be16 objoverhead;
+=======
+	struct {
+		u8 version;
+		u8 flags;
+		__be32 rsvd0;
+>>>>>>> b7ba80a49124 (Commit)
 		__be16 maxpwsize;
 		__be16 maxobjlabelsize;
 		__be16 maxobjsize;
 		__be32 totalsize;
 		__be32 usedspace;
 		__be32 supportedpolicies;
+<<<<<<< HEAD
 		__be32 maxlargeobjectsize;
 		__be64 signedupdatealgorithms;
 		u8 rsvd1[476];
@@ -386,13 +484,34 @@ bool plpks_is_available(void)
 		return false;
 
 	return true;
+=======
+		__be64 rsvd1;
+	} __packed config;
+	size_t size;
+	int rc;
+
+	size = sizeof(config);
+
+	rc = plpar_hcall(H_PKS_GET_CONFIG, retbuf, virt_to_phys(&config), size);
+
+	if (rc != H_SUCCESS)
+		return pseries_status_to_err(rc);
+
+	maxpwsize = be16_to_cpu(config.maxpwsize);
+	maxobjsize = be16_to_cpu(config.maxobjsize);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int plpks_confirm_object_flushed(struct label *label,
 					struct plpks_auth *auth)
 {
 	unsigned long retbuf[PLPAR_HCALL_BUFSIZE] = { 0 };
+<<<<<<< HEAD
 	bool timed_out = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 timeout = 0;
 	u8 status;
 	int rc;
@@ -404,12 +523,16 @@ static int plpks_confirm_object_flushed(struct label *label,
 
 		status = retbuf[0];
 		if (rc) {
+<<<<<<< HEAD
 			timed_out = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			if (rc == H_NOT_FOUND && status == 1)
 				rc = 0;
 			break;
 		}
 
+<<<<<<< HEAD
 		if (!rc && status == 1) {
 			timed_out = false;
 			break;
@@ -477,6 +600,17 @@ int plpks_signed_update_var(struct plpks_var *var, u64 flags)
 	kfree(label);
 out:
 	kfree(auth);
+=======
+		if (!rc && status == 1)
+			break;
+
+		usleep_range(PKS_FLUSH_SLEEP,
+			     PKS_FLUSH_SLEEP + PKS_FLUSH_SLEEP_RANGE);
+		timeout = timeout + PKS_FLUSH_SLEEP;
+	} while (timeout < PKS_FLUSH_MAX_TIMEOUT);
+
+	rc = pseries_status_to_err(rc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return rc;
 }
@@ -489,6 +623,7 @@ int plpks_write_var(struct plpks_var var)
 	int rc;
 
 	if (!var.component || !var.data || var.datalen <= 0 ||
+<<<<<<< HEAD
 	    var.namelen > PLPKS_MAX_NAME_SIZE || var.datalen > PLPKS_MAX_DATA_SIZE)
 		return -EINVAL;
 
@@ -496,6 +631,15 @@ int plpks_write_var(struct plpks_var var)
 		return -EINVAL;
 
 	auth = construct_auth(PLPKS_OS_OWNER);
+=======
+	    var.namelen > MAX_NAME_SIZE || var.datalen > MAX_DATA_SIZE)
+		return -EINVAL;
+
+	if (var.policy & SIGNEDUPDATE)
+		return -EINVAL;
+
+	auth = construct_auth(PKS_OS_OWNER);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(auth))
 		return PTR_ERR(auth);
 
@@ -512,6 +656,13 @@ int plpks_write_var(struct plpks_var var)
 	if (!rc)
 		rc = plpks_confirm_object_flushed(label, auth);
 
+<<<<<<< HEAD
+=======
+	if (rc)
+		pr_err("Failed to write variable %s for component %s with error %d\n",
+		       var.name, var.component, rc);
+
+>>>>>>> b7ba80a49124 (Commit)
 	rc = pseries_status_to_err(rc);
 	kfree(label);
 out:
@@ -527,10 +678,17 @@ int plpks_remove_var(char *component, u8 varos, struct plpks_var_name vname)
 	struct label *label;
 	int rc;
 
+<<<<<<< HEAD
 	if (vname.namelen > PLPKS_MAX_NAME_SIZE)
 		return -EINVAL;
 
 	auth = construct_auth(PLPKS_OS_OWNER);
+=======
+	if (!component || vname.namelen > MAX_NAME_SIZE)
+		return -EINVAL;
+
+	auth = construct_auth(PKS_OS_OWNER);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(auth))
 		return PTR_ERR(auth);
 
@@ -546,6 +704,13 @@ int plpks_remove_var(char *component, u8 varos, struct plpks_var_name vname)
 	if (!rc)
 		rc = plpks_confirm_object_flushed(label, auth);
 
+<<<<<<< HEAD
+=======
+	if (rc)
+		pr_err("Failed to remove variable %s for component %s with error %d\n",
+		       vname.name, component, rc);
+
+>>>>>>> b7ba80a49124 (Commit)
 	rc = pseries_status_to_err(rc);
 	kfree(label);
 out:
@@ -558,6 +723,7 @@ static int plpks_read_var(u8 consumer, struct plpks_var *var)
 {
 	unsigned long retbuf[PLPAR_HCALL_BUFSIZE] = { 0 };
 	struct plpks_auth *auth;
+<<<<<<< HEAD
 	struct label *label = NULL;
 	u8 *output;
 	int rc;
@@ -576,6 +742,24 @@ static int plpks_read_var(u8 consumer, struct plpks_var *var)
 			rc = PTR_ERR(label);
 			goto out_free_auth;
 		}
+=======
+	struct label *label;
+	u8 *output;
+	int rc;
+
+	if (var->namelen > MAX_NAME_SIZE)
+		return -EINVAL;
+
+	auth = construct_auth(PKS_OS_OWNER);
+	if (IS_ERR(auth))
+		return PTR_ERR(auth);
+
+	label = construct_label(var->component, var->os, var->name,
+				var->namelen);
+	if (IS_ERR(label)) {
+		rc = PTR_ERR(label);
+		goto out_free_auth;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	output = kzalloc(maxobjsize, GFP_KERNEL);
@@ -584,6 +768,7 @@ static int plpks_read_var(u8 consumer, struct plpks_var *var)
 		goto out_free_label;
 	}
 
+<<<<<<< HEAD
 	if (consumer == PLPKS_OS_OWNER)
 		rc = plpar_hcall(H_PKS_READ_OBJECT, retbuf, virt_to_phys(auth),
 				 virt_to_phys(label), label->size, virt_to_phys(output),
@@ -595,10 +780,20 @@ static int plpks_read_var(u8 consumer, struct plpks_var *var)
 
 
 	if (rc != H_SUCCESS) {
+=======
+	rc = plpar_hcall(H_PKS_READ_OBJECT, retbuf, virt_to_phys(auth),
+			 virt_to_phys(label), label->size, virt_to_phys(output),
+			 maxobjsize);
+
+	if (rc != H_SUCCESS) {
+		pr_err("Failed to read variable %s for component %s with error %d\n",
+		       var->name, var->component, rc);
+>>>>>>> b7ba80a49124 (Commit)
 		rc = pseries_status_to_err(rc);
 		goto out_free_output;
 	}
 
+<<<<<<< HEAD
 	if (!var->data || var->datalen > retbuf[0])
 		var->datalen = retbuf[0];
 
@@ -607,6 +802,19 @@ static int plpks_read_var(u8 consumer, struct plpks_var *var)
 	if (var->data)
 		memcpy(var->data, output, var->datalen);
 
+=======
+	if (var->datalen == 0 || var->datalen > retbuf[0])
+		var->datalen = retbuf[0];
+
+	var->data = kzalloc(var->datalen, GFP_KERNEL);
+	if (!var->data) {
+		rc = -ENOMEM;
+		goto out_free_output;
+	}
+	var->policy = retbuf[1];
+
+	memcpy(var->data, output, var->datalen);
+>>>>>>> b7ba80a49124 (Commit)
 	rc = 0;
 
 out_free_output:
@@ -621,16 +829,25 @@ out_free_auth:
 
 int plpks_read_os_var(struct plpks_var *var)
 {
+<<<<<<< HEAD
 	return plpks_read_var(PLPKS_OS_OWNER, var);
+=======
+	return plpks_read_var(PKS_OS_OWNER, var);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int plpks_read_fw_var(struct plpks_var *var)
 {
+<<<<<<< HEAD
 	return plpks_read_var(PLPKS_FW_OWNER, var);
+=======
+	return plpks_read_var(PKS_FW_OWNER, var);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int plpks_read_bootloader_var(struct plpks_var *var)
 {
+<<<<<<< HEAD
 	return plpks_read_var(PLPKS_BOOTLOADER_OWNER, var);
 }
 
@@ -684,6 +901,9 @@ out:
 	fdt_nop_property(fdt, chosen_node, "ibm,plpks-pw");
 	// Since we've cleared the password, we must update the FDT checksum
 	early_init_dt_verify(fdt);
+=======
+	return plpks_read_var(PKS_BOOTLOADER_OWNER, var);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static __init int pseries_plpks_init(void)

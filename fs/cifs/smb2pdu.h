@@ -56,9 +56,12 @@ struct smb2_rdma_crypto_transform {
 
 #define COMPOUND_FID 0xFFFFFFFFFFFFFFFFULL
 
+<<<<<<< HEAD
 #define SMB2_SYMLINK_STRUCT_SIZE \
 	(sizeof(struct smb2_err_rsp) + sizeof(struct smb2_symlink_err_rsp))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define SYMLINK_ERROR_TAG 0x4c4d5953
 
 struct smb2_symlink_err_rsp {
@@ -371,7 +374,11 @@ struct smb2_file_id_extd_directory_info {
 	__le32 EaSize; /* EA size */
 	__le32 ReparsePointTag; /* valid if FILE_ATTR_REPARSE_POINT set in FileAttributes */
 	__le64 UniqueId; /* inode num - le since Samba puts ino in low 32 bit */
+<<<<<<< HEAD
 	char FileName[];
+=======
+	char FileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __packed; /* level 60 */
 
 extern char smb2_padding[7];

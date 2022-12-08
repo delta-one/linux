@@ -1717,7 +1717,11 @@ static int wled_probe(struct platform_device *pdev)
 	return PTR_ERR_OR_ZERO(bl);
 };
 
+<<<<<<< HEAD
 static void wled_remove(struct platform_device *pdev)
+=======
+static int wled_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct wled *wled = platform_get_drvdata(pdev);
 
@@ -1725,11 +1729,19 @@ static void wled_remove(struct platform_device *pdev)
 	cancel_delayed_work_sync(&wled->ovp_work);
 	disable_irq(wled->short_irq);
 	disable_irq(wled->ovp_irq);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id wled_match_table[] = {
 	{ .compatible = "qcom,pm8941-wled", .data = (void *)3 },
+<<<<<<< HEAD
 	{ .compatible = "qcom,pmi8950-wled", .data = (void *)4 },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "qcom,pmi8994-wled", .data = (void *)4 },
 	{ .compatible = "qcom,pmi8998-wled", .data = (void *)4 },
 	{ .compatible = "qcom,pm660l-wled", .data = (void *)4 },
@@ -1741,7 +1753,11 @@ MODULE_DEVICE_TABLE(of, wled_match_table);
 
 static struct platform_driver wled_driver = {
 	.probe = wled_probe,
+<<<<<<< HEAD
 	.remove_new = wled_remove,
+=======
+	.remove = wled_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name = "qcom,wled",
 		.of_match_table	= wled_match_table,

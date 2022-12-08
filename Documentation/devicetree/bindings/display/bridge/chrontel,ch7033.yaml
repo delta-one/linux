@@ -5,7 +5,11 @@
 $id: http://devicetree.org/schemas/display/bridge/chrontel,ch7033.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Chrontel CH7033 Video Encoder
+=======
+title: Chrontel CH7033 Video Encoder Device Tree Bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Lubomir Rintel <lkundrak@v3.sk>

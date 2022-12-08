@@ -64,7 +64,11 @@ struct inode *ialloc(struct inode *parent, umode_t mode)
 		goto fail_put;
 	}
 
+<<<<<<< HEAD
 	inode_init_owner(&nop_mnt_idmap, inode, parent, mode);
+=======
+	inode_init_owner(&init_user_ns, inode, parent, mode);
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * New inodes need to save sane values on disk when
 	 * uid & gid mount options are used

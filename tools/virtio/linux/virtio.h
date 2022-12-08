@@ -14,7 +14,10 @@ struct virtio_device {
 	u64 features;
 	struct list_head vqs;
 	spinlock_t vqs_list_lock;
+<<<<<<< HEAD
 	const struct virtio_config_ops *config;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct virtqueue {
@@ -24,9 +27,13 @@ struct virtqueue {
 	struct virtio_device *vdev;
         unsigned int index;
         unsigned int num_free;
+<<<<<<< HEAD
 	unsigned int num_max;
 	void *priv;
 	bool reset;
+=======
+	void *priv;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Interfaces exported by virtio_ring. */

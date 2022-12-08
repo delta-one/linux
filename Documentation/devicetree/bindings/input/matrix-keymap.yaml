@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/input/matrix-keymap.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Common Key Matrices on Matrix-connected Key Boards
+=======
+title: Common key matrices binding for matrix-connected key boards
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Olof Johansson <olof@lixom.net>

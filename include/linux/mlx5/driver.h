@@ -49,7 +49,10 @@
 #include <linux/notifier.h>
 #include <linux/refcount.h>
 #include <linux/auxiliary_bus.h>
+<<<<<<< HEAD
 #include <linux/mutex.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/mlx5/device.h>
 #include <linux/mlx5/doorbell.h>
@@ -101,8 +104,11 @@ enum {
 };
 
 enum {
+<<<<<<< HEAD
 	MLX5_REG_SBPR            = 0xb001,
 	MLX5_REG_SBCM            = 0xb002,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	MLX5_REG_QPTS            = 0x4002,
 	MLX5_REG_QETCR		 = 0x4005,
 	MLX5_REG_QTCT		 = 0x400a,
@@ -134,7 +140,10 @@ enum {
 	MLX5_REG_PCAM		 = 0x507f,
 	MLX5_REG_NODE_DESC	 = 0x6001,
 	MLX5_REG_HOST_ENDIANNESS = 0x7004,
+<<<<<<< HEAD
 	MLX5_REG_MTMP		 = 0x900A,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	MLX5_REG_MCIA		 = 0x9014,
 	MLX5_REG_MFRL		 = 0x9028,
 	MLX5_REG_MLCR		 = 0x902b,
@@ -218,7 +227,10 @@ struct mlx5_rsc_debug {
 enum mlx5_dev_event {
 	MLX5_DEV_EVENT_SYS_ERROR = 128, /* 0 - 127 are FW events */
 	MLX5_DEV_EVENT_PORT_AFFINITY = 129,
+<<<<<<< HEAD
 	MLX5_DEV_EVENT_MULTIPORT_ESW = 130,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum mlx5_port_status {
@@ -313,7 +325,10 @@ struct mlx5_cmd {
 	struct workqueue_struct *wq;
 	struct semaphore sem;
 	struct semaphore pages_sem;
+<<<<<<< HEAD
 	struct semaphore throttle_sem;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int	mode;
 	u16     allowed_opcode;
 	struct mlx5_cmd_work_ent *ent_arr[MLX5_MAX_COMMANDS];
@@ -321,7 +336,11 @@ struct mlx5_cmd {
 	struct mlx5_cmd_debug dbg;
 	struct cmd_msg_cache cache[MLX5_NUM_COMMAND_CACHES];
 	int checksum_disabled;
+<<<<<<< HEAD
 	struct mlx5_cmd_stats stats[MLX5_CMD_OP_MAX];
+=======
+	struct mlx5_cmd_stats *stats;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlx5_cmd_mailbox {
@@ -433,6 +452,11 @@ struct mlx5_core_health {
 	u8				synd;
 	u32				fatal_error;
 	u32				crdump_size;
+<<<<<<< HEAD
+=======
+	/* wq spinlock to synchronize draining */
+	spinlock_t			wq_lock;
+>>>>>>> b7ba80a49124 (Commit)
 	struct workqueue_struct	       *wq;
 	unsigned long			flags;
 	struct work_struct		fatal_report_work;
@@ -517,7 +541,10 @@ struct mlx5_vhca_state_notifier;
 struct mlx5_sf_dev_table;
 struct mlx5_sf_hw_table;
 struct mlx5_sf_table;
+<<<<<<< HEAD
 struct mlx5_crypto_dek_priv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct mlx5_rate_limit {
 	u32			rate;
@@ -556,6 +583,13 @@ enum {
 	 * creation/deletion on drivers rescan. Unset during device attach.
 	 */
 	MLX5_PRIV_FLAGS_DETACH = 1 << 2,
+<<<<<<< HEAD
+=======
+	/* Distinguish between mlx5e_probe/remove called by module init/cleanup
+	 * and called by other flows which can already hold devlink lock
+	 */
+	MLX5_PRIV_FLAGS_MLX5E_LOCKED_FLOW = 1 << 3,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlx5_adev {
@@ -574,6 +608,7 @@ struct mlx5_debugfs_entries {
 	struct dentry *lag_debugfs;
 };
 
+<<<<<<< HEAD
 enum mlx5_func_type {
 	MLX5_PF,
 	MLX5_VF,
@@ -582,6 +617,8 @@ enum mlx5_func_type {
 	MLX5_FUNC_TYPE_NUM,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mlx5_ft_pool;
 struct mlx5_priv {
 	/* IRQ table valid only for real pci devices PF or VF */
@@ -592,10 +629,18 @@ struct mlx5_priv {
 	struct mlx5_nb          pg_nb;
 	struct workqueue_struct *pg_wq;
 	struct xarray           page_root_xa;
+<<<<<<< HEAD
 	atomic_t		reg_pages;
 	struct list_head	free_list;
 	u32			fw_pages;
 	u32			page_counters[MLX5_FUNC_TYPE_NUM];
+=======
+	u32			fw_pages;
+	atomic_t		reg_pages;
+	struct list_head	free_list;
+	u32			vfs_pages;
+	u32			host_pf_pages;
+>>>>>>> b7ba80a49124 (Commit)
 	u32			fw_pages_alloc_failed;
 	u32			give_pages_dropped;
 	u32			reclaim_pages_discard;
@@ -614,6 +659,11 @@ struct mlx5_priv {
 	struct list_head        pgdir_list;
 	/* end: alloc staff */
 
+<<<<<<< HEAD
+=======
+	struct list_head        ctx_list;
+	spinlock_t              ctx_lock;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mlx5_adev       **adev;
 	int			adev_idx;
 	int			sw_vhca_id;
@@ -680,9 +730,14 @@ struct mlx5e_resources {
 		u32			   mkey;
 		struct mlx5_sq_bfreg       bfreg;
 	} hw_objs;
+<<<<<<< HEAD
 	struct net_device *uplink_netdev;
 	struct mutex uplink_netdev_lock;
 	struct mlx5_crypto_dek_priv *dek_priv;
+=======
+	struct devlink_port dl_port;
+	struct net_device *uplink_netdev;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum mlx5_sw_icm_type {
@@ -732,7 +787,10 @@ struct mlx5_fw_tracer;
 struct mlx5_vxlan;
 struct mlx5_geneve;
 struct mlx5_hv_vhca;
+<<<<<<< HEAD
 struct mlx5_thermal;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MLX5_LOG_SW_ICM_BLOCK_SIZE(dev) (MLX5_CAP_DEV_MEM(dev, log_sw_icm_alloc_granularity))
 #define MLX5_SW_ICM_BLOCK_SIZE(dev) (1 << MLX5_LOG_SW_ICM_BLOCK_SIZE(dev))
@@ -744,6 +802,10 @@ enum {
 
 enum {
 	MKEY_CACHE_LAST_STD_ENTRY = 20,
+<<<<<<< HEAD
+=======
+	MLX5_IMR_MTT_CACHE_ENTRY,
+>>>>>>> b7ba80a49124 (Commit)
 	MLX5_IMR_KSM_CACHE_ENTRY,
 	MAX_MKEY_CACHE_ENTRIES
 };
@@ -810,7 +872,10 @@ struct mlx5_core_dev {
 	struct mlx5_rsc_dump    *rsc_dump;
 	u32                      vsc_addr;
 	struct mlx5_hv_vhca	*hv_vhca;
+<<<<<<< HEAD
 	struct mlx5_thermal	*thermal;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlx5_db {
@@ -978,7 +1043,11 @@ void mlx5_cmd_allowed_opcode(struct mlx5_core_dev *dev, u16 opcode);
 struct mlx5_async_ctx {
 	struct mlx5_core_dev *dev;
 	atomic_t num_inflight;
+<<<<<<< HEAD
 	struct completion inflight_done;
+=======
+	struct wait_queue_head wait;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlx5_async_work;
@@ -989,7 +1058,10 @@ struct mlx5_async_work {
 	struct mlx5_async_ctx *ctx;
 	mlx5_async_cbk_t user_callback;
 	u16 opcode; /* cmd opcode */
+<<<<<<< HEAD
 	u16 op_mod; /* cmd op_mod */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void *out; /* pointer to the cmd output buffer */
 };
 
@@ -1021,15 +1093,21 @@ int mlx5_cmd_exec_polling(struct mlx5_core_dev *dev, void *in, int in_size,
 			  void *out, int out_size);
 bool mlx5_cmd_is_down(struct mlx5_core_dev *dev);
 
+<<<<<<< HEAD
 void mlx5_core_uplink_netdev_set(struct mlx5_core_dev *mdev, struct net_device *netdev);
 void mlx5_core_uplink_netdev_event_replay(struct mlx5_core_dev *mdev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int mlx5_core_get_caps(struct mlx5_core_dev *dev, enum mlx5_cap_type cap_type);
 void mlx5_health_cleanup(struct mlx5_core_dev *dev);
 int mlx5_health_init(struct mlx5_core_dev *dev);
 void mlx5_start_health_poll(struct mlx5_core_dev *dev);
 void mlx5_stop_health_poll(struct mlx5_core_dev *dev, bool disable_health);
+<<<<<<< HEAD
 void mlx5_start_health_fw_log_up(struct mlx5_core_dev *dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void mlx5_drain_health_wq(struct mlx5_core_dev *dev);
 void mlx5_trigger_health_work(struct mlx5_core_dev *dev);
 int mlx5_frag_buf_alloc_node(struct mlx5_core_dev *dev, int size,
@@ -1163,7 +1241,10 @@ bool mlx5_lag_is_active(struct mlx5_core_dev *dev);
 bool mlx5_lag_mode_is_hash(struct mlx5_core_dev *dev);
 bool mlx5_lag_is_master(struct mlx5_core_dev *dev);
 bool mlx5_lag_is_shared_fdb(struct mlx5_core_dev *dev);
+<<<<<<< HEAD
 bool mlx5_lag_is_mpesw(struct mlx5_core_dev *dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct net_device *mlx5_lag_get_roce_netdev(struct mlx5_core_dev *dev);
 u8 mlx5_lag_get_slave_port(struct mlx5_core_dev *dev,
 			   struct net_device *slave);
@@ -1214,11 +1295,14 @@ static inline bool mlx5_core_is_vf(const struct mlx5_core_dev *dev)
 	return dev->coredev_type == MLX5_COREDEV_VF;
 }
 
+<<<<<<< HEAD
 static inline bool mlx5_core_is_management_pf(const struct mlx5_core_dev *dev)
 {
 	return MLX5_CAP_GEN(dev, num_ports) == 1 && !MLX5_CAP_GEN(dev, native_port_num);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool mlx5_core_is_ecpf(const struct mlx5_core_dev *dev)
 {
 	return dev->caps.embedded_cpu;
@@ -1307,8 +1391,11 @@ static inline bool mlx5_get_roce_state(struct mlx5_core_dev *dev)
 	return mlx5_is_roce_on(dev);
 }
 
+<<<<<<< HEAD
 enum {
 	MLX5_OCTWORD = 16,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* MLX5_DRIVER_H */

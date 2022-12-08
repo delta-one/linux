@@ -14,9 +14,12 @@ void intel_pxp_tee_component_fini(struct intel_pxp *pxp);
 int intel_pxp_tee_cmd_create_arb_session(struct intel_pxp *pxp,
 					 int arb_session_id);
 
+<<<<<<< HEAD
 int intel_pxp_tee_stream_message(struct intel_pxp *pxp,
 				 u8 client_id, u32 fence_id,
 				 void *msg_in, size_t msg_in_len,
 				 void *msg_out, size_t msg_out_len);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __INTEL_PXP_TEE_H__ */

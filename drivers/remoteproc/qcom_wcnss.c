@@ -19,7 +19,11 @@
 #include <linux/platform_device.h>
 #include <linux/pm_domain.h>
 #include <linux/pm_runtime.h>
+<<<<<<< HEAD
 #include <linux/firmware/qcom/qcom_scm.h>
+=======
+#include <linux/qcom_scm.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regulator/consumer.h>
 #include <linux/remoteproc.h>
 #include <linux/soc/qcom/mdt_loader.h>
@@ -141,6 +145,7 @@ static const struct wcnss_data pronto_v2_data = {
 	.num_vregs = 1,
 };
 
+<<<<<<< HEAD
 static const struct wcnss_data pronto_v3_data = {
 	.pmu_offset = 0x1004,
 	.spare_offset = 0x1088,
@@ -152,6 +157,8 @@ static const struct wcnss_data pronto_v3_data = {
 	.num_vregs = 1,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int wcnss_load(struct rproc *rproc, const struct firmware *fw)
 {
 	struct qcom_wcnss *wcnss = (struct qcom_wcnss *)rproc->priv;
@@ -686,7 +693,10 @@ static const struct of_device_id wcnss_of_match[] = {
 	{ .compatible = "qcom,riva-pil", &riva_data },
 	{ .compatible = "qcom,pronto-v1-pil", &pronto_v1_data },
 	{ .compatible = "qcom,pronto-v2-pil", &pronto_v2_data },
+<<<<<<< HEAD
 	{ .compatible = "qcom,pronto-v3-pil", &pronto_v3_data },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ },
 };
 MODULE_DEVICE_TABLE(of, wcnss_of_match);

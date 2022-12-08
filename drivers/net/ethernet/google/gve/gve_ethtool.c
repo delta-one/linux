@@ -34,11 +34,14 @@ static u32 gve_get_msglevel(struct net_device *netdev)
 	return priv->msg_enable;
 }
 
+<<<<<<< HEAD
 /* For the following stats column string names, make sure the order
  * matches how it is filled in the code. For xdp_aborted, xdp_drop,
  * xdp_pass, xdp_tx, xdp_redirect, make sure it also matches the order
  * as declared in enum xdp_action inside file uapi/linux/bpf.h .
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const char gve_gstrings_main_stats[][ETH_GSTRING_LEN] = {
 	"rx_packets", "tx_packets", "rx_bytes", "tx_bytes",
 	"rx_dropped", "tx_dropped", "tx_timeouts",
@@ -50,6 +53,7 @@ static const char gve_gstrings_main_stats[][ETH_GSTRING_LEN] = {
 static const char gve_gstrings_rx_stats[][ETH_GSTRING_LEN] = {
 	"rx_posted_desc[%u]", "rx_completed_desc[%u]", "rx_consumed_desc[%u]", "rx_bytes[%u]",
 	"rx_cont_packet_cnt[%u]", "rx_frag_flip_cnt[%u]", "rx_frag_copy_cnt[%u]",
+<<<<<<< HEAD
 	"rx_frag_alloc_cnt[%u]",
 	"rx_dropped_pkt[%u]", "rx_copybreak_pkt[%u]", "rx_copied_pkt[%u]",
 	"rx_queue_drop_cnt[%u]", "rx_no_buffers_posted[%u]",
@@ -57,13 +61,22 @@ static const char gve_gstrings_rx_stats[][ETH_GSTRING_LEN] = {
 	"rx_xdp_aborted[%u]", "rx_xdp_drop[%u]", "rx_xdp_pass[%u]",
 	"rx_xdp_tx[%u]", "rx_xdp_redirect[%u]",
 	"rx_xdp_tx_errors[%u]", "rx_xdp_redirect_errors[%u]", "rx_xdp_alloc_fails[%u]",
+=======
+	"rx_dropped_pkt[%u]", "rx_copybreak_pkt[%u]", "rx_copied_pkt[%u]",
+	"rx_queue_drop_cnt[%u]", "rx_no_buffers_posted[%u]",
+	"rx_drops_packet_over_mru[%u]", "rx_drops_invalid_checksum[%u]",
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const char gve_gstrings_tx_stats[][ETH_GSTRING_LEN] = {
 	"tx_posted_desc[%u]", "tx_completed_desc[%u]", "tx_consumed_desc[%u]", "tx_bytes[%u]",
 	"tx_wake[%u]", "tx_stop[%u]", "tx_event_counter[%u]",
+<<<<<<< HEAD
 	"tx_dma_mapping_error[%u]", "tx_xsk_wakeup[%u]",
 	"tx_xsk_done[%u]", "tx_xsk_sent[%u]", "tx_xdp_xmit[%u]", "tx_xdp_xmit_errors[%u]"
+=======
+	"tx_dma_mapping_error[%u]",
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const char gve_gstrings_adminq_stats[][ETH_GSTRING_LEN] = {
@@ -90,10 +103,15 @@ static void gve_get_strings(struct net_device *netdev, u32 stringset, u8 *data)
 {
 	struct gve_priv *priv = netdev_priv(netdev);
 	char *s = (char *)data;
+<<<<<<< HEAD
 	int num_tx_queues;
 	int i, j;
 
 	num_tx_queues = gve_num_tx_queues(priv);
+=======
+	int i, j;
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (stringset) {
 	case ETH_SS_STATS:
 		memcpy(s, *gve_gstrings_main_stats,
@@ -108,7 +126,11 @@ static void gve_get_strings(struct net_device *netdev, u32 stringset, u8 *data)
 			}
 		}
 
+<<<<<<< HEAD
 		for (i = 0; i < num_tx_queues; i++) {
+=======
+		for (i = 0; i < priv->tx_cfg.num_queues; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 			for (j = 0; j < NUM_GVE_TX_CNTS; j++) {
 				snprintf(s, ETH_GSTRING_LEN,
 					 gve_gstrings_tx_stats[j], i);
@@ -135,14 +157,22 @@ static void gve_get_strings(struct net_device *netdev, u32 stringset, u8 *data)
 static int gve_get_sset_count(struct net_device *netdev, int sset)
 {
 	struct gve_priv *priv = netdev_priv(netdev);
+<<<<<<< HEAD
 	int num_tx_queues;
 
 	num_tx_queues = gve_num_tx_queues(priv);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (sset) {
 	case ETH_SS_STATS:
 		return GVE_MAIN_STATS_LEN + GVE_ADMINQ_STATS_LEN +
 		       (priv->rx_cfg.num_queues * NUM_GVE_RX_CNTS) +
+<<<<<<< HEAD
 		       (num_tx_queues * NUM_GVE_TX_CNTS);
+=======
+		       (priv->tx_cfg.num_queues * NUM_GVE_TX_CNTS);
+>>>>>>> b7ba80a49124 (Commit)
 	case ETH_SS_PRIV_FLAGS:
 		return GVE_PRIV_FLAGS_STR_LEN;
 	default:
@@ -166,20 +196,30 @@ gve_get_ethtool_stats(struct net_device *netdev,
 	struct gve_priv *priv;
 	bool skip_nic_stats;
 	unsigned int start;
+<<<<<<< HEAD
 	int num_tx_queues;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ring;
 	int i, j;
 
 	ASSERT_RTNL();
 
 	priv = netdev_priv(netdev);
+<<<<<<< HEAD
 	num_tx_queues = gve_num_tx_queues(priv);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	report_stats = priv->stats_report->stats;
 	rx_qid_to_stats_idx = kmalloc_array(priv->rx_cfg.num_queues,
 					    sizeof(int), GFP_KERNEL);
 	if (!rx_qid_to_stats_idx)
 		return;
+<<<<<<< HEAD
 	tx_qid_to_stats_idx = kmalloc_array(num_tx_queues,
+=======
+	tx_qid_to_stats_idx = kmalloc_array(priv->tx_cfg.num_queues,
+>>>>>>> b7ba80a49124 (Commit)
 					    sizeof(int), GFP_KERNEL);
 	if (!tx_qid_to_stats_idx) {
 		kfree(rx_qid_to_stats_idx);
@@ -193,14 +233,22 @@ gve_get_ethtool_stats(struct net_device *netdev,
 				struct gve_rx_ring *rx = &priv->rx[ring];
 
 				start =
+<<<<<<< HEAD
 				  u64_stats_fetch_begin(&priv->rx[ring].statss);
+=======
+				  u64_stats_fetch_begin_irq(&priv->rx[ring].statss);
+>>>>>>> b7ba80a49124 (Commit)
 				tmp_rx_pkts = rx->rpackets;
 				tmp_rx_bytes = rx->rbytes;
 				tmp_rx_skb_alloc_fail = rx->rx_skb_alloc_fail;
 				tmp_rx_buf_alloc_fail = rx->rx_buf_alloc_fail;
 				tmp_rx_desc_err_dropped_pkt =
 					rx->rx_desc_err_dropped_pkt;
+<<<<<<< HEAD
 			} while (u64_stats_fetch_retry(&priv->rx[ring].statss,
+=======
+			} while (u64_stats_fetch_retry_irq(&priv->rx[ring].statss,
+>>>>>>> b7ba80a49124 (Commit)
 						       start));
 			rx_pkts += tmp_rx_pkts;
 			rx_bytes += tmp_rx_bytes;
@@ -210,6 +258,7 @@ gve_get_ethtool_stats(struct net_device *netdev,
 		}
 	}
 	for (tx_pkts = 0, tx_bytes = 0, tx_dropped = 0, ring = 0;
+<<<<<<< HEAD
 	     ring < num_tx_queues; ring++) {
 		if (priv->tx) {
 			do {
@@ -218,6 +267,16 @@ gve_get_ethtool_stats(struct net_device *netdev,
 				tmp_tx_pkts = priv->tx[ring].pkt_done;
 				tmp_tx_bytes = priv->tx[ring].bytes_done;
 			} while (u64_stats_fetch_retry(&priv->tx[ring].statss,
+=======
+	     ring < priv->tx_cfg.num_queues; ring++) {
+		if (priv->tx) {
+			do {
+				start =
+				  u64_stats_fetch_begin_irq(&priv->tx[ring].statss);
+				tmp_tx_pkts = priv->tx[ring].pkt_done;
+				tmp_tx_bytes = priv->tx[ring].bytes_done;
+			} while (u64_stats_fetch_retry_irq(&priv->tx[ring].statss,
+>>>>>>> b7ba80a49124 (Commit)
 						       start));
 			tx_pkts += tmp_tx_pkts;
 			tx_bytes += tmp_tx_bytes;
@@ -247,7 +306,11 @@ gve_get_ethtool_stats(struct net_device *netdev,
 	i = GVE_MAIN_STATS_LEN;
 
 	/* For rx cross-reporting stats, start from nic rx stats in report */
+<<<<<<< HEAD
 	base_stats_idx = GVE_TX_STATS_REPORT_NUM * num_tx_queues +
+=======
+	base_stats_idx = GVE_TX_STATS_REPORT_NUM * priv->tx_cfg.num_queues +
+>>>>>>> b7ba80a49124 (Commit)
 		GVE_RX_STATS_REPORT_NUM * priv->rx_cfg.num_queues;
 	max_stats_idx = NIC_RX_STATS_REPORT_NUM * priv->rx_cfg.num_queues +
 		base_stats_idx;
@@ -275,19 +338,30 @@ gve_get_ethtool_stats(struct net_device *netdev,
 			data[i++] = rx->fill_cnt - rx->cnt;
 			do {
 				start =
+<<<<<<< HEAD
 				  u64_stats_fetch_begin(&priv->rx[ring].statss);
+=======
+				  u64_stats_fetch_begin_irq(&priv->rx[ring].statss);
+>>>>>>> b7ba80a49124 (Commit)
 				tmp_rx_bytes = rx->rbytes;
 				tmp_rx_skb_alloc_fail = rx->rx_skb_alloc_fail;
 				tmp_rx_buf_alloc_fail = rx->rx_buf_alloc_fail;
 				tmp_rx_desc_err_dropped_pkt =
 					rx->rx_desc_err_dropped_pkt;
+<<<<<<< HEAD
 			} while (u64_stats_fetch_retry(&priv->rx[ring].statss,
+=======
+			} while (u64_stats_fetch_retry_irq(&priv->rx[ring].statss,
+>>>>>>> b7ba80a49124 (Commit)
 						       start));
 			data[i++] = tmp_rx_bytes;
 			data[i++] = rx->rx_cont_packet_cnt;
 			data[i++] = rx->rx_frag_flip_cnt;
 			data[i++] = rx->rx_frag_copy_cnt;
+<<<<<<< HEAD
 			data[i++] = rx->rx_frag_alloc_cnt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			/* rx dropped packets */
 			data[i++] = tmp_rx_skb_alloc_fail +
 				tmp_rx_buf_alloc_fail +
@@ -298,6 +372,7 @@ gve_get_ethtool_stats(struct net_device *netdev,
 			if (skip_nic_stats) {
 				/* skip NIC rx stats */
 				i += NIC_RX_STATS_REPORT_NUM;
+<<<<<<< HEAD
 			} else {
 				stats_idx = rx_qid_to_stats_idx[ring];
 				for (j = 0; j < NIC_RX_STATS_REPORT_NUM; j++) {
@@ -318,6 +393,16 @@ gve_get_ethtool_stats(struct net_device *netdev,
 			} while (u64_stats_fetch_retry(&priv->rx[ring].statss,
 						       start));
 			i += GVE_XDP_ACTIONS + 3; /* XDP rx counters */
+=======
+				continue;
+			}
+			for (j = 0; j < NIC_RX_STATS_REPORT_NUM; j++) {
+				u64 value =
+				be64_to_cpu(report_stats[rx_qid_to_stats_idx[ring] + j].value);
+
+				data[i++] = value;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	} else {
 		i += priv->rx_cfg.num_queues * NUM_GVE_RX_CNTS;
@@ -325,7 +410,11 @@ gve_get_ethtool_stats(struct net_device *netdev,
 
 	/* For tx cross-reporting stats, start from nic tx stats in report */
 	base_stats_idx = max_stats_idx;
+<<<<<<< HEAD
 	max_stats_idx = NIC_TX_STATS_REPORT_NUM * num_tx_queues +
+=======
+	max_stats_idx = NIC_TX_STATS_REPORT_NUM * priv->tx_cfg.num_queues +
+>>>>>>> b7ba80a49124 (Commit)
 		max_stats_idx;
 	/* Preprocess the stats report for tx, map queue id to start index */
 	skip_nic_stats = false;
@@ -343,7 +432,11 @@ gve_get_ethtool_stats(struct net_device *netdev,
 	}
 	/* walk TX rings */
 	if (priv->tx) {
+<<<<<<< HEAD
 		for (ring = 0; ring < num_tx_queues; ring++) {
+=======
+		for (ring = 0; ring < priv->tx_cfg.num_queues; ring++) {
+>>>>>>> b7ba80a49124 (Commit)
 			struct gve_tx_ring *tx = &priv->tx[ring];
 
 			if (gve_is_gqi(priv)) {
@@ -360,9 +453,15 @@ gve_get_ethtool_stats(struct net_device *netdev,
 			}
 			do {
 				start =
+<<<<<<< HEAD
 				  u64_stats_fetch_begin(&priv->tx[ring].statss);
 				tmp_tx_bytes = tx->bytes_done;
 			} while (u64_stats_fetch_retry(&priv->tx[ring].statss,
+=======
+				  u64_stats_fetch_begin_irq(&priv->tx[ring].statss);
+				tmp_tx_bytes = tx->bytes_done;
+			} while (u64_stats_fetch_retry_irq(&priv->tx[ring].statss,
+>>>>>>> b7ba80a49124 (Commit)
 						       start));
 			data[i++] = tmp_tx_bytes;
 			data[i++] = tx->wake_queue;
@@ -373,6 +472,7 @@ gve_get_ethtool_stats(struct net_device *netdev,
 			if (skip_nic_stats) {
 				/* skip NIC tx stats */
 				i += NIC_TX_STATS_REPORT_NUM;
+<<<<<<< HEAD
 			} else {
 				stats_idx = tx_qid_to_stats_idx[ring];
 				for (j = 0; j < NIC_TX_STATS_REPORT_NUM; j++) {
@@ -395,6 +495,18 @@ gve_get_ethtool_stats(struct net_device *netdev,
 		}
 	} else {
 		i += num_tx_queues * NUM_GVE_TX_CNTS;
+=======
+				continue;
+			}
+			for (j = 0; j < NIC_TX_STATS_REPORT_NUM; j++) {
+				u64 value =
+				be64_to_cpu(report_stats[tx_qid_to_stats_idx[ring] + j].value);
+				data[i++] = value;
+			}
+		}
+	} else {
+		i += priv->tx_cfg.num_queues * NUM_GVE_TX_CNTS;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	kfree(rx_qid_to_stats_idx);
@@ -451,12 +563,15 @@ static int gve_set_channels(struct net_device *netdev,
 	if (!new_rx || !new_tx)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (priv->num_xdp_queues &&
 	    (new_tx != new_rx || (2 * new_tx > priv->tx_cfg.max_queues))) {
 		dev_err(&priv->pdev->dev, "XDP load failed: The number of configured RX queues should be equal to the number of configured TX queues and the number of configured RX/TX queues should be less than or equal to half the maximum number of RX/TX queues");
 		return -EINVAL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!netif_carrier_ok(netdev)) {
 		priv->tx_cfg.num_queues = new_tx;
 		priv->rx_cfg.num_queues = new_rx;
@@ -547,9 +662,13 @@ static int gve_set_priv_flags(struct net_device *netdev, u32 flags)
 {
 	struct gve_priv *priv = netdev_priv(netdev);
 	u64 ori_flags, new_flags;
+<<<<<<< HEAD
 	int num_tx_queues;
 
 	num_tx_queues = gve_num_tx_queues(priv);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	ori_flags = READ_ONCE(priv->ethtool_flags);
 	new_flags = ori_flags;
 
@@ -569,7 +688,11 @@ static int gve_set_priv_flags(struct net_device *netdev, u32 flags)
 	/* delete report stats timer. */
 	if (!(flags & BIT(0)) && (ori_flags & BIT(0))) {
 		int tx_stats_num = GVE_TX_STATS_REPORT_NUM *
+<<<<<<< HEAD
 			num_tx_queues;
+=======
+			priv->tx_cfg.num_queues;
+>>>>>>> b7ba80a49124 (Commit)
 		int rx_stats_num = GVE_RX_STATS_REPORT_NUM *
 			priv->rx_cfg.num_queues;
 
@@ -584,10 +707,14 @@ static int gve_get_link_ksettings(struct net_device *netdev,
 				  struct ethtool_link_ksettings *cmd)
 {
 	struct gve_priv *priv = netdev_priv(netdev);
+<<<<<<< HEAD
 	int err = 0;
 
 	if (priv->link_speed == 0)
 		err = gve_adminq_report_link_speed(priv);
+=======
+	int err = gve_adminq_report_link_speed(priv);
+>>>>>>> b7ba80a49124 (Commit)
 
 	cmd->base.speed = priv->link_speed;
 	return err;

@@ -608,12 +608,20 @@ put_ctlr:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void sprd_adi_remove(struct platform_device *pdev)
+=======
+static int sprd_adi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_controller *ctlr = dev_get_drvdata(&pdev->dev);
 	struct sprd_adi *sadi = spi_controller_get_devdata(ctlr);
 
 	unregister_restart_handler(&sadi->restart_handler);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct sprd_adi_data sc9860_data = {
@@ -659,7 +667,11 @@ static struct platform_driver sprd_adi_driver = {
 		.of_match_table = sprd_adi_of_match,
 	},
 	.probe = sprd_adi_probe,
+<<<<<<< HEAD
 	.remove_new = sprd_adi_remove,
+=======
+	.remove = sprd_adi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(sprd_adi_driver);
 

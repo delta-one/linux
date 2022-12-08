@@ -520,10 +520,20 @@ failed:
 	return -ENODEV;
 }
 
+<<<<<<< HEAD
 void au1100fb_drv_remove(struct platform_device *dev)
 {
 	struct au1100fb_device *fbdev = NULL;
 
+=======
+int au1100fb_drv_remove(struct platform_device *dev)
+{
+	struct au1100fb_device *fbdev = NULL;
+
+	if (!dev)
+		return -ENODEV;
+
+>>>>>>> b7ba80a49124 (Commit)
 	fbdev = platform_get_drvdata(dev);
 
 #if !defined(CONFIG_FRAMEBUFFER_CONSOLE) && defined(CONFIG_LOGO)
@@ -540,6 +550,11 @@ void au1100fb_drv_remove(struct platform_device *dev)
 		clk_disable_unprepare(fbdev->lcdclk);
 		clk_put(fbdev->lcdclk);
 	}
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM
@@ -588,8 +603,13 @@ static struct platform_driver au1100fb_driver = {
 		.name		= "au1100-lcd",
 	},
 	.probe		= au1100fb_drv_probe,
+<<<<<<< HEAD
         .remove_new	= au1100fb_drv_remove,
         .suspend	= au1100fb_drv_suspend,
+=======
+        .remove		= au1100fb_drv_remove,
+	.suspend	= au1100fb_drv_suspend,
+>>>>>>> b7ba80a49124 (Commit)
         .resume		= au1100fb_drv_resume,
 };
 module_platform_driver(au1100fb_driver);

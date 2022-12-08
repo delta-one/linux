@@ -107,6 +107,7 @@ int tegra_mc_probe_device(struct tegra_mc *mc, struct device *dev)
 }
 EXPORT_SYMBOL_GPL(tegra_mc_probe_device);
 
+<<<<<<< HEAD
 int tegra_mc_get_carveout_info(struct tegra_mc *mc, unsigned int id,
                                phys_addr_t *base, u64 *size)
 {
@@ -132,6 +133,8 @@ int tegra_mc_get_carveout_info(struct tegra_mc *mc, unsigned int id,
 }
 EXPORT_SYMBOL_GPL(tegra_mc_get_carveout_info);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int tegra_mc_block_dma_common(struct tegra_mc *mc,
 				     const struct tegra_mc_reset *rst)
 {
@@ -794,12 +797,25 @@ static int tegra_mc_interconnect_setup(struct tegra_mc *mc)
 	mc->provider.aggregate = mc->soc->icc_ops->aggregate;
 	mc->provider.xlate_extended = mc->soc->icc_ops->xlate_extended;
 
+<<<<<<< HEAD
 	icc_provider_init(&mc->provider);
 
 	/* create Memory Controller node */
 	node = icc_node_create(TEGRA_ICC_MC);
 	if (IS_ERR(node))
 		return PTR_ERR(node);
+=======
+	err = icc_provider_add(&mc->provider);
+	if (err)
+		return err;
+
+	/* create Memory Controller node */
+	node = icc_node_create(TEGRA_ICC_MC);
+	if (IS_ERR(node)) {
+		err = PTR_ERR(node);
+		goto del_provider;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	node->name = "Memory Controller";
 	icc_node_add(node, &mc->provider);
@@ -826,14 +842,22 @@ static int tegra_mc_interconnect_setup(struct tegra_mc *mc)
 			goto remove_nodes;
 	}
 
+<<<<<<< HEAD
 	err = icc_provider_register(&mc->provider);
 	if (err)
 		goto remove_nodes;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 remove_nodes:
 	icc_nodes_remove(&mc->provider);
+<<<<<<< HEAD
+=======
+del_provider:
+	icc_provider_del(&mc->provider);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return err;
 }
@@ -983,3 +1007,7 @@ arch_initcall(tegra_mc_init);
 
 MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
 MODULE_DESCRIPTION("NVIDIA Tegra Memory Controller driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

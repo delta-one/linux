@@ -123,7 +123,11 @@ static int sy8106a_i2c_probe(struct i2c_client *i2c)
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct of_device_id sy8106a_i2c_of_match[] = {
+=======
+static const struct of_device_id __maybe_unused sy8106a_i2c_of_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "silergy,sy8106a" },
 	{ },
 };
@@ -138,8 +142,12 @@ MODULE_DEVICE_TABLE(i2c, sy8106a_i2c_id);
 static struct i2c_driver sy8106a_regulator_driver = {
 	.driver = {
 		.name = "sy8106a",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 		.of_match_table	= sy8106a_i2c_of_match,
+=======
+		.of_match_table	= of_match_ptr(sy8106a_i2c_of_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe_new = sy8106a_i2c_probe,
 	.id_table = sy8106a_i2c_id,

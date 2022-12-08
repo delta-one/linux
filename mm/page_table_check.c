@@ -4,7 +4,10 @@
  * Copyright (c) 2021, Google LLC.
  * Pasha Tatashin <pasha.tatashin@soleen.com>
  */
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mm.h>
 #include <linux/page_table_check.h>
 
@@ -24,7 +27,11 @@ EXPORT_SYMBOL(page_table_check_disabled);
 
 static int __init early_page_table_check_param(char *buf)
 {
+<<<<<<< HEAD
 	return kstrtobool(buf, &__page_table_check_enabled);
+=======
+	return strtobool(buf, &__page_table_check_enabled);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 early_param("page_table_check", early_page_table_check_param);
@@ -45,7 +52,10 @@ struct page_ext_operations page_table_check_ops = {
 	.size = sizeof(struct page_table_check),
 	.need = need_page_table_check,
 	.init = init_page_table_check,
+<<<<<<< HEAD
 	.need_shared_flags = false,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct page_table_check *get_page_table_check(struct page_ext *page_ext)

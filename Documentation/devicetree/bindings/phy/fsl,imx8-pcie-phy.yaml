@@ -16,7 +16,10 @@ properties:
   compatible:
     enum:
       - fsl,imx8mm-pcie-phy
+<<<<<<< HEAD
       - fsl,imx8mp-pcie-phy
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -29,6 +32,7 @@ properties:
       - const: ref
 
   resets:
+<<<<<<< HEAD
     minItems: 1
     maxItems: 2
 
@@ -39,6 +43,13 @@ properties:
       - items:          # for IMX8MP
           - const: pciephy
           - const: perst
+=======
+    maxItems: 1
+
+  reset-names:
+    items:
+      - const: pciephy
+>>>>>>> b7ba80a49124 (Commit)
 
   fsl,refclk-pad-mode:
     description: |
@@ -66,10 +77,13 @@ properties:
     description: A boolean property indicating the CLKREQ# signal is
       not supported in the board design (optional)
 
+<<<<<<< HEAD
   power-domains:
     description: PCIe PHY  power domain (optional).
     maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - "#phy-cells"
   - compatible

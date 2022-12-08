@@ -44,6 +44,11 @@ static inline const char *printk_skip_headers(const char *buffer)
 	return buffer;
 }
 
+<<<<<<< HEAD
+=======
+#define CONSOLE_EXT_LOG_MAX	8192
+
+>>>>>>> b7ba80a49124 (Commit)
 /* printk's without a loglevel use this.. */
 #define MESSAGE_LOGLEVEL_DEFAULT CONFIG_MESSAGE_LOGLEVEL_DEFAULT
 
@@ -167,6 +172,11 @@ extern void __printk_safe_exit(void);
 #define printk_deferred_enter __printk_safe_enter
 #define printk_deferred_exit __printk_safe_exit
 
+<<<<<<< HEAD
+=======
+extern bool pr_flush(int timeout_ms, bool reset_on_progress);
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Please don't use printk_ratelimit(), because it shares ratelimiting state
  * with all other unrelated printk_ratelimit() callsites.  Instead use
@@ -217,6 +227,14 @@ static inline void printk_deferred_exit(void)
 {
 }
 
+<<<<<<< HEAD
+=======
+static inline bool pr_flush(int timeout_ms, bool reset_on_progress)
+{
+	return true;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline int printk_ratelimit(void)
 {
 	return 0;

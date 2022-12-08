@@ -15,7 +15,11 @@ properties:
   label:
     maxItems: 1
   prefix:
+<<<<<<< HEAD
     description: device name prefix
+=======
+    description: "device name prefix"
+>>>>>>> b7ba80a49124 (Commit)
     $ref: /schemas/types.yaml#/definitions/string
   routing:
     description: |
@@ -27,11 +31,19 @@ properties:
     description: User specified audio sound widgets.
     $ref: /schemas/types.yaml#/definitions/non-unique-string-array
   convert-rate:
+<<<<<<< HEAD
     $ref: /schemas/sound/dai-params.yaml#/$defs/dai-sample-rate
   convert-channels:
     $ref: /schemas/sound/dai-params.yaml#/$defs/dai-channels
   convert-sample-format:
     $ref: /schemas/sound/dai-params.yaml#/$defs/dai-sample-format
+=======
+    $ref: "/schemas/sound/dai-params.yaml#/$defs/dai-sample-rate"
+  convert-channels:
+    $ref: "/schemas/sound/dai-params.yaml#/$defs/dai-channels"
+  convert-sample-format:
+    $ref: "/schemas/sound/dai-params.yaml#/$defs/dai-sample-format"
+>>>>>>> b7ba80a49124 (Commit)
 
   pa-gpios:
     maxItems: 1

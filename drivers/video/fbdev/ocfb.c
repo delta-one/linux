@@ -370,7 +370,11 @@ err_dma_free:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void ocfb_remove(struct platform_device *pdev)
+=======
+static int ocfb_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ocfb_dev *fbdev = platform_get_drvdata(pdev);
 
@@ -383,6 +387,11 @@ static void ocfb_remove(struct platform_device *pdev)
 	ocfb_writereg(fbdev, OCFB_CTRL, 0);
 
 	platform_set_drvdata(pdev, NULL);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id ocfb_match[] = {
@@ -393,7 +402,11 @@ MODULE_DEVICE_TABLE(of, ocfb_match);
 
 static struct platform_driver ocfb_driver = {
 	.probe  = ocfb_probe,
+<<<<<<< HEAD
 	.remove_new = ocfb_remove,
+=======
+	.remove	= ocfb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "ocfb_fb",
 		.of_match_table = ocfb_match,

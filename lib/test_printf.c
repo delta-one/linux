@@ -126,7 +126,11 @@ __test(const char *expect, int elen, const char *fmt, ...)
 	 * be able to print it as expected.
 	 */
 	failed_tests += do_test(BUF_SIZE, expect, elen, fmt, ap);
+<<<<<<< HEAD
 	rand = get_random_u32_inclusive(1, elen + 1);
+=======
+	rand = 1 + prandom_u32_max(elen+1);
+>>>>>>> b7ba80a49124 (Commit)
 	/* Since elen < BUF_SIZE, we have 1 <= rand <= BUF_SIZE. */
 	failed_tests += do_test(rand, expect, elen, fmt, ap);
 	failed_tests += do_test(0, expect, elen, fmt, ap);
@@ -179,6 +183,21 @@ test_number(void)
 	 * behaviour.
 	 */
 	test("00|0|0|0|0", "%.2d|%.1d|%.0d|%.*d|%1.0d", 0, 0, 0, 0, 0, 0);
+<<<<<<< HEAD
+=======
+#ifndef __CHAR_UNSIGNED__
+	{
+		/*
+		 * Passing a 'char' to a %02x specifier doesn't do
+		 * what was presumably the intention when char is
+		 * signed and the value is negative. One must either &
+		 * with 0xff or cast to u8.
+		 */
+		char val = -16;
+		test("0xfffffff0|0xf0|0xf0", "%#02x|%#02x|%#02x", val, val & 0xff, (u8)val);
+	}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __init
@@ -642,6 +661,7 @@ page_flags_test(int section, int node, int zone, int last_cpupid,
 	test(cmp_buf, "%pGp", &flags);
 }
 
+<<<<<<< HEAD
 static void __init page_type_test(unsigned int page_type, const char *name,
 				  char *cmp_buf)
 {
@@ -655,13 +675,18 @@ static void __init page_type_test(unsigned int page_type, const char *name,
 	test(cmp_buf, "%pGt", &page_type);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void __init
 flags(void)
 {
 	unsigned long flags;
 	char *cmp_buffer;
 	gfp_t gfp;
+<<<<<<< HEAD
 	unsigned int page_type;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	cmp_buffer = kmalloc(BUF_SIZE, GFP_KERNEL);
 	if (!cmp_buffer)
@@ -701,6 +726,7 @@ flags(void)
 	gfp |= __GFP_HIGH;
 	test(cmp_buffer, "%pGg", &gfp);
 
+<<<<<<< HEAD
 	page_type = ~0;
 	page_type_test(page_type, "", cmp_buffer);
 
@@ -713,27 +739,45 @@ flags(void)
 	page_type = ~(PG_table | PG_buddy);
 	page_type_test(page_type, "table|buddy", cmp_buffer);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(cmp_buffer);
 }
 
 static void __init fwnode_pointer(void)
 {
+<<<<<<< HEAD
 	const struct software_node first = { .name = "first" };
 	const struct software_node second = { .name = "second", .parent = &first };
 	const struct software_node third = { .name = "third", .parent = &second };
 	const struct software_node *group[] = { &first, &second, &third, NULL };
 	const char * const full_name_second = "first/second";
 	const char * const full_name_third = "first/second/third";
+=======
+	const struct software_node softnodes[] = {
+		{ .name = "first", },
+		{ .name = "second", .parent = &softnodes[0], },
+		{ .name = "third", .parent = &softnodes[1], },
+		{ NULL /* Guardian */ }
+	};
+	const char * const full_name = "first/second/third";
+	const char * const full_name_second = "first/second";
+>>>>>>> b7ba80a49124 (Commit)
 	const char * const second_name = "second";
 	const char * const third_name = "third";
 	int rval;
 
+<<<<<<< HEAD
 	rval = software_node_register_node_group(group);
+=======
+	rval = software_node_register_nodes(softnodes);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rval) {
 		pr_warn("cannot register softnodes; rval %d\n", rval);
 		return;
 	}
 
+<<<<<<< HEAD
 	test(full_name_second, "%pfw", software_node_fwnode(&second));
 	test(full_name_third, "%pfw", software_node_fwnode(&third));
 	test(full_name_third, "%pfwf", software_node_fwnode(&third));
@@ -741,6 +785,15 @@ static void __init fwnode_pointer(void)
 	test(third_name, "%pfwP", software_node_fwnode(&third));
 
 	software_node_unregister_node_group(group);
+=======
+	test(full_name_second, "%pfw", software_node_fwnode(&softnodes[1]));
+	test(full_name, "%pfw", software_node_fwnode(&softnodes[2]));
+	test(full_name, "%pfwf", software_node_fwnode(&softnodes[2]));
+	test(second_name, "%pfwP", software_node_fwnode(&softnodes[1]));
+	test(third_name, "%pfwP", software_node_fwnode(&softnodes[2]));
+
+	software_node_unregister_nodes(softnodes);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __init fourcc_pointer(void)

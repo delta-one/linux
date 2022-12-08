@@ -166,8 +166,11 @@ out_free_name:
 
 /* clang-format on */
 
+<<<<<<< HEAD
 #define LANDLOCK_ABI_LAST 3
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int main(const int argc, char *const argv[], char *const *const envp)
 {
 	const char *cmd_path;
@@ -197,12 +200,17 @@ int main(const int argc, char *const argv[], char *const *const envp)
 			"\nexample:\n"
 			"%s=\"/bin:/lib:/usr:/proc:/etc:/dev/urandom\" "
 			"%s=\"/dev/null:/dev/full:/dev/zero:/dev/pts:/tmp\" "
+<<<<<<< HEAD
 			"%s bash -i\n\n",
 			ENV_FS_RO_NAME, ENV_FS_RW_NAME, argv[0]);
 		fprintf(stderr,
 			"This sandboxer can use Landlock features "
 			"up to ABI version %d.\n",
 			LANDLOCK_ABI_LAST);
+=======
+			"%s bash -i\n",
+			ENV_FS_RO_NAME, ENV_FS_RW_NAME, argv[0]);
+>>>>>>> b7ba80a49124 (Commit)
 		return 1;
 	}
 
@@ -230,6 +238,7 @@ int main(const int argc, char *const argv[], char *const *const envp)
 		}
 		return 1;
 	}
+<<<<<<< HEAD
 
 	/* Best-effort security. */
 	switch (abi) {
@@ -250,11 +259,18 @@ int main(const int argc, char *const argv[], char *const *const envp)
 		 * should then fall back to not restrict themselves at all if
 		 * the running kernel only supports ABI 1.
 		 */
+=======
+	/* Best-effort security. */
+	switch (abi) {
+	case 1:
+		/* Removes LANDLOCK_ACCESS_FS_REFER for ABI < 2 */
+>>>>>>> b7ba80a49124 (Commit)
 		ruleset_attr.handled_access_fs &= ~LANDLOCK_ACCESS_FS_REFER;
 		__attribute__((fallthrough));
 	case 2:
 		/* Removes LANDLOCK_ACCESS_FS_TRUNCATE for ABI < 3 */
 		ruleset_attr.handled_access_fs &= ~LANDLOCK_ACCESS_FS_TRUNCATE;
+<<<<<<< HEAD
 
 		fprintf(stderr,
 			"Hint: You should update the running kernel "
@@ -270,6 +286,8 @@ int main(const int argc, char *const argv[], char *const *const envp)
 			"to leverage Landlock features "
 			"provided by ABI version %d (instead of %d).\n",
 			abi, LANDLOCK_ABI_LAST);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	access_fs_ro &= ruleset_attr.handled_access_fs;
 	access_fs_rw &= ruleset_attr.handled_access_fs;

@@ -285,6 +285,7 @@ void ovs_vport_get_stats(struct vport *vport, struct ovs_vport_stats *stats)
 }
 
 /**
+<<<<<<< HEAD
  *	ovs_vport_get_upcall_stats - retrieve upcall stats
  *
  * @vport: vport from which to retrieve the stats.
@@ -335,6 +336,8 @@ int ovs_vport_get_upcall_stats(struct vport *vport, struct sk_buff *skb)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *	ovs_vport_get_options - retrieve device options
  *
  * @vport: vport from which to retrieve the options.

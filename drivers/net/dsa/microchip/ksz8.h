@@ -57,6 +57,9 @@ int ksz8_reset_switch(struct ksz_device *dev);
 int ksz8_switch_detect(struct ksz_device *dev);
 int ksz8_switch_init(struct ksz_device *dev);
 void ksz8_switch_exit(struct ksz_device *dev);
+<<<<<<< HEAD
 int ksz8_change_mtu(struct ksz_device *dev, int port, int mtu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

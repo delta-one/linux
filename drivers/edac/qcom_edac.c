@@ -76,8 +76,11 @@
 #define DRP0_INTERRUPT_ENABLE           BIT(6)
 #define SB_DB_DRP_INTERRUPT_ENABLE      0x3
 
+<<<<<<< HEAD
 #define ECC_POLL_MSEC			5000
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum {
 	LLCC_DRAM_CE = 0,
 	LLCC_DRAM_UE,
@@ -215,7 +218,11 @@ dump_syn_reg_values(struct llcc_drv_data *drv, u32 bank, int err_type)
 
 	for (i = 0; i < reg_data.reg_cnt; i++) {
 		synd_reg = reg_data.synd_reg + (i * 4);
+<<<<<<< HEAD
 		ret = regmap_read(drv->regmaps[bank], synd_reg,
+=======
+		ret = regmap_read(drv->regmap, drv->offsets[bank] + synd_reg,
+>>>>>>> b7ba80a49124 (Commit)
 				  &synd_val);
 		if (ret)
 			goto clear;
@@ -224,7 +231,12 @@ dump_syn_reg_values(struct llcc_drv_data *drv, u32 bank, int err_type)
 			    reg_data.name, i, synd_val);
 	}
 
+<<<<<<< HEAD
 	ret = regmap_read(drv->regmaps[bank], reg_data.count_status_reg,
+=======
+	ret = regmap_read(drv->regmap,
+			  drv->offsets[bank] + reg_data.count_status_reg,
+>>>>>>> b7ba80a49124 (Commit)
 			  &err_cnt);
 	if (ret)
 		goto clear;
@@ -234,7 +246,12 @@ dump_syn_reg_values(struct llcc_drv_data *drv, u32 bank, int err_type)
 	edac_printk(KERN_CRIT, EDAC_LLCC, "%s: Error count: 0x%4x\n",
 		    reg_data.name, err_cnt);
 
+<<<<<<< HEAD
 	ret = regmap_read(drv->regmaps[bank], reg_data.ways_status_reg,
+=======
+	ret = regmap_read(drv->regmap,
+			  drv->offsets[bank] + reg_data.ways_status_reg,
+>>>>>>> b7ba80a49124 (Commit)
 			  &err_ways);
 	if (ret)
 		goto clear;
@@ -252,7 +269,11 @@ clear:
 static int
 dump_syn_reg(struct edac_device_ctl_info *edev_ctl, int err_type, u32 bank)
 {
+<<<<<<< HEAD
 	struct llcc_drv_data *drv = edev_ctl->dev->platform_data;
+=======
+	struct llcc_drv_data *drv = edev_ctl->pvt_info;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	ret = dump_syn_reg_values(drv, bank, err_type);
@@ -285,17 +306,30 @@ dump_syn_reg(struct edac_device_ctl_info *edev_ctl, int err_type, u32 bank)
 	return ret;
 }
 
+<<<<<<< HEAD
 static irqreturn_t llcc_ecc_irq_handler(int irq, void *edev_ctl)
 {
 	struct edac_device_ctl_info *edac_dev_ctl = edev_ctl;
 	struct llcc_drv_data *drv = edac_dev_ctl->dev->platform_data;
+=======
+static irqreturn_t
+llcc_ecc_irq_handler(int irq, void *edev_ctl)
+{
+	struct edac_device_ctl_info *edac_dev_ctl = edev_ctl;
+	struct llcc_drv_data *drv = edac_dev_ctl->pvt_info;
+>>>>>>> b7ba80a49124 (Commit)
 	irqreturn_t irq_rc = IRQ_NONE;
 	u32 drp_error, trp_error, i;
 	int ret;
 
 	/* Iterate over the banks and look for Tag RAM or Data RAM errors */
 	for (i = 0; i < drv->num_banks; i++) {
+<<<<<<< HEAD
 		ret = regmap_read(drv->regmaps[i], DRP_INTERRUPT_STATUS,
+=======
+		ret = regmap_read(drv->regmap,
+				  drv->offsets[i] + DRP_INTERRUPT_STATUS,
+>>>>>>> b7ba80a49124 (Commit)
 				  &drp_error);
 
 		if (!ret && (drp_error & SB_ECC_ERROR)) {
@@ -310,7 +344,12 @@ static irqreturn_t llcc_ecc_irq_handler(int irq, void *edev_ctl)
 		if (!ret)
 			irq_rc = IRQ_HANDLED;
 
+<<<<<<< HEAD
 		ret = regmap_read(drv->regmaps[i], TRP_INTERRUPT_0_STATUS,
+=======
+		ret = regmap_read(drv->regmap,
+				  drv->offsets[i] + TRP_INTERRUPT_0_STATUS,
+>>>>>>> b7ba80a49124 (Commit)
 				  &trp_error);
 
 		if (!ret && (trp_error & SB_ECC_ERROR)) {
@@ -329,11 +368,14 @@ static irqreturn_t llcc_ecc_irq_handler(int irq, void *edev_ctl)
 	return irq_rc;
 }
 
+<<<<<<< HEAD
 static void llcc_ecc_check(struct edac_device_ctl_info *edev_ctl)
 {
 	llcc_ecc_irq_handler(0, edev_ctl);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int qcom_llcc_edac_probe(struct platform_device *pdev)
 {
 	struct llcc_drv_data *llcc_driv_data = pdev->dev.platform_data;
@@ -360,6 +402,7 @@ static int qcom_llcc_edac_probe(struct platform_device *pdev)
 	edev_ctl->dev_name = dev_name(dev);
 	edev_ctl->ctl_name = "llcc";
 	edev_ctl->panic_on_ue = LLCC_ERP_PANIC_ON_UE;
+<<<<<<< HEAD
 
 	/* Check if LLCC driver has passed ECC IRQ */
 	ecc_irq = llcc_driv_data->ecc_irq;
@@ -387,6 +430,34 @@ irq_done:
 
 	platform_set_drvdata(pdev, edev_ctl);
 
+=======
+	edev_ctl->pvt_info = llcc_driv_data;
+
+	rc = edac_device_add_device(edev_ctl);
+	if (rc)
+		goto out_mem;
+
+	platform_set_drvdata(pdev, edev_ctl);
+
+	/* Request for ecc irq */
+	ecc_irq = llcc_driv_data->ecc_irq;
+	if (ecc_irq < 0) {
+		rc = -ENODEV;
+		goto out_dev;
+	}
+	rc = devm_request_irq(dev, ecc_irq, llcc_ecc_irq_handler,
+			      IRQF_TRIGGER_HIGH, "llcc_ecc", edev_ctl);
+	if (rc)
+		goto out_dev;
+
+	return rc;
+
+out_dev:
+	edac_device_del_device(edev_ctl->dev);
+out_mem:
+	edac_device_free_ctl_info(edev_ctl);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -400,19 +471,25 @@ static int qcom_llcc_edac_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct platform_device_id qcom_llcc_edac_id_table[] = {
 	{ .name = "qcom_llcc_edac" },
 	{}
 };
 MODULE_DEVICE_TABLE(platform, qcom_llcc_edac_id_table);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver qcom_llcc_edac_driver = {
 	.probe = qcom_llcc_edac_probe,
 	.remove = qcom_llcc_edac_remove,
 	.driver = {
 		.name = "qcom_llcc_edac",
 	},
+<<<<<<< HEAD
 	.id_table = qcom_llcc_edac_id_table,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(qcom_llcc_edac_driver);
 

@@ -21,7 +21,10 @@
 #include <linux/slab.h>
 #include <linux/string.h>
 #include <linux/unistd.h>
+<<<<<<< HEAD
 #include <linux/property.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void mdio_device_free(struct mdio_device *mdiodev)
 {
@@ -31,7 +34,10 @@ EXPORT_SYMBOL(mdio_device_free);
 
 static void mdio_device_release(struct device *dev)
 {
+<<<<<<< HEAD
 	fwnode_handle_put(dev->fwnode);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(to_mdio_device(dev));
 }
 

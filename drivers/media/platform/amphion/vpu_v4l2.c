@@ -65,11 +65,26 @@ unsigned int vpu_get_buffer_state(struct vb2_v4l2_buffer *vbuf)
 
 void vpu_v4l2_set_error(struct vpu_inst *inst)
 {
+<<<<<<< HEAD
 	vpu_inst_lock(inst);
 	dev_err(inst->dev, "some error occurs in codec\n");
 	if (inst->fh.m2m_ctx) {
 		vb2_queue_error(v4l2_m2m_get_src_vq(inst->fh.m2m_ctx));
 		vb2_queue_error(v4l2_m2m_get_dst_vq(inst->fh.m2m_ctx));
+=======
+	struct vb2_queue *src_q;
+	struct vb2_queue *dst_q;
+
+	vpu_inst_lock(inst);
+	dev_err(inst->dev, "some error occurs in codec\n");
+	if (inst->fh.m2m_ctx) {
+		src_q = v4l2_m2m_get_src_vq(inst->fh.m2m_ctx);
+		dst_q = v4l2_m2m_get_dst_vq(inst->fh.m2m_ctx);
+		src_q->error = 1;
+		dst_q->error = 1;
+		wake_up(&src_q->done_wq);
+		wake_up(&dst_q->done_wq);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	vpu_inst_unlock(inst);
 }
@@ -133,6 +148,7 @@ bool vpu_is_source_empty(struct vpu_inst *inst)
 	return true;
 }
 
+<<<<<<< HEAD
 static int vpu_init_format(struct vpu_inst *inst, struct vpu_format *fmt)
 {
 	const struct vpu_format *info;
@@ -263,6 +279,53 @@ int vpu_try_fmt_common(struct vpu_inst *inst, struct v4l2_format *f, struct vpu_
 	}
 
 	return 0;
+=======
+const struct vpu_format *vpu_try_fmt_common(struct vpu_inst *inst, struct v4l2_format *f)
+{
+	struct v4l2_pix_format_mplane *pixmp = &f->fmt.pix_mp;
+	u32 type = f->type;
+	u32 stride = 1;
+	u32 bytesperline;
+	u32 sizeimage;
+	const struct vpu_format *fmt;
+	const struct vpu_core_resources *res;
+	int i;
+
+	fmt = vpu_helper_find_format(inst, type, pixmp->pixelformat);
+	if (!fmt) {
+		fmt = vpu_helper_enum_format(inst, type, 0);
+		if (!fmt)
+			return NULL;
+		pixmp->pixelformat = fmt->pixfmt;
+	}
+
+	res = vpu_get_resource(inst);
+	if (res)
+		stride = res->stride;
+	if (pixmp->width)
+		pixmp->width = vpu_helper_valid_frame_width(inst, pixmp->width);
+	if (pixmp->height)
+		pixmp->height = vpu_helper_valid_frame_height(inst, pixmp->height);
+	pixmp->flags = fmt->flags;
+	pixmp->num_planes = fmt->num_planes;
+	if (pixmp->field == V4L2_FIELD_ANY)
+		pixmp->field = V4L2_FIELD_NONE;
+	for (i = 0; i < pixmp->num_planes; i++) {
+		bytesperline = max_t(s32, pixmp->plane_fmt[i].bytesperline, 0);
+		sizeimage = vpu_helper_get_plane_size(pixmp->pixelformat,
+						      pixmp->width,
+						      pixmp->height,
+						      i,
+						      stride,
+						      pixmp->field > V4L2_FIELD_NONE ? 1 : 0,
+						      &bytesperline);
+		sizeimage = max_t(s32, pixmp->plane_fmt[i].sizeimage, sizeimage);
+		pixmp->plane_fmt[i].bytesperline = bytesperline;
+		pixmp->plane_fmt[i].sizeimage = sizeimage;
+	}
+
+	return fmt;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool vpu_check_ready(struct vpu_inst *inst, u32 type)
@@ -327,12 +390,17 @@ int vpu_process_capture_buffer(struct vpu_inst *inst)
 
 struct vb2_v4l2_buffer *vpu_next_src_buf(struct vpu_inst *inst)
 {
+<<<<<<< HEAD
 	struct vb2_v4l2_buffer *src_buf = NULL;
 
 	if (!inst->fh.m2m_ctx)
 		return NULL;
 
 	src_buf = v4l2_m2m_next_src_buf(inst->fh.m2m_ctx);
+=======
+	struct vb2_v4l2_buffer *src_buf = v4l2_m2m_next_src_buf(inst->fh.m2m_ctx);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!src_buf || vpu_get_buffer_state(src_buf) == VPU_BUF_STATE_IDLE)
 		return NULL;
 
@@ -355,7 +423,11 @@ void vpu_skip_frame(struct vpu_inst *inst, int count)
 	enum vb2_buffer_state state;
 	int i = 0;
 
+<<<<<<< HEAD
 	if (count <= 0 || !inst->fh.m2m_ctx)
+=======
+	if (count <= 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	while (i < count) {
@@ -471,10 +543,17 @@ static int vpu_vb2_queue_setup(struct vb2_queue *vq,
 	cur_fmt = vpu_get_format(inst, vq->type);
 
 	if (*plane_count) {
+<<<<<<< HEAD
 		if (*plane_count != cur_fmt->mem_planes)
 			return -EINVAL;
 		for (i = 0; i < cur_fmt->mem_planes; i++) {
 			if (psize[i] < vpu_get_fmt_plane_size(cur_fmt, i))
+=======
+		if (*plane_count != cur_fmt->num_planes)
+			return -EINVAL;
+		for (i = 0; i < cur_fmt->num_planes; i++) {
+			if (psize[i] < cur_fmt->sizeimage[i])
+>>>>>>> b7ba80a49124 (Commit)
 				return -EINVAL;
 		}
 		return 0;
@@ -484,9 +563,15 @@ static int vpu_vb2_queue_setup(struct vb2_queue *vq,
 		*buf_count = max_t(unsigned int, *buf_count, inst->min_buffer_out);
 	else
 		*buf_count = max_t(unsigned int, *buf_count, inst->min_buffer_cap);
+<<<<<<< HEAD
 	*plane_count = cur_fmt->mem_planes;
 	for (i = 0; i < cur_fmt->mem_planes; i++)
 		psize[i] = vpu_get_fmt_plane_size(cur_fmt, i);
+=======
+	*plane_count = cur_fmt->num_planes;
+	for (i = 0; i < cur_fmt->num_planes; i++)
+		psize[i] = cur_fmt->sizeimage[i];
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -516,8 +601,13 @@ static int vpu_vb2_buf_prepare(struct vb2_buffer *vb)
 	u32 i;
 
 	cur_fmt = vpu_get_format(inst, vb->type);
+<<<<<<< HEAD
 	for (i = 0; i < cur_fmt->mem_planes; i++) {
 		if (vpu_get_vb_length(vb, i) < vpu_get_fmt_plane_size(cur_fmt, i)) {
+=======
+	for (i = 0; i < cur_fmt->num_planes; i++) {
+		if (vpu_get_vb_length(vb, i) < cur_fmt->sizeimage[i]) {
+>>>>>>> b7ba80a49124 (Commit)
 			dev_dbg(inst->dev, "[%d] %s buf[%d] is invalid\n",
 				inst->id, vpu_type_name(vb->type), vb->index);
 			vpu_set_buffer_state(vbuf, VPU_BUF_STATE_ERROR);

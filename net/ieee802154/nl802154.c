@@ -26,12 +26,18 @@ static struct genl_family nl802154_fam;
 /* multicast groups */
 enum nl802154_multicast_groups {
 	NL802154_MCGRP_CONFIG,
+<<<<<<< HEAD
 	NL802154_MCGRP_SCAN,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct genl_multicast_group nl802154_mcgrps[] = {
 	[NL802154_MCGRP_CONFIG] = { .name = "config", },
+<<<<<<< HEAD
 	[NL802154_MCGRP_SCAN] = { .name = "scan", },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* returns ERR_PTR values */
@@ -187,8 +193,13 @@ static const struct nla_policy nl802154_policy[NL802154_ATTR_MAX+1] = {
 
 	[NL802154_ATTR_WPAN_DEV] = { .type = NLA_U64 },
 
+<<<<<<< HEAD
 	[NL802154_ATTR_PAGE] = NLA_POLICY_MAX(NLA_U8, IEEE802154_MAX_PAGE),
 	[NL802154_ATTR_CHANNEL] = NLA_POLICY_MAX(NLA_U8, IEEE802154_MAX_CHANNEL),
+=======
+	[NL802154_ATTR_PAGE] = { .type = NLA_U8, },
+	[NL802154_ATTR_CHANNEL] = { .type = NLA_U8, },
+>>>>>>> b7ba80a49124 (Commit)
 
 	[NL802154_ATTR_TX_POWER] = { .type = NLA_S32, },
 
@@ -218,6 +229,7 @@ static const struct nla_policy nl802154_policy[NL802154_ATTR_MAX+1] = {
 
 	[NL802154_ATTR_PID] = { .type = NLA_U32 },
 	[NL802154_ATTR_NETNS_FD] = { .type = NLA_U32 },
+<<<<<<< HEAD
 
 	[NL802154_ATTR_COORDINATOR] = { .type = NLA_NESTED },
 
@@ -235,6 +247,8 @@ static const struct nla_policy nl802154_policy[NL802154_ATTR_MAX+1] = {
 	[NL802154_ATTR_BEACON_INTERVAL] =
 		NLA_POLICY_MAX(NLA_U8, IEEE802154_MAX_SCAN_DURATION),
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_IEEE802154_NL802154_EXPERIMENTAL
 	[NL802154_ATTR_SEC_ENABLED] = { .type = NLA_U8, },
 	[NL802154_ATTR_SEC_OUT_LEVEL] = { .type = NLA_U32, },
@@ -983,7 +997,12 @@ static int nl802154_set_channel(struct sk_buff *skb, struct genl_info *info)
 	channel = nla_get_u8(info->attrs[NL802154_ATTR_CHANNEL]);
 
 	/* check 802.15.4 constraints */
+<<<<<<< HEAD
 	if (!ieee802154_chan_is_valid(&rdev->wpan_phy, page, channel))
+=======
+	if (page > IEEE802154_MAX_PAGE || channel > IEEE802154_MAX_CHANNEL ||
+	    !(rdev->wpan_phy.supported.channels[page] & BIT(channel)))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	return rdev_set_channel(rdev, page, channel);
@@ -1299,6 +1318,7 @@ static int nl802154_wpan_phy_netns(struct sk_buff *skb, struct genl_info *info)
 	return err;
 }
 
+<<<<<<< HEAD
 static int nl802154_prep_scan_event_msg(struct sk_buff *msg,
 					struct cfg802154_registered_device *rdev,
 					struct wpan_dev *wpan_dev,
@@ -1627,6 +1647,8 @@ nl802154_stop_beacons(struct sk_buff *skb, struct genl_info *info)
 	return rdev_stop_beacons(rdev, wpan_dev);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_IEEE802154_NL802154_EXPERIMENTAL
 static const struct nla_policy nl802154_dev_addr_policy[NL802154_DEV_ADDR_ATTR_MAX + 1] = {
 	[NL802154_DEV_ADDR_ATTR_PAN_ID] = { .type = NLA_U16 },
@@ -2503,8 +2525,12 @@ static int nl802154_del_llsec_seclevel(struct sk_buff *skb,
 #define NL802154_FLAG_CHECK_NETDEV_UP	0x08
 #define NL802154_FLAG_NEED_WPAN_DEV	0x10
 
+<<<<<<< HEAD
 static int nl802154_pre_doit(const struct genl_split_ops *ops,
 			     struct sk_buff *skb,
+=======
+static int nl802154_pre_doit(const struct genl_ops *ops, struct sk_buff *skb,
+>>>>>>> b7ba80a49124 (Commit)
 			     struct genl_info *info)
 {
 	struct cfg802154_registered_device *rdev;
@@ -2566,8 +2592,12 @@ static int nl802154_pre_doit(const struct genl_split_ops *ops,
 	return 0;
 }
 
+<<<<<<< HEAD
 static void nl802154_post_doit(const struct genl_split_ops *ops,
 			       struct sk_buff *skb,
+=======
+static void nl802154_post_doit(const struct genl_ops *ops, struct sk_buff *skb,
+>>>>>>> b7ba80a49124 (Commit)
 			       struct genl_info *info)
 {
 	if (info->user_ptr[1]) {
@@ -2717,6 +2747,7 @@ static const struct genl_ops nl802154_ops[] = {
 		.internal_flags = NL802154_FLAG_NEED_NETDEV |
 				  NL802154_FLAG_NEED_RTNL,
 	},
+<<<<<<< HEAD
 	{
 		.cmd = NL802154_CMD_TRIGGER_SCAN,
 		.doit = nl802154_trigger_scan,
@@ -2749,6 +2780,8 @@ static const struct genl_ops nl802154_ops[] = {
 				  NL802154_FLAG_CHECK_NETDEV_UP |
 				  NL802154_FLAG_NEED_RTNL,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_IEEE802154_NL802154_EXPERIMENTAL
 	{
 		.cmd = NL802154_CMD_SET_SEC_PARAMS,

@@ -20,7 +20,10 @@
 
 #include <linux/bitmap.h>
 #include <linux/mm_types.h>
+<<<<<<< HEAD
 #include <linux/netdevice.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sched.h>
 #include <linux/skbuff.h>
 #include <linux/spinlock.h>
@@ -110,14 +113,28 @@ struct dpmaif_rx_queue {
 	struct dpmaif_bat_request *bat_req;
 	struct dpmaif_bat_request *bat_frag;
 
+<<<<<<< HEAD
+=======
+	wait_queue_head_t	rx_wq;
+	struct task_struct	*rx_thread;
+	struct sk_buff_head	skb_list;
+	unsigned int		skb_list_max_len;
+
+	struct workqueue_struct	*worker;
+	struct work_struct	dpmaif_rxq_work;
+
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_t		rx_processing;
 
 	struct dpmaif_ctrl	*dpmaif_ctrl;
 	unsigned int		expect_pit_seq;
 	unsigned int		pit_remain_release_cnt;
 	struct dpmaif_cur_rx_skb_info rx_data_info;
+<<<<<<< HEAD
 	struct napi_struct	napi;
 	bool			sleep_lock_pending;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct dpmaif_tx_queue {
@@ -163,8 +180,12 @@ enum dpmaif_txq_state {
 struct dpmaif_callbacks {
 	void (*state_notify)(struct t7xx_pci_dev *t7xx_dev,
 			     enum dpmaif_txq_state state, int txq_number);
+<<<<<<< HEAD
 	void (*recv_skb)(struct t7xx_ccmni_ctrl *ccmni_ctlb, struct sk_buff *skb,
 			 struct napi_struct *napi);
+=======
+	void (*recv_skb)(struct t7xx_pci_dev *t7xx_dev, struct sk_buff *skb);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct dpmaif_ctrl {

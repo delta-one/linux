@@ -17,6 +17,7 @@
 #define ARCH_SHF_SMALL 0
 #endif
 
+<<<<<<< HEAD
 /*
  * Use highest 4 bits of sh_entsize to store the mod_mem_type of this
  * section. This leaves 28 bits for offset on 32-bit systems, which is
@@ -31,6 +32,30 @@
 /* Maximum number of characters written by module_flags() */
 #define MODULE_FLAGS_BUF_SIZE (TAINT_FLAGS_COUNT + 4)
 
+=======
+/* If this is set, the section belongs in the init part of the module */
+#define INIT_OFFSET_MASK (1UL << (BITS_PER_LONG - 1))
+/* Maximum number of characters written by module_flags() */
+#define MODULE_FLAGS_BUF_SIZE (TAINT_FLAGS_COUNT + 4)
+
+#ifndef CONFIG_ARCH_WANTS_MODULES_DATA_IN_VMALLOC
+#define	data_layout core_layout
+#endif
+
+/*
+ * Modules' sections will be aligned on page boundaries
+ * to ensure complete separation of code and data, but
+ * only when CONFIG_STRICT_MODULE_RWX=y
+ */
+static inline unsigned int strict_align(unsigned int size)
+{
+	if (IS_ENABLED(CONFIG_STRICT_MODULE_RWX))
+		return PAGE_ALIGN(size);
+	else
+		return size;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 extern struct mutex module_mutex;
 extern struct list_head modules;
 
@@ -45,6 +70,10 @@ extern const struct kernel_symbol __stop___ksymtab_gpl[];
 extern const s32 __start___kcrctab[];
 extern const s32 __start___kcrctab_gpl[];
 
+<<<<<<< HEAD
+=======
+#include <linux/dynamic_debug.h>
+>>>>>>> b7ba80a49124 (Commit)
 struct load_info {
 	const char *name;
 	/* pointer to module in temporary copy, freed at end of load_module() */
@@ -54,6 +83,10 @@ struct load_info {
 	Elf_Shdr *sechdrs;
 	char *secstrings, *strtab;
 	unsigned long symoffs, stroffs, init_typeoffs, core_typeoffs;
+<<<<<<< HEAD
+=======
+	struct _ddebug_info dyndbg;
+>>>>>>> b7ba80a49124 (Commit)
 	bool sig_ok;
 #ifdef CONFIG_KALLSYMS
 	unsigned long mod_kallsyms_init_off;
@@ -91,6 +124,7 @@ int try_to_force_load(struct module *mod, const char *reason);
 bool find_symbol(struct find_symbol_arg *fsa);
 struct module *find_module_all(const char *name, size_t len, bool even_unformed);
 int cmp_name(const void *name, const void *sym);
+<<<<<<< HEAD
 long module_get_offset_and_type(struct module *mod, enum mod_mem_type type,
 				Elf_Shdr *sechdr, unsigned int section);
 char *module_flags(struct module *mod, char *buf, bool show_state);
@@ -101,6 +135,13 @@ char *module_next_tag_pair(char *string, unsigned long *secsize);
 #define for_each_modinfo_entry(entry, info, name) \
 	for (entry = get_modinfo(info, name); entry; entry = get_next_modinfo(info, name, entry))
 
+=======
+long module_get_offset(struct module *mod, unsigned int *size, Elf_Shdr *sechdr,
+		       unsigned int section);
+char *module_flags(struct module *mod, char *buf, bool show_state);
+size_t module_flags_taint(unsigned long taints, char *buf);
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void module_assert_mutex_or_preempt(void)
 {
 #ifdef CONFIG_LOCKDEP
@@ -185,6 +226,7 @@ struct mod_tree_root {
 #endif
 	unsigned long addr_min;
 	unsigned long addr_max;
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_WANTS_MODULES_DATA_IN_VMALLOC
 	unsigned long data_addr_min;
 	unsigned long data_addr_max;
@@ -192,6 +234,12 @@ struct mod_tree_root {
 };
 
 extern struct mod_tree_root mod_tree;
+=======
+};
+
+extern struct mod_tree_root mod_tree;
+extern struct mod_tree_root mod_data_tree;
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_MODULES_TREE_LOOKUP
 void mod_tree_insert(struct module *mod);
@@ -222,6 +270,10 @@ void module_enable_nx(const struct module *mod);
 void module_enable_x(const struct module *mod);
 int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
 				char *secstrings, struct module *mod);
+<<<<<<< HEAD
+=======
+bool module_check_misalignment(const struct module *mod);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_MODULE_SIG
 int module_sig_check(struct load_info *info, int flags);
@@ -243,6 +295,10 @@ static inline void kmemleak_load_module(const struct module *mod,
 void init_build_id(struct module *mod, const struct load_info *info);
 void layout_symtab(struct module *mod, struct load_info *info);
 void add_kallsyms(struct module *mod, const struct load_info *info);
+<<<<<<< HEAD
+=======
+unsigned long find_kallsyms_symbol_value(struct module *mod, const char *name);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline bool sect_empty(const Elf_Shdr *sect)
 {

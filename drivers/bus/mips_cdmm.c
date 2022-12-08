@@ -67,9 +67,15 @@ static int mips_cdmm_match(struct device *dev, struct device_driver *drv)
 	return mips_cdmm_lookup(cdrv->id_table, cdev) != NULL;
 }
 
+<<<<<<< HEAD
 static int mips_cdmm_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct mips_cdmm_device *cdev = to_mips_cdmm_device(dev);
+=======
+static int mips_cdmm_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct mips_cdmm_device *cdev = to_mips_cdmm_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	int retval = 0;
 
 	retval = add_uevent_var(env, "CDMM_CPU=%u", cdev->cpu);

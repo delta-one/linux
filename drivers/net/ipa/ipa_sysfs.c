@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
 /* Copyright (C) 2021-2022 Linaro Ltd. */
+=======
+/* Copyright (C) 2021 Linaro Ltd. */
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/kernel.h>
 #include <linux/types.h>
@@ -46,7 +50,11 @@ version_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	struct ipa *ipa = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", ipa_version_string(ipa));
+=======
+	return scnprintf(buf, PAGE_SIZE, "%s\n", ipa_version_string(ipa));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR_RO(version);
@@ -70,7 +78,11 @@ static ssize_t rx_offload_show(struct device *dev,
 {
 	struct ipa *ipa = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", ipa_offload_string(ipa));
+=======
+	return scnprintf(buf, PAGE_SIZE, "%s\n", ipa_offload_string(ipa));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR_RO(rx_offload);
@@ -80,7 +92,11 @@ static ssize_t tx_offload_show(struct device *dev,
 {
 	struct ipa *ipa = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", ipa_offload_string(ipa));
+=======
+	return scnprintf(buf, PAGE_SIZE, "%s\n", ipa_offload_string(ipa));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR_RO(tx_offload);

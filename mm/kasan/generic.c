@@ -172,8 +172,15 @@ static __always_inline bool check_region_inline(unsigned long addr,
 	if (unlikely(addr + size < addr))
 		return !kasan_report(addr, size, write, ret_ip);
 
+<<<<<<< HEAD
 	if (unlikely(!addr_has_metadata((void *)addr)))
 		return !kasan_report(addr, size, write, ret_ip);
+=======
+	if (unlikely((void *)addr <
+		kasan_shadow_to_mem((void *)KASAN_SHADOW_START))) {
+		return !kasan_report(addr, size, write, ret_ip);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (likely(!memory_is_poisoned(addr, size)))
 		return true;
@@ -189,12 +196,16 @@ bool kasan_check_range(unsigned long addr, size_t size, bool write,
 
 bool kasan_byte_accessible(const void *addr)
 {
+<<<<<<< HEAD
 	s8 shadow_byte;
 
 	if (!kasan_arch_is_ready())
 		return true;
 
 	shadow_byte = READ_ONCE(*(s8 *)kasan_mem_to_shadow(addr));
+=======
+	s8 shadow_byte = READ_ONCE(*(s8 *)kasan_mem_to_shadow(addr));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return shadow_byte >= 0 && shadow_byte < KASAN_GRANULE_SIZE;
 }
@@ -453,6 +464,7 @@ void kasan_init_object_meta(struct kmem_cache *cache, const void *object)
 		__memset(alloc_meta, 0, sizeof(*alloc_meta));
 }
 
+<<<<<<< HEAD
 size_t kasan_metadata_size(struct kmem_cache *cache, bool in_object)
 {
 	struct kasan_cache *info = &cache->kasan_info;
@@ -469,6 +481,17 @@ size_t kasan_metadata_size(struct kmem_cache *cache, bool in_object)
 			((info->free_meta_offset &&
 			info->free_meta_offset != KASAN_NO_FREE_META) ?
 			sizeof(struct kasan_free_meta) : 0);
+=======
+size_t kasan_metadata_size(struct kmem_cache *cache)
+{
+	if (!kasan_requires_meta())
+		return 0;
+	return (cache->kasan_info.alloc_meta_offset ?
+		sizeof(struct kasan_alloc_meta) : 0) +
+		((cache->kasan_info.free_meta_offset &&
+		  cache->kasan_info.free_meta_offset != KASAN_NO_FREE_META) ?
+		 sizeof(struct kasan_free_meta) : 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __kasan_record_aux_stack(void *addr, bool can_alloc)

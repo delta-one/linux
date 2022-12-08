@@ -1,6 +1,10 @@
 What:           /sys/devices/uncore_iio_x/dieX
 Date:           February 2020
+<<<<<<< HEAD
 Contact:        Alexander Antonov <alexander.antonov@linux.intel.com>
+=======
+Contact:        Roman Sudarikov <roman.sudarikov@linux.intel.com>
+>>>>>>> b7ba80a49124 (Commit)
 Description:
                 Each IIO stack (PCIe root port) has its own IIO PMON block, so
                 each dieX file (where X is die number) holds "Segment:Root Bus"
@@ -32,6 +36,7 @@ Description:
 		    IIO PMU 0 on die 1 belongs to PCI RP on bus 0x40, domain 0x0000
 		    IIO PMU 0 on die 2 belongs to PCI RP on bus 0x80, domain 0x0000
 		    IIO PMU 0 on die 3 belongs to PCI RP on bus 0xc0, domain 0x0000
+<<<<<<< HEAD
 
 What:           /sys/devices/uncore_upi_x/dieX
 Date:           March 2022
@@ -60,3 +65,5 @@ Description:
 		    UPI link 0 on die 1 is connected to UPI link 0 on die 3
 		    UPI link 0 on die 2 is connected to UPI link 1 on die 3
 		    UPI link 0 on die 3 is connected to UPI link 0 on die 1
+=======
+>>>>>>> b7ba80a49124 (Commit)

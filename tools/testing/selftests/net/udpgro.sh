@@ -5,8 +5,11 @@
 
 readonly PEER_NS="ns-peer-$(mktemp -u XXXXXX)"
 
+<<<<<<< HEAD
 BPF_FILE="../bpf/xdp_dummy.bpf.o"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # set global exit status, but never reset nonzero one.
 check_err()
 {
@@ -36,7 +39,11 @@ cfg_veth() {
 	ip -netns "${PEER_NS}" addr add dev veth1 192.168.1.1/24
 	ip -netns "${PEER_NS}" addr add dev veth1 2001:db8::1/64 nodad
 	ip -netns "${PEER_NS}" link set dev veth1 up
+<<<<<<< HEAD
 	ip -n "${PEER_NS}" link set veth1 xdp object ${BPF_FILE} section xdp
+=======
+	ip -n "${PEER_NS}" link set veth1 xdp object ../bpf/xdp_dummy.o section xdp
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 run_one() {
@@ -52,7 +59,11 @@ run_one() {
 		echo "failed" &
 
 	# Hack: let bg programs complete the startup
+<<<<<<< HEAD
 	sleep 0.2
+=======
+	sleep 0.1
+>>>>>>> b7ba80a49124 (Commit)
 	./udpgso_bench_tx ${tx_args}
 	ret=$?
 	wait $(jobs -p)
@@ -119,7 +130,11 @@ run_one_2sock() {
 		echo "failed" &
 
 	# Hack: let bg programs complete the startup
+<<<<<<< HEAD
 	sleep 0.2
+=======
+	sleep 0.1
+>>>>>>> b7ba80a49124 (Commit)
 	./udpgso_bench_tx ${tx_args} -p 12345
 	sleep 0.1
 	# first UDP GSO socket should be closed at this point
@@ -197,8 +212,13 @@ run_all() {
 	return $ret
 }
 
+<<<<<<< HEAD
 if [ ! -f ${BPF_FILE} ]; then
 	echo "Missing ${BPF_FILE}. Build bpf selftest first"
+=======
+if [ ! -f ../bpf/xdp_dummy.o ]; then
+	echo "Missing xdp_dummy helper. Build bpf selftest first"
+>>>>>>> b7ba80a49124 (Commit)
 	exit -1
 fi
 

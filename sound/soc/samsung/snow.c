@@ -219,7 +219,11 @@ static int snow_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void snow_remove(struct platform_device *pdev)
+=======
+static int snow_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct snow_priv *priv = platform_get_drvdata(pdev);
 	struct snd_soc_dai_link *link = &priv->dai_link;
@@ -229,6 +233,11 @@ static void snow_remove(struct platform_device *pdev)
 	snd_soc_of_put_dai_link_codecs(link);
 
 	clk_put(priv->clk_i2s_bus);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id snow_of_match[] = {
@@ -246,7 +255,11 @@ static struct platform_driver snow_driver = {
 		.of_match_table = snow_of_match,
 	},
 	.probe = snow_probe,
+<<<<<<< HEAD
 	.remove_new = snow_remove,
+=======
+	.remove = snow_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(snow_driver);

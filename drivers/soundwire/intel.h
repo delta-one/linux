@@ -7,7 +7,10 @@
 /**
  * struct sdw_intel_link_res - Soundwire Intel link resource structure,
  * typically populated by the controller driver.
+<<<<<<< HEAD
  * @hw_ops: platform-specific ops
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @mmio_base: mmio base of SoundWire registers
  * @registers: Link IO registers base
  * @shim: Audio shim pointer
@@ -23,8 +26,11 @@
  * @list: used to walk-through all masters exposed by the same controller
  */
 struct sdw_intel_link_res {
+<<<<<<< HEAD
 	const struct sdw_intel_hw_ops *hw_ops;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem *mmio_base; /* not strictly needed, useful for debug */
 	void __iomem *registers;
 	void __iomem *shim;
@@ -50,6 +56,7 @@ struct sdw_intel {
 #endif
 };
 
+<<<<<<< HEAD
 enum intel_pdi_type {
 	INTEL_PDI_IN = 0,
 	INTEL_PDI_OUT = 1,
@@ -204,5 +211,17 @@ int intel_stop_bus(struct sdw_intel *sdw, bool clock_stop);
 /* common bank switch routines */
 int intel_pre_bank_switch(struct sdw_intel *sdw);
 int intel_post_bank_switch(struct sdw_intel *sdw);
+=======
+int intel_link_startup(struct auxiliary_device *auxdev);
+int intel_link_process_wakeen_event(struct auxiliary_device *auxdev);
+
+struct sdw_intel_link_dev {
+	struct auxiliary_device auxdev;
+	struct sdw_intel_link_res link_res;
+};
+
+#define auxiliary_dev_to_sdw_intel_link_dev(auxiliary_dev) \
+	container_of(auxiliary_dev, struct sdw_intel_link_dev, auxdev)
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __SDW_INTEL_LOCAL_H */

@@ -90,6 +90,11 @@ struct dma2d_ctx {
 	struct dma2d_frame	cap;
 	struct dma2d_frame	out;
 	struct dma2d_frame	bg;
+<<<<<<< HEAD
+=======
+	/* fb_buf always point to bg address */
+	struct v4l2_framebuffer	fb_buf;
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * MODE[17:16] of DMA2D_CR
 	 */

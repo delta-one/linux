@@ -17,9 +17,15 @@
 
 #include "bme680.h"
 
+<<<<<<< HEAD
 static int bme680_i2c_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int bme680_i2c_probe(struct i2c_client *client,
+			    const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct regmap *regmap;
 	const char *name = NULL;
 
@@ -52,7 +58,11 @@ static struct i2c_driver bme680_i2c_driver = {
 		.name			= "bme680_i2c",
 		.of_match_table		= bme680_of_i2c_match,
 	},
+<<<<<<< HEAD
 	.probe_new = bme680_i2c_probe,
+=======
+	.probe = bme680_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = bme680_i2c_id,
 };
 module_i2c_driver(bme680_i2c_driver);

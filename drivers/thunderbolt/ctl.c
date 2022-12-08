@@ -230,6 +230,10 @@ static int check_config_address(struct tb_cfg_address addr,
 static struct tb_cfg_result decode_error(const struct ctl_pkg *response)
 {
 	struct cfg_error_pkg *pkg = response->buffer;
+<<<<<<< HEAD
+=======
+	struct tb_ctl *ctl = response->ctl;
+>>>>>>> b7ba80a49124 (Commit)
 	struct tb_cfg_result res = { 0 };
 	res.response_route = tb_cfg_get_route(&pkg->header);
 	res.response_port = 0;
@@ -238,6 +242,16 @@ static struct tb_cfg_result decode_error(const struct ctl_pkg *response)
 	if (res.err)
 		return res;
 
+<<<<<<< HEAD
+=======
+	if (pkg->zero1)
+		tb_ctl_warn(ctl, "pkg->zero1 is %#x\n", pkg->zero1);
+	if (pkg->zero2)
+		tb_ctl_warn(ctl, "pkg->zero2 is %#x\n", pkg->zero2);
+	if (pkg->zero3)
+		tb_ctl_warn(ctl, "pkg->zero3 is %#x\n", pkg->zero3);
+
+>>>>>>> b7ba80a49124 (Commit)
 	res.err = 1;
 	res.tb_error = pkg->error;
 	res.response_port = pkg->port;
@@ -408,7 +422,10 @@ static int tb_async_error(const struct ctl_pkg *pkg)
 	case TB_CFG_ERROR_LINK_ERROR:
 	case TB_CFG_ERROR_HEC_ERROR_DETECTED:
 	case TB_CFG_ERROR_FLOW_CONTROL_ERROR:
+<<<<<<< HEAD
 	case TB_CFG_ERROR_DP_BW:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 
 	default:
@@ -729,6 +746,7 @@ void tb_ctl_stop(struct tb_ctl *ctl)
 /* public interface, commands */
 
 /**
+<<<<<<< HEAD
  * tb_cfg_ack_notification() - Ack notification
  * @ctl: Control channel to use
  * @route: Router that originated the event
@@ -770,6 +788,8 @@ int tb_cfg_ack_notification(struct tb_ctl *ctl, u64 route,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * tb_cfg_ack_plug() - Ack hot plug/unplug event
  * @ctl: Control channel to use
  * @route: Router that originated the event
@@ -788,7 +808,11 @@ int tb_cfg_ack_plug(struct tb_ctl *ctl, u64 route, u32 port, bool unplug)
 		.pg = unplug ? TB_CFG_ERROR_PG_HOT_UNPLUG
 			     : TB_CFG_ERROR_PG_HOT_PLUG,
 	};
+<<<<<<< HEAD
 	tb_ctl_dbg(ctl, "acking hot %splug event on %llx:%u\n",
+=======
+	tb_ctl_dbg(ctl, "acking hot %splug event on %llx:%x\n",
+>>>>>>> b7ba80a49124 (Commit)
 		   unplug ? "un" : "", route, port);
 	return tb_ctl_tx(ctl, &pkg, sizeof(pkg), TB_CFG_PKG_ERROR);
 }

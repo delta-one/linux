@@ -410,8 +410,13 @@ static inline int has_pushable_tasks(struct rq *rq)
 	return !plist_head_empty(&rq->rt.pushable_tasks);
 }
 
+<<<<<<< HEAD
 static DEFINE_PER_CPU(struct balance_callback, rt_push_head);
 static DEFINE_PER_CPU(struct balance_callback, rt_pull_head);
+=======
+static DEFINE_PER_CPU(struct callback_head, rt_push_head);
+static DEFINE_PER_CPU(struct callback_head, rt_pull_head);
+>>>>>>> b7ba80a49124 (Commit)
 
 static void push_rt_tasks(struct rq *);
 static void pull_rt_task(struct rq *);
@@ -1777,8 +1782,11 @@ static struct sched_rt_entity *pick_next_rt_entity(struct rt_rq *rt_rq)
 	BUG_ON(idx >= MAX_RT_PRIO);
 
 	queue = array->queue + idx;
+<<<<<<< HEAD
 	if (SCHED_WARN_ON(list_empty(queue)))
 		return NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	next = list_entry(queue->next, struct sched_rt_entity, run_list);
 
 	return next;
@@ -1791,8 +1799,12 @@ static struct task_struct *_pick_next_task_rt(struct rq *rq)
 
 	do {
 		rt_se = pick_next_rt_entity(rt_rq);
+<<<<<<< HEAD
 		if (unlikely(!rt_se))
 			return NULL;
+=======
+		BUG_ON(!rt_se);
+>>>>>>> b7ba80a49124 (Commit)
 		rt_rq = group_rt_rq(rt_se);
 	} while (rt_rq);
 
@@ -2677,6 +2689,7 @@ static unsigned int get_rr_interval_rt(struct rq *rq, struct task_struct *task)
 		return 0;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_SCHED_CORE
 static int task_is_throttled_rt(struct task_struct *p, int cpu)
 {
@@ -2692,6 +2705,8 @@ static int task_is_throttled_rt(struct task_struct *p, int cpu)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 DEFINE_SCHED_CLASS(rt) = {
 
 	.enqueue_task		= enqueue_task_rt,
@@ -2725,10 +2740,13 @@ DEFINE_SCHED_CLASS(rt) = {
 
 	.update_curr		= update_curr_rt,
 
+<<<<<<< HEAD
 #ifdef CONFIG_SCHED_CORE
 	.task_is_throttled	= task_is_throttled_rt,
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_UCLAMP_TASK
 	.uclamp_enabled		= 1,
 #endif

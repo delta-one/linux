@@ -16,6 +16,14 @@
 #define PAGE_SIZE	(_AC(1, UL) << PAGE_SHIFT)
 #define PAGE_MASK	(~(PAGE_SIZE - 1))
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_64BIT
+#define HUGE_MAX_HSTATE		2
+#else
+#define HUGE_MAX_HSTATE		1
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #define HPAGE_SHIFT		PMD_SHIFT
 #define HPAGE_SIZE		(_AC(1, UL) << HPAGE_SHIFT)
 #define HPAGE_MASK              (~(HPAGE_SIZE - 1))
@@ -44,6 +52,7 @@
 
 #ifndef __ASSEMBLY__
 
+<<<<<<< HEAD
 #ifdef CONFIG_RISCV_ISA_ZICBOZ
 void clear_page(void *page);
 #else
@@ -52,6 +61,12 @@ void clear_page(void *page);
 #define copy_page(to, from)			memcpy((to), (from), PAGE_SIZE)
 
 #define clear_user_page(pgaddr, vaddr, page)	clear_page(pgaddr)
+=======
+#define clear_page(pgaddr)			memset((pgaddr), 0, PAGE_SIZE)
+#define copy_page(to, from)			memcpy((to), (from), PAGE_SIZE)
+
+#define clear_user_page(pgaddr, vaddr, page)	memset((pgaddr), 0, PAGE_SIZE)
+>>>>>>> b7ba80a49124 (Commit)
 #define copy_user_page(vto, vfrom, vaddr, topg) \
 			memcpy((vto), (vfrom), PAGE_SIZE)
 
@@ -122,20 +137,35 @@ extern phys_addr_t phys_ram_base;
 	((x) >= PAGE_OFFSET && (!IS_ENABLED(CONFIG_64BIT) || (x) < PAGE_OFFSET + KERN_VIRT_SIZE))
 
 #define linear_mapping_pa_to_va(x)	((void *)((unsigned long)(x) + kernel_map.va_pa_offset))
+<<<<<<< HEAD
 #define kernel_mapping_pa_to_va(y)	({					\
 	unsigned long _y = (unsigned long)(y);					\
 	(IS_ENABLED(CONFIG_XIP_KERNEL) && _y < phys_ram_base) ?			\
 		(void *)(_y + kernel_map.va_kernel_xip_pa_offset) :		\
 		(void *)(_y + kernel_map.va_kernel_pa_offset + XIP_OFFSET);	\
+=======
+#define kernel_mapping_pa_to_va(y)	({						\
+	unsigned long _y = y;								\
+	(IS_ENABLED(CONFIG_XIP_KERNEL) && _y < phys_ram_base) ?					\
+		(void *)((unsigned long)(_y) + kernel_map.va_kernel_xip_pa_offset) :		\
+		(void *)((unsigned long)(_y) + kernel_map.va_kernel_pa_offset + XIP_OFFSET);	\
+>>>>>>> b7ba80a49124 (Commit)
 	})
 #define __pa_to_va_nodebug(x)		linear_mapping_pa_to_va(x)
 
 #define linear_mapping_va_to_pa(x)	((unsigned long)(x) - kernel_map.va_pa_offset)
 #define kernel_mapping_va_to_pa(y) ({						\
+<<<<<<< HEAD
 	unsigned long _y = (unsigned long)(y);					\
 	(IS_ENABLED(CONFIG_XIP_KERNEL) && _y < kernel_map.virt_addr + XIP_OFFSET) ? \
 		(_y - kernel_map.va_kernel_xip_pa_offset) :			\
 		(_y - kernel_map.va_kernel_pa_offset - XIP_OFFSET);		\
+=======
+	unsigned long _y = y;							\
+	(IS_ENABLED(CONFIG_XIP_KERNEL) && _y < kernel_map.virt_addr + XIP_OFFSET) ?	\
+		((unsigned long)(_y) - kernel_map.va_kernel_xip_pa_offset) :		\
+		((unsigned long)(_y) - kernel_map.va_kernel_pa_offset - XIP_OFFSET);	\
+>>>>>>> b7ba80a49124 (Commit)
 	})
 
 #define __va_to_pa_nodebug(x)	({						\
@@ -170,6 +200,14 @@ extern phys_addr_t __phys_addr_symbol(unsigned long x);
 
 #define sym_to_pfn(x)           __phys_to_pfn(__pa_symbol(x))
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_FLATMEM
+#define pfn_valid(pfn) \
+	(((pfn) >= ARCH_PFN_OFFSET) && (((pfn) - ARCH_PFN_OFFSET) < max_mapnr))
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __ASSEMBLY__ */
 
 #define virt_addr_valid(vaddr)	({						\

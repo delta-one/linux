@@ -11,8 +11,11 @@
 #include <linux/kernel.h>
 #include <linux/init.h>
 #include <linux/bug.h>
+<<<<<<< HEAD
 #include <linux/slab.h>
 #include <linux/sys_soc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/io.h>
 #include <asm/mipsregs.h>
@@ -21,6 +24,7 @@
 
 #include "common.h"
 
+<<<<<<< HEAD
 static struct ralink_soc_info *soc_info_ptr;
 
 static unsigned long rt5350_get_mem_size(void)
@@ -29,6 +33,15 @@ static unsigned long rt5350_get_mem_size(void)
 	u32 t;
 
 	t = __raw_readl(RT305X_SYSC_BASE + SYSC_REG_SYSTEM_CONFIG);
+=======
+static unsigned long rt5350_get_mem_size(void)
+{
+	void __iomem *sysc = (void __iomem *) KSEG1ADDR(RT305X_SYSC_BASE);
+	unsigned long ret;
+	u32 t;
+
+	t = __raw_readl(sysc + SYSC_REG_SYSTEM_CONFIG);
+>>>>>>> b7ba80a49124 (Commit)
 	t = (t >> RT5350_SYSCFG0_DRAM_SIZE_SHIFT) &
 		RT5350_SYSCFG0_DRAM_SIZE_MASK;
 
@@ -143,6 +156,7 @@ void __init ralink_of_remap(void)
 		panic("Failed to remap core resources");
 }
 
+<<<<<<< HEAD
 static unsigned int __init rt305x_get_soc_name0(void)
 {
 	return __raw_readl(RT305X_SYSC_BASE + SYSC_REG_CHIP_NAME0);
@@ -192,11 +206,26 @@ static bool __init rt5350_soc_valid(void)
 static const char __init *rt305x_get_soc_name(struct ralink_soc_info *soc_info)
 {
 	if (rt3052_soc_valid()) {
+=======
+void __init prom_soc_init(struct ralink_soc_info *soc_info)
+{
+	void __iomem *sysc = (void __iomem *) KSEG1ADDR(RT305X_SYSC_BASE);
+	unsigned char *name;
+	u32 n0;
+	u32 n1;
+	u32 id;
+
+	n0 = __raw_readl(sysc + SYSC_REG_CHIP_NAME0);
+	n1 = __raw_readl(sysc + SYSC_REG_CHIP_NAME1);
+
+	if (n0 == RT3052_CHIP_NAME0 && n1 == RT3052_CHIP_NAME1) {
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned long icache_sets;
 
 		icache_sets = (read_c0_config1() >> 22) & 7;
 		if (icache_sets == 1) {
 			ralink_soc = RT305X_SOC_RT3050;
+<<<<<<< HEAD
 			soc_info->compatible = "ralink,rt3050-soc";
 			return "RT3050";
 		} else {
@@ -280,12 +309,43 @@ device_initcall(rt305x_soc_dev_init);
 void __init prom_soc_init(struct ralink_soc_info *soc_info)
 {
 	const char *name = rt305x_get_soc_name(soc_info);
+=======
+			name = "RT3050";
+			soc_info->compatible = "ralink,rt3050-soc";
+		} else {
+			ralink_soc = RT305X_SOC_RT3052;
+			name = "RT3052";
+			soc_info->compatible = "ralink,rt3052-soc";
+		}
+	} else if (n0 == RT3350_CHIP_NAME0 && n1 == RT3350_CHIP_NAME1) {
+		ralink_soc = RT305X_SOC_RT3350;
+		name = "RT3350";
+		soc_info->compatible = "ralink,rt3350-soc";
+	} else if (n0 == RT3352_CHIP_NAME0 && n1 == RT3352_CHIP_NAME1) {
+		ralink_soc = RT305X_SOC_RT3352;
+		name = "RT3352";
+		soc_info->compatible = "ralink,rt3352-soc";
+	} else if (n0 == RT5350_CHIP_NAME0 && n1 == RT5350_CHIP_NAME1) {
+		ralink_soc = RT305X_SOC_RT5350;
+		name = "RT5350";
+		soc_info->compatible = "ralink,rt5350-soc";
+	} else {
+		panic("rt305x: unknown SoC, n0:%08x n1:%08x", n0, n1);
+	}
+
+	id = __raw_readl(sysc + SYSC_REG_CHIP_ID);
+>>>>>>> b7ba80a49124 (Commit)
 
 	snprintf(soc_info->sys_type, RAMIPS_SYS_TYPE_LEN,
 		"Ralink %s id:%u rev:%u",
 		name,
+<<<<<<< HEAD
 		rt305x_get_soc_ver(),
 		rt305x_get_soc_rev());
+=======
+		(id >> CHIP_ID_ID_SHIFT) & CHIP_ID_ID_MASK,
+		(id & CHIP_ID_REV_MASK));
+>>>>>>> b7ba80a49124 (Commit)
 
 	soc_info->mem_base = RT305X_SDRAM_BASE;
 	if (soc_is_rt5350()) {
@@ -297,6 +357,9 @@ void __init prom_soc_init(struct ralink_soc_info *soc_info)
 		soc_info->mem_size_min = RT3352_MEM_SIZE_MIN;
 		soc_info->mem_size_max = RT3352_MEM_SIZE_MAX;
 	}
+<<<<<<< HEAD
 
 	soc_info_ptr = soc_info;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

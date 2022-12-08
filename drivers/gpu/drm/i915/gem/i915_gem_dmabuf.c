@@ -25,6 +25,7 @@ static struct drm_i915_gem_object *dma_buf_to_obj(struct dma_buf *buf)
 	return to_intel_bo(buf->priv);
 }
 
+<<<<<<< HEAD
 static struct sg_table *i915_gem_map_dma_buf(struct dma_buf_attachment *attach,
 					     enum dma_data_direction dir)
 {
@@ -39,10 +40,24 @@ static struct sg_table *i915_gem_map_dma_buf(struct dma_buf_attachment *attach,
 	 */
 	sgt = kmalloc(sizeof(*sgt), GFP_KERNEL);
 	if (!sgt) {
+=======
+static struct sg_table *i915_gem_map_dma_buf(struct dma_buf_attachment *attachment,
+					     enum dma_data_direction dir)
+{
+	struct drm_i915_gem_object *obj = dma_buf_to_obj(attachment->dmabuf);
+	struct sg_table *st;
+	struct scatterlist *src, *dst;
+	int ret, i;
+
+	/* Copy sg so that we make an independent mapping */
+	st = kmalloc(sizeof(struct sg_table), GFP_KERNEL);
+	if (st == NULL) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -ENOMEM;
 		goto err;
 	}
 
+<<<<<<< HEAD
 	ret = sg_alloc_table(sgt, obj->mm.pages->orig_nents, GFP_KERNEL);
 	if (ret)
 		goto err_free;
@@ -63,6 +78,30 @@ err_free_sg:
 	sg_free_table(sgt);
 err_free:
 	kfree(sgt);
+=======
+	ret = sg_alloc_table(st, obj->mm.pages->nents, GFP_KERNEL);
+	if (ret)
+		goto err_free;
+
+	src = obj->mm.pages->sgl;
+	dst = st->sgl;
+	for (i = 0; i < obj->mm.pages->nents; i++) {
+		sg_set_page(dst, sg_page(src), src->length, 0);
+		dst = sg_next(dst);
+		src = sg_next(src);
+	}
+
+	ret = dma_map_sgtable(attachment->dev, st, dir, DMA_ATTR_SKIP_CPU_SYNC);
+	if (ret)
+		goto err_free_sg;
+
+	return st;
+
+err_free_sg:
+	sg_free_table(st);
+err_free:
+	kfree(st);
+>>>>>>> b7ba80a49124 (Commit)
 err:
 	return ERR_PTR(ret);
 }
@@ -73,7 +112,11 @@ static int i915_gem_dmabuf_vmap(struct dma_buf *dma_buf,
 	struct drm_i915_gem_object *obj = dma_buf_to_obj(dma_buf);
 	void *vaddr;
 
+<<<<<<< HEAD
 	vaddr = i915_gem_object_pin_map(obj, I915_MAP_WB);
+=======
+	vaddr = i915_gem_object_pin_map_unlocked(obj, I915_MAP_WB);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(vaddr))
 		return PTR_ERR(vaddr);
 
@@ -97,8 +140,11 @@ static int i915_gem_dmabuf_mmap(struct dma_buf *dma_buf, struct vm_area_struct *
 	struct drm_i915_private *i915 = to_i915(obj->base.dev);
 	int ret;
 
+<<<<<<< HEAD
 	dma_resv_assert_held(dma_buf->resv);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (obj->base.size < vma->vm_end - vma->vm_start)
 		return -EINVAL;
 
@@ -239,6 +285,7 @@ struct dma_buf *i915_gem_prime_export(struct drm_gem_object *gem_obj, int flags)
 static int i915_gem_object_get_pages_dmabuf(struct drm_i915_gem_object *obj)
 {
 	struct drm_i915_private *i915 = to_i915(obj->base.dev);
+<<<<<<< HEAD
 	struct sg_table *sgt;
 
 	assert_object_held(obj);
@@ -247,6 +294,17 @@ static int i915_gem_object_get_pages_dmabuf(struct drm_i915_gem_object *obj)
 				     DMA_BIDIRECTIONAL);
 	if (IS_ERR(sgt))
 		return PTR_ERR(sgt);
+=======
+	struct sg_table *pages;
+	unsigned int sg_page_sizes;
+
+	assert_object_held(obj);
+
+	pages = dma_buf_map_attachment(obj->base.import_attach,
+				       DMA_BIDIRECTIONAL);
+	if (IS_ERR(pages))
+		return PTR_ERR(pages);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * DG1 is special here since it still snoops transactions even with
@@ -263,15 +321,26 @@ static int i915_gem_object_get_pages_dmabuf(struct drm_i915_gem_object *obj)
 	    (!HAS_LLC(i915) && !IS_DG1(i915)))
 		wbinvd_on_all_cpus();
 
+<<<<<<< HEAD
 	__i915_gem_object_set_pages(obj, sgt);
+=======
+	sg_page_sizes = i915_sg_dma_sizes(pages->sgl);
+	__i915_gem_object_set_pages(obj, pages, sg_page_sizes);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 static void i915_gem_object_put_pages_dmabuf(struct drm_i915_gem_object *obj,
+<<<<<<< HEAD
 					     struct sg_table *sgt)
 {
 	dma_buf_unmap_attachment(obj->base.import_attach, sgt,
+=======
+					     struct sg_table *pages)
+{
+	dma_buf_unmap_attachment(obj->base.import_attach, pages,
+>>>>>>> b7ba80a49124 (Commit)
 				 DMA_BIDIRECTIONAL);
 }
 
@@ -314,7 +383,11 @@ struct drm_gem_object *i915_gem_prime_import(struct drm_device *dev,
 	get_dma_buf(dma_buf);
 
 	obj = i915_gem_object_alloc();
+<<<<<<< HEAD
 	if (!obj) {
+=======
+	if (obj == NULL) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -ENOMEM;
 		goto fail_detach;
 	}

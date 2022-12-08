@@ -1617,6 +1617,7 @@ hfcpci_l2l1D(struct mISDNchannel *ch, struct sk_buff *skb)
 		test_and_clear_bit(FLG_L2_ACTIVATED, &dch->Flags);
 		spin_lock_irqsave(&hc->lock, flags);
 		if (hc->hw.protocol == ISDN_P_NT_S0) {
+<<<<<<< HEAD
 			struct sk_buff_head free_queue;
 
 			__skb_queue_head_init(&free_queue);
@@ -1625,11 +1626,22 @@ hfcpci_l2l1D(struct mISDNchannel *ch, struct sk_buff *skb)
 			skb_queue_splice_init(&dch->squeue, &free_queue);
 			if (dch->tx_skb) {
 				__skb_queue_tail(&free_queue, dch->tx_skb);
+=======
+			/* prepare deactivation */
+			Write_hfc(hc, HFCPCI_STATES, 0x40);
+			skb_queue_purge(&dch->squeue);
+			if (dch->tx_skb) {
+				dev_kfree_skb(dch->tx_skb);
+>>>>>>> b7ba80a49124 (Commit)
 				dch->tx_skb = NULL;
 			}
 			dch->tx_idx = 0;
 			if (dch->rx_skb) {
+<<<<<<< HEAD
 				__skb_queue_tail(&free_queue, dch->rx_skb);
+=======
+				dev_kfree_skb(dch->rx_skb);
+>>>>>>> b7ba80a49124 (Commit)
 				dch->rx_skb = NULL;
 			}
 			test_and_clear_bit(FLG_TX_BUSY, &dch->Flags);
@@ -1642,12 +1654,19 @@ hfcpci_l2l1D(struct mISDNchannel *ch, struct sk_buff *skb)
 			hc->hw.mst_m &= ~HFCPCI_MASTER;
 			Write_hfc(hc, HFCPCI_MST_MODE, hc->hw.mst_m);
 			ret = 0;
+<<<<<<< HEAD
 			spin_unlock_irqrestore(&hc->lock, flags);
 			__skb_queue_purge(&free_queue);
 		} else {
 			ret = l1_event(dch->l1, hh->prim);
 			spin_unlock_irqrestore(&hc->lock, flags);
 		}
+=======
+		} else {
+			ret = l1_event(dch->l1, hh->prim);
+		}
+		spin_unlock_irqrestore(&hc->lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 	if (!ret)
@@ -2350,7 +2369,12 @@ HFC_init(void)
 static void __exit
 HFC_cleanup(void)
 {
+<<<<<<< HEAD
 	del_timer_sync(&hfc_tl);
+=======
+	if (timer_pending(&hfc_tl))
+		del_timer_sync(&hfc_tl);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pci_unregister_driver(&hfc_driver);
 }

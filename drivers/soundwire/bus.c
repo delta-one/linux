@@ -225,9 +225,15 @@ static inline int do_transfer(struct sdw_bus *bus, struct sdw_msg *msg)
 }
 
 static inline int do_transfer_defer(struct sdw_bus *bus,
+<<<<<<< HEAD
 				    struct sdw_msg *msg)
 {
 	struct sdw_defer *defer = &bus->defer_msg;
+=======
+				    struct sdw_msg *msg,
+				    struct sdw_defer *defer)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	int retry = bus->prop.err_threshold;
 	enum sdw_command_response resp;
 	int ret = 0, i;
@@ -237,7 +243,28 @@ static inline int do_transfer_defer(struct sdw_bus *bus,
 	init_completion(&defer->complete);
 
 	for (i = 0; i <= retry; i++) {
+<<<<<<< HEAD
 		resp = bus->ops->xfer_msg_defer(bus);
+=======
+		resp = bus->ops->xfer_msg_defer(bus, msg, defer);
+		ret = find_response_code(resp);
+		/* if cmd is ok or ignored return */
+		if (ret == 0 || ret == -ENODATA)
+			return ret;
+	}
+
+	return ret;
+}
+
+static int sdw_reset_page(struct sdw_bus *bus, u16 dev_num)
+{
+	int retry = bus->prop.err_threshold;
+	enum sdw_command_response resp;
+	int ret = 0, i;
+
+	for (i = 0; i <= retry; i++) {
+		resp = bus->ops->reset_page_addr(bus, dev_num);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = find_response_code(resp);
 		/* if cmd is ok or ignored return */
 		if (ret == 0 || ret == -ENODATA)
@@ -258,6 +285,12 @@ static int sdw_transfer_unlocked(struct sdw_bus *bus, struct sdw_msg *msg)
 			(msg->flags & SDW_MSG_FLAG_WRITE) ? "write" : "read",
 			msg->addr, msg->len);
 
+<<<<<<< HEAD
+=======
+	if (msg->page)
+		sdw_reset_page(bus, msg->dev_num);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -315,21 +348,40 @@ EXPORT_SYMBOL(sdw_show_ping_status);
  * sdw_transfer_defer() - Asynchronously transfer message to a SDW Slave device
  * @bus: SDW bus
  * @msg: SDW message to be xfered
+<<<<<<< HEAD
  *
  * Caller needs to hold the msg_lock lock while calling this
  */
 int sdw_transfer_defer(struct sdw_bus *bus, struct sdw_msg *msg)
+=======
+ * @defer: Defer block for signal completion
+ *
+ * Caller needs to hold the msg_lock lock while calling this
+ */
+int sdw_transfer_defer(struct sdw_bus *bus, struct sdw_msg *msg,
+		       struct sdw_defer *defer)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
 	if (!bus->ops->xfer_msg_defer)
 		return -ENOTSUPP;
 
+<<<<<<< HEAD
 	ret = do_transfer_defer(bus, msg);
+=======
+	ret = do_transfer_defer(bus, msg, defer);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret != 0 && ret != -ENODATA)
 		dev_err(bus->dev, "Defer trf on Slave %d failed:%d\n",
 			msg->dev_num, ret);
 
+<<<<<<< HEAD
+=======
+	if (msg->page)
+		sdw_reset_page(bus, msg->dev_num);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -389,7 +441,12 @@ int sdw_fill_msg(struct sdw_msg *msg, struct sdw_slave *slave,
  * all clients need to use the pm versions
  */
 
+<<<<<<< HEAD
 int sdw_nread_no_pm(struct sdw_slave *slave, u32 addr, size_t count, u8 *val)
+=======
+static int
+sdw_nread_no_pm(struct sdw_slave *slave, u32 addr, size_t count, u8 *val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sdw_msg msg;
 	int ret;
@@ -404,9 +461,15 @@ int sdw_nread_no_pm(struct sdw_slave *slave, u32 addr, size_t count, u8 *val)
 		ret = 0;
 	return ret;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(sdw_nread_no_pm);
 
 int sdw_nwrite_no_pm(struct sdw_slave *slave, u32 addr, size_t count, const u8 *val)
+=======
+
+static int
+sdw_nwrite_no_pm(struct sdw_slave *slave, u32 addr, size_t count, const u8 *val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sdw_msg msg;
 	int ret;
@@ -421,7 +484,10 @@ int sdw_nwrite_no_pm(struct sdw_slave *slave, u32 addr, size_t count, const u8 *
 		ret = 0;
 	return ret;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(sdw_nwrite_no_pm);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int sdw_write_no_pm(struct sdw_slave *slave, u32 addr, u8 value)
 {
@@ -1189,7 +1255,11 @@ int sdw_configure_dpn_intr(struct sdw_slave *slave,
 		val &= ~SDW_DPN_INT_PORT_READY;
 	}
 
+<<<<<<< HEAD
 	ret = sdw_update_no_pm(slave, addr, (mask | SDW_DPN_INT_PORT_READY), val);
+=======
+	ret = sdw_update(slave, addr, (mask | SDW_DPN_INT_PORT_READY), val);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		dev_err(&slave->dev,
 			"SDW_DPN_INTMASK write failed:%d\n", val);
@@ -1208,11 +1278,18 @@ static int sdw_slave_set_frequency(struct sdw_slave *slave)
 
 	/*
 	 * frequency base and scale registers are required for SDCA
+<<<<<<< HEAD
 	 * devices. They may also be used for 1.2+/non-SDCA devices.
 	 * Driver can set the property, we will need a DisCo property
 	 * to discover this case from platform firmware.
 	 */
 	if (!slave->id.class_id && !slave->prop.clock_reg_supported)
+=======
+	 * devices. They may also be used for 1.2+/non-SDCA devices,
+	 * but we will need a DisCo property to cover this case
+	 */
+	if (!slave->id.class_id)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	if (!mclk_freq) {
@@ -1563,7 +1640,11 @@ static int sdw_handle_slave_alerts(struct sdw_slave *slave)
 		goto io_err;
 	}
 
+<<<<<<< HEAD
 	if (slave->id.class_id) {
+=======
+	if (slave->prop.is_sdca) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = sdw_read_no_pm(slave, SDW_DP0_INT);
 		if (ret < 0) {
 			dev_err(&slave->dev,
@@ -1700,7 +1781,11 @@ static int sdw_handle_slave_alerts(struct sdw_slave *slave)
 			goto io_err;
 		}
 
+<<<<<<< HEAD
 		if (slave->id.class_id) {
+=======
+		if (slave->prop.is_sdca) {
+>>>>>>> b7ba80a49124 (Commit)
 			ret = sdw_read_no_pm(slave, SDW_DP0_INT);
 			if (ret < 0) {
 				dev_err(&slave->dev,

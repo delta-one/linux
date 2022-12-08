@@ -443,7 +443,11 @@ static int bcm63xx_drv_pcmcia_remove(struct platform_device *pdev)
 	struct resource *res;
 
 	skt = platform_get_drvdata(pdev);
+<<<<<<< HEAD
 	timer_shutdown_sync(&skt->timer);
+=======
+	del_timer_sync(&skt->timer);
+>>>>>>> b7ba80a49124 (Commit)
 	iounmap(skt->base);
 	iounmap(skt->io_base);
 	res = skt->reg_res;

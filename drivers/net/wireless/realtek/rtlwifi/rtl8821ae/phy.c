@@ -1598,6 +1598,21 @@ static bool _rtl8812ae_get_integer_from_string(const char *str, u8 *pint)
 	return true;
 }
 
+<<<<<<< HEAD
+=======
+static bool _rtl8812ae_eq_n_byte(const char *str1, const char *str2, u32 num)
+{
+	if (num == 0)
+		return false;
+	while (num > 0) {
+		num--;
+		if (str1[num] != str2[num])
+			return false;
+	}
+	return true;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static s8 _rtl8812ae_phy_get_chnl_idx_of_txpwr_lmt(struct ieee80211_hw *hw,
 					      u8 band, u8 channel)
 {
@@ -1647,6 +1662,7 @@ static void _rtl8812ae_phy_set_txpower_limit(struct ieee80211_hw *hw,
 	power_limit = power_limit > MAX_POWER_INDEX ?
 		      MAX_POWER_INDEX : power_limit;
 
+<<<<<<< HEAD
 	if (strcmp(pregulation, "FCC") == 0)
 		regulation = 0;
 	else if (strcmp(pregulation, "MKK") == 0)
@@ -1683,6 +1699,44 @@ static void _rtl8812ae_phy_set_txpower_limit(struct ieee80211_hw *hw,
 		bandwidth = 3;
 
 	if (strcmp(pband, "2.4G") == 0) {
+=======
+	if (_rtl8812ae_eq_n_byte(pregulation, "FCC", 3))
+		regulation = 0;
+	else if (_rtl8812ae_eq_n_byte(pregulation, "MKK", 3))
+		regulation = 1;
+	else if (_rtl8812ae_eq_n_byte(pregulation, "ETSI", 4))
+		regulation = 2;
+	else if (_rtl8812ae_eq_n_byte(pregulation, "WW13", 4))
+		regulation = 3;
+
+	if (_rtl8812ae_eq_n_byte(prate_section, "CCK", 3))
+		rate_section = 0;
+	else if (_rtl8812ae_eq_n_byte(prate_section, "OFDM", 4))
+		rate_section = 1;
+	else if (_rtl8812ae_eq_n_byte(prate_section, "HT", 2) &&
+		 _rtl8812ae_eq_n_byte(prf_path, "1T", 2))
+		rate_section = 2;
+	else if (_rtl8812ae_eq_n_byte(prate_section, "HT", 2) &&
+		 _rtl8812ae_eq_n_byte(prf_path, "2T", 2))
+		rate_section = 3;
+	else if (_rtl8812ae_eq_n_byte(prate_section, "VHT", 3) &&
+		 _rtl8812ae_eq_n_byte(prf_path, "1T", 2))
+		rate_section = 4;
+	else if (_rtl8812ae_eq_n_byte(prate_section, "VHT", 3) &&
+		 _rtl8812ae_eq_n_byte(prf_path, "2T", 2))
+		rate_section = 5;
+
+	if (_rtl8812ae_eq_n_byte(pbandwidth, "20M", 3))
+		bandwidth = 0;
+	else if (_rtl8812ae_eq_n_byte(pbandwidth, "40M", 3))
+		bandwidth = 1;
+	else if (_rtl8812ae_eq_n_byte(pbandwidth, "80M", 3))
+		bandwidth = 2;
+	else if (_rtl8812ae_eq_n_byte(pbandwidth, "160M", 4))
+		bandwidth = 3;
+
+	if (_rtl8812ae_eq_n_byte(pband, "2.4G", 4)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = _rtl8812ae_phy_get_chnl_idx_of_txpwr_lmt(hw,
 							       BAND_ON_2_4G,
 							       channel);
@@ -1706,7 +1760,11 @@ static void _rtl8812ae_phy_set_txpower_limit(struct ieee80211_hw *hw,
 			regulation, bandwidth, rate_section, channel_index,
 			rtlphy->txpwr_limit_2_4g[regulation][bandwidth]
 				[rate_section][channel_index][RF90_PATH_A]);
+<<<<<<< HEAD
 	} else if (strcmp(pband, "5G") == 0) {
+=======
+	} else if (_rtl8812ae_eq_n_byte(pband, "5G", 2)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = _rtl8812ae_phy_get_chnl_idx_of_txpwr_lmt(hw,
 							       BAND_ON_5G,
 							       channel);

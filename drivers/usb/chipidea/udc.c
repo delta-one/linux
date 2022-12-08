@@ -2181,6 +2181,7 @@ static void udc_id_switch_for_host(struct ci_hdrc *ci)
 				     ci->platdata->pins_default);
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_PM_SLEEP
 static void udc_suspend(struct ci_hdrc *ci)
 {
@@ -2209,6 +2210,8 @@ static void udc_resume(struct ci_hdrc *ci, bool power_lost)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * ci_hdrc_gadget_init - initialize device related bits
  * @ci: the controller
@@ -2229,10 +2232,13 @@ int ci_hdrc_gadget_init(struct ci_hdrc *ci)
 
 	rdrv->start	= udc_id_switch_for_device;
 	rdrv->stop	= udc_id_switch_for_host;
+<<<<<<< HEAD
 #ifdef CONFIG_PM_SLEEP
 	rdrv->suspend	= udc_suspend;
 	rdrv->resume	= udc_resume;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rdrv->irq	= udc_irq;
 	rdrv->name	= "gadget";
 

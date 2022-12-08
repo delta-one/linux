@@ -103,10 +103,21 @@ static ssize_t __iter_get_bvecs(struct iov_iter *iter, size_t maxsize,
 		size += bytes;
 
 		for ( ; bytes; idx++, bvec_idx++) {
+<<<<<<< HEAD
 			int len = min_t(int, bytes, PAGE_SIZE - start);
 
 			bvec_set_page(&bvecs[bvec_idx], pages[idx], len, start);
 			bytes -= len;
+=======
+			struct bio_vec bv = {
+				.bv_page = pages[idx],
+				.bv_len = min_t(int, bytes, PAGE_SIZE - start),
+				.bv_offset = start,
+			};
+
+			bvecs[bvec_idx] = bv;
+			bytes -= bv.bv_len;
+>>>>>>> b7ba80a49124 (Commit)
 			start = 0;
 		}
 	}
@@ -309,7 +320,11 @@ int ceph_renew_caps(struct inode *inode, int fmode)
 		spin_unlock(&ci->i_ceph_lock);
 		dout("renew caps %p want %s issued %s updating mds_wanted\n",
 		     inode, ceph_cap_string(wanted), ceph_cap_string(issued));
+<<<<<<< HEAD
 		ceph_check_caps(ci, 0);
+=======
+		ceph_check_caps(ci, 0, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 	spin_unlock(&ci->i_ceph_lock);
@@ -404,7 +419,11 @@ int ceph_open(struct inode *inode, struct file *file)
 		if ((issued & wanted) != wanted &&
 		    (mds_wanted & wanted) != wanted &&
 		    ceph_snap(inode) != CEPH_SNAPDIR)
+<<<<<<< HEAD
 			ceph_check_caps(ci, 0);
+=======
+			ceph_check_caps(ci, 0, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 		return ceph_init_file(inode, file, fmode);
 	} else if (ceph_snap(inode) != CEPH_NOSNAP &&
@@ -530,12 +549,16 @@ static void wake_async_create_waiters(struct inode *inode,
 				      struct ceph_mds_session *session)
 {
 	struct ceph_inode_info *ci = ceph_inode(inode);
+<<<<<<< HEAD
 	bool check_cap = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock(&ci->i_ceph_lock);
 	if (ci->i_ceph_flags & CEPH_I_ASYNC_CREATE) {
 		ci->i_ceph_flags &= ~CEPH_I_ASYNC_CREATE;
 		wake_up_bit(&ci->i_ceph_flags, CEPH_ASYNC_CREATE_BIT);
+<<<<<<< HEAD
 
 		if (ci->i_ceph_flags & CEPH_I_ASYNC_CHECK_CAPS) {
 			ci->i_ceph_flags &= ~CEPH_I_ASYNC_CHECK_CAPS;
@@ -547,6 +570,11 @@ static void wake_async_create_waiters(struct inode *inode,
 
 	if (check_cap)
 		ceph_check_caps(ci, CHECK_CAPS_FLUSH);
+=======
+	}
+	ceph_kick_flushing_inode_caps(session, ci);
+	spin_unlock(&ci->i_ceph_lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ceph_async_create_cb(struct ceph_mds_client *mdsc,
@@ -1097,7 +1125,11 @@ static void ceph_aio_complete(struct inode *inode,
 		loff_t endoff = aio_req->iocb->ki_pos + aio_req->total_len;
 		if (endoff > i_size_read(inode)) {
 			if (ceph_inode_set_size(inode, endoff))
+<<<<<<< HEAD
 				ceph_check_caps(ci, CHECK_CAPS_AUTHONLY);
+=======
+				ceph_check_caps(ci, CHECK_CAPS_AUTHONLY, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		spin_lock(&ci->i_ceph_lock);
@@ -1166,7 +1198,11 @@ static void ceph_aio_complete_req(struct ceph_osd_request *req)
 				aio_req->total_len = rc + zlen;
 			}
 
+<<<<<<< HEAD
 			iov_iter_bvec(&i, ITER_DEST, osd_data->bvec_pos.bvecs,
+=======
+			iov_iter_bvec(&i, READ, osd_data->bvec_pos.bvecs,
+>>>>>>> b7ba80a49124 (Commit)
 				      osd_data->num_bvecs, len);
 			iov_iter_advance(&i, rc);
 			iov_iter_zero(zlen, &i);
@@ -1405,7 +1441,11 @@ ceph_direct_read_write(struct kiocb *iocb, struct iov_iter *iter,
 				int zlen = min_t(size_t, len - ret,
 						 size - pos - ret);
 
+<<<<<<< HEAD
 				iov_iter_bvec(&i, ITER_DEST, bvecs, num_pages, len);
+=======
+				iov_iter_bvec(&i, READ, bvecs, num_pages, len);
+>>>>>>> b7ba80a49124 (Commit)
 				iov_iter_advance(&i, ret);
 				iov_iter_zero(zlen, &i);
 				ret += zlen;
@@ -1426,7 +1466,12 @@ ceph_direct_read_write(struct kiocb *iocb, struct iov_iter *iter,
 		if (write && pos > size) {
 			if (ceph_inode_set_size(inode, pos))
 				ceph_check_caps(ceph_inode(inode),
+<<<<<<< HEAD
 						CHECK_CAPS_AUTHONLY);
+=======
+						CHECK_CAPS_AUTHONLY,
+						NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -1581,7 +1626,12 @@ out:
 			check_caps = ceph_inode_set_size(inode, pos);
 			if (check_caps)
 				ceph_check_caps(ceph_inode(inode),
+<<<<<<< HEAD
 						CHECK_CAPS_AUTHONLY);
+=======
+						CHECK_CAPS_AUTHONLY,
+						NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 	}
@@ -1909,7 +1959,11 @@ retry_snap:
 		if (dirty)
 			__mark_inode_dirty(inode, dirty);
 		if (ceph_quota_is_max_bytes_approaching(inode, iocb->ki_pos))
+<<<<<<< HEAD
 			ceph_check_caps(ci, CHECK_CAPS_FLUSH);
+=======
+			ceph_check_caps(ci, CHECK_CAPS_FLUSH, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	dout("aio_write %p %llx.%llx %llu~%u  dropping cap refs on %s\n",
@@ -2007,9 +2061,12 @@ static int ceph_zero_partial_object(struct inode *inode,
 	loff_t zero = 0;
 	int op;
 
+<<<<<<< HEAD
 	if (ceph_inode_is_shutdown(inode))
 		return -EIO;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!length) {
 		op = offset ? CEPH_OSD_OP_DELETE : CEPH_OSD_OP_TRUNCATE;
 		length = &zero;
@@ -2098,9 +2155,12 @@ static long ceph_fallocate(struct file *file, int mode,
 	loff_t endoff = 0;
 	loff_t size;
 
+<<<<<<< HEAD
 	dout("%s %p %llx.%llx mode %x, offset %llu length %llu\n", __func__,
 	     inode, ceph_vinop(inode), mode, offset, length);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (mode != (FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE))
 		return -EOPNOTSUPP;
 
@@ -2135,10 +2195,13 @@ static long ceph_fallocate(struct file *file, int mode,
 	if (ret < 0)
 		goto unlock;
 
+<<<<<<< HEAD
 	ret = file_modified(file);
 	if (ret)
 		goto put_caps;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	filemap_invalidate_lock(inode->i_mapping);
 	ceph_fscache_invalidate(inode, false);
 	ceph_zero_pagecache_range(inode, offset, length);
@@ -2154,7 +2217,10 @@ static long ceph_fallocate(struct file *file, int mode,
 	}
 	filemap_invalidate_unlock(inode->i_mapping);
 
+<<<<<<< HEAD
 put_caps:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ceph_put_cap_refs(ci, got);
 unlock:
 	inode_unlock(inode);
@@ -2535,7 +2601,12 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
 		/* Let the MDS know about dst file size change */
 		if (ceph_inode_set_size(dst_inode, dst_off) ||
 		    ceph_quota_is_max_bytes_approaching(dst_inode, dst_off))
+<<<<<<< HEAD
 			ceph_check_caps(dst_ci, CHECK_CAPS_AUTHONLY | CHECK_CAPS_FLUSH);
+=======
+			ceph_check_caps(dst_ci, CHECK_CAPS_AUTHONLY | CHECK_CAPS_FLUSH,
+					NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	/* Mark Fw dirty */
 	spin_lock(&dst_ci->i_ceph_lock);

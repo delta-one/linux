@@ -18,7 +18,10 @@
 	chassis-type = "handset";
 
 	aliases {
+<<<<<<< HEAD
 		mmc0 = &mmc_0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		serial0 = &serial_0;
 		serial1 = &serial_1;
 		serial2 = &serial_2;

@@ -792,7 +792,11 @@ static struct platform_driver ines_ptp_ctrl_driver = {
 	.remove = ines_ptp_ctrl_remove,
 	.driver = {
 		.name = "ines_ptp_ctrl",
+<<<<<<< HEAD
 		.of_match_table = ines_ptp_ctrl_of_match,
+=======
+		.of_match_table = of_match_ptr(ines_ptp_ctrl_of_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 module_platform_driver(ines_ptp_ctrl_driver);

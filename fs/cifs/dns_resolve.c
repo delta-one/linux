@@ -12,7 +12,10 @@
  *
  */
 
+<<<<<<< HEAD
 #include <linux/inet.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/dns_resolver.h>
 #include "dns_resolve.h"
@@ -26,6 +29,7 @@
  * @ip_addr: Where to return the IP address.
  * @expiry: Where to return the expiry time for the dns record.
  *
+<<<<<<< HEAD
  * Returns zero success, -ve on error.
  */
 int
@@ -33,6 +37,19 @@ dns_resolve_server_name_to_ip(const char *unc, struct sockaddr *ip_addr, time64_
 {
 	const char *hostname, *sep;
 	char *ip;
+=======
+ * The IP address will be returned in string form, and the caller is
+ * responsible for freeing it.
+ *
+ * Returns length of result on success, -ve on error.
+ */
+int
+dns_resolve_server_name_to_ip(const char *unc, char **ip_addr, time64_t *expiry)
+{
+	struct sockaddr_storage ss;
+	const char *hostname, *sep;
+	char *name;
+>>>>>>> b7ba80a49124 (Commit)
 	int len, rc;
 
 	if (!ip_addr || !unc)
@@ -57,6 +74,7 @@ dns_resolve_server_name_to_ip(const char *unc, struct sockaddr *ip_addr, time64_
 			 __func__, unc);
 
 	/* Try to interpret hostname as an IPv4 or IPv6 address */
+<<<<<<< HEAD
 	rc = cifs_convert_address(ip_addr, hostname, len);
 	if (rc > 0) {
 		cifs_dbg(FYI, "%s: unc is IP, skipping dns upcall: %*.*s\n", __func__, len, len,
@@ -85,4 +103,32 @@ dns_resolve_server_name_to_ip(const char *unc, struct sockaddr *ip_addr, time64_
 			rc = 0;
 	}
 	return rc;
+=======
+	rc = cifs_convert_address((struct sockaddr *)&ss, hostname, len);
+	if (rc > 0)
+		goto name_is_IP_address;
+
+	/* Perform the upcall */
+	rc = dns_query(current->nsproxy->net_ns, NULL, hostname, len,
+		       NULL, ip_addr, expiry, false);
+	if (rc < 0)
+		cifs_dbg(FYI, "%s: unable to resolve: %*.*s\n",
+			 __func__, len, len, hostname);
+	else
+		cifs_dbg(FYI, "%s: resolved: %*.*s to %s expiry %llu\n",
+			 __func__, len, len, hostname, *ip_addr,
+			 expiry ? (*expiry) : 0);
+	return rc;
+
+name_is_IP_address:
+	name = kmalloc(len + 1, GFP_KERNEL);
+	if (!name)
+		return -ENOMEM;
+	memcpy(name, hostname, len);
+	name[len] = 0;
+	cifs_dbg(FYI, "%s: unc is IP, skipping dns upcall: %s\n",
+		 __func__, name);
+	*ip_addr = name;
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }

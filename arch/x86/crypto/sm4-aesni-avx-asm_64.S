@@ -14,7 +14,10 @@
  */
 
 #include <linux/linkage.h>
+<<<<<<< HEAD
 #include <linux/cfi_types.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/frame.h>
 
 #define rRIP         (%rip)
@@ -140,11 +143,19 @@
 
 
 .text
+<<<<<<< HEAD
+=======
+.align 16
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * void sm4_aesni_avx_crypt4(const u32 *rk, u8 *dst,
  *                           const u8 *src, int nblocks)
  */
+<<<<<<< HEAD
+=======
+.align 8
+>>>>>>> b7ba80a49124 (Commit)
 SYM_FUNC_START(sm4_aesni_avx_crypt4)
 	/* input:
 	 *	%rdi: round key array, CTX
@@ -248,6 +259,10 @@ SYM_FUNC_START(sm4_aesni_avx_crypt4)
 	RET;
 SYM_FUNC_END(sm4_aesni_avx_crypt4)
 
+<<<<<<< HEAD
+=======
+.align 8
+>>>>>>> b7ba80a49124 (Commit)
 SYM_FUNC_START_LOCAL(__sm4_crypt_blk8)
 	/* input:
 	 *	%rdi: round key array, CTX
@@ -361,6 +376,10 @@ SYM_FUNC_END(__sm4_crypt_blk8)
  * void sm4_aesni_avx_crypt8(const u32 *rk, u8 *dst,
  *                           const u8 *src, int nblocks)
  */
+<<<<<<< HEAD
+=======
+.align 8
+>>>>>>> b7ba80a49124 (Commit)
 SYM_FUNC_START(sm4_aesni_avx_crypt8)
 	/* input:
 	 *	%rdi: round key array, CTX
@@ -416,7 +435,12 @@ SYM_FUNC_END(sm4_aesni_avx_crypt8)
  * void sm4_aesni_avx_ctr_enc_blk8(const u32 *rk, u8 *dst,
  *                                 const u8 *src, u8 *iv)
  */
+<<<<<<< HEAD
 SYM_TYPED_FUNC_START(sm4_aesni_avx_ctr_enc_blk8)
+=======
+.align 8
+SYM_FUNC_START(sm4_aesni_avx_ctr_enc_blk8)
+>>>>>>> b7ba80a49124 (Commit)
 	/* input:
 	 *	%rdi: round key array, CTX
 	 *	%rsi: dst (8 blocks)
@@ -490,7 +514,12 @@ SYM_FUNC_END(sm4_aesni_avx_ctr_enc_blk8)
  * void sm4_aesni_avx_cbc_dec_blk8(const u32 *rk, u8 *dst,
  *                                 const u8 *src, u8 *iv)
  */
+<<<<<<< HEAD
 SYM_TYPED_FUNC_START(sm4_aesni_avx_cbc_dec_blk8)
+=======
+.align 8
+SYM_FUNC_START(sm4_aesni_avx_cbc_dec_blk8)
+>>>>>>> b7ba80a49124 (Commit)
 	/* input:
 	 *	%rdi: round key array, CTX
 	 *	%rsi: dst (8 blocks)
@@ -539,7 +568,12 @@ SYM_FUNC_END(sm4_aesni_avx_cbc_dec_blk8)
  * void sm4_aesni_avx_cfb_dec_blk8(const u32 *rk, u8 *dst,
  *                                 const u8 *src, u8 *iv)
  */
+<<<<<<< HEAD
 SYM_TYPED_FUNC_START(sm4_aesni_avx_cfb_dec_blk8)
+=======
+.align 8
+SYM_FUNC_START(sm4_aesni_avx_cfb_dec_blk8)
+>>>>>>> b7ba80a49124 (Commit)
 	/* input:
 	 *	%rdi: round key array, CTX
 	 *	%rsi: dst (8 blocks)

@@ -68,7 +68,11 @@ Before contributing, carefully read the appropriate documentation:
 * Documentation/process/development-process.rst
 * Documentation/process/submitting-patches.rst
 * Documentation/admin-guide/reporting-issues.rst
+<<<<<<< HEAD
 * Documentation/process/security-bugs.rst
+=======
+* Documentation/admin-guide/security-bugs.rst
+>>>>>>> b7ba80a49124 (Commit)
 
 Then send a patch (including a commit log with all the details listed
 below) and follow up on any feedback from other developers.

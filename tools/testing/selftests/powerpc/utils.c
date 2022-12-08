@@ -8,8 +8,11 @@
 #include <elf.h>
 #include <errno.h>
 #include <fcntl.h>
+<<<<<<< HEAD
 #include <inttypes.h>
 #include <limits.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <link.h>
 #include <sched.h>
 #include <stdio.h>
@@ -28,6 +31,7 @@
 
 static char auxv[4096];
 
+<<<<<<< HEAD
 int read_file(const char *path, char *buf, size_t count, size_t *len)
 {
 	ssize_t rc;
@@ -382,6 +386,36 @@ int write_ulong(const char *path, unsigned long result, int base)
 out:
 	errno = -err;
 	return err;
+=======
+int read_auxv(char *buf, ssize_t buf_size)
+{
+	ssize_t num;
+	int rc, fd;
+
+	fd = open("/proc/self/auxv", O_RDONLY);
+	if (fd == -1) {
+		perror("open");
+		return -errno;
+	}
+
+	num = read(fd, buf, buf_size);
+	if (num < 0) {
+		perror("read");
+		rc = -EIO;
+		goto out;
+	}
+
+	if (num > buf_size) {
+		printf("overflowed auxv buffer\n");
+		rc = -EOVERFLOW;
+		goto out;
+	}
+
+	rc = 0;
+out:
+	close(fd);
+	return rc;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void *find_auxv_entry(int type, char *auxv)
@@ -470,6 +504,7 @@ bool is_ppc64le(void)
 int read_sysfs_file(char *fpath, char *result, size_t result_size)
 {
 	char path[PATH_MAX] = "/sys/";
+<<<<<<< HEAD
 
 	strncat(path, fpath, PATH_MAX - strlen(path) - 1);
 
@@ -495,6 +530,67 @@ int write_debugfs_int(const char *debugfs_file, int result)
 	snprintf(value, 16, "%d", result);
 
 	return write_debugfs_file(debugfs_file, value, strlen(value));
+=======
+	int rc = -1, fd;
+
+	strncat(path, fpath, PATH_MAX - strlen(path) - 1);
+
+	if ((fd = open(path, O_RDONLY)) < 0)
+		return rc;
+
+	rc = read(fd, result, result_size);
+
+	close(fd);
+
+	if (rc < 0)
+		return rc;
+
+	return 0;
+}
+
+int read_debugfs_file(char *debugfs_file, int *result)
+{
+	int rc = -1, fd;
+	char path[PATH_MAX];
+	char value[16];
+
+	strcpy(path, "/sys/kernel/debug/");
+	strncat(path, debugfs_file, PATH_MAX - strlen(path) - 1);
+
+	if ((fd = open(path, O_RDONLY)) < 0)
+		return rc;
+
+	if ((rc = read(fd, value, sizeof(value))) < 0)
+		return rc;
+
+	value[15] = 0;
+	*result = atoi(value);
+	close(fd);
+
+	return 0;
+}
+
+int write_debugfs_file(char *debugfs_file, int result)
+{
+	int rc = -1, fd;
+	char path[PATH_MAX];
+	char value[16];
+
+	strcpy(path, "/sys/kernel/debug/");
+	strncat(path, debugfs_file, PATH_MAX - strlen(path) - 1);
+
+	if ((fd = open(path, O_WRONLY)) < 0)
+		return rc;
+
+	snprintf(value, 16, "%d", result);
+
+	if ((rc = write(fd, value, strlen(value))) < 0)
+		return rc;
+
+	close(fd);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static long perf_event_open(struct perf_event_attr *hw_event, pid_t pid,

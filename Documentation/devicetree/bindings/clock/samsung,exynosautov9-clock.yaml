@@ -148,7 +148,11 @@ allOf:
           items:
             - const: oscclk
             - const: dout_clkcmu_fsys1_bus
+<<<<<<< HEAD
             - const: gout_clkcmu_fsys1_mmc_card
+=======
+            - const: dout_clkcmu_fsys1_mmc_card
+>>>>>>> b7ba80a49124 (Commit)
             - const: dout_clkcmu_fsys1_usbdrd
 
   - if:

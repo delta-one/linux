@@ -22,13 +22,22 @@ properties:
 
   samsung,pmu-syscon:
     $ref: /schemas/types.yaml#/definitions/phandle
+<<<<<<< HEAD
     deprecated: true
     description:
       Phandle to PMU system controller interface (if not a child of PMU).
+=======
+    description:
+      Phandle to PMU system controller interface.
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible
   - "#phy-cells"
+<<<<<<< HEAD
+=======
+  - samsung,pmu-syscon
+>>>>>>> b7ba80a49124 (Commit)
 
 additionalProperties: false
 
@@ -36,5 +45,9 @@ examples:
   - |
     phy {
         compatible = "samsung,exynos5420-dp-video-phy";
+<<<<<<< HEAD
+=======
+        samsung,pmu-syscon = <&pmu_system_controller>;
+>>>>>>> b7ba80a49124 (Commit)
         #phy-cells = <0>;
     };

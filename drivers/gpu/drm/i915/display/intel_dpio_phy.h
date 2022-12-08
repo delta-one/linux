@@ -8,6 +8,7 @@
 
 #include <linux/types.h>
 
+<<<<<<< HEAD
 enum pipe;
 enum port;
 struct drm_i915_private;
@@ -26,6 +27,15 @@ enum dpio_phy {
 	DPIO_PHY2,
 };
 
+=======
+enum dpio_channel;
+enum dpio_phy;
+enum port;
+struct drm_i915_private;
+struct intel_crtc_state;
+struct intel_encoder;
+
+>>>>>>> b7ba80a49124 (Commit)
 void bxt_port_to_phy_channel(struct drm_i915_private *dev_priv, enum port port,
 			     enum dpio_phy *phy, enum dpio_channel *ch);
 void bxt_ddi_phy_set_signal_levels(struct intel_encoder *encoder,
@@ -41,10 +51,13 @@ void bxt_ddi_phy_set_lane_optim_mask(struct intel_encoder *encoder,
 				     u8 lane_lat_optim_mask);
 u8 bxt_ddi_phy_get_lane_lat_optim_mask(struct intel_encoder *encoder);
 
+<<<<<<< HEAD
 enum dpio_channel vlv_dig_port_to_channel(struct intel_digital_port *dig_port);
 enum dpio_phy vlv_dig_port_to_phy(struct intel_digital_port *dig_port);
 enum dpio_channel vlv_pipe_to_channel(enum pipe pipe);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void chv_set_phy_signal_level(struct intel_encoder *encoder,
 			      const struct intel_crtc_state *crtc_state,
 			      u32 deemph_reg_value, u32 margin_reg_value,

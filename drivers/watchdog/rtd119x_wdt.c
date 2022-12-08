@@ -94,10 +94,22 @@ static const struct of_device_id rtd119x_wdt_dt_ids[] = {
 	 { }
 };
 
+<<<<<<< HEAD
+=======
+static void rtd119x_clk_disable_unprepare(void *data)
+{
+	clk_disable_unprepare(data);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int rtd119x_wdt_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 	struct rtd119x_watchdog_device *data;
+<<<<<<< HEAD
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
 	if (!data)
@@ -107,10 +119,25 @@ static int rtd119x_wdt_probe(struct platform_device *pdev)
 	if (IS_ERR(data->base))
 		return PTR_ERR(data->base);
 
+<<<<<<< HEAD
 	data->clk = devm_clk_get_enabled(dev, NULL);
 	if (IS_ERR(data->clk))
 		return PTR_ERR(data->clk);
 
+=======
+	data->clk = devm_clk_get(dev, NULL);
+	if (IS_ERR(data->clk))
+		return PTR_ERR(data->clk);
+
+	ret = clk_prepare_enable(data->clk);
+	if (ret)
+		return ret;
+	ret = devm_add_action_or_reset(dev, rtd119x_clk_disable_unprepare,
+				       data->clk);
+	if (ret)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	data->wdt_dev.info = &rtd119x_wdt_info;
 	data->wdt_dev.ops = &rtd119x_wdt_ops;
 	data->wdt_dev.timeout = 120;

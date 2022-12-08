@@ -295,11 +295,19 @@ static int test_init(struct kunit *test)
 {
 	/* Most test cases want 2 distinct CPUs. */
 	if (num_online_cpus() < 2)
+<<<<<<< HEAD
 		kunit_skip(test, "not enough cpus");
 
 	/* Want the system to not use breakpoints elsewhere. */
 	if (hw_breakpoint_is_used())
 		kunit_skip(test, "hw breakpoint already in use");
+=======
+		return -EINVAL;
+
+	/* Want the system to not use breakpoints elsewhere. */
+	if (hw_breakpoint_is_used())
+		return -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -329,4 +337,8 @@ static struct kunit_suite hw_breakpoint_test_suite = {
 
 kunit_test_suites(&hw_breakpoint_test_suite);
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("Marco Elver <elver@google.com>");

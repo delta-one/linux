@@ -203,7 +203,12 @@ static int ulite_transmit(struct uart_port *port, int stat)
 		return 0;
 
 	uart_out32(xmit->buf[xmit->tail], ULITE_TX, port);
+<<<<<<< HEAD
 	uart_xmit_advance(port, 1);
+=======
+	xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE-1);
+	port->icount.tx++;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* wake up */
 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)

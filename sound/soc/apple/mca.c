@@ -101,6 +101,10 @@
 #define SERDES_CONF_UNK3	BIT(14)
 #define SERDES_CONF_NO_DATA_FEEDBACK	BIT(15)
 #define SERDES_CONF_SYNC_SEL	GENMASK(18, 16)
+<<<<<<< HEAD
+=======
+#define SERDES_CONF_SOME_RST	BIT(19)
+>>>>>>> b7ba80a49124 (Commit)
 #define REG_TX_SERDES_BITSTART	0x08
 #define REG_RX_SERDES_BITSTART	0x0c
 #define REG_TX_SERDES_SLOTMASK	0x0c
@@ -202,6 +206,7 @@ static void mca_fe_early_trigger(struct snd_pcm_substream *substream, int cmd,
 	case SNDRV_PCM_TRIGGER_START:
 	case SNDRV_PCM_TRIGGER_RESUME:
 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+<<<<<<< HEAD
 		mca_modify(cl, serdes_conf, SERDES_CONF_SYNC_SEL,
 			   FIELD_PREP(SERDES_CONF_SYNC_SEL, 0));
 		mca_modify(cl, serdes_conf, SERDES_CONF_SYNC_SEL,
@@ -220,6 +225,17 @@ static void mca_fe_early_trigger(struct snd_pcm_substream *substream, int cmd,
 			   FIELD_PREP(SERDES_CONF_SYNC_SEL, 0));
 		mca_modify(cl, serdes_conf, SERDES_CONF_SYNC_SEL,
 			   FIELD_PREP(SERDES_CONF_SYNC_SEL, cl->no + 1));
+=======
+		mca_modify(cl, serdes_unit + REG_SERDES_STATUS,
+			   SERDES_STATUS_EN | SERDES_STATUS_RST,
+			   SERDES_STATUS_RST);
+		mca_modify(cl, serdes_conf, SERDES_CONF_SOME_RST,
+			   SERDES_CONF_SOME_RST);
+		readl_relaxed(cl->base + serdes_conf);
+		mca_modify(cl, serdes_conf, SERDES_STATUS_RST, 0);
+		WARN_ON(readl_relaxed(cl->base + REG_SERDES_STATUS) &
+			SERDES_STATUS_RST);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		break;
@@ -950,6 +966,7 @@ static int mca_pcm_new(struct snd_soc_component *component,
 		chan = mca_request_dma_channel(cl, i);
 
 		if (IS_ERR_OR_NULL(chan)) {
+<<<<<<< HEAD
 			mca_pcm_free(component, rtd->pcm);
 
 			if (chan && PTR_ERR(chan) == -EPROBE_DEFER)
@@ -961,6 +978,12 @@ static int mca_pcm_new(struct snd_soc_component *component,
 			if (!chan)
 				return -EINVAL;
 			return PTR_ERR(chan);
+=======
+			dev_err(component->dev, "unable to obtain DMA channel (stream %d cluster %d): %pe\n",
+				i, cl->no, chan);
+			mca_pcm_free(component, rtd->pcm);
+			return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		cl->dma_chans[i] = chan;
@@ -985,11 +1008,25 @@ static const struct snd_soc_component_driver mca_component = {
 
 static void apple_mca_release(struct mca_data *mca)
 {
+<<<<<<< HEAD
 	int i;
+=======
+	int i, stream;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < mca->nclusters; i++) {
 		struct mca_cluster *cl = &mca->clusters[i];
 
+<<<<<<< HEAD
+=======
+		for_each_pcm_streams(stream) {
+			if (IS_ERR_OR_NULL(cl->dma_chans[stream]))
+				continue;
+
+			dma_release_channel(cl->dma_chans[stream]);
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (!IS_ERR_OR_NULL(cl->clk_parent))
 			clk_put(cl->clk_parent);
 
@@ -1003,7 +1040,11 @@ static void apple_mca_release(struct mca_data *mca)
 	if (!IS_ERR_OR_NULL(mca->pd_dev))
 		dev_pm_domain_detach(mca->pd_dev, true);
 
+<<<<<<< HEAD
 	reset_control_rearm(mca->rstc);
+=======
+	reset_control_assert(mca->rstc);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int apple_mca_probe(struct platform_device *pdev)
@@ -1057,12 +1098,20 @@ static int apple_mca_probe(struct platform_device *pdev)
 					       DL_FLAG_RPM_ACTIVE);
 	if (!mca->pd_link) {
 		ret = -EINVAL;
+<<<<<<< HEAD
 		/* Prevent an unbalanced reset rearm */
+=======
+		/* Prevent an unbalanced reset assert */
+>>>>>>> b7ba80a49124 (Commit)
 		mca->rstc = NULL;
 		goto err_release;
 	}
 
+<<<<<<< HEAD
 	reset_control_reset(mca->rstc);
+=======
+	reset_control_deassert(mca->rstc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < nclusters; i++) {
 		struct mca_cluster *cl = &clusters[i];
@@ -1144,8 +1193,13 @@ static int apple_mca_probe(struct platform_device *pdev)
 		}
 	}
 
+<<<<<<< HEAD
 	ret = snd_soc_register_component(&pdev->dev, &mca_component,
 					 dai_drivers, nclusters * 2);
+=======
+	ret = devm_snd_soc_register_component(&pdev->dev, &mca_component,
+					      dai_drivers, nclusters * 2);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(&pdev->dev, "unable to register ASoC component: %d\n",
 			ret);
@@ -1159,12 +1213,21 @@ err_release:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void apple_mca_remove(struct platform_device *pdev)
 {
 	struct mca_data *mca = platform_get_drvdata(pdev);
 
 	snd_soc_unregister_component(&pdev->dev);
 	apple_mca_release(mca);
+=======
+static int apple_mca_remove(struct platform_device *pdev)
+{
+	struct mca_data *mca = platform_get_drvdata(pdev);
+
+	apple_mca_release(mca);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id apple_mca_of_match[] = {
@@ -1179,7 +1242,11 @@ static struct platform_driver apple_mca_driver = {
 		.of_match_table = apple_mca_of_match,
 	},
 	.probe = apple_mca_probe,
+<<<<<<< HEAD
 	.remove_new = apple_mca_remove,
+=======
+	.remove = apple_mca_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(apple_mca_driver);
 

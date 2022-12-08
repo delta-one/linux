@@ -13,7 +13,10 @@ struct linkstate_reply_data {
 	int					link;
 	int					sqi;
 	int					sqi_max;
+<<<<<<< HEAD
 	struct ethtool_link_ext_stats		link_stats;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool					link_ext_state_provided;
 	struct ethtool_link_ext_state_info	ethtool_link_ext_state_info;
 };
@@ -23,7 +26,11 @@ struct linkstate_reply_data {
 
 const struct nla_policy ethnl_linkstate_get_policy[] = {
 	[ETHTOOL_A_LINKSTATE_HEADER]		=
+<<<<<<< HEAD
 		NLA_POLICY_NESTED(ethnl_header_policy_stats),
+=======
+		NLA_POLICY_NESTED(ethnl_header_policy),
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int linkstate_get_sqi(struct net_device *dev)
@@ -108,6 +115,7 @@ static int linkstate_prepare_data(const struct ethnl_req_info *req_base,
 			goto out;
 	}
 
+<<<<<<< HEAD
 	ethtool_stats_init((u64 *)&data->link_stats,
 			   sizeof(data->link_stats) / 8);
 
@@ -121,6 +129,8 @@ static int linkstate_prepare_data(const struct ethnl_req_info *req_base,
 							     &data->link_stats);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = 0;
 out:
 	ethnl_ops_complete(dev);
@@ -148,9 +158,12 @@ static int linkstate_reply_size(const struct ethnl_req_info *req_base,
 	if (data->ethtool_link_ext_state_info.__link_ext_substate)
 		len += nla_total_size(sizeof(u8)); /* LINKSTATE_EXT_SUBSTATE */
 
+<<<<<<< HEAD
 	if (data->link_stats.link_down_events != ETHTOOL_STAT_NOT_SET)
 		len += nla_total_size(sizeof(u32));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return len;
 }
 
@@ -183,11 +196,14 @@ static int linkstate_fill_reply(struct sk_buff *skb,
 			return -EMSGSIZE;
 	}
 
+<<<<<<< HEAD
 	if (data->link_stats.link_down_events != ETHTOOL_STAT_NOT_SET)
 		if (nla_put_u32(skb, ETHTOOL_A_LINKSTATE_EXT_DOWN_CNT,
 				data->link_stats.link_down_events))
 			return -EMSGSIZE;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

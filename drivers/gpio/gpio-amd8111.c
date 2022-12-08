@@ -226,10 +226,14 @@ found:
 		ioport_unmap(gp.pm);
 		goto out;
 	}
+<<<<<<< HEAD
 	return 0;
 
 out:
 	pci_dev_put(pdev);
+=======
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -237,7 +241,10 @@ static void __exit amd_gpio_exit(void)
 {
 	gpiochip_remove(&gp.chip);
 	ioport_unmap(gp.pm);
+<<<<<<< HEAD
 	pci_dev_put(gp.pdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 module_init(amd_gpio_init);

@@ -85,7 +85,11 @@ static int wait_lpc_idle(void __iomem *mbase, unsigned int waitcnt)
 		ndelay(LPC_NSEC_PERWAIT);
 	} while (--waitcnt);
 
+<<<<<<< HEAD
 	return -ETIMEDOUT;
+=======
+	return -ETIME;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -347,7 +351,11 @@ static int hisi_lpc_acpi_xlat_io_res(struct acpi_device *adev,
 	unsigned long sys_port;
 	resource_size_t len = resource_size(res);
 
+<<<<<<< HEAD
 	sys_port = logic_pio_trans_hwaddr(acpi_fwnode_handle(host), res->start, len);
+=======
+	sys_port = logic_pio_trans_hwaddr(&host->fwnode, res->start, len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (sys_port == ~0UL)
 		return -EFAULT;
 
@@ -472,7 +480,13 @@ static int hisi_lpc_acpi_clear_enumerated(struct acpi_device *adev, void *not_us
 
 struct hisi_lpc_acpi_cell {
 	const char *hid;
+<<<<<<< HEAD
 	const struct platform_device_info *pdevinfo;
+=======
+	const char *name;
+	void *pdata;
+	size_t pdata_size;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void hisi_lpc_acpi_remove(struct device *hostdev)
@@ -503,6 +517,7 @@ static int hisi_lpc_acpi_add_child(struct acpi_device *child, void *data)
 		/* ipmi */
 		{
 			.hid = "IPI0001",
+<<<<<<< HEAD
 			.pdevinfo = (struct platform_device_info []) {
 				{
 					.parent = hostdev,
@@ -513,10 +528,14 @@ static int hisi_lpc_acpi_add_child(struct acpi_device *child, void *data)
 					.num_res = num_res,
 				},
 			},
+=======
+			.name = "hisi-lpc-ipmi",
+>>>>>>> b7ba80a49124 (Commit)
 		},
 		/* 8250-compatible uart */
 		{
 			.hid = "HISI1031",
+<<<<<<< HEAD
 			.pdevinfo = (struct platform_device_info []) {
 				{
 					.parent = hostdev,
@@ -537,11 +556,29 @@ static int hisi_lpc_acpi_add_child(struct acpi_device *child, void *data)
 					.size_data =  2 * sizeof(struct plat_serial8250_port),
 				},
 			},
+=======
+			.name = "serial8250",
+			.pdata = (struct plat_serial8250_port []) {
+				{
+					.iobase = res->start,
+					.uartclk = 1843200,
+					.iotype = UPIO_PORT,
+					.flags = UPF_BOOT_AUTOCONF,
+				},
+				{}
+			},
+			.pdata_size = 2 *
+				sizeof(struct plat_serial8250_port),
+>>>>>>> b7ba80a49124 (Commit)
 		},
 		{}
 	};
 
+<<<<<<< HEAD
 	for (; cell && cell->hid; cell++) {
+=======
+	for (; cell && cell->name; cell++) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!strcmp(cell->hid, hid)) {
 			found = true;
 			break;
@@ -555,12 +592,40 @@ static int hisi_lpc_acpi_add_child(struct acpi_device *child, void *data)
 		return 0;
 	}
 
+<<<<<<< HEAD
 	pdev = platform_device_register_full(cell->pdevinfo);
 	if (IS_ERR(pdev))
 		return PTR_ERR(pdev);
 
 	acpi_device_set_enumerated(child);
 	return 0;
+=======
+	pdev = platform_device_alloc(cell->name, PLATFORM_DEVID_AUTO);
+	if (!pdev)
+		return -ENOMEM;
+
+	pdev->dev.parent = hostdev;
+	ACPI_COMPANION_SET(&pdev->dev, child);
+
+	ret = platform_device_add_resources(pdev, res, num_res);
+	if (ret)
+		goto fail;
+
+	ret = platform_device_add_data(pdev, cell->pdata, cell->pdata_size);
+	if (ret)
+		goto fail;
+
+	ret = platform_device_add(pdev);
+	if (ret)
+		goto fail;
+
+	acpi_device_set_enumerated(child);
+	return 0;
+
+fail:
+	platform_device_put(pdev);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -585,6 +650,14 @@ static int hisi_lpc_acpi_probe(struct device *hostdev)
 
 	return ret;
 }
+<<<<<<< HEAD
+=======
+
+static const struct acpi_device_id hisi_lpc_acpi_match[] = {
+	{"HISI0191"},
+	{}
+};
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static int hisi_lpc_acpi_probe(struct device *dev)
 {
@@ -606,9 +679,17 @@ static void hisi_lpc_acpi_remove(struct device *hostdev)
 static int hisi_lpc_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
+<<<<<<< HEAD
 	struct logic_pio_hwaddr *range;
 	struct hisi_lpc_dev *lpcdev;
 	resource_size_t io_end;
+=======
+	struct acpi_device *acpi_device = ACPI_COMPANION(dev);
+	struct logic_pio_hwaddr *range;
+	struct hisi_lpc_dev *lpcdev;
+	resource_size_t io_end;
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	lpcdev = devm_kzalloc(dev, sizeof(*lpcdev), GFP_KERNEL);
@@ -617,7 +698,12 @@ static int hisi_lpc_probe(struct platform_device *pdev)
 
 	spin_lock_init(&lpcdev->cycle_lock);
 
+<<<<<<< HEAD
 	lpcdev->membase = devm_platform_ioremap_resource(pdev, 0);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	lpcdev->membase = devm_ioremap_resource(dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(lpcdev->membase))
 		return PTR_ERR(lpcdev->membase);
 
@@ -625,7 +711,11 @@ static int hisi_lpc_probe(struct platform_device *pdev)
 	if (!range)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	range->fwnode = dev_fwnode(dev);
+=======
+	range->fwnode = dev->fwnode;
+>>>>>>> b7ba80a49124 (Commit)
 	range->flags = LOGIC_PIO_INDIRECT;
 	range->size = PIO_INDIRECT_SIZE;
 	range->hostdata = lpcdev;
@@ -639,7 +729,11 @@ static int hisi_lpc_probe(struct platform_device *pdev)
 	}
 
 	/* register the LPC host PIO resources */
+<<<<<<< HEAD
 	if (is_acpi_device_node(range->fwnode))
+=======
+	if (acpi_device)
+>>>>>>> b7ba80a49124 (Commit)
 		ret = hisi_lpc_acpi_probe(dev);
 	else
 		ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
@@ -660,10 +754,18 @@ static int hisi_lpc_probe(struct platform_device *pdev)
 static int hisi_lpc_remove(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
+<<<<<<< HEAD
 	struct hisi_lpc_dev *lpcdev = dev_get_drvdata(dev);
 	struct logic_pio_hwaddr *range = lpcdev->io_host;
 
 	if (is_acpi_device_node(range->fwnode))
+=======
+	struct acpi_device *acpi_device = ACPI_COMPANION(dev);
+	struct hisi_lpc_dev *lpcdev = dev_get_drvdata(dev);
+	struct logic_pio_hwaddr *range = lpcdev->io_host;
+
+	if (acpi_device)
+>>>>>>> b7ba80a49124 (Commit)
 		hisi_lpc_acpi_remove(dev);
 	else
 		of_platform_depopulate(dev);
@@ -679,16 +781,23 @@ static const struct of_device_id hisi_lpc_of_match[] = {
 	{}
 };
 
+<<<<<<< HEAD
 static const struct acpi_device_id hisi_lpc_acpi_match[] = {
 	{"HISI0191"},
 	{}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver hisi_lpc_driver = {
 	.driver = {
 		.name           = DRV_NAME,
 		.of_match_table = hisi_lpc_of_match,
+<<<<<<< HEAD
 		.acpi_match_table = hisi_lpc_acpi_match,
+=======
+		.acpi_match_table = ACPI_PTR(hisi_lpc_acpi_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = hisi_lpc_probe,
 	.remove = hisi_lpc_remove,

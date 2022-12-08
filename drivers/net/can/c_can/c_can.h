@@ -235,6 +235,7 @@ static inline u8 c_can_get_tx_tail(const struct c_can_tx_ring *ring)
 	return ring->tail & (ring->obj_num - 1);
 }
 
+<<<<<<< HEAD
 static inline u8 c_can_get_tx_free(const struct c_can_priv *priv,
 				   const struct c_can_tx_ring *ring)
 {
@@ -251,6 +252,11 @@ static inline u8 c_can_get_tx_free(const struct c_can_priv *priv,
 		return 0;
 
 	return ring->obj_num - head;
+=======
+static inline u8 c_can_get_tx_free(const struct c_can_tx_ring *ring)
+{
+	return ring->obj_num - (ring->head - ring->tail);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #endif /* C_CAN_H */

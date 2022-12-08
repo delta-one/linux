@@ -52,14 +52,20 @@ enum mlx5_mapped_obj_type {
 	MLX5_MAPPED_OBJ_CHAIN,
 	MLX5_MAPPED_OBJ_SAMPLE,
 	MLX5_MAPPED_OBJ_INT_PORT_METADATA,
+<<<<<<< HEAD
 	MLX5_MAPPED_OBJ_ACT_MISS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlx5_mapped_obj {
 	enum mlx5_mapped_obj_type type;
 	union {
 		u32 chain;
+<<<<<<< HEAD
 		u64 act_miss_cookie;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		struct {
 			u32 group_id;
 			u32 rate;
@@ -155,8 +161,11 @@ struct mlx5_vport_info {
 	u8                      qos;
 	u8                      spoofchk: 1;
 	u8                      trusted: 1;
+<<<<<<< HEAD
 	u8                      roce_enabled: 1;
 	u8                      mig_enabled: 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Vport context events */
@@ -224,6 +233,10 @@ struct mlx5_eswitch_fdb {
 			struct mlx5_flow_handle **send_to_vport_meta_rules;
 			struct mlx5_flow_handle *miss_rule_uni;
 			struct mlx5_flow_handle *miss_rule_multi;
+<<<<<<< HEAD
+=======
+			int vlan_push_pop_refcount;
+>>>>>>> b7ba80a49124 (Commit)
 
 			struct mlx5_fs_chains *esw_chains_priv;
 			struct {
@@ -347,8 +360,13 @@ struct mlx5_eswitch {
 
 void esw_offloads_disable(struct mlx5_eswitch *esw);
 int esw_offloads_enable(struct mlx5_eswitch *esw);
+<<<<<<< HEAD
 void esw_offloads_cleanup(struct mlx5_eswitch *esw);
 int esw_offloads_init(struct mlx5_eswitch *esw);
+=======
+void esw_offloads_cleanup_reps(struct mlx5_eswitch *esw);
+int esw_offloads_init_reps(struct mlx5_eswitch *esw);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct mlx5_flow_handle *
 mlx5_eswitch_add_send_to_vport_meta_rule(struct mlx5_eswitch *esw, u16 vport_num);
@@ -511,6 +529,7 @@ int mlx5_devlink_port_function_hw_addr_get(struct devlink_port *port,
 int mlx5_devlink_port_function_hw_addr_set(struct devlink_port *port,
 					   const u8 *hw_addr, int hw_addr_len,
 					   struct netlink_ext_ack *extack);
+<<<<<<< HEAD
 int mlx5_devlink_port_fn_roce_get(struct devlink_port *port, bool *is_enabled,
 				  struct netlink_ext_ack *extack);
 int mlx5_devlink_port_fn_roce_set(struct devlink_port *port, bool enable,
@@ -530,6 +549,18 @@ static inline bool esw_vst_mode_is_steering(struct mlx5_eswitch *esw)
 		MLX5_CAP_ESW_INGRESS_ACL(esw->dev, push_vlan));
 }
 
+=======
+
+void *mlx5_eswitch_get_uplink_priv(struct mlx5_eswitch *esw, u8 rep_type);
+
+int mlx5_eswitch_add_vlan_action(struct mlx5_eswitch *esw,
+				 struct mlx5_flow_attr *attr);
+int mlx5_eswitch_del_vlan_action(struct mlx5_eswitch *esw,
+				 struct mlx5_flow_attr *attr);
+int __mlx5_eswitch_set_vport_vlan(struct mlx5_eswitch *esw,
+				  u16 vport, u16 vlan, u8 qos, u8 set_flags);
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool mlx5_eswitch_vlan_actions_supported(struct mlx5_core_dev *dev,
 						       u8 vlan_depth)
 {
@@ -748,6 +779,7 @@ void mlx5_eswitch_offloads_destroy_single_fdb(struct mlx5_eswitch *master_esw,
 					      struct mlx5_eswitch *slave_esw);
 int mlx5_eswitch_reload_reps(struct mlx5_eswitch *esw);
 
+<<<<<<< HEAD
 static inline int mlx5_eswitch_num_vfs(struct mlx5_eswitch *esw)
 {
 	if (mlx5_esw_allowed(esw))
@@ -761,6 +793,8 @@ mlx5_eswitch_get_slow_fdb(struct mlx5_eswitch *esw)
 {
 	return esw->fdb_table.offloads.slow_fdb;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else  /* CONFIG_MLX5_ESWITCH */
 /* eswitch API stubs */
 static inline int  mlx5_eswitch_init(struct mlx5_core_dev *dev) { return 0; }

@@ -63,10 +63,17 @@ properties:
 
 patternProperties:
   "@[0-9a-f]+$":
+<<<<<<< HEAD
     $ref: /schemas/mtd/partitions/partition.yaml
 
 allOf:
   - $ref: /schemas/memory-controllers/ti,gpmc-child.yaml
+=======
+    $ref: "/schemas/mtd/partitions/partition.yaml"
+
+allOf:
+  - $ref: "/schemas/memory-controllers/ti,gpmc-child.yaml"
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible

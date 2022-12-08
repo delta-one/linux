@@ -8,8 +8,15 @@
 #define pr_fmt(fmt) "damon-reclaim: " fmt
 
 #include <linux/damon.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
 #include <linux/module.h>
+=======
+#include <linux/ioport.h>
+#include <linux/module.h>
+#include <linux/sched.h>
+#include <linux/workqueue.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "modules-common.h"
 
@@ -99,6 +106,7 @@ static unsigned long monitor_region_end __read_mostly;
 module_param(monitor_region_end, ulong, 0600);
 
 /*
+<<<<<<< HEAD
  * Skip anonymous pages reclamation.
  *
  * If this parameter is set as ``Y``, DAMON_RECLAIM does not reclaim anonymous
@@ -108,6 +116,8 @@ static bool skip_anon __read_mostly;
 module_param(skip_anon, bool, 0600);
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * PID of the DAMON thread
  *
  * If DAMON_RECLAIM is enabled, this becomes the PID of the worker thread.
@@ -151,7 +161,10 @@ static struct damos *damon_reclaim_new_scheme(void)
 static int damon_reclaim_apply_parameters(void)
 {
 	struct damos *scheme;
+<<<<<<< HEAD
 	struct damos_filter *filter;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err = 0;
 
 	err = damon_set_attrs(ctx, &damon_reclaim_mon_attrs);
@@ -162,6 +175,7 @@ static int damon_reclaim_apply_parameters(void)
 	scheme = damon_reclaim_new_scheme();
 	if (!scheme)
 		return -ENOMEM;
+<<<<<<< HEAD
 	if (skip_anon) {
 		filter = damos_new_filter(DAMOS_FILTER_TYPE_ANON, true);
 		if (!filter) {
@@ -171,6 +185,8 @@ static int damon_reclaim_apply_parameters(void)
 		}
 		damos_add_filter(scheme, filter);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	damon_set_schemes(ctx, &scheme, 1);
 
 	return damon_set_region_biggest_system_ram_default(target,
@@ -200,6 +216,7 @@ static int damon_reclaim_turn(bool on)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int damon_reclaim_enabled_store(const char *val,
 		const struct kernel_param *kp)
 {
@@ -225,6 +242,40 @@ static int damon_reclaim_enabled_store(const char *val,
 set_param_out:
 	enabled = enable;
 	return err;
+=======
+static struct delayed_work damon_reclaim_timer;
+static void damon_reclaim_timer_fn(struct work_struct *work)
+{
+	static bool last_enabled;
+	bool now_enabled;
+
+	now_enabled = enabled;
+	if (last_enabled != now_enabled) {
+		if (!damon_reclaim_turn(now_enabled))
+			last_enabled = now_enabled;
+		else
+			enabled = last_enabled;
+	}
+}
+static DECLARE_DELAYED_WORK(damon_reclaim_timer, damon_reclaim_timer_fn);
+
+static bool damon_reclaim_initialized;
+
+static int damon_reclaim_enabled_store(const char *val,
+		const struct kernel_param *kp)
+{
+	int rc = param_set_bool(val, kp);
+
+	if (rc < 0)
+		return rc;
+
+	/* system_wq might not initialized yet */
+	if (!damon_reclaim_initialized)
+		return rc;
+
+	schedule_delayed_work(&damon_reclaim_timer, 0);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct kernel_param_ops enabled_param_ops = {
@@ -266,19 +317,44 @@ static int damon_reclaim_after_wmarks_check(struct damon_ctx *c)
 
 static int __init damon_reclaim_init(void)
 {
+<<<<<<< HEAD
 	int err = damon_modules_new_paddr_ctx_target(&ctx, &target);
 
 	if (err)
 		return err;
+=======
+	ctx = damon_new_ctx();
+	if (!ctx)
+		return -ENOMEM;
+
+	if (damon_select_ops(ctx, DAMON_OPS_PADDR)) {
+		damon_destroy_ctx(ctx);
+		return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctx->callback.after_wmarks_check = damon_reclaim_after_wmarks_check;
 	ctx->callback.after_aggregation = damon_reclaim_after_aggregation;
 
+<<<<<<< HEAD
 	/* 'enabled' has set before this function, probably via command line */
 	if (enabled)
 		err = damon_reclaim_turn(true);
 
 	return err;
+=======
+	target = damon_new_target();
+	if (!target) {
+		damon_destroy_ctx(ctx);
+		return -ENOMEM;
+	}
+	damon_add_target(ctx, target);
+
+	schedule_delayed_work(&damon_reclaim_timer, 0);
+
+	damon_reclaim_initialized = true;
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 module_init(damon_reclaim_init);

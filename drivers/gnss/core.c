@@ -337,7 +337,11 @@ static const char * const gnss_type_names[GNSS_TYPE_COUNT] = {
 	[GNSS_TYPE_MTK]		= "MTK",
 };
 
+<<<<<<< HEAD
 static const char *gnss_type_name(const struct gnss_device *gdev)
+=======
+static const char *gnss_type_name(struct gnss_device *gdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const char *name = NULL;
 
@@ -365,9 +369,15 @@ static struct attribute *gnss_attrs[] = {
 };
 ATTRIBUTE_GROUPS(gnss);
 
+<<<<<<< HEAD
 static int gnss_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct gnss_device *gdev = to_gnss_device(dev);
+=======
+static int gnss_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct gnss_device *gdev = to_gnss_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	ret = add_uevent_var(env, "GNSS_TYPE=%s", gnss_type_name(gdev));
@@ -387,7 +397,11 @@ static int __init gnss_module_init(void)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	gnss_class = class_create("gnss");
+=======
+	gnss_class = class_create(THIS_MODULE, "gnss");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(gnss_class)) {
 		ret = PTR_ERR(gnss_class);
 		pr_err("failed to create class: %d\n", ret);

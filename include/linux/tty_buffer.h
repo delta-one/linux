@@ -17,11 +17,21 @@ struct tty_buffer {
 	int commit;
 	int lookahead;		/* Lazy update on recv, can become less than "read" */
 	int read;
+<<<<<<< HEAD
 	bool flags;
+=======
+	int flags;
+>>>>>>> b7ba80a49124 (Commit)
 	/* Data points here */
 	unsigned long data[];
 };
 
+<<<<<<< HEAD
+=======
+/* Values for .flags field of tty_buffer */
+#define TTYB_NORMAL	1	/* buffer has no flags buffer */
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline unsigned char *char_buf_ptr(struct tty_buffer *b, int ofs)
 {
 	return ((unsigned char *)b->data) + ofs;

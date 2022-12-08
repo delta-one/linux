@@ -8,11 +8,16 @@
 #ifndef __MLXBF_GIGE_REGS_H__
 #define __MLXBF_GIGE_REGS_H__
 
+<<<<<<< HEAD
 #include <linux/bitfield.h>
 
 #define MLXBF_GIGE_VERSION                            0x0000
 #define MLXBF_GIGE_VERSION_BF2                        0x0
 #define MLXBF_GIGE_VERSION_BF3                        0x1
+=======
+#define MLXBF_GIGE_VERSION                            0x0000
+#define MLXBF_GIGE_VERSION_BF2                        0x0
+>>>>>>> b7ba80a49124 (Commit)
 #define MLXBF_GIGE_STATUS                             0x0010
 #define MLXBF_GIGE_STATUS_READY                       BIT(0)
 #define MLXBF_GIGE_INT_STATUS                         0x0028
@@ -80,6 +85,7 @@
  */
 #define MLXBF_GIGE_MMIO_REG_SZ                        (MLXBF_GIGE_MAC_CFG + 8)
 
+<<<<<<< HEAD
 #define MLXBF_GIGE_PLU_TX_REG0                        0x80
 #define MLXBF_GIGE_PLU_TX_IPG_SIZE_MASK               GENMASK(11, 0)
 #define MLXBF_GIGE_PLU_TX_SGMII_MODE_MASK             GENMASK(15, 14)
@@ -99,4 +105,6 @@
 #define MLXBF_GIGE_100M_IPG_SIZE                      119
 #define MLXBF_GIGE_10M_IPG_SIZE                       1199
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* !defined(__MLXBF_GIGE_REGS_H__) */

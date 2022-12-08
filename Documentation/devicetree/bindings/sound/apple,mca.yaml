@@ -14,16 +14,22 @@ description: |
 maintainers:
   - Martin Povišer <povik+lin@cutebit.org>
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     items:
       - enum:
           - apple,t6000-mca
           - apple,t8103-mca
+<<<<<<< HEAD
           - apple,t8112-mca
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - const: apple,mca
 
   reg:
@@ -110,7 +116,11 @@ required:
   - power-domains
   - '#sound-dai-cells'
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

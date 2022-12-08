@@ -18,7 +18,10 @@
 #include "flask.h"
 #include "security.h"
 #include "sidtab.h"
+<<<<<<< HEAD
 #include "services.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct sidtab_str_cache {
 	struct rcu_head rcu_member;
@@ -293,6 +296,10 @@ int sidtab_context_to_sid(struct sidtab *s, struct context *context,
 	}
 
 	count = s->count;
+<<<<<<< HEAD
+=======
+	convert = s->convert;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* bail out if we already reached max entries */
 	rc = -EOVERFLOW;
@@ -316,29 +323,46 @@ int sidtab_context_to_sid(struct sidtab *s, struct context *context,
 	 * if we are building a new sidtab, we need to convert the context
 	 * and insert it there as well
 	 */
+<<<<<<< HEAD
 	convert = s->convert;
 	if (convert) {
 		struct sidtab *target = convert->target;
 
 		rc = -ENOMEM;
 		dst_convert = sidtab_do_lookup(target, count, 1);
+=======
+	if (convert) {
+		rc = -ENOMEM;
+		dst_convert = sidtab_do_lookup(convert->target, count, 1);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!dst_convert) {
 			context_destroy(&dst->context);
 			goto out_unlock;
 		}
 
+<<<<<<< HEAD
 		rc = services_convert_context(convert->args,
 					      context, &dst_convert->context,
 					      GFP_ATOMIC);
+=======
+		rc = convert->func(context, &dst_convert->context,
+				   convert->args);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rc) {
 			context_destroy(&dst->context);
 			goto out_unlock;
 		}
 		dst_convert->sid = index_to_sid(count);
 		dst_convert->hash = context_compute_hash(&dst_convert->context);
+<<<<<<< HEAD
 		target->count = count + 1;
 
 		hash_add_rcu(target->context_to_sid,
+=======
+		convert->target->count = count + 1;
+
+		hash_add_rcu(convert->target->context_to_sid,
+>>>>>>> b7ba80a49124 (Commit)
 			     &dst_convert->list, dst_convert->hash);
 	}
 
@@ -406,10 +430,16 @@ static int sidtab_convert_tree(union sidtab_entry_inner *edst,
 		}
 		i = 0;
 		while (i < SIDTAB_LEAF_ENTRIES && *pos < count) {
+<<<<<<< HEAD
 			rc = services_convert_context(convert->args,
 					&esrc->ptr_leaf->entries[i].context,
 					&edst->ptr_leaf->entries[i].context,
 					GFP_KERNEL);
+=======
+			rc = convert->func(&esrc->ptr_leaf->entries[i].context,
+					   &edst->ptr_leaf->entries[i].context,
+					   convert->args);
+>>>>>>> b7ba80a49124 (Commit)
 			if (rc)
 				return rc;
 			(*pos)++;

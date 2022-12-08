@@ -37,7 +37,11 @@ Sysfs entries
 -------------
 
 =============== ============================================
+<<<<<<< HEAD
 temp1_input     Measured temperature in millidegrees Celsius
+=======
+temp1_input     Measured temperature in millidegrees Celcius
+>>>>>>> b7ba80a49124 (Commit)
 humidity1_input Measured humidity in %H
 update_interval The minimum interval for polling the sensor,
                 in milliseconds. Writable. Must be at least

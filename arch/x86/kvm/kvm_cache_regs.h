@@ -4,7 +4,11 @@
 
 #include <linux/kvm_host.h>
 
+<<<<<<< HEAD
 #define KVM_POSSIBLE_CR0_GUEST_BITS	(X86_CR0_TS | X86_CR0_WP)
+=======
+#define KVM_POSSIBLE_CR0_GUEST_BITS X86_CR0_TS
+>>>>>>> b7ba80a49124 (Commit)
 #define KVM_POSSIBLE_CR4_GUEST_BITS				  \
 	(X86_CR4_PVI | X86_CR4_DE | X86_CR4_PCE | X86_CR4_OSFXSR  \
 	 | X86_CR4_OSXMMEXCPT | X86_CR4_PGE | X86_CR4_TSD | X86_CR4_FSGSBASE)
@@ -76,6 +80,7 @@ static inline void kvm_register_mark_dirty(struct kvm_vcpu *vcpu,
 }
 
 /*
+<<<<<<< HEAD
  * kvm_register_test_and_mark_available() is a special snowflake that uses an
  * arch bitop directly to avoid the explicit instrumentation that comes with
  * the generic bitops.  This allows code that cannot be instrumented (noinstr
@@ -88,6 +93,8 @@ static __always_inline bool kvm_register_test_and_mark_available(struct kvm_vcpu
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * The "raw" register helpers are only for cases where the full 64 bits of a
  * register are read/written irrespective of current vCPU mode.  In other words,
  * odds are good you shouldn't be using the raw variants.
@@ -157,6 +164,7 @@ static inline ulong kvm_read_cr0_bits(struct kvm_vcpu *vcpu, ulong mask)
 	return vcpu->arch.cr0 & mask;
 }
 
+<<<<<<< HEAD
 static __always_inline bool kvm_is_cr0_bit_set(struct kvm_vcpu *vcpu,
 					       unsigned long cr0_bit)
 {
@@ -165,6 +173,8 @@ static __always_inline bool kvm_is_cr0_bit_set(struct kvm_vcpu *vcpu,
 	return !!kvm_read_cr0_bits(vcpu, cr0_bit);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline ulong kvm_read_cr0(struct kvm_vcpu *vcpu)
 {
 	return kvm_read_cr0_bits(vcpu, ~0UL);
@@ -179,6 +189,7 @@ static inline ulong kvm_read_cr4_bits(struct kvm_vcpu *vcpu, ulong mask)
 	return vcpu->arch.cr4 & mask;
 }
 
+<<<<<<< HEAD
 static __always_inline bool kvm_is_cr4_bit_set(struct kvm_vcpu *vcpu,
 					       unsigned long cr4_bit)
 {
@@ -187,6 +198,8 @@ static __always_inline bool kvm_is_cr4_bit_set(struct kvm_vcpu *vcpu,
 	return !!kvm_read_cr4_bits(vcpu, cr4_bit);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline ulong kvm_read_cr3(struct kvm_vcpu *vcpu)
 {
 	if (!kvm_register_is_available(vcpu, VCPU_EXREG_CR3))
@@ -228,4 +241,12 @@ static inline bool is_guest_mode(struct kvm_vcpu *vcpu)
 	return vcpu->arch.hflags & HF_GUEST_MASK;
 }
 
+<<<<<<< HEAD
+=======
+static inline bool is_smm(struct kvm_vcpu *vcpu)
+{
+	return vcpu->arch.hflags & HF_SMM_MASK;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif

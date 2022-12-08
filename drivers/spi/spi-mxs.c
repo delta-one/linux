@@ -369,7 +369,11 @@ static int mxs_spi_transfer_one(struct spi_master *master,
 	/* Program CS register bits here, it will be used for all transfers. */
 	writel(BM_SSP_CTRL0_WAIT_FOR_CMD | BM_SSP_CTRL0_WAIT_FOR_IRQ,
 	       ssp->base + HW_SSP_CTRL0 + STMP_OFFSET_REG_CLR);
+<<<<<<< HEAD
 	writel(mxs_spi_cs_to_reg(spi_get_chipselect(m->spi, 0)),
+=======
+	writel(mxs_spi_cs_to_reg(m->spi->chip_select),
+>>>>>>> b7ba80a49124 (Commit)
 	       ssp->base + HW_SSP_CTRL0 + STMP_OFFSET_REG_SET);
 
 	list_for_each_entry(t, &m->transfers, transfer_list) {
@@ -638,7 +642,11 @@ out_master_free:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void mxs_spi_remove(struct platform_device *pdev)
+=======
+static int mxs_spi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master;
 	struct mxs_spi *spi;
@@ -653,11 +661,20 @@ static void mxs_spi_remove(struct platform_device *pdev)
 		mxs_spi_runtime_suspend(&pdev->dev);
 
 	dma_release_channel(ssp->dmach);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver mxs_spi_driver = {
 	.probe	= mxs_spi_probe,
+<<<<<<< HEAD
 	.remove_new = mxs_spi_remove,
+=======
+	.remove	= mxs_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name	= DRIVER_NAME,
 		.of_match_table = mxs_spi_dt_ids,

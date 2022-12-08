@@ -352,7 +352,11 @@ static void saa7164_work_enchandler(struct work_struct *w)
 		container_of(w, struct saa7164_port, workenc);
 	struct saa7164_dev *dev = port->dev;
 
+<<<<<<< HEAD
 	u32 wp, mcb, rp;
+=======
+	u32 wp, mcb, rp, cnt = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	port->last_svc_msecs_diff = port->last_svc_msecs;
 	port->last_svc_msecs = jiffies_to_msecs(jiffies);
@@ -405,6 +409,10 @@ static void saa7164_work_enchandler(struct work_struct *w)
 
 		saa7164_work_enchandler_helper(port, rp);
 		port->last_svc_rp = rp;
+<<<<<<< HEAD
+=======
+		cnt++;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (rp == mcb)
 			break;
@@ -428,7 +436,11 @@ static void saa7164_work_vbihandler(struct work_struct *w)
 		container_of(w, struct saa7164_port, workenc);
 	struct saa7164_dev *dev = port->dev;
 
+<<<<<<< HEAD
 	u32 wp, mcb, rp;
+=======
+	u32 wp, mcb, rp, cnt = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	port->last_svc_msecs_diff = port->last_svc_msecs;
 	port->last_svc_msecs = jiffies_to_msecs(jiffies);
@@ -480,6 +492,10 @@ static void saa7164_work_vbihandler(struct work_struct *w)
 
 		saa7164_work_enchandler_helper(port, rp);
 		port->last_svc_rp = rp;
+<<<<<<< HEAD
+=======
+		cnt++;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (rp == mcb)
 			break;
@@ -1257,7 +1273,11 @@ static int saa7164_initdev(struct pci_dev *pci_dev,
 
 	if (saa7164_dev_setup(dev) < 0) {
 		err = -EINVAL;
+<<<<<<< HEAD
 		goto fail_dev;
+=======
+		goto fail_free;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* print pci info */
@@ -1425,8 +1445,11 @@ fail_fw:
 
 fail_irq:
 	saa7164_dev_unregister(dev);
+<<<<<<< HEAD
 fail_dev:
 	pci_disable_device(pci_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 fail_free:
 	v4l2_device_unregister(&dev->v4l2_dev);
 	kfree(dev);

@@ -330,6 +330,7 @@ static int mtk_pconf_set_pull_select(struct mtk_pinctrl *pctl,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if (pctl->devdata->mt8365_set_clr_mode) {
 		bit = pin & pctl->devdata->mode_mask;
 		reg_pullen = mtk_get_port(pctl, pin) +
@@ -345,6 +346,8 @@ static int mtk_pconf_set_pull_select(struct mtk_pinctrl *pctl,
 		return 0;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bit = BIT(pin & pctl->devdata->mode_mask);
 	if (enable)
 		reg_pullen = SET_ADDR(mtk_get_port(pctl, pin) +
@@ -906,6 +909,10 @@ static const struct gpio_chip mtk_gpio_chip = {
 	.set			= mtk_gpio_set,
 	.to_irq			= mtk_gpio_to_irq,
 	.set_config		= mtk_gpio_set_config,
+<<<<<<< HEAD
+=======
+	.of_gpio_n_cells	= 2,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int mtk_eint_suspend(struct device *device)
@@ -1056,6 +1063,10 @@ int mtk_pctrl_init(struct platform_device *pdev,
 	struct pinctrl_pin_desc *pins;
 	struct mtk_pinctrl *pctl;
 	struct device_node *np = pdev->dev.of_node, *node;
+<<<<<<< HEAD
+=======
+	struct property *prop;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret, i;
 
 	pctl = devm_kzalloc(&pdev->dev, sizeof(*pctl), GFP_KERNEL);
@@ -1064,6 +1075,14 @@ int mtk_pctrl_init(struct platform_device *pdev,
 
 	platform_set_drvdata(pdev, pctl);
 
+<<<<<<< HEAD
+=======
+	prop = of_find_property(np, "pins-are-numbered", NULL);
+	if (!prop)
+		return dev_err_probe(dev, -EINVAL,
+				     "only support pins-are-numbered format\n");
+
+>>>>>>> b7ba80a49124 (Commit)
 	node = of_parse_phandle(np, "mediatek,pctl-regmap", 0);
 	if (node) {
 		pctl->regmap1 = syscon_node_to_regmap(node);

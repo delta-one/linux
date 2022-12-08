@@ -30,12 +30,15 @@
 	};
 };
 
+<<<<<<< HEAD
 /* phy for pcie */
 &combphy2 {
 	phy-supply = <&vcc3v3_sys>;
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &gmac1 {
 	status = "okay";
 };
@@ -111,11 +114,14 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &pcie2x1 {
 	vpcie3v3-supply = <&vcc_3v3>;
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &rgmii_phy1 {
 	status = "okay";
 };

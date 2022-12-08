@@ -12,7 +12,10 @@
 
 #include "qrtr.h"
 
+<<<<<<< HEAD
 #include <trace/events/sock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CREATE_TRACE_POINTS
 #include <trace/events/qrtr.h>
 
@@ -84,10 +87,14 @@ static struct qrtr_node *node_get(unsigned int node_id)
 
 	node->id = node_id;
 
+<<<<<<< HEAD
 	if (radix_tree_insert(&nodes, node_id, node)) {
 		kfree(node);
 		return NULL;
 	}
+=======
+	radix_tree_insert(&nodes, node_id, node);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return node;
 }
@@ -756,8 +763,11 @@ static void qrtr_ns_worker(struct work_struct *work)
 
 static void qrtr_ns_data_ready(struct sock *sk)
 {
+<<<<<<< HEAD
 	trace_sk_data_ready(sk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	queue_work(qrtr_ns.workqueue, &qrtr_ns.work);
 }
 

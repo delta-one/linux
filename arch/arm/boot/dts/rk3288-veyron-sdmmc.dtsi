@@ -5,12 +5,15 @@
  * Copyright 2015 Google, Inc
  */
 
+<<<<<<< HEAD
 / {
 	aliases {
 		mmc1 = &sdmmc;
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &io_domains {
 	sdcard-supply = <&vccio_sd>;
 };

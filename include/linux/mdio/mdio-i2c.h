@@ -11,6 +11,7 @@ struct device;
 struct i2c_adapter;
 struct mii_bus;
 
+<<<<<<< HEAD
 enum mdio_i2c_proto {
 	MDIO_I2C_NONE,
 	MDIO_I2C_MARVELL_C22,
@@ -20,5 +21,8 @@ enum mdio_i2c_proto {
 
 struct mii_bus *mdio_i2c_alloc(struct device *parent, struct i2c_adapter *i2c,
 			       enum mdio_i2c_proto protocol);
+=======
+struct mii_bus *mdio_i2c_alloc(struct device *parent, struct i2c_adapter *i2c);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

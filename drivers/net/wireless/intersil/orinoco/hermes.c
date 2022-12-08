@@ -38,7 +38,10 @@
  * under either the MPL or the GPL.
  */
 
+<<<<<<< HEAD
 #include <linux/net.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/delay.h>

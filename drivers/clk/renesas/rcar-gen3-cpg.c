@@ -310,11 +310,26 @@ static unsigned int cpg_clk_extalr __initdata;
 static u32 cpg_mode __initdata;
 static u32 cpg_quirks __initdata;
 
+<<<<<<< HEAD
+=======
+#define PLL_ERRATA	BIT(0)		/* Missing PLL0/2/4 post-divider */
+>>>>>>> b7ba80a49124 (Commit)
 #define RCKCR_CKSEL	BIT(1)		/* Manual RCLK parent selection */
 
 
 static const struct soc_device_attribute cpg_quirks_match[] __initconst = {
 	{
+<<<<<<< HEAD
+=======
+		.soc_id = "r8a7795", .revision = "ES1.0",
+		.data = (void *)(PLL_ERRATA | RCKCR_CKSEL),
+	},
+	{
+		.soc_id = "r8a7795", .revision = "ES1.*",
+		.data = (void *)(RCKCR_CKSEL),
+	},
+	{
+>>>>>>> b7ba80a49124 (Commit)
 		.soc_id = "r8a7796", .revision = "ES1.0",
 		.data = (void *)(RCKCR_CKSEL),
 	},
@@ -346,8 +361,14 @@ struct clk * __init rcar_gen3_cpg_clk_register(struct device *dev,
 		 * multiplier when cpufreq changes between normal and boost
 		 * modes.
 		 */
+<<<<<<< HEAD
 		return cpg_pll_clk_register(core->name, __clk_get_name(parent),
 					    base, 2, CPG_PLL0CR, 0);
+=======
+		mult = (cpg_quirks & PLL_ERRATA) ? 4 : 2;
+		return cpg_pll_clk_register(core->name, __clk_get_name(parent),
+					    base, mult, CPG_PLL0CR, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	case CLK_TYPE_GEN3_PLL1:
 		mult = cpg_pll_config->pll1_mult;
@@ -360,8 +381,14 @@ struct clk * __init rcar_gen3_cpg_clk_register(struct device *dev,
 		 * multiplier when cpufreq changes between normal and boost
 		 * modes.
 		 */
+<<<<<<< HEAD
 		return cpg_pll_clk_register(core->name, __clk_get_name(parent),
 					    base, 2, CPG_PLL2CR, 2);
+=======
+		mult = (cpg_quirks & PLL_ERRATA) ? 4 : 2;
+		return cpg_pll_clk_register(core->name, __clk_get_name(parent),
+					    base, mult, CPG_PLL2CR, 2);
+>>>>>>> b7ba80a49124 (Commit)
 
 	case CLK_TYPE_GEN3_PLL3:
 		mult = cpg_pll_config->pll3_mult;
@@ -377,6 +404,11 @@ struct clk * __init rcar_gen3_cpg_clk_register(struct device *dev,
 		 */
 		value = readl(base + CPG_PLL4CR);
 		mult = (((value >> 24) & 0x7f) + 1) * 2;
+<<<<<<< HEAD
+=======
+		if (cpg_quirks & PLL_ERRATA)
+			mult *= 2;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case CLK_TYPE_GEN3_SDH:

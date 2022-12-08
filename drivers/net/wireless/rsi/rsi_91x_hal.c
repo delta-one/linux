@@ -162,16 +162,22 @@ int rsi_prepare_data_desc(struct rsi_common *common, struct sk_buff *skb)
 	u8 header_size;
 	u8 vap_id = 0;
 	u8 dword_align_bytes;
+<<<<<<< HEAD
 	bool tx_eapol;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 seq_num;
 
 	info = IEEE80211_SKB_CB(skb);
 	vif = info->control.vif;
 	tx_params = (struct skb_info *)info->driver_data;
 
+<<<<<<< HEAD
 	tx_eapol = IEEE80211_SKB_CB(skb)->control.flags &
 		   IEEE80211_TX_CTRL_PORT_CTRL_PROTO;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	header_size = FRAME_DESC_SZ + sizeof(struct rsi_xtended_desc);
 	if (header_size > skb_headroom(skb)) {
 		rsi_dbg(ERR_ZONE, "%s: Unable to send pkt\n", __func__);
@@ -235,7 +241,11 @@ int rsi_prepare_data_desc(struct rsi_common *common, struct sk_buff *skb)
 		}
 	}
 
+<<<<<<< HEAD
 	if (tx_eapol) {
+=======
+	if (skb->protocol == cpu_to_be16(ETH_P_PAE)) {
+>>>>>>> b7ba80a49124 (Commit)
 		rsi_dbg(INFO_ZONE, "*** Tx EAPOL ***\n");
 
 		data_desc->frame_info = cpu_to_le16(RATE_INFO_ENABLE);
@@ -894,7 +904,11 @@ static int rsi_load_9113_firmware(struct rsi_hw *adapter)
 	struct ta_metadata *metadata_p;
 	int status;
 
+<<<<<<< HEAD
 	status = bl_cmd(adapter, AUTO_READ_MODE, CMD_PASS,
+=======
+	status = bl_cmd(adapter, CONFIG_AUTO_READ_MODE, CMD_PASS,
+>>>>>>> b7ba80a49124 (Commit)
 			"AUTO_READ_CMD");
 	if (status < 0)
 		return status;
@@ -984,7 +998,11 @@ fw_upgrade:
 	}
 	rsi_dbg(ERR_ZONE, "Firmware upgrade failed\n");
 
+<<<<<<< HEAD
 	status = bl_cmd(adapter, AUTO_READ_MODE, CMD_PASS,
+=======
+	status = bl_cmd(adapter, CONFIG_AUTO_READ_MODE, CMD_PASS,
+>>>>>>> b7ba80a49124 (Commit)
 			"AUTO_READ_MODE");
 	if (status)
 		goto fail;

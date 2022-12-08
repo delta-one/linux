@@ -43,6 +43,10 @@
 #include <drm/drm_atomic_state_helper.h>
 #include <drm/drm_bridge.h>
 #include <drm/drm_connector.h>
+<<<<<<< HEAD
+=======
+#include <drm/drm_crtc_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_edid.h>
 #include <drm/drm_modeset_helper_vtables.h>
 #include <drm/drm_print.h>

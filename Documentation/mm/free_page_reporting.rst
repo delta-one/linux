@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _free_page_reporting:
+
+>>>>>>> b7ba80a49124 (Commit)
 =====================
 Free Page Reporting
 =====================

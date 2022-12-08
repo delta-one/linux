@@ -441,6 +441,7 @@ static void zcrypt_cex2a_receive(struct ap_queue *aq,
 	t80h = reply->msg;
 	if (t80h->type == TYPE80_RSP_CODE) {
 		len = t80h->len;
+<<<<<<< HEAD
 		if (len > reply->bufsize || len > msg->bufsize ||
 		    len != reply->len) {
 			ZCRYPT_DBF_DBG("%s len mismatch => EMSGSIZE\n", __func__);
@@ -452,6 +453,16 @@ static void zcrypt_cex2a_receive(struct ap_queue *aq,
 	} else {
 		memcpy(msg->msg, reply->msg, sizeof(error_reply));
 		msg->len = sizeof(error_reply);
+=======
+		if (len > reply->bufsize || len > msg->bufsize) {
+			msg->rc = -EMSGSIZE;
+		} else {
+			memcpy(msg->msg, reply->msg, len);
+			msg->len = len;
+		}
+	} else {
+		memcpy(msg->msg, reply->msg, sizeof(error_reply));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 out:
 	complete((struct completion *)msg->private);
@@ -479,7 +490,11 @@ static long zcrypt_cex2a_modexpo(struct zcrypt_queue *zq,
 	if (!ap_msg->msg)
 		return -ENOMEM;
 	ap_msg->receive = zcrypt_cex2a_receive;
+<<<<<<< HEAD
 	ap_msg->psmid = (((unsigned long)current->pid) << 32) +
+=======
+	ap_msg->psmid = (((unsigned long long)current->pid) << 32) +
+>>>>>>> b7ba80a49124 (Commit)
 		atomic_inc_return(&zcrypt_step);
 	ap_msg->private = &work;
 	rc = ICAMEX_msg_to_type50MEX_msg(zq, ap_msg, mex);
@@ -530,7 +545,11 @@ static long zcrypt_cex2a_modexpo_crt(struct zcrypt_queue *zq,
 	if (!ap_msg->msg)
 		return -ENOMEM;
 	ap_msg->receive = zcrypt_cex2a_receive;
+<<<<<<< HEAD
 	ap_msg->psmid = (((unsigned long)current->pid) << 32) +
+=======
+	ap_msg->psmid = (((unsigned long long)current->pid) << 32) +
+>>>>>>> b7ba80a49124 (Commit)
 		atomic_inc_return(&zcrypt_step);
 	ap_msg->private = &work;
 	rc = ICACRT_msg_to_type50CRT_msg(zq, ap_msg, crt);

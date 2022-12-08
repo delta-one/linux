@@ -450,6 +450,11 @@ static int nsp_analyze_sdtr(struct scsi_cmnd *SCpnt)
 	sync_data	      *sync   = &(data->Sync[target]);
 	struct nsp_sync_table *sync_table;
 	unsigned int	       period, offset;
+<<<<<<< HEAD
+=======
+	int		       i;
+
+>>>>>>> b7ba80a49124 (Commit)
 
 	nsp_dbg(NSP_DEBUG_SYNC, "in");
 
@@ -464,7 +469,11 @@ static int nsp_analyze_sdtr(struct scsi_cmnd *SCpnt)
 		sync_table = nsp_sync_table_40M;
 	}
 
+<<<<<<< HEAD
 	for (; sync_table->max_period != 0; sync_table++) {
+=======
+	for ( i = 0; sync_table->max_period != 0; i++, sync_table++) {
+>>>>>>> b7ba80a49124 (Commit)
 		if ( period >= sync_table->min_period &&
 		     period <= sync_table->max_period	 ) {
 			break;

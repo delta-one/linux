@@ -14,7 +14,10 @@
 #include "psp-dev.h"
 #include "sev-dev.h"
 #include "tee-dev.h"
+<<<<<<< HEAD
 #include "platform-access.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct psp_device *psp_master;
 
@@ -47,6 +50,12 @@ static irqreturn_t psp_irq_handler(int irq, void *data)
 	if (status) {
 		if (psp->sev_irq_handler)
 			psp->sev_irq_handler(irq, psp->sev_irq_data, status);
+<<<<<<< HEAD
+=======
+
+		if (psp->tee_irq_handler)
+			psp->tee_irq_handler(irq, psp->tee_irq_data, status);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Clear the interrupt status by writing the same value we read. */
@@ -103,6 +112,7 @@ static int psp_check_tee_support(struct psp_device *psp)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void psp_init_platform_access(struct psp_device *psp)
 {
 	int ret;
@@ -114,6 +124,8 @@ static void psp_init_platform_access(struct psp_device *psp)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int psp_init(struct psp_device *psp)
 {
 	int ret;
@@ -130,9 +142,12 @@ static int psp_init(struct psp_device *psp)
 			return ret;
 	}
 
+<<<<<<< HEAD
 	if (psp->vdata->platform_access)
 		psp_init_platform_access(psp);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -213,8 +228,11 @@ void psp_dev_destroy(struct sp_device *sp)
 
 	tee_dev_destroy(psp);
 
+<<<<<<< HEAD
 	platform_access_dev_destroy(psp);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sp_free_psp_irq(sp, psp);
 
 	if (sp->clear_psp_master_device)
@@ -233,6 +251,21 @@ void psp_clear_sev_irq_handler(struct psp_device *psp)
 	psp_set_sev_irq_handler(psp, NULL, NULL);
 }
 
+<<<<<<< HEAD
+=======
+void psp_set_tee_irq_handler(struct psp_device *psp, psp_irq_handler_t handler,
+			     void *data)
+{
+	psp->tee_irq_data = data;
+	psp->tee_irq_handler = handler;
+}
+
+void psp_clear_tee_irq_handler(struct psp_device *psp)
+{
+	psp_set_tee_irq_handler(psp, NULL, NULL);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 struct psp_device *psp_get_master_device(void)
 {
 	struct sp_device *sp = sp_get_psp_master_device();

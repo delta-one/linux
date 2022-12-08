@@ -1,7 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0
 
 obj-$(CONFIG_SCSI_UFSHCD)		+= ufshcd-core.o
+<<<<<<< HEAD
 ufshcd-core-y				+= ufshcd.o ufs-sysfs.o ufs-mcq.o
+=======
+ufshcd-core-y				+= ufshcd.o ufs-sysfs.o
+>>>>>>> b7ba80a49124 (Commit)
 ufshcd-core-$(CONFIG_DEBUG_FS)		+= ufs-debugfs.o
 ufshcd-core-$(CONFIG_SCSI_UFS_BSG)	+= ufs_bsg.o
 ufshcd-core-$(CONFIG_SCSI_UFS_CRYPTO)	+= ufshcd-crypto.o

@@ -110,7 +110,10 @@ struct ubi_volume_info {
 	int name_len;
 	const char *name;
 	dev_t cdev;
+<<<<<<< HEAD
 	struct device *dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**

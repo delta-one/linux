@@ -57,6 +57,7 @@ static void ZSTD_ldm_gear_init(ldmRollingHashState_t* state, ldmParams_t const* 
     }
 }
 
+<<<<<<< HEAD
 /* ZSTD_ldm_gear_reset()
  * Feeds [data, data + minMatchLength) into the hash without registering any
  * splits. This effectively resets the hash state. This is used when skipping
@@ -84,6 +85,8 @@ static void ZSTD_ldm_gear_reset(ldmRollingHashState_t* state,
 #undef GEAR_ITER_ONCE
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* ZSTD_ldm_gear_feed():
  *
  * Registers in the splits array all the split points found in the first
@@ -159,12 +162,20 @@ size_t ZSTD_ldm_getTableSize(ldmParams_t params)
     size_t const ldmBucketSize = ((size_t)1) << (params.hashLog - ldmBucketSizeLog);
     size_t const totalSize = ZSTD_cwksp_alloc_size(ldmBucketSize)
                            + ZSTD_cwksp_alloc_size(ldmHSize * sizeof(ldmEntry_t));
+<<<<<<< HEAD
     return params.enableLdm == ZSTD_ps_enable ? totalSize : 0;
+=======
+    return params.enableLdm ? totalSize : 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 size_t ZSTD_ldm_getMaxNbSeq(ldmParams_t params, size_t maxChunkSize)
 {
+<<<<<<< HEAD
     return params.enableLdm == ZSTD_ps_enable ? (maxChunkSize / params.minMatchLength) : 0;
+=======
+    return params.enableLdm ? (maxChunkSize / params.minMatchLength) : 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* ZSTD_ldm_getBucket() :
@@ -282,7 +293,11 @@ void ZSTD_ldm_fillHashTable(
     while (ip < iend) {
         size_t hashed;
         unsigned n;
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> b7ba80a49124 (Commit)
         numSplits = 0;
         hashed = ZSTD_ldm_gear_feed(&hashState, ip, iend - ip, splits, &numSplits);
 
@@ -354,8 +369,21 @@ static size_t ZSTD_ldm_generateSequences_internal(
 
     /* Initialize the rolling hash state with the first minMatchLength bytes */
     ZSTD_ldm_gear_init(&hashState, params);
+<<<<<<< HEAD
     ZSTD_ldm_gear_reset(&hashState, ip, minMatchLength);
     ip += minMatchLength;
+=======
+    {
+        size_t n = 0;
+
+        while (n < minMatchLength) {
+            numSplits = 0;
+            n += ZSTD_ldm_gear_feed(&hashState, ip + n, minMatchLength - n,
+                                    splits, &numSplits);
+        }
+        ip += minMatchLength;
+    }
+>>>>>>> b7ba80a49124 (Commit)
 
     while (ip < ilimit) {
         size_t hashed;
@@ -380,7 +408,10 @@ static size_t ZSTD_ldm_generateSequences_internal(
         for (n = 0; n < numSplits; n++) {
             size_t forwardMatchLength = 0, backwardMatchLength = 0,
                    bestMatchLength = 0, mLength;
+<<<<<<< HEAD
             U32 offset;
+=======
+>>>>>>> b7ba80a49124 (Commit)
             BYTE const* const split = candidates[n].split;
             U32 const checksum = candidates[n].checksum;
             U32 const hash = candidates[n].hash;
@@ -448,9 +479,15 @@ static size_t ZSTD_ldm_generateSequences_internal(
             }
 
             /* Match found */
+<<<<<<< HEAD
             offset = (U32)(split - base) - bestEntry->offset;
             mLength = forwardMatchLength + backwardMatchLength;
             {
+=======
+            mLength = forwardMatchLength + backwardMatchLength;
+            {
+                U32 const offset = (U32)(split - base) - bestEntry->offset;
+>>>>>>> b7ba80a49124 (Commit)
                 rawSeq* const seq = rawSeqStore->seq + rawSeqStore->size;
 
                 /* Out of sequence storage */
@@ -467,6 +504,7 @@ static size_t ZSTD_ldm_generateSequences_internal(
             ZSTD_ldm_insertEntry(ldmState, hash, newEntry, *params);
 
             anchor = split + forwardMatchLength;
+<<<<<<< HEAD
 
             /* If we find a match that ends after the data that we've hashed
              * then we have a repeating, overlapping, pattern. E.g. all zeros.
@@ -482,6 +520,8 @@ static size_t ZSTD_ldm_generateSequences_internal(
                 ip = anchor - hashed;
                 break;
             }
+=======
+>>>>>>> b7ba80a49124 (Commit)
         }
 
         ip += hashed;
@@ -535,7 +575,11 @@ size_t ZSTD_ldm_generateSequences(
 
         assert(chunkStart < iend);
         /* 1. Perform overflow correction if necessary. */
+<<<<<<< HEAD
         if (ZSTD_window_needOverflowCorrection(ldmState->window, 0, maxDist, ldmState->loadedDictEnd, chunkStart, chunkEnd)) {
+=======
+        if (ZSTD_window_needOverflowCorrection(ldmState->window, chunkEnd)) {
+>>>>>>> b7ba80a49124 (Commit)
             U32 const ldmHSize = 1U << params->hashLog;
             U32 const correction = ZSTD_window_correctOverflow(
                 &ldmState->window, /* cycleLog */ 0, maxDist, chunkStart);
@@ -579,9 +623,13 @@ size_t ZSTD_ldm_generateSequences(
     return 0;
 }
 
+<<<<<<< HEAD
 void
 ZSTD_ldm_skipSequences(rawSeqStore_t* rawSeqStore, size_t srcSize, U32 const minMatch)
 {
+=======
+void ZSTD_ldm_skipSequences(rawSeqStore_t* rawSeqStore, size_t srcSize, U32 const minMatch) {
+>>>>>>> b7ba80a49124 (Commit)
     while (srcSize > 0 && rawSeqStore->pos < rawSeqStore->size) {
         rawSeq* seq = rawSeqStore->seq + rawSeqStore->pos;
         if (srcSize <= seq->litLength) {
@@ -659,13 +707,20 @@ void ZSTD_ldm_skipRawSeqStoreBytes(rawSeqStore_t* rawSeqStore, size_t nbBytes) {
 
 size_t ZSTD_ldm_blockCompress(rawSeqStore_t* rawSeqStore,
     ZSTD_matchState_t* ms, seqStore_t* seqStore, U32 rep[ZSTD_REP_NUM],
+<<<<<<< HEAD
     ZSTD_paramSwitch_e useRowMatchFinder,
+=======
+>>>>>>> b7ba80a49124 (Commit)
     void const* src, size_t srcSize)
 {
     const ZSTD_compressionParameters* const cParams = &ms->cParams;
     unsigned const minMatch = cParams->minMatch;
     ZSTD_blockCompressor const blockCompressor =
+<<<<<<< HEAD
         ZSTD_selectBlockCompressor(cParams->strategy, useRowMatchFinder, ZSTD_matchState_dictMode(ms));
+=======
+        ZSTD_selectBlockCompressor(cParams->strategy, ZSTD_matchState_dictMode(ms));
+>>>>>>> b7ba80a49124 (Commit)
     /* Input bounds */
     BYTE const* const istart = (BYTE const*)src;
     BYTE const* const iend = istart + srcSize;
@@ -711,8 +766,13 @@ size_t ZSTD_ldm_blockCompress(rawSeqStore_t* rawSeqStore,
             rep[0] = sequence.offset;
             /* Store the sequence */
             ZSTD_storeSeq(seqStore, newLitLength, ip - newLitLength, iend,
+<<<<<<< HEAD
                           STORE_OFFSET(sequence.offset),
                           sequence.matchLength);
+=======
+                          sequence.offset + ZSTD_REP_MOVE,
+                          sequence.matchLength - MINMATCH);
+>>>>>>> b7ba80a49124 (Commit)
             ip += sequence.matchLength;
         }
     }

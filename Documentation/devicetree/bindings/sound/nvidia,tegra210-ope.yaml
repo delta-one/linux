@@ -17,7 +17,11 @@ maintainers:
   - Sameer Pujar <spujar@nvidia.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: dai-common.yaml#
+=======
+  - $ref: name-prefix.yaml#
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -34,10 +38,17 @@ properties:
     maxItems: 1
 
   "#address-cells":
+<<<<<<< HEAD
     enum: [ 1, 2 ]
 
   "#size-cells":
     enum: [ 1, 2 ]
+=======
+    const: 1
+
+  "#size-cells":
+    const: 1
+>>>>>>> b7ba80a49124 (Commit)
 
   ranges: true
 

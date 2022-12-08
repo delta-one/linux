@@ -2,7 +2,11 @@
 /*
  * SiFive Platform EDAC Driver
  *
+<<<<<<< HEAD
  * Copyright (C) 2018-2022 SiFive, Inc.
+=======
+ * Copyright (C) 2018-2019 SiFive, Inc.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This driver is partially based on octeon_edac-pc.c
  *
@@ -10,7 +14,11 @@
 #include <linux/edac.h>
 #include <linux/platform_device.h>
 #include "edac_module.h"
+<<<<<<< HEAD
 #include <soc/sifive/sifive_ccache.h>
+=======
+#include <soc/sifive/sifive_l2_cache.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DRVNAME "sifive_edac"
 
@@ -32,9 +40,15 @@ int ecc_err_event(struct notifier_block *this, unsigned long event, void *ptr)
 
 	p = container_of(this, struct sifive_edac_priv, notifier);
 
+<<<<<<< HEAD
 	if (event == SIFIVE_CCACHE_ERR_TYPE_UE)
 		edac_device_handle_ue(p->dci, 0, 0, msg);
 	else if (event == SIFIVE_CCACHE_ERR_TYPE_CE)
+=======
+	if (event == SIFIVE_L2_ERR_TYPE_UE)
+		edac_device_handle_ue(p->dci, 0, 0, msg);
+	else if (event == SIFIVE_L2_ERR_TYPE_CE)
+>>>>>>> b7ba80a49124 (Commit)
 		edac_device_handle_ce(p->dci, 0, 0, msg);
 
 	return NOTIFY_OK;
@@ -67,7 +81,11 @@ static int ecc_register(struct platform_device *pdev)
 		goto err;
 	}
 
+<<<<<<< HEAD
 	register_sifive_ccache_error_notifier(&p->notifier);
+=======
+	register_sifive_l2_error_notifier(&p->notifier);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -81,7 +99,11 @@ static int ecc_unregister(struct platform_device *pdev)
 {
 	struct sifive_edac_priv *p = platform_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	unregister_sifive_ccache_error_notifier(&p->notifier);
+=======
+	unregister_sifive_l2_error_notifier(&p->notifier);
+>>>>>>> b7ba80a49124 (Commit)
 	edac_device_del_device(&pdev->dev);
 	edac_device_free_ctl_info(p->dci);
 

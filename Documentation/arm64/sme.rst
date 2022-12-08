@@ -18,19 +18,27 @@ model features for SME is included in Appendix A.
 1.  General
 -----------
 
+<<<<<<< HEAD
 * PSTATE.SM, PSTATE.ZA, the streaming mode vector length, the ZA and (when
   present) ZTn register state and TPIDR2_EL0 are tracked per thread.
+=======
+* PSTATE.SM, PSTATE.ZA, the streaming mode vector length, the ZA
+  register state and TPIDR2_EL0 are tracked per thread.
+>>>>>>> b7ba80a49124 (Commit)
 
 * The presence of SME is reported to userspace via HWCAP2_SME in the aux vector
   AT_HWCAP2 entry.  Presence of this flag implies the presence of the SME
   instructions and registers, and the Linux-specific system interfaces
   described in this document.  SME is reported in /proc/cpuinfo as "sme".
 
+<<<<<<< HEAD
 * The presence of SME2 is reported to userspace via HWCAP2_SME2 in the
   aux vector AT_HWCAP2 entry.  Presence of this flag implies the presence of
   the SME2 instructions and ZT0, and the Linux-specific system interfaces
   described in this document.  SME2 is reported in /proc/cpuinfo as "sme2".
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 * Support for the execution of SME instructions in userspace can also be
   detected by reading the CPU ID register ID_AA64PFR1_EL1 using an MRS
   instruction, and checking that the value of the SME field is nonzero. [3]
@@ -49,7 +57,10 @@ model features for SME is included in Appendix A.
 	HWCAP2_SME_B16F32
 	HWCAP2_SME_F32F32
 	HWCAP2_SME_FA64
+<<<<<<< HEAD
         HWCAP2_SME2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   This list may be extended over time as the SME architecture evolves.
 
@@ -58,8 +69,13 @@ model features for SME is included in Appendix A.
   cpu-feature-registers.txt for details.
 
 * Debuggers should restrict themselves to interacting with the target via the
+<<<<<<< HEAD
   NT_ARM_SVE, NT_ARM_SSVE, NT_ARM_ZA and NT_ARM_ZT regsets.  The recommended
   way of detecting support for these regsets is to connect to a target process
+=======
+  NT_ARM_SVE, NT_ARM_SSVE and NT_ARM_ZA regsets.  The recommended way
+  of detecting support for these regsets is to connect to a target process
+>>>>>>> b7ba80a49124 (Commit)
   first and then attempt a
 
 	ptrace(PTRACE_GETREGSET, pid, NT_ARM_<regset>, &iov).
@@ -95,13 +111,22 @@ be zeroed.
 -------------------------
 
 * On syscall PSTATE.ZA is preserved, if PSTATE.ZA==1 then the contents of the
+<<<<<<< HEAD
   ZA matrix and ZTn (if present) are preserved.
+=======
+  ZA matrix are preserved.
+>>>>>>> b7ba80a49124 (Commit)
 
 * On syscall PSTATE.SM will be cleared and the SVE registers will be handled
   as per the standard SVE ABI.
 
+<<<<<<< HEAD
 * None of the SVE registers, ZA or ZTn are used to pass arguments to
   or receive results from any syscall.
+=======
+* Neither the SVE registers nor ZA are used to pass arguments to or receive
+  results from any syscall.
+>>>>>>> b7ba80a49124 (Commit)
 
 * On process creation (eg, clone()) the newly created process will have
   PSTATE.SM cleared.
@@ -117,9 +142,12 @@ be zeroed.
 
 * Signal handlers are invoked with streaming mode and ZA disabled.
 
+<<<<<<< HEAD
 * A new signal frame record TPIDR2_MAGIC is added formatted as a struct
   tpidr2_context to allow access to TPIDR2_EL0 from signal handlers.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 * A new signal frame record za_context encodes the ZA register contents on
   signal delivery. [1]
 
@@ -143,6 +171,7 @@ be zeroed.
   __reserved[] referencing this space.  za_context is then written in the
   extra space.  Refer to [1] for further details about this mechanism.
 
+<<<<<<< HEAD
 * If ZTn is supported and PSTATE.ZA==1 then a signal frame record for ZTn will
   be generated.
 
@@ -151,6 +180,8 @@ be zeroed.
   the number of ZTn registers supported by the system, then zt_context.nregs
   blocks of 64 bytes of data per register.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 5.  Signal return
 -----------------
@@ -168,9 +199,12 @@ When returning from a signal handler:
   the signal frame does not match the current vector length, the signal return
   attempt is treated as illegal, resulting in a forced SIGSEGV.
 
+<<<<<<< HEAD
 * If ZTn is not supported or PSTATE.ZA==0 then it is illegal to have a
   signal frame record for ZTn, resulting in a forced SIGSEGV.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 6.  prctl extensions
 --------------------
@@ -234,8 +268,13 @@ prctl(PR_SME_SET_VL, unsigned long arg)
       vector length that will be applied at the next execve() by the calling
       thread.
 
+<<<<<<< HEAD
     * Changing the vector length causes all of ZA, ZTn, P0..P15, FFR and all
       bits of Z0..Z31 except for Z0 bits [127:0] .. Z31 bits [127:0] to become
+=======
+    * Changing the vector length causes all of ZA, P0..P15, FFR and all bits of
+      Z0..Z31 except for Z0 bits [127:0] .. Z31 bits [127:0] to become
+>>>>>>> b7ba80a49124 (Commit)
       unspecified, including both streaming and non-streaming SVE state.
       Calling PR_SME_SET_VL with vl equal to the thread's current vector
       length, or calling PR_SME_SET_VL with the PR_SVE_SET_VL_ONEXEC flag,
@@ -337,6 +376,7 @@ The regset data starts with struct user_za_header, containing:
 
 * The effect of writing a partial, incomplete payload is unspecified.
 
+<<<<<<< HEAD
 * A new regset NT_ARM_ZT is defined for access to ZTn state via
   PTRACE_GETREGSET and PTRACE_SETREGSET.
 
@@ -346,6 +386,8 @@ The regset data starts with struct user_za_header, containing:
 
 * Writes to NT_ARM_ZT will set PSTATE.ZA to 1.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 8.  ELF coredump extensions
 ---------------------------
@@ -360,11 +402,14 @@ The regset data starts with struct user_za_header, containing:
   been read if a PTRACE_GETREGSET of NT_ARM_ZA were executed for each thread
   when the coredump was generated.
 
+<<<<<<< HEAD
 * A NT_ARM_ZT note will be added to each coredump for each thread of the
   dumped process.  The contents will be equivalent to the data that would have
   been read if a PTRACE_GETREGSET of NT_ARM_ZT were executed for each thread
   when the coredump was generated.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 * The NT_ARM_TLS note will be extended to two registers, the second register
   will contain TPIDR2_EL0 on systems that support SME and will be read as
   zero with writes ignored otherwise.
@@ -440,9 +485,12 @@ In A64 state, SME adds the following:
   For best system performance it is strongly encouraged for software to enable
   ZA only when it is actively being used.
 
+<<<<<<< HEAD
 * A new ZT0 register is introduced when SME2 is present. This is a 512 bit
   register which is accessible when PSTATE.ZA is set, as ZA itself is.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 * Two new 1 bit fields in PSTATE which may be controlled via the SMSTART and
   SMSTOP instructions or by access to the SVCR system register:
 

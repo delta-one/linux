@@ -350,6 +350,7 @@ although tab2space problem can be solved with external editor.
 
 Another problem is that Gmail will base64-encode any message that has a
 non-ASCII character. That includes things like European names.
+<<<<<<< HEAD
 
 Proton Mail
 ***********
@@ -370,3 +371,5 @@ clients may encrypt responses to encrypted mail for all recipients, including
 the mailing lists.
 Unless a way to disable this "feature" is introduced, Proton Mail is unsuited
 to kernel development.
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -304,6 +304,7 @@ int r8712_init_drv_sw(struct _adapter *padapter)
 	padapter->cmdpriv.padapter = padapter;
 	ret = r8712_init_evt_priv(&padapter->evtpriv);
 	if (ret)
+<<<<<<< HEAD
 		goto free_cmd;
 	ret = r8712_init_mlme_priv(padapter);
 	if (ret)
@@ -314,19 +315,32 @@ int r8712_init_drv_sw(struct _adapter *padapter)
 	ret = _r8712_init_recv_priv(&padapter->recvpriv, padapter);
 	if (ret)
 		goto free_xmit;
+=======
+		return ret;
+	ret = r8712_init_mlme_priv(padapter);
+	if (ret)
+		return ret;
+	_r8712_init_xmit_priv(&padapter->xmitpriv, padapter);
+	_r8712_init_recv_priv(&padapter->recvpriv, padapter);
+>>>>>>> b7ba80a49124 (Commit)
 	memset((unsigned char *)&padapter->securitypriv, 0,
 	       sizeof(struct security_priv));
 	timer_setup(&padapter->securitypriv.tkip_timer,
 		    r8712_use_tkipkey_handler, 0);
 	ret = _r8712_init_sta_priv(&padapter->stapriv);
 	if (ret)
+<<<<<<< HEAD
 		goto free_recv;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	padapter->stapriv.padapter = padapter;
 	r8712_init_bcmc_stainfo(padapter);
 	r8712_init_pwrctrl_priv(padapter);
 	mp871xinit(padapter);
 	init_default_value(padapter);
 	r8712_InitSwLeds(padapter);
+<<<<<<< HEAD
 
 	return 0;
 
@@ -340,6 +354,8 @@ free_evt:
 	r8712_free_evt_priv(&padapter->evtpriv);
 free_cmd:
 	r8712_free_cmd_priv(&padapter->cmdpriv);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

@@ -1,7 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 
 /* Copyright (c) 2015-2018, The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (C) 2018-2022 Linaro Ltd.
+=======
+ * Copyright (C) 2018-2020 Linaro Ltd.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #ifndef _GSI_PRIVATE_H_
 #define _GSI_PRIVATE_H_
@@ -18,13 +22,21 @@ struct gsi_channel;
 
 /**
  * gsi_trans_move_complete() - Mark a GSI transaction completed
+<<<<<<< HEAD
  * @trans:	Transaction whose state is to be updated
+=======
+ * @trans:	Transaction to commit
+>>>>>>> b7ba80a49124 (Commit)
  */
 void gsi_trans_move_complete(struct gsi_trans *trans);
 
 /**
  * gsi_trans_move_polled() - Mark a transaction polled
+<<<<<<< HEAD
  * @trans:	Transaction whose state is to be updated
+=======
+ * @trans:	Transaction to update
+>>>>>>> b7ba80a49124 (Commit)
  */
 void gsi_trans_move_polled(struct gsi_trans *trans);
 
@@ -97,8 +109,13 @@ void gsi_channel_doorbell(struct gsi_channel *channel);
 /* gsi_channel_update() - Update knowledge of channel hardware state
  * @channel:	Channel to be updated
  *
+<<<<<<< HEAD
  * Consult hardware, change the state of any newly-completed transactions
  * on a channel.
+=======
+ * Consult hardware, move any newly completed transactions to a
+ * channel's completed list.
+>>>>>>> b7ba80a49124 (Commit)
  */
 void gsi_channel_update(struct gsi_channel *channel);
 

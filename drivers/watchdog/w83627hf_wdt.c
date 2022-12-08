@@ -113,10 +113,13 @@ MODULE_PARM_DESC(early_disable, "Disable watchdog at boot time (default=0)");
 #define W836X7HF_WDT_CSR	0xf7
 #define NCT6102D_WDT_CSR	0xf2
 
+<<<<<<< HEAD
 #define WDT_CSR_STATUS		0x10
 #define WDT_CSR_KBD		0x40
 #define WDT_CSR_MOUSE		0x80
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void superio_outb(int reg, int val)
 {
 	outb(reg, WDT_EFER);
@@ -248,12 +251,17 @@ static int w83627hf_init(struct watchdog_device *wdog, enum chips chip)
 	t = superio_inb(cr_wdt_control) & ~0x0C;
 	superio_outb(cr_wdt_control, t);
 
+<<<<<<< HEAD
 	t = superio_inb(cr_wdt_csr);
 	if (t & WDT_CSR_STATUS)
 		wdog->bootstatus |= WDIOF_CARDRESET;
 
 	/* reset status, disable keyboard & mouse turning off watchdog */
 	t &= ~(WDT_CSR_STATUS | WDT_CSR_KBD | WDT_CSR_MOUSE);
+=======
+	/* reset trigger, disable keyboard & mouse turning off watchdog */
+	t = superio_inb(cr_wdt_csr) & ~0xD0;
+>>>>>>> b7ba80a49124 (Commit)
 	superio_outb(cr_wdt_csr, t);
 
 	superio_exit();

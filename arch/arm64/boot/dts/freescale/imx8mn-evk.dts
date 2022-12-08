@@ -47,7 +47,10 @@
 				regulator-boot-on;
 				regulator-always-on;
 				regulator-ramp-delay = <3125>;
+<<<<<<< HEAD
 				nxp,dvs-standby-voltage = <750000>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			buck2: BUCK2 {
@@ -57,6 +60,11 @@
 				regulator-boot-on;
 				regulator-always-on;
 				regulator-ramp-delay = <3125>;
+<<<<<<< HEAD
+=======
+				nxp,dvs-run-voltage = <950000>;
+				nxp,dvs-standby-voltage = <850000>;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			buck4: BUCK4{

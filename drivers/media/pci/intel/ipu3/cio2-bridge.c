@@ -195,6 +195,7 @@ static void cio2_bridge_init_swnode_names(struct cio2_sensor *sensor)
 		 SWNODE_GRAPH_ENDPOINT_NAME_FMT, 0); /* And endpoint 0 */
 }
 
+<<<<<<< HEAD
 static void cio2_bridge_init_swnode_group(struct cio2_sensor *sensor)
 {
 	struct software_node *nodes = sensor->swnodes;
@@ -208,6 +209,8 @@ static void cio2_bridge_init_swnode_group(struct cio2_sensor *sensor)
 		sensor->group[SWNODE_VCM] =  &nodes[SWNODE_VCM];
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void cio2_bridge_create_connection_swnodes(struct cio2_bridge *bridge,
 						  struct cio2_sensor *sensor)
 {
@@ -232,8 +235,11 @@ static void cio2_bridge_create_connection_swnodes(struct cio2_bridge *bridge,
 	if (sensor->ssdb.vcmtype)
 		nodes[SWNODE_VCM] =
 			NODE_VCM(cio2_vcm_types[sensor->ssdb.vcmtype - 1]);
+<<<<<<< HEAD
 
 	cio2_bridge_init_swnode_group(sensor);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void cio2_bridge_instantiate_vcm_i2c_client(struct cio2_sensor *sensor)
@@ -267,7 +273,11 @@ static void cio2_bridge_unregister_sensors(struct cio2_bridge *bridge)
 
 	for (i = 0; i < bridge->n_sensors; i++) {
 		sensor = &bridge->sensors[i];
+<<<<<<< HEAD
 		software_node_unregister_node_group(sensor->group);
+=======
+		software_node_unregister_nodes(sensor->swnodes);
+>>>>>>> b7ba80a49124 (Commit)
 		ACPI_FREE(sensor->pld);
 		acpi_dev_put(sensor->adev);
 		i2c_unregister_device(sensor->vcm_i2c_client);
@@ -278,7 +288,11 @@ static int cio2_bridge_connect_sensor(const struct cio2_sensor_config *cfg,
 				      struct cio2_bridge *bridge,
 				      struct pci_dev *cio2)
 {
+<<<<<<< HEAD
 	struct fwnode_handle *fwnode, *primary;
+=======
+	struct fwnode_handle *fwnode;
+>>>>>>> b7ba80a49124 (Commit)
 	struct cio2_sensor *sensor;
 	struct acpi_device *adev;
 	acpi_status status;
@@ -325,7 +339,11 @@ static int cio2_bridge_connect_sensor(const struct cio2_sensor_config *cfg,
 		cio2_bridge_create_fwnode_properties(sensor, bridge, cfg);
 		cio2_bridge_create_connection_swnodes(bridge, sensor);
 
+<<<<<<< HEAD
 		ret = software_node_register_node_group(sensor->group);
+=======
+		ret = software_node_register_nodes(sensor->swnodes);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			goto err_free_pld;
 
@@ -337,9 +355,13 @@ static int cio2_bridge_connect_sensor(const struct cio2_sensor_config *cfg,
 		}
 
 		sensor->adev = acpi_dev_get(adev);
+<<<<<<< HEAD
 
 		primary = acpi_fwnode_handle(adev);
 		primary->secondary = fwnode;
+=======
+		adev->fwnode.secondary = fwnode;
+>>>>>>> b7ba80a49124 (Commit)
 
 		cio2_bridge_instantiate_vcm_i2c_client(sensor);
 
@@ -352,7 +374,11 @@ static int cio2_bridge_connect_sensor(const struct cio2_sensor_config *cfg,
 	return 0;
 
 err_free_swnodes:
+<<<<<<< HEAD
 	software_node_unregister_node_group(sensor->group);
+=======
+	software_node_unregister_nodes(sensor->swnodes);
+>>>>>>> b7ba80a49124 (Commit)
 err_free_pld:
 	ACPI_FREE(sensor->pld);
 err_put_adev:

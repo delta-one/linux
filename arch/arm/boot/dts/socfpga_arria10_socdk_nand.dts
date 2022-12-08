@@ -16,11 +16,19 @@
 
 		partition@0 {
 			label = "Boot and fpga data";
+<<<<<<< HEAD
 			reg = <0x0 0x02500000>;
 		};
 		partition@1c00000 {
 			label = "Root Filesystem - JFFS2";
 			reg = <0x02500000 0x05500000>;
+=======
+			reg = <0x0 0x02000000>;
+		};
+		partition@1c00000 {
+			label = "Root Filesystem - JFFS2";
+			reg = <0x02000000 0x06000000>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };

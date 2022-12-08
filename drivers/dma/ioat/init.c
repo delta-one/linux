@@ -15,6 +15,10 @@
 #include <linux/workqueue.h>
 #include <linux/prefetch.h>
 #include <linux/dca.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sizes.h>
 #include "dma.h"
 #include "registers.h"
@@ -1190,13 +1194,22 @@ static int ioat3_dma_probe(struct ioatdma_device *ioat_dma, int dca)
 		ioat_dma->dca = ioat_dca_init(pdev, ioat_dma->reg_base);
 
 	/* disable relaxed ordering */
+<<<<<<< HEAD
 	err = pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &val16);
+=======
+	err = pcie_capability_read_word(pdev, IOAT_DEVCTRL_OFFSET, &val16);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return pcibios_err_to_errno(err);
 
 	/* clear relaxed ordering enable */
+<<<<<<< HEAD
 	val16 &= ~PCI_EXP_DEVCTL_RELAX_EN;
 	err = pcie_capability_write_word(pdev, PCI_EXP_DEVCTL, val16);
+=======
+	val16 &= ~IOAT_DEVCTRL_ROE;
+	err = pcie_capability_write_word(pdev, IOAT_DEVCTRL_OFFSET, val16);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return pcibios_err_to_errno(err);
 
@@ -1379,11 +1392,21 @@ static int ioat_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 		if (is_skx_ioat(pdev))
 			device->version = IOAT_VER_3_2;
 		err = ioat3_dma_probe(device, ioat_dca_enabled);
+<<<<<<< HEAD
+=======
+
+		if (device->version >= IOAT_VER_3_3)
+			pci_enable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	} else
 		return -ENODEV;
 
 	if (err) {
 		dev_err(dev, "Intel(R) I/OAT DMA Engine init failed\n");
+<<<<<<< HEAD
+=======
+		pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODEV;
 	}
 
@@ -1406,6 +1429,10 @@ static void ioat_remove(struct pci_dev *pdev)
 		device->dca = NULL;
 	}
 
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	ioat_dma_remove(device);
 }
 

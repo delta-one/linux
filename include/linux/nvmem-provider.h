@@ -9,20 +9,32 @@
 #ifndef _LINUX_NVMEM_PROVIDER_H
 #define _LINUX_NVMEM_PROVIDER_H
 
+<<<<<<< HEAD
 #include <linux/device/driver.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/err.h>
 #include <linux/errno.h>
 #include <linux/gpio/consumer.h>
 
 struct nvmem_device;
+<<<<<<< HEAD
+=======
+struct nvmem_cell_info;
+>>>>>>> b7ba80a49124 (Commit)
 typedef int (*nvmem_reg_read_t)(void *priv, unsigned int offset,
 				void *val, size_t bytes);
 typedef int (*nvmem_reg_write_t)(void *priv, unsigned int offset,
 				 void *val, size_t bytes);
 /* used for vendor specific post processing of cell data */
+<<<<<<< HEAD
 typedef int (*nvmem_cell_post_process_t)(void *priv, const char *id, int index,
 					 unsigned int offset, void *buf,
 					 size_t bytes);
+=======
+typedef int (*nvmem_cell_post_process_t)(void *priv, const char *id, unsigned int offset,
+					  void *buf, size_t bytes);
+>>>>>>> b7ba80a49124 (Commit)
 
 enum nvmem_type {
 	NVMEM_TYPE_UNKNOWN = 0,
@@ -49,6 +61,7 @@ struct nvmem_keepout {
 };
 
 /**
+<<<<<<< HEAD
  * struct nvmem_cell_info - NVMEM cell description
  * @name:	Name.
  * @offset:	Offset within the NVMEM device.
@@ -74,6 +87,8 @@ struct nvmem_cell_info {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct nvmem_config - NVMEM device configuration
  *
  * @dev:	Parent device.
@@ -91,12 +106,21 @@ struct nvmem_cell_info {
  * @no_of_node:	Device should not use the parent's of_node even if it's !NULL.
  * @reg_read:	Callback to read data.
  * @reg_write:	Callback to write data.
+<<<<<<< HEAD
+=======
+ * @cell_post_process:	Callback for vendor specific post processing of cell data
+>>>>>>> b7ba80a49124 (Commit)
  * @size:	Device size.
  * @word_size:	Minimum read/write access granularity.
  * @stride:	Minimum read/write access stride.
  * @priv:	User context passed to read/write callbacks.
+<<<<<<< HEAD
  * @ignore_wp:  Write Protect pin is managed by the provider.
  * @layout:	Fixed layout associated with this nvmem device.
+=======
+ * @wp-gpio:	Write protect pin
+ * @ignore_wp:  Write Protect pin is managed by the provider.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Note: A default "nvmem<id>" name will be assigned to the device if
  * no name is specified in its configuration. In such case "<id>" is
@@ -110,6 +134,10 @@ struct nvmem_config {
 	const char		*name;
 	int			id;
 	struct module		*owner;
+<<<<<<< HEAD
+=======
+	struct gpio_desc	*wp_gpio;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct nvmem_cell_info	*cells;
 	int			ncells;
 	const struct nvmem_keepout *keepout;
@@ -118,11 +146,18 @@ struct nvmem_config {
 	bool			read_only;
 	bool			root_only;
 	bool			ignore_wp;
+<<<<<<< HEAD
 	struct nvmem_layout	*layout;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct device_node	*of_node;
 	bool			no_of_node;
 	nvmem_reg_read_t	reg_read;
 	nvmem_reg_write_t	reg_write;
+<<<<<<< HEAD
+=======
+	nvmem_cell_post_process_t cell_post_process;
+>>>>>>> b7ba80a49124 (Commit)
 	int	size;
 	int	word_size;
 	int	stride;
@@ -151,6 +186,7 @@ struct nvmem_cell_table {
 	struct list_head	node;
 };
 
+<<<<<<< HEAD
 /**
  * struct nvmem_layout - NVMEM layout definitions
  *
@@ -183,6 +219,8 @@ struct nvmem_layout {
 	struct list_head node;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if IS_ENABLED(CONFIG_NVMEM)
 
 struct nvmem_device *nvmem_register(const struct nvmem_config *cfg);
@@ -194,6 +232,7 @@ struct nvmem_device *devm_nvmem_register(struct device *dev,
 void nvmem_add_cell_table(struct nvmem_cell_table *table);
 void nvmem_del_cell_table(struct nvmem_cell_table *table);
 
+<<<<<<< HEAD
 int nvmem_add_one_cell(struct nvmem_device *nvmem,
 		       const struct nvmem_cell_info *info);
 
@@ -205,6 +244,8 @@ void nvmem_layout_unregister(struct nvmem_layout *layout);
 const void *nvmem_layout_get_match_data(struct nvmem_device *nvmem,
 					struct nvmem_layout *layout);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 
 static inline struct nvmem_device *nvmem_register(const struct nvmem_config *c)
@@ -222,6 +263,7 @@ devm_nvmem_register(struct device *dev, const struct nvmem_config *c)
 
 static inline void nvmem_add_cell_table(struct nvmem_cell_table *table) {}
 static inline void nvmem_del_cell_table(struct nvmem_cell_table *table) {}
+<<<<<<< HEAD
 static inline int nvmem_add_one_cell(struct nvmem_device *nvmem,
 				     const struct nvmem_cell_info *info)
 {
@@ -248,4 +290,8 @@ nvmem_layout_get_match_data(struct nvmem_device *nvmem,
 	module_driver(__layout_driver, nvmem_layout_register,	\
 		      nvmem_layout_unregister)
 
+=======
+
+#endif /* CONFIG_NVMEM */
+>>>>>>> b7ba80a49124 (Commit)
 #endif  /* ifndef _LINUX_NVMEM_PROVIDER_H */

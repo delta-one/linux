@@ -296,6 +296,11 @@ int main(int argc, char *argv[])
 	bool has_s390_vcpu_resets = kvm_check_cap(KVM_CAP_S390_VCPU_RESETS);
 	int idx;
 
+<<<<<<< HEAD
+=======
+	setbuf(stdout, NULL);	/* Tell stdout not to buffer its content */
+
+>>>>>>> b7ba80a49124 (Commit)
 	ksft_print_header();
 	ksft_set_plan(ARRAY_SIZE(testlist));
 

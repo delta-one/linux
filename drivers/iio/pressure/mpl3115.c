@@ -230,9 +230,15 @@ static const struct iio_info mpl3115_info = {
 	.read_raw = &mpl3115_read_raw,
 };
 
+<<<<<<< HEAD
 static int mpl3115_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int mpl3115_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct mpl3115_data *data;
 	struct iio_dev *indio_dev;
 	int ret;
@@ -335,7 +341,11 @@ static struct i2c_driver mpl3115_driver = {
 		.of_match_table = mpl3115_of_match,
 		.pm	= pm_sleep_ptr(&mpl3115_pm_ops),
 	},
+<<<<<<< HEAD
 	.probe_new = mpl3115_probe,
+=======
+	.probe = mpl3115_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = mpl3115_remove,
 	.id_table = mpl3115_id,
 };

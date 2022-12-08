@@ -678,7 +678,11 @@
 
 		mnoc: interconnect@1745000 {
 			compatible = "qcom,sdm660-mnoc";
+<<<<<<< HEAD
 			reg = <0x01745000 0xa010>;
+=======
+			reg = <0x01745000 0xA010>;
+>>>>>>> b7ba80a49124 (Commit)
 			#interconnect-cells = <1>;
 			clock-names = "bus", "bus_a", "iface";
 			clocks = <&rpmcc RPM_SMD_MMSSNOC_AXI_CLK>,
@@ -721,36 +725,60 @@
 			interrupt-controller;
 			#interrupt-cells = <2>;
 
+<<<<<<< HEAD
 			blsp1_uart1_default: blsp1-uart1-default-state {
 				pins = "gpio0", "gpio1", "gpio2", "gpio3";
 				function = "blsp_uart1";
+=======
+			blsp1_uart1_default: blsp1-uart1-default {
+				pins = "gpio0", "gpio1", "gpio2", "gpio3";
+>>>>>>> b7ba80a49124 (Commit)
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			blsp1_uart1_sleep: blsp1-uart1-sleep-state {
 				pins = "gpio0", "gpio1", "gpio2", "gpio3";
 				function = "gpio";
+=======
+			blsp1_uart1_sleep: blsp1-uart1-sleep {
+				pins = "gpio0", "gpio1", "gpio2", "gpio3";
+>>>>>>> b7ba80a49124 (Commit)
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			blsp1_uart2_default: blsp1-uart2-default-state {
 				pins = "gpio4", "gpio5";
 				function = "blsp_uart2";
+=======
+			blsp1_uart2_default: blsp1-uart2-default {
+				pins = "gpio4", "gpio5";
+>>>>>>> b7ba80a49124 (Commit)
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			blsp2_uart1_default: blsp2-uart1-active-state {
 				tx-rts-pins {
+=======
+			blsp2_uart1_default: blsp2-uart1-active {
+				tx-rts {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio16", "gpio19";
 					function = "blsp_uart5";
 					drive-strength = <2>;
 					bias-disable;
 				};
 
+<<<<<<< HEAD
 				rx-pins {
+=======
+				rx {
+>>>>>>> b7ba80a49124 (Commit)
 					/*
 					 * Avoid garbage data while BT module
 					 * is powered off or not driving signal
@@ -761,7 +789,11 @@
 					bias-pull-up;
 				};
 
+<<<<<<< HEAD
 				cts-pins {
+=======
+				cts {
+>>>>>>> b7ba80a49124 (Commit)
 					/* Match the pull of the BT module */
 					pins = "gpio18";
 					function = "blsp_uart5";
@@ -770,14 +802,20 @@
 				};
 			};
 
+<<<<<<< HEAD
 			blsp2_uart1_sleep: blsp2-uart1-sleep-state {
 				tx-pins {
+=======
+			blsp2_uart1_sleep: blsp2-uart1-sleep {
+				tx {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio16";
 					function = "gpio";
 					drive-strength = <2>;
 					bias-pull-up;
 				};
 
+<<<<<<< HEAD
 				rx-cts-rts-pins {
 					pins = "gpio17", "gpio18", "gpio19";
 					function = "gpio";
@@ -787,117 +825,193 @@
 			};
 
 			i2c1_default: i2c1-default-state {
+=======
+				rx-cts-rts {
+					pins = "gpio17", "gpio18", "gpio19";
+					function = "gpio";
+					drive-strength = <2>;
+					bias-no-pull;
+				};
+			};
+
+			i2c1_default: i2c1-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio2", "gpio3";
 				function = "blsp_i2c1";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			i2c1_sleep: i2c1-sleep-state {
+=======
+			i2c1_sleep: i2c1-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio2", "gpio3";
 				function = "blsp_i2c1";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			i2c2_default: i2c2-default-state {
+=======
+			i2c2_default: i2c2-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio6", "gpio7";
 				function = "blsp_i2c2";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			i2c2_sleep: i2c2-sleep-state {
+=======
+			i2c2_sleep: i2c2-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio6", "gpio7";
 				function = "blsp_i2c2";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			i2c3_default: i2c3-default-state {
+=======
+			i2c3_default: i2c3-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio10", "gpio11";
 				function = "blsp_i2c3";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			i2c3_sleep: i2c3-sleep-state {
+=======
+			i2c3_sleep: i2c3-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio10", "gpio11";
 				function = "blsp_i2c3";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			i2c4_default: i2c4-default-state {
+=======
+			i2c4_default: i2c4-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio14", "gpio15";
 				function = "blsp_i2c4";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			i2c4_sleep: i2c4-sleep-state {
+=======
+			i2c4_sleep: i2c4-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio14", "gpio15";
 				function = "blsp_i2c4";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			i2c5_default: i2c5-default-state {
+=======
+			i2c5_default: i2c5-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio18", "gpio19";
 				function = "blsp_i2c5";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			i2c5_sleep: i2c5-sleep-state {
+=======
+			i2c5_sleep: i2c5-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio18", "gpio19";
 				function = "blsp_i2c5";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			i2c6_default: i2c6-default-state {
+=======
+			i2c6_default: i2c6-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio22", "gpio23";
 				function = "blsp_i2c6";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			i2c6_sleep: i2c6-sleep-state {
+=======
+			i2c6_sleep: i2c6-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio22", "gpio23";
 				function = "blsp_i2c6";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			i2c7_default: i2c7-default-state {
+=======
+			i2c7_default: i2c7-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio26", "gpio27";
 				function = "blsp_i2c7";
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			i2c7_sleep: i2c7-sleep-state {
+=======
+			i2c7_sleep: i2c7-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio26", "gpio27";
 				function = "blsp_i2c7";
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			i2c8_default: i2c8-default-state {
 				pins = "gpio30", "gpio31";
 				function = "blsp_i2c8_a";
+=======
+			i2c8_default: i2c8-default {
+				pins = "gpio30", "gpio31";
+				function = "blsp_i2c8";
+>>>>>>> b7ba80a49124 (Commit)
 				drive-strength = <2>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			i2c8_sleep: i2c8-sleep-state {
 				pins = "gpio30", "gpio31";
 				function = "blsp_i2c8_a";
+=======
+			i2c8_sleep: i2c8-sleep {
+				pins = "gpio30", "gpio31";
+				function = "blsp_i2c8";
+>>>>>>> b7ba80a49124 (Commit)
 				drive-strength = <2>;
 				bias-pull-up;
 			};
 
+<<<<<<< HEAD
 			cci0_default: cci0-default-state {
 				pins = "gpio36","gpio37";
 				function = "cci_i2c";
@@ -914,88 +1028,173 @@
 
 			sdc1_state_on: sdc1-on-state {
 				clk-pins {
+=======
+			cci0_default: cci0_default {
+				pinmux {
+					pins = "gpio36","gpio37";
+					function = "cci_i2c";
+				};
+
+				pinconf {
+					pins = "gpio36","gpio37";
+					bias-pull-up;
+					drive-strength = <2>;
+				};
+			};
+
+			cci1_default: cci1_default {
+				pinmux {
+					pins = "gpio38","gpio39";
+					function = "cci_i2c";
+				};
+
+				pinconf {
+					pins = "gpio38","gpio39";
+					bias-pull-up;
+					drive-strength = <2>;
+				};
+			};
+
+			sdc1_state_on: sdc1-on {
+				clk {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc1_clk";
 					bias-disable;
 					drive-strength = <16>;
 				};
 
+<<<<<<< HEAD
 				cmd-pins {
+=======
+				cmd {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc1_cmd";
 					bias-pull-up;
 					drive-strength = <10>;
 				};
 
+<<<<<<< HEAD
 				data-pins {
+=======
+				data {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc1_data";
 					bias-pull-up;
 					drive-strength = <10>;
 				};
 
+<<<<<<< HEAD
 				rclk-pins {
+=======
+				rclk {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc1_rclk";
 					bias-pull-down;
 				};
 			};
 
+<<<<<<< HEAD
 			sdc1_state_off: sdc1-off-state {
 				clk-pins {
+=======
+			sdc1_state_off: sdc1-off {
+				clk {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc1_clk";
 					bias-disable;
 					drive-strength = <2>;
 				};
 
+<<<<<<< HEAD
 				cmd-pins {
+=======
+				cmd {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc1_cmd";
 					bias-pull-up;
 					drive-strength = <2>;
 				};
 
+<<<<<<< HEAD
 				data-pins {
+=======
+				data {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc1_data";
 					bias-pull-up;
 					drive-strength = <2>;
 				};
 
+<<<<<<< HEAD
 				rclk-pins {
+=======
+				rclk {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc1_rclk";
 					bias-pull-down;
 				};
 			};
 
+<<<<<<< HEAD
 			sdc2_state_on: sdc2-on-state {
 				clk-pins {
+=======
+			sdc2_state_on: sdc2-on {
+				clk {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc2_clk";
 					bias-disable;
 					drive-strength = <16>;
 				};
 
+<<<<<<< HEAD
 				cmd-pins {
+=======
+				cmd {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc2_cmd";
 					bias-pull-up;
 					drive-strength = <10>;
 				};
 
+<<<<<<< HEAD
 				data-pins {
+=======
+				data {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc2_data";
 					bias-pull-up;
 					drive-strength = <10>;
 				};
 			};
 
+<<<<<<< HEAD
 			sdc2_state_off: sdc2-off-state {
 				clk-pins {
+=======
+			sdc2_state_off: sdc2-off {
+				clk {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc2_clk";
 					bias-disable;
 					drive-strength = <2>;
 				};
 
+<<<<<<< HEAD
 				cmd-pins {
+=======
+				cmd {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc2_cmd";
 					bias-pull-up;
 					drive-strength = <2>;
 				};
 
+<<<<<<< HEAD
 				data-pins {
+=======
+				data {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc2_data";
 					bias-pull-up;
 					drive-strength = <2>;
@@ -1044,43 +1243,71 @@
 					opp-hz = /bits/ 64 <775000000>;
 					opp-level = <RPM_SMD_LEVEL_TURBO>;
 					opp-peak-kBps = <5412000>;
+<<<<<<< HEAD
 					opp-supported-hw = <0xa2>;
+=======
+					opp-supported-hw = <0xA2>;
+>>>>>>> b7ba80a49124 (Commit)
 				};
 				opp-647000000 {
 					opp-hz = /bits/ 64 <647000000>;
 					opp-level = <RPM_SMD_LEVEL_NOM_PLUS>;
 					opp-peak-kBps = <4068000>;
+<<<<<<< HEAD
 					opp-supported-hw = <0xff>;
+=======
+					opp-supported-hw = <0xFF>;
+>>>>>>> b7ba80a49124 (Commit)
 				};
 				opp-588000000 {
 					opp-hz = /bits/ 64 <588000000>;
 					opp-level = <RPM_SMD_LEVEL_NOM>;
 					opp-peak-kBps = <3072000>;
+<<<<<<< HEAD
 					opp-supported-hw = <0xff>;
+=======
+					opp-supported-hw = <0xFF>;
+>>>>>>> b7ba80a49124 (Commit)
 				};
 				opp-465000000 {
 					opp-hz = /bits/ 64 <465000000>;
 					opp-level = <RPM_SMD_LEVEL_SVS_PLUS>;
 					opp-peak-kBps = <2724000>;
+<<<<<<< HEAD
 					opp-supported-hw = <0xff>;
+=======
+					opp-supported-hw = <0xFF>;
+>>>>>>> b7ba80a49124 (Commit)
 				};
 				opp-370000000 {
 					opp-hz = /bits/ 64 <370000000>;
 					opp-level = <RPM_SMD_LEVEL_SVS>;
 					opp-peak-kBps = <2188000>;
+<<<<<<< HEAD
 					opp-supported-hw = <0xff>;
+=======
+					opp-supported-hw = <0xFF>;
+>>>>>>> b7ba80a49124 (Commit)
 				};
 				opp-240000000 {
 					opp-hz = /bits/ 64 <240000000>;
 					opp-level = <RPM_SMD_LEVEL_LOW_SVS>;
 					opp-peak-kBps = <1648000>;
+<<<<<<< HEAD
 					opp-supported-hw = <0xff>;
+=======
+					opp-supported-hw = <0xFF>;
+>>>>>>> b7ba80a49124 (Commit)
 				};
 				opp-160000000 {
 					opp-hz = /bits/ 64 <160000000>;
 					opp-level = <RPM_SMD_LEVEL_MIN_SVS>;
 					opp-peak-kBps = <1200000>;
+<<<<<<< HEAD
 					opp-supported-hw = <0xff>;
+=======
+					opp-supported-hw = <0xFF>;
+>>>>>>> b7ba80a49124 (Commit)
 				};
 			};
 		};
@@ -1189,6 +1416,10 @@
 			#size-cells = <0>;
 			interrupt-controller;
 			#interrupt-cells = <4>;
+<<<<<<< HEAD
+=======
+			cell-index = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		usb3: usb@a8f8800 {
@@ -1469,7 +1700,11 @@
 			};
 		};
 
+<<<<<<< HEAD
 		mdss: display-subsystem@c900000 {
+=======
+		mdss: mdss@c900000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,mdss";
 			reg = <0x0c900000 0x1000>,
 			      <0x0c9b0000 0x1040>;
@@ -1496,8 +1731,13 @@
 			ranges;
 			status = "disabled";
 
+<<<<<<< HEAD
 			mdp: display-controller@c901000 {
 				compatible = "qcom,sdm630-mdp5", "qcom,mdp5";
+=======
+			mdp: mdp@c901000 {
+				compatible = "qcom,mdp5";
+>>>>>>> b7ba80a49124 (Commit)
 				reg = <0x0c901000 0x89000>;
 				reg-names = "mdp_phys";
 
@@ -1571,8 +1811,12 @@
 			};
 
 			dsi0: dsi@c994000 {
+<<<<<<< HEAD
 				compatible = "qcom,sdm660-dsi-ctrl",
 					     "qcom,mdss-dsi-ctrl";
+=======
+				compatible = "qcom,mdss-dsi-ctrl";
+>>>>>>> b7ba80a49124 (Commit)
 				reg = <0x0c994000 0x400>;
 				reg-names = "dsi_ctrl";
 
@@ -1607,6 +1851,10 @@
 					      "core";
 
 				phys = <&dsi0_phy>;
+<<<<<<< HEAD
+=======
+				phy-names = "dsi";
+>>>>>>> b7ba80a49124 (Commit)
 
 				status = "disabled";
 
@@ -1629,7 +1877,11 @@
 				};
 			};
 
+<<<<<<< HEAD
 			dsi0_phy: phy@c994400 {
+=======
+			dsi0_phy: dsi-phy@c994400 {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "qcom,dsi-phy-14nm-660";
 				reg = <0x0c994400 0x100>,
 				      <0x0c994500 0x300>,
@@ -2214,12 +2466,20 @@
 					#address-cells = <1>;
 					#size-cells = <0>;
 
+<<<<<<< HEAD
 					service@3 {
+=======
+					q6core {
+>>>>>>> b7ba80a49124 (Commit)
 						reg = <APR_SVC_ADSP_CORE>;
 						compatible = "qcom,q6core";
 					};
 
+<<<<<<< HEAD
 					q6afe: service@4 {
+=======
+					q6afe: apr-service@4 {
+>>>>>>> b7ba80a49124 (Commit)
 						compatible = "qcom,q6afe";
 						reg = <APR_SVC_AFE>;
 						q6afedai: dais {
@@ -2230,7 +2490,11 @@
 						};
 					};
 
+<<<<<<< HEAD
 					q6asm: service@7 {
+=======
+					q6asm: apr-service@7 {
+>>>>>>> b7ba80a49124 (Commit)
 						compatible = "qcom,q6asm";
 						reg = <APR_SVC_ASM>;
 						q6asmdai: dais {
@@ -2242,7 +2506,11 @@
 						};
 					};
 
+<<<<<<< HEAD
 					q6adm: service@8 {
+=======
+					q6adm: apr-service@8 {
+>>>>>>> b7ba80a49124 (Commit)
 						compatible = "qcom,q6adm";
 						reg = <APR_SVC_ADM>;
 						q6routing: routing {
@@ -2409,7 +2677,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu0_crit: cpu-crit {
+=======
+				cpu0_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -2430,7 +2702,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu1_crit: cpu-crit {
+=======
+				cpu1_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -2451,7 +2727,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu2_crit: cpu-crit {
+=======
+				cpu2_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -2472,7 +2752,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu3_crit: cpu-crit {
+=======
+				cpu3_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -2499,7 +2783,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				pwr_cluster_crit: cpu-crit {
+=======
+				pwr_cluster_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";

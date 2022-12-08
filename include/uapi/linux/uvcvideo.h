@@ -36,11 +36,17 @@
 	 UVC_CTRL_FLAG_GET_MAX | UVC_CTRL_FLAG_GET_RES | \
 	 UVC_CTRL_FLAG_GET_DEF)
 
+<<<<<<< HEAD
 #define UVC_MENU_NAME_LEN 32
 
 struct uvc_menu_info {
 	__u32 value;
 	__u8 name[UVC_MENU_NAME_LEN];
+=======
+struct uvc_menu_info {
+	__u32 value;
+	__u8 name[32];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct uvc_xu_control_mapping {
@@ -88,7 +94,11 @@ struct uvc_xu_control_query {
  * struct. The first two fields are added by the driver, they can be used for
  * clock synchronisation. The rest is an exact copy of a UVC payload header.
  * Only complete objects with complete buffers are included. Therefore it's
+<<<<<<< HEAD
  * always sizeof(meta->ns) + sizeof(meta->sof) + meta->length bytes large.
+=======
+ * always sizeof(meta->ts) + sizeof(meta->sof) + meta->length bytes large.
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct uvc_meta_buf {
 	__u64 ns;

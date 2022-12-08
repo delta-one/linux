@@ -124,6 +124,7 @@ static int hclge_send_mbx_msg(struct hclge_vport *vport, u8 *msg, u16 msg_len,
 	return status;
 }
 
+<<<<<<< HEAD
 static int hclge_inform_vf_reset(struct hclge_vport *vport, u16 reset_type)
 {
 	__le16 msg_data;
@@ -144,6 +145,19 @@ int hclge_inform_reset_assert_to_vf(struct hclge_vport *vport)
 
 	BUILD_BUG_ON(HNAE3_MAX_RESET > U16_MAX);
 
+=======
+int hclge_inform_reset_assert_to_vf(struct hclge_vport *vport)
+{
+	struct hclge_dev *hdev = vport->back;
+	__le16 msg_data;
+	u16 reset_type;
+	u8 dest_vfid;
+
+	BUILD_BUG_ON(HNAE3_MAX_RESET > U16_MAX);
+
+	dest_vfid = (u8)vport->vport_id;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (hdev->reset_type == HNAE3_FUNC_RESET)
 		reset_type = HNAE3_VF_PF_FUNC_RESET;
 	else if (hdev->reset_type == HNAE3_FLR_RESET)
@@ -151,7 +165,15 @@ int hclge_inform_reset_assert_to_vf(struct hclge_vport *vport)
 	else
 		reset_type = HNAE3_VF_FUNC_RESET;
 
+<<<<<<< HEAD
 	return hclge_inform_vf_reset(vport, reset_type);
+=======
+	msg_data = cpu_to_le16(reset_type);
+
+	/* send this requested info to VF */
+	return hclge_send_mbx_msg(vport, (u8 *)&msg_data, sizeof(msg_data),
+				  HCLGE_MBX_ASSERTING_RESET, dest_vfid);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void hclge_free_vector_ring_chain(struct hnae3_ring_chain_node *head)
@@ -657,6 +679,7 @@ static int hclge_reset_vf(struct hclge_vport *vport)
 	return hclge_func_reset_cmd(hdev, vport->vport_id);
 }
 
+<<<<<<< HEAD
 static void hclge_notify_vf_config(struct hclge_vport *vport)
 {
 	struct hclge_dev *hdev = vport->back;
@@ -707,6 +730,11 @@ static void hclge_vf_keep_alive(struct hclge_vport *vport)
 			 vport->vport_id - HCLGE_VF_VPORT_START_NUM);
 		hclge_notify_vf_config(vport);
 	}
+=======
+static void hclge_vf_keep_alive(struct hclge_vport *vport)
+{
+	vport->last_active_jiffies = jiffies;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int hclge_set_vf_mtu(struct hclge_vport *vport,
@@ -1006,7 +1034,10 @@ static int hclge_mbx_vf_uninit_handler(struct hclge_mbx_ops_param *param)
 	hclge_rm_vport_all_mac_table(param->vport, true,
 				     HCLGE_MAC_ADDR_MC);
 	hclge_rm_vport_all_vlan_table(param->vport, true);
+<<<<<<< HEAD
 	param->vport->mps = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

@@ -682,6 +682,7 @@ static bool tpm_tis_req_canceled(struct tpm_chip *chip, u8 status)
 {
 	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
 
+<<<<<<< HEAD
 	if (!test_bit(TPM_TIS_DEFAULT_CANCELLATION, &priv->flags)) {
 		switch (priv->manufacturer_id) {
 		case TPM_VID_WINBOND:
@@ -695,6 +696,17 @@ static bool tpm_tis_req_canceled(struct tpm_chip *chip, u8 status)
 	}
 
 	return status == TPM_STS_COMMAND_READY;
+=======
+	switch (priv->manufacturer_id) {
+	case TPM_VID_WINBOND:
+		return ((status == TPM_STS_VALID) ||
+			(status == (TPM_STS_VALID | TPM_STS_COMMAND_READY)));
+	case TPM_VID_STM:
+		return (status == (TPM_STS_VALID | TPM_STS_COMMAND_READY));
+	default:
+		return (status == TPM_STS_COMMAND_READY);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static irqreturn_t tis_int_handler(int dummy, void *dev_id)

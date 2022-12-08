@@ -9,12 +9,16 @@
 #ifndef _CRYPTO_RNG_H
 #define _CRYPTO_RNG_H
 
+<<<<<<< HEAD
 #include <linux/atomic.h>
 #include <linux/container_of.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/crypto.h>
 
 struct crypto_rng;
 
+<<<<<<< HEAD
 /*
  * struct crypto_istat_rng: statistics for RNG algorithm
  * @generate_cnt:	number of RNG generate requests
@@ -29,6 +33,8 @@ struct crypto_istat_rng {
 	atomic64_t err_cnt;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct rng_alg - random number generator definition
  *
@@ -46,7 +52,10 @@ struct crypto_istat_rng {
  *		size of the seed is defined with @seedsize .
  * @set_ent:	Set entropy that would otherwise be obtained from
  *		entropy source.  Internal use only.
+<<<<<<< HEAD
  * @stat:	Statistics for rng algorithm
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @seedsize:	The seed size required for a random number generator
  *		initialization defined with this variable. Some
  *		random number generators does not require a seed
@@ -63,10 +72,13 @@ struct rng_alg {
 	void (*set_ent)(struct crypto_rng *tfm, const u8 *data,
 			unsigned int len);
 
+<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_STATS
 	struct crypto_istat_rng stat;
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int seedsize;
 
 	struct crypto_alg base;
@@ -115,11 +127,14 @@ static inline struct crypto_tfm *crypto_rng_tfm(struct crypto_rng *tfm)
 	return &tfm->base;
 }
 
+<<<<<<< HEAD
 static inline struct rng_alg *__crypto_rng_alg(struct crypto_alg *alg)
 {
 	return container_of(alg, struct rng_alg, base);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * crypto_rng_alg - obtain name of RNG
  * @tfm: cipher handle
@@ -130,7 +145,12 @@ static inline struct rng_alg *__crypto_rng_alg(struct crypto_alg *alg)
  */
 static inline struct rng_alg *crypto_rng_alg(struct crypto_rng *tfm)
 {
+<<<<<<< HEAD
 	return __crypto_rng_alg(crypto_rng_tfm(tfm)->__crt_alg);
+=======
+	return container_of(crypto_rng_tfm(tfm)->__crt_alg,
+			    struct rng_alg, base);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -144,6 +164,7 @@ static inline void crypto_free_rng(struct crypto_rng *tfm)
 	crypto_destroy_tfm(tfm, crypto_rng_tfm(tfm));
 }
 
+<<<<<<< HEAD
 static inline struct crypto_istat_rng *rng_get_stat(struct rng_alg *alg)
 {
 #ifdef CONFIG_CRYPTO_STATS
@@ -164,6 +185,8 @@ static inline int crypto_rng_errstat(struct rng_alg *alg, int err)
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * crypto_rng_generate() - get random number
  * @tfm: cipher handle
@@ -182,6 +205,7 @@ static inline int crypto_rng_generate(struct crypto_rng *tfm,
 				      const u8 *src, unsigned int slen,
 				      u8 *dst, unsigned int dlen)
 {
+<<<<<<< HEAD
 	struct rng_alg *alg = crypto_rng_alg(tfm);
 
 	if (IS_ENABLED(CONFIG_CRYPTO_STATS)) {
@@ -193,6 +217,15 @@ static inline int crypto_rng_generate(struct crypto_rng *tfm,
 
 	return crypto_rng_errstat(alg,
 				  alg->generate(tfm, src, slen, dst, dlen));
+=======
+	struct crypto_alg *alg = tfm->base.__crt_alg;
+	int ret;
+
+	crypto_stats_get(alg);
+	ret = crypto_rng_alg(tfm)->generate(tfm, src, slen, dst, dlen);
+	crypto_stats_rng_generate(alg, dlen, ret);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

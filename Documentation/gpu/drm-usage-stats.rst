@@ -126,6 +126,10 @@ percentage utilization of the engine, whereas drm-engine-<str> only reflects
 time active without considering what frequency the engine is operating as a
 percentage of it's maximum frequency.
 
+<<<<<<< HEAD
+=======
+===============================
+>>>>>>> b7ba80a49124 (Commit)
 Driver specific implementations
 ===============================
 

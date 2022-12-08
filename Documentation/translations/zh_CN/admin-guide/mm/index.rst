@@ -22,7 +22,11 @@ Linux内存管理是一个具有许多可配置设置的复杂系统, 且这些�
 .. _man 5 proc: http://man7.org/linux/man-pages/man5/proc.5.html
 
 Linux内存管理有它自己的术语，如果你还不熟悉它，请考虑阅读下面参考：
+<<<<<<< HEAD
 Documentation/admin-guide/mm/concepts.rst.
+=======
+:ref:`Documentation/admin-guide/mm/concepts.rst <mm_concepts>`.
+>>>>>>> b7ba80a49124 (Commit)
 
 在此目录下，我们详细描述了如何与Linux内存管理中的各种机制交互。
 

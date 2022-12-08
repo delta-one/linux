@@ -47,7 +47,10 @@
 #include <linux/sched.h>
 #include <linux/rculist.h>
 #include <linux/ftrace.h>
+<<<<<<< HEAD
 #include <linux/context_tracking.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 extern struct bug_entry __start___bug_table[], __stop___bug_table[];
 
@@ -154,7 +157,11 @@ struct bug_entry *find_bug(unsigned long bugaddr)
 	return module_find_bug(bugaddr);
 }
 
+<<<<<<< HEAD
 static enum bug_trap_type __report_bug(unsigned long bugaddr, struct pt_regs *regs)
+=======
+enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bug_entry *bug;
 	const char *file;
@@ -210,6 +217,7 @@ static enum bug_trap_type __report_bug(unsigned long bugaddr, struct pt_regs *re
 	return BUG_TRAP_TYPE_BUG;
 }
 
+<<<<<<< HEAD
 enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
 {
 	enum bug_trap_type ret;
@@ -222,6 +230,8 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void clear_once_table(struct bug_entry *start, struct bug_entry *end)
 {
 	struct bug_entry *bug;

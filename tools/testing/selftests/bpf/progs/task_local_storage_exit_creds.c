@@ -14,7 +14,10 @@ struct {
 	__type(value, __u64);
 } task_storage SEC(".maps");
 
+<<<<<<< HEAD
 int run_count = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int valid_ptr_count = 0;
 int null_ptr_count = 0;
 
@@ -29,7 +32,10 @@ int BPF_PROG(trace_exit_creds, struct task_struct *task)
 		__sync_fetch_and_add(&valid_ptr_count, 1);
 	else
 		__sync_fetch_and_add(&null_ptr_count, 1);
+<<<<<<< HEAD
 
 	__sync_fetch_and_add(&run_count, 1);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }

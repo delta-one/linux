@@ -306,7 +306,11 @@ static void migrate_vma_collect(struct migrate_vma *migrate)
 	 * private page mappings that won't be migrated.
 	 */
 	mmu_notifier_range_init_owner(&range, MMU_NOTIFY_MIGRATE, 0,
+<<<<<<< HEAD
 		migrate->vma->vm_mm, migrate->start, migrate->end,
+=======
+		migrate->vma, migrate->vma->vm_mm, migrate->start, migrate->end,
+>>>>>>> b7ba80a49124 (Commit)
 		migrate->pgmap_owner);
 	mmu_notifier_invalidate_range_start(&range);
 
@@ -325,14 +329,22 @@ static void migrate_vma_collect(struct migrate_vma *migrate)
  * folio_migrate_mapping(), except that here we allow migration of a
  * ZONE_DEVICE page.
  */
+<<<<<<< HEAD
 static bool migrate_vma_check_page(struct page *page, struct page *fault_page)
+=======
+static bool migrate_vma_check_page(struct page *page)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/*
 	 * One extra ref because caller holds an extra reference, either from
 	 * isolate_lru_page() for a regular page, or migrate_vma_collect() for
 	 * a device page.
 	 */
+<<<<<<< HEAD
 	int extra = 1 + (page == fault_page);
+=======
+	int extra = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * FIXME support THP (transparent huge page), it is bit more complex to
@@ -357,6 +369,7 @@ static bool migrate_vma_check_page(struct page *page, struct page *fault_page)
 }
 
 /*
+<<<<<<< HEAD
  * Unmaps pages for migration. Returns number of source pfns marked as
  * migrating.
  */
@@ -437,6 +450,8 @@ static unsigned long migrate_device_unmap(unsigned long *src_pfns,
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * migrate_vma_unmap() - replace page mapping with special migration pte entry
  * @migrate: migrate struct containing all migration information
  *
@@ -449,8 +464,75 @@ static unsigned long migrate_device_unmap(unsigned long *src_pfns,
  */
 static void migrate_vma_unmap(struct migrate_vma *migrate)
 {
+<<<<<<< HEAD
 	migrate->cpages = migrate_device_unmap(migrate->src, migrate->npages,
 					migrate->fault_page);
+=======
+	const unsigned long npages = migrate->npages;
+	unsigned long i, restore = 0;
+	bool allow_drain = true;
+
+	lru_add_drain();
+
+	for (i = 0; i < npages; i++) {
+		struct page *page = migrate_pfn_to_page(migrate->src[i]);
+		struct folio *folio;
+
+		if (!page)
+			continue;
+
+		/* ZONE_DEVICE pages are not on LRU */
+		if (!is_zone_device_page(page)) {
+			if (!PageLRU(page) && allow_drain) {
+				/* Drain CPU's pagevec */
+				lru_add_drain_all();
+				allow_drain = false;
+			}
+
+			if (isolate_lru_page(page)) {
+				migrate->src[i] &= ~MIGRATE_PFN_MIGRATE;
+				migrate->cpages--;
+				restore++;
+				continue;
+			}
+
+			/* Drop the reference we took in collect */
+			put_page(page);
+		}
+
+		folio = page_folio(page);
+		if (folio_mapped(folio))
+			try_to_migrate(folio, 0);
+
+		if (page_mapped(page) || !migrate_vma_check_page(page)) {
+			if (!is_zone_device_page(page)) {
+				get_page(page);
+				putback_lru_page(page);
+			}
+
+			migrate->src[i] &= ~MIGRATE_PFN_MIGRATE;
+			migrate->cpages--;
+			restore++;
+			continue;
+		}
+	}
+
+	for (i = 0; i < npages && restore; i++) {
+		struct page *page = migrate_pfn_to_page(migrate->src[i]);
+		struct folio *folio;
+
+		if (!page || (migrate->src[i] & MIGRATE_PFN_MIGRATE))
+			continue;
+
+		folio = page_folio(page);
+		remove_migration_ptes(folio, folio, false);
+
+		migrate->src[i] = 0;
+		folio_unlock(folio);
+		folio_put(folio);
+		restore--;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -535,8 +617,11 @@ int migrate_vma_setup(struct migrate_vma *args)
 		return -EINVAL;
 	if (!args->src || !args->dst)
 		return -EINVAL;
+<<<<<<< HEAD
 	if (args->fault_page && !is_device_private_page(args->fault_page))
 		return -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(args->src, 0, sizeof(*args->src) * nr_pages);
 	args->cpages = 0;
@@ -646,7 +731,11 @@ static void migrate_vma_insert_page(struct migrate_vma *migrate,
 		}
 		entry = mk_pte(page, vma->vm_page_prot);
 		if (vma->vm_flags & VM_WRITE)
+<<<<<<< HEAD
 			entry = pte_mkwrite(pte_mkdirty(entry), vma);
+=======
+			entry = pte_mkwrite(pte_mkdirty(entry));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ptep = pte_offset_map_lock(mm, pmdp, addr, &ptl);
@@ -697,6 +786,7 @@ abort:
 	*src &= ~MIGRATE_PFN_MIGRATE;
 }
 
+<<<<<<< HEAD
 static void __migrate_device_pages(unsigned long *src_pfns,
 				unsigned long *dst_pfns, unsigned long npages,
 				struct migrate_vma *migrate)
@@ -708,38 +798,80 @@ static void __migrate_device_pages(unsigned long *src_pfns,
 	for (i = 0; i < npages; i++) {
 		struct page *newpage = migrate_pfn_to_page(dst_pfns[i]);
 		struct page *page = migrate_pfn_to_page(src_pfns[i]);
+=======
+/**
+ * migrate_vma_pages() - migrate meta-data from src page to dst page
+ * @migrate: migrate struct containing all migration information
+ *
+ * This migrates struct page meta-data from source struct page to destination
+ * struct page. This effectively finishes the migration from source page to the
+ * destination page.
+ */
+void migrate_vma_pages(struct migrate_vma *migrate)
+{
+	const unsigned long npages = migrate->npages;
+	const unsigned long start = migrate->start;
+	struct mmu_notifier_range range;
+	unsigned long addr, i;
+	bool notified = false;
+
+	for (i = 0, addr = start; i < npages; addr += PAGE_SIZE, i++) {
+		struct page *newpage = migrate_pfn_to_page(migrate->dst[i]);
+		struct page *page = migrate_pfn_to_page(migrate->src[i]);
+>>>>>>> b7ba80a49124 (Commit)
 		struct address_space *mapping;
 		int r;
 
 		if (!newpage) {
+<<<<<<< HEAD
 			src_pfns[i] &= ~MIGRATE_PFN_MIGRATE;
+=======
+			migrate->src[i] &= ~MIGRATE_PFN_MIGRATE;
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		}
 
 		if (!page) {
+<<<<<<< HEAD
 			unsigned long addr;
 
 			if (!(src_pfns[i] & MIGRATE_PFN_MIGRATE))
 				continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			/*
 			 * The only time there is no vma is when called from
 			 * migrate_device_coherent_page(). However this isn't
 			 * called if the page could not be unmapped.
 			 */
+<<<<<<< HEAD
 			VM_BUG_ON(!migrate);
 			addr = migrate->start + i*PAGE_SIZE;
+=======
+			VM_BUG_ON(!migrate->vma);
+			if (!(migrate->src[i] & MIGRATE_PFN_MIGRATE))
+				continue;
+>>>>>>> b7ba80a49124 (Commit)
 			if (!notified) {
 				notified = true;
 
 				mmu_notifier_range_init_owner(&range,
+<<<<<<< HEAD
 					MMU_NOTIFY_MIGRATE, 0,
+=======
+					MMU_NOTIFY_MIGRATE, 0, migrate->vma,
+>>>>>>> b7ba80a49124 (Commit)
 					migrate->vma->vm_mm, addr, migrate->end,
 					migrate->pgmap_owner);
 				mmu_notifier_invalidate_range_start(&range);
 			}
 			migrate_vma_insert_page(migrate, addr, newpage,
+<<<<<<< HEAD
 						&src_pfns[i]);
+=======
+						&migrate->src[i]);
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		}
 
@@ -752,13 +884,18 @@ static void __migrate_device_pages(unsigned long *src_pfns,
 			 * device private or coherent memory.
 			 */
 			if (mapping) {
+<<<<<<< HEAD
 				src_pfns[i] &= ~MIGRATE_PFN_MIGRATE;
+=======
+				migrate->src[i] &= ~MIGRATE_PFN_MIGRATE;
+>>>>>>> b7ba80a49124 (Commit)
 				continue;
 			}
 		} else if (is_zone_device_page(newpage)) {
 			/*
 			 * Other types of ZONE_DEVICE page are not supported.
 			 */
+<<<<<<< HEAD
 			src_pfns[i] &= ~MIGRATE_PFN_MIGRATE;
 			continue;
 		}
@@ -772,6 +909,16 @@ static void __migrate_device_pages(unsigned long *src_pfns,
 					page_folio(page), MIGRATE_SYNC_NO_COPY);
 		if (r != MIGRATEPAGE_SUCCESS)
 			src_pfns[i] &= ~MIGRATE_PFN_MIGRATE;
+=======
+			migrate->src[i] &= ~MIGRATE_PFN_MIGRATE;
+			continue;
+		}
+
+		r = migrate_folio(mapping, page_folio(newpage),
+				page_folio(page), MIGRATE_SYNC_NO_COPY);
+		if (r != MIGRATEPAGE_SUCCESS)
+			migrate->src[i] &= ~MIGRATE_PFN_MIGRATE;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -782,6 +929,7 @@ static void __migrate_device_pages(unsigned long *src_pfns,
 	if (notified)
 		mmu_notifier_invalidate_range_only_end(&range);
 }
+<<<<<<< HEAD
 
 /**
  * migrate_device_pages() - migrate meta-data from src page to dst page
@@ -826,12 +974,35 @@ EXPORT_SYMBOL(migrate_vma_pages);
 void migrate_device_finalize(unsigned long *src_pfns,
 			unsigned long *dst_pfns, unsigned long npages)
 {
+=======
+EXPORT_SYMBOL(migrate_vma_pages);
+
+/**
+ * migrate_vma_finalize() - restore CPU page table entry
+ * @migrate: migrate struct containing all migration information
+ *
+ * This replaces the special migration pte entry with either a mapping to the
+ * new page if migration was successful for that page, or to the original page
+ * otherwise.
+ *
+ * This also unlocks the pages and puts them back on the lru, or drops the extra
+ * refcount, for device pages.
+ */
+void migrate_vma_finalize(struct migrate_vma *migrate)
+{
+	const unsigned long npages = migrate->npages;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long i;
 
 	for (i = 0; i < npages; i++) {
 		struct folio *dst, *src;
+<<<<<<< HEAD
 		struct page *newpage = migrate_pfn_to_page(dst_pfns[i]);
 		struct page *page = migrate_pfn_to_page(src_pfns[i]);
+=======
+		struct page *newpage = migrate_pfn_to_page(migrate->dst[i]);
+		struct page *page = migrate_pfn_to_page(migrate->src[i]);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!page) {
 			if (newpage) {
@@ -841,7 +1012,11 @@ void migrate_device_finalize(unsigned long *src_pfns,
 			continue;
 		}
 
+<<<<<<< HEAD
 		if (!(src_pfns[i] & MIGRATE_PFN_MIGRATE) || !newpage) {
+=======
+		if (!(migrate->src[i] & MIGRATE_PFN_MIGRATE) || !newpage) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (newpage) {
 				unlock_page(newpage);
 				put_page(newpage);
@@ -868,6 +1043,7 @@ void migrate_device_finalize(unsigned long *src_pfns,
 		}
 	}
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(migrate_device_finalize);
 
 /**
@@ -934,6 +1110,10 @@ int migrate_device_range(unsigned long *src_pfns, unsigned long start,
 }
 EXPORT_SYMBOL(migrate_device_range);
 
+=======
+EXPORT_SYMBOL(migrate_vma_finalize);
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Migrate a device coherent page back to normal memory. The caller should have
  * a reference on page which will be copied to the new page if migration is
@@ -942,19 +1122,35 @@ EXPORT_SYMBOL(migrate_device_range);
 int migrate_device_coherent_page(struct page *page)
 {
 	unsigned long src_pfn, dst_pfn = 0;
+<<<<<<< HEAD
+=======
+	struct migrate_vma args;
+>>>>>>> b7ba80a49124 (Commit)
 	struct page *dpage;
 
 	WARN_ON_ONCE(PageCompound(page));
 
 	lock_page(page);
 	src_pfn = migrate_pfn(page_to_pfn(page)) | MIGRATE_PFN_MIGRATE;
+<<<<<<< HEAD
+=======
+	args.src = &src_pfn;
+	args.dst = &dst_pfn;
+	args.cpages = 1;
+	args.npages = 1;
+	args.vma = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * We don't have a VMA and don't need to walk the page tables to find
 	 * the source page. So call migrate_vma_unmap() directly to unmap the
 	 * page as migrate_vma_setup() will fail if args.vma == NULL.
 	 */
+<<<<<<< HEAD
 	migrate_device_unmap(&src_pfn, 1, NULL);
+=======
+	migrate_vma_unmap(&args);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!(src_pfn & MIGRATE_PFN_MIGRATE))
 		return -EBUSY;
 
@@ -964,10 +1160,17 @@ int migrate_device_coherent_page(struct page *page)
 		dst_pfn = migrate_pfn(page_to_pfn(dpage));
 	}
 
+<<<<<<< HEAD
 	migrate_device_pages(&src_pfn, &dst_pfn, 1);
 	if (src_pfn & MIGRATE_PFN_MIGRATE)
 		copy_highpage(dpage, page);
 	migrate_device_finalize(&src_pfn, &dst_pfn, 1);
+=======
+	migrate_vma_pages(&args);
+	if (src_pfn & MIGRATE_PFN_MIGRATE)
+		copy_highpage(dpage, page);
+	migrate_vma_finalize(&args);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (src_pfn & MIGRATE_PFN_MIGRATE)
 		return 0;

@@ -9,6 +9,7 @@
  */
 
 #include <linux/kref.h>
+<<<<<<< HEAD
 #include <linux/list.h>
 #include <linux/mutex.h>
 #include <linux/radix-tree.h>
@@ -25,6 +26,14 @@ struct pinctrl;
 struct pinctrl_desc;
 struct pinctrl_gpio_range;
 struct pinctrl_state;
+=======
+#include <linux/mutex.h>
+#include <linux/radix-tree.h>
+#include <linux/pinctrl/pinconf.h>
+#include <linux/pinctrl/machine.h>
+
+struct pinctrl_gpio_range;
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct pinctrl_dev - pin control class device
@@ -252,8 +261,16 @@ extern int pinctrl_force_default(struct pinctrl_dev *pctldev);
 extern struct mutex pinctrl_maps_mutex;
 extern struct list_head pinctrl_maps;
 
+<<<<<<< HEAD
 #define for_each_pin_map(_maps_node_, _map_)						\
 	list_for_each_entry(_maps_node_, &pinctrl_maps, node)				\
 		for (unsigned int __i = 0;						\
 		     __i < _maps_node_->num_maps && (_map_ = &_maps_node_->maps[__i]);	\
 		     __i++)
+=======
+#define for_each_maps(_maps_node_, _i_, _map_) \
+	list_for_each_entry(_maps_node_, &pinctrl_maps, node) \
+		for (_i_ = 0, _map_ = &_maps_node_->maps[_i_]; \
+			_i_ < _maps_node_->num_maps; \
+			_i_++, _map_ = &_maps_node_->maps[_i_])
+>>>>>>> b7ba80a49124 (Commit)

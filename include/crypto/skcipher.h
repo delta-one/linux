@@ -8,7 +8,10 @@
 #ifndef _CRYPTO_SKCIPHER_H
 #define _CRYPTO_SKCIPHER_H
 
+<<<<<<< HEAD
 #include <linux/atomic.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/container_of.h>
 #include <linux/crypto.h>
 #include <linux/slab.h>
@@ -49,6 +52,7 @@ struct crypto_sync_skcipher {
 	struct crypto_skcipher base;
 };
 
+<<<<<<< HEAD
 /*
  * struct crypto_istat_cipher - statistics for cipher algorithm
  * @encrypt_cnt:	number of encrypt requests
@@ -65,6 +69,8 @@ struct crypto_istat_cipher {
 	atomic64_t err_cnt;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct skcipher_alg - symmetric key cipher definition
  * @min_keysize: Minimum key size supported by the transformation. This is the
@@ -118,7 +124,10 @@ struct crypto_istat_cipher {
  * @walksize: Equal to the chunk size except in cases where the algorithm is
  * 	      considerably more efficient if it can operate on multiple chunks
  * 	      in parallel. Should be a multiple of chunksize.
+<<<<<<< HEAD
  * @stat: Statistics for cipher algorithm
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @base: Definition of a generic crypto algorithm.
  *
  * All fields except @ivsize are mandatory and must be filled.
@@ -137,10 +146,13 @@ struct skcipher_alg {
 	unsigned int chunksize;
 	unsigned int walksize;
 
+<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_STATS
 	struct crypto_istat_cipher stat;
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct crypto_alg base;
 };
 

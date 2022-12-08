@@ -255,7 +255,10 @@ $(INSTALL_GEN_HDRS): $(INSTALL_PFX)/%.h: $(OUTPUT)%.h
 		$(call do_install,$<,$(prefix)/include/bpf,644)
 
 install_headers: $(BPF_GENERATED) $(INSTALL_SRC_HDRS) $(INSTALL_GEN_HDRS)
+<<<<<<< HEAD
 	$(call QUIET_INSTALL, libbpf_headers)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 install_pkgconfig: $(PC_FILE)
 	$(call QUIET_INSTALL, $(PC_FILE)) \
@@ -287,6 +290,7 @@ tags:
 
 # Delete partially updated (corrupted) files on error
 .DELETE_ON_ERROR:
+<<<<<<< HEAD
 
 help:
 	@echo 'libbpf common targets:'
@@ -304,3 +308,5 @@ help:
 	@echo 'libbpf make targets:'
 	@echo '  tags    - use ctags to make tag information for source code browsing'
 	@echo '  cscope  - use cscope to make interactive source code browsing database'
+=======
+>>>>>>> b7ba80a49124 (Commit)

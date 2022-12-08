@@ -55,6 +55,7 @@ static inline int current_is_kswapd(void)
  * actions on faults.
  */
 
+<<<<<<< HEAD
 /*
  * PTE markers are used to persist information onto PTEs that otherwise
  * should be a none pte.  As its name "PTE" hints, it should only be
@@ -63,6 +64,24 @@ static inline int current_is_kswapd(void)
 #define SWP_PTE_MARKER_NUM 1
 #define SWP_PTE_MARKER     (MAX_SWAPFILES + SWP_HWPOISON_NUM + \
 			    SWP_MIGRATION_NUM + SWP_DEVICE_NUM)
+=======
+#define SWP_SWAPIN_ERROR_NUM 1
+#define SWP_SWAPIN_ERROR     (MAX_SWAPFILES + SWP_HWPOISON_NUM + \
+			     SWP_MIGRATION_NUM + SWP_DEVICE_NUM + \
+			     SWP_PTE_MARKER_NUM)
+/*
+ * PTE markers are used to persist information onto PTEs that are mapped with
+ * file-backed memories.  As its name "PTE" hints, it should only be applied to
+ * the leaves of pgtables.
+ */
+#ifdef CONFIG_PTE_MARKER
+#define SWP_PTE_MARKER_NUM 1
+#define SWP_PTE_MARKER     (MAX_SWAPFILES + SWP_HWPOISON_NUM + \
+			    SWP_MIGRATION_NUM + SWP_DEVICE_NUM)
+#else
+#define SWP_PTE_MARKER_NUM 0
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Unaddressable device memory support. See include/linux/hmm.h and
@@ -117,7 +136,11 @@ static inline int current_is_kswapd(void)
 #define MAX_SWAPFILES \
 	((1 << MAX_SWAPFILES_SHIFT) - SWP_DEVICE_NUM - \
 	SWP_MIGRATION_NUM - SWP_HWPOISON_NUM - \
+<<<<<<< HEAD
 	SWP_PTE_MARKER_NUM)
+=======
+	SWP_PTE_MARKER_NUM - SWP_SWAPIN_ERROR_NUM)
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Magic header for a swap area. The first part of the union is
@@ -376,11 +399,19 @@ extern unsigned long totalreserve_pages;
 
 
 /* linux/mm/swap.c */
+<<<<<<< HEAD
 void lru_note_cost(struct lruvec *lruvec, bool file,
 		   unsigned int nr_io, unsigned int nr_rotated);
 void lru_note_cost_refault(struct folio *);
 void folio_add_lru(struct folio *);
 void folio_add_lru_vma(struct folio *, struct vm_area_struct *);
+=======
+void lru_note_cost(struct lruvec *lruvec, bool file, unsigned int nr_pages);
+void lru_note_cost_folio(struct folio *);
+void folio_add_lru(struct folio *);
+void folio_add_lru_vma(struct folio *, struct vm_area_struct *);
+void lru_cache_add(struct page *);
+>>>>>>> b7ba80a49124 (Commit)
 void mark_page_accessed(struct page *);
 void folio_mark_accessed(struct folio *);
 
@@ -401,8 +432,13 @@ extern void lru_add_drain(void);
 extern void lru_add_drain_cpu(int cpu);
 extern void lru_add_drain_cpu_zone(struct zone *zone);
 extern void lru_add_drain_all(void);
+<<<<<<< HEAD
 void folio_deactivate(struct folio *folio);
 void folio_mark_lazyfree(struct folio *folio);
+=======
+extern void deactivate_page(struct page *page);
+extern void mark_page_lazyfree(struct page *page);
+>>>>>>> b7ba80a49124 (Commit)
 extern void swap_setup(void);
 
 extern void lru_cache_add_inactive_or_unevictable(struct page *page,
@@ -462,7 +498,11 @@ static inline unsigned long total_swapcache_pages(void)
 
 extern void free_swap_cache(struct page *page);
 extern void free_page_and_swap_cache(struct page *);
+<<<<<<< HEAD
 extern void free_pages_and_swap_cache(struct encoded_page **, int);
+=======
+extern void free_pages_and_swap_cache(struct page **, int);
+>>>>>>> b7ba80a49124 (Commit)
 /* linux/mm/swapfile.c */
 extern atomic_long_t nr_swap_pages;
 extern long total_swap_pages;
@@ -620,6 +660,7 @@ static inline int mem_cgroup_swappiness(struct mem_cgroup *memcg)
 {
 	/* Cgroup2 doesn't have per-cgroup swappiness */
 	if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
+<<<<<<< HEAD
 		return READ_ONCE(vm_swappiness);
 
 	/* root ? */
@@ -627,11 +668,24 @@ static inline int mem_cgroup_swappiness(struct mem_cgroup *memcg)
 		return READ_ONCE(vm_swappiness);
 
 	return READ_ONCE(memcg->swappiness);
+=======
+		return vm_swappiness;
+
+	/* root ? */
+	if (mem_cgroup_disabled() || mem_cgroup_is_root(memcg))
+		return vm_swappiness;
+
+	return memcg->swappiness;
+>>>>>>> b7ba80a49124 (Commit)
 }
 #else
 static inline int mem_cgroup_swappiness(struct mem_cgroup *mem)
 {
+<<<<<<< HEAD
 	return READ_ONCE(vm_swappiness);
+=======
+	return vm_swappiness;
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif
 
@@ -641,6 +695,7 @@ extern atomic_t zswap_stored_pages;
 #endif
 
 #if defined(CONFIG_SWAP) && defined(CONFIG_MEMCG) && defined(CONFIG_BLK_CGROUP)
+<<<<<<< HEAD
 void __folio_throttle_swaprate(struct folio *folio, gfp_t gfp);
 static inline void folio_throttle_swaprate(struct folio *folio, gfp_t gfp)
 {
@@ -655,6 +710,26 @@ static inline void folio_throttle_swaprate(struct folio *folio, gfp_t gfp)
 #endif
 
 #if defined(CONFIG_MEMCG) && defined(CONFIG_SWAP)
+=======
+extern void __cgroup_throttle_swaprate(struct page *page, gfp_t gfp_mask);
+static inline  void cgroup_throttle_swaprate(struct page *page, gfp_t gfp_mask)
+{
+	if (mem_cgroup_disabled())
+		return;
+	__cgroup_throttle_swaprate(page, gfp_mask);
+}
+#else
+static inline void cgroup_throttle_swaprate(struct page *page, gfp_t gfp_mask)
+{
+}
+#endif
+static inline void folio_throttle_swaprate(struct folio *folio, gfp_t gfp)
+{
+	cgroup_throttle_swaprate(&folio->page, gfp);
+}
+
+#ifdef CONFIG_MEMCG_SWAP
+>>>>>>> b7ba80a49124 (Commit)
 void mem_cgroup_swapout(struct folio *folio, swp_entry_t entry);
 int __mem_cgroup_try_charge_swap(struct folio *folio, swp_entry_t entry);
 static inline int mem_cgroup_try_charge_swap(struct folio *folio,

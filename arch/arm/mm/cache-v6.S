@@ -19,8 +19,11 @@
 #define D_CACHE_LINE_SIZE	32
 #define BTB_FLUSH_SIZE		8
 
+<<<<<<< HEAD
 .arch armv6
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  *	v6_flush_icache_all()
  *

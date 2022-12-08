@@ -252,7 +252,11 @@ static int evsel__add_sample(struct evsel *evsel, struct perf_sample *sample,
 	if (ann->has_br_stack && has_annotation(ann))
 		return process_branch_callback(evsel, sample, al, ann, machine);
 
+<<<<<<< HEAD
 	he = hists__add_entry(hists, al, NULL, NULL, NULL, NULL, sample, true);
+=======
+	he = hists__add_entry(hists, al, NULL, NULL, NULL, sample, true);
+>>>>>>> b7ba80a49124 (Commit)
 	if (he == NULL)
 		return -ENOMEM;
 
@@ -499,9 +503,13 @@ int cmd_annotate(int argc, const char **argv)
 			.namespaces = perf_event__process_namespaces,
 			.attr	= perf_event__process_attr,
 			.build_id = perf_event__process_build_id,
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 			.tracing_data   = perf_event__process_tracing_data,
 #endif
+=======
+			.tracing_data   = perf_event__process_tracing_data,
+>>>>>>> b7ba80a49124 (Commit)
 			.id_index	= perf_event__process_id_index,
 			.auxtrace_info	= perf_event__process_auxtrace_info,
 			.auxtrace	= perf_event__process_auxtrace,
@@ -527,7 +535,11 @@ int cmd_annotate(int argc, const char **argv)
 	OPT_BOOLEAN('f', "force", &data.force, "don't complain, do it"),
 	OPT_INCR('v', "verbose", &verbose,
 		    "be more verbose (show symbol address, etc)"),
+<<<<<<< HEAD
 	OPT_BOOLEAN('q', "quiet", &quiet, "do now show any warnings or messages"),
+=======
+	OPT_BOOLEAN('q', "quiet", &quiet, "do now show any message"),
+>>>>>>> b7ba80a49124 (Commit)
 	OPT_BOOLEAN('D', "dump-raw-trace", &dump_trace,
 		    "dump raw trace in ASCII"),
 #ifdef HAVE_GTK2_SUPPORT

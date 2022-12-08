@@ -182,6 +182,7 @@ Date:		November 2021
 Contact:	Jarkko Sakkinen <jarkko@kernel.org>
 Description:
 		The total amount of SGX physical memory in bytes.
+<<<<<<< HEAD
 
 What:		/sys/devices/system/node/nodeX/memory_failure/total
 Date:		January 2023
@@ -221,3 +222,5 @@ Contact:	Jiaqi Yan <jiaqiyan@google.com>
 Description:
 		Of the raw poisoned pages on a NUMA node, how many pages are
 		recovered by memory error recovery attempt.
+=======
+>>>>>>> b7ba80a49124 (Commit)

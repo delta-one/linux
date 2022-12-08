@@ -62,14 +62,22 @@ static int __tegra_bpmp_thermal_get_temp(struct tegra_bpmp_thermal_zone *zone,
 
 static int tegra_bpmp_thermal_get_temp(struct thermal_zone_device *tz, int *out_temp)
 {
+<<<<<<< HEAD
 	struct tegra_bpmp_thermal_zone *zone = thermal_zone_device_priv(tz);
 
 	return __tegra_bpmp_thermal_get_temp(zone, out_temp);
+=======
+	return __tegra_bpmp_thermal_get_temp(tz->devdata, out_temp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int tegra_bpmp_thermal_set_trips(struct thermal_zone_device *tz, int low, int high)
 {
+<<<<<<< HEAD
 	struct tegra_bpmp_thermal_zone *zone = thermal_zone_device_priv(tz);
+=======
+	struct tegra_bpmp_thermal_zone *zone = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mrq_thermal_host_to_bpmp_request req;
 	struct tegra_bpmp_message msg;
 	int err;
@@ -108,6 +116,7 @@ static void tz_device_update_work_fn(struct work_struct *work)
 static void bpmp_mrq_thermal(unsigned int mrq, struct tegra_bpmp_channel *ch,
 			     void *data)
 {
+<<<<<<< HEAD
 	struct mrq_thermal_bpmp_to_host_request req;
 	struct tegra_bpmp_thermal *tegra = data;
 	size_t offset;
@@ -118,12 +127,27 @@ static void bpmp_mrq_thermal(unsigned int mrq, struct tegra_bpmp_channel *ch,
 
 	if (req.type != CMD_THERMAL_HOST_TRIP_REACHED) {
 		dev_err(tegra->dev, "%s: invalid request type: %d\n", __func__, req.type);
+=======
+	struct mrq_thermal_bpmp_to_host_request *req;
+	struct tegra_bpmp_thermal *tegra = data;
+	int i;
+
+	req = (struct mrq_thermal_bpmp_to_host_request *)ch->ib->data;
+
+	if (req->type != CMD_THERMAL_HOST_TRIP_REACHED) {
+		dev_err(tegra->dev, "%s: invalid request type: %d\n",
+			__func__, req->type);
+>>>>>>> b7ba80a49124 (Commit)
 		tegra_bpmp_mrq_return(ch, -EINVAL, NULL, 0);
 		return;
 	}
 
 	for (i = 0; i < tegra->num_zones; ++i) {
+<<<<<<< HEAD
 		if (tegra->zones[i]->idx != req.host_trip_reached.zone)
+=======
+		if (tegra->zones[i]->idx != req->host_trip_reached.zone)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		schedule_work(&tegra->zones[i]->tz_device_update_work);
@@ -132,7 +156,11 @@ static void bpmp_mrq_thermal(unsigned int mrq, struct tegra_bpmp_channel *ch,
 	}
 
 	dev_err(tegra->dev, "%s: invalid thermal zone: %d\n", __func__,
+<<<<<<< HEAD
 		req.host_trip_reached.zone);
+=======
+		req->host_trip_reached.zone);
+>>>>>>> b7ba80a49124 (Commit)
 	tegra_bpmp_mrq_return(ch, -EINVAL, NULL, 0);
 }
 

@@ -10,7 +10,10 @@
 #include <linux/atomic.h>
 #include <linux/random.h>
 #include <linux/static_key.h>
+<<<<<<< HEAD
 #include <asm/archrandom.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/cpacf.h>
 
 DEFINE_STATIC_KEY_FALSE(s390_arch_random_available);

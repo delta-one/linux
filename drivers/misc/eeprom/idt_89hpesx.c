@@ -1366,7 +1366,11 @@ static void idt_remove_dbgfs_files(struct idt_89hpesx_dev *pdev)
 /*
  * idt_probe() - IDT 89HPESx driver probe() callback method
  */
+<<<<<<< HEAD
 static int idt_probe(struct i2c_client *client)
+=======
+static int idt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct idt_89hpesx_dev *pdev;
 	int ret;
@@ -1556,7 +1560,11 @@ static struct i2c_driver idt_driver = {
 		.name = IDT_NAME,
 		.of_match_table = idt_of_match,
 	},
+<<<<<<< HEAD
 	.probe_new = idt_probe,
+=======
+	.probe = idt_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = idt_remove,
 	.id_table = idt_ids,
 };
@@ -1566,13 +1574,17 @@ static struct i2c_driver idt_driver = {
  */
 static int __init idt_init(void)
 {
+<<<<<<< HEAD
 	int ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Create Debugfs directory first */
 	if (debugfs_initialized())
 		csr_dbgdir = debugfs_create_dir("idt_csr", NULL);
 
 	/* Add new i2c-device driver */
+<<<<<<< HEAD
 	ret = i2c_add_driver(&idt_driver);
 	if (ret) {
 		debugfs_remove_recursive(csr_dbgdir);
@@ -1580,6 +1592,9 @@ static int __init idt_init(void)
 	}
 
 	return 0;
+=======
+	return i2c_add_driver(&idt_driver);
+>>>>>>> b7ba80a49124 (Commit)
 }
 module_init(idt_init);
 

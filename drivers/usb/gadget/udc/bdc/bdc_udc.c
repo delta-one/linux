@@ -151,7 +151,10 @@ static void bdc_uspc_disconnected(struct bdc *bdc, bool reinit)
 	bdc->delayed_status = false;
 	bdc->reinit = reinit;
 	bdc->test_mode = false;
+<<<<<<< HEAD
 	usb_gadget_set_state(&bdc->gadget, USB_STATE_NOTATTACHED);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* TNotify wkaeup timer */

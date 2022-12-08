@@ -72,7 +72,11 @@
 
 	sound {
 		compatible = "audio-graph-card";
+<<<<<<< HEAD
 		label = "STM32MP15-DK";
+=======
+		label = "STM32MP1-DK";
+>>>>>>> b7ba80a49124 (Commit)
 		routing =
 			"Playback" , "MCLK",
 			"Capture" , "MCLK",
@@ -141,7 +145,11 @@
 	max-speed = <1000>;
 	phy-handle = <&phy0>;
 
+<<<<<<< HEAD
 	mdio {
+=======
+	mdio0 {
+>>>>>>> b7ba80a49124 (Commit)
 		#address-cells = <1>;
 		#size-cells = <0>;
 		compatible = "snps,dwmac-mdio";
@@ -501,12 +509,21 @@
 	sai2a: audio-controller@4400b004 {
 		#clock-cells = <0>;
 		dma-names = "tx";
+<<<<<<< HEAD
+=======
+		clocks = <&rcc SAI2_K>;
+		clock-names = "sai_ck";
+>>>>>>> b7ba80a49124 (Commit)
 		status = "okay";
 
 		sai2a_port: port {
 			sai2a_endpoint: endpoint {
 				remote-endpoint = <&cs42l51_tx_endpoint>;
+<<<<<<< HEAD
 				dai-format = "i2s";
+=======
+				format = "i2s";
+>>>>>>> b7ba80a49124 (Commit)
 				mclk-fs = <256>;
 				dai-tdm-slot-num = <2>;
 				dai-tdm-slot-width = <32>;
@@ -524,7 +541,11 @@
 		sai2b_port: port {
 			sai2b_endpoint: endpoint {
 				remote-endpoint = <&cs42l51_rx_endpoint>;
+<<<<<<< HEAD
 				dai-format = "i2s";
+=======
+				format = "i2s";
+>>>>>>> b7ba80a49124 (Commit)
 				mclk-fs = <256>;
 				dai-tdm-slot-num = <2>;
 				dai-tdm-slot-width = <32>;

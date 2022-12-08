@@ -300,9 +300,15 @@ static void max5821_regulator_disable(void *reg)
 	regulator_disable(reg);
 }
 
+<<<<<<< HEAD
 static int max5821_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int max5821_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct max5821_data *data;
 	struct iio_dev *indio_dev;
 	u32 tmp;
@@ -377,7 +383,11 @@ static struct i2c_driver max5821_driver = {
 		.of_match_table = max5821_of_match,
 		.pm     = pm_sleep_ptr(&max5821_pm_ops),
 	},
+<<<<<<< HEAD
 	.probe_new	= max5821_probe,
+=======
+	.probe		= max5821_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= max5821_id,
 };
 module_i2c_driver(max5821_driver);

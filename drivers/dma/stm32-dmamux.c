@@ -179,6 +179,10 @@ static int stm32_dmamux_probe(struct platform_device *pdev)
 	const struct of_device_id *match;
 	struct device_node *dma_node;
 	struct stm32_dmamux_data *stm32_dmamux;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem *iomem;
 	struct reset_control *rst;
 	int i, count, ret;
@@ -237,7 +241,12 @@ static int stm32_dmamux_probe(struct platform_device *pdev)
 	}
 	pm_runtime_get_noresume(&pdev->dev);
 
+<<<<<<< HEAD
 	iomem = devm_platform_ioremap_resource(pdev, 0);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	iomem = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(iomem))
 		return PTR_ERR(iomem);
 
@@ -398,3 +407,7 @@ arch_initcall(stm32_dmamux_init);
 MODULE_DESCRIPTION("DMA Router driver for STM32 DMA MUX");
 MODULE_AUTHOR("M'boumba Cedric Madianga <cedric.madianga@gmail.com>");
 MODULE_AUTHOR("Pierre-Yves Mordret <pierre-yves.mordret@st.com>");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

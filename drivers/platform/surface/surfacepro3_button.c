@@ -239,12 +239,20 @@ static int surface_button_add(struct acpi_device *device)
 	return error;
 }
 
+<<<<<<< HEAD
 static void surface_button_remove(struct acpi_device *device)
+=======
+static int surface_button_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct surface_button *button = acpi_driver_data(device);
 
 	input_unregister_device(button->input);
 	kfree(button);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static SIMPLE_DEV_PM_OPS(surface_button_pm,

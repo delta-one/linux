@@ -374,7 +374,10 @@ enum perf_event_read_format {
 #define PERF_ATTR_SIZE_VER5	112	/* add: aux_watermark */
 #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
 #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
+<<<<<<< HEAD
 #define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Hardware event_id to monitor via a performance monitoring event:
@@ -516,8 +519,11 @@ struct perf_event_attr {
 	 * truncated accordingly on 32 bit architectures.
 	 */
 	__u64	sig_data;
+<<<<<<< HEAD
 
 	__u64	config3; /* extension of config2 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -1339,9 +1345,13 @@ union perf_mem_data_src {
 #define PERF_MEM_LVLNUM_L2	0x02 /* L2 */
 #define PERF_MEM_LVLNUM_L3	0x03 /* L3 */
 #define PERF_MEM_LVLNUM_L4	0x04 /* L4 */
+<<<<<<< HEAD
 /* 5-0x8 available */
 #define PERF_MEM_LVLNUM_CXL	0x09 /* CXL */
 #define PERF_MEM_LVLNUM_IO	0x0a /* I/O */
+=======
+/* 5-0xa available */
+>>>>>>> b7ba80a49124 (Commit)
 #define PERF_MEM_LVLNUM_ANY_CACHE 0x0b /* Any cache */
 #define PERF_MEM_LVLNUM_LFB	0x0c /* LFB */
 #define PERF_MEM_LVLNUM_RAM	0x0d /* RAM */
@@ -1359,7 +1369,11 @@ union perf_mem_data_src {
 #define PERF_MEM_SNOOP_SHIFT	19
 
 #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
+<<<<<<< HEAD
 #define PERF_MEM_SNOOPX_PEER	0x02 /* xfer from peer */
+=======
+/* 1 free */
+>>>>>>> b7ba80a49124 (Commit)
 #define PERF_MEM_SNOOPX_SHIFT  38
 
 /* locked instruction */

@@ -43,7 +43,10 @@
 #ifndef __ASSEMBLY__
 
 extern long shadow_stack[SHADOW_OVERFLOW_STACK_SIZE / sizeof(long)];
+<<<<<<< HEAD
 extern unsigned long spin_shadow_stack;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/processor.h>
 #include <asm/csr.h>

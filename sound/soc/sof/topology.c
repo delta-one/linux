@@ -54,6 +54,7 @@ int sof_update_ipc_object(struct snd_soc_component *scomp, void *object, enum so
 			  size_t object_size, int token_instance_num)
 {
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 	const struct sof_token_info *token_list;
 	const struct sof_topology_token *tokens;
@@ -64,6 +65,13 @@ int sof_update_ipc_object(struct snd_soc_component *scomp, void *object, enum so
 	if (!token_list)
 		return 0;
 
+=======
+	const struct sof_ipc_tplg_ops *ipc_tplg_ops = sdev->ipc->ops->tplg;
+	const struct sof_token_info *token_list = ipc_tplg_ops->token_list;
+	const struct sof_topology_token *tokens;
+	int i, j;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (token_list[token_id].count < 0) {
 		dev_err(scomp->dev, "Invalid token count for token ID: %d\n", token_id);
 		return -EINVAL;
@@ -268,9 +276,15 @@ static int set_up_volume_table(struct snd_sof_control *scontrol,
 {
 	struct snd_soc_component *scomp = scontrol->scomp;
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 
 	if (tplg_ops && tplg_ops->control && tplg_ops->control->set_up_volume_table)
+=======
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+
+	if (tplg_ops->control->set_up_volume_table)
+>>>>>>> b7ba80a49124 (Commit)
 		return tplg_ops->control->set_up_volume_table(scontrol, tlv, size);
 
 	dev_err(scomp->dev, "Mandatory op %s not set\n", __func__);
@@ -294,9 +308,12 @@ static const struct sof_dai_types sof_dais[] = {
 	{"ACPDMIC", SOF_DAI_AMD_DMIC},
 	{"ACPHS", SOF_DAI_AMD_HS},
 	{"AFE", SOF_DAI_MEDIATEK_AFE},
+<<<<<<< HEAD
 	{"ACPSP_VIRTUAL", SOF_DAI_AMD_SP_VIRTUAL},
 	{"ACPHS_VIRTUAL", SOF_DAI_AMD_HS_VIRTUAL},
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static enum sof_ipc_dai_type find_dai(const char *name)
@@ -368,6 +385,7 @@ int get_token_uuid(void *elem, void *object, u32 offset)
 	return 0;
 }
 
+<<<<<<< HEAD
 /*
  * The string gets from topology will be stored in heap, the owner only
  * holds a char* member point to the heap.
@@ -383,6 +401,8 @@ int get_token_string(void *elem, void *object, u32 offset)
 	return 0;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int get_token_comp_format(void *elem, void *object, u32 offset)
 {
 	u32 *val = (u32 *)((u8 *)object + offset);
@@ -415,6 +435,7 @@ static const struct sof_topology_token led_tokens[] = {
 		offsetof(struct snd_sof_led_control, direction)},
 };
 
+<<<<<<< HEAD
 static const struct sof_topology_token comp_pin_tokens[] = {
 	{SOF_TKN_COMP_NUM_INPUT_PINS, SND_SOC_TPLG_TUPLE_TYPE_WORD, get_token_u32,
 		offsetof(struct snd_sof_widget, num_input_pins)},
@@ -432,6 +453,8 @@ static const struct sof_topology_token comp_output_pin_binding_tokens[] = {
 		get_token_string, 0},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * sof_parse_uuid_tokens - Parse multiple sets of UUID tokens
  * @scomp: pointer to soc component
@@ -495,14 +518,22 @@ static int sof_copy_tuples(struct snd_sof_dev *sdev, struct snd_soc_tplg_vendor_
 			   int array_size, u32 token_id, int token_instance_num,
 			   struct snd_sof_tuple *tuples, int tuples_size, int *num_copied_tuples)
 {
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 	const struct sof_token_info *token_list;
+=======
+	const struct sof_ipc_tplg_ops *ipc_tplg_ops = sdev->ipc->ops->tplg;
+	const struct sof_token_info *token_list = ipc_tplg_ops->token_list;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct sof_topology_token *tokens;
 	int found = 0;
 	int num_tokens, asize;
 	int i, j;
 
+<<<<<<< HEAD
 	token_list = tplg_ops ? tplg_ops->token_list : NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* nothing to do if token_list is NULL */
 	if (!token_list)
 		return 0;
@@ -613,7 +644,11 @@ static int sof_parse_string_tokens(struct snd_soc_component *scomp,
 {
 	struct snd_soc_tplg_vendor_string_elem *elem;
 	int found = 0;
+<<<<<<< HEAD
 	int i, j, ret;
+=======
+	int i, j;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* parse element by element */
 	for (i = 0; i < le32_to_cpu(array->num_elems); i++) {
@@ -630,9 +665,13 @@ static int sof_parse_string_tokens(struct snd_soc_component *scomp,
 				continue;
 
 			/* matched - now load token */
+<<<<<<< HEAD
 			ret = tokens[j].get_token(elem->string, object, offset + tokens[j].offset);
 			if (ret < 0)
 				return ret;
+=======
+			tokens[j].get_token(elem->string, object, offset + tokens[j].offset);
+>>>>>>> b7ba80a49124 (Commit)
 
 			found++;
 		}
@@ -712,7 +751,10 @@ static int sof_parse_token_sets(struct snd_soc_component *scomp,
 	int found = 0;
 	int total = 0;
 	int asize;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (array_size > 0 && total < count * token_instance_num) {
 		asize = le32_to_cpu(array->size);
@@ -739,6 +781,7 @@ static int sof_parse_token_sets(struct snd_soc_component *scomp,
 						       array);
 			break;
 		case SND_SOC_TPLG_TUPLE_TYPE_STRING:
+<<<<<<< HEAD
 
 			ret = sof_parse_string_tokens(scomp, object, offset, tokens, count,
 						      array);
@@ -748,6 +791,10 @@ static int sof_parse_token_sets(struct snd_soc_component *scomp,
 			}
 
 			found += ret;
+=======
+			found += sof_parse_string_tokens(scomp, object, offset, tokens, count,
+							 array);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case SND_SOC_TPLG_TUPLE_TYPE_BOOL:
 		case SND_SOC_TPLG_TUPLE_TYPE_BYTE:
@@ -1021,14 +1068,23 @@ static int sof_control_unload(struct snd_soc_component *scomp,
 			      struct snd_soc_dobj *dobj)
 {
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
+=======
+	const struct sof_ipc_tplg_ops *ipc_tplg_ops = sdev->ipc->ops->tplg;
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_sof_control *scontrol = dobj->private;
 	int ret = 0;
 
 	dev_dbg(scomp->dev, "tplg: unload control name : %s\n", scontrol->name);
 
+<<<<<<< HEAD
 	if (tplg_ops && tplg_ops->control_free) {
 		ret = tplg_ops->control_free(sdev, scontrol);
+=======
+	if (ipc_tplg_ops->control_free) {
+		ret = ipc_tplg_ops->control_free(sdev, scontrol);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret < 0)
 			dev_err(scomp->dev, "failed to free control: %s\n", scontrol->name);
 	}
@@ -1055,7 +1111,10 @@ static int sof_connect_dai_widget(struct snd_soc_component *scomp,
 	struct snd_soc_card *card = scomp->card;
 	struct snd_soc_pcm_runtime *rtd;
 	struct snd_soc_dai *cpu_dai;
+<<<<<<< HEAD
 	int stream;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	if (!w->sname) {
@@ -1063,6 +1122,7 @@ static int sof_connect_dai_widget(struct snd_soc_component *scomp,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if (w->id == snd_soc_dapm_dai_out)
 		stream = SNDRV_PCM_STREAM_CAPTURE;
 	else if (w->id == snd_soc_dapm_dai_in)
@@ -1070,12 +1130,15 @@ static int sof_connect_dai_widget(struct snd_soc_component *scomp,
 	else
 		goto end;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry(rtd, &card->rtd_list, list) {
 		/* does stream match DAI link ? */
 		if (!rtd->dai_link->stream_name ||
 		    strcmp(w->sname, rtd->dai_link->stream_name))
 			continue;
 
+<<<<<<< HEAD
 		for_each_rtd_cpu_dais(rtd, i, cpu_dai) {
 			/*
 			 * Please create DAI widget in the right order
@@ -1098,6 +1161,58 @@ static int sof_connect_dai_widget(struct snd_soc_component *scomp,
 			w->name, rtd->dai_link->name);
 	}
 end:
+=======
+		switch (w->id) {
+		case snd_soc_dapm_dai_out:
+			for_each_rtd_cpu_dais(rtd, i, cpu_dai) {
+				/*
+				 * Please create DAI widget in the right order
+				 * to ensure BE will connect to the right DAI
+				 * widget.
+				 */
+				if (!cpu_dai->capture_widget) {
+					cpu_dai->capture_widget = w;
+					break;
+				}
+			}
+			if (i == rtd->dai_link->num_cpus) {
+				dev_err(scomp->dev, "error: can't find BE for DAI %s\n",
+					w->name);
+
+				return -EINVAL;
+			}
+			dai->name = rtd->dai_link->name;
+			dev_dbg(scomp->dev, "tplg: connected widget %s -> DAI link %s\n",
+				w->name, rtd->dai_link->name);
+			break;
+		case snd_soc_dapm_dai_in:
+			for_each_rtd_cpu_dais(rtd, i, cpu_dai) {
+				/*
+				 * Please create DAI widget in the right order
+				 * to ensure BE will connect to the right DAI
+				 * widget.
+				 */
+				if (!cpu_dai->playback_widget) {
+					cpu_dai->playback_widget = w;
+					break;
+				}
+			}
+			if (i == rtd->dai_link->num_cpus) {
+				dev_err(scomp->dev, "error: can't find BE for DAI %s\n",
+					w->name);
+
+				return -EINVAL;
+			}
+			dai->name = rtd->dai_link->name;
+			dev_dbg(scomp->dev, "tplg: connected widget %s -> DAI link %s\n",
+				w->name, rtd->dai_link->name);
+			break;
+		default:
+			break;
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* check we have a connection */
 	if (!dai->name) {
 		dev_err(scomp->dev, "error: can't connect DAI %s stream %s\n",
@@ -1114,11 +1229,16 @@ static void sof_disconnect_dai_widget(struct snd_soc_component *scomp,
 	struct snd_soc_card *card = scomp->card;
 	struct snd_soc_pcm_runtime *rtd;
 	struct snd_soc_dai *cpu_dai;
+<<<<<<< HEAD
 	int i, stream;
+=======
+	int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!w->sname)
 		return;
 
+<<<<<<< HEAD
 	if (w->id == snd_soc_dapm_dai_out)
 		stream = SNDRV_PCM_STREAM_CAPTURE;
 	else if (w->id == snd_soc_dapm_dai_in)
@@ -1126,17 +1246,42 @@ static void sof_disconnect_dai_widget(struct snd_soc_component *scomp,
 	else
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry(rtd, &card->rtd_list, list) {
 		/* does stream match DAI link ? */
 		if (!rtd->dai_link->stream_name ||
 		    strcmp(w->sname, rtd->dai_link->stream_name))
 			continue;
 
+<<<<<<< HEAD
 		for_each_rtd_cpu_dais(rtd, i, cpu_dai)
 			if (snd_soc_dai_get_widget(cpu_dai, stream) == w) {
 				snd_soc_dai_set_widget(cpu_dai, stream, NULL);
 				break;
 			}
+=======
+		switch (w->id) {
+		case snd_soc_dapm_dai_out:
+			for_each_rtd_cpu_dais(rtd, i, cpu_dai) {
+				if (cpu_dai->capture_widget == w) {
+					cpu_dai->capture_widget = NULL;
+					break;
+				}
+			}
+			break;
+		case snd_soc_dapm_dai_in:
+			for_each_rtd_cpu_dais(rtd, i, cpu_dai) {
+				if (cpu_dai->playback_widget == w) {
+					cpu_dai->playback_widget = NULL;
+					break;
+				}
+			}
+			break;
+		default:
+			break;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -1179,6 +1324,7 @@ static int sof_widget_parse_tokens(struct snd_soc_component *scomp, struct snd_s
 				   enum sof_tokens *object_token_list, int count)
 {
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 	struct snd_soc_tplg_private *private = &tw->priv;
 	const struct sof_token_info *token_list;
@@ -1190,6 +1336,14 @@ static int sof_widget_parse_tokens(struct snd_soc_component *scomp, struct snd_s
 	if (!token_list)
 		return 0;
 
+=======
+	const struct sof_ipc_tplg_ops *ipc_tplg_ops = sdev->ipc->ops->tplg;
+	const struct sof_token_info *token_list = ipc_tplg_ops->token_list;
+	struct snd_soc_tplg_private *private = &tw->priv;
+	int num_tuples = 0;
+	int ret, i;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (count > 0 && !object_token_list) {
 		dev_err(scomp->dev, "No token list for widget %s\n", swidget->widget->name);
 		return -EINVAL;
@@ -1231,14 +1385,26 @@ static int sof_widget_parse_tokens(struct snd_soc_component *scomp, struct snd_s
 
 			continue;
 		case SOF_IN_AUDIO_FORMAT_TOKENS:
+<<<<<<< HEAD
 			num_sets = sof_get_token_value(SOF_TKN_COMP_NUM_INPUT_AUDIO_FORMATS,
 						       swidget->tuples, swidget->num_tuples);
 			if (num_sets < 0) {
 				dev_err(sdev->dev, "Invalid input audio format count for %s\n",
+=======
+		case SOF_OUT_AUDIO_FORMAT_TOKENS:
+		case SOF_COPIER_GATEWAY_CFG_TOKENS:
+		case SOF_AUDIO_FORMAT_BUFFER_SIZE_TOKENS:
+			num_sets = sof_get_token_value(SOF_TKN_COMP_NUM_AUDIO_FORMATS,
+						       swidget->tuples, swidget->num_tuples);
+
+			if (num_sets < 0) {
+				dev_err(sdev->dev, "Invalid audio format count for %s\n",
+>>>>>>> b7ba80a49124 (Commit)
 					swidget->widget->name);
 				ret = num_sets;
 				goto err;
 			}
+<<<<<<< HEAD
 			break;
 		case SOF_OUT_AUDIO_FORMAT_TOKENS:
 			num_sets = sof_get_token_value(SOF_TKN_COMP_NUM_OUTPUT_AUDIO_FORMATS,
@@ -1248,12 +1414,28 @@ static int sof_widget_parse_tokens(struct snd_soc_component *scomp, struct snd_s
 					swidget->widget->name);
 				ret = num_sets;
 				goto err;
+=======
+
+			if (num_sets > 1) {
+				struct snd_sof_tuple *new_tuples;
+
+				num_tuples += token_list[object_token_list[i]].count * num_sets;
+				new_tuples = krealloc(swidget->tuples,
+						      sizeof(*new_tuples) * num_tuples, GFP_KERNEL);
+				if (!new_tuples) {
+					ret = -ENOMEM;
+					goto err;
+				}
+
+				swidget->tuples = new_tuples;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			break;
 		default:
 			break;
 		}
 
+<<<<<<< HEAD
 		if (num_sets > 1) {
 			struct snd_sof_tuple *new_tuples;
 
@@ -1268,6 +1450,8 @@ static int sof_widget_parse_tokens(struct snd_soc_component *scomp, struct snd_s
 			swidget->tuples = new_tuples;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* copy one set of tuples per token ID into swidget->tuples */
 		ret = sof_copy_tuples(sdev, private->array, le32_to_cpu(private->size),
 				      object_token_list[i], num_sets, swidget->tuples,
@@ -1285,6 +1469,7 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void sof_free_pin_binding(struct snd_sof_widget *swidget,
 				 bool pin_type)
 {
@@ -1358,12 +1543,15 @@ err:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* external widget init - used for any driver specific init */
 static int sof_widget_ready(struct snd_soc_component *scomp, int index,
 			    struct snd_soc_dapm_widget *w,
 			    struct snd_soc_tplg_dapm_widget *tw)
 {
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 	const struct sof_ipc_tplg_widget_ops *widget_ops;
 	struct snd_soc_tplg_private *priv = &tw->priv;
@@ -1371,6 +1559,14 @@ static int sof_widget_ready(struct snd_soc_component *scomp, int index,
 	struct snd_sof_widget *swidget;
 	struct snd_sof_dai *dai;
 	int token_list_size = 0;
+=======
+	const struct sof_ipc_tplg_ops *ipc_tplg_ops = sdev->ipc->ops->tplg;
+	const struct sof_ipc_tplg_widget_ops *widget_ops = ipc_tplg_ops->widget;
+	struct snd_sof_widget *swidget;
+	struct snd_sof_dai *dai;
+	enum sof_tokens *token_list;
+	int token_list_size;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 
 	swidget = kzalloc(sizeof(*swidget), GFP_KERNEL);
@@ -1380,6 +1576,7 @@ static int sof_widget_ready(struct snd_soc_component *scomp, int index,
 	swidget->scomp = scomp;
 	swidget->widget = w;
 	swidget->comp_id = sdev->next_comp_id++;
+<<<<<<< HEAD
 	swidget->id = w->id;
 	swidget->pipeline_id = index;
 	swidget->private = NULL;
@@ -1436,6 +1633,20 @@ static int sof_widget_ready(struct snd_soc_component *scomp, int index,
 		token_list = widget_ops[w->id].token_list;
 		token_list_size = widget_ops[w->id].token_list_size;
 	}
+=======
+	swidget->complete = 0;
+	swidget->id = w->id;
+	swidget->pipeline_id = index;
+	swidget->private = NULL;
+
+	dev_dbg(scomp->dev, "tplg: ready widget id %d pipe %d type %d name : %s stream %s\n",
+		swidget->comp_id, index, swidget->id, tw->name,
+		strnlen(tw->sname, SNDRV_CTL_ELEM_ID_NAME_MAXLEN) > 0
+			? tw->sname : "none");
+
+	token_list = widget_ops[w->id].token_list;
+	token_list_size = widget_ops[w->id].token_list_size;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* handle any special case widgets */
 	switch (w->id) {
@@ -1443,8 +1654,14 @@ static int sof_widget_ready(struct snd_soc_component *scomp, int index,
 	case snd_soc_dapm_dai_out:
 		dai = kzalloc(sizeof(*dai), GFP_KERNEL);
 		if (!dai) {
+<<<<<<< HEAD
 			ret = -ENOMEM;
 			goto widget_free;
+=======
+			kfree(swidget);
+			return -ENOMEM;
+
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		ret = sof_widget_parse_tokens(scomp, swidget, tw, token_list, token_list_size);
@@ -1495,6 +1712,7 @@ static int sof_widget_ready(struct snd_soc_component *scomp, int index,
 		break;
 	}
 
+<<<<<<< HEAD
 	/* check token parsing reply */
 	if (ret < 0) {
 		dev_err(scomp->dev,
@@ -1505,6 +1723,8 @@ static int sof_widget_ready(struct snd_soc_component *scomp, int index,
 		goto widget_free;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (sof_debug_check_flag(SOF_DBG_DISABLE_MULTICORE)) {
 		swidget->core = SOF_DSP_PRIMARY_CORE;
 	} else {
@@ -1515,19 +1735,44 @@ static int sof_widget_ready(struct snd_soc_component *scomp, int index,
 			swidget->core = core;
 	}
 
+<<<<<<< HEAD
 	/* bind widget to external event */
 	if (tw->event_type) {
 		if (widget_ops && widget_ops[w->id].bind_event) {
+=======
+	/* check token parsing reply */
+	if (ret < 0) {
+		dev_err(scomp->dev,
+			"error: failed to add widget id %d type %d name : %s stream %s\n",
+			tw->shift, swidget->id, tw->name,
+			strnlen(tw->sname, SNDRV_CTL_ELEM_ID_NAME_MAXLEN) > 0
+				? tw->sname : "none");
+		kfree(swidget);
+		return ret;
+	}
+
+	/* bind widget to external event */
+	if (tw->event_type) {
+		if (widget_ops[w->id].bind_event) {
+>>>>>>> b7ba80a49124 (Commit)
 			ret = widget_ops[w->id].bind_event(scomp, swidget,
 							   le16_to_cpu(tw->event_type));
 			if (ret) {
 				dev_err(scomp->dev, "widget event binding failed for %s\n",
 					swidget->widget->name);
+<<<<<<< HEAD
 				goto free;
+=======
+				kfree(swidget->private);
+				kfree(swidget->tuples);
+				kfree(swidget);
+				return ret;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 	}
 
+<<<<<<< HEAD
 	/* create and add pipeline for scheduler type widgets */
 	if (w->id == snd_soc_dapm_scheduler) {
 		struct snd_sof_pipeline *spipe;
@@ -1552,6 +1797,11 @@ free:
 widget_free:
 	kfree(swidget);
 	return ret;
+=======
+	w->dobj.private = swidget;
+	list_add(&swidget->list, &sdev->widget_list);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int sof_route_unload(struct snd_soc_component *scomp,
@@ -1575,8 +1825,13 @@ static int sof_widget_unload(struct snd_soc_component *scomp,
 			     struct snd_soc_dobj *dobj)
 {
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 	const struct sof_ipc_tplg_widget_ops *widget_ops;
+=======
+	const struct sof_ipc_tplg_ops *ipc_tplg_ops = sdev->ipc->ops->tplg;
+	const struct sof_ipc_tplg_widget_ops *widget_ops = ipc_tplg_ops->widget;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct snd_kcontrol_new *kc;
 	struct snd_soc_dapm_widget *widget;
 	struct snd_sof_control *scontrol;
@@ -1604,6 +1859,7 @@ static int sof_widget_unload(struct snd_soc_component *scomp,
 		sof_disconnect_dai_widget(scomp, widget);
 
 		break;
+<<<<<<< HEAD
 	case snd_soc_dapm_scheduler:
 	{
 		struct snd_sof_pipeline *spipe = swidget->spipe;
@@ -1613,6 +1869,8 @@ static int sof_widget_unload(struct snd_soc_component *scomp,
 		swidget->spipe = NULL;
 		break;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		break;
 	}
@@ -1645,6 +1903,7 @@ static int sof_widget_unload(struct snd_soc_component *scomp,
 
 out:
 	/* free IPC related data */
+<<<<<<< HEAD
 	widget_ops = tplg_ops ? tplg_ops->widget : NULL;
 	if (widget_ops && widget_ops[swidget->id].ipc_free)
 		widget_ops[swidget->id].ipc_free(swidget);
@@ -1655,6 +1914,11 @@ out:
 	sof_free_pin_binding(swidget, SOF_PIN_TYPE_INPUT);
 	sof_free_pin_binding(swidget, SOF_PIN_TYPE_OUTPUT);
 
+=======
+	if (widget_ops[swidget->id].ipc_free)
+		widget_ops[swidget->id].ipc_free(swidget);
+
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(swidget->tuples);
 
 	/* remove and free swidget object */
@@ -1674,7 +1938,10 @@ static int sof_dai_load(struct snd_soc_component *scomp, int index,
 			struct snd_soc_tplg_pcm *pcm, struct snd_soc_dai *dai)
 {
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_pcm_ops *ipc_pcm_ops = sof_ipc_get_ops(sdev, pcm);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_soc_tplg_stream_caps *caps;
 	struct snd_soc_tplg_private *private = &pcm->priv;
 	struct snd_sof_pcm *spcm;
@@ -1702,6 +1969,7 @@ static int sof_dai_load(struct snd_soc_component *scomp, int index,
 	spcm->pcm = *pcm;
 	dev_dbg(scomp->dev, "tplg: load pcm %s\n", pcm->dai_name);
 
+<<<<<<< HEAD
 	/* perform pcm set op */
 	if (ipc_pcm_ops && ipc_pcm_ops->pcm_setup) {
 		ret = ipc_pcm_ops->pcm_setup(sdev, spcm);
@@ -1709,6 +1977,8 @@ static int sof_dai_load(struct snd_soc_component *scomp, int index,
 			return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dai_drv->dobj.private = spcm;
 	list_add(&spcm->list, &sdev->pcm_list);
 
@@ -1786,8 +2056,11 @@ free_playback_tables:
 static int sof_dai_unload(struct snd_soc_component *scomp,
 			  struct snd_soc_dobj *dobj)
 {
+<<<<<<< HEAD
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
 	const struct sof_ipc_pcm_ops *ipc_pcm_ops = sof_ipc_get_ops(sdev, pcm);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_sof_pcm *spcm = dobj->private;
 
 	/* free PCM DMA pages */
@@ -1797,10 +2070,13 @@ static int sof_dai_unload(struct snd_soc_component *scomp,
 	if (spcm->pcm.capture)
 		snd_dma_free_pages(&spcm->stream[SNDRV_PCM_STREAM_CAPTURE].page_table);
 
+<<<<<<< HEAD
 	/* perform pcm free op */
 	if (ipc_pcm_ops && ipc_pcm_ops->pcm_free)
 		ipc_pcm_ops->pcm_free(sdev, spcm);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* remove from list and free spcm */
 	list_del(&spcm->list);
 	kfree(spcm);
@@ -1818,9 +2094,15 @@ static int sof_link_load(struct snd_soc_component *scomp, int index, struct snd_
 			 struct snd_soc_tplg_link_config *cfg)
 {
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 	struct snd_soc_tplg_private *private = &cfg->priv;
 	const struct sof_token_info *token_list;
+=======
+	const struct sof_ipc_tplg_ops *ipc_tplg_ops = sdev->ipc->ops->tplg;
+	const struct sof_token_info *token_list = ipc_tplg_ops->token_list;
+	struct snd_soc_tplg_private *private = &cfg->priv;
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_sof_dai_link *slink;
 	u32 token_id = 0;
 	int num_tuples = 0;
@@ -1832,6 +2114,7 @@ static int sof_link_load(struct snd_soc_component *scomp, int index, struct snd_
 	}
 	link->platforms->name = dev_name(scomp->dev);
 
+<<<<<<< HEAD
 	if (tplg_ops && tplg_ops->link_setup) {
 		ret = tplg_ops->link_setup(sdev, link);
 		if (ret < 0)
@@ -1841,6 +2124,28 @@ static int sof_link_load(struct snd_soc_component *scomp, int index, struct snd_
 	/* Set nonatomic property for FE dai links as their trigger action involves IPC's */
 	if (!link->no_pcm) {
 		link->nonatomic = true;
+=======
+	/*
+	 * Set nonatomic property for FE dai links as their trigger action
+	 * involves IPC's.
+	 */
+	if (!link->no_pcm) {
+		link->nonatomic = true;
+
+		/*
+		 * set default trigger order for all links. Exceptions to
+		 * the rule will be handled in sof_pcm_dai_link_fixup()
+		 * For playback, the sequence is the following: start FE,
+		 * start BE, stop BE, stop FE; for Capture the sequence is
+		 * inverted start BE, start FE, stop FE, stop BE
+		 */
+		link->trigger[SNDRV_PCM_STREAM_PLAYBACK] =
+					SND_SOC_DPCM_TRIGGER_PRE;
+		link->trigger[SNDRV_PCM_STREAM_CAPTURE] =
+					SND_SOC_DPCM_TRIGGER_POST;
+
+		/* nothing more to do for FE dai links */
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
@@ -1879,7 +2184,10 @@ static int sof_link_load(struct snd_soc_component *scomp, int index, struct snd_
 		return ret;
 	}
 
+<<<<<<< HEAD
 	token_list = tplg_ops ? tplg_ops->token_list : NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!token_list)
 		goto out;
 
@@ -1922,6 +2230,7 @@ static int sof_link_load(struct snd_soc_component *scomp, int index, struct snd_
 		token_id = SOF_ACPDMIC_TOKENS;
 		num_tuples += token_list[SOF_ACPDMIC_TOKENS].count;
 		break;
+<<<<<<< HEAD
 	case SOF_DAI_AMD_SP:
 	case SOF_DAI_AMD_HS:
 	case SOF_DAI_AMD_SP_VIRTUAL:
@@ -1929,6 +2238,8 @@ static int sof_link_load(struct snd_soc_component *scomp, int index, struct snd_
 		token_id = SOF_ACPI2S_TOKENS;
 		num_tuples += token_list[SOF_ACPI2S_TOKENS].count;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		break;
 	}
@@ -2087,19 +2398,31 @@ err:
 }
 
 /**
+<<<<<<< HEAD
  * sof_set_widget_pipeline - Set pipeline for a component
  * @sdev: pointer to struct snd_sof_dev
  * @spipe: pointer to struct snd_sof_pipeline
+=======
+ * sof_set_pipe_widget - Set pipe_widget for a component
+ * @sdev: pointer to struct snd_sof_dev
+ * @pipe_widget: pointer to struct snd_sof_widget of type snd_soc_dapm_scheduler
+>>>>>>> b7ba80a49124 (Commit)
  * @swidget: pointer to struct snd_sof_widget that has the same pipeline ID as @pipe_widget
  *
  * Return: 0 if successful, -EINVAL on error.
  * The function checks if @swidget is associated with any volatile controls. If so, setting
  * the dynamic_pipeline_widget is disallowed.
  */
+<<<<<<< HEAD
 static int sof_set_widget_pipeline(struct snd_sof_dev *sdev, struct snd_sof_pipeline *spipe,
 				   struct snd_sof_widget *swidget)
 {
 	struct snd_sof_widget *pipe_widget = spipe->pipe_widget;
+=======
+static int sof_set_pipe_widget(struct snd_sof_dev *sdev, struct snd_sof_widget *pipe_widget,
+			       struct snd_sof_widget *swidget)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_sof_control *scontrol;
 
 	if (pipe_widget->dynamic_pipeline_widget) {
@@ -2114,8 +2437,13 @@ static int sof_set_widget_pipeline(struct snd_sof_dev *sdev, struct snd_sof_pipe
 			}
 	}
 
+<<<<<<< HEAD
 	/* set the pipeline and apply the dynamic_pipeline_widget_flag */
 	swidget->spipe = spipe;
+=======
+	/* set the pipe_widget and apply the dynamic_pipeline_widget_flag */
+	swidget->pipe_widget = pipe_widget;
+>>>>>>> b7ba80a49124 (Commit)
 	swidget->dynamic_pipeline_widget = pipe_widget->dynamic_pipeline_widget;
 
 	return 0;
@@ -2125,6 +2453,7 @@ static int sof_set_widget_pipeline(struct snd_sof_dev *sdev, struct snd_sof_pipe
 static int sof_complete(struct snd_soc_component *scomp)
 {
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 	const struct sof_ipc_tplg_widget_ops *widget_ops;
 	struct snd_sof_control *scontrol;
@@ -2137,6 +2466,18 @@ static int sof_complete(struct snd_soc_component *scomp)
 	if (tplg_ops && tplg_ops->control_setup)
 		list_for_each_entry(scontrol, &sdev->kcontrol_list, list) {
 			ret = tplg_ops->control_setup(sdev, scontrol);
+=======
+	struct snd_sof_widget *swidget, *comp_swidget;
+	const struct sof_ipc_tplg_ops *ipc_tplg_ops = sdev->ipc->ops->tplg;
+	const struct sof_ipc_tplg_widget_ops *widget_ops = ipc_tplg_ops->widget;
+	struct snd_sof_control *scontrol;
+	int ret;
+
+	/* first update all control IPC structures based on the IPC version */
+	if (ipc_tplg_ops->control_setup)
+		list_for_each_entry(scontrol, &sdev->kcontrol_list, list) {
+			ret = ipc_tplg_ops->control_setup(sdev, scontrol);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret < 0) {
 				dev_err(sdev->dev, "failed updating IPC struct for control %s\n",
 					scontrol->name);
@@ -2144,6 +2485,7 @@ static int sof_complete(struct snd_soc_component *scomp)
 			}
 		}
 
+<<<<<<< HEAD
 	/* set up the IPC structures for the pipeline widgets */
 	list_for_each_entry(spipe, &sdev->pipeline_list, list) {
 		struct snd_sof_widget *pipe_widget = spipe->pipe_widget;
@@ -2177,20 +2519,65 @@ static int sof_complete(struct snd_soc_component *scomp)
 					}
 				}
 			}
+=======
+	/*
+	 * then update all widget IPC structures. If any of the ipc_setup callbacks fail, the
+	 * topology will be removed and all widgets will be unloaded resulting in freeing all
+	 * associated memories.
+	 */
+	list_for_each_entry(swidget, &sdev->widget_list, list) {
+		if (widget_ops[swidget->id].ipc_setup) {
+			ret = widget_ops[swidget->id].ipc_setup(swidget);
+			if (ret < 0) {
+				dev_err(sdev->dev, "failed updating IPC struct for %s\n",
+					swidget->widget->name);
+				return ret;
+			}
+		}
+	}
+
+	/* set the pipe_widget and apply the dynamic_pipeline_widget_flag */
+	list_for_each_entry(swidget, &sdev->widget_list, list) {
+		switch (swidget->id) {
+		case snd_soc_dapm_scheduler:
+			/*
+			 * Apply the dynamic_pipeline_widget flag and set the pipe_widget field
+			 * for all widgets that have the same pipeline ID as the scheduler widget
+			 */
+			list_for_each_entry(comp_swidget, &sdev->widget_list, list)
+				if (comp_swidget->pipeline_id == swidget->pipeline_id) {
+					ret = sof_set_pipe_widget(sdev, swidget, comp_swidget);
+					if (ret < 0)
+						return ret;
+				}
+			break;
+		default:
+			break;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* verify topology components loading including dynamic pipelines */
 	if (sof_debug_check_flag(SOF_DBG_VERIFY_TPLG)) {
+<<<<<<< HEAD
 		if (tplg_ops && tplg_ops->set_up_all_pipelines &&
 		    tplg_ops->tear_down_all_pipelines) {
 			ret = tplg_ops->set_up_all_pipelines(sdev, true);
+=======
+		if (ipc_tplg_ops->set_up_all_pipelines && ipc_tplg_ops->tear_down_all_pipelines) {
+			ret = ipc_tplg_ops->set_up_all_pipelines(sdev, true);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret < 0) {
 				dev_err(sdev->dev, "Failed to set up all topology pipelines: %d\n",
 					ret);
 				return ret;
 			}
 
+<<<<<<< HEAD
 			ret = tplg_ops->tear_down_all_pipelines(sdev, true);
+=======
+			ret = ipc_tplg_ops->tear_down_all_pipelines(sdev, true);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret < 0) {
 				dev_err(sdev->dev, "Failed to tear down topology pipelines: %d\n",
 					ret);
@@ -2200,8 +2587,13 @@ static int sof_complete(struct snd_soc_component *scomp)
 	}
 
 	/* set up static pipelines */
+<<<<<<< HEAD
 	if (tplg_ops && tplg_ops->set_up_all_pipelines)
 		return tplg_ops->set_up_all_pipelines(sdev, false);
+=======
+	if (ipc_tplg_ops->set_up_all_pipelines)
+		return ipc_tplg_ops->set_up_all_pipelines(sdev, false);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -2211,10 +2603,17 @@ static int sof_manifest(struct snd_soc_component *scomp, int index,
 			struct snd_soc_tplg_manifest *man)
 {
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 
 	if (tplg_ops && tplg_ops->parse_manifest)
 		return tplg_ops->parse_manifest(scomp, index, man);
+=======
+	const struct sof_ipc_tplg_ops *ipc_tplg_ops = sdev->ipc->ops->tplg;
+
+	if (ipc_tplg_ops->parse_manifest)
+		return ipc_tplg_ops->parse_manifest(scomp, index, man);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

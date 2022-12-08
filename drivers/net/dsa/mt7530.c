@@ -14,7 +14,10 @@
 #include <linux/of_mdio.h>
 #include <linux/of_net.h>
 #include <linux/of_platform.h>
+<<<<<<< HEAD
 #include <linux/pcs/pcs-mtk-lynxi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/phylink.h>
 #include <linux/regmap.h>
 #include <linux/regulator/consumer.h>
@@ -394,6 +397,7 @@ mt7530_fdb_write(struct mt7530_priv *priv, u16 vid,
 		mt7530_write(priv, MT7530_ATA1 + (i * 4), reg[i]);
 }
 
+<<<<<<< HEAD
 /* Set up switch core clock for MT7530 */
 static void mt7530_pll_setup(struct mt7530_priv *priv)
 {
@@ -421,11 +425,18 @@ static void mt7530_pll_setup(struct mt7530_priv *priv)
 }
 
 /* Setup port 6 interface mode and TRGMII TX circuit */
+=======
+/* Setup TX circuit including relevant PAD and driving */
+>>>>>>> b7ba80a49124 (Commit)
 static int
 mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
 {
 	struct mt7530_priv *priv = ds->priv;
+<<<<<<< HEAD
 	u32 ncpo1, ssc_delta, trgint, xtal;
+=======
+	u32 ncpo1, ssc_delta, trgint, i, xtal;
+>>>>>>> b7ba80a49124 (Commit)
 
 	xtal = mt7530_read(priv, MT7530_MHWTRAP) & HWTRAP_XTAL_MASK;
 
@@ -439,6 +450,7 @@ mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
 	switch (interface) {
 	case PHY_INTERFACE_MODE_RGMII:
 		trgint = 0;
+<<<<<<< HEAD
 		break;
 	case PHY_INTERFACE_MODE_TRGMII:
 		trgint = 1;
@@ -446,6 +458,13 @@ mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
 			ssc_delta = 0x57;
 		else
 			ssc_delta = 0x87;
+=======
+		/* PLL frequency: 125MHz */
+		ncpo1 = 0x0c80;
+		break;
+	case PHY_INTERFACE_MODE_TRGMII:
+		trgint = 1;
+>>>>>>> b7ba80a49124 (Commit)
 		if (priv->id == ID_MT7621) {
 			/* PLL frequency: 150MHz: 1.2GBit */
 			if (xtal == HWTRAP_XTAL_40MHZ)
@@ -465,6 +484,7 @@ mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	mt7530_rmw(priv, MT7530_P6ECR, P6_INTF_MODE_MASK,
 		   P6_INTF_MODE(trgint));
 
@@ -491,6 +511,63 @@ mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
 		core_set(priv, CORE_TRGMII_GSW_CLK_CG, REG_TRGMIICK_EN);
 	}
 
+=======
+	if (xtal == HWTRAP_XTAL_25MHZ)
+		ssc_delta = 0x57;
+	else
+		ssc_delta = 0x87;
+
+	mt7530_rmw(priv, MT7530_P6ECR, P6_INTF_MODE_MASK,
+		   P6_INTF_MODE(trgint));
+
+	/* Lower Tx Driving for TRGMII path */
+	for (i = 0 ; i < NUM_TRGMII_CTRL ; i++)
+		mt7530_write(priv, MT7530_TRGMII_TD_ODT(i),
+			     TD_DM_DRVP(8) | TD_DM_DRVN(8));
+
+	/* Disable MT7530 core and TRGMII Tx clocks */
+	core_clear(priv, CORE_TRGMII_GSW_CLK_CG,
+		   REG_GSWCK_EN | REG_TRGMIICK_EN);
+
+	/* Setup core clock for MT7530 */
+	/* Disable PLL */
+	core_write(priv, CORE_GSWPLL_GRP1, 0);
+
+	/* Set core clock into 500Mhz */
+	core_write(priv, CORE_GSWPLL_GRP2,
+		   RG_GSWPLL_POSDIV_500M(1) |
+		   RG_GSWPLL_FBKDIV_500M(25));
+
+	/* Enable PLL */
+	core_write(priv, CORE_GSWPLL_GRP1,
+		   RG_GSWPLL_EN_PRE |
+		   RG_GSWPLL_POSDIV_200M(2) |
+		   RG_GSWPLL_FBKDIV_200M(32));
+
+	/* Setup the MT7530 TRGMII Tx Clock */
+	core_write(priv, CORE_PLL_GROUP5, RG_LCDDS_PCW_NCPO1(ncpo1));
+	core_write(priv, CORE_PLL_GROUP6, RG_LCDDS_PCW_NCPO0(0));
+	core_write(priv, CORE_PLL_GROUP10, RG_LCDDS_SSC_DELTA(ssc_delta));
+	core_write(priv, CORE_PLL_GROUP11, RG_LCDDS_SSC_DELTA1(ssc_delta));
+	core_write(priv, CORE_PLL_GROUP4,
+		   RG_SYSPLL_DDSFBK_EN | RG_SYSPLL_BIAS_EN |
+		   RG_SYSPLL_BIAS_LPF_EN);
+	core_write(priv, CORE_PLL_GROUP2,
+		   RG_SYSPLL_EN_NORMAL | RG_SYSPLL_VODEN |
+		   RG_SYSPLL_POSDIV(1));
+	core_write(priv, CORE_PLL_GROUP7,
+		   RG_LCDDS_PCW_NCPO_CHG | RG_LCCDS_C(3) |
+		   RG_LCDDS_PWDB | RG_LCDDS_ISO_EN);
+
+	/* Enable MT7530 core and TRGMII Tx clocks */
+	core_set(priv, CORE_TRGMII_GSW_CLK_CG,
+		 REG_GSWCK_EN | REG_TRGMIICK_EN);
+
+	if (!trgint)
+		for (i = 0 ; i < NUM_TRGMII_CTRL; i++)
+			mt7530_rmw(priv, MT7530_TRGMII_RD(i),
+				   RD_TAP_MASK, RD_TAP(16));
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -506,19 +583,27 @@ static bool mt7531_dual_sgmii_supported(struct mt7530_priv *priv)
 static int
 mt7531_pad_setup(struct dsa_switch *ds, phy_interface_t interface)
 {
+<<<<<<< HEAD
 	return 0;
 }
 
 static void
 mt7531_pll_setup(struct mt7530_priv *priv)
 {
+=======
+	struct mt7530_priv *priv = ds->priv;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 top_sig;
 	u32 hwstrap;
 	u32 xtal;
 	u32 val;
 
 	if (mt7531_dual_sgmii_supported(priv))
+<<<<<<< HEAD
 		return;
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	val = mt7530_read(priv, MT7531_CREV);
 	top_sig = mt7530_read(priv, MT7531_TOP_SIG_SR);
@@ -597,6 +682,11 @@ mt7531_pll_setup(struct mt7530_priv *priv)
 	val |= EN_COREPLL;
 	mt7530_write(priv, MT7531_PLLGP_EN, val);
 	usleep_range(25, 35);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -608,17 +698,27 @@ mt7530_mib_reset(struct dsa_switch *ds)
 	mt7530_write(priv, MT7530_MIB_CCR, CCR_MIB_ACTIVATE);
 }
 
+<<<<<<< HEAD
 static int mt7530_phy_read_c22(struct mt7530_priv *priv, int port, int regnum)
+=======
+static int mt7530_phy_read(struct mt7530_priv *priv, int port, int regnum)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return mdiobus_read_nested(priv->bus, port, regnum);
 }
 
+<<<<<<< HEAD
 static int mt7530_phy_write_c22(struct mt7530_priv *priv, int port, int regnum,
 				u16 val)
+=======
+static int mt7530_phy_write(struct mt7530_priv *priv, int port, int regnum,
+			    u16 val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return mdiobus_write_nested(priv->bus, port, regnum, val);
 }
 
+<<<<<<< HEAD
 static int mt7530_phy_read_c45(struct mt7530_priv *priv, int port,
 			       int devad, int regnum)
 {
@@ -631,6 +731,8 @@ static int mt7530_phy_write_c45(struct mt7530_priv *priv, int port, int devad,
 	return mdiobus_c45_write_nested(priv->bus, port, devad, regnum, val);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int
 mt7531_ind_c45_phy_read(struct mt7530_priv *priv, int port, int devad,
 			int regnum)
@@ -682,7 +784,11 @@ out:
 
 static int
 mt7531_ind_c45_phy_write(struct mt7530_priv *priv, int port, int devad,
+<<<<<<< HEAD
 			 int regnum, u16 data)
+=======
+			 int regnum, u32 data)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mii_bus *bus = priv->bus;
 	struct mt7530_dummy_poll p;
@@ -805,6 +911,7 @@ out:
 }
 
 static int
+<<<<<<< HEAD
 mt753x_phy_read_c22(struct mii_bus *bus, int port, int regnum)
 {
 	struct mt7530_priv *priv = bus->priv;
@@ -835,6 +942,57 @@ mt753x_phy_write_c45(struct mii_bus *bus, int port, int devad, int regnum,
 	struct mt7530_priv *priv = bus->priv;
 
 	return priv->info->phy_write_c45(priv, port, devad, regnum, val);
+=======
+mt7531_ind_phy_read(struct mt7530_priv *priv, int port, int regnum)
+{
+	int devad;
+	int ret;
+
+	if (regnum & MII_ADDR_C45) {
+		devad = (regnum >> MII_DEVADDR_C45_SHIFT) & 0x1f;
+		ret = mt7531_ind_c45_phy_read(priv, port, devad,
+					      regnum & MII_REGADDR_C45_MASK);
+	} else {
+		ret = mt7531_ind_c22_phy_read(priv, port, regnum);
+	}
+
+	return ret;
+}
+
+static int
+mt7531_ind_phy_write(struct mt7530_priv *priv, int port, int regnum,
+		     u16 data)
+{
+	int devad;
+	int ret;
+
+	if (regnum & MII_ADDR_C45) {
+		devad = (regnum >> MII_DEVADDR_C45_SHIFT) & 0x1f;
+		ret = mt7531_ind_c45_phy_write(priv, port, devad,
+					       regnum & MII_REGADDR_C45_MASK,
+					       data);
+	} else {
+		ret = mt7531_ind_c22_phy_write(priv, port, regnum, data);
+	}
+
+	return ret;
+}
+
+static int
+mt753x_phy_read(struct mii_bus *bus, int port, int regnum)
+{
+	struct mt7530_priv *priv = bus->priv;
+
+	return priv->info->phy_read(priv, port, regnum);
+}
+
+static int
+mt753x_phy_write(struct mii_bus *bus, int port, int regnum, u16 val)
+{
+	struct mt7530_priv *priv = bus->priv;
+
+	return priv->info->phy_write(priv, port, regnum, val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -1302,6 +1460,7 @@ mt7530_port_set_vlan_aware(struct dsa_switch *ds, int port)
 		if (!priv->ports[port].pvid)
 			mt7530_rmw(priv, MT7530_PVC_P(port), ACC_FRM_MASK,
 				   MT7530_VLAN_ACC_TAGGED);
+<<<<<<< HEAD
 
 		/* Set the port as a user port which is to be able to recognize
 		 * VID from incoming packets before fetching entry within the
@@ -1322,6 +1481,16 @@ mt7530_port_set_vlan_aware(struct dsa_switch *ds, int port)
 		mt7530_rmw(priv, MT7530_PVC_P(port), VLAN_ATTR_MASK,
 			   VLAN_ATTR(MT7530_VLAN_USER));
 	}
+=======
+	}
+
+	/* Set the port as a user port which is to be able to recognize VID
+	 * from incoming packets before fetching entry within the VLAN table.
+	 */
+	mt7530_rmw(priv, MT7530_PVC_P(port), VLAN_ATTR_MASK | PVC_EG_TAG_MASK,
+		   VLAN_ATTR(MT7530_VLAN_USER) |
+		   PVC_EG_TAG(MT7530_VLAN_EG_DISABLED));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -2091,10 +2260,15 @@ mt7530_setup_mdio(struct mt7530_priv *priv)
 	bus->priv = priv;
 	bus->name = KBUILD_MODNAME "-mii";
 	snprintf(bus->id, MII_BUS_ID_SIZE, KBUILD_MODNAME "-%d", idx++);
+<<<<<<< HEAD
 	bus->read = mt753x_phy_read_c22;
 	bus->write = mt753x_phy_write_c22;
 	bus->read_c45 = mt753x_phy_read_c45;
 	bus->write_c45 = mt753x_phy_write_c45;
+=======
+	bus->read = mt753x_phy_read;
+	bus->write = mt753x_phy_write;
+>>>>>>> b7ba80a49124 (Commit)
 	bus->parent = dev;
 	bus->phy_mask = ~ds->phys_mii_mask;
 
@@ -2196,6 +2370,7 @@ mt7530_setup(struct dsa_switch *ds)
 		     SYS_CTRL_PHY_RST | SYS_CTRL_SW_RST |
 		     SYS_CTRL_REG_RST);
 
+<<<<<<< HEAD
 	mt7530_pll_setup(priv);
 
 	/* Lower Tx driving for TRGMII path */
@@ -2208,6 +2383,9 @@ mt7530_setup(struct dsa_switch *ds)
 			   RD_TAP_MASK, RD_TAP(16));
 
 	/* Enable port 6 */
+=======
+	/* Enable Port 6 only; P5 as GMAC5 which currently is not supported */
+>>>>>>> b7ba80a49124 (Commit)
 	val = mt7530_read(priv, MT7530_MHWTRAP);
 	val &= ~MHWTRAP_P6_DIS & ~MHWTRAP_PHY_ACCESS;
 	val |= MHWTRAP_MANUAL;
@@ -2347,17 +2525,23 @@ mt7531_setup(struct dsa_switch *ds)
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
 	/* all MACs must be forced link-down before sw reset */
 	for (i = 0; i < MT7530_NUM_PORTS; i++)
 		mt7530_write(priv, MT7530_PMCR_P(i), MT7531_FORCE_LNK);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Reset the switch through internal reset */
 	mt7530_write(priv, MT7530_SYS_CTRL,
 		     SYS_CTRL_PHY_RST | SYS_CTRL_SW_RST |
 		     SYS_CTRL_REG_RST);
 
+<<<<<<< HEAD
 	mt7531_pll_setup(priv);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (mt7531_dual_sgmii_supported(priv)) {
 		priv->p5_intf_sel = P5_INTF_SEL_GMAC5_SGMII;
 
@@ -2578,11 +2762,134 @@ static int mt7531_rgmii_setup(struct mt7530_priv *priv, u32 port,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void mt7531_pcs_link_up(struct phylink_pcs *pcs, unsigned int mode,
+			       phy_interface_t interface, int speed, int duplex)
+{
+	struct mt7530_priv *priv = pcs_to_mt753x_pcs(pcs)->priv;
+	int port = pcs_to_mt753x_pcs(pcs)->port;
+	unsigned int val;
+
+	/* For adjusting speed and duplex of SGMII force mode. */
+	if (interface != PHY_INTERFACE_MODE_SGMII ||
+	    phylink_autoneg_inband(mode))
+		return;
+
+	/* SGMII force mode setting */
+	val = mt7530_read(priv, MT7531_SGMII_MODE(port));
+	val &= ~MT7531_SGMII_IF_MODE_MASK;
+
+	switch (speed) {
+	case SPEED_10:
+		val |= MT7531_SGMII_FORCE_SPEED_10;
+		break;
+	case SPEED_100:
+		val |= MT7531_SGMII_FORCE_SPEED_100;
+		break;
+	case SPEED_1000:
+		val |= MT7531_SGMII_FORCE_SPEED_1000;
+		break;
+	}
+
+	/* MT7531 SGMII 1G force mode can only work in full duplex mode,
+	 * no matter MT7531_SGMII_FORCE_HALF_DUPLEX is set or not.
+	 *
+	 * The speed check is unnecessary as the MAC capabilities apply
+	 * this restriction. --rmk
+	 */
+	if ((speed == SPEED_10 || speed == SPEED_100) &&
+	    duplex != DUPLEX_FULL)
+		val |= MT7531_SGMII_FORCE_HALF_DUPLEX;
+
+	mt7530_write(priv, MT7531_SGMII_MODE(port), val);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static bool mt753x_is_mac_port(u32 port)
 {
 	return (port == 5 || port == 6);
 }
 
+<<<<<<< HEAD
+=======
+static int mt7531_sgmii_setup_mode_force(struct mt7530_priv *priv, u32 port,
+					 phy_interface_t interface)
+{
+	u32 val;
+
+	if (!mt753x_is_mac_port(port))
+		return -EINVAL;
+
+	mt7530_set(priv, MT7531_QPHY_PWR_STATE_CTRL(port),
+		   MT7531_SGMII_PHYA_PWD);
+
+	val = mt7530_read(priv, MT7531_PHYA_CTRL_SIGNAL3(port));
+	val &= ~MT7531_RG_TPHY_SPEED_MASK;
+	/* Setup 2.5 times faster clock for 2.5Gbps data speeds with 10B/8B
+	 * encoding.
+	 */
+	val |= (interface == PHY_INTERFACE_MODE_2500BASEX) ?
+		MT7531_RG_TPHY_SPEED_3_125G : MT7531_RG_TPHY_SPEED_1_25G;
+	mt7530_write(priv, MT7531_PHYA_CTRL_SIGNAL3(port), val);
+
+	mt7530_clear(priv, MT7531_PCS_CONTROL_1(port), MT7531_SGMII_AN_ENABLE);
+
+	/* MT7531 SGMII 1G and 2.5G force mode can only work in full duplex
+	 * mode, no matter MT7531_SGMII_FORCE_HALF_DUPLEX is set or not.
+	 */
+	mt7530_rmw(priv, MT7531_SGMII_MODE(port),
+		   MT7531_SGMII_IF_MODE_MASK | MT7531_SGMII_REMOTE_FAULT_DIS,
+		   MT7531_SGMII_FORCE_SPEED_1000);
+
+	mt7530_write(priv, MT7531_QPHY_PWR_STATE_CTRL(port), 0);
+
+	return 0;
+}
+
+static int mt7531_sgmii_setup_mode_an(struct mt7530_priv *priv, int port,
+				      phy_interface_t interface)
+{
+	if (!mt753x_is_mac_port(port))
+		return -EINVAL;
+
+	mt7530_set(priv, MT7531_QPHY_PWR_STATE_CTRL(port),
+		   MT7531_SGMII_PHYA_PWD);
+
+	mt7530_rmw(priv, MT7531_PHYA_CTRL_SIGNAL3(port),
+		   MT7531_RG_TPHY_SPEED_MASK, MT7531_RG_TPHY_SPEED_1_25G);
+
+	mt7530_set(priv, MT7531_SGMII_MODE(port),
+		   MT7531_SGMII_REMOTE_FAULT_DIS |
+		   MT7531_SGMII_SPEED_DUPLEX_AN);
+
+	mt7530_rmw(priv, MT7531_PCS_SPEED_ABILITY(port),
+		   MT7531_SGMII_TX_CONFIG_MASK, 1);
+
+	mt7530_set(priv, MT7531_PCS_CONTROL_1(port), MT7531_SGMII_AN_ENABLE);
+
+	mt7530_set(priv, MT7531_PCS_CONTROL_1(port), MT7531_SGMII_AN_RESTART);
+
+	mt7530_write(priv, MT7531_QPHY_PWR_STATE_CTRL(port), 0);
+
+	return 0;
+}
+
+static void mt7531_pcs_an_restart(struct phylink_pcs *pcs)
+{
+	struct mt7530_priv *priv = pcs_to_mt753x_pcs(pcs)->priv;
+	int port = pcs_to_mt753x_pcs(pcs)->port;
+	u32 val;
+
+	/* Only restart AN when AN is enabled */
+	val = mt7530_read(priv, MT7531_PCS_CONTROL_1(port));
+	if (val & MT7531_SGMII_AN_ENABLE) {
+		val |= MT7531_SGMII_AN_RESTART;
+		mt7530_write(priv, MT7531_PCS_CONTROL_1(port), val);
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int
 mt7531_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
 		  phy_interface_t interface)
@@ -2605,11 +2912,22 @@ mt7531_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
 		phydev = dp->slave->phydev;
 		return mt7531_rgmii_setup(priv, port, interface, phydev);
 	case PHY_INTERFACE_MODE_SGMII:
+<<<<<<< HEAD
 	case PHY_INTERFACE_MODE_NA:
 	case PHY_INTERFACE_MODE_1000BASEX:
 	case PHY_INTERFACE_MODE_2500BASEX:
 		/* handled in SGMII PCS driver */
 		return 0;
+=======
+		return mt7531_sgmii_setup_mode_an(priv, port, interface);
+	case PHY_INTERFACE_MODE_NA:
+	case PHY_INTERFACE_MODE_1000BASEX:
+	case PHY_INTERFACE_MODE_2500BASEX:
+		if (phylink_autoneg_inband(mode))
+			return -EINVAL;
+
+		return mt7531_sgmii_setup_mode_force(priv, port, interface);
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -EINVAL;
 	}
@@ -2634,11 +2952,19 @@ mt753x_phylink_mac_select_pcs(struct dsa_switch *ds, int port,
 
 	switch (interface) {
 	case PHY_INTERFACE_MODE_TRGMII:
+<<<<<<< HEAD
 		return &priv->pcs[port].pcs;
 	case PHY_INTERFACE_MODE_SGMII:
 	case PHY_INTERFACE_MODE_1000BASEX:
 	case PHY_INTERFACE_MODE_2500BASEX:
 		return priv->ports[port].sgmii_pcs;
+=======
+	case PHY_INTERFACE_MODE_SGMII:
+	case PHY_INTERFACE_MODE_1000BASEX:
+	case PHY_INTERFACE_MODE_2500BASEX:
+		return &priv->pcs[port].pcs;
+
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return NULL;
 	}
@@ -2684,6 +3010,16 @@ unsupported:
 		return;
 	}
 
+<<<<<<< HEAD
+=======
+	if (phylink_autoneg_inband(mode) &&
+	    state->interface != PHY_INTERFACE_MODE_SGMII) {
+		dev_err(ds->dev, "%s: in-band negotiation unsupported\n",
+			__func__);
+		return;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	mcr_cur = mt7530_read(priv, MT7530_PMCR_P(port));
 	mcr_new = mcr_cur;
 	mcr_new &= ~PMCR_LINK_SETTINGS_MASK;
@@ -2787,6 +3123,11 @@ mt7531_cpu_port_config(struct dsa_switch *ds, int port)
 	case 6:
 		interface = PHY_INTERFACE_MODE_2500BASEX;
 
+<<<<<<< HEAD
+=======
+		mt7531_pad_setup(ds, interface);
+
+>>>>>>> b7ba80a49124 (Commit)
 		priv->p6_interface = interface;
 		break;
 	default:
@@ -2876,6 +3217,60 @@ static void mt7530_pcs_get_state(struct phylink_pcs *pcs,
 		state->pause |= MLO_PAUSE_TX;
 }
 
+<<<<<<< HEAD
+=======
+static int
+mt7531_sgmii_pcs_get_state_an(struct mt7530_priv *priv, int port,
+			      struct phylink_link_state *state)
+{
+	u32 status, val;
+	u16 config_reg;
+
+	status = mt7530_read(priv, MT7531_PCS_CONTROL_1(port));
+	state->link = !!(status & MT7531_SGMII_LINK_STATUS);
+	if (state->interface == PHY_INTERFACE_MODE_SGMII &&
+	    (status & MT7531_SGMII_AN_ENABLE)) {
+		val = mt7530_read(priv, MT7531_PCS_SPEED_ABILITY(port));
+		config_reg = val >> 16;
+
+		switch (config_reg & LPA_SGMII_SPD_MASK) {
+		case LPA_SGMII_1000:
+			state->speed = SPEED_1000;
+			break;
+		case LPA_SGMII_100:
+			state->speed = SPEED_100;
+			break;
+		case LPA_SGMII_10:
+			state->speed = SPEED_10;
+			break;
+		default:
+			dev_err(priv->dev, "invalid sgmii PHY speed\n");
+			state->link = false;
+			return -EINVAL;
+		}
+
+		if (config_reg & LPA_SGMII_FULL_DUPLEX)
+			state->duplex = DUPLEX_FULL;
+		else
+			state->duplex = DUPLEX_HALF;
+	}
+
+	return 0;
+}
+
+static void mt7531_pcs_get_state(struct phylink_pcs *pcs,
+				 struct phylink_link_state *state)
+{
+	struct mt7530_priv *priv = pcs_to_mt753x_pcs(pcs)->priv;
+	int port = pcs_to_mt753x_pcs(pcs)->port;
+
+	if (state->interface == PHY_INTERFACE_MODE_SGMII)
+		mt7531_sgmii_pcs_get_state_an(priv, port, state);
+	else
+		state->link = false;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int mt753x_pcs_config(struct phylink_pcs *pcs, unsigned int mode,
 			     phy_interface_t interface,
 			     const unsigned long *advertising,
@@ -2895,6 +3290,7 @@ static const struct phylink_pcs_ops mt7530_pcs_ops = {
 	.pcs_an_restart = mt7530_pcs_an_restart,
 };
 
+<<<<<<< HEAD
 static int mt7530_regmap_read(void *context, unsigned int reg, unsigned int *val)
 {
 	struct mt7530_priv *priv = context;
@@ -2939,13 +3335,24 @@ static const struct regmap_bus mt7531_regmap_bus = {
 static const struct regmap_config mt7531_pcs_config[] = {
 	MT7531_PCS_REGMAP_CONFIG("port5", MT7531_SGMII_REG_BASE(5)),
 	MT7531_PCS_REGMAP_CONFIG("port6", MT7531_SGMII_REG_BASE(6)),
+=======
+static const struct phylink_pcs_ops mt7531_pcs_ops = {
+	.pcs_validate = mt753x_pcs_validate,
+	.pcs_get_state = mt7531_pcs_get_state,
+	.pcs_config = mt753x_pcs_config,
+	.pcs_an_restart = mt7531_pcs_an_restart,
+	.pcs_link_up = mt7531_pcs_link_up,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int
 mt753x_setup(struct dsa_switch *ds)
 {
 	struct mt7530_priv *priv = ds->priv;
+<<<<<<< HEAD
 	struct regmap *regmap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i, ret;
 
 	/* Initialise the PCS devices */
@@ -2967,6 +3374,7 @@ mt753x_setup(struct dsa_switch *ds)
 	if (ret && priv->irq)
 		mt7530_free_irq_common(priv);
 
+<<<<<<< HEAD
 	if (priv->id == ID_MT7531)
 		for (i = 0; i < 2; i++) {
 			regmap = devm_regmap_init(ds->dev,
@@ -2977,6 +3385,8 @@ mt753x_setup(struct dsa_switch *ds)
 						     MT7531_PHYA_CTRL_SIGNAL3, 0);
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -3050,10 +3460,15 @@ static const struct mt753x_info mt753x_table[] = {
 		.id = ID_MT7621,
 		.pcs_ops = &mt7530_pcs_ops,
 		.sw_setup = mt7530_setup,
+<<<<<<< HEAD
 		.phy_read_c22 = mt7530_phy_read_c22,
 		.phy_write_c22 = mt7530_phy_write_c22,
 		.phy_read_c45 = mt7530_phy_read_c45,
 		.phy_write_c45 = mt7530_phy_write_c45,
+=======
+		.phy_read = mt7530_phy_read,
+		.phy_write = mt7530_phy_write,
+>>>>>>> b7ba80a49124 (Commit)
 		.pad_setup = mt7530_pad_clk_setup,
 		.mac_port_get_caps = mt7530_mac_port_get_caps,
 		.mac_port_config = mt7530_mac_config,
@@ -3062,22 +3477,34 @@ static const struct mt753x_info mt753x_table[] = {
 		.id = ID_MT7530,
 		.pcs_ops = &mt7530_pcs_ops,
 		.sw_setup = mt7530_setup,
+<<<<<<< HEAD
 		.phy_read_c22 = mt7530_phy_read_c22,
 		.phy_write_c22 = mt7530_phy_write_c22,
 		.phy_read_c45 = mt7530_phy_read_c45,
 		.phy_write_c45 = mt7530_phy_write_c45,
+=======
+		.phy_read = mt7530_phy_read,
+		.phy_write = mt7530_phy_write,
+>>>>>>> b7ba80a49124 (Commit)
 		.pad_setup = mt7530_pad_clk_setup,
 		.mac_port_get_caps = mt7530_mac_port_get_caps,
 		.mac_port_config = mt7530_mac_config,
 	},
 	[ID_MT7531] = {
 		.id = ID_MT7531,
+<<<<<<< HEAD
 		.pcs_ops = &mt7530_pcs_ops,
 		.sw_setup = mt7531_setup,
 		.phy_read_c22 = mt7531_ind_c22_phy_read,
 		.phy_write_c22 = mt7531_ind_c22_phy_write,
 		.phy_read_c45 = mt7531_ind_c45_phy_read,
 		.phy_write_c45 = mt7531_ind_c45_phy_write,
+=======
+		.pcs_ops = &mt7531_pcs_ops,
+		.sw_setup = mt7531_setup,
+		.phy_read = mt7531_ind_phy_read,
+		.phy_write = mt7531_ind_phy_write,
+>>>>>>> b7ba80a49124 (Commit)
 		.pad_setup = mt7531_pad_setup,
 		.cpu_port_config = mt7531_cpu_port_config,
 		.mac_port_get_caps = mt7531_mac_port_get_caps,
@@ -3137,7 +3564,11 @@ mt7530_probe(struct mdio_device *mdiodev)
 	 * properly.
 	 */
 	if (!priv->info->sw_setup || !priv->info->pad_setup ||
+<<<<<<< HEAD
 	    !priv->info->phy_read_c22 || !priv->info->phy_write_c22 ||
+=======
+	    !priv->info->phy_read || !priv->info->phy_write ||
+>>>>>>> b7ba80a49124 (Commit)
 	    !priv->info->mac_port_get_caps ||
 	    !priv->info->mac_port_config)
 		return -EINVAL;
@@ -3182,7 +3613,11 @@ static void
 mt7530_remove(struct mdio_device *mdiodev)
 {
 	struct mt7530_priv *priv = dev_get_drvdata(&mdiodev->dev);
+<<<<<<< HEAD
 	int ret = 0, i;
+=======
+	int ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!priv)
 		return;
@@ -3201,11 +3636,17 @@ mt7530_remove(struct mdio_device *mdiodev)
 		mt7530_free_irq(priv);
 
 	dsa_unregister_switch(priv->ds);
+<<<<<<< HEAD
 
 	for (i = 0; i < 2; ++i)
 		mtk_pcs_lynxi_destroy(priv->ports[5 + i].sgmii_pcs);
 
 	mutex_destroy(&priv->reg_mutex);
+=======
+	mutex_destroy(&priv->reg_mutex);
+
+	dev_set_drvdata(&mdiodev->dev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mt7530_shutdown(struct mdio_device *mdiodev)

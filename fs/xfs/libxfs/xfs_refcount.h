@@ -14,6 +14,7 @@ struct xfs_bmbt_irec;
 struct xfs_refcount_irec;
 
 extern int xfs_refcount_lookup_le(struct xfs_btree_cur *cur,
+<<<<<<< HEAD
 		enum xfs_refc_domain domain, xfs_agblock_t bno, int *stat);
 extern int xfs_refcount_lookup_ge(struct xfs_btree_cur *cur,
 		enum xfs_refc_domain domain, xfs_agblock_t bno, int *stat);
@@ -41,6 +42,16 @@ xfs_refcount_encode_startblock(
 	return start;
 }
 
+=======
+		xfs_agblock_t bno, int *stat);
+extern int xfs_refcount_lookup_ge(struct xfs_btree_cur *cur,
+		xfs_agblock_t bno, int *stat);
+extern int xfs_refcount_lookup_eq(struct xfs_btree_cur *cur,
+		xfs_agblock_t bno, int *stat);
+extern int xfs_refcount_get_rec(struct xfs_btree_cur *cur,
+		struct xfs_refcount_irec *irec, int *stat);
+
+>>>>>>> b7ba80a49124 (Commit)
 enum xfs_refcount_intent_type {
 	XFS_REFCOUNT_INCREASE = 1,
 	XFS_REFCOUNT_DECREASE,
@@ -55,6 +66,7 @@ struct xfs_refcount_intent {
 	xfs_fsblock_t				ri_startblock;
 };
 
+<<<<<<< HEAD
 /* Check that the refcount is appropriate for the record domain. */
 static inline bool
 xfs_refcount_check_domain(
@@ -67,6 +79,8 @@ xfs_refcount_check_domain(
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void xfs_refcount_increase_extent(struct xfs_trans *tp,
 		struct xfs_bmbt_irec *irec);
 void xfs_refcount_decrease_extent(struct xfs_trans *tp,
@@ -75,7 +89,13 @@ void xfs_refcount_decrease_extent(struct xfs_trans *tp,
 extern void xfs_refcount_finish_one_cleanup(struct xfs_trans *tp,
 		struct xfs_btree_cur *rcur, int error);
 extern int xfs_refcount_finish_one(struct xfs_trans *tp,
+<<<<<<< HEAD
 		struct xfs_refcount_intent *ri, struct xfs_btree_cur **pcur);
+=======
+		enum xfs_refcount_intent_type type, xfs_fsblock_t startblock,
+		xfs_extlen_t blockcount, xfs_fsblock_t *new_fsb,
+		xfs_extlen_t *new_len, struct xfs_btree_cur **pcur);
+>>>>>>> b7ba80a49124 (Commit)
 
 extern int xfs_refcount_find_shared(struct xfs_btree_cur *cur,
 		xfs_agblock_t agbno, xfs_extlen_t aglen, xfs_agblock_t *fbno,
@@ -108,8 +128,12 @@ extern int xfs_refcount_recover_cow_leftovers(struct xfs_mount *mp,
 #define XFS_REFCOUNT_ITEM_OVERHEAD	32
 
 extern int xfs_refcount_has_record(struct xfs_btree_cur *cur,
+<<<<<<< HEAD
 		enum xfs_refc_domain domain, xfs_agblock_t bno,
 		xfs_extlen_t len, bool *exists);
+=======
+		xfs_agblock_t bno, xfs_extlen_t len, bool *exists);
+>>>>>>> b7ba80a49124 (Commit)
 union xfs_btree_rec;
 extern void xfs_refcount_btrec_to_irec(const union xfs_btree_rec *rec,
 		struct xfs_refcount_irec *irec);

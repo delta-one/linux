@@ -25,7 +25,10 @@
 enum {
 	PG_BUSY = 0,		/* nfs_{un}lock_request */
 	PG_MAPPED,		/* page private set for buffered io */
+<<<<<<< HEAD
 	PG_FOLIO,		/* Tracking a folio (unset for O_DIRECT) */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	PG_CLEAN,		/* write succeeded */
 	PG_COMMIT_TO_DS,	/* used by pnfs layouts */
 	PG_INODE_REF,		/* extra ref held by inode when in writeback */
@@ -42,10 +45,14 @@ enum {
 struct nfs_inode;
 struct nfs_page {
 	struct list_head	wb_list;	/* Defines state of page: */
+<<<<<<< HEAD
 	union {
 		struct page	*wb_page;	/* page to read in/write out */
 		struct folio	*wb_folio;
 	};
+=======
+	struct page		*wb_page;	/* page to read in/write out */
+>>>>>>> b7ba80a49124 (Commit)
 	struct nfs_lock_context	*wb_lock_context;	/* lock context info */
 	pgoff_t			wb_index;	/* Offset >> PAGE_SHIFT */
 	unsigned int		wb_offset,	/* Offset & ~PAGE_MASK */
@@ -121,6 +128,7 @@ struct nfs_pageio_descriptor {
 
 #define NFS_WBACK_BUSY(req)	(test_bit(PG_BUSY,&(req)->wb_flags))
 
+<<<<<<< HEAD
 extern struct nfs_page *nfs_page_create_from_page(struct nfs_open_context *ctx,
 						  struct page *page,
 						  unsigned int pgbase,
@@ -130,6 +138,12 @@ extern struct nfs_page *nfs_page_create_from_folio(struct nfs_open_context *ctx,
 						   struct folio *folio,
 						   unsigned int offset,
 						   unsigned int count);
+=======
+extern	struct nfs_page *nfs_create_request(struct nfs_open_context *ctx,
+					    struct page *page,
+					    unsigned int offset,
+					    unsigned int count);
+>>>>>>> b7ba80a49124 (Commit)
 extern	void nfs_release_request(struct nfs_page *);
 
 
@@ -162,6 +176,7 @@ extern	int nfs_page_set_headlock(struct nfs_page *req);
 extern void nfs_page_clear_headlock(struct nfs_page *req);
 extern bool nfs_async_iocounter_wait(struct rpc_task *, struct nfs_lock_context *);
 
+<<<<<<< HEAD
 /**
  * nfs_page_to_folio - Retrieve a struct folio for the request
  * @req: pointer to a struct nfs_page
@@ -222,6 +237,8 @@ static inline size_t nfs_page_max_length(const struct nfs_page *req)
 	return folio_size(folio);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Lock the page of an asynchronous request
  */

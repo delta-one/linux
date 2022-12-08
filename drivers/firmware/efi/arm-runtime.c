@@ -25,14 +25,22 @@
 #include <asm/mmu.h>
 #include <asm/pgalloc.h>
 
+<<<<<<< HEAD
 #if defined(CONFIG_PTDUMP_DEBUGFS) || defined(CONFIG_ARM_PTDUMP_DEBUGFS)
+=======
+#if defined(CONFIG_PTDUMP_DEBUGFS) && defined(CONFIG_ARM64)
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/ptdump.h>
 
 static struct ptdump_info efi_ptdump_info = {
 	.mm		= &efi_mm,
 	.markers	= (struct addr_marker[]){
 		{ 0,				"UEFI runtime start" },
+<<<<<<< HEAD
 		{ EFI_RUNTIME_MAP_END,		"UEFI runtime end" },
+=======
+		{ DEFAULT_MAP_WINDOW_64,	"UEFI runtime end" },
+>>>>>>> b7ba80a49124 (Commit)
 		{ -1,				NULL }
 	},
 	.base_addr	= 0,
@@ -63,7 +71,11 @@ static bool __init efi_virtmap_init(void)
 
 		if (!(md->attribute & EFI_MEMORY_RUNTIME))
 			continue;
+<<<<<<< HEAD
 		if (md->virt_addr == U64_MAX)
+=======
+		if (md->virt_addr == 0)
+>>>>>>> b7ba80a49124 (Commit)
 			return false;
 
 		ret = efi_create_mapping(&efi_mm, md);

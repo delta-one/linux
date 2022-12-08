@@ -9,8 +9,11 @@ KVM Lock Overview
 
 The acquisition orders for mutexes are as follows:
 
+<<<<<<< HEAD
 - cpus_read_lock() is taken outside kvm_lock
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 - kvm->lock is taken outside vcpu->mutex
 
 - kvm->lock is taken outside kvm->slots_lock and kvm->irq_lock
@@ -18,12 +21,21 @@ The acquisition orders for mutexes are as follows:
 - kvm->slots_lock is taken outside kvm->irq_lock, though acquiring
   them together is quite rare.
 
+<<<<<<< HEAD
+=======
+- Unlike kvm->slots_lock, kvm->slots_arch_lock is released before
+  synchronize_srcu(&kvm->srcu).  Therefore kvm->slots_arch_lock
+  can be taken inside a kvm->srcu read-side critical section,
+  while kvm->slots_lock cannot.
+
+>>>>>>> b7ba80a49124 (Commit)
 - kvm->mn_active_invalidate_count ensures that pairs of
   invalidate_range_start() and invalidate_range_end() callbacks
   use the same memslots array.  kvm->slots_lock and kvm->slots_arch_lock
   are taken on the waiting side in install_new_memslots, so MMU notifiers
   must not take either kvm->slots_lock or kvm->slots_arch_lock.
 
+<<<<<<< HEAD
 For SRCU:
 
 - ``synchronize_srcu(&kvm->srcu)`` is called inside critical sections
@@ -42,6 +54,11 @@ For SRCU:
 On x86:
 
 - vcpu->mutex is taken outside kvm->arch.hyperv.hv_lock and kvm->arch.xen.xen_lock
+=======
+On x86:
+
+- vcpu->mutex is taken outside kvm->arch.hyperv.hv_lock
+>>>>>>> b7ba80a49124 (Commit)
 
 - kvm->arch.mmu_lock is an rwlock.  kvm->arch.tdp_mmu_pages_lock and
   kvm->arch.mmu_unsync_pages_lock are taken inside kvm->arch.mmu_lock, and
@@ -228,10 +245,22 @@ time it will be set using the Dirty tracking mechanism described above.
 :Type:		mutex
 :Arch:		any
 :Protects:	- vm_list
+<<<<<<< HEAD
 		- kvm_usage_count
 		- hardware virtualization enable/disable
 :Comment:	KVM also disables CPU hotplug via cpus_read_lock() during
 		enable/disable.
+=======
+
+``kvm_count_lock``
+^^^^^^^^^^^^^^^^^^
+
+:Type:		raw_spinlock_t
+:Arch:		any
+:Protects:	- hardware virtualization enable/disable
+:Comment:	'raw' because hardware enabling/disabling must be atomic /wrt
+		migration.
+>>>>>>> b7ba80a49124 (Commit)
 
 ``kvm->mn_invalidate_lock``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -289,6 +318,7 @@ time it will be set using the Dirty tracking mechanism described above.
 		wakeup notification event since external interrupts from the
 		assigned devices happens, we will find the vCPU on the list to
 		wakeup.
+<<<<<<< HEAD
 
 ``vendor_module_lock``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -299,3 +329,5 @@ time it will be set using the Dirty tracking mechanism described above.
     taken outside of kvm_lock, e.g. in KVM's CPU online/offline callbacks, and
     many operations need to take cpu_hotplug_lock when loading a vendor module,
     e.g. updating static calls.
+=======
+>>>>>>> b7ba80a49124 (Commit)

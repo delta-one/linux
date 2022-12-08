@@ -14,12 +14,18 @@
 #include <linux/nfs_fs.h>
 #include <linux/sunrpc/addr.h>
 #include <linux/sunrpc/svc.h>
+<<<<<<< HEAD
 #include <linux/sunrpc/svc_xprt.h>
 #include <linux/lockd/lockd.h>
 #include <linux/kthread.h>
 
 #include "trace.h"
 
+=======
+#include <linux/lockd/lockd.h>
+#include <linux/kthread.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #define NLMDBG_FACILITY		NLMDBG_CLIENT
 
 /*
@@ -32,6 +38,21 @@ static int			reclaimer(void *ptr);
  * client perspective.
  */
 
+<<<<<<< HEAD
+=======
+/*
+ * This is the representation of a blocked client lock.
+ */
+struct nlm_wait {
+	struct list_head	b_list;		/* linked list */
+	wait_queue_head_t	b_wait;		/* where to wait on */
+	struct nlm_host *	b_host;
+	struct file_lock *	b_lock;		/* local file lock */
+	unsigned short		b_reclaim;	/* got to reclaim lock */
+	__be32			b_status;	/* grant callback status */
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static LIST_HEAD(nlm_blocked);
 static DEFINE_SPINLOCK(nlm_blocked_lock);
 
@@ -85,6 +106,7 @@ void nlmclnt_done(struct nlm_host *host)
 }
 EXPORT_SYMBOL_GPL(nlmclnt_done);
 
+<<<<<<< HEAD
 void nlmclnt_prepare_block(struct nlm_wait *block, struct nlm_host *host, struct file_lock *fl)
 {
 	block->b_host = host;
@@ -115,12 +137,47 @@ __be32 nlmclnt_dequeue_block(struct nlm_wait *block)
 	status = block->b_status;
 	spin_unlock(&nlm_blocked_lock);
 	return status;
+=======
+/*
+ * Queue up a lock for blocking so that the GRANTED request can see it
+ */
+struct nlm_wait *nlmclnt_prepare_block(struct nlm_host *host, struct file_lock *fl)
+{
+	struct nlm_wait *block;
+
+	block = kmalloc(sizeof(*block), GFP_KERNEL);
+	if (block != NULL) {
+		block->b_host = host;
+		block->b_lock = fl;
+		init_waitqueue_head(&block->b_wait);
+		block->b_status = nlm_lck_blocked;
+
+		spin_lock(&nlm_blocked_lock);
+		list_add(&block->b_list, &nlm_blocked);
+		spin_unlock(&nlm_blocked_lock);
+	}
+	return block;
+}
+
+void nlmclnt_finish_block(struct nlm_wait *block)
+{
+	if (block == NULL)
+		return;
+	spin_lock(&nlm_blocked_lock);
+	list_del(&block->b_list);
+	spin_unlock(&nlm_blocked_lock);
+	kfree(block);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
  * Block on a lock
  */
+<<<<<<< HEAD
 int nlmclnt_wait(struct nlm_wait *block, struct nlm_rqst *req, long timeout)
+=======
+int nlmclnt_block(struct nlm_wait *block, struct nlm_rqst *req, long timeout)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	long ret;
 
@@ -146,6 +203,10 @@ int nlmclnt_wait(struct nlm_wait *block, struct nlm_rqst *req, long timeout)
 	/* Reset the lock status after a server reboot so we resend */
 	if (block->b_status == nlm_lck_denied_grace_period)
 		block->b_status = nlm_lck_blocked;
+<<<<<<< HEAD
+=======
+	req->a_res.status = block->b_status;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -179,7 +240,11 @@ __be32 nlmclnt_grant(const struct sockaddr *addr, const struct nlm_lock *lock)
 			continue;
 		if (!rpc_cmp_addr(nlm_addr(block->b_host), addr))
 			continue;
+<<<<<<< HEAD
 		if (nfs_compare_fh(NFS_FH(file_inode(fl_blocked->fl_file)), fh) != 0)
+=======
+		if (nfs_compare_fh(NFS_FH(locks_inode(fl_blocked->fl_file)), fh) != 0)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		/* Alright, we found a lock. Set the return status
 		 * and wake up the caller
@@ -189,7 +254,10 @@ __be32 nlmclnt_grant(const struct sockaddr *addr, const struct nlm_lock *lock)
 		res = nlm_granted;
 	}
 	spin_unlock(&nlm_blocked_lock);
+<<<<<<< HEAD
 	trace_nlmclnt_grant(lock, addr, svc_addr_len(addr), res);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return res;
 }
 

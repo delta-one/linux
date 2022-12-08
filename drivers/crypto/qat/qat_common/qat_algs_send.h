@@ -3,6 +3,7 @@
 #ifndef QAT_ALGS_SEND_H
 #define QAT_ALGS_SEND_H
 
+<<<<<<< HEAD
 #include <linux/list.h>
 #include "adf_transport_internal.h"
 
@@ -18,6 +19,9 @@ struct qat_alg_req {
 	struct list_head list;
 	struct qat_instance_backlog *backlog;
 };
+=======
+#include "qat_crypto.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 int qat_alg_send_message(struct qat_alg_req *req);
 void qat_alg_send_backlog(struct qat_instance_backlog *backlog);

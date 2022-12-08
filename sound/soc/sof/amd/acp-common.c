@@ -16,7 +16,10 @@
 #include "../sof-audio.h"
 #include "acp.h"
 #include "acp-dsp-offset.h"
+<<<<<<< HEAD
 #include <sound/sof/xtensa.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int acp_dai_probe(struct snd_soc_dai *dai)
 {
@@ -34,6 +37,7 @@ int acp_dai_probe(struct snd_soc_dai *dai)
 }
 EXPORT_SYMBOL_NS(acp_dai_probe, SND_SOC_SOF_AMD_COMMON);
 
+<<<<<<< HEAD
 /**
  * amd_sof_ipc_dump() - This function is called when IPC tx times out.
  * @sdev: SOF device.
@@ -135,6 +139,8 @@ void amd_sof_dump(struct snd_sof_dev *sdev, u32 flags)
 				 &panic_info, stack, AMD_STACK_DUMP_SIZE);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct snd_soc_acpi_mach *amd_sof_machine_select(struct snd_sof_dev *sdev)
 {
 	struct snd_sof_pdata *sof_pdata = sdev->pdata;
@@ -178,7 +184,10 @@ struct snd_sof_dsp_ops sof_acp_common_ops = {
 	/*IPC */
 	.send_msg		= acp_sof_ipc_send_msg,
 	.ipc_msg_data		= acp_sof_ipc_msg_data,
+<<<<<<< HEAD
 	.set_stream_data_offset = acp_set_stream_data_offset,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.get_mailbox_offset	= acp_sof_ipc_get_mailbox_offset,
 	.get_window_offset      = acp_sof_ipc_get_window_offset,
 	.irq_thread		= acp_sof_ipc_irq_thread,
@@ -187,7 +196,10 @@ struct snd_sof_dsp_ops sof_acp_common_ops = {
 	.pcm_open		= acp_pcm_open,
 	.pcm_close		= acp_pcm_close,
 	.pcm_hw_params		= acp_pcm_hw_params,
+<<<<<<< HEAD
 	.pcm_pointer		= acp_pcm_pointer,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	.hw_info		= SNDRV_PCM_INFO_MMAP |
 				  SNDRV_PCM_INFO_MMAP_VALID |
@@ -207,15 +219,21 @@ struct snd_sof_dsp_ops sof_acp_common_ops = {
 	/* PM */
 	.suspend                = amd_sof_acp_suspend,
 	.resume                 = amd_sof_acp_resume,
+<<<<<<< HEAD
 
 	.ipc_dump		= amd_sof_ipc_dump,
 	.dbg_dump		= amd_sof_dump,
 	.debugfs_add_region_item = snd_sof_debugfs_add_region_item_iomem,
 	.dsp_arch_ops = &sof_xtensa_arch_ops,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 EXPORT_SYMBOL_NS(sof_acp_common_ops, SND_SOC_SOF_AMD_COMMON);
 
 MODULE_IMPORT_NS(SND_SOC_SOF_AMD_COMMON);
+<<<<<<< HEAD
 MODULE_IMPORT_NS(SND_SOC_SOF_XTENSA);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_DESCRIPTION("ACP SOF COMMON Driver");
 MODULE_LICENSE("Dual BSD/GPL");

@@ -11,7 +11,10 @@
 #include <drm/display/drm_hdcp_helper.h>
 #include <drm/drm_print.h>
 
+<<<<<<< HEAD
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_ddi.h"
 #include "intel_de.h"
 #include "intel_display_types.h"
@@ -20,6 +23,7 @@
 #include "intel_hdcp.h"
 #include "intel_hdcp_regs.h"
 
+<<<<<<< HEAD
 static u32 transcoder_to_stream_enc_status(enum transcoder cpu_transcoder)
 {
 	switch (cpu_transcoder) {
@@ -34,6 +38,30 @@ static u32 transcoder_to_stream_enc_status(enum transcoder cpu_transcoder)
 	default:
 		return 0;
 	}
+=======
+static unsigned int transcoder_to_stream_enc_status(enum transcoder cpu_transcoder)
+{
+	u32 stream_enc_mask;
+
+	switch (cpu_transcoder) {
+	case TRANSCODER_A:
+		stream_enc_mask = HDCP_STATUS_STREAM_A_ENC;
+		break;
+	case TRANSCODER_B:
+		stream_enc_mask = HDCP_STATUS_STREAM_B_ENC;
+		break;
+	case TRANSCODER_C:
+		stream_enc_mask = HDCP_STATUS_STREAM_C_ENC;
+		break;
+	case TRANSCODER_D:
+		stream_enc_mask = HDCP_STATUS_STREAM_D_ENC;
+		break;
+	default:
+		stream_enc_mask = 0;
+	}
+
+	return stream_enc_mask;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void intel_dp_hdcp_wait_for_cp_irq(struct intel_hdcp *hdcp, int timeout)

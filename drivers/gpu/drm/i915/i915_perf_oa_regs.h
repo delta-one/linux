@@ -97,7 +97,11 @@
 #define  GEN12_OAR_OACONTROL_COUNTER_FORMAT_SHIFT 1
 #define  GEN12_OAR_OACONTROL_COUNTER_ENABLE       (1 << 0)
 
+<<<<<<< HEAD
 #define GEN12_OACTXCONTROL(base) _MMIO((base) + 0x360)
+=======
+#define GEN12_OACTXCONTROL _MMIO(0x2360)
+>>>>>>> b7ba80a49124 (Commit)
 #define GEN12_OAR_OASTATUS _MMIO(0x2968)
 
 /* Gen12 OAG unit */
@@ -134,8 +138,11 @@
 #define GDT_CHICKEN_BITS    _MMIO(0x9840)
 #define   GT_NOA_ENABLE	    0x00000080
 
+<<<<<<< HEAD
 #define GEN12_SQCNT1				_MMIO(0x8718)
 #define   GEN12_SQCNT1_PMON_ENABLE		REG_BIT(30)
 #define   GEN12_SQCNT1_OABPC			REG_BIT(29)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __INTEL_PERF_OA_REGS__ */

@@ -5,7 +5,10 @@
  * Copyright (C) 2013 - 2015 Fujitsu Semiconductor, Ltd
  *              Vincent Yang <vincent.yang@tw.fujitsu.com>
  * Copyright (C) 2015 Linaro Ltd  Andy Green <andy.green@linaro.org>
+<<<<<<< HEAD
  * Copyright (C) 2019 Socionext Inc.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/acpi.h>
@@ -15,7 +18,10 @@
 #include <linux/of.h>
 #include <linux/property.h>
 #include <linux/clk.h>
+<<<<<<< HEAD
 #include <linux/reset.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "sdhci-pltfm.h"
 #include "sdhci_f_sdh30.h"
@@ -23,7 +29,10 @@
 struct f_sdhost_priv {
 	struct clk *clk_iface;
 	struct clk *clk;
+<<<<<<< HEAD
 	struct reset_control *rst;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 vendor_hs200;
 	struct device *dev;
 	bool enable_cmd_dat_delay;
@@ -77,6 +86,7 @@ static void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
 		ctl |= F_SDH30_CMD_DAT_DELAY;
 		sdhci_writel(host, ctl, F_SDH30_ESD_CONTROL);
 	}
+<<<<<<< HEAD
 
 	if ((host->mmc->caps & MMC_CAP_NONREMOVABLE) &&
 	    !(sdhci_readl(host, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT)) {
@@ -84,6 +94,8 @@ static void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
 		ctl |= F_SDH30_FORCE_CARD_INSERT;
 		sdhci_writel(host, ctl, F_SDH30_TEST);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct sdhci_ops sdhci_f_sdh30_ops = {
@@ -160,6 +172,7 @@ static int sdhci_f_sdh30_probe(struct platform_device *pdev)
 		ret = clk_prepare_enable(priv->clk);
 		if (ret)
 			goto err_clk;
+<<<<<<< HEAD
 
 		priv->rst = devm_reset_control_get_optional_shared(dev, NULL);
 		if (IS_ERR(priv->rst)) {
@@ -170,6 +183,8 @@ static int sdhci_f_sdh30_probe(struct platform_device *pdev)
 		ret = reset_control_deassert(priv->rst);
 		if (ret)
 			goto err_rst;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* init vendor specific regs */
@@ -188,9 +203,12 @@ static int sdhci_f_sdh30_probe(struct platform_device *pdev)
 	if (reg & SDHCI_CAN_DO_8BIT)
 		priv->vendor_hs200 = F_SDH30_EMMC_HS200;
 
+<<<<<<< HEAD
 	if (!(reg & SDHCI_TIMEOUT_CLK_MASK))
 		host->quirks |= SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = sdhci_add_host(host);
 	if (ret)
 		goto err_add_host;
@@ -198,8 +216,11 @@ static int sdhci_f_sdh30_probe(struct platform_device *pdev)
 	return 0;
 
 err_add_host:
+<<<<<<< HEAD
 	reset_control_assert(priv->rst);
 err_rst:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	clk_disable_unprepare(priv->clk);
 err_clk:
 	clk_disable_unprepare(priv->clk_iface);
@@ -216,9 +237,14 @@ static int sdhci_f_sdh30_remove(struct platform_device *pdev)
 	sdhci_remove_host(host, readl(host->ioaddr + SDHCI_INT_STATUS) ==
 			  0xffffffff);
 
+<<<<<<< HEAD
 	reset_control_assert(priv->rst);
 	clk_disable_unprepare(priv->clk);
 	clk_disable_unprepare(priv->clk_iface);
+=======
+	clk_disable_unprepare(priv->clk_iface);
+	clk_disable_unprepare(priv->clk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	sdhci_free_host(host);
 	platform_set_drvdata(pdev, NULL);
@@ -229,7 +255,10 @@ static int sdhci_f_sdh30_remove(struct platform_device *pdev)
 #ifdef CONFIG_OF
 static const struct of_device_id f_sdh30_dt_ids[] = {
 	{ .compatible = "fujitsu,mb86s70-sdhci-3.0" },
+<<<<<<< HEAD
 	{ .compatible = "socionext,f-sdh30-e51-mmc" },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ /* sentinel */ }
 };
 MODULE_DEVICE_TABLE(of, f_sdh30_dt_ids);
@@ -259,5 +288,9 @@ module_platform_driver(sdhci_f_sdh30_driver);
 
 MODULE_DESCRIPTION("F_SDH30 SD Card Controller driver");
 MODULE_LICENSE("GPL v2");
+<<<<<<< HEAD
 MODULE_AUTHOR("FUJITSU SEMICONDUCTOR LTD., Socionext Inc.");
+=======
+MODULE_AUTHOR("FUJITSU SEMICONDUCTOR LTD.");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_ALIAS("platform:f_sdh30");

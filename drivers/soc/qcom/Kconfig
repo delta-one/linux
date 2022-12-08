@@ -63,7 +63,10 @@ config QCOM_GSBI
 config QCOM_LLCC
 	tristate "Qualcomm Technologies, Inc. LLCC driver"
 	depends on ARCH_QCOM || COMPILE_TEST
+<<<<<<< HEAD
 	select REGMAP_MMIO
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Qualcomm Technologies, Inc. platform specific
 	  Last Level Cache Controller(LLCC) driver for platforms such as,
@@ -72,7 +75,11 @@ config QCOM_LLCC
 
 config QCOM_KRYO_L2_ACCESSORS
 	bool
+<<<<<<< HEAD
 	depends on (ARCH_QCOM || COMPILE_TEST) && ARM64
+=======
+	depends on ARCH_QCOM && ARM64 || COMPILE_TEST
+>>>>>>> b7ba80a49124 (Commit)
 
 config QCOM_MDT_LOADER
 	tristate
@@ -91,6 +98,7 @@ config QCOM_OCMEM
 config QCOM_PDR_HELPERS
 	tristate
 	select QCOM_QMI_HELPERS
+<<<<<<< HEAD
 	depends on NET
 
 config QCOM_PMIC_GLINK
@@ -109,11 +117,14 @@ config QCOM_PMIC_GLINK
 
 	  Say yes here to support USB-C and battery status on modern Qualcomm
 	  platforms.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 config QCOM_QMI_HELPERS
 	tristate
 	depends on NET
 
+<<<<<<< HEAD
 config QCOM_RAMP_CTRL
 	tristate "Qualcomm Ramp Controller driver"
 	depends on ARCH_QCOM || COMPILE_TEST
@@ -123,6 +134,8 @@ config QCOM_RAMP_CTRL
 	  cores on some Qualcomm SoCs.
 	  Say y here to enable support for the ramp controller.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config QCOM_RMTFS_MEM
 	tristate "Qualcomm Remote Filesystem memory driver"
 	depends on ARCH_QCOM
@@ -264,7 +277,10 @@ config QCOM_ICC_BWMON
 	tristate "QCOM Interconnect Bandwidth Monitor driver"
 	depends on ARCH_QCOM || COMPILE_TEST
 	select PM_OPP
+<<<<<<< HEAD
 	select REGMAP_MMIO
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Sets up driver monitoring bandwidth on various interconnects and
 	  based on that voting for interconnect bandwidth, adjusting their

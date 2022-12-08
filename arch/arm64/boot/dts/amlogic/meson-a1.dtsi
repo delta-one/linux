@@ -36,7 +36,10 @@
 
 		l2: l2-cache0 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -125,6 +128,7 @@
 				clock-names = "xtal", "pclk", "baud";
 				status = "disabled";
 			};
+<<<<<<< HEAD
 
 			gpio_intc: interrupt-controller@0440 {
 				compatible = "amlogic,meson-a1-gpio-intc",
@@ -135,6 +139,8 @@
 				amlogic,channel-interrupts =
 					<49 50 51 52 53 54 55 56>;
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		gic: interrupt-controller@ff901000 {

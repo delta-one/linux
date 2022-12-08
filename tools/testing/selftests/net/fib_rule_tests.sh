@@ -10,10 +10,15 @@ ret=0
 
 PAUSE_ON_FAIL=${PAUSE_ON_FAIL:=no}
 IP="ip -netns testns"
+<<<<<<< HEAD
 IP_PEER="ip -netns peerns"
 
 RTABLE=100
 RTABLE_PEER=101
+=======
+
+RTABLE=100
+>>>>>>> b7ba80a49124 (Commit)
 GW_IP4=192.51.100.2
 SRC_IP=192.51.100.3
 GW_IP6=2001:db8:1::2
@@ -22,9 +27,13 @@ SRC_IP6=2001:db8:1::3
 DEV_ADDR=192.51.100.1
 DEV_ADDR6=2001:db8:1::1
 DEV=dummy0
+<<<<<<< HEAD
 TESTS="fib_rule6 fib_rule4 fib_rule6_connect fib_rule4_connect"
 
 SELFTEST_PATH=""
+=======
+TESTS="fib_rule6 fib_rule4"
+>>>>>>> b7ba80a49124 (Commit)
 
 log_test()
 {
@@ -56,6 +65,7 @@ log_section()
 	echo "######################################################################"
 }
 
+<<<<<<< HEAD
 check_nettest()
 {
 	if which nettest > /dev/null 2>&1; then
@@ -81,6 +91,8 @@ check_nettest()
 	return 1
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 setup()
 {
 	set -e
@@ -101,6 +113,7 @@ cleanup()
 	ip netns del testns
 }
 
+<<<<<<< HEAD
 setup_peer()
 {
 	set -e
@@ -134,6 +147,8 @@ cleanup_peer()
 	ip netns del peerns
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 fib_check_iproute_support()
 {
 	ip rule help 2>&1 | grep -q $1
@@ -252,6 +267,7 @@ fib_rule6_test()
 	fi
 }
 
+<<<<<<< HEAD
 # Verify that the IPV6_TCLASS option of UDPv6 and TCPv6 sockets is properly
 # taken into account when connecting the socket and when sending packets.
 fib_rule6_connect_test()
@@ -283,6 +299,8 @@ fib_rule6_connect_test()
 	cleanup_peer
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 fib_rule4_del()
 {
 	$IP rule del $1
@@ -389,6 +407,7 @@ fib_rule4_test()
 	fi
 }
 
+<<<<<<< HEAD
 # Verify that the IP_TOS option of UDPv4 and TCPv4 sockets is properly taken
 # into account when connecting the socket and when sending packets.
 fib_rule4_connect_test()
@@ -420,6 +439,8 @@ fib_rule4_connect_test()
 	cleanup_peer
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 run_fibrule_tests()
 {
 	log_section "IPv4 fib rule"
@@ -469,8 +490,11 @@ do
 	case $t in
 	fib_rule6_test|fib_rule6)		fib_rule6_test;;
 	fib_rule4_test|fib_rule4)		fib_rule4_test;;
+<<<<<<< HEAD
 	fib_rule6_connect_test|fib_rule6_connect)	fib_rule6_connect_test;;
 	fib_rule4_connect_test|fib_rule4_connect)	fib_rule4_connect_test;;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	help) echo "Test names: $TESTS"; exit 0;;
 

@@ -17,7 +17,10 @@
 #include <linux/thermal.h>
 
 #include "thermal_hwmon.h"
+<<<<<<< HEAD
 #include "thermal_core.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* hwmon sys I/F */
 /* thermal zone devices with the same type share one hwmon device */
@@ -78,6 +81,7 @@ temp_crit_show(struct device *dev, struct device_attribute *attr, char *buf)
 	int temperature;
 	int ret;
 
+<<<<<<< HEAD
 	mutex_lock(&tz->lock);
 
 	if (device_is_registered(&tz->device))
@@ -87,6 +91,9 @@ temp_crit_show(struct device *dev, struct device_attribute *attr, char *buf)
 
 	mutex_unlock(&tz->lock);
 
+=======
+	ret = tz->ops->get_crit_temp(tz, &temperature);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -229,14 +236,22 @@ void thermal_remove_hwmon_sysfs(struct thermal_zone_device *tz)
 	hwmon = thermal_hwmon_lookup_by_type(tz);
 	if (unlikely(!hwmon)) {
 		/* Should never happen... */
+<<<<<<< HEAD
 		dev_dbg(hwmon->device, "hwmon device lookup failed!\n");
+=======
+		dev_dbg(&tz->device, "hwmon device lookup failed!\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
 	temp = thermal_hwmon_lookup_temp(hwmon, tz);
 	if (unlikely(!temp)) {
 		/* Should never happen... */
+<<<<<<< HEAD
 		dev_dbg(hwmon->device, "temperature input lookup failed!\n");
+=======
+		dev_dbg(&tz->device, "temperature input lookup failed!\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -264,7 +279,11 @@ static void devm_thermal_hwmon_release(struct device *dev, void *res)
 	thermal_remove_hwmon_sysfs(*(struct thermal_zone_device **)res);
 }
 
+<<<<<<< HEAD
 int devm_thermal_add_hwmon_sysfs(struct device *dev, struct thermal_zone_device *tz)
+=======
+int devm_thermal_add_hwmon_sysfs(struct thermal_zone_device *tz)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct thermal_zone_device **ptr;
 	int ret;
@@ -281,7 +300,11 @@ int devm_thermal_add_hwmon_sysfs(struct device *dev, struct thermal_zone_device 
 	}
 
 	*ptr = tz;
+<<<<<<< HEAD
 	devres_add(dev, ptr);
+=======
+	devres_add(&tz->device, ptr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }

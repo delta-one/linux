@@ -297,8 +297,13 @@ int cbe_sysreset_hack(void)
 static int __init cbe_ptcal_init(void)
 {
 	int ret;
+<<<<<<< HEAD
 	ptcal_start_tok = rtas_function_token(RTAS_FN_IBM_CBE_START_PTCAL);
 	ptcal_stop_tok = rtas_function_token(RTAS_FN_IBM_CBE_STOP_PTCAL);
+=======
+	ptcal_start_tok = rtas_token("ibm,cbe-start-ptcal");
+	ptcal_stop_tok = rtas_token("ibm,cbe-stop-ptcal");
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ptcal_start_tok == RTAS_UNKNOWN_SERVICE
 			|| ptcal_stop_tok == RTAS_UNKNOWN_SERVICE)

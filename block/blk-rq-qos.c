@@ -294,6 +294,7 @@ void rq_qos_exit(struct request_queue *q)
 		rqos->ops->exit(rqos);
 	}
 }
+<<<<<<< HEAD
 
 int rq_qos_add(struct rq_qos *rqos, struct gendisk *disk, enum rq_qos_id id,
 		const struct rq_qos_ops *ops)
@@ -361,3 +362,5 @@ void rq_qos_del(struct rq_qos *rqos)
 	blk_mq_debugfs_unregister_rqos(rqos);
 	mutex_unlock(&q->debugfs_mutex);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -4,8 +4,11 @@
  */
 
 #include <linux/crc32.h>
+<<<<<<< HEAD
 #include <linux/etherdevice.h>
 #include <linux/if_ether.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mod_devicetable.h>
 #include <linux/module.h>
 #include <linux/mtd/mtd.h>
@@ -18,7 +21,10 @@
 enum u_boot_env_format {
 	U_BOOT_FORMAT_SINGLE,
 	U_BOOT_FORMAT_REDUNDANT,
+<<<<<<< HEAD
 	U_BOOT_FORMAT_BROADCOM,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct u_boot_env {
@@ -43,6 +49,7 @@ struct u_boot_env_image_redundant {
 	uint8_t data[];
 } __packed;
 
+<<<<<<< HEAD
 struct u_boot_env_image_broadcom {
 	__le32 magic;
 	__le32 len;
@@ -50,6 +57,8 @@ struct u_boot_env_image_broadcom {
 	uint8_t data[0];
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int u_boot_env_read(void *context, unsigned int offset, void *val,
 			   size_t bytes)
 {
@@ -72,6 +81,7 @@ static int u_boot_env_read(void *context, unsigned int offset, void *val,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int u_boot_env_read_post_process_ethaddr(void *context, const char *id, int index,
 						unsigned int offset, void *buf, size_t bytes)
 {
@@ -91,6 +101,8 @@ static int u_boot_env_read_post_process_ethaddr(void *context, const char *id, i
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int u_boot_env_add_cells(struct u_boot_env *priv, uint8_t *buf,
 				size_t data_offset, size_t data_len)
 {
@@ -122,11 +134,14 @@ static int u_boot_env_add_cells(struct u_boot_env *priv, uint8_t *buf,
 		priv->cells[idx].offset = data_offset + value - data;
 		priv->cells[idx].bytes = strlen(value);
 		priv->cells[idx].np = of_get_child_by_name(dev->of_node, priv->cells[idx].name);
+<<<<<<< HEAD
 		if (!strcmp(var, "ethaddr")) {
 			priv->cells[idx].raw_len = strlen(value);
 			priv->cells[idx].bytes = ETH_ALEN;
 			priv->cells[idx].read_post_process = u_boot_env_read_post_process_ethaddr;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (WARN_ON(idx != priv->ncells))
@@ -169,6 +184,7 @@ static int u_boot_env_parse(struct u_boot_env *priv)
 		break;
 	case U_BOOT_FORMAT_REDUNDANT:
 		crc32_offset = offsetof(struct u_boot_env_image_redundant, crc32);
+<<<<<<< HEAD
 		crc32_data_offset = offsetof(struct u_boot_env_image_redundant, data);
 		data_offset = offsetof(struct u_boot_env_image_redundant, data);
 		break;
@@ -177,6 +193,11 @@ static int u_boot_env_parse(struct u_boot_env *priv)
 		crc32_data_offset = offsetof(struct u_boot_env_image_broadcom, data);
 		data_offset = offsetof(struct u_boot_env_image_broadcom, data);
 		break;
+=======
+		crc32_data_offset = offsetof(struct u_boot_env_image_redundant, mark);
+		data_offset = offsetof(struct u_boot_env_image_redundant, data);
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	crc32 = le32_to_cpu(*(__le32 *)(buf + crc32_offset));
 	crc32_data_len = priv->mtd->size - crc32_data_offset;
@@ -241,7 +262,10 @@ static const struct of_device_id u_boot_env_of_match_table[] = {
 	{ .compatible = "u-boot,env", .data = (void *)U_BOOT_FORMAT_SINGLE, },
 	{ .compatible = "u-boot,env-redundant-bool", .data = (void *)U_BOOT_FORMAT_REDUNDANT, },
 	{ .compatible = "u-boot,env-redundant-count", .data = (void *)U_BOOT_FORMAT_REDUNDANT, },
+<<<<<<< HEAD
 	{ .compatible = "brcm,env", .data = (void *)U_BOOT_FORMAT_BROADCOM, },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 

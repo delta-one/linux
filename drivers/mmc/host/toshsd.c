@@ -651,9 +651,13 @@ static int toshsd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	if (ret)
 		goto unmap;
 
+<<<<<<< HEAD
 	ret = mmc_add_host(mmc);
 	if (ret)
 		goto free_irq;
+=======
+	mmc_add_host(mmc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	base = pci_resource_start(pdev, 0);
 	dev_dbg(&pdev->dev, "MMIO %pa, IRQ %d\n", &base, pdev->irq);
@@ -662,8 +666,11 @@ static int toshsd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 
 	return 0;
 
+<<<<<<< HEAD
 free_irq:
 	free_irq(pdev->irq, host);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 unmap:
 	pci_iounmap(pdev, host->ioaddr);
 release:

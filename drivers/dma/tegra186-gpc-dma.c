@@ -161,10 +161,14 @@
 #define TEGRA_GPCDMA_BURST_COMPLETION_TIMEOUT	5000 /* 5 msec */
 
 /* Channel base address offset from GPCDMA base address */
+<<<<<<< HEAD
 #define TEGRA_GPCDMA_CHANNEL_BASE_ADDR_OFFSET	0x10000
 
 /* Default channel mask reserving channel0 */
 #define TEGRA_GPCDMA_DEFAULT_CHANNEL_MASK	0xfffffffe
+=======
+#define TEGRA_GPCDMA_CHANNEL_BASE_ADD_OFFSET	0x20000
+>>>>>>> b7ba80a49124 (Commit)
 
 struct tegra_dma;
 struct tegra_dma_channel;
@@ -249,7 +253,10 @@ struct tegra_dma {
 	const struct tegra_dma_chip_data *chip_data;
 	unsigned long sid_m2d_reserved;
 	unsigned long sid_d2m_reserved;
+<<<<<<< HEAD
 	u32 chan_mask;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem *base_addr;
 	struct device *dev;
 	struct dma_device dma_dev;
@@ -711,7 +718,10 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
 			return err;
 		}
 
+<<<<<<< HEAD
 		vchan_terminate_vdesc(&tdc->dma_desc->vd);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		tegra_dma_disable(tdc);
 		tdc->dma_desc = NULL;
 	}
@@ -1293,7 +1303,11 @@ static struct dma_chan *tegra_dma_of_xlate(struct of_phandle_args *dma_spec,
 }
 
 static const struct tegra_dma_chip_data tegra186_dma_chip_data = {
+<<<<<<< HEAD
 	.nr_channels = 32,
+=======
+	.nr_channels = 31,
+>>>>>>> b7ba80a49124 (Commit)
 	.channel_reg_size = SZ_64K,
 	.max_dma_count = SZ_1G,
 	.hw_support_pause = false,
@@ -1301,7 +1315,11 @@ static const struct tegra_dma_chip_data tegra186_dma_chip_data = {
 };
 
 static const struct tegra_dma_chip_data tegra194_dma_chip_data = {
+<<<<<<< HEAD
 	.nr_channels = 32,
+=======
+	.nr_channels = 31,
+>>>>>>> b7ba80a49124 (Commit)
 	.channel_reg_size = SZ_64K,
 	.max_dma_count = SZ_1G,
 	.hw_support_pause = true,
@@ -1309,7 +1327,11 @@ static const struct tegra_dma_chip_data tegra194_dma_chip_data = {
 };
 
 static const struct tegra_dma_chip_data tegra234_dma_chip_data = {
+<<<<<<< HEAD
 	.nr_channels = 32,
+=======
+	.nr_channels = 31,
+>>>>>>> b7ba80a49124 (Commit)
 	.channel_reg_size = SZ_64K,
 	.max_dma_count = SZ_1G,
 	.hw_support_pause = true,
@@ -1385,6 +1407,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
 	}
 	stream_id = iommu_spec->ids[0] & 0xffff;
 
+<<<<<<< HEAD
 	ret = device_property_read_u32(&pdev->dev, "dma-channel-mask",
 				       &tdma->chan_mask);
 	if (ret) {
@@ -1394,19 +1417,28 @@ static int tegra_dma_probe(struct platform_device *pdev)
 		tdma->chan_mask = TEGRA_GPCDMA_DEFAULT_CHANNEL_MASK;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_LIST_HEAD(&tdma->dma_dev.channels);
 	for (i = 0; i < cdata->nr_channels; i++) {
 		struct tegra_dma_channel *tdc = &tdma->channels[i];
 
+<<<<<<< HEAD
 		/* Check for channel mask */
 		if (!(tdma->chan_mask & BIT(i)))
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		tdc->irq = platform_get_irq(pdev, i);
 		if (tdc->irq < 0)
 			return tdc->irq;
 
+<<<<<<< HEAD
 		tdc->chan_base_offset = TEGRA_GPCDMA_CHANNEL_BASE_ADDR_OFFSET +
+=======
+		tdc->chan_base_offset = TEGRA_GPCDMA_CHANNEL_BASE_ADD_OFFSET +
+>>>>>>> b7ba80a49124 (Commit)
 					i * cdata->channel_reg_size;
 		snprintf(tdc->name, sizeof(tdc->name), "gpcdma.%d", i);
 		tdc->tdma = tdma;
@@ -1467,8 +1499,13 @@ static int tegra_dma_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	dev_info(&pdev->dev, "GPC DMA driver register %lu channels\n",
 		 hweight_long(tdma->chan_mask));
+=======
+	dev_info(&pdev->dev, "GPC DMA driver register %d channels\n",
+		 cdata->nr_channels);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1491,9 +1528,12 @@ static int __maybe_unused tegra_dma_pm_suspend(struct device *dev)
 	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
 		struct tegra_dma_channel *tdc = &tdma->channels[i];
 
+<<<<<<< HEAD
 		if (!(tdma->chan_mask & BIT(i)))
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (tdc->dma_desc) {
 			dev_err(tdma->dev, "channel %u busy\n", i);
 			return -EBUSY;
@@ -1513,9 +1553,12 @@ static int __maybe_unused tegra_dma_pm_resume(struct device *dev)
 	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
 		struct tegra_dma_channel *tdc = &tdma->channels[i];
 
+<<<<<<< HEAD
 		if (!(tdma->chan_mask & BIT(i)))
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		tegra_dma_program_sid(tdc, tdc->stream_id);
 	}
 

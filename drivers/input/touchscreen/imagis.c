@@ -309,7 +309,11 @@ static int imagis_probe(struct i2c_client *i2c)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int imagis_suspend(struct device *dev)
+=======
+static int __maybe_unused imagis_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct imagis_ts *ts = i2c_get_clientdata(client);
@@ -325,7 +329,11 @@ static int imagis_suspend(struct device *dev)
 	return retval;
 }
 
+<<<<<<< HEAD
 static int imagis_resume(struct device *dev)
+=======
+static int __maybe_unused imagis_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct imagis_ts *ts = i2c_get_clientdata(client);
@@ -341,7 +349,11 @@ static int imagis_resume(struct device *dev)
 	return retval;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(imagis_pm_ops, imagis_suspend, imagis_resume);
+=======
+static SIMPLE_DEV_PM_OPS(imagis_pm_ops, imagis_suspend, imagis_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_OF
 static const struct of_device_id imagis_of_match[] = {
@@ -354,7 +366,11 @@ MODULE_DEVICE_TABLE(of, imagis_of_match);
 static struct i2c_driver imagis_ts_driver = {
 	.driver = {
 		.name = "imagis-touchscreen",
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&imagis_pm_ops),
+=======
+		.pm = &imagis_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = of_match_ptr(imagis_of_match),
 	},
 	.probe_new = imagis_probe,

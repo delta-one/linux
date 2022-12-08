@@ -91,6 +91,10 @@ int i915_sw_fence_await_dma_fence(struct i915_sw_fence *fence,
 
 int i915_sw_fence_await_reservation(struct i915_sw_fence *fence,
 				    struct dma_resv *resv,
+<<<<<<< HEAD
+=======
+				    const struct dma_fence_ops *exclude,
+>>>>>>> b7ba80a49124 (Commit)
 				    bool write,
 				    unsigned long timeout,
 				    gfp_t gfp);

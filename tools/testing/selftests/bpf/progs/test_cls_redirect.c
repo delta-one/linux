@@ -600,7 +600,11 @@ static INLINING ret_t get_next_hop(buf_t *pkt, encap_headers_t *encap,
 		return TC_ACT_SHOT;
 	}
 
+<<<<<<< HEAD
 	/* Skip the remaining next hops (may be zero). */
+=======
+	/* Skip the remainig next hops (may be zero). */
+>>>>>>> b7ba80a49124 (Commit)
 	return skip_next_hops(pkt, encap->unigue.hop_count -
 					   encap->unigue.next_hop - 1);
 }
@@ -610,8 +614,13 @@ static INLINING ret_t get_next_hop(buf_t *pkt, encap_headers_t *encap,
  *
  *    fill_tuple(&t, foo, sizeof(struct iphdr), 123, 321)
  *
+<<<<<<< HEAD
  * clang will substitute a constant for sizeof, which allows the verifier
  * to track its value. Based on this, it can figure out the constant
+=======
+ * clang will substitue a costant for sizeof, which allows the verifier
+ * to track it's value. Based on this, it can figure out the constant
+>>>>>>> b7ba80a49124 (Commit)
  * return value, and calling code works while still being "generic" to
  * IPv4 and IPv6.
  */

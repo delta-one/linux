@@ -243,6 +243,10 @@ static const struct ov13b10_reg mipi_data_rate_1120mbps[] = {
 	{0x5047, 0xa4},
 	{0x5048, 0x20},
 	{0x5049, 0xa4},
+<<<<<<< HEAD
+=======
+	{0x0100, 0x01},
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct ov13b10_reg mode_4208x3120_regs[] = {
@@ -588,9 +592,12 @@ struct ov13b10 {
 
 	/* Streaming on/off */
 	bool streaming;
+<<<<<<< HEAD
 
 	/* True if the device has been identified */
 	bool identified;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define to_ov13b10(_sd)	container_of(_sd, struct ov13b10, sd)
@@ -1025,6 +1032,7 @@ ov13b10_set_pad_format(struct v4l2_subdev *sd,
 	return 0;
 }
 
+<<<<<<< HEAD
 /* Verify chip ID */
 static int ov13b10_identify_module(struct ov13b10 *ov13b)
 {
@@ -1051,16 +1059,21 @@ static int ov13b10_identify_module(struct ov13b10 *ov13b)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ov13b10_start_streaming(struct ov13b10 *ov13b)
 {
 	struct i2c_client *client = v4l2_get_subdevdata(&ov13b->sd);
 	const struct ov13b10_reg_list *reg_list;
 	int ret, link_freq_index;
 
+<<<<<<< HEAD
 	ret = ov13b10_identify_module(ov13b);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Get out of from software reset */
 	ret = ov13b10_write_reg(ov13b, OV13B10_REG_SOFTWARE_RST,
 				OV13B10_REG_VALUE_08BIT, OV13B10_SOFTWARE_RST);
@@ -1176,6 +1189,30 @@ error:
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+/* Verify chip ID */
+static int ov13b10_identify_module(struct ov13b10 *ov13b)
+{
+	struct i2c_client *client = v4l2_get_subdevdata(&ov13b->sd);
+	int ret;
+	u32 val;
+
+	ret = ov13b10_read_reg(ov13b, OV13B10_REG_CHIP_ID,
+			       OV13B10_REG_VALUE_24BIT, &val);
+	if (ret)
+		return ret;
+
+	if (val != OV13B10_CHIP_ID) {
+		dev_err(&client->dev, "chip id mismatch: %x!=%x\n",
+			OV13B10_CHIP_ID, val);
+		return -EIO;
+	}
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct v4l2_subdev_video_ops ov13b10_video_ops = {
 	.s_stream = ov13b10_set_stream,
 };
@@ -1390,7 +1427,10 @@ out_err:
 static int ov13b10_probe(struct i2c_client *client)
 {
 	struct ov13b10 *ov13b;
+<<<<<<< HEAD
 	bool full_power;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	/* Check HW config */
@@ -1407,6 +1447,7 @@ static int ov13b10_probe(struct i2c_client *client)
 	/* Initialize subdev */
 	v4l2_i2c_subdev_init(&ov13b->sd, client, &ov13b10_subdev_ops);
 
+<<<<<<< HEAD
 	full_power = acpi_dev_state_d0(&client->dev);
 	if (full_power) {
 		/* Check module identity */
@@ -1415,6 +1456,13 @@ static int ov13b10_probe(struct i2c_client *client)
 			dev_err(&client->dev, "failed to find sensor: %d\n", ret);
 			return ret;
 		}
+=======
+	/* Check module identity */
+	ret = ov13b10_identify_module(ov13b);
+	if (ret) {
+		dev_err(&client->dev, "failed to find sensor: %d\n", ret);
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Set default mode to max resolution */
@@ -1446,10 +1494,14 @@ static int ov13b10_probe(struct i2c_client *client)
 	 * Device is already turned on by i2c-core with ACPI domain PM.
 	 * Enable runtime PM and turn off the device.
 	 */
+<<<<<<< HEAD
 
 	/* Set the device's state to active if it's in D0 state. */
 	if (full_power)
 		pm_runtime_set_active(&client->dev);
+=======
+	pm_runtime_set_active(&client->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_enable(&client->dev);
 	pm_runtime_idle(&client->dev);
 
@@ -1498,7 +1550,10 @@ static struct i2c_driver ov13b10_i2c_driver = {
 	},
 	.probe_new = ov13b10_probe,
 	.remove = ov13b10_remove,
+<<<<<<< HEAD
 	.flags = I2C_DRV_ACPI_WAIVE_D0_PROBE,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_i2c_driver(ov13b10_i2c_driver);

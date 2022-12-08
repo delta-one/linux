@@ -136,6 +136,7 @@ static struct orc_entry null_orc_entry = {
 	.type = UNWIND_HINT_TYPE_CALL
 };
 
+<<<<<<< HEAD
 #ifdef CONFIG_CALL_THUNKS
 static struct orc_entry *orc_callthunk_find(unsigned long ip)
 {
@@ -151,6 +152,8 @@ static struct orc_entry *orc_callthunk_find(unsigned long ip)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Fake frame pointer entry -- used as a fallback for generated code */
 static struct orc_entry orc_fp_entry = {
 	.type		= UNWIND_HINT_TYPE_CALL,
@@ -204,11 +207,15 @@ static struct orc_entry *orc_find(unsigned long ip)
 	if (orc)
 		return orc;
 
+<<<<<<< HEAD
 	orc =  orc_ftrace_find(ip);
 	if (orc)
 		return orc;
 
 	return orc_callthunk_find(ip);
+=======
+	return orc_ftrace_find(ip);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_MODULES
@@ -484,8 +491,11 @@ bool unwind_next_frame(struct unwind_state *state)
 		goto the_end;
 	}
 
+<<<<<<< HEAD
 	state->signal = orc->signal;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Find the previous frame's stack: */
 	switch (orc->sp_reg) {
 	case ORC_REG_SP:
@@ -565,6 +575,10 @@ bool unwind_next_frame(struct unwind_state *state)
 		state->sp = sp;
 		state->regs = NULL;
 		state->prev_regs = NULL;
+<<<<<<< HEAD
+=======
+		state->signal = false;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case UNWIND_HINT_TYPE_REGS:
@@ -588,6 +602,10 @@ bool unwind_next_frame(struct unwind_state *state)
 		state->regs = (struct pt_regs *)sp;
 		state->prev_regs = NULL;
 		state->full_regs = true;
+<<<<<<< HEAD
+=======
+		state->signal = true;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case UNWIND_HINT_TYPE_REGS_PARTIAL:
@@ -604,6 +622,10 @@ bool unwind_next_frame(struct unwind_state *state)
 			state->prev_regs = state->regs;
 		state->regs = (void *)sp - IRET_FRAME_OFFSET;
 		state->full_regs = false;
+<<<<<<< HEAD
+=======
+		state->signal = true;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	default:
@@ -731,7 +753,11 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
 	/* Otherwise, skip ahead to the user-specified starting frame: */
 	while (!unwind_done(state) &&
 	       (!on_stack(&state->stack_info, first_frame, sizeof(long)) ||
+<<<<<<< HEAD
 			state->sp <= (unsigned long)first_frame))
+=======
+			state->sp < (unsigned long)first_frame))
+>>>>>>> b7ba80a49124 (Commit)
 		unwind_next_frame(state);
 
 	return;

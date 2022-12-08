@@ -156,12 +156,17 @@ kallsyms()
 		kallsymopt="${kallsymopt} --base-relative"
 	fi
 
+<<<<<<< HEAD
 	if is_enabled CONFIG_LTO_CLANG; then
 		kallsymopt="${kallsymopt} --lto-clang"
 	fi
 
 	info KSYMS ${2}
 	scripts/kallsyms ${kallsymopt} ${1} > ${2}
+=======
+	info KSYMS ${2}
+	${NM} -n ${1} | scripts/kallsyms ${kallsymopt} > ${2}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 # Perform one step in kallsyms generation, including temporary linking of
@@ -174,8 +179,12 @@ kallsyms_step()
 	kallsyms_S=${kallsyms_vmlinux}.S
 
 	vmlinux_link ${kallsyms_vmlinux} "${kallsymso_prev}" ${btf_vmlinux_bin_o}
+<<<<<<< HEAD
 	mksysmap ${kallsyms_vmlinux} ${kallsyms_vmlinux}.syms
 	kallsyms ${kallsyms_vmlinux}.syms ${kallsyms_S}
+=======
+	kallsyms ${kallsyms_vmlinux} ${kallsyms_S}
+>>>>>>> b7ba80a49124 (Commit)
 
 	info AS ${kallsyms_S}
 	${CC} ${NOSTDINC_FLAGS} ${LINUXINCLUDE} ${KBUILD_CPPFLAGS} \
@@ -187,7 +196,10 @@ kallsyms_step()
 # See mksymap for additional details
 mksysmap()
 {
+<<<<<<< HEAD
 	info NM ${2}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	${CONFIG_SHELL} "${srctree}/scripts/mksysmap" ${1} ${2}
 }
 
@@ -203,6 +215,10 @@ cleanup()
 	rm -f System.map
 	rm -f vmlinux
 	rm -f vmlinux.map
+<<<<<<< HEAD
+=======
+	rm -f .vmlinux.export.c
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 # Use "make V=1" to debug this script
@@ -217,6 +233,20 @@ if [ "$1" = "clean" ]; then
 	exit 0
 fi
 
+<<<<<<< HEAD
+=======
+info MODINFO modules.builtin.modinfo
+${OBJCOPY} -j .modinfo -O binary vmlinux.o modules.builtin.modinfo
+info GEN modules.builtin
+# The second line aids cases where multiple modules share the same object.
+tr '\0' '\n' < modules.builtin.modinfo | sed -n 's/^[[:alnum:]:_]*\.file=//p' |
+	tr ' ' '\n' | uniq | sed -e 's:^:kernel/:' -e 's/$/.ko/' > modules.builtin
+
+if is_enabled CONFIG_MODULES; then
+	${MAKE} -f "${srctree}/scripts/Makefile.vmlinux" .vmlinux.export.o
+fi
+
+>>>>>>> b7ba80a49124 (Commit)
 ${MAKE} -f "${srctree}/scripts/Makefile.build" obj=init init/version-timestamp.o
 
 btf_vmlinux_bin_o=""
@@ -277,6 +307,10 @@ if is_enabled CONFIG_DEBUG_INFO_BTF && is_enabled CONFIG_BPF; then
 	${RESOLVE_BTFIDS} vmlinux
 fi
 
+<<<<<<< HEAD
+=======
+info SYSMAP System.map
+>>>>>>> b7ba80a49124 (Commit)
 mksysmap vmlinux System.map
 
 if is_enabled CONFIG_BUILDTIME_TABLE_SORT; then
@@ -289,9 +323,17 @@ fi
 
 # step a (see comment above)
 if is_enabled CONFIG_KALLSYMS; then
+<<<<<<< HEAD
 	if ! cmp -s System.map ${kallsyms_vmlinux}.syms; then
 		echo >&2 Inconsistent kallsyms data
 		echo >&2 'Try "make KALLSYMS_EXTRA_PASS=1" as a workaround'
+=======
+	mksysmap ${kallsyms_vmlinux} .tmp_System.map
+
+	if ! cmp -s System.map .tmp_System.map; then
+		echo >&2 Inconsistent kallsyms data
+		echo >&2 Try "make KALLSYMS_EXTRA_PASS=1" as a workaround
+>>>>>>> b7ba80a49124 (Commit)
 		exit 1
 	fi
 fi

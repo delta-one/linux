@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Remote Processor Framework ELF loader
+=======
+ * Remote Processor Framework Elf loader
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Copyright (C) 2011 Texas Instruments, Inc.
  * Copyright (C) 2011 Google, Inc.
@@ -39,7 +43,11 @@ int rproc_elf_sanity_check(struct rproc *rproc, const struct firmware *fw)
 	const char *name = rproc->firmware;
 	struct device *dev = &rproc->dev;
 	/*
+<<<<<<< HEAD
 	 * ELF files are beginning with the same structure. Thus, to simplify
+=======
+	 * Elf files are beginning with the same structure. Thus, to simplify
+>>>>>>> b7ba80a49124 (Commit)
 	 * header parsing, we can use the elf32_hdr one for both elf64 and
 	 * elf32.
 	 */

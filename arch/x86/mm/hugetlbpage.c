@@ -37,12 +37,17 @@ int pmd_huge(pmd_t pmd)
  */
 int pud_huge(pud_t pud)
 {
+<<<<<<< HEAD
 #if CONFIG_PGTABLE_LEVELS > 2
 	return !pud_none(pud) &&
 		(pud_val(pud) & (_PAGE_PRESENT|_PAGE_PSE)) != _PAGE_PRESENT;
 #else
 	return 0;
 #endif
+=======
+	return !pud_none(pud) &&
+		(pud_val(pud) & (_PAGE_PRESENT|_PAGE_PSE)) != _PAGE_PRESENT;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_HUGETLB_PAGE

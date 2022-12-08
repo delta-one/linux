@@ -3,11 +3,17 @@
  * Copyright (c) 2017 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
  */
 
+<<<<<<< HEAD
 #include <dt-bindings/firmware/imx/rsrc.h>
 #include <linux/arm-smccc.h>
 #include <linux/clk.h>
 #include <linux/err.h>
 #include <linux/firmware/imx/sci.h>
+=======
+#include <linux/arm-smccc.h>
+#include <linux/clk.h>
+#include <linux/err.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/interrupt.h>
 #include <linux/kernel.h>
 #include <linux/mailbox_client.h>
@@ -17,7 +23,10 @@
 #include <linux/of_reserved_mem.h>
 #include <linux/of_device.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/pm_domain.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regmap.h>
 #include <linux/remoteproc.h>
 #include <linux/workqueue.h>
@@ -62,8 +71,11 @@
 #define IMX_SIP_RPROC_STARTED		0x01
 #define IMX_SIP_RPROC_STOP		0x02
 
+<<<<<<< HEAD
 #define IMX_SC_IRQ_GROUP_REBOOTED	5
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct imx_rproc_mem - slim internal memory structure
  * @cpu_addr: MPU virtual address of the memory region
@@ -76,6 +88,7 @@ struct imx_rproc_mem {
 	size_t size;
 };
 
+<<<<<<< HEAD
 /* att flags: lower 16 bits specifying core, higher 16 bits for flags  */
 /* M4 own area. Can be mapped at probe */
 #define ATT_OWN         BIT(31)
@@ -87,6 +100,12 @@ struct imx_rproc_mem {
 static int imx_rproc_xtr_mbox_init(struct rproc *rproc);
 static void imx_rproc_free_mbox(struct rproc *rproc);
 static int imx_rproc_detach_pd(struct rproc *rproc);
+=======
+/* att flags */
+/* M4 own area. Can be mapped at probe */
+#define ATT_OWN		BIT(1)
+#define ATT_IOMEM	BIT(2)
+>>>>>>> b7ba80a49124 (Commit)
 
 struct imx_rproc {
 	struct device			*dev;
@@ -101,6 +120,7 @@ struct imx_rproc {
 	struct work_struct		rproc_work;
 	struct workqueue_struct		*workqueue;
 	void __iomem			*rsc_table;
+<<<<<<< HEAD
 	struct imx_sc_ipc		*ipc_handle;
 	struct notifier_block		rproc_nb;
 	u32				rproc_pt;	/* partition id */
@@ -110,6 +130,8 @@ struct imx_rproc {
 	u32				core_index;
 	struct device                   **pd_dev;
 	struct device_link              **pd_dev_link;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct imx_rproc_att imx_rproc_att_imx93[] = {
@@ -134,6 +156,7 @@ static const struct imx_rproc_att imx_rproc_att_imx93[] = {
 	{ 0x80000000, 0x80000000, 0x10000000, 0 },
 	{ 0x90000000, 0x80000000, 0x10000000, 0 },
 
+<<<<<<< HEAD
 	{ 0xC0000000, 0xC0000000, 0x10000000, 0 },
 	{ 0xD0000000, 0xC0000000, 0x10000000, 0 },
 };
@@ -161,6 +184,10 @@ static const struct imx_rproc_att imx_rproc_att_imx8qxp[] = {
 	{ 0x21100000, 0x00100000, 0x00040000, 0 },
 	/* DDR (Data) */
 	{ 0x80000000, 0x80000000, 0x60000000, 0 },
+=======
+	{ 0xC0000000, 0xa0000000, 0x10000000, 0 },
+	{ 0xD0000000, 0xa0000000, 0x10000000, 0 },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct imx_rproc_att imx_rproc_att_imx8mn[] = {
@@ -301,6 +328,7 @@ static const struct imx_rproc_dcfg imx_rproc_cfg_imx8mq = {
 	.method		= IMX_RPROC_MMIO,
 };
 
+<<<<<<< HEAD
 static const struct imx_rproc_dcfg imx_rproc_cfg_imx8qm = {
 	.att            = imx_rproc_att_imx8qm,
 	.att_size       = ARRAY_SIZE(imx_rproc_att_imx8qm),
@@ -313,6 +341,8 @@ static const struct imx_rproc_dcfg imx_rproc_cfg_imx8qxp = {
 	.method		= IMX_RPROC_SCU_API,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct imx_rproc_dcfg imx_rproc_cfg_imx8ulp = {
 	.att		= imx_rproc_att_imx8ulp,
 	.att_size	= ARRAY_SIZE(imx_rproc_att_imx8ulp),
@@ -359,10 +389,13 @@ static int imx_rproc_start(struct rproc *rproc)
 	struct arm_smccc_res res;
 	int ret;
 
+<<<<<<< HEAD
 	ret = imx_rproc_xtr_mbox_init(rproc);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	switch (dcfg->method) {
 	case IMX_RPROC_MMIO:
 		ret = regmap_update_bits(priv->regmap, dcfg->src_reg, dcfg->src_mask,
@@ -372,9 +405,12 @@ static int imx_rproc_start(struct rproc *rproc)
 		arm_smccc_smc(IMX_SIP_RPROC, IMX_SIP_RPROC_START, 0, 0, 0, 0, 0, 0, &res);
 		ret = res.a0;
 		break;
+<<<<<<< HEAD
 	case IMX_RPROC_SCU_API:
 		ret = imx_sc_pm_cpu_start(priv->ipc_handle, priv->rsrc_id, true, priv->entry);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -EOPNOTSUPP;
 	}
@@ -404,17 +440,23 @@ static int imx_rproc_stop(struct rproc *rproc)
 		if (res.a1)
 			dev_info(dev, "Not in wfi, force stopped\n");
 		break;
+<<<<<<< HEAD
 	case IMX_RPROC_SCU_API:
 		ret = imx_sc_pm_cpu_start(priv->ipc_handle, priv->rsrc_id, false, priv->entry);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -EOPNOTSUPP;
 	}
 
 	if (ret)
 		dev_err(dev, "Failed to stop remote core\n");
+<<<<<<< HEAD
 	else
 		imx_rproc_free_mbox(rproc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -429,6 +471,7 @@ static int imx_rproc_da_to_sys(struct imx_rproc *priv, u64 da,
 	for (i = 0; i < dcfg->att_size; i++) {
 		const struct imx_rproc_att *att = &dcfg->att[i];
 
+<<<<<<< HEAD
 		/*
 		 * Ignore entries not belong to current core:
 		 * i.MX8QM has dual general M4_[0,1] cores, M4_0's own entries
@@ -440,6 +483,8 @@ static int imx_rproc_da_to_sys(struct imx_rproc *priv, u64 da,
 				continue;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (da >= att->da && da + len < att->da + att->size) {
 			unsigned int offset = da - att->da;
 
@@ -600,6 +645,7 @@ static void imx_rproc_kick(struct rproc *rproc, int vqid)
 
 static int imx_rproc_attach(struct rproc *rproc)
 {
+<<<<<<< HEAD
 	return imx_rproc_xtr_mbox_init(rproc);
 }
 
@@ -616,6 +662,8 @@ static int imx_rproc_detach(struct rproc *rproc)
 
 	imx_rproc_free_mbox(rproc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -634,7 +682,10 @@ static struct resource_table *imx_rproc_get_loaded_rsc_table(struct rproc *rproc
 static const struct rproc_ops imx_rproc_ops = {
 	.prepare	= imx_rproc_prepare,
 	.attach		= imx_rproc_attach,
+<<<<<<< HEAD
 	.detach		= imx_rproc_detach,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.start		= imx_rproc_start,
 	.stop		= imx_rproc_stop,
 	.kick		= imx_rproc_kick,
@@ -745,6 +796,7 @@ static int imx_rproc_xtr_mbox_init(struct rproc *rproc)
 	struct device *dev = priv->dev;
 	struct mbox_client *cl;
 
+<<<<<<< HEAD
 	/*
 	 * stop() and detach() will free the mbox channels, so need
 	 * to request mbox channels in start() and attach().
@@ -757,6 +809,8 @@ static int imx_rproc_xtr_mbox_init(struct rproc *rproc)
 	if (priv->tx_ch && priv->rx_ch)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!of_get_property(dev->of_node, "mbox-names", NULL))
 		return 0;
 
@@ -786,6 +840,7 @@ static void imx_rproc_free_mbox(struct rproc *rproc)
 {
 	struct imx_rproc *priv = rproc->priv;
 
+<<<<<<< HEAD
 	if (priv->tx_ch) {
 		mbox_free_channel(priv->tx_ch);
 		priv->tx_ch = NULL;
@@ -899,6 +954,10 @@ static int imx_rproc_detach_pd(struct rproc *rproc)
 	}
 
 	return 0;
+=======
+	mbox_free_channel(priv->tx_ch);
+	mbox_free_channel(priv->rx_ch);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int imx_rproc_detect_mode(struct imx_rproc *priv)
@@ -910,7 +969,10 @@ static int imx_rproc_detect_mode(struct imx_rproc *priv)
 	struct arm_smccc_res res;
 	int ret;
 	u32 val;
+<<<<<<< HEAD
 	u8 pt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (dcfg->method) {
 	case IMX_RPROC_NONE:
@@ -921,6 +983,7 @@ static int imx_rproc_detect_mode(struct imx_rproc *priv)
 		if (res.a0)
 			priv->rproc->state = RPROC_DETACHED;
 		return 0;
+<<<<<<< HEAD
 	case IMX_RPROC_SCU_API:
 		ret = imx_scu_get_handle(&priv->ipc_handle);
 		if (ret)
@@ -976,6 +1039,8 @@ static int imx_rproc_detect_mode(struct imx_rproc *priv)
 		}
 
 		return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		break;
 	}
@@ -1080,7 +1145,11 @@ static int imx_rproc_probe(struct platform_device *pdev)
 
 	ret = imx_rproc_clk_enable(priv);
 	if (ret)
+<<<<<<< HEAD
 		goto err_put_scu;
+=======
+		goto err_put_mbox;
+>>>>>>> b7ba80a49124 (Commit)
 
 	INIT_WORK(&priv->rproc_work, imx_rproc_vq_work);
 
@@ -1097,8 +1166,11 @@ static int imx_rproc_probe(struct platform_device *pdev)
 
 err_put_clk:
 	clk_disable_unprepare(priv->clk);
+<<<<<<< HEAD
 err_put_scu:
 	imx_rproc_put_scu(rproc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_put_mbox:
 	imx_rproc_free_mbox(rproc);
 err_put_wkq:
@@ -1116,7 +1188,10 @@ static int imx_rproc_remove(struct platform_device *pdev)
 
 	clk_disable_unprepare(priv->clk);
 	rproc_del(rproc);
+<<<<<<< HEAD
 	imx_rproc_put_scu(rproc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	imx_rproc_free_mbox(rproc);
 	destroy_workqueue(priv->workqueue);
 	rproc_free(rproc);
@@ -1132,8 +1207,11 @@ static const struct of_device_id imx_rproc_of_match[] = {
 	{ .compatible = "fsl,imx8mm-cm4", .data = &imx_rproc_cfg_imx8mq },
 	{ .compatible = "fsl,imx8mn-cm7", .data = &imx_rproc_cfg_imx8mn },
 	{ .compatible = "fsl,imx8mp-cm7", .data = &imx_rproc_cfg_imx8mn },
+<<<<<<< HEAD
 	{ .compatible = "fsl,imx8qxp-cm4", .data = &imx_rproc_cfg_imx8qxp },
 	{ .compatible = "fsl,imx8qm-cm4", .data = &imx_rproc_cfg_imx8qm },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "fsl,imx8ulp-cm33", .data = &imx_rproc_cfg_imx8ulp },
 	{ .compatible = "fsl,imx93-cm33", .data = &imx_rproc_cfg_imx93 },
 	{},

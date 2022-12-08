@@ -40,6 +40,7 @@ static const struct clk_pll_characteristics plla_characteristics = {
 static const struct {
 	char *n;
 	char *p;
+<<<<<<< HEAD
 	unsigned long flags;
 	u8 id;
 } at91sam9g45_systemck[] = {
@@ -48,6 +49,11 @@ static const struct {
 	 * to keep it enabled in case there is no Linux consumer for it.
 	 */
 	{ .n = "ddrck", .p = "masterck_div", .id = 2, .flags = CLK_IS_CRITICAL },
+=======
+	u8 id;
+} at91sam9g45_systemck[] = {
+	{ .n = "ddrck", .p = "masterck_div", .id = 2 },
+>>>>>>> b7ba80a49124 (Commit)
 	{ .n = "uhpck", .p = "usbck",        .id = 6 },
 	{ .n = "pck0",  .p = "prog0",        .id = 8 },
 	{ .n = "pck1",  .p = "prog1",        .id = 9 },
@@ -203,8 +209,12 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
 	for (i = 0; i < ARRAY_SIZE(at91sam9g45_systemck); i++) {
 		hw = at91_clk_register_system(regmap, at91sam9g45_systemck[i].n,
 					      at91sam9g45_systemck[i].p,
+<<<<<<< HEAD
 					      at91sam9g45_systemck[i].id,
 					      at91sam9g45_systemck[i].flags);
+=======
+					      at91sam9g45_systemck[i].id);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(hw))
 			goto err_free;
 

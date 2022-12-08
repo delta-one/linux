@@ -5,27 +5,40 @@
 #ifdef __ASSEMBLY__
 
 #include <asm/asm-offsets.h>
+<<<<<<< HEAD
 #include <asm/sysreg.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_SHADOW_CALL_STACK
 	scs_sp	.req	x18
 
+<<<<<<< HEAD
 	.macro scs_load_current
 	get_current_task scs_sp
 	ldr	scs_sp, [scs_sp, #TSK_TI_SCS_SP]
+=======
+	.macro scs_load tsk
+	ldr	scs_sp, [\tsk, #TSK_TI_SCS_SP]
+>>>>>>> b7ba80a49124 (Commit)
 	.endm
 
 	.macro scs_save tsk
 	str	scs_sp, [\tsk, #TSK_TI_SCS_SP]
 	.endm
 #else
+<<<<<<< HEAD
 	.macro scs_load_current
+=======
+	.macro scs_load tsk
+>>>>>>> b7ba80a49124 (Commit)
 	.endm
 
 	.macro scs_save tsk
 	.endm
 #endif /* CONFIG_SHADOW_CALL_STACK */
 
+<<<<<<< HEAD
 
 #else
 
@@ -74,6 +87,8 @@ static inline void dynamic_scs_init(void) {}
 
 int scs_patch(const u8 eh_frame[], int size);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __ASSEMBLY __ */
 
 #endif /* _ASM_SCS_H */

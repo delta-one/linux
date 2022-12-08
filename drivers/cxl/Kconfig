@@ -104,12 +104,17 @@ config CXL_SUSPEND
 	depends on SUSPEND && CXL_MEM
 
 config CXL_REGION
+<<<<<<< HEAD
 	bool "CXL: Region Support"
+=======
+	bool
+>>>>>>> b7ba80a49124 (Commit)
 	default CXL_BUS
 	# For MAX_PHYSMEM_BITS
 	depends on SPARSEMEM
 	select MEMREGION
 	select GET_FREE_REGION
+<<<<<<< HEAD
 	help
 	  Enable the CXL core to enumerate and provision CXL regions. A CXL
 	  region is defined by one or more CXL expanders that decode a given
@@ -138,5 +143,7 @@ config CXL_REGION_INVALIDATION_TEST
 
 	  If unsure, or if this kernel is meant for production environments,
 	  say N.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 endif

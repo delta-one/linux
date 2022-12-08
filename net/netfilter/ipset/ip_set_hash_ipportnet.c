@@ -160,12 +160,20 @@ static int
 hash_ipportnet4_uadt(struct ip_set *set, struct nlattr *tb[],
 		     enum ipset_adt adt, u32 *lineno, u32 flags, bool retried)
 {
+<<<<<<< HEAD
 	struct hash_ipportnet4 *h = set->data;
+=======
+	const struct hash_ipportnet4 *h = set->data;
+>>>>>>> b7ba80a49124 (Commit)
 	ipset_adtfn adtfn = set->variant->adt[adt];
 	struct hash_ipportnet4_elem e = { .cidr = HOST_MASK - 1 };
 	struct ip_set_ext ext = IP_SET_INIT_UEXT(set);
 	u32 ip = 0, ip_to = 0, p = 0, port, port_to;
+<<<<<<< HEAD
 	u32 ip2_from = 0, ip2_to = 0, ip2, i = 0;
+=======
+	u32 ip2_from = 0, ip2_to = 0, ip2;
+>>>>>>> b7ba80a49124 (Commit)
 	bool with_ports = false;
 	u8 cidr;
 	int ret;
@@ -253,6 +261,12 @@ hash_ipportnet4_uadt(struct ip_set *set, struct nlattr *tb[],
 			swap(port, port_to);
 	}
 
+<<<<<<< HEAD
+=======
+	if (((u64)ip_to - ip + 1)*(port_to - port + 1) > IPSET_MAX_RANGE)
+		return -ERANGE;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ip2_to = ip2_from;
 	if (tb[IPSET_ATTR_IP2_TO]) {
 		ret = ip_set_get_hostipaddr4(tb[IPSET_ATTR_IP2_TO], &ip2_to);
@@ -279,6 +293,7 @@ hash_ipportnet4_uadt(struct ip_set *set, struct nlattr *tb[],
 		for (; p <= port_to; p++) {
 			e.port = htons(p);
 			do {
+<<<<<<< HEAD
 				i++;
 				e.ip2 = htonl(ip2);
 				ip2 = ip_set_range_to_cidr(ip2, ip2_to, &cidr);
@@ -288,6 +303,11 @@ hash_ipportnet4_uadt(struct ip_set *set, struct nlattr *tb[],
 								  &e);
 					return -ERANGE;
 				}
+=======
+				e.ip2 = htonl(ip2);
+				ip2 = ip_set_range_to_cidr(ip2, ip2_to, &cidr);
+				e.cidr = cidr - 1;
+>>>>>>> b7ba80a49124 (Commit)
 				ret = adtfn(set, &e, &ext, &ext, flags);
 
 				if (ret && !ip_set_eexist(ret, flags))

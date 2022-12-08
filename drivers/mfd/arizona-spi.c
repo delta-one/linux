@@ -282,7 +282,11 @@ static const struct of_device_id arizona_spi_of_match[] = {
 static struct spi_driver arizona_spi_driver = {
 	.driver = {
 		.name	= "arizona",
+<<<<<<< HEAD
 		.pm	= pm_ptr(&arizona_pm_ops),
+=======
+		.pm	= &arizona_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table	= of_match_ptr(arizona_spi_of_match),
 		.acpi_match_table = ACPI_PTR(arizona_acpi_match),
 	},

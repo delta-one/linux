@@ -48,9 +48,19 @@ static int seqbuf_read(struct seqbuf *seqbuf, void *buf, size_t nbyte)
 	return seqbuf_status(seqbuf);
 }
 
+<<<<<<< HEAD
 static int seqbuf_read_u32(struct seqbuf *seqbuf, u32 *v)
 {
 	return seqbuf_read(seqbuf, v, 4);
+=======
+static int seqbuf_read_u32(struct seqbuf *seqbuf, uint32_t *v)
+{
+	int err;
+
+	err = seqbuf_read(seqbuf, v, 4);
+	*v = le32_to_cpu(*v);
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int seqbuf_read_str(struct seqbuf *seqbuf, const char **str)
@@ -105,10 +115,17 @@ out:
 }
 
 static int mrq_debug_open(struct tegra_bpmp *bpmp, const char *name,
+<<<<<<< HEAD
 			  u32 *fd, u32 *len, bool write)
 {
 	struct mrq_debug_request req = {
 		.cmd = write ? CMD_DEBUG_OPEN_WO : CMD_DEBUG_OPEN_RO,
+=======
+			  uint32_t *fd, uint32_t *len, bool write)
+{
+	struct mrq_debug_request req = {
+		.cmd = cpu_to_le32(write ? CMD_DEBUG_OPEN_WO : CMD_DEBUG_OPEN_RO),
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	struct mrq_debug_response resp;
 	struct tegra_bpmp_message msg = {
@@ -143,10 +160,17 @@ static int mrq_debug_open(struct tegra_bpmp *bpmp, const char *name,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mrq_debug_close(struct tegra_bpmp *bpmp, u32 fd)
 {
 	struct mrq_debug_request req = {
 		.cmd = CMD_DEBUG_CLOSE,
+=======
+static int mrq_debug_close(struct tegra_bpmp *bpmp, uint32_t fd)
+{
+	struct mrq_debug_request req = {
+		.cmd = cpu_to_le32(CMD_DEBUG_CLOSE),
+>>>>>>> b7ba80a49124 (Commit)
 		.frd = {
 			.fd = fd,
 		},
@@ -175,10 +199,17 @@ static int mrq_debug_close(struct tegra_bpmp *bpmp, u32 fd)
 }
 
 static int mrq_debug_read(struct tegra_bpmp *bpmp, const char *name,
+<<<<<<< HEAD
 			  char *data, size_t sz_data, u32 *nbytes)
 {
 	struct mrq_debug_request req = {
 		.cmd = CMD_DEBUG_READ,
+=======
+			  char *data, size_t sz_data, uint32_t *nbytes)
+{
+	struct mrq_debug_request req = {
+		.cmd = cpu_to_le32(CMD_DEBUG_READ),
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	struct mrq_debug_response resp;
 	struct tegra_bpmp_message msg = {
@@ -192,7 +223,11 @@ static int mrq_debug_read(struct tegra_bpmp *bpmp, const char *name,
 			.size = sizeof(resp),
 		},
 	};
+<<<<<<< HEAD
 	u32 fd = 0, len = 0;
+=======
+	uint32_t fd = 0, len = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int remaining, err;
 
 	mutex_lock(&bpmp_debug_lock);
@@ -241,7 +276,11 @@ static int mrq_debug_write(struct tegra_bpmp *bpmp, const char *name,
 			   uint8_t *data, size_t sz_data)
 {
 	struct mrq_debug_request req = {
+<<<<<<< HEAD
 		.cmd = CMD_DEBUG_WRITE
+=======
+		.cmd = cpu_to_le32(CMD_DEBUG_WRITE)
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	struct mrq_debug_response resp;
 	struct tegra_bpmp_message msg = {
@@ -255,7 +294,11 @@ static int mrq_debug_write(struct tegra_bpmp *bpmp, const char *name,
 			.size = sizeof(resp),
 		},
 	};
+<<<<<<< HEAD
 	u32 fd = 0, len = 0;
+=======
+	uint32_t fd = 0, len = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t remaining;
 	int err;
 
@@ -304,7 +347,11 @@ static int bpmp_debug_show(struct seq_file *m, void *p)
 	char fnamebuf[256];
 	const char *filename;
 	struct mrq_debug_request req = {
+<<<<<<< HEAD
 		.cmd = CMD_DEBUG_READ,
+=======
+		.cmd = cpu_to_le32(CMD_DEBUG_READ),
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	struct mrq_debug_response resp;
 	struct tegra_bpmp_message msg = {
@@ -318,7 +365,11 @@ static int bpmp_debug_show(struct seq_file *m, void *p)
 			.size = sizeof(resp),
 		},
 	};
+<<<<<<< HEAD
 	u32 fd = 0, len = 0;
+=======
+	uint32_t fd = 0, len = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int remaining, err;
 
 	filename = get_filename(bpmp, file, fnamebuf, sizeof(fnamebuf));
@@ -402,8 +453,13 @@ static int bpmp_populate_debugfs_inband(struct tegra_bpmp *bpmp,
 {
 	const size_t pathlen = SZ_256;
 	const size_t bufsize = SZ_16K;
+<<<<<<< HEAD
 	struct dentry *dentry;
 	u32 dsize, attrs = 0;
+=======
+	uint32_t dsize, attrs = 0;
+	struct dentry *dentry;
+>>>>>>> b7ba80a49124 (Commit)
 	struct seqbuf seqbuf;
 	char *buf, *pathbuf;
 	const char *name;
@@ -483,12 +539,21 @@ static int mrq_debugfs_read(struct tegra_bpmp *bpmp,
 			    size_t *nbytes)
 {
 	struct mrq_debugfs_request req = {
+<<<<<<< HEAD
 		.cmd = CMD_DEBUGFS_READ,
 		.fop = {
 			.fnameaddr = (u32)name,
 			.fnamelen = (u32)sz_name,
 			.dataaddr = (u32)data,
 			.datalen = (u32)sz_data,
+=======
+		.cmd = cpu_to_le32(CMD_DEBUGFS_READ),
+		.fop = {
+			.fnameaddr = cpu_to_le32((uint32_t)name),
+			.fnamelen = cpu_to_le32((uint32_t)sz_name),
+			.dataaddr = cpu_to_le32((uint32_t)data),
+			.datalen = cpu_to_le32((uint32_t)sz_data),
+>>>>>>> b7ba80a49124 (Commit)
 		},
 	};
 	struct mrq_debugfs_response resp;
@@ -521,12 +586,21 @@ static int mrq_debugfs_write(struct tegra_bpmp *bpmp,
 			     dma_addr_t data, size_t sz_data)
 {
 	const struct mrq_debugfs_request req = {
+<<<<<<< HEAD
 		.cmd = CMD_DEBUGFS_WRITE,
 		.fop = {
 			.fnameaddr = (u32)name,
 			.fnamelen = (u32)sz_name,
 			.dataaddr = (u32)data,
 			.datalen = (u32)sz_data,
+=======
+		.cmd = cpu_to_le32(CMD_DEBUGFS_WRITE),
+		.fop = {
+			.fnameaddr = cpu_to_le32((uint32_t)name),
+			.fnamelen = cpu_to_le32((uint32_t)sz_name),
+			.dataaddr = cpu_to_le32((uint32_t)data),
+			.datalen = cpu_to_le32((uint32_t)sz_data),
+>>>>>>> b7ba80a49124 (Commit)
 		},
 	};
 	struct tegra_bpmp_message msg = {
@@ -544,10 +618,17 @@ static int mrq_debugfs_dumpdir(struct tegra_bpmp *bpmp, dma_addr_t addr,
 			       size_t size, size_t *nbytes)
 {
 	const struct mrq_debugfs_request req = {
+<<<<<<< HEAD
 		.cmd = CMD_DEBUGFS_DUMPDIR,
 		.dumpdir = {
 			.dataaddr = (u32)addr,
 			.datalen = (u32)size,
+=======
+		.cmd = cpu_to_le32(CMD_DEBUGFS_DUMPDIR),
+		.dumpdir = {
+			.dataaddr = cpu_to_le32((uint32_t)addr),
+			.datalen = cpu_to_le32((uint32_t)size),
+>>>>>>> b7ba80a49124 (Commit)
 		},
 	};
 	struct mrq_debugfs_response resp;
@@ -684,10 +765,17 @@ static const struct file_operations debugfs_fops = {
 };
 
 static int bpmp_populate_dir(struct tegra_bpmp *bpmp, struct seqbuf *seqbuf,
+<<<<<<< HEAD
 			     struct dentry *parent, u32 depth)
 {
 	int err;
 	u32 d, t;
+=======
+			     struct dentry *parent, uint32_t depth)
+{
+	int err;
+	uint32_t d, t;
+>>>>>>> b7ba80a49124 (Commit)
 	const char *name;
 	struct dentry *dentry;
 

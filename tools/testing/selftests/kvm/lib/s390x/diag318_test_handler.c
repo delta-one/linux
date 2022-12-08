@@ -35,7 +35,12 @@ static uint64_t diag318_handler(void)
 	vcpu_run(vcpu);
 	run = vcpu->run;
 
+<<<<<<< HEAD
 	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_S390_SIEIC);
+=======
+	TEST_ASSERT(run->exit_reason == KVM_EXIT_S390_SIEIC,
+		    "DIAGNOSE 0x0318 instruction was not intercepted");
+>>>>>>> b7ba80a49124 (Commit)
 	TEST_ASSERT(run->s390_sieic.icptcode == ICPT_INSTRUCTION,
 		    "Unexpected intercept code: 0x%x", run->s390_sieic.icptcode);
 	TEST_ASSERT((run->s390_sieic.ipa & 0xff00) == IPA0_DIAG,

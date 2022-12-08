@@ -46,7 +46,11 @@ that is built with ``CONFIG_DAMON_RECLAIM=y``.
 To let sysadmins enable or disable it and tune for the given system,
 DAMON_RECLAIM utilizes module parameters.  That is, you can put
 ``damon_reclaim.<parameter>=<value>`` on the kernel boot command line or write
+<<<<<<< HEAD
 proper values to ``/sys/module/damon_reclaim/parameters/<parameter>`` files.
+=======
+proper values to ``/sys/modules/damon_reclaim/parameters/<parameter>`` files.
+>>>>>>> b7ba80a49124 (Commit)
 
 Below are the description of each parameter.
 
@@ -205,6 +209,7 @@ The end physical address of memory region that DAMON_RECLAIM will do work
 against.  That is, DAMON_RECLAIM will find cold memory regions in this region
 and reclaims.  By default, biggest System RAM is used as the region.
 
+<<<<<<< HEAD
 skip_anon
 ---------
 
@@ -214,6 +219,8 @@ If this parameter is set as ``Y``, DAMON_RECLAIM does not reclaim anonymous
 pages.  By default, ``N``.
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 kdamond_pid
 -----------
 
@@ -260,7 +267,11 @@ therefore the free memory rate becomes lower than 20%, it asks DAMON_RECLAIM to
 do nothing again, so that we can fall back to the LRU-list based page
 granularity reclamation. ::
 
+<<<<<<< HEAD
     # cd /sys/module/damon_reclaim/parameters
+=======
+    # cd /sys/modules/damon_reclaim/parameters
+>>>>>>> b7ba80a49124 (Commit)
     # echo 30000000 > min_age
     # echo $((1 * 1024 * 1024 * 1024)) > quota_sz
     # echo 1000 > quota_reset_interval_ms

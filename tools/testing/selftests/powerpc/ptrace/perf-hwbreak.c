@@ -17,11 +17,16 @@
  * Copyright (C) 2018 Michael Neuling, IBM Corporation.
  */
 
+<<<<<<< HEAD
 #define _GNU_SOURCE
 
 #include <unistd.h>
 #include <assert.h>
 #include <sched.h>
+=======
+#include <unistd.h>
+#include <assert.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -29,7 +34,10 @@
 #include <sys/ioctl.h>
 #include <sys/wait.h>
 #include <sys/ptrace.h>
+<<<<<<< HEAD
 #include <sys/resource.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <sys/sysinfo.h>
 #include <asm/ptrace.h>
 #include <elf.h>
@@ -144,6 +152,7 @@ static void disable_fds(int *fd, int n)
 
 static int perf_systemwide_event_open(int *fd, __u32 type, __u64 addr, __u64 len)
 {
+<<<<<<< HEAD
 	int i, ncpus, cpu, ret = 0;
 	struct rlimit rlim;
 	cpu_set_t *mask;
@@ -197,6 +206,19 @@ static int perf_systemwide_event_open(int *fd, __u32 type, __u64 addr, __u64 len
 done:
 	CPU_FREE(mask);
 	return ret;
+=======
+	int i = 0;
+
+	/* Assume online processors are 0 to nprocs for simplisity */
+	for (i = 0; i < nprocs; i++) {
+		fd[i] = perf_cpu_event_open(i, type, addr, len);
+		if (fd[i] < 0) {
+			close_fds(fd, i);
+			return fd[i];
+		}
+	}
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool breakpoint_test(int len)
@@ -589,12 +611,23 @@ static int test_syswide_multi_diff_addr(void)
 	int ret;
 
 	ret = perf_systemwide_event_open(fd1, HW_BREAKPOINT_RW, (__u64)&a, (__u64)sizeof(a));
+<<<<<<< HEAD
 	if (ret)
 		exit(EXIT_FAILURE);
+=======
+	if (ret) {
+		perror("perf_systemwide_event_open");
+		exit(EXIT_FAILURE);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = perf_systemwide_event_open(fd2, HW_BREAKPOINT_RW, (__u64)&b, (__u64)sizeof(b));
 	if (ret) {
 		close_fds(fd1, nprocs);
+<<<<<<< HEAD
+=======
+		perror("perf_systemwide_event_open");
+>>>>>>> b7ba80a49124 (Commit)
 		exit(EXIT_FAILURE);
 	}
 
@@ -633,12 +666,23 @@ static int test_syswide_multi_same_addr(void)
 	int ret;
 
 	ret = perf_systemwide_event_open(fd1, HW_BREAKPOINT_RW, (__u64)&a, (__u64)sizeof(a));
+<<<<<<< HEAD
 	if (ret)
 		exit(EXIT_FAILURE);
+=======
+	if (ret) {
+		perror("perf_systemwide_event_open");
+		exit(EXIT_FAILURE);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = perf_systemwide_event_open(fd2, HW_BREAKPOINT_RW, (__u64)&a, (__u64)sizeof(a));
 	if (ret) {
 		close_fds(fd1, nprocs);
+<<<<<<< HEAD
+=======
+		perror("perf_systemwide_event_open");
+>>>>>>> b7ba80a49124 (Commit)
 		exit(EXIT_FAILURE);
 	}
 
@@ -677,12 +721,23 @@ static int test_syswide_multi_diff_addr_ro_wo(void)
 	int ret;
 
 	ret = perf_systemwide_event_open(fd1, HW_BREAKPOINT_W, (__u64)&a, (__u64)sizeof(a));
+<<<<<<< HEAD
 	if (ret)
 		exit(EXIT_FAILURE);
+=======
+	if (ret) {
+		perror("perf_systemwide_event_open");
+		exit(EXIT_FAILURE);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = perf_systemwide_event_open(fd2, HW_BREAKPOINT_R, (__u64)&b, (__u64)sizeof(b));
 	if (ret) {
 		close_fds(fd1, nprocs);
+<<<<<<< HEAD
+=======
+		perror("perf_systemwide_event_open");
+>>>>>>> b7ba80a49124 (Commit)
 		exit(EXIT_FAILURE);
 	}
 
@@ -721,12 +776,23 @@ static int test_syswide_multi_same_addr_ro_wo(void)
 	int ret;
 
 	ret = perf_systemwide_event_open(fd1, HW_BREAKPOINT_W, (__u64)&a, (__u64)sizeof(a));
+<<<<<<< HEAD
 	if (ret)
 		exit(EXIT_FAILURE);
+=======
+	if (ret) {
+		perror("perf_systemwide_event_open");
+		exit(EXIT_FAILURE);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = perf_systemwide_event_open(fd2, HW_BREAKPOINT_R, (__u64)&a, (__u64)sizeof(a));
 	if (ret) {
 		close_fds(fd1, nprocs);
+<<<<<<< HEAD
+=======
+		perror("perf_systemwide_event_open");
+>>>>>>> b7ba80a49124 (Commit)
 		exit(EXIT_FAILURE);
 	}
 

@@ -140,8 +140,12 @@ struct dc_vbios_funcs {
 	enum bp_result (*enable_lvtma_control)(
 		struct dc_bios *bios,
 		uint8_t uc_pwr_on,
+<<<<<<< HEAD
 		uint8_t panel_instance,
 		uint8_t bypass_panel_control_wait);
+=======
+		uint8_t panel_instance);
+>>>>>>> b7ba80a49124 (Commit)
 
 	enum bp_result (*get_soc_bb_info)(
 		struct dc_bios *dcb,

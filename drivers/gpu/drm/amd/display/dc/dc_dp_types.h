@@ -27,7 +27,10 @@
 #define DC_DP_TYPES_H
 
 #include "os_types.h"
+<<<<<<< HEAD
 #include "dc_ddc_types.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum dc_lane_count {
 	LANE_COUNT_UNKNOWN = 0,
@@ -150,6 +153,10 @@ struct dc_link_settings {
 	enum dc_link_spread link_spread;
 	bool use_link_rate_set;
 	uint8_t link_rate_set;
+<<<<<<< HEAD
+=======
+	bool dpcd_source_device_specific_field_support;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 union dc_dp_ffe_preset {
@@ -362,10 +369,20 @@ enum dpcd_downstream_port_detailed_type {
 union dwnstream_port_caps_byte2 {
 	struct {
 		uint8_t MAX_BITS_PER_COLOR_COMPONENT:2;
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+>>>>>>> b7ba80a49124 (Commit)
 		uint8_t MAX_ENCODED_LINK_BW_SUPPORT:3;
 		uint8_t SOURCE_CONTROL_MODE_SUPPORT:1;
 		uint8_t CONCURRENT_LINK_BRING_UP_SEQ_SUPPORT:1;
 		uint8_t RESERVED:1;
+<<<<<<< HEAD
+=======
+#else
+		uint8_t RESERVED:6;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	} bits;
 	uint8_t raw;
 };
@@ -403,6 +420,10 @@ union dwnstream_port_caps_byte3_hdmi {
 	uint8_t raw;
 };
 
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+>>>>>>> b7ba80a49124 (Commit)
 union hdmi_sink_encoded_link_bw_support {
 	struct {
 		uint8_t HDMI_SINK_ENCODED_LINK_BW_SUPPORT:3;
@@ -424,6 +445,10 @@ union hdmi_encoded_link_bw {
 	} bits;
 	uint8_t raw;
 };
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 /*4-byte structure for detailed capabilities of a down-stream port
 (DP-to-TMDS converter).*/
@@ -503,11 +528,15 @@ union down_spread_ctrl {
 	1 = Main link signal is downspread <= 0.5%
 	with frequency in the range of 30kHz ~ 33kHz*/
 		uint8_t SPREAD_AMP:1;
+<<<<<<< HEAD
 		uint8_t RESERVED2:1;/*Bit 5 = RESERVED. Read all 0s*/
 	/* Bit 6 = FIXED_VTOTAL_AS_SDP_EN_IN_PR_ACTIVE.
 	0 = FIXED_VTOTAL_AS_SDP_EN_IN_PR_ACTIVE is not enabled by the Source device (default)
 	1 = FIXED_VTOTAL_AS_SDP_EN_IN_PR_ACTIVE is enabled by Source device */
 		uint8_t FIXED_VTOTAL_AS_SDP_EN_IN_PR_ACTIVE:1;
+=======
+		uint8_t RESERVED2:2;/*Bit 6:5 = RESERVED. Read all 0s*/
+>>>>>>> b7ba80a49124 (Commit)
 	/*Bit 7 = MSA_TIMING_PAR_IGNORE_EN
 	0 = Source device will send valid data for the MSA Timing Params
 	1 = Source device may send invalid data for these MSA Timing Params*/
@@ -863,6 +892,7 @@ struct psr_caps {
 	unsigned int psr_power_opt_flag;
 };
 
+<<<<<<< HEAD
 union dpcd_dprx_feature_enumeration_list_cont_1 {
 	struct {
 		uint8_t ADAPTIVE_SYNC_SDP_SUPPORT:1;
@@ -878,6 +908,8 @@ struct adaptive_sync_caps {
 	union dpcd_dprx_feature_enumeration_list_cont_1 dp_adap_sync_caps;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Length of router topology ID read from DPCD in bytes. */
 #define DPCD_USB4_TOPOLOGY_ID_LEN 5
 
@@ -921,6 +953,15 @@ struct dpcd_usb4_dp_tunneling_info {
 #ifndef DP_DFP_CAPABILITY_EXTENSION_SUPPORT
 #define DP_DFP_CAPABILITY_EXTENSION_SUPPORT		0x0A3
 #endif
+<<<<<<< HEAD
+=======
+#ifndef DP_LINK_SQUARE_PATTERN
+#define DP_LINK_SQUARE_PATTERN				0x10F
+#endif
+#ifndef DP_CABLE_ATTRIBUTES_UPDATED_BY_DPTX
+#define DP_CABLE_ATTRIBUTES_UPDATED_BY_DPTX		0x110
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef DP_DSC_CONFIGURATION
 #define DP_DSC_CONFIGURATION				0x161
 #endif
@@ -933,6 +974,12 @@ struct dpcd_usb4_dp_tunneling_info {
 #ifndef DP_128b_132b_TRAINING_AUX_RD_INTERVAL
 #define DP_128b_132b_TRAINING_AUX_RD_INTERVAL		0x2216
 #endif
+<<<<<<< HEAD
+=======
+#ifndef DP_CABLE_ATTRIBUTES_UPDATED_BY_DPRX
+#define DP_CABLE_ATTRIBUTES_UPDATED_BY_DPRX		0x2217
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef DP_TEST_264BIT_CUSTOM_PATTERN_7_0
 #define DP_TEST_264BIT_CUSTOM_PATTERN_7_0		0X2230
 #endif
@@ -976,6 +1023,10 @@ struct dpcd_usb4_dp_tunneling_info {
 #define DP_INTRA_HOP_AUX_REPLY_INDICATION		(1 << 3)
 /* TODO - Use DRM header to replace above once available */
 #endif // DP_INTRA_HOP_AUX_REPLY_INDICATION
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 union dp_main_line_channel_coding_cap {
 	struct {
 		uint8_t DP_8b_10b_SUPPORTED	:1;
@@ -1110,6 +1161,7 @@ struct edp_psr_info {
 	uint8_t force_psrsu_cap;
 };
 
+<<<<<<< HEAD
 struct dprx_states {
 	bool cable_id_written;
 };
@@ -1402,4 +1454,6 @@ struct dp_trace {
 #ifndef REQUESTED_BW
 #define REQUESTED_BW					0xE0031 /* 1.4a */
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* DC_DP_TYPES_H */

@@ -29,8 +29,11 @@ will feature a character device node on which ioctls can be called to
 
 -  negotiate image formats on individual pads
 
+<<<<<<< HEAD
 -  inspect and modify internal data routing between pads of the same entity
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Sub-device character device nodes, conventionally named
 ``/dev/v4l-subdev*``, use major number 81.
 
@@ -406,8 +409,11 @@ pixel array is not rectangular but cross-shaped or round. The maximum
 size may also be smaller than the BOUNDS rectangle.
 
 
+<<<<<<< HEAD
 .. _format-propagation:
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Order of configuration and format propagation
 ---------------------------------------------
 
@@ -505,6 +511,7 @@ source pads.
     :maxdepth: 1
 
     subdev-formats
+<<<<<<< HEAD
 
 Streams, multiplexed media pads and internal routing
 ----------------------------------------------------
@@ -667,3 +674,5 @@ A common way to accomplish this is to start from the sensors and propagate the
 configurations along the stream towards the receiver,
 using :ref:`VIDIOC_SUBDEV_S_FMT <VIDIOC_SUBDEV_G_FMT>` ioctls to configure each
 stream endpoint in each sub-device.
+=======
+>>>>>>> b7ba80a49124 (Commit)

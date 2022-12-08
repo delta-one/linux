@@ -542,35 +542,59 @@ cifs_is_path_accessible(const unsigned int xid, struct cifs_tcon *tcon,
 	return rc;
 }
 
+<<<<<<< HEAD
 static int cifs_query_path_info(const unsigned int xid, struct cifs_tcon *tcon,
 				struct cifs_sb_info *cifs_sb, const char *full_path,
 				struct cifs_open_info_data *data, bool *adjustTZ, bool *symlink)
 {
 	int rc;
 	FILE_ALL_INFO fi = {};
+=======
+static int
+cifs_query_path_info(const unsigned int xid, struct cifs_tcon *tcon,
+		     struct cifs_sb_info *cifs_sb, const char *full_path,
+		     FILE_ALL_INFO *data, bool *adjustTZ, bool *symlink)
+{
+	int rc;
+>>>>>>> b7ba80a49124 (Commit)
 
 	*symlink = false;
 
 	/* could do find first instead but this returns more info */
+<<<<<<< HEAD
 	rc = CIFSSMBQPathInfo(xid, tcon, full_path, &fi, 0 /* not legacy */, cifs_sb->local_nls,
 			      cifs_remap(cifs_sb));
+=======
+	rc = CIFSSMBQPathInfo(xid, tcon, full_path, data, 0 /* not legacy */,
+			      cifs_sb->local_nls, cifs_remap(cifs_sb));
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * BB optimize code so we do not make the above call when server claims
 	 * no NT SMB support and the above call failed at least once - set flag
 	 * in tcon or mount.
 	 */
 	if ((rc == -EOPNOTSUPP) || (rc == -EINVAL)) {
+<<<<<<< HEAD
 		rc = SMBQueryInformation(xid, tcon, full_path, &fi, cifs_sb->local_nls,
+=======
+		rc = SMBQueryInformation(xid, tcon, full_path, data,
+					 cifs_sb->local_nls,
+>>>>>>> b7ba80a49124 (Commit)
 					 cifs_remap(cifs_sb));
 		*adjustTZ = true;
 	}
 
+<<<<<<< HEAD
 	if (!rc) {
+=======
+	if (!rc && (le32_to_cpu(data->Attributes) & ATTR_REPARSE)) {
+>>>>>>> b7ba80a49124 (Commit)
 		int tmprc;
 		int oplock = 0;
 		struct cifs_fid fid;
 		struct cifs_open_parms oparms;
 
+<<<<<<< HEAD
 		move_cifs_info_to_smb2(&data->fi, &fi);
 
 		if (!(le32_to_cpu(fi.Attributes) & ATTR_REPARSE))
@@ -585,6 +609,16 @@ static int cifs_query_path_info(const unsigned int xid, struct cifs_tcon *tcon,
 			.path = full_path,
 			.fid = &fid,
 		};
+=======
+		oparms.tcon = tcon;
+		oparms.cifs_sb = cifs_sb;
+		oparms.desired_access = FILE_READ_ATTRIBUTES;
+		oparms.create_options = cifs_create_options(cifs_sb, 0);
+		oparms.disposition = FILE_OPEN;
+		oparms.path = full_path;
+		oparms.fid = &fid;
+		oparms.reconnect = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Need to check if this is a symbolic link or not */
 		tmprc = CIFS_open(xid, &oparms, &oplock, NULL);
@@ -597,9 +631,16 @@ static int cifs_query_path_info(const unsigned int xid, struct cifs_tcon *tcon,
 	return rc;
 }
 
+<<<<<<< HEAD
 static int cifs_get_srv_inum(const unsigned int xid, struct cifs_tcon *tcon,
 			     struct cifs_sb_info *cifs_sb, const char *full_path,
 			     u64 *uniqueid, struct cifs_open_info_data *unused)
+=======
+static int
+cifs_get_srv_inum(const unsigned int xid, struct cifs_tcon *tcon,
+		  struct cifs_sb_info *cifs_sb, const char *full_path,
+		  u64 *uniqueid, FILE_ALL_INFO *data)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/*
 	 * We can not use the IndexNumber field by default from Windows or
@@ -617,6 +658,7 @@ static int cifs_get_srv_inum(const unsigned int xid, struct cifs_tcon *tcon,
 				     cifs_remap(cifs_sb));
 }
 
+<<<<<<< HEAD
 static int cifs_query_file_info(const unsigned int xid, struct cifs_tcon *tcon,
 				struct cifsFileInfo *cfile, struct cifs_open_info_data *data)
 {
@@ -633,6 +675,13 @@ static int cifs_query_file_info(const unsigned int xid, struct cifs_tcon *tcon,
 	if (!rc)
 		move_cifs_info_to_smb2(&data->fi, &fi);
 	return rc;
+=======
+static int
+cifs_query_file_info(const unsigned int xid, struct cifs_tcon *tcon,
+		     struct cifs_fid *fid, FILE_ALL_INFO *data)
+{
+	return CIFSSMBQFileInfo(xid, tcon, fid->netfid, data);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -717,6 +766,7 @@ cifs_mkdir_setinfo(struct inode *inode, const char *full_path,
 		cifsInode->cifsAttrs = dosattrs;
 }
 
+<<<<<<< HEAD
 static int cifs_open_file(const unsigned int xid, struct cifs_open_parms *oparms, __u32 *oplock,
 			  void *buf)
 {
@@ -739,6 +789,21 @@ static int cifs_open_file(const unsigned int xid, struct cifs_open_parms *oparms
 		move_cifs_info_to_smb2(&data->fi, &fi);
 
 	return rc;
+=======
+static int
+cifs_open_file(const unsigned int xid, struct cifs_open_parms *oparms,
+	       __u32 *oplock, FILE_ALL_INFO *buf)
+{
+	if (!(oparms->tcon->ses->capabilities & CAP_NT_SMBS))
+		return SMBLegacyOpen(xid, oparms->tcon, oparms->path,
+				     oparms->disposition,
+				     oparms->desired_access,
+				     oparms->create_options,
+				     &oparms->fid->netfid, oplock, buf,
+				     oparms->cifs_sb->local_nls,
+				     cifs_remap(oparms->cifs_sb));
+	return CIFS_open(xid, oparms, oplock, buf);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -824,6 +889,7 @@ smb_set_file_info(struct inode *inode, const char *full_path,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	oparms = (struct cifs_open_parms) {
 		.tcon = tcon,
 		.cifs_sb = cifs_sb,
@@ -833,6 +899,16 @@ smb_set_file_info(struct inode *inode, const char *full_path,
 		.path = full_path,
 		.fid = &fid,
 	};
+=======
+	oparms.tcon = tcon;
+	oparms.cifs_sb = cifs_sb;
+	oparms.desired_access = SYNCHRONIZE | FILE_WRITE_ATTRIBUTES;
+	oparms.create_options = cifs_create_options(cifs_sb, CREATE_NOT_DIR);
+	oparms.disposition = FILE_OPEN;
+	oparms.path = full_path;
+	oparms.fid = &fid;
+	oparms.reconnect = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cifs_dbg(FYI, "calling SetFileInfo since SetPathInfo for times not supported by this server\n");
 	rc = CIFS_open(xid, &oparms, &oplock, NULL);
@@ -1000,6 +1076,7 @@ cifs_query_symlink(const unsigned int xid, struct cifs_tcon *tcon,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	oparms = (struct cifs_open_parms) {
 		.tcon = tcon,
 		.cifs_sb = cifs_sb,
@@ -1010,6 +1087,17 @@ cifs_query_symlink(const unsigned int xid, struct cifs_tcon *tcon,
 		.path = full_path,
 		.fid = &fid,
 	};
+=======
+	oparms.tcon = tcon;
+	oparms.cifs_sb = cifs_sb;
+	oparms.desired_access = FILE_READ_ATTRIBUTES;
+	oparms.create_options = cifs_create_options(cifs_sb,
+						    OPEN_REPARSE_POINT);
+	oparms.disposition = FILE_OPEN;
+	oparms.path = full_path;
+	oparms.fid = &fid;
+	oparms.reconnect = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = CIFS_open(xid, &oparms, &oplock, NULL);
 	if (rc)
@@ -1064,7 +1152,11 @@ cifs_make_node(unsigned int xid, struct inode *inode,
 	struct cifs_sb_info *cifs_sb = CIFS_SB(inode->i_sb);
 	struct inode *newinode = NULL;
 	int rc = -EPERM;
+<<<<<<< HEAD
 	struct cifs_open_info_data buf = {};
+=======
+	FILE_ALL_INFO *buf = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	struct cifs_io_parms io_parms;
 	__u32 oplock = 0;
 	struct cifs_fid fid;
@@ -1096,14 +1188,22 @@ cifs_make_node(unsigned int xid, struct inode *inode,
 					    cifs_sb->local_nls,
 					    cifs_remap(cifs_sb));
 		if (rc)
+<<<<<<< HEAD
 			return rc;
+=======
+			goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 		rc = cifs_get_inode_info_unix(&newinode, full_path,
 					      inode->i_sb, xid);
 
 		if (rc == 0)
 			d_instantiate(dentry, newinode);
+<<<<<<< HEAD
 		return rc;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -1111,6 +1211,7 @@ cifs_make_node(unsigned int xid, struct inode *inode,
 	 * support block and char device (no socket & fifo)
 	 */
 	if (!(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_UNX_EMUL))
+<<<<<<< HEAD
 		return rc;
 
 	if (!S_ISCHR(mode) && !S_ISBLK(mode))
@@ -1128,26 +1229,64 @@ cifs_make_node(unsigned int xid, struct inode *inode,
 		.path = full_path,
 		.fid = &fid,
 	};
+=======
+		goto out;
+
+	if (!S_ISCHR(mode) && !S_ISBLK(mode))
+		goto out;
+
+	cifs_dbg(FYI, "sfu compat create special file\n");
+
+	buf = kmalloc(sizeof(FILE_ALL_INFO), GFP_KERNEL);
+	if (buf == NULL) {
+		rc = -ENOMEM;
+		goto out;
+	}
+
+	oparms.tcon = tcon;
+	oparms.cifs_sb = cifs_sb;
+	oparms.desired_access = GENERIC_WRITE;
+	oparms.create_options = cifs_create_options(cifs_sb, CREATE_NOT_DIR |
+						    CREATE_OPTION_SPECIAL);
+	oparms.disposition = FILE_CREATE;
+	oparms.path = full_path;
+	oparms.fid = &fid;
+	oparms.reconnect = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (tcon->ses->server->oplocks)
 		oplock = REQ_OPLOCK;
 	else
 		oplock = 0;
+<<<<<<< HEAD
 	rc = tcon->ses->server->ops->open(xid, &oparms, &oplock, &buf);
 	if (rc)
 		return rc;
+=======
+	rc = tcon->ses->server->ops->open(xid, &oparms, &oplock, buf);
+	if (rc)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * BB Do not bother to decode buf since no local inode yet to put
 	 * timestamps in, but we can reuse it safely.
 	 */
 
+<<<<<<< HEAD
 	pdev = (struct win_dev *)&buf.fi;
+=======
+	pdev = (struct win_dev *)buf;
+>>>>>>> b7ba80a49124 (Commit)
 	io_parms.pid = current->tgid;
 	io_parms.tcon = tcon;
 	io_parms.offset = 0;
 	io_parms.length = sizeof(struct win_dev);
+<<<<<<< HEAD
 	iov[1].iov_base = &buf.fi;
+=======
+	iov[1].iov_base = buf;
+>>>>>>> b7ba80a49124 (Commit)
 	iov[1].iov_len = sizeof(struct win_dev);
 	if (S_ISCHR(mode)) {
 		memcpy(pdev->type, "IntxCHR", 8);
@@ -1166,8 +1305,13 @@ cifs_make_node(unsigned int xid, struct inode *inode,
 	d_drop(dentry);
 
 	/* FIXME: add code here to set EAs */
+<<<<<<< HEAD
 
 	cifs_free_open_info(&buf);
+=======
+out:
+	kfree(buf);
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 

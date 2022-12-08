@@ -1902,7 +1902,11 @@ of 32 possible I/O Base addresses using the following tables::
      6    |  10
 
 The I/O address is sum of all switches set to "1". Remember that
+<<<<<<< HEAD
 the I/O address space below 0x200 is RESERVED for mainboard, so
+=======
+the I/O address space bellow 0x200 is RESERVED for mainboard, so
+>>>>>>> b7ba80a49124 (Commit)
 switch 1 should be ALWAYS SET TO OFF.
 
 

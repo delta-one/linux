@@ -119,6 +119,7 @@ static struct attribute_group cpuidle_attr_group = {
 
 /**
  * cpuidle_add_interface - add CPU global sysfs attributes
+<<<<<<< HEAD
  */
 int cpuidle_add_interface(void)
 {
@@ -131,6 +132,13 @@ int cpuidle_add_interface(void)
 	retval = sysfs_create_group(&dev_root->kobj, &cpuidle_attr_group);
 	put_device(dev_root);
 	return retval;
+=======
+ * @dev: the target device
+ */
+int cpuidle_add_interface(struct device *dev)
+{
+	return sysfs_create_group(&dev->kobj, &cpuidle_attr_group);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -207,7 +215,11 @@ static void cpuidle_sysfs_release(struct kobject *kobj)
 	complete(&kdev->kobj_unregister);
 }
 
+<<<<<<< HEAD
 static const struct kobj_type ktype_cpuidle = {
+=======
+static struct kobj_type ktype_cpuidle = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops = &cpuidle_sysfs_ops,
 	.release = cpuidle_sysfs_release,
 };
@@ -454,7 +466,11 @@ static void cpuidle_state_sysfs_release(struct kobject *kobj)
 	complete(&state_obj->kobj_unregister);
 }
 
+<<<<<<< HEAD
 static const struct kobj_type ktype_state_cpuidle = {
+=======
+static struct kobj_type ktype_state_cpuidle = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops = &cpuidle_state_sysfs_ops,
 	.default_groups = cpuidle_state_default_groups,
 	.release = cpuidle_state_sysfs_release,
@@ -601,7 +617,11 @@ static struct attribute *cpuidle_driver_default_attrs[] = {
 };
 ATTRIBUTE_GROUPS(cpuidle_driver_default);
 
+<<<<<<< HEAD
 static const struct kobj_type ktype_driver_cpuidle = {
+=======
+static struct kobj_type ktype_driver_cpuidle = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops = &cpuidle_driver_sysfs_ops,
 	.default_groups = cpuidle_driver_default_groups,
 	.release = cpuidle_driver_sysfs_release,

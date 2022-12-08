@@ -110,6 +110,11 @@ extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
 extern int kprobe_exceptions_notify(struct notifier_block *self,
 				    unsigned long val, void *data);
 
+<<<<<<< HEAD
+=======
+extern void invalidate_stacked_regs(void);
+extern void flush_register_stack(void);
+>>>>>>> b7ba80a49124 (Commit)
 extern void arch_remove_kprobe(struct kprobe *p);
 
 #endif /* CONFIG_KPROBES */

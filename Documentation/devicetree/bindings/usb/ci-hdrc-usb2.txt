@@ -11,7 +11,10 @@ Required properties:
 	"fsl,imx6ul-usb"
 	"fsl,imx7d-usb"
 	"fsl,imx7ulp-usb"
+<<<<<<< HEAD
 	"fsl,imx8mm-usb"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	"lsi,zevio-usb"
 	"qcom,ci-hdrc"
 	"chipidea,usb2"

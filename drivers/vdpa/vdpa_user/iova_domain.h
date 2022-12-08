@@ -14,6 +14,10 @@
 #include <linux/iova.h>
 #include <linux/dma-mapping.h>
 #include <linux/vhost_iotlb.h>
+<<<<<<< HEAD
+=======
+#include <linux/rwlock.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define IOVA_START_PFN 1
 

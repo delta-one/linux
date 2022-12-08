@@ -51,7 +51,11 @@ int main(int ac, char **argv)
 	struct bpf_program *prog;
 	struct bpf_object *obj;
 	char filename[256];
+<<<<<<< HEAD
 	int map_fd, j = 0;
+=======
+	int map_fd, i, j = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
 	obj = bpf_object__open_file(filename, NULL);
@@ -82,7 +86,11 @@ int main(int ac, char **argv)
 		j++;
 	}
 
+<<<<<<< HEAD
 	while (1) {
+=======
+	for (i = 0; ; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		print_old_objects(map_fd);
 		sleep(1);
 	}

@@ -234,6 +234,7 @@ int jfs_mount_rw(struct super_block *sb, int remount)
 
 		truncate_inode_pages(sbi->ipimap->i_mapping, 0);
 		truncate_inode_pages(sbi->ipbmap->i_mapping, 0);
+<<<<<<< HEAD
 
 		IWRITE_LOCK(sbi->ipimap, RDWRLOCK_IMAP);
 		diUnmount(sbi->ipimap, 1);
@@ -243,6 +244,13 @@ int jfs_mount_rw(struct super_block *sb, int remount)
 			return rc;
 		}
 		IWRITE_UNLOCK(sbi->ipimap);
+=======
+		diUnmount(sbi->ipimap, 1);
+		if ((rc = diMount(sbi->ipimap))) {
+			jfs_err("jfs_mount_rw: diMount failed!");
+			return rc;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		dbUnmount(sbi->ipbmap, 1);
 		if ((rc = dbMount(sbi->ipbmap))) {

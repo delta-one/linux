@@ -478,7 +478,11 @@ adb_register(int default_id, int handler_id, struct adb_ids *ids,
 		if ((adb_handler[i].original_address == default_id) &&
 		    (!handler_id || (handler_id == adb_handler[i].handler_id) || 
 		    try_handler_change(i, handler_id))) {
+<<<<<<< HEAD
 			if (adb_handler[i].handler) {
+=======
+			if (adb_handler[i].handler != 0) {
+>>>>>>> b7ba80a49124 (Commit)
 				pr_err("Two handlers for ADB device %d\n",
 				       default_id);
 				continue;
@@ -673,7 +677,11 @@ static int adb_open(struct inode *inode, struct file *file)
 		goto out;
 	}
 	state = kmalloc(sizeof(struct adbdev_state), GFP_KERNEL);
+<<<<<<< HEAD
 	if (!state) {
+=======
+	if (state == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -ENOMEM;
 		goto out;
 	}
@@ -888,7 +896,11 @@ adbdev_init(void)
 		return;
 	}
 
+<<<<<<< HEAD
 	adb_dev_class = class_create("adb");
+=======
+	adb_dev_class = class_create(THIS_MODULE, "adb");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(adb_dev_class))
 		return;
 	device_create(adb_dev_class, NULL, MKDEV(ADB_MAJOR, 0), NULL, "adb");

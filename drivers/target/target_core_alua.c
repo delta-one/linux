@@ -225,7 +225,11 @@ target_emulate_report_target_port_groups(struct se_cmd *cmd)
 			/*
 			 * Set RELATIVE TARGET PORT IDENTIFIER
 			 */
+<<<<<<< HEAD
 			put_unaligned_be16(lun->lun_tpg->tpg_rtpi, &buf[off]);
+=======
+			put_unaligned_be16(lun->lun_rtpi, &buf[off]);
+>>>>>>> b7ba80a49124 (Commit)
 			off += 2;
 			rd_len += 4;
 		}
@@ -399,7 +403,11 @@ target_emulate_set_target_port_groups(struct se_cmd *cmd)
 			spin_lock(&dev->se_port_lock);
 			list_for_each_entry(lun, &dev->dev_sep_list,
 							lun_dev_link) {
+<<<<<<< HEAD
 				if (lun->lun_tpg->tpg_rtpi != rtpi)
+=======
+				if (lun->lun_rtpi != rtpi)
+>>>>>>> b7ba80a49124 (Commit)
 					continue;
 
 				// XXX: racy unlock

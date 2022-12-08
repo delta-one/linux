@@ -70,7 +70,12 @@ static int sl28cpld_gpio_irq_init(struct platform_device *pdev,
 	irq_chip->num_irqs = ARRAY_SIZE(sl28cpld_gpio_irqs);
 	irq_chip->num_regs = 1;
 	irq_chip->status_base = base + GPIO_REG_IP;
+<<<<<<< HEAD
 	irq_chip->unmask_base = base + GPIO_REG_IE;
+=======
+	irq_chip->mask_base = base + GPIO_REG_IE;
+	irq_chip->mask_invert = true;
+>>>>>>> b7ba80a49124 (Commit)
 	irq_chip->ack_base = base + GPIO_REG_IP;
 
 	ret = devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev),

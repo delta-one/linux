@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/net/asix,ax88178.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: ASIX AX88172/AX88772 USB Ethernet Controllers
+=======
+title: The device tree bindings for the USB Ethernet controllers
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Oleksij Rempel <o.rempel@pengutronix.de>
@@ -27,9 +31,13 @@ properties:
           - usbb95,772b   # ASIX AX88772B
           - usbb95,7e2b   # ASIX AX88772B
 
+<<<<<<< HEAD
   reg:
     maxItems: 1
 
+=======
+  reg: true
+>>>>>>> b7ba80a49124 (Commit)
   local-mac-address: true
   mac-address: true
 

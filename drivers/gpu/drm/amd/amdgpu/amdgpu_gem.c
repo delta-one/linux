@@ -34,12 +34,18 @@
 #include <drm/amdgpu_drm.h>
 #include <drm/drm_drv.h>
 #include <drm/drm_gem_ttm_helper.h>
+<<<<<<< HEAD
 #include <drm/ttm/ttm_tt.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "amdgpu.h"
 #include "amdgpu_display.h"
 #include "amdgpu_dma_buf.h"
+<<<<<<< HEAD
 #include "amdgpu_hmm.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "amdgpu_xgmi.h"
 
 static const struct drm_gem_object_funcs amdgpu_gem_object_funcs;
@@ -62,10 +68,17 @@ static vm_fault_t amdgpu_gem_fault(struct vm_fault *vmf)
 			goto unlock;
 		}
 
+<<<<<<< HEAD
 		ret = ttm_bo_vm_fault_reserved(vmf, vmf->vma->vm_page_prot,
 					       TTM_BO_VM_NUM_PREFAULT);
 
 		drm_dev_exit(idx);
+=======
+		 ret = ttm_bo_vm_fault_reserved(vmf, vmf->vma->vm_page_prot,
+						TTM_BO_VM_NUM_PREFAULT);
+
+		 drm_dev_exit(idx);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		ret = ttm_bo_vm_dummy_page(vmf, vmf->vma->vm_page_prot);
 	}
@@ -89,7 +102,11 @@ static void amdgpu_gem_object_free(struct drm_gem_object *gobj)
 	struct amdgpu_bo *robj = gem_to_amdgpu_bo(gobj);
 
 	if (robj) {
+<<<<<<< HEAD
 		amdgpu_hmm_unregister(robj);
+=======
+		amdgpu_mn_unregister(robj);
+>>>>>>> b7ba80a49124 (Commit)
 		amdgpu_bo_unref(&robj);
 	}
 }
@@ -257,8 +274,13 @@ static int amdgpu_gem_object_mmap(struct drm_gem_object *obj, struct vm_area_str
 	 * becoming writable and makes is_cow_mapping(vm_flags) false.
 	 */
 	if (is_cow_mapping(vma->vm_flags) &&
+<<<<<<< HEAD
 	    !(vma->vm_flags & VM_ACCESS_FLAGS))
 		vm_flags_clear(vma, VM_MAYWRITE);
+=======
+	    !(vma->vm_flags & (VM_READ | VM_WRITE | VM_EXEC)))
+		vma->vm_flags &= ~VM_MAYWRITE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return drm_gem_ttm_mmap(obj, vma);
 }
@@ -380,7 +402,10 @@ int amdgpu_gem_userptr_ioctl(struct drm_device *dev, void *data,
 	struct amdgpu_device *adev = drm_to_adev(dev);
 	struct drm_amdgpu_gem_userptr *args = data;
 	struct drm_gem_object *gobj;
+<<<<<<< HEAD
 	struct hmm_range *range;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct amdgpu_bo *bo;
 	uint32_t handle;
 	int r;
@@ -416,6 +441,7 @@ int amdgpu_gem_userptr_ioctl(struct drm_device *dev, void *data,
 	if (r)
 		goto release_object;
 
+<<<<<<< HEAD
 	r = amdgpu_hmm_register(bo, args->addr);
 	if (r)
 		goto release_object;
@@ -423,6 +449,16 @@ int amdgpu_gem_userptr_ioctl(struct drm_device *dev, void *data,
 	if (args->flags & AMDGPU_GEM_USERPTR_VALIDATE) {
 		r = amdgpu_ttm_tt_get_user_pages(bo, bo->tbo.ttm->pages,
 						 &range);
+=======
+	if (args->flags & AMDGPU_GEM_USERPTR_REGISTER) {
+		r = amdgpu_mn_register(bo, args->addr);
+		if (r)
+			goto release_object;
+	}
+
+	if (args->flags & AMDGPU_GEM_USERPTR_VALIDATE) {
+		r = amdgpu_ttm_tt_get_user_pages(bo, bo->tbo.ttm->pages);
+>>>>>>> b7ba80a49124 (Commit)
 		if (r)
 			goto release_object;
 
@@ -445,7 +481,11 @@ int amdgpu_gem_userptr_ioctl(struct drm_device *dev, void *data,
 
 user_pages_done:
 	if (args->flags & AMDGPU_GEM_USERPTR_VALIDATE)
+<<<<<<< HEAD
 		amdgpu_ttm_tt_get_user_pages_done(bo->tbo.ttm, range);
+=======
+		amdgpu_ttm_tt_get_user_pages_done(bo->tbo.ttm);
+>>>>>>> b7ba80a49124 (Commit)
 
 release_object:
 	drm_gem_object_put(gobj);
@@ -969,7 +1009,11 @@ static int amdgpu_debugfs_gem_info_show(struct seq_file *m, void *unused)
 		 * Therefore, we need to protect this ->comm access using RCU.
 		 */
 		rcu_read_lock();
+<<<<<<< HEAD
 		task = pid_task(file->pid, PIDTYPE_TGID);
+=======
+		task = pid_task(file->pid, PIDTYPE_PID);
+>>>>>>> b7ba80a49124 (Commit)
 		seq_printf(m, "pid %8d command %s:\n", pid_nr(file->pid),
 			   task ? task->comm : "<unknown>");
 		rcu_read_unlock();

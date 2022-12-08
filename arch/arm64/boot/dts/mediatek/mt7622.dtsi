@@ -435,7 +435,10 @@
 	pwm: pwm@11006000 {
 		compatible = "mediatek,mt7622-pwm";
 		reg = <0 0x11006000 0 0x1000>;
+<<<<<<< HEAD
 		#pwm-cells = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
 		clocks = <&topckgen CLK_TOP_PWM_SEL>,
 			 <&pericfg CLK_PERI_PWM_PD>,
@@ -527,6 +530,10 @@
 		reg = <0 0x1100c000 0 0x1000>;
 		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_LOW>;
 		clocks = <&pericfg CLK_PERI_BTIF_PD>;
+<<<<<<< HEAD
+=======
+		clock-names = "main";
+>>>>>>> b7ba80a49124 (Commit)
 		reg-shift = <2>;
 		reg-io-width = <4>;
 		status = "disabled";
@@ -539,7 +546,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	nandc: nand-controller@1100d000 {
+=======
+	nandc: nfi@1100d000 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "mediatek,mt7622-nfc";
 		reg = <0 0x1100D000 0 0x1000>;
 		interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_LOW>;

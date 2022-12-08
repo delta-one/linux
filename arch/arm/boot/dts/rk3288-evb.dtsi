@@ -28,19 +28,31 @@
 			press-threshold-microvolt = <300000>;
 		};
 
+<<<<<<< HEAD
 		button-menu {
+=======
+		menu {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "Menu";
 			linux,code = <KEY_MENU>;
 			press-threshold-microvolt = <640000>;
 		};
 
+<<<<<<< HEAD
 		button-esc {
+=======
+		esc {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "Esc";
 			linux,code = <KEY_ESC>;
 			press-threshold-microvolt = <1000000>;
 		};
 
+<<<<<<< HEAD
 		button-home  {
+=======
+		home  {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "Home";
 			linux,code = <KEY_HOME>;
 			press-threshold-microvolt = <1300000>;

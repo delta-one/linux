@@ -76,9 +76,12 @@ enum __kvm_host_smccc_func {
 	__KVM_HOST_SMCCC_FUNC___vgic_v3_save_aprs,
 	__KVM_HOST_SMCCC_FUNC___vgic_v3_restore_aprs,
 	__KVM_HOST_SMCCC_FUNC___pkvm_vcpu_init_traps,
+<<<<<<< HEAD
 	__KVM_HOST_SMCCC_FUNC___pkvm_init_vm,
 	__KVM_HOST_SMCCC_FUNC___pkvm_init_vcpu,
 	__KVM_HOST_SMCCC_FUNC___pkvm_teardown_vm,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define DECLARE_KVM_VHE_SYM(sym)	extern char sym[]
@@ -109,7 +112,11 @@ enum __kvm_host_smccc_func {
 #define per_cpu_ptr_nvhe_sym(sym, cpu)						\
 	({									\
 		unsigned long base, off;					\
+<<<<<<< HEAD
 		base = kvm_nvhe_sym(kvm_arm_hyp_percpu_base)[cpu];		\
+=======
+		base = kvm_arm_hyp_percpu_base[cpu];				\
+>>>>>>> b7ba80a49124 (Commit)
 		off = (unsigned long)&CHOOSE_NVHE_SYM(sym) -			\
 		      (unsigned long)&CHOOSE_NVHE_SYM(__per_cpu_start);		\
 		base ? (typeof(CHOOSE_NVHE_SYM(sym))*)(base + off) : NULL;	\
@@ -214,7 +221,11 @@ DECLARE_KVM_HYP_SYM(__kvm_hyp_vector);
 #define __kvm_hyp_init		CHOOSE_NVHE_SYM(__kvm_hyp_init)
 #define __kvm_hyp_vector	CHOOSE_HYP_SYM(__kvm_hyp_vector)
 
+<<<<<<< HEAD
 extern unsigned long kvm_nvhe_sym(kvm_arm_hyp_percpu_base)[];
+=======
+extern unsigned long kvm_arm_hyp_percpu_base[NR_CPUS];
+>>>>>>> b7ba80a49124 (Commit)
 DECLARE_KVM_NVHE_SYM(__per_cpu_start);
 DECLARE_KVM_NVHE_SYM(__per_cpu_end);
 

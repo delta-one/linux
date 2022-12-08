@@ -24,7 +24,10 @@
 #include <linux/acpi.h>
 #include <linux/pci.h>
 #include <acpi/acpi.h>
+<<<<<<< HEAD
 #include "internal.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct acpi_pci_ioapic {
 	acpi_handle	root_handle;

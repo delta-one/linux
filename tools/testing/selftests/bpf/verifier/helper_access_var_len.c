@@ -29,6 +29,7 @@
 {
 	"helper access to variable memory: stack, bitwise AND, zero included",
 	.insns = {
+<<<<<<< HEAD
 	/* set max stack size */
 	BPF_ST_MEM(BPF_DW, BPF_REG_10, -128, 0),
 	/* set r3 to a random value */
@@ -53,6 +54,21 @@
 	.result_unpriv = REJECT,
 	/* in privileged mode reads from uninitialized stack locations are permitted */
 	.result = ACCEPT,
+=======
+	BPF_LDX_MEM(BPF_DW, BPF_REG_2, BPF_REG_1, 8),
+	BPF_MOV64_REG(BPF_REG_1, BPF_REG_10),
+	BPF_ALU64_IMM(BPF_ADD, BPF_REG_1, -64),
+	BPF_STX_MEM(BPF_DW, BPF_REG_1, BPF_REG_2, -128),
+	BPF_LDX_MEM(BPF_DW, BPF_REG_2, BPF_REG_1, -128),
+	BPF_ALU64_IMM(BPF_AND, BPF_REG_2, 64),
+	BPF_MOV64_IMM(BPF_REG_3, 0),
+	BPF_EMIT_CALL(BPF_FUNC_probe_read_kernel),
+	BPF_EXIT_INSN(),
+	},
+	.errstr = "invalid indirect read from stack R1 off -64+0 size 64",
+	.result = REJECT,
+	.prog_type = BPF_PROG_TYPE_TRACEPOINT,
+>>>>>>> b7ba80a49124 (Commit)
 },
 {
 	"helper access to variable memory: stack, bitwise AND + JMP, wrong max",
@@ -194,6 +210,7 @@
 {
 	"helper access to variable memory: stack, JMP, no min check",
 	.insns = {
+<<<<<<< HEAD
 	/* set max stack size */
 	BPF_ST_MEM(BPF_DW, BPF_REG_10, -128, 0),
 	/* set r3 to a random value */
@@ -219,6 +236,22 @@
 	.result_unpriv = REJECT,
 	/* in privileged mode reads from uninitialized stack locations are permitted */
 	.result = ACCEPT,
+=======
+	BPF_LDX_MEM(BPF_DW, BPF_REG_2, BPF_REG_1, 8),
+	BPF_MOV64_REG(BPF_REG_1, BPF_REG_10),
+	BPF_ALU64_IMM(BPF_ADD, BPF_REG_1, -64),
+	BPF_STX_MEM(BPF_DW, BPF_REG_1, BPF_REG_2, -128),
+	BPF_LDX_MEM(BPF_DW, BPF_REG_2, BPF_REG_1, -128),
+	BPF_JMP_IMM(BPF_JGT, BPF_REG_2, 64, 3),
+	BPF_MOV64_IMM(BPF_REG_3, 0),
+	BPF_EMIT_CALL(BPF_FUNC_probe_read_kernel),
+	BPF_MOV64_IMM(BPF_REG_0, 0),
+	BPF_EXIT_INSN(),
+	},
+	.errstr = "invalid indirect read from stack R1 off -64+0 size 64",
+	.result = REJECT,
+	.prog_type = BPF_PROG_TYPE_TRACEPOINT,
+>>>>>>> b7ba80a49124 (Commit)
 },
 {
 	"helper access to variable memory: stack, JMP (signed), no min check",
@@ -586,6 +619,7 @@
 {
 	"helper access to variable memory: 8 bytes leak",
 	.insns = {
+<<<<<<< HEAD
 	/* set max stack size */
 	BPF_ST_MEM(BPF_DW, BPF_REG_10, -128, 0),
 	/* set r3 to a random value */
@@ -594,11 +628,17 @@
 	BPF_LD_MAP_FD(BPF_REG_1, 0),
 	BPF_MOV64_REG(BPF_REG_2, BPF_REG_10),
 	BPF_ALU64_IMM(BPF_ADD, BPF_REG_2, -64),
+=======
+	BPF_LDX_MEM(BPF_DW, BPF_REG_2, BPF_REG_1, 8),
+	BPF_MOV64_REG(BPF_REG_1, BPF_REG_10),
+	BPF_ALU64_IMM(BPF_ADD, BPF_REG_1, -64),
+>>>>>>> b7ba80a49124 (Commit)
 	BPF_MOV64_IMM(BPF_REG_0, 0),
 	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_0, -64),
 	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_0, -56),
 	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_0, -48),
 	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_0, -40),
+<<<<<<< HEAD
 	/* Note: fp[-32] left uninitialized */
 	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_0, -24),
 	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_0, -16),
@@ -621,6 +661,23 @@
 	.result_unpriv = REJECT,
 	/* in privileged mode reads from uninitialized stack locations are permitted */
 	.result = ACCEPT,
+=======
+	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_0, -24),
+	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_0, -16),
+	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_0, -8),
+	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_2, -128),
+	BPF_LDX_MEM(BPF_DW, BPF_REG_2, BPF_REG_10, -128),
+	BPF_ALU64_IMM(BPF_AND, BPF_REG_2, 63),
+	BPF_ALU64_IMM(BPF_ADD, BPF_REG_2, 1),
+	BPF_MOV64_IMM(BPF_REG_3, 0),
+	BPF_EMIT_CALL(BPF_FUNC_probe_read_kernel),
+	BPF_LDX_MEM(BPF_DW, BPF_REG_1, BPF_REG_10, -16),
+	BPF_EXIT_INSN(),
+	},
+	.errstr = "invalid indirect read from stack R1 off -64+32 size 64",
+	.result = REJECT,
+	.prog_type = BPF_PROG_TYPE_TRACEPOINT,
+>>>>>>> b7ba80a49124 (Commit)
 },
 {
 	"helper access to variable memory: 8 bytes no leak (init memory)",

@@ -235,9 +235,15 @@ static int amba_match(struct device *dev, struct device_driver *drv)
 	return amba_lookup(pcdrv->id_table, pcdev) != NULL;
 }
 
+<<<<<<< HEAD
 static int amba_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct amba_device *pcdev = to_amba_device(dev);
+=======
+static int amba_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct amba_device *pcdev = to_amba_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	int retval = 0;
 
 	retval = add_uevent_var(env, "AMBA_ID=%08x", pcdev->periphid);
@@ -421,6 +427,15 @@ static int amba_pm_runtime_resume(struct device *dev)
 #endif /* CONFIG_PM */
 
 static const struct dev_pm_ops amba_pm = {
+<<<<<<< HEAD
+=======
+	.suspend	= pm_generic_suspend,
+	.resume		= pm_generic_resume,
+	.freeze		= pm_generic_freeze,
+	.thaw		= pm_generic_thaw,
+	.poweroff	= pm_generic_poweroff,
+	.restore	= pm_generic_restore,
+>>>>>>> b7ba80a49124 (Commit)
 	SET_RUNTIME_PM_OPS(
 		amba_pm_runtime_suspend,
 		amba_pm_runtime_resume,

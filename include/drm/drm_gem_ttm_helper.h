@@ -7,7 +7,12 @@
 
 #include <drm/drm_device.h>
 #include <drm/drm_gem.h>
+<<<<<<< HEAD
 #include <drm/ttm/ttm_bo.h>
+=======
+#include <drm/ttm/ttm_bo_api.h>
+#include <drm/ttm/ttm_bo_driver.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 struct iosys_map;
 

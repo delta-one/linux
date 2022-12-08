@@ -423,15 +423,26 @@ static int get_lvl1_pble(struct irdma_hmc_pble_rsrc *pble_rsrc,
  * get_lvl1_lvl2_pble - calls get_lvl1 and get_lvl2 pble routine
  * @pble_rsrc: pble resources
  * @palloc: contains all inforamtion regarding pble (idx + pble addr)
+<<<<<<< HEAD
  * @lvl: Bitmask for requested pble level
  */
 static int get_lvl1_lvl2_pble(struct irdma_hmc_pble_rsrc *pble_rsrc,
 			      struct irdma_pble_alloc *palloc, u8 lvl)
+=======
+ * @level1_only: flag for a level 1 PBLE
+ */
+static int get_lvl1_lvl2_pble(struct irdma_hmc_pble_rsrc *pble_rsrc,
+			      struct irdma_pble_alloc *palloc, bool level1_only)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int status = 0;
 
 	status = get_lvl1_pble(pble_rsrc, palloc);
+<<<<<<< HEAD
 	if (!status || lvl == PBLE_LEVEL_1 || palloc->total_cnt <= PBLE_PER_PAGE)
+=======
+	if (!status || level1_only || palloc->total_cnt <= PBLE_PER_PAGE)
+>>>>>>> b7ba80a49124 (Commit)
 		return status;
 
 	status = get_lvl2_pble(pble_rsrc, palloc);
@@ -444,11 +455,19 @@ static int get_lvl1_lvl2_pble(struct irdma_hmc_pble_rsrc *pble_rsrc,
  * @pble_rsrc: pble resources
  * @palloc: contains all inforamtion regarding pble (idx + pble addr)
  * @pble_cnt: #of pbles requested
+<<<<<<< HEAD
  * @lvl: requested pble level mask
  */
 int irdma_get_pble(struct irdma_hmc_pble_rsrc *pble_rsrc,
 		   struct irdma_pble_alloc *palloc, u32 pble_cnt,
 		   u8 lvl)
+=======
+ * @level1_only: true if only pble level 1 to acquire
+ */
+int irdma_get_pble(struct irdma_hmc_pble_rsrc *pble_rsrc,
+		   struct irdma_pble_alloc *palloc, u32 pble_cnt,
+		   bool level1_only)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int status = 0;
 	int max_sds = 0;
@@ -462,7 +481,11 @@ int irdma_get_pble(struct irdma_hmc_pble_rsrc *pble_rsrc,
 	/*check first to see if we can get pble's without acquiring
 	 * additional sd's
 	 */
+<<<<<<< HEAD
 	status = get_lvl1_lvl2_pble(pble_rsrc, palloc, lvl);
+=======
+	status = get_lvl1_lvl2_pble(pble_rsrc, palloc, level1_only);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!status)
 		goto exit;
 
@@ -472,9 +495,15 @@ int irdma_get_pble(struct irdma_hmc_pble_rsrc *pble_rsrc,
 		if (status)
 			break;
 
+<<<<<<< HEAD
 		status = get_lvl1_lvl2_pble(pble_rsrc, palloc, lvl);
 		/* if level1_only, only go through it once */
 		if (!status || lvl)
+=======
+		status = get_lvl1_lvl2_pble(pble_rsrc, palloc, level1_only);
+		/* if level1_only, only go through it once */
+		if (!status || level1_only)
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 	}
 

@@ -13,6 +13,10 @@ struct nvkm_pci {
 	const struct nvkm_pci_func *func;
 	struct nvkm_subdev subdev;
 	struct pci_dev *pdev;
+<<<<<<< HEAD
+=======
+	int irq;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct {
 		struct agp_bridge_data *bridge;
@@ -37,7 +41,10 @@ void nvkm_pci_wr08(struct nvkm_pci *, u16 addr, u8 data);
 void nvkm_pci_wr32(struct nvkm_pci *, u16 addr, u32 data);
 u32 nvkm_pci_mask(struct nvkm_pci *, u16 addr, u32 mask, u32 value);
 void nvkm_pci_rom_shadow(struct nvkm_pci *, bool shadow);
+<<<<<<< HEAD
 void nvkm_pci_msi_rearm(struct nvkm_device *);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int nv04_pci_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_pci **);
 int nv40_pci_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_pci **);

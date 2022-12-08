@@ -91,6 +91,10 @@ struct qcom_icc_desc {
 	size_t num_nodes;
 	const char * const *clocks;
 	size_t num_clocks;
+<<<<<<< HEAD
+=======
+	bool has_bus_pd;
+>>>>>>> b7ba80a49124 (Commit)
 	enum qcom_icc_type type;
 	const struct regmap_config *regmap_cfg;
 	unsigned int qos_offset;

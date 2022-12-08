@@ -430,9 +430,12 @@ static struct pci_driver e3d_driver = {
 
 static int __init e3d_init(void)
 {
+<<<<<<< HEAD
 	if (fb_modesetting_disabled("e3d"))
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (fb_get_options("e3d", NULL))
 		return -ENODEV;
 

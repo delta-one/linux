@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * IBM Accelerator Family 'GenWQE'
  *
  * (C) Copyright IBM Corp. 2013
@@ -19,6 +23,10 @@
 #include <linux/types.h>
 #include <linux/pci.h>
 #include <linux/err.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/string.h>
 #include <linux/sched.h>
 #include <linux/wait.h>
@@ -1098,6 +1106,10 @@ static int genwqe_pci_setup(struct genwqe_dev *cd)
 	}
 
 	pci_set_master(pci_dev);
+<<<<<<< HEAD
+=======
+	pci_enable_pcie_error_reporting(pci_dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* EEH recovery requires PCIe fundamental reset */
 	pci_dev->needs_freset = 1;
@@ -1347,7 +1359,11 @@ static struct pci_driver genwqe_driver = {
  * Default mode should be rw for everybody. Do not change default
  * device name.
  */
+<<<<<<< HEAD
 static char *genwqe_devnode(const struct device *dev, umode_t *mode)
+=======
+static char *genwqe_devnode(struct device *dev, umode_t *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (mode)
 		*mode = 0666;
@@ -1361,7 +1377,11 @@ static int __init genwqe_init_module(void)
 {
 	int rc;
 
+<<<<<<< HEAD
 	class_genwqe = class_create(GENWQE_DEVNAME);
+=======
+	class_genwqe = class_create(THIS_MODULE, GENWQE_DEVNAME);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(class_genwqe)) {
 		pr_err("[%s] create class failed\n", __func__);
 		return -ENOMEM;

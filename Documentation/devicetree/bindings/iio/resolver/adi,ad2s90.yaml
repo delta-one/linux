@@ -33,6 +33,11 @@ properties:
 
   spi-cpha: true
 
+<<<<<<< HEAD
+=======
+additionalProperties: false
+
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg
@@ -41,11 +46,14 @@ dependencies:
   spi-cpol: [ spi-cpha ]
   spi-cpha: [ spi-cpol ]
 
+<<<<<<< HEAD
 allOf:
   - $ref: /schemas/spi/spi-peripheral-props.yaml#
 
 unevaluatedProperties: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 examples:
   - |
     spi {

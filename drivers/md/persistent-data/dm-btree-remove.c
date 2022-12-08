@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2011 Red Hat, Inc.
  *
@@ -87,7 +90,10 @@ static int node_copy(struct btree_node *left, struct btree_node *right, int shif
 {
 	uint32_t nr_left = le32_to_cpu(left->header.nr_entries);
 	uint32_t value_size = le32_to_cpu(left->header.value_size);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (value_size != le32_to_cpu(right->header.value_size)) {
 		DMERR("mismatched value size");
 		return -EILSEQ;
@@ -126,12 +132,20 @@ static int node_copy(struct btree_node *left, struct btree_node *right, int shif
 /*
  * Delete a specific entry from a leaf node.
  */
+<<<<<<< HEAD
 static void delete_at(struct btree_node *n, unsigned int index)
 {
 	unsigned int nr_entries = le32_to_cpu(n->header.nr_entries);
 	unsigned int nr_to_copy = nr_entries - (index + 1);
 	uint32_t value_size = le32_to_cpu(n->header.value_size);
 
+=======
+static void delete_at(struct btree_node *n, unsigned index)
+{
+	unsigned nr_entries = le32_to_cpu(n->header.nr_entries);
+	unsigned nr_to_copy = nr_entries - (index + 1);
+	uint32_t value_size = le32_to_cpu(n->header.value_size);
+>>>>>>> b7ba80a49124 (Commit)
 	BUG_ON(index >= nr_entries);
 
 	if (nr_to_copy) {
@@ -147,20 +161,32 @@ static void delete_at(struct btree_node *n, unsigned int index)
 	n->header.nr_entries = cpu_to_le32(nr_entries - 1);
 }
 
+<<<<<<< HEAD
 static unsigned int merge_threshold(struct btree_node *n)
+=======
+static unsigned merge_threshold(struct btree_node *n)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return le32_to_cpu(n->header.max_entries) / 3;
 }
 
 struct child {
+<<<<<<< HEAD
 	unsigned int index;
+=======
+	unsigned index;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_block *block;
 	struct btree_node *n;
 };
 
 static int init_child(struct dm_btree_info *info, struct dm_btree_value_type *vt,
 		      struct btree_node *parent,
+<<<<<<< HEAD
 		      unsigned int index, struct child *result)
+=======
+		      unsigned index, struct child *result)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r, inc;
 	dm_block_t root;
@@ -266,8 +292,12 @@ static int __rebalance2(struct dm_btree_info *info, struct btree_node *parent,
 		/*
 		 * Rebalance.
 		 */
+<<<<<<< HEAD
 		unsigned int target_left = (nr_left + nr_right) / 2;
 
+=======
+		unsigned target_left = (nr_left + nr_right) / 2;
+>>>>>>> b7ba80a49124 (Commit)
 		ret = shift(left, right, nr_left - target_left);
 		if (ret)
 			return ret;
@@ -277,7 +307,11 @@ static int __rebalance2(struct dm_btree_info *info, struct btree_node *parent,
 }
 
 static int rebalance2(struct shadow_spine *s, struct dm_btree_info *info,
+<<<<<<< HEAD
 		      struct dm_btree_value_type *vt, unsigned int left_index)
+=======
+		      struct dm_btree_value_type *vt, unsigned left_index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r;
 	struct btree_node *parent;
@@ -314,7 +348,11 @@ static int delete_center_node(struct dm_btree_info *info, struct btree_node *par
 			      uint32_t nr_left, uint32_t nr_center, uint32_t nr_right)
 {
 	uint32_t max_entries = le32_to_cpu(left->header.max_entries);
+<<<<<<< HEAD
 	unsigned int shift = min(max_entries - nr_left, nr_center);
+=======
+	unsigned shift = min(max_entries - nr_left, nr_center);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (nr_left + shift > max_entries) {
 		DMERR("node shift out of bounds");
@@ -355,10 +393,17 @@ static int redistribute3(struct dm_btree_info *info, struct btree_node *parent,
 {
 	int s, ret;
 	uint32_t max_entries = le32_to_cpu(left->header.max_entries);
+<<<<<<< HEAD
 	unsigned int total = nr_left + nr_center + nr_right;
 	unsigned int target_right = total / 3;
 	unsigned int remainder = (target_right * 3) != total;
 	unsigned int target_left = target_right + remainder;
+=======
+	unsigned total = nr_left + nr_center + nr_right;
+	unsigned target_right = total / 3;
+	unsigned remainder = (target_right * 3) != total;
+	unsigned target_left = target_right + remainder;
+>>>>>>> b7ba80a49124 (Commit)
 
 	BUG_ON(target_left > max_entries);
 	BUG_ON(target_right > max_entries);
@@ -426,7 +471,11 @@ static int __rebalance3(struct dm_btree_info *info, struct btree_node *parent,
 	uint32_t nr_center = le32_to_cpu(center->header.nr_entries);
 	uint32_t nr_right = le32_to_cpu(right->header.nr_entries);
 
+<<<<<<< HEAD
 	unsigned int threshold = merge_threshold(left) * 4 + 1;
+=======
+	unsigned threshold = merge_threshold(left) * 4 + 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if ((left->header.max_entries != center->header.max_entries) ||
 	    (center->header.max_entries != right->header.max_entries)) {
@@ -444,7 +493,11 @@ static int __rebalance3(struct dm_btree_info *info, struct btree_node *parent,
 }
 
 static int rebalance3(struct shadow_spine *s, struct dm_btree_info *info,
+<<<<<<< HEAD
 		      struct dm_btree_value_type *vt, unsigned int left_index)
+=======
+		      struct dm_btree_value_type *vt, unsigned left_index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r;
 	struct btree_node *parent = dm_block_data(shadow_current(s));
@@ -523,7 +576,11 @@ static int rebalance_children(struct shadow_spine *s,
 	return r;
 }
 
+<<<<<<< HEAD
 static int do_leaf(struct btree_node *n, uint64_t key, unsigned int *index)
+=======
+static int do_leaf(struct btree_node *n, uint64_t key, unsigned *index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i = lower_bound(n, key);
 
@@ -543,7 +600,11 @@ static int do_leaf(struct btree_node *n, uint64_t key, unsigned int *index)
  */
 static int remove_raw(struct shadow_spine *s, struct dm_btree_info *info,
 		      struct dm_btree_value_type *vt, dm_block_t root,
+<<<<<<< HEAD
 		      uint64_t key, unsigned int *index)
+=======
+		      uint64_t key, unsigned *index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i = *index, r;
 	struct btree_node *n;
@@ -560,7 +621,10 @@ static int remove_raw(struct shadow_spine *s, struct dm_btree_info *info,
 		 */
 		if (shadow_has_parent(s)) {
 			__le64 location = cpu_to_le64(dm_block_location(shadow_current(s)));
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			memcpy(value_ptr(dm_block_data(shadow_parent(s)), i),
 			       &location, sizeof(__le64));
 		}
@@ -594,7 +658,11 @@ static int remove_raw(struct shadow_spine *s, struct dm_btree_info *info,
 int dm_btree_remove(struct dm_btree_info *info, dm_block_t root,
 		    uint64_t *keys, dm_block_t *new_root)
 {
+<<<<<<< HEAD
 	unsigned int level, last_level = info->levels - 1;
+=======
+	unsigned level, last_level = info->levels - 1;
+>>>>>>> b7ba80a49124 (Commit)
 	int index = 0, r = 0;
 	struct shadow_spine spine;
 	struct btree_node *n;
@@ -606,7 +674,11 @@ int dm_btree_remove(struct dm_btree_info *info, dm_block_t root,
 		r = remove_raw(&spine, info,
 			       (level == last_level ?
 				&info->value_type : &le64_vt),
+<<<<<<< HEAD
 			       root, keys[level], (unsigned int *)&index);
+=======
+			       root, keys[level], (unsigned *)&index);
+>>>>>>> b7ba80a49124 (Commit)
 		if (r < 0)
 			break;
 
@@ -654,7 +726,10 @@ static int remove_nearest(struct shadow_spine *s, struct dm_btree_info *info,
 		 */
 		if (shadow_has_parent(s)) {
 			__le64 location = cpu_to_le64(dm_block_location(shadow_current(s)));
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			memcpy(value_ptr(dm_block_data(shadow_parent(s)), i),
 			       &location, sizeof(__le64));
 		}
@@ -691,9 +766,15 @@ static int remove_nearest(struct shadow_spine *s, struct dm_btree_info *info,
 
 static int remove_one(struct dm_btree_info *info, dm_block_t root,
 		      uint64_t *keys, uint64_t end_key,
+<<<<<<< HEAD
 		      dm_block_t *new_root, unsigned int *nr_removed)
 {
 	unsigned int level, last_level = info->levels - 1;
+=======
+		      dm_block_t *new_root, unsigned *nr_removed)
+{
+	unsigned level, last_level = info->levels - 1;
+>>>>>>> b7ba80a49124 (Commit)
 	int index = 0, r = 0;
 	struct shadow_spine spine;
 	struct btree_node *n;
@@ -704,7 +785,11 @@ static int remove_one(struct dm_btree_info *info, dm_block_t root,
 	init_shadow_spine(&spine, info);
 	for (level = 0; level < last_level; level++) {
 		r = remove_raw(&spine, info, &le64_vt,
+<<<<<<< HEAD
 			       root, keys[level], (unsigned int *) &index);
+=======
+			       root, keys[level], (unsigned *) &index);
+>>>>>>> b7ba80a49124 (Commit)
 		if (r < 0)
 			goto out;
 
@@ -748,7 +833,11 @@ out:
 
 int dm_btree_remove_leaves(struct dm_btree_info *info, dm_block_t root,
 			   uint64_t *first_key, uint64_t end_key,
+<<<<<<< HEAD
 			   dm_block_t *new_root, unsigned int *nr_removed)
+=======
+			   dm_block_t *new_root, unsigned *nr_removed)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r;
 

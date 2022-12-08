@@ -26,6 +26,10 @@ struct svc_xprt_ops {
 	void		(*xpo_release_rqst)(struct svc_rqst *);
 	void		(*xpo_detach)(struct svc_xprt *);
 	void		(*xpo_free)(struct svc_xprt *);
+<<<<<<< HEAD
+=======
+	void		(*xpo_secure_port)(struct svc_rqst *rqstp);
+>>>>>>> b7ba80a49124 (Commit)
 	void		(*xpo_kill_temp_xprt)(struct svc_xprt *);
 	void		(*xpo_start_tls)(struct svc_xprt *);
 };

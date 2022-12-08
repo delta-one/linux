@@ -146,8 +146,11 @@ xfs_dir3_leaf_check_int(
 	xfs_dir2_leaf_tail_t		*ltp;
 	int				stale;
 	int				i;
+<<<<<<< HEAD
 	bool				isleaf1 = (hdr->magic == XFS_DIR2_LEAF1_MAGIC ||
 						   hdr->magic == XFS_DIR3_LEAF1_MAGIC);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ltp = xfs_dir2_leaf_tail_p(geo, leaf);
 
@@ -160,7 +163,12 @@ xfs_dir3_leaf_check_int(
 		return __this_address;
 
 	/* Leaves and bests don't overlap in leaf format. */
+<<<<<<< HEAD
 	if (isleaf1 &&
+=======
+	if ((hdr->magic == XFS_DIR2_LEAF1_MAGIC ||
+	     hdr->magic == XFS_DIR3_LEAF1_MAGIC) &&
+>>>>>>> b7ba80a49124 (Commit)
 	    (char *)&hdr->ents[hdr->count] > (char *)xfs_dir2_leaf_bests_p(ltp))
 		return __this_address;
 
@@ -176,10 +184,13 @@ xfs_dir3_leaf_check_int(
 		}
 		if (hdr->ents[i].address == cpu_to_be32(XFS_DIR2_NULL_DATAPTR))
 			stale++;
+<<<<<<< HEAD
 		if (isleaf1 && xfs_dir2_dataptr_to_db(geo,
 				be32_to_cpu(hdr->ents[i].address)) >=
 				be32_to_cpu(ltp->bestcount))
 			return __this_address;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (hdr->stale != stale)
 		return __this_address;

@@ -26,15 +26,21 @@ properties:
   resets:
     maxItems: 1
 
+<<<<<<< HEAD
   '#hwlock-cells':
     const: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg
   - clocks
   - resets
+<<<<<<< HEAD
   - "#hwlock-cells"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 additionalProperties: false
 
@@ -48,6 +54,9 @@ examples:
         reg = <0x01c18000 0x1000>;
         clocks = <&ccu CLK_BUS_SPINLOCK>;
         resets = <&ccu RST_BUS_SPINLOCK>;
+<<<<<<< HEAD
         #hwlock-cells = <1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
     };
 ...

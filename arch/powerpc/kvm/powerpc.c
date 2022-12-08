@@ -36,6 +36,10 @@
 #include <asm/setup.h>
 
 #include "timing.h"
+<<<<<<< HEAD
+=======
+#include "irq.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "../mm/mmu_decl.h"
 
 #define CREATE_TRACE_POINTS
@@ -238,6 +242,10 @@ int kvmppc_kvm_pv(struct kvm_vcpu *vcpu)
 	case EV_HCALL_TOKEN(EV_IDLE):
 		r = EV_SUCCESS;
 		kvm_vcpu_halt(vcpu);
+<<<<<<< HEAD
+=======
+		kvm_clear_request(KVM_REQ_UNHALT, vcpu);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		r = EV_UNIMPLEMENTED;
@@ -435,6 +443,24 @@ int kvmppc_ld(struct kvm_vcpu *vcpu, ulong *eaddr, int size, void *ptr,
 }
 EXPORT_SYMBOL_GPL(kvmppc_ld);
 
+<<<<<<< HEAD
+=======
+int kvm_arch_hardware_enable(void)
+{
+	return 0;
+}
+
+int kvm_arch_hardware_setup(void *opaque)
+{
+	return 0;
+}
+
+int kvm_arch_check_processor_compat(void *opaque)
+{
+	return kvmppc_core_check_processor_compat();
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
 {
 	struct kvmppc_ops *kvm_ops = NULL;
@@ -769,6 +795,10 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
 
 	hrtimer_init(&vcpu->arch.dec_timer, CLOCK_REALTIME, HRTIMER_MODE_ABS);
 	vcpu->arch.dec_timer.function = kvmppc_decrementer_wakeup;
+<<<<<<< HEAD
+=======
+	vcpu->arch.dec_expires = get_tb();
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_KVM_EXIT_TIMING
 	mutex_init(&vcpu->arch.exit_timing_lock);
@@ -2149,6 +2179,7 @@ static int kvm_vm_ioctl_get_pvinfo(struct kvm_ppc_pvinfo *pvinfo)
 	return 0;
 }
 
+<<<<<<< HEAD
 bool kvm_arch_irqchip_in_kernel(struct kvm *kvm)
 {
 	int ret = 0;
@@ -2168,6 +2199,12 @@ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_event,
 			  bool line_status)
 {
 	if (!kvm_arch_irqchip_in_kernel(kvm))
+=======
+int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_event,
+			  bool line_status)
+{
+	if (!irqchip_in_kernel(kvm))
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENXIO;
 
 	irq_event->status = kvm_set_irq(kvm, KVM_USERSPACE_IRQ_SOURCE_ID,
@@ -2371,11 +2408,20 @@ static int kvmppc_get_cpu_char(struct kvm_ppc_cpu_char *cp)
 }
 #endif
 
+<<<<<<< HEAD
 int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
 {
 	struct kvm *kvm __maybe_unused = filp->private_data;
 	void __user *argp = (void __user *)arg;
 	int r;
+=======
+long kvm_arch_vm_ioctl(struct file *filp,
+                       unsigned int ioctl, unsigned long arg)
+{
+	struct kvm *kvm __maybe_unused = filp->private_data;
+	void __user *argp = (void __user *)arg;
+	long r;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (ioctl) {
 	case KVM_PPC_GET_PVINFO: {
@@ -2528,6 +2574,14 @@ void kvmppc_init_lpid(unsigned long nr_lpids_param)
 }
 EXPORT_SYMBOL_GPL(kvmppc_init_lpid);
 
+<<<<<<< HEAD
+=======
+int kvm_arch_init(void *opaque)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_ppc_instr);
 
 void kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu, struct dentry *debugfs_dentry)

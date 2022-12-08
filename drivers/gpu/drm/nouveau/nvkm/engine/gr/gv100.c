@@ -52,11 +52,18 @@ gv100_gr_trap_mp(struct gf100_gr *gr, int gpc, int tpc)
 	gv100_gr_trap_sm(gr, gpc, tpc, 1);
 }
 
+<<<<<<< HEAD
 void
 gv100_gr_init_4188a4(struct gf100_gr *gr)
 {
 	struct nvkm_device *device = gr->base.engine.subdev.device;
 
+=======
+static void
+gv100_gr_init_4188a4(struct gf100_gr *gr)
+{
+	struct nvkm_device *device = gr->base.engine.subdev.device;
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_mask(device, 0x4188a4, 0x03000000, 0x03000000);
 }
 
@@ -66,6 +73,10 @@ gv100_gr_init_shader_exceptions(struct gf100_gr *gr, int gpc, int tpc)
 	struct nvkm_device *device = gr->base.engine.subdev.device;
 	int sm;
 	for (sm = 0; sm < 0x100; sm += 0x80) {
+<<<<<<< HEAD
+=======
+		nvkm_wr32(device, TPC_UNIT(gpc, tpc, 0x728 + sm), 0x0085eb64);
+>>>>>>> b7ba80a49124 (Commit)
 		nvkm_wr32(device, TPC_UNIT(gpc, tpc, 0x610), 0x00000001);
 		nvkm_wr32(device, TPC_UNIT(gpc, tpc, 0x72c + sm), 0x00000004);
 	}
@@ -85,6 +96,7 @@ gv100_gr_init_419bd8(struct gf100_gr *gr)
 	nvkm_mask(device, 0x419bd8, 0x00000700, 0x00000000);
 }
 
+<<<<<<< HEAD
 u32
 gv100_gr_nonpes_aware_tpc(struct gf100_gr *gr, u32 gpc, u32 tpc)
 {
@@ -281,6 +293,12 @@ static const struct gf100_gr_func
 gv100_gr = {
 	.oneinit_tiles = gm200_gr_oneinit_tiles,
 	.oneinit_sm_id = gv100_gr_oneinit_sm_id,
+=======
+static const struct gf100_gr_func
+gv100_gr = {
+	.oneinit_tiles = gm200_gr_oneinit_tiles,
+	.oneinit_sm_id = gm200_gr_oneinit_sm_id,
+>>>>>>> b7ba80a49124 (Commit)
 	.init = gf100_gr_init,
 	.init_419bd8 = gv100_gr_init_419bd8,
 	.init_gpc_mmu = gm200_gr_init_gpc_mmu,
@@ -295,6 +313,7 @@ gv100_gr = {
 	.init_ppc_exceptions = gk104_gr_init_ppc_exceptions,
 	.init_504430 = gv100_gr_init_504430,
 	.init_shader_exceptions = gv100_gr_init_shader_exceptions,
+<<<<<<< HEAD
 	.init_rop_exceptions = gf100_gr_init_rop_exceptions,
 	.init_exception2 = gf100_gr_init_exception2,
 	.init_4188a4 = gv100_gr_init_4188a4,
@@ -303,6 +322,13 @@ gv100_gr = {
 	.rops = gm200_gr_rops,
 	.gpc_nr = 6,
 	.tpc_nr = 7,
+=======
+	.init_4188a4 = gv100_gr_init_4188a4,
+	.trap_mp = gv100_gr_trap_mp,
+	.rops = gm200_gr_rops,
+	.gpc_nr = 6,
+	.tpc_nr = 5,
+>>>>>>> b7ba80a49124 (Commit)
 	.ppc_nr = 3,
 	.grctx = &gv100_grctx,
 	.zbc = &gp102_gr_zbc,

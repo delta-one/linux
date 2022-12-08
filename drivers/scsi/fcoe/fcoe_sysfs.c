@@ -830,6 +830,7 @@ struct fcoe_ctlr_device *fcoe_ctlr_device_add(struct device *parent,
 
 	dev_set_name(&ctlr->dev, "ctlr_%d", ctlr->id);
 	error = device_register(&ctlr->dev);
+<<<<<<< HEAD
 	if (error) {
 		destroy_workqueue(ctlr->devloss_work_q);
 		destroy_workqueue(ctlr->work_q);
@@ -839,6 +840,16 @@ struct fcoe_ctlr_device *fcoe_ctlr_device_add(struct device *parent,
 
 	return ctlr;
 
+=======
+	if (error)
+		goto out_del_q2;
+
+	return ctlr;
+
+out_del_q2:
+	destroy_workqueue(ctlr->devloss_work_q);
+	ctlr->devloss_work_q = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 out_del_q:
 	destroy_workqueue(ctlr->work_q);
 	ctlr->work_q = NULL;
@@ -1037,16 +1048,26 @@ struct fcoe_fcf_device *fcoe_fcf_device_add(struct fcoe_ctlr_device *ctlr,
 	fcf->selected = new_fcf->selected;
 
 	error = device_register(&fcf->dev);
+<<<<<<< HEAD
 	if (error) {
 		put_device(&fcf->dev);
 		goto out;
 	}
+=======
+	if (error)
+		goto out_del;
+>>>>>>> b7ba80a49124 (Commit)
 
 	fcf->state = FCOE_FCF_STATE_CONNECTED;
 	list_add_tail(&fcf->peers, &ctlr->fcfs);
 
 	return fcf;
 
+<<<<<<< HEAD
+=======
+out_del:
+	kfree(fcf);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	return NULL;
 }

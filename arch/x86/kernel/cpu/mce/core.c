@@ -67,7 +67,17 @@ DEFINE_PER_CPU(unsigned, mce_exception_count);
 
 DEFINE_PER_CPU_READ_MOSTLY(unsigned int, mce_num_banks);
 
+<<<<<<< HEAD
 DEFINE_PER_CPU_READ_MOSTLY(struct mce_bank[MAX_NR_BANKS], mce_banks_array);
+=======
+struct mce_bank {
+	u64			ctl;			/* subevents to enable */
+
+	__u64 init			: 1,		/* initialise bank? */
+	      __reserved_1		: 63;
+};
+static DEFINE_PER_CPU_READ_MOSTLY(struct mce_bank[MAX_NR_BANKS], mce_banks_array);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define ATTR_LEN               16
 /* One object for each MCE bank, shared by all CPUs */
@@ -573,7 +583,11 @@ static int uc_decode_notifier(struct notifier_block *nb, unsigned long val,
 	    mce->severity != MCE_DEFERRED_SEVERITY)
 		return NOTIFY_DONE;
 
+<<<<<<< HEAD
 	pfn = (mce->addr & MCI_ADDR_PHYSADDR) >> PAGE_SHIFT;
+=======
+	pfn = mce->addr >> PAGE_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 	if (!memory_failure(pfn, 0)) {
 		set_mce_nospec(pfn);
 		mce->kflags |= MCE_HANDLED_UC;
@@ -627,7 +641,19 @@ static noinstr void mce_read_aux(struct mce *m, int i)
 			m->addr <<= shift;
 		}
 
+<<<<<<< HEAD
 		smca_extract_err_addr(m);
+=======
+		/*
+		 * Extract [55:<lsb>] where lsb is the least significant
+		 * *valid* bit of the address bits.
+		 */
+		if (mce_flags.smca) {
+			u8 lsb = (m->addr >> 56) & 0x3f;
+
+			m->addr &= GENMASK_ULL(55, lsb);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (mce_flags.smca) {
@@ -1294,7 +1320,10 @@ static void kill_me_maybe(struct callback_head *cb)
 {
 	struct task_struct *p = container_of(cb, struct task_struct, mce_kill_me);
 	int flags = MF_ACTION_REQUIRED;
+<<<<<<< HEAD
 	unsigned long pfn;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	p->mce_count = 0;
@@ -1303,10 +1332,16 @@ static void kill_me_maybe(struct callback_head *cb)
 	if (!p->mce_ripv)
 		flags |= MF_MUST_KILL;
 
+<<<<<<< HEAD
 	pfn = (p->mce_addr & MCI_ADDR_PHYSADDR) >> PAGE_SHIFT;
 	ret = memory_failure(pfn, flags);
 	if (!ret) {
 		set_mce_nospec(pfn);
+=======
+	ret = memory_failure(p->mce_addr >> PAGE_SHIFT, flags);
+	if (!ret) {
+		set_mce_nospec(p->mce_addr >> PAGE_SHIFT);
+>>>>>>> b7ba80a49124 (Commit)
 		sync_core();
 		return;
 	}
@@ -1328,6 +1363,7 @@ static void kill_me_maybe(struct callback_head *cb)
 static void kill_me_never(struct callback_head *cb)
 {
 	struct task_struct *p = container_of(cb, struct task_struct, mce_kill_me);
+<<<<<<< HEAD
 	unsigned long pfn;
 
 	p->mce_count = 0;
@@ -1335,6 +1371,13 @@ static void kill_me_never(struct callback_head *cb)
 	pfn = (p->mce_addr & MCI_ADDR_PHYSADDR) >> PAGE_SHIFT;
 	if (!memory_failure(pfn, 0))
 		set_mce_nospec(pfn);
+=======
+
+	p->mce_count = 0;
+	pr_err("Kernel accessed poison in user space at %llx\n", p->mce_addr);
+	if (!memory_failure(p->mce_addr >> PAGE_SHIFT, 0))
+		set_mce_nospec(p->mce_addr >> PAGE_SHIFT);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void queue_task_work(struct mce *m, char *msg, void (*func)(struct callback_head *))
@@ -2355,7 +2398,10 @@ static void mce_restart(void)
 {
 	mce_timer_delete_all();
 	on_each_cpu(mce_cpu_restart, NULL, 1);
+<<<<<<< HEAD
 	mce_schedule_work();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Toggle features for corrected errors */

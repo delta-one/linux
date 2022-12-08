@@ -3,11 +3,17 @@
 #include <linux/module.h>
 #include <linux/slab.h>
 #include <linux/device.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
 #include <linux/nls.h>
 #include <linux/usb/composite.h>
 #include <linux/usb/gadget_configfs.h>
 #include <linux/usb/webusb.h>
+=======
+#include <linux/nls.h>
+#include <linux/usb/composite.h>
+#include <linux/usb/gadget_configfs.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include "configfs.h"
 #include "u_f.h"
 #include "u_os_desc.h"
@@ -40,7 +46,10 @@ struct gadget_info {
 	struct config_group configs_group;
 	struct config_group strings_group;
 	struct config_group os_desc_group;
+<<<<<<< HEAD
 	struct config_group webusb_group;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct mutex lock;
 	struct usb_gadget_strings *gstrings[MAX_USB_STRING_LANGS + 1];
@@ -52,11 +61,14 @@ struct gadget_info {
 	bool use_os_desc;
 	char b_vendor_code;
 	char qw_sign[OS_STRING_QW_SIGN_LEN];
+<<<<<<< HEAD
 	bool use_webusb;
 	u16 bcd_webusb_version;
 	u8 b_webusb_vendor_code;
 	char landing_page[WEBUSB_URL_RAW_MAX_LENGTH];
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spinlock_t spinlock;
 	bool unbind;
 };
@@ -86,7 +98,11 @@ static inline struct gadget_info *cfg_to_gadget_info(struct config_usb_cfg *cfg)
 	return container_of(cfg->c.cdev, struct gadget_info, cdev);
 }
 
+<<<<<<< HEAD
 struct gadget_language {
+=======
+struct gadget_strings {
+>>>>>>> b7ba80a49124 (Commit)
 	struct usb_gadget_strings stringtab_dev;
 	struct usb_string strings[USB_GADGET_FIRST_AVAIL_IDX];
 	char *manufacturer;
@@ -95,8 +111,11 @@ struct gadget_language {
 
 	struct config_group group;
 	struct list_head list;
+<<<<<<< HEAD
 	struct list_head gadget_strings;
 	unsigned int nstrings;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct gadget_config_name {
@@ -374,9 +393,15 @@ static struct configfs_attribute *gadget_root_attrs[] = {
 	NULL,
 };
 
+<<<<<<< HEAD
 static inline struct gadget_language *to_gadget_language(struct config_item *item)
 {
 	return container_of(to_config_group(item), struct gadget_language,
+=======
+static inline struct gadget_strings *to_gadget_strings(struct config_item *item)
+{
+	return container_of(to_config_group(item), struct gadget_strings,
+>>>>>>> b7ba80a49124 (Commit)
 			 group);
 }
 
@@ -402,7 +427,10 @@ static void gadget_info_attr_release(struct config_item *item)
 	WARN_ON(!list_empty(&gi->string_list));
 	WARN_ON(!list_empty(&gi->available_func));
 	kfree(gi->composite.gadget_driver.function);
+<<<<<<< HEAD
 	kfree(gi->composite.gadget_driver.driver.name);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(gi);
 }
 
@@ -439,12 +467,15 @@ static int config_usb_cfg_link(
 	 * from another gadget or a random directory.
 	 * Also a function instance can only be linked once.
 	 */
+<<<<<<< HEAD
 
 	if (gi->composite.gadget_driver.udc_name) {
 		ret = -EINVAL;
 		goto out;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry(iter, &gi->available_func, cfs_list) {
 		if (iter != fi)
 			continue;
@@ -770,6 +801,7 @@ static const struct config_item_type config_desc_type = {
 	.ct_owner       = THIS_MODULE,
 };
 
+<<<<<<< HEAD
 GS_STRINGS_RW(gadget_language, manufacturer);
 GS_STRINGS_RW(gadget_language, product);
 GS_STRINGS_RW(gadget_language, serialnumber);
@@ -784,6 +816,22 @@ static struct configfs_attribute *gadget_language_langid_attrs[] = {
 static void gadget_language_attr_release(struct config_item *item)
 {
 	struct gadget_language *gs = to_gadget_language(item);
+=======
+GS_STRINGS_RW(gadget_strings, manufacturer);
+GS_STRINGS_RW(gadget_strings, product);
+GS_STRINGS_RW(gadget_strings, serialnumber);
+
+static struct configfs_attribute *gadget_strings_langid_attrs[] = {
+	&gadget_strings_attr_manufacturer,
+	&gadget_strings_attr_product,
+	&gadget_strings_attr_serialnumber,
+	NULL,
+};
+
+static void gadget_strings_attr_release(struct config_item *item)
+{
+	struct gadget_strings *gs = to_gadget_strings(item);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(gs->manufacturer);
 	kfree(gs->product);
@@ -793,6 +841,7 @@ static void gadget_language_attr_release(struct config_item *item)
 	kfree(gs);
 }
 
+<<<<<<< HEAD
 static struct configfs_item_operations gadget_language_langid_item_ops = {
 	.release                = gadget_language_attr_release,
 };
@@ -1104,6 +1153,10 @@ static struct config_item_type webusb_type = {
 	.ct_attrs	= webusb_attrs,
 	.ct_owner	= THIS_MODULE,
 };
+=======
+USB_CONFIG_STRING_RW_OPS(gadget_strings);
+USB_CONFIG_STRINGS_LANG(gadget_strings, gadget_info);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline struct gadget_info *os_desc_item_to_gadget_info(
 		struct config_item *item)
@@ -1125,6 +1178,7 @@ static ssize_t os_desc_use_store(struct config_item *item, const char *page,
 	int ret;
 	bool use;
 
+<<<<<<< HEAD
 	ret = kstrtobool(page, &use);
 	if (ret)
 		return ret;
@@ -1134,6 +1188,17 @@ static ssize_t os_desc_use_store(struct config_item *item, const char *page,
 	mutex_unlock(&gi->lock);
 
 	return len;
+=======
+	mutex_lock(&gi->lock);
+	ret = strtobool(page, &use);
+	if (!ret) {
+		gi->use_os_desc = use;
+		ret = len;
+	}
+	mutex_unlock(&gi->lock);
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t os_desc_b_vendor_code_show(struct config_item *item, char *page)
@@ -1149,6 +1214,7 @@ static ssize_t os_desc_b_vendor_code_store(struct config_item *item,
 	int ret;
 	u8 b_vendor_code;
 
+<<<<<<< HEAD
 	ret = kstrtou8(page, 0, &b_vendor_code);
 	if (ret)
 		return ret;
@@ -1158,6 +1224,17 @@ static ssize_t os_desc_b_vendor_code_store(struct config_item *item,
 	mutex_unlock(&gi->lock);
 
 	return len;
+=======
+	mutex_lock(&gi->lock);
+	ret = kstrtou8(page, 0, &b_vendor_code);
+	if (!ret) {
+		gi->b_vendor_code = b_vendor_code;
+		ret = len;
+	}
+	mutex_unlock(&gi->lock);
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t os_desc_qw_sign_show(struct config_item *item, char *page)
@@ -1282,6 +1359,7 @@ static ssize_t ext_prop_type_store(struct config_item *item,
 	u8 type;
 	int ret;
 
+<<<<<<< HEAD
 	ret = kstrtou8(page, 0, &type);
 	if (ret)
 		return ret;
@@ -1291,6 +1369,17 @@ static ssize_t ext_prop_type_store(struct config_item *item,
 
 	if (desc->opts_mutex)
 		mutex_lock(desc->opts_mutex);
+=======
+	if (desc->opts_mutex)
+		mutex_lock(desc->opts_mutex);
+	ret = kstrtou8(page, 0, &type);
+	if (ret)
+		goto end;
+	if (type < USB_EXT_PROP_UNICODE || type > USB_EXT_PROP_UNICODE_MULTI) {
+		ret = -EINVAL;
+		goto end;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if ((ext_prop->type == USB_EXT_PROP_BINARY ||
 	    ext_prop->type == USB_EXT_PROP_LE32 ||
@@ -1307,10 +1396,19 @@ static ssize_t ext_prop_type_store(struct config_item *item,
 		   type == USB_EXT_PROP_BE32))
 		ext_prop->data_len >>= 1;
 	ext_prop->type = type;
+<<<<<<< HEAD
 
 	if (desc->opts_mutex)
 		mutex_unlock(desc->opts_mutex);
 	return len;
+=======
+	ret = len;
+
+end:
+	if (desc->opts_mutex)
+		mutex_unlock(desc->opts_mutex);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t ext_prop_data_show(struct config_item *item, char *page)
@@ -1595,6 +1693,7 @@ static void purge_configs_funcs(struct gadget_info *gi)
 	}
 }
 
+<<<<<<< HEAD
 static struct usb_string *
 configfs_attach_gadget_strings(struct gadget_info *gi)
 {
@@ -1669,6 +1768,8 @@ cleanup:
 	return us;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int configfs_composite_bind(struct usb_gadget *gadget,
 		struct usb_gadget_driver *gdriver)
 {
@@ -1712,7 +1813,26 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
 
 	/* init all strings */
 	if (!list_empty(&gi->string_list)) {
+<<<<<<< HEAD
 		s = configfs_attach_gadget_strings(gi);
+=======
+		struct gadget_strings *gs;
+
+		i = 0;
+		list_for_each_entry(gs, &gi->string_list, list) {
+
+			gi->gstrings[i] = &gs->stringtab_dev;
+			gs->stringtab_dev.strings = gs->strings;
+			gs->strings[USB_GADGET_MANUFACTURER_IDX].s =
+				gs->manufacturer;
+			gs->strings[USB_GADGET_PRODUCT_IDX].s = gs->product;
+			gs->strings[USB_GADGET_SERIAL_IDX].s = gs->serialnumber;
+			i++;
+		}
+		gi->gstrings[i] = NULL;
+		s = usb_gstrings_attach(&gi->cdev, gi->gstrings,
+				USB_GADGET_FIRST_AVAIL_IDX);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(s)) {
 			ret = PTR_ERR(s);
 			goto err_comp_cleanup;
@@ -1721,6 +1841,7 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
 		gi->cdev.desc.iManufacturer = s[USB_GADGET_MANUFACTURER_IDX].id;
 		gi->cdev.desc.iProduct = s[USB_GADGET_PRODUCT_IDX].id;
 		gi->cdev.desc.iSerialNumber = s[USB_GADGET_SERIAL_IDX].id;
+<<<<<<< HEAD
 
 		gi->cdev.usb_strings = s;
 	}
@@ -1730,6 +1851,8 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
 		cdev->bcd_webusb_version = gi->bcd_webusb_version;
 		cdev->b_webusb_vendor_code = gi->b_webusb_vendor_code;
 		memcpy(cdev->landing_page, gi->landing_page, WEBUSB_URL_RAW_MAX_LENGTH);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (gi->use_os_desc) {
@@ -1963,6 +2086,10 @@ static const struct usb_gadget_driver configfs_driver_template = {
 	.max_speed	= USB_SPEED_SUPER_PLUS,
 	.driver = {
 		.owner          = THIS_MODULE,
+<<<<<<< HEAD
+=======
+		.name		= "configfs-gadget",
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.match_existing_only = 1,
 };
@@ -1988,17 +2115,24 @@ static struct config_group *gadgets_make(
 	configfs_add_default_group(&gi->configs_group, &gi->group);
 
 	config_group_init_type_name(&gi->strings_group, "strings",
+<<<<<<< HEAD
 			&gadget_language_strings_type);
+=======
+			&gadget_strings_strings_type);
+>>>>>>> b7ba80a49124 (Commit)
 	configfs_add_default_group(&gi->strings_group, &gi->group);
 
 	config_group_init_type_name(&gi->os_desc_group, "os_desc",
 			&os_desc_type);
 	configfs_add_default_group(&gi->os_desc_group, &gi->group);
 
+<<<<<<< HEAD
 	config_group_init_type_name(&gi->webusb_group, "webusb",
 			&webusb_type);
 	configfs_add_default_group(&gi->webusb_group, &gi->group);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gi->composite.bind = configfs_do_nothing;
 	gi->composite.unbind = configfs_do_nothing;
 	gi->composite.suspend = NULL;
@@ -2017,21 +2151,30 @@ static struct config_group *gadgets_make(
 
 	gi->composite.gadget_driver = configfs_driver_template;
 
+<<<<<<< HEAD
 	gi->composite.gadget_driver.driver.name = kasprintf(GFP_KERNEL,
 							    "configfs-gadget.%s", name);
 	if (!gi->composite.gadget_driver.driver.name)
 		goto err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gi->composite.gadget_driver.function = kstrdup(name, GFP_KERNEL);
 	gi->composite.name = gi->composite.gadget_driver.function;
 
 	if (!gi->composite.gadget_driver.function)
+<<<<<<< HEAD
 		goto out_free_driver_name;
 
 	return &gi->group;
 
 out_free_driver_name:
 	kfree(gi->composite.gadget_driver.driver.name);
+=======
+		goto err;
+
+	return &gi->group;
+>>>>>>> b7ba80a49124 (Commit)
 err:
 	kfree(gi);
 	return ERR_PTR(-ENOMEM);

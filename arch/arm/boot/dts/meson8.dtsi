@@ -133,7 +133,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	gpu_opp_table: opp-table-gpu {
+=======
+	gpu_opp_table: gpu-opp-table {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "operating-points-v2";
 
 		opp-182142857 {
@@ -506,6 +510,7 @@
 			};
 		};
 
+<<<<<<< HEAD
 		sdxc_a_pins: sdxc-a {
 			mux {
 				groups = "sdxc_d0_a", "sdxc_d13_a",
@@ -515,6 +520,8 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		sdxc_b_pins: sdxc-b {
 			mux {
 				groups = "sdxc_d0_b", "sdxc_d13_b",
@@ -577,6 +584,7 @@
 				bias-disable;
 			};
 		};
+<<<<<<< HEAD
 
 		xtal_32k_out_pins: xtal-32k-out {
 			mux {
@@ -585,6 +593,8 @@
 				bias-disable;
 			};
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -668,9 +678,12 @@
 	arm,filter-ranges = <0x100000 0xc0000000>;
 	prefetch-data = <1>;
 	prefetch-instr = <1>;
+<<<<<<< HEAD
 	arm,prefetch-offset = <7>;
 	arm,double-linefill = <1>;
 	arm,prefetch-drop = <1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	arm,shared-override;
 };
 

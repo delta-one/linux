@@ -44,6 +44,7 @@ Description:
 
 	(read-write)
 
+<<<<<<< HEAD
 What:		/sys/class/bdi/<bdi>/min_ratio_fine
 Date:		November 2022
 Contact:	Stefan Roesch <shr@devkernel.io>
@@ -59,6 +60,8 @@ Description:
 
 	(read-write)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 What:		/sys/class/bdi/<bdi>/max_ratio
 Date:		January 2008
 Contact:	Peter Zijlstra <a.p.zijlstra@chello.nl>
@@ -71,6 +74,7 @@ Description:
 	be trusted to play fair.
 
 	(read-write)
+<<<<<<< HEAD
 
 What:		/sys/class/bdi/<bdi>/max_ratio_fine
 Date:		November 2022
@@ -124,6 +128,8 @@ Description:
 	strictlimit on has no visible effect if max_ratio is equal to 100%.
 
 	(read-write)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 What:		/sys/class/bdi/<bdi>/stable_pages_required
 Date:		January 2008
 Contact:	Peter Zijlstra <a.p.zijlstra@chello.nl>

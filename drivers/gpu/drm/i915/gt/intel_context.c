@@ -528,7 +528,11 @@ retry:
 	return rq;
 }
 
+<<<<<<< HEAD
 struct i915_request *intel_context_get_active_request(struct intel_context *ce)
+=======
+struct i915_request *intel_context_find_active_request(struct intel_context *ce)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct intel_context *parent = intel_context_to_parent(ce);
 	struct i915_request *rq, *active = NULL;
@@ -552,8 +556,11 @@ struct i915_request *intel_context_get_active_request(struct intel_context *ce)
 
 		active = rq;
 	}
+<<<<<<< HEAD
 	if (active)
 		active = i915_request_get_rcu(active);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irqrestore(&parent->guc_state.lock, flags);
 
 	return active;
@@ -616,12 +623,21 @@ bool intel_context_ban(struct intel_context *ce, struct i915_request *rq)
 	return ret;
 }
 
+<<<<<<< HEAD
 bool intel_context_revoke(struct intel_context *ce)
+=======
+bool intel_context_exit_nonpersistent(struct intel_context *ce,
+				      struct i915_request *rq)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	bool ret = intel_context_set_exiting(ce);
 
 	if (ce->ops->revoke)
+<<<<<<< HEAD
 		ce->ops->revoke(ce, NULL, ce->engine->props.preempt_timeout_ms);
+=======
+		ce->ops->revoke(ce, rq, ce->engine->props.preempt_timeout_ms);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }

@@ -1012,7 +1012,11 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	netdev->netdev_ops = &e1000_netdev_ops;
 	e1000_set_ethtool_ops(netdev);
 	netdev->watchdog_timeo = 5 * HZ;
+<<<<<<< HEAD
 	netif_napi_add(netdev, &adapter->napi, e1000_clean);
+=======
+	netif_napi_add(netdev, &adapter->napi, e1000_clean, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	strncpy(netdev->name, pci_name(pdev), sizeof(netdev->name) - 1);
 
@@ -4229,6 +4233,11 @@ process_skb:
 				 */
 				p = buffer_info->rxbuf.page;
 				if (length <= copybreak) {
+<<<<<<< HEAD
+=======
+					u8 *vaddr;
+
+>>>>>>> b7ba80a49124 (Commit)
 					if (likely(!(netdev->features & NETIF_F_RXFCS)))
 						length -= 4;
 					skb = e1000_alloc_rx_skb(adapter,
@@ -4236,9 +4245,16 @@ process_skb:
 					if (!skb)
 						break;
 
+<<<<<<< HEAD
 					memcpy(skb_tail_pointer(skb),
 					       page_address(p), length);
 
+=======
+					vaddr = kmap_atomic(p);
+					memcpy(skb_tail_pointer(skb), vaddr,
+					       length);
+					kunmap_atomic(vaddr);
+>>>>>>> b7ba80a49124 (Commit)
 					/* re-use the page, so don't erase
 					 * buffer_info->rxbuf.page
 					 */

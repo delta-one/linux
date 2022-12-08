@@ -21,7 +21,11 @@ trusted_get(const struct xattr_handler *handler, struct dentry *unused,
 
 static int
 trusted_set(const struct xattr_handler *handler,
+<<<<<<< HEAD
 	    struct mnt_idmap *idmap, struct dentry *unused,
+=======
+	    struct user_namespace *mnt_userns, struct dentry *unused,
+>>>>>>> b7ba80a49124 (Commit)
 	    struct inode *inode, const char *name, const void *buffer,
 	    size_t size, int flags)
 {

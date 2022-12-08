@@ -32,7 +32,10 @@ struct snd_usb_iface_ref {
 	unsigned char iface;
 	bool need_setup;
 	int opened;
+<<<<<<< HEAD
 	int altset;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head list;
 };
 
@@ -96,13 +99,20 @@ static inline unsigned get_usb_high_speed_rate(unsigned int rate)
  */
 static void release_urb_ctx(struct snd_urb_ctx *u)
 {
+<<<<<<< HEAD
 	if (u->urb && u->buffer_size)
+=======
+	if (u->buffer_size)
+>>>>>>> b7ba80a49124 (Commit)
 		usb_free_coherent(u->ep->chip->dev, u->buffer_size,
 				  u->urb->transfer_buffer,
 				  u->urb->transfer_dma);
 	usb_free_urb(u->urb);
 	u->urb = NULL;
+<<<<<<< HEAD
 	u->buffer_size = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const char *usb_error_string(int err)
@@ -455,8 +465,13 @@ static void push_back_to_ready_list(struct snd_usb_endpoint *ep,
  * This function is used both for implicit feedback endpoints and in low-
  * latency playback mode.
  */
+<<<<<<< HEAD
 int snd_usb_queue_pending_output_urbs(struct snd_usb_endpoint *ep,
 				      bool in_stream_lock)
+=======
+void snd_usb_queue_pending_output_urbs(struct snd_usb_endpoint *ep,
+				       bool in_stream_lock)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	bool implicit_fb = snd_usb_endpoint_implicit_feedback_sink(ep);
 
@@ -480,7 +495,11 @@ int snd_usb_queue_pending_output_urbs(struct snd_usb_endpoint *ep,
 		spin_unlock_irqrestore(&ep->lock, flags);
 
 		if (ctx == NULL)
+<<<<<<< HEAD
 			break;
+=======
+			return;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* copy over the length information */
 		if (implicit_fb) {
@@ -495,6 +514,7 @@ int snd_usb_queue_pending_output_urbs(struct snd_usb_endpoint *ep,
 			break;
 		if (err < 0) {
 			/* push back to ready list again for -EAGAIN */
+<<<<<<< HEAD
 			if (err == -EAGAIN) {
 				push_back_to_ready_list(ep, ctx);
 				break;
@@ -503,6 +523,13 @@ int snd_usb_queue_pending_output_urbs(struct snd_usb_endpoint *ep,
 			if (!in_stream_lock)
 				notify_xrun(ep);
 			return -EPIPE;
+=======
+			if (err == -EAGAIN)
+				push_back_to_ready_list(ep, ctx);
+			else
+				notify_xrun(ep);
+			return;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		err = usb_submit_urb(ctx->urb, GFP_ATOMIC);
@@ -510,16 +537,24 @@ int snd_usb_queue_pending_output_urbs(struct snd_usb_endpoint *ep,
 			usb_audio_err(ep->chip,
 				      "Unable to submit urb #%d: %d at %s\n",
 				      ctx->index, err, __func__);
+<<<<<<< HEAD
 			if (!in_stream_lock)
 				notify_xrun(ep);
 			return -EPIPE;
+=======
+			notify_xrun(ep);
+			return;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		set_bit(ctx->index, &ep->active_mask);
 		atomic_inc(&ep->submitted_urbs);
 	}
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -775,8 +810,12 @@ struct snd_usb_endpoint *
 snd_usb_endpoint_open(struct snd_usb_audio *chip,
 		      const struct audioformat *fp,
 		      const struct snd_pcm_hw_params *params,
+<<<<<<< HEAD
 		      bool is_sync_ep,
 		      bool fixed_rate)
+=======
+		      bool is_sync_ep)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct snd_usb_endpoint *ep;
 	int ep_num = is_sync_ep ? fp->sync_ep : fp->endpoint;
@@ -831,8 +870,11 @@ snd_usb_endpoint_open(struct snd_usb_audio *chip,
 
 		ep->implicit_fb_sync = fp->implicit_fb;
 		ep->need_setup = true;
+<<<<<<< HEAD
 		ep->need_prepare = true;
 		ep->fixed_rate = fixed_rate;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		usb_audio_dbg(chip, "  channels=%d, rate=%d, format=%s, period_bytes=%d, periods=%d, implicit_fb=%d\n",
 			      ep->cur_channels, ep->cur_rate,
@@ -909,9 +951,12 @@ static int endpoint_set_interface(struct snd_usb_audio *chip,
 	int altset = set ? ep->altsetting : 0;
 	int err;
 
+<<<<<<< HEAD
 	if (ep->iface_ref->altset == altset)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	usb_audio_dbg(chip, "Setting usb interface %d:%d for EP 0x%x\n",
 		      ep->iface, altset, ep->ep_num);
 	err = usb_set_interface(chip->dev, ep->iface, altset);
@@ -923,7 +968,10 @@ static int endpoint_set_interface(struct snd_usb_audio *chip,
 
 	if (chip->quirk_flags & QUIRK_FLAG_IFACE_DELAY)
 		msleep(50);
+<<<<<<< HEAD
 	ep->iface_ref->altset = altset;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -939,8 +987,12 @@ void snd_usb_endpoint_close(struct snd_usb_audio *chip,
 	usb_audio_dbg(chip, "Closing EP 0x%x (count %d)\n",
 		      ep->ep_num, ep->opened);
 
+<<<<<<< HEAD
 	if (!--ep->iface_ref->opened &&
 		!(chip->quirk_flags & QUIRK_FLAG_IFACE_SKIP_CLOSE))
+=======
+	if (!--ep->iface_ref->opened)
+>>>>>>> b7ba80a49124 (Commit)
 		endpoint_set_interface(chip, ep, false);
 
 	if (!--ep->opened) {
@@ -962,7 +1014,11 @@ void snd_usb_endpoint_close(struct snd_usb_audio *chip,
 /* Prepare for suspening EP, called from the main suspend handler */
 void snd_usb_endpoint_suspend(struct snd_usb_endpoint *ep)
 {
+<<<<<<< HEAD
 	ep->need_prepare = true;
+=======
+	ep->need_setup = true;
+>>>>>>> b7ba80a49124 (Commit)
 	if (ep->iface_ref)
 		ep->iface_ref->need_setup = true;
 	if (ep->clock_ref)
@@ -1179,8 +1235,27 @@ static int data_ep_set_params(struct snd_usb_endpoint *ep)
 	 */
 	if (usb_pipein(ep->pipe) || ep->implicit_fb_sync) {
 
+<<<<<<< HEAD
 		/* make capture URBs <= 1 ms and smaller than a period */
 		urb_packs = min(max_packs_per_urb, packs_per_ms);
+=======
+		urb_packs = packs_per_ms;
+		/*
+		 * Wireless devices can poll at a max rate of once per 4ms.
+		 * For dataintervals less than 5, increase the packet count to
+		 * allow the host controller to use bursting to fill in the
+		 * gaps.
+		 */
+		if (snd_usb_get_speed(chip->dev) == USB_SPEED_WIRELESS) {
+			int interval = ep->datainterval;
+			while (interval < 5) {
+				urb_packs <<= 1;
+				++interval;
+			}
+		}
+		/* make capture URBs <= 1 ms and smaller than a period */
+		urb_packs = min(max_packs_per_urb, urb_packs);
+>>>>>>> b7ba80a49124 (Commit)
 		while (urb_packs > 1 && urb_packs * maxsize >= ep->cur_period_bytes)
 			urb_packs >>= 1;
 		ep->nurbs = MAX_URBS;
@@ -1269,7 +1344,10 @@ static int sync_ep_set_params(struct snd_usb_endpoint *ep)
 	if (!ep->syncbuf)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	ep->nurbs = SYNC_URBS;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < SYNC_URBS; i++) {
 		struct snd_urb_ctx *u = &ep->urb[i];
 		u->index = i;
@@ -1289,6 +1367,11 @@ static int sync_ep_set_params(struct snd_usb_endpoint *ep)
 		u->urb->complete = snd_complete_urb;
 	}
 
+<<<<<<< HEAD
+=======
+	ep->nurbs = SYNC_URBS;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 out_of_memory:
@@ -1331,16 +1414,24 @@ int snd_usb_endpoint_set_params(struct snd_usb_audio *chip,
 				struct snd_usb_endpoint *ep)
 {
 	const struct audioformat *fmt = ep->cur_audiofmt;
+<<<<<<< HEAD
 	int err = 0;
 
 	mutex_lock(&chip->mutex);
 	if (!ep->need_setup)
 		goto unlock;
+=======
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* release old buffers, if any */
 	err = release_urbs(ep, false);
 	if (err < 0)
+<<<<<<< HEAD
 		goto unlock;
+=======
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ep->datainterval = fmt->datainterval;
 	ep->maxpacksize = fmt->maxpacksize;
@@ -1378,12 +1469,17 @@ int snd_usb_endpoint_set_params(struct snd_usb_audio *chip,
 	usb_audio_dbg(chip, "Set up %d URBS, ret=%d\n", ep->nurbs, err);
 
 	if (err < 0)
+<<<<<<< HEAD
 		goto unlock;
+=======
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* some unit conversions in runtime */
 	ep->maxframesize = ep->maxpacksize / ep->cur_frame_bytes;
 	ep->curframesize = ep->curpacksize / ep->cur_frame_bytes;
 
+<<<<<<< HEAD
 	err = update_clock_ref_rate(chip, ep);
 	if (err >= 0) {
 		ep->need_setup = false;
@@ -1393,6 +1489,9 @@ int snd_usb_endpoint_set_params(struct snd_usb_audio *chip,
  unlock:
 	mutex_unlock(&chip->mutex);
 	return err;
+=======
+	return update_clock_ref_rate(chip, ep);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int init_sample_rate(struct snd_usb_audio *chip,
@@ -1407,6 +1506,7 @@ static int init_sample_rate(struct snd_usb_audio *chip,
 	if (clock && !clock->need_setup)
 		return 0;
 
+<<<<<<< HEAD
 	if (!ep->fixed_rate) {
 		err = snd_usb_init_sample_rate(chip, ep->cur_audiofmt, rate);
 		if (err < 0) {
@@ -1414,6 +1514,13 @@ static int init_sample_rate(struct snd_usb_audio *chip,
 				clock->rate = 0; /* reset rate */
 			return err;
 		}
+=======
+	err = snd_usb_init_sample_rate(chip, ep->cur_audiofmt, rate);
+	if (err < 0) {
+		if (clock)
+			clock->rate = 0; /* reset rate */
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (clock)
@@ -1441,7 +1548,11 @@ int snd_usb_endpoint_prepare(struct snd_usb_audio *chip,
 	mutex_lock(&chip->mutex);
 	if (WARN_ON(!ep->iface_ref))
 		goto unlock;
+<<<<<<< HEAD
 	if (!ep->need_prepare)
+=======
+	if (!ep->need_setup)
+>>>>>>> b7ba80a49124 (Commit)
 		goto unlock;
 
 	/* If the interface has been already set up, just set EP parameters */
@@ -1495,7 +1606,11 @@ int snd_usb_endpoint_prepare(struct snd_usb_audio *chip,
 	ep->iface_ref->need_setup = false;
 
  done:
+<<<<<<< HEAD
 	ep->need_prepare = false;
+=======
+	ep->need_setup = false;
+>>>>>>> b7ba80a49124 (Commit)
 	err = 1;
 
 unlock:
@@ -1669,6 +1784,7 @@ void snd_usb_endpoint_stop(struct snd_usb_endpoint *ep, bool keep_pending)
 		stop_urbs(ep, false, keep_pending);
 		if (ep->clock_ref)
 			atomic_dec(&ep->clock_ref->locked);
+<<<<<<< HEAD
 
 		if (ep->chip->quirk_flags & QUIRK_FLAG_FORCE_IFACE_RESET &&
 		    usb_pipeout(ep->pipe)) {
@@ -1676,6 +1792,8 @@ void snd_usb_endpoint_stop(struct snd_usb_endpoint *ep, bool keep_pending)
 			if (ep->iface_ref)
 				ep->iface_ref->need_setup = true;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

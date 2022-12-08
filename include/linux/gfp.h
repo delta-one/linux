@@ -210,6 +210,7 @@ alloc_pages_bulk_array_node(gfp_t gfp, int nid, unsigned long nr_pages, struct p
 	return __alloc_pages_bulk(gfp, nid, NULL, nr_pages, NULL, page_array);
 }
 
+<<<<<<< HEAD
 static inline void warn_if_node_offline(int this_node, gfp_t gfp_mask)
 {
 	gfp_t warn_gfp = gfp_mask & (__GFP_THISNODE|__GFP_NOWARN);
@@ -224,6 +225,8 @@ static inline void warn_if_node_offline(int this_node, gfp_t gfp_mask)
 	dump_stack();
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Allocate pages, preferring the node given as nid. The node must be valid and
  * online. For more general interface, see alloc_pages_node().
@@ -232,7 +235,11 @@ static inline struct page *
 __alloc_pages_node(int nid, gfp_t gfp_mask, unsigned int order)
 {
 	VM_BUG_ON(nid < 0 || nid >= MAX_NUMNODES);
+<<<<<<< HEAD
 	warn_if_node_offline(nid, gfp_mask);
+=======
+	VM_WARN_ON((gfp_mask & __GFP_THISNODE) && !node_online(nid));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return __alloc_pages(gfp_mask, order, nid, NULL);
 }
@@ -241,7 +248,11 @@ static inline
 struct folio *__folio_alloc_node(gfp_t gfp, unsigned int order, int nid)
 {
 	VM_BUG_ON(nid < 0 || nid >= MAX_NUMNODES);
+<<<<<<< HEAD
 	warn_if_node_offline(nid, gfp);
+=======
+	VM_WARN_ON((gfp & __GFP_THISNODE) && !node_online(nid));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return __folio_alloc(gfp, order, nid, NULL);
 }
@@ -319,7 +330,11 @@ extern void page_frag_free(void *addr);
 #define __free_page(page) __free_pages((page), 0)
 #define free_page(addr) free_pages((addr), 0)
 
+<<<<<<< HEAD
 void page_alloc_init_cpuhp(void);
+=======
+void page_alloc_init(void);
+>>>>>>> b7ba80a49124 (Commit)
 void drain_zone_pages(struct zone *zone, struct per_cpu_pages *pcp);
 void drain_all_pages(struct zone *zone);
 void drain_local_pages(struct zone *zone);
@@ -361,4 +376,12 @@ extern struct page *alloc_contig_pages(unsigned long nr_pages, gfp_t gfp_mask,
 #endif
 void free_contig_range(unsigned long pfn, unsigned long nr_pages);
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_CMA
+/* CMA stuff */
+extern void init_cma_reserved_pageblock(struct page *page);
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __LINUX_GFP_H */

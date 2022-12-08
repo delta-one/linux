@@ -208,6 +208,11 @@ struct powerdomain *pwrdm_lookup(const char *name);
 
 int pwrdm_for_each(int (*fn)(struct powerdomain *pwrdm, void *user),
 			void *user);
+<<<<<<< HEAD
+=======
+int pwrdm_for_each_nolock(int (*fn)(struct powerdomain *pwrdm, void *user),
+			void *user);
+>>>>>>> b7ba80a49124 (Commit)
 
 int pwrdm_add_clkdm(struct powerdomain *pwrdm, struct clockdomain *clkdm);
 
@@ -241,6 +246,11 @@ int pwrdm_state_switch_nolock(struct powerdomain *pwrdm);
 int pwrdm_state_switch(struct powerdomain *pwrdm);
 int pwrdm_pre_transition(struct powerdomain *pwrdm);
 int pwrdm_post_transition(struct powerdomain *pwrdm);
+<<<<<<< HEAD
+=======
+int pwrdm_get_context_loss_count(struct powerdomain *pwrdm);
+bool pwrdm_can_ever_lose_context(struct powerdomain *pwrdm);
+>>>>>>> b7ba80a49124 (Commit)
 
 extern int omap_set_pwrdm_state(struct powerdomain *pwrdm, u8 state);
 
@@ -269,4 +279,11 @@ extern struct powerdomain gfx_omap2_pwrdm;
 extern void pwrdm_lock(struct powerdomain *pwrdm);
 extern void pwrdm_unlock(struct powerdomain *pwrdm);
 
+<<<<<<< HEAD
+=======
+extern void pwrdms_save_context(void);
+extern void pwrdms_restore_context(void);
+
+extern void pwrdms_lost_power(void);
+>>>>>>> b7ba80a49124 (Commit)
 #endif

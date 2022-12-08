@@ -184,9 +184,14 @@ static int i2c_outb(struct i2c_adapter *i2c_adap, unsigned char c)
 
 	/* read ack: SDA should be pulled down by slave, or it may
 	 * NAK (usually to report problems with the data we wrote).
+<<<<<<< HEAD
 	 * Always report ACK if SDA is write-only.
 	 */
 	ack = !adap->getsda || !getsda(adap);    /* ack: sda is pulled low -> success */
+=======
+	 */
+	ack = !getsda(adap);    /* ack: sda is pulled low -> success */
+>>>>>>> b7ba80a49124 (Commit)
 	bit_dbg(2, &i2c_adap->dev, "i2c_outb: 0x%02x %s\n", (int)c,
 		ack ? "A" : "NA");
 
@@ -239,6 +244,7 @@ static int test_bus(struct i2c_adapter *i2c_adap)
 			return -ENODEV;
 	}
 
+<<<<<<< HEAD
 	if (adap->getsda == NULL)
 		pr_info("%s: SDA is write-only, testing not possible\n", name);
 	if (adap->getscl == NULL)
@@ -248,46 +254,109 @@ static int test_bus(struct i2c_adapter *i2c_adap)
 	scl = adap->getscl ? getscl(adap) : 1;
 	if (!scl || !sda) {
 		pr_warn("%s: bus seems to be busy (scl=%d, sda=%d)\n", name, scl, sda);
+=======
+	if (adap->getscl == NULL)
+		pr_info("%s: Testing SDA only, SCL is not readable\n", name);
+
+	sda = getsda(adap);
+	scl = (adap->getscl == NULL) ? 1 : getscl(adap);
+	if (!scl || !sda) {
+		printk(KERN_WARNING
+		       "%s: bus seems to be busy (scl=%d, sda=%d)\n",
+		       name, scl, sda);
+>>>>>>> b7ba80a49124 (Commit)
 		goto bailout;
 	}
 
 	sdalo(adap);
+<<<<<<< HEAD
 	if (adap->getsda && getsda(adap)) {
 		pr_warn("%s: SDA stuck high!\n", name);
 		goto bailout;
 	}
 	if (adap->getscl && !getscl(adap)) {
 		pr_warn("%s: SCL unexpected low while pulling SDA low!\n", name);
+=======
+	sda = getsda(adap);
+	scl = (adap->getscl == NULL) ? 1 : getscl(adap);
+	if (sda) {
+		printk(KERN_WARNING "%s: SDA stuck high!\n", name);
+		goto bailout;
+	}
+	if (!scl) {
+		printk(KERN_WARNING
+		       "%s: SCL unexpected low while pulling SDA low!\n",
+		       name);
+>>>>>>> b7ba80a49124 (Commit)
 		goto bailout;
 	}
 
 	sdahi(adap);
+<<<<<<< HEAD
 	if (adap->getsda && !getsda(adap)) {
 		pr_warn("%s: SDA stuck low!\n", name);
 		goto bailout;
 	}
 	if (adap->getscl && !getscl(adap)) {
 		pr_warn("%s: SCL unexpected low while pulling SDA high!\n", name);
+=======
+	sda = getsda(adap);
+	scl = (adap->getscl == NULL) ? 1 : getscl(adap);
+	if (!sda) {
+		printk(KERN_WARNING "%s: SDA stuck low!\n", name);
+		goto bailout;
+	}
+	if (!scl) {
+		printk(KERN_WARNING
+		       "%s: SCL unexpected low while pulling SDA high!\n",
+		       name);
+>>>>>>> b7ba80a49124 (Commit)
 		goto bailout;
 	}
 
 	scllo(adap);
+<<<<<<< HEAD
 	if (adap->getscl && getscl(adap)) {
 		pr_warn("%s: SCL stuck high!\n", name);
 		goto bailout;
 	}
 	if (adap->getsda && !getsda(adap)) {
 		pr_warn("%s: SDA unexpected low while pulling SCL low!\n", name);
+=======
+	sda = getsda(adap);
+	scl = (adap->getscl == NULL) ? 0 : getscl(adap);
+	if (scl) {
+		printk(KERN_WARNING "%s: SCL stuck high!\n", name);
+		goto bailout;
+	}
+	if (!sda) {
+		printk(KERN_WARNING
+		       "%s: SDA unexpected low while pulling SCL low!\n",
+		       name);
+>>>>>>> b7ba80a49124 (Commit)
 		goto bailout;
 	}
 
 	sclhi(adap);
+<<<<<<< HEAD
 	if (adap->getscl && !getscl(adap)) {
 		pr_warn("%s: SCL stuck low!\n", name);
 		goto bailout;
 	}
 	if (adap->getsda && !getsda(adap)) {
 		pr_warn("%s: SDA unexpected low while pulling SCL high!\n", name);
+=======
+	sda = getsda(adap);
+	scl = (adap->getscl == NULL) ? 1 : getscl(adap);
+	if (!scl) {
+		printk(KERN_WARNING "%s: SCL stuck low!\n", name);
+		goto bailout;
+	}
+	if (!sda) {
+		printk(KERN_WARNING
+		       "%s: SDA unexpected low while pulling SCL high!\n",
+		       name);
+>>>>>>> b7ba80a49124 (Commit)
 		goto bailout;
 	}
 
@@ -405,10 +474,13 @@ static int readbytes(struct i2c_adapter *i2c_adap, struct i2c_msg *msg)
 	unsigned char *temp = msg->buf;
 	int count = msg->len;
 	const unsigned flags = msg->flags;
+<<<<<<< HEAD
 	struct i2c_algo_bit_data *adap = i2c_adap->algo_data;
 
 	if (!adap->getsda)
 		return -EOPNOTSUPP;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (count > 0) {
 		inval = i2c_inb(i2c_adap);
@@ -659,6 +731,7 @@ static int __i2c_bit_add_bus(struct i2c_adapter *adap,
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	if (bit_adap->getsda == NULL)
 		dev_warn(&adap->dev, "Not I2C compliant: can't read SDA\n");
 
@@ -668,6 +741,13 @@ static int __i2c_bit_add_bus(struct i2c_adapter *adap,
 	if (bit_adap->getsda == NULL || bit_adap->getscl == NULL)
 		dev_warn(&adap->dev, "Bus may be unreliable\n");
 
+=======
+	/* Complain if SCL can't be read */
+	if (bit_adap->getscl == NULL) {
+		dev_warn(&adap->dev, "Not I2C compliant: can't read SCL\n");
+		dev_warn(&adap->dev, "Bus may be unreliable\n");
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

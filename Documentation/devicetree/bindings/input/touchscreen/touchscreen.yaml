@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/input/touchscreen/touchscreen.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Common touchscreen
+=======
+title: Common touchscreen Bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Dmitry Torokhov <dmitry.torokhov@gmail.com>

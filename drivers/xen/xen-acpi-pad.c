@@ -122,7 +122,11 @@ static int acpi_pad_add(struct acpi_device *device)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void acpi_pad_remove(struct acpi_device *device)
+=======
+static int acpi_pad_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	mutex_lock(&xen_cpu_lock);
 	xen_acpi_pad_idle_cpus(0);
@@ -130,6 +134,10 @@ static void acpi_pad_remove(struct acpi_device *device)
 
 	acpi_remove_notify_handler(device->handle,
 		ACPI_DEVICE_NOTIFY, acpi_pad_notify);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id pad_device_ids[] = {

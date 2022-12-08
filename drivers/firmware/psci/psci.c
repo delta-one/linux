@@ -9,7 +9,10 @@
 #include <linux/acpi.h>
 #include <linux/arm-smccc.h>
 #include <linux/cpuidle.h>
+<<<<<<< HEAD
 #include <linux/debugfs.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/errno.h>
 #include <linux/linkage.h>
 #include <linux/of.h>
@@ -108,10 +111,16 @@ bool psci_power_state_is_valid(u32 state)
 	return !(state & ~valid_mask);
 }
 
+<<<<<<< HEAD
 static __always_inline unsigned long
 __invoke_psci_fn_hvc(unsigned long function_id,
 		     unsigned long arg0, unsigned long arg1,
 		     unsigned long arg2)
+=======
+static unsigned long __invoke_psci_fn_hvc(unsigned long function_id,
+			unsigned long arg0, unsigned long arg1,
+			unsigned long arg2)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct arm_smccc_res res;
 
@@ -119,10 +128,16 @@ __invoke_psci_fn_hvc(unsigned long function_id,
 	return res.a0;
 }
 
+<<<<<<< HEAD
 static __always_inline unsigned long
 __invoke_psci_fn_smc(unsigned long function_id,
 		     unsigned long arg0, unsigned long arg1,
 		     unsigned long arg2)
+=======
+static unsigned long __invoke_psci_fn_smc(unsigned long function_id,
+			unsigned long arg0, unsigned long arg1,
+			unsigned long arg2)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct arm_smccc_res res;
 
@@ -130,7 +145,11 @@ __invoke_psci_fn_smc(unsigned long function_id,
 	return res.a0;
 }
 
+<<<<<<< HEAD
 static __always_inline int psci_to_linux_errno(int errno)
+=======
+static int psci_to_linux_errno(int errno)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (errno) {
 	case PSCI_RET_SUCCESS:
@@ -166,6 +185,7 @@ int psci_set_osi_mode(bool enable)
 			PSCI_1_0_SUSPEND_MODE_PC;
 
 	err = invoke_psci_fn(PSCI_1_0_FN_SET_SUSPEND_MODE, suspend_mode, 0, 0);
+<<<<<<< HEAD
 	if (err < 0)
 		pr_warn("failed to set %s mode: %d\n", enable ? "OSI" : "PC", err);
 	return psci_to_linux_errno(err);
@@ -173,6 +193,12 @@ int psci_set_osi_mode(bool enable)
 
 static __always_inline int
 __psci_cpu_suspend(u32 fn, u32 state, unsigned long entry_point)
+=======
+	return psci_to_linux_errno(err);
+}
+
+static int __psci_cpu_suspend(u32 fn, u32 state, unsigned long entry_point)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 
@@ -180,15 +206,23 @@ __psci_cpu_suspend(u32 fn, u32 state, unsigned long entry_point)
 	return psci_to_linux_errno(err);
 }
 
+<<<<<<< HEAD
 static __always_inline int
 psci_0_1_cpu_suspend(u32 state, unsigned long entry_point)
+=======
+static int psci_0_1_cpu_suspend(u32 state, unsigned long entry_point)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return __psci_cpu_suspend(psci_0_1_function_ids.cpu_suspend,
 				  state, entry_point);
 }
 
+<<<<<<< HEAD
 static __always_inline int
 psci_0_2_cpu_suspend(u32 state, unsigned long entry_point)
+=======
+static int psci_0_2_cpu_suspend(u32 state, unsigned long entry_point)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return __psci_cpu_suspend(PSCI_FN_NATIVE(0_2, CPU_SUSPEND),
 				  state, entry_point);
@@ -282,7 +316,11 @@ static void set_conduit(enum arm_smccc_conduit conduit)
 	psci_conduit = conduit;
 }
 
+<<<<<<< HEAD
 static int get_set_conduit_method(const struct device_node *np)
+=======
+static int get_set_conduit_method(struct device_node *np)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const char *method;
 
@@ -332,12 +370,17 @@ static void psci_sys_poweroff(void)
 	invoke_psci_fn(PSCI_0_2_FN_SYSTEM_OFF, 0, 0, 0);
 }
 
+<<<<<<< HEAD
 static int psci_features(u32 psci_func_id)
+=======
+static int __init psci_features(u32 psci_func_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return invoke_psci_fn(PSCI_1_0_FN_PSCI_FEATURES,
 			      psci_func_id, 0, 0);
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_DEBUG_FS
 
 #define PSCI_ID(ver, _name) \
@@ -461,6 +504,13 @@ static noinstr int psci_suspend_finisher(unsigned long state)
 	phys_addr_t pa_cpu_resume;
 
 	pa_cpu_resume = __pa_symbol_nodebug((unsigned long)cpu_resume);
+=======
+#ifdef CONFIG_CPU_IDLE
+static int psci_suspend_finisher(unsigned long state)
+{
+	u32 power_state = state;
+	phys_addr_t pa_cpu_resume = __pa_symbol(function_nocfi(cpu_resume));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return psci_ops.cpu_suspend(power_state, pa_cpu_resume);
 }
@@ -472,6 +522,7 @@ int psci_cpu_suspend_enter(u32 state)
 	if (!psci_power_state_loses_context(state)) {
 		struct arm_cpuidle_irq_context context;
 
+<<<<<<< HEAD
 		ct_cpuidle_enter();
 		arm_cpuidle_save_irq_context(&context);
 		ret = psci_ops.cpu_suspend(state, 0);
@@ -488,6 +539,13 @@ int psci_cpu_suspend_enter(u32 state)
 
 		if (!IS_ENABLED(CONFIG_ARM64))
 			ct_cpuidle_exit();
+=======
+		arm_cpuidle_save_irq_context(&context);
+		ret = psci_ops.cpu_suspend(state, 0);
+		arm_cpuidle_restore_irq_context(&context);
+	} else {
+		ret = cpu_suspend(state, psci_suspend_finisher);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;
@@ -496,7 +554,11 @@ int psci_cpu_suspend_enter(u32 state)
 
 static int psci_system_suspend(unsigned long unused)
 {
+<<<<<<< HEAD
 	phys_addr_t pa_cpu_resume = __pa_symbol(cpu_resume);
+=======
+	phys_addr_t pa_cpu_resume = __pa_symbol(function_nocfi(cpu_resume));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return invoke_psci_fn(PSCI_FN_NATIVE(1_0, SYSTEM_SUSPEND),
 			      pa_cpu_resume, 0, 0);
@@ -665,7 +727,11 @@ typedef int (*psci_initcall_t)(const struct device_node *);
  *
  * Probe based on PSCI PSCI_VERSION function
  */
+<<<<<<< HEAD
 static int __init psci_0_2_init(const struct device_node *np)
+=======
+static int __init psci_0_2_init(struct device_node *np)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 
@@ -686,7 +752,11 @@ static int __init psci_0_2_init(const struct device_node *np)
 /*
  * PSCI < v0.2 get PSCI Function IDs via DT.
  */
+<<<<<<< HEAD
 static int __init psci_0_1_init(const struct device_node *np)
+=======
+static int __init psci_0_1_init(struct device_node *np)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 id;
 	int err;
@@ -722,7 +792,11 @@ static int __init psci_0_1_init(const struct device_node *np)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int __init psci_1_0_init(const struct device_node *np)
+=======
+static int __init psci_1_0_init(struct device_node *np)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 

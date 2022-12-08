@@ -102,9 +102,15 @@ static inline int huge_pte_dirty(pte_t pte)
 	return pte_dirty(pte);
 }
 
+<<<<<<< HEAD
 static inline pte_t huge_pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
 {
 	return pte_mkwrite(pte, vma);
+=======
+static inline pte_t huge_pte_mkwrite(pte_t pte)
+{
+	return pte_mkwrite(pte);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline pte_t huge_pte_mkdirty(pte_t pte)

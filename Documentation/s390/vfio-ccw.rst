@@ -156,7 +156,11 @@ Below is a high Level block diagram::
  |  MDEV CORE  |
  |   MODULE    |
  |   mdev.ko   |
+<<<<<<< HEAD
  | +---------+ | mdev_register_parent() +--------------+
+=======
+ | +---------+ | mdev_register_device() +--------------+
+>>>>>>> b7ba80a49124 (Commit)
  | |Physical | +<-----------------------+              |
  | | device  | |                        |  vfio_ccw.ko |<-> subchannel
  | |interface| +----------------------->+              |     device
@@ -176,7 +180,11 @@ The process of how these work together.
    Use the 'mdev_create' sysfs file, we need to manually create one (and
    only one for our case) mediated device.
 3. vfio_mdev.ko drives the mediated ccw device.
+<<<<<<< HEAD
    vfio_mdev is also the vfio device driver. It will probe the mdev and
+=======
+   vfio_mdev is also the vfio device drvier. It will probe the mdev and
+>>>>>>> b7ba80a49124 (Commit)
    add it to an iommu_group and a vfio_group. Then we could pass through
    the mdev to a guest.
 
@@ -219,8 +227,13 @@ values may occur:
   The operation was successful.
 
 ``-EOPNOTSUPP``
+<<<<<<< HEAD
   The ORB specified transport mode or the
   SCSW specified a function other than the start function.
+=======
+  The orb specified transport mode or an unidentified IDAW format, or the
+  scsw specified a function other than the start function.
+>>>>>>> b7ba80a49124 (Commit)
 
 ``-EIO``
   A request was issued while the device was not in a state ready to accept

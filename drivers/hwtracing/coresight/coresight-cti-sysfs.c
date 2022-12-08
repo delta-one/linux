@@ -84,8 +84,13 @@ static ssize_t enable_show(struct device *dev,
 	bool enabled, powered;
 	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
 
+<<<<<<< HEAD
 	spin_lock(&drvdata->spinlock);
 	enable_req = drvdata->config.enable_req_count;
+=======
+	enable_req = atomic_read(&drvdata->config.enable_req_count);
+	spin_lock(&drvdata->spinlock);
+>>>>>>> b7ba80a49124 (Commit)
 	powered = drvdata->config.hw_powered;
 	enabled = drvdata->config.hw_enabled;
 	spin_unlock(&drvdata->spinlock);
@@ -108,6 +113,7 @@ static ssize_t enable_store(struct device *dev,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (val) {
 		ret = pm_runtime_resume_and_get(dev->parent);
 		if (ret)
@@ -121,6 +127,12 @@ static ssize_t enable_store(struct device *dev,
 			pm_runtime_put(dev->parent);
 	}
 
+=======
+	if (val)
+		ret = cti_enable(drvdata->csdev);
+	else
+		ret = cti_disable(drvdata->csdev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 	return size;

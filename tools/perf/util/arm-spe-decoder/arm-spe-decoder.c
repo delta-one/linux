@@ -68,11 +68,15 @@ static u64 arm_spe_calc_ip(int index, u64 payload)
 		/* Clean highest byte */
 		payload = SPE_ADDR_PKT_ADDR_GET_BYTES_0_6(payload);
 	} else {
+<<<<<<< HEAD
 		static u32 seen_idx = 0;
 		if (!(seen_idx & BIT(index))) {
 			seen_idx |= BIT(index);
 			pr_warning("ignoring unsupported address packet index: 0x%x\n", index);
 		}
+=======
+		pr_err("unsupported address packet index: 0x%x\n", index);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return payload;

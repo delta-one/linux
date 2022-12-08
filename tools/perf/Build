@@ -5,6 +5,10 @@ perf-y += builtin-diff.o
 perf-y += builtin-evlist.o
 perf-y += builtin-ftrace.o
 perf-y += builtin-help.o
+<<<<<<< HEAD
+=======
+perf-y += builtin-sched.o
+>>>>>>> b7ba80a49124 (Commit)
 perf-y += builtin-buildid-list.o
 perf-y += builtin-buildid-cache.o
 perf-y += builtin-kallsyms.o
@@ -12,8 +16,16 @@ perf-y += builtin-list.o
 perf-y += builtin-record.o
 perf-y += builtin-report.o
 perf-y += builtin-stat.o
+<<<<<<< HEAD
 perf-y += builtin-top.o
 perf-y += builtin-script.o
+=======
+perf-y += builtin-timechart.o
+perf-y += builtin-top.o
+perf-y += builtin-script.o
+perf-y += builtin-kmem.o
+perf-y += builtin-lock.o
+>>>>>>> b7ba80a49124 (Commit)
 perf-y += builtin-kvm.o
 perf-y += builtin-inject.o
 perf-y += builtin-mem.o
@@ -21,6 +33,7 @@ perf-y += builtin-data.o
 perf-y += builtin-version.o
 perf-y += builtin-c2c.o
 perf-y += builtin-daemon.o
+<<<<<<< HEAD
 
 perf-$(CONFIG_LIBTRACEEVENT) += builtin-kmem.o
 perf-$(CONFIG_LIBTRACEEVENT) += builtin-kwork.o
@@ -33,6 +46,11 @@ ifeq ($(CONFIG_LIBTRACEEVENT),y)
   perf-$(CONFIG_TRACE) += trace/beauty/
 endif
 
+=======
+perf-y += builtin-kwork.o
+
+perf-$(CONFIG_TRACE) += builtin-trace.o
+>>>>>>> b7ba80a49124 (Commit)
 perf-$(CONFIG_LIBELF) += builtin-probe.o
 
 perf-y += bench/
@@ -57,5 +75,9 @@ perf-y += util/
 perf-y += arch/
 perf-y += ui/
 perf-y += scripts/
+<<<<<<< HEAD
+=======
+perf-$(CONFIG_TRACE) += trace/beauty/
+>>>>>>> b7ba80a49124 (Commit)
 
 gtk-y += ui/gtk/

@@ -138,6 +138,11 @@ static void lan9303_mdio_remove(struct mdio_device *mdiodev)
 		return;
 
 	lan9303_remove(&sw_dev->chip);
+<<<<<<< HEAD
+=======
+
+	dev_set_drvdata(&mdiodev->dev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void lan9303_mdio_shutdown(struct mdio_device *mdiodev)
@@ -164,7 +169,11 @@ MODULE_DEVICE_TABLE(of, lan9303_mdio_of_match);
 static struct mdio_driver lan9303_mdio_driver = {
 	.mdiodrv.driver = {
 		.name = "LAN9303_MDIO",
+<<<<<<< HEAD
 		.of_match_table = lan9303_mdio_of_match,
+=======
+		.of_match_table = of_match_ptr(lan9303_mdio_of_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe  = lan9303_mdio_probe,
 	.remove = lan9303_mdio_remove,

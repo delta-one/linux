@@ -11,11 +11,38 @@
 /* Permission masks used for kernel mappings */
 #define PAGE_KERNEL	__pgprot(_PAGE_BASE | _PAGE_KERNEL_RW)
 #define PAGE_KERNEL_NC	__pgprot(_PAGE_BASE_NC | _PAGE_KERNEL_RW | _PAGE_NO_CACHE)
+<<<<<<< HEAD
 #define PAGE_KERNEL_NCG	__pgprot(_PAGE_BASE_NC | _PAGE_KERNEL_RW | _PAGE_NO_CACHE | _PAGE_GUARDED)
+=======
+#define PAGE_KERNEL_NCG	__pgprot(_PAGE_BASE_NC | _PAGE_KERNEL_RW | \
+				 _PAGE_NO_CACHE | _PAGE_GUARDED)
+>>>>>>> b7ba80a49124 (Commit)
 #define PAGE_KERNEL_X	__pgprot(_PAGE_BASE | _PAGE_KERNEL_RWX)
 #define PAGE_KERNEL_RO	__pgprot(_PAGE_BASE | _PAGE_KERNEL_RO)
 #define PAGE_KERNEL_ROX	__pgprot(_PAGE_BASE | _PAGE_KERNEL_ROX)
 
+<<<<<<< HEAD
+=======
+/*
+ * Protection used for kernel text. We want the debuggers to be able to
+ * set breakpoints anywhere, so don't write protect the kernel text
+ * on platforms where such control is possible.
+ */
+#if defined(CONFIG_KGDB) || defined(CONFIG_XMON) || defined(CONFIG_BDI_SWITCH) ||\
+	defined(CONFIG_KPROBES) || defined(CONFIG_DYNAMIC_FTRACE)
+#define PAGE_KERNEL_TEXT	PAGE_KERNEL_X
+#else
+#define PAGE_KERNEL_TEXT	PAGE_KERNEL_ROX
+#endif
+
+/* Make modules code happy. We don't set RO yet */
+#define PAGE_KERNEL_EXEC	PAGE_KERNEL_X
+
+/* Advertise special mapping type for AGP */
+#define PAGE_AGP		(PAGE_KERNEL_NC)
+#define HAVE_PAGE_AGP
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef __ASSEMBLY__
 
 /* Generic accessors to PTE bits */
@@ -151,6 +178,7 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
 	return __pte((pte_val(pte) & _PAGE_CHG_MASK) | pgprot_val(newprot));
 }
 
+<<<<<<< HEAD
 static inline int pte_swp_exclusive(pte_t pte)
 {
 	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
@@ -166,6 +194,8 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
 	return __pte(pte_val(pte) & ~_PAGE_SWP_EXCLUSIVE);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Insert a PTE, top-level function is out of line. It uses an inline
  * low level function in the respective pgtable-* files
  */
@@ -198,7 +228,11 @@ static inline void __set_pte_at(struct mm_struct *mm, unsigned long addr,
 	 * cases, and 32-bit non-hash with 32-bit PTEs.
 	 */
 #if defined(CONFIG_PPC_8xx) && defined(CONFIG_PPC_16K_PAGES)
+<<<<<<< HEAD
 	ptep->pte3 = ptep->pte2 = ptep->pte1 = ptep->pte = pte_val(pte);
+=======
+	ptep->pte = ptep->pte1 = ptep->pte2 = ptep->pte3 = pte_val(pte);
+>>>>>>> b7ba80a49124 (Commit)
 #else
 	*ptep = pte;
 #endif
@@ -272,6 +306,15 @@ static inline int pud_huge(pud_t pud)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static inline int pgd_huge(pgd_t pgd)
+{
+	return 0;
+}
+#define pgd_huge		pgd_huge
+
+>>>>>>> b7ba80a49124 (Commit)
 #define is_hugepd(hpd)		(hugepd_ok(hpd))
 #endif
 
@@ -281,7 +324,11 @@ static inline int pud_huge(pud_t pud)
  * We use it to ensure coherency between the i-cache and d-cache
  * for the page which has just been mapped in.
  */
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_E500) && defined(CONFIG_HUGETLB_PAGE)
+=======
+#if defined(CONFIG_PPC_FSL_BOOK3E) && defined(CONFIG_HUGETLB_PAGE)
+>>>>>>> b7ba80a49124 (Commit)
 void update_mmu_cache(struct vm_area_struct *vma, unsigned long address, pte_t *ptep);
 #else
 static inline

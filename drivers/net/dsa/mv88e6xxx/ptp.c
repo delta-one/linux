@@ -11,7 +11,10 @@
  */
 
 #include "chip.h"
+<<<<<<< HEAD
 #include "global1.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "global2.h"
 #include "hwtstamp.h"
 #include "ptp.h"
@@ -420,6 +423,7 @@ const struct mv88e6xxx_ptp_ops mv88e6352_ptp_ops = {
 	.cc_mult_dem = MV88E6XXX_CC_MULT_DEM,
 };
 
+<<<<<<< HEAD
 const struct mv88e6xxx_ptp_ops mv88e6390_ptp_ops = {
 	.clock_read = mv88e6352_ptp_clock_read,
 	.ptp_enable = mv88e6352_ptp_enable,
@@ -448,6 +452,8 @@ const struct mv88e6xxx_ptp_ops mv88e6390_ptp_ops = {
 	.cc_mult_dem = MV88E6XXX_CC_MULT_DEM,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static u64 mv88e6xxx_ptp_clock_read(const struct cyclecounter *cc)
 {
 	struct mv88e6xxx_chip *chip = cc_to_chip(cc);
@@ -520,6 +526,7 @@ int mv88e6xxx_ptp_setup(struct mv88e6xxx_chip *chip)
 	chip->ptp_clock_info.verify	= ptp_ops->ptp_verify;
 	chip->ptp_clock_info.do_aux_work = mv88e6xxx_hwtstamp_work;
 
+<<<<<<< HEAD
 	if (ptp_ops->set_ptp_cpu_port) {
 		struct dsa_port *dp;
 		int upstream = 0;
@@ -537,6 +544,8 @@ int mv88e6xxx_ptp_setup(struct mv88e6xxx_chip *chip)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	chip->ptp_clock = ptp_clock_register(&chip->ptp_clock_info, chip->dev);
 	if (IS_ERR(chip->ptp_clock))
 		return PTR_ERR(chip->ptp_clock);

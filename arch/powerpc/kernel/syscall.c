@@ -12,8 +12,17 @@
 #include <asm/unistd.h>
 
 
+<<<<<<< HEAD
 /* Has to run notrace because it is entered not completely "reconciled" */
 notrace long system_call_exception(struct pt_regs *regs, unsigned long r0)
+=======
+typedef long (*syscall_fn)(long, long, long, long, long, long);
+
+/* Has to run notrace because it is entered not completely "reconciled" */
+notrace long system_call_exception(long r3, long r4, long r5,
+				   long r6, long r7, long r8,
+				   unsigned long r0, struct pt_regs *regs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	long ret;
 	syscall_fn f;
@@ -21,6 +30,10 @@ notrace long system_call_exception(struct pt_regs *regs, unsigned long r0)
 	kuap_lock();
 
 	add_random_kstack_offset();
+<<<<<<< HEAD
+=======
+	regs->orig_gpr3 = r3;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
 		BUG_ON(irq_soft_mask_return() != IRQS_ALL_DISABLED);
@@ -134,6 +147,15 @@ notrace long system_call_exception(struct pt_regs *regs, unsigned long r0)
 		r0 = do_syscall_trace_enter(regs);
 		if (unlikely(r0 >= NR_syscalls))
 			return regs->gpr[3];
+<<<<<<< HEAD
+=======
+		r3 = regs->gpr[3];
+		r4 = regs->gpr[4];
+		r5 = regs->gpr[5];
+		r6 = regs->gpr[6];
+		r7 = regs->gpr[7];
+		r8 = regs->gpr[8];
+>>>>>>> b7ba80a49124 (Commit)
 
 	} else if (unlikely(r0 >= NR_syscalls)) {
 		if (unlikely(trap_is_unsupported_scv(regs))) {
@@ -147,6 +169,7 @@ notrace long system_call_exception(struct pt_regs *regs, unsigned long r0)
 	/* May be faster to do array_index_nospec? */
 	barrier_nospec();
 
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_HAS_SYSCALL_WRAPPER
 	// No COMPAT if we have SYSCALL_WRAPPER, see Kconfig
 	f = (void *)sys_call_table[r0];
@@ -172,6 +195,23 @@ notrace long system_call_exception(struct pt_regs *regs, unsigned long r0)
 			regs->gpr[6], regs->gpr[7], regs->gpr[8]);
 	}
 #endif
+=======
+	if (unlikely(is_compat_task())) {
+		f = (void *)compat_sys_call_table[r0];
+
+		r3 &= 0x00000000ffffffffULL;
+		r4 &= 0x00000000ffffffffULL;
+		r5 &= 0x00000000ffffffffULL;
+		r6 &= 0x00000000ffffffffULL;
+		r7 &= 0x00000000ffffffffULL;
+		r8 &= 0x00000000ffffffffULL;
+
+	} else {
+		f = (void *)sys_call_table[r0];
+	}
+
+	ret = f(r3, r4, r5, r6, r7, r8);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Ultimately, this value will get limited by KSTACK_OFFSET_MAX(),

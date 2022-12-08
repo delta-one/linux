@@ -6,7 +6,10 @@
 #ifndef __SOC_TEGRA_BPMP_H
 #define __SOC_TEGRA_BPMP_H
 
+<<<<<<< HEAD
 #include <linux/iosys-map.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mailbox_client.h>
 #include <linux/pm_domain.h>
 #include <linux/reset-controller.h>
@@ -37,6 +40,7 @@ struct tegra_bpmp_mb_data {
 	u8 data[MSG_DATA_MIN_SZ];
 } __packed;
 
+<<<<<<< HEAD
 #define tegra_bpmp_mb_read(dst, mb, size) \
 	iosys_map_memcpy_from(dst, mb, offsetof(struct tegra_bpmp_mb_data, data), size)
 
@@ -53,6 +57,12 @@ struct tegra_bpmp_channel {
 	struct tegra_bpmp *bpmp;
 	struct iosys_map ib;
 	struct iosys_map ob;
+=======
+struct tegra_bpmp_channel {
+	struct tegra_bpmp *bpmp;
+	struct tegra_bpmp_mb_data *ib;
+	struct tegra_bpmp_mb_data *ob;
+>>>>>>> b7ba80a49124 (Commit)
 	struct completion completion;
 	struct tegra_ivc *ivc;
 	unsigned int index;

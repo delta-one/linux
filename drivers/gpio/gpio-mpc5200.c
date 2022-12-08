@@ -8,7 +8,11 @@
 #include <linux/of.h>
 #include <linux/kernel.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/gpio/legacy-of-mm-gpiochip.h>
+=======
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/io.h>
 #include <linux/of_platform.h>
 #include <linux/module.h>

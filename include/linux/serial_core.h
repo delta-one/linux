@@ -422,7 +422,11 @@ struct uart_icount {
 	__u32	buf_overrun;
 };
 
+<<<<<<< HEAD
 typedef u64 __bitwise upf_t;
+=======
+typedef unsigned int __bitwise upf_t;
+>>>>>>> b7ba80a49124 (Commit)
 typedef unsigned int __bitwise upstat_t;
 
 struct uart_port {
@@ -513,6 +517,7 @@ struct uart_port {
 #define UPF_BUGGY_UART		((__force upf_t) ASYNC_BUGGY_UART     /* 14 */ )
 #define UPF_MAGIC_MULTIPLIER	((__force upf_t) ASYNC_MAGIC_MULTIPLIER /* 16 */ )
 
+<<<<<<< HEAD
 #define UPF_NO_THRE_TEST	((__force upf_t) BIT_ULL(19))
 /* Port has hardware-assisted h/w flow control */
 #define UPF_AUTO_CTS		((__force upf_t) BIT_ULL(20))
@@ -531,6 +536,25 @@ struct uart_port {
 #define UPF_DEAD		((__force upf_t) BIT_ULL(30))
 #define UPF_IOREMAP		((__force upf_t) BIT_ULL(31))
 #define UPF_FULL_PROBE		((__force upf_t) BIT_ULL(32))
+=======
+#define UPF_NO_THRE_TEST	((__force upf_t) (1 << 19))
+/* Port has hardware-assisted h/w flow control */
+#define UPF_AUTO_CTS		((__force upf_t) (1 << 20))
+#define UPF_AUTO_RTS		((__force upf_t) (1 << 21))
+#define UPF_HARD_FLOW		((__force upf_t) (UPF_AUTO_CTS | UPF_AUTO_RTS))
+/* Port has hardware-assisted s/w flow control */
+#define UPF_SOFT_FLOW		((__force upf_t) (1 << 22))
+#define UPF_CONS_FLOW		((__force upf_t) (1 << 23))
+#define UPF_SHARE_IRQ		((__force upf_t) (1 << 24))
+#define UPF_EXAR_EFR		((__force upf_t) (1 << 25))
+#define UPF_BUG_THRE		((__force upf_t) (1 << 26))
+/* The exact UART type is known and should not be probed.  */
+#define UPF_FIXED_TYPE		((__force upf_t) (1 << 27))
+#define UPF_BOOT_AUTOCONF	((__force upf_t) (1 << 28))
+#define UPF_FIXED_PORT		((__force upf_t) (1 << 29))
+#define UPF_DEAD		((__force upf_t) (1 << 30))
+#define UPF_IOREMAP		((__force upf_t) (1 << 31))
+>>>>>>> b7ba80a49124 (Commit)
 
 #define __UPF_CHANGE_MASK	0x17fff
 #define UPF_CHANGE_MASK		((__force upf_t) __UPF_CHANGE_MASK)
@@ -553,7 +577,11 @@ struct uart_port {
 #define UPSTAT_AUTOXOFF		((__force upstat_t) (1 << 4))
 #define UPSTAT_SYNC_FIFO	((__force upstat_t) (1 << 5))
 
+<<<<<<< HEAD
 	bool			hw_stopped;		/* sw-assisted CTS flow state */
+=======
+	int			hw_stopped;		/* sw-assisted CTS flow state */
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int		mctrl;			/* current modem ctrl settings */
 	unsigned int		frame_time;		/* frame timing in ns */
 	unsigned int		type;			/* port type */
@@ -579,7 +607,10 @@ struct uart_port {
 	struct serial_rs485     rs485;
 	struct serial_rs485	rs485_supported;	/* Supported mask for serial_rs485 */
 	struct gpio_desc	*rs485_term_gpio;	/* enable RS485 bus termination */
+<<<<<<< HEAD
 	struct gpio_desc	*rs485_rx_during_tx_gpio; /* Output GPIO that sets the state of RS485 RX during TX */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct serial_iso7816   iso7816;
 	void			*private_data;		/* generic platform data pointer */
 };
@@ -665,6 +696,7 @@ struct uart_driver {
 
 void uart_write_wakeup(struct uart_port *port);
 
+<<<<<<< HEAD
 #define __uart_port_tx(uport, ch, tx_ready, put_char, tx_done, for_test,      \
 		for_post)						      \
 ({									      \
@@ -745,6 +777,8 @@ void uart_write_wakeup(struct uart_port *port);
 #define uart_port_tx(port, ch, tx_ready, put_char)			\
 	__uart_port_tx(port, ch, tx_ready, put_char, ({}), true, ({}))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Baud rate helpers.
  */
@@ -782,7 +816,11 @@ static inline int uart_poll_timeout(struct uart_port *port)
 struct earlycon_device {
 	struct console *con;
 	struct uart_port port;
+<<<<<<< HEAD
 	char options[32];		/* e.g., 115200n8 */
+=======
+	char options[16];		/* e.g., 115200n8 */
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int baud;
 };
 
@@ -812,8 +850,14 @@ extern const struct earlycon_id __earlycon_table_end[];
 
 #define EARLYCON_DECLARE(_name, fn)	OF_EARLYCON_DECLARE(_name, "", fn)
 
+<<<<<<< HEAD
 int of_setup_earlycon(const struct earlycon_id *match, unsigned long node,
 		      const char *options);
+=======
+extern int of_setup_earlycon(const struct earlycon_id *match,
+			     unsigned long node,
+			     const char *options);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_SERIAL_EARLYCON
 extern bool earlycon_acpi_spcr_enable __initdata;
@@ -823,6 +867,7 @@ static const bool earlycon_acpi_spcr_enable EARLYCON_USED_OR_UNUSED;
 static inline int setup_earlycon(char *buf) { return 0; }
 #endif
 
+<<<<<<< HEAD
 /* Variant of uart_console_registered() when the console_list_lock is held. */
 static inline bool uart_console_registered_locked(struct uart_port *port)
 {
@@ -832,6 +877,11 @@ static inline bool uart_console_registered_locked(struct uart_port *port)
 static inline bool uart_console_registered(struct uart_port *port)
 {
 	return uart_console(port) && console_is_registered(port->cons);
+=======
+static inline bool uart_console_enabled(struct uart_port *port)
+{
+	return uart_console(port) && (port->cons->flags & CON_ENABLED);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct uart_port *uart_get_console(struct uart_port *ports, int nr,
@@ -896,11 +946,21 @@ static inline bool uart_softcts_mode(struct uart_port *uport)
  * The following are helper functions for the low level drivers.
  */
 
+<<<<<<< HEAD
 void uart_handle_dcd_change(struct uart_port *uport, bool active);
 void uart_handle_cts_change(struct uart_port *uport, bool active);
 
 void uart_insert_char(struct uart_port *port, unsigned int status,
 		      unsigned int overrun, unsigned int ch, unsigned int flag);
+=======
+extern void uart_handle_dcd_change(struct uart_port *uport,
+		unsigned int status);
+extern void uart_handle_cts_change(struct uart_port *uport,
+		unsigned int status);
+
+extern void uart_insert_char(struct uart_port *port, unsigned int status,
+		 unsigned int overrun, unsigned int ch, unsigned int flag);
+>>>>>>> b7ba80a49124 (Commit)
 
 void uart_xchar_out(struct uart_port *uport, int offset);
 
@@ -1035,4 +1095,8 @@ static inline int uart_handle_break(struct uart_port *port)
 					 !((cflag) & CLOCAL))
 
 int uart_get_rs485_mode(struct uart_port *port);
+<<<<<<< HEAD
+=======
+int uart_rs485_config(struct uart_port *port);
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* LINUX_SERIAL_CORE_H */

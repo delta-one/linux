@@ -27,8 +27,11 @@ unsigned int __read_mostly freeze_timeout_msecs = 20 * MSEC_PER_SEC;
 
 static int try_to_freeze_tasks(bool user_only)
 {
+<<<<<<< HEAD
 	const char *what = user_only ? "user space processes" :
 					"remaining freezable tasks";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct task_struct *g, *p;
 	unsigned long end_time;
 	unsigned int todo;
@@ -38,8 +41,11 @@ static int try_to_freeze_tasks(bool user_only)
 	bool wakeup = false;
 	int sleep_usecs = USEC_PER_MSEC;
 
+<<<<<<< HEAD
 	pr_info("Freezing %s\n", what);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	start = ktime_get_boottime();
 
 	end_time = jiffies + msecs_to_jiffies(freeze_timeout_msecs);
@@ -86,14 +92,24 @@ static int try_to_freeze_tasks(bool user_only)
 	elapsed_msecs = ktime_to_ms(elapsed);
 
 	if (todo) {
+<<<<<<< HEAD
 		pr_err("Freezing %s %s after %d.%03d seconds "
 		       "(%d tasks refusing to freeze, wq_busy=%d):\n", what,
+=======
+		pr_cont("\n");
+		pr_err("Freezing of tasks %s after %d.%03d seconds "
+		       "(%d tasks refusing to freeze, wq_busy=%d):\n",
+>>>>>>> b7ba80a49124 (Commit)
 		       wakeup ? "aborted" : "failed",
 		       elapsed_msecs / 1000, elapsed_msecs % 1000,
 		       todo - wq_busy, wq_busy);
 
 		if (wq_busy)
+<<<<<<< HEAD
 			show_freezable_workqueues();
+=======
+			show_all_workqueues();
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!wakeup || pm_debug_messages_on) {
 			read_lock(&tasklist_lock);
@@ -104,8 +120,13 @@ static int try_to_freeze_tasks(bool user_only)
 			read_unlock(&tasklist_lock);
 		}
 	} else {
+<<<<<<< HEAD
 		pr_info("Freezing %s completed (elapsed %d.%03d seconds)\n",
 			what, elapsed_msecs / 1000, elapsed_msecs % 1000);
+=======
+		pr_cont("(elapsed %d.%03d seconds) ", elapsed_msecs / 1000,
+			elapsed_msecs % 1000);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return todo ? -EBUSY : 0;
@@ -133,11 +154,22 @@ int freeze_processes(void)
 		static_branch_inc(&freezer_active);
 
 	pm_wakeup_clear(0);
+<<<<<<< HEAD
 	pm_freezing = true;
 	error = try_to_freeze_tasks(true);
 	if (!error)
 		__usermodehelper_set_disable_depth(UMH_DISABLED);
 
+=======
+	pr_info("Freezing user space processes ... ");
+	pm_freezing = true;
+	error = try_to_freeze_tasks(true);
+	if (!error) {
+		__usermodehelper_set_disable_depth(UMH_DISABLED);
+		pr_cont("done.");
+	}
+	pr_cont("\n");
+>>>>>>> b7ba80a49124 (Commit)
 	BUG_ON(in_atomic());
 
 	/*
@@ -166,9 +198,20 @@ int freeze_kernel_threads(void)
 {
 	int error;
 
+<<<<<<< HEAD
 	pm_nosig_freezing = true;
 	error = try_to_freeze_tasks(false);
 
+=======
+	pr_info("Freezing remaining freezable tasks ... ");
+
+	pm_nosig_freezing = true;
+	error = try_to_freeze_tasks(false);
+	if (!error)
+		pr_cont("done.");
+
+	pr_cont("\n");
+>>>>>>> b7ba80a49124 (Commit)
 	BUG_ON(in_atomic());
 
 	if (error)

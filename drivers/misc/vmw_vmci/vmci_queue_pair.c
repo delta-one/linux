@@ -854,7 +854,10 @@ static int qp_notify_peer_local(bool attach, struct vmci_handle handle)
 	u32 context_id = vmci_get_context_id();
 	struct vmci_event_qp ev;
 
+<<<<<<< HEAD
 	memset(&ev, 0, sizeof(ev));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ev.msg.hdr.dst = vmci_make_handle(context_id, VMCI_EVENT_HANDLER);
 	ev.msg.hdr.src = vmci_make_handle(VMCI_HYPERVISOR_CONTEXT_ID,
 					  VMCI_CONTEXT_RESOURCE_ID);
@@ -1468,7 +1471,10 @@ static int qp_notify_peer(bool attach,
 	 * kernel.
 	 */
 
+<<<<<<< HEAD
 	memset(&ev, 0, sizeof(ev));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ev.msg.hdr.dst = vmci_make_handle(peer_id, VMCI_EVENT_HANDLER);
 	ev.msg.hdr.src = vmci_make_handle(VMCI_HYPERVISOR_CONTEXT_ID,
 					  VMCI_CONTEXT_RESOURCE_ID);
@@ -3044,7 +3050,11 @@ ssize_t vmci_qpair_enqueue(struct vmci_qp *qpair,
 	if (!qpair || !buf)
 		return VMCI_ERROR_INVALID_ARGS;
 
+<<<<<<< HEAD
 	iov_iter_kvec(&from, ITER_SOURCE, &v, 1, buf_size);
+=======
+	iov_iter_kvec(&from, WRITE, &v, 1, buf_size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	qp_lock(qpair);
 
@@ -3088,7 +3098,11 @@ ssize_t vmci_qpair_dequeue(struct vmci_qp *qpair,
 	if (!qpair || !buf)
 		return VMCI_ERROR_INVALID_ARGS;
 
+<<<<<<< HEAD
 	iov_iter_kvec(&to, ITER_DEST, &v, 1, buf_size);
+=======
+	iov_iter_kvec(&to, READ, &v, 1, buf_size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	qp_lock(qpair);
 
@@ -3133,7 +3147,11 @@ ssize_t vmci_qpair_peek(struct vmci_qp *qpair,
 	if (!qpair || !buf)
 		return VMCI_ERROR_INVALID_ARGS;
 
+<<<<<<< HEAD
 	iov_iter_kvec(&to, ITER_DEST, &v, 1, buf_size);
+=======
+	iov_iter_kvec(&to, READ, &v, 1, buf_size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	qp_lock(qpair);
 

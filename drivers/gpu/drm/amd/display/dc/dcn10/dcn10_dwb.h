@@ -24,6 +24,11 @@
 #ifndef __DC_DWBC_DCN10_H__
 #define __DC_DWBC_DCN10_H__
 
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+
+>>>>>>> b7ba80a49124 (Commit)
 /* DCN */
 #define BASE_INNER(seg) \
 	DCE_BASE__INST0_SEG ## seg
@@ -265,3 +270,8 @@ void dcn10_dwbc_construct(struct dcn10_dwbc *dwbc10,
 		int inst);
 
 #endif
+<<<<<<< HEAD
+=======
+
+#endif
+>>>>>>> b7ba80a49124 (Commit)

@@ -545,7 +545,11 @@ static int find_dup_cset_node_entry(struct overlay_changeset *ovcs,
 
 		fn_1 = kasprintf(GFP_KERNEL, "%pOF", ce_1->np);
 		fn_2 = kasprintf(GFP_KERNEL, "%pOF", ce_2->np);
+<<<<<<< HEAD
 		node_path_match = !fn_1 || !fn_2 || !strcmp(fn_1, fn_2);
+=======
+		node_path_match = !strcmp(fn_1, fn_2);
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(fn_1);
 		kfree(fn_2);
 		if (node_path_match) {
@@ -580,7 +584,11 @@ static int find_dup_cset_prop(struct overlay_changeset *ovcs,
 
 		fn_1 = kasprintf(GFP_KERNEL, "%pOF", ce_1->np);
 		fn_2 = kasprintf(GFP_KERNEL, "%pOF", ce_2->np);
+<<<<<<< HEAD
 		node_path_match = !fn_1 || !fn_2 || !strcmp(fn_1, fn_2);
+=======
+		node_path_match = !strcmp(fn_1, fn_2);
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(fn_1);
 		kfree(fn_2);
 		if (node_path_match &&
@@ -1121,7 +1129,11 @@ static int node_overlaps_later_cs(struct overlay_changeset *remove_ovcs,
  * The topmost check is done by exploiting this property. For each
  * affected device node in the log list we check if this overlay is
  * the one closest to the tail. If another overlay has affected this
+<<<<<<< HEAD
  * device node and is closest to the tail, then removal is not permitted.
+=======
+ * device node and is closest to the tail, then removal is not permited.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int overlay_removal_is_ok(struct overlay_changeset *remove_ovcs)
 {

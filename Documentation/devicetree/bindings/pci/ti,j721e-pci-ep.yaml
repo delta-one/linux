@@ -58,6 +58,7 @@ properties:
   dma-coherent:
     description: Indicates that the PCIe IP block can ensure the coherency
 
+<<<<<<< HEAD
   interrupts:
     maxItems: 1
 
@@ -65,6 +66,8 @@ properties:
     items:
       - const: link_state
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg

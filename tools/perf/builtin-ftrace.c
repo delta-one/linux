@@ -36,8 +36,13 @@
 
 #define DEFAULT_TRACER  "function_graph"
 
+<<<<<<< HEAD
 static volatile sig_atomic_t workload_exec_errno;
 static volatile sig_atomic_t done;
+=======
+static volatile int workload_exec_errno;
+static bool done;
+>>>>>>> b7ba80a49124 (Commit)
 
 static void sig_handler(int sig __maybe_unused)
 {
@@ -623,7 +628,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
 	/* display column headers */
 	read_tracing_file_to_stdout("trace");
 
+<<<<<<< HEAD
 	if (!ftrace->target.initial_delay) {
+=======
+	if (!ftrace->initial_delay) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (write_tracing_file("tracing_on", "1") < 0) {
 			pr_err("can't enable tracing\n");
 			goto out_close_fd;
@@ -632,8 +641,13 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
 
 	evlist__start_workload(ftrace->evlist);
 
+<<<<<<< HEAD
 	if (ftrace->target.initial_delay > 0) {
 		usleep(ftrace->target.initial_delay * 1000);
+=======
+	if (ftrace->initial_delay) {
+		usleep(ftrace->initial_delay * 1000);
+>>>>>>> b7ba80a49124 (Commit)
 		if (write_tracing_file("tracing_on", "1") < 0) {
 			pr_err("can't enable tracing\n");
 			goto out_close_fd;
@@ -1164,8 +1178,13 @@ int cmd_ftrace(int argc, const char **argv)
 		     "Size of per cpu buffer, needs to use a B, K, M or G suffix.", parse_buffer_size),
 	OPT_BOOLEAN(0, "inherit", &ftrace.inherit,
 		    "Trace children processes"),
+<<<<<<< HEAD
 	OPT_INTEGER('D', "delay", &ftrace.target.initial_delay,
 		    "Number of milliseconds to wait before starting tracing after program start"),
+=======
+	OPT_UINTEGER('D', "delay", &ftrace.initial_delay,
+		     "Number of milliseconds to wait before starting tracing after program start"),
+>>>>>>> b7ba80a49124 (Commit)
 	OPT_PARENT(common_options),
 	};
 	const struct option latency_options[] = {

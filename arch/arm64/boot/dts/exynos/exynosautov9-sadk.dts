@@ -65,11 +65,19 @@
 &ufs_0 {
 	status = "okay";
 	vcc-supply = <&ufs_0_fixed_vcc_reg>;
+<<<<<<< HEAD
+=======
+	vcc-fixed-regulator;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &ufs_1 {
 	status = "okay";
 	vcc-supply = <&ufs_1_fixed_vcc_reg>;
+<<<<<<< HEAD
+=======
+	vcc-fixed-regulator;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &usi_0 {

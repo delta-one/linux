@@ -531,7 +531,11 @@ static int dw_i3c_clk_cfg(struct dw_i3c_master *master)
 	if (hcnt < SCL_I3C_TIMING_CNT_MIN)
 		hcnt = SCL_I3C_TIMING_CNT_MIN;
 
+<<<<<<< HEAD
 	lcnt = DIV_ROUND_UP(core_rate, master->base.bus.scl_rate.i3c) - hcnt;
+=======
+	lcnt = DIV_ROUND_UP(core_rate, I3C_BUS_TYP_I3C_SCL_RATE) - hcnt;
+>>>>>>> b7ba80a49124 (Commit)
 	if (lcnt < SCL_I3C_TIMING_CNT_MIN)
 		lcnt = SCL_I3C_TIMING_CNT_MIN;
 
@@ -541,8 +545,12 @@ static int dw_i3c_clk_cfg(struct dw_i3c_master *master)
 	if (!(readl(master->regs + DEVICE_CTRL) & DEV_CTRL_I2C_SLAVE_PRESENT))
 		writel(BUS_I3C_MST_FREE(lcnt), master->regs + BUS_FREE_TIMING);
 
+<<<<<<< HEAD
 	lcnt = max_t(u8,
 		     DIV_ROUND_UP(I3C_BUS_TLOW_OD_MIN_NS, core_period), lcnt);
+=======
+	lcnt = DIV_ROUND_UP(I3C_BUS_TLOW_OD_MIN_NS, core_period);
+>>>>>>> b7ba80a49124 (Commit)
 	scl_timing = SCL_I3C_TIMING_HCNT(hcnt) | SCL_I3C_TIMING_LCNT(lcnt);
 	writel(scl_timing, master->regs + SCL_I3C_OD_TIMING);
 
@@ -1182,15 +1190,31 @@ err_disable_core_clk:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void dw_i3c_remove(struct platform_device *pdev)
 {
 	struct dw_i3c_master *master = platform_get_drvdata(pdev);
 
 	i3c_master_unregister(&master->base);
+=======
+static int dw_i3c_remove(struct platform_device *pdev)
+{
+	struct dw_i3c_master *master = platform_get_drvdata(pdev);
+	int ret;
+
+	ret = i3c_master_unregister(&master->base);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	reset_control_assert(master->core_rst);
 
 	clk_disable_unprepare(master->core_clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id dw_i3c_master_of_match[] = {
@@ -1201,10 +1225,17 @@ MODULE_DEVICE_TABLE(of, dw_i3c_master_of_match);
 
 static struct platform_driver dw_i3c_driver = {
 	.probe = dw_i3c_probe,
+<<<<<<< HEAD
 	.remove_new = dw_i3c_remove,
 	.driver = {
 		.name = "dw-i3c-master",
 		.of_match_table = dw_i3c_master_of_match,
+=======
+	.remove = dw_i3c_remove,
+	.driver = {
+		.name = "dw-i3c-master",
+		.of_match_table = of_match_ptr(dw_i3c_master_of_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 module_platform_driver(dw_i3c_driver);

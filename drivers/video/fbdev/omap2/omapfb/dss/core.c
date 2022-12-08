@@ -171,11 +171,20 @@ static int __init omap_dss_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void omap_dss_remove(struct platform_device *pdev)
+=======
+static int omap_dss_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unregister_pm_notifier(&omap_dss_pm_notif_block);
 
 	dss_uninitialize_debugfs();
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void omap_dss_shutdown(struct platform_device *pdev)
@@ -185,7 +194,11 @@ static void omap_dss_shutdown(struct platform_device *pdev)
 }
 
 static struct platform_driver omap_dss_driver = {
+<<<<<<< HEAD
 	.remove_new     = omap_dss_remove,
+=======
+	.remove         = omap_dss_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.shutdown	= omap_dss_shutdown,
 	.driver         = {
 		.name   = "omapdss",

@@ -22,6 +22,10 @@
 #include <linux/platform_device.h>
 #include <linux/hwmon.h>
 #include <linux/hwmon-sysfs.h>
+<<<<<<< HEAD
+=======
+#include <linux/hwmon-vid.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/err.h>
 #include <linux/mutex.h>
 #include <linux/acpi.h>

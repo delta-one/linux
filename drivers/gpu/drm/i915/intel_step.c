@@ -131,14 +131,18 @@ static const struct intel_step_info adls_rpls_revids[] = {
 	[0xC] = { COMMON_GT_MEDIA_STEP(D0), .display_step = STEP_C0 },
 };
 
+<<<<<<< HEAD
 static const struct intel_step_info adlp_rplp_revids[] = {
 	[0x4] = { COMMON_GT_MEDIA_STEP(C0), .display_step = STEP_E0 },
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct intel_step_info adlp_n_revids[] = {
 	[0x0] = { COMMON_GT_MEDIA_STEP(A0), .display_step = STEP_D0 },
 };
 
+<<<<<<< HEAD
 static u8 gmd_to_intel_step(struct drm_i915_private *i915,
 			    struct intel_ip_version *gmd)
 {
@@ -152,6 +156,8 @@ static u8 gmd_to_intel_step(struct drm_i915_private *i915,
 	return step;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void pvc_step_init(struct drm_i915_private *i915, int pci_revid);
 
 void intel_step_init(struct drm_i915_private *i915)
@@ -161,6 +167,7 @@ void intel_step_init(struct drm_i915_private *i915)
 	int revid = INTEL_REVID(i915);
 	struct intel_step_info step = {};
 
+<<<<<<< HEAD
 	if (HAS_GMD_ID(i915)) {
 		step.graphics_step = gmd_to_intel_step(i915,
 						       &RUNTIME_INFO(i915)->graphics.ip);
@@ -173,6 +180,8 @@ void intel_step_init(struct drm_i915_private *i915)
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_PONTEVECCHIO(i915)) {
 		pvc_step_init(i915, revid);
 		return;
@@ -191,9 +200,12 @@ void intel_step_init(struct drm_i915_private *i915)
 	} else if (IS_ADLP_N(i915)) {
 		revids = adlp_n_revids;
 		size = ARRAY_SIZE(adlp_n_revids);
+<<<<<<< HEAD
 	} else if (IS_ADLP_RPLP(i915)) {
 		revids = adlp_rplp_revids;
 		size = ARRAY_SIZE(adlp_rplp_revids);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (IS_ALDERLAKE_P(i915)) {
 		revids = adlp_revids;
 		size = ARRAY_SIZE(adlp_revids);

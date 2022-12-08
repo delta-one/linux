@@ -226,7 +226,11 @@ static int pm8xxx_vib_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int pm8xxx_vib_suspend(struct device *dev)
+=======
+static int __maybe_unused pm8xxx_vib_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pm8xxx_vib *vib = dev_get_drvdata(dev);
 
@@ -236,7 +240,11 @@ static int pm8xxx_vib_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(pm8xxx_vib_pm_ops, pm8xxx_vib_suspend, NULL);
+=======
+static SIMPLE_DEV_PM_OPS(pm8xxx_vib_pm_ops, pm8xxx_vib_suspend, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct of_device_id pm8xxx_vib_id_table[] = {
 	{ .compatible = "qcom,pm8058-vib", .data = &pm8058_regs },
@@ -250,7 +258,11 @@ static struct platform_driver pm8xxx_vib_driver = {
 	.probe		= pm8xxx_vib_probe,
 	.driver		= {
 		.name	= "pm8xxx-vib",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&pm8xxx_vib_pm_ops),
+=======
+		.pm	= &pm8xxx_vib_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = pm8xxx_vib_id_table,
 	},
 };

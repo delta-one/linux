@@ -52,6 +52,16 @@ static bool deny_reading_verity_digests;
 #endif
 
 #ifdef CONFIG_SYSCTL
+<<<<<<< HEAD
+=======
+
+static struct ctl_path loadpin_sysctl_path[] = {
+	{ .procname = "kernel", },
+	{ .procname = "loadpin", },
+	{ }
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct ctl_table loadpin_sysctl_table[] = {
 	{
 		.procname       = "enforce",
@@ -59,12 +69,17 @@ static struct ctl_table loadpin_sysctl_table[] = {
 		.maxlen         = sizeof(int),
 		.mode           = 0644,
 		.proc_handler   = proc_dointvec_minmax,
+<<<<<<< HEAD
 		.extra1         = SYSCTL_ONE,
+=======
+		.extra1         = SYSCTL_ZERO,
+>>>>>>> b7ba80a49124 (Commit)
 		.extra2         = SYSCTL_ONE,
 	},
 	{ }
 };
 
+<<<<<<< HEAD
 static void set_sysctl(bool is_writable)
 {
 	/*
@@ -94,10 +109,13 @@ static void report_writable(struct super_block *mnt_sb, bool writable)
 		pr_info("load pinning engaged.\n");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This must be called after early kernel init, since then the rootdev
  * is available.
  */
+<<<<<<< HEAD
 static bool sb_is_writable(struct super_block *mnt_sb)
 {
 	bool writable = true;
@@ -107,12 +125,47 @@ static bool sb_is_writable(struct super_block *mnt_sb)
 
 	return writable;
 }
+=======
+static void check_pinning_enforcement(struct super_block *mnt_sb)
+{
+	bool ro = false;
+
+	/*
+	 * If load pinning is not enforced via a read-only block
+	 * device, allow sysctl to change modes for testing.
+	 */
+	if (mnt_sb->s_bdev) {
+		ro = bdev_read_only(mnt_sb->s_bdev);
+		pr_info("%pg (%u:%u): %s\n", mnt_sb->s_bdev,
+			MAJOR(mnt_sb->s_bdev->bd_dev),
+			MINOR(mnt_sb->s_bdev->bd_dev),
+			ro ? "read-only" : "writable");
+	} else
+		pr_info("mnt_sb lacks block device, treating as: writable\n");
+
+	if (!ro) {
+		if (!register_sysctl_paths(loadpin_sysctl_path,
+					   loadpin_sysctl_table))
+			pr_notice("sysctl registration failed!\n");
+		else
+			pr_info("enforcement can be disabled.\n");
+	} else
+		pr_info("load pinning engaged.\n");
+}
+#else
+static void check_pinning_enforcement(struct super_block *mnt_sb)
+{
+	pr_info("load pinning engaged.\n");
+}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static void loadpin_sb_free_security(struct super_block *mnt_sb)
 {
 	/*
 	 * When unmounting the filesystem we were using for load
 	 * pinning, we acknowledge the superblock release, but make sure
+<<<<<<< HEAD
 	 * no other modules or firmware can be loaded when we are in
 	 * enforcing mode. Otherwise, allow the root to be reestablished.
 	 */
@@ -132,6 +185,30 @@ static int loadpin_check(struct file *file, enum kernel_read_file_id id)
 	const char *origin = kernel_read_file_id_str(id);
 	bool first_root_pin = false;
 	bool load_root_writable;
+=======
+	 * no other modules or firmware can be loaded.
+	 */
+	if (!IS_ERR_OR_NULL(pinned_root) && mnt_sb == pinned_root) {
+		pinned_root = ERR_PTR(-EIO);
+		pr_info("umount pinned fs: refusing further loads\n");
+	}
+}
+
+static int loadpin_read_file(struct file *file, enum kernel_read_file_id id,
+			     bool contents)
+{
+	struct super_block *load_root;
+	const char *origin = kernel_read_file_id_str(id);
+
+	/*
+	 * If we will not know that we'll be seeing the full contents
+	 * then we cannot trust a load will be complete and unchanged
+	 * off disk. Treat all contents=false hooks as if there were
+	 * no associated file struct.
+	 */
+	if (!contents)
+		file = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* If the file id is excluded, ignore the pinning. */
 	if ((unsigned int)id < ARRAY_SIZE(ignore_read_file_id) &&
@@ -152,11 +229,15 @@ static int loadpin_check(struct file *file, enum kernel_read_file_id id)
 	}
 
 	load_root = file->f_path.mnt->mnt_sb;
+<<<<<<< HEAD
 	load_root_writable = sb_is_writable(load_root);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* First loaded module/firmware defines the root for all others. */
 	spin_lock(&pinned_root_spinlock);
 	/*
+<<<<<<< HEAD
 	 * pinned_root is only NULL at startup or when the pinned root has
 	 * been unmounted while we are not in enforcing mode. Otherwise, it
 	 * is either a valid reference, or an ERR_PTR.
@@ -171,6 +252,24 @@ static int loadpin_check(struct file *file, enum kernel_read_file_id id)
 		report_writable(pinned_root, load_root_writable);
 		set_sysctl(load_root_writable);
 		report_load(origin, file, "pinned");
+=======
+	 * pinned_root is only NULL at startup. Otherwise, it is either
+	 * a valid reference, or an ERR_PTR.
+	 */
+	if (!pinned_root) {
+		pinned_root = load_root;
+		/*
+		 * Unlock now since it's only pinned_root we care about.
+		 * In the worst case, we will (correctly) report pinning
+		 * failures before we have announced that pinning is
+		 * enforcing. This would be purely cosmetic.
+		 */
+		spin_unlock(&pinned_root_spinlock);
+		check_pinning_enforcement(pinned_root);
+		report_load(origin, file, "pinned");
+	} else {
+		spin_unlock(&pinned_root_spinlock);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (IS_ERR_OR_NULL(pinned_root) ||
@@ -187,6 +286,7 @@ static int loadpin_check(struct file *file, enum kernel_read_file_id id)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int loadpin_read_file(struct file *file, enum kernel_read_file_id id,
 			     bool contents)
 {
@@ -209,6 +309,14 @@ static int loadpin_load_data(enum kernel_load_data_id id, bool contents)
 }
 
 static struct security_hook_list loadpin_hooks[] __ro_after_init = {
+=======
+static int loadpin_load_data(enum kernel_load_data_id id, bool contents)
+{
+	return loadpin_read_file(NULL, (enum kernel_read_file_id) id, contents);
+}
+
+static struct security_hook_list loadpin_hooks[] __lsm_ro_after_init = {
+>>>>>>> b7ba80a49124 (Commit)
 	LSM_HOOK_INIT(sb_free_security, loadpin_sb_free_security),
 	LSM_HOOK_INIT(kernel_read_file, loadpin_read_file),
 	LSM_HOOK_INIT(kernel_load_data, loadpin_load_data),
@@ -255,10 +363,13 @@ static int __init loadpin_init(void)
 	pr_info("ready to pin (currently %senforcing)\n",
 		enforce ? "" : "not ");
 	parse_exclude();
+<<<<<<< HEAD
 #ifdef CONFIG_SYSCTL
 	if (!register_sysctl("kernel/loadpin", loadpin_sysctl_table))
 		pr_notice("sysctl registration failed!\n");
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	security_add_hooks(loadpin_hooks, ARRAY_SIZE(loadpin_hooks), "loadpin");
 
 	return 0;

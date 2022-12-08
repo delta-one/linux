@@ -22,30 +22,50 @@ static ssize_t state_show(struct slave *slave, char *buf)
 {
 	switch (bond_slave_state(slave)) {
 	case BOND_STATE_ACTIVE:
+<<<<<<< HEAD
 		return sysfs_emit(buf, "active\n");
 	case BOND_STATE_BACKUP:
 		return sysfs_emit(buf, "backup\n");
 	default:
 		return sysfs_emit(buf, "UNKNOWN\n");
+=======
+		return sprintf(buf, "active\n");
+	case BOND_STATE_BACKUP:
+		return sprintf(buf, "backup\n");
+	default:
+		return sprintf(buf, "UNKNOWN\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 static SLAVE_ATTR_RO(state);
 
 static ssize_t mii_status_show(struct slave *slave, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", bond_slave_link_status(slave->link));
+=======
+	return sprintf(buf, "%s\n", bond_slave_link_status(slave->link));
+>>>>>>> b7ba80a49124 (Commit)
 }
 static SLAVE_ATTR_RO(mii_status);
 
 static ssize_t link_failure_count_show(struct slave *slave, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", slave->link_failure_count);
+=======
+	return sprintf(buf, "%d\n", slave->link_failure_count);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static SLAVE_ATTR_RO(link_failure_count);
 
 static ssize_t perm_hwaddr_show(struct slave *slave, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%*phC\n",
+=======
+	return sprintf(buf, "%*phC\n",
+>>>>>>> b7ba80a49124 (Commit)
 		       slave->dev->addr_len,
 		       slave->perm_hwaddr);
 }
@@ -53,7 +73,11 @@ static SLAVE_ATTR_RO(perm_hwaddr);
 
 static ssize_t queue_id_show(struct slave *slave, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", slave->queue_id);
+=======
+	return sprintf(buf, "%d\n", slave->queue_id);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static SLAVE_ATTR_RO(queue_id);
 
@@ -64,11 +88,19 @@ static ssize_t ad_aggregator_id_show(struct slave *slave, char *buf)
 	if (BOND_MODE(slave->bond) == BOND_MODE_8023AD) {
 		agg = SLAVE_AD_INFO(slave)->port.aggregator;
 		if (agg)
+<<<<<<< HEAD
 			return sysfs_emit(buf, "%d\n",
 					  agg->aggregator_identifier);
 	}
 
 	return sysfs_emit(buf, "N/A\n");
+=======
+			return sprintf(buf, "%d\n",
+				       agg->aggregator_identifier);
+	}
+
+	return sprintf(buf, "N/A\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 static SLAVE_ATTR_RO(ad_aggregator_id);
 
@@ -79,11 +111,19 @@ static ssize_t ad_actor_oper_port_state_show(struct slave *slave, char *buf)
 	if (BOND_MODE(slave->bond) == BOND_MODE_8023AD) {
 		ad_port = &SLAVE_AD_INFO(slave)->port;
 		if (ad_port->aggregator)
+<<<<<<< HEAD
 			return sysfs_emit(buf, "%u\n",
 				       ad_port->actor_oper_port_state);
 	}
 
 	return sysfs_emit(buf, "N/A\n");
+=======
+			return sprintf(buf, "%u\n",
+				       ad_port->actor_oper_port_state);
+	}
+
+	return sprintf(buf, "N/A\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 static SLAVE_ATTR_RO(ad_actor_oper_port_state);
 
@@ -94,11 +134,19 @@ static ssize_t ad_partner_oper_port_state_show(struct slave *slave, char *buf)
 	if (BOND_MODE(slave->bond) == BOND_MODE_8023AD) {
 		ad_port = &SLAVE_AD_INFO(slave)->port;
 		if (ad_port->aggregator)
+<<<<<<< HEAD
 			return sysfs_emit(buf, "%u\n",
 				       ad_port->partner_oper.port_state);
 	}
 
 	return sysfs_emit(buf, "N/A\n");
+=======
+			return sprintf(buf, "%u\n",
+				       ad_port->partner_oper.port_state);
+	}
+
+	return sprintf(buf, "N/A\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 static SLAVE_ATTR_RO(ad_partner_oper_port_state);
 

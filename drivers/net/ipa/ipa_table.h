@@ -1,7 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 
 /* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (C) 2019-2022 Linaro Ltd.
+=======
+ * Copyright (C) 2019-2021 Linaro Ltd.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #ifndef _IPA_TABLE_H_
 #define _IPA_TABLE_H_
@@ -10,6 +14,7 @@
 
 struct ipa;
 
+<<<<<<< HEAD
 /**
  * ipa_filtered_valid() - Validate a filter table endpoint bitmap
  * @ipa:	IPA pointer
@@ -18,6 +23,33 @@ struct ipa;
  * Return:	true if all regions are valid, false otherwise
  */
 bool ipa_filtered_valid(struct ipa *ipa, u64 filtered);
+=======
+/* The maximum number of filter table entries (IPv4, IPv6; hashed or not) */
+#define IPA_FILTER_COUNT_MAX	14
+
+/* The number of route table entries allotted to the modem */
+#define IPA_ROUTE_MODEM_COUNT	8
+
+/* The maximum number of route table entries (IPv4, IPv6; hashed or not) */
+#define IPA_ROUTE_COUNT_MAX	15
+
+/**
+ * ipa_table_valid() - Validate route and filter table memory regions
+ * @ipa:	IPA pointer
+ *
+ * Return:	true if all regions are valid, false otherwise
+ */
+bool ipa_table_valid(struct ipa *ipa);
+
+/**
+ * ipa_filter_map_valid() - Validate a filter table endpoint bitmap
+ * @ipa:	IPA pointer
+ * @filter_mask: Filter table endpoint bitmap to check
+ *
+ * Return:	true if all regions are valid, false otherwise
+ */
+bool ipa_filter_map_valid(struct ipa *ipa, u32 filter_mask);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * ipa_table_hash_support() - Return true if hashed tables are supported
@@ -69,6 +101,7 @@ int ipa_table_init(struct ipa *ipa);
  */
 void ipa_table_exit(struct ipa *ipa);
 
+<<<<<<< HEAD
 /**
  * ipa_table_mem_valid() - Validate sizes of table memory regions
  * @ipa:	IPA pointer
@@ -76,4 +109,6 @@ void ipa_table_exit(struct ipa *ipa);
  */
 bool ipa_table_mem_valid(struct ipa *ipa, bool filter);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _IPA_TABLE_H_ */

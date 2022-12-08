@@ -532,6 +532,7 @@ static int otx2_tc_prepare_flow(struct otx2_nic *nic, struct otx2_tc_flow *node,
 			req->features |= BIT_ULL(NPC_IPPROTO_ICMP6);
 	}
 
+<<<<<<< HEAD
 	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_CONTROL)) {
 		struct flow_match_control match;
 
@@ -557,6 +558,8 @@ static int otx2_tc_prepare_flow(struct otx2_nic *nic, struct otx2_tc_flow *node,
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ETH_ADDRS)) {
 		struct flow_match_eth_addrs match;
 
@@ -1159,12 +1162,16 @@ int otx2_init_tc(struct otx2_nic *nic)
 		return err;
 
 	tc->flow_ht_params = tc_flow_ht_params;
+<<<<<<< HEAD
 	err = rhashtable_init(&tc->flow_table, &tc->flow_ht_params);
 	if (err) {
 		kfree(tc->tc_entries_bitmap);
 		tc->tc_entries_bitmap = NULL;
 	}
 	return err;
+=======
+	return rhashtable_init(&tc->flow_table, &tc->flow_ht_params);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(otx2_init_tc);
 

@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * dir.c - NTFS kernel directory operations. Part of the Linux-NTFS project.
  *
  * Copyright (c) 2001-2007 Anton Altaparmakov
@@ -17,7 +21,11 @@
 #include "debug.h"
 #include "ntfs.h"
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * The little endian Unicode string $I30 as a global constant.
  */
 ntfschar I30[5] = { cpu_to_le16('$'), cpu_to_le16('I'),

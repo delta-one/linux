@@ -732,6 +732,7 @@ enum nfs4_setxattr_options {
 	SETXATTR4_CREATE	= 1,
 	SETXATTR4_REPLACE	= 2,
 };
+<<<<<<< HEAD
 
 enum {
 	RCA4_TYPE_MASK_RDATA_DLG	= 0,
@@ -745,4 +746,6 @@ enum {
 	RCA4_TYPE_MASK_OTHER_LAYOUT_MAX	= 15,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

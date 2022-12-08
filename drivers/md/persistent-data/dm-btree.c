@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2011 Red Hat, Inc.
  *
@@ -14,11 +17,17 @@
 
 #define DM_MSG_PREFIX "btree"
 
+<<<<<<< HEAD
 /*
  *--------------------------------------------------------------
  * Array manipulation
  *--------------------------------------------------------------
  */
+=======
+/*----------------------------------------------------------------
+ * Array manipulation
+ *--------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 static void memcpy_disk(void *dest, const void *src, size_t len)
 	__dm_written_to_disk(src)
 {
@@ -26,8 +35,13 @@ static void memcpy_disk(void *dest, const void *src, size_t len)
 	__dm_unbless_for_disk(src);
 }
 
+<<<<<<< HEAD
 static void array_insert(void *base, size_t elt_size, unsigned int nr_elts,
 			 unsigned int index, void *elt)
+=======
+static void array_insert(void *base, size_t elt_size, unsigned nr_elts,
+			 unsigned index, void *elt)
+>>>>>>> b7ba80a49124 (Commit)
 	__dm_written_to_disk(elt)
 {
 	if (index < nr_elts)
@@ -83,7 +97,11 @@ void inc_children(struct dm_transaction_manager *tm, struct btree_node *n,
 		vt->inc(vt->context, value_ptr(n, 0), nr_entries);
 }
 
+<<<<<<< HEAD
 static int insert_at(size_t value_size, struct btree_node *node, unsigned int index,
+=======
+static int insert_at(size_t value_size, struct btree_node *node, unsigned index,
+>>>>>>> b7ba80a49124 (Commit)
 		     uint64_t key, void *value)
 	__dm_written_to_disk(value)
 {
@@ -165,9 +183,15 @@ EXPORT_SYMBOL_GPL(dm_btree_empty);
 struct frame {
 	struct dm_block *b;
 	struct btree_node *n;
+<<<<<<< HEAD
 	unsigned int level;
 	unsigned int nr_children;
 	unsigned int current_child;
+=======
+	unsigned level;
+	unsigned nr_children;
+	unsigned current_child;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct del_stack {
@@ -196,7 +220,11 @@ static int unprocessed_frames(struct del_stack *s)
 
 static void prefetch_children(struct del_stack *s, struct frame *f)
 {
+<<<<<<< HEAD
 	unsigned int i;
+=======
+	unsigned i;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_block_manager *bm = dm_tm_get_bm(s->tm);
 
 	for (i = 0; i < f->nr_children; i++)
@@ -208,7 +236,11 @@ static bool is_internal_level(struct dm_btree_info *info, struct frame *f)
 	return f->level < (info->levels - 1);
 }
 
+<<<<<<< HEAD
 static int push_frame(struct del_stack *s, dm_block_t b, unsigned int level)
+=======
+static int push_frame(struct del_stack *s, dm_block_t b, unsigned level)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r;
 	uint32_t ref_count;
@@ -374,7 +406,11 @@ static int btree_lookup_raw(struct ro_spine *s, dm_block_t block, uint64_t key,
 int dm_btree_lookup(struct dm_btree_info *info, dm_block_t root,
 		    uint64_t *keys, void *value_le)
 {
+<<<<<<< HEAD
 	unsigned int level, last_level = info->levels - 1;
+=======
+	unsigned level, last_level = info->levels - 1;
+>>>>>>> b7ba80a49124 (Commit)
 	int r = -ENODATA;
 	uint64_t rkey;
 	__le64 internal_value_le;
@@ -470,7 +506,11 @@ out:
 int dm_btree_lookup_next(struct dm_btree_info *info, dm_block_t root,
 			 uint64_t *keys, uint64_t *rkey, void *value_le)
 {
+<<<<<<< HEAD
 	unsigned int level;
+=======
+	unsigned level;
+>>>>>>> b7ba80a49124 (Commit)
 	int r = -ENODATA;
 	__le64 internal_value_le;
 	struct ro_spine spine;
@@ -496,6 +536,10 @@ out:
 	exit_ro_spine(&spine);
 	return r;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL_GPL(dm_btree_lookup_next);
 
 /*----------------------------------------------------------------*/
@@ -504,12 +548,20 @@ EXPORT_SYMBOL_GPL(dm_btree_lookup_next);
  * Copies entries from one region of a btree node to another.  The regions
  * must not overlap.
  */
+<<<<<<< HEAD
 static void copy_entries(struct btree_node *dest, unsigned int dest_offset,
 			 struct btree_node *src, unsigned int src_offset,
 			 unsigned int count)
 {
 	size_t value_size = le32_to_cpu(dest->header.value_size);
 
+=======
+static void copy_entries(struct btree_node *dest, unsigned dest_offset,
+			 struct btree_node *src, unsigned src_offset,
+			 unsigned count)
+{
+	size_t value_size = le32_to_cpu(dest->header.value_size);
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(dest->keys + dest_offset, src->keys + src_offset, count * sizeof(uint64_t));
 	memcpy(value_ptr(dest, dest_offset), value_ptr(src, src_offset), count * value_size);
 }
@@ -518,12 +570,20 @@ static void copy_entries(struct btree_node *dest, unsigned int dest_offset,
  * Moves entries from one region fo a btree node to another.  The regions
  * may overlap.
  */
+<<<<<<< HEAD
 static void move_entries(struct btree_node *dest, unsigned int dest_offset,
 			 struct btree_node *src, unsigned int src_offset,
 			 unsigned int count)
 {
 	size_t value_size = le32_to_cpu(dest->header.value_size);
 
+=======
+static void move_entries(struct btree_node *dest, unsigned dest_offset,
+			 struct btree_node *src, unsigned src_offset,
+			 unsigned count)
+{
+	size_t value_size = le32_to_cpu(dest->header.value_size);
+>>>>>>> b7ba80a49124 (Commit)
 	memmove(dest->keys + dest_offset, src->keys + src_offset, count * sizeof(uint64_t));
 	memmove(value_ptr(dest, dest_offset), value_ptr(src, src_offset), count * value_size);
 }
@@ -532,7 +592,11 @@ static void move_entries(struct btree_node *dest, unsigned int dest_offset,
  * Erases the first 'count' entries of a btree node, shifting following
  * entries down into their place.
  */
+<<<<<<< HEAD
 static void shift_down(struct btree_node *n, unsigned int count)
+=======
+static void shift_down(struct btree_node *n, unsigned count)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	move_entries(n, 0, n, count, le32_to_cpu(n->header.nr_entries) - count);
 }
@@ -541,7 +605,11 @@ static void shift_down(struct btree_node *n, unsigned int count)
  * Moves entries in a btree node up 'count' places, making space for
  * new entries at the start of the node.
  */
+<<<<<<< HEAD
 static void shift_up(struct btree_node *n, unsigned int count)
+=======
+static void shift_up(struct btree_node *n, unsigned count)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	move_entries(n, count, n, 0, le32_to_cpu(n->header.nr_entries));
 }
@@ -552,6 +620,7 @@ static void shift_up(struct btree_node *n, unsigned int count)
  */
 static void redistribute2(struct btree_node *left, struct btree_node *right)
 {
+<<<<<<< HEAD
 	unsigned int nr_left = le32_to_cpu(left->header.nr_entries);
 	unsigned int nr_right = le32_to_cpu(right->header.nr_entries);
 	unsigned int total = nr_left + nr_right;
@@ -566,6 +635,20 @@ static void redistribute2(struct btree_node *left, struct btree_node *right)
 	} else if (nr_left > target_left) {
 		unsigned int delta = nr_left - target_left;
 
+=======
+	unsigned nr_left = le32_to_cpu(left->header.nr_entries);
+	unsigned nr_right = le32_to_cpu(right->header.nr_entries);
+	unsigned total = nr_left + nr_right;
+	unsigned target_left = total / 2;
+	unsigned target_right = total - target_left;
+
+	if (nr_left < target_left) {
+		unsigned delta = target_left - nr_left;
+		copy_entries(left, nr_left, right, 0, delta);
+		shift_down(right, delta);
+	} else if (nr_left > target_left) {
+		unsigned delta = nr_left - target_left;
+>>>>>>> b7ba80a49124 (Commit)
 		if (nr_right)
 			shift_up(right, delta);
 		copy_entries(right, 0, left, target_left, delta);
@@ -582,10 +665,17 @@ static void redistribute2(struct btree_node *left, struct btree_node *right)
 static void redistribute3(struct btree_node *left, struct btree_node *center,
 			  struct btree_node *right)
 {
+<<<<<<< HEAD
 	unsigned int nr_left = le32_to_cpu(left->header.nr_entries);
 	unsigned int nr_center = le32_to_cpu(center->header.nr_entries);
 	unsigned int nr_right = le32_to_cpu(right->header.nr_entries);
 	unsigned int total, target_left, target_center, target_right;
+=======
+	unsigned nr_left = le32_to_cpu(left->header.nr_entries);
+	unsigned nr_center = le32_to_cpu(center->header.nr_entries);
+	unsigned nr_right = le32_to_cpu(right->header.nr_entries);
+	unsigned total, target_left, target_center, target_right;
+>>>>>>> b7ba80a49124 (Commit)
 
 	BUG_ON(nr_center);
 
@@ -595,22 +685,34 @@ static void redistribute3(struct btree_node *left, struct btree_node *center,
 	target_right = (total - target_left - target_center);
 
 	if (nr_left < target_left) {
+<<<<<<< HEAD
 		unsigned int left_short = target_left - nr_left;
 
+=======
+		unsigned left_short = target_left - nr_left;
+>>>>>>> b7ba80a49124 (Commit)
 		copy_entries(left, nr_left, right, 0, left_short);
 		copy_entries(center, 0, right, left_short, target_center);
 		shift_down(right, nr_right - target_right);
 
 	} else if (nr_left < (target_left + target_center)) {
+<<<<<<< HEAD
 		unsigned int left_to_center = nr_left - target_left;
 
+=======
+		unsigned left_to_center = nr_left - target_left;
+>>>>>>> b7ba80a49124 (Commit)
 		copy_entries(center, 0, left, target_left, left_to_center);
 		copy_entries(center, left_to_center, right, 0, target_center - left_to_center);
 		shift_down(right, nr_right - target_right);
 
 	} else {
+<<<<<<< HEAD
 		unsigned int right_short = target_right - nr_right;
 
+=======
+		unsigned right_short = target_right - nr_right;
+>>>>>>> b7ba80a49124 (Commit)
 		shift_up(right, right_short);
 		copy_entries(right, 0, left, nr_left - right_short, right_short);
 		copy_entries(center, 0, left, target_left, nr_left - target_left);
@@ -651,7 +753,11 @@ static void redistribute3(struct btree_node *left, struct btree_node *center,
  *
  * Where A* is a shadow of A.
  */
+<<<<<<< HEAD
 static int split_one_into_two(struct shadow_spine *s, unsigned int parent_index,
+=======
+static int split_one_into_two(struct shadow_spine *s, unsigned parent_index,
+>>>>>>> b7ba80a49124 (Commit)
 			      struct dm_btree_value_type *vt, uint64_t key)
 {
 	int r;
@@ -705,7 +811,11 @@ static int split_one_into_two(struct shadow_spine *s, unsigned int parent_index,
  * to the new shadow.
  */
 static int shadow_child(struct dm_btree_info *info, struct dm_btree_value_type *vt,
+<<<<<<< HEAD
 			struct btree_node *parent, unsigned int index,
+=======
+			struct btree_node *parent, unsigned index,
+>>>>>>> b7ba80a49124 (Commit)
 			struct dm_block **result)
 {
 	int r, inc;
@@ -734,11 +844,19 @@ static int shadow_child(struct dm_btree_info *info, struct dm_btree_value_type *
  * Splits two nodes into three.  This is more work, but results in fuller
  * nodes, so saves metadata space.
  */
+<<<<<<< HEAD
 static int split_two_into_three(struct shadow_spine *s, unsigned int parent_index,
 				struct dm_btree_value_type *vt, uint64_t key)
 {
 	int r;
 	unsigned int middle_index;
+=======
+static int split_two_into_three(struct shadow_spine *s, unsigned parent_index,
+                                struct dm_btree_value_type *vt, uint64_t key)
+{
+	int r;
+	unsigned middle_index;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_block *left, *middle, *right, *parent;
 	struct btree_node *ln, *rn, *mn, *pn;
 	__le64 location;
@@ -790,7 +908,11 @@ static int split_two_into_three(struct shadow_spine *s, unsigned int parent_inde
 		if (shadow_current(s) != right)
 			unlock_block(s->info, right);
 
+<<<<<<< HEAD
 		return r;
+=======
+	        return r;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 
@@ -839,7 +961,11 @@ static int btree_split_beneath(struct shadow_spine *s, uint64_t key)
 {
 	int r;
 	size_t size;
+<<<<<<< HEAD
 	unsigned int nr_left, nr_right;
+=======
+	unsigned nr_left, nr_right;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_block *left, *right, *new_parent;
 	struct btree_node *pn, *ln, *rn;
 	__le64 val;
@@ -913,7 +1039,11 @@ static int btree_split_beneath(struct shadow_spine *s, uint64_t key)
  * Redistributes a node's entries with its left sibling.
  */
 static int rebalance_left(struct shadow_spine *s, struct dm_btree_value_type *vt,
+<<<<<<< HEAD
 			  unsigned int parent_index, uint64_t key)
+=======
+			  unsigned parent_index, uint64_t key)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r;
 	struct dm_block *sib;
@@ -942,7 +1072,11 @@ static int rebalance_left(struct shadow_spine *s, struct dm_btree_value_type *vt
  * Redistributes a nodes entries with its right sibling.
  */
 static int rebalance_right(struct shadow_spine *s, struct dm_btree_value_type *vt,
+<<<<<<< HEAD
 			   unsigned int parent_index, uint64_t key)
+=======
+			   unsigned parent_index, uint64_t key)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r;
 	struct dm_block *sib;
@@ -970,10 +1104,17 @@ static int rebalance_right(struct shadow_spine *s, struct dm_btree_value_type *v
 /*
  * Returns the number of spare entries in a node.
  */
+<<<<<<< HEAD
 static int get_node_free_space(struct dm_btree_info *info, dm_block_t b, unsigned int *space)
 {
 	int r;
 	unsigned int nr_entries;
+=======
+static int get_node_free_space(struct dm_btree_info *info, dm_block_t b, unsigned *space)
+{
+	int r;
+	unsigned nr_entries;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_block *block;
 	struct btree_node *node;
 
@@ -999,18 +1140,30 @@ static int get_node_free_space(struct dm_btree_info *info, dm_block_t b, unsigne
  */
 #define SPACE_THRESHOLD 8
 static int rebalance_or_split(struct shadow_spine *s, struct dm_btree_value_type *vt,
+<<<<<<< HEAD
 			      unsigned int parent_index, uint64_t key)
 {
 	int r;
 	struct btree_node *parent = dm_block_data(shadow_parent(s));
 	unsigned int nr_parent = le32_to_cpu(parent->header.nr_entries);
 	unsigned int free_space;
+=======
+			      unsigned parent_index, uint64_t key)
+{
+	int r;
+	struct btree_node *parent = dm_block_data(shadow_parent(s));
+	unsigned nr_parent = le32_to_cpu(parent->header.nr_entries);
+	unsigned free_space;
+>>>>>>> b7ba80a49124 (Commit)
 	int left_shared = 0, right_shared = 0;
 
 	/* Should we move entries to the left sibling? */
 	if (parent_index > 0) {
 		dm_block_t left_b = value64(parent, parent_index - 1);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		r = dm_tm_block_is_shared(s->info->tm, left_b, &left_shared);
 		if (r)
 			return r;
@@ -1028,7 +1181,10 @@ static int rebalance_or_split(struct shadow_spine *s, struct dm_btree_value_type
 	/* Should we move entries to the right sibling? */
 	if (parent_index < (nr_parent - 1)) {
 		dm_block_t right_b = value64(parent, parent_index + 1);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		r = dm_tm_block_is_shared(s->info->tm, right_b, &right_shared);
 		if (r)
 			return r;
@@ -1091,7 +1247,11 @@ static bool has_space_for_insert(struct btree_node *node, uint64_t key)
 
 static int btree_insert_raw(struct shadow_spine *s, dm_block_t root,
 			    struct dm_btree_value_type *vt,
+<<<<<<< HEAD
 			    uint64_t key, unsigned int *index)
+=======
+			    uint64_t key, unsigned *index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r, i = *index, top = 1;
 	struct btree_node *node;
@@ -1225,9 +1385,15 @@ int btree_get_overwrite_leaf(struct dm_btree_info *info, dm_block_t root,
 }
 
 static bool need_insert(struct btree_node *node, uint64_t *keys,
+<<<<<<< HEAD
 			unsigned int level, unsigned int index)
 {
 	return ((index >= le32_to_cpu(node->header.nr_entries)) ||
+=======
+			unsigned level, unsigned index)
+{
+        return ((index >= le32_to_cpu(node->header.nr_entries)) ||
+>>>>>>> b7ba80a49124 (Commit)
 		(le64_to_cpu(node->keys[index]) != keys[level]));
 }
 
@@ -1237,7 +1403,11 @@ static int insert(struct dm_btree_info *info, dm_block_t root,
 		  __dm_written_to_disk(value)
 {
 	int r;
+<<<<<<< HEAD
 	unsigned int level, index = -1, last_level = info->levels - 1;
+=======
+	unsigned level, index = -1, last_level = info->levels - 1;
+>>>>>>> b7ba80a49124 (Commit)
 	dm_block_t block = root;
 	struct shadow_spine spine;
 	struct btree_node *n;
@@ -1320,7 +1490,11 @@ bad_unblessed:
 
 int dm_btree_insert(struct dm_btree_info *info, dm_block_t root,
 		    uint64_t *keys, void *value, dm_block_t *new_root)
+<<<<<<< HEAD
 	__dm_written_to_disk(value)
+=======
+		    __dm_written_to_disk(value)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return insert(info, root, keys, value, new_root, NULL);
 }
@@ -1329,7 +1503,11 @@ EXPORT_SYMBOL_GPL(dm_btree_insert);
 int dm_btree_insert_notify(struct dm_btree_info *info, dm_block_t root,
 			   uint64_t *keys, void *value, dm_block_t *new_root,
 			   int *inserted)
+<<<<<<< HEAD
 	__dm_written_to_disk(value)
+=======
+			   __dm_written_to_disk(value)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return insert(info, root, keys, value, new_root, inserted);
 }
@@ -1352,8 +1530,13 @@ static int find_key(struct ro_spine *s, dm_block_t block, bool find_highest,
 		i = le32_to_cpu(ro_node(s)->header.nr_entries);
 		if (!i)
 			return -ENODATA;
+<<<<<<< HEAD
 
 		i--;
+=======
+		else
+			i--;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (find_highest)
 			*result_key = le64_to_cpu(ro_node(s)->keys[i]);
@@ -1423,7 +1606,11 @@ static int walk_node(struct dm_btree_info *info, dm_block_t block,
 		     void *context)
 {
 	int r;
+<<<<<<< HEAD
 	unsigned int i, nr;
+=======
+	unsigned i, nr;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_block *node;
 	struct btree_node *n;
 	uint64_t keys;
@@ -1466,7 +1653,11 @@ EXPORT_SYMBOL_GPL(dm_btree_walk);
 
 static void prefetch_values(struct dm_btree_cursor *c)
 {
+<<<<<<< HEAD
 	unsigned int i, nr;
+=======
+	unsigned i, nr;
+>>>>>>> b7ba80a49124 (Commit)
 	__le64 value_le;
 	struct cursor_node *n = c->nodes + c->depth - 1;
 	struct btree_node *bn = dm_block_data(n->b);
@@ -1596,7 +1787,10 @@ EXPORT_SYMBOL_GPL(dm_btree_cursor_end);
 int dm_btree_cursor_next(struct dm_btree_cursor *c)
 {
 	int r = inc_or_backtrack(c);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!r) {
 		r = find_leaf(c);
 		if (r)

@@ -24,7 +24,10 @@ smp_mb__before_atomic() { __fence{before-atomic}; }
 smp_mb__after_atomic() { __fence{after-atomic}; }
 smp_mb__after_spinlock() { __fence{after-spinlock}; }
 smp_mb__after_unlock_lock() { __fence{after-unlock-lock}; }
+<<<<<<< HEAD
 smp_mb__after_srcu_read_unlock() { __fence{after-srcu-read-unlock}; }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 barrier() { __fence{barrier}; }
 
 // Exchange
@@ -50,10 +53,15 @@ synchronize_rcu() { __fence{sync-rcu}; }
 synchronize_rcu_expedited() { __fence{sync-rcu}; }
 
 // SRCU
+<<<<<<< HEAD
 srcu_read_lock(X) __load{srcu-lock}(*X)
 srcu_read_unlock(X,Y) { __store{srcu-unlock}(*X,Y); }
 srcu_down_read(X) __load{srcu-lock}(*X)
 srcu_up_read(X,Y) { __store{srcu-unlock}(*X,Y); }
+=======
+srcu_read_lock(X)  __srcu{srcu-lock}(X)
+srcu_read_unlock(X,Y) { __srcu{srcu-unlock}(X,Y); }
+>>>>>>> b7ba80a49124 (Commit)
 synchronize_srcu(X)  { __srcu{sync-srcu}(X); }
 synchronize_srcu_expedited(X)  { __srcu{sync-srcu}(X); }
 

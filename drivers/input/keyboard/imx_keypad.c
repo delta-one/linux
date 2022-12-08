@@ -7,7 +7,10 @@
 #include <linux/delay.h>
 #include <linux/device.h>
 #include <linux/err.h>
+<<<<<<< HEAD
 #include <linux/input.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/input/matrix_keypad.h>
 #include <linux/interrupt.h>
 #include <linux/io.h>

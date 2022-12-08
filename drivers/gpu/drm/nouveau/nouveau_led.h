@@ -27,7 +27,11 @@
 
 #include "nouveau_drv.h"
 
+<<<<<<< HEAD
 #include <linux/leds.h>
+=======
+struct led_classdev;
+>>>>>>> b7ba80a49124 (Commit)
 
 struct nouveau_led {
 	struct drm_device *dev;

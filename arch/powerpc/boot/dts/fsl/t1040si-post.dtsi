@@ -686,7 +686,10 @@
 			seville_port8: port@8 {
 				reg = <8>;
 				phy-mode = "internal";
+<<<<<<< HEAD
 				ethernet = <&enet0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				status = "disabled";
 
 				fixed-link {
@@ -698,7 +701,10 @@
 			seville_port9: port@9 {
 				reg = <9>;
 				phy-mode = "internal";
+<<<<<<< HEAD
 				ethernet = <&enet1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				status = "disabled";
 
 				fixed-link {

@@ -706,7 +706,11 @@ void rn_clk_mgr_construct(
 	enum pp_smu_status status = 0;
 	int is_green_sardine = 0;
 
+<<<<<<< HEAD
 #if defined(CONFIG_DRM_AMD_DC_FP)
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+>>>>>>> b7ba80a49124 (Commit)
 	is_green_sardine = ASICREV_IS_GREEN_SARDINE(ctx->asic_id.hw_internal_rev);
 #endif
 

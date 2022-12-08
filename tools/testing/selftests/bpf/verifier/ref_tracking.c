@@ -142,7 +142,11 @@
 	.kfunc = "bpf",
 	.expected_attach_type = BPF_LSM_MAC,
 	.flags = BPF_F_SLEEPABLE,
+<<<<<<< HEAD
 	.errstr = "arg#0 is ptr_or_null_ expected ptr_ or socket",
+=======
+	.errstr = "arg#0 pointer type STRUCT bpf_key must point to scalar, or struct with scalar",
+>>>>>>> b7ba80a49124 (Commit)
 	.fixup_kfunc_btf_id = {
 		{ "bpf_lookup_user_key", 2 },
 		{ "bpf_key_put", 4 },
@@ -163,7 +167,11 @@
 	.kfunc = "bpf",
 	.expected_attach_type = BPF_LSM_MAC,
 	.flags = BPF_F_SLEEPABLE,
+<<<<<<< HEAD
 	.errstr = "arg#0 is ptr_or_null_ expected ptr_ or socket",
+=======
+	.errstr = "arg#0 pointer type STRUCT bpf_key must point to scalar, or struct with scalar",
+>>>>>>> b7ba80a49124 (Commit)
 	.fixup_kfunc_btf_id = {
 		{ "bpf_lookup_system_key", 1 },
 		{ "bpf_key_put", 3 },
@@ -1044,6 +1052,7 @@
 	.result_unpriv = REJECT,
 	.errstr_unpriv = "unknown func",
 },
+<<<<<<< HEAD
 {
 	"reference tracking: try to leak released ptr reg",
 	.insns = {
@@ -1080,3 +1089,5 @@
 	.result_unpriv = REJECT,
 	.errstr_unpriv = "R8 !read_ok"
 },
+=======
+>>>>>>> b7ba80a49124 (Commit)

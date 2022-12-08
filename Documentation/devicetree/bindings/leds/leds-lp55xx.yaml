@@ -43,13 +43,20 @@ properties:
       - 1 # internal
       - 2 # external
 
+<<<<<<< HEAD
   enable-gpios:
+=======
+  enable-gpio:
+>>>>>>> b7ba80a49124 (Commit)
     maxItems: 1
     description: |
       GPIO attached to the chip's enable pin
 
+<<<<<<< HEAD
   label: true
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   pwr-sel:
     $ref: /schemas/types.yaml#/definitions/uint8
     description: |
@@ -67,6 +74,7 @@ properties:
     const: 0
 
 patternProperties:
+<<<<<<< HEAD
   '^multi-led@[0-8]$':
     type: object
     $ref: leds-class-multicolor.yaml#
@@ -111,6 +119,11 @@ patternProperties:
     $ref: common.yaml#
     unevaluatedProperties: false
 
+=======
+  "(^led@[0-9a-f]$|led)":
+    type: object
+    $ref: common.yaml#
+>>>>>>> b7ba80a49124 (Commit)
     properties:
       led-cur:
         $ref: /schemas/types.yaml#/definitions/uint8

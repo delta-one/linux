@@ -20,6 +20,11 @@
 #include <linux/reset.h>
 #include <linux/slab.h>
 
+<<<<<<< HEAD
+=======
+#include <dt-bindings/phy/phy.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #include "phy-qcom-qmp.h"
 
 /* QPHY_SW_RESET bit */
@@ -33,17 +38,33 @@
 #define PLL_READY_GATE_EN			BIT(3)
 /* QPHY_PCS_STATUS bit */
 #define PHYSTATUS				BIT(6)
+<<<<<<< HEAD
+=======
+#define PHYSTATUS_4_20				BIT(7)
+>>>>>>> b7ba80a49124 (Commit)
 /* QPHY_COM_PCS_READY_STATUS bit */
 #define PCS_READY				BIT(0)
 
 #define PHY_INIT_COMPLETE_TIMEOUT		10000
 #define POWER_DOWN_DELAY_US_MIN			10
+<<<<<<< HEAD
 #define POWER_DOWN_DELAY_US_MAX			20
+=======
+#define POWER_DOWN_DELAY_US_MAX			11
+>>>>>>> b7ba80a49124 (Commit)
 
 struct qmp_phy_init_tbl {
 	unsigned int offset;
 	unsigned int val;
 	/*
+<<<<<<< HEAD
+=======
+	 * register part of layout ?
+	 * if yes, then offset gives index in the reg-layout
+	 */
+	bool in_layout;
+	/*
+>>>>>>> b7ba80a49124 (Commit)
 	 * mask of lanes for which this register is written
 	 * for cases when second lane needs different values
 	 */
@@ -57,6 +78,17 @@ struct qmp_phy_init_tbl {
 		.lane_mask = 0xff,	\
 	}
 
+<<<<<<< HEAD
+=======
+#define QMP_PHY_INIT_CFG_L(o, v)	\
+	{				\
+		.offset = o,		\
+		.val = v,		\
+		.in_layout = true,	\
+		.lane_mask = 0xff,	\
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 #define QMP_PHY_INIT_CFG_LANE(o, v, l)	\
 	{				\
 		.offset = o,		\
@@ -75,6 +107,10 @@ enum qphy_reg_layout {
 	QPHY_SW_RESET,
 	QPHY_START_CTRL,
 	QPHY_PCS_STATUS,
+<<<<<<< HEAD
+=======
+	QPHY_PCS_POWER_DOWN_CONTROL,
+>>>>>>> b7ba80a49124 (Commit)
 	/* Keep last to ensure regs_layout arrays are properly initialized */
 	QPHY_LAYOUT_SIZE
 };
@@ -84,9 +120,15 @@ static const unsigned int pciephy_regs_layout[QPHY_LAYOUT_SIZE] = {
 	[QPHY_COM_POWER_DOWN_CONTROL]	= 0x404,
 	[QPHY_COM_START_CONTROL]	= 0x408,
 	[QPHY_COM_PCS_READY_STATUS]	= 0x448,
+<<<<<<< HEAD
 	[QPHY_SW_RESET]			= QPHY_V2_PCS_SW_RESET,
 	[QPHY_START_CTRL]		= QPHY_V2_PCS_START_CONTROL,
 	[QPHY_PCS_STATUS]		= QPHY_V2_PCS_PCI_PCS_STATUS,
+=======
+	[QPHY_SW_RESET]			= 0x00,
+	[QPHY_START_CTRL]		= 0x08,
+	[QPHY_PCS_STATUS]		= 0x174,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
@@ -167,10 +209,21 @@ static const struct qmp_phy_init_tbl msm8996_pcie_pcs_tbl[] = {
 	QMP_PHY_INIT_CFG(QPHY_V2_PCS_TXDEEMPH_M3P5DB_V0, 0x0e),
 };
 
+<<<<<<< HEAD
 /* struct qmp_phy_cfg - per-PHY initialization config */
 struct qmp_phy_cfg {
 	/* number of PHYs provided by this block */
 	int num_phys;
+=======
+struct qmp_phy;
+
+/* struct qmp_phy_cfg - per-PHY initialization config */
+struct qmp_phy_cfg {
+	/* phy-type - PCIE/UFS/USB */
+	unsigned int type;
+	/* number of lanes provided by phy */
+	int nlanes;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Init sequence for PHY blocks - serdes, tx, rx, pcs */
 	const struct qmp_phy_init_tbl *serdes_tbl;
@@ -194,6 +247,21 @@ struct qmp_phy_cfg {
 
 	/* array of registers with different offsets */
 	const unsigned int *regs;
+<<<<<<< HEAD
+=======
+
+	unsigned int start_ctrl;
+	unsigned int pwrdn_ctrl;
+	unsigned int mask_com_pcs_ready;
+	/* bit offset of PHYSTATUS in QPHY_PCS_STATUS register */
+	unsigned int phy_status;
+
+	/* true, if PHY needs delay after POWER_DOWN */
+	bool has_pwrdn_delay;
+	/* power_down delay in usec */
+	int pwrdn_delay_min;
+	int pwrdn_delay_max;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -209,6 +277,10 @@ struct qmp_phy_cfg {
  * @index: lane index
  * @qmp: QMP phy to which this lane belongs
  * @lane_rst: lane's reset controller
+<<<<<<< HEAD
+=======
+ * @mode: current PHY mode
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct qmp_phy {
 	struct phy *phy;
@@ -289,7 +361,12 @@ static const char * const qmp_phy_vreg_l[] = {
 };
 
 static const struct qmp_phy_cfg msm8996_pciephy_cfg = {
+<<<<<<< HEAD
 	.num_phys		= 3,
+=======
+	.type			= PHY_TYPE_PCIE,
+	.nlanes			= 3,
+>>>>>>> b7ba80a49124 (Commit)
 
 	.serdes_tbl		= msm8996_pcie_serdes_tbl,
 	.serdes_tbl_num		= ARRAY_SIZE(msm8996_pcie_serdes_tbl),
@@ -306,9 +383,25 @@ static const struct qmp_phy_cfg msm8996_pciephy_cfg = {
 	.vreg_list		= qmp_phy_vreg_l,
 	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
 	.regs			= pciephy_regs_layout,
+<<<<<<< HEAD
 };
 
 static void qmp_pcie_msm8996_configure_lane(void __iomem *base,
+=======
+
+	.start_ctrl		= PCS_START | PLL_READY_GATE_EN,
+	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+	.mask_com_pcs_ready	= PCS_READY,
+	.phy_status		= PHYSTATUS,
+
+	.has_pwrdn_delay	= true,
+	.pwrdn_delay_min	= POWER_DOWN_DELAY_US_MIN,
+	.pwrdn_delay_max	= POWER_DOWN_DELAY_US_MAX,
+};
+
+static void qmp_pcie_msm8996_configure_lane(void __iomem *base,
+					const unsigned int *regs,
+>>>>>>> b7ba80a49124 (Commit)
 					const struct qmp_phy_init_tbl tbl[],
 					int num,
 					u8 lane_mask)
@@ -323,15 +416,30 @@ static void qmp_pcie_msm8996_configure_lane(void __iomem *base,
 		if (!(t->lane_mask & lane_mask))
 			continue;
 
+<<<<<<< HEAD
 		writel(t->val, base + t->offset);
+=======
+		if (t->in_layout)
+			writel(t->val, base + regs[t->offset]);
+		else
+			writel(t->val, base + t->offset);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
 static void qmp_pcie_msm8996_configure(void __iomem *base,
+<<<<<<< HEAD
 				   const struct qmp_phy_init_tbl tbl[],
 				   int num)
 {
 	qmp_pcie_msm8996_configure_lane(base, tbl, num, 0xff);
+=======
+				   const unsigned int *regs,
+				   const struct qmp_phy_init_tbl tbl[],
+				   int num)
+{
+	qmp_pcie_msm8996_configure_lane(base, regs, tbl, num, 0xff);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int qmp_pcie_msm8996_serdes_init(struct qmp_phy *qphy)
@@ -342,17 +450,30 @@ static int qmp_pcie_msm8996_serdes_init(struct qmp_phy *qphy)
 	const struct qmp_phy_init_tbl *serdes_tbl = cfg->serdes_tbl;
 	int serdes_tbl_num = cfg->serdes_tbl_num;
 	void __iomem *status;
+<<<<<<< HEAD
 	unsigned int val;
 	int ret;
 
 	qmp_pcie_msm8996_configure(serdes, serdes_tbl, serdes_tbl_num);
+=======
+	unsigned int mask, val;
+	int ret;
+
+	qmp_pcie_msm8996_configure(serdes, cfg->regs, serdes_tbl, serdes_tbl_num);
+>>>>>>> b7ba80a49124 (Commit)
 
 	qphy_clrbits(serdes, cfg->regs[QPHY_COM_SW_RESET], SW_RESET);
 	qphy_setbits(serdes, cfg->regs[QPHY_COM_START_CONTROL],
 		     SERDES_START | PCS_START);
 
 	status = serdes + cfg->regs[QPHY_COM_PCS_READY_STATUS];
+<<<<<<< HEAD
 	ret = readl_poll_timeout(status, val, (val & PCS_READY), 200,
+=======
+	mask = cfg->mask_com_pcs_ready;
+
+	ret = readl_poll_timeout(status, val, (val & mask), 10,
+>>>>>>> b7ba80a49124 (Commit)
 				 PHY_INIT_COMPLETE_TIMEOUT);
 	if (ret) {
 		dev_err(qmp->dev,
@@ -376,6 +497,10 @@ static int qmp_pcie_msm8996_com_init(struct qmp_phy *qphy)
 		return 0;
 	}
 
+<<<<<<< HEAD
+=======
+	/* turn on regulator supplies */
+>>>>>>> b7ba80a49124 (Commit)
 	ret = regulator_bulk_enable(cfg->num_vregs, qmp->vregs);
 	if (ret) {
 		dev_err(qmp->dev, "failed to enable regulators, err=%d\n", ret);
@@ -468,7 +593,11 @@ static int qmp_pcie_msm8996_power_on(struct phy *phy)
 	void __iomem *rx = qphy->rx;
 	void __iomem *pcs = qphy->pcs;
 	void __iomem *status;
+<<<<<<< HEAD
 	unsigned int val;
+=======
+	unsigned int mask, val, ready;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	qmp_pcie_msm8996_serdes_init(qphy);
@@ -487,28 +616,55 @@ static int qmp_pcie_msm8996_power_on(struct phy *phy)
 	}
 
 	/* Tx, Rx, and PCS configurations */
+<<<<<<< HEAD
 	qmp_pcie_msm8996_configure_lane(tx, cfg->tx_tbl, cfg->tx_tbl_num, 1);
 	qmp_pcie_msm8996_configure_lane(rx, cfg->rx_tbl, cfg->rx_tbl_num, 1);
 	qmp_pcie_msm8996_configure(pcs, cfg->pcs_tbl, cfg->pcs_tbl_num);
+=======
+	qmp_pcie_msm8996_configure_lane(tx, cfg->regs, cfg->tx_tbl,
+					cfg->tx_tbl_num, 1);
+
+	qmp_pcie_msm8996_configure_lane(rx, cfg->regs, cfg->rx_tbl,
+					cfg->rx_tbl_num, 1);
+
+	qmp_pcie_msm8996_configure(pcs, cfg->regs, cfg->pcs_tbl, cfg->pcs_tbl_num);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Pull out PHY from POWER DOWN state.
 	 * This is active low enable signal to power-down PHY.
 	 */
+<<<<<<< HEAD
 	qphy_setbits(pcs, QPHY_V2_PCS_POWER_DOWN_CONTROL,
 			SW_PWRDN | REFCLK_DRV_DSBL);
 
 	usleep_range(POWER_DOWN_DELAY_US_MIN, POWER_DOWN_DELAY_US_MAX);
+=======
+	qphy_setbits(pcs, QPHY_V2_PCS_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+
+	if (cfg->has_pwrdn_delay)
+		usleep_range(cfg->pwrdn_delay_min, cfg->pwrdn_delay_max);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Pull PHY out of reset state */
 	qphy_clrbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
 
 	/* start SerDes and Phy-Coding-Sublayer */
+<<<<<<< HEAD
 	qphy_setbits(pcs, cfg->regs[QPHY_START_CTRL],
 			PCS_START | PLL_READY_GATE_EN);
 
 	status = pcs + cfg->regs[QPHY_PCS_STATUS];
 	ret = readl_poll_timeout(status, val, !(val & PHYSTATUS), 200,
+=======
+	qphy_setbits(pcs, cfg->regs[QPHY_START_CTRL], cfg->start_ctrl);
+
+	status = pcs + cfg->regs[QPHY_PCS_STATUS];
+	mask = cfg->phy_status;
+	ready = 0;
+
+	ret = readl_poll_timeout(status, val, (val & mask) == ready, 10,
+>>>>>>> b7ba80a49124 (Commit)
 				 PHY_INIT_COMPLETE_TIMEOUT);
 	if (ret) {
 		dev_err(qmp->dev, "phy initialization timed-out\n");
@@ -536,12 +692,25 @@ static int qmp_pcie_msm8996_power_off(struct phy *phy)
 	qphy_setbits(qphy->pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
 
 	/* stop SerDes and Phy-Coding-Sublayer */
+<<<<<<< HEAD
 	qphy_clrbits(qphy->pcs, cfg->regs[QPHY_START_CTRL],
 			SERDES_START | PCS_START);
 
 	/* Put PHY into POWER DOWN state: active low */
 	qphy_clrbits(qphy->pcs, QPHY_V2_PCS_POWER_DOWN_CONTROL,
 			SW_PWRDN | REFCLK_DRV_DSBL);
+=======
+	qphy_clrbits(qphy->pcs, cfg->regs[QPHY_START_CTRL], cfg->start_ctrl);
+
+	/* Put PHY into POWER DOWN state: active low */
+	if (cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL]) {
+		qphy_clrbits(qphy->pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
+			     cfg->pwrdn_ctrl);
+	} else {
+		qphy_clrbits(qphy->pcs, QPHY_V2_PCS_POWER_DOWN_CONTROL,
+				cfg->pwrdn_ctrl);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -721,7 +890,11 @@ static int qmp_pcie_msm8996_create(struct device *dev, struct device_node *np, i
 	qphy->cfg = cfg;
 	qphy->serdes = serdes;
 	/*
+<<<<<<< HEAD
 	 * Get memory resources for each PHY:
+=======
+	 * Get memory resources for each phy lane:
+>>>>>>> b7ba80a49124 (Commit)
 	 * Resources are indexed as: tx -> 0; rx -> 1; pcs -> 2.
 	 */
 	qphy->tx = devm_of_iomap(dev, np, 0, NULL);
@@ -795,15 +968,27 @@ static int qmp_pcie_msm8996_probe(struct platform_device *pdev)
 	qmp->dev = dev;
 	dev_set_drvdata(dev, qmp);
 
+<<<<<<< HEAD
+=======
+	/* Get the specific init parameters of QMP phy */
+>>>>>>> b7ba80a49124 (Commit)
 	cfg = of_device_get_match_data(dev);
 	if (!cfg)
 		return -EINVAL;
 
+<<<<<<< HEAD
+=======
+	/* per PHY serdes; usually located at base address */
+>>>>>>> b7ba80a49124 (Commit)
 	serdes = devm_platform_ioremap_resource(pdev, 0);
 	if (IS_ERR(serdes))
 		return PTR_ERR(serdes);
 
+<<<<<<< HEAD
 	expected_phys = cfg->num_phys;
+=======
+	expected_phys = cfg->nlanes;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_init(&qmp->phy_mutex);
 
@@ -816,8 +1001,17 @@ static int qmp_pcie_msm8996_probe(struct platform_device *pdev)
 		return ret;
 
 	ret = qmp_pcie_msm8996_vreg_init(dev, cfg);
+<<<<<<< HEAD
 	if (ret)
 		return ret;
+=======
+	if (ret) {
+		if (ret != -EPROBE_DEFER)
+			dev_err(dev, "failed to get regulator supplies: %d\n",
+				ret);
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	num = of_get_available_child_count(dev->of_node);
 	/* do we have a rogue child node ? */

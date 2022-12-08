@@ -50,6 +50,7 @@ config ADF4371
 	  To compile this driver as a module, choose M here: the
 	  module will be called adf4371.
 
+<<<<<<< HEAD
 config ADF4377
 	tristate "Analog Devices ADF4377 Microwave Wideband Synthesizer"
 	depends on SPI && COMMON_CLK
@@ -60,6 +61,8 @@ config ADF4377
 	  To compile this driver as a module, choose M here: the
 	  module will be called adf4377.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config ADMV1013
 	tristate "Analog Devices ADMV1013 Microwave Upconverter"
 	depends on SPI && COMMON_CLK

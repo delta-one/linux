@@ -48,6 +48,10 @@ EXPORT_SYMBOL_NS(acp_dsp_block_read, SND_SOC_SOF_AMD_COMMON);
 int acp_dsp_block_write(struct snd_sof_dev *sdev, enum snd_sof_fw_blk_type blk_type,
 			u32 offset, void *src, size_t size)
 {
+<<<<<<< HEAD
+=======
+	struct snd_sof_pdata *plat_data = sdev->pdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct pci_dev *pci = to_pci_dev(sdev->dev);
 	const struct sof_amd_acp_desc *desc = get_chip_info(sdev->pdata);
 	struct acp_dev_data *adata;
@@ -60,7 +64,11 @@ int acp_dsp_block_write(struct snd_sof_dev *sdev, enum snd_sof_fw_blk_type blk_t
 	switch (blk_type) {
 	case SOF_FW_BLK_TYPE_IRAM:
 		if (!adata->bin_buf) {
+<<<<<<< HEAD
 			size_fw = sdev->basefw.fw->size;
+=======
+			size_fw = plat_data->fw->size;
+>>>>>>> b7ba80a49124 (Commit)
 			page_count = PAGE_ALIGN(size_fw) >> PAGE_SHIFT;
 			dma_size = page_count * ACP_PAGE_SIZE;
 			adata->bin_buf = dma_alloc_coherent(&pci->dev, dma_size,
@@ -151,7 +159,11 @@ static void configure_pte_for_fw_loading(int type, int num_pages, struct acp_dev
 int acp_dsp_pre_fw_run(struct snd_sof_dev *sdev)
 {
 	struct pci_dev *pci = to_pci_dev(sdev->dev);
+<<<<<<< HEAD
 	const struct sof_amd_acp_desc *desc = get_chip_info(sdev->pdata);
+=======
+	struct snd_sof_pdata *plat_data = sdev->pdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct acp_dev_data *adata;
 	unsigned int src_addr, size_fw;
 	u32 page_count, dma_size;
@@ -184,6 +196,7 @@ int acp_dsp_pre_fw_run(struct snd_sof_dev *sdev)
 	if (ret < 0)
 		dev_err(sdev->dev, "acp dma transfer status: %d\n", ret);
 
+<<<<<<< HEAD
 	if (desc->rev > 3) {
 		/* Cache Window enable */
 		snd_sof_dsp_write(sdev, ACP_DSP_BAR, ACP_DSP0_CACHE_OFFSET0, desc->sram_pte_offset);
@@ -192,6 +205,10 @@ int acp_dsp_pre_fw_run(struct snd_sof_dev *sdev)
 
 	/* Free memory once DMA is complete */
 	dma_size =  (PAGE_ALIGN(sdev->basefw.fw->size) >> PAGE_SHIFT) * ACP_PAGE_SIZE;
+=======
+	/* Free memory once DMA is complete */
+	dma_size =  (PAGE_ALIGN(plat_data->fw->size) >> PAGE_SHIFT) * ACP_PAGE_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 	dma_free_coherent(&pci->dev, dma_size, adata->bin_buf, adata->sha_dma_addr);
 	dma_free_coherent(&pci->dev, ACP_DEFAULT_DRAM_LENGTH, adata->data_buf, adata->dma_addr);
 	adata->bin_buf = NULL;

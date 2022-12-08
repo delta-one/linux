@@ -54,22 +54,38 @@
 };
 
 &gpio_leds {
+<<<<<<< HEAD
 	led-power {
+=======
+	power {
+>>>>>>> b7ba80a49124 (Commit)
 		gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
 		label = "rango:white:power";
 	};
 
+<<<<<<< HEAD
 	led-sata {
+=======
+	sata {
+>>>>>>> b7ba80a49124 (Commit)
 		gpios = <&gpio0 21 GPIO_ACTIVE_LOW>;
 		label = "rango:white:sata";
 	};
 
+<<<<<<< HEAD
 	led-wlan_2g {
+=======
+	wlan_2g {
+>>>>>>> b7ba80a49124 (Commit)
 		gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
 		label = "rango:white:wlan_2g";
 	};
 
+<<<<<<< HEAD
 	led-wlan_5g {
+=======
+	wlan_5g {
+>>>>>>> b7ba80a49124 (Commit)
 		gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
 		label = "rango:white:wlan_5g";
 	};

@@ -11,7 +11,10 @@
  */
 
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/err.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/errno.h>
 #include <linux/of_platform.h>
 #include <linux/interrupt.h>
@@ -19,6 +22,10 @@
 #include <linux/gpio/consumer.h>
 #include <linux/spi/spi.h>
 #include <linux/io.h>
+<<<<<<< HEAD
+=======
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/of_address.h>
 #include <linux/of_irq.h>
@@ -90,7 +97,11 @@ struct mpc52xx_spi {
 	const u8 *tx_buf;
 	int cs_change;
 	int gpio_cs_count;
+<<<<<<< HEAD
 	struct gpio_desc **gpio_cs;
+=======
+	unsigned int *gpio_cs;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -101,11 +112,18 @@ static void mpc52xx_spi_chipsel(struct mpc52xx_spi *ms, int value)
 	int cs;
 
 	if (ms->gpio_cs_count > 0) {
+<<<<<<< HEAD
 		cs = spi_get_chipselect(ms->message->spi, 0);
 		gpiod_set_value(ms->gpio_cs[cs], value);
 	} else {
 		out_8(ms->regs + SPI_PORTDATA, value ? 0 : 0x08);
 	}
+=======
+		cs = ms->message->spi->chip_select;
+		gpio_set_value(ms->gpio_cs[cs], value ? 0 : 1);
+	} else
+		out_8(ms->regs + SPI_PORTDATA, value ? 0 : 0x08);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -151,7 +169,11 @@ mpc52xx_spi_fsmstate_idle(int irq, struct mpc52xx_spi *ms, u8 status, u8 data)
 	int spr, sppr;
 	u8 ctrl1;
 
+<<<<<<< HEAD
 	if (status && irq)
+=======
+	if (status && (irq != NO_IRQ))
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(&ms->master->dev, "spurious irq, status=0x%.2x\n",
 			status);
 
@@ -387,10 +409,17 @@ static int mpc52xx_spi_probe(struct platform_device *op)
 {
 	struct spi_master *master;
 	struct mpc52xx_spi *ms;
+<<<<<<< HEAD
 	struct gpio_desc *gpio_cs;
 	void __iomem *regs;
 	u8 ctrl1;
 	int rc, i = 0;
+=======
+	void __iomem *regs;
+	u8 ctrl1;
+	int rc, i = 0;
+	int gpio_cs;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* MMIO registers */
 	dev_dbg(&op->dev, "probing mpc5200 SPI device\n");
@@ -452,6 +481,7 @@ static int mpc52xx_spi_probe(struct platform_device *op)
 		}
 
 		for (i = 0; i < ms->gpio_cs_count; i++) {
+<<<<<<< HEAD
 			gpio_cs = gpiod_get_index(&op->dev,
 						  NULL, i, GPIOD_OUT_LOW);
 			rc = PTR_ERR_OR_ZERO(gpio_cs);
@@ -462,6 +492,25 @@ static int mpc52xx_spi_probe(struct platform_device *op)
 				goto err_gpio;
 			}
 
+=======
+			gpio_cs = of_get_gpio(op->dev.of_node, i);
+			if (!gpio_is_valid(gpio_cs)) {
+				dev_err(&op->dev,
+					"could not parse the gpio field in oftree\n");
+				rc = -ENODEV;
+				goto err_gpio;
+			}
+
+			rc = gpio_request(gpio_cs, dev_name(&op->dev));
+			if (rc) {
+				dev_err(&op->dev,
+					"can't request spi cs gpio #%d on gpio line %d\n",
+					i, gpio_cs);
+				goto err_gpio;
+			}
+
+			gpio_direction_output(gpio_cs, 1);
+>>>>>>> b7ba80a49124 (Commit)
 			ms->gpio_cs[i] = gpio_cs;
 		}
 	}
@@ -502,7 +551,11 @@ static int mpc52xx_spi_probe(struct platform_device *op)
 	dev_err(&ms->master->dev, "initialization failed\n");
  err_gpio:
 	while (i-- > 0)
+<<<<<<< HEAD
 		gpiod_put(ms->gpio_cs[i]);
+=======
+		gpio_free(ms->gpio_cs[i]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(ms->gpio_cs);
  err_alloc_gpio:
@@ -513,7 +566,11 @@ static int mpc52xx_spi_probe(struct platform_device *op)
 	return rc;
 }
 
+<<<<<<< HEAD
 static void mpc52xx_spi_remove(struct platform_device *op)
+=======
+static int mpc52xx_spi_remove(struct platform_device *op)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = spi_master_get(platform_get_drvdata(op));
 	struct mpc52xx_spi *ms = spi_master_get_devdata(master);
@@ -523,12 +580,21 @@ static void mpc52xx_spi_remove(struct platform_device *op)
 	free_irq(ms->irq1, ms);
 
 	for (i = 0; i < ms->gpio_cs_count; i++)
+<<<<<<< HEAD
 		gpiod_put(ms->gpio_cs[i]);
+=======
+		gpio_free(ms->gpio_cs[i]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(ms->gpio_cs);
 	spi_unregister_master(master);
 	iounmap(ms->regs);
 	spi_master_put(master);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id mpc52xx_spi_match[] = {
@@ -543,6 +609,10 @@ static struct platform_driver mpc52xx_spi_of_driver = {
 		.of_match_table = mpc52xx_spi_match,
 	},
 	.probe = mpc52xx_spi_probe,
+<<<<<<< HEAD
 	.remove_new = mpc52xx_spi_remove,
+=======
+	.remove = mpc52xx_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(mpc52xx_spi_of_driver);

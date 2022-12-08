@@ -623,6 +623,7 @@ static void etnaviv_gpu_enable_mlcg(struct etnaviv_gpu *gpu)
 
 	/* Disable TX clock gating on affected core revisions. */
 	if (etnaviv_is_model_rev(gpu, GC4000, 0x5222) ||
+<<<<<<< HEAD
 	    etnaviv_is_model_rev(gpu, GC2000, 0x5108) ||
 	    etnaviv_is_model_rev(gpu, GC2000, 0x6202) ||
 	    etnaviv_is_model_rev(gpu, GC2000, 0x6203))
@@ -632,6 +633,16 @@ static void etnaviv_gpu_enable_mlcg(struct etnaviv_gpu *gpu)
 	if (etnaviv_is_model_rev(gpu, GC7000, 0x6202))
 		pmc |= VIVS_PM_MODULE_CONTROLS_DISABLE_MODULE_CLOCK_GATING_SE |
 		       VIVS_PM_MODULE_CONTROLS_DISABLE_MODULE_CLOCK_GATING_RA;
+=======
+	    etnaviv_is_model_rev(gpu, GC2000, 0x5108))
+		pmc |= VIVS_PM_MODULE_CONTROLS_DISABLE_MODULE_CLOCK_GATING_TX;
+
+	/* Disable SE, RA and TX clock gating on affected core revisions. */
+	if (etnaviv_is_model_rev(gpu, GC7000, 0x6202))
+		pmc |= VIVS_PM_MODULE_CONTROLS_DISABLE_MODULE_CLOCK_GATING_SE |
+		       VIVS_PM_MODULE_CONTROLS_DISABLE_MODULE_CLOCK_GATING_RA |
+		       VIVS_PM_MODULE_CONTROLS_DISABLE_MODULE_CLOCK_GATING_TX;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pmc |= VIVS_PM_MODULE_CONTROLS_DISABLE_MODULE_CLOCK_GATING_RA_HZ;
 	pmc |= VIVS_PM_MODULE_CONTROLS_DISABLE_MODULE_CLOCK_GATING_RA_EZ;
@@ -773,10 +784,13 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
 		goto fail;
 	}
 
+<<<<<<< HEAD
 	if (gpu->identity.nn_core_count > 0)
 		dev_warn(gpu->dev, "etnaviv has been instantiated on a NPU, "
                                    "for which the UAPI is still experimental\n");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Exclude VG cores with FE2.0 */
 	if (gpu->identity.features & chipFeatures_PIPE_VG &&
 	    gpu->identity.features & chipFeatures_FE20) {
@@ -961,8 +975,11 @@ int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m)
 			gpu->identity.vertex_cache_size);
 	seq_printf(m, "\t shader_core_count: %d\n",
 			gpu->identity.shader_core_count);
+<<<<<<< HEAD
 	seq_printf(m, "\t nn_core_count: %d\n",
 			gpu->identity.nn_core_count);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	seq_printf(m, "\t pixel_pipes: %d\n",
 			gpu->identity.pixel_pipes);
 	seq_printf(m, "\t vertex_output_buffer_size: %d\n",
@@ -1246,7 +1263,11 @@ int etnaviv_gpu_wait_fence_interruptible(struct etnaviv_gpu *gpu,
 	 * pretends we didn't find a fence in that case.
 	 */
 	rcu_read_lock();
+<<<<<<< HEAD
 	fence = xa_load(&gpu->user_fences, id);
+=======
+	fence = idr_find(&gpu->fence_idr, id);
+>>>>>>> b7ba80a49124 (Commit)
 	if (fence)
 		fence = dma_fence_get_rcu(fence);
 	rcu_read_unlock();
@@ -1456,6 +1477,7 @@ static void sync_point_worker(struct work_struct *work)
 
 static void dump_mmu_fault(struct etnaviv_gpu *gpu)
 {
+<<<<<<< HEAD
 	static const char *fault_reasons[] = {
 		"slave not present",
 		"page not present",
@@ -1465,6 +1487,8 @@ static void dump_mmu_fault(struct etnaviv_gpu *gpu)
 		"write security violation",
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 status_reg, status;
 	int i;
 
@@ -1477,6 +1501,7 @@ static void dump_mmu_fault(struct etnaviv_gpu *gpu)
 	dev_err_ratelimited(gpu->dev, "MMU fault status 0x%08x\n", status);
 
 	for (i = 0; i < 4; i++) {
+<<<<<<< HEAD
 		const char *reason = "unknown";
 		u32 address_reg;
 		u32 mmu_status;
@@ -1488,14 +1513,26 @@ static void dump_mmu_fault(struct etnaviv_gpu *gpu)
 		if ((mmu_status - 1) < ARRAY_SIZE(fault_reasons))
 			reason = fault_reasons[mmu_status - 1];
 
+=======
+		u32 address_reg;
+
+		if (!(status & (VIVS_MMUv2_STATUS_EXCEPTION0__MASK << (i * 4))))
+			continue;
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (gpu->sec_mode == ETNA_SEC_NONE)
 			address_reg = VIVS_MMUv2_EXCEPTION_ADDR(i);
 		else
 			address_reg = VIVS_MMUv2_SEC_EXCEPTION_ADDR;
 
+<<<<<<< HEAD
 		dev_err_ratelimited(gpu->dev,
 				    "MMU %d fault (%s) addr 0x%08x\n",
 				    i, reason, gpu_read(gpu, address_reg));
+=======
+		dev_err_ratelimited(gpu->dev, "MMU %d fault addr 0x%08x\n", i,
+				    gpu_read(gpu, address_reg));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -1651,6 +1688,10 @@ static int etnaviv_gpu_hw_suspend(struct etnaviv_gpu *gpu)
 	return etnaviv_gpu_clk_disable(gpu);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM
+>>>>>>> b7ba80a49124 (Commit)
 static int etnaviv_gpu_hw_resume(struct etnaviv_gpu *gpu)
 {
 	int ret;
@@ -1666,6 +1707,10 @@ static int etnaviv_gpu_hw_resume(struct etnaviv_gpu *gpu)
 
 	return 0;
 }
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static int
 etnaviv_gpu_cooling_get_max_state(struct thermal_cooling_device *cdev,
@@ -1733,17 +1778,29 @@ static int etnaviv_gpu_bind(struct device *dev, struct device *master,
 	if (ret)
 		goto out_workqueue;
 
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_PM))
 		ret = pm_runtime_get_sync(gpu->dev);
 	else
 		ret = etnaviv_gpu_clk_enable(gpu);
+=======
+#ifdef CONFIG_PM
+	ret = pm_runtime_get_sync(gpu->dev);
+#else
+	ret = etnaviv_gpu_clk_enable(gpu);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		goto out_sched;
 
 
 	gpu->drm = drm;
 	gpu->fence_context = dma_fence_context_alloc(1);
+<<<<<<< HEAD
 	xa_init_flags(&gpu->user_fences, XA_FLAGS_ALLOC);
+=======
+	idr_init(&gpu->fence_idr);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_init(&gpu->fence_spinlock);
 
 	INIT_WORK(&gpu->sync_point_work, sync_point_worker);
@@ -1780,12 +1837,21 @@ static void etnaviv_gpu_unbind(struct device *dev, struct device *master,
 
 	etnaviv_sched_fini(gpu);
 
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_PM)) {
 		pm_runtime_get_sync(gpu->dev);
 		pm_runtime_put_sync_suspend(gpu->dev);
 	} else {
 		etnaviv_gpu_hw_suspend(gpu);
 	}
+=======
+#ifdef CONFIG_PM
+	pm_runtime_get_sync(gpu->dev);
+	pm_runtime_put_sync_suspend(gpu->dev);
+#else
+	etnaviv_gpu_hw_suspend(gpu);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (gpu->mmu_context)
 		etnaviv_iommu_context_put(gpu->mmu_context);
@@ -1797,7 +1863,11 @@ static void etnaviv_gpu_unbind(struct device *dev, struct device *master,
 	}
 
 	gpu->drm = NULL;
+<<<<<<< HEAD
 	xa_destroy(&gpu->user_fences);
+=======
+	idr_destroy(&gpu->fence_idr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_ENABLED(CONFIG_DRM_ETNAVIV_THERMAL))
 		thermal_cooling_device_unregister(gpu->cooling);
@@ -1829,7 +1899,11 @@ static int etnaviv_gpu_platform_probe(struct platform_device *pdev)
 
 	gpu->dev = &pdev->dev;
 	mutex_init(&gpu->lock);
+<<<<<<< HEAD
 	mutex_init(&gpu->sched_lock);
+=======
+	mutex_init(&gpu->fence_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Map registers: */
 	gpu->mmio = devm_platform_ioremap_resource(pdev, 0);
@@ -1899,6 +1973,10 @@ static int etnaviv_gpu_platform_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM
+>>>>>>> b7ba80a49124 (Commit)
 static int etnaviv_gpu_rpm_suspend(struct device *dev)
 {
 	struct etnaviv_gpu *gpu = dev_get_drvdata(dev);
@@ -1941,16 +2019,28 @@ static int etnaviv_gpu_rpm_resume(struct device *dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 static const struct dev_pm_ops etnaviv_gpu_pm_ops = {
 	RUNTIME_PM_OPS(etnaviv_gpu_rpm_suspend, etnaviv_gpu_rpm_resume, NULL)
+=======
+#endif
+
+static const struct dev_pm_ops etnaviv_gpu_pm_ops = {
+	SET_RUNTIME_PM_OPS(etnaviv_gpu_rpm_suspend, etnaviv_gpu_rpm_resume,
+			   NULL)
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct platform_driver etnaviv_gpu_driver = {
 	.driver = {
 		.name = "etnaviv-gpu",
 		.owner = THIS_MODULE,
+<<<<<<< HEAD
 		.pm = pm_ptr(&etnaviv_gpu_pm_ops),
+=======
+		.pm = &etnaviv_gpu_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = etnaviv_gpu_match,
 	},
 	.probe = etnaviv_gpu_platform_probe,

@@ -31,6 +31,10 @@ bool block_mount;
 bool verifier_logs;
 bool relaxed_maps;
 bool use_loader;
+<<<<<<< HEAD
+=======
+bool legacy_libbpf;
+>>>>>>> b7ba80a49124 (Commit)
 struct btf *base_btf;
 struct hashmap *refs_table;
 
@@ -70,6 +74,7 @@ static int do_help(int argc, char **argv)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int do_batch(int argc, char **argv);
 static int do_version(int argc, char **argv);
 
@@ -91,6 +96,8 @@ static const struct cmd commands[] = {
 	{ 0 }
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef BPFTOOL_VERSION
 /* bpftool's major and minor version numbers are aligned on libbpf's. There is
  * an offset of 6 for the version number, because bpftool's version was higher
@@ -102,6 +109,7 @@ static const struct cmd commands[] = {
 #define BPFTOOL_PATCH_VERSION 0
 #endif
 
+<<<<<<< HEAD
 static void
 print_feature(const char *feature, bool state, unsigned int *nb_features)
 {
@@ -111,6 +119,8 @@ print_feature(const char *feature, bool state, unsigned int *nb_features)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int do_version(int argc, char **argv)
 {
 #ifdef HAVE_LIBBFD_SUPPORT
@@ -118,16 +128,20 @@ static int do_version(int argc, char **argv)
 #else
 	const bool has_libbfd = false;
 #endif
+<<<<<<< HEAD
 #ifdef HAVE_LLVM_SUPPORT
 	const bool has_llvm = true;
 #else
 	const bool has_llvm = false;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef BPFTOOL_WITHOUT_SKELETONS
 	const bool has_skeletons = false;
 #else
 	const bool has_skeletons = true;
 #endif
+<<<<<<< HEAD
 	bool bootstrap = false;
 	int i;
 
@@ -140,6 +154,8 @@ static int do_version(int argc, char **argv)
 			break;
 		}
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (json_output) {
 		jsonw_start_object(json_wtr);	/* root object */
@@ -158,9 +174,14 @@ static int do_version(int argc, char **argv)
 		jsonw_name(json_wtr, "features");
 		jsonw_start_object(json_wtr);	/* features */
 		jsonw_bool_field(json_wtr, "libbfd", has_libbfd);
+<<<<<<< HEAD
 		jsonw_bool_field(json_wtr, "llvm", has_llvm);
 		jsonw_bool_field(json_wtr, "skeletons", has_skeletons);
 		jsonw_bool_field(json_wtr, "bootstrap", bootstrap);
+=======
+		jsonw_bool_field(json_wtr, "libbpf_strict", !legacy_libbpf);
+		jsonw_bool_field(json_wtr, "skeletons", has_skeletons);
+>>>>>>> b7ba80a49124 (Commit)
 		jsonw_end_object(json_wtr);	/* features */
 
 		jsonw_end_object(json_wtr);	/* root object */
@@ -175,10 +196,23 @@ static int do_version(int argc, char **argv)
 #endif
 		printf("using libbpf %s\n", libbpf_version_string());
 		printf("features:");
+<<<<<<< HEAD
 		print_feature("libbfd", has_libbfd, &nb_features);
 		print_feature("llvm", has_llvm, &nb_features);
 		print_feature("skeletons", has_skeletons, &nb_features);
 		print_feature("bootstrap", bootstrap, &nb_features);
+=======
+		if (has_libbfd) {
+			printf(" libbfd");
+			nb_features++;
+		}
+		if (!legacy_libbpf) {
+			printf("%s libbpf_strict", nb_features++ ? "," : "");
+			nb_features++;
+		}
+		if (has_skeletons)
+			printf("%s skeletons", nb_features++ ? "," : "");
+>>>>>>> b7ba80a49124 (Commit)
 		printf("\n");
 	}
 	return 0;
@@ -320,6 +354,29 @@ static int make_args(char *line, char *n_argv[], int maxargs, int cmd_nb)
 	return n_argc;
 }
 
+<<<<<<< HEAD
+=======
+static int do_batch(int argc, char **argv);
+
+static const struct cmd cmds[] = {
+	{ "help",	do_help },
+	{ "batch",	do_batch },
+	{ "prog",	do_prog },
+	{ "map",	do_map },
+	{ "link",	do_link },
+	{ "cgroup",	do_cgroup },
+	{ "perf",	do_perf },
+	{ "net",	do_net },
+	{ "feature",	do_feature },
+	{ "btf",	do_btf },
+	{ "gen",	do_gen },
+	{ "struct_ops",	do_struct_ops },
+	{ "iter",	do_iter },
+	{ "version",	do_version },
+	{ 0 }
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static int do_batch(int argc, char **argv)
 {
 	char buf[BATCH_LINE_LEN_MAX], contline[BATCH_LINE_LEN_MAX];
@@ -334,12 +391,21 @@ static int do_batch(int argc, char **argv)
 	if (argc < 2) {
 		p_err("too few parameters for batch");
 		return -1;
+<<<<<<< HEAD
 	} else if (argc > 2) {
 		p_err("too many parameters for batch");
 		return -1;
 	} else if (!is_prefix(*argv, "file")) {
 		p_err("expected 'file', got: %s", *argv);
 		return -1;
+=======
+	} else if (!is_prefix(*argv, "file")) {
+		p_err("expected 'file', got: %s", *argv);
+		return -1;
+	} else if (argc > 2) {
+		p_err("too many parameters for batch");
+		return -1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	NEXT_ARG();
 
@@ -407,7 +473,11 @@ static int do_batch(int argc, char **argv)
 			jsonw_name(json_wtr, "output");
 		}
 
+<<<<<<< HEAD
 		err = cmd_select(commands, n_argc, n_argv, do_help);
+=======
+		err = cmd_select(cmds, n_argc, n_argv, do_help);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (json_output)
 			jsonw_end_object(json_wtr);
@@ -448,6 +518,10 @@ int main(int argc, char **argv)
 		{ "debug",	no_argument,	NULL,	'd' },
 		{ "use-loader",	no_argument,	NULL,	'L' },
 		{ "base-btf",	required_argument, NULL, 'B' },
+<<<<<<< HEAD
+=======
+		{ "legacy",	no_argument,	NULL,	'l' },
+>>>>>>> b7ba80a49124 (Commit)
 		{ 0 }
 	};
 	bool version_requested = false;
@@ -470,7 +544,11 @@ int main(int argc, char **argv)
 	json_output = false;
 	show_pinned = false;
 	block_mount = false;
+<<<<<<< HEAD
 	bin_name = "bpftool";
+=======
+	bin_name = argv[0];
+>>>>>>> b7ba80a49124 (Commit)
 
 	opterr = 0;
 	while ((opt = getopt_long(argc, argv, "VhpjfLmndB:l",
@@ -510,15 +588,28 @@ int main(int argc, char **argv)
 			break;
 		case 'B':
 			base_btf = btf__parse(optarg, NULL);
+<<<<<<< HEAD
 			if (!base_btf) {
 				p_err("failed to parse base BTF at '%s': %d\n",
 				      optarg, -errno);
+=======
+			if (libbpf_get_error(base_btf)) {
+				p_err("failed to parse base BTF at '%s': %ld\n",
+				      optarg, libbpf_get_error(base_btf));
+				base_btf = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 				return -1;
 			}
 			break;
 		case 'L':
 			use_loader = true;
 			break;
+<<<<<<< HEAD
+=======
+		case 'l':
+			legacy_libbpf = true;
+			break;
+>>>>>>> b7ba80a49124 (Commit)
 		default:
 			p_err("unrecognized option '%s'", argv[optind - 1]);
 			if (json_output)
@@ -528,6 +619,17 @@ int main(int argc, char **argv)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	if (!legacy_libbpf) {
+		/* Allow legacy map definitions for skeleton generation.
+		 * It will still be rejected if users use LIBBPF_STRICT_ALL
+		 * mode for loading generated skeleton.
+		 */
+		libbpf_set_strict_mode(LIBBPF_STRICT_ALL & ~LIBBPF_STRICT_MAP_DEFINITIONS);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	argc -= optind;
 	argv += optind;
 	if (argc < 0)
@@ -536,7 +638,11 @@ int main(int argc, char **argv)
 	if (version_requested)
 		return do_version(argc, argv);
 
+<<<<<<< HEAD
 	ret = cmd_select(commands, argc, argv, do_help);
+=======
+	ret = cmd_select(cmds, argc, argv, do_help);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (json_output)
 		jsonw_destroy(&json_wtr);

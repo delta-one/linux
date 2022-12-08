@@ -121,6 +121,10 @@ static inline bool is_swiotlb_force_bounce(struct device *dev)
 
 void swiotlb_init(bool addressing_limited, unsigned int flags);
 void __init swiotlb_exit(void);
+<<<<<<< HEAD
+=======
+unsigned int swiotlb_max_segment(void);
+>>>>>>> b7ba80a49124 (Commit)
 size_t swiotlb_max_mapping_size(struct device *dev);
 bool is_swiotlb_active(struct device *dev);
 void __init swiotlb_adjust_size(unsigned long size);
@@ -139,6 +143,13 @@ static inline bool is_swiotlb_force_bounce(struct device *dev)
 static inline void swiotlb_exit(void)
 {
 }
+<<<<<<< HEAD
+=======
+static inline unsigned int swiotlb_max_segment(void)
+{
+	return 0;
+}
+>>>>>>> b7ba80a49124 (Commit)
 static inline size_t swiotlb_max_mapping_size(struct device *dev)
 {
 	return SIZE_MAX;

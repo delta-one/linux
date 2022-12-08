@@ -355,9 +355,17 @@ static int tfp410_probe(struct platform_device *pdev)
 	return tfp410_init(&pdev->dev, false);
 }
 
+<<<<<<< HEAD
 static void tfp410_remove(struct platform_device *pdev)
 {
 	tfp410_fini(&pdev->dev);
+=======
+static int tfp410_remove(struct platform_device *pdev)
+{
+	tfp410_fini(&pdev->dev);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id tfp410_match[] = {
@@ -368,7 +376,11 @@ MODULE_DEVICE_TABLE(of, tfp410_match);
 
 static struct platform_driver tfp410_platform_driver = {
 	.probe	= tfp410_probe,
+<<<<<<< HEAD
 	.remove_new = tfp410_remove,
+=======
+	.remove	= tfp410_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name		= "tfp410-bridge",
 		.of_match_table	= tfp410_match,
@@ -377,7 +389,12 @@ static struct platform_driver tfp410_platform_driver = {
 
 #if IS_ENABLED(CONFIG_I2C)
 /* There is currently no i2c functionality. */
+<<<<<<< HEAD
 static int tfp410_i2c_probe(struct i2c_client *client)
+=======
+static int tfp410_i2c_probe(struct i2c_client *client,
+			    const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int reg;
 
@@ -408,7 +425,11 @@ static struct i2c_driver tfp410_i2c_driver = {
 		.of_match_table = of_match_ptr(tfp410_match),
 	},
 	.id_table	= tfp410_i2c_ids,
+<<<<<<< HEAD
 	.probe_new	= tfp410_i2c_probe,
+=======
+	.probe		= tfp410_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= tfp410_i2c_remove,
 };
 #endif /* IS_ENABLED(CONFIG_I2C) */

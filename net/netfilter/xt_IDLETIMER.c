@@ -413,7 +413,11 @@ static void idletimer_tg_destroy(const struct xt_tgdtor_param *par)
 		pr_debug("deleting timer %s\n", info->label);
 
 		list_del(&info->timer->entry);
+<<<<<<< HEAD
 		timer_shutdown_sync(&info->timer->timer);
+=======
+		del_timer_sync(&info->timer->timer);
+>>>>>>> b7ba80a49124 (Commit)
 		cancel_work_sync(&info->timer->work);
 		sysfs_remove_file(idletimer_tg_kobj, &info->timer->attr.attr);
 		kfree(info->timer->attr.attr.name);
@@ -441,7 +445,11 @@ static void idletimer_tg_destroy_v1(const struct xt_tgdtor_param *par)
 		if (info->timer->timer_type & XT_IDLETIMER_ALARM) {
 			alarm_cancel(&info->timer->alarm);
 		} else {
+<<<<<<< HEAD
 			timer_shutdown_sync(&info->timer->timer);
+=======
+			del_timer_sync(&info->timer->timer);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		cancel_work_sync(&info->timer->work);
 		sysfs_remove_file(idletimer_tg_kobj, &info->timer->attr.attr);
@@ -490,7 +498,11 @@ static int __init idletimer_tg_init(void)
 {
 	int err;
 
+<<<<<<< HEAD
 	idletimer_tg_class = class_create("xt_idletimer");
+=======
+	idletimer_tg_class = class_create(THIS_MODULE, "xt_idletimer");
+>>>>>>> b7ba80a49124 (Commit)
 	err = PTR_ERR(idletimer_tg_class);
 	if (IS_ERR(idletimer_tg_class)) {
 		pr_debug("couldn't register device class\n");

@@ -26,7 +26,13 @@ static void __run_vcpu_with_invalid_state(struct kvm_vcpu *vcpu)
 
 	vcpu_run(vcpu);
 
+<<<<<<< HEAD
 	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_INTERNAL_ERROR);
+=======
+	TEST_ASSERT(run->exit_reason == KVM_EXIT_INTERNAL_ERROR,
+		    "Expected KVM_EXIT_INTERNAL_ERROR, got %d (%s)\n",
+		    run->exit_reason, exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 	TEST_ASSERT(run->emulation_failure.suberror == KVM_INTERNAL_ERROR_EMULATION,
 		    "Expected emulation failure, got %d\n",
 		    run->emulation_failure.suberror);
@@ -109,7 +115,11 @@ int main(int argc, char *argv[])
 	struct kvm_vcpu *vcpu;
 	struct kvm_vm *vm;
 
+<<<<<<< HEAD
 	TEST_REQUIRE(host_cpu_is_intel);
+=======
+	TEST_REQUIRE(is_intel_cpu());
+>>>>>>> b7ba80a49124 (Commit)
 	TEST_REQUIRE(!vm_is_unrestricted_guest(NULL));
 
 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);

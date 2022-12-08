@@ -29,7 +29,11 @@ if [[ "$#" -eq "0" ]]; then
 	for IP in "${IPs[@]}"; do
 		for mode in $(seq 1 3); do
 			$0 "$IP" udp -m "$mode" -t 1 -n 32
+<<<<<<< HEAD
 			$0 "$IP" tcp -m "$mode" -t 1 -n 1
+=======
+			$0 "$IP" tcp -m "$mode" -t 1 -n 32
+>>>>>>> b7ba80a49124 (Commit)
 		done
 	done
 

@@ -36,6 +36,11 @@ struct amdtp_am824 {
 
 	u8 pcm_positions[AM824_MAX_CHANNELS_FOR_PCM];
 	u8 midi_position;
+<<<<<<< HEAD
+=======
+
+	unsigned int frame_multiplier;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -57,8 +62,13 @@ int amdtp_am824_set_parameters(struct amdtp_stream *s, unsigned int rate,
 {
 	struct amdtp_am824 *p = s->protocol;
 	unsigned int midi_channels;
+<<<<<<< HEAD
 	unsigned int pcm_frame_multiplier;
 	int i, err;
+=======
+	unsigned int i;
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (amdtp_stream_running(s))
 		return -EINVAL;
@@ -75,6 +85,7 @@ int amdtp_am824_set_parameters(struct amdtp_stream *s, unsigned int rate,
 	    WARN_ON(midi_channels > AM824_MAX_CHANNELS_FOR_MIDI))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/*
 	 * In IEC 61883-6, one data block represents one event. In ALSA, one
 	 * event equals to one PCM frame. But Dice has a quirk at higher
@@ -87,6 +98,10 @@ int amdtp_am824_set_parameters(struct amdtp_stream *s, unsigned int rate,
 
 	err = amdtp_stream_set_parameters(s, rate, pcm_channels + midi_channels,
 					  pcm_frame_multiplier);
+=======
+	err = amdtp_stream_set_parameters(s, rate,
+					  pcm_channels + midi_channels);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err < 0)
 		return err;
 
@@ -96,6 +111,19 @@ int amdtp_am824_set_parameters(struct amdtp_stream *s, unsigned int rate,
 	p->pcm_channels = pcm_channels;
 	p->midi_ports = midi_ports;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * In IEC 61883-6, one data block represents one event. In ALSA, one
+	 * event equals to one PCM frame. But Dice has a quirk at higher
+	 * sampling rate to transfer two PCM frames in one data block.
+	 */
+	if (double_pcm_frames)
+		p->frame_multiplier = 2;
+	else
+		p->frame_multiplier = 1;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* init the position map for PCM and MIDI channels */
 	for (i = 0; i < pcm_channels; i++)
 		p->pcm_positions[i] = i;
@@ -344,20 +372,36 @@ static void read_midi_messages(struct amdtp_stream *s, __be32 *buffer,
 	}
 }
 
+<<<<<<< HEAD
 static void process_it_ctx_payloads(struct amdtp_stream *s, const struct pkt_desc *desc,
 				    unsigned int count, struct snd_pcm_substream *pcm)
+=======
+static unsigned int process_it_ctx_payloads(struct amdtp_stream *s,
+					    const struct pkt_desc *descs,
+					    unsigned int packets,
+					    struct snd_pcm_substream *pcm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct amdtp_am824 *p = s->protocol;
 	unsigned int pcm_frames = 0;
 	int i;
 
+<<<<<<< HEAD
 	for (i = 0; i < count; ++i) {
+=======
+	for (i = 0; i < packets; ++i) {
+		const struct pkt_desc *desc = descs + i;
+>>>>>>> b7ba80a49124 (Commit)
 		__be32 *buf = desc->ctx_payload;
 		unsigned int data_blocks = desc->data_blocks;
 
 		if (pcm) {
 			write_pcm_s32(s, pcm, buf, data_blocks, pcm_frames);
+<<<<<<< HEAD
 			pcm_frames += data_blocks * s->pcm_frame_multiplier;
+=======
+			pcm_frames += data_blocks * p->frame_multiplier;
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			write_pcm_silence(s, buf, data_blocks);
 		}
@@ -366,6 +410,7 @@ static void process_it_ctx_payloads(struct amdtp_stream *s, const struct pkt_des
 			write_midi_messages(s, buf, data_blocks,
 					    desc->data_block_counter);
 		}
+<<<<<<< HEAD
 
 		desc = amdtp_stream_next_packet_desc(s, desc);
 	}
@@ -373,27 +418,53 @@ static void process_it_ctx_payloads(struct amdtp_stream *s, const struct pkt_des
 
 static void process_ir_ctx_payloads(struct amdtp_stream *s, const struct pkt_desc *desc,
 				    unsigned int count, struct snd_pcm_substream *pcm)
+=======
+	}
+
+	return pcm_frames;
+}
+
+static unsigned int process_ir_ctx_payloads(struct amdtp_stream *s,
+					    const struct pkt_desc *descs,
+					    unsigned int packets,
+					    struct snd_pcm_substream *pcm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct amdtp_am824 *p = s->protocol;
 	unsigned int pcm_frames = 0;
 	int i;
 
+<<<<<<< HEAD
 	for (i = 0; i < count; ++i) {
+=======
+	for (i = 0; i < packets; ++i) {
+		const struct pkt_desc *desc = descs + i;
+>>>>>>> b7ba80a49124 (Commit)
 		__be32 *buf = desc->ctx_payload;
 		unsigned int data_blocks = desc->data_blocks;
 
 		if (pcm) {
 			read_pcm_s32(s, pcm, buf, data_blocks, pcm_frames);
+<<<<<<< HEAD
 			pcm_frames += data_blocks * s->pcm_frame_multiplier;
+=======
+			pcm_frames += data_blocks * p->frame_multiplier;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (p->midi_ports) {
 			read_midi_messages(s, buf, data_blocks,
 					   desc->data_block_counter);
 		}
+<<<<<<< HEAD
 
 		desc = amdtp_stream_next_packet_desc(s, desc);
 	}
+=======
+	}
+
+	return pcm_frames;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

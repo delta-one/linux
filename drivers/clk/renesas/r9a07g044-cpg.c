@@ -182,7 +182,11 @@ static const struct {
 };
 
 static const struct {
+<<<<<<< HEAD
 	struct rzg2l_mod_clk common[79];
+=======
+	struct rzg2l_mod_clk common[76];
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_CLK_R9A07G054
 	struct rzg2l_mod_clk drp[0];
 #endif
@@ -204,8 +208,11 @@ static const struct {
 					0x534, 1),
 		DEF_MOD("ostm2_pclk",	R9A07G044_OSTM2_PCLK, R9A07G044_CLK_P0,
 					0x534, 2),
+<<<<<<< HEAD
 		DEF_MOD("mtu_x_mck",	R9A07G044_MTU_X_MCK_MTU3, R9A07G044_CLK_P0,
 					0x538, 0),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		DEF_MOD("gpt_pclk",	R9A07G044_GPT_PCLK, R9A07G044_CLK_P0,
 					0x540, 0),
 		DEF_MOD("poeg_a_clkp",	R9A07G044_POEG_A_CLKP, R9A07G044_CLK_P0,
@@ -224,6 +231,13 @@ static const struct {
 					0x548, 2),
 		DEF_MOD("wdt1_clk",	R9A07G044_WDT1_CLK, R9A07G044_OSCCLK,
 					0x548, 3),
+<<<<<<< HEAD
+=======
+		DEF_MOD("wdt2_pclk",	R9A07G044_WDT2_PCLK, R9A07G044_CLK_P0,
+					0x548, 4),
+		DEF_MOD("wdt2_clk",	R9A07G044_WDT2_CLK, R9A07G044_OSCCLK,
+					0x548, 5),
+>>>>>>> b7ba80a49124 (Commit)
 		DEF_MOD("spi_clk2",	R9A07G044_SPI_CLK2, R9A07G044_CLK_SPI1,
 					0x550, 0),
 		DEF_MOD("spi_clk",	R9A07G044_SPI_CLK, R9A07G044_CLK_SPI0,
@@ -250,6 +264,7 @@ static const struct {
 					0x558, 1),
 		DEF_MOD("gpu_ace_clk",	R9A07G044_GPU_ACE_CLK, R9A07G044_CLK_P1,
 					0x558, 2),
+<<<<<<< HEAD
 		DEF_MOD("cru_sysclk",   R9A07G044_CRU_SYSCLK, CLK_M2_DIV2,
 					0x564, 0),
 		DEF_MOD("cru_vclk",     R9A07G044_CRU_VCLK, R9A07G044_CLK_M2,
@@ -258,6 +273,8 @@ static const struct {
 					0x564, 2),
 		DEF_MOD("cru_aclk",     R9A07G044_CRU_ACLK, R9A07G044_CLK_M0,
 					0x564, 3),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		DEF_MOD("dsi_pll_clk",	R9A07G044_MIPI_DSI_PLLCLK, R9A07G044_CLK_M1,
 					0x568, 0),
 		DEF_MOD("dsi_sys_clk",	R9A07G044_MIPI_DSI_SYSCLK, CLK_M2_DIV2,
@@ -362,7 +379,10 @@ static struct rzg2l_reset r9a07g044_resets[] = {
 	DEF_RST(R9A07G044_OSTM0_PRESETZ, 0x834, 0),
 	DEF_RST(R9A07G044_OSTM1_PRESETZ, 0x834, 1),
 	DEF_RST(R9A07G044_OSTM2_PRESETZ, 0x834, 2),
+<<<<<<< HEAD
 	DEF_RST(R9A07G044_MTU_X_PRESET_MTU3, 0x838, 0),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	DEF_RST(R9A07G044_GPT_RST_C, 0x840, 0),
 	DEF_RST(R9A07G044_POEG_A_RST, 0x844, 0),
 	DEF_RST(R9A07G044_POEG_B_RST, 0x844, 1),
@@ -370,15 +390,22 @@ static struct rzg2l_reset r9a07g044_resets[] = {
 	DEF_RST(R9A07G044_POEG_D_RST, 0x844, 3),
 	DEF_RST(R9A07G044_WDT0_PRESETN, 0x848, 0),
 	DEF_RST(R9A07G044_WDT1_PRESETN, 0x848, 1),
+<<<<<<< HEAD
+=======
+	DEF_RST(R9A07G044_WDT2_PRESETN, 0x848, 2),
+>>>>>>> b7ba80a49124 (Commit)
 	DEF_RST(R9A07G044_SPI_RST, 0x850, 0),
 	DEF_RST(R9A07G044_SDHI0_IXRST, 0x854, 0),
 	DEF_RST(R9A07G044_SDHI1_IXRST, 0x854, 1),
 	DEF_RST(R9A07G044_GPU_RESETN, 0x858, 0),
 	DEF_RST(R9A07G044_GPU_AXI_RESETN, 0x858, 1),
 	DEF_RST(R9A07G044_GPU_ACE_RESETN, 0x858, 2),
+<<<<<<< HEAD
 	DEF_RST(R9A07G044_CRU_CMN_RSTB, 0x864, 0),
 	DEF_RST(R9A07G044_CRU_PRESETN, 0x864, 1),
 	DEF_RST(R9A07G044_CRU_ARESETN, 0x864, 2),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	DEF_RST(R9A07G044_MIPI_DSI_CMN_RSTB, 0x868, 0),
 	DEF_RST(R9A07G044_MIPI_DSI_ARESET_N, 0x868, 1),
 	DEF_RST(R9A07G044_MIPI_DSI_PRESET_N, 0x868, 2),
@@ -423,11 +450,14 @@ static const unsigned int r9a07g044_crit_mod_clks[] __initconst = {
 	MOD_CLK_BASE + R9A07G044_DMAC_ACLK,
 };
 
+<<<<<<< HEAD
 static const unsigned int r9a07g044_no_pm_mod_clks[] = {
 	MOD_CLK_BASE + R9A07G044_CRU_SYSCLK,
 	MOD_CLK_BASE + R9A07G044_CRU_VCLK,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_CLK_R9A07G044
 const struct rzg2l_cpg_info r9a07g044_cpg_info = {
 	/* Core Clocks */
@@ -445,10 +475,13 @@ const struct rzg2l_cpg_info r9a07g044_cpg_info = {
 	.num_mod_clks = ARRAY_SIZE(mod_clks.common),
 	.num_hw_mod_clks = R9A07G044_TSU_PCLK + 1,
 
+<<<<<<< HEAD
 	/* No PM Module Clocks */
 	.no_pm_mod_clks = r9a07g044_no_pm_mod_clks,
 	.num_no_pm_mod_clks = ARRAY_SIZE(r9a07g044_no_pm_mod_clks),
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Resets */
 	.resets = r9a07g044_resets,
 	.num_resets = R9A07G044_TSU_PRESETN + 1, /* Last reset ID + 1 */
@@ -474,10 +507,13 @@ const struct rzg2l_cpg_info r9a07g054_cpg_info = {
 	.num_mod_clks = ARRAY_SIZE(mod_clks.common) + ARRAY_SIZE(mod_clks.drp),
 	.num_hw_mod_clks = R9A07G054_STPAI_ACLK_DRP + 1,
 
+<<<<<<< HEAD
 	/* No PM Module Clocks */
 	.no_pm_mod_clks = r9a07g044_no_pm_mod_clks,
 	.num_no_pm_mod_clks = ARRAY_SIZE(r9a07g044_no_pm_mod_clks),
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Resets */
 	.resets = r9a07g044_resets,
 	.num_resets = R9A07G054_STPAI_ARESETN + 1, /* Last reset ID + 1 */

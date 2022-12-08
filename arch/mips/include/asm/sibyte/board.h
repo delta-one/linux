@@ -7,7 +7,11 @@
 #define _SIBYTE_BOARD_H
 
 #if defined(CONFIG_SIBYTE_SWARM) || defined(CONFIG_SIBYTE_CRHONE) || \
+<<<<<<< HEAD
     defined(CONFIG_SIBYTE_LITTLESUR)
+=======
+    defined(CONFIG_SIBYTE_CRHINE) || defined(CONFIG_SIBYTE_LITTLESUR)
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/sibyte/swarm.h>
 #endif
 
@@ -15,6 +19,13 @@
 #include <asm/sibyte/sentosa.h>
 #endif
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_SIBYTE_CARMEL
+#include <asm/sibyte/carmel.h>
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SIBYTE_BIGSUR
 #include <asm/sibyte/bigsur.h>
 #endif

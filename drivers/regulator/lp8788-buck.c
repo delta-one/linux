@@ -531,7 +531,10 @@ static struct platform_driver lp8788_buck_driver = {
 	.probe = lp8788_buck_probe,
 	.driver = {
 		.name = LP8788_DEV_BUCK,
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

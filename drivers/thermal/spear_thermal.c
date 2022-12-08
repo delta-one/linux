@@ -31,7 +31,11 @@ struct spear_thermal_dev {
 static inline int thermal_get_temp(struct thermal_zone_device *thermal,
 				int *temp)
 {
+<<<<<<< HEAD
 	struct spear_thermal_dev *stdev = thermal_zone_device_priv(thermal);
+=======
+	struct spear_thermal_dev *stdev = thermal->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Data are ready to be read after 628 usec from POWERDOWN signal
@@ -48,7 +52,11 @@ static struct thermal_zone_device_ops ops = {
 static int __maybe_unused spear_thermal_suspend(struct device *dev)
 {
 	struct thermal_zone_device *spear_thermal = dev_get_drvdata(dev);
+<<<<<<< HEAD
 	struct spear_thermal_dev *stdev = thermal_zone_device_priv(spear_thermal);
+=======
+	struct spear_thermal_dev *stdev = spear_thermal->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int actual_mask = 0;
 
 	/* Disable SPEAr Thermal Sensor */
@@ -64,7 +72,11 @@ static int __maybe_unused spear_thermal_suspend(struct device *dev)
 static int __maybe_unused spear_thermal_resume(struct device *dev)
 {
 	struct thermal_zone_device *spear_thermal = dev_get_drvdata(dev);
+<<<<<<< HEAD
 	struct spear_thermal_dev *stdev = thermal_zone_device_priv(spear_thermal);
+=======
+	struct spear_thermal_dev *stdev = spear_thermal->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int actual_mask = 0;
 	int ret = 0;
 
@@ -91,6 +103,10 @@ static int spear_thermal_probe(struct platform_device *pdev)
 	struct thermal_zone_device *spear_thermal = NULL;
 	struct spear_thermal_dev *stdev;
 	struct device_node *np = pdev->dev.of_node;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0, val;
 
 	if (!np || !of_property_read_u32(np, "st,thermal-flags", &val)) {
@@ -103,7 +119,12 @@ static int spear_thermal_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	/* Enable thermal sensor */
+<<<<<<< HEAD
 	stdev->thermal_base = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	stdev->thermal_base = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(stdev->thermal_base))
 		return PTR_ERR(stdev->thermal_base);
 
@@ -137,7 +158,11 @@ static int spear_thermal_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, spear_thermal);
 
+<<<<<<< HEAD
 	dev_info(&pdev->dev, "Thermal Sensor Loaded at: 0x%p.\n",
+=======
+	dev_info(&spear_thermal->device, "Thermal Sensor Loaded at: 0x%p.\n",
+>>>>>>> b7ba80a49124 (Commit)
 			stdev->thermal_base);
 
 	return 0;
@@ -154,7 +179,11 @@ static int spear_thermal_exit(struct platform_device *pdev)
 {
 	unsigned int actual_mask = 0;
 	struct thermal_zone_device *spear_thermal = platform_get_drvdata(pdev);
+<<<<<<< HEAD
 	struct spear_thermal_dev *stdev = thermal_zone_device_priv(spear_thermal);
+=======
+	struct spear_thermal_dev *stdev = spear_thermal->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 
 	thermal_zone_device_unregister(spear_thermal);
 

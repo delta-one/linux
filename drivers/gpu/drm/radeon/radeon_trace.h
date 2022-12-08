@@ -22,7 +22,11 @@ TRACE_EVENT(radeon_bo_create,
 
 	    TP_fast_assign(
 			   __entry->bo = bo;
+<<<<<<< HEAD
 			   __entry->pages = PFN_UP(bo->tbo.resource->size);
+=======
+			   __entry->pages = bo->tbo.resource->num_pages;
+>>>>>>> b7ba80a49124 (Commit)
 			   ),
 	    TP_printk("bo=%p, pages=%u", __entry->bo, __entry->pages)
 );

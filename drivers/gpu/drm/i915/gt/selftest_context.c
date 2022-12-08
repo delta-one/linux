@@ -171,7 +171,11 @@ static int live_context_size(void *arg)
 		 * active state is sufficient, we are only checking that we
 		 * don't use more than we planned.
 		 */
+<<<<<<< HEAD
 		saved = __xchg(&engine->default_state, 0);
+=======
+		saved = fetch_and_zero(&engine->default_state);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Overlaps with the execlists redzone */
 		engine->context_size += I915_GTT_PAGE_SIZE;

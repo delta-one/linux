@@ -20,7 +20,11 @@ mt76x02_ampdu_stat_show(struct seq_file *file, void *data)
 		seq_puts(file, "Count:  ");
 		for (j = 0; j < 8; j++)
 			seq_printf(file, "%8d | ",
+<<<<<<< HEAD
 				   dev->mphy.aggr_stats[i * 8 + j]);
+=======
+				   dev->mt76.aggr_stats[i * 8 + j]);
+>>>>>>> b7ba80a49124 (Commit)
 		seq_puts(file, "\n");
 		seq_puts(file, "--------");
 		for (j = 0; j < 8; j++)
@@ -114,6 +118,7 @@ mt76_edcca_get(void *data, u64 *val)
 DEFINE_DEBUGFS_ATTRIBUTE(fops_edcca, mt76_edcca_get, mt76_edcca_set,
 			 "%lld\n");
 
+<<<<<<< HEAD
 static int mt76x02_read_rate_txpower(struct seq_file *s, void *data)
 {
 	struct mt76x02_dev *dev = dev_get_drvdata(s->private);
@@ -129,6 +134,8 @@ static int mt76x02_read_rate_txpower(struct seq_file *s, void *data)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void mt76x02_init_debugfs(struct mt76x02_dev *dev)
 {
 	struct dentry *dir;
@@ -148,8 +155,11 @@ void mt76x02_init_debugfs(struct mt76x02_dev *dev)
 	debugfs_create_devm_seqfile(dev->mt76.dev, "txpower", dir,
 				    read_txpower);
 
+<<<<<<< HEAD
 	debugfs_create_devm_seqfile(dev->mt76.dev, "rate_txpower", dir,
 				    mt76x02_read_rate_txpower);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	debugfs_create_devm_seqfile(dev->mt76.dev, "agc", dir, read_agc);
 
 	debugfs_create_u32("tx_hang_reset", 0400, dir, &dev->tx_hang_reset);

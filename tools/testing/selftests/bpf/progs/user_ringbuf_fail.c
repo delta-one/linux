@@ -16,6 +16,7 @@ struct sample {
 
 struct {
 	__uint(type, BPF_MAP_TYPE_USER_RINGBUF);
+<<<<<<< HEAD
 	__uint(max_entries, 4096);
 } user_ringbuf SEC(".maps");
 
@@ -26,6 +27,10 @@ struct {
 
 static int map_value;
 
+=======
+} user_ringbuf SEC(".maps");
+
+>>>>>>> b7ba80a49124 (Commit)
 static long
 bad_access1(struct bpf_dynptr *dynptr, void *context)
 {
@@ -40,8 +45,12 @@ bad_access1(struct bpf_dynptr *dynptr, void *context)
 /* A callback that accesses a dynptr in a bpf_user_ringbuf_drain callback should
  * not be able to read before the pointer.
  */
+<<<<<<< HEAD
 SEC("?raw_tp")
 __failure __msg("negative offset dynptr_ptr ptr")
+=======
+SEC("?raw_tp/sys_nanosleep")
+>>>>>>> b7ba80a49124 (Commit)
 int user_ringbuf_callback_bad_access1(void *ctx)
 {
 	bpf_user_ringbuf_drain(&user_ringbuf, bad_access1, NULL, 0);
@@ -63,8 +72,12 @@ bad_access2(struct bpf_dynptr *dynptr, void *context)
 /* A callback that accesses a dynptr in a bpf_user_ringbuf_drain callback should
  * not be able to read past the end of the pointer.
  */
+<<<<<<< HEAD
 SEC("?raw_tp")
 __failure __msg("dereference of modified dynptr_ptr ptr")
+=======
+SEC("?raw_tp/sys_nanosleep")
+>>>>>>> b7ba80a49124 (Commit)
 int user_ringbuf_callback_bad_access2(void *ctx)
 {
 	bpf_user_ringbuf_drain(&user_ringbuf, bad_access2, NULL, 0);
@@ -83,8 +96,12 @@ write_forbidden(struct bpf_dynptr *dynptr, void *context)
 /* A callback that accesses a dynptr in a bpf_user_ringbuf_drain callback should
  * not be able to write to that pointer.
  */
+<<<<<<< HEAD
 SEC("?raw_tp")
 __failure __msg("invalid mem access 'dynptr_ptr'")
+=======
+SEC("?raw_tp/sys_nanosleep")
+>>>>>>> b7ba80a49124 (Commit)
 int user_ringbuf_callback_write_forbidden(void *ctx)
 {
 	bpf_user_ringbuf_drain(&user_ringbuf, write_forbidden, NULL, 0);
@@ -103,8 +120,12 @@ null_context_write(struct bpf_dynptr *dynptr, void *context)
 /* A callback that accesses a dynptr in a bpf_user_ringbuf_drain callback should
  * not be able to write to that pointer.
  */
+<<<<<<< HEAD
 SEC("?raw_tp")
 __failure __msg("invalid mem access 'scalar'")
+=======
+SEC("?raw_tp/sys_nanosleep")
+>>>>>>> b7ba80a49124 (Commit)
 int user_ringbuf_callback_null_context_write(void *ctx)
 {
 	bpf_user_ringbuf_drain(&user_ringbuf, null_context_write, NULL, 0);
@@ -125,8 +146,12 @@ null_context_read(struct bpf_dynptr *dynptr, void *context)
 /* A callback that accesses a dynptr in a bpf_user_ringbuf_drain callback should
  * not be able to write to that pointer.
  */
+<<<<<<< HEAD
 SEC("?raw_tp")
 __failure __msg("invalid mem access 'scalar'")
+=======
+SEC("?raw_tp/sys_nanosleep")
+>>>>>>> b7ba80a49124 (Commit)
 int user_ringbuf_callback_null_context_read(void *ctx)
 {
 	bpf_user_ringbuf_drain(&user_ringbuf, null_context_read, NULL, 0);
@@ -145,8 +170,12 @@ try_discard_dynptr(struct bpf_dynptr *dynptr, void *context)
 /* A callback that accesses a dynptr in a bpf_user_ringbuf_drain callback should
  * not be able to read past the end of the pointer.
  */
+<<<<<<< HEAD
 SEC("?raw_tp")
 __failure __msg("cannot release unowned const bpf_dynptr")
+=======
+SEC("?raw_tp/sys_nanosleep")
+>>>>>>> b7ba80a49124 (Commit)
 int user_ringbuf_callback_discard_dynptr(void *ctx)
 {
 	bpf_user_ringbuf_drain(&user_ringbuf, try_discard_dynptr, NULL, 0);
@@ -165,8 +194,12 @@ try_submit_dynptr(struct bpf_dynptr *dynptr, void *context)
 /* A callback that accesses a dynptr in a bpf_user_ringbuf_drain callback should
  * not be able to read past the end of the pointer.
  */
+<<<<<<< HEAD
 SEC("?raw_tp")
 __failure __msg("cannot release unowned const bpf_dynptr")
+=======
+SEC("?raw_tp/sys_nanosleep")
+>>>>>>> b7ba80a49124 (Commit)
 int user_ringbuf_callback_submit_dynptr(void *ctx)
 {
 	bpf_user_ringbuf_drain(&user_ringbuf, try_submit_dynptr, NULL, 0);
@@ -183,14 +216,19 @@ invalid_drain_callback_return(struct bpf_dynptr *dynptr, void *context)
 /* A callback that accesses a dynptr in a bpf_user_ringbuf_drain callback should
  * not be able to write to that pointer.
  */
+<<<<<<< HEAD
 SEC("?raw_tp")
 __failure __msg("At callback return the register R0 has value")
+=======
+SEC("?raw_tp/sys_nanosleep")
+>>>>>>> b7ba80a49124 (Commit)
 int user_ringbuf_callback_invalid_return(void *ctx)
 {
 	bpf_user_ringbuf_drain(&user_ringbuf, invalid_drain_callback_return, NULL, 0);
 
 	return 0;
 }
+<<<<<<< HEAD
 
 static long
 try_reinit_dynptr_mem(struct bpf_dynptr *dynptr, void *context)
@@ -221,3 +259,5 @@ int user_ringbuf_callback_reinit_dynptr_ringbuf(void *ctx)
 	bpf_user_ringbuf_drain(&user_ringbuf, try_reinit_dynptr_ringbuf, NULL, 0);
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

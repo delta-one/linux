@@ -27,7 +27,11 @@
 #define U_BRG(x)	(UART_BASE(x) + 0x40)
 
 static void __iomem *uart_base;
+<<<<<<< HEAD
 static int console_port = -1;
+=======
+static char console_port = -1;
+>>>>>>> b7ba80a49124 (Commit)
 
 static int __init configure_uart_pins(int port)
 {
@@ -47,7 +51,11 @@ static int __init configure_uart_pins(int port)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void __init configure_uart(int port, int baud)
+=======
+static void __init configure_uart(char port, int baud)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 pbclk;
 
@@ -60,7 +68,11 @@ static void __init configure_uart(int port, int baud)
 		     uart_base + PIC32_SET(U_STA(port)));
 }
 
+<<<<<<< HEAD
 static void __init setup_early_console(int port, int baud)
+=======
+static void __init setup_early_console(char port, int baud)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (configure_uart_pins(port))
 		return;
@@ -130,15 +142,27 @@ _out:
 	return baud;
 }
 
+<<<<<<< HEAD
 void __init fw_init_early_console(void)
 {
 	char *arch_cmdline = pic32_getcmdline();
 	int baud, port;
+=======
+void __init fw_init_early_console(char port)
+{
+	char *arch_cmdline = pic32_getcmdline();
+	int baud = -1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	uart_base = ioremap(PIC32_BASE_UART, 0xc00);
 
 	baud = get_baud_from_cmdline(arch_cmdline);
+<<<<<<< HEAD
 	port = get_port_from_cmdline(arch_cmdline);
+=======
+	if (port == -1)
+		port = get_port_from_cmdline(arch_cmdline);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (port == -1)
 		port = EARLY_CONSOLE_PORT;

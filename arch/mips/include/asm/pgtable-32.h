@@ -191,6 +191,7 @@ static inline pte_t pfn_pte(unsigned long pfn, pgprot_t prot)
 
 #define pte_page(x)		pfn_to_page(pte_pfn(x))
 
+<<<<<<< HEAD
 /*
  * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
  * are !pte_none() && !pte_present().
@@ -217,10 +218,22 @@ static inline pte_t pfn_pte(unsigned long pfn, pgprot_t prot)
 /* We borrow bit 7 to store the exclusive marker in swap PTEs. */
 #define _PAGE_SWP_EXCLUSIVE	(1 << 7)
 
+=======
+#if defined(CONFIG_CPU_R3K_TLB)
+
+/* Swap entries must have VALID bit cleared. */
+#define __swp_type(x)			(((x).val >> 10) & 0x1f)
+#define __swp_offset(x)			((x).val >> 15)
+#define __swp_entry(type,offset)	((swp_entry_t) { ((type) << 10) | ((offset) << 15) })
+#define __pte_to_swp_entry(pte)		((swp_entry_t) { pte_val(pte) })
+#define __swp_entry_to_pte(x)		((pte_t) { (x).val })
+
+>>>>>>> b7ba80a49124 (Commit)
 #else
 
 #if defined(CONFIG_XPA)
 
+<<<<<<< HEAD
 /*
  * Format of swap PTEs:
  *
@@ -298,6 +311,38 @@ static inline pte_t pfn_pte(unsigned long pfn, pgprot_t prot)
 /* We borrow bit 1 to store the exclusive marker in swap PTEs. */
 #define _PAGE_SWP_EXCLUSIVE	(1 << 1)
 
+=======
+/* Swap entries must have VALID and GLOBAL bits cleared. */
+#define __swp_type(x)			(((x).val >> 4) & 0x1f)
+#define __swp_offset(x)			 ((x).val >> 9)
+#define __swp_entry(type,offset)	((swp_entry_t)  { ((type) << 4) | ((offset) << 9) })
+#define __pte_to_swp_entry(pte)		((swp_entry_t) { (pte).pte_high })
+#define __swp_entry_to_pte(x)		((pte_t) { 0, (x).val })
+
+#elif defined(CONFIG_PHYS_ADDR_T_64BIT) && defined(CONFIG_CPU_MIPS32)
+
+/* Swap entries must have VALID and GLOBAL bits cleared. */
+#define __swp_type(x)			(((x).val >> 2) & 0x1f)
+#define __swp_offset(x)			 ((x).val >> 7)
+#define __swp_entry(type, offset)	((swp_entry_t)  { ((type) << 2) | ((offset) << 7) })
+#define __pte_to_swp_entry(pte)		((swp_entry_t) { (pte).pte_high })
+#define __swp_entry_to_pte(x)		((pte_t) { 0, (x).val })
+
+#else
+/*
+ * Constraints:
+ *      _PAGE_PRESENT at bit 0
+ *      _PAGE_MODIFIED at bit 4
+ *      _PAGE_GLOBAL at bit 6
+ *      _PAGE_VALID at bit 7
+ */
+#define __swp_type(x)			(((x).val >> 8) & 0x1f)
+#define __swp_offset(x)			 ((x).val >> 13)
+#define __swp_entry(type,offset)	((swp_entry_t)	{ ((type) << 8) | ((offset) << 13) })
+#define __pte_to_swp_entry(pte)		((swp_entry_t) { pte_val(pte) })
+#define __swp_entry_to_pte(x)		((pte_t) { (x).val })
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* defined(CONFIG_PHYS_ADDR_T_64BIT) && defined(CONFIG_CPU_MIPS32) */
 
 #endif /* defined(CONFIG_CPU_R3K_TLB) */

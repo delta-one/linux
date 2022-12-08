@@ -4,6 +4,7 @@
  * Copyright (c) 2022, Linaro Limited
  */
 
+<<<<<<< HEAD
 #include <dt-bindings/clock/qcom,dispcc-sc8280xp.h>
 #include <dt-bindings/clock/qcom,gcc-sc8280xp.h>
 #include <dt-bindings/clock/qcom,rpmh.h>
@@ -16,6 +17,15 @@
 #include <dt-bindings/soc/qcom,gpr.h>
 #include <dt-bindings/soc/qcom,rpmh-rsc.h>
 #include <dt-bindings/sound/qcom,q6afe.h>
+=======
+#include <dt-bindings/clock/qcom,gcc-sc8280xp.h>
+#include <dt-bindings/clock/qcom,rpmh.h>
+#include <dt-bindings/interconnect/qcom,sc8280xp.h>
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/mailbox/qcom-ipcc.h>
+#include <dt-bindings/power/qcom-rpmpd.h>
+#include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <dt-bindings/thermal/thermal.h>
 
 / {
@@ -37,15 +47,161 @@
 		};
 	};
 
+<<<<<<< HEAD
+=======
+	cpu0_opp_table: cpu0-opp-table {
+		compatible = "operating-points-v2";
+		opp-shared;
+
+		opp-300000000 {
+			opp-hz = /bits/ 64 <300000000>;
+		};
+		opp-403200000 {
+			opp-hz = /bits/ 64 <403200000>;
+		};
+		opp-499200000 {
+			opp-hz = /bits/ 64 <499200000>;
+		};
+		opp-595200000 {
+			opp-hz = /bits/ 64 <595200000>;
+		};
+		opp-691200000 {
+			opp-hz = /bits/ 64 <691200000>;
+		};
+		opp-806400000 {
+			opp-hz = /bits/ 64 <806400000>;
+		};
+		opp-902400000 {
+			opp-hz = /bits/ 64 <902400000>;
+		};
+		opp-1017600000 {
+			opp-hz = /bits/ 64 <1017600000>;
+		};
+		opp-1113600000 {
+			opp-hz = /bits/ 64 <1113600000>;
+		};
+		opp-1209600000 {
+			opp-hz = /bits/ 64 <1209600000>;
+		};
+		opp-1324800000 {
+			opp-hz = /bits/ 64 <1324800000>;
+		};
+		opp-1440000000 {
+			opp-hz = /bits/ 64 <1440000000>;
+		};
+		opp-1555200000 {
+			opp-hz = /bits/ 64 <1555200000>;
+		};
+		opp-1670400000 {
+			opp-hz = /bits/ 64 <1670400000>;
+		};
+		opp-1785600000 {
+			opp-hz = /bits/ 64 <1785600000>;
+		};
+		opp-1881600000 {
+			opp-hz = /bits/ 64 <1881600000>;
+		};
+		opp-1996800000 {
+			opp-hz = /bits/ 64 <1996800000>;
+		};
+		opp-2112000000 {
+			opp-hz = /bits/ 64 <2112000000>;
+		};
+		opp-2227200000 {
+			opp-hz = /bits/ 64 <2227200000>;
+		};
+		opp-2342400000 {
+			opp-hz = /bits/ 64 <2342400000>;
+		};
+		opp-2438400000 {
+			opp-hz = /bits/ 64 <2438400000>;
+		};
+	};
+
+	cpu4_opp_table: cpu4-opp-table {
+		compatible = "operating-points-v2";
+		opp-shared;
+
+		opp-825600000 {
+			opp-hz = /bits/ 64 <825600000>;
+		};
+		opp-940800000 {
+			opp-hz = /bits/ 64 <940800000>;
+		};
+		opp-1056000000 {
+			opp-hz = /bits/ 64 <1056000000>;
+		};
+		opp-1171200000 {
+			opp-hz = /bits/ 64 <1171200000>;
+		};
+		opp-1286400000 {
+			opp-hz = /bits/ 64 <1286400000>;
+		};
+		opp-1401600000 {
+			opp-hz = /bits/ 64 <1401600000>;
+		};
+		opp-1516800000 {
+			opp-hz = /bits/ 64 <1516800000>;
+		};
+		opp-1632000000 {
+			opp-hz = /bits/ 64 <1632000000>;
+		};
+		opp-1747200000 {
+			opp-hz = /bits/ 64 <1747200000>;
+		};
+		opp-1862400000 {
+			opp-hz = /bits/ 64 <1862400000>;
+		};
+		opp-1977600000 {
+			opp-hz = /bits/ 64 <1977600000>;
+		};
+		opp-2073600000 {
+			opp-hz = /bits/ 64 <2073600000>;
+		};
+		opp-2169600000 {
+			opp-hz = /bits/ 64 <2169600000>;
+		};
+		opp-2284800000 {
+			opp-hz = /bits/ 64 <2284800000>;
+		};
+		opp-2400000000 {
+			opp-hz = /bits/ 64 <2400000000>;
+		};
+		opp-2496000000 {
+			opp-hz = /bits/ 64 <2496000000>;
+		};
+		opp-2592000000 {
+			opp-hz = /bits/ 64 <2592000000>;
+		};
+		opp-2688000000 {
+			opp-hz = /bits/ 64 <2688000000>;
+		};
+		opp-2803200000 {
+			opp-hz = /bits/ 64 <2803200000>;
+		};
+		opp-2899200000 {
+			opp-hz = /bits/ 64 <2899200000>;
+		};
+		opp-2995200000 {
+			opp-hz = /bits/ 64 <2995200000>;
+		};
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	cpus {
 		#address-cells = <2>;
 		#size-cells = <0>;
 
 		CPU0: cpu@0 {
 			device_type = "cpu";
+<<<<<<< HEAD
 			compatible = "arm,cortex-a78c";
 			reg = <0x0 0x0>;
 			clocks = <&cpufreq_hw 0>;
+=======
+			compatible = "qcom,kryo";
+			reg = <0x0 0x0>;
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <602>;
 			next-level-cache = <&L2_0>;
@@ -53,6 +209,7 @@
 			power-domain-names = "psci";
 			qcom,freq-domain = <&cpufreq_hw 0>;
 			operating-points-v2 = <&cpu0_opp_table>;
+<<<<<<< HEAD
 			interconnects = <&epss_l3 MASTER_EPSS_L3_APPS &epss_l3 SLAVE_EPSS_L3_SHARED>;
 			#cooling-cells = <2>;
 			L2_0: l2-cache {
@@ -62,15 +219,28 @@
 				L3_0: l3-cache {
 				      compatible = "cache";
 				      cache-level = <3>;
+=======
+			#cooling-cells = <2>;
+			L2_0: l2-cache {
+				compatible = "cache";
+				next-level-cache = <&L3_0>;
+				L3_0: l3-cache {
+				      compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
 				};
 			};
 		};
 
 		CPU1: cpu@100 {
 			device_type = "cpu";
+<<<<<<< HEAD
 			compatible = "arm,cortex-a78c";
 			reg = <0x0 0x100>;
 			clocks = <&cpufreq_hw 0>;
+=======
+			compatible = "qcom,kryo";
+			reg = <0x0 0x100>;
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <602>;
 			next-level-cache = <&L2_100>;
@@ -78,20 +248,31 @@
 			power-domain-names = "psci";
 			qcom,freq-domain = <&cpufreq_hw 0>;
 			operating-points-v2 = <&cpu0_opp_table>;
+<<<<<<< HEAD
 			interconnects = <&epss_l3 MASTER_EPSS_L3_APPS &epss_l3 SLAVE_EPSS_L3_SHARED>;
 			#cooling-cells = <2>;
 			L2_100: l2-cache {
 				compatible = "cache";
 				cache-level = <2>;
+=======
+			#cooling-cells = <2>;
+			L2_100: l2-cache {
+				compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
 
 		CPU2: cpu@200 {
 			device_type = "cpu";
+<<<<<<< HEAD
 			compatible = "arm,cortex-a78c";
 			reg = <0x0 0x200>;
 			clocks = <&cpufreq_hw 0>;
+=======
+			compatible = "qcom,kryo";
+			reg = <0x0 0x200>;
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <602>;
 			next-level-cache = <&L2_200>;
@@ -99,20 +280,31 @@
 			power-domain-names = "psci";
 			qcom,freq-domain = <&cpufreq_hw 0>;
 			operating-points-v2 = <&cpu0_opp_table>;
+<<<<<<< HEAD
 			interconnects = <&epss_l3 MASTER_EPSS_L3_APPS &epss_l3 SLAVE_EPSS_L3_SHARED>;
 			#cooling-cells = <2>;
 			L2_200: l2-cache {
 				compatible = "cache";
 				cache-level = <2>;
+=======
+			#cooling-cells = <2>;
+			L2_200: l2-cache {
+				compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
 
 		CPU3: cpu@300 {
 			device_type = "cpu";
+<<<<<<< HEAD
 			compatible = "arm,cortex-a78c";
 			reg = <0x0 0x300>;
 			clocks = <&cpufreq_hw 0>;
+=======
+			compatible = "qcom,kryo";
+			reg = <0x0 0x300>;
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <602>;
 			next-level-cache = <&L2_300>;
@@ -120,20 +312,31 @@
 			power-domain-names = "psci";
 			qcom,freq-domain = <&cpufreq_hw 0>;
 			operating-points-v2 = <&cpu0_opp_table>;
+<<<<<<< HEAD
 			interconnects = <&epss_l3 MASTER_EPSS_L3_APPS &epss_l3 SLAVE_EPSS_L3_SHARED>;
 			#cooling-cells = <2>;
 			L2_300: l2-cache {
 				compatible = "cache";
 				cache-level = <2>;
+=======
+			#cooling-cells = <2>;
+			L2_300: l2-cache {
+				compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
 
 		CPU4: cpu@400 {
 			device_type = "cpu";
+<<<<<<< HEAD
 			compatible = "arm,cortex-x1c";
 			reg = <0x0 0x400>;
 			clocks = <&cpufreq_hw 1>;
+=======
+			compatible = "qcom,kryo";
+			reg = <0x0 0x400>;
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <1024>;
 			next-level-cache = <&L2_400>;
@@ -141,20 +344,31 @@
 			power-domain-names = "psci";
 			qcom,freq-domain = <&cpufreq_hw 1>;
 			operating-points-v2 = <&cpu4_opp_table>;
+<<<<<<< HEAD
 			interconnects = <&epss_l3 MASTER_EPSS_L3_APPS &epss_l3 SLAVE_EPSS_L3_SHARED>;
 			#cooling-cells = <2>;
 			L2_400: l2-cache {
 				compatible = "cache";
 				cache-level = <2>;
+=======
+			#cooling-cells = <2>;
+			L2_400: l2-cache {
+				compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
 
 		CPU5: cpu@500 {
 			device_type = "cpu";
+<<<<<<< HEAD
 			compatible = "arm,cortex-x1c";
 			reg = <0x0 0x500>;
 			clocks = <&cpufreq_hw 1>;
+=======
+			compatible = "qcom,kryo";
+			reg = <0x0 0x500>;
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <1024>;
 			next-level-cache = <&L2_500>;
@@ -162,20 +376,31 @@
 			power-domain-names = "psci";
 			qcom,freq-domain = <&cpufreq_hw 1>;
 			operating-points-v2 = <&cpu4_opp_table>;
+<<<<<<< HEAD
 			interconnects = <&epss_l3 MASTER_EPSS_L3_APPS &epss_l3 SLAVE_EPSS_L3_SHARED>;
 			#cooling-cells = <2>;
 			L2_500: l2-cache {
 				compatible = "cache";
 				cache-level = <2>;
+=======
+			#cooling-cells = <2>;
+			L2_500: l2-cache {
+				compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
 
 		CPU6: cpu@600 {
 			device_type = "cpu";
+<<<<<<< HEAD
 			compatible = "arm,cortex-x1c";
 			reg = <0x0 0x600>;
 			clocks = <&cpufreq_hw 1>;
+=======
+			compatible = "qcom,kryo";
+			reg = <0x0 0x600>;
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <1024>;
 			next-level-cache = <&L2_600>;
@@ -183,20 +408,31 @@
 			power-domain-names = "psci";
 			qcom,freq-domain = <&cpufreq_hw 1>;
 			operating-points-v2 = <&cpu4_opp_table>;
+<<<<<<< HEAD
 			interconnects = <&epss_l3 MASTER_EPSS_L3_APPS &epss_l3 SLAVE_EPSS_L3_SHARED>;
 			#cooling-cells = <2>;
 			L2_600: l2-cache {
 				compatible = "cache";
 				cache-level = <2>;
+=======
+			#cooling-cells = <2>;
+			L2_600: l2-cache {
+				compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
 
 		CPU7: cpu@700 {
 			device_type = "cpu";
+<<<<<<< HEAD
 			compatible = "arm,cortex-x1c";
 			reg = <0x0 0x700>;
 			clocks = <&cpufreq_hw 1>;
+=======
+			compatible = "qcom,kryo";
+			reg = <0x0 0x700>;
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <1024>;
 			next-level-cache = <&L2_700>;
@@ -204,11 +440,17 @@
 			power-domain-names = "psci";
 			qcom,freq-domain = <&cpufreq_hw 1>;
 			operating-points-v2 = <&cpu4_opp_table>;
+<<<<<<< HEAD
 			interconnects = <&epss_l3 MASTER_EPSS_L3_APPS &epss_l3 SLAVE_EPSS_L3_SHARED>;
 			#cooling-cells = <2>;
 			L2_700: l2-cache {
 				compatible = "cache";
 				cache-level = <2>;
+=======
+			#cooling-cells = <2>;
+			L2_700: l2-cache {
+				compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
@@ -369,6 +611,7 @@
 		reg = <0x0 0x80000000 0x0 0x0>;
 	};
 
+<<<<<<< HEAD
 	cpu0_opp_table: opp-table-cpu0 {
 		compatible = "operating-points-v2";
 		opp-shared;
@@ -550,6 +793,72 @@
 	};
 
 	qup_opp_table_100mhz: opp-table-qup100mhz {
+=======
+	pmu {
+		compatible = "arm,armv8-pmuv3";
+		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
+	};
+
+	psci {
+		compatible = "arm,psci-1.0";
+		method = "smc";
+
+		CPU_PD0: cpu0 {
+			#power-domain-cells = <0>;
+			power-domains = <&CLUSTER_PD>;
+			domain-idle-states = <&LITTLE_CPU_SLEEP_0>;
+		};
+
+		CPU_PD1: cpu1 {
+			#power-domain-cells = <0>;
+			power-domains = <&CLUSTER_PD>;
+			domain-idle-states = <&LITTLE_CPU_SLEEP_0>;
+		};
+
+		CPU_PD2: cpu2 {
+			#power-domain-cells = <0>;
+			power-domains = <&CLUSTER_PD>;
+			domain-idle-states = <&LITTLE_CPU_SLEEP_0>;
+		};
+
+		CPU_PD3: cpu3 {
+			#power-domain-cells = <0>;
+			power-domains = <&CLUSTER_PD>;
+			domain-idle-states = <&LITTLE_CPU_SLEEP_0>;
+		};
+
+		CPU_PD4: cpu4 {
+			#power-domain-cells = <0>;
+			power-domains = <&CLUSTER_PD>;
+			domain-idle-states = <&BIG_CPU_SLEEP_0>;
+		};
+
+		CPU_PD5: cpu5 {
+			#power-domain-cells = <0>;
+			power-domains = <&CLUSTER_PD>;
+			domain-idle-states = <&BIG_CPU_SLEEP_0>;
+		};
+
+		CPU_PD6: cpu6 {
+			#power-domain-cells = <0>;
+			power-domains = <&CLUSTER_PD>;
+			domain-idle-states = <&BIG_CPU_SLEEP_0>;
+		};
+
+		CPU_PD7: cpu7 {
+			#power-domain-cells = <0>;
+			power-domains = <&CLUSTER_PD>;
+			domain-idle-states = <&BIG_CPU_SLEEP_0>;
+		};
+
+		CLUSTER_PD: cpu-cluster0 {
+			#power-domain-cells = <0>;
+			domain-idle-states = <&CLUSTER_SLEEP_0>;
+		};
+	};
+
+	qup_opp_table_100mhz: qup-100mhz-opp-table {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "operating-points-v2";
 
 		opp-75000000 {
@@ -563,6 +872,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	pmu {
 		compatible = "arm,armv8-pmuv3";
 		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
@@ -626,6 +936,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	reserved-memory {
 		#address-cells = <2>;
 		#size-cells = <2>;
@@ -783,7 +1095,11 @@
 				 <0>,
 				 <0>,
 				 <0>,
+<<<<<<< HEAD
 				 <&usb_0_qmpphy QMP_USB43DP_USB3_PIPE_CLK>,
+=======
+				 <&usb_0_ssphy>,
+>>>>>>> b7ba80a49124 (Commit)
 				 <0>,
 				 <0>,
 				 <0>,
@@ -791,7 +1107,16 @@
 				 <0>,
 				 <0>,
 				 <0>,
+<<<<<<< HEAD
 				 <&usb_1_qmpphy QMP_USB43DP_USB3_PIPE_CLK>,
+=======
+				 <&usb_1_ssphy>,
+				 <0>,
+				 <0>,
+				 <0>,
+				 <0>,
+				 <0>,
+>>>>>>> b7ba80a49124 (Commit)
 				 <0>,
 				 <0>,
 				 <0>,
@@ -801,11 +1126,14 @@
 				 <0>,
 				 <0>,
 				 <0>,
+<<<<<<< HEAD
 				 <&pcie2a_phy>,
 				 <&pcie2b_phy>,
 				 <&pcie3a_phy>,
 				 <&pcie3b_phy>,
 				 <&pcie4_phy>,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				 <0>,
 				 <0>;
 			power-domains = <&rpmhpd SC8280XP_CX>;
@@ -834,6 +1162,7 @@
 
 			status = "disabled";
 
+<<<<<<< HEAD
 			i2c16: i2c@880000 {
 				compatible = "qcom,geni-i2c";
 				reg = <0 0x00880000 0 0x4000>;
@@ -899,6 +1228,9 @@
 			};
 
 			uart17: serial@884000 {
+=======
+			qup2_uart17: serial@884000 {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "qcom,geni-uart";
 				reg = <0 0x00884000 0 0x4000>;
 				clocks = <&gcc GCC_QUPV3_WRAP2_S1_CLK>;
@@ -912,6 +1244,7 @@
 				status = "disabled";
 			};
 
+<<<<<<< HEAD
 			i2c18: i2c@888000 {
 				compatible = "qcom,geni-i2c";
 				reg = <0 0x00888000 0 0x4000>;
@@ -1009,6 +1342,9 @@
 			};
 
 			i2c21: i2c@894000 {
+=======
+			qup2_i2c5: i2c@894000 {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "qcom,geni-i2c";
 				reg = <0 0x00894000 0 0x4000>;
 				clock-names = "se";
@@ -1023,6 +1359,7 @@
 				interconnect-names = "qup-core", "qup-config", "qup-memory";
 				status = "disabled";
 			};
+<<<<<<< HEAD
 
 			spi21: spi@894000 {
 				compatible = "qcom,geni-spi";
@@ -1103,6 +1440,8 @@
 				interconnect-names = "qup-core", "qup-config", "qup-memory";
 				status = "disabled";
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		qup0: geniqup@9c0000 {
@@ -1119,6 +1458,7 @@
 
 			status = "disabled";
 
+<<<<<<< HEAD
 			i2c0: i2c@980000 {
 				compatible = "qcom,geni-i2c";
 				reg = <0 0x00980000 0 0x4000>;
@@ -1248,6 +1588,9 @@
 			};
 
 			i2c4: i2c@990000 {
+=======
+			qup0_i2c4: i2c@990000 {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "qcom,geni-i2c";
 				reg = <0 0x00990000 0 0x4000>;
 				clock-names = "se";
@@ -1262,6 +1605,7 @@
 				interconnect-names = "qup-core", "qup-config", "qup-memory";
 				status = "disabled";
 			};
+<<<<<<< HEAD
 
 			spi4: spi@990000 {
 				compatible = "qcom,geni-spi";
@@ -1374,6 +1718,8 @@
 				interconnect-names = "qup-core", "qup-config", "qup-memory";
 				status = "disabled";
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		qup1: geniqup@ac0000 {
@@ -1389,6 +1735,7 @@
 			ranges;
 
 			status = "disabled";
+<<<<<<< HEAD
 
 			i2c8: i2c@a80000 {
 				compatible = "qcom,geni-i2c";
@@ -2145,6 +2492,8 @@
 			#phy-cells = <0>;
 
 			status = "disabled";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		ufs_mem_hc: ufs@1d84000 {
@@ -2152,7 +2501,11 @@
 				     "jedec,ufs-2.0";
 			reg = <0 0x01d84000 0 0x3000>;
 			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 			phys = <&ufs_mem_phy>;
+=======
+			phys = <&ufs_mem_phy_lanes>;
+>>>>>>> b7ba80a49124 (Commit)
 			phy-names = "ufsphy";
 			lanes-per-direction = <2>;
 			#reset-cells = <1>;
@@ -2163,13 +2516,20 @@
 			required-opps = <&rpmhpd_opp_nom>;
 
 			iommus = <&apps_smmu 0xe0 0x0>;
+<<<<<<< HEAD
 			dma-coherent;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 			clocks = <&gcc GCC_UFS_PHY_AXI_CLK>,
 				 <&gcc GCC_AGGRE_UFS_PHY_AXI_CLK>,
 				 <&gcc GCC_UFS_PHY_AHB_CLK>,
 				 <&gcc GCC_UFS_PHY_UNIPRO_CORE_CLK>,
+<<<<<<< HEAD
 				 <&gcc GCC_UFS_REF_CLKREF_CLK>,
+=======
+				 <&rpmhcc RPMH_CXO_CLK>,
+>>>>>>> b7ba80a49124 (Commit)
 				 <&gcc GCC_UFS_PHY_TX_SYMBOL_0_CLK>,
 				 <&gcc GCC_UFS_PHY_RX_SYMBOL_0_CLK>,
 				 <&gcc GCC_UFS_PHY_RX_SYMBOL_1_CLK>;
@@ -2194,6 +2554,7 @@
 
 		ufs_mem_phy: phy@1d87000 {
 			compatible = "qcom,sc8280xp-qmp-ufs-phy";
+<<<<<<< HEAD
 			reg = <0 0x01d87000 0 0x1000>;
 
 			clocks = <&gcc GCC_UFS_CARD_CLKREF_CLK>,
@@ -2208,6 +2569,29 @@
 			#phy-cells = <0>;
 
 			status = "disabled";
+=======
+			reg = <0 0x01d87000 0 0xe10>;
+			#address-cells = <2>;
+			#size-cells = <2>;
+			ranges;
+			clock-names = "ref",
+				      "ref_aux";
+			clocks = <&rpmhcc RPMH_CXO_CLK>,
+				 <&gcc GCC_UFS_PHY_PHY_AUX_CLK>;
+
+			resets = <&ufs_mem_hc 0>;
+			reset-names = "ufsphy";
+			status = "disabled";
+
+			ufs_mem_phy_lanes: phy@1d87400 {
+				reg = <0 0x01d87400 0 0x108>,
+				      <0 0x01d87600 0 0x1e0>,
+				      <0 0x01d87c00 0 0x1dc>,
+				      <0 0x01d87800 0 0x108>,
+				      <0 0x01d87a00 0 0x1e0>;
+				#phy-cells = <0>;
+			};
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		ufs_card_hc: ufs@1da4000 {
@@ -2215,7 +2599,11 @@
 				     "jedec,ufs-2.0";
 			reg = <0 0x01da4000 0 0x3000>;
 			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 			phys = <&ufs_card_phy>;
+=======
+			phys = <&ufs_card_phy_lanes>;
+>>>>>>> b7ba80a49124 (Commit)
 			phy-names = "ufsphy";
 			lanes-per-direction = <2>;
 			#reset-cells = <1>;
@@ -2225,13 +2613,20 @@
 			power-domains = <&gcc UFS_CARD_GDSC>;
 
 			iommus = <&apps_smmu 0x4a0 0x0>;
+<<<<<<< HEAD
 			dma-coherent;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 			clocks = <&gcc GCC_UFS_CARD_AXI_CLK>,
 				 <&gcc GCC_AGGRE_UFS_CARD_AXI_CLK>,
 				 <&gcc GCC_UFS_CARD_AHB_CLK>,
 				 <&gcc GCC_UFS_CARD_UNIPRO_CORE_CLK>,
+<<<<<<< HEAD
 				 <&gcc GCC_UFS_REF_CLKREF_CLK>,
+=======
+				 <&rpmhcc RPMH_CXO_CLK>,
+>>>>>>> b7ba80a49124 (Commit)
 				 <&gcc GCC_UFS_CARD_TX_SYMBOL_0_CLK>,
 				 <&gcc GCC_UFS_CARD_RX_SYMBOL_0_CLK>,
 				 <&gcc GCC_UFS_CARD_RX_SYMBOL_1_CLK>;
@@ -2256,6 +2651,7 @@
 
 		ufs_card_phy: phy@1da7000 {
 			compatible = "qcom,sc8280xp-qmp-ufs-phy";
+<<<<<<< HEAD
 			reg = <0 0x01da7000 0 0x1000>;
 
 			clocks = <&gcc GCC_UFS_1_CARD_CLKREF_CLK>,
@@ -2263,13 +2659,36 @@
 			clock-names = "ref", "ref_aux";
 
 			power-domains = <&gcc UFS_CARD_GDSC>;
+=======
+			reg = <0 0x01da7000 0 0xe10>;
+			#address-cells = <2>;
+			#size-cells = <2>;
+			ranges;
+			clock-names = "ref",
+				      "ref_aux";
+			clocks = <&gcc GCC_UFS_1_CARD_CLKREF_CLK>,
+				 <&gcc GCC_UFS_CARD_PHY_AUX_CLK>;
+>>>>>>> b7ba80a49124 (Commit)
 
 			resets = <&ufs_card_hc 0>;
 			reset-names = "ufsphy";
 
+<<<<<<< HEAD
 			#phy-cells = <0>;
 
 			status = "disabled";
+=======
+			status = "disabled";
+
+			ufs_card_phy_lanes: phy@1da7400 {
+				reg = <0 0x01da7400 0 0x108>,
+				      <0 0x01da7600 0 0x1e0>,
+				      <0 0x01da7c00 0 0x1dc>,
+				      <0 0x01da7800 0 0x108>,
+				      <0 0x01da7a00 0 0x1e0>;
+				#phy-cells = <0>;
+			};
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		tcsr_mutex: hwlock@1f40000 {
@@ -2278,11 +2697,14 @@
 			#hwlock-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		tcsr: syscon@1fc0000 {
 			compatible = "qcom,sc8280xp-tcsr", "syscon";
 			reg = <0x0 0x01fc0000 0x0 0x30000>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		usb_0_hsphy: phy@88e5000 {
 			compatible = "qcom,sc8280xp-usb-hs-phy",
 				     "qcom,usb-snps-hs-5nm-phy";
@@ -2348,6 +2770,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		usb_2_qmpphy0: phy@88ef000 {
 			compatible = "qcom,sc8280xp-qmp-usb3-uni-phy";
 			reg = <0 0x088ef000 0 0x2000>;
@@ -2394,6 +2817,72 @@
 			#phy-cells = <0>;
 
 			status = "disabled";
+=======
+		usb_2_qmpphy0: phy-wrapper@88ef000 {
+			compatible = "qcom,sc8280xp-qmp-usb3-uni-phy";
+			reg = <0 0x088ef000 0 0x1c8>;
+			#address-cells = <2>;
+			#size-cells = <2>;
+			ranges;
+
+			clocks = <&gcc GCC_USB3_MP_PHY_AUX_CLK>,
+				 <&rpmhcc RPMH_CXO_CLK>,
+				 <&gcc GCC_USB3_MP0_CLKREF_CLK>,
+				 <&gcc GCC_USB3_MP_PHY_COM_AUX_CLK>;
+			clock-names = "aux", "ref_clk_src", "ref", "com_aux";
+
+			resets = <&gcc GCC_USB3_UNIPHY_MP0_BCR>,
+				 <&gcc GCC_USB3UNIPHY_PHY_MP0_BCR>;
+			reset-names = "phy", "common";
+
+			power-domains = <&gcc USB30_MP_GDSC>;
+
+			status = "disabled";
+
+			usb_2_ssphy0: phy@88efe00 {
+				reg = <0 0x088efe00 0 0x160>,
+				      <0 0x088f0000 0 0x1ec>,
+				      <0 0x088ef200 0 0x1f0>;
+				#phy-cells = <0>;
+				#clock-cells = <0>;
+				clocks = <&gcc GCC_USB3_MP_PHY_PIPE_0_CLK>;
+				clock-names = "pipe0";
+				clock-output-names = "usb2_phy0_pipe_clk";
+			};
+		};
+
+		usb_2_qmpphy1: phy-wrapper@88f1000 {
+			compatible = "qcom,sc8280xp-qmp-usb3-uni-phy";
+			reg = <0 0x088f1000 0 0x1c8>;
+			#address-cells = <2>;
+			#size-cells = <2>;
+			ranges;
+
+			clocks = <&gcc GCC_USB3_MP_PHY_AUX_CLK>,
+				 <&rpmhcc RPMH_CXO_CLK>,
+				 <&gcc GCC_USB3_MP1_CLKREF_CLK>,
+				 <&gcc GCC_USB3_MP_PHY_COM_AUX_CLK>;
+			clock-names = "aux", "ref_clk_src", "ref", "com_aux";
+
+			resets = <&gcc GCC_USB3_UNIPHY_MP1_BCR>,
+				 <&gcc GCC_USB3UNIPHY_PHY_MP1_BCR>;
+			reset-names = "phy", "common";
+
+			power-domains = <&gcc USB30_MP_GDSC>;
+
+			status = "disabled";
+
+			usb_2_ssphy1: phy@88f1e00 {
+				reg = <0 0x088f1e00 0 0x160>,
+				      <0 0x088f2000 0 0x1ec>,
+				      <0 0x088f1200 0 0x1f0>;
+				#phy-cells = <0>;
+				#clock-cells = <0>;
+				clocks = <&gcc GCC_USB3_MP_PHY_PIPE_1_CLK>;
+				clock-names = "pipe0";
+				clock-output-names = "usb2_phy1_pipe_clk";
+			};
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		remoteproc_adsp: remoteproc@3000000 {
@@ -2434,6 +2923,7 @@
 
 				label = "lpass";
 				qcom,remote-pid = <2>;
+<<<<<<< HEAD
 
 				gpr {
 					compatible = "qcom,gpr";
@@ -2823,6 +3313,57 @@
 			#phy-cells = <1>;
 
 			status = "disabled";
+=======
+			};
+		};
+
+		usb_0_qmpphy: phy-wrapper@88ec000 {
+			compatible = "qcom,sc8280xp-qmp-usb43dp-phy";
+			reg = <0 0x088ec000 0 0x1e4>,
+			      <0 0x088eb000 0 0x40>,
+			      <0 0x088ed000 0 0x1c8>;
+			#address-cells = <2>;
+			#size-cells = <2>;
+			ranges;
+
+			clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
+				 <&rpmhcc RPMH_CXO_CLK>,
+				 <&gcc GCC_USB4_EUD_CLKREF_CLK>,
+				 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
+			clock-names = "aux", "ref_clk_src", "ref", "com_aux";
+
+			resets = <&gcc GCC_USB3_PHY_PRIM_BCR>,
+				 <&gcc GCC_USB3_DP_PHY_PRIM_BCR>;
+			reset-names = "phy", "common";
+
+			power-domains = <&gcc USB30_PRIM_GDSC>;
+
+			status = "disabled";
+
+			usb_0_ssphy: usb3-phy@88eb400 {
+				reg = <0 0x088eb400 0 0x100>,
+				      <0 0x088eb600 0 0x3ec>,
+				      <0 0x088ec400 0 0x1f0>,
+				      <0 0x088eba00 0 0x100>,
+				      <0 0x088ebc00 0 0x3ec>,
+				      <0 0x088ec700 0 0x64>;
+				#phy-cells = <0>;
+				#clock-cells = <0>;
+				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
+				clock-names = "pipe0";
+				clock-output-names = "usb0_phy_pipe_clk_src";
+			};
+
+			usb_0_dpphy: dp-phy@88ed200 {
+				reg = <0 0x088ed200 0 0x200>,
+				      <0 0x088ed400 0 0x200>,
+				      <0 0x088eda00 0 0x200>,
+				      <0 0x088ea600 0 0x200>,
+				      <0 0x088ea800 0 0x200>;
+				#clock-cells = <1>;
+				#phy-cells = <0>;
+			};
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		usb_1_hsphy: phy@8902000 {
@@ -2839,6 +3380,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		usb_1_qmpphy: phy@8903000 {
 			compatible = "qcom,sc8280xp-qmp-usb43dp-phy";
 			reg = <0 0x08903000 0 0x4000>;
@@ -2850,11 +3392,28 @@
 			clock-names = "aux", "ref", "com_aux", "usb3_pipe";
 
 			power-domains = <&gcc USB30_SEC_GDSC>;
+=======
+		usb_1_qmpphy: phy-wrapper@8904000 {
+			compatible = "qcom,sc8280xp-qmp-usb43dp-phy";
+			reg = <0 0x08904000 0 0x1e4>,
+			      <0 0x08903000 0 0x40>,
+			      <0 0x08905000 0 0x1c8>;
+			#address-cells = <2>;
+			#size-cells = <2>;
+			ranges;
+
+			clocks = <&gcc GCC_USB3_SEC_PHY_AUX_CLK>,
+				 <&rpmhcc RPMH_CXO_CLK>,
+				 <&gcc GCC_USB4_CLKREF_CLK>,
+				 <&gcc GCC_USB3_SEC_PHY_COM_AUX_CLK>;
+			clock-names = "aux", "ref_clk_src", "ref", "com_aux";
+>>>>>>> b7ba80a49124 (Commit)
 
 			resets = <&gcc GCC_USB3_PHY_SEC_BCR>,
 				 <&gcc GCC_USB4_1_DP_PHY_PRIM_BCR>;
 			reset-names = "phy", "common";
 
+<<<<<<< HEAD
 			#clock-cells = <1>;
 			#phy-cells = <1>;
 
@@ -2985,11 +3544,40 @@
 				opp-6 {
 					opp-peak-kBps = <15258001>;
 				};
+=======
+			power-domains = <&gcc USB30_SEC_GDSC>;
+
+			status = "disabled";
+
+			usb_1_ssphy: usb3-phy@8903400 {
+				reg = <0 0x08903400 0 0x100>,
+				      <0 0x08903c00 0 0x3ec>,
+				      <0 0x08904400 0 0x1f0>,
+				      <0 0x08903a00 0 0x100>,
+				      <0 0x08903c00 0 0x3ec>,
+				      <0 0x08904200 0 0x18>;
+				#phy-cells = <0>;
+				#clock-cells = <0>;
+				clocks = <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
+				clock-names = "pipe0";
+				clock-output-names = "usb1_phy_pipe_clk_src";
+			};
+
+			usb_1_dpphy: dp-phy@8904200 {
+				reg = <0 0x08904200 0 0x200>,
+				      <0 0x08904400 0 0x200>,
+				      <0 0x08904a00 0 0x200>,
+				      <0 0x08904600 0 0x200>,
+				      <0 0x08904800 0 0x200>;
+				#clock-cells = <1>;
+				#phy-cells = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 
 		system-cache-controller@9200000 {
 			compatible = "qcom,sc8280xp-llcc";
+<<<<<<< HEAD
 			reg = <0 0x09200000 0 0x58000>, <0 0x09280000 0 0x58000>,
 			      <0 0x09300000 0 0x58000>, <0 0x09380000 0 0x58000>,
 			      <0 0x09400000 0 0x58000>, <0 0x09480000 0 0x58000>,
@@ -2998,6 +3586,10 @@
 			reg-names = "llcc0_base", "llcc1_base", "llcc2_base",
 				    "llcc3_base", "llcc4_base", "llcc5_base",
 				    "llcc6_base", "llcc7_base",  "llcc_broadcast_base";
+=======
+			reg = <0 0x09200000 0 0x58000>, <0 0x09600000 0 0x58000>;
+			reg-names = "llcc_base", "llcc_broadcast_base";
+>>>>>>> b7ba80a49124 (Commit)
 			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
 		};
 
@@ -3034,7 +3626,10 @@
 					  "ss_phy_irq";
 
 			power-domains = <&gcc USB30_PRIM_GDSC>;
+<<<<<<< HEAD
 			required-opps = <&rpmhpd_opp_nom>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 			resets = <&gcc GCC_USB30_PRIM_BCR>;
 
@@ -3051,6 +3646,7 @@
 				reg = <0 0x0a600000 0 0xcd00>;
 				interrupts = <GIC_SPI 803 IRQ_TYPE_LEVEL_HIGH>;
 				iommus = <&apps_smmu 0x820 0x0>;
+<<<<<<< HEAD
 				phys = <&usb_0_hsphy>, <&usb_0_qmpphy QMP_USB43DP_USB3_PHY>;
 				phy-names = "usb2-phy", "usb3-phy";
 
@@ -3058,6 +3654,10 @@
 					usb_0_role_switch: endpoint {
 					};
 				};
+=======
+				phys = <&usb_0_hsphy>, <&usb_0_ssphy>;
+				phy-names = "usb2-phy", "usb3-phy";
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 
@@ -3094,7 +3694,10 @@
 					  "ss_phy_irq";
 
 			power-domains = <&gcc USB30_SEC_GDSC>;
+<<<<<<< HEAD
 			required-opps = <&rpmhpd_opp_nom>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 			resets = <&gcc GCC_USB30_SEC_BCR>;
 
@@ -3111,6 +3714,7 @@
 				reg = <0 0x0a800000 0 0xcd00>;
 				interrupts = <GIC_SPI 810 IRQ_TYPE_LEVEL_HIGH>;
 				iommus = <&apps_smmu 0x860 0x0>;
+<<<<<<< HEAD
 				phys = <&usb_1_hsphy>, <&usb_1_qmpphy QMP_USB43DP_USB3_PHY>;
 				phy-names = "usb2-phy", "usb3-phy";
 
@@ -3602,6 +4206,13 @@
 			status = "disabled";
 		};
 
+=======
+				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
+				phy-names = "usb2-phy", "usb3-phy";
+			};
+		};
+
+>>>>>>> b7ba80a49124 (Commit)
 		pdc: interrupt-controller@b220000 {
 			compatible = "qcom,sc8280xp-pdc", "qcom,pdc";
 			reg = <0 0x0b220000 0 0x30000>, <0 0x17c000f0 0 0x60>;
@@ -3689,7 +4300,11 @@
 			#thermal-sensor-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		aoss_qmp: power-management@c300000 {
+=======
+		aoss_qmp: power-controller@c300000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,sc8280xp-aoss-qmp", "qcom,aoss-qmp";
 			reg = <0 0x0c300000 0 0x400>;
 			interrupts-extended = <&ipcc IPCC_CLIENT_AOP IPCC_MPROC_SIGNAL_GLINK_QMP IRQ_TYPE_EDGE_RISING>;
@@ -3698,11 +4313,14 @@
 			#clock-cells = <0>;
 		};
 
+<<<<<<< HEAD
 		sram@c3f0000 {
 			compatible = "qcom,rpmh-stats";
 			reg = <0 0x0c3f0000 0 0x400>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		spmi_bus: spmi@c440000 {
 			compatible = "qcom,spmi-pmic-arb";
 			reg = <0 0x0c440000 0 0x1100>,
@@ -3715,8 +4333,13 @@
 			interrupts-extended = <&pdc 1 IRQ_TYPE_LEVEL_HIGH>;
 			qcom,ee = <0>;
 			qcom,channel = <0>;
+<<<<<<< HEAD
 			#address-cells = <2>;
 			#size-cells = <0>;
+=======
+			#address-cells = <1>;
+			#size-cells = <1>;
+>>>>>>> b7ba80a49124 (Commit)
 			interrupt-controller;
 			#interrupt-cells = <4>;
 		};
@@ -4033,6 +4656,7 @@
 			};
 		};
 
+<<<<<<< HEAD
 		epss_l3: interconnect@18590000 {
 			compatible = "qcom,sc8280xp-epss-l3", "qcom,epss-l3";
 			reg = <0 0x18590000 0 0x1000>;
@@ -4043,6 +4667,8 @@
 			#interconnect-cells = <1>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		cpufreq_hw: cpufreq@18591000 {
 			compatible = "qcom,sc8280xp-cpufreq-epss", "qcom,cpufreq-epss";
 			reg = <0 0x18591000 0 0x1000>,
@@ -4053,7 +4679,10 @@
 			clock-names = "xo", "alternate";
 
 			#freq-domain-cells = <1>;
+<<<<<<< HEAD
 			#clock-cells = <1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		remoteproc_nsp0: remoteproc@1b300000 {
@@ -4225,6 +4854,7 @@
 				qcom,remote-pid = <12>;
 			};
 		};
+<<<<<<< HEAD
 
 		mdss1: display-subsystem@22000000 {
 			compatible = "qcom,sc8280xp-mdss";
@@ -4697,6 +5327,8 @@
 	};
 
 	sound: sound {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	thermal-zones {

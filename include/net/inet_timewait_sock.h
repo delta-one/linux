@@ -73,6 +73,7 @@ struct inet_timewait_sock {
 	u32			tw_priority;
 	struct timer_list	tw_timer;
 	struct inet_bind_bucket	*tw_tb;
+<<<<<<< HEAD
 	struct inet_bind2_bucket	*tw_tb2;
 	struct hlist_node		tw_bind2_node;
 };
@@ -81,6 +82,11 @@ struct inet_timewait_sock {
 #define twsk_for_each_bound_bhash2(__tw, list) \
 	hlist_for_each_entry(__tw, list, tw_bind2_node)
 
+=======
+};
+#define tw_tclass tw_tos
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct inet_timewait_sock *inet_twsk(const struct sock *sk)
 {
 	return (struct inet_timewait_sock *)sk;

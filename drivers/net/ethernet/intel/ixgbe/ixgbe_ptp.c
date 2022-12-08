@@ -451,11 +451,29 @@ static int ixgbe_ptp_adjfine_82599(struct ptp_clock_info *ptp, long scaled_ppm)
 	struct ixgbe_adapter *adapter =
 		container_of(ptp, struct ixgbe_adapter, ptp_caps);
 	struct ixgbe_hw *hw = &adapter->hw;
+<<<<<<< HEAD
 	u64 incval;
 
 	smp_mb();
 	incval = READ_ONCE(adapter->base_incval);
 	incval = adjust_by_scaled_ppm(incval, scaled_ppm);
+=======
+	u64 incval, diff;
+	int neg_adj = 0;
+
+	if (scaled_ppm < 0) {
+		neg_adj = 1;
+		scaled_ppm = -scaled_ppm;
+	}
+
+	smp_mb();
+	incval = READ_ONCE(adapter->base_incval);
+
+	diff = mul_u64_u64_div_u64(incval, scaled_ppm,
+				   1000000ULL << 16);
+
+	incval = neg_adj ? (incval - diff) : (incval + diff);
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (hw->mac.type) {
 	case ixgbe_mac_X540:
@@ -492,11 +510,25 @@ static int ixgbe_ptp_adjfine_X550(struct ptp_clock_info *ptp, long scaled_ppm)
 	struct ixgbe_adapter *adapter =
 			container_of(ptp, struct ixgbe_adapter, ptp_caps);
 	struct ixgbe_hw *hw = &adapter->hw;
+<<<<<<< HEAD
 	bool neg_adj;
 	u64 rate;
 	u32 inca;
 
 	neg_adj = diff_by_scaled_ppm(IXGBE_X550_BASE_PERIOD, scaled_ppm, &rate);
+=======
+	int neg_adj = 0;
+	u64 rate;
+	u32 inca;
+
+	if (scaled_ppm < 0) {
+		neg_adj = 1;
+		scaled_ppm = -scaled_ppm;
+	}
+
+	rate = mul_u64_u64_div_u64(IXGBE_X550_BASE_PERIOD, scaled_ppm,
+				   1000000ULL << 16);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* warn if rate is too large */
 	if (rate >= INCVALUE_MASK)
@@ -1302,7 +1334,11 @@ static void ixgbe_ptp_init_systime(struct ixgbe_adapter *adapter)
 	default:
 		/* Other devices aren't supported */
 		return;
+<<<<<<< HEAD
 	}
+=======
+	};
+>>>>>>> b7ba80a49124 (Commit)
 
 	IXGBE_WRITE_FLUSH(hw);
 }

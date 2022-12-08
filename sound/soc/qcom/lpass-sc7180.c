@@ -12,7 +12,10 @@
 #include <linux/module.h>
 #include <linux/of.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/pm_runtime.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <dt-bindings/sound/sc7180-lpass.h>
 #include <sound/pcm.h>
 #include <sound/soc.h>
@@ -132,9 +135,12 @@ static int sc7180_lpass_init(struct platform_device *pdev)
 
 	drvdata->clks = devm_kcalloc(dev, variant->num_clks,
 				     sizeof(*drvdata->clks), GFP_KERNEL);
+<<<<<<< HEAD
 	if (!drvdata->clks)
 		return -ENOMEM;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	drvdata->num_clks = variant->num_clks;
 
 	for (i = 0; i < drvdata->num_clks; i++)
@@ -160,6 +166,7 @@ static int sc7180_lpass_exit(struct platform_device *pdev)
 	struct lpass_data *drvdata = platform_get_drvdata(pdev);
 
 	clk_bulk_disable_unprepare(drvdata->num_clks, drvdata->clks);
+<<<<<<< HEAD
 	return 0;
 }
 
@@ -182,6 +189,12 @@ static const struct dev_pm_ops sc7180_lpass_pm_ops = {
 	SET_SYSTEM_SLEEP_PM_OPS(sc7180_lpass_dev_suspend, sc7180_lpass_dev_resume)
 };
 
+=======
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct lpass_variant sc7180_data = {
 	.i2sctrl_reg_base	= 0x1000,
 	.i2sctrl_reg_stride	= 0x1000,
@@ -315,7 +328,10 @@ static struct platform_driver sc7180_lpass_cpu_platform_driver = {
 	.driver = {
 		.name = "sc7180-lpass-cpu",
 		.of_match_table = of_match_ptr(sc7180_lpass_cpu_device_id),
+<<<<<<< HEAD
 		.pm = &sc7180_lpass_pm_ops,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = asoc_qcom_lpass_cpu_platform_probe,
 	.remove = asoc_qcom_lpass_cpu_platform_remove,

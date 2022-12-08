@@ -62,7 +62,11 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinmux_default>;
 
+<<<<<<< HEAD
 		pinmux_default: pinmux {
+=======
+		pinmux_default: pinmux@0 {
+>>>>>>> b7ba80a49124 (Commit)
 			dap_mclk1_pw4 {
 				nvidia,pins = "dap_mclk1_pw4";
 				nvidia,function = "extperiph1";
@@ -1030,6 +1034,7 @@
 	gpio-keys {
 		compatible = "gpio-keys";
 
+<<<<<<< HEAD
 		key-power {
 			label = "Power";
 			gpios = <&gpio TEGRA_GPIO(Q, 0) GPIO_ACTIVE_LOW>;
@@ -1038,6 +1043,8 @@
 			wakeup-source;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		switch-lid {
 			label = "Lid";
 			gpios = <&gpio TEGRA_GPIO(R, 4) GPIO_ACTIVE_LOW>;
@@ -1046,6 +1053,17 @@
 			debounce-interval = <1>;
 			wakeup-source;
 		};
+<<<<<<< HEAD
+=======
+
+		key-power {
+			label = "Power";
+			gpios = <&gpio TEGRA_GPIO(Q, 0) GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_POWER>;
+			debounce-interval = <10>;
+			wakeup-source;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	panel: panel {

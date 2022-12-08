@@ -285,4 +285,8 @@ module_platform_driver(tegra_ahb_driver);
 
 MODULE_AUTHOR("Hiroshi DOYU <hdoyu@nvidia.com>");
 MODULE_DESCRIPTION("Tegra AHB driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_ALIAS("platform:" DRV_NAME);

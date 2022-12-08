@@ -164,6 +164,10 @@ MODULE_DEVICE_TABLE(of, rockchp_mbox_of_match);
 static int rockchip_mbox_probe(struct platform_device *pdev)
 {
 	struct rockchip_mbox *mb;
+<<<<<<< HEAD
+=======
+	const struct of_device_id *match;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct rockchip_mbox_data *drv_data;
 	struct resource *res;
 	int ret, irq, i;
@@ -171,7 +175,12 @@ static int rockchip_mbox_probe(struct platform_device *pdev)
 	if (!pdev->dev.of_node)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	drv_data = (const struct rockchip_mbox_data *) device_get_match_data(&pdev->dev);
+=======
+	match = of_match_node(rockchip_mbox_of_match, pdev->dev.of_node);
+	drv_data = (const struct rockchip_mbox_data *)match->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mb = devm_kzalloc(&pdev->dev, sizeof(*mb), GFP_KERNEL);
 	if (!mb)
@@ -254,6 +263,10 @@ static struct platform_driver rockchip_mbox_driver = {
 
 module_platform_driver(rockchip_mbox_driver);
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_DESCRIPTION("Rockchip mailbox: communicate between CPU cores and MCU");
 MODULE_AUTHOR("Addy Ke <addy.ke@rock-chips.com>");
 MODULE_AUTHOR("Caesar Wang <wxt@rock-chips.com>");

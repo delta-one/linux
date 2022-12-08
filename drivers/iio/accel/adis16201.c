@@ -281,7 +281,11 @@ static int adis16201_probe(struct spi_device *spi)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = __adis_initial_startup(st);
+=======
+	ret = adis_initial_startup(st);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 

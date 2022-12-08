@@ -4,13 +4,21 @@
 $id: http://devicetree.org/schemas/nvmem/ingenic,jz4780-efuse.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Ingenic JZ EFUSE driver
+=======
+title: Ingenic JZ EFUSE driver bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: nvmem.yaml#
+=======
+  - $ref: "nvmem.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

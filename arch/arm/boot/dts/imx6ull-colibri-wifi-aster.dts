@@ -15,6 +15,7 @@
 		     "fsl,imx6ull";
 };
 
+<<<<<<< HEAD
 &ad7879_ts {
 	status = "okay";
 };
@@ -58,3 +59,8 @@
 	/* Pin already used by atmel_mxt_ts touchscreen */
 	status = "disabled";
 };
+=======
+&atmel_mxt_ts {
+	status = "okay";
+};
+>>>>>>> b7ba80a49124 (Commit)

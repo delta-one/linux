@@ -17,9 +17,13 @@ state::
 	rcu_read_lock_held() for normal RCU.
 	rcu_read_lock_bh_held() for RCU-bh.
 	rcu_read_lock_sched_held() for RCU-sched.
+<<<<<<< HEAD
 	rcu_read_lock_any_held() for any of normal RCU, RCU-bh, and RCU-sched.
 	srcu_read_lock_held() for SRCU.
 	rcu_read_lock_trace_held() for RCU Tasks Trace.
+=======
+	srcu_read_lock_held() for SRCU.
+>>>>>>> b7ba80a49124 (Commit)
 
 These functions are conservative, and will therefore return 1 if they
 aren't certain (for example, if CONFIG_DEBUG_LOCK_ALLOC is not set).
@@ -55,8 +59,11 @@ checking of rcu_dereference() primitives:
 		is invoked by both SRCU readers and updaters.
 	rcu_dereference_raw(p):
 		Don't check.  (Use sparingly, if at all.)
+<<<<<<< HEAD
 	rcu_dereference_raw_check(p):
 		Don't do lockdep at all.  (Use sparingly, if at all.)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_dereference_protected(p, c):
 		Use explicit check expression "c", and omit all barriers
 		and compiler constraints.  This is useful when the data
@@ -65,12 +72,22 @@ checking of rcu_dereference() primitives:
 	rcu_access_pointer(p):
 		Return the value of the pointer and omit all barriers,
 		but retain the compiler constraints that prevent duplicating
+<<<<<<< HEAD
 		or coalescing.  This is useful when testing the
 		value of the pointer itself, for example, against NULL.
 
 The rcu_dereference_check() check expression can be any boolean
 expression, but would normally include a lockdep expression.  For a
 moderately ornate example, consider the following::
+=======
+		or coalescsing.  This is useful when testing the
+		value of the pointer itself, for example, against NULL.
+
+The rcu_dereference_check() check expression can be any boolean
+expression, but would normally include a lockdep expression.  However,
+any boolean expression can be used.  For a moderately ornate example,
+consider the following::
+>>>>>>> b7ba80a49124 (Commit)
 
 	file = rcu_dereference_check(fdt->fd[fd],
 				     lockdep_is_held(&files->file_lock) ||
@@ -96,10 +113,17 @@ code, it could instead be written as follows::
 					 atomic_read(&files->count) == 1);
 
 This would verify cases #2 and #3 above, and furthermore lockdep would
+<<<<<<< HEAD
 complain even if this was used in an RCU read-side critical section unless
 one of these two cases held.  Because rcu_dereference_protected() omits
 all barriers and compiler constraints, it generates better code than do
 the other flavors of rcu_dereference().  On the other hand, it is illegal
+=======
+complain if this was used in an RCU read-side critical section unless one
+of these two cases held.  Because rcu_dereference_protected() omits all
+barriers and compiler constraints, it generates better code than do the
+other flavors of rcu_dereference().  On the other hand, it is illegal
+>>>>>>> b7ba80a49124 (Commit)
 to use rcu_dereference_protected() if either the RCU-protected pointer
 or the RCU-protected data that it points to can change concurrently.
 

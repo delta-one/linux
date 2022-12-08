@@ -833,7 +833,11 @@ static int alloc_wbufs(struct ubifs_info *c)
 		INIT_LIST_HEAD(&c->jheads[i].buds_list);
 		err = ubifs_wbuf_init(c, &c->jheads[i].wbuf);
 		if (err)
+<<<<<<< HEAD
 			goto out_wbuf;
+=======
+			return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 		c->jheads[i].wbuf.sync_callback = &bud_wbuf_callback;
 		c->jheads[i].wbuf.jhead = i;
@@ -841,7 +845,11 @@ static int alloc_wbufs(struct ubifs_info *c)
 		c->jheads[i].log_hash = ubifs_hash_get_desc(c);
 		if (IS_ERR(c->jheads[i].log_hash)) {
 			err = PTR_ERR(c->jheads[i].log_hash);
+<<<<<<< HEAD
 			goto out_log_hash;
+=======
+			goto out;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -854,6 +862,7 @@ static int alloc_wbufs(struct ubifs_info *c)
 
 	return 0;
 
+<<<<<<< HEAD
 out_log_hash:
 	kfree(c->jheads[i].wbuf.buf);
 	kfree(c->jheads[i].wbuf.inodes);
@@ -866,6 +875,11 @@ out_wbuf:
 	}
 	kfree(c->jheads);
 	c->jheads = NULL;
+=======
+out:
+	while (i--)
+		kfree(c->jheads[i].log_hash);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return err;
 }

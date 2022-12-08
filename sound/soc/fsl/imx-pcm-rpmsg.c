@@ -140,6 +140,10 @@ static int imx_rpmsg_pcm_hw_params(struct snd_soc_component *component,
 {
 	struct rpmsg_info *info = dev_get_drvdata(component->dev);
 	struct rpmsg_msg *msg;
+<<<<<<< HEAD
+=======
+	int ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
 		msg = &info->msg[TX_HW_PARAM];
@@ -177,13 +181,21 @@ static int imx_rpmsg_pcm_hw_params(struct snd_soc_component *component,
 		msg->s_msg.param.channels = RPMSG_CH_STEREO;
 		break;
 	default:
+<<<<<<< HEAD
 		msg->s_msg.param.channels = params_channels(params);
+=======
+		ret = -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
 	info->send_message(msg, info);
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static snd_pcm_uframes_t imx_rpmsg_pcm_pointer(struct snd_soc_component *component,
@@ -281,6 +293,10 @@ static int imx_rpmsg_pcm_close(struct snd_soc_component *component,
 	struct snd_soc_pcm_runtime *rtd = asoc_substream_to_rtd(substream);
 	struct rpmsg_info *info = dev_get_drvdata(component->dev);
 	struct rpmsg_msg *msg;
+<<<<<<< HEAD
+=======
+	int ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Flush work in workqueue to make TX_CLOSE is the last message */
 	flush_workqueue(info->rpmsg_wq);
@@ -303,7 +319,11 @@ static int imx_rpmsg_pcm_close(struct snd_soc_component *component,
 		dev_warn(rtd->dev, "Msg is dropped!, number is %d\n",
 			 info->msg_drop_count[substream->stream]);
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int imx_rpmsg_pcm_prepare(struct snd_soc_component *component,
@@ -682,7 +702,11 @@ static int imx_rpmsg_pcm_probe(struct platform_device *pdev)
 	info->rpdev = container_of(pdev->dev.parent, struct rpmsg_device, dev);
 	info->dev = &pdev->dev;
 	/* Setup work queue */
+<<<<<<< HEAD
 	info->rpmsg_wq = alloc_ordered_workqueue(info->rpdev->id.name,
+=======
+	info->rpmsg_wq = alloc_ordered_workqueue("rpmsg_audio",
+>>>>>>> b7ba80a49124 (Commit)
 						 WQ_HIGHPRI |
 						 WQ_UNBOUND |
 						 WQ_FREEZABLE);
@@ -721,15 +745,22 @@ static int imx_rpmsg_pcm_probe(struct platform_device *pdev)
 	if (ret)
 		goto fail;
 
+<<<<<<< HEAD
 	component = snd_soc_lookup_component(&pdev->dev, NULL);
+=======
+	component = snd_soc_lookup_component(&pdev->dev, IMX_PCM_DRV_NAME);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!component) {
 		ret = -EINVAL;
 		goto fail;
 	}
+<<<<<<< HEAD
 
 	/* platform component name is used by machine driver to link with */
 	component->name = info->rpdev->id.name;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_DEBUG_FS
 	component->debugfs_prefix = "rpmsg";
 #endif
@@ -743,12 +774,21 @@ fail:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void imx_rpmsg_pcm_remove(struct platform_device *pdev)
+=======
+static int imx_rpmsg_pcm_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rpmsg_info *info = platform_get_drvdata(pdev);
 
 	if (info->rpmsg_wq)
 		destroy_workqueue(info->rpmsg_wq);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM
@@ -819,7 +859,11 @@ static const struct dev_pm_ops imx_rpmsg_pcm_pm_ops = {
 
 static struct platform_driver imx_pcm_rpmsg_driver = {
 	.probe  = imx_rpmsg_pcm_probe,
+<<<<<<< HEAD
 	.remove_new = imx_rpmsg_pcm_remove,
+=======
+	.remove	= imx_rpmsg_pcm_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = IMX_PCM_DRV_NAME,
 		.pm = &imx_rpmsg_pcm_pm_ops,

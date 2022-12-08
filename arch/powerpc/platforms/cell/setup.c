@@ -265,6 +265,10 @@ define_machine(cell) {
 	.get_boot_time		= rtas_get_boot_time,
 	.get_rtc_time		= rtas_get_rtc_time,
 	.set_rtc_time		= rtas_set_rtc_time,
+<<<<<<< HEAD
+=======
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.progress		= cell_progress,
 	.init_IRQ       	= cell_init_irq,
 	.pci_setup_phb		= cell_setup_phb,

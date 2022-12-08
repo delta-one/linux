@@ -29,7 +29,12 @@ static const struct regmap_irq rt5033_irqs[] = {
 static const struct regmap_irq_chip rt5033_irq_chip = {
 	.name		= "rt5033",
 	.status_base	= RT5033_REG_PMIC_IRQ_STAT,
+<<<<<<< HEAD
 	.unmask_base	= RT5033_REG_PMIC_IRQ_CTRL,
+=======
+	.mask_base	= RT5033_REG_PMIC_IRQ_CTRL,
+	.mask_invert	= true,
+>>>>>>> b7ba80a49124 (Commit)
 	.num_regs	= 1,
 	.irqs		= rt5033_irqs,
 	.num_irqs	= ARRAY_SIZE(rt5033_irqs),
@@ -55,7 +60,12 @@ static const struct regmap_config rt5033_regmap_config = {
 	.max_register	= RT5033_REG_END,
 };
 
+<<<<<<< HEAD
 static int rt5033_i2c_probe(struct i2c_client *i2c)
+=======
+static int rt5033_i2c_probe(struct i2c_client *i2c,
+				const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rt5033_dev *rt5033;
 	unsigned int dev_id;
@@ -122,7 +132,11 @@ static struct i2c_driver rt5033_driver = {
 		.name = "rt5033",
 		.of_match_table = rt5033_dt_match,
 	},
+<<<<<<< HEAD
 	.probe_new = rt5033_i2c_probe,
+=======
+	.probe = rt5033_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = rt5033_i2c_id,
 };
 module_i2c_driver(rt5033_driver);

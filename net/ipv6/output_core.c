@@ -15,7 +15,17 @@ static u32 __ipv6_select_ident(struct net *net,
 			       const struct in6_addr *dst,
 			       const struct in6_addr *src)
 {
+<<<<<<< HEAD
 	return get_random_u32_above(0);
+=======
+	u32 id;
+
+	do {
+		id = prandom_u32();
+	} while (!id);
+
+	return id;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* This function exists only for tap drivers that must support broken

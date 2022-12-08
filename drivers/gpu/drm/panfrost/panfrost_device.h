@@ -7,7 +7,10 @@
 
 #include <linux/atomic.h>
 #include <linux/io-pgtable.h>
+<<<<<<< HEAD
 #include <linux/pm.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regulator/consumer.h>
 #include <linux/spinlock.h>
 #include <drm/drm_device.h>
@@ -23,7 +26,11 @@ struct panfrost_job;
 struct panfrost_perfcnt;
 
 #define NUM_JOB_SLOTS 3
+<<<<<<< HEAD
 #define MAX_PM_DOMAINS 5
+=======
+#define MAX_PM_DOMAINS 3
+>>>>>>> b7ba80a49124 (Commit)
 
 struct panfrost_features {
 	u16 id;
@@ -173,7 +180,12 @@ int panfrost_device_init(struct panfrost_device *pfdev);
 void panfrost_device_fini(struct panfrost_device *pfdev);
 void panfrost_device_reset(struct panfrost_device *pfdev);
 
+<<<<<<< HEAD
 extern const struct dev_pm_ops panfrost_pm_ops;
+=======
+int panfrost_device_resume(struct device *dev);
+int panfrost_device_suspend(struct device *dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 enum drm_panfrost_exception_type {
 	DRM_PANFROST_EXCEPTION_OK = 0x00,

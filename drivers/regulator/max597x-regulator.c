@@ -193,7 +193,11 @@ static int max597x_get_status(struct regulator_dev *rdev)
 
 	ret = regmap_read(rdev->regmap, MAX5970_REG_STATUS3, &val);
 	if (ret)
+<<<<<<< HEAD
 		return ret;
+=======
+		return REGULATOR_FAILED_RETRY;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (val & MAX5970_STATUS3_ALERT)
 		return REGULATOR_STATUS_ERROR;
@@ -357,6 +361,15 @@ static int max597x_irq_handler(int irq, struct regulator_irq_data *rid,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static const struct regmap_config max597x_regmap_config = {
+	.reg_bits = 8,
+	.val_bits = 8,
+	.max_register = MAX_REGISTERS,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static int max597x_adc_range(struct regmap *regmap, const int ch,
 			     u32 *irng, u32 *mon_rng)
 {
@@ -425,6 +438,7 @@ static int max597x_setup_irq(struct device *dev,
 
 static int max597x_regulator_probe(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	struct max597x_data *max597x;
 	struct regmap *regmap = dev_get_regmap(pdev->dev.parent, NULL);
 	struct max597x_regulator *data;
@@ -457,20 +471,43 @@ static int max597x_regulator_probe(struct platform_device *pdev)
 	for (i = 0; i < num_switches; i++) {
 		data =
 		    devm_kzalloc(&i2c->dev, sizeof(struct max597x_regulator),
+=======
+
+
+	struct max597x_data *max597x = dev_get_drvdata(pdev->dev.parent);
+	struct max597x_regulator *data;
+
+	struct regulator_config config = { };
+	struct regulator_dev *rdev;
+	struct regulator_dev *rdevs[MAX5970_NUM_SWITCHES];
+	int num_switches = max597x->num_switches;
+	int ret, i;
+
+	for (i = 0; i < num_switches; i++) {
+		data =
+		    devm_kzalloc(max597x->dev, sizeof(struct max597x_regulator),
+>>>>>>> b7ba80a49124 (Commit)
 				 GFP_KERNEL);
 		if (!data)
 			return -ENOMEM;
 
 		data->num_switches = num_switches;
+<<<<<<< HEAD
 		data->regmap = regmap;
 
 		ret = max597x_adc_range(regmap, i, &max597x->irng[i], &max597x->mon_rng[i]);
+=======
+		data->regmap = max597x->regmap;
+
+		ret = max597x_adc_range(data->regmap, i, &max597x->irng[i], &max597x->mon_rng[i]);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret < 0)
 			return ret;
 
 		data->irng = max597x->irng[i];
 		data->mon_rng = max597x->mon_rng[i];
 
+<<<<<<< HEAD
 		config.dev = &i2c->dev;
 		config.driver_data = (void *)data;
 		config.regmap = data->regmap;
@@ -478,6 +515,15 @@ static int max597x_regulator_probe(struct platform_device *pdev)
 					       &regulators[i], &config);
 		if (IS_ERR(rdev)) {
 			dev_err(&i2c->dev, "failed to register regulator %s\n",
+=======
+		config.dev = max597x->dev;
+		config.driver_data = (void *)data;
+		config.regmap = data->regmap;
+		rdev = devm_regulator_register(max597x->dev,
+					       &regulators[i], &config);
+		if (IS_ERR(rdev)) {
+			dev_err(max597x->dev, "failed to register regulator %s\n",
+>>>>>>> b7ba80a49124 (Commit)
 				regulators[i].name);
 			return PTR_ERR(rdev);
 		}
@@ -485,12 +531,21 @@ static int max597x_regulator_probe(struct platform_device *pdev)
 		max597x->shunt_micro_ohms[i] = data->shunt_micro_ohms;
 	}
 
+<<<<<<< HEAD
 	if (i2c->irq) {
 		ret =
 		    max597x_setup_irq(&i2c->dev, i2c->irq, rdevs, num_switches,
 				      data);
 		if (ret) {
 			dev_err(&i2c->dev, "IRQ setup failed");
+=======
+	if (max597x->irq) {
+		ret =
+		    max597x_setup_irq(max597x->dev, max597x->irq, rdevs, num_switches,
+				      data);
+		if (ret) {
+			dev_err(max597x->dev, "IRQ setup failed");
+>>>>>>> b7ba80a49124 (Commit)
 			return ret;
 		}
 	}
@@ -501,7 +556,10 @@ static int max597x_regulator_probe(struct platform_device *pdev)
 static struct platform_driver max597x_regulator_driver = {
 	.driver = {
 		.name = "max597x-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = max597x_regulator_probe,
 };

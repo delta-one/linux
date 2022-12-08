@@ -4,18 +4,27 @@
  */
 #include <linux/platform_device.h>
 #include <linux/init.h>
+<<<<<<< HEAD
 #include <linux/interrupt.h>
 #include <linux/completion.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/cpumask.h>
 #include <linux/export.h>
 #include <linux/dma-mapping.h>
 #include <linux/interconnect.h>
 #include <linux/module.h>
 #include <linux/types.h>
+<<<<<<< HEAD
 #include <linux/firmware/qcom/qcom_scm.h>
 #include <linux/of.h>
 #include <linux/of_address.h>
 #include <linux/of_irq.h>
+=======
+#include <linux/qcom_scm.h>
+#include <linux/of.h>
+#include <linux/of_address.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/of_platform.h>
 #include <linux/clk.h>
 #include <linux/reset-controller.h>
@@ -36,7 +45,10 @@ struct qcom_scm {
 	struct clk *iface_clk;
 	struct clk *bus_clk;
 	struct icc_path *path;
+<<<<<<< HEAD
 	struct completion waitq_comp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct reset_controller_dev reset;
 
 	/* control access to the interconnect path */
@@ -67,9 +79,12 @@ static const u8 qcom_scm_cpu_warm_bits[QCOM_SCM_BOOT_MAX_CPUS] = {
 	BIT(2), BIT(1), BIT(4), BIT(6)
 };
 
+<<<<<<< HEAD
 #define QCOM_SMC_WAITQ_FLAG_WAKE_ONE	BIT(0)
 #define QCOM_SMC_WAITQ_FLAG_WAKE_ALL	BIT(1)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const char * const qcom_scm_convention_names[] = {
 	[SMC_CONVENTION_UNKNOWN] = "unknown",
 	[SMC_CONVENTION_ARM_32] = "smc arm 32",
@@ -905,7 +920,11 @@ static int __qcom_scm_assign_mem(struct device *dev, phys_addr_t mem_region,
  * Return negative errno on failure or 0 on success with @srcvm updated.
  */
 int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+<<<<<<< HEAD
 			u64 *srcvm,
+=======
+			unsigned int *srcvm,
+>>>>>>> b7ba80a49124 (Commit)
 			const struct qcom_scm_vmperm *newvm,
 			unsigned int dest_cnt)
 {
@@ -922,9 +941,15 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
 	__le32 *src;
 	void *ptr;
 	int ret, i, b;
+<<<<<<< HEAD
 	u64 srcvm_bits = *srcvm;
 
 	src_sz = hweight64(srcvm_bits) * sizeof(*src);
+=======
+	unsigned long srcvm_bits = *srcvm;
+
+	src_sz = hweight_long(srcvm_bits) * sizeof(*src);
+>>>>>>> b7ba80a49124 (Commit)
 	mem_to_map_sz = sizeof(*mem_to_map);
 	dest_sz = dest_cnt * sizeof(*destvm);
 	ptr_sz = ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
@@ -937,10 +962,15 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
 	/* Fill source vmid detail */
 	src = ptr;
 	i = 0;
+<<<<<<< HEAD
 	for (b = 0; b < BITS_PER_TYPE(u64); b++) {
 		if (srcvm_bits & BIT(b))
 			src[i++] = cpu_to_le32(b);
 	}
+=======
+	for_each_set_bit(b, &srcvm_bits, BITS_PER_LONG)
+		src[i++] = cpu_to_le32(b);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Fill details of mem buff to map */
 	mem_to_map = ptr + ALIGN(src_sz, SZ_64);
@@ -1334,6 +1364,7 @@ bool qcom_scm_is_available(void)
 }
 EXPORT_SYMBOL(qcom_scm_is_available);
 
+<<<<<<< HEAD
 static int qcom_scm_assert_valid_wq_ctx(u32 wq_ctx)
 {
 	/* FW currently only supports a single wq_ctx (zero).
@@ -1402,11 +1433,17 @@ out:
 	return IRQ_HANDLED;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int qcom_scm_probe(struct platform_device *pdev)
 {
 	struct qcom_scm *scm;
 	unsigned long clks;
+<<<<<<< HEAD
 	int irq, ret;
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	scm = devm_kzalloc(&pdev->dev, sizeof(*scm), GFP_KERNEL);
 	if (!scm)
@@ -1479,6 +1516,7 @@ static int qcom_scm_probe(struct platform_device *pdev)
 	__scm = scm;
 	__scm->dev = &pdev->dev;
 
+<<<<<<< HEAD
 	init_completion(&__scm->waitq_comp);
 
 	irq = platform_get_irq_optional(pdev, 0);
@@ -1492,6 +1530,8 @@ static int qcom_scm_probe(struct platform_device *pdev)
 			return dev_err_probe(scm->dev, ret, "Failed to request qcom-scm irq\n");
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__get_convention();
 
 	/*
@@ -1508,7 +1548,12 @@ static int qcom_scm_probe(struct platform_device *pdev)
 static void qcom_scm_shutdown(struct platform_device *pdev)
 {
 	/* Clean shutdown, disable download mode to allow normal restart */
+<<<<<<< HEAD
 	qcom_scm_set_download_mode(false);
+=======
+	if (download_mode)
+		qcom_scm_set_download_mode(false);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id qcom_scm_dt_match[] = {
@@ -1543,7 +1588,10 @@ static const struct of_device_id qcom_scm_dt_match[] = {
 	},
 	{ .compatible = "qcom,scm-msm8994" },
 	{ .compatible = "qcom,scm-msm8996" },
+<<<<<<< HEAD
 	{ .compatible = "qcom,scm-sm6375", .data = (void *)SCM_HAS_CORE_CLK },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "qcom,scm" },
 	{}
 };

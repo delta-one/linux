@@ -50,6 +50,12 @@ struct thread_struct {
 	unsigned long kpsr;
 };
 
+<<<<<<< HEAD
+=======
+#define INIT_MMAP \
+	{ &init_mm, (0), (0), __pgprot(0x0), VM_READ | VM_WRITE | VM_EXEC }
+
+>>>>>>> b7ba80a49124 (Commit)
 # define INIT_THREAD {			\
 	.kregs	= NULL,			\
 	.ksp	= 0,			\

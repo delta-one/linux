@@ -579,7 +579,11 @@ static void list_filters(const char *dirname)
 		if (!get_filter_desc(dirname, entry->d_name, &desc, &long_desc))
 			continue;
 		printf("  %-36s %s\n", entry->d_name, desc ? desc : "");
+<<<<<<< HEAD
 		if (verbose > 0) {
+=======
+		if (verbose) {
+>>>>>>> b7ba80a49124 (Commit)
 			char *p = long_desc;
 			char *line;
 

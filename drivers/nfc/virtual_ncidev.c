@@ -13,6 +13,15 @@
 #include <linux/wait.h>
 #include <net/nfc/nci_core.h>
 
+<<<<<<< HEAD
+=======
+enum virtual_ncidev_mode {
+	virtual_ncidev_enabled,
+	virtual_ncidev_disabled,
+	virtual_ncidev_disabling,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 #define IOCTL_GET_NCIDEV_IDX    0
 #define VIRTUAL_NFC_PROTOCOLS	(NFC_PROTO_JEWEL_MASK | \
 				 NFC_PROTO_MIFARE_MASK | \
@@ -21,12 +30,21 @@
 				 NFC_PROTO_ISO14443_B_MASK | \
 				 NFC_PROTO_ISO15693_MASK)
 
+<<<<<<< HEAD
 struct virtual_nci_dev {
 	struct nci_dev *ndev;
 	struct mutex mtx;
 	struct sk_buff *send_buff;
 	struct wait_queue_head wq;
 };
+=======
+static enum virtual_ncidev_mode state;
+static DECLARE_WAIT_QUEUE_HEAD(wq);
+static struct miscdevice miscdev;
+static struct sk_buff *send_buff;
+static struct nci_dev *ndev;
+static DEFINE_MUTEX(nci_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 static int virtual_nci_open(struct nci_dev *ndev)
 {
@@ -35,18 +53,26 @@ static int virtual_nci_open(struct nci_dev *ndev)
 
 static int virtual_nci_close(struct nci_dev *ndev)
 {
+<<<<<<< HEAD
 	struct virtual_nci_dev *vdev = nci_get_drvdata(ndev);
 
 	mutex_lock(&vdev->mtx);
 	kfree_skb(vdev->send_buff);
 	vdev->send_buff = NULL;
 	mutex_unlock(&vdev->mtx);
+=======
+	mutex_lock(&nci_mutex);
+	kfree_skb(send_buff);
+	send_buff = NULL;
+	mutex_unlock(&nci_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 static int virtual_nci_send(struct nci_dev *ndev, struct sk_buff *skb)
 {
+<<<<<<< HEAD
 	struct virtual_nci_dev *vdev = nci_get_drvdata(ndev);
 
 	mutex_lock(&vdev->mtx);
@@ -64,6 +90,21 @@ static int virtual_nci_send(struct nci_dev *ndev, struct sk_buff *skb)
 	mutex_unlock(&vdev->mtx);
 	wake_up_interruptible(&vdev->wq);
 	consume_skb(skb);
+=======
+	mutex_lock(&nci_mutex);
+	if (state != virtual_ncidev_enabled) {
+		mutex_unlock(&nci_mutex);
+		return 0;
+	}
+
+	if (send_buff) {
+		mutex_unlock(&nci_mutex);
+		return -1;
+	}
+	send_buff = skb_copy(skb, GFP_KERNEL);
+	mutex_unlock(&nci_mutex);
+	wake_up_interruptible(&wq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -77,6 +118,7 @@ static const struct nci_ops virtual_nci_ops = {
 static ssize_t virtual_ncidev_read(struct file *file, char __user *buf,
 				   size_t count, loff_t *ppos)
 {
+<<<<<<< HEAD
 	struct virtual_nci_dev *vdev = file->private_data;
 	size_t actual_len;
 
@@ -101,6 +143,31 @@ static ssize_t virtual_ncidev_read(struct file *file, char __user *buf,
 		vdev->send_buff = NULL;
 	}
 	mutex_unlock(&vdev->mtx);
+=======
+	size_t actual_len;
+
+	mutex_lock(&nci_mutex);
+	while (!send_buff) {
+		mutex_unlock(&nci_mutex);
+		if (wait_event_interruptible(wq, send_buff))
+			return -EFAULT;
+		mutex_lock(&nci_mutex);
+	}
+
+	actual_len = min_t(size_t, count, send_buff->len);
+
+	if (copy_to_user(buf, send_buff->data, actual_len)) {
+		mutex_unlock(&nci_mutex);
+		return -EFAULT;
+	}
+
+	skb_pull(send_buff, actual_len);
+	if (send_buff->len == 0) {
+		consume_skb(send_buff);
+		send_buff = NULL;
+	}
+	mutex_unlock(&nci_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return actual_len;
 }
@@ -109,7 +176,10 @@ static ssize_t virtual_ncidev_write(struct file *file,
 				    const char __user *buf,
 				    size_t count, loff_t *ppos)
 {
+<<<<<<< HEAD
 	struct virtual_nci_dev *vdev = file->private_data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct sk_buff *skb;
 
 	skb = alloc_skb(count, GFP_KERNEL);
@@ -121,13 +191,18 @@ static ssize_t virtual_ncidev_write(struct file *file,
 		return -EFAULT;
 	}
 
+<<<<<<< HEAD
 	nci_recv_frame(vdev->ndev, skb);
+=======
+	nci_recv_frame(ndev, skb);
+>>>>>>> b7ba80a49124 (Commit)
 	return count;
 }
 
 static int virtual_ncidev_open(struct inode *inode, struct file *file)
 {
 	int ret = 0;
+<<<<<<< HEAD
 	struct virtual_nci_dev *vdev;
 
 	vdev = kzalloc(sizeof(*vdev), GFP_KERNEL);
@@ -152,27 +227,75 @@ static int virtual_ncidev_open(struct inode *inode, struct file *file)
 		kfree(vdev);
 		return ret;
 	}
+=======
+
+	mutex_lock(&nci_mutex);
+	if (state != virtual_ncidev_disabled) {
+		mutex_unlock(&nci_mutex);
+		return -EBUSY;
+	}
+
+	ndev = nci_allocate_device(&virtual_nci_ops, VIRTUAL_NFC_PROTOCOLS,
+				   0, 0);
+	if (!ndev) {
+		mutex_unlock(&nci_mutex);
+		return -ENOMEM;
+	}
+
+	ret = nci_register_device(ndev);
+	if (ret < 0) {
+		nci_free_device(ndev);
+		mutex_unlock(&nci_mutex);
+		return ret;
+	}
+	state = virtual_ncidev_enabled;
+	mutex_unlock(&nci_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 static int virtual_ncidev_close(struct inode *inode, struct file *file)
 {
+<<<<<<< HEAD
 	struct virtual_nci_dev *vdev = file->private_data;
 
 	nci_unregister_device(vdev->ndev);
 	nci_free_device(vdev->ndev);
 	mutex_destroy(&vdev->mtx);
 	kfree(vdev);
+=======
+	mutex_lock(&nci_mutex);
+
+	if (state == virtual_ncidev_enabled) {
+		state = virtual_ncidev_disabling;
+		mutex_unlock(&nci_mutex);
+
+		nci_unregister_device(ndev);
+		nci_free_device(ndev);
+
+		mutex_lock(&nci_mutex);
+	}
+
+	state = virtual_ncidev_disabled;
+	mutex_unlock(&nci_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static long virtual_ncidev_ioctl(struct file *file, unsigned int cmd,
 				 unsigned long arg)
 {
 	struct virtual_nci_dev *vdev = file->private_data;
 	const struct nfc_dev *nfc_dev = vdev->ndev->nfc_dev;
+=======
+static long virtual_ncidev_ioctl(struct file *flip, unsigned int cmd,
+				 unsigned long arg)
+{
+	const struct nfc_dev *nfc_dev = ndev->nfc_dev;
+>>>>>>> b7ba80a49124 (Commit)
 	void __user *p = (void __user *)arg;
 
 	if (cmd != IOCTL_GET_NCIDEV_IDX)
@@ -193,6 +316,7 @@ static const struct file_operations virtual_ncidev_fops = {
 	.unlocked_ioctl = virtual_ncidev_ioctl
 };
 
+<<<<<<< HEAD
 static struct miscdevice miscdev = {
 	.minor = MISC_DYNAMIC_MINOR,
 	.name = "virtual_nci",
@@ -202,6 +326,16 @@ static struct miscdevice miscdev = {
 
 static int __init virtual_ncidev_init(void)
 {
+=======
+static int __init virtual_ncidev_init(void)
+{
+	state = virtual_ncidev_disabled;
+	miscdev.minor = MISC_DYNAMIC_MINOR;
+	miscdev.name = "virtual_nci";
+	miscdev.fops = &virtual_ncidev_fops;
+	miscdev.mode = 0600;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return misc_register(&miscdev);
 }
 

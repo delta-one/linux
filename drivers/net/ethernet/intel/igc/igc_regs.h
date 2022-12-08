@@ -224,7 +224,10 @@
 /* Transmit Scheduling Registers */
 #define IGC_TQAVCTRL		0x3570
 #define IGC_TXQCTL(_n)		(0x3344 + 0x4 * (_n))
+<<<<<<< HEAD
 #define IGC_GTXOFFSET		0x3310
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define IGC_BASET_L		0x3314
 #define IGC_BASET_H		0x3318
 #define IGC_QBVCYCLET		0x331C
@@ -292,6 +295,10 @@
 
 /* LTR registers */
 #define IGC_LTRC	0x01A0 /* Latency Tolerance Reporting Control */
+<<<<<<< HEAD
+=======
+#define IGC_DMACR	0x02508 /* DMA Coalescing Control Register */
+>>>>>>> b7ba80a49124 (Commit)
 #define IGC_LTRMINV	0x5BB0 /* LTR Minimum Value */
 #define IGC_LTRMAXV	0x5BB4 /* LTR Maximum Value */
 

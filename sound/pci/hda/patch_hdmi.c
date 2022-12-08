@@ -151,7 +151,11 @@ struct hdmi_spec {
 	 */
 	int dev_num;
 	struct snd_array pins; /* struct hdmi_spec_per_pin */
+<<<<<<< HEAD
 	struct hdmi_pcm pcm_rec[8];
+=======
+	struct hdmi_pcm pcm_rec[16];
+>>>>>>> b7ba80a49124 (Commit)
 	struct mutex pcm_lock;
 	struct mutex bind_lock; /* for audio component binding */
 	/* pcm_bitmap means which pcms have been assigned to pins*/
@@ -167,7 +171,10 @@ struct hdmi_spec {
 	struct hdmi_ops ops;
 
 	bool dyn_pin_out;
+<<<<<<< HEAD
 	bool static_pcm_mapping;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* hdmi interrupt trigger control flag for Nvidia codec */
 	bool hdmi_intr_trig_ctrl;
 	bool nv_dp_workaround; /* workaround DP audio infoframe for Nvidia */
@@ -1526,6 +1533,7 @@ static void update_eld(struct hda_codec *codec,
 	 */
 	pcm_jack = pin_idx_to_pcm_jack(codec, per_pin);
 
+<<<<<<< HEAD
 	if (!spec->static_pcm_mapping) {
 		if (eld->eld_valid) {
 			hdmi_attach_hda_pcm(spec, per_pin);
@@ -1536,6 +1544,15 @@ static void update_eld(struct hda_codec *codec,
 		}
 	}
 
+=======
+	if (eld->eld_valid) {
+		hdmi_attach_hda_pcm(spec, per_pin);
+		hdmi_pcm_setup_pin(spec, per_pin);
+	} else {
+		hdmi_pcm_reset_pin(spec, per_pin);
+		hdmi_detach_hda_pcm(spec, per_pin);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	/* if pcm_idx == -1, it means this is in monitor connection event
 	 * we can get the correct pcm_idx now.
 	 */
@@ -1742,7 +1759,10 @@ static void silent_stream_enable(struct hda_codec *codec,
 
 	switch (spec->silent_stream_type) {
 	case SILENT_STREAM_KAE:
+<<<<<<< HEAD
 		silent_stream_enable_i915(codec, per_pin);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		silent_stream_set_kae(codec, per_pin, true);
 		break;
 	case SILENT_STREAM_I915:
@@ -1980,8 +2000,11 @@ static int hdmi_add_cvt(struct hda_codec *codec, hda_nid_t cvt_nid)
 static const struct snd_pci_quirk force_connect_list[] = {
 	SND_PCI_QUIRK(0x103c, 0x870f, "HP", 1),
 	SND_PCI_QUIRK(0x103c, 0x871a, "HP", 1),
+<<<<<<< HEAD
 	SND_PCI_QUIRK(0x103c, 0x8711, "HP", 1),
 	SND_PCI_QUIRK(0x103c, 0x8715, "HP", 1),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SND_PCI_QUIRK(0x1462, 0xec94, "MS-7C94", 1),
 	SND_PCI_QUIRK(0x8086, 0x2081, "Intel NUC 10", 1),
 	{}
@@ -2286,8 +2309,13 @@ static int generic_hdmi_build_pcms(struct hda_codec *codec)
 	struct hdmi_spec *spec = codec->spec;
 	int idx, pcm_num;
 
+<<<<<<< HEAD
 	/* limit the PCM devices to the codec converters or available PINs */
 	pcm_num = min(spec->num_cvts, spec->num_pins);
+=======
+	/* limit the PCM devices to the codec converters */
+	pcm_num = spec->num_cvts;
+>>>>>>> b7ba80a49124 (Commit)
 	codec_dbg(codec, "hdmi: pcm_num set to %d\n", pcm_num);
 
 	for (idx = 0; idx < pcm_num; idx++) {
@@ -2306,8 +2334,13 @@ static int generic_hdmi_build_pcms(struct hda_codec *codec)
 		pstr = &info->stream[SNDRV_PCM_STREAM_PLAYBACK];
 		pstr->substreams = 1;
 		pstr->ops = generic_ops;
+<<<<<<< HEAD
 		/* pcm number is less than pcm_rec array size */
 		if (spec->pcm_used >= ARRAY_SIZE(spec->pcm_rec))
+=======
+		/* pcm number is less than 16 */
+		if (spec->pcm_used >= 16)
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		/* other pstr fields are set in open */
 	}
@@ -2384,11 +2417,14 @@ static int generic_hdmi_build_controls(struct hda_codec *codec)
 		struct hdmi_spec_per_pin *per_pin = get_pin(spec, pin_idx);
 		struct hdmi_eld *pin_eld = &per_pin->sink_eld;
 
+<<<<<<< HEAD
 		if (spec->static_pcm_mapping) {
 			hdmi_attach_hda_pcm(spec, per_pin);
 			hdmi_pcm_setup_pin(spec, per_pin);
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pin_eld->eld_valid = false;
 		hdmi_present_sense(per_pin, 0);
 	}
@@ -2678,6 +2714,12 @@ static void generic_acomp_pin_eld_notify(void *audio_ptr, int port, int dev_id)
 	 */
 	if (codec->core.dev.power.power_state.event == PM_EVENT_SUSPEND)
 		return;
+<<<<<<< HEAD
+=======
+	/* ditto during suspend/resume process itself */
+	if (snd_hdac_is_in_pm(&codec->core))
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	check_presence_and_report(codec, pin_nid, dev_id);
 }
@@ -2861,6 +2903,12 @@ static void intel_pin_eld_notify(void *audio_ptr, int port, int pipe)
 	 */
 	if (codec->core.dev.power.power_state.event == PM_EVENT_SUSPEND)
 		return;
+<<<<<<< HEAD
+=======
+	/* ditto during suspend/resume process itself */
+	if (snd_hdac_is_in_pm(&codec->core))
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	snd_hdac_i915_set_bclk(&codec->bus->core);
 	check_presence_and_report(codec, pin_nid, dev_id);
@@ -2890,6 +2938,7 @@ static int i915_hsw_setup_stream(struct hda_codec *codec, hda_nid_t cvt_nid,
 				 hda_nid_t pin_nid, int dev_id, u32 stream_tag,
 				 int format)
 {
+<<<<<<< HEAD
 	struct hdmi_spec *spec = codec->spec;
 	int pin_idx = pin_id_to_pin_index(codec, pin_nid, dev_id);
 	struct hdmi_spec_per_pin *per_pin;
@@ -2917,6 +2966,11 @@ static int i915_hsw_setup_stream(struct hda_codec *codec, hda_nid_t cvt_nid,
 	}
 
 	return res;
+=======
+	haswell_verify_D0(codec, cvt_nid, pin_nid);
+	return hdmi_setup_stream(codec, cvt_nid, pin_nid, dev_id,
+				 stream_tag, format);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* pin_cvt_fixup ops override for HSW+ and VLV+ */
@@ -2936,6 +2990,7 @@ static void i915_pin_cvt_fixup(struct hda_codec *codec,
 	}
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_PM
 static int i915_adlp_hdmi_suspend(struct hda_codec *codec)
 {
@@ -3018,6 +3073,8 @@ static int i915_adlp_hdmi_resume(struct hda_codec *codec)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* precondition and allocation for Intel codecs */
 static int alloc_intel_hdmi(struct hda_codec *codec)
 {
@@ -3148,6 +3205,7 @@ static int patch_i915_adlp_hdmi(struct hda_codec *codec)
 	if (!res) {
 		spec = codec->spec;
 
+<<<<<<< HEAD
 		if (spec->silent_stream_type) {
 			spec->silent_stream_type = SILENT_STREAM_KAE;
 
@@ -3156,6 +3214,10 @@ static int patch_i915_adlp_hdmi(struct hda_codec *codec)
 			codec->patch_ops.suspend = i915_adlp_hdmi_suspend;
 #endif
 		}
+=======
+		if (spec->silent_stream_type)
+			spec->silent_stream_type = SILENT_STREAM_KAE;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return res;
@@ -4429,8 +4491,11 @@ static int patch_atihdmi(struct hda_codec *codec)
 
 	spec = codec->spec;
 
+<<<<<<< HEAD
 	spec->static_pcm_mapping = true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spec->ops.pin_get_eld = atihdmi_pin_get_eld;
 	spec->ops.pin_setup_infoframe = atihdmi_pin_setup_infoframe;
 	spec->ops.pin_hbr_setup = atihdmi_pin_hbr_setup;

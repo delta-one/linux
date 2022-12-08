@@ -7,5 +7,14 @@
 #ifndef _ROCKCHIP_DRM_FB_H
 #define _ROCKCHIP_DRM_FB_H
 
+<<<<<<< HEAD
+=======
+struct drm_framebuffer *
+rockchip_drm_framebuffer_init(struct drm_device *dev,
+			      const struct drm_mode_fb_cmd2 *mode_cmd,
+			      struct drm_gem_object *obj);
+void rockchip_drm_framebuffer_fini(struct drm_framebuffer *fb);
+
+>>>>>>> b7ba80a49124 (Commit)
 void rockchip_drm_mode_config_init(struct drm_device *dev);
 #endif /* _ROCKCHIP_DRM_FB_H */

@@ -135,8 +135,13 @@ static int i40e_dcbnl_ieee_setets(struct net_device *netdev,
 	ret = i40e_hw_dcb_config(pf, &pf->tmp_cfg);
 	if (ret) {
 		dev_info(&pf->pdev->dev,
+<<<<<<< HEAD
 			 "Failed setting DCB ETS configuration err %pe aq_err %s\n",
 			 ERR_PTR(ret),
+=======
+			 "Failed setting DCB ETS configuration err %s aq_err %s\n",
+			 i40e_stat_str(&pf->hw, ret),
+>>>>>>> b7ba80a49124 (Commit)
 			 i40e_aq_str(&pf->hw, pf->hw.aq.asq_last_status));
 		return -EINVAL;
 	}
@@ -174,8 +179,13 @@ static int i40e_dcbnl_ieee_setpfc(struct net_device *netdev,
 	ret = i40e_hw_dcb_config(pf, &pf->tmp_cfg);
 	if (ret) {
 		dev_info(&pf->pdev->dev,
+<<<<<<< HEAD
 			 "Failed setting DCB PFC configuration err %pe aq_err %s\n",
 			 ERR_PTR(ret),
+=======
+			 "Failed setting DCB PFC configuration err %s aq_err %s\n",
+			 i40e_stat_str(&pf->hw, ret),
+>>>>>>> b7ba80a49124 (Commit)
 			 i40e_aq_str(&pf->hw, pf->hw.aq.asq_last_status));
 		return -EINVAL;
 	}
@@ -225,8 +235,13 @@ static int i40e_dcbnl_ieee_setapp(struct net_device *netdev,
 	ret = i40e_hw_dcb_config(pf, &pf->tmp_cfg);
 	if (ret) {
 		dev_info(&pf->pdev->dev,
+<<<<<<< HEAD
 			 "Failed setting DCB configuration err %pe aq_err %s\n",
 			 ERR_PTR(ret),
+=======
+			 "Failed setting DCB configuration err %s aq_err %s\n",
+			 i40e_stat_str(&pf->hw, ret),
+>>>>>>> b7ba80a49124 (Commit)
 			 i40e_aq_str(&pf->hw, pf->hw.aq.asq_last_status));
 		return -EINVAL;
 	}
@@ -290,8 +305,13 @@ static int i40e_dcbnl_ieee_delapp(struct net_device *netdev,
 	ret = i40e_hw_dcb_config(pf, &pf->tmp_cfg);
 	if (ret) {
 		dev_info(&pf->pdev->dev,
+<<<<<<< HEAD
 			 "Failed setting DCB configuration err %pe aq_err %s\n",
 			 ERR_PTR(ret),
+=======
+			 "Failed setting DCB configuration err %s aq_err %s\n",
+			 i40e_stat_str(&pf->hw, ret),
+>>>>>>> b7ba80a49124 (Commit)
 			 i40e_aq_str(&pf->hw, pf->hw.aq.asq_last_status));
 		return -EINVAL;
 	}

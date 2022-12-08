@@ -34,6 +34,10 @@
 #include <asm/percpu.h>
 #include <asm/desc.h>
 
+<<<<<<< HEAD
+=======
+#include <linux/random.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sched.h>
 
 /*
@@ -49,11 +53,29 @@
  */
 static __always_inline void boot_init_stack_canary(void)
 {
+<<<<<<< HEAD
 	unsigned long canary = get_random_canary();
+=======
+	u64 canary;
+	u64 tsc;
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_X86_64
 	BUILD_BUG_ON(offsetof(struct fixed_percpu_data, stack_canary) != 40);
 #endif
+<<<<<<< HEAD
+=======
+	/*
+	 * We both use the random pool and the current TSC as a source
+	 * of randomness. The TSC only matters for very early init,
+	 * there it already has some randomness on most systems. Later
+	 * on during the bootup the random pool has true entropy too.
+	 */
+	get_random_bytes(&canary, sizeof(canary));
+	tsc = rdtsc();
+	canary += tsc + (tsc << 32UL);
+	canary &= CANARY_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 
 	current->stack_canary = canary;
 #ifdef CONFIG_X86_64

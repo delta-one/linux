@@ -1,6 +1,7 @@
 #ifndef _ASM_RISCV_VMALLOC_H
 #define _ASM_RISCV_VMALLOC_H
 
+<<<<<<< HEAD
 #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
 
 #define IOREMAP_MAX_ORDER (PUD_SHIFT)
@@ -78,4 +79,6 @@ static inline int arch_vmap_pte_supported_shift(unsigned long size)
 
 #endif /* CONFIG_RISCV_ISA_SVNAPOT */
 #endif /* CONFIG_HAVE_ARCH_HUGE_VMAP */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_RISCV_VMALLOC_H */

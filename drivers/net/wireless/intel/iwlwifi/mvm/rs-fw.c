@@ -9,11 +9,17 @@
 #include "iwl-op-mode.h"
 #include "mvm.h"
 
+<<<<<<< HEAD
 static u8 rs_fw_bw_from_sta_bw(const struct ieee80211_sta *sta)
 {
 	switch (sta->deflink.bandwidth) {
 	case IEEE80211_STA_RX_BW_320:
 		return IWL_TLC_MNG_CH_WIDTH_320MHZ;
+=======
+static u8 rs_fw_bw_from_sta_bw(struct ieee80211_sta *sta)
+{
+	switch (sta->deflink.bandwidth) {
+>>>>>>> b7ba80a49124 (Commit)
 	case IEEE80211_STA_RX_BW_160:
 		return IWL_TLC_MNG_CH_WIDTH_160MHZ;
 	case IEEE80211_STA_RX_BW_80:
@@ -240,6 +246,7 @@ rs_fw_he_set_enabled_rates(const struct ieee80211_sta *sta,
 	}
 }
 
+<<<<<<< HEAD
 static u8 rs_fw_eht_max_nss(u8 rx_nss, u8 tx_nss)
 {
 	u8 tx = u8_get_bits(tx_nss, IEEE80211_EHT_MCS_NSS_TX);
@@ -360,6 +367,8 @@ static void rs_fw_eht_set_enabled_rates(const struct ieee80211_sta *sta,
 		       sizeof(cmd->ht_rates[IWL_TLC_NSS_2]));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void rs_fw_set_supp_rates(struct ieee80211_sta *sta,
 				 struct ieee80211_supported_band *sband,
 				 struct iwl_tlc_config_cmd_v4 *cmd)
@@ -380,10 +389,14 @@ static void rs_fw_set_supp_rates(struct ieee80211_sta *sta,
 	cmd->mode = IWL_TLC_MNG_MODE_NON_HT;
 
 	/* HT/VHT rates */
+<<<<<<< HEAD
 	if (sta->deflink.eht_cap.has_eht) {
 		cmd->mode = IWL_TLC_MNG_MODE_EHT;
 		rs_fw_eht_set_enabled_rates(sta, sband, cmd);
 	} else if (he_cap->has_he) {
+=======
+	if (he_cap->has_he) {
+>>>>>>> b7ba80a49124 (Commit)
 		cmd->mode = IWL_TLC_MNG_MODE_HE;
 		rs_fw_he_set_enabled_rates(sta, sband, cmd);
 	} else if (vht_cap->vht_supported) {
@@ -554,7 +567,11 @@ void rs_fw_rate_init(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
 	struct iwl_tlc_config_cmd_v4 cfg_cmd = {
 		.sta_id = mvmsta->sta_id,
 		.max_ch_width = update ?
+<<<<<<< HEAD
 			rs_fw_bw_from_sta_bw(sta) : IWL_TLC_MNG_CH_WIDTH_20MHZ,
+=======
+			rs_fw_bw_from_sta_bw(sta) : RATE_MCS_CHAN_WIDTH_20,
+>>>>>>> b7ba80a49124 (Commit)
 		.flags = cpu_to_le16(rs_fw_get_config_flags(mvm, sta, sband)),
 		.chains = rs_fw_set_active_chains(iwl_mvm_get_valid_tx_ant(mvm)),
 		.sgi_ch_width_supp = rs_fw_sgi_cw_support(sta),

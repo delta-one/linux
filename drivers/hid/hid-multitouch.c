@@ -71,7 +71,10 @@ MODULE_LICENSE("GPL");
 #define MT_QUIRK_SEPARATE_APP_REPORT	BIT(19)
 #define MT_QUIRK_FORCE_MULTI_INPUT	BIT(20)
 #define MT_QUIRK_DISABLE_WAKEUP		BIT(21)
+<<<<<<< HEAD
 #define MT_QUIRK_ORIENTATION_INVERT	BIT(22)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MT_INPUTMODE_TOUCHSCREEN	0x02
 #define MT_INPUTMODE_TOUCHPAD		0x03
@@ -1010,7 +1013,10 @@ static int mt_process_slot(struct mt_device *td, struct input_dev *input,
 			    struct mt_usages *slot)
 {
 	struct input_mt *mt = input->mt;
+<<<<<<< HEAD
 	struct hid_device *hdev = td->hdev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__s32 quirks = app->quirks;
 	bool valid = true;
 	bool confidence_state = true;
@@ -1088,10 +1094,13 @@ static int mt_process_slot(struct mt_device *td, struct input_dev *input,
 		int orientation = wide;
 		int max_azimuth;
 		int azimuth;
+<<<<<<< HEAD
 		int x;
 		int y;
 		int cx;
 		int cy;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (slot->a != DEFAULT_ZERO) {
 			/*
@@ -1110,9 +1119,12 @@ static int mt_process_slot(struct mt_device *td, struct input_dev *input,
 			if (azimuth > max_azimuth * 2)
 				azimuth -= max_azimuth * 4;
 			orientation = -azimuth;
+<<<<<<< HEAD
 			if (quirks & MT_QUIRK_ORIENTATION_INVERT)
 				orientation = -orientation;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (quirks & MT_QUIRK_TOUCH_SIZE_SCALING) {
@@ -1124,6 +1136,7 @@ static int mt_process_slot(struct mt_device *td, struct input_dev *input,
 			minor = minor >> 1;
 		}
 
+<<<<<<< HEAD
 		x = hdev->quirks & HID_QUIRK_X_INVERT ?
 			input_abs_get_max(input, ABS_MT_POSITION_X) - *slot->x :
 			*slot->x;
@@ -1141,6 +1154,12 @@ static int mt_process_slot(struct mt_device *td, struct input_dev *input,
 		input_event(input, EV_ABS, ABS_MT_POSITION_Y, y);
 		input_event(input, EV_ABS, ABS_MT_TOOL_X, cx);
 		input_event(input, EV_ABS, ABS_MT_TOOL_Y, cy);
+=======
+		input_event(input, EV_ABS, ABS_MT_POSITION_X, *slot->x);
+		input_event(input, EV_ABS, ABS_MT_POSITION_Y, *slot->y);
+		input_event(input, EV_ABS, ABS_MT_TOOL_X, *slot->cx);
+		input_event(input, EV_ABS, ABS_MT_TOOL_Y, *slot->cy);
+>>>>>>> b7ba80a49124 (Commit)
 		input_event(input, EV_ABS, ABS_MT_DISTANCE, !*slot->tip_state);
 		input_event(input, EV_ABS, ABS_MT_ORIENTATION, orientation);
 		input_event(input, EV_ABS, ABS_MT_PRESSURE, *slot->p);
@@ -1757,6 +1776,7 @@ static int mt_probe(struct hid_device *hdev, const struct hid_device_id *id)
 	if (id->vendor == HID_ANY_ID && id->product == HID_ANY_ID)
 		td->serial_maybe = true;
 
+<<<<<<< HEAD
 
 	/* Orientation is inverted if the X or Y axes are
 	 * flipped, but normalized if both are inverted.
@@ -1766,6 +1786,8 @@ static int mt_probe(struct hid_device *hdev, const struct hid_device_id *id)
 	      && (hdev->quirks & HID_QUIRK_Y_INVERT)))
 		td->mtclass.quirks = MT_QUIRK_ORIENTATION_INVERT;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* This allows the driver to correctly support devices
 	 * that emit events over several HID messages.
 	 */
@@ -1998,10 +2020,13 @@ static const struct hid_device_id mt_devices[] = {
 		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
 			USB_VENDOR_ID_ELAN, 0x313a) },
 
+<<<<<<< HEAD
 	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
 		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
 			USB_VENDOR_ID_ELAN, 0x3148) },
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Elitegroup panel */
 	{ .driver_data = MT_CLS_SERIAL,
 		MT_USB_DEVICE(USB_VENDOR_ID_ELITEGROUP,

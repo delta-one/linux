@@ -801,6 +801,12 @@ static u8 hci_cc_write_auth_payload_timeout(struct hci_dev *hdev, void *data,
 
 	bt_dev_dbg(hdev, "status 0x%2.2x", rp->status);
 
+<<<<<<< HEAD
+=======
+	if (rp->status)
+		return rp->status;
+
+>>>>>>> b7ba80a49124 (Commit)
 	sent = hci_sent_cmd_data(hdev, HCI_OP_WRITE_AUTH_PAYLOAD_TO);
 	if (!sent)
 		return rp->status;
@@ -808,6 +814,7 @@ static u8 hci_cc_write_auth_payload_timeout(struct hci_dev *hdev, void *data,
 	hci_dev_lock(hdev);
 
 	conn = hci_conn_hash_lookup_handle(hdev, __le16_to_cpu(rp->handle));
+<<<<<<< HEAD
 	if (!conn) {
 		rp->status = 0xff;
 		goto unlock;
@@ -819,6 +826,11 @@ static u8 hci_cc_write_auth_payload_timeout(struct hci_dev *hdev, void *data,
 	hci_encrypt_cfm(conn, 0);
 
 unlock:
+=======
+	if (conn)
+		conn->auth_payload_timeout = get_unaligned_le16(sent + 2);
+
+>>>>>>> b7ba80a49124 (Commit)
 	hci_dev_unlock(hdev);
 
 	return rp->status;
@@ -886,6 +898,7 @@ static u8 hci_cc_read_local_ext_features(struct hci_dev *hdev, void *data,
 	if (rp->status)
 		return rp->status;
 
+<<<<<<< HEAD
 	if (hdev->max_page < rp->max_page) {
 		if (test_bit(HCI_QUIRK_BROKEN_LOCAL_EXT_FEATURES_PAGE_2,
 			     &hdev->quirks))
@@ -893,6 +906,10 @@ static u8 hci_cc_read_local_ext_features(struct hci_dev *hdev, void *data,
 		else
 			hdev->max_page = rp->max_page;
 	}
+=======
+	if (hdev->max_page < rp->max_page)
+		hdev->max_page = rp->max_page;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rp->page < HCI_MAX_PAGES)
 		memcpy(hdev->features[rp->page], rp->features, 8);
@@ -3690,6 +3707,7 @@ static void hci_encrypt_change_evt(struct hci_dev *hdev, void *data,
 
 		cp.handle = cpu_to_le16(conn->handle);
 		cp.timeout = cpu_to_le16(hdev->auth_payload_timeout);
+<<<<<<< HEAD
 		if (hci_send_cmd(conn->hdev, HCI_OP_WRITE_AUTH_PAYLOAD_TO,
 				 sizeof(cp), &cp)) {
 			bt_dev_err(hdev, "write auth payload timeout failed");
@@ -3697,6 +3715,10 @@ static void hci_encrypt_change_evt(struct hci_dev *hdev, void *data,
 		}
 
 		goto unlock;
+=======
+		hci_send_cmd(conn->hdev, HCI_OP_WRITE_AUTH_PAYLOAD_TO,
+			     sizeof(cp), &cp);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 notify:
@@ -3853,11 +3875,16 @@ static u8 hci_cc_le_set_cig_params(struct hci_dev *hdev, void *data,
 			   conn->handle, conn->link);
 
 		/* Create CIS if LE is already connected */
+<<<<<<< HEAD
 		if (conn->link && conn->link->state == BT_CONNECTED) {
 			rcu_read_unlock();
 			hci_le_create_cis(conn->link);
 			rcu_read_lock();
 		}
+=======
+		if (conn->link && conn->link->state == BT_CONNECTED)
+			hci_le_create_cis(conn->link);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (i == rp->num_handles)
 			break;
@@ -6512,7 +6539,11 @@ static void hci_le_ext_adv_report_evt(struct hci_dev *hdev, void *data,
 					info->length))
 			break;
 
+<<<<<<< HEAD
 		evt_type = __le16_to_cpu(info->type) & LE_EXT_ADV_EVT_TYPE_MASK;
+=======
+		evt_type = __le16_to_cpu(info->type);
+>>>>>>> b7ba80a49124 (Commit)
 		legacy_evt_type = ext_evt_type_to_legacy(hdev, evt_type);
 		if (legacy_evt_type != LE_ADV_INVALID) {
 			process_adv_report(hdev, legacy_evt_type, &info->bdaddr,

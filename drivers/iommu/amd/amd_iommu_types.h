@@ -461,8 +461,11 @@ struct irq_remap_table {
 /* Interrupt remapping feature used? */
 extern bool amd_iommu_irq_remap;
 
+<<<<<<< HEAD
 extern const struct iommu_ops amd_iommu_ops;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* IVRS indicates that pre-boot remapping was enabled */
 extern bool amdr_ivrs_remap_support;
 
@@ -549,7 +552,10 @@ struct protection_domain {
 	spinlock_t lock;	/* mostly used to lock the page table*/
 	u16 id;			/* the domain id written to the device table */
 	int glx;		/* Number of levels for GCR3 table */
+<<<<<<< HEAD
 	int nid;		/* Node ID */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 *gcr3_tbl;		/* Guest CR3 table */
 	unsigned long flags;	/* flags to find out type of domain */
 	unsigned dev_cnt;	/* devices assigned to this domain */
@@ -735,6 +741,10 @@ struct amd_iommu {
 	u8 max_counters;
 #ifdef CONFIG_IRQ_REMAP
 	struct irq_domain *ir_domain;
+<<<<<<< HEAD
+=======
+	struct irq_domain *msi_domain;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct amd_irte_ops *irte_ops;
 #endif

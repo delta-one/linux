@@ -14,8 +14,15 @@
 #define chains_lock(chains) ((chains)->lock)
 #define chains_ht(chains) ((chains)->chains_ht)
 #define prios_ht(chains) ((chains)->prios_ht)
+<<<<<<< HEAD
 #define chains_default_ft(chains) ((chains)->chains_default_ft)
 #define chains_end_ft(chains) ((chains)->chains_end_ft)
+=======
+#define tc_default_ft(chains) ((chains)->tc_default_ft)
+#define tc_end_ft(chains) ((chains)->tc_end_ft)
+#define ns_to_chains_fs_prio(ns) ((ns) == MLX5_FLOW_NAMESPACE_FDB ? \
+				  FDB_TC_OFFLOAD : MLX5E_TC_PRIO)
+>>>>>>> b7ba80a49124 (Commit)
 #define FT_TBL_SZ (64 * 1024)
 
 struct mlx5_fs_chains {
@@ -26,15 +33,23 @@ struct mlx5_fs_chains {
 	/* Protects above chains_ht and prios_ht */
 	struct mutex lock;
 
+<<<<<<< HEAD
 	struct mlx5_flow_table *chains_default_ft;
 	struct mlx5_flow_table *chains_end_ft;
+=======
+	struct mlx5_flow_table *tc_default_ft;
+	struct mlx5_flow_table *tc_end_ft;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mapping_ctx *chains_mapping;
 
 	enum mlx5_flow_namespace_type ns;
 	u32 group_num;
 	u32 flags;
+<<<<<<< HEAD
 	int fs_base_prio;
 	int fs_base_level;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct fs_chain {
@@ -145,7 +160,11 @@ void
 mlx5_chains_set_end_ft(struct mlx5_fs_chains *chains,
 		       struct mlx5_flow_table *ft)
 {
+<<<<<<< HEAD
 	chains_end_ft(chains) = ft;
+=======
+	tc_end_ft(chains) = ft;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct mlx5_flow_table *
@@ -164,11 +183,19 @@ mlx5_chains_create_table(struct mlx5_fs_chains *chains,
 	sz = (chain == mlx5_chains_get_nf_ft_chain(chains)) ? FT_TBL_SZ : POOL_NEXT_SIZE;
 	ft_attr.max_fte = sz;
 
+<<<<<<< HEAD
 	/* We use chains_default_ft(chains) as the table's next_ft till
 	 * ignore_flow_level is allowed on FT creation and not just for FTEs.
 	 * Instead caller should add an explicit miss rule if needed.
 	 */
 	ft_attr.next_ft = chains_default_ft(chains);
+=======
+	/* We use tc_default_ft(chains) as the table's next_ft till
+	 * ignore_flow_level is allowed on FT creation and not just for FTEs.
+	 * Instead caller should add an explicit miss rule if needed.
+	 */
+	ft_attr.next_ft = tc_default_ft(chains);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* The root table(chain 0, prio 1, level 0) is required to be
 	 * connected to the previous fs_core managed prio.
@@ -177,22 +204,37 @@ mlx5_chains_create_table(struct mlx5_fs_chains *chains,
 	 */
 	if (!mlx5_chains_ignore_flow_level_supported(chains) ||
 	    (chain == 0 && prio == 1 && level == 0)) {
+<<<<<<< HEAD
 		ft_attr.level = chains->fs_base_level;
 		ft_attr.prio = chains->fs_base_prio;
+=======
+		ft_attr.level = level;
+		ft_attr.prio = prio - 1;
+>>>>>>> b7ba80a49124 (Commit)
 		ns = (chains->ns == MLX5_FLOW_NAMESPACE_FDB) ?
 			mlx5_get_fdb_sub_ns(chains->dev, chain) :
 			mlx5_get_flow_namespace(chains->dev, chains->ns);
 	} else {
 		ft_attr.flags |= MLX5_FLOW_TABLE_UNMANAGED;
+<<<<<<< HEAD
 		ft_attr.prio = chains->fs_base_prio;
 		/* Firmware doesn't allow us to create another level 0 table,
 		 * so we create all unmanaged tables as level 1 (base + 1).
+=======
+		ft_attr.prio = ns_to_chains_fs_prio(chains->ns);
+		/* Firmware doesn't allow us to create another level 0 table,
+		 * so we create all unmanaged tables as level 1.
+>>>>>>> b7ba80a49124 (Commit)
 		 *
 		 * To connect them, we use explicit miss rules with
 		 * ignore_flow_level. Caller is responsible to create
 		 * these rules (if needed).
 		 */
+<<<<<<< HEAD
 		ft_attr.level = chains->fs_base_level + 1;
+=======
+		ft_attr.level = 1;
+>>>>>>> b7ba80a49124 (Commit)
 		ns = mlx5_get_flow_namespace(chains->dev, chains->ns);
 	}
 
@@ -214,14 +256,22 @@ create_chain_restore(struct fs_chain *chain)
 	struct mlx5_eswitch *esw = chain->chains->dev->priv.eswitch;
 	u8 modact[MLX5_UN_SZ_BYTES(set_add_copy_action_in_auto)] = {};
 	struct mlx5_fs_chains *chains = chain->chains;
+<<<<<<< HEAD
 	enum mlx5e_tc_attr_to_reg mapped_obj_to_reg;
+=======
+	enum mlx5e_tc_attr_to_reg chain_to_reg;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mlx5_modify_hdr *mod_hdr;
 	u32 index;
 	int err;
 
 	if (chain->chain == mlx5_chains_get_nf_ft_chain(chains) ||
+<<<<<<< HEAD
 	    !mlx5_chains_prios_supported(chains) ||
 	    !chains->chains_mapping)
+=======
+	    !mlx5_chains_prios_supported(chains))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	err = mlx5_chains_get_chain_mapping(chains, chain->chain, &index);
@@ -243,7 +293,11 @@ create_chain_restore(struct fs_chain *chain)
 	chain->id = index;
 
 	if (chains->ns == MLX5_FLOW_NAMESPACE_FDB) {
+<<<<<<< HEAD
 		mapped_obj_to_reg = MAPPED_OBJ_TO_REG;
+=======
+		chain_to_reg = CHAIN_TO_REG;
+>>>>>>> b7ba80a49124 (Commit)
 		chain->restore_rule = esw_add_restore_rule(esw, chain->id);
 		if (IS_ERR(chain->restore_rule)) {
 			err = PTR_ERR(chain->restore_rule);
@@ -254,7 +308,11 @@ create_chain_restore(struct fs_chain *chain)
 		 * since we write the metadata to reg_b
 		 * that is passed to SW directly.
 		 */
+<<<<<<< HEAD
 		mapped_obj_to_reg = NIC_MAPPED_OBJ_TO_REG;
+=======
+		chain_to_reg = NIC_CHAIN_TO_REG;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		err = -EINVAL;
 		goto err_rule;
@@ -262,12 +320,21 @@ create_chain_restore(struct fs_chain *chain)
 
 	MLX5_SET(set_action_in, modact, action_type, MLX5_ACTION_TYPE_SET);
 	MLX5_SET(set_action_in, modact, field,
+<<<<<<< HEAD
 		 mlx5e_tc_attr_to_reg_mappings[mapped_obj_to_reg].mfield);
 	MLX5_SET(set_action_in, modact, offset,
 		 mlx5e_tc_attr_to_reg_mappings[mapped_obj_to_reg].moffset);
 	MLX5_SET(set_action_in, modact, length,
 		 mlx5e_tc_attr_to_reg_mappings[mapped_obj_to_reg].mlen == 32 ?
 		 0 : mlx5e_tc_attr_to_reg_mappings[mapped_obj_to_reg].mlen);
+=======
+		 mlx5e_tc_attr_to_reg_mappings[chain_to_reg].mfield);
+	MLX5_SET(set_action_in, modact, offset,
+		 mlx5e_tc_attr_to_reg_mappings[chain_to_reg].moffset);
+	MLX5_SET(set_action_in, modact, length,
+		 mlx5e_tc_attr_to_reg_mappings[chain_to_reg].mlen == 32 ?
+		 0 : mlx5e_tc_attr_to_reg_mappings[chain_to_reg].mlen);
+>>>>>>> b7ba80a49124 (Commit)
 	MLX5_SET(set_action_in, modact, data, chain->id);
 	mod_hdr = mlx5_modify_header_alloc(chains->dev, chains->ns,
 					   1, modact);
@@ -381,7 +448,11 @@ mlx5_chains_add_miss_rule(struct fs_chain *chain,
 	dest.type  = MLX5_FLOW_DESTINATION_TYPE_FLOW_TABLE;
 	dest.ft = next_ft;
 
+<<<<<<< HEAD
 	if (chains->chains_mapping && next_ft == chains_end_ft(chains) &&
+=======
+	if (next_ft == tc_end_ft(chains) &&
+>>>>>>> b7ba80a49124 (Commit)
 	    chain->chain != mlx5_chains_get_nf_ft_chain(chains) &&
 	    mlx5_chains_prios_supported(chains)) {
 		act.modify_hdr = chain->miss_modify_hdr;
@@ -495,8 +566,13 @@ mlx5_chains_create_prio(struct mlx5_fs_chains *chains,
 
 	/* Default miss for each chain: */
 	next_ft = (chain == mlx5_chains_get_nf_ft_chain(chains)) ?
+<<<<<<< HEAD
 		  chains_default_ft(chains) :
 		  chains_end_ft(chains);
+=======
+		  tc_default_ft(chains) :
+		  tc_end_ft(chains);
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each(pos, &chain_s->prios_list) {
 		struct prio *p = list_entry(pos, struct prio, list);
 
@@ -682,7 +758,11 @@ err_get_prio:
 struct mlx5_flow_table *
 mlx5_chains_get_tc_end_ft(struct mlx5_fs_chains *chains)
 {
+<<<<<<< HEAD
 	return chains_end_ft(chains);
+=======
+	return tc_end_ft(chains);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct mlx5_flow_table *
@@ -719,6 +799,7 @@ mlx5_chains_destroy_global_table(struct mlx5_fs_chains *chains,
 static struct mlx5_fs_chains *
 mlx5_chains_init(struct mlx5_core_dev *dev, struct mlx5_chains_attr *attr)
 {
+<<<<<<< HEAD
 	struct mlx5_fs_chains *chains;
 	int err;
 
@@ -751,6 +832,50 @@ init_prios_ht_err:
 	rhashtable_destroy(&chains_ht(chains));
 init_chains_ht_err:
 	kfree(chains);
+=======
+	struct mlx5_fs_chains *chains_priv;
+	u32 max_flow_counter;
+	int err;
+
+	chains_priv = kzalloc(sizeof(*chains_priv), GFP_KERNEL);
+	if (!chains_priv)
+		return ERR_PTR(-ENOMEM);
+
+	max_flow_counter = (MLX5_CAP_GEN(dev, max_flow_counter_31_16) << 16) |
+			    MLX5_CAP_GEN(dev, max_flow_counter_15_0);
+
+	mlx5_core_dbg(dev,
+		      "Init flow table chains, max counters(%d), groups(%d), max flow table size(%d)\n",
+		      max_flow_counter, attr->max_grp_num, attr->max_ft_sz);
+
+	chains_priv->dev = dev;
+	chains_priv->flags = attr->flags;
+	chains_priv->ns = attr->ns;
+	chains_priv->group_num = attr->max_grp_num;
+	chains_priv->chains_mapping = attr->mapping;
+	tc_default_ft(chains_priv) = tc_end_ft(chains_priv) = attr->default_ft;
+
+	mlx5_core_info(dev, "Supported tc offload range - chains: %u, prios: %u\n",
+		       mlx5_chains_get_chain_range(chains_priv),
+		       mlx5_chains_get_prio_range(chains_priv));
+
+	err = rhashtable_init(&chains_ht(chains_priv), &chain_params);
+	if (err)
+		goto init_chains_ht_err;
+
+	err = rhashtable_init(&prios_ht(chains_priv), &prio_params);
+	if (err)
+		goto init_prios_ht_err;
+
+	mutex_init(&chains_lock(chains_priv));
+
+	return chains_priv;
+
+init_prios_ht_err:
+	rhashtable_destroy(&chains_ht(chains_priv));
+init_chains_ht_err:
+	kfree(chains_priv);
+>>>>>>> b7ba80a49124 (Commit)
 	return ERR_PTR(err);
 }
 
@@ -799,9 +924,12 @@ mlx5_chains_put_chain_mapping(struct mlx5_fs_chains *chains, u32 chain_mapping)
 
 	return mapping_remove(ctx, chain_mapping);
 }
+<<<<<<< HEAD
 
 void
 mlx5_chains_print_info(struct mlx5_fs_chains *chains)
 {
 	mlx5_core_dbg(chains->dev, "Flow table chains groups(%d)\n", chains->group_num);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

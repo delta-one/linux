@@ -22,7 +22,10 @@
 
 #define DP_KHZ_TO_HZ 1000
 #define IDLE_PATTERN_COMPLETION_TIMEOUT_JIFFIES	(30 * HZ / 1000) /* 30 ms */
+<<<<<<< HEAD
 #define PSR_OPERATION_COMPLETION_TIMEOUT_JIFFIES       (300 * HZ / 1000) /* 300 ms */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define WAIT_FOR_VIDEO_READY_TIMEOUT_JIFFIES (HZ / 2)
 
 #define DP_CTRL_INTR_READY_FOR_VIDEO     BIT(0)
@@ -81,7 +84,10 @@ struct dp_ctrl_private {
 	struct dp_catalog *catalog;
 
 	struct completion idle_comp;
+<<<<<<< HEAD
 	struct completion psr_op_comp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct completion video_comp;
 };
 
@@ -155,9 +161,12 @@ static void dp_ctrl_config_ctrl(struct dp_ctrl_private *ctrl)
 	config |= DP_CONFIGURATION_CTRL_STATIC_DYNAMIC_CN;
 	config |= DP_CONFIGURATION_CTRL_SYNC_ASYNC_CLK;
 
+<<<<<<< HEAD
 	if (ctrl->panel->psr_cap.version)
 		config |= DP_CONFIGURATION_CTRL_SEND_VSC;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dp_catalog_ctrl_config_ctrl(ctrl->catalog, config);
 }
 
@@ -1248,7 +1257,12 @@ static int dp_ctrl_link_train(struct dp_ctrl_private *ctrl,
 {
 	int ret = 0;
 	const u8 *dpcd = ctrl->panel->dpcd;
+<<<<<<< HEAD
 	u8 encoding[] = { 0, DP_SET_ANSI_8B10B };
+=======
+	u8 encoding = DP_SET_ANSI_8B10B;
+	u8 ssc;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 assr;
 	struct dp_link_info link_info = {0};
 
@@ -1260,11 +1274,21 @@ static int dp_ctrl_link_train(struct dp_ctrl_private *ctrl,
 
 	dp_aux_link_configure(ctrl->aux, &link_info);
 
+<<<<<<< HEAD
 	if (drm_dp_max_downspread(dpcd))
 		encoding[0] |= DP_SPREAD_AMP_0_5;
 
 	/* config DOWNSPREAD_CTRL and MAIN_LINK_CHANNEL_CODING_SET */
 	drm_dp_dpcd_write(ctrl->aux, DP_DOWNSPREAD_CTRL, encoding, 2);
+=======
+	if (drm_dp_max_downspread(dpcd)) {
+		ssc = DP_SPREAD_AMP_0_5;
+		drm_dp_dpcd_write(ctrl->aux, DP_DOWNSPREAD_CTRL, &ssc, 1);
+	}
+
+	drm_dp_dpcd_write(ctrl->aux, DP_MAIN_LINK_CHANNEL_CODING_SET,
+				&encoding, 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (drm_dp_alternate_scrambler_reset_cap(dpcd)) {
 		assr = DP_ALTERNATE_SCRAMBLER_RESET_ENABLE;
@@ -1380,6 +1404,7 @@ void dp_ctrl_reset_irq_ctrl(struct dp_ctrl *dp_ctrl, bool enable)
 	dp_catalog_ctrl_enable_irq(ctrl->catalog, enable);
 }
 
+<<<<<<< HEAD
 void dp_ctrl_config_psr(struct dp_ctrl *dp_ctrl)
 {
 	u8 cfg;
@@ -1438,6 +1463,8 @@ void dp_ctrl_set_psr(struct dp_ctrl *dp_ctrl, bool enter)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void dp_ctrl_phy_init(struct dp_ctrl *dp_ctrl)
 {
 	struct dp_ctrl_private *ctrl;
@@ -2052,6 +2079,7 @@ void dp_ctrl_isr(struct dp_ctrl *dp_ctrl)
 
 	ctrl = container_of(dp_ctrl, struct dp_ctrl_private, dp_ctrl);
 
+<<<<<<< HEAD
 	if (ctrl->panel->psr_cap.version) {
 		isr = dp_catalog_ctrl_read_psr_interrupt_status(ctrl->catalog);
 
@@ -2068,6 +2096,8 @@ void dp_ctrl_isr(struct dp_ctrl *dp_ctrl)
 			drm_dbg_dp(ctrl->drm_dev, "PSR frame capture done\n");
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	isr = dp_catalog_ctrl_get_interrupt(ctrl->catalog);
 
 	if (isr & DP_CTRL_INTR_READY_FOR_VIDEO) {
@@ -2114,7 +2144,10 @@ struct dp_ctrl *dp_ctrl_get(struct device *dev, struct dp_link *link,
 		dev_err(dev, "failed to add DP OPP table\n");
 
 	init_completion(&ctrl->idle_comp);
+<<<<<<< HEAD
 	init_completion(&ctrl->psr_op_comp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	init_completion(&ctrl->video_comp);
 
 	/* in parameters */

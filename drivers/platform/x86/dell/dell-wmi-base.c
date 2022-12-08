@@ -261,9 +261,12 @@ static const struct key_entry dell_wmi_keymap_type_0010[] = {
 	{ KE_KEY,    0x57, { KEY_BRIGHTNESSDOWN } },
 	{ KE_KEY,    0x58, { KEY_BRIGHTNESSUP } },
 
+<<<<<<< HEAD
 	/*Speaker Mute*/
 	{ KE_KEY, 0x109, { KEY_MUTE} },
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Mic mute */
 	{ KE_KEY, 0x150, { KEY_MICMUTE } },
 

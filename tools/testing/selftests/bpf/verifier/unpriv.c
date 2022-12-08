@@ -240,6 +240,7 @@
 	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
 },
 {
+<<<<<<< HEAD
 	/* Same as above, but use BPF_ST_MEM to save 42
 	 * instead of BPF_STX_MEM.
 	 */
@@ -263,6 +264,8 @@
 	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
 },
 {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	"unpriv: spill/fill of different pointers stx - ctx and sock",
 	.insns = {
 	BPF_MOV64_REG(BPF_REG_8, BPF_REG_1),

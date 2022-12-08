@@ -27,9 +27,13 @@ VERSION {
 		__vdso_time;
 		clock_getres;
 		__vdso_clock_getres;
+<<<<<<< HEAD
 #ifdef CONFIG_X86_SGX
 		__vdso_sgx_enter_enclave;
 #endif
+=======
+		__vdso_sgx_enter_enclave;
+>>>>>>> b7ba80a49124 (Commit)
 	local: *;
 	};
 }

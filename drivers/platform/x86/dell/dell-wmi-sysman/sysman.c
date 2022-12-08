@@ -255,7 +255,11 @@ static void attr_name_release(struct kobject *kobj)
 	kfree(kobj);
 }
 
+<<<<<<< HEAD
 static const struct kobj_type attr_name_ktype = {
+=======
+static struct kobj_type attr_name_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release	= attr_name_release,
 	.sysfs_ops	= &wmi_sysman_kobj_sysfs_ops,
 };

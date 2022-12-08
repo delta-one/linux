@@ -39,22 +39,42 @@ static bool clk_branch_check_halt(const struct clk_branch *br, bool enabling)
 	return !!val == !enabling;
 }
 
+<<<<<<< HEAD
+=======
+#define BRANCH_CLK_OFF			BIT(31)
+#define BRANCH_NOC_FSM_STATUS_SHIFT	28
+#define BRANCH_NOC_FSM_STATUS_MASK	0x7
+#define BRANCH_NOC_FSM_STATUS_ON	(0x2 << BRANCH_NOC_FSM_STATUS_SHIFT)
+
+>>>>>>> b7ba80a49124 (Commit)
 static bool clk_branch2_check_halt(const struct clk_branch *br, bool enabling)
 {
 	u32 val;
 	u32 mask;
 
+<<<<<<< HEAD
 	mask = CBCR_NOC_FSM_STATUS;
 	mask |= CBCR_CLK_OFF;
+=======
+	mask = BRANCH_NOC_FSM_STATUS_MASK << BRANCH_NOC_FSM_STATUS_SHIFT;
+	mask |= BRANCH_CLK_OFF;
+>>>>>>> b7ba80a49124 (Commit)
 
 	regmap_read(br->clkr.regmap, br->halt_reg, &val);
 
 	if (enabling) {
 		val &= mask;
+<<<<<<< HEAD
 		return (val & CBCR_CLK_OFF) == 0 ||
 			FIELD_GET(CBCR_NOC_FSM_STATUS, val) == FSM_STATUS_ON;
 	} else {
 		return val & CBCR_CLK_OFF;
+=======
+		return (val & BRANCH_CLK_OFF) == 0 ||
+			val == BRANCH_NOC_FSM_STATUS_ON;
+	} else {
+		return val & BRANCH_CLK_OFF;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

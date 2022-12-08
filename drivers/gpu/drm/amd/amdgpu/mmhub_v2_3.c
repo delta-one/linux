@@ -164,7 +164,11 @@ static void mmhub_v2_3_init_system_aperture_regs(struct amdgpu_device *adev)
 		     max(adev->gmc.fb_end, adev->gmc.agp_end) >> 18);
 
 	/* Set default page address. */
+<<<<<<< HEAD
 	value = amdgpu_gmc_vram_mc2pa(adev, adev->mem_scratch.gpu_addr);
+=======
+	value = amdgpu_gmc_vram_mc2pa(adev, adev->vram_scratch.gpu_addr);
+>>>>>>> b7ba80a49124 (Commit)
 	WREG32_SOC15(MMHUB, 0, mmMMMC_VM_SYSTEM_APERTURE_DEFAULT_ADDR_LSB,
 		     (u32)(value >> 12));
 	WREG32_SOC15(MMHUB, 0, mmMMMC_VM_SYSTEM_APERTURE_DEFAULT_ADDR_MSB,
@@ -243,7 +247,11 @@ static void mmhub_v2_3_init_cache_regs(struct amdgpu_device *adev)
 
 	tmp = mmMMVM_L2_CNTL5_DEFAULT;
 	tmp = REG_SET_FIELD(tmp, MMVM_L2_CNTL5, L2_CACHE_SMALLK_FRAGMENT_SIZE, 0);
+<<<<<<< HEAD
 	WREG32_SOC15(MMHUB, 0, mmMMVM_L2_CNTL5, tmp);
+=======
+	WREG32_SOC15(GC, 0, mmMMVM_L2_CNTL5, tmp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mmhub_v2_3_enable_system_domain(struct amdgpu_device *adev)

@@ -821,7 +821,11 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
 	 * called by a driver when serving an unrelated request from userland, we use
 	 * the kernel credentials to read the file.
 	 */
+<<<<<<< HEAD
 	kern_cred = prepare_kernel_cred(&init_task);
+=======
+	kern_cred = prepare_kernel_cred(NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!kern_cred) {
 		ret = -ENOMEM;
 		goto out;

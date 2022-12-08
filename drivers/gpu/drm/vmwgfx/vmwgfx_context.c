@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0 OR MIT
 /**************************************************************************
  *
+<<<<<<< HEAD
  * Copyright 2009-2023 VMware, Inc., Palo Alto, CA., USA
+=======
+ * Copyright 2009-2015 VMware, Inc., Palo Alto, CA., USA
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
@@ -27,10 +31,16 @@
 
 #include <drm/ttm/ttm_placement.h>
 
+<<<<<<< HEAD
 #include "vmwgfx_binding.h"
 #include "vmwgfx_bo.h"
 #include "vmwgfx_drv.h"
 #include "vmwgfx_resource_priv.h"
+=======
+#include "vmwgfx_drv.h"
+#include "vmwgfx_resource_priv.h"
+#include "vmwgfx_binding.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 struct vmw_user_context {
 	struct ttm_base_object base;
@@ -39,7 +49,11 @@ struct vmw_user_context {
 	struct vmw_cmdbuf_res_manager *man;
 	struct vmw_resource *cotables[SVGA_COTABLE_MAX];
 	spinlock_t cotable_lock;
+<<<<<<< HEAD
 	struct vmw_bo *dx_query_mob;
+=======
+	struct vmw_buffer_object *dx_query_mob;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void vmw_user_context_free(struct vmw_resource *res);
@@ -73,11 +87,18 @@ const struct vmw_user_resource_conv *user_context_converter =
 
 static const struct vmw_res_func vmw_legacy_context_func = {
 	.res_type = vmw_res_context,
+<<<<<<< HEAD
 	.needs_guest_memory = false,
 	.may_evict = false,
 	.type_name = "legacy contexts",
 	.domain = VMW_BO_DOMAIN_SYS,
 	.busy_domain = VMW_BO_DOMAIN_SYS,
+=======
+	.needs_backup = false,
+	.may_evict = false,
+	.type_name = "legacy contexts",
+	.backup_placement = NULL,
+>>>>>>> b7ba80a49124 (Commit)
 	.create = NULL,
 	.destroy = NULL,
 	.bind = NULL,
@@ -86,13 +107,21 @@ static const struct vmw_res_func vmw_legacy_context_func = {
 
 static const struct vmw_res_func vmw_gb_context_func = {
 	.res_type = vmw_res_context,
+<<<<<<< HEAD
 	.needs_guest_memory = true,
+=======
+	.needs_backup = true,
+>>>>>>> b7ba80a49124 (Commit)
 	.may_evict = true,
 	.prio = 3,
 	.dirty_prio = 3,
 	.type_name = "guest backed contexts",
+<<<<<<< HEAD
 	.domain = VMW_BO_DOMAIN_MOB,
 	.busy_domain = VMW_BO_DOMAIN_MOB,
+=======
+	.backup_placement = &vmw_mob_placement,
+>>>>>>> b7ba80a49124 (Commit)
 	.create = vmw_gb_context_create,
 	.destroy = vmw_gb_context_destroy,
 	.bind = vmw_gb_context_bind,
@@ -101,13 +130,21 @@ static const struct vmw_res_func vmw_gb_context_func = {
 
 static const struct vmw_res_func vmw_dx_context_func = {
 	.res_type = vmw_res_dx_context,
+<<<<<<< HEAD
 	.needs_guest_memory = true,
+=======
+	.needs_backup = true,
+>>>>>>> b7ba80a49124 (Commit)
 	.may_evict = true,
 	.prio = 3,
 	.dirty_prio = 3,
 	.type_name = "dx contexts",
+<<<<<<< HEAD
 	.domain = VMW_BO_DOMAIN_MOB,
 	.busy_domain = VMW_BO_DOMAIN_MOB,
+=======
+	.backup_placement = &vmw_mob_placement,
+>>>>>>> b7ba80a49124 (Commit)
 	.create = vmw_dx_context_create,
 	.destroy = vmw_dx_context_destroy,
 	.bind = vmw_dx_context_bind,
@@ -186,7 +223,11 @@ static int vmw_gb_context_init(struct vmw_private *dev_priv,
 	struct vmw_user_context *uctx =
 		container_of(res, struct vmw_user_context, res);
 
+<<<<<<< HEAD
 	res->guest_memory_size = (dx ? sizeof(SVGADXContextMobFormat) :
+=======
+	res->backup_size = (dx ? sizeof(SVGADXContextMobFormat) :
+>>>>>>> b7ba80a49124 (Commit)
 				 sizeof(SVGAGBContextData));
 	ret = vmw_resource_init(dev_priv, res, true,
 				res_free,
@@ -358,8 +399,13 @@ static int vmw_gb_context_bind(struct vmw_resource *res,
 	cmd->header.size = sizeof(cmd->body);
 	cmd->body.cid = res->id;
 	cmd->body.mobid = bo->resource->start;
+<<<<<<< HEAD
 	cmd->body.validContents = res->guest_memory_dirty;
 	res->guest_memory_dirty = false;
+=======
+	cmd->body.validContents = res->backup_dirty;
+	res->backup_dirty = false;
+>>>>>>> b7ba80a49124 (Commit)
 	vmw_cmd_commit(dev_priv, sizeof(*cmd));
 
 	return 0;
@@ -525,8 +571,13 @@ static int vmw_dx_context_bind(struct vmw_resource *res,
 	cmd->header.size = sizeof(cmd->body);
 	cmd->body.cid = res->id;
 	cmd->body.mobid = bo->resource->start;
+<<<<<<< HEAD
 	cmd->body.validContents = res->guest_memory_dirty;
 	res->guest_memory_dirty = false;
+=======
+	cmd->body.validContents = res->backup_dirty;
+	res->backup_dirty = false;
+>>>>>>> b7ba80a49124 (Commit)
 	vmw_cmd_commit(dev_priv, sizeof(*cmd));
 
 
@@ -857,7 +908,11 @@ vmw_context_binding_state(struct vmw_resource *ctx)
  * specified in the parameter.  0 otherwise.
  */
 int vmw_context_bind_dx_query(struct vmw_resource *ctx_res,
+<<<<<<< HEAD
 			      struct vmw_bo *mob)
+=======
+			      struct vmw_buffer_object *mob)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vmw_user_context *uctx =
 		container_of(ctx_res, struct vmw_user_context, res);
@@ -889,7 +944,11 @@ int vmw_context_bind_dx_query(struct vmw_resource *ctx_res,
  *
  * @ctx_res: The context resource
  */
+<<<<<<< HEAD
 struct vmw_bo *
+=======
+struct vmw_buffer_object *
+>>>>>>> b7ba80a49124 (Commit)
 vmw_context_get_dx_query_mob(struct vmw_resource *ctx_res)
 {
 	struct vmw_user_context *uctx =

@@ -5,16 +5,25 @@
  * Data structure and helper functions for tracking pending FSF
  * requests.
  *
+<<<<<<< HEAD
  * Copyright IBM Corp. 2009, 2023
+=======
+ * Copyright IBM Corp. 2009, 2016
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #ifndef ZFCP_REQLIST_H
 #define ZFCP_REQLIST_H
 
+<<<<<<< HEAD
 #include <linux/types.h>
 
 /* number of hash buckets */
 #define ZFCP_REQ_LIST_BUCKETS 128u
+=======
+/* number of hash buckets */
+#define ZFCP_REQ_LIST_BUCKETS 128
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct zfcp_reqlist - Container for request list (reqlist)
@@ -26,7 +35,11 @@ struct zfcp_reqlist {
 	struct list_head buckets[ZFCP_REQ_LIST_BUCKETS];
 };
 
+<<<<<<< HEAD
 static inline size_t zfcp_reqlist_hash(u64 req_id)
+=======
+static inline int zfcp_reqlist_hash(unsigned long req_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return req_id % ZFCP_REQ_LIST_BUCKETS;
 }
@@ -39,7 +52,11 @@ static inline size_t zfcp_reqlist_hash(u64 req_id)
  */
 static inline struct zfcp_reqlist *zfcp_reqlist_alloc(void)
 {
+<<<<<<< HEAD
 	size_t i;
+=======
+	unsigned int i;
+>>>>>>> b7ba80a49124 (Commit)
 	struct zfcp_reqlist *rl;
 
 	rl = kzalloc(sizeof(struct zfcp_reqlist), GFP_KERNEL);
@@ -62,7 +79,11 @@ static inline struct zfcp_reqlist *zfcp_reqlist_alloc(void)
  */
 static inline int zfcp_reqlist_isempty(struct zfcp_reqlist *rl)
 {
+<<<<<<< HEAD
 	size_t i;
+=======
+	unsigned int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < ZFCP_REQ_LIST_BUCKETS; i++)
 		if (!list_empty(&rl->buckets[i]))
@@ -83,10 +104,17 @@ static inline void zfcp_reqlist_free(struct zfcp_reqlist *rl)
 }
 
 static inline struct zfcp_fsf_req *
+<<<<<<< HEAD
 _zfcp_reqlist_find(struct zfcp_reqlist *rl, u64 req_id)
 {
 	struct zfcp_fsf_req *req;
 	size_t i;
+=======
+_zfcp_reqlist_find(struct zfcp_reqlist *rl, unsigned long req_id)
+{
+	struct zfcp_fsf_req *req;
+	unsigned int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	i = zfcp_reqlist_hash(req_id);
 	list_for_each_entry(req, &rl->buckets[i], list)
@@ -104,7 +132,11 @@ _zfcp_reqlist_find(struct zfcp_reqlist *rl, u64 req_id)
  * or NULL if there is no known FSF request with this id.
  */
 static inline struct zfcp_fsf_req *
+<<<<<<< HEAD
 zfcp_reqlist_find(struct zfcp_reqlist *rl, u64 req_id)
+=======
+zfcp_reqlist_find(struct zfcp_reqlist *rl, unsigned long req_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long flags;
 	struct zfcp_fsf_req *req;
@@ -129,7 +161,11 @@ zfcp_reqlist_find(struct zfcp_reqlist *rl, u64 req_id)
  * NULL if it has not been found.
  */
 static inline struct zfcp_fsf_req *
+<<<<<<< HEAD
 zfcp_reqlist_find_rm(struct zfcp_reqlist *rl, u64 req_id)
+=======
+zfcp_reqlist_find_rm(struct zfcp_reqlist *rl, unsigned long req_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long flags;
 	struct zfcp_fsf_req *req;
@@ -156,7 +192,11 @@ zfcp_reqlist_find_rm(struct zfcp_reqlist *rl, u64 req_id)
 static inline void zfcp_reqlist_add(struct zfcp_reqlist *rl,
 				    struct zfcp_fsf_req *req)
 {
+<<<<<<< HEAD
 	size_t i;
+=======
+	unsigned int i;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flags;
 
 	i = zfcp_reqlist_hash(req->req_id);
@@ -174,7 +214,11 @@ static inline void zfcp_reqlist_add(struct zfcp_reqlist *rl,
 static inline void zfcp_reqlist_move(struct zfcp_reqlist *rl,
 				     struct list_head *list)
 {
+<<<<<<< HEAD
 	size_t i;
+=======
+	unsigned int i;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flags;
 
 	spin_lock_irqsave(&rl->lock, flags);
@@ -202,7 +246,11 @@ zfcp_reqlist_apply_for_all(struct zfcp_reqlist *rl,
 {
 	struct zfcp_fsf_req *req;
 	unsigned long flags;
+<<<<<<< HEAD
 	size_t i;
+=======
+	unsigned int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irqsave(&rl->lock, flags);
 	for (i = 0; i < ZFCP_REQ_LIST_BUCKETS; i++)

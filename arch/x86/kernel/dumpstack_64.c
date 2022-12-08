@@ -134,7 +134,11 @@ static __always_inline bool in_exception_stack(unsigned long *stack, struct stac
 
 static __always_inline bool in_irq_stack(unsigned long *stack, struct stack_info *info)
 {
+<<<<<<< HEAD
 	unsigned long *end = (unsigned long *)this_cpu_read(pcpu_hot.hardirq_stack_ptr);
+=======
+	unsigned long *end = (unsigned long *)this_cpu_read(hardirq_stack_ptr);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long *begin;
 
 	/*

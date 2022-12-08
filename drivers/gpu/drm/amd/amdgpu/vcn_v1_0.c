@@ -57,12 +57,19 @@ static void vcn_v1_0_idle_work_handler(struct work_struct *work);
 static void vcn_v1_0_ring_begin_use(struct amdgpu_ring *ring);
 
 /**
+<<<<<<< HEAD
  * vcn_v1_0_early_init - set function pointers and load microcode
+=======
+ * vcn_v1_0_early_init - set function pointers
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @handle: amdgpu_device pointer
  *
  * Set ring and irq function pointers
+<<<<<<< HEAD
  * Load microcode from filesystem
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int vcn_v1_0_early_init(void *handle)
 {
@@ -76,7 +83,11 @@ static int vcn_v1_0_early_init(void *handle)
 
 	jpeg_v1_0_early_init(handle);
 
+<<<<<<< HEAD
 	return amdgpu_vcn_early_init(adev);
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

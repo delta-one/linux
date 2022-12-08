@@ -515,12 +515,30 @@ static struct nvmem_config ti_k3_rtc_nvmem_config = {
 
 static int k3rtc_get_32kclk(struct device *dev, struct ti_k3_rtc *priv)
 {
+<<<<<<< HEAD
 	struct clk *clk;
 
 	clk = devm_clk_get_enabled(dev, "osc32k");
 	if (IS_ERR(clk))
 		return PTR_ERR(clk);
 
+=======
+	int ret;
+	struct clk *clk;
+
+	clk = devm_clk_get(dev, "osc32k");
+	if (IS_ERR(clk))
+		return PTR_ERR(clk);
+
+	ret = clk_prepare_enable(clk);
+	if (ret)
+		return ret;
+
+	ret = devm_add_action_or_reset(dev, (void (*)(void *))clk_disable_unprepare, clk);
+	if (ret)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	priv->rate_32k = clk_get_rate(clk);
 
 	/* Make sure we are exact 32k clock. Else, try to compensate delay */
@@ -535,11 +553,16 @@ static int k3rtc_get_32kclk(struct device *dev, struct ti_k3_rtc *priv)
 	 */
 	priv->sync_timeout_us = (u32)(DIV_ROUND_UP_ULL(1000000, priv->rate_32k) * 4);
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int k3rtc_get_vbusclk(struct device *dev, struct ti_k3_rtc *priv)
 {
+<<<<<<< HEAD
 	struct clk *clk;
 
 	/* Note: VBUS isn't a context clock, it is needed for hardware operation */
@@ -548,6 +571,21 @@ static int k3rtc_get_vbusclk(struct device *dev, struct ti_k3_rtc *priv)
 		return PTR_ERR(clk);
 
 	return 0;
+=======
+	int ret;
+	struct clk *clk;
+
+	/* Note: VBUS isn't a context clock, it is needed for hardware operation */
+	clk = devm_clk_get(dev, "vbus");
+	if (IS_ERR(clk))
+		return PTR_ERR(clk);
+
+	ret = clk_prepare_enable(clk);
+	if (ret)
+		return ret;
+
+	return devm_add_action_or_reset(dev, (void (*)(void *))clk_disable_unprepare, clk);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ti_k3_rtc_probe(struct platform_device *pdev)

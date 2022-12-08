@@ -161,7 +161,14 @@ static inline struct vio_driver *to_vio_driver(struct device_driver *drv)
 	return container_of(drv, struct vio_driver, driver);
 }
 
+<<<<<<< HEAD
 #define to_vio_dev(__dev)	container_of_const(__dev, struct vio_dev, dev)
+=======
+static inline struct vio_dev *to_vio_dev(struct device *dev)
+{
+	return container_of(dev, struct vio_dev, dev);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __KERNEL__ */
 #endif /* _ASM_POWERPC_VIO_H */

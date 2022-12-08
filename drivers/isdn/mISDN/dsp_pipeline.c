@@ -77,7 +77,10 @@ int mISDN_dsp_element_register(struct mISDN_dsp_element *elem)
 	if (!entry)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	INIT_LIST_HEAD(&entry->list);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	entry->elem = elem;
 
 	entry->dev.class = elements_class;
@@ -108,7 +111,11 @@ err2:
 	device_unregister(&entry->dev);
 	return ret;
 err1:
+<<<<<<< HEAD
 	put_device(&entry->dev);
+=======
+	kfree(entry);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 EXPORT_SYMBOL(mISDN_dsp_element_register);
@@ -131,7 +138,11 @@ EXPORT_SYMBOL(mISDN_dsp_element_unregister);
 
 int dsp_pipeline_module_init(void)
 {
+<<<<<<< HEAD
 	elements_class = class_create("dsp_pipeline");
+=======
+	elements_class = class_create(THIS_MODULE, "dsp_pipeline");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(elements_class))
 		return PTR_ERR(elements_class);
 

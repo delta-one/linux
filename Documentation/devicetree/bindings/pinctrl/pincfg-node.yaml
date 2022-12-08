@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/pinctrl/pincfg-node.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Generic Pin Configuration Node
+=======
+title: Generic pin configuration node schema
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Linus Walleij <linus.walleij@linaro.org>

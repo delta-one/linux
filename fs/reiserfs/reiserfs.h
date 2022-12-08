@@ -3100,13 +3100,20 @@ static inline void reiserfs_update_sd(struct reiserfs_transaction_handle *th,
 }
 
 void sd_attrs_to_i_attrs(__u16 sd_attrs, struct inode *inode);
+<<<<<<< HEAD
 int reiserfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+int reiserfs_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		     struct iattr *attr);
 
 int __reiserfs_write_begin(struct page *page, unsigned from, unsigned len);
 
 /* namei.c */
+<<<<<<< HEAD
 void reiserfs_init_priv_inode(struct inode *inode);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void set_de_name_and_namelen(struct reiserfs_dir_entry *de);
 int search_by_entry_key(struct super_block *sb, const struct cpu_key *key,
 			struct treepath *path, struct reiserfs_dir_entry *de);
@@ -3176,7 +3183,10 @@ void reiserfs_unmap_buffer(struct buffer_head *);
 
 /* file.c */
 extern const struct inode_operations reiserfs_file_inode_operations;
+<<<<<<< HEAD
 extern const struct inode_operations reiserfs_priv_file_inode_operations;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern const struct file_operations reiserfs_file_operations;
 extern const struct address_space_operations reiserfs_address_space_operations;
 
@@ -3409,7 +3419,11 @@ __u32 r5_hash(const signed char *msg, int len);
 
 /* prototypes from ioctl.c */
 int reiserfs_fileattr_get(struct dentry *dentry, struct fileattr *fa);
+<<<<<<< HEAD
 int reiserfs_fileattr_set(struct mnt_idmap *idmap,
+=======
+int reiserfs_fileattr_set(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			  struct dentry *dentry, struct fileattr *fa);
 long reiserfs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg);
 long reiserfs_compat_ioctl(struct file *filp,

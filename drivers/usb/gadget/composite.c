@@ -14,11 +14,17 @@
 #include <linux/device.h>
 #include <linux/utsname.h>
 #include <linux/bitfield.h>
+<<<<<<< HEAD
 #include <linux/uuid.h>
 
 #include <linux/usb/composite.h>
 #include <linux/usb/otg.h>
 #include <linux/usb/webusb.h>
+=======
+
+#include <linux/usb/composite.h>
+#include <linux/usb/otg.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/unaligned.h>
 
 #include "u_os_desc.h"
@@ -715,6 +721,7 @@ static int bos_desc(struct usb_composite_dev *cdev)
 	 * A SuperSpeed device shall include the USB2.0 extension descriptor
 	 * and shall support LPM when operating in USB2.0 HS mode.
 	 */
+<<<<<<< HEAD
 	if (cdev->gadget->lpm_capable) {
 		usb_ext = cdev->req->buf + le16_to_cpu(bos->wTotalLength);
 		bos->bNumDeviceCaps++;
@@ -725,6 +732,16 @@ static int bos_desc(struct usb_composite_dev *cdev)
 		usb_ext->bmAttributes = cpu_to_le32(USB_LPM_SUPPORT |
 							USB_BESL_SUPPORT | besl);
 	}
+=======
+	usb_ext = cdev->req->buf + le16_to_cpu(bos->wTotalLength);
+	bos->bNumDeviceCaps++;
+	le16_add_cpu(&bos->wTotalLength, USB_DT_USB_EXT_CAP_SIZE);
+	usb_ext->bLength = USB_DT_USB_EXT_CAP_SIZE;
+	usb_ext->bDescriptorType = USB_DT_DEVICE_CAPABILITY;
+	usb_ext->bDevCapabilityType = USB_CAP_TYPE_EXT;
+	usb_ext->bmAttributes = cpu_to_le32(USB_LPM_SUPPORT |
+					    USB_BESL_SUPPORT | besl);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * The Superspeed USB Capability descriptor shall be implemented by all
@@ -825,6 +842,7 @@ static int bos_desc(struct usb_composite_dev *cdev)
 		}
 	}
 
+<<<<<<< HEAD
 	/* The WebUSB Platform Capability descriptor */
 	if (cdev->use_webusb) {
 		struct usb_plat_dev_cap_descriptor *webusb_cap;
@@ -856,6 +874,8 @@ static int bos_desc(struct usb_composite_dev *cdev)
 			webusb_cap_data->iLandingPage = WEBUSB_LANDING_PAGE_NOT_PRESENT;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return le16_to_cpu(bos->wTotalLength);
 }
 
@@ -1779,7 +1799,11 @@ composite_setup(struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
 					cdev->desc.bcdUSB = cpu_to_le16(0x0210);
 				}
 			} else {
+<<<<<<< HEAD
 				if (gadget->lpm_capable || cdev->use_webusb)
+=======
+				if (gadget->lpm_capable)
+>>>>>>> b7ba80a49124 (Commit)
 					cdev->desc.bcdUSB = cpu_to_le16(0x0201);
 				else
 					cdev->desc.bcdUSB = cpu_to_le16(0x0200);
@@ -1814,7 +1838,11 @@ composite_setup(struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
 			break;
 		case USB_DT_BOS:
 			if (gadget_is_superspeed(gadget) ||
+<<<<<<< HEAD
 			    gadget->lpm_capable || cdev->use_webusb) {
+=======
+			    gadget->lpm_capable) {
+>>>>>>> b7ba80a49124 (Commit)
 				value = bos_desc(cdev);
 				value = min(w_length, (u16) value);
 			}
@@ -2048,6 +2076,7 @@ unknown:
 			goto check_value;
 		}
 
+<<<<<<< HEAD
 		/*
 		 * WebUSB URL descriptor handling, following:
 		 * https://wicg.github.io/webusb/#device-requests
@@ -2094,6 +2123,8 @@ unknown:
 			goto check_value;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		VDBG(cdev,
 			"non-core control req%02x.%02x v%04x i%04x l%d\n",
 			ctrl->bRequestType, ctrl->bRequest,
@@ -2530,10 +2561,13 @@ void composite_resume(struct usb_gadget *gadget)
 			usb_gadget_clear_selfpowered(gadget);
 
 		usb_gadget_vbus_draw(gadget, maxpower);
+<<<<<<< HEAD
 	} else {
 		maxpower = CONFIG_USB_GADGET_VBUS_DRAW;
 		maxpower = min(maxpower, 100U);
 		usb_gadget_vbus_draw(gadget, maxpower);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	cdev->suspended = 0;

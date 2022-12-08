@@ -720,9 +720,12 @@ static int tegra_qspi_start_cpu_based_transfer(struct tegra_qspi *qspi, struct s
 
 static void tegra_qspi_deinit_dma(struct tegra_qspi *tqspi)
 {
+<<<<<<< HEAD
 	if (!tqspi->soc_data->has_dma)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (tqspi->tx_dma_buf) {
 		dma_free_coherent(tqspi->dev, tqspi->dma_buf_size,
 				  tqspi->tx_dma_buf, tqspi->tx_dma_phys);
@@ -753,9 +756,12 @@ static int tegra_qspi_init_dma(struct tegra_qspi *tqspi)
 	u32 *dma_buf;
 	int err;
 
+<<<<<<< HEAD
 	if (!tqspi->soc_data->has_dma)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dma_chan = dma_request_chan(tqspi->dev, "rx");
 	if (IS_ERR(dma_chan)) {
 		err = PTR_ERR(dma_chan);
@@ -829,7 +835,11 @@ static u32 tegra_qspi_setup_transfer_one(struct spi_device *spi, struct spi_tran
 		tegra_qspi_mask_clear_irq(tqspi);
 
 		command1 = tqspi->def_command1_reg;
+<<<<<<< HEAD
 		command1 |= QSPI_CS_SEL(spi_get_chipselect(spi, 0));
+=======
+		command1 |= QSPI_CS_SEL(spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 		command1 |= QSPI_BIT_LENGTH(bits_per_word - 1);
 
 		command1 &= ~QSPI_CONTROL_MODE_MASK;
@@ -924,9 +934,14 @@ static int tegra_qspi_start_transfer_one(struct spi_device *spi,
 static struct tegra_qspi_client_data *tegra_qspi_parse_cdata_dt(struct spi_device *spi)
 {
 	struct tegra_qspi_client_data *cdata;
+<<<<<<< HEAD
 	struct tegra_qspi *tqspi = spi_master_get_devdata(spi->master);
 
 	cdata = devm_kzalloc(tqspi->dev, sizeof(*cdata), GFP_KERNEL);
+=======
+
+	cdata = devm_kzalloc(&spi->dev, sizeof(*cdata), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!cdata)
 		return NULL;
 
@@ -960,11 +975,19 @@ static int tegra_qspi_setup(struct spi_device *spi)
 
 	/* keep default cs state to inactive */
 	val = tqspi->def_command1_reg;
+<<<<<<< HEAD
 	val |= QSPI_CS_SEL(spi_get_chipselect(spi, 0));
 	if (spi->mode & SPI_CS_HIGH)
 		val &= ~QSPI_CS_POL_INACTIVE(spi_get_chipselect(spi, 0));
 	else
 		val |= QSPI_CS_POL_INACTIVE(spi_get_chipselect(spi, 0));
+=======
+	val |= QSPI_CS_SEL(spi->chip_select);
+	if (spi->mode & SPI_CS_HIGH)
+		val &= ~QSPI_CS_POL_INACTIVE(spi->chip_select);
+	else
+		val |= QSPI_CS_POL_INACTIVE(spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	tqspi->def_command1_reg = val;
 	tegra_qspi_writel(tqspi, tqspi->def_command1_reg, QSPI_COMMAND1);
@@ -1156,10 +1179,13 @@ static int tegra_qspi_combined_seq_xfer(struct tegra_qspi *tqspi,
 				ret = -EIO;
 				goto exit;
 			}
+<<<<<<< HEAD
 			if (!xfer->cs_change) {
 				tegra_qspi_transfer_end(spi);
 				spi_transfer_delay_exec(xfer);
 			}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		default:
 			ret = -EINVAL;
@@ -1168,6 +1194,7 @@ static int tegra_qspi_combined_seq_xfer(struct tegra_qspi *tqspi,
 		msg->actual_length += xfer->len;
 		transfer_phase++;
 	}
+<<<<<<< HEAD
 	ret = 0;
 
 exit:
@@ -1176,6 +1203,11 @@ exit:
 		tegra_qspi_transfer_end(spi);
 		spi_transfer_delay_exec(xfer);
 	}
+=======
+
+exit:
+	msg->status = ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -1301,7 +1333,11 @@ static bool tegra_qspi_validate_cmb_seq(struct tegra_qspi *tqspi,
 	if (xfer->len > 4 || xfer->len < 3)
 		return false;
 	xfer = list_next_entry(xfer, transfer_list);
+<<<<<<< HEAD
 	if (!tqspi->soc_data->has_dma && xfer->len > (QSPI_FIFO_DEPTH << 2))
+=======
+	if (!tqspi->soc_data->has_dma || xfer->len > (QSPI_FIFO_DEPTH << 2))
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	return true;
@@ -1536,7 +1572,10 @@ static int tegra_qspi_probe(struct platform_device *pdev)
 	master->mode_bits = SPI_MODE_0 | SPI_MODE_3 | SPI_CS_HIGH |
 			    SPI_TX_DUAL | SPI_RX_DUAL | SPI_TX_QUAD | SPI_RX_QUAD;
 	master->bits_per_word_mask = SPI_BPW_MASK(32) | SPI_BPW_MASK(16) | SPI_BPW_MASK(8);
+<<<<<<< HEAD
 	master->flags = SPI_CONTROLLER_HALF_DUPLEX;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	master->setup = tegra_qspi_setup;
 	master->transfer_one_message = tegra_qspi_transfer_one_message;
 	master->num_chipselect = 1;
@@ -1630,7 +1669,11 @@ exit_pm_disable:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void tegra_qspi_remove(struct platform_device *pdev)
+=======
+static int tegra_qspi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct tegra_qspi *tqspi = spi_master_get_devdata(master);
@@ -1639,6 +1682,11 @@ static void tegra_qspi_remove(struct platform_device *pdev)
 	free_irq(tqspi->irq, tqspi);
 	pm_runtime_force_suspend(&pdev->dev);
 	tegra_qspi_deinit_dma(tqspi);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused tegra_qspi_suspend(struct device *dev)
@@ -1712,7 +1760,11 @@ static struct platform_driver tegra_qspi_driver = {
 		.acpi_match_table = ACPI_PTR(tegra_qspi_acpi_match),
 	},
 	.probe =	tegra_qspi_probe,
+<<<<<<< HEAD
 	.remove_new =	tegra_qspi_remove,
+=======
+	.remove =	tegra_qspi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(tegra_qspi_driver);
 

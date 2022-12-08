@@ -119,9 +119,13 @@ torture_param(int, stutter, 5, "Number of seconds to run/halt test");
 torture_param(int, test_boost, 1, "Test RCU prio boost: 0=no, 1=maybe, 2=yes.");
 torture_param(int, test_boost_duration, 4, "Duration of each boost test, seconds.");
 torture_param(int, test_boost_interval, 7, "Interval between boost tests, seconds.");
+<<<<<<< HEAD
 torture_param(int, test_nmis, 0, "End-test NMI tests, 0 to disable.");
 torture_param(bool, test_no_idle_hz, true, "Test support for tickless idle CPUs");
 torture_param(int, test_srcu_lockdep, 0, "Test specified SRCU deadlock scenario.");
+=======
+torture_param(bool, test_no_idle_hz, true, "Test support for tickless idle CPUs");
+>>>>>>> b7ba80a49124 (Commit)
 torture_param(int, verbose, 1, "Enable verbose debugging printk()s");
 
 static char *torture_type = "rcu";
@@ -181,6 +185,10 @@ static atomic_t n_rcu_torture_mbchk_tries;
 static atomic_t n_rcu_torture_error;
 static long n_rcu_torture_barrier_error;
 static long n_rcu_torture_boost_ktrerror;
+<<<<<<< HEAD
+=======
+static long n_rcu_torture_boost_rterror;
+>>>>>>> b7ba80a49124 (Commit)
 static long n_rcu_torture_boost_failure;
 static long n_rcu_torture_boosts;
 static atomic_long_t n_rcu_torture_timers;
@@ -400,7 +408,11 @@ static int torture_readlock_not_held(void)
 	return rcu_read_lock_bh_held() || rcu_read_lock_sched_held();
 }
 
+<<<<<<< HEAD
 static int rcu_torture_read_lock(void)
+=======
+static int rcu_torture_read_lock(void) __acquires(RCU)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	rcu_read_lock();
 	return 0;
@@ -442,7 +454,11 @@ rcu_read_delay(struct torture_random_state *rrsp, struct rt_read_seg *rtrsp)
 	}
 }
 
+<<<<<<< HEAD
 static void rcu_torture_read_unlock(int idx)
+=======
+static void rcu_torture_read_unlock(int idx) __releases(RCU)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	rcu_read_unlock();
 }
@@ -515,7 +531,11 @@ static unsigned long rcu_no_completed(void)
 
 static void rcu_torture_deferred_free(struct rcu_torture *p)
 {
+<<<<<<< HEAD
 	call_rcu_hurry(&p->rtort_rcu, rcu_torture_cb);
+=======
+	call_rcu(&p->rtort_rcu, rcu_torture_cb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void rcu_sync_torture_init(void)
@@ -560,7 +580,11 @@ static struct rcu_torture_ops rcu_ops = {
 	.start_gp_poll_exp_full	= start_poll_synchronize_rcu_expedited_full,
 	.poll_gp_state_exp	= poll_state_synchronize_rcu,
 	.cond_sync_exp		= cond_synchronize_rcu_expedited,
+<<<<<<< HEAD
 	.call			= call_rcu_hurry,
+=======
+	.call			= call_rcu,
+>>>>>>> b7ba80a49124 (Commit)
 	.cb_barrier		= rcu_barrier,
 	.fqs			= rcu_force_quiescent_state,
 	.stats			= NULL,
@@ -626,7 +650,11 @@ static struct srcu_struct srcu_ctld;
 static struct srcu_struct *srcu_ctlp = &srcu_ctl;
 static struct rcu_torture_ops srcud_ops;
 
+<<<<<<< HEAD
 static int srcu_torture_read_lock(void)
+=======
+static int srcu_torture_read_lock(void) __acquires(srcu_ctlp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (cur_ops == &srcud_ops)
 		return srcu_read_lock_nmisafe(srcu_ctlp);
@@ -653,7 +681,11 @@ srcu_read_delay(struct torture_random_state *rrsp, struct rt_read_seg *rtrsp)
 	}
 }
 
+<<<<<<< HEAD
 static void srcu_torture_read_unlock(int idx)
+=======
+static void srcu_torture_read_unlock(int idx) __releases(srcu_ctlp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (cur_ops == &srcud_ops)
 		srcu_read_unlock_nmisafe(srcu_ctlp, idx);
@@ -815,13 +847,21 @@ static void synchronize_rcu_trivial(void)
 	}
 }
 
+<<<<<<< HEAD
 static int rcu_torture_read_lock_trivial(void)
+=======
+static int rcu_torture_read_lock_trivial(void) __acquires(RCU)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	preempt_disable();
 	return 0;
 }
 
+<<<<<<< HEAD
 static void rcu_torture_read_unlock_trivial(int idx)
+=======
+static void rcu_torture_read_unlock_trivial(int idx) __releases(RCU)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	preempt_enable();
 }
@@ -864,7 +904,11 @@ static void rcu_tasks_torture_deferred_free(struct rcu_torture *p)
 
 static void synchronize_rcu_mult_test(void)
 {
+<<<<<<< HEAD
 	synchronize_rcu_mult(call_rcu_tasks, call_rcu_hurry);
+=======
+	synchronize_rcu_mult(call_rcu_tasks, call_rcu);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct rcu_torture_ops tasks_ops = {
@@ -2195,11 +2239,20 @@ rcu_torture_stats_print(void)
 		atomic_read(&n_rcu_torture_alloc),
 		atomic_read(&n_rcu_torture_alloc_fail),
 		atomic_read(&n_rcu_torture_free));
+<<<<<<< HEAD
 	pr_cont("rtmbe: %d rtmbkf: %d/%d rtbe: %ld rtbke: %ld ",
 		atomic_read(&n_rcu_torture_mberror),
 		atomic_read(&n_rcu_torture_mbchk_fail), atomic_read(&n_rcu_torture_mbchk_tries),
 		n_rcu_torture_barrier_error,
 		n_rcu_torture_boost_ktrerror);
+=======
+	pr_cont("rtmbe: %d rtmbkf: %d/%d rtbe: %ld rtbke: %ld rtbre: %ld ",
+		atomic_read(&n_rcu_torture_mberror),
+		atomic_read(&n_rcu_torture_mbchk_fail), atomic_read(&n_rcu_torture_mbchk_tries),
+		n_rcu_torture_barrier_error,
+		n_rcu_torture_boost_ktrerror,
+		n_rcu_torture_boost_rterror);
+>>>>>>> b7ba80a49124 (Commit)
 	pr_cont("rtbf: %ld rtb: %ld nt: %ld ",
 		n_rcu_torture_boost_failure,
 		n_rcu_torture_boosts,
@@ -2217,13 +2270,22 @@ rcu_torture_stats_print(void)
 	if (atomic_read(&n_rcu_torture_mberror) ||
 	    atomic_read(&n_rcu_torture_mbchk_fail) ||
 	    n_rcu_torture_barrier_error || n_rcu_torture_boost_ktrerror ||
+<<<<<<< HEAD
 	    n_rcu_torture_boost_failure || i > 1) {
+=======
+	    n_rcu_torture_boost_rterror || n_rcu_torture_boost_failure ||
+	    i > 1) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_cont("%s", "!!! ");
 		atomic_inc(&n_rcu_torture_error);
 		WARN_ON_ONCE(atomic_read(&n_rcu_torture_mberror));
 		WARN_ON_ONCE(atomic_read(&n_rcu_torture_mbchk_fail));
 		WARN_ON_ONCE(n_rcu_torture_barrier_error);  // rcu_barrier()
 		WARN_ON_ONCE(n_rcu_torture_boost_ktrerror); // no boost kthread
+<<<<<<< HEAD
+=======
+		WARN_ON_ONCE(n_rcu_torture_boost_rterror); // can't set RT prio
+>>>>>>> b7ba80a49124 (Commit)
 		WARN_ON_ONCE(n_rcu_torture_boost_failure); // boost failed (TIMER_SOFTIRQ RT prio?)
 		WARN_ON_ONCE(i > 1); // Too-short grace period
 	}
@@ -2356,8 +2418,12 @@ rcu_torture_print_module_parms(struct rcu_torture_ops *cur_ops, const char *tag)
 		 "n_barrier_cbs=%d "
 		 "onoff_interval=%d onoff_holdoff=%d "
 		 "read_exit_delay=%d read_exit_burst=%d "
+<<<<<<< HEAD
 		 "nocbs_nthreads=%d nocbs_toggle=%d "
 		 "test_nmis=%d\n",
+=======
+		 "nocbs_nthreads=%d nocbs_toggle=%d\n",
+>>>>>>> b7ba80a49124 (Commit)
 		 torture_type, tag, nrealreaders, nfakewriters,
 		 stat_interval, verbose, test_no_idle_hz, shuffle_interval,
 		 stutter, irqreader, fqs_duration, fqs_holdoff, fqs_stutter,
@@ -2368,8 +2434,12 @@ rcu_torture_print_module_parms(struct rcu_torture_ops *cur_ops, const char *tag)
 		 n_barrier_cbs,
 		 onoff_interval, onoff_holdoff,
 		 read_exit_delay, read_exit_burst,
+<<<<<<< HEAD
 		 nocbs_nthreads, nocbs_toggle,
 		 test_nmis);
+=======
+		 nocbs_nthreads, nocbs_toggle);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int rcutorture_booster_cleanup(unsigned int cpu)
@@ -3273,6 +3343,7 @@ static void rcu_torture_read_exit_cleanup(void)
 	torture_stop_kthread(rcutorture_read_exit, read_exit_task);
 }
 
+<<<<<<< HEAD
 static void rcutorture_test_nmis(int n)
 {
 #if IS_BUILTIN(CONFIG_RCU_TORTURE_TEST)
@@ -3296,6 +3367,8 @@ static void rcutorture_test_nmis(int n)
 #endif // #else // #if IS_BUILTIN(CONFIG_RCU_TORTURE_TEST)
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static enum cpuhp_state rcutor_hp;
 
 static void
@@ -3320,8 +3393,11 @@ rcu_torture_cleanup(void)
 		return;
 	}
 
+<<<<<<< HEAD
 	rcutorture_test_nmis(test_nmis);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (cur_ops->gp_kthread_dbg)
 		cur_ops->gp_kthread_dbg();
 	rcu_torture_read_exit_cleanup();
@@ -3457,6 +3533,7 @@ static void rcu_test_debug_objects(void)
 	/* Try to queue the rh2 pair of callbacks for the same grace period. */
 	preempt_disable(); /* Prevent preemption from interrupting test. */
 	rcu_read_lock(); /* Make it impossible to finish a grace period. */
+<<<<<<< HEAD
 	call_rcu_hurry(&rh1, rcu_torture_leak_cb); /* Start grace period. */
 	local_irq_disable(); /* Make it harder to start a new grace period. */
 	call_rcu_hurry(&rh2, rcu_torture_leak_cb);
@@ -3464,6 +3541,15 @@ static void rcu_test_debug_objects(void)
 	if (rhp) {
 		call_rcu_hurry(rhp, rcu_torture_leak_cb);
 		call_rcu_hurry(rhp, rcu_torture_err_cb); /* Another duplicate callback. */
+=======
+	call_rcu(&rh1, rcu_torture_leak_cb); /* Start grace period. */
+	local_irq_disable(); /* Make it harder to start a new grace period. */
+	call_rcu(&rh2, rcu_torture_leak_cb);
+	call_rcu(&rh2, rcu_torture_err_cb); /* Duplicate callback. */
+	if (rhp) {
+		call_rcu(rhp, rcu_torture_leak_cb);
+		call_rcu(rhp, rcu_torture_err_cb); /* Another duplicate callback. */
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	local_irq_enable();
 	rcu_read_unlock();
@@ -3488,6 +3574,7 @@ static void rcutorture_sync(void)
 		cur_ops->sync();
 }
 
+<<<<<<< HEAD
 static DEFINE_MUTEX(mut0);
 static DEFINE_MUTEX(mut1);
 static DEFINE_MUTEX(mut2);
@@ -3670,6 +3757,8 @@ err_out:
 		pr_info("%s: NN=3 disallowed because kernel is built with CONFIG_TASKS_TRACE_RCU=n\n", __func__);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __init
 rcu_torture_init(void)
 {
@@ -3708,6 +3797,7 @@ rcu_torture_init(void)
 		pr_alert("rcu-torture: ->fqs NULL and non-zero fqs_duration, fqs disabled.\n");
 		fqs_duration = 0;
 	}
+<<<<<<< HEAD
 	if (nocbs_nthreads != 0 && (cur_ops != &rcu_ops ||
 				    !IS_ENABLED(CONFIG_RCU_NOCB_CPU))) {
 		pr_alert("rcu-torture types: %s and CONFIG_RCU_NOCB_CPU=%d, nocb toggle disabled.\n",
@@ -3719,6 +3809,11 @@ rcu_torture_init(void)
 
 	rcu_torture_init_srcu_lockdep();
 
+=======
+	if (cur_ops->init)
+		cur_ops->init();
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (nreaders >= 0) {
 		nrealreaders = nreaders;
 	} else {
@@ -3755,6 +3850,10 @@ rcu_torture_init(void)
 	atomic_set(&n_rcu_torture_error, 0);
 	n_rcu_torture_barrier_error = 0;
 	n_rcu_torture_boost_ktrerror = 0;
+<<<<<<< HEAD
+=======
+	n_rcu_torture_boost_rterror = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	n_rcu_torture_boost_failure = 0;
 	n_rcu_torture_boosts = 0;
 	for (i = 0; i < RCU_TORTURE_PIPE_LEN + 1; i++)

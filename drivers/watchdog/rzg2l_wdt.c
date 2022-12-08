@@ -8,10 +8,16 @@
 #include <linux/clk.h>
 #include <linux/delay.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/iopoll.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/of_device.h>
+=======
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/of.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <linux/pm_runtime.h>
 #include <linux/reset.h>
@@ -36,24 +42,31 @@
 
 #define F2CYCLE_NSEC(f)			(1000000000 / (f))
 
+<<<<<<< HEAD
 #define RZV2M_A_NSEC			730
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool nowayout = WATCHDOG_NOWAYOUT;
 module_param(nowayout, bool, 0);
 MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
 				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
 
+<<<<<<< HEAD
 enum rz_wdt_type {
 	WDT_RZG2L,
 	WDT_RZV2M,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct rzg2l_wdt_priv {
 	void __iomem *base;
 	struct watchdog_device wdev;
 	struct reset_control *rstc;
 	unsigned long osc_clk_rate;
 	unsigned long delay;
+<<<<<<< HEAD
 	unsigned long minimum_assertion_period;
 	struct clk *pclk;
 	struct clk *osc_clk;
@@ -83,6 +96,12 @@ static int rzg2l_wdt_reset(struct rzg2l_wdt_priv *priv)
 	return err;
 }
 
+=======
+	struct clk *pclk;
+	struct clk *osc_clk;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static void rzg2l_wdt_wait_delay(struct rzg2l_wdt_priv *priv)
 {
 	/* delay timer when change the setting register */
@@ -142,23 +161,41 @@ static int rzg2l_wdt_stop(struct watchdog_device *wdev)
 {
 	struct rzg2l_wdt_priv *priv = watchdog_get_drvdata(wdev);
 
+<<<<<<< HEAD
 	rzg2l_wdt_reset(priv);
 	pm_runtime_put(wdev->parent);
+=======
+	pm_runtime_put(wdev->parent);
+	reset_control_reset(priv->rstc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 static int rzg2l_wdt_set_timeout(struct watchdog_device *wdev, unsigned int timeout)
 {
+<<<<<<< HEAD
+=======
+	struct rzg2l_wdt_priv *priv = watchdog_get_drvdata(wdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	wdev->timeout = timeout;
 
 	/*
 	 * If the watchdog is active, reset the module for updating the WDTSET
+<<<<<<< HEAD
 	 * register by calling rzg2l_wdt_stop() (which internally calls reset_control_reset()
 	 * to reset the module) so that it is updated with new timeout values.
 	 */
 	if (watchdog_active(wdev)) {
 		rzg2l_wdt_stop(wdev);
+=======
+	 * register so that it is updated with new timeout values.
+	 */
+	if (watchdog_active(wdev)) {
+		pm_runtime_put(wdev->parent);
+		reset_control_reset(priv->rstc);
+>>>>>>> b7ba80a49124 (Commit)
 		rzg2l_wdt_start(wdev);
 	}
 
@@ -173,6 +210,7 @@ static int rzg2l_wdt_restart(struct watchdog_device *wdev,
 	clk_prepare_enable(priv->pclk);
 	clk_prepare_enable(priv->osc_clk);
 
+<<<<<<< HEAD
 	if (priv->devtype == WDT_RZG2L) {
 		/* Generate Reset (WDTRSTB) Signal on parity error */
 		rzg2l_wdt_write(priv, 0, PECR);
@@ -197,6 +235,13 @@ static int rzg2l_wdt_restart(struct watchdog_device *wdev,
 		/* Wait 2 consecutive overflow cycles for reset */
 		mdelay(DIV_ROUND_UP(2 * 0xFFFFF * 1000, priv->osc_clk_rate));
 	}
+=======
+	/* Generate Reset (WDTRSTB) Signal on parity error */
+	rzg2l_wdt_write(priv, 0, PECR);
+
+	/* Force parity error */
+	rzg2l_wdt_write(priv, PEEN_FORCE, PEEN);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -277,6 +322,7 @@ static int rzg2l_wdt_probe(struct platform_device *pdev)
 	if (ret)
 		return dev_err_probe(dev, ret, "failed to deassert");
 
+<<<<<<< HEAD
 	priv->devtype = (uintptr_t)of_device_get_match_data(dev);
 
 	if (priv->devtype == WDT_RZV2M) {
@@ -286,6 +332,8 @@ static int rzg2l_wdt_probe(struct platform_device *pdev)
 			    F2CYCLE_NSEC(pclk_rate));
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_enable(&pdev->dev);
 
 	priv->wdev.info = &rzg2l_wdt_ident;
@@ -314,8 +362,12 @@ static int rzg2l_wdt_probe(struct platform_device *pdev)
 }
 
 static const struct of_device_id rzg2l_wdt_ids[] = {
+<<<<<<< HEAD
 	{ .compatible = "renesas,rzg2l-wdt", .data = (void *)WDT_RZG2L },
 	{ .compatible = "renesas,rzv2m-wdt", .data = (void *)WDT_RZV2M },
+=======
+	{ .compatible = "renesas,rzg2l-wdt", },
+>>>>>>> b7ba80a49124 (Commit)
 	{ /* sentinel */ }
 };
 MODULE_DEVICE_TABLE(of, rzg2l_wdt_ids);

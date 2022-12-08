@@ -35,6 +35,7 @@
 	ddrc_opp_table: opp-table {
 		compatible = "operating-points-v2";
 
+<<<<<<< HEAD
 		opp-25000000 {
 			opp-hz = /bits/ 64 <25000000>;
 		};
@@ -44,6 +45,17 @@
 		};
 
 		opp-600000000 {
+=======
+		opp-25M {
+			opp-hz = /bits/ 64 <25000000>;
+		};
+
+		opp-100M {
+			opp-hz = /bits/ 64 <100000000>;
+		};
+
+		opp-600M {
+>>>>>>> b7ba80a49124 (Commit)
 			opp-hz = /bits/ 64 <600000000>;
 		};
 	};

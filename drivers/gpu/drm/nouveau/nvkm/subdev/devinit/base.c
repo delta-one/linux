@@ -51,8 +51,12 @@ u64
 nvkm_devinit_disable(struct nvkm_devinit *init)
 {
 	if (init && init->func->disable)
+<<<<<<< HEAD
 		init->func->disable(init);
 
+=======
+		return init->func->disable(init);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

@@ -125,7 +125,10 @@ enum psp_fw_type {
 	PSP_FW_TYPE_PSP_INTF_DRV,
 	PSP_FW_TYPE_PSP_DBG_DRV,
 	PSP_FW_TYPE_PSP_RAS_DRV,
+<<<<<<< HEAD
 	PSP_FW_TYPE_MAX_INDEX,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* version_major=2, version_minor=0 */
@@ -538,15 +541,22 @@ struct amdgpu_firmware {
 
 void amdgpu_ucode_print_mc_hdr(const struct common_firmware_header *hdr);
 void amdgpu_ucode_print_smc_hdr(const struct common_firmware_header *hdr);
+<<<<<<< HEAD
 void amdgpu_ucode_print_imu_hdr(const struct common_firmware_header *hdr);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void amdgpu_ucode_print_gfx_hdr(const struct common_firmware_header *hdr);
 void amdgpu_ucode_print_rlc_hdr(const struct common_firmware_header *hdr);
 void amdgpu_ucode_print_sdma_hdr(const struct common_firmware_header *hdr);
 void amdgpu_ucode_print_psp_hdr(const struct common_firmware_header *hdr);
 void amdgpu_ucode_print_gpu_info_hdr(const struct common_firmware_header *hdr);
+<<<<<<< HEAD
 int amdgpu_ucode_request(struct amdgpu_device *adev, const struct firmware **fw,
 			 const char *fw_name);
 void amdgpu_ucode_release(const struct firmware **fw);
+=======
+int amdgpu_ucode_validate(const struct firmware *fw);
+>>>>>>> b7ba80a49124 (Commit)
 bool amdgpu_ucode_hdr_version(union amdgpu_firmware_header *hdr,
 				uint16_t hdr_major, uint16_t hdr_minor);
 

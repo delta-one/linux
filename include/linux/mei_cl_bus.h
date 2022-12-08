@@ -11,7 +11,10 @@
 
 struct mei_cl_device;
 struct mei_device;
+<<<<<<< HEAD
 struct scatterlist;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 typedef void (*mei_cldev_cb_t)(struct mei_cl_device *cldev);
 
@@ -117,11 +120,14 @@ void mei_cldev_set_drvdata(struct mei_cl_device *cldev, void *data);
 int mei_cldev_enable(struct mei_cl_device *cldev);
 int mei_cldev_disable(struct mei_cl_device *cldev);
 bool mei_cldev_enabled(const struct mei_cl_device *cldev);
+<<<<<<< HEAD
 ssize_t mei_cldev_send_gsc_command(struct mei_cl_device *cldev,
 				   u8 client_id, u32 fence_id,
 				   struct scatterlist *sg_in,
 				   size_t total_in_len,
 				   struct scatterlist *sg_out);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void *mei_cldev_dma_map(struct mei_cl_device *cldev, u8 buffer_id, size_t size);
 int mei_cldev_dma_unmap(struct mei_cl_device *cldev);

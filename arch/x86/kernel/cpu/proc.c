@@ -4,8 +4,11 @@
 #include <linux/string.h>
 #include <linux/seq_file.h>
 #include <linux/cpufreq.h>
+<<<<<<< HEAD
 #include <asm/prctl.h>
 #include <linux/proc_fs.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "cpu.h"
 
@@ -177,6 +180,7 @@ const struct seq_operations cpuinfo_op = {
 	.stop	= c_stop,
 	.show	= show_cpuinfo,
 };
+<<<<<<< HEAD
 
 #ifdef CONFIG_X86_USER_SHADOW_STACK
 static void dump_x86_features(struct seq_file *m, unsigned long features)
@@ -198,3 +202,5 @@ void arch_proc_pid_thread_features(struct seq_file *m, struct task_struct *task)
 	seq_putc(m, '\n');
 }
 #endif /* CONFIG_X86_USER_SHADOW_STACK */
+=======
+>>>>>>> b7ba80a49124 (Commit)

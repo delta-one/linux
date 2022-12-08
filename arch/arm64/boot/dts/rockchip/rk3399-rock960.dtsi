@@ -128,8 +128,11 @@
 };
 
 &hdmi {
+<<<<<<< HEAD
 	avdd-0v9-supply = <&vcca0v9_hdmi>;
 	avdd-1v8-supply = <&vcca1v8_hdmi>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ddc-i2c-bus = <&i2c3>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&hdmi_cec>;

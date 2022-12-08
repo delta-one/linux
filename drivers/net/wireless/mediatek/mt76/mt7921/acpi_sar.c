@@ -33,17 +33,25 @@ mt7921_acpi_read(struct mt7921_dev *dev, u8 *method, u8 **tbl, u32 *len)
 	    sar_root->package.elements[0].type != ACPI_TYPE_INTEGER) {
 		dev_err(mdev->dev, "sar cnt = %d\n",
 			sar_root->package.count);
+<<<<<<< HEAD
 		ret = -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto free;
 	}
 
 	if (!*tbl) {
 		*tbl = devm_kzalloc(mdev->dev, sar_root->package.count,
 				    GFP_KERNEL);
+<<<<<<< HEAD
 		if (!*tbl) {
 			ret = -ENOMEM;
 			goto free;
 		}
+=======
+		if (!*tbl)
+			goto free;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (len)
 		*len = sar_root->package.count;
@@ -55,9 +63,15 @@ mt7921_acpi_read(struct mt7921_dev *dev, u8 *method, u8 **tbl, u32 *len)
 			break;
 		*(*tbl + i) = (u8)sar_unit->integer.value;
 	}
+<<<<<<< HEAD
 	ret = (i == sar_root->package.count) ? 0 : -EINVAL;
 
 free:
+=======
+free:
+	ret = (i == sar_root->package.count) ? 0 : -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(sar_root);
 
 	return ret;
@@ -138,6 +152,7 @@ mt7921_asar_acpi_read_mtgs(struct mt7921_dev *dev, u8 **table, u8 version)
 	return ret;
 }
 
+<<<<<<< HEAD
 /* MTFG : Flag Table */
 static int
 mt7921_asar_acpi_read_mtfg(struct mt7921_dev *dev, u8 **table)
@@ -154,6 +169,8 @@ mt7921_asar_acpi_read_mtfg(struct mt7921_dev *dev, u8 **table)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int mt7921_init_acpi_sar(struct mt7921_dev *dev)
 {
 	struct mt7921_acpi_sar *asar;
@@ -181,12 +198,15 @@ int mt7921_init_acpi_sar(struct mt7921_dev *dev)
 		asar->geo = NULL;
 	}
 
+<<<<<<< HEAD
 	/* MTFG is optional */
 	ret = mt7921_asar_acpi_read_mtfg(dev, (u8 **)&asar->fg);
 	if (ret) {
 		devm_kfree(dev->mt76.dev, asar->fg);
 		asar->fg = NULL;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev->phy.acpisar = asar;
 
 	return 0;
@@ -305,6 +325,7 @@ int mt7921_init_acpi_sar_power(struct mt7921_phy *phy, bool set_default)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 u8 mt7921_acpi_get_flags(struct mt7921_phy *phy)
 {
@@ -338,3 +359,5 @@ u8 mt7921_acpi_get_flags(struct mt7921_phy *phy)
 
 	return flags;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

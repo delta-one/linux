@@ -7,7 +7,10 @@
  *
  */
 #include <linux/fs.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/stat.h>
 #include <linux/slab.h>
 #include <linux/pagemap.h>
@@ -21,6 +24,7 @@
 #include "cifs_unicode.h"
 #include "fscache.h"
 #include "smb2proto.h"
+<<<<<<< HEAD
 #include "smb2status.h"
 
 static struct smb2_symlink_err_rsp *symlink_data(const struct kvec *iov)
@@ -107,16 +111,42 @@ int smb2_open_file(const unsigned int xid, struct cifs_open_parms *oparms, __u32
 	struct smb2_file_all_info *smb2_data = data ? &file_info : NULL;
 	struct kvec err_iov = {};
 	int err_buftype = CIFS_NO_BUFFER;
+=======
+
+int
+smb2_open_file(const unsigned int xid, struct cifs_open_parms *oparms,
+	       __u32 *oplock, FILE_ALL_INFO *buf)
+{
+	int rc;
+	__le16 *smb2_path;
+	struct smb2_file_all_info *smb2_data = NULL;
+	__u8 smb2_oplock;
+>>>>>>> b7ba80a49124 (Commit)
 	struct cifs_fid *fid = oparms->fid;
 	struct network_resiliency_req nr_ioctl_req;
 
 	smb2_path = cifs_convert_path_to_utf16(oparms->path, oparms->cifs_sb);
+<<<<<<< HEAD
 	if (smb2_path == NULL)
 		return -ENOMEM;
+=======
+	if (smb2_path == NULL) {
+		rc = -ENOMEM;
+		goto out;
+	}
+
+	smb2_data = kzalloc(sizeof(struct smb2_file_all_info) + PATH_MAX * 2,
+			    GFP_KERNEL);
+	if (smb2_data == NULL) {
+		rc = -ENOMEM;
+		goto out;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	oparms->desired_access |= FILE_READ_ATTRIBUTES;
 	smb2_oplock = SMB2_OPLOCK_LEVEL_BATCH;
 
+<<<<<<< HEAD
 	rc = SMB2_open(xid, oparms, smb2_path, &smb2_oplock, smb2_data, NULL, &err_iov,
 		       &err_buftype);
 	if (rc && data) {
@@ -140,6 +170,14 @@ int smb2_open_file(const unsigned int xid, struct cifs_open_parms *oparms, __u32
 	if (rc)
 		goto out;
 
+=======
+	rc = SMB2_open(xid, oparms, smb2_path, &smb2_oplock, smb2_data, NULL,
+		       NULL, NULL);
+	if (rc)
+		goto out;
+
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (oparms->tcon->use_resilient) {
 		/* default timeout is 0, servers pick default (120 seconds) */
 		nr_ioctl_req.Timeout =
@@ -159,7 +197,11 @@ int smb2_open_file(const unsigned int xid, struct cifs_open_parms *oparms, __u32
 		rc = 0;
 	}
 
+<<<<<<< HEAD
 	if (smb2_data) {
+=======
+	if (buf) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* if open response does not have IndexNumber field - get it */
 		if (smb2_data->IndexNumber == 0) {
 			rc = SMB2_get_srv_num(xid, oparms->tcon,
@@ -175,12 +217,20 @@ int smb2_open_file(const unsigned int xid, struct cifs_open_parms *oparms, __u32
 				rc = 0;
 			}
 		}
+<<<<<<< HEAD
 		memcpy(&data->fi, smb2_data, sizeof(data->fi));
+=======
+		move_smb2_info_to_cifs(buf, smb2_data);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	*oplock = smb2_oplock;
 out:
+<<<<<<< HEAD
 	free_rsp_buf(err_buftype, err_iov.iov_base);
+=======
+	kfree(smb2_data);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(smb2_path);
 	return rc;
 }

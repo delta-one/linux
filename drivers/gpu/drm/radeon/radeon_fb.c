@@ -80,8 +80,11 @@ static const struct fb_ops radeonfb_ops = {
 	DRM_FB_HELPER_DEFAULT_OPS,
 	.fb_open = radeonfb_open,
 	.fb_release = radeonfb_release,
+<<<<<<< HEAD
 	.fb_read = drm_fb_helper_cfb_read,
 	.fb_write = drm_fb_helper_cfb_write,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.fb_fillrect = drm_fb_helper_cfb_fillrect,
 	.fb_copyarea = drm_fb_helper_cfb_copyarea,
 	.fb_imageblit = drm_fb_helper_cfb_imageblit,
@@ -245,7 +248,11 @@ static int radeonfb_create(struct drm_fb_helper *helper,
 	rbo = gem_to_radeon_bo(gobj);
 
 	/* okay we have an object now allocate the framebuffer */
+<<<<<<< HEAD
 	info = drm_fb_helper_alloc_info(helper);
+=======
+	info = drm_fb_helper_alloc_fbi(helper);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(info)) {
 		ret = PTR_ERR(info);
 		goto out;
@@ -277,6 +284,13 @@ static int radeonfb_create(struct drm_fb_helper *helper,
 
 	drm_fb_helper_fill_info(info, &rfbdev->helper, sizes);
 
+<<<<<<< HEAD
+=======
+	/* setup aperture base/size for vesafb takeover */
+	info->apertures->ranges[0].base = rdev->ddev->mode_config.fb_base;
+	info->apertures->ranges[0].size = rdev->mc.aper_size;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Use default scratch pixmap (info->pixmap.flags = FB_PIXMAP_SYSTEM) */
 
 	if (info->screen_base == NULL) {
@@ -307,7 +321,11 @@ static int radeon_fbdev_destroy(struct drm_device *dev, struct radeon_fbdev *rfb
 {
 	struct drm_framebuffer *fb = &rfbdev->fb;
 
+<<<<<<< HEAD
 	drm_fb_helper_unregister_info(&rfbdev->helper);
+=======
+	drm_fb_helper_unregister_fbi(&rfbdev->helper);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (fb->obj[0]) {
 		radeonfb_destroy_pinned_object(fb->obj[0]);
@@ -348,7 +366,11 @@ int radeon_fbdev_init(struct radeon_device *rdev)
 	rfbdev->rdev = rdev;
 	rdev->mode_info.rfbdev = rfbdev;
 
+<<<<<<< HEAD
 	drm_fb_helper_prepare(rdev->ddev, &rfbdev->helper, bpp_sel,
+=======
+	drm_fb_helper_prepare(rdev->ddev, &rfbdev->helper,
+>>>>>>> b7ba80a49124 (Commit)
 			      &radeon_fb_helper_funcs);
 
 	ret = drm_fb_helper_init(rdev->ddev, &rfbdev->helper);
@@ -358,7 +380,11 @@ int radeon_fbdev_init(struct radeon_device *rdev)
 	/* disable all the possible outputs/crtcs before entering KMS mode */
 	drm_helper_disable_unused_functions(rdev->ddev);
 
+<<<<<<< HEAD
 	ret = drm_fb_helper_initial_config(&rfbdev->helper);
+=======
+	ret = drm_fb_helper_initial_config(&rfbdev->helper, bpp_sel);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto fini;
 
@@ -367,7 +393,10 @@ int radeon_fbdev_init(struct radeon_device *rdev)
 fini:
 	drm_fb_helper_fini(&rfbdev->helper);
 free:
+<<<<<<< HEAD
 	drm_fb_helper_unprepare(&rfbdev->helper);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(rfbdev);
 	return ret;
 }
@@ -378,7 +407,10 @@ void radeon_fbdev_fini(struct radeon_device *rdev)
 		return;
 
 	radeon_fbdev_destroy(rdev->ddev, rdev->mode_info.rfbdev);
+<<<<<<< HEAD
 	drm_fb_helper_unprepare(&rdev->mode_info.rfbdev->helper);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(rdev->mode_info.rfbdev);
 	rdev->mode_info.rfbdev = NULL;
 }

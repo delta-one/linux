@@ -201,7 +201,11 @@ work looked at debugging uses of RCU [Seyster:2011:RFA:2075416.2075425].
 In 2012, Josh Triplett received his Ph.D. with his dissertation
 covering RCU-protected resizable hash tables and the relationship
 between memory barriers and read-side traversal order:  If the updater
+<<<<<<< HEAD
 is making changes in the opposite direction from the read-side traversal
+=======
+is making changes in the opposite direction from the read-side traveral
+>>>>>>> b7ba80a49124 (Commit)
 order, the updater need only execute a memory-barrier instruction,
 but if in the same direction, the updater needs to wait for a grace
 period between the individual updates [JoshTriplettPhD].  Also in 2012,
@@ -1245,7 +1249,11 @@ Oregon Health and Sciences University"
 [Viewed September 5, 2005]"
 ,annotation={
 	First posting showing how RCU can be safely adapted for
+<<<<<<< HEAD
 	preemptible RCU read side critical sections.
+=======
+	preemptable RCU read side critical sections.
+>>>>>>> b7ba80a49124 (Commit)
 }
 }
 
@@ -1888,7 +1896,11 @@ Revised:
 \url{https://lore.kernel.org/r/20070910183004.GA3299@linux.vnet.ibm.com}
 [Viewed October 25, 2007]"
 ,annotation={
+<<<<<<< HEAD
 	Final patch for preemptible RCU to -rt.  (Later patches were
+=======
+	Final patch for preemptable RCU to -rt.  (Later patches were
+>>>>>>> b7ba80a49124 (Commit)
 	to mainline, eventually incorporated.)
 }
 }
@@ -2275,7 +2287,11 @@ lot of {Linux} into your technology!!!"
 \url{https://lore.kernel.org/r/20090724001429.GA17374@linux.vnet.ibm.com}
 [Viewed August 15, 2009]"
 ,annotation={
+<<<<<<< HEAD
 	First posting of simple and fast preemptible RCU.
+=======
+	First posting of simple and fast preemptable RCU.
+>>>>>>> b7ba80a49124 (Commit)
 }
 }
 
@@ -2639,7 +2655,11 @@ lot of {Linux} into your technology!!!"
 	RCU-protected hash tables, barriers vs. read-side traversal order.
 	.
 	If the updater is making changes in the opposite direction from
+<<<<<<< HEAD
 	the read-side traversal order, the updater need only execute a
+=======
+	the read-side traveral order, the updater need only execute a
+>>>>>>> b7ba80a49124 (Commit)
 	memory-barrier instruction, but if in the same direction, the
 	updater needs to wait for a grace period between the individual
 	updates.

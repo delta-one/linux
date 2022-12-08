@@ -14,9 +14,16 @@
 #include <linux/ctype.h>
 #include <linux/delay.h>
 #include <linux/export.h>
+<<<<<<< HEAD
 #include <linux/gpio/consumer.h>
 #include <linux/gpio/driver.h>
 #include <linux/init.h>
+=======
+#include <linux/gpio.h>
+#include <linux/gpio/driver.h>
+#include <linux/init.h>
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/of.h>
 #include <linux/pinctrl/consumer.h>
 #include <linux/slab.h>
@@ -28,9 +35,15 @@ struct snd_ac97_reset_cfg {
 	struct pinctrl_state *pstate_reset;
 	struct pinctrl_state *pstate_warm_reset;
 	struct pinctrl_state *pstate_run;
+<<<<<<< HEAD
 	struct gpio_desc *reset_gpio;
 	struct gpio_desc *sdata_gpio;
 	struct gpio_desc *sync_gpio;
+=======
+	int gpio_sdata;
+	int gpio_sync;
+	int gpio_reset;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct snd_ac97_bus soc_ac97_bus = {
@@ -267,11 +280,19 @@ static void snd_soc_ac97_warm_reset(struct snd_ac97 *ac97)
 
 	pinctrl_select_state(pctl, snd_ac97_rst_cfg.pstate_warm_reset);
 
+<<<<<<< HEAD
 	gpiod_direction_output_raw(snd_ac97_rst_cfg.sync_gpio, 1);
 
 	udelay(10);
 
 	gpiod_direction_output_raw(snd_ac97_rst_cfg.sync_gpio, 0);
+=======
+	gpio_direction_output(snd_ac97_rst_cfg.gpio_sync, 1);
+
+	udelay(10);
+
+	gpio_direction_output(snd_ac97_rst_cfg.gpio_sync, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pinctrl_select_state(pctl, snd_ac97_rst_cfg.pstate_run);
 	msleep(2);
@@ -283,6 +304,7 @@ static void snd_soc_ac97_reset(struct snd_ac97 *ac97)
 
 	pinctrl_select_state(pctl, snd_ac97_rst_cfg.pstate_reset);
 
+<<<<<<< HEAD
 	gpiod_direction_output_raw(snd_ac97_rst_cfg.sync_gpio, 0);
 	gpiod_direction_output_raw(snd_ac97_rst_cfg.sdata_gpio, 0);
 	gpiod_direction_output_raw(snd_ac97_rst_cfg.reset_gpio, 0);
@@ -290,6 +312,15 @@ static void snd_soc_ac97_reset(struct snd_ac97 *ac97)
 	udelay(10);
 
 	gpiod_direction_output_raw(snd_ac97_rst_cfg.reset_gpio, 1);
+=======
+	gpio_direction_output(snd_ac97_rst_cfg.gpio_sync, 0);
+	gpio_direction_output(snd_ac97_rst_cfg.gpio_sdata, 0);
+	gpio_direction_output(snd_ac97_rst_cfg.gpio_reset, 0);
+
+	udelay(10);
+
+	gpio_direction_output(snd_ac97_rst_cfg.gpio_reset, 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pinctrl_select_state(pctl, snd_ac97_rst_cfg.pstate_run);
 	msleep(2);
@@ -300,6 +331,11 @@ static int snd_soc_ac97_parse_pinctl(struct device *dev,
 {
 	struct pinctrl *p;
 	struct pinctrl_state *state;
+<<<<<<< HEAD
+=======
+	int gpio;
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	p = devm_pinctrl_get(dev);
 	if (IS_ERR(p)) {
@@ -329,6 +365,7 @@ static int snd_soc_ac97_parse_pinctl(struct device *dev,
 	}
 	cfg->pstate_run = state;
 
+<<<<<<< HEAD
 	cfg->sync_gpio = devm_gpiod_get_index(dev, "ac97", 0, GPIOD_ASIS);
 	if (IS_ERR(cfg->sync_gpio))
 		return dev_err_probe(dev, PTR_ERR(cfg->sync_gpio), "Can't find ac97-sync gpio\n");
@@ -343,6 +380,43 @@ static int snd_soc_ac97_parse_pinctl(struct device *dev,
 	if (IS_ERR(cfg->reset_gpio))
 		return dev_err_probe(dev, PTR_ERR(cfg->reset_gpio), "Can't find ac97-reset gpio\n");
 	gpiod_set_consumer_name(cfg->reset_gpio, "AC97 link reset");
+=======
+	gpio = of_get_named_gpio(dev->of_node, "ac97-gpios", 0);
+	if (gpio < 0) {
+		dev_err(dev, "Can't find ac97-sync gpio\n");
+		return gpio;
+	}
+	ret = devm_gpio_request(dev, gpio, "AC97 link sync");
+	if (ret) {
+		dev_err(dev, "Failed requesting ac97-sync gpio\n");
+		return ret;
+	}
+	cfg->gpio_sync = gpio;
+
+	gpio = of_get_named_gpio(dev->of_node, "ac97-gpios", 1);
+	if (gpio < 0) {
+		dev_err(dev, "Can't find ac97-sdata gpio %d\n", gpio);
+		return gpio;
+	}
+	ret = devm_gpio_request(dev, gpio, "AC97 link sdata");
+	if (ret) {
+		dev_err(dev, "Failed requesting ac97-sdata gpio\n");
+		return ret;
+	}
+	cfg->gpio_sdata = gpio;
+
+	gpio = of_get_named_gpio(dev->of_node, "ac97-gpios", 2);
+	if (gpio < 0) {
+		dev_err(dev, "Can't find ac97-reset gpio\n");
+		return gpio;
+	}
+	ret = devm_gpio_request(dev, gpio, "AC97 link reset");
+	if (ret) {
+		dev_err(dev, "Failed requesting ac97-reset gpio\n");
+		return ret;
+	}
+	cfg->gpio_reset = gpio;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

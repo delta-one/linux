@@ -67,14 +67,20 @@ efi_status_t efi_random_get_seed(void)
 	efi_guid_t rng_proto = EFI_RNG_PROTOCOL_GUID;
 	efi_guid_t rng_algo_raw = EFI_RNG_ALGORITHM_RAW;
 	efi_guid_t rng_table_guid = LINUX_EFI_RANDOM_SEED_TABLE_GUID;
+<<<<<<< HEAD
 	struct linux_efi_random_seed *prev_seed, *seed = NULL;
 	int prev_seed_size = 0, seed_size = EFI_RANDOM_SEED_SIZE;
 	unsigned long nv_seed_size = 0, offset = 0;
 	efi_rng_protocol_t *rng = NULL;
+=======
+	efi_rng_protocol_t *rng = NULL;
+	struct linux_efi_random_seed *seed = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	efi_status_t status;
 
 	status = efi_bs_call(locate_protocol, &rng_proto, NULL, (void **)&rng);
 	if (status != EFI_SUCCESS)
+<<<<<<< HEAD
 		seed_size = 0;
 
 	// Call GetVariable() with a zero length buffer to obtain the size
@@ -157,10 +163,36 @@ efi_status_t efi_random_get_seed(void)
 	}
 
 	seed->size = offset;
+=======
+		return status;
+
+	status = efi_bs_call(allocate_pool, EFI_RUNTIME_SERVICES_DATA,
+			     sizeof(*seed) + EFI_RANDOM_SEED_SIZE,
+			     (void **)&seed);
+	if (status != EFI_SUCCESS)
+		return status;
+
+	status = efi_call_proto(rng, get_rng, &rng_algo_raw,
+				 EFI_RANDOM_SEED_SIZE, seed->bits);
+
+	if (status == EFI_UNSUPPORTED)
+		/*
+		 * Use whatever algorithm we have available if the raw algorithm
+		 * is not implemented.
+		 */
+		status = efi_call_proto(rng, get_rng, NULL,
+					EFI_RANDOM_SEED_SIZE, seed->bits);
+
+	if (status != EFI_SUCCESS)
+		goto err_freepool;
+
+	seed->size = EFI_RANDOM_SEED_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 	status = efi_bs_call(install_configuration_table, &rng_table_guid, seed);
 	if (status != EFI_SUCCESS)
 		goto err_freepool;
 
+<<<<<<< HEAD
 	if (prev_seed_size) {
 		/* wipe and free the old seed if we managed to install the new one */
 		memzero_explicit(prev_seed->bits, prev_seed_size);
@@ -175,5 +207,11 @@ err_freepool:
 err_warn:
 	if (prev_seed)
 		efi_warn("Retaining bootloader-supplied seed only");
+=======
+	return EFI_SUCCESS;
+
+err_freepool:
+	efi_bs_call(free_pool, seed);
+>>>>>>> b7ba80a49124 (Commit)
 	return status;
 }

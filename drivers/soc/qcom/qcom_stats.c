@@ -92,7 +92,11 @@ static int qcom_subsystem_sleep_stats_show(struct seq_file *s, void *unused)
 	/* Items are allocated lazily, so lookup pointer each time */
 	stat = qcom_smem_get(subsystem->pid, subsystem->smem_item, NULL);
 	if (IS_ERR(stat))
+<<<<<<< HEAD
 		return 0;
+=======
+		return -EIO;
+>>>>>>> b7ba80a49124 (Commit)
 
 	qcom_print_stats(s, stat);
 
@@ -170,14 +174,29 @@ static void qcom_create_soc_sleep_stat_files(struct dentry *root, void __iomem *
 static void qcom_create_subsystem_stat_files(struct dentry *root,
 					     const struct stats_config *config)
 {
+<<<<<<< HEAD
+=======
+	const struct sleep_stats *stat;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	if (!config->subsystem_stats_in_smem)
 		return;
 
+<<<<<<< HEAD
 	for (i = 0; i < ARRAY_SIZE(subsystems); i++)
 		debugfs_create_file(subsystems[i].name, 0400, root, (void *)&subsystems[i],
 				    &qcom_subsystem_sleep_stats_fops);
+=======
+	for (i = 0; i < ARRAY_SIZE(subsystems); i++) {
+		stat = qcom_smem_get(subsystems[i].pid, subsystems[i].smem_item, NULL);
+		if (IS_ERR(stat))
+			continue;
+
+		debugfs_create_file(subsystems[i].name, 0400, root, (void *)&subsystems[i],
+				    &qcom_subsystem_sleep_stats_fops);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int qcom_stats_probe(struct platform_device *pdev)
@@ -211,8 +230,11 @@ static int qcom_stats_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, root);
 
+<<<<<<< HEAD
 	device_set_pm_not_required(&pdev->dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

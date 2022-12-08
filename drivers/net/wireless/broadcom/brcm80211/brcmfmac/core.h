@@ -13,12 +13,15 @@
 #include <net/cfg80211.h>
 #include "fweh.h"
 
+<<<<<<< HEAD
 #if IS_MODULE(CONFIG_BRCMFMAC)
 #define BRCMF_EXPORT_SYMBOL_GPL(__sym)	EXPORT_SYMBOL_NS_GPL(__sym, BRCMFMAC)
 #else
 #define BRCMF_EXPORT_SYMBOL_GPL(__sym)
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define TOE_TX_CSUM_OL		0x00000001
 #define TOE_RX_CSUM_OL		0x00000002
 
@@ -142,9 +145,12 @@ struct brcmf_pub {
 	struct work_struct bus_reset;
 
 	u8 clmver[BRCMF_DCMD_SMLEN];
+<<<<<<< HEAD
 	u8 sta_mac_idx;
 	const struct brcmf_fwvid_ops *vops;
 	void *vdata;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* forward declarations */

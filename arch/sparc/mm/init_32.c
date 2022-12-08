@@ -37,7 +37,12 @@
 
 #include "mm_32.h"
 
+<<<<<<< HEAD
 static unsigned long *sparc_valid_addr_bitmap;
+=======
+unsigned long *sparc_valid_addr_bitmap;
+EXPORT_SYMBOL(sparc_valid_addr_bitmap);
+>>>>>>> b7ba80a49124 (Commit)
 
 unsigned long phys_base;
 EXPORT_SYMBOL(phys_base);

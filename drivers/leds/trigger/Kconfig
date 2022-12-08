@@ -83,7 +83,10 @@ config LEDS_TRIGGER_ACTIVITY
 config LEDS_TRIGGER_GPIO
 	tristate "LED GPIO Trigger"
 	depends on GPIOLIB || COMPILE_TEST
+<<<<<<< HEAD
 	depends on BROKEN
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This allows LEDs to be controlled by gpio events. It's good
 	  when using gpios as switches and triggering the needed LEDs

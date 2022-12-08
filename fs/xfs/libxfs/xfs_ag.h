@@ -32,12 +32,23 @@ struct xfs_ag_resv {
 struct xfs_perag {
 	struct xfs_mount *pag_mount;	/* owner filesystem */
 	xfs_agnumber_t	pag_agno;	/* AG this structure belongs to */
+<<<<<<< HEAD
 	atomic_t	pag_ref;	/* passive reference count */
 	atomic_t	pag_active_ref;	/* active reference count */
 	wait_queue_head_t pag_active_wq;/* woken active_ref falls to zero */
 	unsigned long	pag_opstate;
 	uint8_t		pagf_levels[XFS_BTNUM_AGF];
 					/* # of levels in bno & cnt btree */
+=======
+	atomic_t	pag_ref;	/* perag reference count */
+	char		pagf_init;	/* this agf's entry is initialized */
+	char		pagi_init;	/* this agi's entry is initialized */
+	char		pagf_metadata;	/* the agf is preferred to be metadata */
+	char		pagi_inodeok;	/* The agi is ok for inodes */
+	uint8_t		pagf_levels[XFS_BTNUM_AGF];
+					/* # of levels in bno & cnt btree */
+	bool		pagf_agflreset; /* agfl requires reset before use */
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t	pagf_flcount;	/* count of blocks in freelist */
 	xfs_extlen_t	pagf_freeblks;	/* total free blocks */
 	xfs_extlen_t	pagf_longest;	/* longest free space */
@@ -104,6 +115,7 @@ struct xfs_perag {
 #endif /* __KERNEL__ */
 };
 
+<<<<<<< HEAD
 /*
  * Per-AG operational state. These are atomic flag bits.
  */
@@ -125,23 +137,31 @@ __XFS_AG_OPSTATE(prefers_metadata, PREFERS_METADATA)
 __XFS_AG_OPSTATE(allows_inodes, ALLOWS_INODES)
 __XFS_AG_OPSTATE(agfl_needs_reset, AGFL_NEEDS_RESET)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int xfs_initialize_perag(struct xfs_mount *mp, xfs_agnumber_t agcount,
 			xfs_rfsblock_t dcount, xfs_agnumber_t *maxagi);
 int xfs_initialize_perag_data(struct xfs_mount *mp, xfs_agnumber_t agno);
 void xfs_free_perag(struct xfs_mount *mp);
 
+<<<<<<< HEAD
 /* Passive AG references */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct xfs_perag *xfs_perag_get(struct xfs_mount *mp, xfs_agnumber_t agno);
 struct xfs_perag *xfs_perag_get_tag(struct xfs_mount *mp, xfs_agnumber_t agno,
 		unsigned int tag);
 void xfs_perag_put(struct xfs_perag *pag);
 
+<<<<<<< HEAD
 /* Active AG references */
 struct xfs_perag *xfs_perag_grab(struct xfs_mount *, xfs_agnumber_t);
 struct xfs_perag *xfs_perag_grab_tag(struct xfs_mount *, xfs_agnumber_t,
 				   int tag);
 void xfs_perag_rele(struct xfs_perag *pag);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Per-ag geometry infomation and validation
  */
@@ -159,6 +179,7 @@ xfs_verify_agbno(struct xfs_perag *pag, xfs_agblock_t agbno)
 	return true;
 }
 
+<<<<<<< HEAD
 static inline bool
 xfs_verify_agbext(
 	struct xfs_perag	*pag,
@@ -174,6 +195,8 @@ xfs_verify_agbext(
 	return xfs_verify_agbno(pag, agbno + len - 1);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Verify that an AG inode number pointer neither points outside the AG
  * nor points at static metadata.
@@ -219,6 +242,7 @@ xfs_perag_next(
 	struct xfs_mount	*mp = pag->pag_mount;
 
 	*agno = pag->pag_agno + 1;
+<<<<<<< HEAD
 	xfs_perag_rele(pag);
 	while (*agno <= end_agno) {
 		pag = xfs_perag_grab(mp, *agno);
@@ -231,17 +255,32 @@ xfs_perag_next(
 
 #define for_each_perag_range(mp, agno, end_agno, pag) \
 	for ((pag) = xfs_perag_grab((mp), (agno)); \
+=======
+	xfs_perag_put(pag);
+	if (*agno > end_agno)
+		return NULL;
+	return xfs_perag_get(mp, *agno);
+}
+
+#define for_each_perag_range(mp, agno, end_agno, pag) \
+	for ((pag) = xfs_perag_get((mp), (agno)); \
+>>>>>>> b7ba80a49124 (Commit)
 		(pag) != NULL; \
 		(pag) = xfs_perag_next((pag), &(agno), (end_agno)))
 
 #define for_each_perag_from(mp, agno, pag) \
 	for_each_perag_range((mp), (agno), (mp)->m_sb.sb_agcount - 1, (pag))
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 #define for_each_perag(mp, agno, pag) \
 	(agno) = 0; \
 	for_each_perag_from((mp), (agno), (pag))
 
 #define for_each_perag_tag(mp, agno, pag, tag) \
+<<<<<<< HEAD
 	for ((agno) = 0, (pag) = xfs_perag_grab_tag((mp), 0, (tag)); \
 		(pag) != NULL; \
 		(agno) = (pag)->pag_agno + 1, \
@@ -299,6 +338,13 @@ xfs_perag_next_wrap(
 	for_each_perag_wrap_at((mp), (start_agno), (mp)->m_sb.sb_agcount, \
 				(agno), (pag))
 
+=======
+	for ((agno) = 0, (pag) = xfs_perag_get_tag((mp), 0, (tag)); \
+		(pag) != NULL; \
+		(agno) = (pag)->pag_agno + 1, \
+		xfs_perag_put(pag), \
+		(pag) = xfs_perag_get_tag((mp), (agno), (tag)))
+>>>>>>> b7ba80a49124 (Commit)
 
 struct aghdr_init_data {
 	/* per ag data */

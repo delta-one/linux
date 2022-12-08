@@ -6,7 +6,10 @@
  *          Laurent Pinchart (laurent.pinchart@ideasonboard.com)
  */
 
+<<<<<<< HEAD
 #include <linux/bits.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/compat.h>
 #include <linux/kernel.h>
 #include <linux/list.h>
@@ -26,6 +29,7 @@
 
 #include "uvcvideo.h"
 
+<<<<<<< HEAD
 static int uvc_control_add_xu_mapping(struct uvc_video_chain *chain,
 				      struct uvc_control_mapping *map,
 				      const struct uvc_xu_control_mapping *xmap)
@@ -104,6 +108,16 @@ static int uvc_ioctl_xu_ctrl_map(struct uvc_video_chain *chain,
 				 struct uvc_xu_control_mapping *xmap)
 {
 	struct uvc_control_mapping *map;
+=======
+/* ------------------------------------------------------------------------
+ * UVC ioctls
+ */
+static int uvc_ioctl_ctrl_map(struct uvc_video_chain *chain,
+	struct uvc_xu_control_mapping *xmap)
+{
+	struct uvc_control_mapping *map;
+	unsigned int size;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	map = kzalloc(sizeof(*map), GFP_KERNEL);
@@ -131,20 +145,53 @@ static int uvc_ioctl_xu_ctrl_map(struct uvc_video_chain *chain,
 	case V4L2_CTRL_TYPE_INTEGER:
 	case V4L2_CTRL_TYPE_BOOLEAN:
 	case V4L2_CTRL_TYPE_BUTTON:
+<<<<<<< HEAD
 		ret = uvc_ctrl_add_mapping(chain, map);
 		break;
 
 	case V4L2_CTRL_TYPE_MENU:
 		ret = uvc_control_add_xu_mapping(chain, map, xmap);
+=======
+		break;
+
+	case V4L2_CTRL_TYPE_MENU:
+		/*
+		 * Prevent excessive memory consumption, as well as integer
+		 * overflows.
+		 */
+		if (xmap->menu_count == 0 ||
+		    xmap->menu_count > UVC_MAX_CONTROL_MENU_ENTRIES) {
+			ret = -EINVAL;
+			goto free_map;
+		}
+
+		size = xmap->menu_count * sizeof(*map->menu_info);
+		map->menu_info = memdup_user(xmap->menu_info, size);
+		if (IS_ERR(map->menu_info)) {
+			ret = PTR_ERR(map->menu_info);
+			goto free_map;
+		}
+
+		map->menu_count = xmap->menu_count;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	default:
 		uvc_dbg(chain->dev, CONTROL,
 			"Unsupported V4L2 control type %u\n", xmap->v4l2_type);
 		ret = -ENOTTY;
+<<<<<<< HEAD
 		break;
 	}
 
+=======
+		goto free_map;
+	}
+
+	ret = uvc_ctrl_add_mapping(chain, map);
+
+	kfree(map->menu_info);
+>>>>>>> b7ba80a49124 (Commit)
 free_map:
 	kfree(map);
 
@@ -438,7 +485,11 @@ static int uvc_v4l2_get_streamparm(struct uvc_streaming *stream,
 	mutex_unlock(&stream->mutex);
 
 	denominator = 10000000;
+<<<<<<< HEAD
 	v4l2_simplify_fraction(&numerator, &denominator, 8, 333);
+=======
+	uvc_simplify_fraction(&numerator, &denominator, 8, 333);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(parm, 0, sizeof(*parm));
 	parm->type = stream->type;
@@ -479,7 +530,11 @@ static int uvc_v4l2_set_streamparm(struct uvc_streaming *stream,
 	else
 		timeperframe = parm->parm.output.timeperframe;
 
+<<<<<<< HEAD
 	interval = v4l2_fraction_to_interval(timeperframe.numerator,
+=======
+	interval = uvc_fraction_to_interval(timeperframe.numerator,
+>>>>>>> b7ba80a49124 (Commit)
 		timeperframe.denominator);
 	uvc_dbg(stream->dev, FORMAT, "Setting frame interval to %u/%u (%u)\n",
 		timeperframe.numerator, timeperframe.denominator, interval);
@@ -533,7 +588,11 @@ static int uvc_v4l2_set_streamparm(struct uvc_streaming *stream,
 	/* Return the actual frame period. */
 	timeperframe.numerator = probe.dwFrameInterval;
 	timeperframe.denominator = 10000000;
+<<<<<<< HEAD
 	v4l2_simplify_fraction(&timeperframe.numerator,
+=======
+	uvc_simplify_fraction(&timeperframe.numerator,
+>>>>>>> b7ba80a49124 (Commit)
 		&timeperframe.denominator, 8, 333);
 
 	if (parm->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
@@ -712,6 +771,11 @@ static int uvc_ioctl_enum_fmt(struct uvc_streaming *stream,
 	fmt->flags = 0;
 	if (format->flags & UVC_FMT_FLAG_COMPRESSED)
 		fmt->flags |= V4L2_FMT_FLAG_COMPRESSED;
+<<<<<<< HEAD
+=======
+	strscpy(fmt->description, format->name, sizeof(fmt->description));
+	fmt->description[sizeof(fmt->description) - 1] = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	fmt->pixelformat = format->fcc;
 	return 0;
 }
@@ -1070,7 +1134,12 @@ static int uvc_ctrl_check_access(struct uvc_video_chain *chain,
 	int ret = 0;
 
 	for (i = 0; i < ctrls->count; ++ctrl, ++i) {
+<<<<<<< HEAD
 		ret = uvc_ctrl_is_accessible(chain, ctrl->id, ctrls, ioctl);
+=======
+		ret = uvc_ctrl_is_accessible(chain, ctrl->id,
+					    ioctl == VIDIOC_G_EXT_CTRLS);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			break;
 	}
@@ -1324,7 +1393,11 @@ static int uvc_ioctl_enum_frameintervals(struct file *file, void *fh,
 		fival->discrete.numerator =
 			frame->dwFrameInterval[index];
 		fival->discrete.denominator = 10000000;
+<<<<<<< HEAD
 		v4l2_simplify_fraction(&fival->discrete.numerator,
+=======
+		uvc_simplify_fraction(&fival->discrete.numerator,
+>>>>>>> b7ba80a49124 (Commit)
 			&fival->discrete.denominator, 8, 333);
 	} else {
 		fival->type = V4L2_FRMIVAL_TYPE_STEPWISE;
@@ -1334,11 +1407,19 @@ static int uvc_ioctl_enum_frameintervals(struct file *file, void *fh,
 		fival->stepwise.max.denominator = 10000000;
 		fival->stepwise.step.numerator = frame->dwFrameInterval[2];
 		fival->stepwise.step.denominator = 10000000;
+<<<<<<< HEAD
 		v4l2_simplify_fraction(&fival->stepwise.min.numerator,
 			&fival->stepwise.min.denominator, 8, 333);
 		v4l2_simplify_fraction(&fival->stepwise.max.numerator,
 			&fival->stepwise.max.denominator, 8, 333);
 		v4l2_simplify_fraction(&fival->stepwise.step.numerator,
+=======
+		uvc_simplify_fraction(&fival->stepwise.min.numerator,
+			&fival->stepwise.min.denominator, 8, 333);
+		uvc_simplify_fraction(&fival->stepwise.max.numerator,
+			&fival->stepwise.max.denominator, 8, 333);
+		uvc_simplify_fraction(&fival->stepwise.step.numerator,
+>>>>>>> b7ba80a49124 (Commit)
 			&fival->stepwise.step.denominator, 8, 333);
 	}
 
@@ -1365,7 +1446,11 @@ static long uvc_ioctl_default(struct file *file, void *fh, bool valid_prio,
 	switch (cmd) {
 	/* Dynamic controls. */
 	case UVCIOC_CTRL_MAP:
+<<<<<<< HEAD
 		return uvc_ioctl_xu_ctrl_map(chain, arg);
+=======
+		return uvc_ioctl_ctrl_map(chain, arg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	case UVCIOC_CTRL_QUERY:
 		return uvc_xu_ctrl_query(chain, arg);
@@ -1478,7 +1563,11 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
 		ret = uvc_v4l2_get_xu_mapping(&karg.xmap, up);
 		if (ret)
 			return ret;
+<<<<<<< HEAD
 		ret = uvc_ioctl_xu_ctrl_map(handle->chain, &karg.xmap);
+=======
+		ret = uvc_ioctl_ctrl_map(handle->chain, &karg.xmap);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			return ret;
 		ret = uvc_v4l2_put_xu_mapping(&karg.xmap, up);

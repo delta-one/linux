@@ -8,6 +8,10 @@
  */
 
 #include <linux/err.h>
+<<<<<<< HEAD
+=======
+#include <linux/i2c.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mfd/lp3943.h>
 #include <linux/module.h>
 #include <linux/platform_device.h>

@@ -690,7 +690,11 @@ static void twl_load_sgl(TW_Device_Extension *tw_dev, TW_Command_Full *full_comm
 		newcommand->request_id__lunl =
 			cpu_to_le16(TW_REQ_LUN_IN(TW_LUN_OUT(newcommand->request_id__lunl), request_id));
 		if (length) {
+<<<<<<< HEAD
 			newcommand->sg_list[0].address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache));
+=======
+			newcommand->sg_list[0].address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache) - 1);
+>>>>>>> b7ba80a49124 (Commit)
 			newcommand->sg_list[0].length = TW_CPU_TO_SGL(length);
 		}
 		newcommand->sgl_entries__lunh =
@@ -702,7 +706,11 @@ static void twl_load_sgl(TW_Device_Extension *tw_dev, TW_Command_Full *full_comm
 		if (TW_SGL_OUT(oldcommand->opcode__sgloffset)) {
 			/* Load the sg list */
 			sgl = (TW_SG_Entry_ISO *)((u32 *)oldcommand+oldcommand->size - (sizeof(TW_SG_Entry_ISO)/4) + pae + (sizeof(dma_addr_t) > 4 ? 1 : 0));
+<<<<<<< HEAD
 			sgl->address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache));
+=======
+			sgl->address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache) - 1);
+>>>>>>> b7ba80a49124 (Commit)
 			sgl->length = TW_CPU_TO_SGL(length);
 			oldcommand->size += pae;
 			oldcommand->size += sizeof(dma_addr_t) > 4 ? 1 : 0;
@@ -748,7 +756,11 @@ static long twl_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long 
 	data_buffer_length_adjusted = (driver_command.buffer_length + 511) & ~511;
 
 	/* Now allocate ioctl buf memory */
+<<<<<<< HEAD
 	cpu_addr = dma_alloc_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted + sizeof(TW_Ioctl_Buf_Apache), &dma_handle, GFP_KERNEL);
+=======
+	cpu_addr = dma_alloc_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted+sizeof(TW_Ioctl_Buf_Apache) - 1, &dma_handle, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!cpu_addr) {
 		retval = -ENOMEM;
 		goto out2;
@@ -757,7 +769,11 @@ static long twl_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long 
 	tw_ioctl = (TW_Ioctl_Buf_Apache *)cpu_addr;
 
 	/* Now copy down the entire ioctl */
+<<<<<<< HEAD
 	if (copy_from_user(tw_ioctl, argp, driver_command.buffer_length + sizeof(TW_Ioctl_Buf_Apache)))
+=======
+	if (copy_from_user(tw_ioctl, argp, driver_command.buffer_length + sizeof(TW_Ioctl_Buf_Apache) - 1))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out3;
 
 	/* See which ioctl we are doing */
@@ -815,11 +831,19 @@ static long twl_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long 
 	}
 
 	/* Now copy the entire response to userspace */
+<<<<<<< HEAD
 	if (copy_to_user(argp, tw_ioctl, sizeof(TW_Ioctl_Buf_Apache) + driver_command.buffer_length) == 0)
 		retval = 0;
 out3:
 	/* Now free ioctl buf memory */
 	dma_free_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted + sizeof(TW_Ioctl_Buf_Apache), cpu_addr, dma_handle);
+=======
+	if (copy_to_user(argp, tw_ioctl, sizeof(TW_Ioctl_Buf_Apache) + driver_command.buffer_length - 1) == 0)
+		retval = 0;
+out3:
+	/* Now free ioctl buf memory */
+	dma_free_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted+sizeof(TW_Ioctl_Buf_Apache) - 1, cpu_addr, dma_handle);
+>>>>>>> b7ba80a49124 (Commit)
 out2:
 	mutex_unlock(&tw_dev->ioctl_lock);
 out:

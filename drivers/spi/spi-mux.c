@@ -51,6 +51,7 @@ static int spi_mux_select(struct spi_device *spi)
 	struct spi_mux_priv *priv = spi_controller_get_devdata(spi->controller);
 	int ret;
 
+<<<<<<< HEAD
 	ret = mux_control_select(priv->mux, spi_get_chipselect(spi, 0));
 	if (ret)
 		return ret;
@@ -60,13 +61,28 @@ static int spi_mux_select(struct spi_device *spi)
 
 	dev_dbg(&priv->spi->dev, "setting up the mux for cs %d\n",
 		spi_get_chipselect(spi, 0));
+=======
+	ret = mux_control_select(priv->mux, spi->chip_select);
+	if (ret)
+		return ret;
+
+	if (priv->current_cs == spi->chip_select)
+		return 0;
+
+	dev_dbg(&priv->spi->dev, "setting up the mux for cs %d\n",
+		spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* copy the child device's settings except for the cs */
 	priv->spi->max_speed_hz = spi->max_speed_hz;
 	priv->spi->mode = spi->mode;
 	priv->spi->bits_per_word = spi->bits_per_word;
 
+<<<<<<< HEAD
 	priv->current_cs = spi_get_chipselect(spi, 0);
+=======
+	priv->current_cs = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

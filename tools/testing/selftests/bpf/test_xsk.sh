@@ -24,6 +24,11 @@
 #      -----------     |     ----------
 #      |  vethX  | --------- |  vethY |
 #      -----------   peer    ----------
+<<<<<<< HEAD
+=======
+#           |          |          |
+#      namespaceX      |     namespaceY
+>>>>>>> b7ba80a49124 (Commit)
 #
 # AF_XDP is an address family optimized for high performance packet processing,
 # it is XDP’s user-space interface.
@@ -37,9 +42,16 @@
 # Prerequisites setup by script:
 #
 #   Set up veth interfaces as per the topology shown ^^:
+<<<<<<< HEAD
 #   * setup two veth interfaces
 #   ** veth<xxxx>
 #   ** veth<yyyy>
+=======
+#   * setup two veth interfaces and one namespace
+#   ** veth<xxxx> in root namespace
+#   ** veth<yyyy> in af_xdp<xxxx> namespace
+#   ** namespace af_xdp<xxxx>
+>>>>>>> b7ba80a49124 (Commit)
 #   *** xxxx and yyyy are randomly generated 4 digit numbers used to avoid
 #       conflict with any existing interface
 #   * tests the veth and xsk layers of the topology
@@ -71,9 +83,12 @@
 # Run and dump packet contents:
 #   sudo ./test_xsk.sh -D
 #
+<<<<<<< HEAD
 # Set up veth interfaces and leave them up so xskxceiver can be launched in a debugger:
 #   sudo ./test_xsk.sh -d
 #
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # Run test suite for physical device in loopback mode
 #   sudo ./test_xsk.sh -i IFACE
 
@@ -81,12 +96,19 @@
 
 ETH=""
 
+<<<<<<< HEAD
 while getopts "vDi:d" flag
+=======
+while getopts "vDi:" flag
+>>>>>>> b7ba80a49124 (Commit)
 do
 	case "${flag}" in
 		v) verbose=1;;
 		D) dump_pkts=1;;
+<<<<<<< HEAD
 		d) debug=1;;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		i) ETH=${OPTARG};;
 	esac
 done
@@ -100,25 +122,44 @@ VETH0_POSTFIX=$(cat ${URANDOM} | tr -dc '0-9' | fold -w 256 | head -n 1 | head -
 VETH0=ve${VETH0_POSTFIX}
 VETH1_POSTFIX=$(cat ${URANDOM} | tr -dc '0-9' | fold -w 256 | head -n 1 | head --bytes 4)
 VETH1=ve${VETH1_POSTFIX}
+<<<<<<< HEAD
+=======
+NS0=root
+NS1=af_xdp${VETH1_POSTFIX}
+>>>>>>> b7ba80a49124 (Commit)
 MTU=1500
 
 trap ctrl_c INT
 
 function ctrl_c() {
+<<<<<<< HEAD
         cleanup_exit ${VETH0} ${VETH1}
+=======
+        cleanup_exit ${VETH0} ${VETH1} ${NS1}
+>>>>>>> b7ba80a49124 (Commit)
 	exit 1
 }
 
 setup_vethPairs() {
 	if [[ $verbose -eq 1 ]]; then
+<<<<<<< HEAD
 	        echo "setting up ${VETH0}"
 	fi
+=======
+	        echo "setting up ${VETH0}: namespace: ${NS0}"
+	fi
+	ip netns add ${NS1}
+>>>>>>> b7ba80a49124 (Commit)
 	ip link add ${VETH0} numtxqueues 4 numrxqueues 4 type veth peer name ${VETH1} numtxqueues 4 numrxqueues 4
 	if [ -f /proc/net/if_inet6 ]; then
 		echo 1 > /proc/sys/net/ipv6/conf/${VETH0}/disable_ipv6
 	fi
 	if [[ $verbose -eq 1 ]]; then
+<<<<<<< HEAD
 	        echo "setting up ${VETH1}"
+=======
+	        echo "setting up ${VETH1}: namespace: ${NS1}"
+>>>>>>> b7ba80a49124 (Commit)
 	fi
 
 	if [[ $busy_poll -eq 1 ]]; then
@@ -128,15 +169,27 @@ setup_vethPairs() {
 		echo 200000 > /sys/class/net/${VETH1}/gro_flush_timeout
 	fi
 
+<<<<<<< HEAD
 	ip link set ${VETH1} mtu ${MTU}
 	ip link set ${VETH0} mtu ${MTU}
 	ip link set ${VETH1} up
+=======
+	ip link set ${VETH1} netns ${NS1}
+	ip netns exec ${NS1} ip link set ${VETH1} mtu ${MTU}
+	ip link set ${VETH0} mtu ${MTU}
+	ip netns exec ${NS1} ip link set ${VETH1} up
+	ip netns exec ${NS1} ip link set dev lo up
+>>>>>>> b7ba80a49124 (Commit)
 	ip link set ${VETH0} up
 }
 
 if [ ! -z $ETH ]; then
 	VETH0=${ETH}
 	VETH1=${ETH}
+<<<<<<< HEAD
+=======
+	NS1=""
+>>>>>>> b7ba80a49124 (Commit)
 else
 	validate_root_exec
 	validate_veth_support ${VETH0}
@@ -146,7 +199,11 @@ else
 	retval=$?
 	if [ $retval -ne 0 ]; then
 		test_status $retval "${TEST_NAME}"
+<<<<<<< HEAD
 		cleanup_exit ${VETH0} ${VETH1}
+=======
+		cleanup_exit ${VETH0} ${VETH1} ${NS1}
+>>>>>>> b7ba80a49124 (Commit)
 		exit $retval
 	fi
 fi
@@ -169,6 +226,7 @@ statusList=()
 
 TEST_NAME="XSK_SELFTESTS_${VETH0}_SOFTIRQ"
 
+<<<<<<< HEAD
 if [[ $debug -eq 1 ]]; then
     echo "-i" ${VETH0} "-i" ${VETH1}
     exit
@@ -178,6 +236,12 @@ exec_xskxceiver
 
 if [ -z $ETH ]; then
 	cleanup_exit ${VETH0} ${VETH1}
+=======
+exec_xskxceiver
+
+if [ -z $ETH ]; then
+	cleanup_exit ${VETH0} ${VETH1} ${NS1}
+>>>>>>> b7ba80a49124 (Commit)
 fi
 TEST_NAME="XSK_SELFTESTS_${VETH0}_BUSY_POLL"
 busy_poll=1
@@ -190,7 +254,11 @@ exec_xskxceiver
 ## END TESTS
 
 if [ -z $ETH ]; then
+<<<<<<< HEAD
 	cleanup_exit ${VETH0} ${VETH1}
+=======
+	cleanup_exit ${VETH0} ${VETH1} ${NS1}
+>>>>>>> b7ba80a49124 (Commit)
 fi
 
 failures=0

@@ -178,8 +178,11 @@
 
 			/* Network controller */
 			ethernet: ethernet@f0000 {
+<<<<<<< HEAD
 				#address-cells = <1>;
 				#size-cells = <0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "marvell,armada-375-pp2";
 				reg = <0xf0000 0xa000>, /* Packet Processor regs */
 				      <0xc0000 0x3060>, /* LMS regs */
@@ -189,6 +192,7 @@
 				clock-names = "pp_clk", "gop_clk";
 				status = "disabled";
 
+<<<<<<< HEAD
 				eth0: ethernet-port@0 {
 					interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
 					reg = <0>;
@@ -200,6 +204,17 @@
 					interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
 					reg = <1>;
 					port-id = <1>; /* For backward compatibility. */
+=======
+				eth0: eth0 {
+					interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+					port-id = <0>;
+					status = "disabled";
+				};
+
+				eth1: eth1 {
+					interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+					port-id = <1>;
+>>>>>>> b7ba80a49124 (Commit)
 					status = "disabled";
 				};
 			};
@@ -596,7 +611,11 @@
 
 			pcie1: pcie@2,0 {
 				device_type = "pci";
+<<<<<<< HEAD
 				assigned-addresses = <0x82001000 0 0x44000 0 0x2000>;
+=======
+				assigned-addresses = <0x82000800 0 0x44000 0 0x2000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg = <0x1000 0 0 0 0>;
 				#address-cells = <3>;
 				#size-cells = <2>;

@@ -12,16 +12,24 @@
 #include <net/netlink.h>
 #include <net/pkt_sched.h>
 #include <net/pkt_cls.h>
+<<<<<<< HEAD
 #include <net/tc_wrapper.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/tc_act/tc_vlan.h>
 #include <net/tc_act/tc_vlan.h>
 
 static struct tc_action_ops act_vlan_ops;
 
+<<<<<<< HEAD
 TC_INDIRECT_SCOPE int tcf_vlan_act(struct sk_buff *skb,
 				   const struct tc_action *a,
 				   struct tcf_result *res)
+=======
+static int tcf_vlan_act(struct sk_buff *skb, const struct tc_action *a,
+			struct tcf_result *res)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tcf_vlan *v = to_vlan(a);
 	struct tcf_vlan_params *p;

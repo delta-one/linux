@@ -397,7 +397,11 @@ static const struct platform_device_id mt6397_platform_ids[] = {
 };
 MODULE_DEVICE_TABLE(platform, mt6397_platform_ids);
 
+<<<<<<< HEAD
 static const struct of_device_id mt6397_of_match[] __maybe_unused = {
+=======
+static const struct of_device_id mt6397_of_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "mediatek,mt6397-regulator", },
 	{ /* sentinel */ },
 };
@@ -406,7 +410,10 @@ MODULE_DEVICE_TABLE(of, mt6397_of_match);
 static struct platform_driver mt6397_regulator_driver = {
 	.driver = {
 		.name = "mt6397-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = of_match_ptr(mt6397_of_match),
 	},
 	.probe = mt6397_regulator_probe,

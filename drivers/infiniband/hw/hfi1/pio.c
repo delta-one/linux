@@ -913,7 +913,12 @@ void sc_disable(struct send_context *sc)
 	spin_unlock(&sc->release_lock);
 
 	write_seqlock(&sc->waitlock);
+<<<<<<< HEAD
 	list_splice_init(&sc->piowait, &wake_list);
+=======
+	if (!list_empty(&sc->piowait))
+		list_move(&sc->piowait, &wake_list);
+>>>>>>> b7ba80a49124 (Commit)
 	write_sequnlock(&sc->waitlock);
 	while (!list_empty(&wake_list)) {
 		struct iowait *wait;

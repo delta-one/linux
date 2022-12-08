@@ -1150,7 +1150,11 @@ static int nct6775_write_fan_div(struct nct6775_data *data, int nr)
 	if (err)
 		return err;
 	reg &= 0x70 >> oddshift;
+<<<<<<< HEAD
 	reg |= (data->fan_div[nr] & 0x7) << oddshift;
+=======
+	reg |= data->fan_div[nr] & (0x7 << oddshift);
+>>>>>>> b7ba80a49124 (Commit)
 	return nct6775_write_value(data, fandiv_reg, reg);
 }
 

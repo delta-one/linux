@@ -512,7 +512,11 @@ static int titsc_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int titsc_suspend(struct device *dev)
+=======
+static int __maybe_unused titsc_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct titsc *ts_dev = dev_get_drvdata(dev);
 	unsigned int idle;
@@ -527,7 +531,11 @@ static int titsc_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int titsc_resume(struct device *dev)
+=======
+static int __maybe_unused titsc_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct titsc *ts_dev = dev_get_drvdata(dev);
 
@@ -543,7 +551,11 @@ static int titsc_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(titsc_pm_ops, titsc_suspend, titsc_resume);
+=======
+static SIMPLE_DEV_PM_OPS(titsc_pm_ops, titsc_suspend, titsc_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct of_device_id ti_tsc_dt_ids[] = {
 	{ .compatible = "ti,am3359-tsc", },
@@ -556,7 +568,11 @@ static struct platform_driver ti_tsc_driver = {
 	.remove	= titsc_remove,
 	.driver	= {
 		.name   = "TI-am335x-tsc",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&titsc_pm_ops),
+=======
+		.pm	= &titsc_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = ti_tsc_dt_ids,
 	},
 };

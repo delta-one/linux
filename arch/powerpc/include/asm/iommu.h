@@ -175,7 +175,11 @@ struct iommu_table_group_ops {
 	long (*unset_window)(struct iommu_table_group *table_group,
 			int num);
 	/* Switch ownership from platform code to external user (e.g. VFIO) */
+<<<<<<< HEAD
 	long (*take_ownership)(struct iommu_table_group *table_group);
+=======
+	void (*take_ownership)(struct iommu_table_group *table_group);
+>>>>>>> b7ba80a49124 (Commit)
 	/* Switch ownership from external user (e.g. VFIO) back to core */
 	void (*release_ownership)(struct iommu_table_group *table_group);
 };
@@ -215,8 +219,11 @@ extern long iommu_tce_xchg_no_kill(struct mm_struct *mm,
 		enum dma_data_direction *direction);
 extern void iommu_tce_kill(struct iommu_table *tbl,
 		unsigned long entry, unsigned long pages);
+<<<<<<< HEAD
 
 extern struct iommu_table_group_ops spapr_tce_table_group_ops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline void iommu_register_group(struct iommu_table_group *table_group,
 					int pci_domain_number,
@@ -305,6 +312,11 @@ extern int iommu_tce_check_gpa(unsigned long page_shift,
 		iommu_tce_check_gpa((tbl)->it_page_shift, (gpa)))
 
 extern void iommu_flush_tce(struct iommu_table *tbl);
+<<<<<<< HEAD
+=======
+extern int iommu_take_ownership(struct iommu_table *tbl);
+extern void iommu_release_ownership(struct iommu_table *tbl);
+>>>>>>> b7ba80a49124 (Commit)
 
 extern enum dma_data_direction iommu_tce_direction(unsigned long tce);
 extern unsigned long iommu_direction_to_tce_perm(enum dma_data_direction dir);

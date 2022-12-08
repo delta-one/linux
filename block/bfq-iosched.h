@@ -33,6 +33,7 @@
  */
 #define BFQ_SOFTRT_WEIGHT_FACTOR	100
 
+<<<<<<< HEAD
 /*
  * Maximum number of actuators supported. This constant is used simply
  * to define the size of the static array that will contain
@@ -41,6 +42,8 @@
  */
 #define BFQ_MAX_ACTUATORS 8
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct bfq_entity;
 
 /**
@@ -205,10 +208,15 @@ struct bfq_entity {
 	/* flag, set to request a weight, ioprio or ioprio_class change  */
 	int prio_changed;
 
+<<<<<<< HEAD
 #ifdef CONFIG_BFQ_GROUP_IOSCHED
 	/* flag, set if the entity is counted in groups_with_pending_reqs */
 	bool in_groups_with_pending_reqs;
 #endif
+=======
+	/* flag, set if the entity is counted in groups_with_pending_reqs */
+	bool in_groups_with_pending_reqs;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* last child queue of entity created (for non-leaf entities) */
 	struct bfq_queue *last_bfqq_created;
@@ -235,6 +243,7 @@ struct bfq_ttime {
  * struct bfq_queue - leaf schedulable entity.
  *
  * A bfq_queue is a leaf request queue; it can be associated with an
+<<<<<<< HEAD
  * io_context or more, if it is async or shared between cooperating
  * processes. Besides, it contains I/O requests for only one actuator
  * (an io_context is associated with a different bfq_queue for each
@@ -243,6 +252,14 @@ struct bfq_ttime {
  * references it (mostly to avoid races between request issuing and
  * task migration followed by cgroup destruction).  All the fields are
  * protected by the queue lock of the containing bfqd.
+=======
+ * io_context or more, if it  is  async or shared  between  cooperating
+ * processes. @cgroup holds a reference to the cgroup, to be sure that it
+ * does not disappear while a bfqq still references it (mostly to avoid
+ * races between request issuing and task migration followed by cgroup
+ * destruction).
+ * All the fields are protected by the queue lock of the containing bfqd.
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct bfq_queue {
 	/* reference counter */
@@ -381,8 +398,17 @@ struct bfq_queue {
 	unsigned long split_time; /* time of last split */
 
 	unsigned long first_IO_time; /* time of first I/O for this queue */
+<<<<<<< HEAD
 	unsigned long creation_time; /* when this queue is created */
 
+=======
+
+	unsigned long creation_time; /* when this queue is created */
+
+	/* max service rate measured so far */
+	u32 max_service_rate;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Pointer to the waker queue for this queue, i.e., to the
 	 * queue Q such that this queue happens to get new I/O right
@@ -407,6 +433,7 @@ struct bfq_queue {
 	 * the woken queues when this queue exits.
 	 */
 	struct hlist_head woken_list;
+<<<<<<< HEAD
 
 	/* index of the actuator this queue is associated with */
 	unsigned int actuator_idx;
@@ -419,6 +446,26 @@ struct bfq_iocq_bfqq_data {
 	/*
 	 * Snapshot of the has_short_time flag before merging; taken
 	 * to remember its values while the queue is merged, so as to
+=======
+};
+
+/**
+ * struct bfq_io_cq - per (request_queue, io_context) structure.
+ */
+struct bfq_io_cq {
+	/* associated io_cq structure */
+	struct io_cq icq; /* must be the first member */
+	/* array of two process queues, the sync and the async */
+	struct bfq_queue *bfqq[2];
+	/* per (request_queue, blkcg) ioprio */
+	int ioprio;
+#ifdef CONFIG_BFQ_GROUP_IOSCHED
+	uint64_t blkcg_serial_nr; /* the current blkcg serial */
+#endif
+	/*
+	 * Snapshot of the has_short_time flag before merging; taken
+	 * to remember its value while the queue is merged, so as to
+>>>>>>> b7ba80a49124 (Commit)
 	 * be able to restore it in case of split.
 	 */
 	bool saved_has_short_ttime;
@@ -432,7 +479,11 @@ struct bfq_iocq_bfqq_data {
 	u64 saved_tot_idle_time;
 
 	/*
+<<<<<<< HEAD
 	 * Same purpose as the previous fields for the values of the
+=======
+	 * Same purpose as the previous fields for the value of the
+>>>>>>> b7ba80a49124 (Commit)
 	 * field keeping the queue's belonging to a large burst
 	 */
 	bool saved_in_large_burst;
@@ -470,6 +521,7 @@ struct bfq_iocq_bfqq_data {
 	struct bfq_queue *stable_merge_bfqq;
 
 	bool stably_merged;	/* non splittable if true */
+<<<<<<< HEAD
 };
 
 /**
@@ -502,6 +554,8 @@ struct bfq_io_cq {
 	 */
 	struct bfq_iocq_bfqq_data bfqq_data[BFQ_MAX_ACTUATORS];
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int requests;	/* Number of requests this process has in flight */
 };
 
@@ -529,21 +583,31 @@ struct bfq_data {
 	 */
 	struct rb_root_cached queue_weights_tree;
 
+<<<<<<< HEAD
 #ifdef CONFIG_BFQ_GROUP_IOSCHED
 	/*
 	 * Number of groups with at least one process that
+=======
+	/*
+	 * Number of groups with at least one descendant process that
+>>>>>>> b7ba80a49124 (Commit)
 	 * has at least one request waiting for completion. Note that
 	 * this accounts for also requests already dispatched, but not
 	 * yet completed. Therefore this number of groups may differ
 	 * (be larger) than the number of active groups, as a group is
 	 * considered active only if its corresponding entity has
+<<<<<<< HEAD
 	 * queues with at least one request queued. This
+=======
+	 * descendant queues with at least one request queued. This
+>>>>>>> b7ba80a49124 (Commit)
 	 * number is used to decide whether a scenario is symmetric.
 	 * For a detailed explanation see comments on the computation
 	 * of the variable asymmetric_scenario in the function
 	 * bfq_better_to_idle().
 	 *
 	 * However, it is hard to compute this number exactly, for
+<<<<<<< HEAD
 	 * groups with multiple processes. Consider a group
 	 * that is inactive, i.e., that has no process with
 	 * pending I/O inside BFQ queues. Then suppose that
@@ -552,6 +616,16 @@ struct bfq_data {
 	 * I/O request still in flight. num_groups_with_pending_reqs
 	 * should be decremented when the in-flight request of the
 	 * last process is finally completed (assuming that
+=======
+	 * groups with multiple descendant processes. Consider a group
+	 * that is inactive, i.e., that has no descendant process with
+	 * pending I/O inside BFQ queues. Then suppose that
+	 * num_groups_with_pending_reqs is still accounting for this
+	 * group, because the group has descendant processes with some
+	 * I/O request still in flight. num_groups_with_pending_reqs
+	 * should be decremented when the in-flight request of the
+	 * last descendant process is finally completed (assuming that
+>>>>>>> b7ba80a49124 (Commit)
 	 * nothing else has changed for the group in the meantime, in
 	 * terms of composition of the group and active/inactive state of child
 	 * groups and processes). To accomplish this, an additional
@@ -560,7 +634,11 @@ struct bfq_data {
 	 * we resort to the following tradeoff between simplicity and
 	 * accuracy: for an inactive group that is still counted in
 	 * num_groups_with_pending_reqs, we decrement
+<<<<<<< HEAD
 	 * num_groups_with_pending_reqs when the first
+=======
+	 * num_groups_with_pending_reqs when the first descendant
+>>>>>>> b7ba80a49124 (Commit)
 	 * process of the group remains with no request waiting for
 	 * completion.
 	 *
@@ -568,16 +646,27 @@ struct bfq_data {
 	 * carefulness: to avoid multiple decrements, we flag a group,
 	 * more precisely an entity representing a group, as still
 	 * counted in num_groups_with_pending_reqs when it becomes
+<<<<<<< HEAD
 	 * inactive. Then, when the first queue of the
+=======
+	 * inactive. Then, when the first descendant queue of the
+>>>>>>> b7ba80a49124 (Commit)
 	 * entity remains with no request waiting for completion,
 	 * num_groups_with_pending_reqs is decremented, and this flag
 	 * is reset. After this flag is reset for the entity,
 	 * num_groups_with_pending_reqs won't be decremented any
+<<<<<<< HEAD
 	 * longer in case a new queue of the entity remains
 	 * with no request waiting for completion.
 	 */
 	unsigned int num_groups_with_pending_reqs;
 #endif
+=======
+	 * longer in case a new descendant queue of the entity remains
+	 * with no request waiting for completion.
+	 */
+	unsigned int num_groups_with_pending_reqs;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Per-class (RT, BE, IDLE) number of bfq_queues containing
@@ -590,12 +679,16 @@ struct bfq_data {
 	/* number of queued requests */
 	int queued;
 	/* number of requests dispatched and waiting for completion */
+<<<<<<< HEAD
 	int tot_rq_in_driver;
 	/*
 	 * number of requests dispatched and waiting for completion
 	 * for each actuator
 	 */
 	int rq_in_driver[BFQ_MAX_ACTUATORS];
+=======
+	int rq_in_driver;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* true if the device is non rotational and performs queueing */
 	bool nonrot_with_queueing;
@@ -689,6 +782,7 @@ struct bfq_data {
 	/* maximum budget allotted to a bfq_queue before rescheduling */
 	int bfq_max_budget;
 
+<<<<<<< HEAD
 	/*
 	 * List of all the bfq_queues active for a specific actuator
 	 * on the device. Keeping active queues separate on a
@@ -696,6 +790,10 @@ struct bfq_data {
 	 * injection more efficiently.
 	 */
 	struct list_head active_list[BFQ_MAX_ACTUATORS];
+=======
+	/* list of all the bfq_queues active on the device */
+	struct list_head active_list;
+>>>>>>> b7ba80a49124 (Commit)
 	/* list of all the bfq_queues idle on the device */
 	struct list_head idle_list;
 
@@ -769,6 +867,11 @@ struct bfq_data {
 	 * is multiplied.
 	 */
 	unsigned int bfq_wr_coeff;
+<<<<<<< HEAD
+=======
+	/* maximum duration of a weight-raising period (jiffies) */
+	unsigned int bfq_wr_max_time;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Maximum weight-raising duration for soft real-time processes */
 	unsigned int bfq_wr_rt_max_time;
@@ -816,6 +919,7 @@ struct bfq_data {
 	 */
 	unsigned int word_depths[2][2];
 	unsigned int full_depth_shift;
+<<<<<<< HEAD
 
 	/*
 	 * Number of independent actuators. This is equal to 1 in
@@ -852,6 +956,8 @@ struct bfq_data {
 	 * other queues (NCQ provides for 32 slots).
 	 */
 	unsigned int actuator_load_threshold;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum bfqq_state_flags {
@@ -1008,20 +1114,36 @@ struct bfq_group {
 	char blkg_path[128];
 
 	/* reference counter (see comments in bfq_bic_update_cgroup) */
+<<<<<<< HEAD
 	refcount_t ref;
+=======
+	int ref;
+	/* Is bfq_group still online? */
+	bool online;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct bfq_entity entity;
 	struct bfq_sched_data sched_data;
 
+<<<<<<< HEAD
 	struct bfq_data *bfqd;
 
 	struct bfq_queue *async_bfqq[2][IOPRIO_NR_LEVELS][BFQ_MAX_ACTUATORS];
 	struct bfq_queue *async_idle_bfqq[BFQ_MAX_ACTUATORS];
+=======
+	void *bfqd;
+
+	struct bfq_queue *async_bfqq[2][IOPRIO_NR_LEVELS];
+	struct bfq_queue *async_idle_bfqq;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct bfq_entity *my_entity;
 
 	int active_entities;
+<<<<<<< HEAD
 	int num_queues_with_pending_reqs;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct rb_root rq_pos_tree;
 
@@ -1033,8 +1155,13 @@ struct bfq_group {
 	struct bfq_entity entity;
 	struct bfq_sched_data sched_data;
 
+<<<<<<< HEAD
 	struct bfq_queue *async_bfqq[2][IOPRIO_NR_LEVELS][BFQ_MAX_ACTUATORS];
 	struct bfq_queue *async_idle_bfqq[BFQ_MAX_ACTUATORS];
+=======
+	struct bfq_queue *async_bfqq[2][IOPRIO_NR_LEVELS];
+	struct bfq_queue *async_idle_bfqq;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct rb_root rq_pos_tree;
 };
@@ -1047,6 +1174,7 @@ struct bfq_group {
 
 extern const int bfq_timeout;
 
+<<<<<<< HEAD
 struct bfq_queue *bic_to_bfqq(struct bfq_io_cq *bic, bool is_sync,
 				unsigned int actuator_idx);
 void bic_set_bfqq(struct bfq_io_cq *bic, struct bfq_queue *bfqq, bool is_sync,
@@ -1055,6 +1183,19 @@ struct bfq_data *bic_to_bfqd(struct bfq_io_cq *bic);
 void bfq_pos_tree_add_move(struct bfq_data *bfqd, struct bfq_queue *bfqq);
 void bfq_weights_tree_add(struct bfq_queue *bfqq);
 void bfq_weights_tree_remove(struct bfq_queue *bfqq);
+=======
+struct bfq_queue *bic_to_bfqq(struct bfq_io_cq *bic, bool is_sync);
+void bic_set_bfqq(struct bfq_io_cq *bic, struct bfq_queue *bfqq, bool is_sync);
+struct bfq_data *bic_to_bfqd(struct bfq_io_cq *bic);
+void bfq_pos_tree_add_move(struct bfq_data *bfqd, struct bfq_queue *bfqq);
+void bfq_weights_tree_add(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+			  struct rb_root_cached *root);
+void __bfq_weights_tree_remove(struct bfq_data *bfqd,
+			       struct bfq_queue *bfqq,
+			       struct rb_root_cached *root);
+void bfq_weights_tree_remove(struct bfq_data *bfqd,
+			     struct bfq_queue *bfqq);
+>>>>>>> b7ba80a49124 (Commit)
 void bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq,
 		     bool compensate, enum bfqq_expiration reason);
 void bfq_put_queue(struct bfq_queue *bfqq);
@@ -1158,8 +1299,11 @@ void bfq_requeue_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq,
 		      bool expiration);
 void bfq_del_bfqq_busy(struct bfq_queue *bfqq, bool expiration);
 void bfq_add_bfqq_busy(struct bfq_queue *bfqq);
+<<<<<<< HEAD
 void bfq_add_bfqq_in_groups_with_pending_reqs(struct bfq_queue *bfqq);
 void bfq_del_bfqq_in_groups_with_pending_reqs(struct bfq_queue *bfqq);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* --------------- end of interface of B-WF2Q+ ---------------- */
 

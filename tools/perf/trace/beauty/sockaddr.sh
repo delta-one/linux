@@ -17,8 +17,15 @@ printf "static const char *socket_families[] = {\n"
 # #define AF_LOCAL	1	/* POSIX name for AF_UNIX	*/
 regex='^#define[[:space:]]+AF_(\w+)[[:space:]]+([[:digit:]]+).*'
 
+<<<<<<< HEAD
 grep -E $regex ${header_dir}/socket.h | \
 	sed -r "s/$regex/\2 \1/g"	| \
 	xargs printf "\t[%s] = \"%s\",\n" | \
 	grep -E -v "\"(UNIX|MAX)\""
+=======
+egrep $regex ${header_dir}/socket.h | \
+	sed -r "s/$regex/\2 \1/g"	| \
+	xargs printf "\t[%s] = \"%s\",\n" | \
+	egrep -v "\"(UNIX|MAX)\""
+>>>>>>> b7ba80a49124 (Commit)
 printf "};\n"

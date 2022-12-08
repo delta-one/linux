@@ -36,14 +36,22 @@ enum iwl_tlc_mng_cfg_flags {
  * @IWL_TLC_MNG_CH_WIDTH_40MHZ: 40MHZ channel
  * @IWL_TLC_MNG_CH_WIDTH_80MHZ: 80MHZ channel
  * @IWL_TLC_MNG_CH_WIDTH_160MHZ: 160MHZ channel
+<<<<<<< HEAD
  * @IWL_TLC_MNG_CH_WIDTH_320MHZ: 320MHZ channel
+=======
+ * @IWL_TLC_MNG_CH_WIDTH_LAST: maximum value
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum iwl_tlc_mng_cfg_cw {
 	IWL_TLC_MNG_CH_WIDTH_20MHZ,
 	IWL_TLC_MNG_CH_WIDTH_40MHZ,
 	IWL_TLC_MNG_CH_WIDTH_80MHZ,
 	IWL_TLC_MNG_CH_WIDTH_160MHZ,
+<<<<<<< HEAD
 	IWL_TLC_MNG_CH_WIDTH_320MHZ,
+=======
+	IWL_TLC_MNG_CH_WIDTH_LAST = IWL_TLC_MNG_CH_WIDTH_160MHZ,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -64,7 +72,12 @@ enum iwl_tlc_mng_cfg_chains {
  * @IWL_TLC_MNG_MODE_HT: enable HT
  * @IWL_TLC_MNG_MODE_VHT: enable VHT
  * @IWL_TLC_MNG_MODE_HE: enable HE
+<<<<<<< HEAD
  * @IWL_TLC_MNG_MODE_EHT: enable EHT
+=======
+ * @IWL_TLC_MNG_MODE_INVALID: invalid value
+ * @IWL_TLC_MNG_MODE_NUM: a count of possible modes
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum iwl_tlc_mng_cfg_mode {
 	IWL_TLC_MNG_MODE_CCK = 0,
@@ -73,7 +86,12 @@ enum iwl_tlc_mng_cfg_mode {
 	IWL_TLC_MNG_MODE_HT,
 	IWL_TLC_MNG_MODE_VHT,
 	IWL_TLC_MNG_MODE_HE,
+<<<<<<< HEAD
 	IWL_TLC_MNG_MODE_EHT,
+=======
+	IWL_TLC_MNG_MODE_INVALID,
+	IWL_TLC_MNG_MODE_NUM = IWL_TLC_MNG_MODE_INVALID,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -373,6 +391,12 @@ enum {
 
 /* Bit 4-5: (0) SISO, (1) MIMO2 (2) MIMO3 */
 #define RATE_VHT_MCS_RATE_CODE_MSK	0xf
+<<<<<<< HEAD
+=======
+#define RATE_VHT_MCS_NSS_POS		4
+#define RATE_VHT_MCS_NSS_MSK		(3 << RATE_VHT_MCS_NSS_POS)
+#define RATE_VHT_MCS_MIMO2_MSK		BIT(RATE_VHT_MCS_NSS_POS)
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Legacy OFDM rate format for bits 7:0
@@ -446,16 +470,23 @@ enum {
  *	1			2xLTF+0.8us
  *	2			2xLTF+1.6us
  *	3			4xLTF+3.2us
+<<<<<<< HEAD
  * HE-EHT TRIG:
+=======
+ * HE TRIG:
+>>>>>>> b7ba80a49124 (Commit)
  *	0			1xLTF+1.6us
  *	1			2xLTF+1.6us
  *	2			4xLTF+3.2us
  *	3			(does not occur)
+<<<<<<< HEAD
  * EHT MU:
  *	0			2xLTF+0.8us
  *	1			2xLTF+1.6us
  *	2			4xLTF+0.8us
  *	3			4xLTF+3.2us
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 #define RATE_MCS_HE_GI_LTF_POS		20
 #define RATE_MCS_HE_GI_LTF_MSK_V1		(3 << RATE_MCS_HE_GI_LTF_POS)
@@ -548,6 +579,7 @@ enum {
 /*
  * Bits 13-11: (0) 20MHz, (1) 40MHz, (2) 80MHz, (3) 160MHz, (4) 320MHz
  */
+<<<<<<< HEAD
 #define RATE_MCS_CHAN_WIDTH_MSK		(0x7 << RATE_MCS_CHAN_WIDTH_POS)
 #define RATE_MCS_CHAN_WIDTH_20_VAL	0
 #define RATE_MCS_CHAN_WIDTH_20		(RATE_MCS_CHAN_WIDTH_20_VAL << RATE_MCS_CHAN_WIDTH_POS)
@@ -559,6 +591,14 @@ enum {
 #define RATE_MCS_CHAN_WIDTH_160		(RATE_MCS_CHAN_WIDTH_160_VAL << RATE_MCS_CHAN_WIDTH_POS)
 #define RATE_MCS_CHAN_WIDTH_320_VAL	4
 #define RATE_MCS_CHAN_WIDTH_320		(RATE_MCS_CHAN_WIDTH_320_VAL << RATE_MCS_CHAN_WIDTH_POS)
+=======
+#define RATE_MCS_CHAN_WIDTH_MSK			(0x7 << RATE_MCS_CHAN_WIDTH_POS)
+#define RATE_MCS_CHAN_WIDTH_20			(0 << RATE_MCS_CHAN_WIDTH_POS)
+#define RATE_MCS_CHAN_WIDTH_40			(1 << RATE_MCS_CHAN_WIDTH_POS)
+#define RATE_MCS_CHAN_WIDTH_80			(2 << RATE_MCS_CHAN_WIDTH_POS)
+#define RATE_MCS_CHAN_WIDTH_160			(3 << RATE_MCS_CHAN_WIDTH_POS)
+#define RATE_MCS_CHAN_WIDTH_320			(4 << RATE_MCS_CHAN_WIDTH_POS)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Bit 15-14: Antenna selection:
  * Bit 14: Ant A active

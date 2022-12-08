@@ -19,6 +19,7 @@ Contact:        linux-accelerators@lists.ozlabs.org
 Description:    Available instances left of the device
                 Return -ENODEV if uacce_ops get_available_instances is not provided
 
+<<<<<<< HEAD
 What:           /sys/class/uacce/<dev_name>/isolate_strategy
 Date:           Nov 2022
 KernelVersion:  6.1
@@ -37,6 +38,8 @@ Description:    (R) A sysfs node that read the device isolated state. The value 
                 means the device is unavailable. The 0 means the device is
                 available.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 What:           /sys/class/uacce/<dev_name>/algorithms
 Date:           Feb 2020
 KernelVersion:  5.7

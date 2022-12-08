@@ -50,7 +50,11 @@ static int __acpi_processor_set_throttling(struct acpi_processor *pr,
 
 static int acpi_processor_update_tsd_coord(void)
 {
+<<<<<<< HEAD
 	int count_target;
+=======
+	int count, count_target;
+>>>>>>> b7ba80a49124 (Commit)
 	int retval = 0;
 	unsigned int i, j;
 	cpumask_var_t covered_cpus;
@@ -107,6 +111,10 @@ static int acpi_processor_update_tsd_coord(void)
 
 		/* Validate the Domain info */
 		count_target = pdomain->num_processors;
+<<<<<<< HEAD
+=======
+		count = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 		for_each_possible_cpu(j) {
 			if (i == j)
@@ -139,6 +147,10 @@ static int acpi_processor_update_tsd_coord(void)
 
 			cpumask_set_cpu(j, covered_cpus);
 			cpumask_set_cpu(j, pthrottling->shared_cpu_map);
+<<<<<<< HEAD
+=======
+			count++;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		for_each_possible_cpu(j) {
 			if (i == j)

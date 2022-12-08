@@ -88,7 +88,11 @@ static ssize_t led_current_show(struct device *dev,
 {
 	struct lp55xx_led *led = dev_to_lp55xx_led(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", led->led_current);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%d\n", led->led_current);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t led_current_store(struct device *dev,
@@ -121,7 +125,11 @@ static ssize_t max_current_show(struct device *dev,
 {
 	struct lp55xx_led *led = dev_to_lp55xx_led(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", led->max_current);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%d\n", led->max_current);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR_RW(led_current);
@@ -166,7 +174,11 @@ static int lp55xx_init_led(struct lp55xx_led *led,
 	struct mc_subled *mc_led_info;
 	struct led_classdev *led_cdev;
 	char name[32];
+<<<<<<< HEAD
 	int i;
+=======
+	int i, j = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (chan >= max_channel) {
@@ -201,6 +213,10 @@ static int lp55xx_init_led(struct lp55xx_led *led,
 				pdata->led_config[chan].color_id[i];
 			mc_led_info[i].channel =
 					pdata->led_config[chan].output_num[i];
+<<<<<<< HEAD
+=======
+			j++;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		led->mc_cdev.subled_info = mc_led_info;

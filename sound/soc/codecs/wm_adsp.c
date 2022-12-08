@@ -19,7 +19,10 @@
 #include <linux/regmap.h>
 #include <linux/regulator/consumer.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/vmalloc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/workqueue.h>
 #include <linux/debugfs.h>
 #include <sound/core.h>
@@ -420,6 +423,7 @@ static int wm_coeff_tlv_put(struct snd_kcontrol *kctl,
 		(struct soc_bytes_ext *)kctl->private_value;
 	struct wm_coeff_ctl *ctl = bytes_ext_to_ctl(bytes_ext);
 	struct cs_dsp_coeff_ctl *cs_ctl = ctl->cs_ctl;
+<<<<<<< HEAD
 	void *scratch;
 	int ret = 0;
 
@@ -435,6 +439,18 @@ static int wm_coeff_tlv_put(struct snd_kcontrol *kctl,
 		mutex_unlock(&cs_ctl->dsp->pwr_lock);
 	}
 	vfree(scratch);
+=======
+	int ret = 0;
+
+	mutex_lock(&cs_ctl->dsp->pwr_lock);
+
+	if (copy_from_user(cs_ctl->cache, bytes, size))
+		ret = -EFAULT;
+	else
+		ret = cs_dsp_coeff_write_ctrl(cs_ctl, 0, cs_ctl->cache, size);
+
+	mutex_unlock(&cs_ctl->dsp->pwr_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -461,10 +477,14 @@ static int wm_coeff_put_acked(struct snd_kcontrol *kctl,
 
 	mutex_unlock(&cs_ctl->dsp->pwr_lock);
 
+<<<<<<< HEAD
 	if (ret < 0)
 		return ret;
 
 	return 1;
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int wm_coeff_get(struct snd_kcontrol *kctl,
@@ -691,10 +711,17 @@ int wm_adsp_write_ctl(struct wm_adsp *dsp, const char *name, int type,
 	int ret;
 
 	ret = cs_dsp_coeff_write_ctrl(cs_ctl, 0, buf, len);
+<<<<<<< HEAD
 	if (ret < 0)
 		return ret;
 
 	if (ret == 0 || (cs_ctl->flags & WMFW_CTL_FLAG_SYS))
+=======
+	if (ret)
+		return ret;
+
+	if (cs_ctl->flags & WMFW_CTL_FLAG_SYS)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	ctl = cs_ctl->priv;
@@ -787,8 +814,11 @@ static int wm_adsp_request_firmware_file(struct wm_adsp *dsp,
 		adsp_dbg(dsp, "Failed to request '%s'\n", *filename);
 		kfree(*filename);
 		*filename = NULL;
+<<<<<<< HEAD
 	} else {
 		adsp_dbg(dsp, "Found '%s'\n", *filename);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;
@@ -809,6 +839,10 @@ static int wm_adsp_request_firmware_files(struct wm_adsp *dsp,
 		if (!wm_adsp_request_firmware_file(dsp, wmfw_firmware, wmfw_filename,
 						   cirrus_dir, system_name,
 						   asoc_component_prefix, "wmfw")) {
+<<<<<<< HEAD
+=======
+			adsp_dbg(dsp, "Found '%s'\n", *wmfw_filename);
+>>>>>>> b7ba80a49124 (Commit)
 			wm_adsp_request_firmware_file(dsp, coeff_firmware, coeff_filename,
 						      cirrus_dir, system_name,
 						      asoc_component_prefix, "bin");
@@ -820,6 +854,10 @@ static int wm_adsp_request_firmware_files(struct wm_adsp *dsp,
 		if (!wm_adsp_request_firmware_file(dsp, wmfw_firmware, wmfw_filename,
 						   cirrus_dir, system_name,
 						   NULL, "wmfw")) {
+<<<<<<< HEAD
+=======
+			adsp_dbg(dsp, "Found '%s'\n", *wmfw_filename);
+>>>>>>> b7ba80a49124 (Commit)
 			if (asoc_component_prefix)
 				wm_adsp_request_firmware_file(dsp, coeff_firmware, coeff_filename,
 							      cirrus_dir, system_name,
@@ -835,6 +873,10 @@ static int wm_adsp_request_firmware_files(struct wm_adsp *dsp,
 
 	if (!wm_adsp_request_firmware_file(dsp, wmfw_firmware, wmfw_filename,
 					   "", NULL, NULL, "wmfw")) {
+<<<<<<< HEAD
+=======
+		adsp_dbg(dsp, "Found '%s'\n", *wmfw_filename);
+>>>>>>> b7ba80a49124 (Commit)
 		wm_adsp_request_firmware_file(dsp, coeff_firmware, coeff_filename,
 					      "", NULL, NULL, "bin");
 		return 0;
@@ -843,11 +885,16 @@ static int wm_adsp_request_firmware_files(struct wm_adsp *dsp,
 	ret = wm_adsp_request_firmware_file(dsp, wmfw_firmware, wmfw_filename,
 					    cirrus_dir, NULL, NULL, "wmfw");
 	if (!ret) {
+<<<<<<< HEAD
+=======
+		adsp_dbg(dsp, "Found '%s'\n", *wmfw_filename);
+>>>>>>> b7ba80a49124 (Commit)
 		wm_adsp_request_firmware_file(dsp, coeff_firmware, coeff_filename,
 					      cirrus_dir, NULL, NULL, "bin");
 		return 0;
 	}
 
+<<<<<<< HEAD
 	if (dsp->wmfw_optional) {
 		if (system_name) {
 			if (asoc_component_prefix)
@@ -872,6 +919,8 @@ static int wm_adsp_request_firmware_files(struct wm_adsp *dsp,
 		return 0;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	adsp_err(dsp, "Failed to request firmware <%s>%s-%s-%s<-%s<%s>>.wmfw\n",
 		 cirrus_dir, dsp->part, dsp->fwf_name, wm_adsp_fw[dsp->fw].file,
 		 system_name, asoc_component_prefix);
@@ -1017,8 +1066,16 @@ int wm_adsp2_preloader_put(struct snd_kcontrol *kcontrol,
 }
 EXPORT_SYMBOL_GPL(wm_adsp2_preloader_put);
 
+<<<<<<< HEAD
 int wm_adsp_power_up(struct wm_adsp *dsp)
 {
+=======
+static void wm_adsp_boot_work(struct work_struct *work)
+{
+	struct wm_adsp *dsp = container_of(work,
+					   struct wm_adsp,
+					   boot_work);
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 	char *wmfw_filename = NULL;
 	const struct firmware *wmfw_firmware = NULL;
@@ -1029,16 +1086,26 @@ int wm_adsp_power_up(struct wm_adsp *dsp)
 					     &wmfw_firmware, &wmfw_filename,
 					     &coeff_firmware, &coeff_filename);
 	if (ret)
+<<<<<<< HEAD
 		return ret;
 
 	ret = cs_dsp_power_up(&dsp->cs_dsp,
 			      wmfw_firmware, wmfw_filename,
 			      coeff_firmware, coeff_filename,
 			      wm_adsp_fw_text[dsp->fw]);
+=======
+		return;
+
+	cs_dsp_power_up(&dsp->cs_dsp,
+			wmfw_firmware, wmfw_filename,
+			coeff_firmware, coeff_filename,
+			wm_adsp_fw_text[dsp->fw]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	wm_adsp_release_firmware_files(dsp,
 				       wmfw_firmware, wmfw_filename,
 				       coeff_firmware, coeff_filename);
+<<<<<<< HEAD
 
 	return ret;
 }
@@ -1051,6 +1118,8 @@ static void wm_adsp_boot_work(struct work_struct *work)
 					   boot_work);
 
 	wm_adsp_power_up(dsp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int wm_adsp_early_event(struct snd_soc_dapm_widget *w,
@@ -1075,6 +1144,7 @@ int wm_adsp_early_event(struct snd_soc_dapm_widget *w,
 }
 EXPORT_SYMBOL_GPL(wm_adsp_early_event);
 
+<<<<<<< HEAD
 static int wm_adsp_pre_run(struct cs_dsp *cs_dsp)
 {
 	struct wm_adsp *dsp = container_of(cs_dsp, struct wm_adsp, cs_dsp);
@@ -1085,6 +1155,8 @@ static int wm_adsp_pre_run(struct cs_dsp *cs_dsp)
 	return (*dsp->pre_run)(dsp);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int wm_adsp_event_post_run(struct cs_dsp *cs_dsp)
 {
 	struct wm_adsp *dsp = container_of(cs_dsp, struct wm_adsp, cs_dsp);
@@ -1133,10 +1205,15 @@ int wm_adsp2_component_probe(struct wm_adsp *dsp, struct snd_soc_component *comp
 {
 	char preload[32];
 
+<<<<<<< HEAD
 	if (!dsp->cs_dsp.no_core_startstop) {
 		snprintf(preload, ARRAY_SIZE(preload), "%s Preload", dsp->cs_dsp.name);
 		snd_soc_component_disable_pin(component, preload);
 	}
+=======
+	snprintf(preload, ARRAY_SIZE(preload), "%s Preload", dsp->cs_dsp.name);
+	snd_soc_component_disable_pin(component, preload);
+>>>>>>> b7ba80a49124 (Commit)
 
 	cs_dsp_init_debugfs(&dsp->cs_dsp, component->debugfs_root);
 
@@ -2095,11 +2172,17 @@ static const struct cs_dsp_client_ops wm_adsp1_client_ops = {
 static const struct cs_dsp_client_ops wm_adsp2_client_ops = {
 	.control_add = wm_adsp_control_add,
 	.control_remove = wm_adsp_control_remove,
+<<<<<<< HEAD
 	.pre_run = wm_adsp_pre_run,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.post_run = wm_adsp_event_post_run,
 	.post_stop = wm_adsp_event_post_stop,
 	.watchdog_expired = wm_adsp_fatal_error,
 };
 
 MODULE_LICENSE("GPL v2");
+<<<<<<< HEAD
 MODULE_IMPORT_NS(FW_CS_DSP);
+=======
+>>>>>>> b7ba80a49124 (Commit)

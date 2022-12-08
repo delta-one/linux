@@ -72,7 +72,10 @@ source "drivers/media/platform/chips-media/Kconfig"
 source "drivers/media/platform/intel/Kconfig"
 source "drivers/media/platform/marvell/Kconfig"
 source "drivers/media/platform/mediatek/Kconfig"
+<<<<<<< HEAD
 source "drivers/media/platform/microchip/Kconfig"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 source "drivers/media/platform/nvidia/Kconfig"
 source "drivers/media/platform/nxp/Kconfig"
 source "drivers/media/platform/qcom/Kconfig"

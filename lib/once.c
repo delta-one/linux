@@ -66,6 +66,7 @@ void __do_once_done(bool *done, struct static_key_true *once_key,
 	once_disable_jump(once_key, mod);
 }
 EXPORT_SYMBOL(__do_once_done);
+<<<<<<< HEAD
 
 static DEFINE_MUTEX(once_mutex);
 
@@ -96,3 +97,5 @@ void __do_once_sleepable_done(bool *done, struct static_key_true *once_key,
 	once_disable_jump(once_key, mod);
 }
 EXPORT_SYMBOL(__do_once_sleepable_done);
+=======
+>>>>>>> b7ba80a49124 (Commit)

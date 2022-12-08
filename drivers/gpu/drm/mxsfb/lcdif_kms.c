@@ -5,7 +5,10 @@
  * This code is based on drivers/gpu/drm/mxsfb/mxsfb*
  */
 
+<<<<<<< HEAD
 #include <linux/bitfield.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/clk.h>
 #include <linux/io.h>
 #include <linux/iopoll.h>
@@ -16,7 +19,10 @@
 #include <drm/drm_atomic.h>
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_bridge.h>
+<<<<<<< HEAD
 #include <drm/drm_color_mgmt.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_crtc.h>
 #include <drm/drm_encoder.h>
 #include <drm/drm_fb_dma_helper.h>
@@ -33,6 +39,7 @@
 /* -----------------------------------------------------------------------------
  * CRTC
  */
+<<<<<<< HEAD
 
 /*
  * For conversion from YCbCr to RGB, the CSC operates as follows:
@@ -153,6 +160,15 @@ static void lcdif_set_formats(struct lcdif_drm_private *lcdif,
 	const u32 format = plane_state->fb->format->format;
 	bool in_yuv = false;
 	bool out_yuv = false;
+=======
+static void lcdif_set_formats(struct lcdif_drm_private *lcdif,
+			      const u32 bus_format)
+{
+	struct drm_device *drm = lcdif->drm;
+	const u32 format = lcdif->crtc.primary->state->fb->format->format;
+
+	writel(CSC0_CTRL_BYPASS, lcdif->base + LCDC_V8_CSC0_CTRL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (bus_format) {
 	case MEDIA_BUS_FMT_RGB565_1X16:
@@ -166,7 +182,28 @@ static void lcdif_set_formats(struct lcdif_drm_private *lcdif,
 	case MEDIA_BUS_FMT_UYVY8_1X16:
 		writel(DISP_PARA_LINE_PATTERN_UYVY_H,
 		       lcdif->base + LCDC_V8_DISP_PARA);
+<<<<<<< HEAD
 		out_yuv = true;
+=======
+
+		/* CSC: BT.601 Full Range RGB to YCbCr coefficients. */
+		writel(CSC0_COEF0_A2(0x096) | CSC0_COEF0_A1(0x04c),
+		       lcdif->base + LCDC_V8_CSC0_COEF0);
+		writel(CSC0_COEF1_B1(0x7d5) | CSC0_COEF1_A3(0x01d),
+		       lcdif->base + LCDC_V8_CSC0_COEF1);
+		writel(CSC0_COEF2_B3(0x080) | CSC0_COEF2_B2(0x7ac),
+		       lcdif->base + LCDC_V8_CSC0_COEF2);
+		writel(CSC0_COEF3_C2(0x795) | CSC0_COEF3_C1(0x080),
+		       lcdif->base + LCDC_V8_CSC0_COEF3);
+		writel(CSC0_COEF4_D1(0x000) | CSC0_COEF4_C3(0x7ec),
+		       lcdif->base + LCDC_V8_CSC0_COEF4);
+		writel(CSC0_COEF5_D3(0x080) | CSC0_COEF5_D2(0x080),
+		       lcdif->base + LCDC_V8_CSC0_COEF5);
+
+		writel(CSC0_CTRL_CSC_MODE_RGB2YCbCr,
+		       lcdif->base + LCDC_V8_CSC0_CTRL);
+
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		dev_err(drm->dev, "Unknown media bus format 0x%x\n", bus_format);
@@ -174,7 +211,10 @@ static void lcdif_set_formats(struct lcdif_drm_private *lcdif,
 	}
 
 	switch (format) {
+<<<<<<< HEAD
 	/* RGB Formats */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case DRM_FORMAT_RGB565:
 		writel(CTRLDESCL0_5_BPP_16_RGB565,
 		       lcdif->base + LCDC_V8_CTRLDESCL0_5);
@@ -199,6 +239,7 @@ static void lcdif_set_formats(struct lcdif_drm_private *lcdif,
 		writel(CTRLDESCL0_5_BPP_32_ARGB8888,
 		       lcdif->base + LCDC_V8_CTRLDESCL0_5);
 		break;
+<<<<<<< HEAD
 
 	/* YUV Formats */
 	case DRM_FORMAT_YUYV:
@@ -222,10 +263,13 @@ static void lcdif_set_formats(struct lcdif_drm_private *lcdif,
 		in_yuv = true;
 		break;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		dev_err(drm->dev, "Unknown pixel format 0x%x\n", format);
 		break;
 	}
+<<<<<<< HEAD
 
 	/*
 	 * The CSC differentiates between "YCbCr" and "YUV", but the reference
@@ -277,6 +321,8 @@ static void lcdif_set_formats(struct lcdif_drm_private *lcdif,
 		/* RGB -> RGB, YCbCr -> YCbCr: bypass colorspace converter. */
 		writel(CSC0_CTRL_BYPASS, lcdif->base + LCDC_V8_CSC0_CTRL);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void lcdif_set_mode(struct lcdif_drm_private *lcdif, u32 bus_flags)
@@ -315,6 +361,7 @@ static void lcdif_set_mode(struct lcdif_drm_private *lcdif, u32 bus_flags)
 	       CTRLDESCL0_1_WIDTH(m->hdisplay),
 	       lcdif->base + LCDC_V8_CTRLDESCL0_1);
 
+<<<<<<< HEAD
 	/*
 	 * Undocumented P_SIZE and T_SIZE register but those written in the
 	 * downstream kernel those registers control the AXI burst size. As of
@@ -327,12 +374,17 @@ static void lcdif_set_mode(struct lcdif_drm_private *lcdif, u32 bus_flags)
 	ctrl = CTRLDESCL0_3_P_SIZE(2) | CTRLDESCL0_3_T_SIZE(2) |
 	       CTRLDESCL0_3_PITCH(lcdif->crtc.primary->state->fb->pitches[0]);
 	writel(ctrl, lcdif->base + LCDC_V8_CTRLDESCL0_3);
+=======
+	writel(CTRLDESCL0_3_PITCH(lcdif->crtc.primary->state->fb->pitches[0]),
+	       lcdif->base + LCDC_V8_CTRLDESCL0_3);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void lcdif_enable_controller(struct lcdif_drm_private *lcdif)
 {
 	u32 reg;
 
+<<<<<<< HEAD
 	/* Set FIFO Panic watermarks, low 1/3, high 2/3 . */
 	writel(FIELD_PREP(PANIC0_THRES_LOW_MASK, 1 * PANIC0_THRES_MAX / 3) |
 	       FIELD_PREP(PANIC0_THRES_HIGH_MASK, 2 * PANIC0_THRES_MAX / 3),
@@ -345,6 +397,8 @@ static void lcdif_enable_controller(struct lcdif_drm_private *lcdif)
 	writel(INT_ENABLE_D1_PLANE_PANIC_EN,
 	       lcdif->base + LCDC_V8_INT_ENABLE_D1);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	reg = readl(lcdif->base + LCDC_V8_DISP_PARA);
 	reg |= DISP_PARA_DISP_ON;
 	writel(reg, lcdif->base + LCDC_V8_DISP_PARA);
@@ -372,9 +426,12 @@ static void lcdif_disable_controller(struct lcdif_drm_private *lcdif)
 	reg = readl(lcdif->base + LCDC_V8_DISP_PARA);
 	reg &= ~DISP_PARA_DISP_ON;
 	writel(reg, lcdif->base + LCDC_V8_DISP_PARA);
+<<<<<<< HEAD
 
 	/* Disable FIFO Panic NoC priority booster. */
 	writel(0, lcdif->base + LCDC_V8_INT_ENABLE_D1);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void lcdif_reset_block(struct lcdif_drm_private *lcdif)
@@ -386,7 +443,10 @@ static void lcdif_reset_block(struct lcdif_drm_private *lcdif)
 }
 
 static void lcdif_crtc_mode_set_nofb(struct lcdif_drm_private *lcdif,
+<<<<<<< HEAD
 				     struct drm_plane_state *plane_state,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				     struct drm_bridge_state *bridge_state,
 				     const u32 bus_format)
 {
@@ -409,7 +469,11 @@ static void lcdif_crtc_mode_set_nofb(struct lcdif_drm_private *lcdif,
 	/* Mandatory eLCDIF reset as per the Reference Manual */
 	lcdif_reset_block(lcdif);
 
+<<<<<<< HEAD
 	lcdif_set_formats(lcdif, plane_state, bus_format);
+=======
+	lcdif_set_formats(lcdif, bus_format);
+>>>>>>> b7ba80a49124 (Commit)
 
 	lcdif_set_mode(lcdif, bus_flags);
 }
@@ -492,7 +556,11 @@ static void lcdif_crtc_atomic_enable(struct drm_crtc *crtc,
 
 	pm_runtime_get_sync(drm->dev);
 
+<<<<<<< HEAD
 	lcdif_crtc_mode_set_nofb(lcdif, new_pstate, bridge_state, bus_format);
+=======
+	lcdif_crtc_mode_set_nofb(lcdif, bridge_state, bus_format);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Write cur_buf as well to avoid an initial corrupt frame */
 	paddr = drm_fb_dma_get_gem_addr(new_pstate->fb, new_pstate, 0);
@@ -636,19 +704,25 @@ static const struct drm_plane_funcs lcdif_plane_funcs = {
 };
 
 static const u32 lcdif_primary_plane_formats[] = {
+<<<<<<< HEAD
 	/* RGB */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	DRM_FORMAT_RGB565,
 	DRM_FORMAT_RGB888,
 	DRM_FORMAT_XBGR8888,
 	DRM_FORMAT_XRGB1555,
 	DRM_FORMAT_XRGB4444,
 	DRM_FORMAT_XRGB8888,
+<<<<<<< HEAD
 
 	/* Packed YCbCr */
 	DRM_FORMAT_YUYV,
 	DRM_FORMAT_YVYU,
 	DRM_FORMAT_UYVY,
 	DRM_FORMAT_VYUY,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const u64 lcdif_modifiers[] = {
@@ -662,11 +736,14 @@ static const u64 lcdif_modifiers[] = {
 
 int lcdif_kms_init(struct lcdif_drm_private *lcdif)
 {
+<<<<<<< HEAD
 	const u32 supported_encodings = BIT(DRM_COLOR_YCBCR_BT601) |
 					BIT(DRM_COLOR_YCBCR_BT709) |
 					BIT(DRM_COLOR_YCBCR_BT2020);
 	const u32 supported_ranges = BIT(DRM_COLOR_YCBCR_LIMITED_RANGE) |
 				     BIT(DRM_COLOR_YCBCR_FULL_RANGE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_encoder *encoder = &lcdif->encoder;
 	struct drm_crtc *crtc = &lcdif->crtc;
 	int ret;
@@ -682,6 +759,7 @@ int lcdif_kms_init(struct lcdif_drm_private *lcdif)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = drm_plane_create_color_properties(&lcdif->planes.primary,
 						supported_encodings,
 						supported_ranges,
@@ -690,6 +768,8 @@ int lcdif_kms_init(struct lcdif_drm_private *lcdif)
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	drm_crtc_helper_add(crtc, &lcdif_crtc_helper_funcs);
 	ret = drm_crtc_init_with_planes(lcdif->drm, crtc,
 					&lcdif->planes.primary, NULL,

@@ -37,9 +37,13 @@
 #include "wm8940.h"
 
 struct wm8940_priv {
+<<<<<<< HEAD
 	unsigned int mclk;
 	unsigned int fs;
 
+=======
+	unsigned int sysclk;
+>>>>>>> b7ba80a49124 (Commit)
 	struct regmap *regmap;
 };
 
@@ -389,24 +393,33 @@ static int wm8940_set_dai_fmt(struct snd_soc_dai *codec_dai,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int wm8940_update_clocks(struct snd_soc_dai *dai);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int wm8940_i2s_hw_params(struct snd_pcm_substream *substream,
 				struct snd_pcm_hw_params *params,
 				struct snd_soc_dai *dai)
 {
 	struct snd_soc_component *component = dai->component;
+<<<<<<< HEAD
 	struct wm8940_priv *priv = snd_soc_component_get_drvdata(component);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 iface = snd_soc_component_read(component, WM8940_IFACE) & 0xFD9F;
 	u16 addcntrl = snd_soc_component_read(component, WM8940_ADDCNTRL) & 0xFFF1;
 	u16 companding =  snd_soc_component_read(component,
 						WM8940_COMPANDINGCTL) & 0xFFDF;
 	int ret;
 
+<<<<<<< HEAD
 	priv->fs = params_rate(params);
 	ret = wm8940_update_clocks(dai);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* LoutR control */
 	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE
 	    && params_channels(params) == 2)
@@ -620,6 +633,27 @@ static int wm8940_set_dai_pll(struct snd_soc_dai *codec_dai, int pll_id,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int wm8940_set_dai_sysclk(struct snd_soc_dai *codec_dai,
+				 int clk_id, unsigned int freq, int dir)
+{
+	struct snd_soc_component *component = codec_dai->component;
+	struct wm8940_priv *wm8940 = snd_soc_component_get_drvdata(component);
+
+	switch (freq) {
+	case 11289600:
+	case 12000000:
+	case 12288000:
+	case 16934400:
+	case 18432000:
+		wm8940->sysclk = freq;
+		return 0;
+	}
+	return -EINVAL;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int wm8940_set_dai_clkdiv(struct snd_soc_dai *codec_dai,
 				 int div_id, int div)
 {
@@ -644,6 +678,7 @@ static int wm8940_set_dai_clkdiv(struct snd_soc_dai *codec_dai,
 	return ret;
 }
 
+<<<<<<< HEAD
 static unsigned int wm8940_get_mclkdiv(unsigned int f_in, unsigned int f_out,
 				       int *mclkdiv)
 {
@@ -716,6 +751,8 @@ static int wm8940_set_dai_sysclk(struct snd_soc_dai *dai, int clk_id,
 	return wm8940_update_clocks(dai);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define WM8940_RATES SNDRV_PCM_RATE_8000_48000
 
 #define WM8940_FORMATS (SNDRV_PCM_FMTBIT_S8 |				\
@@ -760,6 +797,7 @@ static int wm8940_probe(struct snd_soc_component *component)
 	int ret;
 	u16 reg;
 
+<<<<<<< HEAD
 	/*
 	 * Check chip ID for wm8940 - value of 0x00 offset
 	 * SOFTWARE_RESET on write
@@ -771,6 +809,8 @@ static int wm8940_probe(struct snd_soc_component *component)
 		return -ENODEV;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = wm8940_reset(component);
 	if (ret < 0) {
 		dev_err(component->dev, "Failed to issue reset\n");
@@ -783,7 +823,13 @@ static int wm8940_probe(struct snd_soc_component *component)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	if (pdata) {
+=======
+	if (!pdata)
+		dev_warn(component->dev, "No platform data supplied\n");
+	else {
+>>>>>>> b7ba80a49124 (Commit)
 		reg = snd_soc_component_read(component, WM8940_OUTPUTCTL);
 		ret = snd_soc_component_write(component, WM8940_OUTPUTCTL, reg | pdata->vroi);
 		if (ret < 0)

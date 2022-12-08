@@ -136,7 +136,12 @@ static const struct of_device_id ts4900_gpio_of_match_table[] = {
 };
 MODULE_DEVICE_TABLE(of, ts4900_gpio_of_match_table);
 
+<<<<<<< HEAD
 static int ts4900_gpio_probe(struct i2c_client *client)
+=======
+static int ts4900_gpio_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ts4900_gpio_priv *priv;
 	u32 ngpio;
@@ -185,7 +190,11 @@ static struct i2c_driver ts4900_gpio_driver = {
 		.name = "ts4900-gpio",
 		.of_match_table = ts4900_gpio_of_match_table,
 	},
+<<<<<<< HEAD
 	.probe_new = ts4900_gpio_probe,
+=======
+	.probe = ts4900_gpio_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = ts4900_gpio_id_table,
 };
 module_i2c_driver(ts4900_gpio_driver);

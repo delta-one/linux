@@ -272,7 +272,11 @@ static int cht_codec_fixup(struct snd_soc_pcm_runtime *rtd,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	/* The DSP will convert the FE rate to 48k, stereo, 24bits */
+=======
+	/* The DSP will covert the FE rate to 48k, stereo, 24bits */
+>>>>>>> b7ba80a49124 (Commit)
 	rate->min = rate->max = 48000;
 	channels->min = channels->max = 2;
 
@@ -623,13 +627,22 @@ static int snd_cht_mc_probe(struct platform_device *pdev)
 	return ret_val;
 }
 
+<<<<<<< HEAD
 static void snd_cht_mc_remove(struct platform_device *pdev)
+=======
+static int snd_cht_mc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 	struct cht_mc_private *ctx = snd_soc_card_get_drvdata(card);
 
 	if (ctx->quirks & QUIRK_PMC_PLT_CLK_0)
 		clk_disable_unprepare(ctx->mclk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver snd_cht_mc_driver = {
@@ -637,7 +650,11 @@ static struct platform_driver snd_cht_mc_driver = {
 		.name = "cht-bsw-max98090",
 	},
 	.probe = snd_cht_mc_probe,
+<<<<<<< HEAD
 	.remove_new = snd_cht_mc_remove,
+=======
+	.remove = snd_cht_mc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(snd_cht_mc_driver)

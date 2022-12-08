@@ -114,7 +114,11 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 void __init erofs_pcpubuf_init(void)
+=======
+void erofs_pcpubuf_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int cpu;
 

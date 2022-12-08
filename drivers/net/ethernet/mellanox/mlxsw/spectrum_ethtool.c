@@ -1672,6 +1672,7 @@ mlxsw_sp2_mask_ethtool_400gaui_8[] = {
 #define MLXSW_SP2_MASK_ETHTOOL_400GAUI_8_LEN \
 	ARRAY_SIZE(mlxsw_sp2_mask_ethtool_400gaui_8)
 
+<<<<<<< HEAD
 static const enum ethtool_link_mode_bit_indices
 mlxsw_sp2_mask_ethtool_800gaui_8[] = {
 	ETHTOOL_LINK_MODE_800000baseCR8_Full_BIT,
@@ -1685,6 +1686,8 @@ mlxsw_sp2_mask_ethtool_800gaui_8[] = {
 #define MLXSW_SP2_MASK_ETHTOOL_800GAUI_8_LEN \
 	ARRAY_SIZE(mlxsw_sp2_mask_ethtool_800gaui_8)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MLXSW_SP_PORT_MASK_WIDTH_1X	BIT(0)
 #define MLXSW_SP_PORT_MASK_WIDTH_2X	BIT(1)
 #define MLXSW_SP_PORT_MASK_WIDTH_4X	BIT(2)
@@ -1833,6 +1836,7 @@ static const struct mlxsw_sp2_port_link_mode mlxsw_sp2_port_link_mode[] = {
 		.speed		= SPEED_400000,
 		.width		= 8,
 	},
+<<<<<<< HEAD
 	{
 		.mask		= MLXSW_REG_PTYS_EXT_ETH_SPEED_800GAUI_8,
 		.mask_ethtool	= mlxsw_sp2_mask_ethtool_800gaui_8,
@@ -1841,6 +1845,8 @@ static const struct mlxsw_sp2_port_link_mode mlxsw_sp2_port_link_mode[] = {
 		.speed		= SPEED_800000,
 		.width		= 8,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define MLXSW_SP2_PORT_LINK_MODE_LEN ARRAY_SIZE(mlxsw_sp2_port_link_mode)

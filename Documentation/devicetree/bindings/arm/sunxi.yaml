@@ -366,12 +366,15 @@ properties:
           - const: lamobo,lamobo-r1
           - const: allwinner,sun7i-a20
 
+<<<<<<< HEAD
       - description: Lctech Pi F1C200s
         items:
           - const: lctech,pi-f1c200s
           - const: allwinner,suniv-f1c200s
           - const: allwinner,suniv-f1c100s
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: Libre Computer Board ALL-H3-CC H2+
         items:
           - const: libretech,all-h3-cc-h2-plus
@@ -813,6 +816,7 @@ properties:
           - const: sinlinx,sina33
           - const: allwinner,sun8i-a33
 
+<<<<<<< HEAD
       - description: SourceParts PopStick v1.1
         items:
           - const: sourceparts,popstick-v1.1
@@ -820,6 +824,8 @@ properties:
           - const: allwinner,suniv-f1c200s
           - const: allwinner,suniv-f1c100s
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: SL631 Action Camera with IMX179
         items:
           - const: allwinner,sl631-imx179

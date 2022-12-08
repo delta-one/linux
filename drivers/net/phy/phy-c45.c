@@ -8,8 +8,11 @@
 #include <linux/mii.h>
 #include <linux/phy.h>
 
+<<<<<<< HEAD
 #include "mdio-open-alliance.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * genphy_c45_baset1_able - checks if the PMA has BASE-T1 extended abilities
  * @phydev: target phy_device struct
@@ -256,17 +259,25 @@ static int genphy_c45_baset1_an_config_aneg(struct phy_device *phydev)
  */
 int genphy_c45_an_config_aneg(struct phy_device *phydev)
 {
+<<<<<<< HEAD
 	int changed = 0, ret;
+=======
+	int changed, ret;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 adv;
 
 	linkmode_and(phydev->advertising, phydev->advertising,
 		     phydev->supported);
 
+<<<<<<< HEAD
 	ret = genphy_c45_an_config_eee_aneg(phydev);
 	if (ret < 0)
 		return ret;
 	else if (ret)
 		changed = true;
+=======
+	changed = genphy_config_eee_advert(phydev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (genphy_c45_baset1_able(phydev))
 		return genphy_c45_baset1_an_config_aneg(phydev);
@@ -666,6 +677,7 @@ int genphy_c45_read_mdix(struct phy_device *phydev)
 EXPORT_SYMBOL_GPL(genphy_c45_read_mdix);
 
 /**
+<<<<<<< HEAD
  * genphy_c45_write_eee_adv - write advertised EEE link modes
  * @phydev: target phy_device struct
  * @adv: the linkmode advertisement settings
@@ -873,6 +885,8 @@ int genphy_c45_an_config_eee_aneg(struct phy_device *phydev)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * genphy_c45_pma_read_abilities - read supported link modes from PMA
  * @phydev: target phy_device struct
  *
@@ -986,11 +1000,14 @@ int genphy_c45_pma_read_abilities(struct phy_device *phydev)
 		}
 	}
 
+<<<<<<< HEAD
 	/* This is optional functionality. If not supported, we may get an error
 	 * which should be ignored.
 	 */
 	genphy_c45_read_eee_abilities(phydev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 EXPORT_SYMBOL_GPL(genphy_c45_pma_read_abilities);
@@ -1149,6 +1166,7 @@ int genphy_c45_fast_retrain(struct phy_device *phydev, bool enable)
 }
 EXPORT_SYMBOL_GPL(genphy_c45_fast_retrain);
 
+<<<<<<< HEAD
 /**
  * genphy_c45_plca_get_cfg - get PLCA configuration from standard registers
  * @phydev: target phy_device struct
@@ -1471,6 +1489,8 @@ int genphy_c45_ethtool_set_eee(struct phy_device *phydev,
 }
 EXPORT_SYMBOL(genphy_c45_ethtool_set_eee);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct phy_driver genphy_c45_driver = {
 	.phy_id         = 0xffffffff,
 	.phy_id_mask    = 0xffffffff,

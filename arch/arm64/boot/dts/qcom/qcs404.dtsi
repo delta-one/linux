@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 /*
  * Copyright (c) 2018, Linaro Limited
  */
+=======
+// Copyright (c) 2018, Linaro Limited
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/clock/qcom,gcc-qcs404.h>
@@ -223,15 +227,22 @@
 		qcom,rpm-msg-ram = <&rpm_msg_ram>;
 		mboxes = <&apcs_glb 0>;
 
+<<<<<<< HEAD
 		rpm_requests: rpm-requests {
+=======
+		rpm_requests: glink-channel {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,rpm-qcs404";
 			qcom,glink-channels = "rpm_requests";
 
 			rpmcc: clock-controller {
 				compatible = "qcom,rpmcc-qcs404", "qcom,rpmcc";
 				#clock-cells = <1>;
+<<<<<<< HEAD
 				clocks = <&xo_board>;
 				clock-names = "xo";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			rpmpd: power-controller {
@@ -368,10 +379,17 @@
 			reg = <0x000a4000 0x1000>;
 			#address-cells = <1>;
 			#size-cells = <1>;
+<<<<<<< HEAD
+=======
+			tsens_caldata: caldata@d0 {
+				reg = <0x1f8 0x14>;
+			};
+>>>>>>> b7ba80a49124 (Commit)
 			cpr_efuse_speedbin: speedbin@13c {
 				reg = <0x13c 0x4>;
 				bits = <2 3>;
 			};
+<<<<<<< HEAD
 
 			tsens_s0_p1: s0-p1@1f8 {
 				reg = <0x1f8 0x1>;
@@ -488,6 +506,8 @@
 				bits = <3 8>;
 			};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			cpr_efuse_quot_offset1: qoffset1@231 {
 				reg = <0x231 0x4>;
 				bits = <4 7>;
@@ -562,6 +582,7 @@
 			compatible = "qcom,qcs404-tsens", "qcom,tsens-v1";
 			reg = <0x004a9000 0x1000>, /* TM */
 			      <0x004a8000 0x1000>; /* SROT */
+<<<<<<< HEAD
 			nvmem-cells = <&tsens_mode>,
 				      <&tsens_base1>, <&tsens_base2>,
 				      <&tsens_s0_p1>, <&tsens_s0_p2>,
@@ -586,6 +607,10 @@
 					   "s7_p1", "s7_p2",
 					   "s8_p1", "s8_p2",
 					   "s9_p1", "s9_p2";
+=======
+			nvmem-cells = <&tsens_caldata>;
+			nvmem-cell-names = "calib";
+>>>>>>> b7ba80a49124 (Commit)
 			#qcom,sensors = <10>;
 			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
 			interrupt-names = "uplow";
@@ -622,6 +647,7 @@
 			interrupt-names = "wdog", "fatal", "ready",
 					  "handover", "stop-ack";
 
+<<<<<<< HEAD
 			clocks = <&xo_board>;
 			clock-names = "xo";
 
@@ -647,6 +673,29 @@
 			 * reset-names = "restart";
 			 * qcom,halt-regs = <&tcsr 0x19004>;
 			 */
+=======
+			clocks = <&xo_board>,
+				 <&gcc GCC_CDSP_CFG_AHB_CLK>,
+				 <&gcc GCC_CDSP_TBU_CLK>,
+				 <&gcc GCC_BIMC_CDSP_CLK>,
+				 <&turingcc TURING_WRAPPER_AON_CLK>,
+				 <&turingcc TURING_Q6SS_AHBS_AON_CLK>,
+				 <&turingcc TURING_Q6SS_AHBM_AON_CLK>,
+				 <&turingcc TURING_Q6SS_Q6_AXIM_CLK>;
+			clock-names = "xo",
+				      "sway",
+				      "tbu",
+				      "bimc",
+				      "ahb_aon",
+				      "q6ss_slave",
+				      "q6ss_master",
+				      "q6_axim";
+
+			resets = <&gcc GCC_CDSP_RESTART>;
+			reset-names = "restart";
+
+			qcom,halt-regs = <&tcsr 0x19004>;
+>>>>>>> b7ba80a49124 (Commit)
 
 			memory-region = <&cdsp_fw_mem>;
 
@@ -736,60 +785,103 @@
 			interrupt-controller;
 			#interrupt-cells = <2>;
 
+<<<<<<< HEAD
 			blsp1_i2c0_default: blsp1-i2c0-default-state {
+=======
+			blsp1_i2c0_default: blsp1-i2c0-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio32", "gpio33";
 				function = "blsp_i2c0";
 			};
 
+<<<<<<< HEAD
 			blsp1_i2c1_default: blsp1-i2c1-default-state {
+=======
+			blsp1_i2c1_default: blsp1-i2c1-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio24", "gpio25";
 				function = "blsp_i2c1";
 			};
 
+<<<<<<< HEAD
 			blsp1_i2c2_default: blsp1-i2c2-default-state {
 				sda-pins {
+=======
+			blsp1_i2c2_default: blsp1-i2c2-default {
+				sda {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio19";
 					function = "blsp_i2c_sda_a2";
 				};
 
+<<<<<<< HEAD
 				scl-pins {
+=======
+				scl {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio20";
 					function = "blsp_i2c_scl_a2";
 				};
 			};
 
+<<<<<<< HEAD
 			blsp1_i2c3_default: blsp1-i2c3-default-state {
+=======
+			blsp1_i2c3_default: blsp1-i2c3-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio84", "gpio85";
 				function = "blsp_i2c3";
 			};
 
+<<<<<<< HEAD
 			blsp1_i2c4_default: blsp1-i2c4-default-state {
+=======
+			blsp1_i2c4_default: blsp1-i2c4-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio117", "gpio118";
 				function = "blsp_i2c4";
 			};
 
+<<<<<<< HEAD
 			blsp1_uart0_default: blsp1-uart0-default-state {
+=======
+			blsp1_uart0_default: blsp1-uart0-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio30", "gpio31", "gpio32", "gpio33";
 				function = "blsp_uart0";
 			};
 
+<<<<<<< HEAD
 			blsp1_uart1_default: blsp1-uart1-default-state {
+=======
+			blsp1_uart1_default: blsp1-uart1-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio22", "gpio23";
 				function = "blsp_uart1";
 			};
 
+<<<<<<< HEAD
 			blsp1_uart2_default: blsp1-uart2-default-state {
 				rx-pins {
+=======
+			blsp1_uart2_default: blsp1-uart2-default {
+				rx {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio18";
 					function = "blsp_uart_rx_a2";
 				};
 
+<<<<<<< HEAD
 				tx-pins {
+=======
+				tx {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio17";
 					function = "blsp_uart_tx_a2";
 				};
 			};
 
+<<<<<<< HEAD
 			blsp1_uart3_default: blsp1-uart3-default-state {
 				cts-pins {
 					pins = "gpio84";
@@ -808,58 +900,107 @@
 			};
 
 			blsp2_i2c0_default: blsp2-i2c0-default-state {
+=======
+			blsp1_uart3_default: blsp1-uart3-default {
+				pins = "gpio82", "gpio83", "gpio84", "gpio85";
+				function = "blsp_uart3";
+			};
+
+			blsp2_i2c0_default: blsp2-i2c0-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio28", "gpio29";
 				function = "blsp_i2c5";
 			};
 
+<<<<<<< HEAD
 			blsp1_spi0_default: blsp1-spi0-default-state {
+=======
+			blsp1_spi0_default: blsp1-spi0-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio30", "gpio31", "gpio32", "gpio33";
 				function = "blsp_spi0";
 			};
 
+<<<<<<< HEAD
 			blsp1_spi1_default: blsp1-spi1-default-state {
 				mosi-pins {
+=======
+			blsp1_spi1_default: blsp1-spi1-default {
+				mosi {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio22";
 					function = "blsp_spi_mosi_a1";
 				};
 
+<<<<<<< HEAD
 				miso-pins {
+=======
+				miso {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio23";
 					function = "blsp_spi_miso_a1";
 				};
 
+<<<<<<< HEAD
 				cs-n-pins {
+=======
+				cs_n {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio24";
 					function = "blsp_spi_cs_n_a1";
 				};
 
+<<<<<<< HEAD
 				clk-pins {
+=======
+				clk {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio25";
 					function = "blsp_spi_clk_a1";
 				};
 			};
 
+<<<<<<< HEAD
 			blsp1_spi2_default: blsp1-spi2-default-state {
+=======
+			blsp1_spi2_default: blsp1-spi2-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio17", "gpio18", "gpio19", "gpio20";
 				function = "blsp_spi2";
 			};
 
+<<<<<<< HEAD
 			blsp1_spi3_default: blsp1-spi3-default-state {
+=======
+			blsp1_spi3_default: blsp1-spi3-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio82", "gpio83", "gpio84", "gpio85";
 				function = "blsp_spi3";
 			};
 
+<<<<<<< HEAD
 			blsp1_spi4_default: blsp1-spi4-default-state {
+=======
+			blsp1_spi4_default: blsp1-spi4-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio37", "gpio38", "gpio117", "gpio118";
 				function = "blsp_spi4";
 			};
 
+<<<<<<< HEAD
 			blsp2_spi0_default: blsp2-spi0-default-state {
+=======
+			blsp2_spi0_default: blsp2-spi0-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio26", "gpio27", "gpio28", "gpio29";
 				function = "blsp_spi5";
 			};
 
+<<<<<<< HEAD
 			blsp2_uart0_default: blsp2-uart0-default-state {
+=======
+			blsp2_uart0_default: blsp2-uart0-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio26", "gpio27", "gpio28", "gpio29";
 				function = "blsp_uart5";
 			};
@@ -870,6 +1011,7 @@
 			reg = <0x01800000 0x80000>;
 			#clock-cells = <1>;
 			#reset-cells = <1>;
+<<<<<<< HEAD
 			#power-domain-cells = <1>;
 
 			clocks = <&xo_board>,
@@ -878,6 +1020,8 @@
 				 <0>,
 				 <0>,
 				 <0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 			assigned-clocks = <&gcc GCC_APSS_AHB_CLK_SRC>;
 			assigned-clock-rates = <19200000>;
@@ -955,11 +1099,18 @@
 
 			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
 			resets = <&gcc GCC_PCIEPHY_0_PHY_BCR>,
+<<<<<<< HEAD
 				 <&gcc GCC_PCIE_0_PIPE_ARES>;
 			reset-names = "phy", "pipe";
 
 			clock-output-names = "pcie_0_pipe_clk";
 			#clock-cells = <0>;
+=======
+				 <&gcc 21>;
+			reset-names = "phy", "pipe";
+
+			clock-output-names = "pcie_0_pipe_clk";
+>>>>>>> b7ba80a49124 (Commit)
 			#phy-cells = <0>;
 
 			status = "disabled";
@@ -1469,8 +1620,13 @@
 			#address-cells = <3>;
 			#size-cells = <2>;
 
+<<<<<<< HEAD
 			ranges = <0x81000000 0x0 0x00000000 0x10003000 0x0 0x00010000>, /* I/O */
 				 <0x82000000 0x0 0x10013000 0x10013000 0x0 0x007ed000>; /* memory */
+=======
+			ranges = <0x81000000 0 0          0x10003000 0 0x00010000>, /* I/O */
+				 <0x82000000 0 0x10013000 0x10013000 0 0x007ed000>; /* memory */
+>>>>>>> b7ba80a49124 (Commit)
 
 			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
 			interrupt-names = "msi";
@@ -1486,12 +1642,21 @@
 				 <&gcc GCC_PCIE_0_SLV_AXI_CLK>;
 			clock-names = "iface", "aux", "master_bus", "slave_bus";
 
+<<<<<<< HEAD
 			resets = <&gcc GCC_PCIE_0_AXI_MASTER_ARES>,
 				 <&gcc GCC_PCIE_0_AXI_SLAVE_ARES>,
 				 <&gcc GCC_PCIE_0_AXI_MASTER_STICKY_ARES>,
 				 <&gcc GCC_PCIE_0_CORE_STICKY_ARES>,
 				 <&gcc GCC_PCIE_0_BCR>,
 				 <&gcc GCC_PCIE_0_AHB_ARES>;
+=======
+			resets = <&gcc 18>,
+				 <&gcc 17>,
+				 <&gcc 15>,
+				 <&gcc 19>,
+				 <&gcc GCC_PCIE_0_BCR>,
+				 <&gcc 16>;
+>>>>>>> b7ba80a49124 (Commit)
 			reset-names = "axi_m",
 				      "axi_s",
 				      "axi_m_sticky",
@@ -1652,7 +1817,11 @@
 					hysteresis = <2000>;
 					type = "passive";
 				};
+<<<<<<< HEAD
 				cluster_crit: cluster-crit {
+=======
+				cluster_crit: cluster_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <120000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -1686,7 +1855,11 @@
 					hysteresis = <2000>;
 					type = "passive";
 				};
+<<<<<<< HEAD
 				cpu0_crit: cpu-crit {
+=======
+				cpu0_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <120000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -1720,7 +1893,11 @@
 					hysteresis = <2000>;
 					type = "passive";
 				};
+<<<<<<< HEAD
 				cpu1_crit: cpu-crit {
+=======
+				cpu1_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <120000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -1754,7 +1931,11 @@
 					hysteresis = <2000>;
 					type = "passive";
 				};
+<<<<<<< HEAD
 				cpu2_crit: cpu-crit {
+=======
+				cpu2_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <120000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -1788,7 +1969,11 @@
 					hysteresis = <2000>;
 					type = "passive";
 				};
+<<<<<<< HEAD
 				cpu3_crit: cpu-crit {
+=======
+				cpu3_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <120000>;
 					hysteresis = <2000>;
 					type = "critical";

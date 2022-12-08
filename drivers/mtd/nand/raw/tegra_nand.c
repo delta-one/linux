@@ -1181,7 +1181,11 @@ static int tegra_nand_probe(struct platform_device *pdev)
 	pm_runtime_enable(&pdev->dev);
 	err = pm_runtime_resume_and_get(&pdev->dev);
 	if (err)
+<<<<<<< HEAD
 		goto err_dis_pm;
+=======
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = reset_control_reset(rst);
 	if (err) {
@@ -1215,8 +1219,11 @@ static int tegra_nand_probe(struct platform_device *pdev)
 err_put_pm:
 	pm_runtime_put_sync_suspend(ctrl->dev);
 	pm_runtime_force_suspend(ctrl->dev);
+<<<<<<< HEAD
 err_dis_pm:
 	pm_runtime_disable(&pdev->dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 

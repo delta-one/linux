@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 ==========
 Crypto API
 ==========
+=======
+=======================
+Linux Kernel Crypto API
+=======================
+>>>>>>> b7ba80a49124 (Commit)
 
 :Author: Stephan Mueller
 :Author: Marek Vasut

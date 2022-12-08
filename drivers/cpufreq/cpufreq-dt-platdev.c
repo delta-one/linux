@@ -103,8 +103,11 @@ static const struct of_device_id allowlist[] __initconst = {
 static const struct of_device_id blocklist[] __initconst = {
 	{ .compatible = "allwinner,sun50i-h6", },
 
+<<<<<<< HEAD
 	{ .compatible = "apple,arm-platform", },
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "arm,vexpress", },
 
 	{ .compatible = "calxeda,highbank", },
@@ -137,7 +140,10 @@ static const struct of_device_id blocklist[] __initconst = {
 	{ .compatible = "nvidia,tegra30", },
 	{ .compatible = "nvidia,tegra124", },
 	{ .compatible = "nvidia,tegra210", },
+<<<<<<< HEAD
 	{ .compatible = "nvidia,tegra234", },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	{ .compatible = "qcom,apq8096", },
 	{ .compatible = "qcom,msm8996", },
@@ -151,7 +157,10 @@ static const struct of_device_id blocklist[] __initconst = {
 	{ .compatible = "qcom,sdm845", },
 	{ .compatible = "qcom,sm6115", },
 	{ .compatible = "qcom,sm6350", },
+<<<<<<< HEAD
 	{ .compatible = "qcom,sm6375", },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "qcom,sm8150", },
 	{ .compatible = "qcom,sm8250", },
 	{ .compatible = "qcom,sm8350", },
@@ -164,7 +173,10 @@ static const struct of_device_id blocklist[] __initconst = {
 	{ .compatible = "ti,am43", },
 	{ .compatible = "ti,dra7", },
 	{ .compatible = "ti,omap3", },
+<<<<<<< HEAD
 	{ .compatible = "ti,am625", },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	{ .compatible = "qcom,ipq8064", },
 	{ .compatible = "qcom,apq8064", },
@@ -179,7 +191,11 @@ static bool __init cpu0_node_has_opp_v2_prop(void)
 	struct device_node *np = of_cpu_device_node_get(0);
 	bool ret = false;
 
+<<<<<<< HEAD
 	if (of_property_present(np, "operating-points-v2"))
+=======
+	if (of_get_property(np, "operating-points-v2", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		ret = true;
 
 	of_node_put(np);

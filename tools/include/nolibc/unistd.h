@@ -51,7 +51,10 @@ int tcsetpgrp(int fd, pid_t pid)
 	return ioctl(fd, TIOCSPGRP, &pid);
 }
 
+<<<<<<< HEAD
 /* make sure to include all global symbols */
 #include "nolibc.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _NOLIBC_UNISTD_H */

@@ -34,9 +34,12 @@
 #include <linux/log2.h>
 #include <linux/bpf_verifier.h>
 #include <linux/nodemask.h>
+<<<<<<< HEAD
 #include <linux/nospec.h>
 #include <linux/bpf_mem_alloc.h>
 #include <linux/memcontrol.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/barrier.h>
 #include <asm/unaligned.h>
@@ -63,9 +66,12 @@
 #define CTX	regs[BPF_REG_CTX]
 #define IMM	insn->imm
 
+<<<<<<< HEAD
 struct bpf_mem_alloc bpf_global_ma;
 bool bpf_global_ma_set;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* No hurry in this branch
  *
  * Exported for the bpf jit load helper.
@@ -89,7 +95,11 @@ void *bpf_internal_load_pointer_neg_helper(const struct sk_buff *skb, int k, uns
 
 struct bpf_prog *bpf_prog_alloc_no_stats(unsigned int size, gfp_t gfp_extra_flags)
 {
+<<<<<<< HEAD
 	gfp_t gfp_flags = bpf_memcg_flags(GFP_KERNEL | __GFP_ZERO | gfp_extra_flags);
+=======
+	gfp_t gfp_flags = GFP_KERNEL_ACCOUNT | __GFP_ZERO | gfp_extra_flags;
+>>>>>>> b7ba80a49124 (Commit)
 	struct bpf_prog_aux *aux;
 	struct bpf_prog *fp;
 
@@ -98,12 +108,20 @@ struct bpf_prog *bpf_prog_alloc_no_stats(unsigned int size, gfp_t gfp_extra_flag
 	if (fp == NULL)
 		return NULL;
 
+<<<<<<< HEAD
 	aux = kzalloc(sizeof(*aux), bpf_memcg_flags(GFP_KERNEL | gfp_extra_flags));
+=======
+	aux = kzalloc(sizeof(*aux), GFP_KERNEL_ACCOUNT | gfp_extra_flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (aux == NULL) {
 		vfree(fp);
 		return NULL;
 	}
+<<<<<<< HEAD
 	fp->active = alloc_percpu_gfp(int, bpf_memcg_flags(GFP_KERNEL | gfp_extra_flags));
+=======
+	fp->active = alloc_percpu_gfp(int, GFP_KERNEL_ACCOUNT | gfp_extra_flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!fp->active) {
 		vfree(fp);
 		kfree(aux);
@@ -128,7 +146,11 @@ struct bpf_prog *bpf_prog_alloc_no_stats(unsigned int size, gfp_t gfp_extra_flag
 
 struct bpf_prog *bpf_prog_alloc(unsigned int size, gfp_t gfp_extra_flags)
 {
+<<<<<<< HEAD
 	gfp_t gfp_flags = bpf_memcg_flags(GFP_KERNEL | __GFP_ZERO | gfp_extra_flags);
+=======
+	gfp_t gfp_flags = GFP_KERNEL_ACCOUNT | __GFP_ZERO | gfp_extra_flags;
+>>>>>>> b7ba80a49124 (Commit)
 	struct bpf_prog *prog;
 	int cpu;
 
@@ -161,7 +183,11 @@ int bpf_prog_alloc_jited_linfo(struct bpf_prog *prog)
 
 	prog->aux->jited_linfo = kvcalloc(prog->aux->nr_linfo,
 					  sizeof(*prog->aux->jited_linfo),
+<<<<<<< HEAD
 					  bpf_memcg_flags(GFP_KERNEL | __GFP_NOWARN));
+=======
+					  GFP_KERNEL_ACCOUNT | __GFP_NOWARN);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!prog->aux->jited_linfo)
 		return -ENOMEM;
 
@@ -236,7 +262,11 @@ void bpf_prog_fill_jited_linfo(struct bpf_prog *prog,
 struct bpf_prog *bpf_prog_realloc(struct bpf_prog *fp_old, unsigned int size,
 				  gfp_t gfp_extra_flags)
 {
+<<<<<<< HEAD
 	gfp_t gfp_flags = bpf_memcg_flags(GFP_KERNEL | __GFP_ZERO | gfp_extra_flags);
+=======
+	gfp_t gfp_flags = GFP_KERNEL_ACCOUNT | __GFP_ZERO | gfp_extra_flags;
+>>>>>>> b7ba80a49124 (Commit)
 	struct bpf_prog *fp;
 	u32 pages;
 
@@ -831,11 +861,14 @@ struct bpf_prog_pack {
 	unsigned long bitmap[];
 };
 
+<<<<<<< HEAD
 void bpf_jit_fill_hole_with_zero(void *area, unsigned int size)
 {
 	memset(area, 0, size);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define BPF_PROG_SIZE_TO_NBITS(size)	(round_up(size, BPF_PROG_CHUNK_SIZE) / BPF_PROG_CHUNK_SIZE)
 
 static DEFINE_MUTEX(pack_mutex);
@@ -870,11 +903,20 @@ static struct bpf_prog_pack *alloc_new_pack(bpf_jit_fill_hole_t bpf_fill_ill_ins
 	list_add_tail(&pack->list, &pack_list);
 
 	set_vm_flush_reset_perms(pack->ptr);
+<<<<<<< HEAD
 	set_memory_rox((unsigned long)pack->ptr, BPF_PROG_PACK_SIZE / PAGE_SIZE);
 	return pack;
 }
 
 void *bpf_prog_pack_alloc(u32 size, bpf_jit_fill_hole_t bpf_fill_ill_insns)
+=======
+	set_memory_ro((unsigned long)pack->ptr, BPF_PROG_PACK_SIZE / PAGE_SIZE);
+	set_memory_x((unsigned long)pack->ptr, BPF_PROG_PACK_SIZE / PAGE_SIZE);
+	return pack;
+}
+
+static void *bpf_prog_pack_alloc(u32 size, bpf_jit_fill_hole_t bpf_fill_ill_insns)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int nbits = BPF_PROG_SIZE_TO_NBITS(size);
 	struct bpf_prog_pack *pack;
@@ -888,7 +930,12 @@ void *bpf_prog_pack_alloc(u32 size, bpf_jit_fill_hole_t bpf_fill_ill_insns)
 		if (ptr) {
 			bpf_fill_ill_insns(ptr, size);
 			set_vm_flush_reset_perms(ptr);
+<<<<<<< HEAD
 			set_memory_rox((unsigned long)ptr, size / PAGE_SIZE);
+=======
+			set_memory_ro((unsigned long)ptr, size / PAGE_SIZE);
+			set_memory_x((unsigned long)ptr, size / PAGE_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		goto out;
 	}
@@ -914,7 +961,11 @@ out:
 	return ptr;
 }
 
+<<<<<<< HEAD
 void bpf_prog_pack_free(struct bpf_binary_header *hdr)
+=======
+static void bpf_prog_pack_free(struct bpf_binary_header *hdr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_prog_pack *pack = NULL, *tmp;
 	unsigned int nbits;
@@ -972,7 +1023,11 @@ static int __init bpf_jit_charge_init(void)
 {
 	/* Only used as heuristic here to derive limit. */
 	bpf_jit_limit_max = bpf_jit_alloc_exec_limit();
+<<<<<<< HEAD
 	bpf_jit_limit = min_t(u64, round_up(bpf_jit_limit_max >> 1,
+=======
+	bpf_jit_limit = min_t(u64, round_up(bpf_jit_limit_max >> 2,
+>>>>>>> b7ba80a49124 (Commit)
 					    PAGE_SIZE), LONG_MAX);
 	return 0;
 }
@@ -1036,7 +1091,11 @@ bpf_jit_binary_alloc(unsigned int proglen, u8 **image_ptr,
 	hdr->size = size;
 	hole = min_t(unsigned int, size - (proglen + sizeof(*hdr)),
 		     PAGE_SIZE - sizeof(*hdr));
+<<<<<<< HEAD
 	start = get_random_u32_below(hole) & ~(alignment - 1);
+=======
+	start = (get_random_int() % hole) & ~(alignment - 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Leave a random number of instructions before BPF code. */
 	*image_ptr = &hdr->image[start];
@@ -1098,7 +1157,11 @@ bpf_jit_binary_pack_alloc(unsigned int proglen, u8 **image_ptr,
 
 	hole = min_t(unsigned int, size - (proglen + sizeof(*ro_header)),
 		     BPF_PROG_CHUNK_SIZE - sizeof(*ro_header));
+<<<<<<< HEAD
 	start = get_random_u32_below(hole) & ~(alignment - 1);
+=======
+	start = (get_random_int() % hole) & ~(alignment - 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	*image_ptr = &ro_header->image[start];
 	*rw_image = &(*rw_header)->image[start];
@@ -1220,7 +1283,11 @@ static int bpf_jit_blind_insn(const struct bpf_insn *from,
 			      bool emit_zext)
 {
 	struct bpf_insn *to = to_buff;
+<<<<<<< HEAD
 	u32 imm_rnd = get_random_u32();
+=======
+	u32 imm_rnd = get_random_int();
+>>>>>>> b7ba80a49124 (Commit)
 	s16 off;
 
 	BUILD_BUG_ON(BPF_REG_AX  + 1 != MAX_BPF_JIT_REG);
@@ -1912,7 +1979,13 @@ out:
 		 * reuse preexisting logic from Spectre v1 mitigation that
 		 * happens to produce the required code on x86 for v4 as well.
 		 */
+<<<<<<< HEAD
 		barrier_nospec();
+=======
+#ifdef CONFIG_X86
+		barrier_nospec();
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 		CONT;
 #define LDST(SIZEOP, SIZE)						\
 	STX_MEM_##SIZEOP:						\
@@ -2090,12 +2163,16 @@ static unsigned int __bpf_prog_ret0_warn(const void *ctx,
 bool bpf_prog_map_compatible(struct bpf_map *map,
 			     const struct bpf_prog *fp)
 {
+<<<<<<< HEAD
 	enum bpf_prog_type prog_type = resolve_prog_type(fp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool ret;
 
 	if (fp->kprobe_override)
 		return false;
 
+<<<<<<< HEAD
 	/* XDP programs inserted into maps are not guaranteed to run on
 	 * a particular netdev (and can run outside driver context entirely
 	 * in the case of devmap and cpumap). Until device checks
@@ -2104,17 +2181,27 @@ bool bpf_prog_map_compatible(struct bpf_map *map,
 	if (bpf_prog_is_dev_bound(fp->aux))
 		return false;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock(&map->owner.lock);
 	if (!map->owner.type) {
 		/* There's no owner yet where we could check for
 		 * compatibility.
 		 */
+<<<<<<< HEAD
 		map->owner.type  = prog_type;
+=======
+		map->owner.type  = fp->type;
+>>>>>>> b7ba80a49124 (Commit)
 		map->owner.jited = fp->jited;
 		map->owner.xdp_has_frags = fp->aux->xdp_has_frags;
 		ret = true;
 	} else {
+<<<<<<< HEAD
 		ret = map->owner.type  == prog_type &&
+=======
+		ret = map->owner.type  == fp->type &&
+>>>>>>> b7ba80a49124 (Commit)
 		      map->owner.jited == fp->jited &&
 		      map->owner.xdp_has_frags == fp->aux->xdp_has_frags;
 	}
@@ -2190,7 +2277,11 @@ struct bpf_prog *bpf_prog_select_runtime(struct bpf_prog *fp, int *err)
 	 * valid program, which in this case would simply not
 	 * be JITed, but falls back to the interpreter.
 	 */
+<<<<<<< HEAD
 	if (!bpf_prog_is_offloaded(fp->aux)) {
+=======
+	if (!bpf_prog_is_dev_bound(fp->aux)) {
+>>>>>>> b7ba80a49124 (Commit)
 		*err = bpf_prog_alloc_jited_linfo(fp);
 		if (*err)
 			return fp;
@@ -2262,6 +2353,7 @@ static void __bpf_prog_array_free_sleepable_cb(struct rcu_head *rcu)
 {
 	struct bpf_prog_array *progs;
 
+<<<<<<< HEAD
 	/* If RCU Tasks Trace grace period implies RCU grace period, there is
 	 * no need to call kfree_rcu(), just call kfree() directly.
 	 */
@@ -2270,6 +2362,10 @@ static void __bpf_prog_array_free_sleepable_cb(struct rcu_head *rcu)
 		kfree(progs);
 	else
 		kfree_rcu(progs, rcu);
+=======
+	progs = container_of(rcu, struct bpf_prog_array, rcu);
+	kfree_rcu(progs, rcu);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void bpf_prog_array_free_sleepable(struct bpf_prog_array *progs)
@@ -2562,7 +2658,11 @@ static void bpf_prog_free_deferred(struct work_struct *work)
 	bpf_free_used_maps(aux);
 	bpf_free_used_btfs(aux);
 	if (bpf_prog_is_dev_bound(aux))
+<<<<<<< HEAD
 		bpf_prog_dev_bound_destroy(aux->prog);
+=======
+		bpf_prog_offload_destroy(aux->prog);
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PERF_EVENTS
 	if (aux->prog->has_callchain_buf)
 		put_callchain_buffers();
@@ -2757,6 +2857,7 @@ int __weak bpf_arch_text_invalidate(void *dst, size_t len)
 	return -ENOTSUPP;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_BPF_SYSCALL
 static int __init bpf_global_ma_init(void)
 {
@@ -2769,6 +2870,8 @@ static int __init bpf_global_ma_init(void)
 late_initcall(bpf_global_ma_init);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 DEFINE_STATIC_KEY_FALSE(bpf_stats_enabled_key);
 EXPORT_SYMBOL(bpf_stats_enabled_key);
 

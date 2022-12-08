@@ -79,6 +79,7 @@ int uvc_query_ctrl(struct uvc_device *dev, u8 query, u8 unit,
 	if (likely(ret == size))
 		return 0;
 
+<<<<<<< HEAD
 	if (ret != -EPIPE) {
 		dev_err(&dev->udev->dev,
 			"Failed to query (%s) UVC control %u on unit %u: %d (exp. %u).\n",
@@ -87,6 +88,15 @@ int uvc_query_ctrl(struct uvc_device *dev, u8 query, u8 unit,
 	}
 
 	/* Reuse data[0] to request the error code. */
+=======
+	dev_err(&dev->udev->dev,
+		"Failed to query (%s) UVC control %u on unit %u: %d (exp. %u).\n",
+		uvc_query_name(query), cs, unit, ret, size);
+
+	if (ret != -EPIPE)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	tmp = *(u8 *)data;
 
 	ret = __uvc_query_ctrl(dev, UVC_GET_CUR, 0, intfnum,
@@ -108,7 +118,11 @@ int uvc_query_ctrl(struct uvc_device *dev, u8 query, u8 unit,
 	case 1: /* Not ready */
 		return -EBUSY;
 	case 2: /* Wrong state */
+<<<<<<< HEAD
 		return -EACCES;
+=======
+		return -EILSEQ;
+>>>>>>> b7ba80a49124 (Commit)
 	case 3: /* Power */
 		return -EREMOTE;
 	case 4: /* Out of range */
@@ -130,6 +144,7 @@ int uvc_query_ctrl(struct uvc_device *dev, u8 query, u8 unit,
 	return -EPIPE;
 }
 
+<<<<<<< HEAD
 static const struct usb_device_id elgato_cam_link_4k = {
 	USB_DEVICE(0x0fd9, 0x0066)
 };
@@ -137,6 +152,14 @@ static const struct usb_device_id elgato_cam_link_4k = {
 static void uvc_fixup_video_ctrl(struct uvc_streaming *stream,
 	struct uvc_streaming_control *ctrl)
 {
+=======
+static void uvc_fixup_video_ctrl(struct uvc_streaming *stream,
+	struct uvc_streaming_control *ctrl)
+{
+	static const struct usb_device_id elgato_cam_link_4k = {
+		USB_DEVICE(0x0fd9, 0x0066)
+	};
+>>>>>>> b7ba80a49124 (Commit)
 	struct uvc_format *format = NULL;
 	struct uvc_frame *frame = NULL;
 	unsigned int i;
@@ -299,7 +322,11 @@ static int uvc_get_video_ctrl(struct uvc_streaming *stream,
 		dev_err(&stream->intf->dev,
 			"Failed to query (%u) UVC %s control : %d (exp. %u).\n",
 			query, probe ? "probe" : "commit", ret, size);
+<<<<<<< HEAD
 		ret = (ret == -EPROTO) ? -EPROTO : -EIO;
+=======
+		ret = -EIO;
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -518,9 +545,13 @@ uvc_video_clock_decode(struct uvc_streaming *stream, struct uvc_buffer *buf,
 
 	/*
 	 * To limit the amount of data, drop SCRs with an SOF identical to the
+<<<<<<< HEAD
 	 * previous one. This filtering is also needed to support UVC 1.5, where
 	 * all the data packets of the same frame contains the same SOF. In that
 	 * case only the first one will match the host_sof.
+=======
+	 * previous one.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	dev_sof = get_unaligned_le16(&data[header_size - 2]);
 	if (dev_sof == stream->clock.last_sof)
@@ -1356,9 +1387,13 @@ static void uvc_video_decode_meta(struct uvc_streaming *stream,
 	if (has_scr)
 		memcpy(stream->clock.last_scr, scr, 6);
 
+<<<<<<< HEAD
 	meta->length = mem[0];
 	meta->flags  = mem[1];
 	memcpy(meta->buf, &mem[2], length - 2);
+=======
+	memcpy(&meta->length, mem, length);
+>>>>>>> b7ba80a49124 (Commit)
 	meta_buf->bytesused += length + sizeof(meta->ns) + sizeof(meta->sof);
 
 	uvc_dbg(stream->dev, FRAME,
@@ -1971,6 +2006,7 @@ static int uvc_video_start_transfer(struct uvc_streaming *stream,
 			"Selecting alternate setting %u (%u B/frame bandwidth)\n",
 			altsetting, best_psize);
 
+<<<<<<< HEAD
 		/*
 		 * Some devices, namely the Logitech C910 and B910, are unable
 		 * to recover from a USB autosuspend, unless the alternate
@@ -1982,6 +2018,8 @@ static int uvc_video_start_transfer(struct uvc_streaming *stream,
 			usb_set_interface(stream->dev->udev, intfnum, 0);
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ret = usb_set_interface(stream->dev->udev, intfnum, altsetting);
 		if (ret < 0)
 			return ret;
@@ -2138,6 +2176,7 @@ int uvc_video_init(struct uvc_streaming *stream)
 	 * request on the probe control, as required by the UVC specification.
 	 */
 	ret = uvc_get_video_ctrl(stream, probe, 1, UVC_GET_CUR);
+<<<<<<< HEAD
 
 	/*
 	 * Elgato Cam Link 4k can be in a stalled state if the resolution of
@@ -2153,6 +2192,8 @@ int uvc_video_init(struct uvc_streaming *stream)
 		usb_reset_device(stream->dev->udev);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 

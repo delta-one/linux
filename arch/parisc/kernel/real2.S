@@ -15,15 +15,39 @@
 
 #include <linux/linkage.h>
 
+<<<<<<< HEAD
 	.export real_stack
 	.export real64_stack
 	__PAGE_ALIGNED_BSS
 real_stack:
+=======
+
+	.section	.bss
+
+	.export pdc_result
+	.export pdc_result2
+	.align 8
+pdc_result:
+	.block	ASM_PDC_RESULT_SIZE
+pdc_result2:
+	.block	ASM_PDC_RESULT_SIZE
+
+	.export real_stack
+	.export real32_stack
+	.export real64_stack
+	.align	64
+real_stack:
+real32_stack:
+>>>>>>> b7ba80a49124 (Commit)
 real64_stack:
 	.block	8192
 
 #define N_SAVED_REGS 9
+<<<<<<< HEAD
 	.section	.bss
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 save_cr_space:
 	.block	REG_SZ * N_SAVED_REGS
 save_cr_end:

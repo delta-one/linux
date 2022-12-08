@@ -990,7 +990,11 @@ static int s390_vxrs_low_get(struct task_struct *target,
 	if (target == current)
 		save_fpu_regs();
 	for (i = 0; i < __NUM_VXRS_LOW; i++)
+<<<<<<< HEAD
 		vxrs[i] = target->thread.fpu.vxrs[i].low;
+=======
+		vxrs[i] = *((__u64 *)(target->thread.fpu.vxrs + i) + 1);
+>>>>>>> b7ba80a49124 (Commit)
 	return membuf_write(&to, vxrs, sizeof(vxrs));
 }
 
@@ -1008,12 +1012,20 @@ static int s390_vxrs_low_set(struct task_struct *target,
 		save_fpu_regs();
 
 	for (i = 0; i < __NUM_VXRS_LOW; i++)
+<<<<<<< HEAD
 		vxrs[i] = target->thread.fpu.vxrs[i].low;
+=======
+		vxrs[i] = *((__u64 *)(target->thread.fpu.vxrs + i) + 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = user_regset_copyin(&pos, &count, &kbuf, &ubuf, vxrs, 0, -1);
 	if (rc == 0)
 		for (i = 0; i < __NUM_VXRS_LOW; i++)
+<<<<<<< HEAD
 			target->thread.fpu.vxrs[i].low = vxrs[i];
+=======
+			*((__u64 *)(target->thread.fpu.vxrs + i) + 1) = vxrs[i];
+>>>>>>> b7ba80a49124 (Commit)
 
 	return rc;
 }

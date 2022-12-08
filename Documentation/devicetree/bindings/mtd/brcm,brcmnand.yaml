@@ -86,15 +86,25 @@ properties:
     minItems: 1
     items:
       - description: NAND CTLRDY interrupt
+<<<<<<< HEAD
       - description: FLASH_DMA_DONE (if flash DMA is available) or FLASH_EDU_DONE (if EDU is available)
+=======
+      - description: FLASH_DMA_DONE if flash DMA is available
+      - description: FLASH_EDU_DONE if EDU is available
+>>>>>>> b7ba80a49124 (Commit)
 
   interrupt-names:
     minItems: 1
     items:
       - const: nand_ctlrdy
+<<<<<<< HEAD
       - enum:
           - flash_dma_done
           - flash_edu_done
+=======
+      - const: flash_dma_done
+      - const: flash_edu_done
+>>>>>>> b7ba80a49124 (Commit)
 
   clocks:
     maxItems: 1
@@ -173,6 +183,7 @@ allOf:
             - const: nand
             - const: iproc-idm
             - const: iproc-ext
+<<<<<<< HEAD
   - if:
       properties:
         interrupts:
@@ -180,6 +191,8 @@ allOf:
     then:
       required:
         - interrupt-names
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 unevaluatedProperties: false
 
@@ -191,6 +204,7 @@ required:
 examples:
   - |
     nand-controller@f0442800 {
+<<<<<<< HEAD
         compatible = "brcm,brcmnand-v7.0", "brcm,brcmnand";
         reg = <0xf0442800 0x600>,
               <0xf0443000 0x100>;
@@ -239,4 +253,53 @@ examples:
             #address-cells = <1>;
             #size-cells = <1>;
         };
+=======
+            compatible = "brcm,brcmnand-v7.0", "brcm,brcmnand";
+            reg = <0xf0442800 0x600>,
+                  <0xf0443000 0x100>;
+            reg-names = "nand", "flash-dma";
+            interrupt-parent = <&hif_intr2_intc>;
+            interrupts = <24>, <4>;
+
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            nand@1 {
+                    compatible = "brcm,nandcs";
+                    reg = <1>; // Chip select 1
+                    nand-on-flash-bbt;
+                    nand-ecc-strength = <12>;
+                    nand-ecc-step-size = <512>;
+
+                    #address-cells = <1>;
+                    #size-cells = <1>;
+            };
+    };
+  - |
+    nand-controller@10000200 {
+            compatible = "brcm,nand-bcm63168", "brcm,nand-bcm6368",
+                         "brcm,brcmnand-v4.0", "brcm,brcmnand";
+            reg = <0x10000200 0x180>,
+                  <0x100000b0 0x10>,
+                  <0x10000600 0x200>;
+            reg-names = "nand", "nand-int-base", "nand-cache";
+            interrupt-parent = <&periph_intc>;
+            interrupts = <50>;
+            clocks = <&periph_clk 20>;
+            clock-names = "nand";
+
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            nand@0 {
+                    compatible = "brcm,nandcs";
+                    reg = <0>;
+                    nand-on-flash-bbt;
+                    nand-ecc-strength = <1>;
+                    nand-ecc-step-size = <512>;
+
+                    #address-cells = <1>;
+                    #size-cells = <1>;
+            };
+>>>>>>> b7ba80a49124 (Commit)
     };

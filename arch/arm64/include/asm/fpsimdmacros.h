@@ -221,6 +221,7 @@
 .endm
 
 /*
+<<<<<<< HEAD
  * LDR (ZT0)
  *
  *	LDR ZT0, nx
@@ -243,6 +244,8 @@
 .endm
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Zero the entire ZA array
  *	ZERO ZA
  */

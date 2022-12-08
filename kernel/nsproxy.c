@@ -157,8 +157,12 @@ int copy_namespaces(unsigned long flags, struct task_struct *tsk)
 	if (likely(!(flags & (CLONE_NEWNS | CLONE_NEWUTS | CLONE_NEWIPC |
 			      CLONE_NEWPID | CLONE_NEWNET |
 			      CLONE_NEWCGROUP | CLONE_NEWTIME)))) {
+<<<<<<< HEAD
 		if ((flags & CLONE_VM) ||
 		    likely(old_ns->time_ns_for_children == old_ns->time_ns)) {
+=======
+		if (likely(old_ns->time_ns_for_children == old_ns->time_ns)) {
+>>>>>>> b7ba80a49124 (Commit)
 			get_nsproxy(old_ns);
 			return 0;
 		}
@@ -180,8 +184,12 @@ int copy_namespaces(unsigned long flags, struct task_struct *tsk)
 	if (IS_ERR(new_ns))
 		return  PTR_ERR(new_ns);
 
+<<<<<<< HEAD
 	if ((flags & CLONE_VM) == 0)
 		timens_on_fork(new_ns, tsk);
+=======
+	timens_on_fork(new_ns, tsk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	tsk->nsproxy = new_ns;
 	return 0;
@@ -256,6 +264,7 @@ void exit_task_namespaces(struct task_struct *p)
 	switch_task_namespaces(p, NULL);
 }
 
+<<<<<<< HEAD
 int exec_task_namespaces(void)
 {
 	struct task_struct *tsk = current;
@@ -273,6 +282,8 @@ int exec_task_namespaces(void)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int check_setns_flags(unsigned long flags)
 {
 	if (!flags || (flags & ~(CLONE_NEWNS | CLONE_NEWUTS | CLONE_NEWIPC |
@@ -545,11 +556,16 @@ static void commit_nsset(struct nsset *nsset)
 
 SYSCALL_DEFINE2(setns, int, fd, int, flags)
 {
+<<<<<<< HEAD
 	struct fd f = fdget(fd);
+=======
+	struct file *file;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ns_common *ns = NULL;
 	struct nsset nsset = {};
 	int err = 0;
 
+<<<<<<< HEAD
 	if (!f.file)
 		return -EBADF;
 
@@ -559,6 +575,18 @@ SYSCALL_DEFINE2(setns, int, fd, int, flags)
 			err = -EINVAL;
 		flags = ns->ops->type;
 	} else if (!IS_ERR(pidfd_pid(f.file))) {
+=======
+	file = fget(fd);
+	if (!file)
+		return -EBADF;
+
+	if (proc_ns_file(file)) {
+		ns = get_proc_ns(file_inode(file));
+		if (flags && (ns->ops->type != flags))
+			err = -EINVAL;
+		flags = ns->ops->type;
+	} else if (!IS_ERR(pidfd_pid(file))) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = check_setns_flags(flags);
 	} else {
 		err = -EINVAL;
@@ -570,17 +598,28 @@ SYSCALL_DEFINE2(setns, int, fd, int, flags)
 	if (err)
 		goto out;
 
+<<<<<<< HEAD
 	if (proc_ns_file(f.file))
 		err = validate_ns(&nsset, ns);
 	else
 		err = validate_nsset(&nsset, f.file->private_data);
+=======
+	if (proc_ns_file(file))
+		err = validate_ns(&nsset, ns);
+	else
+		err = validate_nsset(&nsset, file->private_data);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!err) {
 		commit_nsset(&nsset);
 		perf_event_namespaces(current);
 	}
 	put_nsset(&nsset);
 out:
+<<<<<<< HEAD
 	fdput(f);
+=======
+	fput(file);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 

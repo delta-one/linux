@@ -62,7 +62,11 @@ int skl_int3472_get_sensor_adev_and_name(struct device *dev,
 	struct acpi_device *sensor;
 	int ret = 0;
 
+<<<<<<< HEAD
 	sensor = acpi_dev_get_next_consumer_dev(adev, NULL);
+=======
+	sensor = acpi_dev_get_first_consumer_dev(adev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!sensor) {
 		dev_err(dev, "INT3472 seems to have no dependents.\n");
 		return -ENODEV;

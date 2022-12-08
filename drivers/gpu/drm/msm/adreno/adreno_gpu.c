@@ -8,7 +8,11 @@
 
 #include <linux/ascii85.h>
 #include <linux/interconnect.h>
+<<<<<<< HEAD
 #include <linux/firmware/qcom/qcom_scm.h>
+=======
+#include <linux/qcom_scm.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kernel.h>
 #include <linux/of_address.h>
 #include <linux/pm_opp.h>
@@ -191,23 +195,36 @@ int adreno_zap_shader_load(struct msm_gpu *gpu, u32 pasid)
 	return zap_shader_load_mdt(gpu, adreno_gpu->info->zapfw, pasid);
 }
 
+<<<<<<< HEAD
 struct msm_gem_address_space *
 adreno_create_address_space(struct msm_gpu *gpu,
 			    struct platform_device *pdev)
 {
 	return adreno_iommu_create_address_space(gpu, pdev, 0);
+=======
+void adreno_set_llc_attributes(struct iommu_domain *iommu)
+{
+	iommu_set_pgtable_quirks(iommu, IO_PGTABLE_QUIRK_ARM_OUTER_WBWA);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct msm_gem_address_space *
 adreno_iommu_create_address_space(struct msm_gpu *gpu,
+<<<<<<< HEAD
 				  struct platform_device *pdev,
 				  unsigned long quirks)
 {
 	struct iommu_domain_geometry *geometry;
+=======
+		struct platform_device *pdev)
+{
+	struct iommu_domain *iommu;
+>>>>>>> b7ba80a49124 (Commit)
 	struct msm_mmu *mmu;
 	struct msm_gem_address_space *aspace;
 	u64 start, size;
 
+<<<<<<< HEAD
 	mmu = msm_iommu_new(&pdev->dev, quirks);
 	if (IS_ERR_OR_NULL(mmu))
 		return ERR_CAST(mmu);
@@ -215,14 +232,30 @@ adreno_iommu_create_address_space(struct msm_gpu *gpu,
 	geometry = msm_iommu_get_geometry(mmu);
 	if (IS_ERR(geometry))
 		return ERR_CAST(geometry);
+=======
+	iommu = iommu_domain_alloc(&platform_bus_type);
+	if (!iommu)
+		return NULL;
+
+	mmu = msm_iommu_new(&pdev->dev, iommu);
+	if (IS_ERR(mmu)) {
+		iommu_domain_free(iommu);
+		return ERR_CAST(mmu);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Use the aperture start or SZ_16M, whichever is greater. This will
 	 * ensure that we align with the allocated pagetable range while still
 	 * allowing room in the lower 32 bits for GMEM and whatnot
 	 */
+<<<<<<< HEAD
 	start = max_t(u64, SZ_16M, geometry->aperture_start);
 	size = geometry->aperture_end - start + 1;
+=======
+	start = max_t(u64, SZ_16M, iommu->geometry.aperture_start);
+	size = iommu->geometry.aperture_end - start + 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	aspace = msm_gem_address_space_create(mmu, "gpu",
 		start & GENMASK_ULL(48, 0), size);
@@ -352,8 +385,11 @@ int adreno_set_param(struct msm_gpu *gpu, struct msm_file_private *ctx,
 		/* Ensure string is null terminated: */
 		str[len] = '\0';
 
+<<<<<<< HEAD
 		mutex_lock(&gpu->lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (param == MSM_PARAM_COMM) {
 			paramp = &ctx->comm;
 		} else {
@@ -363,8 +399,11 @@ int adreno_set_param(struct msm_gpu *gpu, struct msm_file_private *ctx,
 		kfree(*paramp);
 		*paramp = str;
 
+<<<<<<< HEAD
 		mutex_unlock(&gpu->lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 	case MSM_PARAM_SYSPROF:
@@ -734,12 +773,16 @@ static char *adreno_gpu_ascii85_encode(u32 *src, size_t len)
 	return buf;
 }
 
+<<<<<<< HEAD
 /* len is expected to be in bytes
  *
  * WARNING: *ptr should be allocated with kvmalloc or friends.  It can be free'd
  * with kvfree() and replaced with a newly kvmalloc'd buffer on the first call
  * when the unencoded raw data is encoded
  */
+=======
+/* len is expected to be in bytes */
+>>>>>>> b7ba80a49124 (Commit)
 void adreno_show_object(struct drm_printer *p, void **ptr, int len,
 		bool *encoded)
 {
@@ -922,16 +965,55 @@ void adreno_wait_ring(struct msm_ringbuffer *ring, uint32_t ndwords)
 			ring->id);
 }
 
+<<<<<<< HEAD
 static int adreno_get_pwrlevels(struct device *dev,
 		struct msm_gpu *gpu)
 {
 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+=======
+/* Get legacy powerlevels from qcom,gpu-pwrlevels and populate the opp table */
+static int adreno_get_legacy_pwrlevels(struct device *dev)
+{
+	struct device_node *child, *node;
+	int ret;
+
+	node = of_get_compatible_child(dev->of_node, "qcom,gpu-pwrlevels");
+	if (!node) {
+		DRM_DEV_DEBUG(dev, "Could not find the GPU powerlevels\n");
+		return -ENXIO;
+	}
+
+	for_each_child_of_node(node, child) {
+		unsigned int val;
+
+		ret = of_property_read_u32(child, "qcom,gpu-freq", &val);
+		if (ret)
+			continue;
+
+		/*
+		 * Skip the intentionally bogus clock value found at the bottom
+		 * of most legacy frequency tables
+		 */
+		if (val != 27000000)
+			dev_pm_opp_add(dev, val, 0);
+	}
+
+	of_node_put(node);
+
+	return 0;
+}
+
+static void adreno_get_pwrlevels(struct device *dev,
+		struct msm_gpu *gpu)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long freq = ULONG_MAX;
 	struct dev_pm_opp *opp;
 	int ret;
 
 	gpu->fast_rate = 0;
 
+<<<<<<< HEAD
 	/* devm_pm_opp_of_add_table may error out but will still create an OPP table */
 	ret = devm_pm_opp_of_add_table(dev);
 	if (ret == -ENODEV) {
@@ -962,6 +1044,34 @@ static int adreno_get_pwrlevels(struct device *dev,
 	DBG("fast_rate=%u, slow_rate=27000000", gpu->fast_rate);
 
 	return 0;
+=======
+	/* You down with OPP? */
+	if (!of_find_property(dev->of_node, "operating-points-v2", NULL))
+		ret = adreno_get_legacy_pwrlevels(dev);
+	else {
+		ret = devm_pm_opp_of_add_table(dev);
+		if (ret)
+			DRM_DEV_ERROR(dev, "Unable to set the OPP table\n");
+	}
+
+	if (!ret) {
+		/* Find the fastest defined rate */
+		opp = dev_pm_opp_find_freq_floor(dev, &freq);
+		if (!IS_ERR(opp)) {
+			gpu->fast_rate = freq;
+			dev_pm_opp_put(opp);
+		}
+	}
+
+	if (!gpu->fast_rate) {
+		dev_warn(dev,
+			"Could not find a clock rate. Using a reasonable default\n");
+		/* Pick a suitably safe clock speed for any target */
+		gpu->fast_rate = 200000000;
+	}
+
+	DBG("fast_rate=%u, slow_rate=27000000", gpu->fast_rate);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int adreno_gpu_ocmem_init(struct device *dev, struct adreno_gpu *adreno_gpu,
@@ -1019,6 +1129,7 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
 	struct adreno_rev *rev = &config->rev;
 	const char *gpu_name;
 	u32 speedbin;
+<<<<<<< HEAD
 	int ret;
 
 	/*
@@ -1033,6 +1144,8 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
 		devm_pm_opp_set_clkname(dev, "core_clk");
 	} else
 		devm_pm_opp_set_clkname(dev, "core");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	adreno_gpu->funcs = funcs;
 	adreno_gpu->info = adreno_info(config->rev);
@@ -1057,9 +1170,13 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
 
 	adreno_gpu_config.nr_rings = nr_rings;
 
+<<<<<<< HEAD
 	ret = adreno_get_pwrlevels(dev, gpu);
 	if (ret)
 		return ret;
+=======
+	adreno_get_pwrlevels(dev, gpu);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pm_runtime_set_autosuspend_delay(dev,
 		adreno_gpu->info->inactive_period);
@@ -1072,13 +1189,21 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
 void adreno_gpu_cleanup(struct adreno_gpu *adreno_gpu)
 {
 	struct msm_gpu *gpu = &adreno_gpu->base;
+<<<<<<< HEAD
 	struct msm_drm_private *priv = gpu->dev ? gpu->dev->dev_private : NULL;
+=======
+	struct msm_drm_private *priv = gpu->dev->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int i;
 
 	for (i = 0; i < ARRAY_SIZE(adreno_gpu->info->fw); i++)
 		release_firmware(adreno_gpu->fw[i]);
 
+<<<<<<< HEAD
 	if (priv && pm_runtime_enabled(&priv->gpu_pdev->dev))
+=======
+	if (pm_runtime_enabled(&priv->gpu_pdev->dev))
+>>>>>>> b7ba80a49124 (Commit)
 		pm_runtime_disable(&priv->gpu_pdev->dev);
 
 	msm_gpu_cleanup(&adreno_gpu->base);

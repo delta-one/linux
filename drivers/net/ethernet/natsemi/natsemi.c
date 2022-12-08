@@ -869,7 +869,11 @@ static int natsemi_probe1(struct pci_dev *pdev, const struct pci_device_id *ent)
 	np = netdev_priv(dev);
 	np->ioaddr = ioaddr;
 
+<<<<<<< HEAD
 	netif_napi_add(dev, &np->napi, natsemi_poll);
+=======
+	netif_napi_add(dev, &np->napi, natsemi_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 	np->dev = dev;
 
 	np->pci_dev = pdev;

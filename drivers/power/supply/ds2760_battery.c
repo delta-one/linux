@@ -227,12 +227,27 @@ static int rated_capacities[] = {
 	920,	/* NEC */
 	1440,	/* Samsung */
 	1440,	/* BYD */
+<<<<<<< HEAD
 	1440,	/* Lishen */
+=======
+#ifdef CONFIG_MACH_H4700
+	1800,	/* HP iPAQ hx4700 3.7V 1800mAh (359113-001) */
+#else
+	1440,	/* Lishen */
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	1440,	/* NEC */
 	2880,	/* Samsung */
 	2880,	/* BYD */
 	2880,	/* Lishen */
 	2880,	/* NEC */
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_MACH_H4700
+	0,
+	3600,	/* HP iPAQ hx4700 3.7V 3600mAh (359114-001) */
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* array is level at temps 0°C, 10°C, 20°C, 30°C, 40°C

@@ -24,7 +24,11 @@
 #define ALTERA_SPI_TXDATA	4
 #define ALTERA_SPI_STATUS	8
 #define ALTERA_SPI_CONTROL	12
+<<<<<<< HEAD
 #define ALTERA_SPI_TARGET_SEL	20
+=======
+#define ALTERA_SPI_SLAVE_SEL	20
+>>>>>>> b7ba80a49124 (Commit)
 
 #define ALTERA_SPI_STATUS_ROE_MSK	0x8
 #define ALTERA_SPI_STATUS_TOE_MSK	0x10
@@ -67,7 +71,11 @@ static int altr_spi_readl(struct altera_spi *hw, unsigned int reg,
 
 static inline struct altera_spi *altera_spi_to_hw(struct spi_device *sdev)
 {
+<<<<<<< HEAD
 	return spi_controller_get_devdata(sdev->controller);
+=======
+	return spi_master_get_devdata(sdev->master);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void altera_spi_set_cs(struct spi_device *spi, bool is_high)
@@ -77,10 +85,17 @@ static void altera_spi_set_cs(struct spi_device *spi, bool is_high)
 	if (is_high) {
 		hw->imr &= ~ALTERA_SPI_CONTROL_SSO_MSK;
 		altr_spi_writel(hw, ALTERA_SPI_CONTROL, hw->imr);
+<<<<<<< HEAD
 		altr_spi_writel(hw, ALTERA_SPI_TARGET_SEL, 0);
 	} else {
 		altr_spi_writel(hw, ALTERA_SPI_TARGET_SEL,
 				BIT(spi_get_chipselect(spi, 0)));
+=======
+		altr_spi_writel(hw, ALTERA_SPI_SLAVE_SEL, 0);
+	} else {
+		altr_spi_writel(hw, ALTERA_SPI_SLAVE_SEL,
+				BIT(spi->chip_select));
+>>>>>>> b7ba80a49124 (Commit)
 		hw->imr |= ALTERA_SPI_CONTROL_SSO_MSK;
 		altr_spi_writel(hw, ALTERA_SPI_CONTROL, hw->imr);
 	}
@@ -139,10 +154,17 @@ static void altera_spi_rx_word(struct altera_spi *hw)
 	hw->count++;
 }
 
+<<<<<<< HEAD
 static int altera_spi_txrx(struct spi_controller *host,
 	struct spi_device *spi, struct spi_transfer *t)
 {
 	struct altera_spi *hw = spi_controller_get_devdata(host);
+=======
+static int altera_spi_txrx(struct spi_master *master,
+	struct spi_device *spi, struct spi_transfer *t)
+{
+	struct altera_spi *hw = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 	u32 val;
 
 	hw->tx = t->tx_buf;
@@ -175,15 +197,24 @@ static int altera_spi_txrx(struct spi_controller *host,
 
 		altera_spi_rx_word(hw);
 	}
+<<<<<<< HEAD
 	spi_finalize_current_transfer(host);
+=======
+	spi_finalize_current_transfer(master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 irqreturn_t altera_spi_irq(int irq, void *dev)
 {
+<<<<<<< HEAD
 	struct spi_controller *host = dev;
 	struct altera_spi *hw = spi_controller_get_devdata(host);
+=======
+	struct spi_master *master = dev;
+	struct altera_spi *hw = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	altera_spi_rx_word(hw);
 
@@ -194,13 +225,18 @@ irqreturn_t altera_spi_irq(int irq, void *dev)
 		hw->imr &= ~ALTERA_SPI_CONTROL_IRRDY_MSK;
 		altr_spi_writel(hw, ALTERA_SPI_CONTROL, hw->imr);
 
+<<<<<<< HEAD
 		spi_finalize_current_transfer(host);
+=======
+		spi_finalize_current_transfer(master);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return IRQ_HANDLED;
 }
 EXPORT_SYMBOL_GPL(altera_spi_irq);
 
+<<<<<<< HEAD
 void altera_spi_init_host(struct spi_controller *host)
 {
 	struct altera_spi *hw = spi_controller_get_devdata(host);
@@ -208,6 +244,15 @@ void altera_spi_init_host(struct spi_controller *host)
 
 	host->transfer_one = altera_spi_txrx;
 	host->set_cs = altera_spi_set_cs;
+=======
+void altera_spi_init_master(struct spi_master *master)
+{
+	struct altera_spi *hw = spi_master_get_devdata(master);
+	u32 val;
+
+	master->transfer_one = altera_spi_txrx;
+	master->set_cs = altera_spi_set_cs;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* program defaults into the registers */
 	hw->imr = 0;		/* disable spi interrupts */
@@ -217,6 +262,10 @@ void altera_spi_init_host(struct spi_controller *host)
 	if (val & ALTERA_SPI_STATUS_RRDY_MSK)
 		altr_spi_readl(hw, ALTERA_SPI_RXDATA, &val); /* flush rxdata */
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(altera_spi_init_host);
+=======
+EXPORT_SYMBOL_GPL(altera_spi_init_master);
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_LICENSE("GPL");

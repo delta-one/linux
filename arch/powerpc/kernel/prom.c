@@ -30,7 +30,10 @@
 #include <linux/libfdt.h>
 #include <linux/cpu.h>
 #include <linux/pgtable.h>
+<<<<<<< HEAD
 #include <linux/seq_buf.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/rtas.h>
 #include <asm/page.h>
@@ -56,7 +59,10 @@
 #include <asm/drmem.h>
 #include <asm/ultravisor.h>
 #include <asm/prom.h>
+<<<<<<< HEAD
 #include <asm/plpks.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <mm/mmu_decl.h>
 
@@ -73,7 +79,10 @@ int __initdata iommu_is_off;
 int __initdata iommu_force_on;
 unsigned long tce_alloc_start, tce_alloc_end;
 u64 ppc64_rma_size;
+<<<<<<< HEAD
 unsigned int boot_cpu_node_count __ro_after_init;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 static phys_addr_t first_memblock_size;
 static int __initdata boot_cpu_count;
@@ -140,7 +149,11 @@ static void __init move_device_tree(void)
 }
 
 /*
+<<<<<<< HEAD
  * ibm,pa/pi-features is a per-cpu property that contains a string of
+=======
+ * ibm,pa-features is a per-cpu property that contains a string of
+>>>>>>> b7ba80a49124 (Commit)
  * attribute descriptors, each of which has a 2 byte header plus up
  * to 254 bytes worth of processor attribute bits.  First header
  * byte specifies the number of bytes following the header.
@@ -152,17 +165,28 @@ static void __init move_device_tree(void)
  * is supported/not supported.  Note that the bit numbers are
  * big-endian to match the definition in PAPR.
  */
+<<<<<<< HEAD
 struct ibm_feature {
+=======
+static struct ibm_pa_feature {
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long	cpu_features;	/* CPU_FTR_xxx bit */
 	unsigned long	mmu_features;	/* MMU_FTR_xxx bit */
 	unsigned int	cpu_user_ftrs;	/* PPC_FEATURE_xxx bit */
 	unsigned int	cpu_user_ftrs2;	/* PPC_FEATURE2_xxx bit */
+<<<<<<< HEAD
 	unsigned char	pabyte;		/* byte number in ibm,pa/pi-features */
 	unsigned char	pabit;		/* bit number (big-endian) */
 	unsigned char	invert;		/* if 1, pa bit set => clear feature */
 };
 
 static struct ibm_feature ibm_pa_features[] __initdata = {
+=======
+	unsigned char	pabyte;		/* byte number in ibm,pa-features */
+	unsigned char	pabit;		/* bit number (big-endian) */
+	unsigned char	invert;		/* if 1, pa bit set => clear feature */
+} ibm_pa_features[] __initdata = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .pabyte = 0,  .pabit = 0, .cpu_user_ftrs = PPC_FEATURE_HAS_MMU },
 	{ .pabyte = 0,  .pabit = 1, .cpu_user_ftrs = PPC_FEATURE_HAS_FPU },
 	{ .pabyte = 0,  .pabit = 3, .cpu_features  = CPU_FTR_CTRL },
@@ -184,6 +208,7 @@ static struct ibm_feature ibm_pa_features[] __initdata = {
 	{ .pabyte = 64, .pabit = 0, .cpu_features = CPU_FTR_DAWR1 },
 };
 
+<<<<<<< HEAD
 /*
  * ibm,pi-features property provides the support of processor specific
  * options not described in ibm,pa-features. Right now use byte 0, bit 3
@@ -197,6 +222,11 @@ static struct ibm_feature ibm_pi_features[] __initdata = {
 static void __init scan_features(unsigned long node, const unsigned char *ftrs,
 				 unsigned long tablelen,
 				 struct ibm_feature *fp,
+=======
+static void __init scan_features(unsigned long node, const unsigned char *ftrs,
+				 unsigned long tablelen,
+				 struct ibm_pa_feature *fp,
+>>>>>>> b7ba80a49124 (Commit)
 				 unsigned long ft_size)
 {
 	unsigned long i, len, bit;
@@ -233,18 +263,31 @@ static void __init scan_features(unsigned long node, const unsigned char *ftrs,
 	}
 }
 
+<<<<<<< HEAD
 static void __init check_cpu_features(unsigned long node, char *name,
 				      struct ibm_feature *fp,
 				      unsigned long size)
+=======
+static void __init check_cpu_pa_features(unsigned long node)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const unsigned char *pa_ftrs;
 	int tablelen;
 
+<<<<<<< HEAD
 	pa_ftrs = of_get_flat_dt_prop(node, name, &tablelen);
 	if (pa_ftrs == NULL)
 		return;
 
 	scan_features(node, pa_ftrs, tablelen, fp, size);
+=======
+	pa_ftrs = of_get_flat_dt_prop(node, "ibm,pa-features", &tablelen);
+	if (pa_ftrs == NULL)
+		return;
+
+	scan_features(node, pa_ftrs, tablelen,
+		      ibm_pa_features, ARRAY_SIZE(ibm_pa_features));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PPC_64S_HASH_MMU
@@ -337,9 +380,12 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
 	if (type == NULL || strcmp(type, "cpu") != 0)
 		return 0;
 
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_PPC64))
 		boot_cpu_node_count++;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Get physical cpuid */
 	intserv = of_get_flat_dt_prop(node, "ibm,ppc-interrupt-server#s", &len);
 	if (!intserv)
@@ -371,8 +417,13 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
 	    be32_to_cpu(intserv[found_thread]));
 	boot_cpuid = found;
 
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_PPC64))
 		boot_cpu_hwid = be32_to_cpu(intserv[found_thread]);
+=======
+	// Pass the boot CPU's hard CPU id back to our caller
+	*((u32 *)data) = be32_to_cpu(intserv[found_thread]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * PAPR defines "logical" PVR values for cpus that
@@ -395,6 +446,7 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
 	 */
 	if (!dt_cpu_ftrs_in_use()) {
 		prop = of_get_flat_dt_prop(node, "cpu-version", NULL);
+<<<<<<< HEAD
 		if (prop && (be32_to_cpup(prop) & 0xff000000) == 0x0f000000) {
 			identify_cpu(0, be32_to_cpup(prop));
 			seq_buf_printf(&ppc_hw_desc, "0x%04x ", be32_to_cpup(prop));
@@ -405,6 +457,13 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
 				   ARRAY_SIZE(ibm_pa_features));
 		check_cpu_features(node, "ibm,pi-features", ibm_pi_features,
 				   ARRAY_SIZE(ibm_pi_features));
+=======
+		if (prop && (be32_to_cpup(prop) & 0xff000000) == 0x0f000000)
+			identify_cpu(0, be32_to_cpup(prop));
+
+		check_cpu_feature_properties(node);
+		check_cpu_pa_features(node);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	identical_pvr_fixup(node);
@@ -720,6 +779,7 @@ static void __init tm_init(void)
 static void tm_init(void) { }
 #endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
 
+<<<<<<< HEAD
 static int __init
 early_init_dt_scan_model(unsigned long node, const char *uname,
 			 int depth, void *data)
@@ -737,6 +797,8 @@ early_init_dt_scan_model(unsigned long node, const char *uname,
 	return 1;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PPC64
 static void __init save_fscr_to_task(void)
 {
@@ -756,6 +818,10 @@ static inline void save_fscr_to_task(void) {}
 
 void __init early_init_devtree(void *params)
 {
+<<<<<<< HEAD
+=======
+	u32 boot_cpu_hwid;
+>>>>>>> b7ba80a49124 (Commit)
 	phys_addr_t limit;
 
 	DBG(" -> early_init_devtree(%px)\n", params);
@@ -764,8 +830,11 @@ void __init early_init_devtree(void *params)
 	if (!early_init_dt_verify(params))
 		panic("BUG: Failed verifying flat device tree, bad version?");
 
+<<<<<<< HEAD
 	of_scan_flat_dt(early_init_dt_scan_model, NULL);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PPC_RTAS
 	/* Some machines might need RTAS info for debugging, grab it now. */
 	of_scan_flat_dt(early_init_dt_scan_rtas, NULL);
@@ -845,6 +914,7 @@ void __init early_init_devtree(void *params)
 
 	dt_cpu_ftrs_scan();
 
+<<<<<<< HEAD
 	// We can now add the CPU name & PVR to the hardware description
 	seq_buf_printf(&ppc_hw_desc, "%s 0x%04lx ", cur_cpu_spec->cpu_name, mfspr(SPRN_PVR));
 
@@ -852,6 +922,12 @@ void __init early_init_devtree(void *params)
 	 * (altivec support, boot CPU ID, ...)
 	 */
 	of_scan_flat_dt(early_init_dt_scan_cpus, NULL);
+=======
+	/* Retrieve CPU related informations from the flat tree
+	 * (altivec support, boot CPU ID, ...)
+	 */
+	of_scan_flat_dt(early_init_dt_scan_cpus, &boot_cpu_hwid);
+>>>>>>> b7ba80a49124 (Commit)
 	if (boot_cpuid < 0) {
 		printk("Failed to identify boot CPU !\n");
 		BUG();
@@ -868,6 +944,14 @@ void __init early_init_devtree(void *params)
 
 	mmu_early_init_devtree();
 
+<<<<<<< HEAD
+=======
+	// NB. paca is not installed until later in early_setup()
+	allocate_paca_ptrs();
+	allocate_paca(boot_cpuid);
+	set_hard_smp_processor_id(boot_cpuid, boot_cpu_hwid);
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PPC_POWERNV
 	/* Scan and build the list of machine check recoverable ranges */
 	of_scan_flat_dt(early_init_dt_scan_recoverable_ranges, NULL);
@@ -888,9 +972,12 @@ void __init early_init_devtree(void *params)
 		powerpc_firmware_features |= FW_FEATURE_PS3_POSSIBLE;
 #endif
 
+<<<<<<< HEAD
 	/* If kexec left a PLPKS password in the DT, get it and clear it */
 	plpks_early_init_devtree();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tm_init();
 
 	DBG(" <- early_init_devtree()\n");

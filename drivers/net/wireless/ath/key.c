@@ -503,7 +503,11 @@ int ath_key_config(struct ath_common *common,
 
 	hk.kv_len = key->keylen;
 	if (key->keylen)
+<<<<<<< HEAD
 		memcpy(&hk.kv_values, key->key, key->keylen);
+=======
+		memcpy(hk.kv_val, key->key, key->keylen);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!(key->flags & IEEE80211_KEY_FLAG_PAIRWISE)) {
 		switch (vif->type) {

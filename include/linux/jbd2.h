@@ -1308,6 +1308,7 @@ struct journal_s
 				    struct buffer_head *bh,
 				    enum passtype pass, int off,
 				    tid_t expected_commit_id);
+<<<<<<< HEAD
 
 	/**
 	 * @j_bmap:
@@ -1316,6 +1317,8 @@ struct journal_s
 	 * VFS bmap function.
 	 */
 	int (*j_bmap)(struct journal_s *journal, sector_t *block);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define jbd2_might_wait_for_commit(j) \
@@ -1578,6 +1581,11 @@ extern int	   jbd2_journal_inode_ranged_write(handle_t *handle,
 extern int	   jbd2_journal_inode_ranged_wait(handle_t *handle,
 			struct jbd2_inode *inode, loff_t start_byte,
 			loff_t length);
+<<<<<<< HEAD
+=======
+extern int	   jbd2_journal_submit_inode_data_buffers(
+			struct jbd2_inode *jinode);
+>>>>>>> b7ba80a49124 (Commit)
 extern int	   jbd2_journal_finish_inode_data_buffers(
 			struct jbd2_inode *jinode);
 extern int	   jbd2_journal_begin_ordered_truncate(journal_t *journal,
@@ -1668,7 +1676,11 @@ int jbd2_fc_begin_commit(journal_t *journal, tid_t tid);
 int jbd2_fc_end_commit(journal_t *journal);
 int jbd2_fc_end_commit_fallback(journal_t *journal);
 int jbd2_fc_get_buf(journal_t *journal, struct buffer_head **bh_out);
+<<<<<<< HEAD
 int jbd2_submit_inode_data(journal_t *journal, struct jbd2_inode *jinode);
+=======
+int jbd2_submit_inode_data(struct jbd2_inode *jinode);
+>>>>>>> b7ba80a49124 (Commit)
 int jbd2_wait_inode_data(journal_t *journal, struct jbd2_inode *jinode);
 int jbd2_fc_wait_bufs(journal_t *journal, int num_blks);
 int jbd2_fc_release_bufs(journal_t *journal);

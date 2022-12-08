@@ -1127,7 +1127,11 @@ static int r6040_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 	dev->ethtool_ops = &netdev_ethtool_ops;
 	dev->watchdog_timeo = TX_TIMEOUT;
 
+<<<<<<< HEAD
 	netif_napi_add(dev, &lp->napi, r6040_poll);
+=======
+	netif_napi_add(dev, &lp->napi, r6040_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	lp->mii_bus = mdiobus_alloc();
 	if (!lp->mii_bus) {
@@ -1159,12 +1163,19 @@ static int r6040_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 	err = register_netdev(dev);
 	if (err) {
 		dev_err(&pdev->dev, "Failed to register net device\n");
+<<<<<<< HEAD
 		goto err_out_phy_disconnect;
 	}
 	return 0;
 
 err_out_phy_disconnect:
 	phy_disconnect(dev->phydev);
+=======
+		goto err_out_mdio_unregister;
+	}
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 err_out_mdio_unregister:
 	mdiobus_unregister(lp->mii_bus);
 err_out_mdio:
@@ -1188,7 +1199,10 @@ static void r6040_remove_one(struct pci_dev *pdev)
 	struct r6040_private *lp = netdev_priv(dev);
 
 	unregister_netdev(dev);
+<<<<<<< HEAD
 	phy_disconnect(dev->phydev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mdiobus_unregister(lp->mii_bus);
 	mdiobus_free(lp->mii_bus);
 	netif_napi_del(&lp->napi);

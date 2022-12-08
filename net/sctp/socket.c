@@ -59,7 +59,10 @@
 #include <net/ipv6.h>
 #include <net/inet_common.h>
 #include <net/busy_poll.h>
+<<<<<<< HEAD
 #include <trace/events/sock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/socket.h> /* for sa_family_t */
 #include <linux/export.h>
@@ -5099,17 +5102,25 @@ static void sctp_destroy_sock(struct sock *sk)
 }
 
 /* Triggered when there are no references on the socket anymore */
+<<<<<<< HEAD
 static void sctp_destruct_common(struct sock *sk)
+=======
+static void sctp_destruct_sock(struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sctp_sock *sp = sctp_sk(sk);
 
 	/* Free up the HMAC transform. */
 	crypto_free_shash(sp->hmac);
+<<<<<<< HEAD
 }
 
 static void sctp_destruct_sock(struct sock *sk)
 {
 	sctp_destruct_common(sk);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	inet_sock_destruct(sk);
 }
 
@@ -5316,14 +5327,22 @@ EXPORT_SYMBOL_GPL(sctp_for_each_endpoint);
 
 int sctp_transport_lookup_process(sctp_callback_t cb, struct net *net,
 				  const union sctp_addr *laddr,
+<<<<<<< HEAD
 				  const union sctp_addr *paddr, void *p, int dif)
+=======
+				  const union sctp_addr *paddr, void *p)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sctp_transport *transport;
 	struct sctp_endpoint *ep;
 	int err = -ENOENT;
 
 	rcu_read_lock();
+<<<<<<< HEAD
 	transport = sctp_addrs_lookup_transport(net, laddr, paddr, dif, dif);
+=======
+	transport = sctp_addrs_lookup_transport(net, laddr, paddr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!transport) {
 		rcu_read_unlock();
 		return err;
@@ -8322,9 +8341,15 @@ static int sctp_get_port_local(struct sock *sk, union sctp_addr *addr)
 		int low, high, remaining, index;
 		unsigned int rover;
 
+<<<<<<< HEAD
 		inet_sk_get_local_port_range(sk, &low, &high);
 		remaining = (high - low) + 1;
 		rover = get_random_u32_below(remaining) + low;
+=======
+		inet_get_local_port_range(net, &low, &high);
+		remaining = (high - low) + 1;
+		rover = prandom_u32() % remaining + low;
+>>>>>>> b7ba80a49124 (Commit)
 
 		do {
 			rover++;
@@ -8399,7 +8424,10 @@ pp_found:
 		 * in an endpoint.
 		 */
 		sk_for_each_bound(sk2, &pp->owner) {
+<<<<<<< HEAD
 			int bound_dev_if2 = READ_ONCE(sk2->sk_bound_dev_if);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			struct sctp_sock *sp2 = sctp_sk(sk2);
 			struct sctp_endpoint *ep2 = sp2->ep;
 
@@ -8410,9 +8438,13 @@ pp_found:
 			     uid_eq(uid, sock_i_uid(sk2))))
 				continue;
 
+<<<<<<< HEAD
 			if ((!sk->sk_bound_dev_if || !bound_dev_if2 ||
 			     sk->sk_bound_dev_if == bound_dev_if2) &&
 			    sctp_bind_addr_conflict(&ep2->base.bind_addr,
+=======
+			if (sctp_bind_addr_conflict(&ep2->base.bind_addr,
+>>>>>>> b7ba80a49124 (Commit)
 						    addr, sp2, sp)) {
 				ret = 1;
 				goto fail_unlock;
@@ -9245,8 +9277,11 @@ void sctp_data_ready(struct sock *sk)
 {
 	struct socket_wq *wq;
 
+<<<<<<< HEAD
 	trace_sk_data_ready(sk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_read_lock();
 	wq = rcu_dereference(sk->sk_wq);
 	if (skwq_has_sleeper(wq))
@@ -9437,7 +9472,11 @@ void sctp_copy_sock(struct sock *newsk, struct sock *sk,
 	sctp_sk(newsk)->reuse = sp->reuse;
 
 	newsk->sk_shutdown = sk->sk_shutdown;
+<<<<<<< HEAD
 	newsk->sk_destruct = sk->sk_destruct;
+=======
+	newsk->sk_destruct = sctp_destruct_sock;
+>>>>>>> b7ba80a49124 (Commit)
 	newsk->sk_family = sk->sk_family;
 	newsk->sk_protocol = IPPROTO_SCTP;
 	newsk->sk_backlog_rcv = sk->sk_prot->backlog_rcv;
@@ -9458,7 +9497,11 @@ void sctp_copy_sock(struct sock *newsk, struct sock *sk,
 	newinet->inet_rcv_saddr = inet->inet_rcv_saddr;
 	newinet->inet_dport = htons(asoc->peer.port);
 	newinet->pmtudisc = inet->pmtudisc;
+<<<<<<< HEAD
 	newinet->inet_id = get_random_u16();
+=======
+	newinet->inet_id = prandom_u32();
+>>>>>>> b7ba80a49124 (Commit)
 
 	newinet->uc_ttl = inet->uc_ttl;
 	newinet->mc_loop = 1;
@@ -9672,6 +9715,7 @@ struct proto sctp_prot = {
 
 #if IS_ENABLED(CONFIG_IPV6)
 
+<<<<<<< HEAD
 static void sctp_v6_destruct_sock(struct sock *sk)
 {
 	sctp_destruct_common(sk);
@@ -9686,6 +9730,13 @@ static int sctp_v6_init_sock(struct sock *sk)
 		sk->sk_destruct = sctp_v6_destruct_sock;
 
 	return ret;
+=======
+#include <net/transp_v6.h>
+static void sctp_v6_destroy_sock(struct sock *sk)
+{
+	sctp_destroy_sock(sk);
+	inet6_destroy_sock(sk);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct proto sctpv6_prot = {
@@ -9695,8 +9746,13 @@ struct proto sctpv6_prot = {
 	.disconnect	= sctp_disconnect,
 	.accept		= sctp_accept,
 	.ioctl		= sctp_ioctl,
+<<<<<<< HEAD
 	.init		= sctp_v6_init_sock,
 	.destroy	= sctp_destroy_sock,
+=======
+	.init		= sctp_init_sock,
+	.destroy	= sctp_v6_destroy_sock,
+>>>>>>> b7ba80a49124 (Commit)
 	.shutdown	= sctp_shutdown,
 	.setsockopt	= sctp_setsockopt,
 	.getsockopt	= sctp_getsockopt,

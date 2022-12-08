@@ -147,9 +147,15 @@ static struct qcom_icc_node mas_snoc_bimc_nrt = {
 	.name = "mas_snoc_bimc_nrt",
 	.buswidth = 16,
 	.qos.ap_owned = true,
+<<<<<<< HEAD
 	.qos.qos_port = 3,
 	.qos.qos_mode = NOC_QOS_MODE_BYPASS,
 	.mas_rpm_id = 164,
+=======
+	.qos.qos_port = 2,
+	.qos.qos_mode = NOC_QOS_MODE_BYPASS,
+	.mas_rpm_id = 163,
+>>>>>>> b7ba80a49124 (Commit)
 	.slv_rpm_id = -1,
 	.num_links = ARRAY_SIZE(mas_snoc_bimc_nrt_links),
 	.links = mas_snoc_bimc_nrt_links,

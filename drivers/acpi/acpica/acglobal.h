@@ -24,7 +24,10 @@ ACPI_GLOBAL(struct acpi_table_list, acpi_gbl_root_table_list);
 
 ACPI_GLOBAL(struct acpi_table_header *, acpi_gbl_DSDT);
 ACPI_GLOBAL(struct acpi_table_header, acpi_gbl_original_dsdt_header);
+<<<<<<< HEAD
 ACPI_INIT_GLOBAL(char *, acpi_gbl_CDAT, NULL);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ACPI_INIT_GLOBAL(u32, acpi_gbl_dsdt_index, ACPI_INVALID_TABLE_INDEX);
 ACPI_INIT_GLOBAL(u32, acpi_gbl_facs_index, ACPI_INVALID_TABLE_INDEX);
 ACPI_INIT_GLOBAL(u32, acpi_gbl_xfacs_index, ACPI_INVALID_TABLE_INDEX);

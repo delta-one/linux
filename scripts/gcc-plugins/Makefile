@@ -29,7 +29,11 @@ GCC_PLUGINS_DIR = $(shell $(CC) -print-file-name=plugin)
 plugin_cxxflags	= -Wp,-MMD,$(depfile) $(KBUILD_HOSTCXXFLAGS) -fPIC \
 		  -include $(srctree)/include/linux/compiler-version.h \
 		  -DPLUGIN_VERSION=$(call stringify,$(KERNELVERSION)) \
+<<<<<<< HEAD
 		  -I $(GCC_PLUGINS_DIR)/include -I $(obj) \
+=======
+		  -I $(GCC_PLUGINS_DIR)/include -I $(obj) -std=gnu++11 \
+>>>>>>> b7ba80a49124 (Commit)
 		  -fno-rtti -fno-exceptions -fasynchronous-unwind-tables \
 		  -ggdb -Wno-narrowing -Wno-unused-variable \
 		  -Wno-format-diag

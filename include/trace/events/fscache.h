@@ -66,7 +66,10 @@ enum fscache_cookie_trace {
 	fscache_cookie_put_work,
 	fscache_cookie_see_active,
 	fscache_cookie_see_lru_discard,
+<<<<<<< HEAD
 	fscache_cookie_see_lru_discard_clear,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	fscache_cookie_see_lru_do_one,
 	fscache_cookie_see_relinquish,
 	fscache_cookie_see_withdraw,
@@ -150,7 +153,10 @@ enum fscache_access_trace {
 	EM(fscache_cookie_put_work,		"PQ  work ")		\
 	EM(fscache_cookie_see_active,		"-   activ")		\
 	EM(fscache_cookie_see_lru_discard,	"-   x-lru")		\
+<<<<<<< HEAD
 	EM(fscache_cookie_see_lru_discard_clear,"-   lrudc")            \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	EM(fscache_cookie_see_lru_do_one,	"-   lrudo")		\
 	EM(fscache_cookie_see_relinquish,	"-   x-rlq")		\
 	EM(fscache_cookie_see_withdraw,		"-   x-wth")		\

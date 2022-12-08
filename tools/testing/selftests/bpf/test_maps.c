@@ -1275,7 +1275,11 @@ static void test_map_in_map(void)
 			goto out_map_in_map;
 		}
 
+<<<<<<< HEAD
 		err = bpf_map_get_info_by_fd(fd, &info, &len);
+=======
+		err = bpf_obj_get_info_by_fd(fd, &info, &len);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err) {
 			printf("Failed to get map info by fd %d: %d", fd,
 			       errno);

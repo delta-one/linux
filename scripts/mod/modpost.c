@@ -519,8 +519,14 @@ static int parse_elf(struct elf_info *info, const char *filename)
 		int nobits = sechdrs[i].sh_type == SHT_NOBITS;
 
 		if (!nobits && sechdrs[i].sh_offset > info->size) {
+<<<<<<< HEAD
 			fatal("%s is truncated. sechdrs[i].sh_offset=%lu > sizeof(*hrd)=%zu\n",
 			      filename, (unsigned long)sechdrs[i].sh_offset,
+=======
+			fatal("%s is truncated. sechdrs[i].sh_offset=%lu > "
+			      "sizeof(*hrd)=%zu\n", filename,
+			      (unsigned long)sechdrs[i].sh_offset,
+>>>>>>> b7ba80a49124 (Commit)
 			      sizeof(*hdr));
 			return 0;
 		}
@@ -822,10 +828,17 @@ static void check_section(const char *modname, struct elf_info *elf,
 #define ALL_EXIT_SECTIONS EXIT_SECTIONS, ALL_XXXEXIT_SECTIONS
 
 #define DATA_SECTIONS ".data", ".data.rel"
+<<<<<<< HEAD
 #define TEXT_SECTIONS ".text", ".text.*", ".sched.text", \
 		".kprobes.text", ".cpuidle.text", ".noinstr.text"
 #define OTHER_TEXT_SECTIONS ".ref.text", ".head.text", ".spinlock.text", \
 		".fixup", ".entry.text", ".exception.text", \
+=======
+#define TEXT_SECTIONS ".text", ".text.unlikely", ".sched.text", \
+		".kprobes.text", ".cpuidle.text", ".noinstr.text"
+#define OTHER_TEXT_SECTIONS ".ref.text", ".head.text", ".spinlock.text", \
+		".fixup", ".entry.text", ".exception.text", ".text.*", \
+>>>>>>> b7ba80a49124 (Commit)
 		".coldtext", ".softirqentry.text"
 
 #define INIT_SECTIONS      ".init.*"
@@ -1354,7 +1367,12 @@ static void report_extable_warnings(const char* modname, struct elf_info* elf,
 	get_pretty_name(is_function(tosym),
 			&to_pretty_name, &to_pretty_name_p);
 
+<<<<<<< HEAD
 	warn("%s(%s+0x%lx): Section mismatch in reference from the %s %s%s to the %s %s:%s%s\n",
+=======
+	warn("%s(%s+0x%lx): Section mismatch in reference"
+	     " from the %s %s%s to the %s %s:%s%s\n",
+>>>>>>> b7ba80a49124 (Commit)
 	     modname, fromsec, (long)r->r_offset, from_pretty_name,
 	     fromsym_name, from_pretty_name_p,
 	     to_pretty_name, tosec, tosym_name, to_pretty_name_p);
@@ -1521,6 +1539,7 @@ static int addend_mips_rel(struct elf_info *elf, Elf_Shdr *sechdr, Elf_Rela *r)
 #define R_RISCV_SUB32		39
 #endif
 
+<<<<<<< HEAD
 #ifndef EM_LOONGARCH
 #define EM_LOONGARCH		258
 #endif
@@ -1529,6 +1548,8 @@ static int addend_mips_rel(struct elf_info *elf, Elf_Shdr *sechdr, Elf_Rela *r)
 #define R_LARCH_SUB32		55
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void section_rela(const char *modname, struct elf_info *elf,
 			 Elf_Shdr *sechdr)
 {
@@ -1570,11 +1591,14 @@ static void section_rela(const char *modname, struct elf_info *elf,
 			    ELF_R_TYPE(r.r_info) == R_RISCV_SUB32)
 				continue;
 			break;
+<<<<<<< HEAD
 		case EM_LOONGARCH:
 			if (!strcmp("__ex_table", fromsec) &&
 			    ELF_R_TYPE(r.r_info) == R_LARCH_SUB32)
 				continue;
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		sym = elf->symtab_start + r_sym;
 		/* Skip special sections */
@@ -1733,7 +1757,11 @@ static void extract_crcs_for_object(const char *object, struct module *mod)
 		if (!isdigit(*p))
 			continue;	/* skip this line */
 
+<<<<<<< HEAD
 		crc = strtoul(p, &p, 0);
+=======
+		crc = strtol(p, &p, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		if (*p != '\n')
 			continue;	/* skip this line */
 
@@ -1869,9 +1897,17 @@ static void read_symbols_from_files(const char *filename)
 	FILE *in = stdin;
 	char fname[PATH_MAX];
 
+<<<<<<< HEAD
 	in = fopen(filename, "r");
 	if (!in)
 		fatal("Can't open filenames file %s: %m", filename);
+=======
+	if (strcmp(filename, "-") != 0) {
+		in = fopen(filename, "r");
+		if (!in)
+			fatal("Can't open filenames file %s: %m", filename);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (fgets(fname, PATH_MAX, in) != NULL) {
 		if (strends(fname, "\n"))
@@ -1879,7 +1915,12 @@ static void read_symbols_from_files(const char *filename)
 		read_symbols(fname);
 	}
 
+<<<<<<< HEAD
 	fclose(in);
+=======
+	if (in != stdin)
+		fclose(in);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define SZ 500

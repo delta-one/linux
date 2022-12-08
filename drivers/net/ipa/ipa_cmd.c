@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0
 
 /* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (C) 2019-2023 Linaro Ltd.
+=======
+ * Copyright (C) 2019-2021 Linaro Ltd.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/types.h>
@@ -32,7 +36,11 @@
  * immediate command's opcode.  The payload for a command resides in AP
  * memory and is described by a single scatterlist entry in its transaction.
  * Commands do not require a transaction completion callback, and are
+<<<<<<< HEAD
  * always issued using gsi_trans_commit_wait().
+=======
+ * (currently) always issued using gsi_trans_commit_wait().
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 /* Some commands can wait until indicated pipeline stages are clear */
@@ -94,11 +102,19 @@ struct ipa_cmd_register_write {
 /* IPA_CMD_IP_PACKET_INIT */
 
 struct ipa_cmd_ip_packet_init {
+<<<<<<< HEAD
 	u8 dest_endpoint;	/* Full 8 bits used for IPA v5.0+ */
 	u8 reserved[7];
 };
 
 /* Field mask for ipa_cmd_ip_packet_init dest_endpoint field (unused v5.0+) */
+=======
+	u8 dest_endpoint;
+	u8 reserved[7];
+};
+
+/* Field masks for ipa_cmd_ip_packet_init dest_endpoint field */
+>>>>>>> b7ba80a49124 (Commit)
 #define IPA_PACKET_INIT_DEST_ENDPOINT_FMASK		GENMASK(4, 0)
 
 /* IPA_CMD_DMA_SHARED_MEM */
@@ -145,18 +161,36 @@ union ipa_cmd_payload {
 
 static void ipa_cmd_validate_build(void)
 {
+<<<<<<< HEAD
 	/* The size of a filter table needs to fit into fields in the
 	 * ipa_cmd_hw_ip_fltrt_init structure.  Although hashed tables
 	 * might not be used, non-hashed and hashed tables have the same
 	 * maximum size.  IPv4 and IPv6 filter tables have the same number
 	 * of entries.
 	 */
+=======
+	/* The sizes of a filter and route tables need to fit into fields
+	 * in the ipa_cmd_hw_ip_fltrt_init structure.  Although hashed tables
+	 * might not be used, non-hashed and hashed tables have the same
+	 * maximum size.  IPv4 and IPv6 filter tables have the same number
+	 * of entries, as and IPv4 and IPv6 route tables have the same number
+	 * of entries.
+	 */
+#define TABLE_SIZE	(TABLE_COUNT_MAX * sizeof(__le64))
+#define TABLE_COUNT_MAX	max_t(u32, IPA_ROUTE_COUNT_MAX, IPA_FILTER_COUNT_MAX)
+	BUILD_BUG_ON(TABLE_SIZE > field_max(IP_FLTRT_FLAGS_HASH_SIZE_FMASK));
+	BUILD_BUG_ON(TABLE_SIZE > field_max(IP_FLTRT_FLAGS_NHASH_SIZE_FMASK));
+#undef TABLE_COUNT_MAX
+#undef TABLE_SIZE
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Hashed and non-hashed fields are assumed to be the same size */
 	BUILD_BUG_ON(field_max(IP_FLTRT_FLAGS_HASH_SIZE_FMASK) !=
 		     field_max(IP_FLTRT_FLAGS_NHASH_SIZE_FMASK));
 	BUILD_BUG_ON(field_max(IP_FLTRT_FLAGS_HASH_ADDR_FMASK) !=
 		     field_max(IP_FLTRT_FLAGS_NHASH_ADDR_FMASK));
 
+<<<<<<< HEAD
 	/* Prior to IPA v5.0, we supported no more than 32 endpoints,
 	 * and this was reflected in some 5-bit fields that held
 	 * endpoint numbers.  Starting with IPA v5.0, the widths of
@@ -170,11 +204,21 @@ static void ipa_cmd_validate_build(void)
 /* Validate a memory region holding a table */
 bool ipa_cmd_table_init_valid(struct ipa *ipa, const struct ipa_mem *mem,
 			      bool route)
+=======
+	/* Valid endpoint numbers must fit in the IP packet init command */
+	BUILD_BUG_ON(field_max(IPA_PACKET_INIT_DEST_ENDPOINT_FMASK) <
+		     IPA_ENDPOINT_MAX - 1);
+}
+
+/* Validate a memory region holding a table */
+bool ipa_cmd_table_valid(struct ipa *ipa, const struct ipa_mem *mem, bool route)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 offset_max = field_max(IP_FLTRT_FLAGS_NHASH_ADDR_FMASK);
 	u32 size_max = field_max(IP_FLTRT_FLAGS_NHASH_SIZE_FMASK);
 	const char *table = route ? "route" : "filter";
 	struct device *dev = &ipa->pdev->dev;
+<<<<<<< HEAD
 	u32 size;
 
 	size = route ? ipa->route_count : ipa->filter_count + 1;
@@ -184,6 +228,14 @@ bool ipa_cmd_table_init_valid(struct ipa *ipa, const struct ipa_mem *mem,
 	if (size > size_max) {
 		dev_err(dev, "%s table region size too large\n", table);
 		dev_err(dev, "    (0x%04x > 0x%04x)\n", size, size_max);
+=======
+
+	/* Size must fit in the immediate command field that holds it */
+	if (mem->size > size_max) {
+		dev_err(dev, "%s table region size too large\n", table);
+		dev_err(dev, "    (0x%04x > 0x%04x)\n",
+			mem->size, size_max);
+>>>>>>> b7ba80a49124 (Commit)
 
 		return false;
 	}
@@ -198,11 +250,28 @@ bool ipa_cmd_table_init_valid(struct ipa *ipa, const struct ipa_mem *mem,
 		return false;
 	}
 
+<<<<<<< HEAD
+=======
+	/* Entire memory range must fit within IPA-local memory */
+	if (mem->offset > ipa->mem_size ||
+	    mem->size > ipa->mem_size - mem->offset) {
+		dev_err(dev, "%s table region out of range\n", table);
+		dev_err(dev, "    (0x%04x + 0x%04x > 0x%04x)\n",
+			mem->offset, mem->size, ipa->mem_size);
+
+		return false;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
 /* Validate the memory region that holds headers */
+<<<<<<< HEAD
 static bool ipa_cmd_header_init_local_valid(struct ipa *ipa)
+=======
+static bool ipa_cmd_header_valid(struct ipa *ipa)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &ipa->pdev->dev;
 	const struct ipa_mem *mem;
@@ -248,6 +317,18 @@ static bool ipa_cmd_header_init_local_valid(struct ipa *ipa)
 		return false;
 	}
 
+<<<<<<< HEAD
+=======
+	/* Make sure the entire combined area fits in IPA memory */
+	if (size > ipa->mem_size || offset > ipa->mem_size - size) {
+		dev_err(dev, "header table region out of range\n");
+		dev_err(dev, "    (0x%04x + 0x%04x > 0x%04x)\n",
+			offset, size, ipa->mem_size);
+
+		return false;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -287,7 +368,10 @@ static bool ipa_cmd_register_write_offset_valid(struct ipa *ipa,
 /* Check whether offsets passed to register_write are valid */
 static bool ipa_cmd_register_write_valid(struct ipa *ipa)
 {
+<<<<<<< HEAD
 	const struct reg *reg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const char *name;
 	u32 offset;
 
@@ -295,12 +379,16 @@ static bool ipa_cmd_register_write_valid(struct ipa *ipa)
 	 * offset will fit in a register write IPA immediate command.
 	 */
 	if (ipa_table_hash_support(ipa)) {
+<<<<<<< HEAD
 		if (ipa->version < IPA_VERSION_5_0)
 			reg = ipa_reg(ipa, FILT_ROUT_HASH_FLUSH);
 		else
 			reg = ipa_reg(ipa, FILT_ROUT_CACHE_FLUSH);
 
 		offset = reg_offset(reg);
+=======
+		offset = ipa_reg_filt_rout_hash_flush_offset(ipa->version);
+>>>>>>> b7ba80a49124 (Commit)
 		name = "filter/route hash flush";
 		if (!ipa_cmd_register_write_offset_valid(ipa, name, offset))
 			return false;
@@ -313,8 +401,12 @@ static bool ipa_cmd_register_write_valid(struct ipa *ipa)
 	 * worst case (highest endpoint number) offset of that endpoint
 	 * fits in the register write command field(s) that must hold it.
 	 */
+<<<<<<< HEAD
 	reg = ipa_reg(ipa, ENDP_STATUS);
 	offset = reg_n_offset(reg, IPA_ENDPOINT_COUNT - 1);
+=======
+	offset = IPA_REG_ENDP_STATUS_N_OFFSET(IPA_ENDPOINT_COUNT - 1);
+>>>>>>> b7ba80a49124 (Commit)
 	name = "maximal endpoint status";
 	if (!ipa_cmd_register_write_offset_valid(ipa, name, offset))
 		return false;
@@ -322,11 +414,32 @@ static bool ipa_cmd_register_write_valid(struct ipa *ipa)
 	return true;
 }
 
+<<<<<<< HEAD
+=======
+bool ipa_cmd_data_valid(struct ipa *ipa)
+{
+	if (!ipa_cmd_header_valid(ipa))
+		return false;
+
+	if (!ipa_cmd_register_write_valid(ipa))
+		return false;
+
+	return true;
+}
+
+
+>>>>>>> b7ba80a49124 (Commit)
 int ipa_cmd_pool_init(struct gsi_channel *channel, u32 tre_max)
 {
 	struct gsi_trans_info *trans_info = &channel->trans_info;
 	struct device *dev = channel->gsi->dev;
 
+<<<<<<< HEAD
+=======
+	/* This is as good a place as any to validate build constants */
+	ipa_cmd_validate_build();
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Command payloads are allocated one at a time, but a single
 	 * transaction can require up to the maximum supported by the
 	 * channel; treat them as if they were allocated all at once.
@@ -495,6 +608,7 @@ static void ipa_cmd_ip_packet_init_add(struct gsi_trans *trans, u8 endpoint_id)
 	cmd_payload = ipa_cmd_payload_alloc(ipa, &payload_addr);
 	payload = &cmd_payload->ip_packet_init;
 
+<<<<<<< HEAD
 	if (ipa->version < IPA_VERSION_5_0) {
 		payload->dest_endpoint =
 			u8_encode_bits(endpoint_id,
@@ -502,6 +616,10 @@ static void ipa_cmd_ip_packet_init_add(struct gsi_trans *trans, u8 endpoint_id)
 	} else {
 		payload->dest_endpoint = endpoint_id;
 	}
+=======
+	payload->dest_endpoint = u8_encode_bits(endpoint_id,
+					IPA_PACKET_INIT_DEST_ENDPOINT_FMASK);
+>>>>>>> b7ba80a49124 (Commit)
 
 	gsi_trans_cmd_add(trans, payload, sizeof(*payload), payload_addr,
 			  opcode);
@@ -631,6 +749,7 @@ struct gsi_trans *ipa_cmd_trans_alloc(struct ipa *ipa, u32 tre_count)
 	return gsi_channel_trans_alloc(&ipa->gsi, endpoint->channel_id,
 				       tre_count, DMA_NONE);
 }
+<<<<<<< HEAD
 
 /* Init function for immediate commands; there is no ipa_cmd_exit() */
 int ipa_cmd_init(struct ipa *ipa)
@@ -645,3 +764,5 @@ int ipa_cmd_init(struct ipa *ipa)
 
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

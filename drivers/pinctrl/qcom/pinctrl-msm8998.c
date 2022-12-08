@@ -1503,6 +1503,7 @@ static const struct msm_pingroup msm8998_groups[] = {
 	UFS_RESET(ufs_reset, 0x19d000),
 };
 
+<<<<<<< HEAD
 static const struct msm_gpio_wakeirq_map msm8998_mpm_map[] = {
 	{ 1, 3 }, { 5, 4 }, { 9, 5 }, { 11, 6 }, { 22, 8 }, { 24, 9 }, { 26, 10 },
 	{ 34, 11 }, { 36, 12 }, { 37, 13 }, { 38, 14 }, { 40, 15 }, { 42, 16 }, { 46, 17 },
@@ -1515,6 +1516,8 @@ static const struct msm_gpio_wakeirq_map msm8998_mpm_map[] = {
 	{ 125, 63 }, { 126, 64 }, { 127, 50 }, { 129, 65 }, { 131, 66 }, { 132, 67 }, { 133, 68 },
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct msm_pinctrl_soc_data msm8998_pinctrl = {
 	.pins = msm8998_pins,
 	.npins = ARRAY_SIZE(msm8998_pins),
@@ -1523,8 +1526,11 @@ static const struct msm_pinctrl_soc_data msm8998_pinctrl = {
 	.groups = msm8998_groups,
 	.ngroups = ARRAY_SIZE(msm8998_groups),
 	.ngpios = 150,
+<<<<<<< HEAD
 	.wakeirq_map = msm8998_mpm_map,
 	.nwakeirq_map = ARRAY_SIZE(msm8998_mpm_map),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int msm8998_pinctrl_probe(struct platform_device *pdev)

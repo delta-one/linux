@@ -16,7 +16,11 @@ struct lpass_macro *lpass_macro_pds_init(struct device *dev)
 	struct lpass_macro *l_pds;
 	int ret;
 
+<<<<<<< HEAD
 	if (!of_property_present(dev->of_node, "power-domains"))
+=======
+	if (!of_find_property(dev->of_node, "power-domains", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	l_pds = devm_kzalloc(dev, sizeof(*l_pds), GFP_KERNEL);

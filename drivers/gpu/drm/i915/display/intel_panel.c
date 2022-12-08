@@ -31,15 +31,21 @@
 #include <linux/kernel.h>
 #include <linux/pwm.h>
 
+<<<<<<< HEAD
 #include <drm/drm_edid.h>
 
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_backlight.h"
 #include "intel_connector.h"
 #include "intel_de.h"
 #include "intel_display_types.h"
 #include "intel_drrs.h"
+<<<<<<< HEAD
 #include "intel_lvds_regs.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_panel.h"
 #include "intel_quirks.h"
 
@@ -89,10 +95,16 @@ static bool is_alt_drrs_mode(const struct drm_display_mode *mode,
 static bool is_alt_fixed_mode(const struct drm_display_mode *mode,
 			      const struct drm_display_mode *preferred_mode)
 {
+<<<<<<< HEAD
 	u32 sync_flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_NHSYNC |
 		DRM_MODE_FLAG_PVSYNC | DRM_MODE_FLAG_NVSYNC;
 
 	return (mode->flags & ~sync_flags) == (preferred_mode->flags & ~sync_flags) &&
+=======
+	return drm_mode_match(mode, preferred_mode,
+			      DRM_MODE_MATCH_FLAGS |
+			      DRM_MODE_MATCH_3D_FLAGS) &&
+>>>>>>> b7ba80a49124 (Commit)
 		mode->hdisplay == preferred_mode->hdisplay &&
 		mode->vdisplay == preferred_mode->vdisplay;
 }
@@ -152,6 +164,7 @@ int intel_panel_get_modes(struct intel_connector *connector)
 	return num_modes;
 }
 
+<<<<<<< HEAD
 static bool has_drrs_modes(struct intel_connector *connector)
 {
 	const struct drm_display_mode *mode1;
@@ -170,6 +183,14 @@ static bool has_drrs_modes(struct intel_connector *connector)
 
 enum drrs_type intel_panel_drrs_type(struct intel_connector *connector)
 {
+=======
+enum drrs_type intel_panel_drrs_type(struct intel_connector *connector)
+{
+	if (list_empty(&connector->panel.fixed_modes) ||
+	    list_is_singular(&connector->panel.fixed_modes))
+		return DRRS_TYPE_NONE;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return connector->panel.vbt.drrs_type;
 }
 
@@ -271,10 +292,17 @@ static void intel_panel_destroy_probed_modes(struct intel_connector *connector)
 }
 
 void intel_panel_add_edid_fixed_modes(struct intel_connector *connector,
+<<<<<<< HEAD
 				      bool use_alt_fixed_modes)
 {
 	intel_panel_add_edid_preferred_mode(connector);
 	if (intel_panel_preferred_fixed_mode(connector) && use_alt_fixed_modes)
+=======
+				      bool has_drrs, bool has_vrr)
+{
+	intel_panel_add_edid_preferred_mode(connector);
+	if (intel_panel_preferred_fixed_mode(connector) && (has_drrs || has_vrr))
+>>>>>>> b7ba80a49124 (Commit)
 		intel_panel_add_edid_alt_fixed_modes(connector);
 	intel_panel_destroy_probed_modes(connector);
 }
@@ -664,6 +692,7 @@ intel_panel_mode_valid(struct intel_connector *connector,
 	return MODE_OK;
 }
 
+<<<<<<< HEAD
 void intel_panel_init_alloc(struct intel_connector *connector)
 {
 	struct intel_panel *panel = &connector->panel;
@@ -685,6 +714,14 @@ int intel_panel_init(struct intel_connector *connector,
 	if (!has_drrs_modes(connector))
 		connector->panel.vbt.drrs_type = DRRS_TYPE_NONE;
 
+=======
+int intel_panel_init(struct intel_connector *connector)
+{
+	struct intel_panel *panel = &connector->panel;
+
+	intel_backlight_init_funcs(panel);
+
+>>>>>>> b7ba80a49124 (Commit)
 	drm_dbg_kms(connector->base.dev,
 		    "[CONNECTOR:%d:%s] DRRS type: %s\n",
 		    connector->base.base.id, connector->base.name,
@@ -698,9 +735,12 @@ void intel_panel_fini(struct intel_connector *connector)
 	struct intel_panel *panel = &connector->panel;
 	struct drm_display_mode *fixed_mode, *next;
 
+<<<<<<< HEAD
 	if (!IS_ERR_OR_NULL(panel->fixed_edid))
 		drm_edid_free(panel->fixed_edid);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	intel_backlight_destroy(panel);
 
 	intel_bios_fini_panel(panel);

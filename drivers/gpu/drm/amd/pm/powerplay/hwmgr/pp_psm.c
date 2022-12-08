@@ -75,10 +75,15 @@ int psm_init_power_state_table(struct pp_hwmgr *hwmgr)
 	for (i = 0; i < table_entries; i++) {
 		result = hwmgr->hwmgr_func->get_pp_table_entry(hwmgr, i, state);
 		if (result) {
+<<<<<<< HEAD
 			kfree(hwmgr->current_ps);
 			kfree(hwmgr->request_ps);
 			kfree(hwmgr->ps);
 			hwmgr->current_ps = NULL;
+=======
+			kfree(hwmgr->request_ps);
+			kfree(hwmgr->ps);
+>>>>>>> b7ba80a49124 (Commit)
 			hwmgr->request_ps = NULL;
 			hwmgr->ps = NULL;
 			return -EINVAL;

@@ -323,12 +323,15 @@ acpi_ex_write_serial_bus(union acpi_operand_object *source_desc,
 		function = ACPI_WRITE;
 		break;
 
+<<<<<<< HEAD
 	case ACPI_ADR_SPACE_FIXED_HARDWARE:
 
 		buffer_length = ACPI_FFH_INPUT_BUFFER_SIZE;
 		function = ACPI_WRITE;
 		break;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return_ACPI_STATUS(AE_AML_INVALID_SPACE_ID);
 	}

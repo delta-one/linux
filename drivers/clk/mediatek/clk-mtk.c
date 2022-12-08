@@ -11,12 +11,17 @@
 #include <linux/mfd/syscon.h>
 #include <linux/module.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/of_address.h>
+=======
+#include <linux/of_device.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <linux/slab.h>
 
 #include "clk-mtk.h"
 #include "clk-gate.h"
+<<<<<<< HEAD
 #include "clk-mux.h"
 
 const struct mtk_gate_regs cg_regs_dummy = { 0, 0, 0 };
@@ -64,13 +69,26 @@ EXPORT_SYMBOL_GPL(mtk_devm_alloc_clk_data);
 
 struct clk_hw_onecell_data *mtk_alloc_clk_data(unsigned int clk_num)
 {
+=======
+
+struct clk_hw_onecell_data *mtk_alloc_clk_data(unsigned int clk_num)
+{
+	int i;
+>>>>>>> b7ba80a49124 (Commit)
 	struct clk_hw_onecell_data *clk_data;
 
 	clk_data = kzalloc(struct_size(clk_data, hws, clk_num), GFP_KERNEL);
 	if (!clk_data)
 		return NULL;
 
+<<<<<<< HEAD
 	mtk_init_clk_data(clk_data, clk_num);
+=======
+	clk_data->num = clk_num;
+
+	for (i = 0; i < clk_num; i++)
+		clk_data->hws[i] = ERR_PTR(-ENOENT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return clk_data;
 }
@@ -120,7 +138,11 @@ err:
 		if (IS_ERR_OR_NULL(clk_data->hws[rc->id]))
 			continue;
 
+<<<<<<< HEAD
 		clk_hw_unregister_fixed_rate(clk_data->hws[rc->id]);
+=======
+		clk_unregister_fixed_rate(clk_data->hws[rc->id]->clk);
+>>>>>>> b7ba80a49124 (Commit)
 		clk_data->hws[rc->id] = ERR_PTR(-ENOENT);
 	}
 
@@ -142,7 +164,11 @@ void mtk_clk_unregister_fixed_clks(const struct mtk_fixed_clk *clks, int num,
 		if (IS_ERR_OR_NULL(clk_data->hws[rc->id]))
 			continue;
 
+<<<<<<< HEAD
 		clk_hw_unregister_fixed_rate(clk_data->hws[rc->id]);
+=======
+		clk_unregister_fixed_rate(clk_data->hws[rc->id]->clk);
+>>>>>>> b7ba80a49124 (Commit)
 		clk_data->hws[rc->id] = ERR_PTR(-ENOENT);
 	}
 }
@@ -166,7 +192,11 @@ int mtk_clk_register_factors(const struct mtk_fixed_factor *clks, int num,
 		}
 
 		hw = clk_hw_register_fixed_factor(NULL, ff->name, ff->parent_name,
+<<<<<<< HEAD
 				ff->flags, ff->mult, ff->div);
+=======
+				CLK_SET_RATE_PARENT, ff->mult, ff->div);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (IS_ERR(hw)) {
 			pr_err("Failed to register clk %s: %pe\n", ff->name,
@@ -186,7 +216,11 @@ err:
 		if (IS_ERR_OR_NULL(clk_data->hws[ff->id]))
 			continue;
 
+<<<<<<< HEAD
 		clk_hw_unregister_fixed_factor(clk_data->hws[ff->id]);
+=======
+		clk_unregister_fixed_factor(clk_data->hws[ff->id]->clk);
+>>>>>>> b7ba80a49124 (Commit)
 		clk_data->hws[ff->id] = ERR_PTR(-ENOENT);
 	}
 
@@ -208,14 +242,23 @@ void mtk_clk_unregister_factors(const struct mtk_fixed_factor *clks, int num,
 		if (IS_ERR_OR_NULL(clk_data->hws[ff->id]))
 			continue;
 
+<<<<<<< HEAD
 		clk_hw_unregister_fixed_factor(clk_data->hws[ff->id]);
+=======
+		clk_unregister_fixed_factor(clk_data->hws[ff->id]->clk);
+>>>>>>> b7ba80a49124 (Commit)
 		clk_data->hws[ff->id] = ERR_PTR(-ENOENT);
 	}
 }
 EXPORT_SYMBOL_GPL(mtk_clk_unregister_factors);
 
+<<<<<<< HEAD
 static struct clk_hw *mtk_clk_register_composite(struct device *dev,
 		const struct mtk_composite *mc, void __iomem *base, spinlock_t *lock)
+=======
+static struct clk_hw *mtk_clk_register_composite(const struct mtk_composite *mc,
+		void __iomem *base, spinlock_t *lock)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct clk_hw *hw;
 	struct clk_mux *mux = NULL;
@@ -281,7 +324,11 @@ static struct clk_hw *mtk_clk_register_composite(struct device *dev,
 		div_ops = &clk_divider_ops;
 	}
 
+<<<<<<< HEAD
 	hw = clk_hw_register_composite(dev, mc->name, parent_names, num_parents,
+=======
+	hw = clk_hw_register_composite(NULL, mc->name, parent_names, num_parents,
+>>>>>>> b7ba80a49124 (Commit)
 		mux_hw, mux_ops,
 		div_hw, div_ops,
 		gate_hw, gate_ops,
@@ -325,8 +372,12 @@ static void mtk_clk_unregister_composite(struct clk_hw *hw)
 	kfree(mux);
 }
 
+<<<<<<< HEAD
 int mtk_clk_register_composites(struct device *dev,
 				const struct mtk_composite *mcs, int num,
+=======
+int mtk_clk_register_composites(const struct mtk_composite *mcs, int num,
+>>>>>>> b7ba80a49124 (Commit)
 				void __iomem *base, spinlock_t *lock,
 				struct clk_hw_onecell_data *clk_data)
 {
@@ -345,7 +396,11 @@ int mtk_clk_register_composites(struct device *dev,
 			continue;
 		}
 
+<<<<<<< HEAD
 		hw = mtk_clk_register_composite(dev, mc, base, lock);
+=======
+		hw = mtk_clk_register_composite(mc, base, lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (IS_ERR(hw)) {
 			pr_err("Failed to register clk %s: %pe\n", mc->name,
@@ -393,8 +448,12 @@ void mtk_clk_unregister_composites(const struct mtk_composite *mcs, int num,
 }
 EXPORT_SYMBOL_GPL(mtk_clk_unregister_composites);
 
+<<<<<<< HEAD
 int mtk_clk_register_dividers(struct device *dev,
 			      const struct mtk_clk_divider *mcds, int num,
+=======
+int mtk_clk_register_dividers(const struct mtk_clk_divider *mcds, int num,
+>>>>>>> b7ba80a49124 (Commit)
 			      void __iomem *base, spinlock_t *lock,
 			      struct clk_hw_onecell_data *clk_data)
 {
@@ -413,7 +472,11 @@ int mtk_clk_register_dividers(struct device *dev,
 			continue;
 		}
 
+<<<<<<< HEAD
 		hw = clk_hw_register_divider(dev, mcd->name, mcd->parent_name,
+=======
+		hw = clk_hw_register_divider(NULL, mcd->name, mcd->parent_name,
+>>>>>>> b7ba80a49124 (Commit)
 			mcd->flags, base +  mcd->div_reg, mcd->div_shift,
 			mcd->div_width, mcd->clk_divider_flags, lock);
 
@@ -435,13 +498,20 @@ err:
 		if (IS_ERR_OR_NULL(clk_data->hws[mcd->id]))
 			continue;
 
+<<<<<<< HEAD
 		clk_hw_unregister_divider(clk_data->hws[mcd->id]);
+=======
+		mtk_clk_unregister_composite(clk_data->hws[mcd->id]);
+>>>>>>> b7ba80a49124 (Commit)
 		clk_data->hws[mcd->id] = ERR_PTR(-ENOENT);
 	}
 
 	return PTR_ERR(hw);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(mtk_clk_register_dividers);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void mtk_clk_unregister_dividers(const struct mtk_clk_divider *mcds, int num,
 				 struct clk_hw_onecell_data *clk_data)
@@ -457,6 +527,7 @@ void mtk_clk_unregister_dividers(const struct mtk_clk_divider *mcds, int num,
 		if (IS_ERR_OR_NULL(clk_data->hws[mcd->id]))
 			continue;
 
+<<<<<<< HEAD
 		clk_hw_unregister_divider(clk_data->hws[mcd->id]);
 		clk_data->hws[mcd->id] = ERR_PTR(-ENOENT);
 	}
@@ -558,6 +629,31 @@ static int __mtk_clk_simple_probe(struct platform_device *pdev,
 		if (r)
 			goto unregister_clks;
 	}
+=======
+		clk_unregister_divider(clk_data->hws[mcd->id]->clk);
+		clk_data->hws[mcd->id] = ERR_PTR(-ENOENT);
+	}
+}
+
+int mtk_clk_simple_probe(struct platform_device *pdev)
+{
+	const struct mtk_clk_desc *mcd;
+	struct clk_hw_onecell_data *clk_data;
+	struct device_node *node = pdev->dev.of_node;
+	int r;
+
+	mcd = of_device_get_match_data(&pdev->dev);
+	if (!mcd)
+		return -EINVAL;
+
+	clk_data = mtk_alloc_clk_data(mcd->num_clks);
+	if (!clk_data)
+		return -ENOMEM;
+
+	r = mtk_clk_register_gates(node, mcd->clks, mcd->num_clks, clk_data);
+	if (r)
+		goto free_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
 	if (r)
@@ -575,6 +671,7 @@ static int __mtk_clk_simple_probe(struct platform_device *pdev,
 	return r;
 
 unregister_clks:
+<<<<<<< HEAD
 	if (mcd->clks)
 		mtk_clk_unregister_gates(mcd->clks, mcd->num_clks, clk_data);
 unregister_dividers:
@@ -628,11 +725,28 @@ static int __mtk_clk_simple_remove(struct platform_device *pdev,
 	if (mcd->fixed_clks)
 		mtk_clk_unregister_fixed_clks(mcd->fixed_clks,
 					      mcd->num_fixed_clks, clk_data);
+=======
+	mtk_clk_unregister_gates(mcd->clks, mcd->num_clks, clk_data);
+free_data:
+	mtk_free_clk_data(clk_data);
+	return r;
+}
+
+int mtk_clk_simple_remove(struct platform_device *pdev)
+{
+	const struct mtk_clk_desc *mcd = of_device_get_match_data(&pdev->dev);
+	struct clk_hw_onecell_data *clk_data = platform_get_drvdata(pdev);
+	struct device_node *node = pdev->dev.of_node;
+
+	of_clk_del_provider(node);
+	mtk_clk_unregister_gates(mcd->clks, mcd->num_clks, clk_data);
+>>>>>>> b7ba80a49124 (Commit)
 	mtk_free_clk_data(clk_data);
 
 	return 0;
 }
 
+<<<<<<< HEAD
 int mtk_clk_pdev_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
@@ -665,4 +779,6 @@ int mtk_clk_simple_remove(struct platform_device *pdev)
 }
 EXPORT_SYMBOL_GPL(mtk_clk_simple_remove);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_LICENSE("GPL");

@@ -679,6 +679,7 @@ static const struct of_device_id sca3300_dt_ids[] = {
 };
 MODULE_DEVICE_TABLE(of, sca3300_dt_ids);
 
+<<<<<<< HEAD
 static const struct spi_device_id sca3300_ids[] = {
 	{ "sca3300" },
 	{ "scl3300" },
@@ -693,6 +694,14 @@ static struct spi_driver sca3300_driver = {
 	},
 	.probe	  = sca3300_probe,
 	.id_table = sca3300_ids,
+=======
+static struct spi_driver sca3300_driver = {
+	.driver = {
+		.name		= SCA3300_ALIAS,
+		.of_match_table = sca3300_dt_ids,
+	},
+	.probe	= sca3300_probe,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_spi_driver(sca3300_driver);
 

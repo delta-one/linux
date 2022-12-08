@@ -240,6 +240,10 @@ driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
 }
 #endif
 
+<<<<<<< HEAD
+=======
+extern int driver_deferred_probe_timeout;
+>>>>>>> b7ba80a49124 (Commit)
 void driver_deferred_probe_add(struct device *dev);
 int driver_deferred_probe_check_state(struct device *dev);
 void driver_init(void);

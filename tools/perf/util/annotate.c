@@ -2239,10 +2239,14 @@ int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
 	}
 
 	args.ms = *ms;
+<<<<<<< HEAD
 	if (notes->options && notes->options->full_addr)
 		notes->start = map__objdump_2mem(ms->map, ms->sym->start);
 	else
 		notes->start = map__rip_2objdump(ms->map, ms->sym->start);
+=======
+	notes->start = map__rip_2objdump(ms->map, sym->start);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return symbol__disassemble(sym, &args);
 }
@@ -2765,8 +2769,11 @@ void annotation__update_column_widths(struct annotation *notes)
 {
 	if (notes->options->use_offset)
 		notes->widths.target = notes->widths.min_addr;
+<<<<<<< HEAD
 	else if (notes->options->full_addr)
 		notes->widths.target = BITS_PER_LONG / 4;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		notes->widths.target = notes->widths.max_addr;
 
@@ -2776,6 +2783,7 @@ void annotation__update_column_widths(struct annotation *notes)
 		notes->widths.addr += notes->widths.jumps + 1;
 }
 
+<<<<<<< HEAD
 void annotation__toggle_full_addr(struct annotation *notes, struct map_symbol *ms)
 {
 	notes->options->full_addr = !notes->options->full_addr;
@@ -2788,6 +2796,8 @@ void annotation__toggle_full_addr(struct annotation *notes, struct map_symbol *m
 	annotation__update_column_widths(notes);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void annotation__calc_lines(struct annotation *notes, struct map *map,
 				   struct rb_root *root,
 				   struct annotation_options *opts)

@@ -41,7 +41,11 @@ static ssize_t type_show(struct device *dev,
 {
 	struct zcrypt_card *zc = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", zc->type_string);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%s\n", zc->type_string);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR_RO(type);
@@ -54,7 +58,11 @@ static ssize_t online_show(struct device *dev,
 	struct ap_card *ac = to_ap_card(dev);
 	int online = ac->config && zc->online ? 1 : 0;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", online);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%d\n", online);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t online_store(struct device *dev,
@@ -118,7 +126,11 @@ static ssize_t load_show(struct device *dev,
 {
 	struct zcrypt_card *zc = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", atomic_read(&zc->load));
+=======
+	return scnprintf(buf, PAGE_SIZE, "%d\n", atomic_read(&zc->load));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR_RO(load);

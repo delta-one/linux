@@ -16,6 +16,10 @@
 #include <linux/module.h>
 #include <linux/delay.h>
 #include <linux/spi/spi.h>
+<<<<<<< HEAD
+=======
+#include <linux/gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <video/omapfb_dss.h>
 
 struct panel_drv_data {

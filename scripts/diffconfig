@@ -65,7 +65,11 @@ def print_config(op, config, value, new_value):
         else:
             print(" %s %s -> %s" % (config, value, new_value))
 
+<<<<<<< HEAD
 def show_diff():
+=======
+def main():
+>>>>>>> b7ba80a49124 (Commit)
     global merge_style
 
     # parse command line args
@@ -129,6 +133,7 @@ def show_diff():
     for config in new:
         print_config("+", config, None, b[config])
 
+<<<<<<< HEAD
 def main():
     try:
         show_diff()
@@ -142,3 +147,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+=======
+main()
+>>>>>>> b7ba80a49124 (Commit)

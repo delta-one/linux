@@ -71,6 +71,7 @@
 	le32p_replace_bits((__le32 *)(txdesc) + 0x03, value, BIT(15))
 #define SET_TX_DESC_BT_NULL(txdesc, value)				       \
 	le32p_replace_bits((__le32 *)(txdesc) + 0x02, value, BIT(23))
+<<<<<<< HEAD
 #define SET_TX_DESC_TXDESC_CHECKSUM(txdesc, value)				\
 	le32p_replace_bits((__le32 *)(txdesc) + 0x07, value, GENMASK(15, 0))
 #define SET_TX_DESC_DMA_TXAGG_NUM(txdesc, value)				\
@@ -79,6 +80,8 @@
 	le32_get_bits(*((__le32 *)(txdesc) + 0x01), GENMASK(28, 24))
 #define GET_TX_DESC_QSEL(txdesc)						\
 	le32_get_bits(*((__le32 *)(txdesc) + 0x01), GENMASK(12, 8))
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum rtw_tx_desc_queue_select {
 	TX_DESC_QSEL_TID0	= 0,
@@ -131,6 +134,7 @@ rtw_tx_write_data_h2c_get(struct rtw_dev *rtwdev,
 			  struct rtw_tx_pkt_info *pkt_info,
 			  u8 *buf, u32 size);
 
+<<<<<<< HEAD
 enum rtw_tx_queue_type rtw_tx_ac_to_hwq(enum ieee80211_ac_numbers ac);
 enum rtw_tx_queue_type rtw_tx_queue_mapping(struct sk_buff *skb);
 
@@ -157,4 +161,6 @@ static inline void rtw_tx_fill_txdesc_checksum(struct rtw_dev *rtwdev,
 	chip->ops->fill_txdesc_checksum(rtwdev, pkt_info, txdesc);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

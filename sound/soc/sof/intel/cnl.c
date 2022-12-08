@@ -37,12 +37,18 @@ irqreturn_t cnl_ipc4_irq_thread(int irq, void *context)
 {
 	struct sof_ipc4_msg notification_data = {{ 0 }};
 	struct snd_sof_dev *sdev = context;
+<<<<<<< HEAD
 	bool ack_received = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool ipc_irq = false;
 	u32 hipcida, hipctdr;
 
 	hipcida = snd_sof_dsp_read(sdev, HDA_DSP_BAR, CNL_DSP_REG_HIPCIDA);
+<<<<<<< HEAD
 	hipctdr = snd_sof_dsp_read(sdev, HDA_DSP_BAR, CNL_DSP_REG_HIPCTDR);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (hipcida & CNL_DSP_REG_HIPCIDA_DONE) {
 		/* DSP received the message */
 		snd_sof_dsp_update_bits(sdev, HDA_DSP_BAR,
@@ -51,9 +57,15 @@ irqreturn_t cnl_ipc4_irq_thread(int irq, void *context)
 		cnl_ipc_dsp_done(sdev);
 
 		ipc_irq = true;
+<<<<<<< HEAD
 		ack_received = true;
 	}
 
+=======
+	}
+
+	hipctdr = snd_sof_dsp_read(sdev, HDA_DSP_BAR, CNL_DSP_REG_HIPCTDR);
+>>>>>>> b7ba80a49124 (Commit)
 	if (hipctdr & CNL_DSP_REG_HIPCTDR_BUSY) {
 		/* Message from DSP (reply or notification) */
 		u32 hipctdd = snd_sof_dsp_read(sdev, HDA_DSP_BAR,
@@ -72,7 +84,10 @@ irqreturn_t cnl_ipc4_irq_thread(int irq, void *context)
 				spin_lock_irq(&sdev->ipc_lock);
 
 				snd_sof_ipc_get_reply(sdev);
+<<<<<<< HEAD
 				cnl_ipc_host_done(sdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				snd_sof_ipc_reply(sdev, data->primary);
 
 				spin_unlock_irq(&sdev->ipc_lock);
@@ -89,11 +104,19 @@ irqreturn_t cnl_ipc4_irq_thread(int irq, void *context)
 			sdev->ipc->msg.rx_data = &notification_data;
 			snd_sof_ipc_msgs_rx(sdev);
 			sdev->ipc->msg.rx_data = NULL;
+<<<<<<< HEAD
 
 			/* Let DSP know that we have finished processing the message */
 			cnl_ipc_host_done(sdev);
 		}
 
+=======
+		}
+
+		/* Let DSP know that we have finished processing the message */
+		cnl_ipc_host_done(sdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 		ipc_irq = true;
 	}
 
@@ -101,6 +124,7 @@ irqreturn_t cnl_ipc4_irq_thread(int irq, void *context)
 		/* This interrupt is not shared so no need to return IRQ_NONE. */
 		dev_dbg_ratelimited(sdev->dev, "nothing to do in IPC IRQ thread\n");
 
+<<<<<<< HEAD
 	if (ack_received) {
 		struct sof_intel_hda_dev *hdev = sdev->pdata->hw_pdata;
 
@@ -108,6 +132,8 @@ irqreturn_t cnl_ipc4_irq_thread(int irq, void *context)
 			cnl_ipc4_send_msg(sdev, hdev->delayed_ipc_tx_msg);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return IRQ_HANDLED;
 }
 
@@ -261,6 +287,7 @@ static bool cnl_compact_ipc_compress(struct snd_sof_ipc_msg *msg,
 
 int cnl_ipc4_send_msg(struct snd_sof_dev *sdev, struct snd_sof_ipc_msg *msg)
 {
+<<<<<<< HEAD
 	struct sof_intel_hda_dev *hdev = sdev->pdata->hw_pdata;
 	struct sof_ipc4_msg *msg_data = msg->msg_data;
 
@@ -271,6 +298,10 @@ int cnl_ipc4_send_msg(struct snd_sof_dev *sdev, struct snd_sof_ipc_msg *msg)
 
 	hdev->delayed_ipc_tx_msg = NULL;
 
+=======
+	struct sof_ipc4_msg *msg_data = msg->msg_data;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* send the message via mailbox */
 	if (msg_data->data_size)
 		sof_mailbox_write(sdev, sdev->host_box.offset, msg_data->data_ptr,
@@ -280,8 +311,11 @@ int cnl_ipc4_send_msg(struct snd_sof_dev *sdev, struct snd_sof_ipc_msg *msg)
 	snd_sof_dsp_write(sdev, HDA_DSP_BAR, CNL_DSP_REG_HIPCIDR,
 			  msg_data->primary | CNL_DSP_REG_HIPCIDR_BUSY);
 
+<<<<<<< HEAD
 	hda_dsp_ipc4_schedule_d0i3_work(hdev, msg);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -352,6 +386,7 @@ void cnl_ipc_dump(struct snd_sof_dev *sdev)
 		hipcida, hipctdr, hipcctl);
 }
 
+<<<<<<< HEAD
 void cnl_ipc4_dump(struct snd_sof_dev *sdev)
 {
 	u32 hipcidr, hipcidd, hipcida, hipctdr, hipctdd, hipctda, hipcctl;
@@ -373,6 +408,8 @@ void cnl_ipc4_dump(struct snd_sof_dev *sdev)
 		hipcidr, hipcidd, hipcida, hipctdr, hipctdd, hipctda, hipcctl);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* cannonlake ops */
 struct snd_sof_dsp_ops sof_cnl_ops;
 EXPORT_SYMBOL_NS(sof_cnl_ops, SND_SOC_SOF_INTEL_HDA_COMMON);
@@ -392,9 +429,12 @@ int sof_cnl_ops_init(struct snd_sof_dev *sdev)
 
 		/* ipc */
 		sof_cnl_ops.send_msg	= cnl_ipc_send_msg;
+<<<<<<< HEAD
 
 		/* debug */
 		sof_cnl_ops.ipc_dump	= cnl_ipc_dump;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (sdev->pdata->ipc_type == SOF_INTEL_IPC4) {
@@ -409,17 +449,23 @@ int sof_cnl_ops_init(struct snd_sof_dev *sdev)
 
 		ipc4_data->mtrace_type = SOF_IPC4_MTRACE_INTEL_CAVS_1_8;
 
+<<<<<<< HEAD
 		/* External library loading support */
 		ipc4_data->load_library = hda_dsp_ipc4_load_library;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* doorbell */
 		sof_cnl_ops.irq_thread	= cnl_ipc4_irq_thread;
 
 		/* ipc */
 		sof_cnl_ops.send_msg	= cnl_ipc4_send_msg;
+<<<<<<< HEAD
 
 		/* debug */
 		sof_cnl_ops.ipc_dump	= cnl_ipc4_dump;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* set DAI driver ops */
@@ -428,6 +474,10 @@ int sof_cnl_ops_init(struct snd_sof_dev *sdev)
 	/* debug */
 	sof_cnl_ops.debug_map	= cnl_dsp_debugfs;
 	sof_cnl_ops.debug_map_count	= ARRAY_SIZE(cnl_dsp_debugfs);
+<<<<<<< HEAD
+=======
+	sof_cnl_ops.ipc_dump	= cnl_ipc_dump;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* pre/post fw run */
 	sof_cnl_ops.post_fw_run = hda_dsp_post_fw_run;
@@ -458,6 +508,7 @@ const struct sof_intel_dsp_desc cnl_chip_info = {
 	.ssp_base_offset = CNL_SSP_BASE_OFFSET,
 	.sdw_shim_base = SDW_SHIM_BASE,
 	.sdw_alh_base = SDW_ALH_BASE,
+<<<<<<< HEAD
 	.d0i3_offset = SOF_HDA_VS_D0I3C,
 	.read_sdw_lcount =  hda_sdw_check_lcount_common,
 	.enable_sdw_irq	= hda_common_enable_sdw_irq,
@@ -466,6 +517,11 @@ const struct sof_intel_dsp_desc cnl_chip_info = {
 	.cl_init = cl_dsp_init,
 	.power_down_dsp = hda_power_down_dsp,
 	.disable_interrupts = hda_dsp_disable_interrupts,
+=======
+	.check_sdw_irq	= hda_common_check_sdw_irq,
+	.check_ipc_irq	= hda_dsp_check_ipc_irq,
+	.cl_init = cl_dsp_init,
+>>>>>>> b7ba80a49124 (Commit)
 	.hw_ip_version = SOF_INTEL_CAVS_1_8,
 };
 EXPORT_SYMBOL_NS(cnl_chip_info, SND_SOC_SOF_INTEL_HDA_COMMON);
@@ -493,6 +549,7 @@ const struct sof_intel_dsp_desc jsl_chip_info = {
 	.ssp_base_offset = CNL_SSP_BASE_OFFSET,
 	.sdw_shim_base = SDW_SHIM_BASE,
 	.sdw_alh_base = SDW_ALH_BASE,
+<<<<<<< HEAD
 	.d0i3_offset = SOF_HDA_VS_D0I3C,
 	.read_sdw_lcount =  hda_sdw_check_lcount_common,
 	.enable_sdw_irq	= hda_common_enable_sdw_irq,
@@ -501,6 +558,11 @@ const struct sof_intel_dsp_desc jsl_chip_info = {
 	.cl_init = cl_dsp_init,
 	.power_down_dsp = hda_power_down_dsp,
 	.disable_interrupts = hda_dsp_disable_interrupts,
+=======
+	.check_sdw_irq	= hda_common_check_sdw_irq,
+	.check_ipc_irq	= hda_dsp_check_ipc_irq,
+	.cl_init = cl_dsp_init,
+>>>>>>> b7ba80a49124 (Commit)
 	.hw_ip_version = SOF_INTEL_CAVS_2_0,
 };
 EXPORT_SYMBOL_NS(jsl_chip_info, SND_SOC_SOF_INTEL_HDA_COMMON);

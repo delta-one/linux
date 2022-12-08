@@ -30,6 +30,7 @@
 
 #define GCOV_TAG_FUNCTION_LENGTH	3
 
+<<<<<<< HEAD
 /* Since GCC 12.1 sizes are in BYTES and not in WORDS (4B). */
 #if (__GNUC__ >= 12)
 #define GCOV_UNIT_SIZE				4
@@ -37,6 +38,8 @@
 #define GCOV_UNIT_SIZE				1
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct gcov_info *gcov_info_head;
 
 /**
@@ -82,7 +85,10 @@ struct gcov_fn_info {
  * @version: gcov version magic indicating the gcc version used for compilation
  * @next: list head for a singly-linked list
  * @stamp: uniquifying time stamp
+<<<<<<< HEAD
  * @checksum: unique object checksum
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @filename: name of the associated gcov data file
  * @merge: merge functions (null for unused counter type)
  * @n_functions: number of instrumented functions
@@ -95,10 +101,13 @@ struct gcov_info {
 	unsigned int version;
 	struct gcov_info *next;
 	unsigned int stamp;
+<<<<<<< HEAD
  /* Since GCC 12.1 a checksum field is added. */
 #if (__GNUC__ >= 12)
 	unsigned int checksum;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const char *filename;
 	void (*merge[GCOV_COUNTERS])(gcov_type *, unsigned int);
 	unsigned int n_functions;
@@ -395,18 +404,25 @@ size_t convert_to_gcda(char *buffer, struct gcov_info *info)
 	pos += store_gcov_u32(buffer, pos, info->version);
 	pos += store_gcov_u32(buffer, pos, info->stamp);
 
+<<<<<<< HEAD
 #if (__GNUC__ >= 12)
 	/* Use zero as checksum of the compilation unit. */
 	pos += store_gcov_u32(buffer, pos, 0);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (fi_idx = 0; fi_idx < info->n_functions; fi_idx++) {
 		fi_ptr = info->functions[fi_idx];
 
 		/* Function record. */
 		pos += store_gcov_u32(buffer, pos, GCOV_TAG_FUNCTION);
+<<<<<<< HEAD
 		pos += store_gcov_u32(buffer, pos,
 			GCOV_TAG_FUNCTION_LENGTH * GCOV_UNIT_SIZE);
+=======
+		pos += store_gcov_u32(buffer, pos, GCOV_TAG_FUNCTION_LENGTH);
+>>>>>>> b7ba80a49124 (Commit)
 		pos += store_gcov_u32(buffer, pos, fi_ptr->ident);
 		pos += store_gcov_u32(buffer, pos, fi_ptr->lineno_checksum);
 		pos += store_gcov_u32(buffer, pos, fi_ptr->cfg_checksum);
@@ -420,8 +436,12 @@ size_t convert_to_gcda(char *buffer, struct gcov_info *info)
 			/* Counter record. */
 			pos += store_gcov_u32(buffer, pos,
 					      GCOV_TAG_FOR_COUNTER(ct_idx));
+<<<<<<< HEAD
 			pos += store_gcov_u32(buffer, pos,
 				ci_ptr->num * 2 * GCOV_UNIT_SIZE);
+=======
+			pos += store_gcov_u32(buffer, pos, ci_ptr->num * 2);
+>>>>>>> b7ba80a49124 (Commit)
 
 			for (cv_idx = 0; cv_idx < ci_ptr->num; cv_idx++) {
 				pos += store_gcov_u64(buffer, pos,

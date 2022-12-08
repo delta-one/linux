@@ -692,6 +692,10 @@ static int msm8974_icc_probe(struct platform_device *pdev)
 		return ret;
 
 	provider = &qp->provider;
+<<<<<<< HEAD
+=======
+	INIT_LIST_HEAD(&provider->nodes);
+>>>>>>> b7ba80a49124 (Commit)
 	provider->dev = dev;
 	provider->set = msm8974_icc_set;
 	provider->aggregate = icc_std_aggregate;
@@ -699,7 +703,15 @@ static int msm8974_icc_probe(struct platform_device *pdev)
 	provider->data = data;
 	provider->get_bw = msm8974_get_bw;
 
+<<<<<<< HEAD
 	icc_provider_init(provider);
+=======
+	ret = icc_provider_add(provider);
+	if (ret) {
+		dev_err(dev, "error adding interconnect provider: %d\n", ret);
+		goto err_disable_clks;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < num_nodes; i++) {
 		size_t j;
@@ -707,7 +719,11 @@ static int msm8974_icc_probe(struct platform_device *pdev)
 		node = icc_node_create(qnodes[i]->id);
 		if (IS_ERR(node)) {
 			ret = PTR_ERR(node);
+<<<<<<< HEAD
 			goto err_remove_nodes;
+=======
+			goto err_del_icc;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		node->name = qnodes[i]->name;
@@ -724,16 +740,27 @@ static int msm8974_icc_probe(struct platform_device *pdev)
 	}
 	data->num_nodes = num_nodes;
 
+<<<<<<< HEAD
 	ret = icc_provider_register(provider);
 	if (ret)
 		goto err_remove_nodes;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	platform_set_drvdata(pdev, qp);
 
 	return 0;
 
+<<<<<<< HEAD
 err_remove_nodes:
 	icc_nodes_remove(provider);
+=======
+err_del_icc:
+	icc_nodes_remove(provider);
+	icc_provider_del(provider);
+
+err_disable_clks:
+>>>>>>> b7ba80a49124 (Commit)
 	clk_bulk_disable_unprepare(qp->num_clks, qp->bus_clks);
 
 	return ret;
@@ -743,9 +770,15 @@ static int msm8974_icc_remove(struct platform_device *pdev)
 {
 	struct msm8974_icc_provider *qp = platform_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	icc_provider_deregister(&qp->provider);
 	icc_nodes_remove(&qp->provider);
 	clk_bulk_disable_unprepare(qp->num_clks, qp->bus_clks);
+=======
+	icc_nodes_remove(&qp->provider);
+	clk_bulk_disable_unprepare(qp->num_clks, qp->bus_clks);
+	icc_provider_del(&qp->provider);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

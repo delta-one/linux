@@ -180,7 +180,11 @@ static int check_mmap_afu_irq(struct ocxl_context *ctx,
 	if ((vma->vm_flags & VM_READ) || (vma->vm_flags & VM_EXEC) ||
 		!(vma->vm_flags & VM_WRITE))
 		return -EINVAL;
+<<<<<<< HEAD
 	vm_flags_clear(vma, VM_MAYREAD | VM_MAYEXEC);
+=======
+	vma->vm_flags &= ~(VM_MAYREAD | VM_MAYEXEC);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -204,7 +208,11 @@ int ocxl_context_mmap(struct ocxl_context *ctx, struct vm_area_struct *vma)
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_IO | VM_PFNMAP);
+=======
+	vma->vm_flags |= VM_IO | VM_PFNMAP;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
 	vma->vm_ops = &ocxl_vmops;
 	return 0;

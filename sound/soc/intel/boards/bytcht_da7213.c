@@ -256,9 +256,15 @@ static int bytcht_da7213_probe(struct platform_device *pdev)
 	if (adev) {
 		snprintf(codec_name, sizeof(codec_name),
 			 "i2c-%s", acpi_dev_name(adev));
+<<<<<<< HEAD
 		dailink[dai_index].codecs->name = codec_name;
 	}
 	acpi_dev_put(adev);
+=======
+		put_device(&adev->dev);
+		dailink[dai_index].codecs->name = codec_name;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* override platform name, if required */
 	platform_name = mach->mach_params.platform;

@@ -41,7 +41,10 @@ struct ksmbd_server_config {
 	unsigned int		share_fake_fscaps;
 	struct smb_sid		domain_sid;
 	unsigned int		auth_mechs;
+<<<<<<< HEAD
 	unsigned int		max_connections;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	char			*conf[SERVER_CONF_WORK_GROUP + 1];
 };

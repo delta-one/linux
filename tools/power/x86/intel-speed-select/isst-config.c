@@ -15,7 +15,11 @@ struct process_cmd_struct {
 	int arg;
 };
 
+<<<<<<< HEAD
 static const char *version_str = "v1.14";
+=======
+static const char *version_str = "v1.13";
+>>>>>>> b7ba80a49124 (Commit)
 
 static const int supported_api_ver = 1;
 static struct isst_if_platform_info isst_platform_info;
@@ -110,7 +114,11 @@ int is_skx_based_platform(void)
 
 int is_spr_platform(void)
 {
+<<<<<<< HEAD
 	if (cpu_model == 0x8F || cpu_model == 0xCF)
+=======
+	if (cpu_model == 0x8F)
+>>>>>>> b7ba80a49124 (Commit)
 		return 1;
 
 	return 0;
@@ -383,11 +391,19 @@ void set_isst_id(struct isst_id *id, int cpu)
 	id->cpu = cpu;
 
 	id->pkg = get_physical_package_id(cpu);
+<<<<<<< HEAD
 	if (id->pkg >= MAX_PACKAGE_COUNT)
 		id->pkg = -1;
 
 	id->die = get_physical_die_id(cpu);
 	if (id->die >= MAX_DIE_PER_PACKAGE)
+=======
+	if (id < 0 || id->pkg >= MAX_PACKAGE_COUNT)
+		id->pkg = -1;
+
+	id->die = get_physical_die_id(cpu);
+	if (id < 0 || id->die >= MAX_DIE_PER_PACKAGE)
+>>>>>>> b7ba80a49124 (Commit)
 		id->die = -1;
 }
 
@@ -413,6 +429,7 @@ int get_topo_max_cpus(void)
 	return topo_max_cpus;
 }
 
+<<<<<<< HEAD
 static unsigned int is_cpu_online(int cpu)
 {
 	char buffer[128];
@@ -440,6 +457,8 @@ static unsigned int is_cpu_online(int cpu)
 	return online;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void set_cpu_online_offline(int cpu, int state)
 {
 	char buffer[128];
@@ -1319,6 +1338,7 @@ static void dump_isst_config(int arg)
 	isst_ctdp_display_information_end(outf);
 }
 
+<<<<<<< HEAD
 static int set_uncore_min_max(struct isst_id *id, int max, int freq)
 {
 	char buffer[128], freq_str[16];
@@ -1347,6 +1367,8 @@ static int set_uncore_min_max(struct isst_id *id, int max, int freq)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void adjust_scaling_max_from_base_freq(int cpu);
 
 static void set_tdp_level_for_cpu(struct isst_id *id, void *arg1, void *arg2, void *arg3,
@@ -1368,6 +1390,7 @@ static void set_tdp_level_for_cpu(struct isst_id *id, void *arg1, void *arg2, vo
 			/* Wait for updated base frequencies */
 			usleep(2000);
 
+<<<<<<< HEAD
 			/* Adjusting uncore freq */
 			isst_get_uncore_p0_p1_info(id, tdp_level, &ctdp_level);
 			if (ctdp_level.uncore_pm)
@@ -1376,6 +1399,8 @@ static void set_tdp_level_for_cpu(struct isst_id *id, void *arg1, void *arg2, vo
 			if (ctdp_level.uncore_p0)
 				set_uncore_min_max(id, 1, ctdp_level.uncore_p0 * 100000);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			fprintf(stderr, "Option is set to online/offline\n");
 			ctdp_level.core_cpumask_size =
 				alloc_cpu_set(&ctdp_level.core_cpumask);
@@ -1646,7 +1671,10 @@ static int set_cpufreq_scaling_min_max_from_cpuinfo(int cpu, int cpuinfo_max, in
 	if (fd < 0)
 		return fd;
 
+<<<<<<< HEAD
 	min_freq[15] = '\0';
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	len = strlen(min_freq);
 	ret = write(fd, min_freq, len);
 	if (ret == -1) {
@@ -1666,9 +1694,12 @@ static void set_scaling_min_to_cpuinfo_max(struct isst_id *id)
 		if (!is_cpu_in_power_domain(i, id))
 			continue;
 
+<<<<<<< HEAD
 		if (is_cpu_online(i) != 1)
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		adjust_scaling_max_from_base_freq(i);
 		set_cpufreq_scaling_min_max_from_cpuinfo(i, 1, 0);
 		adjust_scaling_min_from_base_freq(i);
@@ -1683,9 +1714,12 @@ static void set_scaling_min_to_cpuinfo_min(struct isst_id *id)
 		if (!is_cpu_in_power_domain(i, id))
 			continue;
 
+<<<<<<< HEAD
 		if (is_cpu_online(i) != 1)
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		adjust_scaling_max_from_base_freq(i);
 		set_cpufreq_scaling_min_max_from_cpuinfo(i, 0, 0);
 	}
@@ -2085,7 +2119,10 @@ static void set_fact_enable(int arg)
 			if (len < 0)
 				continue;
 
+<<<<<<< HEAD
 			sibling_list[127] = '\0';
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			cpu_str = strtok(sibling_list, ",");
 			while (cpu_str != NULL) {
 				int cpu;
@@ -2102,9 +2139,12 @@ static void set_fact_enable(int arg)
 			if (!CPU_ISSET_S(i, present_cpumask_size, present_cpumask))
 				continue;
 
+<<<<<<< HEAD
 			if (is_cpu_online(i) != 1)
 				continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			set_isst_id(&id, i);
 			ret = set_clos_param(&id, 0, 0, 0, 0, 0xff);
 			if (ret)

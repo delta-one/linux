@@ -206,23 +206,32 @@ values for memory may require disabling the callback-flooding tests
 using the --bootargs parameter discussed below.
 
 Sometimes additional debugging is useful, and in such cases the --kconfig
+<<<<<<< HEAD
 parameter to kvm.sh may be used, for example, ``--kconfig 'CONFIG_RCU_EQS_DEBUG=y'``.
 In addition, there are the --gdb, --kasan, and --kcsan parameters.
 Note that --gdb limits you to one scenario per kvm.sh run and requires
 that you have another window open from which to run ``gdb`` as instructed
 by the script.
+=======
+parameter to kvm.sh may be used, for example, ``--kconfig 'CONFIG_KASAN=y'``.
+>>>>>>> b7ba80a49124 (Commit)
 
 Kernel boot arguments can also be supplied, for example, to control
 rcutorture's module parameters.  For example, to test a change to RCU's
 CPU stall-warning code, use "--bootargs 'rcutorture.stall_cpu=30'".
 This will of course result in the scripting reporting a failure, namely
+<<<<<<< HEAD
 the resulting RCU CPU stall warning.  As noted above, reducing memory may
+=======
+the resuling RCU CPU stall warning.  As noted above, reducing memory may
+>>>>>>> b7ba80a49124 (Commit)
 require disabling rcutorture's callback-flooding tests::
 
 	kvm.sh --cpus 448 --configs '56*TREE04' --memory 128M \
 		--bootargs 'rcutorture.fwd_progress=0'
 
 Sometimes all that is needed is a full set of kernel builds.  This is
+<<<<<<< HEAD
 what the --buildonly parameter does.
 
 The --duration parameter can override the default run time of 30 minutes.
@@ -234,6 +243,12 @@ for tracking down rare boot-time failures.
 Finally, the --trust-make parameter allows each kernel build to reuse what
 it can from the previous kernel build.  Please note that without the
 --trust-make parameter, your tags files may be demolished.
+=======
+what the --buildonly argument does.
+
+Finally, the --trust-make argument allows each kernel build to reuse what
+it can from the previous kernel build.
+>>>>>>> b7ba80a49124 (Commit)
 
 There are additional more arcane arguments that are documented in the
 source code of the kvm.sh script.
@@ -302,6 +317,7 @@ the following summary at the end of the run on a 12-CPU system::
     TREE07 ------- 167347 GPs (30.9902/s) [rcu: g1079021 f0x0 ] n_max_cbs: 478732
     CPU count limited from 16 to 12
     TREE09 ------- 752238 GPs (139.303/s) [rcu: g13075057 f0x0 ] n_max_cbs: 99011
+<<<<<<< HEAD
 
 
 Repeated Runs
@@ -372,3 +388,5 @@ You can also re-run a previous remote run in a manner similar to kvm.sh:
 
 In this case, most of the kvm-again.sh parameters may be supplied following
 the pathname of the old run-results directory.
+=======
+>>>>>>> b7ba80a49124 (Commit)

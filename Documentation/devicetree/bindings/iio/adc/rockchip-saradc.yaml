@@ -22,7 +22,10 @@ properties:
               - rockchip,rk3328-saradc
               - rockchip,rk3568-saradc
               - rockchip,rv1108-saradc
+<<<<<<< HEAD
               - rockchip,rv1126-saradc
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - const: rockchip,rk3399-saradc
 
   reg:

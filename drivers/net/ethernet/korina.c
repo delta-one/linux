@@ -1355,7 +1355,11 @@ static int korina_probe(struct platform_device *pdev)
 	dev->netdev_ops = &korina_netdev_ops;
 	dev->ethtool_ops = &netdev_ethtool_ops;
 	dev->watchdog_timeo = TX_TIMEOUT;
+<<<<<<< HEAD
 	netif_napi_add(dev, &lp->napi, korina_poll);
+=======
+	netif_napi_add(dev, &lp->napi, korina_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	lp->mii_if.dev = dev;
 	lp->mii_if.mdio_read = korina_mdio_read;

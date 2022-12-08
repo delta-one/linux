@@ -38,14 +38,52 @@
 #include "amdgpu_dm.h"
 #include "amdgpu_dm_irq.h"
 #include "amdgpu_dm_mst_types.h"
+<<<<<<< HEAD
 #include "dpcd_defs.h"
 #include "dc/inc/core_types.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "dm_helpers.h"
 #include "ddc_service_types.h"
 
+<<<<<<< HEAD
 /* MST Dock */
 static const uint8_t SYNAPTICS_DEVICE_ID[] = "SYNA";
+=======
+struct monitor_patch_info {
+	unsigned int manufacturer_id;
+	unsigned int product_id;
+	void (*patch_func)(struct dc_edid_caps *edid_caps, unsigned int param);
+	unsigned int patch_param;
+};
+static void set_max_dsc_bpp_limit(struct dc_edid_caps *edid_caps, unsigned int param);
+
+static const struct monitor_patch_info monitor_patch_table[] = {
+{0x6D1E, 0x5BBF, set_max_dsc_bpp_limit, 15},
+{0x6D1E, 0x5B9A, set_max_dsc_bpp_limit, 15},
+};
+
+static void set_max_dsc_bpp_limit(struct dc_edid_caps *edid_caps, unsigned int param)
+{
+	if (edid_caps)
+		edid_caps->panel_patch.max_dsc_target_bpp_limit = param;
+}
+
+static int amdgpu_dm_patch_edid_caps(struct dc_edid_caps *edid_caps)
+{
+	int i, ret = 0;
+
+	for (i = 0; i < ARRAY_SIZE(monitor_patch_table); i++)
+		if ((edid_caps->manufacturer_id == monitor_patch_table[i].manufacturer_id)
+			&&  (edid_caps->product_id == monitor_patch_table[i].product_id)) {
+			monitor_patch_table[i].patch_func(edid_caps, monitor_patch_table[i].patch_param);
+			ret++;
+		}
+
+	return ret;
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 /* dm_helpers_parse_edid_caps
  *
@@ -121,17 +159,28 @@ enum dc_edid_status dm_helpers_parse_edid_caps(
 	kfree(sads);
 	kfree(sadb);
 
+<<<<<<< HEAD
+=======
+	amdgpu_dm_patch_edid_caps(edid_caps);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return result;
 }
 
 static void
+<<<<<<< HEAD
 fill_dc_mst_payload_table_from_drm(struct dc_link *link,
 				   bool enable,
 				   struct drm_dp_mst_atomic_payload *target_payload,
+=======
+fill_dc_mst_payload_table_from_drm(struct drm_dp_mst_topology_state *mst_state,
+				   struct amdgpu_dm_connector *aconnector,
+>>>>>>> b7ba80a49124 (Commit)
 				   struct dc_dp_mst_stream_allocation_table *table)
 {
 	struct dc_dp_mst_stream_allocation_table new_table = { 0 };
 	struct dc_dp_mst_stream_allocation *sa;
+<<<<<<< HEAD
 	struct link_mst_stream_allocation_table copy_of_link_table =
 										link->mst_stream_alloc_table;
 
@@ -169,6 +218,19 @@ fill_dc_mst_payload_table_from_drm(struct dc_link *link,
 			sa->vcp_id = dc_alloc->vcp_id;
 			new_table.stream_count++;
 		}
+=======
+	struct drm_dp_mst_atomic_payload *payload;
+
+	/* Fill payload info*/
+	list_for_each_entry(payload, &mst_state->payloads, next) {
+		if (payload->delete)
+			continue;
+
+		sa = &new_table.stream_allocations[new_table.stream_count];
+		sa->slot_count = payload->time_slots;
+		sa->vcp_id = payload->vcpi;
+		new_table.stream_count++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Overwrite the old table */
@@ -180,6 +242,7 @@ void dm_helpers_dp_update_branch_info(
 	const struct dc_link *link)
 {}
 
+<<<<<<< HEAD
 static void dm_helpers_construct_old_payload(
 			struct dc_link *link,
 			int pbn_per_slot,
@@ -214,6 +277,8 @@ static void dm_helpers_construct_old_payload(
 
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Writes payload allocation table in immediate downstream device.
  */
@@ -225,7 +290,11 @@ bool dm_helpers_dp_mst_write_payload_allocation_table(
 {
 	struct amdgpu_dm_connector *aconnector;
 	struct drm_dp_mst_topology_state *mst_state;
+<<<<<<< HEAD
 	struct drm_dp_mst_atomic_payload *target_payload, *new_payload, old_payload;
+=======
+	struct drm_dp_mst_atomic_payload *payload;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_dp_mst_topology_mgr *mst_mgr;
 
 	aconnector = (struct amdgpu_dm_connector *)stream->dm_stream_context;
@@ -234,6 +303,7 @@ bool dm_helpers_dp_mst_write_payload_allocation_table(
 	 * that blocks before commit guaranteeing that the state
 	 * is not gonna be swapped while still in use in commit tail */
 
+<<<<<<< HEAD
 	if (!aconnector || !aconnector->mst_root)
 		return false;
 
@@ -255,12 +325,30 @@ bool dm_helpers_dp_mst_write_payload_allocation_table(
 
 		drm_dp_remove_payload(mst_mgr, mst_state, &old_payload, new_payload);
 	}
+=======
+	if (!aconnector || !aconnector->mst_port)
+		return false;
+
+	mst_mgr = &aconnector->mst_port->mst_mgr;
+	mst_state = to_drm_dp_mst_topology_state(mst_mgr->base.state);
+
+	/* It's OK for this to fail */
+	payload = drm_atomic_get_mst_payload_state(mst_state, aconnector->port);
+	if (enable)
+		drm_dp_add_payload_part1(mst_mgr, mst_state, payload);
+	else
+		drm_dp_remove_payload(mst_mgr, mst_state, payload);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* mst_mgr->->payloads are VC payload notify MST branch using DPCD or
 	 * AUX message. The sequence is slot 1-63 allocated sequence for each
 	 * stream. AMD ASIC stream slot allocation should follow the same
 	 * sequence. copy DRM MST allocation to dc */
+<<<<<<< HEAD
 	fill_dc_mst_payload_table_from_drm(stream->link, enable, target_payload, proposed_table);
+=======
+	fill_dc_mst_payload_table_from_drm(mst_state, aconnector, proposed_table);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return true;
 }
@@ -295,10 +383,17 @@ enum act_return_status dm_helpers_dp_mst_poll_for_allocation_change_trigger(
 
 	aconnector = (struct amdgpu_dm_connector *)stream->dm_stream_context;
 
+<<<<<<< HEAD
 	if (!aconnector || !aconnector->mst_root)
 		return ACT_FAILED;
 
 	mst_mgr = &aconnector->mst_root->mst_mgr;
+=======
+	if (!aconnector || !aconnector->mst_port)
+		return ACT_FAILED;
+
+	mst_mgr = &aconnector->mst_port->mst_mgr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!mst_mgr->mst_state)
 		return ACT_FAILED;
@@ -322,6 +417,7 @@ bool dm_helpers_dp_mst_send_payload_allocation(
 	struct drm_dp_mst_atomic_payload *payload;
 	enum mst_progress_status set_flag = MST_ALLOCATE_NEW_PAYLOAD;
 	enum mst_progress_status clr_flag = MST_CLEAR_ALLOCATED_PAYLOAD;
+<<<<<<< HEAD
 	int ret = 0;
 
 	aconnector = (struct amdgpu_dm_connector *)stream->dm_stream_context;
@@ -334,15 +430,31 @@ bool dm_helpers_dp_mst_send_payload_allocation(
 
 	payload = drm_atomic_get_mst_payload_state(mst_state, aconnector->mst_output_port);
 
+=======
+
+	aconnector = (struct amdgpu_dm_connector *)stream->dm_stream_context;
+
+	if (!aconnector || !aconnector->mst_port)
+		return false;
+
+	mst_mgr = &aconnector->mst_port->mst_mgr;
+	mst_state = to_drm_dp_mst_topology_state(mst_mgr->base.state);
+
+	payload = drm_atomic_get_mst_payload_state(mst_state, aconnector->port);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!enable) {
 		set_flag = MST_CLEAR_ALLOCATED_PAYLOAD;
 		clr_flag = MST_ALLOCATE_NEW_PAYLOAD;
 	}
 
+<<<<<<< HEAD
 	if (enable)
 		ret = drm_dp_add_payload_part2(mst_mgr, mst_state->base.state, payload);
 
 	if (ret) {
+=======
+	if (enable && drm_dp_add_payload_part2(mst_mgr, mst_state->base.state, payload)) {
+>>>>>>> b7ba80a49124 (Commit)
 		amdgpu_dm_set_mst_status(&aconnector->mst_status,
 			set_flag, false);
 	} else {
@@ -449,7 +561,10 @@ bool dm_helpers_dp_mst_start_top_mgr(
 		bool boot)
 {
 	struct amdgpu_dm_connector *aconnector = link->priv;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!aconnector) {
 		DRM_ERROR("Failed to find connector for link!");
@@ -465,6 +580,7 @@ bool dm_helpers_dp_mst_start_top_mgr(
 	DRM_INFO("DM_MST: starting TM on aconnector: %p [id: %d]\n",
 			aconnector, aconnector->base.base.id);
 
+<<<<<<< HEAD
 	ret = drm_dp_mst_topology_mgr_set_mst(&aconnector->mst_mgr, true);
 	if (ret < 0) {
 		DRM_ERROR("DM_MST: Failed to set the device into MST mode!");
@@ -475,6 +591,9 @@ bool dm_helpers_dp_mst_start_top_mgr(
 		aconnector->mst_mgr.dpcd[2] & DP_MAX_LANE_COUNT_MASK);
 
 	return true;
+=======
+	return (drm_dp_mst_topology_mgr_set_mst(&aconnector->mst_mgr, true) == 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 bool dm_helpers_dp_mst_stop_top_mgr(
@@ -514,8 +633,13 @@ bool dm_helpers_dp_read_dpcd(
 		return false;
 	}
 
+<<<<<<< HEAD
 	return drm_dp_dpcd_read(&aconnector->dm_dp_aux.aux, address, data,
 				size) == size;
+=======
+	return drm_dp_dpcd_read(&aconnector->dm_dp_aux.aux, address,
+			data, size) > 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 bool dm_helpers_dp_write_dpcd(
@@ -571,6 +695,10 @@ bool dm_helpers_submit_i2c(
 	return result;
 }
 
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+>>>>>>> b7ba80a49124 (Commit)
 static bool execute_synaptics_rc_command(struct drm_dp_aux *aux,
 		bool is_write_cmd,
 		unsigned char cmd,
@@ -738,6 +866,10 @@ static uint8_t write_dsc_enable_synaptics_non_virtual_dpcd_mst(
 
 	return ret;
 }
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 bool dm_helpers_dp_write_dsc_enable(
 		struct dc_context *ctx,
@@ -763,13 +895,23 @@ bool dm_helpers_dp_write_dsc_enable(
 		if (!aconnector->dsc_aux)
 			return false;
 
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+>>>>>>> b7ba80a49124 (Commit)
 		// apply w/a to synaptics
 		if (needs_dsc_aux_workaround(aconnector->dc_link) &&
 		    (aconnector->mst_downstream_port_present.byte & 0x7) != 0x3)
 			return write_dsc_enable_synaptics_non_virtual_dpcd_mst(
 				aconnector->dsc_aux, stream, enable_dsc);
+<<<<<<< HEAD
 
 		port = aconnector->mst_output_port;
+=======
+#endif
+
+		port = aconnector->port;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (enable) {
 			if (port->passthrough_aux) {
@@ -805,13 +947,26 @@ bool dm_helpers_dp_write_dsc_enable(
 	}
 
 	if (stream->signal == SIGNAL_TYPE_DISPLAY_PORT || stream->signal == SIGNAL_TYPE_EDP) {
+<<<<<<< HEAD
 		if (stream->sink->link->dpcd_caps.dongle_type == DISPLAY_DONGLE_NONE) {
 			ret = dm_helpers_dp_write_dpcd(ctx, stream->link, DP_DSC_ENABLE, &enable_dsc, 1);
 			DC_LOG_DC("Send DSC %s to SST RX\n", enable_dsc ? "enable" : "disable");
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+		if (stream->sink->link->dpcd_caps.dongle_type == DISPLAY_DONGLE_NONE) {
+#endif
+			ret = dm_helpers_dp_write_dpcd(ctx, stream->link, DP_DSC_ENABLE, &enable_dsc, 1);
+			DC_LOG_DC("Send DSC %s to SST RX\n", enable_dsc ? "enable" : "disable");
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+>>>>>>> b7ba80a49124 (Commit)
 		} else if (stream->sink->link->dpcd_caps.dongle_type == DISPLAY_DONGLE_DP_HDMI_CONVERTER) {
 			ret = dm_helpers_dp_write_dpcd(ctx, stream->link, DP_DSC_ENABLE, &enable_dsc, 1);
 			DC_LOG_DC("Send DSC %s to DP-HDMI PCON\n", enable_dsc ? "enable" : "disable");
 		}
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;
@@ -899,8 +1054,14 @@ int dm_helper_dmub_aux_transfer_sync(
 		struct aux_payload *payload,
 		enum aux_return_code_type *operation_result)
 {
+<<<<<<< HEAD
 	return amdgpu_dm_process_dmub_aux_transfer_sync(ctx, link->link_index, payload,
 			operation_result);
+=======
+	return amdgpu_dm_process_dmub_aux_transfer_sync(true, ctx,
+			link->link_index, (void *)payload,
+			(void *)operation_result);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int dm_helpers_dmub_set_config_sync(struct dc_context *ctx,
@@ -908,8 +1069,14 @@ int dm_helpers_dmub_set_config_sync(struct dc_context *ctx,
 		struct set_config_cmd_payload *payload,
 		enum set_config_status *operation_result)
 {
+<<<<<<< HEAD
 	return amdgpu_dm_process_dmub_set_config_sync(ctx, link->link_index, payload,
 			operation_result);
+=======
+	return amdgpu_dm_process_dmub_aux_transfer_sync(false, ctx,
+			link->link_index, (void *)payload,
+			(void *)operation_result);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void dm_set_dcn_clocks(struct dc_context *ctx, struct dc_clocks *clks)
@@ -1042,6 +1209,7 @@ void dm_helpers_mst_enable_stream_features(const struct dc_stream_state *stream)
 					 sizeof(new_downspread));
 }
 
+<<<<<<< HEAD
 bool dm_helpers_dp_handle_test_pattern_request(
 		struct dc_context *ctx,
 		const struct dc_link *link,
@@ -1164,6 +1332,8 @@ bool dm_helpers_dp_handle_test_pattern_request(
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void dm_set_phyd32clk(struct dc_context *ctx, int freq_khz)
 {
        // TODO
@@ -1173,6 +1343,7 @@ void dm_helpers_enable_periodic_detection(struct dc_context *ctx, bool enable)
 {
 	/* TODO: add periodic detection implementation */
 }
+<<<<<<< HEAD
 
 void dm_helpers_dp_mst_update_branch_bandwidth(
 		struct dc_context *ctx,
@@ -1216,3 +1387,5 @@ enum adaptive_sync_type dm_get_adaptive_sync_support_type(struct dc_link *link)
 
 	return as_type;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -458,7 +458,11 @@ static inline int kprobe_optready(struct kprobe *p)
 }
 
 /* Return true if the kprobe is disarmed. Note: p must be on hash list */
+<<<<<<< HEAD
 bool kprobe_disarmed(struct kprobe *p)
+=======
+static inline bool kprobe_disarmed(struct kprobe *p)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct optimized_kprobe *op;
 
@@ -555,6 +559,7 @@ static void do_unoptimize_kprobes(void)
 	/* See comment in do_optimize_kprobes() */
 	lockdep_assert_cpus_held();
 
+<<<<<<< HEAD
 	if (!list_empty(&unoptimizing_list))
 		arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
 
@@ -564,6 +569,19 @@ static void do_unoptimize_kprobes(void)
 		op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
 		/* Disarm probes if marked disabled and not gone */
 		if (kprobe_disabled(&op->kp) && !kprobe_gone(&op->kp))
+=======
+	/* Unoptimization must be done anytime */
+	if (list_empty(&unoptimizing_list))
+		return;
+
+	arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
+	/* Loop on 'freeing_list' for disarming */
+	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
+		/* Switching from detour code to origin */
+		op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+		/* Disarm probes if marked disabled */
+		if (kprobe_disabled(&op->kp))
+>>>>>>> b7ba80a49124 (Commit)
 			arch_disarm_kprobe(&op->kp);
 		if (kprobe_unused(&op->kp)) {
 			/*
@@ -660,7 +678,11 @@ void wait_for_kprobe_optimizer(void)
 	mutex_unlock(&kprobe_mutex);
 }
 
+<<<<<<< HEAD
 bool optprobe_queued_unopt(struct optimized_kprobe *op)
+=======
+static bool optprobe_queued_unopt(struct optimized_kprobe *op)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct optimized_kprobe *_op;
 
@@ -795,6 +817,7 @@ static void kill_optimized_kprobe(struct kprobe *p)
 	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
 
 	if (kprobe_unused(p)) {
+<<<<<<< HEAD
 		/*
 		 * Unused kprobe is on unoptimizing or freeing list. We move it
 		 * to freeing_list and let the kprobe_optimizer() remove it from
@@ -802,6 +825,16 @@ static void kill_optimized_kprobe(struct kprobe *p)
 		 */
 		if (optprobe_queued_unopt(op))
 			list_move(&op->list, &freeing_list);
+=======
+		/* Enqueue if it is unused */
+		list_add(&op->list, &freeing_list);
+		/*
+		 * Remove unused probes from the hash list. After waiting
+		 * for synchronization, this probe is reclaimed.
+		 * (reclaiming is done by do_free_cleaned_kprobes().)
+		 */
+		hlist_del_rcu(&op->kp.hlist);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Don't touch the code, because it is already freed. */
@@ -1604,10 +1637,16 @@ int register_kprobe(struct kprobe *p)
 	struct kprobe *old_p;
 	struct module *probed_mod;
 	kprobe_opcode_t *addr;
+<<<<<<< HEAD
 	bool on_func_entry;
 
 	/* Adjust probe address from symbol */
 	addr = _kprobe_addr(p->addr, p->symbol_name, p->offset, &on_func_entry);
+=======
+
+	/* Adjust probe address from symbol */
+	addr = kprobe_addr(p);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(addr))
 		return PTR_ERR(addr);
 	p->addr = addr;
@@ -1627,9 +1666,12 @@ int register_kprobe(struct kprobe *p)
 
 	mutex_lock(&kprobe_mutex);
 
+<<<<<<< HEAD
 	if (on_func_entry)
 		p->flags |= KPROBE_FLAG_ON_FUNC_ENTRY;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	old_p = get_kprobe(p->addr);
 	if (old_p) {
 		/* Since this may unoptimize 'old_p', locking 'text_mutex'. */
@@ -1763,6 +1805,7 @@ static int __unregister_kprobe_top(struct kprobe *p)
 				if ((list_p != p) && (list_p->post_handler))
 					goto noclean;
 			}
+<<<<<<< HEAD
 			/*
 			 * For the kprobe-on-ftrace case, we keep the
 			 * post_handler setting to identify this aggrprobe
@@ -1770,6 +1813,9 @@ static int __unregister_kprobe_top(struct kprobe *p)
 			 */
 			if (!kprobe_ftrace(ap))
 				ap->post_handler = NULL;
+=======
+			ap->post_handler = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 noclean:
 		/*
@@ -2210,9 +2256,19 @@ int register_kretprobe(struct kretprobe *rp)
 	rp->kp.post_handler = NULL;
 
 	/* Pre-allocate memory for max kretprobe instances */
+<<<<<<< HEAD
 	if (rp->maxactive <= 0)
 		rp->maxactive = max_t(unsigned int, 10, 2*num_possible_cpus());
 
+=======
+	if (rp->maxactive <= 0) {
+#ifdef CONFIG_PREEMPTION
+		rp->maxactive = max_t(unsigned int, 10, 2*num_possible_cpus());
+#else
+		rp->maxactive = num_possible_cpus();
+#endif
+	}
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_KRETPROBE_ON_RETHOOK
 	rp->rh = rethook_alloc((void *)rp, kretprobe_rethook_handler);
 	if (!rp->rh)
@@ -2357,6 +2413,7 @@ static void kill_kprobe(struct kprobe *p)
 
 	lockdep_assert_held(&kprobe_mutex);
 
+<<<<<<< HEAD
 	/*
 	 * The module is going away. We should disarm the kprobe which
 	 * is using ftrace, because ftrace framework is still available at
@@ -2365,6 +2422,8 @@ static void kill_kprobe(struct kprobe *p)
 	if (kprobe_ftrace(p) && !kprobe_disabled(p) && !kprobes_all_disarmed)
 		disarm_kprobe_ftrace(p);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	p->flags |= KPROBE_FLAG_GONE;
 	if (kprobe_aggrprobe(p)) {
 		/*
@@ -2381,6 +2440,17 @@ static void kill_kprobe(struct kprobe *p)
 	 * the original probed function (which will be freed soon) any more.
 	 */
 	arch_remove_kprobe(p);
+<<<<<<< HEAD
+=======
+
+	/*
+	 * The module is going away. We should disarm the kprobe which
+	 * is using ftrace, because ftrace framework is still available at
+	 * 'MODULE_STATE_GOING' notification.
+	 */
+	if (kprobe_ftrace(p) && !kprobe_disabled(p) && !kprobes_all_disarmed)
+		disarm_kprobe_ftrace(p);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Disable one kprobe */
@@ -2428,11 +2498,16 @@ int enable_kprobe(struct kprobe *kp)
 	if (!kprobes_all_disarmed && kprobe_disabled(p)) {
 		p->flags &= ~KPROBE_FLAG_DISABLED;
 		ret = arm_kprobe(p);
+<<<<<<< HEAD
 		if (ret) {
 			p->flags |= KPROBE_FLAG_DISABLED;
 			if (p != kp)
 				kp->flags |= KPROBE_FLAG_DISABLED;
 		}
+=======
+		if (ret)
+			p->flags |= KPROBE_FLAG_DISABLED;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 out:
 	mutex_unlock(&kprobe_mutex);

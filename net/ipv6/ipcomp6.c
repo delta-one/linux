@@ -136,8 +136,12 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static int ipcomp6_init_state(struct xfrm_state *x,
 			      struct netlink_ext_ack *extack)
+=======
+static int ipcomp6_init_state(struct xfrm_state *x)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err = -EINVAL;
 
@@ -149,20 +153,32 @@ static int ipcomp6_init_state(struct xfrm_state *x,
 		x->props.header_len += sizeof(struct ipv6hdr);
 		break;
 	default:
+<<<<<<< HEAD
 		NL_SET_ERR_MSG(extack, "Unsupported XFRM mode for IPcomp");
 		goto out;
 	}
 
 	err = ipcomp_init_state(x, extack);
+=======
+		goto out;
+	}
+
+	err = ipcomp_init_state(x);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out;
 
 	if (x->props.mode == XFRM_MODE_TUNNEL) {
 		err = ipcomp6_tunnel_attach(x);
+<<<<<<< HEAD
 		if (err) {
 			NL_SET_ERR_MSG(extack, "Kernel error: failed to initialize the associated state");
 			goto out;
 		}
+=======
+		if (err)
+			goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	err = 0;

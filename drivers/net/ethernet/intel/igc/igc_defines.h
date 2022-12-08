@@ -321,8 +321,11 @@
 #define IGC_ADVTXD_L4LEN_SHIFT	8  /* Adv ctxt L4LEN shift */
 #define IGC_ADVTXD_MSS_SHIFT	16 /* Adv ctxt MSS shift */
 
+<<<<<<< HEAD
 #define IGC_ADVTXD_TSN_CNTX_FIRST	0x00000080
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Transmit Control */
 #define IGC_TCTL_EN		0x00000002 /* enable Tx */
 #define IGC_TCTL_PSP		0x00000008 /* pad short packets */
@@ -402,6 +405,7 @@
 #define IGC_DTXMXPKTSZ_TSN	0x19 /* 1600 bytes of max TX DMA packet size */
 #define IGC_DTXMXPKTSZ_DEFAULT	0x98 /* 9728-byte Jumbo frames */
 
+<<<<<<< HEAD
 /* Transmit Scheduling Latency */
 /* Latency between transmission scheduling (LaunchTime) and the time
  * the packet is transmitted to the network in nanosecond.
@@ -411,6 +415,8 @@
 #define IGC_TXOFFSET_SPEED_1000	0x0000012C
 #define IGC_TXOFFSET_SPEED_2500	0x00000578
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Time Sync Interrupt Causes */
 #define IGC_TSICR_SYS_WRAP	BIT(0) /* SYSTIM Wrap around. */
 #define IGC_TSICR_TXTS		BIT(1) /* Transmit Timestamp. */
@@ -475,9 +481,13 @@
 #define IGC_TSAUXC_EN_TT0	BIT(0)  /* Enable target time 0. */
 #define IGC_TSAUXC_EN_TT1	BIT(1)  /* Enable target time 1. */
 #define IGC_TSAUXC_EN_CLK0	BIT(2)  /* Enable Configurable Frequency Clock 0. */
+<<<<<<< HEAD
 #define IGC_TSAUXC_ST0		BIT(4)  /* Start Clock 0 Toggle on Target Time 0. */
 #define IGC_TSAUXC_EN_CLK1	BIT(5)  /* Enable Configurable Frequency Clock 1. */
 #define IGC_TSAUXC_ST1		BIT(7)  /* Start Clock 1 Toggle on Target Time 1. */
+=======
+#define IGC_TSAUXC_EN_CLK1	BIT(5)  /* Enable Configurable Frequency Clock 1. */
+>>>>>>> b7ba80a49124 (Commit)
 #define IGC_TSAUXC_EN_TS0	BIT(8)  /* Enable hardware timestamp 0. */
 #define IGC_TSAUXC_AUTT0	BIT(9)  /* Auxiliary Timestamp Taken. */
 #define IGC_TSAUXC_EN_TS1	BIT(10) /* Enable hardware timestamp 0. */
@@ -524,7 +534,10 @@
 /* Transmit Scheduling */
 #define IGC_TQAVCTRL_TRANSMIT_MODE_TSN	0x00000001
 #define IGC_TQAVCTRL_ENHANCED_QAV	0x00000008
+<<<<<<< HEAD
 #define IGC_TQAVCTRL_FUTSCDDIS		0x00000080
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define IGC_TXQCTL_QUEUE_MODE_LAUNCHT	0x00000001
 #define IGC_TXQCTL_STRICT_CYCLE		0x00000002
@@ -662,6 +675,12 @@
  */
 #define IGC_TW_SYSTEM_100_MASK		0x0000FF00
 #define IGC_TW_SYSTEM_100_SHIFT		8
+<<<<<<< HEAD
+=======
+#define IGC_DMACR_DMAC_EN		0x80000000 /* Enable DMA Coalescing */
+#define IGC_DMACR_DMACTHR_MASK		0x00FF0000
+#define IGC_DMACR_DMACTHR_SHIFT		16
+>>>>>>> b7ba80a49124 (Commit)
 /* Reg val to set scale to 1024 nsec */
 #define IGC_LTRMINV_SCALE_1024		2
 /* Reg val to set scale to 32768 nsec */

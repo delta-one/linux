@@ -10,6 +10,10 @@ Block
    bfq-iosched
    biovecs
    blk-mq
+<<<<<<< HEAD
+=======
+   capability
+>>>>>>> b7ba80a49124 (Commit)
    cmdline-partition
    data-integrity
    deadline-iosched

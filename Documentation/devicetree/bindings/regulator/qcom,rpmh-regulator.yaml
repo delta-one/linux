@@ -37,8 +37,11 @@ description: |
       For PM6150, smps1 - smps5, ldo1 - ldo19
       For PM6150L, smps1 - smps8, ldo1 - ldo11, bob
       For PM6350, smps1 - smps5, ldo1 - ldo22
+<<<<<<< HEAD
       For PM660, smps1 - smps6, ldo1 - ldo3, ldo5 - ldo19
       For PM660L, smps1 - smps3, smps5, ldo1 - ldo8, bob
+=======
+>>>>>>> b7ba80a49124 (Commit)
       For PM7325, smps1 - smps8, ldo1 - ldo19
       For PM8005, smps1 - smps4
       For PM8009, smps1 - smps2, ldo1 - ldo7
@@ -47,7 +50,10 @@ description: |
       For PM8350, smps1 - smps12, ldo1 - ldo10
       For PM8350C, smps1 - smps10, ldo1 - ldo13, bob
       For PM8450, smps1 - smps6, ldo1 - ldo4
+<<<<<<< HEAD
       For PM8550, smps1 - smps6, ldo1 - ldo17, bob1 - bob2
+=======
+>>>>>>> b7ba80a49124 (Commit)
       For PM8998, smps1 - smps13, ldo1 - ldo28, lvs1 - lvs2
       For PMI8998, bob
       For PMR735A, smps1 - smps3, ldo1 - ldo7
@@ -60,8 +66,11 @@ properties:
       - qcom,pm6150-rpmh-regulators
       - qcom,pm6150l-rpmh-regulators
       - qcom,pm6350-rpmh-regulators
+<<<<<<< HEAD
       - qcom,pm660-rpmh-regulators
       - qcom,pm660l-rpmh-regulators
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - qcom,pm7325-rpmh-regulators
       - qcom,pm8005-rpmh-regulators
       - qcom,pm8009-rpmh-regulators
@@ -71,9 +80,12 @@ properties:
       - qcom,pm8350-rpmh-regulators
       - qcom,pm8350c-rpmh-regulators
       - qcom,pm8450-rpmh-regulators
+<<<<<<< HEAD
       - qcom,pm8550-rpmh-regulators
       - qcom,pm8550ve-rpmh-regulators
       - qcom,pm8550vs-rpmh-regulators
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - qcom,pm8998-rpmh-regulators
       - qcom,pmg1110-rpmh-regulators
       - qcom,pmi8998-rpmh-regulators
@@ -87,7 +99,11 @@ properties:
         RPMh resource name suffix used for the regulators found
         on this PMIC.
     $ref: /schemas/types.yaml#/definitions/string
+<<<<<<< HEAD
     enum: [a, b, c, d, e, f, g, h, k]
+=======
+    enum: [a, b, c, d, e, f, h, k]
+>>>>>>> b7ba80a49124 (Commit)
 
   qcom,always-wait-for-ack:
     description: |
@@ -105,6 +121,7 @@ properties:
 
   bob:
     type: object
+<<<<<<< HEAD
     $ref: regulator.yaml#
     description: BOB regulator node.
     dependencies:
@@ -117,6 +134,20 @@ patternProperties:
     description: smps/ldo regulator nodes(s).
     dependencies:
       regulator-allow-set-load: [ regulator-allowed-modes ]
+=======
+    $ref: "regulator.yaml#"
+    description: BOB regulator node.
+    dependencies:
+      regulator-allow-set-load: ["regulator-allowed-modes"]
+
+patternProperties:
+  "^(smps|ldo|lvs)[0-9]+$":
+    type: object
+    $ref: "regulator.yaml#"
+    description: smps/ldo regulator nodes(s).
+    dependencies:
+      regulator-allow-set-load: ["regulator-allowed-modes"]
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible
@@ -160,6 +191,7 @@ allOf:
       properties:
         compatible:
           enum:
+<<<<<<< HEAD
             - qcom,pm660-rpmh-regulators
     then:
       properties:
@@ -192,6 +224,8 @@ allOf:
       properties:
         compatible:
           enum:
+=======
+>>>>>>> b7ba80a49124 (Commit)
             - qcom,pm7325-rpmh-regulators
     then:
       properties:
@@ -307,6 +341,7 @@ allOf:
       properties:
         compatible:
           enum:
+<<<<<<< HEAD
             - qcom,pm8550-rpmh-regulators
             - qcom,pm8550ve-rpmh-regulators
             - qcom,pm8550vs-rpmh-regulators
@@ -325,6 +360,8 @@ allOf:
       properties:
         compatible:
           enum:
+=======
+>>>>>>> b7ba80a49124 (Commit)
             - qcom,pm8998-rpmh-regulators
     then:
       properties:
@@ -434,8 +471,14 @@ examples:
             regulator-min-microvolt = <1800000>;
             regulator-max-microvolt = <1800000>;
             regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+<<<<<<< HEAD
             regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
                                        RPMH_REGULATOR_MODE_HPM>;
+=======
+            regulator-allowed-modes =
+                <RPMH_REGULATOR_MODE_LPM
+                 RPMH_REGULATOR_MODE_HPM>;
+>>>>>>> b7ba80a49124 (Commit)
             regulator-allow-set-load;
         };
 
@@ -452,8 +495,14 @@ examples:
         bob {
             regulator-min-microvolt = <3312000>;
             regulator-max-microvolt = <3600000>;
+<<<<<<< HEAD
             regulator-allowed-modes = <RPMH_REGULATOR_MODE_AUTO
                                        RPMH_REGULATOR_MODE_HPM>;
+=======
+            regulator-allowed-modes =
+                <RPMH_REGULATOR_MODE_AUTO
+                 RPMH_REGULATOR_MODE_HPM>;
+>>>>>>> b7ba80a49124 (Commit)
             regulator-initial-mode = <RPMH_REGULATOR_MODE_AUTO>;
         };
     };

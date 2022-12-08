@@ -14,7 +14,11 @@ void notify_eq(struct erdma_eq *eq)
 		      FIELD_PREP(ERDMA_EQDB_ARM_MASK, 1);
 
 	*eq->db_record = db_data;
+<<<<<<< HEAD
 	writeq(db_data, eq->db);
+=======
+	writeq(db_data, eq->db_addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	atomic64_inc(&eq->notify_num);
 }
@@ -98,7 +102,11 @@ int erdma_aeq_init(struct erdma_dev *dev)
 	atomic64_set(&eq->event_num, 0);
 	atomic64_set(&eq->notify_num, 0);
 
+<<<<<<< HEAD
 	eq->db = dev->func_bar + ERDMA_REGS_AEQ_DB_REG;
+=======
+	eq->db_addr = (u64 __iomem *)(dev->func_bar + ERDMA_REGS_AEQ_DB_REG);
+>>>>>>> b7ba80a49124 (Commit)
 	eq->db_record = (u64 *)(eq->qbuf + buf_size);
 
 	erdma_reg_write32(dev, ERDMA_REGS_AEQ_ADDR_H_REG,
@@ -243,8 +251,14 @@ static int erdma_ceq_init_one(struct erdma_dev *dev, u16 ceqn)
 	atomic64_set(&eq->notify_num, 0);
 
 	eq->depth = ERDMA_DEFAULT_EQ_DEPTH;
+<<<<<<< HEAD
 	eq->db = dev->func_bar + ERDMA_REGS_CEQ_DB_BASE_REG +
 		 (ceqn + 1) * ERDMA_DB_SIZE;
+=======
+	eq->db_addr =
+		(u64 __iomem *)(dev->func_bar + ERDMA_REGS_CEQ_DB_BASE_REG +
+				(ceqn + 1) * ERDMA_DB_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 	eq->db_record = (u64 *)(eq->qbuf + buf_size);
 	eq->ci = 0;
 	dev->ceqs[ceqn].dev = dev;

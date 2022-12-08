@@ -21,6 +21,7 @@ static DEFINE_IDA(reuseport_ida);
 static int reuseport_resurrect(struct sock *sk, struct sock_reuseport *old_reuse,
 			       struct sock_reuseport *reuse, bool bind_inany);
 
+<<<<<<< HEAD
 void reuseport_has_conns_set(struct sock *sk)
 {
 	struct sock_reuseport *reuse;
@@ -101,6 +102,8 @@ out:
 	spin_unlock_bh(&reuseport_lock);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int reuseport_sock_index(struct sock *sk,
 				const struct sock_reuseport *reuse,
 				bool closed)
@@ -128,7 +131,10 @@ static void __reuseport_add_sock(struct sock *sk,
 	/* paired with smp_rmb() in reuseport_(select|migrate)_sock() */
 	smp_wmb();
 	reuse->num_socks++;
+<<<<<<< HEAD
 	reuseport_get_incoming_cpu(sk, reuse);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool __reuseport_detach_sock(struct sock *sk,
@@ -141,7 +147,10 @@ static bool __reuseport_detach_sock(struct sock *sk,
 
 	reuse->socks[i] = reuse->socks[reuse->num_socks - 1];
 	reuse->num_socks--;
+<<<<<<< HEAD
 	reuseport_put_incoming_cpu(sk, reuse);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return true;
 }
@@ -152,7 +161,10 @@ static void __reuseport_add_closed_sock(struct sock *sk,
 	reuse->socks[reuse->max_socks - reuse->num_closed_socks - 1] = sk;
 	/* paired with READ_ONCE() in inet_csk_bind_conflict() */
 	WRITE_ONCE(reuse->num_closed_socks, reuse->num_closed_socks + 1);
+<<<<<<< HEAD
 	reuseport_get_incoming_cpu(sk, reuse);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool __reuseport_detach_closed_sock(struct sock *sk,
@@ -166,7 +178,10 @@ static bool __reuseport_detach_closed_sock(struct sock *sk,
 	reuse->socks[i] = reuse->socks[reuse->max_socks - reuse->num_closed_socks];
 	/* paired with READ_ONCE() in inet_csk_bind_conflict() */
 	WRITE_ONCE(reuse->num_closed_socks, reuse->num_closed_socks - 1);
+<<<<<<< HEAD
 	reuseport_put_incoming_cpu(sk, reuse);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return true;
 }
@@ -234,7 +249,10 @@ int reuseport_alloc(struct sock *sk, bool bind_inany)
 	reuse->bind_inany = bind_inany;
 	reuse->socks[0] = sk;
 	reuse->num_socks = 1;
+<<<<<<< HEAD
 	reuseport_get_incoming_cpu(sk, reuse);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_assign_pointer(sk->sk_reuseport_cb, reuse);
 
 out:
@@ -278,7 +296,10 @@ static struct sock_reuseport *reuseport_grow(struct sock_reuseport *reuse)
 	more_reuse->reuseport_id = reuse->reuseport_id;
 	more_reuse->bind_inany = reuse->bind_inany;
 	more_reuse->has_conns = reuse->has_conns;
+<<<<<<< HEAD
 	more_reuse->incoming_cpu = reuse->incoming_cpu;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	memcpy(more_reuse->socks, reuse->socks,
 	       reuse->num_socks * sizeof(struct sock *));
@@ -528,6 +549,7 @@ static struct sock *run_bpf_filter(struct sock_reuseport *reuse, u16 socks,
 static struct sock *reuseport_select_sock_by_hash(struct sock_reuseport *reuse,
 						  u32 hash, u16 num_socks)
 {
+<<<<<<< HEAD
 	struct sock *first_valid_sk = NULL;
 	int i, j;
 
@@ -554,6 +576,20 @@ static struct sock *reuseport_select_sock_by_hash(struct sock_reuseport *reuse,
 	} while (i != j);
 
 	return first_valid_sk;
+=======
+	int i, j;
+
+	i = j = reciprocal_scale(hash, num_socks);
+	while (reuse->socks[i]->sk_state == TCP_ESTABLISHED) {
+		i++;
+		if (i >= num_socks)
+			i = 0;
+		if (i == j)
+			return NULL;
+	}
+
+	return reuse->socks[i];
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

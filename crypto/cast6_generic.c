@@ -11,8 +11,13 @@
 
 
 #include <asm/unaligned.h>
+<<<<<<< HEAD
 #include <crypto/algapi.h>
 #include <linux/init.h>
+=======
+#include <linux/init.h>
+#include <linux/crypto.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/errno.h>
 #include <linux/string.h>

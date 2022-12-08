@@ -11,7 +11,10 @@
 #include <linux/module.h>
 #include <linux/of.h>
 #include <linux/of_address.h>
+<<<<<<< HEAD
 #include <linux/of_irq.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <linux/regmap.h>
 #include <linux/rpmsg.h>
@@ -54,6 +57,7 @@ struct glink_rpm_pipe {
 	void __iomem *fifo;
 };
 
+<<<<<<< HEAD
 struct glink_rpm {
 	struct qcom_glink *glink;
 
@@ -66,6 +70,8 @@ struct glink_rpm {
 	struct glink_rpm_pipe tx_pipe;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static size_t glink_rpm_rx_avail(struct qcom_glink_pipe *glink_pipe)
 {
 	struct glink_rpm_pipe *pipe = to_rpm_pipe(glink_pipe);
@@ -81,7 +87,11 @@ static size_t glink_rpm_rx_avail(struct qcom_glink_pipe *glink_pipe)
 		return head - tail;
 }
 
+<<<<<<< HEAD
 static void glink_rpm_rx_peek(struct qcom_glink_pipe *glink_pipe,
+=======
+static void glink_rpm_rx_peak(struct qcom_glink_pipe *glink_pipe,
+>>>>>>> b7ba80a49124 (Commit)
 			      void *data, unsigned int offset, size_t count)
 {
 	struct glink_rpm_pipe *pipe = to_rpm_pipe(glink_pipe);
@@ -192,6 +202,7 @@ static void glink_rpm_tx_write(struct qcom_glink_pipe *glink_pipe,
 	writel(head, pipe->head);
 }
 
+<<<<<<< HEAD
 static void glink_rpm_tx_kick(struct qcom_glink_pipe *glink_pipe)
 {
 	struct glink_rpm_pipe *pipe = to_rpm_pipe(glink_pipe);
@@ -210,6 +221,8 @@ static irqreturn_t qcom_glink_rpm_intr(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int glink_rpm_parse_toc(struct device *dev,
 			       void __iomem *msg_ram,
 			       size_t msg_ram_size,
@@ -288,7 +301,12 @@ err_inval:
 static int glink_rpm_probe(struct platform_device *pdev)
 {
 	struct qcom_glink *glink;
+<<<<<<< HEAD
 	struct glink_rpm *rpm;
+=======
+	struct glink_rpm_pipe *rx_pipe;
+	struct glink_rpm_pipe *tx_pipe;
+>>>>>>> b7ba80a49124 (Commit)
 	struct device_node *np;
 	void __iomem *msg_ram;
 	size_t msg_ram_size;
@@ -296,8 +314,14 @@ static int glink_rpm_probe(struct platform_device *pdev)
 	struct resource r;
 	int ret;
 
+<<<<<<< HEAD
 	rpm = devm_kzalloc(&pdev->dev, sizeof(*rpm), GFP_KERNEL);
 	if (!rpm)
+=======
+	rx_pipe = devm_kzalloc(&pdev->dev, sizeof(*rx_pipe), GFP_KERNEL);
+	tx_pipe = devm_kzalloc(&pdev->dev, sizeof(*tx_pipe), GFP_KERNEL);
+	if (!rx_pipe || !tx_pipe)
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOMEM;
 
 	np = of_parse_phandle(dev->of_node, "qcom,rpm-msg-ram", 0);
@@ -312,6 +336,7 @@ static int glink_rpm_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	ret = glink_rpm_parse_toc(dev, msg_ram, msg_ram_size,
+<<<<<<< HEAD
 				  &rpm->rx_pipe, &rpm->tx_pipe);
 	if (ret)
 		return ret;
@@ -357,12 +382,38 @@ static int glink_rpm_probe(struct platform_device *pdev)
 	platform_set_drvdata(pdev, rpm);
 
 	enable_irq(rpm->irq);
+=======
+				  rx_pipe, tx_pipe);
+	if (ret)
+		return ret;
+
+	/* Pipe specific accessors */
+	rx_pipe->native.avail = glink_rpm_rx_avail;
+	rx_pipe->native.peak = glink_rpm_rx_peak;
+	rx_pipe->native.advance = glink_rpm_rx_advance;
+	tx_pipe->native.avail = glink_rpm_tx_avail;
+	tx_pipe->native.write = glink_rpm_tx_write;
+
+	writel(0, tx_pipe->head);
+	writel(0, rx_pipe->tail);
+
+	glink = qcom_glink_native_probe(&pdev->dev,
+					0,
+					&rx_pipe->native,
+					&tx_pipe->native,
+					true);
+	if (IS_ERR(glink))
+		return PTR_ERR(glink);
+
+	platform_set_drvdata(pdev, glink);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 static int glink_rpm_remove(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	struct glink_rpm *rpm = platform_get_drvdata(pdev);
 	struct qcom_glink *glink = rpm->glink;
 
@@ -372,6 +423,12 @@ static int glink_rpm_remove(struct platform_device *pdev)
 
 	mbox_free_channel(rpm->mbox_chan);
 
+=======
+	struct qcom_glink *glink = platform_get_drvdata(pdev);
+
+	qcom_glink_native_remove(glink);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

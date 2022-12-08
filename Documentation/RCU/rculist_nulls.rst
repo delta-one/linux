@@ -14,6 +14,7 @@ Using 'nulls'
 =============
 
 Using special makers (called 'nulls') is a convenient way
+<<<<<<< HEAD
 to solve following problem.
 
 Without 'nulls', a typical RCU linked list managing objects which are
@@ -27,6 +28,21 @@ algorithms:
 
   begin:
   rcu_read_lock()
+=======
+to solve following problem :
+
+A typical RCU linked list managing objects which are
+allocated with SLAB_TYPESAFE_BY_RCU kmem_cache can
+use following algos :
+
+1) Lookup algo
+--------------
+
+::
+
+  rcu_read_lock()
+  begin:
+>>>>>>> b7ba80a49124 (Commit)
   obj = lockless_lookup(key);
   if (obj) {
     if (!try_get_ref(obj)) // might fail for free objects
@@ -38,7 +54,10 @@ algorithms:
     */
     if (obj->key != key) { // not the object we expected
       put_ref(obj);
+<<<<<<< HEAD
       rcu_read_unlock();
+=======
+>>>>>>> b7ba80a49124 (Commit)
       goto begin;
     }
   }
@@ -53,9 +72,15 @@ but a version with an additional memory barrier (smp_rmb())
   {
     struct hlist_node *node, *next;
     for (pos = rcu_dereference((head)->first);
+<<<<<<< HEAD
          pos && ({ next = pos->next; smp_rmb(); prefetch(next); 1; }) &&
          ({ tpos = hlist_entry(pos, typeof(*tpos), member); 1; });
          pos = rcu_dereference(next))
+=======
+        pos && ({ next = pos->next; smp_rmb(); prefetch(next); 1; }) &&
+        ({ tpos = hlist_entry(pos, typeof(*tpos), member); 1; });
+        pos = rcu_dereference(next))
+>>>>>>> b7ba80a49124 (Commit)
       if (obj->key == key)
         return obj;
     return NULL;
@@ -65,9 +90,15 @@ And note the traditional hlist_for_each_entry_rcu() misses this smp_rmb()::
 
   struct hlist_node *node;
   for (pos = rcu_dereference((head)->first);
+<<<<<<< HEAD
        pos && ({ prefetch(pos->next); 1; }) &&
        ({ tpos = hlist_entry(pos, typeof(*tpos), member); 1; });
        pos = rcu_dereference(pos->next))
+=======
+        pos && ({ prefetch(pos->next); 1; }) &&
+        ({ tpos = hlist_entry(pos, typeof(*tpos), member); 1; });
+        pos = rcu_dereference(pos->next))
+>>>>>>> b7ba80a49124 (Commit)
    if (obj->key == key)
      return obj;
   return NULL;
@@ -83,6 +114,7 @@ Quoting Corey Minyard::
   solved by pre-fetching the "next" field (with proper barriers) before
   checking the key."
 
+<<<<<<< HEAD
 2) Insertion algorithm
 ----------------------
 
@@ -91,10 +123,21 @@ and previous value of 'obj->key'. Otherwise, an item could be deleted
 from a chain, and inserted into another chain. If new chain was empty
 before the move, 'next' pointer is NULL, and lockless reader can not
 detect the fact that it missed following items in original chain.
+=======
+2) Insert algo
+--------------
+
+We need to make sure a reader cannot read the new 'obj->obj_next' value
+and previous value of 'obj->key'. Or else, an item could be deleted
+from a chain, and inserted into another chain. If new chain was empty
+before the move, 'next' pointer is NULL, and lockless reader can
+not detect it missed following items in original chain.
+>>>>>>> b7ba80a49124 (Commit)
 
 ::
 
   /*
+<<<<<<< HEAD
    * Please note that new inserts are done at the head of list,
    * not in the middle or end.
    */
@@ -102,13 +145,32 @@ detect the fact that it missed following items in original chain.
   lock_chain(); // typically a spin_lock()
   obj->key = key;
   atomic_set_release(&obj->refcnt, 1); // key before refcnt
+=======
+  * Please note that new inserts are done at the head of list,
+  * not in the middle or end.
+  */
+  obj = kmem_cache_alloc(...);
+  lock_chain(); // typically a spin_lock()
+  obj->key = key;
+  /*
+  * we need to make sure obj->key is updated before obj->next
+  * or obj->refcnt
+  */
+  smp_wmb();
+  atomic_set(&obj->refcnt, 1);
+>>>>>>> b7ba80a49124 (Commit)
   hlist_add_head_rcu(&obj->obj_node, list);
   unlock_chain(); // typically a spin_unlock()
 
 
+<<<<<<< HEAD
 3) Removal algorithm
 --------------------
 
+=======
+3) Remove algo
+--------------
+>>>>>>> b7ba80a49124 (Commit)
 Nothing special here, we can use a standard RCU hlist deletion.
 But thanks to SLAB_TYPESAFE_BY_RCU, beware a deleted object can be reused
 very very fast (before the end of RCU grace period)
@@ -130,7 +192,11 @@ Avoiding extra smp_rmb()
 ========================
 
 With hlist_nulls we can avoid extra smp_rmb() in lockless_lookup()
+<<<<<<< HEAD
 and extra _release() in insert function.
+=======
+and extra smp_wmb() in insert function.
+>>>>>>> b7ba80a49124 (Commit)
 
 For example, if we choose to store the slot number as the 'nulls'
 end-of-list marker for each slot of the hash table, we can detect
@@ -139,16 +205,26 @@ to another chain) checking the final 'nulls' value if
 the lookup met the end of chain. If final 'nulls' value
 is not the slot number, then we must restart the lookup at
 the beginning. If the object was moved to the same chain,
+<<<<<<< HEAD
 then the reader doesn't care: It might occasionally
 scan the list again without harm.
 
 
 1) lookup algorithm
 -------------------
+=======
+then the reader doesn't care : It might eventually
+scan the list again without harm.
+
+
+1) lookup algo
+--------------
+>>>>>>> b7ba80a49124 (Commit)
 
 ::
 
   head = &table[slot];
+<<<<<<< HEAD
   begin:
   rcu_read_lock();
   hlist_nulls_for_each_entry_rcu(obj, node, head, member) {
@@ -174,17 +250,44 @@ scan the list again without harm.
     rcu_read_unlock();
     goto begin;
   }
+=======
+  rcu_read_lock();
+  begin:
+  hlist_nulls_for_each_entry_rcu(obj, node, head, member) {
+    if (obj->key == key) {
+      if (!try_get_ref(obj)) // might fail for free objects
+        goto begin;
+      if (obj->key != key) { // not the object we expected
+        put_ref(obj);
+        goto begin;
+      }
+    goto out;
+  }
+  /*
+  * if the nulls value we got at the end of this lookup is
+  * not the expected one, we must restart lookup.
+  * We probably met an item that was moved to another chain.
+  */
+  if (get_nulls_value(node) != slot)
+  goto begin;
+>>>>>>> b7ba80a49124 (Commit)
   obj = NULL;
 
   out:
   rcu_read_unlock();
 
+<<<<<<< HEAD
 2) Insert algorithm
 -------------------
+=======
+2) Insert function
+------------------
+>>>>>>> b7ba80a49124 (Commit)
 
 ::
 
   /*
+<<<<<<< HEAD
    * Please note that new inserts are done at the head of list,
    * not in the middle or end.
    */
@@ -195,5 +298,21 @@ scan the list again without harm.
   /*
    * insert obj in RCU way (readers might be traversing chain)
    */
+=======
+  * Please note that new inserts are done at the head of list,
+  * not in the middle or end.
+  */
+  obj = kmem_cache_alloc(cachep);
+  lock_chain(); // typically a spin_lock()
+  obj->key = key;
+  /*
+  * changes to obj->key must be visible before refcnt one
+  */
+  smp_wmb();
+  atomic_set(&obj->refcnt, 1);
+  /*
+  * insert obj in RCU way (readers might be traversing chain)
+  */
+>>>>>>> b7ba80a49124 (Commit)
   hlist_nulls_add_head_rcu(&obj->obj_node, list);
   unlock_chain(); // typically a spin_unlock()

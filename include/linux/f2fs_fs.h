@@ -40,8 +40,14 @@
 
 #define F2FS_ENC_UTF8_12_1	1
 
+<<<<<<< HEAD
 #define F2FS_IO_SIZE(sbi)	BIT(F2FS_OPTION(sbi).write_io_size_bits) /* Blocks */
 #define F2FS_IO_SIZE_KB(sbi)	BIT(F2FS_OPTION(sbi).write_io_size_bits + 2) /* KB */
+=======
+#define F2FS_IO_SIZE(sbi)	(1 << F2FS_OPTION(sbi).write_io_size_bits) /* Blocks */
+#define F2FS_IO_SIZE_KB(sbi)	(1 << (F2FS_OPTION(sbi).write_io_size_bits + 2)) /* KB */
+#define F2FS_IO_SIZE_BYTES(sbi)	(1 << (F2FS_OPTION(sbi).write_io_size_bits + 12)) /* B */
+>>>>>>> b7ba80a49124 (Commit)
 #define F2FS_IO_SIZE_BITS(sbi)	(F2FS_OPTION(sbi).write_io_size_bits) /* power of 2 */
 #define F2FS_IO_SIZE_MASK(sbi)	(F2FS_IO_SIZE(sbi) - 1)
 #define F2FS_IO_ALIGNED(sbi)	(F2FS_IO_SIZE(sbi) > 1)
@@ -72,6 +78,7 @@ struct f2fs_device {
 	__le32 total_segments;
 } __packed;
 
+<<<<<<< HEAD
 /* reason of stop_checkpoint */
 enum stop_cp_reason {
 	STOP_CP_REASON_SHUTDOWN,
@@ -108,6 +115,8 @@ enum f2fs_error {
 
 #define MAX_F2FS_ERRORS			16
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct f2fs_super_block {
 	__le32 magic;			/* Magic Number */
 	__le16 major_ver;		/* Major Version */
@@ -151,9 +160,13 @@ struct f2fs_super_block {
 	__u8 hot_ext_count;		/* # of hot file extension */
 	__le16  s_encoding;		/* Filename charset encoding */
 	__le16  s_encoding_flags;	/* Filename charset encoding flags */
+<<<<<<< HEAD
 	__u8 s_stop_reason[MAX_STOP_REASON];	/* stop checkpoint reason */
 	__u8 s_errors[MAX_F2FS_ERRORS];		/* reason of image corrupts */
 	__u8 reserved[258];		/* valid reserved region */
+=======
+	__u8 reserved[306];		/* valid reserved region */
+>>>>>>> b7ba80a49124 (Commit)
 	__le32 crc;			/* checksum of superblock */
 } __packed;
 
@@ -314,7 +327,11 @@ struct f2fs_inode {
 			__u8 i_log_cluster_size;	/* log of cluster size */
 			__le16 i_compress_flag;		/* compress flag */
 						/* 0 bit: chksum flag
+<<<<<<< HEAD
 						 * [8,15] bits: compress level
+=======
+						 * [10,15] bits: compress level
+>>>>>>> b7ba80a49124 (Commit)
 						 */
 			__le32 i_extra_end[0];	/* for attribute size calculation */
 		} __packed;
@@ -339,7 +356,11 @@ enum {
 	OFFSET_BIT_SHIFT
 };
 
+<<<<<<< HEAD
 #define OFFSET_BIT_MASK		GENMASK(OFFSET_BIT_SHIFT - 1, 0)
+=======
+#define OFFSET_BIT_MASK		(0x07)	/* (0x01 << OFFSET_BIT_SHIFT) - 1 */
+>>>>>>> b7ba80a49124 (Commit)
 
 struct node_footer {
 	__le32 nid;		/* node id */
@@ -544,7 +565,11 @@ typedef __le32	f2fs_hash_t;
 #define MAX_DIR_HASH_DEPTH	63
 
 /* MAX buckets in one level of dir */
+<<<<<<< HEAD
 #define MAX_DIR_BUCKETS		BIT((MAX_DIR_HASH_DEPTH / 2) - 1)
+=======
+#define MAX_DIR_BUCKETS		(1 << ((MAX_DIR_HASH_DEPTH / 2) - 1))
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * space utilization of regular dentry and inline dentry (w/o extra reservation)

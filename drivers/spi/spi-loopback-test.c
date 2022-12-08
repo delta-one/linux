@@ -71,11 +71,14 @@ module_param(check_ranges, int, 0644);
 MODULE_PARM_DESC(check_ranges,
 		 "checks rx_buffer pattern are valid");
 
+<<<<<<< HEAD
 static unsigned int delay_ms = 100;
 module_param(delay_ms, uint, 0644);
 MODULE_PARM_DESC(delay_ms,
 		 "delay between tests, in milliseconds (default: 100)");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* the actual tests to execute */
 static struct spi_test spi_tests[] = {
 	{
@@ -1103,8 +1106,12 @@ int spi_test_run_tests(struct spi_device *spi,
 		 * detect the individual tests when using a logic analyzer
 		 * we also add scheduling to avoid potential spi_timeouts...
 		 */
+<<<<<<< HEAD
 		if (delay_ms)
 			mdelay(delay_ms);
+=======
+		mdelay(100);
+>>>>>>> b7ba80a49124 (Commit)
 		schedule();
 	}
 

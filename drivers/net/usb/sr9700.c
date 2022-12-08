@@ -413,7 +413,11 @@ static int sr9700_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
 		/* ignore the CRC length */
 		len = (skb->data[1] | (skb->data[2] << 8)) - 4;
 
+<<<<<<< HEAD
 		if (len > ETH_FRAME_LEN || len > skb->len || len < 0)
+=======
+		if (len > ETH_FRAME_LEN || len > skb->len)
+>>>>>>> b7ba80a49124 (Commit)
 			return 0;
 
 		/* the last packet of current skb */

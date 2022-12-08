@@ -25,8 +25,11 @@
 #define EROFS_FEATURE_INCOMPAT_DEVICE_TABLE	0x00000008
 #define EROFS_FEATURE_INCOMPAT_COMPR_HEAD2	0x00000008
 #define EROFS_FEATURE_INCOMPAT_ZTAILPACKING	0x00000010
+<<<<<<< HEAD
 #define EROFS_FEATURE_INCOMPAT_FRAGMENTS	0x00000020
 #define EROFS_FEATURE_INCOMPAT_DEDUPE		0x00000020
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define EROFS_ALL_FEATURE_INCOMPAT		\
 	(EROFS_FEATURE_INCOMPAT_ZERO_PADDING | \
 	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
@@ -34,9 +37,13 @@
 	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE | \
 	 EROFS_FEATURE_INCOMPAT_DEVICE_TABLE | \
 	 EROFS_FEATURE_INCOMPAT_COMPR_HEAD2 | \
+<<<<<<< HEAD
 	 EROFS_FEATURE_INCOMPAT_ZTAILPACKING | \
 	 EROFS_FEATURE_INCOMPAT_FRAGMENTS | \
 	 EROFS_FEATURE_INCOMPAT_DEDUPE)
+=======
+	 EROFS_FEATURE_INCOMPAT_ZTAILPACKING)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define EROFS_SB_EXTSLOT_SIZE	16
 
@@ -53,7 +60,11 @@ struct erofs_super_block {
 	__le32 magic;           /* file system magic number */
 	__le32 checksum;        /* crc32c(super_block) */
 	__le32 feature_compat;
+<<<<<<< HEAD
 	__u8 blkszbits;         /* filesystem block size in bit shift */
+=======
+	__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
+>>>>>>> b7ba80a49124 (Commit)
 	__u8 sb_extslots;	/* superblock size = 128 + sb_extslots * 16 */
 
 	__le16 root_nid;	/* nid of root directory */
@@ -75,10 +86,14 @@ struct erofs_super_block {
 	} __packed u1;
 	__le16 extra_devices;	/* # of devices besides the primary device */
 	__le16 devt_slotoff;	/* startoff = devt_slotoff * devt_slotsize */
+<<<<<<< HEAD
 	__u8 dirblkbits;	/* directory block size in bit shift */
 	__u8 reserved[5];
 	__le64 packed_nid;	/* nid of the special packed inode */
 	__u8 reserved2[24];
+=======
+	__u8 reserved2[38];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -302,13 +317,17 @@ struct z_erofs_lzma_cfgs {
  * bit 1 : HEAD1 big pcluster (0 - off; 1 - on)
  * bit 2 : HEAD2 big pcluster (0 - off; 1 - on)
  * bit 3 : tailpacking inline pcluster (0 - off; 1 - on)
+<<<<<<< HEAD
  * bit 4 : interlaced plain pcluster (0 - off; 1 - on)
  * bit 5 : fragment pcluster (0 - off; 1 - on)
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 #define Z_EROFS_ADVISE_COMPACTED_2B		0x0001
 #define Z_EROFS_ADVISE_BIG_PCLUSTER_1		0x0002
 #define Z_EROFS_ADVISE_BIG_PCLUSTER_2		0x0004
 #define Z_EROFS_ADVISE_INLINE_PCLUSTER		0x0008
+<<<<<<< HEAD
 #define Z_EROFS_ADVISE_INTERLACED_PCLUSTER	0x0010
 #define Z_EROFS_ADVISE_FRAGMENT_PCLUSTER	0x0020
 
@@ -323,6 +342,13 @@ struct z_erofs_map_header {
 			__le16  h_idata_size;
 		};
 	};
+=======
+
+struct z_erofs_map_header {
+	__le16	h_reserved1;
+	/* indicates the encoded size of tailpacking data */
+	__le16  h_idata_size;
+>>>>>>> b7ba80a49124 (Commit)
 	__le16	h_advise;
 	/*
 	 * bit 0-3 : algorithm type of head 1 (logical cluster type 01);
@@ -331,8 +357,12 @@ struct z_erofs_map_header {
 	__u8	h_algorithmtype;
 	/*
 	 * bit 0-2 : logical cluster bits - 12, e.g. 0 for 4096;
+<<<<<<< HEAD
 	 * bit 3-6 : reserved;
 	 * bit 7   : move the whole file into packed inode or not.
+=======
+	 * bit 3-7 : reserved.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	__u8	h_clusterbits;
 };
@@ -374,9 +404,12 @@ enum {
 #define Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS        2
 #define Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT         0
 
+<<<<<<< HEAD
 /* (noncompact only, HEAD) This pcluster refers to partial decompressed data */
 #define Z_EROFS_VLE_DI_PARTIAL_REF		(1 << 15)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * D0_CBLKCNT will be marked _only_ at the 1st non-head lcluster to store the
  * compressed block count of a compressed extent (in logical clusters, aka.
@@ -424,10 +457,13 @@ struct erofs_dirent {
 /* check the EROFS on-disk layout strictly at compile time */
 static inline void erofs_check_ondisk_layout_definitions(void)
 {
+<<<<<<< HEAD
 	const __le64 fmh = *(__le64 *)&(struct z_erofs_map_header) {
 		.h_clusterbits = 1 << Z_EROFS_FRAGMENT_INODE_BIT
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BUILD_BUG_ON(sizeof(struct erofs_super_block) != 128);
 	BUILD_BUG_ON(sizeof(struct erofs_inode_compact) != 32);
 	BUILD_BUG_ON(sizeof(struct erofs_inode_extended) != 64);
@@ -445,9 +481,12 @@ static inline void erofs_check_ondisk_layout_definitions(void)
 
 	BUILD_BUG_ON(BIT(Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS) <
 		     Z_EROFS_VLE_CLUSTER_TYPE_MAX - 1);
+<<<<<<< HEAD
 	/* exclude old compiler versions like gcc 7.5.0 */
 	BUILD_BUG_ON(__builtin_constant_p(fmh) ?
 		     fmh != cpu_to_le64(1ULL << 63) : 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #endif

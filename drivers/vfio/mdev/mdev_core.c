@@ -8,7 +8,13 @@
  */
 
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/slab.h>
+=======
+#include <linux/device.h>
+#include <linux/slab.h>
+#include <linux/uuid.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sysfs.h>
 #include <linux/mdev.h>
 
@@ -18,11 +24,77 @@
 #define DRIVER_AUTHOR		"NVIDIA Corporation"
 #define DRIVER_DESC		"Mediated device Core Driver"
 
+<<<<<<< HEAD
+=======
+static LIST_HEAD(parent_list);
+static DEFINE_MUTEX(parent_list_lock);
+>>>>>>> b7ba80a49124 (Commit)
 static struct class_compat *mdev_bus_compat_class;
 
 static LIST_HEAD(mdev_list);
 static DEFINE_MUTEX(mdev_list_lock);
 
+<<<<<<< HEAD
+=======
+struct device *mdev_parent_dev(struct mdev_device *mdev)
+{
+	return mdev->type->parent->dev;
+}
+EXPORT_SYMBOL(mdev_parent_dev);
+
+/*
+ * Return the index in supported_type_groups that this mdev_device was created
+ * from.
+ */
+unsigned int mdev_get_type_group_id(struct mdev_device *mdev)
+{
+	return mdev->type->type_group_id;
+}
+EXPORT_SYMBOL(mdev_get_type_group_id);
+
+/*
+ * Used in mdev_type_attribute sysfs functions to return the index in the
+ * supported_type_groups that the sysfs is called from.
+ */
+unsigned int mtype_get_type_group_id(struct mdev_type *mtype)
+{
+	return mtype->type_group_id;
+}
+EXPORT_SYMBOL(mtype_get_type_group_id);
+
+/*
+ * Used in mdev_type_attribute sysfs functions to return the parent struct
+ * device
+ */
+struct device *mtype_get_parent_dev(struct mdev_type *mtype)
+{
+	return mtype->parent->dev;
+}
+EXPORT_SYMBOL(mtype_get_parent_dev);
+
+/* Should be called holding parent_list_lock */
+static struct mdev_parent *__find_parent_device(struct device *dev)
+{
+	struct mdev_parent *parent;
+
+	list_for_each_entry(parent, &parent_list, next) {
+		if (parent->dev == dev)
+			return parent;
+	}
+	return NULL;
+}
+
+void mdev_release_parent(struct kref *kref)
+{
+	struct mdev_parent *parent = container_of(kref, struct mdev_parent,
+						  ref);
+	struct device *dev = parent->dev;
+
+	kfree(parent);
+	put_device(dev);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Caller must hold parent unreg_sem read or write lock */
 static void mdev_device_remove_common(struct mdev_device *mdev)
 {
@@ -37,12 +109,20 @@ static void mdev_device_remove_common(struct mdev_device *mdev)
 
 static int mdev_device_remove_cb(struct device *dev, void *data)
 {
+<<<<<<< HEAD
 	if (dev->bus == &mdev_bus_type)
 		mdev_device_remove_common(to_mdev_device(dev));
+=======
+	struct mdev_device *mdev = mdev_from_dev(dev);
+
+	if (mdev)
+		mdev_device_remove_common(mdev);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 /*
+<<<<<<< HEAD
  * mdev_register_parent: Register a device as parent for mdevs
  * @parent: parent structure registered
  * @dev: device structure representing parent device.
@@ -76,16 +156,73 @@ int mdev_register_parent(struct mdev_parent *parent, struct device *dev,
 		mdev_bus_compat_class = class_compat_register("mdev_bus");
 		if (!mdev_bus_compat_class)
 			return -ENOMEM;
+=======
+ * mdev_register_device : Register a device
+ * @dev: device structure representing parent device.
+ * @mdev_driver: Device driver to bind to the newly created mdev
+ *
+ * Add device to list of registered parent devices.
+ * Returns a negative value on error, otherwise 0.
+ */
+int mdev_register_device(struct device *dev, struct mdev_driver *mdev_driver)
+{
+	int ret;
+	struct mdev_parent *parent;
+	char *env_string = "MDEV_STATE=registered";
+	char *envp[] = { env_string, NULL };
+
+	/* check for mandatory ops */
+	if (!mdev_driver->supported_type_groups)
+		return -EINVAL;
+
+	dev = get_device(dev);
+	if (!dev)
+		return -EINVAL;
+
+	mutex_lock(&parent_list_lock);
+
+	/* Check for duplicate */
+	parent = __find_parent_device(dev);
+	if (parent) {
+		parent = NULL;
+		ret = -EEXIST;
+		goto add_dev_err;
+	}
+
+	parent = kzalloc(sizeof(*parent), GFP_KERNEL);
+	if (!parent) {
+		ret = -ENOMEM;
+		goto add_dev_err;
+	}
+
+	kref_init(&parent->ref);
+	init_rwsem(&parent->unreg_sem);
+
+	parent->dev = dev;
+	parent->mdev_driver = mdev_driver;
+
+	if (!mdev_bus_compat_class) {
+		mdev_bus_compat_class = class_compat_register("mdev_bus");
+		if (!mdev_bus_compat_class) {
+			ret = -ENOMEM;
+			goto add_dev_err;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = parent_create_sysfs_files(parent);
 	if (ret)
+<<<<<<< HEAD
 		return ret;
+=======
+		goto add_dev_err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = class_compat_create_link(mdev_bus_compat_class, dev, NULL);
 	if (ret)
 		dev_warn(dev, "Failed to create compatibility class link\n");
 
+<<<<<<< HEAD
 	dev_info(dev, "MDEV: Registered\n");
 	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
 	return 0;
@@ -112,10 +249,72 @@ void mdev_unregister_parent(struct mdev_parent *parent)
 	kobject_uevent_env(&parent->dev->kobj, KOBJ_CHANGE, envp);
 }
 EXPORT_SYMBOL(mdev_unregister_parent);
+=======
+	list_add(&parent->next, &parent_list);
+	mutex_unlock(&parent_list_lock);
+
+	dev_info(dev, "MDEV: Registered\n");
+	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
+
+	return 0;
+
+add_dev_err:
+	mutex_unlock(&parent_list_lock);
+	if (parent)
+		mdev_put_parent(parent);
+	else
+		put_device(dev);
+	return ret;
+}
+EXPORT_SYMBOL(mdev_register_device);
+
+/*
+ * mdev_unregister_device : Unregister a parent device
+ * @dev: device structure representing parent device.
+ *
+ * Remove device from list of registered parent devices. Give a chance to free
+ * existing mediated devices for given device.
+ */
+
+void mdev_unregister_device(struct device *dev)
+{
+	struct mdev_parent *parent;
+	char *env_string = "MDEV_STATE=unregistered";
+	char *envp[] = { env_string, NULL };
+
+	mutex_lock(&parent_list_lock);
+	parent = __find_parent_device(dev);
+
+	if (!parent) {
+		mutex_unlock(&parent_list_lock);
+		return;
+	}
+	dev_info(dev, "MDEV: Unregistering\n");
+
+	list_del(&parent->next);
+	mutex_unlock(&parent_list_lock);
+
+	down_write(&parent->unreg_sem);
+
+	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
+
+	device_for_each_child(dev, NULL, mdev_device_remove_cb);
+
+	parent_remove_sysfs_files(parent);
+	up_write(&parent->unreg_sem);
+
+	mdev_put_parent(parent);
+
+	/* We still have the caller's reference to use for the uevent */
+	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
+}
+EXPORT_SYMBOL(mdev_unregister_device);
+>>>>>>> b7ba80a49124 (Commit)
 
 static void mdev_device_release(struct device *dev)
 {
 	struct mdev_device *mdev = to_mdev_device(dev);
+<<<<<<< HEAD
 	struct mdev_parent *parent = mdev->type->parent;
 
 	mutex_lock(&mdev_list_lock);
@@ -123,10 +322,19 @@ static void mdev_device_release(struct device *dev)
 	if (!parent->mdev_driver->get_available)
 		atomic_inc(&parent->available_instances);
 	mutex_unlock(&mdev_list_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Pairs with the get in mdev_device_create() */
 	kobject_put(&mdev->type->kobj);
 
+<<<<<<< HEAD
+=======
+	mutex_lock(&mdev_list_lock);
+	list_del(&mdev->next);
+	mutex_unlock(&mdev_list_lock);
+
+>>>>>>> b7ba80a49124 (Commit)
 	dev_dbg(&mdev->dev, "MDEV: destroying\n");
 	kfree(mdev);
 }
@@ -148,6 +356,7 @@ int mdev_device_create(struct mdev_type *type, const guid_t *uuid)
 		}
 	}
 
+<<<<<<< HEAD
 	if (!drv->get_available) {
 		/*
 		 * Note: that non-atomic read and dec is fine here because
@@ -160,6 +369,8 @@ int mdev_device_create(struct mdev_type *type, const guid_t *uuid)
 		atomic_dec(&parent->available_instances);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mdev = kzalloc(sizeof(*mdev), GFP_KERNEL);
 	if (!mdev) {
 		mutex_unlock(&mdev_list_lock);

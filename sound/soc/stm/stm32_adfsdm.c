@@ -304,11 +304,14 @@ static int stm32_adfsdm_dummy_cb(const void *data, void *private)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void stm32_adfsdm_cleanup(void *data)
 {
 	iio_channel_release_all_cb(data);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct snd_soc_component_driver stm32_adfsdm_soc_platform = {
 	.open		= stm32_adfsdm_pcm_open,
 	.close		= stm32_adfsdm_pcm_close,
@@ -340,6 +343,11 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
 
 	dev_set_drvdata(&pdev->dev, priv);
 
+<<<<<<< HEAD
+=======
+	pm_runtime_enable(&pdev->dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = devm_snd_soc_register_component(&pdev->dev,
 					      &stm32_adfsdm_dai_component,
 					      &priv->dai_drv, 1);
@@ -355,12 +363,15 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
 	if (IS_ERR(priv->iio_cb))
 		return PTR_ERR(priv->iio_cb);
 
+<<<<<<< HEAD
 	ret = devm_add_action_or_reset(&pdev->dev, stm32_adfsdm_cleanup, priv->iio_cb);
 	if (ret < 0)  {
 		dev_err(&pdev->dev, "Unable to add action\n");
 		return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	component = devm_kzalloc(&pdev->dev, sizeof(*component), GFP_KERNEL);
 	if (!component)
 		return -ENOMEM;
@@ -375,6 +386,7 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
 #endif
 
 	ret = snd_soc_add_component(component, NULL, 0);
+<<<<<<< HEAD
 	if (ret < 0) {
 		dev_err(&pdev->dev, "%s: Failed to register PCM platform\n",
 			__func__);
@@ -382,14 +394,28 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
 	}
 
 	pm_runtime_enable(&pdev->dev);
+=======
+	if (ret < 0)
+		dev_err(&pdev->dev, "%s: Failed to register PCM platform\n",
+			__func__);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
 
+<<<<<<< HEAD
 static void stm32_adfsdm_remove(struct platform_device *pdev)
 {
 	snd_soc_unregister_component(&pdev->dev);
 	pm_runtime_disable(&pdev->dev);
+=======
+static int stm32_adfsdm_remove(struct platform_device *pdev)
+{
+	snd_soc_unregister_component(&pdev->dev);
+	pm_runtime_disable(&pdev->dev);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver stm32_adfsdm_driver = {
@@ -398,7 +424,11 @@ static struct platform_driver stm32_adfsdm_driver = {
 		   .of_match_table = stm32_adfsdm_of_match,
 		   },
 	.probe = stm32_adfsdm_probe,
+<<<<<<< HEAD
 	.remove_new = stm32_adfsdm_remove,
+=======
+	.remove = stm32_adfsdm_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(stm32_adfsdm_driver);

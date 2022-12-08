@@ -3,7 +3,10 @@ config HFS_FS
 	tristate "Apple Macintosh file system support"
 	depends on BLOCK
 	select NLS
+<<<<<<< HEAD
 	select LEGACY_DIRECT_IO
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  If you say Y here, you will be able to mount Macintosh-formatted
 	  floppy disks and hard drive partitions with full read-write access.

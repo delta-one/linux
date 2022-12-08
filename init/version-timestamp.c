@@ -2,6 +2,10 @@
 
 #include <generated/compile.h>
 #include <generated/utsrelease.h>
+<<<<<<< HEAD
+=======
+#include <linux/version.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/proc_ns.h>
 #include <linux/refcount.h>
 #include <linux/uts.h>

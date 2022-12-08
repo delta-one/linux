@@ -14,7 +14,10 @@
 #include <string.h>
 #include <stdio.h>
 #include <sys/utsname.h>
+<<<<<<< HEAD
 #include "reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "utils.h"
 #include "flush_utils.h"
 
@@ -80,5 +83,9 @@ void set_dscr(unsigned long val)
 		init = 1;
 	}
 
+<<<<<<< HEAD
 	mtspr(SPRN_DSCR, val);
+=======
+	asm volatile("mtspr %1,%0" : : "r" (val), "i" (SPRN_DSCR));
+>>>>>>> b7ba80a49124 (Commit)
 }

@@ -3,6 +3,7 @@
  * Copyright © 2014-2019 Intel Corporation
  */
 
+<<<<<<< HEAD
 #include "gt/intel_gsc.h"
 #include "gt/intel_gt.h"
 #include "intel_huc.h"
@@ -40,6 +41,11 @@ int intel_huc_fw_load_and_auth_via_gsc(struct intel_huc *huc)
 
 	return intel_huc_wait_for_auth_complete(huc);
 }
+=======
+#include "gt/intel_gt.h"
+#include "intel_huc_fw.h"
+#include "i915_drv.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * intel_huc_fw_upload() - load HuC uCode to device via DMA transfer

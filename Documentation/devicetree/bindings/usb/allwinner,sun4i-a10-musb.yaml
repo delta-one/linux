@@ -13,12 +13,19 @@ maintainers:
 properties:
   compatible:
     oneOf:
+<<<<<<< HEAD
       - enum:
           - allwinner,sun4i-a10-musb
           - allwinner,sun6i-a31-musb
           - allwinner,sun8i-a33-musb
           - allwinner,sun8i-h3-musb
           - allwinner,suniv-f1c100s-musb
+=======
+      - const: allwinner,sun4i-a10-musb
+      - const: allwinner,sun6i-a31-musb
+      - const: allwinner,sun8i-a33-musb
+      - const: allwinner,sun8i-h3-musb
+>>>>>>> b7ba80a49124 (Commit)
       - items:
           - enum:
               - allwinner,sun8i-a83t-musb

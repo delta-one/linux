@@ -436,10 +436,13 @@ struct hwmon_chip_info {
 /* hwmon_device_register() is deprecated */
 struct device *hwmon_device_register(struct device *dev);
 
+<<<<<<< HEAD
 /*
  * hwmon_device_register_with_groups() and
  * devm_hwmon_device_register_with_groups() are deprecated.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct device *
 hwmon_device_register_with_groups(struct device *dev, const char *name,
 				  void *drvdata,

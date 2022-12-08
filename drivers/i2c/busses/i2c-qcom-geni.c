@@ -14,7 +14,11 @@
 #include <linux/of.h>
 #include <linux/platform_device.h>
 #include <linux/pm_runtime.h>
+<<<<<<< HEAD
 #include <linux/soc/qcom/geni-se.h>
+=======
+#include <linux/qcom-geni-se.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/spinlock.h>
 
 #define SE_I2C_TX_TRANS_LEN		0x26c
@@ -88,7 +92,10 @@ struct geni_i2c_dev {
 	int cur_wr;
 	int cur_rd;
 	spinlock_t lock;
+<<<<<<< HEAD
 	struct clk *core_clk;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 clk_freq_out;
 	const struct geni_i2c_clk_fld *clk_fld;
 	int suspended;
@@ -101,6 +108,7 @@ struct geni_i2c_dev {
 	bool abort_done;
 };
 
+<<<<<<< HEAD
 struct geni_i2c_desc {
 	bool has_core_clk;
 	char *icc_ddr;
@@ -108,6 +116,8 @@ struct geni_i2c_desc {
 	unsigned int tx_fifo_depth;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct geni_i2c_err_log {
 	int err;
 	const char *msg;
@@ -634,6 +644,10 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
 			dev_err(gi2c->se.dev, "I2C timeout gpi flags:%d addr:0x%x\n",
 				gi2c->cur->flags, gi2c->cur->addr);
 			gi2c->err = -ETIMEDOUT;
+<<<<<<< HEAD
+=======
+			goto err;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (gi2c->err) {
@@ -771,7 +785,10 @@ static int geni_i2c_probe(struct platform_device *pdev)
 	u32 proto, tx_depth, fifo_disable;
 	int ret;
 	struct device *dev = &pdev->dev;
+<<<<<<< HEAD
 	const struct geni_i2c_desc *desc = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	gi2c = devm_kzalloc(dev, sizeof(*gi2c), GFP_KERNEL);
 	if (!gi2c)
@@ -784,6 +801,7 @@ static int geni_i2c_probe(struct platform_device *pdev)
 	if (IS_ERR(gi2c->se.base))
 		return PTR_ERR(gi2c->se.base);
 
+<<<<<<< HEAD
 	desc = device_get_match_data(&pdev->dev);
 
 	if (desc && desc->has_core_clk) {
@@ -792,6 +810,8 @@ static int geni_i2c_probe(struct platform_device *pdev)
 			return PTR_ERR(gi2c->core_clk);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gi2c->se.clk = devm_clk_get(dev, "se");
 	if (IS_ERR(gi2c->se.clk) && !has_acpi_companion(dev))
 		return PTR_ERR(gi2c->se.clk);
@@ -835,7 +855,11 @@ static int geni_i2c_probe(struct platform_device *pdev)
 	gi2c->adap.dev.of_node = dev->of_node;
 	strscpy(gi2c->adap.name, "Geni-I2C", sizeof(gi2c->adap.name));
 
+<<<<<<< HEAD
 	ret = geni_icc_get(&gi2c->se, desc ? desc->icc_ddr : "qup-memory");
+=======
+	ret = geni_icc_get(&gi2c->se, "qup-memory");
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 	/*
@@ -845,17 +869,24 @@ static int geni_i2c_probe(struct platform_device *pdev)
 	 */
 	gi2c->se.icc_paths[GENI_TO_CORE].avg_bw = GENI_DEFAULT_BW;
 	gi2c->se.icc_paths[CPU_TO_GENI].avg_bw = GENI_DEFAULT_BW;
+<<<<<<< HEAD
 	if (!desc || desc->icc_ddr)
 		gi2c->se.icc_paths[GENI_TO_DDR].avg_bw = Bps_to_icc(gi2c->clk_freq_out);
+=======
+	gi2c->se.icc_paths[GENI_TO_DDR].avg_bw = Bps_to_icc(gi2c->clk_freq_out);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = geni_icc_set_bw(&gi2c->se);
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = clk_prepare_enable(gi2c->core_clk);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = geni_se_resources_on(&gi2c->se);
 	if (ret) {
 		dev_err(dev, "Error turning on resources %d\n", ret);
@@ -865,6 +896,7 @@ static int geni_i2c_probe(struct platform_device *pdev)
 	if (proto != GENI_SE_I2C) {
 		dev_err(dev, "Invalid proto %d\n", proto);
 		geni_se_resources_off(&gi2c->se);
+<<<<<<< HEAD
 		clk_disable_unprepare(gi2c->core_clk);
 		return -ENXIO;
 	}
@@ -874,6 +906,12 @@ static int geni_i2c_probe(struct platform_device *pdev)
 	else
 		fifo_disable = readl_relaxed(gi2c->se.base + GENI_IF_DISABLE_RO) & FIFO_IF_DISABLE;
 
+=======
+		return -ENXIO;
+	}
+
+	fifo_disable = readl_relaxed(gi2c->se.base + GENI_IF_DISABLE_RO) & FIFO_IF_DISABLE;
+>>>>>>> b7ba80a49124 (Commit)
 	if (fifo_disable) {
 		/* FIFO is disabled, so we can only use GPI DMA */
 		gi2c->gpi_mode = true;
@@ -885,6 +923,7 @@ static int geni_i2c_probe(struct platform_device *pdev)
 	} else {
 		gi2c->gpi_mode = false;
 		tx_depth = geni_se_get_tx_fifo_depth(&gi2c->se);
+<<<<<<< HEAD
 
 		/* I2C Master Hub Serial Elements doesn't have the HW_PARAM_0 register */
 		if (!tx_depth && desc)
@@ -895,6 +934,8 @@ static int geni_i2c_probe(struct platform_device *pdev)
 			return -EINVAL;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		gi2c->tx_wm = tx_depth - 1;
 		geni_se_init(&gi2c->se, gi2c->tx_wm, tx_depth);
 		geni_se_config_packing(&gi2c->se, BITS_PER_BYTE,
@@ -903,7 +944,10 @@ static int geni_i2c_probe(struct platform_device *pdev)
 		dev_dbg(dev, "i2c fifo/se-dma mode. fifo depth:%d\n", tx_depth);
 	}
 
+<<<<<<< HEAD
 	clk_disable_unprepare(gi2c->core_clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = geni_se_resources_off(&gi2c->se);
 	if (ret) {
 		dev_err(dev, "Error turning off resources %d\n", ret);
@@ -969,8 +1013,11 @@ static int __maybe_unused geni_i2c_runtime_suspend(struct device *dev)
 		gi2c->suspended = 1;
 	}
 
+<<<<<<< HEAD
 	clk_disable_unprepare(gi2c->core_clk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return geni_icc_disable(&gi2c->se);
 }
 
@@ -983,10 +1030,13 @@ static int __maybe_unused geni_i2c_runtime_resume(struct device *dev)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = clk_prepare_enable(gi2c->core_clk);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = geni_se_resources_on(&gi2c->se);
 	if (ret)
 		return ret;
@@ -1025,6 +1075,7 @@ static const struct dev_pm_ops geni_i2c_pm_ops = {
 									NULL)
 };
 
+<<<<<<< HEAD
 static const struct geni_i2c_desc i2c_master_hub = {
 	.has_core_clk = true,
 	.icc_ddr = NULL,
@@ -1035,6 +1086,10 @@ static const struct geni_i2c_desc i2c_master_hub = {
 static const struct of_device_id geni_i2c_dt_match[] = {
 	{ .compatible = "qcom,geni-i2c" },
 	{ .compatible = "qcom,geni-i2c-master-hub", .data = &i2c_master_hub },
+=======
+static const struct of_device_id geni_i2c_dt_match[] = {
+	{ .compatible = "qcom,geni-i2c" },
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 MODULE_DEVICE_TABLE(of, geni_i2c_dt_match);

@@ -542,7 +542,11 @@ static bool __oom_reap_task_mm(struct mm_struct *mm)
 			struct mmu_gather tlb;
 
 			mmu_notifier_range_init(&range, MMU_NOTIFY_UNMAP, 0,
+<<<<<<< HEAD
 						mm, vma->vm_start,
+=======
+						vma, mm, vma->vm_start,
+>>>>>>> b7ba80a49124 (Commit)
 						vma->vm_end);
 			tlb_gather_mmu(&tlb, mm);
 			if (mmu_notifier_invalidate_range_start_nonblock(&range)) {
@@ -994,7 +998,10 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
 	mmdrop(mm);
 	put_task_struct(victim);
 }
+<<<<<<< HEAD
 #undef K
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Kill provided task unless it's secured by setting
@@ -1240,17 +1247,45 @@ SYSCALL_DEFINE2(process_mrelease, int, pidfd, unsigned int, flags)
 		goto drop_mm;
 
 	if (mmap_read_lock_killable(mm)) {
+<<<<<<< HEAD
 		ret = -EINTR;
 		goto drop_mm;
+=======
+		trace_skip_task_reaping(task->pid);
+		ret = -EINTR;
+		goto read_unlock;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	/*
 	 * Check MMF_OOM_SKIP again under mmap_read_lock protection to ensure
 	 * possible change in exit_mmap is seen
 	 */
+<<<<<<< HEAD
 	if (!test_bit(MMF_OOM_SKIP, &mm->flags) && !__oom_reap_task_mm(mm))
 		ret = -EAGAIN;
 	mmap_read_unlock(mm);
 
+=======
+	if (test_bit(MMF_OOM_SKIP, &mm->flags)) {
+		trace_skip_task_reaping(task->pid);
+		goto read_unlock;
+	}
+
+	trace_start_task_reaping(task->pid);
+
+	if (!__oom_reap_task_mm(mm))
+		ret = -EAGAIN;
+
+	pr_debug("process_mrelease: reaped process %d (%s), now anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB\n",
+		 task_pid_nr(task), task->comm,
+		 K(get_mm_counter(mm, MM_ANONPAGES)),
+		 K(get_mm_counter(mm, MM_FILEPAGES)),
+		 K(get_mm_counter(mm, MM_SHMEMPAGES)));
+	trace_finish_task_reaping(task->pid);
+
+read_unlock:
+	mmap_read_unlock(mm);
+>>>>>>> b7ba80a49124 (Commit)
 drop_mm:
 	mmdrop(mm);
 put_task:
@@ -1260,3 +1295,7 @@ put_task:
 	return -ENOSYS;
 #endif /* CONFIG_MMU */
 }
+<<<<<<< HEAD
+=======
+#undef K
+>>>>>>> b7ba80a49124 (Commit)

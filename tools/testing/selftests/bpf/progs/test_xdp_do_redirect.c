@@ -4,6 +4,7 @@
 
 #define ETH_ALEN 6
 #define HDR_SZ (sizeof(struct ethhdr) + sizeof(struct ipv6hdr) + sizeof(struct udphdr))
+<<<<<<< HEAD
 
 /**
  * enum frame_mark - magics to distinguish page/packet paths
@@ -17,6 +18,8 @@ enum frame_mark {
 	MARK_SKB	= 0x45,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const volatile int ifindex_out;
 const volatile int ifindex_in;
 const volatile __u8 expect_dst[ETH_ALEN];
@@ -47,12 +50,21 @@ int xdp_redirect(struct xdp_md *xdp)
 	if (*metadata != 0x42)
 		return XDP_ABORTED;
 
+<<<<<<< HEAD
 	if (*payload == MARK_XMIT)
 		pkts_seen_zero++;
 
 	*payload = MARK_IN;
 
 	if (bpf_xdp_adjust_meta(xdp, sizeof(__u64)))
+=======
+	if (*payload == 0) {
+		*payload = 0x42;
+		pkts_seen_zero++;
+	}
+
+	if (bpf_xdp_adjust_meta(xdp, 4))
+>>>>>>> b7ba80a49124 (Commit)
 		return XDP_ABORTED;
 
 	if (retcode > XDP_PASS)
@@ -64,7 +76,11 @@ int xdp_redirect(struct xdp_md *xdp)
 	return ret;
 }
 
+<<<<<<< HEAD
 static bool check_pkt(void *data, void *data_end, const __u32 mark)
+=======
+static bool check_pkt(void *data, void *data_end)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ipv6hdr *iph = data + sizeof(struct ethhdr);
 	__u8 *payload = data + HDR_SZ;
@@ -72,13 +88,21 @@ static bool check_pkt(void *data, void *data_end, const __u32 mark)
 	if (payload + 1 > data_end)
 		return false;
 
+<<<<<<< HEAD
 	if (iph->nexthdr != IPPROTO_UDP || *payload != MARK_IN)
+=======
+	if (iph->nexthdr != IPPROTO_UDP || *payload != 0x42)
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	/* reset the payload so the same packet doesn't get counted twice when
 	 * it cycles back through the kernel path and out the dst veth
 	 */
+<<<<<<< HEAD
 	*payload = mark;
+=======
+	*payload = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -88,11 +112,19 @@ int xdp_count_pkts(struct xdp_md *xdp)
 	void *data = (void *)(long)xdp->data;
 	void *data_end = (void *)(long)xdp->data_end;
 
+<<<<<<< HEAD
 	if (check_pkt(data, data_end, MARK_XMIT))
 		pkts_seen_xdp++;
 
 	/* Return %XDP_DROP to recycle the data page with %MARK_XMIT, like
 	 * it exited a physical NIC. Those pages will be counted in the
+=======
+	if (check_pkt(data, data_end))
+		pkts_seen_xdp++;
+
+	/* Return XDP_DROP to make sure the data page is recycled, like when it
+	 * exits a physical NIC. Recycled pages will be counted in the
+>>>>>>> b7ba80a49124 (Commit)
 	 * pkts_seen_zero counter above.
 	 */
 	return XDP_DROP;
@@ -104,12 +136,18 @@ int tc_count_pkts(struct __sk_buff *skb)
 	void *data = (void *)(long)skb->data;
 	void *data_end = (void *)(long)skb->data_end;
 
+<<<<<<< HEAD
 	if (check_pkt(data, data_end, MARK_SKB))
 		pkts_seen_tc++;
 
 	/* Will be either recycled or freed, %MARK_SKB makes sure it won't
 	 * hit any of the counters above.
 	 */
+=======
+	if (check_pkt(data, data_end))
+		pkts_seen_tc++;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

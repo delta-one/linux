@@ -28,12 +28,21 @@
 
 #include "internal.h"
 
+<<<<<<< HEAD
 struct mlock_fbatch {
 	local_lock_t lock;
 	struct folio_batch fbatch;
 };
 
 static DEFINE_PER_CPU(struct mlock_fbatch, mlock_fbatch) = {
+=======
+struct mlock_pvec {
+	local_lock_t lock;
+	struct pagevec vec;
+};
+
+static DEFINE_PER_CPU(struct mlock_pvec, mlock_pvec) = {
+>>>>>>> b7ba80a49124 (Commit)
 	.lock = INIT_LOCAL_LOCK(lock),
 };
 
@@ -48,6 +57,7 @@ bool can_do_mlock(void)
 EXPORT_SYMBOL(can_do_mlock);
 
 /*
+<<<<<<< HEAD
  * Mlocked folios are marked with the PG_mlocked flag for efficient testing
  * in vmscan and, possibly, the fault path; and to support semi-accurate
  * statistics.
@@ -79,10 +89,44 @@ static struct lruvec *__mlock_folio(struct folio *folio, struct lruvec *lruvec)
 
 			__count_vm_events(UNEVICTABLE_PGRESCUED,
 					  folio_nr_pages(folio));
+=======
+ * Mlocked pages are marked with PageMlocked() flag for efficient testing
+ * in vmscan and, possibly, the fault path; and to support semi-accurate
+ * statistics.
+ *
+ * An mlocked page [PageMlocked(page)] is unevictable.  As such, it will
+ * be placed on the LRU "unevictable" list, rather than the [in]active lists.
+ * The unevictable list is an LRU sibling list to the [in]active lists.
+ * PageUnevictable is set to indicate the unevictable state.
+ */
+
+static struct lruvec *__mlock_page(struct page *page, struct lruvec *lruvec)
+{
+	/* There is nothing more we can do while it's off LRU */
+	if (!TestClearPageLRU(page))
+		return lruvec;
+
+	lruvec = folio_lruvec_relock_irq(page_folio(page), lruvec);
+
+	if (unlikely(page_evictable(page))) {
+		/*
+		 * This is a little surprising, but quite possible:
+		 * PageMlocked must have got cleared already by another CPU.
+		 * Could this page be on the Unevictable LRU?  I'm not sure,
+		 * but move it now if so.
+		 */
+		if (PageUnevictable(page)) {
+			del_page_from_lru_list(page, lruvec);
+			ClearPageUnevictable(page);
+			add_page_to_lru_list(page, lruvec);
+			__count_vm_events(UNEVICTABLE_PGRESCUED,
+					  thp_nr_pages(page));
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if (folio_test_unevictable(folio)) {
 		if (folio_test_mlocked(folio))
 			folio->mlock_count++;
@@ -135,33 +179,106 @@ static struct lruvec *__munlock_folio(struct folio *folio, struct lruvec *lruvec
 		if (folio->mlock_count)
 			folio->mlock_count--;
 		if (folio->mlock_count)
+=======
+	if (PageUnevictable(page)) {
+		if (PageMlocked(page))
+			page->mlock_count++;
+		goto out;
+	}
+
+	del_page_from_lru_list(page, lruvec);
+	ClearPageActive(page);
+	SetPageUnevictable(page);
+	page->mlock_count = !!PageMlocked(page);
+	add_page_to_lru_list(page, lruvec);
+	__count_vm_events(UNEVICTABLE_PGCULLED, thp_nr_pages(page));
+out:
+	SetPageLRU(page);
+	return lruvec;
+}
+
+static struct lruvec *__mlock_new_page(struct page *page, struct lruvec *lruvec)
+{
+	VM_BUG_ON_PAGE(PageLRU(page), page);
+
+	lruvec = folio_lruvec_relock_irq(page_folio(page), lruvec);
+
+	/* As above, this is a little surprising, but possible */
+	if (unlikely(page_evictable(page)))
+		goto out;
+
+	SetPageUnevictable(page);
+	page->mlock_count = !!PageMlocked(page);
+	__count_vm_events(UNEVICTABLE_PGCULLED, thp_nr_pages(page));
+out:
+	add_page_to_lru_list(page, lruvec);
+	SetPageLRU(page);
+	return lruvec;
+}
+
+static struct lruvec *__munlock_page(struct page *page, struct lruvec *lruvec)
+{
+	int nr_pages = thp_nr_pages(page);
+	bool isolated = false;
+
+	if (!TestClearPageLRU(page))
+		goto munlock;
+
+	isolated = true;
+	lruvec = folio_lruvec_relock_irq(page_folio(page), lruvec);
+
+	if (PageUnevictable(page)) {
+		/* Then mlock_count is maintained, but might undercount */
+		if (page->mlock_count)
+			page->mlock_count--;
+		if (page->mlock_count)
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 	}
 	/* else assume that was the last mlock: reclaim will fix it if not */
 
 munlock:
+<<<<<<< HEAD
 	if (folio_test_clear_mlocked(folio)) {
 		__zone_stat_mod_folio(folio, NR_MLOCK, -nr_pages);
 		if (isolated || !folio_test_unevictable(folio))
+=======
+	if (TestClearPageMlocked(page)) {
+		__mod_zone_page_state(page_zone(page), NR_MLOCK, -nr_pages);
+		if (isolated || !PageUnevictable(page))
+>>>>>>> b7ba80a49124 (Commit)
 			__count_vm_events(UNEVICTABLE_PGMUNLOCKED, nr_pages);
 		else
 			__count_vm_events(UNEVICTABLE_PGSTRANDED, nr_pages);
 	}
 
+<<<<<<< HEAD
 	/* folio_evictable() has to be checked *after* clearing Mlocked */
 	if (isolated && folio_test_unevictable(folio) && folio_evictable(folio)) {
 		lruvec_del_folio(lruvec, folio);
 		folio_clear_unevictable(folio);
 		lruvec_add_folio(lruvec, folio);
+=======
+	/* page_evictable() has to be checked *after* clearing Mlocked */
+	if (isolated && PageUnevictable(page) && page_evictable(page)) {
+		del_page_from_lru_list(page, lruvec);
+		ClearPageUnevictable(page);
+		add_page_to_lru_list(page, lruvec);
+>>>>>>> b7ba80a49124 (Commit)
 		__count_vm_events(UNEVICTABLE_PGRESCUED, nr_pages);
 	}
 out:
 	if (isolated)
+<<<<<<< HEAD
 		folio_set_lru(folio);
+=======
+		SetPageLRU(page);
+>>>>>>> b7ba80a49124 (Commit)
 	return lruvec;
 }
 
 /*
+<<<<<<< HEAD
  * Flags held in the low bits of a struct folio pointer on the mlock_fbatch.
  */
 #define LRU_FOLIO 0x1
@@ -202,10 +319,53 @@ static void mlock_folio_batch(struct folio_batch *fbatch)
 			lruvec = __mlock_new_folio(folio, lruvec);
 		else
 			lruvec = __munlock_folio(folio, lruvec);
+=======
+ * Flags held in the low bits of a struct page pointer on the mlock_pvec.
+ */
+#define LRU_PAGE 0x1
+#define NEW_PAGE 0x2
+static inline struct page *mlock_lru(struct page *page)
+{
+	return (struct page *)((unsigned long)page + LRU_PAGE);
+}
+
+static inline struct page *mlock_new(struct page *page)
+{
+	return (struct page *)((unsigned long)page + NEW_PAGE);
+}
+
+/*
+ * mlock_pagevec() is derived from pagevec_lru_move_fn():
+ * perhaps that can make use of such page pointer flags in future,
+ * but for now just keep it for mlock.  We could use three separate
+ * pagevecs instead, but one feels better (munlocking a full pagevec
+ * does not need to drain mlocking pagevecs first).
+ */
+static void mlock_pagevec(struct pagevec *pvec)
+{
+	struct lruvec *lruvec = NULL;
+	unsigned long mlock;
+	struct page *page;
+	int i;
+
+	for (i = 0; i < pagevec_count(pvec); i++) {
+		page = pvec->pages[i];
+		mlock = (unsigned long)page & (LRU_PAGE | NEW_PAGE);
+		page = (struct page *)((unsigned long)page - mlock);
+		pvec->pages[i] = page;
+
+		if (mlock & LRU_PAGE)
+			lruvec = __mlock_page(page, lruvec);
+		else if (mlock & NEW_PAGE)
+			lruvec = __mlock_new_page(page, lruvec);
+		else
+			lruvec = __munlock_page(page, lruvec);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (lruvec)
 		unlock_page_lruvec_irq(lruvec);
+<<<<<<< HEAD
 	release_pages(fbatch->folios, fbatch->nr);
 	folio_batch_reinit(fbatch);
 }
@@ -234,6 +394,36 @@ void mlock_drain_remote(int cpu)
 bool need_mlock_drain(int cpu)
 {
 	return folio_batch_count(&per_cpu(mlock_fbatch.fbatch, cpu));
+=======
+	release_pages(pvec->pages, pvec->nr);
+	pagevec_reinit(pvec);
+}
+
+void mlock_page_drain_local(void)
+{
+	struct pagevec *pvec;
+
+	local_lock(&mlock_pvec.lock);
+	pvec = this_cpu_ptr(&mlock_pvec.vec);
+	if (pagevec_count(pvec))
+		mlock_pagevec(pvec);
+	local_unlock(&mlock_pvec.lock);
+}
+
+void mlock_page_drain_remote(int cpu)
+{
+	struct pagevec *pvec;
+
+	WARN_ON_ONCE(cpu_online(cpu));
+	pvec = &per_cpu(mlock_pvec.vec, cpu);
+	if (pagevec_count(pvec))
+		mlock_pagevec(pvec);
+}
+
+bool need_mlock_page_drain(int cpu)
+{
+	return pagevec_count(&per_cpu(mlock_pvec.vec, cpu));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -242,10 +432,17 @@ bool need_mlock_drain(int cpu)
  */
 void mlock_folio(struct folio *folio)
 {
+<<<<<<< HEAD
 	struct folio_batch *fbatch;
 
 	local_lock(&mlock_fbatch.lock);
 	fbatch = this_cpu_ptr(&mlock_fbatch.fbatch);
+=======
+	struct pagevec *pvec;
+
+	local_lock(&mlock_pvec.lock);
+	pvec = this_cpu_ptr(&mlock_pvec.vec);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!folio_test_set_mlocked(folio)) {
 		int nr_pages = folio_nr_pages(folio);
@@ -255,6 +452,7 @@ void mlock_folio(struct folio *folio)
 	}
 
 	folio_get(folio);
+<<<<<<< HEAD
 	if (!folio_batch_add(fbatch, mlock_lru(folio)) ||
 	    folio_test_large(folio) || lru_cache_disabled())
 		mlock_folio_batch(fbatch);
@@ -303,6 +501,56 @@ void munlock_folio(struct folio *folio)
 	    folio_test_large(folio) || lru_cache_disabled())
 		mlock_folio_batch(fbatch);
 	local_unlock(&mlock_fbatch.lock);
+=======
+	if (!pagevec_add(pvec, mlock_lru(&folio->page)) ||
+	    folio_test_large(folio) || lru_cache_disabled())
+		mlock_pagevec(pvec);
+	local_unlock(&mlock_pvec.lock);
+}
+
+/**
+ * mlock_new_page - mlock a newly allocated page not yet on LRU
+ * @page: page to be mlocked, either a normal page or a THP head.
+ */
+void mlock_new_page(struct page *page)
+{
+	struct pagevec *pvec;
+	int nr_pages = thp_nr_pages(page);
+
+	local_lock(&mlock_pvec.lock);
+	pvec = this_cpu_ptr(&mlock_pvec.vec);
+	SetPageMlocked(page);
+	mod_zone_page_state(page_zone(page), NR_MLOCK, nr_pages);
+	__count_vm_events(UNEVICTABLE_PGMLOCKED, nr_pages);
+
+	get_page(page);
+	if (!pagevec_add(pvec, mlock_new(page)) ||
+	    PageHead(page) || lru_cache_disabled())
+		mlock_pagevec(pvec);
+	local_unlock(&mlock_pvec.lock);
+}
+
+/**
+ * munlock_page - munlock a page
+ * @page: page to be munlocked, either a normal page or a THP head.
+ */
+void munlock_page(struct page *page)
+{
+	struct pagevec *pvec;
+
+	local_lock(&mlock_pvec.lock);
+	pvec = this_cpu_ptr(&mlock_pvec.vec);
+	/*
+	 * TestClearPageMlocked(page) must be left to __munlock_page(),
+	 * which will check whether the page is multiply mlocked.
+	 */
+
+	get_page(page);
+	if (!pagevec_add(pvec, page) ||
+	    PageHead(page) || lru_cache_disabled())
+		mlock_pagevec(pvec);
+	local_unlock(&mlock_pvec.lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mlock_pte_range(pmd_t *pmd, unsigned long addr,
@@ -312,7 +560,11 @@ static int mlock_pte_range(pmd_t *pmd, unsigned long addr,
 	struct vm_area_struct *vma = walk->vma;
 	spinlock_t *ptl;
 	pte_t *start_pte, *pte;
+<<<<<<< HEAD
 	struct folio *folio;
+=======
+	struct page *page;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ptl = pmd_trans_huge_lock(pmd, vma);
 	if (ptl) {
@@ -320,11 +572,19 @@ static int mlock_pte_range(pmd_t *pmd, unsigned long addr,
 			goto out;
 		if (is_huge_zero_pmd(*pmd))
 			goto out;
+<<<<<<< HEAD
 		folio = page_folio(pmd_page(*pmd));
 		if (vma->vm_flags & VM_LOCKED)
 			mlock_folio(folio);
 		else
 			munlock_folio(folio);
+=======
+		page = pmd_page(*pmd);
+		if (vma->vm_flags & VM_LOCKED)
+			mlock_folio(page_folio(page));
+		else
+			munlock_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -332,6 +592,7 @@ static int mlock_pte_range(pmd_t *pmd, unsigned long addr,
 	for (pte = start_pte; addr != end; pte++, addr += PAGE_SIZE) {
 		if (!pte_present(*pte))
 			continue;
+<<<<<<< HEAD
 		folio = vm_normal_folio(vma, addr, *pte);
 		if (!folio || folio_is_zone_device(folio))
 			continue;
@@ -341,6 +602,17 @@ static int mlock_pte_range(pmd_t *pmd, unsigned long addr,
 			mlock_folio(folio);
 		else
 			munlock_folio(folio);
+=======
+		page = vm_normal_page(vma, addr, *pte);
+		if (!page || is_zone_device_page(page))
+			continue;
+		if (PageTransCompound(page))
+			continue;
+		if (vma->vm_flags & VM_LOCKED)
+			mlock_folio(page_folio(page));
+		else
+			munlock_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	pte_unmap(start_pte);
 out:
@@ -370,9 +642,15 @@ static void mlock_vma_pages_range(struct vm_area_struct *vma,
 	/*
 	 * There is a slight chance that concurrent page migration,
 	 * or page reclaim finding a page of this now-VM_LOCKED vma,
+<<<<<<< HEAD
 	 * will call mlock_vma_folio() and raise page's mlock_count:
 	 * double counting, leaving the page unevictable indefinitely.
 	 * Communicate this danger to mlock_vma_folio() with VM_IO,
+=======
+	 * will call mlock_vma_page() and raise page's mlock_count:
+	 * double counting, leaving the page unevictable indefinitely.
+	 * Communicate this danger to mlock_vma_page() with VM_IO,
+>>>>>>> b7ba80a49124 (Commit)
 	 * which is a VM_SPECIAL flag not allowed on VM_LOCKED vmas.
 	 * mmap_lock is held in write mode here, so this weird
 	 * combination should not be visible to other mmap_lock users;
@@ -380,7 +658,11 @@ static void mlock_vma_pages_range(struct vm_area_struct *vma,
 	 */
 	if (newflags & VM_LOCKED)
 		newflags |= VM_IO;
+<<<<<<< HEAD
 	vm_flags_reset_once(vma, newflags);
+=======
+	WRITE_ONCE(vma->vm_flags, newflags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	lru_add_drain();
 	walk_page_range(vma->vm_mm, start, end, &mlock_walk_ops, NULL);
@@ -388,7 +670,11 @@ static void mlock_vma_pages_range(struct vm_area_struct *vma,
 
 	if (newflags & VM_IO) {
 		newflags &= ~VM_IO;
+<<<<<<< HEAD
 		vm_flags_reset_once(vma, newflags);
+=======
+		WRITE_ONCE(vma->vm_flags, newflags);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -401,9 +687,14 @@ static void mlock_vma_pages_range(struct vm_area_struct *vma,
  *
  * For vmas that pass the filters, merge/split as appropriate.
  */
+<<<<<<< HEAD
 static int mlock_fixup(struct vma_iterator *vmi, struct vm_area_struct *vma,
 	       struct vm_area_struct **prev, unsigned long start,
 	       unsigned long end, vm_flags_t newflags)
+=======
+static int mlock_fixup(struct vm_area_struct *vma, struct vm_area_struct **prev,
+	unsigned long start, unsigned long end, vm_flags_t newflags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mm_struct *mm = vma->vm_mm;
 	pgoff_t pgoff;
@@ -418,22 +709,36 @@ static int mlock_fixup(struct vma_iterator *vmi, struct vm_area_struct *vma,
 		goto out;
 
 	pgoff = vma->vm_pgoff + ((start - vma->vm_start) >> PAGE_SHIFT);
+<<<<<<< HEAD
 	*prev = vma_merge(vmi, mm, *prev, start, end, newflags,
 			vma->anon_vma, vma->vm_file, pgoff, vma_policy(vma),
 			vma->vm_userfaultfd_ctx, anon_vma_name(vma));
+=======
+	*prev = vma_merge(mm, *prev, start, end, newflags, vma->anon_vma,
+			  vma->vm_file, pgoff, vma_policy(vma),
+			  vma->vm_userfaultfd_ctx, anon_vma_name(vma));
+>>>>>>> b7ba80a49124 (Commit)
 	if (*prev) {
 		vma = *prev;
 		goto success;
 	}
 
 	if (start != vma->vm_start) {
+<<<<<<< HEAD
 		ret = split_vma(vmi, vma, start, 1);
+=======
+		ret = split_vma(mm, vma, start, 1);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			goto out;
 	}
 
 	if (end != vma->vm_end) {
+<<<<<<< HEAD
 		ret = split_vma(vmi, vma, end, 0);
+=======
+		ret = split_vma(mm, vma, end, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			goto out;
 	}
@@ -457,7 +762,11 @@ success:
 
 	if ((newflags & VM_LOCKED) && (oldflags & VM_LOCKED)) {
 		/* No work to do, and mlocking twice would be wrong */
+<<<<<<< HEAD
 		vm_flags_reset(vma, newflags);
+=======
+		vma->vm_flags = newflags;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		mlock_vma_pages_range(vma, start, end, newflags);
 	}
@@ -472,7 +781,11 @@ static int apply_vma_lock_flags(unsigned long start, size_t len,
 	unsigned long nstart, end, tmp;
 	struct vm_area_struct *vma, *prev;
 	int error;
+<<<<<<< HEAD
 	VMA_ITERATOR(vmi, current->mm, start);
+=======
+	MA_STATE(mas, &current->mm->mm_mt, start, start);
+>>>>>>> b7ba80a49124 (Commit)
 
 	VM_BUG_ON(offset_in_page(start));
 	VM_BUG_ON(len != PAGE_ALIGN(len));
@@ -481,6 +794,7 @@ static int apply_vma_lock_flags(unsigned long start, size_t len,
 		return -EINVAL;
 	if (end == start)
 		return 0;
+<<<<<<< HEAD
 	vma = vma_iter_load(&vmi);
 	if (!vma)
 		return -ENOMEM;
@@ -499,10 +813,27 @@ static int apply_vma_lock_flags(unsigned long start, size_t len,
 
 		newflags = vma->vm_flags & ~VM_LOCKED_MASK;
 		newflags |= flags;
+=======
+	vma = mas_walk(&mas);
+	if (!vma)
+		return -ENOMEM;
+
+	if (start > vma->vm_start)
+		prev = vma;
+	else
+		prev = mas_prev(&mas, 0);
+
+	for (nstart = start ; ; ) {
+		vm_flags_t newflags = vma->vm_flags & VM_LOCKED_CLEAR_MASK;
+
+		newflags |= flags;
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* Here we know that  vma->vm_start <= nstart < vma->vm_end. */
 		tmp = vma->vm_end;
 		if (tmp > end)
 			tmp = end;
+<<<<<<< HEAD
 		error = mlock_fixup(&vmi, vma, &prev, nstart, tmp, newflags);
 		if (error)
 			break;
@@ -512,6 +843,23 @@ static int apply_vma_lock_flags(unsigned long start, size_t len,
 	if (vma_iter_end(&vmi) < end)
 		return -ENOMEM;
 
+=======
+		error = mlock_fixup(vma, &prev, nstart, tmp, newflags);
+		if (error)
+			break;
+		nstart = tmp;
+		if (nstart < prev->vm_end)
+			nstart = prev->vm_end;
+		if (nstart >= end)
+			break;
+
+		vma = find_vma(prev->vm_mm, prev->vm_end);
+		if (!vma || vma->vm_start != nstart) {
+			error = -ENOMEM;
+			break;
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }
 
@@ -657,11 +1005,19 @@ SYSCALL_DEFINE2(munlock, unsigned long, start, size_t, len)
  */
 static int apply_mlockall_flags(int flags)
 {
+<<<<<<< HEAD
 	VMA_ITERATOR(vmi, current->mm, 0);
 	struct vm_area_struct *vma, *prev = NULL;
 	vm_flags_t to_add = 0;
 
 	current->mm->def_flags &= ~VM_LOCKED_MASK;
+=======
+	MA_STATE(mas, &current->mm->mm_mt, 0, 0);
+	struct vm_area_struct *vma, *prev = NULL;
+	vm_flags_t to_add = 0;
+
+	current->mm->def_flags &= VM_LOCKED_CLEAR_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 	if (flags & MCL_FUTURE) {
 		current->mm->def_flags |= VM_LOCKED;
 
@@ -678,6 +1034,7 @@ static int apply_mlockall_flags(int flags)
 			to_add |= VM_LOCKONFAULT;
 	}
 
+<<<<<<< HEAD
 	for_each_vma(vmi, vma) {
 		vm_flags_t newflags;
 
@@ -687,6 +1044,17 @@ static int apply_mlockall_flags(int flags)
 		/* Ignore errors */
 		mlock_fixup(&vmi, vma, &prev, vma->vm_start, vma->vm_end,
 			    newflags);
+=======
+	mas_for_each(&mas, vma, ULONG_MAX) {
+		vm_flags_t newflags;
+
+		newflags = vma->vm_flags & VM_LOCKED_CLEAR_MASK;
+		newflags |= to_add;
+
+		/* Ignore errors */
+		mlock_fixup(vma, &prev, vma->vm_start, vma->vm_end, newflags);
+		mas_pause(&mas);
+>>>>>>> b7ba80a49124 (Commit)
 		cond_resched();
 	}
 out:

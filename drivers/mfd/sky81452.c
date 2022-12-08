@@ -21,7 +21,12 @@ static const struct regmap_config sky81452_config = {
 	.val_bits = 8,
 };
 
+<<<<<<< HEAD
 static int sky81452_probe(struct i2c_client *client)
+=======
+static int sky81452_probe(struct i2c_client *client,
+				const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &client->dev;
 	const struct sky81452_platform_data *pdata = dev_get_platdata(dev);
@@ -77,7 +82,11 @@ static struct i2c_driver sky81452_driver = {
 		.name = "sky81452",
 		.of_match_table = of_match_ptr(sky81452_of_match),
 	},
+<<<<<<< HEAD
 	.probe_new = sky81452_probe,
+=======
+	.probe = sky81452_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = sky81452_ids,
 };
 

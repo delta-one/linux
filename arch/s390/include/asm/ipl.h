@@ -22,7 +22,10 @@ struct ipl_parameter_block {
 		struct ipl_pb0_common common;
 		struct ipl_pb0_fcp fcp;
 		struct ipl_pb0_ccw ccw;
+<<<<<<< HEAD
 		struct ipl_pb0_eckd eckd;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		struct ipl_pb0_nvme nvme;
 		char raw[PAGE_SIZE - sizeof(struct ipl_pl_hdr)];
 	};
@@ -42,10 +45,13 @@ struct ipl_parameter_block {
 			      sizeof(struct ipl_pb0_ccw))
 #define IPL_BP0_CCW_LEN (sizeof(struct ipl_pb0_ccw))
 
+<<<<<<< HEAD
 #define IPL_BP_ECKD_LEN (sizeof(struct ipl_pl_hdr) + \
 			      sizeof(struct ipl_pb0_eckd))
 #define IPL_BP0_ECKD_LEN (sizeof(struct ipl_pb0_eckd))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define IPL_MAX_SUPPORTED_VERSION (0)
 
 #define IPL_RB_CERT_UNKNOWN ((unsigned short)-1)
@@ -73,8 +79,11 @@ enum ipl_type {
 	IPL_TYPE_NSS		= 16,
 	IPL_TYPE_NVME		= 32,
 	IPL_TYPE_NVME_DUMP	= 64,
+<<<<<<< HEAD
 	IPL_TYPE_ECKD		= 128,
 	IPL_TYPE_ECKD_DUMP	= 256,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ipl_info
@@ -86,9 +95,12 @@ struct ipl_info
 		} ccw;
 		struct {
 			struct ccw_dev_id dev_id;
+<<<<<<< HEAD
 		} eckd;
 		struct {
 			struct ccw_dev_id dev_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			u64 wwpn;
 			u64 lun;
 		} fcp;
@@ -109,7 +121,10 @@ extern void set_os_info_reipl_block(void);
 static inline bool is_ipl_type_dump(void)
 {
 	return (ipl_info.type == IPL_TYPE_FCP_DUMP) ||
+<<<<<<< HEAD
 		(ipl_info.type == IPL_TYPE_ECKD_DUMP) ||
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		(ipl_info.type == IPL_TYPE_NVME_DUMP);
 }
 

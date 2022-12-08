@@ -15,7 +15,10 @@
 #include <time.h>
 #include <sched.h>
 #include <signal.h>
+<<<<<<< HEAD
 #include <pthread.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <sys/eventfd.h>
 
@@ -23,6 +26,7 @@
 #define SHINFO_REGION_GPA	0xc0000000ULL
 #define SHINFO_REGION_SLOT	10
 
+<<<<<<< HEAD
 #define DUMMY_REGION_GPA	(SHINFO_REGION_GPA + (3 * PAGE_SIZE))
 #define DUMMY_REGION_SLOT	11
 
@@ -37,6 +41,19 @@
 #define SHINFO_VADDR	(SHINFO_REGION_GVA)
 #define VCPU_INFO_VADDR	(SHINFO_REGION_GVA + 0x40)
 #define RUNSTATE_VADDR	(SHINFO_REGION_GVA + PAGE_SIZE + PAGE_SIZE - 15)
+=======
+#define DUMMY_REGION_GPA	(SHINFO_REGION_GPA + (2 * PAGE_SIZE))
+#define DUMMY_REGION_SLOT	11
+
+#define SHINFO_ADDR	(SHINFO_REGION_GPA)
+#define PVTIME_ADDR	(SHINFO_REGION_GPA + PAGE_SIZE)
+#define RUNSTATE_ADDR	(SHINFO_REGION_GPA + PAGE_SIZE + 0x20)
+#define VCPU_INFO_ADDR	(SHINFO_REGION_GPA + 0x40)
+
+#define SHINFO_VADDR	(SHINFO_REGION_GVA)
+#define RUNSTATE_VADDR	(SHINFO_REGION_GVA + PAGE_SIZE + 0x20)
+#define VCPU_INFO_VADDR	(SHINFO_REGION_GVA + 0x40)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define EVTCHN_VECTOR	0x10
 
@@ -44,6 +61,7 @@
 #define EVTCHN_TEST2 66
 #define EVTCHN_TIMER 13
 
+<<<<<<< HEAD
 enum {
 	TEST_INJECT_VECTOR = 0,
 	TEST_RUNSTATE_runnable,
@@ -75,12 +93,17 @@ enum {
 	TEST_GUEST_SAW_IRQ,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define XEN_HYPERCALL_MSR	0x40000000
 
 #define MIN_STEAL_TIME		50000
 
+<<<<<<< HEAD
 #define SHINFO_RACE_TIMEOUT	2	/* seconds */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define __HYPERVISOR_set_timer_op	15
 #define __HYPERVISOR_sched_op		29
 #define __HYPERVISOR_event_channel_op	32
@@ -119,6 +142,7 @@ struct pvclock_wall_clock {
 } __attribute__((__packed__));
 
 struct vcpu_runstate_info {
+<<<<<<< HEAD
 	uint32_t state;
 	uint64_t state_entry_time;
 	uint64_t time[5]; /* Extra field for overrun check */
@@ -133,6 +157,16 @@ struct compat_vcpu_runstate_info {
 struct arch_vcpu_info {
 	unsigned long cr2;
 	unsigned long pad; /* sizeof(vcpu_info_t) == 64 */
+=======
+    uint32_t state;
+    uint64_t state_entry_time;
+    uint64_t time[4];
+};
+
+struct arch_vcpu_info {
+    unsigned long cr2;
+    unsigned long pad; /* sizeof(vcpu_info_t) == 64 */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct vcpu_info {
@@ -169,7 +203,11 @@ struct {
 	struct kvm_irq_routing_entry entries[2];
 } irq_routes;
 
+<<<<<<< HEAD
 static volatile bool guest_saw_irq;
+=======
+bool guest_saw_irq;
+>>>>>>> b7ba80a49124 (Commit)
 
 static void evtchn_handler(struct ex_regs *regs)
 {
@@ -178,7 +216,11 @@ static void evtchn_handler(struct ex_regs *regs)
 	vi->evtchn_pending_sel = 0;
 	guest_saw_irq = true;
 
+<<<<<<< HEAD
 	GUEST_SYNC(TEST_GUEST_SAW_IRQ);
+=======
+	GUEST_SYNC(0x20);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void guest_wait_for_irq(void)
@@ -191,7 +233,10 @@ static void guest_wait_for_irq(void)
 static void guest_code(void)
 {
 	struct vcpu_runstate_info *rs = (void *)RUNSTATE_VADDR;
+<<<<<<< HEAD
 	int i;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	__asm__ __volatile__(
 		"sti\n"
@@ -199,11 +244,16 @@ static void guest_code(void)
 	);
 
 	/* Trigger an interrupt injection */
+<<<<<<< HEAD
 	GUEST_SYNC(TEST_INJECT_VECTOR);
+=======
+	GUEST_SYNC(0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	guest_wait_for_irq();
 
 	/* Test having the host set runstates manually */
+<<<<<<< HEAD
 	GUEST_SYNC(TEST_RUNSTATE_runnable);
 	GUEST_ASSERT(rs->time[RUNSTATE_runnable] != 0);
 	GUEST_ASSERT(rs->state == 0);
@@ -213,27 +263,54 @@ static void guest_code(void)
 	GUEST_ASSERT(rs->state == 0);
 
 	GUEST_SYNC(TEST_RUNSTATE_offline);
+=======
+	GUEST_SYNC(RUNSTATE_runnable);
+	GUEST_ASSERT(rs->time[RUNSTATE_runnable] != 0);
+	GUEST_ASSERT(rs->state == 0);
+
+	GUEST_SYNC(RUNSTATE_blocked);
+	GUEST_ASSERT(rs->time[RUNSTATE_blocked] != 0);
+	GUEST_ASSERT(rs->state == 0);
+
+	GUEST_SYNC(RUNSTATE_offline);
+>>>>>>> b7ba80a49124 (Commit)
 	GUEST_ASSERT(rs->time[RUNSTATE_offline] != 0);
 	GUEST_ASSERT(rs->state == 0);
 
 	/* Test runstate time adjust */
+<<<<<<< HEAD
 	GUEST_SYNC(TEST_RUNSTATE_ADJUST);
+=======
+	GUEST_SYNC(4);
+>>>>>>> b7ba80a49124 (Commit)
 	GUEST_ASSERT(rs->time[RUNSTATE_blocked] == 0x5a);
 	GUEST_ASSERT(rs->time[RUNSTATE_offline] == 0x6b6b);
 
 	/* Test runstate time set */
+<<<<<<< HEAD
 	GUEST_SYNC(TEST_RUNSTATE_DATA);
+=======
+	GUEST_SYNC(5);
+>>>>>>> b7ba80a49124 (Commit)
 	GUEST_ASSERT(rs->state_entry_time >= 0x8000);
 	GUEST_ASSERT(rs->time[RUNSTATE_runnable] == 0);
 	GUEST_ASSERT(rs->time[RUNSTATE_blocked] == 0x6b6b);
 	GUEST_ASSERT(rs->time[RUNSTATE_offline] == 0x5a);
 
 	/* sched_yield() should result in some 'runnable' time */
+<<<<<<< HEAD
 	GUEST_SYNC(TEST_STEAL_TIME);
 	GUEST_ASSERT(rs->time[RUNSTATE_runnable] >= MIN_STEAL_TIME);
 
 	/* Attempt to deliver a *masked* interrupt */
 	GUEST_SYNC(TEST_EVTCHN_MASKED);
+=======
+	GUEST_SYNC(6);
+	GUEST_ASSERT(rs->time[RUNSTATE_runnable] >= MIN_STEAL_TIME);
+
+	/* Attempt to deliver a *masked* interrupt */
+	GUEST_SYNC(7);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Wait until we see the bit set */
 	struct shared_info *si = (void *)SHINFO_VADDR;
@@ -241,16 +318,25 @@ static void guest_code(void)
 		__asm__ __volatile__ ("rep nop" : : : "memory");
 
 	/* Now deliver an *unmasked* interrupt */
+<<<<<<< HEAD
 	GUEST_SYNC(TEST_EVTCHN_UNMASKED);
+=======
+	GUEST_SYNC(8);
+>>>>>>> b7ba80a49124 (Commit)
 
 	guest_wait_for_irq();
 
 	/* Change memslots and deliver an interrupt */
+<<<<<<< HEAD
 	GUEST_SYNC(TEST_EVTCHN_SLOWPATH);
+=======
+	GUEST_SYNC(9);
+>>>>>>> b7ba80a49124 (Commit)
 
 	guest_wait_for_irq();
 
 	/* Deliver event channel with KVM_XEN_HVM_EVTCHN_SEND */
+<<<<<<< HEAD
 	GUEST_SYNC(TEST_EVTCHN_SEND_IOCTL);
 
 	guest_wait_for_irq();
@@ -275,10 +361,34 @@ static void guest_code(void)
 	guest_wait_for_irq();
 
 	GUEST_SYNC(TEST_EVTCHN_HCALL_EVENTFD);
+=======
+	GUEST_SYNC(10);
+
+	guest_wait_for_irq();
+
+	GUEST_SYNC(11);
+
+	/* Our turn. Deliver event channel (to ourselves) with
+	 * EVTCHNOP_send hypercall. */
+	unsigned long rax;
+	struct evtchn_send s = { .port = 127 };
+	__asm__ __volatile__ ("vmcall" :
+			      "=a" (rax) :
+			      "a" (__HYPERVISOR_event_channel_op),
+			      "D" (EVTCHNOP_send),
+			      "S" (&s));
+
+	GUEST_ASSERT(rax == 0);
+
+	guest_wait_for_irq();
+
+	GUEST_SYNC(12);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Deliver "outbound" event channel to an eventfd which
 	 * happens to be one of our own irqfds. */
 	s.port = 197;
+<<<<<<< HEAD
 	xen_hypercall(__HYPERVISOR_event_channel_op, EVTCHNOP_send, &s);
 
 	guest_wait_for_irq();
@@ -290,16 +400,46 @@ static void guest_code(void)
 		      rs->state_entry_time + 100000000, NULL);
 
 	GUEST_SYNC(TEST_TIMER_WAIT);
+=======
+	__asm__ __volatile__ ("vmcall" :
+			      "=a" (rax) :
+			      "a" (__HYPERVISOR_event_channel_op),
+			      "D" (EVTCHNOP_send),
+			      "S" (&s));
+
+	GUEST_ASSERT(rax == 0);
+
+	guest_wait_for_irq();
+
+	GUEST_SYNC(13);
+
+	/* Set a timer 100ms in the future. */
+	__asm__ __volatile__ ("vmcall" :
+			      "=a" (rax) :
+			      "a" (__HYPERVISOR_set_timer_op),
+			      "D" (rs->state_entry_time + 100000000));
+	GUEST_ASSERT(rax == 0);
+
+	GUEST_SYNC(14);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Now wait for the timer */
 	guest_wait_for_irq();
 
+<<<<<<< HEAD
 	GUEST_SYNC(TEST_TIMER_RESTORE);
+=======
+	GUEST_SYNC(15);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* The host has 'restored' the timer. Just wait for it. */
 	guest_wait_for_irq();
 
+<<<<<<< HEAD
 	GUEST_SYNC(TEST_POLL_READY);
+=======
+	GUEST_SYNC(16);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Poll for an event channel port which is already set */
 	u32 ports[1] = { EVTCHN_TIMER };
@@ -309,6 +449,7 @@ static void guest_code(void)
 		.timeout = 0,
 	};
 
+<<<<<<< HEAD
 	xen_hypercall(__HYPERVISOR_sched_op, SCHEDOP_poll, &p);
 
 	GUEST_SYNC(TEST_POLL_TIMEOUT);
@@ -324,20 +465,70 @@ static void guest_code(void)
 	xen_hypercall(__HYPERVISOR_sched_op, SCHEDOP_poll, &p);
 
 	GUEST_SYNC(TEST_POLL_WAKE);
+=======
+	__asm__ __volatile__ ("vmcall" :
+			      "=a" (rax) :
+			      "a" (__HYPERVISOR_sched_op),
+			      "D" (SCHEDOP_poll),
+			      "S" (&p));
+
+	GUEST_ASSERT(rax == 0);
+
+	GUEST_SYNC(17);
+
+	/* Poll for an unset port and wait for the timeout. */
+	p.timeout = 100000000;
+	__asm__ __volatile__ ("vmcall" :
+			      "=a" (rax) :
+			      "a" (__HYPERVISOR_sched_op),
+			      "D" (SCHEDOP_poll),
+			      "S" (&p));
+
+	GUEST_ASSERT(rax == 0);
+
+	GUEST_SYNC(18);
+
+	/* A timer will wake the masked port we're waiting on, while we poll */
+	p.timeout = 0;
+	__asm__ __volatile__ ("vmcall" :
+			      "=a" (rax) :
+			      "a" (__HYPERVISOR_sched_op),
+			      "D" (SCHEDOP_poll),
+			      "S" (&p));
+
+	GUEST_ASSERT(rax == 0);
+
+	GUEST_SYNC(19);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* A timer wake an *unmasked* port which should wake us with an
 	 * actual interrupt, while we're polling on a different port. */
 	ports[0]++;
 	p.timeout = 0;
+<<<<<<< HEAD
 	xen_hypercall(__HYPERVISOR_sched_op, SCHEDOP_poll, &p);
 
 	guest_wait_for_irq();
 
 	GUEST_SYNC(TEST_TIMER_PAST);
+=======
+	__asm__ __volatile__ ("vmcall" :
+			      "=a" (rax) :
+			      "a" (__HYPERVISOR_sched_op),
+			      "D" (SCHEDOP_poll),
+			      "S" (&p));
+
+	GUEST_ASSERT(rax == 0);
+
+	guest_wait_for_irq();
+
+	GUEST_SYNC(20);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Timer should have fired already */
 	guest_wait_for_irq();
 
+<<<<<<< HEAD
 	GUEST_SYNC(TEST_LOCKING_SEND_RACE);
 	/* Racing host ioctls */
 
@@ -377,6 +568,9 @@ wait_for_timer:
 	guest_saw_irq = false;
 
 	GUEST_SYNC(TEST_DONE);
+=======
+	GUEST_SYNC(21);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cmp_timespec(struct timespec *a, struct timespec *b)
@@ -404,6 +598,7 @@ static void handle_alrm(int sig)
 	TEST_FAIL("IRQ delivery timed out");
 }
 
+<<<<<<< HEAD
 static void *juggle_shinfo_state(void *arg)
 {
 	struct kvm_vm *vm = (struct kvm_vm *)arg;
@@ -435,6 +630,13 @@ int main(int argc, char *argv[])
 	pthread_t thread;
 	bool verbose;
 	int ret;
+=======
+int main(int argc, char *argv[])
+{
+	struct timespec min_ts, max_ts, vm_ts;
+	struct kvm_vm *vm;
+	bool verbose;
+>>>>>>> b7ba80a49124 (Commit)
 
 	verbose = argc > 1 && (!strncmp(argv[1], "-v", 3) ||
 			       !strncmp(argv[1], "--verbose", 10));
@@ -443,7 +645,10 @@ int main(int argc, char *argv[])
 	TEST_REQUIRE(xen_caps & KVM_XEN_HVM_CONFIG_SHARED_INFO);
 
 	bool do_runstate_tests = !!(xen_caps & KVM_XEN_HVM_CONFIG_RUNSTATE);
+<<<<<<< HEAD
 	bool do_runstate_flag = !!(xen_caps & KVM_XEN_HVM_CONFIG_RUNSTATE_UPDATE_FLAG);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool do_eventfd_tests = !!(xen_caps & KVM_XEN_HVM_CONFIG_EVTCHN_2LEVEL);
 	bool do_evtchn_tests = do_eventfd_tests && !!(xen_caps & KVM_XEN_HVM_CONFIG_EVTCHN_SEND);
 
@@ -453,8 +658,13 @@ int main(int argc, char *argv[])
 
 	/* Map a region for the shared_info page */
 	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
+<<<<<<< HEAD
 				    SHINFO_REGION_GPA, SHINFO_REGION_SLOT, 3, 0);
 	virt_map(vm, SHINFO_REGION_GVA, SHINFO_REGION_GPA, 3);
+=======
+				    SHINFO_REGION_GPA, SHINFO_REGION_SLOT, 2, 0);
+	virt_map(vm, SHINFO_REGION_GVA, SHINFO_REGION_GPA, 2);
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct shared_info *shinfo = addr_gpa2hva(vm, SHINFO_VADDR);
 
@@ -479,6 +689,7 @@ int main(int argc, char *argv[])
 	};
 	vm_ioctl(vm, KVM_XEN_HVM_SET_ATTR, &lm);
 
+<<<<<<< HEAD
 	if (do_runstate_flag) {
 		struct kvm_xen_hvm_attr ruf = {
 			.type = KVM_XEN_ATTR_TYPE_RUNSTATE_UPDATE_FLAG,
@@ -492,6 +703,8 @@ int main(int argc, char *argv[])
 			    "Failed to read back RUNSTATE_UPDATE_FLAG attr");
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct kvm_xen_hvm_attr ha = {
 		.type = KVM_XEN_ATTR_TYPE_SHARED_INFO,
 		.u.shared_info.gfn = SHINFO_REGION_GPA / PAGE_SIZE,
@@ -622,10 +835,22 @@ int main(int argc, char *argv[])
 	bool evtchn_irq_expected = false;
 
 	for (;;) {
+<<<<<<< HEAD
 		struct ucall uc;
 
 		vcpu_run(vcpu);
 		TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+=======
+		volatile struct kvm_run *run = vcpu->run;
+		struct ucall uc;
+
+		vcpu_run(vcpu);
+
+		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+			    "Got exit_reason other than KVM_EXIT_IO: %u (%s)\n",
+			    run->exit_reason,
+			    exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 
 		switch (get_ucall(vcpu, &uc)) {
 		case UCALL_ABORT:
@@ -641,26 +866,42 @@ int main(int argc, char *argv[])
 					    "runstate times don't add up");
 
 			switch (uc.args[1]) {
+<<<<<<< HEAD
 			case TEST_INJECT_VECTOR:
+=======
+			case 0:
+>>>>>>> b7ba80a49124 (Commit)
 				if (verbose)
 					printf("Delivering evtchn upcall\n");
 				evtchn_irq_expected = true;
 				vinfo->evtchn_upcall_pending = 1;
 				break;
 
+<<<<<<< HEAD
 			case TEST_RUNSTATE_runnable...TEST_RUNSTATE_offline:
+=======
+			case RUNSTATE_runnable...RUNSTATE_offline:
+>>>>>>> b7ba80a49124 (Commit)
 				TEST_ASSERT(!evtchn_irq_expected, "Event channel IRQ not seen");
 				if (!do_runstate_tests)
 					goto done;
 				if (verbose)
 					printf("Testing runstate %s\n", runstate_names[uc.args[1]]);
 				rst.type = KVM_XEN_VCPU_ATTR_TYPE_RUNSTATE_CURRENT;
+<<<<<<< HEAD
 				rst.u.runstate.state = uc.args[1] + RUNSTATE_runnable -
 					TEST_RUNSTATE_runnable;
 				vcpu_ioctl(vcpu, KVM_XEN_VCPU_SET_ATTR, &rst);
 				break;
 
 			case TEST_RUNSTATE_ADJUST:
+=======
+				rst.u.runstate.state = uc.args[1];
+				vcpu_ioctl(vcpu, KVM_XEN_VCPU_SET_ATTR, &rst);
+				break;
+
+			case 4:
+>>>>>>> b7ba80a49124 (Commit)
 				if (verbose)
 					printf("Testing RUNSTATE_ADJUST\n");
 				rst.type = KVM_XEN_VCPU_ATTR_TYPE_RUNSTATE_ADJUST;
@@ -675,7 +916,11 @@ int main(int argc, char *argv[])
 				vcpu_ioctl(vcpu, KVM_XEN_VCPU_SET_ATTR, &rst);
 				break;
 
+<<<<<<< HEAD
 			case TEST_RUNSTATE_DATA:
+=======
+			case 5:
+>>>>>>> b7ba80a49124 (Commit)
 				if (verbose)
 					printf("Testing RUNSTATE_DATA\n");
 				rst.type = KVM_XEN_VCPU_ATTR_TYPE_RUNSTATE_DATA;
@@ -687,7 +932,11 @@ int main(int argc, char *argv[])
 				vcpu_ioctl(vcpu, KVM_XEN_VCPU_SET_ATTR, &rst);
 				break;
 
+<<<<<<< HEAD
 			case TEST_STEAL_TIME:
+=======
+			case 6:
+>>>>>>> b7ba80a49124 (Commit)
 				if (verbose)
 					printf("Testing steal time\n");
 				/* Yield until scheduler delay exceeds target */
@@ -697,7 +946,11 @@ int main(int argc, char *argv[])
 				} while (get_run_delay() < rundelay);
 				break;
 
+<<<<<<< HEAD
 			case TEST_EVTCHN_MASKED:
+=======
+			case 7:
+>>>>>>> b7ba80a49124 (Commit)
 				if (!do_eventfd_tests)
 					goto done;
 				if (verbose)
@@ -707,7 +960,11 @@ int main(int argc, char *argv[])
 				alarm(1);
 				break;
 
+<<<<<<< HEAD
 			case TEST_EVTCHN_UNMASKED:
+=======
+			case 8:
+>>>>>>> b7ba80a49124 (Commit)
 				if (verbose)
 					printf("Testing unmasked event channel\n");
 				/* Unmask that, but deliver the other one */
@@ -718,7 +975,11 @@ int main(int argc, char *argv[])
 				alarm(1);
 				break;
 
+<<<<<<< HEAD
 			case TEST_EVTCHN_SLOWPATH:
+=======
+			case 9:
+>>>>>>> b7ba80a49124 (Commit)
 				TEST_ASSERT(!evtchn_irq_expected,
 					    "Expected event channel IRQ but it didn't happen");
 				shinfo->evtchn_pending[1] = 0;
@@ -731,7 +992,11 @@ int main(int argc, char *argv[])
 				alarm(1);
 				break;
 
+<<<<<<< HEAD
 			case TEST_EVTCHN_SEND_IOCTL:
+=======
+			case 10:
+>>>>>>> b7ba80a49124 (Commit)
 				TEST_ASSERT(!evtchn_irq_expected,
 					    "Expected event channel IRQ but it didn't happen");
 				if (!do_evtchn_tests)
@@ -751,7 +1016,11 @@ int main(int argc, char *argv[])
 				alarm(1);
 				break;
 
+<<<<<<< HEAD
 			case TEST_EVTCHN_HCALL:
+=======
+			case 11:
+>>>>>>> b7ba80a49124 (Commit)
 				TEST_ASSERT(!evtchn_irq_expected,
 					    "Expected event channel IRQ but it didn't happen");
 				shinfo->evtchn_pending[1] = 0;
@@ -762,6 +1031,7 @@ int main(int argc, char *argv[])
 				alarm(1);
 				break;
 
+<<<<<<< HEAD
 			case TEST_EVTCHN_HCALL_SLOWPATH:
 				TEST_ASSERT(!evtchn_irq_expected,
 					    "Expected event channel IRQ but it didn't happen");
@@ -776,6 +1046,9 @@ int main(int argc, char *argv[])
 				break;
 
 			case TEST_EVTCHN_HCALL_EVENTFD:
+=======
+			case 12:
+>>>>>>> b7ba80a49124 (Commit)
 				TEST_ASSERT(!evtchn_irq_expected,
 					    "Expected event channel IRQ but it didn't happen");
 				shinfo->evtchn_pending[0] = 0;
@@ -786,7 +1059,11 @@ int main(int argc, char *argv[])
 				alarm(1);
 				break;
 
+<<<<<<< HEAD
 			case TEST_TIMER_SETUP:
+=======
+			case 13:
+>>>>>>> b7ba80a49124 (Commit)
 				TEST_ASSERT(!evtchn_irq_expected,
 					    "Expected event channel IRQ but it didn't happen");
 				shinfo->evtchn_pending[1] = 0;
@@ -795,7 +1072,11 @@ int main(int argc, char *argv[])
 					printf("Testing guest oneshot timer\n");
 				break;
 
+<<<<<<< HEAD
 			case TEST_TIMER_WAIT:
+=======
+			case 14:
+>>>>>>> b7ba80a49124 (Commit)
 				memset(&tmr, 0, sizeof(tmr));
 				tmr.type = KVM_XEN_VCPU_ATTR_TYPE_TIMER;
 				vcpu_ioctl(vcpu, KVM_XEN_VCPU_GET_ATTR, &tmr);
@@ -809,7 +1090,11 @@ int main(int argc, char *argv[])
 				alarm(1);
 				break;
 
+<<<<<<< HEAD
 			case TEST_TIMER_RESTORE:
+=======
+			case 15:
+>>>>>>> b7ba80a49124 (Commit)
 				TEST_ASSERT(!evtchn_irq_expected,
 					    "Expected event channel IRQ but it didn't happen");
 				shinfo->evtchn_pending[0] = 0;
@@ -823,7 +1108,11 @@ int main(int argc, char *argv[])
 				alarm(1);
 				break;
 
+<<<<<<< HEAD
 			case TEST_POLL_READY:
+=======
+			case 16:
+>>>>>>> b7ba80a49124 (Commit)
 				TEST_ASSERT(!evtchn_irq_expected,
 					    "Expected event channel IRQ but it didn't happen");
 
@@ -833,14 +1122,22 @@ int main(int argc, char *argv[])
 				alarm(1);
 				break;
 
+<<<<<<< HEAD
 			case TEST_POLL_TIMEOUT:
+=======
+			case 17:
+>>>>>>> b7ba80a49124 (Commit)
 				if (verbose)
 					printf("Testing SCHEDOP_poll timeout\n");
 				shinfo->evtchn_pending[0] = 0;
 				alarm(1);
 				break;
 
+<<<<<<< HEAD
 			case TEST_POLL_MASKED:
+=======
+			case 18:
+>>>>>>> b7ba80a49124 (Commit)
 				if (verbose)
 					printf("Testing SCHEDOP_poll wake on masked event\n");
 
@@ -849,7 +1146,11 @@ int main(int argc, char *argv[])
 				alarm(1);
 				break;
 
+<<<<<<< HEAD
 			case TEST_POLL_WAKE:
+=======
+			case 19:
+>>>>>>> b7ba80a49124 (Commit)
 				shinfo->evtchn_pending[0] = shinfo->evtchn_mask[0] = 0;
 				if (verbose)
 					printf("Testing SCHEDOP_poll wake on unmasked event\n");
@@ -866,7 +1167,11 @@ int main(int argc, char *argv[])
 				alarm(1);
 				break;
 
+<<<<<<< HEAD
 			case TEST_TIMER_PAST:
+=======
+			case 20:
+>>>>>>> b7ba80a49124 (Commit)
 				TEST_ASSERT(!evtchn_irq_expected,
 					    "Expected event channel IRQ but it didn't happen");
 				/* Read timer and check it is no longer pending */
@@ -883,6 +1188,7 @@ int main(int argc, char *argv[])
 				alarm(1);
 				break;
 
+<<<<<<< HEAD
 			case TEST_LOCKING_SEND_RACE:
 				TEST_ASSERT(!evtchn_irq_expected,
 					    "Expected event channel IRQ but it didn't happen");
@@ -954,6 +1260,14 @@ int main(int argc, char *argv[])
 				goto done;
 
 			case TEST_GUEST_SAW_IRQ:
+=======
+			case 21:
+				TEST_ASSERT(!evtchn_irq_expected,
+					    "Expected event channel IRQ but it didn't happen");
+				goto done;
+
+			case 0x20:
+>>>>>>> b7ba80a49124 (Commit)
 				TEST_ASSERT(evtchn_irq_expected, "Unexpected event channel IRQ");
 				evtchn_irq_expected = false;
 				break;
@@ -968,10 +1282,13 @@ int main(int argc, char *argv[])
 	}
 
  done:
+<<<<<<< HEAD
 	evt_reset.type = KVM_XEN_ATTR_TYPE_EVTCHN;
 	evt_reset.u.evtchn.flags = KVM_XEN_EVTCHN_RESET;
 	vm_ioctl(vm, KVM_XEN_HVM_SET_ATTR, &evt_reset);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	alarm(0);
 	clock_gettime(CLOCK_REALTIME, &max_ts);
 
@@ -1029,6 +1346,7 @@ int main(int argc, char *argv[])
 				       runstate_names[i], rs->time[i]);
 			}
 		}
+<<<<<<< HEAD
 
 		/*
 		 * Exercise runstate info at all points across the page boundary, in
@@ -1114,6 +1432,24 @@ int main(int argc, char *argv[])
 		}
 	}
 
+=======
+		TEST_ASSERT(rs->state == rst.u.runstate.state, "Runstate mismatch");
+		TEST_ASSERT(rs->state_entry_time == rst.u.runstate.state_entry_time,
+			    "State entry time mismatch");
+		TEST_ASSERT(rs->time[RUNSTATE_running] == rst.u.runstate.time_running,
+			    "Running time mismatch");
+		TEST_ASSERT(rs->time[RUNSTATE_runnable] == rst.u.runstate.time_runnable,
+			    "Runnable time mismatch");
+		TEST_ASSERT(rs->time[RUNSTATE_blocked] == rst.u.runstate.time_blocked,
+			    "Blocked time mismatch");
+		TEST_ASSERT(rs->time[RUNSTATE_offline] == rst.u.runstate.time_offline,
+			    "Offline time mismatch");
+
+		TEST_ASSERT(rs->state_entry_time == rs->time[0] +
+			    rs->time[1] + rs->time[2] + rs->time[3],
+			    "runstate times don't add up");
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	kvm_vm_free(vm);
 	return 0;
 }

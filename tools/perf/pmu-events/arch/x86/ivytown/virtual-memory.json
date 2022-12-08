@@ -1,6 +1,11 @@
 [
     {
         "BriefDescription": "Demand load Miss in all translation lookaside buffer (TLB) levels causes a page walk that completes of any page size.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x08",
         "EventName": "DTLB_LOAD_MISSES.DEMAND_LD_WALK_COMPLETED",
         "SampleAfterValue": "100003",
@@ -8,6 +13,11 @@
     },
     {
         "BriefDescription": "Demand load cycles page miss handler (PMH) is busy with this walk.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x08",
         "EventName": "DTLB_LOAD_MISSES.DEMAND_LD_WALK_DURATION",
         "SampleAfterValue": "2000003",
@@ -15,6 +25,11 @@
     },
     {
         "BriefDescription": "Page walk for a large page completed for Demand load.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x08",
         "EventName": "DTLB_LOAD_MISSES.LARGE_PAGE_WALK_COMPLETED",
         "SampleAfterValue": "100003",
@@ -22,6 +37,11 @@
     },
     {
         "BriefDescription": "Demand load Miss in all translation lookaside buffer (TLB) levels causes an page walk of any page size.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x08",
         "EventName": "DTLB_LOAD_MISSES.MISS_CAUSES_A_WALK",
         "PublicDescription": "Misses in all TLB levels that cause a page walk of any page size from demand loads.",
@@ -30,6 +50,11 @@
     },
     {
         "BriefDescription": "Load operations that miss the first DTLB level but hit the second and do not cause page walks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5F",
         "EventName": "DTLB_LOAD_MISSES.STLB_HIT",
         "PublicDescription": "Counts load operations that missed 1st level DTLB but hit the 2nd level.",
@@ -38,6 +63,11 @@
     },
     {
         "BriefDescription": "Demand load Miss in all translation lookaside buffer (TLB) levels causes a page walk that completes of any page size.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x08",
         "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED",
         "PublicDescription": "Misses in all TLB levels that caused page walk completed of any size by demand loads.",
@@ -46,6 +76,11 @@
     },
     {
         "BriefDescription": "Demand load cycles page miss handler (PMH) is busy with this walk.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x08",
         "EventName": "DTLB_LOAD_MISSES.WALK_DURATION",
         "PublicDescription": "Cycle PMH is busy with a walk due to demand loads.",
@@ -54,6 +89,11 @@
     },
     {
         "BriefDescription": "Store misses in all DTLB levels that cause page walks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x49",
         "EventName": "DTLB_STORE_MISSES.MISS_CAUSES_A_WALK",
         "PublicDescription": "Miss in all TLB levels causes a page walk of any page size (4K/2M/4M/1G).",
@@ -62,6 +102,11 @@
     },
     {
         "BriefDescription": "Store operations that miss the first TLB level but hit the second and do not cause page walks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x49",
         "EventName": "DTLB_STORE_MISSES.STLB_HIT",
         "PublicDescription": "Store operations that miss the first TLB level but hit the second and do not cause page walks.",
@@ -70,6 +115,11 @@
     },
     {
         "BriefDescription": "Store misses in all DTLB levels that cause completed page walks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x49",
         "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED",
         "PublicDescription": "Miss in all TLB levels causes a page walk that completes of any page size (4K/2M/4M/1G).",
@@ -78,6 +128,11 @@
     },
     {
         "BriefDescription": "Cycles when PMH is busy with page walks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x49",
         "EventName": "DTLB_STORE_MISSES.WALK_DURATION",
         "PublicDescription": "Cycles PMH is busy with this walk.",
@@ -86,6 +141,11 @@
     },
     {
         "BriefDescription": "Cycle count for an Extended Page table walk.  The Extended Page Directory cache is used by Virtual Machine operating systems while the guest operating systems use the standard TLB caches.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x4F",
         "EventName": "EPT.WALK_CYCLES",
         "SampleAfterValue": "2000003",
@@ -93,6 +153,11 @@
     },
     {
         "BriefDescription": "Flushing of the Instruction TLB (ITLB) pages, includes 4k/2M/4M pages.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xAE",
         "EventName": "ITLB.ITLB_FLUSH",
         "PublicDescription": "Counts the number of ITLB flushes, includes 4k/2M/4M pages.",
@@ -101,6 +166,11 @@
     },
     {
         "BriefDescription": "Completed page walks in ITLB due to STLB load misses for large pages",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x85",
         "EventName": "ITLB_MISSES.LARGE_PAGE_WALK_COMPLETED",
         "PublicDescription": "Completed page walks in ITLB due to STLB load misses for large pages.",
@@ -109,6 +179,11 @@
     },
     {
         "BriefDescription": "Misses at all ITLB levels that cause page walks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x85",
         "EventName": "ITLB_MISSES.MISS_CAUSES_A_WALK",
         "PublicDescription": "Misses in all ITLB levels that cause page walks.",
@@ -117,6 +192,11 @@
     },
     {
         "BriefDescription": "Operations that miss the first ITLB level but hit the second and do not cause any page walks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x85",
         "EventName": "ITLB_MISSES.STLB_HIT",
         "PublicDescription": "Number of cache load STLB hits. No page walk.",
@@ -125,6 +205,11 @@
     },
     {
         "BriefDescription": "Misses in all ITLB levels that cause completed page walks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x85",
         "EventName": "ITLB_MISSES.WALK_COMPLETED",
         "PublicDescription": "Misses in all ITLB levels that cause completed page walks.",
@@ -133,6 +218,11 @@
     },
     {
         "BriefDescription": "Cycles when PMH is busy with page walks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x85",
         "EventName": "ITLB_MISSES.WALK_DURATION",
         "PublicDescription": "Cycle PMH is busy with a walk.",
@@ -141,6 +231,11 @@
     },
     {
         "BriefDescription": "DTLB flush attempts of the thread-specific entries",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xBD",
         "EventName": "TLB_FLUSH.DTLB_THREAD",
         "PublicDescription": "DTLB flush attempts of the thread-specific entries.",
@@ -149,6 +244,11 @@
     },
     {
         "BriefDescription": "STLB flush attempts",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xBD",
         "EventName": "TLB_FLUSH.STLB_ANY",
         "PublicDescription": "Count number of STLB flush attempts.",

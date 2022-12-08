@@ -8,6 +8,7 @@
 #ifndef __LINUX_CLK_SPEAR_H
 #define __LINUX_CLK_SPEAR_H
 
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_SPEAR3XX
 void __init spear3xx_clk_init(void __iomem *misc_base,
 			      void __iomem *soc_config_base);
@@ -22,6 +23,8 @@ void __init spear6xx_clk_init(void __iomem *misc_base);
 static inline void __init spear6xx_clk_init(void __iomem *misc_base) {}
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_MACH_SPEAR1310
 void __init spear1310_clk_init(void __iomem *misc_base, void __iomem *ras_base);
 #else

@@ -9,6 +9,7 @@ config SPARX5_SWITCH
 	select PHYLINK
 	select PHY_SPARX5_SERDES
 	select RESET_CONTROLLER
+<<<<<<< HEAD
 	select VCAP
 	help
 	  This driver supports the Sparx5 network switch device.
@@ -23,3 +24,7 @@ config SPARX5_DCB
 	  DSCP and PCP.
 
 	  If unsure, set to Y.
+=======
+	help
+	  This driver supports the Sparx5 network switch device.
+>>>>>>> b7ba80a49124 (Commit)

@@ -110,6 +110,7 @@ found:
 	return 0;
 }
 
+<<<<<<< HEAD
 int bcm47xx_nvram_init_from_iomem(void __iomem *nvram_start, size_t res_size)
 {
 	if (nvram_len) {
@@ -128,6 +129,8 @@ int bcm47xx_nvram_init_from_iomem(void __iomem *nvram_start, size_t res_size)
 }
 EXPORT_SYMBOL_GPL(bcm47xx_nvram_init_from_iomem);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * On bcm47xx we need access to the NVRAM very early, so we can't use mtd
  * subsystem to access flash. We can't even use platform device / driver to
@@ -255,3 +258,7 @@ char *bcm47xx_nvram_get_contents(size_t *nvram_size)
 }
 EXPORT_SYMBOL(bcm47xx_nvram_get_contents);
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

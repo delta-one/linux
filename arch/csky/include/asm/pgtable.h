@@ -176,7 +176,11 @@ static inline pte_t pte_mkold(pte_t pte)
 	return pte;
 }
 
+<<<<<<< HEAD
 static inline pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
+=======
+static inline pte_t pte_mkwrite(pte_t pte)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pte_val(pte) |= _PAGE_WRITE;
 	if (pte_val(pte) & _PAGE_MODIFIED)
@@ -200,6 +204,7 @@ static inline pte_t pte_mkyoung(pte_t pte)
 	return pte;
 }
 
+<<<<<<< HEAD
 static inline int pte_swp_exclusive(pte_t pte)
 {
 	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
@@ -217,6 +222,8 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
 	return pte;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define __HAVE_PHYS_MEM_ACCESS_PROT
 struct file;
 extern pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
@@ -266,6 +273,12 @@ extern void paging_init(void);
 void update_mmu_cache(struct vm_area_struct *vma, unsigned long address,
 		      pte_t *pte);
 
+<<<<<<< HEAD
+=======
+/* Needs to be defined here and not in linux/mm.h, as it is arch dependent */
+#define kern_addr_valid(addr)	(1)
+
+>>>>>>> b7ba80a49124 (Commit)
 #define io_remap_pfn_range(vma, vaddr, pfn, size, prot) \
 	remap_pfn_range(vma, vaddr, pfn, size, prot)
 

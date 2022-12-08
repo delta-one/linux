@@ -213,7 +213,11 @@ static int ds1390_probe(struct spi_device *spi)
 	return res;
 }
 
+<<<<<<< HEAD
 static const struct of_device_id ds1390_of_match[] __maybe_unused = {
+=======
+static const struct of_device_id ds1390_of_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "dallas,ds1390" },
 	{}
 };

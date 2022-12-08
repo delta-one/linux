@@ -77,6 +77,7 @@
 #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
 #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
 
+<<<<<<< HEAD
 
 /*
  * Compile time check that field has an expected offset
@@ -86,4 +87,6 @@
 		"Offset of " #field " in " #type " has changed.")
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif	/* _LINUX_BUILD_BUG_H */

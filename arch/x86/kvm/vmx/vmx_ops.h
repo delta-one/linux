@@ -6,17 +6,28 @@
 
 #include <asm/vmx.h>
 
+<<<<<<< HEAD
 #include "hyperv.h"
 #include "vmcs.h"
 #include "../x86.h"
 
 void vmread_error(unsigned long field, bool fault);
+=======
+#include "evmcs.h"
+#include "vmcs.h"
+#include "../x86.h"
+
+asmlinkage void vmread_error(unsigned long field, bool fault);
+__attribute__((regparm(0))) void vmread_error_trampoline(unsigned long field,
+							 bool fault);
+>>>>>>> b7ba80a49124 (Commit)
 void vmwrite_error(unsigned long field, unsigned long value);
 void vmclear_error(struct vmcs *vmcs, u64 phys_addr);
 void vmptrld_error(struct vmcs *vmcs, u64 phys_addr);
 void invvpid_error(unsigned long ext, u16 vpid, gva_t gva);
 void invept_error(unsigned long ext, u64 eptp, gpa_t gpa);
 
+<<<<<<< HEAD
 #ifndef CONFIG_CC_HAS_ASM_GOTO_OUTPUT
 /*
  * The VMREAD error trampoline _always_ uses the stack to pass parameters, even
@@ -33,6 +44,8 @@ void invept_error(unsigned long ext, u64 eptp, gpa_t gpa);
 extern unsigned long vmread_error_trampoline;
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static __always_inline void vmcs_check16(unsigned long field)
 {
 	BUILD_BUG_ON_MSG(__builtin_constant_p(field) && ((field) & 0x6001) == 0x2000,
@@ -100,10 +113,15 @@ static __always_inline unsigned long __vmcs_readl(unsigned long field)
 	return value;
 
 do_fail:
+<<<<<<< HEAD
 	instrumentation_begin();
 	WARN_ONCE(1, KBUILD_MODNAME ": vmread failed: field=%lx\n", field);
 	pr_warn_ratelimited(KBUILD_MODNAME ": vmread failed: field=%lx\n", field);
 	instrumentation_end();
+=======
+	WARN_ONCE(1, "kvm: vmread failed: field=%lx\n", field);
+	pr_warn_ratelimited("kvm: vmread failed: field=%lx\n", field);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 do_exception:
@@ -147,7 +165,11 @@ do_exception:
 static __always_inline u16 vmcs_read16(unsigned long field)
 {
 	vmcs_check16(field);
+<<<<<<< HEAD
 	if (kvm_is_using_evmcs())
+=======
+	if (static_branch_unlikely(&enable_evmcs))
+>>>>>>> b7ba80a49124 (Commit)
 		return evmcs_read16(field);
 	return __vmcs_readl(field);
 }
@@ -155,7 +177,11 @@ static __always_inline u16 vmcs_read16(unsigned long field)
 static __always_inline u32 vmcs_read32(unsigned long field)
 {
 	vmcs_check32(field);
+<<<<<<< HEAD
 	if (kvm_is_using_evmcs())
+=======
+	if (static_branch_unlikely(&enable_evmcs))
+>>>>>>> b7ba80a49124 (Commit)
 		return evmcs_read32(field);
 	return __vmcs_readl(field);
 }
@@ -163,7 +189,11 @@ static __always_inline u32 vmcs_read32(unsigned long field)
 static __always_inline u64 vmcs_read64(unsigned long field)
 {
 	vmcs_check64(field);
+<<<<<<< HEAD
 	if (kvm_is_using_evmcs())
+=======
+	if (static_branch_unlikely(&enable_evmcs))
+>>>>>>> b7ba80a49124 (Commit)
 		return evmcs_read64(field);
 #ifdef CONFIG_X86_64
 	return __vmcs_readl(field);
@@ -175,7 +205,11 @@ static __always_inline u64 vmcs_read64(unsigned long field)
 static __always_inline unsigned long vmcs_readl(unsigned long field)
 {
 	vmcs_checkl(field);
+<<<<<<< HEAD
 	if (kvm_is_using_evmcs())
+=======
+	if (static_branch_unlikely(&enable_evmcs))
+>>>>>>> b7ba80a49124 (Commit)
 		return evmcs_read64(field);
 	return __vmcs_readl(field);
 }
@@ -222,7 +256,11 @@ static __always_inline void __vmcs_writel(unsigned long field, unsigned long val
 static __always_inline void vmcs_write16(unsigned long field, u16 value)
 {
 	vmcs_check16(field);
+<<<<<<< HEAD
 	if (kvm_is_using_evmcs())
+=======
+	if (static_branch_unlikely(&enable_evmcs))
+>>>>>>> b7ba80a49124 (Commit)
 		return evmcs_write16(field, value);
 
 	__vmcs_writel(field, value);
@@ -231,7 +269,11 @@ static __always_inline void vmcs_write16(unsigned long field, u16 value)
 static __always_inline void vmcs_write32(unsigned long field, u32 value)
 {
 	vmcs_check32(field);
+<<<<<<< HEAD
 	if (kvm_is_using_evmcs())
+=======
+	if (static_branch_unlikely(&enable_evmcs))
+>>>>>>> b7ba80a49124 (Commit)
 		return evmcs_write32(field, value);
 
 	__vmcs_writel(field, value);
@@ -240,7 +282,11 @@ static __always_inline void vmcs_write32(unsigned long field, u32 value)
 static __always_inline void vmcs_write64(unsigned long field, u64 value)
 {
 	vmcs_check64(field);
+<<<<<<< HEAD
 	if (kvm_is_using_evmcs())
+=======
+	if (static_branch_unlikely(&enable_evmcs))
+>>>>>>> b7ba80a49124 (Commit)
 		return evmcs_write64(field, value);
 
 	__vmcs_writel(field, value);
@@ -252,7 +298,11 @@ static __always_inline void vmcs_write64(unsigned long field, u64 value)
 static __always_inline void vmcs_writel(unsigned long field, unsigned long value)
 {
 	vmcs_checkl(field);
+<<<<<<< HEAD
 	if (kvm_is_using_evmcs())
+=======
+	if (static_branch_unlikely(&enable_evmcs))
+>>>>>>> b7ba80a49124 (Commit)
 		return evmcs_write64(field, value);
 
 	__vmcs_writel(field, value);
@@ -262,7 +312,11 @@ static __always_inline void vmcs_clear_bits(unsigned long field, u32 mask)
 {
 	BUILD_BUG_ON_MSG(__builtin_constant_p(field) && ((field) & 0x6000) == 0x2000,
 			 "vmcs_clear_bits does not support 64-bit fields");
+<<<<<<< HEAD
 	if (kvm_is_using_evmcs())
+=======
+	if (static_branch_unlikely(&enable_evmcs))
+>>>>>>> b7ba80a49124 (Commit)
 		return evmcs_write32(field, evmcs_read32(field) & ~mask);
 
 	__vmcs_writel(field, __vmcs_readl(field) & ~mask);
@@ -272,7 +326,11 @@ static __always_inline void vmcs_set_bits(unsigned long field, u32 mask)
 {
 	BUILD_BUG_ON_MSG(__builtin_constant_p(field) && ((field) & 0x6000) == 0x2000,
 			 "vmcs_set_bits does not support 64-bit fields");
+<<<<<<< HEAD
 	if (kvm_is_using_evmcs())
+=======
+	if (static_branch_unlikely(&enable_evmcs))
+>>>>>>> b7ba80a49124 (Commit)
 		return evmcs_write32(field, evmcs_read32(field) | mask);
 
 	__vmcs_writel(field, __vmcs_readl(field) | mask);
@@ -289,7 +347,11 @@ static inline void vmcs_load(struct vmcs *vmcs)
 {
 	u64 phys_addr = __pa(vmcs);
 
+<<<<<<< HEAD
 	if (kvm_is_using_evmcs())
+=======
+	if (static_branch_unlikely(&enable_evmcs))
+>>>>>>> b7ba80a49124 (Commit)
 		return evmcs_load(phys_addr);
 
 	vmx_asm1(vmptrld, "m"(phys_addr), vmcs, phys_addr);

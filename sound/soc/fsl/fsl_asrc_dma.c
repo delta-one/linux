@@ -139,7 +139,11 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
 	struct dma_chan *tmp_chan = NULL, *be_chan = NULL;
 	struct snd_soc_component *component_be = NULL;
 	struct fsl_asrc *asrc = pair->asrc;
+<<<<<<< HEAD
 	struct dma_slave_config config_fe = {}, config_be = {};
+=======
+	struct dma_slave_config config_fe, config_be;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sdma_peripheral_config audio_config;
 	enum asrc_pair_index index = pair->index;
 	struct device *dev = component->dev;
@@ -183,6 +187,10 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	memset(&config_fe, 0, sizeof(config_fe));
+>>>>>>> b7ba80a49124 (Commit)
 	ret = snd_dmaengine_pcm_prepare_slave_config(substream, params, &config_fe);
 	if (ret) {
 		dev_err(dev, "failed to prepare DMA config for Front-End\n");

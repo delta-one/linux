@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * Host side test driver to test endpoint functionality
  *
  * Copyright (C) 2017 Texas Instruments
@@ -72,7 +76,10 @@
 #define PCI_DEVICE_ID_TI_J7200			0xb00f
 #define PCI_DEVICE_ID_TI_AM64			0xb010
 #define PCI_DEVICE_ID_LS1088A			0x80c0
+<<<<<<< HEAD
 #define PCI_DEVICE_ID_IMX8			0x0808
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define is_am654_pci_dev(pdev)		\
 		((pdev)->device == PCI_DEVICE_ID_TI_AM654)
@@ -981,7 +988,10 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
 	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0),
 	  .driver_data = (kernel_ulong_t)&default_data,
 	},
+<<<<<<< HEAD
 	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, PCI_DEVICE_ID_IMX8),},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, PCI_DEVICE_ID_LS1088A),
 	  .driver_data = (kernel_ulong_t)&default_data,
 	},

@@ -138,7 +138,10 @@
 
 static DEFINE_SPINLOCK(svs_lock);
 
+<<<<<<< HEAD
 #ifdef CONFIG_DEBUG_FS
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define debug_fops_ro(name)						\
 	static int svs_##name##_debug_open(struct inode *inode,		\
 					   struct file *filp)		\
@@ -171,7 +174,10 @@ static DEFINE_SPINLOCK(svs_lock);
 	}
 
 #define svs_dentry_data(name)	{__stringify(name), &svs_##name##_debug_fops}
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * enum svsb_phase - svs bank phase enumeration
@@ -313,12 +319,21 @@ static const u32 svs_regs_v2[] = {
 
 /**
  * struct svs_platform - svs platform control
+<<<<<<< HEAD
+=======
+ * @name: svs platform name
+>>>>>>> b7ba80a49124 (Commit)
  * @base: svs platform register base
  * @dev: svs platform device
  * @main_clk: main clock for svs bank
  * @pbank: svs bank pointer needing to be protected by spin_lock section
  * @banks: svs banks that svs platform supports
  * @rst: svs platform reset control
+<<<<<<< HEAD
+=======
+ * @efuse_parsing: svs platform efuse parsing function pointer
+ * @probe: svs platform probe function pointer
+>>>>>>> b7ba80a49124 (Commit)
  * @efuse_max: total number of svs efuse
  * @tefuse_max: total number of thermal efuse
  * @regs: svs platform registers map
@@ -327,12 +342,21 @@ static const u32 svs_regs_v2[] = {
  * @tefuse: thermal efuse data received from NVMEM framework
  */
 struct svs_platform {
+<<<<<<< HEAD
+=======
+	char *name;
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem *base;
 	struct device *dev;
 	struct clk *main_clk;
 	struct svs_bank *pbank;
 	struct svs_bank *banks;
 	struct reset_control *rst;
+<<<<<<< HEAD
+=======
+	bool (*efuse_parsing)(struct svs_platform *svsp);
+	int (*probe)(struct svs_platform *svsp);
+>>>>>>> b7ba80a49124 (Commit)
 	size_t efuse_max;
 	size_t tefuse_max;
 	const u32 *regs;
@@ -624,6 +648,7 @@ unlock_mutex:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void svs_bank_disable_and_restore_default_volts(struct svs_platform *svsp,
 						       struct svs_bank *svsb)
 {
@@ -644,6 +669,8 @@ static void svs_bank_disable_and_restore_default_volts(struct svs_platform *svsp
 }
 
 #ifdef CONFIG_DEBUG_FS
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int svs_dump_debug_show(struct seq_file *m, void *p)
 {
 	struct svs_platform *svsp = (struct svs_platform *)m->private;
@@ -719,6 +746,10 @@ static ssize_t svs_enable_debug_write(struct file *filp,
 {
 	struct svs_bank *svsb = file_inode(filp)->i_private;
 	struct svs_platform *svsp = dev_get_drvdata(svsb->dev);
+<<<<<<< HEAD
+=======
+	unsigned long flags;
+>>>>>>> b7ba80a49124 (Commit)
 	int enabled, ret;
 	char *buf = NULL;
 
@@ -734,8 +765,21 @@ static ssize_t svs_enable_debug_write(struct file *filp,
 		return ret;
 
 	if (!enabled) {
+<<<<<<< HEAD
 		svs_bank_disable_and_restore_default_volts(svsp, svsb);
 		svsb->mode_support = SVSB_MODE_ALL_DISABLE;
+=======
+		spin_lock_irqsave(&svs_lock, flags);
+		svsp->pbank = svsb;
+		svsb->mode_support = SVSB_MODE_ALL_DISABLE;
+		svs_switch_bank(svsp);
+		svs_writel_relaxed(svsp, SVSB_PTPEN_OFF, SVSEN);
+		svs_writel_relaxed(svsp, SVSB_INTSTS_VAL_CLEAN, INTSTS);
+		spin_unlock_irqrestore(&svs_lock, flags);
+
+		svsb->phase = SVSB_PHASE_ERROR;
+		svs_adjust_pm_opp_volts(svsb);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	kfree(buf);
@@ -850,7 +894,10 @@ static int svs_create_debug_cmds(struct svs_platform *svsp)
 
 	return 0;
 }
+<<<<<<< HEAD
 #endif /* CONFIG_DEBUG_FS */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static u32 interpolate(u32 f0, u32 f1, u32 v0, u32 v1, u32 fx)
 {
@@ -1332,7 +1379,11 @@ static int svs_init01(struct svs_platform *svsp)
 				svsb->pm_runtime_enabled_count++;
 			}
 
+<<<<<<< HEAD
 			ret = pm_runtime_resume_and_get(svsb->opp_dev);
+=======
+			ret = pm_runtime_get_sync(svsb->opp_dev);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret < 0) {
 				dev_err(svsb->dev, "mtcmos on fail: %d\n", ret);
 				goto svs_init01_resume_cpuidle;
@@ -1469,7 +1520,10 @@ static int svs_init02(struct svs_platform *svsp)
 {
 	struct svs_bank *svsb;
 	unsigned long flags, time_left;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 idx;
 
 	for (idx = 0; idx < svsp->bank_max; idx++) {
@@ -1488,8 +1542,12 @@ static int svs_init02(struct svs_platform *svsp)
 							msecs_to_jiffies(5000));
 		if (!time_left) {
 			dev_err(svsb->dev, "init02 completion timeout\n");
+<<<<<<< HEAD
 			ret = -EBUSY;
 			goto out_of_init02;
+=======
+			return -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -1507,13 +1565,18 @@ static int svs_init02(struct svs_platform *svsp)
 		if (svsb->type == SVSB_HIGH || svsb->type == SVSB_LOW) {
 			if (svs_sync_bank_volts_from_opp(svsb)) {
 				dev_err(svsb->dev, "sync volt fail\n");
+<<<<<<< HEAD
 				ret = -EPERM;
 				goto out_of_init02;
+=======
+				return -EPERM;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 	}
 
 	return 0;
+<<<<<<< HEAD
 
 out_of_init02:
 	for (idx = 0; idx < svsp->bank_max; idx++) {
@@ -1522,6 +1585,8 @@ out_of_init02:
 	}
 
 	return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void svs_mon_mode(struct svs_platform *svsp)
@@ -1564,12 +1629,30 @@ static int svs_suspend(struct device *dev)
 {
 	struct svs_platform *svsp = dev_get_drvdata(dev);
 	struct svs_bank *svsb;
+<<<<<<< HEAD
+=======
+	unsigned long flags;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 	u32 idx;
 
 	for (idx = 0; idx < svsp->bank_max; idx++) {
 		svsb = &svsp->banks[idx];
+<<<<<<< HEAD
 		svs_bank_disable_and_restore_default_volts(svsp, svsb);
+=======
+
+		/* This might wait for svs_isr() process */
+		spin_lock_irqsave(&svs_lock, flags);
+		svsp->pbank = svsb;
+		svs_switch_bank(svsp);
+		svs_writel_relaxed(svsp, SVSB_PTPEN_OFF, SVSEN);
+		svs_writel_relaxed(svsp, SVSB_INTSTS_VAL_CLEAN, INTSTS);
+		spin_unlock_irqrestore(&svs_lock, flags);
+
+		svsb->phase = SVSB_PHASE_ERROR;
+		svs_adjust_pm_opp_volts(svsb);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = reset_control_assert(svsp->rst);
@@ -1602,16 +1685,23 @@ static int svs_resume(struct device *dev)
 
 	ret = svs_init02(svsp);
 	if (ret)
+<<<<<<< HEAD
 		goto svs_resume_reset_assert;
+=======
+		goto out_of_resume;
+>>>>>>> b7ba80a49124 (Commit)
 
 	svs_mon_mode(svsp);
 
 	return 0;
 
+<<<<<<< HEAD
 svs_resume_reset_assert:
 	dev_err(svsp->dev, "assert reset: %d\n",
 		reset_control_assert(svsp->rst));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 out_of_resume:
 	clk_disable_unprepare(svsp->main_clk);
 	return ret;
@@ -1719,6 +1809,7 @@ static int svs_bank_resource_setup(struct svs_platform *svsp)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int svs_get_efuse_data(struct svs_platform *svsp,
 			      const char *nvmem_cell_name,
 			      u32 **svsp_efuse, size_t *svsp_efuse_max)
@@ -1741,6 +1832,28 @@ static int svs_get_efuse_data(struct svs_platform *svsp,
 	}
 
 	*svsp_efuse_max /= sizeof(u32);
+=======
+static int svs_thermal_efuse_get_data(struct svs_platform *svsp)
+{
+	struct nvmem_cell *cell;
+
+	/* Thermal efuse parsing */
+	cell = nvmem_cell_get(svsp->dev, "t-calibration-data");
+	if (IS_ERR_OR_NULL(cell)) {
+		dev_err(svsp->dev, "no \"t-calibration-data\"? %ld\n", PTR_ERR(cell));
+		return PTR_ERR(cell);
+	}
+
+	svsp->tefuse = nvmem_cell_read(cell, &svsp->tefuse_max);
+	if (IS_ERR(svsp->tefuse)) {
+		dev_err(svsp->dev, "cannot read thermal efuse: %ld\n",
+			PTR_ERR(svsp->tefuse));
+		nvmem_cell_put(cell);
+		return PTR_ERR(svsp->tefuse);
+	}
+
+	svsp->tefuse_max /= sizeof(u32);
+>>>>>>> b7ba80a49124 (Commit)
 	nvmem_cell_put(cell);
 
 	return 0;
@@ -1788,8 +1901,12 @@ static bool svs_mt8192_efuse_parsing(struct svs_platform *svsp)
 		svsb->vmax += svsb->dvt_fixed;
 	}
 
+<<<<<<< HEAD
 	ret = svs_get_efuse_data(svsp, "t-calibration-data",
 				 &svsp->tefuse, &svsp->tefuse_max);
+=======
+	ret = svs_thermal_efuse_get_data(svsp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return false;
 
@@ -1894,8 +2011,12 @@ static bool svs_mt8183_efuse_parsing(struct svs_platform *svsp)
 		}
 	}
 
+<<<<<<< HEAD
 	ret = svs_get_efuse_data(svsp, "t-calibration-data",
 				 &svsp->tefuse, &svsp->tefuse_max);
+=======
+	ret = svs_thermal_efuse_get_data(svsp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return false;
 
@@ -1915,6 +2036,7 @@ static bool svs_mt8183_efuse_parsing(struct svs_platform *svsp)
 	o_slope_sign = (svsp->tefuse[0] >> 7) & BIT(0);
 
 	ts_id = (svsp->tefuse[1] >> 9) & BIT(0);
+<<<<<<< HEAD
 	if (!ts_id) {
 		o_slope = 1534;
 	} else {
@@ -1936,6 +2058,28 @@ static bool svs_mt8183_efuse_parsing(struct svs_platform *svsp)
 	    o_vtsabb < -8 || o_vtsabb > 484 ||
 	    degc_cali < 1 || degc_cali > 63) {
 		dev_err(svsp->dev, "bad thermal efuse, no mon mode\n");
+=======
+	o_slope = (svsp->tefuse[0] >> 26) & GENMASK(5, 0);
+
+	if (adc_cali_en_t == 1) {
+		if (!ts_id)
+			o_slope = 0;
+
+		if (adc_ge_t < 265 || adc_ge_t > 758 ||
+		    adc_oe_t < 265 || adc_oe_t > 758 ||
+		    o_vtsmcu[0] < -8 || o_vtsmcu[0] > 484 ||
+		    o_vtsmcu[1] < -8 || o_vtsmcu[1] > 484 ||
+		    o_vtsmcu[2] < -8 || o_vtsmcu[2] > 484 ||
+		    o_vtsmcu[3] < -8 || o_vtsmcu[3] > 484 ||
+		    o_vtsmcu[4] < -8 || o_vtsmcu[4] > 484 ||
+		    o_vtsabb < -8 || o_vtsabb > 484 ||
+		    degc_cali < 1 || degc_cali > 63) {
+			dev_err(svsp->dev, "bad thermal efuse, no mon mode\n");
+			goto remove_mt8183_svsb_mon_mode;
+		}
+	} else {
+		dev_err(svsp->dev, "no thermal efuse, no mon mode\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto remove_mt8183_svsb_mon_mode;
 	}
 
@@ -1954,7 +2098,15 @@ static bool svs_mt8183_efuse_parsing(struct svs_platform *svsp)
 		x_roomt[i] = (((format[i] * 10000) / 4096) * 10000) / gain;
 
 	temp0 = (10000 * 100000 / gain) * 15 / 18;
+<<<<<<< HEAD
 	mts = (temp0 * 10) / o_slope;
+=======
+
+	if (!o_slope_sign)
+		mts = (temp0 * 10) / (1534 + o_slope * 10);
+	else
+		mts = (temp0 * 10) / (1534 - o_slope * 10);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (idx = 0; idx < svsp->bank_max; idx++) {
 		svsb = &svsp->banks[idx];
@@ -1981,7 +2133,15 @@ static bool svs_mt8183_efuse_parsing(struct svs_platform *svsp)
 		temp0 = (degc_cali * 10 / 2);
 		temp1 = ((10000 * 100000 / 4096 / gain) *
 			 oe + tb_roomt * 10) * 15 / 18;
+<<<<<<< HEAD
 		temp2 = temp1 * 100 / o_slope;
+=======
+
+		if (!o_slope_sign)
+			temp2 = temp1 * 100 / (1534 + o_slope * 10);
+		else
+			temp2 = temp1 * 100 / (1534 - o_slope * 10);
+>>>>>>> b7ba80a49124 (Commit)
 
 		svsb->bts = (temp0 + temp2 - 250) * 4 / 10;
 	}
@@ -1997,6 +2157,35 @@ remove_mt8183_svsb_mon_mode:
 	return true;
 }
 
+<<<<<<< HEAD
+=======
+static bool svs_is_efuse_data_correct(struct svs_platform *svsp)
+{
+	struct nvmem_cell *cell;
+
+	/* Get svs efuse by nvmem */
+	cell = nvmem_cell_get(svsp->dev, "svs-calibration-data");
+	if (IS_ERR(cell)) {
+		dev_err(svsp->dev, "no \"svs-calibration-data\"? %ld\n",
+			PTR_ERR(cell));
+		return false;
+	}
+
+	svsp->efuse = nvmem_cell_read(cell, &svsp->efuse_max);
+	if (IS_ERR(svsp->efuse)) {
+		dev_err(svsp->dev, "cannot read svs efuse: %ld\n",
+			PTR_ERR(svsp->efuse));
+		nvmem_cell_put(cell);
+		return false;
+	}
+
+	svsp->efuse_max /= sizeof(u32);
+	nvmem_cell_put(cell);
+
+	return svsp->efuse_parsing(svsp);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct device *svs_get_subsys_device(struct svs_platform *svsp,
 					    const char *node_name)
 {
@@ -2027,6 +2216,14 @@ static struct device *svs_add_device_link(struct svs_platform *svsp,
 	struct device *dev;
 	struct device_link *sup_link;
 
+<<<<<<< HEAD
+=======
+	if (!node_name) {
+		dev_err(svsp->dev, "node name cannot be null\n");
+		return ERR_PTR(-EINVAL);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	dev = svs_get_subsys_device(svsp, node_name);
 	if (IS_ERR(dev))
 		return dev;
@@ -2304,11 +2501,46 @@ static const struct of_device_id svs_of_match[] = {
 		/* Sentinel */
 	},
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(of, svs_of_match);
+=======
+
+static struct svs_platform *svs_platform_probe(struct platform_device *pdev)
+{
+	struct svs_platform *svsp;
+	const struct svs_platform_data *svsp_data;
+	int ret;
+
+	svsp_data = of_device_get_match_data(&pdev->dev);
+	if (!svsp_data) {
+		dev_err(&pdev->dev, "no svs platform data?\n");
+		return ERR_PTR(-EPERM);
+	}
+
+	svsp = devm_kzalloc(&pdev->dev, sizeof(*svsp), GFP_KERNEL);
+	if (!svsp)
+		return ERR_PTR(-ENOMEM);
+
+	svsp->dev = &pdev->dev;
+	svsp->name = svsp_data->name;
+	svsp->banks = svsp_data->banks;
+	svsp->efuse_parsing = svsp_data->efuse_parsing;
+	svsp->probe = svsp_data->probe;
+	svsp->regs = svsp_data->regs;
+	svsp->bank_max = svsp_data->bank_max;
+
+	ret = svsp->probe(svsp);
+	if (ret)
+		return ERR_PTR(ret);
+
+	return svsp;
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 static int svs_probe(struct platform_device *pdev)
 {
 	struct svs_platform *svsp;
+<<<<<<< HEAD
 	const struct svs_platform_data *svsp_data;
 	int ret, svsp_irq;
 
@@ -2338,18 +2570,46 @@ static int svs_probe(struct platform_device *pdev)
 		dev_err(svsp->dev, "efuse data parsing failed\n");
 		ret = -EPERM;
 		goto svs_probe_free_tefuse;
+=======
+	int svsp_irq, ret;
+
+	svsp = svs_platform_probe(pdev);
+	if (IS_ERR(svsp))
+		return PTR_ERR(svsp);
+
+	if (!svs_is_efuse_data_correct(svsp)) {
+		dev_notice(svsp->dev, "efuse data isn't correct\n");
+		ret = -EPERM;
+		goto svs_probe_free_resource;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = svs_bank_resource_setup(svsp);
 	if (ret) {
 		dev_err(svsp->dev, "svs bank resource setup fail: %d\n", ret);
+<<<<<<< HEAD
 		goto svs_probe_free_tefuse;
+=======
+		goto svs_probe_free_resource;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	svsp_irq = platform_get_irq(pdev, 0);
 	if (svsp_irq < 0) {
 		ret = svsp_irq;
+<<<<<<< HEAD
 		goto svs_probe_free_tefuse;
+=======
+		goto svs_probe_free_resource;
+	}
+
+	ret = devm_request_threaded_irq(svsp->dev, svsp_irq, NULL, svs_isr,
+					IRQF_ONESHOT, svsp->name, svsp);
+	if (ret) {
+		dev_err(svsp->dev, "register irq(%d) failed: %d\n",
+			svsp_irq, ret);
+		goto svs_probe_free_resource;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	svsp->main_clk = devm_clk_get(svsp->dev, "main");
@@ -2357,13 +2617,21 @@ static int svs_probe(struct platform_device *pdev)
 		dev_err(svsp->dev, "failed to get clock: %ld\n",
 			PTR_ERR(svsp->main_clk));
 		ret = PTR_ERR(svsp->main_clk);
+<<<<<<< HEAD
 		goto svs_probe_free_tefuse;
+=======
+		goto svs_probe_free_resource;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = clk_prepare_enable(svsp->main_clk);
 	if (ret) {
 		dev_err(svsp->dev, "cannot enable main clk: %d\n", ret);
+<<<<<<< HEAD
 		goto svs_probe_free_tefuse;
+=======
+		goto svs_probe_free_resource;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	svsp->base = of_iomap(svsp->dev->of_node, 0);
@@ -2373,6 +2641,7 @@ static int svs_probe(struct platform_device *pdev)
 		goto svs_probe_clk_disable;
 	}
 
+<<<<<<< HEAD
 	ret = devm_request_threaded_irq(svsp->dev, svsp_irq, NULL, svs_isr,
 					IRQF_ONESHOT, svsp_data->name, svsp);
 	if (ret) {
@@ -2381,19 +2650,27 @@ static int svs_probe(struct platform_device *pdev)
 		goto svs_probe_iounmap;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = svs_start(svsp);
 	if (ret) {
 		dev_err(svsp->dev, "svs start fail: %d\n", ret);
 		goto svs_probe_iounmap;
 	}
 
+<<<<<<< HEAD
 #ifdef CONFIG_DEBUG_FS
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = svs_create_debug_cmds(svsp);
 	if (ret) {
 		dev_err(svsp->dev, "svs create debug cmds fail: %d\n", ret);
 		goto svs_probe_iounmap;
 	}
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -2403,6 +2680,7 @@ svs_probe_iounmap:
 svs_probe_clk_disable:
 	clk_disable_unprepare(svsp->main_clk);
 
+<<<<<<< HEAD
 svs_probe_free_tefuse:
 	if (!IS_ERR_OR_NULL(svsp->tefuse))
 		kfree(svsp->tefuse);
@@ -2410,6 +2688,13 @@ svs_probe_free_tefuse:
 svs_probe_free_efuse:
 	if (!IS_ERR_OR_NULL(svsp->efuse))
 		kfree(svsp->efuse);
+=======
+svs_probe_free_resource:
+	if (!IS_ERR_OR_NULL(svsp->efuse))
+		kfree(svsp->efuse);
+	if (!IS_ERR_OR_NULL(svsp->tefuse))
+		kfree(svsp->tefuse);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }

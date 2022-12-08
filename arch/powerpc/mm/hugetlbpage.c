@@ -392,7 +392,11 @@ static void hugetlb_free_pmd_range(struct mmu_gather *tlb, pud_t *pud,
 		 * single hugepage, but all of them point to
 		 * the same kmem cache that holds the hugepte.
 		 */
+<<<<<<< HEAD
 		more = addr + (1UL << hugepd_shift(*(hugepd_t *)pmd));
+=======
+		more = addr + (1 << hugepd_shift(*(hugepd_t *)pmd));
+>>>>>>> b7ba80a49124 (Commit)
 		if (more > next)
 			next = more;
 
@@ -434,7 +438,11 @@ static void hugetlb_free_pud_range(struct mmu_gather *tlb, p4d_t *p4d,
 			 * single hugepage, but all of them point to
 			 * the same kmem cache that holds the hugepte.
 			 */
+<<<<<<< HEAD
 			more = addr + (1UL << hugepd_shift(*(hugepd_t *)pud));
+=======
+			more = addr + (1 << hugepd_shift(*(hugepd_t *)pud));
+>>>>>>> b7ba80a49124 (Commit)
 			if (more > next)
 				next = more;
 
@@ -496,7 +504,11 @@ void hugetlb_free_pgd_range(struct mmu_gather *tlb,
 			 * for a single hugepage, but all of them point to the
 			 * same kmem cache that holds the hugepte.
 			 */
+<<<<<<< HEAD
 			more = addr + (1UL << hugepd_shift(*(hugepd_t *)pgd));
+=======
+			more = addr + (1 << hugepd_shift(*(hugepd_t *)pgd));
+>>>>>>> b7ba80a49124 (Commit)
 			if (more > next)
 				next = more;
 
@@ -586,7 +598,11 @@ static int __init hugetlbpage_init(void)
 		if (pdshift > shift) {
 			if (!IS_ENABLED(CONFIG_PPC_8xx))
 				pgtable_cache_add(pdshift - shift);
+<<<<<<< HEAD
 		} else if (IS_ENABLED(CONFIG_PPC_E500) ||
+=======
+		} else if (IS_ENABLED(CONFIG_PPC_FSL_BOOK3E) ||
+>>>>>>> b7ba80a49124 (Commit)
 			   IS_ENABLED(CONFIG_PPC_8xx)) {
 			pgtable_cache_add(PTE_T_ORDER);
 		}
@@ -615,7 +631,11 @@ void __init gigantic_hugetlb_cma_reserve(void)
 		order = mmu_psize_to_shift(MMU_PAGE_16G) - PAGE_SHIFT;
 
 	if (order) {
+<<<<<<< HEAD
 		VM_WARN_ON(order <= MAX_ORDER);
+=======
+		VM_WARN_ON(order < MAX_ORDER);
+>>>>>>> b7ba80a49124 (Commit)
 		hugetlb_cma_reserve(order);
 	}
 }

@@ -108,7 +108,11 @@
  * @next_tx_buf_to_use:	next Tx buffer to write to
  * @next_rx_buf_to_use:	next Rx buffer to read from
  * @base_addr:		base address of the Emaclite device
+<<<<<<< HEAD
  * @reset_lock:		lock to serialize xmit and tx_timeout execution
+=======
+ * @reset_lock:		lock used for synchronization
+>>>>>>> b7ba80a49124 (Commit)
  * @deferred_skb:	holds an skb (for transmission at a later time) when the
  *			Tx buffer is not free
  * @phy_dev:		pointer to the PHY device
@@ -536,7 +540,11 @@ static void xemaclite_tx_timeout(struct net_device *dev, unsigned int txqueue)
 	xemaclite_enable_interrupts(lp);
 
 	if (lp->deferred_skb) {
+<<<<<<< HEAD
 		dev_kfree_skb_irq(lp->deferred_skb);
+=======
+		dev_kfree_skb(lp->deferred_skb);
+>>>>>>> b7ba80a49124 (Commit)
 		lp->deferred_skb = NULL;
 		dev->stats.tx_errors++;
 	}

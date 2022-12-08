@@ -57,7 +57,11 @@ static int of_get_mac_addr(struct device_node *np, const char *name, u8 *addr)
 	return -ENODEV;
 }
 
+<<<<<<< HEAD
 int of_get_mac_address_nvmem(struct device_node *np, u8 *addr)
+=======
+static int of_get_mac_addr_nvmem(struct device_node *np, u8 *addr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *pdev = of_find_device_by_node(np);
 	struct nvmem_cell *cell;
@@ -94,7 +98,10 @@ int of_get_mac_address_nvmem(struct device_node *np, u8 *addr)
 
 	return 0;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(of_get_mac_address_nvmem);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * of_get_mac_address()
@@ -141,7 +148,11 @@ int of_get_mac_address(struct device_node *np, u8 *addr)
 	if (!ret)
 		return 0;
 
+<<<<<<< HEAD
 	return of_get_mac_address_nvmem(np, addr);
+=======
+	return of_get_mac_addr_nvmem(np, addr);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(of_get_mac_address);
 

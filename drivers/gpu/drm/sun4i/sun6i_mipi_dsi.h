@@ -15,11 +15,14 @@
 
 #define SUN6I_DSI_TCON_DIV	4
 
+<<<<<<< HEAD
 struct sun6i_dsi_variant {
 	bool			has_mod_clk;
 	bool			set_mod_clk;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct sun6i_dsi {
 	struct drm_connector	connector;
 	struct drm_encoder	encoder;
@@ -36,8 +39,11 @@ struct sun6i_dsi {
 	struct mipi_dsi_device	*device;
 	struct drm_device	*drm;
 	struct drm_panel	*panel;
+<<<<<<< HEAD
 
 	const struct sun6i_dsi_variant *variant;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct sun6i_dsi *host_to_sun6i_dsi(struct mipi_dsi_host *host)

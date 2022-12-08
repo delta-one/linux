@@ -96,7 +96,10 @@
 #include <linux/time_namespace.h>
 #include <linux/resctrl.h>
 #include <linux/cn_proc.h>
+<<<<<<< HEAD
 #include <linux/ksm.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <trace/events/oom.h>
 #include "internal.h"
 #include "fd.h"
@@ -686,7 +689,11 @@ static bool proc_fd_access_allowed(struct inode *inode)
 	return allowed;
 }
 
+<<<<<<< HEAD
 int proc_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+int proc_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		 struct iattr *attr)
 {
 	int error;
@@ -695,11 +702,20 @@ int proc_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 	if (attr->ia_valid & ATTR_MODE)
 		return -EPERM;
 
+<<<<<<< HEAD
 	error = setattr_prepare(&nop_mnt_idmap, dentry, attr);
 	if (error)
 		return error;
 
 	setattr_copy(&nop_mnt_idmap, inode, attr);
+=======
+	error = setattr_prepare(&init_user_ns, dentry, attr);
+	if (error)
+		return error;
+
+	setattr_copy(&init_user_ns, inode, attr);
+	mark_inode_dirty(inode);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -727,7 +743,11 @@ static bool has_pid_permissions(struct proc_fs_info *fs_info,
 }
 
 
+<<<<<<< HEAD
 static int proc_pid_permission(struct mnt_idmap *idmap,
+=======
+static int proc_pid_permission(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			       struct inode *inode, int mask)
 {
 	struct proc_fs_info *fs_info = proc_sb_info(inode->i_sb);
@@ -753,7 +773,11 @@ static int proc_pid_permission(struct mnt_idmap *idmap,
 
 		return -EPERM;
 	}
+<<<<<<< HEAD
 	return generic_permission(&nop_mnt_idmap, inode, mask);
+=======
+	return generic_permission(&init_user_ns, inode, mask);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 
@@ -1959,14 +1983,22 @@ static struct inode *proc_pid_make_base_inode(struct super_block *sb,
 	return inode;
 }
 
+<<<<<<< HEAD
 int pid_getattr(struct mnt_idmap *idmap, const struct path *path,
+=======
+int pid_getattr(struct user_namespace *mnt_userns, const struct path *path,
+>>>>>>> b7ba80a49124 (Commit)
 		struct kstat *stat, u32 request_mask, unsigned int query_flags)
 {
 	struct inode *inode = d_inode(path->dentry);
 	struct proc_fs_info *fs_info = proc_sb_info(inode->i_sb);
 	struct task_struct *task;
 
+<<<<<<< HEAD
 	generic_fillattr(&nop_mnt_idmap, inode, stat);
+=======
+	generic_fillattr(&init_user_ns, inode, stat);
+>>>>>>> b7ba80a49124 (Commit)
 
 	stat->uid = GLOBAL_ROOT_UID;
 	stat->gid = GLOBAL_ROOT_GID;
@@ -3199,7 +3231,10 @@ static int proc_pid_ksm_merging_pages(struct seq_file *m, struct pid_namespace *
 
 	return 0;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int proc_pid_ksm_stat(struct seq_file *m, struct pid_namespace *ns,
 				struct pid *pid, struct task_struct *task)
 {
@@ -3208,10 +3243,13 @@ static int proc_pid_ksm_stat(struct seq_file *m, struct pid_namespace *ns,
 	mm = get_task_mm(task);
 	if (mm) {
 		seq_printf(m, "ksm_rmap_items %lu\n", mm->ksm_rmap_items);
+<<<<<<< HEAD
 		seq_printf(m, "zero_pages_sharing %lu\n", mm->ksm_zero_pages_sharing);
 		seq_printf(m, "ksm_merging_pages %lu\n", mm->ksm_merging_pages);
 		seq_printf(m, "ksm_merge_type %s\n", ksm_merge_type(mm));
 		seq_printf(m, "ksm_process_profit %ld\n", ksm_process_profit(mm));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		mmput(mm);
 	}
 
@@ -3562,7 +3600,11 @@ int proc_pid_readdir(struct file *file, struct dir_context *ctx)
  * This function makes sure that the node is always accessible for members of
  * same thread group.
  */
+<<<<<<< HEAD
 static int proc_tid_comm_permission(struct mnt_idmap *idmap,
+=======
+static int proc_tid_comm_permission(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				    struct inode *inode, int mask)
 {
 	bool is_same_tgroup;
@@ -3582,7 +3624,11 @@ static int proc_tid_comm_permission(struct mnt_idmap *idmap,
 		return 0;
 	}
 
+<<<<<<< HEAD
 	return generic_permission(&nop_mnt_idmap, inode, mask);
+=======
+	return generic_permission(&init_user_ns, inode, mask);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct inode_operations proc_tid_comm_inode_operations = {
@@ -3896,13 +3942,21 @@ static int proc_task_readdir(struct file *file, struct dir_context *ctx)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int proc_task_getattr(struct mnt_idmap *idmap,
+=======
+static int proc_task_getattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			     const struct path *path, struct kstat *stat,
 			     u32 request_mask, unsigned int query_flags)
 {
 	struct inode *inode = d_inode(path->dentry);
 	struct task_struct *p = get_proc_task(inode);
+<<<<<<< HEAD
 	generic_fillattr(&nop_mnt_idmap, inode, stat);
+=======
+	generic_fillattr(&init_user_ns, inode, stat);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (p) {
 		stat->nlink += get_nr_threads(p);

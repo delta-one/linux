@@ -3,7 +3,11 @@
  */
 
 #include "hdmi.h"
+<<<<<<< HEAD
 #include <linux/firmware/qcom/qcom_scm.h>
+=======
+#include <linux/qcom_scm.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define HDCP_REG_ENABLE 0x01
 #define HDCP_REG_DISABLE 0x00

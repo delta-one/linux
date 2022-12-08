@@ -7,7 +7,11 @@ set -e
 err=0
 test_default_stat() {
   echo "Basic stat command test"
+<<<<<<< HEAD
   if ! perf stat true 2>&1 | grep -E -q "Performance counter stats for 'true':"
+=======
+  if ! perf stat true 2>&1 | egrep -q "Performance counter stats for 'true':"
+>>>>>>> b7ba80a49124 (Commit)
   then
     echo "Basic stat command test [Failed]"
     err=1
@@ -19,7 +23,11 @@ test_default_stat() {
 test_stat_record_report() {
   echo "stat record and report test"
   if ! perf stat record -o - true | perf stat report -i - 2>&1 | \
+<<<<<<< HEAD
     grep -E -q "Performance counter stats for 'pipe':"
+=======
+    egrep -q "Performance counter stats for 'pipe':"
+>>>>>>> b7ba80a49124 (Commit)
   then
     echo "stat record and report test [Failed]"
     err=1
@@ -55,13 +63,21 @@ test_topdown_groups() {
     echo "Topdown event group test [Skipped event parsing failed]"
     return
   fi
+<<<<<<< HEAD
   if perf stat -e '{slots,topdown-retiring}' true 2>&1 | grep -E -q "<not supported>"
+=======
+  if perf stat -e '{slots,topdown-retiring}' true 2>&1 | egrep -q "<not supported>"
+>>>>>>> b7ba80a49124 (Commit)
   then
     echo "Topdown event group test [Failed events not supported]"
     err=1
     return
   fi
+<<<<<<< HEAD
   if perf stat -e '{topdown-retiring,slots}' true 2>&1 | grep -E -q "<not supported>"
+=======
+  if perf stat -e '{topdown-retiring,slots}' true 2>&1 | egrep -q "<not supported>"
+>>>>>>> b7ba80a49124 (Commit)
   then
     echo "Topdown event group test [Failed slots not reordered first]"
     err=1
@@ -82,7 +98,11 @@ test_topdown_weak_groups() {
     return
   fi
   group_needs_break="{slots,topdown-bad-spec,topdown-be-bound,topdown-fe-bound,topdown-retiring,branch-instructions,branch-misses,bus-cycles,cache-misses,cache-references,cpu-cycles,instructions,mem-loads,mem-stores,ref-cycles,cache-misses,cache-references}:W"
+<<<<<<< HEAD
   if perf stat --no-merge -e "$group_needs_break" true 2>&1 | grep -E -q "<not supported>"
+=======
+  if perf stat --no-merge -e "$group_needs_break" true 2>&1 | egrep -q "<not supported>"
+>>>>>>> b7ba80a49124 (Commit)
   then
     echo "Topdown weak groups test [Failed events not supported]"
     err=1

@@ -663,7 +663,11 @@ void r8712_joinbss_event_callback(struct _adapter *adapter, u8 *pbuf)
 		if (!pnetwork)
 			return;
 		memcpy((u8 *)pnetwork + 16, (u8 *)pbuf + 8,
+<<<<<<< HEAD
 			sizeof(struct wlan_network) - 16);
+=======
+		       sizeof(struct wlan_network) - 16);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		pnetwork = (struct wlan_network *)pbuf;
 	}
@@ -674,6 +678,7 @@ void r8712_joinbss_event_callback(struct _adapter *adapter, u8 *pbuf)
 	pnetwork->network_type = le32_to_cpu(pnetwork->network_type);
 	pnetwork->network.Length = le32_to_cpu(pnetwork->network.Length);
 	pnetwork->network.Ssid.SsidLength =
+<<<<<<< HEAD
 		le32_to_cpu(pnetwork->network.Ssid.SsidLength);
 	pnetwork->network.Privacy = le32_to_cpu(pnetwork->network.Privacy);
 	pnetwork->network.Rssi = le32_to_cpu(pnetwork->network.Rssi);
@@ -697,13 +702,44 @@ void r8712_joinbss_event_callback(struct _adapter *adapter, u8 *pbuf)
 		le32_to_cpu(pnetwork->network.Configuration.Length);
 	pnetwork->network.InfrastructureMode =
 		le32_to_cpu(pnetwork->network.InfrastructureMode);
+=======
+		 le32_to_cpu(pnetwork->network.Ssid.SsidLength);
+	pnetwork->network.Privacy = le32_to_cpu(pnetwork->network.Privacy);
+	pnetwork->network.Rssi = le32_to_cpu(pnetwork->network.Rssi);
+	pnetwork->network.NetworkTypeInUse =
+		 le32_to_cpu(pnetwork->network.NetworkTypeInUse);
+	pnetwork->network.Configuration.ATIMWindow =
+		 le32_to_cpu(pnetwork->network.Configuration.ATIMWindow);
+	pnetwork->network.Configuration.BeaconPeriod =
+		 le32_to_cpu(pnetwork->network.Configuration.BeaconPeriod);
+	pnetwork->network.Configuration.DSConfig =
+		 le32_to_cpu(pnetwork->network.Configuration.DSConfig);
+	pnetwork->network.Configuration.FHConfig.DwellTime =
+		 le32_to_cpu(pnetwork->network.Configuration.FHConfig.DwellTime);
+	pnetwork->network.Configuration.FHConfig.HopPattern =
+		 le32_to_cpu(pnetwork->network.Configuration.FHConfig.HopPattern);
+	pnetwork->network.Configuration.FHConfig.HopSet =
+		 le32_to_cpu(pnetwork->network.Configuration.FHConfig.HopSet);
+	pnetwork->network.Configuration.FHConfig.Length =
+		 le32_to_cpu(pnetwork->network.Configuration.FHConfig.Length);
+	pnetwork->network.Configuration.Length =
+		 le32_to_cpu(pnetwork->network.Configuration.Length);
+	pnetwork->network.InfrastructureMode =
+		 le32_to_cpu(pnetwork->network.InfrastructureMode);
+>>>>>>> b7ba80a49124 (Commit)
 	pnetwork->network.IELength = le32_to_cpu(pnetwork->network.IELength);
 #endif
 
 	the_same_macaddr = !memcmp(pnetwork->network.MacAddress,
+<<<<<<< HEAD
 				cur_network->network.MacAddress, ETH_ALEN);
 	pnetwork->network.Length =
 		r8712_get_wlan_bssid_ex_sz(&pnetwork->network);
+=======
+				   cur_network->network.MacAddress, ETH_ALEN);
+	pnetwork->network.Length =
+		 r8712_get_wlan_bssid_ex_sz(&pnetwork->network);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_irqsave(&pmlmepriv->lock, irqL);
 	if (pnetwork->network.Length > sizeof(struct wlan_bssid_ex))
 		goto ignore_joinbss_callback;
@@ -713,24 +749,42 @@ void r8712_joinbss_event_callback(struct _adapter *adapter, u8 *pbuf)
 			if (check_fwstate(pmlmepriv, _FW_LINKED)) {
 				if (the_same_macaddr) {
 					ptarget_wlan =
+<<<<<<< HEAD
 						r8712_find_network(&pmlmepriv->scanned_queue,
 						cur_network->network.MacAddress);
 				} else {
 					pcur_wlan =
 						r8712_find_network(&pmlmepriv->scanned_queue,
 						cur_network->network.MacAddress);
+=======
+					    r8712_find_network(&pmlmepriv->scanned_queue,
+					    cur_network->network.MacAddress);
+				} else {
+					pcur_wlan =
+					     r8712_find_network(&pmlmepriv->scanned_queue,
+					     cur_network->network.MacAddress);
+>>>>>>> b7ba80a49124 (Commit)
 					if (pcur_wlan)
 						pcur_wlan->fixed = false;
 
 					pcur_sta = r8712_get_stainfo(pstapriv,
+<<<<<<< HEAD
 						cur_network->network.MacAddress);
+=======
+					     cur_network->network.MacAddress);
+>>>>>>> b7ba80a49124 (Commit)
 					spin_lock_irqsave(&pstapriv->sta_hash_lock, irqL2);
 					r8712_free_stainfo(adapter, pcur_sta);
 					spin_unlock_irqrestore(&(pstapriv->sta_hash_lock), irqL2);
 
 					ptarget_wlan =
+<<<<<<< HEAD
 						r8712_find_network(&pmlmepriv->scanned_queue,
 						pnetwork->network.MacAddress);
+=======
+						 r8712_find_network(&pmlmepriv->scanned_queue,
+						 pnetwork->network.MacAddress);
+>>>>>>> b7ba80a49124 (Commit)
 					if (ptarget_wlan)
 						ptarget_wlan->fixed = true;
 				}
@@ -745,7 +799,11 @@ void r8712_joinbss_event_callback(struct _adapter *adapter, u8 *pbuf)
 				if (check_fwstate(pmlmepriv,
 					_FW_UNDER_LINKING))
 					pmlmepriv->fw_state ^=
+<<<<<<< HEAD
 						_FW_UNDER_LINKING;
+=======
+						 _FW_UNDER_LINKING;
+>>>>>>> b7ba80a49124 (Commit)
 				goto ignore_joinbss_callback;
 			}
 
@@ -753,6 +811,7 @@ void r8712_joinbss_event_callback(struct _adapter *adapter, u8 *pbuf)
 			if (check_fwstate(pmlmepriv, WIFI_STATION_STATE)) {
 				if (the_same_macaddr) {
 					ptarget_sta =
+<<<<<<< HEAD
 						r8712_get_stainfo(pstapriv,
 						pnetwork->network.MacAddress);
 					if (!ptarget_sta)
@@ -763,6 +822,18 @@ void r8712_joinbss_event_callback(struct _adapter *adapter, u8 *pbuf)
 					ptarget_sta =
 						r8712_alloc_stainfo(pstapriv,
 						pnetwork->network.MacAddress);
+=======
+						 r8712_get_stainfo(pstapriv,
+						 pnetwork->network.MacAddress);
+					if (!ptarget_sta)
+						ptarget_sta =
+						 r8712_alloc_stainfo(pstapriv,
+						 pnetwork->network.MacAddress);
+				} else {
+					ptarget_sta =
+						 r8712_alloc_stainfo(pstapriv,
+						 pnetwork->network.MacAddress);
+>>>>>>> b7ba80a49124 (Commit)
 				}
 				if (ptarget_sta) /*update ptarget_sta*/ {
 					ptarget_sta->aid = pnetwork->join_res;
@@ -773,6 +844,7 @@ void r8712_joinbss_event_callback(struct _adapter *adapter, u8 *pbuf)
 						adapter->securitypriv.busetkipkey = false;
 						adapter->securitypriv.bgrpkey_handshake = false;
 						ptarget_sta->ieee8021x_blocked = true;
+<<<<<<< HEAD
 						ptarget_sta->XPrivacy =
 							adapter->securitypriv.PrivacyAlgrthm;
 						memset((u8 *)&ptarget_sta->x_UncstKey,
@@ -795,6 +867,29 @@ void r8712_joinbss_event_callback(struct _adapter *adapter, u8 *pbuf)
 					if (check_fwstate(pmlmepriv, _FW_UNDER_LINKING))
 						pmlmepriv->fw_state ^=
 							_FW_UNDER_LINKING;
+=======
+						ptarget_sta->XPrivacy = adapter->
+						securitypriv.PrivacyAlgrthm;
+						memset((u8 *)&ptarget_sta->x_UncstKey,
+							 0,
+							 sizeof(union Keytype));
+						memset((u8 *)&ptarget_sta->tkiprxmickey,
+							 0,
+							 sizeof(union Keytype));
+						memset((u8 *)&ptarget_sta->tkiptxmickey,
+							 0,
+							 sizeof(union Keytype));
+						memset((u8 *)&ptarget_sta->txpn, 0,
+							 sizeof(union pn48));
+						memset((u8 *)&ptarget_sta->rxpn, 0,
+							 sizeof(union pn48));
+					}
+				} else {
+					if (check_fwstate(pmlmepriv,
+					    _FW_UNDER_LINKING))
+						pmlmepriv->fw_state ^=
+							 _FW_UNDER_LINKING;
+>>>>>>> b7ba80a49124 (Commit)
 					goto ignore_joinbss_callback;
 				}
 			}
@@ -816,12 +911,21 @@ void r8712_joinbss_event_callback(struct _adapter *adapter, u8 *pbuf)
 				break;
 			}
 			r8712_update_protection(adapter,
+<<<<<<< HEAD
 				(cur_network->network.IEs) +
 				sizeof(struct NDIS_802_11_FIXED_IEs),
 				(cur_network->network.IELength));
 			/*TODO: update HT_Capability*/
 			update_ht_cap(adapter, cur_network->network.IEs,
 				cur_network->network.IELength);
+=======
+					  (cur_network->network.IEs) +
+					  sizeof(struct NDIS_802_11_FIXED_IEs),
+					  (cur_network->network.IELength));
+			/*TODO: update HT_Capability*/
+			update_ht_cap(adapter, cur_network->network.IEs,
+				      cur_network->network.IELength);
+>>>>>>> b7ba80a49124 (Commit)
 			/*indicate connect*/
 			if (check_fwstate(pmlmepriv, WIFI_STATION_STATE))
 				r8712_indicate_connect(adapter);
@@ -832,7 +936,11 @@ void r8712_joinbss_event_callback(struct _adapter *adapter, u8 *pbuf)
 	} else {
 		if (check_fwstate(pmlmepriv, _FW_UNDER_LINKING)) {
 			mod_timer(&pmlmepriv->assoc_timer,
+<<<<<<< HEAD
 				jiffies + msecs_to_jiffies(1));
+=======
+				  jiffies + msecs_to_jiffies(1));
+>>>>>>> b7ba80a49124 (Commit)
 			_clr_fwstate_(pmlmepriv, _FW_UNDER_LINKING);
 		}
 	}

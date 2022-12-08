@@ -25,6 +25,7 @@ mana_ib_verbs_to_gdma_access_flags(int access_flags)
 	return flags;
 }
 
+<<<<<<< HEAD
 static int mana_ib_gd_create_mr(struct mana_ib_dev *dev, struct mana_ib_mr *mr,
 				struct gdma_create_mr_params *mr_params)
 {
@@ -100,6 +101,8 @@ static int mana_ib_gd_destroy_mr(struct mana_ib_dev *dev, u64 mr_handle)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ib_mr *mana_ib_reg_user_mr(struct ib_pd *ibpd, u64 start, u64 length,
 				  u64 iova, int access_flags,
 				  struct ib_udata *udata)
@@ -107,9 +110,16 @@ struct ib_mr *mana_ib_reg_user_mr(struct ib_pd *ibpd, u64 start, u64 length,
 	struct mana_ib_pd *pd = container_of(ibpd, struct mana_ib_pd, ibpd);
 	struct gdma_create_mr_params mr_params = {};
 	struct ib_device *ibdev = ibpd->device;
+<<<<<<< HEAD
 	struct mana_ib_dev *dev;
 	struct mana_ib_mr *mr;
 	u64 dma_region_handle;
+=======
+	gdma_obj_handle_t dma_region_handle;
+	struct mana_ib_dev *dev;
+	struct mana_ib_mr *mr;
+	u64 page_sz;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	dev = container_of(ibdev, struct mana_ib_dev, ib_dev);
@@ -133,9 +143,24 @@ struct ib_mr *mana_ib_reg_user_mr(struct ib_pd *ibpd, u64 start, u64 length,
 		goto err_free;
 	}
 
+<<<<<<< HEAD
 	err = mana_ib_gd_create_dma_region(dev, mr->umem, &dma_region_handle);
 	if (err) {
 		ibdev_dbg(ibdev, "Failed create dma region for user-mr, %d\n",
+=======
+	page_sz = ib_umem_find_best_pgsz(mr->umem, PAGE_SZ_BM, iova);
+	if (unlikely(!page_sz)) {
+		ibdev_err(ibdev, "Failed to get best page size\n");
+		err = -EOPNOTSUPP;
+		goto err_umem;
+	}
+	ibdev_dbg(ibdev, "Page size chosen %llu\n", page_sz);
+
+	err = mana_ib_gd_create_dma_region(dev, mr->umem, &dma_region_handle,
+					   page_sz);
+	if (err) {
+		ibdev_err(ibdev, "Failed create dma region for user-mr, %d\n",
+>>>>>>> b7ba80a49124 (Commit)
 			  err);
 		goto err_umem;
 	}
@@ -155,12 +180,21 @@ struct ib_mr *mana_ib_reg_user_mr(struct ib_pd *ibpd, u64 start, u64 length,
 	if (err)
 		goto err_dma_region;
 
+<<<<<<< HEAD
 	/*
 	 * There is no need to keep track of dma_region_handle after MR is
+=======
+	/* There is no need to keep track of dma_region_handle after MR is
+>>>>>>> b7ba80a49124 (Commit)
 	 * successfully created. The dma_region_handle is tracked in the PF
 	 * as part of the lifecycle of this MR.
 	 */
 
+<<<<<<< HEAD
+=======
+	mr->ibmr.length = length;
+	mr->ibmr.page_size = page_sz;
+>>>>>>> b7ba80a49124 (Commit)
 	return &mr->ibmr;
 
 err_dma_region:

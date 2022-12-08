@@ -21,9 +21,15 @@ static const struct regmap_config st_lsm6dsx_i2c_regmap_config = {
 	.val_bits = 8,
 };
 
+<<<<<<< HEAD
 static int st_lsm6dsx_i2c_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int st_lsm6dsx_i2c_probe(struct i2c_client *client,
+				const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	int hw_id = id->driver_data;
 	struct regmap *regmap;
 
@@ -109,6 +115,7 @@ static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
 		.compatible = "st,lsm6dstx",
 		.data = (void *)ST_LSM6DSTX_ID,
 	},
+<<<<<<< HEAD
 	{
 		.compatible = "st,lsm6dsv",
 		.data = (void *)ST_LSM6DSV_ID,
@@ -129,6 +136,8 @@ static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
 		.compatible = "st,asm330lhb",
 		.data = (void *)ST_ASM330LHB_ID,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
@@ -152,11 +161,14 @@ static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
 	{ ST_LSM6DSOP_DEV_NAME, ST_LSM6DSOP_ID },
 	{ ST_ASM330LHHX_DEV_NAME, ST_ASM330LHHX_ID },
 	{ ST_LSM6DSTX_DEV_NAME, ST_LSM6DSTX_ID },
+<<<<<<< HEAD
 	{ ST_LSM6DSV_DEV_NAME, ST_LSM6DSV_ID },
 	{ ST_LSM6DSV16X_DEV_NAME, ST_LSM6DSV16X_ID },
 	{ ST_LSM6DSO16IS_DEV_NAME, ST_LSM6DSO16IS_ID },
 	{ ST_ISM330IS_DEV_NAME, ST_ISM330IS_ID },
 	{ ST_ASM330LHB_DEV_NAME, ST_ASM330LHB_ID },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
@@ -167,7 +179,11 @@ static struct i2c_driver st_lsm6dsx_driver = {
 		.pm = pm_sleep_ptr(&st_lsm6dsx_pm_ops),
 		.of_match_table = st_lsm6dsx_i2c_of_match,
 	},
+<<<<<<< HEAD
 	.probe_new = st_lsm6dsx_i2c_probe,
+=======
+	.probe = st_lsm6dsx_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = st_lsm6dsx_i2c_id_table,
 };
 module_i2c_driver(st_lsm6dsx_driver);

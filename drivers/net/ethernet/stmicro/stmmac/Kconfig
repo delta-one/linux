@@ -235,6 +235,7 @@ config DWMAC_INTEL_PLAT
 	  the stmmac device driver. This driver is used for the Intel Keem Bay
 	  SoC.
 
+<<<<<<< HEAD
 config DWMAC_TEGRA
 	tristate "NVIDIA Tegra MGBE support"
 	depends on ARCH_TEGRA || COMPILE_TEST
@@ -244,6 +245,8 @@ config DWMAC_TEGRA
 	  layer on top of the stmmac driver required for these NVIDIA Tegra SoC
 	  devices.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config DWMAC_VISCONTI
 	tristate "Toshiba Visconti DWMAC support"
 	default ARCH_VISCONTI

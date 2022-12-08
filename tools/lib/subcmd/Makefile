@@ -17,6 +17,7 @@ RM = rm -f
 
 MAKEFLAGS += --no-print-directory
 
+<<<<<<< HEAD
 INSTALL = install
 
 # Use DESTDIR for installing into a different root directory.
@@ -26,6 +27,8 @@ INSTALL = install
 DESTDIR ?=
 DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 LIBFILE = $(OUTPUT)libsubcmd.a
 
 CFLAGS := -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
@@ -57,6 +60,7 @@ CFLAGS += $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
 
 SUBCMD_IN := $(OUTPUT)libsubcmd-in.o
 
+<<<<<<< HEAD
 ifeq ($(LP64), 1)
   libdir_relative = lib64
 else
@@ -69,6 +73,8 @@ libdir = $(prefix)/$(libdir_relative)
 # Shell quotes
 libdir_SQ = $(subst ','\'',$(libdir))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 all:
 
 export srctree OUTPUT CC LD CFLAGS V
@@ -82,6 +88,7 @@ $(SUBCMD_IN): FORCE
 $(LIBFILE): $(SUBCMD_IN)
 	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(SUBCMD_IN)
 
+<<<<<<< HEAD
 define do_install_mkdir
 	if [ ! -d '$(DESTDIR_SQ)$1' ]; then             \
 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$1'; \
@@ -113,6 +120,8 @@ install_headers: $(INSTALL_HDRS)
 
 install: install_lib install_headers
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 clean:
 	$(call QUIET_CLEAN, libsubcmd) $(RM) $(LIBFILE); \
 	find $(or $(OUTPUT),.) -name \*.o -or -name \*.o.cmd -or -name \*.o.d | xargs $(RM)

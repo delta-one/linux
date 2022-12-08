@@ -4,11 +4,14 @@
 #define _NF_CONNTRACK_BPF_H
 
 #include <linux/kconfig.h>
+<<<<<<< HEAD
 #include <net/netfilter/nf_conntrack.h>
 
 struct nf_conn___init {
 	struct nf_conn ct;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #if (IS_BUILTIN(CONFIG_NF_CONNTRACK) && IS_ENABLED(CONFIG_DEBUG_INFO_BTF)) || \
     (IS_MODULE(CONFIG_NF_CONNTRACK) && IS_ENABLED(CONFIG_DEBUG_INFO_BTF_MODULES))
@@ -29,6 +32,7 @@ static inline void cleanup_nf_conntrack_bpf(void)
 
 #endif
 
+<<<<<<< HEAD
 #if (IS_BUILTIN(CONFIG_NF_NAT) && IS_ENABLED(CONFIG_DEBUG_INFO_BTF)) || \
     (IS_MODULE(CONFIG_NF_NAT) && IS_ENABLED(CONFIG_DEBUG_INFO_BTF_MODULES))
 
@@ -43,4 +47,6 @@ static inline int register_nf_nat_bpf(void)
 
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _NF_CONNTRACK_BPF_H */

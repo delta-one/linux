@@ -156,7 +156,11 @@ int pcmcia_h3600_init(struct device *dev)
 {
 	int ret = -ENODEV;
 
+<<<<<<< HEAD
 	if (machine_is_h3600())
+=======
+	if (machine_is_h3600() || machine_is_h3100())
+>>>>>>> b7ba80a49124 (Commit)
 		ret = sa11xx_drv_pcmcia_probe(dev, &h3600_pcmcia_ops, 0, 2);
 
 	return ret;

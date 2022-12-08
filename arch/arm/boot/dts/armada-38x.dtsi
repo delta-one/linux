@@ -289,6 +289,7 @@
 					marvell,pins = "mpp44";
 					marvell,function = "sata3";
 				};
+<<<<<<< HEAD
 
 				i2s_pins: i2s-pins {
 					marvell,pins = "mpp48", "mpp49",
@@ -301,6 +302,8 @@
 					marvell,pins = "mpp51";
 					marvell,function = "audio";
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			gpio0: gpio@18100 {
@@ -632,6 +635,7 @@
 				status = "disabled";
 			};
 
+<<<<<<< HEAD
 			audio_controller: audio-controller@e8000 {
 				#sound-dai-cells = <1>;
 				compatible = "marvell,armada-380-audio";
@@ -644,6 +648,8 @@
 				status = "disabled";
 			};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			usb3_0: usb3@f0000 {
 				compatible = "marvell,armada-380-xhci";
 				reg = <0xf0000 0x4000>,<0xf4000 0x4000>;

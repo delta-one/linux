@@ -15,7 +15,11 @@ __dtbs_install:
 
 include include/config/auto.conf
 include $(srctree)/scripts/Kbuild.include
+<<<<<<< HEAD
 include $(kbuild-file)
+=======
+include $(src)/Makefile
+>>>>>>> b7ba80a49124 (Commit)
 
 dtbs    := $(addprefix $(dst)/, $(dtb-y) $(if $(CONFIG_OF_ALL_DTBS),$(dtb-)))
 subdirs := $(addprefix $(obj)/, $(subdir-y) $(subdir-m))

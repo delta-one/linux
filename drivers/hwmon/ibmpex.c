@@ -502,7 +502,10 @@ static void ibmpex_register_bmc(int iface, struct device *dev)
 	return;
 
 out_register:
+<<<<<<< HEAD
 	list_del(&data->list);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hwmon_device_unregister(data->hwmon_dev);
 out_user:
 	ipmi_destroy_user(data->user);
@@ -546,7 +549,11 @@ static void ibmpex_bmc_gone(int iface)
 
 static void ibmpex_msg_handler(struct ipmi_recv_msg *msg, void *user_msg_data)
 {
+<<<<<<< HEAD
 	struct ibmpex_bmc_data *data = user_msg_data;
+=======
+	struct ibmpex_bmc_data *data = (struct ibmpex_bmc_data *)user_msg_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (msg->msgid != data->tx_msgid) {
 		dev_err(data->bmc_device,

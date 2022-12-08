@@ -58,7 +58,11 @@ static void rpcif_spi_mem_prepare(struct spi_device *spi_dev,
 		rpc_op.data.dir = RPCIF_NO_DATA;
 	}
 
+<<<<<<< HEAD
 	rpcif_prepare(rpc->dev, &rpc_op, offs, len);
+=======
+	rpcif_prepare(rpc, &rpc_op, offs, len);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool rpcif_spi_mem_supports_op(struct spi_mem *mem,
@@ -86,7 +90,11 @@ static ssize_t rpcif_spi_mem_dirmap_read(struct spi_mem_dirmap_desc *desc,
 
 	rpcif_spi_mem_prepare(desc->mem->spi, &desc->info.op_tmpl, &offs, &len);
 
+<<<<<<< HEAD
 	return rpcif_dirmap_read(rpc->dev, offs, len, buf);
+=======
+	return rpcif_dirmap_read(rpc, offs, len, buf);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int rpcif_spi_mem_dirmap_create(struct spi_mem_dirmap_desc *desc)
@@ -117,7 +125,11 @@ static int rpcif_spi_mem_exec_op(struct spi_mem *mem,
 
 	rpcif_spi_mem_prepare(mem->spi, op, NULL, NULL);
 
+<<<<<<< HEAD
 	return rpcif_manual_xfer(rpc->dev);
+=======
+	return rpcif_manual_xfer(rpc);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct spi_controller_mem_ops rpcif_spi_mem_ops = {
@@ -147,7 +159,11 @@ static int rpcif_spi_probe(struct platform_device *pdev)
 
 	ctlr->dev.of_node = parent->of_node;
 
+<<<<<<< HEAD
 	pm_runtime_enable(rpc->dev);
+=======
+	rpcif_enable_rpm(rpc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctlr->num_chipselect = 1;
 	ctlr->mem_ops = &rpcif_spi_mem_ops;
@@ -156,7 +172,11 @@ static int rpcif_spi_probe(struct platform_device *pdev)
 	ctlr->mode_bits = SPI_CPOL | SPI_CPHA | SPI_TX_QUAD | SPI_RX_QUAD;
 	ctlr->flags = SPI_CONTROLLER_HALF_DUPLEX;
 
+<<<<<<< HEAD
 	error = rpcif_hw_init(rpc->dev, false);
+=======
+	error = rpcif_hw_init(rpc, false);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		goto out_disable_rpm;
 
@@ -169,17 +189,31 @@ static int rpcif_spi_probe(struct platform_device *pdev)
 	return 0;
 
 out_disable_rpm:
+<<<<<<< HEAD
 	pm_runtime_disable(rpc->dev);
 	return error;
 }
 
 static void rpcif_spi_remove(struct platform_device *pdev)
+=======
+	rpcif_disable_rpm(rpc);
+	return error;
+}
+
+static int rpcif_spi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_controller *ctlr = platform_get_drvdata(pdev);
 	struct rpcif *rpc = spi_controller_get_devdata(ctlr);
 
 	spi_unregister_controller(ctlr);
+<<<<<<< HEAD
 	pm_runtime_disable(rpc->dev);
+=======
+	rpcif_disable_rpm(rpc);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused rpcif_spi_suspend(struct device *dev)
@@ -200,7 +234,11 @@ static SIMPLE_DEV_PM_OPS(rpcif_spi_pm_ops, rpcif_spi_suspend, rpcif_spi_resume);
 
 static struct platform_driver rpcif_spi_driver = {
 	.probe	= rpcif_spi_probe,
+<<<<<<< HEAD
 	.remove_new = rpcif_spi_remove,
+=======
+	.remove	= rpcif_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name	= "rpc-if-spi",
 #ifdef CONFIG_PM_SLEEP

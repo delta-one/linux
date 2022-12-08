@@ -68,7 +68,14 @@ enum {
 struct rtrs_ib_dev;
 
 struct rtrs_rdma_dev_pd_ops {
+<<<<<<< HEAD
 	int (*init)(struct rtrs_ib_dev *dev);
+=======
+	struct rtrs_ib_dev *(*alloc)(void);
+	void (*free)(struct rtrs_ib_dev *dev);
+	int (*init)(struct rtrs_ib_dev *dev);
+	void (*deinit)(struct rtrs_ib_dev *dev);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct rtrs_rdma_dev_pd {

@@ -3068,12 +3068,22 @@ static int setup_copyup_bvecs(struct rbd_obj_request *obj_req, u64 obj_overlap)
 
 	for (i = 0; i < obj_req->copyup_bvec_count; i++) {
 		unsigned int len = min(obj_overlap, (u64)PAGE_SIZE);
+<<<<<<< HEAD
 		struct page *page = alloc_page(GFP_NOIO);
 
 		if (!page)
 			return -ENOMEM;
 
 		bvec_set_page(&obj_req->copyup_bvecs[i], page, len, 0);
+=======
+
+		obj_req->copyup_bvecs[i].bv_page = alloc_page(GFP_NOIO);
+		if (!obj_req->copyup_bvecs[i].bv_page)
+			return -ENOMEM;
+
+		obj_req->copyup_bvecs[i].bv_offset = 0;
+		obj_req->copyup_bvecs[i].bv_len = len;
+>>>>>>> b7ba80a49124 (Commit)
 		obj_overlap -= len;
 	}
 
@@ -5291,7 +5301,12 @@ static void rbd_dev_release(struct device *dev)
 		module_put(THIS_MODULE);
 }
 
+<<<<<<< HEAD
 static struct rbd_device *__rbd_dev_create(struct rbd_spec *spec)
+=======
+static struct rbd_device *__rbd_dev_create(struct rbd_client *rbdc,
+					   struct rbd_spec *spec)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rbd_device *rbd_dev;
 
@@ -5336,6 +5351,12 @@ static struct rbd_device *__rbd_dev_create(struct rbd_spec *spec)
 	rbd_dev->dev.parent = &rbd_root_dev;
 	device_initialize(&rbd_dev->dev);
 
+<<<<<<< HEAD
+=======
+	rbd_dev->rbd_client = rbdc;
+	rbd_dev->spec = spec;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return rbd_dev;
 }
 
@@ -5348,10 +5369,19 @@ static struct rbd_device *rbd_dev_create(struct rbd_client *rbdc,
 {
 	struct rbd_device *rbd_dev;
 
+<<<<<<< HEAD
 	rbd_dev = __rbd_dev_create(spec);
 	if (!rbd_dev)
 		return NULL;
 
+=======
+	rbd_dev = __rbd_dev_create(rbdc, spec);
+	if (!rbd_dev)
+		return NULL;
+
+	rbd_dev->opts = opts;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* get an id and fill in device name */
 	rbd_dev->dev_id = ida_simple_get(&rbd_dev_id_ida, 0,
 					 minor_to_rbd_dev_id(1 << MINORBITS),
@@ -5368,10 +5398,13 @@ static struct rbd_device *rbd_dev_create(struct rbd_client *rbdc,
 	/* we have a ref from do_rbd_add() */
 	__module_get(THIS_MODULE);
 
+<<<<<<< HEAD
 	rbd_dev->rbd_client = rbdc;
 	rbd_dev->spec = spec;
 	rbd_dev->opts = opts;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dout("%s rbd_dev %p dev_id %d\n", __func__, rbd_dev, rbd_dev->dev_id);
 	return rbd_dev;
 
@@ -6733,7 +6766,11 @@ static int rbd_dev_probe_parent(struct rbd_device *rbd_dev, int depth)
 		goto out_err;
 	}
 
+<<<<<<< HEAD
 	parent = __rbd_dev_create(rbd_dev->parent_spec);
+=======
+	parent = __rbd_dev_create(rbd_dev->rbd_client, rbd_dev->parent_spec);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!parent) {
 		ret = -ENOMEM;
 		goto out_err;
@@ -6743,8 +6780,13 @@ static int rbd_dev_probe_parent(struct rbd_device *rbd_dev, int depth)
 	 * Images related by parent/child relationships always share
 	 * rbd_client and spec/parent_spec, so bump their refcounts.
 	 */
+<<<<<<< HEAD
 	parent->rbd_client = __rbd_get_client(rbd_dev->rbd_client);
 	parent->spec = rbd_spec_get(rbd_dev->parent_spec);
+=======
+	__rbd_get_client(rbd_dev->rbd_client);
+	rbd_spec_get(rbd_dev->parent_spec);
+>>>>>>> b7ba80a49124 (Commit)
 
 	__set_bit(RBD_DEV_FLAG_READONLY, &parent->flags);
 
@@ -7219,10 +7261,15 @@ static int __init rbd_sysfs_init(void)
 	int ret;
 
 	ret = device_register(&rbd_root_dev);
+<<<<<<< HEAD
 	if (ret < 0) {
 		put_device(&rbd_root_dev);
 		return ret;
 	}
+=======
+	if (ret < 0)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = bus_register(&rbd_bus_type);
 	if (ret < 0)

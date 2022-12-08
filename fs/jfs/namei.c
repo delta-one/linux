@@ -59,7 +59,11 @@ static inline void free_ea_wmap(struct inode *inode)
  * RETURN:	Errors from subroutines
  *
  */
+<<<<<<< HEAD
 static int jfs_create(struct mnt_idmap *idmap, struct inode *dip,
+=======
+static int jfs_create(struct user_namespace *mnt_userns, struct inode *dip,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *dentry, umode_t mode, bool excl)
 {
 	int rc = 0;
@@ -192,7 +196,11 @@ static int jfs_create(struct mnt_idmap *idmap, struct inode *dip,
  * note:
  * EACCES: user needs search+write permission on the parent directory
  */
+<<<<<<< HEAD
 static int jfs_mkdir(struct mnt_idmap *idmap, struct inode *dip,
+=======
+static int jfs_mkdir(struct user_namespace *mnt_userns, struct inode *dip,
+>>>>>>> b7ba80a49124 (Commit)
 		     struct dentry *dentry, umode_t mode)
 {
 	int rc = 0;
@@ -869,7 +877,11 @@ static int jfs_link(struct dentry *old_dentry,
  * an intermediate result whose length exceeds PATH_MAX [XPG4.2]
 */
 
+<<<<<<< HEAD
 static int jfs_symlink(struct mnt_idmap *idmap, struct inode *dip,
+=======
+static int jfs_symlink(struct user_namespace *mnt_userns, struct inode *dip,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct dentry *dentry, const char *name)
 {
 	int rc;
@@ -946,7 +958,11 @@ static int jfs_symlink(struct mnt_idmap *idmap, struct inode *dip,
 	if (ssize <= IDATASIZE) {
 		ip->i_op = &jfs_fast_symlink_inode_operations;
 
+<<<<<<< HEAD
 		ip->i_link = JFS_IP(ip)->i_inline_all;
+=======
+		ip->i_link = JFS_IP(ip)->i_inline;
+>>>>>>> b7ba80a49124 (Commit)
 		memcpy(ip->i_link, name, ssize);
 		ip->i_size = ssize - 1;
 
@@ -1059,7 +1075,11 @@ static int jfs_symlink(struct mnt_idmap *idmap, struct inode *dip,
  *
  * FUNCTION:	rename a file or directory
  */
+<<<<<<< HEAD
 static int jfs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
+=======
+static int jfs_rename(struct user_namespace *mnt_userns, struct inode *old_dir,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *old_dentry, struct inode *new_dir,
 		      struct dentry *new_dentry, unsigned int flags)
 {
@@ -1345,7 +1365,11 @@ static int jfs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
  *
  * FUNCTION:	Create a special file (device)
  */
+<<<<<<< HEAD
 static int jfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int jfs_mknod(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		     struct dentry *dentry, umode_t mode, dev_t rdev)
 {
 	struct jfs_inode_info *jfs_ip;
@@ -1525,7 +1549,11 @@ const struct inode_operations jfs_dir_inode_operations = {
 	.fileattr_get	= jfs_fileattr_get,
 	.fileattr_set	= jfs_fileattr_set,
 #ifdef CONFIG_JFS_POSIX_ACL
+<<<<<<< HEAD
 	.get_inode_acl	= jfs_get_acl,
+=======
+	.get_acl	= jfs_get_acl,
+>>>>>>> b7ba80a49124 (Commit)
 	.set_acl	= jfs_set_acl,
 #endif
 };

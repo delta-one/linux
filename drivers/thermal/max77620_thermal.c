@@ -46,13 +46,24 @@ struct max77620_therm_info {
 
 static int max77620_thermal_read_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	struct max77620_therm_info *mtherm = thermal_zone_device_priv(tz);
+=======
+	struct max77620_therm_info *mtherm = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int val;
 	int ret;
 
 	ret = regmap_read(mtherm->rmap, MAX77620_REG_STATLBT, &val);
+<<<<<<< HEAD
 	if (ret < 0)
 		return ret;
+=======
+	if (ret < 0) {
+		dev_err(mtherm->dev, "Failed to read STATLBT: %d\n", ret);
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (val & MAX77620_IRQ_TJALRM2_MASK)
 		*temp = MAX77620_TJALARM2_TEMP;

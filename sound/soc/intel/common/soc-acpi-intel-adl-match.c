@@ -354,6 +354,7 @@ static const struct snd_soc_acpi_link_adr adl_sdw_rt711_link0_rt1316_link3[] = {
 	{}
 };
 
+<<<<<<< HEAD
 static const struct snd_soc_acpi_link_adr adl_sdw_rt711_link0_rt1316_link2[] = {
 	{
 		.mask = BIT(0),
@@ -368,6 +369,8 @@ static const struct snd_soc_acpi_link_adr adl_sdw_rt711_link0_rt1316_link2[] = {
 	{}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_soc_acpi_adr_device mx8373_2_adr[] = {
 	{
 		.adr = 0x000223019F837300ull,
@@ -444,11 +447,14 @@ static const struct snd_soc_acpi_codecs adl_rt5682_rt5682s_hp = {
 	.codecs = {"10EC5682", "RTL5682"},
 };
 
+<<<<<<< HEAD
 static const struct snd_soc_acpi_codecs adl_rt1015p_amp = {
 	.num_codecs = 1,
 	.codecs = {"RTL1015"}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_soc_acpi_codecs adl_rt1019p_amp = {
 	.num_codecs = 1,
 	.codecs = {"RTL1019"}
@@ -464,11 +470,14 @@ static const struct snd_soc_acpi_codecs adl_lt6911_hdmi = {
 	.codecs = {"INTC10B0"}
 };
 
+<<<<<<< HEAD
 static const struct snd_soc_acpi_codecs adl_nau8318_amp = {
 	.num_codecs = 1,
 	.codecs = {"NVTN2012"}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct snd_soc_acpi_mach snd_soc_acpi_intel_adl_machines[] = {
 	{
 		.comp_ids = &adl_rt5682_rt5682s_hp,
@@ -493,34 +502,52 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_adl_machines[] = {
 	},
 	{
 		.id = "10508825",
+<<<<<<< HEAD
 		.drv_name = "adl_rt1019p_8825",
+=======
+		.drv_name = "adl_rt1019p_nau8825",
+>>>>>>> b7ba80a49124 (Commit)
 		.machine_quirk = snd_soc_acpi_codec_list,
 		.quirk_data = &adl_rt1019p_amp,
 		.sof_tplg_filename = "sof-adl-rt1019-nau8825.tplg",
 	},
 	{
 		.id = "10508825",
+<<<<<<< HEAD
 		.drv_name = "adl_max98373_8825",
+=======
+		.drv_name = "adl_max98373_nau8825",
+>>>>>>> b7ba80a49124 (Commit)
 		.machine_quirk = snd_soc_acpi_codec_list,
 		.quirk_data = &adl_max98373_amp,
 		.sof_tplg_filename = "sof-adl-max98373-nau8825.tplg",
 	},
 	{
 		.id = "10508825",
+<<<<<<< HEAD
 		.drv_name = "adl_mx98360a_8825",
+=======
+		.drv_name = "adl_mx98360a_nau8825",
+>>>>>>> b7ba80a49124 (Commit)
 		.machine_quirk = snd_soc_acpi_codec_list,
 		.quirk_data = &adl_max98360a_amp,
 		.sof_tplg_filename = "sof-adl-max98360a-nau8825.tplg",
 	},
 	{
+<<<<<<< HEAD
 		.comp_ids = &adl_rt5682_rt5682s_hp,
 		.drv_name = "adl_rt1019_rt5682",
+=======
+		.id = "RTL5682",
+		.drv_name = "adl_rt1019_rt5682s",
+>>>>>>> b7ba80a49124 (Commit)
 		.machine_quirk = snd_soc_acpi_codec_list,
 		.quirk_data = &adl_rt1019p_amp,
 		.sof_tplg_filename = "sof-adl-rt1019-rt5682.tplg",
 	},
 	{
 		.id = "10508825",
+<<<<<<< HEAD
 		.drv_name = "adl_rt1015p_8825",
 		.machine_quirk = snd_soc_acpi_codec_list,
 		.quirk_data = &adl_rt1015p_amp,
@@ -535,6 +562,8 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_adl_machines[] = {
 	},
 	{
 		.id = "10508825",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.drv_name = "sof_nau8825",
 		.sof_tplg_filename = "sof-adl-nau8825.tplg",
 	},
@@ -573,7 +602,11 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_adl_machines[] = {
 	{
 		.comp_ids = &essx_83x6,
 		.drv_name = "sof-essx8336",
+<<<<<<< HEAD
 		.sof_tplg_filename = "sof-adl-es8336", /* the tplg suffix is added at run time */
+=======
+		.sof_tplg_filename = "sof-adl-es83x6", /* the tplg suffix is added at run time */
+>>>>>>> b7ba80a49124 (Commit)
 		.tplg_quirk_mask = SND_SOC_ACPI_TPLG_INTEL_SSP_NUMBER |
 					SND_SOC_ACPI_TPLG_INTEL_SSP_MSB |
 					SND_SOC_ACPI_TPLG_INTEL_DMIC_NUMBER,
@@ -639,12 +672,15 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_adl_sdw_machines[] = {
 		.sof_tplg_filename = "sof-adl-rt711-l0-rt1316-l3.tplg",
 	},
 	{
+<<<<<<< HEAD
 		.link_mask = 0x5, /* 2 active links required */
 		.links = adl_sdw_rt711_link0_rt1316_link2,
 		.drv_name = "sof_sdw",
 		.sof_tplg_filename = "sof-adl-rt711-l0-rt1316-l2.tplg",
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.link_mask = 0x1, /* link0 required */
 		.links = adl_rvp,
 		.drv_name = "sof_sdw",

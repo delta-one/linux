@@ -82,7 +82,10 @@ static const struct irq_domain_ops intel_ir_domain_ops;
 
 static void iommu_disable_irq_remapping(struct intel_iommu *iommu);
 static int __init parse_ioapics_under_ir(void);
+<<<<<<< HEAD
 static const struct msi_parent_ops dmar_msi_parent_ops, virt_dmar_msi_parent_ops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static bool ir_pre_enabled(struct intel_iommu *iommu)
 {
@@ -174,6 +177,10 @@ static int modify_irte(struct irq_2_iommu *irq_iommu,
 	index = irq_iommu->irte_index + irq_iommu->sub_handle;
 	irte = &iommu->ir_table->base[index];
 
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_HAVE_CMPXCHG_DOUBLE)
+>>>>>>> b7ba80a49124 (Commit)
 	if ((irte->pst == 1) || (irte_modified->pst == 1)) {
 		bool ret;
 
@@ -187,9 +194,17 @@ static int modify_irte(struct irq_2_iommu *irq_iommu,
 		 * same as the old value.
 		 */
 		WARN_ON(!ret);
+<<<<<<< HEAD
 	} else {
 		WRITE_ONCE(irte->low, irte_modified->low);
 		WRITE_ONCE(irte->high, irte_modified->high);
+=======
+	} else
+#endif
+	{
+		set_64bit(&irte->low, irte_modified->low);
+		set_64bit(&irte->high, irte_modified->high);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	__iommu_flush_cache(iommu, irte, sizeof(*irte));
 
@@ -228,7 +243,11 @@ static struct irq_domain *map_dev_to_ir(struct pci_dev *dev)
 {
 	struct dmar_drhd_unit *drhd = dmar_find_matched_drhd_unit(dev);
 
+<<<<<<< HEAD
 	return drhd ? drhd->iommu->ir_domain : NULL;
+=======
+	return drhd ? drhd->iommu->ir_msi_domain : NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int clear_entries(struct irq_2_iommu *irq_iommu)
@@ -247,8 +266,13 @@ static int clear_entries(struct irq_2_iommu *irq_iommu)
 	end = start + (1 << irq_iommu->irte_mask);
 
 	for (entry = start; entry < end; entry++) {
+<<<<<<< HEAD
 		WRITE_ONCE(entry->low, 0);
 		WRITE_ONCE(entry->high, 0);
+=======
+		set_64bit(&entry->low, 0);
+		set_64bit(&entry->high, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	bitmap_release_region(iommu->ir_table->bitmap, index,
 			      irq_iommu->irte_mask);
@@ -492,8 +516,12 @@ static void iommu_set_irq_remapping(struct intel_iommu *iommu, int mode)
 	 * Global invalidation of interrupt entry cache to make sure the
 	 * hardware uses the new irq remapping table.
 	 */
+<<<<<<< HEAD
 	if (!cap_esirtps(iommu->cap))
 		qi_global_iec(iommu);
+=======
+	qi_global_iec(iommu);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void iommu_enable_irq_remapping(struct intel_iommu *iommu)
@@ -571,6 +599,7 @@ static int intel_setup_irq_remapping(struct intel_iommu *iommu)
 		pr_err("IR%d: failed to allocate irqdomain\n", iommu->seq_id);
 		goto out_free_fwnode;
 	}
+<<<<<<< HEAD
 
 	irq_domain_update_bus_token(iommu->ir_domain,  DOMAIN_BUS_DMAR);
 	iommu->ir_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT |
@@ -580,6 +609,12 @@ static int intel_setup_irq_remapping(struct intel_iommu *iommu)
 		iommu->ir_domain->msi_parent_ops = &virt_dmar_msi_parent_ops;
 	else
 		iommu->ir_domain->msi_parent_ops = &dmar_msi_parent_ops;
+=======
+	iommu->ir_msi_domain =
+		arch_create_remap_msi_irq_domain(iommu->ir_domain,
+						 "INTEL-IR-MSI",
+						 iommu->seq_id);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ir_table->base = page_address(pages);
 	ir_table->bitmap = bitmap;
@@ -623,6 +658,12 @@ static int intel_setup_irq_remapping(struct intel_iommu *iommu)
 	return 0;
 
 out_free_ir_domain:
+<<<<<<< HEAD
+=======
+	if (iommu->ir_msi_domain)
+		irq_domain_remove(iommu->ir_msi_domain);
+	iommu->ir_msi_domain = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	irq_domain_remove(iommu->ir_domain);
 	iommu->ir_domain = NULL;
 out_free_fwnode:
@@ -644,6 +685,16 @@ static void intel_teardown_irq_remapping(struct intel_iommu *iommu)
 	struct fwnode_handle *fn;
 
 	if (iommu && iommu->ir_table) {
+<<<<<<< HEAD
+=======
+		if (iommu->ir_msi_domain) {
+			fn = iommu->ir_msi_domain->fwnode;
+
+			irq_domain_remove(iommu->ir_msi_domain);
+			irq_domain_free_fwnode(fn);
+			iommu->ir_msi_domain = NULL;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		if (iommu->ir_domain) {
 			fn = iommu->ir_domain->fwnode;
 
@@ -674,8 +725,12 @@ static void iommu_disable_irq_remapping(struct intel_iommu *iommu)
 	 * global invalidation of interrupt entry cache before disabling
 	 * interrupt-remapping.
 	 */
+<<<<<<< HEAD
 	if (!cap_esirtps(iommu->cap))
 		qi_global_iec(iommu);
+=======
+	qi_global_iec(iommu);
+>>>>>>> b7ba80a49124 (Commit)
 
 	raw_spin_lock_irqsave(&iommu->register_lock, flags);
 
@@ -1100,7 +1155,11 @@ error:
  */
 void intel_irq_remap_add_device(struct dmar_pci_notify_info *info)
 {
+<<<<<<< HEAD
 	if (!irq_remapping_enabled || !pci_dev_has_default_msi_parent_domain(info->dev))
+=======
+	if (!irq_remapping_enabled || pci_dev_has_special_msi_domain(info->dev))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	dev_set_msi_domain(&info->dev->dev, map_dev_to_ir(info->dev));
@@ -1327,9 +1386,23 @@ static int intel_irq_remapping_alloc(struct irq_domain *domain,
 
 	if (!info || !iommu)
 		return -EINVAL;
+<<<<<<< HEAD
 	if (nr_irqs > 1 && info->type != X86_IRQ_ALLOC_TYPE_PCI_MSI)
 		return -EINVAL;
 
+=======
+	if (nr_irqs > 1 && info->type != X86_IRQ_ALLOC_TYPE_PCI_MSI &&
+	    info->type != X86_IRQ_ALLOC_TYPE_PCI_MSIX)
+		return -EINVAL;
+
+	/*
+	 * With IRQ remapping enabled, don't need contiguous CPU vectors
+	 * to support multiple MSI interrupts.
+	 */
+	if (info->type == X86_IRQ_ALLOC_TYPE_PCI_MSI)
+		info->flags &= ~X86_IRQ_ALLOC_CONTIGUOUS_VECTORS;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
 	if (ret < 0)
 		return ret;
@@ -1430,6 +1503,7 @@ static const struct irq_domain_ops intel_ir_domain_ops = {
 	.deactivate = intel_irq_remapping_deactivate,
 };
 
+<<<<<<< HEAD
 static const struct msi_parent_ops dmar_msi_parent_ops = {
 	.supported_flags	= X86_VECTOR_MSI_FLAGS_SUPPORTED |
 				  MSI_FLAG_MULTI_PCI_MSI |
@@ -1445,6 +1519,8 @@ static const struct msi_parent_ops virt_dmar_msi_parent_ops = {
 	.init_dev_msi_info	= msi_parent_init_dev_msi_info,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Support of Interrupt Remapping Unit Hotplug
  */

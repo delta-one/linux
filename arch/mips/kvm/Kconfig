@@ -26,8 +26,13 @@ config KVM
 	select HAVE_KVM_VCPU_ASYNC_IOCTL
 	select KVM_MMIO
 	select MMU_NOTIFIER
+<<<<<<< HEAD
 	select INTERVAL_TREE
 	select KVM_GENERIC_HARDWARE_ENABLING
+=======
+	select SRCU
+	select INTERVAL_TREE
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Support for hosting Guest kernels.
 

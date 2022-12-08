@@ -62,7 +62,11 @@ struct snd_soc_dobj {
 	enum snd_soc_dobj_type type;
 	unsigned int index;	/* objects can belong in different groups */
 	struct list_head list;
+<<<<<<< HEAD
 	int (*unload)(struct snd_soc_component *comp, struct snd_soc_dobj *dobj);
+=======
+	struct snd_soc_tplg_ops *ops;
+>>>>>>> b7ba80a49124 (Commit)
 	union {
 		struct snd_soc_dobj_control control;
 		struct snd_soc_dobj_widget widget;

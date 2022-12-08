@@ -511,9 +511,14 @@ disable:
 	return err;
 }
 
+<<<<<<< HEAD
 static void tegra_smmu_set_platform_dma(struct device *dev)
 {
 	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+=======
+static void tegra_smmu_detach_dev(struct iommu_domain *domain, struct device *dev)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
 	struct tegra_smmu_as *as = to_smmu_as(domain);
 	struct tegra_smmu *smmu = as->smmu;
@@ -672,12 +677,20 @@ static struct page *as_get_pde_page(struct tegra_smmu_as *as,
 	 * allocate page in a sleeping context if GFP flags permit. Hence
 	 * spinlock needs to be unlocked and re-locked after allocation.
 	 */
+<<<<<<< HEAD
 	if (gfpflags_allow_blocking(gfp))
+=======
+	if (gfp & __GFP_DIRECT_RECLAIM)
+>>>>>>> b7ba80a49124 (Commit)
 		spin_unlock_irqrestore(&as->lock, *flags);
 
 	page = alloc_page(gfp | __GFP_DMA | __GFP_ZERO);
 
+<<<<<<< HEAD
 	if (gfpflags_allow_blocking(gfp))
+=======
+	if (gfp & __GFP_DIRECT_RECLAIM)
+>>>>>>> b7ba80a49124 (Commit)
 		spin_lock_irqsave(&as->lock, *flags);
 
 	/*
@@ -966,11 +979,18 @@ static const struct iommu_ops tegra_smmu_ops = {
 	.domain_alloc = tegra_smmu_domain_alloc,
 	.probe_device = tegra_smmu_probe_device,
 	.device_group = tegra_smmu_device_group,
+<<<<<<< HEAD
 	.set_platform_dma_ops = tegra_smmu_set_platform_dma,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.of_xlate = tegra_smmu_of_xlate,
 	.pgsize_bitmap = SZ_4K,
 	.default_domain_ops = &(const struct iommu_domain_ops) {
 		.attach_dev	= tegra_smmu_attach_dev,
+<<<<<<< HEAD
+=======
+		.detach_dev	= tegra_smmu_detach_dev,
+>>>>>>> b7ba80a49124 (Commit)
 		.map		= tegra_smmu_map,
 		.unmap		= tegra_smmu_unmap,
 		.iova_to_phys	= tegra_smmu_iova_to_phys,

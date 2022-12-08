@@ -253,7 +253,11 @@ static int ecard_init_mm(void)
 	current->mm = mm;
 	current->active_mm = mm;
 	activate_mm(active_mm, mm);
+<<<<<<< HEAD
 	mmdrop_lazy_tlb(active_mm);
+=======
+	mmdrop(active_mm);
+>>>>>>> b7ba80a49124 (Commit)
 	ecard_init_pgtables(mm);
 	return 0;
 }

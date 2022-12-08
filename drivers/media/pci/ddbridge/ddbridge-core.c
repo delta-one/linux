@@ -2716,9 +2716,15 @@ static const struct file_operations ddb_fops = {
 	.release        = ddb_release,
 };
 
+<<<<<<< HEAD
 static char *ddb_devnode(const struct device *device, umode_t *mode)
 {
 	const struct ddb *dev = dev_get_drvdata(device);
+=======
+static char *ddb_devnode(struct device *device, umode_t *mode)
+{
+	struct ddb *dev = dev_get_drvdata(device);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return kasprintf(GFP_KERNEL, "ddbridge/card%d", dev->nr);
 }
@@ -3117,6 +3123,10 @@ static struct device_attribute ddb_attrs_fanspeed[] = {
 
 static struct class ddb_class = {
 	.name		= "ddbridge",
+<<<<<<< HEAD
+=======
+	.owner          = THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.devnode        = ddb_devnode,
 };
 

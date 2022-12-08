@@ -24,12 +24,19 @@
  *
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/circ_buf.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/ctype.h>
 #include <linux/debugfs.h>
 #include <linux/seq_file.h>
 
+<<<<<<< HEAD
 #include "i915_irq.h"
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_atomic.h"
 #include "intel_de.h"
 #include "intel_display_types.h"
@@ -72,6 +79,7 @@ static int i8xx_pipe_crc_ctl_reg(enum intel_pipe_crc_source *source,
 	return 0;
 }
 
+<<<<<<< HEAD
 static void i9xx_pipe_crc_auto_source(struct drm_i915_private *dev_priv,
 				      enum pipe pipe,
 				      enum intel_pipe_crc_source *source)
@@ -84,6 +92,22 @@ static void i9xx_pipe_crc_auto_source(struct drm_i915_private *dev_priv,
 
 	drm_modeset_lock_all(&dev_priv->drm);
 	for_each_intel_encoder(&dev_priv->drm, encoder) {
+=======
+static int i9xx_pipe_crc_auto_source(struct drm_i915_private *dev_priv,
+				     enum pipe pipe,
+				     enum intel_pipe_crc_source *source)
+{
+	struct drm_device *dev = &dev_priv->drm;
+	struct intel_encoder *encoder;
+	struct intel_crtc *crtc;
+	struct intel_digital_port *dig_port;
+	int ret = 0;
+
+	*source = INTEL_PIPE_CRC_SOURCE_PIPE;
+
+	drm_modeset_lock_all(dev);
+	for_each_intel_encoder(dev, encoder) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!encoder->base.crtc)
 			continue;
 
@@ -110,7 +134,11 @@ static void i9xx_pipe_crc_auto_source(struct drm_i915_private *dev_priv,
 				*source = INTEL_PIPE_CRC_SOURCE_DP_D;
 				break;
 			default:
+<<<<<<< HEAD
 				drm_WARN(&dev_priv->drm, 1, "nonexisting DP port %c\n",
+=======
+				drm_WARN(dev, 1, "nonexisting DP port %c\n",
+>>>>>>> b7ba80a49124 (Commit)
 					 port_name(dig_port->base.port));
 				break;
 			}
@@ -119,7 +147,13 @@ static void i9xx_pipe_crc_auto_source(struct drm_i915_private *dev_priv,
 			break;
 		}
 	}
+<<<<<<< HEAD
 	drm_modeset_unlock_all(&dev_priv->drm);
+=======
+	drm_modeset_unlock_all(dev);
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int vlv_pipe_crc_ctl_reg(struct drm_i915_private *dev_priv,
@@ -129,8 +163,16 @@ static int vlv_pipe_crc_ctl_reg(struct drm_i915_private *dev_priv,
 {
 	bool need_stable_symbols = false;
 
+<<<<<<< HEAD
 	if (*source == INTEL_PIPE_CRC_SOURCE_AUTO)
 		i9xx_pipe_crc_auto_source(dev_priv, pipe, source);
+=======
+	if (*source == INTEL_PIPE_CRC_SOURCE_AUTO) {
+		int ret = i9xx_pipe_crc_auto_source(dev_priv, pipe, source);
+		if (ret)
+			return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (*source) {
 	case INTEL_PIPE_CRC_SOURCE_PIPE:
@@ -194,8 +236,16 @@ static int i9xx_pipe_crc_ctl_reg(struct drm_i915_private *dev_priv,
 				 enum intel_pipe_crc_source *source,
 				 u32 *val)
 {
+<<<<<<< HEAD
 	if (*source == INTEL_PIPE_CRC_SOURCE_AUTO)
 		i9xx_pipe_crc_auto_source(dev_priv, pipe, source);
+=======
+	if (*source == INTEL_PIPE_CRC_SOURCE_AUTO) {
+		int ret = i9xx_pipe_crc_auto_source(dev_priv, pipe, source);
+		if (ret)
+			return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (*source) {
 	case INTEL_PIPE_CRC_SOURCE_PIPE:

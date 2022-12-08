@@ -10,6 +10,44 @@
 #include "rxe_loc.h"
 #include "rxe_queue.h"
 
+<<<<<<< HEAD
+=======
+enum resp_states {
+	RESPST_NONE,
+	RESPST_GET_REQ,
+	RESPST_CHK_PSN,
+	RESPST_CHK_OP_SEQ,
+	RESPST_CHK_OP_VALID,
+	RESPST_CHK_RESOURCE,
+	RESPST_CHK_LENGTH,
+	RESPST_CHK_RKEY,
+	RESPST_EXECUTE,
+	RESPST_READ_REPLY,
+	RESPST_ATOMIC_REPLY,
+	RESPST_COMPLETE,
+	RESPST_ACKNOWLEDGE,
+	RESPST_CLEANUP,
+	RESPST_DUPLICATE_REQUEST,
+	RESPST_ERR_MALFORMED_WQE,
+	RESPST_ERR_UNSUPPORTED_OPCODE,
+	RESPST_ERR_MISALIGNED_ATOMIC,
+	RESPST_ERR_PSN_OUT_OF_SEQ,
+	RESPST_ERR_MISSING_OPCODE_FIRST,
+	RESPST_ERR_MISSING_OPCODE_LAST_C,
+	RESPST_ERR_MISSING_OPCODE_LAST_D1E,
+	RESPST_ERR_TOO_MANY_RDMA_ATM_REQ,
+	RESPST_ERR_RNR,
+	RESPST_ERR_RKEY_VIOLATION,
+	RESPST_ERR_INVALIDATE_RKEY,
+	RESPST_ERR_LENGTH,
+	RESPST_ERR_CQ_OVERFLOW,
+	RESPST_ERROR,
+	RESPST_RESET,
+	RESPST_DONE,
+	RESPST_EXIT,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static char *resp_state_name[] = {
 	[RESPST_NONE]				= "NONE",
 	[RESPST_GET_REQ]			= "GET_REQ",
@@ -22,8 +60,11 @@ static char *resp_state_name[] = {
 	[RESPST_EXECUTE]			= "EXECUTE",
 	[RESPST_READ_REPLY]			= "READ_REPLY",
 	[RESPST_ATOMIC_REPLY]			= "ATOMIC_REPLY",
+<<<<<<< HEAD
 	[RESPST_ATOMIC_WRITE_REPLY]		= "ATOMIC_WRITE_REPLY",
 	[RESPST_PROCESS_FLUSH]			= "PROCESS_FLUSH",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	[RESPST_COMPLETE]			= "COMPLETE",
 	[RESPST_ACKNOWLEDGE]			= "ACKNOWLEDGE",
 	[RESPST_CLEANUP]			= "CLEANUP",
@@ -58,10 +99,14 @@ void rxe_resp_queue_pkt(struct rxe_qp *qp, struct sk_buff *skb)
 	must_sched = (pkt->opcode == IB_OPCODE_RC_RDMA_READ_REQUEST) ||
 			(skb_queue_len(&qp->req_pkts) > 1);
 
+<<<<<<< HEAD
 	if (must_sched)
 		rxe_sched_task(&qp->resp.task);
 	else
 		rxe_run_task(&qp->resp.task);
+=======
+	rxe_run_task(&qp->resp.task, must_sched);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline enum resp_states get_req(struct rxe_qp *qp,
@@ -223,6 +268,7 @@ static enum resp_states check_op_seq(struct rxe_qp *qp,
 	}
 }
 
+<<<<<<< HEAD
 static bool check_qp_attr_access(struct rxe_qp *qp,
 				 struct rxe_pkt_info *pkt)
 {
@@ -247,13 +293,26 @@ static bool check_qp_attr_access(struct rxe_qp *qp,
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static enum resp_states check_op_valid(struct rxe_qp *qp,
 				       struct rxe_pkt_info *pkt)
 {
 	switch (qp_type(qp)) {
 	case IB_QPT_RC:
+<<<<<<< HEAD
 		if (!check_qp_attr_access(qp, pkt))
 			return RESPST_ERR_UNSUPPORTED_OPCODE;
+=======
+		if (((pkt->mask & RXE_READ_MASK) &&
+		     !(qp->attr.qp_access_flags & IB_ACCESS_REMOTE_READ)) ||
+		    ((pkt->mask & RXE_WRITE_MASK) &&
+		     !(qp->attr.qp_access_flags & IB_ACCESS_REMOTE_WRITE)) ||
+		    ((pkt->mask & RXE_ATOMIC_MASK) &&
+		     !(qp->attr.qp_access_flags & IB_ACCESS_REMOTE_ATOMIC))) {
+			return RESPST_ERR_UNSUPPORTED_OPCODE;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		break;
 
@@ -302,7 +361,11 @@ static enum resp_states get_srq_wqe(struct rxe_qp *qp)
 	/* don't trust user space data */
 	if (unlikely(wqe->dma.num_sge > srq->rq.max_sge)) {
 		spin_unlock_irqrestore(&srq->rq.consumer_lock, flags);
+<<<<<<< HEAD
 		rxe_dbg_qp(qp, "invalid num_sge in SRQ entry\n");
+=======
+		pr_warn("%s: invalid num_sge in SRQ entry\n", __func__);
+>>>>>>> b7ba80a49124 (Commit)
 		return RESPST_ERR_MALFORMED_WQE;
 	}
 	size = sizeof(*wqe) + wqe->dma.num_sge*sizeof(struct rxe_sge);
@@ -352,7 +415,11 @@ static enum resp_states check_resource(struct rxe_qp *qp,
 		}
 	}
 
+<<<<<<< HEAD
 	if (pkt->mask & (RXE_READ_OR_ATOMIC_MASK | RXE_ATOMIC_WRITE_MASK)) {
+=======
+	if (pkt->mask & RXE_READ_OR_ATOMIC_MASK) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* it is the requesters job to not send
 		 * too many read/atomic ops, we just
 		 * recycle the responder resource queue
@@ -375,6 +442,7 @@ static enum resp_states check_resource(struct rxe_qp *qp,
 	return RESPST_CHK_LENGTH;
 }
 
+<<<<<<< HEAD
 static enum resp_states rxe_resp_check_length(struct rxe_qp *qp,
 					      struct rxe_pkt_info *pkt)
 {
@@ -451,6 +519,23 @@ static void qp_resp_from_atmeth(struct rxe_qp *qp, struct rxe_pkt_info *pkt)
  * if an invalid rkey is received or the rdma length is zero. For middle
  * or last packets use the stored value of mr.
  */
+=======
+static enum resp_states check_length(struct rxe_qp *qp,
+				     struct rxe_pkt_info *pkt)
+{
+	switch (qp_type(qp)) {
+	case IB_QPT_RC:
+		return RESPST_CHK_RKEY;
+
+	case IB_QPT_UC:
+		return RESPST_CHK_RKEY;
+
+	default:
+		return RESPST_CHK_RKEY;
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static enum resp_states check_rkey(struct rxe_qp *qp,
 				   struct rxe_pkt_info *pkt)
 {
@@ -462,6 +547,7 @@ static enum resp_states check_rkey(struct rxe_qp *qp,
 	u32 pktlen;
 	int mtu = qp->mtu;
 	enum resp_states state;
+<<<<<<< HEAD
 	int access = 0;
 
 	if (pkt->mask & (RXE_READ_OR_WRITE_MASK | RXE_ATOMIC_WRITE_MASK)) {
@@ -482,17 +568,43 @@ static enum resp_states check_rkey(struct rxe_qp *qp,
 			access |= IB_ACCESS_FLUSH_PERSISTENT;
 	} else if (pkt->mask & RXE_ATOMIC_MASK) {
 		qp_resp_from_atmeth(qp, pkt);
+=======
+	int access;
+
+	if (pkt->mask & RXE_READ_OR_WRITE_MASK) {
+		if (pkt->mask & RXE_RETH_MASK) {
+			qp->resp.va = reth_va(pkt);
+			qp->resp.offset = 0;
+			qp->resp.rkey = reth_rkey(pkt);
+			qp->resp.resid = reth_len(pkt);
+			qp->resp.length = reth_len(pkt);
+		}
+		access = (pkt->mask & RXE_READ_MASK) ? IB_ACCESS_REMOTE_READ
+						     : IB_ACCESS_REMOTE_WRITE;
+	} else if (pkt->mask & RXE_ATOMIC_MASK) {
+		qp->resp.va = atmeth_va(pkt);
+		qp->resp.offset = 0;
+		qp->resp.rkey = atmeth_rkey(pkt);
+		qp->resp.resid = sizeof(u64);
+>>>>>>> b7ba80a49124 (Commit)
 		access = IB_ACCESS_REMOTE_ATOMIC;
 	} else {
 		return RESPST_EXECUTE;
 	}
 
+<<<<<<< HEAD
 	/* A zero-byte read or write op is not required to
 	 * set an addr or rkey. See C9-88
 	 */
 	if ((pkt->mask & RXE_READ_OR_WRITE_MASK) &&
 	    (pkt->mask & RXE_RETH_MASK) && reth_len(pkt) == 0) {
 		qp->resp.mr = NULL;
+=======
+	/* A zero-byte op is not required to set an addr or rkey. */
+	if ((pkt->mask & RXE_READ_OR_WRITE_MASK) &&
+	    (pkt->mask & RXE_RETH_MASK) &&
+	    reth_len(pkt) == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		return RESPST_EXECUTE;
 	}
 
@@ -504,14 +616,23 @@ static enum resp_states check_rkey(struct rxe_qp *qp,
 	if (rkey_is_mw(rkey)) {
 		mw = rxe_lookup_mw(qp, access, rkey);
 		if (!mw) {
+<<<<<<< HEAD
 			rxe_dbg_qp(qp, "no MW matches rkey %#x\n", rkey);
+=======
+			pr_debug("%s: no MW matches rkey %#x\n",
+					__func__, rkey);
+>>>>>>> b7ba80a49124 (Commit)
 			state = RESPST_ERR_RKEY_VIOLATION;
 			goto err;
 		}
 
 		mr = mw->mr;
 		if (!mr) {
+<<<<<<< HEAD
 			rxe_dbg_qp(qp, "MW doesn't have an MR\n");
+=======
+			pr_err("%s: MW doesn't have an MR\n", __func__);
+>>>>>>> b7ba80a49124 (Commit)
 			state = RESPST_ERR_RKEY_VIOLATION;
 			goto err;
 		}
@@ -524,12 +645,18 @@ static enum resp_states check_rkey(struct rxe_qp *qp,
 	} else {
 		mr = lookup_mr(qp->pd, access, rkey, RXE_LOOKUP_REMOTE);
 		if (!mr) {
+<<<<<<< HEAD
 			rxe_dbg_qp(qp, "no MR matches rkey %#x\n", rkey);
+=======
+			pr_debug("%s: no MR matches rkey %#x\n",
+					__func__, rkey);
+>>>>>>> b7ba80a49124 (Commit)
 			state = RESPST_ERR_RKEY_VIOLATION;
 			goto err;
 		}
 	}
 
+<<<<<<< HEAD
 	if (pkt->mask & RXE_FLUSH_MASK) {
 		/* FLUSH MR may not set va or resid
 		 * no need to check range since we will flush whole mr
@@ -538,13 +665,19 @@ static enum resp_states check_rkey(struct rxe_qp *qp,
 			goto skip_check_range;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (mr_check_range(mr, va + qp->resp.offset, resid)) {
 		state = RESPST_ERR_RKEY_VIOLATION;
 		goto err;
 	}
 
+<<<<<<< HEAD
 skip_check_range:
 	if (pkt->mask & (RXE_WRITE_MASK | RXE_ATOMIC_WRITE_MASK)) {
+=======
+	if (pkt->mask & RXE_WRITE_MASK)	 {
+>>>>>>> b7ba80a49124 (Commit)
 		if (resid > mtu) {
 			if (pktlen != mtu || bth_pad(pkt)) {
 				state = RESPST_ERR_LENGTH;
@@ -571,7 +704,10 @@ skip_check_range:
 	return RESPST_EXECUTE;
 
 err:
+<<<<<<< HEAD
 	qp->resp.mr = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (mr)
 		rxe_put(mr);
 	if (mw)
@@ -645,21 +781,28 @@ static struct resp_res *rxe_prepare_res(struct rxe_qp *qp,
 		res->state = rdatm_res_state_new;
 		break;
 	case RXE_ATOMIC_MASK:
+<<<<<<< HEAD
 	case RXE_ATOMIC_WRITE_MASK:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		res->first_psn = pkt->psn;
 		res->last_psn = pkt->psn;
 		res->cur_psn = pkt->psn;
 		break;
+<<<<<<< HEAD
 	case RXE_FLUSH_MASK:
 		res->flush.va = qp->resp.va + qp->resp.offset;
 		res->flush.length = qp->resp.length;
 		res->flush.type = feth_plt(pkt);
 		res->flush.level = feth_sel(pkt);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return res;
 }
 
+<<<<<<< HEAD
 static enum resp_states process_flush(struct rxe_qp *qp,
 				       struct rxe_pkt_info *pkt)
 {
@@ -711,6 +854,19 @@ static enum resp_states atomic_reply(struct rxe_qp *qp,
 	struct rxe_mr *mr = qp->resp.mr;
 	struct resp_res *res = qp->resp.res;
 	int err;
+=======
+/* Guarantee atomicity of atomic operations at the machine level. */
+static DEFINE_SPINLOCK(atomic_ops_lock);
+
+static enum resp_states atomic_reply(struct rxe_qp *qp,
+					 struct rxe_pkt_info *pkt)
+{
+	u64 *vaddr;
+	enum resp_states ret;
+	struct rxe_mr *mr = qp->resp.mr;
+	struct resp_res *res = qp->resp.res;
+	u64 value;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!res) {
 		res = rxe_prepare_res(qp, pkt, RXE_ATOMIC_MASK);
@@ -718,6 +874,7 @@ static enum resp_states atomic_reply(struct rxe_qp *qp,
 	}
 
 	if (!res->replay) {
+<<<<<<< HEAD
 		u64 iova = qp->resp.va + qp->resp.offset;
 
 		err = rxe_mr_do_atomic_op(mr, iova, pkt->opcode,
@@ -726,6 +883,34 @@ static enum resp_states atomic_reply(struct rxe_qp *qp,
 					  &res->atomic.orig_val);
 		if (err)
 			return err;
+=======
+		if (mr->state != RXE_MR_STATE_VALID) {
+			ret = RESPST_ERR_RKEY_VIOLATION;
+			goto out;
+		}
+
+		vaddr = iova_to_vaddr(mr, qp->resp.va + qp->resp.offset,
+					sizeof(u64));
+
+		/* check vaddr is 8 bytes aligned. */
+		if (!vaddr || (uintptr_t)vaddr & 7) {
+			ret = RESPST_ERR_MISALIGNED_ATOMIC;
+			goto out;
+		}
+
+		spin_lock_bh(&atomic_ops_lock);
+		res->atomic.orig_val = value = *vaddr;
+
+		if (pkt->opcode == IB_OPCODE_RC_COMPARE_SWAP) {
+			if (value == atmeth_comp(pkt))
+				value = atmeth_swap_add(pkt);
+		} else {
+			value += atmeth_swap_add(pkt);
+		}
+
+		*vaddr = value;
+		spin_unlock_bh(&atomic_ops_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 		qp->resp.msn++;
 
@@ -737,6 +922,7 @@ static enum resp_states atomic_reply(struct rxe_qp *qp,
 		qp->resp.status = IB_WC_SUCCESS;
 	}
 
+<<<<<<< HEAD
 	return RESPST_ACKNOWLEDGE;
 }
 
@@ -776,6 +962,11 @@ static enum resp_states atomic_write_reply(struct rxe_qp *qp,
 	qp->resp.status = IB_WC_SUCCESS;
 
 	return RESPST_ACKNOWLEDGE;
+=======
+	ret = RESPST_ACKNOWLEDGE;
+out:
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct sk_buff *prepare_ack_packet(struct rxe_qp *qp,
@@ -902,11 +1093,15 @@ static enum resp_states read_reply(struct rxe_qp *qp,
 	}
 
 	if (res->state == rdatm_res_state_new) {
+<<<<<<< HEAD
 		if (!res->replay || qp->resp.length == 0) {
 			/* if length == 0 mr will be NULL (is ok)
 			 * otherwise qp->resp.mr holds a ref on mr
 			 * which we transfer to mr and drop below.
 			 */
+=======
+		if (!res->replay) {
+>>>>>>> b7ba80a49124 (Commit)
 			mr = qp->resp.mr;
 			qp->resp.mr = NULL;
 		} else {
@@ -920,10 +1115,13 @@ static enum resp_states read_reply(struct rxe_qp *qp,
 		else
 			opcode = IB_OPCODE_RC_RDMA_READ_RESPONSE_FIRST;
 	} else {
+<<<<<<< HEAD
 		/* re-lookup mr from rkey on all later packets.
 		 * length will be non-zero. This can fail if someone
 		 * modifies or destroys the mr since the first packet.
 		 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		mr = rxe_recheck_mr(qp, res->read.rkey);
 		if (!mr)
 			return RESPST_ERR_RKEY_VIOLATION;
@@ -940,6 +1138,7 @@ static enum resp_states read_reply(struct rxe_qp *qp,
 
 	skb = prepare_ack_packet(qp, &ack_pkt, opcode, payload,
 				 res->cur_psn, AETH_ACK_UNLIMITED);
+<<<<<<< HEAD
 	if (!skb) {
 		state = RESPST_ERR_RNR;
 		goto err_out;
@@ -952,6 +1151,15 @@ static enum resp_states read_reply(struct rxe_qp *qp,
 		state = RESPST_ERR_RKEY_VIOLATION;
 		goto err_out;
 	}
+=======
+	if (!skb)
+		return RESPST_ERR_RNR;
+
+	rxe_mr_copy(mr, res->read.va, payload_addr(&ack_pkt),
+		    payload, RXE_FROM_MR_OBJ);
+	if (mr)
+		rxe_put(mr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (bth_pad(&ack_pkt)) {
 		u8 *pad = payload_addr(&ack_pkt) + payload;
@@ -959,12 +1167,18 @@ static enum resp_states read_reply(struct rxe_qp *qp,
 		memset(pad, 0, bth_pad(&ack_pkt));
 	}
 
+<<<<<<< HEAD
 	/* rxe_xmit_packet always consumes the skb */
 	err = rxe_xmit_packet(qp, &ack_pkt, skb);
 	if (err) {
 		state = RESPST_ERR_RNR;
 		goto err_out;
 	}
+=======
+	err = rxe_xmit_packet(qp, &ack_pkt, skb);
+	if (err)
+		return RESPST_ERR_RNR;
+>>>>>>> b7ba80a49124 (Commit)
 
 	res->read.va += payload;
 	res->read.resid -= payload;
@@ -981,9 +1195,12 @@ static enum resp_states read_reply(struct rxe_qp *qp,
 		state = RESPST_CLEANUP;
 	}
 
+<<<<<<< HEAD
 err_out:
 	if (mr)
 		rxe_put(mr);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return state;
 }
 
@@ -1033,10 +1250,13 @@ static enum resp_states execute(struct rxe_qp *qp, struct rxe_pkt_info *pkt)
 		return RESPST_READ_REPLY;
 	} else if (pkt->mask & RXE_ATOMIC_MASK) {
 		return RESPST_ATOMIC_REPLY;
+<<<<<<< HEAD
 	} else if (pkt->mask & RXE_ATOMIC_WRITE_MASK) {
 		return RESPST_ATOMIC_WRITE_REPLY;
 	} else if (pkt->mask & RXE_FLUSH_MASK) {
 		return RESPST_PROCESS_FLUSH;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		/* Unreachable */
 		WARN_ON_ONCE(1);
@@ -1173,6 +1393,7 @@ finish:
 		return RESPST_CLEANUP;
 }
 
+<<<<<<< HEAD
 
 static int send_common_ack(struct rxe_qp *qp, u8 syndrome, u32 psn,
 				  int opcode, const char *msg)
@@ -1202,11 +1423,51 @@ static int send_atomic_ack(struct rxe_qp *qp, u8 syndrome, u32 psn)
 {
 	int ret = send_common_ack(qp, syndrome, psn,
 			IB_OPCODE_RC_ATOMIC_ACKNOWLEDGE, "ATOMIC ACK");
+=======
+static int send_ack(struct rxe_qp *qp, u8 syndrome, u32 psn)
+{
+	int err = 0;
+	struct rxe_pkt_info ack_pkt;
+	struct sk_buff *skb;
+
+	skb = prepare_ack_packet(qp, &ack_pkt, IB_OPCODE_RC_ACKNOWLEDGE,
+				 0, psn, syndrome);
+	if (!skb) {
+		err = -ENOMEM;
+		goto err1;
+	}
+
+	err = rxe_xmit_packet(qp, &ack_pkt, skb);
+	if (err)
+		pr_err_ratelimited("Failed sending ack\n");
+
+err1:
+	return err;
+}
+
+static int send_atomic_ack(struct rxe_qp *qp, u8 syndrome, u32 psn)
+{
+	int err = 0;
+	struct rxe_pkt_info ack_pkt;
+	struct sk_buff *skb;
+
+	skb = prepare_ack_packet(qp, &ack_pkt, IB_OPCODE_RC_ATOMIC_ACKNOWLEDGE,
+				 0, psn, syndrome);
+	if (!skb) {
+		err = -ENOMEM;
+		goto out;
+	}
+
+	err = rxe_xmit_packet(qp, &ack_pkt, skb);
+	if (err)
+		pr_err_ratelimited("Failed sending atomic ack\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* have to clear this since it is used to trigger
 	 * long read replies
 	 */
 	qp->resp.res = NULL;
+<<<<<<< HEAD
 	return ret;
 }
 
@@ -1221,6 +1482,10 @@ static int send_read_response_ack(struct rxe_qp *qp, u8 syndrome, u32 psn)
 	 */
 	qp->resp.res = NULL;
 	return ret;
+=======
+out:
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static enum resp_states acknowledge(struct rxe_qp *qp,
@@ -1233,8 +1498,11 @@ static enum resp_states acknowledge(struct rxe_qp *qp,
 		send_ack(qp, qp->resp.aeth_syndrome, pkt->psn);
 	else if (pkt->mask & RXE_ATOMIC_MASK)
 		send_atomic_ack(qp, AETH_ACK_UNLIMITED, pkt->psn);
+<<<<<<< HEAD
 	else if (pkt->mask & (RXE_FLUSH_MASK | RXE_ATOMIC_WRITE_MASK))
 		send_read_response_ack(qp, AETH_ACK_UNLIMITED, pkt->psn);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	else if (bth_ack(pkt))
 		send_ack(qp, AETH_ACK_UNLIMITED, pkt->psn);
 
@@ -1291,6 +1559,7 @@ static enum resp_states duplicate_request(struct rxe_qp *qp,
 		/* SEND. Ack again and cleanup. C9-105. */
 		send_ack(qp, AETH_ACK_UNLIMITED, prev_psn);
 		return RESPST_CLEANUP;
+<<<<<<< HEAD
 	} else if (pkt->mask & RXE_FLUSH_MASK) {
 		struct resp_res *res;
 
@@ -1307,6 +1576,8 @@ static enum resp_states duplicate_request(struct rxe_qp *qp,
 		/* Resource not found. Class D error. Drop the request. */
 		rc = RESPST_CLEANUP;
 		goto out;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (pkt->mask & RXE_READ_MASK) {
 		struct resp_res *res;
 
@@ -1362,9 +1633,13 @@ static enum resp_states duplicate_request(struct rxe_qp *qp,
 			res->replay = 1;
 			res->cur_psn = pkt->psn;
 			qp->resp.res = res;
+<<<<<<< HEAD
 			rc = pkt->mask & RXE_ATOMIC_MASK ?
 					RESPST_ATOMIC_REPLY :
 					RESPST_ATOMIC_WRITE_REPLY;
+=======
+			rc = RESPST_ATOMIC_REPLY;
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 		}
 
@@ -1466,7 +1741,12 @@ int rxe_responder(void *arg)
 	}
 
 	while (1) {
+<<<<<<< HEAD
 		rxe_dbg_qp(qp, "state = %s\n", resp_state_name[state]);
+=======
+		pr_debug("qp#%d state = %s\n", qp_num(qp),
+			 resp_state_name[state]);
+>>>>>>> b7ba80a49124 (Commit)
 		switch (state) {
 		case RESPST_GET_REQ:
 			state = get_req(qp, &pkt);
@@ -1484,7 +1764,11 @@ int rxe_responder(void *arg)
 			state = check_resource(qp, pkt);
 			break;
 		case RESPST_CHK_LENGTH:
+<<<<<<< HEAD
 			state = rxe_resp_check_length(qp, pkt);
+=======
+			state = check_length(qp, pkt);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case RESPST_CHK_RKEY:
 			state = check_rkey(qp, pkt);
@@ -1501,12 +1785,15 @@ int rxe_responder(void *arg)
 		case RESPST_ATOMIC_REPLY:
 			state = atomic_reply(qp, pkt);
 			break;
+<<<<<<< HEAD
 		case RESPST_ATOMIC_WRITE_REPLY:
 			state = atomic_write_reply(qp, pkt);
 			break;
 		case RESPST_PROCESS_FLUSH:
 			state = process_flush(qp, pkt);
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		case RESPST_ACKNOWLEDGE:
 			state = acknowledge(qp, pkt);
 			break;
@@ -1629,7 +1916,11 @@ int rxe_responder(void *arg)
 
 		case RESPST_ERROR:
 			qp->resp.goto_error = 0;
+<<<<<<< HEAD
 			rxe_dbg_qp(qp, "moved to error state\n");
+=======
+			pr_debug("qp#%d moved to error state\n", qp_num(qp));
+>>>>>>> b7ba80a49124 (Commit)
 			rxe_qp_error(qp);
 			goto exit;
 

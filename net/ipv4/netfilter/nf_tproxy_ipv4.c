@@ -38,7 +38,11 @@ nf_tproxy_handle_time_wait4(struct net *net, struct sk_buff *skb,
 					    hp->source, lport ? lport : hp->dest,
 					    skb->dev, NF_TPROXY_LOOKUP_LISTENER);
 		if (sk2) {
+<<<<<<< HEAD
 			nf_tproxy_twsk_deschedule_put(inet_twsk(sk));
+=======
+			inet_twsk_deschedule_put(inet_twsk(sk));
+>>>>>>> b7ba80a49124 (Commit)
 			sk = sk2;
 		}
 	}

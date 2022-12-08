@@ -12,7 +12,10 @@
 #include "ctree.h"
 #include "extent_io.h"
 #include "locking.h"
+<<<<<<< HEAD
 #include "accessors.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Lockdep class keys for extent_buffer->lock's in this root.  For a given
@@ -299,10 +302,15 @@ struct extent_buffer *btrfs_try_read_lock_root_node(struct btrfs_root *root)
 
 	while (1) {
 		eb = btrfs_root_node(root);
+<<<<<<< HEAD
 		if (!btrfs_try_tree_read_lock(eb)) {
 			free_extent_buffer(eb);
 			return ERR_PTR(-EAGAIN);
 		}
+=======
+		if (!btrfs_try_tree_read_lock(eb))
+			return ERR_PTR(-EAGAIN);
+>>>>>>> b7ba80a49124 (Commit)
 		if (eb == root->node)
 			break;
 		btrfs_tree_read_unlock(eb);

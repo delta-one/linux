@@ -119,6 +119,7 @@ TRACE_EVENT_FN_COND(hcall_exit,
 );
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_RTAS
 
 #include <asm/rtas-types.h>
@@ -222,6 +223,8 @@ DEFINE_EVENT(rtas_parameter_block, rtas_ll_exit,
 
 #endif /* CONFIG_PPC_RTAS */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PPC_POWERNV
 extern int opal_tracepoint_regfunc(void);
 extern void opal_tracepoint_unregfunc(void);

@@ -479,6 +479,7 @@ Spectre variant 2
    On Intel Skylake-era systems the mitigation covers most, but not all,
    cases. See :ref:`[3] <spec_ref3>` for more details.
 
+<<<<<<< HEAD
    On CPUs with hardware mitigation for Spectre variant 2 (e.g. IBRS
    or enhanced IBRS on x86), retpoline is automatically disabled at run time.
 
@@ -489,6 +490,10 @@ Spectre variant 2
 
    Legacy IBRS systems clear the IBRS bit on exit to userspace and
    therefore explicitly enable STIBP for that
+=======
+   On CPUs with hardware mitigation for Spectre variant 2 (e.g. Enhanced
+   IBRS on x86), retpoline is automatically disabled at run time.
+>>>>>>> b7ba80a49124 (Commit)
 
    The retpoline mitigation is turned on by default on vulnerable
    CPUs. It can be forced on or off by the administrator
@@ -512,12 +517,18 @@ Spectre variant 2
    For Spectre variant 2 mitigation, individual user programs
    can be compiled with return trampolines for indirect branches.
    This protects them from consuming poisoned entries in the branch
+<<<<<<< HEAD
    target buffer left by malicious software.
 
    On legacy IBRS systems, at return to userspace, implicit STIBP is disabled
    because the kernel clears the IBRS bit. In this case, the userspace programs
    can disable indirect branch speculation via prctl() (See
    :ref:`Documentation/userspace-api/spec_ctrl.rst <set_spec_ctrl>`).
+=======
+   target buffer left by malicious software.  Alternatively, the
+   programs can disable their indirect branch speculation via prctl()
+   (See :ref:`Documentation/userspace-api/spec_ctrl.rst <set_spec_ctrl>`).
+>>>>>>> b7ba80a49124 (Commit)
    On x86, this will turn on STIBP to guard against attacks from the
    sibling thread when the user program is running, and use IBPB to
    flush the branch target buffer when switching to/from the program.
@@ -621,9 +632,15 @@ kernel command line.
                 retpoline,generic       Retpolines
                 retpoline,lfence        LFENCE; indirect branch
                 retpoline,amd           alias for retpoline,lfence
+<<<<<<< HEAD
                 eibrs                   Enhanced/Auto IBRS
                 eibrs,retpoline         Enhanced/Auto IBRS + Retpolines
                 eibrs,lfence            Enhanced/Auto IBRS + LFENCE
+=======
+                eibrs                   enhanced IBRS
+                eibrs,retpoline         enhanced IBRS + Retpolines
+                eibrs,lfence            enhanced IBRS + LFENCE
+>>>>>>> b7ba80a49124 (Commit)
                 ibrs                    use IBRS to protect kernel
 
 		Not specifying this option is equivalent to

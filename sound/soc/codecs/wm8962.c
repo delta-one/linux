@@ -1840,6 +1840,7 @@ SOC_SINGLE_TLV("SPKOUTR Mixer DACR Volume", WM8962_SPEAKER_MIXER_5,
 	       4, 1, 0, inmix_tlv),
 };
 
+<<<<<<< HEAD
 static int tp_event(struct snd_soc_dapm_widget *w,
 		    struct snd_kcontrol *kcontrol, int event)
 {
@@ -1883,6 +1884,8 @@ static int tp_event(struct snd_soc_dapm_widget *w,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int cp_event(struct snd_soc_dapm_widget *w,
 		    struct snd_kcontrol *kcontrol, int event)
 {
@@ -2183,10 +2186,15 @@ SND_SOC_DAPM_SUPPLY("TOCLK", WM8962_ADDITIONAL_CONTROL_1, 0, 0, NULL, 0),
 SND_SOC_DAPM_SUPPLY_S("DSP2", 1, WM8962_DSP2_POWER_MANAGEMENT,
 		      WM8962_DSP2_ENA_SHIFT, 0, dsp2_event,
 		      SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
+<<<<<<< HEAD
 SND_SOC_DAPM_SUPPLY("TEMP_HP", SND_SOC_NOPM, 0, 0, tp_event,
 		SND_SOC_DAPM_POST_PMU|SND_SOC_DAPM_POST_PMD),
 SND_SOC_DAPM_SUPPLY("TEMP_SPK", SND_SOC_NOPM, 0, 0, tp_event,
 		SND_SOC_DAPM_POST_PMU|SND_SOC_DAPM_POST_PMD),
+=======
+SND_SOC_DAPM_SUPPLY("TEMP_HP", WM8962_ADDITIONAL_CONTROL_4, 2, 0, NULL, 0),
+SND_SOC_DAPM_SUPPLY("TEMP_SPK", WM8962_ADDITIONAL_CONTROL_4, 1, 0, NULL, 0),
+>>>>>>> b7ba80a49124 (Commit)
 
 SND_SOC_DAPM_MIXER("INPGAL", WM8962_LEFT_INPUT_PGA_CONTROL, 4, 0,
 		   inpgal, ARRAY_SIZE(inpgal)),
@@ -2503,6 +2511,7 @@ static void wm8962_configure_bclk(struct snd_soc_component *component)
 		snd_soc_component_update_bits(component, WM8962_CLOCKING2,
 				WM8962_SYSCLK_ENA_MASK, WM8962_SYSCLK_ENA);
 
+<<<<<<< HEAD
 	/* DSPCLK_DIV field in WM8962_CLOCKING1 register is used to generate
 	 * correct frequency of LRCLK and BCLK. Sometimes the read-only value
 	 * can't be updated timely after enabling SYSCLK. This results in wrong
@@ -2511,6 +2520,8 @@ static void wm8962_configure_bclk(struct snd_soc_component *component)
 	 * 500~1000us according to test.
 	 */
 	usleep_range(500, 1000);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dspclk = snd_soc_component_read(component, WM8962_CLOCKING1);
 
 	if (snd_soc_component_get_bias_level(component) != SND_SOC_BIAS_ON)
@@ -3816,11 +3827,14 @@ static int wm8962_i2c_probe(struct i2c_client *i2c)
 	if (ret < 0)
 		goto err_pm_runtime;
 
+<<<<<<< HEAD
 	regmap_update_bits(wm8962->regmap, WM8962_ADDITIONAL_CONTROL_4,
 			    WM8962_TEMP_ENA_HP_MASK, 0);
 	regmap_update_bits(wm8962->regmap, WM8962_ADDITIONAL_CONTROL_4,
 			    WM8962_TEMP_ENA_SPK_MASK, 0);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	regcache_cache_only(wm8962->regmap, true);
 
 	/* The drivers should power up as needed */

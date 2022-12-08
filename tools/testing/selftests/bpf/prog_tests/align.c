@@ -2,7 +2,11 @@
 #include <test_progs.h>
 
 #define MAX_INSNS	512
+<<<<<<< HEAD
 #define MAX_MATCHES	24
+=======
+#define MAX_MATCHES	16
+>>>>>>> b7ba80a49124 (Commit)
 
 struct bpf_reg_match {
 	unsigned int line;
@@ -267,7 +271,10 @@ static struct bpf_align_test tests[] = {
 			 */
 			BPF_MOV64_REG(BPF_REG_5, BPF_REG_2),
 			BPF_ALU64_REG(BPF_ADD, BPF_REG_5, BPF_REG_6),
+<<<<<<< HEAD
 			BPF_MOV64_REG(BPF_REG_4, BPF_REG_5),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			BPF_ALU64_IMM(BPF_ADD, BPF_REG_5, 14),
 			BPF_MOV64_REG(BPF_REG_4, BPF_REG_5),
 			BPF_ALU64_IMM(BPF_ADD, BPF_REG_4, 4),
@@ -281,7 +288,10 @@ static struct bpf_align_test tests[] = {
 			BPF_MOV64_REG(BPF_REG_5, BPF_REG_2),
 			BPF_ALU64_IMM(BPF_ADD, BPF_REG_5, 14),
 			BPF_ALU64_REG(BPF_ADD, BPF_REG_5, BPF_REG_6),
+<<<<<<< HEAD
 			BPF_MOV64_REG(BPF_REG_4, BPF_REG_5),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			BPF_ALU64_IMM(BPF_ADD, BPF_REG_5, 4),
 			BPF_ALU64_REG(BPF_ADD, BPF_REG_5, BPF_REG_6),
 			BPF_MOV64_REG(BPF_REG_4, BPF_REG_5),
@@ -313,6 +323,7 @@ static struct bpf_align_test tests[] = {
 			{15, "R4=pkt(id=1,off=18,r=18,umax=1020,var_off=(0x0; 0x3fc))"},
 			{15, "R5=pkt(id=1,off=14,r=18,umax=1020,var_off=(0x0; 0x3fc))"},
 			/* Variable offset is added to R5 packet pointer,
+<<<<<<< HEAD
 			 * resulting in auxiliary alignment of 4. To avoid BPF
 			 * verifier's precision backtracking logging
 			 * interfering we also have a no-op R4 = R5
@@ -325,12 +336,22 @@ static struct bpf_align_test tests[] = {
 			 * reg->off of 14.
 			 */
 			{19, "R5_w=pkt(id=2,off=14,r=0,umax=1020,var_off=(0x0; 0x3fc))"},
+=======
+			 * resulting in auxiliary alignment of 4.
+			 */
+			{17, "R5_w=pkt(id=2,off=0,r=0,umax=1020,var_off=(0x0; 0x3fc))"},
+			/* Constant offset is added to R5, resulting in
+			 * reg->off of 14.
+			 */
+			{18, "R5_w=pkt(id=2,off=14,r=0,umax=1020,var_off=(0x0; 0x3fc))"},
+>>>>>>> b7ba80a49124 (Commit)
 			/* At the time the word size load is performed from R5,
 			 * its total fixed offset is NET_IP_ALIGN + reg->off
 			 * (14) which is 16.  Then the variable offset is 4-byte
 			 * aligned, so the total offset is 4-byte aligned and
 			 * meets the load's requirements.
 			 */
+<<<<<<< HEAD
 			{24, "R4=pkt(id=2,off=18,r=18,umax=1020,var_off=(0x0; 0x3fc))"},
 			{24, "R5=pkt(id=2,off=14,r=18,umax=1020,var_off=(0x0; 0x3fc))"},
 			/* Constant offset is added to R5 packet pointer,
@@ -345,20 +366,43 @@ static struct bpf_align_test tests[] = {
 			{28, "R5_w=pkt(id=3,off=14,r=0,umax=1020,var_off=(0x0; 0x3fc))"},
 			/* Constant is added to R5 again, setting reg->off to 18. */
 			{29, "R5_w=pkt(id=3,off=18,r=0,umax=1020,var_off=(0x0; 0x3fc))"},
+=======
+			{23, "R4=pkt(id=2,off=18,r=18,umax=1020,var_off=(0x0; 0x3fc))"},
+			{23, "R5=pkt(id=2,off=14,r=18,umax=1020,var_off=(0x0; 0x3fc))"},
+			/* Constant offset is added to R5 packet pointer,
+			 * resulting in reg->off value of 14.
+			 */
+			{25, "R5_w=pkt(off=14,r=8"},
+			/* Variable offset is added to R5, resulting in a
+			 * variable offset of (4n).
+			 */
+			{26, "R5_w=pkt(id=3,off=14,r=0,umax=1020,var_off=(0x0; 0x3fc))"},
+			/* Constant is added to R5 again, setting reg->off to 18. */
+			{27, "R5_w=pkt(id=3,off=18,r=0,umax=1020,var_off=(0x0; 0x3fc))"},
+>>>>>>> b7ba80a49124 (Commit)
 			/* And once more we add a variable; resulting var_off
 			 * is still (4n), fixed offset is not changed.
 			 * Also, we create a new reg->id.
 			 */
+<<<<<<< HEAD
 			{31, "R4_w=pkt(id=4,off=18,r=0,umax=2040,var_off=(0x0; 0x7fc)"},
 			{31, "R5_w=pkt(id=4,off=18,r=0,umax=2040,var_off=(0x0; 0x7fc)"},
+=======
+			{28, "R5_w=pkt(id=4,off=18,r=0,umax=2040,var_off=(0x0; 0x7fc)"},
+>>>>>>> b7ba80a49124 (Commit)
 			/* At the time the word size load is performed from R5,
 			 * its total fixed offset is NET_IP_ALIGN + reg->off (18)
 			 * which is 20.  Then the variable offset is (4n), so
 			 * the total offset is 4-byte aligned and meets the
 			 * load's requirements.
 			 */
+<<<<<<< HEAD
 			{35, "R4=pkt(id=4,off=22,r=22,umax=2040,var_off=(0x0; 0x7fc)"},
 			{35, "R5=pkt(id=4,off=18,r=22,umax=2040,var_off=(0x0; 0x7fc)"},
+=======
+			{33, "R4=pkt(id=4,off=22,r=22,umax=2040,var_off=(0x0; 0x7fc)"},
+			{33, "R5=pkt(id=4,off=18,r=22,umax=2040,var_off=(0x0; 0x7fc)"},
+>>>>>>> b7ba80a49124 (Commit)
 		},
 	},
 	{
@@ -575,14 +619,22 @@ static struct bpf_align_test tests[] = {
 			/* New unknown value in R7 is (4n), >= 76 */
 			{14, "R7_w=scalar(umin=76,umax=1096,var_off=(0x0; 0x7fc))"},
 			/* Adding it to packet pointer gives nice bounds again */
+<<<<<<< HEAD
 			{16, "R5_w=pkt(id=3,off=0,r=0,umin=2,umax=1082,var_off=(0x2; 0x7fc)"},
+=======
+			{16, "R5_w=pkt(id=3,off=0,r=0,umin=2,umax=1082,var_off=(0x2; 0xfffffffc)"},
+>>>>>>> b7ba80a49124 (Commit)
 			/* At the time the word size load is performed from R5,
 			 * its total fixed offset is NET_IP_ALIGN + reg->off (0)
 			 * which is 2.  Then the variable offset is (4n+2), so
 			 * the total offset is 4-byte aligned and meets the
 			 * load's requirements.
 			 */
+<<<<<<< HEAD
 			{20, "R5=pkt(id=3,off=0,r=4,umin=2,umax=1082,var_off=(0x2; 0x7fc)"},
+=======
+			{20, "R5=pkt(id=3,off=0,r=4,umin=2,umax=1082,var_off=(0x2; 0xfffffffc)"},
+>>>>>>> b7ba80a49124 (Commit)
 		},
 	},
 };
@@ -660,6 +712,7 @@ static int do_test_single(struct bpf_align_test *test)
 			 * func#0 @0
 			 * 0: R1=ctx(off=0,imm=0) R10=fp0
 			 * 0: (b7) r3 = 2                 ; R3_w=2
+<<<<<<< HEAD
 			 *
 			 * Sometimes it's actually two lines below, e.g. when
 			 * searching for "6: R3_w=scalar(umax=255,var_off=(0x0; 0xff))":
@@ -676,6 +729,18 @@ static int do_test_single(struct bpf_align_test *test)
 			}
 			if (cur_line != m.line || !line_ptr || !strstr(line_ptr, m.match)) {
 				printf("Failed to find match %u: %s\n", m.line, m.match);
+=======
+			 */
+			if (!strstr(line_ptr, m.match)) {
+				cur_line = -1;
+				line_ptr = strtok(NULL, "\n");
+				sscanf(line_ptr, "%u: ", &cur_line);
+			}
+			if (cur_line != m.line || !line_ptr ||
+			    !strstr(line_ptr, m.match)) {
+				printf("Failed to find match %u: %s\n",
+				       m.line, m.match);
+>>>>>>> b7ba80a49124 (Commit)
 				ret = 1;
 				printf("%s", bpf_vlog);
 				break;
@@ -697,6 +762,10 @@ void test_align(void)
 		if (!test__start_subtest(test->descr))
 			continue;
 
+<<<<<<< HEAD
 		ASSERT_OK(do_test_single(test), test->descr);
+=======
+		CHECK_FAIL(do_test_single(test));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }

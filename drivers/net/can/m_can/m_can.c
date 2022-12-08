@@ -9,20 +9,35 @@
  */
 
 #include <linux/bitfield.h>
+<<<<<<< HEAD
 #include <linux/can/dev.h>
 #include <linux/ethtool.h>
 #include <linux/interrupt.h>
 #include <linux/io.h>
 #include <linux/iopoll.h>
+=======
+#include <linux/ethtool.h>
+#include <linux/interrupt.h>
+#include <linux/io.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/netdevice.h>
 #include <linux/of.h>
 #include <linux/of_device.h>
+<<<<<<< HEAD
 #include <linux/phy/phy.h>
 #include <linux/pinctrl/consumer.h>
 #include <linux/platform_device.h>
 #include <linux/pm_runtime.h>
+=======
+#include <linux/platform_device.h>
+#include <linux/pm_runtime.h>
+#include <linux/iopoll.h>
+#include <linux/can/dev.h>
+#include <linux/pinctrl/consumer.h>
+#include <linux/phy/phy.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "m_can.h"
 
@@ -156,7 +171,10 @@ enum m_can_reg {
 #define PSR_EW		BIT(6)
 #define PSR_EP		BIT(5)
 #define PSR_LEC_MASK	GENMASK(2, 0)
+<<<<<<< HEAD
 #define PSR_DLEC_MASK	GENMASK(10, 8)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Interrupt Register (IR) */
 #define IR_ALL_INT	0xffffffff
@@ -210,7 +228,11 @@ enum m_can_reg {
 
 /* Interrupts for version >= 3.1.x */
 #define IR_ERR_LEC_31X	(IR_PED | IR_PEA)
+<<<<<<< HEAD
 #define IR_ERR_BUS_31X	(IR_ERR_LEC_31X | IR_WDI | IR_BEU | IR_BEC | \
+=======
+#define IR_ERR_BUS_31X      (IR_ERR_LEC_31X | IR_WDI | IR_BEU | IR_BEC | \
+>>>>>>> b7ba80a49124 (Commit)
 			 IR_TOO | IR_MRAF | IR_TSW | IR_TEFL | IR_RF1L | \
 			 IR_RF0L)
 #define IR_ERR_ALL_31X	(IR_ERR_STATE | IR_ERR_BUS_31X)
@@ -369,6 +391,7 @@ m_can_txe_fifo_read(struct m_can_classdev *cdev, u32 fgi, u32 offset, u32 *val)
 	return cdev->ops->read_fifo(cdev, addr_offset, val, 1);
 }
 
+<<<<<<< HEAD
 static inline bool _m_can_tx_fifo_full(u32 txfqs)
 {
 	return !!(txfqs & TXFQS_TFQF);
@@ -377,6 +400,11 @@ static inline bool _m_can_tx_fifo_full(u32 txfqs)
 static inline bool m_can_tx_fifo_full(struct m_can_classdev *cdev)
 {
 	return _m_can_tx_fifo_full(m_can_read(cdev, M_CAN_TXFQS));
+=======
+static inline bool m_can_tx_fifo_full(struct m_can_classdev *cdev)
+{
+	return !!(m_can_read(cdev, M_CAN_TXFQS) & TXFQS_TFQF);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void m_can_config_endisable(struct m_can_classdev *cdev, bool enable)
@@ -477,16 +505,29 @@ static void m_can_receive_skb(struct m_can_classdev *cdev,
 	}
 }
 
+<<<<<<< HEAD
 static int m_can_read_fifo(struct net_device *dev, u32 fgi)
+=======
+static int m_can_read_fifo(struct net_device *dev, u32 rxfs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct net_device_stats *stats = &dev->stats;
 	struct m_can_classdev *cdev = netdev_priv(dev);
 	struct canfd_frame *cf;
 	struct sk_buff *skb;
 	struct id_and_dlc fifo_header;
+<<<<<<< HEAD
 	u32 timestamp = 0;
 	int err;
 
+=======
+	u32 fgi;
+	u32 timestamp = 0;
+	int err;
+
+	/* calculate the fifo get index for where to read data */
+	fgi = FIELD_GET(RXFS_FGI_MASK, rxfs);
+>>>>>>> b7ba80a49124 (Commit)
 	err = m_can_fifo_read(cdev, fgi, M_CAN_FIFO_ID, &fifo_header, 2);
 	if (err)
 		goto out_fail;
@@ -530,6 +571,12 @@ static int m_can_read_fifo(struct net_device *dev, u32 fgi)
 	}
 	stats->rx_packets++;
 
+<<<<<<< HEAD
+=======
+	/* acknowledge rx fifo 0 */
+	m_can_write(cdev, M_CAN_RXF0A, fgi);
+
+>>>>>>> b7ba80a49124 (Commit)
 	timestamp = FIELD_GET(RX_BUF_RXTS_MASK, fifo_header.dlc) << 16;
 
 	m_can_receive_skb(cdev, skb, timestamp);
@@ -548,11 +595,15 @@ static int m_can_do_rx_poll(struct net_device *dev, int quota)
 	struct m_can_classdev *cdev = netdev_priv(dev);
 	u32 pkts = 0;
 	u32 rxfs;
+<<<<<<< HEAD
 	u32 rx_count;
 	u32 fgi;
 	int ack_fgi = -1;
 	int i;
 	int err = 0;
+=======
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rxfs = m_can_read(cdev, M_CAN_RXF0S);
 	if (!(rxfs & RXFS_FFL_MASK)) {
@@ -560,6 +611,7 @@ static int m_can_do_rx_poll(struct net_device *dev, int quota)
 		return 0;
 	}
 
+<<<<<<< HEAD
 	rx_count = FIELD_GET(RXFS_FFL_MASK, rxfs);
 	fgi = FIELD_GET(RXFS_FGI_MASK, rxfs);
 
@@ -580,6 +632,18 @@ static int m_can_do_rx_poll(struct net_device *dev, int quota)
 	if (err)
 		return err;
 
+=======
+	while ((rxfs & RXFS_FFL_MASK) && (quota > 0)) {
+		err = m_can_read_fifo(dev, rxfs);
+		if (err)
+			return err;
+
+		quota--;
+		pkts++;
+		rxfs = m_can_read(cdev, M_CAN_RXF0S);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return pkts;
 }
 
@@ -830,9 +894,17 @@ static void m_can_handle_other_err(struct net_device *dev, u32 irqstatus)
 		netdev_err(dev, "Message RAM access failure occurred\n");
 }
 
+<<<<<<< HEAD
 static inline bool is_lec_err(u8 lec)
 {
 	return lec != LEC_NO_ERROR && lec != LEC_NO_CHANGE;
+=======
+static inline bool is_lec_err(u32 psr)
+{
+	psr &= LEC_UNUSED;
+
+	return psr && (psr != LEC_UNUSED);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool m_can_is_protocol_err(u32 irqstatus)
@@ -887,6 +959,7 @@ static int m_can_handle_bus_errors(struct net_device *dev, u32 irqstatus,
 		work_done += m_can_handle_lost_msg(dev);
 
 	/* handle lec errors on the bus */
+<<<<<<< HEAD
 	if (cdev->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING) {
 		u8 lec = FIELD_GET(PSR_LEC_MASK, psr);
 		u8 dlec = FIELD_GET(PSR_DLEC_MASK, psr);
@@ -901,6 +974,11 @@ static int m_can_handle_bus_errors(struct net_device *dev, u32 irqstatus,
 			work_done += m_can_handle_lec_err(dev, dlec);
 		}
 	}
+=======
+	if ((cdev->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING) &&
+	    is_lec_err(psr))
+		work_done += m_can_handle_lec_err(dev, psr & LEC_UNUSED);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* handle protocol errors in arbitration phase */
 	if ((cdev->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING) &&
@@ -913,12 +991,22 @@ static int m_can_handle_bus_errors(struct net_device *dev, u32 irqstatus,
 	return work_done;
 }
 
+<<<<<<< HEAD
 static int m_can_rx_handler(struct net_device *dev, int quota, u32 irqstatus)
+=======
+static int m_can_rx_handler(struct net_device *dev, int quota)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct m_can_classdev *cdev = netdev_priv(dev);
 	int rx_work_or_err;
 	int work_done = 0;
+<<<<<<< HEAD
 
+=======
+	u32 irqstatus, psr;
+
+	irqstatus = cdev->irqstatus | m_can_read(cdev, M_CAN_IR);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!irqstatus)
 		goto end;
 
@@ -943,6 +1031,7 @@ static int m_can_rx_handler(struct net_device *dev, int quota, u32 irqstatus)
 		}
 	}
 
+<<<<<<< HEAD
 	if (irqstatus & IR_ERR_STATE)
 		work_done += m_can_handle_state_errors(dev,
 						       m_can_read(cdev, M_CAN_PSR));
@@ -950,6 +1039,15 @@ static int m_can_rx_handler(struct net_device *dev, int quota, u32 irqstatus)
 	if (irqstatus & IR_ERR_BUS_30X)
 		work_done += m_can_handle_bus_errors(dev, irqstatus,
 						     m_can_read(cdev, M_CAN_PSR));
+=======
+	psr = m_can_read(cdev, M_CAN_PSR);
+
+	if (irqstatus & IR_ERR_STATE)
+		work_done += m_can_handle_state_errors(dev, psr);
+
+	if (irqstatus & IR_ERR_BUS_30X)
+		work_done += m_can_handle_bus_errors(dev, irqstatus, psr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (irqstatus & IR_RF0N) {
 		rx_work_or_err = m_can_do_rx_poll(dev, (quota - work_done));
@@ -962,12 +1060,20 @@ end:
 	return work_done;
 }
 
+<<<<<<< HEAD
 static int m_can_rx_peripheral(struct net_device *dev, u32 irqstatus)
+=======
+static int m_can_rx_peripheral(struct net_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct m_can_classdev *cdev = netdev_priv(dev);
 	int work_done;
 
+<<<<<<< HEAD
 	work_done = m_can_rx_handler(dev, NAPI_POLL_WEIGHT, irqstatus);
+=======
+	work_done = m_can_rx_handler(dev, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Don't re-enable interrupts if the driver had a fatal error
 	 * (e.g., FIFO read failure).
@@ -983,11 +1089,16 @@ static int m_can_poll(struct napi_struct *napi, int quota)
 	struct net_device *dev = napi->dev;
 	struct m_can_classdev *cdev = netdev_priv(dev);
 	int work_done;
+<<<<<<< HEAD
 	u32 irqstatus;
 
 	irqstatus = cdev->irqstatus | m_can_read(cdev, M_CAN_IR);
 
 	work_done = m_can_rx_handler(dev, quota, irqstatus);
+=======
+
+	work_done = m_can_rx_handler(dev, quota);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Don't re-enable interrupts if the driver had a fatal error
 	 * (e.g., FIFO read failure).
@@ -1028,9 +1139,13 @@ static int m_can_echo_tx_event(struct net_device *dev)
 	u32 txe_count = 0;
 	u32 m_can_txefs;
 	u32 fgi = 0;
+<<<<<<< HEAD
 	int ack_fgi = -1;
 	int i = 0;
 	int err = 0;
+=======
+	int i = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int msg_mark;
 
 	struct m_can_classdev *cdev = netdev_priv(dev);
@@ -1040,34 +1155,58 @@ static int m_can_echo_tx_event(struct net_device *dev)
 
 	/* Get Tx Event fifo element count */
 	txe_count = FIELD_GET(TXEFS_EFFL_MASK, m_can_txefs);
+<<<<<<< HEAD
 	fgi = FIELD_GET(TXEFS_EFGI_MASK, m_can_txefs);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Get and process all sent elements */
 	for (i = 0; i < txe_count; i++) {
 		u32 txe, timestamp = 0;
+<<<<<<< HEAD
+=======
+		int err;
+
+		/* retrieve get index */
+		fgi = FIELD_GET(TXEFS_EFGI_MASK, m_can_read(cdev, M_CAN_TXEFS));
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* get message marker, timestamp */
 		err = m_can_txe_fifo_read(cdev, fgi, 4, &txe);
 		if (err) {
 			netdev_err(dev, "TXE FIFO read returned %d\n", err);
+<<<<<<< HEAD
 			break;
+=======
+			return err;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		msg_mark = FIELD_GET(TX_EVENT_MM_MASK, txe);
 		timestamp = FIELD_GET(TX_EVENT_TXTS_MASK, txe) << 16;
 
+<<<<<<< HEAD
 		ack_fgi = fgi;
 		fgi = (++fgi >= cdev->mcfg[MRAM_TXE].num ? 0 : fgi);
+=======
+		/* ack txe element */
+		m_can_write(cdev, M_CAN_TXEFA, FIELD_PREP(TXEFA_EFAI_MASK,
+							  fgi));
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* update stats */
 		m_can_tx_update_stats(cdev, msg_mark, timestamp);
 	}
 
+<<<<<<< HEAD
 	if (ack_fgi != -1)
 		m_can_write(cdev, M_CAN_TXEFA, FIELD_PREP(TXEFA_EFAI_MASK,
 							  ack_fgi));
 
 	return err;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static irqreturn_t m_can_isr(int irq, void *dev_id)
@@ -1099,7 +1238,11 @@ static irqreturn_t m_can_isr(int irq, void *dev_id)
 		m_can_disable_all_interrupts(cdev);
 		if (!cdev->is_peripheral)
 			napi_schedule(&cdev->napi);
+<<<<<<< HEAD
 		else if (m_can_rx_peripheral(dev, ir) < 0)
+=======
+		else if (m_can_rx_peripheral(dev) < 0)
+>>>>>>> b7ba80a49124 (Commit)
 			goto out_fail;
 	}
 
@@ -1259,6 +1402,7 @@ static int m_can_set_bittiming(struct net_device *dev)
  * - setup bittiming
  * - configure timestamp generation
  */
+<<<<<<< HEAD
 static int m_can_chip_config(struct net_device *dev)
 {
 	struct m_can_classdev *cdev = netdev_priv(dev);
@@ -1270,6 +1414,12 @@ static int m_can_chip_config(struct net_device *dev)
 		dev_err(cdev->dev, "Message RAM configuration failed\n");
 		return err;
 	}
+=======
+static void m_can_chip_config(struct net_device *dev)
+{
+	struct m_can_classdev *cdev = netdev_priv(dev);
+	u32 cccr, test;
+>>>>>>> b7ba80a49124 (Commit)
 
 	m_can_config_endisable(cdev, true);
 
@@ -1393,6 +1543,7 @@ static int m_can_chip_config(struct net_device *dev)
 
 	if (cdev->ops->init)
 		cdev->ops->init(cdev);
+<<<<<<< HEAD
 
 	return 0;
 }
@@ -1406,12 +1557,25 @@ static int m_can_start(struct net_device *dev)
 	ret = m_can_chip_config(dev);
 	if (ret)
 		return ret;
+=======
+}
+
+static void m_can_start(struct net_device *dev)
+{
+	struct m_can_classdev *cdev = netdev_priv(dev);
+
+	/* basic m_can configuration */
+	m_can_chip_config(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	cdev->can.state = CAN_STATE_ERROR_ACTIVE;
 
 	m_can_enable_all_interrupts(cdev);
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int m_can_set_mode(struct net_device *dev, enum can_mode mode)
@@ -1507,7 +1671,12 @@ static int m_can_dev_setup(struct m_can_classdev *cdev)
 	}
 
 	if (!cdev->is_peripheral)
+<<<<<<< HEAD
 		netif_napi_add(dev, &cdev->napi, m_can_poll);
+=======
+		netif_napi_add(dev, &cdev->napi,
+			       m_can_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Shared properties of all M_CAN versions */
 	cdev->version = m_can_version;
@@ -1625,7 +1794,10 @@ static netdev_tx_t m_can_tx_handler(struct m_can_classdev *cdev)
 	struct sk_buff *skb = cdev->tx_skb;
 	struct id_and_dlc fifo_header;
 	u32 cccr, fdflags;
+<<<<<<< HEAD
 	u32 txfqs;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 	int putidx;
 
@@ -1682,10 +1854,15 @@ static netdev_tx_t m_can_tx_handler(struct m_can_classdev *cdev)
 	} else {
 		/* Transmit routine for version >= v3.1.x */
 
+<<<<<<< HEAD
 		txfqs = m_can_read(cdev, M_CAN_TXFQS);
 
 		/* Check if FIFO full */
 		if (_m_can_tx_fifo_full(txfqs)) {
+=======
+		/* Check if FIFO full */
+		if (m_can_tx_fifo_full(cdev)) {
+>>>>>>> b7ba80a49124 (Commit)
 			/* This shouldn't happen */
 			netif_stop_queue(dev);
 			netdev_warn(dev,
@@ -1701,7 +1878,12 @@ static netdev_tx_t m_can_tx_handler(struct m_can_classdev *cdev)
 		}
 
 		/* get put index for frame */
+<<<<<<< HEAD
 		putidx = FIELD_GET(TXFQS_TFQPI_MASK, txfqs);
+=======
+		putidx = FIELD_GET(TXFQS_TFQPI_MASK,
+				   m_can_read(cdev, M_CAN_TXFQS));
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Construct DLC Field, with CAN-FD configuration.
 		 * Use the put index of the fifo as the message marker,
@@ -1763,7 +1945,11 @@ static netdev_tx_t m_can_start_xmit(struct sk_buff *skb,
 {
 	struct m_can_classdev *cdev = netdev_priv(dev);
 
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(dev, skb))
+=======
+	if (can_dropped_invalid_skb(dev, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	if (cdev->is_peripheral) {
@@ -1841,9 +2027,13 @@ static int m_can_open(struct net_device *dev)
 	}
 
 	/* start the m_can controller */
+<<<<<<< HEAD
 	err = m_can_start(dev);
 	if (err)
 		goto exit_irq_fail;
+=======
+	m_can_start(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!cdev->is_peripheral)
 		napi_enable(&cdev->napi);
@@ -1953,7 +2143,11 @@ int m_can_class_get_clocks(struct m_can_classdev *cdev)
 	cdev->hclk = devm_clk_get(cdev->dev, "hclk");
 	cdev->cclk = devm_clk_get(cdev->dev, "cclk");
 
+<<<<<<< HEAD
 	if (IS_ERR(cdev->hclk) || IS_ERR(cdev->cclk)) {
+=======
+	if (IS_ERR(cdev->cclk)) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(cdev->dev, "no clock found\n");
 		ret = -ENODEV;
 	}
@@ -2102,6 +2296,7 @@ int m_can_class_resume(struct device *dev)
 		ret = m_can_clk_start(cdev);
 		if (ret)
 			return ret;
+<<<<<<< HEAD
 		ret  = m_can_start(ndev);
 		if (ret) {
 			m_can_clk_stop(cdev);
@@ -2109,6 +2304,11 @@ int m_can_class_resume(struct device *dev)
 			return ret;
 		}
 
+=======
+
+		m_can_init_ram(cdev);
+		m_can_start(ndev);
+>>>>>>> b7ba80a49124 (Commit)
 		netif_device_attach(ndev);
 		netif_start_queue(ndev);
 	}

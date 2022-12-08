@@ -2478,6 +2478,7 @@ DEFINE_EVENT(sta_event, drv_net_fill_forward_path,
 	TP_ARGS(local, sdata, sta)
 );
 
+<<<<<<< HEAD
 TRACE_EVENT(drv_net_setup_tc,
 	TP_PROTO(struct ieee80211_local *local,
 		 struct ieee80211_sub_if_data *sdata,
@@ -2503,6 +2504,8 @@ TRACE_EVENT(drv_net_setup_tc,
 	)
 );
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 TRACE_EVENT(drv_change_vif_links,
 	TP_PROTO(struct ieee80211_local *local,
 		 struct ieee80211_sub_if_data *sdata,

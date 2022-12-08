@@ -1,6 +1,7 @@
 #ifndef PERF_UTIL_KWORK_H
 #define PERF_UTIL_KWORK_H
 
+<<<<<<< HEAD
 #include "util/tool.h"
 #include "util/time-utils.h"
 
@@ -11,6 +12,18 @@
 
 struct perf_sample;
 struct perf_session;
+=======
+#include "perf.h"
+
+#include "util/tool.h"
+#include "util/event.h"
+#include "util/evlist.h"
+#include "util/session.h"
+#include "util/time-utils.h"
+
+#include <linux/list.h>
+#include <linux/bitmap.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 enum kwork_class_type {
 	KWORK_CLASS_IRQ,

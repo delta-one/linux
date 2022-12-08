@@ -188,6 +188,13 @@ static struct drm_display_mode *drm_connector_pick_cmdline_mode(struct drm_conne
 	prefer_non_interlace = !cmdline_mode->interlace;
 again:
 	list_for_each_entry(mode, &connector->modes, head) {
+<<<<<<< HEAD
+=======
+		/* Check (optional) mode name first */
+		if (!strcmp(mode->name, cmdline_mode->name))
+			return mode;
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* check width/height */
 		if (mode->hdisplay != cmdline_mode->xres ||
 		    mode->vdisplay != cmdline_mode->yres)
@@ -1233,7 +1240,10 @@ int drm_client_modeset_dpms(struct drm_client_dev *client, int mode)
 	return ret;
 }
 EXPORT_SYMBOL(drm_client_modeset_dpms);
+<<<<<<< HEAD
 
 #ifdef CONFIG_DRM_KUNIT_TEST
 #include "tests/drm_client_modeset_test.c"
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)

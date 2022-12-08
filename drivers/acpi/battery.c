@@ -42,8 +42,11 @@
 #define ACPI_BATTERY_STATE_CHARGING	0x2
 #define ACPI_BATTERY_STATE_CRITICAL	0x4
 
+<<<<<<< HEAD
 #define MAX_STRING_LENGTH	64
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("Paul Diefenbaugh");
 MODULE_AUTHOR("Alexey Starikovskiy <astarikovskiy@suse.de>");
 MODULE_DESCRIPTION("ACPI Battery Driver");
@@ -120,10 +123,17 @@ struct acpi_battery {
 	int capacity_granularity_1;
 	int capacity_granularity_2;
 	int alarm;
+<<<<<<< HEAD
 	char model_number[MAX_STRING_LENGTH];
 	char serial_number[MAX_STRING_LENGTH];
 	char type[MAX_STRING_LENGTH];
 	char oem_info[MAX_STRING_LENGTH];
+=======
+	char model_number[32];
+	char serial_number[32];
+	char type[32];
+	char oem_info[32];
+>>>>>>> b7ba80a49124 (Commit)
 	int state;
 	int power_unit;
 	unsigned long flags;
@@ -439,6 +449,7 @@ static int extract_package(struct acpi_battery *battery,
 		element = &package->package.elements[i];
 		if (offsets[i].mode) {
 			u8 *ptr = (u8 *)battery + offsets[i].offset;
+<<<<<<< HEAD
 			u32 len = MAX_STRING_LENGTH;
 
 			switch (element->type) {
@@ -458,6 +469,18 @@ static int extract_package(struct acpi_battery *battery,
 			default:
 				*ptr = 0; /* don't have value */
 			}
+=======
+
+			if (element->type == ACPI_TYPE_STRING ||
+			    element->type == ACPI_TYPE_BUFFER)
+				strncpy(ptr, element->string.pointer, 32);
+			else if (element->type == ACPI_TYPE_INTEGER) {
+				strncpy(ptr, (u8 *)&element->integer.value,
+					sizeof(u64));
+				ptr[sizeof(u64)] = 0;
+			} else
+				*ptr = 0; /* don't have value */
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			int *x = (int *)((u8 *)battery + offsets[i].offset);
 			*x = (element->type == ACPI_TYPE_INTEGER) ?
@@ -707,8 +730,12 @@ static void __battery_hook_unregister(struct acpi_battery_hook *hook, int lock)
 	if (lock)
 		mutex_lock(&hook_mutex);
 	list_for_each_entry(battery, &acpi_battery_list, list) {
+<<<<<<< HEAD
 		if (!hook->remove_battery(battery->bat, hook))
 			power_supply_changed(battery->bat);
+=======
+		hook->remove_battery(battery->bat);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	list_del(&hook->list);
 	if (lock)
@@ -736,7 +763,11 @@ void battery_hook_register(struct acpi_battery_hook *hook)
 	 * its attributes.
 	 */
 	list_for_each_entry(battery, &acpi_battery_list, list) {
+<<<<<<< HEAD
 		if (hook->add_battery(battery->bat, hook)) {
+=======
+		if (hook->add_battery(battery->bat)) {
+>>>>>>> b7ba80a49124 (Commit)
 			/*
 			 * If a add-battery returns non-zero,
 			 * the registration of the extension has failed,
@@ -747,8 +778,11 @@ void battery_hook_register(struct acpi_battery_hook *hook)
 			__battery_hook_unregister(hook, 0);
 			goto end;
 		}
+<<<<<<< HEAD
 
 		power_supply_changed(battery->bat);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	pr_info("new extension: %s\n", hook->name);
 end:
@@ -776,7 +810,11 @@ static void battery_hook_add_battery(struct acpi_battery *battery)
 	 * during the battery module initialization.
 	 */
 	list_for_each_entry_safe(hook_node, tmp, &battery_hook_list, list) {
+<<<<<<< HEAD
 		if (hook_node->add_battery(battery->bat, hook_node)) {
+=======
+		if (hook_node->add_battery(battery->bat)) {
+>>>>>>> b7ba80a49124 (Commit)
 			/*
 			 * The notification of the extensions has failed, to
 			 * prevent further errors we will unload the extension.
@@ -799,7 +837,11 @@ static void battery_hook_remove_battery(struct acpi_battery *battery)
 	 * custom attributes from the battery.
 	 */
 	list_for_each_entry(hook, &battery_hook_list, list) {
+<<<<<<< HEAD
 		hook->remove_battery(battery->bat, hook);
+=======
+		hook->remove_battery(battery->bat);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	/* Then, just remove the battery from the list */
 	list_del(&battery->list);
@@ -1222,12 +1264,20 @@ fail:
 	return result;
 }
 
+<<<<<<< HEAD
 static void acpi_battery_remove(struct acpi_device *device)
+=======
+static int acpi_battery_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct acpi_battery *battery = NULL;
 
 	if (!device || !acpi_driver_data(device))
+<<<<<<< HEAD
 		return;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	device_init_wakeup(&device->dev, 0);
 	battery = acpi_driver_data(device);
 	unregister_pm_notifier(&battery->pm_nb);
@@ -1235,6 +1285,10 @@ static void acpi_battery_remove(struct acpi_device *device)
 	mutex_destroy(&battery->lock);
 	mutex_destroy(&battery->sysfs_lock);
 	kfree(battery);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP

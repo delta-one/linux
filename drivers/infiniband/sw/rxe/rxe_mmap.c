@@ -79,7 +79,11 @@ int rxe_mmap(struct ib_ucontext *context, struct vm_area_struct *vma)
 
 		/* Don't allow a mmap larger than the object. */
 		if (size > ip->info.size) {
+<<<<<<< HEAD
 			rxe_dbg(rxe, "mmap region is larger than the object!\n");
+=======
+			pr_err("mmap region is larger than the object!\n");
+>>>>>>> b7ba80a49124 (Commit)
 			spin_unlock_bh(&rxe->pending_lock);
 			ret = -EINVAL;
 			goto done;
@@ -87,7 +91,11 @@ int rxe_mmap(struct ib_ucontext *context, struct vm_area_struct *vma)
 
 		goto found_it;
 	}
+<<<<<<< HEAD
 	rxe_dbg(rxe, "unable to find pending mmap info\n");
+=======
+	pr_warn("unable to find pending mmap info\n");
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_bh(&rxe->pending_lock);
 	ret = -EINVAL;
 	goto done;
@@ -98,7 +106,11 @@ found_it:
 
 	ret = remap_vmalloc_range(vma, ip->obj, 0);
 	if (ret) {
+<<<<<<< HEAD
 		rxe_dbg(rxe, "err %d from remap_vmalloc_range\n", ret);
+=======
+		pr_err("err %d from remap_vmalloc_range\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 		goto done;
 	}
 

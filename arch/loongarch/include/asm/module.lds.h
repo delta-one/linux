@@ -2,8 +2,13 @@
 /* Copyright (C) 2020-2022 Loongson Technology Corporation Limited */
 SECTIONS {
 	. = ALIGN(4);
+<<<<<<< HEAD
 	.got : { BYTE(0) }
 	.plt : { BYTE(0) }
 	.plt.idx : { BYTE(0) }
 	.ftrace_trampoline : { BYTE(0) }
+=======
+	.plt : { BYTE(0) }
+	.plt.idx : { BYTE(0) }
+>>>>>>> b7ba80a49124 (Commit)
 }

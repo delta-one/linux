@@ -21,17 +21,29 @@
 		pinctrl-0 = <&pmx_gpio_0 &pmx_gpio_1 &pmx_gpio_2>;
 		pinctrl-names = "default";
 
+<<<<<<< HEAD
 		led-wlan-act {
+=======
+		wlan-act {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "wlan-act";
 			gpios = <&gpio0 0 1>;
 		};
 
+<<<<<<< HEAD
 		led-wlan-ap {
+=======
+		wlan-ap {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "wlan-ap";
 			gpios = <&gpio0 1 1>;
 		};
 
+<<<<<<< HEAD
 		led-status {
+=======
+		status {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "status";
 			gpios = <&gpio0 2 1>;
 		};

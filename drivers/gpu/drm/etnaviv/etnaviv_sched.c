@@ -97,6 +97,7 @@ static const struct drm_sched_backend_ops etnaviv_sched_ops = {
 
 int etnaviv_sched_push_job(struct etnaviv_gem_submit *submit)
 {
+<<<<<<< HEAD
 	struct etnaviv_gpu *gpu = submit->gpu;
 	int ret;
 
@@ -106,15 +107,34 @@ int etnaviv_sched_push_job(struct etnaviv_gem_submit *submit)
 	 * allocated in drm_sched_job_arm.
 	 */
 	mutex_lock(&gpu->sched_lock);
+=======
+	int ret = 0;
+
+	/*
+	 * Hold the fence lock across the whole operation to avoid jobs being
+	 * pushed out of order with regard to their sched fence seqnos as
+	 * allocated in drm_sched_job_arm.
+	 */
+	mutex_lock(&submit->gpu->fence_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_sched_job_arm(&submit->sched_job);
 
 	submit->out_fence = dma_fence_get(&submit->sched_job.s_fence->finished);
+<<<<<<< HEAD
 	ret = xa_alloc_cyclic(&gpu->user_fences, &submit->out_fence_id,
 			      submit->out_fence, xa_limit_32b,
 			      &gpu->next_user_fence, GFP_KERNEL);
 	if (ret < 0) {
 		drm_sched_job_cleanup(&submit->sched_job);
+=======
+	submit->out_fence_id = idr_alloc_cyclic(&submit->gpu->fence_idr,
+						submit->out_fence, 0,
+						INT_MAX, GFP_KERNEL);
+	if (submit->out_fence_id < 0) {
+		drm_sched_job_cleanup(&submit->sched_job);
+		ret = -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_unlock;
 	}
 
@@ -124,7 +144,11 @@ int etnaviv_sched_push_job(struct etnaviv_gem_submit *submit)
 	drm_sched_entity_push_job(&submit->sched_job);
 
 out_unlock:
+<<<<<<< HEAD
 	mutex_unlock(&gpu->sched_lock);
+=======
+	mutex_unlock(&submit->gpu->fence_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }

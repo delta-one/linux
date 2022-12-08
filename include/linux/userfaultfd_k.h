@@ -36,6 +36,7 @@
 #define UFFD_SHARED_FCNTL_FLAGS (O_CLOEXEC | O_NONBLOCK)
 #define UFFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS)
 
+<<<<<<< HEAD
 extern vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason);
 
 /* A combined operation mode + behavior flags. */
@@ -87,6 +88,46 @@ extern int mwriteprotect_range(struct mm_struct *dst_mm,
 			       unsigned long start, unsigned long len,
 			       bool enable_wp, atomic_t *mmap_changing);
 extern long uffd_wp_range(struct vm_area_struct *vma,
+=======
+extern int sysctl_unprivileged_userfaultfd;
+
+extern vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason);
+
+/*
+ * The mode of operation for __mcopy_atomic and its helpers.
+ *
+ * This is almost an implementation detail (mcopy_atomic below doesn't take this
+ * as a parameter), but it's exposed here because memory-kind-specific
+ * implementations (e.g. hugetlbfs) need to know the mode of operation.
+ */
+enum mcopy_atomic_mode {
+	/* A normal copy_from_user into the destination range. */
+	MCOPY_ATOMIC_NORMAL,
+	/* Don't copy; map the destination range to the zero page. */
+	MCOPY_ATOMIC_ZEROPAGE,
+	/* Just install pte(s) with the existing page(s) in the page cache. */
+	MCOPY_ATOMIC_CONTINUE,
+};
+
+extern int mfill_atomic_install_pte(struct mm_struct *dst_mm, pmd_t *dst_pmd,
+				    struct vm_area_struct *dst_vma,
+				    unsigned long dst_addr, struct page *page,
+				    bool newly_allocated, bool wp_copy);
+
+extern ssize_t mcopy_atomic(struct mm_struct *dst_mm, unsigned long dst_start,
+			    unsigned long src_start, unsigned long len,
+			    atomic_t *mmap_changing, __u64 mode);
+extern ssize_t mfill_zeropage(struct mm_struct *dst_mm,
+			      unsigned long dst_start,
+			      unsigned long len,
+			      atomic_t *mmap_changing);
+extern ssize_t mcopy_continue(struct mm_struct *dst_mm, unsigned long dst_start,
+			      unsigned long len, atomic_t *mmap_changing);
+extern int mwriteprotect_range(struct mm_struct *dst_mm,
+			       unsigned long start, unsigned long len,
+			       bool enable_wp, atomic_t *mmap_changing);
+extern void uffd_wp_range(struct mm_struct *dst_mm, struct vm_area_struct *vma,
+>>>>>>> b7ba80a49124 (Commit)
 			  unsigned long start, unsigned long len, bool enable_wp);
 
 /* mm helpers */
@@ -159,9 +200,15 @@ static inline bool userfaultfd_armed(struct vm_area_struct *vma)
 static inline bool vma_can_userfault(struct vm_area_struct *vma,
 				     unsigned long vm_flags)
 {
+<<<<<<< HEAD
 	if ((vm_flags & VM_UFFD_MINOR) &&
 	    (!is_vm_hugetlb_page(vma) && !vma_is_shmem(vma)))
 		return false;
+=======
+	if (vm_flags & VM_UFFD_MINOR)
+		return is_vm_hugetlb_page(vma) || vma_is_shmem(vma);
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef CONFIG_PTE_MARKER_UFFD_WP
 	/*
 	 * If user requested uffd-wp but not enabled pte markers for
@@ -192,7 +239,10 @@ extern int userfaultfd_unmap_prep(struct mm_struct *mm, unsigned long start,
 				  unsigned long end, struct list_head *uf);
 extern void userfaultfd_unmap_complete(struct mm_struct *mm,
 				       struct list_head *uf);
+<<<<<<< HEAD
 extern bool userfaultfd_wp_unpopulated(struct vm_area_struct *vma);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #else /* CONFIG_USERFAULTFD */
 
@@ -288,6 +338,7 @@ static inline bool uffd_disable_fault_around(struct vm_area_struct *vma)
 	return false;
 }
 
+<<<<<<< HEAD
 static inline bool userfaultfd_wp_unpopulated(struct vm_area_struct *vma)
 {
 	return false;
@@ -312,6 +363,10 @@ static inline bool userfaultfd_wp_use_markers(struct vm_area_struct *vma)
 	return userfaultfd_wp_unpopulated(vma);
 }
 
+=======
+#endif /* CONFIG_USERFAULTFD */
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool pte_marker_entry_uffd_wp(swp_entry_t entry)
 {
 #ifdef CONFIG_PTE_MARKER_UFFD_WP

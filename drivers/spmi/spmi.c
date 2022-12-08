@@ -35,7 +35,11 @@ static void spmi_ctrl_release(struct device *dev)
 {
 	struct spmi_controller *ctrl = to_spmi_controller(dev);
 
+<<<<<<< HEAD
 	ida_free(&ctrl_ida, ctrl->nr);
+=======
+	ida_simple_remove(&ctrl_ida, ctrl->nr);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(ctrl);
 }
 
@@ -366,7 +370,11 @@ static void spmi_drv_shutdown(struct device *dev)
 		sdrv->shutdown(to_spmi_device(dev));
 }
 
+<<<<<<< HEAD
 static int spmi_drv_uevent(const struct device *dev, struct kobj_uevent_env *env)
+=======
+static int spmi_drv_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
@@ -457,7 +465,11 @@ struct spmi_controller *spmi_controller_alloc(struct device *parent,
 	ctrl->dev.of_node = parent->of_node;
 	spmi_controller_set_drvdata(ctrl, &ctrl[1]);
 
+<<<<<<< HEAD
 	id = ida_alloc(&ctrl_ida, GFP_KERNEL);
+=======
+	id = ida_simple_get(&ctrl_ida, 0, 0, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (id < 0) {
 		dev_err(parent,
 			"unable to allocate SPMI controller identifier.\n");

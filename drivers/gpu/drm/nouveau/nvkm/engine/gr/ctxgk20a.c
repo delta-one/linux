@@ -25,9 +25,14 @@
 #include <subdev/mc.h>
 
 static void
+<<<<<<< HEAD
 gk20a_grctx_generate_main(struct gf100_gr_chan *chan)
 {
 	struct gf100_gr *gr = chan->gr;
+=======
+gk20a_grctx_generate_main(struct gf100_gr *gr, struct gf100_grctx *info)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct nvkm_device *device = gr->base.engine.subdev.device;
 	const struct gf100_grctx_func *grctx = gr->func->grctx;
 	u32 idle_timeout;
@@ -39,8 +44,12 @@ gk20a_grctx_generate_main(struct gf100_gr_chan *chan)
 
 	idle_timeout = nvkm_mask(device, 0x404154, 0xffffffff, 0x00000000);
 
+<<<<<<< HEAD
 	grctx->attrib_cb(chan, chan->attrib_cb->addr, grctx->attrib_cb_size(gr));
 	grctx->attrib(chan);
+=======
+	grctx->attrib(info);
+>>>>>>> b7ba80a49124 (Commit)
 
 	grctx->unkn(gr);
 
@@ -62,8 +71,13 @@ gk20a_grctx_generate_main(struct gf100_gr_chan *chan)
 	gf100_gr_wait_idle(gr);
 
 	gf100_gr_icmd(gr, gr->bundle);
+<<<<<<< HEAD
 	grctx->pagepool(chan, chan->pagepool->addr);
 	grctx->bundle(chan, chan->bundle_cb->addr, grctx->bundle_size);
+=======
+	grctx->pagepool(info);
+	grctx->bundle(info);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 const struct gf100_grctx_func
@@ -76,8 +90,11 @@ gk20a_grctx = {
 	.bundle_token_limit = 0x100,
 	.pagepool = gk104_grctx_generate_pagepool,
 	.pagepool_size = 0x8000,
+<<<<<<< HEAD
 	.attrib_cb_size = gf100_grctx_generate_attrib_cb_size,
 	.attrib_cb = gf100_grctx_generate_attrib_cb,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.attrib = gf117_grctx_generate_attrib,
 	.attrib_nr_max = 0x240,
 	.attrib_nr = 0x240,

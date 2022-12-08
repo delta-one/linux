@@ -6,11 +6,15 @@
 #include <linux/types.h>
 
 #include "gt/intel_gt.h"
+<<<<<<< HEAD
 #include "gt/intel_gt_print.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_guc_reg.h"
 #include "intel_huc.h"
 #include "i915_drv.h"
 
+<<<<<<< HEAD
 #include <linux/device/bus.h>
 #include <linux/mei_aux.h>
 
@@ -23,6 +27,8 @@
 #define huc_dbg(_huc, _fmt, ...)	huc_printk((_huc), dbg, _fmt, ##__VA_ARGS__)
 #define huc_probe_error(_huc, _fmt, ...) huc_printk((_huc), probe_error, _fmt, ##__VA_ARGS__)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * DOC: HuC
  *
@@ -55,6 +61,7 @@
  * HuC-specific commands.
  */
 
+<<<<<<< HEAD
 /*
  * MEI-GSC load is an async process. The probing of the exposed aux device
  * (see intel_gsc.c) usually happens a few seconds after i915 probe, depending
@@ -285,6 +292,14 @@ void intel_huc_init_early(struct intel_huc *huc)
 		return;
 	}
 
+=======
+void intel_huc_init_early(struct intel_huc *huc)
+{
+	struct drm_i915_private *i915 = huc_to_gt(huc)->i915;
+
+	intel_uc_fw_init_early(&huc->fw, INTEL_UC_FW_TYPE_HUC);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (GRAPHICS_VER(i915) >= 11) {
 		huc->status.reg = GEN11_HUC_KERNEL_LOAD_INFO;
 		huc->status.mask = HUC_LOAD_SUCCESSFUL;
@@ -312,25 +327,45 @@ static int check_huc_loading_mode(struct intel_huc *huc)
 			      GSC_LOADS_HUC;
 
 	if (fw_needs_gsc != hw_uses_gsc) {
+<<<<<<< HEAD
 		huc_err(huc, "mismatch between FW (%s) and HW (%s) load modes\n",
 			HUC_LOAD_MODE_STRING(fw_needs_gsc), HUC_LOAD_MODE_STRING(hw_uses_gsc));
+=======
+		drm_err(&gt->i915->drm,
+			"mismatch between HuC FW (%s) and HW (%s) load modes\n",
+			HUC_LOAD_MODE_STRING(fw_needs_gsc),
+			HUC_LOAD_MODE_STRING(hw_uses_gsc));
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOEXEC;
 	}
 
 	/* make sure we can access the GSC via the mei driver if we need it */
 	if (!(IS_ENABLED(CONFIG_INTEL_MEI_PXP) && IS_ENABLED(CONFIG_INTEL_MEI_GSC)) &&
 	    fw_needs_gsc) {
+<<<<<<< HEAD
 		huc_info(huc, "can't load due to missing MEI modules\n");
 		return -EIO;
 	}
 
 	huc_dbg(huc, "loaded by GSC = %s\n", str_yes_no(fw_needs_gsc));
+=======
+		drm_info(&gt->i915->drm,
+			 "Can't load HuC due to missing MEI modules\n");
+		return -EIO;
+	}
+
+	drm_dbg(&gt->i915->drm, "GSC loads huc=%s\n", str_yes_no(fw_needs_gsc));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 int intel_huc_init(struct intel_huc *huc)
 {
+<<<<<<< HEAD
+=======
+	struct drm_i915_private *i915 = huc_to_gt(huc)->i915;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	err = check_huc_loading_mode(huc);
@@ -346,13 +381,18 @@ int intel_huc_init(struct intel_huc *huc)
 	return 0;
 
 out:
+<<<<<<< HEAD
 	intel_uc_fw_change_status(&huc->fw, INTEL_UC_FIRMWARE_INIT_FAIL);
 	huc_info(huc, "initialization failed %pe\n", ERR_PTR(err));
+=======
+	drm_info(&i915->drm, "HuC init failed with %d\n", err);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
 void intel_huc_fini(struct intel_huc *huc)
 {
+<<<<<<< HEAD
 	/*
 	 * the fence is initialized in init_early, so we need to clean it up
 	 * even if HuC loading is off.
@@ -399,6 +439,12 @@ int intel_huc_wait_for_auth_complete(struct intel_huc *huc)
 	intel_uc_fw_change_status(&huc->fw, INTEL_UC_FIRMWARE_RUNNING);
 	huc_info(huc, "authenticated!\n");
 	return 0;
+=======
+	if (!intel_uc_fw_is_loadable(&huc->fw))
+		return;
+
+	intel_uc_fw_fini(&huc->fw);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -432,11 +478,16 @@ int intel_huc_auth(struct intel_huc *huc)
 
 	ret = intel_guc_auth_huc(guc, intel_guc_ggtt_offset(guc, huc->fw.rsa_data));
 	if (ret) {
+<<<<<<< HEAD
 		huc_err(huc, "authentication by GuC failed %pe\n", ERR_PTR(ret));
+=======
+		DRM_ERROR("HuC: GuC did not ack Auth request %d\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 		goto fail;
 	}
 
 	/* Check authentication status, it should be done by now */
+<<<<<<< HEAD
 	ret = intel_huc_wait_for_auth_complete(huc);
 	if (ret)
 		goto fail;
@@ -449,6 +500,29 @@ fail:
 }
 
 bool intel_huc_is_authenticated(struct intel_huc *huc)
+=======
+	ret = __intel_wait_for_register(gt->uncore,
+					huc->status.reg,
+					huc->status.mask,
+					huc->status.value,
+					2, 50, NULL);
+	if (ret) {
+		DRM_ERROR("HuC: Firmware not verified %d\n", ret);
+		goto fail;
+	}
+
+	intel_uc_fw_change_status(&huc->fw, INTEL_UC_FIRMWARE_RUNNING);
+	drm_info(&gt->i915->drm, "HuC authenticated\n");
+	return 0;
+
+fail:
+	i915_probe_error(gt->i915, "HuC: Authentication failed %d\n", ret);
+	intel_uc_fw_change_status(&huc->fw, INTEL_UC_FIRMWARE_LOAD_FAIL);
+	return ret;
+}
+
+static bool huc_is_authenticated(struct intel_huc *huc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct intel_gt *gt = huc_to_gt(huc);
 	intel_wakeref_t wakeref;
@@ -467,8 +541,18 @@ bool intel_huc_is_authenticated(struct intel_huc *huc)
  * This function reads status register to verify if HuC
  * firmware was successfully loaded.
  *
+<<<<<<< HEAD
  * The return values match what is expected for the I915_PARAM_HUC_STATUS
  * getparam.
+=======
+ * Returns:
+ *  * -ENODEV if HuC is not present on this platform,
+ *  * -EOPNOTSUPP if HuC firmware is disabled,
+ *  * -ENOPKG if HuC firmware was not installed,
+ *  * -ENOEXEC if HuC firmware is invalid or mismatched,
+ *  * 0 if HuC firmware is not running,
+ *  * 1 if HuC firmware is authenticated and running.
+>>>>>>> b7ba80a49124 (Commit)
  */
 int intel_huc_check_status(struct intel_huc *huc)
 {
@@ -481,14 +565,18 @@ int intel_huc_check_status(struct intel_huc *huc)
 		return -ENOPKG;
 	case INTEL_UC_FIRMWARE_ERROR:
 		return -ENOEXEC;
+<<<<<<< HEAD
 	case INTEL_UC_FIRMWARE_INIT_FAIL:
 		return -ENOMEM;
 	case INTEL_UC_FIRMWARE_LOAD_FAIL:
 		return -EIO;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		break;
 	}
 
+<<<<<<< HEAD
 	return intel_huc_is_authenticated(huc);
 }
 
@@ -496,6 +584,9 @@ static bool huc_has_delayed_load(struct intel_huc *huc)
 {
 	return intel_huc_is_loaded_by_gsc(huc) &&
 	       (huc->delayed_load.status != INTEL_HUC_DELAYED_LOAD_ERROR);
+=======
+	return huc_is_authenticated(huc);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void intel_huc_update_auth_status(struct intel_huc *huc)
@@ -503,11 +594,17 @@ void intel_huc_update_auth_status(struct intel_huc *huc)
 	if (!intel_uc_fw_is_loadable(&huc->fw))
 		return;
 
+<<<<<<< HEAD
 	if (intel_huc_is_authenticated(huc))
 		intel_uc_fw_change_status(&huc->fw,
 					  INTEL_UC_FIRMWARE_RUNNING);
 	else if (huc_has_delayed_load(huc))
 		huc_delayed_load_start(huc);
+=======
+	if (huc_is_authenticated(huc))
+		intel_uc_fw_change_status(&huc->fw,
+					  INTEL_UC_FIRMWARE_RUNNING);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

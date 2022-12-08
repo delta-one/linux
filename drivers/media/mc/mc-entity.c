@@ -59,12 +59,19 @@ static inline const char *link_type_name(struct media_link *link)
 	}
 }
 
+<<<<<<< HEAD
 __must_check int media_entity_enum_init(struct media_entity_enum *ent_enum,
 					struct media_device *mdev)
 {
 	int idx_max;
 
 	idx_max = ALIGN(mdev->entity_internal_idx_max + 1, BITS_PER_LONG);
+=======
+__must_check int __media_entity_enum_init(struct media_entity_enum *ent_enum,
+					  int idx_max)
+{
+	idx_max = ALIGN(idx_max, BITS_PER_LONG);
+>>>>>>> b7ba80a49124 (Commit)
 	ent_enum->bmap = bitmap_zalloc(idx_max, GFP_KERNEL);
 	if (!ent_enum->bmap)
 		return -ENOMEM;
@@ -73,7 +80,11 @@ __must_check int media_entity_enum_init(struct media_entity_enum *ent_enum,
 
 	return 0;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(media_entity_enum_init);
+=======
+EXPORT_SYMBOL_GPL(__media_entity_enum_init);
+>>>>>>> b7ba80a49124 (Commit)
 
 void media_entity_enum_cleanup(struct media_entity_enum *ent_enum)
 {
@@ -195,8 +206,12 @@ int media_entity_pads_init(struct media_entity *entity, u16 num_pads,
 			   struct media_pad *pads)
 {
 	struct media_device *mdev = entity->graph_obj.mdev;
+<<<<<<< HEAD
 	struct media_pad *iter;
 	unsigned int i = 0;
+=======
+	unsigned int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (num_pads >= MEDIA_ENTITY_MAX_PADS)
 		return -E2BIG;
@@ -207,12 +222,21 @@ int media_entity_pads_init(struct media_entity *entity, u16 num_pads,
 	if (mdev)
 		mutex_lock(&mdev->graph_mutex);
 
+<<<<<<< HEAD
 	media_entity_for_each_pad(entity, iter) {
 		iter->entity = entity;
 		iter->index = i++;
 		if (mdev)
 			media_gobj_create(mdev, MEDIA_GRAPH_PAD,
 					  &iter->graph_obj);
+=======
+	for (i = 0; i < num_pads; i++) {
+		pads[i].entity = entity;
+		pads[i].index = i;
+		if (mdev)
+			media_gobj_create(mdev, MEDIA_GRAPH_PAD,
+					&entity->pads[i].graph_obj);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (mdev)
@@ -226,6 +250,7 @@ EXPORT_SYMBOL_GPL(media_entity_pads_init);
  * Graph traversal
  */
 
+<<<<<<< HEAD
 /**
  * media_entity_has_pad_interdep - Check interdependency between two pads
  *
@@ -266,6 +291,8 @@ static bool media_entity_has_pad_interdep(struct media_entity *entity,
 	return entity->ops->has_pad_interdep(entity, pad0, pad1);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct media_entity *
 media_entity_other(struct media_entity *entity, struct media_link *link)
 {
@@ -308,7 +335,11 @@ static struct media_entity *stack_pop(struct media_graph *graph)
  *
  * Reserve resources for graph walk in media device's current
  * state. The memory must be released using
+<<<<<<< HEAD
  * media_graph_walk_cleanup().
+=======
+ * media_graph_walk_free().
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Returns error on failure, zero on success.
  */
@@ -410,10 +441,49 @@ struct media_entity *media_graph_walk_next(struct media_graph *graph)
 }
 EXPORT_SYMBOL_GPL(media_graph_walk_next);
 
+<<<<<<< HEAD
+=======
+int media_entity_get_fwnode_pad(struct media_entity *entity,
+				struct fwnode_handle *fwnode,
+				unsigned long direction_flags)
+{
+	struct fwnode_endpoint endpoint;
+	unsigned int i;
+	int ret;
+
+	if (!entity->ops || !entity->ops->get_fwnode_pad) {
+		for (i = 0; i < entity->num_pads; i++) {
+			if (entity->pads[i].flags & direction_flags)
+				return i;
+		}
+
+		return -ENXIO;
+	}
+
+	ret = fwnode_graph_parse_endpoint(fwnode, &endpoint);
+	if (ret)
+		return ret;
+
+	ret = entity->ops->get_fwnode_pad(entity, &endpoint);
+	if (ret < 0)
+		return ret;
+
+	if (ret >= entity->num_pads)
+		return -ENXIO;
+
+	if (!(entity->pads[ret].flags & direction_flags))
+		return -ENXIO;
+
+	return ret;
+}
+EXPORT_SYMBOL_GPL(media_entity_get_fwnode_pad);
+
+>>>>>>> b7ba80a49124 (Commit)
 /* -----------------------------------------------------------------------------
  * Pipeline management
  */
 
+<<<<<<< HEAD
 /*
  * The pipeline traversal stack stores pads that are reached during graph
  * traversal, with a list of links to be visited to continue the traversal.
@@ -770,10 +840,41 @@ __must_check int __media_pipeline_start(struct media_pad *pad,
 		if (pad->pipe) {
 			dev_dbg(mdev->dev, "Failed to start pipeline: pad '%s':%u busy\n",
 				pad->entity->name, pad->index);
+=======
+__must_check int __media_pipeline_start(struct media_entity *entity,
+					struct media_pipeline *pipe)
+{
+	struct media_device *mdev = entity->graph_obj.mdev;
+	struct media_graph *graph = &pipe->graph;
+	struct media_entity *entity_err = entity;
+	struct media_link *link;
+	int ret;
+
+	if (pipe->streaming_count) {
+		pipe->streaming_count++;
+		return 0;
+	}
+
+	ret = media_graph_walk_init(&pipe->graph, mdev);
+	if (ret)
+		return ret;
+
+	media_graph_walk_start(&pipe->graph, entity);
+
+	while ((entity = media_graph_walk_next(graph))) {
+		DECLARE_BITMAP(active, MEDIA_ENTITY_MAX_PADS);
+		DECLARE_BITMAP(has_no_links, MEDIA_ENTITY_MAX_PADS);
+
+		if (entity->pipe && entity->pipe != pipe) {
+			pr_err("Pipe active for %s. Can't start for %s\n",
+				entity->name,
+				entity_err->name);
+>>>>>>> b7ba80a49124 (Commit)
 			ret = -EBUSY;
 			goto error;
 		}
 
+<<<<<<< HEAD
 		/*
 		 * 2. Validate all active links whose sink is the current pad.
 		 * Validation of the source pads is performed in the context of
@@ -839,6 +940,70 @@ __must_check int __media_pipeline_start(struct media_pad *pad,
 	}
 
 	pipe->start_count++;
+=======
+		/* Already streaming --- no need to check. */
+		if (entity->pipe)
+			continue;
+
+		entity->pipe = pipe;
+
+		if (!entity->ops || !entity->ops->link_validate)
+			continue;
+
+		bitmap_zero(active, entity->num_pads);
+		bitmap_fill(has_no_links, entity->num_pads);
+
+		for_each_media_entity_data_link(entity, link) {
+			struct media_pad *pad = link->sink->entity == entity
+						? link->sink : link->source;
+
+			/* Mark that a pad is connected by a link. */
+			bitmap_clear(has_no_links, pad->index, 1);
+
+			/*
+			 * Pads that either do not need to connect or
+			 * are connected through an enabled link are
+			 * fine.
+			 */
+			if (!(pad->flags & MEDIA_PAD_FL_MUST_CONNECT) ||
+			    link->flags & MEDIA_LNK_FL_ENABLED)
+				bitmap_set(active, pad->index, 1);
+
+			/*
+			 * Link validation will only take place for
+			 * sink ends of the link that are enabled.
+			 */
+			if (link->sink != pad ||
+			    !(link->flags & MEDIA_LNK_FL_ENABLED))
+				continue;
+
+			ret = entity->ops->link_validate(link);
+			if (ret < 0 && ret != -ENOIOCTLCMD) {
+				dev_dbg(entity->graph_obj.mdev->dev,
+					"link validation failed for '%s':%u -> '%s':%u, error %d\n",
+					link->source->entity->name,
+					link->source->index,
+					entity->name, link->sink->index, ret);
+				goto error;
+			}
+		}
+
+		/* Either no links or validated links are fine. */
+		bitmap_or(active, active, has_no_links, entity->num_pads);
+
+		if (!bitmap_full(active, entity->num_pads)) {
+			ret = -ENOLINK;
+			dev_dbg(entity->graph_obj.mdev->dev,
+				"'%s':%u must be connected by an enabled link\n",
+				entity->name,
+				(unsigned)find_first_zero_bit(
+					active, entity->num_pads));
+			goto error;
+		}
+	}
+
+	pipe->streaming_count++;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -847,6 +1012,7 @@ error:
 	 * Link validation on graph failed. We revert what we did and
 	 * return the error.
 	 */
+<<<<<<< HEAD
 
 	list_for_each_entry(err_ppad, &pipe->pads, list) {
 		if (err_ppad == ppad)
@@ -856,11 +1022,28 @@ error:
 	}
 
 	media_pipeline_cleanup(pipe);
+=======
+	media_graph_walk_start(graph, entity_err);
+
+	while ((entity_err = media_graph_walk_next(graph))) {
+		entity_err->pipe = NULL;
+
+		/*
+		 * We haven't started entities further than this so we quit
+		 * here.
+		 */
+		if (entity_err == entity)
+			break;
+	}
+
+	media_graph_walk_cleanup(graph);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
 EXPORT_SYMBOL_GPL(__media_pipeline_start);
 
+<<<<<<< HEAD
 __must_check int media_pipeline_start(struct media_pad *pad,
 				      struct media_pipeline *pipe)
 {
@@ -869,15 +1052,32 @@ __must_check int media_pipeline_start(struct media_pad *pad,
 
 	mutex_lock(&mdev->graph_mutex);
 	ret = __media_pipeline_start(pad, pipe);
+=======
+__must_check int media_pipeline_start(struct media_entity *entity,
+				      struct media_pipeline *pipe)
+{
+	struct media_device *mdev = entity->graph_obj.mdev;
+	int ret;
+
+	mutex_lock(&mdev->graph_mutex);
+	ret = __media_pipeline_start(entity, pipe);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&mdev->graph_mutex);
 	return ret;
 }
 EXPORT_SYMBOL_GPL(media_pipeline_start);
 
+<<<<<<< HEAD
 void __media_pipeline_stop(struct media_pad *pad)
 {
 	struct media_pipeline *pipe = pad->pipe;
 	struct media_pipeline_pad *ppad;
+=======
+void __media_pipeline_stop(struct media_entity *entity)
+{
+	struct media_graph *graph = &entity->pipe->graph;
+	struct media_pipeline *pipe = entity->pipe;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * If the following check fails, the driver has performed an
@@ -886,6 +1086,7 @@ void __media_pipeline_stop(struct media_pad *pad)
 	if (WARN_ON(!pipe))
 		return;
 
+<<<<<<< HEAD
 	if (--pipe->start_count)
 		return;
 
@@ -905,10 +1106,32 @@ void media_pipeline_stop(struct media_pad *pad)
 
 	mutex_lock(&mdev->graph_mutex);
 	__media_pipeline_stop(pad);
+=======
+	if (--pipe->streaming_count)
+		return;
+
+	media_graph_walk_start(graph, entity);
+
+	while ((entity = media_graph_walk_next(graph)))
+		entity->pipe = NULL;
+
+	media_graph_walk_cleanup(graph);
+
+}
+EXPORT_SYMBOL_GPL(__media_pipeline_stop);
+
+void media_pipeline_stop(struct media_entity *entity)
+{
+	struct media_device *mdev = entity->graph_obj.mdev;
+
+	mutex_lock(&mdev->graph_mutex);
+	__media_pipeline_stop(entity);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&mdev->graph_mutex);
 }
 EXPORT_SYMBOL_GPL(media_pipeline_stop);
 
+<<<<<<< HEAD
 __must_check int media_pipeline_alloc_start(struct media_pad *pad)
 {
 	struct media_device *mdev = pad->graph_obj.mdev;
@@ -1000,6 +1223,8 @@ __media_pipeline_entity_iter_next(struct media_pipeline *pipe,
 }
 EXPORT_SYMBOL_GPL(__media_pipeline_entity_iter_next);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* -----------------------------------------------------------------------------
  * Links management
  */
@@ -1254,7 +1479,11 @@ int __media_entity_setup_link(struct media_link *link, u32 flags)
 {
 	const u32 mask = MEDIA_LNK_FL_ENABLED;
 	struct media_device *mdev;
+<<<<<<< HEAD
 	struct media_pad *source, *sink;
+=======
+	struct media_entity *source, *sink;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = -EBUSY;
 
 	if (link == NULL)
@@ -1270,11 +1499,20 @@ int __media_entity_setup_link(struct media_link *link, u32 flags)
 	if (link->flags == flags)
 		return 0;
 
+<<<<<<< HEAD
 	source = link->source;
 	sink = link->sink;
 
 	if (!(link->flags & MEDIA_LNK_FL_DYNAMIC) &&
 	    (media_pad_is_streaming(source) || media_pad_is_streaming(sink)))
+=======
+	source = link->source->entity;
+	sink = link->sink->entity;
+
+	if (!(link->flags & MEDIA_LNK_FL_DYNAMIC) &&
+	    (media_entity_is_streaming(source) ||
+	     media_entity_is_streaming(sink)))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EBUSY;
 
 	mdev = source->graph_obj.mdev;
@@ -1415,6 +1653,7 @@ struct media_pad *media_pad_remote_pad_unique(const struct media_pad *pad)
 }
 EXPORT_SYMBOL_GPL(media_pad_remote_pad_unique);
 
+<<<<<<< HEAD
 int media_entity_get_fwnode_pad(struct media_entity *entity,
 				struct fwnode_handle *fwnode,
 				unsigned long direction_flags)
@@ -1469,6 +1708,8 @@ struct media_pipeline *media_pad_pipeline(struct media_pad *pad)
 }
 EXPORT_SYMBOL_GPL(media_pad_pipeline);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void media_interface_init(struct media_device *mdev,
 				 struct media_interface *intf,
 				 u32 gobj_type,

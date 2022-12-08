@@ -32,8 +32,16 @@ properties:
       - description: nCLUSTERPMUIRQ interrupt
 
   cpus:
+<<<<<<< HEAD
     minItems: 1
     maxItems: 12
+=======
+    $ref: /schemas/types.yaml#/definitions/phandle-array
+    minItems: 1
+    maxItems: 12
+    items:
+      maxItems: 1
+>>>>>>> b7ba80a49124 (Commit)
     description: List of phandles for the CPUs connected to this DSU instance.
 
 required:

@@ -377,7 +377,11 @@ void hdlcdrv_arbitrate(struct net_device *dev, struct hdlcdrv_state *s)
 	if ((--s->hdlctx.slotcnt) > 0)
 		return;
 	s->hdlctx.slotcnt = s->ch_params.slottime;
+<<<<<<< HEAD
 	if (get_random_u8() > s->ch_params.ppersist)
+=======
+	if ((prandom_u32() % 256) > s->ch_params.ppersist)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	start_tx(dev, s);
 }

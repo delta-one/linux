@@ -14,6 +14,7 @@ int devkmsg_sysctl_set_loglvl(struct ctl_table *table, int write,
 
 #ifdef CONFIG_PRINTK
 
+<<<<<<< HEAD
 #ifdef CONFIG_PRINTK_CALLER
 #define PRINTK_PREFIX_MAX	48
 #else
@@ -29,6 +30,8 @@ int devkmsg_sysctl_set_loglvl(struct ctl_table *table, int write,
 /* the maximum size allowed to be reserved for a record */
 #define PRINTKRB_RECORD_MAX	1024
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Flags for a single printk record. */
 enum printk_info_flags {
 	LOG_NEWLINE	= 2,	/* text ended with a newline */
@@ -63,10 +66,13 @@ u16 printk_parse_prefix(const char *text, int *level,
 			enum printk_info_flags *flags);
 #else
 
+<<<<<<< HEAD
 #define PRINTK_PREFIX_MAX	0
 #define PRINTK_MESSAGE_MAX	0
 #define PRINTKRB_RECORD_MAX	0
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * In !PRINTK builds we still export console_sem
  * semaphore and some of console functions (console_unlock()/etc.), so
@@ -77,6 +83,7 @@ u16 printk_parse_prefix(const char *text, int *level,
 
 static inline bool printk_percpu_data_ready(void) { return false; }
 #endif /* CONFIG_PRINTK */
+<<<<<<< HEAD
 
 /**
  * struct printk_buffers - Buffers to read/format/output printk messages.
@@ -103,3 +110,5 @@ struct printk_message {
 	u64			seq;
 	unsigned long		dropped;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

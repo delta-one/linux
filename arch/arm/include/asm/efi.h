@@ -20,7 +20,11 @@ void efi_init(void);
 void arm_efi_init(void);
 
 int efi_create_mapping(struct mm_struct *mm, efi_memory_desc_t *md);
+<<<<<<< HEAD
 int efi_set_mapping_permissions(struct mm_struct *mm, efi_memory_desc_t *md, bool);
+=======
+int efi_set_mapping_permissions(struct mm_struct *mm, efi_memory_desc_t *md);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define arch_efi_call_virt_setup()	efi_virtmap_load()
 #define arch_efi_call_virt_teardown()	efi_virtmap_unload()
@@ -43,6 +47,12 @@ void efi_virtmap_unload(void);
 
 /* arch specific definitions used by the stub code */
 
+<<<<<<< HEAD
+=======
+struct screen_info *alloc_screen_info(void);
+void free_screen_info(struct screen_info *si);
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * A reasonable upper bound for the uncompressed kernel size is 32 MBytes,
  * so we will reserve that amount of memory. We have no easy way to tell what

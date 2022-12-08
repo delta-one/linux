@@ -22,7 +22,10 @@
 #define HW_REV				0x0
 #define HW_INTR_STATUS			0x0010
 
+<<<<<<< HEAD
 #define UBWC_DEC_HW_VERSION		0x58
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define UBWC_STATIC			0x144
 #define UBWC_CTRL_2			0x150
 #define UBWC_PREDICTION_MODE		0x154
@@ -47,17 +50,26 @@ struct msm_mdss {
 static int msm_mdss_parse_data_bus_icc_path(struct device *dev,
 					    struct msm_mdss *msm_mdss)
 {
+<<<<<<< HEAD
 	struct icc_path *path0;
 	struct icc_path *path1;
 
 	path0 = of_icc_get(dev, "mdp0-mem");
+=======
+	struct icc_path *path0 = of_icc_get(dev, "mdp0-mem");
+	struct icc_path *path1 = of_icc_get(dev, "mdp1-mem");
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR_OR_NULL(path0))
 		return PTR_ERR_OR_ZERO(path0);
 
 	msm_mdss->path[0] = path0;
 	msm_mdss->num_paths = 1;
 
+<<<<<<< HEAD
 	path1 = of_icc_get(dev, "mdp1-mem");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!IS_ERR_OR_NULL(path1)) {
 		msm_mdss->path[1] = path1;
 		msm_mdss->num_paths++;
@@ -177,6 +189,7 @@ static int _msm_mdss_irq_domain_add(struct msm_mdss *msm_mdss)
 	return 0;
 }
 
+<<<<<<< HEAD
 #define UBWC_1_0 0x10000000
 #define UBWC_2_0 0x20000000
 #define UBWC_3_0 0x30000000
@@ -234,6 +247,11 @@ static int msm_mdss_enable(struct msm_mdss *msm_mdss)
 {
 	int ret;
 	u32 hw_rev;
+=======
+static int msm_mdss_enable(struct msm_mdss *msm_mdss)
+{
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Several components have AXI clocks that can only be turned on if
@@ -255,6 +273,7 @@ static int msm_mdss_enable(struct msm_mdss *msm_mdss)
 	if (msm_mdss->is_mdp5)
 		return 0;
 
+<<<<<<< HEAD
 	hw_rev = readl_relaxed(msm_mdss->mmio + HW_REV);
 	dev_dbg(msm_mdss->dev, "HW_REV: 0x%x\n", hw_rev);
 	dev_dbg(msm_mdss->dev, "UBWC_DEC_HW_VERSION: 0x%x\n",
@@ -300,6 +319,28 @@ static int msm_mdss_enable(struct msm_mdss *msm_mdss)
 	case DPU_HW_VER_900:
 		/* TODO: highest_bank_bit = 2 for LP_DDR4 */
 		msm_mdss_setup_ubwc_dec_40(msm_mdss, UBWC_4_0, 6, 1, 3, 1);
+=======
+	/*
+	 * ubwc config is part of the "mdss" region which is not accessible
+	 * from the rest of the driver. hardcode known configurations here
+	 */
+	switch (readl_relaxed(msm_mdss->mmio + HW_REV)) {
+	case DPU_HW_VER_500:
+	case DPU_HW_VER_501:
+		writel_relaxed(0x420, msm_mdss->mmio + UBWC_STATIC);
+		break;
+	case DPU_HW_VER_600:
+		/* TODO: 0x102e for LP_DDR4 */
+		writel_relaxed(0x103e, msm_mdss->mmio + UBWC_STATIC);
+		writel_relaxed(2, msm_mdss->mmio + UBWC_CTRL_2);
+		writel_relaxed(1, msm_mdss->mmio + UBWC_PREDICTION_MODE);
+		break;
+	case DPU_HW_VER_620:
+		writel_relaxed(0x1e, msm_mdss->mmio + UBWC_STATIC);
+		break;
+	case DPU_HW_VER_720:
+		writel_relaxed(0x101e, msm_mdss->mmio + UBWC_STATIC);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -527,6 +568,7 @@ static const struct of_device_id mdss_dt_match[] = {
 	{ .compatible = "qcom,sc7180-mdss" },
 	{ .compatible = "qcom,sc7280-mdss" },
 	{ .compatible = "qcom,sc8180x-mdss" },
+<<<<<<< HEAD
 	{ .compatible = "qcom,sc8280xp-mdss" },
 	{ .compatible = "qcom,sm6115-mdss" },
 	{ .compatible = "qcom,sm8150-mdss" },
@@ -534,6 +576,10 @@ static const struct of_device_id mdss_dt_match[] = {
 	{ .compatible = "qcom,sm8350-mdss" },
 	{ .compatible = "qcom,sm8450-mdss" },
 	{ .compatible = "qcom,sm8550-mdss" },
+=======
+	{ .compatible = "qcom,sm8150-mdss" },
+	{ .compatible = "qcom,sm8250-mdss" },
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 MODULE_DEVICE_TABLE(of, mdss_dt_match);

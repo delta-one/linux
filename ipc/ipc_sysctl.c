@@ -14,7 +14,10 @@
 #include <linux/ipc_namespace.h>
 #include <linux/msg.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/cred.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "util.h"
 
 static int proc_ipc_dointvec_minmax_orphans(struct ctl_table *table, int write,
@@ -191,6 +194,7 @@ static int set_is_seen(struct ctl_table_set *set)
 	return &current->nsproxy->ipc_ns->ipc_set == set;
 }
 
+<<<<<<< HEAD
 static void ipc_set_ownership(struct ctl_table_header *head,
 			      struct ctl_table *table,
 			      kuid_t *uid, kgid_t *gid)
@@ -205,19 +209,26 @@ static void ipc_set_ownership(struct ctl_table_header *head,
 	*gid = gid_valid(ns_root_gid) ? ns_root_gid : GLOBAL_ROOT_GID;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ipc_permissions(struct ctl_table_header *head, struct ctl_table *table)
 {
 	int mode = table->mode;
 
 #ifdef CONFIG_CHECKPOINT_RESTORE
+<<<<<<< HEAD
 	struct ipc_namespace *ns =
 		container_of(head->set, struct ipc_namespace, ipc_set);
+=======
+	struct ipc_namespace *ns = current->nsproxy->ipc_ns;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (((table->data == &ns->ids[IPC_SEM_IDS].next_id) ||
 	     (table->data == &ns->ids[IPC_MSG_IDS].next_id) ||
 	     (table->data == &ns->ids[IPC_SHM_IDS].next_id)) &&
 	    checkpoint_restore_ns_capable(ns->user_ns))
 		mode = 0666;
+<<<<<<< HEAD
 	else
 #endif
 	{
@@ -236,12 +247,19 @@ static int ipc_permissions(struct ctl_table_header *head, struct ctl_table *tabl
 	mode &= 7;
 
 	return (mode << 6) | (mode << 3) | mode;
+=======
+#endif
+	return mode;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct ctl_table_root set_root = {
 	.lookup = set_lookup,
 	.permissions = ipc_permissions,
+<<<<<<< HEAD
 	.set_ownership = ipc_set_ownership,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 bool setup_ipc_sysctls(struct ipc_namespace *ns)

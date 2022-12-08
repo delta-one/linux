@@ -37,7 +37,10 @@ struct vdpasim_dev_attr {
 	struct vdpa_mgmt_dev *mgmt_dev;
 	const char *name;
 	u64 supported_features;
+<<<<<<< HEAD
 	size_t alloc_size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	size_t config_size;
 	size_t buffer_size;
 	int nvqs;
@@ -45,18 +48,25 @@ struct vdpasim_dev_attr {
 	u32 ngroups;
 	u32 nas;
 
+<<<<<<< HEAD
 	void (*work_fn)(struct vdpasim *vdpasim);
 	void (*get_config)(struct vdpasim *vdpasim, void *config);
 	void (*set_config)(struct vdpasim *vdpasim, const void *config);
 	int (*get_stats)(struct vdpasim *vdpasim, u16 idx,
 			 struct sk_buff *msg,
 			 struct netlink_ext_ack *extack);
+=======
+	work_func_t work_fn;
+	void (*get_config)(struct vdpasim *vdpasim, void *config);
+	void (*set_config)(struct vdpasim *vdpasim, const void *config);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* State of each vdpasim device */
 struct vdpasim {
 	struct vdpa_device vdpa;
 	struct vdpasim_virtqueue *vqs;
+<<<<<<< HEAD
 	struct kthread_worker *worker;
 	struct kthread_work work;
 	struct mm_struct *mm_bound;
@@ -67,20 +77,37 @@ struct vdpasim {
 	void *config;
 	struct vhost_iotlb *iommu;
 	bool *iommu_pt;
+=======
+	struct work_struct work;
+	struct vdpasim_dev_attr dev_attr;
+	/* spinlock to synchronize virtqueue state */
+	spinlock_t lock;
+	/* virtio config according to device type */
+	void *config;
+	struct vhost_iotlb *iommu;
+	struct iova_domain iova;
+>>>>>>> b7ba80a49124 (Commit)
 	void *buffer;
 	u32 status;
 	u32 generation;
 	u64 features;
 	u32 groups;
 	bool running;
+<<<<<<< HEAD
 	bool pending_kick;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* spinlock to synchronize iommu table */
 	spinlock_t iommu_lock;
 };
 
+<<<<<<< HEAD
 struct vdpasim *vdpasim_create(struct vdpasim_dev_attr *attr,
 			       const struct vdpa_dev_set_config *config);
 void vdpasim_schedule_work(struct vdpasim *vdpasim);
+=======
+struct vdpasim *vdpasim_create(struct vdpasim_dev_attr *attr);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* TODO: cross-endian support */
 static inline bool vdpasim_is_little_endian(struct vdpasim *vdpasim)

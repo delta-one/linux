@@ -1128,6 +1128,13 @@ static struct dso *machine__get_kernel(struct machine *machine)
 	return kernel;
 }
 
+<<<<<<< HEAD
+=======
+struct process_args {
+	u64 start;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 void machine__get_kallsyms_filename(struct machine *machine, char *buf,
 				    size_t bufsz)
 {
@@ -3336,6 +3343,7 @@ int machine__for_each_kernel_map(struct machine *machine, machine__map_t fn, voi
 	}
 	return err;
 }
+<<<<<<< HEAD
 
 bool machine__is_lock_function(struct machine *machine, u64 addr)
 {
@@ -3376,3 +3384,5 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
 
 	return false;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

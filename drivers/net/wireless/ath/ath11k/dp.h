@@ -1,7 +1,10 @@
 /* SPDX-License-Identifier: BSD-3-Clause-Clear */
 /*
  * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #ifndef ATH11K_DP_H
@@ -204,7 +207,10 @@ struct ath11k_pdev_dp {
 
 #define DP_WBM_RELEASE_RING_SIZE	64
 #define DP_TCL_DATA_RING_SIZE		512
+<<<<<<< HEAD
 #define DP_TCL_DATA_RING_SIZE_WCN6750	2048
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DP_TX_COMP_RING_SIZE		32768
 #define DP_TX_IDR_SIZE			DP_TX_COMP_RING_SIZE
 #define DP_TCL_CMD_RING_SIZE		32
@@ -224,8 +230,11 @@ struct ath11k_pdev_dp {
 #define DP_RXDMA_MONITOR_DST_RING_SIZE	2048
 #define DP_RXDMA_MONITOR_DESC_RING_SIZE	4096
 
+<<<<<<< HEAD
 #define DP_RX_RELEASE_RING_NUM	3
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DP_RX_BUFFER_SIZE	2048
 #define	DP_RX_BUFFER_SIZE_LITE  1024
 #define DP_RX_BUFFER_ALIGN_SIZE	128
@@ -303,7 +312,11 @@ struct ath11k_dp {
 
 #define HTT_TX_WBM_COMP_STATUS_OFFSET 8
 
+<<<<<<< HEAD
 /* HTT tx completion is overlaid in wbm_release_ring */
+=======
+/* HTT tx completion is overlayed in wbm_release_ring */
+>>>>>>> b7ba80a49124 (Commit)
 #define HTT_TX_WBM_COMP_INFO0_STATUS		GENMASK(12, 9)
 #define HTT_TX_WBM_COMP_INFO0_REINJECT_REASON	GENMASK(16, 13)
 #define HTT_TX_WBM_COMP_INFO0_REINJECT_REASON	GENMASK(16, 13)
@@ -470,7 +483,11 @@ enum htt_srng_ring_id {
  *                     3'b010: 4 usec
  *                     3'b011: 8 usec (default)
  *                     3'b100: 16 usec
+<<<<<<< HEAD
  *                     Others: Reserved
+=======
+ *                     Others: Reserverd
+>>>>>>> b7ba80a49124 (Commit)
  *           b'19    - response_required:
  *                     Host needs HTT_T2H_MSG_TYPE_SRING_SETUP_DONE as response
  *           b'20:31 - reserved:  reserved for future use
@@ -997,7 +1014,12 @@ struct htt_rx_ring_tlv_filter {
 #define HTT_RX_FULL_MON_MODE_CFG_CMD_CFG_NON_ZERO_MPDUS_END	BIT(2)
 #define HTT_RX_FULL_MON_MODE_CFG_CMD_CFG_RELEASE_RING		GENMASK(10, 3)
 
+<<<<<<< HEAD
 /* Enumeration for full monitor mode destination ring select
+=======
+/**
+ * Enumeration for full monitor mode destination ring select
+>>>>>>> b7ba80a49124 (Commit)
  * 0 - REO destination ring select
  * 1 - FW destination ring select
  * 2 - SW destination ring select
@@ -1394,7 +1416,12 @@ struct htt_ppdu_stats_info {
 	struct list_head list;
 };
 
+<<<<<<< HEAD
 /* @brief target -> host packet log message
+=======
+/**
+ * @brief target -> host packet log message
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @details
  * The following field definitions describe the format of the packet log
@@ -1432,7 +1459,12 @@ struct htt_pktlog_msg {
 	u8 payload[];
 };
 
+<<<<<<< HEAD
 /* @brief host -> target FW extended statistics retrieve
+=======
+/**
+ * @brief host -> target FW extended statistics retrieve
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @details
  * The following field definitions describe the format of the HTT host
@@ -1567,7 +1599,12 @@ struct htt_ext_stats_cfg_params {
 	u32 cfg3;
 };
 
+<<<<<<< HEAD
 /* @brief target -> host extended statistics upload
+=======
+/**
+ * @brief target -> host extended statistics upload
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @details
  * The following field definitions describe the format of the HTT target

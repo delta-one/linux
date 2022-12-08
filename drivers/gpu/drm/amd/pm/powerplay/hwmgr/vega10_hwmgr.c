@@ -22,6 +22,10 @@
  */
 
 #include <linux/delay.h>
+<<<<<<< HEAD
+=======
+#include <linux/fb.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/pci.h>
 #include <linux/slab.h>
@@ -3007,6 +3011,7 @@ static int vega10_enable_disable_PCC_limit_feature(struct pp_hwmgr *hwmgr, bool 
 	return 0;
 }
 
+<<<<<<< HEAD
 static void vega10_populate_umdpstate_clocks(struct pp_hwmgr *hwmgr)
 {
 	struct phm_ppt_v2_information *table_info =
@@ -3031,6 +3036,8 @@ static void vega10_populate_umdpstate_clocks(struct pp_hwmgr *hwmgr)
 	hwmgr->pstate_mclk_peak /= 100;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int vega10_enable_dpm_tasks(struct pp_hwmgr *hwmgr)
 {
 	struct vega10_hwmgr *data = hwmgr->backend;
@@ -3105,8 +3112,11 @@ static int vega10_enable_dpm_tasks(struct pp_hwmgr *hwmgr)
 				    result = tmp_result);
 	}
 
+<<<<<<< HEAD
 	vega10_populate_umdpstate_clocks(hwmgr);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return result;
 }
 
@@ -3180,7 +3190,11 @@ static int vega10_get_pp_table_entry_callback_func(struct pp_hwmgr *hwmgr,
 			return -1);
 
 	PP_ASSERT_WITH_CODE(
+<<<<<<< HEAD
 			(vega10_ps->performance_level_count <
+=======
+			(vega10_ps->performance_level_count <=
+>>>>>>> b7ba80a49124 (Commit)
 					hwmgr->platform_descriptor.
 					hardwareActivityPerformanceLevels),
 			"Performance levels exceeds Driver limit!",
@@ -4194,6 +4208,11 @@ static int vega10_get_profiling_clk_mask(struct pp_hwmgr *hwmgr, enum amd_dpm_fo
 		*sclk_mask = VEGA10_UMD_PSTATE_GFXCLK_LEVEL;
 		*soc_mask = VEGA10_UMD_PSTATE_SOCCLK_LEVEL;
 		*mclk_mask = VEGA10_UMD_PSTATE_MCLK_LEVEL;
+<<<<<<< HEAD
+=======
+		hwmgr->pstate_sclk = table_info->vdd_dep_on_sclk->entries[VEGA10_UMD_PSTATE_GFXCLK_LEVEL].clk;
+		hwmgr->pstate_mclk = table_info->vdd_dep_on_mclk->entries[VEGA10_UMD_PSTATE_MCLK_LEVEL].clk;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (level == AMD_DPM_FORCED_LEVEL_PROFILE_MIN_SCLK) {
@@ -4304,6 +4323,12 @@ static int vega10_dpm_force_dpm_level(struct pp_hwmgr *hwmgr,
 	uint32_t mclk_mask = 0;
 	uint32_t soc_mask = 0;
 
+<<<<<<< HEAD
+=======
+	if (hwmgr->pstate_sclk == 0)
+		vega10_get_profiling_clk_mask(hwmgr, level, &sclk_mask, &mclk_mask, &soc_mask);
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (level) {
 	case AMD_DPM_FORCED_LEVEL_HIGH:
 		ret = vega10_force_dpm_highest(hwmgr);

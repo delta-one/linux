@@ -265,8 +265,20 @@ static void skbprio_walk(struct Qdisc *sch, struct qdisc_walker *arg)
 		return;
 
 	for (i = 0; i < SKBPRIO_MAX_PRIORITY; i++) {
+<<<<<<< HEAD
 		if (!tc_qdisc_stats_dump(sch, i + 1, arg))
 			break;
+=======
+		if (arg->count < arg->skip) {
+			arg->count++;
+			continue;
+		}
+		if (arg->fn(sch, i + 1, arg) < 0) {
+			arg->stop = 1;
+			break;
+		}
+		arg->count++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

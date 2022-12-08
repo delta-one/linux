@@ -49,7 +49,11 @@ int hard_smp_processor_id(void);
 
 void smp_fill_in_cpu_possible_map(void);
 void smp_fill_in_sib_core_maps(void);
+<<<<<<< HEAD
 void __noreturn cpu_play_dead(void);
+=======
+void cpu_play_dead(void);
+>>>>>>> b7ba80a49124 (Commit)
 
 void smp_fetch_global_regs(void);
 void smp_fetch_global_pmu(void);

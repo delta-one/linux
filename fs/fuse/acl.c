@@ -11,10 +11,16 @@
 #include <linux/posix_acl.h>
 #include <linux/posix_acl_xattr.h>
 
+<<<<<<< HEAD
 static struct posix_acl *__fuse_get_acl(struct fuse_conn *fc,
 					struct mnt_idmap *idmap,
 					struct inode *inode, int type, bool rcu)
 {
+=======
+struct posix_acl *fuse_get_acl(struct inode *inode, int type, bool rcu)
+{
+	struct fuse_conn *fc = get_fuse_conn(inode);
+>>>>>>> b7ba80a49124 (Commit)
 	int size;
 	const char *name;
 	void *value = NULL;
@@ -26,7 +32,11 @@ static struct posix_acl *__fuse_get_acl(struct fuse_conn *fc,
 	if (fuse_is_bad(inode))
 		return ERR_PTR(-EIO);
 
+<<<<<<< HEAD
 	if (fc->no_getxattr)
+=======
+	if (!fc->posix_acl || fc->no_getxattr)
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	if (type == ACL_TYPE_ACCESS)
@@ -54,6 +64,7 @@ static struct posix_acl *__fuse_get_acl(struct fuse_conn *fc,
 	return acl;
 }
 
+<<<<<<< HEAD
 static inline bool fuse_no_acl(const struct fuse_conn *fc,
 			       const struct inode *inode)
 {
@@ -98,6 +109,11 @@ int fuse_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
 		 struct posix_acl *acl, int type)
 {
 	struct inode *inode = d_inode(dentry);
+=======
+int fuse_set_acl(struct user_namespace *mnt_userns, struct inode *inode,
+		 struct posix_acl *acl, int type)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct fuse_conn *fc = get_fuse_conn(inode);
 	const char *name;
 	int ret;
@@ -105,7 +121,11 @@ int fuse_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
 	if (fuse_is_bad(inode))
 		return -EIO;
 
+<<<<<<< HEAD
 	if (fc->no_setxattr || fuse_no_acl(fc, inode))
+=======
+	if (!fc->posix_acl || fc->no_setxattr)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOPNOTSUPP;
 
 	if (type == ACL_TYPE_ACCESS)
@@ -140,6 +160,7 @@ int fuse_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
 			return ret;
 		}
 
+<<<<<<< HEAD
 		/*
 		 * Fuse daemons without FUSE_POSIX_ACL never changed the passed
 		 * through POSIX ACLs. Such daemons don't expect setgid bits to
@@ -148,6 +169,10 @@ int fuse_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
 		if (fc->posix_acl &&
 		    !vfsgid_in_group_p(i_gid_into_vfsgid(&nop_mnt_idmap, inode)) &&
 		    !capable_wrt_inode_uidgid(&nop_mnt_idmap, inode, CAP_FSETID))
+=======
+		if (!in_group_p(i_gid_into_mnt(&init_user_ns, inode)) &&
+		    !capable_wrt_inode_uidgid(&init_user_ns, inode, CAP_FSETID))
+>>>>>>> b7ba80a49124 (Commit)
 			extra_flags |= FUSE_SETXATTR_ACL_KILL_SGID;
 
 		ret = fuse_setxattr(inode, name, value, size, 0, extra_flags);
@@ -155,6 +180,7 @@ int fuse_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
 	} else {
 		ret = fuse_removexattr(inode, name);
 	}
+<<<<<<< HEAD
 
 	if (fc->posix_acl) {
 		/*
@@ -164,6 +190,10 @@ int fuse_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
 		forget_all_cached_acls(inode);
 		fuse_invalidate_attr(inode);
 	}
+=======
+	forget_all_cached_acls(inode);
+	fuse_invalidate_attr(inode);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }

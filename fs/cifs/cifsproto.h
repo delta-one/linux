@@ -57,9 +57,12 @@ extern void exit_cifs_idmap(void);
 extern int init_cifs_spnego(void);
 extern void exit_cifs_spnego(void);
 extern const char *build_path_from_dentry(struct dentry *, void *);
+<<<<<<< HEAD
 char *__build_path_from_dentry_optional_prefix(struct dentry *direntry, void *page,
 					       const char *tree, int tree_len,
 					       bool prefix);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern char *build_path_from_dentry_optional_prefix(struct dentry *direntry,
 						    void *page, bool prefix);
 static inline void *alloc_dentry_path(void)
@@ -78,7 +81,13 @@ extern char *cifs_build_path_to_root(struct smb3_fs_context *ctx,
 				     struct cifs_tcon *tcon,
 				     int add_treename);
 extern char *build_wildcard_path_from_dentry(struct dentry *direntry);
+<<<<<<< HEAD
 char *cifs_build_devname(char *nodename, const char *prepath);
+=======
+extern char *cifs_compose_mount_options(const char *sb_mountdata,
+		const char *fullpath, const struct dfs_info3_param *ref,
+		char **devname);
+>>>>>>> b7ba80a49124 (Commit)
 extern void delete_mid(struct mid_q_entry *mid);
 extern void release_mid(struct mid_q_entry *mid);
 extern void cifs_wake_up_task(struct mid_q_entry *mid);
@@ -125,7 +134,11 @@ extern int SendReceive2(const unsigned int /* xid */ , struct cifs_ses *,
 			struct kvec * /* resp vec */);
 extern int SendReceiveBlockingLock(const unsigned int xid,
 			struct cifs_tcon *ptcon,
+<<<<<<< HEAD
 			struct smb_hdr *in_buf,
+=======
+			struct smb_hdr *in_buf ,
+>>>>>>> b7ba80a49124 (Commit)
 			struct smb_hdr *out_buf,
 			int *bytes_returned);
 void
@@ -183,9 +196,16 @@ extern int cifs_unlock_range(struct cifsFileInfo *cfile,
 extern int cifs_push_mandatory_locks(struct cifsFileInfo *cfile);
 
 extern void cifs_down_write(struct rw_semaphore *sem);
+<<<<<<< HEAD
 struct cifsFileInfo *cifs_new_fileinfo(struct cifs_fid *fid, struct file *file,
 				       struct tcon_link *tlink, __u32 oplock,
 				       const char *symlink_target);
+=======
+extern struct cifsFileInfo *cifs_new_fileinfo(struct cifs_fid *fid,
+					      struct file *file,
+					      struct tcon_link *tlink,
+					      __u32 oplock);
+>>>>>>> b7ba80a49124 (Commit)
 extern int cifs_posix_open(const char *full_path, struct inode **inode,
 			   struct super_block *sb, int mode,
 			   unsigned int f_flags, __u32 *oplock, __u16 *netfid,
@@ -200,9 +220,15 @@ extern int cifs_fattr_to_inode(struct inode *inode, struct cifs_fattr *fattr);
 extern struct inode *cifs_iget(struct super_block *sb,
 			       struct cifs_fattr *fattr);
 
+<<<<<<< HEAD
 int cifs_get_inode_info(struct inode **inode, const char *full_path,
 			struct cifs_open_info_data *data, struct super_block *sb, int xid,
 			const struct cifs_fid *fid);
+=======
+extern int cifs_get_inode_info(struct inode **inode, const char *full_path,
+			       FILE_ALL_INFO *data, struct super_block *sb,
+			       int xid, const struct cifs_fid *fid);
+>>>>>>> b7ba80a49124 (Commit)
 extern int smb311_posix_get_inode_info(struct inode **pinode, const char *search_path,
 			struct super_block *sb, unsigned int xid);
 extern int cifs_get_inode_info_unix(struct inode **pinode,
@@ -225,10 +251,13 @@ extern struct cifs_ntsd *get_cifs_acl(struct cifs_sb_info *, struct inode *,
 				      const char *, u32 *, u32);
 extern struct cifs_ntsd *get_cifs_acl_by_fid(struct cifs_sb_info *,
 				const struct cifs_fid *, u32 *, u32);
+<<<<<<< HEAD
 extern struct posix_acl *cifs_get_acl(struct mnt_idmap *idmap,
 				      struct dentry *dentry, int type);
 extern int cifs_set_acl(struct mnt_idmap *idmap,
 			struct dentry *dentry, struct posix_acl *acl, int type);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern int set_cifs_acl(struct cifs_ntsd *, __u32, struct inode *,
 				const char *, int);
 extern unsigned int setup_authusers_ACE(struct cifs_ace *pace);
@@ -244,6 +273,7 @@ extern int cifs_read_page_from_socket(struct TCP_Server_Info *server,
 					struct page *page,
 					unsigned int page_offset,
 					unsigned int to_read);
+<<<<<<< HEAD
 int cifs_read_iter_from_socket(struct TCP_Server_Info *server,
 			       struct iov_iter *iter,
 			       unsigned int to_read);
@@ -252,6 +282,9 @@ void cifs_mount_put_conns(struct cifs_mount_ctx *mnt_ctx);
 int cifs_mount_get_session(struct cifs_mount_ctx *mnt_ctx);
 int cifs_is_path_remote(struct cifs_mount_ctx *mnt_ctx);
 int cifs_mount_get_tcon(struct cifs_mount_ctx *mnt_ctx);
+=======
+extern int cifs_setup_cifs_sb(struct cifs_sb_info *cifs_sb);
+>>>>>>> b7ba80a49124 (Commit)
 extern int cifs_match_super(struct super_block *, void *);
 extern int cifs_mount(struct cifs_sb_info *cifs_sb, struct smb3_fs_context *ctx);
 extern void cifs_umount(struct cifs_sb_info *);
@@ -278,8 +311,12 @@ extern void cifs_add_deferred_close(struct cifsFileInfo *cfile,
 
 extern void cifs_del_deferred_close(struct cifsFileInfo *cfile);
 
+<<<<<<< HEAD
 extern void cifs_close_deferred_file(struct cifsInodeInfo *cifs_inode,
 				     bool wait_oplock_handler);
+=======
+extern void cifs_close_deferred_file(struct cifsInodeInfo *cifs_inode);
+>>>>>>> b7ba80a49124 (Commit)
 
 extern void cifs_close_all_deferred_files(struct cifs_tcon *cifs_tcon);
 
@@ -550,6 +587,7 @@ extern int CIFSSMBGetCIFSACL(const unsigned int xid, struct cifs_tcon *tcon,
 			__u16 fid, struct cifs_ntsd **acl_inf, __u32 *buflen);
 extern int CIFSSMBSetCIFSACL(const unsigned int, struct cifs_tcon *, __u16,
 			struct cifs_ntsd *, __u32, int);
+<<<<<<< HEAD
 extern int cifs_do_get_acl(const unsigned int xid, struct cifs_tcon *tcon,
 			   const unsigned char *searchName,
 			   struct posix_acl **acl, const int acl_type,
@@ -558,6 +596,16 @@ extern int cifs_do_set_acl(const unsigned int xid, struct cifs_tcon *tcon,
 			   const unsigned char *fileName,
 			   const struct posix_acl *acl, const int acl_type,
 			   const struct nls_table *nls_codepage, int remap);
+=======
+extern int CIFSSMBGetPosixACL(const unsigned int xid, struct cifs_tcon *tcon,
+		const unsigned char *searchName,
+		char *acl_inf, const int buflen, const int acl_type,
+		const struct nls_table *nls_codepage, int remap_special_chars);
+extern int CIFSSMBSetPosixACL(const unsigned int xid, struct cifs_tcon *tcon,
+		const unsigned char *fileName,
+		const char *local_acl, const int buflen, const int acl_type,
+		const struct nls_table *nls_codepage, int remap_special_chars);
+>>>>>>> b7ba80a49124 (Commit)
 extern int CIFSGetExtAttr(const unsigned int xid, struct cifs_tcon *tcon,
 			const int netfid, __u64 *pExtAttrBits, __u64 *pMask);
 #endif /* CIFS_ALLOW_INSECURE_LEGACY */
@@ -570,6 +618,12 @@ extern int check_mf_symlink(unsigned int xid, struct cifs_tcon *tcon,
 extern int E_md4hash(const unsigned char *passwd, unsigned char *p16,
 			const struct nls_table *codepage);
 
+<<<<<<< HEAD
+=======
+extern int
+cifs_setup_volume_info(struct smb3_fs_context *ctx, const char *mntopts, const char *devname);
+
+>>>>>>> b7ba80a49124 (Commit)
 extern struct TCP_Server_Info *
 cifs_find_tcp_session(struct smb3_fs_context *ctx);
 
@@ -585,7 +639,14 @@ int cifs_readv_receive(struct TCP_Server_Info *server, struct mid_q_entry *mid);
 int cifs_async_writev(struct cifs_writedata *wdata,
 		      void (*release)(struct kref *kref));
 void cifs_writev_complete(struct work_struct *work);
+<<<<<<< HEAD
 struct cifs_writedata *cifs_writedata_alloc(work_func_t complete);
+=======
+struct cifs_writedata *cifs_writedata_alloc(unsigned int nr_pages,
+						work_func_t complete);
+struct cifs_writedata *cifs_writedata_direct_alloc(struct page **pages,
+						work_func_t complete);
+>>>>>>> b7ba80a49124 (Commit)
 void cifs_writedata_release(struct kref *refcount);
 int cifs_query_mf_symlink(unsigned int xid, struct cifs_tcon *tcon,
 			  struct cifs_sb_info *cifs_sb,
@@ -602,10 +663,21 @@ enum securityEnum cifs_select_sectype(struct TCP_Server_Info *,
 					enum securityEnum);
 struct cifs_aio_ctx *cifs_aio_ctx_alloc(void);
 void cifs_aio_ctx_release(struct kref *refcount);
+<<<<<<< HEAD
 
 int cifs_alloc_hash(const char *name, struct shash_desc **sdesc);
 void cifs_free_hash(struct shash_desc **sdesc);
 
+=======
+int setup_aio_ctx_iter(struct cifs_aio_ctx *ctx, struct iov_iter *iter, int rw);
+
+int cifs_alloc_hash(const char *name, struct crypto_shash **shash,
+		    struct sdesc **sdesc);
+void cifs_free_hash(struct crypto_shash **shash, struct sdesc **sdesc);
+
+extern void rqst_page_get_length(struct smb_rqst *rqst, unsigned int page,
+				unsigned int *len, unsigned int *offset);
+>>>>>>> b7ba80a49124 (Commit)
 struct cifs_chan *
 cifs_ses_find_chan(struct cifs_ses *ses, struct TCP_Server_Info *server);
 int cifs_try_adding_channels(struct cifs_sb_info *cifs_sb, struct cifs_ses *ses);
@@ -641,7 +713,11 @@ cifs_chan_is_iface_active(struct cifs_ses *ses,
 int
 cifs_chan_update_iface(struct cifs_ses *ses, struct TCP_Server_Info *server);
 int
+<<<<<<< HEAD
 SMB3_request_interfaces(const unsigned int xid, struct cifs_tcon *tcon, bool in_mount);
+=======
+SMB3_request_interfaces(const unsigned int xid, struct cifs_tcon *tcon);
+>>>>>>> b7ba80a49124 (Commit)
 
 void extract_unc_hostname(const char *unc, const char **h, size_t *len);
 int copy_path_name(char *dst, const char *src);
@@ -668,6 +744,7 @@ static inline int get_dfs_path(const unsigned int xid, struct cifs_ses *ses,
 int match_target_ip(struct TCP_Server_Info *server,
 		    const char *share, size_t share_len,
 		    bool *result);
+<<<<<<< HEAD
 int cifs_inval_name_dfs_link_error(const unsigned int xid,
 				   struct cifs_tcon *tcon,
 				   struct cifs_sb_info *cifs_sb,
@@ -683,6 +760,13 @@ static inline int cifs_inval_name_dfs_link_error(const unsigned int xid,
 	*islink = false;
 	return 0;
 }
+=======
+
+int cifs_dfs_query_info_nonascii_quirk(const unsigned int xid,
+				       struct cifs_tcon *tcon,
+				       struct cifs_sb_info *cifs_sb,
+				       const char *dfs_link_path);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 static inline int cifs_create_options(struct cifs_sb_info *cifs_sb, int options)
@@ -695,6 +779,9 @@ static inline int cifs_create_options(struct cifs_sb_info *cifs_sb, int options)
 
 struct super_block *cifs_get_tcon_super(struct cifs_tcon *tcon);
 void cifs_put_tcon_super(struct super_block *sb);
+<<<<<<< HEAD
 int cifs_wait_for_server_reconnect(struct TCP_Server_Info *server, bool retry);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif			/* _CIFSPROTO_H */

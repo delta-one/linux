@@ -450,6 +450,7 @@ static enum drm_mode_status dsi_mgr_bridge_mode_valid(struct drm_bridge *bridge,
 	int id = dsi_mgr_bridge_get_id(bridge);
 	struct msm_dsi *msm_dsi = dsi_mgr_get_dsi(id);
 	struct mipi_dsi_host *host = msm_dsi->host;
+<<<<<<< HEAD
 	struct platform_device *pdev = msm_dsi->pdev;
 	struct dev_pm_opp *opp;
 	unsigned long byte_clk_rate;
@@ -470,6 +471,8 @@ static enum drm_mode_status dsi_mgr_bridge_mode_valid(struct drm_bridge *bridge,
 	} else {
 			return MODE_ERROR;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return msm_dsi_host_check_dsc(host, mode);
 }

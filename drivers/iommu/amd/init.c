@@ -85,7 +85,11 @@
 
 #define LOOP_TIMEOUT	2000000
 
+<<<<<<< HEAD
 #define IVRS_GET_SBDF_ID(seg, bus, dev, fn)	(((seg & 0xffff) << 16) | ((bus & 0xff) << 8) \
+=======
+#define IVRS_GET_SBDF_ID(seg, bus, dev, fd)	(((seg & 0xffff) << 16) | ((bus & 0xff) << 8) \
+>>>>>>> b7ba80a49124 (Commit)
 						 | ((dev & 0x1f) << 3) | (fn & 0x7))
 
 /*
@@ -95,6 +99,11 @@
  * out of it.
  */
 
+<<<<<<< HEAD
+=======
+extern const struct iommu_ops amd_iommu_ops;
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * structure describing one IOMMU in the ACPI table. Typically followed by one
  * or more ivhd_entrys.
@@ -1941,7 +1950,11 @@ static ssize_t amd_iommu_show_cap(struct device *dev,
 				  char *buf)
 {
 	struct amd_iommu *iommu = dev_to_amd_iommu(dev);
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%x\n", iommu->cap);
+=======
+	return sprintf(buf, "%x\n", iommu->cap);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(cap, S_IRUGO, amd_iommu_show_cap, NULL);
 
@@ -1950,7 +1963,11 @@ static ssize_t amd_iommu_show_features(struct device *dev,
 				       char *buf)
 {
 	struct amd_iommu *iommu = dev_to_amd_iommu(dev);
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%llx:%llx\n", iommu->features2, iommu->features);
+=======
+	return sprintf(buf, "%llx:%llx\n", iommu->features2, iommu->features);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(features, S_IRUGO, amd_iommu_show_features, NULL);
 
@@ -2383,7 +2400,10 @@ static int iommu_setup_intcapxt(struct amd_iommu *iommu)
 	struct irq_domain *domain;
 	struct irq_alloc_info info;
 	int irq, ret;
+<<<<<<< HEAD
 	int node = dev_to_node(&iommu->dev->dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	domain = iommu_get_irqdomain();
 	if (!domain)
@@ -2393,7 +2413,11 @@ static int iommu_setup_intcapxt(struct amd_iommu *iommu)
 	info.type = X86_IRQ_ALLOC_TYPE_AMDVI;
 	info.data = iommu;
 
+<<<<<<< HEAD
 	irq = irq_domain_alloc_irqs(domain, 1, node, &info);
+=======
+	irq = irq_domain_alloc_irqs(domain, 1, NUMA_NO_NODE, &info);
+>>>>>>> b7ba80a49124 (Commit)
 	if (irq < 0) {
 		irq_domain_remove(domain);
 		return irq;
@@ -3403,6 +3427,7 @@ static int __init parse_amd_iommu_options(char *str)
 static int __init parse_ivrs_ioapic(char *str)
 {
 	u32 seg = 0, bus, dev, fn;
+<<<<<<< HEAD
 	int id, i;
 	u32 devid;
 
@@ -3421,6 +3446,20 @@ static int __init parse_ivrs_ioapic(char *str)
 	return 1;
 
 found:
+=======
+	int ret, id, i;
+	u32 devid;
+
+	ret = sscanf(str, "[%d]=%x:%x.%x", &id, &bus, &dev, &fn);
+	if (ret != 4) {
+		ret = sscanf(str, "[%d]=%x:%x:%x.%x", &id, &seg, &bus, &dev, &fn);
+		if (ret != 5) {
+			pr_err("Invalid command line: ivrs_ioapic%s\n", str);
+			return 1;
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (early_ioapic_map_size == EARLY_MAP_SIZE) {
 		pr_err("Early IOAPIC map overflow - ignoring ivrs_ioapic%s\n",
 			str);
@@ -3441,6 +3480,7 @@ found:
 static int __init parse_ivrs_hpet(char *str)
 {
 	u32 seg = 0, bus, dev, fn;
+<<<<<<< HEAD
 	int id, i;
 	u32 devid;
 
@@ -3459,6 +3499,20 @@ static int __init parse_ivrs_hpet(char *str)
 	return 1;
 
 found:
+=======
+	int ret, id, i;
+	u32 devid;
+
+	ret = sscanf(str, "[%d]=%x:%x.%x", &id, &bus, &dev, &fn);
+	if (ret != 4) {
+		ret = sscanf(str, "[%d]=%x:%x:%x.%x", &id, &seg, &bus, &dev, &fn);
+		if (ret != 5) {
+			pr_err("Invalid command line: ivrs_hpet%s\n", str);
+			return 1;
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (early_hpet_map_size == EARLY_MAP_SIZE) {
 		pr_err("Early HPET map overflow - ignoring ivrs_hpet%s\n",
 			str);
@@ -3476,6 +3530,7 @@ found:
 	return 1;
 }
 
+<<<<<<< HEAD
 #define ACPIID_LEN (ACPIHID_UID_LEN + ACPIHID_HID_LEN)
 
 static int __init parse_ivrs_acpihid(char *str)
@@ -3523,6 +3578,24 @@ not_found:
 	return 1;
 
 found:
+=======
+static int __init parse_ivrs_acpihid(char *str)
+{
+	u32 seg = 0, bus, dev, fn;
+	char *hid, *uid, *p;
+	char acpiid[ACPIHID_UID_LEN + ACPIHID_HID_LEN] = {0};
+	int ret, i;
+
+	ret = sscanf(str, "[%x:%x.%x]=%s", &bus, &dev, &fn, acpiid);
+	if (ret != 4) {
+		ret = sscanf(str, "[%x:%x:%x.%x]=%s", &seg, &bus, &dev, &fn, acpiid);
+		if (ret != 5) {
+			pr_err("Invalid command line: ivrs_acpihid(%s)\n", str);
+			return 1;
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	p = acpiid;
 	hid = strsep(&p, ":");
 	uid = p;
@@ -3532,6 +3605,7 @@ found:
 		return 1;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Ignore leading zeroes after ':', so e.g., AMDI0095:00
 	 * will match AMDI0095:0 in the second strcmp in acpi_dev_hid_uid_match
@@ -3539,6 +3613,8 @@ found:
 	while (*uid == '0' && *(uid + 1))
 		uid++;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	i = early_acpihid_map_size++;
 	memcpy(early_acpihid_map[i].hid, hid, strlen(hid));
 	memcpy(early_acpihid_map[i].uid, uid, strlen(uid));

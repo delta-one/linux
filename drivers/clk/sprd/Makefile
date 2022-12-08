@@ -11,4 +11,7 @@ clk-sprd-y	+= pll.o
 ## SoC support
 obj-$(CONFIG_SPRD_SC9860_CLK)	+= sc9860-clk.o
 obj-$(CONFIG_SPRD_SC9863A_CLK)	+= sc9863a-clk.o
+<<<<<<< HEAD
 obj-$(CONFIG_SPRD_UMS512_CLK)	+= ums512-clk.o
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -16,7 +16,10 @@
 #include "ops.h"
 #include "sof-client.h"
 #include "sof-priv.h"
+<<<<<<< HEAD
 #include "ipc4-priv.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct sof_ipc_event_entry - IPC client event description
@@ -266,6 +269,7 @@ int sof_client_ipc_tx_message(struct sof_client_dev *cdev, void *ipc_msg,
 }
 EXPORT_SYMBOL_NS_GPL(sof_client_ipc_tx_message, SND_SOC_SOF_CLIENT);
 
+<<<<<<< HEAD
 int sof_client_ipc_set_get_data(struct sof_client_dev *cdev, void *ipc_msg,
 				bool set)
 {
@@ -299,6 +303,8 @@ struct sof_ipc4_fw_module *sof_client_ipc4_find_module(struct sof_client_dev *c,
 EXPORT_SYMBOL_NS_GPL(sof_client_ipc4_find_module, SND_SOC_SOF_CLIENT);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int sof_suspend_clients(struct snd_sof_dev *sdev, pm_message_t state)
 {
 	struct auxiliary_driver *adrv;

@@ -504,7 +504,12 @@ static int tegra_kbc_parse_dt(struct tegra_kbc *kbc)
 	if (!of_property_read_u32(np, "nvidia,repeat-delay-ms", &prop))
 		kbc->repeat_cnt = prop;
 
+<<<<<<< HEAD
 	kbc->use_ghost_filter = of_property_present(np, "nvidia,needs-ghost-filter");
+=======
+	if (of_find_property(np, "nvidia,needs-ghost-filter", NULL))
+		kbc->use_ghost_filter = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (of_property_read_bool(np, "wakeup-source") ||
 	    of_property_read_bool(np, "nvidia,wakeup-source")) /* legacy */
@@ -597,6 +602,10 @@ MODULE_DEVICE_TABLE(of, tegra_kbc_of_match);
 static int tegra_kbc_probe(struct platform_device *pdev)
 {
 	struct tegra_kbc *kbc;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 	int num_rows = 0;
 	unsigned int debounce_cnt;
@@ -640,7 +649,12 @@ static int tegra_kbc_probe(struct platform_device *pdev)
 
 	timer_setup(&kbc->timer, tegra_kbc_keypress_timer, 0);
 
+<<<<<<< HEAD
 	kbc->mmio = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	kbc->mmio = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(kbc->mmio))
 		return PTR_ERR(kbc->mmio);
 
@@ -710,6 +724,10 @@ static int tegra_kbc_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static void tegra_kbc_set_keypress_interrupt(struct tegra_kbc *kbc, bool enable)
 {
 	u32 val;
@@ -798,15 +816,25 @@ static int tegra_kbc_resume(struct device *dev)
 
 	return err;
 }
+<<<<<<< HEAD
 
 static DEFINE_SIMPLE_DEV_PM_OPS(tegra_kbc_pm_ops,
 				tegra_kbc_suspend, tegra_kbc_resume);
+=======
+#endif
+
+static SIMPLE_DEV_PM_OPS(tegra_kbc_pm_ops, tegra_kbc_suspend, tegra_kbc_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_driver tegra_kbc_driver = {
 	.probe		= tegra_kbc_probe,
 	.driver	= {
 		.name	= "tegra-kbc",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&tegra_kbc_pm_ops),
+=======
+		.pm	= &tegra_kbc_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = tegra_kbc_of_match,
 	},
 };

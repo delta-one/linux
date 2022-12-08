@@ -37,17 +37,30 @@ qca8k_split_addr(u32 regaddr, u16 *r1, u16 *r2, u16 *page)
 }
 
 static int
+<<<<<<< HEAD
 qca8k_mii_write_lo(struct mii_bus *bus, int phy_id, u32 regnum, u32 val)
 {
 	int ret;
 	u16 lo;
 
 	lo = val & 0xffff;
+=======
+qca8k_set_lo(struct qca8k_priv *priv, int phy_id, u32 regnum, u16 lo)
+{
+	u16 *cached_lo = &priv->mdio_cache.lo;
+	struct mii_bus *bus = priv->bus;
+	int ret;
+
+	if (lo == *cached_lo)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = bus->write(bus, phy_id, regnum, lo);
 	if (ret < 0)
 		dev_err_ratelimited(&bus->dev,
 				    "failed to write qca8k 32bit lo register\n");
 
+<<<<<<< HEAD
 	return ret;
 }
 
@@ -58,11 +71,28 @@ qca8k_mii_write_hi(struct mii_bus *bus, int phy_id, u32 regnum, u32 val)
 	u16 hi;
 
 	hi = (u16)(val >> 16);
+=======
+	*cached_lo = lo;
+	return 0;
+}
+
+static int
+qca8k_set_hi(struct qca8k_priv *priv, int phy_id, u32 regnum, u16 hi)
+{
+	u16 *cached_hi = &priv->mdio_cache.hi;
+	struct mii_bus *bus = priv->bus;
+	int ret;
+
+	if (hi == *cached_hi)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = bus->write(bus, phy_id, regnum, hi);
 	if (ret < 0)
 		dev_err_ratelimited(&bus->dev,
 				    "failed to write qca8k 32bit hi register\n");
 
+<<<<<<< HEAD
 	return ret;
 }
 
@@ -104,11 +134,16 @@ err:
 	*val = 0;
 
 	return ret;
+=======
+	*cached_hi = hi;
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int
 qca8k_mii_read32(struct mii_bus *bus, int phy_id, u32 regnum, u32 *val)
 {
+<<<<<<< HEAD
 	u32 hi, lo;
 	int ret;
 
@@ -135,6 +170,39 @@ qca8k_mii_write32(struct mii_bus *bus, int phy_id, u32 regnum, u32 val)
 		return;
 
 	qca8k_mii_write_hi(bus, phy_id, regnum + 1, val);
+=======
+	int ret;
+
+	ret = bus->read(bus, phy_id, regnum);
+	if (ret >= 0) {
+		*val = ret;
+		ret = bus->read(bus, phy_id, regnum + 1);
+		*val |= ret << 16;
+	}
+
+	if (ret < 0) {
+		dev_err_ratelimited(&bus->dev,
+				    "failed to read qca8k 32bit register\n");
+		*val = 0;
+		return ret;
+	}
+
+	return 0;
+}
+
+static void
+qca8k_mii_write32(struct qca8k_priv *priv, int phy_id, u32 regnum, u32 val)
+{
+	u16 lo, hi;
+	int ret;
+
+	lo = val & 0xffff;
+	hi = (u16)(val >> 16);
+
+	ret = qca8k_set_lo(priv, phy_id, regnum, lo);
+	if (ret >= 0)
+		ret = qca8k_set_hi(priv, phy_id, regnum + 1, hi);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int
@@ -164,13 +232,18 @@ static void qca8k_rw_reg_ack_handler(struct dsa_switch *ds, struct sk_buff *skb)
 	struct qca8k_mgmt_eth_data *mgmt_eth_data;
 	struct qca8k_priv *priv = ds->priv;
 	struct qca_mgmt_ethhdr *mgmt_ethhdr;
+<<<<<<< HEAD
 	u32 command;
 	u8 len, cmd;
 	int i;
+=======
+	u8 len, cmd;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mgmt_ethhdr = (struct qca_mgmt_ethhdr *)skb_mac_header(skb);
 	mgmt_eth_data = &priv->mgmt_eth_data;
 
+<<<<<<< HEAD
 	command = get_unaligned_le32(&mgmt_ethhdr->command);
 	cmd = FIELD_GET(QCA_HDR_MGMT_CMD, command);
 
@@ -192,10 +265,22 @@ static void qca8k_rw_reg_ack_handler(struct dsa_switch *ds, struct sk_buff *skb)
 		u32 *val = mgmt_eth_data->data;
 
 		*val = get_unaligned_le32(&mgmt_ethhdr->mdio_data);
+=======
+	cmd = FIELD_GET(QCA_HDR_MGMT_CMD, mgmt_ethhdr->command);
+	len = FIELD_GET(QCA_HDR_MGMT_LENGTH, mgmt_ethhdr->command);
+
+	/* Make sure the seq match the requested packet */
+	if (mgmt_ethhdr->seq == mgmt_eth_data->seq)
+		mgmt_eth_data->ack = true;
+
+	if (cmd == MDIO_READ) {
+		mgmt_eth_data->data[0] = mgmt_ethhdr->mdio_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Get the rest of the 12 byte of data.
 		 * The read/write function will extract the requested data.
 		 */
+<<<<<<< HEAD
 		if (len > QCA_HDR_MGMT_DATA1_LEN) {
 			__le32 *data2 = (__le32 *)skb->data;
 			int data_len = min_t(int, QCA_HDR_MGMT_DATA2_LEN,
@@ -209,6 +294,11 @@ static void qca8k_rw_reg_ack_handler(struct dsa_switch *ds, struct sk_buff *skb)
 				data2++;
 			}
 		}
+=======
+		if (len > QCA_HDR_MGMT_DATA1_LEN)
+			memcpy(mgmt_eth_data->data + 1, skb->data,
+			       QCA_HDR_MGMT_DATA2_LEN);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	complete(&mgmt_eth_data->rw_done);
@@ -220,15 +310,21 @@ static struct sk_buff *qca8k_alloc_mdio_header(enum mdio_cmd cmd, u32 reg, u32 *
 	struct qca_mgmt_ethhdr *mgmt_ethhdr;
 	unsigned int real_len;
 	struct sk_buff *skb;
+<<<<<<< HEAD
 	__le32 *data2;
 	u32 command;
 	u16 hdr;
 	int i;
+=======
+	u32 *data2;
+	u16 hdr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	skb = dev_alloc_skb(QCA_HDR_MGMT_PKT_LEN);
 	if (!skb)
 		return NULL;
 
+<<<<<<< HEAD
 	/* Hdr mgmt length value is in step of word size.
 	 * As an example to process 4 byte of data the correct length to set is 2.
 	 * To process 8 byte 4, 12 byte 6, 16 byte 8...
@@ -256,6 +352,19 @@ static struct sk_buff *qca8k_alloc_mdio_header(enum mdio_cmd cmd, u32 reg, u32 *
 	/* Max reg value is 0xf(15) but switch will always return the next size (32 byte) */
 	if (real_len == 16)
 		real_len--;
+=======
+	/* Max value for len reg is 15 (0xf) but the switch actually return 16 byte
+	 * Actually for some reason the steps are:
+	 * 0: nothing
+	 * 1-4: first 4 byte
+	 * 5-6: first 12 byte
+	 * 7-15: all 16 byte
+	 */
+	if (len == 16)
+		real_len = 15;
+	else
+		real_len = len;
+>>>>>>> b7ba80a49124 (Commit)
 
 	skb_reset_mac_header(skb);
 	skb_set_network_header(skb, skb->len);
@@ -268,6 +377,7 @@ static struct sk_buff *qca8k_alloc_mdio_header(enum mdio_cmd cmd, u32 reg, u32 *
 	hdr |= FIELD_PREP(QCA_HDR_XMIT_DP_BIT, BIT(0));
 	hdr |= FIELD_PREP(QCA_HDR_XMIT_CONTROL, QCA_HDR_XMIT_TYPE_RW_REG);
 
+<<<<<<< HEAD
 	command = FIELD_PREP(QCA_HDR_MGMT_ADDR, reg);
 	command |= FIELD_PREP(QCA_HDR_MGMT_LENGTH, real_len);
 	command |= FIELD_PREP(QCA_HDR_MGMT_CMD, cmd);
@@ -278,10 +388,21 @@ static struct sk_buff *qca8k_alloc_mdio_header(enum mdio_cmd cmd, u32 reg, u32 *
 
 	if (cmd == MDIO_WRITE)
 		put_unaligned_le32(*val, &mgmt_ethhdr->mdio_data);
+=======
+	mgmt_ethhdr->command = FIELD_PREP(QCA_HDR_MGMT_ADDR, reg);
+	mgmt_ethhdr->command |= FIELD_PREP(QCA_HDR_MGMT_LENGTH, real_len);
+	mgmt_ethhdr->command |= FIELD_PREP(QCA_HDR_MGMT_CMD, cmd);
+	mgmt_ethhdr->command |= FIELD_PREP(QCA_HDR_MGMT_CHECK_CODE,
+					   QCA_HDR_MGMT_CHECK_CODE_VAL);
+
+	if (cmd == MDIO_WRITE)
+		mgmt_ethhdr->mdio_data = *val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mgmt_ethhdr->hdr = htons(hdr);
 
 	data2 = skb_put_zero(skb, QCA_HDR_MGMT_DATA2_LEN + QCA_HDR_MGMT_PADDING_LEN);
+<<<<<<< HEAD
 	if (cmd == MDIO_WRITE && len > QCA_HDR_MGMT_DATA1_LEN) {
 		int data_len = min_t(int, QCA_HDR_MGMT_DATA2_LEN,
 				     len - QCA_HDR_MGMT_DATA1_LEN);
@@ -294,6 +415,10 @@ static struct sk_buff *qca8k_alloc_mdio_header(enum mdio_cmd cmd, u32 reg, u32 *
 			val++;
 		}
 	}
+=======
+	if (cmd == MDIO_WRITE && len > QCA_HDR_MGMT_DATA1_LEN)
+		memcpy(data2, val + 1, len - QCA_HDR_MGMT_DATA1_LEN);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return skb;
 }
@@ -301,11 +426,17 @@ static struct sk_buff *qca8k_alloc_mdio_header(enum mdio_cmd cmd, u32 reg, u32 *
 static void qca8k_mdio_header_fill_seq_num(struct sk_buff *skb, u32 seq_num)
 {
 	struct qca_mgmt_ethhdr *mgmt_ethhdr;
+<<<<<<< HEAD
 	u32 seq;
 
 	seq = FIELD_PREP(QCA_HDR_MGMT_SEQ_NUM, seq_num);
 	mgmt_ethhdr = (struct qca_mgmt_ethhdr *)skb->data;
 	put_unaligned_le32(seq, &mgmt_ethhdr->seq);
+=======
+
+	mgmt_ethhdr = (struct qca_mgmt_ethhdr *)skb->data;
+	mgmt_ethhdr->seq = FIELD_PREP(QCA_HDR_MGMT_SEQ_NUM, seq_num);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int qca8k_read_eth(struct qca8k_priv *priv, u32 reg, u32 *val, int len)
@@ -425,12 +556,24 @@ qca8k_regmap_update_bits_eth(struct qca8k_priv *priv, u32 reg, u32 mask, u32 wri
 }
 
 static int
+<<<<<<< HEAD
 qca8k_read_mii(struct qca8k_priv *priv, uint32_t reg, uint32_t *val)
 {
+=======
+qca8k_regmap_read(void *ctx, uint32_t reg, uint32_t *val)
+{
+	struct qca8k_priv *priv = (struct qca8k_priv *)ctx;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mii_bus *bus = priv->bus;
 	u16 r1, r2, page;
 	int ret;
 
+<<<<<<< HEAD
+=======
+	if (!qca8k_read_eth(priv, reg, val, sizeof(*val)))
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	qca8k_split_addr(reg, &r1, &r2, &page);
 
 	mutex_lock_nested(&bus->mdio_lock, MDIO_MUTEX_NESTED);
@@ -447,12 +590,24 @@ exit:
 }
 
 static int
+<<<<<<< HEAD
 qca8k_write_mii(struct qca8k_priv *priv, uint32_t reg, uint32_t val)
 {
+=======
+qca8k_regmap_write(void *ctx, uint32_t reg, uint32_t val)
+{
+	struct qca8k_priv *priv = (struct qca8k_priv *)ctx;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mii_bus *bus = priv->bus;
 	u16 r1, r2, page;
 	int ret;
 
+<<<<<<< HEAD
+=======
+	if (!qca8k_write_eth(priv, reg, &val, sizeof(val)))
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	qca8k_split_addr(reg, &r1, &r2, &page);
 
 	mutex_lock_nested(&bus->mdio_lock, MDIO_MUTEX_NESTED);
@@ -461,7 +616,11 @@ qca8k_write_mii(struct qca8k_priv *priv, uint32_t reg, uint32_t val)
 	if (ret < 0)
 		goto exit;
 
+<<<<<<< HEAD
 	qca8k_mii_write32(bus, 0x10 | r2, r1, val);
+=======
+	qca8k_mii_write32(priv, 0x10 | r2, r1, val);
+>>>>>>> b7ba80a49124 (Commit)
 
 exit:
 	mutex_unlock(&bus->mdio_lock);
@@ -469,14 +628,26 @@ exit:
 }
 
 static int
+<<<<<<< HEAD
 qca8k_regmap_update_bits_mii(struct qca8k_priv *priv, uint32_t reg,
 			     uint32_t mask, uint32_t write_val)
 {
+=======
+qca8k_regmap_update_bits(void *ctx, uint32_t reg, uint32_t mask, uint32_t write_val)
+{
+	struct qca8k_priv *priv = (struct qca8k_priv *)ctx;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mii_bus *bus = priv->bus;
 	u16 r1, r2, page;
 	u32 val;
 	int ret;
 
+<<<<<<< HEAD
+=======
+	if (!qca8k_regmap_update_bits_eth(priv, reg, mask, write_val))
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	qca8k_split_addr(reg, &r1, &r2, &page);
 
 	mutex_lock_nested(&bus->mdio_lock, MDIO_MUTEX_NESTED);
@@ -491,7 +662,11 @@ qca8k_regmap_update_bits_mii(struct qca8k_priv *priv, uint32_t reg,
 
 	val &= ~mask;
 	val |= write_val;
+<<<<<<< HEAD
 	qca8k_mii_write32(bus, 0x10 | r2, r1, val);
+=======
+	qca8k_mii_write32(priv, 0x10 | r2, r1, val);
+>>>>>>> b7ba80a49124 (Commit)
 
 exit:
 	mutex_unlock(&bus->mdio_lock);
@@ -499,6 +674,7 @@ exit:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int
 qca8k_bulk_read(void *ctx, const void *reg_buf, size_t reg_len,
 		void *val_buf, size_t val_len)
@@ -564,19 +740,29 @@ qca8k_regmap_update_bits(void *ctx, uint32_t reg, uint32_t mask, uint32_t write_
 	return qca8k_regmap_update_bits_mii(priv, reg, mask, write_val);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct regmap_config qca8k_regmap_config = {
 	.reg_bits = 16,
 	.val_bits = 32,
 	.reg_stride = 4,
 	.max_register = 0x16ac, /* end MIB - Port6 range */
+<<<<<<< HEAD
 	.read = qca8k_bulk_read,
 	.write = qca8k_bulk_write,
+=======
+	.reg_read = qca8k_regmap_read,
+	.reg_write = qca8k_regmap_write,
+>>>>>>> b7ba80a49124 (Commit)
 	.reg_update_bits = qca8k_regmap_update_bits,
 	.rd_table = &qca8k_readable_table,
 	.disable_locking = true, /* Locking is handled by qca8k read/write */
 	.cache_type = REGCACHE_NONE, /* Explicitly disable CACHE */
+<<<<<<< HEAD
 	.max_raw_read = 32, /* mgmt eth can read/write up to 8 registers at time */
 	.max_raw_write = 32,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int
@@ -796,9 +982,15 @@ qca8k_mdio_busy_wait(struct mii_bus *bus, u32 reg, u32 mask)
 
 	qca8k_split_addr(reg, &r1, &r2, &page);
 
+<<<<<<< HEAD
 	ret = read_poll_timeout(qca8k_mii_read_hi, ret1, !(val & mask), 0,
 				QCA8K_BUSY_WAIT_TIMEOUT * USEC_PER_MSEC, false,
 				bus, 0x10 | r2, r1 + 1, &val);
+=======
+	ret = read_poll_timeout(qca8k_mii_read32, ret1, !(val & mask), 0,
+				QCA8K_BUSY_WAIT_TIMEOUT * USEC_PER_MSEC, false,
+				bus, 0x10 | r2, r1, &val);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Check if qca8k_read has failed for a different reason
 	 * before returnting -ETIMEDOUT
@@ -833,14 +1025,22 @@ qca8k_mdio_write(struct qca8k_priv *priv, int phy, int regnum, u16 data)
 	if (ret)
 		goto exit;
 
+<<<<<<< HEAD
 	qca8k_mii_write32(bus, 0x10 | r2, r1, val);
+=======
+	qca8k_mii_write32(priv, 0x10 | r2, r1, val);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = qca8k_mdio_busy_wait(bus, QCA8K_MDIO_MASTER_CTRL,
 				   QCA8K_MDIO_MASTER_BUSY);
 
 exit:
 	/* even if the busy_wait timeouts try to clear the MASTER_EN */
+<<<<<<< HEAD
 	qca8k_mii_write_hi(bus, 0x10 | r2, r1 + 1, 0);
+=======
+	qca8k_mii_write32(priv, 0x10 | r2, r1, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&bus->mdio_lock);
 
@@ -870,18 +1070,30 @@ qca8k_mdio_read(struct qca8k_priv *priv, int phy, int regnum)
 	if (ret)
 		goto exit;
 
+<<<<<<< HEAD
 	qca8k_mii_write_hi(bus, 0x10 | r2, r1 + 1, val);
+=======
+	qca8k_mii_write32(priv, 0x10 | r2, r1, val);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = qca8k_mdio_busy_wait(bus, QCA8K_MDIO_MASTER_CTRL,
 				   QCA8K_MDIO_MASTER_BUSY);
 	if (ret)
 		goto exit;
 
+<<<<<<< HEAD
 	ret = qca8k_mii_read_lo(bus, 0x10 | r2, r1, &val);
 
 exit:
 	/* even if the busy_wait timeouts try to clear the MASTER_EN */
 	qca8k_mii_write_hi(bus, 0x10 | r2, r1 + 1, 0);
+=======
+	ret = qca8k_mii_read32(bus, 0x10 | r2, r1, &val);
+
+exit:
+	/* even if the busy_wait timeouts try to clear the MASTER_EN */
+	qca8k_mii_write32(priv, 0x10 | r2, r1, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&bus->mdio_lock);
 
@@ -1483,6 +1695,10 @@ static void qca8k_pcs_get_state(struct phylink_pcs *pcs,
 
 	state->link = !!(reg & QCA8K_PORT_STATUS_LINK_UP);
 	state->an_complete = state->link;
+<<<<<<< HEAD
+=======
+	state->an_enabled = !!(reg & QCA8K_PORT_STATUS_LINK_AUTO);
+>>>>>>> b7ba80a49124 (Commit)
 	state->duplex = (reg & QCA8K_PORT_STATUS_DUPLEX) ? DUPLEX_FULL :
 							   DUPLEX_HALF;
 
@@ -1625,9 +1841,15 @@ static void qca8k_mib_autocast_handler(struct dsa_switch *ds, struct sk_buff *sk
 	struct qca8k_priv *priv = ds->priv;
 	const struct qca8k_mib_desc *mib;
 	struct mib_ethhdr *mib_ethhdr;
+<<<<<<< HEAD
 	__le32 *data2;
 	u8 port;
 	int i;
+=======
+	int i, mib_len, offset = 0;
+	u64 *data;
+	u8 port;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mib_ethhdr = (struct mib_ethhdr *)skb_mac_header(skb);
 	mib_eth_data = &priv->mib_eth_data;
@@ -1639,13 +1861,18 @@ static void qca8k_mib_autocast_handler(struct dsa_switch *ds, struct sk_buff *sk
 	if (port != mib_eth_data->req_port)
 		goto exit;
 
+<<<<<<< HEAD
 	data2 = (__le32 *)skb->data;
+=======
+	data = mib_eth_data->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < priv->info->mib_count; i++) {
 		mib = &ar8327_mib[i];
 
 		/* First 3 mib are present in the skb head */
 		if (i < 3) {
+<<<<<<< HEAD
 			mib_eth_data->data[i] = get_unaligned_le32(mib_ethhdr->data + i);
 			continue;
 		}
@@ -1657,6 +1884,23 @@ static void qca8k_mib_autocast_handler(struct dsa_switch *ds, struct sk_buff *sk
 			mib_eth_data->data[i] = get_unaligned_le32(data2);
 
 		data2 += mib->size;
+=======
+			data[i] = mib_ethhdr->data[i];
+			continue;
+		}
+
+		mib_len = sizeof(uint32_t);
+
+		/* Some mib are 64 bit wide */
+		if (mib->size == 2)
+			mib_len = sizeof(uint64_t);
+
+		/* Copy the mib value from packet to the */
+		memcpy(data + i, skb->data + offset, mib_len);
+
+		/* Set the offset for the next mib */
+		offset += mib_len;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 exit:
@@ -2050,6 +2294,11 @@ qca8k_sw_probe(struct mdio_device *mdiodev)
 	}
 
 	priv->mdio_cache.page = 0xffff;
+<<<<<<< HEAD
+=======
+	priv->mdio_cache.lo = 0xffff;
+	priv->mdio_cache.hi = 0xffff;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Check the detected switch id */
 	ret = qca8k_read_switch_id(priv);
@@ -2089,6 +2338,11 @@ qca8k_sw_remove(struct mdio_device *mdiodev)
 		qca8k_port_set_status(priv, i, 0);
 
 	dsa_unregister_switch(priv->ds);
+<<<<<<< HEAD
+=======
+
+	dev_set_drvdata(&mdiodev->dev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void qca8k_sw_shutdown(struct mdio_device *mdiodev)
@@ -2144,6 +2398,11 @@ static SIMPLE_DEV_PM_OPS(qca8k_pm_ops,
 
 static const struct qca8k_info_ops qca8xxx_ops = {
 	.autocast_mib = qca8k_get_ethtool_stats_eth,
+<<<<<<< HEAD
+=======
+	.read_eth = qca8k_read_eth,
+	.write_eth = qca8k_write_eth,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct qca8k_match_data qca8327 = {

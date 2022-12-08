@@ -1,11 +1,16 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
+<<<<<<< HEAD
  * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
+=======
+ * Copyright (C) 2021 Patrick Franz <deltaone@debian.org>
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #ifndef DEFS_H
 #define DEFS_H
 
+<<<<<<< HEAD
 /* global variables */
 extern bool CFDEBUG;
 extern bool stop_rangefix;
@@ -15,6 +20,24 @@ extern bool stop_rangefix;
 		printf(fmt); \
 } while (0)
 
+=======
+/* external variables */
+extern unsigned int sat_variable_nr;
+extern unsigned int tmp_variable_nr;
+extern struct fexpr *satmap; // map SAT variables to fexpr
+extern size_t satmap_size;
+
+extern struct sdv_list *sdv_symbols; /* array with conflict-symbols */
+extern bool CFDEBUG;
+extern bool stop_rangefix;
+extern struct fexpr *const_false;
+extern struct fexpr *const_true;
+extern struct fexpr *symbol_yes_fexpr;
+extern struct fexpr *symbol_mod_fexpr;
+extern struct fexpr *symbol_no_fexpr;
+
+#define printd(fmt...) if (CFDEBUG) printf(fmt)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* different types for f_expr */
 enum fexpr_type {
@@ -223,6 +246,7 @@ struct prop_node {
 	struct prop_node *next, *prev;
 };
 
+<<<<<<< HEAD
 struct constants {
 	struct fexpr *const_false;
 	struct fexpr *const_true;
@@ -240,4 +264,6 @@ struct cfdata {
 	struct sdv_list *sdv_symbols; // array with conflict-symbols
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

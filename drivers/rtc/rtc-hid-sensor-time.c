@@ -296,12 +296,21 @@ err_open:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void hid_time_remove(struct platform_device *pdev)
+=======
+static int hid_time_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hid_sensor_hub_device *hsdev = dev_get_platdata(&pdev->dev);
 
 	sensor_hub_device_close(hsdev);
 	sensor_hub_remove_callback(hsdev, HID_USAGE_SENSOR_TIME);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct platform_device_id hid_time_ids[] = {
@@ -319,7 +328,11 @@ static struct platform_driver hid_time_platform_driver = {
 		.name	= KBUILD_MODNAME,
 	},
 	.probe		= hid_time_probe,
+<<<<<<< HEAD
 	.remove_new	= hid_time_remove,
+=======
+	.remove		= hid_time_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(hid_time_platform_driver);
 

@@ -267,9 +267,15 @@ static int gpr_set(struct task_struct *target, const struct user_regset *regset,
 					 (PT_MAX_PUT_REG + 1) * sizeof(reg));
 
 	if (PT_MAX_PUT_REG + 1 < PT_TRAP && !ret)
+<<<<<<< HEAD
 		user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
 					  (PT_MAX_PUT_REG + 1) * sizeof(reg),
 					  PT_TRAP * sizeof(reg));
+=======
+		ret = user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+						(PT_MAX_PUT_REG + 1) * sizeof(reg),
+						PT_TRAP * sizeof(reg));
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!ret && count > 0) {
 		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &reg,
@@ -280,8 +286,13 @@ static int gpr_set(struct task_struct *target, const struct user_regset *regset,
 	}
 
 	if (!ret)
+<<<<<<< HEAD
 		user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
 					  (PT_TRAP + 1) * sizeof(reg), -1);
+=======
+		ret = user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+						(PT_TRAP + 1) * sizeof(reg), -1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -706,9 +717,14 @@ int gpr32_set_common(struct task_struct *target,
 	ubuf = u;
 	pos *= sizeof(reg);
 	count *= sizeof(reg);
+<<<<<<< HEAD
 	user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
 				  (PT_TRAP + 1) * sizeof(reg), -1);
 	return 0;
+=======
+	return user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+					 (PT_TRAP + 1) * sizeof(reg), -1);
+>>>>>>> b7ba80a49124 (Commit)
 
 Efault:
 	user_read_access_end();

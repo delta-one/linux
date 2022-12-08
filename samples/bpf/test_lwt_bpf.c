@@ -10,8 +10,21 @@
  * General Public License for more details.
  */
 
+<<<<<<< HEAD
 #include "vmlinux.h"
 #include "net_shared.h"
+=======
+#include <stdint.h>
+#include <stddef.h>
+#include <linux/bpf.h>
+#include <linux/ip.h>
+#include <linux/in.h>
+#include <linux/in6.h>
+#include <linux/tcp.h>
+#include <linux/udp.h>
+#include <linux/icmpv6.h>
+#include <linux/if_ether.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <bpf/bpf_helpers.h>
 #include <string.h>
 
@@ -36,9 +49,15 @@ SEC("test_ctx")
 int do_test_ctx(struct __sk_buff *skb)
 {
 	skb->cb[0] = CB_MAGIC;
+<<<<<<< HEAD
 	printk("len %d hash %d protocol %d", skb->len, skb->hash,
 	       skb->protocol);
 	printk("cb %d ingress_ifindex %d ifindex %d", skb->cb[0],
+=======
+	printk("len %d hash %d protocol %d\n", skb->len, skb->hash,
+	       skb->protocol);
+	printk("cb %d ingress_ifindex %d ifindex %d\n", skb->cb[0],
+>>>>>>> b7ba80a49124 (Commit)
 	       skb->ingress_ifindex, skb->ifindex);
 
 	return BPF_OK;
@@ -48,9 +67,15 @@ int do_test_ctx(struct __sk_buff *skb)
 SEC("test_cb")
 int do_test_cb(struct __sk_buff *skb)
 {
+<<<<<<< HEAD
 	printk("cb0: %x cb1: %x cb2: %x", skb->cb[0], skb->cb[1],
 	       skb->cb[2]);
 	printk("cb3: %x cb4: %x", skb->cb[3], skb->cb[4]);
+=======
+	printk("cb0: %x cb1: %x cb2: %x\n", skb->cb[0], skb->cb[1],
+	       skb->cb[2]);
+	printk("cb3: %x cb4: %x\n", skb->cb[3], skb->cb[4]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return BPF_OK;
 }
@@ -64,11 +89,19 @@ int do_test_data(struct __sk_buff *skb)
 	struct iphdr *iph = data;
 
 	if (data + sizeof(*iph) > data_end) {
+<<<<<<< HEAD
 		printk("packet truncated");
 		return BPF_DROP;
 	}
 
 	printk("src: %x dst: %x", iph->saddr, iph->daddr);
+=======
+		printk("packet truncated\n");
+		return BPF_DROP;
+	}
+
+	printk("src: %x dst: %x\n", iph->saddr, iph->daddr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return BPF_OK;
 }
@@ -89,7 +122,11 @@ static inline int rewrite(struct __sk_buff *skb, uint32_t old_ip,
 
 	ret = bpf_skb_load_bytes(skb, IP_PROTO_OFF, &proto, 1);
 	if (ret < 0) {
+<<<<<<< HEAD
 		printk("bpf_l4_csum_replace failed: %d", ret);
+=======
+		printk("bpf_l4_csum_replace failed: %d\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 		return BPF_DROP;
 	}
 
@@ -112,14 +149,22 @@ static inline int rewrite(struct __sk_buff *skb, uint32_t old_ip,
 		ret = bpf_l4_csum_replace(skb, off, old_ip, new_ip,
 					  flags | sizeof(new_ip));
 		if (ret < 0) {
+<<<<<<< HEAD
 			printk("bpf_l4_csum_replace failed: %d");
+=======
+			printk("bpf_l4_csum_replace failed: %d\n");
+>>>>>>> b7ba80a49124 (Commit)
 			return BPF_DROP;
 		}
 	}
 
 	ret = bpf_l3_csum_replace(skb, IP_CSUM_OFF, old_ip, new_ip, sizeof(new_ip));
 	if (ret < 0) {
+<<<<<<< HEAD
 		printk("bpf_l3_csum_replace failed: %d", ret);
+=======
+		printk("bpf_l3_csum_replace failed: %d\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 		return BPF_DROP;
 	}
 
@@ -129,7 +174,11 @@ static inline int rewrite(struct __sk_buff *skb, uint32_t old_ip,
 		ret = bpf_skb_store_bytes(skb, IP_SRC_OFF, &new_ip, sizeof(new_ip), 0);
 
 	if (ret < 0) {
+<<<<<<< HEAD
 		printk("bpf_skb_store_bytes() failed: %d", ret);
+=======
+		printk("bpf_skb_store_bytes() failed: %d\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 		return BPF_DROP;
 	}
 
@@ -145,12 +194,20 @@ int do_test_rewrite(struct __sk_buff *skb)
 
 	ret = bpf_skb_load_bytes(skb, IP_DST_OFF, &old_ip, 4);
 	if (ret < 0) {
+<<<<<<< HEAD
 		printk("bpf_skb_load_bytes failed: %d", ret);
+=======
+		printk("bpf_skb_load_bytes failed: %d\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 		return BPF_DROP;
 	}
 
 	if (old_ip == 0x2fea8c0) {
+<<<<<<< HEAD
 		printk("out: rewriting from %x to %x", old_ip, new_ip);
+=======
+		printk("out: rewriting from %x to %x\n", old_ip, new_ip);
+>>>>>>> b7ba80a49124 (Commit)
 		return rewrite(skb, old_ip, new_ip, 1);
 	}
 
@@ -165,16 +222,27 @@ static inline int __do_push_ll_and_redirect(struct __sk_buff *skb)
 
 	ret = bpf_skb_change_head(skb, 14, 0);
 	if (ret < 0) {
+<<<<<<< HEAD
 		printk("skb_change_head() failed: %d", ret);
 	}
 
 	ehdr.h_proto = bpf_htons(ETH_P_IP);
+=======
+		printk("skb_change_head() failed: %d\n", ret);
+	}
+
+	ehdr.h_proto = __constant_htons(ETH_P_IP);
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(&ehdr.h_source, &smac, 6);
 	memcpy(&ehdr.h_dest, &dmac, 6);
 
 	ret = bpf_skb_store_bytes(skb, 0, &ehdr, sizeof(ehdr), 0);
 	if (ret < 0) {
+<<<<<<< HEAD
 		printk("skb_store_bytes() failed: %d", ret);
+=======
+		printk("skb_store_bytes() failed: %d\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 		return BPF_DROP;
 	}
 
@@ -194,7 +262,11 @@ int do_push_ll_and_redirect(struct __sk_buff *skb)
 
 	ret = __do_push_ll_and_redirect(skb);
 	if (ret >= 0)
+<<<<<<< HEAD
 		printk("redirected to %d", ifindex);
+=======
+		printk("redirected to %d\n", ifindex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -221,7 +293,11 @@ SEC("fill_garbage")
 int do_fill_garbage(struct __sk_buff *skb)
 {
 	__fill_garbage(skb);
+<<<<<<< HEAD
 	printk("Set initial 96 bytes of header to FF");
+=======
+	printk("Set initial 96 bytes of header to FF\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return BPF_OK;
 }
 
@@ -230,7 +306,11 @@ int do_fill_garbage_and_redirect(struct __sk_buff *skb)
 {
 	int ifindex = DST_IFINDEX;
 	__fill_garbage(skb);
+<<<<<<< HEAD
 	printk("redirected to %d", ifindex);
+=======
+	printk("redirected to %d\n", ifindex);
+>>>>>>> b7ba80a49124 (Commit)
 	return bpf_redirect(ifindex, 0);
 }
 
@@ -238,7 +318,11 @@ int do_fill_garbage_and_redirect(struct __sk_buff *skb)
 SEC("drop_all")
 int do_drop_all(struct __sk_buff *skb)
 {
+<<<<<<< HEAD
 	printk("dropping with: %d", BPF_DROP);
+=======
+	printk("dropping with: %d\n", BPF_DROP);
+>>>>>>> b7ba80a49124 (Commit)
 	return BPF_DROP;
 }
 

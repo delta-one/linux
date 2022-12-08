@@ -463,7 +463,11 @@ void nv50_crc_atomic_set(struct nv50_head *head,
 	if (!outp)
 		return;
 
+<<<<<<< HEAD
 	func->set_src(head, outp->outp.or.id, nv50_crc_source_type(outp, asyh->crc.src),
+=======
+	func->set_src(head, outp->or, nv50_crc_source_type(outp, asyh->crc.src),
+>>>>>>> b7ba80a49124 (Commit)
 		      &crc->ctx[crc->ctx_idx]);
 }
 

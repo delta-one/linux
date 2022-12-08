@@ -12,9 +12,13 @@
 #ifndef PMC_CORE_H
 #define PMC_CORE_H
 
+<<<<<<< HEAD
 #include <linux/acpi.h>
 #include <linux/bits.h>
 #include <linux/platform_device.h>
+=======
+#include <linux/bits.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define PMC_BASE_ADDR_DEFAULT			0xFE000000
 
@@ -238,6 +242,7 @@ enum ppfear_regs {
 #define ADL_LPM_STATUS_LATCH_EN_OFFSET		0x1704
 #define ADL_LPM_LIVE_STATUS_OFFSET		0x1764
 
+<<<<<<< HEAD
 /* Meteor Lake Power Management Controller register offsets */
 #define MTL_LPM_EN_OFFSET			0x1798
 #define MTL_LPM_RESIDENCY_OFFSET		0x17A0
@@ -249,6 +254,19 @@ enum ppfear_regs {
 #define MTL_LPM_LIVE_STATUS_OFFSET		0x175C
 
 extern const char *pmc_lpm_modes[];
+=======
+static const char *pmc_lpm_modes[] = {
+	"S0i2.0",
+	"S0i2.1",
+	"S0i2.2",
+	"S0i3.0",
+	"S0i3.1",
+	"S0i3.2",
+	"S0i3.3",
+	"S0i3.4",
+	NULL
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 struct pmc_bit_map {
 	const char *name;
@@ -266,7 +284,11 @@ struct pmc_bit_map {
  * @slp_s0_offset:	PWRMBASE offset to read SLP_S0 residency
  * @ltr_ignore_offset:	PWRMBASE offset to read/write LTR ignore bit
  * @regmap_length:	Length of memory to map from PWRMBASE address to access
+<<<<<<< HEAD
  * @ppfear0_offset:	PWRMBASE offset to read PPFEAR*
+=======
+ * @ppfear0_offset:	PWRMBASE offset to to read PPFEAR*
+>>>>>>> b7ba80a49124 (Commit)
  * @ppfear_buckets:	Number of 8 bits blocks to read all IP blocks from
  *			PPFEAR
  * @pm_cfg_offset:	PWRMBASE offset to PM_CFG register
@@ -314,7 +336,10 @@ struct pmc_reg_map {
  * @regbase:		pointer to io-remapped memory location
  * @map:		pointer to pmc_reg_map struct that contains platform
  *			specific attributes
+<<<<<<< HEAD
  * @pdev:		pointer to platform_device struct
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @dbgfs_dir:		path to debugfs interface
  * @pmc_xram_read_bit:	flag to indicate whether PMC XRAM shadow registers
  *			used to read MPHY PG and PLL status are available
@@ -325,7 +350,10 @@ struct pmc_reg_map {
  * @num_lpm_modes:	Count of enabled modes
  * @lpm_en_modes:	Array of enabled modes from lowest to highest priority
  * @lpm_req_regs:	List of substate requirements
+<<<<<<< HEAD
  * @core_configure:	Function pointer to configure the platform
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * pmc_dev contains info about power management controller device.
  */
@@ -334,7 +362,10 @@ struct pmc_dev {
 	void __iomem *regbase;
 	const struct pmc_reg_map *map;
 	struct dentry *dbgfs_dir;
+<<<<<<< HEAD
 	struct platform_device *pdev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int pmc_xram_read_bit;
 	struct mutex lock; /* generic mutex lock for PMC Core */
 
@@ -344,6 +375,7 @@ struct pmc_dev {
 	int num_lpm_modes;
 	int lpm_en_modes[LPM_MAX_NUM_MODES];
 	u32 *lpm_req_regs;
+<<<<<<< HEAD
 	void (*core_configure)(struct pmc_dev *pmcdev);
 };
 
@@ -408,6 +440,10 @@ void tgl_core_configure(struct pmc_dev *pmcdev);
 void adl_core_configure(struct pmc_dev *pmcdev);
 void mtl_core_configure(struct pmc_dev *pmcdev);
 
+=======
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 #define pmc_for_each_mode(i, mode, pmcdev)		\
 	for (i = 0, mode = pmcdev->lpm_en_modes[i];	\
 	     i < pmcdev->num_lpm_modes;			\

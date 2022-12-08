@@ -180,9 +180,13 @@
 };
 
 &seville_port8 {
+<<<<<<< HEAD
 	status = "okay";
 };
 
 &seville_port9 {
+=======
+	ethernet = <&enet0>;
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };

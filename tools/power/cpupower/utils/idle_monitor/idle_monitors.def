@@ -4,6 +4,9 @@ DEF(intel_nhm)
 DEF(intel_snb)
 DEF(intel_hsw_ext)
 DEF(mperf)
+<<<<<<< HEAD
 DEF(rapl)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 DEF(cpuidle_sysfs)

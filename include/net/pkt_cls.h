@@ -59,8 +59,11 @@ int tcf_block_get_ext(struct tcf_block **p_block, struct Qdisc *q,
 void tcf_block_put(struct tcf_block *block);
 void tcf_block_put_ext(struct tcf_block *block, struct Qdisc *q,
 		       struct tcf_block_ext_info *ei);
+<<<<<<< HEAD
 int tcf_exts_init_ex(struct tcf_exts *exts, struct net *net, int action,
 		     int police, struct tcf_proto *tp, u32 handle, bool used_action_miss);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline bool tcf_block_shared(struct tcf_block *block)
 {
@@ -212,6 +215,7 @@ tcf_unbind_filter(struct tcf_proto *tp, struct tcf_result *r)
 	__tcf_unbind_filter(q, r);
 }
 
+<<<<<<< HEAD
 static inline void tc_cls_bind_class(u32 classid, unsigned long cl,
 				     void *q, struct tcf_result *res,
 				     unsigned long base)
@@ -224,6 +228,8 @@ static inline void tc_cls_bind_class(u32 classid, unsigned long cl,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct tcf_exts {
 #ifdef CONFIG_NET_CLS_ACT
 	__u32	type; /* for backward compat(TCA_OLD_COMPAT) */
@@ -231,7 +237,10 @@ struct tcf_exts {
 	struct tc_action **actions;
 	struct net	*net;
 	netns_tracker	ns_tracker;
+<<<<<<< HEAD
 	struct tcf_exts_miss_cookie_node *miss_cookie_node;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	/* Map to export classifier specific extension TLV types to the
 	 * generic extensions API. Unsupported extensions must be set to 0.
@@ -243,11 +252,29 @@ struct tcf_exts {
 static inline int tcf_exts_init(struct tcf_exts *exts, struct net *net,
 				int action, int police)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_NET_CLS
 	return tcf_exts_init_ex(exts, net, action, police, NULL, 0, false);
 #else
 	return -EOPNOTSUPP;
 #endif
+=======
+#ifdef CONFIG_NET_CLS_ACT
+	exts->type = 0;
+	exts->nr_actions = 0;
+	/* Note: we do not own yet a reference on net.
+	 * This reference might be taken later from tcf_exts_get_net().
+	 */
+	exts->net = net;
+	exts->actions = kcalloc(TCA_ACT_MAX_PRIO, sizeof(struct tc_action *),
+				GFP_KERNEL);
+	if (!exts->actions)
+		return -ENOMEM;
+#endif
+	exts->action = action;
+	exts->police = police;
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Return false if the netns is being destroyed in cleanup_net(). Callers
@@ -285,6 +312,7 @@ static inline void tcf_exts_put_net(struct tcf_exts *exts)
 #define tcf_act_for_each_action(i, a, actions) \
 	for (i = 0; i < TCA_ACT_MAX_PRIO && ((a) = actions[i]); i++)
 
+<<<<<<< HEAD
 static inline bool tc_act_in_hw(struct tc_action *act)
 {
 	return !!act->in_hw_count;
@@ -294,6 +322,12 @@ static inline void
 tcf_exts_hw_stats_update(const struct tcf_exts *exts,
 			 struct flow_stats *stats,
 			 bool use_act_stats)
+=======
+static inline void
+tcf_exts_hw_stats_update(const struct tcf_exts *exts,
+			 u64 bytes, u64 packets, u64 drops, u64 lastuse,
+			 u8 used_hw_stats, bool used_hw_stats_valid)
+>>>>>>> b7ba80a49124 (Commit)
 {
 #ifdef CONFIG_NET_CLS_ACT
 	int i;
@@ -301,6 +335,7 @@ tcf_exts_hw_stats_update(const struct tcf_exts *exts,
 	for (i = 0; i < exts->nr_actions; i++) {
 		struct tc_action *a = exts->actions[i];
 
+<<<<<<< HEAD
 		if (use_act_stats || tc_act_in_hw(a)) {
 			if (!tcf_action_update_hw_stats(a))
 				continue;
@@ -313,6 +348,18 @@ tcf_exts_hw_stats_update(const struct tcf_exts *exts,
 
 		a->used_hw_stats = stats->used_hw_stats;
 		a->used_hw_stats_valid = stats->used_hw_stats_valid;
+=======
+		/* if stats from hw, just skip */
+		if (tcf_action_update_hw_stats(a)) {
+			preempt_disable();
+			tcf_action_stats_update(a, bytes, packets, drops,
+						lastuse, true);
+			preempt_enable();
+
+			a->used_hw_stats = used_hw_stats;
+			a->used_hw_stats_valid = used_hw_stats_valid;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 #endif
 }
@@ -353,6 +400,7 @@ tcf_exts_exec(struct sk_buff *skb, struct tcf_exts *exts,
 	return TC_ACT_OK;
 }
 
+<<<<<<< HEAD
 static inline int
 tcf_exts_exec_ex(struct sk_buff *skb, struct tcf_exts *exts, int act_index,
 		 struct tcf_result *res)
@@ -365,6 +413,8 @@ tcf_exts_exec_ex(struct sk_buff *skb, struct tcf_exts *exts, int act_index,
 #endif
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int tcf_exts_validate(struct net *net, struct tcf_proto *tp,
 		      struct nlattr **tb, struct nlattr *rate_tlv,
 		      struct tcf_exts *exts, u32 flags,
@@ -589,7 +639,10 @@ int tc_setup_offload_action(struct flow_action *flow_action,
 void tc_cleanup_offload_action(struct flow_action *flow_action);
 int tc_setup_action(struct flow_action *flow_action,
 		    struct tc_action *actions[],
+<<<<<<< HEAD
 		    u32 miss_cookie_base,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		    struct netlink_ext_ack *extack);
 
 int tc_setup_cb_call(struct tcf_block *block, enum tc_setup_type type,
@@ -783,7 +836,10 @@ struct tc_cls_matchall_offload {
 	enum tc_matchall_command command;
 	struct flow_rule *rule;
 	struct flow_stats stats;
+<<<<<<< HEAD
 	bool use_act_stats;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long cookie;
 };
 
@@ -802,6 +858,19 @@ struct tc_cls_bpf_offload {
 	bool exts_integrated;
 };
 
+<<<<<<< HEAD
+=======
+struct tc_mqprio_qopt_offload {
+	/* struct tc_mqprio_qopt must always be the first element */
+	struct tc_mqprio_qopt qopt;
+	u16 mode;
+	u16 shaper;
+	u32 flags;
+	u64 min_rate[TC_QOPT_MAX_QUEUE];
+	u64 max_rate[TC_QOPT_MAX_QUEUE];
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* This structure holds cookie structure that is passed from user
  * to the kernel for actions and classifiers
  */

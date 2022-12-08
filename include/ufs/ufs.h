@@ -38,6 +38,10 @@
 #define UFS_UPIU_MAX_UNIT_NUM_ID	0x7F
 #define UFS_MAX_LUNS		(SCSI_W_LUN_BASE + UFS_UPIU_MAX_UNIT_NUM_ID)
 #define UFS_UPIU_WLUN_ID	(1 << 7)
+<<<<<<< HEAD
+=======
+#define UFS_RPMB_UNIT		0xC4
+>>>>>>> b7ba80a49124 (Commit)
 
 /* WriteBooster buffer is available only for the logical unit from 0 to 7 */
 #define UFS_UPIU_MAX_WB_LUN_ID	8
@@ -48,11 +52,14 @@
  */
 #define UFS_WB_EXCEED_LIFETIME		0x0B
 
+<<<<<<< HEAD
 /*
  * In UFS Spec, the Extra Header Segment (EHS) starts from byte 32 in UPIU request/response packet
  */
 #define EHS_OFFSET_IN_RESPONSE 32
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Well known logical unit id in LUN field of UPIU */
 enum {
 	UFS_UPIU_REPORT_LUNS_WLUN	= 0x81,
@@ -169,7 +176,10 @@ enum attr_idn {
 	QUERY_ATTR_IDN_AVAIL_WB_BUFF_SIZE       = 0x1D,
 	QUERY_ATTR_IDN_WB_BUFF_LIFE_TIME_EST    = 0x1E,
 	QUERY_ATTR_IDN_CURR_WB_BUFF_SIZE        = 0x1F,
+<<<<<<< HEAD
 	QUERY_ATTR_IDN_EXT_IID_EN		= 0x2A,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Descriptor idn for Query requests */
@@ -217,6 +227,7 @@ enum unit_desc_param {
 	UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS	= 0x29,
 };
 
+<<<<<<< HEAD
 /* RPMB Unit descriptor parameters offsets in bytes*/
 enum rpmb_unit_desc_param {
 	RPMB_UNIT_DESC_PARAM_LEN		= 0x0,
@@ -239,6 +250,8 @@ enum rpmb_unit_desc_param {
 	RPMB_UNIT_DESC_PARAM_PHY_MEM_RSRC_CNT	= 0x18,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Device descriptor parameters offsets in bytes*/
 enum device_desc_param {
 	DEVICE_DESC_PARAM_LEN			= 0x0,
@@ -379,7 +392,10 @@ enum {
 	UFS_DEV_EXT_TEMP_NOTIF		= BIT(6),
 	UFS_DEV_HPB_SUPPORT		= BIT(7),
 	UFS_DEV_WRITE_BOOSTER_SUP	= BIT(8),
+<<<<<<< HEAD
 	UFS_DEV_EXT_IID_SUP		= BIT(16),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 #define UFS_DEV_HPB_SUPPORT_VERSION		0x310
 
@@ -617,8 +633,11 @@ struct ufs_dev_info {
 	u8	*model;
 	u16	wspecversion;
 	u32	clk_gating_wait_us;
+<<<<<<< HEAD
 	/* Stores the depth of queue in UFS device */
 	u8	bqueuedepth;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* UFS HPB related flag */
 	bool	hpb_enabled;
@@ -631,11 +650,14 @@ struct ufs_dev_info {
 
 	bool	b_rpm_dev_flush_capable;
 	u8	b_presrv_uspc_en;
+<<<<<<< HEAD
 
 	bool    b_advanced_rpmb_en;
 
 	/* UFS EXT_IID Enable */
 	bool	b_ext_iid_en;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*

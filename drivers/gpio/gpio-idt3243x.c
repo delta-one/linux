@@ -92,8 +92,11 @@ static void idt_gpio_mask(struct irq_data *d)
 	writel(ctrl->mask_cache, ctrl->pic + IDT_PIC_IRQ_MASK);
 
 	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+<<<<<<< HEAD
 
 	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void idt_gpio_unmask(struct irq_data *d)
@@ -102,7 +105,10 @@ static void idt_gpio_unmask(struct irq_data *d)
 	struct idt_gpio_ctrl *ctrl = gpiochip_get_data(gc);
 	unsigned long flags;
 
+<<<<<<< HEAD
 	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
 
 	ctrl->mask_cache &= ~BIT(d->hwirq);
@@ -122,14 +128,22 @@ static int idt_gpio_irq_init_hw(struct gpio_chip *gc)
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct irq_chip idt_gpio_irqchip = {
+=======
+static struct irq_chip idt_gpio_irqchip = {
+>>>>>>> b7ba80a49124 (Commit)
 	.name = "IDTGPIO",
 	.irq_mask = idt_gpio_mask,
 	.irq_ack = idt_gpio_ack,
 	.irq_unmask = idt_gpio_unmask,
+<<<<<<< HEAD
 	.irq_set_type = idt_gpio_irq_set_type,
 	.flags = IRQCHIP_IMMUTABLE,
 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+=======
+	.irq_set_type = idt_gpio_irq_set_type
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int idt_gpio_probe(struct platform_device *pdev)
@@ -173,7 +187,11 @@ static int idt_gpio_probe(struct platform_device *pdev)
 			return parent_irq;
 
 		girq = &ctrl->gc.irq;
+<<<<<<< HEAD
 		gpio_irq_chip_set_chip(girq, &idt_gpio_irqchip);
+=======
+		girq->chip = &idt_gpio_irqchip;
+>>>>>>> b7ba80a49124 (Commit)
 		girq->init_hw = idt_gpio_irq_init_hw;
 		girq->parent_handler = idt_gpio_dispatch;
 		girq->num_parents = 1;

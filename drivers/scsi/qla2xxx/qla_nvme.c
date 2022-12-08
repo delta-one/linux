@@ -170,6 +170,21 @@ out:
 	qla2xxx_rel_qpair_sp(sp->qpair, sp);
 }
 
+<<<<<<< HEAD
+=======
+static void qla_nvme_ls_unmap(struct srb *sp, struct nvmefc_ls_req *fd)
+{
+	if (sp->flags & SRB_DMA_VALID) {
+		struct srb_iocb *nvme = &sp->u.iocb_cmd;
+		struct qla_hw_data *ha = sp->fcport->vha->hw;
+
+		dma_unmap_single(&ha->pdev->dev, nvme->u.nvme.cmd_dma,
+				 fd->rqstlen, DMA_TO_DEVICE);
+		sp->flags &= ~SRB_DMA_VALID;
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void qla_nvme_release_ls_cmd_kref(struct kref *kref)
 {
 	struct srb *sp = container_of(kref, struct srb, cmd_kref);
@@ -187,6 +202,10 @@ static void qla_nvme_release_ls_cmd_kref(struct kref *kref)
 
 	fd = priv->fd;
 
+<<<<<<< HEAD
+=======
+	qla_nvme_ls_unmap(sp, fd);
+>>>>>>> b7ba80a49124 (Commit)
 	fd->done(fd, priv->comp_status);
 out:
 	qla2x00_rel_sp(sp);
@@ -352,10 +371,20 @@ static int qla_nvme_ls_req(struct nvme_fc_local_port *lport,
 	nvme->u.nvme.rsp_len = fd->rsplen;
 	nvme->u.nvme.rsp_dma = fd->rspdma;
 	nvme->u.nvme.timeout_sec = fd->timeout;
+<<<<<<< HEAD
 	nvme->u.nvme.cmd_dma = fd->rqstdma;
 	dma_sync_single_for_device(&ha->pdev->dev, nvme->u.nvme.cmd_dma,
 	    fd->rqstlen, DMA_TO_DEVICE);
 
+=======
+	nvme->u.nvme.cmd_dma = dma_map_single(&ha->pdev->dev, fd->rqstaddr,
+	    fd->rqstlen, DMA_TO_DEVICE);
+	dma_sync_single_for_device(&ha->pdev->dev, nvme->u.nvme.cmd_dma,
+	    fd->rqstlen, DMA_TO_DEVICE);
+
+	sp->flags |= SRB_DMA_VALID;
+
+>>>>>>> b7ba80a49124 (Commit)
 	rval = qla2x00_start_sp(sp);
 	if (rval != QLA_SUCCESS) {
 		ql_log(ql_log_warn, vha, 0x700e,
@@ -363,6 +392,10 @@ static int qla_nvme_ls_req(struct nvme_fc_local_port *lport,
 		wake_up(&sp->nvme_ls_waitq);
 		sp->priv = NULL;
 		priv->sp = NULL;
+<<<<<<< HEAD
+=======
+		qla_nvme_ls_unmap(sp, fd);
+>>>>>>> b7ba80a49124 (Commit)
 		qla2x00_rel_sp(sp);
 		return rval;
 	}
@@ -428,6 +461,7 @@ static inline int qla2x00_start_nvme_mq(srb_t *sp)
 		goto queuing_error;
 	}
 	req_cnt = qla24xx_calc_iocbs(vha, tot_dsds);
+<<<<<<< HEAD
 
 	sp->iores.res_type = RESOURCE_IOCB | RESOURCE_EXCH;
 	sp->iores.exch_cnt = 1;
@@ -437,15 +471,22 @@ static inline int qla2x00_start_nvme_mq(srb_t *sp)
 		goto queuing_error;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (req->cnt < (req_cnt + 2)) {
 		if (IS_SHADOW_REG_CAPABLE(ha)) {
 			cnt = *req->out_ptr;
 		} else {
 			cnt = rd_reg_dword_relaxed(req->req_q_out);
+<<<<<<< HEAD
 			if (qla2x00_check_reg16_for_disconnect(vha, cnt)) {
 				rval = -EBUSY;
 				goto queuing_error;
 			}
+=======
+			if (qla2x00_check_reg16_for_disconnect(vha, cnt))
+				goto queuing_error;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (req->ring_index < cnt)
@@ -594,8 +635,11 @@ static inline int qla2x00_start_nvme_mq(srb_t *sp)
 		qla24xx_process_response_queue(vha, rsp);
 
 queuing_error:
+<<<<<<< HEAD
 	if (rval)
 		qla_put_fw_resources(sp->qpair, &sp->iores);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irqrestore(&qpair->qp_lock, flags);
 
 	return rval;
@@ -609,7 +653,10 @@ static int qla_nvme_post_cmd(struct nvme_fc_local_port *lport,
 	fc_port_t *fcport;
 	struct srb_iocb *nvme;
 	struct scsi_qla_host *vha;
+<<<<<<< HEAD
 	struct qla_hw_data *ha;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int rval;
 	srb_t *sp;
 	struct qla_qpair *qpair = hw_queue_handle;
@@ -630,7 +677,10 @@ static int qla_nvme_post_cmd(struct nvme_fc_local_port *lport,
 		return -ENODEV;
 
 	vha = fcport->vha;
+<<<<<<< HEAD
 	ha = vha->hw;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (test_bit(ABORT_ISP_ACTIVE, &vha->dpc_flags))
 		return -EBUSY;
@@ -645,8 +695,11 @@ static int qla_nvme_post_cmd(struct nvme_fc_local_port *lport,
 	if (fcport->nvme_flag & NVME_FLAG_RESETTING)
 		return -EBUSY;
 
+<<<<<<< HEAD
 	qpair = qla_mapq_nvme_select_qpair(ha, qpair);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Alloc SRB structure */
 	sp = qla2xxx_get_qpair_sp(vha, qpair, fcport, GFP_ATOMIC);
 	if (!sp)

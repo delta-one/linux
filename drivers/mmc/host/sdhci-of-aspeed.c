@@ -547,7 +547,12 @@ static int aspeed_sdc_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	sdc->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &sdc->res);
+=======
+	sdc->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	sdc->regs = devm_ioremap_resource(&pdev->dev, sdc->res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(sdc->regs)) {
 		ret = PTR_ERR(sdc->regs);
 		goto err_clk;

@@ -7,7 +7,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+<<<<<<< HEAD
 #include <unistd.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "thread_map.h"
 #include "evsel.h"
 #include "debug.h"

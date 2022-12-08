@@ -250,7 +250,11 @@ static int synquacer_spi_config(struct spi_master *master,
 	}
 
 	mode = spi->mode;
+<<<<<<< HEAD
 	cs = spi_get_chipselect(spi, 0);
+=======
+	cs = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 	speed = xfer->speed_hz;
 	bpw = xfer->bits_per_word;
 
@@ -344,7 +348,11 @@ static int synquacer_spi_config(struct spi_master *master,
 	sspi->bpw = bpw;
 	sspi->mode = mode;
 	sspi->speed = speed;
+<<<<<<< HEAD
 	sspi->cs = spi_get_chipselect(spi, 0);
+=======
+	sspi->cs = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 	sspi->bus_width = bus_width;
 
 	return 0;
@@ -472,9 +480,16 @@ static int synquacer_spi_transfer_one(struct spi_master *master,
 		read_fifo(sspi);
 	}
 
+<<<<<<< HEAD
 	if (status == 0) {
 		dev_err(sspi->dev, "failed to transfer. Timeout.\n");
 		return -ETIMEDOUT;
+=======
+	if (status < 0) {
+		dev_err(sspi->dev, "failed to transfer. status: 0x%x\n",
+			status);
+		return status;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -488,7 +503,11 @@ static void synquacer_spi_set_cs(struct spi_device *spi, bool enable)
 	val = readl(sspi->regs + SYNQUACER_HSSPI_REG_DMSTART);
 	val &= ~(SYNQUACER_HSSPI_DMPSEL_CS_MASK <<
 		 SYNQUACER_HSSPI_DMPSEL_CS_SHIFT);
+<<<<<<< HEAD
 	val |= spi_get_chipselect(spi, 0) << SYNQUACER_HSSPI_DMPSEL_CS_SHIFT;
+=======
+	val |= spi->chip_select << SYNQUACER_HSSPI_DMPSEL_CS_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!enable)
 		val |= SYNQUACER_HSSPI_DMSTOP_STOP;
@@ -735,7 +754,11 @@ put_spi:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void synquacer_spi_remove(struct platform_device *pdev)
+=======
+static int synquacer_spi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct synquacer_spi *sspi = spi_master_get_devdata(master);
@@ -743,6 +766,11 @@ static void synquacer_spi_remove(struct platform_device *pdev)
 	pm_runtime_disable(sspi->dev);
 
 	clk_disable_unprepare(sspi->clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused synquacer_spi_suspend(struct device *dev)
@@ -818,7 +846,11 @@ static struct platform_driver synquacer_spi_driver = {
 		.acpi_match_table = ACPI_PTR(synquacer_hsspi_acpi_ids),
 	},
 	.probe = synquacer_spi_probe,
+<<<<<<< HEAD
 	.remove_new = synquacer_spi_remove,
+=======
+	.remove = synquacer_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(synquacer_spi_driver);
 

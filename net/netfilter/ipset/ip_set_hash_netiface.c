@@ -202,7 +202,11 @@ hash_netiface4_uadt(struct ip_set *set, struct nlattr *tb[],
 	ipset_adtfn adtfn = set->variant->adt[adt];
 	struct hash_netiface4_elem e = { .cidr = HOST_MASK, .elem = 1 };
 	struct ip_set_ext ext = IP_SET_INIT_UEXT(set);
+<<<<<<< HEAD
 	u32 ip = 0, ip_to = 0, i = 0;
+=======
+	u32 ip = 0, ip_to = 0, ipn, n = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (tb[IPSET_ATTR_LINENO])
@@ -256,16 +260,31 @@ hash_netiface4_uadt(struct ip_set *set, struct nlattr *tb[],
 	} else {
 		ip_set_mask_from_to(ip, ip_to, e.cidr);
 	}
+<<<<<<< HEAD
+=======
+	ipn = ip;
+	do {
+		ipn = ip_set_range_to_cidr(ipn, ip_to, &e.cidr);
+		n++;
+	} while (ipn++ < ip_to);
+
+	if (n > IPSET_MAX_RANGE)
+		return -ERANGE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (retried)
 		ip = ntohl(h->next.ip);
 	do {
+<<<<<<< HEAD
 		i++;
 		e.ip = htonl(ip);
 		if (i > IPSET_MAX_RANGE) {
 			hash_netiface4_data_next(&h->next, &e);
 			return -ERANGE;
 		}
+=======
+		e.ip = htonl(ip);
+>>>>>>> b7ba80a49124 (Commit)
 		ip = ip_set_range_to_cidr(ip, ip_to, &e.cidr);
 		ret = adtfn(set, &e, &ext, &ext, flags);
 

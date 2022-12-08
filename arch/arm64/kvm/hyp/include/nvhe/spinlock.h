@@ -28,6 +28,7 @@ typedef union hyp_spinlock {
 	};
 } hyp_spinlock_t;
 
+<<<<<<< HEAD
 #define __HYP_SPIN_LOCK_INITIALIZER \
 	{ .__val = 0 }
 
@@ -39,6 +40,11 @@ typedef union hyp_spinlock {
 #define hyp_spin_lock_init(l)						\
 do {									\
 	*(l) = __HYP_SPIN_LOCK_UNLOCKED;				\
+=======
+#define hyp_spin_lock_init(l)						\
+do {									\
+	*(l) = (hyp_spinlock_t){ .__val = 0 };				\
+>>>>>>> b7ba80a49124 (Commit)
 } while (0)
 
 static inline void hyp_spin_lock(hyp_spinlock_t *lock)

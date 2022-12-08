@@ -223,7 +223,11 @@ _GLOBAL(kvmppc_resume_host)
 	lwz	r3, VCPU_HOST_PID(r4)
 	mtspr	SPRN_PID, r3
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_85xx
+=======
+#ifdef CONFIG_FSL_BOOKE
+>>>>>>> b7ba80a49124 (Commit)
 	/* we cheat and know that Linux doesn't use PID1 which is always 0 */
 	lis	r3, 0
 	mtspr	SPRN_PID1, r3
@@ -406,7 +410,11 @@ lightweight_exit:
 	lwz	r3, VCPU_SHADOW_PID(r4)
 	mtspr	SPRN_PID, r3
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_85xx
+=======
+#ifdef CONFIG_FSL_BOOKE
+>>>>>>> b7ba80a49124 (Commit)
 	lwz	r3, VCPU_SHADOW_PID1(r4)
 	mtspr	SPRN_PID1, r3
 #endif

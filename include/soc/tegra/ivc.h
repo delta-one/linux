@@ -4,11 +4,17 @@
  */
 
 #ifndef __TEGRA_IVC_H
+<<<<<<< HEAD
 #define __TEGRA_IVC_H
 
 #include <linux/device.h>
 #include <linux/dma-mapping.h>
 #include <linux/iosys-map.h>
+=======
+
+#include <linux/device.h>
+#include <linux/dma-mapping.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/types.h>
 
 struct tegra_ivc_header;
@@ -17,7 +23,11 @@ struct tegra_ivc {
 	struct device *peer;
 
 	struct {
+<<<<<<< HEAD
 		struct iosys_map map;
+=======
+		struct tegra_ivc_header *channel;
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned int position;
 		dma_addr_t phys;
 	} rx, tx;
@@ -38,7 +48,11 @@ struct tegra_ivc {
  *
  * Returns a pointer to the frame, or an error encoded pointer.
  */
+<<<<<<< HEAD
 int tegra_ivc_read_get_next_frame(struct tegra_ivc *ivc, struct iosys_map *map);
+=======
+void *tegra_ivc_read_get_next_frame(struct tegra_ivc *ivc);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * tegra_ivc_read_advance - Advance the read queue
@@ -58,7 +72,11 @@ int tegra_ivc_read_advance(struct tegra_ivc *ivc);
  *
  * Returns a pointer to the frame, or an error encoded pointer.
  */
+<<<<<<< HEAD
 int tegra_ivc_write_get_next_frame(struct tegra_ivc *ivc, struct iosys_map *map);
+=======
+void *tegra_ivc_write_get_next_frame(struct tegra_ivc *ivc);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * tegra_ivc_write_advance - Advance the write queue
@@ -93,8 +111,13 @@ void tegra_ivc_reset(struct tegra_ivc *ivc);
 
 size_t tegra_ivc_align(size_t size);
 unsigned tegra_ivc_total_queue_size(unsigned queue_size);
+<<<<<<< HEAD
 int tegra_ivc_init(struct tegra_ivc *ivc, struct device *peer, const struct iosys_map *rx,
 		   dma_addr_t rx_phys, const struct iosys_map *tx, dma_addr_t tx_phys,
+=======
+int tegra_ivc_init(struct tegra_ivc *ivc, struct device *peer, void *rx,
+		   dma_addr_t rx_phys, void *tx, dma_addr_t tx_phys,
+>>>>>>> b7ba80a49124 (Commit)
 		   unsigned int num_frames, size_t frame_size,
 		   void (*notify)(struct tegra_ivc *ivc, void *data),
 		   void *data);

@@ -404,7 +404,12 @@ static void bu21013_disable_chip(void *_ts)
 	gpiod_set_value(ts->cs_gpiod, 0);
 }
 
+<<<<<<< HEAD
 static int bu21013_probe(struct i2c_client *client)
+=======
+static int bu21013_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bu21013_ts *ts;
 	struct input_dev *in_dev;
@@ -560,7 +565,11 @@ static void bu21013_remove(struct i2c_client *client)
 	/* The resources will be freed by devm */
 }
 
+<<<<<<< HEAD
 static int bu21013_suspend(struct device *dev)
+=======
+static int __maybe_unused bu21013_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct bu21013_ts *ts = i2c_get_clientdata(client);
@@ -575,7 +584,11 @@ static int bu21013_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int bu21013_resume(struct device *dev)
+=======
+static int __maybe_unused bu21013_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct bu21013_ts *ts = i2c_get_clientdata(client);
@@ -604,7 +617,11 @@ static int bu21013_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(bu21013_dev_pm_ops, bu21013_suspend, bu21013_resume);
+=======
+static SIMPLE_DEV_PM_OPS(bu21013_dev_pm_ops, bu21013_suspend, bu21013_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id bu21013_id[] = {
 	{ DRIVER_TP, 0 },
@@ -615,9 +632,15 @@ MODULE_DEVICE_TABLE(i2c, bu21013_id);
 static struct i2c_driver bu21013_driver = {
 	.driver	= {
 		.name	=	DRIVER_TP,
+<<<<<<< HEAD
 		.pm	=	pm_sleep_ptr(&bu21013_dev_pm_ops),
 	},
 	.probe_new	=	bu21013_probe,
+=======
+		.pm	=	&bu21013_dev_pm_ops,
+	},
+	.probe		=	bu21013_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		=	bu21013_remove,
 	.id_table	=	bu21013_id,
 };

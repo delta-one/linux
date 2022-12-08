@@ -257,9 +257,17 @@ static int fsl_aud2htx_probe(struct platform_device *pdev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void fsl_aud2htx_remove(struct platform_device *pdev)
 {
 	pm_runtime_disable(&pdev->dev);
+=======
+static int fsl_aud2htx_remove(struct platform_device *pdev)
+{
+	pm_runtime_disable(&pdev->dev);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused fsl_aud2htx_runtime_suspend(struct device *dev)
@@ -298,7 +306,11 @@ static const struct dev_pm_ops fsl_aud2htx_pm_ops = {
 
 static struct platform_driver fsl_aud2htx_driver = {
 	.probe = fsl_aud2htx_probe,
+<<<<<<< HEAD
 	.remove_new = fsl_aud2htx_remove,
+=======
+	.remove = fsl_aud2htx_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "fsl-aud2htx",
 		.pm = &fsl_aud2htx_pm_ops,

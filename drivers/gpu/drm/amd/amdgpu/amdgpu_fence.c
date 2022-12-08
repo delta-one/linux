@@ -55,7 +55,10 @@ struct amdgpu_fence {
 
 	/* RB, DMA, etc. */
 	struct amdgpu_ring		*ring;
+<<<<<<< HEAD
 	ktime_t				start_timestamp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct kmem_cache *amdgpu_fence_slab;
@@ -200,8 +203,11 @@ int amdgpu_fence_emit(struct amdgpu_ring *ring, struct dma_fence **f, struct amd
 		}
 	}
 
+<<<<<<< HEAD
 	to_amdgpu_fence(fence)->start_timestamp = ktime_get();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* This function can't be called concurrently anyway, otherwise
 	 * emitting the fence would mess up the hardware ring buffer.
 	 */
@@ -403,6 +409,10 @@ unsigned amdgpu_fence_count_emitted(struct amdgpu_ring *ring)
 	/* We are not protected by ring lock when reading the last sequence
 	 * but it's ok to report slightly wrong fence count here.
 	 */
+<<<<<<< HEAD
+=======
+	amdgpu_fence_process(ring);
+>>>>>>> b7ba80a49124 (Commit)
 	emitted = 0x100000000ull;
 	emitted -= atomic_read(&ring->fence_drv.last_seq);
 	emitted += READ_ONCE(ring->fence_drv.sync_seq);
@@ -410,6 +420,7 @@ unsigned amdgpu_fence_count_emitted(struct amdgpu_ring *ring)
 }
 
 /**
+<<<<<<< HEAD
  * amdgpu_fence_last_unsignaled_time_us - the time fence emitted until now
  * @ring: ring the fence is associated with
  *
@@ -461,6 +472,8 @@ void amdgpu_fence_update_start_timestamp(struct amdgpu_ring *ring, uint32_t seq,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * amdgpu_fence_driver_start_ring - make the fence driver
  * ready for use on the requested ring.
  *
@@ -618,6 +631,7 @@ void amdgpu_fence_driver_sw_fini(struct amdgpu_device *adev)
 		if (!ring || !ring->fence_drv.initialized)
 			continue;
 
+<<<<<<< HEAD
 		/*
 		 * Notice we check for sched.ops since there's some
 		 * override on the meaning of sched.ready by amdgpu.
@@ -625,6 +639,9 @@ void amdgpu_fence_driver_sw_fini(struct amdgpu_device *adev)
 		 * set as drm_sched_init() finishes...
 		 */
 		if (ring->sched.ops)
+=======
+		if (!ring->no_scheduler)
+>>>>>>> b7ba80a49124 (Commit)
 			drm_sched_fini(&ring->sched);
 
 		for (j = 0; j <= ring->fence_drv.num_fences_mask; ++j)
@@ -678,6 +695,7 @@ void amdgpu_fence_driver_clear_job_fences(struct amdgpu_ring *ring)
 		ptr = &ring->fence_drv.fences[i];
 		old = rcu_dereference_protected(*ptr, 1);
 		if (old && old->ops == &amdgpu_job_fence_ops) {
+<<<<<<< HEAD
 			struct amdgpu_job *job;
 
 			/* For non-scheduler bad job, i.e. failed ib test, we need to signal
@@ -687,6 +705,8 @@ void amdgpu_fence_driver_clear_job_fences(struct amdgpu_ring *ring)
 			job = container_of(old, struct amdgpu_job, hw_fence);
 			if (!job->base.s_fence && !dma_fence_is_signaled(old))
 				dma_fence_signal(old);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			RCU_INIT_POINTER(*ptr, NULL);
 			dma_fence_put(old);
 		}

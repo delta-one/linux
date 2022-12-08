@@ -10,8 +10,12 @@ ccp-$(CONFIG_CRYPTO_DEV_CCP_DEBUGFS) += ccp-debugfs.o
 ccp-$(CONFIG_PCI) += sp-pci.o
 ccp-$(CONFIG_CRYPTO_DEV_SP_PSP) += psp-dev.o \
                                    sev-dev.o \
+<<<<<<< HEAD
                                    tee-dev.o \
                                    platform-access.o
+=======
+                                   tee-dev.o
+>>>>>>> b7ba80a49124 (Commit)
 
 obj-$(CONFIG_CRYPTO_DEV_CCP_CRYPTO) += ccp-crypto.o
 ccp-crypto-objs := ccp-crypto-main.o \

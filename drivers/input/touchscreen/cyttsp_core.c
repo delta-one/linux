@@ -491,7 +491,11 @@ static int cyttsp_disable(struct cyttsp *ts)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int cyttsp_suspend(struct device *dev)
+=======
+static int __maybe_unused cyttsp_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cyttsp *ts = dev_get_drvdata(dev);
 	int retval = 0;
@@ -509,7 +513,11 @@ static int cyttsp_suspend(struct device *dev)
 	return retval;
 }
 
+<<<<<<< HEAD
 static int cyttsp_resume(struct device *dev)
+=======
+static int __maybe_unused cyttsp_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cyttsp *ts = dev_get_drvdata(dev);
 
@@ -525,7 +533,12 @@ static int cyttsp_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 EXPORT_GPL_SIMPLE_DEV_PM_OPS(cyttsp_pm_ops, cyttsp_suspend, cyttsp_resume);
+=======
+SIMPLE_DEV_PM_OPS(cyttsp_pm_ops, cyttsp_suspend, cyttsp_resume);
+EXPORT_SYMBOL_GPL(cyttsp_pm_ops);
+>>>>>>> b7ba80a49124 (Commit)
 
 static int cyttsp_open(struct input_dev *dev)
 {

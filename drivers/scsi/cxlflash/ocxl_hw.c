@@ -1167,7 +1167,11 @@ static int afu_mmap(struct file *file, struct vm_area_struct *vma)
 	    (ctx->psn_size >> PAGE_SHIFT))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_IO | VM_PFNMAP);
+=======
+	vma->vm_flags |= VM_IO | VM_PFNMAP;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
 	vma->vm_ops = &ocxlflash_vmops;
 	return 0;

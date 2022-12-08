@@ -32,7 +32,11 @@ properties:
     maxItems: 1
 
   richtek,oc-level-select:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/uint8
+=======
+    $ref: "/schemas/types.yaml#/definitions/uint8"
+>>>>>>> b7ba80a49124 (Commit)
     enum: [0, 1, 2, 3]
     description: |
       Over current level selection. Each respective value means the current
@@ -40,7 +44,11 @@ properties:
       in chip default.
 
   richtek,ot-level-select:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/uint8
+=======
+    $ref: "/schemas/types.yaml#/definitions/uint8"
+>>>>>>> b7ba80a49124 (Commit)
     enum: [0, 1, 2]
     description: |
       Over temperature level selection. Each respective value means the degree
@@ -48,7 +56,11 @@ properties:
       default.
 
   richtek,pgdly-time-select:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/uint8
+=======
+    $ref: "/schemas/types.yaml#/definitions/uint8"
+>>>>>>> b7ba80a49124 (Commit)
     enum: [0, 1, 2, 3]
     description: |
       Power good signal delay time selection. Each respective value means the
@@ -57,7 +69,11 @@ properties:
 
 
   richtek,switch-freq-select:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/uint8
+=======
+    $ref: "/schemas/types.yaml#/definitions/uint8"
+>>>>>>> b7ba80a49124 (Commit)
     enum: [0, 1, 2]
     description: |
       Buck switch frequency selection. Each respective value means 400KHz,

@@ -206,7 +206,17 @@ pxa2xx_pcmcia_frequency_change(struct soc_pcmcia_socket *skt,
 
 void pxa2xx_configure_sockets(struct device *dev, struct pcmcia_low_level *ops)
 {
+<<<<<<< HEAD
 	pxa_smemc_set_pcmcia_socket(1);
+=======
+	int nr = 1;
+
+	if ((ops->first + ops->nr) > 1 ||
+	    machine_is_viper() || machine_is_arcom_zeus())
+		nr = 2;
+
+	pxa_smemc_set_pcmcia_socket(nr);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(pxa2xx_configure_sockets);
 

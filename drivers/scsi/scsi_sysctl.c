@@ -21,11 +21,32 @@ static struct ctl_table scsi_table[] = {
 	{ }
 };
 
+<<<<<<< HEAD
+=======
+static struct ctl_table scsi_dir_table[] = {
+	{ .procname	= "scsi",
+	  .mode		= 0555,
+	  .child	= scsi_table },
+	{ }
+};
+
+static struct ctl_table scsi_root_table[] = {
+	{ .procname	= "dev",
+	  .mode		= 0555,
+	  .child	= scsi_dir_table },
+	{ }
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct ctl_table_header *scsi_table_header;
 
 int __init scsi_init_sysctl(void)
 {
+<<<<<<< HEAD
 	scsi_table_header = register_sysctl("dev/scsi", scsi_table);
+=======
+	scsi_table_header = register_sysctl_table(scsi_root_table);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!scsi_table_header)
 		return -ENOMEM;
 	return 0;

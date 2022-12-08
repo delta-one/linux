@@ -471,6 +471,7 @@ static int vdec_h264_slice_core_decode(struct vdec_lat_buf *lat_buf)
 	       sizeof(share_info->h264_slice_params));
 
 	fb = ctx->dev->vdec_pdata->get_cap_buffer(ctx);
+<<<<<<< HEAD
 	if (!fb) {
 		err = -EBUSY;
 		mtk_vcodec_err(inst, "fb buffer is NULL");
@@ -479,11 +480,20 @@ static int vdec_h264_slice_core_decode(struct vdec_lat_buf *lat_buf)
 
 	vdec_fb_va = (unsigned long)fb;
 	y_fb_dma = (u64)fb->base_y.dma_addr;
+=======
+	y_fb_dma = fb ? (u64)fb->base_y.dma_addr : 0;
+	vdec_fb_va = (unsigned long)fb;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (ctx->q_data[MTK_Q_DATA_DST].fmt->num_planes == 1)
 		c_fb_dma =
 			y_fb_dma + inst->ctx->picinfo.buf_w * inst->ctx->picinfo.buf_h;
 	else
+<<<<<<< HEAD
 		c_fb_dma = (u64)fb->base_c.dma_addr;
+=======
+		c_fb_dma = fb ? (u64)fb->base_c.dma_addr : 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mtk_vcodec_debug(inst, "[h264-core] y/c addr = 0x%llx 0x%llx", y_fb_dma,
 			 c_fb_dma);
@@ -544,6 +554,7 @@ vdec_dec_end:
 	return 0;
 }
 
+<<<<<<< HEAD
 static void vdec_h264_insert_startcode(struct mtk_vcodec_dev *vcodec_dev, unsigned char *buf,
 				       size_t *bs_size, struct mtk_h264_pps_param *pps)
 {
@@ -567,6 +578,8 @@ static void vdec_h264_insert_startcode(struct mtk_vcodec_dev *vcodec_dev, unsign
 	(*bs_size) += 4;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int vdec_h264_slice_lat_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
 				      struct vdec_fb *fb, bool *res_chg)
 {
@@ -610,6 +623,12 @@ static int vdec_h264_slice_lat_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
 	}
 
 	inst->vsi->dec.nal_info = buf[nal_start_idx];
+<<<<<<< HEAD
+=======
+	inst->vsi->dec.bs_buf_addr = (u64)bs->dma_addr;
+	inst->vsi->dec.bs_buf_size = bs->size;
+
+>>>>>>> b7ba80a49124 (Commit)
 	lat_buf->src_buf_req = src_buf_info->m2m_buf.vb.vb2_buf.req_obj.req;
 	v4l2_m2m_buf_copy_metadata(&src_buf_info->m2m_buf.vb, &lat_buf->ts_info, true);
 
@@ -617,12 +636,15 @@ static int vdec_h264_slice_lat_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
 	if (err)
 		goto err_free_fb_out;
 
+<<<<<<< HEAD
 	vdec_h264_insert_startcode(inst->ctx->dev, buf, &bs->size,
 				   &share_info->h264_slice_params.pps);
 
 	inst->vsi->dec.bs_buf_addr = (uint64_t)bs->dma_addr;
 	inst->vsi->dec.bs_buf_size = bs->size;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	*res_chg = inst->resolution_changed;
 	if (inst->resolution_changed) {
 		mtk_vcodec_debug(inst, "- resolution changed -");
@@ -661,7 +683,11 @@ static int vdec_h264_slice_lat_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
 	err = vpu_dec_start(vpu, data, 2);
 	if (err) {
 		mtk_vcodec_debug(inst, "lat decode err: %d", err);
+<<<<<<< HEAD
 		goto err_free_fb_out;
+=======
+		goto err_scp_decode;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	share_info->trans_end = inst->ctx->msg_queue.wdma_addr.dma_addr +
@@ -678,6 +704,7 @@ static int vdec_h264_slice_lat_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
 	/* wait decoder done interrupt */
 	timeout = mtk_vcodec_wait_for_done_ctx(inst->ctx, MTK_INST_IRQ_RECEIVED,
 					       WAIT_INTR_TIMEOUT_MS, MTK_VDEC_LAT0);
+<<<<<<< HEAD
 	if (timeout)
 		mtk_vcodec_err(inst, "lat decode timeout: pic_%d", inst->slice_dec_num);
 	inst->vsi->dec.timeout = !!timeout;
@@ -689,6 +716,14 @@ static int vdec_h264_slice_lat_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
 		inst->slice_dec_num++;
 		mtk_vcodec_err(inst, "lat dec fail: pic_%d err:%d", inst->slice_dec_num, err);
 		return -EINVAL;
+=======
+	inst->vsi->dec.timeout = !!timeout;
+
+	err = vpu_dec_end(vpu);
+	if (err == SLICE_HEADER_FULL || timeout || err == TRANS_BUFFER_FULL) {
+		err = -EINVAL;
+		goto err_scp_decode;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	share_info->trans_end = inst->ctx->msg_queue.wdma_addr.dma_addr +
@@ -705,6 +740,13 @@ static int vdec_h264_slice_lat_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
 
 	inst->slice_dec_num++;
 	return 0;
+<<<<<<< HEAD
+=======
+
+err_scp_decode:
+	if (!IS_VDEC_INNER_RACING(inst->ctx->dev->dec_capability))
+		vdec_msg_queue_qbuf(&inst->ctx->msg_queue.lat_ctx, lat_buf);
+>>>>>>> b7ba80a49124 (Commit)
 err_free_fb_out:
 	vdec_msg_queue_qbuf(&inst->ctx->msg_queue.lat_ctx, lat_buf);
 	mtk_vcodec_err(inst, "slice dec number: %d err: %d", inst->slice_dec_num, err);

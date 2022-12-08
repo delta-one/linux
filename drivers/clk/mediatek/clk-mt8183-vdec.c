@@ -38,6 +38,7 @@ static const struct mtk_gate vdec_clks[] = {
 	GATE_VDEC1_I(CLK_VDEC_LARB1, "vdec_larb1", "mm_sel", 0),
 };
 
+<<<<<<< HEAD
 static const struct mtk_clk_desc vdec_desc = {
 	.clks = vdec_clks,
 	.num_clks = ARRAY_SIZE(vdec_clks),
@@ -56,10 +57,37 @@ MODULE_DEVICE_TABLE(of, of_match_clk_mt8183_vdec);
 static struct platform_driver clk_mt8183_vdec_drv = {
 	.probe = mtk_clk_simple_probe,
 	.remove = mtk_clk_simple_remove,
+=======
+static int clk_mt8183_vdec_probe(struct platform_device *pdev)
+{
+	struct clk_hw_onecell_data *clk_data;
+	struct device_node *node = pdev->dev.of_node;
+
+	clk_data = mtk_alloc_clk_data(CLK_VDEC_NR_CLK);
+
+	mtk_clk_register_gates(node, vdec_clks, ARRAY_SIZE(vdec_clks),
+			clk_data);
+
+	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+}
+
+static const struct of_device_id of_match_clk_mt8183_vdec[] = {
+	{ .compatible = "mediatek,mt8183-vdecsys", },
+	{}
+};
+
+static struct platform_driver clk_mt8183_vdec_drv = {
+	.probe = clk_mt8183_vdec_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "clk-mt8183-vdec",
 		.of_match_table = of_match_clk_mt8183_vdec,
 	},
 };
+<<<<<<< HEAD
 module_platform_driver(clk_mt8183_vdec_drv);
 MODULE_LICENSE("GPL");
+=======
+
+builtin_platform_driver(clk_mt8183_vdec_drv);
+>>>>>>> b7ba80a49124 (Commit)

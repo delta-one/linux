@@ -303,6 +303,7 @@ static void bcm_uart_do_rx(struct uart_port *port)
  */
 static void bcm_uart_do_tx(struct uart_port *port)
 {
+<<<<<<< HEAD
 	unsigned int val;
 	bool pending;
 	u8 ch;
@@ -317,10 +318,58 @@ static void bcm_uart_do_tx(struct uart_port *port)
 	if (pending)
 		return;
 
+=======
+	struct circ_buf *xmit;
+	unsigned int val, max_count;
+
+	if (port->x_char) {
+		bcm_uart_writel(port, port->x_char, UART_FIFO_REG);
+		port->icount.tx++;
+		port->x_char = 0;
+		return;
+	}
+
+	if (uart_tx_stopped(port)) {
+		bcm_uart_stop_tx(port);
+		return;
+	}
+
+	xmit = &port->state->xmit;
+	if (uart_circ_empty(xmit))
+		goto txq_empty;
+
+	val = bcm_uart_readl(port, UART_MCTL_REG);
+	val = (val & UART_MCTL_TXFIFOFILL_MASK) >> UART_MCTL_TXFIFOFILL_SHIFT;
+	max_count = port->fifosize - val;
+
+	while (max_count--) {
+		unsigned int c;
+
+		c = xmit->buf[xmit->tail];
+		bcm_uart_writel(port, c, UART_FIFO_REG);
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+		port->icount.tx++;
+		if (uart_circ_empty(xmit))
+			break;
+	}
+
+	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+		uart_write_wakeup(port);
+
+	if (uart_circ_empty(xmit))
+		goto txq_empty;
+	return;
+
+txq_empty:
+>>>>>>> b7ba80a49124 (Commit)
 	/* nothing to send, disable transmit interrupt */
 	val = bcm_uart_readl(port, UART_IR_REG);
 	val &= ~UART_TX_INT_MASK;
 	bcm_uart_writel(port, val, UART_IR_REG);
+<<<<<<< HEAD
+=======
+	return;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*

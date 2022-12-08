@@ -32,7 +32,10 @@ struct a6xx_gpu {
 	void *llc_slice;
 	void *htw_llc_slice;
 	bool have_mmu500;
+<<<<<<< HEAD
 	bool hung;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define to_a6xx_gpu(x) container_of(x, struct a6xx_gpu, base)

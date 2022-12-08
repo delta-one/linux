@@ -45,7 +45,10 @@ struct time_namespace *copy_time_ns(unsigned long flags,
 void free_time_ns(struct time_namespace *ns);
 void timens_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk);
 struct vdso_data *arch_get_vdso_data(void *vvar_page);
+<<<<<<< HEAD
 struct page *find_timens_vvar_page(struct vm_area_struct *vma);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void put_time_ns(struct time_namespace *ns)
 {
@@ -142,11 +145,14 @@ static inline void timens_on_fork(struct nsproxy *nsproxy,
 	return;
 }
 
+<<<<<<< HEAD
 static inline struct page *find_timens_vvar_page(struct vm_area_struct *vma)
 {
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void timens_add_monotonic(struct timespec64 *ts) { }
 static inline void timens_add_boottime(struct timespec64 *ts) { }
 

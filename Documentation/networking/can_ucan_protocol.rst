@@ -50,7 +50,11 @@ Setup Packet
 ``wIndex``         USB Interface Index (0 for device commands)
 ``wLength``        * Host to Device - Number of bytes to transmit
                    * Device to Host - Maximum Number of bytes to
+<<<<<<< HEAD
                      receive. If the device send less. Common ZLP
+=======
+                     receive. If the device send less. Commom ZLP
+>>>>>>> b7ba80a49124 (Commit)
                      semantics are used.
 =================  =====================================================
 

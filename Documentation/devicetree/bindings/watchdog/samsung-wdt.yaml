@@ -23,7 +23,10 @@ properties:
       - samsung,exynos5420-wdt                # for Exynos5420
       - samsung,exynos7-wdt                   # for Exynos7
       - samsung,exynos850-wdt                 # for Exynos850
+<<<<<<< HEAD
       - samsung,exynosautov9-wdt              # for Exynosautov9
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -68,7 +71,10 @@ allOf:
               - samsung,exynos5420-wdt
               - samsung,exynos7-wdt
               - samsung,exynos850-wdt
+<<<<<<< HEAD
               - samsung,exynosautov9-wdt
+=======
+>>>>>>> b7ba80a49124 (Commit)
     then:
       required:
         - samsung,syscon-phandle
@@ -78,7 +84,10 @@ allOf:
           contains:
             enum:
               - samsung,exynos850-wdt
+<<<<<<< HEAD
               - samsung,exynosautov9-wdt
+=======
+>>>>>>> b7ba80a49124 (Commit)
     then:
       properties:
         clocks:

@@ -1,6 +1,12 @@
 # SPDX-License-Identifier: GPL-2.0-only
 
+<<<<<<< HEAD
 # Include the generic Makefile to check the built vdso.
+=======
+# Absolute relocation type $(ARCH_REL_TYPE_ABS) needs to be defined before
+# the inclusion of generic Makefile.
+ARCH_REL_TYPE_ABS := R_CKCORE_ADDR32|R_CKCORE_JUMP_SLOT
+>>>>>>> b7ba80a49124 (Commit)
 include $(srctree)/lib/vdso/Makefile
 
 # Symbols present in the vdso

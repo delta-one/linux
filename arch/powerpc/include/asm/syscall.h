@@ -14,6 +14,7 @@
 #include <linux/sched.h>
 #include <linux/thread_info.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_HAS_SYSCALL_WRAPPER
 typedef long (*syscall_fn)(const struct pt_regs *);
 #else
@@ -24,6 +25,11 @@ typedef long (*syscall_fn)(unsigned long, unsigned long, unsigned long,
 /* ftrace syscalls requires exporting the sys_call_table */
 extern const syscall_fn sys_call_table[];
 extern const syscall_fn compat_sys_call_table[];
+=======
+/* ftrace syscalls requires exporting the sys_call_table */
+extern const unsigned long sys_call_table[];
+extern const unsigned long compat_sys_call_table[];
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline int syscall_get_nr(struct task_struct *task, struct pt_regs *regs)
 {

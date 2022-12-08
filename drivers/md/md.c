@@ -93,6 +93,7 @@ static int remove_and_add_spares(struct mddev *mddev,
 				 struct md_rdev *this);
 static void mddev_detach(struct mddev *mddev);
 
+<<<<<<< HEAD
 enum md_ro_state {
 	MD_RDWR,
 	MD_RDONLY,
@@ -105,6 +106,8 @@ static bool md_is_rdwr(struct mddev *mddev)
 	return (mddev->ro == MD_RDWR);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Default number of read corrections we'll attempt on an rdev
  * before ejecting it from the array. We divide the read error
@@ -322,6 +325,29 @@ static struct ctl_table raid_table[] = {
 	{ }
 };
 
+<<<<<<< HEAD
+=======
+static struct ctl_table raid_dir_table[] = {
+	{
+		.procname	= "raid",
+		.maxlen		= 0,
+		.mode		= S_IRUGO|S_IXUGO,
+		.child		= raid_table,
+	},
+	{ }
+};
+
+static struct ctl_table raid_root_table[] = {
+	{
+		.procname	= "dev",
+		.maxlen		= 0,
+		.mode		= 0555,
+		.child		= raid_dir_table,
+	},
+	{  }
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static int start_readonly;
 
 /*
@@ -360,10 +386,13 @@ EXPORT_SYMBOL_GPL(md_new_event);
 static LIST_HEAD(all_mddevs);
 static DEFINE_SPINLOCK(all_mddevs_lock);
 
+<<<<<<< HEAD
 static bool is_md_suspended(struct mddev *mddev)
 {
 	return percpu_ref_is_dying(&mddev->active_io);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Rather than calling directly into the personality make_request function,
  * IO requests come here first so that we can check if the device is
  * being suspended pending a reconfiguration.
@@ -373,7 +402,11 @@ static bool is_md_suspended(struct mddev *mddev)
  */
 static bool is_suspended(struct mddev *mddev, struct bio *bio)
 {
+<<<<<<< HEAD
 	if (is_md_suspended(mddev))
+=======
+	if (mddev->suspended)
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 	if (bio_data_dir(bio) != WRITE)
 		return false;
@@ -389,10 +422,18 @@ static bool is_suspended(struct mddev *mddev, struct bio *bio)
 void md_handle_request(struct mddev *mddev, struct bio *bio)
 {
 check_suspended:
+<<<<<<< HEAD
+=======
+	rcu_read_lock();
+>>>>>>> b7ba80a49124 (Commit)
 	if (is_suspended(mddev, bio)) {
 		DEFINE_WAIT(__wait);
 		/* Bail out if REQ_NOWAIT is set for the bio */
 		if (bio->bi_opf & REQ_NOWAIT) {
+<<<<<<< HEAD
+=======
+			rcu_read_unlock();
+>>>>>>> b7ba80a49124 (Commit)
 			bio_wouldblock_error(bio);
 			return;
 		}
@@ -401,6 +442,7 @@ check_suspended:
 					TASK_UNINTERRUPTIBLE);
 			if (!is_suspended(mddev, bio))
 				break;
+<<<<<<< HEAD
 			schedule();
 		}
 		finish_wait(&mddev->sb_wait, &__wait);
@@ -414,6 +456,25 @@ check_suspended:
 	}
 
 	percpu_ref_put(&mddev->active_io);
+=======
+			rcu_read_unlock();
+			schedule();
+			rcu_read_lock();
+		}
+		finish_wait(&mddev->sb_wait, &__wait);
+	}
+	atomic_inc(&mddev->active_io);
+	rcu_read_unlock();
+
+	if (!mddev->pers->make_request(mddev, bio)) {
+		atomic_dec(&mddev->active_io);
+		wake_up(&mddev->sb_wait);
+		goto check_suspended;
+	}
+
+	if (atomic_dec_and_test(&mddev->active_io) && mddev->suspended)
+		wake_up(&mddev->sb_wait);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(md_handle_request);
 
@@ -433,10 +494,15 @@ static void md_submit_bio(struct bio *bio)
 	}
 
 	bio = bio_split_to_limits(bio);
+<<<<<<< HEAD
 	if (!bio)
 		return;
 
 	if (mddev->ro == MD_RDONLY && unlikely(rw == WRITE)) {
+=======
+
+	if (mddev->ro == 1 && unlikely(rw == WRITE)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (bio_sectors(bio) != 0)
 			bio->bi_status = BLK_STS_IOERR;
 		bio_endio(bio);
@@ -461,10 +527,18 @@ void mddev_suspend(struct mddev *mddev)
 	lockdep_assert_held(&mddev->reconfig_mutex);
 	if (mddev->suspended++)
 		return;
+<<<<<<< HEAD
 	wake_up(&mddev->sb_wait);
 	set_bit(MD_ALLOW_SB_UPDATE, &mddev->flags);
 	percpu_ref_kill(&mddev->active_io);
 	wait_event(mddev->sb_wait, percpu_ref_is_zero(&mddev->active_io));
+=======
+	synchronize_rcu();
+	wake_up(&mddev->sb_wait);
+	set_bit(MD_ALLOW_SB_UPDATE, &mddev->flags);
+	smp_mb__after_atomic();
+	wait_event(mddev->sb_wait, atomic_read(&mddev->active_io) == 0);
+>>>>>>> b7ba80a49124 (Commit)
 	mddev->pers->quiesce(mddev, 1);
 	clear_bit_unlock(MD_ALLOW_SB_UPDATE, &mddev->flags);
 	wait_event(mddev->sb_wait, !test_bit(MD_UPDATING_SB, &mddev->flags));
@@ -482,7 +556,10 @@ void mddev_resume(struct mddev *mddev)
 	lockdep_assert_held(&mddev->reconfig_mutex);
 	if (--mddev->suspended)
 		return;
+<<<<<<< HEAD
 	percpu_ref_resurrect(&mddev->active_io);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	wake_up(&mddev->sb_wait);
 	mddev->pers->quiesce(mddev, 0);
 
@@ -501,14 +578,21 @@ static void md_end_flush(struct bio *bio)
 	struct md_rdev *rdev = bio->bi_private;
 	struct mddev *mddev = rdev->mddev;
 
+<<<<<<< HEAD
 	bio_put(bio);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rdev_dec_pending(rdev, mddev);
 
 	if (atomic_dec_and_test(&mddev->flush_pending)) {
 		/* The pre-request flush has finished */
 		queue_work(md_wq, &mddev->flush_work);
 	}
+<<<<<<< HEAD
+=======
+	bio_put(bio);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void md_submit_flush_data(struct work_struct *ws);
@@ -661,6 +745,10 @@ void mddev_init(struct mddev *mddev)
 	timer_setup(&mddev->safemode_timer, md_safemode_timeout, 0);
 	atomic_set(&mddev->active, 1);
 	atomic_set(&mddev->openers, 0);
+<<<<<<< HEAD
+=======
+	atomic_set(&mddev->active_io, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_init(&mddev->lock);
 	atomic_set(&mddev->flush_pending, 0);
 	init_waitqueue_head(&mddev->sb_wait);
@@ -905,12 +993,19 @@ static void super_written(struct bio *bio)
 	} else
 		clear_bit(LastDev, &rdev->flags);
 
+<<<<<<< HEAD
 	bio_put(bio);
 
 	rdev_dec_pending(rdev, mddev);
 
 	if (atomic_dec_and_test(&mddev->pending_writes))
 		wake_up(&mddev->sb_wait);
+=======
+	if (atomic_dec_and_test(&mddev->pending_writes))
+		wake_up(&mddev->sb_wait);
+	rdev_dec_pending(rdev, mddev);
+	bio_put(bio);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void md_super_write(struct mddev *mddev, struct md_rdev *rdev,
@@ -2447,6 +2542,7 @@ static void rdev_delayed_delete(struct work_struct *ws)
 	kobject_put(&rdev->kobj);
 }
 
+<<<<<<< HEAD
 void md_autodetect_dev(dev_t dev);
 
 static void export_rdev(struct md_rdev *rdev)
@@ -2463,6 +2559,9 @@ static void export_rdev(struct md_rdev *rdev)
 }
 
 static void md_kick_rdev_from_array(struct md_rdev *rdev)
+=======
+static void unbind_rdev_from_array(struct md_rdev *rdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	bd_unlink_disk_holder(rdev->bdev, rdev->mddev->gendisk);
 	list_del_rcu(&rdev->same_set);
@@ -2485,8 +2584,61 @@ static void md_kick_rdev_from_array(struct md_rdev *rdev)
 	INIT_WORK(&rdev->del_work, rdev_delayed_delete);
 	kobject_get(&rdev->kobj);
 	queue_work(md_rdev_misc_wq, &rdev->del_work);
+<<<<<<< HEAD
 	export_rdev(rdev);
 }
+=======
+}
+
+/*
+ * prevent the device from being mounted, repartitioned or
+ * otherwise reused by a RAID array (or any other kernel
+ * subsystem), by bd_claiming the device.
+ */
+static int lock_rdev(struct md_rdev *rdev, dev_t dev, int shared)
+{
+	int err = 0;
+	struct block_device *bdev;
+
+	bdev = blkdev_get_by_dev(dev, FMODE_READ|FMODE_WRITE|FMODE_EXCL,
+				 shared ? (struct md_rdev *)lock_rdev : rdev);
+	if (IS_ERR(bdev)) {
+		pr_warn("md: could not open device unknown-block(%u,%u).\n",
+			MAJOR(dev), MINOR(dev));
+		return PTR_ERR(bdev);
+	}
+	rdev->bdev = bdev;
+	return err;
+}
+
+static void unlock_rdev(struct md_rdev *rdev)
+{
+	struct block_device *bdev = rdev->bdev;
+	rdev->bdev = NULL;
+	blkdev_put(bdev, FMODE_READ|FMODE_WRITE|FMODE_EXCL);
+}
+
+void md_autodetect_dev(dev_t dev);
+
+static void export_rdev(struct md_rdev *rdev)
+{
+	pr_debug("md: export_rdev(%pg)\n", rdev->bdev);
+	md_rdev_clear(rdev);
+#ifndef MODULE
+	if (test_bit(AutoDetected, &rdev->flags))
+		md_autodetect_dev(rdev->bdev->bd_dev);
+#endif
+	unlock_rdev(rdev);
+	kobject_put(&rdev->kobj);
+}
+
+void md_kick_rdev_from_array(struct md_rdev *rdev)
+{
+	unbind_rdev_from_array(rdev);
+	export_rdev(rdev);
+}
+EXPORT_SYMBOL_GPL(md_kick_rdev_from_array);
+>>>>>>> b7ba80a49124 (Commit)
 
 static void export_array(struct mddev *mddev)
 {
@@ -2600,7 +2752,11 @@ void md_update_sb(struct mddev *mddev, int force_change)
 	int any_badblocks_changed = 0;
 	int ret = -1;
 
+<<<<<<< HEAD
 	if (!md_is_rdwr(mddev)) {
+=======
+	if (mddev->ro) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (force_change)
 			set_bit(MD_SB_CHANGE_DEVS, &mddev->sb_flags);
 		return;
@@ -3108,9 +3264,12 @@ slot_store(struct md_rdev *rdev, const char *buf, size_t len)
 		err = kstrtouint(buf, 10, (unsigned int *)&slot);
 		if (err < 0)
 			return err;
+<<<<<<< HEAD
 		if (slot < 0)
 			/* overflow */
 			return -ENOSPC;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (rdev->mddev->pers && slot == -1) {
 		/* Setting 'slot' on an active array requires also
@@ -3624,10 +3783,16 @@ EXPORT_SYMBOL_GPL(md_rdev_init);
  */
 static struct md_rdev *md_import_device(dev_t newdev, int super_format, int super_minor)
 {
+<<<<<<< HEAD
 	static struct md_rdev claim_rdev; /* just for claiming the bdev */
 	struct md_rdev *rdev;
 	sector_t size;
 	int err;
+=======
+	int err;
+	struct md_rdev *rdev;
+	sector_t size;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rdev = kzalloc(sizeof(*rdev), GFP_KERNEL);
 	if (!rdev)
@@ -3635,6 +3800,7 @@ static struct md_rdev *md_import_device(dev_t newdev, int super_format, int supe
 
 	err = md_rdev_init(rdev);
 	if (err)
+<<<<<<< HEAD
 		goto out_free_rdev;
 	err = alloc_disk_sb(rdev);
 	if (err)
@@ -3649,6 +3815,16 @@ static struct md_rdev *md_import_device(dev_t newdev, int super_format, int supe
 		err = PTR_ERR(rdev->bdev);
 		goto out_clear_rdev;
 	}
+=======
+		goto abort_free;
+	err = alloc_disk_sb(rdev);
+	if (err)
+		goto abort_free;
+
+	err = lock_rdev(rdev, newdev, super_format == -2);
+	if (err)
+		goto abort_free;
+>>>>>>> b7ba80a49124 (Commit)
 
 	kobject_init(&rdev->kobj, &rdev_ktype);
 
@@ -3657,7 +3833,11 @@ static struct md_rdev *md_import_device(dev_t newdev, int super_format, int supe
 		pr_warn("md: %pg has zero or unknown size, marking faulty!\n",
 			rdev->bdev);
 		err = -EINVAL;
+<<<<<<< HEAD
 		goto out_blkdev_put;
+=======
+		goto abort_free;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (super_format >= 0) {
@@ -3667,22 +3847,37 @@ static struct md_rdev *md_import_device(dev_t newdev, int super_format, int supe
 			pr_warn("md: %pg does not have a valid v%d.%d superblock, not importing!\n",
 				rdev->bdev,
 				super_format, super_minor);
+<<<<<<< HEAD
 			goto out_blkdev_put;
+=======
+			goto abort_free;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		if (err < 0) {
 			pr_warn("md: could not read %pg's sb, not importing!\n",
 				rdev->bdev);
+<<<<<<< HEAD
 			goto out_blkdev_put;
+=======
+			goto abort_free;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
 	return rdev;
 
+<<<<<<< HEAD
 out_blkdev_put:
 	blkdev_put(rdev->bdev, FMODE_READ | FMODE_WRITE | FMODE_EXCL);
 out_clear_rdev:
 	md_rdev_clear(rdev);
 out_free_rdev:
+=======
+abort_free:
+	if (rdev->bdev)
+		unlock_rdev(rdev);
+	md_rdev_clear(rdev);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(rdev);
 	return ERR_PTR(err);
 }
@@ -3873,7 +4068,11 @@ level_store(struct mddev *mddev, const char *buf, size_t len)
 		goto out_unlock;
 	}
 	rv = -EROFS;
+<<<<<<< HEAD
 	if (!md_is_rdwr(mddev))
+=======
+	if (mddev->ro)
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_unlock;
 
 	/* request to change the personality.  Need to ensure:
@@ -4079,7 +4278,11 @@ layout_store(struct mddev *mddev, const char *buf, size_t len)
 	if (mddev->pers) {
 		if (mddev->pers->check_reshape == NULL)
 			err = -EBUSY;
+<<<<<<< HEAD
 		else if (!md_is_rdwr(mddev))
+=======
+		else if (mddev->ro)
+>>>>>>> b7ba80a49124 (Commit)
 			err = -EROFS;
 		else {
 			mddev->new_layout = n;
@@ -4188,7 +4391,11 @@ chunk_size_store(struct mddev *mddev, const char *buf, size_t len)
 	if (mddev->pers) {
 		if (mddev->pers->check_reshape == NULL)
 			err = -EBUSY;
+<<<<<<< HEAD
 		else if (!md_is_rdwr(mddev))
+=======
+		else if (mddev->ro)
+>>>>>>> b7ba80a49124 (Commit)
 			err = -EROFS;
 		else {
 			mddev->new_chunk_sectors = n >> 9;
@@ -4311,6 +4518,7 @@ array_state_show(struct mddev *mddev, char *page)
 
 	if (mddev->pers && !test_bit(MD_NOT_READY, &mddev->flags)) {
 		switch(mddev->ro) {
+<<<<<<< HEAD
 		case MD_RDONLY:
 			st = readonly;
 			break;
@@ -4318,6 +4526,15 @@ array_state_show(struct mddev *mddev, char *page)
 			st = read_auto;
 			break;
 		case MD_RDWR:
+=======
+		case 1:
+			st = readonly;
+			break;
+		case 2:
+			st = read_auto;
+			break;
+		case 0:
+>>>>>>> b7ba80a49124 (Commit)
 			spin_lock(&mddev->lock);
 			if (test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags))
 				st = write_pending;
@@ -4353,8 +4570,12 @@ array_state_store(struct mddev *mddev, const char *buf, size_t len)
 	int err = 0;
 	enum array_state st = match_word(buf, array_states);
 
+<<<<<<< HEAD
 	if (mddev->pers && (st == active || st == clean) &&
 	    mddev->ro != MD_RDONLY) {
+=======
+	if (mddev->pers && (st == active || st == clean) && mddev->ro != 1) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* don't take reconfig_mutex when toggling between
 		 * clean and active
 		 */
@@ -4398,13 +4619,18 @@ array_state_store(struct mddev *mddev, const char *buf, size_t len)
 		if (mddev->pers)
 			err = md_set_readonly(mddev, NULL);
 		else {
+<<<<<<< HEAD
 			mddev->ro = MD_RDONLY;
+=======
+			mddev->ro = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			set_disk_ro(mddev->gendisk, 1);
 			err = do_md_run(mddev);
 		}
 		break;
 	case read_auto:
 		if (mddev->pers) {
+<<<<<<< HEAD
 			if (md_is_rdwr(mddev))
 				err = md_set_readonly(mddev, NULL);
 			else if (mddev->ro == MD_RDONLY)
@@ -4415,6 +4641,18 @@ array_state_store(struct mddev *mddev, const char *buf, size_t len)
 			}
 		} else {
 			mddev->ro = MD_AUTO_READ;
+=======
+			if (mddev->ro == 0)
+				err = md_set_readonly(mddev, NULL);
+			else if (mddev->ro == 1)
+				err = restart_array(mddev);
+			if (err == 0) {
+				mddev->ro = 2;
+				set_disk_ro(mddev->gendisk, 0);
+			}
+		} else {
+			mddev->ro = 2;
+>>>>>>> b7ba80a49124 (Commit)
 			err = do_md_run(mddev);
 		}
 		break;
@@ -4439,7 +4677,11 @@ array_state_store(struct mddev *mddev, const char *buf, size_t len)
 			wake_up(&mddev->sb_wait);
 			err = 0;
 		} else {
+<<<<<<< HEAD
 			mddev->ro = MD_RDWR;
+=======
+			mddev->ro = 0;
+>>>>>>> b7ba80a49124 (Commit)
 			set_disk_ro(mddev->gendisk, 0);
 			err = do_md_run(mddev);
 		}
@@ -4738,7 +4980,11 @@ action_show(struct mddev *mddev, char *page)
 	if (test_bit(MD_RECOVERY_FROZEN, &recovery))
 		type = "frozen";
 	else if (test_bit(MD_RECOVERY_RUNNING, &recovery) ||
+<<<<<<< HEAD
 	    (md_is_rdwr(mddev) && test_bit(MD_RECOVERY_NEEDED, &recovery))) {
+=======
+	    (!mddev->ro && test_bit(MD_RECOVERY_NEEDED, &recovery))) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (test_bit(MD_RECOVERY_RESHAPE, &recovery))
 			type = "reshape";
 		else if (test_bit(MD_RECOVERY_SYNC, &recovery)) {
@@ -4824,11 +5070,19 @@ action_store(struct mddev *mddev, const char *page, size_t len)
 		set_bit(MD_RECOVERY_REQUESTED, &mddev->recovery);
 		set_bit(MD_RECOVERY_SYNC, &mddev->recovery);
 	}
+<<<<<<< HEAD
 	if (mddev->ro == MD_AUTO_READ) {
 		/* A write to sync_action is enough to justify
 		 * canceling read-auto mode
 		 */
 		mddev->ro = MD_RDWR;
+=======
+	if (mddev->ro == 2) {
+		/* A write to sync_action is enough to justify
+		 * canceling read-auto mode
+		 */
+		mddev->ro = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		md_wakeup_thread(mddev->sync_thread);
 	}
 	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
@@ -5056,7 +5310,12 @@ max_sync_store(struct mddev *mddev, const char *buf, size_t len)
 			goto out_unlock;
 
 		err = -EBUSY;
+<<<<<<< HEAD
 		if (max < mddev->resync_max && md_is_rdwr(mddev) &&
+=======
+		if (max < mddev->resync_max &&
+		    mddev->ro == 0 &&
+>>>>>>> b7ba80a49124 (Commit)
 		    test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
 			goto out_unlock;
 
@@ -5740,12 +5999,15 @@ static void md_safemode_timeout(struct timer_list *t)
 }
 
 static int start_dirty_degraded;
+<<<<<<< HEAD
 static void active_io_release(struct percpu_ref *ref)
 {
 	struct mddev *mddev = container_of(ref, struct mddev, active_io);
 
 	wake_up(&mddev->sb_wait);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int md_run(struct mddev *mddev)
 {
@@ -5791,8 +6053,13 @@ int md_run(struct mddev *mddev)
 			continue;
 		sync_blockdev(rdev->bdev);
 		invalidate_bdev(rdev->bdev);
+<<<<<<< HEAD
 		if (mddev->ro != MD_RDONLY && rdev_read_only(rdev)) {
 			mddev->ro = MD_RDONLY;
+=======
+		if (mddev->ro != 1 && rdev_read_only(rdev)) {
+			mddev->ro = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			if (mddev->gendisk)
 				set_disk_ro(mddev->gendisk, 1);
 		}
@@ -5823,6 +6090,7 @@ int md_run(struct mddev *mddev)
 			}
 		}
 		sysfs_notify_dirent_safe(rdev->sysfs_state);
+<<<<<<< HEAD
 		nowait = nowait && bdev_nowait(rdev->bdev);
 	}
 
@@ -5835,6 +6103,15 @@ int md_run(struct mddev *mddev)
 		err = bioset_init(&mddev->bio_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
 		if (err)
 			goto exit_active_io;
+=======
+		nowait = nowait && blk_queue_nowait(bdev_get_queue(rdev->bdev));
+	}
+
+	if (!bioset_initialized(&mddev->bio_set)) {
+		err = bioset_init(&mddev->bio_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
+		if (err)
+			return err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (!bioset_initialized(&mddev->sync_set)) {
 		err = bioset_init(&mddev->sync_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
@@ -5900,8 +6177,13 @@ int md_run(struct mddev *mddev)
 
 	mddev->ok_start_degraded = start_dirty_degraded;
 
+<<<<<<< HEAD
 	if (start_readonly && md_is_rdwr(mddev))
 		mddev->ro = MD_AUTO_READ; /* read-only, but switch on first write */
+=======
+	if (start_readonly && mddev->ro == 0)
+		mddev->ro = 2; /* read-only, but switch on first write */
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = pers->run(mddev);
 	if (err)
@@ -5979,8 +6261,13 @@ int md_run(struct mddev *mddev)
 		mddev->sysfs_action = sysfs_get_dirent_safe(mddev->kobj.sd, "sync_action");
 		mddev->sysfs_completed = sysfs_get_dirent_safe(mddev->kobj.sd, "sync_completed");
 		mddev->sysfs_degraded = sysfs_get_dirent_safe(mddev->kobj.sd, "degraded");
+<<<<<<< HEAD
 	} else if (mddev->ro == MD_AUTO_READ)
 		mddev->ro = MD_RDWR;
+=======
+	} else if (mddev->ro == 2) /* auto-readonly not meaningful */
+		mddev->ro = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	atomic_set(&mddev->max_corr_read_errors,
 		   MD_DEFAULT_MAX_CORRECTED_READ_ERRORS);
@@ -5998,7 +6285,11 @@ int md_run(struct mddev *mddev)
 		if (rdev->raid_disk >= 0)
 			sysfs_link_rdev(mddev, rdev); /* failure here is OK */
 
+<<<<<<< HEAD
 	if (mddev->degraded && md_is_rdwr(mddev))
+=======
+	if (mddev->degraded && !mddev->ro)
+>>>>>>> b7ba80a49124 (Commit)
 		/* This ensures that recovering status is reported immediately
 		 * via sysfs - until a lack of spares is confirmed.
 		 */
@@ -6022,8 +6313,11 @@ abort:
 	bioset_exit(&mddev->sync_set);
 exit_bio_set:
 	bioset_exit(&mddev->bio_set);
+<<<<<<< HEAD
 exit_active_io:
 	percpu_ref_exit(&mddev->active_io);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 EXPORT_SYMBOL_GPL(md_run);
@@ -6090,7 +6384,11 @@ static int restart_array(struct mddev *mddev)
 		return -ENXIO;
 	if (!mddev->pers)
 		return -EINVAL;
+<<<<<<< HEAD
 	if (md_is_rdwr(mddev))
+=======
+	if (!mddev->ro)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EBUSY;
 
 	rcu_read_lock();
@@ -6109,7 +6407,11 @@ static int restart_array(struct mddev *mddev)
 		return -EROFS;
 
 	mddev->safemode = 0;
+<<<<<<< HEAD
 	mddev->ro = MD_RDWR;
+=======
+	mddev->ro = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	set_disk_ro(disk, 0);
 	pr_debug("md: %s switched to read-write mode.\n", mdname(mddev));
 	/* Kick recovery or resync if necessary */
@@ -6136,7 +6438,11 @@ static void md_clean(struct mddev *mddev)
 	mddev->clevel[0] = 0;
 	mddev->flags = 0;
 	mddev->sb_flags = 0;
+<<<<<<< HEAD
 	mddev->ro = MD_RDWR;
+=======
+	mddev->ro = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	mddev->metadata_type[0] = 0;
 	mddev->chunk_sectors = 0;
 	mddev->ctime = mddev->utime = 0;
@@ -6149,7 +6455,11 @@ static void md_clean(struct mddev *mddev)
 	mddev->new_level = LEVEL_NONE;
 	mddev->new_layout = 0;
 	mddev->new_chunk_sectors = 0;
+<<<<<<< HEAD
 	mddev->curr_resync = MD_RESYNC_NONE;
+=======
+	mddev->curr_resync = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	atomic64_set(&mddev->resync_mismatches, 0);
 	mddev->suspend_lo = mddev->suspend_hi = 0;
 	mddev->sync_speed_min = mddev->sync_speed_max = 0;
@@ -6188,7 +6498,11 @@ static void __md_stop_writes(struct mddev *mddev)
 	}
 	md_bitmap_flush(mddev);
 
+<<<<<<< HEAD
 	if (md_is_rdwr(mddev) &&
+=======
+	if (mddev->ro == 0 &&
+>>>>>>> b7ba80a49124 (Commit)
 	    ((!mddev->in_sync && !mddev_is_clustered(mddev)) ||
 	     mddev->sb_flags)) {
 		/* mark array as shutdown cleanly */
@@ -6212,7 +6526,11 @@ EXPORT_SYMBOL_GPL(md_stop_writes);
 static void mddev_detach(struct mddev *mddev)
 {
 	md_bitmap_wait_behind_writes(mddev);
+<<<<<<< HEAD
 	if (mddev->pers && mddev->pers->quiesce && !is_md_suspended(mddev)) {
+=======
+	if (mddev->pers && mddev->pers->quiesce && !mddev->suspended) {
+>>>>>>> b7ba80a49124 (Commit)
 		mddev->pers->quiesce(mddev, 1);
 		mddev->pers->quiesce(mddev, 0);
 	}
@@ -6239,11 +6557,14 @@ static void __md_stop(struct mddev *mddev)
 		mddev->to_remove = &md_redundancy_group;
 	module_put(pers->owner);
 	clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+<<<<<<< HEAD
 
 	percpu_ref_exit(&mddev->writes_pending);
 	percpu_ref_exit(&mddev->active_io);
 	bioset_exit(&mddev->bio_set);
 	bioset_exit(&mddev->sync_set);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void md_stop(struct mddev *mddev)
@@ -6253,6 +6574,11 @@ void md_stop(struct mddev *mddev)
 	 */
 	__md_stop_writes(mddev);
 	__md_stop(mddev);
+<<<<<<< HEAD
+=======
+	bioset_exit(&mddev->bio_set);
+	bioset_exit(&mddev->sync_set);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 EXPORT_SYMBOL_GPL(md_stop);
@@ -6300,9 +6626,15 @@ static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
 		__md_stop_writes(mddev);
 
 		err  = -ENXIO;
+<<<<<<< HEAD
 		if (mddev->ro == MD_RDONLY)
 			goto out;
 		mddev->ro = MD_RDONLY;
+=======
+		if (mddev->ro==1)
+			goto out;
+		mddev->ro = 1;
+>>>>>>> b7ba80a49124 (Commit)
 		set_disk_ro(mddev->gendisk, 1);
 		clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
 		set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
@@ -6359,7 +6691,11 @@ static int do_md_stop(struct mddev *mddev, int mode,
 		return -EBUSY;
 	}
 	if (mddev->pers) {
+<<<<<<< HEAD
 		if (!md_is_rdwr(mddev))
+=======
+		if (mddev->ro)
+>>>>>>> b7ba80a49124 (Commit)
 			set_disk_ro(disk, 0);
 
 		__md_stop_writes(mddev);
@@ -6376,8 +6712,13 @@ static int do_md_stop(struct mddev *mddev, int mode,
 		mutex_unlock(&mddev->open_mutex);
 		mddev->changed = 1;
 
+<<<<<<< HEAD
 		if (!md_is_rdwr(mddev))
 			mddev->ro = MD_RDWR;
+=======
+		if (mddev->ro)
+			mddev->ro = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	} else
 		mutex_unlock(&mddev->open_mutex);
 	/*
@@ -6970,7 +7311,11 @@ static int hot_add_disk(struct mddev *mddev, dev_t dev)
 	 * If the new disk does not support REQ_NOWAIT,
 	 * disable on the whole MD.
 	 */
+<<<<<<< HEAD
 	if (!bdev_nowait(rdev->bdev)) {
+=======
+	if (!blk_queue_nowait(bdev_get_queue(rdev->bdev))) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_info("%s: Disabling nowait because %pg does not support nowait\n",
 			mdname(mddev), rdev->bdev);
 		blk_queue_flag_clear(QUEUE_FLAG_NOWAIT, mddev->queue);
@@ -7192,7 +7537,11 @@ static int update_size(struct mddev *mddev, sector_t num_sectors)
 	if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) ||
 	    mddev->sync_thread)
 		return -EBUSY;
+<<<<<<< HEAD
 	if (!md_is_rdwr(mddev))
+=======
+	if (mddev->ro)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EROFS;
 
 	rdev_for_each(rdev, mddev) {
@@ -7222,7 +7571,11 @@ static int update_raid_disks(struct mddev *mddev, int raid_disks)
 	/* change the number of raid disks */
 	if (mddev->pers->check_reshape == NULL)
 		return -EINVAL;
+<<<<<<< HEAD
 	if (!md_is_rdwr(mddev))
+=======
+	if (mddev->ro)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EROFS;
 	if (raid_disks <= 0 ||
 	    (mddev->max_disks && raid_disks >= mddev->max_disks))
@@ -7452,6 +7805,7 @@ static inline bool md_ioctl_valid(unsigned int cmd)
 	}
 }
 
+<<<<<<< HEAD
 static int __md_set_array_info(struct mddev *mddev, void __user *argp)
 {
 	mdu_array_info_t info;
@@ -7486,6 +7840,8 @@ static int __md_set_array_info(struct mddev *mddev, void __user *argp)
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int md_ioctl(struct block_device *bdev, fmode_t mode,
 			unsigned int cmd, unsigned long arg)
 {
@@ -7591,7 +7947,40 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
 	}
 
 	if (cmd == SET_ARRAY_INFO) {
+<<<<<<< HEAD
 		err = __md_set_array_info(mddev, argp);
+=======
+		mdu_array_info_t info;
+		if (!arg)
+			memset(&info, 0, sizeof(info));
+		else if (copy_from_user(&info, argp, sizeof(info))) {
+			err = -EFAULT;
+			goto unlock;
+		}
+		if (mddev->pers) {
+			err = update_array_info(mddev, &info);
+			if (err) {
+				pr_warn("md: couldn't update array info. %d\n", err);
+				goto unlock;
+			}
+			goto unlock;
+		}
+		if (!list_empty(&mddev->disks)) {
+			pr_warn("md: array %s already has disks!\n", mdname(mddev));
+			err = -EBUSY;
+			goto unlock;
+		}
+		if (mddev->raid_disks) {
+			pr_warn("md: array %s already initialised!\n", mdname(mddev));
+			err = -EBUSY;
+			goto unlock;
+		}
+		err = md_set_array_info(mddev, &info);
+		if (err) {
+			pr_warn("md: couldn't set array info. %d\n", err);
+			goto unlock;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		goto unlock;
 	}
 
@@ -7651,6 +8040,7 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
 	 * The remaining ioctls are changing the state of the
 	 * superblock, so we do not allow them on read-only arrays.
 	 */
+<<<<<<< HEAD
 	if (!md_is_rdwr(mddev) && mddev->pers) {
 		if (mddev->ro != MD_AUTO_READ) {
 			err = -EROFS;
@@ -7670,6 +8060,28 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
 				   !test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags));
 			mddev_lock_nointr(mddev);
 		}
+=======
+	if (mddev->ro && mddev->pers) {
+		if (mddev->ro == 2) {
+			mddev->ro = 0;
+			sysfs_notify_dirent_safe(mddev->sysfs_state);
+			set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
+			/* mddev_unlock will wake thread */
+			/* If a device failed while we were read-only, we
+			 * need to make sure the metadata is updated now.
+			 */
+			if (test_bit(MD_SB_CHANGE_DEVS, &mddev->sb_flags)) {
+				mddev_unlock(mddev);
+				wait_event(mddev->sb_wait,
+					   !test_bit(MD_SB_CHANGE_DEVS, &mddev->sb_flags) &&
+					   !test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags));
+				mddev_lock_nointr(mddev);
+			}
+		} else {
+			err = -EROFS;
+			goto unlock;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	switch (cmd) {
@@ -7755,11 +8167,19 @@ static int md_set_read_only(struct block_device *bdev, bool ro)
 	 * Transitioning to read-auto need only happen for arrays that call
 	 * md_write_start and which are not ready for writes yet.
 	 */
+<<<<<<< HEAD
 	if (!ro && mddev->ro == MD_RDONLY && mddev->pers) {
 		err = restart_array(mddev);
 		if (err)
 			goto out_unlock;
 		mddev->ro = MD_AUTO_READ;
+=======
+	if (!ro && mddev->ro == 1 && mddev->pers) {
+		err = restart_array(mddev);
+		if (err)
+			goto out_unlock;
+		mddev->ro = 2;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 out_unlock:
@@ -7823,6 +8243,13 @@ static void md_free_disk(struct gendisk *disk)
 {
 	struct mddev *mddev = disk->private_data;
 
+<<<<<<< HEAD
+=======
+	percpu_ref_exit(&mddev->writes_pending);
+	bioset_exit(&mddev->bio_set);
+	bioset_exit(&mddev->sync_set);
+
+>>>>>>> b7ba80a49124 (Commit)
 	mddev_free(mddev);
 }
 
@@ -8144,6 +8571,10 @@ static void *md_seq_start(struct seq_file *seq, loff_t *pos)
 	list_for_each(tmp,&all_mddevs)
 		if (!l--) {
 			mddev = list_entry(tmp, struct mddev, all_mddevs);
+<<<<<<< HEAD
+=======
+			mddev_get(mddev);
+>>>>>>> b7ba80a49124 (Commit)
 			if (!mddev_get(mddev))
 				continue;
 			spin_unlock(&all_mddevs_lock);
@@ -8229,9 +8660,15 @@ static int md_seq_show(struct seq_file *seq, void *v)
 		seq_printf(seq, "%s : %sactive", mdname(mddev),
 						mddev->pers ? "" : "in");
 		if (mddev->pers) {
+<<<<<<< HEAD
 			if (mddev->ro == MD_RDONLY)
 				seq_printf(seq, " (read-only)");
 			if (mddev->ro == MD_AUTO_READ)
+=======
+			if (mddev->ro==1)
+				seq_printf(seq, " (read-only)");
+			if (mddev->ro==2)
+>>>>>>> b7ba80a49124 (Commit)
 				seq_printf(seq, " (auto-read-only)");
 			seq_printf(seq, " %s", mddev->pers->name);
 		}
@@ -8490,10 +8927,17 @@ bool md_write_start(struct mddev *mddev, struct bio *bi)
 	if (bio_data_dir(bi) != WRITE)
 		return true;
 
+<<<<<<< HEAD
 	BUG_ON(mddev->ro == MD_RDONLY);
 	if (mddev->ro == MD_AUTO_READ) {
 		/* need to switch to read/write */
 		mddev->ro = MD_RDWR;
+=======
+	BUG_ON(mddev->ro == 1);
+	if (mddev->ro == 2) {
+		/* need to switch to read/write */
+		mddev->ro = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
 		md_wakeup_thread(mddev->thread);
 		md_wakeup_thread(mddev->sync_thread);
@@ -8523,7 +8967,11 @@ bool md_write_start(struct mddev *mddev, struct bio *bi)
 		return true;
 	wait_event(mddev->sb_wait,
 		   !test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags) ||
+<<<<<<< HEAD
 		   is_md_suspended(mddev));
+=======
+		   mddev->suspended);
+>>>>>>> b7ba80a49124 (Commit)
 	if (test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags)) {
 		percpu_ref_put(&mddev->writes_pending);
 		return false;
@@ -8544,7 +8992,11 @@ void md_write_inc(struct mddev *mddev, struct bio *bi)
 {
 	if (bio_data_dir(bi) != WRITE)
 		return;
+<<<<<<< HEAD
 	WARN_ON_ONCE(mddev->in_sync || !md_is_rdwr(mddev));
+=======
+	WARN_ON_ONCE(mddev->in_sync || mddev->ro);
+>>>>>>> b7ba80a49124 (Commit)
 	percpu_ref_get(&mddev->writes_pending);
 }
 EXPORT_SYMBOL(md_write_inc);
@@ -8607,15 +9059,21 @@ static void md_end_io_acct(struct bio *bio)
 {
 	struct md_io_acct *md_io_acct = bio->bi_private;
 	struct bio *orig_bio = md_io_acct->orig_bio;
+<<<<<<< HEAD
 	struct mddev *mddev = md_io_acct->mddev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	orig_bio->bi_status = bio->bi_status;
 
 	bio_end_io_acct(orig_bio, md_io_acct->start_time);
 	bio_put(bio);
 	bio_endio(orig_bio);
+<<<<<<< HEAD
 
 	percpu_ref_put(&mddev->active_io);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -8631,13 +9089,19 @@ void md_account_bio(struct mddev *mddev, struct bio **bio)
 	if (!blk_queue_io_stat(bdev->bd_disk->queue))
 		return;
 
+<<<<<<< HEAD
 	percpu_ref_get(&mddev->active_io);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	clone = bio_alloc_clone(bdev, *bio, GFP_NOIO, &mddev->io_acct_set);
 	md_io_acct = container_of(clone, struct md_io_acct, bio_clone);
 	md_io_acct->orig_bio = *bio;
 	md_io_acct->start_time = bio_start_io_acct(*bio);
+<<<<<<< HEAD
 	md_io_acct->mddev = mddev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	clone->bi_end_io = md_end_io_acct;
 	clone->bi_private = md_io_acct;
@@ -8655,7 +9119,11 @@ void md_allow_write(struct mddev *mddev)
 {
 	if (!mddev->pers)
 		return;
+<<<<<<< HEAD
 	if (!md_is_rdwr(mddev))
+=======
+	if (mddev->ro)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	if (!mddev->pers->sync_request)
 		return;
@@ -8703,7 +9171,11 @@ void md_do_sync(struct md_thread *thread)
 	if (test_bit(MD_RECOVERY_DONE, &mddev->recovery) ||
 	    test_bit(MD_RECOVERY_WAIT, &mddev->recovery))
 		return;
+<<<<<<< HEAD
 	if (!md_is_rdwr(mddev)) {/* never try to sync a read-only array */
+=======
+	if (mddev->ro) {/* never try to sync a read-only array */
+>>>>>>> b7ba80a49124 (Commit)
 		set_bit(MD_RECOVERY_INTR, &mddev->recovery);
 		return;
 	}
@@ -8881,7 +9353,11 @@ void md_do_sync(struct md_thread *thread)
 	atomic_set(&mddev->recovery_active, 0);
 	last_check = 0;
 
+<<<<<<< HEAD
 	if (j >= MD_RESYNC_ACTIVE) {
+=======
+	if (j>2) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_debug("md: resuming %s of %s from checkpoint.\n",
 			 desc, mdname(mddev));
 		mddev->curr_resync = j;
@@ -8953,7 +9429,11 @@ void md_do_sync(struct md_thread *thread)
 		if (j > max_sectors)
 			/* when skipping, extra large numbers can be returned. */
 			j = max_sectors;
+<<<<<<< HEAD
 		if (j >= MD_RESYNC_ACTIVE)
+=======
+		if (j > 2)
+>>>>>>> b7ba80a49124 (Commit)
 			mddev->curr_resync = j;
 		mddev->curr_mark_cnt = io_sectors;
 		if (last_check == 0)
@@ -9028,7 +9508,11 @@ void md_do_sync(struct md_thread *thread)
 	mddev->pers->sync_request(mddev, max_sectors, &skipped);
 
 	if (!test_bit(MD_RECOVERY_CHECK, &mddev->recovery) &&
+<<<<<<< HEAD
 	    mddev->curr_resync > MD_RESYNC_ACTIVE) {
+=======
+	    mddev->curr_resync >= MD_RESYNC_ACTIVE) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery)) {
 			if (test_bit(MD_RECOVERY_INTR, &mddev->recovery)) {
 				if (mddev->curr_resync >= mddev->recovery_cp) {
@@ -9172,9 +9656,15 @@ static int remove_and_add_spares(struct mddev *mddev,
 		if (test_bit(Faulty, &rdev->flags))
 			continue;
 		if (!test_bit(Journal, &rdev->flags)) {
+<<<<<<< HEAD
 			if (!md_is_rdwr(mddev) &&
 			    !(rdev->saved_raid_disk >= 0 &&
 			      !test_bit(Bitmap_sync, &rdev->flags)))
+=======
+			if (mddev->ro &&
+			    ! (rdev->saved_raid_disk >= 0 &&
+			       !test_bit(Bitmap_sync, &rdev->flags)))
+>>>>>>> b7ba80a49124 (Commit)
 				continue;
 
 			rdev->recovery_offset = 0;
@@ -9257,7 +9747,11 @@ void md_check_recovery(struct mddev *mddev)
 		wake_up(&mddev->sb_wait);
 	}
 
+<<<<<<< HEAD
 	if (is_md_suspended(mddev))
+=======
+	if (mddev->suspended)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	if (mddev->bitmap)
@@ -9272,8 +9766,12 @@ void md_check_recovery(struct mddev *mddev)
 		flush_signals(current);
 	}
 
+<<<<<<< HEAD
 	if (!md_is_rdwr(mddev) &&
 	    !test_bit(MD_RECOVERY_NEEDED, &mddev->recovery))
+=======
+	if (mddev->ro && !test_bit(MD_RECOVERY_NEEDED, &mddev->recovery))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	if ( ! (
 		(mddev->sb_flags & ~ (1<<MD_SB_CHANGE_PENDING)) ||
@@ -9292,7 +9790,11 @@ void md_check_recovery(struct mddev *mddev)
 		if (!mddev->external && mddev->safemode == 1)
 			mddev->safemode = 0;
 
+<<<<<<< HEAD
 		if (!md_is_rdwr(mddev)) {
+=======
+		if (mddev->ro) {
+>>>>>>> b7ba80a49124 (Commit)
 			struct md_rdev *rdev;
 			if (!mddev->external && mddev->in_sync)
 				/* 'Blocked' flag not needed as failed devices
@@ -9629,7 +10131,11 @@ static int __init md_init(void)
 	mdp_major = ret;
 
 	register_reboot_notifier(&md_notifier);
+<<<<<<< HEAD
 	raid_table_header = register_sysctl("dev/raid", raid_table);
+=======
+	raid_table_header = register_sysctl_table(raid_root_table);
+>>>>>>> b7ba80a49124 (Commit)
 
 	md_geninit();
 	return 0;

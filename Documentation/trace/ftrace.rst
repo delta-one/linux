@@ -564,7 +564,11 @@ of ftrace. Here is a list of some of the key files:
 
 	start::
 
+<<<<<<< HEAD
 		trace_fd = open("trace_marker", O_WRONLY);
+=======
+		trace_fd = open("trace_marker", WR_ONLY);
+>>>>>>> b7ba80a49124 (Commit)
 
 	Note: Writing into the trace_marker file can also initiate triggers
 	      that are written into /sys/kernel/tracing/events/ftrace/print/trigger
@@ -830,10 +834,17 @@ Error conditions
   The extended error information and usage takes the form shown in
   this example::
 
+<<<<<<< HEAD
     # echo xxx > /sys/kernel/tracing/events/sched/sched_wakeup/trigger
     echo: write error: Invalid argument
 
     # cat /sys/kernel/tracing/error_log
+=======
+    # echo xxx > /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
+    echo: write error: Invalid argument
+
+    # cat /sys/kernel/debug/tracing/error_log
+>>>>>>> b7ba80a49124 (Commit)
     [ 5348.887237] location: error: Couldn't yyy: zzz
       Command: xxx
                ^
@@ -843,7 +854,11 @@ Error conditions
 
   To clear the error log, echo the empty string into it::
 
+<<<<<<< HEAD
     # echo > /sys/kernel/tracing/error_log
+=======
+    # echo > /sys/kernel/debug/tracing/error_log
+>>>>>>> b7ba80a49124 (Commit)
 
 Examples of using the tracer
 ----------------------------
@@ -2940,7 +2955,11 @@ Produces::
               bash-1994  [000] ....  4342.324898: ima_get_action <-process_measurement
               bash-1994  [000] ....  4342.324898: ima_match_policy <-ima_get_action
               bash-1994  [000] ....  4342.324899: do_truncate <-do_last
+<<<<<<< HEAD
               bash-1994  [000] ....  4342.324899: setattr_should_drop_suidgid <-do_truncate
+=======
+              bash-1994  [000] ....  4342.324899: should_remove_suid <-do_truncate
+>>>>>>> b7ba80a49124 (Commit)
               bash-1994  [000] ....  4342.324899: notify_change <-do_truncate
               bash-1994  [000] ....  4342.324900: current_fs_time <-notify_change
               bash-1994  [000] ....  4342.324900: current_kernel_time <-current_fs_time

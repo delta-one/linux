@@ -1,5 +1,10 @@
 .. SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
+=======
+.. _physical_memory_model:
+
+>>>>>>> b7ba80a49124 (Commit)
 =====================
 Physical Memory Model
 =====================

@@ -11,6 +11,14 @@
 #include <asm/asm-offsets.h>
 #include <asm/export.h>
 
+<<<<<<< HEAD
+=======
+	.section	".toc","aw"
+PPC64_CACHES:
+	.tc		ppc64_caches[TC],ppc64_caches
+	.section	".text"
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * __arch_clear_user: - Zero a block of memory in user space, with less checking.
  * @to:   Destination address, in user space.
@@ -128,7 +136,11 @@ err1;	stb	r0,0(r3)
 	blr
 
 .Llong_clear:
+<<<<<<< HEAD
 	LOAD_REG_ADDR(r5, ppc64_caches)
+=======
+	ld	r5,PPC64_CACHES@toc(r2)
+>>>>>>> b7ba80a49124 (Commit)
 
 	bf	cr7*4+0,11f
 err2;	std	r0,0(r3)

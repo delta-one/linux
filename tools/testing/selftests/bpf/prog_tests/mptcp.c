@@ -7,8 +7,11 @@
 #include "network_helpers.h"
 #include "mptcp_sock.skel.h"
 
+<<<<<<< HEAD
 #define NS_TEST "mptcp_ns"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef TCP_CA_NAME_MAX
 #define TCP_CA_NAME_MAX	16
 #endif
@@ -140,13 +143,17 @@ out:
 
 static void test_base(void)
 {
+<<<<<<< HEAD
 	struct nstoken *nstoken = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int server_fd, cgroup_fd;
 
 	cgroup_fd = test__join_cgroup("/mptcp");
 	if (!ASSERT_GE(cgroup_fd, 0, "test__join_cgroup"))
 		return;
 
+<<<<<<< HEAD
 	SYS(fail, "ip netns add %s", NS_TEST);
 	SYS(fail, "ip -net %s link set dev lo up", NS_TEST);
 
@@ -154,6 +161,8 @@ static void test_base(void)
 	if (!ASSERT_OK_PTR(nstoken, "open_netns"))
 		goto fail;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* without MPTCP */
 	server_fd = start_server(AF_INET, SOCK_STREAM, NULL, 0, 0);
 	if (!ASSERT_GE(server_fd, 0, "start_server"))
@@ -167,18 +176,26 @@ with_mptcp:
 	/* with MPTCP */
 	server_fd = start_mptcp_server(AF_INET, NULL, 0, 0);
 	if (!ASSERT_GE(server_fd, 0, "start_mptcp_server"))
+<<<<<<< HEAD
 		goto fail;
+=======
+		goto close_cgroup_fd;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_OK(run_test(cgroup_fd, server_fd, true), "run_test mptcp");
 
 	close(server_fd);
 
+<<<<<<< HEAD
 fail:
 	if (nstoken)
 		close_netns(nstoken);
 
 	SYS_NOFAIL("ip netns del " NS_TEST " &> /dev/null");
 
+=======
+close_cgroup_fd:
+>>>>>>> b7ba80a49124 (Commit)
 	close(cgroup_fd);
 }
 

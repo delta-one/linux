@@ -29,12 +29,18 @@
 
 #include "display/intel_cdclk.h"
 #include "display/intel_de.h"
+<<<<<<< HEAD
 #include "display/intel_display.h"
 #include "gt/intel_gt_regs.h"
 #include "i915_drv.h"
 #include "i915_reg.h"
 #include "i915_utils.h"
 #include "intel_device_info.h"
+=======
+#include "intel_device_info.h"
+#include "i915_drv.h"
+#include "i915_utils.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define PLATFORM_NAME(x) [INTEL_##x] = #x
 static const char * const platform_names[] = {
@@ -119,6 +125,7 @@ void intel_device_info_print(const struct intel_device_info *info,
 		drm_printf(p, "display version: %u\n",
 			   runtime->display.ip.ver);
 
+<<<<<<< HEAD
 	drm_printf(p, "graphics stepping: %s\n", intel_step_name(runtime->step.graphics_step));
 	drm_printf(p, "media stepping: %s\n", intel_step_name(runtime->step.media_step));
 	drm_printf(p, "display stepping: %s\n", intel_step_name(runtime->step.display_step));
@@ -127,6 +134,11 @@ void intel_device_info_print(const struct intel_device_info *info,
 	drm_printf(p, "gt: %d\n", info->gt);
 	drm_printf(p, "memory-regions: 0x%x\n", runtime->memory_regions);
 	drm_printf(p, "page-sizes: 0x%x\n", runtime->page_sizes);
+=======
+	drm_printf(p, "gt: %d\n", info->gt);
+	drm_printf(p, "memory-regions: %x\n", runtime->memory_regions);
+	drm_printf(p, "page-sizes: %x\n", runtime->page_sizes);
+>>>>>>> b7ba80a49124 (Commit)
 	drm_printf(p, "platform: %s\n", intel_platform_name(info->platform));
 	drm_printf(p, "ppgtt-size: %d\n", runtime->ppgtt_size);
 	drm_printf(p, "ppgtt-type: %d\n", runtime->ppgtt_type);
@@ -207,10 +219,13 @@ static const u16 subplatform_rpl_ids[] = {
 	INTEL_RPLP_IDS(0),
 };
 
+<<<<<<< HEAD
 static const u16 subplatform_rplu_ids[] = {
 	INTEL_RPLU_IDS(0),
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const u16 subplatform_g10_ids[] = {
 	INTEL_DG2_G10_IDS(0),
 	INTEL_ATS_M150_IDS(0),
@@ -243,7 +258,11 @@ static bool find_devid(u16 id, const u16 *p, unsigned int num)
 	return false;
 }
 
+<<<<<<< HEAD
 static void intel_device_info_subplatform_init(struct drm_i915_private *i915)
+=======
+void intel_device_info_subplatform_init(struct drm_i915_private *i915)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct intel_device_info *info = INTEL_INFO(i915);
 	const struct intel_runtime_info *rinfo = RUNTIME_INFO(i915);
@@ -278,9 +297,12 @@ static void intel_device_info_subplatform_init(struct drm_i915_private *i915)
 	} else if (find_devid(devid, subplatform_rpl_ids,
 			      ARRAY_SIZE(subplatform_rpl_ids))) {
 		mask = BIT(INTEL_SUBPLATFORM_RPL);
+<<<<<<< HEAD
 		if (find_devid(devid, subplatform_rplu_ids,
 			       ARRAY_SIZE(subplatform_rplu_ids)))
 			mask |= BIT(INTEL_SUBPLATFORM_RPLU);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (find_devid(devid, subplatform_g10_ids,
 			      ARRAY_SIZE(subplatform_g10_ids))) {
 		mask = BIT(INTEL_SUBPLATFORM_G10);
@@ -303,6 +325,7 @@ static void intel_device_info_subplatform_init(struct drm_i915_private *i915)
 	RUNTIME_INFO(i915)->platform_mask[pi] |= mask;
 }
 
+<<<<<<< HEAD
 static void ip_ver_read(struct drm_i915_private *i915, u32 offset, struct intel_ip_version *ip)
 {
 	struct pci_dev *pdev = to_pci_dev(i915->drm.dev);
@@ -381,6 +404,8 @@ void intel_device_info_runtime_init_early(struct drm_i915_private *i915)
 	intel_device_info_subplatform_init(i915);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * intel_device_info_runtime_init - initialize runtime info
  * @dev_priv: the i915 device
@@ -448,6 +473,7 @@ void intel_device_info_runtime_init(struct drm_i915_private *dev_priv)
 			runtime->num_sprites[pipe] = 1;
 	}
 
+<<<<<<< HEAD
 	if (HAS_DISPLAY(dev_priv) &&
 	    (IS_DGFX(dev_priv) || DISPLAY_VER(dev_priv) >= 14) &&
 	    !(intel_de_read(dev_priv, GU_CNTL_PROTECTED) & DEPRESENT)) {
@@ -456,6 +482,8 @@ void intel_device_info_runtime_init(struct drm_i915_private *dev_priv)
 		runtime->pipe_mask = 0;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (HAS_DISPLAY(dev_priv) && IS_GRAPHICS_VER(dev_priv, 7, 8) &&
 	    HAS_PCH_SPLIT(dev_priv)) {
 		u32 fuse_strap = intel_de_read(dev_priv, FUSE_STRAP);
@@ -477,6 +505,11 @@ void intel_device_info_runtime_init(struct drm_i915_private *dev_priv)
 			drm_info(&dev_priv->drm,
 				 "Display fused off, disabling\n");
 			runtime->pipe_mask = 0;
+<<<<<<< HEAD
+=======
+			runtime->cpu_transcoder_mask = 0;
+			runtime->fbc_mask = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		} else if (fuse_strap & IVB_PIPE_C_DISABLE) {
 			drm_info(&dev_priv->drm, "PipeC fused off\n");
 			runtime->pipe_mask &= ~BIT(PIPE_C);
@@ -514,7 +547,11 @@ void intel_device_info_runtime_init(struct drm_i915_private *dev_priv)
 		if (DISPLAY_VER(dev_priv) >= 11 && (dfsm & ICL_DFSM_DMC_DISABLE))
 			runtime->has_dmc = 0;
 
+<<<<<<< HEAD
 		if (IS_DISPLAY_VER(dev_priv, 10, 12) &&
+=======
+		if (DISPLAY_VER(dev_priv) >= 10 &&
+>>>>>>> b7ba80a49124 (Commit)
 		    (dfsm & GLK_DFSM_DISPLAY_DSC_DISABLE))
 			runtime->has_dsc = 0;
 	}
@@ -532,6 +569,7 @@ void intel_device_info_runtime_init(struct drm_i915_private *dev_priv)
 		dev_priv->drm.driver_features &= ~(DRIVER_MODESET |
 						   DRIVER_ATOMIC);
 		memset(&info->display, 0, sizeof(info->display));
+<<<<<<< HEAD
 
 		runtime->cpu_transcoder_mask = 0;
 		memset(runtime->num_sprites, 0, sizeof(runtime->num_sprites));
@@ -546,6 +584,11 @@ void intel_device_info_runtime_init(struct drm_i915_private *dev_priv)
 	if (!dev_priv->params.nuclear_pageflip &&
 	    DISPLAY_VER(dev_priv) < 5 && !IS_G4X(dev_priv))
 		dev_priv->drm.driver_features &= ~DRIVER_ATOMIC;
+=======
+		memset(runtime->num_sprites, 0, sizeof(runtime->num_sprites));
+		memset(runtime->num_scalers, 0, sizeof(runtime->num_scalers));
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void intel_driver_caps_print(const struct intel_driver_caps *caps,
@@ -553,5 +596,9 @@ void intel_driver_caps_print(const struct intel_driver_caps *caps,
 {
 	drm_printf(p, "Has logical contexts? %s\n",
 		   str_yes_no(caps->has_logical_contexts));
+<<<<<<< HEAD
 	drm_printf(p, "scheduler: 0x%x\n", caps->scheduler);
+=======
+	drm_printf(p, "scheduler: %x\n", caps->scheduler);
+>>>>>>> b7ba80a49124 (Commit)
 }

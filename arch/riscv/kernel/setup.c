@@ -252,10 +252,17 @@ static void __init parse_dtb(void)
 			pr_info("Machine model: %s\n", name);
 			dump_stack_set_arch_desc("%s (DT)", name);
 		}
+<<<<<<< HEAD
 	} else {
 		pr_err("No DTB passed to the kernel\n");
 	}
 
+=======
+		return;
+	}
+
+	pr_err("No DTB passed to the kernel\n");
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_CMDLINE_FORCE
 	strscpy(boot_command_line, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
 	pr_info("Forcing kernel command line to: %s\n", boot_command_line);
@@ -283,7 +290,10 @@ void __init setup_arch(char **cmdline_p)
 	else
 		pr_err("No DTB found in kernel mappings\n");
 #endif
+<<<<<<< HEAD
 	early_init_fdt_scan_reserved_mem();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	misc_mem_init();
 
 	init_resources();
@@ -297,12 +307,18 @@ void __init setup_arch(char **cmdline_p)
 	setup_smp();
 #endif
 
+<<<<<<< HEAD
 	riscv_init_cbo_blocksizes();
 	riscv_fill_hwcap();
 	apply_boot_alternatives();
 	if (IS_ENABLED(CONFIG_RISCV_ISA_ZICBOM) &&
 	    riscv_isa_extension_available(NULL, ZICBOM))
 		riscv_noncoherent_supported();
+=======
+	riscv_init_cbom_blocksize();
+	riscv_fill_hwcap();
+	apply_boot_alternatives();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __init topology_init(void)
@@ -325,11 +341,18 @@ subsys_initcall(topology_init);
 
 void free_initmem(void)
 {
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX)) {
 		set_kernel_memory(lm_alias(__init_begin), lm_alias(__init_end), set_memory_rw_nx);
 		if (IS_ENABLED(CONFIG_64BIT))
 			set_kernel_memory(__init_begin, __init_end, set_memory_nx);
 	}
+=======
+	if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX))
+		set_kernel_memory(lm_alias(__init_begin), lm_alias(__init_end),
+				  IS_ENABLED(CONFIG_64BIT) ?
+					set_memory_rw : set_memory_rw_nx);
+>>>>>>> b7ba80a49124 (Commit)
 
 	free_initmem_default(POISON_FREE_INITMEM);
 }

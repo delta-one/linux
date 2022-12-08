@@ -402,10 +402,15 @@ int pxa2xx_ac97_hw_probe(struct platform_device *dev)
 		goto err_clk2;
 
 	irq = platform_get_irq(dev, 0);
+<<<<<<< HEAD
 	if (irq < 0) {
 		ret = irq;
 		goto err_irq;
 	}
+=======
+	if (!irq)
+		goto err_irq;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = request_irq(irq, pxa2xx_ac97_irq, 0, "AC97", NULL);
 	if (ret < 0)

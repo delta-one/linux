@@ -54,7 +54,11 @@
 &i2c0 {
 	status = "okay";
 
+<<<<<<< HEAD
 	i2c-mux@77 {
+=======
+	i2c-switch@77 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "nxp,pca9547";
 		#address-cells = <1>;
 		#size-cells = <0>;

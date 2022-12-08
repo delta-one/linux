@@ -6,12 +6,20 @@
  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
  */
 
+<<<<<<< HEAD
 #include <linux/err.h>
 #include <linux/gpio/consumer.h>
 #include <linux/module.h>
 #include <linux/mod_devicetable.h>
 #include <linux/platform_device.h>
 #include <linux/slab.h>
+=======
+#include <linux/gpio.h>
+#include <linux/module.h>
+#include <linux/platform_device.h>
+#include <linux/slab.h>
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <video/omapfb_dss.h>
 
@@ -19,8 +27,12 @@ struct panel_drv_data {
 	struct omap_dss_device dssdev;
 	struct omap_dss_device *in;
 
+<<<<<<< HEAD
 	struct gpio_desc *pd_gpio;
 
+=======
+	int pd_gpio;
+>>>>>>> b7ba80a49124 (Commit)
 	int data_lines;
 
 	struct omap_video_timings timings;
@@ -88,8 +100,13 @@ static int tfp410_enable(struct omap_dss_device *dssdev)
 	if (r)
 		return r;
 
+<<<<<<< HEAD
 	if (ddata->pd_gpio)
 		gpiod_set_value_cansleep(ddata->pd_gpio, 0);
+=======
+	if (gpio_is_valid(ddata->pd_gpio))
+		gpio_set_value_cansleep(ddata->pd_gpio, 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dssdev->state = OMAP_DSS_DISPLAY_ACTIVE;
 
@@ -104,8 +121,13 @@ static void tfp410_disable(struct omap_dss_device *dssdev)
 	if (!omapdss_device_is_enabled(dssdev))
 		return;
 
+<<<<<<< HEAD
 	if (ddata->pd_gpio)
 		gpiod_set_value_cansleep(ddata->pd_gpio, 1);
+=======
+	if (gpio_is_valid(ddata->pd_gpio))
+		gpio_set_value_cansleep(ddata->pd_gpio, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	in->ops.dpi->disable(in);
 
@@ -164,6 +186,36 @@ static const struct omapdss_dvi_ops tfp410_dvi_ops = {
 	.get_timings	= tfp410_get_timings,
 };
 
+<<<<<<< HEAD
+=======
+static int tfp410_probe_of(struct platform_device *pdev)
+{
+	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
+	struct device_node *node = pdev->dev.of_node;
+	struct omap_dss_device *in;
+	int gpio;
+
+	gpio = of_get_named_gpio(node, "powerdown-gpios", 0);
+
+	if (gpio_is_valid(gpio) || gpio == -ENOENT) {
+		ddata->pd_gpio = gpio;
+	} else {
+		dev_err(&pdev->dev, "failed to parse PD gpio\n");
+		return gpio;
+	}
+
+	in = omapdss_of_find_source_for_first_ep(node);
+	if (IS_ERR(in)) {
+		dev_err(&pdev->dev, "failed to find video source\n");
+		return PTR_ERR(in);
+	}
+
+	ddata->in = in;
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int tfp410_probe(struct platform_device *pdev)
 {
 	struct panel_drv_data *ddata;
@@ -179,6 +231,7 @@ static int tfp410_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, ddata);
 
+<<<<<<< HEAD
 	ddata->pd_gpio = devm_gpiod_get_optional(&pdev->dev, "powerdown",
 						 GPIOD_OUT_HIGH);
 	r = PTR_ERR_OR_ZERO(ddata->pd_gpio);
@@ -194,6 +247,20 @@ static int tfp410_probe(struct platform_device *pdev)
 	if (r) {
 		dev_err(&pdev->dev, "failed to find video source: %d\n", r);
 		return r;
+=======
+	r = tfp410_probe_of(pdev);
+	if (r)
+		return r;
+
+	if (gpio_is_valid(ddata->pd_gpio)) {
+		r = devm_gpio_request_one(&pdev->dev, ddata->pd_gpio,
+				GPIOF_OUT_INIT_LOW, "tfp410 PD");
+		if (r) {
+			dev_err(&pdev->dev, "Failed to request PD GPIO %d\n",
+					ddata->pd_gpio);
+			goto err_gpio;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	dssdev = &ddata->dssdev;
@@ -213,6 +280,10 @@ static int tfp410_probe(struct platform_device *pdev)
 
 	return 0;
 err_reg:
+<<<<<<< HEAD
+=======
+err_gpio:
+>>>>>>> b7ba80a49124 (Commit)
 	omap_dss_put_device(ddata->in);
 	return r;
 }

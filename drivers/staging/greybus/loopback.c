@@ -100,6 +100,10 @@ struct gb_loopback {
 
 static struct class loopback_class = {
 	.name		= "gb_loopback",
+<<<<<<< HEAD
+=======
+	.owner		= THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 };
 static DEFINE_IDA(loopback_ida);
 

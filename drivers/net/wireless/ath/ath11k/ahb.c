@@ -16,8 +16,11 @@
 #include "hif.h"
 #include <linux/remoteproc.h>
 #include "pcic.h"
+<<<<<<< HEAD
 #include <linux/soc/qcom/smem.h>
 #include <linux/soc/qcom/smem_state.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct of_device_id ath11k_ahb_of_match[] = {
 	/* TODO: Should we change the compatible string to something similar
@@ -32,9 +35,12 @@ static const struct of_device_id ath11k_ahb_of_match[] = {
 	{ .compatible = "qcom,wcn6750-wifi",
 	  .data = (void *)ATH11K_HW_WCN6750_HW10,
 	},
+<<<<<<< HEAD
 	{ .compatible = "qcom,ipq5018-wifi",
 	  .data = (void *)ATH11K_HW_IPQ5018_HW10,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 
@@ -270,6 +276,7 @@ static void ath11k_ahb_clearbit32(struct ath11k_base *ab, u8 bit, u32 offset)
 static void ath11k_ahb_ce_irq_enable(struct ath11k_base *ab, u16 ce_id)
 {
 	const struct ce_attr *ce_attr;
+<<<<<<< HEAD
 	const struct ce_ie_addr *ce_ie_addr = ab->hw_params.ce_ie_addr;
 	u32 ie1_reg_addr, ie2_reg_addr, ie3_reg_addr;
 
@@ -285,12 +292,24 @@ static void ath11k_ahb_ce_irq_enable(struct ath11k_base *ab, u16 ce_id)
 		ath11k_ahb_setbit32(ab, ce_id, ie2_reg_addr);
 		ath11k_ahb_setbit32(ab, ce_id + CE_HOST_IE_3_SHIFT,
 				    ie3_reg_addr);
+=======
+
+	ce_attr = &ab->hw_params.host_ce_config[ce_id];
+	if (ce_attr->src_nentries)
+		ath11k_ahb_setbit32(ab, ce_id, CE_HOST_IE_ADDRESS);
+
+	if (ce_attr->dest_nentries) {
+		ath11k_ahb_setbit32(ab, ce_id, CE_HOST_IE_2_ADDRESS);
+		ath11k_ahb_setbit32(ab, ce_id + CE_HOST_IE_3_SHIFT,
+				    CE_HOST_IE_3_ADDRESS);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
 static void ath11k_ahb_ce_irq_disable(struct ath11k_base *ab, u16 ce_id)
 {
 	const struct ce_attr *ce_attr;
+<<<<<<< HEAD
 	const struct ce_ie_addr *ce_ie_addr = ab->hw_params.ce_ie_addr;
 	u32 ie1_reg_addr, ie2_reg_addr, ie3_reg_addr;
 
@@ -306,6 +325,17 @@ static void ath11k_ahb_ce_irq_disable(struct ath11k_base *ab, u16 ce_id)
 		ath11k_ahb_clearbit32(ab, ce_id, ie2_reg_addr);
 		ath11k_ahb_clearbit32(ab, ce_id + CE_HOST_IE_3_SHIFT,
 				      ie3_reg_addr);
+=======
+
+	ce_attr = &ab->hw_params.host_ce_config[ce_id];
+	if (ce_attr->src_nentries)
+		ath11k_ahb_clearbit32(ab, ce_id, CE_HOST_IE_ADDRESS);
+
+	if (ce_attr->dest_nentries) {
+		ath11k_ahb_clearbit32(ab, ce_id, CE_HOST_IE_2_ADDRESS);
+		ath11k_ahb_clearbit32(ab, ce_id + CE_HOST_IE_3_SHIFT,
+				      CE_HOST_IE_3_ADDRESS);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -376,7 +406,10 @@ static void ath11k_ahb_ext_irq_enable(struct ath11k_base *ab)
 		struct ath11k_ext_irq_grp *irq_grp = &ab->ext_irq_grp[i];
 
 		if (!irq_grp->napi_enabled) {
+<<<<<<< HEAD
 			dev_set_threaded(&irq_grp->napi_ndev, true);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			napi_enable(&irq_grp->napi);
 			irq_grp->napi_enabled = true;
 		}
@@ -424,8 +457,12 @@ static int ath11k_ahb_fwreset_from_cold_boot(struct ath11k_base *ab)
 	int timeout;
 
 	if (ath11k_cold_boot_cal == 0 || ab->qmi.cal_done ||
+<<<<<<< HEAD
 	    ab->hw_params.cold_boot_calib == 0 ||
 	    ab->hw_params.cbcal_restart_fw == 0)
+=======
+	    ab->hw_params.cold_boot_calib == 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	ath11k_dbg(ab, ATH11K_DBG_AHB, "wait for cold boot done\n");
@@ -560,7 +597,11 @@ static int ath11k_ahb_config_ext_irq(struct ath11k_base *ab)
 		irq_grp->grp_id = i;
 		init_dummy_netdev(&irq_grp->napi_ndev);
 		netif_napi_add(&irq_grp->napi_ndev, &irq_grp->napi,
+<<<<<<< HEAD
 			       ath11k_ahb_ext_grp_napi_poll);
+=======
+			       ath11k_ahb_ext_grp_napi_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 		for (j = 0; j < ATH11K_EXT_IRQ_NUM_MAX; j++) {
 			if (ab->hw_params.ring_mask->tx[i] & BIT(j)) {
@@ -704,6 +745,7 @@ static int ath11k_ahb_map_service_to_pipe(struct ath11k_base *ab, u16 service_id
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ath11k_ahb_hif_suspend(struct ath11k_base *ab)
 {
 	struct ath11k_ahb *ab_ahb = ath11k_ahb_priv(ab);
@@ -782,12 +824,17 @@ static int ath11k_ahb_hif_resume(struct ath11k_base *ab)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct ath11k_hif_ops ath11k_ahb_hif_ops_ipq8074 = {
 	.start = ath11k_ahb_start,
 	.stop = ath11k_ahb_stop,
 	.read32 = ath11k_ahb_read32,
 	.write32 = ath11k_ahb_write32,
+<<<<<<< HEAD
 	.read = NULL,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.irq_enable = ath11k_ahb_ext_irq_enable,
 	.irq_disable = ath11k_ahb_ext_irq_disable,
 	.map_service_to_pipe = ath11k_ahb_map_service_to_pipe,
@@ -800,7 +847,10 @@ static const struct ath11k_hif_ops ath11k_ahb_hif_ops_wcn6750 = {
 	.stop = ath11k_pcic_stop,
 	.read32 = ath11k_pcic_read32,
 	.write32 = ath11k_pcic_write32,
+<<<<<<< HEAD
 	.read = NULL,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.irq_enable = ath11k_pcic_ext_irq_enable,
 	.irq_disable = ath11k_pcic_ext_irq_disable,
 	.get_msi_address =  ath11k_pcic_get_msi_address,
@@ -808,10 +858,13 @@ static const struct ath11k_hif_ops ath11k_ahb_hif_ops_wcn6750 = {
 	.map_service_to_pipe = ath11k_pcic_map_service_to_pipe,
 	.power_down = ath11k_ahb_power_down,
 	.power_up = ath11k_ahb_power_up,
+<<<<<<< HEAD
 	.suspend = ath11k_ahb_hif_suspend,
 	.resume = ath11k_ahb_hif_resume,
 	.ce_irq_enable = ath11k_pci_enable_ce_irqs_except_wake_irq,
 	.ce_irq_disable = ath11k_pci_disable_ce_irqs_except_wake_irq,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int ath11k_core_get_rproc(struct ath11k_base *ab)
@@ -874,11 +927,19 @@ static int ath11k_ahb_setup_msi_resources(struct ath11k_base *ab)
 	ab->pci.msi.ep_base_data = int_prop + 32;
 
 	for (i = 0; i < ab->pci.msi.config->total_vectors; i++) {
+<<<<<<< HEAD
 		ret = platform_get_irq(pdev, i);
 		if (ret < 0)
 			return ret;
 
 		ab->pci.msi.irqs[i] = ret;
+=======
+		res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
+		if (!res)
+			return -ENODEV;
+
+		ab->pci.msi.irqs[i] = res->start;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	set_bit(ATH11K_FLAG_MULTI_MSI_VECTORS, &ab->dev_flags);
@@ -886,6 +947,7 @@ static int ath11k_ahb_setup_msi_resources(struct ath11k_base *ab)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ath11k_ahb_setup_smp2p_handle(struct ath11k_base *ab)
 {
 	struct ath11k_ahb *ab_ahb = ath11k_ahb_priv(ab);
@@ -914,6 +976,8 @@ static void ath11k_ahb_release_smp2p_handle(struct ath11k_base *ab)
 	qcom_smem_state_put(ab_ahb->smp2p_info.smem_state);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ath11k_ahb_setup_resources(struct ath11k_base *ab)
 {
 	struct platform_device *pdev = ab->pdev;
@@ -1036,7 +1100,11 @@ static int ath11k_ahb_fw_resources_init(struct ath11k_base *ab)
 
 	ret = iommu_map(iommu_dom, ab_ahb->fw.msa_paddr,
 			ab_ahb->fw.msa_paddr, ab_ahb->fw.msa_size,
+<<<<<<< HEAD
 			IOMMU_READ | IOMMU_WRITE, GFP_KERNEL);
+=======
+			IOMMU_READ | IOMMU_WRITE);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		ath11k_err(ab, "failed to map firmware region: %d\n", ret);
 		goto err_iommu_detach;
@@ -1044,7 +1112,11 @@ static int ath11k_ahb_fw_resources_init(struct ath11k_base *ab)
 
 	ret = iommu_map(iommu_dom, ab_ahb->fw.ce_paddr,
 			ab_ahb->fw.ce_paddr, ab_ahb->fw.ce_size,
+<<<<<<< HEAD
 			IOMMU_READ | IOMMU_WRITE, GFP_KERNEL);
+=======
+			IOMMU_READ | IOMMU_WRITE);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		ath11k_err(ab, "failed to map firmware CE region: %d\n", ret);
 		goto err_iommu_unmap;
@@ -1165,6 +1237,7 @@ static int ath11k_ahb_probe(struct platform_device *pdev)
 	if (ret)
 		goto err_core_free;
 
+<<<<<<< HEAD
 	ab->mem_ce = ab->mem;
 
 	if (ab->hw_params.ce_remap) {
@@ -1181,10 +1254,13 @@ static int ath11k_ahb_probe(struct platform_device *pdev)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ath11k_ahb_fw_resources_init(ab);
 	if (ret)
 		goto err_core_free;
 
+<<<<<<< HEAD
 	ret = ath11k_ahb_setup_smp2p_handle(ab);
 	if (ret)
 		goto err_fw_deinit;
@@ -1192,6 +1268,11 @@ static int ath11k_ahb_probe(struct platform_device *pdev)
 	ret = ath11k_hal_srng_init(ab);
 	if (ret)
 		goto err_release_smp2p_handle;
+=======
+	ret = ath11k_hal_srng_init(ab);
+	if (ret)
+		goto err_fw_deinit;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = ath11k_ce_alloc_pipes(ab);
 	if (ret) {
@@ -1229,9 +1310,12 @@ err_ce_free:
 err_hal_srng_deinit:
 	ath11k_hal_srng_deinit(ab);
 
+<<<<<<< HEAD
 err_release_smp2p_handle:
 	ath11k_ahb_release_smp2p_handle(ab);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_fw_deinit:
 	ath11k_ahb_fw_resource_deinit(ab);
 
@@ -1242,10 +1326,27 @@ err_core_free:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void ath11k_ahb_remove_prepare(struct ath11k_base *ab)
 {
 	unsigned long left;
 
+=======
+static int ath11k_ahb_remove(struct platform_device *pdev)
+{
+	struct ath11k_base *ab = platform_get_drvdata(pdev);
+	unsigned long left;
+
+	if (test_bit(ATH11K_FLAG_QMI_FAIL, &ab->dev_flags)) {
+		ath11k_ahb_power_down(ab);
+		ath11k_debugfs_soc_destroy(ab);
+		ath11k_qmi_deinit_service(ab);
+		goto qmi_fail;
+	}
+
+	reinit_completion(&ab->driver_recovery);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (test_bit(ATH11K_FLAG_RECOVERY, &ab->dev_flags)) {
 		left = wait_for_completion_timeout(&ab->driver_recovery,
 						   ATH11K_AHB_RECOVERY_TIMEOUT);
@@ -1255,6 +1356,7 @@ static void ath11k_ahb_remove_prepare(struct ath11k_base *ab)
 
 	set_bit(ATH11K_FLAG_UNREGISTERING, &ab->dev_flags);
 	cancel_work_sync(&ab->restart_work);
+<<<<<<< HEAD
 	cancel_work_sync(&ab->qmi.event_work);
 }
 
@@ -1291,10 +1393,22 @@ static int ath11k_ahb_remove(struct platform_device *pdev)
 
 qmi_fail:
 	ath11k_ahb_free_resources(ab);
+=======
+
+	ath11k_core_deinit(ab);
+qmi_fail:
+	ath11k_ahb_free_irq(ab);
+	ath11k_hal_srng_deinit(ab);
+	ath11k_ahb_fw_resource_deinit(ab);
+	ath11k_ce_free_pipes(ab);
+	ath11k_core_free(ab);
+	platform_set_drvdata(pdev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static void ath11k_ahb_shutdown(struct platform_device *pdev)
 {
 	struct ath11k_base *ab = platform_get_drvdata(pdev);
@@ -1314,6 +1428,8 @@ free_resources:
 	ath11k_ahb_free_resources(ab);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver ath11k_ahb_driver = {
 	.driver         = {
 		.name   = "ath11k",
@@ -1321,7 +1437,10 @@ static struct platform_driver ath11k_ahb_driver = {
 	},
 	.probe  = ath11k_ahb_probe,
 	.remove = ath11k_ahb_remove,
+<<<<<<< HEAD
 	.shutdown = ath11k_ahb_shutdown,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int ath11k_ahb_init(void)

@@ -114,7 +114,11 @@ static const char *bnad_net_stats_strings[] = {
 	"mac_tx_deferral",
 	"mac_tx_excessive_deferral",
 	"mac_tx_single_collision",
+<<<<<<< HEAD
 	"mac_tx_multiple_collision",
+=======
+	"mac_tx_muliple_collision",
+>>>>>>> b7ba80a49124 (Commit)
 	"mac_tx_late_collision",
 	"mac_tx_excessive_collision",
 	"mac_tx_total_collision",

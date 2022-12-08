@@ -248,7 +248,11 @@ static int b53_mmap_probe_of(struct platform_device *pdev,
 		return -ENOMEM;
 
 	pdata->regs = mem;
+<<<<<<< HEAD
 	pdata->chip_id = (u32)(unsigned long)device_get_match_data(dev);
+=======
+	pdata->chip_id = BCM63XX_DEVICE_ID;
+>>>>>>> b7ba80a49124 (Commit)
 	pdata->big_endian = of_property_read_bool(np, "big-endian");
 
 	of_ports = of_get_child_by_name(np, "ports");
@@ -263,7 +267,11 @@ static int b53_mmap_probe_of(struct platform_device *pdev,
 		if (of_property_read_u32(of_port, "reg", &reg))
 			continue;
 
+<<<<<<< HEAD
 		if (reg < B53_N_PORTS)
+=======
+		if (reg < B53_CPU_PORT)
+>>>>>>> b7ba80a49124 (Commit)
 			pdata->enabled_ports |= BIT(reg);
 	}
 
@@ -316,6 +324,11 @@ static int b53_mmap_remove(struct platform_device *pdev)
 	if (dev)
 		b53_switch_remove(dev);
 
+<<<<<<< HEAD
+=======
+	platform_set_drvdata(pdev, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -330,6 +343,7 @@ static void b53_mmap_shutdown(struct platform_device *pdev)
 }
 
 static const struct of_device_id b53_mmap_of_table[] = {
+<<<<<<< HEAD
 	{
 		.compatible = "brcm,bcm3384-switch",
 		.data = (void *)BCM63XX_DEVICE_ID,
@@ -352,6 +366,13 @@ static const struct of_device_id b53_mmap_of_table[] = {
 		.compatible = "brcm,bcm63xx-switch",
 		.data = (void *)BCM63XX_DEVICE_ID,
 	}, { /* sentinel */ }
+=======
+	{ .compatible = "brcm,bcm3384-switch" },
+	{ .compatible = "brcm,bcm6328-switch" },
+	{ .compatible = "brcm,bcm6368-switch" },
+	{ .compatible = "brcm,bcm63xx-switch" },
+	{ /* sentinel */ },
+>>>>>>> b7ba80a49124 (Commit)
 };
 MODULE_DEVICE_TABLE(of, b53_mmap_of_table);
 

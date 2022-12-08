@@ -172,15 +172,25 @@ static inline int par_io_data_set(u8 port, u8 pin, u8 val) { return -ENOSYS; }
 /*
  * Pin multiplexing functions.
  */
+<<<<<<< HEAD
 struct device;
 struct qe_pin;
 #ifdef CONFIG_QE_GPIO
 extern struct qe_pin *qe_pin_request(struct device *dev, int index);
+=======
+struct qe_pin;
+#ifdef CONFIG_QE_GPIO
+extern struct qe_pin *qe_pin_request(struct device_node *np, int index);
+>>>>>>> b7ba80a49124 (Commit)
 extern void qe_pin_free(struct qe_pin *qe_pin);
 extern void qe_pin_set_gpio(struct qe_pin *qe_pin);
 extern void qe_pin_set_dedicated(struct qe_pin *pin);
 #else
+<<<<<<< HEAD
 static inline struct qe_pin *qe_pin_request(struct device *dev, int index)
+=======
+static inline struct qe_pin *qe_pin_request(struct device_node *np, int index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return ERR_PTR(-ENOSYS);
 }

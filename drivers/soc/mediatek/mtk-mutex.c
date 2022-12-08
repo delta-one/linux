@@ -23,7 +23,10 @@
 #define DISP_REG_MUTEX(n)			(0x24 + 0x20 * (n))
 #define DISP_REG_MUTEX_RST(n)			(0x28 + 0x20 * (n))
 #define DISP_REG_MUTEX_MOD(mutex_mod_reg, n)	(mutex_mod_reg + 0x20 * (n))
+<<<<<<< HEAD
 #define DISP_REG_MUTEX_MOD1(mutex_mod_reg, n)	((mutex_mod_reg) + 0x20 * (n) + 0x4)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DISP_REG_MUTEX_SOF(mutex_sof_reg, n)	(mutex_sof_reg + 0x20 * (n))
 #define DISP_REG_MUTEX_MOD2(n)			(0x34 + 0x20 * (n))
 
@@ -117,6 +120,7 @@
 #define MT8173_MUTEX_MOD_DISP_PWM1		24
 #define MT8173_MUTEX_MOD_DISP_OD		25
 
+<<<<<<< HEAD
 #define MT8188_MUTEX_MOD_DISP_OVL0		0
 #define MT8188_MUTEX_MOD_DISP_WDMA0		1
 #define MT8188_MUTEX_MOD_DISP_RDMA0		2
@@ -132,6 +136,8 @@
 #define MT8188_MUTEX_MOD_DISP_POSTMASK0		24
 #define MT8188_MUTEX_MOD2_DISP_PWM0		33
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MT8195_MUTEX_MOD_DISP_OVL0		0
 #define MT8195_MUTEX_MOD_DISP_WDMA0		1
 #define MT8195_MUTEX_MOD_DISP_RDMA0		2
@@ -146,6 +152,7 @@
 #define MT8195_MUTEX_MOD_DISP_DP_INTF0		21
 #define MT8195_MUTEX_MOD_DISP_PWM0		27
 
+<<<<<<< HEAD
 #define MT8195_MUTEX_MOD_DISP1_MDP_RDMA0	0
 #define MT8195_MUTEX_MOD_DISP1_MDP_RDMA1	1
 #define MT8195_MUTEX_MOD_DISP1_MDP_RDMA2	2
@@ -211,6 +218,8 @@
 #define MT8195_MUTEX_MOD_MDP_WROT2             32
 #define MT8195_MUTEX_MOD_MDP_WROT3             33
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MT8365_MUTEX_MOD_DISP_OVL0		7
 #define MT8365_MUTEX_MOD_DISP_OVL0_2L		8
 #define MT8365_MUTEX_MOD_DISP_RDMA0		9
@@ -261,8 +270,11 @@
 #define MT8167_MUTEX_SOF_DPI1			3
 #define MT8183_MUTEX_SOF_DSI0			1
 #define MT8183_MUTEX_SOF_DPI0			2
+<<<<<<< HEAD
 #define MT8188_MUTEX_SOF_DSI0			1
 #define MT8188_MUTEX_SOF_DP_INTF0		3
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MT8195_MUTEX_SOF_DSI0			1
 #define MT8195_MUTEX_SOF_DSI1			2
 #define MT8195_MUTEX_SOF_DP_INTF0		3
@@ -272,8 +284,11 @@
 
 #define MT8183_MUTEX_EOF_DSI0			(MT8183_MUTEX_SOF_DSI0 << 6)
 #define MT8183_MUTEX_EOF_DPI0			(MT8183_MUTEX_SOF_DPI0 << 6)
+<<<<<<< HEAD
 #define MT8188_MUTEX_EOF_DSI0			(MT8188_MUTEX_SOF_DSI0 << 7)
 #define MT8188_MUTEX_EOF_DP_INTF0		(MT8188_MUTEX_SOF_DP_INTF0 << 7)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MT8195_MUTEX_EOF_DSI0			(MT8195_MUTEX_SOF_DSI0 << 7)
 #define MT8195_MUTEX_EOF_DSI1			(MT8195_MUTEX_SOF_DSI1 << 7)
 #define MT8195_MUTEX_EOF_DP_INTF0		(MT8195_MUTEX_SOF_DP_INTF0 << 7)
@@ -429,6 +444,7 @@ static const unsigned int mt8186_mdp_mutex_table_mod[MUTEX_MOD_IDX_MAX] = {
 	[MUTEX_MOD_IDX_MDP_COLOR0] = MT8186_MUTEX_MOD_MDP_COLOR0,
 };
 
+<<<<<<< HEAD
 static const unsigned int mt8188_mutex_mod[DDP_COMPONENT_ID_MAX] = {
 	[DDP_COMPONENT_OVL0] = MT8188_MUTEX_MOD_DISP_OVL0,
 	[DDP_COMPONENT_WDMA0] = MT8188_MUTEX_MOD_DISP_WDMA0,
@@ -446,6 +462,8 @@ static const unsigned int mt8188_mutex_mod[DDP_COMPONENT_ID_MAX] = {
 	[DDP_COMPONENT_DP_INTF0] = MT8188_MUTEX_MOD_DISP_DP_INTF0,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const unsigned int mt8192_mutex_mod[DDP_COMPONENT_ID_MAX] = {
 	[DDP_COMPONENT_AAL0] = MT8192_MUTEX_MOD_DISP_AAL0,
 	[DDP_COMPONENT_CCORR] = MT8192_MUTEX_MOD_DISP_CCORR0,
@@ -474,6 +492,7 @@ static const unsigned int mt8195_mutex_mod[DDP_COMPONENT_ID_MAX] = {
 	[DDP_COMPONENT_DSI0] = MT8195_MUTEX_MOD_DISP_DSI0,
 	[DDP_COMPONENT_PWM0] = MT8195_MUTEX_MOD_DISP_PWM0,
 	[DDP_COMPONENT_DP_INTF0] = MT8195_MUTEX_MOD_DISP_DP_INTF0,
+<<<<<<< HEAD
 	[DDP_COMPONENT_MDP_RDMA0] = MT8195_MUTEX_MOD_DISP1_MDP_RDMA0,
 	[DDP_COMPONENT_MDP_RDMA1] = MT8195_MUTEX_MOD_DISP1_MDP_RDMA1,
 	[DDP_COMPONENT_MDP_RDMA2] = MT8195_MUTEX_MOD_DISP1_MDP_RDMA2,
@@ -535,6 +554,8 @@ static const unsigned int mt8195_mutex_table_mod[MUTEX_MOD_IDX_MAX] = {
 	[MUTEX_MOD_IDX_MDP_WROT1] = MT8195_MUTEX_MOD_MDP_WROT1,
 	[MUTEX_MOD_IDX_MDP_WROT2] = MT8195_MUTEX_MOD_MDP_WROT2,
 	[MUTEX_MOD_IDX_MDP_WROT3] = MT8195_MUTEX_MOD_MDP_WROT3,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const unsigned int mt8365_mutex_mod[DDP_COMPONENT_ID_MAX] = {
@@ -598,6 +619,7 @@ static const unsigned int mt8186_mutex_sof[MUTEX_SOF_DSI3 + 1] = {
  * but also detect the error at end of frame(EAEOF) when EOF signal
  * arrives.
  */
+<<<<<<< HEAD
 static const unsigned int mt8188_mutex_sof[DDP_MUTEX_SOF_MAX] = {
 	[MUTEX_SOF_SINGLE_MODE] = MUTEX_SOF_SINGLE_MODE,
 	[MUTEX_SOF_DSI0] =
@@ -606,6 +628,8 @@ static const unsigned int mt8188_mutex_sof[DDP_MUTEX_SOF_MAX] = {
 		MT8188_MUTEX_SOF_DP_INTF0 | MT8188_MUTEX_EOF_DP_INTF0,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const unsigned int mt8195_mutex_sof[DDP_MUTEX_SOF_MAX] = {
 	[MUTEX_SOF_SINGLE_MODE] = MUTEX_SOF_SINGLE_MODE,
 	[MUTEX_SOF_DSI0] = MT8195_MUTEX_SOF_DSI0 | MT8195_MUTEX_EOF_DSI0,
@@ -676,6 +700,7 @@ static const struct mtk_mutex_data mt8186_mutex_driver_data = {
 	.mutex_sof_reg = MT8183_MUTEX0_SOF0,
 };
 
+<<<<<<< HEAD
 static const struct mtk_mutex_data mt8188_mutex_driver_data = {
 	.mutex_mod = mt8188_mutex_mod,
 	.mutex_sof = mt8188_mutex_sof,
@@ -683,6 +708,8 @@ static const struct mtk_mutex_data mt8188_mutex_driver_data = {
 	.mutex_sof_reg = MT8183_MUTEX0_SOF0,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct mtk_mutex_data mt8192_mutex_driver_data = {
 	.mutex_mod = mt8192_mutex_mod,
 	.mutex_sof = mt8183_mutex_sof,
@@ -697,6 +724,7 @@ static const struct mtk_mutex_data mt8195_mutex_driver_data = {
 	.mutex_sof_reg = MT8183_MUTEX0_SOF0,
 };
 
+<<<<<<< HEAD
 static const struct mtk_mutex_data mt8195_vpp_mutex_driver_data = {
 	.mutex_sof = mt8195_mutex_sof,
 	.mutex_mod_reg = MT8183_MUTEX0_MOD0,
@@ -704,6 +732,8 @@ static const struct mtk_mutex_data mt8195_vpp_mutex_driver_data = {
 	.mutex_table_mod = mt8195_mutex_table_mod,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct mtk_mutex_data mt8365_mutex_driver_data = {
 	.mutex_mod = mt8365_mutex_mod,
 	.mutex_sof = mt8183_mutex_sof,
@@ -787,9 +817,12 @@ void mtk_mutex_add_comp(struct mtk_mutex *mutex,
 	case DDP_COMPONENT_DP_INTF0:
 		sof_id = MUTEX_SOF_DP_INTF0;
 		break;
+<<<<<<< HEAD
 	case DDP_COMPONENT_DP_INTF1:
 		sof_id = MUTEX_SOF_DP_INTF1;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		if (mtx->data->mutex_mod[id] < 32) {
 			offset = DISP_REG_MUTEX_MOD(mtx->data->mutex_mod_reg,
@@ -830,7 +863,10 @@ void mtk_mutex_remove_comp(struct mtk_mutex *mutex,
 	case DDP_COMPONENT_DPI0:
 	case DDP_COMPONENT_DPI1:
 	case DDP_COMPONENT_DP_INTF0:
+<<<<<<< HEAD
 	case DDP_COMPONENT_DP_INTF1:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		writel_relaxed(MUTEX_SOF_SINGLE_MODE,
 			       mtx->regs +
 			       DISP_REG_MUTEX_SOF(mtx->data->mutex_sof_reg,
@@ -929,7 +965,11 @@ int mtk_mutex_write_mod(struct mtk_mutex *mutex,
 	struct mtk_mutex_ctx *mtx = container_of(mutex, struct mtk_mutex_ctx,
 						 mutex[mutex->id]);
 	unsigned int reg;
+<<<<<<< HEAD
 	u32 reg_offset, id_offset = 0;
+=======
+	unsigned int offset;
+>>>>>>> b7ba80a49124 (Commit)
 
 	WARN_ON(&mtx->mutex[mutex->id] != mutex);
 
@@ -939,6 +979,7 @@ int mtk_mutex_write_mod(struct mtk_mutex *mutex,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Some SoCs may have multiple MUTEX_MOD registers as more than 32 mods
 	 * are present, hence requiring multiple 32-bits registers.
@@ -967,6 +1008,18 @@ int mtk_mutex_write_mod(struct mtk_mutex *mutex,
 		reg |= BIT(mtx->data->mutex_table_mod[idx] - id_offset);
 
 	writel_relaxed(reg, mtx->regs + reg_offset);
+=======
+	offset = DISP_REG_MUTEX_MOD(mtx->data->mutex_mod_reg,
+				    mutex->id);
+	reg = readl_relaxed(mtx->regs + offset);
+
+	if (clear)
+		reg &= ~BIT(mtx->data->mutex_table_mod[idx]);
+	else
+		reg |= BIT(mtx->data->mutex_table_mod[idx]);
+
+	writel_relaxed(reg, mtx->regs + offset);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1039,6 +1092,14 @@ static int mtk_mutex_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int mtk_mutex_remove(struct platform_device *pdev)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id mutex_driver_dt_match[] = {
 	{ .compatible = "mediatek,mt2701-disp-mutex",
 	  .data = &mt2701_mutex_driver_data},
@@ -1056,14 +1117,20 @@ static const struct of_device_id mutex_driver_dt_match[] = {
 	  .data = &mt8186_mutex_driver_data},
 	{ .compatible = "mediatek,mt8186-mdp3-mutex",
 	  .data = &mt8186_mdp_mutex_driver_data},
+<<<<<<< HEAD
 	{ .compatible = "mediatek,mt8188-disp-mutex",
 	  .data = &mt8188_mutex_driver_data},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "mediatek,mt8192-disp-mutex",
 	  .data = &mt8192_mutex_driver_data},
 	{ .compatible = "mediatek,mt8195-disp-mutex",
 	  .data = &mt8195_mutex_driver_data},
+<<<<<<< HEAD
 	{ .compatible = "mediatek,mt8195-vpp-mutex",
 	  .data = &mt8195_vpp_mutex_driver_data},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "mediatek,mt8365-disp-mutex",
 	  .data = &mt8365_mutex_driver_data},
 	{},
@@ -1072,6 +1139,10 @@ MODULE_DEVICE_TABLE(of, mutex_driver_dt_match);
 
 static struct platform_driver mtk_mutex_driver = {
 	.probe		= mtk_mutex_probe,
+<<<<<<< HEAD
+=======
+	.remove		= mtk_mutex_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "mediatek-mutex",
 		.owner	= THIS_MODULE,
@@ -1079,6 +1150,7 @@ static struct platform_driver mtk_mutex_driver = {
 	},
 };
 
+<<<<<<< HEAD
 static int __init mtk_mutex_init(void)
 {
 	return platform_driver_register(&mtk_mutex_driver);
@@ -1095,3 +1167,6 @@ module_exit(mtk_mutex_exit);
 MODULE_AUTHOR("Yongqiang Niu <yongqiang.niu@mediatek.com>");
 MODULE_DESCRIPTION("MediaTek SoC MUTEX driver");
 MODULE_LICENSE("GPL");
+=======
+builtin_platform_driver(mtk_mutex_driver);
+>>>>>>> b7ba80a49124 (Commit)

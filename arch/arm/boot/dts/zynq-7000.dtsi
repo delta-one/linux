@@ -243,7 +243,11 @@
 		};
 
 		gem0: ethernet@e000b000 {
+<<<<<<< HEAD
 			compatible = "xlnx,zynq-gem", "cdns,gem";
+=======
+			compatible = "cdns,zynq-gem", "cdns,gem";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0xe000b000 0x1000>;
 			status = "disabled";
 			interrupts = <0 22 4>;
@@ -254,7 +258,11 @@
 		};
 
 		gem1: ethernet@e000c000 {
+<<<<<<< HEAD
 			compatible = "xlnx,zynq-gem", "cdns,gem";
+=======
+			compatible = "cdns,zynq-gem", "cdns,gem";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0xe000c000 0x1000>;
 			status = "disabled";
 			interrupts = <0 45 4>;
@@ -343,6 +351,7 @@
 			};
 		};
 
+<<<<<<< HEAD
 		dmac_s: dma-controller@f8003000 {
 			compatible = "arm,pl330", "arm,primecell";
 			reg = <0xf8003000 0x1000>;
@@ -351,6 +360,14 @@
 			 * interrupt-names = "abort", "dma0", "dma1", "dma2", "dma3",
 			 * "dma4", "dma5", "dma6", "dma7";
 			 */
+=======
+		dmac_s: dmac@f8003000 {
+			compatible = "arm,pl330", "arm,primecell";
+			reg = <0xf8003000 0x1000>;
+			interrupt-parent = <&intc>;
+			interrupt-names = "abort", "dma0", "dma1", "dma2", "dma3",
+				"dma4", "dma5", "dma6", "dma7";
+>>>>>>> b7ba80a49124 (Commit)
 			interrupts = <0 13 4>,
 			             <0 14 4>, <0 15 4>,
 			             <0 16 4>, <0 17 4>,

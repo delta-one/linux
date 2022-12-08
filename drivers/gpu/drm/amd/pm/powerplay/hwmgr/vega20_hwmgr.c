@@ -22,6 +22,10 @@
  */
 
 #include <linux/delay.h>
+<<<<<<< HEAD
+=======
+#include <linux/fb.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/slab.h>
 
@@ -1554,16 +1558,28 @@ static int vega20_set_mclk_od(
 	return 0;
 }
 
+<<<<<<< HEAD
 static void vega20_populate_umdpstate_clocks(struct pp_hwmgr *hwmgr)
+=======
+static int vega20_populate_umdpstate_clocks(
+		struct pp_hwmgr *hwmgr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vega20_hwmgr *data = (struct vega20_hwmgr *)(hwmgr->backend);
 	struct vega20_single_dpm_table *gfx_table = &(data->dpm_table.gfx_table);
 	struct vega20_single_dpm_table *mem_table = &(data->dpm_table.mem_table);
 
+<<<<<<< HEAD
+=======
+	hwmgr->pstate_sclk = gfx_table->dpm_levels[0].value;
+	hwmgr->pstate_mclk = mem_table->dpm_levels[0].value;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (gfx_table->count > VEGA20_UMD_PSTATE_GFXCLK_LEVEL &&
 	    mem_table->count > VEGA20_UMD_PSTATE_MCLK_LEVEL) {
 		hwmgr->pstate_sclk = gfx_table->dpm_levels[VEGA20_UMD_PSTATE_GFXCLK_LEVEL].value;
 		hwmgr->pstate_mclk = mem_table->dpm_levels[VEGA20_UMD_PSTATE_MCLK_LEVEL].value;
+<<<<<<< HEAD
 	} else {
 		hwmgr->pstate_sclk = gfx_table->dpm_levels[0].value;
 		hwmgr->pstate_mclk = mem_table->dpm_levels[0].value;
@@ -1571,6 +1587,14 @@ static void vega20_populate_umdpstate_clocks(struct pp_hwmgr *hwmgr)
 
 	hwmgr->pstate_sclk_peak = gfx_table->dpm_levels[gfx_table->count - 1].value;
 	hwmgr->pstate_mclk_peak = mem_table->dpm_levels[mem_table->count - 1].value;
+=======
+	}
+
+	hwmgr->pstate_sclk = hwmgr->pstate_sclk * 100;
+	hwmgr->pstate_mclk = hwmgr->pstate_mclk * 100;
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int vega20_get_max_sustainable_clock(struct pp_hwmgr *hwmgr,
@@ -1749,7 +1773,14 @@ static int vega20_enable_dpm_tasks(struct pp_hwmgr *hwmgr)
 			"[EnableDPMTasks] Failed to initialize odn settings!",
 			return result);
 
+<<<<<<< HEAD
 	vega20_populate_umdpstate_clocks(hwmgr);
+=======
+	result = vega20_populate_umdpstate_clocks(hwmgr);
+	PP_ASSERT_WITH_CODE(!result,
+			"[EnableDPMTasks] Failed to populate umdpstate clocks!",
+			return result);
+>>>>>>> b7ba80a49124 (Commit)
 
 	result = smum_send_msg_to_smc_with_parameter(hwmgr, PPSMC_MSG_GetPptLimit,
 			POWER_SOURCE_AC << 16, &hwmgr->default_power_limit);
@@ -2954,8 +2985,12 @@ static int vega20_odn_edit_dpm_table(struct pp_hwmgr *hwmgr,
 			data->od8_settings.od8_settings_array;
 	OverDriveTable_t *od_table =
 			&(data->smc_state_table.overdrive_table);
+<<<<<<< HEAD
 	int32_t input_clk, input_vol, i;
 	uint32_t input_index;
+=======
+	int32_t input_index, input_clk, input_vol, i;
+>>>>>>> b7ba80a49124 (Commit)
 	int od8_id;
 	int ret;
 

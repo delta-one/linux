@@ -20,12 +20,19 @@
 #include <drm/drm_damage_helper.h>
 #include <drm/drm_drv.h>
 #include <drm/drm_fb_dma_helper.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_generic.h>
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_fourcc.h>
 #include <drm/drm_framebuffer.h>
 #include <drm/drm_gem_atomic_helper.h>
 #include <drm/drm_gem_dma_helper.h>
+<<<<<<< HEAD
 #include <drm/drm_gem_framebuffer_helper.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_managed.h>
 #include <drm/drm_mipi_dbi.h>
 #include <drm/drm_rect.h>
@@ -77,9 +84,15 @@ static inline int ili9225_command(struct mipi_dbi *dbi, u8 cmd, u16 data)
 	return mipi_dbi_command_buf(dbi, cmd, par, 2);
 }
 
+<<<<<<< HEAD
 static void ili9225_fb_dirty(struct iosys_map *src, struct drm_framebuffer *fb,
 			     struct drm_rect *rect)
 {
+=======
+static void ili9225_fb_dirty(struct drm_framebuffer *fb, struct drm_rect *rect)
+{
+	struct drm_gem_dma_object *dma_obj = drm_fb_dma_get_gem_obj(fb, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	struct mipi_dbi_dev *dbidev = drm_to_mipi_dbi_dev(fb->dev);
 	unsigned int height = rect->y2 - rect->y1;
 	unsigned int width = rect->x2 - rect->x1;
@@ -87,10 +100,20 @@ static void ili9225_fb_dirty(struct iosys_map *src, struct drm_framebuffer *fb,
 	bool swap = dbi->swap_bytes;
 	u16 x_start, y_start;
 	u16 x1, x2, y1, y2;
+<<<<<<< HEAD
 	int ret = 0;
 	bool full;
 	void *tr;
 
+=======
+	int idx, ret = 0;
+	bool full;
+	void *tr;
+
+	if (!drm_dev_enter(fb->dev, &idx))
+		return;
+
+>>>>>>> b7ba80a49124 (Commit)
 	full = width == fb->width && height == fb->height;
 
 	DRM_DEBUG_KMS("Flushing [FB:%d] " DRM_RECT_FMT "\n", fb->base.id, DRM_RECT_ARG(rect));
@@ -98,11 +121,19 @@ static void ili9225_fb_dirty(struct iosys_map *src, struct drm_framebuffer *fb,
 	if (!dbi->dc || !full || swap ||
 	    fb->format->format == DRM_FORMAT_XRGB8888) {
 		tr = dbidev->tx_buf;
+<<<<<<< HEAD
 		ret = mipi_dbi_buf_copy(tr, src, fb, rect, swap);
 		if (ret)
 			goto err_msg;
 	} else {
 		tr = src->vaddr; /* TODO: Use mapping abstraction properly */
+=======
+		ret = mipi_dbi_buf_copy(dbidev->tx_buf, fb, rect, swap);
+		if (ret)
+			goto err_msg;
+	} else {
+		tr = dma_obj->vaddr;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	switch (dbidev->rotation) {
@@ -153,20 +184,30 @@ static void ili9225_fb_dirty(struct iosys_map *src, struct drm_framebuffer *fb,
 err_msg:
 	if (ret)
 		dev_err_once(fb->dev->dev, "Failed to update display %d\n", ret);
+<<<<<<< HEAD
+=======
+
+	drm_dev_exit(idx);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ili9225_pipe_update(struct drm_simple_display_pipe *pipe,
 				struct drm_plane_state *old_state)
 {
 	struct drm_plane_state *state = pipe->plane.state;
+<<<<<<< HEAD
 	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(state);
 	struct drm_framebuffer *fb = state->fb;
 	struct drm_rect rect;
 	int idx;
+=======
+	struct drm_rect rect;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!pipe->crtc.state->active)
 		return;
 
+<<<<<<< HEAD
 	if (!drm_dev_enter(fb->dev, &idx))
 		return;
 
@@ -174,6 +215,10 @@ static void ili9225_pipe_update(struct drm_simple_display_pipe *pipe,
 		ili9225_fb_dirty(&shadow_plane_state->data[0], fb, &rect);
 
 	drm_dev_exit(idx);
+=======
+	if (drm_atomic_helper_damage_merged(old_state, state, &rect))
+		ili9225_fb_dirty(state->fb, &rect);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ili9225_pipe_enable(struct drm_simple_display_pipe *pipe,
@@ -181,7 +226,10 @@ static void ili9225_pipe_enable(struct drm_simple_display_pipe *pipe,
 				struct drm_plane_state *plane_state)
 {
 	struct mipi_dbi_dev *dbidev = drm_to_mipi_dbi_dev(pipe->crtc.dev);
+<<<<<<< HEAD
 	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_framebuffer *fb = plane_state->fb;
 	struct device *dev = pipe->crtc.dev->dev;
 	struct mipi_dbi *dbi = &dbidev->dbi;
@@ -281,8 +329,12 @@ static void ili9225_pipe_enable(struct drm_simple_display_pipe *pipe,
 
 	ili9225_command(dbi, ILI9225_DISPLAY_CONTROL_1, 0x1017);
 
+<<<<<<< HEAD
 	ili9225_fb_dirty(&shadow_plane_state->data[0], fb, &rect);
 
+=======
+	ili9225_fb_dirty(fb, &rect);
+>>>>>>> b7ba80a49124 (Commit)
 out_exit:
 	drm_dev_exit(idx);
 }
@@ -332,6 +384,7 @@ static int ili9225_dbi_command(struct mipi_dbi *dbi, u8 *cmd, u8 *par,
 }
 
 static const struct drm_simple_display_pipe_funcs ili9225_pipe_funcs = {
+<<<<<<< HEAD
 	.mode_valid	= mipi_dbi_pipe_mode_valid,
 	.enable		= ili9225_pipe_enable,
 	.disable	= ili9225_pipe_disable,
@@ -341,6 +394,11 @@ static const struct drm_simple_display_pipe_funcs ili9225_pipe_funcs = {
 	.reset_plane	= mipi_dbi_pipe_reset_plane,
 	.duplicate_plane_state = mipi_dbi_pipe_duplicate_plane_state,
 	.destroy_plane_state = mipi_dbi_pipe_destroy_plane_state,
+=======
+	.enable		= ili9225_pipe_enable,
+	.disable	= ili9225_pipe_disable,
+	.update		= ili9225_pipe_update,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct drm_display_mode ili9225_mode = {

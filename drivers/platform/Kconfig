@@ -1,7 +1,13 @@
 # SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 source "drivers/platform/mips/Kconfig"
 
 source "drivers/platform/loongarch/Kconfig"
+=======
+if MIPS
+source "drivers/platform/mips/Kconfig"
+endif
+>>>>>>> b7ba80a49124 (Commit)
 
 source "drivers/platform/goldfish/Kconfig"
 

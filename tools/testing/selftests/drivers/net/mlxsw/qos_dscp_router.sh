@@ -94,6 +94,19 @@ h2_destroy()
 	simple_if_fini $h2 192.0.2.18/28
 }
 
+<<<<<<< HEAD
+=======
+dscp_map()
+{
+	local base=$1; shift
+	local prio
+
+	for prio in {0..7}; do
+		echo app=$prio,5,$((base + prio))
+	done
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 switch_create()
 {
 	simple_if_init $swp1 192.0.2.2/28
@@ -102,14 +115,27 @@ switch_create()
 	tc qdisc add dev $swp1 clsact
 	tc qdisc add dev $swp2 clsact
 
+<<<<<<< HEAD
 	dcb app add dev $swp1 dscp-prio 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
 	dcb app add dev $swp2 dscp-prio 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
+=======
+	lldptool -T -i $swp1 -V APP $(dscp_map 0) >/dev/null
+	lldptool -T -i $swp2 -V APP $(dscp_map 0) >/dev/null
+	lldpad_app_wait_set $swp1
+	lldpad_app_wait_set $swp2
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 switch_destroy()
 {
+<<<<<<< HEAD
 	dcb app del dev $swp2 dscp-prio 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
 	dcb app del dev $swp1 dscp-prio 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
+=======
+	lldptool -T -i $swp2 -V APP -d $(dscp_map 0) >/dev/null
+	lldptool -T -i $swp1 -V APP -d $(dscp_map 0) >/dev/null
+	lldpad_app_wait_del
+>>>>>>> b7ba80a49124 (Commit)
 
 	tc qdisc del dev $swp2 clsact
 	tc qdisc del dev $swp1 clsact
@@ -252,11 +278,21 @@ test_dscp_leftover()
 {
 	echo "Test that last removed DSCP rule is deconfigured correctly"
 
+<<<<<<< HEAD
 	dcb app del dev $swp2 dscp-prio 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
 
 	__test_update 0 zero
 
 	dcb app add dev $swp2 dscp-prio 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
+=======
+	lldptool -T -i $swp2 -V APP -d $(dscp_map 0) >/dev/null
+	lldpad_app_wait_del
+
+	__test_update 0 zero
+
+	lldptool -T -i $swp2 -V APP $(dscp_map 0) >/dev/null
+	lldpad_app_wait_set $swp2
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 trap cleanup EXIT

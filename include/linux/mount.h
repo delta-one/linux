@@ -16,7 +16,10 @@
 struct super_block;
 struct dentry;
 struct user_namespace;
+<<<<<<< HEAD
 struct mnt_idmap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct file_system_type;
 struct fs_context;
 struct file;
@@ -71,6 +74,7 @@ struct vfsmount {
 	struct dentry *mnt_root;	/* root of the mounted tree */
 	struct super_block *mnt_sb;	/* pointer to superblock */
 	int mnt_flags;
+<<<<<<< HEAD
 	struct mnt_idmap *mnt_idmap;
 } __randomize_layout;
 
@@ -78,6 +82,15 @@ static inline struct mnt_idmap *mnt_idmap(const struct vfsmount *mnt)
 {
 	/* Pairs with smp_store_release() in do_idmap_mount(). */
 	return smp_load_acquire(&mnt->mnt_idmap);
+=======
+	struct user_namespace *mnt_userns;
+} __randomize_layout;
+
+static inline struct user_namespace *mnt_user_ns(const struct vfsmount *mnt)
+{
+	/* Pairs with smp_store_release() in do_idmap_mount(). */
+	return smp_load_acquire(&mnt->mnt_userns);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 extern int mnt_want_write(struct vfsmount *mnt);
@@ -86,7 +99,10 @@ extern void mnt_drop_write(struct vfsmount *mnt);
 extern void mnt_drop_write_file(struct file *file);
 extern void mntput(struct vfsmount *mnt);
 extern struct vfsmount *mntget(struct vfsmount *mnt);
+<<<<<<< HEAD
 extern void mnt_make_shortterm(struct vfsmount *mnt);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern struct vfsmount *mnt_clone_internal(const struct path *path);
 extern bool __mnt_is_readonly(struct vfsmount *mnt);
 extern bool mnt_may_suid(struct vfsmount *mnt);

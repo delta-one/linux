@@ -187,6 +187,7 @@
 /* NAU8822_REG_PLL_K3 (0x27) */
 #define NAU8822_PLLK3_MASK			0x1FF
 
+<<<<<<< HEAD
 /* NAU8822_REG_RIGHT_SPEAKER_CONTROL (0x2B) */
 #define NAU8822_RMIXMUT				0x20
 #define NAU8822_RSUBBYP				0x10
@@ -196,6 +197,8 @@
 
 #define NAU8822_RAUXSMUT			0x01
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* System Clock Source */
 enum {
 	NAU8822_CLK_MCLK,

@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /******************************************************************************
  *
+<<<<<<< HEAD
  * Copyright(c) 2005 - 2014, 2018 - 2022 Intel Corporation. All rights reserved.
+=======
+ * Copyright(c) 2005 - 2014, 2018 - 2021 Intel Corporation. All rights reserved.
+>>>>>>> b7ba80a49124 (Commit)
  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
  *****************************************************************************/
@@ -512,10 +516,17 @@ static char *rs_pretty_rate(const struct rs_rate *rate)
 		 (rate->index <= IWL_RATE_MCS_9_INDEX))
 		rate_str = ht_vht_rates[rate->index];
 	else
+<<<<<<< HEAD
 		rate_str = NULL;
 
 	sprintf(buf, "(%s|%s|%s)", rs_pretty_lq_type(rate->type),
 		iwl_rs_pretty_ant(rate->ant), rate_str ?: "BAD_RATE");
+=======
+		rate_str = "BAD_RATE";
+
+	sprintf(buf, "(%s|%s|%s)", rs_pretty_lq_type(rate->type),
+		iwl_rs_pretty_ant(rate->ant), rate_str);
+>>>>>>> b7ba80a49124 (Commit)
 	return buf;
 }
 
@@ -895,7 +906,12 @@ static int rs_rate_from_ucode_rate(const u32 ucode_rate,
 			WARN_ON_ONCE(1);
 		}
 	} else if (ucode_rate & RATE_MCS_VHT_MSK_V1) {
+<<<<<<< HEAD
 		nss = FIELD_GET(RATE_MCS_NSS_MSK, ucode_rate) + 1;
+=======
+		nss = ((ucode_rate & RATE_VHT_MCS_NSS_MSK) >>
+		       RATE_VHT_MCS_NSS_POS) + 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (nss == 1) {
 			rate->type = LQ_VHT_SISO;
@@ -909,7 +925,12 @@ static int rs_rate_from_ucode_rate(const u32 ucode_rate,
 			WARN_ON_ONCE(1);
 		}
 	} else if (ucode_rate & RATE_MCS_HE_MSK_V1) {
+<<<<<<< HEAD
 		nss = FIELD_GET(RATE_MCS_NSS_MSK, ucode_rate) + 1;
+=======
+		nss = ((ucode_rate & RATE_VHT_MCS_NSS_MSK) >>
+		      RATE_VHT_MCS_NSS_POS) + 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (nss == 1) {
 			rate->type = LQ_HE_SISO;
@@ -2682,6 +2703,10 @@ static void rs_drv_get_rate(void *mvm_r, struct ieee80211_sta *sta,
 		/* if vif isn't initialized mvm doesn't know about
 		 * this station, so don't do anything with the it
 		 */
+<<<<<<< HEAD
+=======
+		sta = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 		mvm_sta = NULL;
 	}
 
@@ -2882,7 +2907,12 @@ void iwl_mvm_update_frame_stats(struct iwl_mvm *mvm, u32 rate, bool agg)
 		nss = ((rate & RATE_HT_MCS_NSS_MSK_V1) >> RATE_HT_MCS_NSS_POS_V1) + 1;
 	} else if (rate & RATE_MCS_VHT_MSK_V1) {
 		mvm->drv_rx_stats.vht_frames++;
+<<<<<<< HEAD
 		nss = FIELD_GET(RATE_MCS_NSS_MSK, rate) + 1;
+=======
+		nss = ((rate & RATE_VHT_MCS_NSS_MSK) >>
+		       RATE_VHT_MCS_NSS_POS) + 1;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		mvm->drv_rx_stats.legacy_frames++;
 	}
@@ -3661,7 +3691,12 @@ int rs_pretty_print_rate_v1(char *buf, int bufsz, const u32 rate)
 	if (rate & RATE_MCS_VHT_MSK_V1) {
 		type = "VHT";
 		mcs = rate & RATE_VHT_MCS_RATE_CODE_MSK;
+<<<<<<< HEAD
 		nss = FIELD_GET(RATE_MCS_NSS_MSK, rate) + 1;
+=======
+		nss = ((rate & RATE_VHT_MCS_NSS_MSK)
+		       >> RATE_VHT_MCS_NSS_POS) + 1;
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (rate & RATE_MCS_HT_MSK_V1) {
 		type = "HT";
 		mcs = rate & RATE_HT_MCS_INDEX_MSK_V1;
@@ -3670,7 +3705,12 @@ int rs_pretty_print_rate_v1(char *buf, int bufsz, const u32 rate)
 	} else if (rate & RATE_MCS_HE_MSK_V1) {
 		type = "HE";
 		mcs = rate & RATE_VHT_MCS_RATE_CODE_MSK;
+<<<<<<< HEAD
 		nss = FIELD_GET(RATE_MCS_NSS_MSK, rate) + 1;
+=======
+		nss = ((rate & RATE_VHT_MCS_NSS_MSK)
+		       >> RATE_VHT_MCS_NSS_POS) + 1;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		type = "Unknown"; /* shouldn't happen */
 	}

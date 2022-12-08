@@ -1396,8 +1396,13 @@ static int octeon_mgmt_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, netdev);
 	p = netdev_priv(netdev);
+<<<<<<< HEAD
 	netif_napi_add_weight(netdev, &p->napi, octeon_mgmt_napi_poll,
 			      OCTEON_MGMT_NAPI_WEIGHT);
+=======
+	netif_napi_add(netdev, &p->napi, octeon_mgmt_napi_poll,
+		       OCTEON_MGMT_NAPI_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	p->netdev = netdev;
 	p->dev = &pdev->dev;

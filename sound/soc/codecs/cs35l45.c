@@ -10,7 +10,10 @@
 #include <linux/module.h>
 #include <linux/pm_runtime.h>
 #include <linux/property.h>
+<<<<<<< HEAD
 #include <linux/firmware.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regulator/consumer.h>
 #include <sound/core.h>
 #include <sound/pcm.h>
@@ -20,6 +23,7 @@
 
 #include "cs35l45.h"
 
+<<<<<<< HEAD
 static bool cs35l45_check_cspl_mbox_sts(const enum cs35l45_cspl_mboxcmd cmd,
 					enum cs35l45_cspl_mboxstate sts)
 {
@@ -85,6 +89,8 @@ static int cs35l45_set_cspl_mbox_cmd(struct cs35l45_private *cs35l45,
 	return -ENOMSG;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int cs35l45_global_en_ev(struct snd_soc_dapm_widget *w,
 				struct snd_kcontrol *kcontrol, int event)
 {
@@ -112,6 +118,7 @@ static int cs35l45_global_en_ev(struct snd_soc_dapm_widget *w,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int cs35l45_dsp_preload_ev(struct snd_soc_dapm_widget *w,
 				  struct snd_kcontrol *kcontrol, int event)
 {
@@ -169,11 +176,16 @@ static int cs35l45_dsp_audio_ev(struct snd_soc_dapm_widget *w,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const char * const cs35l45_asp_tx_txt[] = {
 	"Zero", "ASP_RX1", "ASP_RX2",
 	"VMON", "IMON", "ERR_VOL",
 	"VDD_BATTMON", "VDD_BSTMON",
+<<<<<<< HEAD
 	"DSP_TX1", "DSP_TX2",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	"Interpolator", "IL_TARGET",
 };
 
@@ -181,7 +193,10 @@ static const unsigned int cs35l45_asp_tx_val[] = {
 	CS35L45_PCM_SRC_ZERO, CS35L45_PCM_SRC_ASP_RX1, CS35L45_PCM_SRC_ASP_RX2,
 	CS35L45_PCM_SRC_VMON, CS35L45_PCM_SRC_IMON, CS35L45_PCM_SRC_ERR_VOL,
 	CS35L45_PCM_SRC_VDD_BATTMON, CS35L45_PCM_SRC_VDD_BSTMON,
+<<<<<<< HEAD
 	CS35L45_PCM_SRC_DSP_TX1, CS35L45_PCM_SRC_DSP_TX2,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	CS35L45_PCM_SRC_INTERPOLATOR, CS35L45_PCM_SRC_IL_TARGET,
 };
 
@@ -203,6 +218,7 @@ static const struct soc_enum cs35l45_asp_tx_enums[] = {
 			      cs35l45_asp_tx_val),
 };
 
+<<<<<<< HEAD
 static const char * const cs35l45_dsp_rx_txt[] = {
 	"Zero", "ASP_RX1", "ASP_RX2",
 	"VMON", "IMON", "ERR_VOL",
@@ -251,6 +267,14 @@ static const char * const cs35l45_dac_txt[] = {
 static const unsigned int cs35l45_dac_val[] = {
 	CS35L45_PCM_SRC_ZERO, CS35L45_PCM_SRC_ASP_RX1, CS35L45_PCM_SRC_ASP_RX2,
 	CS35L45_PCM_SRC_DSP_TX1, CS35L45_PCM_SRC_DSP_TX2
+=======
+static const char * const cs35l45_dac_txt[] = {
+	"Zero", "ASP_RX1", "ASP_RX2"
+};
+
+static const unsigned int cs35l45_dac_val[] = {
+	CS35L45_PCM_SRC_ZERO, CS35L45_PCM_SRC_ASP_RX1, CS35L45_PCM_SRC_ASP_RX2
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct soc_enum cs35l45_dacpcm_enums[] = {
@@ -267,6 +291,7 @@ static const struct snd_kcontrol_new cs35l45_asp_muxes[] = {
 	SOC_DAPM_ENUM("ASP_TX5 Source", cs35l45_asp_tx_enums[4]),
 };
 
+<<<<<<< HEAD
 static const struct snd_kcontrol_new cs35l45_dsp_muxes[] = {
 	SOC_DAPM_ENUM("DSP_RX1 Source", cs35l45_dsp_rx_enums[0]),
 	SOC_DAPM_ENUM("DSP_RX2 Source", cs35l45_dsp_rx_enums[1]),
@@ -278,11 +303,14 @@ static const struct snd_kcontrol_new cs35l45_dsp_muxes[] = {
 	SOC_DAPM_ENUM("DSP_RX8 Source", cs35l45_dsp_rx_enums[7]),
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_kcontrol_new cs35l45_dac_muxes[] = {
 	SOC_DAPM_ENUM("DACPCM1 Source", cs35l45_dacpcm_enums[0]),
 };
 
 static const struct snd_soc_dapm_widget cs35l45_dapm_widgets[] = {
+<<<<<<< HEAD
 	SND_SOC_DAPM_SPK("DSP1 Preload", NULL),
 	SND_SOC_DAPM_SUPPLY_S("DSP1 Preloader", 100, SND_SOC_NOPM, 0, 0,
 				cs35l45_dsp_preload_ev,
@@ -290,6 +318,8 @@ static const struct snd_soc_dapm_widget cs35l45_dapm_widgets[] = {
 	SND_SOC_DAPM_OUT_DRV_E("DSP1", SND_SOC_NOPM, 0, 0, NULL, 0,
 				cs35l45_dsp_audio_ev,
 				SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SND_SOC_DAPM_SUPPLY("GLOBAL_EN", SND_SOC_NOPM, 0, 0,
 			    cs35l45_global_en_ev,
 			    SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
@@ -324,6 +354,7 @@ static const struct snd_soc_dapm_widget cs35l45_dapm_widgets[] = {
 	SND_SOC_DAPM_MUX("ASP_TX4 Source", SND_SOC_NOPM, 0, 0, &cs35l45_asp_muxes[3]),
 	SND_SOC_DAPM_MUX("ASP_TX5 Source", SND_SOC_NOPM, 0, 0, &cs35l45_asp_muxes[4]),
 
+<<<<<<< HEAD
 	SND_SOC_DAPM_MUX("DSP_RX1 Source", SND_SOC_NOPM, 0, 0, &cs35l45_dsp_muxes[0]),
 	SND_SOC_DAPM_MUX("DSP_RX2 Source", SND_SOC_NOPM, 0, 0, &cs35l45_dsp_muxes[1]),
 	SND_SOC_DAPM_MUX("DSP_RX3 Source", SND_SOC_NOPM, 0, 0, &cs35l45_dsp_muxes[2]),
@@ -333,6 +364,8 @@ static const struct snd_soc_dapm_widget cs35l45_dapm_widgets[] = {
 	SND_SOC_DAPM_MUX("DSP_RX7 Source", SND_SOC_NOPM, 0, 0, &cs35l45_dsp_muxes[6]),
 	SND_SOC_DAPM_MUX("DSP_RX8 Source", SND_SOC_NOPM, 0, 0, &cs35l45_dsp_muxes[7]),
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SND_SOC_DAPM_MUX("DACPCM1 Source", SND_SOC_NOPM, 0, 0, &cs35l45_dac_muxes[0]),
 
 	SND_SOC_DAPM_OUT_DRV("AMP", SND_SOC_NOPM, 0, 0, NULL, 0),
@@ -343,8 +376,11 @@ static const struct snd_soc_dapm_widget cs35l45_dapm_widgets[] = {
 #define CS35L45_ASP_MUX_ROUTE(name) \
 	{ name" Source", "ASP_RX1",	 "ASP_RX1" }, \
 	{ name" Source", "ASP_RX2",	 "ASP_RX2" }, \
+<<<<<<< HEAD
 	{ name" Source", "DSP_TX1",	 "DSP1" }, \
 	{ name" Source", "DSP_TX2",	 "DSP1" }, \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ name" Source", "VMON",	 "VMON" }, \
 	{ name" Source", "IMON",	 "IMON" }, \
 	{ name" Source", "ERR_VOL",	 "ERR_VOL" }, \
@@ -353,6 +389,7 @@ static const struct snd_soc_dapm_widget cs35l45_dapm_widgets[] = {
 	{ name" Source", "Interpolator", "AMP_INTP" }, \
 	{ name" Source", "IL_TARGET",	 "IL_TARGET" }
 
+<<<<<<< HEAD
 #define CS35L45_DSP_MUX_ROUTE(name) \
 	{ name" Source", "ASP_RX1",	"ASP_RX1" }, \
 	{ name" Source", "ASP_RX2",	"ASP_RX2" }
@@ -362,6 +399,11 @@ static const struct snd_soc_dapm_widget cs35l45_dapm_widgets[] = {
 	{ name" Source", "ASP_RX2",	"ASP_RX2" }, \
 	{ name" Source", "DSP_TX1",	"DSP1" }, \
 	{ name" Source", "DSP_TX2",	"DSP1" }
+=======
+#define CS35L45_DAC_MUX_ROUTE(name) \
+	{ name" Source", "ASP_RX1",	"ASP_RX1" }, \
+	{ name" Source", "ASP_RX2",	"ASP_RX2" }
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct snd_soc_dapm_route cs35l45_dapm_routes[] = {
 	/* Feedback */
@@ -406,6 +448,7 @@ static const struct snd_soc_dapm_route cs35l45_dapm_routes[] = {
 	{ "AMP", NULL, "DACPCM1 Source"},
 	{ "AMP", NULL, "GLOBAL_EN"},
 
+<<<<<<< HEAD
 	CS35L45_DSP_MUX_ROUTE("DSP_RX1"),
 	CS35L45_DSP_MUX_ROUTE("DSP_RX2"),
 	CS35L45_DSP_MUX_ROUTE("DSP_RX3"),
@@ -427,6 +470,8 @@ static const struct snd_soc_dapm_route cs35l45_dapm_routes[] = {
 	{"DSP1 Preload", NULL, "DSP1 Preloader"},
 	{"DSP1", NULL, "DSP1 Preloader"},
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	CS35L45_DAC_MUX_ROUTE("DACPCM1"),
 
 	{ "SPK", NULL, "AMP"},
@@ -442,8 +487,11 @@ static const struct snd_kcontrol_new cs35l45_controls[] = {
 			 -409, 48,
 			 (CS35L45_AMP_VOL_PCM_WIDTH - 1) - 1,
 			 0, cs35l45_dig_pcm_vol_tlv),
+<<<<<<< HEAD
 	WM_ADSP2_PRELOAD_SWITCH("DSP1", 1),
 	WM_ADSP_FW_CONTROL("DSP1", 0),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int cs35l45_set_pll(struct cs35l45_private *cs35l45, unsigned int freq)
@@ -714,6 +762,7 @@ static struct snd_soc_dai_driver cs35l45_dai[] = {
 	},
 };
 
+<<<<<<< HEAD
 static int cs35l45_component_probe(struct snd_soc_component *component)
 {
 	struct cs35l45_private *cs35l45 = snd_soc_component_get_drvdata(component);
@@ -732,6 +781,9 @@ static const struct snd_soc_component_driver cs35l45_component = {
 	.probe = cs35l45_component_probe,
 	.remove = cs35l45_component_remove,
 
+=======
+static const struct snd_soc_component_driver cs35l45_component = {
+>>>>>>> b7ba80a49124 (Commit)
 	.dapm_widgets = cs35l45_dapm_widgets,
 	.num_dapm_widgets = ARRAY_SIZE(cs35l45_dapm_widgets),
 
@@ -746,6 +798,7 @@ static const struct snd_soc_component_driver cs35l45_component = {
 	.endianness = 1,
 };
 
+<<<<<<< HEAD
 static void cs35l45_setup_hibernate(struct cs35l45_private *cs35l45)
 {
 	unsigned int wksrc;
@@ -810,10 +863,13 @@ static int cs35l45_exit_hibernate(struct cs35l45_private *cs35l45)
 	return -ETIMEDOUT;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __maybe_unused cs35l45_runtime_suspend(struct device *dev)
 {
 	struct cs35l45_private *cs35l45 = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	if (!cs35l45->dsp.preloaded || !cs35l45->dsp.cs_dsp.running)
 		return 0;
 
@@ -821,6 +877,9 @@ static int __maybe_unused cs35l45_runtime_suspend(struct device *dev)
 
 	regcache_cache_only(cs35l45->regmap, true);
 	regcache_mark_dirty(cs35l45->regmap);
+=======
+	regcache_cache_only(cs35l45->regmap, true);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_dbg(cs35l45->dev, "Runtime suspended\n");
 
@@ -832,6 +891,7 @@ static int __maybe_unused cs35l45_runtime_resume(struct device *dev)
 	struct cs35l45_private *cs35l45 = dev_get_drvdata(dev);
 	int ret;
 
+<<<<<<< HEAD
 	if (!cs35l45->dsp.preloaded || !cs35l45->dsp.cs_dsp.running)
 		return 0;
 
@@ -843,6 +903,11 @@ static int __maybe_unused cs35l45_runtime_resume(struct device *dev)
 	if (ret)
 		return ret;
 
+=======
+	dev_dbg(cs35l45->dev, "Runtime resume\n");
+
+	regcache_cache_only(cs35l45->regmap, false);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = regcache_sync(cs35l45->regmap);
 	if (ret != 0)
 		dev_warn(cs35l45->dev, "regcache_sync failed: %d\n", ret);
@@ -856,6 +921,7 @@ static int __maybe_unused cs35l45_runtime_resume(struct device *dev)
 
 static int cs35l45_apply_property_config(struct cs35l45_private *cs35l45)
 {
+<<<<<<< HEAD
 	struct device_node *node = cs35l45->dev->of_node;
 	unsigned int gpio_regs[] = {CS35L45_GPIO1_CTRL1, CS35L45_GPIO2_CTRL1,
 				    CS35L45_GPIO3_CTRL1};
@@ -916,6 +982,9 @@ static int cs35l45_apply_property_config(struct cs35l45_private *cs35l45)
 
 		of_node_put(child);
 	}
+=======
+	unsigned int val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (device_property_read_u32(cs35l45->dev,
 				     "cirrus,asp-sdout-hiz-ctrl", &val) == 0) {
@@ -927,6 +996,7 @@ static int cs35l45_apply_property_config(struct cs35l45_private *cs35l45)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int cs35l45_dsp_virt2_mbox3_irq_handle(struct cs35l45_private *cs35l45,
 					      const unsigned int cmd,
 					      unsigned int data)
@@ -1055,6 +1125,8 @@ static const struct regmap_irq_chip cs35l45_regmap_irq_chip = {
 	.runtime_pm = true,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int cs35l45_initialize(struct cs35l45_private *cs35l45)
 {
 	struct device *dev = cs35l45->dev;
@@ -1100,6 +1172,7 @@ static int cs35l45_initialize(struct cs35l45_private *cs35l45)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	return 0;
 }
 
@@ -1162,6 +1235,20 @@ int cs35l45_probe(struct cs35l45_private *cs35l45)
 	struct device *dev = cs35l45->dev;
 	unsigned long irq_pol = IRQF_ONESHOT | IRQF_SHARED;
 	int ret, i, irq;
+=======
+	pm_runtime_set_autosuspend_delay(cs35l45->dev, 3000);
+	pm_runtime_use_autosuspend(cs35l45->dev);
+	pm_runtime_set_active(cs35l45->dev);
+	pm_runtime_enable(cs35l45->dev);
+
+	return 0;
+}
+
+int cs35l45_probe(struct cs35l45_private *cs35l45)
+{
+	struct device *dev = cs35l45->dev;
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cs35l45->vdd_batt = devm_regulator_get(dev, "vdd-batt");
 	if (IS_ERR(cs35l45->vdd_batt))
@@ -1206,6 +1293,7 @@ int cs35l45_probe(struct cs35l45_private *cs35l45)
 	if (ret < 0)
 		goto err_reset;
 
+<<<<<<< HEAD
 	ret = cs35l45_dsp_init(cs35l45);
 	if (ret < 0)
 		goto err_reset;
@@ -1248,10 +1336,13 @@ int cs35l45_probe(struct cs35l45_private *cs35l45)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = devm_snd_soc_register_component(dev, &cs35l45_component,
 					      cs35l45_dai,
 					      ARRAY_SIZE(cs35l45_dai));
 	if (ret < 0)
+<<<<<<< HEAD
 		goto err_dsp;
 
 	pm_runtime_put_autosuspend(cs35l45->dev);
@@ -1263,6 +1354,12 @@ err_dsp:
 	pm_runtime_put_noidle(cs35l45->dev);
 	wm_adsp2_remove(&cs35l45->dsp);
 
+=======
+		goto err_reset;
+
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 err_reset:
 	gpiod_set_value_cansleep(cs35l45->reset_gpio, 0);
 err:
@@ -1275,6 +1372,7 @@ EXPORT_SYMBOL_NS_GPL(cs35l45_probe, SND_SOC_CS35L45);
 
 void cs35l45_remove(struct cs35l45_private *cs35l45)
 {
+<<<<<<< HEAD
 	pm_runtime_get_sync(cs35l45->dev);
 	pm_runtime_disable(cs35l45->dev);
 	wm_adsp2_remove(&cs35l45->dsp);
@@ -1282,6 +1380,11 @@ void cs35l45_remove(struct cs35l45_private *cs35l45)
 	gpiod_set_value_cansleep(cs35l45->reset_gpio, 0);
 
 	pm_runtime_put_noidle(cs35l45->dev);
+=======
+	pm_runtime_disable(cs35l45->dev);
+
+	gpiod_set_value_cansleep(cs35l45->reset_gpio, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	regulator_disable(cs35l45->vdd_a);
 	/* VDD_BATT must be the last to power-off */
 	regulator_disable(cs35l45->vdd_batt);
@@ -1297,3 +1400,7 @@ MODULE_DESCRIPTION("ASoC CS35L45 driver");
 MODULE_AUTHOR("James Schulman, Cirrus Logic Inc, <james.schulman@cirrus.com>");
 MODULE_AUTHOR("Richard Fitzgerald <rf@opensource.cirrus.com>");
 MODULE_LICENSE("Dual BSD/GPL");
+<<<<<<< HEAD
+=======
+MODULE_IMPORT_NS(SND_SOC_CS35L45_TABLES);
+>>>>>>> b7ba80a49124 (Commit)

@@ -334,6 +334,7 @@ void set_pgdat_percpu_threshold(pg_data_t *pgdat,
 	}
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_HAVE_CMPXCHG_LOCAL
 /*
  * If we have cmpxchg_local support then we do not need to incur the overhead
@@ -516,6 +517,8 @@ void __dec_node_page_state(struct page *page, enum node_stat_item item)
 }
 EXPORT_SYMBOL(__dec_node_page_state);
 #else
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * For use when we know that interrupts are disabled,
  * or when we know that preemption is disabled and that
@@ -525,7 +528,11 @@ void __mod_zone_page_state(struct zone *zone, enum zone_stat_item item,
 			   long delta)
 {
 	struct per_cpu_zonestat __percpu *pcp = zone->per_cpu_zonestats;
+<<<<<<< HEAD
 	s32 __percpu *p = pcp->vm_stat_diff + item;
+=======
+	s8 __percpu *p = pcp->vm_stat_diff + item;
+>>>>>>> b7ba80a49124 (Commit)
 	long x;
 	long t;
 
@@ -556,7 +563,11 @@ void __mod_node_page_state(struct pglist_data *pgdat, enum node_stat_item item,
 				long delta)
 {
 	struct per_cpu_nodestat __percpu *pcp = pgdat->per_cpu_nodestats;
+<<<<<<< HEAD
 	s32 __percpu *p = pcp->vm_node_stat_diff + item;
+=======
+	s8 __percpu *p = pcp->vm_node_stat_diff + item;
+>>>>>>> b7ba80a49124 (Commit)
 	long x;
 	long t;
 
@@ -614,8 +625,13 @@ EXPORT_SYMBOL(__mod_node_page_state);
 void __inc_zone_state(struct zone *zone, enum zone_stat_item item)
 {
 	struct per_cpu_zonestat __percpu *pcp = zone->per_cpu_zonestats;
+<<<<<<< HEAD
 	s32 __percpu *p = pcp->vm_stat_diff + item;
 	s32 v, t;
+=======
+	s8 __percpu *p = pcp->vm_stat_diff + item;
+	s8 v, t;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* See __mod_node_page_state */
 	preempt_disable_nested();
@@ -623,7 +639,11 @@ void __inc_zone_state(struct zone *zone, enum zone_stat_item item)
 	v = __this_cpu_inc_return(*p);
 	t = __this_cpu_read(pcp->stat_threshold);
 	if (unlikely(v > t)) {
+<<<<<<< HEAD
 		s32 overstep = t >> 1;
+=======
+		s8 overstep = t >> 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 		zone_page_state_add(v + overstep, zone, item);
 		__this_cpu_write(*p, -overstep);
@@ -635,8 +655,13 @@ void __inc_zone_state(struct zone *zone, enum zone_stat_item item)
 void __inc_node_state(struct pglist_data *pgdat, enum node_stat_item item)
 {
 	struct per_cpu_nodestat __percpu *pcp = pgdat->per_cpu_nodestats;
+<<<<<<< HEAD
 	s32 __percpu *p = pcp->vm_node_stat_diff + item;
 	s32 v, t;
+=======
+	s8 __percpu *p = pcp->vm_node_stat_diff + item;
+	s8 v, t;
+>>>>>>> b7ba80a49124 (Commit)
 
 	VM_WARN_ON_ONCE(vmstat_item_in_bytes(item));
 
@@ -646,7 +671,11 @@ void __inc_node_state(struct pglist_data *pgdat, enum node_stat_item item)
 	v = __this_cpu_inc_return(*p);
 	t = __this_cpu_read(pcp->stat_threshold);
 	if (unlikely(v > t)) {
+<<<<<<< HEAD
 		s32 overstep = t >> 1;
+=======
+		s8 overstep = t >> 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 		node_page_state_add(v + overstep, pgdat, item);
 		__this_cpu_write(*p, -overstep);
@@ -670,8 +699,13 @@ EXPORT_SYMBOL(__inc_node_page_state);
 void __dec_zone_state(struct zone *zone, enum zone_stat_item item)
 {
 	struct per_cpu_zonestat __percpu *pcp = zone->per_cpu_zonestats;
+<<<<<<< HEAD
 	s32 __percpu *p = pcp->vm_stat_diff + item;
 	s32 v, t;
+=======
+	s8 __percpu *p = pcp->vm_stat_diff + item;
+	s8 v, t;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* See __mod_node_page_state */
 	preempt_disable_nested();
@@ -679,7 +713,11 @@ void __dec_zone_state(struct zone *zone, enum zone_stat_item item)
 	v = __this_cpu_dec_return(*p);
 	t = __this_cpu_read(pcp->stat_threshold);
 	if (unlikely(v < - t)) {
+<<<<<<< HEAD
 		s32 overstep = t >> 1;
+=======
+		s8 overstep = t >> 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 		zone_page_state_add(v - overstep, zone, item);
 		__this_cpu_write(*p, overstep);
@@ -691,8 +729,13 @@ void __dec_zone_state(struct zone *zone, enum zone_stat_item item)
 void __dec_node_state(struct pglist_data *pgdat, enum node_stat_item item)
 {
 	struct per_cpu_nodestat __percpu *pcp = pgdat->per_cpu_nodestats;
+<<<<<<< HEAD
 	s32 __percpu *p = pcp->vm_node_stat_diff + item;
 	s32 v, t;
+=======
+	s8 __percpu *p = pcp->vm_node_stat_diff + item;
+	s8 v, t;
+>>>>>>> b7ba80a49124 (Commit)
 
 	VM_WARN_ON_ONCE(vmstat_item_in_bytes(item));
 
@@ -702,7 +745,11 @@ void __dec_node_state(struct pglist_data *pgdat, enum node_stat_item item)
 	v = __this_cpu_dec_return(*p);
 	t = __this_cpu_read(pcp->stat_threshold);
 	if (unlikely(v < - t)) {
+<<<<<<< HEAD
 		s32 overstep = t >> 1;
+=======
+		s8 overstep = t >> 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 		node_page_state_add(v - overstep, pgdat, item);
 		__this_cpu_write(*p, overstep);
@@ -723,6 +770,152 @@ void __dec_node_page_state(struct page *page, enum node_stat_item item)
 }
 EXPORT_SYMBOL(__dec_node_page_state);
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_HAVE_CMPXCHG_LOCAL
+/*
+ * If we have cmpxchg_local support then we do not need to incur the overhead
+ * that comes with local_irq_save/restore if we use this_cpu_cmpxchg.
+ *
+ * mod_state() modifies the zone counter state through atomic per cpu
+ * operations.
+ *
+ * Overstep mode specifies how overstep should handled:
+ *     0       No overstepping
+ *     1       Overstepping half of threshold
+ *     -1      Overstepping minus half of threshold
+*/
+static inline void mod_zone_state(struct zone *zone,
+       enum zone_stat_item item, long delta, int overstep_mode)
+{
+	struct per_cpu_zonestat __percpu *pcp = zone->per_cpu_zonestats;
+	s8 __percpu *p = pcp->vm_stat_diff + item;
+	long o, n, t, z;
+
+	do {
+		z = 0;  /* overflow to zone counters */
+
+		/*
+		 * The fetching of the stat_threshold is racy. We may apply
+		 * a counter threshold to the wrong the cpu if we get
+		 * rescheduled while executing here. However, the next
+		 * counter update will apply the threshold again and
+		 * therefore bring the counter under the threshold again.
+		 *
+		 * Most of the time the thresholds are the same anyways
+		 * for all cpus in a zone.
+		 */
+		t = this_cpu_read(pcp->stat_threshold);
+
+		o = this_cpu_read(*p);
+		n = delta + o;
+
+		if (abs(n) > t) {
+			int os = overstep_mode * (t >> 1) ;
+
+			/* Overflow must be added to zone counters */
+			z = n + os;
+			n = -os;
+		}
+	} while (this_cpu_cmpxchg(*p, o, n) != o);
+
+	if (z)
+		zone_page_state_add(z, zone, item);
+}
+
+void mod_zone_page_state(struct zone *zone, enum zone_stat_item item,
+			 long delta)
+{
+	mod_zone_state(zone, item, delta, 0);
+}
+EXPORT_SYMBOL(mod_zone_page_state);
+
+void inc_zone_page_state(struct page *page, enum zone_stat_item item)
+{
+	mod_zone_state(page_zone(page), item, 1, 1);
+}
+EXPORT_SYMBOL(inc_zone_page_state);
+
+void dec_zone_page_state(struct page *page, enum zone_stat_item item)
+{
+	mod_zone_state(page_zone(page), item, -1, -1);
+}
+EXPORT_SYMBOL(dec_zone_page_state);
+
+static inline void mod_node_state(struct pglist_data *pgdat,
+       enum node_stat_item item, int delta, int overstep_mode)
+{
+	struct per_cpu_nodestat __percpu *pcp = pgdat->per_cpu_nodestats;
+	s8 __percpu *p = pcp->vm_node_stat_diff + item;
+	long o, n, t, z;
+
+	if (vmstat_item_in_bytes(item)) {
+		/*
+		 * Only cgroups use subpage accounting right now; at
+		 * the global level, these items still change in
+		 * multiples of whole pages. Store them as pages
+		 * internally to keep the per-cpu counters compact.
+		 */
+		VM_WARN_ON_ONCE(delta & (PAGE_SIZE - 1));
+		delta >>= PAGE_SHIFT;
+	}
+
+	do {
+		z = 0;  /* overflow to node counters */
+
+		/*
+		 * The fetching of the stat_threshold is racy. We may apply
+		 * a counter threshold to the wrong the cpu if we get
+		 * rescheduled while executing here. However, the next
+		 * counter update will apply the threshold again and
+		 * therefore bring the counter under the threshold again.
+		 *
+		 * Most of the time the thresholds are the same anyways
+		 * for all cpus in a node.
+		 */
+		t = this_cpu_read(pcp->stat_threshold);
+
+		o = this_cpu_read(*p);
+		n = delta + o;
+
+		if (abs(n) > t) {
+			int os = overstep_mode * (t >> 1) ;
+
+			/* Overflow must be added to node counters */
+			z = n + os;
+			n = -os;
+		}
+	} while (this_cpu_cmpxchg(*p, o, n) != o);
+
+	if (z)
+		node_page_state_add(z, pgdat, item);
+}
+
+void mod_node_page_state(struct pglist_data *pgdat, enum node_stat_item item,
+					long delta)
+{
+	mod_node_state(pgdat, item, delta, 0);
+}
+EXPORT_SYMBOL(mod_node_page_state);
+
+void inc_node_state(struct pglist_data *pgdat, enum node_stat_item item)
+{
+	mod_node_state(pgdat, item, 1, 1);
+}
+
+void inc_node_page_state(struct page *page, enum node_stat_item item)
+{
+	mod_node_state(page_pgdat(page), item, 1, 1);
+}
+EXPORT_SYMBOL(inc_node_page_state);
+
+void dec_node_page_state(struct page *page, enum node_stat_item item)
+{
+	mod_node_state(page_pgdat(page), item, -1, -1);
+}
+EXPORT_SYMBOL(dec_node_page_state);
+#else
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Use interrupt disable to serialize counter updates
  */
@@ -924,11 +1117,19 @@ static int refresh_cpu_vm_stats(bool do_pagesets)
 }
 
 /*
+<<<<<<< HEAD
  * Fold the data for a cpu into the global array.
  * There cannot be any access by the offline cpu and therefore
  * synchronization is simplified.
  */
 void cpu_vm_stats_fold(int cpu, bool do_pagesets)
+=======
+ * Fold the data for an offline cpu into the global array.
+ * There cannot be any access by the offline cpu and therefore
+ * synchronization is simplified.
+ */
+void cpu_vm_stats_fold(int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pglist_data *pgdat;
 	struct zone *zone;
@@ -938,9 +1139,12 @@ void cpu_vm_stats_fold(int cpu, bool do_pagesets)
 
 	for_each_populated_zone(zone) {
 		struct per_cpu_zonestat *pzstats;
+<<<<<<< HEAD
 #ifdef CONFIG_NUMA
 		struct per_cpu_pages *pcp = per_cpu_ptr(zone->per_cpu_pageset, cpu);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		pzstats = per_cpu_ptr(zone->per_cpu_zonestats, cpu);
 
@@ -948,6 +1152,7 @@ void cpu_vm_stats_fold(int cpu, bool do_pagesets)
 			if (pzstats->vm_stat_diff[i]) {
 				int v;
 
+<<<<<<< HEAD
 				v = xchg(&pzstats->vm_stat_diff[i], 0);
 				atomic_long_add(v, &zone->vm_stat[i]);
 				global_zone_diff[i] += v;
@@ -956,6 +1161,12 @@ void cpu_vm_stats_fold(int cpu, bool do_pagesets)
 				if (do_pagesets)
 					pcp->expire = 3;
 #endif
+=======
+				v = pzstats->vm_stat_diff[i];
+				pzstats->vm_stat_diff[i] = 0;
+				atomic_long_add(v, &zone->vm_stat[i]);
+				global_zone_diff[i] += v;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 #ifdef CONFIG_NUMA
@@ -963,6 +1174,7 @@ void cpu_vm_stats_fold(int cpu, bool do_pagesets)
 			if (pzstats->vm_numa_event[i]) {
 				unsigned long v;
 
+<<<<<<< HEAD
 				v = xchg(&pzstats->vm_numa_event[i], 0);
 				zone_numa_event_add(v, zone, i);
 			}
@@ -999,6 +1211,13 @@ void cpu_vm_stats_fold(int cpu, bool do_pagesets)
 			if (pcp->count)
 				drain_zone_pages(zone, pcp);
 		}
+=======
+				v = pzstats->vm_numa_event[i];
+				pzstats->vm_numa_event[i] = 0;
+				zone_numa_event_add(v, zone, i);
+			}
+		}
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	}
 
@@ -1011,7 +1230,12 @@ void cpu_vm_stats_fold(int cpu, bool do_pagesets)
 			if (p->vm_node_stat_diff[i]) {
 				int v;
 
+<<<<<<< HEAD
 				v = xchg(&p->vm_node_stat_diff[i], 0);
+=======
+				v = p->vm_node_stat_diff[i];
+				p->vm_node_stat_diff[i] = 0;
+>>>>>>> b7ba80a49124 (Commit)
 				atomic_long_add(v, &pgdat->vm_stat[i]);
 				global_node_diff[i] += v;
 			}
@@ -1131,7 +1355,11 @@ static void fill_contig_page_info(struct zone *zone,
 	info->free_blocks_total = 0;
 	info->free_blocks_suitable = 0;
 
+<<<<<<< HEAD
 	for (order = 0; order <= MAX_ORDER; order++) {
+=======
+	for (order = 0; order < MAX_ORDER; order++) {
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned long blocks;
 
 		/*
@@ -1164,7 +1392,11 @@ static int __fragmentation_index(unsigned int order, struct contig_page_info *in
 {
 	unsigned long requested = 1UL << order;
 
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(order > MAX_ORDER))
+=======
+	if (WARN_ON_ONCE(order >= MAX_ORDER))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	if (!info->free_blocks_total)
@@ -1310,7 +1542,10 @@ const char * const vmstat_text[] = {
 	"nr_shadow_call_stack",
 #endif
 	"nr_page_table_pages",
+<<<<<<< HEAD
 	"nr_sec_page_table_pages",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SWAP
 	"nr_swapcached",
 #endif
@@ -1347,6 +1582,7 @@ const char * const vmstat_text[] = {
 	"pgreuse",
 	"pgsteal_kswapd",
 	"pgsteal_direct",
+<<<<<<< HEAD
 	"pgsteal_khugepaged",
 	"pgdemote_kswapd",
 	"pgdemote_direct",
@@ -1354,6 +1590,12 @@ const char * const vmstat_text[] = {
 	"pgscan_kswapd",
 	"pgscan_direct",
 	"pgscan_khugepaged",
+=======
+	"pgdemote_kswapd",
+	"pgdemote_direct",
+	"pgscan_kswapd",
+	"pgscan_direct",
+>>>>>>> b7ba80a49124 (Commit)
 	"pgscan_direct_throttle",
 	"pgscan_anon",
 	"pgscan_file",
@@ -1475,12 +1717,15 @@ const char * const vmstat_text[] = {
 	"direct_map_level2_splits",
 	"direct_map_level3_splits",
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_PER_VMA_LOCK_STATS
 	"vma_lock_success",
 	"vma_lock_abort",
 	"vma_lock_retry",
 	"vma_lock_miss",
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_VM_EVENT_COUNTERS || CONFIG_MEMCG */
 };
 #endif /* CONFIG_PROC_FS || CONFIG_SYSFS || CONFIG_NUMA || CONFIG_MEMCG */
@@ -1544,7 +1789,11 @@ static void frag_show_print(struct seq_file *m, pg_data_t *pgdat,
 	int order;
 
 	seq_printf(m, "Node %d, zone %8s ", pgdat->node_id, zone->name);
+<<<<<<< HEAD
 	for (order = 0; order <= MAX_ORDER; ++order)
+=======
+	for (order = 0; order < MAX_ORDER; ++order)
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Access to nr_free is lockless as nr_free is used only for
 		 * printing purposes. Use data_race to avoid KCSAN warning.
@@ -1573,7 +1822,11 @@ static void pagetypeinfo_showfree_print(struct seq_file *m,
 					pgdat->node_id,
 					zone->name,
 					migratetype_names[mtype]);
+<<<<<<< HEAD
 		for (order = 0; order <= MAX_ORDER; ++order) {
+=======
+		for (order = 0; order < MAX_ORDER; ++order) {
+>>>>>>> b7ba80a49124 (Commit)
 			unsigned long freecount = 0;
 			struct free_area *area;
 			struct list_head *curr;
@@ -1613,7 +1866,11 @@ static void pagetypeinfo_showfree(struct seq_file *m, void *arg)
 
 	/* Print header */
 	seq_printf(m, "%-43s ", "Free pages count per migrate type at order");
+<<<<<<< HEAD
 	for (order = 0; order <= MAX_ORDER; ++order)
+=======
+	for (order = 0; order < MAX_ORDER; ++order)
+>>>>>>> b7ba80a49124 (Commit)
 		seq_printf(m, "%6d ", order);
 	seq_putc(m, '\n');
 
@@ -1947,20 +2204,26 @@ static DEFINE_PER_CPU(struct delayed_work, vmstat_work);
 int sysctl_stat_interval __read_mostly = HZ;
 
 #ifdef CONFIG_PROC_FS
+<<<<<<< HEAD
 #ifdef CONFIG_HAVE_CMPXCHG_LOCAL
 static int refresh_all_vm_stats(void);
 #else
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void refresh_vm_stats(struct work_struct *work)
 {
 	refresh_cpu_vm_stats(true);
 }
 
+<<<<<<< HEAD
 static int refresh_all_vm_stats(void)
 {
 	return schedule_on_each_cpu(refresh_vm_stats);
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int vmstat_refresh(struct ctl_table *table, int write,
 		   void *buffer, size_t *lenp, loff_t *ppos)
 {
@@ -1980,7 +2243,11 @@ int vmstat_refresh(struct ctl_table *table, int write,
 	 * transiently negative values, report an error here if any of
 	 * the stats is negative, so we know to go looking for imbalance.
 	 */
+<<<<<<< HEAD
 	err = refresh_all_vm_stats();
+=======
+	err = schedule_on_each_cpu(refresh_vm_stats);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 	for (i = 0; i < NR_VM_ZONE_STAT_ITEMS; i++) {
@@ -2098,6 +2365,7 @@ static void vmstat_shepherd(struct work_struct *w);
 
 static DECLARE_DEFERRABLE_WORK(shepherd, vmstat_shepherd);
 
+<<<<<<< HEAD
 #ifdef CONFIG_HAVE_CMPXCHG_LOCAL
 /* Flush counters remotely if CPU uses cmpxchg to update its per-CPU counters */
 static int refresh_all_vm_stats(void)
@@ -2120,6 +2388,8 @@ static void vmstat_shepherd(struct work_struct *w)
 		round_jiffies_relative(sysctl_stat_interval));
 }
 #else
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void vmstat_shepherd(struct work_struct *w)
 {
 	int cpu;
@@ -2139,7 +2409,10 @@ static void vmstat_shepherd(struct work_struct *w)
 	schedule_delayed_work(&shepherd,
 		round_jiffies_relative(sysctl_stat_interval));
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void __init start_shepherd_timer(void)
 {
@@ -2267,7 +2540,11 @@ static void unusable_show_print(struct seq_file *m,
 	seq_printf(m, "Node %d, zone %8s ",
 				pgdat->node_id,
 				zone->name);
+<<<<<<< HEAD
 	for (order = 0; order <= MAX_ORDER; ++order) {
+=======
+	for (order = 0; order < MAX_ORDER; ++order) {
+>>>>>>> b7ba80a49124 (Commit)
 		fill_contig_page_info(zone, order, &info);
 		index = unusable_free_index(order, &info);
 		seq_printf(m, "%d.%03d ", index / 1000, index % 1000);
@@ -2319,7 +2596,11 @@ static void extfrag_show_print(struct seq_file *m,
 	seq_printf(m, "Node %d, zone %8s ",
 				pgdat->node_id,
 				zone->name);
+<<<<<<< HEAD
 	for (order = 0; order <= MAX_ORDER; ++order) {
+=======
+	for (order = 0; order < MAX_ORDER; ++order) {
+>>>>>>> b7ba80a49124 (Commit)
 		fill_contig_page_info(zone, order, &info);
 		index = __fragmentation_index(order, &info);
 		seq_printf(m, "%2d.%03d ", index / 1000, index % 1000);

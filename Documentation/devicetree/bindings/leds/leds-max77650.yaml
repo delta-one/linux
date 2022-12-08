@@ -30,8 +30,14 @@ properties:
 
 patternProperties:
   "^led@[0-2]$":
+<<<<<<< HEAD
     $ref: common.yaml#
     unevaluatedProperties: false
+=======
+    type: object
+    description: |
+      Properties for a single LED.
+>>>>>>> b7ba80a49124 (Commit)
 
     properties:
       reg:
@@ -40,6 +46,13 @@ patternProperties:
         minimum: 0
         maximum: 2
 
+<<<<<<< HEAD
+=======
+      label: true
+
+      linux,default-trigger: true
+
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - "#address-cells"

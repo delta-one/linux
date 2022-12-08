@@ -89,11 +89,14 @@
 #define  USB2_TRK_START_TIMER(x)		(((x) & 0x7f) << 12)
 #define  USB2_TRK_DONE_RESET_TIMER(x)		(((x) & 0x7f) << 19)
 #define  USB2_PD_TRK				BIT(26)
+<<<<<<< HEAD
 #define  USB2_TRK_COMPLETED			BIT(31)
 
 #define XUSB_PADCTL_USB2_BIAS_PAD_CTL2		0x28c
 #define  USB2_TRK_HW_MODE			BIT(0)
 #define  CYA_TRK_CODE_UPDATE_ON_IDLE		BIT(31)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define XUSB_PADCTL_HSIC_PADX_CTL0(x)		(0x300 + (x) * 0x20)
 #define  HSIC_PD_TX_DATA0			BIT(1)
@@ -145,8 +148,11 @@
 #define   MODE_HS				MODE(0)
 #define   MODE_RST				MODE(1)
 
+<<<<<<< HEAD
 #define XUSB_AO_UTMIP_SLEEPWALK_STATUS(x)	(0xa0 + (x) * 4)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define XUSB_AO_UTMIP_SLEEPWALK_CFG(x)		(0xd0 + (x) * 4)
 #define XUSB_AO_UHSIC_SLEEPWALK_CFG(x)		(0xf0 + (x) * 4)
 #define   FAKE_USBOP_VAL			BIT(0)
@@ -174,30 +180,42 @@
 #define   AP_A					BIT(4)
 #define   AN_A					BIT(5)
 #define   HIGHZ_A				BIT(6)
+<<<<<<< HEAD
 #define   MASTER_ENABLE_A			BIT(7)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* phase B */
 #define   USBOP_RPD_B				BIT(8)
 #define   USBON_RPD_B				BIT(9)
 #define   AP_B					BIT(12)
 #define   AN_B					BIT(13)
 #define   HIGHZ_B				BIT(14)
+<<<<<<< HEAD
 #define   MASTER_ENABLE_B			BIT(15)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* phase C */
 #define   USBOP_RPD_C				BIT(16)
 #define   USBON_RPD_C				BIT(17)
 #define   AP_C					BIT(20)
 #define   AN_C					BIT(21)
 #define   HIGHZ_C				BIT(22)
+<<<<<<< HEAD
 #define   MASTER_ENABLE_C			BIT(23)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* phase D */
 #define   USBOP_RPD_D				BIT(24)
 #define   USBON_RPD_D				BIT(25)
 #define   AP_D					BIT(28)
 #define   AN_D					BIT(29)
 #define   HIGHZ_D				BIT(30)
+<<<<<<< HEAD
 #define   MASTER_ENABLE_D			BIT(31)
 #define   MASTER_ENABLE_B_C_D					\
 	 (MASTER_ENABLE_B | MASTER_ENABLE_C | MASTER_ENABLE_D)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define XUSB_AO_UHSIC_SLEEPWALK(x)		(0x120 + (x) * 4)
 /* phase A */
@@ -425,8 +443,11 @@ static int tegra186_utmi_enable_phy_sleepwalk(struct tegra_xusb_lane *lane,
 		value |= HIGHZ_A;
 		value |= AP_A;
 		value |= AN_B | AN_C | AN_D;
+<<<<<<< HEAD
 		if (padctl->soc->supports_lp_cfg_en)
 			value |= MASTER_ENABLE_B_C_D;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case USB_SPEED_LOW:
@@ -434,8 +455,11 @@ static int tegra186_utmi_enable_phy_sleepwalk(struct tegra_xusb_lane *lane,
 		value |= HIGHZ_A;
 		value |= AN_A;
 		value |= AP_B | AP_C | AP_D;
+<<<<<<< HEAD
 		if (padctl->soc->supports_lp_cfg_en)
 			value |= MASTER_ENABLE_B_C_D;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	default:
@@ -500,6 +524,7 @@ static int tegra186_utmi_disable_phy_sleepwalk(struct tegra_xusb_lane *lane)
 	value |= WAKE_VAL_NONE;
 	ao_writel(priv, value, XUSB_AO_UTMIP_SLEEPWALK_CFG(index));
 
+<<<<<<< HEAD
 	if (padctl->soc->supports_lp_cfg_en) {
 		/* disable the four stages of sleepwalk */
 		value = ao_readl(priv, XUSB_AO_UTMIP_SLEEPWALK(index));
@@ -507,6 +532,8 @@ static int tegra186_utmi_disable_phy_sleepwalk(struct tegra_xusb_lane *lane)
 		ao_writel(priv, value, XUSB_AO_UTMIP_SLEEPWALK(index));
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* power down the line state detectors of the port */
 	value = ao_readl(priv, XUSB_AO_UTMIP_PAD_CFG(index));
 	value |= USBOP_VAL_PD | USBON_VAL_PD;
@@ -633,6 +660,7 @@ static void tegra186_utmi_bias_pad_power_on(struct tegra_xusb_padctl *padctl)
 	value &= ~USB2_PD_TRK;
 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
 
+<<<<<<< HEAD
 	if (padctl->soc->poll_trk_completed) {
 		err = padctl_readl_poll(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1,
 					USB2_TRK_COMPLETED, USB2_TRK_COMPLETED, 100);
@@ -659,6 +687,8 @@ static void tegra186_utmi_bias_pad_power_on(struct tegra_xusb_padctl *padctl)
 		clk_disable_unprepare(priv->usb2_trk_clk);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&padctl->lock);
 }
 
@@ -683,12 +713,16 @@ static void tegra186_utmi_bias_pad_power_off(struct tegra_xusb_padctl *padctl)
 	value |= USB2_PD_TRK;
 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
 
+<<<<<<< HEAD
 	if (padctl->soc->trk_hw_mode) {
 		value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL2);
 		value &= ~USB2_TRK_HW_MODE;
 		padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL2);
 		clk_disable_unprepare(priv->usb2_trk_clk);
 	}
+=======
+	clk_disable_unprepare(priv->usb2_trk_clk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&padctl->lock);
 }
@@ -1240,6 +1274,10 @@ tegra186_usb3_port_map(struct tegra_xusb_port *port)
 
 static const struct tegra_xusb_port_ops tegra186_usb3_port_ops = {
 	.release = tegra_xusb_usb3_port_release,
+<<<<<<< HEAD
+=======
+	.remove = tegra_xusb_usb3_port_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.enable = tegra186_usb3_port_enable,
 	.disable = tegra186_usb3_port_disable,
 	.map = tegra186_usb3_port_map,
@@ -1438,9 +1476,18 @@ tegra186_xusb_read_fuse_calibration(struct tegra186_xusb_padctl *padctl)
 		return -ENOMEM;
 
 	err = tegra_fuse_readl(TEGRA_FUSE_SKU_CALIB_0, &value);
+<<<<<<< HEAD
 	if (err)
 		return dev_err_probe(dev, err,
 				     "failed to read calibration fuse\n");
+=======
+	if (err) {
+		if (err != -EPROBE_DEFER)
+			dev_err(dev, "failed to read calibration fuse: %d\n",
+				err);
+		return err;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_dbg(dev, "FUSE_USB_CALIB_0 %#x\n", value);
 
@@ -1612,8 +1659,12 @@ const struct tegra_xusb_padctl_soc tegra186_xusb_padctl_soc = {
 EXPORT_SYMBOL_GPL(tegra186_xusb_padctl_soc);
 #endif
 
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_ARCH_TEGRA_194_SOC) || \
 	IS_ENABLED(CONFIG_ARCH_TEGRA_234_SOC)
+=======
+#if IS_ENABLED(CONFIG_ARCH_TEGRA_194_SOC)
+>>>>>>> b7ba80a49124 (Commit)
 static const char * const tegra194_xusb_padctl_supply_names[] = {
 	"avdd-usb",
 	"vclamp-usb",
@@ -1669,6 +1720,7 @@ const struct tegra_xusb_padctl_soc tegra194_xusb_padctl_soc = {
 	.supply_names = tegra194_xusb_padctl_supply_names,
 	.num_supplies = ARRAY_SIZE(tegra194_xusb_padctl_supply_names),
 	.supports_gen2 = true,
+<<<<<<< HEAD
 	.poll_trk_completed = true,
 };
 EXPORT_SYMBOL_GPL(tegra194_xusb_padctl_soc);
@@ -1695,6 +1747,10 @@ const struct tegra_xusb_padctl_soc tegra234_xusb_padctl_soc = {
 	.supports_lp_cfg_en = true,
 };
 EXPORT_SYMBOL_GPL(tegra234_xusb_padctl_soc);
+=======
+};
+EXPORT_SYMBOL_GPL(tegra194_xusb_padctl_soc);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 MODULE_AUTHOR("JC Kuo <jckuo@nvidia.com>");

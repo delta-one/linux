@@ -322,7 +322,11 @@ dump_ipv4_packet(struct net *net, struct nf_log_buf *m,
 
 	/* Max length: 46 "LEN=65535 TOS=0xFF PREC=0xFF TTL=255 ID=65535 " */
 	nf_log_buf_add(m, "LEN=%u TOS=0x%02X PREC=0x%02X TTL=%u ID=%u ",
+<<<<<<< HEAD
 		       iph_totlen(skb, ih), ih->tos & IPTOS_TOS_MASK,
+=======
+		       ntohs(ih->tot_len), ih->tos & IPTOS_TOS_MASK,
+>>>>>>> b7ba80a49124 (Commit)
 		       ih->tos & IPTOS_PREC_MASK, ih->ttl, ntohs(ih->id));
 
 	/* Max length: 6 "CE DF MF " */

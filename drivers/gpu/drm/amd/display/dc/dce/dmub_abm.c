@@ -148,7 +148,11 @@ static bool dmub_abm_set_level(struct abm *abm, uint32_t level)
 	int edp_num;
 	uint8_t panel_mask = 0;
 
+<<<<<<< HEAD
 	dc_get_edp_links(dc->dc, edp_links, &edp_num);
+=======
+	get_edp_links(dc->dc, edp_links, &edp_num);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < edp_num; i++) {
 		if (edp_links[i]->link_status.link_active)

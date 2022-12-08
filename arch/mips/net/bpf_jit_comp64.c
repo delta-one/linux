@@ -228,9 +228,12 @@ static void emit_alu_r64(struct jit_context *ctx, u8 dst, u8 src, u8 op)
 		} else {
 			emit(ctx, dmultu, dst, src);
 			emit(ctx, mflo, dst);
+<<<<<<< HEAD
 			/* Ensure multiplication is completed */
 			if (IS_ENABLED(CONFIG_CPU_R4000_WORKAROUNDS))
 				emit(ctx, mfhi, MIPS_R_ZERO);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		break;
 	/* dst = dst / src */

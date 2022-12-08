@@ -199,14 +199,24 @@ static int tcp_v4_pre_connect(struct sock *sk, struct sockaddr *uaddr,
 /* This will initiate an outgoing connection. */
 int tcp_v4_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
 {
+<<<<<<< HEAD
 	struct sockaddr_in *usin = (struct sockaddr_in *)uaddr;
 	struct inet_timewait_death_row *tcp_death_row;
+=======
+	struct inet_bind_hashbucket *prev_addr_hashbucket = NULL;
+	struct sockaddr_in *usin = (struct sockaddr_in *)uaddr;
+	struct inet_timewait_death_row *tcp_death_row;
+	__be32 daddr, nexthop, prev_sk_rcv_saddr;
+>>>>>>> b7ba80a49124 (Commit)
 	struct inet_sock *inet = inet_sk(sk);
 	struct tcp_sock *tp = tcp_sk(sk);
 	struct ip_options_rcu *inet_opt;
 	struct net *net = sock_net(sk);
 	__be16 orig_sport, orig_dport;
+<<<<<<< HEAD
 	__be32 daddr, nexthop;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct flowi4 *fl4;
 	struct rtable *rt;
 	int err;
@@ -250,6 +260,7 @@ int tcp_v4_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
 	tcp_death_row = &sock_net(sk)->ipv4.tcp_death_row;
 
 	if (!inet->inet_saddr) {
+<<<<<<< HEAD
 		err = inet_bhash2_update_saddr(sk,  &fl4->saddr, AF_INET);
 		if (err) {
 			ip_rt_put(rt);
@@ -257,6 +268,26 @@ int tcp_v4_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
 		}
 	} else {
 		sk_rcv_saddr_set(sk, inet->inet_saddr);
+=======
+		if (inet_csk(sk)->icsk_bind2_hash) {
+			prev_addr_hashbucket = inet_bhashfn_portaddr(tcp_death_row->hashinfo,
+								     sk, net, inet->inet_num);
+			prev_sk_rcv_saddr = sk->sk_rcv_saddr;
+		}
+		inet->inet_saddr = fl4->saddr;
+	}
+
+	sk_rcv_saddr_set(sk, inet->inet_saddr);
+
+	if (prev_addr_hashbucket) {
+		err = inet_bhash2_update_saddr(prev_addr_hashbucket, sk);
+		if (err) {
+			inet->inet_saddr = 0;
+			sk_rcv_saddr_set(sk, prev_sk_rcv_saddr);
+			ip_rt_put(rt);
+			return err;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (tp->rx_opt.ts_recent_stamp && inet->inet_daddr != daddr) {
@@ -311,7 +342,11 @@ int tcp_v4_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
 						 inet->inet_daddr);
 	}
 
+<<<<<<< HEAD
 	inet->inet_id = get_random_u16();
+=======
+	inet->inet_id = prandom_u32();
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (tcp_fastopen_defer_connect(sk, &err))
 		return err;
@@ -331,7 +366,10 @@ failure:
 	 * if necessary.
 	 */
 	tcp_set_state(sk, TCP_CLOSE);
+<<<<<<< HEAD
 	inet_bhash2_reset_saddr(sk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ip_rt_put(rt);
 	sk->sk_route_caps = 0;
 	inet->inet_dport = 0;
@@ -361,7 +399,11 @@ void tcp_v4_mtu_reduced(struct sock *sk)
 	 * for the case, if this connection will not able to recover.
 	 */
 	if (mtu < dst_mtu(dst) && ip_dont_fragment(sk, dst))
+<<<<<<< HEAD
 		WRITE_ONCE(sk->sk_err_soft, EMSGSIZE);
+=======
+		sk->sk_err_soft = EMSGSIZE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mtu = dst_mtu(dst);
 
@@ -596,13 +638,21 @@ int tcp_v4_err(struct sk_buff *skb, u32 info)
 		ip_icmp_error(sk, skb, err, th->dest, info, (u8 *)th);
 
 		if (!sock_owned_by_user(sk)) {
+<<<<<<< HEAD
 			WRITE_ONCE(sk->sk_err, err);
+=======
+			sk->sk_err = err;
+>>>>>>> b7ba80a49124 (Commit)
 
 			sk_error_report(sk);
 
 			tcp_done(sk);
 		} else {
+<<<<<<< HEAD
 			WRITE_ONCE(sk->sk_err_soft, err);
+=======
+			sk->sk_err_soft = err;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		goto out;
 	}
@@ -625,10 +675,17 @@ int tcp_v4_err(struct sk_buff *skb, u32 info)
 
 	inet = inet_sk(sk);
 	if (!sock_owned_by_user(sk) && inet->recverr) {
+<<<<<<< HEAD
 		WRITE_ONCE(sk->sk_err, err);
 		sk_error_report(sk);
 	} else	{ /* Only an error on timeout */
 		WRITE_ONCE(sk->sk_err_soft, err);
+=======
+		sk->sk_err = err;
+		sk_error_report(sk);
+	} else	{ /* Only an error on timeout */
+		sk->sk_err_soft = err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 out:
@@ -1053,7 +1110,11 @@ static void tcp_v4_reqsk_destructor(struct request_sock *req)
  * We need to maintain these in the sk structure.
  */
 
+<<<<<<< HEAD
 DEFINE_STATIC_KEY_DEFERRED_FALSE(tcp_md5_needed, HZ);
+=======
+DEFINE_STATIC_KEY_FALSE(tcp_md5_needed);
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL(tcp_md5_needed);
 
 static bool better_md5_match(struct tcp_md5sig_key *old, struct tcp_md5sig_key *new)
@@ -1161,6 +1222,7 @@ struct tcp_md5sig_key *tcp_v4_md5_lookup(const struct sock *sk,
 }
 EXPORT_SYMBOL(tcp_v4_md5_lookup);
 
+<<<<<<< HEAD
 static int tcp_md5sig_info_add(struct sock *sk, gfp_t gfp)
 {
 	struct tcp_sock *tp = tcp_sk(sk);
@@ -1180,6 +1242,12 @@ static int tcp_md5sig_info_add(struct sock *sk, gfp_t gfp)
 static int __tcp_md5_do_add(struct sock *sk, const union tcp_md5_addr *addr,
 			    int family, u8 prefixlen, int l3index, u8 flags,
 			    const u8 *newkey, u8 newkeylen, gfp_t gfp)
+=======
+/* This can be called on a newly created socket, from other files */
+int tcp_md5_do_add(struct sock *sk, const union tcp_md5_addr *addr,
+		   int family, u8 prefixlen, int l3index, u8 flags,
+		   const u8 *newkey, u8 newkeylen, gfp_t gfp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* Add Key to the list */
 	struct tcp_md5sig_key *key;
@@ -1208,6 +1276,18 @@ static int __tcp_md5_do_add(struct sock *sk, const union tcp_md5_addr *addr,
 
 	md5sig = rcu_dereference_protected(tp->md5sig_info,
 					   lockdep_sock_is_held(sk));
+<<<<<<< HEAD
+=======
+	if (!md5sig) {
+		md5sig = kmalloc(sizeof(*md5sig), gfp);
+		if (!md5sig)
+			return -ENOMEM;
+
+		sk_gso_disable(sk);
+		INIT_HLIST_HEAD(&md5sig->head);
+		rcu_assign_pointer(tp->md5sig_info, md5sig);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	key = sock_kmalloc(sk, sizeof(*key), gfp | __GFP_ZERO);
 	if (!key)
@@ -1229,6 +1309,7 @@ static int __tcp_md5_do_add(struct sock *sk, const union tcp_md5_addr *addr,
 	hlist_add_head_rcu(&key->node, &md5sig->head);
 	return 0;
 }
+<<<<<<< HEAD
 
 int tcp_md5_do_add(struct sock *sk, const union tcp_md5_addr *addr,
 		   int family, u8 prefixlen, int l3index, u8 flags,
@@ -1282,6 +1363,10 @@ int tcp_md5_key_copy(struct sock *sk, const union tcp_md5_addr *addr,
 }
 EXPORT_SYMBOL(tcp_md5_key_copy);
 
+=======
+EXPORT_SYMBOL(tcp_md5_do_add);
+
+>>>>>>> b7ba80a49124 (Commit)
 int tcp_md5_do_del(struct sock *sk, const union tcp_md5_addr *addr, int family,
 		   u8 prefixlen, int l3index, u8 flags)
 {
@@ -1368,7 +1453,11 @@ static int tcp_v4_parse_md5_keys(struct sock *sk, int optname,
 		return -EINVAL;
 
 	return tcp_md5_do_add(sk, addr, AF_INET, prefixlen, l3index, flags,
+<<<<<<< HEAD
 			      cmd.tcpm_key, cmd.tcpm_keylen);
+=======
+			      cmd.tcpm_key, cmd.tcpm_keylen, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int tcp_v4_md5_hash_headers(struct tcp_md5sig_pool *hp,
@@ -1589,7 +1678,11 @@ struct sock *tcp_v4_syn_recv_sock(const struct sock *sk, struct sk_buff *skb,
 	inet_csk(newsk)->icsk_ext_hdr_len = 0;
 	if (inet_opt)
 		inet_csk(newsk)->icsk_ext_hdr_len = inet_opt->opt.optlen;
+<<<<<<< HEAD
 	newinet->inet_id = get_random_u16();
+=======
+	newinet->inet_id = prandom_u32();
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Set ToS of the new socket based upon the value of incoming SYN.
 	 * ECT bits are set later in tcp_init_transfer().
@@ -1619,8 +1712,19 @@ struct sock *tcp_v4_syn_recv_sock(const struct sock *sk, struct sk_buff *skb,
 	addr = (union tcp_md5_addr *)&newinet->inet_daddr;
 	key = tcp_md5_do_lookup(sk, l3index, addr, AF_INET);
 	if (key) {
+<<<<<<< HEAD
 		if (tcp_md5_key_copy(newsk, addr, AF_INET, 32, l3index, key))
 			goto put_and_exit;
+=======
+		/*
+		 * We're using one, so create a matching key
+		 * on the newsk structure. If we fail to get
+		 * memory, then we end up not copying the key
+		 * across. Shucks.
+		 */
+		tcp_md5_do_add(newsk, addr, AF_INET, 32, l3index, key->flags,
+			       key->key, key->keylen, GFP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 		sk_gso_disable(newsk);
 	}
 #endif
@@ -1914,13 +2018,20 @@ bool tcp_add_backlog(struct sock *sk, struct sk_buff *skb,
 	__skb_push(skb, hdrlen);
 
 no_coalesce:
+<<<<<<< HEAD
 	limit = (u32)READ_ONCE(sk->sk_rcvbuf) + (u32)(READ_ONCE(sk->sk_sndbuf) >> 1);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Only socket owner can try to collapse/prune rx queues
 	 * to reduce memory overhead, so add a little headroom here.
 	 * Few sockets backlog are possibly concurrently non empty.
 	 */
+<<<<<<< HEAD
 	limit += 64 * 1024;
+=======
+	limit = READ_ONCE(sk->sk_rcvbuf) + READ_ONCE(sk->sk_sndbuf) + 64*1024;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unlikely(sk_add_backlog(sk, skb, limit))) {
 		bh_unlock_sock(sk);
@@ -2102,7 +2213,10 @@ process:
 		/* min_ttl can be changed concurrently from do_ip_setsockopt() */
 		if (unlikely(iph->ttl < READ_ONCE(inet_sk(sk)->min_ttl))) {
 			__NET_INC_STATS(net, LINUX_MIB_TCPMINTTLDROP);
+<<<<<<< HEAD
 			drop_reason = SKB_DROP_REASON_TCP_MINTTL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			goto discard_and_relse;
 		}
 	}
@@ -2313,7 +2427,10 @@ void tcp_v4_destroy_sock(struct sock *sk)
 		tcp_clear_md5_list(sk);
 		kfree_rcu(rcu_dereference_protected(tp->md5sig_info, 1), rcu);
 		tp->md5sig_info = NULL;
+<<<<<<< HEAD
 		static_branch_slow_dec_deferred(&tcp_md5_needed);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 #endif
 
@@ -2522,6 +2639,10 @@ static void *tcp_seek_last_pos(struct seq_file *seq)
 	case TCP_SEQ_STATE_LISTENING:
 		if (st->bucket > hinfo->lhash2_mask)
 			break;
+<<<<<<< HEAD
+=======
+		st->state = TCP_SEQ_STATE_LISTENING;
+>>>>>>> b7ba80a49124 (Commit)
 		rc = listening_get_first(seq);
 		while (offset-- && rc && bucket == st->bucket)
 			rc = listening_get_next(seq, rc);
@@ -3259,6 +3380,7 @@ static int __net_init tcp_sk_init(struct net *net)
 	net->ipv4.sysctl_tcp_fastopen_blackhole_timeout = 0;
 	atomic_set(&net->ipv4.tfo_active_disable_times, 0);
 
+<<<<<<< HEAD
 	/* Set default values for PLB */
 	net->ipv4.sysctl_tcp_plb_enabled = 0; /* Disabled by default */
 	net->ipv4.sysctl_tcp_plb_idle_rehash_rounds = 3;
@@ -3267,6 +3389,8 @@ static int __net_init tcp_sk_init(struct net *net)
 	/* Default congestion threshold for PLB to mark a round is 50% */
 	net->ipv4.sysctl_tcp_plb_cong_thresh = (1 << TCP_PLB_SCALE) / 2;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Reno is always built in */
 	if (!net_eq(net, &init_net) &&
 	    bpf_try_module_get(init_net.ipv4.tcp_congestion_control,

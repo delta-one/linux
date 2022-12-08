@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _hmm:
+
+>>>>>>> b7ba80a49124 (Commit)
 =====================================
 Heterogeneous Memory Management (HMM)
 =====================================
@@ -302,7 +307,11 @@ devm_memunmap_pages(), and devm_release_mem_region() when the resources can
 be tied to a ``struct device``.
 
 The overall migration steps are similar to migrating NUMA pages within system
+<<<<<<< HEAD
 memory (see Documentation/mm/page_migration.rst) but the steps are split
+=======
+memory (see :ref:`Page migration <page_migration>`) but the steps are split
+>>>>>>> b7ba80a49124 (Commit)
 between device driver specific code and shared common code:
 
 1. ``mmap_read_lock()``

@@ -4,8 +4,13 @@
 #include <bpf/bpf_helpers.h>
 
 struct map_value {
+<<<<<<< HEAD
 	struct prog_test_ref_kfunc __kptr_untrusted *unref_ptr;
 	struct prog_test_ref_kfunc __kptr *ref_ptr;
+=======
+	struct prog_test_ref_kfunc __kptr *unref_ptr;
+	struct prog_test_ref_kfunc __kptr_ref *ref_ptr;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct array_map {
@@ -15,6 +20,7 @@ struct array_map {
 	__uint(max_entries, 1);
 } array_map SEC(".maps");
 
+<<<<<<< HEAD
 struct pcpu_array_map {
 	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
 	__type(key, int);
@@ -22,6 +28,8 @@ struct pcpu_array_map {
 	__uint(max_entries, 1);
 } pcpu_array_map SEC(".maps");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct hash_map {
 	__uint(type, BPF_MAP_TYPE_HASH);
 	__type(key, int);
@@ -29,6 +37,7 @@ struct hash_map {
 	__uint(max_entries, 1);
 } hash_map SEC(".maps");
 
+<<<<<<< HEAD
 struct pcpu_hash_map {
 	__uint(type, BPF_MAP_TYPE_PERCPU_HASH);
 	__type(key, int);
@@ -36,6 +45,8 @@ struct pcpu_hash_map {
 	__uint(max_entries, 1);
 } pcpu_hash_map SEC(".maps");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct hash_malloc_map {
 	__uint(type, BPF_MAP_TYPE_HASH);
 	__type(key, int);
@@ -44,6 +55,7 @@ struct hash_malloc_map {
 	__uint(map_flags, BPF_F_NO_PREALLOC);
 } hash_malloc_map SEC(".maps");
 
+<<<<<<< HEAD
 struct pcpu_hash_malloc_map {
 	__uint(type, BPF_MAP_TYPE_PERCPU_HASH);
 	__type(key, int);
@@ -52,6 +64,8 @@ struct pcpu_hash_malloc_map {
 	__uint(map_flags, BPF_F_NO_PREALLOC);
 } pcpu_hash_malloc_map SEC(".maps");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct lru_hash_map {
 	__uint(type, BPF_MAP_TYPE_LRU_HASH);
 	__type(key, int);
@@ -59,6 +73,7 @@ struct lru_hash_map {
 	__uint(max_entries, 1);
 } lru_hash_map SEC(".maps");
 
+<<<<<<< HEAD
 struct lru_pcpu_hash_map {
 	__uint(type, BPF_MAP_TYPE_LRU_PERCPU_HASH);
 	__type(key, int);
@@ -94,6 +109,8 @@ struct sk_ls_map {
 	__type(value, struct map_value);
 } sk_ls_map SEC(".maps");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DEFINE_MAP_OF_MAP(map_type, inner_map_type, name)       \
 	struct {                                                \
 		__uint(type, map_type);                         \
@@ -118,9 +135,12 @@ extern struct prog_test_ref_kfunc *bpf_kfunc_call_test_acquire(unsigned long *sp
 extern struct prog_test_ref_kfunc *
 bpf_kfunc_call_test_kptr_get(struct prog_test_ref_kfunc **p, int a, int b) __ksym;
 extern void bpf_kfunc_call_test_release(struct prog_test_ref_kfunc *p) __ksym;
+<<<<<<< HEAD
 void bpf_kfunc_call_test_ref(struct prog_test_ref_kfunc *p) __ksym;
 
 #define WRITE_ONCE(x, val) ((*(volatile typeof(x) *) &(x)) = (val))
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void test_kptr_unref(struct map_value *v)
 {
@@ -128,15 +148,25 @@ static void test_kptr_unref(struct map_value *v)
 
 	p = v->unref_ptr;
 	/* store untrusted_ptr_or_null_ */
+<<<<<<< HEAD
 	WRITE_ONCE(v->unref_ptr, p);
+=======
+	v->unref_ptr = p;
+>>>>>>> b7ba80a49124 (Commit)
 	if (!p)
 		return;
 	if (p->a + p->b > 100)
 		return;
 	/* store untrusted_ptr_ */
+<<<<<<< HEAD
 	WRITE_ONCE(v->unref_ptr, p);
 	/* store NULL */
 	WRITE_ONCE(v->unref_ptr, NULL);
+=======
+	v->unref_ptr = p;
+	/* store NULL */
+	v->unref_ptr = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void test_kptr_ref(struct map_value *v)
@@ -145,6 +175,7 @@ static void test_kptr_ref(struct map_value *v)
 
 	p = v->ref_ptr;
 	/* store ptr_or_null_ */
+<<<<<<< HEAD
 	WRITE_ONCE(v->unref_ptr, p);
 	if (!p)
 		return;
@@ -154,23 +185,35 @@ static void test_kptr_ref(struct map_value *v)
 	 * p can be passed to kfunc that requires KF_RCU.
 	 */
 	bpf_kfunc_call_test_ref(p);
+=======
+	v->unref_ptr = p;
+	if (!p)
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 	if (p->a + p->b > 100)
 		return;
 	/* store NULL */
 	p = bpf_kptr_xchg(&v->ref_ptr, NULL);
 	if (!p)
 		return;
+<<<<<<< HEAD
 	/*
 	 * p is trusted_ptr_prog_test_ref_kfunc.
 	 * p can be passed to kfunc that requires KF_RCU.
 	 */
 	bpf_kfunc_call_test_ref(p);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (p->a + p->b > 100) {
 		bpf_kfunc_call_test_release(p);
 		return;
 	}
 	/* store ptr_ */
+<<<<<<< HEAD
 	WRITE_ONCE(v->unref_ptr, p);
+=======
+	v->unref_ptr = p;
+>>>>>>> b7ba80a49124 (Commit)
 	bpf_kfunc_call_test_release(p);
 
 	p = bpf_kfunc_call_test_acquire(&(unsigned long){0});
@@ -229,6 +272,7 @@ int test_map_kptr(struct __sk_buff *ctx)
 	return 0;
 }
 
+<<<<<<< HEAD
 SEC("tp_btf/cgroup_mkdir")
 int BPF_PROG(test_cgrp_map_kptr, struct cgroup *cgrp, const char *path)
 {
@@ -281,6 +325,8 @@ int test_sk_map_kptr(struct __sk_buff *ctx)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 SEC("tc")
 int test_map_in_map_kptr(struct __sk_buff *ctx)
 {
@@ -310,6 +356,7 @@ int test_map_in_map_kptr(struct __sk_buff *ctx)
 	return 0;
 }
 
+<<<<<<< HEAD
 int ref = 1;
 
 static __always_inline
@@ -318,18 +365,34 @@ int test_map_kptr_ref_pre(struct map_value *v)
 	struct prog_test_ref_kfunc *p, *p_st;
 	unsigned long arg = 0;
 	int ret;
+=======
+SEC("tc")
+int test_map_kptr_ref(struct __sk_buff *ctx)
+{
+	struct prog_test_ref_kfunc *p, *p_st;
+	unsigned long arg = 0;
+	struct map_value *v;
+	int key = 0, ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	p = bpf_kfunc_call_test_acquire(&arg);
 	if (!p)
 		return 1;
+<<<<<<< HEAD
 	ref++;
 
 	p_st = p->next;
 	if (p_st->cnt.refs.counter != ref) {
+=======
+
+	p_st = p->next;
+	if (p_st->cnt.refs.counter != 2) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = 2;
 		goto end;
 	}
 
+<<<<<<< HEAD
 	p = bpf_kptr_xchg(&v->ref_ptr, p);
 	if (p) {
 		ret = 3;
@@ -370,15 +433,63 @@ int test_map_kptr_ref_pre(struct map_value *v)
 	}
 	if (p_st->cnt.refs.counter != ref)
 		return 12;
+=======
+	v = bpf_map_lookup_elem(&array_map, &key);
+	if (!v) {
+		ret = 3;
+		goto end;
+	}
+
+	p = bpf_kptr_xchg(&v->ref_ptr, p);
+	if (p) {
+		ret = 4;
+		goto end;
+	}
+	if (p_st->cnt.refs.counter != 2)
+		return 5;
+
+	p = bpf_kfunc_call_test_kptr_get(&v->ref_ptr, 0, 0);
+	if (!p)
+		return 6;
+	if (p_st->cnt.refs.counter != 3) {
+		ret = 7;
+		goto end;
+	}
+	bpf_kfunc_call_test_release(p);
+	if (p_st->cnt.refs.counter != 2)
+		return 8;
+
+	p = bpf_kptr_xchg(&v->ref_ptr, NULL);
+	if (!p)
+		return 9;
+	bpf_kfunc_call_test_release(p);
+	if (p_st->cnt.refs.counter != 1)
+		return 10;
+
+	p = bpf_kfunc_call_test_acquire(&arg);
+	if (!p)
+		return 11;
+	p = bpf_kptr_xchg(&v->ref_ptr, p);
+	if (p) {
+		ret = 12;
+		goto end;
+	}
+	if (p_st->cnt.refs.counter != 2)
+		return 13;
+>>>>>>> b7ba80a49124 (Commit)
 	/* Leave in map */
 
 	return 0;
 end:
+<<<<<<< HEAD
 	ref--;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bpf_kfunc_call_test_release(p);
 	return ret;
 }
 
+<<<<<<< HEAD
 static __always_inline
 int test_map_kptr_ref_post(struct map_value *v)
 {
@@ -394,11 +505,35 @@ int test_map_kptr_ref_post(struct map_value *v)
 	if (p_st->cnt.refs.counter != ref) {
 		bpf_kfunc_call_test_release(p);
 		return 3;
+=======
+SEC("tc")
+int test_map_kptr_ref2(struct __sk_buff *ctx)
+{
+	struct prog_test_ref_kfunc *p, *p_st;
+	struct map_value *v;
+	int key = 0;
+
+	v = bpf_map_lookup_elem(&array_map, &key);
+	if (!v)
+		return 1;
+
+	p_st = v->ref_ptr;
+	if (!p_st || p_st->cnt.refs.counter != 2)
+		return 2;
+
+	p = bpf_kptr_xchg(&v->ref_ptr, NULL);
+	if (!p)
+		return 3;
+	if (p_st->cnt.refs.counter != 2) {
+		bpf_kfunc_call_test_release(p);
+		return 4;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	p = bpf_kptr_xchg(&v->ref_ptr, p);
 	if (p) {
 		bpf_kfunc_call_test_release(p);
+<<<<<<< HEAD
 		return 4;
 	}
 	if (p_st->cnt.refs.counter != ref)
@@ -560,4 +695,14 @@ int test_ls_map_kptr_ref_del(void *ctx)
 	return bpf_task_storage_delete(&task_ls_map, current);
 }
 
+=======
+		return 5;
+	}
+	if (p_st->cnt.refs.counter != 2)
+		return 6;
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 char _license[] SEC("license") = "GPL";

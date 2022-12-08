@@ -11,6 +11,10 @@
 #include <linux/kernel.h>
 #include <linux/compiler.h>
 #include <linux/string.h>
+<<<<<<< HEAD
+=======
+#include <linux/version.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pci.h>
 #include <linux/delay.h>
 #include <scsi/scsi_transport.h>

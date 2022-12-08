@@ -33,7 +33,11 @@ static inline void rcu_virt_note_context_switch(void)
 }
 
 void synchronize_rcu_expedited(void);
+<<<<<<< HEAD
 void kvfree_call_rcu(struct rcu_head *head, void *ptr);
+=======
+void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func);
+>>>>>>> b7ba80a49124 (Commit)
 
 void rcu_barrier(void);
 bool rcu_eqs_special_set(int cpu);
@@ -87,6 +91,11 @@ bool poll_state_synchronize_rcu_full(struct rcu_gp_oldstate *rgosp);
 void cond_synchronize_rcu(unsigned long oldstate);
 void cond_synchronize_rcu_full(struct rcu_gp_oldstate *rgosp);
 
+<<<<<<< HEAD
+=======
+bool rcu_is_idle_cpu(int cpu);
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PROVE_RCU
 void rcu_irq_exit_check_preempt(void);
 #else

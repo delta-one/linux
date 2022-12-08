@@ -117,7 +117,11 @@ bool inet_rcv_saddr_any(const struct sock *sk)
 	return !sk->sk_rcv_saddr;
 }
 
+<<<<<<< HEAD
 void inet_get_local_port_range(const struct net *net, int *low, int *high)
+=======
+void inet_get_local_port_range(struct net *net, int *low, int *high)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int seq;
 
@@ -130,6 +134,7 @@ void inet_get_local_port_range(const struct net *net, int *low, int *high)
 }
 EXPORT_SYMBOL(inet_get_local_port_range);
 
+<<<<<<< HEAD
 void inet_sk_get_local_port_range(const struct sock *sk, int *low, int *high)
 {
 	const struct inet_sock *inet = inet_sk(sk);
@@ -151,6 +156,8 @@ void inet_sk_get_local_port_range(const struct sock *sk, int *low, int *high)
 }
 EXPORT_SYMBOL(inet_sk_get_local_port_range);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool inet_use_bhash2_on_bind(const struct sock *sk)
 {
 #if IS_ENABLED(CONFIG_IPV6)
@@ -194,6 +201,7 @@ static bool inet_bind_conflict(const struct sock *sk, struct sock *sk2,
 	return false;
 }
 
+<<<<<<< HEAD
 static bool __inet_bhash2_conflict(const struct sock *sk, struct sock *sk2,
 				   kuid_t sk_uid, bool relax,
 				   bool reuseport_cb_ok, bool reuseport_ok)
@@ -205,12 +213,15 @@ static bool __inet_bhash2_conflict(const struct sock *sk, struct sock *sk2,
 				  reuseport_cb_ok, reuseport_ok);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool inet_bhash2_conflict(const struct sock *sk,
 				 const struct inet_bind2_bucket *tb2,
 				 kuid_t sk_uid,
 				 bool relax, bool reuseport_cb_ok,
 				 bool reuseport_ok)
 {
+<<<<<<< HEAD
 	struct inet_timewait_sock *tw2;
 	struct sock *sk2;
 
@@ -228,6 +239,18 @@ static bool inet_bhash2_conflict(const struct sock *sk,
 			return true;
 	}
 
+=======
+	struct sock *sk2;
+
+	sk_for_each_bound_bhash2(sk2, &tb2->owners) {
+		if (sk->sk_family == AF_INET && ipv6_only_sock(sk2))
+			continue;
+
+		if (inet_bind_conflict(sk, sk2, sk_uid, relax,
+				       reuseport_cb_ok, reuseport_ok))
+			return true;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return false;
 }
 
@@ -337,7 +360,11 @@ inet_csk_find_open_port(const struct sock *sk, struct inet_bind_bucket **tb_ret,
 ports_exhausted:
 	attempt_half = (sk->sk_reuse == SK_CAN_REUSE) ? 1 : 0;
 other_half_scan:
+<<<<<<< HEAD
 	inet_sk_get_local_port_range(sk, &low, &high);
+=======
+	inet_get_local_port_range(net, &low, &high);
+>>>>>>> b7ba80a49124 (Commit)
 	high++; /* [32768, 60999] -> [32768, 61000[ */
 	if (high - low < 4)
 		attempt_half = 0;
@@ -353,7 +380,11 @@ other_half_scan:
 	if (likely(remaining > 1))
 		remaining &= ~1U;
 
+<<<<<<< HEAD
 	offset = get_random_u32_below(remaining);
+=======
+	offset = prandom_u32() % remaining;
+>>>>>>> b7ba80a49124 (Commit)
 	/* __inet_hash_connect() favors ports having @low parity
 	 * We do the opposite to not pollute connect() users.
 	 */
@@ -510,11 +541,18 @@ int inet_csk_get_port(struct sock *sk, unsigned short snum)
 	bool reuse = sk->sk_reuse && sk->sk_state != TCP_LISTEN;
 	bool found_port = false, check_bind_conflict = true;
 	bool bhash_created = false, bhash2_created = false;
+<<<<<<< HEAD
 	int ret = -EADDRINUSE, port = snum, l3mdev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct inet_bind_hashbucket *head, *head2;
 	struct inet_bind2_bucket *tb2 = NULL;
 	struct inet_bind_bucket *tb = NULL;
 	bool head2_lock_acquired = false;
+<<<<<<< HEAD
+=======
+	int ret = 1, port = snum, l3mdev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct net *net = sock_net(sk);
 
 	l3mdev = inet_sk_bound_l3mdev(sk);
@@ -1122,7 +1160,12 @@ static void inet_clone_ulp(const struct request_sock *req, struct sock *newsk,
 	if (!icsk->icsk_ulp_ops)
 		return;
 
+<<<<<<< HEAD
 	icsk->icsk_ulp_ops->clone(req, newsk, priority);
+=======
+	if (icsk->icsk_ulp_ops->clone)
+		icsk->icsk_ulp_ops->clone(req, newsk, priority);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1198,6 +1241,11 @@ void inet_csk_destroy_sock(struct sock *sk)
 
 	xfrm_sk_free_policy(sk);
 
+<<<<<<< HEAD
+=======
+	sk_refcnt_debug_release(sk);
+
+>>>>>>> b7ba80a49124 (Commit)
 	this_cpu_dec(*sk->sk_prot->orphan_count);
 
 	sock_put(sk);
@@ -1218,6 +1266,7 @@ void inet_csk_prepare_forced_close(struct sock *sk)
 }
 EXPORT_SYMBOL(inet_csk_prepare_forced_close);
 
+<<<<<<< HEAD
 static int inet_ulp_can_listen(const struct sock *sk)
 {
 	const struct inet_connection_sock *icsk = inet_csk(sk);
@@ -1228,29 +1277,45 @@ static int inet_ulp_can_listen(const struct sock *sk)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int inet_csk_listen_start(struct sock *sk)
 {
 	struct inet_connection_sock *icsk = inet_csk(sk);
 	struct inet_sock *inet = inet_sk(sk);
+<<<<<<< HEAD
 	int err;
 
 	err = inet_ulp_can_listen(sk);
 	if (unlikely(err))
 		return err;
+=======
+	int err = -EADDRINUSE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	reqsk_queue_alloc(&icsk->icsk_accept_queue);
 
 	sk->sk_ack_backlog = 0;
 	inet_csk_delack_init(sk);
 
+<<<<<<< HEAD
+=======
+	if (sk->sk_txrehash == SOCK_TXREHASH_DEFAULT)
+		sk->sk_txrehash = READ_ONCE(sock_net(sk)->core.sysctl_txrehash);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* There is race window here: we announce ourselves listening,
 	 * but this transition is still not validated by get_port().
 	 * It is OK, because this socket enters to hash table only
 	 * after validation is complete.
 	 */
 	inet_sk_state_store(sk, TCP_LISTEN);
+<<<<<<< HEAD
 	err = sk->sk_prot->get_port(sk, inet->inet_num);
 	if (!err) {
+=======
+	if (!sk->sk_prot->get_port(sk, inet->inet_num)) {
+>>>>>>> b7ba80a49124 (Commit)
 		inet->inet_sport = htons(inet->inet_num);
 
 		sk_dst_reset(sk);

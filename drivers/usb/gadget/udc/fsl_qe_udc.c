@@ -2285,6 +2285,10 @@ static int fsl_qe_start(struct usb_gadget *gadget,
 	/* lock is needed but whether should use this lock or another */
 	spin_lock_irqsave(&udc->lock, flags);
 
+<<<<<<< HEAD
+=======
+	driver->driver.bus = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	/* hook up the driver */
 	udc->driver = driver;
 	udc->gadget.speed = driver->max_speed;

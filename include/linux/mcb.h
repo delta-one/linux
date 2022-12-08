@@ -76,7 +76,14 @@ struct mcb_device {
 	struct device *dma_dev;
 };
 
+<<<<<<< HEAD
 #define to_mcb_device(__dev)	container_of_const(__dev, struct mcb_device, dev)
+=======
+static inline struct mcb_device *to_mcb_device(struct device *dev)
+{
+	return container_of(dev, struct mcb_device, dev);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct mcb_driver - MEN Chameleon Bus device driver

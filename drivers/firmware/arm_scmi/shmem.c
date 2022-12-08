@@ -5,13 +5,19 @@
  * Copyright (C) 2019 ARM Ltd.
  */
 
+<<<<<<< HEAD
 #include <linux/ktime.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/io.h>
 #include <linux/processor.h>
 #include <linux/types.h>
 
+<<<<<<< HEAD
 #include <asm-generic/bug.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "common.h"
 
 /*
@@ -33,14 +39,20 @@ struct scmi_shared_mem {
 };
 
 void shmem_tx_prepare(struct scmi_shared_mem __iomem *shmem,
+<<<<<<< HEAD
 		      struct scmi_xfer *xfer, struct scmi_chan_info *cinfo)
 {
 	ktime_t stop;
 
+=======
+		      struct scmi_xfer *xfer)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Ideally channel must be free by now unless OS timeout last
 	 * request and platform continued to process the same, wait
 	 * until it releases the shared memory, otherwise we may endup
+<<<<<<< HEAD
 	 * overwriting its response with new message payload or vice-versa.
 	 * Giving up anyway after twice the expected channel timeout so as
 	 * not to bail-out on intermittent issues where the platform is
@@ -63,6 +75,12 @@ void shmem_tx_prepare(struct scmi_shared_mem __iomem *shmem,
 		return;
 	}
 
+=======
+	 * overwriting its response with new message payload or vice-versa
+	 */
+	spin_until_cond(ioread32(&shmem->channel_status) &
+			SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE);
+>>>>>>> b7ba80a49124 (Commit)
 	/* Mark channel busy + clear error */
 	iowrite32(0x0, &shmem->channel_status);
 	iowrite32(xfer->hdr.poll_completion ? 0 : SCMI_SHMEM_FLAG_INTR_ENABLED,
@@ -81,11 +99,18 @@ u32 shmem_read_header(struct scmi_shared_mem __iomem *shmem)
 void shmem_fetch_response(struct scmi_shared_mem __iomem *shmem,
 			  struct scmi_xfer *xfer)
 {
+<<<<<<< HEAD
 	size_t len = ioread32(&shmem->length);
 
 	xfer->hdr.status = ioread32(shmem->msg_payload);
 	/* Skip the length of header and status in shmem area i.e 8 bytes */
 	xfer->rx.len = min_t(size_t, xfer->rx.len, len > 8 ? len - 8 : 0);
+=======
+	xfer->hdr.status = ioread32(shmem->msg_payload);
+	/* Skip the length of header and status in shmem area i.e 8 bytes */
+	xfer->rx.len = min_t(size_t, xfer->rx.len,
+			     ioread32(&shmem->length) - 8);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Take a copy to the rx buffer.. */
 	memcpy_fromio(xfer->rx.buf, shmem->msg_payload + 4, xfer->rx.len);
@@ -94,10 +119,15 @@ void shmem_fetch_response(struct scmi_shared_mem __iomem *shmem,
 void shmem_fetch_notification(struct scmi_shared_mem __iomem *shmem,
 			      size_t max_len, struct scmi_xfer *xfer)
 {
+<<<<<<< HEAD
 	size_t len = ioread32(&shmem->length);
 
 	/* Skip only the length of header in shmem area i.e 4 bytes */
 	xfer->rx.len = min_t(size_t, max_len, len > 4 ? len - 4 : 0);
+=======
+	/* Skip only the length of header in shmem area i.e 4 bytes */
+	xfer->rx.len = min_t(size_t, max_len, ioread32(&shmem->length) - 4);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Take a copy to the rx buffer.. */
 	memcpy_fromio(xfer->rx.buf, shmem->msg_payload, xfer->rx.len);

@@ -35,7 +35,10 @@
 #define MLX5_CT_STATE_REPLY_BIT BIT(4)
 #define MLX5_CT_STATE_RELATED_BIT BIT(5)
 #define MLX5_CT_STATE_INVALID_BIT BIT(6)
+<<<<<<< HEAD
 #define MLX5_CT_STATE_NEW_BIT BIT(7)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MLX5_CT_LABELS_BITS MLX5_REG_MAPPING_MBITS(LABELS_TO_REG)
 #define MLX5_CT_LABELS_MASK MLX5_REG_MAPPING_MASK(LABELS_TO_REG)
@@ -60,7 +63,10 @@ struct mlx5_tc_ct_debugfs {
 
 struct mlx5_tc_ct_priv {
 	struct mlx5_core_dev *dev;
+<<<<<<< HEAD
 	struct mlx5e_priv *priv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const struct net_device *netdev;
 	struct mod_hdr_tbl *mod_hdr_tbl;
 	struct xarray tuple_ids;
@@ -87,6 +93,10 @@ struct mlx5_ct_flow {
 	struct mlx5_flow_attr *pre_ct_attr;
 	struct mlx5_flow_handle *pre_ct_rule;
 	struct mlx5_ct_ft *ft;
+<<<<<<< HEAD
+=======
+	u32 chain_mapping;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlx5_ct_zone_rule {
@@ -722,14 +732,20 @@ mlx5_tc_ct_entry_create_mod_hdr(struct mlx5_tc_ct_priv *ct_priv,
 	DECLARE_MOD_HDR_ACTS_ACTIONS(actions_arr, MLX5_CT_MIN_MOD_ACTS);
 	DECLARE_MOD_HDR_ACTS(mod_acts, actions_arr);
 	struct flow_action_entry *meta;
+<<<<<<< HEAD
 	enum ip_conntrack_info ctinfo;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 ct_state = 0;
 	int err;
 
 	meta = mlx5_tc_ct_get_ct_metadata_action(flow_rule);
 	if (!meta)
 		return -EOPNOTSUPP;
+<<<<<<< HEAD
 	ctinfo = meta->ct_metadata.cookie & NFCT_INFOMASK;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = mlx5_get_label_mapping(ct_priv, meta->ct_metadata.labels,
 				     &attr->ct_attr.ct_labels_id);
@@ -745,8 +761,12 @@ mlx5_tc_ct_entry_create_mod_hdr(struct mlx5_tc_ct_priv *ct_priv,
 		ct_state |= MLX5_CT_STATE_NAT_BIT;
 	}
 
+<<<<<<< HEAD
 	ct_state |= MLX5_CT_STATE_TRK_BIT;
 	ct_state |= ctinfo == IP_CT_NEW ? MLX5_CT_STATE_NEW_BIT : MLX5_CT_STATE_ESTABLISHED_BIT;
+=======
+	ct_state |= MLX5_CT_STATE_ESTABLISHED_BIT | MLX5_CT_STATE_TRK_BIT;
+>>>>>>> b7ba80a49124 (Commit)
 	ct_state |= meta->ct_metadata.orig_dir ? 0 : MLX5_CT_STATE_REPLY_BIT;
 	err = mlx5_tc_ct_entry_set_registers(ct_priv, &mod_acts,
 					     ct_state,
@@ -875,6 +895,7 @@ err_attr:
 	return err;
 }
 
+<<<<<<< HEAD
 static int
 mlx5_tc_ct_entry_replace_rule(struct mlx5_tc_ct_priv *ct_priv,
 			      struct flow_rule *flow_rule,
@@ -937,6 +958,8 @@ err_attr:
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool
 mlx5_tc_ct_entry_valid(struct mlx5_ct_entry *entry)
 {
@@ -1132,6 +1155,7 @@ err_orig:
 }
 
 static int
+<<<<<<< HEAD
 mlx5_tc_ct_entry_replace_rules(struct mlx5_tc_ct_priv *ct_priv,
 			       struct flow_rule *flow_rule,
 			       struct mlx5_ct_entry *entry,
@@ -1178,6 +1202,8 @@ mlx5_tc_ct_block_flow_offload_replace(struct mlx5_ct_ft *ft, struct flow_rule *f
 }
 
 static int
+=======
+>>>>>>> b7ba80a49124 (Commit)
 mlx5_tc_ct_block_flow_offload_add(struct mlx5_ct_ft *ft,
 				  struct flow_cls_offload *flow)
 {
@@ -1195,6 +1221,7 @@ mlx5_tc_ct_block_flow_offload_add(struct mlx5_ct_ft *ft,
 	spin_lock_bh(&ct_priv->ht_lock);
 	entry = rhashtable_lookup_fast(&ft->ct_entries_ht, &cookie, cts_ht_params);
 	if (entry && refcount_inc_not_zero(&entry->refcnt)) {
+<<<<<<< HEAD
 		if (entry->restore_cookie == meta_action->ct_metadata.cookie) {
 			spin_unlock_bh(&ct_priv->ht_lock);
 			mlx5_tc_ct_entry_put(entry);
@@ -1206,6 +1233,11 @@ mlx5_tc_ct_block_flow_offload_add(struct mlx5_ct_ft *ft,
 		err = mlx5_tc_ct_block_flow_offload_replace(ft, flow_rule, entry, cookie);
 		mlx5_tc_ct_entry_put(entry);
 		return err;
+=======
+		spin_unlock_bh(&ct_priv->ht_lock);
+		mlx5_tc_ct_entry_put(entry);
+		return -EEXIST;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	spin_unlock_bh(&ct_priv->ht_lock);
 
@@ -1443,7 +1475,11 @@ mlx5_tc_ct_match_add(struct mlx5_tc_ct_priv *priv,
 		     struct mlx5_ct_attr *ct_attr,
 		     struct netlink_ext_ack *extack)
 {
+<<<<<<< HEAD
 	bool trk, est, untrk, unnew, unest, new, rpl, unrpl, rel, unrel, inv, uninv;
+=======
+	bool trk, est, untrk, unest, new, rpl, unrpl, rel, unrel, inv, uninv;
+>>>>>>> b7ba80a49124 (Commit)
 	struct flow_rule *rule = flow_cls_offload_flow_rule(f);
 	struct flow_dissector_key_ct *mask, *key;
 	u32 ctstate = 0, ctstate_mask = 0;
@@ -1489,18 +1525,27 @@ mlx5_tc_ct_match_add(struct mlx5_tc_ct_priv *priv,
 	rel = ct_state_on & TCA_FLOWER_KEY_CT_FLAGS_RELATED;
 	inv = ct_state_on & TCA_FLOWER_KEY_CT_FLAGS_INVALID;
 	untrk = ct_state_off & TCA_FLOWER_KEY_CT_FLAGS_TRACKED;
+<<<<<<< HEAD
 	unnew = ct_state_off & TCA_FLOWER_KEY_CT_FLAGS_NEW;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unest = ct_state_off & TCA_FLOWER_KEY_CT_FLAGS_ESTABLISHED;
 	unrpl = ct_state_off & TCA_FLOWER_KEY_CT_FLAGS_REPLY;
 	unrel = ct_state_off & TCA_FLOWER_KEY_CT_FLAGS_RELATED;
 	uninv = ct_state_off & TCA_FLOWER_KEY_CT_FLAGS_INVALID;
 
 	ctstate |= trk ? MLX5_CT_STATE_TRK_BIT : 0;
+<<<<<<< HEAD
 	ctstate |= new ? MLX5_CT_STATE_NEW_BIT : 0;
 	ctstate |= est ? MLX5_CT_STATE_ESTABLISHED_BIT : 0;
 	ctstate |= rpl ? MLX5_CT_STATE_REPLY_BIT : 0;
 	ctstate_mask |= (untrk || trk) ? MLX5_CT_STATE_TRK_BIT : 0;
 	ctstate_mask |= (unnew || new) ? MLX5_CT_STATE_NEW_BIT : 0;
+=======
+	ctstate |= est ? MLX5_CT_STATE_ESTABLISHED_BIT : 0;
+	ctstate |= rpl ? MLX5_CT_STATE_REPLY_BIT : 0;
+	ctstate_mask |= (untrk || trk) ? MLX5_CT_STATE_TRK_BIT : 0;
+>>>>>>> b7ba80a49124 (Commit)
 	ctstate_mask |= (unest || est) ? MLX5_CT_STATE_ESTABLISHED_BIT : 0;
 	ctstate_mask |= (unrpl || rpl) ? MLX5_CT_STATE_REPLY_BIT : 0;
 	ctstate_mask |= unrel ? MLX5_CT_STATE_RELATED_BIT : 0;
@@ -1518,6 +1563,15 @@ mlx5_tc_ct_match_add(struct mlx5_tc_ct_priv *priv,
 		return -EOPNOTSUPP;
 	}
 
+<<<<<<< HEAD
+=======
+	if (new) {
+		NL_SET_ERR_MSG_MOD(extack,
+				   "matching on ct_state +new isn't supported");
+		return -EOPNOTSUPP;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (mask->ct_zone)
 		mlx5e_tc_match_to_reg_match(spec, ZONE_TO_REG,
 					    key->ct_zone, MLX5_CT_ZONE_MASK);
@@ -1558,7 +1612,10 @@ mlx5_tc_ct_parse_action(struct mlx5_tc_ct_priv *priv,
 	attr->ct_attr.zone = act->ct.zone;
 	attr->ct_attr.ct_action = act->ct.action;
 	attr->ct_attr.nf_ft = act->ct.flow_table;
+<<<<<<< HEAD
 	attr->ct_attr.act_miss_cookie = act->miss_cookie;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1892,6 +1949,7 @@ mlx5_tc_ct_del_ft_cb(struct mlx5_tc_ct_priv *ct_priv, struct mlx5_ct_ft *ft)
 
 /* We translate the tc filter with CT action to the following HW model:
  *
+<<<<<<< HEAD
  *	+---------------------+
  *	+ ft prio (tc chain)  +
  *	+ original match      +
@@ -1928,6 +1986,37 @@ mlx5_tc_ct_del_ft_cb(struct mlx5_tc_ct_priv *ct_priv, struct mlx5_ct_ft *ft)
  *	+ fte_id match +------------------------>
  *	+--------------+
  *
+=======
+ * +---------------------+
+ * + ft prio (tc chain)  +
+ * + original match      +
+ * +---------------------+
+ *      | set chain miss mapping
+ *      | set fte_id
+ *      | set tunnel_id
+ *      | do decap
+ *      v
+ * +---------------------+
+ * + pre_ct/pre_ct_nat   +  if matches     +-------------------------+
+ * + zone+nat match      +---------------->+ post_act (see below)    +
+ * +---------------------+  set zone       +-------------------------+
+ *      | set zone
+ *      v
+ * +--------------------+
+ * + CT (nat or no nat) +
+ * + tuple + zone match +
+ * +--------------------+
+ *      | set mark
+ *      | set labels_id
+ *      | set established
+ *	| set zone_restore
+ *      | do nat (if needed)
+ *      v
+ * +--------------+
+ * + post_act     + original filter actions
+ * + fte_id match +------------------------>
+ * +--------------+
+>>>>>>> b7ba80a49124 (Commit)
  */
 static struct mlx5_flow_handle *
 __mlx5_tc_ct_flow_offload(struct mlx5_tc_ct_priv *ct_priv,
@@ -1941,9 +2030,14 @@ __mlx5_tc_ct_flow_offload(struct mlx5_tc_ct_priv *ct_priv,
 	struct mlx5_flow_attr *pre_ct_attr;
 	struct mlx5_modify_hdr *mod_hdr;
 	struct mlx5_ct_flow *ct_flow;
+<<<<<<< HEAD
 	int act_miss_mapping = 0, err;
 	struct mlx5_ct_ft *ft;
 	u16 zone;
+=======
+	int chain_mapping = 0, err;
+	struct mlx5_ct_ft *ft;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ct_flow = kzalloc(sizeof(*ct_flow), GFP_KERNEL);
 	if (!ct_flow) {
@@ -1976,6 +2070,7 @@ __mlx5_tc_ct_flow_offload(struct mlx5_tc_ct_priv *ct_priv,
 	pre_ct_attr->action |= MLX5_FLOW_CONTEXT_ACTION_FWD_DEST |
 			       MLX5_FLOW_CONTEXT_ACTION_MOD_HDR;
 
+<<<<<<< HEAD
 	err = mlx5e_tc_action_miss_mapping_get(ct_priv->priv, attr, attr->ct_attr.act_miss_cookie,
 					       &act_miss_mapping);
 	if (err) {
@@ -1988,6 +2083,24 @@ __mlx5_tc_ct_flow_offload(struct mlx5_tc_ct_priv *ct_priv,
 					MAPPED_OBJ_TO_REG, act_miss_mapping);
 	if (err) {
 		ct_dbg("Failed to set act miss register mapping");
+=======
+	/* Write chain miss tag for miss in ct table as we
+	 * don't go though all prios of this chain as normal tc rules
+	 * miss.
+	 */
+	err = mlx5_chains_get_chain_mapping(ct_priv->chains, attr->chain,
+					    &chain_mapping);
+	if (err) {
+		ct_dbg("Failed to get chain register mapping for chain");
+		goto err_get_chain;
+	}
+	ct_flow->chain_mapping = chain_mapping;
+
+	err = mlx5e_tc_match_to_reg_set(priv->mdev, pre_mod_acts, ct_priv->ns_type,
+					CHAIN_TO_REG, chain_mapping);
+	if (err) {
+		ct_dbg("Failed to set chain register mapping");
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_mapping;
 	}
 
@@ -2006,6 +2119,7 @@ __mlx5_tc_ct_flow_offload(struct mlx5_tc_ct_priv *ct_priv,
 		}
 	}
 
+<<<<<<< HEAD
 	/* Change original rule point to ct table
 	 * Chain 0 sets the zone and jumps to ct table
 	 * Other chains jump to pre_ct table to align with act_ct cached logic
@@ -2025,6 +2139,8 @@ __mlx5_tc_ct_flow_offload(struct mlx5_tc_ct_priv *ct_priv,
 		pre_ct_attr->dest_ft = nat ? ft->pre_ct_nat.ft : ft->pre_ct.ft;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mod_hdr = mlx5_modify_header_alloc(priv->mdev, ct_priv->ns_type,
 					   pre_mod_acts->num_actions,
 					   pre_mod_acts->actions);
@@ -2034,6 +2150,13 @@ __mlx5_tc_ct_flow_offload(struct mlx5_tc_ct_priv *ct_priv,
 		goto err_mapping;
 	}
 	pre_ct_attr->modify_hdr = mod_hdr;
+<<<<<<< HEAD
+=======
+
+	/* Change original rule point to ct table */
+	pre_ct_attr->dest_chain = 0;
+	pre_ct_attr->dest_ft = nat ? ft->pre_ct_nat.ft : ft->pre_ct.ft;
+>>>>>>> b7ba80a49124 (Commit)
 	ct_flow->pre_ct_rule = mlx5_tc_rule_insert(priv, orig_spec,
 						   pre_ct_attr);
 	if (IS_ERR(ct_flow->pre_ct_rule)) {
@@ -2051,8 +2174,13 @@ err_insert_orig:
 	mlx5_modify_header_dealloc(priv->mdev, pre_ct_attr->modify_hdr);
 err_mapping:
 	mlx5e_mod_hdr_dealloc(pre_mod_acts);
+<<<<<<< HEAD
 	mlx5e_tc_action_miss_mapping_put(ct_priv->priv, attr, act_miss_mapping);
 err_get_act_miss:
+=======
+	mlx5_chains_put_chain_mapping(ct_priv->chains, ct_flow->chain_mapping);
+err_get_chain:
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(ct_flow->pre_ct_attr);
 err_alloc_pre:
 	mlx5_tc_ct_del_ft_cb(ct_priv, ft);
@@ -2091,7 +2219,11 @@ __mlx5_tc_ct_delete_flow(struct mlx5_tc_ct_priv *ct_priv,
 	mlx5_tc_rule_delete(priv, ct_flow->pre_ct_rule, pre_ct_attr);
 	mlx5_modify_header_dealloc(priv->mdev, pre_ct_attr->modify_hdr);
 
+<<<<<<< HEAD
 	mlx5e_tc_action_miss_mapping_put(ct_priv->priv, attr, attr->ct_attr.act_miss_mapping);
+=======
+	mlx5_chains_put_chain_mapping(ct_priv->chains, ct_flow->chain_mapping);
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5_tc_ct_del_ft_cb(ct_priv, ct_flow->ft);
 
 	kfree(ct_flow->pre_ct_attr);
@@ -2188,6 +2320,16 @@ mlx5_tc_ct_init_check_support(struct mlx5e_priv *priv,
 	const char *err_msg = NULL;
 	int err = 0;
 
+<<<<<<< HEAD
+=======
+#if !IS_ENABLED(CONFIG_NET_TC_SKB_EXT)
+	/* cannot restore chain ID on HW miss */
+
+	err_msg = "tc skb extension missing";
+	err = -EOPNOTSUPP;
+	goto out_err;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR_OR_NULL(post_act)) {
 		/* Ignore_flow_level support isn't supported by default for VFs and so post_act
 		 * won't be supported. Skip showing error msg.
@@ -2210,9 +2352,20 @@ out_err:
 static void
 mlx5_ct_tc_create_dbgfs(struct mlx5_tc_ct_priv *ct_priv)
 {
+<<<<<<< HEAD
 	struct mlx5_tc_ct_debugfs *ct_dbgfs = &ct_priv->debugfs;
 
 	ct_dbgfs->root = debugfs_create_dir("ct", mlx5_debugfs_get_dev_root(ct_priv->dev));
+=======
+	bool is_fdb = ct_priv->ns_type == MLX5_FLOW_NAMESPACE_FDB;
+	struct mlx5_tc_ct_debugfs *ct_dbgfs = &ct_priv->debugfs;
+	char dirname[16] = {};
+
+	if (sscanf(dirname, "ct_%s", is_fdb ? "fdb" : "nic") < 0)
+		return;
+
+	ct_dbgfs->root = debugfs_create_dir(dirname, mlx5_debugfs_get_dev_root(ct_priv->dev));
+>>>>>>> b7ba80a49124 (Commit)
 	debugfs_create_atomic_t("offloaded", 0400, ct_dbgfs->root,
 				&ct_dbgfs->stats.offloaded);
 	debugfs_create_atomic_t("rx_dropped", 0400, ct_dbgfs->root,
@@ -2264,7 +2417,10 @@ mlx5_tc_ct_init(struct mlx5e_priv *priv, struct mlx5_fs_chains *chains,
 	}
 
 	spin_lock_init(&ct_priv->ht_lock);
+<<<<<<< HEAD
 	ct_priv->priv = priv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ct_priv->ns_type = ns_type;
 	ct_priv->chains = chains;
 	ct_priv->netdev = priv->netdev;

@@ -56,4 +56,8 @@ do {								\
 			(h)->bus.func, ##__VA_ARGS__);		\
 } while (0)
 
+<<<<<<< HEAD
+=======
+typedef enum i40e_status_code i40e_status;
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _I40E_OSDEP_H_ */

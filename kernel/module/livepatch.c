@@ -11,7 +11,11 @@
 #include "internal.h"
 
 /*
+<<<<<<< HEAD
  * Persist ELF information about a module. Copy the ELF header,
+=======
+ * Persist Elf information about a module. Copy the Elf header,
+>>>>>>> b7ba80a49124 (Commit)
  * section header table, section string table, and symtab section
  * index from info to mod->klp_info.
  */
@@ -25,11 +29,19 @@ int copy_module_elf(struct module *mod, struct load_info *info)
 	if (!mod->klp_info)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	/* ELF header */
 	size = sizeof(mod->klp_info->hdr);
 	memcpy(&mod->klp_info->hdr, info->hdr, size);
 
 	/* ELF section header table */
+=======
+	/* Elf header */
+	size = sizeof(mod->klp_info->hdr);
+	memcpy(&mod->klp_info->hdr, info->hdr, size);
+
+	/* Elf section header table */
+>>>>>>> b7ba80a49124 (Commit)
 	size = sizeof(*info->sechdrs) * info->hdr->e_shnum;
 	mod->klp_info->sechdrs = kmemdup(info->sechdrs, size, GFP_KERNEL);
 	if (!mod->klp_info->sechdrs) {
@@ -37,7 +49,11 @@ int copy_module_elf(struct module *mod, struct load_info *info)
 		goto free_info;
 	}
 
+<<<<<<< HEAD
 	/* ELF section name string table */
+=======
+	/* Elf section name string table */
+>>>>>>> b7ba80a49124 (Commit)
 	size = info->sechdrs[info->hdr->e_shstrndx].sh_size;
 	mod->klp_info->secstrings = kmemdup(info->secstrings, size, GFP_KERNEL);
 	if (!mod->klp_info->secstrings) {
@@ -45,7 +61,11 @@ int copy_module_elf(struct module *mod, struct load_info *info)
 		goto free_sechdrs;
 	}
 
+<<<<<<< HEAD
 	/* ELF symbol section index */
+=======
+	/* Elf symbol section index */
+>>>>>>> b7ba80a49124 (Commit)
 	symndx = info->index.sym;
 	mod->klp_info->symndx = symndx;
 

@@ -3,7 +3,18 @@
 #include "funeth.h"
 #include "funeth_devlink.h"
 
+<<<<<<< HEAD
 static const struct devlink_ops fun_dl_ops = {
+=======
+static int fun_dl_info_get(struct devlink *dl, struct devlink_info_req *req,
+			   struct netlink_ext_ack *extack)
+{
+	return devlink_info_driver_name_put(req, KBUILD_MODNAME);
+}
+
+static const struct devlink_ops fun_dl_ops = {
+	.info_get = fun_dl_info_get,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct devlink *fun_devlink_alloc(struct device *dev)

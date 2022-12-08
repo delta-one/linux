@@ -592,7 +592,11 @@ static void mrp_join_timer_arm(struct mrp_applicant *app)
 {
 	unsigned long delay;
 
+<<<<<<< HEAD
 	delay = get_random_u32_below(msecs_to_jiffies(mrp_join_time));
+=======
+	delay = (u64)msecs_to_jiffies(mrp_join_time) * prandom_u32() >> 32;
+>>>>>>> b7ba80a49124 (Commit)
 	mod_timer(&app->join_timer, jiffies + delay);
 }
 
@@ -606,10 +610,14 @@ static void mrp_join_timer(struct timer_list *t)
 	spin_unlock(&app->lock);
 
 	mrp_queue_xmit(app);
+<<<<<<< HEAD
 	spin_lock(&app->lock);
 	if (likely(app->active))
 		mrp_join_timer_arm(app);
 	spin_unlock(&app->lock);
+=======
+	mrp_join_timer_arm(app);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mrp_periodic_timer_arm(struct mrp_applicant *app)
@@ -623,12 +631,20 @@ static void mrp_periodic_timer(struct timer_list *t)
 	struct mrp_applicant *app = from_timer(app, t, periodic_timer);
 
 	spin_lock(&app->lock);
+<<<<<<< HEAD
 	if (likely(app->active)) {
 		mrp_mad_event(app, MRP_EVENT_PERIODIC);
 		mrp_pdu_queue(app);
 		mrp_periodic_timer_arm(app);
 	}
 	spin_unlock(&app->lock);
+=======
+	mrp_mad_event(app, MRP_EVENT_PERIODIC);
+	mrp_pdu_queue(app);
+	spin_unlock(&app->lock);
+
+	mrp_periodic_timer_arm(app);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mrp_pdu_parse_end_mark(struct sk_buff *skb, int *offset)
@@ -876,7 +892,10 @@ int mrp_init_applicant(struct net_device *dev, struct mrp_application *appl)
 	app->dev = dev;
 	app->app = appl;
 	app->mad = RB_ROOT;
+<<<<<<< HEAD
 	app->active = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_init(&app->lock);
 	skb_queue_head_init(&app->queue);
 	rcu_assign_pointer(dev->mrp_port->applicants[appl->type], app);
@@ -905,6 +924,7 @@ void mrp_uninit_applicant(struct net_device *dev, struct mrp_application *appl)
 
 	RCU_INIT_POINTER(port->applicants[appl->type], NULL);
 
+<<<<<<< HEAD
 	spin_lock_bh(&app->lock);
 	app->active = false;
 	spin_unlock_bh(&app->lock);
@@ -913,6 +933,13 @@ void mrp_uninit_applicant(struct net_device *dev, struct mrp_application *appl)
 	 */
 	timer_shutdown_sync(&app->join_timer);
 	timer_shutdown_sync(&app->periodic_timer);
+=======
+	/* Delete timer and generate a final TX event to flush out
+	 * all pending messages before the applicant is gone.
+	 */
+	del_timer_sync(&app->join_timer);
+	del_timer_sync(&app->periodic_timer);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_bh(&app->lock);
 	mrp_mad_event(app, MRP_EVENT_TX);

@@ -13,10 +13,13 @@
 #include "fabrics.h"
 #include <linux/nvme-auth.h>
 
+<<<<<<< HEAD
 #define CHAP_BUF_SIZE 4096
 static struct kmem_cache *nvme_chap_buf_cache;
 static mempool_t *nvme_chap_buf_pool;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct nvme_dhchap_queue_context {
 	struct list_head entry;
 	struct work_struct auth_work;
@@ -24,6 +27,10 @@ struct nvme_dhchap_queue_context {
 	struct crypto_shash *shash_tfm;
 	struct crypto_kpp *dh_tfm;
 	void *buf;
+<<<<<<< HEAD
+=======
+	size_t buf_size;
+>>>>>>> b7ba80a49124 (Commit)
 	int qid;
 	int error;
 	u32 s1;
@@ -45,19 +52,25 @@ struct nvme_dhchap_queue_context {
 	int sess_key_len;
 };
 
+<<<<<<< HEAD
 static struct workqueue_struct *nvme_auth_wq;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define nvme_auth_flags_from_qid(qid) \
 	(qid == 0) ? 0 : BLK_MQ_REQ_NOWAIT | BLK_MQ_REQ_RESERVED
 #define nvme_auth_queue_from_qid(ctrl, qid) \
 	(qid == 0) ? (ctrl)->fabrics_q : (ctrl)->connect_q
 
+<<<<<<< HEAD
 static inline int ctrl_max_dhchaps(struct nvme_ctrl *ctrl)
 {
 	return ctrl->opts->nr_io_queues + ctrl->opts->nr_write_queues +
 			ctrl->opts->nr_poll_queues + 1;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int nvme_auth_submit(struct nvme_ctrl *ctrl, int qid,
 			    void *data, size_t data_len, bool auth_send)
 {
@@ -123,7 +136,11 @@ static int nvme_auth_set_dhchap_negotiate_data(struct nvme_ctrl *ctrl,
 	struct nvmf_auth_dhchap_negotiate_data *data = chap->buf;
 	size_t size = sizeof(*data) + sizeof(union nvmf_auth_protocol);
 
+<<<<<<< HEAD
 	if (size > CHAP_BUF_SIZE) {
+=======
+	if (chap->buf_size < size) {
+>>>>>>> b7ba80a49124 (Commit)
 		chap->status = NVME_AUTH_DHCHAP_FAILURE_INCORRECT_PAYLOAD;
 		return -EINVAL;
 	}
@@ -158,9 +175,15 @@ static int nvme_auth_process_dhchap_challenge(struct nvme_ctrl *ctrl,
 	const char *gid_name = nvme_auth_dhgroup_name(data->dhgid);
 	const char *hmac_name, *kpp_name;
 
+<<<<<<< HEAD
 	if (size > CHAP_BUF_SIZE) {
 		chap->status = NVME_AUTH_DHCHAP_FAILURE_INCORRECT_PAYLOAD;
 		return -EINVAL;
+=======
+	if (chap->buf_size < size) {
+		chap->status = NVME_AUTH_DHCHAP_FAILURE_INCORRECT_PAYLOAD;
+		return NVME_SC_INVALID_FIELD;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	hmac_name = nvme_auth_hmac_name(data->hashid);
@@ -169,7 +192,11 @@ static int nvme_auth_process_dhchap_challenge(struct nvme_ctrl *ctrl,
 			 "qid %d: invalid HASH ID %d\n",
 			 chap->qid, data->hashid);
 		chap->status = NVME_AUTH_DHCHAP_FAILURE_HASH_UNUSABLE;
+<<<<<<< HEAD
 		return -EPROTO;
+=======
+		return NVME_SC_INVALID_FIELD;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (chap->hash_id == data->hashid && chap->shash_tfm &&
@@ -195,7 +222,11 @@ static int nvme_auth_process_dhchap_challenge(struct nvme_ctrl *ctrl,
 			 chap->qid, hmac_name, PTR_ERR(chap->shash_tfm));
 		chap->shash_tfm = NULL;
 		chap->status = NVME_AUTH_DHCHAP_FAILURE_FAILED;
+<<<<<<< HEAD
 		return -ENOMEM;
+=======
+		return NVME_SC_AUTH_REQUIRED;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (crypto_shash_digestsize(chap->shash_tfm) != data->hl) {
@@ -205,7 +236,17 @@ static int nvme_auth_process_dhchap_challenge(struct nvme_ctrl *ctrl,
 		crypto_free_shash(chap->shash_tfm);
 		chap->shash_tfm = NULL;
 		chap->status = NVME_AUTH_DHCHAP_FAILURE_HASH_UNUSABLE;
+<<<<<<< HEAD
 		return -EPROTO;
+=======
+		return NVME_SC_AUTH_REQUIRED;
+	}
+
+	/* Reset host response if the hash had been changed */
+	if (chap->hash_id != data->hashid) {
+		kfree(chap->host_response);
+		chap->host_response = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	chap->hash_id = data->hashid;
@@ -221,9 +262,23 @@ select_kpp:
 			 chap->qid, data->dhgid);
 		chap->status = NVME_AUTH_DHCHAP_FAILURE_DHGROUP_UNUSABLE;
 		/* Leave previous dh_tfm intact */
+<<<<<<< HEAD
 		return -EPROTO;
 	}
 
+=======
+		return NVME_SC_AUTH_REQUIRED;
+	}
+
+	/* Clear host and controller key to avoid accidental reuse */
+	kfree_sensitive(chap->host_key);
+	chap->host_key = NULL;
+	chap->host_key_len = 0;
+	kfree_sensitive(chap->ctrl_key);
+	chap->ctrl_key = NULL;
+	chap->ctrl_key_len = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (chap->dhgroup_id == data->dhgid &&
 	    (data->dhgid == NVME_AUTH_DHGROUP_NULL || chap->dh_tfm)) {
 		dev_dbg(ctrl->device,
@@ -244,7 +299,11 @@ select_kpp:
 				 "qid %d: empty DH value\n",
 				 chap->qid);
 			chap->status = NVME_AUTH_DHCHAP_FAILURE_DHGROUP_UNUSABLE;
+<<<<<<< HEAD
 			return -EPROTO;
+=======
+			return NVME_SC_INVALID_FIELD;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		chap->dh_tfm = crypto_alloc_kpp(kpp_name, 0, 0);
@@ -256,7 +315,11 @@ select_kpp:
 				 chap->qid, ret, gid_name);
 			chap->status = NVME_AUTH_DHCHAP_FAILURE_DHGROUP_UNUSABLE;
 			chap->dh_tfm = NULL;
+<<<<<<< HEAD
 			return ret;
+=======
+			return NVME_SC_AUTH_REQUIRED;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		dev_dbg(ctrl->device, "qid %d: selected DH group %s\n",
 			chap->qid, gid_name);
@@ -265,7 +328,11 @@ select_kpp:
 			 "qid %d: invalid DH value for NULL DH\n",
 			 chap->qid);
 		chap->status = NVME_AUTH_DHCHAP_FAILURE_INCORRECT_PAYLOAD;
+<<<<<<< HEAD
 		return -EPROTO;
+=======
+		return NVME_SC_INVALID_FIELD;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	chap->dhgroup_id = data->dhgid;
 
@@ -276,7 +343,11 @@ skip_kpp:
 		chap->ctrl_key = kmalloc(dhvlen, GFP_KERNEL);
 		if (!chap->ctrl_key) {
 			chap->status = NVME_AUTH_DHCHAP_FAILURE_FAILED;
+<<<<<<< HEAD
 			return -ENOMEM;
+=======
+			return NVME_SC_AUTH_REQUIRED;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		chap->ctrl_key_len = dhvlen;
 		memcpy(chap->ctrl_key, data->cval + chap->hash_len,
@@ -299,7 +370,11 @@ static int nvme_auth_set_dhchap_reply_data(struct nvme_ctrl *ctrl,
 	if (chap->host_key_len)
 		size += chap->host_key_len;
 
+<<<<<<< HEAD
 	if (size > CHAP_BUF_SIZE) {
+=======
+	if (chap->buf_size < size) {
+>>>>>>> b7ba80a49124 (Commit)
 		chap->status = NVME_AUTH_DHCHAP_FAILURE_INCORRECT_PAYLOAD;
 		return -EINVAL;
 	}
@@ -341,12 +416,21 @@ static int nvme_auth_process_dhchap_success1(struct nvme_ctrl *ctrl,
 	struct nvmf_auth_dhchap_success1_data *data = chap->buf;
 	size_t size = sizeof(*data);
 
+<<<<<<< HEAD
 	if (chap->ctrl_key)
 		size += chap->hash_len;
 
 	if (size > CHAP_BUF_SIZE) {
 		chap->status = NVME_AUTH_DHCHAP_FAILURE_INCORRECT_PAYLOAD;
 		return -EINVAL;
+=======
+	if (ctrl->ctrl_key)
+		size += chap->hash_len;
+
+	if (chap->buf_size < size) {
+		chap->status = NVME_AUTH_DHCHAP_FAILURE_INCORRECT_PAYLOAD;
+		return NVME_SC_INVALID_FIELD;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (data->hl != chap->hash_len) {
@@ -354,7 +438,11 @@ static int nvme_auth_process_dhchap_success1(struct nvme_ctrl *ctrl,
 			 "qid %d: invalid hash length %u\n",
 			 chap->qid, data->hl);
 		chap->status = NVME_AUTH_DHCHAP_FAILURE_HASH_UNUSABLE;
+<<<<<<< HEAD
 		return -EPROTO;
+=======
+		return NVME_SC_INVALID_FIELD;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Just print out information for the admin queue */
@@ -378,7 +466,11 @@ static int nvme_auth_process_dhchap_success1(struct nvme_ctrl *ctrl,
 			 "qid %d: controller authentication failed\n",
 			 chap->qid);
 		chap->status = NVME_AUTH_DHCHAP_FAILURE_FAILED;
+<<<<<<< HEAD
 		return -ECONNREFUSED;
+=======
+		return NVME_SC_AUTH_REQUIRED;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Just print out information for the admin queue */
@@ -518,7 +610,10 @@ static int nvme_auth_dhchap_setup_ctrl_response(struct nvme_ctrl *ctrl,
 		ret = PTR_ERR(ctrl_response);
 		return ret;
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = crypto_shash_setkey(chap->shash_tfm,
 			ctrl_response, ctrl->ctrl_key->len);
 	if (ret) {
@@ -619,6 +714,12 @@ static int nvme_auth_dhchap_exponential(struct nvme_ctrl *ctrl,
 	if (ret) {
 		dev_dbg(ctrl->device,
 			"failed to generate public key, error %d\n", ret);
+<<<<<<< HEAD
+=======
+		kfree(chap->host_key);
+		chap->host_key = NULL;
+		chap->host_key_len = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		chap->status = NVME_AUTH_DHCHAP_FAILURE_INCORRECT_PAYLOAD;
 		return ret;
 	}
@@ -638,6 +739,12 @@ gen_sesskey:
 	if (ret) {
 		dev_dbg(ctrl->device,
 			"failed to generate shared secret, error %d\n", ret);
+<<<<<<< HEAD
+=======
+		kfree_sensitive(chap->sess_key);
+		chap->sess_key = NULL;
+		chap->sess_key_len = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		chap->status = NVME_AUTH_DHCHAP_FAILURE_INCORRECT_PAYLOAD;
 		return ret;
 	}
@@ -646,7 +753,11 @@ gen_sesskey:
 	return 0;
 }
 
+<<<<<<< HEAD
 static void nvme_auth_reset_dhchap(struct nvme_dhchap_queue_context *chap)
+=======
+static void __nvme_auth_reset(struct nvme_dhchap_queue_context *chap)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	kfree_sensitive(chap->host_response);
 	chap->host_response = NULL;
@@ -666,6 +777,7 @@ static void nvme_auth_reset_dhchap(struct nvme_dhchap_queue_context *chap)
 	chap->transaction = 0;
 	memset(chap->c1, 0, sizeof(chap->c1));
 	memset(chap->c2, 0, sizeof(chap->c2));
+<<<<<<< HEAD
 	mempool_free(chap->buf, nvme_chap_buf_pool);
 	chap->buf = NULL;
 }
@@ -673,13 +785,32 @@ static void nvme_auth_reset_dhchap(struct nvme_dhchap_queue_context *chap)
 static void nvme_auth_free_dhchap(struct nvme_dhchap_queue_context *chap)
 {
 	nvme_auth_reset_dhchap(chap);
+=======
+}
+
+static void __nvme_auth_free(struct nvme_dhchap_queue_context *chap)
+{
+	__nvme_auth_reset(chap);
+>>>>>>> b7ba80a49124 (Commit)
 	if (chap->shash_tfm)
 		crypto_free_shash(chap->shash_tfm);
 	if (chap->dh_tfm)
 		crypto_free_kpp(chap->dh_tfm);
+<<<<<<< HEAD
 }
 
 static void nvme_queue_auth_work(struct work_struct *work)
+=======
+	kfree_sensitive(chap->ctrl_key);
+	kfree_sensitive(chap->host_key);
+	kfree_sensitive(chap->sess_key);
+	kfree_sensitive(chap->host_response);
+	kfree(chap->buf);
+	kfree(chap);
+}
+
+static void __nvme_auth_work(struct work_struct *work)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nvme_dhchap_queue_context *chap =
 		container_of(work, struct nvme_dhchap_queue_context, auth_work);
@@ -687,6 +818,7 @@ static void nvme_queue_auth_work(struct work_struct *work)
 	size_t tl;
 	int ret = 0;
 
+<<<<<<< HEAD
 	/*
 	 * Allocate a large enough buffer for the entire negotiation:
 	 * 4k is enough to ffdhe8192.
@@ -697,6 +829,8 @@ static void nvme_queue_auth_work(struct work_struct *work)
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	chap->transaction = ctrl->transaction++;
 
 	/* DH-HMAC-CHAP Step 1: send negotiate */
@@ -718,9 +852,14 @@ static void nvme_queue_auth_work(struct work_struct *work)
 	dev_dbg(ctrl->device, "%s: qid %d receive challenge\n",
 		__func__, chap->qid);
 
+<<<<<<< HEAD
 	memset(chap->buf, 0, CHAP_BUF_SIZE);
 	ret = nvme_auth_submit(ctrl, chap->qid, chap->buf, CHAP_BUF_SIZE,
 			       false);
+=======
+	memset(chap->buf, 0, chap->buf_size);
+	ret = nvme_auth_submit(ctrl, chap->qid, chap->buf, chap->buf_size, false);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_warn(ctrl->device,
 			 "qid %d failed to receive challenge, %s %d\n",
@@ -732,7 +871,11 @@ static void nvme_queue_auth_work(struct work_struct *work)
 					 NVME_AUTH_DHCHAP_MESSAGE_CHALLENGE);
 	if (ret) {
 		chap->status = ret;
+<<<<<<< HEAD
 		chap->error = -ECONNREFUSED;
+=======
+		chap->error = NVME_SC_AUTH_REQUIRED;
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -756,6 +899,7 @@ static void nvme_queue_auth_work(struct work_struct *work)
 
 	dev_dbg(ctrl->device, "%s: qid %d host response\n",
 		__func__, chap->qid);
+<<<<<<< HEAD
 	mutex_lock(&ctrl->dhchap_auth_mutex);
 	ret = nvme_auth_dhchap_setup_host_response(ctrl, chap);
 	if (ret) {
@@ -764,6 +908,13 @@ static void nvme_queue_auth_work(struct work_struct *work)
 		goto fail2;
 	}
 	mutex_unlock(&ctrl->dhchap_auth_mutex);
+=======
+	ret = nvme_auth_dhchap_setup_host_response(ctrl, chap);
+	if (ret) {
+		chap->error = ret;
+		goto fail2;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* DH-HMAC-CHAP Step 3: send reply */
 	dev_dbg(ctrl->device, "%s: qid %d send reply\n",
@@ -785,9 +936,14 @@ static void nvme_queue_auth_work(struct work_struct *work)
 	dev_dbg(ctrl->device, "%s: qid %d receive success1\n",
 		__func__, chap->qid);
 
+<<<<<<< HEAD
 	memset(chap->buf, 0, CHAP_BUF_SIZE);
 	ret = nvme_auth_submit(ctrl, chap->qid, chap->buf, CHAP_BUF_SIZE,
 			       false);
+=======
+	memset(chap->buf, 0, chap->buf_size);
+	ret = nvme_auth_submit(ctrl, chap->qid, chap->buf, chap->buf_size, false);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_warn(ctrl->device,
 			 "qid %d failed to receive success1, %s %d\n",
@@ -800,32 +956,53 @@ static void nvme_queue_auth_work(struct work_struct *work)
 					 NVME_AUTH_DHCHAP_MESSAGE_SUCCESS1);
 	if (ret) {
 		chap->status = ret;
+<<<<<<< HEAD
 		chap->error = -ECONNREFUSED;
 		return;
 	}
 
 	mutex_lock(&ctrl->dhchap_auth_mutex);
+=======
+		chap->error = NVME_SC_AUTH_REQUIRED;
+		return;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (ctrl->ctrl_key) {
 		dev_dbg(ctrl->device,
 			"%s: qid %d controller response\n",
 			__func__, chap->qid);
 		ret = nvme_auth_dhchap_setup_ctrl_response(ctrl, chap);
 		if (ret) {
+<<<<<<< HEAD
 			mutex_unlock(&ctrl->dhchap_auth_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			chap->error = ret;
 			goto fail2;
 		}
 	}
+<<<<<<< HEAD
 	mutex_unlock(&ctrl->dhchap_auth_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = nvme_auth_process_dhchap_success1(ctrl, chap);
 	if (ret) {
 		/* Controller authentication failed */
+<<<<<<< HEAD
 		chap->error = -ECONNREFUSED;
 		goto fail2;
 	}
 
 	if (chap->ctrl_key) {
+=======
+		chap->error = NVME_SC_AUTH_REQUIRED;
+		goto fail2;
+	}
+
+	if (ctrl->ctrl_key) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* DH-HMAC-CHAP Step 5: send success2 */
 		dev_dbg(ctrl->device, "%s: qid %d send success2\n",
 			__func__, chap->qid);
@@ -866,9 +1043,49 @@ int nvme_auth_negotiate(struct nvme_ctrl *ctrl, int qid)
 		return -ENOKEY;
 	}
 
+<<<<<<< HEAD
 	chap = &ctrl->dhchap_ctxs[qid];
 	cancel_work_sync(&chap->auth_work);
 	queue_work(nvme_auth_wq, &chap->auth_work);
+=======
+	mutex_lock(&ctrl->dhchap_auth_mutex);
+	/* Check if the context is already queued */
+	list_for_each_entry(chap, &ctrl->dhchap_auth_list, entry) {
+		WARN_ON(!chap->buf);
+		if (chap->qid == qid) {
+			dev_dbg(ctrl->device, "qid %d: re-using context\n", qid);
+			mutex_unlock(&ctrl->dhchap_auth_mutex);
+			flush_work(&chap->auth_work);
+			__nvme_auth_reset(chap);
+			queue_work(nvme_wq, &chap->auth_work);
+			return 0;
+		}
+	}
+	chap = kzalloc(sizeof(*chap), GFP_KERNEL);
+	if (!chap) {
+		mutex_unlock(&ctrl->dhchap_auth_mutex);
+		return -ENOMEM;
+	}
+	chap->qid = (qid == NVME_QID_ANY) ? 0 : qid;
+	chap->ctrl = ctrl;
+
+	/*
+	 * Allocate a large enough buffer for the entire negotiation:
+	 * 4k should be enough to ffdhe8192.
+	 */
+	chap->buf_size = 4096;
+	chap->buf = kzalloc(chap->buf_size, GFP_KERNEL);
+	if (!chap->buf) {
+		mutex_unlock(&ctrl->dhchap_auth_mutex);
+		kfree(chap);
+		return -ENOMEM;
+	}
+
+	INIT_WORK(&chap->auth_work, __nvme_auth_work);
+	list_add(&chap->entry, &ctrl->dhchap_auth_list);
+	mutex_unlock(&ctrl->dhchap_auth_mutex);
+	queue_work(nvme_wq, &chap->auth_work);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 EXPORT_SYMBOL_GPL(nvme_auth_negotiate);
@@ -878,6 +1095,7 @@ int nvme_auth_wait(struct nvme_ctrl *ctrl, int qid)
 	struct nvme_dhchap_queue_context *chap;
 	int ret;
 
+<<<<<<< HEAD
 	chap = &ctrl->dhchap_ctxs[qid];
 	flush_work(&chap->auth_work);
 	ret = chap->error;
@@ -888,11 +1106,43 @@ int nvme_auth_wait(struct nvme_ctrl *ctrl, int qid)
 EXPORT_SYMBOL_GPL(nvme_auth_wait);
 
 static void nvme_ctrl_auth_work(struct work_struct *work)
+=======
+	mutex_lock(&ctrl->dhchap_auth_mutex);
+	list_for_each_entry(chap, &ctrl->dhchap_auth_list, entry) {
+		if (chap->qid != qid)
+			continue;
+		mutex_unlock(&ctrl->dhchap_auth_mutex);
+		flush_work(&chap->auth_work);
+		ret = chap->error;
+		return ret;
+	}
+	mutex_unlock(&ctrl->dhchap_auth_mutex);
+	return -ENXIO;
+}
+EXPORT_SYMBOL_GPL(nvme_auth_wait);
+
+void nvme_auth_reset(struct nvme_ctrl *ctrl)
+{
+	struct nvme_dhchap_queue_context *chap;
+
+	mutex_lock(&ctrl->dhchap_auth_mutex);
+	list_for_each_entry(chap, &ctrl->dhchap_auth_list, entry) {
+		mutex_unlock(&ctrl->dhchap_auth_mutex);
+		flush_work(&chap->auth_work);
+		__nvme_auth_reset(chap);
+	}
+	mutex_unlock(&ctrl->dhchap_auth_mutex);
+}
+EXPORT_SYMBOL_GPL(nvme_auth_reset);
+
+static void nvme_dhchap_auth_work(struct work_struct *work)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nvme_ctrl *ctrl =
 		container_of(work, struct nvme_ctrl, dhchap_auth_work);
 	int ret, q;
 
+<<<<<<< HEAD
 	/*
 	 * If the ctrl is no connected, bail as reconnect will handle
 	 * authentication.
@@ -900,6 +1150,8 @@ static void nvme_ctrl_auth_work(struct work_struct *work)
 	if (ctrl->state != NVME_CTRL_LIVE)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Authenticate admin queue first */
 	ret = nvme_auth_negotiate(ctrl, 0);
 	if (ret) {
@@ -928,6 +1180,7 @@ static void nvme_ctrl_auth_work(struct work_struct *work)
 	 * Failure is a soft-state; credentials remain valid until
 	 * the controller terminates the connection.
 	 */
+<<<<<<< HEAD
 	for (q = 1; q < ctrl->queue_count; q++) {
 		ret = nvme_auth_wait(ctrl, q);
 		if (ret)
@@ -979,17 +1232,41 @@ err_free_dhchap_secret:
 	nvme_auth_free_key(ctrl->host_key);
 	ctrl->host_key = NULL;
 	return ret;
+=======
+}
+
+void nvme_auth_init_ctrl(struct nvme_ctrl *ctrl)
+{
+	INIT_LIST_HEAD(&ctrl->dhchap_auth_list);
+	INIT_WORK(&ctrl->dhchap_auth_work, nvme_dhchap_auth_work);
+	mutex_init(&ctrl->dhchap_auth_mutex);
+	if (!ctrl->opts)
+		return;
+	nvme_auth_generate_key(ctrl->opts->dhchap_secret, &ctrl->host_key);
+	nvme_auth_generate_key(ctrl->opts->dhchap_ctrl_secret, &ctrl->ctrl_key);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(nvme_auth_init_ctrl);
 
 void nvme_auth_stop(struct nvme_ctrl *ctrl)
 {
+<<<<<<< HEAD
 	cancel_work_sync(&ctrl->dhchap_auth_work);
+=======
+	struct nvme_dhchap_queue_context *chap = NULL, *tmp;
+
+	cancel_work_sync(&ctrl->dhchap_auth_work);
+	mutex_lock(&ctrl->dhchap_auth_mutex);
+	list_for_each_entry_safe(chap, tmp, &ctrl->dhchap_auth_list, entry)
+		cancel_work_sync(&chap->auth_work);
+	mutex_unlock(&ctrl->dhchap_auth_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(nvme_auth_stop);
 
 void nvme_auth_free(struct nvme_ctrl *ctrl)
 {
+<<<<<<< HEAD
 	int i;
 
 	if (ctrl->dhchap_ctxs) {
@@ -997,6 +1274,17 @@ void nvme_auth_free(struct nvme_ctrl *ctrl)
 			nvme_auth_free_dhchap(&ctrl->dhchap_ctxs[i]);
 		kfree(ctrl->dhchap_ctxs);
 	}
+=======
+	struct nvme_dhchap_queue_context *chap = NULL, *tmp;
+
+	mutex_lock(&ctrl->dhchap_auth_mutex);
+	list_for_each_entry_safe(chap, tmp, &ctrl->dhchap_auth_list, entry) {
+		list_del_init(&chap->entry);
+		flush_work(&chap->auth_work);
+		__nvme_auth_free(chap);
+	}
+	mutex_unlock(&ctrl->dhchap_auth_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ctrl->host_key) {
 		nvme_auth_free_key(ctrl->host_key);
 		ctrl->host_key = NULL;
@@ -1007,6 +1295,7 @@ void nvme_auth_free(struct nvme_ctrl *ctrl)
 	}
 }
 EXPORT_SYMBOL_GPL(nvme_auth_free);
+<<<<<<< HEAD
 
 int __init nvme_init_auth(void)
 {
@@ -1039,3 +1328,5 @@ void __exit nvme_exit_auth(void)
 	kmem_cache_destroy(nvme_chap_buf_cache);
 	destroy_workqueue(nvme_auth_wq);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

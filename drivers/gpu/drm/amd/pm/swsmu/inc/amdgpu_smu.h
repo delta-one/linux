@@ -168,7 +168,10 @@ struct smu_temperature_range {
 	int mem_crit_max;
 	int mem_emergency_max;
 	int software_shutdown_temp;
+<<<<<<< HEAD
 	int software_shutdown_temp_offset;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct smu_state_validation_block {
@@ -569,10 +572,13 @@ struct smu_context
 	u32 param_reg;
 	u32 msg_reg;
 	u32 resp_reg;
+<<<<<<< HEAD
 
 	u32 debug_param_reg;
 	u32 debug_msg_reg;
 	u32 debug_resp_reg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct i2c_adapter;
@@ -722,6 +728,7 @@ struct pptable_funcs {
 			   void *data, uint32_t *size);
 
 	/**
+<<<<<<< HEAD
 	 * @get_apu_thermal_limit: get apu core limit from smu
 	 * &limit: current limit temperature in millidegrees Celsius
 	 */
@@ -734,6 +741,8 @@ struct pptable_funcs {
 	int (*set_apu_thermal_limit)(struct smu_context *smu, uint32_t limit);
 
 	/**
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * @pre_display_config_changed: Prepare GPU for a display configuration
 	 *                              change.
 	 *
@@ -1213,8 +1222,11 @@ struct pptable_funcs {
 	 * IPs reset varies by asic.
 	 */
 	int (*mode2_reset)(struct smu_context *smu);
+<<<<<<< HEAD
 	/* for gfx feature enablement after mode2 reset */
 	int (*enable_gfx_features)(struct smu_context *smu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/**
 	 * @get_dpm_ultimate_freq: Get the hard frequency range of a clock
@@ -1407,6 +1419,7 @@ enum smu_cmn2asic_mapping_type {
 	CMN2ASIC_MAPPING_WORKLOAD,
 };
 
+<<<<<<< HEAD
 enum smu_baco_seq {
 	BACO_SEQ_BACO = 0,
 	BACO_SEQ_MSR,
@@ -1415,6 +1428,8 @@ enum smu_baco_seq {
 	BACO_SEQ_COUNT,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MSG_MAP(msg, index, valid_in_vf) \
 	[SMU_MSG_##msg] = {1, (index), (valid_in_vf)}
 

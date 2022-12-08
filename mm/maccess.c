@@ -97,7 +97,11 @@ long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr, long count)
 	return src - unsafe_addr;
 Efault:
 	pagefault_enable();
+<<<<<<< HEAD
 	dst[0] = '\0';
+=======
+	dst[-1] = '\0';
+>>>>>>> b7ba80a49124 (Commit)
 	return -EFAULT;
 }
 

@@ -6,7 +6,10 @@
 #include <dirent.h>
 
 DIR *tracing_events__opendir(void);
+<<<<<<< HEAD
 int tracing_events__scandir_alphasort(struct dirent ***namelist);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void tracing_path_set(const char *mountpoint);
 const char *tracing_path_mount(void);

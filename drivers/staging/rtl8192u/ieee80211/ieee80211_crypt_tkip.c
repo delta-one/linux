@@ -716,3 +716,12 @@ void ieee80211_crypto_tkip_exit(void)
 {
 	ieee80211_unregister_crypto_ops(&ieee80211_crypt_tkip);
 }
+<<<<<<< HEAD
+=======
+
+void ieee80211_tkip_null(void)
+{
+//    printk("============>%s()\n", __func__);
+	return;
+}
+>>>>>>> b7ba80a49124 (Commit)

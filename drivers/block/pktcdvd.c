@@ -417,6 +417,10 @@ static int pkt_sysfs_init(void)
 	if (!class_pktcdvd)
 		return -ENOMEM;
 	class_pktcdvd->name = DRIVER_NAME;
+<<<<<<< HEAD
+=======
+	class_pktcdvd->owner = THIS_MODULE;
+>>>>>>> b7ba80a49124 (Commit)
 	class_pktcdvd->class_release = class_pktcdvd_release;
 	class_pktcdvd->class_groups = class_pktcdvd_groups;
 	ret = class_register(class_pktcdvd);
@@ -2399,8 +2403,11 @@ static void pkt_submit_bio(struct bio *bio)
 	struct bio *split;
 
 	bio = bio_split_to_limits(bio);
+<<<<<<< HEAD
 	if (!bio)
 		return;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	pkt_dbg(2, pd, "start = %6llx stop = %6llx\n",
 		(unsigned long long)bio->bi_iter.bi_sector,

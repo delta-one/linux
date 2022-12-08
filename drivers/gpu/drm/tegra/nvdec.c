@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2015-2022, NVIDIA Corporation.
+=======
+ * Copyright (c) 2015-2021, NVIDIA Corporation.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/clk.h>
@@ -8,7 +12,10 @@
 #include <linux/dma-mapping.h>
 #include <linux/host1x.h>
 #include <linux/iommu.h>
+<<<<<<< HEAD
 #include <linux/iopoll.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/of.h>
 #include <linux/of_device.h>
@@ -17,6 +24,7 @@
 #include <linux/pm_runtime.h>
 #include <linux/reset.h>
 
+<<<<<<< HEAD
 #include <soc/tegra/mc.h>
 
 #include "drm.h"
@@ -25,14 +33,25 @@
 #include "vic.h"
 
 #define NVDEC_FALCON_DEBUGINFO			0x1094
+=======
+#include <soc/tegra/pmc.h>
+
+#include "drm.h"
+#include "falcon.h"
+#include "vic.h"
+
+>>>>>>> b7ba80a49124 (Commit)
 #define NVDEC_TFBIF_TRANSCFG			0x2c44
 
 struct nvdec_config {
 	const char *firmware;
 	unsigned int version;
 	bool supports_sid;
+<<<<<<< HEAD
 	bool has_riscv;
 	bool has_extra_clocks;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct nvdec {
@@ -42,6 +61,7 @@ struct nvdec {
 	struct tegra_drm_client client;
 	struct host1x_channel *channel;
 	struct device *dev;
+<<<<<<< HEAD
 	struct clk_bulk_data clks[3];
 	unsigned int num_clks;
 	struct reset_control *reset;
@@ -52,6 +72,12 @@ struct nvdec {
 	/* RISC-V specific data */
 	struct tegra_drm_riscv riscv;
 	phys_addr_t carveout_base;
+=======
+	struct clk *clk;
+
+	/* Platform configuration */
+	const struct nvdec_config *config;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct nvdec *to_nvdec(struct tegra_drm_client *client)
@@ -65,20 +91,43 @@ static inline void nvdec_writel(struct nvdec *nvdec, u32 value,
 	writel(value, nvdec->regs + offset);
 }
 
+<<<<<<< HEAD
 static int nvdec_boot_falcon(struct nvdec *nvdec)
 {
 	u32 stream_id;
 	int err;
 
 	if (nvdec->config->supports_sid && tegra_dev_iommu_get_stream_id(nvdec->dev, &stream_id)) {
+=======
+static int nvdec_boot(struct nvdec *nvdec)
+{
+#ifdef CONFIG_IOMMU_API
+	struct iommu_fwspec *spec = dev_iommu_fwspec_get(nvdec->dev);
+#endif
+	int err;
+
+#ifdef CONFIG_IOMMU_API
+	if (nvdec->config->supports_sid && spec) {
+>>>>>>> b7ba80a49124 (Commit)
 		u32 value;
 
 		value = TRANSCFG_ATT(1, TRANSCFG_SID_FALCON) | TRANSCFG_ATT(0, TRANSCFG_SID_HW);
 		nvdec_writel(nvdec, value, NVDEC_TFBIF_TRANSCFG);
 
+<<<<<<< HEAD
 		nvdec_writel(nvdec, stream_id, VIC_THI_STREAMID0);
 		nvdec_writel(nvdec, stream_id, VIC_THI_STREAMID1);
 	}
+=======
+		if (spec->num_ids > 0) {
+			value = spec->ids[0] & 0xffff;
+
+			nvdec_writel(nvdec, value, VIC_THI_STREAMID0);
+			nvdec_writel(nvdec, value, VIC_THI_STREAMID1);
+		}
+	}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = falcon_boot(&nvdec->falcon);
 	if (err < 0)
@@ -93,6 +142,7 @@ static int nvdec_boot_falcon(struct nvdec *nvdec)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int nvdec_wait_debuginfo(struct nvdec *nvdec, const char *phase)
 {
 	int err;
@@ -151,6 +201,8 @@ release_reset:
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int nvdec_init(struct host1x_client *client)
 {
 	struct tegra_drm_client *drm = host1x_to_drm_client(client);
@@ -250,7 +302,11 @@ static const struct host1x_client_ops nvdec_client_ops = {
 	.exit = nvdec_exit,
 };
 
+<<<<<<< HEAD
 static int nvdec_load_falcon_firmware(struct nvdec *nvdec)
+=======
+static int nvdec_load_firmware(struct nvdec *nvdec)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct host1x_client *client = &nvdec->client.base;
 	struct tegra_drm *tegra = nvdec->client.drm;
@@ -313,17 +369,26 @@ cleanup:
 	return err;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static __maybe_unused int nvdec_runtime_resume(struct device *dev)
 {
 	struct nvdec *nvdec = dev_get_drvdata(dev);
 	int err;
 
+<<<<<<< HEAD
 	err = clk_bulk_prepare_enable(nvdec->num_clks, nvdec->clks);
+=======
+	err = clk_prepare_enable(nvdec->clk);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err < 0)
 		return err;
 
 	usleep_range(10, 20);
 
+<<<<<<< HEAD
 	if (nvdec->config->has_riscv) {
 		err = nvdec_boot_riscv(nvdec);
 		if (err < 0)
@@ -337,11 +402,24 @@ static __maybe_unused int nvdec_runtime_resume(struct device *dev)
 		if (err < 0)
 			goto disable;
 	}
+=======
+	err = nvdec_load_firmware(nvdec);
+	if (err < 0)
+		goto disable;
+
+	err = nvdec_boot(nvdec);
+	if (err < 0)
+		goto disable;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
 disable:
+<<<<<<< HEAD
 	clk_bulk_disable_unprepare(nvdec->num_clks, nvdec->clks);
+=======
+	clk_disable_unprepare(nvdec->clk);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -351,7 +429,11 @@ static __maybe_unused int nvdec_runtime_suspend(struct device *dev)
 
 	host1x_channel_stop(nvdec->channel);
 
+<<<<<<< HEAD
 	clk_bulk_disable_unprepare(nvdec->num_clks, nvdec->clks);
+=======
+	clk_disable_unprepare(nvdec->clk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -412,6 +494,7 @@ static const struct nvdec_config nvdec_t194_config = {
 	.supports_sid = true,
 };
 
+<<<<<<< HEAD
 static const struct nvdec_config nvdec_t234_config = {
 	.version = 0x23,
 	.supports_sid = true,
@@ -419,11 +502,16 @@ static const struct nvdec_config nvdec_t234_config = {
 	.has_extra_clocks = true,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id tegra_nvdec_of_match[] = {
 	{ .compatible = "nvidia,tegra210-nvdec", .data = &nvdec_t210_config },
 	{ .compatible = "nvidia,tegra186-nvdec", .data = &nvdec_t186_config },
 	{ .compatible = "nvidia,tegra194-nvdec", .data = &nvdec_t194_config },
+<<<<<<< HEAD
 	{ .compatible = "nvidia,tegra234-nvdec", .data = &nvdec_t234_config },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ },
 };
 MODULE_DEVICE_TABLE(of, tegra_nvdec_of_match);
@@ -457,6 +545,7 @@ static int nvdec_probe(struct platform_device *pdev)
 	if (IS_ERR(nvdec->regs))
 		return PTR_ERR(nvdec->regs);
 
+<<<<<<< HEAD
 	nvdec->clks[0].id = "nvdec";
 	nvdec->num_clks = 1;
 
@@ -473,6 +562,15 @@ static int nvdec_probe(struct platform_device *pdev)
 	}
 
 	err = clk_set_rate(nvdec->clks[0].clk, ULONG_MAX);
+=======
+	nvdec->clk = devm_clk_get(dev, NULL);
+	if (IS_ERR(nvdec->clk)) {
+		dev_err(&pdev->dev, "failed to get clock\n");
+		return PTR_ERR(nvdec->clk);
+	}
+
+	err = clk_set_rate(nvdec->clk, ULONG_MAX);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err < 0) {
 		dev_err(&pdev->dev, "failed to set clock rate\n");
 		return err;
@@ -482,6 +580,7 @@ static int nvdec_probe(struct platform_device *pdev)
 	if (err < 0)
 		host_class = HOST1X_CLASS_NVDEC;
 
+<<<<<<< HEAD
 	if (nvdec->config->has_riscv) {
 		struct tegra_mc *mc;
 
@@ -518,6 +617,14 @@ static int nvdec_probe(struct platform_device *pdev)
 		if (err < 0)
 			return err;
 	}
+=======
+	nvdec->falcon.dev = dev;
+	nvdec->falcon.regs = nvdec->regs;
+
+	err = falcon_init(&nvdec->falcon);
+	if (err < 0)
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	platform_set_drvdata(pdev, nvdec);
 

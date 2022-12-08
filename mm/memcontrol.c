@@ -63,7 +63,10 @@
 #include <linux/resume_user_mode.h>
 #include <linux/psi.h>
 #include <linux/seq_buf.h>
+<<<<<<< HEAD
 #include <linux/sched/isolation.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "internal.h"
 #include <net/sock.h>
 #include <net/ip.h>
@@ -89,8 +92,26 @@ static bool cgroup_memory_nosocket __ro_after_init;
 /* Kernel memory accounting disabled? */
 static bool cgroup_memory_nokmem __ro_after_init;
 
+<<<<<<< HEAD
 /* BPF memory accounting disabled? */
 static bool cgroup_memory_nobpf __ro_after_init;
+=======
+/* Whether the swap controller is active */
+#ifdef CONFIG_MEMCG_SWAP
+static bool cgroup_memory_noswap __initdata;
+
+static DEFINE_STATIC_KEY_FALSE(memcg_swap_enabled_key);
+static inline bool memcg_swap_enabled(void)
+{
+	return static_branch_likely(&memcg_swap_enabled_key);
+}
+#else
+static inline bool memcg_swap_enabled(void)
+{
+	return false;
+}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_CGROUP_WRITEBACK
 static DECLARE_WAIT_QUEUE_HEAD(memcg_cgwb_frn_waitq);
@@ -99,7 +120,11 @@ static DECLARE_WAIT_QUEUE_HEAD(memcg_cgwb_frn_waitq);
 /* Whether legacy memory+swap accounting is active */
 static bool do_memsw_account(void)
 {
+<<<<<<< HEAD
 	return !cgroup_subsys_on_dfl(memory_cgrp_subsys);
+=======
+	return !cgroup_subsys_on_dfl(memory_cgrp_subsys) && memcg_swap_enabled();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define THRESHOLDS_EVENTS_TARGET 128
@@ -349,6 +374,7 @@ static void memcg_reparent_objcgs(struct mem_cgroup *memcg,
  * conditional to this static branch, we'll have to allow modules that does
  * kmem_cache_alloc and the such to see this symbol as well
  */
+<<<<<<< HEAD
 DEFINE_STATIC_KEY_FALSE(memcg_kmem_online_key);
 EXPORT_SYMBOL(memcg_kmem_online_key);
 
@@ -362,14 +388,34 @@ EXPORT_SYMBOL(memcg_bpf_enabled_key);
  *
  * If memcg is bound to the default hierarchy, css of the memcg associated
  * with @folio is returned.  The returned css remains associated with @folio
+=======
+DEFINE_STATIC_KEY_FALSE(memcg_kmem_enabled_key);
+EXPORT_SYMBOL(memcg_kmem_enabled_key);
+#endif
+
+/**
+ * mem_cgroup_css_from_page - css of the memcg associated with a page
+ * @page: page of interest
+ *
+ * If memcg is bound to the default hierarchy, css of the memcg associated
+ * with @page is returned.  The returned css remains associated with @page
+>>>>>>> b7ba80a49124 (Commit)
  * until it is released.
  *
  * If memcg is bound to a traditional hierarchy, the css of root_mem_cgroup
  * is returned.
  */
+<<<<<<< HEAD
 struct cgroup_subsys_state *mem_cgroup_css_from_folio(struct folio *folio)
 {
 	struct mem_cgroup *memcg = folio_memcg(folio);
+=======
+struct cgroup_subsys_state *mem_cgroup_css_from_page(struct page *page)
+{
+	struct mem_cgroup *memcg;
+
+	memcg = page_memcg(page);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!memcg || !cgroup_subsys_on_dfl(memory_cgrp_subsys))
 		memcg = root_mem_cgroup;
@@ -482,12 +528,15 @@ static void mem_cgroup_update_tree(struct mem_cgroup *memcg, int nid)
 	struct mem_cgroup_per_node *mz;
 	struct mem_cgroup_tree_per_node *mctz;
 
+<<<<<<< HEAD
 	if (lru_gen_enabled()) {
 		if (soft_limit_excess(memcg))
 			lru_gen_soft_reclaim(&memcg->nodeinfo[nid]->lruvec);
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mctz = soft_limit_tree.rb_tree_per_node[nid];
 	if (!mctz)
 		return;
@@ -672,10 +721,15 @@ static const unsigned int memcg_vm_event_stat[] = {
 	PGPGOUT,
 	PGSCAN_KSWAPD,
 	PGSCAN_DIRECT,
+<<<<<<< HEAD
 	PGSCAN_KHUGEPAGED,
 	PGSTEAL_KSWAPD,
 	PGSTEAL_DIRECT,
 	PGSTEAL_KHUGEPAGED,
+=======
+	PGSTEAL_KSWAPD,
+	PGSTEAL_DIRECT,
+>>>>>>> b7ba80a49124 (Commit)
 	PGFAULT,
 	PGMAJFAULT,
 	PGREFILL,
@@ -1232,7 +1286,11 @@ static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
 	 * cgroup root (root_mem_cgroup). So we have to handle
 	 * dead_memcg from cgroup root separately.
 	 */
+<<<<<<< HEAD
 	if (!mem_cgroup_is_root(last))
+=======
+	if (last != root_mem_cgroup)
+>>>>>>> b7ba80a49124 (Commit)
 		__invalidate_reclaim_iterators(root_mem_cgroup,
 						dead_memcg);
 }
@@ -1256,7 +1314,11 @@ int mem_cgroup_scan_tasks(struct mem_cgroup *memcg,
 	struct mem_cgroup *iter;
 	int ret = 0;
 
+<<<<<<< HEAD
 	BUG_ON(mem_cgroup_is_root(memcg));
+=======
+	BUG_ON(memcg == root_mem_cgroup);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for_each_mem_cgroup_tree(iter, memcg) {
 		struct css_task_iter it;
@@ -1285,7 +1347,11 @@ void lruvec_memcg_debug(struct lruvec *lruvec, struct folio *folio)
 	memcg = folio_memcg(folio);
 
 	if (!memcg)
+<<<<<<< HEAD
 		VM_BUG_ON_FOLIO(!mem_cgroup_is_root(lruvec_memcg(lruvec)), folio);
+=======
+		VM_BUG_ON_FOLIO(lruvec_memcg(lruvec) != root_mem_cgroup, folio);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		VM_BUG_ON_FOLIO(lruvec_memcg(lruvec) != memcg, folio);
 }
@@ -1485,7 +1551,10 @@ static const struct memory_stat memory_stats[] = {
 	{ "kernel",			MEMCG_KMEM			},
 	{ "kernel_stack",		NR_KERNEL_STACK_KB		},
 	{ "pagetables",			NR_PAGETABLE			},
+<<<<<<< HEAD
 	{ "sec_pagetables",		NR_SECONDARY_PAGETABLE		},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ "percpu",			MEMCG_PERCPU_B			},
 	{ "sock",			MEMCG_SOCK			},
 	{ "vmalloc",			MEMCG_VMALLOC			},
@@ -1587,12 +1656,19 @@ static void memory_stat_format(struct mem_cgroup *memcg, char *buf, int bufsize)
 	/* Accumulated memory events */
 	seq_buf_printf(&s, "pgscan %lu\n",
 		       memcg_events(memcg, PGSCAN_KSWAPD) +
+<<<<<<< HEAD
 		       memcg_events(memcg, PGSCAN_DIRECT) +
 		       memcg_events(memcg, PGSCAN_KHUGEPAGED));
 	seq_buf_printf(&s, "pgsteal %lu\n",
 		       memcg_events(memcg, PGSTEAL_KSWAPD) +
 		       memcg_events(memcg, PGSTEAL_DIRECT) +
 		       memcg_events(memcg, PGSTEAL_KHUGEPAGED));
+=======
+		       memcg_events(memcg, PGSCAN_DIRECT));
+	seq_buf_printf(&s, "pgsteal %lu\n",
+		       memcg_events(memcg, PGSTEAL_KSWAPD) +
+		       memcg_events(memcg, PGSTEAL_DIRECT));
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < ARRAY_SIZE(memcg_vm_event_stat); i++) {
 		if (memcg_vm_event_stat[i] == PGPGIN ||
@@ -1676,17 +1752,28 @@ unsigned long mem_cgroup_get_max(struct mem_cgroup *memcg)
 {
 	unsigned long max = READ_ONCE(memcg->memory.max);
 
+<<<<<<< HEAD
 	if (do_memsw_account()) {
+=======
+	if (cgroup_subsys_on_dfl(memory_cgrp_subsys)) {
+		if (mem_cgroup_swappiness(memcg))
+			max += min(READ_ONCE(memcg->swap.max),
+				   (unsigned long)total_swap_pages);
+	} else { /* v1 */
+>>>>>>> b7ba80a49124 (Commit)
 		if (mem_cgroup_swappiness(memcg)) {
 			/* Calculate swap excess capacity from memsw limit */
 			unsigned long swap = READ_ONCE(memcg->memsw.max) - max;
 
 			max += min(swap, (unsigned long)total_swap_pages);
 		}
+<<<<<<< HEAD
 	} else {
 		if (mem_cgroup_swappiness(memcg))
 			max += min(READ_ONCE(memcg->swap.max),
 				   (unsigned long)total_swap_pages);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return max;
 }
@@ -1930,7 +2017,11 @@ static bool mem_cgroup_oom(struct mem_cgroup *memcg, gfp_t mask, int order)
 	 * Please note that mem_cgroup_out_of_memory might fail to find a
 	 * victim and then we have to bail out from the charge path.
 	 */
+<<<<<<< HEAD
 	if (READ_ONCE(memcg->oom_kill_disable)) {
+=======
+	if (memcg->oom_kill_disable) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (current->in_user_fault) {
 			css_get(&memcg->css);
 			current->memcg_in_oom = memcg;
@@ -2000,7 +2091,11 @@ bool mem_cgroup_oom_synchronize(bool handle)
 	if (locked)
 		mem_cgroup_oom_notify(memcg);
 
+<<<<<<< HEAD
 	if (locked && !READ_ONCE(memcg->oom_kill_disable)) {
+=======
+	if (locked && !memcg->oom_kill_disable) {
+>>>>>>> b7ba80a49124 (Commit)
 		mem_cgroup_unmark_under_oom(memcg);
 		finish_wait(&memcg_oom_waitq, &owait.wait);
 		mem_cgroup_out_of_memory(memcg, current->memcg_oom_gfp_mask,
@@ -2051,7 +2146,11 @@ struct mem_cgroup *mem_cgroup_get_oom_group(struct task_struct *victim,
 	rcu_read_lock();
 
 	memcg = mem_cgroup_from_task(victim);
+<<<<<<< HEAD
 	if (mem_cgroup_is_root(memcg))
+=======
+	if (memcg == root_mem_cgroup)
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	/*
@@ -2068,7 +2167,11 @@ struct mem_cgroup *mem_cgroup_get_oom_group(struct task_struct *victim,
 	 * highest-level memory cgroup with oom.group set.
 	 */
 	for (; memcg; memcg = parent_mem_cgroup(memcg)) {
+<<<<<<< HEAD
 		if (READ_ONCE(memcg->oom_group))
+=======
+		if (memcg->oom_group)
+>>>>>>> b7ba80a49124 (Commit)
 			oom_group = memcg;
 
 		if (memcg == oom_domain)
@@ -2367,7 +2470,11 @@ static void drain_all_stock(struct mem_cgroup *root_memcg)
 		    !test_and_set_bit(FLUSHING_CACHED_CHARGE, &stock->flags)) {
 			if (cpu == curcpu)
 				drain_local_stock(&stock->work);
+<<<<<<< HEAD
 			else if (!cpu_is_isolated(cpu))
+=======
+			else
+>>>>>>> b7ba80a49124 (Commit)
 				schedule_work_on(cpu, &stock->work);
 		}
 	}
@@ -2950,6 +3057,7 @@ struct mem_cgroup *mem_cgroup_from_obj_folio(struct folio *folio, void *p)
 	}
 
 	/*
+<<<<<<< HEAD
 	 * folio_memcg_check() is used here, because in theory we can encounter
 	 * a folio where the slab flag has been cleared already, but
 	 * slab->memcg_data has not been freed yet
@@ -2957,6 +3065,15 @@ struct mem_cgroup *mem_cgroup_from_obj_folio(struct folio *folio, void *p)
 	 * cgroup pointer or NULL will be returned.
 	 */
 	return folio_memcg_check(folio);
+=======
+	 * page_memcg_check() is used here, because in theory we can encounter
+	 * a folio where the slab flag has been cleared already, but
+	 * slab->memcg_data has not been freed yet
+	 * page_memcg_check(page) will guarantee that a proper memory
+	 * cgroup pointer or NULL will be returned.
+	 */
+	return page_memcg_check(folio_page(folio, 0));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -3010,7 +3127,11 @@ static struct obj_cgroup *__get_obj_cgroup_from_memcg(struct mem_cgroup *memcg)
 {
 	struct obj_cgroup *objcg = NULL;
 
+<<<<<<< HEAD
 	for (; !mem_cgroup_is_root(memcg); memcg = parent_mem_cgroup(memcg)) {
+=======
+	for (; memcg != root_mem_cgroup; memcg = parent_mem_cgroup(memcg)) {
+>>>>>>> b7ba80a49124 (Commit)
 		objcg = rcu_dereference(memcg->objcg);
 		if (objcg && obj_cgroup_tryget(objcg))
 			break;
@@ -3041,7 +3162,11 @@ struct obj_cgroup *get_obj_cgroup_from_page(struct page *page)
 {
 	struct obj_cgroup *objcg;
 
+<<<<<<< HEAD
 	if (!memcg_kmem_online())
+=======
+	if (!memcg_kmem_enabled() || memcg_kmem_bypass())
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	if (PageMemcgKmem(page)) {
@@ -3432,7 +3557,11 @@ void split_page_memcg(struct page *head, unsigned int nr)
 		css_get_many(&memcg->css, nr - 1);
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_SWAP
+=======
+#ifdef CONFIG_MEMCG_SWAP
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * mem_cgroup_move_swap_account - move swap charge and swap_cgroup's record.
  * @entry: swap entry to be moved
@@ -3537,9 +3666,12 @@ unsigned long mem_cgroup_soft_limit_reclaim(pg_data_t *pgdat, int order,
 	struct mem_cgroup_tree_per_node *mctz;
 	unsigned long excess;
 
+<<<<<<< HEAD
 	if (lru_gen_enabled())
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (order > 0)
 		return 0;
 
@@ -3729,7 +3861,11 @@ static u64 mem_cgroup_read_u64(struct cgroup_subsys_state *css,
 	case RES_FAILCNT:
 		return counter->failcnt;
 	case RES_SOFT_LIMIT:
+<<<<<<< HEAD
 		return (u64)READ_ONCE(memcg->soft_limit) * PAGE_SIZE;
+=======
+		return (u64)memcg->soft_limit * PAGE_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		BUG();
 	}
@@ -3753,7 +3889,11 @@ static int memcg_online_kmem(struct mem_cgroup *memcg)
 	objcg->memcg = memcg;
 	rcu_assign_pointer(memcg->objcg, objcg);
 
+<<<<<<< HEAD
 	static_branch_enable(&memcg_kmem_online_key);
+=======
+	static_branch_enable(&memcg_kmem_enabled_key);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memcg->kmemcg_id = memcg->id.id;
 
@@ -3871,7 +4011,11 @@ static ssize_t mem_cgroup_write(struct kernfs_open_file *of,
 		if (IS_ENABLED(CONFIG_PREEMPT_RT)) {
 			ret = -EOPNOTSUPP;
 		} else {
+<<<<<<< HEAD
 			WRITE_ONCE(memcg->soft_limit, nr_pages);
+=======
+			memcg->soft_limit = nr_pages;
+>>>>>>> b7ba80a49124 (Commit)
 			ret = 0;
 		}
 		break;
@@ -3928,10 +4072,13 @@ static int mem_cgroup_move_charge_write(struct cgroup_subsys_state *css,
 {
 	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
 
+<<<<<<< HEAD
 	pr_warn_once("Cgroup memory moving (move_charge_at_immigrate) is deprecated. "
 		     "Please report your usecase to linux-mm@kvack.org if you "
 		     "depend on this functionality.\n");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (val & ~MOVE_MASK)
 		return -EINVAL;
 
@@ -4180,9 +4327,15 @@ static int mem_cgroup_swappiness_write(struct cgroup_subsys_state *css,
 		return -EINVAL;
 
 	if (!mem_cgroup_is_root(memcg))
+<<<<<<< HEAD
 		WRITE_ONCE(memcg->swappiness, val);
 	else
 		WRITE_ONCE(vm_swappiness, val);
+=======
+		memcg->swappiness = val;
+	else
+		vm_swappiness = val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -4516,7 +4669,11 @@ static int mem_cgroup_oom_control_read(struct seq_file *sf, void *v)
 {
 	struct mem_cgroup *memcg = mem_cgroup_from_seq(sf);
 
+<<<<<<< HEAD
 	seq_printf(sf, "oom_kill_disable %d\n", READ_ONCE(memcg->oom_kill_disable));
+=======
+	seq_printf(sf, "oom_kill_disable %d\n", memcg->oom_kill_disable);
+>>>>>>> b7ba80a49124 (Commit)
 	seq_printf(sf, "under_oom %d\n", (bool)memcg->under_oom);
 	seq_printf(sf, "oom_kill %lu\n",
 		   atomic_long_read(&memcg->memory_events[MEMCG_OOM_KILL]));
@@ -4532,7 +4689,11 @@ static int mem_cgroup_oom_control_write(struct cgroup_subsys_state *css,
 	if (mem_cgroup_is_root(memcg) || !((val == 0) || (val == 1)))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	WRITE_ONCE(memcg->oom_kill_disable, val);
+=======
+	memcg->oom_kill_disable = val;
+>>>>>>> b7ba80a49124 (Commit)
 	if (!val)
 		memcg_oom_recover(memcg);
 
@@ -4854,7 +5015,10 @@ static ssize_t memcg_write_event_control(struct kernfs_open_file *of,
 	unsigned int efd, cfd;
 	struct fd efile;
 	struct fd cfile;
+<<<<<<< HEAD
 	struct dentry *cdentry;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const char *name;
 	char *endp;
 	int ret;
@@ -4909,6 +5073,7 @@ static ssize_t memcg_write_event_control(struct kernfs_open_file *of,
 		goto out_put_cfile;
 
 	/*
+<<<<<<< HEAD
 	 * The control file must be a regular cgroup1 file. As a regular cgroup
 	 * file can't be renamed, it's safe to access its name afterwards.
 	 */
@@ -4919,6 +5084,8 @@ static ssize_t memcg_write_event_control(struct kernfs_open_file *of,
 	}
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * Determine the event callbacks and set them in @event.  This used
 	 * to be done via struct cftype but cgroup core no longer knows
 	 * about these events.  The following is crude but the whole thing
@@ -4926,7 +5093,11 @@ static ssize_t memcg_write_event_control(struct kernfs_open_file *of,
 	 *
 	 * DO NOT ADD NEW FILES.
 	 */
+<<<<<<< HEAD
 	name = cdentry->d_name.name;
+=======
+	name = cfile.file->f_path.dentry->d_name.name;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!strcmp(name, "memory.usage_in_bytes")) {
 		event->register_event = mem_cgroup_usage_register_event;
@@ -4950,7 +5121,11 @@ static ssize_t memcg_write_event_control(struct kernfs_open_file *of,
 	 * automatically removed on cgroup destruction but the removal is
 	 * asynchronous, so take an extra ref on @css.
 	 */
+<<<<<<< HEAD
 	cfile_css = css_tryget_online_from_dir(cdentry->d_parent,
+=======
+	cfile_css = css_tryget_online_from_dir(cfile.file->f_path.dentry->d_parent,
+>>>>>>> b7ba80a49124 (Commit)
 					       &memory_cgrp_subsys);
 	ret = -EINVAL;
 	if (IS_ERR(cfile_css))
@@ -5348,14 +5523,23 @@ mem_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
 		return ERR_CAST(memcg);
 
 	page_counter_set_high(&memcg->memory, PAGE_COUNTER_MAX);
+<<<<<<< HEAD
 	WRITE_ONCE(memcg->soft_limit, PAGE_COUNTER_MAX);
+=======
+	memcg->soft_limit = PAGE_COUNTER_MAX;
+>>>>>>> b7ba80a49124 (Commit)
 #if defined(CONFIG_MEMCG_KMEM) && defined(CONFIG_ZSWAP)
 	memcg->zswap_max = PAGE_COUNTER_MAX;
 #endif
 	page_counter_set_high(&memcg->swap, PAGE_COUNTER_MAX);
 	if (parent) {
+<<<<<<< HEAD
 		WRITE_ONCE(memcg->swappiness, mem_cgroup_swappiness(parent));
 		WRITE_ONCE(memcg->oom_kill_disable, READ_ONCE(parent->oom_kill_disable));
+=======
+		memcg->swappiness = mem_cgroup_swappiness(parent);
+		memcg->oom_kill_disable = parent->oom_kill_disable;
+>>>>>>> b7ba80a49124 (Commit)
 
 		page_counter_init(&memcg->memory, &parent->memory);
 		page_counter_init(&memcg->swap, &parent->swap);
@@ -5375,11 +5559,14 @@ mem_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
 	if (cgroup_subsys_on_dfl(memory_cgrp_subsys) && !cgroup_memory_nosocket)
 		static_branch_inc(&memcg_sockets_enabled_key);
 
+<<<<<<< HEAD
 #if defined(CONFIG_MEMCG_KMEM)
 	if (!cgroup_memory_nobpf)
 		static_branch_inc(&memcg_bpf_enabled_key);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return &memcg->css;
 }
 
@@ -5405,7 +5592,10 @@ static int mem_cgroup_css_online(struct cgroup_subsys_state *css)
 	if (unlikely(mem_cgroup_is_root(memcg)))
 		queue_delayed_work(system_unbound_wq, &stats_flush_dwork,
 				   2UL*HZ);
+<<<<<<< HEAD
 	lru_gen_online_memcg(memcg);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 offline_kmem:
 	memcg_offline_kmem(memcg);
@@ -5437,7 +5627,10 @@ static void mem_cgroup_css_offline(struct cgroup_subsys_state *css)
 	memcg_offline_kmem(memcg);
 	reparent_shrinker_deferred(memcg);
 	wb_memcg_offline(memcg);
+<<<<<<< HEAD
 	lru_gen_offline_memcg(memcg);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	drain_all_stock(memcg);
 
@@ -5449,7 +5642,10 @@ static void mem_cgroup_css_released(struct cgroup_subsys_state *css)
 	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
 
 	invalidate_reclaim_iterators(memcg);
+<<<<<<< HEAD
 	lru_gen_release_memcg(memcg);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mem_cgroup_css_free(struct cgroup_subsys_state *css)
@@ -5467,11 +5663,14 @@ static void mem_cgroup_css_free(struct cgroup_subsys_state *css)
 	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys) && memcg->tcpmem_active)
 		static_branch_dec(&memcg_sockets_enabled_key);
 
+<<<<<<< HEAD
 #if defined(CONFIG_MEMCG_KMEM)
 	if (!cgroup_memory_nobpf)
 		static_branch_dec(&memcg_bpf_enabled_key);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vmpressure_cleanup(&memcg->vmpressure);
 	cancel_work_sync(&memcg->high_work);
 	mem_cgroup_remove_from_trees(memcg);
@@ -5503,7 +5702,11 @@ static void mem_cgroup_css_reset(struct cgroup_subsys_state *css)
 	page_counter_set_min(&memcg->memory, 0);
 	page_counter_set_low(&memcg->memory, 0);
 	page_counter_set_high(&memcg->memory, PAGE_COUNTER_MAX);
+<<<<<<< HEAD
 	WRITE_ONCE(memcg->soft_limit, PAGE_COUNTER_MAX);
+=======
+	memcg->soft_limit = PAGE_COUNTER_MAX;
+>>>>>>> b7ba80a49124 (Commit)
 	page_counter_set_high(&memcg->swap, PAGE_COUNTER_MAX);
 	memcg_wb_domain_size_changed(memcg);
 }
@@ -5694,14 +5897,18 @@ static struct page *mc_handle_swap_pte(struct vm_area_struct *vma,
 static struct page *mc_handle_file_pte(struct vm_area_struct *vma,
 			unsigned long addr, pte_t ptent)
 {
+<<<<<<< HEAD
 	unsigned long index;
 	struct folio *folio;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!vma->vm_file) /* anonymous vma */
 		return NULL;
 	if (!(mc.flags & MOVE_FILE))
 		return NULL;
 
+<<<<<<< HEAD
 	/* folio is moved even if it's not RSS of this task(page-faulted). */
 	/* shmem/tmpfs may report page out on swap: account for that too. */
 	index = linear_page_index(vma, addr);
@@ -5709,6 +5916,12 @@ static struct page *mc_handle_file_pte(struct vm_area_struct *vma,
 	if (IS_ERR(folio))
 		return NULL;
 	return folio_file_page(folio, index);
+=======
+	/* page is moved even if it's not RSS of this task(page-faulted). */
+	/* shmem/tmpfs may report page out on swap: account for that too. */
+	return find_get_incore_page(vma->vm_file->f_mapping,
+			linear_page_index(vma, addr));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -5718,7 +5931,11 @@ static struct page *mc_handle_file_pte(struct vm_area_struct *vma,
  * @from: mem_cgroup which the page is moved from.
  * @to:	mem_cgroup which the page is moved to. @from != @to.
  *
+<<<<<<< HEAD
  * The page must be locked and not on the LRU.
+=======
+ * The caller must make sure the page is not on LRU (isolate_page() is useful.)
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This function doesn't do "charge" to new cgroup and doesn't do "uncharge"
  * from old cgroup.
@@ -5735,6 +5952,7 @@ static int mem_cgroup_move_account(struct page *page,
 	int nid, ret;
 
 	VM_BUG_ON(from == to);
+<<<<<<< HEAD
 	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
 	VM_BUG_ON_FOLIO(folio_test_lru(folio), folio);
 	VM_BUG_ON(compound && !folio_test_large(folio));
@@ -5742,6 +5960,22 @@ static int mem_cgroup_move_account(struct page *page,
 	ret = -EINVAL;
 	if (folio_memcg(folio) != from)
 		goto out;
+=======
+	VM_BUG_ON_FOLIO(folio_test_lru(folio), folio);
+	VM_BUG_ON(compound && !folio_test_large(folio));
+
+	/*
+	 * Prevent mem_cgroup_migrate() from looking at
+	 * page's memory cgroup of its source page while we change it.
+	 */
+	ret = -EBUSY;
+	if (!folio_trylock(folio))
+		goto out;
+
+	ret = -EINVAL;
+	if (folio_memcg(folio) != from)
+		goto out_unlock;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pgdat = folio_pgdat(folio);
 	from_vec = mem_cgroup_lruvec(from, pgdat);
@@ -5786,12 +6020,15 @@ static int mem_cgroup_move_account(struct page *page,
 		}
 	}
 
+<<<<<<< HEAD
 #ifdef CONFIG_SWAP
 	if (folio_test_swapcache(folio)) {
 		__mod_lruvec_state(from_vec, NR_SWAPCACHE, -nr_pages);
 		__mod_lruvec_state(to_vec, NR_SWAPCACHE, nr_pages);
 	}
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (folio_test_writeback(folio)) {
 		__mod_lruvec_state(from_vec, NR_WRITEBACK, -nr_pages);
 		__mod_lruvec_state(to_vec, NR_WRITEBACK, nr_pages);
@@ -5828,6 +6065,11 @@ static int mem_cgroup_move_account(struct page *page,
 	mem_cgroup_charge_statistics(from, -nr_pages);
 	memcg_check_events(from, nid);
 	local_irq_enable();
+<<<<<<< HEAD
+=======
+out_unlock:
+	folio_unlock(folio);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	return ret;
 }
@@ -5876,6 +6118,7 @@ static enum mc_target_type get_mctgt_type(struct vm_area_struct *vma,
 	else if (is_swap_pte(ptent))
 		page = mc_handle_swap_pte(vma, ptent, &ent);
 
+<<<<<<< HEAD
 	if (target && page) {
 		if (!trylock_page(page)) {
 			put_page(page);
@@ -5899,6 +6142,8 @@ static enum mc_target_type get_mctgt_type(struct vm_area_struct *vma,
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!page && !ent.val)
 		return ret;
 	if (page) {
@@ -5915,11 +6160,16 @@ static enum mc_target_type get_mctgt_type(struct vm_area_struct *vma,
 			if (target)
 				target->page = page;
 		}
+<<<<<<< HEAD
 		if (!ret || !target) {
 			if (target)
 				unlock_page(page);
 			put_page(page);
 		}
+=======
+		if (!ret || !target)
+			put_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	/*
 	 * There is a swap entry and a page doesn't exist or isn't charged.
@@ -5959,10 +6209,13 @@ static enum mc_target_type get_mctgt_type_thp(struct vm_area_struct *vma,
 		ret = MC_TARGET_PAGE;
 		if (target) {
 			get_page(page);
+<<<<<<< HEAD
 			if (!trylock_page(page)) {
 				put_page(page);
 				return MC_TARGET_NONE;
 			}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			target->page = page;
 		}
 	}
@@ -6193,7 +6446,11 @@ static int mem_cgroup_move_charge_pte_range(pmd_t *pmd,
 		target_type = get_mctgt_type_thp(vma, addr, *pmd, &target);
 		if (target_type == MC_TARGET_PAGE) {
 			page = target.page;
+<<<<<<< HEAD
 			if (isolate_lru_page(page)) {
+=======
+			if (!isolate_lru_page(page)) {
+>>>>>>> b7ba80a49124 (Commit)
 				if (!mem_cgroup_move_account(page, true,
 							     mc.from, mc.to)) {
 					mc.precharge -= HPAGE_PMD_NR;
@@ -6201,7 +6458,10 @@ static int mem_cgroup_move_charge_pte_range(pmd_t *pmd,
 				}
 				putback_lru_page(page);
 			}
+<<<<<<< HEAD
 			unlock_page(page);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			put_page(page);
 		} else if (target_type == MC_TARGET_DEVICE) {
 			page = target.page;
@@ -6210,7 +6470,10 @@ static int mem_cgroup_move_charge_pte_range(pmd_t *pmd,
 				mc.precharge -= HPAGE_PMD_NR;
 				mc.moved_charge += HPAGE_PMD_NR;
 			}
+<<<<<<< HEAD
 			unlock_page(page);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			put_page(page);
 		}
 		spin_unlock(ptl);
@@ -6243,7 +6506,11 @@ retry:
 			 */
 			if (PageTransCompound(page))
 				goto put;
+<<<<<<< HEAD
 			if (!device && !isolate_lru_page(page))
+=======
+			if (!device && isolate_lru_page(page))
+>>>>>>> b7ba80a49124 (Commit)
 				goto put;
 			if (!mem_cgroup_move_account(page, false,
 						mc.from, mc.to)) {
@@ -6253,8 +6520,12 @@ retry:
 			}
 			if (!device)
 				putback_lru_page(page);
+<<<<<<< HEAD
 put:			/* get_mctgt_type() gets & locks the page */
 			unlock_page(page);
+=======
+put:			/* get_mctgt_type() gets the page */
+>>>>>>> b7ba80a49124 (Commit)
 			put_page(page);
 			break;
 		case MC_TARGET_SWAP:
@@ -6624,7 +6895,11 @@ static int memory_oom_group_show(struct seq_file *m, void *v)
 {
 	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
 
+<<<<<<< HEAD
 	seq_printf(m, "%d\n", READ_ONCE(memcg->oom_group));
+=======
+	seq_printf(m, "%d\n", memcg->oom_group);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -6646,7 +6921,11 @@ static ssize_t memory_oom_group_write(struct kernfs_open_file *of,
 	if (oom_group != 0 && oom_group != 1)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	WRITE_ONCE(memcg->oom_group, oom_group);
+=======
+	memcg->oom_group = oom_group;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return nbytes;
 }
@@ -7245,7 +7524,11 @@ void mem_cgroup_sk_alloc(struct sock *sk)
 
 	rcu_read_lock();
 	memcg = mem_cgroup_from_task(current);
+<<<<<<< HEAD
 	if (mem_cgroup_is_root(memcg))
+=======
+	if (memcg == root_mem_cgroup)
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys) && !memcg->tcpmem_active)
 		goto out;
@@ -7324,8 +7607,11 @@ static int __init cgroup_memory(char *s)
 			cgroup_memory_nosocket = true;
 		if (!strcmp(token, "nokmem"))
 			cgroup_memory_nokmem = true;
+<<<<<<< HEAD
 		if (!strcmp(token, "nobpf"))
 			cgroup_memory_nobpf = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return 1;
 }
@@ -7374,7 +7660,11 @@ static int __init mem_cgroup_init(void)
 }
 subsys_initcall(mem_cgroup_init);
 
+<<<<<<< HEAD
 #ifdef CONFIG_SWAP
+=======
+#ifdef CONFIG_MEMCG_SWAP
+>>>>>>> b7ba80a49124 (Commit)
 static struct mem_cgroup *mem_cgroup_id_get_online(struct mem_cgroup *memcg)
 {
 	while (!refcount_inc_not_zero(&memcg->id.ref)) {
@@ -7382,7 +7672,11 @@ static struct mem_cgroup *mem_cgroup_id_get_online(struct mem_cgroup *memcg)
 		 * The root cgroup cannot be destroyed, so it's refcount must
 		 * always be >= 1.
 		 */
+<<<<<<< HEAD
 		if (WARN_ON_ONCE(mem_cgroup_is_root(memcg))) {
+=======
+		if (WARN_ON_ONCE(memcg == root_mem_cgroup)) {
+>>>>>>> b7ba80a49124 (Commit)
 			VM_BUG_ON(1);
 			break;
 		}
@@ -7412,7 +7706,11 @@ void mem_cgroup_swapout(struct folio *folio, swp_entry_t entry)
 	if (mem_cgroup_disabled())
 		return;
 
+<<<<<<< HEAD
 	if (!do_memsw_account())
+=======
+	if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	memcg = folio_memcg(folio);
@@ -7441,7 +7739,11 @@ void mem_cgroup_swapout(struct folio *folio, swp_entry_t entry)
 	if (!mem_cgroup_is_root(memcg))
 		page_counter_uncharge(&memcg->memory, nr_entries);
 
+<<<<<<< HEAD
 	if (memcg != swap_memcg) {
+=======
+	if (memcg_swap_enabled() && memcg != swap_memcg) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!mem_cgroup_is_root(swap_memcg))
 			page_counter_charge(&swap_memcg->memsw, nr_entries);
 		page_counter_uncharge(&memcg->memsw, nr_entries);
@@ -7477,7 +7779,11 @@ int __mem_cgroup_try_charge_swap(struct folio *folio, swp_entry_t entry)
 	struct mem_cgroup *memcg;
 	unsigned short oldid;
 
+<<<<<<< HEAD
 	if (do_memsw_account())
+=======
+	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	memcg = folio_memcg(folio);
@@ -7493,7 +7799,11 @@ int __mem_cgroup_try_charge_swap(struct folio *folio, swp_entry_t entry)
 
 	memcg = mem_cgroup_id_get_online(memcg);
 
+<<<<<<< HEAD
 	if (!mem_cgroup_is_root(memcg) &&
+=======
+	if (memcg_swap_enabled() && !mem_cgroup_is_root(memcg) &&
+>>>>>>> b7ba80a49124 (Commit)
 	    !page_counter_try_charge(&memcg->swap, nr_pages, &counter)) {
 		memcg_memory_event(memcg, MEMCG_SWAP_MAX);
 		memcg_memory_event(memcg, MEMCG_SWAP_FAIL);
@@ -7521,18 +7831,29 @@ void __mem_cgroup_uncharge_swap(swp_entry_t entry, unsigned int nr_pages)
 	struct mem_cgroup *memcg;
 	unsigned short id;
 
+<<<<<<< HEAD
 	if (mem_cgroup_disabled())
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	id = swap_cgroup_record(entry, 0, nr_pages);
 	rcu_read_lock();
 	memcg = mem_cgroup_from_id(id);
 	if (memcg) {
+<<<<<<< HEAD
 		if (!mem_cgroup_is_root(memcg)) {
 			if (do_memsw_account())
 				page_counter_uncharge(&memcg->memsw, nr_pages);
 			else
 				page_counter_uncharge(&memcg->swap, nr_pages);
+=======
+		if (memcg_swap_enabled() && !mem_cgroup_is_root(memcg)) {
+			if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
+				page_counter_uncharge(&memcg->swap, nr_pages);
+			else
+				page_counter_uncharge(&memcg->memsw, nr_pages);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		mod_memcg_state(memcg, MEMCG_SWAP, -nr_pages);
 		mem_cgroup_id_put_many(memcg, nr_pages);
@@ -7544,9 +7865,15 @@ long mem_cgroup_get_nr_swap_pages(struct mem_cgroup *memcg)
 {
 	long nr_swap_pages = get_nr_swap_pages();
 
+<<<<<<< HEAD
 	if (mem_cgroup_disabled() || do_memsw_account())
 		return nr_swap_pages;
 	for (; !mem_cgroup_is_root(memcg); memcg = parent_mem_cgroup(memcg))
+=======
+	if (!memcg_swap_enabled() || !cgroup_subsys_on_dfl(memory_cgrp_subsys))
+		return nr_swap_pages;
+	for (; memcg != root_mem_cgroup; memcg = parent_mem_cgroup(memcg))
+>>>>>>> b7ba80a49124 (Commit)
 		nr_swap_pages = min_t(long, nr_swap_pages,
 				      READ_ONCE(memcg->swap.max) -
 				      page_counter_read(&memcg->swap));
@@ -7561,14 +7888,22 @@ bool mem_cgroup_swap_full(struct folio *folio)
 
 	if (vm_swap_full())
 		return true;
+<<<<<<< HEAD
 	if (do_memsw_account())
+=======
+	if (!memcg_swap_enabled() || !cgroup_subsys_on_dfl(memory_cgrp_subsys))
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	memcg = folio_memcg(folio);
 	if (!memcg)
 		return false;
 
+<<<<<<< HEAD
 	for (; !mem_cgroup_is_root(memcg); memcg = parent_mem_cgroup(memcg)) {
+=======
+	for (; memcg != root_mem_cgroup; memcg = parent_mem_cgroup(memcg)) {
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned long usage = page_counter_read(&memcg->swap);
 
 		if (usage * 2 >= READ_ONCE(memcg->swap.high) ||
@@ -7581,9 +7916,16 @@ bool mem_cgroup_swap_full(struct folio *folio)
 
 static int __init setup_swap_account(char *s)
 {
+<<<<<<< HEAD
 	pr_warn_once("The swapaccount= commandline option is deprecated. "
 		     "Please report your usecase to linux-mm@kvack.org if you "
 		     "depend on this functionality.\n");
+=======
+	bool res;
+
+	if (!kstrtobool(s, &res))
+		cgroup_memory_noswap = !res;
+>>>>>>> b7ba80a49124 (Commit)
 	return 1;
 }
 __setup("swapaccount=", setup_swap_account);
@@ -7732,7 +8074,11 @@ bool obj_cgroup_may_zswap(struct obj_cgroup *objcg)
 		return true;
 
 	original_memcg = get_mem_cgroup_from_objcg(objcg);
+<<<<<<< HEAD
 	for (memcg = original_memcg; !mem_cgroup_is_root(memcg);
+=======
+	for (memcg = original_memcg; memcg != root_mem_cgroup;
+>>>>>>> b7ba80a49124 (Commit)
 	     memcg = parent_mem_cgroup(memcg)) {
 		unsigned long max = READ_ONCE(memcg->zswap_max);
 		unsigned long pages;
@@ -7852,11 +8198,32 @@ static struct cftype zswap_files[] = {
 };
 #endif /* CONFIG_MEMCG_KMEM && CONFIG_ZSWAP */
 
+<<<<<<< HEAD
 static int __init mem_cgroup_swap_init(void)
 {
 	if (mem_cgroup_disabled())
 		return 0;
 
+=======
+/*
+ * If mem_cgroup_swap_init() is implemented as a subsys_initcall()
+ * instead of a core_initcall(), this could mean cgroup_memory_noswap still
+ * remains set to false even when memcg is disabled via "cgroup_disable=memory"
+ * boot parameter. This may result in premature OOPS inside
+ * mem_cgroup_get_nr_swap_pages() function in corner cases.
+ */
+static int __init mem_cgroup_swap_init(void)
+{
+	/* No memory control -> no swap control */
+	if (mem_cgroup_disabled())
+		cgroup_memory_noswap = true;
+
+	if (cgroup_memory_noswap)
+		return 0;
+
+	static_branch_enable(&memcg_swap_enabled_key);
+
+>>>>>>> b7ba80a49124 (Commit)
 	WARN_ON(cgroup_add_dfl_cftypes(&memory_cgrp_subsys, swap_files));
 	WARN_ON(cgroup_add_legacy_cftypes(&memory_cgrp_subsys, memsw_files));
 #if defined(CONFIG_MEMCG_KMEM) && defined(CONFIG_ZSWAP)
@@ -7864,6 +8231,12 @@ static int __init mem_cgroup_swap_init(void)
 #endif
 	return 0;
 }
+<<<<<<< HEAD
 subsys_initcall(mem_cgroup_swap_init);
 
 #endif /* CONFIG_SWAP */
+=======
+core_initcall(mem_cgroup_swap_init);
+
+#endif /* CONFIG_MEMCG_SWAP */
+>>>>>>> b7ba80a49124 (Commit)

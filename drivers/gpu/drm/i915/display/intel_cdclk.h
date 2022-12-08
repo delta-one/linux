@@ -8,7 +8,11 @@
 
 #include <linux/types.h>
 
+<<<<<<< HEAD
 #include "intel_display_limits.h"
+=======
+#include "intel_display.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_global_state.h"
 
 struct drm_i915_private;

@@ -323,17 +323,28 @@ static void pcpu_delegate(struct pcpu *pcpu,
 {
 	struct lowcore *lc, *abs_lc;
 	unsigned int source_cpu;
+<<<<<<< HEAD
 
 	lc = lowcore_ptr[pcpu - pcpu_devices];
 	source_cpu = stap();
 
+=======
+	unsigned long flags;
+
+	lc = lowcore_ptr[pcpu - pcpu_devices];
+	source_cpu = stap();
+	__load_psw_mask(PSW_KERNEL_BITS | PSW_MASK_DAT);
+>>>>>>> b7ba80a49124 (Commit)
 	if (pcpu->address == source_cpu) {
 		call_on_stack(2, stack, void, __pcpu_delegate,
 			      pcpu_delegate_fn *, func, void *, data);
 	}
 	/* Stop target cpu (if func returns this stops the current cpu). */
 	pcpu_sigp_retry(pcpu, SIGP_STOP, 0);
+<<<<<<< HEAD
 	pcpu_sigp_retry(pcpu, SIGP_CPU_RESET, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Restart func on the target cpu and stop the current cpu. */
 	if (lc) {
 		lc->restart_stack = stack;
@@ -341,13 +352,23 @@ static void pcpu_delegate(struct pcpu *pcpu,
 		lc->restart_data = (unsigned long)data;
 		lc->restart_source = source_cpu;
 	} else {
+<<<<<<< HEAD
 		abs_lc = get_abs_lowcore();
+=======
+		abs_lc = get_abs_lowcore(&flags);
+>>>>>>> b7ba80a49124 (Commit)
 		abs_lc->restart_stack = stack;
 		abs_lc->restart_fn = (unsigned long)func;
 		abs_lc->restart_data = (unsigned long)data;
 		abs_lc->restart_source = source_cpu;
+<<<<<<< HEAD
 		put_abs_lowcore(abs_lc);
 	}
+=======
+		put_abs_lowcore(abs_lc, flags);
+	}
+	__bpon();
+>>>>>>> b7ba80a49124 (Commit)
 	asm volatile(
 		"0:	sigp	0,%0,%2	# sigp restart to target cpu\n"
 		"	brc	2,0b	# busy, try again\n"
@@ -487,7 +508,11 @@ void smp_send_stop(void)
 	int cpu;
 
 	/* Disable all interrupts/machine checks */
+<<<<<<< HEAD
 	__load_psw_mask(PSW_KERNEL_BITS);
+=======
+	__load_psw_mask(PSW_KERNEL_BITS | PSW_MASK_DAT);
+>>>>>>> b7ba80a49124 (Commit)
 	trace_hardirqs_off();
 
 	debug_set_critical();
@@ -522,7 +547,11 @@ static void smp_handle_ext_call(void)
 	if (test_bit(ec_call_function_single, &bits))
 		generic_smp_call_function_single_interrupt();
 	if (test_bit(ec_mcck_pending, &bits))
+<<<<<<< HEAD
 		s390_handle_mcck();
+=======
+		__s390_handle_mcck();
+>>>>>>> b7ba80a49124 (Commit)
 	if (test_bit(ec_irq_work, &bits))
 		irq_work_run();
 }
@@ -592,6 +621,10 @@ void smp_ctl_set_clear_bit(int cr, int bit, bool set)
 {
 	struct ec_creg_mask_parms parms = { .cr = cr, };
 	struct lowcore *abs_lc;
+<<<<<<< HEAD
+=======
+	unsigned long flags;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 ctlreg;
 
 	if (set) {
@@ -602,11 +635,19 @@ void smp_ctl_set_clear_bit(int cr, int bit, bool set)
 		parms.andval = ~(1UL << bit);
 	}
 	spin_lock(&ctl_lock);
+<<<<<<< HEAD
 	abs_lc = get_abs_lowcore();
 	ctlreg = abs_lc->cregs_save_area[cr];
 	ctlreg = (ctlreg & parms.andval) | parms.orval;
 	abs_lc->cregs_save_area[cr] = ctlreg;
 	put_abs_lowcore(abs_lc);
+=======
+	abs_lc = get_abs_lowcore(&flags);
+	ctlreg = abs_lc->cregs_save_area[cr];
+	ctlreg = (ctlreg & parms.andval) | parms.orval;
+	abs_lc->cregs_save_area[cr] = ctlreg;
+	put_abs_lowcore(abs_lc, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock(&ctl_lock);
 	on_each_cpu(smp_ctl_bit_callback, &parms, 1);
 }
@@ -985,6 +1026,10 @@ void __cpu_die(unsigned int cpu)
 void __noreturn cpu_die(void)
 {
 	idle_task_exit();
+<<<<<<< HEAD
+=======
+	__bpon();
+>>>>>>> b7ba80a49124 (Commit)
 	pcpu_sigp_retry(pcpu_devices + smp_processor_id(), SIGP_STOP, 0);
 	for (;;) ;
 }
@@ -1225,6 +1270,7 @@ static DEVICE_ATTR_WO(rescan);
 
 static int __init s390_smp_init(void)
 {
+<<<<<<< HEAD
 	struct device *dev_root;
 	int cpu, rc = 0;
 
@@ -1236,6 +1282,13 @@ static int __init s390_smp_init(void)
 			return rc;
 	}
 
+=======
+	int cpu, rc = 0;
+
+	rc = device_create_file(cpu_subsys.dev_root, &dev_attr_rescan);
+	if (rc)
+		return rc;
+>>>>>>> b7ba80a49124 (Commit)
 	for_each_present_cpu(cpu) {
 		rc = smp_add_present_cpu(cpu);
 		if (rc)

@@ -133,14 +133,21 @@ static int __init davinci_cpufreq_probe(struct platform_device *pdev)
 
 static int __exit davinci_cpufreq_remove(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	cpufreq_unregister_driver(&davinci_driver);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	clk_put(cpufreq.armclk);
 
 	if (cpufreq.asyncclk)
 		clk_put(cpufreq.asyncclk);
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return cpufreq_unregister_driver(&davinci_driver);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver davinci_cpufreq_driver = {

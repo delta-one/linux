@@ -27,6 +27,10 @@
 #define UNIT_TEST 0
 #if !UNIT_TEST
 #include "dc.h"
+<<<<<<< HEAD
+=======
+#include "dc_link.h"
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 #include "../display_mode_lib.h"
 #include "display_mode_vba_314.h"
@@ -899,9 +903,13 @@ static bool CalculatePrefetchSchedule(
 	double DSTTotalPixelsAfterScaler;
 	double LineTime;
 	double dst_y_prefetch_equ;
+<<<<<<< HEAD
 #ifdef __DML_VBA_DEBUG__
 	double Tsw_oto;
 #endif
+=======
+	double Tsw_oto;
+>>>>>>> b7ba80a49124 (Commit)
 	double prefetch_bw_oto;
 	double prefetch_bw_pr;
 	double Tvm_oto;
@@ -1075,18 +1083,31 @@ static bool CalculatePrefetchSchedule(
 	else
 		bytes_pp = myPipe->BytePerPixelY + myPipe->BytePerPixelC;
 	/*rev 99*/
+<<<<<<< HEAD
 	prefetch_bw_pr = bytes_pp * myPipe->PixelClock / (double) myPipe->DPPPerPlane;
 	prefetch_bw_pr = dml_min(1, myPipe->VRatio) * prefetch_bw_pr;
 	max_Tsw = dml_max(PrefetchSourceLinesY, PrefetchSourceLinesC) * LineTime;
 	prefetch_sw_bytes = PrefetchSourceLinesY * swath_width_luma_ub * myPipe->BytePerPixelY + PrefetchSourceLinesC * swath_width_chroma_ub * myPipe->BytePerPixelC;
+=======
+	prefetch_bw_pr = dml_min(1, bytes_pp * myPipe->PixelClock / (double) myPipe->DPPPerPlane);
+	max_Tsw = dml_max(PrefetchSourceLinesY, PrefetchSourceLinesC) * LineTime;
+	prefetch_sw_bytes = PrefetchSourceLinesY * swath_width_luma_ub * myPipe->BytePerPixelY + PrefetchSourceLinesC * swath_width_chroma_ub * myPipe->BytePerPixelC;
+	prefetch_bw_oto = dml_max(bytes_pp * myPipe->PixelClock / myPipe->DPPPerPlane, prefetch_sw_bytes / (dml_max(PrefetchSourceLinesY, PrefetchSourceLinesC) * LineTime));
+>>>>>>> b7ba80a49124 (Commit)
 	prefetch_bw_oto = dml_max(prefetch_bw_pr, prefetch_sw_bytes / max_Tsw);
 
 	min_Lsw = dml_max(1, dml_max(PrefetchSourceLinesY, PrefetchSourceLinesC) / max_vratio_pre);
 	Lsw_oto = dml_ceil(4 * dml_max(prefetch_sw_bytes / prefetch_bw_oto / LineTime, min_Lsw), 1) / 4;
+<<<<<<< HEAD
 #ifdef __DML_VBA_DEBUG__
 	Tsw_oto = Lsw_oto * LineTime;
 #endif
 
+=======
+	Tsw_oto = Lsw_oto * LineTime;
+
+	prefetch_bw_oto = (PrefetchSourceLinesY * swath_width_luma_ub * myPipe->BytePerPixelY + PrefetchSourceLinesC * swath_width_chroma_ub * myPipe->BytePerPixelC) / Tsw_oto;
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef __DML_VBA_DEBUG__
 	dml_print("DML: HTotal: %d\n", myPipe->HTotal);
@@ -3186,7 +3207,11 @@ static void DISPCLKDPPCLKDCFCLKDeepSleepPrefetchParametersWatermarksAndPerforman
 		} else {
 			v->MIN_DST_Y_NEXT_START[k] = v->VTotal[k] - v->VFrontPorch[k] + v->VTotal[k] - v->VActive[k] - v->VStartup[k];
 		}
+<<<<<<< HEAD
 		v->MIN_DST_Y_NEXT_START[k] += dml_floor(4.0 * v->TSetup[k] / ((double)v->HTotal[k] / v->PixelClock[k]), 1.0) / 4.0;
+=======
+		v->MIN_DST_Y_NEXT_START[k] += dml_floor(4.0 * v->TSetup[k] / (double)v->HTotal[k] / v->PixelClock[k], 1.0) / 4.0;
+>>>>>>> b7ba80a49124 (Commit)
 		if (((v->VUpdateOffsetPix[k] + v->VUpdateWidthPix[k] + v->VReadyOffsetPix[k]) / v->HTotal[k])
 				<= (isInterlaceTiming ?
 						dml_floor((v->VTotal[k] - v->VActive[k] - v->VFrontPorch[k] - v->VStartup[k]) / 2.0, 1.0) :
@@ -4405,11 +4430,19 @@ void dml314_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_
 							v->AudioSampleRate[k],
 							v->AudioSampleLayout[k],
 							v->ODMCombineEnablePerState[i][k]);
+<<<<<<< HEAD
 				} else if (v->Output[k] == dm_dp || v->Output[k] == dm_edp || v->Output[k] == dm_dp2p0) {
 					if (v->DSCEnable[k] == true) {
 						v->RequiresDSC[i][k] = true;
 						v->LinkDSCEnable = true;
 						if (v->Output[k] == dm_dp || v->Output[k] == dm_dp2p0) {
+=======
+				} else if (v->Output[k] == dm_dp || v->Output[k] == dm_edp) {
+					if (v->DSCEnable[k] == true) {
+						v->RequiresDSC[i][k] = true;
+						v->LinkDSCEnable = true;
+						if (v->Output[k] == dm_dp) {
+>>>>>>> b7ba80a49124 (Commit)
 							v->RequiresFEC[i][k] = true;
 						} else {
 							v->RequiresFEC[i][k] = false;
@@ -4417,6 +4450,7 @@ void dml314_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_
 					} else {
 						v->RequiresDSC[i][k] = false;
 						v->LinkDSCEnable = false;
+<<<<<<< HEAD
 						if (v->Output[k] == dm_dp2p0) {
 							v->RequiresFEC[i][k] = true;
 						} else {
@@ -4612,6 +4646,109 @@ void dml314_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_
 							// TODO: Need some other way to handle this nonsense
 							// v->OutputTypeAndRatePerState[i][k] = v->Output[k] & " HBR3"
 						}
+=======
+						v->RequiresFEC[i][k] = false;
+					}
+
+					v->Outbpp = BPP_INVALID;
+					if (v->PHYCLKPerState[i] >= 270.0) {
+						v->Outbpp = TruncToValidBPP(
+								(1.0 - v->Downspreading / 100.0) * 2700,
+								v->OutputLinkDPLanes[k],
+								v->HTotal[k],
+								v->HActive[k],
+								v->PixelClockBackEnd[k],
+								v->ForcedOutputLinkBPP[k],
+								v->LinkDSCEnable,
+								v->Output[k],
+								v->OutputFormat[k],
+								v->DSCInputBitPerComponent[k],
+								v->NumberOfDSCSlices[k],
+								v->AudioSampleRate[k],
+								v->AudioSampleLayout[k],
+								v->ODMCombineEnablePerState[i][k]);
+						v->OutputBppPerState[i][k] = v->Outbpp;
+						// TODO: Need some other way to handle this nonsense
+						// v->OutputTypeAndRatePerState[i][k] = v->Output[k] & " HBR"
+					}
+					if (v->Outbpp == BPP_INVALID && v->PHYCLKPerState[i] >= 540.0) {
+						v->Outbpp = TruncToValidBPP(
+								(1.0 - v->Downspreading / 100.0) * 5400,
+								v->OutputLinkDPLanes[k],
+								v->HTotal[k],
+								v->HActive[k],
+								v->PixelClockBackEnd[k],
+								v->ForcedOutputLinkBPP[k],
+								v->LinkDSCEnable,
+								v->Output[k],
+								v->OutputFormat[k],
+								v->DSCInputBitPerComponent[k],
+								v->NumberOfDSCSlices[k],
+								v->AudioSampleRate[k],
+								v->AudioSampleLayout[k],
+								v->ODMCombineEnablePerState[i][k]);
+						v->OutputBppPerState[i][k] = v->Outbpp;
+						// TODO: Need some other way to handle this nonsense
+						// v->OutputTypeAndRatePerState[i][k] = v->Output[k] & " HBR2"
+					}
+					if (v->Outbpp == BPP_INVALID && v->PHYCLKPerState[i] >= 810.0) {
+						v->Outbpp = TruncToValidBPP(
+								(1.0 - v->Downspreading / 100.0) * 8100,
+								v->OutputLinkDPLanes[k],
+								v->HTotal[k],
+								v->HActive[k],
+								v->PixelClockBackEnd[k],
+								v->ForcedOutputLinkBPP[k],
+								v->LinkDSCEnable,
+								v->Output[k],
+								v->OutputFormat[k],
+								v->DSCInputBitPerComponent[k],
+								v->NumberOfDSCSlices[k],
+								v->AudioSampleRate[k],
+								v->AudioSampleLayout[k],
+								v->ODMCombineEnablePerState[i][k]);
+						v->OutputBppPerState[i][k] = v->Outbpp;
+						// TODO: Need some other way to handle this nonsense
+						// v->OutputTypeAndRatePerState[i][k] = v->Output[k] & " HBR3"
+					}
+					if (v->Outbpp == BPP_INVALID && v->PHYCLKD18PerState[i] >= 10000.0 / 18) {
+						v->Outbpp = TruncToValidBPP(
+								(1.0 - v->Downspreading / 100.0) * 10000,
+								4,
+								v->HTotal[k],
+								v->HActive[k],
+								v->PixelClockBackEnd[k],
+								v->ForcedOutputLinkBPP[k],
+								v->LinkDSCEnable,
+								v->Output[k],
+								v->OutputFormat[k],
+								v->DSCInputBitPerComponent[k],
+								v->NumberOfDSCSlices[k],
+								v->AudioSampleRate[k],
+								v->AudioSampleLayout[k],
+								v->ODMCombineEnablePerState[i][k]);
+						v->OutputBppPerState[i][k] = v->Outbpp;
+						//v->OutputTypeAndRatePerState[i][k] = v->Output[k] & "10x4";
+					}
+					if (v->Outbpp == BPP_INVALID && v->PHYCLKD18PerState[i] >= 12000.0 / 18) {
+						v->Outbpp = TruncToValidBPP(
+								12000,
+								4,
+								v->HTotal[k],
+								v->HActive[k],
+								v->PixelClockBackEnd[k],
+								v->ForcedOutputLinkBPP[k],
+								v->LinkDSCEnable,
+								v->Output[k],
+								v->OutputFormat[k],
+								v->DSCInputBitPerComponent[k],
+								v->NumberOfDSCSlices[k],
+								v->AudioSampleRate[k],
+								v->AudioSampleLayout[k],
+								v->ODMCombineEnablePerState[i][k]);
+						v->OutputBppPerState[i][k] = v->Outbpp;
+						//v->OutputTypeAndRatePerState[i][k] = v->Output[k] & "12x4";
+>>>>>>> b7ba80a49124 (Commit)
 					}
 				}
 			} else {
@@ -5276,7 +5413,11 @@ void dml314_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_
 							v->SwathHeightYThisState[k],
 							v->SwathHeightCThisState[k],
 							v->HTotal[k] / v->PixelClock[k],
+<<<<<<< HEAD
 							v->UrgLatency[i],
+=======
+							v->UrgentLatency,
+>>>>>>> b7ba80a49124 (Commit)
 							v->CursorBufferSize,
 							v->CursorWidth[k][0],
 							v->CursorBPP[k][0],

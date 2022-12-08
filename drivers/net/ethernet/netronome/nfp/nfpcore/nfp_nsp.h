@@ -65,11 +65,14 @@ static inline bool nfp_nsp_has_read_module_eeprom(struct nfp_nsp *state)
 	return nfp_nsp_get_abi_ver_minor(state) > 28;
 }
 
+<<<<<<< HEAD
 static inline bool nfp_nsp_has_read_media(struct nfp_nsp *state)
 {
 	return nfp_nsp_get_abi_ver_minor(state) > 33;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum nfp_eth_interface {
 	NFP_INTERFACE_NONE	= 0,
 	NFP_INTERFACE_SFP	= 1,
@@ -102,6 +105,7 @@ enum nfp_eth_fec {
 	NFP_FEC_DISABLED_BIT,
 };
 
+<<<<<<< HEAD
 /* link modes about RJ45 haven't been used, so there's no mapping to them */
 enum nfp_ethtool_link_mode_list {
 	NFP_MEDIA_W0_RJ45_10M,
@@ -146,6 +150,8 @@ enum nfp_ethtool_link_mode_list {
 	NFP_MEDIA_LINK_MODES_NUMBER
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define NFP_FEC_AUTO		BIT(NFP_FEC_AUTO_BIT)
 #define NFP_FEC_BASER		BIT(NFP_FEC_BASER_BIT)
 #define NFP_FEC_REED_SOLOMON	BIT(NFP_FEC_REED_SOLOMON_BIT)
@@ -181,7 +187,10 @@ enum nfp_ethtool_link_mode_list {
  * @ports.interface:	interface (module) plugged in
  * @ports.media:	media type of the @interface
  * @ports.fec:		forward error correction mode
+<<<<<<< HEAD
  * @ports.act_fec:	active forward error correction mode
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @ports.aneg:		auto negotiation mode
  * @ports.mac_addr:	interface MAC address
  * @ports.label_port:	port id
@@ -212,7 +221,10 @@ struct nfp_eth_table {
 		enum nfp_eth_media media;
 
 		enum nfp_eth_fec fec;
+<<<<<<< HEAD
 		enum nfp_eth_fec act_fec;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		enum nfp_eth_aneg aneg;
 
 		u8 mac_addr[ETH_ALEN];
@@ -223,7 +235,10 @@ struct nfp_eth_table {
 		bool enabled;
 		bool tx_enabled;
 		bool rx_enabled;
+<<<<<<< HEAD
 		bool supp_aneg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		bool override_changed;
 
@@ -305,6 +320,7 @@ enum nfp_nsp_sensor_id {
 int nfp_hwmon_read_sensor(struct nfp_cpp *cpp, enum nfp_nsp_sensor_id id,
 			  long *val);
 
+<<<<<<< HEAD
 struct nfp_eth_media_buf {
 	u8 eth_index;
 	u8 reserved[7];
@@ -315,6 +331,8 @@ struct nfp_eth_media_buf {
 int nfp_nsp_read_media(struct nfp_nsp *state, void *buf, unsigned int size);
 int nfp_eth_read_media(struct nfp_cpp *cpp, struct nfp_eth_media_buf *ethm);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define NFP_NSP_VERSION_BUFSZ	1024 /* reasonable size, not in the ABI */
 
 enum nfp_nsp_versions {

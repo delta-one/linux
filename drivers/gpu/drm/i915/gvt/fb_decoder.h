@@ -38,7 +38,11 @@
 
 #include <linux/types.h>
 
+<<<<<<< HEAD
 #include "display/intel_display_limits.h"
+=======
+#include "display/intel_display.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 struct intel_vgpu;
 

@@ -10,7 +10,11 @@ maintainers:
   - Linus Walleij <linus.walleij@linaro.org>
 
 allOf:
+<<<<<<< HEAD
   - $ref: spi-controller.yaml#
+=======
+  - $ref: "spi-controller.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 # We need a select here so we don't match all nodes with 'arm,primecell'
 select:
@@ -45,7 +49,11 @@ properties:
     description: delay in ms following transfer completion before the
       runtime power management system suspends the device. A setting of 0
       indicates no delay and the device will be suspended immediately.
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/uint32
+=======
+    $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
 
   pl022,rt:
     description: indicates the controller should run the message pump with realtime
@@ -81,7 +89,11 @@ patternProperties:
     properties:
       pl022,interface:
         description: SPI interface type
+<<<<<<< HEAD
         $ref: /schemas/types.yaml#/definitions/uint32
+=======
+        $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
         enum:
           - 0      # SPI
           - 1      # Texas Instruments Synchronous Serial Frame Format
@@ -89,7 +101,11 @@ patternProperties:
 
       pl022,com-mode:
         description: Specifies the transfer mode
+<<<<<<< HEAD
         $ref: /schemas/types.yaml#/definitions/uint32
+=======
+        $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
         enum:
           - 0      # interrupt mode
           - 1      # polling mode
@@ -98,30 +114,50 @@ patternProperties:
 
       pl022,rx-level-trig:
         description: Rx FIFO watermark level
+<<<<<<< HEAD
         $ref: /schemas/types.yaml#/definitions/uint32
+=======
+        $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
         minimum: 0
         maximum: 4
 
       pl022,tx-level-trig:
         description: Tx FIFO watermark level
+<<<<<<< HEAD
         $ref: /schemas/types.yaml#/definitions/uint32
+=======
+        $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
         minimum: 0
         maximum: 4
 
       pl022,ctrl-len:
         description: Microwire interface - Control length
+<<<<<<< HEAD
         $ref: /schemas/types.yaml#/definitions/uint32
+=======
+        $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
         minimum: 0x03
         maximum: 0x1f
 
       pl022,wait-state:
         description: Microwire interface - Wait state
+<<<<<<< HEAD
         $ref: /schemas/types.yaml#/definitions/uint32
+=======
+        $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
         enum: [0, 1]
 
       pl022,duplex:
         description: Microwire interface - Full/Half duplex
+<<<<<<< HEAD
         $ref: /schemas/types.yaml#/definitions/uint32
+=======
+        $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
         enum: [0, 1]
 
 required:

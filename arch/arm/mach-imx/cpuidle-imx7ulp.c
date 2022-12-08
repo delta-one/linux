@@ -12,8 +12,13 @@
 #include "common.h"
 #include "cpuidle.h"
 
+<<<<<<< HEAD
 static __cpuidle int imx7ulp_enter_wait(struct cpuidle_device *dev,
 					struct cpuidle_driver *drv, int index)
+=======
+static int imx7ulp_enter_wait(struct cpuidle_device *dev,
+			    struct cpuidle_driver *drv, int index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (index == 1)
 		imx7ulp_set_lpm(ULP_PM_WAIT);

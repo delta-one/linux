@@ -307,7 +307,10 @@ static void adnp_irq_mask(struct irq_data *d)
 	unsigned int pos = d->hwirq & 7;
 
 	adnp->irq_enable[reg] &= ~BIT(pos);
+<<<<<<< HEAD
 	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void adnp_irq_unmask(struct irq_data *d)
@@ -317,7 +320,10 @@ static void adnp_irq_unmask(struct irq_data *d)
 	unsigned int reg = d->hwirq >> adnp->reg_shift;
 	unsigned int pos = d->hwirq & 7;
 
+<<<<<<< HEAD
 	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	adnp->irq_enable[reg] |= BIT(pos);
 }
 
@@ -374,15 +380,22 @@ static void adnp_irq_bus_unlock(struct irq_data *d)
 	mutex_unlock(&adnp->irq_lock);
 }
 
+<<<<<<< HEAD
 static const struct irq_chip adnp_irq_chip = {
+=======
+static struct irq_chip adnp_irq_chip = {
+>>>>>>> b7ba80a49124 (Commit)
 	.name = "gpio-adnp",
 	.irq_mask = adnp_irq_mask,
 	.irq_unmask = adnp_irq_unmask,
 	.irq_set_type = adnp_irq_set_type,
 	.irq_bus_lock = adnp_irq_bus_lock,
 	.irq_bus_sync_unlock = adnp_irq_bus_unlock,
+<<<<<<< HEAD
 	.flags = IRQCHIP_IMMUTABLE,
 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int adnp_irq_setup(struct adnp *adnp)
@@ -473,8 +486,12 @@ static int adnp_gpio_setup(struct adnp *adnp, unsigned int num_gpios,
 			return err;
 
 		girq = &chip->irq;
+<<<<<<< HEAD
 		gpio_irq_chip_set_chip(girq, &adnp_irq_chip);
 
+=======
+		girq->chip = &adnp_irq_chip;
+>>>>>>> b7ba80a49124 (Commit)
 		/* This will let us handle the parent IRQ in the driver */
 		girq->parent_handler = NULL;
 		girq->num_parents = 0;

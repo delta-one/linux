@@ -4010,7 +4010,11 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
 		    rptid_entry->port_id[2], rptid_entry->port_id[1],
 		    rptid_entry->port_id[0]);
 		ha->current_topology = ISP_CFG_NL;
+<<<<<<< HEAD
 		qla_update_host_map(vha, id);
+=======
+		qlt_update_host_map(vha, id);
+>>>>>>> b7ba80a49124 (Commit)
 
 	} else if (rptid_entry->format == 1) {
 		/* fabric */
@@ -4126,7 +4130,11 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
 					    WWN_SIZE);
 				}
 
+<<<<<<< HEAD
 				qla_update_host_map(vha, id);
+=======
+				qlt_update_host_map(vha, id);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 
 			set_bit(REGISTER_FC4_NEEDED, &vha->dpc_flags);
@@ -4153,7 +4161,11 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
 			if (!found)
 				return;
 
+<<<<<<< HEAD
 			qla_update_host_map(vp, id);
+=======
+			qlt_update_host_map(vp, id);
+>>>>>>> b7ba80a49124 (Commit)
 
 			/*
 			 * Cannot configure here as we are still sitting on the
@@ -4184,7 +4196,11 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
 
 		ha->flags.n2n_ae = 1;
 		spin_lock_irqsave(&ha->vport_slock, flags);
+<<<<<<< HEAD
 		qla_update_vp_map(vha, SET_AL_PA);
+=======
+		qlt_update_vp_map(vha, SET_AL_PA);
+>>>>>>> b7ba80a49124 (Commit)
 		spin_unlock_irqrestore(&ha->vport_slock, flags);
 
 		list_for_each_entry(fcport, &vha->vp_fcports, list) {

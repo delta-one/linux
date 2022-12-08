@@ -35,7 +35,11 @@
  *
  * If the credit is below the drop threshold, the packet is dropped. If it
  * is a TCP packet, then it also calls tcp_cwr since packets dropped by
+<<<<<<< HEAD
  * a cgroup skb BPF program do not automatically trigger a call to
+=======
+ * by a cgroup skb BPF program do not automatically trigger a call to
+>>>>>>> b7ba80a49124 (Commit)
  * tcp_cwr in the current kernel code.
  *
  * This BPF program actually uses 2 drop thresholds, one threshold

@@ -135,24 +135,40 @@
 	clocks = <&zynqmp_clk LPD_LSBUS>, <&zynqmp_clk GEM0_REF>,
 		 <&zynqmp_clk GEM0_TX>, <&zynqmp_clk GEM0_RX>,
 		 <&zynqmp_clk GEM_TSU>;
+<<<<<<< HEAD
+=======
+	clock-names = "pclk", "hclk", "tx_clk", "rx_clk", "tsu_clk";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &gem1 {
 	clocks = <&zynqmp_clk LPD_LSBUS>, <&zynqmp_clk GEM1_REF>,
 		 <&zynqmp_clk GEM1_TX>, <&zynqmp_clk GEM1_RX>,
 		 <&zynqmp_clk GEM_TSU>;
+<<<<<<< HEAD
+=======
+	clock-names = "pclk", "hclk", "tx_clk", "rx_clk", "tsu_clk";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &gem2 {
 	clocks = <&zynqmp_clk LPD_LSBUS>, <&zynqmp_clk GEM2_REF>,
 		 <&zynqmp_clk GEM2_TX>, <&zynqmp_clk GEM2_RX>,
 		 <&zynqmp_clk GEM_TSU>;
+<<<<<<< HEAD
+=======
+	clock-names = "pclk", "hclk", "tx_clk", "rx_clk", "tsu_clk";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &gem3 {
 	clocks = <&zynqmp_clk LPD_LSBUS>, <&zynqmp_clk GEM3_REF>,
 		 <&zynqmp_clk GEM3_TX>, <&zynqmp_clk GEM3_RX>,
 		 <&zynqmp_clk GEM_TSU>;
+<<<<<<< HEAD
+=======
+	clock-names = "pclk", "hclk", "tx_clk", "rx_clk", "tsu_clk";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &gpio {

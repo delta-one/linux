@@ -686,12 +686,19 @@ setup_xfrm() {
 }
 
 setup_nettest_xfrm() {
+<<<<<<< HEAD
 	if ! which nettest >/dev/null; then
 		PATH=$PWD:$PATH
 		if ! which nettest >/dev/null; then
 			echo "'nettest' command not found; skipping tests"
 			return 1
 		fi
+=======
+	which nettest >/dev/null
+	if [ $? -ne 0 ]; then
+		echo "'nettest' command not found; skipping tests"
+	        return 1
+>>>>>>> b7ba80a49124 (Commit)
 	fi
 
 	[ ${1} -eq 6 ] && proto="-6" || proto=""

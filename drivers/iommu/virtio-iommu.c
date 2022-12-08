@@ -490,6 +490,7 @@ static int viommu_add_resv_mem(struct viommu_endpoint *vdev,
 		fallthrough;
 	case VIRTIO_IOMMU_RESV_MEM_T_RESERVED:
 		region = iommu_alloc_resv_region(start, size, 0,
+<<<<<<< HEAD
 						 IOMMU_RESV_RESERVED,
 						 GFP_KERNEL);
 		break;
@@ -497,6 +498,13 @@ static int viommu_add_resv_mem(struct viommu_endpoint *vdev,
 		region = iommu_alloc_resv_region(start, size, prot,
 						 IOMMU_RESV_MSI,
 						 GFP_KERNEL);
+=======
+						 IOMMU_RESV_RESERVED);
+		break;
+	case VIRTIO_IOMMU_RESV_MEM_T_MSI:
+		region = iommu_alloc_resv_region(start, size, prot,
+						 IOMMU_RESV_MSI);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 	if (!region)
@@ -670,7 +678,11 @@ static int viommu_domain_finalise(struct viommu_endpoint *vdev,
 		dev_err(vdev->dev,
 			"granule 0x%lx larger than system page size 0x%lx\n",
 			viommu_page_size, PAGE_SIZE);
+<<<<<<< HEAD
 		return -ENODEV;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = ida_alloc_range(&viommu->domain_ids, viommu->first_domain,
@@ -697,7 +709,11 @@ static int viommu_domain_finalise(struct viommu_endpoint *vdev,
 		if (ret) {
 			ida_free(&viommu->domain_ids, vdomain->id);
 			vdomain->viommu = NULL;
+<<<<<<< HEAD
 			return ret;
+=======
+			return -EOPNOTSUPP;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -734,7 +750,12 @@ static int viommu_attach_dev(struct iommu_domain *domain, struct device *dev)
 		 */
 		ret = viommu_domain_finalise(vdev, domain);
 	} else if (vdomain->viommu != vdev->viommu) {
+<<<<<<< HEAD
 		ret = -EINVAL;
+=======
+		dev_err(dev, "cannot attach to foreign vIOMMU\n");
+		ret = -EXDEV;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	mutex_unlock(&vdomain->mutex);
 
@@ -910,8 +931,12 @@ static void viommu_get_resv_regions(struct device *dev, struct list_head *head)
 	 */
 	if (!msi) {
 		msi = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH,
+<<<<<<< HEAD
 					      prot, IOMMU_RESV_SW_MSI,
 					      GFP_KERNEL);
+=======
+					      prot, IOMMU_RESV_SW_MSI);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!msi)
 			return;
 

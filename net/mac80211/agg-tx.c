@@ -82,7 +82,11 @@ static void ieee80211_send_addba_request(struct ieee80211_sub_if_data *sdata,
 	    sdata->vif.type == NL80211_IFTYPE_MESH_POINT)
 		memcpy(mgmt->bssid, sdata->vif.addr, ETH_ALEN);
 	else if (sdata->vif.type == NL80211_IFTYPE_STATION)
+<<<<<<< HEAD
 		memcpy(mgmt->bssid, sdata->vif.cfg.ap_addr, ETH_ALEN);
+=======
+		memcpy(mgmt->bssid, sdata->deflink.u.mgd.bssid, ETH_ALEN);
+>>>>>>> b7ba80a49124 (Commit)
 	else if (sdata->vif.type == NL80211_IFTYPE_ADHOC)
 		memcpy(mgmt->bssid, sdata->u.ibss.bssid, ETH_ALEN);
 
@@ -491,7 +495,11 @@ void ieee80211_tx_ba_session_handle_start(struct sta_info *sta, int tid)
 {
 	struct tid_ampdu_tx *tid_tx;
 	struct ieee80211_local *local = sta->local;
+<<<<<<< HEAD
 	struct ieee80211_sub_if_data *sdata;
+=======
+	struct ieee80211_sub_if_data *sdata = sta->sdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ieee80211_ampdu_params params = {
 		.sta = &sta->sta,
 		.action = IEEE80211_AMPDU_TX_START,
@@ -511,6 +519,11 @@ void ieee80211_tx_ba_session_handle_start(struct sta_info *sta, int tid)
 	 */
 	clear_bit(HT_AGG_STATE_WANT_START, &tid_tx->state);
 
+<<<<<<< HEAD
+=======
+	ieee80211_agg_stop_txq(sta, tid);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Make sure no packets are being processed. This ensures that
 	 * we have a valid starting sequence number and that in-flight
@@ -519,7 +532,10 @@ void ieee80211_tx_ba_session_handle_start(struct sta_info *sta, int tid)
 	 */
 	synchronize_net();
 
+<<<<<<< HEAD
 	sdata = sta->sdata;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	params.ssn = sta->tid_seq[tid] >> 4;
 	ret = drv_ampdu_action(local, sdata, &params);
 	tid_tx->ssn = params.ssn;
@@ -533,9 +549,12 @@ void ieee80211_tx_ba_session_handle_start(struct sta_info *sta, int tid)
 		 */
 		set_bit(HT_AGG_STATE_DRV_READY, &tid_tx->state);
 	} else if (ret) {
+<<<<<<< HEAD
 		if (!sdata)
 			return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ht_dbg(sdata,
 		       "BA request denied - HW unavailable for %pM tid %d\n",
 		       sta->sta.addr, tid);
@@ -554,6 +573,7 @@ void ieee80211_tx_ba_session_handle_start(struct sta_info *sta, int tid)
 	ieee80211_send_addba_with_timeout(sta, tid_tx);
 }
 
+<<<<<<< HEAD
 void ieee80211_refresh_tx_agg_session_timer(struct ieee80211_sta *pubsta,
 					    u16 tid)
 {
@@ -571,6 +591,8 @@ void ieee80211_refresh_tx_agg_session_timer(struct ieee80211_sta *pubsta,
 }
 EXPORT_SYMBOL(ieee80211_refresh_tx_agg_session_timer);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * After accepting the AddBA Response we activated a timer,
  * resetting it after each frame that we send.

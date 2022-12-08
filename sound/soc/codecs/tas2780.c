@@ -380,6 +380,7 @@ static int tas2780_set_dai_tdm_slot(struct snd_soc_dai *dai,
 	if (tx_mask == 0 || rx_mask != 0)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	left_slot = __ffs(tx_mask);
 	tx_mask &= ~(1 << left_slot);
 	if (tx_mask == 0) {
@@ -387,6 +388,22 @@ static int tas2780_set_dai_tdm_slot(struct snd_soc_dai *dai,
 	} else {
 		right_slot = __ffs(tx_mask);
 		tx_mask &= ~(1 << right_slot);
+=======
+	if (slots == 1) {
+		if (tx_mask != 1)
+			return -EINVAL;
+		left_slot = 0;
+		right_slot = 0;
+	} else {
+		left_slot = __ffs(tx_mask);
+		tx_mask &= ~(1 << left_slot);
+		if (tx_mask == 0) {
+			right_slot = left_slot;
+		} else {
+			right_slot = __ffs(tx_mask);
+			tx_mask &= ~(1 << right_slot);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (tx_mask != 0 || left_slot >= slots || right_slot >= slots)
@@ -591,7 +608,12 @@ static int tas2780_parse_dt(struct device *dev, struct tas2780_priv *tas2780)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int tas2780_i2c_probe(struct i2c_client *client)
+=======
+static int tas2780_i2c_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tas2780_priv *tas2780;
 	int result;
@@ -645,7 +667,11 @@ static struct i2c_driver tas2780_i2c_driver = {
 		.name   = "tas2780",
 		.of_match_table = of_match_ptr(tas2780_of_match),
 	},
+<<<<<<< HEAD
 	.probe_new  = tas2780_i2c_probe,
+=======
+	.probe  = tas2780_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table   = tas2780_i2c_id,
 };
 module_i2c_driver(tas2780_i2c_driver);

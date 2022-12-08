@@ -830,7 +830,11 @@ static int smk_open_cipso(struct inode *inode, struct file *file)
 static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
 				size_t count, loff_t *ppos, int format)
 {
+<<<<<<< HEAD
 	struct netlbl_lsm_catmap *old_cat, *new_cat = NULL;
+=======
+	struct netlbl_lsm_catmap *old_cat;
+>>>>>>> b7ba80a49124 (Commit)
 	struct smack_known *skp;
 	struct netlbl_lsm_secattr ncats;
 	char mapcatset[SMK_CIPSOLEN];
@@ -917,6 +921,7 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
 
 		smack_catset_bit(cat, mapcatset);
 	}
+<<<<<<< HEAD
 	ncats.flags = 0;
 	if (catlen == 0) {
 		ncats.attr.mls.cat = NULL;
@@ -930,6 +935,10 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
 	} else {
 		rc = smk_netlbl_mls(maplevel, mapcatset, &ncats, SMK_CIPSOLEN);
 	}
+=======
+
+	rc = smk_netlbl_mls(maplevel, mapcatset, &ncats, SMK_CIPSOLEN);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc >= 0) {
 		old_cat = skp->smk_netlabel.attr.mls.cat;
 		skp->smk_netlabel.attr.mls.cat = ncats.attr.mls.cat;

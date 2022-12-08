@@ -684,7 +684,11 @@ static int omap_prm_domain_init(struct device *dev, struct omap_prm *prm)
 	const char *name;
 	int error;
 
+<<<<<<< HEAD
 	if (!of_property_present(dev->of_node, "#power-domain-cells"))
+=======
+	if (!of_find_property(dev->of_node, "#power-domain-cells", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	of_node_put(dev->of_node);

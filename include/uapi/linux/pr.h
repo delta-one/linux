@@ -4,6 +4,7 @@
 
 #include <linux/types.h>
 
+<<<<<<< HEAD
 enum pr_status {
 	PR_STS_SUCCESS			= 0x0,
 	/*
@@ -21,6 +22,8 @@ enum pr_status {
 	PR_STS_PATH_FAILED		= 0x10000,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum pr_type {
 	PR_WRITE_EXCLUSIVE		= 1,
 	PR_EXCLUSIVE_ACCESS		= 2,

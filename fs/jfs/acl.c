@@ -94,19 +94,30 @@ out:
 	return rc;
 }
 
+<<<<<<< HEAD
 int jfs_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+int jfs_set_acl(struct user_namespace *mnt_userns, struct inode *inode,
+>>>>>>> b7ba80a49124 (Commit)
 		struct posix_acl *acl, int type)
 {
 	int rc;
 	tid_t tid;
 	int update_mode = 0;
+<<<<<<< HEAD
 	struct inode *inode = d_inode(dentry);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	umode_t mode = inode->i_mode;
 
 	tid = txBegin(inode->i_sb, 0);
 	mutex_lock(&JFS_IP(inode)->commit_mutex);
 	if (type == ACL_TYPE_ACCESS && acl) {
+<<<<<<< HEAD
 		rc = posix_acl_update_mode(&nop_mnt_idmap, inode, &mode, &acl);
+=======
+		rc = posix_acl_update_mode(&init_user_ns, inode, &mode, &acl);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rc)
 			goto end_tx;
 		if (mode != inode->i_mode)

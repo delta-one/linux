@@ -1,5 +1,6 @@
 #!/bin/bash
 # SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 
 # +-----------------------+                          +------------------------+
 # | H1 (vrf)              |                          | H2 (vrf)               |
@@ -39,10 +40,29 @@ h1_create()
 	simple_if_init $h1
 	vlan_create $h1 10 v$h1 192.0.2.1/28 2001:db8:1::1/64
 	vlan_create $h1 20 v$h1 198.51.100.1/24 2001:db8:2::1/64
+=======
+#
+# Verify that adding host mdb entries work as intended for all types of
+# multicast filters: ipv4, ipv6, and mac
+
+ALL_TESTS="mdb_add_del_test"
+NUM_NETIFS=2
+
+TEST_GROUP_IP4="225.1.2.3"
+TEST_GROUP_IP6="ff02::42"
+TEST_GROUP_MAC="01:00:01:c0:ff:ee"
+
+source lib.sh
+
+h1_create()
+{
+	simple_if_init $h1 192.0.2.1/24 2001:db8:1::1/64
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 h1_destroy()
 {
+<<<<<<< HEAD
 	vlan_destroy $h1 20
 	vlan_destroy $h1 10
 	simple_if_fini $h1
@@ -60,10 +80,14 @@ h2_destroy()
 	vlan_destroy $h2 20
 	vlan_destroy $h2 10
 	simple_if_fini $h2
+=======
+	simple_if_fini $h1 192.0.2.1/24 2001:db8:1::1/64
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 switch_create()
 {
+<<<<<<< HEAD
 	ip link add name br0 type bridge vlan_filtering 1 vlan_default_pvid 0 \
 		mcast_snooping 1 mcast_igmp_version 3 mcast_mld_version 2
 	bridge vlan add vid 10 dev br0 self
@@ -82,10 +106,20 @@ switch_create()
 
 	tc qdisc add dev br0 clsact
 	tc qdisc add dev $h2 clsact
+=======
+	# Enable multicast filtering
+	ip link add dev br0 type bridge mcast_snooping 1
+
+	ip link set dev $swp1 master br0
+
+	ip link set dev br0 up
+	ip link set dev $swp1 up
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 switch_destroy()
 {
+<<<<<<< HEAD
 	tc qdisc del dev $h2 clsact
 	tc qdisc del dev br0 clsact
 
@@ -102,6 +136,9 @@ switch_destroy()
 	ip link set dev br0 down
 	bridge vlan del vid 20 dev br0 self
 	bridge vlan del vid 10 dev br0 self
+=======
+	ip link set dev $swp1 down
+>>>>>>> b7ba80a49124 (Commit)
 	ip link del dev br0
 }
 
@@ -110,6 +147,7 @@ setup_prepare()
 	h1=${NETIFS[p1]}
 	swp1=${NETIFS[p2]}
 
+<<<<<<< HEAD
 	swp2=${NETIFS[p3]}
 	h2=${NETIFS[p4]}
 
@@ -118,6 +156,11 @@ setup_prepare()
 
 	h1_create
 	h2_create
+=======
+	vrf_prepare
+
+	h1_create
+>>>>>>> b7ba80a49124 (Commit)
 	switch_create
 }
 
@@ -126,6 +169,7 @@ cleanup()
 	pre_cleanup
 
 	switch_destroy
+<<<<<<< HEAD
 	h2_destroy
 	h1_destroy
 
@@ -1204,12 +1248,53 @@ ctrl_test()
 
 	ctrl_igmpv3_is_in_test
 	ctrl_mldv2_is_in_test
+=======
+	h1_destroy
+
+	vrf_cleanup
+}
+
+do_mdb_add_del()
+{
+	local group=$1
+	local flag=$2
+
+	RET=0
+	bridge mdb add dev br0 port br0 grp $group $flag 2>/dev/null
+	check_err $? "Failed adding $group to br0, port br0"
+
+	if [ -z "$flag" ]; then
+	    flag="temp"
+	fi
+
+	bridge mdb show dev br0 | grep $group | grep -q $flag 2>/dev/null
+	check_err $? "$group not added with $flag flag"
+
+	bridge mdb del dev br0 port br0 grp $group 2>/dev/null
+	check_err $? "Failed deleting $group from br0, port br0"
+
+	bridge mdb show dev br0 | grep -q $group >/dev/null
+	check_err_fail 1 $? "$group still in mdb after delete"
+
+	log_test "MDB add/del group $group to bridge port br0"
+}
+
+mdb_add_del_test()
+{
+	do_mdb_add_del $TEST_GROUP_MAC permanent
+	do_mdb_add_del $TEST_GROUP_IP4
+	do_mdb_add_del $TEST_GROUP_IP6
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 trap cleanup EXIT
 
 setup_prepare
 setup_wait
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 tests_run
 
 exit $EXIT_STATUS

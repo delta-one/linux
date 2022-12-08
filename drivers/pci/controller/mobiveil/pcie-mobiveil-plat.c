@@ -56,5 +56,9 @@ static struct platform_driver mobiveil_pcie_driver = {
 
 builtin_platform_driver(mobiveil_pcie_driver);
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_DESCRIPTION("Mobiveil PCIe host controller driver");
 MODULE_AUTHOR("Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>");

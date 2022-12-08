@@ -1599,6 +1599,19 @@ static inline int is_imx25_nfc(struct mxc_nand_host *host)
 	return host->devtype_data == &imx25_nand_devtype_data;
 }
 
+<<<<<<< HEAD
+=======
+static inline int is_imx51_nfc(struct mxc_nand_host *host)
+{
+	return host->devtype_data == &imx51_nand_devtype_data;
+}
+
+static inline int is_imx53_nfc(struct mxc_nand_host *host)
+{
+	return host->devtype_data == &imx53_nand_devtype_data;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id mxcnd_dt_ids[] = {
 	{ .compatible = "fsl,imx21-nand", .data = &imx21_nand_devtype_data, },
 	{ .compatible = "fsl,imx27-nand", .data = &imx27_nand_devtype_data, },

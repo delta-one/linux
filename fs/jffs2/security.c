@@ -57,7 +57,11 @@ static int jffs2_security_getxattr(const struct xattr_handler *handler,
 }
 
 static int jffs2_security_setxattr(const struct xattr_handler *handler,
+<<<<<<< HEAD
 				   struct mnt_idmap *idmap,
+=======
+				   struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				   struct dentry *unused, struct inode *inode,
 				   const char *name, const void *buffer,
 				   size_t size, int flags)

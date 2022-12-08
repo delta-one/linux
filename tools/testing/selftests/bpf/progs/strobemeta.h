@@ -135,7 +135,11 @@ struct strobe_value_loc {
 	 * tpidr_el0 for aarch64).
 	 * TLS_IMM_EXEC: absolute address of GOT entry containing offset
 	 * from thread pointer;
+<<<<<<< HEAD
 	 * TLS_GENERAL_DYN: absolute address of double GOT entry
+=======
+	 * TLS_GENERAL_DYN: absolute addres of double GOT entry
+>>>>>>> b7ba80a49124 (Commit)
 	 * containing tls_index_t struct;
 	 */
 	int64_t offset;
@@ -391,6 +395,10 @@ static __always_inline void *read_map_var(struct strobemeta_cfg *cfg,
 	struct strobe_map_raw map;
 	void *location;
 	uint64_t len;
+<<<<<<< HEAD
+=======
+	int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	descr->tag_len = 0; /* presume no tag is set */
 	descr->cnt = -1; /* presume no value is set */

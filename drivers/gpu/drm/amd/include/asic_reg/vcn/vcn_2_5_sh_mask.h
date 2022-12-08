@@ -3618,6 +3618,7 @@
 #define UVD_RAS_MMSCH_FATAL_ERROR__POISONED_VF_MASK             0x7FFFFFFFL
 #define UVD_RAS_MMSCH_FATAL_ERROR__POISONED_PF_MASK             0x80000000L
 
+<<<<<<< HEAD
 //VCN 2_6_0 VCN_RAS_CNTL
 #define VCN_RAS_CNTL__VCPU_VCODEC_IH_EN__SHIFT                                                                0x0
 #define VCN_RAS_CNTL__MMSCH_FATAL_ERROR_EN__SHIFT                                                             0x1
@@ -3645,6 +3646,8 @@
 //VCN 2_6_0 UVD_SYS_INT_EN
 #define UVD_SYS_INT_EN__RASCNTL_VCPU_VCODEC_EN_MASK                                                           0x04000000L
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* JPEG 2_6_0 UVD_RAS_JPEG0_STATUS */
 #define UVD_RAS_JPEG0_STATUS__POISONED_VF__SHIFT                0x0
 #define UVD_RAS_JPEG0_STATUS__POISONED_PF__SHIFT                0x1f

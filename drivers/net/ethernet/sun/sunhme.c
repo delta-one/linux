@@ -61,8 +61,20 @@
 #include "sunhme.h"
 
 #define DRV_NAME	"sunhme"
+<<<<<<< HEAD
 
 MODULE_AUTHOR("David S. Miller (davem@davemloft.net)");
+=======
+#define DRV_VERSION	"3.10"
+#define DRV_RELDATE	"August 26, 2008"
+#define DRV_AUTHOR	"David S. Miller (davem@davemloft.net)"
+
+static char version[] =
+	DRV_NAME ".c:v" DRV_VERSION " " DRV_RELDATE " " DRV_AUTHOR "\n";
+
+MODULE_VERSION(DRV_VERSION);
+MODULE_AUTHOR(DRV_AUTHOR);
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_DESCRIPTION("Sun HappyMealEthernet(HME) 10/100baseT ethernet driver");
 MODULE_LICENSE("GPL");
 
@@ -80,6 +92,7 @@ static struct quattro *qfe_sbus_list;
 static struct quattro *qfe_pci_list;
 #endif
 
+<<<<<<< HEAD
 #define hme_debug(fmt, ...) pr_debug("%s: " fmt, __func__, ##__VA_ARGS__)
 #define HMD hme_debug
 
@@ -91,6 +104,15 @@ static struct quattro *qfe_pci_list;
 #endif
 
 #if 0
+=======
+#undef HMEDEBUG
+#undef SXDEBUG
+#undef RXDEBUG
+#undef TXDEBUG
+#undef TXLOGGING
+
+#ifdef TXLOGGING
+>>>>>>> b7ba80a49124 (Commit)
 struct hme_tx_logent {
 	unsigned int tstamp;
 	int tx_new, tx_old;
@@ -125,16 +147,56 @@ static __inline__ void tx_dump_log(void)
 
 	this = txlog_cur_entry;
 	for (i = 0; i < TX_LOG_LEN; i++) {
+<<<<<<< HEAD
 		pr_err("TXLOG[%d]: j[%08x] tx[N(%d)O(%d)] action[%08x] stat[%08x]\n", i,
+=======
+		printk("TXLOG[%d]: j[%08x] tx[N(%d)O(%d)] action[%08x] stat[%08x]\n", i,
+>>>>>>> b7ba80a49124 (Commit)
 		       tx_log[this].tstamp,
 		       tx_log[this].tx_new, tx_log[this].tx_old,
 		       tx_log[this].action, tx_log[this].status);
 		this = (this + 1) & (TX_LOG_LEN - 1);
 	}
 }
+<<<<<<< HEAD
 #else
 #define tx_add_log(hp, a, s)
 #define tx_dump_log()
+=======
+static __inline__ void tx_dump_ring(struct happy_meal *hp)
+{
+	struct hmeal_init_block *hb = hp->happy_block;
+	struct happy_meal_txd *tp = &hb->happy_meal_txd[0];
+	int i;
+
+	for (i = 0; i < TX_RING_SIZE; i+=4) {
+		printk("TXD[%d..%d]: [%08x:%08x] [%08x:%08x] [%08x:%08x] [%08x:%08x]\n",
+		       i, i + 4,
+		       le32_to_cpu(tp[i].tx_flags), le32_to_cpu(tp[i].tx_addr),
+		       le32_to_cpu(tp[i + 1].tx_flags), le32_to_cpu(tp[i + 1].tx_addr),
+		       le32_to_cpu(tp[i + 2].tx_flags), le32_to_cpu(tp[i + 2].tx_addr),
+		       le32_to_cpu(tp[i + 3].tx_flags), le32_to_cpu(tp[i + 3].tx_addr));
+	}
+}
+#else
+#define tx_add_log(hp, a, s)		do { } while(0)
+#define tx_dump_log()			do { } while(0)
+#define tx_dump_ring(hp)		do { } while(0)
+#endif
+
+#ifdef HMEDEBUG
+#define HMD(x)  printk x
+#else
+#define HMD(x)
+#endif
+
+/* #define AUTO_SWITCH_DEBUG */
+
+#ifdef AUTO_SWITCH_DEBUG
+#define ASD(x)  printk x
+#else
+#define ASD(x)
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #define DEFAULT_IPG0      16 /* For lance-mode only */
@@ -310,6 +372,11 @@ static int happy_meal_bb_read(struct happy_meal *hp,
 	int retval = 0;
 	int i;
 
+<<<<<<< HEAD
+=======
+	ASD(("happy_meal_bb_read: reg=%d ", reg));
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Enable the MIF BitBang outputs. */
 	hme_write32(hp, tregs + TCVR_BBOENAB, 1);
 
@@ -343,7 +410,11 @@ static int happy_meal_bb_read(struct happy_meal *hp,
 	(void) BB_GET_BIT2(hp, tregs, (hp->tcvr_type == internal));
 	(void) BB_GET_BIT2(hp, tregs, (hp->tcvr_type == internal));
 	(void) BB_GET_BIT2(hp, tregs, (hp->tcvr_type == internal));
+<<<<<<< HEAD
 	ASD("reg=%d value=%x\n", reg, retval);
+=======
+	ASD(("value=%x\n", retval));
+>>>>>>> b7ba80a49124 (Commit)
 	return retval;
 }
 
@@ -354,7 +425,11 @@ static void happy_meal_bb_write(struct happy_meal *hp,
 	u32 tmp;
 	int i;
 
+<<<<<<< HEAD
 	ASD("reg=%d value=%x\n", reg, value);
+=======
+	ASD(("happy_meal_bb_write: reg=%d value=%x\n", reg, value));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Enable the MIF BitBang outputs. */
 	hme_write32(hp, tregs + TCVR_BBOENAB, 1);
@@ -398,13 +473,23 @@ static int happy_meal_tcvr_read(struct happy_meal *hp,
 	int tries = TCVR_READ_TRIES;
 	int retval;
 
+<<<<<<< HEAD
 	if (hp->tcvr_type == none) {
 		ASD("no transceiver, value=TCVR_FAILURE\n");
+=======
+	ASD(("happy_meal_tcvr_read: reg=0x%02x ", reg));
+	if (hp->tcvr_type == none) {
+		ASD(("no transceiver, value=TCVR_FAILURE\n"));
+>>>>>>> b7ba80a49124 (Commit)
 		return TCVR_FAILURE;
 	}
 
 	if (!(hp->happy_flags & HFLAG_FENABLE)) {
+<<<<<<< HEAD
 		ASD("doing bit bang\n");
+=======
+		ASD(("doing bit bang\n"));
+>>>>>>> b7ba80a49124 (Commit)
 		return happy_meal_bb_read(hp, tregs, reg);
 	}
 
@@ -413,11 +498,19 @@ static int happy_meal_tcvr_read(struct happy_meal *hp,
 	while (!(hme_read32(hp, tregs + TCVR_FRAME) & 0x10000) && --tries)
 		udelay(20);
 	if (!tries) {
+<<<<<<< HEAD
 		netdev_err(hp->dev, "Aieee, transceiver MIF read bolixed\n");
 		return TCVR_FAILURE;
 	}
 	retval = hme_read32(hp, tregs + TCVR_FRAME) & 0xffff;
 	ASD("reg=0x%02x value=%04x\n", reg, retval);
+=======
+		printk(KERN_ERR "happy meal: Aieee, transceiver MIF read bolixed\n");
+		return TCVR_FAILURE;
+	}
+	retval = hme_read32(hp, tregs + TCVR_FRAME) & 0xffff;
+	ASD(("value=%04x\n", retval));
+>>>>>>> b7ba80a49124 (Commit)
 	return retval;
 }
 
@@ -429,7 +522,11 @@ static void happy_meal_tcvr_write(struct happy_meal *hp,
 {
 	int tries = TCVR_WRITE_TRIES;
 
+<<<<<<< HEAD
 	ASD("reg=0x%02x value=%04x\n", reg, value);
+=======
+	ASD(("happy_meal_tcvr_write: reg=0x%02x value=%04x\n", reg, value));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Welcome to Sun Microsystems, can I take your order please? */
 	if (!(hp->happy_flags & HFLAG_FENABLE)) {
@@ -446,7 +543,11 @@ static void happy_meal_tcvr_write(struct happy_meal *hp,
 
 	/* Anything else? */
 	if (!tries)
+<<<<<<< HEAD
 		netdev_err(hp->dev, "Aieee, transceiver MIF write bolixed\n");
+=======
+		printk(KERN_ERR "happy meal: Aieee, transceiver MIF write bolixed\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Fifty-two cents is your change, have a nice day. */
 }
@@ -624,8 +725,13 @@ static void happy_meal_timer(struct timer_list *t)
 			/* Enter force mode. */
 	do_force_mode:
 			hp->sw_bmcr = happy_meal_tcvr_read(hp, tregs, MII_BMCR);
+<<<<<<< HEAD
 			netdev_notice(hp->dev,
 				      "Auto-Negotiation unsuccessful, trying force link mode\n");
+=======
+			printk(KERN_NOTICE "%s: Auto-Negotiation unsuccessful, trying force link mode\n",
+			       hp->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 			hp->sw_bmcr = BMCR_SPEED100;
 			happy_meal_tcvr_write(hp, tregs, MII_BMCR, hp->sw_bmcr);
 
@@ -684,8 +790,13 @@ static void happy_meal_timer(struct timer_list *t)
 			restart_timer = 0;
 		} else {
 			if (hp->timer_ticks >= 10) {
+<<<<<<< HEAD
 				netdev_notice(hp->dev,
 					      "Auto negotiation successful, link still not completely up.\n");
+=======
+				printk(KERN_NOTICE "%s: Auto negotiation successful, link still "
+				       "not completely up.\n", hp->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 				hp->timer_ticks = 0;
 				restart_timer = 1;
 			} else {
@@ -740,14 +851,24 @@ static void happy_meal_timer(struct timer_list *t)
 					 */
 
 					/* Let the user know... */
+<<<<<<< HEAD
 					netdev_notice(hp->dev,
 						      "Link down, cable problem?\n");
+=======
+					printk(KERN_NOTICE "%s: Link down, cable problem?\n",
+					       hp->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 
 					ret = happy_meal_init(hp);
 					if (ret) {
 						/* ho hum... */
+<<<<<<< HEAD
 						netdev_err(hp->dev,
 							   "Error, cannot re-init the Happy Meal.\n");
+=======
+						printk(KERN_ERR "%s: Error, cannot re-init the "
+						       "Happy Meal.\n", hp->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 					}
 					goto out;
 				}
@@ -769,8 +890,13 @@ static void happy_meal_timer(struct timer_list *t)
 	case asleep:
 	default:
 		/* Can't happens.... */
+<<<<<<< HEAD
 		netdev_err(hp->dev,
 			   "Aieee, link timer is asleep but we got one anyways!\n");
+=======
+		printk(KERN_ERR "%s: Aieee, link timer is asleep but we got one anyways!\n",
+		       hp->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 		restart_timer = 0;
 		hp->timer_ticks = 0;
 		hp->timer_state = asleep; /* foo on you */
@@ -794,7 +920,11 @@ static void happy_meal_tx_reset(struct happy_meal *hp, void __iomem *bregs)
 {
 	int tries = TX_RESET_TRIES;
 
+<<<<<<< HEAD
 	HMD("reset...\n");
+=======
+	HMD(("happy_meal_tx_reset: reset, "));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Would you like to try our SMCC Delux? */
 	hme_write32(hp, bregs + BMAC_TXSWRESET, 0);
@@ -803,10 +933,17 @@ static void happy_meal_tx_reset(struct happy_meal *hp, void __iomem *bregs)
 
 	/* Lettuce, tomato, buggy hardware (no extra charge)? */
 	if (!tries)
+<<<<<<< HEAD
 		netdev_err(hp->dev, "Transceiver BigMac ATTACK!");
 
 	/* Take care. */
 	HMD("done\n");
+=======
+		printk(KERN_ERR "happy meal: Transceiver BigMac ATTACK!");
+
+	/* Take care. */
+	HMD(("done\n"));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* hp->happy_lock must be held */
@@ -814,7 +951,11 @@ static void happy_meal_rx_reset(struct happy_meal *hp, void __iomem *bregs)
 {
 	int tries = RX_RESET_TRIES;
 
+<<<<<<< HEAD
 	HMD("reset...\n");
+=======
+	HMD(("happy_meal_rx_reset: reset, "));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* We have a special on GNU/Viking hardware bugs today. */
 	hme_write32(hp, bregs + BMAC_RXSWRESET, 0);
@@ -823,10 +964,17 @@ static void happy_meal_rx_reset(struct happy_meal *hp, void __iomem *bregs)
 
 	/* Will that be all? */
 	if (!tries)
+<<<<<<< HEAD
 		netdev_err(hp->dev, "Receiver BigMac ATTACK!\n");
 
 	/* Don't forget your vik_1137125_wa.  Have a nice day. */
 	HMD("done\n");
+=======
+		printk(KERN_ERR "happy meal: Receiver BigMac ATTACK!");
+
+	/* Don't forget your vik_1137125_wa.  Have a nice day. */
+	HMD(("done\n"));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define STOP_TRIES         16
@@ -836,7 +984,11 @@ static void happy_meal_stop(struct happy_meal *hp, void __iomem *gregs)
 {
 	int tries = STOP_TRIES;
 
+<<<<<<< HEAD
 	HMD("reset...\n");
+=======
+	HMD(("happy_meal_stop: reset, "));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* We're consolidating our STB products, it's your lucky day. */
 	hme_write32(hp, gregs + GREG_SWRESET, GREG_RESET_ALL);
@@ -845,10 +997,17 @@ static void happy_meal_stop(struct happy_meal *hp, void __iomem *gregs)
 
 	/* Come back next week when we are "Sun Microelectronics". */
 	if (!tries)
+<<<<<<< HEAD
 		netdev_err(hp->dev, "Fry guys.\n");
 
 	/* Remember: "Different name, same old buggy as shit hardware." */
 	HMD("done\n");
+=======
+		printk(KERN_ERR "happy meal: Fry guys.");
+
+	/* Remember: "Different name, same old buggy as shit hardware." */
+	HMD(("done\n"));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* hp->happy_lock must be held */
@@ -877,18 +1036,35 @@ static void happy_meal_get_counters(struct happy_meal *hp, void __iomem *bregs)
 /* hp->happy_lock must be held */
 static void happy_meal_poll_stop(struct happy_meal *hp, void __iomem *tregs)
 {
+<<<<<<< HEAD
 	/* If polling disabled or not polling already, nothing to do. */
 	if ((hp->happy_flags & (HFLAG_POLLENABLE | HFLAG_POLL)) !=
 	   (HFLAG_POLLENABLE | HFLAG_POLL)) {
 		ASD("not polling, return\n");
+=======
+	ASD(("happy_meal_poll_stop: "));
+
+	/* If polling disabled or not polling already, nothing to do. */
+	if ((hp->happy_flags & (HFLAG_POLLENABLE | HFLAG_POLL)) !=
+	   (HFLAG_POLLENABLE | HFLAG_POLL)) {
+		HMD(("not polling, return\n"));
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
 	/* Shut up the MIF. */
+<<<<<<< HEAD
 	ASD("were polling, mif ints off, polling off\n");
 	hme_write32(hp, tregs + TCVR_IMASK, 0xffff);
 
 	/* Turn off polling. */
+=======
+	ASD(("were polling, mif ints off, "));
+	hme_write32(hp, tregs + TCVR_IMASK, 0xffff);
+
+	/* Turn off polling. */
+	ASD(("polling off, "));
+>>>>>>> b7ba80a49124 (Commit)
 	hme_write32(hp, tregs + TCVR_CFG,
 		    hme_read32(hp, tregs + TCVR_CFG) & ~(TCV_CFG_PENABLE));
 
@@ -897,7 +1073,11 @@ static void happy_meal_poll_stop(struct happy_meal *hp, void __iomem *tregs)
 
 	/* Let the bits set. */
 	udelay(200);
+<<<<<<< HEAD
 	ASD("done\n");
+=======
+	ASD(("done\n"));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Only Sun can take such nice parts and fuck up the programming interface
@@ -913,40 +1093,74 @@ static int happy_meal_tcvr_reset(struct happy_meal *hp, void __iomem *tregs)
 	int result, tries = TCVR_RESET_TRIES;
 
 	tconfig = hme_read32(hp, tregs + TCVR_CFG);
+<<<<<<< HEAD
 	ASD("tcfg=%08x\n", tconfig);
 	if (hp->tcvr_type == external) {
 		hme_write32(hp, tregs + TCVR_CFG, tconfig & ~(TCV_CFG_PSELECT));
 		hp->tcvr_type = internal;
 		hp->paddr = TCV_PADDR_ITX;
+=======
+	ASD(("happy_meal_tcvr_reset: tcfg<%08lx> ", tconfig));
+	if (hp->tcvr_type == external) {
+		ASD(("external<"));
+		hme_write32(hp, tregs + TCVR_CFG, tconfig & ~(TCV_CFG_PSELECT));
+		hp->tcvr_type = internal;
+		hp->paddr = TCV_PADDR_ITX;
+		ASD(("ISOLATE,"));
+>>>>>>> b7ba80a49124 (Commit)
 		happy_meal_tcvr_write(hp, tregs, MII_BMCR,
 				      (BMCR_LOOPBACK|BMCR_PDOWN|BMCR_ISOLATE));
 		result = happy_meal_tcvr_read(hp, tregs, MII_BMCR);
 		if (result == TCVR_FAILURE) {
+<<<<<<< HEAD
 			ASD("phyread_fail\n");
 			return -1;
 		}
 		ASD("external: ISOLATE, phyread_ok, PSELECT\n");
+=======
+			ASD(("phyread_fail>\n"));
+			return -1;
+		}
+		ASD(("phyread_ok,PSELECT>"));
+>>>>>>> b7ba80a49124 (Commit)
 		hme_write32(hp, tregs + TCVR_CFG, tconfig | TCV_CFG_PSELECT);
 		hp->tcvr_type = external;
 		hp->paddr = TCV_PADDR_ETX;
 	} else {
 		if (tconfig & TCV_CFG_MDIO1) {
+<<<<<<< HEAD
 			hme_write32(hp, tregs + TCVR_CFG, (tconfig | TCV_CFG_PSELECT));
+=======
+			ASD(("internal<PSELECT,"));
+			hme_write32(hp, tregs + TCVR_CFG, (tconfig | TCV_CFG_PSELECT));
+			ASD(("ISOLATE,"));
+>>>>>>> b7ba80a49124 (Commit)
 			happy_meal_tcvr_write(hp, tregs, MII_BMCR,
 					      (BMCR_LOOPBACK|BMCR_PDOWN|BMCR_ISOLATE));
 			result = happy_meal_tcvr_read(hp, tregs, MII_BMCR);
 			if (result == TCVR_FAILURE) {
+<<<<<<< HEAD
 				ASD("phyread_fail>\n");
 				return -1;
 			}
 			ASD("internal: PSELECT, ISOLATE, phyread_ok, ~PSELECT\n");
+=======
+				ASD(("phyread_fail>\n"));
+				return -1;
+			}
+			ASD(("phyread_ok,~PSELECT>"));
+>>>>>>> b7ba80a49124 (Commit)
 			hme_write32(hp, tregs + TCVR_CFG, (tconfig & ~(TCV_CFG_PSELECT)));
 			hp->tcvr_type = internal;
 			hp->paddr = TCV_PADDR_ITX;
 		}
 	}
 
+<<<<<<< HEAD
 	ASD("BMCR_RESET...\n");
+=======
+	ASD(("BMCR_RESET "));
+>>>>>>> b7ba80a49124 (Commit)
 	happy_meal_tcvr_write(hp, tregs, MII_BMCR, BMCR_RESET);
 
 	while (--tries) {
@@ -959,10 +1173,17 @@ static int happy_meal_tcvr_reset(struct happy_meal *hp, void __iomem *tregs)
 		udelay(20);
 	}
 	if (!tries) {
+<<<<<<< HEAD
 		ASD("BMCR RESET FAILED!\n");
 		return -1;
 	}
 	ASD("RESET_OK\n");
+=======
+		ASD(("BMCR RESET FAILED!\n"));
+		return -1;
+	}
+	ASD(("RESET_OK\n"));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Get fresh copies of the PHY registers. */
 	hp->sw_bmsr      = happy_meal_tcvr_read(hp, tregs, MII_BMSR);
@@ -970,7 +1191,11 @@ static int happy_meal_tcvr_reset(struct happy_meal *hp, void __iomem *tregs)
 	hp->sw_physid2   = happy_meal_tcvr_read(hp, tregs, MII_PHYSID2);
 	hp->sw_advertise = happy_meal_tcvr_read(hp, tregs, MII_ADVERTISE);
 
+<<<<<<< HEAD
 	ASD("UNISOLATE...\n");
+=======
+	ASD(("UNISOLATE"));
+>>>>>>> b7ba80a49124 (Commit)
 	hp->sw_bmcr &= ~(BMCR_ISOLATE);
 	happy_meal_tcvr_write(hp, tregs, MII_BMCR, hp->sw_bmcr);
 
@@ -984,10 +1209,17 @@ static int happy_meal_tcvr_reset(struct happy_meal *hp, void __iomem *tregs)
 		udelay(20);
 	}
 	if (!tries) {
+<<<<<<< HEAD
 		ASD("UNISOLATE FAILED!\n");
 		return -1;
 	}
 	ASD("SUCCESS and CSCONFIG_DFBYPASS\n");
+=======
+		ASD((" FAILED!\n"));
+		return -1;
+	}
+	ASD((" SUCCESS and CSCONFIG_DFBYPASS\n"));
+>>>>>>> b7ba80a49124 (Commit)
 	if (!is_lucent_phy(hp)) {
 		result = happy_meal_tcvr_read(hp, tregs,
 					      DP83840_CSCONFIG);
@@ -1005,6 +1237,7 @@ static void happy_meal_transceiver_check(struct happy_meal *hp, void __iomem *tr
 {
 	unsigned long tconfig = hme_read32(hp, tregs + TCVR_CFG);
 
+<<<<<<< HEAD
 	ASD("tcfg=%08lx\n", tconfig);
 	if (hp->happy_flags & HFLAG_POLL) {
 		/* If we are polling, we must stop to get the transceiver type. */
@@ -1031,29 +1264,78 @@ static void happy_meal_transceiver_check(struct happy_meal *hp, void __iomem *tr
 				}
 			} else {
 				ASD("polling, none\n");
+=======
+	ASD(("happy_meal_transceiver_check: tcfg=%08lx ", tconfig));
+	if (hp->happy_flags & HFLAG_POLL) {
+		/* If we are polling, we must stop to get the transceiver type. */
+		ASD(("<polling> "));
+		if (hp->tcvr_type == internal) {
+			if (tconfig & TCV_CFG_MDIO1) {
+				ASD(("<internal> <poll stop> "));
+				happy_meal_poll_stop(hp, tregs);
+				hp->paddr = TCV_PADDR_ETX;
+				hp->tcvr_type = external;
+				ASD(("<external>\n"));
+				tconfig &= ~(TCV_CFG_PENABLE);
+				tconfig |= TCV_CFG_PSELECT;
+				hme_write32(hp, tregs + TCVR_CFG, tconfig);
+			}
+		} else {
+			if (hp->tcvr_type == external) {
+				ASD(("<external> "));
+				if (!(hme_read32(hp, tregs + TCVR_STATUS) >> 16)) {
+					ASD(("<poll stop> "));
+					happy_meal_poll_stop(hp, tregs);
+					hp->paddr = TCV_PADDR_ITX;
+					hp->tcvr_type = internal;
+					ASD(("<internal>\n"));
+					hme_write32(hp, tregs + TCVR_CFG,
+						    hme_read32(hp, tregs + TCVR_CFG) &
+						    ~(TCV_CFG_PSELECT));
+				}
+				ASD(("\n"));
+			} else {
+				ASD(("<none>\n"));
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 	} else {
 		u32 reread = hme_read32(hp, tregs + TCVR_CFG);
 
 		/* Else we can just work off of the MDIO bits. */
+<<<<<<< HEAD
+=======
+		ASD(("<not polling> "));
+>>>>>>> b7ba80a49124 (Commit)
 		if (reread & TCV_CFG_MDIO1) {
 			hme_write32(hp, tregs + TCVR_CFG, tconfig | TCV_CFG_PSELECT);
 			hp->paddr = TCV_PADDR_ETX;
 			hp->tcvr_type = external;
+<<<<<<< HEAD
 			ASD("not polling, external\n");
+=======
+			ASD(("<external>\n"));
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			if (reread & TCV_CFG_MDIO0) {
 				hme_write32(hp, tregs + TCVR_CFG,
 					    tconfig & ~(TCV_CFG_PSELECT));
 				hp->paddr = TCV_PADDR_ITX;
 				hp->tcvr_type = internal;
+<<<<<<< HEAD
 				ASD("not polling, internal\n");
 			} else {
 				netdev_err(hp->dev,
 					   "Transceiver and a coke please.");
 				hp->tcvr_type = none; /* Grrr... */
 				ASD("not polling, none\n");
+=======
+				ASD(("<internal>\n"));
+			} else {
+				printk(KERN_ERR "happy meal: Transceiver and a coke please.");
+				hp->tcvr_type = none; /* Grrr... */
+				ASD(("<none>\n"));
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 	}
@@ -1160,6 +1442,7 @@ static void happy_meal_init_rings(struct happy_meal *hp)
 	struct hmeal_init_block *hb = hp->happy_block;
 	int i;
 
+<<<<<<< HEAD
 	HMD("counters to zero\n");
 	hp->rx_new = hp->rx_old = hp->tx_new = hp->tx_old = 0;
 
@@ -1168,6 +1451,17 @@ static void happy_meal_init_rings(struct happy_meal *hp)
 
 	/* Now get new skippy bufs for the receive ring. */
 	HMD("init rxring\n");
+=======
+	HMD(("happy_meal_init_rings: counters to zero, "));
+	hp->rx_new = hp->rx_old = hp->tx_new = hp->tx_old = 0;
+
+	/* Free any skippy bufs left around in the rings. */
+	HMD(("clean, "));
+	happy_meal_clean_rings(hp);
+
+	/* Now get new skippy bufs for the receive ring. */
+	HMD(("init rxring, "));
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < RX_RING_SIZE; i++) {
 		struct sk_buff *skb;
 		u32 mapping;
@@ -1194,11 +1488,19 @@ static void happy_meal_init_rings(struct happy_meal *hp)
 		skb_reserve(skb, RX_OFFSET);
 	}
 
+<<<<<<< HEAD
 	HMD("init txring\n");
 	for (i = 0; i < TX_RING_SIZE; i++)
 		hme_write_txd(hp, &hb->happy_meal_txd[i], 0, 0);
 
 	HMD("done\n");
+=======
+	HMD(("init txring, "));
+	for (i = 0; i < TX_RING_SIZE; i++)
+		hme_write_txd(hp, &hb->happy_meal_txd[i], 0, 0);
+
+	HMD(("done\n"));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* hp->happy_lock must be held */
@@ -1245,11 +1547,25 @@ happy_meal_begin_auto_negotiation(struct happy_meal *hp,
 		 * XXX so I completely skip checking for it in the BMSR for now.
 		 */
 
+<<<<<<< HEAD
 		ASD("Advertising [ %s%s%s%s]\n",
 		    hp->sw_advertise & ADVERTISE_10HALF ? "10H " : "",
 		    hp->sw_advertise & ADVERTISE_10FULL ? "10F " : "",
 		    hp->sw_advertise & ADVERTISE_100HALF ? "100H " : "",
 		    hp->sw_advertise & ADVERTISE_100FULL ? "100F " : "");
+=======
+#ifdef AUTO_SWITCH_DEBUG
+		ASD(("%s: Advertising [ ", hp->dev->name));
+		if (hp->sw_advertise & ADVERTISE_10HALF)
+			ASD(("10H "));
+		if (hp->sw_advertise & ADVERTISE_10FULL)
+			ASD(("10F "));
+		if (hp->sw_advertise & ADVERTISE_100HALF)
+			ASD(("100H "));
+		if (hp->sw_advertise & ADVERTISE_100FULL)
+			ASD(("100F "));
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Enable Auto-Negotiation, this is usually on already... */
 		hp->sw_bmcr |= BMCR_ANENABLE;
@@ -1269,11 +1585,18 @@ happy_meal_begin_auto_negotiation(struct happy_meal *hp,
 			udelay(10);
 		}
 		if (!timeout) {
+<<<<<<< HEAD
 			netdev_err(hp->dev,
 				   "Happy Meal would not start auto negotiation BMCR=0x%04x\n",
 				   hp->sw_bmcr);
 			netdev_notice(hp->dev,
 				      "Performing force link detection.\n");
+=======
+			printk(KERN_ERR "%s: Happy Meal would not start auto negotiation "
+			       "BMCR=0x%04x\n", hp->dev->name, hp->sw_bmcr);
+			printk(KERN_NOTICE "%s: Performing force link detection.\n",
+			       hp->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 			goto force_link;
 		} else {
 			hp->timer_state = arbwait;
@@ -1328,20 +1651,31 @@ static int happy_meal_init(struct happy_meal *hp)
 	void __iomem *erxregs      = hp->erxregs;
 	void __iomem *bregs        = hp->bigmacregs;
 	void __iomem *tregs        = hp->tcvregs;
+<<<<<<< HEAD
 	const char *bursts = "64";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 regtmp, rxcfg;
 
 	/* If auto-negotiation timer is running, kill it. */
 	del_timer(&hp->happy_timer);
 
+<<<<<<< HEAD
 	HMD("happy_flags[%08x]\n", hp->happy_flags);
 	if (!(hp->happy_flags & HFLAG_INIT)) {
 		HMD("set HFLAG_INIT\n");
+=======
+	HMD(("happy_meal_init: happy_flags[%08x] ",
+	     hp->happy_flags));
+	if (!(hp->happy_flags & HFLAG_INIT)) {
+		HMD(("set HFLAG_INIT, "));
+>>>>>>> b7ba80a49124 (Commit)
 		hp->happy_flags |= HFLAG_INIT;
 		happy_meal_get_counters(hp, bregs);
 	}
 
 	/* Stop polling. */
+<<<<<<< HEAD
 	HMD("to happy_meal_poll_stop\n");
 	happy_meal_poll_stop(hp, tregs);
 
@@ -1356,10 +1690,27 @@ static int happy_meal_init(struct happy_meal *hp)
 	/* Shut up the MIF. */
 	HMD("Disable all MIF irqs (old[%08x])\n",
 	    hme_read32(hp, tregs + TCVR_IMASK));
+=======
+	HMD(("to happy_meal_poll_stop\n"));
+	happy_meal_poll_stop(hp, tregs);
+
+	/* Stop transmitter and receiver. */
+	HMD(("happy_meal_init: to happy_meal_stop\n"));
+	happy_meal_stop(hp, gregs);
+
+	/* Alloc and reset the tx/rx descriptor chains. */
+	HMD(("happy_meal_init: to happy_meal_init_rings\n"));
+	happy_meal_init_rings(hp);
+
+	/* Shut up the MIF. */
+	HMD(("happy_meal_init: Disable all MIF irqs (old[%08x]), ",
+	     hme_read32(hp, tregs + TCVR_IMASK)));
+>>>>>>> b7ba80a49124 (Commit)
 	hme_write32(hp, tregs + TCVR_IMASK, 0xffff);
 
 	/* See if we can enable the MIF frame on this card to speak to the DP83840. */
 	if (hp->happy_flags & HFLAG_FENABLE) {
+<<<<<<< HEAD
 		HMD("use frame old[%08x]\n",
 		    hme_read32(hp, tregs + TCVR_CFG));
 		hme_write32(hp, tregs + TCVR_CFG,
@@ -1367,11 +1718,21 @@ static int happy_meal_init(struct happy_meal *hp)
 	} else {
 		HMD("use bitbang old[%08x]\n",
 		    hme_read32(hp, tregs + TCVR_CFG));
+=======
+		HMD(("use frame old[%08x], ",
+		     hme_read32(hp, tregs + TCVR_CFG)));
+		hme_write32(hp, tregs + TCVR_CFG,
+			    hme_read32(hp, tregs + TCVR_CFG) & ~(TCV_CFG_BENABLE));
+	} else {
+		HMD(("use bitbang old[%08x], ",
+		     hme_read32(hp, tregs + TCVR_CFG)));
+>>>>>>> b7ba80a49124 (Commit)
 		hme_write32(hp, tregs + TCVR_CFG,
 			    hme_read32(hp, tregs + TCVR_CFG) | TCV_CFG_BENABLE);
 	}
 
 	/* Check the state of the transceiver. */
+<<<<<<< HEAD
 	HMD("to happy_meal_transceiver_check\n");
 	happy_meal_transceiver_check(hp, tregs);
 
@@ -1380,17 +1741,36 @@ static int happy_meal_init(struct happy_meal *hp)
 	case none:
 		/* Cannot operate if we don't know the transceiver type! */
 		HMD("AAIEEE no transceiver type, EAGAIN\n");
+=======
+	HMD(("to happy_meal_transceiver_check\n"));
+	happy_meal_transceiver_check(hp, tregs);
+
+	/* Put the Big Mac into a sane state. */
+	HMD(("happy_meal_init: "));
+	switch(hp->tcvr_type) {
+	case none:
+		/* Cannot operate if we don't know the transceiver type! */
+		HMD(("AAIEEE no transceiver type, EAGAIN"));
+>>>>>>> b7ba80a49124 (Commit)
 		return -EAGAIN;
 
 	case internal:
 		/* Using the MII buffers. */
+<<<<<<< HEAD
 		HMD("internal, using MII\n");
+=======
+		HMD(("internal, using MII, "));
+>>>>>>> b7ba80a49124 (Commit)
 		hme_write32(hp, bregs + BMAC_XIFCFG, 0);
 		break;
 
 	case external:
 		/* Not using the MII, disable it. */
+<<<<<<< HEAD
 		HMD("external, disable MII\n");
+=======
+		HMD(("external, disable MII, "));
+>>>>>>> b7ba80a49124 (Commit)
 		hme_write32(hp, bregs + BMAC_XIFCFG, BIGMAC_XCFG_MIIDISAB);
 		break;
 	}
@@ -1399,16 +1779,28 @@ static int happy_meal_init(struct happy_meal *hp)
 		return -EAGAIN;
 
 	/* Reset the Happy Meal Big Mac transceiver and the receiver. */
+<<<<<<< HEAD
 	HMD("tx/rx reset\n");
+=======
+	HMD(("tx/rx reset, "));
+>>>>>>> b7ba80a49124 (Commit)
 	happy_meal_tx_reset(hp, bregs);
 	happy_meal_rx_reset(hp, bregs);
 
 	/* Set jam size and inter-packet gaps to reasonable defaults. */
+<<<<<<< HEAD
+=======
+	HMD(("jsize/ipg1/ipg2, "));
+>>>>>>> b7ba80a49124 (Commit)
 	hme_write32(hp, bregs + BMAC_JSIZE, DEFAULT_JAMSIZE);
 	hme_write32(hp, bregs + BMAC_IGAP1, DEFAULT_IPG1);
 	hme_write32(hp, bregs + BMAC_IGAP2, DEFAULT_IPG2);
 
 	/* Load up the MAC address and random seed. */
+<<<<<<< HEAD
+=======
+	HMD(("rseed/macaddr, "));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* The docs recommend to use the 10LSB of our MAC here. */
 	hme_write32(hp, bregs + BMAC_RSEED, ((e[5] | e[4]<<8)&0x3ff));
@@ -1417,6 +1809,10 @@ static int happy_meal_init(struct happy_meal *hp)
 	hme_write32(hp, bregs + BMAC_MACADDR1, ((e[2] << 8) | e[3]));
 	hme_write32(hp, bregs + BMAC_MACADDR0, ((e[0] << 8) | e[1]));
 
+<<<<<<< HEAD
+=======
+	HMD(("htable, "));
+>>>>>>> b7ba80a49124 (Commit)
 	if ((hp->dev->flags & IFF_ALLMULTI) ||
 	    (netdev_mc_count(hp->dev) > 64)) {
 		hme_write32(hp, bregs + BMAC_HTABLE0, 0xffff);
@@ -1446,9 +1842,15 @@ static int happy_meal_init(struct happy_meal *hp)
 	}
 
 	/* Set the RX and TX ring ptrs. */
+<<<<<<< HEAD
 	HMD("ring ptrs rxr[%08x] txr[%08x]\n",
 	    ((__u32)hp->hblock_dvma + hblock_offset(happy_meal_rxd, 0)),
 	    ((__u32)hp->hblock_dvma + hblock_offset(happy_meal_txd, 0)));
+=======
+	HMD(("ring ptrs rxr[%08x] txr[%08x]\n",
+	     ((__u32)hp->hblock_dvma + hblock_offset(happy_meal_rxd, 0)),
+	     ((__u32)hp->hblock_dvma + hblock_offset(happy_meal_txd, 0))));
+>>>>>>> b7ba80a49124 (Commit)
 	hme_write32(hp, erxregs + ERX_RING,
 		    ((__u32)hp->hblock_dvma + hblock_offset(happy_meal_rxd, 0)));
 	hme_write32(hp, etxregs + ETX_RING,
@@ -1466,6 +1868,12 @@ static int happy_meal_init(struct happy_meal *hp)
 			    | 0x4);
 
 	/* Set the supported burst sizes. */
+<<<<<<< HEAD
+=======
+	HMD(("happy_meal_init: old[%08x] bursts<",
+	     hme_read32(hp, gregs + GREG_CFG)));
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef CONFIG_SPARC
 	/* It is always PCI and can handle 64byte bursts. */
 	hme_write32(hp, gregs + GREG_CFG, GREG_CFG_BURST64);
@@ -1493,6 +1901,7 @@ static int happy_meal_init(struct happy_meal *hp)
 		}
 #endif
 
+<<<<<<< HEAD
 		bursts = "64";
 		hme_write32(hp, gregs + GREG_CFG, gcfg);
 	} else if (hp->happy_bursts & DMA_BURST32) {
@@ -1503,25 +1912,52 @@ static int happy_meal_init(struct happy_meal *hp)
 		hme_write32(hp, gregs + GREG_CFG, GREG_CFG_BURST16);
 	} else {
 		bursts = "XXX";
+=======
+		HMD(("64>"));
+		hme_write32(hp, gregs + GREG_CFG, gcfg);
+	} else if (hp->happy_bursts & DMA_BURST32) {
+		HMD(("32>"));
+		hme_write32(hp, gregs + GREG_CFG, GREG_CFG_BURST32);
+	} else if (hp->happy_bursts & DMA_BURST16) {
+		HMD(("16>"));
+		hme_write32(hp, gregs + GREG_CFG, GREG_CFG_BURST16);
+	} else {
+		HMD(("XXX>"));
+>>>>>>> b7ba80a49124 (Commit)
 		hme_write32(hp, gregs + GREG_CFG, 0);
 	}
 #endif /* CONFIG_SPARC */
 
+<<<<<<< HEAD
 	HMD("old[%08x] bursts<%s>\n",
 	    hme_read32(hp, gregs + GREG_CFG), bursts);
 
 	/* Turn off interrupts we do not want to hear. */
+=======
+	/* Turn off interrupts we do not want to hear. */
+	HMD((", enable global interrupts, "));
+>>>>>>> b7ba80a49124 (Commit)
 	hme_write32(hp, gregs + GREG_IMASK,
 		    (GREG_IMASK_GOTFRAME | GREG_IMASK_RCNTEXP |
 		     GREG_IMASK_SENTFRAME | GREG_IMASK_TXPERR));
 
 	/* Set the transmit ring buffer size. */
+<<<<<<< HEAD
 	HMD("tx rsize=%d oreg[%08x]\n", (int)TX_RING_SIZE,
 	    hme_read32(hp, etxregs + ETX_RSIZE));
 	hme_write32(hp, etxregs + ETX_RSIZE, (TX_RING_SIZE >> ETX_RSIZE_SHIFT) - 1);
 
 	/* Enable transmitter DVMA. */
 	HMD("tx dma enable old[%08x]\n", hme_read32(hp, etxregs + ETX_CFG));
+=======
+	HMD(("tx rsize=%d oreg[%08x], ", (int)TX_RING_SIZE,
+	     hme_read32(hp, etxregs + ETX_RSIZE)));
+	hme_write32(hp, etxregs + ETX_RSIZE, (TX_RING_SIZE >> ETX_RSIZE_SHIFT) - 1);
+
+	/* Enable transmitter DVMA. */
+	HMD(("tx dma enable old[%08x], ",
+	     hme_read32(hp, etxregs + ETX_CFG)));
+>>>>>>> b7ba80a49124 (Commit)
 	hme_write32(hp, etxregs + ETX_CFG,
 		    hme_read32(hp, etxregs + ETX_CFG) | ETX_CFG_DMAENABLE);
 
@@ -1530,23 +1966,39 @@ static int happy_meal_init(struct happy_meal *hp)
 	 * properly.  I cannot think of a sane way to provide complete
 	 * coverage for this hardware bug yet.
 	 */
+<<<<<<< HEAD
 	HMD("erx regs bug old[%08x]\n",
 	    hme_read32(hp, erxregs + ERX_CFG));
+=======
+	HMD(("erx regs bug old[%08x]\n",
+	     hme_read32(hp, erxregs + ERX_CFG)));
+>>>>>>> b7ba80a49124 (Commit)
 	hme_write32(hp, erxregs + ERX_CFG, ERX_CFG_DEFAULT(RX_OFFSET));
 	regtmp = hme_read32(hp, erxregs + ERX_CFG);
 	hme_write32(hp, erxregs + ERX_CFG, ERX_CFG_DEFAULT(RX_OFFSET));
 	if (hme_read32(hp, erxregs + ERX_CFG) != ERX_CFG_DEFAULT(RX_OFFSET)) {
+<<<<<<< HEAD
 		netdev_err(hp->dev,
 			   "Eieee, rx config register gets greasy fries.\n");
 		netdev_err(hp->dev,
 			   "Trying to set %08x, reread gives %08x\n",
 			   ERX_CFG_DEFAULT(RX_OFFSET), regtmp);
+=======
+		printk(KERN_ERR "happy meal: Eieee, rx config register gets greasy fries.\n");
+		printk(KERN_ERR "happy meal: Trying to set %08x, reread gives %08x\n",
+		       ERX_CFG_DEFAULT(RX_OFFSET), regtmp);
+>>>>>>> b7ba80a49124 (Commit)
 		/* XXX Should return failure here... */
 	}
 
 	/* Enable Big Mac hash table filter. */
+<<<<<<< HEAD
 	HMD("enable hash rx_cfg_old[%08x]\n",
 	    hme_read32(hp, bregs + BMAC_RXCFG));
+=======
+	HMD(("happy_meal_init: enable hash rx_cfg_old[%08x], ",
+	     hme_read32(hp, bregs + BMAC_RXCFG)));
+>>>>>>> b7ba80a49124 (Commit)
 	rxcfg = BIGMAC_RXCFG_HENABLE | BIGMAC_RXCFG_REJME;
 	if (hp->dev->flags & IFF_PROMISC)
 		rxcfg |= BIGMAC_RXCFG_PMISC;
@@ -1556,7 +2008,11 @@ static int happy_meal_init(struct happy_meal *hp)
 	udelay(10);
 
 	/* Ok, configure the Big Mac transmitter. */
+<<<<<<< HEAD
 	HMD("BIGMAC init\n");
+=======
+	HMD(("BIGMAC init, "));
+>>>>>>> b7ba80a49124 (Commit)
 	regtmp = 0;
 	if (hp->happy_flags & HFLAG_FULL)
 		regtmp |= BIGMAC_TXCFG_FULLDPLX;
@@ -1580,6 +2036,7 @@ static int happy_meal_init(struct happy_meal *hp)
 	if (hp->tcvr_type == external)
 		regtmp |= BIGMAC_XCFG_MIIDISAB;
 
+<<<<<<< HEAD
 	HMD("XIF config old[%08x]\n", hme_read32(hp, bregs + BMAC_XIFCFG));
 	hme_write32(hp, bregs + BMAC_XIFCFG, regtmp);
 
@@ -1587,6 +2044,16 @@ static int happy_meal_init(struct happy_meal *hp)
 	HMD("tx old[%08x] and rx [%08x] ON!\n",
 	    hme_read32(hp, bregs + BMAC_TXCFG),
 	    hme_read32(hp, bregs + BMAC_RXCFG));
+=======
+	HMD(("XIF config old[%08x], ",
+	     hme_read32(hp, bregs + BMAC_XIFCFG)));
+	hme_write32(hp, bregs + BMAC_XIFCFG, regtmp);
+
+	/* Start things up. */
+	HMD(("tx old[%08x] and rx [%08x] ON!\n",
+	     hme_read32(hp, bregs + BMAC_TXCFG),
+	     hme_read32(hp, bregs + BMAC_RXCFG)));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Set larger TX/RX size to allow for 802.1q */
 	hme_write32(hp, bregs + BMAC_TXMAX, ETH_FRAME_LEN + 8);
@@ -1676,26 +2143,44 @@ static int happy_meal_is_not_so_happy(struct happy_meal *hp, u32 status)
 		      GREG_STAT_MIFIRQ | GREG_STAT_TXEACK | GREG_STAT_TXLERR |
 		      GREG_STAT_TXPERR | GREG_STAT_TXTERR | GREG_STAT_SLVERR |
 		      GREG_STAT_SLVPERR))
+<<<<<<< HEAD
 		netdev_err(hp->dev,
 			   "Error interrupt for happy meal, status = %08x\n",
 			   status);
+=======
+		printk(KERN_ERR "%s: Error interrupt for happy meal, status = %08x\n",
+		       hp->dev->name, status);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (status & GREG_STAT_RFIFOVF) {
 		/* Receive FIFO overflow is harmless and the hardware will take
 		   care of it, just some packets are lost. Who cares. */
+<<<<<<< HEAD
 		netdev_dbg(hp->dev, "Happy Meal receive FIFO overflow.\n");
+=======
+		printk(KERN_DEBUG "%s: Happy Meal receive FIFO overflow.\n", hp->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (status & GREG_STAT_STSTERR) {
 		/* BigMAC SQE link test failed. */
+<<<<<<< HEAD
 		netdev_err(hp->dev, "Happy Meal BigMAC SQE test failed.\n");
+=======
+		printk(KERN_ERR "%s: Happy Meal BigMAC SQE test failed.\n", hp->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 		reset = 1;
 	}
 
 	if (status & GREG_STAT_TFIFO_UND) {
 		/* Transmit FIFO underrun, again DMA error likely. */
+<<<<<<< HEAD
 		netdev_err(hp->dev,
 			   "Happy Meal transmitter FIFO underrun, DMA error.\n");
+=======
+		printk(KERN_ERR "%s: Happy Meal transmitter FIFO underrun, DMA error.\n",
+		       hp->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 		reset = 1;
 	}
 
@@ -1703,7 +2188,11 @@ static int happy_meal_is_not_so_happy(struct happy_meal *hp, u32 status)
 		/* Driver error, tried to transmit something larger
 		 * than ethernet max mtu.
 		 */
+<<<<<<< HEAD
 		netdev_err(hp->dev, "Happy Meal MAX Packet size error.\n");
+=======
+		printk(KERN_ERR "%s: Happy Meal MAX Packet size error.\n", hp->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 		reset = 1;
 	}
 
@@ -1713,16 +2202,33 @@ static int happy_meal_is_not_so_happy(struct happy_meal *hp, u32 status)
 		 * faster than the interrupt handler could keep up
 		 * with.
 		 */
+<<<<<<< HEAD
 		netdev_info(hp->dev,
 			    "Happy Meal out of receive descriptors, packet dropped.\n");
+=======
+		printk(KERN_INFO "%s: Happy Meal out of receive "
+		       "descriptors, packet dropped.\n",
+		       hp->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (status & (GREG_STAT_RXERR|GREG_STAT_RXPERR|GREG_STAT_RXTERR)) {
 		/* All sorts of DMA receive errors. */
+<<<<<<< HEAD
 		netdev_err(hp->dev, "Happy Meal rx DMA errors [ %s%s%s]\n",
 			   status & GREG_STAT_RXERR ? "GenericError " : "",
 			   status & GREG_STAT_RXPERR ? "ParityError " : "",
 			   status & GREG_STAT_RXTERR ? "RxTagBotch " : "");
+=======
+		printk(KERN_ERR "%s: Happy Meal rx DMA errors [ ", hp->dev->name);
+		if (status & GREG_STAT_RXERR)
+			printk("GenericError ");
+		if (status & GREG_STAT_RXPERR)
+			printk("ParityError ");
+		if (status & GREG_STAT_RXTERR)
+			printk("RxTagBotch ");
+		printk("]\n");
+>>>>>>> b7ba80a49124 (Commit)
 		reset = 1;
 	}
 
@@ -1730,24 +2236,46 @@ static int happy_meal_is_not_so_happy(struct happy_meal *hp, u32 status)
 		/* Driver bug, didn't set EOP bit in tx descriptor given
 		 * to the happy meal.
 		 */
+<<<<<<< HEAD
 		netdev_err(hp->dev,
 			   "EOP not set in happy meal transmit descriptor!\n");
+=======
+		printk(KERN_ERR "%s: EOP not set in happy meal transmit descriptor!\n",
+		       hp->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 		reset = 1;
 	}
 
 	if (status & GREG_STAT_MIFIRQ) {
 		/* MIF signalled an interrupt, were we polling it? */
+<<<<<<< HEAD
 		netdev_err(hp->dev, "Happy Meal MIF interrupt.\n");
+=======
+		printk(KERN_ERR "%s: Happy Meal MIF interrupt.\n", hp->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (status &
 	    (GREG_STAT_TXEACK|GREG_STAT_TXLERR|GREG_STAT_TXPERR|GREG_STAT_TXTERR)) {
 		/* All sorts of transmit DMA errors. */
+<<<<<<< HEAD
 		netdev_err(hp->dev, "Happy Meal tx DMA errors [ %s%s%s%s]\n",
 			   status & GREG_STAT_TXEACK ? "GenericError " : "",
 			   status & GREG_STAT_TXLERR ? "LateError " : "",
 			   status & GREG_STAT_TXPERR ? "ParityError " : "",
 			   status & GREG_STAT_TXTERR ? "TagBotch " : "");
+=======
+		printk(KERN_ERR "%s: Happy Meal tx DMA errors [ ", hp->dev->name);
+		if (status & GREG_STAT_TXEACK)
+			printk("GenericError ");
+		if (status & GREG_STAT_TXLERR)
+			printk("LateError ");
+		if (status & GREG_STAT_TXPERR)
+			printk("ParityError ");
+		if (status & GREG_STAT_TXTERR)
+			printk("TagBotch ");
+		printk("]\n");
+>>>>>>> b7ba80a49124 (Commit)
 		reset = 1;
 	}
 
@@ -1755,14 +2283,24 @@ static int happy_meal_is_not_so_happy(struct happy_meal *hp, u32 status)
 		/* Bus or parity error when cpu accessed happy meal registers
 		 * or it's internal FIFO's.  Should never see this.
 		 */
+<<<<<<< HEAD
 		netdev_err(hp->dev,
 			   "Happy Meal register access SBUS slave (%s) error.\n",
 			   (status & GREG_STAT_SLVPERR) ? "parity" : "generic");
+=======
+		printk(KERN_ERR "%s: Happy Meal register access SBUS slave (%s) error.\n",
+		       hp->dev->name,
+		       (status & GREG_STAT_SLVPERR) ? "parity" : "generic");
+>>>>>>> b7ba80a49124 (Commit)
 		reset = 1;
 	}
 
 	if (reset) {
+<<<<<<< HEAD
 		netdev_notice(hp->dev, "Resetting...\n");
+=======
+		printk(KERN_NOTICE "%s: Resetting...\n", hp->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 		happy_meal_init(hp);
 		return 1;
 	}
@@ -1774,12 +2312,17 @@ static void happy_meal_mif_interrupt(struct happy_meal *hp)
 {
 	void __iomem *tregs = hp->tcvregs;
 
+<<<<<<< HEAD
 	netdev_info(hp->dev, "Link status change.\n");
+=======
+	printk(KERN_INFO "%s: Link status change.\n", hp->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 	hp->sw_bmcr = happy_meal_tcvr_read(hp, tregs, MII_BMCR);
 	hp->sw_lpa = happy_meal_tcvr_read(hp, tregs, MII_LPA);
 
 	/* Use the fastest transmission protocol possible. */
 	if (hp->sw_lpa & LPA_100FULL) {
+<<<<<<< HEAD
 		netdev_info(hp->dev, "Switching to 100Mbps at full duplex.\n");
 		hp->sw_bmcr |= (BMCR_FULLDPLX | BMCR_SPEED100);
 	} else if (hp->sw_lpa & LPA_100HALF) {
@@ -1790,6 +2333,18 @@ static void happy_meal_mif_interrupt(struct happy_meal *hp)
 		hp->sw_bmcr |= BMCR_FULLDPLX;
 	} else {
 		netdev_info(hp->dev, "Using 10Mbps at half duplex.\n");
+=======
+		printk(KERN_INFO "%s: Switching to 100Mbps at full duplex.", hp->dev->name);
+		hp->sw_bmcr |= (BMCR_FULLDPLX | BMCR_SPEED100);
+	} else if (hp->sw_lpa & LPA_100HALF) {
+		printk(KERN_INFO "%s: Switching to 100MBps at half duplex.", hp->dev->name);
+		hp->sw_bmcr |= BMCR_SPEED100;
+	} else if (hp->sw_lpa & LPA_10FULL) {
+		printk(KERN_INFO "%s: Switching to 10MBps at full duplex.", hp->dev->name);
+		hp->sw_bmcr |= BMCR_FULLDPLX;
+	} else {
+		printk(KERN_INFO "%s: Using 10Mbps at half duplex.", hp->dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	happy_meal_tcvr_write(hp, tregs, MII_BMCR, hp->sw_bmcr);
 
@@ -1797,6 +2352,15 @@ static void happy_meal_mif_interrupt(struct happy_meal *hp)
 	happy_meal_poll_stop(hp, tregs);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef TXDEBUG
+#define TXD(x) printk x
+#else
+#define TXD(x)
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 /* hp->happy_lock must be held */
 static void happy_meal_tx(struct happy_meal *hp)
 {
@@ -1806,12 +2370,20 @@ static void happy_meal_tx(struct happy_meal *hp)
 	int elem;
 
 	elem = hp->tx_old;
+<<<<<<< HEAD
+=======
+	TXD(("TX<"));
+>>>>>>> b7ba80a49124 (Commit)
 	while (elem != hp->tx_new) {
 		struct sk_buff *skb;
 		u32 flags, dma_addr, dma_len;
 		int frag;
 
+<<<<<<< HEAD
 		netdev_vdbg(hp->dev, "TX[%d]\n", elem);
+=======
+		TXD(("[%d]", elem));
+>>>>>>> b7ba80a49124 (Commit)
 		this = &txbase[elem];
 		flags = hme_read_desc32(hp, &this->tx_flags);
 		if (flags & TXFLAG_OWN)
@@ -1847,12 +2419,25 @@ static void happy_meal_tx(struct happy_meal *hp)
 		dev->stats.tx_packets++;
 	}
 	hp->tx_old = elem;
+<<<<<<< HEAD
+=======
+	TXD((">"));
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (netif_queue_stopped(dev) &&
 	    TX_BUFFS_AVAIL(hp) > (MAX_SKB_FRAGS + 1))
 		netif_wake_queue(dev);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef RXDEBUG
+#define RXD(x) printk x
+#else
+#define RXD(x)
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Originally I used to handle the allocation failure by just giving back just
  * that one ring buffer to the happy meal.  Problem is that usually when that
  * condition is triggered, the happy meal expects you to do something reasonable
@@ -1869,6 +2454,10 @@ static void happy_meal_rx(struct happy_meal *hp, struct net_device *dev)
 	int elem = hp->rx_new, drops = 0;
 	u32 flags;
 
+<<<<<<< HEAD
+=======
+	RXD(("RX<"));
+>>>>>>> b7ba80a49124 (Commit)
 	this = &rxbase[elem];
 	while (!((flags = hme_read_desc32(hp, &this->rx_flags)) & RXFLAG_OWN)) {
 		struct sk_buff *skb;
@@ -1876,9 +2465,17 @@ static void happy_meal_rx(struct happy_meal *hp, struct net_device *dev)
 		u16 csum = flags & RXFLAG_CSUM;
 		u32 dma_addr = hme_read_desc32(hp, &this->rx_addr);
 
+<<<<<<< HEAD
 		/* Check for errors. */
 		if ((len < ETH_ZLEN) || (flags & RXFLAG_OVERFLOW)) {
 			netdev_vdbg(dev, "RX[%d ERR(%08x)]", elem, flags);
+=======
+		RXD(("[%d ", elem));
+
+		/* Check for errors. */
+		if ((len < ETH_ZLEN) || (flags & RXFLAG_OVERFLOW)) {
+			RXD(("ERR(%08x)]", flags));
+>>>>>>> b7ba80a49124 (Commit)
 			dev->stats.rx_errors++;
 			if (len < ETH_ZLEN)
 				dev->stats.rx_length_errors++;
@@ -1950,7 +2547,11 @@ static void happy_meal_rx(struct happy_meal *hp, struct net_device *dev)
 		skb->csum = csum_unfold(~(__force __sum16)htons(csum));
 		skb->ip_summed = CHECKSUM_COMPLETE;
 
+<<<<<<< HEAD
 		netdev_vdbg(dev, "RX[%d len=%d csum=%4x]", elem, len, csum);
+=======
+		RXD(("len=%d csum=%4x]", len, csum));
+>>>>>>> b7ba80a49124 (Commit)
 		skb->protocol = eth_type_trans(skb, dev);
 		netif_rx(skb);
 
@@ -1962,7 +2563,12 @@ static void happy_meal_rx(struct happy_meal *hp, struct net_device *dev)
 	}
 	hp->rx_new = elem;
 	if (drops)
+<<<<<<< HEAD
 		netdev_info(hp->dev, "Memory squeeze, deferring packet.\n");
+=======
+		printk(KERN_INFO "%s: Memory squeeze, deferring packet.\n", hp->dev->name);
+	RXD((">"));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static irqreturn_t happy_meal_interrupt(int irq, void *dev_id)
@@ -1971,15 +2577,24 @@ static irqreturn_t happy_meal_interrupt(int irq, void *dev_id)
 	struct happy_meal *hp  = netdev_priv(dev);
 	u32 happy_status       = hme_read32(hp, hp->gregs + GREG_STAT);
 
+<<<<<<< HEAD
 	HMD("status=%08x\n", happy_status);
+=======
+	HMD(("happy_meal_interrupt: status=%08x ", happy_status));
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock(&hp->happy_lock);
 
 	if (happy_status & GREG_STAT_ERRORS) {
+<<<<<<< HEAD
+=======
+		HMD(("ERRORS "));
+>>>>>>> b7ba80a49124 (Commit)
 		if (happy_meal_is_not_so_happy(hp, /* un- */ happy_status))
 			goto out;
 	}
 
+<<<<<<< HEAD
 	if (happy_status & GREG_STAT_MIFIRQ)
 		happy_meal_mif_interrupt(hp);
 
@@ -1990,6 +2605,24 @@ static irqreturn_t happy_meal_interrupt(int irq, void *dev_id)
 		happy_meal_rx(hp, dev);
 
 	HMD("done\n");
+=======
+	if (happy_status & GREG_STAT_MIFIRQ) {
+		HMD(("MIFIRQ "));
+		happy_meal_mif_interrupt(hp);
+	}
+
+	if (happy_status & GREG_STAT_TXALL) {
+		HMD(("TXALL "));
+		happy_meal_tx(hp);
+	}
+
+	if (happy_status & GREG_STAT_RXTOHOST) {
+		HMD(("RXTOHOST "));
+		happy_meal_rx(hp, dev);
+	}
+
+	HMD(("done\n"));
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	spin_unlock(&hp->happy_lock);
 
@@ -2007,7 +2640,11 @@ static irqreturn_t quattro_sbus_interrupt(int irq, void *cookie)
 		struct happy_meal *hp  = netdev_priv(dev);
 		u32 happy_status       = hme_read32(hp, hp->gregs + GREG_STAT);
 
+<<<<<<< HEAD
 		HMD("status=%08x\n", happy_status);
+=======
+		HMD(("quattro_interrupt: status=%08x ", happy_status));
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!(happy_status & (GREG_STAT_ERRORS |
 				      GREG_STAT_MIFIRQ |
@@ -2017,6 +2654,7 @@ static irqreturn_t quattro_sbus_interrupt(int irq, void *cookie)
 
 		spin_lock(&hp->happy_lock);
 
+<<<<<<< HEAD
 		if (happy_status & GREG_STAT_ERRORS)
 			if (happy_meal_is_not_so_happy(hp, happy_status))
 				goto next;
@@ -2029,11 +2667,37 @@ static irqreturn_t quattro_sbus_interrupt(int irq, void *cookie)
 
 		if (happy_status & GREG_STAT_RXTOHOST)
 			happy_meal_rx(hp, dev);
+=======
+		if (happy_status & GREG_STAT_ERRORS) {
+			HMD(("ERRORS "));
+			if (happy_meal_is_not_so_happy(hp, happy_status))
+				goto next;
+		}
+
+		if (happy_status & GREG_STAT_MIFIRQ) {
+			HMD(("MIFIRQ "));
+			happy_meal_mif_interrupt(hp);
+		}
+
+		if (happy_status & GREG_STAT_TXALL) {
+			HMD(("TXALL "));
+			happy_meal_tx(hp);
+		}
+
+		if (happy_status & GREG_STAT_RXTOHOST) {
+			HMD(("RXTOHOST "));
+			happy_meal_rx(hp, dev);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 	next:
 		spin_unlock(&hp->happy_lock);
 	}
+<<<<<<< HEAD
 	HMD("done\n");
+=======
+	HMD(("done\n"));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return IRQ_HANDLED;
 }
@@ -2044,6 +2708,11 @@ static int happy_meal_open(struct net_device *dev)
 	struct happy_meal *hp = netdev_priv(dev);
 	int res;
 
+<<<<<<< HEAD
+=======
+	HMD(("happy_meal_open: "));
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* On SBUS Quattro QFE cards, all hme interrupts are concentrated
 	 * into a single source which we register handling at probe time.
 	 */
@@ -2051,14 +2720,24 @@ static int happy_meal_open(struct net_device *dev)
 		res = request_irq(hp->irq, happy_meal_interrupt, IRQF_SHARED,
 				  dev->name, dev);
 		if (res) {
+<<<<<<< HEAD
 			HMD("EAGAIN\n");
 			netdev_err(dev, "Can't order irq %d to go.\n", hp->irq);
+=======
+			HMD(("EAGAIN\n"));
+			printk(KERN_ERR "happy_meal(SBUS): Can't order irq %d to go.\n",
+			       hp->irq);
+>>>>>>> b7ba80a49124 (Commit)
 
 			return -EAGAIN;
 		}
 	}
 
+<<<<<<< HEAD
 	HMD("to happy_meal_init\n");
+=======
+	HMD(("to happy_meal_init\n"));
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irq(&hp->happy_lock);
 	res = happy_meal_init(hp);
@@ -2092,16 +2771,34 @@ static int happy_meal_close(struct net_device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef SXDEBUG
+#define SXD(x) printk x
+#else
+#define SXD(x)
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 static void happy_meal_tx_timeout(struct net_device *dev, unsigned int txqueue)
 {
 	struct happy_meal *hp = netdev_priv(dev);
 
+<<<<<<< HEAD
 	netdev_err(dev, "transmit timed out, resetting\n");
 	tx_dump_log();
 	netdev_err(dev, "Happy Status %08x TX[%08x:%08x]\n",
 		   hme_read32(hp, hp->gregs + GREG_STAT),
 		   hme_read32(hp, hp->etxregs + ETX_CFG),
 		   hme_read32(hp, hp->bigmacregs + BMAC_TXCFG));
+=======
+	printk (KERN_ERR "%s: transmit timed out, resetting\n", dev->name);
+	tx_dump_log();
+	printk (KERN_ERR "%s: Happy Status %08x TX[%08x:%08x]\n", dev->name,
+		hme_read32(hp, hp->gregs + GREG_STAT),
+		hme_read32(hp, hp->etxregs + ETX_CFG),
+		hme_read32(hp, hp->bigmacregs + BMAC_TXCFG));
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irq(&hp->happy_lock);
 	happy_meal_init(hp);
@@ -2151,12 +2848,21 @@ static netdev_tx_t happy_meal_start_xmit(struct sk_buff *skb,
 	if (TX_BUFFS_AVAIL(hp) <= (skb_shinfo(skb)->nr_frags + 1)) {
 		netif_stop_queue(dev);
 		spin_unlock_irq(&hp->happy_lock);
+<<<<<<< HEAD
 		netdev_err(dev, "BUG! Tx Ring full when queue awake!\n");
+=======
+		printk(KERN_ERR "%s: BUG! Tx Ring full when queue awake!\n",
+		       dev->name);
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_BUSY;
 	}
 
 	entry = hp->tx_new;
+<<<<<<< HEAD
 	netdev_vdbg(dev, "SX<l[%d]e[%d]>\n", skb->len, entry);
+=======
+	SXD(("SX<l[%d]e[%d]>", len, entry));
+>>>>>>> b7ba80a49124 (Commit)
 	hp->tx_skbs[entry] = skb;
 
 	if (skb_shinfo(skb)->nr_frags == 0) {
@@ -2356,7 +3062,12 @@ static void hme_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info
 {
 	struct happy_meal *hp = netdev_priv(dev);
 
+<<<<<<< HEAD
 	strscpy(info->driver, DRV_NAME, sizeof(info->driver));
+=======
+	strscpy(info->driver, "sunhme", sizeof(info->driver));
+	strscpy(info->version, "2.02", sizeof(info->version));
+>>>>>>> b7ba80a49124 (Commit)
 	if (hp->happy_flags & HFLAG_PCI) {
 		struct pci_dev *pdev = hp->happy_dev;
 		strscpy(info->bus_info, pci_name(pdev), sizeof(info->bus_info));
@@ -2392,6 +3103,11 @@ static const struct ethtool_ops hme_ethtool_ops = {
 	.set_link_ksettings	= hme_set_link_ksettings,
 };
 
+<<<<<<< HEAD
+=======
+static int hme_version_printed;
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SBUS
 /* Given a happy meal sbus device, find it's quattro parent.
  * If none exist, allocate and return a new one.
@@ -2409,6 +3125,7 @@ static struct quattro *quattro_sbus_find(struct platform_device *child)
 	if (qp)
 		return qp;
 
+<<<<<<< HEAD
 	qp = kzalloc(sizeof(*qp), GFP_KERNEL);
 	if (!qp)
 		return NULL;
@@ -2418,6 +3135,21 @@ static struct quattro *quattro_sbus_find(struct platform_device *child)
 	qfe_sbus_list = qp;
 
 	platform_set_drvdata(op, qp);
+=======
+	qp = kmalloc(sizeof(struct quattro), GFP_KERNEL);
+	if (qp != NULL) {
+		int i;
+
+		for (i = 0; i < 4; i++)
+			qp->happy_meals[i] = NULL;
+
+		qp->quattro_dev = child;
+		qp->next = qfe_sbus_list;
+		qfe_sbus_list = qp;
+
+		platform_set_drvdata(op, qp);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return qp;
 }
 
@@ -2445,9 +3177,14 @@ static int __init quattro_sbus_register_irqs(void)
 				  IRQF_SHARED, "Quattro",
 				  qp);
 		if (err != 0) {
+<<<<<<< HEAD
 			dev_err(&op->dev,
 				"Quattro HME: IRQ registration error %d.\n",
 				err);
+=======
+			printk(KERN_ERR "Quattro HME: IRQ registration "
+			       "error %d.\n", err);
+>>>>>>> b7ba80a49124 (Commit)
 			return err;
 		}
 	}
@@ -2478,6 +3215,7 @@ static void quattro_sbus_free_irqs(void)
 #ifdef CONFIG_PCI
 static struct quattro *quattro_pci_find(struct pci_dev *pdev)
 {
+<<<<<<< HEAD
 	int i;
 	struct pci_dev *bdev = pdev->bus->self;
 	struct quattro *qp;
@@ -2485,12 +3223,19 @@ static struct quattro *quattro_pci_find(struct pci_dev *pdev)
 	if (!bdev)
 		return ERR_PTR(-ENODEV);
 
+=======
+	struct pci_dev *bdev = pdev->bus->self;
+	struct quattro *qp;
+
+	if (!bdev) return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	for (qp = qfe_pci_list; qp != NULL; qp = qp->next) {
 		struct pci_dev *qpdev = qp->quattro_dev;
 
 		if (qpdev == bdev)
 			return qp;
 	}
+<<<<<<< HEAD
 
 	qp = kmalloc(sizeof(struct quattro), GFP_KERNEL);
 	if (!qp)
@@ -2505,6 +3250,22 @@ static struct quattro *quattro_pci_find(struct pci_dev *pdev)
 
 	/* No range tricks necessary on PCI. */
 	qp->nranges = 0;
+=======
+	qp = kmalloc(sizeof(struct quattro), GFP_KERNEL);
+	if (qp != NULL) {
+		int i;
+
+		for (i = 0; i < 4; i++)
+			qp->happy_meals[i] = NULL;
+
+		qp->quattro_dev = bdev;
+		qp->next = qfe_pci_list;
+		qfe_pci_list = qp;
+
+		/* No range tricks necessary on PCI. */
+		qp->nranges = 0;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return qp;
 }
 #endif /* CONFIG_PCI */
@@ -2554,6 +3315,12 @@ static int happy_meal_sbus_probe_one(struct platform_device *op, int is_qfe)
 		goto err_out;
 	SET_NETDEV_DEV(dev, &op->dev);
 
+<<<<<<< HEAD
+=======
+	if (hme_version_printed++ == 0)
+		printk(KERN_INFO "%s", version);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* If user did not specify a MAC address specifically, use
 	 * the Quattro local-mac-address property...
 	 */
@@ -2595,35 +3362,55 @@ static int happy_meal_sbus_probe_one(struct platform_device *op, int is_qfe)
 	hp->gregs = of_ioremap(&op->resource[0], 0,
 			       GREG_REG_SIZE, "HME Global Regs");
 	if (!hp->gregs) {
+<<<<<<< HEAD
 		dev_err(&op->dev, "Cannot map global registers.\n");
+=======
+		printk(KERN_ERR "happymeal: Cannot map global registers.\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_out_free_netdev;
 	}
 
 	hp->etxregs = of_ioremap(&op->resource[1], 0,
 				 ETX_REG_SIZE, "HME TX Regs");
 	if (!hp->etxregs) {
+<<<<<<< HEAD
 		dev_err(&op->dev, "Cannot map MAC TX registers.\n");
+=======
+		printk(KERN_ERR "happymeal: Cannot map MAC TX registers.\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_out_iounmap;
 	}
 
 	hp->erxregs = of_ioremap(&op->resource[2], 0,
 				 ERX_REG_SIZE, "HME RX Regs");
 	if (!hp->erxregs) {
+<<<<<<< HEAD
 		dev_err(&op->dev, "Cannot map MAC RX registers.\n");
+=======
+		printk(KERN_ERR "happymeal: Cannot map MAC RX registers.\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_out_iounmap;
 	}
 
 	hp->bigmacregs = of_ioremap(&op->resource[3], 0,
 				    BMAC_REG_SIZE, "HME BIGMAC Regs");
 	if (!hp->bigmacregs) {
+<<<<<<< HEAD
 		dev_err(&op->dev, "Cannot map BIGMAC registers.\n");
+=======
+		printk(KERN_ERR "happymeal: Cannot map BIGMAC registers.\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_out_iounmap;
 	}
 
 	hp->tcvregs = of_ioremap(&op->resource[4], 0,
 				 TCVR_REG_SIZE, "HME Tranceiver Regs");
 	if (!hp->tcvregs) {
+<<<<<<< HEAD
 		dev_err(&op->dev, "Cannot map TCVR registers.\n");
+=======
+		printk(KERN_ERR "happymeal: Cannot map TCVR registers.\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_out_iounmap;
 	}
 
@@ -2690,19 +3477,34 @@ static int happy_meal_sbus_probe_one(struct platform_device *op, int is_qfe)
 
 	err = register_netdev(hp->dev);
 	if (err) {
+<<<<<<< HEAD
 		dev_err(&op->dev, "Cannot register net device, aborting.\n");
+=======
+		printk(KERN_ERR "happymeal: Cannot register net device, "
+		       "aborting.\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_out_free_coherent;
 	}
 
 	platform_set_drvdata(op, hp);
 
 	if (qfe_slot != -1)
+<<<<<<< HEAD
 		netdev_info(dev,
 			    "Quattro HME slot %d (SBUS) 10/100baseT Ethernet %pM\n",
 			    qfe_slot, dev->dev_addr);
 	else
 		netdev_info(dev, "HAPPY MEAL (SBUS) 10/100baseT Ethernet %pM\n",
 			    dev->dev_addr);
+=======
+		printk(KERN_INFO "%s: Quattro HME slot %d (SBUS) 10/100baseT Ethernet ",
+		       dev->name, qfe_slot);
+	else
+		printk(KERN_INFO "%s: HAPPY MEAL (SBUS) 10/100baseT Ethernet ",
+		       dev->name);
+
+	printk("%pM\n", dev->dev_addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -2830,7 +3632,11 @@ static int happy_meal_pci_probe(struct pci_dev *pdev,
 	struct happy_meal *hp;
 	struct net_device *dev;
 	void __iomem *hpreg_base;
+<<<<<<< HEAD
 	struct resource *hpreg_res;
+=======
+	unsigned long hpreg_res;
+>>>>>>> b7ba80a49124 (Commit)
 	int i, qfe_slot = -1;
 	char prom_name[64];
 	u8 addr[ETH_ALEN];
@@ -2847,13 +3653,20 @@ static int happy_meal_pci_probe(struct pci_dev *pdev,
 		strcpy(prom_name, "SUNW,hme");
 #endif
 
+<<<<<<< HEAD
 	err = pcim_enable_device(pdev);
 	if (err)
+=======
+	err = -ENODEV;
+
+	if (pci_enable_device(pdev))
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_out;
 	pci_set_master(pdev);
 
 	if (!strcmp(prom_name, "SUNW,qfe") || !strcmp(prom_name, "qfe")) {
 		qp = quattro_pci_find(pdev);
+<<<<<<< HEAD
 		if (IS_ERR(qp)) {
 			err = PTR_ERR(qp);
 			goto err_out;
@@ -2863,10 +3676,18 @@ static int happy_meal_pci_probe(struct pci_dev *pdev,
 			if (!qp->happy_meals[qfe_slot])
 				break;
 
+=======
+		if (qp == NULL)
+			goto err_out;
+		for (qfe_slot = 0; qfe_slot < 4; qfe_slot++)
+			if (qp->happy_meals[qfe_slot] == NULL)
+				break;
+>>>>>>> b7ba80a49124 (Commit)
 		if (qfe_slot == 4)
 			goto err_out;
 	}
 
+<<<<<<< HEAD
 	dev = devm_alloc_etherdev(&pdev->dev, sizeof(struct happy_meal));
 	if (!dev) {
 		err = -ENOMEM;
@@ -2874,6 +3695,17 @@ static int happy_meal_pci_probe(struct pci_dev *pdev,
 	}
 	SET_NETDEV_DEV(dev, &pdev->dev);
 
+=======
+	dev = alloc_etherdev(sizeof(struct happy_meal));
+	err = -ENOMEM;
+	if (!dev)
+		goto err_out;
+	SET_NETDEV_DEV(dev, &pdev->dev);
+
+	if (hme_version_printed++ == 0)
+		printk(KERN_INFO "%s", version);
+
+>>>>>>> b7ba80a49124 (Commit)
 	hp = netdev_priv(dev);
 
 	hp->happy_dev = pdev;
@@ -2887,6 +3719,7 @@ static int happy_meal_pci_probe(struct pci_dev *pdev,
 		qp->happy_meals[qfe_slot] = dev;
 	}
 
+<<<<<<< HEAD
 	err = -EINVAL;
 	if ((pci_resource_flags(pdev, 0) & IORESOURCE_IO) != 0) {
 		dev_err(&pdev->dev,
@@ -2909,6 +3742,23 @@ static int happy_meal_pci_probe(struct pci_dev *pdev,
 		err = -ENOMEM;
 		dev_err(&pdev->dev, "Unable to remap card memory.\n");
 		goto err_out_clear_quattro;
+=======
+	hpreg_res = pci_resource_start(pdev, 0);
+	err = -ENODEV;
+	if ((pci_resource_flags(pdev, 0) & IORESOURCE_IO) != 0) {
+		printk(KERN_ERR "happymeal(PCI): Cannot find proper PCI device base address.\n");
+		goto err_out_clear_quattro;
+	}
+	if (pci_request_regions(pdev, DRV_NAME)) {
+		printk(KERN_ERR "happymeal(PCI): Cannot obtain PCI resources, "
+		       "aborting.\n");
+		goto err_out_clear_quattro;
+	}
+
+	if ((hpreg_base = ioremap(hpreg_res, 0x8000)) == NULL) {
+		printk(KERN_ERR "happymeal(PCI): Unable to remap card memory.\n");
+		goto err_out_free_res;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (i = 0; i < 6; i++) {
@@ -2974,12 +3824,20 @@ static int happy_meal_pci_probe(struct pci_dev *pdev,
 	hp->happy_bursts = DMA_BURSTBITS;
 #endif
 
+<<<<<<< HEAD
 	hp->happy_block = dmam_alloc_coherent(&pdev->dev, PAGE_SIZE,
 					      &hp->hblock_dvma, GFP_KERNEL);
 	if (!hp->happy_block) {
 		err = -ENOMEM;
 		goto err_out_clear_quattro;
 	}
+=======
+	hp->happy_block = dma_alloc_coherent(&pdev->dev, PAGE_SIZE,
+					     &hp->hblock_dvma, GFP_KERNEL);
+	err = -ENODEV;
+	if (!hp->happy_block)
+		goto err_out_iounmap;
+>>>>>>> b7ba80a49124 (Commit)
 
 	hp->linkcheck = 0;
 	hp->timer_state = asleep;
@@ -3013,10 +3871,18 @@ static int happy_meal_pci_probe(struct pci_dev *pdev,
 	happy_meal_set_initial_advertisement(hp);
 	spin_unlock_irq(&hp->happy_lock);
 
+<<<<<<< HEAD
 	err = devm_register_netdev(&pdev->dev, dev);
 	if (err) {
 		dev_err(&pdev->dev, "Cannot register net device, aborting.\n");
 		goto err_out_clear_quattro;
+=======
+	err = register_netdev(hp->dev);
+	if (err) {
+		printk(KERN_ERR "happymeal(PCI): Cannot register net device, "
+		       "aborting.\n");
+		goto err_out_free_coherent;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	pci_set_drvdata(pdev, hp);
@@ -3029,6 +3895,7 @@ static int happy_meal_pci_probe(struct pci_dev *pdev,
 			int i = simple_strtoul(dev->name + 3, NULL, 10);
 			sprintf(prom_name, "-%d", i + 3);
 		}
+<<<<<<< HEAD
 		netdev_info(dev,
 			    "%s: Quattro HME (PCI/CheerIO) 10/100baseT Ethernet bridge %04x.%04x\n",
 			    prom_name, qpdev->vendor, qpdev->device);
@@ -3045,14 +3912,69 @@ static int happy_meal_pci_probe(struct pci_dev *pdev,
 
 	return 0;
 
+=======
+		printk(KERN_INFO "%s%s: Quattro HME (PCI/CheerIO) 10/100baseT Ethernet ", dev->name, prom_name);
+		if (qpdev->vendor == PCI_VENDOR_ID_DEC &&
+		    qpdev->device == PCI_DEVICE_ID_DEC_21153)
+			printk("DEC 21153 PCI Bridge\n");
+		else
+			printk("unknown bridge %04x.%04x\n",
+				qpdev->vendor, qpdev->device);
+	}
+
+	if (qfe_slot != -1)
+		printk(KERN_INFO "%s: Quattro HME slot %d (PCI/CheerIO) 10/100baseT Ethernet ",
+		       dev->name, qfe_slot);
+	else
+		printk(KERN_INFO "%s: HAPPY MEAL (PCI/CheerIO) 10/100BaseT Ethernet ",
+		       dev->name);
+
+	printk("%pM\n", dev->dev_addr);
+
+	return 0;
+
+err_out_free_coherent:
+	dma_free_coherent(hp->dma_dev, PAGE_SIZE,
+			  hp->happy_block, hp->hblock_dvma);
+
+err_out_iounmap:
+	iounmap(hp->gregs);
+
+err_out_free_res:
+	pci_release_regions(pdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 err_out_clear_quattro:
 	if (qp != NULL)
 		qp->happy_meals[qfe_slot] = NULL;
 
+<<<<<<< HEAD
+=======
+	free_netdev(dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 err_out:
 	return err;
 }
 
+<<<<<<< HEAD
+=======
+static void happy_meal_pci_remove(struct pci_dev *pdev)
+{
+	struct happy_meal *hp = pci_get_drvdata(pdev);
+	struct net_device *net_dev = hp->dev;
+
+	unregister_netdev(net_dev);
+
+	dma_free_coherent(hp->dma_dev, PAGE_SIZE,
+			  hp->happy_block, hp->hblock_dvma);
+	iounmap(hp->gregs);
+	pci_release_regions(hp->happy_dev);
+
+	free_netdev(net_dev);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct pci_device_id happymeal_pci_ids[] = {
 	{ PCI_DEVICE(PCI_VENDOR_ID_SUN, PCI_DEVICE_ID_SUN_HAPPYMEAL) },
 	{ }			/* Terminating entry */
@@ -3064,6 +3986,10 @@ static struct pci_driver hme_pci_driver = {
 	.name		= "hme",
 	.id_table	= happymeal_pci_ids,
 	.probe		= happy_meal_pci_probe,
+<<<<<<< HEAD
+=======
+	.remove		= happy_meal_pci_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init happy_meal_pci_init(void)

@@ -36,7 +36,10 @@
 #include <linux/seqlock.h>
 #include <linux/kcsan.h>
 #include <linux/rv.h>
+<<<<<<< HEAD
 #include <linux/livepatch_sched.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/kmap_size.h>
 
 /* task_struct member predeclarations (sorted alphabetically): */
@@ -871,6 +874,14 @@ struct task_struct {
 	struct mm_struct		*mm;
 	struct mm_struct		*active_mm;
 
+<<<<<<< HEAD
+=======
+	/* Per-thread vma caching: */
+
+#ifdef SPLIT_RSS_COUNTING
+	struct task_rss_stat		rss_stat;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	int				exit_state;
 	int				exit_code;
 	int				exit_signal;
@@ -886,6 +897,12 @@ struct task_struct {
 	unsigned			sched_reset_on_fork:1;
 	unsigned			sched_contributes_to_load:1;
 	unsigned			sched_migrated:1;
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PSI
+	unsigned			sched_psi_wake_requeue:1;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Force alignment to the next boundary: */
 	unsigned			:0;
@@ -1238,7 +1255,11 @@ struct task_struct {
 	unsigned int			futex_state;
 #endif
 #ifdef CONFIG_PERF_EVENTS
+<<<<<<< HEAD
 	struct perf_event_context	*perf_event_ctxp;
+=======
+	struct perf_event_context	*perf_event_ctxp[perf_nr_task_contexts];
+>>>>>>> b7ba80a49124 (Commit)
 	struct mutex			perf_event_mutex;
 	struct list_head		perf_event_list;
 #endif
@@ -1303,7 +1324,10 @@ struct task_struct {
 
 #ifdef CONFIG_RSEQ
 	struct rseq __user *rseq;
+<<<<<<< HEAD
 	u32 rseq_len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 rseq_sig;
 	/*
 	 * RmW on rseq_event_mask must be performed atomically
@@ -1312,6 +1336,7 @@ struct task_struct {
 	unsigned long rseq_event_mask;
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_SCHED_MM_CID
 	int				mm_cid;		/* Current cid in mm */
 	int				mm_cid_active;	/* Whether cid bitmap is active */
@@ -1319,6 +1344,15 @@ struct task_struct {
 
 	struct tlbflush_unmap_batch	tlb_ubc;
 
+=======
+	struct tlbflush_unmap_batch	tlb_ubc;
+
+	union {
+		refcount_t		rcu_users;
+		struct rcu_head		rcu;
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Cache last used pipe for splice(): */
 	struct pipe_inode_info		*splice_pipe;
 
@@ -1396,6 +1430,12 @@ struct task_struct {
 #endif
 
 #ifdef CONFIG_TRACING
+<<<<<<< HEAD
+=======
+	/* State flags for use by tracers: */
+	unsigned long			trace;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Bitmask and counter of trace recursion: */
 	unsigned long			trace_recursion;
 #endif /* CONFIG_TRACING */
@@ -1438,7 +1478,11 @@ struct task_struct {
 #endif
 
 #ifdef CONFIG_BLK_CGROUP
+<<<<<<< HEAD
 	struct gendisk			*throttle_disk;
+=======
+	struct request_queue		*throttle_queue;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #ifdef CONFIG_UPROBES
@@ -1455,8 +1499,11 @@ struct task_struct {
 	unsigned long			saved_state_change;
 # endif
 #endif
+<<<<<<< HEAD
 	struct rcu_head			rcu;
 	refcount_t			rcu_users;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int				pagefault_disabled;
 #ifdef CONFIG_MMU
 	struct task_struct		*oom_reaper_list;
@@ -1727,7 +1774,11 @@ extern struct pid *cad_pid;
 #define PF_MEMALLOC		0x00000800	/* Allocating memory */
 #define PF_NPROC_EXCEEDED	0x00001000	/* set_user() noticed that RLIMIT_NPROC was exceeded */
 #define PF_USED_MATH		0x00002000	/* If unset the fpu must be initialized before use */
+<<<<<<< HEAD
 #define PF_USER_WORKER		0x00004000	/* Kernel thread cloned from userspace thread */
+=======
+#define PF__HOLE__00004000	0x00004000
+>>>>>>> b7ba80a49124 (Commit)
 #define PF_NOFREEZE		0x00008000	/* This thread should not be frozen */
 #define PF__HOLE__00010000	0x00010000
 #define PF_KSWAPD		0x00020000	/* I am kswapd */
@@ -2068,9 +2119,12 @@ extern int __cond_resched(void);
 
 #if defined(CONFIG_PREEMPT_DYNAMIC) && defined(CONFIG_HAVE_PREEMPT_DYNAMIC_CALL)
 
+<<<<<<< HEAD
 void sched_dynamic_klp_enable(void);
 void sched_dynamic_klp_disable(void);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 DECLARE_STATIC_CALL(cond_resched, __cond_resched);
 
 static __always_inline int _cond_resched(void)
@@ -2079,7 +2133,10 @@ static __always_inline int _cond_resched(void)
 }
 
 #elif defined(CONFIG_PREEMPT_DYNAMIC) && defined(CONFIG_HAVE_PREEMPT_DYNAMIC_KEY)
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern int dynamic_cond_resched(void);
 
 static __always_inline int _cond_resched(void)
@@ -2087,6 +2144,7 @@ static __always_inline int _cond_resched(void)
 	return dynamic_cond_resched();
 }
 
+<<<<<<< HEAD
 #else /* !CONFIG_PREEMPTION */
 
 static inline int _cond_resched(void)
@@ -2106,6 +2164,22 @@ static inline int _cond_resched(void)
 }
 
 #endif /* !CONFIG_PREEMPTION || CONFIG_PREEMPT_DYNAMIC */
+=======
+#else
+
+static inline int _cond_resched(void)
+{
+	return __cond_resched();
+}
+
+#endif /* CONFIG_PREEMPT_DYNAMIC */
+
+#else
+
+static inline int _cond_resched(void) { return 0; }
+
+#endif /* !defined(CONFIG_PREEMPTION) || defined(CONFIG_PREEMPT_DYNAMIC) */
+>>>>>>> b7ba80a49124 (Commit)
 
 #define cond_resched() ({			\
 	__might_resched(__FILE__, __LINE__, 0);	\
@@ -2365,12 +2439,18 @@ static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
 {
 	if (clone_flags & CLONE_VM) {
 		t->rseq = NULL;
+<<<<<<< HEAD
 		t->rseq_len = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		t->rseq_sig = 0;
 		t->rseq_event_mask = 0;
 	} else {
 		t->rseq = current->rseq;
+<<<<<<< HEAD
 		t->rseq_len = current->rseq_len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		t->rseq_sig = current->rseq_sig;
 		t->rseq_event_mask = current->rseq_event_mask;
 	}
@@ -2379,7 +2459,10 @@ static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
 static inline void rseq_execve(struct task_struct *t)
 {
 	t->rseq = NULL;
+<<<<<<< HEAD
 	t->rseq_len = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	t->rseq_sig = 0;
 	t->rseq_event_mask = 0;
 }

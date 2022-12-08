@@ -7,6 +7,7 @@
  */
 
 #include <linux/acpi.h>
+<<<<<<< HEAD
 #include <linux/module.h>
 #include <linux/of.h>
 #include <linux/platform_data/cros_ec_commands.h>
@@ -18,11 +19,98 @@
 
 #include "cros_ec_typec.h"
 #include "cros_typec_vdm.h"
+=======
+#include <linux/list.h>
+#include <linux/module.h>
+#include <linux/of.h>
+#include <linux/platform_data/cros_ec_commands.h>
+#include <linux/platform_data/cros_ec_proto.h>
+#include <linux/platform_data/cros_usbpd_notify.h>
+#include <linux/platform_device.h>
+#include <linux/usb/pd.h>
+#include <linux/usb/pd_vdo.h>
+#include <linux/usb/typec.h>
+#include <linux/usb/typec_altmode.h>
+#include <linux/usb/typec_dp.h>
+#include <linux/usb/typec_mux.h>
+#include <linux/usb/typec_retimer.h>
+#include <linux/usb/typec_tbt.h>
+#include <linux/usb/role.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DRV_NAME "cros-ec-typec"
 
 #define DP_PORT_VDO	(DP_CONF_SET_PIN_ASSIGN(BIT(DP_PIN_ASSIGN_C) | BIT(DP_PIN_ASSIGN_D)) | \
+<<<<<<< HEAD
 				DP_CAP_DFP_D | DP_CAP_RECEPTACLE)
+=======
+				DP_CAP_DFP_D)
+
+/* Supported alt modes. */
+enum {
+	CROS_EC_ALTMODE_DP = 0,
+	CROS_EC_ALTMODE_TBT,
+	CROS_EC_ALTMODE_MAX,
+};
+
+/* Container for altmode pointer nodes. */
+struct cros_typec_altmode_node {
+	struct typec_altmode *amode;
+	struct list_head list;
+};
+
+/* Per port data. */
+struct cros_typec_port {
+	struct typec_port *port;
+	/* Initial capabilities for the port. */
+	struct typec_capability caps;
+	struct typec_partner *partner;
+	struct typec_cable *cable;
+	/* SOP' plug. */
+	struct typec_plug *plug;
+	/* Port partner PD identity info. */
+	struct usb_pd_identity p_identity;
+	/* Port cable PD identity info. */
+	struct usb_pd_identity c_identity;
+	struct typec_switch *ori_sw;
+	struct typec_mux *mux;
+	struct typec_retimer *retimer;
+	struct usb_role_switch *role_sw;
+
+	/* Variables keeping track of switch state. */
+	struct typec_mux_state state;
+	uint8_t mux_flags;
+	uint8_t role;
+
+	struct typec_altmode *port_altmode[CROS_EC_ALTMODE_MAX];
+
+	/* Flag indicating that PD partner discovery data parsing is completed. */
+	bool sop_disc_done;
+	bool sop_prime_disc_done;
+	struct ec_response_typec_discovery *disc_data;
+	struct list_head partner_mode_list;
+	struct list_head plug_mode_list;
+
+	/* PDO-related structs */
+	struct usb_power_delivery *partner_pd;
+	struct usb_power_delivery_capabilities *partner_src_caps;
+	struct usb_power_delivery_capabilities *partner_sink_caps;
+};
+
+/* Platform-specific data for the Chrome OS EC Type C controller. */
+struct cros_typec_data {
+	struct device *dev;
+	struct cros_ec_device *ec;
+	int num_ports;
+	unsigned int pd_ctrl_ver;
+	/* Array of ports, indexed by port number. */
+	struct cros_typec_port *ports[EC_USB_PD_MAX_PORTS];
+	struct notifier_block nb;
+	struct work_struct port_work;
+	bool typec_cmd_supported;
+	bool needs_mux_ack;
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static int cros_typec_parse_port_props(struct typec_capability *cap,
 				       struct fwnode_handle *fwnode,
@@ -75,33 +163,51 @@ static int cros_typec_get_switch_handles(struct cros_typec_port *port,
 					 struct fwnode_handle *fwnode,
 					 struct device *dev)
 {
+<<<<<<< HEAD
 	int ret = 0;
 
 	port->mux = fwnode_typec_mux_get(fwnode, NULL);
 	if (IS_ERR(port->mux)) {
 		ret = PTR_ERR(port->mux);
 		dev_dbg(dev, "Mux handle not found: %d.\n", ret);
+=======
+	port->mux = fwnode_typec_mux_get(fwnode, NULL);
+	if (IS_ERR(port->mux)) {
+		dev_dbg(dev, "Mux handle not found.\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto mux_err;
 	}
 
 	port->retimer = fwnode_typec_retimer_get(fwnode);
 	if (IS_ERR(port->retimer)) {
+<<<<<<< HEAD
 		ret = PTR_ERR(port->retimer);
 		dev_dbg(dev, "Retimer handle not found: %d.\n", ret);
+=======
+		dev_dbg(dev, "Retimer handle not found.\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto retimer_sw_err;
 	}
 
 	port->ori_sw = fwnode_typec_switch_get(fwnode);
 	if (IS_ERR(port->ori_sw)) {
+<<<<<<< HEAD
 		ret = PTR_ERR(port->ori_sw);
 		dev_dbg(dev, "Orientation switch handle not found: %d\n", ret);
+=======
+		dev_dbg(dev, "Orientation switch handle not found.\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto ori_sw_err;
 	}
 
 	port->role_sw = fwnode_usb_role_switch_get(fwnode);
 	if (IS_ERR(port->role_sw)) {
+<<<<<<< HEAD
 		ret = PTR_ERR(port->role_sw);
 		dev_dbg(dev, "USB role switch handle not found: %d\n", ret);
+=======
+		dev_dbg(dev, "USB role switch handle not found.\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto role_sw_err;
 	}
 
@@ -109,6 +215,7 @@ static int cros_typec_get_switch_handles(struct cros_typec_port *port,
 
 role_sw_err:
 	typec_switch_put(port->ori_sw);
+<<<<<<< HEAD
 	port->ori_sw = NULL;
 ori_sw_err:
 	typec_retimer_put(port->retimer);
@@ -118,6 +225,14 @@ retimer_sw_err:
 	port->mux = NULL;
 mux_err:
 	return ret;
+=======
+ori_sw_err:
+	typec_retimer_put(port->retimer);
+retimer_sw_err:
+	typec_mux_put(port->mux);
+mux_err:
+	return -ENODEV;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cros_typec_add_partner(struct cros_typec_data *typec, int port_num,
@@ -278,8 +393,11 @@ static int cros_typec_register_port_altmodes(struct cros_typec_data *typec,
 	if (IS_ERR(amode))
 		return PTR_ERR(amode);
 	port->port_altmode[CROS_EC_ALTMODE_DP] = amode;
+<<<<<<< HEAD
 	typec_altmode_set_drvdata(amode, port);
 	amode->ops = &port_amode_ops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Register TBT compatibility alt mode. The EC will not enter the mode
@@ -293,8 +411,11 @@ static int cros_typec_register_port_altmodes(struct cros_typec_data *typec,
 	if (IS_ERR(amode))
 		return PTR_ERR(amode);
 	port->port_altmode[CROS_EC_ALTMODE_TBT] = amode;
+<<<<<<< HEAD
 	typec_altmode_set_drvdata(amode, port);
 	amode->ops = &port_amode_ops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	port->state.alt = NULL;
 	port->state.mode = TYPEC_STATE_USB;
@@ -348,8 +469,11 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
 			goto unregister_ports;
 		}
 
+<<<<<<< HEAD
 		cros_port->port_num = port_num;
 		cros_port->typec_data = typec;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		typec->ports[port_num] = cros_port;
 		cap = &cros_port->caps;
 
@@ -365,11 +489,17 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
 		}
 
 		ret = cros_typec_get_switch_handles(cros_port, fwnode, dev);
+<<<<<<< HEAD
 		if (ret) {
 			dev_dbg(dev, "No switch control for port %d, err: %d\n", port_num, ret);
 			if (ret == -EPROBE_DEFER)
 				goto unregister_ports;
 		}
+=======
+		if (ret)
+			dev_dbg(dev, "No switch control for port %d\n",
+				port_num);
+>>>>>>> b7ba80a49124 (Commit)
 
 		ret = cros_typec_register_port_altmodes(typec, port_num);
 		if (ret) {
@@ -915,7 +1045,11 @@ static void cros_typec_register_partner_pdos(struct cros_typec_data *typec,
 	if (!resp->source_cap_count && !resp->sink_cap_count)
 		return;
 
+<<<<<<< HEAD
 	port->partner_pd = typec_partner_usb_power_delivery_register(port->partner, &desc);
+=======
+	port->partner_pd = usb_power_delivery_register(NULL, &desc);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(port->partner_pd)) {
 		dev_warn(typec->dev, "Failed to register partner PD device, port: %d\n", port_num);
 		return;
@@ -1008,6 +1142,7 @@ static void cros_typec_handle_status(struct cros_typec_data *typec, int port_num
 					 "Failed SOP Disc event clear, port: %d\n", port_num);
 		}
 	}
+<<<<<<< HEAD
 
 	if (resp.events & PD_STATUS_EVENT_VDM_REQ_REPLY) {
 		cros_typec_handle_vdm_response(typec, port_num);
@@ -1023,6 +1158,8 @@ static void cros_typec_handle_status(struct cros_typec_data *typec, int port_num
 			dev_warn(typec->dev, "Failed VDM attention event clear, port: %d\n",
 				 port_num);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)

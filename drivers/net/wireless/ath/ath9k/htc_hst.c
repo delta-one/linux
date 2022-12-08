@@ -391,7 +391,11 @@ static void ath9k_htc_fw_panic_report(struct htc_target *htc_handle,
  * HTC Messages are handled directly here and the obtained SKB
  * is freed.
  *
+<<<<<<< HEAD
  * Service messages (Data, WMI) are passed to the corresponding
+=======
+ * Service messages (Data, WMI) passed to the corresponding
+>>>>>>> b7ba80a49124 (Commit)
  * endpoint RX handlers, which have to free the SKB.
  */
 void ath9k_htc_rx_msg(struct htc_target *htc_handle,
@@ -478,8 +482,11 @@ invalid:
 		if (endpoint->ep_callbacks.rx)
 			endpoint->ep_callbacks.rx(endpoint->ep_callbacks.priv,
 						  skb, epid);
+<<<<<<< HEAD
 		else
 			goto invalid;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

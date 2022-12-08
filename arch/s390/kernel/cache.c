@@ -46,7 +46,11 @@ struct cache_info {
 #define CACHE_MAX_LEVEL 8
 union cache_topology {
 	struct cache_info ci[CACHE_MAX_LEVEL];
+<<<<<<< HEAD
 	unsigned long raw;
+=======
+	unsigned long long raw;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const char * const cache_type_string[] = {

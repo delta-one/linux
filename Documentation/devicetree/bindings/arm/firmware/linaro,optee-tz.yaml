@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/arm/firmware/linaro,optee-tz.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: OP-TEE
+=======
+title: OP-TEE Device Tree Bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Jens Wiklander <jens.wiklander@linaro.org>

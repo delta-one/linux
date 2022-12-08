@@ -5364,8 +5364,11 @@ static struct clk_branch gcc_ufs_1_card_clkref_clk = {
 		.enable_mask = BIT(0),
 		.hw.init = &(const struct clk_init_data) {
 			.name = "gcc_ufs_1_card_clkref_clk",
+<<<<<<< HEAD
 			.parent_data = &gcc_parent_data_tcxo,
 			.num_parents = 1,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			.ops = &clk_branch2_ops,
 		},
 	},
@@ -5434,8 +5437,11 @@ static struct clk_branch gcc_ufs_card_clkref_clk = {
 		.enable_mask = BIT(0),
 		.hw.init = &(const struct clk_init_data) {
 			.name = "gcc_ufs_card_clkref_clk",
+<<<<<<< HEAD
 			.parent_data = &gcc_parent_data_tcxo,
 			.num_parents = 1,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			.ops = &clk_branch2_ops,
 		},
 	},
@@ -5852,8 +5858,11 @@ static struct clk_branch gcc_ufs_ref_clkref_clk = {
 		.enable_mask = BIT(0),
 		.hw.init = &(const struct clk_init_data) {
 			.name = "gcc_ufs_ref_clkref_clk",
+<<<<<<< HEAD
 			.parent_data = &gcc_parent_data_tcxo,
 			.num_parents = 1,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			.ops = &clk_branch2_ops,
 		},
 	},
@@ -6849,12 +6858,24 @@ static struct gdsc ufs_phy_gdsc = {
 	.pwrsts = PWRSTS_OFF_ON,
 };
 
+<<<<<<< HEAD
+=======
+/*
+ * The Qualcomm DWC3 driver suspend implementation appears to be incomplete
+ * for sc8280xp so keep the USB power domains always-on for now.
+ */
+>>>>>>> b7ba80a49124 (Commit)
 static struct gdsc usb30_mp_gdsc = {
 	.gdscr = 0xab004,
 	.pd = {
 		.name = "usb30_mp_gdsc",
 	},
+<<<<<<< HEAD
 	.pwrsts = PWRSTS_RET_ON,
+=======
+	.pwrsts = PWRSTS_OFF_ON,
+	.flags = ALWAYS_ON,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct gdsc usb30_prim_gdsc = {
@@ -6862,7 +6883,12 @@ static struct gdsc usb30_prim_gdsc = {
 	.pd = {
 		.name = "usb30_prim_gdsc",
 	},
+<<<<<<< HEAD
 	.pwrsts = PWRSTS_RET_ON,
+=======
+	.pwrsts = PWRSTS_OFF_ON,
+	.flags = ALWAYS_ON,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct gdsc usb30_sec_gdsc = {
@@ -6870,7 +6896,12 @@ static struct gdsc usb30_sec_gdsc = {
 	.pd = {
 		.name = "usb30_sec_gdsc",
 	},
+<<<<<<< HEAD
 	.pwrsts = PWRSTS_RET_ON,
+=======
+	.pwrsts = PWRSTS_OFF_ON,
+	.flags = ALWAYS_ON,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct clk_regmap *gcc_sc8280xp_clocks[] = {

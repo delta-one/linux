@@ -8,7 +8,10 @@
 
 struct intel_huc;
 
+<<<<<<< HEAD
 int intel_huc_fw_load_and_auth_via_gsc(struct intel_huc *huc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int intel_huc_fw_upload(struct intel_huc *huc);
 
 #endif

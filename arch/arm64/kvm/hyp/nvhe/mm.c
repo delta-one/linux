@@ -14,7 +14,10 @@
 #include <nvhe/early_alloc.h>
 #include <nvhe/gfp.h>
 #include <nvhe/memory.h>
+<<<<<<< HEAD
 #include <nvhe/mem_protect.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <nvhe/mm.h>
 #include <nvhe/spinlock.h>
 
@@ -26,12 +29,15 @@ unsigned int hyp_memblock_nr;
 
 static u64 __io_map_base;
 
+<<<<<<< HEAD
 struct hyp_fixmap_slot {
 	u64 addr;
 	kvm_pte_t *ptep;
 };
 static DEFINE_PER_CPU(struct hyp_fixmap_slot, fixmap_slots);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __pkvm_create_mappings(unsigned long start, unsigned long size,
 				  unsigned long phys, enum kvm_pgtable_prot prot)
 {
@@ -136,6 +142,7 @@ int pkvm_create_mappings(void *from, void *to, enum kvm_pgtable_prot prot)
 	return ret;
 }
 
+<<<<<<< HEAD
 int hyp_back_vmemmap(phys_addr_t back)
 {
 	unsigned long i, start, size, end = 0;
@@ -166,6 +173,15 @@ int hyp_back_vmemmap(phys_addr_t back)
 	}
 
 	return 0;
+=======
+int hyp_back_vmemmap(phys_addr_t phys, unsigned long size, phys_addr_t back)
+{
+	unsigned long start, end;
+
+	hyp_vmemmap_range(phys, size, &start, &end);
+
+	return __pkvm_create_mappings(start, end - start, back, PAGE_HYP);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void *__hyp_bp_vect_base;
@@ -219,6 +235,7 @@ int hyp_map_vectors(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 void *hyp_fixmap_map(phys_addr_t phys)
 {
 	struct hyp_fixmap_slot *slot = this_cpu_ptr(&fixmap_slots);
@@ -315,6 +332,8 @@ int hyp_create_pcpu_fixmap(void)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int hyp_create_idmap(u32 hyp_va_bits)
 {
 	unsigned long start, end;
@@ -339,6 +358,7 @@ int hyp_create_idmap(u32 hyp_va_bits)
 
 	return __pkvm_create_mappings(start, end - start, start, PAGE_HYP_EXEC);
 }
+<<<<<<< HEAD
 
 static void *admit_host_page(void *arg)
 {
@@ -372,3 +392,5 @@ int refill_memcache(struct kvm_hyp_memcache *mc, unsigned long min_pages,
 
 	return ret;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

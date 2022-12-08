@@ -3,7 +3,10 @@
 #include <linux/clk.h>
 #include <linux/of_clk.h>
 #include <linux/minmax.h>
+<<<<<<< HEAD
 #include <linux/of_address.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_data/simplefb.h>
 #include <linux/platform_device.h>
 #include <linux/regulator/consumer.h>
@@ -12,11 +15,18 @@
 #include <drm/drm_atomic.h>
 #include <drm/drm_atomic_state_helper.h>
 #include <drm/drm_connector.h>
+<<<<<<< HEAD
 #include <drm/drm_crtc_helper.h>
 #include <drm/drm_damage_helper.h>
 #include <drm/drm_device.h>
 #include <drm/drm_drv.h>
 #include <drm/drm_fbdev_generic.h>
+=======
+#include <drm/drm_damage_helper.h>
+#include <drm/drm_device.h>
+#include <drm/drm_drv.h>
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_format_helper.h>
 #include <drm/drm_gem_atomic_helper.h>
 #include <drm/drm_gem_framebuffer_helper.h>
@@ -185,6 +195,7 @@ simplefb_get_format_of(struct drm_device *dev, struct device_node *of_node)
 	return simplefb_get_validated_format(dev, format);
 }
 
+<<<<<<< HEAD
 static struct resource *
 simplefb_get_memory_of(struct drm_device *dev, struct device_node *of_node)
 {
@@ -210,6 +221,8 @@ simplefb_get_memory_of(struct drm_device *dev, struct device_node *of_node)
 	return res;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Simple Framebuffer device
  */
@@ -234,7 +247,11 @@ struct simpledrm_device {
 	unsigned int pitch;
 
 	/* memory management */
+<<<<<<< HEAD
 	struct iosys_map screen_base;
+=======
+	void __iomem *screen_base;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* modesetting */
 	uint32_t formats[8];
@@ -472,20 +489,50 @@ static int simpledrm_device_init_regulators(struct simpledrm_device *sdev)
  * Modesetting
  */
 
+<<<<<<< HEAD
+=======
+/*
+ * Support all formats of simplefb and maybe more; in order
+ * of preference. The display's update function will do any
+ * conversion necessary.
+ *
+ * TODO: Add blit helpers for remaining formats and uncomment
+ *       constants.
+ */
+static const uint32_t simpledrm_primary_plane_formats[] = {
+	DRM_FORMAT_XRGB8888,
+	DRM_FORMAT_ARGB8888,
+	DRM_FORMAT_RGB565,
+	//DRM_FORMAT_XRGB1555,
+	//DRM_FORMAT_ARGB1555,
+	DRM_FORMAT_RGB888,
+	DRM_FORMAT_XRGB2101010,
+	DRM_FORMAT_ARGB2101010,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static const uint64_t simpledrm_primary_plane_format_modifiers[] = {
 	DRM_FORMAT_MOD_LINEAR,
 	DRM_FORMAT_MOD_INVALID
 };
 
 static void simpledrm_primary_plane_helper_atomic_update(struct drm_plane *plane,
+<<<<<<< HEAD
 							 struct drm_atomic_state *state)
 {
 	struct drm_plane_state *plane_state = drm_atomic_get_new_plane_state(state, plane);
 	struct drm_plane_state *old_plane_state = drm_atomic_get_old_plane_state(state, plane);
+=======
+							 struct drm_atomic_state *old_state)
+{
+	struct drm_plane_state *plane_state = plane->state;
+	struct drm_plane_state *old_plane_state = drm_atomic_get_old_plane_state(old_state, plane);
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
 	struct drm_framebuffer *fb = plane_state->fb;
 	struct drm_device *dev = plane->dev;
 	struct simpledrm_device *sdev = simpledrm_device_of_dev(dev);
+<<<<<<< HEAD
 	struct drm_atomic_helper_damage_iter iter;
 	struct drm_rect damage;
 	int ret, idx;
@@ -517,6 +564,34 @@ out_drm_gem_fb_end_cpu_access:
 
 static void simpledrm_primary_plane_helper_atomic_disable(struct drm_plane *plane,
 							  struct drm_atomic_state *state)
+=======
+	struct iosys_map dst = IOSYS_MAP_INIT_VADDR(sdev->screen_base);
+	struct drm_rect src_clip, dst_clip;
+	int idx;
+
+	if (!fb)
+		return;
+
+	if (!drm_atomic_helper_damage_merged(old_plane_state, plane_state, &src_clip))
+		return;
+
+	dst_clip = plane_state->dst;
+	if (!drm_rect_intersect(&dst_clip, &src_clip))
+		return;
+
+	if (!drm_dev_enter(dev, &idx))
+		return;
+
+	iosys_map_incr(&dst, drm_fb_clip_offset(sdev->pitch, sdev->format, &dst_clip));
+	drm_fb_blit(&dst, &sdev->pitch, sdev->format->format, shadow_plane_state->data, fb,
+		    &src_clip);
+
+	drm_dev_exit(idx);
+}
+
+static void simpledrm_primary_plane_helper_atomic_disable(struct drm_plane *plane,
+							  struct drm_atomic_state *old_state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drm_device *dev = plane->dev;
 	struct simpledrm_device *sdev = simpledrm_device_of_dev(dev);
@@ -526,7 +601,11 @@ static void simpledrm_primary_plane_helper_atomic_disable(struct drm_plane *plan
 		return;
 
 	/* Clear screen to black if disabled */
+<<<<<<< HEAD
 	iosys_map_memset(&sdev->screen_base, 0, 0, sdev->pitch * sdev->mode.vdisplay);
+=======
+	memset_io(sdev->screen_base, 0, sdev->pitch * sdev->mode.vdisplay);
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_dev_exit(idx);
 }
@@ -553,6 +632,22 @@ static enum drm_mode_status simpledrm_crtc_helper_mode_valid(struct drm_crtc *cr
 	return drm_crtc_helper_mode_valid_fixed(crtc, mode, &sdev->mode);
 }
 
+<<<<<<< HEAD
+=======
+static int simpledrm_crtc_helper_atomic_check(struct drm_crtc *crtc,
+					      struct drm_atomic_state *new_state)
+{
+	struct drm_crtc_state *new_crtc_state = drm_atomic_get_new_crtc_state(new_state, crtc);
+	int ret;
+
+	ret = drm_atomic_helper_check_crtc_state(new_crtc_state, false);
+	if (ret)
+		return ret;
+
+	return drm_atomic_add_affected_planes(new_state, crtc);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The CRTC is always enabled. Screen updates are performed by
  * the primary plane's atomic_update function. Disabling clears
@@ -560,7 +655,11 @@ static enum drm_mode_status simpledrm_crtc_helper_mode_valid(struct drm_crtc *cr
  */
 static const struct drm_crtc_helper_funcs simpledrm_crtc_helper_funcs = {
 	.mode_valid = simpledrm_crtc_helper_mode_valid,
+<<<<<<< HEAD
 	.atomic_check = drm_crtc_helper_atomic_check,
+=======
+	.atomic_check = simpledrm_crtc_helper_atomic_check,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct drm_crtc_funcs simpledrm_crtc_funcs = {
@@ -606,12 +705,25 @@ static const struct drm_mode_config_funcs simpledrm_mode_config_funcs = {
  */
 
 static struct drm_display_mode simpledrm_mode(unsigned int width,
+<<<<<<< HEAD
 					      unsigned int height,
 					      unsigned int width_mm,
 					      unsigned int height_mm)
 {
 	const struct drm_display_mode mode = {
 		DRM_MODE_INIT(60, width, height, width_mm, height_mm)
+=======
+					      unsigned int height)
+{
+	/*
+	 * Assume a monitor resolution of 96 dpi to
+	 * get a somewhat reasonable screen size.
+	 */
+	const struct drm_display_mode mode = {
+		DRM_MODE_INIT(60, width, height,
+			      DRM_MODE_RES_MM(width, 96ul),
+			      DRM_MODE_RES_MM(height, 96ul))
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	return mode;
@@ -625,10 +737,16 @@ static struct simpledrm_device *simpledrm_device_create(struct drm_driver *drv,
 	struct simpledrm_device *sdev;
 	struct drm_device *dev;
 	int width, height, stride;
+<<<<<<< HEAD
 	int width_mm = 0, height_mm = 0;
 	struct device_node *panel_node;
 	const struct drm_format_info *format;
 	struct resource *res, *mem = NULL;
+=======
+	const struct drm_format_info *format;
+	struct resource *res, *mem;
+	void __iomem *screen_base;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_plane *primary_plane;
 	struct drm_crtc *crtc;
 	struct drm_encoder *encoder;
@@ -680,6 +798,7 @@ static struct simpledrm_device *simpledrm_device_create(struct drm_driver *drv,
 		format = simplefb_get_format_of(dev, of_node);
 		if (IS_ERR(format))
 			return ERR_CAST(format);
+<<<<<<< HEAD
 		mem = simplefb_get_memory_of(dev, of_node);
 		if (IS_ERR(mem))
 			return ERR_CAST(mem);
@@ -689,10 +808,13 @@ static struct simpledrm_device *simpledrm_device_create(struct drm_driver *drv,
 			simplefb_read_u32_of(dev, panel_node, "height-mm", &height_mm);
 			of_node_put(panel_node);
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		drm_err(dev, "no simplefb configuration found\n");
 		return ERR_PTR(-ENODEV);
 	}
+<<<<<<< HEAD
 	if (!stride) {
 		stride = drm_format_info_min_pitch(format, 0, width);
 		if (drm_WARN_ON(dev, !stride))
@@ -709,6 +831,12 @@ static struct simpledrm_device *simpledrm_device_create(struct drm_driver *drv,
 		height_mm = DRM_MODE_RES_MM(height, 96ul);
 
 	sdev->mode = simpledrm_mode(width, height, width_mm, height_mm);
+=======
+	if (!stride)
+		stride = DIV_ROUND_UP(drm_format_info_bpp(format, 0) * width, 8);
+
+	sdev->mode = simpledrm_mode(width, height);
+>>>>>>> b7ba80a49124 (Commit)
 	sdev->format = format;
 	sdev->pitch = stride;
 
@@ -720,6 +848,7 @@ static struct simpledrm_device *simpledrm_device_create(struct drm_driver *drv,
 	 * Memory management
 	 */
 
+<<<<<<< HEAD
 	if (mem) {
 		void *screen_base;
 
@@ -770,6 +899,34 @@ static struct simpledrm_device *simpledrm_device_create(struct drm_driver *drv,
 		iosys_map_set_vaddr_iomem(&sdev->screen_base, screen_base);
 	}
 
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	if (!res)
+		return ERR_PTR(-EINVAL);
+
+	ret = devm_aperture_acquire_from_firmware(dev, res->start, resource_size(res));
+	if (ret) {
+		drm_err(dev, "could not acquire memory range %pr: error %d\n", res, ret);
+		return ERR_PTR(ret);
+	}
+
+	mem = devm_request_mem_region(&pdev->dev, res->start, resource_size(res), drv->name);
+	if (!mem) {
+		/*
+		 * We cannot make this fatal. Sometimes this comes from magic
+		 * spaces our resource handlers simply don't know about. Use
+		 * the I/O-memory resource as-is and try to map that instead.
+		 */
+		drm_warn(dev, "could not acquire memory region %pr\n", res);
+		mem = res;
+	}
+
+	screen_base = devm_ioremap_wc(&pdev->dev, mem->start, resource_size(mem));
+	if (!screen_base)
+		return ERR_PTR(-ENOMEM);
+	sdev->screen_base = screen_base;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Modesetting
 	 */
@@ -785,12 +942,21 @@ static struct simpledrm_device *simpledrm_device_create(struct drm_driver *drv,
 	dev->mode_config.max_width = max_width;
 	dev->mode_config.min_height = height;
 	dev->mode_config.max_height = max_height;
+<<<<<<< HEAD
 	dev->mode_config.preferred_depth = format->depth;
+=======
+	dev->mode_config.preferred_depth = format->cpp[0] * 8;
+>>>>>>> b7ba80a49124 (Commit)
 	dev->mode_config.funcs = &simpledrm_mode_config_funcs;
 
 	/* Primary plane */
 
 	nformats = drm_fb_build_fourcc_list(dev, &format->format, 1,
+<<<<<<< HEAD
+=======
+					    simpledrm_primary_plane_formats,
+					    ARRAY_SIZE(simpledrm_primary_plane_formats),
+>>>>>>> b7ba80a49124 (Commit)
 					    sdev->formats, ARRAY_SIZE(sdev->formats));
 
 	primary_plane = &sdev->primary_plane;
@@ -867,7 +1033,10 @@ static int simpledrm_probe(struct platform_device *pdev)
 {
 	struct simpledrm_device *sdev;
 	struct drm_device *dev;
+<<<<<<< HEAD
 	unsigned int color_mode;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	sdev = simpledrm_device_create(&simpledrm_driver, pdev);
@@ -879,11 +1048,15 @@ static int simpledrm_probe(struct platform_device *pdev)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	color_mode = drm_format_info_bpp(sdev->format, 0);
 	if (color_mode == 16)
 		color_mode = sdev->format->depth; // can be 15 or 16
 
 	drm_fbdev_generic_setup(dev, color_mode);
+=======
+	drm_fbdev_generic_setup(dev, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

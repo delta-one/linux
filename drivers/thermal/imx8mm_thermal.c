@@ -10,6 +10,7 @@
 #include <linux/err.h>
 #include <linux/io.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/nvmem-consumer.h>
 #include <linux/of.h>
 #include <linux/of_device.h>
@@ -18,10 +19,19 @@
 #include <linux/thermal.h>
 
 #include "thermal_hwmon.h"
+=======
+#include <linux/of.h>
+#include <linux/of_device.h>
+#include <linux/platform_device.h>
+#include <linux/thermal.h>
+
+#include "thermal_core.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define TER			0x0	/* TMU enable */
 #define TPS			0x4
 #define TRITSR			0x20	/* TMU immediate temp */
+<<<<<<< HEAD
 /* TMU calibration data registers */
 #define TASR			0x28
 #define TASR_BUF_SLOPE_MASK	GENMASK(19, 16)
@@ -43,6 +53,13 @@
 #define TER_EN			BIT(31)
 #define TRITSR_TEMP0_VAL_MASK	GENMASK(7, 0)
 #define TRITSR_TEMP1_VAL_MASK	GENMASK(23, 16)
+=======
+
+#define TER_ADC_PD		BIT(30)
+#define TER_EN			BIT(31)
+#define TRITSR_TEMP0_VAL_MASK	0xff
+#define TRITSR_TEMP1_VAL_MASK	0xff0000
+>>>>>>> b7ba80a49124 (Commit)
 
 #define PROBE_SEL_ALL		GENMASK(31, 30)
 
@@ -50,6 +67,7 @@
 #define SIGN_BIT		BIT(7)
 #define TEMP_VAL_MASK		GENMASK(6, 0)
 
+<<<<<<< HEAD
 /* TMU OCOTP calibration data bitfields */
 #define ANA0_EN			BIT(25)
 #define ANA0_BUF_VREF_MASK	GENMASK(24, 20)
@@ -69,6 +87,8 @@
 #define TRIM5_TCA105_1_MASK	GENMASK(23, 12)
 #define TRIM5_TCA25_1_MASK	GENMASK(11, 0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define VER1_TEMP_LOW_LIMIT	10000
 #define VER2_TEMP_LOW_LIMIT	-40000
 #define VER2_TEMP_HIGH_LIMIT	125000
@@ -102,6 +122,7 @@ static int imx8mm_tmu_get_temp(void *data, int *temp)
 	u32 val;
 
 	val = readl_relaxed(tmu->base + TRITSR) & TRITSR_TEMP0_VAL_MASK;
+<<<<<<< HEAD
 
 	/*
 	 * Do not validate against the V bit (bit 31) due to errata
@@ -110,6 +131,10 @@ static int imx8mm_tmu_get_temp(void *data, int *temp)
 
 	*temp = val * 1000;
 	if (*temp < VER1_TEMP_LOW_LIMIT || *temp > VER2_TEMP_HIGH_LIMIT)
+=======
+	*temp = val * 1000;
+	if (*temp < VER1_TEMP_LOW_LIMIT)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EAGAIN;
 
 	return 0;
@@ -141,7 +166,11 @@ static int imx8mp_tmu_get_temp(void *data, int *temp)
 
 static int tmu_get_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	struct tmu_sensor *sensor = thermal_zone_device_priv(tz);
+=======
+	struct tmu_sensor *sensor = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct imx8mm_tmu *tmu = sensor->priv;
 
 	return tmu->socdata->get_temp(sensor, temp);
@@ -171,6 +200,7 @@ static void imx8mm_tmu_probe_sel_all(struct imx8mm_tmu *tmu)
 	writel_relaxed(val, tmu->base + TPS);
 }
 
+<<<<<<< HEAD
 static int imx8mm_tmu_probe_set_calib_v1(struct platform_device *pdev,
 					 struct imx8mm_tmu *tmu)
 {
@@ -294,6 +324,8 @@ static int imx8mm_tmu_probe_set_calib(struct platform_device *pdev,
 	return imx8mm_tmu_probe_set_calib_v2(pdev, tmu);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int imx8mm_tmu_probe(struct platform_device *pdev)
 {
 	const struct thermal_soc_data *data;
@@ -342,17 +374,23 @@ static int imx8mm_tmu_probe(struct platform_device *pdev)
 			goto disable_clk;
 		}
 		tmu->sensors[i].hw_id = i;
+<<<<<<< HEAD
 
 		if (devm_thermal_add_hwmon_sysfs(&pdev->dev, tmu->sensors[i].tzd))
 			dev_warn(&pdev->dev, "failed to add hwmon sysfs attributes\n");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	platform_set_drvdata(pdev, tmu);
 
+<<<<<<< HEAD
 	ret = imx8mm_tmu_probe_set_calib(pdev, tmu);
 	if (ret)
 		goto disable_clk;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* enable all the probes for V2 TMU */
 	if (tmu->socdata->version == TMU_VER2)
 		imx8mm_tmu_probe_sel_all(tmu);

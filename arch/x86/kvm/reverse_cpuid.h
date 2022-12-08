@@ -7,6 +7,7 @@
 #include <asm/cpufeatures.h>
 
 /*
+<<<<<<< HEAD
  * Hardware-defined CPUID leafs that are either scattered by the kernel or are
  * unknown to the kernel, but need to be directly used by KVM.  Note, these
  * word values conflict with the kernel's "bug" caps, but KVM doesn't use those.
@@ -15,11 +16,20 @@ enum kvm_only_cpuid_leafs {
 	CPUID_12_EAX	 = NCAPINTS,
 	CPUID_7_1_EDX,
 	CPUID_8000_0007_EDX,
+=======
+ * Hardware-defined CPUID leafs that are scattered in the kernel, but need to
+ * be directly used by KVM.  Note, these word values conflict with the kernel's
+ * "bug" caps, but KVM doesn't use those.
+ */
+enum kvm_only_cpuid_leafs {
+	CPUID_12_EAX	 = NCAPINTS,
+>>>>>>> b7ba80a49124 (Commit)
 	NR_KVM_CPU_CAPS,
 
 	NKVMCAPINTS = NR_KVM_CPU_CAPS - NCAPINTS,
 };
 
+<<<<<<< HEAD
 /*
  * Define a KVM-only feature flag.
  *
@@ -32,11 +42,14 @@ enum kvm_only_cpuid_leafs {
  * that X86_FEATURE_* can be used in KVM.  No __feature_translate() handling is
  * needed in this case.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define KVM_X86_FEATURE(w, f)		((w)*32 + (f))
 
 /* Intel-defined SGX sub-features, CPUID level 0x12 (EAX). */
 #define KVM_X86_FEATURE_SGX1		KVM_X86_FEATURE(CPUID_12_EAX, 0)
 #define KVM_X86_FEATURE_SGX2		KVM_X86_FEATURE(CPUID_12_EAX, 1)
+<<<<<<< HEAD
 #define KVM_X86_FEATURE_SGX_EDECCSSA	KVM_X86_FEATURE(CPUID_12_EAX, 11)
 
 /* Intel-defined sub-features, CPUID level 0x00000007:1 (EDX) */
@@ -46,6 +59,8 @@ enum kvm_only_cpuid_leafs {
 
 /* CPUID level 0x80000007 (EDX). */
 #define KVM_X86_FEATURE_CONSTANT_TSC	KVM_X86_FEATURE(CPUID_8000_0007_EDX, 8)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct cpuid_reg {
 	u32 function;
@@ -71,9 +86,12 @@ static const struct cpuid_reg reverse_cpuid[] = {
 	[CPUID_7_1_EAX]       = {         7, 1, CPUID_EAX},
 	[CPUID_12_EAX]        = {0x00000012, 0, CPUID_EAX},
 	[CPUID_8000_001F_EAX] = {0x8000001f, 0, CPUID_EAX},
+<<<<<<< HEAD
 	[CPUID_7_1_EDX]       = {         7, 1, CPUID_EDX},
 	[CPUID_8000_0007_EDX] = {0x80000007, 0, CPUID_EDX},
 	[CPUID_8000_0021_EAX] = {0x80000021, 0, CPUID_EAX},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -104,10 +122,13 @@ static __always_inline u32 __feature_translate(int x86_feature)
 		return KVM_X86_FEATURE_SGX1;
 	else if (x86_feature == X86_FEATURE_SGX2)
 		return KVM_X86_FEATURE_SGX2;
+<<<<<<< HEAD
 	else if (x86_feature == X86_FEATURE_SGX_EDECCSSA)
 		return KVM_X86_FEATURE_SGX_EDECCSSA;
 	else if (x86_feature == X86_FEATURE_CONSTANT_TSC)
 		return KVM_X86_FEATURE_CONSTANT_TSC;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return x86_feature;
 }

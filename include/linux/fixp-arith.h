@@ -2,7 +2,10 @@
 #ifndef _FIXP_ARITH_H
 #define _FIXP_ARITH_H
 
+<<<<<<< HEAD
 #include <linux/bug.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/math64.h>
 
 /*

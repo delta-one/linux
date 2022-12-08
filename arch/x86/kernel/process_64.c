@@ -165,7 +165,11 @@ static noinstr unsigned long __rdgsbase_inactive(void)
 
 	lockdep_assert_irqs_disabled();
 
+<<<<<<< HEAD
 	if (!cpu_feature_enabled(X86_FEATURE_XENPV)) {
+=======
+	if (!static_cpu_has(X86_FEATURE_XENPV)) {
+>>>>>>> b7ba80a49124 (Commit)
 		native_swapgs();
 		gsbase = rdgsbase();
 		native_swapgs();
@@ -190,7 +194,11 @@ static noinstr void __wrgsbase_inactive(unsigned long gsbase)
 {
 	lockdep_assert_irqs_disabled();
 
+<<<<<<< HEAD
 	if (!cpu_feature_enabled(X86_FEATURE_XENPV)) {
+=======
+	if (!static_cpu_has(X86_FEATURE_XENPV)) {
+>>>>>>> b7ba80a49124 (Commit)
 		native_swapgs();
 		wrgsbase(gsbase);
 		native_swapgs();
@@ -514,8 +522,11 @@ start_thread_common(struct pt_regs *regs, unsigned long new_ip,
 		load_gs_index(__USER_DS);
 	}
 
+<<<<<<< HEAD
 	reset_thread_features();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	loadsegment(fs, 0);
 	loadsegment(es, _ds);
 	loadsegment(ds, _ds);
@@ -565,7 +576,11 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
 	int cpu = smp_processor_id();
 
 	WARN_ON_ONCE(IS_ENABLED(CONFIG_DEBUG_ENTRY) &&
+<<<<<<< HEAD
 		     this_cpu_read(pcpu_hot.hardirq_stack_inuse));
+=======
+		     this_cpu_read(hardirq_stack_inuse));
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!test_thread_flag(TIF_NEED_FPU_LOAD))
 		switch_fpu_prepare(prev_fpu, cpu);
@@ -619,8 +634,13 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
 	/*
 	 * Switch the PDA and FPU contexts.
 	 */
+<<<<<<< HEAD
 	raw_cpu_write(pcpu_hot.current_task, next_p);
 	raw_cpu_write(pcpu_hot.top_of_stack, task_top_of_stack(next_p));
+=======
+	this_cpu_write(current_task, next_p);
+	this_cpu_write(cpu_current_top_of_stack, task_top_of_stack(next_p));
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch_fpu_finish();
 
@@ -658,7 +678,11 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
 	}
 
 	/* Load the Intel cache allocation PQR MSR. */
+<<<<<<< HEAD
 	resctrl_sched_in(next_p);
+=======
+	resctrl_sched_in();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return prev_p;
 }
@@ -832,12 +856,16 @@ long do_arch_prctl_64(struct task_struct *task, int option, unsigned long arg2)
 	case ARCH_MAP_VDSO_64:
 		return prctl_map_vdso(&vdso_image_64, arg2);
 #endif
+<<<<<<< HEAD
 	case ARCH_SHSTK_ENABLE:
 	case ARCH_SHSTK_DISABLE:
 	case ARCH_SHSTK_LOCK:
 	case ARCH_SHSTK_UNLOCK:
 	case ARCH_SHSTK_STATUS:
 		return shstk_prctl(task, option, arg2);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		ret = -EINVAL;
 		break;

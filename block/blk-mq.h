@@ -312,8 +312,12 @@ static inline void blk_mq_clear_mq_map(struct blk_mq_queue_map *qmap)
 static inline struct blk_plug *blk_mq_plug( struct bio *bio)
 {
 	/* Zoned block device write operation case: do not plug the BIO */
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_BLK_DEV_ZONED) &&
 	    bdev_op_is_zoned_write(bio->bi_bdev, bio_op(bio)))
+=======
+	if (bdev_is_zoned(bio->bi_bdev) && op_is_write(bio_op(bio)))
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	/*
@@ -377,6 +381,7 @@ static inline bool hctx_may_queue(struct blk_mq_hw_ctx *hctx,
 /* run the code block in @dispatch_ops with rcu/srcu read lock held */
 #define __blk_mq_run_dispatch_ops(q, check_sleep, dispatch_ops)	\
 do {								\
+<<<<<<< HEAD
 	if ((q)->tag_set->flags & BLK_MQ_F_BLOCKING) {		\
 		struct blk_mq_tag_set *__tag_set = (q)->tag_set; \
 		int srcu_idx;					\
@@ -389,6 +394,19 @@ do {								\
 		rcu_read_lock();				\
 		(dispatch_ops);					\
 		rcu_read_unlock();				\
+=======
+	if (!blk_queue_has_srcu(q)) {				\
+		rcu_read_lock();				\
+		(dispatch_ops);					\
+		rcu_read_unlock();				\
+	} else {						\
+		int srcu_idx;					\
+								\
+		might_sleep_if(check_sleep);			\
+		srcu_idx = srcu_read_lock((q)->srcu);		\
+		(dispatch_ops);					\
+		srcu_read_unlock((q)->srcu, srcu_idx);		\
+>>>>>>> b7ba80a49124 (Commit)
 	}							\
 } while (0)
 

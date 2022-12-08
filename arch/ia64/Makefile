@@ -23,7 +23,11 @@ KBUILD_AFLAGS_KERNEL := -mconstant-gp
 EXTRA		:=
 
 cflags-y	:= -pipe $(EXTRA) -ffixed-r13 -mfixed-range=f12-f15,f32-f127 \
+<<<<<<< HEAD
 		   -frename-registers -fno-optimize-sibling-calls
+=======
+		   -falign-functions=32 -frename-registers -fno-optimize-sibling-calls
+>>>>>>> b7ba80a49124 (Commit)
 KBUILD_CFLAGS_KERNEL := -mconstant-gp
 
 GAS_STATUS	= $(shell $(srctree)/arch/ia64/scripts/check-gas "$(CC)" "$(OBJDUMP)")

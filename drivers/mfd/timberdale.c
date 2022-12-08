@@ -11,6 +11,10 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/pci.h>
+<<<<<<< HEAD
+=======
+#include <linux/msi.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mfd/core.h>
 #include <linux/slab.h>
 

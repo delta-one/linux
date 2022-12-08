@@ -47,7 +47,10 @@ fixes/update part 1.1  Stefani Seibold <stefani@seibold.net>    June 9 2009
   3.10  /proc/<pid>/timerslack_ns - Task timerslack value
   3.11	/proc/<pid>/patch_state - Livepatch patch operation state
   3.12	/proc/<pid>/arch_status - Task architecture specific information
+<<<<<<< HEAD
   3.13  /proc/<pid>/fd - List of symlinks to open files
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   4	Configuring procfs
   4.1	Mount options
@@ -85,7 +88,11 @@ contact Bodo  Bauer  at  bb@ricochet.net.  We'll  be happy to add them to this
 document.
 
 The   latest   version    of   this   document   is    available   online   at
+<<<<<<< HEAD
 https://www.kernel.org/doc/html/latest/filesystems/proc.html
+=======
+http://tldp.org/LDP/Linux-Filesystem-Hierarchy/html/proc.html
+>>>>>>> b7ba80a49124 (Commit)
 
 If  the above  direction does  not works  for you,  you could  try the  kernel
 mailing  list  at  linux-kernel@vger.kernel.org  and/or try  to  reach  me  at
@@ -232,7 +239,11 @@ asynchronous manner and the value may not be very precise. To see a precise
 snapshot of a moment, you can see /proc/<pid>/smaps file and scan page table.
 It's slow but very precise.
 
+<<<<<<< HEAD
 .. table:: Table 1-2: Contents of the status fields (as of 4.19)
+=======
+.. table:: Table 1-2: Contents of the status files (as of 4.19)
+>>>>>>> b7ba80a49124 (Commit)
 
  ==========================  ===================================================
  Field                       Content
@@ -246,8 +257,12 @@ It's slow but very precise.
  Ngid                        NUMA group ID (0 if none)
  Pid                         process id
  PPid                        process id of the parent process
+<<<<<<< HEAD
  TracerPid                   PID of process tracing this process (0 if not, or
                              the tracer is outside of the current pid namespace)
+=======
+ TracerPid                   PID of process tracing this process (0 if not)
+>>>>>>> b7ba80a49124 (Commit)
  Uid                         Real, effective, saved set, and  file system UIDs
  Gid                         Real, effective, saved set, and  file system GIDs
  FDSize                      number of file descriptor slots currently allocated
@@ -305,7 +320,11 @@ It's slow but very precise.
  ==========================  ===================================================
 
 
+<<<<<<< HEAD
 .. table:: Table 1-3: Contents of the statm fields (as of 2.6.8-rc3)
+=======
+.. table:: Table 1-3: Contents of the statm files (as of 2.6.8-rc3)
+>>>>>>> b7ba80a49124 (Commit)
 
  ======== ===============================	==============================
  Field    Content
@@ -323,7 +342,11 @@ It's slow but very precise.
  ======== ===============================	==============================
 
 
+<<<<<<< HEAD
 .. table:: Table 1-4: Contents of the stat fields (as of 2.6.30-rc7)
+=======
+.. table:: Table 1-4: Contents of the stat files (as of 2.6.30-rc7)
+>>>>>>> b7ba80a49124 (Commit)
 
   ============= ===============================================================
   Field         Content
@@ -428,16 +451,26 @@ with the memory region, as the case would be with BSS (uninitialized data).
 The "pathname" shows the name associated file for this mapping.  If the mapping
 is not associated with a file:
 
+<<<<<<< HEAD
  ===================        ===========================================
+=======
+ =============              ====================================
+>>>>>>> b7ba80a49124 (Commit)
  [heap]                     the heap of the program
  [stack]                    the stack of the main process
  [vdso]                     the "virtual dynamic shared object",
                             the kernel system call handler
+<<<<<<< HEAD
  [anon:<name>]              a private anonymous mapping that has been
                             named by userspace
  [anon_shmem:<name>]        an anonymous shared memory mapping that has
                             been named by userspace
  ===================        ===========================================
+=======
+ [anon:<name>]              an anonymous mapping that has been
+                            named by userspace
+ =============              ====================================
+>>>>>>> b7ba80a49124 (Commit)
 
  or if empty, the mapping is anonymous.
 
@@ -564,7 +597,10 @@ encoded manner. The codes are the following:
     mt    arm64 MTE allocation tags are enabled
     um    userfaultfd missing tracking
     uw    userfaultfd wr-protect tracking
+<<<<<<< HEAD
     ss    shadow stack page
+=======
+>>>>>>> b7ba80a49124 (Commit)
     ==    =======================================
 
 Note that there is no guarantee that every flag and associated mnemonic will
@@ -987,7 +1023,10 @@ Example output. You may not have all of these fields.
     SUnreclaim:       142336 kB
     KernelStack:       11168 kB
     PageTables:        20540 kB
+<<<<<<< HEAD
     SecPageTables:         0 kB
+=======
+>>>>>>> b7ba80a49124 (Commit)
     NFS_Unstable:          0 kB
     Bounce:                0 kB
     WritebackTmp:          0 kB
@@ -997,7 +1036,10 @@ Example output. You may not have all of these fields.
     VmallocUsed:       40444 kB
     VmallocChunk:          0 kB
     Percpu:            29312 kB
+<<<<<<< HEAD
     EarlyMemtestBad:       0 kB
+=======
+>>>>>>> b7ba80a49124 (Commit)
     HardwareCorrupted:     0 kB
     AnonHugePages:   4149248 kB
     ShmemHugePages:        0 kB
@@ -1097,9 +1139,12 @@ KernelStack
               Memory consumed by the kernel stacks of all tasks
 PageTables
               Memory consumed by userspace page tables
+<<<<<<< HEAD
 SecPageTables
               Memory consumed by secondary page tables, this currently
               currently includes KVM mmu allocations on x86 and arm64.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 NFS_Unstable
               Always zero. Previous counted pages which had been written to
               the server, but has not been committed to stable storage.
@@ -1148,6 +1193,7 @@ VmallocChunk
 Percpu
               Memory allocated to the percpu allocator used to back percpu
               allocations. This stat excludes the cost of metadata.
+<<<<<<< HEAD
 EarlyMemtestBad
               The amount of RAM/memory in kB, that was identified as corrupted
               by early memtest. If memtest was not run, this field will not
@@ -1155,6 +1201,8 @@ EarlyMemtestBad
               That means if 0 kB is reported, you can safely assume
               there was at least one pass of memtest and none of the passes
               found a single faulty byte of RAM.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 HardwareCorrupted
               The amount of RAM/memory in KB, the kernel identifies as
               corrupted.
@@ -1293,7 +1341,10 @@ support this. Table 1-9 lists the files and their meaning.
  rt_cache      Routing cache
  snmp          SNMP data
  sockstat      Socket statistics
+<<<<<<< HEAD
  softnet_stat  Per-CPU incoming packets queues statistics of online CPUs
+=======
+>>>>>>> b7ba80a49124 (Commit)
  tcp           TCP  sockets
  udp           UDP sockets
  unix          UNIX domain sockets
@@ -1330,9 +1381,15 @@ many times the slaves link has failed.
 1.4 SCSI info
 -------------
 
+<<<<<<< HEAD
 If you have a SCSI or ATA host adapter in your system, you'll find a
 subdirectory named after the driver for this adapter in /proc/scsi.
 You'll also see a list of all recognized SCSI devices in /proc/scsi::
+=======
+If you  have  a  SCSI  host adapter in your system, you'll find a subdirectory
+named after  the driver for this adapter in /proc/scsi. You'll also see a list
+of all recognized SCSI devices in /proc/scsi::
+>>>>>>> b7ba80a49124 (Commit)
 
   >cat /proc/scsi/scsi
   Attached devices:
@@ -1458,6 +1515,7 @@ Various pieces   of  information about  kernel activity  are  available in the
 since the system first booted.  For a quick look, simply cat the file::
 
   > cat /proc/stat
+<<<<<<< HEAD
   cpu  237902850 368826709 106375398 1873517540 1135548 0 14507935 0 0 0
   cpu0 60045249 91891769 26331539 468411416 495718 0 5739640 0 0 0
   cpu1 59746288 91759249 26609887 468860630 312281 0 4384817 0 0 0
@@ -1470,6 +1528,18 @@ since the system first booted.  For a quick look, simply cat the file::
   procs_running 2
   procs_blocked 0
   softirq 12121874454 100099120 3938138295 127375644 2795979 187870761 0 173808342 3072582055 52608 224184354
+=======
+  cpu  2255 34 2290 22625563 6290 127 456 0 0 0
+  cpu0 1132 34 1441 11311718 3675 127 438 0 0 0
+  cpu1 1123 0 849 11313845 2614 0 18 0 0 0
+  intr 114930548 113199788 3 0 5 263 0 4 [... lots more numbers ...]
+  ctxt 1990473
+  btime 1062191376
+  processes 2915
+  procs_running 1
+  procs_blocked 0
+  softirq 183433 0 21755 12 39 1137 231 21459 2263
+>>>>>>> b7ba80a49124 (Commit)
 
 The very first  "cpu" line aggregates the  numbers in all  of the other "cpuN"
 lines.  These numbers identify the amount of time the CPU has spent performing
@@ -1531,8 +1601,13 @@ softirq.
 Information about mounted ext4 file systems can be found in
 /proc/fs/ext4.  Each mounted filesystem will have a directory in
 /proc/fs/ext4 based on its device name (i.e., /proc/fs/ext4/hdc or
+<<<<<<< HEAD
 /proc/fs/ext4/sda9 or /proc/fs/ext4/dm-0).   The files in each per-device
 directory are shown in Table 1-12, below.
+=======
+/proc/fs/ext4/dm-0).   The files in each per-device directory are shown
+in Table 1-12, below.
+>>>>>>> b7ba80a49124 (Commit)
 
 .. table:: Table 1-12: Files in /proc/fs/ext4/<devname>
 
@@ -1612,12 +1687,21 @@ can inadvertently  disrupt  your  system,  it  is  advisable  to  read  both
 documentation and  source  before actually making adjustments. In any case, be
 very careful  when  writing  to  any  of these files. The entries in /proc may
 change slightly between the 2.1.* and the 2.2 kernel, so if there is any doubt
+<<<<<<< HEAD
 review the kernel documentation in the directory linux/Documentation.
 This chapter  is  heavily  based  on the documentation included in the pre 2.2
 kernels, and became part of it in version 2.2.1 of the Linux kernel.
 
 Please see: Documentation/admin-guide/sysctl/ directory for descriptions of
 these entries.
+=======
+review the kernel documentation in the directory /usr/src/linux/Documentation.
+This chapter  is  heavily  based  on the documentation included in the pre 2.2
+kernels, and became part of it in version 2.2.1 of the Linux kernel.
+
+Please see: Documentation/admin-guide/sysctl/ directory for descriptions of these
+entries.
+>>>>>>> b7ba80a49124 (Commit)
 
 Summary
 -------
@@ -2165,6 +2249,7 @@ AVX512_elapsed_ms
   the task is unlikely an AVX512 user, but depends on the workload and the
   scheduling scenario, it also could be a false negative mentioned above.
 
+<<<<<<< HEAD
 3.13 /proc/<pid>/fd - List of symlinks to open files
 -------------------------------------------------------
 This directory contains symbolic links which represent open files
@@ -2181,6 +2266,8 @@ of stat() output for /proc/<pid>/fd for fast access.
 -------------------------------------------------------
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Chapter 4: Configuring procfs
 =============================
 

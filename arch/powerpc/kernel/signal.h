@@ -196,6 +196,12 @@ extern int handle_rt_signal64(struct ksignal *ksig, sigset_t *set,
 
 #else /* CONFIG_PPC64 */
 
+<<<<<<< HEAD
+=======
+extern long sys_rt_sigreturn(void);
+extern long sys_sigreturn(void);
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline int handle_rt_signal64(struct ksignal *ksig, sigset_t *set,
 				     struct task_struct *tsk)
 {

@@ -10,7 +10,11 @@ maintainers:
   - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
 allOf:
+<<<<<<< HEAD
   - $ref: nvmem.yaml#
+=======
+  - $ref: "nvmem.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

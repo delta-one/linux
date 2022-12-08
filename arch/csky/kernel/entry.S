@@ -54,7 +54,11 @@ ENTRY(csky_systemcall)
 
 	lrw     r9, __NR_syscalls
 	cmphs   syscallid, r9		/* Check nr of syscall */
+<<<<<<< HEAD
 	bt      ret_from_exception
+=======
+	bt      1f
+>>>>>>> b7ba80a49124 (Commit)
 
 	lrw     r9, sys_call_table
 	ixw     r9, syscallid
@@ -80,6 +84,14 @@ ENTRY(csky_systemcall)
 	jsr     syscallid
 #endif
 	stw     a0, (sp, LSAVE_A0)      /* Save return value */
+<<<<<<< HEAD
+=======
+1:
+#ifdef CONFIG_DEBUG_RSEQ
+	mov	a0, sp
+	jbsr	rseq_syscall
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	jmpi    ret_from_exception
 
 csky_syscall_trace:
@@ -108,6 +120,13 @@ csky_syscall_trace:
 	stw	a0, (sp, LSAVE_A0)	/* Save return value */
 
 1:
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_DEBUG_RSEQ
+	mov	a0, sp
+	jbsr	rseq_syscall
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	mov     a0, sp                  /* right now, sp --> pt_regs */
 	jbsr    syscall_trace_exit
 	br	ret_from_exception

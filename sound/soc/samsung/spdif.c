@@ -460,7 +460,11 @@ err0:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void spdif_remove(struct platform_device *pdev)
+=======
+static int spdif_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct samsung_spdif_info *spdif = &spdif_info;
 	struct resource *mem_res;
@@ -472,11 +476,20 @@ static void spdif_remove(struct platform_device *pdev)
 
 	clk_disable_unprepare(spdif->sclk);
 	clk_disable_unprepare(spdif->pclk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver samsung_spdif_driver = {
 	.probe	= spdif_probe,
+<<<<<<< HEAD
 	.remove_new = spdif_remove,
+=======
+	.remove	= spdif_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name	= "samsung-spdif",
 	},

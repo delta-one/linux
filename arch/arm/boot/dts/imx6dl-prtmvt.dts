@@ -193,7 +193,10 @@
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		clock-frequency = <50000000>;
+<<<<<<< HEAD
 		clock-output-names = "enet_ref_pad";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	reg_1v8: regulator-1v8 {
@@ -294,10 +297,15 @@
 };
 
 &clks {
+<<<<<<< HEAD
 	clocks = <&clk50m_phy>;
 	clock-names = "enet_ref_pad";
 	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>, <&clks IMX6QDL_CLK_ENET_REF_SEL>;
 	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>, <&clk50m_phy>;
+=======
+	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>;
+	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &ecspi1 {
@@ -317,6 +325,13 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_enet>;
 	phy-mode = "rmii";
+<<<<<<< HEAD
+=======
+	clocks = <&clks IMX6QDL_CLK_ENET>,
+		 <&clks IMX6QDL_CLK_ENET>,
+		 <&clk50m_phy>;
+	clock-names = "ipg", "ahb", "ptp";
+>>>>>>> b7ba80a49124 (Commit)
 	phy-handle = <&rmii_phy>;
 	status = "okay";
 

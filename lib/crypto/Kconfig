@@ -8,6 +8,7 @@ config CRYPTO_LIB_UTILS
 config CRYPTO_LIB_AES
 	tristate
 
+<<<<<<< HEAD
 config CRYPTO_LIB_AESGCM
 	tristate
 	select CRYPTO_LIB_AES
@@ -20,6 +21,11 @@ config CRYPTO_LIB_ARC4
 config CRYPTO_LIB_GF128MUL
 	tristate
 
+=======
+config CRYPTO_LIB_ARC4
+	tristate
+
+>>>>>>> b7ba80a49124 (Commit)
 config CRYPTO_ARCH_HAVE_LIB_BLAKE2S
 	bool
 	help

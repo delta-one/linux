@@ -108,8 +108,11 @@ endif # GCC_TOOLCHAIN_DIR
 endif # CLANG_CROSS_FLAGS
 CFLAGS += $(CLANG_CROSS_FLAGS)
 AFLAGS += $(CLANG_CROSS_FLAGS)
+<<<<<<< HEAD
 else
 CLANG_CROSS_FLAGS :=
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endif # CROSS_COMPILE
 
 # Hack to avoid type-punned warnings on old systems such as RHEL5:

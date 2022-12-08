@@ -32,7 +32,11 @@
 #include <drm/ttm/ttm_device.h>
 #include <drm/ttm/ttm_placement.h>
 #include <drm/ttm/ttm_range_manager.h>
+<<<<<<< HEAD
 #include <drm/ttm/ttm_bo.h>
+=======
+#include <drm/ttm/ttm_bo_api.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_mm.h>
 #include <linux/slab.h>
 #include <linux/spinlock.h>
@@ -83,7 +87,11 @@ static int ttm_range_man_alloc(struct ttm_resource_manager *man,
 
 	spin_lock(&rman->lock);
 	ret = drm_mm_insert_node_in_range(mm, &node->mm_nodes[0],
+<<<<<<< HEAD
 					  PFN_UP(node->base.size),
+=======
+					  node->base.num_pages,
+>>>>>>> b7ba80a49124 (Commit)
 					  bo->page_alignment, 0,
 					  place->fpfn, lpfn, mode);
 	spin_unlock(&rman->lock);
@@ -229,6 +237,10 @@ int ttm_range_man_fini_nocheck(struct ttm_device *bdev,
 		return ret;
 
 	spin_lock(&rman->lock);
+<<<<<<< HEAD
+=======
+	drm_mm_clean(mm);
+>>>>>>> b7ba80a49124 (Commit)
 	drm_mm_takedown(mm);
 	spin_unlock(&rman->lock);
 

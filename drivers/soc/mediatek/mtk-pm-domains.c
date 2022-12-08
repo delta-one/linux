@@ -21,7 +21,10 @@
 #include "mt8173-pm-domains.h"
 #include "mt8183-pm-domains.h"
 #include "mt8186-pm-domains.h"
+<<<<<<< HEAD
 #include "mt8188-pm-domains.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "mt8192-pm-domains.h"
 #include "mt8195-pm-domains.h"
 
@@ -219,10 +222,13 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
 	if (ret)
 		goto err_reg;
 
+<<<<<<< HEAD
 	if (pd->data->ext_buck_iso_offs && MTK_SCPD_CAPS(pd, MTK_SCPD_EXT_BUCK_ISO))
 		regmap_clear_bits(scpsys->base, pd->data->ext_buck_iso_offs,
 				  pd->data->ext_buck_iso_mask);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* subsys power on */
 	regmap_set_bits(scpsys->base, pd->data->ctl_offs, PWR_ON_BIT);
 	regmap_set_bits(scpsys->base, pd->data->ctl_offs, PWR_ON_2ND_BIT);
@@ -277,6 +283,7 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	if (pd->data->ext_buck_iso_offs && MTK_SCPD_CAPS(pd, MTK_SCPD_EXT_BUCK_ISO))
 		regmap_set_bits(scpsys->base, pd->data->ext_buck_iso_offs,
 				pd->data->ext_buck_iso_mask);
@@ -287,6 +294,14 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
 	regmap_set_bits(scpsys->base, pd->data->ctl_offs, PWR_ISO_BIT);
 	regmap_set_bits(scpsys->base, pd->data->ctl_offs, PWR_CLK_DIS_BIT);
 	regmap_clear_bits(scpsys->base, pd->data->ctl_offs, PWR_RST_B_BIT);
+=======
+	clk_bulk_disable_unprepare(pd->num_subsys_clks, pd->subsys_clks);
+
+	/* subsys power off */
+	regmap_clear_bits(scpsys->base, pd->data->ctl_offs, PWR_RST_B_BIT);
+	regmap_set_bits(scpsys->base, pd->data->ctl_offs, PWR_ISO_BIT);
+	regmap_set_bits(scpsys->base, pd->data->ctl_offs, PWR_CLK_DIS_BIT);
+>>>>>>> b7ba80a49124 (Commit)
 	regmap_clear_bits(scpsys->base, pd->data->ctl_offs, PWR_ON_2ND_BIT);
 	regmap_clear_bits(scpsys->base, pd->data->ctl_offs, PWR_ON_BIT);
 
@@ -589,10 +604,13 @@ static const struct of_device_id scpsys_of_match[] = {
 		.data = &mt8186_scpsys_data,
 	},
 	{
+<<<<<<< HEAD
 		.compatible = "mediatek,mt8188-power-controller",
 		.data = &mt8188_scpsys_data,
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.compatible = "mediatek,mt8192-power-controller",
 		.data = &mt8192_scpsys_data,
 	},

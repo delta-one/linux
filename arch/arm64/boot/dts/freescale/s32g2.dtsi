@@ -52,12 +52,18 @@
 
 		cluster0_l2: l2-cache0 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		cluster1_l2: l2-cache1 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 

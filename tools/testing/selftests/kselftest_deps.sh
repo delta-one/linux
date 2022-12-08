@@ -12,9 +12,15 @@ usage()
 
 echo -e "Usage: $0 -[p] <compiler> [test_name]\n"
 echo -e "\tkselftest_deps.sh [-p] gcc"
+<<<<<<< HEAD
 echo -e "\tkselftest_deps.sh [-p] gcc mm"
 echo -e "\tkselftest_deps.sh [-p] aarch64-linux-gnu-gcc"
 echo -e "\tkselftest_deps.sh [-p] aarch64-linux-gnu-gcc mm\n"
+=======
+echo -e "\tkselftest_deps.sh [-p] gcc vm"
+echo -e "\tkselftest_deps.sh [-p] aarch64-linux-gnu-gcc"
+echo -e "\tkselftest_deps.sh [-p] aarch64-linux-gnu-gcc vm\n"
+>>>>>>> b7ba80a49124 (Commit)
 echo "- Should be run in selftests directory in the kernel repo."
 echo "- Checks if Kselftests can be built/cross-built on a system."
 echo "- Parses all test/sub-test Makefile to find library dependencies."
@@ -90,7 +96,11 @@ pass_libs=()
 pass_cnt=0
 
 # Get all TARGETS from selftests Makefile
+<<<<<<< HEAD
 targets=$(grep -E "^TARGETS +|^TARGETS =" Makefile | cut -d "=" -f2)
+=======
+targets=$(egrep "^TARGETS +|^TARGETS =" Makefile | cut -d "=" -f2)
+>>>>>>> b7ba80a49124 (Commit)
 
 # Single test case
 if [ $# -eq 2 ]
@@ -120,7 +130,11 @@ l1_tests=$(grep -r --include=Makefile "^LDLIBS" | \
 # Level 2
 # Some tests have multiple valid LDLIBS lines for individual sub-tests
 # that need dependency checks. Find them and append them to the tests
+<<<<<<< HEAD
 # e.g: mm/Makefile:$(OUTPUT)/userfaultfd: LDLIBS += -lpthread
+=======
+# e.g: vm/Makefile:$(OUTPUT)/userfaultfd: LDLIBS += -lpthread
+>>>>>>> b7ba80a49124 (Commit)
 # Filter out VAR_LDLIBS to discard the following:
 # 	memfd/Makefile:$(OUTPUT)/fuse_mnt: LDLIBS += $(VAR_LDLIBS)
 # Append space at the end of the list to append more tests.

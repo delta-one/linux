@@ -93,7 +93,11 @@ struct selinux_avc {
 
 static struct selinux_avc selinux_avc;
 
+<<<<<<< HEAD
 void selinux_avc_init(void)
+=======
+void selinux_avc_init(struct selinux_avc **avc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 
@@ -104,6 +108,7 @@ void selinux_avc_init(void)
 	}
 	atomic_set(&selinux_avc.avc_cache.active_nodes, 0);
 	atomic_set(&selinux_avc.avc_cache.lru_hint, 0);
+<<<<<<< HEAD
 }
 
 unsigned int avc_get_cache_threshold(void)
@@ -114,6 +119,20 @@ unsigned int avc_get_cache_threshold(void)
 void avc_set_cache_threshold(unsigned int cache_threshold)
 {
 	selinux_avc.avc_cache_threshold = cache_threshold;
+=======
+	*avc = &selinux_avc;
+}
+
+unsigned int avc_get_cache_threshold(struct selinux_avc *avc)
+{
+	return avc->avc_cache_threshold;
+}
+
+void avc_set_cache_threshold(struct selinux_avc *avc,
+			     unsigned int cache_threshold)
+{
+	avc->avc_cache_threshold = cache_threshold;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct avc_callback_node *avc_callbacks __ro_after_init;
@@ -148,7 +167,11 @@ void __init avc_init(void)
 					0, SLAB_PANIC, NULL);
 }
 
+<<<<<<< HEAD
 int avc_get_hash_stats(char *page)
+=======
+int avc_get_hash_stats(struct selinux_avc *avc, char *page)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i, chain_len, max_chain_len, slots_used;
 	struct avc_node *node;
@@ -159,7 +182,11 @@ int avc_get_hash_stats(char *page)
 	slots_used = 0;
 	max_chain_len = 0;
 	for (i = 0; i < AVC_CACHE_SLOTS; i++) {
+<<<<<<< HEAD
 		head = &selinux_avc.avc_cache.slots[i];
+=======
+		head = &avc->avc_cache.slots[i];
+>>>>>>> b7ba80a49124 (Commit)
 		if (!hlist_empty(head)) {
 			slots_used++;
 			chain_len = 0;
@@ -174,7 +201,11 @@ int avc_get_hash_stats(char *page)
 
 	return scnprintf(page, PAGE_SIZE, "entries: %d\nbuckets used: %d/%d\n"
 			 "longest chain: %d\n",
+<<<<<<< HEAD
 			 atomic_read(&selinux_avc.avc_cache.active_nodes),
+=======
+			 atomic_read(&avc->avc_cache.active_nodes),
+>>>>>>> b7ba80a49124 (Commit)
 			 slots_used, AVC_CACHE_SLOTS, max_chain_len);
 }
 
@@ -412,7 +443,12 @@ static inline u32 avc_xperms_audit_required(u32 requested,
 	return audited;
 }
 
+<<<<<<< HEAD
 static inline int avc_xperms_audit(u32 ssid, u32 tsid, u16 tclass,
+=======
+static inline int avc_xperms_audit(struct selinux_state *state,
+				   u32 ssid, u32 tsid, u16 tclass,
+>>>>>>> b7ba80a49124 (Commit)
 				   u32 requested, struct av_decision *avd,
 				   struct extended_perms_decision *xpd,
 				   u8 perm, int result,
@@ -424,7 +460,11 @@ static inline int avc_xperms_audit(u32 ssid, u32 tsid, u16 tclass,
 			requested, avd, xpd, perm, result, &denied);
 	if (likely(!audited))
 		return 0;
+<<<<<<< HEAD
 	return slow_avc_audit(ssid, tsid, tclass, requested,
+=======
+	return slow_avc_audit(state, ssid, tsid, tclass, requested,
+>>>>>>> b7ba80a49124 (Commit)
 			audited, denied, result, ad);
 }
 
@@ -436,6 +476,7 @@ static void avc_node_free(struct rcu_head *rhead)
 	avc_cache_stats_incr(frees);
 }
 
+<<<<<<< HEAD
 static void avc_node_delete(struct avc_node *node)
 {
 	hlist_del_rcu(&node->list);
@@ -444,10 +485,21 @@ static void avc_node_delete(struct avc_node *node)
 }
 
 static void avc_node_kill(struct avc_node *node)
+=======
+static void avc_node_delete(struct selinux_avc *avc, struct avc_node *node)
+{
+	hlist_del_rcu(&node->list);
+	call_rcu(&node->rhead, avc_node_free);
+	atomic_dec(&avc->avc_cache.active_nodes);
+}
+
+static void avc_node_kill(struct selinux_avc *avc, struct avc_node *node)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	avc_xperms_free(node->ae.xp_node);
 	kmem_cache_free(avc_node_cachep, node);
 	avc_cache_stats_incr(frees);
+<<<<<<< HEAD
 	atomic_dec(&selinux_avc.avc_cache.active_nodes);
 }
 
@@ -459,6 +511,20 @@ static void avc_node_replace(struct avc_node *new, struct avc_node *old)
 }
 
 static inline int avc_reclaim_node(void)
+=======
+	atomic_dec(&avc->avc_cache.active_nodes);
+}
+
+static void avc_node_replace(struct selinux_avc *avc,
+			     struct avc_node *new, struct avc_node *old)
+{
+	hlist_replace_rcu(&old->list, &new->list);
+	call_rcu(&old->rhead, avc_node_free);
+	atomic_dec(&avc->avc_cache.active_nodes);
+}
+
+static inline int avc_reclaim_node(struct selinux_avc *avc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct avc_node *node;
 	int hvalue, try, ecx;
@@ -467,17 +533,28 @@ static inline int avc_reclaim_node(void)
 	spinlock_t *lock;
 
 	for (try = 0, ecx = 0; try < AVC_CACHE_SLOTS; try++) {
+<<<<<<< HEAD
 		hvalue = atomic_inc_return(&selinux_avc.avc_cache.lru_hint) &
 			(AVC_CACHE_SLOTS - 1);
 		head = &selinux_avc.avc_cache.slots[hvalue];
 		lock = &selinux_avc.avc_cache.slots_lock[hvalue];
+=======
+		hvalue = atomic_inc_return(&avc->avc_cache.lru_hint) &
+			(AVC_CACHE_SLOTS - 1);
+		head = &avc->avc_cache.slots[hvalue];
+		lock = &avc->avc_cache.slots_lock[hvalue];
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!spin_trylock_irqsave(lock, flags))
 			continue;
 
 		rcu_read_lock();
 		hlist_for_each_entry(node, head, list) {
+<<<<<<< HEAD
 			avc_node_delete(node);
+=======
+			avc_node_delete(avc, node);
+>>>>>>> b7ba80a49124 (Commit)
 			avc_cache_stats_incr(reclaims);
 			ecx++;
 			if (ecx >= AVC_CACHE_RECLAIM) {
@@ -493,7 +570,11 @@ out:
 	return ecx;
 }
 
+<<<<<<< HEAD
 static struct avc_node *avc_alloc_node(void)
+=======
+static struct avc_node *avc_alloc_node(struct selinux_avc *avc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct avc_node *node;
 
@@ -504,9 +585,15 @@ static struct avc_node *avc_alloc_node(void)
 	INIT_HLIST_NODE(&node->list);
 	avc_cache_stats_incr(allocations);
 
+<<<<<<< HEAD
 	if (atomic_inc_return(&selinux_avc.avc_cache.active_nodes) >
 	    selinux_avc.avc_cache_threshold)
 		avc_reclaim_node();
+=======
+	if (atomic_inc_return(&avc->avc_cache.active_nodes) >
+	    avc->avc_cache_threshold)
+		avc_reclaim_node(avc);
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	return node;
@@ -520,14 +607,23 @@ static void avc_node_populate(struct avc_node *node, u32 ssid, u32 tsid, u16 tcl
 	memcpy(&node->ae.avd, avd, sizeof(node->ae.avd));
 }
 
+<<<<<<< HEAD
 static inline struct avc_node *avc_search_node(u32 ssid, u32 tsid, u16 tclass)
+=======
+static inline struct avc_node *avc_search_node(struct selinux_avc *avc,
+					       u32 ssid, u32 tsid, u16 tclass)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct avc_node *node, *ret = NULL;
 	int hvalue;
 	struct hlist_head *head;
 
 	hvalue = avc_hash(ssid, tsid, tclass);
+<<<<<<< HEAD
 	head = &selinux_avc.avc_cache.slots[hvalue];
+=======
+	head = &avc->avc_cache.slots[hvalue];
+>>>>>>> b7ba80a49124 (Commit)
 	hlist_for_each_entry_rcu(node, head, list) {
 		if (ssid == node->ae.ssid &&
 		    tclass == node->ae.tclass &&
@@ -542,6 +638,10 @@ static inline struct avc_node *avc_search_node(u32 ssid, u32 tsid, u16 tclass)
 
 /**
  * avc_lookup - Look up an AVC entry.
+<<<<<<< HEAD
+=======
+ * @avc: the access vector cache
+>>>>>>> b7ba80a49124 (Commit)
  * @ssid: source security identifier
  * @tsid: target security identifier
  * @tclass: target security class
@@ -552,12 +652,21 @@ static inline struct avc_node *avc_search_node(u32 ssid, u32 tsid, u16 tclass)
  * then this function returns the avc_node.
  * Otherwise, this function returns NULL.
  */
+<<<<<<< HEAD
 static struct avc_node *avc_lookup(u32 ssid, u32 tsid, u16 tclass)
+=======
+static struct avc_node *avc_lookup(struct selinux_avc *avc,
+				   u32 ssid, u32 tsid, u16 tclass)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct avc_node *node;
 
 	avc_cache_stats_incr(lookups);
+<<<<<<< HEAD
 	node = avc_search_node(ssid, tsid, tclass);
+=======
+	node = avc_search_node(avc, ssid, tsid, tclass);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (node)
 		return node;
@@ -566,7 +675,12 @@ static struct avc_node *avc_lookup(u32 ssid, u32 tsid, u16 tclass)
 	return NULL;
 }
 
+<<<<<<< HEAD
 static int avc_latest_notif_update(int seqno, int is_insert)
+=======
+static int avc_latest_notif_update(struct selinux_avc *avc,
+				   int seqno, int is_insert)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret = 0;
 	static DEFINE_SPINLOCK(notif_lock);
@@ -574,6 +688,7 @@ static int avc_latest_notif_update(int seqno, int is_insert)
 
 	spin_lock_irqsave(&notif_lock, flag);
 	if (is_insert) {
+<<<<<<< HEAD
 		if (seqno < selinux_avc.avc_cache.latest_notif) {
 			pr_warn("SELinux: avc:  seqno %d < latest_notif %d\n",
 			       seqno, selinux_avc.avc_cache.latest_notif);
@@ -582,6 +697,16 @@ static int avc_latest_notif_update(int seqno, int is_insert)
 	} else {
 		if (seqno > selinux_avc.avc_cache.latest_notif)
 			selinux_avc.avc_cache.latest_notif = seqno;
+=======
+		if (seqno < avc->avc_cache.latest_notif) {
+			pr_warn("SELinux: avc:  seqno %d < latest_notif %d\n",
+			       seqno, avc->avc_cache.latest_notif);
+			ret = -EAGAIN;
+		}
+	} else {
+		if (seqno > avc->avc_cache.latest_notif)
+			avc->avc_cache.latest_notif = seqno;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	spin_unlock_irqrestore(&notif_lock, flag);
 
@@ -590,6 +715,10 @@ static int avc_latest_notif_update(int seqno, int is_insert)
 
 /**
  * avc_insert - Insert an AVC entry.
+<<<<<<< HEAD
+=======
+ * @avc: the access vector cache
+>>>>>>> b7ba80a49124 (Commit)
  * @ssid: source security identifier
  * @tsid: target security identifier
  * @tclass: target security class
@@ -606,7 +735,12 @@ static int avc_latest_notif_update(int seqno, int is_insert)
  * the access vectors into a cache entry, returns
  * avc_node inserted. Otherwise, this function returns NULL.
  */
+<<<<<<< HEAD
 static struct avc_node *avc_insert(u32 ssid, u32 tsid, u16 tclass,
+=======
+static struct avc_node *avc_insert(struct selinux_avc *avc,
+				   u32 ssid, u32 tsid, u16 tclass,
+>>>>>>> b7ba80a49124 (Commit)
 				   struct av_decision *avd,
 				   struct avc_xperms_node *xp_node)
 {
@@ -616,28 +750,48 @@ static struct avc_node *avc_insert(u32 ssid, u32 tsid, u16 tclass,
 	spinlock_t *lock;
 	struct hlist_head *head;
 
+<<<<<<< HEAD
 	if (avc_latest_notif_update(avd->seqno, 1))
 		return NULL;
 
 	node = avc_alloc_node();
+=======
+	if (avc_latest_notif_update(avc, avd->seqno, 1))
+		return NULL;
+
+	node = avc_alloc_node(avc);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!node)
 		return NULL;
 
 	avc_node_populate(node, ssid, tsid, tclass, avd);
 	if (avc_xperms_populate(node, xp_node)) {
+<<<<<<< HEAD
 		avc_node_kill(node);
+=======
+		avc_node_kill(avc, node);
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 	}
 
 	hvalue = avc_hash(ssid, tsid, tclass);
+<<<<<<< HEAD
 	head = &selinux_avc.avc_cache.slots[hvalue];
 	lock = &selinux_avc.avc_cache.slots_lock[hvalue];
+=======
+	head = &avc->avc_cache.slots[hvalue];
+	lock = &avc->avc_cache.slots_lock[hvalue];
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_irqsave(lock, flag);
 	hlist_for_each_entry(pos, head, list) {
 		if (pos->ae.ssid == ssid &&
 			pos->ae.tsid == tsid &&
 			pos->ae.tclass == tclass) {
+<<<<<<< HEAD
 			avc_node_replace(node, pos);
+=======
+			avc_node_replace(avc, node, pos);
+>>>>>>> b7ba80a49124 (Commit)
 			goto found;
 		}
 	}
@@ -705,14 +859,22 @@ static void avc_audit_post_callback(struct audit_buffer *ab, void *a)
 	u32 tcontext_len;
 	int rc;
 
+<<<<<<< HEAD
 	rc = security_sid_to_context(sad->ssid, &scontext,
+=======
+	rc = security_sid_to_context(sad->state, sad->ssid, &scontext,
+>>>>>>> b7ba80a49124 (Commit)
 				     &scontext_len);
 	if (rc)
 		audit_log_format(ab, " ssid=%d", sad->ssid);
 	else
 		audit_log_format(ab, " scontext=%s", scontext);
 
+<<<<<<< HEAD
 	rc = security_sid_to_context(sad->tsid, &tcontext,
+=======
+	rc = security_sid_to_context(sad->state, sad->tsid, &tcontext,
+>>>>>>> b7ba80a49124 (Commit)
 				     &tcontext_len);
 	if (rc)
 		audit_log_format(ab, " tsid=%d", sad->tsid);
@@ -730,7 +892,11 @@ static void avc_audit_post_callback(struct audit_buffer *ab, void *a)
 	kfree(scontext);
 
 	/* in case of invalid context report also the actual context string */
+<<<<<<< HEAD
 	rc = security_sid_to_context_inval(sad->ssid, &scontext,
+=======
+	rc = security_sid_to_context_inval(sad->state, sad->ssid, &scontext,
+>>>>>>> b7ba80a49124 (Commit)
 					   &scontext_len);
 	if (!rc && scontext) {
 		if (scontext_len && scontext[scontext_len - 1] == '\0')
@@ -740,7 +906,11 @@ static void avc_audit_post_callback(struct audit_buffer *ab, void *a)
 		kfree(scontext);
 	}
 
+<<<<<<< HEAD
 	rc = security_sid_to_context_inval(sad->tsid, &scontext,
+=======
+	rc = security_sid_to_context_inval(sad->state, sad->tsid, &scontext,
+>>>>>>> b7ba80a49124 (Commit)
 					   &scontext_len);
 	if (!rc && scontext) {
 		if (scontext_len && scontext[scontext_len - 1] == '\0')
@@ -756,7 +926,12 @@ static void avc_audit_post_callback(struct audit_buffer *ab, void *a)
  * Note that it is non-blocking and can be called from under
  * rcu_read_lock().
  */
+<<<<<<< HEAD
 noinline int slow_avc_audit(u32 ssid, u32 tsid, u16 tclass,
+=======
+noinline int slow_avc_audit(struct selinux_state *state,
+			    u32 ssid, u32 tsid, u16 tclass,
+>>>>>>> b7ba80a49124 (Commit)
 			    u32 requested, u32 audited, u32 denied, int result,
 			    struct common_audit_data *a)
 {
@@ -778,6 +953,10 @@ noinline int slow_avc_audit(u32 ssid, u32 tsid, u16 tclass,
 	sad.audited = audited;
 	sad.denied = denied;
 	sad.result = result;
+<<<<<<< HEAD
+=======
+	sad.state = state;
+>>>>>>> b7ba80a49124 (Commit)
 
 	a->selinux_audit_data = &sad;
 
@@ -815,6 +994,10 @@ out:
 
 /**
  * avc_update_node - Update an AVC entry
+<<<<<<< HEAD
+=======
+ * @avc: the access vector cache
+>>>>>>> b7ba80a49124 (Commit)
  * @event : Updating event
  * @perms : Permission mask bits
  * @driver: xperm driver information
@@ -831,7 +1014,12 @@ out:
  * otherwise, this function updates the AVC entry. The original AVC-entry object
  * will release later by RCU.
  */
+<<<<<<< HEAD
 static int avc_update_node(u32 event, u32 perms, u8 driver, u8 xperm, u32 ssid,
+=======
+static int avc_update_node(struct selinux_avc *avc,
+			   u32 event, u32 perms, u8 driver, u8 xperm, u32 ssid,
+>>>>>>> b7ba80a49124 (Commit)
 			   u32 tsid, u16 tclass, u32 seqno,
 			   struct extended_perms_decision *xpd,
 			   u32 flags)
@@ -842,7 +1030,11 @@ static int avc_update_node(u32 event, u32 perms, u8 driver, u8 xperm, u32 ssid,
 	struct hlist_head *head;
 	spinlock_t *lock;
 
+<<<<<<< HEAD
 	node = avc_alloc_node();
+=======
+	node = avc_alloc_node(avc);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!node) {
 		rc = -ENOMEM;
 		goto out;
@@ -851,8 +1043,13 @@ static int avc_update_node(u32 event, u32 perms, u8 driver, u8 xperm, u32 ssid,
 	/* Lock the target slot */
 	hvalue = avc_hash(ssid, tsid, tclass);
 
+<<<<<<< HEAD
 	head = &selinux_avc.avc_cache.slots[hvalue];
 	lock = &selinux_avc.avc_cache.slots_lock[hvalue];
+=======
+	head = &avc->avc_cache.slots[hvalue];
+	lock = &avc->avc_cache.slots_lock[hvalue];
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irqsave(lock, flag);
 
@@ -868,7 +1065,11 @@ static int avc_update_node(u32 event, u32 perms, u8 driver, u8 xperm, u32 ssid,
 
 	if (!orig) {
 		rc = -ENOENT;
+<<<<<<< HEAD
 		avc_node_kill(node);
+=======
+		avc_node_kill(avc, node);
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_unlock;
 	}
 
@@ -881,7 +1082,11 @@ static int avc_update_node(u32 event, u32 perms, u8 driver, u8 xperm, u32 ssid,
 	if (orig->ae.xp_node) {
 		rc = avc_xperms_populate(node, orig->ae.xp_node);
 		if (rc) {
+<<<<<<< HEAD
 			avc_node_kill(node);
+=======
+			avc_node_kill(avc, node);
+>>>>>>> b7ba80a49124 (Commit)
 			goto out_unlock;
 		}
 	}
@@ -912,7 +1117,11 @@ static int avc_update_node(u32 event, u32 perms, u8 driver, u8 xperm, u32 ssid,
 		avc_add_xperms_decision(node, xpd);
 		break;
 	}
+<<<<<<< HEAD
 	avc_node_replace(node, orig);
+=======
+	avc_node_replace(avc, node, orig);
+>>>>>>> b7ba80a49124 (Commit)
 out_unlock:
 	spin_unlock_irqrestore(lock, flag);
 out:
@@ -921,8 +1130,14 @@ out:
 
 /**
  * avc_flush - Flush the cache
+<<<<<<< HEAD
  */
 static void avc_flush(void)
+=======
+ * @avc: the access vector cache
+ */
+static void avc_flush(struct selinux_avc *avc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hlist_head *head;
 	struct avc_node *node;
@@ -931,8 +1146,13 @@ static void avc_flush(void)
 	int i;
 
 	for (i = 0; i < AVC_CACHE_SLOTS; i++) {
+<<<<<<< HEAD
 		head = &selinux_avc.avc_cache.slots[i];
 		lock = &selinux_avc.avc_cache.slots_lock[i];
+=======
+		head = &avc->avc_cache.slots[i];
+		lock = &avc->avc_cache.slots_lock[i];
+>>>>>>> b7ba80a49124 (Commit)
 
 		spin_lock_irqsave(lock, flag);
 		/*
@@ -941,7 +1161,11 @@ static void avc_flush(void)
 		 */
 		rcu_read_lock();
 		hlist_for_each_entry(node, head, list)
+<<<<<<< HEAD
 			avc_node_delete(node);
+=======
+			avc_node_delete(avc, node);
+>>>>>>> b7ba80a49124 (Commit)
 		rcu_read_unlock();
 		spin_unlock_irqrestore(lock, flag);
 	}
@@ -949,14 +1173,25 @@ static void avc_flush(void)
 
 /**
  * avc_ss_reset - Flush the cache and revalidate migrated permissions.
+<<<<<<< HEAD
  * @seqno: policy sequence number
  */
 int avc_ss_reset(u32 seqno)
+=======
+ * @avc: the access vector cache
+ * @seqno: policy sequence number
+ */
+int avc_ss_reset(struct selinux_avc *avc, u32 seqno)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct avc_callback_node *c;
 	int rc = 0, tmprc;
 
+<<<<<<< HEAD
 	avc_flush();
+=======
+	avc_flush(avc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (c = avc_callbacks; c; c = c->next) {
 		if (c->events & AVC_CALLBACK_RESET) {
@@ -968,6 +1203,7 @@ int avc_ss_reset(u32 seqno)
 		}
 	}
 
+<<<<<<< HEAD
 	avc_latest_notif_update(seqno, 0);
 	return rc;
 }
@@ -994,6 +1230,36 @@ static noinline struct avc_node *avc_compute_av(u32 ssid, u32 tsid, u16 tclass,
 }
 
 static noinline int avc_denied(u32 ssid, u32 tsid,
+=======
+	avc_latest_notif_update(avc, seqno, 0);
+	return rc;
+}
+
+/*
+ * Slow-path helper function for avc_has_perm_noaudit,
+ * when the avc_node lookup fails. We get called with
+ * the RCU read lock held, and need to return with it
+ * still held, but drop if for the security compute.
+ *
+ * Don't inline this, since it's the slow-path and just
+ * results in a bigger stack frame.
+ */
+static noinline
+struct avc_node *avc_compute_av(struct selinux_state *state,
+				u32 ssid, u32 tsid,
+				u16 tclass, struct av_decision *avd,
+				struct avc_xperms_node *xp_node)
+{
+	rcu_read_unlock();
+	INIT_LIST_HEAD(&xp_node->xpd_head);
+	security_compute_av(state, ssid, tsid, tclass, avd, &xp_node->xp);
+	rcu_read_lock();
+	return avc_insert(state->avc, ssid, tsid, tclass, avd, xp_node);
+}
+
+static noinline int avc_denied(struct selinux_state *state,
+			       u32 ssid, u32 tsid,
+>>>>>>> b7ba80a49124 (Commit)
 			       u16 tclass, u32 requested,
 			       u8 driver, u8 xperm, unsigned int flags,
 			       struct av_decision *avd)
@@ -1001,11 +1267,19 @@ static noinline int avc_denied(u32 ssid, u32 tsid,
 	if (flags & AVC_STRICT)
 		return -EACCES;
 
+<<<<<<< HEAD
 	if (enforcing_enabled() &&
 	    !(avd->flags & AVD_FLAGS_PERMISSIVE))
 		return -EACCES;
 
 	avc_update_node(AVC_CALLBACK_GRANT, requested, driver,
+=======
+	if (enforcing_enabled(state) &&
+	    !(avd->flags & AVD_FLAGS_PERMISSIVE))
+		return -EACCES;
+
+	avc_update_node(state->avc, AVC_CALLBACK_GRANT, requested, driver,
+>>>>>>> b7ba80a49124 (Commit)
 			xperm, ssid, tsid, tclass, avd->seqno, NULL, flags);
 	return 0;
 }
@@ -1017,7 +1291,12 @@ static noinline int avc_denied(u32 ssid, u32 tsid,
  * as-is the case with ioctls, then multiple may be chained together and the
  * driver field is used to specify which set contains the permission.
  */
+<<<<<<< HEAD
 int avc_has_extended_perms(u32 ssid, u32 tsid, u16 tclass, u32 requested,
+=======
+int avc_has_extended_perms(struct selinux_state *state,
+			   u32 ssid, u32 tsid, u16 tclass, u32 requested,
+>>>>>>> b7ba80a49124 (Commit)
 			   u8 driver, u8 xperm, struct common_audit_data *ad)
 {
 	struct avc_node *node;
@@ -1038,9 +1317,15 @@ int avc_has_extended_perms(u32 ssid, u32 tsid, u16 tclass, u32 requested,
 
 	rcu_read_lock();
 
+<<<<<<< HEAD
 	node = avc_lookup(ssid, tsid, tclass);
 	if (unlikely(!node)) {
 		avc_compute_av(ssid, tsid, tclass, &avd, xp_node);
+=======
+	node = avc_lookup(state->avc, ssid, tsid, tclass);
+	if (unlikely(!node)) {
+		avc_compute_av(state, ssid, tsid, tclass, &avd, xp_node);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		memcpy(&avd, &node->ae.avd, sizeof(avd));
 		xp_node = node->ae.xp_node;
@@ -1064,10 +1349,17 @@ int avc_has_extended_perms(u32 ssid, u32 tsid, u16 tclass, u32 requested,
 			goto decision;
 		}
 		rcu_read_unlock();
+<<<<<<< HEAD
 		security_compute_xperms_decision(ssid, tsid, tclass,
 						 driver, &local_xpd);
 		rcu_read_lock();
 		avc_update_node(AVC_CALLBACK_ADD_XPERMS, requested,
+=======
+		security_compute_xperms_decision(state, ssid, tsid, tclass,
+						 driver, &local_xpd);
+		rcu_read_lock();
+		avc_update_node(state->avc, AVC_CALLBACK_ADD_XPERMS, requested,
+>>>>>>> b7ba80a49124 (Commit)
 				driver, xperm, ssid, tsid, tclass, avd.seqno,
 				&local_xpd, 0);
 	} else {
@@ -1081,12 +1373,20 @@ int avc_has_extended_perms(u32 ssid, u32 tsid, u16 tclass, u32 requested,
 decision:
 	denied = requested & ~(avd.allowed);
 	if (unlikely(denied))
+<<<<<<< HEAD
 		rc = avc_denied(ssid, tsid, tclass, requested,
+=======
+		rc = avc_denied(state, ssid, tsid, tclass, requested,
+>>>>>>> b7ba80a49124 (Commit)
 				driver, xperm, AVC_EXTENDED_PERMS, &avd);
 
 	rcu_read_unlock();
 
+<<<<<<< HEAD
 	rc2 = avc_xperms_audit(ssid, tsid, tclass, requested,
+=======
+	rc2 = avc_xperms_audit(state, ssid, tsid, tclass, requested,
+>>>>>>> b7ba80a49124 (Commit)
 			&avd, xpd, xperm, rc, ad);
 	if (rc2)
 		return rc2;
@@ -1094,6 +1394,7 @@ decision:
 }
 
 /**
+<<<<<<< HEAD
  * avc_perm_nonode - Add an entry to the AVC
  * @ssid: subject
  * @tsid: object/target
@@ -1123,6 +1424,10 @@ static noinline int avc_perm_nonode(u32 ssid, u32 tsid, u16 tclass,
 
 /**
  * avc_has_perm_noaudit - Check permissions but perform no auditing.
+=======
+ * avc_has_perm_noaudit - Check permissions but perform no auditing.
+ * @state: SELinux state
+>>>>>>> b7ba80a49124 (Commit)
  * @ssid: source security identifier
  * @tsid: target security identifier
  * @tclass: target security class
@@ -1141,18 +1446,31 @@ static noinline int avc_perm_nonode(u32 ssid, u32 tsid, u16 tclass,
  * auditing, e.g. in cases where a lock must be held for the check but
  * should be released for the auditing.
  */
+<<<<<<< HEAD
 inline int avc_has_perm_noaudit(u32 ssid, u32 tsid,
+=======
+inline int avc_has_perm_noaudit(struct selinux_state *state,
+				u32 ssid, u32 tsid,
+>>>>>>> b7ba80a49124 (Commit)
 				u16 tclass, u32 requested,
 				unsigned int flags,
 				struct av_decision *avd)
 {
+<<<<<<< HEAD
 	u32 denied;
 	struct avc_node *node;
+=======
+	struct avc_node *node;
+	struct avc_xperms_node xp_node;
+	int rc = 0;
+	u32 denied;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (WARN_ON(!requested))
 		return -EACCES;
 
 	rcu_read_lock();
+<<<<<<< HEAD
 	node = avc_lookup(ssid, tsid, tclass);
 	if (unlikely(!node)) {
 		rcu_read_unlock();
@@ -1167,10 +1485,30 @@ inline int avc_has_perm_noaudit(u32 ssid, u32 tsid,
 		return avc_denied(ssid, tsid, tclass, requested, 0, 0,
 				  flags, avd);
 	return 0;
+=======
+
+	node = avc_lookup(state->avc, ssid, tsid, tclass);
+	if (unlikely(!node))
+		avc_compute_av(state, ssid, tsid, tclass, avd, &xp_node);
+	else
+		memcpy(avd, &node->ae.avd, sizeof(*avd));
+
+	denied = requested & ~(avd->allowed);
+	if (unlikely(denied))
+		rc = avc_denied(state, ssid, tsid, tclass, requested, 0, 0,
+				flags, avd);
+
+	rcu_read_unlock();
+	return rc;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
  * avc_has_perm - Check permissions and perform any appropriate auditing.
+<<<<<<< HEAD
+=======
+ * @state: SELinux state
+>>>>>>> b7ba80a49124 (Commit)
  * @ssid: source security identifier
  * @tsid: target security identifier
  * @tclass: target security class
@@ -1185,25 +1523,42 @@ inline int avc_has_perm_noaudit(u32 ssid, u32 tsid,
  * permissions are granted, -%EACCES if any permissions are denied, or
  * another -errno upon other errors.
  */
+<<<<<<< HEAD
 int avc_has_perm(u32 ssid, u32 tsid, u16 tclass,
+=======
+int avc_has_perm(struct selinux_state *state, u32 ssid, u32 tsid, u16 tclass,
+>>>>>>> b7ba80a49124 (Commit)
 		 u32 requested, struct common_audit_data *auditdata)
 {
 	struct av_decision avd;
 	int rc, rc2;
 
+<<<<<<< HEAD
 	rc = avc_has_perm_noaudit(ssid, tsid, tclass, requested, 0,
 				  &avd);
 
 	rc2 = avc_audit(ssid, tsid, tclass, requested, &avd, rc,
+=======
+	rc = avc_has_perm_noaudit(state, ssid, tsid, tclass, requested, 0,
+				  &avd);
+
+	rc2 = avc_audit(state, ssid, tsid, tclass, requested, &avd, rc,
+>>>>>>> b7ba80a49124 (Commit)
 			auditdata);
 	if (rc2)
 		return rc2;
 	return rc;
 }
 
+<<<<<<< HEAD
 u32 avc_policy_seqno(void)
 {
 	return selinux_avc.avc_cache.latest_notif;
+=======
+u32 avc_policy_seqno(struct selinux_state *state)
+{
+	return state->avc->avc_cache.latest_notif;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void avc_disable(void)
@@ -1220,7 +1575,11 @@ void avc_disable(void)
 	 * the cache and get that memory back.
 	 */
 	if (avc_node_cachep) {
+<<<<<<< HEAD
 		avc_flush();
+=======
+		avc_flush(selinux_state.avc);
+>>>>>>> b7ba80a49124 (Commit)
 		/* kmem_cache_destroy(avc_node_cachep); */
 	}
 }

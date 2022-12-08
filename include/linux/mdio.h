@@ -10,6 +10,17 @@
 #include <linux/bitfield.h>
 #include <linux/mod_devicetable.h>
 
+<<<<<<< HEAD
+=======
+/* Or MII_ADDR_C45 into regnum for read/write on mii_bus to enable the 21 bit
+ * IEEE 802.3ae clause 45 addressing mode used by 10GIGE phy chips.
+ */
+#define MII_ADDR_C45		(1<<30)
+#define MII_DEVADDR_C45_SHIFT	16
+#define MII_DEVADDR_C45_MASK	GENMASK(20, 16)
+#define MII_REGADDR_C45_MASK	GENMASK(15, 0)
+
+>>>>>>> b7ba80a49124 (Commit)
 struct gpio_desc;
 struct mii_bus;
 struct reset_control;
@@ -402,6 +413,7 @@ static inline u32 linkmode_adv_to_mii_t1_adv_m_t(unsigned long *advertising)
 	return result;
 }
 
+<<<<<<< HEAD
 /**
  * mii_eee_cap1_mod_linkmode_t()
  * @adv: target the linkmode advertisement settings
@@ -486,6 +498,8 @@ static inline u32 linkmode_adv_to_mii_10base_t1_t(unsigned long *adv)
 	return result;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int __mdiobus_read(struct mii_bus *bus, int addr, u32 regnum);
 int __mdiobus_write(struct mii_bus *bus, int addr, u32 regnum, u16 val);
 int __mdiobus_modify_changed(struct mii_bus *bus, int addr, u32 regnum,
@@ -499,6 +513,7 @@ int mdiobus_modify(struct mii_bus *bus, int addr, u32 regnum, u16 mask,
 		   u16 set);
 int mdiobus_modify_changed(struct mii_bus *bus, int addr, u32 regnum,
 			   u16 mask, u16 set);
+<<<<<<< HEAD
 int __mdiobus_c45_read(struct mii_bus *bus, int addr, int devad, u32 regnum);
 int mdiobus_c45_read(struct mii_bus *bus, int addr, int devad, u32 regnum);
 int mdiobus_c45_read_nested(struct mii_bus *bus, int addr, int devad,
@@ -514,6 +529,8 @@ int mdiobus_c45_modify(struct mii_bus *bus, int addr, int devad, u32 regnum,
 
 int mdiobus_c45_modify_changed(struct mii_bus *bus, int addr, int devad,
 			       u32 regnum, u16 mask, u16 set);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline int mdiodev_read(struct mdio_device *mdiodev, u32 regnum)
 {
@@ -539,6 +556,7 @@ static inline int mdiodev_modify_changed(struct mdio_device *mdiodev,
 				      mask, set);
 }
 
+<<<<<<< HEAD
 static inline int mdiodev_c45_modify(struct mdio_device *mdiodev, int devad,
 				     u32 regnum, u16 mask, u16 set)
 {
@@ -565,6 +583,46 @@ static inline int mdiodev_c45_write(struct mdio_device *mdiodev, u32 devad,
 {
 	return mdiobus_c45_write(mdiodev->bus, mdiodev->addr, devad, regnum,
 				 val);
+=======
+static inline u32 mdiobus_c45_addr(int devad, u16 regnum)
+{
+	return MII_ADDR_C45 | devad << MII_DEVADDR_C45_SHIFT | regnum;
+}
+
+static inline u16 mdiobus_c45_regad(u32 regnum)
+{
+	return FIELD_GET(MII_REGADDR_C45_MASK, regnum);
+}
+
+static inline u16 mdiobus_c45_devad(u32 regnum)
+{
+	return FIELD_GET(MII_DEVADDR_C45_MASK, regnum);
+}
+
+static inline int __mdiobus_c45_read(struct mii_bus *bus, int prtad, int devad,
+				     u16 regnum)
+{
+	return __mdiobus_read(bus, prtad, mdiobus_c45_addr(devad, regnum));
+}
+
+static inline int __mdiobus_c45_write(struct mii_bus *bus, int prtad, int devad,
+				      u16 regnum, u16 val)
+{
+	return __mdiobus_write(bus, prtad, mdiobus_c45_addr(devad, regnum),
+			       val);
+}
+
+static inline int mdiobus_c45_read(struct mii_bus *bus, int prtad, int devad,
+				   u16 regnum)
+{
+	return mdiobus_read(bus, prtad, mdiobus_c45_addr(devad, regnum));
+}
+
+static inline int mdiobus_c45_write(struct mii_bus *bus, int prtad, int devad,
+				    u16 regnum, u16 val)
+{
+	return mdiobus_write(bus, prtad, mdiobus_c45_addr(devad, regnum), val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int mdiobus_register_device(struct mdio_device *mdiodev);

@@ -280,7 +280,11 @@ static int tegra_sflash_start_transfer_one(struct spi_device *spi,
 			command |= SPI_ACTIVE_SCLK_DRIVE_HIGH;
 		else
 			command |= SPI_ACTIVE_SCLK_DRIVE_LOW;
+<<<<<<< HEAD
 		command |= SPI_CS0_EN << spi_get_chipselect(spi, 0);
+=======
+		command |= SPI_CS0_EN << spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		command = tsd->command_reg;
 		command &= ~SPI_BIT_LENGTH(~0);
@@ -520,7 +524,11 @@ exit_free_master:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void tegra_sflash_remove(struct platform_device *pdev)
+=======
+static int tegra_sflash_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct tegra_sflash_data	*tsd = spi_master_get_devdata(master);
@@ -530,6 +538,11 @@ static void tegra_sflash_remove(struct platform_device *pdev)
 	pm_runtime_disable(&pdev->dev);
 	if (!pm_runtime_status_suspended(&pdev->dev))
 		tegra_sflash_runtime_suspend(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -596,7 +609,11 @@ static struct platform_driver tegra_sflash_driver = {
 		.of_match_table	= tegra_sflash_of_match,
 	},
 	.probe =	tegra_sflash_probe,
+<<<<<<< HEAD
 	.remove_new =	tegra_sflash_remove,
+=======
+	.remove =	tegra_sflash_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(tegra_sflash_driver);
 

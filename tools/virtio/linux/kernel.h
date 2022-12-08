@@ -10,7 +10,10 @@
 #include <stdarg.h>
 
 #include <linux/compiler.h>
+<<<<<<< HEAD
 #include <linux/log2.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/types.h>
 #include <linux/overflow.h>
 #include <linux/list.h>

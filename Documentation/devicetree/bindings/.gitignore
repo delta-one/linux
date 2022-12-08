@@ -2,8 +2,11 @@
 *.example.dts
 /processed-schema*.yaml
 /processed-schema*.json
+<<<<<<< HEAD
 
 #
 # We don't want to ignore the following even if they are dot-files
 #
 !.yamllint
+=======
+>>>>>>> b7ba80a49124 (Commit)

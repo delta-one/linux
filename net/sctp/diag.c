@@ -343,9 +343,17 @@ static int sctp_sock_filter(struct sctp_endpoint *ep, struct sctp_transport *tsp
 	struct sctp_comm_param *commp = p;
 	struct sock *sk = ep->base.sk;
 	const struct inet_diag_req_v2 *r = commp->r;
+<<<<<<< HEAD
 
 	/* find the ep only once through the transports by this condition */
 	if (!list_is_first(&tsp->asoc->asocs, &ep->asocs))
+=======
+	struct sctp_association *assoc =
+		list_entry(ep->asocs.next, struct sctp_association, asocs);
+
+	/* find the ep only once through the transports by this condition */
+	if (tsp->asoc != assoc)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	if (r->sdiag_family != AF_UNSPEC && sk->sk_family != r->sdiag_family)
@@ -424,7 +432,10 @@ static int sctp_diag_dump_one(struct netlink_callback *cb,
 	struct net *net = sock_net(skb->sk);
 	const struct nlmsghdr *nlh = cb->nlh;
 	union sctp_addr laddr, paddr;
+<<<<<<< HEAD
 	int dif = req->id.idiag_if;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct sctp_comm_param commp = {
 		.skb = skb,
 		.r = req,
@@ -453,7 +464,11 @@ static int sctp_diag_dump_one(struct netlink_callback *cb,
 	}
 
 	return sctp_transport_lookup_process(sctp_sock_dump_one,
+<<<<<<< HEAD
 					     net, &laddr, &paddr, &commp, dif);
+=======
+					     net, &laddr, &paddr, &commp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void sctp_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,

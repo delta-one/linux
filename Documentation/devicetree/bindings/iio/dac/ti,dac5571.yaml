@@ -46,7 +46,11 @@ examples:
 
         dac@4c {
             compatible = "ti,dac5571";
+<<<<<<< HEAD
             reg = <0x4c>;
+=======
+            reg = <0x4C>;
+>>>>>>> b7ba80a49124 (Commit)
             vref-supply = <&vdd_supply>;
         };
     };

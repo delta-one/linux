@@ -39,6 +39,10 @@
 #include <linux/ipv6.h>
 #include <linux/if_vlan.h>
 #include <linux/mdio.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/bitops.h>
 #include <linux/netdevice.h>
 #include <linux/etherdevice.h>
@@ -751,7 +755,11 @@ static int alx_alloc_napis(struct alx_priv *alx)
 			goto err_out;
 
 		np->alx = alx;
+<<<<<<< HEAD
 		netif_napi_add(alx->dev, &np->napi, alx_poll);
+=======
+		netif_napi_add(alx->dev, &np->napi, alx_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 		alx->qnapi[i] = np;
 	}
 
@@ -1744,6 +1752,10 @@ static int alx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 		goto out_pci_disable;
 	}
 
+<<<<<<< HEAD
+=======
+	pci_enable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_set_master(pdev);
 
 	if (!pdev->pm_cap) {
@@ -1877,6 +1889,10 @@ out_free_netdev:
 	free_netdev(netdev);
 out_pci_release:
 	pci_release_mem_regions(pdev);
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 out_pci_disable:
 	pci_disable_device(pdev);
 	return err;
@@ -1894,6 +1910,10 @@ static void alx_remove(struct pci_dev *pdev)
 	iounmap(hw->hw_addr);
 	pci_release_mem_regions(pdev);
 
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_disable_device(pdev);
 
 	mutex_destroy(&alx->mtx);
@@ -1901,20 +1921,30 @@ static void alx_remove(struct pci_dev *pdev)
 	free_netdev(alx->dev);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int alx_suspend(struct device *dev)
 {
 	struct alx_priv *alx = dev_get_drvdata(dev);
 
 	if (!netif_running(alx->dev))
 		return 0;
+<<<<<<< HEAD
 
 	rtnl_lock();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	netif_device_detach(alx->dev);
 
 	mutex_lock(&alx->mtx);
 	__alx_stop(alx);
 	mutex_unlock(&alx->mtx);
+<<<<<<< HEAD
 	rtnl_unlock();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1925,7 +1955,10 @@ static int alx_resume(struct device *dev)
 	struct alx_hw *hw = &alx->hw;
 	int err;
 
+<<<<<<< HEAD
 	rtnl_lock();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&alx->mtx);
 	alx_reset_phy(hw);
 
@@ -1942,11 +1975,23 @@ static int alx_resume(struct device *dev)
 
 unlock:
 	mutex_unlock(&alx->mtx);
+<<<<<<< HEAD
 	rtnl_unlock();
 	return err;
 }
 
 static DEFINE_SIMPLE_DEV_PM_OPS(alx_pm_ops, alx_suspend, alx_resume);
+=======
+	return err;
+}
+
+static SIMPLE_DEV_PM_OPS(alx_pm_ops, alx_suspend, alx_resume);
+#define ALX_PM_OPS      (&alx_pm_ops)
+#else
+#define ALX_PM_OPS      NULL
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 
 static pci_ers_result_t alx_pci_error_detected(struct pci_dev *pdev,
 					       pci_channel_state_t state)
@@ -2045,7 +2090,11 @@ static struct pci_driver alx_driver = {
 	.probe       = alx_probe,
 	.remove      = alx_remove,
 	.err_handler = &alx_err_handlers,
+<<<<<<< HEAD
 	.driver.pm   = pm_sleep_ptr(&alx_pm_ops),
+=======
+	.driver.pm   = ALX_PM_OPS,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_pci_driver(alx_driver);

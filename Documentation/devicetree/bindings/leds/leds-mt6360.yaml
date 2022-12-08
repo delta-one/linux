@@ -26,10 +26,18 @@ properties:
     const: 0
 
 patternProperties:
+<<<<<<< HEAD
   "^multi-led@[0-5]$":
     type: object
     $ref: leds-class-multicolor.yaml#
     unevaluatedProperties: false
+=======
+  "^(multi-)?led@[0-5]$":
+    type: object
+    $ref: common.yaml#
+    description:
+      Properties for a single LED.
+>>>>>>> b7ba80a49124 (Commit)
 
     properties:
       reg:
@@ -42,6 +50,7 @@ patternProperties:
           - 4 # LED output FLASH1
           - 5 # LED output FLASH2
 
+<<<<<<< HEAD
       "#address-cells":
         const: 1
 
@@ -78,6 +87,8 @@ patternProperties:
       reg:
         enum: [0, 1, 2, 3, 4, 5]
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - "#address-cells"

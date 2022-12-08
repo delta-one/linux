@@ -1017,6 +1017,10 @@ extern void qlt_fc_port_added(struct scsi_qla_host *, fc_port_t *);
 extern void qlt_fc_port_deleted(struct scsi_qla_host *, fc_port_t *, int);
 extern int __init qlt_init(void);
 extern void qlt_exit(void);
+<<<<<<< HEAD
+=======
+extern void qlt_update_vp_map(struct scsi_qla_host *, int);
+>>>>>>> b7ba80a49124 (Commit)
 extern void qlt_free_session_done(struct work_struct *);
 /*
  * This macro is used during early initializations when host->active_mode

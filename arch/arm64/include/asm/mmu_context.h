@@ -18,7 +18,10 @@
 
 #include <asm/cacheflush.h>
 #include <asm/cpufeature.h>
+<<<<<<< HEAD
 #include <asm/daifflags.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/proc-fns.h>
 #include <asm-generic/mm_hooks.h>
 #include <asm/cputype.h>
@@ -148,12 +151,19 @@ static inline void cpu_install_ttbr0(phys_addr_t ttbr0, unsigned long t0sz)
  * Atomically replaces the active TTBR1_EL1 PGD with a new VA-compatible PGD,
  * avoiding the possibility of conflicting TLB entries being allocated.
  */
+<<<<<<< HEAD
 static inline void cpu_replace_ttbr1(pgd_t *pgdp, pgd_t *idmap)
+=======
+static inline void __nocfi cpu_replace_ttbr1(pgd_t *pgdp, pgd_t *idmap)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	typedef void (ttbr_replace_func)(phys_addr_t);
 	extern ttbr_replace_func idmap_cpu_replace_ttbr1;
 	ttbr_replace_func *replace_phys;
+<<<<<<< HEAD
 	unsigned long daif;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* phys_to_ttbr() zeros lower 2 bits of ttbr with 52-bit PA */
 	phys_addr_t ttbr1 = phys_to_ttbr(virt_to_phys(pgdp));
@@ -170,6 +180,7 @@ static inline void cpu_replace_ttbr1(pgd_t *pgdp, pgd_t *idmap)
 		ttbr1 |= TTBR_CNP_BIT;
 	}
 
+<<<<<<< HEAD
 	replace_phys = (void *)__pa_symbol(idmap_cpu_replace_ttbr1);
 
 	__cpu_install_idmap(idmap);
@@ -182,6 +193,12 @@ static inline void cpu_replace_ttbr1(pgd_t *pgdp, pgd_t *idmap)
 	replace_phys(ttbr1);
 	local_daif_restore(daif);
 
+=======
+	replace_phys = (void *)__pa_symbol(function_nocfi(idmap_cpu_replace_ttbr1));
+
+	__cpu_install_idmap(idmap);
+	replace_phys(ttbr1);
+>>>>>>> b7ba80a49124 (Commit)
 	cpu_uninstall_idmap();
 }
 

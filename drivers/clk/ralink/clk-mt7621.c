@@ -121,7 +121,11 @@ static int mt7621_gate_is_enabled(struct clk_hw *hw)
 	if (regmap_read(sysc, SYSC_REG_CLKCFG1, &val))
 		return 0;
 
+<<<<<<< HEAD
 	return val & clk_gate->bit_idx;
+=======
+	return val & BIT(clk_gate->bit_idx);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct clk_ops mt7621_gate_ops = {
@@ -133,6 +137,7 @@ static const struct clk_ops mt7621_gate_ops = {
 static int mt7621_gate_ops_init(struct device *dev,
 				struct mt7621_gate *sclk)
 {
+<<<<<<< HEAD
 	/*
 	 * There are drivers for this SoC that are older
 	 * than clock driver and are not prepared for the clock.
@@ -141,6 +146,10 @@ static int mt7621_gate_ops_init(struct device *dev,
 	 */
 	struct clk_init_data init = {
 		.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
+=======
+	struct clk_init_data init = {
+		.flags = CLK_SET_RATE_PARENT,
+>>>>>>> b7ba80a49124 (Commit)
 		.num_parents = 1,
 		.parent_names = &sclk->parent_name,
 		.ops = &mt7621_gate_ops,

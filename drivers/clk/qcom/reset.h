@@ -12,7 +12,10 @@ struct qcom_reset_map {
 	unsigned int reg;
 	u8 bit;
 	u8 udelay;
+<<<<<<< HEAD
 	u32 bitmask;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct regmap;

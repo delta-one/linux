@@ -380,6 +380,7 @@ static struct i2c_board_info lenovo_yogabook1_board_info = {
 	.platform_data = &bq2589x_pdata,
 };
 
+<<<<<<< HEAD
 /********** Lenovo Yogabook YT3-X90F charger settings **********/
 static const char * const lenovo_yt3_bq25892_1_suppliers[] = { "cht_wcove_pwrsrc" };
 
@@ -423,6 +424,8 @@ static struct i2c_board_info lenovo_yoga_tab3_board_info = {
 	.platform_data = &bq2589x_pdata,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
 {
 	struct intel_soc_pmic *pmic = dev_get_drvdata(pdev->dev.parent);
@@ -502,9 +505,12 @@ static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
 	case INTEL_CHT_WC_LENOVO_YOGABOOK1:
 		board_info = &lenovo_yogabook1_board_info;
 		break;
+<<<<<<< HEAD
 	case INTEL_CHT_WC_LENOVO_YT3_X90:
 		board_info = &lenovo_yoga_tab3_board_info;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		dev_warn(&pdev->dev, "Unknown model, not instantiating charger device\n");
 		break;

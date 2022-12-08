@@ -506,7 +506,12 @@ static struct v4l2_subdev *fc2580_get_v4l2_subdev(struct i2c_client *client)
 		return NULL;
 }
 
+<<<<<<< HEAD
 static int fc2580_probe(struct i2c_client *client)
+=======
+static int fc2580_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fc2580_dev *dev;
 	struct fc2580_platform_data *pdata = client->dev.platform_data;
@@ -610,7 +615,11 @@ static struct i2c_driver fc2580_driver = {
 		.name	= "fc2580",
 		.suppress_bind_attrs = true,
 	},
+<<<<<<< HEAD
 	.probe_new	= fc2580_probe,
+=======
+	.probe		= fc2580_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= fc2580_remove,
 	.id_table	= fc2580_id_table,
 };

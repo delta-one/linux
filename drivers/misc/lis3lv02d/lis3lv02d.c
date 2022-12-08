@@ -965,6 +965,7 @@ int lis3lv02d_init_dt(struct lis3lv02d *lis3)
 	if (!pdata)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "st,click-single-x"))
 		pdata->click_flags |= LIS3_CLICK_SINGLE_X;
 	if (of_property_read_bool(np, "st,click-double-x"))
@@ -978,6 +979,21 @@ int lis3lv02d_init_dt(struct lis3lv02d *lis3)
 	if (of_property_read_bool(np, "st,click-single-z"))
 		pdata->click_flags |= LIS3_CLICK_SINGLE_Z;
 	if (of_property_read_bool(np, "st,click-double-z"))
+=======
+	if (of_get_property(np, "st,click-single-x", NULL))
+		pdata->click_flags |= LIS3_CLICK_SINGLE_X;
+	if (of_get_property(np, "st,click-double-x", NULL))
+		pdata->click_flags |= LIS3_CLICK_DOUBLE_X;
+
+	if (of_get_property(np, "st,click-single-y", NULL))
+		pdata->click_flags |= LIS3_CLICK_SINGLE_Y;
+	if (of_get_property(np, "st,click-double-y", NULL))
+		pdata->click_flags |= LIS3_CLICK_DOUBLE_Y;
+
+	if (of_get_property(np, "st,click-single-z", NULL))
+		pdata->click_flags |= LIS3_CLICK_SINGLE_Z;
+	if (of_get_property(np, "st,click-double-z", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		pdata->click_flags |= LIS3_CLICK_DOUBLE_Z;
 
 	if (!of_property_read_u32(np, "st,click-threshold-x", &val))
@@ -994,6 +1010,7 @@ int lis3lv02d_init_dt(struct lis3lv02d *lis3)
 	if (!of_property_read_u32(np, "st,click-window", &val))
 		pdata->click_window = val;
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "st,irq1-disable"))
 		pdata->irq_cfg |= LIS3_IRQ1_DISABLE;
 	if (of_property_read_bool(np, "st,irq1-ff-wu-1"))
@@ -1019,6 +1036,33 @@ int lis3lv02d_init_dt(struct lis3lv02d *lis3)
 	if (of_property_read_bool(np, "st,irq-open-drain"))
 		pdata->irq_cfg |= LIS3_IRQ_OPEN_DRAIN;
 	if (of_property_read_bool(np, "st,irq-active-low"))
+=======
+	if (of_get_property(np, "st,irq1-disable", NULL))
+		pdata->irq_cfg |= LIS3_IRQ1_DISABLE;
+	if (of_get_property(np, "st,irq1-ff-wu-1", NULL))
+		pdata->irq_cfg |= LIS3_IRQ1_FF_WU_1;
+	if (of_get_property(np, "st,irq1-ff-wu-2", NULL))
+		pdata->irq_cfg |= LIS3_IRQ1_FF_WU_2;
+	if (of_get_property(np, "st,irq1-data-ready", NULL))
+		pdata->irq_cfg |= LIS3_IRQ1_DATA_READY;
+	if (of_get_property(np, "st,irq1-click", NULL))
+		pdata->irq_cfg |= LIS3_IRQ1_CLICK;
+
+	if (of_get_property(np, "st,irq2-disable", NULL))
+		pdata->irq_cfg |= LIS3_IRQ2_DISABLE;
+	if (of_get_property(np, "st,irq2-ff-wu-1", NULL))
+		pdata->irq_cfg |= LIS3_IRQ2_FF_WU_1;
+	if (of_get_property(np, "st,irq2-ff-wu-2", NULL))
+		pdata->irq_cfg |= LIS3_IRQ2_FF_WU_2;
+	if (of_get_property(np, "st,irq2-data-ready", NULL))
+		pdata->irq_cfg |= LIS3_IRQ2_DATA_READY;
+	if (of_get_property(np, "st,irq2-click", NULL))
+		pdata->irq_cfg |= LIS3_IRQ2_CLICK;
+
+	if (of_get_property(np, "st,irq-open-drain", NULL))
+		pdata->irq_cfg |= LIS3_IRQ_OPEN_DRAIN;
+	if (of_get_property(np, "st,irq-active-low", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		pdata->irq_cfg |= LIS3_IRQ_ACTIVE_LOW;
 
 	if (!of_property_read_u32(np, "st,wu-duration-1", &val))
@@ -1026,6 +1070,7 @@ int lis3lv02d_init_dt(struct lis3lv02d *lis3)
 	if (!of_property_read_u32(np, "st,wu-duration-2", &val))
 		pdata->duration2 = val;
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "st,wakeup-x-lo"))
 		pdata->wakeup_flags |= LIS3_WAKEUP_X_LO;
 	if (of_property_read_bool(np, "st,wakeup-x-hi"))
@@ -1037,10 +1082,24 @@ int lis3lv02d_init_dt(struct lis3lv02d *lis3)
 	if (of_property_read_bool(np, "st,wakeup-z-lo"))
 		pdata->wakeup_flags |= LIS3_WAKEUP_Z_LO;
 	if (of_property_read_bool(np, "st,wakeup-z-hi"))
+=======
+	if (of_get_property(np, "st,wakeup-x-lo", NULL))
+		pdata->wakeup_flags |= LIS3_WAKEUP_X_LO;
+	if (of_get_property(np, "st,wakeup-x-hi", NULL))
+		pdata->wakeup_flags |= LIS3_WAKEUP_X_HI;
+	if (of_get_property(np, "st,wakeup-y-lo", NULL))
+		pdata->wakeup_flags |= LIS3_WAKEUP_Y_LO;
+	if (of_get_property(np, "st,wakeup-y-hi", NULL))
+		pdata->wakeup_flags |= LIS3_WAKEUP_Y_HI;
+	if (of_get_property(np, "st,wakeup-z-lo", NULL))
+		pdata->wakeup_flags |= LIS3_WAKEUP_Z_LO;
+	if (of_get_property(np, "st,wakeup-z-hi", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		pdata->wakeup_flags |= LIS3_WAKEUP_Z_HI;
 	if (of_get_property(np, "st,wakeup-threshold", &val))
 		pdata->wakeup_thresh = val;
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "st,wakeup2-x-lo"))
 		pdata->wakeup_flags2 |= LIS3_WAKEUP_X_LO;
 	if (of_property_read_bool(np, "st,wakeup2-x-hi"))
@@ -1052,6 +1111,19 @@ int lis3lv02d_init_dt(struct lis3lv02d *lis3)
 	if (of_property_read_bool(np, "st,wakeup2-z-lo"))
 		pdata->wakeup_flags2 |= LIS3_WAKEUP_Z_LO;
 	if (of_property_read_bool(np, "st,wakeup2-z-hi"))
+=======
+	if (of_get_property(np, "st,wakeup2-x-lo", NULL))
+		pdata->wakeup_flags2 |= LIS3_WAKEUP_X_LO;
+	if (of_get_property(np, "st,wakeup2-x-hi", NULL))
+		pdata->wakeup_flags2 |= LIS3_WAKEUP_X_HI;
+	if (of_get_property(np, "st,wakeup2-y-lo", NULL))
+		pdata->wakeup_flags2 |= LIS3_WAKEUP_Y_LO;
+	if (of_get_property(np, "st,wakeup2-y-hi", NULL))
+		pdata->wakeup_flags2 |= LIS3_WAKEUP_Y_HI;
+	if (of_get_property(np, "st,wakeup2-z-lo", NULL))
+		pdata->wakeup_flags2 |= LIS3_WAKEUP_Z_LO;
+	if (of_get_property(np, "st,wakeup2-z-hi", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		pdata->wakeup_flags2 |= LIS3_WAKEUP_Z_HI;
 	if (of_get_property(np, "st,wakeup2-threshold", &val))
 		pdata->wakeup_thresh2 = val;
@@ -1073,9 +1145,15 @@ int lis3lv02d_init_dt(struct lis3lv02d *lis3)
 		}
 	}
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "st,hipass1-disable"))
 		pdata->hipass_ctrl |= LIS3_HIPASS1_DISABLE;
 	if (of_property_read_bool(np, "st,hipass2-disable"))
+=======
+	if (of_get_property(np, "st,hipass1-disable", NULL))
+		pdata->hipass_ctrl |= LIS3_HIPASS1_DISABLE;
+	if (of_get_property(np, "st,hipass2-disable", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		pdata->hipass_ctrl |= LIS3_HIPASS2_DISABLE;
 
 	if (of_property_read_s32(np, "st,axis-x", &sval) == 0)
@@ -1085,7 +1163,11 @@ int lis3lv02d_init_dt(struct lis3lv02d *lis3)
 	if (of_property_read_s32(np, "st,axis-z", &sval) == 0)
 		pdata->axis_z = sval;
 
+<<<<<<< HEAD
 	if (of_property_read_u32(np, "st,default-rate", &val) == 0)
+=======
+	if (of_get_property(np, "st,default-rate", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		pdata->default_rate = val;
 
 	if (of_property_read_s32(np, "st,min-limit-x", &sval) == 0)

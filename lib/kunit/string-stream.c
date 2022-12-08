@@ -12,10 +12,48 @@
 
 #include "string-stream.h"
 
+<<<<<<< HEAD
+=======
+struct string_stream_fragment_alloc_context {
+	struct kunit *test;
+	int len;
+	gfp_t gfp;
+};
+
+static int string_stream_fragment_init(struct kunit_resource *res,
+				       void *context)
+{
+	struct string_stream_fragment_alloc_context *ctx = context;
+	struct string_stream_fragment *frag;
+
+	frag = kunit_kzalloc(ctx->test, sizeof(*frag), ctx->gfp);
+	if (!frag)
+		return -ENOMEM;
+
+	frag->test = ctx->test;
+	frag->fragment = kunit_kmalloc(ctx->test, ctx->len, ctx->gfp);
+	if (!frag->fragment)
+		return -ENOMEM;
+
+	res->data = frag;
+
+	return 0;
+}
+
+static void string_stream_fragment_free(struct kunit_resource *res)
+{
+	struct string_stream_fragment *frag = res->data;
+
+	list_del(&frag->node);
+	kunit_kfree(frag->test, frag->fragment);
+	kunit_kfree(frag->test, frag);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct string_stream_fragment *alloc_string_stream_fragment(
 		struct kunit *test, int len, gfp_t gfp)
 {
+<<<<<<< HEAD
 	struct string_stream_fragment *frag;
 
 	frag = kunit_kzalloc(test, sizeof(*frag), gfp);
@@ -37,6 +75,26 @@ static void string_stream_fragment_destroy(struct kunit *test,
 	list_del(&frag->node);
 	kunit_kfree(test, frag->fragment);
 	kunit_kfree(test, frag);
+=======
+	struct string_stream_fragment_alloc_context context = {
+		.test = test,
+		.len = len,
+		.gfp = gfp
+	};
+
+	return kunit_alloc_resource(test,
+				    string_stream_fragment_init,
+				    string_stream_fragment_free,
+				    gfp,
+				    &context);
+}
+
+static int string_stream_fragment_destroy(struct string_stream_fragment *frag)
+{
+	return kunit_destroy_resource(frag->test,
+				      kunit_resource_instance_match,
+				      frag);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int string_stream_vadd(struct string_stream *stream,
@@ -58,8 +116,13 @@ int string_stream_vadd(struct string_stream *stream,
 	frag_container = alloc_string_stream_fragment(stream->test,
 						      len,
 						      stream->gfp);
+<<<<<<< HEAD
 	if (IS_ERR(frag_container))
 		return PTR_ERR(frag_container);
+=======
+	if (!frag_container)
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	len = vsnprintf(frag_container->fragment, len, fmt, args);
 	spin_lock(&stream->lock);
@@ -91,7 +154,11 @@ static void string_stream_clear(struct string_stream *stream)
 				 frag_container_safe,
 				 &stream->fragments,
 				 node) {
+<<<<<<< HEAD
 		string_stream_fragment_destroy(stream->test, frag_container);
+=======
+		string_stream_fragment_destroy(frag_container);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	stream->length = 0;
 	spin_unlock(&stream->lock);
@@ -133,6 +200,7 @@ bool string_stream_is_empty(struct string_stream *stream)
 	return list_empty(&stream->fragments);
 }
 
+<<<<<<< HEAD
 struct string_stream *alloc_string_stream(struct kunit *test, gfp_t gfp)
 {
 	struct string_stream *stream;
@@ -153,3 +221,55 @@ void string_stream_destroy(struct string_stream *stream)
 {
 	string_stream_clear(stream);
 }
+=======
+struct string_stream_alloc_context {
+	struct kunit *test;
+	gfp_t gfp;
+};
+
+static int string_stream_init(struct kunit_resource *res, void *context)
+{
+	struct string_stream *stream;
+	struct string_stream_alloc_context *ctx = context;
+
+	stream = kunit_kzalloc(ctx->test, sizeof(*stream), ctx->gfp);
+	if (!stream)
+		return -ENOMEM;
+
+	res->data = stream;
+	stream->gfp = ctx->gfp;
+	stream->test = ctx->test;
+	INIT_LIST_HEAD(&stream->fragments);
+	spin_lock_init(&stream->lock);
+
+	return 0;
+}
+
+static void string_stream_free(struct kunit_resource *res)
+{
+	struct string_stream *stream = res->data;
+
+	string_stream_clear(stream);
+}
+
+struct string_stream *alloc_string_stream(struct kunit *test, gfp_t gfp)
+{
+	struct string_stream_alloc_context context = {
+		.test = test,
+		.gfp = gfp
+	};
+
+	return kunit_alloc_resource(test,
+				    string_stream_init,
+				    string_stream_free,
+				    gfp,
+				    &context);
+}
+
+int string_stream_destroy(struct string_stream *stream)
+{
+	return kunit_destroy_resource(stream->test,
+				      kunit_resource_instance_match,
+				      stream);
+}
+>>>>>>> b7ba80a49124 (Commit)

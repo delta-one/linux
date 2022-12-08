@@ -119,6 +119,7 @@ static int adls_pcode_read_psf_gv_point_info(struct drm_i915_private *dev_priv,
 	return 0;
 }
 
+<<<<<<< HEAD
 static u16 icl_qgv_points_mask(struct drm_i915_private *i915)
 {
 	unsigned int num_psf_gv_points = i915->display.bw.max[0].num_psf_gv_points;
@@ -145,6 +146,8 @@ static bool is_sagv_enabled(struct drm_i915_private *i915, u16 points_mask)
 			      ICL_PCODE_REQ_QGV_PT_MASK);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int icl_pcode_restrict_qgv_points(struct drm_i915_private *dev_priv,
 				  u32 points_mask)
 {
@@ -162,9 +165,12 @@ int icl_pcode_restrict_qgv_points(struct drm_i915_private *dev_priv,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	dev_priv->display.sagv.status = is_sagv_enabled(dev_priv, points_mask) ?
 		I915_SAGV_ENABLED : I915_SAGV_DISABLED;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -468,8 +474,12 @@ static int tgl_get_bw_info(struct drm_i915_private *dev_priv, const struct intel
 		return ret;
 	}
 
+<<<<<<< HEAD
 	if (DISPLAY_VER(dev_priv) < 14 &&
 	    (dram_info->type == INTEL_DRAM_LPDDR4 || dram_info->type == INTEL_DRAM_LPDDR5))
+=======
+	if (dram_info->type == INTEL_DRAM_LPDDR4 || dram_info->type == INTEL_DRAM_LPDDR5)
+>>>>>>> b7ba80a49124 (Commit)
 		num_channels *= 2;
 
 	qi.deinterleave = qi.deinterleave ? : DIV_ROUND_UP(num_channels, is_y_tile ? 4 : 2);
@@ -994,6 +1004,29 @@ int intel_bw_calc_min_cdclk(struct intel_atomic_state *state,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static u16 icl_qgv_points_mask(struct drm_i915_private *i915)
+{
+	unsigned int num_psf_gv_points = i915->display.bw.max[0].num_psf_gv_points;
+	unsigned int num_qgv_points = i915->display.bw.max[0].num_qgv_points;
+	u16 qgv_points = 0, psf_points = 0;
+
+	/*
+	 * We can _not_ use the whole ADLS_QGV_PT_MASK here, as PCode rejects
+	 * it with failure if we try masking any unadvertised points.
+	 * So need to operate only with those returned from PCode.
+	 */
+	if (num_qgv_points > 0)
+		qgv_points = GENMASK(num_qgv_points - 1, 0);
+
+	if (num_psf_gv_points > 0)
+		psf_points = GENMASK(num_psf_gv_points - 1, 0);
+
+	return ICL_PCODE_REQ_QGV_PT(qgv_points) | ADLS_PCODE_REQ_PSF_PT(psf_points);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int intel_bw_check_data_rate(struct intel_atomic_state *state, bool *changed)
 {
 	struct drm_i915_private *i915 = to_i915(state->base.dev);

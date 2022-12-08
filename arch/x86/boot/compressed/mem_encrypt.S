@@ -12,13 +12,25 @@
 #include <asm/processor-flags.h>
 #include <asm/msr.h>
 #include <asm/asm-offsets.h>
+<<<<<<< HEAD
 #include <asm/segment.h>
 #include <asm/trapnr.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	.text
 	.code32
 SYM_FUNC_START(get_sev_encryption_bit)
+<<<<<<< HEAD
 	push	%ebx
+=======
+	xor	%eax, %eax
+
+#ifdef CONFIG_AMD_MEM_ENCRYPT
+	push	%ebx
+	push	%ecx
+	push	%edx
+>>>>>>> b7ba80a49124 (Commit)
 
 	movl	$0x80000000, %eax	/* CPUID to check the highest leaf */
 	cpuid
@@ -49,7 +61,16 @@ SYM_FUNC_START(get_sev_encryption_bit)
 	xor	%eax, %eax
 
 .Lsev_exit:
+<<<<<<< HEAD
 	pop	%ebx
+=======
+	pop	%edx
+	pop	%ecx
+	pop	%ebx
+
+#endif	/* CONFIG_AMD_MEM_ENCRYPT */
+
+>>>>>>> b7ba80a49124 (Commit)
 	RET
 SYM_FUNC_END(get_sev_encryption_bit)
 
@@ -90,7 +111,11 @@ SYM_CODE_START_LOCAL(sev_es_req_cpuid)
 	jmp	1b
 SYM_CODE_END(sev_es_req_cpuid)
 
+<<<<<<< HEAD
 SYM_CODE_START_LOCAL(startup32_vc_handler)
+=======
+SYM_CODE_START(startup32_vc_handler)
+>>>>>>> b7ba80a49124 (Commit)
 	pushl	%eax
 	pushl	%ebx
 	pushl	%ecx
@@ -176,6 +201,7 @@ SYM_CODE_START_LOCAL(startup32_vc_handler)
 	jmp .Lfail
 SYM_CODE_END(startup32_vc_handler)
 
+<<<<<<< HEAD
 /*
  * Write an IDT entry into boot32_idt
  *
@@ -301,16 +327,23 @@ SYM_FUNC_START(startup32_check_sev_cbit)
 	RET
 SYM_FUNC_END(startup32_check_sev_cbit)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.code64
 
 #include "../../kernel/sev_verify_cbit.S"
 
 	.data
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_AMD_MEM_ENCRYPT
+>>>>>>> b7ba80a49124 (Commit)
 	.balign	8
 SYM_DATA(sme_me_mask,		.quad 0)
 SYM_DATA(sev_status,		.quad 0)
 SYM_DATA(sev_check_data,	.quad 0)
+<<<<<<< HEAD
 
 SYM_DATA_START_LOCAL(boot32_idt)
 	.rept	32
@@ -322,3 +355,6 @@ SYM_DATA_START_LOCAL(boot32_idt_desc)
 	.word	. - boot32_idt - 1
 	.long	0
 SYM_DATA_END(boot32_idt_desc)
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)

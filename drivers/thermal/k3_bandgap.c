@@ -141,7 +141,11 @@ static int k3_bgp_read_temp(struct k3_thermal_data *devdata,
 
 static int k3_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	struct k3_thermal_data *data = thermal_zone_device_priv(tz);
+=======
+	struct k3_thermal_data *data = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 
 	ret = k3_bgp_read_temp(data, temp);
@@ -222,7 +226,11 @@ static int k3_bandgap_probe(struct platform_device *pdev)
 			goto err_alloc;
 		}
 
+<<<<<<< HEAD
 		if (devm_thermal_add_hwmon_sysfs(dev, data[id].tzd))
+=======
+		if (devm_thermal_add_hwmon_sysfs(data[id].tzd))
+>>>>>>> b7ba80a49124 (Commit)
 			dev_warn(dev, "Failed to add hwmon sysfs attributes\n");
 	}
 

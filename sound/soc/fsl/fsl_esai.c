@@ -1069,7 +1069,11 @@ static int fsl_esai_probe(struct platform_device *pdev)
 	regmap_write(esai_priv->regmap, REG_ESAI_RSMB, 0);
 
 	ret = pm_runtime_put_sync(&pdev->dev);
+<<<<<<< HEAD
 	if (ret < 0 && ret != -ENOSYS)
+=======
+	if (ret < 0)
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_pm_get_sync;
 
 	/*
@@ -1101,7 +1105,11 @@ err_pm_disable:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void fsl_esai_remove(struct platform_device *pdev)
+=======
+static int fsl_esai_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fsl_esai *esai_priv = platform_get_drvdata(pdev);
 
@@ -1110,6 +1118,11 @@ static void fsl_esai_remove(struct platform_device *pdev)
 		fsl_esai_runtime_suspend(&pdev->dev);
 
 	cancel_work_sync(&esai_priv->work);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id fsl_esai_dt_ids[] = {
@@ -1198,7 +1211,11 @@ static const struct dev_pm_ops fsl_esai_pm_ops = {
 
 static struct platform_driver fsl_esai_driver = {
 	.probe = fsl_esai_probe,
+<<<<<<< HEAD
 	.remove_new = fsl_esai_remove,
+=======
+	.remove = fsl_esai_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "fsl-esai-dai",
 		.pm = &fsl_esai_pm_ops,

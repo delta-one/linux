@@ -17,8 +17,14 @@
 #include <linux/platform_device.h>
 #include <linux/of.h>
 #include <linux/of_irq.h>
+<<<<<<< HEAD
 #include <linux/of_platform.h>
 #include <linux/gpio/consumer.h>
+=======
+#include <linux/of_gpio.h>
+#include <linux/of_platform.h>
+#include <linux/gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/delay.h>
 #include <linux/i2c.h>
 #include <linux/regmap.h>
@@ -250,7 +256,11 @@ static int twl6040_power_up_automatic(struct twl6040 *twl6040)
 {
 	int time_left;
 
+<<<<<<< HEAD
 	gpiod_set_value_cansleep(twl6040->audpwron, 1);
+=======
+	gpio_set_value(twl6040->audpwron, 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	time_left = wait_for_completion_timeout(&twl6040->ready,
 						msecs_to_jiffies(144));
@@ -261,7 +271,11 @@ static int twl6040_power_up_automatic(struct twl6040 *twl6040)
 		intid = twl6040_reg_read(twl6040, TWL6040_REG_INTID);
 		if (!(intid & TWL6040_READYINT)) {
 			dev_err(twl6040->dev, "automatic power-up failed\n");
+<<<<<<< HEAD
 			gpiod_set_value_cansleep(twl6040->audpwron, 0);
+=======
+			gpio_set_value(twl6040->audpwron, 0);
+>>>>>>> b7ba80a49124 (Commit)
 			return -ETIMEDOUT;
 		}
 	}
@@ -289,7 +303,11 @@ int twl6040_power(struct twl6040 *twl6040, int on)
 		/* Allow writes to the chip */
 		regcache_cache_only(twl6040->regmap, false);
 
+<<<<<<< HEAD
 		if (twl6040->audpwron) {
+=======
+		if (gpio_is_valid(twl6040->audpwron)) {
+>>>>>>> b7ba80a49124 (Commit)
 			/* use automatic power-up sequence */
 			ret = twl6040_power_up_automatic(twl6040);
 			if (ret) {
@@ -336,9 +354,15 @@ int twl6040_power(struct twl6040 *twl6040, int on)
 		if (--twl6040->power_count)
 			goto out;
 
+<<<<<<< HEAD
 		if (twl6040->audpwron) {
 			/* use AUDPWRON line */
 			gpiod_set_value_cansleep(twl6040->audpwron, 0);
+=======
+		if (gpio_is_valid(twl6040->audpwron)) {
+			/* use AUDPWRON line */
+			gpio_set_value(twl6040->audpwron, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 			/* power-down sequence latency */
 			usleep_range(500, 700);
@@ -632,7 +656,12 @@ static struct regmap_irq_chip twl6040_irq_chip = {
 	.mask_base = TWL6040_REG_INTMR,
 };
 
+<<<<<<< HEAD
 static int twl6040_probe(struct i2c_client *client)
+=======
+static int twl6040_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device_node *node = client->dev.of_node;
 	struct twl6040 *twl6040;
@@ -710,6 +739,7 @@ static int twl6040_probe(struct i2c_client *client)
 	}
 
 	/* ERRATA: Automatic power-up is not possible in ES1.0 */
+<<<<<<< HEAD
 	if (twl6040_get_revid(twl6040) > TWL6040_REV_ES1_0) {
 		twl6040->audpwron = devm_gpiod_get_optional(&client->dev,
 							    "ti,audpwron",
@@ -720,6 +750,20 @@ static int twl6040_probe(struct i2c_client *client)
 
 		gpiod_set_consumer_name(twl6040->audpwron, "audpwron");
 
+=======
+	if (twl6040_get_revid(twl6040) > TWL6040_REV_ES1_0)
+		twl6040->audpwron = of_get_named_gpio(node,
+						      "ti,audpwron-gpio", 0);
+	else
+		twl6040->audpwron = -EINVAL;
+
+	if (gpio_is_valid(twl6040->audpwron)) {
+		ret = devm_gpio_request_one(&client->dev, twl6040->audpwron,
+					    GPIOF_OUT_INIT_LOW, "audpwron");
+		if (ret)
+			goto gpio_err;
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* Clear any pending interrupt */
 		twl6040_reg_read(twl6040, TWL6040_REG_INTID);
 	}
@@ -829,7 +873,11 @@ static struct i2c_driver twl6040_driver = {
 	.driver = {
 		.name = "twl6040",
 	},
+<<<<<<< HEAD
 	.probe_new	= twl6040_probe,
+=======
+	.probe		= twl6040_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= twl6040_remove,
 	.id_table	= twl6040_i2c_id,
 };
@@ -839,3 +887,7 @@ module_i2c_driver(twl6040_driver);
 MODULE_DESCRIPTION("TWL6040 MFD");
 MODULE_AUTHOR("Misael Lopez Cruz <misael.lopez@ti.com>");
 MODULE_AUTHOR("Jorge Eduardo Candelaria <jorge.candelaria@ti.com>");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

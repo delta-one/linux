@@ -383,7 +383,11 @@ static ssize_t mei_write(struct file *file, const char __user *ubuf,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	rets = mei_cl_write(cl, cb, MAX_SCHEDULE_TIMEOUT);
+=======
+	rets = mei_cl_write(cl, cb);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	mutex_unlock(&dev->device_lock);
 	return rets;
@@ -1275,7 +1279,11 @@ static int __init mei_init(void)
 {
 	int ret;
 
+<<<<<<< HEAD
 	mei_class = class_create("mei");
+=======
+	mei_class = class_create(THIS_MODULE, "mei");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(mei_class)) {
 		pr_err("couldn't create class\n");
 		ret = PTR_ERR(mei_class);

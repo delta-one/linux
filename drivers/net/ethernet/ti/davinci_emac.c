@@ -1948,7 +1948,11 @@ static int davinci_emac_probe(struct platform_device *pdev)
 
 	ndev->netdev_ops = &emac_netdev_ops;
 	ndev->ethtool_ops = &ethtool_ops;
+<<<<<<< HEAD
 	netif_napi_add(ndev, &priv->napi, emac_poll);
+=======
+	netif_napi_add(ndev, &priv->napi, emac_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pm_runtime_enable(&pdev->dev);
 	rc = pm_runtime_resume_and_get(&pdev->dev);

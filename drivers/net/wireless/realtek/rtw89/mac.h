@@ -168,8 +168,11 @@ enum rtw89_mac_ax_l0_to_l1_event {
 	MAC_AX_L0_TO_L1_EVENT_MAX = 15,
 };
 
+<<<<<<< HEAD
 #define RTW89_PORT_OFFSET_TU_TO_32US(shift_tu) ((shift_tu) * 1024 / 32)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum rtw89_mac_dbg_port_sel {
 	/* CMAC 0 related */
 	RTW89_DBG_PORT_SEL_PTCL_C0 = 0,
@@ -213,6 +216,7 @@ enum rtw89_mac_dbg_port_sel {
 	RTW89_DBG_PORT_SEL_PLE_QUEMGN_QLNKTBL,
 	RTW89_DBG_PORT_SEL_PLE_QUEMGN_QEMPTY,
 	RTW89_DBG_PORT_SEL_PKTINFO,
+<<<<<<< HEAD
 	/* DISPATCHER related */
 	RTW89_DBG_PORT_SEL_DSPT_HDT_TX0,
 	RTW89_DBG_PORT_SEL_DSPT_HDT_TX1,
@@ -258,6 +262,8 @@ enum rtw89_mac_dbg_port_sel {
 	RTW89_DBG_PORT_SEL_DSPT_WDE_INTF,
 	RTW89_DBG_PORT_SEL_DSPT_PLE_INTF,
 	RTW89_DBG_PORT_SEL_DSPT_FLOW_CTRL,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* PCIE related */
 	RTW89_DBG_PORT_SEL_PCIE_TXDMA,
 	RTW89_DBG_PORT_SEL_PCIE_RXDMA,
@@ -292,8 +298,11 @@ enum rtw89_mac_dbg_port_sel {
 #define	BCN_IE_CAM1_BASE_ADDR		0x188A0000
 #define	TXD_FIFO_0_BASE_ADDR		0x18856200
 #define	TXD_FIFO_1_BASE_ADDR		0x188A1080
+<<<<<<< HEAD
 #define	TXD_FIFO_0_BASE_ADDR_V1		0x18856400 /* for 8852C */
 #define	TXD_FIFO_1_BASE_ADDR_V1		0x188A1080 /* for 8852C */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define	TXDATA_FIFO_0_BASE_ADDR		0x18856000
 #define	TXDATA_FIFO_1_BASE_ADDR		0x188A1000
 #define	CPU_LOCAL_BASE_ADDR		0x18003000
@@ -320,8 +329,11 @@ enum rtw89_mac_mem_sel {
 	RTW89_MAC_MEM_TXDATA_FIFO_1,
 	RTW89_MAC_MEM_CPU_LOCAL,
 	RTW89_MAC_MEM_BSSID_CAM,
+<<<<<<< HEAD
 	RTW89_MAC_MEM_TXD_FIFO_0_V1,
 	RTW89_MAC_MEM_TXD_FIFO_1_V1,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* keep last */
 	RTW89_MAC_MEM_NUM,
@@ -357,7 +369,10 @@ enum rtw89_mac_c2h_ofld_func {
 	RTW89_MAC_C2H_FUNC_PKT_OFLD_RSP,
 	RTW89_MAC_C2H_FUNC_BCN_RESEND,
 	RTW89_MAC_C2H_FUNC_MACID_PAUSE,
+<<<<<<< HEAD
 	RTW89_MAC_C2H_FUNC_TSF32_TOGL_RPT = 0x6,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	RTW89_MAC_C2H_FUNC_SCANOFLD_RSP = 0x9,
 	RTW89_MAC_C2H_FUNC_OFLD_MAX,
 };
@@ -370,6 +385,7 @@ enum rtw89_mac_c2h_info_func {
 	RTW89_MAC_C2H_FUNC_INFO_MAX,
 };
 
+<<<<<<< HEAD
 enum rtw89_mac_c2h_mcc_func {
 	RTW89_MAC_C2H_FUNC_MCC_RCV_ACK = 0,
 	RTW89_MAC_C2H_FUNC_MCC_REQ_ACK = 1,
@@ -379,6 +395,8 @@ enum rtw89_mac_c2h_mcc_func {
 	NUM_OF_RTW89_MAC_C2H_FUNC_MCC,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum rtw89_mac_c2h_class {
 	RTW89_MAC_C2H_CLASS_INFO,
 	RTW89_MAC_C2H_CLASS_OFLD,
@@ -389,6 +407,7 @@ enum rtw89_mac_c2h_class {
 	RTW89_MAC_C2H_CLASS_MAX,
 };
 
+<<<<<<< HEAD
 enum rtw89_mac_mcc_status {
 	RTW89_MAC_MCC_ADD_ROLE_OK = 0,
 	RTW89_MAC_MCC_START_GROUP_OK = 1,
@@ -414,6 +433,8 @@ enum rtw89_mac_mcc_status {
 	RTW89_MAC_MCC_TXNULL1_FAIL = 27,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct rtw89_mac_ax_coex {
 #define RTW89_MAC_AX_COEX_RTK_MODE 0
 #define RTW89_MAC_AX_COEX_CSR_MODE 1
@@ -476,7 +497,10 @@ enum rtw89_mac_bf_rrsc_rate {
 #define ACCESS_CMAC(_addr) \
 	({typeof(_addr) __addr = (_addr); \
 	  __addr >= R_AX_CMAC_REG_START && __addr <= R_AX_CMAC_REG_END; })
+<<<<<<< HEAD
 #define RTW89_MAC_AX_BAND_REG_OFFSET 0x2000
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define PTCL_IDLE_POLL_CNT	10000
 #define SW_CVR_DUR_US	8
@@ -502,6 +526,7 @@ enum rtw89_mac_bf_rrsc_rate {
 #define S_AX_PLE_PAGE_SEL_128	1
 #define S_AX_PLE_PAGE_SEL_256	2
 
+<<<<<<< HEAD
 #define B_CMAC0_MGQ_NORMAL	BIT(2)
 #define B_CMAC0_MGQ_NO_PWRSAV	BIT(3)
 #define B_CMAC0_CPUMGQ		BIT(4)
@@ -513,6 +538,8 @@ enum rtw89_mac_bf_rrsc_rate {
 #define QEMP_ACQ_GRP_QSEL_SH	4
 #define QEMP_ACQ_GRP_QSEL_MASK	0xF
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define SDIO_LOCAL_BASE_ADDR    0x80000000
 
 #define	PWR_CMD_WRITE		0
@@ -623,7 +650,10 @@ struct rtw89_mac_dle_dfi_qempty {
 };
 
 enum rtw89_mac_error_scenario {
+<<<<<<< HEAD
 	RTW89_RXI300_ERROR		= 1,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	RTW89_WCPU_CPU_EXCEPTION	= 2,
 	RTW89_WCPU_ASSERTION		= 3,
 };
@@ -770,7 +800,10 @@ enum mac_ax_err_info {
 	MAC_AX_ERR_L2_ERR_WDT_TIMEOUT_INT = 0x2599,
 	MAC_AX_ERR_CPU_EXCEPTION = 0x3000,
 	MAC_AX_ERR_ASSERTION = 0x4000,
+<<<<<<< HEAD
 	MAC_AX_ERR_RXI300 = 0x5000,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	MAC_AX_GET_ERR_MAX,
 	MAC_AX_DUMP_SHAREBUFF_INDICATOR = 0x80000000,
 
@@ -790,31 +823,46 @@ struct rtw89_mac_size_set {
 	const struct rtw89_hfc_prec_cfg hfc_preccfg_pcie;
 	const struct rtw89_dle_size wde_size0;
 	const struct rtw89_dle_size wde_size4;
+<<<<<<< HEAD
 	const struct rtw89_dle_size wde_size6;
 	const struct rtw89_dle_size wde_size9;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const struct rtw89_dle_size wde_size18;
 	const struct rtw89_dle_size wde_size19;
 	const struct rtw89_dle_size ple_size0;
 	const struct rtw89_dle_size ple_size4;
+<<<<<<< HEAD
 	const struct rtw89_dle_size ple_size6;
 	const struct rtw89_dle_size ple_size8;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const struct rtw89_dle_size ple_size18;
 	const struct rtw89_dle_size ple_size19;
 	const struct rtw89_wde_quota wde_qt0;
 	const struct rtw89_wde_quota wde_qt4;
+<<<<<<< HEAD
 	const struct rtw89_wde_quota wde_qt6;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const struct rtw89_wde_quota wde_qt17;
 	const struct rtw89_wde_quota wde_qt18;
 	const struct rtw89_ple_quota ple_qt4;
 	const struct rtw89_ple_quota ple_qt5;
 	const struct rtw89_ple_quota ple_qt13;
+<<<<<<< HEAD
 	const struct rtw89_ple_quota ple_qt18;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const struct rtw89_ple_quota ple_qt44;
 	const struct rtw89_ple_quota ple_qt45;
 	const struct rtw89_ple_quota ple_qt46;
 	const struct rtw89_ple_quota ple_qt47;
+<<<<<<< HEAD
 	const struct rtw89_ple_quota ple_qt58;
 	const struct rtw89_ple_quota ple_qt_52a_wow;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 extern const struct rtw89_mac_size_set rtw89_mac_size;
@@ -830,6 +878,7 @@ static inline u32 rtw89_mac_reg_by_port(u32 base, u8 port, u8 mac_idx)
 }
 
 static inline u32
+<<<<<<< HEAD
 rtw89_read32_port(struct rtw89_dev *rtwdev, struct rtw89_vif *rtwvif, u32 base)
 {
 	u32 reg;
@@ -839,6 +888,8 @@ rtw89_read32_port(struct rtw89_dev *rtwdev, struct rtw89_vif *rtwvif, u32 base)
 }
 
 static inline u32
+=======
+>>>>>>> b7ba80a49124 (Commit)
 rtw89_read32_port_mask(struct rtw89_dev *rtwdev, struct rtw89_vif *rtwvif,
 		       u32 base, u32 mask)
 {
@@ -917,6 +968,7 @@ int rtw89_mac_write_lte(struct rtw89_dev *rtwdev, const u32 offset, u32 val);
 int rtw89_mac_read_lte(struct rtw89_dev *rtwdev, const u32 offset, u32 *val);
 int rtw89_mac_add_vif(struct rtw89_dev *rtwdev, struct rtw89_vif *vif);
 int rtw89_mac_port_update(struct rtw89_dev *rtwdev, struct rtw89_vif *rtwvif);
+<<<<<<< HEAD
 void rtw89_mac_port_tsf_sync(struct rtw89_dev *rtwdev,
 			     struct rtw89_vif *rtwvif,
 			     struct rtw89_vif *rtwvif_src,
@@ -931,6 +983,11 @@ void rtw89_mac_disable_cpu(struct rtw89_dev *rtwdev);
 int rtw89_mac_enable_cpu(struct rtw89_dev *rtwdev, u8 boot_reason, bool dlfw);
 int rtw89_mac_enable_bb_rf(struct rtw89_dev *rtwdev);
 int rtw89_mac_disable_bb_rf(struct rtw89_dev *rtwdev);
+=======
+int rtw89_mac_remove_vif(struct rtw89_dev *rtwdev, struct rtw89_vif *vif);
+int rtw89_mac_enable_bb_rf(struct rtw89_dev *rtwdev);
+void rtw89_mac_disable_bb_rf(struct rtw89_dev *rtwdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline int rtw89_chip_enable_bb_rf(struct rtw89_dev *rtwdev)
 {
@@ -939,16 +996,27 @@ static inline int rtw89_chip_enable_bb_rf(struct rtw89_dev *rtwdev)
 	return chip->ops->enable_bb_rf(rtwdev);
 }
 
+<<<<<<< HEAD
 static inline int rtw89_chip_disable_bb_rf(struct rtw89_dev *rtwdev)
 {
 	const struct rtw89_chip_info *chip = rtwdev->chip;
 
 	return chip->ops->disable_bb_rf(rtwdev);
+=======
+static inline void rtw89_chip_disable_bb_rf(struct rtw89_dev *rtwdev)
+{
+	const struct rtw89_chip_info *chip = rtwdev->chip;
+
+	chip->ops->disable_bb_rf(rtwdev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 u32 rtw89_mac_get_err_status(struct rtw89_dev *rtwdev);
 int rtw89_mac_set_err_status(struct rtw89_dev *rtwdev, u32 err);
+<<<<<<< HEAD
 bool rtw89_mac_c2h_chk_atomic(struct rtw89_dev *rtwdev, u8 class, u8 func);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void rtw89_mac_c2h_handle(struct rtw89_dev *rtwdev, struct sk_buff *skb,
 			  u32 len, u8 class, u8 func);
 int rtw89_mac_setup_phycap(struct rtw89_dev *rtwdev);
@@ -1081,6 +1149,7 @@ static inline void rtw89_mac_ctrl_hci_dma_trx(struct rtw89_dev *rtwdev,
 				  B_AX_HCI_TXDMA_EN | B_AX_HCI_RXDMA_EN);
 }
 
+<<<<<<< HEAD
 static inline bool rtw89_mac_get_power_state(struct rtw89_dev *rtwdev)
 {
 	u32 val;
@@ -1091,6 +1160,8 @@ static inline bool rtw89_mac_get_power_state(struct rtw89_dev *rtwdev)
 	return !!val;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int rtw89_mac_set_tx_time(struct rtw89_dev *rtwdev, struct rtw89_sta *rtwsta,
 			  bool resume, u32 tx_time);
 int rtw89_mac_get_tx_time(struct rtw89_dev *rtwdev, struct rtw89_sta *rtwsta,
@@ -1124,10 +1195,15 @@ enum rtw89_mac_xtal_si_offset {
 #define XTAL_SI_HIGH_ADDR_MASK	GENMASK(2, 0)
 	XTAL_SI_READ_VAL = 0x7A,
 	XTAL_SI_WL_RFC_S0 = 0x80,
+<<<<<<< HEAD
 #define XTAL_SI_RF00S_EN	GENMASK(2, 0)
 #define XTAL_SI_RF00		BIT(0)
 	XTAL_SI_WL_RFC_S1 = 0x81,
 #define XTAL_SI_RF10S_EN	GENMASK(2, 0)
+=======
+#define XTAL_SI_RF00		BIT(0)
+	XTAL_SI_WL_RFC_S1 = 0x81,
+>>>>>>> b7ba80a49124 (Commit)
 #define XTAL_SI_RF10		BIT(0)
 	XTAL_SI_ANAPAR_WL = 0x90,
 #define XTAL_SI_SRAM2RFC	BIT(7)
@@ -1139,7 +1215,10 @@ enum rtw89_mac_xtal_si_offset {
 #define XTAL_SI_PON_EI		BIT(1)
 #define XTAL_SI_PON_WEI		BIT(0)
 	XTAL_SI_SRAM_CTRL = 0xA1,
+<<<<<<< HEAD
 #define XTAL_SI_SRAM_DIS	BIT(1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define FULL_BIT_MASK		GENMASK(7, 0)
 };
 
@@ -1149,6 +1228,7 @@ void rtw89_mac_pkt_drop_vif(struct rtw89_dev *rtwdev, struct rtw89_vif *rtwvif);
 u16 rtw89_mac_dle_buf_req(struct rtw89_dev *rtwdev, u16 buf_len, bool wd);
 int rtw89_mac_set_cpuio(struct rtw89_dev *rtwdev,
 			struct rtw89_cpuio_ctrl *ctrl_para, bool wd);
+<<<<<<< HEAD
 int rtw89_mac_typ_fltr_opt(struct rtw89_dev *rtwdev,
 			   enum rtw89_machdr_frame_type type,
 			   enum rtw89_mac_fwd_target fwd_target, u8 mac_idx);
@@ -1156,5 +1236,7 @@ int rtw89_mac_resize_ple_rx_quota(struct rtw89_dev *rtwdev, bool wow);
 int rtw89_mac_ptk_drop_by_band_and_wait(struct rtw89_dev *rtwdev,
 					enum rtw89_mac_idx band);
 void rtw89_mac_hw_mgnt_sec(struct rtw89_dev *rtwdev, bool wow);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

@@ -9,6 +9,7 @@ title: Qualcomm Display DSI controller
 maintainers:
   - Krishna Manikandan <quic_mkrishn@quicinc.com>
 
+<<<<<<< HEAD
 properties:
   compatible:
     oneOf:
@@ -36,6 +37,16 @@ properties:
               - dsi-ctrl-6g-qcm2290
           - const: qcom,mdss-dsi-ctrl
         deprecated: true
+=======
+allOf:
+  - $ref: "../dsi-controller.yaml#"
+
+properties:
+  compatible:
+    enum:
+      - qcom,mdss-dsi-ctrl
+      - qcom,dsi-ctrl-6g-qcm2290
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -47,6 +58,7 @@ properties:
     maxItems: 1
 
   clocks:
+<<<<<<< HEAD
     description: |
       Several clocks are used, depending on the variant. Typical ones are::
        - bus:: Display AHB clock.
@@ -64,14 +76,41 @@ properties:
   clock-names:
     minItems: 3
     maxItems: 9
+=======
+    items:
+      - description: Display byte clock
+      - description: Display byte interface clock
+      - description: Display pixel clock
+      - description: Display escape clock
+      - description: Display AHB clock
+      - description: Display AXI clock
+
+  clock-names:
+    items:
+      - const: byte
+      - const: byte_intf
+      - const: pixel
+      - const: core
+      - const: iface
+      - const: bus
+>>>>>>> b7ba80a49124 (Commit)
 
   phys:
     maxItems: 1
 
   phy-names:
+<<<<<<< HEAD
     deprecated: true
     const: dsi
 
+=======
+    const: dsi
+
+  "#address-cells": true
+
+  "#size-cells": true
+
+>>>>>>> b7ba80a49124 (Commit)
   syscon-sfpb:
     description: A phandle to mmss_sfpb syscon node (only for DSIv2).
     $ref: "/schemas/types.yaml#/definitions/phandle"
@@ -83,6 +122,7 @@ properties:
       2 DSI links.
 
   assigned-clocks:
+<<<<<<< HEAD
     minItems: 2
     maxItems: 4
     description: |
@@ -93,6 +133,14 @@ properties:
   assigned-clock-parents:
     minItems: 2
     maxItems: 4
+=======
+    maxItems: 2
+    description: |
+      Parents of "byte" and "pixel" for the given platform.
+
+  assigned-clock-parents:
+    maxItems: 2
+>>>>>>> b7ba80a49124 (Commit)
     description: |
       The Byte clock and Pixel clock PLL outputs provided by a DSI PHY block.
 
@@ -101,9 +149,12 @@ properties:
 
   operating-points-v2: true
 
+<<<<<<< HEAD
   opp-table:
     type: object
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   ports:
     $ref: "/schemas/graph.yaml#/properties/ports"
     description: |
@@ -123,7 +174,11 @@ properties:
             properties:
               data-lanes:
                 maxItems: 4
+<<<<<<< HEAD
                 minItems: 1
+=======
+                minItems: 4
+>>>>>>> b7ba80a49124 (Commit)
                 items:
                   enum: [ 0, 1, 2, 3 ]
 
@@ -139,7 +194,11 @@ properties:
             properties:
               data-lanes:
                 maxItems: 4
+<<<<<<< HEAD
                 minItems: 1
+=======
+                minItems: 4
+>>>>>>> b7ba80a49124 (Commit)
                 items:
                   enum: [ 0, 1, 2, 3 ]
 
@@ -147,6 +206,7 @@ properties:
       - port@0
       - port@1
 
+<<<<<<< HEAD
   avdd-supply:
     description:
       Phandle to vdd regulator device node
@@ -167,6 +227,8 @@ properties:
     description:
       VDDA regulator
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg
@@ -175,6 +237,7 @@ required:
   - clocks
   - clock-names
   - phys
+<<<<<<< HEAD
   - assigned-clocks
   - assigned-clock-parents
   - ports
@@ -365,6 +428,16 @@ allOf:
             - const: bus
 
 unevaluatedProperties: false
+=======
+  - phy-names
+  - assigned-clocks
+  - assigned-clock-parents
+  - power-domains
+  - operating-points-v2
+  - ports
+
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |
@@ -374,7 +447,11 @@ examples:
      #include <dt-bindings/power/qcom-rpmpd.h>
 
      dsi@ae94000 {
+<<<<<<< HEAD
            compatible = "qcom,sc7180-dsi-ctrl", "qcom,mdss-dsi-ctrl";
+=======
+           compatible = "qcom,mdss-dsi-ctrl";
+>>>>>>> b7ba80a49124 (Commit)
            reg = <0x0ae94000 0x400>;
            reg-names = "dsi_ctrl";
 

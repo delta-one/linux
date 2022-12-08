@@ -469,16 +469,22 @@ static bool do_hot_add;
  * the specified number of seconds.
  */
 static uint pressure_report_delay = 45;
+<<<<<<< HEAD
 extern unsigned int page_reporting_order;
 #define HV_MAX_FAILURES	2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * The last time we posted a pressure report to host.
  */
 static unsigned long last_post_time;
 
+<<<<<<< HEAD
 static int hv_hypercall_multi_failure;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 module_param(hot_add, bool, (S_IRUGO | S_IWUSR));
 MODULE_PARM_DESC(hot_add, "If set attempt memory hot_add");
 
@@ -583,10 +589,13 @@ static struct hv_dynmem_device dm_device;
 
 static void post_status(struct hv_dynmem_device *dm);
 
+<<<<<<< HEAD
 static void enable_page_reporting(void);
 
 static void disable_page_reporting(void);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_MEMORY_HOTPLUG
 static inline bool has_pfn_is_backed(struct hv_hotadd_state *has,
 				     unsigned long pfn)
@@ -913,7 +922,11 @@ static unsigned long handle_pg_range(unsigned long pg_start,
 			 * We have some residual hot add range
 			 * that needs to be hot added; hot add
 			 * it now. Hot add a multiple of
+<<<<<<< HEAD
 			 * HA_CHUNK that fully covers the pages
+=======
+			 * of HA_CHUNK that fully covers the pages
+>>>>>>> b7ba80a49124 (Commit)
 			 * we have.
 			 */
 			size = (has->end_pfn - has->ha_end_pfn);
@@ -1426,6 +1439,7 @@ static int dm_thread_func(void *dm_dev)
 		 */
 		reinit_completion(&dm_device.config_event);
 		post_status(dm);
+<<<<<<< HEAD
 		/*
 		 * disable free page reporting if multiple hypercall
 		 * failure flag set. It is not done in the page_reporting
@@ -1438,6 +1452,8 @@ static int dm_thread_func(void *dm_dev)
 			/* Reset the flag after disabling reporting */
 			hv_hypercall_multi_failure = 0;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -1613,20 +1629,34 @@ static void balloon_onchannelcallback(void *context)
 
 }
 
+<<<<<<< HEAD
 #define HV_LARGE_REPORTING_ORDER	9
 #define HV_LARGE_REPORTING_LEN (HV_HYP_PAGE_SIZE << \
 		HV_LARGE_REPORTING_ORDER)
+=======
+/* Hyper-V only supports reporting 2MB pages or higher */
+#define HV_MIN_PAGE_REPORTING_ORDER	9
+#define HV_MIN_PAGE_REPORTING_LEN (HV_HYP_PAGE_SIZE << HV_MIN_PAGE_REPORTING_ORDER)
+>>>>>>> b7ba80a49124 (Commit)
 static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
 		    struct scatterlist *sgl, unsigned int nents)
 {
 	unsigned long flags;
 	struct hv_memory_hint *hint;
+<<<<<<< HEAD
 	int i, order;
+=======
+	int i;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 status;
 	struct scatterlist *sg;
 
 	WARN_ON_ONCE(nents > HV_MEMORY_HINT_MAX_GPA_PAGE_RANGES);
+<<<<<<< HEAD
 	WARN_ON_ONCE(sgl->length < (HV_HYP_PAGE_SIZE << page_reporting_order));
+=======
+	WARN_ON_ONCE(sgl->length < HV_MIN_PAGE_REPORTING_LEN);
+>>>>>>> b7ba80a49124 (Commit)
 	local_irq_save(flags);
 	hint = *(struct hv_memory_hint **)this_cpu_ptr(hyperv_pcpu_input_arg);
 	if (!hint) {
@@ -1641,6 +1671,7 @@ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
 
 		range = &hint->ranges[i];
 		range->address_space = 0;
+<<<<<<< HEAD
 		order = get_order(sg->length);
 		/*
 		 * Hyper-V expects the additional_pages field in the units
@@ -1667,11 +1698,21 @@ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
 				(sg->length / HV_HYP_PAGE_SIZE) - 1;
 		}
 
+=======
+		/* page reporting only reports 2MB pages or higher */
+		range->page.largepage = 1;
+		range->page.additional_pages =
+			(sg->length / HV_MIN_PAGE_REPORTING_LEN) - 1;
+		range->page_size = HV_GPA_PAGE_RANGE_PAGE_SIZE_2MB;
+		range->base_large_pfn =
+			page_to_hvpfn(sg_page(sg)) >> HV_MIN_PAGE_REPORTING_ORDER;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	status = hv_do_rep_hypercall(HV_EXT_CALL_MEMORY_HEAT_HINT, nents, 0,
 				     hint, NULL);
 	local_irq_restore(flags);
+<<<<<<< HEAD
 	if (!hv_result_success(status)) {
 
 		pr_err("Cold memory discard hypercall failed with status %llx\n",
@@ -1688,6 +1729,11 @@ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
 			return -EINVAL;
 		}
 
+=======
+	if ((status & HV_HYPERCALL_RESULT_MASK) != HV_STATUS_SUCCESS) {
+		pr_err("Cold memory discard hypercall failed with status %llx\n",
+			status);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -1698,6 +1744,15 @@ static void enable_page_reporting(void)
 {
 	int ret;
 
+<<<<<<< HEAD
+=======
+	/* Essentially, validating 'PAGE_REPORTING_MIN_ORDER' is big enough. */
+	if (pageblock_order < HV_MIN_PAGE_REPORTING_ORDER) {
+		pr_debug("Cold memory discard is only supported on 2MB pages and above\n");
+		return;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!hv_query_ext_cap(HV_EXT_CAPABILITY_MEMORY_COLD_DISCARD_HINT)) {
 		pr_debug("Cold memory discard hint not supported by Hyper-V\n");
 		return;
@@ -1705,18 +1760,25 @@ static void enable_page_reporting(void)
 
 	BUILD_BUG_ON(PAGE_REPORTING_CAPACITY > HV_MEMORY_HINT_MAX_GPA_PAGE_RANGES);
 	dm_device.pr_dev_info.report = hv_free_page_report;
+<<<<<<< HEAD
 	/*
 	 * We let the page_reporting_order parameter decide the order
 	 * in the page_reporting code
 	 */
 	dm_device.pr_dev_info.order = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = page_reporting_register(&dm_device.pr_dev_info);
 	if (ret < 0) {
 		dm_device.pr_dev_info.report = NULL;
 		pr_err("Failed to enable cold memory discard: %d\n", ret);
 	} else {
+<<<<<<< HEAD
 		pr_info("Cold memory discard hint enabled with order %d\n",
 				page_reporting_order);
+=======
+		pr_info("Cold memory discard hint enabled\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -1963,7 +2025,11 @@ static void  hv_balloon_debugfs_init(struct hv_dynmem_device *b)
 
 static void  hv_balloon_debugfs_exit(struct hv_dynmem_device *b)
 {
+<<<<<<< HEAD
 	debugfs_lookup_and_remove("hv-balloon", NULL);
+=======
+	debugfs_remove(debugfs_lookup("hv-balloon", NULL));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #else
@@ -2042,7 +2108,11 @@ connect_error:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void balloon_remove(struct hv_device *dev)
+=======
+static int balloon_remove(struct hv_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hv_dynmem_device *dm = hv_get_drvdata(dev);
 	struct hv_hotadd_state *has, *tmp;
@@ -2083,6 +2153,11 @@ static void balloon_remove(struct hv_device *dev)
 		kfree(has);
 	}
 	spin_unlock_irqrestore(&dm_device.ha_lock, flags);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int balloon_suspend(struct hv_device *hv_dev)

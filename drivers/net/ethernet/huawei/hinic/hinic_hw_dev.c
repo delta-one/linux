@@ -29,6 +29,10 @@
 #include "hinic_hw_io.h"
 #include "hinic_hw_dev.h"
 
+<<<<<<< HEAD
+=======
+#define IO_STATUS_TIMEOUT               100
+>>>>>>> b7ba80a49124 (Commit)
 #define OUTBOUND_STATE_TIMEOUT          100
 #define DB_STATE_TIMEOUT                100
 
@@ -41,6 +45,14 @@ enum intr_type {
 	INTR_MSIX_TYPE,
 };
 
+<<<<<<< HEAD
+=======
+enum io_status {
+	IO_STOPPED = 0,
+	IO_RUNNING = 1,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * parse_capability - convert device capabilities to NIC capabilities
  * @hwdev: the HW device to set and convert device capabilities for
@@ -831,8 +843,13 @@ static int hinic_l2nic_reset(struct hinic_hwdev *hwdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int hinic_get_interrupt_cfg(struct hinic_hwdev *hwdev,
 				   struct hinic_msix_config *interrupt_info)
+=======
+int hinic_get_interrupt_cfg(struct hinic_hwdev *hwdev,
+			    struct hinic_msix_config *interrupt_info)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u16 out_size = sizeof(*interrupt_info);
 	struct hinic_pfhwdev *pfhwdev;
@@ -877,7 +894,11 @@ int hinic_set_interrupt_cfg(struct hinic_hwdev *hwdev,
 	if (err)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	interrupt_info->lli_credit_cnt = temp_info.lli_credit_cnt;
+=======
+	interrupt_info->lli_credit_cnt = temp_info.lli_timer_cnt;
+>>>>>>> b7ba80a49124 (Commit)
 	interrupt_info->lli_timer_cnt = temp_info.lli_timer_cnt;
 
 	err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
@@ -1035,6 +1056,16 @@ void hinic_free_hwdev(struct hinic_hwdev *hwdev)
 	hinic_free_hwif(hwdev->hwif);
 }
 
+<<<<<<< HEAD
+=======
+int hinic_hwdev_max_num_qps(struct hinic_hwdev *hwdev)
+{
+	struct hinic_cap *nic_cap = &hwdev->nic_cap;
+
+	return nic_cap->max_qps;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * hinic_hwdev_num_qps - return the number QPs available for use
  * @hwdev: the NIC HW device

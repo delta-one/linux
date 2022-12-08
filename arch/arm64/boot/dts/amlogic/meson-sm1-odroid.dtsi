@@ -48,7 +48,11 @@
 		regulator-max-microvolt = <3300000>;
 		vin-supply = <&vcc_5v>;
 
+<<<<<<< HEAD
 		enable-gpios = <&gpio_ao GPIOE_2 GPIO_OPEN_DRAIN>;
+=======
+		enable-gpio = <&gpio_ao GPIOE_2 GPIO_OPEN_DRAIN>;
+>>>>>>> b7ba80a49124 (Commit)
 		enable-active-high;
 		regulator-always-on;
 

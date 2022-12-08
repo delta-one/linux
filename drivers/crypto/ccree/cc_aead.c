@@ -138,7 +138,11 @@ static int cc_aead_init(struct crypto_aead *tfm)
 	ctx->flow_mode = cc_alg->flow_mode;
 	ctx->auth_mode = cc_alg->auth_mode;
 	ctx->drvdata = cc_alg->drvdata;
+<<<<<<< HEAD
 	crypto_aead_set_reqsize_dma(tfm, sizeof(struct aead_req_ctx));
+=======
+	crypto_aead_set_reqsize(tfm, sizeof(struct aead_req_ctx));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Allocate key buffer, cache line aligned */
 	ctx->enckey = dma_alloc_coherent(dev, AES_MAX_KEY_SIZE,
@@ -208,7 +212,11 @@ init_failed:
 static void cc_aead_complete(struct device *dev, void *cc_req, int err)
 {
 	struct aead_request *areq = (struct aead_request *)cc_req;
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(areq);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 	struct crypto_aead *tfm = crypto_aead_reqtfm(cc_req);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
 
@@ -723,7 +731,11 @@ static void cc_set_assoc_desc(struct aead_request *areq, unsigned int flow_mode,
 {
 	struct crypto_aead *tfm = crypto_aead_reqtfm(areq);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(areq);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 	enum cc_req_dma_buf_type assoc_dma_type = areq_ctx->assoc_buff_type;
 	unsigned int idx = *seq_size;
 	struct device *dev = drvdata_to_dev(ctx->drvdata);
@@ -762,7 +774,11 @@ static void cc_proc_authen_desc(struct aead_request *areq,
 				struct cc_hw_desc desc[],
 				unsigned int *seq_size, int direct)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(areq);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 	enum cc_req_dma_buf_type data_dma_type = areq_ctx->data_buff_type;
 	unsigned int idx = *seq_size;
 	struct crypto_aead *tfm = crypto_aead_reqtfm(areq);
@@ -827,7 +843,11 @@ static void cc_proc_cipher_desc(struct aead_request *areq,
 				unsigned int *seq_size)
 {
 	unsigned int idx = *seq_size;
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(areq);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 	enum cc_req_dma_buf_type data_dma_type = areq_ctx->data_buff_type;
 	struct crypto_aead *tfm = crypto_aead_reqtfm(areq);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
@@ -873,7 +893,11 @@ static void cc_proc_digest_desc(struct aead_request *req,
 {
 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
+<<<<<<< HEAD
 	struct aead_req_ctx *req_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *req_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int idx = *seq_size;
 	unsigned int hash_mode = (ctx->auth_mode == DRV_HASH_SHA1) ?
 				DRV_HASH_HW_SHA1 : DRV_HASH_HW_SHA256;
@@ -923,7 +947,11 @@ static void cc_set_cipher_desc(struct aead_request *req,
 {
 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
+<<<<<<< HEAD
 	struct aead_req_ctx *req_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *req_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int hw_iv_size = req_ctx->hw_iv_size;
 	unsigned int idx = *seq_size;
 	int direct = req_ctx->gen_ctx.op_type;
@@ -965,7 +993,11 @@ static void cc_set_cipher_desc(struct aead_request *req,
 static void cc_proc_cipher(struct aead_request *req, struct cc_hw_desc desc[],
 			   unsigned int *seq_size, unsigned int data_flow_mode)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *req_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *req_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	int direct = req_ctx->gen_ctx.op_type;
 	unsigned int idx = *seq_size;
 
@@ -1082,7 +1114,11 @@ static void cc_proc_header_desc(struct aead_request *req,
 				struct cc_hw_desc desc[],
 				unsigned int *seq_size)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int idx = *seq_size;
 
 	/* Hash associated data */
@@ -1158,7 +1194,11 @@ static void cc_proc_scheme_desc(struct aead_request *req,
 static void cc_mlli_to_sram(struct aead_request *req,
 			    struct cc_hw_desc desc[], unsigned int *seq_size)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *req_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *req_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
 	struct device *dev = drvdata_to_dev(ctx->drvdata);
@@ -1212,7 +1252,11 @@ static void cc_hmac_authenc(struct aead_request *req, struct cc_hw_desc desc[],
 {
 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
+<<<<<<< HEAD
 	struct aead_req_ctx *req_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *req_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	int direct = req_ctx->gen_ctx.op_type;
 	unsigned int data_flow_mode =
 		cc_get_data_flow(direct, ctx->flow_mode,
@@ -1265,7 +1309,11 @@ cc_xcbc_authenc(struct aead_request *req, struct cc_hw_desc desc[],
 {
 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
+<<<<<<< HEAD
 	struct aead_req_ctx *req_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *req_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	int direct = req_ctx->gen_ctx.op_type;
 	unsigned int data_flow_mode =
 		cc_get_data_flow(direct, ctx->flow_mode,
@@ -1312,7 +1360,11 @@ static int validate_data_size(struct cc_aead_ctx *ctx,
 			      enum drv_crypto_direction direct,
 			      struct aead_request *req)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = drvdata_to_dev(ctx->drvdata);
 	unsigned int assoclen = areq_ctx->assoclen;
 	unsigned int cipherlen = (direct == DRV_CRYPTO_DIRECTION_DECRYPT) ?
@@ -1411,7 +1463,11 @@ static int cc_ccm(struct aead_request *req, struct cc_hw_desc desc[],
 {
 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
+<<<<<<< HEAD
 	struct aead_req_ctx *req_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *req_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int idx = *seq_size;
 	unsigned int cipher_flow_mode;
 	dma_addr_t mac_result;
@@ -1533,7 +1589,11 @@ static int config_ccm_adata(struct aead_request *req)
 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
 	struct device *dev = drvdata_to_dev(ctx->drvdata);
+<<<<<<< HEAD
 	struct aead_req_ctx *req_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *req_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	//unsigned int size_of_a = 0, rem_a_size = 0;
 	unsigned int lp = req->iv[0];
 	/* Note: The code assume that req->iv[0] already contains the value
@@ -1591,7 +1651,11 @@ static void cc_proc_rfc4309_ccm(struct aead_request *req)
 {
 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* L' */
 	memset(areq_ctx->ctr_iv, 0, AES_BLOCK_SIZE);
@@ -1615,7 +1679,11 @@ static void cc_set_ghash_desc(struct aead_request *req,
 {
 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
+<<<<<<< HEAD
 	struct aead_req_ctx *req_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *req_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int idx = *seq_size;
 
 	/* load key to AES*/
@@ -1693,7 +1761,11 @@ static void cc_set_gctr_desc(struct aead_request *req, struct cc_hw_desc desc[],
 {
 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
+<<<<<<< HEAD
 	struct aead_req_ctx *req_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *req_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int idx = *seq_size;
 
 	/* load key to AES*/
@@ -1730,7 +1802,11 @@ static void cc_proc_gcm_result(struct aead_request *req,
 {
 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
+<<<<<<< HEAD
 	struct aead_req_ctx *req_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *req_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	dma_addr_t mac_result;
 	unsigned int idx = *seq_size;
 
@@ -1792,7 +1868,11 @@ static void cc_proc_gcm_result(struct aead_request *req,
 static int cc_gcm(struct aead_request *req, struct cc_hw_desc desc[],
 		  unsigned int *seq_size)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *req_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *req_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int cipher_flow_mode;
 
 	//in RFC4543 no data to encrypt. just copy data from src to dest.
@@ -1830,7 +1910,11 @@ static int config_gcm_context(struct aead_request *req)
 {
 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
+<<<<<<< HEAD
 	struct aead_req_ctx *req_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *req_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = drvdata_to_dev(ctx->drvdata);
 
 	unsigned int cryptlen = (req_ctx->gen_ctx.op_type ==
@@ -1879,7 +1963,11 @@ static void cc_proc_rfc4_gcm(struct aead_request *req)
 {
 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memcpy(areq_ctx->ctr_iv + GCM_BLOCK_RFC4_NONCE_OFFSET,
 	       ctx->ctr_nonce, GCM_BLOCK_RFC4_NONCE_SIZE);
@@ -1896,7 +1984,11 @@ static int cc_proc_aead(struct aead_request *req,
 	struct cc_hw_desc desc[MAX_AEAD_PROCESS_SEQ];
 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = drvdata_to_dev(ctx->drvdata);
 	struct cc_crypto_req cc_req = {};
 
@@ -2019,7 +2111,11 @@ exit:
 
 static int cc_aead_encrypt(struct aead_request *req)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	memset(areq_ctx, 0, sizeof(*areq_ctx));
@@ -2039,7 +2135,11 @@ static int cc_rfc4309_ccm_encrypt(struct aead_request *req)
 {
 	/* Very similar to cc_aead_encrypt() above. */
 
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	rc = crypto_ipsec_check_assoclen(req->assoclen);
@@ -2063,7 +2163,11 @@ out:
 
 static int cc_aead_decrypt(struct aead_request *req)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	memset(areq_ctx, 0, sizeof(*areq_ctx));
@@ -2081,7 +2185,11 @@ static int cc_aead_decrypt(struct aead_request *req)
 
 static int cc_rfc4309_ccm_decrypt(struct aead_request *req)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	rc = crypto_ipsec_check_assoclen(req->assoclen);
@@ -2193,7 +2301,11 @@ static int cc_rfc4543_gcm_setauthsize(struct crypto_aead *authenc,
 
 static int cc_rfc4106_gcm_encrypt(struct aead_request *req)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	rc = crypto_ipsec_check_assoclen(req->assoclen);
@@ -2217,7 +2329,11 @@ out:
 
 static int cc_rfc4543_gcm_encrypt(struct aead_request *req)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	rc = crypto_ipsec_check_assoclen(req->assoclen);
@@ -2244,7 +2360,11 @@ out:
 
 static int cc_rfc4106_gcm_decrypt(struct aead_request *req)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	rc = crypto_ipsec_check_assoclen(req->assoclen);
@@ -2268,7 +2388,11 @@ out:
 
 static int cc_rfc4543_gcm_decrypt(struct aead_request *req)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	rc = crypto_ipsec_check_assoclen(req->assoclen);

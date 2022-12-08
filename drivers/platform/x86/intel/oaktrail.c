@@ -266,11 +266,23 @@ static int oaktrail_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int oaktrail_remove(struct platform_device *pdev)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver oaktrail_driver = {
 	.driver = {
 		.name = DRIVER_NAME,
 	},
 	.probe	= oaktrail_probe,
+<<<<<<< HEAD
+=======
+	.remove	= oaktrail_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int dmi_check_cb(const struct dmi_system_id *id)
@@ -311,7 +323,11 @@ static int __init oaktrail_init(void)
 		goto err_driver_reg;
 	}
 
+<<<<<<< HEAD
 	oaktrail_device = platform_device_alloc(DRIVER_NAME, PLATFORM_DEVID_NONE);
+=======
+	oaktrail_device = platform_device_alloc(DRIVER_NAME, -1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!oaktrail_device) {
 		pr_warn("Unable to allocate platform device\n");
 		ret = -ENOMEM;

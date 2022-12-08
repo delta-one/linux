@@ -28,7 +28,10 @@
 #include <linux/pm_runtime.h>
 #include <linux/msi.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/aperture.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "pci.h"
 
 static int sysfs_initialized;	/* = 0 */
@@ -756,6 +759,7 @@ static ssize_t pci_write_config(struct file *filp, struct kobject *kobj,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (resource_is_exclusive(&dev->driver_exclusive_resource, off,
 				  count)) {
 		pci_warn_once(dev, "%s: Unexpected write to kernel-exclusive config offset %llx",
@@ -763,6 +767,8 @@ static ssize_t pci_write_config(struct file *filp, struct kobject *kobj,
 		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (off > dev->cfg_size)
 		return 0;
 	if (off + count > dev->cfg_size) {
@@ -1182,9 +1188,17 @@ static int pci_create_attr(struct pci_dev *pdev, int num, int write_combine)
 
 	sysfs_bin_attr_init(res_attr);
 	if (write_combine) {
+<<<<<<< HEAD
 		sprintf(res_attr_name, "resource%d_wc", num);
 		res_attr->mmap = pci_mmap_resource_wc;
 	} else {
+=======
+		pdev->res_attr_wc[num] = res_attr;
+		sprintf(res_attr_name, "resource%d_wc", num);
+		res_attr->mmap = pci_mmap_resource_wc;
+	} else {
+		pdev->res_attr[num] = res_attr;
+>>>>>>> b7ba80a49124 (Commit)
 		sprintf(res_attr_name, "resource%d", num);
 		if (pci_resource_flags(pdev, num) & IORESOURCE_IO) {
 			res_attr->read = pci_read_resource_io;
@@ -1202,6 +1216,7 @@ static int pci_create_attr(struct pci_dev *pdev, int num, int write_combine)
 	res_attr->size = pci_resource_len(pdev, num);
 	res_attr->private = (void *)(unsigned long)num;
 	retval = sysfs_create_bin_file(&pdev->dev.kobj, res_attr);
+<<<<<<< HEAD
 	if (retval) {
 		kfree(res_attr);
 		return retval;
@@ -1213,6 +1228,12 @@ static int pci_create_attr(struct pci_dev *pdev, int num, int write_combine)
 		pdev->res_attr[num] = res_attr;
 
 	return 0;
+=======
+	if (retval)
+		kfree(res_attr);
+
+	return retval;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1386,6 +1407,7 @@ static const struct attribute_group pci_dev_reset_attr_group = {
 	.is_visible = pci_dev_reset_attr_is_visible,
 };
 
+<<<<<<< HEAD
 #define pci_dev_resource_resize_attr(n)					\
 static ssize_t resource##n##_resize_show(struct device *dev,		\
 					 struct device_attribute *attr,	\
@@ -1492,6 +1514,8 @@ static const struct attribute_group pci_dev_resource_resize_group = {
 	.is_visible = resource_resize_is_visible,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
 {
 	if (!sysfs_initialized)
@@ -1613,7 +1637,10 @@ const struct attribute_group *pci_dev_groups[] = {
 #ifdef CONFIG_ACPI
 	&pci_dev_acpi_attr_group,
 #endif
+<<<<<<< HEAD
 	&pci_dev_resource_resize_group,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	NULL,
 };
 

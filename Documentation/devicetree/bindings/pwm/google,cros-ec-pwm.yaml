@@ -48,7 +48,10 @@ examples:
         cros-ec@0 {
             compatible = "google,cros-ec-spi";
             reg = <0>;
+<<<<<<< HEAD
             interrupts = <101 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
             cros_ec_pwm: pwm {
                 compatible = "google,cros-ec-pwm";

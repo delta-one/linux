@@ -22,6 +22,10 @@
 #include <linux/un.h>
 #include <linux/uaccess.h>
 #include <linux/inet.h>
+<<<<<<< HEAD
+=======
+#include <linux/idr.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/file.h>
 #include <linux/highmem.h>
 #include <linux/slab.h>
@@ -262,7 +266,11 @@ p9_virtio_request(struct p9_client *client, struct p9_req_t *req)
 
 	p9_debug(P9_DEBUG_TRANS, "9p debug: virtio request\n");
 
+<<<<<<< HEAD
 	WRITE_ONCE(req->status, REQ_STATUS_SENT);
+=======
+	req->status = REQ_STATUS_SENT;
+>>>>>>> b7ba80a49124 (Commit)
 req_retry:
 	spin_lock_irqsave(&chan->lock, flags);
 
@@ -468,7 +476,11 @@ p9_virtio_zc_request(struct p9_client *client, struct p9_req_t *req,
 			inlen = n;
 		}
 	}
+<<<<<<< HEAD
 	WRITE_ONCE(req->status, REQ_STATUS_SENT);
+=======
+	req->status = REQ_STATUS_SENT;
+>>>>>>> b7ba80a49124 (Commit)
 req_retry_pinned:
 	spin_lock_irqsave(&chan->lock, flags);
 
@@ -531,10 +543,16 @@ req_retry_pinned:
 	spin_unlock_irqrestore(&chan->lock, flags);
 	kicked = 1;
 	p9_debug(P9_DEBUG_TRANS, "virtio request kicked\n");
+<<<<<<< HEAD
 	err = wait_event_killable(req->wq,
 			          READ_ONCE(req->status) >= REQ_STATUS_RCVD);
 	// RERROR needs reply (== error string) in static data
 	if (READ_ONCE(req->status) == REQ_STATUS_RCVD &&
+=======
+	err = wait_event_killable(req->wq, req->status >= REQ_STATUS_RCVD);
+	// RERROR needs reply (== error string) in static data
+	if (req->status == REQ_STATUS_RCVD &&
+>>>>>>> b7ba80a49124 (Commit)
 	    unlikely(req->rc.sdata[4] == P9_RERROR))
 		handle_rerror(req, in_hdr_len, offs, in_pages);
 

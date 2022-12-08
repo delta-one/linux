@@ -32,6 +32,7 @@ static irqreturn_t xen_reschedule_interrupt(int irq, void *dev_id)
 
 void xen_smp_intr_free(unsigned int cpu)
 {
+<<<<<<< HEAD
 	kfree(per_cpu(xen_resched_irq, cpu).name);
 	per_cpu(xen_resched_irq, cpu).name = NULL;
 	if (per_cpu(xen_resched_irq, cpu).irq >= 0) {
@@ -52,10 +53,35 @@ void xen_smp_intr_free(unsigned int cpu)
 	}
 	kfree(per_cpu(xen_callfuncsingle_irq, cpu).name);
 	per_cpu(xen_callfuncsingle_irq, cpu).name = NULL;
+=======
+	if (per_cpu(xen_resched_irq, cpu).irq >= 0) {
+		unbind_from_irqhandler(per_cpu(xen_resched_irq, cpu).irq, NULL);
+		per_cpu(xen_resched_irq, cpu).irq = -1;
+		kfree(per_cpu(xen_resched_irq, cpu).name);
+		per_cpu(xen_resched_irq, cpu).name = NULL;
+	}
+	if (per_cpu(xen_callfunc_irq, cpu).irq >= 0) {
+		unbind_from_irqhandler(per_cpu(xen_callfunc_irq, cpu).irq, NULL);
+		per_cpu(xen_callfunc_irq, cpu).irq = -1;
+		kfree(per_cpu(xen_callfunc_irq, cpu).name);
+		per_cpu(xen_callfunc_irq, cpu).name = NULL;
+	}
+	if (per_cpu(xen_debug_irq, cpu).irq >= 0) {
+		unbind_from_irqhandler(per_cpu(xen_debug_irq, cpu).irq, NULL);
+		per_cpu(xen_debug_irq, cpu).irq = -1;
+		kfree(per_cpu(xen_debug_irq, cpu).name);
+		per_cpu(xen_debug_irq, cpu).name = NULL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (per_cpu(xen_callfuncsingle_irq, cpu).irq >= 0) {
 		unbind_from_irqhandler(per_cpu(xen_callfuncsingle_irq, cpu).irq,
 				       NULL);
 		per_cpu(xen_callfuncsingle_irq, cpu).irq = -1;
+<<<<<<< HEAD
+=======
+		kfree(per_cpu(xen_callfuncsingle_irq, cpu).name);
+		per_cpu(xen_callfuncsingle_irq, cpu).name = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -65,7 +91,10 @@ int xen_smp_intr_init(unsigned int cpu)
 	char *resched_name, *callfunc_name, *debug_name;
 
 	resched_name = kasprintf(GFP_KERNEL, "resched%d", cpu);
+<<<<<<< HEAD
 	per_cpu(xen_resched_irq, cpu).name = resched_name;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rc = bind_ipi_to_irqhandler(XEN_RESCHEDULE_VECTOR,
 				    cpu,
 				    xen_reschedule_interrupt,
@@ -75,9 +104,15 @@ int xen_smp_intr_init(unsigned int cpu)
 	if (rc < 0)
 		goto fail;
 	per_cpu(xen_resched_irq, cpu).irq = rc;
+<<<<<<< HEAD
 
 	callfunc_name = kasprintf(GFP_KERNEL, "callfunc%d", cpu);
 	per_cpu(xen_callfunc_irq, cpu).name = callfunc_name;
+=======
+	per_cpu(xen_resched_irq, cpu).name = resched_name;
+
+	callfunc_name = kasprintf(GFP_KERNEL, "callfunc%d", cpu);
+>>>>>>> b7ba80a49124 (Commit)
 	rc = bind_ipi_to_irqhandler(XEN_CALL_FUNCTION_VECTOR,
 				    cpu,
 				    xen_call_function_interrupt,
@@ -87,10 +122,17 @@ int xen_smp_intr_init(unsigned int cpu)
 	if (rc < 0)
 		goto fail;
 	per_cpu(xen_callfunc_irq, cpu).irq = rc;
+<<<<<<< HEAD
 
 	if (!xen_fifo_events) {
 		debug_name = kasprintf(GFP_KERNEL, "debug%d", cpu);
 		per_cpu(xen_debug_irq, cpu).name = debug_name;
+=======
+	per_cpu(xen_callfunc_irq, cpu).name = callfunc_name;
+
+	if (!xen_fifo_events) {
+		debug_name = kasprintf(GFP_KERNEL, "debug%d", cpu);
+>>>>>>> b7ba80a49124 (Commit)
 		rc = bind_virq_to_irqhandler(VIRQ_DEBUG, cpu,
 					     xen_debug_interrupt,
 					     IRQF_PERCPU | IRQF_NOBALANCING,
@@ -98,10 +140,17 @@ int xen_smp_intr_init(unsigned int cpu)
 		if (rc < 0)
 			goto fail;
 		per_cpu(xen_debug_irq, cpu).irq = rc;
+<<<<<<< HEAD
 	}
 
 	callfunc_name = kasprintf(GFP_KERNEL, "callfuncsingle%d", cpu);
 	per_cpu(xen_callfuncsingle_irq, cpu).name = callfunc_name;
+=======
+		per_cpu(xen_debug_irq, cpu).name = debug_name;
+	}
+
+	callfunc_name = kasprintf(GFP_KERNEL, "callfuncsingle%d", cpu);
+>>>>>>> b7ba80a49124 (Commit)
 	rc = bind_ipi_to_irqhandler(XEN_CALL_FUNCTION_SINGLE_VECTOR,
 				    cpu,
 				    xen_call_function_single_interrupt,
@@ -111,6 +160,10 @@ int xen_smp_intr_init(unsigned int cpu)
 	if (rc < 0)
 		goto fail;
 	per_cpu(xen_callfuncsingle_irq, cpu).irq = rc;
+<<<<<<< HEAD
+=======
+	per_cpu(xen_callfuncsingle_irq, cpu).name = callfunc_name;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 

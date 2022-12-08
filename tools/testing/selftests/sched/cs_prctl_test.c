@@ -27,7 +27,10 @@
 #include <sys/prctl.h>
 #include <unistd.h>
 #include <time.h>
+<<<<<<< HEAD
 #include <errno.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -152,17 +155,24 @@ static void create_threads(int num_threads, int thr_tids[])
 static int child_func_process(void *arg)
 {
 	struct child_args *ca = (struct child_args *)arg;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	close(ca->pfd[0]);
 
 	create_threads(ca->num_threads, ca->thr_tids);
 
+<<<<<<< HEAD
 	ret = write(ca->pfd[1], &ca->thr_tids, sizeof(int) * ca->num_threads);
 	if (ret == -1)
 		printf("write failed on pfd[%d] - error (%s)\n",
 			ca->pfd[1], strerror(errno));
 
+=======
+	write(ca->pfd[1], &ca->thr_tids, sizeof(int) * ca->num_threads);
+>>>>>>> b7ba80a49124 (Commit)
 	close(ca->pfd[1]);
 
 	while (1)
@@ -175,7 +185,11 @@ static unsigned char child_func_process_stack[STACK_SIZE];
 void create_processes(int num_processes, int num_threads, struct child_args proc[])
 {
 	pid_t cpid;
+<<<<<<< HEAD
 	int i, ret;
+=======
+	int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < num_processes; ++i) {
 		proc[i].num_threads = num_threads;
@@ -190,10 +204,14 @@ void create_processes(int num_processes, int num_threads, struct child_args proc
 	}
 
 	for (i = 0; i < num_processes; ++i) {
+<<<<<<< HEAD
 		ret = read(proc[i].pfd[0], &proc[i].thr_tids, sizeof(int) * proc[i].num_threads);
 		if (ret == -1)
 			printf("read failed on proc[%d].pfd[0] error (%s)\n",
 				i, strerror(errno));
+=======
+		read(proc[i].pfd[0], &proc[i].thr_tids, sizeof(int) * proc[i].num_threads);
+>>>>>>> b7ba80a49124 (Commit)
 		close(proc[i].pfd[0]);
 	}
 }

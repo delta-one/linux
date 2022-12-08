@@ -809,8 +809,11 @@ struct pp_hwmgr {
 	uint32_t workload_prority[Workload_Policy_Max];
 	uint32_t workload_setting[Workload_Policy_Max];
 	bool gfxoff_state_changed_by_workload;
+<<<<<<< HEAD
 	uint32_t pstate_sclk_peak;
 	uint32_t pstate_mclk_peak;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int hwmgr_early_init(struct pp_hwmgr *hwmgr);

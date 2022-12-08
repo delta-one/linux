@@ -422,7 +422,11 @@ qed_mfw_get_tlv_time_value(struct qed_mfw_tlv_time *p_time,
 	if (p_time->hour > 23)
 		p_time->hour = 0;
 	if (p_time->min > 59)
+<<<<<<< HEAD
 		p_time->min = 0;
+=======
+		p_time->hour = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	if (p_time->msec > 999)
 		p_time->msec = 0;
 	if (p_time->usec > 999)

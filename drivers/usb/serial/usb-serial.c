@@ -754,7 +754,11 @@ static struct usb_serial_driver *search_serial_device(
 	return NULL;
 }
 
+<<<<<<< HEAD
 static bool serial_port_carrier_raised(struct tty_port *port)
+=======
+static int serial_port_carrier_raised(struct tty_port *port)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct usb_serial_port *p = container_of(port, struct usb_serial_port, port);
 	struct usb_serial_driver *drv = p->serial->type;
@@ -762,10 +766,17 @@ static bool serial_port_carrier_raised(struct tty_port *port)
 	if (drv->carrier_raised)
 		return drv->carrier_raised(p);
 	/* No carrier control - don't block */
+<<<<<<< HEAD
 	return true;
 }
 
 static void serial_port_dtr_rts(struct tty_port *port, bool on)
+=======
+	return 1;
+}
+
+static void serial_port_dtr_rts(struct tty_port *port, int on)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct usb_serial_port *p = container_of(port, struct usb_serial_port, port);
 	struct usb_serial_driver *drv = p->serial->type;

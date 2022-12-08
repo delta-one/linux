@@ -128,6 +128,7 @@ enum slpc_media_ratio_mode {
 	SLPC_MEDIA_RATIO_MODE_FIXED_ONE_TO_TWO = 2,
 };
 
+<<<<<<< HEAD
 enum slpc_gucrc_mode {
 	SLPC_GUCRC_MODE_HW = 0,
 	SLPC_GUCRC_MODE_GUCRC_NO_RC6 = 1,
@@ -137,6 +138,8 @@ enum slpc_gucrc_mode {
 	SLPC_GUCRC_MODE_MAX,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum slpc_event_id {
 	SLPC_EVENT_RESET = 0,
 	SLPC_EVENT_SHUTDOWN = 1,

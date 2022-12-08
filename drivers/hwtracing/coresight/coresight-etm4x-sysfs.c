@@ -266,10 +266,16 @@ static ssize_t reset_store(struct device *dev,
 	config->vmid_mask0 = 0x0;
 	config->vmid_mask1 = 0x0;
 
+<<<<<<< HEAD
 	spin_unlock(&drvdata->spinlock);
 
 	/* for sysfs - only release trace id when resetting */
 	etm4_release_trace_id(drvdata);
+=======
+	drvdata->trcid = drvdata->cpu + 1;
+
+	spin_unlock(&drvdata->spinlock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	cscfg_csdev_reset_feats(to_coresight_device(dev));
 
@@ -2393,6 +2399,7 @@ static struct attribute *coresight_etmv4_attrs[] = {
 	NULL,
 };
 
+<<<<<<< HEAD
 /*
  * Trace ID allocated dynamically on enable - but also allocate on read
  * in case sysfs or perf read before enable to ensure consistent metadata
@@ -2413,6 +2420,8 @@ static ssize_t trctraceid_show(struct device *dev,
 }
 static DEVICE_ATTR_RO(trctraceid);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct etmv4_reg {
 	struct coresight_device *csdev;
 	u32 offset;
@@ -2549,7 +2558,11 @@ static struct attribute *coresight_etmv4_mgmt_attrs[] = {
 	coresight_etm4x_reg(trcpidr3, TRCPIDR3),
 	coresight_etm4x_reg(trcoslsr, TRCOSLSR),
 	coresight_etm4x_reg(trcconfig, TRCCONFIGR),
+<<<<<<< HEAD
 	&dev_attr_trctraceid.attr,
+=======
+	coresight_etm4x_reg(trctraceid, TRCTRACEIDR),
+>>>>>>> b7ba80a49124 (Commit)
 	coresight_etm4x_reg(trcdevarch, TRCDEVARCH),
 	NULL,
 };

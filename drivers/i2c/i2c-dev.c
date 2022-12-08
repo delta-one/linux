@@ -646,19 +646,31 @@ static void i2cdev_dev_release(struct device *dev)
 	kfree(i2c_dev);
 }
 
+<<<<<<< HEAD
 static int i2cdev_attach_adapter(struct device *dev)
+=======
+static int i2cdev_attach_adapter(struct device *dev, void *dummy)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_adapter *adap;
 	struct i2c_dev *i2c_dev;
 	int res;
 
 	if (dev->type != &i2c_adapter_type)
+<<<<<<< HEAD
 		return NOTIFY_DONE;
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 	adap = to_i2c_adapter(dev);
 
 	i2c_dev = get_free_i2c_dev(adap);
 	if (IS_ERR(i2c_dev))
+<<<<<<< HEAD
 		return NOTIFY_DONE;
+=======
+		return PTR_ERR(i2c_dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	cdev_init(&i2c_dev->cdev, &i2cdev_fops);
 	i2c_dev->cdev.owner = THIS_MODULE;
@@ -678,6 +690,7 @@ static int i2cdev_attach_adapter(struct device *dev)
 		goto err_put_i2c_dev;
 
 	pr_debug("adapter [%s] registered as minor %d\n", adap->name, adap->nr);
+<<<<<<< HEAD
 	return NOTIFY_OK;
 
 err_put_i2c_dev:
@@ -686,22 +699,44 @@ err_put_i2c_dev:
 }
 
 static int i2cdev_detach_adapter(struct device *dev)
+=======
+	return 0;
+
+err_put_i2c_dev:
+	put_i2c_dev(i2c_dev, false);
+	return res;
+}
+
+static int i2cdev_detach_adapter(struct device *dev, void *dummy)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_adapter *adap;
 	struct i2c_dev *i2c_dev;
 
 	if (dev->type != &i2c_adapter_type)
+<<<<<<< HEAD
 		return NOTIFY_DONE;
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 	adap = to_i2c_adapter(dev);
 
 	i2c_dev = i2c_dev_get_by_minor(adap->nr);
 	if (!i2c_dev) /* attach_adapter must have failed */
+<<<<<<< HEAD
 		return NOTIFY_DONE;
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	put_i2c_dev(i2c_dev, true);
 
 	pr_debug("adapter [%s] unregistered\n", adap->name);
+<<<<<<< HEAD
 	return NOTIFY_OK;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int i2cdev_notifier_call(struct notifier_block *nb, unsigned long action,
@@ -711,12 +746,21 @@ static int i2cdev_notifier_call(struct notifier_block *nb, unsigned long action,
 
 	switch (action) {
 	case BUS_NOTIFY_ADD_DEVICE:
+<<<<<<< HEAD
 		return i2cdev_attach_adapter(dev);
 	case BUS_NOTIFY_DEL_DEVICE:
 		return i2cdev_detach_adapter(dev);
 	}
 
 	return NOTIFY_DONE;
+=======
+		return i2cdev_attach_adapter(dev, NULL);
+	case BUS_NOTIFY_DEL_DEVICE:
+		return i2cdev_detach_adapter(dev, NULL);
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct notifier_block i2cdev_notifier = {
@@ -725,6 +769,7 @@ static struct notifier_block i2cdev_notifier = {
 
 /* ------------------------------------------------------------------------- */
 
+<<<<<<< HEAD
 static int __init i2c_dev_attach_adapter(struct device *dev, void *dummy)
 {
 	i2cdev_attach_adapter(dev);
@@ -737,6 +782,8 @@ static int __exit i2c_dev_detach_adapter(struct device *dev, void *dummy)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * module load/unload record keeping
  */
@@ -751,7 +798,11 @@ static int __init i2c_dev_init(void)
 	if (res)
 		goto out;
 
+<<<<<<< HEAD
 	i2c_dev_class = class_create("i2c-dev");
+=======
+	i2c_dev_class = class_create(THIS_MODULE, "i2c-dev");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(i2c_dev_class)) {
 		res = PTR_ERR(i2c_dev_class);
 		goto out_unreg_chrdev;
@@ -764,7 +815,11 @@ static int __init i2c_dev_init(void)
 		goto out_unreg_class;
 
 	/* Bind to already existing adapters right away */
+<<<<<<< HEAD
 	i2c_for_each_dev(NULL, i2c_dev_attach_adapter);
+=======
+	i2c_for_each_dev(NULL, i2cdev_attach_adapter);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -780,7 +835,11 @@ out:
 static void __exit i2c_dev_exit(void)
 {
 	bus_unregister_notifier(&i2c_bus_type, &i2cdev_notifier);
+<<<<<<< HEAD
 	i2c_for_each_dev(NULL, i2c_dev_detach_adapter);
+=======
+	i2c_for_each_dev(NULL, i2cdev_detach_adapter);
+>>>>>>> b7ba80a49124 (Commit)
 	class_destroy(i2c_dev_class);
 	unregister_chrdev_region(MKDEV(I2C_MAJOR, 0), I2C_MINORS);
 }

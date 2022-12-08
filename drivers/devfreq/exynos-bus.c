@@ -432,7 +432,11 @@ static int exynos_bus_probe(struct platform_device *pdev)
 		goto err;
 
 	/* Create child platform device for the interconnect provider */
+<<<<<<< HEAD
 	if (of_property_present(dev->of_node, "#interconnect-cells")) {
+=======
+	if (of_get_property(dev->of_node, "#interconnect-cells", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		bus->icc_pdev = platform_device_register_data(
 						dev, "exynos-generic-icc",
 						PLATFORM_DEVID_AUTO, NULL, 0);
@@ -513,7 +517,11 @@ static struct platform_driver exynos_bus_platdrv = {
 	.driver = {
 		.name	= "exynos-bus",
 		.pm	= &exynos_bus_pm,
+<<<<<<< HEAD
 		.of_match_table = exynos_bus_of_match,
+=======
+		.of_match_table = of_match_ptr(exynos_bus_of_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 module_platform_driver(exynos_bus_platdrv);

@@ -1,11 +1,17 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
  * CPUID-related helpers/definitions
+<<<<<<< HEAD
+=======
+ *
+ * Derived from arch/x86/kvm/cpuid.c
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #ifndef _ASM_X86_CPUID_H
 #define _ASM_X86_CPUID_H
 
+<<<<<<< HEAD
 #include <asm/string.h>
 
 struct cpuid_regs {
@@ -127,6 +133,8 @@ static inline unsigned int cpuid_edx(unsigned int op)
 	return edx;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static __always_inline bool cpuid_function_is_indexed(u32 function)
 {
 	switch (function) {
@@ -150,6 +158,7 @@ static __always_inline bool cpuid_function_is_indexed(u32 function)
 	return false;
 }
 
+<<<<<<< HEAD
 #define for_each_possible_hypervisor_cpuid_base(function) \
 	for (function = 0x40000000; function < 0x40010000; function += 0x100)
 
@@ -168,4 +177,6 @@ static inline uint32_t hypervisor_cpuid_base(const char *sig, uint32_t leaves)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_X86_CPUID_H */

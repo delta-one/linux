@@ -669,9 +669,12 @@ const struct nf_ct_hook __rcu *nf_ct_hook __read_mostly;
 EXPORT_SYMBOL_GPL(nf_ct_hook);
 
 #if IS_ENABLED(CONFIG_NF_CONNTRACK)
+<<<<<<< HEAD
 u8 nf_ctnetlink_has_listener;
 EXPORT_SYMBOL_GPL(nf_ctnetlink_has_listener);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct nf_nat_hook __rcu *nf_nat_hook __read_mostly;
 EXPORT_SYMBOL_GPL(nf_nat_hook);
 
@@ -705,6 +708,7 @@ void nf_conntrack_destroy(struct nf_conntrack *nfct)
 }
 EXPORT_SYMBOL(nf_conntrack_destroy);
 
+<<<<<<< HEAD
 void nf_ct_set_closing(struct nf_conntrack *nfct)
 {
 	const struct nf_ct_hook *ct_hook;
@@ -721,6 +725,8 @@ void nf_ct_set_closing(struct nf_conntrack *nfct)
 }
 EXPORT_SYMBOL_GPL(nf_ct_set_closing);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool nf_ct_get_tuple_skb(struct nf_conntrack_tuple *dst_tuple,
 			 const struct sk_buff *skb)
 {

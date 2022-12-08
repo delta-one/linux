@@ -26,10 +26,13 @@ ip_mptcp=0
 check_invert=0
 validate_checksum=0
 init=0
+<<<<<<< HEAD
 evts_ns1=""
 evts_ns2=""
 evts_ns1_pid=0
 evts_ns2_pid=0
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 declare -A all_tests
 declare -a only_tests_ids
@@ -63,9 +66,14 @@ init_partial()
 {
 	capout=$(mktemp)
 
+<<<<<<< HEAD
 	local sec rndh
 	sec=$(date +%s)
 	rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
+=======
+	local rndh
+	rndh=$(mktemp -u XXXXXX)
+>>>>>>> b7ba80a49124 (Commit)
 
 	ns1="ns1-$rndh"
 	ns2="ns2-$rndh"
@@ -158,8 +166,11 @@ init() {
 	cin=$(mktemp)
 	cinsent=$(mktemp)
 	cout=$(mktemp)
+<<<<<<< HEAD
 	evts_ns1=$(mktemp)
 	evts_ns2=$(mktemp)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	trap cleanup EXIT
 
@@ -171,7 +182,10 @@ cleanup()
 {
 	rm -f "$cin" "$cout" "$sinfail"
 	rm -f "$sin" "$sout" "$cinsent" "$cinfail"
+<<<<<<< HEAD
 	rm -rf $evts_ns1 $evts_ns2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cleanup_partial
 }
 
@@ -327,6 +341,7 @@ reset_with_fail()
 		index 100 || exit 1
 }
 
+<<<<<<< HEAD
 reset_with_events()
 {
 	reset "${1}" || return 1
@@ -339,6 +354,8 @@ reset_with_events()
 	evts_ns2_pid=$!
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 fail_test()
 {
 	ret=1
@@ -366,6 +383,7 @@ check_transfer()
 	local in=$1
 	local out=$2
 	local what=$3
+<<<<<<< HEAD
 	local bytes=$4
 	local i a b
 
@@ -381,6 +399,12 @@ check_transfer()
 		bytes="--bytes=${bytes}"
 	fi
 	cmp -l "$in" "$out" ${bytes} | while read -r i a b; do
+=======
+	local i a b
+
+	local line
+	cmp -l "$in" "$out" | while read -r i a b; do
+>>>>>>> b7ba80a49124 (Commit)
 		local sum=$((0${a} + 0${b}))
 		if [ $check_invert -eq 0 ] || [ $sum -ne $((0xff)) ]; then
 			echo "[ FAIL ] $what does not match (in, out):"
@@ -492,6 +516,7 @@ kill_wait()
 	wait $1 2>/dev/null
 }
 
+<<<<<<< HEAD
 kill_events_pids()
 {
 	kill_wait $evts_ns1_pid
@@ -504,6 +529,8 @@ kill_tests_wait()
 	wait
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 pm_nl_set_limits()
 {
 	local ns=$1
@@ -704,6 +731,13 @@ do_transfer()
 	local port=$((10000 + TEST_COUNT - 1))
 	local cappid
 	local userspace_pm=0
+<<<<<<< HEAD
+=======
+	local evts_ns1
+	local evts_ns1_pid
+	local evts_ns2
+	local evts_ns2_pid
+>>>>>>> b7ba80a49124 (Commit)
 
 	:> "$cout"
 	:> "$sout"
@@ -746,6 +780,7 @@ do_transfer()
 	fi
 
 	local flags="subflow"
+<<<<<<< HEAD
 	local extra_cl_args=""
 	local extra_srv_args=""
 	local trunc_size=""
@@ -771,6 +806,11 @@ do_transfer()
 			fail_test
 			return 1
 		fi
+=======
+	if [[ "${addr_nr_ns2}" = "fastclose_"* ]]; then
+		# disconnect
+		extra_args="$extra_args -I ${addr_nr_ns2:10}"
+>>>>>>> b7ba80a49124 (Commit)
 		addr_nr_ns2=0
 	elif [[ "${addr_nr_ns2}" = "userspace_"* ]]; then
 		userspace_pm=1
@@ -780,41 +820,85 @@ do_transfer()
 		addr_nr_ns2=${addr_nr_ns2:9}
 	fi
 
+<<<<<<< HEAD
 	extra_srv_args="$extra_args $extra_srv_args"
+=======
+	if [ $userspace_pm -eq 1 ]; then
+		evts_ns1=$(mktemp)
+		evts_ns2=$(mktemp)
+		:> "$evts_ns1"
+		:> "$evts_ns2"
+		ip netns exec ${listener_ns} ./pm_nl_ctl events >> "$evts_ns1" 2>&1 &
+		evts_ns1_pid=$!
+		ip netns exec ${connector_ns} ./pm_nl_ctl events >> "$evts_ns2" 2>&1 &
+		evts_ns2_pid=$!
+	fi
+
+	local local_addr
+	if is_v6 "${connect_addr}"; then
+		local_addr="::"
+	else
+		local_addr="0.0.0.0"
+	fi
+
+>>>>>>> b7ba80a49124 (Commit)
 	if [ "$test_link_fail" -gt 1 ];then
 		timeout ${timeout_test} \
 			ip netns exec ${listener_ns} \
 				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
+<<<<<<< HEAD
 					$extra_srv_args "::" < "$sinfail" > "$sout" &
+=======
+					$extra_args ${local_addr} < "$sinfail" > "$sout" &
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		timeout ${timeout_test} \
 			ip netns exec ${listener_ns} \
 				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
+<<<<<<< HEAD
 					$extra_srv_args "::" < "$sin" > "$sout" &
+=======
+					$extra_args ${local_addr} < "$sin" > "$sout" &
+>>>>>>> b7ba80a49124 (Commit)
 	fi
 	local spid=$!
 
 	wait_local_port_listen "${listener_ns}" "${port}"
 
+<<<<<<< HEAD
 	extra_cl_args="$extra_args $extra_cl_args"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if [ "$test_link_fail" -eq 0 ];then
 		timeout ${timeout_test} \
 			ip netns exec ${connector_ns} \
 				./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
+<<<<<<< HEAD
 					$extra_cl_args $connect_addr < "$cin" > "$cout" &
+=======
+					$extra_args $connect_addr < "$cin" > "$cout" &
+>>>>>>> b7ba80a49124 (Commit)
 	elif [ "$test_link_fail" -eq 1 ] || [ "$test_link_fail" -eq 2 ];then
 		( cat "$cinfail" ; sleep 2; link_failure $listener_ns ; cat "$cinfail" ) | \
 			tee "$cinsent" | \
 			timeout ${timeout_test} \
 				ip netns exec ${connector_ns} \
 					./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
+<<<<<<< HEAD
 						$extra_cl_args $connect_addr > "$cout" &
+=======
+						$extra_args $connect_addr > "$cout" &
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		tee "$cinsent" < "$cinfail" | \
 			timeout ${timeout_test} \
 				ip netns exec ${connector_ns} \
 					./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
+<<<<<<< HEAD
 						$extra_cl_args $connect_addr > "$cout" &
+=======
+						$extra_args $connect_addr > "$cout" &
+>>>>>>> b7ba80a49124 (Commit)
 	fi
 	local cpid=$!
 
@@ -839,8 +923,12 @@ do_transfer()
 			if [ $userspace_pm -eq 0 ]; then
 				pm_nl_add_endpoint $ns1 $addr flags signal
 			else
+<<<<<<< HEAD
 				tk=$(grep "type:1," "$evts_ns1" |
 				     sed -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q')
+=======
+				tk=$(sed -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$evts_ns1")
+>>>>>>> b7ba80a49124 (Commit)
 				ip netns exec ${listener_ns} ./pm_nl_ctl ann $addr token $tk id $id
 				sleep 1
 				ip netns exec ${listener_ns} ./pm_nl_ctl rem token $tk id $id
@@ -991,6 +1079,15 @@ do_transfer()
 	    kill $cappid
 	fi
 
+<<<<<<< HEAD
+=======
+	if [ $userspace_pm -eq 1 ]; then
+		kill_wait $evts_ns1_pid
+		kill_wait $evts_ns2_pid
+		rm -rf $evts_ns1 $evts_ns2
+	fi
+
+>>>>>>> b7ba80a49124 (Commit)
 	NSTAT_HISTORY=/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} \
 		nstat | grep Tcp > /tmp/${listener_ns}.out
 	NSTAT_HISTORY=/tmp/${connector_ns}.nstat ip netns exec ${connector_ns} \
@@ -1011,6 +1108,7 @@ do_transfer()
 	fi
 
 	if [ "$test_link_fail" -gt 1 ];then
+<<<<<<< HEAD
 		check_transfer $sinfail $cout "file received by client" $trunc_size
 	else
 		check_transfer $sin $cout "file received by client" $trunc_size
@@ -1020,6 +1118,17 @@ do_transfer()
 		check_transfer $cin $sout "file received by server" $trunc_size
 	else
 		check_transfer $cinsent $sout "file received by server" $trunc_size
+=======
+		check_transfer $sinfail $cout "file received by client"
+	else
+		check_transfer $sin $cout "file received by client"
+	fi
+	retc=$?
+	if [ "$test_link_fail" -eq 0 ];then
+		check_transfer $cin $sout "file received by server"
+	else
+		check_transfer $cinsent $sout "file received by server"
+>>>>>>> b7ba80a49124 (Commit)
 	fi
 	rets=$?
 
@@ -1228,6 +1337,7 @@ chk_fclose_nr()
 {
 	local fclose_tx=$1
 	local fclose_rx=$2
+<<<<<<< HEAD
 	local ns_invert=$3
 	local count
 	local dump_stats
@@ -1245,6 +1355,14 @@ chk_fclose_nr()
 	count=$(ip netns exec $ns_tx nstat -as | grep MPTcpExtMPFastcloseTx | awk '{print $2}')
 	[ -z "$count" ] && count=0
 	[ "$count" != "$fclose_tx" ] && extra_msg="$extra_msg,tx=$count"
+=======
+	local count
+	local dump_stats
+
+	printf "%-${nr_blank}s %s" " " "ctx"
+	count=$(ip netns exec $ns2 nstat -as | grep MPTcpExtMPFastcloseTx | awk '{print $2}')
+	[ -z "$count" ] && count=0
+>>>>>>> b7ba80a49124 (Commit)
 	if [ "$count" != "$fclose_tx" ]; then
 		echo "[fail] got $count MP_FASTCLOSE[s] TX expected $fclose_tx"
 		fail_test
@@ -1254,20 +1372,32 @@ chk_fclose_nr()
 	fi
 
 	echo -n " - fclzrx"
+<<<<<<< HEAD
 	count=$(ip netns exec $ns_rx nstat -as | grep MPTcpExtMPFastcloseRx | awk '{print $2}')
 	[ -z "$count" ] && count=0
 	[ "$count" != "$fclose_rx" ] && extra_msg="$extra_msg,rx=$count"
+=======
+	count=$(ip netns exec $ns1 nstat -as | grep MPTcpExtMPFastcloseRx | awk '{print $2}')
+	[ -z "$count" ] && count=0
+>>>>>>> b7ba80a49124 (Commit)
 	if [ "$count" != "$fclose_rx" ]; then
 		echo "[fail] got $count MP_FASTCLOSE[s] RX expected $fclose_rx"
 		fail_test
 		dump_stats=1
 	else
+<<<<<<< HEAD
 		echo -n "[ ok ]"
 	fi
 
 	[ "${dump_stats}" = 1 ] && dump_stats
 
 	echo "$extra_msg"
+=======
+		echo "[ ok ]"
+	fi
+
+	[ "${dump_stats}" = 1 ] && dump_stats
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 chk_rst_nr()
@@ -1290,7 +1420,11 @@ chk_rst_nr()
 	printf "%-${nr_blank}s %s" " " "rtx"
 	count=$(ip netns exec $ns_tx nstat -as | grep MPTcpExtMPRstTx | awk '{print $2}')
 	[ -z "$count" ] && count=0
+<<<<<<< HEAD
 	if [ $count -lt $rst_tx ]; then
+=======
+	if [ "$count" != "$rst_tx" ]; then
+>>>>>>> b7ba80a49124 (Commit)
 		echo "[fail] got $count MP_RST[s] TX expected $rst_tx"
 		fail_test
 		dump_stats=1
@@ -1301,7 +1435,11 @@ chk_rst_nr()
 	echo -n " - rstrx "
 	count=$(ip netns exec $ns_rx nstat -as | grep MPTcpExtMPRstRx | awk '{print $2}')
 	[ -z "$count" ] && count=0
+<<<<<<< HEAD
 	if [ "$count" -lt "$rst_rx" ]; then
+=======
+	if [ "$count" != "$rst_rx" ]; then
+>>>>>>> b7ba80a49124 (Commit)
 		echo "[fail] got $count MP_RST[s] RX expected $rst_rx"
 		fail_test
 		dump_stats=1
@@ -1693,7 +1831,10 @@ chk_subflow_nr()
 	local subflow_nr=$3
 	local cnt1
 	local cnt2
+<<<<<<< HEAD
 	local dump_stats
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if [ -n "${need_title}" ]; then
 		printf "%03u %-36s %s" "${TEST_COUNT}" "${TEST_NAME}" "${msg}"
@@ -1711,12 +1852,16 @@ chk_subflow_nr()
 		echo "[ ok ]"
 	fi
 
+<<<<<<< HEAD
 	if [ "${dump_stats}" = 1 ]; then
 		ss -N $ns1 -tOni
 		ss -N $ns1 -tOni | grep token
 		ip -n $ns1 mptcp endpoint
 		dump_stats
 	fi
+=======
+	[ "${dump_stats}" = 1 ] && ( ss -N $ns1 -tOni ; ss -N $ns1 -tOni | grep token; ip -n $ns1 mptcp endpoint )
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 chk_link_usage()
@@ -2163,7 +2308,11 @@ remove_tests()
 		pm_nl_set_limits $ns2 1 3
 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
 		pm_nl_add_endpoint $ns2 10.0.4.2 flags subflow
+<<<<<<< HEAD
 		run_tests $ns1 $ns2 10.0.1.1 0 -1 -2 speed_10
+=======
+		run_tests $ns1 $ns2 10.0.1.1 0 -1 -2 slow
+>>>>>>> b7ba80a49124 (Commit)
 		chk_join_nr 3 3 3
 		chk_add_nr 1 1
 		chk_rm_nr 2 2
@@ -2176,7 +2325,11 @@ remove_tests()
 		pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
 		pm_nl_add_endpoint $ns1 10.0.4.1 flags signal
 		pm_nl_set_limits $ns2 3 3
+<<<<<<< HEAD
 		run_tests $ns1 $ns2 10.0.1.1 0 -3 0 speed_10
+=======
+		run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
+>>>>>>> b7ba80a49124 (Commit)
 		chk_join_nr 3 3 3
 		chk_add_nr 3 3
 		chk_rm_nr 3 3 invert
@@ -2189,7 +2342,11 @@ remove_tests()
 		pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
 		pm_nl_add_endpoint $ns1 10.0.14.1 flags signal
 		pm_nl_set_limits $ns2 3 3
+<<<<<<< HEAD
 		run_tests $ns1 $ns2 10.0.1.1 0 -3 0 speed_10
+=======
+		run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
+>>>>>>> b7ba80a49124 (Commit)
 		chk_join_nr 1 1 1
 		chk_add_nr 3 3
 		chk_rm_nr 3 1 invert
@@ -2453,6 +2610,7 @@ v4mapped_tests()
 	fi
 }
 
+<<<<<<< HEAD
 mixed_tests()
 {
 	if reset "IPv4 sockets do not use IPv6 addresses"; then
@@ -2494,6 +2652,8 @@ mixed_tests()
 	fi
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 backup_tests()
 {
 	# single subflow, backup
@@ -2559,6 +2719,7 @@ backup_tests()
 	fi
 }
 
+<<<<<<< HEAD
 LISTENER_CREATED=15 #MPTCP_EVENT_LISTENER_CREATED
 LISTENER_CLOSED=16  #MPTCP_EVENT_LISTENER_CLOSED
 
@@ -2610,6 +2771,8 @@ verify_listener_events()
 	stdbuf -o0 -e0 printf "[fail]\n"
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 add_addr_ports_tests()
 {
 	# signal address with port
@@ -2634,8 +2797,12 @@ add_addr_ports_tests()
 	fi
 
 	# single address with port, remove
+<<<<<<< HEAD
 	# pm listener events
 	if reset_with_events "remove single address with port"; then
+=======
+	if reset "remove single address with port"; then
+>>>>>>> b7ba80a49124 (Commit)
 		pm_nl_set_limits $ns1 0 1
 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal port 10100
 		pm_nl_set_limits $ns2 1 1
@@ -2643,10 +2810,13 @@ add_addr_ports_tests()
 		chk_join_nr 1 1 1
 		chk_add_nr 1 1 1
 		chk_rm_nr 1 1 invert
+<<<<<<< HEAD
 
 		verify_listener_events $evts_ns1 $LISTENER_CREATED $AF_INET 10.0.2.1 10100
 		verify_listener_events $evts_ns1 $LISTENER_CLOSED $AF_INET 10.0.2.1 10100
 		kill_events_pids
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	fi
 
 	# subflow and signal with port, remove
@@ -2958,11 +3128,16 @@ fullmesh_tests()
 fastclose_tests()
 {
 	if reset "fastclose test"; then
+<<<<<<< HEAD
 		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_client
+=======
+		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_2
+>>>>>>> b7ba80a49124 (Commit)
 		chk_join_nr 0 0 0
 		chk_fclose_nr 1 1
 		chk_rst_nr 1 1 invert
 	fi
+<<<<<<< HEAD
 
 	if reset "fastclose server test"; then
 		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_server
@@ -2970,6 +3145,8 @@ fastclose_tests()
 		chk_fclose_nr 1 1 invert
 		chk_rst_nr 1 1
 	fi
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 pedit_action_pkts()
@@ -3067,24 +3244,38 @@ userspace_tests()
 	fi
 
 	# userspace pm add & remove address
+<<<<<<< HEAD
 	if reset_with_events "userspace pm add & remove address"; then
+=======
+	if reset "userspace pm add & remove address"; then
+>>>>>>> b7ba80a49124 (Commit)
 		set_userspace_pm $ns1
 		pm_nl_set_limits $ns2 1 1
 		run_tests $ns1 $ns2 10.0.1.1 0 userspace_1 0 slow
 		chk_join_nr 1 1 1
 		chk_add_nr 1 1
 		chk_rm_nr 1 1 invert
+<<<<<<< HEAD
 		kill_events_pids
 	fi
 
 	# userspace pm create destroy subflow
 	if reset_with_events "userspace pm create destroy subflow"; then
+=======
+	fi
+
+	# userspace pm create destroy subflow
+	if reset "userspace pm create destroy subflow"; then
+>>>>>>> b7ba80a49124 (Commit)
 		set_userspace_pm $ns2
 		pm_nl_set_limits $ns1 0 1
 		run_tests $ns1 $ns2 10.0.1.1 0 0 userspace_1 slow
 		chk_join_nr 1 1 1
 		chk_rm_nr 0 1
+<<<<<<< HEAD
 		kill_events_pids
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	fi
 }
 
@@ -3095,7 +3286,11 @@ endpoint_tests()
 		pm_nl_set_limits $ns1 2 2
 		pm_nl_set_limits $ns2 2 2
 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+<<<<<<< HEAD
 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow 2>/dev/null &
+=======
+		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow &
+>>>>>>> b7ba80a49124 (Commit)
 
 		wait_mpj $ns1
 		pm_nl_check_endpoint 1 "creation" \
@@ -3108,14 +3303,22 @@ endpoint_tests()
 		pm_nl_add_endpoint $ns2 10.0.2.2 flags signal
 		pm_nl_check_endpoint 0 "modif is allowed" \
 			$ns2 10.0.2.2 id 1 flags signal
+<<<<<<< HEAD
 		kill_tests_wait
+=======
+		wait
+>>>>>>> b7ba80a49124 (Commit)
 	fi
 
 	if reset "delete and re-add"; then
 		pm_nl_set_limits $ns1 1 1
 		pm_nl_set_limits $ns2 1 1
 		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow
+<<<<<<< HEAD
 		run_tests $ns1 $ns2 10.0.1.1 4 0 0 speed_20 2>/dev/null &
+=======
+		run_tests $ns1 $ns2 10.0.1.1 4 0 0 slow &
+>>>>>>> b7ba80a49124 (Commit)
 
 		wait_mpj $ns2
 		pm_nl_del_endpoint $ns2 2 10.0.2.2
@@ -3125,7 +3328,11 @@ endpoint_tests()
 		pm_nl_add_endpoint $ns2 10.0.2.2 dev ns2eth2 flags subflow
 		wait_mpj $ns2
 		chk_subflow_nr "" "after re-add" 2
+<<<<<<< HEAD
 		kill_tests_wait
+=======
+		wait
+>>>>>>> b7ba80a49124 (Commit)
 	fi
 }
 
@@ -3166,7 +3373,10 @@ all_tests_sorted=(
 	a@add_tests
 	6@ipv6_tests
 	4@v4mapped_tests
+<<<<<<< HEAD
 	M@mixed_tests
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	b@backup_tests
 	p@add_addr_ports_tests
 	k@syncookies_tests

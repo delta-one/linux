@@ -953,6 +953,7 @@ int gve_clean_tx_done_dqo(struct gve_priv *priv, struct gve_tx_ring *tx,
 			atomic_set_release(&tx->dqo_compl.hw_tx_head, tx_head);
 		} else if (type == GVE_COMPL_TYPE_DQO_PKT) {
 			u16 compl_tag = le16_to_cpu(compl_desc->completion_tag);
+<<<<<<< HEAD
 			if (compl_tag & GVE_ALT_MISS_COMPL_BIT) {
 				compl_tag &= ~GVE_ALT_MISS_COMPL_BIT;
 				gve_handle_miss_completion(priv, tx, compl_tag,
@@ -965,6 +966,14 @@ int gve_clean_tx_done_dqo(struct gve_priv *priv, struct gve_tx_ring *tx,
 							     &pkt_compl_pkts,
 							     false);
 			}
+=======
+
+			gve_handle_packet_completion(priv, tx, !!napi,
+						     compl_tag,
+						     &pkt_compl_bytes,
+						     &pkt_compl_pkts,
+						     /*is_reinjection=*/false);
+>>>>>>> b7ba80a49124 (Commit)
 		} else if (type == GVE_COMPL_TYPE_DQO_MISS) {
 			u16 compl_tag = le16_to_cpu(compl_desc->completion_tag);
 
@@ -978,7 +987,11 @@ int gve_clean_tx_done_dqo(struct gve_priv *priv, struct gve_tx_ring *tx,
 						     compl_tag,
 						     &reinject_compl_bytes,
 						     &reinject_compl_pkts,
+<<<<<<< HEAD
 						     true);
+=======
+						     /*is_reinjection=*/true);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		tx->dqo_compl.head =

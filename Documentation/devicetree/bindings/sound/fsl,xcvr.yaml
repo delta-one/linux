@@ -21,7 +21,10 @@ properties:
   compatible:
     enum:
       - fsl,imx8mp-xcvr
+<<<<<<< HEAD
       - fsl,imx93-xcvr
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     items:

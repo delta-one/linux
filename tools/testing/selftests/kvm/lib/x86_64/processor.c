@@ -19,8 +19,11 @@
 #define MAX_NR_CPUID_ENTRIES 100
 
 vm_vaddr_t exception_handlers;
+<<<<<<< HEAD
 bool host_cpu_is_amd;
 bool host_cpu_is_intel;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void regs_dump(FILE *stream, struct kvm_regs *regs, uint8_t indent)
 {
@@ -113,6 +116,7 @@ static void sregs_dump(FILE *stream, struct kvm_sregs *sregs, uint8_t indent)
 	}
 }
 
+<<<<<<< HEAD
 bool kvm_is_tdp_enabled(void)
 {
 	if (host_cpu_is_intel)
@@ -121,6 +125,8 @@ bool kvm_is_tdp_enabled(void)
 		return get_kvm_amd_param_bool("npt");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void virt_arch_pgd_alloc(struct kvm_vm *vm)
 {
 	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K, "Attempt to use "
@@ -133,6 +139,7 @@ void virt_arch_pgd_alloc(struct kvm_vm *vm)
 	}
 }
 
+<<<<<<< HEAD
 static void *virt_get_pte(struct kvm_vm *vm, uint64_t *parent_pte,
 			  uint64_t vaddr, int level)
 {
@@ -144,17 +151,33 @@ static void *virt_get_pte(struct kvm_vm *vm, uint64_t *parent_pte,
 		    "Parent PTE (level %d) not PRESENT for gva: 0x%08lx",
 		    level + 1, vaddr);
 
+=======
+static void *virt_get_pte(struct kvm_vm *vm, uint64_t pt_pfn, uint64_t vaddr,
+			  int level)
+{
+	uint64_t *page_table = addr_gpa2hva(vm, pt_pfn << vm->page_shift);
+	int index = (vaddr >> PG_LEVEL_SHIFT(level)) & 0x1ffu;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return &page_table[index];
 }
 
 static uint64_t *virt_create_upper_pte(struct kvm_vm *vm,
+<<<<<<< HEAD
 				       uint64_t *parent_pte,
+=======
+				       uint64_t pt_pfn,
+>>>>>>> b7ba80a49124 (Commit)
 				       uint64_t vaddr,
 				       uint64_t paddr,
 				       int current_level,
 				       int target_level)
 {
+<<<<<<< HEAD
 	uint64_t *pte = virt_get_pte(vm, parent_pte, vaddr, current_level);
+=======
+	uint64_t *pte = virt_get_pte(vm, pt_pfn, vaddr, current_level);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!(*pte & PTE_PRESENT_MASK)) {
 		*pte = PTE_PRESENT_MASK | PTE_WRITABLE_MASK;
@@ -204,6 +227,7 @@ void __virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr, int level)
 	 * Allocate upper level page tables, if not already present.  Return
 	 * early if a hugepage was created.
 	 */
+<<<<<<< HEAD
 	pml4e = virt_create_upper_pte(vm, &vm->pgd, vaddr, paddr, PG_LEVEL_512G, level);
 	if (*pml4e & PTE_LARGE_MASK)
 		return;
@@ -213,11 +237,27 @@ void __virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr, int level)
 		return;
 
 	pde = virt_create_upper_pte(vm, pdpe, vaddr, paddr, PG_LEVEL_2M, level);
+=======
+	pml4e = virt_create_upper_pte(vm, vm->pgd >> vm->page_shift,
+				      vaddr, paddr, PG_LEVEL_512G, level);
+	if (*pml4e & PTE_LARGE_MASK)
+		return;
+
+	pdpe = virt_create_upper_pte(vm, PTE_GET_PFN(*pml4e), vaddr, paddr, PG_LEVEL_1G, level);
+	if (*pdpe & PTE_LARGE_MASK)
+		return;
+
+	pde = virt_create_upper_pte(vm, PTE_GET_PFN(*pdpe), vaddr, paddr, PG_LEVEL_2M, level);
+>>>>>>> b7ba80a49124 (Commit)
 	if (*pde & PTE_LARGE_MASK)
 		return;
 
 	/* Fill in page table entry. */
+<<<<<<< HEAD
 	pte = virt_get_pte(vm, pde, vaddr, PG_LEVEL_4K);
+=======
+	pte = virt_get_pte(vm, PTE_GET_PFN(*pde), vaddr, PG_LEVEL_4K);
+>>>>>>> b7ba80a49124 (Commit)
 	TEST_ASSERT(!(*pte & PTE_PRESENT_MASK),
 		    "PTE already present for 4k page at vaddr: 0x%lx\n", vaddr);
 	*pte = PTE_PRESENT_MASK | PTE_WRITABLE_MASK | (paddr & PHYSICAL_PAGE_MASK);
@@ -228,6 +268,7 @@ void virt_arch_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr)
 	__virt_pg_map(vm, vaddr, paddr, PG_LEVEL_4K);
 }
 
+<<<<<<< HEAD
 void virt_map_level(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
 		    uint64_t nr_bytes, int level)
 {
@@ -266,6 +307,32 @@ uint64_t *__vm_get_page_table_entry(struct kvm_vm *vm, uint64_t vaddr,
 
 	TEST_ASSERT(*level >= PG_LEVEL_NONE && *level < PG_LEVEL_NUM,
 		    "Invalid PG_LEVEL_* '%d'", *level);
+=======
+static uint64_t *_vm_get_page_table_entry(struct kvm_vm *vm,
+					  struct kvm_vcpu *vcpu,
+					  uint64_t vaddr)
+{
+	uint16_t index[4];
+	uint64_t *pml4e, *pdpe, *pde;
+	uint64_t *pte;
+	struct kvm_sregs sregs;
+	uint64_t rsvd_mask = 0;
+
+	/* Set the high bits in the reserved mask. */
+	if (vm->pa_bits < 52)
+		rsvd_mask = GENMASK_ULL(51, vm->pa_bits);
+
+	/*
+	 * SDM vol 3, fig 4-11 "Formats of CR3 and Paging-Structure Entries
+	 * with 4-Level Paging and 5-Level Paging".
+	 * If IA32_EFER.NXE = 0 and the P flag of a paging-structure entry is 1,
+	 * the XD flag (bit 63) is reserved.
+	 */
+	vcpu_sregs_get(vcpu, &sregs);
+	if ((sregs.efer & EFER_NX) == 0) {
+		rsvd_mask |= PTE_NX_MASK;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K, "Attempt to use "
 		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
@@ -280,6 +347,7 @@ uint64_t *__vm_get_page_table_entry(struct kvm_vm *vm, uint64_t vaddr,
 	TEST_ASSERT(vaddr == (((int64_t)vaddr << 16) >> 16),
 		"Canonical check failed.  The virtual address is invalid.");
 
+<<<<<<< HEAD
 	pml4e = virt_get_pte(vm, &vm->pgd, vaddr, PG_LEVEL_512G);
 	if (vm_is_target_pte(pml4e, level, PG_LEVEL_512G))
 		return pml4e;
@@ -300,6 +368,56 @@ uint64_t *vm_get_page_table_entry(struct kvm_vm *vm, uint64_t vaddr)
 	int level = PG_LEVEL_4K;
 
 	return __vm_get_page_table_entry(vm, vaddr, &level);
+=======
+	index[0] = (vaddr >> 12) & 0x1ffu;
+	index[1] = (vaddr >> 21) & 0x1ffu;
+	index[2] = (vaddr >> 30) & 0x1ffu;
+	index[3] = (vaddr >> 39) & 0x1ffu;
+
+	pml4e = addr_gpa2hva(vm, vm->pgd);
+	TEST_ASSERT(pml4e[index[3]] & PTE_PRESENT_MASK,
+		"Expected pml4e to be present for gva: 0x%08lx", vaddr);
+	TEST_ASSERT((pml4e[index[3]] & (rsvd_mask | PTE_LARGE_MASK)) == 0,
+		"Unexpected reserved bits set.");
+
+	pdpe = addr_gpa2hva(vm, PTE_GET_PFN(pml4e[index[3]]) * vm->page_size);
+	TEST_ASSERT(pdpe[index[2]] & PTE_PRESENT_MASK,
+		"Expected pdpe to be present for gva: 0x%08lx", vaddr);
+	TEST_ASSERT(!(pdpe[index[2]] & PTE_LARGE_MASK),
+		"Expected pdpe to map a pde not a 1-GByte page.");
+	TEST_ASSERT((pdpe[index[2]] & rsvd_mask) == 0,
+		"Unexpected reserved bits set.");
+
+	pde = addr_gpa2hva(vm, PTE_GET_PFN(pdpe[index[2]]) * vm->page_size);
+	TEST_ASSERT(pde[index[1]] & PTE_PRESENT_MASK,
+		"Expected pde to be present for gva: 0x%08lx", vaddr);
+	TEST_ASSERT(!(pde[index[1]] & PTE_LARGE_MASK),
+		"Expected pde to map a pte not a 2-MByte page.");
+	TEST_ASSERT((pde[index[1]] & rsvd_mask) == 0,
+		"Unexpected reserved bits set.");
+
+	pte = addr_gpa2hva(vm, PTE_GET_PFN(pde[index[1]]) * vm->page_size);
+	TEST_ASSERT(pte[index[0]] & PTE_PRESENT_MASK,
+		"Expected pte to be present for gva: 0x%08lx", vaddr);
+
+	return &pte[index[0]];
+}
+
+uint64_t vm_get_page_table_entry(struct kvm_vm *vm, struct kvm_vcpu *vcpu,
+				 uint64_t vaddr)
+{
+	uint64_t *pte = _vm_get_page_table_entry(vm, vcpu, vaddr);
+
+	return *(uint64_t *)pte;
+}
+
+void vm_set_page_table_entry(struct kvm_vm *vm, struct kvm_vcpu *vcpu,
+			     uint64_t vaddr, uint64_t pte)
+{
+	uint64_t *new_pte = _vm_get_page_table_entry(vm, vcpu, vaddr);
+
+	*(uint64_t *)new_pte = pte;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void virt_arch_dump(FILE *stream, struct kvm_vm *vm, uint8_t indent)
@@ -485,6 +603,7 @@ static void kvm_seg_set_kernel_data_64bit(struct kvm_vm *vm, uint16_t selector,
 
 vm_paddr_t addr_arch_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva)
 {
+<<<<<<< HEAD
 	int level = PG_LEVEL_NONE;
 	uint64_t *pte = __vm_get_page_table_entry(vm, gva, &level);
 
@@ -496,12 +615,53 @@ vm_paddr_t addr_arch_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva)
 	 * address bits to be zero.
 	 */
 	return PTE_GET_PA(*pte) | (gva & ~HUGEPAGE_MASK(level));
+=======
+	uint16_t index[4];
+	uint64_t *pml4e, *pdpe, *pde;
+	uint64_t *pte;
+
+	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K, "Attempt to use "
+		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
+
+	index[0] = (gva >> 12) & 0x1ffu;
+	index[1] = (gva >> 21) & 0x1ffu;
+	index[2] = (gva >> 30) & 0x1ffu;
+	index[3] = (gva >> 39) & 0x1ffu;
+
+	if (!vm->pgd_created)
+		goto unmapped_gva;
+	pml4e = addr_gpa2hva(vm, vm->pgd);
+	if (!(pml4e[index[3]] & PTE_PRESENT_MASK))
+		goto unmapped_gva;
+
+	pdpe = addr_gpa2hva(vm, PTE_GET_PFN(pml4e[index[3]]) * vm->page_size);
+	if (!(pdpe[index[2]] & PTE_PRESENT_MASK))
+		goto unmapped_gva;
+
+	pde = addr_gpa2hva(vm, PTE_GET_PFN(pdpe[index[2]]) * vm->page_size);
+	if (!(pde[index[1]] & PTE_PRESENT_MASK))
+		goto unmapped_gva;
+
+	pte = addr_gpa2hva(vm, PTE_GET_PFN(pde[index[1]]) * vm->page_size);
+	if (!(pte[index[0]] & PTE_PRESENT_MASK))
+		goto unmapped_gva;
+
+	return (PTE_GET_PFN(pte[index[0]]) * vm->page_size) + (gva & ~PAGE_MASK);
+
+unmapped_gva:
+	TEST_FAIL("No mapping for vm virtual address, gva: 0x%lx", gva);
+	exit(EXIT_FAILURE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void kvm_setup_gdt(struct kvm_vm *vm, struct kvm_dtable *dt)
 {
 	if (!vm->gdt)
+<<<<<<< HEAD
 		vm->gdt = __vm_vaddr_alloc_page(vm, MEM_REGION_DATA);
+=======
+		vm->gdt = vm_vaddr_alloc_page(vm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dt->base = vm->gdt;
 	dt->limit = getpagesize();
@@ -511,7 +671,11 @@ static void kvm_setup_tss_64bit(struct kvm_vm *vm, struct kvm_segment *segp,
 				int selector)
 {
 	if (!vm->tss)
+<<<<<<< HEAD
 		vm->tss = __vm_vaddr_alloc_page(vm, MEM_REGION_DATA);
+=======
+		vm->tss = vm_vaddr_alloc_page(vm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(segp, 0, sizeof(*segp));
 	segp->base = vm->tss;
@@ -554,11 +718,46 @@ static void vcpu_setup(struct kvm_vm *vm, struct kvm_vcpu *vcpu)
 	vcpu_sregs_set(vcpu, &sregs);
 }
 
+<<<<<<< HEAD
 void kvm_arch_vm_post_create(struct kvm_vm *vm)
 {
 	vm_create_irqchip(vm);
 	sync_global_to_guest(vm, host_cpu_is_intel);
 	sync_global_to_guest(vm, host_cpu_is_amd);
+=======
+void __vm_xsave_require_permission(int bit, const char *name)
+{
+	int kvm_fd;
+	u64 bitmask;
+	long rc;
+	struct kvm_device_attr attr = {
+		.group = 0,
+		.attr = KVM_X86_XCOMP_GUEST_SUPP,
+		.addr = (unsigned long) &bitmask
+	};
+
+	TEST_REQUIRE(kvm_cpu_has(X86_FEATURE_XFD));
+
+	kvm_fd = open_kvm_dev_path_or_exit();
+	rc = __kvm_ioctl(kvm_fd, KVM_GET_DEVICE_ATTR, &attr);
+	close(kvm_fd);
+
+	if (rc == -1 && (errno == ENXIO || errno == EINVAL))
+		__TEST_REQUIRE(0, "KVM_X86_XCOMP_GUEST_SUPP not supported");
+
+	TEST_ASSERT(rc == 0, "KVM_GET_DEVICE_ATTR(0, KVM_X86_XCOMP_GUEST_SUPP) error: %ld", rc);
+
+	__TEST_REQUIRE(bitmask & (1ULL << bit),
+		       "Required XSAVE feature '%s' not supported", name);
+
+	TEST_REQUIRE(!syscall(SYS_arch_prctl, ARCH_REQ_XCOMP_GUEST_PERM, bit));
+
+	rc = syscall(SYS_arch_prctl, ARCH_GET_XCOMP_GUEST_PERM, &bitmask);
+	TEST_ASSERT(rc == 0, "prctl(ARCH_GET_XCOMP_GUEST_PERM) error: %ld", rc);
+	TEST_ASSERT(bitmask & (1ULL << bit),
+		    "prctl(ARCH_REQ_XCOMP_GUEST_PERM) failure bitmask=0x%lx",
+		    bitmask);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
@@ -569,9 +768,14 @@ struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
 	vm_vaddr_t stack_vaddr;
 	struct kvm_vcpu *vcpu;
 
+<<<<<<< HEAD
 	stack_vaddr = __vm_vaddr_alloc(vm, DEFAULT_STACK_PGS * getpagesize(),
 				       DEFAULT_GUEST_STACK_VADDR_MIN,
 				       MEM_REGION_DATA);
+=======
+	stack_vaddr = vm_vaddr_alloc(vm, DEFAULT_STACK_PGS * getpagesize(),
+				     DEFAULT_GUEST_STACK_VADDR_MIN);
+>>>>>>> b7ba80a49124 (Commit)
 
 	vcpu = __vm_vcpu_add(vm, vcpu_id);
 	vcpu_init_cpuid(vcpu, kvm_get_supported_cpuid());
@@ -606,6 +810,7 @@ void vcpu_arch_free(struct kvm_vcpu *vcpu)
 		free(vcpu->cpuid);
 }
 
+<<<<<<< HEAD
 /* Do not use kvm_supported_cpuid directly except for validity checks. */
 static void *kvm_supported_cpuid;
 
@@ -629,6 +834,27 @@ const struct kvm_cpuid2 *kvm_get_supported_cpuid(void)
 static uint32_t __kvm_cpu_has(const struct kvm_cpuid2 *cpuid,
 			      uint32_t function, uint32_t index,
 			      uint8_t reg, uint8_t lo, uint8_t hi)
+=======
+const struct kvm_cpuid2 *kvm_get_supported_cpuid(void)
+{
+	static struct kvm_cpuid2 *cpuid;
+	int kvm_fd;
+
+	if (cpuid)
+		return cpuid;
+
+	cpuid = allocate_kvm_cpuid2(MAX_NR_CPUID_ENTRIES);
+	kvm_fd = open_kvm_dev_path_or_exit();
+
+	kvm_ioctl(kvm_fd, KVM_GET_SUPPORTED_CPUID, cpuid);
+
+	close(kvm_fd);
+	return cpuid;
+}
+
+bool kvm_cpuid_has(const struct kvm_cpuid2 *cpuid,
+		   struct kvm_x86_cpu_feature feature)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct kvm_cpuid_entry2 *entry;
 	int i;
@@ -641,6 +867,7 @@ static uint32_t __kvm_cpu_has(const struct kvm_cpuid2 *cpuid,
 		 * order, but kvm_x86_cpu_feature matches that mess, so yay
 		 * pointer shenanigans!
 		 */
+<<<<<<< HEAD
 		if (entry->function == function && entry->index == index)
 			return ((&entry->eax)[reg] & GENMASK(hi, lo)) >> lo;
 	}
@@ -660,6 +887,14 @@ uint32_t kvm_cpuid_property(const struct kvm_cpuid2 *cpuid,
 {
 	return __kvm_cpu_has(cpuid, property.function, property.index,
 			     property.reg, property.lo_bit, property.hi_bit);
+=======
+		if (entry->function == feature.function &&
+		    entry->index == feature.index)
+			return (&entry->eax)[feature.reg] & BIT(feature.bit);
+	}
+
+	return false;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 uint64_t kvm_get_feature_msr(uint64_t msr_index)
@@ -681,6 +916,7 @@ uint64_t kvm_get_feature_msr(uint64_t msr_index)
 	return buffer.entry.data;
 }
 
+<<<<<<< HEAD
 void __vm_xsave_require_permission(int bit, const char *name)
 {
 	int kvm_fd;
@@ -716,6 +952,8 @@ void __vm_xsave_require_permission(int bit, const char *name)
 		    bitmask);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void vcpu_init_cpuid(struct kvm_vcpu *vcpu, const struct kvm_cpuid2 *cpuid)
 {
 	TEST_ASSERT(cpuid != vcpu->cpuid, "@cpuid can't be the vCPU's CPUID");
@@ -1010,6 +1248,7 @@ void kvm_x86_state_cleanup(struct kvm_x86_state *state)
 	free(state);
 }
 
+<<<<<<< HEAD
 void kvm_get_cpu_address_width(unsigned int *pa_bits, unsigned int *va_bits)
 {
 	if (!kvm_cpu_has_p(X86_PROPERTY_MAX_PHY_ADDR)) {
@@ -1021,6 +1260,60 @@ void kvm_get_cpu_address_width(unsigned int *pa_bits, unsigned int *va_bits)
 	}
 }
 
+=======
+static bool cpu_vendor_string_is(const char *vendor)
+{
+	const uint32_t *chunk = (const uint32_t *)vendor;
+	uint32_t eax, ebx, ecx, edx;
+
+	cpuid(0, &eax, &ebx, &ecx, &edx);
+	return (ebx == chunk[0] && edx == chunk[1] && ecx == chunk[2]);
+}
+
+bool is_intel_cpu(void)
+{
+	return cpu_vendor_string_is("GenuineIntel");
+}
+
+/*
+ * Exclude early K5 samples with a vendor string of "AMDisbetter!"
+ */
+bool is_amd_cpu(void)
+{
+	return cpu_vendor_string_is("AuthenticAMD");
+}
+
+void kvm_get_cpu_address_width(unsigned int *pa_bits, unsigned int *va_bits)
+{
+	const struct kvm_cpuid_entry2 *entry;
+	bool pae;
+
+	/* SDM 4.1.4 */
+	if (kvm_get_cpuid_max_extended() < 0x80000008) {
+		pae = kvm_get_supported_cpuid_entry(1)->edx & (1 << 6);
+		*pa_bits = pae ? 36 : 32;
+		*va_bits = 32;
+	} else {
+		entry = kvm_get_supported_cpuid_entry(0x80000008);
+		*pa_bits = entry->eax & 0xff;
+		*va_bits = (entry->eax >> 8) & 0xff;
+	}
+}
+
+struct idt_entry {
+	uint16_t offset0;
+	uint16_t selector;
+	uint16_t ist : 3;
+	uint16_t : 5;
+	uint16_t type : 4;
+	uint16_t : 1;
+	uint16_t dpl : 2;
+	uint16_t p : 1;
+	uint16_t offset1;
+	uint32_t offset2; uint32_t reserved;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static void set_idt_entry(struct kvm_vm *vm, int vector, unsigned long addr,
 			  int dpl, unsigned short selector)
 {
@@ -1050,7 +1343,10 @@ static bool kvm_fixup_exception(struct ex_regs *regs)
 
 	regs->rip = regs->r11;
 	regs->r9 = regs->vector;
+<<<<<<< HEAD
 	regs->r10 = regs->error_code;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -1080,8 +1376,13 @@ void vm_init_descriptor_tables(struct kvm_vm *vm)
 	extern void *idt_handlers;
 	int i;
 
+<<<<<<< HEAD
 	vm->idt = __vm_vaddr_alloc_page(vm, MEM_REGION_DATA);
 	vm->handlers = __vm_vaddr_alloc_page(vm, MEM_REGION_DATA);
+=======
+	vm->idt = vm_vaddr_alloc_page(vm);
+	vm->handlers = vm_vaddr_alloc_page(vm);
+>>>>>>> b7ba80a49124 (Commit)
 	/* Handlers have the same address in both address spaces.*/
 	for (i = 0; i < NUM_INTERRUPTS; i++)
 		set_idt_entry(vm, i, (unsigned long)(&idt_handlers)[i], 0,
@@ -1139,6 +1440,7 @@ const struct kvm_cpuid_entry2 *get_cpuid_entry(const struct kvm_cpuid2 *cpuid,
 	return NULL;
 }
 
+<<<<<<< HEAD
 #define X86_HYPERCALL(inputs...)					\
 ({									\
 	uint64_t r;							\
@@ -1169,6 +1471,17 @@ uint64_t __xen_hypercall(uint64_t nr, uint64_t a0, void *a1)
 void xen_hypercall(uint64_t nr, uint64_t a0, void *a1)
 {
 	GUEST_ASSERT(!__xen_hypercall(nr, a0, a1));
+=======
+uint64_t kvm_hypercall(uint64_t nr, uint64_t a0, uint64_t a1, uint64_t a2,
+		       uint64_t a3)
+{
+	uint64_t r;
+
+	asm volatile("vmcall"
+		     : "=a"(r)
+		     : "a"(nr), "b"(a0), "c"(a1), "d"(a2), "S"(a3));
+	return r;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 const struct kvm_cpuid2 *kvm_get_supported_hv_cpuid(void)
@@ -1234,12 +1547,20 @@ unsigned long vm_compute_max_gfn(struct kvm_vm *vm)
 {
 	const unsigned long num_ht_pages = 12 << (30 - vm->page_shift); /* 12 GiB */
 	unsigned long ht_gfn, max_gfn, max_pfn;
+<<<<<<< HEAD
 	uint8_t maxphyaddr;
+=======
+	uint32_t eax, ebx, ecx, edx, max_ext_leaf;
+>>>>>>> b7ba80a49124 (Commit)
 
 	max_gfn = (1ULL << (vm->pa_bits - vm->page_shift)) - 1;
 
 	/* Avoid reserved HyperTransport region on AMD processors.  */
+<<<<<<< HEAD
 	if (!host_cpu_is_amd)
+=======
+	if (!is_amd_cpu())
+>>>>>>> b7ba80a49124 (Commit)
 		return max_gfn;
 
 	/* On parts with <40 physical address bits, the area is fully hidden */
@@ -1248,7 +1569,12 @@ unsigned long vm_compute_max_gfn(struct kvm_vm *vm)
 
 	/* Before family 17h, the HyperTransport area is just below 1T.  */
 	ht_gfn = (1 << 28) - num_ht_pages;
+<<<<<<< HEAD
 	if (this_cpu_family() < 0x17)
+=======
+	cpuid(1, &eax, &ebx, &ecx, &edx);
+	if (x86_family(eax) < 0x17)
+>>>>>>> b7ba80a49124 (Commit)
 		goto done;
 
 	/*
@@ -1256,6 +1582,7 @@ unsigned long vm_compute_max_gfn(struct kvm_vm *vm)
 	 * reduced due to SME by bits 11:6 of CPUID[0x8000001f].EBX.  Use
 	 * the old conservative value if MAXPHYADDR is not enumerated.
 	 */
+<<<<<<< HEAD
 	if (!this_cpu_has_p(X86_PROPERTY_MAX_PHY_ADDR))
 		goto done;
 
@@ -1264,6 +1591,19 @@ unsigned long vm_compute_max_gfn(struct kvm_vm *vm)
 
 	if (this_cpu_has_p(X86_PROPERTY_PHYS_ADDR_REDUCTION))
 		max_pfn >>= this_cpu_property(X86_PROPERTY_PHYS_ADDR_REDUCTION);
+=======
+	cpuid(0x80000000, &eax, &ebx, &ecx, &edx);
+	max_ext_leaf = eax;
+	if (max_ext_leaf < 0x80000008)
+		goto done;
+
+	cpuid(0x80000008, &eax, &ebx, &ecx, &edx);
+	max_pfn = (1ULL << ((eax & 0xff) - vm->page_shift)) - 1;
+	if (max_ext_leaf >= 0x8000001f) {
+		cpuid(0x8000001f, &eax, &ebx, &ecx, &edx);
+		max_pfn >>= (ebx >> 6) & 0x3f;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ht_gfn = max_pfn - num_ht_pages;
 done:
@@ -1273,10 +1613,18 @@ done:
 /* Returns true if kvm_intel was loaded with unrestricted_guest=1. */
 bool vm_is_unrestricted_guest(struct kvm_vm *vm)
 {
+<<<<<<< HEAD
+=======
+	char val = 'N';
+	size_t count;
+	FILE *f;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Ensure that a KVM vendor-specific module is loaded. */
 	if (vm == NULL)
 		close(open_kvm_dev_path_or_exit());
 
+<<<<<<< HEAD
 	return get_kvm_intel_param_bool("unrestricted_guest");
 }
 
@@ -1284,4 +1632,14 @@ void kvm_selftest_arch_init(void)
 {
 	host_cpu_is_intel = this_cpu_is_intel();
 	host_cpu_is_amd = this_cpu_is_amd();
+=======
+	f = fopen("/sys/module/kvm_intel/parameters/unrestricted_guest", "r");
+	if (f) {
+		count = fread(&val, sizeof(char), 1, f);
+		TEST_ASSERT(count == 1, "Unable to read from param file.");
+		fclose(f);
+	}
+
+	return val == 'Y';
+>>>>>>> b7ba80a49124 (Commit)
 }

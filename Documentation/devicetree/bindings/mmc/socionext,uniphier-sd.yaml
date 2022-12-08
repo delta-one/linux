@@ -55,6 +55,7 @@ properties:
     minItems: 1
     maxItems: 3
 
+<<<<<<< HEAD
   socionext,syscon-uhs-mode:
     $ref: /schemas/types.yaml#/definitions/phandle-array
     items:
@@ -65,6 +66,8 @@ properties:
       A phandle to syscon with one argument that configures UHS mode.
       The argument is the ID of SD instance.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 allOf:
   - $ref: mmc-controller.yaml
 

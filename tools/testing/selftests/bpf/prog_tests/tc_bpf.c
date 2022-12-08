@@ -29,8 +29,13 @@ static int test_tc_bpf_basic(const struct bpf_tc_hook *hook, int fd)
 	__u32 info_len = sizeof(info);
 	int ret;
 
+<<<<<<< HEAD
 	ret = bpf_prog_get_info_by_fd(fd, &info, &info_len);
 	if (!ASSERT_OK(ret, "bpf_prog_get_info_by_fd"))
+=======
+	ret = bpf_obj_get_info_by_fd(fd, &info, &info_len);
+	if (!ASSERT_OK(ret, "bpf_obj_get_info_by_fd"))
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 
 	ret = bpf_tc_attach(hook, &opts);

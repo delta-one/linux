@@ -35,8 +35,19 @@ extern u32 msrpm_offsets[MSRPM_OFFSETS] __read_mostly;
 extern bool npt_enabled;
 extern int vgif;
 extern bool intercept_smi;
+<<<<<<< HEAD
 extern bool x2avic_enabled;
 extern bool vnmi;
+=======
+
+enum avic_modes {
+	AVIC_MODE_NONE = 0,
+	AVIC_MODE_X1,
+	AVIC_MODE_X2,
+};
+
+extern enum avic_modes avic_mode;
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Clean bits in VMCB.
@@ -145,10 +156,14 @@ struct vmcb_ctrl_area_cached {
 	u64 nested_cr3;
 	u64 virt_ext;
 	u32 clean;
+<<<<<<< HEAD
 	union {
 		struct hv_vmcb_enlightenments hv_enlightenments;
 		u8 reserved_sw[32];
 	};
+=======
+	u8 reserved_sw[32];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct svm_nested_state {
@@ -206,6 +221,10 @@ struct vcpu_svm {
 	struct vmcb *vmcb;
 	struct kvm_vmcb_info vmcb01;
 	struct kvm_vmcb_info *current_vmcb;
+<<<<<<< HEAD
+=======
+	struct svm_cpu_data *svm_data;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 asid;
 	u32 sysenter_esp_hi;
 	u32 sysenter_eip_hi;
@@ -231,6 +250,7 @@ struct vcpu_svm {
 
 	struct svm_nested_state nested;
 
+<<<<<<< HEAD
 	/* NMI mask value, used when vNMI is not enabled */
 	bool nmi_masked;
 
@@ -251,6 +271,10 @@ struct vcpu_svm {
 	bool nmi_singlestep;
 	u64 nmi_singlestep_guest_rflags;
 
+=======
+	bool nmi_singlestep;
+	u64 nmi_singlestep_guest_rflags;
+>>>>>>> b7ba80a49124 (Commit)
 	bool nmi_l1_to_l2;
 
 	unsigned long soft_int_csbase;
@@ -266,7 +290,10 @@ struct vcpu_svm {
 	bool pause_filter_enabled         : 1;
 	bool pause_threshold_enabled      : 1;
 	bool vgif_enabled                 : 1;
+<<<<<<< HEAD
 	bool vnmi_enabled                 : 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	u32 ldr_reg;
 	u32 dfr_reg;
@@ -293,12 +320,20 @@ struct vcpu_svm {
 	bool guest_state_loaded;
 
 	bool x2avic_msrs_intercepted;
+<<<<<<< HEAD
 
 	/* Guest GIF value, used when vGIF is not enabled */
 	bool guest_gif;
 };
 
 struct svm_cpu_data {
+=======
+};
+
+struct svm_cpu_data {
+	int cpu;
+
+>>>>>>> b7ba80a49124 (Commit)
 	u64 asid_generation;
 	u32 max_asid;
 	u32 next_asid;
@@ -306,15 +341,22 @@ struct svm_cpu_data {
 	struct kvm_ldttss_desc *tss_desc;
 
 	struct page *save_area;
+<<<<<<< HEAD
 	unsigned long save_area_pa;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct vmcb *current_vmcb;
 
 	/* index = sev_asid, value = vmcb pointer */
 	struct vmcb **sev_vmcbs;
 };
 
+<<<<<<< HEAD
 DECLARE_PER_CPU(struct svm_cpu_data, svm_data);
+=======
+DECLARE_PER_CPU(struct svm_cpu_data *, svm_data);
+>>>>>>> b7ba80a49124 (Commit)
 
 void recalc_intercepts(struct vcpu_svm *svm);
 
@@ -513,7 +555,11 @@ static inline void enable_gif(struct vcpu_svm *svm)
 	if (vmcb)
 		vmcb->control.int_ctl |= V_GIF_MASK;
 	else
+<<<<<<< HEAD
 		svm->guest_gif = true;
+=======
+		svm->vcpu.arch.hflags |= HF_GIF_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void disable_gif(struct vcpu_svm *svm)
@@ -523,7 +569,11 @@ static inline void disable_gif(struct vcpu_svm *svm)
 	if (vmcb)
 		vmcb->control.int_ctl &= ~V_GIF_MASK;
 	else
+<<<<<<< HEAD
 		svm->guest_gif = false;
+=======
+		svm->vcpu.arch.hflags &= ~HF_GIF_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool gif_set(struct vcpu_svm *svm)
@@ -533,7 +583,11 @@ static inline bool gif_set(struct vcpu_svm *svm)
 	if (vmcb)
 		return !!(vmcb->control.int_ctl & V_GIF_MASK);
 	else
+<<<<<<< HEAD
 		return svm->guest_gif;
+=======
+		return !!(svm->vcpu.arch.hflags & HF_GIF_MASK);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool nested_npt_enabled(struct vcpu_svm *svm)
@@ -541,12 +595,15 @@ static inline bool nested_npt_enabled(struct vcpu_svm *svm)
 	return svm->nested.ctl.nested_ctl & SVM_NESTED_CTL_NP_ENABLE;
 }
 
+<<<<<<< HEAD
 static inline bool nested_vnmi_enabled(struct vcpu_svm *svm)
 {
 	return svm->vnmi_enabled &&
 	       (svm->nested.ctl.int_ctl & V_NMI_ENABLE_MASK);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool is_x2apic_msrpm_offset(u32 offset)
 {
 	/* 4 msrs per u8, and 4 u8 in u32 */
@@ -556,6 +613,7 @@ static inline bool is_x2apic_msrpm_offset(u32 offset)
 	       (msr < (APIC_BASE_MSR + 0x100));
 }
 
+<<<<<<< HEAD
 static inline struct vmcb *get_vnmi_vmcb_l1(struct vcpu_svm *svm)
 {
 	if (!vnmi)
@@ -577,6 +635,8 @@ static inline bool is_vnmi_enabled(struct vcpu_svm *svm)
 		return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* svm.c */
 #define MSR_INVALID				0xffffffffU
 
@@ -671,6 +731,7 @@ void svm_switch_vmcb(struct vcpu_svm *svm, struct kvm_vmcb_info *target_vmcb);
 extern struct kvm_x86_nested_ops svm_nested_ops;
 
 /* avic.c */
+<<<<<<< HEAD
 #define AVIC_REQUIRED_APICV_INHIBITS			\
 (							\
 	BIT(APICV_INHIBIT_REASON_DISABLE) |		\
@@ -688,6 +749,10 @@ extern struct kvm_x86_nested_ops svm_nested_ops;
 )
 
 bool avic_hardware_setup(void);
+=======
+
+bool avic_hardware_setup(struct kvm_x86_ops *ops);
+>>>>>>> b7ba80a49124 (Commit)
 int avic_ga_log_notifier(u32 ga_tag);
 void avic_vm_destroy(struct kvm *kvm);
 int avic_vm_init(struct kvm *kvm);
@@ -699,13 +764,21 @@ void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
 void avic_vcpu_put(struct kvm_vcpu *vcpu);
 void avic_apicv_post_state_restore(struct kvm_vcpu *vcpu);
 void avic_refresh_apicv_exec_ctrl(struct kvm_vcpu *vcpu);
+<<<<<<< HEAD
+=======
+bool avic_check_apicv_inhibit_reasons(enum kvm_apicv_inhibit reason);
+>>>>>>> b7ba80a49124 (Commit)
 int avic_pi_update_irte(struct kvm *kvm, unsigned int host_irq,
 			uint32_t guest_irq, bool set);
 void avic_vcpu_blocking(struct kvm_vcpu *vcpu);
 void avic_vcpu_unblocking(struct kvm_vcpu *vcpu);
 void avic_ring_doorbell(struct kvm_vcpu *vcpu);
 unsigned long avic_vcpu_get_apicv_inhibit_reasons(struct kvm_vcpu *vcpu);
+<<<<<<< HEAD
 void avic_refresh_virtual_apic_mode(struct kvm_vcpu *vcpu);
+=======
+void avic_set_virtual_apic_mode(struct kvm_vcpu *vcpu);
+>>>>>>> b7ba80a49124 (Commit)
 
 
 /* sev.c */
@@ -742,7 +815,12 @@ void sev_es_unmap_ghcb(struct vcpu_svm *svm);
 
 /* vmenter.S */
 
+<<<<<<< HEAD
 void __svm_sev_es_vcpu_run(struct vcpu_svm *svm, bool spec_ctrl_intercepted);
 void __svm_vcpu_run(struct vcpu_svm *svm, bool spec_ctrl_intercepted);
+=======
+void __svm_sev_es_vcpu_run(unsigned long vmcb_pa);
+void __svm_vcpu_run(unsigned long vmcb_pa, unsigned long *regs);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

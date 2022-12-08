@@ -10,14 +10,20 @@
 #include <linux/pci-p2pdma.h>
 #include <linux/scatterlist.h>
 
+<<<<<<< HEAD
 #include <generated/utsrelease.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CREATE_TRACE_POINTS
 #include "trace.h"
 
 #include "nvmet.h"
 
+<<<<<<< HEAD
 struct kmem_cache *nvmet_bvec_cache;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct workqueue_struct *buffered_io_wq;
 struct workqueue_struct *zbd_wq;
 static const struct nvmet_fabrics_ops *nvmet_transports[NVMF_TRTYPE_MAX];
@@ -698,10 +704,18 @@ static void nvmet_update_sq_head(struct nvmet_req *req)
 	if (req->sq->size) {
 		u32 old_sqhd, new_sqhd;
 
+<<<<<<< HEAD
 		old_sqhd = READ_ONCE(req->sq->sqhd);
 		do {
 			new_sqhd = (old_sqhd + 1) % req->sq->size;
 		} while (!try_cmpxchg(&req->sq->sqhd, &old_sqhd, new_sqhd));
+=======
+		do {
+			old_sqhd = req->sq->sqhd;
+			new_sqhd = (old_sqhd + 1) % req->sq->size;
+		} while (cmpxchg(&req->sq->sqhd, old_sqhd, new_sqhd) !=
+					old_sqhd);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	req->cqe->sq_head = cpu_to_le16(req->sq->sqhd & 0x0000FFFF);
 }
@@ -756,10 +770,15 @@ static void __nvmet_req_complete(struct nvmet_req *req, u16 status)
 
 void nvmet_req_complete(struct nvmet_req *req, u16 status)
 {
+<<<<<<< HEAD
 	struct nvmet_sq *sq = req->sq;
 
 	__nvmet_req_complete(req, status);
 	percpu_ref_put(&sq->ref);
+=======
+	__nvmet_req_complete(req, status);
+	percpu_ref_put(&req->sq->ref);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(nvmet_req_complete);
 
@@ -836,7 +855,10 @@ int nvmet_sq_init(struct nvmet_sq *sq)
 	}
 	init_completion(&sq->free_done);
 	init_completion(&sq->confirm_done);
+<<<<<<< HEAD
 	nvmet_auth_sq_init(sq);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1180,7 +1202,11 @@ static void nvmet_start_ctrl(struct nvmet_ctrl *ctrl)
 	 * reset the keep alive timer when the controller is enabled.
 	 */
 	if (ctrl->kato)
+<<<<<<< HEAD
 		mod_delayed_work(nvmet_wq, &ctrl->ka_work, ctrl->kato * HZ);
+=======
+		mod_delayed_work(system_wq, &ctrl->ka_work, ctrl->kato * HZ);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void nvmet_clear_ctrl(struct nvmet_ctrl *ctrl)
@@ -1565,6 +1591,7 @@ struct nvmet_subsys *nvmet_subsys_alloc(const char *subsysnqn,
 		goto free_subsys;
 	}
 
+<<<<<<< HEAD
 	subsys->ieee_oui = 0;
 
 	subsys->firmware_rev = kstrndup(UTS_RELEASE, NVMET_FR_MAX_SIZE, GFP_KERNEL);
@@ -1573,6 +1600,8 @@ struct nvmet_subsys *nvmet_subsys_alloc(const char *subsysnqn,
 		goto free_mn;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	switch (type) {
 	case NVME_NQN_NVME:
 		subsys->max_qid = NVMET_NR_QUEUES;
@@ -1584,14 +1613,22 @@ struct nvmet_subsys *nvmet_subsys_alloc(const char *subsysnqn,
 	default:
 		pr_err("%s: Unknown Subsystem type - %d\n", __func__, type);
 		ret = -EINVAL;
+<<<<<<< HEAD
 		goto free_fr;
+=======
+		goto free_mn;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	subsys->type = type;
 	subsys->subsysnqn = kstrndup(subsysnqn, NVMF_NQN_SIZE,
 			GFP_KERNEL);
 	if (!subsys->subsysnqn) {
 		ret = -ENOMEM;
+<<<<<<< HEAD
 		goto free_fr;
+=======
+		goto free_mn;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	subsys->cntlid_min = NVME_CNTLID_MIN;
 	subsys->cntlid_max = NVME_CNTLID_MAX;
@@ -1604,8 +1641,11 @@ struct nvmet_subsys *nvmet_subsys_alloc(const char *subsysnqn,
 
 	return subsys;
 
+<<<<<<< HEAD
 free_fr:
 	kfree(subsys->firmware_rev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 free_mn:
 	kfree(subsys->model_number);
 free_subsys:
@@ -1625,7 +1665,10 @@ static void nvmet_subsys_free(struct kref *ref)
 
 	kfree(subsys->subsysnqn);
 	kfree(subsys->model_number);
+<<<<<<< HEAD
 	kfree(subsys->firmware_rev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(subsys);
 }
 
@@ -1646,6 +1689,7 @@ void nvmet_subsys_put(struct nvmet_subsys *subsys)
 
 static int __init nvmet_init(void)
 {
+<<<<<<< HEAD
 	int error = -ENOMEM;
 
 	nvmet_ana_group_enabled[NVMET_DEFAULT_ANA_GRPID] = 1;
@@ -1668,6 +1712,28 @@ static int __init nvmet_init(void)
 	nvmet_wq = alloc_workqueue("nvmet-wq", WQ_MEM_RECLAIM, 0);
 	if (!nvmet_wq)
 		goto out_free_buffered_work_queue;
+=======
+	int error;
+
+	nvmet_ana_group_enabled[NVMET_DEFAULT_ANA_GRPID] = 1;
+
+	zbd_wq = alloc_workqueue("nvmet-zbd-wq", WQ_MEM_RECLAIM, 0);
+	if (!zbd_wq)
+		return -ENOMEM;
+
+	buffered_io_wq = alloc_workqueue("nvmet-buffered-io-wq",
+			WQ_MEM_RECLAIM, 0);
+	if (!buffered_io_wq) {
+		error = -ENOMEM;
+		goto out_free_zbd_work_queue;
+	}
+
+	nvmet_wq = alloc_workqueue("nvmet-wq", WQ_MEM_RECLAIM, 0);
+	if (!nvmet_wq) {
+		error = -ENOMEM;
+		goto out_free_buffered_work_queue;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	error = nvmet_init_discovery();
 	if (error)
@@ -1686,8 +1752,11 @@ out_free_buffered_work_queue:
 	destroy_workqueue(buffered_io_wq);
 out_free_zbd_work_queue:
 	destroy_workqueue(zbd_wq);
+<<<<<<< HEAD
 out_destroy_bvec_cache:
 	kmem_cache_destroy(nvmet_bvec_cache);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }
 
@@ -1699,7 +1768,10 @@ static void __exit nvmet_exit(void)
 	destroy_workqueue(nvmet_wq);
 	destroy_workqueue(buffered_io_wq);
 	destroy_workqueue(zbd_wq);
+<<<<<<< HEAD
 	kmem_cache_destroy(nvmet_bvec_cache);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	BUILD_BUG_ON(sizeof(struct nvmf_disc_rsp_page_entry) != 1024);
 	BUILD_BUG_ON(sizeof(struct nvmf_disc_rsp_page_hdr) != 1024);

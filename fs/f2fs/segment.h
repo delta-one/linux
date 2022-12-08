@@ -222,6 +222,13 @@ struct sec_entry {
 	unsigned int valid_blocks;	/* # of valid blocks in a section */
 };
 
+<<<<<<< HEAD
+=======
+struct segment_allocation {
+	void (*allocate_segment)(struct f2fs_sb_info *, int, bool);
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 #define MAX_SKIP_GC_COUNT			16
 
 struct revoke_entry {
@@ -231,6 +238,11 @@ struct revoke_entry {
 };
 
 struct sit_info {
+<<<<<<< HEAD
+=======
+	const struct segment_allocation *s_ops;
+
+>>>>>>> b7ba80a49124 (Commit)
 	block_t sit_base_addr;		/* start block address of SIT area */
 	block_t sit_blocks;		/* # of blocks used by SIT area */
 	block_t written_valid_blocks;	/* # of valid blocks in main area */
@@ -670,9 +682,12 @@ static inline int utilization(struct f2fs_sb_info *sbi)
 
 #define SMALL_VOLUME_SEGMENTS	(16 * 512)	/* 16GB */
 
+<<<<<<< HEAD
 #define F2FS_IPU_DISABLE	0
 
 /* Modification on enum should be synchronized with ipu_mode_names array */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum {
 	F2FS_IPU_FORCE,
 	F2FS_IPU_SSR,
@@ -682,6 +697,7 @@ enum {
 	F2FS_IPU_ASYNC,
 	F2FS_IPU_NOCACHE,
 	F2FS_IPU_HONOR_OPU_WRITE,
+<<<<<<< HEAD
 	F2FS_IPU_MAX,
 };
 
@@ -705,6 +721,10 @@ F2FS_IPU_POLICY(F2FS_IPU_ASYNC);
 F2FS_IPU_POLICY(F2FS_IPU_NOCACHE);
 F2FS_IPU_POLICY(F2FS_IPU_HONOR_OPU_WRITE);
 
+=======
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline unsigned int curseg_segno(struct f2fs_sb_info *sbi,
 		int type)
 {
@@ -719,10 +739,22 @@ static inline unsigned char curseg_alloc_type(struct f2fs_sb_info *sbi,
 	return curseg->alloc_type;
 }
 
+<<<<<<< HEAD
 static inline bool valid_main_segno(struct f2fs_sb_info *sbi,
 		unsigned int segno)
 {
 	return segno <= (MAIN_SEGS(sbi) - 1);
+=======
+static inline unsigned short curseg_blkoff(struct f2fs_sb_info *sbi, int type)
+{
+	struct curseg_info *curseg = CURSEG_I(sbi, type);
+	return curseg->next_blkoff;
+}
+
+static inline void check_seg_range(struct f2fs_sb_info *sbi, unsigned int segno)
+{
+	f2fs_bug_on(sbi, segno > TOTAL_SEGS(sbi) - 1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void verify_fio_blkaddr(struct f2fs_io_info *fio)
@@ -766,7 +798,10 @@ static inline int check_block_count(struct f2fs_sb_info *sbi,
 		f2fs_err(sbi, "Mismatch valid blocks %d vs. %d",
 			 GET_SIT_VBLOCKS(raw_sit), valid_blocks);
 		set_sbi_flag(sbi, SBI_NEED_FSCK);
+<<<<<<< HEAD
 		f2fs_handle_error(sbi, ERROR_INCONSISTENT_SIT);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return -EFSCORRUPTED;
 	}
 
@@ -777,11 +812,18 @@ static inline int check_block_count(struct f2fs_sb_info *sbi,
 
 	/* check segment usage, and check boundary of a given segment number */
 	if (unlikely(GET_SIT_VBLOCKS(raw_sit) > usable_blks_per_seg
+<<<<<<< HEAD
 					|| !valid_main_segno(sbi, segno))) {
 		f2fs_err(sbi, "Wrong valid blocks %d or segno %u",
 			 GET_SIT_VBLOCKS(raw_sit), segno);
 		set_sbi_flag(sbi, SBI_NEED_FSCK);
 		f2fs_handle_error(sbi, ERROR_INCONSISTENT_SIT);
+=======
+					|| segno > TOTAL_SEGS(sbi) - 1)) {
+		f2fs_err(sbi, "Wrong valid blocks %d or segno %u",
+			 GET_SIT_VBLOCKS(raw_sit), segno);
+		set_sbi_flag(sbi, SBI_NEED_FSCK);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EFSCORRUPTED;
 	}
 	return 0;
@@ -794,7 +836,11 @@ static inline pgoff_t current_sit_addr(struct f2fs_sb_info *sbi,
 	unsigned int offset = SIT_BLOCK_OFFSET(start);
 	block_t blk_addr = sit_i->sit_base_addr + offset;
 
+<<<<<<< HEAD
 	f2fs_bug_on(sbi, !valid_main_segno(sbi, start));
+=======
+	check_seg_range(sbi, start);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_F2FS_CHECK_FS
 	if (f2fs_test_bit(offset, sit_i->sit_bitmap) !=
@@ -943,6 +989,10 @@ static inline void wake_up_discard_thread(struct f2fs_sb_info *sbi, bool force)
 	if (!wakeup || !is_idle(sbi, DISCARD_TIME))
 		return;
 wake_up:
+<<<<<<< HEAD
 	dcc->discard_wake = true;
+=======
+	dcc->discard_wake = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	wake_up_interruptible_all(&dcc->discard_wait_queue);
 }

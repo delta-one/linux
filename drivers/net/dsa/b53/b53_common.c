@@ -1209,6 +1209,7 @@ static void b53_force_port_config(struct b53_device *dev, int port,
 	b53_write8(dev, B53_CTRL_PAGE, off, reg);
 }
 
+<<<<<<< HEAD
 static void b53_adjust_63xx_rgmii(struct dsa_switch *ds, int port,
 				  phy_interface_t interface)
 {
@@ -1253,6 +1254,8 @@ static void b53_adjust_63xx_rgmii(struct dsa_switch *ds, int port,
 		phy_modes(interface));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void b53_adjust_link(struct dsa_switch *ds, int port,
 			    struct phy_device *phydev)
 {
@@ -1279,9 +1282,12 @@ static void b53_adjust_link(struct dsa_switch *ds, int port,
 			      tx_pause, rx_pause);
 	b53_force_link(dev, port, phydev->link);
 
+<<<<<<< HEAD
 	if (is63xx(dev) && port >= B53_63XX_RGMII0)
 		b53_adjust_63xx_rgmii(ds, port, phydev->interface);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (is531x5(dev) && phy_interface_is_rgmii(phydev)) {
 		if (port == dev->imp_port)
 			off = B53_RGMII_CTRL_IMP;
@@ -1449,9 +1455,12 @@ void b53_phylink_mac_link_up(struct dsa_switch *ds, int port,
 {
 	struct b53_device *dev = ds->priv;
 
+<<<<<<< HEAD
 	if (is63xx(dev) && port >= B53_63XX_RGMII0)
 		b53_adjust_63xx_rgmii(ds, port, interface);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (mode == MLO_AN_PHY)
 		return;
 
@@ -2470,6 +2479,7 @@ static const struct b53_chip_data b53_switch_chips[] = {
 		.jumbo_size_reg = B53_JUMBO_MAX_SIZE_63XX,
 	},
 	{
+<<<<<<< HEAD
 		.chip_id = BCM63268_DEVICE_ID,
 		.dev_name = "BCM63268",
 		.vlans = 4096,
@@ -2483,6 +2493,8 @@ static const struct b53_chip_data b53_switch_chips[] = {
 		.jumbo_size_reg = B53_JUMBO_MAX_SIZE_63XX,
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.chip_id = BCM53010_DEVICE_ID,
 		.dev_name = "BCM53010",
 		.vlans = 4096,

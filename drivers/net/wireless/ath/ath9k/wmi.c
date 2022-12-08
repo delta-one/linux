@@ -341,7 +341,10 @@ int ath9k_wmi_cmd(struct wmi *wmi, enum wmi_cmd_id cmd_id,
 	if (!time_left) {
 		ath_dbg(common, WMI, "Timeout waiting for WMI command: %s\n",
 			wmi_cmd_to_name(cmd_id));
+<<<<<<< HEAD
 		wmi->last_seq_id = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		mutex_unlock(&wmi->op_mutex);
 		return -ETIMEDOUT;
 	}

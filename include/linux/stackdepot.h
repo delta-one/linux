@@ -1,5 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 /*
+<<<<<<< HEAD
  * Stack depot - a stack trace storage that avoids duplication.
  *
  * Stack depot is intended to be used by subsystems that need to store and
@@ -12,11 +13,18 @@
  * stack traces often repeat, using stack depot allows to save about 100x space.
  *
  * Stack traces are never removed from the stack depot.
+=======
+ * A generic stack depot implementation
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Author: Alexander Potapenko <glider@google.com>
  * Copyright (C) 2016 Google, Inc.
  *
+<<<<<<< HEAD
  * Based on the code by Dmitry Chernenkov.
+=======
+ * Based on code by Dmitry Chernenkov.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #ifndef _LINUX_STACKDEPOT_H
@@ -25,6 +33,7 @@
 #include <linux/gfp.h>
 
 typedef u32 depot_stack_handle_t;
+<<<<<<< HEAD
 
 /*
  * Number of bits in the handle that stack depot doesn't use. Users may store
@@ -52,22 +61,64 @@ typedef u32 depot_stack_handle_t;
  * config is disabled. The save/fetch/print stack depot functions can only be
  * called from the code that makes sure CONFIG_STACKDEPOT is enabled _and_
  * initializes stack depot via one of the ways listed above.
+=======
+/*
+ * Number of bits in the handle that stack depot doesn't use. Users may store
+ * information in them.
+ */
+#define STACK_DEPOT_EXTRA_BITS 5
+
+depot_stack_handle_t __stack_depot_save(unsigned long *entries,
+					unsigned int nr_entries,
+					unsigned int extra_bits,
+					gfp_t gfp_flags, bool can_alloc);
+
+/*
+ * Every user of stack depot has to call stack_depot_init() during its own init
+ * when it's decided that it will be calling stack_depot_save() later. This is
+ * recommended for e.g. modules initialized later in the boot process, when
+ * slab_is_available() is true.
+ *
+ * The alternative is to select STACKDEPOT_ALWAYS_INIT to have stack depot
+ * enabled as part of mm_init(), for subsystems where it's known at compile time
+ * that stack depot will be used.
+ *
+ * Another alternative is to call stack_depot_want_early_init(), when the
+ * decision to use stack depot is taken e.g. when evaluating kernel boot
+ * parameters, which precedes the enablement point in mm_init().
+ *
+ * stack_depot_init() and stack_depot_want_early_init() can be called regardless
+ * of CONFIG_STACKDEPOT and are no-op when disabled. The actual save/fetch/print
+ * functions should only be called from code that makes sure CONFIG_STACKDEPOT
+ * is enabled.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #ifdef CONFIG_STACKDEPOT
 int stack_depot_init(void);
 
+<<<<<<< HEAD
 void __init stack_depot_request_early_init(void);
 
 /* Must be only called from mm_init(). */
+=======
+void __init stack_depot_want_early_init(void);
+
+/* This is supposed to be called only from mm_init() */
+>>>>>>> b7ba80a49124 (Commit)
 int __init stack_depot_early_init(void);
 #else
 static inline int stack_depot_init(void) { return 0; }
 
+<<<<<<< HEAD
 static inline void stack_depot_request_early_init(void) { }
+=======
+static inline void stack_depot_want_early_init(void) { }
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline int stack_depot_early_init(void)	{ return 0; }
 #endif
 
+<<<<<<< HEAD
 /**
  * __stack_depot_save - Save a stack trace to stack depot
  *
@@ -163,5 +214,19 @@ depot_stack_handle_t __must_check stack_depot_set_extra_bits(
  * Return: Extra bits retrieved from the stack depot handle
  */
 unsigned int stack_depot_get_extra_bits(depot_stack_handle_t handle);
+=======
+depot_stack_handle_t stack_depot_save(unsigned long *entries,
+				      unsigned int nr_entries, gfp_t gfp_flags);
+
+unsigned int stack_depot_fetch(depot_stack_handle_t handle,
+			       unsigned long **entries);
+
+unsigned int stack_depot_get_extra_bits(depot_stack_handle_t handle);
+
+int stack_depot_snprint(depot_stack_handle_t handle, char *buf, size_t size,
+		       int spaces);
+
+void stack_depot_print(depot_stack_handle_t stack);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

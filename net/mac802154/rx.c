@@ -29,6 +29,7 @@ static int ieee802154_deliver_skb(struct sk_buff *skb)
 	return netif_receive_skb(skb);
 }
 
+<<<<<<< HEAD
 void mac802154_rx_beacon_worker(struct work_struct *work)
 {
 	struct ieee802154_local *local =
@@ -47,13 +48,19 @@ void mac802154_rx_beacon_worker(struct work_struct *work)
 	kfree(mac_pkt);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int
 ieee802154_subif_frame(struct ieee802154_sub_if_data *sdata,
 		       struct sk_buff *skb, const struct ieee802154_hdr *hdr)
 {
+<<<<<<< HEAD
 	struct wpan_phy *wpan_phy = sdata->local->hw.phy;
 	struct wpan_dev *wpan_dev = &sdata->wpan_dev;
 	struct cfg802154_mac_pkt *mac_pkt;
+=======
+	struct wpan_dev *wpan_dev = &sdata->wpan_dev;
+>>>>>>> b7ba80a49124 (Commit)
 	__le16 span, sshort;
 	int rc;
 
@@ -62,6 +69,7 @@ ieee802154_subif_frame(struct ieee802154_sub_if_data *sdata,
 	span = wpan_dev->pan_id;
 	sshort = wpan_dev->short_addr;
 
+<<<<<<< HEAD
 	/* Level 3 filtering: Only beacons are accepted during scans */
 	if (sdata->required_filtering == IEEE802154_FILTERING_3_SCAN &&
 	    sdata->required_filtering > wpan_phy->filtering) {
@@ -73,6 +81,8 @@ ieee802154_subif_frame(struct ieee802154_sub_if_data *sdata,
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	switch (mac_cb(skb)->dest.mode) {
 	case IEEE802154_ADDR_NONE:
 		if (hdr->source.mode != IEEE802154_ADDR_NONE)
@@ -125,6 +135,7 @@ ieee802154_subif_frame(struct ieee802154_sub_if_data *sdata,
 
 	switch (mac_cb(skb)->type) {
 	case IEEE802154_FC_TYPE_BEACON:
+<<<<<<< HEAD
 		dev_dbg(&sdata->dev->dev, "BEACON received\n");
 		if (!mac802154_is_scanning(sdata->local))
 			goto fail;
@@ -140,6 +151,8 @@ ieee802154_subif_frame(struct ieee802154_sub_if_data *sdata,
 		list_add_tail(&mac_pkt->node, &sdata->local->rx_beacon_list);
 		queue_work(sdata->local->mac_wq, &sdata->local->rx_beacon_work);
 		return NET_RX_SUCCESS;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case IEEE802154_FC_TYPE_ACK:
 	case IEEE802154_FC_TYPE_MAC_CMD:
 		goto fail;
@@ -160,10 +173,15 @@ fail:
 static void
 ieee802154_print_addr(const char *name, const struct ieee802154_addr *addr)
 {
+<<<<<<< HEAD
 	if (addr->mode == IEEE802154_ADDR_NONE) {
 		pr_debug("%s not present\n", name);
 		return;
 	}
+=======
+	if (addr->mode == IEEE802154_ADDR_NONE)
+		pr_debug("%s not present\n", name);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_debug("%s PAN ID: %04x\n", name, le16_to_cpu(addr->pan_id));
 	if (addr->mode == IEEE802154_ADDR_SHORT) {
@@ -180,7 +198,11 @@ static int
 ieee802154_parse_frame_start(struct sk_buff *skb, struct ieee802154_hdr *hdr)
 {
 	int hlen;
+<<<<<<< HEAD
 	struct ieee802154_mac_cb *cb = mac_cb(skb);
+=======
+	struct ieee802154_mac_cb *cb = mac_cb_init(skb);
+>>>>>>> b7ba80a49124 (Commit)
 
 	skb_reset_mac_header(skb);
 
@@ -242,21 +264,33 @@ __ieee802154_rx_handle_packet(struct ieee802154_local *local,
 	int ret;
 	struct ieee802154_sub_if_data *sdata;
 	struct ieee802154_hdr hdr;
+<<<<<<< HEAD
 	struct sk_buff *skb2;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = ieee802154_parse_frame_start(skb, &hdr);
 	if (ret) {
 		pr_debug("got invalid frame\n");
+<<<<<<< HEAD
+=======
+		kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
 	list_for_each_entry_rcu(sdata, &local->interfaces, list) {
+<<<<<<< HEAD
 		if (sdata->wpan_dev.iftype == NL802154_IFTYPE_MONITOR)
+=======
+		if (sdata->wpan_dev.iftype != NL802154_IFTYPE_NODE)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		if (!ieee802154_sdata_running(sdata))
 			continue;
 
+<<<<<<< HEAD
 		/* Do not deliver packets received on interfaces expecting
 		 * AACK=1 if the address filters where disabled.
 		 */
@@ -270,6 +304,14 @@ __ieee802154_rx_handle_packet(struct ieee802154_local *local,
 			ieee802154_subif_frame(sdata, skb2, &hdr);
 		}
 	}
+=======
+		ieee802154_subif_frame(sdata, skb, &hdr);
+		skb = NULL;
+		break;
+	}
+
+	kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -308,7 +350,11 @@ void ieee802154_rx(struct ieee802154_local *local, struct sk_buff *skb)
 	WARN_ON_ONCE(softirq_count() == 0);
 
 	if (local->suspended)
+<<<<<<< HEAD
 		goto free_skb;
+=======
+		goto drop;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* TODO: When a transceiver omits the checksum here, we
 	 * add an own calculated one. This is currently an ugly
@@ -323,20 +369,39 @@ void ieee802154_rx(struct ieee802154_local *local, struct sk_buff *skb)
 
 	ieee802154_monitors_rx(local, skb);
 
+<<<<<<< HEAD
 	/* Level 1 filtering: Check the FCS by software when relevant */
 	if (local->hw.phy->filtering == IEEE802154_FILTERING_NONE) {
 		crc = crc_ccitt(0, skb->data, skb->len);
 		if (crc)
 			goto drop;
+=======
+	/* Check if transceiver doesn't validate the checksum.
+	 * If not we validate the checksum here.
+	 */
+	if (local->hw.flags & IEEE802154_HW_RX_DROP_BAD_CKSUM) {
+		crc = crc_ccitt(0, skb->data, skb->len);
+		if (crc) {
+			rcu_read_unlock();
+			goto drop;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	/* remove crc */
 	skb_trim(skb, skb->len - 2);
 
 	__ieee802154_rx_handle_packet(local, skb);
 
+<<<<<<< HEAD
 drop:
 	rcu_read_unlock();
 free_skb:
+=======
+	rcu_read_unlock();
+
+	return;
+drop:
+>>>>>>> b7ba80a49124 (Commit)
 	kfree_skb(skb);
 }
 
@@ -344,9 +409,14 @@ void
 ieee802154_rx_irqsafe(struct ieee802154_hw *hw, struct sk_buff *skb, u8 lqi)
 {
 	struct ieee802154_local *local = hw_to_local(hw);
+<<<<<<< HEAD
 	struct ieee802154_mac_cb *cb = mac_cb_init(skb);
 
 	cb->lqi = lqi;
+=======
+
+	mac_cb(skb)->lqi = lqi;
+>>>>>>> b7ba80a49124 (Commit)
 	skb->pkt_type = IEEE802154_RX_MSG;
 	skb_queue_tail(&local->skb_queue, skb);
 	tasklet_schedule(&local->tasklet);

@@ -478,7 +478,11 @@ qtnf_event_handle_freq_change(struct qtnf_wmac *mac,
 			continue;
 
 		mutex_lock(&vif->wdev.mtx);
+<<<<<<< HEAD
 		cfg80211_ch_switch_notify(vif->netdev, &chandef, 0, 0);
+=======
+		cfg80211_ch_switch_notify(vif->netdev, &chandef, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		mutex_unlock(&vif->wdev.mtx);
 	}
 
@@ -662,7 +666,10 @@ qtnf_event_handle_update_owe(struct qtnf_vif *vif,
 	memcpy(ie, owe_ev->ies, ie_len);
 	owe_info.ie_len = ie_len;
 	owe_info.ie = ie;
+<<<<<<< HEAD
 	owe_info.assoc_link_id = -1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_info("%s: external OWE processing: peer=%pM\n",
 		vif->netdev->name, owe_ev->peer);

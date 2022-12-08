@@ -41,7 +41,10 @@
 #include "idmap.h"
 #include "nfsd.h"
 #include "netns.h"
+<<<<<<< HEAD
 #include "vfs.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Turn off idmapping when using AUTH_SYS.
@@ -240,8 +243,13 @@ idtoname_parse(struct cache_detail *cd, char *buf, int buflen)
 		goto out;
 
 	/* expiry */
+<<<<<<< HEAD
 	error = get_expiry(&buf, &ent.h.expiry_time);
 	if (error)
+=======
+	ent.h.expiry_time = get_expiry(&buf);
+	if (ent.h.expiry_time == 0)
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	error = -ENOMEM;
@@ -408,8 +416,13 @@ nametoid_parse(struct cache_detail *cd, char *buf, int buflen)
 	memcpy(ent.name, buf1, sizeof(ent.name));
 
 	/* expiry */
+<<<<<<< HEAD
 	error = get_expiry(&buf, &ent.h.expiry_time);
 	if (error)
+=======
+	ent.h.expiry_time = get_expiry(&buf);
+	if (ent.h.expiry_time == 0)
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	/* ID */

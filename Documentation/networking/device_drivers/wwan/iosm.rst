@@ -69,7 +69,11 @@ wwan0-X network device
 The IOSM driver exposes IP link interface "wwan0-X" of type "wwan" for IP
 traffic. Iproute network utility is used for creating "wwan0-X" network
 interface and for associating it with MBIM IP session. The Driver supports
+<<<<<<< HEAD
 up to 8 IP sessions for simultaneous IP communication.
+=======
+upto 8 IP sessions for simultaneous IP communication.
+>>>>>>> b7ba80a49124 (Commit)
 
 The userspace management application is responsible for creating new IP link
 prior to establishing MBIM IP session where the SessionId is greater than 0.

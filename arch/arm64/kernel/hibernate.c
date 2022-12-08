@@ -271,7 +271,11 @@ static int swsusp_mte_save_tags(void)
 			if (!page)
 				continue;
 
+<<<<<<< HEAD
 			if (!page_mte_tagged(page))
+=======
+			if (!test_bit(PG_mte_tagged, &page->flags))
+>>>>>>> b7ba80a49124 (Commit)
 				continue;
 
 			ret = save_tags(page, pfn);

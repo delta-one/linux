@@ -2,8 +2,11 @@
 /dts-v1/;
 #include "bcm2835.dtsi"
 #include "bcm2835-rpi.dtsi"
+<<<<<<< HEAD
 #include "bcm2835-rpi-common.dtsi"
 #include "bcm283x-rpi-led-deprecated.dtsi"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "bcm283x-rpi-smsc9512.dtsi"
 #include "bcm283x-rpi-usb-host.dtsi"
 
@@ -15,6 +18,15 @@
 		device_type = "memory";
 		reg = <0 0x10000000>;
 	};
+<<<<<<< HEAD
+=======
+
+	leds {
+		led-act {
+			gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
+		};
+	};
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &gpio {
@@ -98,10 +110,13 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &led_act {
 	gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &pwm {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pwm0_gpio40 &pwm1_gpio45>;

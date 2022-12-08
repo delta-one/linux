@@ -560,8 +560,11 @@ static int qcom_ethqos_probe(struct platform_device *pdev)
 	plat_dat->has_gmac4 = 1;
 	plat_dat->pmt = 1;
 	plat_dat->tso_en = of_property_read_bool(np, "snps,tso");
+<<<<<<< HEAD
 	if (of_device_is_compatible(np, "qcom,qcs404-ethqos"))
 		plat_dat->rx_clk_runs_in_lpi = 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
 	if (ret)
@@ -606,7 +609,11 @@ static struct platform_driver qcom_ethqos_driver = {
 	.driver = {
 		.name           = "qcom-ethqos",
 		.pm		= &stmmac_pltfr_pm_ops,
+<<<<<<< HEAD
 		.of_match_table = qcom_ethqos_match,
+=======
+		.of_match_table = of_match_ptr(qcom_ethqos_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 module_platform_driver(qcom_ethqos_driver);

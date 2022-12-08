@@ -47,6 +47,10 @@ config LED_TRIGGER_PHY
 
 config FIXED_PHY
 	tristate "MDIO Bus/PHY emulation with fixed speed/link PHYs"
+<<<<<<< HEAD
+=======
+	depends on PHYLIB
+>>>>>>> b7ba80a49124 (Commit)
 	select SWPHY
 	help
 	  Adds the platform "fixed" MDIO Bus to cover the boards that use
@@ -70,7 +74,10 @@ config AMD_PHY
 config MESON_GXL_PHY
 	tristate "Amlogic Meson GXL Internal PHY"
 	depends on ARCH_MESON || COMPILE_TEST
+<<<<<<< HEAD
 	select SMSC_PHY
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Currently has a driver for the Amlogic Meson GXL Internal PHY
 
@@ -112,6 +119,10 @@ config BROADCOM_PHY
 
 config BCM54140_PHY
 	tristate "Broadcom BCM54140 PHY"
+<<<<<<< HEAD
+=======
+	depends on PHYLIB
+>>>>>>> b7ba80a49124 (Commit)
 	depends on HWMON || HWMON=n
 	select BCM_NET_PHYLIB
 	help
@@ -136,6 +147,10 @@ config BCM7XXX_PHY
 
 config BCM84881_PHY
 	tristate "Broadcom BCM84881 PHY"
+<<<<<<< HEAD
+=======
+	depends on PHYLIB
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Support the Broadcom BCM84881 PHY.
 
@@ -258,7 +273,11 @@ config MOTORCOMM_PHY
 	tristate "Motorcomm PHYs"
 	help
 	  Enables support for Motorcomm network PHYs.
+<<<<<<< HEAD
 	  Currently supports YT85xx Gigabit Ethernet PHYs.
+=======
+	  Currently supports the YT8511 gigabit PHY.
+>>>>>>> b7ba80a49124 (Commit)
 
 config NATIONAL_PHY
 	tristate "National Semiconductor PHYs"
@@ -278,6 +297,7 @@ config NXP_TJA11XX_PHY
 	help
 	  Currently supports the NXP TJA1100 and TJA1101 PHY.
 
+<<<<<<< HEAD
 config NCN26000_PHY
 	tristate "Onsemi 10BASE-T1S Ethernet PHY"
 	help
@@ -285,6 +305,8 @@ config NCN26000_PHY
 	  Currently supports the NCN26000 10BASE-T1S Industrial PHY
 	  with MII interface.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config AT803X_PHY
 	tristate "Qualcomm Atheros AR803X PHYs and QCA833x PHYs"
 	depends on REGULATOR

@@ -7,6 +7,10 @@
  * both usually compiled in and the module overhead goes away.
  */
 MODULE_DESCRIPTION("glob(7) matching");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("Dual MIT/GPL");
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * glob_match - Shell-style pattern matching, like !fnmatch(pat, str, 0)

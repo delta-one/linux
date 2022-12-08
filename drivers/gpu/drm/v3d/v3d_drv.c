@@ -22,6 +22,10 @@
 #include <linux/reset.h>
 
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_managed.h>
 #include <uapi/drm/v3d_drm.h>
 

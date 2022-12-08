@@ -2,8 +2,12 @@
 
 menuconfig CLK_SIFIVE
 	bool "SiFive SoC driver support"
+<<<<<<< HEAD
 	depends on SOC_SIFIVE || COMPILE_TEST
 	default SOC_SIFIVE
+=======
+	depends on RISCV || COMPILE_TEST
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  SoC drivers for SiFive Linux-capable SoCs.
 
@@ -11,7 +15,10 @@ if CLK_SIFIVE
 
 config CLK_SIFIVE_PRCI
 	bool "PRCI driver for SiFive SoCs"
+<<<<<<< HEAD
 	default SOC_SIFIVE
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select RESET_CONTROLLER
 	select RESET_SIMPLE
 	select CLK_ANALOGBITS_WRPLL_CLN28HPC

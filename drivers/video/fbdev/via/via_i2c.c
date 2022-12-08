@@ -246,7 +246,11 @@ static int viafb_i2c_probe(struct platform_device *platdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void viafb_i2c_remove(struct platform_device *platdev)
+=======
+static int viafb_i2c_remove(struct platform_device *platdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 
@@ -259,6 +263,10 @@ static void viafb_i2c_remove(struct platform_device *platdev)
 		if (i2c_stuff->is_active)
 			i2c_del_adapter(&i2c_stuff->adapter);
 	}
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver via_i2c_driver = {
@@ -266,7 +274,11 @@ static struct platform_driver via_i2c_driver = {
 		.name = "viafb-i2c",
 	},
 	.probe = viafb_i2c_probe,
+<<<<<<< HEAD
 	.remove_new = viafb_i2c_remove,
+=======
+	.remove = viafb_i2c_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int viafb_i2c_init(void)

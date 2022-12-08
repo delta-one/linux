@@ -370,20 +370,32 @@
 		};
 
 		syscon_fsys2: syscon@17c20000 {
+<<<<<<< HEAD
 			compatible = "samsung,exynosautov9-fsys2-sysreg",
 				     "samsung,exynosautov9-sysreg", "syscon";
+=======
+			compatible = "samsung,exynosautov9-sysreg", "syscon";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0x17c20000 0x1000>;
 		};
 
 		syscon_peric0: syscon@10220000 {
+<<<<<<< HEAD
 			compatible = "samsung,exynosautov9-peric0-sysreg",
 				     "samsung,exynosautov9-sysreg", "syscon";
+=======
+			compatible = "samsung,exynosautov9-sysreg", "syscon";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0x10220000 0x2000>;
 		};
 
 		syscon_peric1: syscon@10820000 {
+<<<<<<< HEAD
 			compatible = "samsung,exynosautov9-peric1-sysreg",
 				     "samsung,exynosautov9-sysreg", "syscon";
+=======
+			compatible = "samsung,exynosautov9-sysreg", "syscon";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0x10820000 0x2000>;
 		};
 

@@ -676,6 +676,7 @@ static int siw_copy_inline_sgl(const struct ib_send_wr *core_wr,
 static int siw_sq_flush_wr(struct siw_qp *qp, const struct ib_send_wr *wr,
 			   const struct ib_send_wr **bad_wr)
 {
+<<<<<<< HEAD
 	int rv = 0;
 
 	while (wr) {
@@ -715,6 +716,15 @@ static int siw_sq_flush_wr(struct siw_qp *qp, const struct ib_send_wr *wr,
 			rv = siw_sqe_complete(qp, &sqe, 0,
 					      SIW_WC_WR_FLUSH_ERR);
 		}
+=======
+	struct siw_sqe sqe = {};
+	int rv = 0;
+
+	while (wr) {
+		sqe.id = wr->wr_id;
+		sqe.opcode = wr->opcode;
+		rv = siw_sqe_complete(qp, &sqe, 0, SIW_WC_WR_FLUSH_ERR);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rv) {
 			if (bad_wr)
 				*bad_wr = wr;

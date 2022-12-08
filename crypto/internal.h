@@ -47,6 +47,7 @@ extern struct list_head crypto_alg_list;
 extern struct rw_semaphore crypto_alg_sem;
 extern struct blocking_notifier_head crypto_chain;
 
+<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_MANAGER_DISABLE_TESTS
 static inline bool crypto_boot_test_finished(void)
 {
@@ -66,6 +67,9 @@ static inline void set_crypto_boot_test_finished(void)
 	static_branch_enable(&__crypto_boot_test_finished);
 }
 #endif /* !CONFIG_CRYPTO_MANAGER_DISABLE_TESTS */
+=======
+DECLARE_STATIC_KEY_FALSE(crypto_boot_test_finished);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_PROC_FS
 void __init crypto_init_proc(void);

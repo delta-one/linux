@@ -36,6 +36,11 @@ source "drivers/staging/rtl8723bs/Kconfig"
 
 source "drivers/staging/rtl8712/Kconfig"
 
+<<<<<<< HEAD
+=======
+source "drivers/staging/r8188eu/Kconfig"
+
+>>>>>>> b7ba80a49124 (Commit)
 source "drivers/staging/rts5208/Kconfig"
 
 source "drivers/staging/octeon/Kconfig"
@@ -58,6 +63,11 @@ source "drivers/staging/board/Kconfig"
 
 source "drivers/staging/gdm724x/Kconfig"
 
+<<<<<<< HEAD
+=======
+source "drivers/staging/fwserial/Kconfig"
+
+>>>>>>> b7ba80a49124 (Commit)
 source "drivers/staging/fbtft/Kconfig"
 
 source "drivers/staging/most/Kconfig"

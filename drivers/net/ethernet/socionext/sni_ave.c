@@ -1229,8 +1229,11 @@ static int ave_init(struct net_device *ndev)
 
 	phy_support_asym_pause(phydev);
 
+<<<<<<< HEAD
 	phydev->mac_managed_pm = true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	phy_attached_info(phydev);
 
 	return 0;
@@ -1508,6 +1511,7 @@ static void ave_get_stats64(struct net_device *ndev,
 	unsigned int start;
 
 	do {
+<<<<<<< HEAD
 		start = u64_stats_fetch_begin(&priv->stats_rx.syncp);
 		stats->rx_packets = priv->stats_rx.packets;
 		stats->rx_bytes	  = priv->stats_rx.bytes;
@@ -1518,6 +1522,18 @@ static void ave_get_stats64(struct net_device *ndev,
 		stats->tx_packets = priv->stats_tx.packets;
 		stats->tx_bytes	  = priv->stats_tx.bytes;
 	} while (u64_stats_fetch_retry(&priv->stats_tx.syncp, start));
+=======
+		start = u64_stats_fetch_begin_irq(&priv->stats_rx.syncp);
+		stats->rx_packets = priv->stats_rx.packets;
+		stats->rx_bytes	  = priv->stats_rx.bytes;
+	} while (u64_stats_fetch_retry_irq(&priv->stats_rx.syncp, start));
+
+	do {
+		start = u64_stats_fetch_begin_irq(&priv->stats_tx.syncp);
+		stats->tx_packets = priv->stats_tx.packets;
+		stats->tx_bytes	  = priv->stats_tx.bytes;
+	} while (u64_stats_fetch_retry_irq(&priv->stats_tx.syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 	stats->rx_errors      = priv->stats_rx.errors;
 	stats->tx_errors      = priv->stats_tx.errors;
@@ -1689,7 +1705,12 @@ static int ave_probe(struct platform_device *pdev)
 		 pdev->name, pdev->id);
 
 	/* Register as a NAPI supported driver */
+<<<<<<< HEAD
 	netif_napi_add(ndev, &priv->napi_rx, ave_napi_poll_rx);
+=======
+	netif_napi_add(ndev, &priv->napi_rx, ave_napi_poll_rx,
+		       NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 	netif_napi_add_tx(ndev, &priv->napi_tx, ave_napi_poll_tx);
 
 	platform_set_drvdata(pdev, ndev);
@@ -1758,14 +1779,26 @@ static int ave_resume(struct device *dev)
 
 	ave_global_reset(ndev);
 
+<<<<<<< HEAD
 	ret = phy_init_hw(ndev->phydev);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ave_ethtool_get_wol(ndev, &wol);
 	wol.wolopts = priv->wolopts;
 	__ave_ethtool_set_wol(ndev, &wol);
 
+<<<<<<< HEAD
+=======
+	if (ndev->phydev) {
+		ret = phy_resume(ndev->phydev);
+		if (ret)
+			return ret;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (netif_running(ndev)) {
 		ret = ave_open(ndev);
 		netif_device_attach(ndev);

@@ -437,6 +437,15 @@ static int at25_probe(struct spi_device *spi)
 	struct spi_eeprom *pdata;
 	bool is_fram;
 
+<<<<<<< HEAD
+=======
+	err = device_property_match_string(&spi->dev, "compatible", "cypress,fm25");
+	if (err >= 0)
+		is_fram = true;
+	else
+		is_fram = false;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Ping the chip ... the status register is pretty portable,
 	 * unlike probing manufacturer IDs. We do expect that system
@@ -456,8 +465,11 @@ static int at25_probe(struct spi_device *spi)
 	at25->spi = spi;
 	spi_set_drvdata(spi, at25);
 
+<<<<<<< HEAD
 	is_fram = fwnode_device_is_compatible(dev_fwnode(&spi->dev), "cypress,fm25");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Chip description */
 	pdata = dev_get_platdata(&spi->dev);
 	if (pdata) {

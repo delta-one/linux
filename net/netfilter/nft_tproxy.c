@@ -294,7 +294,11 @@ static void nft_tproxy_destroy(const struct nft_ctx *ctx,
 }
 
 static int nft_tproxy_dump(struct sk_buff *skb,
+<<<<<<< HEAD
 			   const struct nft_expr *expr, bool reset)
+=======
+			   const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_tproxy *priv = nft_expr_priv(expr);
 

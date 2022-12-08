@@ -7,6 +7,10 @@
  */
 
 #include <linux/clk.h>
+<<<<<<< HEAD
+=======
+#include <linux/crypto.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/delay.h>
 #include <linux/dma-mapping.h>
 #include <linux/dmaengine.h>
@@ -31,7 +35,10 @@
 #define HASH_CR				0x00
 #define HASH_DIN			0x04
 #define HASH_STR			0x08
+<<<<<<< HEAD
 #define HASH_UX500_HREG(x)		(0x0c + ((x) * 0x04))
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define HASH_IMR			0x20
 #define HASH_SR				0x24
 #define HASH_CSR(x)			(0x0F8 + ((x) * 0x04))
@@ -54,10 +61,13 @@
 #define HASH_CR_ALGO_SHA224		0x40000
 #define HASH_CR_ALGO_SHA256		0x40080
 
+<<<<<<< HEAD
 #define HASH_CR_UX500_EMPTYMSG		BIT(20)
 #define HASH_CR_UX500_ALGO_SHA1		BIT(7)
 #define HASH_CR_UX500_ALGO_SHA256	0x0
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Interrupt */
 #define HASH_DINIE			BIT(0)
 #define HASH_DCIE			BIT(1)
@@ -67,7 +77,11 @@
 #define HASH_MASK_DATA_INPUT		BIT(1)
 
 /* Context swap register */
+<<<<<<< HEAD
 #define HASH_CSR_REGISTER_NUMBER	54
+=======
+#define HASH_CSR_REGISTER_NUMBER	53
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Status Flags */
 #define HASH_SR_DATA_INPUT_READY	BIT(0)
@@ -95,7 +109,11 @@
 #define HASH_FLAGS_SHA1			BIT(19)
 #define HASH_FLAGS_SHA224		BIT(20)
 #define HASH_FLAGS_SHA256		BIT(21)
+<<<<<<< HEAD
 #define HASH_FLAGS_EMPTY		BIT(22)
+=======
+#define HASH_FLAGS_ERRORS		BIT(22)
+>>>>>>> b7ba80a49124 (Commit)
 #define HASH_FLAGS_HMAC			BIT(23)
 
 #define HASH_OP_UPDATE			1
@@ -119,13 +137,17 @@ enum stm32_hash_data_format {
 struct stm32_hash_ctx {
 	struct crypto_engine_ctx enginectx;
 	struct stm32_hash_dev	*hdev;
+<<<<<<< HEAD
 	struct crypto_shash	*xtfm;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long		flags;
 
 	u8			key[HASH_MAX_KEY_SIZE];
 	int			keylen;
 };
 
+<<<<<<< HEAD
 struct stm32_hash_state {
 	u32			flags;
 
@@ -140,10 +162,20 @@ struct stm32_hash_state {
 
 struct stm32_hash_request_ctx {
 	struct stm32_hash_dev	*hdev;
+=======
+struct stm32_hash_request_ctx {
+	struct stm32_hash_dev	*hdev;
+	unsigned long		flags;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long		op;
 
 	u8 digest[SHA256_DIGEST_SIZE] __aligned(sizeof(u32));
 	size_t			digcnt;
+<<<<<<< HEAD
+=======
+	size_t			bufcnt;
+	size_t			buflen;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* DMA */
 	struct scatterlist	*sg;
@@ -157,7 +189,14 @@ struct stm32_hash_request_ctx {
 
 	u8			data_type;
 
+<<<<<<< HEAD
 	struct stm32_hash_state state;
+=======
+	u8 buffer[HASH_BUFLEN] __aligned(sizeof(u32));
+
+	/* Export Context */
+	u32			*hw_context;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct stm32_hash_algs_info {
@@ -168,10 +207,13 @@ struct stm32_hash_algs_info {
 struct stm32_hash_pdata {
 	struct stm32_hash_algs_info	*algs_info;
 	size_t				algs_info_size;
+<<<<<<< HEAD
 	bool				has_sr;
 	bool				has_mdmat;
 	bool				broken_emptymsg;
 	bool				ux500;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct stm32_hash_dev {
@@ -183,11 +225,18 @@ struct stm32_hash_dev {
 	phys_addr_t		phys_base;
 	u32			dma_mode;
 	u32			dma_maxburst;
+<<<<<<< HEAD
 	bool			polled;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct ahash_request	*req;
 	struct crypto_engine	*engine;
 
+<<<<<<< HEAD
+=======
+	int			err;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long		flags;
 
 	struct dma_chan		*dma_lch;
@@ -223,11 +272,14 @@ static inline int stm32_hash_wait_busy(struct stm32_hash_dev *hdev)
 {
 	u32 status;
 
+<<<<<<< HEAD
 	/* The Ux500 lacks the special status register, we poll the DCAL bit instead */
 	if (!hdev->pdata->has_sr)
 		return readl_relaxed_poll_timeout(hdev->io_base + HASH_STR, status,
 						  !(status & HASH_STR_DCAL), 10, 10000);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return readl_relaxed_poll_timeout(hdev->io_base + HASH_SR, status,
 				   !(status & HASH_SR_BUSY), 10, 10000);
 }
@@ -269,34 +321,53 @@ static int stm32_hash_write_key(struct stm32_hash_dev *hdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void stm32_hash_write_ctrl(struct stm32_hash_dev *hdev, int bufcnt)
+=======
+static void stm32_hash_write_ctrl(struct stm32_hash_dev *hdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct stm32_hash_request_ctx *rctx = ahash_request_ctx(hdev->req);
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(hdev->req);
 	struct stm32_hash_ctx *ctx = crypto_ahash_ctx(tfm);
+<<<<<<< HEAD
 	struct stm32_hash_state *state = &rctx->state;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	u32 reg = HASH_CR_INIT;
 
 	if (!(hdev->flags & HASH_FLAGS_INIT)) {
+<<<<<<< HEAD
 		switch (state->flags & HASH_FLAGS_ALGO_MASK) {
+=======
+		switch (rctx->flags & HASH_FLAGS_ALGO_MASK) {
+>>>>>>> b7ba80a49124 (Commit)
 		case HASH_FLAGS_MD5:
 			reg |= HASH_CR_ALGO_MD5;
 			break;
 		case HASH_FLAGS_SHA1:
+<<<<<<< HEAD
 			if (hdev->pdata->ux500)
 				reg |= HASH_CR_UX500_ALGO_SHA1;
 			else
 				reg |= HASH_CR_ALGO_SHA1;
+=======
+			reg |= HASH_CR_ALGO_SHA1;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case HASH_FLAGS_SHA224:
 			reg |= HASH_CR_ALGO_SHA224;
 			break;
 		case HASH_FLAGS_SHA256:
+<<<<<<< HEAD
 			if (hdev->pdata->ux500)
 				reg |= HASH_CR_UX500_ALGO_SHA256;
 			else
 				reg |= HASH_CR_ALGO_SHA256;
+=======
+			reg |= HASH_CR_ALGO_SHA256;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		default:
 			reg |= HASH_CR_ALGO_MD5;
@@ -304,15 +375,23 @@ static void stm32_hash_write_ctrl(struct stm32_hash_dev *hdev, int bufcnt)
 
 		reg |= (rctx->data_type << HASH_CR_DATATYPE_POS);
 
+<<<<<<< HEAD
 		if (state->flags & HASH_FLAGS_HMAC) {
+=======
+		if (rctx->flags & HASH_FLAGS_HMAC) {
+>>>>>>> b7ba80a49124 (Commit)
 			hdev->flags |= HASH_FLAGS_HMAC;
 			reg |= HASH_CR_MODE;
 			if (ctx->keylen > HASH_LONG_KEY)
 				reg |= HASH_CR_LKEY;
 		}
 
+<<<<<<< HEAD
 		if (!hdev->polled)
 			stm32_hash_write(hdev, HASH_IMR, HASH_DCIE);
+=======
+		stm32_hash_write(hdev, HASH_IMR, HASH_DCIE);
+>>>>>>> b7ba80a49124 (Commit)
 
 		stm32_hash_write(hdev, HASH_CR, reg);
 
@@ -324,12 +403,20 @@ static void stm32_hash_write_ctrl(struct stm32_hash_dev *hdev, int bufcnt)
 
 static void stm32_hash_append_sg(struct stm32_hash_request_ctx *rctx)
 {
+<<<<<<< HEAD
 	struct stm32_hash_state *state = &rctx->state;
 	size_t count;
 
 	while ((state->bufcnt < state->buflen) && rctx->total) {
 		count = min(rctx->sg->length - rctx->offset, rctx->total);
 		count = min_t(size_t, count, state->buflen - state->bufcnt);
+=======
+	size_t count;
+
+	while ((rctx->bufcnt < rctx->buflen) && rctx->total) {
+		count = min(rctx->sg->length - rctx->offset, rctx->total);
+		count = min(count, rctx->buflen - rctx->bufcnt);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (count <= 0) {
 			if ((rctx->sg->length == 0) && !sg_is_last(rctx->sg)) {
@@ -340,10 +427,17 @@ static void stm32_hash_append_sg(struct stm32_hash_request_ctx *rctx)
 			}
 		}
 
+<<<<<<< HEAD
 		scatterwalk_map_and_copy(state->buffer + state->bufcnt,
 					 rctx->sg, rctx->offset, count, 0);
 
 		state->bufcnt += count;
+=======
+		scatterwalk_map_and_copy(rctx->buffer + rctx->bufcnt, rctx->sg,
+					 rctx->offset, count, 0);
+
+		rctx->bufcnt += count;
+>>>>>>> b7ba80a49124 (Commit)
 		rctx->offset += count;
 		rctx->total -= count;
 
@@ -360,12 +454,16 @@ static void stm32_hash_append_sg(struct stm32_hash_request_ctx *rctx)
 static int stm32_hash_xmit_cpu(struct stm32_hash_dev *hdev,
 			       const u8 *buf, size_t length, int final)
 {
+<<<<<<< HEAD
 	struct stm32_hash_request_ctx *rctx = ahash_request_ctx(hdev->req);
 	struct stm32_hash_state *state = &rctx->state;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int count, len32;
 	const u32 *buffer = (const u32 *)buf;
 	u32 reg;
 
+<<<<<<< HEAD
 	if (final) {
 		hdev->flags |= HASH_FLAGS_FINAL;
 
@@ -377,6 +475,11 @@ static int stm32_hash_xmit_cpu(struct stm32_hash_dev *hdev,
 		}
 	}
 
+=======
+	if (final)
+		hdev->flags |= HASH_FLAGS_FINAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	len32 = DIV_ROUND_UP(length, sizeof(u32));
 
 	dev_dbg(hdev->dev, "%s: length: %zd, final: %x len32 %i\n",
@@ -384,7 +487,11 @@ static int stm32_hash_xmit_cpu(struct stm32_hash_dev *hdev,
 
 	hdev->flags |= HASH_FLAGS_CPU;
 
+<<<<<<< HEAD
 	stm32_hash_write_ctrl(hdev, length);
+=======
+	stm32_hash_write_ctrl(hdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (stm32_hash_wait_busy(hdev))
 		return -ETIMEDOUT;
@@ -401,9 +508,12 @@ static int stm32_hash_xmit_cpu(struct stm32_hash_dev *hdev,
 		stm32_hash_write(hdev, HASH_DIN, buffer[count]);
 
 	if (final) {
+<<<<<<< HEAD
 		if (stm32_hash_wait_busy(hdev))
 			return -ETIMEDOUT;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		stm32_hash_set_nblw(hdev, length);
 		reg = stm32_hash_read(hdev, HASH_STR);
 		reg |= HASH_STR_DCAL;
@@ -422,6 +532,7 @@ static int stm32_hash_xmit_cpu(struct stm32_hash_dev *hdev,
 static int stm32_hash_update_cpu(struct stm32_hash_dev *hdev)
 {
 	struct stm32_hash_request_ctx *rctx = ahash_request_ctx(hdev->req);
+<<<<<<< HEAD
 	struct stm32_hash_state *state = &rctx->state;
 	u32 *preg = state->hw_context;
 	int bufcnt, err = 0, final;
@@ -439,11 +550,26 @@ static int stm32_hash_update_cpu(struct stm32_hash_dev *hdev)
 		err = stm32_hash_xmit_cpu(hdev, state->buffer, bufcnt, 0);
 		if (err)
 			return err;
+=======
+	int bufcnt, err = 0, final;
+
+	dev_dbg(hdev->dev, "%s flags %lx\n", __func__, rctx->flags);
+
+	final = (rctx->flags & HASH_FLAGS_FINUP);
+
+	while ((rctx->total >= rctx->buflen) ||
+	       (rctx->bufcnt + rctx->total >= rctx->buflen)) {
+		stm32_hash_append_sg(rctx);
+		bufcnt = rctx->bufcnt;
+		rctx->bufcnt = 0;
+		err = stm32_hash_xmit_cpu(hdev, rctx->buffer, bufcnt, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	stm32_hash_append_sg(rctx);
 
 	if (final) {
+<<<<<<< HEAD
 		bufcnt = state->bufcnt;
 		state->bufcnt = 0;
 		return stm32_hash_xmit_cpu(hdev, state->buffer, bufcnt, 1);
@@ -464,6 +590,14 @@ static int stm32_hash_update_cpu(struct stm32_hash_dev *hdev)
 
 	state->flags |= HASH_FLAGS_INIT;
 
+=======
+		bufcnt = rctx->bufcnt;
+		rctx->bufcnt = 0;
+		err = stm32_hash_xmit_cpu(hdev, rctx->buffer, bufcnt,
+					  (rctx->flags & HASH_FLAGS_FINUP));
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -492,12 +626,20 @@ static int stm32_hash_xmit_dma(struct stm32_hash_dev *hdev,
 
 	reg = stm32_hash_read(hdev, HASH_CR);
 
+<<<<<<< HEAD
 	if (!hdev->pdata->has_mdmat) {
 		if (mdma)
 			reg |= HASH_CR_MDMAT;
 		else
 			reg &= ~HASH_CR_MDMAT;
 	}
+=======
+	if (mdma)
+		reg |= HASH_CR_MDMAT;
+	else
+		reg &= ~HASH_CR_MDMAT;
+
+>>>>>>> b7ba80a49124 (Commit)
 	reg |= HASH_CR_DMAE;
 
 	stm32_hash_write(hdev, HASH_CR, reg);
@@ -605,10 +747,17 @@ static int stm32_hash_dma_init(struct stm32_hash_dev *hdev)
 static int stm32_hash_dma_send(struct stm32_hash_dev *hdev)
 {
 	struct stm32_hash_request_ctx *rctx = ahash_request_ctx(hdev->req);
+<<<<<<< HEAD
 	u32 *buffer = (void *)rctx->state.buffer;
 	struct scatterlist sg[1], *tsg;
 	int err = 0, len = 0, reg, ncp = 0;
 	unsigned int i;
+=======
+	struct scatterlist sg[1], *tsg;
+	int err = 0, len = 0, reg, ncp = 0;
+	unsigned int i;
+	u32 *buffer = (void *)rctx->buffer;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rctx->sg = hdev->req->src;
 	rctx->total = hdev->req->nbytes;
@@ -618,7 +767,11 @@ static int stm32_hash_dma_send(struct stm32_hash_dev *hdev)
 	if (rctx->nents < 0)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	stm32_hash_write_ctrl(hdev, rctx->total);
+=======
+	stm32_hash_write_ctrl(hdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (hdev->flags & HASH_FLAGS_HMAC) {
 		err = stm32_hash_hmac_dma_send(hdev);
@@ -636,7 +789,11 @@ static int stm32_hash_dma_send(struct stm32_hash_dev *hdev)
 
 				ncp = sg_pcopy_to_buffer(
 					rctx->sg, rctx->nents,
+<<<<<<< HEAD
 					rctx->state.buffer, sg->length - len,
+=======
+					rctx->buffer, sg->length - len,
+>>>>>>> b7ba80a49124 (Commit)
 					rctx->total - sg->length + len);
 
 				sg->length = len;
@@ -747,15 +904,23 @@ static int stm32_hash_init(struct ahash_request *req)
 	struct stm32_hash_ctx *ctx = crypto_ahash_ctx(tfm);
 	struct stm32_hash_request_ctx *rctx = ahash_request_ctx(req);
 	struct stm32_hash_dev *hdev = stm32_hash_find_dev(ctx);
+<<<<<<< HEAD
 	struct stm32_hash_state *state = &rctx->state;
 
 	rctx->hdev = hdev;
 
 	state->flags = HASH_FLAGS_CPU;
+=======
+
+	rctx->hdev = hdev;
+
+	rctx->flags = HASH_FLAGS_CPU;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rctx->digcnt = crypto_ahash_digestsize(tfm);
 	switch (rctx->digcnt) {
 	case MD5_DIGEST_SIZE:
+<<<<<<< HEAD
 		state->flags |= HASH_FLAGS_MD5;
 		break;
 	case SHA1_DIGEST_SIZE:
@@ -766,33 +931,62 @@ static int stm32_hash_init(struct ahash_request *req)
 		break;
 	case SHA256_DIGEST_SIZE:
 		state->flags |= HASH_FLAGS_SHA256;
+=======
+		rctx->flags |= HASH_FLAGS_MD5;
+		break;
+	case SHA1_DIGEST_SIZE:
+		rctx->flags |= HASH_FLAGS_SHA1;
+		break;
+	case SHA224_DIGEST_SIZE:
+		rctx->flags |= HASH_FLAGS_SHA224;
+		break;
+	case SHA256_DIGEST_SIZE:
+		rctx->flags |= HASH_FLAGS_SHA256;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	rctx->state.bufcnt = 0;
 	rctx->state.buflen = HASH_BUFLEN;
+=======
+	rctx->bufcnt = 0;
+	rctx->buflen = HASH_BUFLEN;
+>>>>>>> b7ba80a49124 (Commit)
 	rctx->total = 0;
 	rctx->offset = 0;
 	rctx->data_type = HASH_DATA_8_BITS;
 
+<<<<<<< HEAD
 	if (ctx->flags & HASH_FLAGS_HMAC)
 		state->flags |= HASH_FLAGS_HMAC;
 
 	dev_dbg(hdev->dev, "%s Flags %x\n", __func__, state->flags);
+=======
+	memset(rctx->buffer, 0, HASH_BUFLEN);
+
+	if (ctx->flags & HASH_FLAGS_HMAC)
+		rctx->flags |= HASH_FLAGS_HMAC;
+
+	dev_dbg(hdev->dev, "%s Flags %lx\n", __func__, rctx->flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 static int stm32_hash_update_req(struct stm32_hash_dev *hdev)
 {
+<<<<<<< HEAD
 	struct stm32_hash_request_ctx *rctx = ahash_request_ctx(hdev->req);
 	struct stm32_hash_state *state = &rctx->state;
 
 	if (!(state->flags & HASH_FLAGS_CPU))
 		return stm32_hash_dma_send(hdev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return stm32_hash_update_cpu(hdev);
 }
 
@@ -800,6 +994,7 @@ static int stm32_hash_final_req(struct stm32_hash_dev *hdev)
 {
 	struct ahash_request *req = hdev->req;
 	struct stm32_hash_request_ctx *rctx = ahash_request_ctx(req);
+<<<<<<< HEAD
 	struct stm32_hash_state *state = &rctx->state;
 	int buflen = state->bufcnt;
 
@@ -838,11 +1033,26 @@ static void stm32_hash_emptymsg_fallback(struct ahash_request *req)
 	ret = crypto_shash_tfm_digest(ctx->xtfm, NULL, 0, rctx->digest);
 	if (ret)
 		dev_err(hdev->dev, "shash digest error\n");
+=======
+	int err;
+	int buflen = rctx->bufcnt;
+
+	rctx->bufcnt = 0;
+
+	if (!(rctx->flags & HASH_FLAGS_CPU))
+		err = stm32_hash_dma_send(hdev);
+	else
+		err = stm32_hash_xmit_cpu(hdev, rctx->buffer, buflen, 1);
+
+
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void stm32_hash_copy_hash(struct ahash_request *req)
 {
 	struct stm32_hash_request_ctx *rctx = ahash_request_ctx(req);
+<<<<<<< HEAD
 	struct stm32_hash_state *state = &rctx->state;
 	struct stm32_hash_dev *hdev = rctx->hdev;
 	__be32 *hash = (void *)rctx->digest;
@@ -852,6 +1062,12 @@ static void stm32_hash_copy_hash(struct ahash_request *req)
 		return stm32_hash_emptymsg_fallback(req);
 
 	switch (state->flags & HASH_FLAGS_ALGO_MASK) {
+=======
+	__be32 *hash = (void *)rctx->digest;
+	unsigned int i, hashsize;
+
+	switch (rctx->flags & HASH_FLAGS_ALGO_MASK) {
+>>>>>>> b7ba80a49124 (Commit)
 	case HASH_FLAGS_MD5:
 		hashsize = MD5_DIGEST_SIZE;
 		break;
@@ -868,6 +1084,7 @@ static void stm32_hash_copy_hash(struct ahash_request *req)
 		return;
 	}
 
+<<<<<<< HEAD
 	for (i = 0; i < hashsize / sizeof(u32); i++) {
 		if (hdev->pdata->ux500)
 			hash[i] = cpu_to_be32(stm32_hash_read(hdev,
@@ -876,6 +1093,11 @@ static void stm32_hash_copy_hash(struct ahash_request *req)
 			hash[i] = cpu_to_be32(stm32_hash_read(hdev,
 					      HASH_HREG(i)));
 	}
+=======
+	for (i = 0; i < hashsize / sizeof(u32); i++)
+		hash[i] = cpu_to_be32(stm32_hash_read(rctx->hdev,
+						      HASH_HREG(i)));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int stm32_hash_finish(struct ahash_request *req)
@@ -898,6 +1120,16 @@ static void stm32_hash_finish_req(struct ahash_request *req, int err)
 	if (!err && (HASH_FLAGS_FINAL & hdev->flags)) {
 		stm32_hash_copy_hash(req);
 		err = stm32_hash_finish(req);
+<<<<<<< HEAD
+=======
+		hdev->flags &= ~(HASH_FLAGS_FINAL | HASH_FLAGS_CPU |
+				 HASH_FLAGS_INIT | HASH_FLAGS_DMA_READY |
+				 HASH_FLAGS_OUTPUT_READY | HASH_FLAGS_HMAC |
+				 HASH_FLAGS_HMAC_INIT | HASH_FLAGS_HMAC_FINAL |
+				 HASH_FLAGS_HMAC_KEY);
+	} else {
+		rctx->flags |= HASH_FLAGS_ERRORS;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	pm_runtime_mark_last_busy(hdev->dev);
@@ -906,25 +1138,77 @@ static void stm32_hash_finish_req(struct ahash_request *req, int err)
 	crypto_finalize_hash_request(hdev->engine, req, err);
 }
 
+<<<<<<< HEAD
+=======
+static int stm32_hash_hw_init(struct stm32_hash_dev *hdev,
+			      struct stm32_hash_request_ctx *rctx)
+{
+	pm_runtime_get_sync(hdev->dev);
+
+	if (!(HASH_FLAGS_INIT & hdev->flags)) {
+		stm32_hash_write(hdev, HASH_CR, HASH_CR_INIT);
+		stm32_hash_write(hdev, HASH_STR, 0);
+		stm32_hash_write(hdev, HASH_DIN, 0);
+		stm32_hash_write(hdev, HASH_IMR, 0);
+		hdev->err = 0;
+	}
+
+	return 0;
+}
+
+static int stm32_hash_one_request(struct crypto_engine *engine, void *areq);
+static int stm32_hash_prepare_req(struct crypto_engine *engine, void *areq);
+
+>>>>>>> b7ba80a49124 (Commit)
 static int stm32_hash_handle_queue(struct stm32_hash_dev *hdev,
 				   struct ahash_request *req)
 {
 	return crypto_transfer_hash_request_to_engine(hdev->engine, req);
 }
 
+<<<<<<< HEAD
+=======
+static int stm32_hash_prepare_req(struct crypto_engine *engine, void *areq)
+{
+	struct ahash_request *req = container_of(areq, struct ahash_request,
+						 base);
+	struct stm32_hash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
+	struct stm32_hash_dev *hdev = stm32_hash_find_dev(ctx);
+	struct stm32_hash_request_ctx *rctx;
+
+	if (!hdev)
+		return -ENODEV;
+
+	hdev->req = req;
+
+	rctx = ahash_request_ctx(req);
+
+	dev_dbg(hdev->dev, "processing new req, op: %lu, nbytes %d\n",
+		rctx->op, req->nbytes);
+
+	return stm32_hash_hw_init(hdev, rctx);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int stm32_hash_one_request(struct crypto_engine *engine, void *areq)
 {
 	struct ahash_request *req = container_of(areq, struct ahash_request,
 						 base);
 	struct stm32_hash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
+<<<<<<< HEAD
 	struct stm32_hash_request_ctx *rctx = ahash_request_ctx(req);
 	struct stm32_hash_dev *hdev = stm32_hash_find_dev(ctx);
 	struct stm32_hash_state *state = &rctx->state;
+=======
+	struct stm32_hash_dev *hdev = stm32_hash_find_dev(ctx);
+	struct stm32_hash_request_ctx *rctx;
+>>>>>>> b7ba80a49124 (Commit)
 	int err = 0;
 
 	if (!hdev)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	dev_dbg(hdev->dev, "processing new req, op: %lu, nbytes %d\n",
 		rctx->op, req->nbytes);
 
@@ -954,12 +1238,18 @@ static int stm32_hash_one_request(struct crypto_engine *engine, void *areq)
 			hdev->flags |= HASH_FLAGS_HMAC |
 				       HASH_FLAGS_HMAC_KEY;
 	}
+=======
+	hdev->req = req;
+
+	rctx = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rctx->op == HASH_OP_UPDATE)
 		err = stm32_hash_update_req(hdev);
 	else if (rctx->op == HASH_OP_FINAL)
 		err = stm32_hash_final_req(hdev);
 
+<<<<<<< HEAD
 	/* If we have an IRQ, wait for that, else poll for completion */
 	if (err == -EINPROGRESS && hdev->polled) {
 		if (stm32_hash_wait_busy(hdev))
@@ -970,6 +1260,8 @@ static int stm32_hash_one_request(struct crypto_engine *engine, void *areq)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (err != -EINPROGRESS)
 	/* done task will not finish it, so do it here */
 		stm32_hash_finish_req(req, err);
@@ -991,16 +1283,25 @@ static int stm32_hash_enqueue(struct ahash_request *req, unsigned int op)
 static int stm32_hash_update(struct ahash_request *req)
 {
 	struct stm32_hash_request_ctx *rctx = ahash_request_ctx(req);
+<<<<<<< HEAD
 	struct stm32_hash_state *state = &rctx->state;
 
 	if (!req->nbytes || !(state->flags & HASH_FLAGS_CPU))
+=======
+
+	if (!req->nbytes || !(rctx->flags & HASH_FLAGS_CPU))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	rctx->total = req->nbytes;
 	rctx->sg = req->src;
 	rctx->offset = 0;
 
+<<<<<<< HEAD
 	if ((state->bufcnt + rctx->total < state->buflen)) {
+=======
+	if ((rctx->bufcnt + rctx->total < rctx->buflen)) {
+>>>>>>> b7ba80a49124 (Commit)
 		stm32_hash_append_sg(rctx);
 		return 0;
 	}
@@ -1011,9 +1312,14 @@ static int stm32_hash_update(struct ahash_request *req)
 static int stm32_hash_final(struct ahash_request *req)
 {
 	struct stm32_hash_request_ctx *rctx = ahash_request_ctx(req);
+<<<<<<< HEAD
 	struct stm32_hash_state *state = &rctx->state;
 
 	state->flags |= HASH_FLAGS_FINAL;
+=======
+
+	rctx->flags |= HASH_FLAGS_FINUP;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return stm32_hash_enqueue(req, HASH_OP_FINAL);
 }
@@ -1023,6 +1329,7 @@ static int stm32_hash_finup(struct ahash_request *req)
 	struct stm32_hash_request_ctx *rctx = ahash_request_ctx(req);
 	struct stm32_hash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
 	struct stm32_hash_dev *hdev = stm32_hash_find_dev(ctx);
+<<<<<<< HEAD
 	struct stm32_hash_state *state = &rctx->state;
 
 	if (!req->nbytes)
@@ -1038,6 +1345,27 @@ static int stm32_hash_finup(struct ahash_request *req)
 
 out:
 	return stm32_hash_final(req);
+=======
+	int err1, err2;
+
+	rctx->flags |= HASH_FLAGS_FINUP;
+
+	if (hdev->dma_lch && stm32_hash_dma_aligned_data(req))
+		rctx->flags &= ~HASH_FLAGS_CPU;
+
+	err1 = stm32_hash_update(req);
+
+	if (err1 == -EINPROGRESS || err1 == -EBUSY)
+		return err1;
+
+	/*
+	 * final() has to be always called to cleanup resources
+	 * even if update() failed, except EINPROGRESS
+	 */
+	err2 = stm32_hash_final(req);
+
+	return err1 ?: err2;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int stm32_hash_digest(struct ahash_request *req)
@@ -1048,8 +1376,37 @@ static int stm32_hash_digest(struct ahash_request *req)
 static int stm32_hash_export(struct ahash_request *req, void *out)
 {
 	struct stm32_hash_request_ctx *rctx = ahash_request_ctx(req);
+<<<<<<< HEAD
 
 	memcpy(out, &rctx->state, sizeof(rctx->state));
+=======
+	struct stm32_hash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
+	struct stm32_hash_dev *hdev = stm32_hash_find_dev(ctx);
+	u32 *preg;
+	unsigned int i;
+
+	pm_runtime_get_sync(hdev->dev);
+
+	while ((stm32_hash_read(hdev, HASH_SR) & HASH_SR_BUSY))
+		cpu_relax();
+
+	rctx->hw_context = kmalloc_array(3 + HASH_CSR_REGISTER_NUMBER,
+					 sizeof(u32),
+					 GFP_KERNEL);
+
+	preg = rctx->hw_context;
+
+	*preg++ = stm32_hash_read(hdev, HASH_IMR);
+	*preg++ = stm32_hash_read(hdev, HASH_STR);
+	*preg++ = stm32_hash_read(hdev, HASH_CR);
+	for (i = 0; i < HASH_CSR_REGISTER_NUMBER; i++)
+		*preg++ = stm32_hash_read(hdev, HASH_CSR(i));
+
+	pm_runtime_mark_last_busy(hdev->dev);
+	pm_runtime_put_autosuspend(hdev->dev);
+
+	memcpy(out, rctx, sizeof(*rctx));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1057,9 +1414,37 @@ static int stm32_hash_export(struct ahash_request *req, void *out)
 static int stm32_hash_import(struct ahash_request *req, const void *in)
 {
 	struct stm32_hash_request_ctx *rctx = ahash_request_ctx(req);
+<<<<<<< HEAD
 
 	stm32_hash_init(req);
 	memcpy(&rctx->state, in, sizeof(rctx->state));
+=======
+	struct stm32_hash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
+	struct stm32_hash_dev *hdev = stm32_hash_find_dev(ctx);
+	const u32 *preg = in;
+	u32 reg;
+	unsigned int i;
+
+	memcpy(rctx, in, sizeof(*rctx));
+
+	preg = rctx->hw_context;
+
+	pm_runtime_get_sync(hdev->dev);
+
+	stm32_hash_write(hdev, HASH_IMR, *preg++);
+	stm32_hash_write(hdev, HASH_STR, *preg++);
+	stm32_hash_write(hdev, HASH_CR, *preg);
+	reg = *preg++ | HASH_CR_INIT;
+	stm32_hash_write(hdev, HASH_CR, reg);
+
+	for (i = 0; i < HASH_CSR_REGISTER_NUMBER; i++)
+		stm32_hash_write(hdev, HASH_CSR(i), *preg++);
+
+	pm_runtime_mark_last_busy(hdev->dev);
+	pm_runtime_put_autosuspend(hdev->dev);
+
+	kfree(rctx->hw_context);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1079,6 +1464,7 @@ static int stm32_hash_setkey(struct crypto_ahash *tfm,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int stm32_hash_init_fallback(struct crypto_tfm *tfm)
 {
 	struct stm32_hash_ctx *ctx = crypto_tfm_ctx(tfm);
@@ -1102,6 +1488,8 @@ static int stm32_hash_init_fallback(struct crypto_tfm *tfm)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int stm32_hash_cra_init_algs(struct crypto_tfm *tfm,
 				    const char *algs_hmac_name)
 {
@@ -1116,8 +1504,14 @@ static int stm32_hash_cra_init_algs(struct crypto_tfm *tfm,
 		ctx->flags |= HASH_FLAGS_HMAC;
 
 	ctx->enginectx.op.do_one_request = stm32_hash_one_request;
+<<<<<<< HEAD
 
 	return stm32_hash_init_fallback(tfm);
+=======
+	ctx->enginectx.op.prepare_request = stm32_hash_prepare_req;
+	ctx->enginectx.op.unprepare_request = NULL;
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int stm32_hash_cra_init(struct crypto_tfm *tfm)
@@ -1145,6 +1539,7 @@ static int stm32_hash_cra_sha256_init(struct crypto_tfm *tfm)
 	return stm32_hash_cra_init_algs(tfm, "sha256");
 }
 
+<<<<<<< HEAD
 static void stm32_hash_cra_exit(struct crypto_tfm *tfm)
 {
 	struct stm32_hash_ctx *ctx = crypto_tfm_ctx(tfm);
@@ -1153,6 +1548,8 @@ static void stm32_hash_cra_exit(struct crypto_tfm *tfm)
 		crypto_free_shash(ctx->xtfm);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static irqreturn_t stm32_hash_irq_thread(int irq, void *dev_id)
 {
 	struct stm32_hash_dev *hdev = dev_id;
@@ -1196,7 +1593,11 @@ static irqreturn_t stm32_hash_irq_handler(int irq, void *dev_id)
 	return IRQ_NONE;
 }
 
+<<<<<<< HEAD
 static struct ahash_alg algs_md5[] = {
+=======
+static struct ahash_alg algs_md5_sha1[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.init = stm32_hash_init,
 		.update = stm32_hash_update,
@@ -1207,7 +1608,11 @@ static struct ahash_alg algs_md5[] = {
 		.import = stm32_hash_import,
 		.halg = {
 			.digestsize = MD5_DIGEST_SIZE,
+<<<<<<< HEAD
 			.statesize = sizeof(struct stm32_hash_state),
+=======
+			.statesize = sizeof(struct stm32_hash_request_ctx),
+>>>>>>> b7ba80a49124 (Commit)
 			.base = {
 				.cra_name = "md5",
 				.cra_driver_name = "stm32-md5",
@@ -1218,7 +1623,10 @@ static struct ahash_alg algs_md5[] = {
 				.cra_ctxsize = sizeof(struct stm32_hash_ctx),
 				.cra_alignmask = 3,
 				.cra_init = stm32_hash_cra_init,
+<<<<<<< HEAD
 				.cra_exit = stm32_hash_cra_exit,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				.cra_module = THIS_MODULE,
 			}
 		}
@@ -1234,7 +1642,11 @@ static struct ahash_alg algs_md5[] = {
 		.setkey = stm32_hash_setkey,
 		.halg = {
 			.digestsize = MD5_DIGEST_SIZE,
+<<<<<<< HEAD
 			.statesize = sizeof(struct stm32_hash_state),
+=======
+			.statesize = sizeof(struct stm32_hash_request_ctx),
+>>>>>>> b7ba80a49124 (Commit)
 			.base = {
 				.cra_name = "hmac(md5)",
 				.cra_driver_name = "stm32-hmac-md5",
@@ -1245,14 +1657,20 @@ static struct ahash_alg algs_md5[] = {
 				.cra_ctxsize = sizeof(struct stm32_hash_ctx),
 				.cra_alignmask = 3,
 				.cra_init = stm32_hash_cra_md5_init,
+<<<<<<< HEAD
 				.cra_exit = stm32_hash_cra_exit,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				.cra_module = THIS_MODULE,
 			}
 		}
 	},
+<<<<<<< HEAD
 };
 
 static struct ahash_alg algs_sha1[] = {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.init = stm32_hash_init,
 		.update = stm32_hash_update,
@@ -1263,7 +1681,11 @@ static struct ahash_alg algs_sha1[] = {
 		.import = stm32_hash_import,
 		.halg = {
 			.digestsize = SHA1_DIGEST_SIZE,
+<<<<<<< HEAD
 			.statesize = sizeof(struct stm32_hash_state),
+=======
+			.statesize = sizeof(struct stm32_hash_request_ctx),
+>>>>>>> b7ba80a49124 (Commit)
 			.base = {
 				.cra_name = "sha1",
 				.cra_driver_name = "stm32-sha1",
@@ -1274,7 +1696,10 @@ static struct ahash_alg algs_sha1[] = {
 				.cra_ctxsize = sizeof(struct stm32_hash_ctx),
 				.cra_alignmask = 3,
 				.cra_init = stm32_hash_cra_init,
+<<<<<<< HEAD
 				.cra_exit = stm32_hash_cra_exit,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				.cra_module = THIS_MODULE,
 			}
 		}
@@ -1290,7 +1715,11 @@ static struct ahash_alg algs_sha1[] = {
 		.setkey = stm32_hash_setkey,
 		.halg = {
 			.digestsize = SHA1_DIGEST_SIZE,
+<<<<<<< HEAD
 			.statesize = sizeof(struct stm32_hash_state),
+=======
+			.statesize = sizeof(struct stm32_hash_request_ctx),
+>>>>>>> b7ba80a49124 (Commit)
 			.base = {
 				.cra_name = "hmac(sha1)",
 				.cra_driver_name = "stm32-hmac-sha1",
@@ -1301,14 +1730,21 @@ static struct ahash_alg algs_sha1[] = {
 				.cra_ctxsize = sizeof(struct stm32_hash_ctx),
 				.cra_alignmask = 3,
 				.cra_init = stm32_hash_cra_sha1_init,
+<<<<<<< HEAD
 				.cra_exit = stm32_hash_cra_exit,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				.cra_module = THIS_MODULE,
 			}
 		}
 	},
 };
 
+<<<<<<< HEAD
 static struct ahash_alg algs_sha224[] = {
+=======
+static struct ahash_alg algs_sha224_sha256[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.init = stm32_hash_init,
 		.update = stm32_hash_update,
@@ -1319,7 +1755,11 @@ static struct ahash_alg algs_sha224[] = {
 		.import = stm32_hash_import,
 		.halg = {
 			.digestsize = SHA224_DIGEST_SIZE,
+<<<<<<< HEAD
 			.statesize = sizeof(struct stm32_hash_state),
+=======
+			.statesize = sizeof(struct stm32_hash_request_ctx),
+>>>>>>> b7ba80a49124 (Commit)
 			.base = {
 				.cra_name = "sha224",
 				.cra_driver_name = "stm32-sha224",
@@ -1330,7 +1770,10 @@ static struct ahash_alg algs_sha224[] = {
 				.cra_ctxsize = sizeof(struct stm32_hash_ctx),
 				.cra_alignmask = 3,
 				.cra_init = stm32_hash_cra_init,
+<<<<<<< HEAD
 				.cra_exit = stm32_hash_cra_exit,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				.cra_module = THIS_MODULE,
 			}
 		}
@@ -1346,7 +1789,11 @@ static struct ahash_alg algs_sha224[] = {
 		.import = stm32_hash_import,
 		.halg = {
 			.digestsize = SHA224_DIGEST_SIZE,
+<<<<<<< HEAD
 			.statesize = sizeof(struct stm32_hash_state),
+=======
+			.statesize = sizeof(struct stm32_hash_request_ctx),
+>>>>>>> b7ba80a49124 (Commit)
 			.base = {
 				.cra_name = "hmac(sha224)",
 				.cra_driver_name = "stm32-hmac-sha224",
@@ -1357,14 +1804,20 @@ static struct ahash_alg algs_sha224[] = {
 				.cra_ctxsize = sizeof(struct stm32_hash_ctx),
 				.cra_alignmask = 3,
 				.cra_init = stm32_hash_cra_sha224_init,
+<<<<<<< HEAD
 				.cra_exit = stm32_hash_cra_exit,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				.cra_module = THIS_MODULE,
 			}
 		}
 	},
+<<<<<<< HEAD
 };
 
 static struct ahash_alg algs_sha256[] = {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.init = stm32_hash_init,
 		.update = stm32_hash_update,
@@ -1375,7 +1828,11 @@ static struct ahash_alg algs_sha256[] = {
 		.import = stm32_hash_import,
 		.halg = {
 			.digestsize = SHA256_DIGEST_SIZE,
+<<<<<<< HEAD
 			.statesize = sizeof(struct stm32_hash_state),
+=======
+			.statesize = sizeof(struct stm32_hash_request_ctx),
+>>>>>>> b7ba80a49124 (Commit)
 			.base = {
 				.cra_name = "sha256",
 				.cra_driver_name = "stm32-sha256",
@@ -1386,7 +1843,10 @@ static struct ahash_alg algs_sha256[] = {
 				.cra_ctxsize = sizeof(struct stm32_hash_ctx),
 				.cra_alignmask = 3,
 				.cra_init = stm32_hash_cra_init,
+<<<<<<< HEAD
 				.cra_exit = stm32_hash_cra_exit,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				.cra_module = THIS_MODULE,
 			}
 		}
@@ -1402,7 +1862,11 @@ static struct ahash_alg algs_sha256[] = {
 		.setkey = stm32_hash_setkey,
 		.halg = {
 			.digestsize = SHA256_DIGEST_SIZE,
+<<<<<<< HEAD
 			.statesize = sizeof(struct stm32_hash_state),
+=======
+			.statesize = sizeof(struct stm32_hash_request_ctx),
+>>>>>>> b7ba80a49124 (Commit)
 			.base = {
 				.cra_name = "hmac(sha256)",
 				.cra_driver_name = "stm32-hmac-sha256",
@@ -1413,7 +1877,10 @@ static struct ahash_alg algs_sha256[] = {
 				.cra_ctxsize = sizeof(struct stm32_hash_ctx),
 				.cra_alignmask = 3,
 				.cra_init = stm32_hash_cra_sha256_init,
+<<<<<<< HEAD
 				.cra_exit = stm32_hash_cra_exit,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				.cra_module = THIS_MODULE,
 			}
 		}
@@ -1459,6 +1926,7 @@ static int stm32_hash_unregister_algs(struct stm32_hash_dev *hdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct stm32_hash_algs_info stm32_hash_algs_info_ux500[] = {
 	{
 		.algs_list	= algs_sha1,
@@ -1485,18 +1953,28 @@ static struct stm32_hash_algs_info stm32_hash_algs_info_stm32f4[] = {
 	{
 		.algs_list	= algs_sha1,
 		.size		= ARRAY_SIZE(algs_sha1),
+=======
+static struct stm32_hash_algs_info stm32_hash_algs_info_stm32f4[] = {
+	{
+		.algs_list	= algs_md5_sha1,
+		.size		= ARRAY_SIZE(algs_md5_sha1),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 
 static const struct stm32_hash_pdata stm32_hash_pdata_stm32f4 = {
 	.algs_info	= stm32_hash_algs_info_stm32f4,
 	.algs_info_size	= ARRAY_SIZE(stm32_hash_algs_info_stm32f4),
+<<<<<<< HEAD
 	.has_sr		= true,
 	.has_mdmat	= true,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct stm32_hash_algs_info stm32_hash_algs_info_stm32f7[] = {
 	{
+<<<<<<< HEAD
 		.algs_list	= algs_md5,
 		.size		= ARRAY_SIZE(algs_md5),
 	},
@@ -1511,22 +1989,36 @@ static struct stm32_hash_algs_info stm32_hash_algs_info_stm32f7[] = {
 	{
 		.algs_list	= algs_sha256,
 		.size		= ARRAY_SIZE(algs_sha256),
+=======
+		.algs_list	= algs_md5_sha1,
+		.size		= ARRAY_SIZE(algs_md5_sha1),
+	},
+	{
+		.algs_list	= algs_sha224_sha256,
+		.size		= ARRAY_SIZE(algs_sha224_sha256),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 
 static const struct stm32_hash_pdata stm32_hash_pdata_stm32f7 = {
 	.algs_info	= stm32_hash_algs_info_stm32f7,
 	.algs_info_size	= ARRAY_SIZE(stm32_hash_algs_info_stm32f7),
+<<<<<<< HEAD
 	.has_sr		= true,
 	.has_mdmat	= true,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct of_device_id stm32_hash_of_match[] = {
 	{
+<<<<<<< HEAD
 		.compatible = "stericsson,ux500-hash",
 		.data = &stm32_hash_pdata_ux500,
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.compatible = "st,stm32f456-hash",
 		.data = &stm32_hash_pdata_stm32f4,
 	},
@@ -1579,6 +2071,7 @@ static int stm32_hash_probe(struct platform_device *pdev)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	irq = platform_get_irq_optional(pdev, 0);
 	if (irq < 0 && irq != -ENXIO)
 		return irq;
@@ -1596,6 +2089,18 @@ static int stm32_hash_probe(struct platform_device *pdev)
 	} else {
 		dev_info(dev, "No IRQ, use polling mode\n");
 		hdev->polled = true;
+=======
+	irq = platform_get_irq(pdev, 0);
+	if (irq < 0)
+		return irq;
+
+	ret = devm_request_threaded_irq(dev, irq, stm32_hash_irq_handler,
+					stm32_hash_irq_thread, IRQF_ONESHOT,
+					dev_name(dev), hdev);
+	if (ret) {
+		dev_err(dev, "Cannot grab IRQ\n");
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	hdev->clk = devm_clk_get(&pdev->dev, NULL);
@@ -1637,11 +2142,17 @@ static int stm32_hash_probe(struct platform_device *pdev)
 	case 0:
 		break;
 	case -ENOENT:
+<<<<<<< HEAD
 	case -ENODEV:
 		dev_info(dev, "DMA mode not available\n");
 		break;
 	default:
 		dev_err(dev, "DMA init error %d\n", ret);
+=======
+		dev_dbg(dev, "DMA mode not available\n");
+		break;
+	default:
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_dma;
 	}
 
@@ -1660,11 +2171,15 @@ static int stm32_hash_probe(struct platform_device *pdev)
 	if (ret)
 		goto err_engine_start;
 
+<<<<<<< HEAD
 	if (hdev->pdata->ux500)
 		/* FIXME: implement DMA mode for Ux500 */
 		hdev->dma_mode = 0;
 	else
 		hdev->dma_mode = stm32_hash_read(hdev, HASH_HWCFGR);
+=======
+	hdev->dma_mode = stm32_hash_read(hdev, HASH_HWCFGR);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Register algos */
 	ret = stm32_hash_register_algs(hdev);

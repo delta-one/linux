@@ -12,7 +12,10 @@
 #include <linux/crc8.h>
 #include <linux/delay.h>
 #include <linux/gpio/consumer.h>
+<<<<<<< HEAD
 #include <linux/interconnect.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/interrupt.h>
 #include <linux/io.h>
 #include <linux/iopoll.h>
@@ -23,7 +26,10 @@
 #include <linux/pci.h>
 #include <linux/pm_runtime.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/phy/pcie.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/phy/phy.h>
 #include <linux/regulator/consumer.h>
 #include <linux/reset.h>
@@ -210,6 +216,10 @@ struct qcom_pcie_ops {
 	int (*init)(struct qcom_pcie *pcie);
 	int (*post_init)(struct qcom_pcie *pcie);
 	void (*deinit)(struct qcom_pcie *pcie);
+<<<<<<< HEAD
+=======
+	void (*post_deinit)(struct qcom_pcie *pcie);
+>>>>>>> b7ba80a49124 (Commit)
 	void (*ltssm_enable)(struct qcom_pcie *pcie);
 	int (*config_sid)(struct qcom_pcie *pcie);
 };
@@ -225,7 +235,10 @@ struct qcom_pcie {
 	union qcom_pcie_resources res;
 	struct phy *phy;
 	struct gpio_desc *reset;
+<<<<<<< HEAD
 	struct icc_path *icc_mem;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const struct qcom_pcie_cfg *cfg;
 };
 
@@ -1239,7 +1252,11 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
 
 	ret = reset_control_assert(res->pci_reset);
 	if (ret < 0) {
+<<<<<<< HEAD
 		dev_err(dev, "cannot assert pci reset\n");
+=======
+		dev_err(dev, "cannot deassert pci reset\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_disable_clocks;
 	}
 
@@ -1500,10 +1517,13 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = phy_set_mode_ext(pcie->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
 	if (ret)
 		goto err_deinit;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = phy_power_on(pcie->phy);
 	if (ret)
 		goto err_deinit;
@@ -1519,13 +1539,24 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
 	if (pcie->cfg->ops->config_sid) {
 		ret = pcie->cfg->ops->config_sid(pcie);
 		if (ret)
+<<<<<<< HEAD
 			goto err_assert_reset;
+=======
+			goto err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
 
+<<<<<<< HEAD
 err_assert_reset:
 	qcom_ep_reset_assert(pcie);
+=======
+err:
+	qcom_ep_reset_assert(pcie);
+	if (pcie->cfg->ops->post_deinit)
+		pcie->cfg->ops->post_deinit(pcie);
+>>>>>>> b7ba80a49124 (Commit)
 err_disable_phy:
 	phy_power_off(pcie->phy);
 err_deinit:
@@ -1534,6 +1565,7 @@ err_deinit:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void qcom_pcie_host_deinit(struct dw_pcie_rp *pp)
 {
 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
@@ -1547,6 +1579,10 @@ static void qcom_pcie_host_deinit(struct dw_pcie_rp *pp)
 static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
 	.host_init	= qcom_pcie_host_init,
 	.host_deinit	= qcom_pcie_host_deinit,
+=======
+static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
+	.host_init = qcom_pcie_host_init,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Qcom IP rev.: 2.1.0	Synopsys IP rev.: 4.01a */
@@ -1657,6 +1693,7 @@ static const struct dw_pcie_ops dw_pcie_ops = {
 	.start_link = qcom_pcie_start_link,
 };
 
+<<<<<<< HEAD
 static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
 {
 	struct dw_pcie *pci = pcie->pci;
@@ -1725,6 +1762,8 @@ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int qcom_pcie_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
@@ -1785,10 +1824,13 @@ static int qcom_pcie_probe(struct platform_device *pdev)
 		goto err_pm_runtime_put;
 	}
 
+<<<<<<< HEAD
 	ret = qcom_pcie_icc_init(pcie);
 	if (ret)
 		goto err_pm_runtime_put;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = pcie->cfg->ops->get_resources(pcie);
 	if (ret)
 		goto err_pm_runtime_put;
@@ -1807,8 +1849,11 @@ static int qcom_pcie_probe(struct platform_device *pdev)
 		goto err_phy_exit;
 	}
 
+<<<<<<< HEAD
 	qcom_pcie_icc_update(pcie);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_phy_exit:
@@ -1828,7 +1873,10 @@ static const struct of_device_id qcom_pcie_match[] = {
 	{ .compatible = "qcom,pcie-ipq8064", .data = &cfg_2_1_0 },
 	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
 	{ .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
+<<<<<<< HEAD
 	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
 	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
 	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_1_9_0 },
@@ -1838,7 +1886,10 @@ static const struct of_device_id qcom_pcie_match[] = {
 	{ .compatible = "qcom,pcie-sdm845", .data = &cfg_2_7_0 },
 	{ .compatible = "qcom,pcie-sm8150", .data = &cfg_1_9_0 },
 	{ .compatible = "qcom,pcie-sm8250", .data = &cfg_1_9_0 },
+<<<<<<< HEAD
 	{ .compatible = "qcom,pcie-sm8350", .data = &cfg_1_9_0 },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
 	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
 	{ }

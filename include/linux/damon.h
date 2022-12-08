@@ -8,7 +8,10 @@
 #ifndef _DAMON_H_
 #define _DAMON_H_
 
+<<<<<<< HEAD
 #include <linux/memcontrol.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mutex.h>
 #include <linux/time64.h>
 #include <linux/types.h>
@@ -22,7 +25,11 @@
 /* Get a random number in [l, r) */
 static inline unsigned long damon_rand(unsigned long l, unsigned long r)
 {
+<<<<<<< HEAD
 	return l + get_random_u32_below(r - l);
+=======
+	return l + prandom_u32_max(r - l);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -91,12 +98,15 @@ struct damon_target {
  * @DAMOS_LRU_DEPRIO:	Deprioritize the region on its LRU lists.
  * @DAMOS_STAT:		Do nothing but count the stat.
  * @NR_DAMOS_ACTIONS:	Total number of DAMOS actions
+<<<<<<< HEAD
  *
  * The support of each action is up to running &struct damon_operations.
  * &enum DAMON_OPS_VADDR and &enum DAMON_OPS_FVADDR supports all actions except
  * &enum DAMOS_LRU_PRIO and &enum DAMOS_LRU_DEPRIO.  &enum DAMON_OPS_PADDR
  * supports only &enum DAMOS_PAGEOUT, &enum DAMOS_LRU_PRIO, &enum
  * DAMOS_LRU_DEPRIO, and &DAMOS_STAT.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum damos_action {
 	DAMOS_WILLNEED,
@@ -223,6 +233,7 @@ struct damos_stat {
 };
 
 /**
+<<<<<<< HEAD
  * enum damos_filter_type - Type of memory for &struct damos_filter
  * @DAMOS_FILTER_TYPE_ANON:	Anonymous pages.
  * @DAMOS_FILTER_TYPE_MEMCG:	Specific memcg's pages.
@@ -261,6 +272,8 @@ struct damos_filter {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct damos_access_pattern - Target access pattern of the given scheme.
  * @min_sz_region:	Minimum size of target regions.
  * @max_sz_region:	Maximum size of target regions.
@@ -284,7 +297,10 @@ struct damos_access_pattern {
  * @action:		&damo_action to be applied to the target regions.
  * @quota:		Control the aggressiveness of this scheme.
  * @wmarks:		Watermarks for automated (in)activation of this scheme.
+<<<<<<< HEAD
  * @filters:		Additional set of &struct damos_filter for &action.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @stat:		Statistics of this scheme.
  * @list:		List head for siblings.
  *
@@ -300,10 +316,13 @@ struct damos_access_pattern {
  * If all schemes that registered to a &struct damon_ctx are inactive, DAMON
  * stops monitoring and just repeatedly checks the watermarks.
  *
+<<<<<<< HEAD
  * Before applying the &action to a memory region, &struct damon_operations
  * implementation could check pages of the region and skip &action to respect
  * &filters
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * After applying the &action to each region, &stat_count and &stat_sz is
  * updated to reflect the number of regions and total size of regions that the
  * &action is applied.
@@ -313,7 +332,10 @@ struct damos {
 	enum damos_action action;
 	struct damos_quota quota;
 	struct damos_watermarks wmarks;
+<<<<<<< HEAD
 	struct list_head filters;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct damos_stat stat;
 	struct list_head list;
 };
@@ -354,10 +376,17 @@ struct damon_ctx;
  * users should register the low level operations for their target address
  * space and usecase via the &damon_ctx.ops.  Then, the monitoring thread
  * (&damon_ctx.kdamond) calls @init and @prepare_access_checks before starting
+<<<<<<< HEAD
  * the monitoring, @update after each &damon_attrs.ops_update_interval, and
  * @check_accesses, @target_valid and @prepare_access_checks after each
  * &damon_attrs.sample_interval.  Finally, @reset_aggregated is called after
  * each &damon_attrs.aggr_interval.
+=======
+ * the monitoring, @update after each &damon_ctx.ops_update_interval, and
+ * @check_accesses, @target_valid and @prepare_access_checks after each
+ * &damon_ctx.sample_interval.  Finally, @reset_aggregated is called after each
+ * &damon_ctx.aggr_interval.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Each &struct damon_operations instance having valid @id can be registered
  * via damon_register_ops() and selected by damon_select_ops() later.
@@ -408,7 +437,10 @@ struct damon_operations {
  * @after_wmarks_check:	Called after each schemes' watermarks check.
  * @after_sampling:	Called after each sampling.
  * @after_aggregation:	Called after each aggregation.
+<<<<<<< HEAD
  * @before_damos_apply:	Called before applying DAMOS action.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @before_terminate:	Called before terminating the monitoring.
  * @private:		User private data.
  *
@@ -437,10 +469,13 @@ struct damon_callback {
 	int (*after_wmarks_check)(struct damon_ctx *context);
 	int (*after_sampling)(struct damon_ctx *context);
 	int (*after_aggregation)(struct damon_ctx *context);
+<<<<<<< HEAD
 	int (*before_damos_apply)(struct damon_ctx *context,
 			struct damon_target *target,
 			struct damon_region *region,
 			struct damos *scheme);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void (*before_terminate)(struct damon_ctx *context);
 };
 
@@ -540,12 +575,15 @@ static inline struct damon_region *damon_first_region(struct damon_target *t)
 	return list_first_entry(&t->regions_list, struct damon_region, list);
 }
 
+<<<<<<< HEAD
 static inline unsigned long damon_sz_region(struct damon_region *r)
 {
 	return r->ar.end - r->ar.start;
 }
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define damon_for_each_region(r, t) \
 	list_for_each_entry(r, &t->regions_list, list)
 
@@ -567,12 +605,15 @@ static inline unsigned long damon_sz_region(struct damon_region *r)
 #define damon_for_each_scheme_safe(s, next, ctx) \
 	list_for_each_entry_safe(s, next, &(ctx)->schemes, list)
 
+<<<<<<< HEAD
 #define damos_for_each_filter(f, scheme) \
 	list_for_each_entry(f, &(scheme)->filters, list)
 
 #define damos_for_each_filter_safe(f, next, scheme) \
 	list_for_each_entry_safe(f, next, &(scheme)->filters, list)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_DAMON
 
 struct damon_region *damon_new_region(unsigned long start, unsigned long end);
@@ -593,11 +634,14 @@ void damon_destroy_region(struct damon_region *r, struct damon_target *t);
 int damon_set_regions(struct damon_target *t, struct damon_addr_range *ranges,
 		unsigned int nr_ranges);
 
+<<<<<<< HEAD
 struct damos_filter *damos_new_filter(enum damos_filter_type type,
 		bool matching);
 void damos_add_filter(struct damos *s, struct damos_filter *f);
 void damos_destroy_filter(struct damos_filter *f);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct damos *damon_new_scheme(struct damos_access_pattern *pattern,
 			enum damos_action action, struct damos_quota *quota,
 			struct damos_watermarks *wmarks);

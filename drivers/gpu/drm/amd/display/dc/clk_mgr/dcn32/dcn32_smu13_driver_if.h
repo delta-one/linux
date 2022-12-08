@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: MIT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 // This is a stripped-down version of the smu13_driver_if.h file for the relevant DAL interfaces.
 
 #define SMU13_DRIVER_IF_VERSION  0x18

@@ -36,11 +36,19 @@
 };
 
 &ethsc {
+<<<<<<< HEAD
 	interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
 };
 
 &serialsc {
 	interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
+=======
+	interrupts = <1 8>;
+};
+
+&serialsc {
+	interrupts = <1 8>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &serial0 {
@@ -56,7 +64,11 @@
 };
 
 &gpio {
+<<<<<<< HEAD
 	xirq1-hog {
+=======
+	xirq1 {
+>>>>>>> b7ba80a49124 (Commit)
 		gpio-hog;
 		gpios = <UNIPHIER_GPIO_IRQ(1) 0>;
 		input;

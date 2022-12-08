@@ -70,6 +70,10 @@ static struct regmap_irq_chip bd718xx_irq_chip = {
 	.mask_base = BD718XX_REG_MIRQ,
 	.ack_base = BD718XX_REG_IRQ,
 	.init_ack_masked = true,
+<<<<<<< HEAD
+=======
+	.mask_invert = false,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct regmap_range pmic_status_range = {
@@ -126,7 +130,12 @@ static int bd718xx_init_press_duration(struct regmap *regmap,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int bd718xx_i2c_probe(struct i2c_client *i2c)
+=======
+static int bd718xx_i2c_probe(struct i2c_client *i2c,
+			    const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct regmap *regmap;
 	struct regmap_irq_chip_data *irq_data;
@@ -156,15 +165,29 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c)
 	}
 
 	regmap = devm_regmap_init_i2c(i2c, &bd718xx_regmap_config);
+<<<<<<< HEAD
 	if (IS_ERR(regmap))
 		return dev_err_probe(&i2c->dev, PTR_ERR(regmap),
 				     "regmap initialization failed\n");
+=======
+	if (IS_ERR(regmap)) {
+		dev_err(&i2c->dev, "regmap initialization failed\n");
+		return PTR_ERR(regmap);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = devm_regmap_add_irq_chip(&i2c->dev, regmap, i2c->irq,
 				       IRQF_ONESHOT, 0, &bd718xx_irq_chip,
 				       &irq_data);
+<<<<<<< HEAD
 	if (ret)
 		return dev_err_probe(&i2c->dev, ret, "Failed to add irq_chip\n");
+=======
+	if (ret) {
+		dev_err(&i2c->dev, "Failed to add irq_chip\n");
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = bd718xx_init_press_duration(regmap, &i2c->dev);
 	if (ret)
@@ -172,8 +195,15 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c)
 
 	ret = regmap_irq_get_virq(irq_data, BD718XX_INT_PWRBTN_S);
 
+<<<<<<< HEAD
 	if (ret < 0)
 		return dev_err_probe(&i2c->dev, ret, "Failed to get the IRQ\n");
+=======
+	if (ret < 0) {
+		dev_err(&i2c->dev, "Failed to get the IRQ\n");
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	button.irq = ret;
 
@@ -181,7 +211,11 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c)
 				   mfd, cells, NULL, 0,
 				   regmap_irq_get_domain(irq_data));
 	if (ret)
+<<<<<<< HEAD
 		dev_err_probe(&i2c->dev, ret, "Failed to create subdevices\n");
+=======
+		dev_err(&i2c->dev, "Failed to create subdevices\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -208,7 +242,11 @@ static struct i2c_driver bd718xx_i2c_driver = {
 		.name = "rohm-bd718x7",
 		.of_match_table = bd718xx_of_match,
 	},
+<<<<<<< HEAD
 	.probe_new = bd718xx_i2c_probe,
+=======
+	.probe = bd718xx_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init bd718xx_i2c_init(void)

@@ -339,7 +339,10 @@
 #define GCC_PCIE_1_MSTR_AXI_CLK				330
 #define GCC_PCIE_1_PIPE_CLK				331
 #define GCC_PCIE_1_SLV_AXI_CLK				332
+<<<<<<< HEAD
 #define GCC_MMSS_GPLL0_CLK_SRC				333
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* gdscs */
 #define USB_HS_HSIC_GDSC				0

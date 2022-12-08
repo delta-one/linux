@@ -26,7 +26,10 @@
 #include <asm/pti.h>
 #include <asm/text-patching.h>
 #include <asm/memtype.h>
+<<<<<<< HEAD
 #include <asm/paravirt.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * We need to define the tracepoints somewhere, and tlb.c
@@ -802,12 +805,18 @@ void __init poking_init(void)
 	spinlock_t *ptl;
 	pte_t *ptep;
 
+<<<<<<< HEAD
 	poking_mm = mm_alloc();
 	BUG_ON(!poking_mm);
 
 	/* Xen PV guests need the PGD to be pinned. */
 	paravirt_enter_mmap(poking_mm);
 
+=======
+	poking_mm = copy_init_mm();
+	BUG_ON(!poking_mm);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Randomize the poking address, but make sure that the following page
 	 * will be mapped at the same PMD. We need 2 pages, so find space for 3,

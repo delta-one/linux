@@ -28,7 +28,11 @@ struct bigelement {
 SEC("raw_tracepoint/sys_enter")
 int bpf_hash_large_key_test(void *ctx)
 {
+<<<<<<< HEAD
 	int zero = 0, value = 42;
+=======
+	int zero = 0, err = 1, value = 42;
+>>>>>>> b7ba80a49124 (Commit)
 	struct bigelement *key;
 
 	key = bpf_map_lookup_elem(&key_map, &zero);

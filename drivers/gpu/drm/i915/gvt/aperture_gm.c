@@ -240,13 +240,21 @@ static void free_resource(struct intel_vgpu *vgpu)
 }
 
 static int alloc_resource(struct intel_vgpu *vgpu,
+<<<<<<< HEAD
 		const struct intel_vgpu_config *conf)
+=======
+		struct intel_vgpu_creation_params *param)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct intel_gvt *gvt = vgpu->gvt;
 	unsigned long request, avail, max, taken;
 	const char *item;
 
+<<<<<<< HEAD
 	if (!conf->low_mm || !conf->high_mm || !conf->fence) {
+=======
+	if (!param->low_gm_sz || !param->high_gm_sz || !param->fence_sz) {
+>>>>>>> b7ba80a49124 (Commit)
 		gvt_vgpu_err("Invalid vGPU creation params\n");
 		return -EINVAL;
 	}
@@ -255,7 +263,11 @@ static int alloc_resource(struct intel_vgpu *vgpu,
 	max = gvt_aperture_sz(gvt) - HOST_LOW_GM_SIZE;
 	taken = gvt->gm.vgpu_allocated_low_gm_size;
 	avail = max - taken;
+<<<<<<< HEAD
 	request = conf->low_mm;
+=======
+	request = MB_TO_BYTES(param->low_gm_sz);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (request > avail)
 		goto no_enough_resource;
@@ -266,7 +278,11 @@ static int alloc_resource(struct intel_vgpu *vgpu,
 	max = gvt_hidden_sz(gvt) - HOST_HIGH_GM_SIZE;
 	taken = gvt->gm.vgpu_allocated_high_gm_size;
 	avail = max - taken;
+<<<<<<< HEAD
 	request = conf->high_mm;
+=======
+	request = MB_TO_BYTES(param->high_gm_sz);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (request > avail)
 		goto no_enough_resource;
@@ -277,16 +293,26 @@ static int alloc_resource(struct intel_vgpu *vgpu,
 	max = gvt_fence_sz(gvt) - HOST_FENCE;
 	taken = gvt->fence.vgpu_allocated_fence_num;
 	avail = max - taken;
+<<<<<<< HEAD
 	request = conf->fence;
+=======
+	request = param->fence_sz;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (request > avail)
 		goto no_enough_resource;
 
 	vgpu_fence_sz(vgpu) = request;
 
+<<<<<<< HEAD
 	gvt->gm.vgpu_allocated_low_gm_size += conf->low_mm;
 	gvt->gm.vgpu_allocated_high_gm_size += conf->high_mm;
 	gvt->fence.vgpu_allocated_fence_num += conf->fence;
+=======
+	gvt->gm.vgpu_allocated_low_gm_size += MB_TO_BYTES(param->low_gm_sz);
+	gvt->gm.vgpu_allocated_high_gm_size += MB_TO_BYTES(param->high_gm_sz);
+	gvt->fence.vgpu_allocated_fence_num += param->fence_sz;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 no_enough_resource:
@@ -340,11 +366,19 @@ void intel_vgpu_reset_resource(struct intel_vgpu *vgpu)
  *
  */
 int intel_vgpu_alloc_resource(struct intel_vgpu *vgpu,
+<<<<<<< HEAD
 		const struct intel_vgpu_config *conf)
 {
 	int ret;
 
 	ret = alloc_resource(vgpu, conf);
+=======
+		struct intel_vgpu_creation_params *param)
+{
+	int ret;
+
+	ret = alloc_resource(vgpu, param);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 

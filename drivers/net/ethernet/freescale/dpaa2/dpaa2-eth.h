@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
 /* Copyright 2014-2016 Freescale Semiconductor Inc.
+<<<<<<< HEAD
  * Copyright 2016-2022 NXP
+=======
+ * Copyright 2016-2020 NXP
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #ifndef __DPAA2_ETH_H
@@ -53,12 +57,15 @@
  */
 #define DPAA2_ETH_TXCONF_PER_NAPI	256
 
+<<<<<<< HEAD
 /* Maximum number of Tx frames to be processed in a single NAPI
  * call when AF_XDP is running. Bind it to DPAA2_ETH_TXCONF_PER_NAPI
  * to maximize the throughput.
  */
 #define DPAA2_ETH_TX_ZC_PER_NAPI	DPAA2_ETH_TXCONF_PER_NAPI
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Buffer qouta per channel. We want to keep in check number of ingress frames
  * in flight: for small sized frames, congestion group taildrop may kick in
  * first; for large sizes, Rx FQ taildrop threshold will ensure only a
@@ -115,6 +122,7 @@
 #define DPAA2_ETH_RX_BUF_ALIGN_REV1	256
 #define DPAA2_ETH_RX_BUF_ALIGN		64
 
+<<<<<<< HEAD
 /* The firmware allows assigning multiple buffer pools to a single DPNI -
  * maximum 8 DPBP objects. By default, only the first DPBP (idx 0) is used for
  * all queues. Thus, when enabling AF_XDP we must accommodate up to 9 DPBPs
@@ -123,6 +131,8 @@
 #define DPAA2_ETH_DEFAULT_BP_IDX	0
 #define DPAA2_ETH_MAX_BPS		9
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* We are accommodating a skb backpointer and some S/G info
  * in the frame's software annotation. The hardware
  * options are either 0 or 64, so we choose the latter.
@@ -136,7 +146,10 @@ enum dpaa2_eth_swa_type {
 	DPAA2_ETH_SWA_SINGLE,
 	DPAA2_ETH_SWA_SG,
 	DPAA2_ETH_SWA_XDP,
+<<<<<<< HEAD
 	DPAA2_ETH_SWA_XSK,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	DPAA2_ETH_SWA_SW_TSO,
 };
 
@@ -159,10 +172,13 @@ struct dpaa2_eth_swa {
 			struct xdp_frame *xdpf;
 		} xdp;
 		struct {
+<<<<<<< HEAD
 			struct xdp_buff *xdp_buff;
 			int sgt_size;
 		} xsk;
 		struct {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			struct sk_buff *skb;
 			int num_sg;
 			int sgt_size;
@@ -440,19 +456,25 @@ enum dpaa2_eth_fq_type {
 };
 
 struct dpaa2_eth_priv;
+<<<<<<< HEAD
 struct dpaa2_eth_channel;
 struct dpaa2_eth_fq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct dpaa2_eth_xdp_fds {
 	struct dpaa2_fd fds[DEV_MAP_BULK_SIZE];
 	ssize_t num;
 };
 
+<<<<<<< HEAD
 typedef void dpaa2_eth_consume_cb_t(struct dpaa2_eth_priv *priv,
 				    struct dpaa2_eth_channel *ch,
 				    const struct dpaa2_fd *fd,
 				    struct dpaa2_eth_fq *fq);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct dpaa2_eth_fq {
 	u32 fqid;
 	u32 tx_qdbin;
@@ -465,7 +487,14 @@ struct dpaa2_eth_fq {
 	struct dpaa2_eth_channel *channel;
 	enum dpaa2_eth_fq_type type;
 
+<<<<<<< HEAD
 	dpaa2_eth_consume_cb_t *consume;
+=======
+	void (*consume)(struct dpaa2_eth_priv *priv,
+			struct dpaa2_eth_channel *ch,
+			const struct dpaa2_fd *fd,
+			struct dpaa2_eth_fq *fq);
+>>>>>>> b7ba80a49124 (Commit)
 	struct dpaa2_eth_fq_stats stats;
 
 	struct dpaa2_eth_xdp_fds xdp_redirect_fds;
@@ -477,11 +506,14 @@ struct dpaa2_eth_ch_xdp {
 	unsigned int res;
 };
 
+<<<<<<< HEAD
 struct dpaa2_eth_bp {
 	struct fsl_mc_device *dev;
 	int bpid;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct dpaa2_eth_channel {
 	struct dpaa2_io_notification_ctx nctx;
 	struct fsl_mc_device *dpcon;
@@ -500,11 +532,14 @@ struct dpaa2_eth_channel {
 	/* Buffers to be recycled back in the buffer pool */
 	u64 recycled_bufs[DPAA2_ETH_BUFS_PER_CMD];
 	int recycled_bufs_cnt;
+<<<<<<< HEAD
 
 	bool xsk_zc;
 	int xsk_tx_pkts_sent;
 	struct xsk_buff_pool *xsk_pool;
 	struct dpaa2_eth_bp *bp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct dpaa2_eth_dist_fields {
@@ -539,7 +574,11 @@ struct dpaa2_eth_trap_data {
 
 #define DPAA2_ETH_DEFAULT_COPYBREAK	512
 
+<<<<<<< HEAD
 #define DPAA2_ETH_ENQUEUE_MAX_FDS	256
+=======
+#define DPAA2_ETH_ENQUEUE_MAX_FDS	200
+>>>>>>> b7ba80a49124 (Commit)
 struct dpaa2_eth_fds {
 	struct dpaa2_fd array[DPAA2_ETH_ENQUEUE_MAX_FDS];
 };
@@ -568,16 +607,25 @@ struct dpaa2_eth_priv {
 	u8 ptp_correction_off;
 	void (*dpaa2_set_onestep_params_cb)(struct dpaa2_eth_priv *priv,
 					    u32 offset, u8 udp);
+<<<<<<< HEAD
 	u16 rx_buf_size;
+=======
+	struct fsl_mc_device *dpbp_dev;
+	u16 rx_buf_size;
+	u16 bpid;
+>>>>>>> b7ba80a49124 (Commit)
 	struct iommu_domain *iommu_domain;
 
 	enum hwtstamp_tx_types tx_tstamp_type;	/* Tx timestamping type */
 	bool rx_tstamp;				/* Rx timestamping enabled */
 
+<<<<<<< HEAD
 	/* Buffer pool management */
 	struct dpaa2_eth_bp *bp[DPAA2_ETH_MAX_BPS];
 	int num_bps;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 tx_qdid;
 	struct fsl_mc_io *mc_io;
 	/* Cores which have an affine DPIO/DPCON.
@@ -615,8 +663,11 @@ struct dpaa2_eth_priv {
 #endif
 
 	struct dpaa2_mac *mac;
+<<<<<<< HEAD
 	/* Serializes changes to priv->mac */
 	struct mutex		mac_lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct workqueue_struct	*dpaa2_ptp_wq;
 	struct work_struct	tx_onestep_tstamp;
 	struct sk_buff_head	tx_skbs;
@@ -770,15 +821,27 @@ static inline unsigned int dpaa2_eth_rx_head_room(struct dpaa2_eth_priv *priv)
 
 static inline bool dpaa2_eth_is_type_phy(struct dpaa2_eth_priv *priv)
 {
+<<<<<<< HEAD
 	lockdep_assert_held(&priv->mac_lock);
 
 	return dpaa2_mac_is_type_phy(priv->mac);
+=======
+	if (priv->mac &&
+	    (priv->mac->attr.link_type == DPMAC_LINK_TYPE_PHY ||
+	     priv->mac->attr.link_type == DPMAC_LINK_TYPE_BACKPLANE))
+		return true;
+
+	return false;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool dpaa2_eth_has_mac(struct dpaa2_eth_priv *priv)
 {
+<<<<<<< HEAD
 	lockdep_assert_held(&priv->mac_lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return priv->mac ? true : false;
 }
 
@@ -807,6 +870,7 @@ void dpaa2_eth_dl_traps_unregister(struct dpaa2_eth_priv *priv);
 
 struct dpaa2_eth_trap_item *dpaa2_eth_dl_get_trap(struct dpaa2_eth_priv *priv,
 						  struct dpaa2_fapr *fapr);
+<<<<<<< HEAD
 
 struct dpaa2_eth_bp *dpaa2_eth_allocate_dpbp(struct dpaa2_eth_priv *priv);
 void dpaa2_eth_free_dpbp(struct dpaa2_eth_priv *priv, struct dpaa2_eth_bp *bp);
@@ -857,4 +921,6 @@ void *dpaa2_eth_sgt_get(struct dpaa2_eth_priv *priv);
 
 void dpaa2_eth_sgt_recycle(struct dpaa2_eth_priv *priv, void *sgt_buf);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif	/* __DPAA2_H */

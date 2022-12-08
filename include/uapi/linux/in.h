@@ -20,7 +20,10 @@
 #define _UAPI_LINUX_IN_H
 
 #include <linux/types.h>
+<<<<<<< HEAD
 #include <linux/stddef.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/libc-compat.h>
 #include <linux/socket.h>
 
@@ -162,7 +165,10 @@ struct in_addr {
 #define MCAST_MSFILTER			48
 #define IP_MULTICAST_ALL		49
 #define IP_UNICAST_IF			50
+<<<<<<< HEAD
 #define IP_LOCAL_PORT_RANGE		51
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MCAST_EXCLUDE	0
 #define MCAST_INCLUDE	1

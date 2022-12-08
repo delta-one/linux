@@ -2149,8 +2149,15 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
 	}
 
 	edac->sb_irq = platform_get_irq(pdev, 0);
+<<<<<<< HEAD
 	if (edac->sb_irq < 0)
 		return edac->sb_irq;
+=======
+	if (edac->sb_irq < 0) {
+		dev_err(&pdev->dev, "No SBERR IRQ resource\n");
+		return edac->sb_irq;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	irq_set_chained_handler_and_data(edac->sb_irq,
 					 altr_edac_a10_irq_handler,
@@ -2182,9 +2189,16 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
 	}
 #else
 	edac->db_irq = platform_get_irq(pdev, 1);
+<<<<<<< HEAD
 	if (edac->db_irq < 0)
 		return edac->db_irq;
 
+=======
+	if (edac->db_irq < 0) {
+		dev_err(&pdev->dev, "No DBERR IRQ resource\n");
+		return edac->db_irq;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	irq_set_chained_handler_and_data(edac->db_irq,
 					 altr_edac_a10_irq_handler, edac);
 #endif
@@ -2223,5 +2237,9 @@ static struct platform_driver altr_edac_a10_driver = {
 };
 module_platform_driver(altr_edac_a10_driver);
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("Thor Thayer");
 MODULE_DESCRIPTION("EDAC Driver for Altera Memories");

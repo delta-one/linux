@@ -8,7 +8,10 @@
 extern void hpet_time_init(void);
 extern void time_init(void);
 extern bool pit_timer_init(void);
+<<<<<<< HEAD
 extern bool tsc_clocksource_watchdog_disabled(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 extern struct clock_event_device *global_clock_event;
 

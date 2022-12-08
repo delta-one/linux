@@ -33,11 +33,14 @@
 #define ST_LSM6DSOP_DEV_NAME	"lsm6dsop"
 #define ST_ASM330LHHX_DEV_NAME	"asm330lhhx"
 #define ST_LSM6DSTX_DEV_NAME	"lsm6dstx"
+<<<<<<< HEAD
 #define ST_LSM6DSV_DEV_NAME	"lsm6dsv"
 #define ST_LSM6DSV16X_DEV_NAME	"lsm6dsv16x"
 #define ST_LSM6DSO16IS_DEV_NAME	"lsm6dso16is"
 #define ST_ISM330IS_DEV_NAME	"ism330is"
 #define ST_ASM330LHB_DEV_NAME	"asm330lhb"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum st_lsm6dsx_hw_id {
 	ST_LSM6DS3_ID,
@@ -58,11 +61,14 @@ enum st_lsm6dsx_hw_id {
 	ST_LSM6DSOP_ID,
 	ST_ASM330LHHX_ID,
 	ST_LSM6DSTX_ID,
+<<<<<<< HEAD
 	ST_LSM6DSV_ID,
 	ST_LSM6DSV16X_ID,
 	ST_LSM6DSO16IS_ID,
 	ST_ISM330IS_ID,
 	ST_ASM330LHB_ID,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ST_LSM6DSX_MAX_ID,
 };
 
@@ -95,7 +101,11 @@ enum st_lsm6dsx_hw_id {
 		.endianness = IIO_LE,					\
 	},								\
 	.event_spec = &st_lsm6dsx_event,				\
+<<<<<<< HEAD
 	.ext_info = st_lsm6dsx_ext_info,				\
+=======
+	.ext_info = st_lsm6dsx_accel_ext_info,				\
+>>>>>>> b7ba80a49124 (Commit)
 	.num_event_specs = 1,						\
 }
 
@@ -115,7 +125,10 @@ enum st_lsm6dsx_hw_id {
 		.storagebits = 16,					\
 		.endianness = IIO_LE,					\
 	},								\
+<<<<<<< HEAD
 	.ext_info = st_lsm6dsx_ext_info,				\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct st_lsm6dsx_reg {
@@ -139,6 +152,7 @@ struct st_lsm6dsx_odr_table_entry {
 	int odr_len;
 };
 
+<<<<<<< HEAD
 struct st_lsm6dsx_samples_to_discard {
 	struct {
 		u32 milli_hz;
@@ -146,6 +160,8 @@ struct st_lsm6dsx_samples_to_discard {
 	} val[ST_LSM6DSX_ODR_LIST_SIZE];
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct st_lsm6dsx_fs {
 	u32 gain;
 	u8 val;
@@ -300,7 +316,10 @@ struct st_lsm6dsx_ext_dev_settings {
  * @irq_config: interrupts related registers.
  * @drdy_mask: register info for data-ready mask (addr + mask).
  * @odr_table: Hw sensors odr table (Hz + val).
+<<<<<<< HEAD
  * @samples_to_discard: Number of samples to discard for filters settling time.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @fs_table: Hw sensors gain table (gain + val).
  * @decimator: List of decimator register info (addr + mask).
  * @batch: List of FIFO batching register info (addr + mask).
@@ -333,7 +352,10 @@ struct st_lsm6dsx_settings {
 	} irq_config;
 	struct st_lsm6dsx_reg drdy_mask;
 	struct st_lsm6dsx_odr_table_entry odr_table[2];
+<<<<<<< HEAD
 	struct st_lsm6dsx_samples_to_discard samples_to_discard[2];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct st_lsm6dsx_fs_table_entry fs_table[2];
 	struct st_lsm6dsx_reg decimator[ST_LSM6DSX_MAX_ID];
 	struct st_lsm6dsx_reg batch[ST_LSM6DSX_MAX_ID];
@@ -364,7 +386,10 @@ enum st_lsm6dsx_fifo_mode {
  * @hw: Pointer to instance of struct st_lsm6dsx_hw.
  * @gain: Configured sensor sensitivity.
  * @odr: Output data rate of the sensor [Hz].
+<<<<<<< HEAD
  * @samples_to_discard: Number of samples to discard for filters settling time.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @watermark: Sensor watermark level.
  * @decimator: Sensor decimation factor.
  * @sip: Number of samples in a given pattern.
@@ -379,7 +404,10 @@ struct st_lsm6dsx_sensor {
 	u32 gain;
 	u32 odr;
 
+<<<<<<< HEAD
 	u16 samples_to_discard;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 watermark;
 	u8 decimator;
 	u8 sip;
@@ -396,6 +424,10 @@ struct st_lsm6dsx_sensor {
  * struct st_lsm6dsx_hw - ST IMU MEMS hw instance
  * @dev: Pointer to instance of struct device (I2C or SPI).
  * @regmap: Register map of the device.
+<<<<<<< HEAD
+=======
+ * @regulators: VDD/VDDIO voltage regulators.
+>>>>>>> b7ba80a49124 (Commit)
  * @irq: Device interrupt line (I2C or SPI).
  * @fifo_lock: Mutex to prevent concurrent access to the hw FIFO.
  * @conf_lock: Mutex to prevent concurrent FIFO configuration update.
@@ -418,6 +450,10 @@ struct st_lsm6dsx_sensor {
 struct st_lsm6dsx_hw {
 	struct device *dev;
 	struct regmap *regmap;
+<<<<<<< HEAD
+=======
+	struct regulator_bulk_data regulators[2];
+>>>>>>> b7ba80a49124 (Commit)
 	int irq;
 
 	struct mutex fifo_lock;
@@ -446,7 +482,11 @@ struct st_lsm6dsx_hw {
 	struct {
 		__le16 channels[3];
 		s64 ts __aligned(8);
+<<<<<<< HEAD
 	} scan[ST_LSM6DSX_ID_MAX];
+=======
+	} scan[3];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static __maybe_unused const struct iio_event_spec st_lsm6dsx_event = {
@@ -478,7 +518,10 @@ int st_lsm6dsx_read_tagged_fifo(struct st_lsm6dsx_hw *hw);
 int st_lsm6dsx_check_odr(struct st_lsm6dsx_sensor *sensor, u32 odr, u8 *val);
 int st_lsm6dsx_shub_probe(struct st_lsm6dsx_hw *hw, const char *name);
 int st_lsm6dsx_shub_set_enable(struct st_lsm6dsx_sensor *sensor, bool enable);
+<<<<<<< HEAD
 int st_lsm6dsx_shub_read_output(struct st_lsm6dsx_hw *hw, u8 *data, int len);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int st_lsm6dsx_set_page(struct st_lsm6dsx_hw *hw, bool enable);
 
 static inline int
@@ -530,6 +573,7 @@ st_lsm6dsx_get_mount_matrix(const struct iio_dev *iio_dev,
 	return &hw->orientation;
 }
 
+<<<<<<< HEAD
 static inline int
 st_lsm6dsx_device_set_enable(struct st_lsm6dsx_sensor *sensor, bool enable)
 {
@@ -543,6 +587,10 @@ st_lsm6dsx_device_set_enable(struct st_lsm6dsx_sensor *sensor, bool enable)
 
 static const
 struct iio_chan_spec_ext_info __maybe_unused st_lsm6dsx_ext_info[] = {
+=======
+static const
+struct iio_chan_spec_ext_info __maybe_unused st_lsm6dsx_accel_ext_info[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	IIO_MOUNT_MATRIX(IIO_SHARED_BY_ALL, st_lsm6dsx_get_mount_matrix),
 	{ }
 };

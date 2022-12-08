@@ -711,7 +711,11 @@ static int qlcnic_validate_ring_count(struct qlcnic_adapter *adapter,
 		}
 	}
 
+<<<<<<< HEAD
 	if (tx_ring != 0) {
+=======
+	 if (tx_ring != 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (tx_ring > adapter->max_tx_rings) {
 			netdev_err(adapter->netdev,
 				   "Invalid ring count, Tx ring count %d should not be greater than max %d driver Tx rings.\n",

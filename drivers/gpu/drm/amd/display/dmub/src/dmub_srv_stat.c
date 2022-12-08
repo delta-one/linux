@@ -92,6 +92,7 @@ enum dmub_status dmub_srv_stat_get_notification(struct dmub_srv *dmub,
 		notify->link_index = cmd.set_config_reply.set_config_reply_control.instance;
 		notify->sc_status = cmd.set_config_reply.set_config_reply_control.status;
 		break;
+<<<<<<< HEAD
 	case DMUB_OUT_CMD__DPIA_NOTIFICATION:
 		notify->type = DMUB_NOTIFICATION_DPIA_NOTIFICATION;
 		notify->link_index = cmd.dpia_notification.payload.header.instance;
@@ -113,6 +114,8 @@ enum dmub_status dmub_srv_stat_get_notification(struct dmub_srv *dmub,
 				notify->result = DPIA_BW_ALLOC_CAPS_CHANGED;
 		}
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		notify->type = DMUB_NOTIFICATION_NO_DATA;
 		break;

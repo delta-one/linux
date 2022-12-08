@@ -2,11 +2,16 @@
 #define __NVKM_FAULT_H__
 #include <core/subdev.h>
 #include <core/event.h>
+<<<<<<< HEAD
+=======
+#include <core/notify.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 struct nvkm_fault {
 	const struct nvkm_fault_func *func;
 	struct nvkm_subdev subdev;
 
+<<<<<<< HEAD
 	struct nvkm_inth info_fault;
 
 	struct nvkm_fault_buffer *buffer[2];
@@ -17,6 +22,14 @@ struct nvkm_fault {
 
 	struct nvkm_event_ntfy nrpfb;
 	struct work_struct nrpfb_work;
+=======
+	struct nvkm_fault_buffer *buffer[2];
+	int buffer_nr;
+
+	struct nvkm_event event;
+
+	struct nvkm_notify nrpfb;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct nvkm_device_oclass user;
 };

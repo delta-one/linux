@@ -10,7 +10,10 @@
 #include <linux/acpi.h>
 #include <asm/msr.h>
 #include <asm/tsc.h>
+<<<<<<< HEAD
 #include "internal.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct lpit_residency_info {
 	struct acpi_generic_address gaddr;
@@ -98,12 +101,15 @@ EXPORT_SYMBOL_GPL(lpit_read_residency_count_address);
 static void lpit_update_residency(struct lpit_residency_info *info,
 				 struct acpi_lpit_native *lpit_native)
 {
+<<<<<<< HEAD
 	struct device *dev_root = bus_get_dev_root(&cpu_subsys);
 
 	/* Silently fail, if cpuidle attribute group is not present */
 	if (!dev_root)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	info->frequency = lpit_native->counter_frequency ?
 				lpit_native->counter_frequency : tsc_khz * 1000;
 	if (!info->frequency)
@@ -114,6 +120,7 @@ static void lpit_update_residency(struct lpit_residency_info *info,
 		info->iomem_addr = ioremap(info->gaddr.address,
 						   info->gaddr.bit_width / 8);
 		if (!info->iomem_addr)
+<<<<<<< HEAD
 			goto exit;
 
 		sysfs_add_file_to_group(&dev_root->kobj,
@@ -126,6 +133,20 @@ static void lpit_update_residency(struct lpit_residency_info *info,
 	}
 exit:
 	put_device(dev_root);
+=======
+			return;
+
+		/* Silently fail, if cpuidle attribute group is not present */
+		sysfs_add_file_to_group(&cpu_subsys.dev_root->kobj,
+					&dev_attr_low_power_idle_system_residency_us.attr,
+					"cpuidle");
+	} else if (info->gaddr.space_id == ACPI_ADR_SPACE_FIXED_HARDWARE) {
+		/* Silently fail, if cpuidle attribute group is not present */
+		sysfs_add_file_to_group(&cpu_subsys.dev_root->kobj,
+					&dev_attr_low_power_idle_cpu_residency_us.attr,
+					"cpuidle");
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void lpit_process(u64 begin, u64 end)

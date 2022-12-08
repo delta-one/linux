@@ -1300,6 +1300,7 @@ static int exynos_ufs_hce_enable_notify(struct ufs_hba *hba,
 
 	switch (status) {
 	case PRE_CHANGE:
+<<<<<<< HEAD
 		/*
 		 * The maximum segment size must be set after scsi_host_alloc()
 		 * has been called and before LUN scanning starts
@@ -1308,6 +1309,8 @@ static int exynos_ufs_hce_enable_notify(struct ufs_hba *hba,
 		 */
 		hba->host->max_segment_size = 4096;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (ufs->drv_data->pre_hce_enable) {
 			ret = ufs->drv_data->pre_hce_enable(ufs);
 			if (ret)
@@ -1681,7 +1684,11 @@ static const struct exynos_ufs_drv_data exynos_ufs_drvs = {
 				  UFSHCD_QUIRK_BROKEN_OCS_FATAL_ERROR |
 				  UFSHCI_QUIRK_SKIP_MANUAL_WB_FLUSH_CTRL |
 				  UFSHCD_QUIRK_SKIP_DEF_UNIPRO_TIMEOUT_SETTING |
+<<<<<<< HEAD
 				  UFSHCD_QUIRK_4KB_DMA_ALIGNMENT,
+=======
+				  UFSHCD_QUIRK_ALIGN_SG_WITH_PAGE_SIZE,
+>>>>>>> b7ba80a49124 (Commit)
 	.opts			= EXYNOS_UFS_OPT_HAS_APB_CLK_CTRL |
 				  EXYNOS_UFS_OPT_BROKEN_AUTO_CLK_CTRL |
 				  EXYNOS_UFS_OPT_BROKEN_RX_SEL_IDX |
@@ -1761,7 +1768,11 @@ static struct platform_driver exynos_ufs_pltform = {
 	.driver	= {
 		.name	= "exynos-ufshc",
 		.pm	= &exynos_ufs_pm_ops,
+<<<<<<< HEAD
 		.of_match_table = exynos_ufs_of_match,
+=======
+		.of_match_table = of_match_ptr(exynos_ufs_of_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 module_platform_driver(exynos_ufs_pltform);

@@ -554,7 +554,11 @@ out_fb:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void sh7760fb_remove(struct platform_device *dev)
+=======
+static int sh7760fb_remove(struct platform_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = platform_get_drvdata(dev);
 	struct sh7760fb_par *par = info->par;
@@ -568,6 +572,11 @@ static void sh7760fb_remove(struct platform_device *dev)
 	iounmap(par->base);
 	release_mem_region(par->ioarea->start, resource_size(par->ioarea));
 	framebuffer_release(info);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver sh7760_lcdc_driver = {
@@ -575,7 +584,11 @@ static struct platform_driver sh7760_lcdc_driver = {
 		   .name = "sh7760-lcdc",
 		   },
 	.probe = sh7760fb_probe,
+<<<<<<< HEAD
 	.remove_new = sh7760fb_remove,
+=======
+	.remove = sh7760fb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(sh7760_lcdc_driver);

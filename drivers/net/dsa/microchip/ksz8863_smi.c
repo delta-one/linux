@@ -152,10 +152,18 @@ static int ksz8863_smi_probe(struct mdio_device *mdiodev)
 						  &regmap_smi[i], dev,
 						  &rc);
 		if (IS_ERR(dev->regmap[i])) {
+<<<<<<< HEAD
 			return dev_err_probe(&mdiodev->dev,
 					     PTR_ERR(dev->regmap[i]),
 					     "Failed to initialize regmap%i\n",
 					     ksz8863_regmap_config[i].val_bits);
+=======
+			ret = PTR_ERR(dev->regmap[i]);
+			dev_err(&mdiodev->dev,
+				"Failed to initialize regmap%i: %d\n",
+				ksz8863_regmap_config[i].val_bits, ret);
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -179,6 +187,11 @@ static void ksz8863_smi_remove(struct mdio_device *mdiodev)
 
 	if (dev)
 		ksz_switch_remove(dev);
+<<<<<<< HEAD
+=======
+
+	dev_set_drvdata(&mdiodev->dev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ksz8863_smi_shutdown(struct mdio_device *mdiodev)

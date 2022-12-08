@@ -126,7 +126,11 @@ int kvm_s390_pci_aen_init(u8 nisc)
 		return -EPERM;
 
 	mutex_lock(&aift->aift_lock);
+<<<<<<< HEAD
 	aift->kzdev = kcalloc(ZPCI_NR_DEVICES, sizeof(struct kvm_zdev *),
+=======
+	aift->kzdev = kcalloc(ZPCI_NR_DEVICES, sizeof(struct kvm_zdev),
+>>>>>>> b7ba80a49124 (Commit)
 			      GFP_KERNEL);
 	if (!aift->kzdev) {
 		rc = -ENOMEM;
@@ -434,7 +438,10 @@ static void kvm_s390_pci_dev_release(struct zpci_dev *zdev)
 static int kvm_s390_pci_register_kvm(void *opaque, struct kvm *kvm)
 {
 	struct zpci_dev *zdev = opaque;
+<<<<<<< HEAD
 	u8 status;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	if (!zdev)
@@ -487,7 +494,11 @@ static int kvm_s390_pci_register_kvm(void *opaque, struct kvm *kvm)
 
 	/* Re-register the IOMMU that was already created */
 	rc = zpci_register_ioat(zdev, 0, zdev->start_dma, zdev->end_dma,
+<<<<<<< HEAD
 				virt_to_phys(zdev->dma_table), &status);
+=======
+				virt_to_phys(zdev->dma_table));
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		goto clear_gisa;
 
@@ -517,7 +528,10 @@ static void kvm_s390_pci_unregister_kvm(void *opaque)
 {
 	struct zpci_dev *zdev = opaque;
 	struct kvm *kvm;
+<<<<<<< HEAD
 	u8 status;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!zdev)
 		return;
@@ -556,7 +570,11 @@ static void kvm_s390_pci_unregister_kvm(void *opaque)
 
 	/* Re-register the IOMMU that was already created */
 	zpci_register_ioat(zdev, 0, zdev->start_dma, zdev->end_dma,
+<<<<<<< HEAD
 			   virt_to_phys(zdev->dma_table), &status);
+=======
+			   virt_to_phys(zdev->dma_table));
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	spin_lock(&kvm->arch.kzdev_list_lock);
@@ -672,7 +690,11 @@ out:
 	return r;
 }
 
+<<<<<<< HEAD
 int __init kvm_s390_pci_init(void)
+=======
+int kvm_s390_pci_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	zpci_kvm_hook.kvm_register = kvm_s390_pci_register_kvm;
 	zpci_kvm_hook.kvm_unregister = kvm_s390_pci_unregister_kvm;

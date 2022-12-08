@@ -38,14 +38,21 @@ The media subsystem
 
 	remote-controller
 
+<<<<<<< HEAD
 	cec
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dvb
 
 	cardlist
 
 	v4l-drivers
 	dvb-drivers
+<<<<<<< HEAD
+=======
+	cec-drivers
+>>>>>>> b7ba80a49124 (Commit)
 
 **Copyright** |copy| 1999-2020 : LinuxTV Developers
 

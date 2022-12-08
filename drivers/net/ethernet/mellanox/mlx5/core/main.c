@@ -37,6 +37,10 @@
 #include <linux/pci.h>
 #include <linux/dma-mapping.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/io-mapping.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/interrupt.h>
 #include <linux/delay.h>
 #include <linux/mlx5/driver.h>
@@ -52,7 +56,10 @@
 #include <linux/version.h>
 #include <net/devlink.h>
 #include "mlx5_core.h"
+<<<<<<< HEAD
 #include "thermal.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "lib/eq.h"
 #include "fs_core.h"
 #include "lib/mpfs.h"
@@ -192,7 +199,11 @@ static int wait_fw_init(struct mlx5_core_dev *dev, u32 max_wait_mili,
 		if (!(fw_initializing >> 31))
 			break;
 		if (time_after(jiffies, end) ||
+<<<<<<< HEAD
 		    test_bit(MLX5_BREAK_FW_WAIT, &dev->intf_state)) {
+=======
+		    test_and_clear_bit(MLX5_BREAK_FW_WAIT, &dev->intf_state)) {
+>>>>>>> b7ba80a49124 (Commit)
 			err = -EBUSY;
 			break;
 		}
@@ -337,6 +348,7 @@ static u16 to_fw_pkey_sz(struct mlx5_core_dev *dev, u32 size)
 	}
 }
 
+<<<<<<< HEAD
 void mlx5_core_uplink_netdev_set(struct mlx5_core_dev *dev, struct net_device *netdev)
 {
 	mutex_lock(&dev->mlx5e_res.uplink_netdev_lock);
@@ -355,6 +367,8 @@ void mlx5_core_uplink_netdev_event_replay(struct mlx5_core_dev *dev)
 }
 EXPORT_SYMBOL(mlx5_core_uplink_netdev_event_replay);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mlx5_core_get_caps_mode(struct mlx5_core_dev *dev,
 				   enum mlx5_cap_type cap_type,
 				   enum mlx5_cap_mode cap_mode)
@@ -503,9 +517,15 @@ static int max_uc_list_get_devlink_param(struct mlx5_core_dev *dev)
 	union devlink_param_value val;
 	int err;
 
+<<<<<<< HEAD
 	err = devl_param_driverinit_value_get(devlink,
 					      DEVLINK_PARAM_GENERIC_ID_MAX_MACS,
 					      &val);
+=======
+	err = devlink_param_driverinit_value_get(devlink,
+						 DEVLINK_PARAM_GENERIC_ID_MAX_MACS,
+						 &val);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!err)
 		return val.vu32;
 	mlx5_core_dbg(dev, "Failed to get param. err = %d\n", err);
@@ -518,9 +538,15 @@ bool mlx5_is_roce_on(struct mlx5_core_dev *dev)
 	union devlink_param_value val;
 	int err;
 
+<<<<<<< HEAD
 	err = devl_param_driverinit_value_get(devlink,
 					      DEVLINK_PARAM_GENERIC_ID_ENABLE_ROCE,
 					      &val);
+=======
+	err = devlink_param_driverinit_value_get(devlink,
+						 DEVLINK_PARAM_GENERIC_ID_ENABLE_ROCE,
+						 &val);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!err)
 		return val.vbool;
@@ -632,7 +658,11 @@ static int handle_hca_cap(struct mlx5_core_dev *dev, void *set_ctx)
 		MLX5_SET(cmd_hca_cap, set_hca_cap, num_total_dynamic_vf_msix,
 			 MLX5_CAP_GEN_MAX(dev, num_total_dynamic_vf_msix));
 
+<<<<<<< HEAD
 	if (MLX5_CAP_GEN(dev, roce_rw_supported) && MLX5_CAP_GEN_MAX(dev, roce))
+=======
+	if (MLX5_CAP_GEN(dev, roce_rw_supported))
+>>>>>>> b7ba80a49124 (Commit)
 		MLX5_SET(cmd_hca_cap, set_hca_cap, roce,
 			 mlx5_is_roce_on(dev));
 
@@ -685,9 +715,12 @@ static int handle_hca_cap_roce(struct mlx5_core_dev *dev, void *set_ctx)
 	       MLX5_ST_SZ_BYTES(roce_cap));
 	MLX5_SET(roce_cap, set_hca_cap, sw_r_roce_src_udp_port, 1);
 
+<<<<<<< HEAD
 	if (MLX5_CAP_ROCE_MAX(dev, qp_ooo_transmit_default))
 		MLX5_SET(roce_cap, set_hca_cap, qp_ooo_transmit_default, 1);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = set_caps(dev, set_ctx, MLX5_SET_HCA_CAP_OP_MOD_ROCE);
 	return err;
 }
@@ -1072,8 +1105,11 @@ err_rl_cleanup:
 err_tables_cleanup:
 	mlx5_geneve_destroy(dev->geneve);
 	mlx5_vxlan_destroy(dev->vxlan);
+<<<<<<< HEAD
 	mlx5_cleanup_clock(dev);
 	mlx5_cleanup_reserved_gids(dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5_cq_debugfs_cleanup(dev);
 	mlx5_fw_reset_cleanup(dev);
 err_events_cleanup:
@@ -1115,7 +1151,11 @@ static void mlx5_cleanup_once(struct mlx5_core_dev *dev)
 	mlx5_devcom_unregister_device(dev->priv.devcom);
 }
 
+<<<<<<< HEAD
 static int mlx5_function_setup(struct mlx5_core_dev *dev, bool boot, u64 timeout)
+=======
+static int mlx5_function_setup(struct mlx5_core_dev *dev, u64 timeout)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 
@@ -1153,12 +1193,19 @@ static int mlx5_function_setup(struct mlx5_core_dev *dev, bool boot, u64 timeout
 
 	mlx5_cmd_set_state(dev, MLX5_CMDIF_STATE_UP);
 
+<<<<<<< HEAD
 	mlx5_start_health_poll(dev);
 
 	err = mlx5_core_enable_hca(dev, 0);
 	if (err) {
 		mlx5_core_err(dev, "enable hca failed\n");
 		goto stop_health_poll;
+=======
+	err = mlx5_core_enable_hca(dev, 0);
+	if (err) {
+		mlx5_core_err(dev, "enable hca failed\n");
+		goto err_cmd_cleanup;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	err = mlx5_core_set_issi(dev);
@@ -1210,7 +1257,12 @@ static int mlx5_function_setup(struct mlx5_core_dev *dev, bool boot, u64 timeout
 		mlx5_core_err(dev, "query hca failed\n");
 		goto reclaim_boot_pages;
 	}
+<<<<<<< HEAD
 	mlx5_start_health_fw_log_up(dev);
+=======
+
+	mlx5_start_health_poll(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -1218,8 +1270,11 @@ reclaim_boot_pages:
 	mlx5_reclaim_startup_pages(dev);
 err_disable_hca:
 	mlx5_core_disable_hca(dev, 0);
+<<<<<<< HEAD
 stop_health_poll:
 	mlx5_stop_health_poll(dev, boot);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_cmd_cleanup:
 	mlx5_cmd_set_state(dev, MLX5_CMDIF_STATE_DOWN);
 	mlx5_cmd_cleanup(dev);
@@ -1231,6 +1286,10 @@ static int mlx5_function_teardown(struct mlx5_core_dev *dev, bool boot)
 {
 	int err;
 
+<<<<<<< HEAD
+=======
+	mlx5_stop_health_poll(dev, boot);
+>>>>>>> b7ba80a49124 (Commit)
 	err = mlx5_cmd_teardown_hca(dev);
 	if (err) {
 		mlx5_core_err(dev, "tear_down_hca failed, skip cleanup\n");
@@ -1238,7 +1297,10 @@ static int mlx5_function_teardown(struct mlx5_core_dev *dev, bool boot)
 	}
 	mlx5_reclaim_startup_pages(dev);
 	mlx5_core_disable_hca(dev, 0);
+<<<<<<< HEAD
 	mlx5_stop_health_poll(dev, boot);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5_cmd_set_state(dev, MLX5_CMDIF_STATE_DOWN);
 	mlx5_cmd_cleanup(dev);
 
@@ -1329,6 +1391,7 @@ static int mlx5_load(struct mlx5_core_dev *dev)
 
 	mlx5_sf_dev_table_create(dev);
 
+<<<<<<< HEAD
 	err = mlx5_devlink_traps_register(priv_to_devlink(dev));
 	if (err)
 		goto err_traps_reg;
@@ -1338,6 +1401,10 @@ static int mlx5_load(struct mlx5_core_dev *dev)
 err_traps_reg:
 	mlx5_sf_dev_table_destroy(dev);
 	mlx5_sriov_detach(dev);
+=======
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 err_sriov:
 	mlx5_lag_remove_mdev(dev);
 	mlx5_ec_cleanup(dev);
@@ -1366,10 +1433,16 @@ err_irq_table:
 
 static void mlx5_unload(struct mlx5_core_dev *dev)
 {
+<<<<<<< HEAD
 	mlx5_devlink_traps_unregister(priv_to_devlink(dev));
 	mlx5_sf_dev_table_destroy(dev);
 	mlx5_eswitch_disable(dev->priv.eswitch);
 	mlx5_sriov_detach(dev);
+=======
+	mlx5_sf_dev_table_destroy(dev);
+	mlx5_sriov_detach(dev);
+	mlx5_eswitch_disable(dev->priv.eswitch);
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5_lag_remove_mdev(dev);
 	mlx5_ec_cleanup(dev);
 	mlx5_sf_hw_table_destroy(dev);
@@ -1396,7 +1469,11 @@ int mlx5_init_one(struct mlx5_core_dev *dev)
 	mutex_lock(&dev->intf_state_mutex);
 	dev->state = MLX5_DEVICE_STATE_UP;
 
+<<<<<<< HEAD
 	err = mlx5_function_setup(dev, true, mlx5_tout_ms(dev, FW_PRE_INIT_TIMEOUT));
+=======
+	err = mlx5_function_setup(dev, mlx5_tout_ms(dev, FW_PRE_INIT_TIMEOUT));
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto err_function;
 
@@ -1412,9 +1489,15 @@ int mlx5_init_one(struct mlx5_core_dev *dev)
 
 	set_bit(MLX5_INTERFACE_STATE_UP, &dev->intf_state);
 
+<<<<<<< HEAD
 	err = mlx5_devlink_params_register(priv_to_devlink(dev));
 	if (err)
 		goto err_devlink_params_reg;
+=======
+	err = mlx5_devlink_register(priv_to_devlink(dev));
+	if (err)
+		goto err_devlink_reg;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = mlx5_register_device(dev);
 	if (err)
@@ -1425,8 +1508,13 @@ int mlx5_init_one(struct mlx5_core_dev *dev)
 	return 0;
 
 err_register:
+<<<<<<< HEAD
 	mlx5_devlink_params_unregister(priv_to_devlink(dev));
 err_devlink_params_reg:
+=======
+	mlx5_devlink_unregister(priv_to_devlink(dev));
+err_devlink_reg:
+>>>>>>> b7ba80a49124 (Commit)
 	clear_bit(MLX5_INTERFACE_STATE_UP, &dev->intf_state);
 	mlx5_unload(dev);
 err_load:
@@ -1448,7 +1536,11 @@ void mlx5_uninit_one(struct mlx5_core_dev *dev)
 	mutex_lock(&dev->intf_state_mutex);
 
 	mlx5_unregister_device(dev);
+<<<<<<< HEAD
 	mlx5_devlink_params_unregister(priv_to_devlink(dev));
+=======
+	mlx5_devlink_unregister(priv_to_devlink(dev));
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!test_bit(MLX5_INTERFACE_STATE_UP, &dev->intf_state)) {
 		mlx5_core_warn(dev, "%s: interface is down, NOP\n",
@@ -1484,7 +1576,11 @@ int mlx5_load_one_devl_locked(struct mlx5_core_dev *dev, bool recovery)
 		timeout = mlx5_tout_ms(dev, FW_PRE_INIT_ON_RECOVERY_TIMEOUT);
 	else
 		timeout = mlx5_tout_ms(dev, FW_PRE_INIT_TIMEOUT);
+<<<<<<< HEAD
 	err = mlx5_function_setup(dev, false, timeout);
+=======
+	err = mlx5_function_setup(dev, timeout);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto err_function;
 
@@ -1513,23 +1609,39 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 int mlx5_load_one(struct mlx5_core_dev *dev)
+=======
+int mlx5_load_one(struct mlx5_core_dev *dev, bool recovery)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct devlink *devlink = priv_to_devlink(dev);
 	int ret;
 
 	devl_lock(devlink);
+<<<<<<< HEAD
 	ret = mlx5_load_one_devl_locked(dev, false);
+=======
+	ret = mlx5_load_one_devl_locked(dev, recovery);
+>>>>>>> b7ba80a49124 (Commit)
 	devl_unlock(devlink);
 	return ret;
 }
 
+<<<<<<< HEAD
 void mlx5_unload_one_devl_locked(struct mlx5_core_dev *dev, bool suspend)
+=======
+void mlx5_unload_one_devl_locked(struct mlx5_core_dev *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	devl_assert_locked(priv_to_devlink(dev));
 	mutex_lock(&dev->intf_state_mutex);
 
+<<<<<<< HEAD
 	mlx5_detach_device(dev, suspend);
+=======
+	mlx5_detach_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!test_bit(MLX5_INTERFACE_STATE_UP, &dev->intf_state)) {
 		mlx5_core_warn(dev, "%s: interface is down, NOP\n",
@@ -1544,12 +1656,20 @@ out:
 	mutex_unlock(&dev->intf_state_mutex);
 }
 
+<<<<<<< HEAD
 void mlx5_unload_one(struct mlx5_core_dev *dev, bool suspend)
+=======
+void mlx5_unload_one(struct mlx5_core_dev *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct devlink *devlink = priv_to_devlink(dev);
 
 	devl_lock(devlink);
+<<<<<<< HEAD
 	mlx5_unload_one_devl_locked(dev, suspend);
+=======
+	mlx5_unload_one_devl_locked(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	devl_unlock(devlink);
 }
 
@@ -1577,7 +1697,10 @@ static const int types[] = {
 	MLX5_CAP_DEV_SHAMPO,
 	MLX5_CAP_MACSEC,
 	MLX5_CAP_ADV_VIRTUALIZATION,
+<<<<<<< HEAD
 	MLX5_CAP_CRYPTO,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void mlx5_hca_caps_free(struct mlx5_core_dev *dev)
@@ -1612,6 +1735,7 @@ err:
 	return -ENOMEM;
 }
 
+<<<<<<< HEAD
 static int vhca_id_show(struct seq_file *file, void *priv)
 {
 	struct mlx5_core_dev *dev = file->private;
@@ -1622,16 +1746,26 @@ static int vhca_id_show(struct seq_file *file, void *priv)
 
 DEFINE_SHOW_ATTRIBUTE(vhca_id);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int mlx5_mdev_init(struct mlx5_core_dev *dev, int profile_idx)
 {
 	struct mlx5_priv *priv = &dev->priv;
 	int err;
 
 	memcpy(&dev->profile, &profile[profile_idx], sizeof(dev->profile));
+<<<<<<< HEAD
 	lockdep_register_key(&dev->lock_key);
 	mutex_init(&dev->intf_state_mutex);
 	lockdep_set_class(&dev->intf_state_mutex, &dev->lock_key);
 	mutex_init(&dev->mlx5e_res.uplink_netdev_lock);
+=======
+	INIT_LIST_HEAD(&priv->ctx_list);
+	spin_lock_init(&priv->ctx_lock);
+	lockdep_register_key(&dev->lock_key);
+	mutex_init(&dev->intf_state_mutex);
+	lockdep_set_class(&dev->intf_state_mutex, &dev->lock_key);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_init(&priv->bfregs.reg_head.lock);
 	mutex_init(&priv->bfregs.wc_head.lock);
@@ -1645,7 +1779,10 @@ int mlx5_mdev_init(struct mlx5_core_dev *dev, int profile_idx)
 	priv->numa_node = dev_to_node(mlx5_core_dma_dev(dev));
 	priv->dbg.dbg_root = debugfs_create_dir(dev_name(dev->device),
 						mlx5_debugfs_root);
+<<<<<<< HEAD
 	debugfs_create_file("vhca_id", 0400, priv->dbg.dbg_root, dev, &vhca_id_fops);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_LIST_HEAD(&priv->traps);
 
 	err = mlx5_tout_init(dev);
@@ -1720,7 +1857,10 @@ void mlx5_mdev_uninit(struct mlx5_core_dev *dev)
 	mutex_destroy(&priv->alloc_mutex);
 	mutex_destroy(&priv->bfregs.wc_head.lock);
 	mutex_destroy(&priv->bfregs.reg_head.lock);
+<<<<<<< HEAD
 	mutex_destroy(&dev->mlx5e_res.uplink_netdev_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_destroy(&dev->intf_state_mutex);
 	lockdep_unregister_key(&dev->lock_key);
 }
@@ -1772,10 +1912,13 @@ static int probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
 	if (err)
 		dev_err(&pdev->dev, "mlx5_crdump_enable failed with error code %d\n", err);
 
+<<<<<<< HEAD
 	err = mlx5_thermal_init(dev);
 	if (err)
 		dev_err(&pdev->dev, "mlx5_thermal_init failed with error code %d\n", err);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pci_save_state(pdev);
 	devlink_register(devlink);
 	return 0;
@@ -1797,14 +1940,23 @@ static void remove_one(struct pci_dev *pdev)
 	struct mlx5_core_dev *dev  = pci_get_drvdata(pdev);
 	struct devlink *devlink = priv_to_devlink(dev);
 
+<<<<<<< HEAD
 	set_bit(MLX5_BREAK_FW_WAIT, &dev->intf_state);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* mlx5_drain_fw_reset() is using devlink APIs. Hence, we must drain
 	 * fw_reset before unregistering the devlink.
 	 */
 	mlx5_drain_fw_reset(dev);
+<<<<<<< HEAD
 	devlink_unregister(devlink);
 	mlx5_sriov_disable(pdev);
 	mlx5_thermal_uninit(dev);
+=======
+	set_bit(MLX5_BREAK_FW_WAIT, &dev->intf_state);
+	devlink_unregister(devlink);
+	mlx5_sriov_disable(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5_crdump_disable(dev);
 	mlx5_drain_health_wq(dev);
 	mlx5_uninit_one(dev);
@@ -1839,15 +1991,23 @@ static pci_ers_result_t mlx5_pci_err_detected(struct pci_dev *pdev,
 
 	mlx5_enter_error_state(dev, false);
 	mlx5_error_sw_reset(dev);
+<<<<<<< HEAD
 	mlx5_unload_one(dev, true);
+=======
+	mlx5_unload_one(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5_drain_health_wq(dev);
 	mlx5_pci_disable_device(dev);
 
 	res = state == pci_channel_io_perm_failure ?
 		PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_NEED_RESET;
 
+<<<<<<< HEAD
 	mlx5_core_info(dev, "%s Device state = %d pci_status: %d. Exit, result = %d, %s\n",
 		       __func__, dev->state, dev->pci_status, res, result2str(res));
+=======
+	mlx5_pci_trace(dev, "Exit, result = %d, %s\n",  res, result2str(res));
+>>>>>>> b7ba80a49124 (Commit)
 	return res;
 }
 
@@ -1886,8 +2046,12 @@ static pci_ers_result_t mlx5_pci_slot_reset(struct pci_dev *pdev)
 	struct mlx5_core_dev *dev = pci_get_drvdata(pdev);
 	int err;
 
+<<<<<<< HEAD
 	mlx5_core_info(dev, "%s Device state = %d pci_status: %d. Enter\n",
 		       __func__, dev->state, dev->pci_status);
+=======
+	mlx5_pci_trace(dev, "Enter\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = mlx5_pci_enable_device(dev);
 	if (err) {
@@ -1909,8 +2073,12 @@ static pci_ers_result_t mlx5_pci_slot_reset(struct pci_dev *pdev)
 
 	res = PCI_ERS_RESULT_RECOVERED;
 out:
+<<<<<<< HEAD
 	mlx5_core_info(dev, "%s Device state = %d pci_status: %d. Exit, err = %d, result = %d, %s\n",
 		       __func__, dev->state, dev->pci_status, err, res, result2str(res));
+=======
+	mlx5_pci_trace(dev, "Exit, err = %d, result = %d, %s\n", err, res, result2str(res));
+>>>>>>> b7ba80a49124 (Commit)
 	return res;
 }
 
@@ -1921,10 +2089,14 @@ static void mlx5_pci_resume(struct pci_dev *pdev)
 
 	mlx5_pci_trace(dev, "Enter, loading driver..\n");
 
+<<<<<<< HEAD
 	err = mlx5_load_one(dev);
 	if (!err)
 		devlink_health_reporter_state_update(dev->priv.health.fw_fatal_reporter,
 						     DEVLINK_HEALTH_REPORTER_STATE_HEALTHY);
+=======
+	err = mlx5_load_one(dev, false);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mlx5_pci_trace(dev, "Done, err = %d, device %s\n", err,
 		       !err ? "recovered" : "Failed");
@@ -1995,7 +2167,11 @@ static void shutdown(struct pci_dev *pdev)
 	set_bit(MLX5_BREAK_FW_WAIT, &dev->intf_state);
 	err = mlx5_try_fast_unload(dev);
 	if (err)
+<<<<<<< HEAD
 		mlx5_unload_one(dev, false);
+=======
+		mlx5_unload_one(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5_pci_disable_device(dev);
 }
 
@@ -2003,7 +2179,11 @@ static int mlx5_suspend(struct pci_dev *pdev, pm_message_t state)
 {
 	struct mlx5_core_dev *dev = pci_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	mlx5_unload_one(dev, true);
+=======
+	mlx5_unload_one(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -2012,7 +2192,11 @@ static int mlx5_resume(struct pci_dev *pdev)
 {
 	struct mlx5_core_dev *dev = pci_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	return mlx5_load_one(dev);
+=======
+	return mlx5_load_one(dev, false);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct pci_device_id mlx5_core_pci_table[] = {
@@ -2046,7 +2230,11 @@ MODULE_DEVICE_TABLE(pci, mlx5_core_pci_table);
 void mlx5_disable_device(struct mlx5_core_dev *dev)
 {
 	mlx5_error_sw_reset(dev);
+<<<<<<< HEAD
 	mlx5_unload_one_devl_locked(dev, false);
+=======
+	mlx5_unload_one_devl_locked(dev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int mlx5_recover_device(struct mlx5_core_dev *dev)
@@ -2127,7 +2315,11 @@ static void mlx5_core_verify_params(void)
 	}
 }
 
+<<<<<<< HEAD
 static int __init mlx5_init(void)
+=======
+static int __init init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 
@@ -2139,7 +2331,11 @@ static int __init mlx5_init(void)
 	mlx5_core_verify_params();
 	mlx5_register_debugfs();
 
+<<<<<<< HEAD
 	err = mlx5e_init();
+=======
+	err = pci_register_driver(&mlx5_core_driver);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto err_debug;
 
@@ -2147,6 +2343,7 @@ static int __init mlx5_init(void)
 	if (err)
 		goto err_sf;
 
+<<<<<<< HEAD
 	err = pci_register_driver(&mlx5_core_driver);
 	if (err)
 		goto err_pci;
@@ -2157,11 +2354,24 @@ err_pci:
 	mlx5_sf_driver_unregister();
 err_sf:
 	mlx5e_cleanup();
+=======
+	err = mlx5e_init();
+	if (err)
+		goto err_en;
+
+	return 0;
+
+err_en:
+	mlx5_sf_driver_unregister();
+err_sf:
+	pci_unregister_driver(&mlx5_core_driver);
+>>>>>>> b7ba80a49124 (Commit)
 err_debug:
 	mlx5_unregister_debugfs();
 	return err;
 }
 
+<<<<<<< HEAD
 static void __exit mlx5_cleanup(void)
 {
 	pci_unregister_driver(&mlx5_core_driver);
@@ -2172,3 +2382,15 @@ static void __exit mlx5_cleanup(void)
 
 module_init(mlx5_init);
 module_exit(mlx5_cleanup);
+=======
+static void __exit cleanup(void)
+{
+	mlx5e_cleanup();
+	mlx5_sf_driver_unregister();
+	pci_unregister_driver(&mlx5_core_driver);
+	mlx5_unregister_debugfs();
+}
+
+module_init(init);
+module_exit(cleanup);
+>>>>>>> b7ba80a49124 (Commit)

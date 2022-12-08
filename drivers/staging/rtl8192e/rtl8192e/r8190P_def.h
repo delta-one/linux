@@ -103,10 +103,28 @@ enum rf_optype {
 
 struct bb_reg_definition {
 	u32 rfintfs;
+<<<<<<< HEAD
 	u32 rfintfo;
 	u32 rfintfe;
 	u32 rf3wireOffset;
 	u32 rfHSSIPara2;
+=======
+	u32 rfintfi;
+	u32 rfintfo;
+	u32 rfintfe;
+	u32 rf3wireOffset;
+	u32 rfLSSI_Select;
+	u32 rfTxGainStage;
+	u32 rfHSSIPara1;
+	u32 rfHSSIPara2;
+	u32 rfSwitchControl;
+	u32 rfAGCControl1;
+	u32 rfAGCControl2;
+	u32 rfRxIQImbalance;
+	u32 rfRxAFE;
+	u32 rfTxIQImbalance;
+	u32 rfTxAFE;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 rfLSSIReadBack;
 	u32 rfLSSIReadBackPi;
 };
@@ -143,6 +161,24 @@ struct tx_fwinfo_8190pci {
 
 };
 
+<<<<<<< HEAD
+=======
+struct log_int_8190 {
+	u32	nIMR_COMDOK;
+	u32	nIMR_MGNTDOK;
+	u32	nIMR_HIGH;
+	u32	nIMR_VODOK;
+	u32	nIMR_VIDOK;
+	u32	nIMR_BEDOK;
+	u32	nIMR_BKDOK;
+	u32	nIMR_ROK;
+	u32	nIMR_RCOK;
+	u32	nIMR_TBDOK;
+	u32	nIMR_BDOK;
+	u32	nIMR_RXFOVW;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct phy_ofdm_rx_status_rxsc_sgien_exintfflag {
 	u8			reserved:4;
 	u8			rxsc:2;

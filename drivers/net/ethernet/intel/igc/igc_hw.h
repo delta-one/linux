@@ -273,7 +273,10 @@ struct igc_hw_stats {
 	u64 o2bspc;
 	u64 b2ospc;
 	u64 b2ogprc;
+<<<<<<< HEAD
 	u64 txdrop;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct net_device *igc_get_hw_dev(struct igc_hw *hw);

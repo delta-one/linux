@@ -1452,6 +1452,7 @@ void cpsw_ale_dump(struct cpsw_ale *ale, u32 *data)
 	}
 }
 
+<<<<<<< HEAD
 void cpsw_ale_restore(struct cpsw_ale *ale, u32 *data)
 {
 	int i;
@@ -1462,6 +1463,8 @@ void cpsw_ale_restore(struct cpsw_ale *ale, u32 *data)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 u32 cpsw_ale_get_num_entries(struct cpsw_ale *ale)
 {
 	return ale ? ale->params.ale_entries : 0;

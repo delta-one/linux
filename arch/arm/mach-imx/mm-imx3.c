@@ -12,6 +12,10 @@
 #include <linux/err.h>
 #include <linux/io.h>
 #include <linux/of_address.h>
+<<<<<<< HEAD
+=======
+#include <linux/pinctrl/machine.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/system_misc.h>
 #include <asm/hardware/cache-l2x0.h>

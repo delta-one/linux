@@ -1,7 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0 OR MIT */
 /**************************************************************************
  *
+<<<<<<< HEAD
  * Copyright © 2018 - 2022 VMware, Inc., Palo Alto, CA., USA
+=======
+ * Copyright © 2018 VMware, Inc., Palo Alto, CA., USA
+>>>>>>> b7ba80a49124 (Commit)
  * All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -29,11 +33,19 @@
 #define _VMWGFX_VALIDATION_H_
 
 #include <linux/list.h>
+<<<<<<< HEAD
 #include <linux/hashtable.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/ww_mutex.h>
 
 #include <drm/ttm/ttm_execbuf_util.h>
 
+<<<<<<< HEAD
+=======
+#include "vmwgfx_hashtab.h"
+
+>>>>>>> b7ba80a49124 (Commit)
 #define VMW_RES_DIRTY_NONE 0
 #define VMW_RES_DIRTY_SET BIT(0)
 #define VMW_RES_DIRTY_CLEAR BIT(1)
@@ -58,7 +70,11 @@
  * @total_mem: Amount of reserved memory.
  */
 struct vmw_validation_context {
+<<<<<<< HEAD
 	struct vmw_sw_context *sw_context;
+=======
+	struct vmwgfx_open_hash *ht;
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head resource_list;
 	struct list_head resource_ctx_list;
 	struct list_head bo_list;
@@ -73,7 +89,11 @@ struct vmw_validation_context {
 	size_t total_mem;
 };
 
+<<<<<<< HEAD
 struct vmw_bo;
+=======
+struct vmw_buffer_object;
+>>>>>>> b7ba80a49124 (Commit)
 struct vmw_resource;
 struct vmw_fence_obj;
 
@@ -81,16 +101,26 @@ struct vmw_fence_obj;
 /**
  * DECLARE_VAL_CONTEXT - Declare a validation context with initialization
  * @_name: The name of the variable
+<<<<<<< HEAD
  * @_sw_context: Contains the hash table used to find dups or NULL if none
+=======
+ * @_ht: The hash table used to find dups or NULL if none
+>>>>>>> b7ba80a49124 (Commit)
  * @_merge_dups: Whether to merge duplicate buffer object- or resource
  * entries. If set to true, ideally a hash table pointer should be supplied
  * as well unless the number of resources and buffer objects per validation
  * is known to be very small
  */
 #endif
+<<<<<<< HEAD
 #define DECLARE_VAL_CONTEXT(_name, _sw_context, _merge_dups)		\
 	struct vmw_validation_context _name =				\
 	{ .sw_context = _sw_context,					\
+=======
+#define DECLARE_VAL_CONTEXT(_name, _ht, _merge_dups)			\
+	struct vmw_validation_context _name =				\
+	{ .ht = _ht,							\
+>>>>>>> b7ba80a49124 (Commit)
 	  .resource_list = LIST_HEAD_INIT((_name).resource_list),	\
 	  .resource_ctx_list = LIST_HEAD_INIT((_name).resource_ctx_list), \
 	  .bo_list = LIST_HEAD_INIT((_name).bo_list),			\
@@ -114,6 +144,22 @@ vmw_validation_has_bos(struct vmw_validation_context *ctx)
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * vmw_validation_set_ht - Register a hash table for duplicate finding
+ * @ctx: The validation context
+ * @ht: Pointer to a hash table to use for duplicate finding
+ * This function is intended to be used if the hash table wasn't
+ * available at validation context declaration time
+ */
+static inline void vmw_validation_set_ht(struct vmw_validation_context *ctx,
+					 struct vmwgfx_open_hash *ht)
+{
+	ctx->ht = ht;
+}
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * vmw_validation_bo_reserve - Reserve buffer objects registered with a
  * validation context
  * @ctx: The validation context
@@ -159,7 +205,15 @@ static inline unsigned int vmw_validation_align(unsigned int val)
 }
 
 int vmw_validation_add_bo(struct vmw_validation_context *ctx,
+<<<<<<< HEAD
 			  struct vmw_bo *vbo);
+=======
+			  struct vmw_buffer_object *vbo,
+			  bool as_mob, bool cpu_blit);
+int vmw_validation_bo_validate_single(struct ttm_buffer_object *bo,
+				      bool interruptible,
+				      bool validate_as_mob);
+>>>>>>> b7ba80a49124 (Commit)
 int vmw_validation_bo_validate(struct vmw_validation_context *ctx, bool intr);
 void vmw_validation_unref_lists(struct vmw_validation_context *ctx);
 int vmw_validation_add_resource(struct vmw_validation_context *ctx,
@@ -175,7 +229,11 @@ void vmw_validation_res_unreserve(struct vmw_validation_context *ctx,
 				  bool backoff);
 void vmw_validation_res_switch_backup(struct vmw_validation_context *ctx,
 				      void *val_private,
+<<<<<<< HEAD
 				      struct vmw_bo *vbo,
+=======
+				      struct vmw_buffer_object *vbo,
+>>>>>>> b7ba80a49124 (Commit)
 				      unsigned long backup_offset);
 int vmw_validation_res_validate(struct vmw_validation_context *ctx, bool intr);
 

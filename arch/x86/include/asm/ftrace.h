@@ -23,6 +23,10 @@
 #define HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
 
 #ifndef __ASSEMBLY__
+<<<<<<< HEAD
+=======
+extern atomic_t modifying_ftrace_code;
+>>>>>>> b7ba80a49124 (Commit)
 extern void __fentry__(void);
 
 static inline unsigned long ftrace_call_adjust(unsigned long addr)
@@ -34,6 +38,22 @@ static inline unsigned long ftrace_call_adjust(unsigned long addr)
 	return addr;
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * When a ftrace registered caller is tracing a function that is
+ * also set by a register_ftrace_direct() call, it needs to be
+ * differentiated in the ftrace_caller trampoline. To do this, we
+ * place the direct caller in the ORIG_AX part of pt_regs. This
+ * tells the ftrace_caller that there's a direct caller.
+ */
+static inline void arch_ftrace_set_direct_caller(struct pt_regs *regs, unsigned long addr)
+{
+	/* Emulate a call */
+	regs->orig_ax = addr;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
 struct ftrace_regs {
 	struct pt_regs		regs;
@@ -48,6 +68,7 @@ arch_ftrace_get_regs(struct ftrace_regs *fregs)
 	return &fregs->regs;
 }
 
+<<<<<<< HEAD
 #define ftrace_regs_set_instruction_pointer(fregs, _ip)	\
 	do { (fregs)->regs.ip = (_ip); } while (0)
 
@@ -67,6 +88,11 @@ arch_ftrace_get_regs(struct ftrace_regs *fregs)
 #define ftrace_regs_query_register_offset(name) \
 	regs_query_register_offset(name)
 
+=======
+#define ftrace_instruction_pointer_set(fregs, _ip)	\
+	do { (fregs)->regs.ip = (_ip); } while (0)
+
+>>>>>>> b7ba80a49124 (Commit)
 struct ftrace_ops;
 #define ftrace_graph_func ftrace_graph_func
 void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
@@ -75,6 +101,7 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
 #define FTRACE_GRAPH_TRAMP_ADDR FTRACE_GRAPH_ADDR
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
 /*
  * When a ftrace registered caller is tracing a function that is
@@ -93,6 +120,8 @@ __arch_ftrace_set_direct_caller(struct pt_regs *regs, unsigned long addr)
 	__arch_ftrace_set_direct_caller(&(fregs)->regs, addr)
 #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_DYNAMIC_FTRACE
 
 struct dyn_arch_ftrace {

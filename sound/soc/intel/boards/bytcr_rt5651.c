@@ -683,7 +683,11 @@ static int byt_rt5651_codec_fixup(struct snd_soc_pcm_runtime *rtd,
 						SNDRV_PCM_HW_PARAM_CHANNELS);
 	int ret, bits;
 
+<<<<<<< HEAD
 	/* The DSP will convert the FE rate to 48k, stereo */
+=======
+	/* The DSP will covert the FE rate to 48k, stereo */
+>>>>>>> b7ba80a49124 (Commit)
 	rate->min = rate->max = 48000;
 	channels->min = channels->max = 2;
 
@@ -922,6 +926,10 @@ static int snd_byt_rt5651_mc_probe(struct platform_device *pdev)
 	if (adev) {
 		snprintf(byt_rt5651_codec_name, sizeof(byt_rt5651_codec_name),
 			 "i2c-%s", acpi_dev_name(adev));
+<<<<<<< HEAD
+=======
+		put_device(&adev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 		byt_rt5651_dais[dai_index].codecs->name = byt_rt5651_codec_name;
 	} else {
 		dev_err(dev, "Error cannot find '%s' dev\n", mach->id);
@@ -929,7 +937,10 @@ static int snd_byt_rt5651_mc_probe(struct platform_device *pdev)
 	}
 
 	codec_dev = acpi_get_first_physical_node(adev);
+<<<<<<< HEAD
 	acpi_dev_put(adev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!codec_dev)
 		return -EPROBE_DEFER;
 	priv->codec_dev = get_device(codec_dev);
@@ -1127,13 +1138,21 @@ err_device:
 	return ret_val;
 }
 
+<<<<<<< HEAD
 static void snd_byt_rt5651_mc_remove(struct platform_device *pdev)
+=======
+static int snd_byt_rt5651_mc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 	struct byt_rt5651_private *priv = snd_soc_card_get_drvdata(card);
 
 	device_remove_software_node(priv->codec_dev);
 	put_device(priv->codec_dev);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver snd_byt_rt5651_mc_driver = {
@@ -1141,7 +1160,11 @@ static struct platform_driver snd_byt_rt5651_mc_driver = {
 		.name = "bytcr_rt5651",
 	},
 	.probe = snd_byt_rt5651_mc_probe,
+<<<<<<< HEAD
 	.remove_new = snd_byt_rt5651_mc_remove,
+=======
+	.remove = snd_byt_rt5651_mc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(snd_byt_rt5651_mc_driver);

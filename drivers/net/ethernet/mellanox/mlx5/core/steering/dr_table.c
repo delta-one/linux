@@ -46,7 +46,11 @@ static int dr_table_set_miss_action_nic(struct mlx5dr_domain *dmn,
 int mlx5dr_table_set_miss_action(struct mlx5dr_table *tbl,
 				 struct mlx5dr_action *action)
 {
+<<<<<<< HEAD
 	int ret = -EOPNOTSUPP;
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (action && action->action_type != DR_ACTION_TYP_FT)
 		return -EOPNOTSUPP;
@@ -67,9 +71,12 @@ int mlx5dr_table_set_miss_action(struct mlx5dr_table *tbl,
 			goto out;
 	}
 
+<<<<<<< HEAD
 	if (ret)
 		goto out;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Release old action */
 	if (tbl->miss_action)
 		refcount_dec(&tbl->miss_action->refcount);
@@ -295,7 +302,11 @@ int mlx5dr_table_destroy(struct mlx5dr_table *tbl)
 	mlx5dr_dbg_tbl_del(tbl);
 	ret = dr_table_destroy_sw_owned_tbl(tbl);
 	if (ret)
+<<<<<<< HEAD
 		mlx5dr_err(tbl->dmn, "Failed to destroy sw owned table\n");
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dr_table_uninit(tbl);
 

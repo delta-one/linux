@@ -1544,7 +1544,12 @@ static int s5k6aa_configure_gpios(struct s5k6aa *s5k6aa,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int s5k6aa_probe(struct i2c_client *client)
+=======
+static int s5k6aa_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct s5k6aa_platform_data *pdata = client->dev.platform_data;
 	struct v4l2_subdev *sd;
@@ -1640,7 +1645,11 @@ static struct i2c_driver s5k6aa_i2c_driver = {
 	.driver = {
 		.name = DRIVER_NAME
 	},
+<<<<<<< HEAD
 	.probe_new	= s5k6aa_probe,
+=======
+	.probe		= s5k6aa_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= s5k6aa_remove,
 	.id_table	= s5k6aa_id,
 };

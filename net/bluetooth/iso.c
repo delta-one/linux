@@ -235,6 +235,7 @@ static int iso_chan_add(struct iso_conn *conn, struct sock *sk,
 	return err;
 }
 
+<<<<<<< HEAD
 static inline u8 le_addr_type(u8 bdaddr_type)
 {
 	if (bdaddr_type == BDADDR_LE_PUBLIC)
@@ -243,6 +244,8 @@ static inline u8 le_addr_type(u8 bdaddr_type)
 		return ADDR_LE_DEV_RANDOM;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int iso_connect_bis(struct sock *sk)
 {
 	struct iso_conn *conn;
@@ -261,28 +264,44 @@ static int iso_connect_bis(struct sock *sk)
 
 	if (!bis_capable(hdev)) {
 		err = -EOPNOTSUPP;
+<<<<<<< HEAD
 		goto unlock;
+=======
+		goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Fail if out PHYs are marked as disabled */
 	if (!iso_pi(sk)->qos.out.phy) {
 		err = -EINVAL;
+<<<<<<< HEAD
 		goto unlock;
 	}
 
 	hcon = hci_connect_bis(hdev, &iso_pi(sk)->dst,
 			       le_addr_type(iso_pi(sk)->dst_type),
+=======
+		goto done;
+	}
+
+	hcon = hci_connect_bis(hdev, &iso_pi(sk)->dst, iso_pi(sk)->dst_type,
+>>>>>>> b7ba80a49124 (Commit)
 			       &iso_pi(sk)->qos, iso_pi(sk)->base_len,
 			       iso_pi(sk)->base);
 	if (IS_ERR(hcon)) {
 		err = PTR_ERR(hcon);
+<<<<<<< HEAD
 		goto unlock;
+=======
+		goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	conn = iso_conn_add(hcon);
 	if (!conn) {
 		hci_conn_drop(hcon);
 		err = -ENOMEM;
+<<<<<<< HEAD
 		goto unlock;
 	}
 
@@ -298,6 +317,18 @@ static int iso_connect_bis(struct sock *sk)
 	/* Update source addr of the socket */
 	bacpy(&iso_pi(sk)->src, &hcon->src);
 
+=======
+		goto done;
+	}
+
+	/* Update source addr of the socket */
+	bacpy(&iso_pi(sk)->src, &hcon->src);
+
+	err = iso_chan_add(conn, sk, NULL);
+	if (err)
+		goto done;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (hcon->state == BT_CONNECTED) {
 		iso_sock_clear_timer(sk);
 		sk->sk_state = BT_CONNECTED;
@@ -306,10 +337,14 @@ static int iso_connect_bis(struct sock *sk)
 		iso_sock_set_timer(sk, sk->sk_sndtimeo);
 	}
 
+<<<<<<< HEAD
 	release_sock(sk);
 	return err;
 
 unlock:
+=======
+done:
+>>>>>>> b7ba80a49124 (Commit)
 	hci_dev_unlock(hdev);
 	hci_dev_put(hdev);
 	return err;
@@ -333,18 +368,27 @@ static int iso_connect_cis(struct sock *sk)
 
 	if (!cis_central_capable(hdev)) {
 		err = -EOPNOTSUPP;
+<<<<<<< HEAD
 		goto unlock;
+=======
+		goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Fail if either PHYs are marked as disabled */
 	if (!iso_pi(sk)->qos.in.phy && !iso_pi(sk)->qos.out.phy) {
 		err = -EINVAL;
+<<<<<<< HEAD
 		goto unlock;
+=======
+		goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Just bind if DEFER_SETUP has been set */
 	if (test_bit(BT_SK_DEFER_SETUP, &bt_sk(sk)->flags)) {
 		hcon = hci_bind_cis(hdev, &iso_pi(sk)->dst,
+<<<<<<< HEAD
 				    le_addr_type(iso_pi(sk)->dst_type),
 				    &iso_pi(sk)->qos);
 		if (IS_ERR(hcon)) {
@@ -358,6 +402,19 @@ static int iso_connect_cis(struct sock *sk)
 		if (IS_ERR(hcon)) {
 			err = PTR_ERR(hcon);
 			goto unlock;
+=======
+				    iso_pi(sk)->dst_type, &iso_pi(sk)->qos);
+		if (IS_ERR(hcon)) {
+			err = PTR_ERR(hcon);
+			goto done;
+		}
+	} else {
+		hcon = hci_connect_cis(hdev, &iso_pi(sk)->dst,
+				       iso_pi(sk)->dst_type, &iso_pi(sk)->qos);
+		if (IS_ERR(hcon)) {
+			err = PTR_ERR(hcon);
+			goto done;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -365,6 +422,7 @@ static int iso_connect_cis(struct sock *sk)
 	if (!conn) {
 		hci_conn_drop(hcon);
 		err = -ENOMEM;
+<<<<<<< HEAD
 		goto unlock;
 	}
 
@@ -380,6 +438,18 @@ static int iso_connect_cis(struct sock *sk)
 	/* Update source addr of the socket */
 	bacpy(&iso_pi(sk)->src, &hcon->src);
 
+=======
+		goto done;
+	}
+
+	/* Update source addr of the socket */
+	bacpy(&iso_pi(sk)->src, &hcon->src);
+
+	err = iso_chan_add(conn, sk, NULL);
+	if (err)
+		goto done;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (hcon->state == BT_CONNECTED) {
 		iso_sock_clear_timer(sk);
 		sk->sk_state = BT_CONNECTED;
@@ -391,10 +461,14 @@ static int iso_connect_cis(struct sock *sk)
 		iso_sock_set_timer(sk, sk->sk_sndtimeo);
 	}
 
+<<<<<<< HEAD
 	release_sock(sk);
 	return err;
 
 unlock:
+=======
+done:
+>>>>>>> b7ba80a49124 (Commit)
 	hci_dev_unlock(hdev);
 	hci_dev_put(hdev);
 	return err;
@@ -848,23 +922,34 @@ static int iso_sock_connect(struct socket *sock, struct sockaddr *addr,
 	bacpy(&iso_pi(sk)->dst, &sa->iso_bdaddr);
 	iso_pi(sk)->dst_type = sa->iso_bdaddr_type;
 
+<<<<<<< HEAD
 	release_sock(sk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (bacmp(&iso_pi(sk)->dst, BDADDR_ANY))
 		err = iso_connect_cis(sk);
 	else
 		err = iso_connect_bis(sk);
 
 	if (err)
+<<<<<<< HEAD
 		return err;
 
 	lock_sock(sk);
+=======
+		goto done;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!test_bit(BT_SK_DEFER_SETUP, &bt_sk(sk)->flags)) {
 		err = bt_sock_wait_state(sk, BT_CONNECTED,
 					 sock_sndtimeo(sk, flags & O_NONBLOCK));
 	}
 
+<<<<<<< HEAD
+=======
+done:
+>>>>>>> b7ba80a49124 (Commit)
 	release_sock(sk);
 	return err;
 }
@@ -893,11 +978,20 @@ static int iso_listen_bis(struct sock *sk)
 	if (!hdev)
 		return -EHOSTUNREACH;
 
+<<<<<<< HEAD
 	err = hci_pa_create_sync(hdev, &iso_pi(sk)->dst,
 				 le_addr_type(iso_pi(sk)->dst_type),
 				 iso_pi(sk)->bc_sid);
 
 	hci_dev_put(hdev);
+=======
+	hci_dev_lock(hdev);
+
+	err = hci_pa_create_sync(hdev, &iso_pi(sk)->dst, iso_pi(sk)->dst_type,
+				 iso_pi(sk)->bc_sid);
+
+	hci_dev_unlock(hdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return err;
 }
@@ -1117,6 +1211,7 @@ static int iso_sock_recvmsg(struct socket *sock, struct msghdr *msg,
 {
 	struct sock *sk = sock->sk;
 	struct iso_pinfo *pi = iso_pi(sk);
+<<<<<<< HEAD
 
 	BT_DBG("sk %p", sk);
 
@@ -1124,15 +1219,37 @@ static int iso_sock_recvmsg(struct socket *sock, struct msghdr *msg,
 		switch (sk->sk_state) {
 		case BT_CONNECT2:
 			lock_sock(sk);
+=======
+	int err;
+
+	BT_DBG("sk %p", sk);
+
+	lock_sock(sk);
+
+	if (test_and_clear_bit(BT_SK_DEFER_SETUP, &bt_sk(sk)->flags)) {
+		switch (sk->sk_state) {
+		case BT_CONNECT2:
+>>>>>>> b7ba80a49124 (Commit)
 			iso_conn_defer_accept(pi->conn->hcon);
 			sk->sk_state = BT_CONFIG;
 			release_sock(sk);
 			return 0;
 		case BT_CONNECT:
+<<<<<<< HEAD
 			return iso_connect_cis(sk);
 		}
 	}
 
+=======
+			err = iso_connect_cis(sk);
+			release_sock(sk);
+			return err;
+		}
+	}
+
+	release_sock(sk);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return bt_sock_recvmsg(sock, msg, len, flags);
 }
 
@@ -1427,13 +1544,17 @@ static void iso_conn_ready(struct iso_conn *conn)
 	struct sock *parent;
 	struct sock *sk = conn->sk;
 	struct hci_ev_le_big_sync_estabilished *ev;
+<<<<<<< HEAD
 	struct hci_conn *hcon;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	BT_DBG("conn %p", conn);
 
 	if (sk) {
 		iso_sock_ready(conn->sk);
 	} else {
+<<<<<<< HEAD
 		hcon = conn->hcon;
 		if (!hcon)
 			return;
@@ -1450,6 +1571,29 @@ static void iso_conn_ready(struct iso_conn *conn)
 
 		if (!parent)
 			return;
+=======
+		iso_conn_lock(conn);
+
+		if (!conn->hcon) {
+			iso_conn_unlock(conn);
+			return;
+		}
+
+		ev = hci_recv_event_data(conn->hcon->hdev,
+					 HCI_EVT_LE_BIG_SYNC_ESTABILISHED);
+		if (ev)
+			parent = iso_get_sock_listen(&conn->hcon->src,
+						     &conn->hcon->dst,
+						     iso_match_big, ev);
+		else
+			parent = iso_get_sock_listen(&conn->hcon->src,
+						     BDADDR_ANY, NULL, NULL);
+
+		if (!parent) {
+			iso_conn_unlock(conn);
+			return;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		lock_sock(parent);
 
@@ -1457,18 +1601,28 @@ static void iso_conn_ready(struct iso_conn *conn)
 				    BTPROTO_ISO, GFP_ATOMIC, 0);
 		if (!sk) {
 			release_sock(parent);
+<<<<<<< HEAD
+=======
+			iso_conn_unlock(conn);
+>>>>>>> b7ba80a49124 (Commit)
 			return;
 		}
 
 		iso_sock_init(sk, parent);
 
+<<<<<<< HEAD
 		bacpy(&iso_pi(sk)->src, &hcon->src);
 		iso_pi(sk)->src_type = hcon->src_type;
+=======
+		bacpy(&iso_pi(sk)->src, &conn->hcon->src);
+		iso_pi(sk)->src_type = conn->hcon->src_type;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* If hcon has no destination address (BDADDR_ANY) it means it
 		 * was created by HCI_EV_LE_BIG_SYNC_ESTABILISHED so we need to
 		 * initialize using the parent socket destination address.
 		 */
+<<<<<<< HEAD
 		if (!bacmp(&hcon->dst, BDADDR_ANY)) {
 			bacpy(&hcon->dst, &iso_pi(parent)->dst);
 			hcon->dst_type = iso_pi(parent)->dst_type;
@@ -1480,6 +1634,19 @@ static void iso_conn_ready(struct iso_conn *conn)
 
 		hci_conn_hold(hcon);
 		iso_chan_add(conn, sk, parent);
+=======
+		if (!bacmp(&conn->hcon->dst, BDADDR_ANY)) {
+			bacpy(&conn->hcon->dst, &iso_pi(parent)->dst);
+			conn->hcon->dst_type = iso_pi(parent)->dst_type;
+			conn->hcon->sync_handle = iso_pi(parent)->sync_handle;
+		}
+
+		bacpy(&iso_pi(sk)->dst, &conn->hcon->dst);
+		iso_pi(sk)->dst_type = conn->hcon->dst_type;
+
+		hci_conn_hold(conn->hcon);
+		__iso_chan_add(conn, sk, parent);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (test_bit(BT_SK_DEFER_SETUP, &bt_sk(parent)->flags))
 			sk->sk_state = BT_CONNECT2;
@@ -1490,6 +1657,11 @@ static void iso_conn_ready(struct iso_conn *conn)
 		parent->sk_data_ready(parent);
 
 		release_sock(parent);
+<<<<<<< HEAD
+=======
+
+		iso_conn_unlock(conn);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -1620,6 +1792,10 @@ static void iso_disconn_cfm(struct hci_conn *hcon, __u8 reason)
 void iso_recv(struct hci_conn *hcon, struct sk_buff *skb, u16 flags)
 {
 	struct iso_conn *conn = hcon->iso_data;
+<<<<<<< HEAD
+=======
+	struct hci_iso_data_hdr *hdr;
+>>>>>>> b7ba80a49124 (Commit)
 	__u16 pb, ts, len;
 
 	if (!conn)
@@ -1641,8 +1817,11 @@ void iso_recv(struct hci_conn *hcon, struct sk_buff *skb, u16 flags)
 		}
 
 		if (ts) {
+<<<<<<< HEAD
 			struct hci_iso_ts_data_hdr *hdr;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			/* TODO: add timestamp to the packet? */
 			hdr = skb_pull_data(skb, HCI_ISO_TS_DATA_HDR_SIZE);
 			if (!hdr) {
@@ -1650,19 +1829,29 @@ void iso_recv(struct hci_conn *hcon, struct sk_buff *skb, u16 flags)
 				goto drop;
 			}
 
+<<<<<<< HEAD
 			len = __le16_to_cpu(hdr->slen);
 		} else {
 			struct hci_iso_data_hdr *hdr;
 
+=======
+		} else {
+>>>>>>> b7ba80a49124 (Commit)
 			hdr = skb_pull_data(skb, HCI_ISO_DATA_HDR_SIZE);
 			if (!hdr) {
 				BT_ERR("Frame is too short (len %d)", skb->len);
 				goto drop;
 			}
+<<<<<<< HEAD
 
 			len = __le16_to_cpu(hdr->slen);
 		}
 
+=======
+		}
+
+		len    = __le16_to_cpu(hdr->slen);
+>>>>>>> b7ba80a49124 (Commit)
 		flags  = hci_iso_data_flags(len);
 		len    = hci_iso_data_len(len);
 

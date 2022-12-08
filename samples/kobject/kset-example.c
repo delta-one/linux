@@ -185,7 +185,11 @@ ATTRIBUTE_GROUPS(foo_default);
  * release function, and the set of default attributes we want created
  * whenever a kobject of this type is registered with the kernel.
  */
+<<<<<<< HEAD
 static const struct kobj_type foo_ktype = {
+=======
+static struct kobj_type foo_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops = &foo_sysfs_ops,
 	.release = foo_release,
 	.default_groups = foo_default_groups,

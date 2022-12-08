@@ -15,7 +15,11 @@
 #include "screen.h"
 
 /***************************************************************************/
+<<<<<<< HEAD
 /*                        Init Dragon Engine II hardware                   */
+=======
+/*                        Init Drangon Engine hardware                     */
+>>>>>>> b7ba80a49124 (Commit)
 /***************************************************************************/
 
 static void dragen2_reset(void)

@@ -65,7 +65,11 @@ gp100_fault_buffer_info(struct nvkm_fault_buffer *buffer)
 void
 gp100_fault_intr(struct nvkm_fault *fault)
 {
+<<<<<<< HEAD
 	nvkm_event_ntfy(&fault->event, 0, NVKM_FAULT_BUFFER_EVENT_PENDING);
+=======
+	nvkm_event_send(&fault->event, 1, 0, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct nvkm_fault_func

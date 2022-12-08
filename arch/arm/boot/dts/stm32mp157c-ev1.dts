@@ -8,7 +8,10 @@
 #include "stm32mp157c-ed1.dts"
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/input/input.h>
+<<<<<<< HEAD
 #include <dt-bindings/media/video-interfaces.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	model = "STMicroelectronics STM32MP157C eval daughter on eval mother";
@@ -91,7 +94,11 @@
 	port {
 		dcmi_0: endpoint {
 			remote-endpoint = <&ov5640_0>;
+<<<<<<< HEAD
 			bus-type = <MEDIA_BUS_TYPE_PARALLEL>;
+=======
+			bus-type = <5>;
+>>>>>>> b7ba80a49124 (Commit)
 			bus-width = <8>;
 			hsync-active = <0>;
 			vsync-active = <0>;
@@ -145,7 +152,11 @@
 	max-speed = <1000>;
 	phy-handle = <&phy0>;
 
+<<<<<<< HEAD
 	mdio {
+=======
+	mdio0 {
+>>>>>>> b7ba80a49124 (Commit)
 		#address-cells = <1>;
 		#size-cells = <0>;
 		compatible = "snps,dwmac-mdio";
@@ -371,6 +382,7 @@
 &usbh_ehci {
 	phys = <&usbphyc_port0>;
 	status = "okay";
+<<<<<<< HEAD
 	#address-cells = <1>;
 	#size-cells = <0>;
 	/* onboard HUB */
@@ -379,6 +391,8 @@
 		reg = <1>;
 		vdd-supply = <&v3v3>;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &usbotg_hs {
@@ -402,11 +416,14 @@
 	st,tune-squelch-level = <3>;
 	st,tune-hs-rx-offset = <2>;
 	st,no-lsfs-sc;
+<<<<<<< HEAD
 
 	connector {
 		compatible = "usb-a-connector";
 		vbus-supply = <&vbus_sw>;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &usbphyc_port1 {

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0-only */
+=======
+/* SPDX-License-Identifier: GPL-2.0 */
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef __DRBD_INTERVAL_H
 #define __DRBD_INTERVAL_H
 

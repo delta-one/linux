@@ -176,7 +176,10 @@
 #include <linux/fcntl.h>
 #include <linux/file.h>
 #include <linux/fs.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kthread.h>
 #include <linux/sched/signal.h>
 #include <linux/limits.h>
@@ -3388,7 +3391,11 @@ static ssize_t fsg_opts_stall_store(struct config_item *item, const char *page,
 		return -EBUSY;
 	}
 
+<<<<<<< HEAD
 	ret = kstrtobool(page, &stall);
+=======
+	ret = strtobool(page, &stall);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ret) {
 		opts->common->can_stall = stall;
 		ret = len;

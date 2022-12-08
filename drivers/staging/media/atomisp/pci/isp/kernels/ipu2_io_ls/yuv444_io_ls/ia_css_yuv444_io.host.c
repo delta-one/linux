@@ -28,7 +28,13 @@ int ia_css_yuv444_io_config(const struct ia_css_binary      *binary,
 	const struct ia_css_frame *in_frame = args->in_frame;
 	const struct ia_css_frame **out_frames = (const struct ia_css_frame **)
 		&args->out_frame;
+<<<<<<< HEAD
 	const struct ia_css_frame_info *in_frame_info = ia_css_frame_get_info(in_frame);
+=======
+	const struct ia_css_frame_info *in_frame_info = (in_frame) ? &in_frame->info :
+		&binary->in_frame_info;
+
+>>>>>>> b7ba80a49124 (Commit)
 	const unsigned int ddr_bits_per_element = sizeof(short) * 8;
 	const unsigned int ddr_elems_per_word = ceil_div(HIVE_ISP_DDR_WORD_BITS,
 						ddr_bits_per_element);
@@ -79,13 +85,22 @@ int ia_css_yuv444_io_config(const struct ia_css_binary      *binary,
 				    "ia_css_yuv444_io_config() put part enter:\n");
 #endif
 
+<<<<<<< HEAD
 		ret = ia_css_dma_configure_from_info(&config, &out_frames[0]->frame_info);
+=======
+		ret = ia_css_dma_configure_from_info(&config, &out_frames[0]->info);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			return ret;
 
 		to->base_address = out_frames[0]->data;
+<<<<<<< HEAD
 		to->width = out_frames[0]->frame_info.res.width;
 		to->height = out_frames[0]->frame_info.res.height;
+=======
+		to->width = out_frames[0]->info.res.width;
+		to->height = out_frames[0]->info.res.height;
+>>>>>>> b7ba80a49124 (Commit)
 		to->stride = config.stride;
 		to->ddr_elems_per_word = ddr_elems_per_word;
 

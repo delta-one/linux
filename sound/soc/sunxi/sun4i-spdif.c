@@ -703,11 +703,20 @@ err_unregister:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void sun4i_spdif_remove(struct platform_device *pdev)
+=======
+static int sun4i_spdif_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pm_runtime_disable(&pdev->dev);
 	if (!pm_runtime_status_suspended(&pdev->dev))
 		sun4i_spdif_runtime_suspend(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct dev_pm_ops sun4i_spdif_pm = {
@@ -722,7 +731,11 @@ static struct platform_driver sun4i_spdif_driver = {
 		.pm	= &sun4i_spdif_pm,
 	},
 	.probe		= sun4i_spdif_probe,
+<<<<<<< HEAD
 	.remove_new	= sun4i_spdif_remove,
+=======
+	.remove		= sun4i_spdif_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(sun4i_spdif_driver);

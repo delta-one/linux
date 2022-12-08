@@ -317,7 +317,10 @@ static bool amdgpu_atrm_get_bios(struct amdgpu_device *adev)
 
 	if (!found)
 		return false;
+<<<<<<< HEAD
 	pci_dev_put(pdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	adev->bios = kmalloc(size, GFP_KERNEL);
 	if (!adev->bios) {

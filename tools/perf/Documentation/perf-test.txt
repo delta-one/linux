@@ -34,6 +34,9 @@ OPTIONS
 -F::
 --dont-fork::
 	Do not fork child for each test, run all tests within single process.
+<<<<<<< HEAD
 
 --dso::
 	Specify a DSO for the "Symbols" test.
+=======
+>>>>>>> b7ba80a49124 (Commit)

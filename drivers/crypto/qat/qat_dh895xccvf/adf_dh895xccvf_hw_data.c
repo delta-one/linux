@@ -2,8 +2,11 @@
 /* Copyright(c) 2015 - 2021 Intel Corporation */
 #include <adf_accel_devices.h>
 #include <adf_common_drv.h>
+<<<<<<< HEAD
 #include <adf_gen2_config.h>
 #include <adf_gen2_dc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <adf_gen2_hw_data.h>
 #include <adf_gen2_pfvf.h>
 #include <adf_pfvf_vf_msg.h>
@@ -88,11 +91,17 @@ void adf_init_hw_data_dh895xcciov(struct adf_hw_device_data *hw_data)
 	hw_data->get_sku = get_sku;
 	hw_data->enable_ints = adf_vf_void_noop;
 	hw_data->dev_class->instances++;
+<<<<<<< HEAD
 	hw_data->dev_config = adf_gen2_dev_config;
 	adf_devmgr_update_class_index(hw_data);
 	adf_gen2_init_vf_pfvf_ops(&hw_data->pfvf_ops);
 	adf_gen2_init_hw_csr_ops(&hw_data->csr_ops);
 	adf_gen2_init_dc_ops(&hw_data->dc_ops);
+=======
+	adf_devmgr_update_class_index(hw_data);
+	adf_gen2_init_vf_pfvf_ops(&hw_data->pfvf_ops);
+	adf_gen2_init_hw_csr_ops(&hw_data->csr_ops);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void adf_clean_hw_data_dh895xcciov(struct adf_hw_device_data *hw_data)

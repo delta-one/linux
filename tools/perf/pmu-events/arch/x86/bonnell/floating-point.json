@@ -1,6 +1,10 @@
 [
     {
         "BriefDescription": "Floating point assists for retired operations.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x11",
         "EventName": "FP_ASSIST.AR",
         "SampleAfterValue": "10000",
@@ -8,6 +12,10 @@
     },
     {
         "BriefDescription": "Floating point assists.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x11",
         "EventName": "FP_ASSIST.S",
         "SampleAfterValue": "10000",
@@ -15,12 +23,24 @@
     },
     {
         "BriefDescription": "SIMD assists invoked.",
+<<<<<<< HEAD
         "EventCode": "0xCD",
         "EventName": "SIMD_ASSIST",
         "SampleAfterValue": "100000"
     },
     {
         "BriefDescription": "Retired computational Streaming SIMD Extensions (SSE) packed-single instructions.",
+=======
+        "Counter": "0,1",
+        "EventCode": "0xCD",
+        "EventName": "SIMD_ASSIST",
+        "SampleAfterValue": "100000",
+        "UMask": "0x0"
+    },
+    {
+        "BriefDescription": "Retired computational Streaming SIMD Extensions (SSE) packed-single instructions.",
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xCA",
         "EventName": "SIMD_COMP_INST_RETIRED.PACKED_SINGLE",
         "SampleAfterValue": "2000000",
@@ -28,6 +48,10 @@
     },
     {
         "BriefDescription": "Retired computational Streaming SIMD Extensions 2 (SSE2) scalar-double instructions.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xCA",
         "EventName": "SIMD_COMP_INST_RETIRED.SCALAR_DOUBLE",
         "SampleAfterValue": "2000000",
@@ -35,6 +59,10 @@
     },
     {
         "BriefDescription": "Retired computational Streaming SIMD Extensions (SSE) scalar-single instructions.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xCA",
         "EventName": "SIMD_COMP_INST_RETIRED.SCALAR_SINGLE",
         "SampleAfterValue": "2000000",
@@ -42,12 +70,24 @@
     },
     {
         "BriefDescription": "SIMD Instructions retired.",
+<<<<<<< HEAD
         "EventCode": "0xCE",
         "EventName": "SIMD_INSTR_RETIRED",
         "SampleAfterValue": "2000000"
     },
     {
         "BriefDescription": "Retired Streaming SIMD Extensions (SSE) packed-single instructions.",
+=======
+        "Counter": "0,1",
+        "EventCode": "0xCE",
+        "EventName": "SIMD_INSTR_RETIRED",
+        "SampleAfterValue": "2000000",
+        "UMask": "0x0"
+    },
+    {
+        "BriefDescription": "Retired Streaming SIMD Extensions (SSE) packed-single instructions.",
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC7",
         "EventName": "SIMD_INST_RETIRED.PACKED_SINGLE",
         "SampleAfterValue": "2000000",
@@ -55,6 +95,10 @@
     },
     {
         "BriefDescription": "Retired Streaming SIMD Extensions 2 (SSE2) scalar-double instructions.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC7",
         "EventName": "SIMD_INST_RETIRED.SCALAR_DOUBLE",
         "SampleAfterValue": "2000000",
@@ -62,6 +106,10 @@
     },
     {
         "BriefDescription": "Retired Streaming SIMD Extensions (SSE) scalar-single instructions.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC7",
         "EventName": "SIMD_INST_RETIRED.SCALAR_SINGLE",
         "SampleAfterValue": "2000000",
@@ -69,6 +117,10 @@
     },
     {
         "BriefDescription": "Retired Streaming SIMD Extensions 2 (SSE2) vector instructions.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC7",
         "EventName": "SIMD_INST_RETIRED.VECTOR",
         "SampleAfterValue": "2000000",
@@ -76,12 +128,24 @@
     },
     {
         "BriefDescription": "Saturated arithmetic instructions retired.",
+<<<<<<< HEAD
         "EventCode": "0xCF",
         "EventName": "SIMD_SAT_INSTR_RETIRED",
         "SampleAfterValue": "2000000"
     },
     {
         "BriefDescription": "SIMD saturated arithmetic micro-ops retired.",
+=======
+        "Counter": "0,1",
+        "EventCode": "0xCF",
+        "EventName": "SIMD_SAT_INSTR_RETIRED",
+        "SampleAfterValue": "2000000",
+        "UMask": "0x0"
+    },
+    {
+        "BriefDescription": "SIMD saturated arithmetic micro-ops retired.",
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB1",
         "EventName": "SIMD_SAT_UOP_EXEC.AR",
         "SampleAfterValue": "2000000",
@@ -89,12 +153,24 @@
     },
     {
         "BriefDescription": "SIMD saturated arithmetic micro-ops executed.",
+<<<<<<< HEAD
         "EventCode": "0xB1",
         "EventName": "SIMD_SAT_UOP_EXEC.S",
         "SampleAfterValue": "2000000"
     },
     {
         "BriefDescription": "SIMD micro-ops retired (excluding stores).",
+=======
+        "Counter": "0,1",
+        "EventCode": "0xB1",
+        "EventName": "SIMD_SAT_UOP_EXEC.S",
+        "SampleAfterValue": "2000000",
+        "UMask": "0x0"
+    },
+    {
+        "BriefDescription": "SIMD micro-ops retired (excluding stores).",
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB0",
         "EventName": "SIMD_UOPS_EXEC.AR",
         "PEBS": "2",
@@ -103,12 +179,24 @@
     },
     {
         "BriefDescription": "SIMD micro-ops executed (excluding stores).",
+<<<<<<< HEAD
         "EventCode": "0xB0",
         "EventName": "SIMD_UOPS_EXEC.S",
         "SampleAfterValue": "2000000"
     },
     {
         "BriefDescription": "SIMD packed arithmetic micro-ops retired",
+=======
+        "Counter": "0,1",
+        "EventCode": "0xB0",
+        "EventName": "SIMD_UOPS_EXEC.S",
+        "SampleAfterValue": "2000000",
+        "UMask": "0x0"
+    },
+    {
+        "BriefDescription": "SIMD packed arithmetic micro-ops retired",
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB3",
         "EventName": "SIMD_UOP_TYPE_EXEC.ARITHMETIC.AR",
         "SampleAfterValue": "2000000",
@@ -116,6 +204,10 @@
     },
     {
         "BriefDescription": "SIMD packed arithmetic micro-ops executed",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB3",
         "EventName": "SIMD_UOP_TYPE_EXEC.ARITHMETIC.S",
         "SampleAfterValue": "2000000",
@@ -123,6 +215,10 @@
     },
     {
         "BriefDescription": "SIMD packed logical micro-ops retired",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB3",
         "EventName": "SIMD_UOP_TYPE_EXEC.LOGICAL.AR",
         "SampleAfterValue": "2000000",
@@ -130,6 +226,10 @@
     },
     {
         "BriefDescription": "SIMD packed logical micro-ops executed",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB3",
         "EventName": "SIMD_UOP_TYPE_EXEC.LOGICAL.S",
         "SampleAfterValue": "2000000",
@@ -137,6 +237,10 @@
     },
     {
         "BriefDescription": "SIMD packed multiply micro-ops retired",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB3",
         "EventName": "SIMD_UOP_TYPE_EXEC.MUL.AR",
         "SampleAfterValue": "2000000",
@@ -144,6 +248,10 @@
     },
     {
         "BriefDescription": "SIMD packed multiply micro-ops executed",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB3",
         "EventName": "SIMD_UOP_TYPE_EXEC.MUL.S",
         "SampleAfterValue": "2000000",
@@ -151,6 +259,10 @@
     },
     {
         "BriefDescription": "SIMD packed micro-ops retired",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB3",
         "EventName": "SIMD_UOP_TYPE_EXEC.PACK.AR",
         "SampleAfterValue": "2000000",
@@ -158,6 +270,10 @@
     },
     {
         "BriefDescription": "SIMD packed micro-ops executed",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB3",
         "EventName": "SIMD_UOP_TYPE_EXEC.PACK.S",
         "SampleAfterValue": "2000000",
@@ -165,6 +281,10 @@
     },
     {
         "BriefDescription": "SIMD packed shift micro-ops retired",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB3",
         "EventName": "SIMD_UOP_TYPE_EXEC.SHIFT.AR",
         "SampleAfterValue": "2000000",
@@ -172,6 +292,10 @@
     },
     {
         "BriefDescription": "SIMD packed shift micro-ops executed",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB3",
         "EventName": "SIMD_UOP_TYPE_EXEC.SHIFT.S",
         "SampleAfterValue": "2000000",
@@ -179,6 +303,10 @@
     },
     {
         "BriefDescription": "SIMD unpacked micro-ops retired",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB3",
         "EventName": "SIMD_UOP_TYPE_EXEC.UNPACK.AR",
         "SampleAfterValue": "2000000",
@@ -186,6 +314,10 @@
     },
     {
         "BriefDescription": "SIMD unpacked micro-ops executed",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB3",
         "EventName": "SIMD_UOP_TYPE_EXEC.UNPACK.S",
         "SampleAfterValue": "2000000",
@@ -193,6 +325,10 @@
     },
     {
         "BriefDescription": "Floating point computational micro-ops retired.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x10",
         "EventName": "X87_COMP_OPS_EXE.ANY.AR",
         "PEBS": "2",
@@ -201,6 +337,10 @@
     },
     {
         "BriefDescription": "Floating point computational micro-ops executed.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x10",
         "EventName": "X87_COMP_OPS_EXE.ANY.S",
         "SampleAfterValue": "2000000",
@@ -208,6 +348,10 @@
     },
     {
         "BriefDescription": "FXCH uops retired.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x10",
         "EventName": "X87_COMP_OPS_EXE.FXCH.AR",
         "PEBS": "2",
@@ -216,6 +360,10 @@
     },
     {
         "BriefDescription": "FXCH uops executed.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x10",
         "EventName": "X87_COMP_OPS_EXE.FXCH.S",
         "SampleAfterValue": "2000000",

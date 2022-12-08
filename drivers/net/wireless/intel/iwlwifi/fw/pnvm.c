@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
 /*
+<<<<<<< HEAD
  * Copyright(c) 2020-2022 Intel Corporation
+=======
+ * Copyright(c) 2020-2021 Intel Corporation
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include "iwl-drv.h"
@@ -318,6 +322,10 @@ parse:
 	kfree(data);
 
 skip_parse:
+<<<<<<< HEAD
+=======
+	data = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	/* now try to get the reduce power table, if not loaded yet */
 	if (!trans->reduce_power_loaded) {
 		data = iwl_uefi_get_reduced_power(trans, &len);
@@ -328,6 +336,7 @@ skip_parse:
 			 * trying again over and over.
 			 */
 			trans->reduce_power_loaded = true;
+<<<<<<< HEAD
 		} else {
 			ret = iwl_trans_set_reduce_power(trans, data, len);
 			if (ret)
@@ -338,6 +347,21 @@ skip_parse:
 		}
 	}
 
+=======
+
+			goto skip_reduce_power;
+		}
+	}
+
+	ret = iwl_trans_set_reduce_power(trans, data, len);
+	if (ret)
+		IWL_DEBUG_FW(trans,
+			     "Failed to set reduce power table %d\n",
+			     ret);
+	kfree(data);
+
+skip_reduce_power:
+>>>>>>> b7ba80a49124 (Commit)
 	iwl_init_notification_wait(notif_wait, &pnvm_wait,
 				   ntf_cmds, ARRAY_SIZE(ntf_cmds),
 				   iwl_pnvm_complete_fn, trans);

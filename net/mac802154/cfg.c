@@ -46,7 +46,11 @@ static int ieee802154_suspend(struct wpan_phy *wpan_phy)
 	if (!local->open_count)
 		goto suspend;
 
+<<<<<<< HEAD
 	ieee802154_sync_and_hold_queue(local);
+=======
+	ieee802154_stop_queue(&local->hw);
+>>>>>>> b7ba80a49124 (Commit)
 	synchronize_net();
 
 	/* stop hardware - this must stop RX */
@@ -67,12 +71,20 @@ static int ieee802154_resume(struct wpan_phy *wpan_phy)
 		goto wake_up;
 
 	/* restart hardware */
+<<<<<<< HEAD
 	ret = drv_start(local, local->phy->filtering, &local->addr_filt);
+=======
+	ret = drv_start(local);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
 wake_up:
+<<<<<<< HEAD
 	ieee802154_release_queue(local);
+=======
+	ieee802154_wake_queue(&local->hw);
+>>>>>>> b7ba80a49124 (Commit)
 	local->suspended = false;
 	return 0;
 }
@@ -114,15 +126,22 @@ ieee802154_set_channel(struct wpan_phy *wpan_phy, u8 page, u8 channel)
 	    wpan_phy->current_channel == channel)
 		return 0;
 
+<<<<<<< HEAD
 	/* Refuse to change channels during scanning or beaconing */
 	if (mac802154_is_scanning(local) || mac802154_is_beaconing(local))
 		return -EBUSY;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = drv_set_channel(local, page, channel);
 	if (!ret) {
 		wpan_phy->current_page = page;
 		wpan_phy->current_channel = channel;
+<<<<<<< HEAD
 		ieee802154_configure_durations(wpan_phy, page, channel);
+=======
+		ieee802154_configure_durations(wpan_phy);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;
@@ -265,6 +284,7 @@ ieee802154_set_ackreq_default(struct wpan_phy *wpan_phy,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mac802154_trigger_scan(struct wpan_phy *wpan_phy,
 				  struct cfg802154_scan_request *request)
 {
@@ -315,6 +335,8 @@ static int mac802154_stop_beacons(struct wpan_phy *wpan_phy,
 	return mac802154_stop_beacons_locked(local, sdata);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_IEEE802154_NL802154_EXPERIMENTAL
 static void
 ieee802154_get_llsec_table(struct wpan_phy *wpan_phy,
@@ -522,10 +544,13 @@ const struct cfg802154_ops mac802154_config_ops = {
 	.set_max_frame_retries = ieee802154_set_max_frame_retries,
 	.set_lbt_mode = ieee802154_set_lbt_mode,
 	.set_ackreq_default = ieee802154_set_ackreq_default,
+<<<<<<< HEAD
 	.trigger_scan = mac802154_trigger_scan,
 	.abort_scan = mac802154_abort_scan,
 	.send_beacons = mac802154_send_beacons,
 	.stop_beacons = mac802154_stop_beacons,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_IEEE802154_NL802154_EXPERIMENTAL
 	.get_llsec_table = ieee802154_get_llsec_table,
 	.lock_llsec_table = ieee802154_lock_llsec_table,

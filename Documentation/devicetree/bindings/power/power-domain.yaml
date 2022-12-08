@@ -43,6 +43,12 @@ properties:
       domain would be considered as capable of being powered-on or powered-off.
 
   operating-points-v2:
+<<<<<<< HEAD
+=======
+    $ref: /schemas/types.yaml#/definitions/phandle-array
+    items:
+      maxItems: 1
+>>>>>>> b7ba80a49124 (Commit)
     description:
       Phandles to the OPP tables of power domains provided by a power domain
       provider. If the provider provides a single power domain only or all

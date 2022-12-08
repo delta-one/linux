@@ -117,7 +117,11 @@
 		};
 
 		pci@c0000000 {
+<<<<<<< HEAD
 			status = "okay";
+=======
+			status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 
 			/*
 			 * We have up to 2 slots (IDSEL) with 2 swizzled IRQs.
@@ -141,7 +145,11 @@
 		 * Do we need a new binding and property for this?
 		 */
 		ethernet@c8009000 {
+<<<<<<< HEAD
 			status = "okay";
+=======
+			status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 			queue-rx = <&qmgr 3>;
 			queue-txready = <&qmgr 20>;
 			phy-mode = "rgmii";
@@ -165,7 +173,11 @@
 
 		/* EthC - connected to KS8995 switch port 5 */
 		ethernet@c800a000 {
+<<<<<<< HEAD
 			status = "okay";
+=======
+			status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 			queue-rx = <&qmgr 4>;
 			queue-txready = <&qmgr 21>;
 			phy-mode = "rgmii";

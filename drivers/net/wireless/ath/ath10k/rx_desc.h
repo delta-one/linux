@@ -448,7 +448,11 @@ struct rx_mpdu_end {
  *     - 4 bytes for WEP
  *     - 8 bytes for TKIP, AES
  *  [padding to 4 bytes]
+<<<<<<< HEAD
  *  c) A-MSDU subframe header (14 bytes) if applicable
+=======
+ *  c) A-MSDU subframe header (14 bytes) if appliable
+>>>>>>> b7ba80a49124 (Commit)
  *  d) LLC/SNAP (RFC1042, 8 bytes)
  *
  * In case of A-MSDU only first frame in sequence contains (a) and (b).

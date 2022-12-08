@@ -33,6 +33,7 @@ char *xstrdup(const char *s)
 	return d;
 }
 
+<<<<<<< HEAD
 char *xstrndup(const char *s, size_t n)
 {
 	size_t len = strnlen(s, n) + 1;
@@ -44,6 +45,8 @@ char *xstrndup(const char *s, size_t n)
 	return d;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int xavsprintf_append(char **strp, const char *fmt, va_list ap)
 {
 	int n, size = 0;	/* start with 128 bytes */
@@ -364,11 +367,19 @@ int utilfdt_decode_type(const char *fmt, int *type, int *size)
 	}
 
 	/* we should now have a type */
+<<<<<<< HEAD
 	if ((*fmt == '\0') || !strchr("iuxsr", *fmt))
 		return -1;
 
 	/* convert qualifier (bhL) to byte size */
 	if (*fmt != 's' && *fmt != 'r')
+=======
+	if ((*fmt == '\0') || !strchr("iuxs", *fmt))
+		return -1;
+
+	/* convert qualifier (bhL) to byte size */
+	if (*fmt != 's')
+>>>>>>> b7ba80a49124 (Commit)
 		*size = qualifier == 'b' ? 1 :
 				qualifier == 'h' ? 2 :
 				qualifier == 'l' ? 4 : -1;

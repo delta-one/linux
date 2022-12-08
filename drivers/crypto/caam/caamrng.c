@@ -12,8 +12,11 @@
 #include <linux/hw_random.h>
 #include <linux/completion.h>
 #include <linux/atomic.h>
+<<<<<<< HEAD
 #include <linux/dma-mapping.h>
 #include <linux/kernel.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kfifo.h>
 
 #include "compat.h"
@@ -178,11 +181,16 @@ static int caam_init(struct hwrng *rng)
 	int err;
 
 	ctx->desc_sync = devm_kzalloc(ctx->ctrldev, CAAM_RNG_DESC_LEN,
+<<<<<<< HEAD
 				      GFP_KERNEL);
+=======
+				      GFP_DMA | GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ctx->desc_sync)
 		return -ENOMEM;
 
 	ctx->desc_async = devm_kzalloc(ctx->ctrldev, CAAM_RNG_DESC_LEN,
+<<<<<<< HEAD
 				       GFP_KERNEL);
 	if (!ctx->desc_async)
 		return -ENOMEM;
@@ -190,6 +198,14 @@ static int caam_init(struct hwrng *rng)
 	if (kfifo_alloc(&ctx->fifo, ALIGN(CAAM_RNG_MAX_FIFO_STORE_SIZE,
 					  dma_get_cache_alignment()),
 			GFP_KERNEL))
+=======
+				       GFP_DMA | GFP_KERNEL);
+	if (!ctx->desc_async)
+		return -ENOMEM;
+
+	if (kfifo_alloc(&ctx->fifo, CAAM_RNG_MAX_FIFO_STORE_SIZE,
+			GFP_DMA | GFP_KERNEL))
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOMEM;
 
 	INIT_WORK(&ctx->worker, caam_rng_worker);
@@ -249,6 +265,10 @@ int caam_rng_init(struct device *ctrldev)
 	ctx->rng.cleanup = caam_cleanup;
 	ctx->rng.read    = caam_read;
 	ctx->rng.priv    = (unsigned long)ctx;
+<<<<<<< HEAD
+=======
+	ctx->rng.quality = 1024;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_info(ctrldev, "registering rng-caam\n");
 

@@ -7,7 +7,11 @@
 #include <asm/alternative.h>
 #include <asm/export.h>
 
+<<<<<<< HEAD
 .section .noinstr.text, "ax"
+=======
+.pushsection .noinstr.text, "ax"
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * We build a jump to memcpy_orig by default which gets NOPped out on
@@ -27,7 +31,11 @@
  * Output:
  * rax original destination
  */
+<<<<<<< HEAD
 SYM_TYPED_FUNC_START(__memcpy)
+=======
+SYM_FUNC_START(__memcpy)
+>>>>>>> b7ba80a49124 (Commit)
 	ALTERNATIVE_2 "jmp memcpy_orig", "", X86_FEATURE_REP_GOOD, \
 		      "jmp memcpy_erms", X86_FEATURE_ERMS
 
@@ -42,7 +50,11 @@ SYM_TYPED_FUNC_START(__memcpy)
 SYM_FUNC_END(__memcpy)
 EXPORT_SYMBOL(__memcpy)
 
+<<<<<<< HEAD
 SYM_FUNC_ALIAS(memcpy, __memcpy)
+=======
+SYM_FUNC_ALIAS_WEAK(memcpy, __memcpy)
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL(memcpy)
 
 /*
@@ -183,3 +195,7 @@ SYM_FUNC_START_LOCAL(memcpy_orig)
 	RET
 SYM_FUNC_END(memcpy_orig)
 
+<<<<<<< HEAD
+=======
+.popsection
+>>>>>>> b7ba80a49124 (Commit)

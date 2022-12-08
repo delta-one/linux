@@ -73,16 +73,27 @@ int main(int argc, char *argv[])
 
 	struct kvm_vcpu *vcpu;
 	struct kvm_vm *vm;
+<<<<<<< HEAD
+=======
+	struct kvm_run *run;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ucall uc;
 	bool done = false;
 
 	TEST_REQUIRE(kvm_cpu_has(X86_FEATURE_VMX));
+<<<<<<< HEAD
 	TEST_REQUIRE(kvm_cpu_has_ept());
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Create VM */
 	vm = vm_create_with_one_vcpu(&vcpu, l1_guest_code);
 	vmx = vcpu_alloc_vmx(vm, &vmx_pages_gva);
 	vcpu_args_set(vcpu, 1, vmx_pages_gva);
+<<<<<<< HEAD
+=======
+	run = vcpu->run;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Add an extra memory slot for testing dirty logging */
 	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
@@ -115,7 +126,14 @@ int main(int argc, char *argv[])
 	while (!done) {
 		memset(host_test_mem, 0xaa, TEST_MEM_PAGES * 4096);
 		vcpu_run(vcpu);
+<<<<<<< HEAD
 		TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+=======
+		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+			    "Unexpected exit reason: %u (%s),\n",
+			    run->exit_reason,
+			    exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 
 		switch (get_ucall(vcpu, &uc)) {
 		case UCALL_ABORT:

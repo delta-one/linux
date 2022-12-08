@@ -245,7 +245,11 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
 	 * We need a scratch buffer in case where we'll not have any
 	 * more buffer queued so that we don't error out. One of those
 	 * cases is when you end up at the last frame to capture, you
+<<<<<<< HEAD
 	 * don't have any buffer queued any more, and yet it doesn't
+=======
+	 * don't havea any buffer queued any more, and yet it doesn't
+>>>>>>> b7ba80a49124 (Commit)
 	 * really matter since you'll never reach the next buffer.
 	 *
 	 * Since we support the multi-planar API, we need to have a
@@ -266,7 +270,11 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
 		goto err_clear_dma_queue;
 	}
 
+<<<<<<< HEAD
 	ret = video_device_pipeline_alloc_start(&csi->vdev);
+=======
+	ret = media_pipeline_start(&csi->vdev.entity, &csi->vdev.pipe);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		goto err_free_scratch_buffer;
 
@@ -311,7 +319,11 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
 	writel(CSI_BUF_CTRL_DBE, csi->regs + CSI_BUF_CTRL_REG);
 
 	/* Clear the pending interrupts */
+<<<<<<< HEAD
 	writel(CSI_INT_FRM_DONE, csi->regs + CSI_INT_STA_REG);
+=======
+	writel(CSI_INT_FRM_DONE, csi->regs + 0x34);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Enable frame done interrupt */
 	writel(CSI_INT_FRM_DONE, csi->regs + CSI_INT_EN_REG);
@@ -330,7 +342,11 @@ err_disable_device:
 	sun4i_csi_capture_stop(csi);
 
 err_disable_pipeline:
+<<<<<<< HEAD
 	video_device_pipeline_stop(&csi->vdev);
+=======
+	media_pipeline_stop(&csi->vdev.entity);
+>>>>>>> b7ba80a49124 (Commit)
 
 err_free_scratch_buffer:
 	dma_free_coherent(csi->dev, csi->scratch.size, csi->scratch.vaddr,
@@ -359,7 +375,11 @@ static void sun4i_csi_stop_streaming(struct vb2_queue *vq)
 	return_all_buffers(csi, VB2_BUF_STATE_ERROR);
 	spin_unlock_irqrestore(&csi->qlock, flags);
 
+<<<<<<< HEAD
 	video_device_pipeline_stop(&csi->vdev);
+=======
+	media_pipeline_stop(&csi->vdev.entity);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dma_free_coherent(csi->dev, csi->scratch.size, csi->scratch.vaddr,
 			  csi->scratch.paddr);

@@ -269,7 +269,11 @@ EXPORT_SYMBOL(mmc_of_parse_clk_phase);
  * @host: host whose properties should be parsed.
  *
  * To keep the rest of the MMC subsystem unaware of whether DT has been
+<<<<<<< HEAD
  * used to instantiate and configure this host instance or not, we
+=======
+ * used to to instantiate and configure this host instance or not, we
+>>>>>>> b7ba80a49124 (Commit)
  * parse the properties and set respective generic mmc-host flags and
  * parameters.
  */
@@ -588,6 +592,7 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
 
 EXPORT_SYMBOL(mmc_alloc_host);
 
+<<<<<<< HEAD
 static void devm_mmc_host_release(struct device *dev, void *res)
 {
 	mmc_free_host(res);
@@ -614,6 +619,8 @@ struct mmc_host *devm_mmc_alloc_host(struct device *dev, int extra)
 }
 EXPORT_SYMBOL(devm_mmc_alloc_host);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mmc_validate_host_caps(struct mmc_host *host)
 {
 	struct device *dev = host->parent;
@@ -655,7 +662,13 @@ int mmc_add_host(struct mmc_host *host)
 
 	led_trigger_register_simple(dev_name(&host->class_dev), &host->led);
 
+<<<<<<< HEAD
 	mmc_add_host_debugfs(host);
+=======
+#ifdef CONFIG_DEBUG_FS
+	mmc_add_host_debugfs(host);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	mmc_start_host(host);
 	return 0;
@@ -675,7 +688,13 @@ void mmc_remove_host(struct mmc_host *host)
 {
 	mmc_stop_host(host);
 
+<<<<<<< HEAD
 	mmc_remove_host_debugfs(host);
+=======
+#ifdef CONFIG_DEBUG_FS
+	mmc_remove_host_debugfs(host);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	device_del(&host->class_dev);
 

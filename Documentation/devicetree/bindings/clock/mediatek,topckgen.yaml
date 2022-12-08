@@ -33,9 +33,13 @@ properties:
               - mediatek,mt2712-topckgen
               - mediatek,mt6765-topckgen
               - mediatek,mt6779-topckgen
+<<<<<<< HEAD
               - mediatek,mt6795-topckgen
               - mediatek,mt7629-topckgen
               - mediatek,mt7981-topckgen
+=======
+              - mediatek,mt7629-topckgen
+>>>>>>> b7ba80a49124 (Commit)
               - mediatek,mt7986-topckgen
               - mediatek,mt8167-topckgen
               - mediatek,mt8183-topckgen

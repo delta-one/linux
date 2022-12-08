@@ -281,3 +281,7 @@ module_exit(rza1_irqc_exit);
 
 MODULE_AUTHOR("Geert Uytterhoeven <geert+renesas@glider.be>");
 MODULE_DESCRIPTION("Renesas RZ/A1 IRQC Driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

@@ -2,4 +2,7 @@
 *.d
 virtio_test
 vringh_test
+<<<<<<< HEAD
 virtio-trace/trace-agent
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -1,7 +1,10 @@
 /* SPDX-License-Identifier: BSD-3-Clause-Clear */
 /*
  * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 #ifndef ATH11K_AHB_H
 #define ATH11K_AHB_H
@@ -9,6 +12,7 @@
 #include "core.h"
 
 #define ATH11K_AHB_RECOVERY_TIMEOUT (3 * HZ)
+<<<<<<< HEAD
 
 #define ATH11K_AHB_SMP2P_SMEM_MSG		GENMASK(15, 0)
 #define ATH11K_AHB_SMP2P_SMEM_SEQ_NO		GENMASK(31, 16)
@@ -19,6 +23,8 @@ enum ath11k_ahb_smp2p_msg_id {
 	ATH11K_AHB_POWER_SAVE_EXIT,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ath11k_base;
 
 struct ath11k_ahb {
@@ -32,11 +38,14 @@ struct ath11k_ahb {
 		u32 ce_size;
 		bool use_tz;
 	} fw;
+<<<<<<< HEAD
 	struct {
 		unsigned short seq_no;
 		unsigned int smem_bit;
 		struct qcom_smem_state *smem_state;
 	} smp2p_info;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct ath11k_ahb *ath11k_ahb_priv(struct ath11k_base *ab)

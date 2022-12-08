@@ -81,6 +81,7 @@
 	ddrc_opp_table: opp-table {
 		compatible = "operating-points-v2";
 
+<<<<<<< HEAD
 		opp-25000000 {
 			opp-hz = /bits/ 64 <25000000>;
 		};
@@ -90,6 +91,17 @@
 		};
 
 		opp-750000000 {
+=======
+		opp-25M {
+			opp-hz = /bits/ 64 <25000000>;
+		};
+
+		opp-100M {
+			opp-hz = /bits/ 64 <100000000>;
+		};
+
+		opp-750M {
+>>>>>>> b7ba80a49124 (Commit)
 			opp-hz = /bits/ 64 <750000000>;
 		};
 	};
@@ -119,11 +131,16 @@
 
 &i2c1 {
 	clock-frequency = <100000>;
+<<<<<<< HEAD
 	pinctrl-names = "default", "gpio";
 	pinctrl-0 = <&pinctrl_i2c1>;
 	pinctrl-1 = <&pinctrl_i2c1_gpio>;
 	scl-gpios = <&gpio5 14 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 	sda-gpios = <&gpio5 15 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+=======
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_i2c1>;
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 
 	gsc: gsc@20 {
@@ -368,11 +385,16 @@
 
 &i2c2 {
 	clock-frequency = <400000>;
+<<<<<<< HEAD
 	pinctrl-names = "default", "gpio";
 	pinctrl-0 = <&pinctrl_i2c2>;
 	pinctrl-1 = <&pinctrl_i2c2_gpio>;
 	scl-gpios = <&gpio5 16 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 	sda-gpios = <&gpio5 17 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+=======
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_i2c2>;
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 
 	eeprom@52 {
@@ -441,6 +463,7 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_i2c1_gpio: i2c1gpiogrp {
 		fsl,pins = <
 			MX8MM_IOMUXC_I2C1_SCL_GPIO5_IO14	0x400001c3
@@ -448,6 +471,8 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_i2c2: i2c2grp {
 		fsl,pins = <
 			MX8MM_IOMUXC_I2C2_SCL_I2C2_SCL		0x400001c3
@@ -455,6 +480,7 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_i2c2_gpio: i2c2gpiogrp {
 		fsl,pins = <
 			MX8MM_IOMUXC_I2C2_SCL_GPIO5_IO16	0x400001c3
@@ -462,6 +488,8 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_uart2: uart2grp {
 		fsl,pins = <
 			MX8MM_IOMUXC_UART2_RXD_UART2_DCE_RX	0x140

@@ -31,6 +31,7 @@
 	(SNDRV_PCM_FMTBIT_S16_LE | \
 	 SNDRV_PCM_FMTBIT_S24_LE)
 
+<<<<<<< HEAD
 /* These registers are relative to the second register region -
  * audio pll configuration.
  */
@@ -147,6 +148,8 @@ static inline void armada_38x_set_pll(void __iomem *base, unsigned long rate)
 	writel(reg_val, base + A38X_PLL_CONF_REG1);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int kirkwood_i2s_set_fmt(struct snd_soc_dai *cpu_dai,
 		unsigned int fmt)
 {
@@ -222,10 +225,14 @@ static void kirkwood_set_rate(struct snd_soc_dai *dai,
 		 * defined in kirkwood_i2s_dai */
 		dev_dbg(dai->dev, "%s: dco set rate = %lu\n",
 			__func__, rate);
+<<<<<<< HEAD
 		if (priv->pll_config)
 			armada_38x_set_pll(priv->pll_config, rate);
 		else
 			kirkwood_set_dco(priv->io, rate);
+=======
+		kirkwood_set_dco(priv->io, rate);
+>>>>>>> b7ba80a49124 (Commit)
 
 		clks_ctrl = KIRKWOOD_MCLK_SOURCE_DCO;
 	} else {
@@ -651,10 +658,14 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
 
 	dev_set_drvdata(&pdev->dev, priv);
 
+<<<<<<< HEAD
 	if (of_device_is_compatible(np, "marvell,armada-380-audio"))
 		priv->io = devm_platform_ioremap_resource_byname(pdev, "i2s_regs");
 	else
 		priv->io = devm_platform_ioremap_resource(pdev, 0);
+=======
+	priv->io = devm_platform_ioremap_resource(pdev, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(priv->io))
 		return PTR_ERR(priv->io);
 
@@ -662,6 +673,7 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
 	if (priv->irq < 0)
 		return priv->irq;
 
+<<<<<<< HEAD
 	if (of_device_is_compatible(np, "marvell,armada-380-audio")) {
 		err = armada_38x_i2s_init_quirk(pdev, priv, soc_dai);
 		if (err < 0)
@@ -670,6 +682,8 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
 		armada_38x_set_pll(priv->pll_config, 44100);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (np) {
 		priv->burst = 128;		/* might be 32 or 128 */
 	} else if (data) {
@@ -736,7 +750,11 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
 	return err;
 }
 
+<<<<<<< HEAD
 static void kirkwood_i2s_dev_remove(struct platform_device *pdev)
+=======
+static int kirkwood_i2s_dev_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct kirkwood_dma_data *priv = dev_get_drvdata(&pdev->dev);
 
@@ -744,6 +762,11 @@ static void kirkwood_i2s_dev_remove(struct platform_device *pdev)
 	if (!IS_ERR(priv->extclk))
 		clk_disable_unprepare(priv->extclk);
 	clk_disable_unprepare(priv->clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_OF
@@ -751,7 +774,10 @@ static const struct of_device_id mvebu_audio_of_match[] = {
 	{ .compatible = "marvell,kirkwood-audio" },
 	{ .compatible = "marvell,dove-audio" },
 	{ .compatible = "marvell,armada370-audio" },
+<<<<<<< HEAD
 	{ .compatible = "marvell,armada-380-audio" },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(of, mvebu_audio_of_match);
@@ -759,7 +785,11 @@ MODULE_DEVICE_TABLE(of, mvebu_audio_of_match);
 
 static struct platform_driver kirkwood_i2s_driver = {
 	.probe  = kirkwood_i2s_dev_probe,
+<<<<<<< HEAD
 	.remove_new = kirkwood_i2s_dev_remove,
+=======
+	.remove = kirkwood_i2s_dev_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = DRV_NAME,
 		.of_match_table = of_match_ptr(mvebu_audio_of_match),

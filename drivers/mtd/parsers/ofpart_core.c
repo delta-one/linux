@@ -122,6 +122,7 @@ static int parse_fixed_partitions(struct mtd_info *master,
 
 		a_cells = of_n_addr_cells(pp);
 		s_cells = of_n_size_cells(pp);
+<<<<<<< HEAD
 		if (!dedicated && s_cells == 0) {
 			/*
 			 * This is a ugly workaround to not create
@@ -141,6 +142,8 @@ static int parse_fixed_partitions(struct mtd_info *master,
 				master->name, pp, mtd_node);
 			s_cells = 1;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (len / 4 != a_cells + s_cells) {
 			pr_debug("%s: ofpart partition %pOF (%pOF) error parsing reg property.\n",
 				 master->name, pp,

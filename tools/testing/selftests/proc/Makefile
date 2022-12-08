@@ -8,7 +8,10 @@ TEST_GEN_PROGS += fd-001-lookup
 TEST_GEN_PROGS += fd-002-posix-eq
 TEST_GEN_PROGS += fd-003-kthread
 TEST_GEN_PROGS += proc-loadavg-001
+<<<<<<< HEAD
 TEST_GEN_PROGS += proc-empty-vm
+=======
+>>>>>>> b7ba80a49124 (Commit)
 TEST_GEN_PROGS += proc-pid-vm
 TEST_GEN_PROGS += proc-self-map-files-001
 TEST_GEN_PROGS += proc-self-map-files-002

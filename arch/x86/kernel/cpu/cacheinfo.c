@@ -11,19 +11,28 @@
 #include <linux/slab.h>
 #include <linux/cacheinfo.h>
 #include <linux/cpu.h>
+<<<<<<< HEAD
 #include <linux/cpuhotplug.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sched.h>
 #include <linux/capability.h>
 #include <linux/sysfs.h>
 #include <linux/pci.h>
+<<<<<<< HEAD
 #include <linux/stop_machine.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/cpufeature.h>
 #include <asm/cacheinfo.h>
 #include <asm/amd_nb.h>
 #include <asm/smp.h>
+<<<<<<< HEAD
 #include <asm/mtrr.h>
 #include <asm/tlbflush.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "cpu.h"
 
@@ -39,9 +48,12 @@ DEFINE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_llc_shared_map);
 /* Shared L2 cache maps */
 DEFINE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_l2c_shared_map);
 
+<<<<<<< HEAD
 /* Kernel controls MTRR and/or PAT MSRs. */
 unsigned int memory_caching_control __ro_after_init;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct _cache_table {
 	unsigned char descriptor;
 	char cache_type;
@@ -734,7 +746,11 @@ void init_hygon_cacheinfo(struct cpuinfo_x86 *c)
 void init_intel_cacheinfo(struct cpuinfo_x86 *c)
 {
 	/* Cache sizes */
+<<<<<<< HEAD
 	unsigned int l1i = 0, l1d = 0, l2 = 0, l3 = 0;
+=======
+	unsigned int trace = 0, l1i = 0, l1d = 0, l2 = 0, l3 = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int new_l1d = 0, new_l1i = 0; /* Cache sizes from cpuid(4) */
 	unsigned int new_l2 = 0, new_l3 = 0, i; /* Cache sizes from cpuid(4) */
 	unsigned int l2_id = 0, l3_id = 0, num_threads_sharing, index_msb;
@@ -835,6 +851,12 @@ void init_intel_cacheinfo(struct cpuinfo_x86 *c)
 						case LVL_3:
 							l3 += cache_table[k].size;
 							break;
+<<<<<<< HEAD
+=======
+						case LVL_TRACE:
+							trace += cache_table[k].size;
+							break;
+>>>>>>> b7ba80a49124 (Commit)
 						}
 
 						break;
@@ -1044,6 +1066,7 @@ int populate_cache_leaves(unsigned int cpu)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 /*
  * Disable and enable caches. Needed for changing MTRRs and the PAT MSR.
@@ -1216,3 +1239,5 @@ static int __init cache_ap_register(void)
 	return 0;
 }
 core_initcall(cache_ap_register);
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -173,14 +173,30 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	/* Completion for VF2PF request/response message exchange */
 	init_completion(&accel_dev->vf.msg_received);
 
+<<<<<<< HEAD
 	ret = adf_dev_up(accel_dev, false);
+=======
+	ret = adf_dev_init(accel_dev);
+	if (ret)
+		goto out_err_dev_shutdown;
+
+	set_bit(ADF_STATUS_PF_RUNNING, &accel_dev->status);
+
+	ret = adf_dev_start(accel_dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto out_err_dev_stop;
 
 	return ret;
 
 out_err_dev_stop:
+<<<<<<< HEAD
 	adf_dev_down(accel_dev, false);
+=======
+	adf_dev_stop(accel_dev);
+out_err_dev_shutdown:
+	adf_dev_shutdown(accel_dev);
+>>>>>>> b7ba80a49124 (Commit)
 out_err_free_reg:
 	pci_release_regions(accel_pci_dev->pci_dev);
 out_err_disable:
@@ -200,7 +216,12 @@ static void adf_remove(struct pci_dev *pdev)
 		return;
 	}
 	adf_flush_vf_wq(accel_dev);
+<<<<<<< HEAD
 	adf_dev_down(accel_dev, false);
+=======
+	adf_dev_stop(accel_dev);
+	adf_dev_shutdown(accel_dev);
+>>>>>>> b7ba80a49124 (Commit)
 	adf_cleanup_accel(accel_dev);
 	adf_cleanup_pci_dev(accel_dev);
 	kfree(accel_dev);

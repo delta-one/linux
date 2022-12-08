@@ -30,7 +30,10 @@
 #include <linux/seq_file.h>
 #include <linux/sysfs.h>
 #include <linux/types.h>
+<<<<<<< HEAD
 #include <linux/wmi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <acpi/video.h>
 
@@ -38,11 +41,23 @@
 
 #define IDEAPAD_RFKILL_DEV_NUM	3
 
+<<<<<<< HEAD
+=======
+#if IS_ENABLED(CONFIG_ACPI_WMI)
+static const char *const ideapad_wmi_fnesc_events[] = {
+	"26CAB2E5-5CF1-46AE-AAC3-4A12B6BA50E6", /* Yoga 3 */
+	"56322276-8493-4CE8-A783-98C991274F5E", /* Yoga 700 */
+	"8FC0DE0C-B4E4-43FD-B0F3-8871711C1294", /* Legion 5 */
+};
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 enum {
 	CFG_CAP_BT_BIT       = 16,
 	CFG_CAP_3G_BIT       = 17,
 	CFG_CAP_WIFI_BIT     = 18,
 	CFG_CAP_CAM_BIT      = 19,
+<<<<<<< HEAD
 
 	/*
 	 * These are OnScreenDisplay support bits that can be useful to determine
@@ -55,6 +70,9 @@ enum {
 	CFG_OSD_MICMUTE_BIT  = 29,
 	CFG_OSD_TOUCHPAD_BIT = 30,
 	CFG_OSD_CAM_BIT      = 31,
+=======
+	CFG_CAP_TOUCHPAD_BIT = 30,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum {
@@ -134,17 +152,27 @@ struct ideapad_private {
 	struct ideapad_dytc_priv *dytc;
 	struct dentry *debug;
 	unsigned long cfg;
+<<<<<<< HEAD
 	unsigned long r_touchpad_val;
+=======
+	const char *fnesc_guid;
+>>>>>>> b7ba80a49124 (Commit)
 	struct {
 		bool conservation_mode    : 1;
 		bool dytc                 : 1;
 		bool fan_mode             : 1;
 		bool fn_lock              : 1;
+<<<<<<< HEAD
 		bool set_fn_lock_led      : 1;
 		bool hw_rfkill_switch     : 1;
 		bool kbd_bl               : 1;
 		bool touchpad_ctrl_via_ec : 1;
 		bool ctrl_ps2_aux_port    : 1;
+=======
+		bool hw_rfkill_switch     : 1;
+		bool kbd_bl               : 1;
+		bool touchpad_ctrl_via_ec : 1;
+>>>>>>> b7ba80a49124 (Commit)
 		bool usb_charging         : 1;
 	} features;
 	struct {
@@ -160,6 +188,7 @@ MODULE_PARM_DESC(no_bt_rfkill, "No rfkill for bluetooth.");
 
 static bool allow_v4_dytc;
 module_param(allow_v4_dytc, bool, 0444);
+<<<<<<< HEAD
 MODULE_PARM_DESC(allow_v4_dytc,
 	"Enable DYTC version 4 platform-profile support. "
 	"If you need this please report this to: platform-driver-x86@vger.kernel.org");
@@ -223,6 +252,9 @@ static void ideapad_shared_exit(struct ideapad_private *priv)
 
 	mutex_unlock(&ideapad_shared_mutex);
 }
+=======
+MODULE_PARM_DESC(allow_v4_dytc, "Enable DYTC version 4 platform-profile support.");
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * ACPI Helpers
@@ -439,6 +471,7 @@ static int debugfs_cfg_show(struct seq_file *s, void *data)
 		seq_puts(s, " wifi");
 	if (test_bit(CFG_CAP_CAM_BIT, &priv->cfg))
 		seq_puts(s, " camera");
+<<<<<<< HEAD
 	seq_puts(s, "\n");
 
 	seq_puts(s, "OSD support:");
@@ -452,6 +485,10 @@ static int debugfs_cfg_show(struct seq_file *s, void *data)
 		seq_puts(s, " touchpad");
 	if (test_bit(CFG_OSD_CAM_BIT, &priv->cfg))
 		seq_puts(s, " camera");
+=======
+	if (test_bit(CFG_CAP_TOUCHPAD_BIT, &priv->cfg))
+		seq_puts(s, " touchpad");
+>>>>>>> b7ba80a49124 (Commit)
 	seq_puts(s, "\n");
 
 	seq_puts(s, "Graphics: ");
@@ -657,8 +694,11 @@ static ssize_t touchpad_show(struct device *dev,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	priv->r_touchpad_val = result;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return sysfs_emit(buf, "%d\n", !!result);
 }
 
@@ -678,8 +718,11 @@ static ssize_t touchpad_store(struct device *dev,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	priv->r_touchpad_val = state;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return count;
 }
 
@@ -748,7 +791,12 @@ static umode_t ideapad_is_visible(struct kobject *kobj,
 	else if (attr == &dev_attr_fn_lock.attr)
 		supported = priv->features.fn_lock;
 	else if (attr == &dev_attr_touchpad.attr)
+<<<<<<< HEAD
 		supported = priv->features.touchpad_ctrl_via_ec;
+=======
+		supported = priv->features.touchpad_ctrl_via_ec &&
+			    test_bit(CFG_CAP_TOUCHPAD_BIT, &priv->cfg);
+>>>>>>> b7ba80a49124 (Commit)
 	else if (attr == &dev_attr_usb_charging.attr)
 		supported = priv->features.usb_charging;
 
@@ -1156,8 +1204,11 @@ static void ideapad_sysfs_exit(struct ideapad_private *priv)
 /*
  * input device
  */
+<<<<<<< HEAD
 #define IDEAPAD_WMI_KEY 0x100
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct key_entry ideapad_keymap[] = {
 	{ KE_KEY,   6, { KEY_SWITCHVIDEOMODE } },
 	{ KE_KEY,   7, { KEY_CAMERA } },
@@ -1170,6 +1221,7 @@ static const struct key_entry ideapad_keymap[] = {
 	{ KE_KEY,  65, { KEY_PROG4 } },
 	{ KE_KEY,  66, { KEY_TOUCHPAD_OFF } },
 	{ KE_KEY,  67, { KEY_TOUCHPAD_ON } },
+<<<<<<< HEAD
 	{ KE_KEY,  68, { KEY_TOUCHPAD_TOGGLE } },
 	{ KE_KEY, 128, { KEY_ESC } },
 
@@ -1194,6 +1246,9 @@ static const struct key_entry ideapad_keymap[] = {
 	/* Refresh Rate Toggle */
 	{ KE_KEY,	0x0a | IDEAPAD_WMI_KEY, { KEY_DISPLAYTOGGLE } },
 
+=======
+	{ KE_KEY, 128, { KEY_ESC } },
+>>>>>>> b7ba80a49124 (Commit)
 	{ KE_END },
 };
 
@@ -1506,6 +1561,7 @@ static void ideapad_kbd_bl_exit(struct ideapad_private *priv)
 /*
  * module init/exit
  */
+<<<<<<< HEAD
 static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_events)
 {
 	unsigned long value;
@@ -1541,6 +1597,28 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
 	}
 
 	priv->r_touchpad_val = value;
+=======
+static void ideapad_sync_touchpad_state(struct ideapad_private *priv)
+{
+	unsigned long value;
+
+	if (!priv->features.touchpad_ctrl_via_ec)
+		return;
+
+	/* Without reading from EC touchpad LED doesn't switch state */
+	if (!read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value)) {
+		unsigned char param;
+		/*
+		 * Some IdeaPads don't really turn off touchpad - they only
+		 * switch the LED state. We (de)activate KBC AUX port to turn
+		 * touchpad off and on. We send KEY_TOUCHPAD_OFF and
+		 * KEY_TOUCHPAD_ON to not to get out of sync with LED
+		 */
+		i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I8042_CMD_AUX_DISABLE);
+		ideapad_input_report(priv, value ? 67 : 66);
+		sysfs_notify(&priv->platform_device->dev.kobj, NULL, "touchpad");
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
@@ -1581,7 +1659,11 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
 			ideapad_sync_rfk_state(priv);
 			break;
 		case 5:
+<<<<<<< HEAD
 			ideapad_sync_touchpad_state(priv, true);
+=======
+			ideapad_sync_touchpad_state(priv);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 4:
 			ideapad_backlight_notify_brightness(priv);
@@ -1612,6 +1694,7 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
 	}
 }
 
+<<<<<<< HEAD
 /* On some models we need to call exec_sals(SALS_FNLOCK_ON/OFF) to set the LED */
 static const struct dmi_system_id set_fn_lock_led_list[] = {
 	{
@@ -1629,6 +1712,31 @@ static const struct dmi_system_id set_fn_lock_led_list[] = {
 	},
 	{}
 };
+=======
+#if IS_ENABLED(CONFIG_ACPI_WMI)
+static void ideapad_wmi_notify(u32 value, void *context)
+{
+	struct ideapad_private *priv = context;
+	unsigned long result;
+
+	switch (value) {
+	case 128:
+		ideapad_input_report(priv, value);
+		break;
+	case 208:
+		if (!eval_hals(priv->adev->handle, &result)) {
+			bool state = test_bit(HALS_FNLOCK_STATE_BIT, &result);
+
+			exec_sals(priv->adev->handle, state ? SALS_FNLOCK_ON : SALS_FNLOCK_OFF);
+		}
+		break;
+	default:
+		dev_info(&priv->platform_device->dev,
+			 "Unknown WMI event: %u\n", value);
+	}
+}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Some ideapads have a hardware rfkill switch, but most do not have one.
@@ -1649,6 +1757,7 @@ static const struct dmi_system_id hw_rfkill_list[] = {
 	{}
 };
 
+<<<<<<< HEAD
 /*
  * On some models the EC toggles the touchpad muted LED on touchpad toggle
  * hotkey presses, but the EC does not actually disable the touchpad itself.
@@ -1666,11 +1775,14 @@ static const struct dmi_system_id ctrl_ps2_aux_port_list[] = {
 	{}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void ideapad_check_features(struct ideapad_private *priv)
 {
 	acpi_handle handle = priv->adev->handle;
 	unsigned long val;
 
+<<<<<<< HEAD
 	priv->features.set_fn_lock_led =
 		set_fn_lock_led || dmi_check_system(set_fn_lock_led_list);
 	priv->features.hw_rfkill_switch =
@@ -1678,6 +1790,12 @@ static void ideapad_check_features(struct ideapad_private *priv)
 	priv->features.ctrl_ps2_aux_port =
 		ctrl_ps2_aux_port || dmi_check_system(ctrl_ps2_aux_port_list);
 	priv->features.touchpad_ctrl_via_ec = touchpad_ctrl_via_ec;
+=======
+	priv->features.hw_rfkill_switch = dmi_check_system(hw_rfkill_list);
+
+	/* Most ideapads with ELAN0634 touchpad don't use EC touchpad switch */
+	priv->features.touchpad_ctrl_via_ec = !acpi_dev_present("ELAN0634", NULL, -1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!read_ec_data(handle, VPCCMD_R_FAN, &val))
 		priv->features.fan_mode = true;
@@ -1702,6 +1820,7 @@ static void ideapad_check_features(struct ideapad_private *priv)
 	}
 }
 
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_ACPI_WMI)
 /*
  * WMI driver
@@ -1814,6 +1933,8 @@ static inline void ideapad_wmi_driver_unregister(void) { }
 /*
  * ACPI driver
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ideapad_acpi_add(struct platform_device *pdev)
 {
 	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
@@ -1862,12 +1983,23 @@ static int ideapad_acpi_add(struct platform_device *pdev)
 	if (!priv->features.hw_rfkill_switch)
 		write_ec_cmd(priv->adev->handle, VPCCMD_W_RF, 1);
 
+<<<<<<< HEAD
+=======
+	/* The same for Touchpad */
+	if (!priv->features.touchpad_ctrl_via_ec)
+		write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, 1);
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
 		if (test_bit(ideapad_rfk_data[i].cfgbit, &priv->cfg))
 			ideapad_register_rfkill(priv, i);
 
 	ideapad_sync_rfk_state(priv);
+<<<<<<< HEAD
 	ideapad_sync_touchpad_state(priv, false);
+=======
+	ideapad_sync_touchpad_state(priv);
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = ideapad_dytc_profile_init(priv);
 	if (err) {
@@ -1891,6 +2023,7 @@ static int ideapad_acpi_add(struct platform_device *pdev)
 		goto notification_failed;
 	}
 
+<<<<<<< HEAD
 	err = ideapad_shared_init(priv);
 	if (err)
 		goto shared_init_failed;
@@ -1901,6 +2034,32 @@ shared_init_failed:
 	acpi_remove_notify_handler(priv->adev->handle,
 				   ACPI_DEVICE_NOTIFY,
 				   ideapad_acpi_notify);
+=======
+#if IS_ENABLED(CONFIG_ACPI_WMI)
+	for (i = 0; i < ARRAY_SIZE(ideapad_wmi_fnesc_events); i++) {
+		status = wmi_install_notify_handler(ideapad_wmi_fnesc_events[i],
+						    ideapad_wmi_notify, priv);
+		if (ACPI_SUCCESS(status)) {
+			priv->fnesc_guid = ideapad_wmi_fnesc_events[i];
+			break;
+		}
+	}
+
+	if (ACPI_FAILURE(status) && status != AE_NOT_EXIST) {
+		err = -EIO;
+		goto notification_failed_wmi;
+	}
+#endif
+
+	return 0;
+
+#if IS_ENABLED(CONFIG_ACPI_WMI)
+notification_failed_wmi:
+	acpi_remove_notify_handler(priv->adev->handle,
+				   ACPI_DEVICE_NOTIFY,
+				   ideapad_acpi_notify);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 notification_failed:
 	ideapad_backlight_exit(priv);
@@ -1921,12 +2080,23 @@ input_failed:
 	return err;
 }
 
+<<<<<<< HEAD
 static void ideapad_acpi_remove(struct platform_device *pdev)
+=======
+static int ideapad_acpi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ideapad_private *priv = dev_get_drvdata(&pdev->dev);
 	int i;
 
+<<<<<<< HEAD
 	ideapad_shared_exit(priv);
+=======
+#if IS_ENABLED(CONFIG_ACPI_WMI)
+	if (priv->fnesc_guid)
+		wmi_remove_notify_handler(priv->fnesc_guid);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	acpi_remove_notify_handler(priv->adev->handle,
 				   ACPI_DEVICE_NOTIFY,
@@ -1942,6 +2112,11 @@ static void ideapad_acpi_remove(struct platform_device *pdev)
 	ideapad_input_exit(priv);
 	ideapad_debugfs_exit(priv);
 	ideapad_sysfs_exit(priv);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -1950,7 +2125,11 @@ static int ideapad_acpi_resume(struct device *dev)
 	struct ideapad_private *priv = dev_get_drvdata(dev);
 
 	ideapad_sync_rfk_state(priv);
+<<<<<<< HEAD
 	ideapad_sync_touchpad_state(priv, false);
+=======
+	ideapad_sync_touchpad_state(priv);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (priv->dytc)
 		dytc_profile_refresh(priv);
@@ -1968,7 +2147,11 @@ MODULE_DEVICE_TABLE(acpi, ideapad_device_ids);
 
 static struct platform_driver ideapad_acpi_driver = {
 	.probe = ideapad_acpi_add,
+<<<<<<< HEAD
 	.remove_new = ideapad_acpi_remove,
+=======
+	.remove = ideapad_acpi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name   = "ideapad_acpi",
 		.pm     = &ideapad_pm,
@@ -1976,6 +2159,7 @@ static struct platform_driver ideapad_acpi_driver = {
 	},
 };
 
+<<<<<<< HEAD
 static int __init ideapad_laptop_init(void)
 {
 	int err;
@@ -2000,6 +2184,9 @@ static void __exit ideapad_laptop_exit(void)
 	platform_driver_unregister(&ideapad_acpi_driver);
 }
 module_exit(ideapad_laptop_exit)
+=======
+module_platform_driver(ideapad_acpi_driver);
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_AUTHOR("David Woodhouse <dwmw2@infradead.org>");
 MODULE_DESCRIPTION("IdeaPad ACPI Extras");

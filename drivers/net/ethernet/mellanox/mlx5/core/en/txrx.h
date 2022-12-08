@@ -11,6 +11,7 @@
 
 #define INL_HDR_START_SZ (sizeof(((struct mlx5_wqe_eth_seg *)NULL)->inline_hdr.start))
 
+<<<<<<< HEAD
 /* IPSEC inline data includes:
  * 1. ESP trailer: up to 255 bytes of padding, 1 byte for pad length, 1 byte for
  *    next header.
@@ -32,6 +33,8 @@
 					 MAX_SKB_FRAGS + 1, \
 					 MLX5_SEND_WQEBB_NUM_DS)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MLX5E_RX_ERR_CQE(cqe) (get_cqe_opcode(cqe) != MLX5_CQE_RESP_SEND)
 
 static inline
@@ -73,23 +76,29 @@ int mlx5e_poll_rx_cq(struct mlx5e_cq *cq, int budget);
 void mlx5e_free_rx_descs(struct mlx5e_rq *rq);
 void mlx5e_free_rx_in_progress_descs(struct mlx5e_rq *rq);
 
+<<<<<<< HEAD
 static inline bool mlx5e_rx_hw_stamp(struct hwtstamp_config *config)
 {
 	return config->rx_filter == HWTSTAMP_FILTER_ALL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* TX */
 netdev_tx_t mlx5e_xmit(struct sk_buff *skb, struct net_device *dev);
 bool mlx5e_poll_tx_cq(struct mlx5e_cq *cq, int napi_budget);
 void mlx5e_free_txqsq_descs(struct mlx5e_txqsq *sq);
 
 static inline bool
+<<<<<<< HEAD
 mlx5e_skb_fifo_has_room(struct mlx5e_skb_fifo *fifo)
 {
 	return (u16)(*fifo->pc - *fifo->cc) <= fifo->mask;
 }
 
 static inline bool
+=======
+>>>>>>> b7ba80a49124 (Commit)
 mlx5e_wqc_has_room_for(struct mlx5_wq_cyc *wq, u16 cc, u16 pc, u16 n)
 {
 	return (mlx5_wq_cyc_ctr2ix(wq, cc - pc) >= n) || (cc == pc);
@@ -302,8 +311,11 @@ void mlx5e_skb_fifo_push(struct mlx5e_skb_fifo *fifo, struct sk_buff *skb)
 static inline
 struct sk_buff *mlx5e_skb_fifo_pop(struct mlx5e_skb_fifo *fifo)
 {
+<<<<<<< HEAD
 	WARN_ON_ONCE(*fifo->pc == *fifo->cc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return *mlx5e_skb_fifo_get(fifo, (*fifo->cc)++);
 }
 
@@ -322,6 +334,10 @@ mlx5e_tx_dma_unmap(struct device *pdev, struct mlx5e_sq_dma *dma)
 	}
 }
 
+<<<<<<< HEAD
+=======
+void mlx5e_sq_xmit_simple(struct mlx5e_txqsq *sq, struct sk_buff *skb, bool xmit_more);
+>>>>>>> b7ba80a49124 (Commit)
 void mlx5e_tx_mpwqe_ensure_complete(struct mlx5e_txqsq *sq);
 
 static inline bool mlx5e_tx_mpwqe_is_full(struct mlx5e_tx_mpwqe *session, u8 max_sq_mpw_wqebbs)
@@ -451,8 +467,11 @@ mlx5e_set_eseg_swp(struct sk_buff *skb, struct mlx5_wqe_eth_seg *eseg,
 
 static inline u16 mlx5e_stop_room_for_wqe(struct mlx5_core_dev *mdev, u16 wqe_size)
 {
+<<<<<<< HEAD
 	WARN_ON_ONCE(PAGE_SIZE / MLX5_SEND_WQE_BB < (u16)mlx5e_get_max_sq_wqebbs(mdev));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* A WQE must not cross the page boundary, hence two conditions:
 	 * 1. Its size must not exceed the page size.
 	 * 2. If the WQE size is X, and the space remaining in a page is less
@@ -465,6 +484,10 @@ static inline u16 mlx5e_stop_room_for_wqe(struct mlx5_core_dev *mdev, u16 wqe_si
 		  "wqe_size %u is greater than max SQ WQEBBs %u",
 		  wqe_size, mlx5e_get_max_sq_wqebbs(mdev));
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	return MLX5E_STOP_ROOM(wqe_size);
 }
 
@@ -473,6 +496,7 @@ static inline u16 mlx5e_stop_room_for_max_wqe(struct mlx5_core_dev *mdev)
 	return MLX5E_STOP_ROOM(mlx5e_get_max_sq_wqebbs(mdev));
 }
 
+<<<<<<< HEAD
 static inline u16 mlx5e_stop_room_for_mpwqe(struct mlx5_core_dev *mdev)
 {
 	u8 mpwqe_wqebbs = mlx5e_get_max_sq_aligned_wqebbs(mdev);
@@ -493,4 +517,18 @@ static inline struct mlx5e_mpw_info *mlx5e_get_mpw_info(struct mlx5e_rq *rq, int
 
 	return (struct mlx5e_mpw_info *)((char *)rq->mpwqe.info + array_size(i, isz));
 }
+=======
+static inline bool mlx5e_icosq_can_post_wqe(struct mlx5e_icosq *sq, u16 wqe_size)
+{
+	u16 room = sq->reserved_room;
+
+	WARN_ONCE(wqe_size > sq->max_sq_wqebbs,
+		  "wqe_size %u is greater than max SQ WQEBBs %u",
+		  wqe_size, sq->max_sq_wqebbs);
+
+	room += MLX5E_STOP_ROOM(wqe_size);
+
+	return mlx5e_wqc_has_room_for(&sq->wq, sq->cc, sq->pc, room);
+}
+>>>>>>> b7ba80a49124 (Commit)
 #endif

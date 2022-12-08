@@ -11,8 +11,12 @@ lsio_subsys: bus@5d000000 {
 	compatible = "simple-bus";
 	#address-cells = <1>;
 	#size-cells = <1>;
+<<<<<<< HEAD
 	ranges = <0x5d000000 0x0 0x5d000000 0x1000000>,
 		 <0x08000000 0x0 0x08000000 0x10000000>;
+=======
+	ranges = <0x5d000000 0x0 0x5d000000 0x1000000>;
+>>>>>>> b7ba80a49124 (Commit)
 
 	lsio_mem_clk: clock-lsio-mem {
 		compatible = "fixed-clock";
@@ -28,6 +32,7 @@ lsio_subsys: bus@5d000000 {
 		clock-output-names = "lsio_bus_clk";
 	};
 
+<<<<<<< HEAD
 	lsio_pwm0: pwm@5d000000 {
 		compatible = "fsl,imx27-pwm";
 		reg = <0x5d000000 0x10000>;
@@ -76,6 +81,8 @@ lsio_subsys: bus@5d000000 {
 		status = "disabled";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	lsio_gpio0: gpio@5d080000 {
 		reg = <0x5d080000 0x10000>;
 		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
@@ -156,6 +163,7 @@ lsio_subsys: bus@5d000000 {
 		power-domains = <&pd IMX_SC_R_GPIO_7>;
 	};
 
+<<<<<<< HEAD
 	flexspi0: spi@5d120000 {
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -170,6 +178,8 @@ lsio_subsys: bus@5d000000 {
 		status = "disabled";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	lsio_mu0: mailbox@5d1b0000 {
 		reg = <0x5d1b0000 0x10000>;
 		interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;

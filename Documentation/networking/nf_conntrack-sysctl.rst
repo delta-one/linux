@@ -163,6 +163,7 @@ nf_conntrack_timestamp - BOOLEAN
 
 	Enable connection tracking flow timestamping.
 
+<<<<<<< HEAD
 nf_conntrack_sctp_timeout_closed - INTEGER (seconds)
 	default 10
 
@@ -192,6 +193,8 @@ nf_conntrack_sctp_timeout_heartbeat_sent - INTEGER (seconds)
 	This timeout is used to setup conntrack entry on secondary paths.
 	Default is set to hb_interval.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 nf_conntrack_udp_timeout - INTEGER (seconds)
 	default 30
 

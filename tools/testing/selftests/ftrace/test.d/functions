@@ -142,6 +142,7 @@ finish_ftrace() {
 
 check_requires() { # Check required files and tracers
     for i in "$@" ; do
+<<<<<<< HEAD
 	p=${i%:program}
         r=${i%:README}
         t=${i%:tracer}
@@ -151,6 +152,11 @@ check_requires() { # Check required files and tracers
                 exit_unresolved
 	    fi
         elif [ $t != $i ]; then
+=======
+        r=${i%:README}
+        t=${i%:tracer}
+        if [ $t != $i ]; then
+>>>>>>> b7ba80a49124 (Commit)
             if ! grep -wq $t available_tracers ; then
                 echo "Required tracer $t is not configured."
                 exit_unsupported

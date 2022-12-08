@@ -102,12 +102,15 @@ test_stream(struct i915_perf *perf)
 		I915_OA_FORMAT_A32u40_A4u32_B8_C8 : I915_OA_FORMAT_C4_B8,
 	};
 	struct i915_perf_stream *stream;
+<<<<<<< HEAD
 	struct intel_gt *gt;
 
 	if (!props.engine)
 		return NULL;
 
 	gt = props.engine->gt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!oa_config)
 		return NULL;
@@ -122,12 +125,20 @@ test_stream(struct i915_perf *perf)
 
 	stream->perf = perf;
 
+<<<<<<< HEAD
 	mutex_lock(&gt->perf.lock);
+=======
+	mutex_lock(&perf->lock);
+>>>>>>> b7ba80a49124 (Commit)
 	if (i915_oa_stream_init(stream, &param, &props)) {
 		kfree(stream);
 		stream =  NULL;
 	}
+<<<<<<< HEAD
 	mutex_unlock(&gt->perf.lock);
+=======
+	mutex_unlock(&perf->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	i915_oa_config_put(oa_config);
 
@@ -136,11 +147,19 @@ test_stream(struct i915_perf *perf)
 
 static void stream_destroy(struct i915_perf_stream *stream)
 {
+<<<<<<< HEAD
 	struct intel_gt *gt = stream->engine->gt;
 
 	mutex_lock(&gt->perf.lock);
 	i915_perf_destroy_locked(stream);
 	mutex_unlock(&gt->perf.lock);
+=======
+	struct i915_perf *perf = stream->perf;
+
+	mutex_lock(&perf->lock);
+	i915_perf_destroy_locked(stream);
+	mutex_unlock(&perf->lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int live_sanitycheck(void *arg)

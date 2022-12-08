@@ -6,7 +6,10 @@
 
 #include <linux/module.h>
 #include <linux/phy/phy.h>
+<<<<<<< HEAD
 #include <net/dcbnl.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "sparx5_main_regs.h"
 #include "sparx5_main.h"
@@ -1071,11 +1074,14 @@ int sparx5_port_init(struct sparx5 *sparx5,
 	/* Discard pause frame 01-80-C2-00-00-01 */
 	spx5_wr(PAUSE_DISCARD, sparx5, ANA_CL_CAPTURE_BPDU_CFG(port->portno));
 
+<<<<<<< HEAD
 	/* Discard SMAC multicast */
 	spx5_rmw(ANA_CL_FILTER_CTRL_FILTER_SMAC_MC_DIS_SET(0),
 		 ANA_CL_FILTER_CTRL_FILTER_SMAC_MC_DIS,
 		 sparx5, ANA_CL_FILTER_CTRL(port->portno));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (conf->portmode == PHY_INTERFACE_MODE_QSGMII ||
 	    conf->portmode == PHY_INTERFACE_MODE_SGMII) {
 		err = sparx5_serdes_set(sparx5, port, conf);
@@ -1150,6 +1156,7 @@ void sparx5_port_enable(struct sparx5_port *port, bool enable)
 		 sparx5,
 		 QFWD_SWITCH_PORT_MODE(port->portno));
 }
+<<<<<<< HEAD
 
 int sparx5_port_qos_set(struct sparx5_port *port,
 			struct sparx5_port_qos *qos)
@@ -1345,3 +1352,5 @@ int sparx5_port_qos_default_set(const struct sparx5_port *port,
 
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

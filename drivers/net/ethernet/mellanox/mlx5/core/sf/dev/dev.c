@@ -18,10 +18,13 @@ struct mlx5_sf_dev_table {
 	phys_addr_t base_address;
 	u64 sf_bar_length;
 	struct notifier_block nb;
+<<<<<<< HEAD
 	struct mutex table_lock; /* Serializes sf life cycle and vhca state change handler */
 	struct workqueue_struct *active_wq;
 	struct work_struct work;
 	u8 stop_active_wq:1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct mlx5_core_dev *dev;
 };
 
@@ -172,7 +175,10 @@ mlx5_sf_dev_state_change_handler(struct notifier_block *nb, unsigned long event_
 		return 0;
 
 	sf_index = event->function_id - base_id;
+<<<<<<< HEAD
 	mutex_lock(&table->table_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sf_dev = xa_load(&table->devices, sf_index);
 	switch (event->new_vhca_state) {
 	case MLX5_VHCA_STATE_INVALID:
@@ -196,7 +202,10 @@ mlx5_sf_dev_state_change_handler(struct notifier_block *nb, unsigned long event_
 	default:
 		break;
 	}
+<<<<<<< HEAD
 	mutex_unlock(&table->table_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -221,6 +230,7 @@ static int mlx5_sf_dev_vhca_arm_all(struct mlx5_sf_dev_table *table)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void mlx5_sf_dev_add_active_work(struct work_struct *work)
 {
 	struct mlx5_sf_dev_table *table = container_of(work, struct mlx5_sf_dev_table, work);
@@ -293,6 +303,8 @@ static void mlx5_sf_dev_destroy_active_work(struct mlx5_sf_dev_table *table)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void mlx5_sf_dev_table_create(struct mlx5_core_dev *dev)
 {
 	struct mlx5_sf_dev_table *table;
@@ -318,17 +330,23 @@ void mlx5_sf_dev_table_create(struct mlx5_core_dev *dev)
 	table->base_address = pci_resource_start(dev->pdev, 2);
 	table->max_sfs = max_sfs;
 	xa_init(&table->devices);
+<<<<<<< HEAD
 	mutex_init(&table->table_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev->priv.sf_dev_table = table;
 
 	err = mlx5_vhca_event_notifier_register(dev, &table->nb);
 	if (err)
 		goto vhca_err;
+<<<<<<< HEAD
 
 	err = mlx5_sf_dev_queue_active_work(table);
 	if (err)
 		goto add_active_err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = mlx5_sf_dev_vhca_arm_all(table);
 	if (err)
 		goto arm_err;
@@ -336,8 +354,11 @@ void mlx5_sf_dev_table_create(struct mlx5_core_dev *dev)
 	return;
 
 arm_err:
+<<<<<<< HEAD
 	mlx5_sf_dev_destroy_active_work(table);
 add_active_err:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5_vhca_event_notifier_unregister(dev, &table->nb);
 vhca_err:
 	table->max_sfs = 0;
@@ -365,9 +386,13 @@ void mlx5_sf_dev_table_destroy(struct mlx5_core_dev *dev)
 	if (!table)
 		return;
 
+<<<<<<< HEAD
 	mlx5_sf_dev_destroy_active_work(table);
 	mlx5_vhca_event_notifier_unregister(dev, &table->nb);
 	mutex_destroy(&table->table_lock);
+=======
+	mlx5_vhca_event_notifier_unregister(dev, &table->nb);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Now that event handler is not running, it is safe to destroy
 	 * the sf device without race.

@@ -25,14 +25,22 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_led>;
 
+<<<<<<< HEAD
 		led0: led-user1 {
+=======
+		led0: user1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "user1";
 			gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
 			default-state = "on";
 			linux,default-trigger = "heartbeat";
 		};
 
+<<<<<<< HEAD
 		led1: led-user2 {
+=======
+		led1: user2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "user2";
 			gpios = <&gpio3 28 GPIO_ACTIVE_LOW>;
 			default-state = "off";

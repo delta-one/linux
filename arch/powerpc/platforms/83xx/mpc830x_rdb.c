@@ -53,5 +53,9 @@ define_machine(mpc830x_rdb) {
 	.get_irq		= ipic_get_irq,
 	.restart		= mpc83xx_restart,
 	.time_init		= mpc83xx_time_init,
+<<<<<<< HEAD
+=======
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.progress		= udbg_progress,
 };

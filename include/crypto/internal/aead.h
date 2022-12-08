@@ -39,11 +39,14 @@ static inline void *crypto_aead_ctx(struct crypto_aead *tfm)
 	return crypto_tfm_ctx(&tfm->base);
 }
 
+<<<<<<< HEAD
 static inline void *crypto_aead_ctx_dma(struct crypto_aead *tfm)
 {
 	return crypto_tfm_ctx_dma(&tfm->base);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct crypto_instance *aead_crypto_instance(
 	struct aead_instance *inst)
 {
@@ -70,6 +73,7 @@ static inline void *aead_request_ctx(struct aead_request *req)
 	return req->__ctx;
 }
 
+<<<<<<< HEAD
 static inline void *aead_request_ctx_dma(struct aead_request *req)
 {
 	unsigned int align = crypto_dma_align();
@@ -83,6 +87,11 @@ static inline void *aead_request_ctx_dma(struct aead_request *req)
 static inline void aead_request_complete(struct aead_request *req, int err)
 {
 	crypto_request_complete(&req->base, err);
+=======
+static inline void aead_request_complete(struct aead_request *req, int err)
+{
+	req->base.complete(&req->base, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline u32 aead_request_flags(struct aead_request *req)
@@ -123,6 +132,7 @@ static inline void crypto_aead_set_reqsize(struct crypto_aead *aead,
 	aead->reqsize = reqsize;
 }
 
+<<<<<<< HEAD
 static inline void crypto_aead_set_reqsize_dma(struct crypto_aead *aead,
 					       unsigned int reqsize)
 {
@@ -130,12 +140,42 @@ static inline void crypto_aead_set_reqsize_dma(struct crypto_aead *aead,
 	aead->reqsize = reqsize;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void aead_init_queue(struct aead_queue *queue,
 				   unsigned int max_qlen)
 {
 	crypto_init_queue(&queue->base, max_qlen);
 }
 
+<<<<<<< HEAD
+=======
+static inline int aead_enqueue_request(struct aead_queue *queue,
+				       struct aead_request *request)
+{
+	return crypto_enqueue_request(&queue->base, &request->base);
+}
+
+static inline struct aead_request *aead_dequeue_request(
+	struct aead_queue *queue)
+{
+	struct crypto_async_request *req;
+
+	req = crypto_dequeue_request(&queue->base);
+
+	return req ? container_of(req, struct aead_request, base) : NULL;
+}
+
+static inline struct aead_request *aead_get_backlog(struct aead_queue *queue)
+{
+	struct crypto_async_request *req;
+
+	req = crypto_get_backlog(&queue->base);
+
+	return req ? container_of(req, struct aead_request, base) : NULL;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline unsigned int crypto_aead_alg_chunksize(struct aead_alg *alg)
 {
 	return alg->chunksize;

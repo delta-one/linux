@@ -6,7 +6,10 @@
  *  VM_EXEC
  */
 #include <asm/asm-offsets.h>
+<<<<<<< HEAD
 #include <asm/pgtable.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/thread_info.h>
 
 #ifdef CONFIG_CPU_V7M

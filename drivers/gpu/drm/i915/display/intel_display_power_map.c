@@ -10,7 +10,10 @@
 
 #include "intel_display_power_map.h"
 #include "intel_display_power_well.h"
+<<<<<<< HEAD
 #include "intel_display_types.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define __LIST_INLINE_ELEMS(__elem_type, ...) \
 	((__elem_type[]) { __VA_ARGS__ })
@@ -171,8 +174,11 @@ I915_DECL_PW_DOMAINS(vlv_pwdoms_display,
 	POWER_DOMAIN_VGA,
 	POWER_DOMAIN_AUDIO_MMIO,
 	POWER_DOMAIN_AUDIO_PLAYBACK,
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_B,
 	POWER_DOMAIN_AUX_IO_C,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_B,
 	POWER_DOMAIN_AUX_C,
 	POWER_DOMAIN_GMBUS,
@@ -182,8 +188,11 @@ I915_DECL_PW_DOMAINS(vlv_pwdoms_dpio_cmn_bc,
 	POWER_DOMAIN_PORT_DDI_LANES_B,
 	POWER_DOMAIN_PORT_DDI_LANES_C,
 	POWER_DOMAIN_PORT_CRT,
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_B,
 	POWER_DOMAIN_AUX_IO_C,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_B,
 	POWER_DOMAIN_AUX_C,
 	POWER_DOMAIN_INIT);
@@ -191,8 +200,11 @@ I915_DECL_PW_DOMAINS(vlv_pwdoms_dpio_cmn_bc,
 I915_DECL_PW_DOMAINS(vlv_pwdoms_dpio_tx_bc_lanes,
 	POWER_DOMAIN_PORT_DDI_LANES_B,
 	POWER_DOMAIN_PORT_DDI_LANES_C,
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_B,
 	POWER_DOMAIN_AUX_IO_C,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_B,
 	POWER_DOMAIN_AUX_C,
 	POWER_DOMAIN_INIT);
@@ -250,9 +262,12 @@ I915_DECL_PW_DOMAINS(chv_pwdoms_display,
 	POWER_DOMAIN_VGA,
 	POWER_DOMAIN_AUDIO_MMIO,
 	POWER_DOMAIN_AUDIO_PLAYBACK,
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_B,
 	POWER_DOMAIN_AUX_IO_C,
 	POWER_DOMAIN_AUX_IO_D,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_B,
 	POWER_DOMAIN_AUX_C,
 	POWER_DOMAIN_AUX_D,
@@ -262,15 +277,21 @@ I915_DECL_PW_DOMAINS(chv_pwdoms_display,
 I915_DECL_PW_DOMAINS(chv_pwdoms_dpio_cmn_bc,
 	POWER_DOMAIN_PORT_DDI_LANES_B,
 	POWER_DOMAIN_PORT_DDI_LANES_C,
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_B,
 	POWER_DOMAIN_AUX_IO_C,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_B,
 	POWER_DOMAIN_AUX_C,
 	POWER_DOMAIN_INIT);
 
 I915_DECL_PW_DOMAINS(chv_pwdoms_dpio_cmn_d,
 	POWER_DOMAIN_PORT_DDI_LANES_D,
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_D,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_D,
 	POWER_DOMAIN_INIT);
 
@@ -318,9 +339,12 @@ static const struct i915_power_well_desc_list chv_power_wells[] = {
 	POWER_DOMAIN_VGA, \
 	POWER_DOMAIN_AUDIO_MMIO, \
 	POWER_DOMAIN_AUDIO_PLAYBACK, \
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_B, \
 	POWER_DOMAIN_AUX_IO_C, \
 	POWER_DOMAIN_AUX_IO_D, \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_B, \
 	POWER_DOMAIN_AUX_C, \
 	POWER_DOMAIN_AUX_D
@@ -334,7 +358,10 @@ I915_DECL_PW_DOMAINS(skl_pwdoms_dc_off,
 	POWER_DOMAIN_AUX_A,
 	POWER_DOMAIN_MODESET,
 	POWER_DOMAIN_GT_IRQ,
+<<<<<<< HEAD
 	POWER_DOMAIN_DC_OFF,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_INIT);
 
 I915_DECL_PW_DOMAINS(skl_pwdoms_ddi_io_a_e,
@@ -424,8 +451,11 @@ static const struct i915_power_well_desc_list skl_power_wells[] = {
 	POWER_DOMAIN_VGA, \
 	POWER_DOMAIN_AUDIO_MMIO, \
 	POWER_DOMAIN_AUDIO_PLAYBACK, \
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_B, \
 	POWER_DOMAIN_AUX_IO_C, \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_B, \
 	POWER_DOMAIN_AUX_C
 
@@ -439,20 +469,29 @@ I915_DECL_PW_DOMAINS(bxt_pwdoms_dc_off,
 	POWER_DOMAIN_GMBUS,
 	POWER_DOMAIN_MODESET,
 	POWER_DOMAIN_GT_IRQ,
+<<<<<<< HEAD
 	POWER_DOMAIN_DC_OFF,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_INIT);
 
 I915_DECL_PW_DOMAINS(bxt_pwdoms_dpio_cmn_a,
 	POWER_DOMAIN_PORT_DDI_LANES_A,
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_A,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_A,
 	POWER_DOMAIN_INIT);
 
 I915_DECL_PW_DOMAINS(bxt_pwdoms_dpio_cmn_bc,
 	POWER_DOMAIN_PORT_DDI_LANES_B,
 	POWER_DOMAIN_PORT_DDI_LANES_C,
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_B,
 	POWER_DOMAIN_AUX_IO_C,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_B,
 	POWER_DOMAIN_AUX_C,
 	POWER_DOMAIN_INIT);
@@ -506,8 +545,11 @@ static const struct i915_power_well_desc_list bxt_power_wells[] = {
 	POWER_DOMAIN_VGA, \
 	POWER_DOMAIN_AUDIO_MMIO, \
 	POWER_DOMAIN_AUDIO_PLAYBACK, \
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_B, \
 	POWER_DOMAIN_AUX_IO_C, \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_B, \
 	POWER_DOMAIN_AUX_C
 
@@ -521,7 +563,10 @@ I915_DECL_PW_DOMAINS(glk_pwdoms_dc_off,
 	POWER_DOMAIN_GMBUS,
 	POWER_DOMAIN_MODESET,
 	POWER_DOMAIN_GT_IRQ,
+<<<<<<< HEAD
 	POWER_DOMAIN_DC_OFF,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_INIT);
 
 I915_DECL_PW_DOMAINS(glk_pwdoms_ddi_io_a,	POWER_DOMAIN_PORT_DDI_IO_A);
@@ -530,34 +575,54 @@ I915_DECL_PW_DOMAINS(glk_pwdoms_ddi_io_c,	POWER_DOMAIN_PORT_DDI_IO_C);
 
 I915_DECL_PW_DOMAINS(glk_pwdoms_dpio_cmn_a,
 	POWER_DOMAIN_PORT_DDI_LANES_A,
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_A,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_A,
 	POWER_DOMAIN_INIT);
 
 I915_DECL_PW_DOMAINS(glk_pwdoms_dpio_cmn_b,
 	POWER_DOMAIN_PORT_DDI_LANES_B,
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_B,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_B,
 	POWER_DOMAIN_INIT);
 
 I915_DECL_PW_DOMAINS(glk_pwdoms_dpio_cmn_c,
 	POWER_DOMAIN_PORT_DDI_LANES_C,
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_C,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_C,
 	POWER_DOMAIN_INIT);
 
 I915_DECL_PW_DOMAINS(glk_pwdoms_aux_a,
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_A,
 	POWER_DOMAIN_AUX_A,
 	POWER_DOMAIN_INIT);
 
 I915_DECL_PW_DOMAINS(glk_pwdoms_aux_b,
 	POWER_DOMAIN_AUX_IO_B,
+=======
+	POWER_DOMAIN_AUX_A,
+	POWER_DOMAIN_AUX_IO_A,
+	POWER_DOMAIN_INIT);
+
+I915_DECL_PW_DOMAINS(glk_pwdoms_aux_b,
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_B,
 	POWER_DOMAIN_INIT);
 
 I915_DECL_PW_DOMAINS(glk_pwdoms_aux_c,
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_C,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_C,
 	POWER_DOMAIN_INIT);
 
@@ -648,11 +713,14 @@ I915_DECL_PW_DOMAINS(icl_pwdoms_pw_4,
 	POWER_DOMAIN_VGA, \
 	POWER_DOMAIN_AUDIO_MMIO, \
 	POWER_DOMAIN_AUDIO_PLAYBACK, \
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_B, \
 	POWER_DOMAIN_AUX_IO_C, \
 	POWER_DOMAIN_AUX_IO_D, \
 	POWER_DOMAIN_AUX_IO_E, \
 	POWER_DOMAIN_AUX_IO_F, \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_B, \
 	POWER_DOMAIN_AUX_C, \
 	POWER_DOMAIN_AUX_D, \
@@ -694,6 +762,7 @@ I915_DECL_PW_DOMAINS(icl_pwdoms_ddi_io_e,	POWER_DOMAIN_PORT_DDI_IO_E);
 I915_DECL_PW_DOMAINS(icl_pwdoms_ddi_io_f,	POWER_DOMAIN_PORT_DDI_IO_F);
 
 I915_DECL_PW_DOMAINS(icl_pwdoms_aux_a,
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_A,
 	POWER_DOMAIN_AUX_A);
 I915_DECL_PW_DOMAINS(icl_pwdoms_aux_b,
@@ -711,6 +780,15 @@ I915_DECL_PW_DOMAINS(icl_pwdoms_aux_e,
 I915_DECL_PW_DOMAINS(icl_pwdoms_aux_f,
 	POWER_DOMAIN_AUX_IO_F,
 	POWER_DOMAIN_AUX_F);
+=======
+	POWER_DOMAIN_AUX_A,
+	POWER_DOMAIN_AUX_IO_A);
+I915_DECL_PW_DOMAINS(icl_pwdoms_aux_b,		POWER_DOMAIN_AUX_B);
+I915_DECL_PW_DOMAINS(icl_pwdoms_aux_c,		POWER_DOMAIN_AUX_C);
+I915_DECL_PW_DOMAINS(icl_pwdoms_aux_d,		POWER_DOMAIN_AUX_D);
+I915_DECL_PW_DOMAINS(icl_pwdoms_aux_e,		POWER_DOMAIN_AUX_E);
+I915_DECL_PW_DOMAINS(icl_pwdoms_aux_f,		POWER_DOMAIN_AUX_F);
+>>>>>>> b7ba80a49124 (Commit)
 I915_DECL_PW_DOMAINS(icl_pwdoms_aux_tbt1,	POWER_DOMAIN_AUX_TBT1);
 I915_DECL_PW_DOMAINS(icl_pwdoms_aux_tbt2,	POWER_DOMAIN_AUX_TBT2);
 I915_DECL_PW_DOMAINS(icl_pwdoms_aux_tbt3,	POWER_DOMAIN_AUX_TBT3);
@@ -862,7 +940,10 @@ I915_DECL_PW_DOMAINS(tgl_pwdoms_dc_off,
 	POWER_DOMAIN_AUX_B,
 	POWER_DOMAIN_AUX_C,
 	POWER_DOMAIN_MODESET,
+<<<<<<< HEAD
 	POWER_DOMAIN_DC_OFF,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_INIT);
 
 I915_DECL_PW_DOMAINS(tgl_pwdoms_ddi_io_tc1,	POWER_DOMAIN_PORT_DDI_IO_TC1);
@@ -1059,7 +1140,10 @@ I915_DECL_PW_DOMAINS(rkl_pwdoms_dc_off,
 	POWER_DOMAIN_AUX_A,
 	POWER_DOMAIN_AUX_B,
 	POWER_DOMAIN_MODESET,
+<<<<<<< HEAD
 	POWER_DOMAIN_DC_OFF,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_INIT);
 
 static const struct i915_power_well_desc rkl_power_wells_main[] = {
@@ -1142,7 +1226,10 @@ I915_DECL_PW_DOMAINS(dg1_pwdoms_dc_off,
 	POWER_DOMAIN_AUX_A,
 	POWER_DOMAIN_AUX_B,
 	POWER_DOMAIN_MODESET,
+<<<<<<< HEAD
 	POWER_DOMAIN_DC_OFF,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_INIT);
 
 I915_DECL_PW_DOMAINS(dg1_pwdoms_pw_2,
@@ -1264,9 +1351,12 @@ I915_DECL_PW_DOMAINS(xelpd_pwdoms_pw_a,
 	POWER_DOMAIN_PORT_DDI_LANES_TC4, \
 	POWER_DOMAIN_VGA, \
 	POWER_DOMAIN_AUDIO_PLAYBACK, \
+<<<<<<< HEAD
 	POWER_DOMAIN_AUX_IO_C, \
 	POWER_DOMAIN_AUX_IO_D, \
 	POWER_DOMAIN_AUX_IO_E, \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_C, \
 	POWER_DOMAIN_AUX_D, \
 	POWER_DOMAIN_AUX_E, \
@@ -1307,7 +1397,10 @@ I915_DECL_PW_DOMAINS(xelpd_pwdoms_dc_off,
 	POWER_DOMAIN_AUX_A,
 	POWER_DOMAIN_AUX_B,
 	POWER_DOMAIN_MODESET,
+<<<<<<< HEAD
 	POWER_DOMAIN_DC_OFF,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_INIT);
 
 static const struct i915_power_well_desc xelpd_power_wells_main[] = {
@@ -1429,7 +1522,10 @@ I915_DECL_PW_DOMAINS(xelpdp_pwdoms_dc_off,
 	POWER_DOMAIN_MODESET,
 	POWER_DOMAIN_AUX_A,
 	POWER_DOMAIN_AUX_B,
+<<<<<<< HEAD
 	POWER_DOMAIN_DC_OFF,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_INIT);
 
 I915_DECL_PW_DOMAINS(xelpdp_pwdoms_aux_tc1,

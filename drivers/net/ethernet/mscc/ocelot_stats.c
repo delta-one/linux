@@ -4,12 +4,16 @@
  * Copyright (c) 2017 Microsemi Corporation
  * Copyright 2022 NXP
  */
+<<<<<<< HEAD
 #include <linux/ethtool_netlink.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/spinlock.h>
 #include <linux/mutex.h>
 #include <linux/workqueue.h>
 #include "ocelot.h"
 
+<<<<<<< HEAD
 enum ocelot_stat {
 	OCELOT_STAT_RX_OCTETS,
 	OCELOT_STAT_RX_UNICAST,
@@ -317,6 +321,8 @@ ocelot_get_stats_layout(struct ocelot *ocelot)
 	return ocelot_stats_layout;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Read the counters from hardware and keep them in region->buf.
  * Caller must hold &ocelot->stat_view_lock.
  */
@@ -343,12 +349,19 @@ static int ocelot_port_update_stats(struct ocelot *ocelot, int port)
  */
 static void ocelot_port_transfer_stats(struct ocelot *ocelot, int port)
 {
+<<<<<<< HEAD
+=======
+	unsigned int idx = port * OCELOT_NUM_STATS;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ocelot_stats_region *region;
 	int j;
 
 	list_for_each_entry(region, &ocelot->stats_regions, node) {
+<<<<<<< HEAD
 		unsigned int idx = port * OCELOT_NUM_STATS + region->first_stat;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		for (j = 0; j < region->count; j++) {
 			u64 *stat = &ocelot->stats[idx + j];
 			u64 val = region->buf[j];
@@ -358,6 +371,11 @@ static void ocelot_port_transfer_stats(struct ocelot *ocelot, int port)
 
 			*stat = (*stat & ~(u64)U32_MAX) + val;
 		}
+<<<<<<< HEAD
+=======
+
+		idx += region->count;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -394,12 +412,16 @@ static void ocelot_check_stats_work(struct work_struct *work)
 
 void ocelot_get_strings(struct ocelot *ocelot, int port, u32 sset, u8 *data)
 {
+<<<<<<< HEAD
 	const struct ocelot_stat_layout *layout;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	if (sset != ETH_SS_STATS)
 		return;
 
+<<<<<<< HEAD
 	layout = ocelot_get_stats_layout(ocelot);
 
 	for (i = 0; i < OCELOT_NUM_STATS; i++) {
@@ -408,6 +430,14 @@ void ocelot_get_strings(struct ocelot *ocelot, int port, u32 sset, u8 *data)
 
 		memcpy(data, layout[i].name, ETH_GSTRING_LEN);
 		data += ETH_GSTRING_LEN;
+=======
+	for (i = 0; i < OCELOT_NUM_STATS; i++) {
+		if (ocelot->stats_layout[i].name[0] == '\0')
+			continue;
+
+		memcpy(data + i * ETH_GSTRING_LEN, ocelot->stats_layout[i].name,
+		       ETH_GSTRING_LEN);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 EXPORT_SYMBOL(ocelot_get_strings);
@@ -441,16 +471,24 @@ out_unlock:
 
 int ocelot_get_sset_count(struct ocelot *ocelot, int port, int sset)
 {
+<<<<<<< HEAD
 	const struct ocelot_stat_layout *layout;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i, num_stats = 0;
 
 	if (sset != ETH_SS_STATS)
 		return -EOPNOTSUPP;
 
+<<<<<<< HEAD
 	layout = ocelot_get_stats_layout(ocelot);
 
 	for (i = 0; i < OCELOT_NUM_STATS; i++)
 		if (layout[i].name[0] != '\0')
+=======
+	for (i = 0; i < OCELOT_NUM_STATS; i++)
+		if (ocelot->stats_layout[i].name[0] != '\0')
+>>>>>>> b7ba80a49124 (Commit)
 			num_stats++;
 
 	return num_stats;
@@ -460,17 +498,27 @@ EXPORT_SYMBOL(ocelot_get_sset_count);
 static void ocelot_port_ethtool_stats_cb(struct ocelot *ocelot, int port,
 					 void *priv)
 {
+<<<<<<< HEAD
 	const struct ocelot_stat_layout *layout;
 	u64 *data = priv;
 	int i;
 
 	layout = ocelot_get_stats_layout(ocelot);
 
+=======
+	u64 *data = priv;
+	int i;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Copy all supported counters */
 	for (i = 0; i < OCELOT_NUM_STATS; i++) {
 		int index = port * OCELOT_NUM_STATS + i;
 
+<<<<<<< HEAD
 		if (layout[i].name[0] == '\0')
+=======
+		if (ocelot->stats_layout[i].name[0] == '\0')
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		*data++ = ocelot->stats[index];
@@ -492,6 +540,7 @@ static void ocelot_port_pause_stats_cb(struct ocelot *ocelot, int port, void *pr
 	pause_stats->rx_pause_frames = s[OCELOT_STAT_RX_PAUSE];
 }
 
+<<<<<<< HEAD
 static void ocelot_port_pmac_pause_stats_cb(struct ocelot *ocelot, int port,
 					    void *priv)
 {
@@ -549,6 +598,16 @@ void ocelot_port_get_mm_stats(struct ocelot *ocelot, int port,
 }
 EXPORT_SYMBOL_GPL(ocelot_port_get_mm_stats);
 
+=======
+void ocelot_port_get_pause_stats(struct ocelot *ocelot, int port,
+				 struct ethtool_pause_stats *pause_stats)
+{
+	ocelot_port_stats_run(ocelot, port, pause_stats,
+			      ocelot_port_pause_stats_cb);
+}
+EXPORT_SYMBOL_GPL(ocelot_port_get_pause_stats);
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct ethtool_rmon_hist_range ocelot_rmon_ranges[] = {
 	{   64,    64 },
 	{   65,   127 },
@@ -587,6 +646,7 @@ static void ocelot_port_rmon_stats_cb(struct ocelot *ocelot, int port, void *pri
 	rmon_stats->hist_tx[6] = s[OCELOT_STAT_TX_1024_1526];
 }
 
+<<<<<<< HEAD
 static void ocelot_port_pmac_rmon_stats_cb(struct ocelot *ocelot, int port,
 					   void *priv)
 {
@@ -615,10 +675,13 @@ static void ocelot_port_pmac_rmon_stats_cb(struct ocelot *ocelot, int port,
 	rmon_stats->hist_tx[6] = s[OCELOT_STAT_TX_PMAC_1024_1526];
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void ocelot_port_get_rmon_stats(struct ocelot *ocelot, int port,
 				struct ethtool_rmon_stats *rmon_stats,
 				const struct ethtool_rmon_hist_range **ranges)
 {
+<<<<<<< HEAD
 	struct net_device *dev;
 
 	*ranges = ocelot_rmon_ranges;
@@ -638,6 +701,12 @@ void ocelot_port_get_rmon_stats(struct ocelot *ocelot, int port,
 		ethtool_aggregate_rmon_stats(dev, rmon_stats);
 		break;
 	}
+=======
+	*ranges = ocelot_rmon_ranges;
+
+	ocelot_port_stats_run(ocelot, port, rmon_stats,
+			      ocelot_port_rmon_stats_cb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(ocelot_port_get_rmon_stats);
 
@@ -649,6 +718,7 @@ static void ocelot_port_ctrl_stats_cb(struct ocelot *ocelot, int port, void *pri
 	ctrl_stats->MACControlFramesReceived = s[OCELOT_STAT_RX_CONTROL];
 }
 
+<<<<<<< HEAD
 static void ocelot_port_pmac_ctrl_stats_cb(struct ocelot *ocelot, int port,
 					   void *priv)
 {
@@ -678,6 +748,13 @@ void ocelot_port_get_eth_ctrl_stats(struct ocelot *ocelot, int port,
 		ethtool_aggregate_ctrl_stats(dev, ctrl_stats);
 		break;
 	}
+=======
+void ocelot_port_get_eth_ctrl_stats(struct ocelot *ocelot, int port,
+				    struct ethtool_eth_ctrl_stats *ctrl_stats)
+{
+	ocelot_port_stats_run(ocelot, port, ctrl_stats,
+			      ocelot_port_ctrl_stats_cb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(ocelot_port_get_eth_ctrl_stats);
 
@@ -723,6 +800,7 @@ static void ocelot_port_mac_stats_cb(struct ocelot *ocelot, int port, void *priv
 	mac_stats->AlignmentErrors = s[OCELOT_STAT_RX_CRC_ALIGN_ERRS];
 }
 
+<<<<<<< HEAD
 static void ocelot_port_pmac_mac_stats_cb(struct ocelot *ocelot, int port,
 					  void *priv)
 {
@@ -777,6 +855,13 @@ void ocelot_port_get_eth_mac_stats(struct ocelot *ocelot, int port,
 		ethtool_aggregate_mac_stats(dev, mac_stats);
 		break;
 	}
+=======
+void ocelot_port_get_eth_mac_stats(struct ocelot *ocelot, int port,
+				   struct ethtool_eth_mac_stats *mac_stats)
+{
+	ocelot_port_stats_run(ocelot, port, mac_stats,
+			      ocelot_port_mac_stats_cb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(ocelot_port_get_eth_mac_stats);
 
@@ -788,6 +873,7 @@ static void ocelot_port_phy_stats_cb(struct ocelot *ocelot, int port, void *priv
 	phy_stats->SymbolErrorDuringCarrier = s[OCELOT_STAT_RX_SYM_ERRS];
 }
 
+<<<<<<< HEAD
 static void ocelot_port_pmac_phy_stats_cb(struct ocelot *ocelot, int port,
 					  void *priv)
 {
@@ -817,6 +903,13 @@ void ocelot_port_get_eth_phy_stats(struct ocelot *ocelot, int port,
 		ethtool_aggregate_phy_stats(dev, phy_stats);
 		break;
 	}
+=======
+void ocelot_port_get_eth_phy_stats(struct ocelot *ocelot, int port,
+				   struct ethtool_eth_phy_stats *phy_stats)
+{
+	ocelot_port_stats_run(ocelot, port, phy_stats,
+			      ocelot_port_phy_stats_cb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(ocelot_port_get_eth_phy_stats);
 
@@ -888,12 +981,17 @@ EXPORT_SYMBOL(ocelot_port_get_stats64);
 static int ocelot_prepare_stats_regions(struct ocelot *ocelot)
 {
 	struct ocelot_stats_region *region = NULL;
+<<<<<<< HEAD
 	const struct ocelot_stat_layout *layout;
 	unsigned int last = 0;
+=======
+	unsigned int last;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	INIT_LIST_HEAD(&ocelot->stats_regions);
 
+<<<<<<< HEAD
 	layout = ocelot_get_stats_layout(ocelot);
 
 	for (i = 0; i < OCELOT_NUM_STATS; i++) {
@@ -902,6 +1000,13 @@ static int ocelot_prepare_stats_regions(struct ocelot *ocelot)
 
 		if (region && ocelot->map[SYS][layout[i].reg & REG_MASK] ==
 		    ocelot->map[SYS][last & REG_MASK] + 4) {
+=======
+	for (i = 0; i < OCELOT_NUM_STATS; i++) {
+		if (!ocelot->stats_layout[i].reg)
+			continue;
+
+		if (region && ocelot->stats_layout[i].reg == last + 4) {
+>>>>>>> b7ba80a49124 (Commit)
 			region->count++;
 		} else {
 			region = devm_kzalloc(ocelot->dev, sizeof(*region),
@@ -909,6 +1014,7 @@ static int ocelot_prepare_stats_regions(struct ocelot *ocelot)
 			if (!region)
 				return -ENOMEM;
 
+<<<<<<< HEAD
 			/* enum ocelot_stat must be kept sorted in the same
 			 * order as layout[i].reg in order to have efficient
 			 * bulking
@@ -917,11 +1023,18 @@ static int ocelot_prepare_stats_regions(struct ocelot *ocelot)
 
 			region->base = layout[i].reg;
 			region->first_stat = i;
+=======
+			region->base = ocelot->stats_layout[i].reg;
+>>>>>>> b7ba80a49124 (Commit)
 			region->count = 1;
 			list_add_tail(&region->node, &ocelot->stats_regions);
 		}
 
+<<<<<<< HEAD
 		last = layout[i].reg;
+=======
+		last = ocelot->stats_layout[i].reg;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	list_for_each_entry(region, &ocelot->stats_regions, node) {
@@ -972,4 +1085,7 @@ void ocelot_stats_deinit(struct ocelot *ocelot)
 	cancel_delayed_work(&ocelot->stats_work);
 	destroy_workqueue(ocelot->stats_queue);
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)

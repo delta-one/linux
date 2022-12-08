@@ -224,6 +224,7 @@ static int exfat_search_empty_slot(struct super_block *sb,
 
 	if (hint_femp->eidx != EXFAT_HINT_NONE) {
 		dentry = hint_femp->eidx;
+<<<<<<< HEAD
 
 		/*
 		 * If hint_femp->count is enough, it is needed to check if
@@ -236,6 +237,13 @@ static int exfat_search_empty_slot(struct super_block *sb,
 			return -ENOSPC;
 
 		hint_femp->eidx = EXFAT_HINT_NONE;
+=======
+		if (num_entries <= hint_femp->count) {
+			hint_femp->eidx = EXFAT_HINT_NONE;
+			return dentry;
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		exfat_chain_dup(&clu, &hint_femp->cur);
 	} else {
 		exfat_chain_dup(&clu, p_dir);
@@ -300,12 +308,15 @@ static int exfat_search_empty_slot(struct super_block *sb,
 		}
 	}
 
+<<<<<<< HEAD
 	hint_femp->eidx = p_dir->size * dentries_per_clu - num_empty;
 	hint_femp->count = num_empty;
 	if (num_empty == 0)
 		exfat_chain_set(&hint_femp->cur, EXFAT_EOF_CLUSTER, 0,
 				clu.flags);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return -ENOSPC;
 }
 
@@ -382,11 +393,23 @@ static int exfat_find_empty_entry(struct inode *inode,
 			if (exfat_ent_set(sb, last_clu, clu.dir))
 				return -EIO;
 
+<<<<<<< HEAD
 		if (hint_femp.cur.dir == EXFAT_EOF_CLUSTER)
 			exfat_chain_set(&hint_femp.cur, clu.dir, 0, clu.flags);
 
 		hint_femp.count += sbi->dentries_per_clu;
 
+=======
+		if (hint_femp.eidx == EXFAT_HINT_NONE) {
+			/* the special case that new dentry
+			 * should be allocated from the start of new cluster
+			 */
+			hint_femp.eidx = EXFAT_B_TO_DEN_IDX(p_dir->size, sbi);
+			hint_femp.count = sbi->dentries_per_clu;
+
+			exfat_chain_set(&hint_femp.cur, clu.dir, 0, clu.flags);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		hint_femp.cur.size++;
 		p_dir->size++;
 		size = EXFAT_CLU_TO_B(p_dir->size, sbi);
@@ -396,7 +419,11 @@ static int exfat_find_empty_entry(struct inode *inode,
 		ei->i_size_ondisk += sbi->cluster_size;
 		ei->i_size_aligned += sbi->cluster_size;
 		ei->flags = p_dir->flags;
+<<<<<<< HEAD
 		inode->i_blocks += sbi->cluster_size >> 9;
+=======
+		inode->i_blocks += 1 << sbi->sect_per_clus_bits;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return dentry;
@@ -551,7 +578,11 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int exfat_create(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int exfat_create(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 			struct dentry *dentry, umode_t mode, bool excl)
 {
 	struct super_block *sb = dir->i_sb;
@@ -597,14 +628,22 @@ unlock:
 static int exfat_find(struct inode *dir, struct qstr *qname,
 		struct exfat_dir_entry *info)
 {
+<<<<<<< HEAD
 	int ret, dentry, count;
+=======
+	int ret, dentry, num_entries, count;
+>>>>>>> b7ba80a49124 (Commit)
 	struct exfat_chain cdir;
 	struct exfat_uni_name uni_name;
 	struct super_block *sb = dir->i_sb;
 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
 	struct exfat_inode_info *ei = EXFAT_I(dir);
 	struct exfat_dentry *ep, *ep2;
+<<<<<<< HEAD
 	struct exfat_entry_set_cache es;
+=======
+	struct exfat_entry_set_cache *es;
+>>>>>>> b7ba80a49124 (Commit)
 	/* for optimized dir & entry to prevent long traverse of cluster chain */
 	struct exfat_hint hint_opt;
 
@@ -616,6 +655,13 @@ static int exfat_find(struct inode *dir, struct qstr *qname,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
+=======
+	num_entries = exfat_calc_num_entries(&uni_name);
+	if (num_entries < 0)
+		return num_entries;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* check the validation of hint_stat and initialize it if required */
 	if (ei->version != (inode_peek_iversion_raw(dir) & 0xffffffff)) {
 		ei->hint_stat.clu = cdir.dir;
@@ -625,7 +671,13 @@ static int exfat_find(struct inode *dir, struct qstr *qname,
 	}
 
 	/* search the file name for directories */
+<<<<<<< HEAD
 	dentry = exfat_find_dir_entry(sb, ei, &cdir, &uni_name, &hint_opt);
+=======
+	dentry = exfat_find_dir_entry(sb, ei, &cdir, &uni_name,
+			num_entries, TYPE_ALL, &hint_opt);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (dentry < 0)
 		return dentry; /* -error value */
 
@@ -638,10 +690,18 @@ static int exfat_find(struct inode *dir, struct qstr *qname,
 	if (cdir.flags & ALLOC_NO_FAT_CHAIN)
 		cdir.size -= dentry / sbi->dentries_per_clu;
 	dentry = hint_opt.eidx;
+<<<<<<< HEAD
 	if (exfat_get_dentry_set(&es, sb, &cdir, dentry, ES_2_ENTRIES))
 		return -EIO;
 	ep = exfat_get_dentry_cached(&es, ES_IDX_FILE);
 	ep2 = exfat_get_dentry_cached(&es, ES_IDX_STREAM);
+=======
+	es = exfat_get_dentry_set(sb, &cdir, dentry, ES_2_ENTRIES);
+	if (!es)
+		return -EIO;
+	ep = exfat_get_dentry_cached(es, 0);
+	ep2 = exfat_get_dentry_cached(es, 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	info->type = exfat_get_entry_type(ep);
 	info->attr = le16_to_cpu(ep->dentry.file.attr);
@@ -670,7 +730,11 @@ static int exfat_find(struct inode *dir, struct qstr *qname,
 			     ep->dentry.file.access_time,
 			     ep->dentry.file.access_date,
 			     0);
+<<<<<<< HEAD
 	exfat_put_dentry_set(&es, false);
+=======
+	exfat_free_dentry_set(es, false);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ei->start_clu == EXFAT_FREE_CLUSTER) {
 		exfat_fs_error(sb,
@@ -834,7 +898,11 @@ unlock:
 	return err;
 }
 
+<<<<<<< HEAD
 static int exfat_mkdir(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int exfat_mkdir(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct dentry *dentry, umode_t mode)
 {
 	struct super_block *sb = dir->i_sb;
@@ -1169,7 +1237,11 @@ static int __exfat_rename(struct inode *old_parent_inode,
 	struct exfat_inode_info *new_ei = NULL;
 	unsigned int new_entry_type = TYPE_UNUSED;
 	int new_entry = 0;
+<<<<<<< HEAD
 	struct buffer_head *new_bh = NULL;
+=======
+	struct buffer_head *old_bh, *new_bh = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* check the validity of pointer parameters */
 	if (new_path == NULL || strlen(new_path) == 0)
@@ -1185,6 +1257,16 @@ static int __exfat_rename(struct inode *old_parent_inode,
 		EXFAT_I(old_parent_inode)->flags);
 	dentry = ei->entry;
 
+<<<<<<< HEAD
+=======
+	ep = exfat_get_dentry(sb, &olddir, dentry, &old_bh);
+	if (!ep) {
+		ret = -EIO;
+		goto out;
+	}
+	brelse(old_bh);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* check whether new dir is existing directory and empty */
 	if (new_inode) {
 		ret = -EIO;
@@ -1285,7 +1367,11 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int exfat_rename(struct mnt_idmap *idmap,
+=======
+static int exfat_rename(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			struct inode *old_dir, struct dentry *old_dentry,
 			struct inode *new_dir, struct dentry *new_dentry,
 			unsigned int flags)

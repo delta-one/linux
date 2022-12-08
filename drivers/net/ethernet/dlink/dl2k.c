@@ -814,6 +814,10 @@ rio_free_tx (struct net_device *dev, int irq)
 {
 	struct netdev_private *np = netdev_priv(dev);
 	int entry = np->old_tx % TX_RING_SIZE;
+<<<<<<< HEAD
+=======
+	int tx_use = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flag = 0;
 
 	if (irq)
@@ -838,6 +842,10 @@ rio_free_tx (struct net_device *dev, int irq)
 
 		np->tx_skbuff[entry] = NULL;
 		entry = (entry + 1) % TX_RING_SIZE;
+<<<<<<< HEAD
+=======
+		tx_use++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (irq)
 		spin_unlock(&np->tx_lock);

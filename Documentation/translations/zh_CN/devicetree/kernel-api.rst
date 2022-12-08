@@ -1,7 +1,11 @@
 .. SPDX-License-Identifier: GPL-2.0
 .. include:: ../disclaimer-zh_CN.rst
 
+<<<<<<< HEAD
 :Original: Documentation/devicetree/kernel-api.rst
+=======
+:Original: Documentation/Devicetree/kernel-api.rst
+>>>>>>> b7ba80a49124 (Commit)
 
 :翻译:
 

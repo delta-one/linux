@@ -33,6 +33,12 @@ extern volatile unsigned long cpu_callin_map[NR_CPUS];
 extern cpumask_t smp_commenced_mask;
 extern struct linux_prom_registers smp_penguin_ctable;
 
+<<<<<<< HEAD
+=======
+typedef void (*smpfunc_t)(unsigned long, unsigned long, unsigned long,
+		       unsigned long, unsigned long);
+
+>>>>>>> b7ba80a49124 (Commit)
 void cpu_panic(void);
 
 /*
@@ -54,7 +60,11 @@ void smp_bogo(struct seq_file *);
 void smp_info(struct seq_file *);
 
 struct sparc32_ipi_ops {
+<<<<<<< HEAD
 	void (*cross_call)(void *func, cpumask_t mask, unsigned long arg1,
+=======
+	void (*cross_call)(smpfunc_t func, cpumask_t mask, unsigned long arg1,
+>>>>>>> b7ba80a49124 (Commit)
 			   unsigned long arg2, unsigned long arg3,
 			   unsigned long arg4);
 	void (*resched)(int cpu);
@@ -63,28 +73,48 @@ struct sparc32_ipi_ops {
 };
 extern const struct sparc32_ipi_ops *sparc32_ipi_ops;
 
+<<<<<<< HEAD
 static inline void xc0(void *func)
+=======
+static inline void xc0(smpfunc_t func)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	sparc32_ipi_ops->cross_call(func, *cpu_online_mask, 0, 0, 0, 0);
 }
 
+<<<<<<< HEAD
 static inline void xc1(void *func, unsigned long arg1)
 {
 	sparc32_ipi_ops->cross_call(func, *cpu_online_mask, arg1, 0, 0, 0);
 }
 static inline void xc2(void *func, unsigned long arg1, unsigned long arg2)
+=======
+static inline void xc1(smpfunc_t func, unsigned long arg1)
+{
+	sparc32_ipi_ops->cross_call(func, *cpu_online_mask, arg1, 0, 0, 0);
+}
+static inline void xc2(smpfunc_t func, unsigned long arg1, unsigned long arg2)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	sparc32_ipi_ops->cross_call(func, *cpu_online_mask, arg1, arg2, 0, 0);
 }
 
+<<<<<<< HEAD
 static inline void xc3(void *func, unsigned long arg1, unsigned long arg2,
+=======
+static inline void xc3(smpfunc_t func, unsigned long arg1, unsigned long arg2,
+>>>>>>> b7ba80a49124 (Commit)
 		       unsigned long arg3)
 {
 	sparc32_ipi_ops->cross_call(func, *cpu_online_mask,
 				    arg1, arg2, arg3, 0);
 }
 
+<<<<<<< HEAD
 static inline void xc4(void *func, unsigned long arg1, unsigned long arg2,
+=======
+static inline void xc4(smpfunc_t func, unsigned long arg1, unsigned long arg2,
+>>>>>>> b7ba80a49124 (Commit)
 		       unsigned long arg3, unsigned long arg4)
 {
 	sparc32_ipi_ops->cross_call(func, *cpu_online_mask,

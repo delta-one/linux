@@ -1219,6 +1219,10 @@
 	(((u8)(__txpower)) > MAX_TXPOWER) ? DEFAULT_TXPOWER : (__txpower)
 
 #define TXPOWER_TO_DEV(__txpower) \
+<<<<<<< HEAD
 	clamp_t(u8, __txpower, MIN_TXPOWER, MAX_TXPOWER)
+=======
+	clamp_t(char, __txpower, MIN_TXPOWER, MAX_TXPOWER)
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* RT2500PCI_H */

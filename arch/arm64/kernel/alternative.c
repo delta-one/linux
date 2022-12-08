@@ -139,9 +139,15 @@ static void clean_dcache_range_nopatch(u64 start, u64 end)
 	} while (cur += d_size, cur < end);
 }
 
+<<<<<<< HEAD
 static void __apply_alternatives(const struct alt_region *region,
 				 bool is_module,
 				 unsigned long *feature_mask)
+=======
+static void __nocfi __apply_alternatives(const struct alt_region *region,
+					 bool is_module,
+					 unsigned long *feature_mask)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct alt_instr *alt;
 	__le32 *origptr, *updptr;
@@ -196,7 +202,11 @@ static void __apply_alternatives(const struct alt_region *region,
 	}
 }
 
+<<<<<<< HEAD
 static void __init apply_alternatives_vdso(void)
+=======
+void apply_alternatives_vdso(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct alt_region region;
 	const struct elf64_hdr *hdr;
@@ -220,7 +230,11 @@ static void __init apply_alternatives_vdso(void)
 	__apply_alternatives(&region, false, &all_capabilities[0]);
 }
 
+<<<<<<< HEAD
 static const struct alt_region kernel_alternatives __initconst = {
+=======
+static const struct alt_region kernel_alternatives = {
+>>>>>>> b7ba80a49124 (Commit)
 	.begin	= (struct alt_instr *)__alt_instructions,
 	.end	= (struct alt_instr *)__alt_instructions_end,
 };
@@ -229,7 +243,11 @@ static const struct alt_region kernel_alternatives __initconst = {
  * We might be patching the stop_machine state machine, so implement a
  * really simple polling protocol here.
  */
+<<<<<<< HEAD
 static int __init __apply_alternatives_multi_stop(void *unused)
+=======
+static int __apply_alternatives_multi_stop(void *unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* We always have a CPU 0 at this point (__init) */
 	if (smp_processor_id()) {

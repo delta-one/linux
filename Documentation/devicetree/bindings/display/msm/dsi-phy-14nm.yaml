@@ -16,7 +16,10 @@ properties:
   compatible:
     enum:
       - qcom,dsi-phy-14nm
+<<<<<<< HEAD
       - qcom,dsi-phy-14nm-2290
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - qcom,dsi-phy-14nm-660
       - qcom,dsi-phy-14nm-8953
 
@@ -39,6 +42,10 @@ required:
   - compatible
   - reg
   - reg-names
+<<<<<<< HEAD
+=======
+  - vcca-supply
+>>>>>>> b7ba80a49124 (Commit)
 
 unevaluatedProperties: false
 

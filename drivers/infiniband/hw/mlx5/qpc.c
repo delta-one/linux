@@ -135,8 +135,12 @@ static int rsc_event_notifier(struct notifier_block *nb,
 	case MLX5_RES_SQ:
 		qp = (struct mlx5_core_qp *)common;
 		qp->event(qp, event_type);
+<<<<<<< HEAD
 		/* Need to put resource in event handler */
 		return NOTIFY_OK;
+=======
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	case MLX5_RES_DCT:
 		dct = (struct mlx5_core_dct *)common;
 		if (event_type == MLX5_EVENT_TYPE_DCT_DRAINED)
@@ -505,14 +509,21 @@ void mlx5_cleanup_qp_table(struct mlx5_ib_dev *dev)
 }
 
 int mlx5_core_qp_query(struct mlx5_ib_dev *dev, struct mlx5_core_qp *qp,
+<<<<<<< HEAD
 		       u32 *out, int outlen, bool qpc_ext)
+=======
+		       u32 *out, int outlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 in[MLX5_ST_SZ_DW(query_qp_in)] = {};
 
 	MLX5_SET(query_qp_in, in, opcode, MLX5_CMD_OP_QUERY_QP);
 	MLX5_SET(query_qp_in, in, qpn, qp->qpn);
+<<<<<<< HEAD
 	MLX5_SET(query_qp_in, in, qpc_ext, qpc_ext);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return mlx5_cmd_exec(dev->mdev, in, sizeof(in), out, outlen);
 }
 

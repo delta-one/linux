@@ -12,10 +12,18 @@
 #include <linux/bitfield.h>
 #include <linux/clk.h>
 #include <linux/clk-provider.h>
+<<<<<<< HEAD
+=======
+#include <linux/debugfs.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/device.h>
 #include <linux/gcd.h>
 #include <linux/gpio/consumer.h>
 #include <linux/module.h>
+<<<<<<< HEAD
+=======
+#include <linux/uaccess.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regmap.h>
 #include <linux/spi/spi.h>
 
@@ -175,6 +183,7 @@ enum lmk04832_device_types {
 };
 
 /**
+<<<<<<< HEAD
  * struct lmk04832_device_info - Holds static device information that is
  *                               specific to the chip revision
  *
@@ -183,6 +192,16 @@ enum lmk04832_device_types {
  * @num_channels: Number of available output channels (clkout count)
  * @vco0_range:   {min, max} of the VCO0 operating range (in MHz)
  * @vco1_range:   {min, max} of the VCO1 operating range (in MHz)
+=======
+ * lmk04832_device_info - Holds static device information that is specific to
+ *                        the chip revision
+ *
+ * pid:          Product Identifier
+ * maskrev:      IC version identifier
+ * num_channels: Number of available output channels (clkout count)
+ * vco0_range:   {min, max} of the VCO0 operating range (in MHz)
+ * vco1_range:   {min, max} of the VCO1 operating range (in MHz)
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct lmk04832_device_info {
 	u16 pid;
@@ -280,7 +299,11 @@ static bool lmk04832_regmap_rd_regs(struct device *dev, unsigned int reg)
 	default:
 		return false;
 	};
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static bool lmk04832_regmap_wr_regs(struct device *dev, unsigned int reg)
 {
@@ -303,7 +326,11 @@ static bool lmk04832_regmap_wr_regs(struct device *dev, unsigned int reg)
 	default:
 		return false;
 	};
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct regmap_config regmap_config = {
 	.name = "lmk04832",
@@ -369,7 +396,11 @@ static unsigned long lmk04832_vco_recalc_rate(struct clk_hw *hw,
 					      unsigned long prate)
 {
 	struct lmk04832 *lmk = container_of(hw, struct lmk04832, vco);
+<<<<<<< HEAD
 	const unsigned int pll2_p[] = {8, 2, 2, 3, 4, 5, 6, 7};
+=======
+	unsigned int pll2_p[] = {8, 2, 2, 3, 4, 5, 6, 7};
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int pll2_n, p, pll2_r;
 	unsigned int pll2_misc;
 	unsigned long vco_rate;
@@ -401,7 +432,11 @@ static unsigned long lmk04832_vco_recalc_rate(struct clk_hw *hw,
 				       pll2_misc)) * pll2_n * pll2_p[p] / pll2_r;
 
 	return vco_rate;
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * lmk04832_check_vco_ranges - Check requested VCO frequency against VCO ranges
@@ -412,7 +447,11 @@ static unsigned long lmk04832_vco_recalc_rate(struct clk_hw *hw,
  * The LMK04832 has 2 internal VCO, each with independent operating ranges.
  * Use the device_info structure to determine which VCO to use based on rate.
  *
+<<<<<<< HEAD
  * Returns: VCO_MUX value or negative errno.
+=======
+ * Returns VCO_MUX value or negative errno.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int lmk04832_check_vco_ranges(struct lmk04832 *lmk, unsigned long rate)
 {
@@ -449,7 +488,11 @@ static int lmk04832_check_vco_ranges(struct lmk04832 *lmk, unsigned long rate)
  *
  *	VCO = OSCin * 2 * PLL2_N * PLL2_P / PLL2_R
  *
+<<<<<<< HEAD
  * Returns: vco rate or negative errno.
+=======
+ * Returns vco rate or negative errno.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static long lmk04832_calc_pll2_params(unsigned long prate, unsigned long rate,
 				      unsigned int *n, unsigned int *p,
@@ -507,7 +550,11 @@ static long lmk04832_vco_round_rate(struct clk_hw *hw, unsigned long rate,
 		return -EINVAL;
 
 	return vco_rate;
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static int lmk04832_vco_set_rate(struct clk_hw *hw, unsigned long rate,
 				 unsigned long prate)
@@ -566,7 +613,11 @@ static int lmk04832_vco_set_rate(struct clk_hw *hw, unsigned long rate,
 
 	return regmap_write(lmk->regmap, LMK04832_REG_PLL2_N_2,
 			    FIELD_GET(0x0000ff, n));
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct clk_ops lmk04832_vco_ops = {
 	.is_enabled = lmk04832_vco_is_enabled,
@@ -631,7 +682,11 @@ static int lmk04832_register_vco(struct lmk04832 *lmk)
 
 static int lmk04832_clkout_set_ddly(struct lmk04832 *lmk, int id)
 {
+<<<<<<< HEAD
 	const int dclk_div_adj[] = {0, 0, -2, -2, 0, 3, -1, 0};
+=======
+	int dclk_div_adj[] = {0, 0, -2, -2, 0, 3, -1, 0};
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int sclkx_y_ddly = 10;
 	unsigned int dclkx_y_ddly;
 	unsigned int dclkx_y_div;
@@ -1061,7 +1116,11 @@ static unsigned long lmk04832_dclk_recalc_rate(struct clk_hw *hw,
 	rate = DIV_ROUND_CLOSEST(prate, dclk_div);
 
 	return rate;
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static long lmk04832_dclk_round_rate(struct clk_hw *hw, unsigned long rate,
 				     unsigned long *prate)
@@ -1083,7 +1142,11 @@ static long lmk04832_dclk_round_rate(struct clk_hw *hw, unsigned long rate,
 		return -EINVAL;
 
 	return dclk_rate;
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static int lmk04832_dclk_set_rate(struct clk_hw *hw, unsigned long rate,
 				  unsigned long prate)
@@ -1145,7 +1208,11 @@ static int lmk04832_dclk_set_rate(struct clk_hw *hw, unsigned long rate,
 		dev_err(lmk->dev, "SYNC sequence failed\n");
 
 	return ret;
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct clk_ops lmk04832_dclk_ops = {
 	.is_enabled = lmk04832_dclk_is_enabled,
@@ -1549,7 +1616,10 @@ static void lmk04832_remove(struct spi_device *spi)
 	clk_disable_unprepare(lmk->oscin);
 	of_clk_del_provider(spi->dev.of_node);
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct spi_device_id lmk04832_id[] = {
 	{ "lmk04832", LMK04832 },
 	{}

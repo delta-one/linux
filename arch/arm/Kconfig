@@ -3,7 +3,11 @@ config ARM
 	bool
 	default y
 	select ARCH_32BIT_OFF_T
+<<<<<<< HEAD
 	select ARCH_CORRECT_STACKTRACE_ON_KRETPROBE if HAVE_KRETPROBES && FRAME_POINTER && !ARM_UNWIND
+=======
+	select ARCH_CORRECT_STACKTRACE_ON_KRETPROBE if HAVE_KRETPROBES
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_HAS_BINFMT_FLAT
 	select ARCH_HAS_CURRENT_STACK_POINTER
 	select ARCH_HAS_DEBUG_VIRTUAL if MMU
@@ -17,17 +21,27 @@ config ARM
 	select ARCH_HAS_PTE_SPECIAL if ARM_LPAE
 	select ARCH_HAS_SETUP_DMA_OPS
 	select ARCH_HAS_SET_MEMORY
+<<<<<<< HEAD
 	select ARCH_STACKWALK
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_HAS_STRICT_KERNEL_RWX if MMU && !XIP_KERNEL
 	select ARCH_HAS_STRICT_MODULE_RWX if MMU
 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
 	select ARCH_HAS_SYNC_DMA_FOR_CPU
 	select ARCH_HAS_TEARDOWN_DMA_OPS if MMU
 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+<<<<<<< HEAD
 	select ARCH_HAVE_NMI_SAFE_CMPXCHG if CPU_V7 || CPU_V7M || CPU_V6K
 	select ARCH_HAS_GCOV_PROFILE_ALL
 	select ARCH_KEEP_MEMBLOCK
 	select ARCH_HAS_UBSAN_SANITIZE_ALL
+=======
+	select ARCH_HAVE_CUSTOM_GPIO_H
+	select ARCH_HAVE_NMI_SAFE_CMPXCHG if CPU_V7 || CPU_V7M || CPU_V6K
+	select ARCH_HAS_GCOV_PROFILE_ALL
+	select ARCH_KEEP_MEMBLOCK
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_MIGHT_HAVE_PC_PARPORT
 	select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
 	select ARCH_OPTIONAL_KERNEL_RWX_DEFAULT if CPU_V7
@@ -96,7 +110,10 @@ config ARM
 	select HAVE_EXIT_THREAD
 	select HAVE_FAST_GUP if ARM_LPAE
 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+<<<<<<< HEAD
 	select HAVE_FUNCTION_ERROR_INJECTION
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select HAVE_FUNCTION_GRAPH_TRACER
 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
 	select HAVE_GCC_PLUGINS
@@ -281,7 +298,12 @@ config PHYS_OFFSET
 	default DRAM_BASE if !MMU
 	default 0x00000000 if ARCH_FOOTBRIDGE
 	default 0x10000000 if ARCH_OMAP1 || ARCH_RPC
+<<<<<<< HEAD
 	default 0xa0000000 if ARCH_PXA
+=======
+	default 0x30000000 if ARCH_S3C24XX
+	default 0xa0000000 if ARCH_IOP32X || ARCH_PXA
+>>>>>>> b7ba80a49124 (Commit)
 	default 0xc0000000 if ARCH_EP93XX || ARCH_SA1100
 	default 0
 	help
@@ -343,16 +365,22 @@ comment "CPU Core family selection"
 config ARCH_MULTI_V4
 	bool "ARMv4 based platforms (FA526, StrongARM)"
 	depends on !ARCH_MULTI_V6_V7
+<<<<<<< HEAD
 	# https://github.com/llvm/llvm-project/issues/50764
 	depends on !LD_IS_LLD || LLD_VERSION >= 160000
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_MULTI_V4_V5
 	select CPU_FA526 if !(CPU_SA110 || CPU_SA1100)
 
 config ARCH_MULTI_V4T
 	bool "ARMv4T based platforms (ARM720T, ARM920T, ...)"
 	depends on !ARCH_MULTI_V6_V7
+<<<<<<< HEAD
 	# https://github.com/llvm/llvm-project/issues/50764
 	depends on !LD_IS_LLD || LLD_VERSION >= 160000
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_MULTI_V4_V5
 	select CPU_ARM920T if !(CPU_ARM7TDMI || CPU_ARM720T || \
 		CPU_ARM740T || CPU_ARM9TDMI || CPU_ARM922T || \
@@ -438,6 +466,11 @@ source "arch/arm/mach-berlin/Kconfig"
 
 source "arch/arm/mach-clps711x/Kconfig"
 
+<<<<<<< HEAD
+=======
+source "arch/arm/mach-cns3xxx/Kconfig"
+
+>>>>>>> b7ba80a49124 (Commit)
 source "arch/arm/mach-davinci/Kconfig"
 
 source "arch/arm/mach-digicolor/Kconfig"
@@ -460,6 +493,11 @@ source "arch/arm/mach-hpe/Kconfig"
 
 source "arch/arm/mach-imx/Kconfig"
 
+<<<<<<< HEAD
+=======
+source "arch/arm/mach-iop32x/Kconfig"
+
+>>>>>>> b7ba80a49124 (Commit)
 source "arch/arm/mach-ixp4xx/Kconfig"
 
 source "arch/arm/mach-keystone/Kconfig"
@@ -657,9 +695,13 @@ config ARM_ERRATA_458693
 	  hazard might then cause a processor deadlock. The workaround enables
 	  the L1 caching of the NEON accesses and disables the PLD instruction
 	  in the ACTLR register. Note that setting specific bits in the ACTLR
+<<<<<<< HEAD
 	  register may not be available in non-secure mode and thus is not
 	  available on a multiplatform kernel. This should be applied by the
 	  bootloader instead.
+=======
+	  register may not be available in non-secure mode.
+>>>>>>> b7ba80a49124 (Commit)
 
 config ARM_ERRATA_460075
 	bool "ARM errata: Data written to the L2 cache can be overwritten with stale data"
@@ -672,9 +714,13 @@ config ARM_ERRATA_460075
 	  and overwritten with stale memory contents from external memory. The
 	  workaround disables the write-allocate mode for the L2 cache via the
 	  ACTLR register. Note that setting specific bits in the ACTLR register
+<<<<<<< HEAD
 	  may not be available in non-secure mode and thus is not available on
 	  a multiplatform kernel. This should be applied by the bootloader
 	  instead.
+=======
+	  may not be available in non-secure mode.
+>>>>>>> b7ba80a49124 (Commit)
 
 config ARM_ERRATA_742230
 	bool "ARM errata: DMB operation may be faulty"
@@ -687,10 +733,14 @@ config ARM_ERRATA_742230
 	  ordering of the two writes. This workaround sets a specific bit in
 	  the diagnostic register of the Cortex-A9 which causes the DMB
 	  instruction to behave as a DSB, ensuring the correct behaviour of
+<<<<<<< HEAD
 	  the two writes. Note that setting specific bits in the diagnostics
 	  register may not be available in non-secure mode and thus is not
 	  available on a multiplatform kernel. This should be applied by the
 	  bootloader instead.
+=======
+	  the two writes.
+>>>>>>> b7ba80a49124 (Commit)
 
 config ARM_ERRATA_742231
 	bool "ARM errata: Incorrect hazard handling in the SCU may lead to data corruption"
@@ -705,10 +755,14 @@ config ARM_ERRATA_742231
 	  replaced from one of the CPUs at the same time as another CPU is
 	  accessing it. This workaround sets specific bits in the diagnostic
 	  register of the Cortex-A9 which reduces the linefill issuing
+<<<<<<< HEAD
 	  capabilities of the processor. Note that setting specific bits in the
 	  diagnostics register may not be available in non-secure mode and thus
 	  is not available on a multiplatform kernel. This should be applied by
 	  the bootloader instead.
+=======
+	  capabilities of the processor.
+>>>>>>> b7ba80a49124 (Commit)
 
 config ARM_ERRATA_643719
 	bool "ARM errata: LoUIS bit field in CLIDR register is incorrect"
@@ -745,9 +799,13 @@ config ARM_ERRATA_743622
 	  register of the Cortex-A9 which disables the Store Buffer
 	  optimisation, preventing the defect from occurring. This has no
 	  visible impact on the overall performance or power consumption of the
+<<<<<<< HEAD
 	  processor. Note that setting specific bits in the diagnostics register
 	  may not be available in non-secure mode and thus is not available on a
 	  multiplatform kernel. This should be applied by the bootloader instead.
+=======
+	  processor.
+>>>>>>> b7ba80a49124 (Commit)
 
 config ARM_ERRATA_751472
 	bool "ARM errata: Interrupted ICIALLUIS may prevent completion of broadcasted operation"
@@ -759,10 +817,13 @@ config ARM_ERRATA_751472
 	  completion of a following broadcasted operation if the second
 	  operation is received by a CPU before the ICIALLUIS has completed,
 	  potentially leading to corrupted entries in the cache or TLB.
+<<<<<<< HEAD
 	  Note that setting specific bits in the diagnostics register may
 	  not be available in non-secure mode and thus is not available on
 	  a multiplatform kernel. This should be applied by the bootloader
 	  instead.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 config ARM_ERRATA_754322
 	bool "ARM errata: possible faulty MMU translations following an ASID switch"
@@ -943,6 +1004,15 @@ config ISA
 config ISA_DMA_API
 	bool
 
+<<<<<<< HEAD
+=======
+config PCI_NANOENGINE
+	bool "BSE nanoEngine PCI support"
+	depends on SA1100_NANOENGINE
+	help
+	  Enable PCI on the BSE nanoEngine board.
+
+>>>>>>> b7ba80a49124 (Commit)
 config ARM_ERRATA_814220
 	bool "ARM errata: Cache maintenance by set/way operations can execute out of order"
 	depends on CPU_V7
@@ -1166,6 +1236,30 @@ config ARM_PSCI
 	  0022A ("Power State Coordination Interface System Software on
 	  ARM processors").
 
+<<<<<<< HEAD
+=======
+# The GPIO number here must be sorted by descending number. In case of
+# a multiplatform kernel, we just want the highest value required by the
+# selected platforms.
+config ARCH_NR_GPIO
+	int
+	default 2048 if ARCH_INTEL_SOCFPGA
+	default 1024 if ARCH_BRCMSTB || ARCH_RENESAS || ARCH_TEGRA || \
+		ARCH_ZYNQ || ARCH_ASPEED
+	default 512 if ARCH_EXYNOS || ARCH_KEYSTONE || SOC_OMAP5 || \
+		SOC_DRA7XX || ARCH_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210
+	default 416 if ARCH_SUNXI
+	default 392 if ARCH_U8500
+	default 352 if ARCH_VT8500
+	default 288 if ARCH_ROCKCHIP
+	default 264 if MACH_H4700
+	default 0
+	help
+	  Maximum number of GPIOs in the system.
+
+	  If unsure, leave the default value.
+
+>>>>>>> b7ba80a49124 (Commit)
 config HZ_FIXED
 	int
 	default 128 if SOC_AT91RM9200
@@ -1354,9 +1448,15 @@ config ARM_MODULE_PLTS
 
 config ARCH_FORCE_MAX_ORDER
 	int "Maximum zone order"
+<<<<<<< HEAD
 	default "11" if SOC_AM33XX
 	default "8" if SA1111
 	default "10"
+=======
+	default "12" if SOC_AM33XX
+	default "9" if SA1111
+	default "11"
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  The kernel memory allocator divides physically contiguous memory
 	  blocks into "zones", where each zone is a power of two number of
@@ -1365,6 +1465,12 @@ config ARCH_FORCE_MAX_ORDER
 	  blocks of physically contiguous memory, then you may need to
 	  increase this value.
 
+<<<<<<< HEAD
+=======
+	  This config option is actually maximum order plus one. For example,
+	  a value of 11 means that the largest free memory block is 2^10 pages.
+
+>>>>>>> b7ba80a49124 (Commit)
 config ALIGNMENT_TRAP
 	def_bool CPU_CP15_MMU
 	select HAVE_PROC_CPU if PROC_FS
@@ -1468,6 +1574,22 @@ config ATAGS
 	  the ARM_ATAG_DTB_COMPAT option) then you may unselect this option
 	  to remove ATAGS support from your kernel binary.
 
+<<<<<<< HEAD
+=======
+config UNUSED_BOARD_FILES
+	bool "Board support for machines without known users"
+	depends on ATAGS
+	help
+	  Most ATAGS based board files are completely unused and are
+	  scheduled for removal in early 2023, and left out of kernels
+	  by default now.  If you are using a board file that is marked
+	  as unused, turn on this option to build support into the kernel.
+
+	  To keep support for your individual board from being removed,
+	  send a reply to the email discussion at
+	  https://lore.kernel.org/all/CAK8P3a0Z9vGEQbVRBo84bSyPFM-LF+hs5w8ZA51g2Z+NsdtDQA@mail.gmail.com/
+
+>>>>>>> b7ba80a49124 (Commit)
 config DEPRECATED_PARAM_STRUCT
 	bool "Provide old way to pass kernel parameters"
 	depends on ATAGS
@@ -1573,6 +1695,10 @@ config CMDLINE
 choice
 	prompt "Kernel command line type" if CMDLINE != ""
 	default CMDLINE_FROM_BOOTLOADER
+<<<<<<< HEAD
+=======
+	depends on ATAGS
+>>>>>>> b7ba80a49124 (Commit)
 
 config CMDLINE_FROM_BOOTLOADER
 	bool "Use bootloader kernel arguments if available"
@@ -1589,6 +1715,10 @@ config CMDLINE_EXTEND
 
 config CMDLINE_FORCE
 	bool "Always use the default kernel command string"
+<<<<<<< HEAD
+=======
+	depends on !ARCH_MULTIPLATFORM
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Always use the default kernel command string, even if the boot
 	  loader passes other arguments to the kernel.

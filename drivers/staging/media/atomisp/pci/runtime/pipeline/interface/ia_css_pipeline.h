@@ -54,6 +54,10 @@ struct ia_css_pipeline {
 	unsigned int inout_port_config;
 	int num_execs;
 	bool acquire_isp_each_stage;
+<<<<<<< HEAD
+=======
+	u32 pipe_qos_config;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define DEFAULT_PIPELINE { \
@@ -64,6 +68,10 @@ struct ia_css_pipeline {
 	.dvs_frame_delay	= IA_CSS_FRAME_DELAY_1, \
 	.num_execs		= -1, \
 	.acquire_isp_each_stage	= true, \
+<<<<<<< HEAD
+=======
+	.pipe_qos_config	= QOS_INVALID \
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Stage descriptor used to create a new stage in the pipeline */

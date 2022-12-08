@@ -639,11 +639,19 @@ struct sas_task_slow {
 #define SAS_TASK_STATE_ABORTED      4
 #define SAS_TASK_NEED_DEV_RESET     8
 
+<<<<<<< HEAD
+=======
+extern struct sas_task *sas_alloc_task(gfp_t flags);
+extern struct sas_task *sas_alloc_slow_task(gfp_t flags);
+extern void sas_free_task(struct sas_task *task);
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool sas_is_internal_abort(struct sas_task *task)
 {
 	return task->task_proto == SAS_PROTOCOL_INTERNAL_ABORT;
 }
 
+<<<<<<< HEAD
 static inline struct request *sas_task_find_rq(struct sas_task *task)
 {
 	struct scsi_cmnd *scmd;
@@ -662,6 +670,8 @@ static inline struct request *sas_task_find_rq(struct sas_task *task)
 	return scsi_cmd_to_rq(scmd);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct sas_domain_function_template {
 	/* The class calls these to notify the LLDD of an event. */
 	void (*lldd_port_formed)(struct asd_sas_phy *);
@@ -735,6 +745,10 @@ void sas_unregister_domain_devices(struct asd_sas_port *port, int gone);
 void sas_init_disc(struct sas_discovery *disc, struct asd_sas_port *);
 void sas_discover_event(struct asd_sas_port *, enum discover_event ev);
 
+<<<<<<< HEAD
+=======
+int  sas_discover_sata(struct domain_device *);
+>>>>>>> b7ba80a49124 (Commit)
 int  sas_discover_end_dev(struct domain_device *);
 
 void sas_unregister_dev(struct asd_sas_port *port, struct domain_device *);
@@ -763,8 +777,11 @@ int sas_clear_task_set(struct domain_device *dev, u8 *lun);
 int sas_lu_reset(struct domain_device *dev, u8 *lun);
 int sas_query_task(struct sas_task *task, u16 tag);
 int sas_abort_task(struct sas_task *task, u16 tag);
+<<<<<<< HEAD
 int sas_find_attached_phy_id(struct expander_device *ex_dev,
 			     struct domain_device *dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void sas_notify_port_event(struct asd_sas_phy *phy, enum port_event event,
 			   gfp_t gfp_flags);

@@ -1163,6 +1163,25 @@ int dev_change_name(struct net_device *dev, const char *newname)
 
 	net = dev_net(dev);
 
+<<<<<<< HEAD
+=======
+	/* Some auto-enslaved devices e.g. failover slaves are
+	 * special, as userspace might rename the device after
+	 * the interface had been brought up and running since
+	 * the point kernel initiated auto-enslavement. Allow
+	 * live name change even when these slave devices are
+	 * up and running.
+	 *
+	 * Typically, users of these auto-enslaving devices
+	 * don't actually care about slave name change, as
+	 * they are supposed to operate on master interface
+	 * directly.
+	 */
+	if (dev->flags & IFF_UP &&
+	    likely(!(dev->priv_flags & IFF_LIVE_RENAME_OK)))
+		return -EBUSY;
+
+>>>>>>> b7ba80a49124 (Commit)
 	down_write(&devnet_rename_sem);
 
 	if (strncmp(newname, dev->name, IFNAMSIZ) == 0) {
@@ -1179,8 +1198,12 @@ int dev_change_name(struct net_device *dev, const char *newname)
 	}
 
 	if (oldname[0] && !strchr(oldname, '%'))
+<<<<<<< HEAD
 		netdev_info(dev, "renamed from %s%s\n", oldname,
 			    dev->flags & IFF_UP ? " (while UP)" : "");
+=======
+		netdev_info(dev, "renamed from %s\n", oldname);
+>>>>>>> b7ba80a49124 (Commit)
 
 	old_assign_type = dev->name_assign_type;
 	dev->name_assign_type = NET_NAME_RENAMED;
@@ -1318,7 +1341,11 @@ void netdev_state_change(struct net_device *dev)
 
 		call_netdevice_notifiers_info(NETDEV_CHANGE,
 					      &change_info.info);
+<<<<<<< HEAD
 		rtmsg_ifinfo(RTM_NEWLINK, dev, 0, GFP_KERNEL, 0, NULL);
+=======
+		rtmsg_ifinfo(RTM_NEWLINK, dev, 0, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 EXPORT_SYMBOL(netdev_state_change);
@@ -1454,7 +1481,11 @@ int dev_open(struct net_device *dev, struct netlink_ext_ack *extack)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	rtmsg_ifinfo(RTM_NEWLINK, dev, IFF_UP | IFF_RUNNING, GFP_KERNEL, 0, NULL);
+=======
+	rtmsg_ifinfo(RTM_NEWLINK, dev, IFF_UP|IFF_RUNNING, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	call_netdevice_notifiers(NETDEV_UP, dev);
 
 	return ret;
@@ -1526,7 +1557,11 @@ void dev_close_many(struct list_head *head, bool unlink)
 	__dev_close_many(head);
 
 	list_for_each_entry_safe(dev, tmp, head, close_list) {
+<<<<<<< HEAD
 		rtmsg_ifinfo(RTM_NEWLINK, dev, IFF_UP | IFF_RUNNING, GFP_KERNEL, 0, NULL);
+=======
+		rtmsg_ifinfo(RTM_NEWLINK, dev, IFF_UP|IFF_RUNNING, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 		call_netdevice_notifiers(NETDEV_DOWN, dev);
 		if (unlink)
 			list_del_init(&dev->close_list);
@@ -1606,15 +1641,25 @@ const char *netdev_cmd_to_name(enum netdev_cmd cmd)
 	N(UP) N(DOWN) N(REBOOT) N(CHANGE) N(REGISTER) N(UNREGISTER)
 	N(CHANGEMTU) N(CHANGEADDR) N(GOING_DOWN) N(CHANGENAME) N(FEAT_CHANGE)
 	N(BONDING_FAILOVER) N(PRE_UP) N(PRE_TYPE_CHANGE) N(POST_TYPE_CHANGE)
+<<<<<<< HEAD
 	N(POST_INIT) N(PRE_UNINIT) N(RELEASE) N(NOTIFY_PEERS) N(JOIN)
 	N(CHANGEUPPER) N(RESEND_IGMP) N(PRECHANGEMTU) N(CHANGEINFODATA)
 	N(BONDING_INFO) N(PRECHANGEUPPER) N(CHANGELOWERSTATE)
 	N(UDP_TUNNEL_PUSH_INFO) N(UDP_TUNNEL_DROP_INFO) N(CHANGE_TX_QUEUE_LEN)
+=======
+	N(POST_INIT) N(RELEASE) N(NOTIFY_PEERS) N(JOIN) N(CHANGEUPPER)
+	N(RESEND_IGMP) N(PRECHANGEMTU) N(CHANGEINFODATA) N(BONDING_INFO)
+	N(PRECHANGEUPPER) N(CHANGELOWERSTATE) N(UDP_TUNNEL_PUSH_INFO)
+	N(UDP_TUNNEL_DROP_INFO) N(CHANGE_TX_QUEUE_LEN)
+>>>>>>> b7ba80a49124 (Commit)
 	N(CVLAN_FILTER_PUSH_INFO) N(CVLAN_FILTER_DROP_INFO)
 	N(SVLAN_FILTER_PUSH_INFO) N(SVLAN_FILTER_DROP_INFO)
 	N(PRE_CHANGEADDR) N(OFFLOAD_XSTATS_ENABLE) N(OFFLOAD_XSTATS_DISABLE)
 	N(OFFLOAD_XSTATS_REPORT_USED) N(OFFLOAD_XSTATS_REPORT_DELTA)
+<<<<<<< HEAD
 	N(XDP_FEAT_CHANGE)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 #undef N
 	return "UNKNOWN_NETDEV_EVENT";
@@ -1841,7 +1886,11 @@ EXPORT_SYMBOL(register_netdevice_notifier_net);
  * @nb: notifier
  *
  * Unregister a notifier previously registered by
+<<<<<<< HEAD
  * register_netdevice_notifier_net(). The notifier is unlinked from the
+=======
+ * register_netdevice_notifier(). The notifier is unlinked into the
+>>>>>>> b7ba80a49124 (Commit)
  * kernel structures and may then be reused. A negative errno code
  * is returned on a failure.
  *
@@ -1862,6 +1911,7 @@ int unregister_netdevice_notifier_net(struct net *net,
 }
 EXPORT_SYMBOL(unregister_netdevice_notifier_net);
 
+<<<<<<< HEAD
 static void __move_netdevice_notifier_net(struct net *src_net,
 					  struct net *dst_net,
 					  struct notifier_block *nb)
@@ -1870,6 +1920,8 @@ static void __move_netdevice_notifier_net(struct net *src_net,
 	__register_netdevice_notifier_net(dst_net, nb, true);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int register_netdevice_notifier_dev_net(struct net_device *dev,
 					struct notifier_block *nb,
 					struct netdev_net_notifier *nn)
@@ -1906,8 +1958,15 @@ static void move_netdevice_notifiers_dev_net(struct net_device *dev,
 {
 	struct netdev_net_notifier *nn;
 
+<<<<<<< HEAD
 	list_for_each_entry(nn, &dev->net_notifier_list, list)
 		__move_netdevice_notifier_net(dev_net(dev), net, nn->nb);
+=======
+	list_for_each_entry(nn, &dev->net_notifier_list, list) {
+		__unregister_netdevice_notifier_net(dev_net(dev), nn->nb);
+		__register_netdevice_notifier_net(net, nn->nb, true);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -2066,10 +2125,20 @@ static DECLARE_WORK(netstamp_work, netstamp_clear);
 void net_enable_timestamp(void)
 {
 #ifdef CONFIG_JUMP_LABEL
+<<<<<<< HEAD
 	int wanted = atomic_read(&netstamp_wanted);
 
 	while (wanted > 0) {
 		if (atomic_try_cmpxchg(&netstamp_wanted, &wanted, wanted + 1))
+=======
+	int wanted;
+
+	while (1) {
+		wanted = atomic_read(&netstamp_wanted);
+		if (wanted <= 0)
+			break;
+		if (atomic_cmpxchg(&netstamp_wanted, wanted, wanted + 1) == wanted)
+>>>>>>> b7ba80a49124 (Commit)
 			return;
 	}
 	atomic_inc(&netstamp_needed_deferred);
@@ -2083,10 +2152,20 @@ EXPORT_SYMBOL(net_enable_timestamp);
 void net_disable_timestamp(void)
 {
 #ifdef CONFIG_JUMP_LABEL
+<<<<<<< HEAD
 	int wanted = atomic_read(&netstamp_wanted);
 
 	while (wanted > 1) {
 		if (atomic_try_cmpxchg(&netstamp_wanted, &wanted, wanted - 1))
+=======
+	int wanted;
+
+	while (1) {
+		wanted = atomic_read(&netstamp_wanted);
+		if (wanted <= 1)
+			break;
+		if (atomic_cmpxchg(&netstamp_wanted, wanted, wanted - 1) == wanted)
+>>>>>>> b7ba80a49124 (Commit)
 			return;
 	}
 	atomic_dec(&netstamp_needed_deferred);
@@ -2535,8 +2614,11 @@ int __netif_set_xps_queue(struct net_device *dev, const unsigned long *mask,
 	struct xps_map *map, *new_map;
 	unsigned int nr_ids;
 
+<<<<<<< HEAD
 	WARN_ON_ONCE(index >= dev->num_tx_queues);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (dev->num_tc) {
 		/* Do not allow XPS on subordinate device directly */
 		num_tc = dev->num_tc;
@@ -2996,8 +3078,11 @@ void netif_set_tso_max_size(struct net_device *dev, unsigned int size)
 	dev->tso_max_size = min(GSO_MAX_SIZE, size);
 	if (size < READ_ONCE(dev->gso_max_size))
 		netif_set_gso_max_size(dev, size);
+<<<<<<< HEAD
 	if (size < READ_ONCE(dev->gso_ipv4_max_size))
 		netif_set_gso_ipv4_max_size(dev, size);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(netif_set_tso_max_size);
 
@@ -3077,7 +3162,11 @@ void __netif_schedule(struct Qdisc *q)
 EXPORT_SYMBOL(__netif_schedule);
 
 struct dev_kfree_skb_cb {
+<<<<<<< HEAD
 	enum skb_drop_reason reason;
+=======
+	enum skb_free_reason reason;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct dev_kfree_skb_cb *get_kfree_skb_cb(const struct sk_buff *skb)
@@ -3110,7 +3199,11 @@ void netif_tx_wake_queue(struct netdev_queue *dev_queue)
 }
 EXPORT_SYMBOL(netif_tx_wake_queue);
 
+<<<<<<< HEAD
 void dev_kfree_skb_irq_reason(struct sk_buff *skb, enum skb_drop_reason reason)
+=======
+void __dev_kfree_skb_irq(struct sk_buff *skb, enum skb_free_reason reason)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long flags;
 
@@ -3130,6 +3223,7 @@ void dev_kfree_skb_irq_reason(struct sk_buff *skb, enum skb_drop_reason reason)
 	raise_softirq_irqoff(NET_TX_SOFTIRQ);
 	local_irq_restore(flags);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(dev_kfree_skb_irq_reason);
 
 void dev_kfree_skb_any_reason(struct sk_buff *skb, enum skb_drop_reason reason)
@@ -3140,6 +3234,18 @@ void dev_kfree_skb_any_reason(struct sk_buff *skb, enum skb_drop_reason reason)
 		kfree_skb_reason(skb, reason);
 }
 EXPORT_SYMBOL(dev_kfree_skb_any_reason);
+=======
+EXPORT_SYMBOL(__dev_kfree_skb_irq);
+
+void __dev_kfree_skb_any(struct sk_buff *skb, enum skb_free_reason reason)
+{
+	if (in_hardirq() || irqs_disabled())
+		__dev_kfree_skb_irq(skb, reason);
+	else
+		dev_kfree_skb(skb);
+}
+EXPORT_SYMBOL(__dev_kfree_skb_any);
+>>>>>>> b7ba80a49124 (Commit)
 
 
 /**
@@ -3735,25 +3841,41 @@ static void qdisc_pkt_len_init(struct sk_buff *skb)
 	 * we add to pkt_len the headers size of all segments
 	 */
 	if (shinfo->gso_size && skb_transport_header_was_set(skb)) {
+<<<<<<< HEAD
 		u16 gso_segs = shinfo->gso_segs;
 		unsigned int hdr_len;
 
 		/* mac layer + network layer */
 		hdr_len = skb_transport_offset(skb);
+=======
+		unsigned int hdr_len;
+		u16 gso_segs = shinfo->gso_segs;
+
+		/* mac layer + network layer */
+		hdr_len = skb_transport_header(skb) - skb_mac_header(skb);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* + transport layer */
 		if (likely(shinfo->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6))) {
 			const struct tcphdr *th;
 			struct tcphdr _tcphdr;
 
+<<<<<<< HEAD
 			th = skb_header_pointer(skb, hdr_len,
+=======
+			th = skb_header_pointer(skb, skb_transport_offset(skb),
+>>>>>>> b7ba80a49124 (Commit)
 						sizeof(_tcphdr), &_tcphdr);
 			if (likely(th))
 				hdr_len += __tcp_hdrlen(th);
 		} else {
 			struct udphdr _udphdr;
 
+<<<<<<< HEAD
 			if (skb_header_pointer(skb, hdr_len,
+=======
+			if (skb_header_pointer(skb, skb_transport_offset(skb),
+>>>>>>> b7ba80a49124 (Commit)
 					       sizeof(_udphdr), &_udphdr))
 				hdr_len += sizeof(struct udphdr);
 		}
@@ -5020,11 +5142,19 @@ static __latent_entropy void net_tx_action(struct softirq_action *h)
 			clist = clist->next;
 
 			WARN_ON(refcount_read(&skb->users));
+<<<<<<< HEAD
 			if (likely(get_kfree_skb_cb(skb)->reason == SKB_CONSUMED))
 				trace_consume_skb(skb, net_tx_action);
 			else
 				trace_kfree_skb(skb, net_tx_action,
 						get_kfree_skb_cb(skb)->reason);
+=======
+			if (likely(get_kfree_skb_cb(skb)->reason == SKB_REASON_CONSUMED))
+				trace_consume_skb(skb);
+			else
+				trace_kfree_skb(skb, net_tx_action,
+						SKB_DROP_REASON_NOT_SPECIFIED);
+>>>>>>> b7ba80a49124 (Commit)
 
 			if (skb->fclone != SKB_FCLONE_UNAVAILABLE)
 				__kfree_skb(skb);
@@ -5126,13 +5256,19 @@ sch_handle_ingress(struct sk_buff *skb, struct packet_type **pt_prev, int *ret,
 	case TC_ACT_SHOT:
 		mini_qdisc_qstats_cpu_drop(miniq);
 		kfree_skb_reason(skb, SKB_DROP_REASON_TC_INGRESS);
+<<<<<<< HEAD
 		*ret = NET_RX_DROP;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 	case TC_ACT_STOLEN:
 	case TC_ACT_QUEUED:
 	case TC_ACT_TRAP:
 		consume_skb(skb);
+<<<<<<< HEAD
 		*ret = NET_RX_SUCCESS;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 	case TC_ACT_REDIRECT:
 		/* skb_mac_header check was done by cls/act_bpf, so
@@ -5145,10 +5281,15 @@ sch_handle_ingress(struct sk_buff *skb, struct packet_type **pt_prev, int *ret,
 			*another = true;
 			break;
 		}
+<<<<<<< HEAD
 		*ret = NET_RX_SUCCESS;
 		return NULL;
 	case TC_ACT_CONSUMED:
 		*ret = NET_RX_SUCCESS;
+=======
+		return NULL;
+	case TC_ACT_CONSUMED:
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 	default:
 		break;
@@ -5976,9 +6117,16 @@ EXPORT_SYMBOL(__napi_schedule);
  */
 bool napi_schedule_prep(struct napi_struct *n)
 {
+<<<<<<< HEAD
 	unsigned long new, val = READ_ONCE(n->state);
 
 	do {
+=======
+	unsigned long val, new;
+
+	do {
+		val = READ_ONCE(n->state);
+>>>>>>> b7ba80a49124 (Commit)
 		if (unlikely(val & NAPIF_STATE_DISABLE))
 			return false;
 		new = val | NAPIF_STATE_SCHED;
@@ -5991,7 +6139,11 @@ bool napi_schedule_prep(struct napi_struct *n)
 		 */
 		new |= (val & NAPIF_STATE_SCHED) / NAPIF_STATE_SCHED *
 						   NAPIF_STATE_MISSED;
+<<<<<<< HEAD
 	} while (!try_cmpxchg(&n->state, &val, new));
+=======
+	} while (cmpxchg(&n->state, val, new) != val);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return !(val & NAPIF_STATE_SCHED);
 }
@@ -6059,8 +6211,14 @@ bool napi_complete_done(struct napi_struct *n, int work_done)
 		local_irq_restore(flags);
 	}
 
+<<<<<<< HEAD
 	val = READ_ONCE(n->state);
 	do {
+=======
+	do {
+		val = READ_ONCE(n->state);
+
+>>>>>>> b7ba80a49124 (Commit)
 		WARN_ON_ONCE(!(val & NAPIF_STATE_SCHED));
 
 		new = val & ~(NAPIF_STATE_MISSED | NAPIF_STATE_SCHED |
@@ -6073,7 +6231,11 @@ bool napi_complete_done(struct napi_struct *n, int work_done)
 		 */
 		new |= (val & NAPIF_STATE_MISSED) / NAPIF_STATE_MISSED *
 						    NAPIF_STATE_SCHED;
+<<<<<<< HEAD
 	} while (!try_cmpxchg(&n->state, &val, new));
+=======
+	} while (cmpxchg(&n->state, val, new) != val);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unlikely(val & NAPIF_STATE_MISSED)) {
 		__napi_schedule(n);
@@ -6350,6 +6512,26 @@ int dev_set_threaded(struct net_device *dev, bool threaded)
 }
 EXPORT_SYMBOL(dev_set_threaded);
 
+<<<<<<< HEAD
+=======
+/* Double check that napi_get_frags() allocates skbs with
+ * skb->head being backed by slab, not a page fragment.
+ * This is to make sure bug fixed in 3226b158e67c
+ * ("net: avoid 32 x truesize under-estimation for tiny skbs")
+ * does not accidentally come back.
+ */
+static void napi_get_frags_check(struct napi_struct *napi)
+{
+	struct sk_buff *skb;
+
+	local_bh_disable();
+	skb = napi_get_frags(napi);
+	WARN_ON_ONCE(skb && skb->head_frag);
+	napi_free_frags(napi);
+	local_bh_enable();
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 void netif_napi_add_weight(struct net_device *dev, struct napi_struct *napi,
 			   int (*poll)(struct napi_struct *, int), int weight)
 {
@@ -6394,16 +6576,31 @@ void napi_disable(struct napi_struct *n)
 	might_sleep();
 	set_bit(NAPI_STATE_DISABLE, &n->state);
 
+<<<<<<< HEAD
 	val = READ_ONCE(n->state);
 	do {
 		while (val & (NAPIF_STATE_SCHED | NAPIF_STATE_NPSVC)) {
 			usleep_range(20, 200);
 			val = READ_ONCE(n->state);
+=======
+	for ( ; ; ) {
+		val = READ_ONCE(n->state);
+		if (val & (NAPIF_STATE_SCHED | NAPIF_STATE_NPSVC)) {
+			usleep_range(20, 200);
+			continue;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		new = val | NAPIF_STATE_SCHED | NAPIF_STATE_NPSVC;
 		new &= ~(NAPIF_STATE_THREADED | NAPIF_STATE_PREFER_BUSY_POLL);
+<<<<<<< HEAD
 	} while (!try_cmpxchg(&n->state, &val, new));
+=======
+
+		if (cmpxchg(&n->state, val, new) == val)
+			break;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	hrtimer_cancel(&n->timer);
 
@@ -6420,15 +6617,26 @@ EXPORT_SYMBOL(napi_disable);
  */
 void napi_enable(struct napi_struct *n)
 {
+<<<<<<< HEAD
 	unsigned long new, val = READ_ONCE(n->state);
 
 	do {
+=======
+	unsigned long val, new;
+
+	do {
+		val = READ_ONCE(n->state);
+>>>>>>> b7ba80a49124 (Commit)
 		BUG_ON(!test_bit(NAPI_STATE_SCHED, &val));
 
 		new = val & ~(NAPIF_STATE_SCHED | NAPIF_STATE_NPSVC);
 		if (n->dev->threaded && n->thread)
 			new |= NAPIF_STATE_THREADED;
+<<<<<<< HEAD
 	} while (!try_cmpxchg(&n->state, &val, new));
+=======
+	} while (cmpxchg(&n->state, val, new) != val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(napi_enable);
 
@@ -6613,16 +6821,28 @@ static int napi_threaded_poll(void *data)
 static void skb_defer_free_flush(struct softnet_data *sd)
 {
 	struct sk_buff *skb, *next;
+<<<<<<< HEAD
+=======
+	unsigned long flags;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Paired with WRITE_ONCE() in skb_attempt_defer_free() */
 	if (!READ_ONCE(sd->defer_list))
 		return;
 
+<<<<<<< HEAD
 	spin_lock_irq(&sd->defer_lock);
 	skb = sd->defer_list;
 	sd->defer_list = NULL;
 	sd->defer_count = 0;
 	spin_unlock_irq(&sd->defer_lock);
+=======
+	spin_lock_irqsave(&sd->defer_lock, flags);
+	skb = sd->defer_list;
+	sd->defer_list = NULL;
+	sd->defer_count = 0;
+	spin_unlock_irqrestore(&sd->defer_lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (skb != NULL) {
 		next = skb->next;
@@ -8315,8 +8535,14 @@ static int __dev_set_promiscuity(struct net_device *dev, int inc, bool notify)
 		}
 	}
 	if (dev->flags != old_flags) {
+<<<<<<< HEAD
 		netdev_info(dev, "%s promiscuous mode\n",
 			    dev->flags & IFF_PROMISC ? "entered" : "left");
+=======
+		pr_info("device %s %s promiscuous mode\n",
+			dev->name,
+			dev->flags & IFF_PROMISC ? "entered" : "left");
+>>>>>>> b7ba80a49124 (Commit)
 		if (audit_enabled) {
 			current_uid_gid(&uid, &gid);
 			audit_log(audit_context(), GFP_ATOMIC,
@@ -8333,7 +8559,11 @@ static int __dev_set_promiscuity(struct net_device *dev, int inc, bool notify)
 		dev_change_rx_flags(dev, IFF_PROMISC);
 	}
 	if (notify)
+<<<<<<< HEAD
 		__dev_notify_flags(dev, old_flags, IFF_PROMISC, 0, NULL);
+=======
+		__dev_notify_flags(dev, old_flags, IFF_PROMISC);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -8384,13 +8614,20 @@ static int __dev_set_allmulti(struct net_device *dev, int inc, bool notify)
 		}
 	}
 	if (dev->flags ^ old_flags) {
+<<<<<<< HEAD
 		netdev_info(dev, "%s allmulticast mode\n",
 			    dev->flags & IFF_ALLMULTI ? "entered" : "left");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		dev_change_rx_flags(dev, IFF_ALLMULTI);
 		dev_set_rx_mode(dev);
 		if (notify)
 			__dev_notify_flags(dev, old_flags,
+<<<<<<< HEAD
 					   dev->gflags ^ old_gflags, 0, NULL);
+=======
+					   dev->gflags ^ old_gflags);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return 0;
 }
@@ -8553,13 +8790,21 @@ int __dev_change_flags(struct net_device *dev, unsigned int flags,
 }
 
 void __dev_notify_flags(struct net_device *dev, unsigned int old_flags,
+<<<<<<< HEAD
 			unsigned int gchanges, u32 portid,
 			const struct nlmsghdr *nlh)
+=======
+			unsigned int gchanges)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int changes = dev->flags ^ old_flags;
 
 	if (gchanges)
+<<<<<<< HEAD
 		rtmsg_ifinfo(RTM_NEWLINK, dev, gchanges, GFP_ATOMIC, portid, nlh);
+=======
+		rtmsg_ifinfo(RTM_NEWLINK, dev, gchanges, GFP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (changes & IFF_UP) {
 		if (dev->flags & IFF_UP)
@@ -8601,7 +8846,11 @@ int dev_change_flags(struct net_device *dev, unsigned int flags,
 		return ret;
 
 	changes = (old_flags ^ dev->flags) | (old_gflags ^ dev->gflags);
+<<<<<<< HEAD
 	__dev_notify_flags(dev, old_flags, changes, 0, NULL);
+=======
+	__dev_notify_flags(dev, old_flags, changes);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 EXPORT_SYMBOL(dev_change_flags);
@@ -8807,7 +9056,11 @@ EXPORT_SYMBOL(dev_set_mac_address_user);
 
 int dev_get_mac_address(struct sockaddr *sa, struct net *net, char *dev_name)
 {
+<<<<<<< HEAD
 	size_t size = sizeof(sa->sa_data_min);
+=======
+	size_t size = sizeof(sa->sa_data);
+>>>>>>> b7ba80a49124 (Commit)
 	struct net_device *dev;
 	int ret = 0;
 
@@ -9221,12 +9474,17 @@ static int dev_xdp_attach(struct net_device *dev, struct netlink_ext_ack *extack
 			NL_SET_ERR_MSG(extack, "Native and generic XDP can't be active at the same time");
 			return -EEXIST;
 		}
+<<<<<<< HEAD
 		if (!offload && bpf_prog_is_offloaded(new_prog->aux)) {
 			NL_SET_ERR_MSG(extack, "Using offloaded program without HW_MODE flag is not supported");
 			return -EINVAL;
 		}
 		if (bpf_prog_is_dev_bound(new_prog->aux) && !bpf_offload_dev_match(new_prog, dev)) {
 			NL_SET_ERR_MSG(extack, "Program bound to different device");
+=======
+		if (!offload && bpf_prog_is_dev_bound(new_prog->aux)) {
+			NL_SET_ERR_MSG(extack, "Using device-bound program without HW_MODE flag is not supported");
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 		if (new_prog->expected_attach_type == BPF_XDP_DEVMAP) {
@@ -10048,7 +10306,11 @@ int register_netdevice(struct net_device *dev)
 	dev->reg_state = ret ? NETREG_UNREGISTERED : NETREG_REGISTERED;
 	write_unlock(&dev_base_lock);
 	if (ret)
+<<<<<<< HEAD
 		goto err_uninit_notify;
+=======
+		goto err_uninit;
+>>>>>>> b7ba80a49124 (Commit)
 
 	__netdev_update_features(dev);
 
@@ -10090,13 +10352,20 @@ int register_netdevice(struct net_device *dev)
 	 */
 	if (!dev->rtnl_link_ops ||
 	    dev->rtnl_link_state == RTNL_LINK_INITIALIZED)
+<<<<<<< HEAD
 		rtmsg_ifinfo(RTM_NEWLINK, dev, ~0U, GFP_KERNEL, 0, NULL);
+=======
+		rtmsg_ifinfo(RTM_NEWLINK, dev, ~0U, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	return ret;
 
+<<<<<<< HEAD
 err_uninit_notify:
 	call_netdevice_notifiers(NETDEV_PRE_UNINIT, dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_uninit:
 	if (dev->netdev_ops->ndo_uninit)
 		dev->netdev_ops->ndo_uninit(dev);
@@ -10370,16 +10639,36 @@ void netdev_run_todo(void)
 void netdev_stats_to_stats64(struct rtnl_link_stats64 *stats64,
 			     const struct net_device_stats *netdev_stats)
 {
+<<<<<<< HEAD
 	size_t i, n = sizeof(*netdev_stats) / sizeof(atomic_long_t);
 	const atomic_long_t *src = (atomic_long_t *)netdev_stats;
+=======
+#if BITS_PER_LONG == 64
+	BUILD_BUG_ON(sizeof(*stats64) < sizeof(*netdev_stats));
+	memcpy(stats64, netdev_stats, sizeof(*netdev_stats));
+	/* zero out counters that only exist in rtnl_link_stats64 */
+	memset((char *)stats64 + sizeof(*netdev_stats), 0,
+	       sizeof(*stats64) - sizeof(*netdev_stats));
+#else
+	size_t i, n = sizeof(*netdev_stats) / sizeof(unsigned long);
+	const unsigned long *src = (const unsigned long *)netdev_stats;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 *dst = (u64 *)stats64;
 
 	BUILD_BUG_ON(n > sizeof(*stats64) / sizeof(u64));
 	for (i = 0; i < n; i++)
+<<<<<<< HEAD
 		dst[i] = (unsigned long)atomic_long_read(&src[i]);
 	/* zero out counters that only exist in rtnl_link_stats64 */
 	memset((char *)stats64 + n * sizeof(u64), 0,
 	       sizeof(*stats64) - n * sizeof(u64));
+=======
+		dst[i] = src[i];
+	/* zero out counters that only exist in rtnl_link_stats64 */
+	memset((char *)stats64 + n * sizeof(u64), 0,
+	       sizeof(*stats64) - n * sizeof(u64));
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(netdev_stats_to_stats64);
 
@@ -10460,12 +10749,20 @@ void dev_fetch_sw_netstats(struct rtnl_link_stats64 *s,
 
 		stats = per_cpu_ptr(netstats, cpu);
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&stats->syncp);
+=======
+			start = u64_stats_fetch_begin_irq(&stats->syncp);
+>>>>>>> b7ba80a49124 (Commit)
 			rx_packets = u64_stats_read(&stats->rx_packets);
 			rx_bytes   = u64_stats_read(&stats->rx_bytes);
 			tx_packets = u64_stats_read(&stats->tx_packets);
 			tx_bytes   = u64_stats_read(&stats->tx_bytes);
+<<<<<<< HEAD
 		} while (u64_stats_fetch_retry(&stats->syncp, start));
+=======
+		} while (u64_stats_fetch_retry_irq(&stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		s->rx_packets += rx_packets;
 		s->rx_bytes   += rx_bytes;
@@ -10518,6 +10815,7 @@ void netdev_set_default_ethtool_ops(struct net_device *dev,
 }
 EXPORT_SYMBOL_GPL(netdev_set_default_ethtool_ops);
 
+<<<<<<< HEAD
 /**
  * netdev_sw_irq_coalesce_default_on() - enable SW IRQ coalescing by default
  * @dev: netdev to enable the IRQ coalescing on
@@ -10534,6 +10832,8 @@ void netdev_sw_irq_coalesce_default_on(struct net_device *dev)
 }
 EXPORT_SYMBOL_GPL(netdev_sw_irq_coalesce_default_on);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void netdev_freemem(struct net_device *dev)
 {
 	char *addr = (char *)dev - dev->padded;
@@ -10612,8 +10912,11 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
 	dev->gso_max_size = GSO_LEGACY_MAX_SIZE;
 	dev->gso_max_segs = GSO_MAX_SEGS;
 	dev->gro_max_size = GRO_LEGACY_MAX_SIZE;
+<<<<<<< HEAD
 	dev->gso_ipv4_max_size = GSO_LEGACY_MAX_SIZE;
 	dev->gro_ipv4_max_size = GRO_LEGACY_MAX_SIZE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev->tso_max_size = TSO_LEGACY_MAX_SIZE;
 	dev->tso_max_segs = TSO_MAX_SEGS;
 	dev->upper_level = 1;
@@ -10781,8 +11084,19 @@ void unregister_netdevice_queue(struct net_device *dev, struct list_head *head)
 }
 EXPORT_SYMBOL(unregister_netdevice_queue);
 
+<<<<<<< HEAD
 void unregister_netdevice_many_notify(struct list_head *head,
 				      u32 portid, const struct nlmsghdr *nlh)
+=======
+/**
+ *	unregister_netdevice_many - unregister many devices
+ *	@head: list of devices
+ *
+ *  Note: As most callers use a stack allocated list_head,
+ *  we force a list_del() to make sure stack wont be corrupted later.
+ */
+void unregister_netdevice_many(struct list_head *head)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct net_device *dev, *tmp;
 	LIST_HEAD(close_head);
@@ -10833,7 +11147,10 @@ void unregister_netdevice_many_notify(struct list_head *head,
 		dev_shutdown(dev);
 
 		dev_xdp_uninstall(dev);
+<<<<<<< HEAD
 		bpf_dev_bound_netdev_unregister(dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		netdev_offload_xstats_disable_all(dev);
 
@@ -10845,8 +11162,12 @@ void unregister_netdevice_many_notify(struct list_head *head,
 		if (!dev->rtnl_link_ops ||
 		    dev->rtnl_link_state == RTNL_LINK_INITIALIZED)
 			skb = rtmsg_ifinfo_build_skb(RTM_DELLINK, dev, ~0U, 0,
+<<<<<<< HEAD
 						     GFP_KERNEL, NULL, 0,
 						     portid, nlmsg_seq(nlh));
+=======
+						     GFP_KERNEL, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 *	Flush the unicast and multicast chains
@@ -10857,13 +11178,20 @@ void unregister_netdevice_many_notify(struct list_head *head,
 		netdev_name_node_alt_flush(dev);
 		netdev_name_node_free(dev->name_node);
 
+<<<<<<< HEAD
 		call_netdevice_notifiers(NETDEV_PRE_UNINIT, dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (dev->netdev_ops->ndo_uninit)
 			dev->netdev_ops->ndo_uninit(dev);
 
 		if (skb)
+<<<<<<< HEAD
 			rtmsg_ifinfo_send(skb, dev, GFP_KERNEL, portid, nlh);
+=======
+			rtmsg_ifinfo_send(skb, dev, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Notifier chain MUST detach us all upper devices. */
 		WARN_ON(netdev_has_any_upper_dev(dev));
@@ -10886,6 +11214,7 @@ void unregister_netdevice_many_notify(struct list_head *head,
 
 	list_del(head);
 }
+<<<<<<< HEAD
 
 /**
  *	unregister_netdevice_many - unregister many devices
@@ -10898,6 +11227,8 @@ void unregister_netdevice_many(struct list_head *head)
 {
 	unregister_netdevice_many_notify(head, 0, NULL);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL(unregister_netdevice_many);
 
 /**
@@ -11053,7 +11384,11 @@ int __dev_change_net_namespace(struct net_device *dev, struct net *net,
 	 *	Prevent userspace races by waiting until the network
 	 *	device is fully setup before sending notifications.
 	 */
+<<<<<<< HEAD
 	rtmsg_ifinfo(RTM_NEWLINK, dev, ~0U, GFP_KERNEL, 0, NULL);
+=======
+	rtmsg_ifinfo(RTM_NEWLINK, dev, ~0U, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	synchronize_net();
 	err = 0;

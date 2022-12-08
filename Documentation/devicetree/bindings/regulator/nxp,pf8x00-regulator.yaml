@@ -59,7 +59,11 @@ properties:
               should be "buck1", ..., "buck7"
 
           nxp,ilim-ma:
+<<<<<<< HEAD
             $ref: /schemas/types.yaml#/definitions/uint32
+=======
+            $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
             minimum: 2100
             maximum: 4500
             deprecated: true
@@ -75,7 +79,11 @@ properties:
               4500
 
           nxp,phase-shift:
+<<<<<<< HEAD
             $ref: /schemas/types.yaml#/definitions/uint32
+=======
+            $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
             default: 0
             enum: [ 0, 45, 90, 135, 180, 225, 270, 315 ]
             description:
@@ -109,7 +117,11 @@ additionalProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     i2c {
+=======
+    i2c1 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 

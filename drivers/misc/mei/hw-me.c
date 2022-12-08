@@ -590,6 +590,7 @@ static int mei_me_hbuf_write(struct mei_device *dev,
 	u32 dw_cnt;
 	int empty_slots;
 
+<<<<<<< HEAD
 	if (WARN_ON(!hdr || hdr_len & 0x3))
 		return -EINVAL;
 
@@ -598,6 +599,11 @@ static int mei_me_hbuf_write(struct mei_device *dev,
 		return -EINVAL;
 	}
 
+=======
+	if (WARN_ON(!hdr || !data || hdr_len & 0x3))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	dev_dbg(dev->dev, MEI_HDR_FMT, MEI_HDR_PRM((struct mei_msg_hdr *)hdr));
 
 	empty_slots = mei_hbuf_empty_slots(dev);

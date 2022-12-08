@@ -598,6 +598,10 @@ static int tegra_dpaux_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM
+>>>>>>> b7ba80a49124 (Commit)
 static int tegra_dpaux_suspend(struct device *dev)
 {
 	struct tegra_dpaux *dpaux = dev_get_drvdata(dev);
@@ -656,9 +660,16 @@ disable_clk:
 	clk_disable_unprepare(dpaux->clk);
 	return err;
 }
+<<<<<<< HEAD
 
 static const struct dev_pm_ops tegra_dpaux_pm_ops = {
 	RUNTIME_PM_OPS(tegra_dpaux_suspend, tegra_dpaux_resume, NULL)
+=======
+#endif
+
+static const struct dev_pm_ops tegra_dpaux_pm_ops = {
+	SET_RUNTIME_PM_OPS(tegra_dpaux_suspend, tegra_dpaux_resume, NULL)
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct tegra_dpaux_soc tegra124_dpaux_soc = {
@@ -692,7 +703,11 @@ struct platform_driver tegra_dpaux_driver = {
 	.driver = {
 		.name = "tegra-dpaux",
 		.of_match_table = tegra_dpaux_of_match,
+<<<<<<< HEAD
 		.pm = pm_ptr(&tegra_dpaux_pm_ops),
+=======
+		.pm = &tegra_dpaux_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = tegra_dpaux_probe,
 	.remove = tegra_dpaux_remove,

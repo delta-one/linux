@@ -6,6 +6,7 @@
 #ifndef HOST1X_FENCE_H
 #define HOST1X_FENCE_H
 
+<<<<<<< HEAD
 struct host1x_syncpt_fence {
 	struct dma_fence base;
 
@@ -24,6 +25,9 @@ struct host1x_fence_list {
 	spinlock_t lock;
 	struct list_head list;
 };
+=======
+struct host1x_syncpt_fence;
+>>>>>>> b7ba80a49124 (Commit)
 
 void host1x_fence_signal(struct host1x_syncpt_fence *fence);
 

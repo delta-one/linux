@@ -346,6 +346,7 @@ struct test tests[] = {
 		.retval = BPF_OK,
 	},
 	{
+<<<<<<< HEAD
 		.name = "ipv6-empty-flow-label",
 		.pkt.ipv6 = {
 			.eth.h_proto = __bpf_constant_htons(ETH_P_IPV6),
@@ -370,6 +371,8 @@ struct test tests[] = {
 		.retval = BPF_OK,
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.name = "ipip-encap",
 		.pkt.ipip = {
 			.eth.h_proto = __bpf_constant_htons(ETH_P_IP),

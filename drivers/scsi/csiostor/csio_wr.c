@@ -1051,6 +1051,10 @@ csio_wr_process_fl(struct csio_hw *hw, struct csio_q *q,
 	struct csio_fl_dma_buf flb;
 	struct csio_dma_buf *buf, *fbuf;
 	uint32_t bufsz, len, lastlen = 0;
+<<<<<<< HEAD
+=======
+	int n;
+>>>>>>> b7ba80a49124 (Commit)
 	struct csio_q *flq = hw->wrm.q_arr[q->un.iq.flq_idx];
 
 	CSIO_DB_ASSERT(flq != NULL);
@@ -1070,7 +1074,11 @@ csio_wr_process_fl(struct csio_hw *hw, struct csio_q *q,
 	flb.totlen = len;
 
 	/* Consume all freelist buffers used for len bytes */
+<<<<<<< HEAD
 	for (fbuf = flb.flbufs; ; fbuf++) {
+=======
+	for (n = 0, fbuf = flb.flbufs; ; n++, fbuf++) {
+>>>>>>> b7ba80a49124 (Commit)
 		buf = &flq->un.fl.bufs[flq->cidx];
 		bufsz = csio_wr_fl_bufsz(sge, buf);
 

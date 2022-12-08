@@ -7,7 +7,10 @@
  * Authors:
  *   Yaozu (Eddie) Dong <Eddie.dong@intel.com>
  */
+<<<<<<< HEAD
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/export.h>
 #include <linux/kvm_host.h>
@@ -32,6 +35,10 @@ int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
 
 	return r;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL(kvm_cpu_has_pending_timer);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * check if there is a pending userspace external interrupt
@@ -150,6 +157,10 @@ void kvm_inject_pending_timer_irqs(struct kvm_vcpu *vcpu)
 	if (kvm_xen_timer_enabled(vcpu))
 		kvm_xen_inject_timer_irqs(vcpu);
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(kvm_inject_pending_timer_irqs);
+>>>>>>> b7ba80a49124 (Commit)
 
 void __kvm_migrate_timers(struct kvm_vcpu *vcpu)
 {
@@ -164,8 +175,11 @@ bool kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args)
 
 	return resample ? irqchip_kernel(kvm) : irqchip_in_kernel(kvm);
 }
+<<<<<<< HEAD
 
 bool kvm_arch_irqchip_in_kernel(struct kvm *kvm)
 {
 	return irqchip_in_kernel(kvm);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

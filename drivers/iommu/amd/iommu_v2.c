@@ -587,7 +587,10 @@ out_drop_state:
 	put_device_state(dev_state);
 
 out:
+<<<<<<< HEAD
 	pci_dev_put(pdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -640,9 +643,13 @@ int amd_iommu_bind_pasid(struct pci_dev *pdev, u32 pasid,
 	if (pasid_state->mm == NULL)
 		goto out_free;
 
+<<<<<<< HEAD
 	ret = mmu_notifier_register(&pasid_state->mn, mm);
 	if (ret)
 		goto out_free;
+=======
+	mmu_notifier_register(&pasid_state->mn, mm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = set_pasid_state(dev_state, pasid_state, pasid);
 	if (ret)

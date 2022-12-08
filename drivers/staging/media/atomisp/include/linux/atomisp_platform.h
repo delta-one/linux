@@ -125,7 +125,17 @@ struct intel_v4l2_subdev_id {
 	enum atomisp_camera_port    port;
 };
 
+<<<<<<< HEAD
 struct intel_v4l2_subdev_table {
+=======
+struct intel_v4l2_subdev_i2c_board_info {
+	struct i2c_board_info board_info;
+	int i2c_adapter_id;
+};
+
+struct intel_v4l2_subdev_table {
+	struct intel_v4l2_subdev_i2c_board_info v4l2_subdev;
+>>>>>>> b7ba80a49124 (Commit)
 	enum intel_v4l2_subdev_type type;
 	enum atomisp_camera_port port;
 	struct v4l2_subdev *subdev;
@@ -135,6 +145,26 @@ struct atomisp_platform_data {
 	struct intel_v4l2_subdev_table *subdevs;
 };
 
+<<<<<<< HEAD
+=======
+/* Describe the capacities of one single sensor. */
+struct atomisp_sensor_caps {
+	/* The number of streams this sensor can output. */
+	int stream_num;
+	bool is_slave;
+};
+
+/* Describe the capacities of sensors connected to one camera port. */
+struct atomisp_camera_caps {
+	/* The number of sensors connected to this camera port. */
+	int sensor_num;
+	/* The capacities of each sensor. */
+	struct atomisp_sensor_caps sensor[MAX_SENSORS_PER_PORT];
+	/* Define whether stream control is required for multiple streams. */
+	bool multi_stream_ctrl;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  *  Sensor of external ISP can send multiple steams with different mipi data
  * type in the same virtual channel. This information needs to come from the
@@ -204,6 +234,10 @@ struct camera_mipi_info {
 	unsigned int                    num_lanes;
 	enum atomisp_input_format       input_format;
 	enum atomisp_bayer_order        raw_bayer_order;
+<<<<<<< HEAD
+=======
+	struct atomisp_sensor_mode_data data;
+>>>>>>> b7ba80a49124 (Commit)
 	enum atomisp_input_format       metadata_format;
 	u32                             metadata_width;
 	u32                             metadata_height;
@@ -211,10 +245,14 @@ struct camera_mipi_info {
 };
 
 const struct atomisp_platform_data *atomisp_get_platform_data(void);
+<<<<<<< HEAD
 int atomisp_register_sensor_no_gmin(struct v4l2_subdev *subdev, u32 lanes,
 				    enum atomisp_input_format format,
 				    enum atomisp_bayer_order bayer_order);
 void atomisp_unregister_subdev(struct v4l2_subdev *subdev);
+=======
+const struct atomisp_camera_caps *atomisp_get_default_camera_caps(void);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* API from old platform_camera.h, new CPUID implementation */
 #define __IS_SOC(x) (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL && \

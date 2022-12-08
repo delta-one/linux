@@ -104,8 +104,12 @@ static void parse_options(int argc, char *argv[], unsigned int *ifindex, __u32 *
 		{ "tc", no_argument, NULL, 'c' },
 		{ NULL, 0, NULL, 0 },
 	};
+<<<<<<< HEAD
 	unsigned long mss4, wscale, ttl;
 	unsigned long long mss6;
+=======
+	unsigned long mss4, mss6, wscale, ttl;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int tcpipopts_mask = 0;
 
 	if (argc < 2)
@@ -116,7 +120,10 @@ static void parse_options(int argc, char *argv[], unsigned int *ifindex, __u32 *
 	*tcpipopts = 0;
 	*ports = NULL;
 	*single = false;
+<<<<<<< HEAD
 	*tc = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (true) {
 		int opt;
@@ -217,10 +224,16 @@ static int syncookie_attach(const char *argv0, unsigned int ifindex, bool tc)
 
 	prog_fd = bpf_program__fd(prog);
 
+<<<<<<< HEAD
 	err = bpf_prog_get_info_by_fd(prog_fd, &info, &info_len);
 	if (err < 0) {
 		fprintf(stderr, "Error: bpf_prog_get_info_by_fd: %s\n",
 			strerror(-err));
+=======
+	err = bpf_obj_get_info_by_fd(prog_fd, &info, &info_len);
+	if (err < 0) {
+		fprintf(stderr, "Error: bpf_obj_get_info_by_fd: %s\n", strerror(-err));
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 	attached_tc = tc;
@@ -289,6 +302,7 @@ static int syncookie_open_bpf_maps(__u32 prog_id, int *values_map_fd, int *ports
 
 	prog_info = (struct bpf_prog_info) {
 		.nr_map_ids = 8,
+<<<<<<< HEAD
 		.map_ids = (__u64)(unsigned long)map_ids,
 	};
 	info_len = sizeof(prog_info);
@@ -297,6 +311,15 @@ static int syncookie_open_bpf_maps(__u32 prog_id, int *values_map_fd, int *ports
 	if (err != 0) {
 		fprintf(stderr, "Error: bpf_prog_get_info_by_fd: %s\n",
 			strerror(-err));
+=======
+		.map_ids = (__u64)map_ids,
+	};
+	info_len = sizeof(prog_info);
+
+	err = bpf_obj_get_info_by_fd(prog_fd, &prog_info, &info_len);
+	if (err != 0) {
+		fprintf(stderr, "Error: bpf_obj_get_info_by_fd: %s\n", strerror(-err));
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -319,10 +342,16 @@ static int syncookie_open_bpf_maps(__u32 prog_id, int *values_map_fd, int *ports
 		map_fd = err;
 
 		info_len = sizeof(map_info);
+<<<<<<< HEAD
 		err = bpf_map_get_info_by_fd(map_fd, &map_info, &info_len);
 		if (err != 0) {
 			fprintf(stderr, "Error: bpf_map_get_info_by_fd: %s\n",
 				strerror(-err));
+=======
+		err = bpf_obj_get_info_by_fd(map_fd, &map_info, &info_len);
+		if (err != 0) {
+			fprintf(stderr, "Error: bpf_obj_get_info_by_fd: %s\n", strerror(-err));
+>>>>>>> b7ba80a49124 (Commit)
 			close(map_fd);
 			goto err_close_map_fds;
 		}

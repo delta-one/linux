@@ -41,7 +41,10 @@
 #include "xfs_attr_item.h"
 #include "xfs_xattr.h"
 #include "xfs_iunlink_item.h"
+<<<<<<< HEAD
 #include "xfs_dahash_test.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/magic.h>
 #include <linux/fs_context.h>
@@ -248,6 +251,7 @@ xfs_fs_show_options(
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool
 xfs_set_inode_alloc_perag(
 	struct xfs_perag	*pag,
@@ -274,6 +278,8 @@ xfs_set_inode_alloc_perag(
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Set parameters for inode allocation heuristics, taking into account
  * filesystem size and inode32/inode64 mount options; i.e. specifically
@@ -337,8 +343,29 @@ xfs_set_inode_alloc(
 		ino = XFS_AGINO_TO_INO(mp, index, agino);
 
 		pag = xfs_perag_get(mp, index);
+<<<<<<< HEAD
 		if (xfs_set_inode_alloc_perag(pag, ino, max_metadata))
 			maxagi++;
+=======
+
+		if (xfs_is_inode32(mp)) {
+			if (ino > XFS_MAXINUMBER_32) {
+				pag->pagi_inodeok = 0;
+				pag->pagf_metadata = 0;
+			} else {
+				pag->pagi_inodeok = 1;
+				maxagi++;
+				if (index < max_metadata)
+					pag->pagf_metadata = 1;
+				else
+					pag->pagf_metadata = 0;
+			}
+		} else {
+			pag->pagi_inodeok = 1;
+			pag->pagf_metadata = 0;
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		xfs_perag_put(pag);
 	}
 
@@ -664,7 +691,11 @@ xfs_fs_destroy_inode(
 static void
 xfs_fs_dirty_inode(
 	struct inode			*inode,
+<<<<<<< HEAD
 	int				flags)
+=======
+	int				flag)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct xfs_inode		*ip = XFS_I(inode);
 	struct xfs_mount		*mp = ip->i_mount;
@@ -672,6 +703,7 @@ xfs_fs_dirty_inode(
 
 	if (!(inode->i_sb->s_flags & SB_LAZYTIME))
 		return;
+<<<<<<< HEAD
 
 	/*
 	 * Only do the timestamp update if the inode is dirty (I_DIRTY_SYNC)
@@ -679,6 +711,9 @@ xfs_fs_dirty_inode(
 	 * in flags possibly together with I_DIRTY_SYNC.
 	 */
 	if ((flags & ~I_DIRTY_TIME) != I_DIRTY_SYNC || !(flags & I_DIRTY_TIME))
+=======
+	if (flag != I_DIRTY_SYNC || !(inode->i_state & I_DIRTY_TIME))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	if (xfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0, 0, &tp))
@@ -1121,7 +1156,11 @@ xfs_fs_put_super(
 	if (!sb->s_fs_info)
 		return;
 
+<<<<<<< HEAD
 	xfs_notice(mp, "Unmounting Filesystem %pU", &mp->m_sb.sb_uuid);
+=======
+	xfs_notice(mp, "Unmounting Filesystem");
+>>>>>>> b7ba80a49124 (Commit)
 	xfs_filestream_unmount(mp);
 	xfs_unmountfs(mp);
 
@@ -1933,6 +1972,10 @@ static int xfs_init_fs_context(
 		return -ENOMEM;
 
 	spin_lock_init(&mp->m_sb_lock);
+<<<<<<< HEAD
+=======
+	spin_lock_init(&mp->m_agirotor_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_RADIX_TREE(&mp->m_perag_tree, GFP_ATOMIC);
 	spin_lock_init(&mp->m_perag_lock);
 	mutex_init(&mp->m_growlock);
@@ -2038,14 +2081,28 @@ xfs_init_caches(void)
 		goto out_destroy_trans_cache;
 
 	xfs_efd_cache = kmem_cache_create("xfs_efd_item",
+<<<<<<< HEAD
 			xfs_efd_log_item_sizeof(XFS_EFD_MAX_FAST_EXTENTS),
 			0, 0, NULL);
+=======
+					(sizeof(struct xfs_efd_log_item) +
+					(XFS_EFD_MAX_FAST_EXTENTS - 1) *
+					sizeof(struct xfs_extent)),
+					0, 0, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!xfs_efd_cache)
 		goto out_destroy_buf_item_cache;
 
 	xfs_efi_cache = kmem_cache_create("xfs_efi_item",
+<<<<<<< HEAD
 			xfs_efi_log_item_sizeof(XFS_EFI_MAX_FAST_EXTENTS),
 			0, 0, NULL);
+=======
+					 (sizeof(struct xfs_efi_log_item) +
+					 (XFS_EFI_MAX_FAST_EXTENTS - 1) *
+					 sizeof(struct xfs_extent)),
+					 0, 0, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!xfs_efi_cache)
 		goto out_destroy_efd_cache;
 
@@ -2287,10 +2344,13 @@ init_xfs_fs(void)
 
 	xfs_check_ondisk_structs();
 
+<<<<<<< HEAD
 	error = xfs_dahash_test();
 	if (error)
 		return error;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	printk(KERN_INFO XFS_VERSION_STRING " with "
 			 XFS_BUILD_OPTIONS " enabled\n");
 

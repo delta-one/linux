@@ -47,14 +47,22 @@ record_sample(struct bpf_dynptr *dynptr, void *context)
 		if (status) {
 			bpf_printk("bpf_dynptr_read() failed: %d\n", status);
 			err = 1;
+<<<<<<< HEAD
 			return 1;
+=======
+			return 0;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	} else {
 		sample = bpf_dynptr_data(dynptr, 0, sizeof(*sample));
 		if (!sample) {
 			bpf_printk("Unexpectedly failed to get sample\n");
 			err = 2;
+<<<<<<< HEAD
 			return 1;
+=======
+			return 0;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		stack_sample = *sample;
 	}
@@ -162,6 +170,11 @@ SEC("fentry/" SYS_PREFIX "sys_prctl")
 int test_user_ringbuf_protocol(void *ctx)
 {
 	long status = 0;
+<<<<<<< HEAD
+=======
+	struct sample *sample = NULL;
+	struct bpf_dynptr ptr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!is_test_process())
 		return 0;
@@ -181,6 +194,13 @@ int test_user_ringbuf_protocol(void *ctx)
 SEC("fentry/" SYS_PREFIX "sys_getpgid")
 int test_user_ringbuf(void *ctx)
 {
+<<<<<<< HEAD
+=======
+	int status = 0;
+	struct sample *sample = NULL;
+	struct bpf_dynptr ptr;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!is_test_process())
 		return 0;
 
@@ -196,7 +216,11 @@ do_nothing_cb(struct bpf_dynptr *dynptr, void *context)
 	return 0;
 }
 
+<<<<<<< HEAD
 SEC("fentry/" SYS_PREFIX "sys_prlimit64")
+=======
+SEC("fentry/" SYS_PREFIX "sys_getrlimit")
+>>>>>>> b7ba80a49124 (Commit)
 int test_user_ringbuf_epoll(void *ctx)
 {
 	long num_samples;

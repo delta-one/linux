@@ -390,6 +390,7 @@ do {									\
 		goto err_label;						\
 } while (0)
 
+<<<<<<< HEAD
 void __cmpxchg_user_key_called_with_bad_pointer(void);
 
 #define CMPXCHG_USER_KEY_MAX_LOOPS 128
@@ -598,4 +599,6 @@ static __always_inline int __cmpxchg_user_key(unsigned long address, void *uval,
 			   (old), (new), (key), sizeof(*(__ptr)));	\
 })
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __S390_UACCESS_H */

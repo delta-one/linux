@@ -35,10 +35,39 @@
 	}
 
 #define ADL_N_COMMUNITY(b, s, e, g)			\
+<<<<<<< HEAD
 	INTEL_COMMUNITY_GPPS(b, s, e, g, ADL_N)
 
 #define ADL_S_COMMUNITY(b, s, e, g)			\
 	INTEL_COMMUNITY_GPPS(b, s, e, g, ADL_S)
+=======
+	{						\
+		.barno = (b),				\
+		.padown_offset = ADL_N_PAD_OWN,		\
+		.padcfglock_offset = ADL_N_PADCFGLOCK,	\
+		.hostown_offset = ADL_N_HOSTSW_OWN,	\
+		.is_offset = ADL_N_GPI_IS,		\
+		.ie_offset = ADL_N_GPI_IE,		\
+		.pin_base = (s),			\
+		.npins = ((e) - (s) + 1),		\
+		.gpps = (g),				\
+		.ngpps = ARRAY_SIZE(g),			\
+	}
+
+#define ADL_S_COMMUNITY(b, s, e, g)			\
+	{						\
+		.barno = (b),				\
+		.padown_offset = ADL_S_PAD_OWN,		\
+		.padcfglock_offset = ADL_S_PADCFGLOCK,	\
+		.hostown_offset = ADL_S_HOSTSW_OWN,	\
+		.is_offset = ADL_S_GPI_IS,		\
+		.ie_offset = ADL_S_GPI_IE,		\
+		.pin_base = (s),			\
+		.npins = ((e) - (s) + 1),		\
+		.gpps = (g),				\
+		.ngpps = ARRAY_SIZE(g),			\
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Alder Lake-N */
 static const struct pinctrl_pin_desc adln_pins[] = {

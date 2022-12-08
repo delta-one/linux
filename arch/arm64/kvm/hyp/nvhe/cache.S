@@ -12,6 +12,7 @@ SYM_FUNC_START(__pi_dcache_clean_inval_poc)
 	ret
 SYM_FUNC_END(__pi_dcache_clean_inval_poc)
 SYM_FUNC_ALIAS(dcache_clean_inval_poc, __pi_dcache_clean_inval_poc)
+<<<<<<< HEAD
 
 SYM_FUNC_START(__pi_icache_inval_pou)
 alternative_if ARM64_HAS_CACHE_DIC
@@ -23,3 +24,5 @@ alternative_else_nop_endif
 	ret
 SYM_FUNC_END(__pi_icache_inval_pou)
 SYM_FUNC_ALIAS(icache_inval_pou, __pi_icache_inval_pou)
+=======
+>>>>>>> b7ba80a49124 (Commit)

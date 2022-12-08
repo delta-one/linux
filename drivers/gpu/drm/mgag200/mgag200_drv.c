@@ -11,7 +11,10 @@
 
 #include <drm/drm_aperture.h>
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_generic.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_file.h>
 #include <drm/drm_ioctl.h>
 #include <drm/drm_managed.h>

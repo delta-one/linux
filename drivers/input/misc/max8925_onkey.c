@@ -129,7 +129,11 @@ static int max8925_onkey_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int max8925_onkey_suspend(struct device *dev)
+=======
+static int __maybe_unused max8925_onkey_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *pdev = to_platform_device(dev);
 	struct max8925_onkey_info *info = platform_get_drvdata(pdev);
@@ -143,7 +147,11 @@ static int max8925_onkey_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int max8925_onkey_resume(struct device *dev)
+=======
+static int __maybe_unused max8925_onkey_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *pdev = to_platform_device(dev);
 	struct max8925_onkey_info *info = platform_get_drvdata(pdev);
@@ -157,13 +165,21 @@ static int max8925_onkey_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(max8925_onkey_pm_ops,
 				max8925_onkey_suspend, max8925_onkey_resume);
+=======
+static SIMPLE_DEV_PM_OPS(max8925_onkey_pm_ops, max8925_onkey_suspend, max8925_onkey_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_driver max8925_onkey_driver = {
 	.driver		= {
 		.name	= "max8925-onkey",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&max8925_onkey_pm_ops),
+=======
+		.pm	= &max8925_onkey_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe		= max8925_onkey_probe,
 };

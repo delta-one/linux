@@ -22,6 +22,7 @@ enum mtk_mutex_mod_index {
 	MUTEX_MOD_IDX_MDP_CCORR0,
 	MUTEX_MOD_IDX_MDP_HDR0,
 	MUTEX_MOD_IDX_MDP_COLOR0,
+<<<<<<< HEAD
 	MUTEX_MOD_IDX_MDP_RDMA1,
 	MUTEX_MOD_IDX_MDP_RDMA2,
 	MUTEX_MOD_IDX_MDP_RDMA3,
@@ -57,6 +58,8 @@ enum mtk_mutex_mod_index {
 	MUTEX_MOD_IDX_MDP_WROT1,
 	MUTEX_MOD_IDX_MDP_WROT2,
 	MUTEX_MOD_IDX_MDP_WROT3,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	MUTEX_MOD_IDX_MAX		/* ALWAYS keep at the end */
 };

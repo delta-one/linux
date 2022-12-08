@@ -13,7 +13,10 @@
 #define EF100_MAE_H
 /* MCDI interface for the ef100 Match-Action Engine */
 
+<<<<<<< HEAD
 #include <net/devlink.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "net_driver.h"
 #include "tc.h"
 #include "mcdi_pcol.h" /* needed for various MC_CMD_MAE_*_NULL defines */
@@ -28,6 +31,7 @@ void efx_mae_mport_mport(struct efx_nic *efx, u32 mport_id, u32 *out);
 
 int efx_mae_lookup_mport(struct efx_nic *efx, u32 selector, u32 *id);
 
+<<<<<<< HEAD
 struct mae_mport_desc {
 	u32 mport_id;
 	u32 flags;
@@ -83,6 +87,8 @@ int efx_mae_match_check_caps(struct efx_nic *efx,
 int efx_mae_allocate_counter(struct efx_nic *efx, struct efx_tc_counter *cnt);
 int efx_mae_free_counter(struct efx_nic *efx, struct efx_tc_counter *cnt);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int efx_mae_alloc_action_set(struct efx_nic *efx, struct efx_tc_action_set *act);
 int efx_mae_free_action_set(struct efx_nic *efx, u32 fw_id);
 
@@ -95,9 +101,12 @@ int efx_mae_insert_rule(struct efx_nic *efx, const struct efx_tc_match *match,
 			u32 prio, u32 acts_id, u32 *id);
 int efx_mae_delete_rule(struct efx_nic *efx, u32 id);
 
+<<<<<<< HEAD
 int efx_init_mae(struct efx_nic *efx);
 void efx_fini_mae(struct efx_nic *efx);
 void efx_mae_remove_mport(void *desc, void *arg);
 int efx_mae_fw_lookup_mport(struct efx_nic *efx, u32 selector, u32 *id);
 int efx_mae_lookup_mport(struct efx_nic *efx, u32 vf, u32 *id);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* EF100_MAE_H */

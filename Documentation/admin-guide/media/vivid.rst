@@ -392,7 +392,11 @@ Which one is returned depends on the chosen channel, each next valid channel
 will cycle through the possible audio subchannel combinations. This allows
 you to test the various combinations by just switching channels..
 
+<<<<<<< HEAD
 Finally, for these inputs the v4l2_timecode struct is filled in the
+=======
+Finally, for these inputs the v4l2_timecode struct is filled in in the
+>>>>>>> b7ba80a49124 (Commit)
 dequeued v4l2_buffer struct.
 
 
@@ -580,7 +584,11 @@ Metadata Capture
 ----------------
 
 The Metadata capture generates UVC format metadata. The PTS and SCR are
+<<<<<<< HEAD
 transmitted based on the values set in vivid controls.
+=======
+transmitted based on the values set in vivid contols.
+>>>>>>> b7ba80a49124 (Commit)
 
 The Metadata device will only work for the Webcam input, it will give
 back an error for all other inputs.
@@ -1318,7 +1326,11 @@ instance. This setup would require the following commands:
 	$ v4l2-ctl -d2 -i2
 	$ v4l2-ctl -d2 -c horizontal_movement=4
 	$ v4l2-ctl -d1 --overlay=1
+<<<<<<< HEAD
 	$ v4l2-ctl -d0 -c loop_video=1
+=======
+	$ v4l2-ctl -d1 -c loop_video=1
+>>>>>>> b7ba80a49124 (Commit)
 	$ v4l2-ctl -d2 --stream-mmap --overlay=1
 
 And from another console:

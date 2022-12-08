@@ -22,7 +22,10 @@
  */
 
 #include <linux/acpi.h>
+<<<<<<< HEAD
 #include <linux/backlight.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pci.h>
 #include <linux/pm_runtime.h>
 #include <linux/power_supply.h>
@@ -31,6 +34,10 @@
 #include <acpi/acpi_bus.h>
 #include <acpi/video.h>
 
+<<<<<<< HEAD
+=======
+#include <drm/drm_crtc_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_probe_helper.h>
 
 #include "atom.h"

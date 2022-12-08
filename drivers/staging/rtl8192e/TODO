@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 To-do list:
 
 * merge into drivers/net/wireless/realtek/rtlwifi/rtl8192*
@@ -16,3 +17,7 @@ To-do list:
 * Switch to use CFG80211.
 * Improve the error handling of various functions, particularly those that use
   existing kernel APIs.
+=======
+* merge into drivers/net/wireless/rtllib/rtl8192e
+* clean up function naming
+>>>>>>> b7ba80a49124 (Commit)

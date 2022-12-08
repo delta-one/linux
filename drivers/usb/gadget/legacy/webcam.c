@@ -171,7 +171,11 @@ static const struct uvc_format_uncompressed uvc_format_yuv = {
 	.bDefaultFrameIndex	= 1,
 	.bAspectRatioX		= 0,
 	.bAspectRatioY		= 0,
+<<<<<<< HEAD
 	.bmInterlaceFlags	= 0,
+=======
+	.bmInterfaceFlags	= 0,
+>>>>>>> b7ba80a49124 (Commit)
 	.bCopyProtect		= 0,
 };
 
@@ -222,7 +226,11 @@ static const struct uvc_format_mjpeg uvc_format_mjpg = {
 	.bDefaultFrameIndex	= 1,
 	.bAspectRatioX		= 0,
 	.bAspectRatioY		= 0,
+<<<<<<< HEAD
 	.bmInterlaceFlags	= 0,
+=======
+	.bmInterfaceFlags	= 0,
+>>>>>>> b7ba80a49124 (Commit)
 	.bCopyProtect		= 0,
 };
 
@@ -293,7 +301,10 @@ static const struct uvc_descriptor_header * const uvc_fs_streaming_cls[] = {
 	(const struct uvc_descriptor_header *) &uvc_format_yuv,
 	(const struct uvc_descriptor_header *) &uvc_frame_yuv_360p,
 	(const struct uvc_descriptor_header *) &uvc_frame_yuv_720p,
+<<<<<<< HEAD
 	(const struct uvc_descriptor_header *) &uvc_color_matching,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	(const struct uvc_descriptor_header *) &uvc_format_mjpg,
 	(const struct uvc_descriptor_header *) &uvc_frame_mjpg_360p,
 	(const struct uvc_descriptor_header *) &uvc_frame_mjpg_720p,
@@ -306,7 +317,10 @@ static const struct uvc_descriptor_header * const uvc_hs_streaming_cls[] = {
 	(const struct uvc_descriptor_header *) &uvc_format_yuv,
 	(const struct uvc_descriptor_header *) &uvc_frame_yuv_360p,
 	(const struct uvc_descriptor_header *) &uvc_frame_yuv_720p,
+<<<<<<< HEAD
 	(const struct uvc_descriptor_header *) &uvc_color_matching,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	(const struct uvc_descriptor_header *) &uvc_format_mjpg,
 	(const struct uvc_descriptor_header *) &uvc_frame_mjpg_360p,
 	(const struct uvc_descriptor_header *) &uvc_frame_mjpg_720p,
@@ -319,7 +333,10 @@ static const struct uvc_descriptor_header * const uvc_ss_streaming_cls[] = {
 	(const struct uvc_descriptor_header *) &uvc_format_yuv,
 	(const struct uvc_descriptor_header *) &uvc_frame_yuv_360p,
 	(const struct uvc_descriptor_header *) &uvc_frame_yuv_720p,
+<<<<<<< HEAD
 	(const struct uvc_descriptor_header *) &uvc_color_matching,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	(const struct uvc_descriptor_header *) &uvc_format_mjpg,
 	(const struct uvc_descriptor_header *) &uvc_frame_mjpg_360p,
 	(const struct uvc_descriptor_header *) &uvc_frame_mjpg_720p,

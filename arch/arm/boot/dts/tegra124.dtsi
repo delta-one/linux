@@ -639,6 +639,7 @@
 		reset-names = "fuse";
 	};
 
+<<<<<<< HEAD
 	cec@70015000 {
 		compatible = "nvidia,tegra124-cec";
 		reg = <0x0 0x70015000 0x0 0x00001000>;
@@ -649,6 +650,8 @@
 		hdmi-phandle = <&hdmi>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mc: memory-controller@70019000 {
 		compatible = "nvidia,tegra124-mc";
 		reg = <0x0 0x70019000 0x0 0x1000>;
@@ -916,6 +919,19 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
+=======
+	cec@70015000 {
+		compatible = "nvidia,tegra124-cec";
+		reg = <0x0 0x70015000 0x0 0x00001000>;
+		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&tegra_car TEGRA124_CLK_CEC>;
+		clock-names = "cec";
+		status = "disabled";
+		hdmi-phandle = <&hdmi>;
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	soctherm: thermal-sensor@700e2000 {
 		compatible = "nvidia,tegra124-soctherm";
 		reg = <0x0 0x700e2000 0x0 0x600>, /* SOC_THERM reg_base */

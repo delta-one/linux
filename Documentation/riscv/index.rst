@@ -8,7 +8,10 @@ RISC-V architecture
     boot-image-header
     vm-layout
     patch-acceptance
+<<<<<<< HEAD
     uabi
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
     features
 

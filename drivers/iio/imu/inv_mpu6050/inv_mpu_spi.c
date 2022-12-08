@@ -154,7 +154,11 @@ static struct spi_driver inv_mpu_driver = {
 		.of_match_table = inv_of_match,
 		.acpi_match_table = inv_acpi_match,
 		.name	=	"inv-mpu6000-spi",
+<<<<<<< HEAD
 		.pm     =       pm_ptr(&inv_mpu_pmops),
+=======
+		.pm     =       &inv_mpu_pmops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 
@@ -163,4 +167,7 @@ module_spi_driver(inv_mpu_driver);
 MODULE_AUTHOR("Adriana Reus <adriana.reus@intel.com>");
 MODULE_DESCRIPTION("Invensense device MPU6000 driver");
 MODULE_LICENSE("GPL");
+<<<<<<< HEAD
 MODULE_IMPORT_NS(IIO_MPU6050);
+=======
+>>>>>>> b7ba80a49124 (Commit)

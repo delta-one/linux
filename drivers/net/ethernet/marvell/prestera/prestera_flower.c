@@ -500,9 +500,13 @@ int prestera_flower_tmplt_create(struct prestera_flow_block *block,
 	}
 
 	/* preserve keymask/template to this ruleset */
+<<<<<<< HEAD
 	err = prestera_acl_ruleset_keymask_set(ruleset, rule.re_key.match.mask);
 	if (err)
 		goto err_ruleset_keymask_set;
+=======
+	prestera_acl_ruleset_keymask_set(ruleset, rule.re_key.match.mask);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* skip error, as it is not possible to reject template operation,
 	 * so, keep the reference to the ruleset for rules to be added
@@ -518,8 +522,11 @@ int prestera_flower_tmplt_create(struct prestera_flow_block *block,
 	list_add_rcu(&template->list, &block->template_list);
 	return 0;
 
+<<<<<<< HEAD
 err_ruleset_keymask_set:
 	prestera_acl_ruleset_put(ruleset);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_ruleset_get:
 	kfree(template);
 err_malloc:

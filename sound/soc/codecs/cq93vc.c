@@ -134,12 +134,24 @@ static int cq93vc_platform_probe(struct platform_device *pdev)
 			&soc_component_dev_cq93vc, &cq93vc_dai, 1);
 }
 
+<<<<<<< HEAD
+=======
+static int cq93vc_platform_remove(struct platform_device *pdev)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver cq93vc_codec_driver = {
 	.driver = {
 			.name = "cq93vc-codec",
 	},
 
 	.probe = cq93vc_platform_probe,
+<<<<<<< HEAD
+=======
+	.remove = cq93vc_platform_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(cq93vc_codec_driver);

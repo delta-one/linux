@@ -11,8 +11,11 @@
 #include <linux/dma-mapping.h>
 #include <linux/etherdevice.h>
 #include <linux/ethtool.h>
+<<<<<<< HEAD
 #include <linux/if_ether.h>
 #include <linux/if_vlan.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/init.h>
 #include <linux/interrupt.h>
 #include <linux/io.h>
@@ -29,8 +32,13 @@
 #define RX_QUEUE_ENTRIES	128	/* must be power of 2 */
 #define TX_QUEUE_ENTRIES	16	/* must be power of 2 */
 
+<<<<<<< HEAD
 #define RX_BUF_SIZE		2044	/* must be smaller than 0x7ff */
 #define MAX_PKT_SIZE		RX_BUF_SIZE /* multi-segment not supported */
+=======
+#define MAX_PKT_SIZE		1518
+#define RX_BUF_SIZE		2044	/* must be smaller than 0x7ff */
+>>>>>>> b7ba80a49124 (Commit)
 
 #if MAX_PKT_SIZE > 0x7ff
 #error invalid MAX_PKT_SIZE
@@ -161,7 +169,10 @@ static void ftmac100_set_mac(struct ftmac100 *priv, const unsigned char *mac)
 static int ftmac100_start_hw(struct ftmac100 *priv)
 {
 	struct net_device *netdev = priv->netdev;
+<<<<<<< HEAD
 	unsigned int maccr = MACCR_ENABLE_ALL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ftmac100_reset(priv))
 		return -EIO;
@@ -178,6 +189,7 @@ static int ftmac100_start_hw(struct ftmac100 *priv)
 
 	ftmac100_set_mac(priv, netdev->dev_addr);
 
+<<<<<<< HEAD
 	 /* See ftmac100_change_mtu() */
 	if (netdev->mtu > ETH_DATA_LEN)
 		maccr |= FTMAC100_MACCR_RX_FTL;
@@ -189,6 +201,9 @@ static int ftmac100_start_hw(struct ftmac100 *priv)
 		maccr |= FTMAC100_MACCR_RX_MULTIPKT;
 
 	iowrite32(maccr, priv->base + FTMAC100_OFFSET_MACCR);
+=======
+	iowrite32(MACCR_ENABLE_ALL, priv->base + FTMAC100_OFFSET_MACCR);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -231,6 +246,14 @@ static bool ftmac100_rxdes_crc_error(struct ftmac100_rxdes *rxdes)
 	return rxdes->rxdes0 & cpu_to_le32(FTMAC100_RXDES0_CRC_ERR);
 }
 
+<<<<<<< HEAD
+=======
+static bool ftmac100_rxdes_frame_too_long(struct ftmac100_rxdes *rxdes)
+{
+	return rxdes->rxdes0 & cpu_to_le32(FTMAC100_RXDES0_FTL);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static bool ftmac100_rxdes_runt(struct ftmac100_rxdes *rxdes)
 {
 	return rxdes->rxdes0 & cpu_to_le32(FTMAC100_RXDES0_RUNT);
@@ -345,7 +368,17 @@ static bool ftmac100_rx_packet_error(struct ftmac100 *priv,
 		error = true;
 	}
 
+<<<<<<< HEAD
 	if (unlikely(ftmac100_rxdes_runt(rxdes))) {
+=======
+	if (unlikely(ftmac100_rxdes_frame_too_long(rxdes))) {
+		if (net_ratelimit())
+			netdev_info(netdev, "rx frame too long\n");
+
+		netdev->stats.rx_length_errors++;
+		error = true;
+	} else if (unlikely(ftmac100_rxdes_runt(rxdes))) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (net_ratelimit())
 			netdev_info(netdev, "rx runt\n");
 
@@ -358,11 +391,14 @@ static bool ftmac100_rx_packet_error(struct ftmac100 *priv,
 		netdev->stats.rx_length_errors++;
 		error = true;
 	}
+<<<<<<< HEAD
 	/*
 	 * FTMAC100_RXDES0_FTL is not an error, it just indicates that the
 	 * frame is longer than 1518 octets. Receiving these is possible when
 	 * we told the hardware not to drop them, via FTMAC100_MACCR_RX_FTL.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return error;
 }
@@ -407,6 +443,7 @@ static bool ftmac100_rx_packet(struct ftmac100 *priv, int *processed)
 		return true;
 	}
 
+<<<<<<< HEAD
 	/* We don't support multi-segment packets for now, so drop them. */
 	ret = ftmac100_rxdes_last_segment(rxdes);
 	if (unlikely(!ret)) {
@@ -414,6 +451,14 @@ static bool ftmac100_rx_packet(struct ftmac100 *priv, int *processed)
 		ftmac100_rx_drop_packet(priv);
 		return true;
 	}
+=======
+	/*
+	 * It is impossible to get multi-segment packets
+	 * because we always provide big enough receive buffers.
+	 */
+	ret = ftmac100_rxdes_last_segment(rxdes);
+	BUG_ON(!ret);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* start processing */
 	skb = netdev_alloc_skb_ip_align(netdev, 128);
@@ -1045,6 +1090,7 @@ static int ftmac100_do_ioctl(struct net_device *netdev, struct ifreq *ifr, int c
 	return generic_mii_ioctl(&priv->mii, data, cmd, NULL);
 }
 
+<<<<<<< HEAD
 static int ftmac100_change_mtu(struct net_device *netdev, int mtu)
 {
 	struct ftmac100 *priv = netdev_priv(netdev);
@@ -1067,6 +1113,8 @@ static int ftmac100_change_mtu(struct net_device *netdev, int mtu)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct net_device_ops ftmac100_netdev_ops = {
 	.ndo_open		= ftmac100_open,
 	.ndo_stop		= ftmac100_stop,
@@ -1074,7 +1122,10 @@ static const struct net_device_ops ftmac100_netdev_ops = {
 	.ndo_set_mac_address	= eth_mac_addr,
 	.ndo_validate_addr	= eth_validate_addr,
 	.ndo_eth_ioctl		= ftmac100_do_ioctl,
+<<<<<<< HEAD
 	.ndo_change_mtu		= ftmac100_change_mtu,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /******************************************************************************
@@ -1106,7 +1157,11 @@ static int ftmac100_probe(struct platform_device *pdev)
 	SET_NETDEV_DEV(netdev, &pdev->dev);
 	netdev->ethtool_ops = &ftmac100_ethtool_ops;
 	netdev->netdev_ops = &ftmac100_netdev_ops;
+<<<<<<< HEAD
 	netdev->max_mtu = MAX_PKT_SIZE - VLAN_ETH_HLEN;
+=======
+	netdev->max_mtu = MAX_PKT_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = platform_get_ethdev_address(&pdev->dev, netdev);
 	if (err == -EPROBE_DEFER)
@@ -1122,7 +1177,11 @@ static int ftmac100_probe(struct platform_device *pdev)
 	spin_lock_init(&priv->tx_lock);
 
 	/* initialize NAPI */
+<<<<<<< HEAD
 	netif_napi_add(netdev, &priv->napi, ftmac100_poll);
+=======
+	netif_napi_add(netdev, &priv->napi, ftmac100_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* map io memory */
 	priv->res = request_mem_region(res->start, resource_size(res),

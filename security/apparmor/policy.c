@@ -94,7 +94,10 @@ const char *const aa_profile_mode_names[] = {
 	"complain",
 	"kill",
 	"unconfined",
+<<<<<<< HEAD
 	"user",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 
@@ -193,6 +196,7 @@ static void aa_free_data(void *ptr, void *arg)
 	kfree_sensitive(data);
 }
 
+<<<<<<< HEAD
 static void free_attachment(struct aa_attachment *attach)
 {
 	int i;
@@ -229,6 +233,8 @@ struct aa_ruleset *aa_alloc_ruleset(gfp_t gfp)
 	return rules;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * aa_free_profile - free a profile
  * @profile: the profile to free  (MAYBE NULL)
@@ -241,8 +247,13 @@ struct aa_ruleset *aa_alloc_ruleset(gfp_t gfp)
  */
 void aa_free_profile(struct aa_profile *profile)
 {
+<<<<<<< HEAD
 	struct aa_ruleset *rule, *tmp;
 	struct rhashtable *rht;
+=======
+	struct rhashtable *rht;
+	int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	AA_DEBUG("%s(%p)\n", __func__, profile);
 
@@ -256,6 +267,7 @@ void aa_free_profile(struct aa_profile *profile)
 	aa_put_ns(profile->ns);
 	kfree_sensitive(profile->rename);
 
+<<<<<<< HEAD
 	free_attachment(&profile->attach);
 
 	/*
@@ -267,6 +279,21 @@ void aa_free_profile(struct aa_profile *profile)
 		free_ruleset(rule);
 	}
 	kfree_sensitive(profile->dirname);
+=======
+	aa_free_file_rules(&profile->file);
+	aa_free_cap_rules(&profile->caps);
+	aa_free_rlimit_rules(&profile->rlimits);
+
+	for (i = 0; i < profile->xattr_count; i++)
+		kfree_sensitive(profile->xattrs[i]);
+	kfree_sensitive(profile->xattrs);
+	for (i = 0; i < profile->secmark_count; i++)
+		kfree_sensitive(profile->secmark[i].label);
+	kfree_sensitive(profile->secmark);
+	kfree_sensitive(profile->dirname);
+	aa_put_dfa(profile->xmatch);
+	aa_put_dfa(profile->policy.dfa);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (profile->data) {
 		rht = profile->data;
@@ -293,7 +320,10 @@ struct aa_profile *aa_alloc_profile(const char *hname, struct aa_proxy *proxy,
 				    gfp_t gfp)
 {
 	struct aa_profile *profile;
+<<<<<<< HEAD
 	struct aa_ruleset *rules;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* freed by free_profile - usually through aa_put_profile */
 	profile = kzalloc(struct_size(profile, label.vec, 2), gfp);
@@ -305,6 +335,7 @@ struct aa_profile *aa_alloc_profile(const char *hname, struct aa_proxy *proxy,
 	if (!aa_label_init(&profile->label, 1, gfp))
 		goto fail;
 
+<<<<<<< HEAD
 	INIT_LIST_HEAD(&profile->rules);
 
 	/* allocate the first ruleset, but leave it empty */
@@ -313,6 +344,8 @@ struct aa_profile *aa_alloc_profile(const char *hname, struct aa_proxy *proxy,
 		goto fail;
 	list_add(&rules->list, &profile->rules);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* update being set needed by fs interface */
 	if (!proxy) {
 		proxy = aa_alloc_proxy(&profile->label, gfp);
@@ -425,6 +458,7 @@ static struct aa_policy *__lookup_parent(struct aa_ns *ns,
 }
 
 /**
+<<<<<<< HEAD
  * __create_missing_ancestors - create place holders for missing ancestores
  * @ns: namespace to lookup profile in (NOT NULL)
  * @hname: hierarchical profile name to find parent of (NOT NULL)
@@ -474,6 +508,8 @@ static struct aa_policy *__create_missing_ancestors(struct aa_ns *ns,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * __lookupn_profile - lookup the profile matching @hname
  * @base: base list to start looking up profile name from  (NOT NULL)
  * @hname: hierarchical profile name  (NOT NULL)
@@ -574,6 +610,7 @@ struct aa_profile *aa_fqlookupn_profile(struct aa_label *base,
 	return profile;
 }
 
+<<<<<<< HEAD
 
 struct aa_profile *aa_alloc_null(struct aa_profile *parent, const char *name,
 				 gfp_t gfp)
@@ -604,6 +641,10 @@ struct aa_profile *aa_alloc_null(struct aa_profile *parent, const char *name,
 
 /**
  * aa_new_learning_profile - create or find a null-X learning profile
+=======
+/**
+ * aa_new_null_profile - create or find a null-X learning profile
+>>>>>>> b7ba80a49124 (Commit)
  * @parent: profile that caused this profile to be created (NOT NULL)
  * @hat: true if the null- learning profile is a hat
  * @base: name to base the null profile off of
@@ -620,8 +661,13 @@ struct aa_profile *aa_alloc_null(struct aa_profile *parent, const char *name,
  *
  * Returns: new refcounted profile else NULL on failure
  */
+<<<<<<< HEAD
 struct aa_profile *aa_new_learning_profile(struct aa_profile *parent, bool hat,
 					   const char *base, gfp_t gfp)
+=======
+struct aa_profile *aa_new_null_profile(struct aa_profile *parent, bool hat,
+				       const char *base, gfp_t gfp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct aa_profile *p, *profile;
 	const char *bname;
@@ -652,12 +698,30 @@ name:
 	if (profile)
 		goto out;
 
+<<<<<<< HEAD
 	profile = aa_alloc_null(parent, name, gfp);
 	if (!profile)
 		goto fail;
 	profile->mode = APPARMOR_COMPLAIN;
 	if (hat)
 		profile->label.flags |= FLAG_HAT;
+=======
+	profile = aa_alloc_profile(name, NULL, gfp);
+	if (!profile)
+		goto fail;
+
+	profile->mode = APPARMOR_COMPLAIN;
+	profile->label.flags |= FLAG_NULL;
+	if (hat)
+		profile->label.flags |= FLAG_HAT;
+	profile->path_flags = parent->path_flags;
+
+	/* released on free_profile */
+	rcu_assign_pointer(profile->parent, aa_get_profile(parent));
+	profile->ns = aa_get_ns(parent->ns);
+	profile->file.dfa = aa_get_dfa(nulldfa);
+	profile->policy.dfa = aa_get_dfa(nulldfa);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock_nested(&profile->ns->lock, profile->ns->level);
 	p = __find_child(&parent->base.profiles, bname);
@@ -730,7 +794,11 @@ static int audit_policy(struct aa_label *label, const char *op,
 			const char *ns_name, const char *name,
 			const char *info, int error)
 {
+<<<<<<< HEAD
 	DEFINE_AUDIT_DATA(sa, LSM_AUDIT_DATA_NONE, AA_CLASS_NONE, op);
+=======
+	DEFINE_AUDIT_DATA(sa, LSM_AUDIT_DATA_NONE, op);
+>>>>>>> b7ba80a49124 (Commit)
 
 	aad(&sa)->iface.ns = ns_name;
 	aad(&sa)->name = name;
@@ -826,7 +894,11 @@ bool aa_current_policy_admin_capable(struct aa_ns *ns)
 /**
  * aa_may_manage_policy - can the current task manage policy
  * @label: label to check if it can manage policy
+<<<<<<< HEAD
  * @mask: contains the policy manipulation operation being done
+=======
+ * @op: the policy manipulation operation being done
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Returns: 0 if the task is allowed to manipulate policy else error
  */
@@ -881,6 +953,10 @@ static struct aa_profile *__list_lookup_parent(struct list_head *lh,
  * __replace_profile - replace @old with @new on a list
  * @old: profile to be replaced  (NOT NULL)
  * @new: profile to replace @old with  (NOT NULL)
+<<<<<<< HEAD
+=======
+ * @share_proxy: transfer @old->proxy to @new
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Will duplicate and refcount elements that @new inherits from @old
  * and will inherit @old children.
@@ -1081,7 +1157,10 @@ ssize_t aa_replace_profiles(struct aa_ns *policy_ns, struct aa_label *label,
 	/* setup parent and ns info */
 	list_for_each_entry(ent, &lh, list) {
 		struct aa_policy *policy;
+<<<<<<< HEAD
 		struct aa_profile *p;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (aa_g_export_binary)
 			ent->new->rawdata = aa_get_loaddata(udata);
@@ -1106,6 +1185,7 @@ ssize_t aa_replace_profiles(struct aa_ns *policy_ns, struct aa_label *label,
 			continue;
 
 		/* no ref on policy only use inside lock */
+<<<<<<< HEAD
 		p = NULL;
 		policy = __lookup_parent(ns, ent->new->base.hname);
 		if (!policy) {
@@ -1138,6 +1218,23 @@ ssize_t aa_replace_profiles(struct aa_ns *policy_ns, struct aa_label *label,
 			/* released on profile replacement or free_profile */
 			p = (struct aa_profile *) policy;
 		rcu_assign_pointer(ent->new->parent, aa_get_profile(p));
+=======
+		policy = __lookup_parent(ns, ent->new->base.hname);
+		if (!policy) {
+			struct aa_profile *p;
+			p = __list_lookup_parent(&lh, ent->new);
+			if (!p) {
+				error = -ENOENT;
+				info = "parent does not exist";
+				goto fail_lock;
+			}
+			rcu_assign_pointer(ent->new->parent, aa_get_profile(p));
+		} else if (policy != &ns->base) {
+			/* released on profile replacement or free_profile */
+			struct aa_profile *p = (struct aa_profile *) policy;
+			rcu_assign_pointer(ent->new->parent, aa_get_profile(p));
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* create new fs entries for introspection if needed */
@@ -1299,7 +1396,11 @@ ssize_t aa_remove_profiles(struct aa_ns *policy_ns, struct aa_label *subj,
 
 	if (!name) {
 		/* remove namespace - can only happen if fqname[0] == ':' */
+<<<<<<< HEAD
 		mutex_lock_nested(&ns->parent->lock, ns->parent->level);
+=======
+		mutex_lock_nested(&ns->parent->lock, ns->level);
+>>>>>>> b7ba80a49124 (Commit)
 		__aa_bump_ns_revision(ns);
 		__aa_remove_ns(ns);
 		mutex_unlock(&ns->parent->lock);

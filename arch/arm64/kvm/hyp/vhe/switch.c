@@ -40,7 +40,11 @@ static void __activate_traps(struct kvm_vcpu *vcpu)
 	___activate_traps(vcpu);
 
 	val = read_sysreg(cpacr_el1);
+<<<<<<< HEAD
 	val |= CPACR_ELx_TTA;
+=======
+	val |= CPACR_EL1_TTA;
+>>>>>>> b7ba80a49124 (Commit)
 	val &= ~(CPACR_EL1_ZEN_EL0EN | CPACR_EL1_ZEN_EL1EN |
 		 CPACR_EL1_SMEN_EL0EN | CPACR_EL1_SMEN_EL1EN);
 
@@ -63,6 +67,13 @@ static void __activate_traps(struct kvm_vcpu *vcpu)
 		__activate_traps_fpsimd32(vcpu);
 	}
 
+<<<<<<< HEAD
+=======
+	if (cpus_have_final_cap(ARM64_SME))
+		write_sysreg(read_sysreg(sctlr_el2) & ~SCTLR_ELx_ENTP2,
+			     sctlr_el2);
+
+>>>>>>> b7ba80a49124 (Commit)
 	write_sysreg(val, cpacr_el1);
 
 	write_sysreg(__this_cpu_read(kvm_hyp_vector), vbar_el1);
@@ -84,6 +95,13 @@ static void __deactivate_traps(struct kvm_vcpu *vcpu)
 	 */
 	asm(ALTERNATIVE("nop", "isb", ARM64_WORKAROUND_SPECULATIVE_AT));
 
+<<<<<<< HEAD
+=======
+	if (cpus_have_final_cap(ARM64_SME))
+		write_sysreg(read_sysreg(sctlr_el2) | SCTLR_ELx_ENTP2,
+			     sctlr_el2);
+
+>>>>>>> b7ba80a49124 (Commit)
 	write_sysreg(CPACR_EL1_DEFAULT, cpacr_el1);
 
 	if (!arm64_kernel_unmapped_at_el0())
@@ -120,6 +138,7 @@ static const exit_handler_fn *kvm_get_exit_handler_array(struct kvm_vcpu *vcpu)
 
 static void early_exit_filter(struct kvm_vcpu *vcpu, u64 *exit_code)
 {
+<<<<<<< HEAD
 	/*
 	 * If we were in HYP context on entry, adjust the PSTATE view
 	 * so that the usual helpers work correctly.
@@ -139,6 +158,8 @@ static void early_exit_filter(struct kvm_vcpu *vcpu, u64 *exit_code)
 		*vcpu_cpsr(vcpu) &= ~(PSR_MODE_MASK | PSR_MODE32_BIT);
 		*vcpu_cpsr(vcpu) |= mode;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Switch to the guest for VHE systems running in EL2 */
@@ -173,11 +194,14 @@ static int __kvm_vcpu_run_vhe(struct kvm_vcpu *vcpu)
 	sysreg_restore_guest_state_vhe(guest_ctxt);
 	__debug_switch_to_guest(vcpu);
 
+<<<<<<< HEAD
 	if (is_hyp_ctxt(vcpu))
 		vcpu_set_flag(vcpu, VCPU_HYP_CONTEXT);
 	else
 		vcpu_clear_flag(vcpu, VCPU_HYP_CONTEXT);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	do {
 		/* Jump in the fire! */
 		exit_code = __guest_enter(vcpu);

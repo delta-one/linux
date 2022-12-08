@@ -843,6 +843,7 @@ static const struct clk_ops rockchip_rk3399_pll_clk_ops = {
 };
 
 /*
+<<<<<<< HEAD
  * PLL used in RK3588
  */
 
@@ -1050,6 +1051,8 @@ static const struct clk_ops rockchip_rk3588_pll_clk_ops = {
 };
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Common registering of pll clocks
  */
 
@@ -1097,8 +1100,12 @@ struct clk *rockchip_clk_register_pll(struct rockchip_clk_provider *ctx,
 	if (pll_type == pll_rk3036 ||
 	    pll_type == pll_rk3066 ||
 	    pll_type == pll_rk3328 ||
+<<<<<<< HEAD
 	    pll_type == pll_rk3399 ||
 	    pll_type == pll_rk3588)
+=======
+	    pll_type == pll_rk3399)
+>>>>>>> b7ba80a49124 (Commit)
 		pll_mux->flags |= CLK_MUX_HIWORD_MASK;
 
 	/* the actual muxing is xin24m, pll-output, xin32k */
@@ -1165,6 +1172,7 @@ struct clk *rockchip_clk_register_pll(struct rockchip_clk_provider *ctx,
 		else
 			init.ops = &rockchip_rk3399_pll_clk_ops;
 		break;
+<<<<<<< HEAD
 	case pll_rk3588:
 	case pll_rk3588_core:
 		if (!pll->rate_table)
@@ -1173,6 +1181,8 @@ struct clk *rockchip_clk_register_pll(struct rockchip_clk_provider *ctx,
 			init.ops = &rockchip_rk3588_pll_clk_ops;
 		init.flags = flags;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		pr_warn("%s: Unknown pll type for pll clk %s\n",
 			__func__, name);
@@ -1197,7 +1207,10 @@ struct clk *rockchip_clk_register_pll(struct rockchip_clk_provider *ctx,
 	return mux_clk;
 
 err_pll:
+<<<<<<< HEAD
 	kfree(pll->rate_table);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	clk_unregister(mux_clk);
 	mux_clk = pll_clk;
 err_mux:

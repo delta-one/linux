@@ -62,7 +62,11 @@ static void *rtllib_tkip_init(int key_idx)
 		return NULL;
 
 	priv = kzalloc(sizeof(*priv), GFP_ATOMIC);
+<<<<<<< HEAD
 	if (!priv)
+=======
+	if (priv == NULL)
+>>>>>>> b7ba80a49124 (Commit)
 		goto fail;
 	priv->key_idx = key_idx;
 
@@ -91,6 +95,10 @@ fail:
 	return NULL;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static void rtllib_tkip_deinit(void *priv)
 {
 	struct rtllib_tkip_data *_priv = priv;
@@ -102,41 +110,73 @@ static void rtllib_tkip_deinit(void *priv)
 	kfree_sensitive(priv);
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline u16 RotR1(u16 val)
 {
 	return (val >> 1) | (val << 15);
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline u8 Lo8(u16 val)
 {
 	return val & 0xff;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline u8 Hi8(u16 val)
 {
 	return val >> 8;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline u16 Lo16(u32 val)
 {
 	return val & 0xffff;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline u16 Hi16(u32 val)
 {
 	return val >> 16;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline u16 Mk16(u8 hi, u8 lo)
 {
 	return lo | (hi << 8);
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline u16 Mk16_le(u16 *v)
 {
 	return *v;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static const u16 Sbox[256] = {
 	0xC6A5, 0xF884, 0xEE99, 0xF68D, 0xFF0D, 0xD6BD, 0xDEB1, 0x9154,
 	0x6050, 0x0203, 0xCEA9, 0x567D, 0xE719, 0xB562, 0x4DE6, 0xEC9A,
@@ -172,14 +212,25 @@ static const u16 Sbox[256] = {
 	0x82C3, 0x29B0, 0x5A77, 0x1E11, 0x7BCB, 0xA8FC, 0x6DD6, 0x2C3A,
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline u16 _S_(u16 v)
 {
 	u16 t = Sbox[Hi8(v)];
 	return Sbox[Lo8(v)] ^ ((t << 8) | (t >> 8));
 }
 
+<<<<<<< HEAD
 #define PHASE1_LOOP_COUNT 8
 
+=======
+
+#define PHASE1_LOOP_COUNT 8
+
+
+>>>>>>> b7ba80a49124 (Commit)
 static void tkip_mixing_phase1(u16 *TTAK, const u8 *TK, const u8 *TA, u32 IV32)
 {
 	int i, j;
@@ -201,6 +252,10 @@ static void tkip_mixing_phase1(u16 *TTAK, const u8 *TK, const u8 *TA, u32 IV32)
 	}
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static void tkip_mixing_phase2(u8 *WEPSeed, const u8 *TK, const u16 *TTAK,
 			       u16 IV16)
 {
@@ -250,6 +305,10 @@ static void tkip_mixing_phase2(u8 *WEPSeed, const u8 *TK, const u16 *TTAK,
 #endif
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static int rtllib_tkip_encrypt(struct sk_buff *skb, int hdr_len, void *priv)
 {
 	struct rtllib_tkip_data *tkey = priv;
@@ -271,14 +330,24 @@ static int rtllib_tkip_encrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	if (!tcb_desc->bHwSec) {
 		if (!tkey->tx_phase1_done) {
 			tkip_mixing_phase1(tkey->tx_ttak, tkey->key, hdr->addr2,
+<<<<<<< HEAD
 					   tkey->tx_iv32);
+=======
+					tkey->tx_iv32);
+>>>>>>> b7ba80a49124 (Commit)
 			tkey->tx_phase1_done = 1;
 		}
 		tkip_mixing_phase2(rc4key, tkey->key, tkey->tx_ttak,
 				   tkey->tx_iv16);
+<<<<<<< HEAD
 	} else {
 		tkey->tx_phase1_done = 1;
 	}
+=======
+	} else
+		tkey->tx_phase1_done = 1;
+
+>>>>>>> b7ba80a49124 (Commit)
 
 	len = skb->len - hdr_len;
 	pos = skb_push(skb, 8);
@@ -322,6 +391,11 @@ static int rtllib_tkip_encrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	if (!tcb_desc->bHwSec)
 		return ret;
 	return 0;
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int rtllib_tkip_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
@@ -373,8 +447,13 @@ static int rtllib_tkip_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 
 	if (!tcb_desc->bHwSec || (skb->cb[0] == 1)) {
 		if ((iv32 < tkey->rx_iv32 ||
+<<<<<<< HEAD
 		     (iv32 == tkey->rx_iv32 && iv16 <= tkey->rx_iv16)) &&
 		     tkey->initialized) {
+=======
+		    (iv32 == tkey->rx_iv32 && iv16 <= tkey->rx_iv16)) &&
+		    tkey->initialized) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (net_ratelimit()) {
 				netdev_dbg(skb->dev,
 					   "Replay detected: STA= %pM previous TSC %08x%04x received TSC %08x%04x\n",
@@ -420,6 +499,10 @@ static int rtllib_tkip_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 			tkey->dot11RSNAStatsTKIPICVErrors++;
 			return -5;
 		}
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Update real counters only after Michael MIC verification has
@@ -436,6 +519,10 @@ static int rtllib_tkip_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	return keyidx;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static int michael_mic(struct crypto_shash *tfm_michael, u8 *key, u8 *hdr,
 		       u8 *data, size_t data_len, u8 *mic)
 {
@@ -488,6 +575,7 @@ static void michael_mic_hdr(struct sk_buff *skb, u8 *hdr)
 		break;
 	}
 
+<<<<<<< HEAD
 	/* priority */
 	hdr[12] = 0;
 
@@ -497,6 +585,14 @@ static void michael_mic_hdr(struct sk_buff *skb, u8 *hdr)
 	hdr[15] = 0;
 }
 
+=======
+	hdr[12] = 0; /* priority */
+
+	hdr[13] = hdr[14] = hdr[15] = 0; /* reserved */
+}
+
+
+>>>>>>> b7ba80a49124 (Commit)
 static int rtllib_michael_mic_add(struct sk_buff *skb, int hdr_len, void *priv)
 {
 	struct rtllib_tkip_data *tkey = priv;
@@ -518,12 +614,20 @@ static int rtllib_michael_mic_add(struct sk_buff *skb, int hdr_len, void *priv)
 		tkey->tx_hdr[12] = *(skb->data + hdr_len - 2) & 0x07;
 	pos = skb_put(skb, 8);
 	if (michael_mic(tkey->tx_tfm_michael, &tkey->key[16], tkey->tx_hdr,
+<<<<<<< HEAD
 			skb->data + hdr_len, skb->len - 8 - hdr_len, pos))
+=======
+	    skb->data + hdr_len, skb->len - 8 - hdr_len, pos))
+>>>>>>> b7ba80a49124 (Commit)
 		return -1;
 
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static void rtllib_michael_mic_failure(struct net_device *dev,
 				       struct rtllib_hdr_4addr *hdr,
 				       int keyidx)
@@ -593,6 +697,10 @@ static int rtllib_michael_mic_verify(struct sk_buff *skb, int keyidx,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static int rtllib_tkip_set_key(void *key, int len, u8 *seq, void *priv)
 {
 	struct rtllib_tkip_data *tkey = priv;
@@ -615,15 +723,26 @@ static int rtllib_tkip_set_key(void *key, int len, u8 *seq, void *priv)
 				(seq[3] << 8) | seq[2];
 			tkey->rx_iv16 = (seq[1] << 8) | seq[0];
 		}
+<<<<<<< HEAD
 	} else if (len == 0) {
 		tkey->key_set = 0;
 	} else {
 		return -1;
 	}
+=======
+	} else if (len == 0)
+		tkey->key_set = 0;
+	else
+		return -1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static int rtllib_tkip_get_key(void *key, int len, u8 *seq, void *priv)
 {
 	struct rtllib_tkip_data *tkey = priv;
@@ -654,6 +773,10 @@ static int rtllib_tkip_get_key(void *key, int len, u8 *seq, void *priv)
 	return TKIP_KEY_LEN;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static void rtllib_tkip_print_stats(struct seq_file *m, void *priv)
 {
 	struct rtllib_tkip_data *tkip = priv;
@@ -695,11 +818,19 @@ static struct lib80211_crypto_ops rtllib_crypt_tkip = {
 	.owner			= THIS_MODULE,
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __init rtllib_crypto_tkip_init(void)
 {
 	return lib80211_register_crypto_ops(&rtllib_crypt_tkip);
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static void __exit rtllib_crypto_tkip_exit(void)
 {
 	lib80211_unregister_crypto_ops(&rtllib_crypt_tkip);

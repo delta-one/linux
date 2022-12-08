@@ -15,8 +15,11 @@ config OPENVSWITCH
 	select NET_MPLS_GSO
 	select DST_CACHE
 	select NET_NSH
+<<<<<<< HEAD
 	select NF_CONNTRACK_OVS if NF_CONNTRACK
 	select NF_NAT_OVS if NF_NAT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Open vSwitch is a multilayer Ethernet switch targeted at virtualized
 	  environments.  In addition to supporting a variety of features

@@ -196,10 +196,17 @@ struct vsp1_hgo *vsp1_hgo_create(struct vsp1_device *vsp1)
 
 	/* Initialize the control handler. */
 	v4l2_ctrl_handler_init(&hgo->ctrls.handler,
+<<<<<<< HEAD
 			       vsp1->info->gen >= 3 ? 2 : 1);
 	hgo->ctrls.max_rgb = v4l2_ctrl_new_custom(&hgo->ctrls.handler,
 						  &hgo_max_rgb_control, NULL);
 	if (vsp1->info->gen >= 3)
+=======
+			       vsp1->info->gen == 3 ? 2 : 1);
+	hgo->ctrls.max_rgb = v4l2_ctrl_new_custom(&hgo->ctrls.handler,
+						  &hgo_max_rgb_control, NULL);
+	if (vsp1->info->gen == 3)
+>>>>>>> b7ba80a49124 (Commit)
 		hgo->ctrls.num_bins =
 			v4l2_ctrl_new_custom(&hgo->ctrls.handler,
 					     &hgo_num_bins_control, NULL);

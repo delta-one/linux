@@ -390,7 +390,11 @@ static int tmp108_probe(struct i2c_client *client)
 	return PTR_ERR_OR_ZERO(hwmon_dev);
 }
 
+<<<<<<< HEAD
 static int tmp108_suspend(struct device *dev)
+=======
+static int __maybe_unused tmp108_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tmp108 *tmp108 = dev_get_drvdata(dev);
 
@@ -398,7 +402,11 @@ static int tmp108_suspend(struct device *dev)
 				  TMP108_CONF_MODE_MASK, TMP108_MODE_SHUTDOWN);
 }
 
+<<<<<<< HEAD
 static int tmp108_resume(struct device *dev)
+=======
+static int __maybe_unused tmp108_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tmp108 *tmp108 = dev_get_drvdata(dev);
 	int err;
@@ -410,7 +418,11 @@ static int tmp108_resume(struct device *dev)
 	return err;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(tmp108_dev_pm_ops, tmp108_suspend, tmp108_resume);
+=======
+static SIMPLE_DEV_PM_OPS(tmp108_dev_pm_ops, tmp108_suspend, tmp108_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id tmp108_i2c_ids[] = {
 	{ "tmp108", 0 },
@@ -429,7 +441,11 @@ MODULE_DEVICE_TABLE(of, tmp108_of_ids);
 static struct i2c_driver tmp108_driver = {
 	.driver = {
 		.name	= DRIVER_NAME,
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&tmp108_dev_pm_ops),
+=======
+		.pm	= &tmp108_dev_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = of_match_ptr(tmp108_of_ids),
 	},
 	.probe_new	= tmp108_probe,

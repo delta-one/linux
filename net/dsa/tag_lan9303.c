@@ -7,7 +7,11 @@
 #include <linux/list.h>
 #include <linux/slab.h>
 
+<<<<<<< HEAD
 #include "tag.h"
+=======
+#include "dsa_priv.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /* To define the outgoing port and to discover the incoming port a regular
  * VLAN tag is used by the LAN9303. But its VID meaning is 'special':
@@ -30,8 +34,11 @@
  * Required when no forwarding between the external ports should happen.
  */
 
+<<<<<<< HEAD
 #define LAN9303_NAME "lan9303"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define LAN9303_TAG_LEN 4
 # define LAN9303_TAG_TX_USE_ALR BIT(3)
 # define LAN9303_TAG_TX_STP_OVERRIDE BIT(4)
@@ -112,7 +119,11 @@ static struct sk_buff *lan9303_rcv(struct sk_buff *skb, struct net_device *dev)
 }
 
 static const struct dsa_device_ops lan9303_netdev_ops = {
+<<<<<<< HEAD
 	.name = LAN9303_NAME,
+=======
+	.name = "lan9303",
+>>>>>>> b7ba80a49124 (Commit)
 	.proto	= DSA_TAG_PROTO_LAN9303,
 	.xmit = lan9303_xmit,
 	.rcv = lan9303_rcv,
@@ -120,6 +131,10 @@ static const struct dsa_device_ops lan9303_netdev_ops = {
 };
 
 MODULE_LICENSE("GPL");
+<<<<<<< HEAD
 MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_LAN9303, LAN9303_NAME);
+=======
+MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_LAN9303);
+>>>>>>> b7ba80a49124 (Commit)
 
 module_dsa_tag_driver(lan9303_netdev_ops);

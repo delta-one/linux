@@ -116,6 +116,7 @@ static int uas_use_uas_driver(struct usb_interface *intf,
 	if (le16_to_cpu(udev->descriptor.idVendor) == 0x0bc2)
 		flags |= US_FL_NO_ATA_1X;
 
+<<<<<<< HEAD
 	/*
 	 * RTL9210-based enclosure from HIKSEMI, MD202 reportedly have issues
 	 * with UAS.  This isn't distinguishable with just idVendor and
@@ -129,6 +130,8 @@ static int uas_use_uas_driver(struct usb_interface *intf,
 			(udev->product && !strcmp(udev->product, "MD202")))
 		flags |= US_FL_IGNORE_UAS;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	usb_stor_adjust_quirks(udev, &flags);
 
 	if (flags & US_FL_IGNORE_UAS) {

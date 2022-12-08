@@ -343,7 +343,11 @@ long cifs_ioctl(struct file *filep, unsigned int command, unsigned long arg)
 					rc = put_user(ExtAttrBits &
 						FS_FL_USER_VISIBLE,
 						(int __user *)arg);
+<<<<<<< HEAD
 				if (rc != -EOPNOTSUPP)
+=======
+				if (rc != EOPNOTSUPP)
+>>>>>>> b7ba80a49124 (Commit)
 					break;
 			}
 #endif /* CONFIG_CIFS_ALLOW_INSECURE_LEGACY */
@@ -373,7 +377,11 @@ long cifs_ioctl(struct file *filep, unsigned int command, unsigned long arg)
 			 *		       pSMBFile->fid.netfid,
 			 *		       extAttrBits,
 			 *		       &ExtAttrMask);
+<<<<<<< HEAD
 			 * if (rc != -EOPNOTSUPP)
+=======
+			 * if (rc != EOPNOTSUPP)
+>>>>>>> b7ba80a49124 (Commit)
 			 *	break;
 			 */
 
@@ -484,13 +492,18 @@ long cifs_ioctl(struct file *filep, unsigned int command, unsigned long arg)
 			tcon = tlink_tcon(tlink);
 			if (tcon && tcon->ses->server->ops->notify) {
 				rc = tcon->ses->server->ops->notify(xid,
+<<<<<<< HEAD
 						filep, (void __user *)arg,
 						false /* no ret data */);
+=======
+						filep, (void __user *)arg);
+>>>>>>> b7ba80a49124 (Commit)
 				cifs_dbg(FYI, "ioctl notify rc %d\n", rc);
 			} else
 				rc = -EOPNOTSUPP;
 			cifs_put_tlink(tlink);
 			break;
+<<<<<<< HEAD
 		case CIFS_IOC_NOTIFY_INFO:
 			if (!S_ISDIR(inode->i_mode)) {
 				/* Notify can only be done on directories */
@@ -513,6 +526,8 @@ long cifs_ioctl(struct file *filep, unsigned int command, unsigned long arg)
 				rc = -EOPNOTSUPP;
 			cifs_put_tlink(tlink);
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		case CIFS_IOC_SHUTDOWN:
 			rc = cifs_shutdown(inode->i_sb, arg);
 			break;

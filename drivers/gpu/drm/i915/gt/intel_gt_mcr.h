@@ -9,6 +9,7 @@
 #include "intel_gt_types.h"
 
 void intel_gt_mcr_init(struct intel_gt *gt);
+<<<<<<< HEAD
 void intel_gt_mcr_lock(struct intel_gt *gt, unsigned long *flags);
 void intel_gt_mcr_unlock(struct intel_gt *gt, unsigned long flags);
 
@@ -31,6 +32,25 @@ u32 intel_gt_mcr_multicast_rmw(struct intel_gt *gt, i915_mcr_reg_t reg,
 
 void intel_gt_mcr_get_nonterminated_steering(struct intel_gt *gt,
 					     i915_mcr_reg_t reg,
+=======
+
+u32 intel_gt_mcr_read(struct intel_gt *gt,
+		      i915_reg_t reg,
+		      int group, int instance);
+u32 intel_gt_mcr_read_any_fw(struct intel_gt *gt, i915_reg_t reg);
+u32 intel_gt_mcr_read_any(struct intel_gt *gt, i915_reg_t reg);
+
+void intel_gt_mcr_unicast_write(struct intel_gt *gt,
+				i915_reg_t reg, u32 value,
+				int group, int instance);
+void intel_gt_mcr_multicast_write(struct intel_gt *gt,
+				  i915_reg_t reg, u32 value);
+void intel_gt_mcr_multicast_write_fw(struct intel_gt *gt,
+				     i915_reg_t reg, u32 value);
+
+void intel_gt_mcr_get_nonterminated_steering(struct intel_gt *gt,
+					     i915_reg_t reg,
+>>>>>>> b7ba80a49124 (Commit)
 					     u8 *group, u8 *instance);
 
 void intel_gt_mcr_report_steering(struct drm_printer *p, struct intel_gt *gt,
@@ -39,6 +59,7 @@ void intel_gt_mcr_report_steering(struct drm_printer *p, struct intel_gt *gt,
 void intel_gt_mcr_get_ss_steering(struct intel_gt *gt, unsigned int dss,
 				  unsigned int *group, unsigned int *instance);
 
+<<<<<<< HEAD
 int intel_gt_mcr_wait_for_reg(struct intel_gt *gt,
 			      i915_mcr_reg_t reg,
 			      u32 mask,
@@ -46,6 +67,8 @@ int intel_gt_mcr_wait_for_reg(struct intel_gt *gt,
 			      unsigned int fast_timeout_us,
 			      unsigned int slow_timeout_ms);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Helper for for_each_ss_steering loop.  On pre-Xe_HP platforms, subslice
  * presence is determined by using the group/instance as direct lookups in the

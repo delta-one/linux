@@ -4,16 +4,28 @@
 $id: http://devicetree.org/schemas/clock/qcom,gcc-sc8280xp.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Qualcomm Global Clock & Reset Controller on SC8280xp
+=======
+title: Qualcomm Global Clock & Reset Controller Binding for SC8280xp
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Bjorn Andersson <bjorn.andersson@linaro.org>
 
 description: |
+<<<<<<< HEAD
   Qualcomm global clock control module provides the clocks, resets and
   power domains on SC8280xp.
 
   See also:: include/dt-bindings/clock/qcom,gcc-sc8280xp.h
+=======
+  Qualcomm global clock control module which supports the clocks, resets and
+  power domains on SC8280xp.
+
+  See also:
+  - include/dt-bindings/clock/qcom,gcc-sc8280xp.h
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -32,7 +44,11 @@ properties:
       - description: Primary USB SuperSpeed pipe clock
       - description: USB4 PHY pipegmux clock source
       - description: USB4 PHY DP gmux clock source
+<<<<<<< HEAD
       - description: USB4 PHY sys pipegmux clock source
+=======
+      - description: USB4 PHY sys piegmux clock source
+>>>>>>> b7ba80a49124 (Commit)
       - description: USB4 PHY PCIe pipe clock
       - description: USB4 PHY router max pipe clock
       - description: Primary USB4 RX0 clock
@@ -45,7 +61,11 @@ properties:
       - description: Second USB4 PHY router max pipe clock
       - description: Secondary USB4 RX0 clock
       - description: Secondary USB4 RX1 clock
+<<<<<<< HEAD
       - description: Multiport USB first SuperSpeed pipe clock
+=======
+      - description: Multiport USB first SupserSpeed pipe clock
+>>>>>>> b7ba80a49124 (Commit)
       - description: Multiport USB second SuperSpeed pipe clock
       - description: PCIe 2a pipe clock
       - description: PCIe 2b pipe clock
@@ -55,10 +75,13 @@ properties:
       - description: First EMAC controller reference clock
       - description: Second EMAC controller reference clock
 
+<<<<<<< HEAD
   power-domains:
     items:
       - description: CX domain
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   protected-clocks:
     maxItems: 389
 
@@ -74,8 +97,11 @@ unevaluatedProperties: false
 examples:
   - |
     #include <dt-bindings/clock/qcom,rpmh.h>
+<<<<<<< HEAD
     #include <dt-bindings/power/qcom-rpmpd.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     clock-controller@100000 {
       compatible = "qcom,gcc-sc8280xp";
       reg = <0x00100000 0x1f0000>;
@@ -112,7 +138,10 @@ examples:
                <&pcie4_lane>,
                <&rxc0_ref_clk>,
                <&rxc1_ref_clk>;
+<<<<<<< HEAD
       power-domains = <&rpmhpd SC8280XP_CX>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
       #clock-cells = <1>;
       #reset-cells = <1>;

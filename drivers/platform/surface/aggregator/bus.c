@@ -35,9 +35,15 @@ static struct attribute *ssam_device_attrs[] = {
 };
 ATTRIBUTE_GROUPS(ssam_device);
 
+<<<<<<< HEAD
 static int ssam_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct ssam_device *sdev = to_ssam_device(dev);
+=======
+static int ssam_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct ssam_device *sdev = to_ssam_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return add_uevent_var(env, "MODALIAS=ssam:d%02Xc%02Xt%02Xi%02Xf%02X",
 			      sdev->uid.domain, sdev->uid.category,
@@ -136,9 +142,15 @@ int ssam_device_add(struct ssam_device *sdev)
 	 * is always valid and can be used for requests as long as the client
 	 * device we add here is registered as child under it. This essentially
 	 * guarantees that the client driver can always expect the preconditions
+<<<<<<< HEAD
 	 * for functions like ssam_request_do_sync() (controller has to be
 	 * started and is not suspended) to hold and thus does not have to check
 	 * for them.
+=======
+	 * for functions like ssam_request_sync (controller has to be started
+	 * and is not suspended) to hold and thus does not have to check for
+	 * them.
+>>>>>>> b7ba80a49124 (Commit)
 	 *
 	 * Note that for this to work, the controller has to be a parent device.
 	 * If it is not a direct parent, care has to be taken that the device is
@@ -485,10 +497,15 @@ int __ssam_register_clients(struct device *parent, struct ssam_controller *ctrl,
 		 * device, so ignore it and continue with the next one.
 		 */
 		status = ssam_add_client_device(parent, ctrl, child);
+<<<<<<< HEAD
 		if (status && status != -ENODEV) {
 			fwnode_handle_put(child);
 			goto err;
 		}
+=======
+		if (status && status != -ENODEV)
+			goto err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;

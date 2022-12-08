@@ -359,8 +359,12 @@ static const struct dce_audio_registers audio_regs[] = {
 	audio_regs(2),
 	audio_regs(3),
 	audio_regs(4),
+<<<<<<< HEAD
 	audio_regs(5),
 	audio_regs(6),
+=======
+	audio_regs(5)
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define DCE120_AUD_COMMON_MASK_SH_LIST(mask_sh)\

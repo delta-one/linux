@@ -34,6 +34,7 @@
 
 #define VSC7512_MIIM0_RES_START		0x7107009c
 #define VSC7512_MIIM1_RES_START		0x710700c0
+<<<<<<< HEAD
 #define VSC7512_MIIM_RES_SIZE		0x00000024
 
 #define VSC7512_PHY_RES_START		0x710700f0
@@ -80,6 +81,18 @@
 #define VSC7512_PORT_9_RES_START	0x71270000
 #define VSC7512_PORT_10_RES_START	0x71280000
 #define VSC7512_PORT_RES_SIZE		0x00010000
+=======
+#define VSC7512_MIIM_RES_SIZE		0x024
+
+#define VSC7512_PHY_RES_START		0x710700f0
+#define VSC7512_PHY_RES_SIZE		0x004
+
+#define VSC7512_GPIO_RES_START		0x71070034
+#define VSC7512_GPIO_RES_SIZE		0x06c
+
+#define VSC7512_SIO_CTRL_RES_START	0x710700f8
+#define VSC7512_SIO_CTRL_RES_SIZE	0x100
+>>>>>>> b7ba80a49124 (Commit)
 
 #define VSC7512_GCB_RST_SLEEP_US	100
 #define VSC7512_GCB_RST_TIMEOUT_US	100000
@@ -132,6 +145,7 @@ static const struct resource vsc7512_sgpio_resources[] = {
 	DEFINE_RES_REG_NAMED(VSC7512_SIO_CTRL_RES_START, VSC7512_SIO_CTRL_RES_SIZE, "gcb_sio"),
 };
 
+<<<<<<< HEAD
 static const struct resource vsc7512_serdes_resources[] = {
 	DEFINE_RES_REG_NAMED(VSC7512_HSIO_RES_START, VSC7512_HSIO_RES_SIZE, "hsio"),
 };
@@ -159,6 +173,8 @@ static const struct resource vsc7512_switch_resources[] = {
 	DEFINE_RES_REG_NAMED(VSC7512_PORT_10_RES_START, VSC7512_PORT_RES_SIZE, "port10")
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct mfd_cell vsc7512_devs[] = {
 	{
 		.name = "ocelot-pinctrl",
@@ -184,6 +200,7 @@ static const struct mfd_cell vsc7512_devs[] = {
 		.use_of_reg = true,
 		.num_resources = ARRAY_SIZE(vsc7512_miim1_resources),
 		.resources = vsc7512_miim1_resources,
+<<<<<<< HEAD
 	}, {
 		.name = "ocelot-serdes",
 		.of_compatible = "mscc,vsc7514-serdes",
@@ -194,6 +211,8 @@ static const struct mfd_cell vsc7512_devs[] = {
 		.of_compatible = "mscc,vsc7512-switch",
 		.num_resources = ARRAY_SIZE(vsc7512_switch_resources),
 		.resources = vsc7512_switch_resources,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

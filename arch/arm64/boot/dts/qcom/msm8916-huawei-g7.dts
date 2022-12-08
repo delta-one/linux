@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 /*
  * Copyright (C) 2021 Stephan Gerhold
  */
+=======
+// Copyright (C) 2021 Stephan Gerhold
+>>>>>>> b7ba80a49124 (Commit)
 
 /dts-v1/;
 
@@ -416,7 +420,11 @@
 };
 
 &msmgpio {
+<<<<<<< HEAD
 	accel_irq_default: accel-irq-default-state {
+=======
+	accel_irq_default: accel-irq-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio115";
 		function = "gpio";
 
@@ -424,7 +432,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	gpio_keys_default: gpio-keys-default-state {
+=======
+	gpio_keys_default: gpio-keys-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio107";
 		function = "gpio";
 
@@ -432,7 +444,11 @@
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	gpio_leds_default: gpio-leds-default-state {
+=======
+	gpio_leds_default: gpio-leds-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio8", "gpio9", "gpio10";
 		function = "gpio";
 
@@ -440,7 +456,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	nfc_default: nfc-default-state {
+=======
+	nfc_default: nfc-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio2", "gpio20", "gpio21";
 		function = "gpio";
 
@@ -448,7 +468,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	mag_reset_default: mag-reset-default-state {
+=======
+	mag_reset_default: mag-reset-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio36";
 		function = "gpio";
 
@@ -456,7 +480,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	prox_irq_default: prox-irq-default-state {
+=======
+	prox_irq_default: prox-irq-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio113";
 		function = "gpio";
 
@@ -464,7 +492,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	reg_lcd_en_default: reg-lcd-en-default-state {
+=======
+	reg_lcd_en_default: reg-lcd-en-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio32", "gpio97";
 		function = "gpio";
 
@@ -472,7 +504,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	sdhc2_cd_default: sdhc2-cd-default-state {
+=======
+	sdhc2_cd_default: sdhc2-cd-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio56";
 		function = "gpio";
 
@@ -480,7 +516,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	ts_irq_default: ts-irq-default-state {
+=======
+	ts_irq_default: ts-irq-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio13";
 		function = "gpio";
 
@@ -488,7 +528,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	usb_id_default: usb-id-default-state {
+=======
+	usb_id_default: usb-id-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio117";
 		function = "gpio";
 

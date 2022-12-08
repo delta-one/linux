@@ -1191,7 +1191,11 @@ static int omap_iommu_probe(struct platform_device *pdev)
 		return err;
 	if (obj->nr_tlb_entries != 32 && obj->nr_tlb_entries != 8)
 		return -EINVAL;
+<<<<<<< HEAD
 	if (of_property_read_bool(of, "ti,iommu-bus-err-back"))
+=======
+	if (of_find_property(of, "ti,iommu-bus-err-back", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		obj->has_bus_err_back = MMU_GP_REG_BUS_ERR_BACK_EN;
 
 	obj->dev = &pdev->dev;
@@ -1414,7 +1418,11 @@ static int omap_iommu_attach_init(struct device *dev,
 
 	odomain->num_iommus = omap_iommu_count(dev);
 	if (!odomain->num_iommus)
+<<<<<<< HEAD
 		return -ENODEV;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	odomain->iommus = kcalloc(odomain->num_iommus, sizeof(*iommu),
 				  GFP_ATOMIC);
@@ -1464,7 +1472,11 @@ omap_iommu_attach_dev(struct iommu_domain *domain, struct device *dev)
 
 	if (!arch_data || !arch_data->iommu_dev) {
 		dev_err(dev, "device doesn't have an associated iommu\n");
+<<<<<<< HEAD
 		return -ENODEV;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	spin_lock(&omap_domain->lock);
@@ -1472,7 +1484,11 @@ omap_iommu_attach_dev(struct iommu_domain *domain, struct device *dev)
 	/* only a single client device can be attached to a domain */
 	if (omap_domain->dev) {
 		dev_err(dev, "iommu domain is already attached\n");
+<<<<<<< HEAD
 		ret = -EINVAL;
+=======
+		ret = -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -1556,9 +1572,15 @@ static void _omap_iommu_detach_dev(struct omap_iommu_domain *omap_domain,
 	omap_domain->dev = NULL;
 }
 
+<<<<<<< HEAD
 static void omap_iommu_set_platform_dma(struct device *dev)
 {
 	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+=======
+static void omap_iommu_detach_dev(struct iommu_domain *domain,
+				  struct device *dev)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct omap_iommu_domain *omap_domain = to_omap_domain(domain);
 
 	spin_lock(&omap_domain->lock);
@@ -1737,10 +1759,17 @@ static const struct iommu_ops omap_iommu_ops = {
 	.probe_device	= omap_iommu_probe_device,
 	.release_device	= omap_iommu_release_device,
 	.device_group	= omap_iommu_device_group,
+<<<<<<< HEAD
 	.set_platform_dma_ops = omap_iommu_set_platform_dma,
 	.pgsize_bitmap	= OMAP_IOMMU_PGSIZES,
 	.default_domain_ops = &(const struct iommu_domain_ops) {
 		.attach_dev	= omap_iommu_attach_dev,
+=======
+	.pgsize_bitmap	= OMAP_IOMMU_PGSIZES,
+	.default_domain_ops = &(const struct iommu_domain_ops) {
+		.attach_dev	= omap_iommu_attach_dev,
+		.detach_dev	= omap_iommu_detach_dev,
+>>>>>>> b7ba80a49124 (Commit)
 		.map		= omap_iommu_map,
 		.unmap		= omap_iommu_unmap,
 		.iova_to_phys	= omap_iommu_iova_to_phys,

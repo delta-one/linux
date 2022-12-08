@@ -101,6 +101,7 @@ struct rxe_wr_opcode_info rxe_wr_opcode_info[] = {
 			[IB_QPT_UC]	= WR_LOCAL_OP_MASK,
 		},
 	},
+<<<<<<< HEAD
 	[IB_WR_FLUSH]					= {
 		.name   = "IB_WR_FLUSH",
 		.mask   = {
@@ -113,6 +114,8 @@ struct rxe_wr_opcode_info rxe_wr_opcode_info[] = {
 			[IB_QPT_RC]     = WR_ATOMIC_WRITE_MASK,
 		},
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct rxe_opcode_info rxe_opcode[RXE_NUM_OPCODE] = {
@@ -390,6 +393,7 @@ struct rxe_opcode_info rxe_opcode[RXE_NUM_OPCODE] = {
 					  RXE_IETH_BYTES,
 		}
 	},
+<<<<<<< HEAD
 	[IB_OPCODE_RC_FLUSH]					= {
 		.name	= "IB_OPCODE_RC_FLUSH",
 		.mask	= RXE_FETH_MASK | RXE_RETH_MASK | RXE_FLUSH_MASK |
@@ -413,6 +417,8 @@ struct rxe_opcode_info rxe_opcode[RXE_NUM_OPCODE] = {
 			[RXE_PAYLOAD]   = RXE_BTH_BYTES + RXE_RETH_BYTES,
 		}
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* UC */
 	[IB_OPCODE_UC_SEND_FIRST]			= {

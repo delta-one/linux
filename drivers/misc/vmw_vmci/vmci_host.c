@@ -242,8 +242,11 @@ static int vmci_host_setup_notify(struct vmci_ctx *context,
 		context->notify_page = NULL;
 		return VMCI_ERROR_GENERIC;
 	}
+<<<<<<< HEAD
 	if (context->notify_page == NULL)
 		return VMCI_ERROR_UNAVAILABLE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Map the locked page and set up notify pointer.

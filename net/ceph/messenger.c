@@ -17,7 +17,10 @@
 #endif	/* CONFIG_BLOCK */
 #include <linux/dns_resolver.h>
 #include <net/tcp.h>
+<<<<<<< HEAD
 #include <trace/events/sock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/ceph/ceph_features.h>
 #include <linux/ceph/libceph.h>
@@ -345,9 +348,12 @@ static void con_sock_state_closed(struct ceph_connection *con)
 static void ceph_sock_data_ready(struct sock *sk)
 {
 	struct ceph_connection *con = sk->sk_user_data;
+<<<<<<< HEAD
 
 	trace_sk_data_ready(sk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (atomic_read(&con->msgr->stopping)) {
 		return;
 	}
@@ -450,7 +456,10 @@ int ceph_tcp_connect(struct ceph_connection *con)
 	if (ret)
 		return ret;
 	sock->sk->sk_allocation = GFP_NOFS;
+<<<<<<< HEAD
 	sock->sk->sk_use_task_frag = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_LOCKDEP
 	lockdep_set_class(&sock->sk->sk_lock, &socket_class);
@@ -733,6 +742,10 @@ static void ceph_msg_data_bio_cursor_init(struct ceph_msg_data_cursor *cursor,
 		it->iter.bi_size = cursor->resid;
 
 	BUG_ON(cursor->resid < bio_iter_len(it->bio, it->iter));
+<<<<<<< HEAD
+=======
+	cursor->last_piece = cursor->resid == bio_iter_len(it->bio, it->iter);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct page *ceph_msg_data_bio_next(struct ceph_msg_data_cursor *cursor,
@@ -758,8 +771,15 @@ static bool ceph_msg_data_bio_advance(struct ceph_msg_data_cursor *cursor,
 	cursor->resid -= bytes;
 	bio_advance_iter(it->bio, &it->iter, bytes);
 
+<<<<<<< HEAD
 	if (!cursor->resid)
 		return false;   /* no more data */
+=======
+	if (!cursor->resid) {
+		BUG_ON(!cursor->last_piece);
+		return false;   /* no more data */
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!bytes || (it->iter.bi_size && it->iter.bi_bvec_done &&
 		       page == bio_iter_page(it->bio, it->iter)))
@@ -772,7 +792,13 @@ static bool ceph_msg_data_bio_advance(struct ceph_msg_data_cursor *cursor,
 			it->iter.bi_size = cursor->resid;
 	}
 
+<<<<<<< HEAD
 	BUG_ON(cursor->resid < bio_iter_len(it->bio, it->iter));
+=======
+	BUG_ON(cursor->last_piece);
+	BUG_ON(cursor->resid < bio_iter_len(it->bio, it->iter));
+	cursor->last_piece = cursor->resid == bio_iter_len(it->bio, it->iter);
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 #endif /* CONFIG_BLOCK */
@@ -788,6 +814,11 @@ static void ceph_msg_data_bvecs_cursor_init(struct ceph_msg_data_cursor *cursor,
 	cursor->bvec_iter.bi_size = cursor->resid;
 
 	BUG_ON(cursor->resid < bvec_iter_len(bvecs, cursor->bvec_iter));
+<<<<<<< HEAD
+=======
+	cursor->last_piece =
+	    cursor->resid == bvec_iter_len(bvecs, cursor->bvec_iter);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct page *ceph_msg_data_bvecs_next(struct ceph_msg_data_cursor *cursor,
@@ -813,14 +844,28 @@ static bool ceph_msg_data_bvecs_advance(struct ceph_msg_data_cursor *cursor,
 	cursor->resid -= bytes;
 	bvec_iter_advance(bvecs, &cursor->bvec_iter, bytes);
 
+<<<<<<< HEAD
 	if (!cursor->resid)
 		return false;   /* no more data */
+=======
+	if (!cursor->resid) {
+		BUG_ON(!cursor->last_piece);
+		return false;   /* no more data */
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!bytes || (cursor->bvec_iter.bi_bvec_done &&
 		       page == bvec_iter_page(bvecs, cursor->bvec_iter)))
 		return false;	/* more bytes to process in this segment */
 
+<<<<<<< HEAD
 	BUG_ON(cursor->resid < bvec_iter_len(bvecs, cursor->bvec_iter));
+=======
+	BUG_ON(cursor->last_piece);
+	BUG_ON(cursor->resid < bvec_iter_len(bvecs, cursor->bvec_iter));
+	cursor->last_piece =
+	    cursor->resid == bvec_iter_len(bvecs, cursor->bvec_iter);
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -846,6 +891,10 @@ static void ceph_msg_data_pages_cursor_init(struct ceph_msg_data_cursor *cursor,
 	BUG_ON(page_count > (int)USHRT_MAX);
 	cursor->page_count = (unsigned short)page_count;
 	BUG_ON(length > SIZE_MAX - cursor->page_offset);
+<<<<<<< HEAD
+=======
+	cursor->last_piece = cursor->page_offset + cursor->resid <= PAGE_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct page *
@@ -860,7 +909,15 @@ ceph_msg_data_pages_next(struct ceph_msg_data_cursor *cursor,
 	BUG_ON(cursor->page_offset >= PAGE_SIZE);
 
 	*page_offset = cursor->page_offset;
+<<<<<<< HEAD
 	*length = min_t(size_t, cursor->resid, PAGE_SIZE - *page_offset);
+=======
+	if (cursor->last_piece)
+		*length = cursor->resid;
+	else
+		*length = PAGE_SIZE - *page_offset;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return data->pages[cursor->page_index];
 }
 
@@ -885,6 +942,11 @@ static bool ceph_msg_data_pages_advance(struct ceph_msg_data_cursor *cursor,
 
 	BUG_ON(cursor->page_index >= cursor->page_count);
 	cursor->page_index++;
+<<<<<<< HEAD
+=======
+	cursor->last_piece = cursor->resid <= PAGE_SIZE;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -914,6 +976,10 @@ ceph_msg_data_pagelist_cursor_init(struct ceph_msg_data_cursor *cursor,
 	cursor->resid = min(length, pagelist->length);
 	cursor->page = page;
 	cursor->offset = 0;
+<<<<<<< HEAD
+=======
+	cursor->last_piece = cursor->resid <= PAGE_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct page *
@@ -933,7 +999,15 @@ ceph_msg_data_pagelist_next(struct ceph_msg_data_cursor *cursor,
 
 	/* offset of first page in pagelist is always 0 */
 	*page_offset = cursor->offset & ~PAGE_MASK;
+<<<<<<< HEAD
 	*length = min_t(size_t, cursor->resid, PAGE_SIZE - *page_offset);
+=======
+	if (cursor->last_piece)
+		*length = cursor->resid;
+	else
+		*length = PAGE_SIZE - *page_offset;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return cursor->page;
 }
 
@@ -966,6 +1040,11 @@ static bool ceph_msg_data_pagelist_advance(struct ceph_msg_data_cursor *cursor,
 
 	BUG_ON(list_is_last(&cursor->page->lru, &pagelist->head));
 	cursor->page = list_next_entry(cursor->page, lru);
+<<<<<<< HEAD
+=======
+	cursor->last_piece = cursor->resid <= PAGE_SIZE;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -1023,7 +1102,12 @@ void ceph_msg_data_cursor_init(struct ceph_msg_data_cursor *cursor,
  * Indicate whether this is the last piece in this data item.
  */
 struct page *ceph_msg_data_next(struct ceph_msg_data_cursor *cursor,
+<<<<<<< HEAD
 				size_t *page_offset, size_t *length)
+=======
+				size_t *page_offset, size_t *length,
+				bool *last_piece)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct page *page;
 
@@ -1052,6 +1136,11 @@ struct page *ceph_msg_data_next(struct ceph_msg_data_cursor *cursor,
 	BUG_ON(*page_offset + *length > PAGE_SIZE);
 	BUG_ON(!*length);
 	BUG_ON(*length > cursor->resid);
+<<<<<<< HEAD
+=======
+	if (last_piece)
+		*last_piece = cursor->last_piece;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return page;
 }
@@ -1088,6 +1177,10 @@ void ceph_msg_data_advance(struct ceph_msg_data_cursor *cursor, size_t bytes)
 	cursor->total_resid -= bytes;
 
 	if (!cursor->resid && cursor->total_resid) {
+<<<<<<< HEAD
+=======
+		WARN_ON(!cursor->last_piece);
+>>>>>>> b7ba80a49124 (Commit)
 		cursor->data++;
 		__ceph_msg_data_cursor_init(cursor);
 		new_piece = true;

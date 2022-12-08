@@ -89,14 +89,20 @@ static inline int __ww_mutex_check_kill(struct rt_mutex *lock,
  * set this bit before looking at the lock.
  */
 
+<<<<<<< HEAD
 static __always_inline struct task_struct *
 rt_mutex_owner_encode(struct rt_mutex_base *lock, struct task_struct *owner)
+=======
+static __always_inline void
+rt_mutex_set_owner(struct rt_mutex_base *lock, struct task_struct *owner)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long val = (unsigned long)owner;
 
 	if (rt_mutex_has_waiters(lock))
 		val |= RT_MUTEX_HAS_WAITERS;
 
+<<<<<<< HEAD
 	return (struct task_struct *)val;
 }
 
@@ -114,6 +120,9 @@ static __always_inline void rt_mutex_clear_owner(struct rt_mutex_base *lock)
 {
 	/* lock->wait_lock is held so the unlock provides release semantics. */
 	WRITE_ONCE(lock->owner, rt_mutex_owner_encode(lock, NULL));
+=======
+	WRITE_ONCE(lock->owner, (struct task_struct *)val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static __always_inline void clear_rt_mutex_waiters(struct rt_mutex_base *lock)
@@ -122,8 +131,12 @@ static __always_inline void clear_rt_mutex_waiters(struct rt_mutex_base *lock)
 			((unsigned long)lock->owner & ~RT_MUTEX_HAS_WAITERS);
 }
 
+<<<<<<< HEAD
 static __always_inline void
 fixup_rt_mutex_waiters(struct rt_mutex_base *lock, bool acquire_lock)
+=======
+static __always_inline void fixup_rt_mutex_waiters(struct rt_mutex_base *lock)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long owner, *p = (unsigned long *) &lock->owner;
 
@@ -189,6 +202,7 @@ fixup_rt_mutex_waiters(struct rt_mutex_base *lock, bool acquire_lock)
 	 * still set.
 	 */
 	owner = READ_ONCE(*p);
+<<<<<<< HEAD
 	if (owner & RT_MUTEX_HAS_WAITERS) {
 		/*
 		 * See rt_mutex_set_owner() and rt_mutex_clear_owner() on
@@ -204,6 +218,10 @@ fixup_rt_mutex_waiters(struct rt_mutex_base *lock, bool acquire_lock)
 		else
 			WRITE_ONCE(*p, owner & ~RT_MUTEX_HAS_WAITERS);
 	}
+=======
+	if (owner & RT_MUTEX_HAS_WAITERS)
+		WRITE_ONCE(*p, owner & ~RT_MUTEX_HAS_WAITERS);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -238,6 +256,7 @@ static __always_inline void mark_rt_mutex_waiters(struct rt_mutex_base *lock)
 		owner = *p;
 	} while (cmpxchg_relaxed(p, owner,
 				 owner | RT_MUTEX_HAS_WAITERS) != owner);
+<<<<<<< HEAD
 
 	/*
 	 * The cmpxchg loop above is relaxed to avoid back-to-back ACQUIRE
@@ -245,6 +264,8 @@ static __always_inline void mark_rt_mutex_waiters(struct rt_mutex_base *lock)
 	 * cmpxchg is visible.
 	 */
 	smp_mb__after_atomic();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -901,9 +922,14 @@ static int __sched rt_mutex_adjust_prio_chain(struct task_struct *task,
 		 * then we need to wake the new top waiter up to try
 		 * to get the lock.
 		 */
+<<<<<<< HEAD
 		top_waiter = rt_mutex_top_waiter(lock);
 		if (prerequeue_top_waiter != top_waiter)
 			wake_up_state(top_waiter->task, top_waiter->wake_state);
+=======
+		if (prerequeue_top_waiter != rt_mutex_top_waiter(lock))
+			wake_up_state(waiter->task, waiter->wake_state);
+>>>>>>> b7ba80a49124 (Commit)
 		raw_spin_unlock_irq(&lock->wait_lock);
 		return 0;
 	}
@@ -1281,7 +1307,11 @@ static int __sched __rt_mutex_slowtrylock(struct rt_mutex_base *lock)
 	 * try_to_take_rt_mutex() sets the lock waiters bit
 	 * unconditionally. Clean this up.
 	 */
+<<<<<<< HEAD
 	fixup_rt_mutex_waiters(lock, true);
+=======
+	fixup_rt_mutex_waiters(lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -1642,7 +1672,11 @@ static int __sched __rt_mutex_slowlock(struct rt_mutex_base *lock,
 	 * try_to_take_rt_mutex() sets the waiter bit
 	 * unconditionally. We might have to fix that up.
 	 */
+<<<<<<< HEAD
 	fixup_rt_mutex_waiters(lock, true);
+=======
+	fixup_rt_mutex_waiters(lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	trace_contention_end(lock, ret);
 
@@ -1757,7 +1791,11 @@ static void __sched rtlock_slowlock_locked(struct rt_mutex_base *lock)
 	 * try_to_take_rt_mutex() sets the waiter bit unconditionally.
 	 * We might have to fix that up:
 	 */
+<<<<<<< HEAD
 	fixup_rt_mutex_waiters(lock, true);
+=======
+	fixup_rt_mutex_waiters(lock);
+>>>>>>> b7ba80a49124 (Commit)
 	debug_rt_mutex_free_waiter(&waiter);
 
 	trace_contention_end(lock, 0);

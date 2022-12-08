@@ -70,6 +70,10 @@ obj-$(CONFIG_HAVE_TCM)		+= tcm.o
 obj-$(CONFIG_OF)		+= devtree.o
 obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
 obj-$(CONFIG_SWP_EMULATE)	+= swp_emulate.o
+<<<<<<< HEAD
+=======
+CFLAGS_swp_emulate.o		:= -Wa,-march=armv7-a
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
 
 obj-$(CONFIG_CPU_XSCALE)	+= xscale-cp0.o
@@ -98,6 +102,10 @@ CFLAGS_head-inflate-data.o := $(call cc-option,-Wframe-larger-than=10240)
 obj-$(CONFIG_XIP_DEFLATED_DATA) += head-inflate-data.o
 
 obj-$(CONFIG_ARM_VIRT_EXT)	+= hyp-stub.o
+<<<<<<< HEAD
+=======
+AFLAGS_hyp-stub.o		:=-Wa,-march=armv7-a
+>>>>>>> b7ba80a49124 (Commit)
 ifeq ($(CONFIG_ARM_PSCI),y)
 obj-$(CONFIG_SMP)		+= psci_smp.o
 endif

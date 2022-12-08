@@ -1009,7 +1009,11 @@ static void dce_transform_set_pixel_storage_depth(
 		color_depth = COLOR_DEPTH_101010;
 		pixel_depth = 0;
 		expan_mode  = 1;
+<<<<<<< HEAD
 		DC_LOG_DC("The pixel depth %d is not valid, set COLOR_DEPTH_101010 instead.", depth);
+=======
+		BREAK_TO_DEBUGGER();
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -1023,7 +1027,12 @@ static void dce_transform_set_pixel_storage_depth(
 	if (!(xfm_dce->lb_pixel_depth_supported & depth)) {
 		/*we should use unsupported capabilities
 		 *  unless it is required by w/a*/
+<<<<<<< HEAD
 		DC_LOG_DC("%s: Capability not supported", __func__);
+=======
+		DC_LOG_WARNING("%s: Capability not supported",
+			__func__);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

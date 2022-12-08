@@ -6,7 +6,10 @@
  * Author(s): Arnaud Pouliquen <arnaud.pouliquen@st.com> for STMicroelectronics.
  */
 
+<<<<<<< HEAD
 #include <linux/bitfield.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/clk.h>
 #include <linux/iio/iio.h>
 #include <linux/iio/sysfs.h>
@@ -20,6 +23,7 @@
 
 #include "stm32-dfsdm.h"
 
+<<<<<<< HEAD
 /**
  * struct stm32_dfsdm_dev_data - DFSDM compatible configuration data
  * @ipid: DFSDM identification number. Used only if hardware provides identification registers
@@ -29,6 +33,9 @@
  */
 struct stm32_dfsdm_dev_data {
 	u32 ipid;
+=======
+struct stm32_dfsdm_dev_data {
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int num_filters;
 	unsigned int num_channels;
 	const struct regmap_config *regmap_cfg;
@@ -36,6 +43,11 @@ struct stm32_dfsdm_dev_data {
 
 #define STM32H7_DFSDM_NUM_FILTERS	4
 #define STM32H7_DFSDM_NUM_CHANNELS	8
+<<<<<<< HEAD
+=======
+#define STM32MP1_DFSDM_NUM_FILTERS	6
+#define STM32MP1_DFSDM_NUM_CHANNELS	8
+>>>>>>> b7ba80a49124 (Commit)
 
 static bool stm32_dfsdm_volatile_reg(struct device *dev, unsigned int reg)
 {
@@ -82,7 +94,12 @@ static const struct regmap_config stm32mp1_dfsdm_regmap_cfg = {
 };
 
 static const struct stm32_dfsdm_dev_data stm32mp1_dfsdm_data = {
+<<<<<<< HEAD
 	.ipid = STM32MP15_IPIDR_NUMBER,
+=======
+	.num_filters = STM32MP1_DFSDM_NUM_FILTERS,
+	.num_channels = STM32MP1_DFSDM_NUM_CHANNELS,
+>>>>>>> b7ba80a49124 (Commit)
 	.regmap_cfg = &stm32mp1_dfsdm_regmap_cfg,
 };
 
@@ -301,6 +318,7 @@ static const struct of_device_id stm32_dfsdm_of_match[] = {
 };
 MODULE_DEVICE_TABLE(of, stm32_dfsdm_of_match);
 
+<<<<<<< HEAD
 static int stm32_dfsdm_probe_identification(struct platform_device *pdev,
 					    struct dfsdm_priv *priv,
 					    const struct stm32_dfsdm_dev_data *dev_data)
@@ -360,6 +378,8 @@ static int stm32_dfsdm_probe_identification(struct platform_device *pdev,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int stm32_dfsdm_probe(struct platform_device *pdev)
 {
 	struct dfsdm_priv *priv;
@@ -376,6 +396,21 @@ static int stm32_dfsdm_probe(struct platform_device *pdev)
 	dev_data = of_device_get_match_data(&pdev->dev);
 
 	dfsdm = &priv->dfsdm;
+<<<<<<< HEAD
+=======
+	dfsdm->fl_list = devm_kcalloc(&pdev->dev, dev_data->num_filters,
+				      sizeof(*dfsdm->fl_list), GFP_KERNEL);
+	if (!dfsdm->fl_list)
+		return -ENOMEM;
+
+	dfsdm->num_fls = dev_data->num_filters;
+	dfsdm->ch_list = devm_kcalloc(&pdev->dev, dev_data->num_channels,
+				      sizeof(*dfsdm->ch_list),
+				      GFP_KERNEL);
+	if (!dfsdm->ch_list)
+		return -ENOMEM;
+	dfsdm->num_chs = dev_data->num_channels;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = stm32_dfsdm_parse_of(pdev, priv);
 	if (ret < 0)
@@ -391,6 +426,7 @@ static int stm32_dfsdm_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = stm32_dfsdm_probe_identification(pdev, priv, dev_data);
 	if (ret < 0)
 		return ret;
@@ -405,6 +441,8 @@ static int stm32_dfsdm_probe(struct platform_device *pdev)
 	if (!dfsdm->ch_list)
 		return -ENOMEM;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	platform_set_drvdata(pdev, dfsdm);
 
 	ret = stm32_dfsdm_clk_prepare_enable(dfsdm);

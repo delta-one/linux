@@ -336,10 +336,15 @@ static int mxc_rtc_probe(struct platform_device *pdev)
 	}
 
 	pdata->rtc = devm_rtc_allocate_device(&pdev->dev);
+<<<<<<< HEAD
 	if (IS_ERR(pdata->rtc)) {
 		clk_disable_unprepare(pdata->clk);
 		return PTR_ERR(pdata->rtc);
 	}
+=======
+	if (IS_ERR(pdata->rtc))
+		return PTR_ERR(pdata->rtc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pdata->rtc->ops = &mxc_rtc_ops;
 	pdata->rtc->range_max = U32_MAX;
@@ -362,11 +367,19 @@ static int mxc_rtc_probe(struct platform_device *pdev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void mxc_rtc_remove(struct platform_device *pdev)
+=======
+static int mxc_rtc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mxc_rtc_data *pdata = platform_get_drvdata(pdev);
 
 	clk_disable_unprepare(pdata->clk);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id mxc_ids[] = {
@@ -381,7 +394,11 @@ static struct platform_driver mxc_rtc_driver = {
 		.of_match_table = mxc_ids,
 	},
 	.probe = mxc_rtc_probe,
+<<<<<<< HEAD
 	.remove_new = mxc_rtc_remove,
+=======
+	.remove = mxc_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(mxc_rtc_driver);

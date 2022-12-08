@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+// SPDX-License-Identifier: GPL-2.0
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (c) 2018 Red Hat, Inc.
  *

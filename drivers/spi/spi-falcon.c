@@ -131,7 +131,11 @@ int falcon_sflash_xfer(struct spi_device *spi, struct spi_transfer *t,
 				 * especially alen and dumlen.
 				 */
 
+<<<<<<< HEAD
 				priv->sfcmd = ((spi_get_chipselect(spi, 0)
+=======
+				priv->sfcmd = ((spi->chip_select
+>>>>>>> b7ba80a49124 (Commit)
 						<< SFCMD_CS_OFFSET)
 					       & SFCMD_CS_MASK);
 				priv->sfcmd |= SFCMD_KEEP_CS_KEEP_SELECTED;

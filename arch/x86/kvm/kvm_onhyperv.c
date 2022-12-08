@@ -2,7 +2,10 @@
 /*
  * KVM L1 hypervisor optimizations on Hyper-V.
  */
+<<<<<<< HEAD
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/kvm_host.h>
 #include <asm/mshyperv.h>

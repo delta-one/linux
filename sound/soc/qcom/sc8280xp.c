@@ -12,7 +12,10 @@
 #include <linux/input-event-codes.h>
 #include "qdsp6/q6afe.h"
 #include "common.h"
+<<<<<<< HEAD
 #include "sdw.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DRIVER_NAME		"sc8280xp"
 

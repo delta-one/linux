@@ -15,6 +15,7 @@
 		     "fsl,imx6ull";
 };
 
+<<<<<<< HEAD
 &ad7879_ts {
 	status = "okay";
 };
@@ -36,5 +37,8 @@
 };
 
 &pwm4 {
+=======
+&atmel_mxt_ts {
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };

@@ -43,6 +43,7 @@ void *kasan_find_first_bad_addr(void *addr, size_t size)
 	return p;
 }
 
+<<<<<<< HEAD
 size_t kasan_get_alloc_size(void *object, struct kmem_cache *cache)
 {
 	size_t size = 0;
@@ -71,6 +72,8 @@ size_t kasan_get_alloc_size(void *object, struct kmem_cache *cache)
 	return cache->object_size;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const char *get_shadow_bug_type(struct kasan_report_info *info)
 {
 	const char *bug_type = "unknown-crash";
@@ -107,11 +110,17 @@ static const char *get_shadow_bug_type(struct kasan_report_info *info)
 		bug_type = "stack-out-of-bounds";
 		break;
 	case KASAN_PAGE_FREE:
+<<<<<<< HEAD
 		bug_type = "use-after-free";
 		break;
 	case KASAN_SLAB_FREE:
 	case KASAN_SLAB_FREETRACK:
 		bug_type = "slab-use-after-free";
+=======
+	case KASAN_SLAB_FREE:
+	case KASAN_SLAB_FREETRACK:
+		bug_type = "use-after-free";
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case KASAN_ALLOCA_LEFT:
 	case KASAN_ALLOCA_RIGHT:

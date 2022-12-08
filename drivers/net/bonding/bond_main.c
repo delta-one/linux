@@ -307,7 +307,11 @@ netdev_tx_t bond_dev_queue_xmit(struct bonding *bond, struct sk_buff *skb,
 	return dev_queue_xmit(skb);
 }
 
+<<<<<<< HEAD
 static bool bond_sk_check(struct bonding *bond)
+=======
+bool bond_sk_check(struct bonding *bond)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (BOND_MODE(bond)) {
 	case BOND_MODE_8023AD:
@@ -419,10 +423,15 @@ static int bond_vlan_rx_kill_vid(struct net_device *bond_dev,
 /**
  * bond_ipsec_add_sa - program device with a security association
  * @xs: pointer to transformer state struct
+<<<<<<< HEAD
  * @extack: extack point to fill failure reason
  **/
 static int bond_ipsec_add_sa(struct xfrm_state *xs,
 			     struct netlink_ext_ack *extack)
+=======
+ **/
+static int bond_ipsec_add_sa(struct xfrm_state *xs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct net_device *bond_dev = xs->xso.dev;
 	struct bond_ipsec *ipsec;
@@ -444,7 +453,11 @@ static int bond_ipsec_add_sa(struct xfrm_state *xs,
 	if (!slave->dev->xfrmdev_ops ||
 	    !slave->dev->xfrmdev_ops->xdo_dev_state_add ||
 	    netif_is_bond_master(slave->dev)) {
+<<<<<<< HEAD
 		NL_SET_ERR_MSG_MOD(extack, "Slave does not support ipsec offload");
+=======
+		slave_warn(bond_dev, slave->dev, "Slave does not support ipsec offload\n");
+>>>>>>> b7ba80a49124 (Commit)
 		rcu_read_unlock();
 		return -EINVAL;
 	}
@@ -456,7 +469,11 @@ static int bond_ipsec_add_sa(struct xfrm_state *xs,
 	}
 	xs->xso.real_dev = slave->dev;
 
+<<<<<<< HEAD
 	err = slave->dev->xfrmdev_ops->xdo_dev_state_add(xs, extack);
+=======
+	err = slave->dev->xfrmdev_ops->xdo_dev_state_add(xs);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!err) {
 		ipsec->xs = xs;
 		INIT_LIST_HEAD(&ipsec->list);
@@ -496,7 +513,11 @@ static void bond_ipsec_add_sa_all(struct bonding *bond)
 	spin_lock_bh(&bond->ipsec_lock);
 	list_for_each_entry(ipsec, &bond->ipsec_list, list) {
 		ipsec->xs->xso.real_dev = slave->dev;
+<<<<<<< HEAD
 		if (slave->dev->xfrmdev_ops->xdo_dev_state_add(ipsec->xs, NULL)) {
+=======
+		if (slave->dev->xfrmdev_ops->xdo_dev_state_add(ipsec->xs)) {
+>>>>>>> b7ba80a49124 (Commit)
 			slave_warn(bond_dev, slave->dev, "%s: failed to add SA\n", __func__);
 			ipsec->xs->xso.real_dev = NULL;
 		}
@@ -1400,6 +1421,16 @@ static netdev_features_t bond_fix_features(struct net_device *dev,
 	netdev_features_t mask;
 	struct slave *slave;
 
+<<<<<<< HEAD
+=======
+#if IS_ENABLED(CONFIG_TLS_DEVICE)
+	if (bond_sk_check(bond))
+		features |= BOND_TLS_FEATURES;
+	else
+		features &= ~BOND_TLS_FEATURES;
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 	mask = features;
 
 	features &= ~NETIF_F_ONE_FOR_ALL;
@@ -1634,12 +1665,16 @@ static int bond_master_upper_dev_link(struct bonding *bond, struct slave *slave,
 {
 	struct netdev_lag_upper_info lag_upper_info;
 	enum netdev_lag_tx_type type;
+<<<<<<< HEAD
 	int err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	type = bond_lag_tx_type(bond);
 	lag_upper_info.tx_type = type;
 	lag_upper_info.hash_type = bond_lag_hash_type(bond, type);
 
+<<<<<<< HEAD
 	err = netdev_master_upper_dev_link(slave->dev, bond->dev, slave,
 					   &lag_upper_info, extack);
 	if (err)
@@ -1647,6 +1682,10 @@ static int bond_master_upper_dev_link(struct bonding *bond, struct slave *slave,
 
 	slave->dev->flags |= IFF_SLAVE;
 	return 0;
+=======
+	return netdev_master_upper_dev_link(slave->dev, bond->dev, slave,
+					    &lag_upper_info, extack);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void bond_upper_dev_unlink(struct bonding *bond, struct slave *slave)
@@ -1775,6 +1814,7 @@ void bond_lower_state_changed(struct slave *slave)
 		slave_err(bond_dev, slave_dev, "Error: %s\n", errmsg);	\
 } while (0)
 
+<<<<<<< HEAD
 /* The bonding driver uses ether_setup() to convert a master bond device
  * to ARPHRD_ETHER, that resets the target netdevice's flags so we always
  * have to restore the IFF_MASTER flag, and only restore IFF_SLAVE if it was set
@@ -1788,6 +1828,8 @@ static void bond_ether_setup(struct net_device *bond_dev)
 	bond_dev->priv_flags &= ~IFF_TX_SKB_SHARING;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* enslave device <slave> to bond device <master> */
 int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
 		 struct netlink_ext_ack *extack)
@@ -1879,8 +1921,15 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
 
 			if (slave_dev->type != ARPHRD_ETHER)
 				bond_setup_by_slave(bond_dev, slave_dev);
+<<<<<<< HEAD
 			else
 				bond_ether_setup(bond_dev);
+=======
+			else {
+				ether_setup(bond_dev);
+				bond_dev->priv_flags &= ~IFF_TX_SKB_SHARING;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 
 			call_netdevice_notifiers(NETDEV_POST_TYPE_CHANGE,
 						 bond_dev);
@@ -1969,8 +2018,13 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
 		}
 	}
 
+<<<<<<< HEAD
 	/* set no_addrconf flag before open to prevent IPv6 addrconf */
 	slave_dev->priv_flags |= IFF_NO_ADDRCONF;
+=======
+	/* set slave flag before open to prevent IPv6 addrconf */
+	slave_dev->flags |= IFF_SLAVE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* open the slave since the application closed it */
 	res = dev_open(slave_dev, extack);
@@ -2273,7 +2327,11 @@ err_close:
 	dev_close(slave_dev);
 
 err_restore_mac:
+<<<<<<< HEAD
 	slave_dev->priv_flags &= ~IFF_NO_ADDRCONF;
+=======
+	slave_dev->flags &= ~IFF_SLAVE;
+>>>>>>> b7ba80a49124 (Commit)
 	if (!bond->params.fail_over_mac ||
 	    BOND_MODE(bond) != BOND_MODE_ACTIVEBACKUP) {
 		/* XXX TODO - fom follow mode needs to change master's
@@ -2300,7 +2358,13 @@ err_undo_flags:
 			eth_hw_addr_random(bond_dev);
 		if (bond_dev->type != ARPHRD_ETHER) {
 			dev_close(bond_dev);
+<<<<<<< HEAD
 			bond_ether_setup(bond_dev);
+=======
+			ether_setup(bond_dev);
+			bond_dev->flags |= IFF_MASTER;
+			bond_dev->priv_flags &= ~IFF_TX_SKB_SHARING;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -2463,8 +2527,11 @@ static int __bond_release_one(struct net_device *bond_dev,
 	/* close slave before restoring its mac address */
 	dev_close(slave_dev);
 
+<<<<<<< HEAD
 	slave_dev->priv_flags &= ~IFF_NO_ADDRCONF;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (bond->params.fail_over_mac != BOND_FOM_ACTIVE ||
 	    BOND_MODE(bond) != BOND_MODE_ACTIVEBACKUP) {
 		/* restore original ("permanent") mac address */
@@ -2543,6 +2610,7 @@ static int bond_slave_info_query(struct net_device *bond_dev, struct ifslave *in
 /* called with rcu_read_lock() */
 static int bond_miimon_inspect(struct bonding *bond)
 {
+<<<<<<< HEAD
 	bool ignore_updelay = false;
 	int link_state, commit = 0;
 	struct list_head *iter;
@@ -2558,6 +2626,14 @@ static int bond_miimon_inspect(struct bonding *bond)
 		if (usable_slaves && usable_slaves->count == 0)
 			ignore_updelay = true;
 	}
+=======
+	int link_state, commit = 0;
+	struct list_head *iter;
+	struct slave *slave;
+	bool ignore_updelay;
+
+	ignore_updelay = !rcu_dereference(bond->curr_active_slave);
+>>>>>>> b7ba80a49124 (Commit)
 
 	bond_for_each_slave_rcu(bond, slave, iter) {
 		bond_propose_link_state(slave, BOND_LINK_NOCHANGE);
@@ -2665,11 +2741,16 @@ static void bond_miimon_link_change(struct bonding *bond,
 
 static void bond_miimon_commit(struct bonding *bond)
 {
+<<<<<<< HEAD
 	struct slave *slave, *primary, *active;
 	bool do_failover = false;
 	struct list_head *iter;
 
 	ASSERT_RTNL();
+=======
+	struct list_head *iter;
+	struct slave *slave, *primary;
+>>>>>>> b7ba80a49124 (Commit)
 
 	bond_for_each_slave(bond, slave, iter) {
 		switch (slave->link_new_state) {
@@ -2713,9 +2794,14 @@ static void bond_miimon_commit(struct bonding *bond)
 
 			bond_miimon_link_change(bond, slave, BOND_LINK_UP);
 
+<<<<<<< HEAD
 			active = rtnl_dereference(bond->curr_active_slave);
 			if (!active || slave == primary || slave->prio > active->prio)
 				do_failover = true;
+=======
+			if (!bond->curr_active_slave || slave == primary)
+				goto do_failover;
+>>>>>>> b7ba80a49124 (Commit)
 
 			continue;
 
@@ -2736,7 +2822,11 @@ static void bond_miimon_commit(struct bonding *bond)
 			bond_miimon_link_change(bond, slave, BOND_LINK_DOWN);
 
 			if (slave == rcu_access_pointer(bond->curr_active_slave))
+<<<<<<< HEAD
 				do_failover = true;
+=======
+				goto do_failover;
+>>>>>>> b7ba80a49124 (Commit)
 
 			continue;
 
@@ -2747,9 +2837,14 @@ static void bond_miimon_commit(struct bonding *bond)
 
 			continue;
 		}
+<<<<<<< HEAD
 	}
 
 	if (do_failover) {
+=======
+
+do_failover:
+>>>>>>> b7ba80a49124 (Commit)
 		block_netpoll_tx();
 		bond_select_active_slave(bond);
 		unblock_netpoll_tx();
@@ -3257,6 +3352,7 @@ static int bond_na_rcv(const struct sk_buff *skb, struct bonding *bond,
 		       struct slave *slave)
 {
 	struct slave *curr_active_slave, *curr_arp_slave;
+<<<<<<< HEAD
 	struct in6_addr *saddr, *daddr;
 	struct {
 		struct ipv6hdr ip6;
@@ -3274,6 +3370,18 @@ static int bond_na_rcv(const struct sk_buff *skb, struct bonding *bond,
 
 	saddr = &combined->ip6.saddr;
 	daddr = &combined->ip6.daddr;
+=======
+	struct icmp6hdr *hdr = icmp6_hdr(skb);
+	struct in6_addr *saddr, *daddr;
+
+	if (skb->pkt_type == PACKET_OTHERHOST ||
+	    skb->pkt_type == PACKET_LOOPBACK ||
+	    hdr->icmp6_type != NDISC_NEIGHBOUR_ADVERTISEMENT)
+		goto out;
+
+	saddr = &ipv6_hdr(skb)->saddr;
+	daddr = &ipv6_hdr(skb)->daddr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	slave_dbg(bond->dev, slave->dev, "%s: %s/%d av %d sv %d sip %pI6c tip %pI6c\n",
 		  __func__, slave->dev->name, bond_slave_state(slave),
@@ -3547,7 +3655,10 @@ static int bond_ab_arp_inspect(struct bonding *bond)
  */
 static void bond_ab_arp_commit(struct bonding *bond)
 {
+<<<<<<< HEAD
 	bool do_failover = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head *iter;
 	unsigned long last_tx;
 	struct slave *slave;
@@ -3577,9 +3688,14 @@ static void bond_ab_arp_commit(struct bonding *bond)
 				slave_info(bond->dev, slave->dev, "link status definitely up\n");
 
 				if (!rtnl_dereference(bond->curr_active_slave) ||
+<<<<<<< HEAD
 				    slave == rtnl_dereference(bond->primary_slave) ||
 				    slave->prio > rtnl_dereference(bond->curr_active_slave)->prio)
 					do_failover = true;
+=======
+				    slave == rtnl_dereference(bond->primary_slave))
+					goto do_failover;
+>>>>>>> b7ba80a49124 (Commit)
 
 			}
 
@@ -3598,7 +3714,11 @@ static void bond_ab_arp_commit(struct bonding *bond)
 
 			if (slave == rtnl_dereference(bond->curr_active_slave)) {
 				RCU_INIT_POINTER(bond->current_arp_slave, NULL);
+<<<<<<< HEAD
 				do_failover = true;
+=======
+				goto do_failover;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 
 			continue;
@@ -3622,9 +3742,14 @@ static void bond_ab_arp_commit(struct bonding *bond)
 				  slave->link_new_state);
 			continue;
 		}
+<<<<<<< HEAD
 	}
 
 	if (do_failover) {
+=======
+
+do_failover:
+>>>>>>> b7ba80a49124 (Commit)
 		block_netpoll_tx();
 		bond_select_active_slave(bond);
 		unblock_netpoll_tx();
@@ -4842,7 +4967,11 @@ static u32 bond_rr_gen_slave_id(struct bonding *bond)
 
 	switch (packets_per_slave) {
 	case 0:
+<<<<<<< HEAD
 		slave_id = get_random_u32();
+=======
+		slave_id = prandom_u32();
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case 1:
 		slave_id = this_cpu_inc_return(*bond->rr_tx_counter);
@@ -5842,6 +5971,13 @@ void bond_setup(struct net_device *bond_dev)
 	if (BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP)
 		bond_dev->features |= BOND_XFRM_FEATURES;
 #endif /* CONFIG_XFRM_OFFLOAD */
+<<<<<<< HEAD
+=======
+#if IS_ENABLED(CONFIG_TLS_DEVICE)
+	if (bond_sk_check(bond))
+		bond_dev->features |= BOND_TLS_FEATURES;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Destroy a bonding device.

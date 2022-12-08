@@ -2,14 +2,26 @@
 #ifndef PARSE_CTX_H
 #define PARSE_CTX_H 1
 
+<<<<<<< HEAD
 struct hashmap;
+=======
+#ifdef HAVE_LIBBPF_SUPPORT
+#include <bpf/hashmap.h>
+#else
+#include "util/hashmap.h"
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 struct metric_ref;
 
 struct expr_scanner_ctx {
 	char *user_requested_cpu_list;
 	int runtime;
 	bool system_wide;
+<<<<<<< HEAD
 	bool is_test;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct expr_parse_ctx {

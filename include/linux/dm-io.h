@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0-only */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2003 Sistina Software
  * Copyright (C) 2004 - 2008 Red Hat, Inc. All rights reserved.
@@ -27,7 +30,11 @@ struct page_list {
 	struct page *page;
 };
 
+<<<<<<< HEAD
 typedef void (*io_notify_fn)(unsigned int long error, void *context);
+=======
+typedef void (*io_notify_fn)(unsigned long error, void *context);
+>>>>>>> b7ba80a49124 (Commit)
 
 enum dm_io_mem_type {
 	DM_IO_PAGE_LIST,/* Page list */
@@ -39,7 +46,11 @@ enum dm_io_mem_type {
 struct dm_io_memory {
 	enum dm_io_mem_type type;
 
+<<<<<<< HEAD
 	unsigned int offset;
+=======
+	unsigned offset;
+>>>>>>> b7ba80a49124 (Commit)
 
 	union {
 		struct page_list *pl;
@@ -79,8 +90,13 @@ void dm_io_client_destroy(struct dm_io_client *client);
  * Each bit in the optional 'sync_error_bits' bitset indicates whether an
  * error occurred doing io to the corresponding region.
  */
+<<<<<<< HEAD
 int dm_io(struct dm_io_request *io_req, unsigned int num_regions,
 	  struct dm_io_region *region, unsigned int long *sync_error_bits);
+=======
+int dm_io(struct dm_io_request *io_req, unsigned num_regions,
+	  struct dm_io_region *region, unsigned long *sync_error_bits);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif	/* __KERNEL__ */
 #endif	/* _LINUX_DM_IO_H */

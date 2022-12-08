@@ -177,8 +177,11 @@ out:
 	for (node = 0; node < node_affinity.num_possible_nodes; node++)
 		hfi1_per_node_cntr[node] = 1;
 
+<<<<<<< HEAD
 	pci_dev_put(dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

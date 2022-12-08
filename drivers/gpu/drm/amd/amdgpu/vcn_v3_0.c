@@ -78,12 +78,19 @@ static void vcn_v3_0_dec_ring_set_wptr(struct amdgpu_ring *ring);
 static void vcn_v3_0_enc_ring_set_wptr(struct amdgpu_ring *ring);
 
 /**
+<<<<<<< HEAD
  * vcn_v3_0_early_init - set function pointers and load microcode
+=======
+ * vcn_v3_0_early_init - set function pointers
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @handle: amdgpu_device pointer
  *
  * Set ring and irq function pointers
+<<<<<<< HEAD
  * Load microcode from filesystem
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int vcn_v3_0_early_init(void *handle)
 {
@@ -110,7 +117,11 @@ static int vcn_v3_0_early_init(void *handle)
 	vcn_v3_0_set_enc_ring_funcs(adev);
 	vcn_v3_0_set_irq_funcs(adev);
 
+<<<<<<< HEAD
 	return amdgpu_vcn_early_init(adev);
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1771,10 +1782,13 @@ static int vcn_v3_0_limit_sched(struct amdgpu_cs_parser *p,
 	if (atomic_read(&job->base.entity->fence_seq))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/* if VCN0 is harvested, we can't support AV1 */
 	if (p->adev->vcn.harvest_config & AMDGPU_VCN_HARVEST_VCN0)
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	scheds = p->adev->gpu_sched[AMDGPU_HW_IP_VCN_DEC]
 		[AMDGPU_RING_PRIO_DEFAULT].sched;
 	drm_sched_entity_modify_sched(job->base.entity, scheds, 1);

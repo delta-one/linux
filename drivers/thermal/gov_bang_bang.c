@@ -13,6 +13,7 @@
 
 #include "thermal_core.h"
 
+<<<<<<< HEAD
 static int thermal_zone_trip_update(struct thermal_zone_device *tz, int trip_id)
 {
 	struct thermal_trip trip;
@@ -28,6 +29,14 @@ static int thermal_zone_trip_update(struct thermal_zone_device *tz, int trip_id)
 	if (!trip.hysteresis)
 		dev_info_once(&tz->device,
 			      "Zero hysteresis value for thermal zone %s\n", tz->type);
+=======
+static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip_id)
+{
+	struct thermal_trip trip;
+	struct thermal_instance *instance;
+
+	thermal_zone_get_trip(tz, trip_id, &trip);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_dbg(&tz->device, "Trip%d[temp=%d]:temp=%d:hyst=%d\n",
 				trip_id, trip.temperature, tz->temperature,
@@ -65,8 +74,11 @@ static int thermal_zone_trip_update(struct thermal_zone_device *tz, int trip_id)
 		instance->cdev->updated = false; /* cdev needs update */
 		mutex_unlock(&instance->cdev->lock);
 	}
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -99,6 +111,7 @@ static int thermal_zone_trip_update(struct thermal_zone_device *tz, int trip_id)
 static int bang_bang_control(struct thermal_zone_device *tz, int trip)
 {
 	struct thermal_instance *instance;
+<<<<<<< HEAD
 	int ret;
 
 	lockdep_assert_held(&tz->lock);
@@ -106,6 +119,12 @@ static int bang_bang_control(struct thermal_zone_device *tz, int trip)
 	ret = thermal_zone_trip_update(tz, trip);
 	if (ret)
 		return ret;
+=======
+
+	lockdep_assert_held(&tz->lock);
+
+	thermal_zone_trip_update(tz, trip);
+>>>>>>> b7ba80a49124 (Commit)
 
 	list_for_each_entry(instance, &tz->thermal_instances, tz_node)
 		thermal_cdev_update(instance->cdev);

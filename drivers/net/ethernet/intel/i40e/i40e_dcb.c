@@ -12,7 +12,11 @@
  *
  * Get the DCBX status from the Firmware
  **/
+<<<<<<< HEAD
 int i40e_get_dcbx_status(struct i40e_hw *hw, u16 *status)
+=======
+i40e_status i40e_get_dcbx_status(struct i40e_hw *hw, u16 *status)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 reg;
 
@@ -497,6 +501,7 @@ static void i40e_parse_org_tlv(struct i40e_lldp_org_tlv *tlv,
  *
  * Parse DCB configuration from the LLDPDU
  **/
+<<<<<<< HEAD
 int i40e_lldp_to_dcb_config(u8 *lldpmib,
 			    struct i40e_dcbx_config *dcbcfg)
 {
@@ -506,6 +511,17 @@ int i40e_lldp_to_dcb_config(u8 *lldpmib,
 	int ret = 0;
 	u16 length;
 	u16 type;
+=======
+i40e_status i40e_lldp_to_dcb_config(u8 *lldpmib,
+				    struct i40e_dcbx_config *dcbcfg)
+{
+	i40e_status ret = 0;
+	struct i40e_lldp_org_tlv *tlv;
+	u16 type;
+	u16 length;
+	u16 typelength;
+	u16 offset = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!lldpmib || !dcbcfg)
 		return I40E_ERR_PARAM;
@@ -551,12 +567,21 @@ int i40e_lldp_to_dcb_config(u8 *lldpmib,
  *
  * Query DCB configuration from the Firmware
  **/
+<<<<<<< HEAD
 int i40e_aq_get_dcb_config(struct i40e_hw *hw, u8 mib_type,
 			   u8 bridgetype,
 			   struct i40e_dcbx_config *dcbcfg)
 {
 	struct i40e_virt_mem mem;
 	int ret = 0;
+=======
+i40e_status i40e_aq_get_dcb_config(struct i40e_hw *hw, u8 mib_type,
+				   u8 bridgetype,
+				   struct i40e_dcbx_config *dcbcfg)
+{
+	i40e_status ret = 0;
+	struct i40e_virt_mem mem;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 *lldpmib;
 
 	/* Allocate the LLDPDU */
@@ -767,9 +792,15 @@ static void i40e_cee_to_dcb_config(
  *
  * Get IEEE mode DCB configuration from the Firmware
  **/
+<<<<<<< HEAD
 static int i40e_get_ieee_dcb_config(struct i40e_hw *hw)
 {
 	int ret = 0;
+=======
+static i40e_status i40e_get_ieee_dcb_config(struct i40e_hw *hw)
+{
+	i40e_status ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* IEEE mode */
 	hw->local_dcbx_config.dcbx_mode = I40E_DCBX_MODE_IEEE;
@@ -797,11 +828,19 @@ out:
  *
  * Get DCB configuration from the Firmware
  **/
+<<<<<<< HEAD
 int i40e_get_dcb_config(struct i40e_hw *hw)
 {
 	struct i40e_aqc_get_cee_dcb_cfg_v1_resp cee_v1_cfg;
 	struct i40e_aqc_get_cee_dcb_cfg_resp cee_cfg;
 	int ret = 0;
+=======
+i40e_status i40e_get_dcb_config(struct i40e_hw *hw)
+{
+	i40e_status ret = 0;
+	struct i40e_aqc_get_cee_dcb_cfg_resp cee_cfg;
+	struct i40e_aqc_get_cee_dcb_cfg_v1_resp cee_v1_cfg;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* If Firmware version < v4.33 on X710/XL710, IEEE only */
 	if ((hw->mac.type == I40E_MAC_XL710) &&
@@ -867,11 +906,19 @@ out:
  *
  * Update DCB configuration from the Firmware
  **/
+<<<<<<< HEAD
 int i40e_init_dcb(struct i40e_hw *hw, bool enable_mib_change)
 {
 	struct i40e_lldp_variables lldp_cfg;
 	u8 adminstatus = 0;
 	int ret = 0;
+=======
+i40e_status i40e_init_dcb(struct i40e_hw *hw, bool enable_mib_change)
+{
+	i40e_status ret = 0;
+	struct i40e_lldp_variables lldp_cfg;
+	u8 adminstatus = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!hw->func_caps.dcb)
 		return I40E_NOT_SUPPORTED;
@@ -940,13 +987,22 @@ int i40e_init_dcb(struct i40e_hw *hw, bool enable_mib_change)
  * Get status of FW Link Layer Discovery Protocol (LLDP) Agent.
  * Status of agent is reported via @lldp_status parameter.
  **/
+<<<<<<< HEAD
 int
+=======
+enum i40e_status_code
+>>>>>>> b7ba80a49124 (Commit)
 i40e_get_fw_lldp_status(struct i40e_hw *hw,
 			enum i40e_get_fw_lldp_status_resp *lldp_status)
 {
 	struct i40e_virt_mem mem;
+<<<<<<< HEAD
 	u8 *lldpmib;
 	int ret;
+=======
+	i40e_status ret;
+	u8 *lldpmib;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!lldp_status)
 		return I40E_ERR_PARAM;
@@ -1238,13 +1294,22 @@ static void i40e_add_dcb_tlv(struct i40e_lldp_org_tlv *tlv,
  *
  * Set DCB configuration to the Firmware
  **/
+<<<<<<< HEAD
 int i40e_set_dcb_config(struct i40e_hw *hw)
+=======
+i40e_status i40e_set_dcb_config(struct i40e_hw *hw)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i40e_dcbx_config *dcbcfg;
 	struct i40e_virt_mem mem;
 	u8 mib_type, *lldpmib;
+<<<<<<< HEAD
 	u16 miblen;
 	int ret;
+=======
+	i40e_status ret;
+	u16 miblen;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* update the hw local config */
 	dcbcfg = &hw->local_dcbx_config;
@@ -1274,8 +1339,13 @@ int i40e_set_dcb_config(struct i40e_hw *hw)
  *
  * send DCB configuration to FW
  **/
+<<<<<<< HEAD
 int i40e_dcb_config_to_lldp(u8 *lldpmib, u16 *miblen,
 			    struct i40e_dcbx_config *dcbcfg)
+=======
+i40e_status i40e_dcb_config_to_lldp(u8 *lldpmib, u16 *miblen,
+				    struct i40e_dcbx_config *dcbcfg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u16 length, offset = 0, tlvid, typelength;
 	struct i40e_lldp_org_tlv *tlv;
@@ -1888,6 +1958,7 @@ void i40e_dcb_hw_rx_pb_config(struct i40e_hw *hw,
  *
  * Reads the LLDP configuration data from NVM using passed addresses
  **/
+<<<<<<< HEAD
 static int _i40e_read_lldp_cfg(struct i40e_hw *hw,
 			       struct i40e_lldp_variables *lldp_cfg,
 			       u8 module, u32 word_offset)
@@ -1895,6 +1966,15 @@ static int _i40e_read_lldp_cfg(struct i40e_hw *hw,
 	u32 address, offset = (2 * word_offset);
 	__le16 raw_mem;
 	int ret;
+=======
+static i40e_status _i40e_read_lldp_cfg(struct i40e_hw *hw,
+				       struct i40e_lldp_variables *lldp_cfg,
+				       u8 module, u32 word_offset)
+{
+	u32 address, offset = (2 * word_offset);
+	i40e_status ret;
+	__le16 raw_mem;
+>>>>>>> b7ba80a49124 (Commit)
 	u16 mem;
 
 	ret = i40e_acquire_nvm(hw, I40E_RESOURCE_READ);
@@ -1950,10 +2030,17 @@ err_lldp_cfg:
  *
  * Reads the LLDP configuration data from NVM
  **/
+<<<<<<< HEAD
 int i40e_read_lldp_cfg(struct i40e_hw *hw,
 		       struct i40e_lldp_variables *lldp_cfg)
 {
 	int ret = 0;
+=======
+i40e_status i40e_read_lldp_cfg(struct i40e_hw *hw,
+			       struct i40e_lldp_variables *lldp_cfg)
+{
+	i40e_status ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 mem;
 
 	if (!lldp_cfg)

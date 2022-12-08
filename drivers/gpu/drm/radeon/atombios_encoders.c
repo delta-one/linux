@@ -30,7 +30,10 @@
 
 #include <drm/drm_crtc_helper.h>
 #include <drm/drm_file.h>
+<<<<<<< HEAD
 #include <drm/drm_modeset_helper_vtables.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/radeon_drm.h>
 
 #include <acpi/video.h>
@@ -2123,12 +2126,20 @@ int radeon_atom_pick_dig_encoder(struct drm_encoder *encoder, int fe_idx)
 
 	/*
 	 * On DCE32 any encoder can drive any block so usually just use crtc id,
+<<<<<<< HEAD
 	 * but Apple thinks different at least on iMac10,1 and iMac11,2, so there use linkb,
 	 * otherwise the internal eDP panel will stay dark.
 	 */
 	if (ASIC_IS_DCE32(rdev)) {
 		if (dmi_match(DMI_PRODUCT_NAME, "iMac10,1") ||
 		    dmi_match(DMI_PRODUCT_NAME, "iMac11,2"))
+=======
+	 * but Apple thinks different at least on iMac10,1, so there use linkb,
+	 * otherwise the internal eDP panel will stay dark.
+	 */
+	if (ASIC_IS_DCE32(rdev)) {
+		if (dmi_match(DMI_PRODUCT_NAME, "iMac10,1"))
+>>>>>>> b7ba80a49124 (Commit)
 			enc_idx = (dig->linkb) ? 1 : 0;
 		else
 			enc_idx = radeon_crtc->crtc_id;

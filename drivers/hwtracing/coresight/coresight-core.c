@@ -8,7 +8,10 @@
 #include <linux/types.h>
 #include <linux/device.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/idr.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/err.h>
 #include <linux/export.h>
 #include <linux/slab.h>
@@ -27,6 +30,7 @@
 static DEFINE_MUTEX(coresight_mutex);
 static DEFINE_PER_CPU(struct coresight_device *, csdev_sink);
 
+<<<<<<< HEAD
 /*
  * Use IDR to map the hash of the source's device name
  * to the pointer of path for the source. The idr is for
@@ -34,6 +38,8 @@ static DEFINE_PER_CPU(struct coresight_device *, csdev_sink);
  */
 static DEFINE_IDR(path_idr);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct coresight_node - elements of a path, from source to sink
  * @csdev:	Address of an element.
@@ -51,6 +57,17 @@ struct coresight_node {
 static DEFINE_PER_CPU(struct list_head *, tracer_path);
 
 /*
+<<<<<<< HEAD
+=======
+ * As of this writing only a single STM can be found in CS topologies.  Since
+ * there is no way to know if we'll ever see more and what kind of
+ * configuration they will enact, for the time being only define a single path
+ * for STM.
+ */
+static struct list_head *stm_path;
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * When losing synchronisation a new barrier packet needs to be inserted at the
  * beginning of the data collected in a buffer.  That way the decoder knows that
  * it needs to look for another sync sequence.
@@ -112,6 +129,48 @@ struct coresight_device *coresight_get_percpu_sink(int cpu)
 }
 EXPORT_SYMBOL_GPL(coresight_get_percpu_sink);
 
+<<<<<<< HEAD
+=======
+static int coresight_id_match(struct device *dev, void *data)
+{
+	int trace_id, i_trace_id;
+	struct coresight_device *csdev, *i_csdev;
+
+	csdev = data;
+	i_csdev = to_coresight_device(dev);
+
+	/*
+	 * No need to care about oneself and components that are not
+	 * sources or not enabled
+	 */
+	if (i_csdev == csdev || !i_csdev->enable ||
+	    i_csdev->type != CORESIGHT_DEV_TYPE_SOURCE)
+		return 0;
+
+	/* Get the source ID for both components */
+	trace_id = source_ops(csdev)->trace_id(csdev);
+	i_trace_id = source_ops(i_csdev)->trace_id(i_csdev);
+
+	/* All you need is one */
+	if (trace_id == i_trace_id)
+		return 1;
+
+	return 0;
+}
+
+static int coresight_source_is_unique(struct coresight_device *csdev)
+{
+	int trace_id = source_ops(csdev)->trace_id(csdev);
+
+	/* this shouldn't happen */
+	if (trace_id < 0)
+		return 0;
+
+	return !bus_for_each_dev(&coresight_bustype, NULL,
+				 csdev, coresight_id_match);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int coresight_find_link_inport(struct coresight_device *csdev,
 				      struct coresight_device *parent)
 {
@@ -420,6 +479,15 @@ static int coresight_enable_source(struct coresight_device *csdev, u32 mode)
 {
 	int ret;
 
+<<<<<<< HEAD
+=======
+	if (!coresight_source_is_unique(csdev)) {
+		dev_warn(&csdev->dev, "traceID %d not unique\n",
+			 source_ops(csdev)->trace_id(csdev));
+		return -EINVAL;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!csdev->enable) {
 		if (source_ops(csdev)->enable) {
 			ret = coresight_control_assoc_ectdev(csdev, true);
@@ -1061,8 +1129,12 @@ static int coresight_validate_source(struct coresight_device *csdev,
 	}
 
 	if (subtype != CORESIGHT_DEV_SUBTYPE_SOURCE_PROC &&
+<<<<<<< HEAD
 	    subtype != CORESIGHT_DEV_SUBTYPE_SOURCE_SOFTWARE &&
 	    subtype != CORESIGHT_DEV_SUBTYPE_SOURCE_OTHERS) {
+=======
+	    subtype != CORESIGHT_DEV_SUBTYPE_SOURCE_SOFTWARE) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(&csdev->dev, "wrong device subtype in %s\n", function);
 		return -EINVAL;
 	}
@@ -1076,7 +1148,10 @@ int coresight_enable(struct coresight_device *csdev)
 	struct coresight_device *sink;
 	struct list_head *path;
 	enum coresight_dev_subtype_source subtype;
+<<<<<<< HEAD
 	u32 hash;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	subtype = csdev->subtype.source_subtype;
 
@@ -1131,6 +1206,7 @@ int coresight_enable(struct coresight_device *csdev)
 		per_cpu(tracer_path, cpu) = path;
 		break;
 	case CORESIGHT_DEV_SUBTYPE_SOURCE_SOFTWARE:
+<<<<<<< HEAD
 	case CORESIGHT_DEV_SUBTYPE_SOURCE_OTHERS:
 		/*
 		 * Use the hash of source's device name as ID
@@ -1140,6 +1216,9 @@ int coresight_enable(struct coresight_device *csdev)
 		ret = idr_alloc_u32(&path_idr, path, &hash, hash, GFP_KERNEL);
 		if (ret)
 			goto err_source;
+=======
+		stm_path = path;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		/* We can't be here */
@@ -1163,7 +1242,10 @@ void coresight_disable(struct coresight_device *csdev)
 {
 	int cpu, ret;
 	struct list_head *path = NULL;
+<<<<<<< HEAD
 	u32 hash;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&coresight_mutex);
 
@@ -1181,6 +1263,7 @@ void coresight_disable(struct coresight_device *csdev)
 		per_cpu(tracer_path, cpu) = NULL;
 		break;
 	case CORESIGHT_DEV_SUBTYPE_SOURCE_SOFTWARE:
+<<<<<<< HEAD
 	case CORESIGHT_DEV_SUBTYPE_SOURCE_OTHERS:
 		hash = hashlen_hash(hashlen_string(NULL, dev_name(&csdev->dev)));
 		/* Find the path by the hash. */
@@ -1190,6 +1273,10 @@ void coresight_disable(struct coresight_device *csdev)
 			goto out;
 		}
 		idr_remove(&path_idr, hash);
+=======
+		path = stm_path;
+		stm_path = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		/* We can't be here */
@@ -1660,15 +1747,25 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
 		ret = coresight_fixup_device_conns(csdev);
 	if (!ret)
 		ret = coresight_fixup_orphan_conns(csdev);
+<<<<<<< HEAD
+=======
+	if (!ret && cti_assoc_ops && cti_assoc_ops->add)
+		cti_assoc_ops->add(csdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 out_unlock:
 	mutex_unlock(&coresight_mutex);
 	/* Success */
+<<<<<<< HEAD
 	if (!ret) {
 		if (cti_assoc_ops && cti_assoc_ops->add)
 			cti_assoc_ops->add(csdev);
 		return csdev;
 	}
+=======
+	if (!ret)
+		return csdev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Unregister the device if needed */
 	if (registered) {

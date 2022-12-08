@@ -10,22 +10,38 @@
 / {
 	/* BOARD-SPECIFIC TOP LEVEL NODES */
 
+<<<<<<< HEAD
 	max98360a_1: amplifier-1 {
+=======
+	max98360a_1: max98360a_1 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "maxim,max98360a";
 		#sound-dai-cells = <0>;
 	};
 
+<<<<<<< HEAD
 	max98360a_2: amplifier-2 {
+=======
+	max98360a_2: max98360a_2 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "maxim,max98360a";
 		#sound-dai-cells = <0>;
 	};
 
+<<<<<<< HEAD
 	max98360a_3: amplifier-3 {
+=======
+	max98360a_3: max98360a_3 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "maxim,max98360a";
 		#sound-dai-cells = <0>;
 	};
 
+<<<<<<< HEAD
 	pp3300_touch: pp3300-touch-regulator {
+=======
+	pp3300_touch: pp3300-touch {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "pp3300_touch";
 
@@ -85,6 +101,7 @@
 	};
 };
 
+<<<<<<< HEAD
 /*
  * ADDITIONS TO FIXED REGULATORS DEFINED IN PARENT DEVICE TREE FILES
  *
@@ -103,6 +120,8 @@
 
 /* ADDITIONS TO NODES DEFINED IN PARENT DEVICE TREE FILES */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ap_ts_pen_1v8: &i2c4 {
 	status = "okay";
 	clock-frequency = <400000>;
@@ -198,6 +217,7 @@ ap_ts_pen_1v8: &i2c4 {
 /* PINCTRL - modifications to sc7180-trogdor.dtsi */
 
 &en_pp3300_dx_edp {
+<<<<<<< HEAD
 	pins = "gpio67";
 };
 
@@ -211,6 +231,32 @@ ap_ts_pen_1v8: &i2c4 {
 	 * driver to disable this when it's ready.
 	 */
 	output-low;
+=======
+	pinmux {
+		pins = "gpio67";
+	};
+
+	pinconf {
+		pins = "gpio67";
+	};
+};
+
+&sec_mi2s_active{
+	pinmux {
+		pins = "gpio49", "gpio50", "gpio51", "gpio52";
+		function = "mi2s_1";
+	};
+};
+
+&ts_reset_l {
+	pinconf {
+		/*
+		 * We want reset state by default and it will be up to the
+		 * driver to disable this when it's ready.
+		 */
+		output-low;
+	};
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* PINCTRL - board-specific pinctrl */
@@ -340,10 +386,24 @@ ap_ts_pen_1v8: &i2c4 {
 			  "DP_HOT_PLUG_DET",
 			  "EC_IN_RW_ODL";
 
+<<<<<<< HEAD
 	en_pp3300_touch: en-pp3300-touch-state {
 		pins = "gpio87";
 		function = "gpio";
 		drive-strength = <2>;
 		bias-disable;
+=======
+	en_pp3300_touch: en-pp3300-touch {
+		pinmux {
+			pins = "gpio87";
+			function = "gpio";
+		};
+
+		pinconf {
+			pins = "gpio87";
+			drive-strength = <2>;
+			bias-disable;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };

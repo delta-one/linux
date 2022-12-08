@@ -29,7 +29,11 @@ properties:
 
     properties:
       mps,switch-freq:
+<<<<<<< HEAD
         $ref: /schemas/types.yaml#/definitions/uint8
+=======
+        $ref: "/schemas/types.yaml#/definitions/uint8"
+>>>>>>> b7ba80a49124 (Commit)
         enum: [0, 1, 2, 3]
         default: 2
         description: |
@@ -51,14 +55,22 @@ properties:
 
         properties:
           mps,buck-softstart:
+<<<<<<< HEAD
             $ref: /schemas/types.yaml#/definitions/uint8
+=======
+            $ref: "/schemas/types.yaml#/definitions/uint8"
+>>>>>>> b7ba80a49124 (Commit)
             enum: [0, 1, 2, 3]
             description: |
               defines the soft start time of this buck, must be one of the following
               corresponding values 150us, 300us, 610us, 920us
 
           mps,buck-phase-delay:
+<<<<<<< HEAD
             $ref: /schemas/types.yaml#/definitions/uint8
+=======
+            $ref: "/schemas/types.yaml#/definitions/uint8"
+>>>>>>> b7ba80a49124 (Commit)
             enum: [0, 1, 2, 3]
             description: |
               defines the phase delay of this buck, must be one of the following

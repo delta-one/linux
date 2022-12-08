@@ -260,6 +260,25 @@ int virt_to_scatterlist(const void *addr, int size, struct scatterlist *sg,
 	return i;
 }
 
+<<<<<<< HEAD
+=======
+struct extent_crypt_result {
+	struct completion completion;
+	int rc;
+};
+
+static void extent_crypt_complete(struct crypto_async_request *req, int rc)
+{
+	struct extent_crypt_result *ecr = req->data;
+
+	if (rc == -EINPROGRESS)
+		return;
+
+	ecr->rc = rc;
+	complete(&ecr->completion);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * crypt_scatterlist
  * @crypt_stat: Pointer to the crypt_stat struct to initialize.
@@ -277,7 +296,11 @@ static int crypt_scatterlist(struct ecryptfs_crypt_stat *crypt_stat,
 			     unsigned char *iv, int op)
 {
 	struct skcipher_request *req = NULL;
+<<<<<<< HEAD
 	DECLARE_CRYPTO_WAIT(ecr);
+=======
+	struct extent_crypt_result ecr;
+>>>>>>> b7ba80a49124 (Commit)
 	int rc = 0;
 
 	if (unlikely(ecryptfs_verbosity > 0)) {
@@ -287,6 +310,11 @@ static int crypt_scatterlist(struct ecryptfs_crypt_stat *crypt_stat,
 				  crypt_stat->key_size);
 	}
 
+<<<<<<< HEAD
+=======
+	init_completion(&ecr.completion);
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&crypt_stat->cs_tfm_mutex);
 	req = skcipher_request_alloc(crypt_stat->tfm, GFP_NOFS);
 	if (!req) {
@@ -297,7 +325,11 @@ static int crypt_scatterlist(struct ecryptfs_crypt_stat *crypt_stat,
 
 	skcipher_request_set_callback(req,
 			CRYPTO_TFM_REQ_MAY_BACKLOG | CRYPTO_TFM_REQ_MAY_SLEEP,
+<<<<<<< HEAD
 			crypto_req_done, &ecr);
+=======
+			extent_crypt_complete, &ecr);
+>>>>>>> b7ba80a49124 (Commit)
 	/* Consider doing this once, when the file is opened */
 	if (!(crypt_stat->flags & ECRYPTFS_KEY_SET)) {
 		rc = crypto_skcipher_setkey(crypt_stat->tfm, crypt_stat->key,
@@ -316,7 +348,17 @@ static int crypt_scatterlist(struct ecryptfs_crypt_stat *crypt_stat,
 	skcipher_request_set_crypt(req, src_sg, dst_sg, size, iv);
 	rc = op == ENCRYPT ? crypto_skcipher_encrypt(req) :
 			     crypto_skcipher_decrypt(req);
+<<<<<<< HEAD
 	rc = crypto_wait_req(rc, &ecr);
+=======
+	if (rc == -EINPROGRESS || rc == -EBUSY) {
+		struct extent_crypt_result *ecr = req->base.data;
+
+		wait_for_completion(&ecr->completion);
+		rc = ecr->rc;
+		reinit_completion(&ecr->completion);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	skcipher_request_free(req);
 	return rc;
@@ -441,10 +483,17 @@ int ecryptfs_encrypt_page(struct page *page)
 	}
 
 	lower_offset = lower_offset_for_page(crypt_stat, page);
+<<<<<<< HEAD
 	enc_extent_virt = kmap_local_page(enc_extent_page);
 	rc = ecryptfs_write_lower(ecryptfs_inode, enc_extent_virt, lower_offset,
 				  PAGE_SIZE);
 	kunmap_local(enc_extent_virt);
+=======
+	enc_extent_virt = kmap(enc_extent_page);
+	rc = ecryptfs_write_lower(ecryptfs_inode, enc_extent_virt, lower_offset,
+				  PAGE_SIZE);
+	kunmap(enc_extent_page);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc < 0) {
 		ecryptfs_printk(KERN_ERR,
 			"Error attempting to write lower page; rc = [%d]\n",
@@ -490,10 +539,17 @@ int ecryptfs_decrypt_page(struct page *page)
 	BUG_ON(!(crypt_stat->flags & ECRYPTFS_ENCRYPTED));
 
 	lower_offset = lower_offset_for_page(crypt_stat, page);
+<<<<<<< HEAD
 	page_virt = kmap_local_page(page);
 	rc = ecryptfs_read_lower(page_virt, lower_offset, PAGE_SIZE,
 				 ecryptfs_inode);
 	kunmap_local(page_virt);
+=======
+	page_virt = kmap(page);
+	rc = ecryptfs_read_lower(page_virt, lower_offset, PAGE_SIZE,
+				 ecryptfs_inode);
+	kunmap(page);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc < 0) {
 		ecryptfs_printk(KERN_ERR,
 			"Error attempting to read lower page; rc = [%d]\n",
@@ -1081,7 +1137,11 @@ ecryptfs_write_metadata_to_xattr(struct dentry *ecryptfs_dentry,
 	}
 
 	inode_lock(lower_inode);
+<<<<<<< HEAD
 	rc = __vfs_setxattr(&nop_mnt_idmap, lower_dentry, lower_inode,
+=======
+	rc = __vfs_setxattr(&init_user_ns, lower_dentry, lower_inode,
+>>>>>>> b7ba80a49124 (Commit)
 			    ECRYPTFS_XATTR_NAME, page_virt, size, 0);
 	if (!rc && ecryptfs_inode)
 		fsstack_copy_attr_all(ecryptfs_inode, lower_inode);

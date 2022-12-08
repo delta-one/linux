@@ -42,11 +42,16 @@ static char *normalize(char *str, int runtime)
 	char *dst = str;
 
 	while (*str) {
+<<<<<<< HEAD
 		if (*str == '\\') {
 			*dst++ = *++str;
 			if (!*str)
 				break;
 		}
+=======
+		if (*str == '\\')
+			*dst++ = *++str;
+>>>>>>> b7ba80a49124 (Commit)
 		else if (*str == '?') {
 			char *paramval;
 			int i = 0;
@@ -87,11 +92,17 @@ static int literal(yyscan_t scanner, const struct expr_scanner_ctx *sctx)
 	YYSTYPE *yylval = expr_get_lval(scanner);
 
 	yylval->num = expr__get_literal(expr_get_text(scanner), sctx);
+<<<<<<< HEAD
 	if (isnan(yylval->num)) {
 		if (!sctx->is_test)
 			return EXPR_ERROR;
 		yylval->num = 1;
 	}
+=======
+	if (isnan(yylval->num))
+		return EXPR_ERROR;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return LITERAL;
 }
 %}

@@ -422,7 +422,11 @@ static int qcom_smp2p_outbound_entry(struct qcom_smp2p *smp2p,
 	char buf[SMP2P_MAX_ENTRY_NAME] = {};
 
 	/* Allocate an entry from the smem item */
+<<<<<<< HEAD
 	strscpy(buf, entry->name, SMP2P_MAX_ENTRY_NAME);
+=======
+	strlcpy(buf, entry->name, SMP2P_MAX_ENTRY_NAME);
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(out->entries[out->valid_entries].name, buf, SMP2P_MAX_ENTRY_NAME);
 
 	/* Make the logical entry reference the physical value */

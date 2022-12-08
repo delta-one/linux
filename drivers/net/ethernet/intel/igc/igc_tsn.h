@@ -6,6 +6,9 @@
 
 int igc_tsn_offload_apply(struct igc_adapter *adapter);
 int igc_tsn_reset(struct igc_adapter *adapter);
+<<<<<<< HEAD
 void igc_tsn_adjust_txtime_offset(struct igc_adapter *adapter);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _IGC_BASE_H */

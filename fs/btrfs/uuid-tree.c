@@ -5,14 +5,21 @@
 
 #include <linux/uuid.h>
 #include <asm/unaligned.h>
+<<<<<<< HEAD
 #include "messages.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "ctree.h"
 #include "transaction.h"
 #include "disk-io.h"
 #include "print-tree.h"
+<<<<<<< HEAD
 #include "fs.h"
 #include "accessors.h"
 #include "uuid-tree.h"
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 
 static void btrfs_uuid_to_key(u8 *uuid, u8 type, struct btrfs_key *key)
 {

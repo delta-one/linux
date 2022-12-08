@@ -39,6 +39,7 @@ struct wpr_header_v1 {
 
 void wpr_header_v1_dump(struct nvkm_subdev *, const struct wpr_header_v1 *);
 
+<<<<<<< HEAD
 struct wpr_generic_header {
 #define WPR_GENERIC_HEADER_ID_LSF_UCODE_DESC     1
 #define WPR_GENERIC_HEADER_ID_LSF_WPR_HEADER     2
@@ -56,6 +57,8 @@ struct wpr_header_v2 {
 
 void wpr_header_v2_dump(struct nvkm_subdev *, const struct wpr_header_v2 *);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct lsf_signature {
 	u8 prd_keys[2][16];
 	u8 dbg_keys[2][16];
@@ -106,6 +109,7 @@ struct lsb_header_v1 {
 
 void lsb_header_v1_dump(struct nvkm_subdev *, struct lsb_header_v1 *);
 
+<<<<<<< HEAD
 struct lsb_header_v2 {
 	struct wpr_generic_header hdr;
 	struct lsf_signature_v2 {
@@ -174,6 +178,8 @@ struct lsb_header_v2 {
 
 void lsb_header_v2_dump(struct nvkm_subdev *, struct lsb_header_v2 *);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct flcn_acr_desc {
 	union {
 		u8 reserved_dmem[0x200];

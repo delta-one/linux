@@ -41,6 +41,7 @@ static const struct clk_pll_characteristics plla_characteristics = {
 static const struct {
 	char *n;
 	char *p;
+<<<<<<< HEAD
 	unsigned long flags;
 	u8 id;
 } at91sam9x5_systemck[] = {
@@ -49,6 +50,11 @@ static const struct {
 	 * to keep it enabled in case there is no Linux consumer for it.
 	 */
 	{ .n = "ddrck", .p = "masterck_div", .id = 2, .flags = CLK_IS_CRITICAL },
+=======
+	u8 id;
+} at91sam9x5_systemck[] = {
+	{ .n = "ddrck", .p = "masterck_div", .id = 2 },
+>>>>>>> b7ba80a49124 (Commit)
 	{ .n = "smdck", .p = "smdclk",   .id = 4 },
 	{ .n = "uhpck", .p = "usbck",    .id = 6 },
 	{ .n = "udpck", .p = "usbck",    .id = 7 },
@@ -253,8 +259,12 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
 	for (i = 0; i < ARRAY_SIZE(at91sam9x5_systemck); i++) {
 		hw = at91_clk_register_system(regmap, at91sam9x5_systemck[i].n,
 					      at91sam9x5_systemck[i].p,
+<<<<<<< HEAD
 					      at91sam9x5_systemck[i].id,
 					      at91sam9x5_systemck[i].flags);
+=======
+					      at91sam9x5_systemck[i].id);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(hw))
 			goto err_free;
 
@@ -262,8 +272,12 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
 	}
 
 	if (has_lcdck) {
+<<<<<<< HEAD
 		hw = at91_clk_register_system(regmap, "lcdck", "masterck_div",
 					      3, 0);
+=======
+		hw = at91_clk_register_system(regmap, "lcdck", "masterck_div", 3);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(hw))
 			goto err_free;
 
@@ -276,7 +290,11 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
 							 at91sam9x5_periphck[i].n,
 							 "masterck_div",
 							 at91sam9x5_periphck[i].id,
+<<<<<<< HEAD
 							 &range, INT_MIN, 0);
+=======
+							 &range, INT_MIN);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(hw))
 			goto err_free;
 
@@ -289,7 +307,11 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
 							 extra_pcks[i].n,
 							 "masterck_div",
 							 extra_pcks[i].id,
+<<<<<<< HEAD
 							 &range, INT_MIN, 0);
+=======
+							 &range, INT_MIN);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(hw))
 			goto err_free;
 

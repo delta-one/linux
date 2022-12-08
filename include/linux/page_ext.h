@@ -7,6 +7,7 @@
 #include <linux/stackdepot.h>
 
 struct pglist_data;
+<<<<<<< HEAD
 
 /**
  * struct page_ext_operations - per page_ext client operations
@@ -21,19 +22,27 @@ struct pglist_data;
  * Each Page Extension client must define page_ext_operations in
  * page_ext_ops array.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct page_ext_operations {
 	size_t offset;
 	size_t size;
 	bool (*need)(void);
 	void (*init)(void);
+<<<<<<< HEAD
 	bool need_shared_flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #ifdef CONFIG_PAGE_EXTENSION
 
+<<<<<<< HEAD
 /*
  * The page_ext_flags users must set need_shared_flags to true.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum page_ext_flags {
 	PAGE_EXT_OWNER,
 	PAGE_EXT_OWNER_ALLOCATED,

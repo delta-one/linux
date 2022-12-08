@@ -65,7 +65,11 @@ static void dw_spi_mscc_set_cs(struct spi_device *spi, bool enable)
 	struct dw_spi *dws = spi_master_get_devdata(spi->master);
 	struct dw_spi_mmio *dwsmmio = container_of(dws, struct dw_spi_mmio, dws);
 	struct dw_spi_mscc *dwsmscc = dwsmmio->priv;
+<<<<<<< HEAD
 	u32 cs = spi_get_chipselect(spi, 0);
+=======
+	u32 cs = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (cs < 4) {
 		u32 sw_mode = MSCC_SPI_MST_SW_MODE_SW_PIN_CTRL_MODE;
@@ -138,7 +142,11 @@ static void dw_spi_sparx5_set_cs(struct spi_device *spi, bool enable)
 	struct dw_spi *dws = spi_master_get_devdata(spi->master);
 	struct dw_spi_mmio *dwsmmio = container_of(dws, struct dw_spi_mmio, dws);
 	struct dw_spi_mscc *dwsmscc = dwsmmio->priv;
+<<<<<<< HEAD
 	u8 cs = spi_get_chipselect(spi, 0);
+=======
+	u8 cs = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!enable) {
 		/* CS override drive enable */
@@ -328,7 +336,11 @@ out_clk:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void dw_spi_mmio_remove(struct platform_device *pdev)
+=======
+static int dw_spi_mmio_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dw_spi_mmio *dwsmmio = platform_get_drvdata(pdev);
 
@@ -337,6 +349,11 @@ static void dw_spi_mmio_remove(struct platform_device *pdev)
 	clk_disable_unprepare(dwsmmio->pclk);
 	clk_disable_unprepare(dwsmmio->clk);
 	reset_control_assert(dwsmmio->rstc);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id dw_spi_mmio_of_match[] = {
@@ -364,7 +381,11 @@ MODULE_DEVICE_TABLE(acpi, dw_spi_mmio_acpi_match);
 
 static struct platform_driver dw_spi_mmio_driver = {
 	.probe		= dw_spi_mmio_probe,
+<<<<<<< HEAD
 	.remove_new	= dw_spi_mmio_remove,
+=======
+	.remove		= dw_spi_mmio_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= DRIVER_NAME,
 		.of_match_table = dw_spi_mmio_of_match,

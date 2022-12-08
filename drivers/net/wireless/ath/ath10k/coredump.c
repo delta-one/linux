@@ -531,7 +531,11 @@ static const struct ath10k_mem_section qca6174_hw30_sdio_register_sections[] = {
 
 	{0x40000, 0x400A4},
 
+<<<<<<< HEAD
 	/* SI register is skipped here.
+=======
+	/* SI register is skiped here.
+>>>>>>> b7ba80a49124 (Commit)
 	 * Because it will cause bus hang
 	 *
 	 * {0x50000, 0x50018},

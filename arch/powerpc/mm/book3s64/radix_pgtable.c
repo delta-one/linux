@@ -30,12 +30,18 @@
 #include <asm/trace.h>
 #include <asm/uaccess.h>
 #include <asm/ultravisor.h>
+<<<<<<< HEAD
 #include <asm/set_memory.h>
 
 #include <trace/events/thp.h>
 
 #include <mm/mmu_decl.h>
 
+=======
+
+#include <trace/events/thp.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 unsigned int mmu_base_pid;
 unsigned long radix_mem_block_size __ro_after_init;
 
@@ -231,6 +237,7 @@ void radix__mark_rodata_ro(void)
 	unsigned long start, end;
 
 	start = (unsigned long)_stext;
+<<<<<<< HEAD
 	end = (unsigned long)__end_rodata;
 
 	radix__change_memory_range(start, end, _PAGE_WRITE);
@@ -242,6 +249,11 @@ void radix__mark_rodata_ro(void)
 		else
 			break;
 	}
+=======
+	end = (unsigned long)__init_begin;
+
+	radix__change_memory_range(start, end, _PAGE_WRITE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void radix__mark_initmem_nx(void)
@@ -270,6 +282,7 @@ print_mapping(unsigned long start, unsigned long end, unsigned long size, bool e
 static unsigned long next_boundary(unsigned long addr, unsigned long end)
 {
 #ifdef CONFIG_STRICT_KERNEL_RWX
+<<<<<<< HEAD
 	unsigned long stext_phys;
 
 	stext_phys = __pa_symbol(_stext);
@@ -288,22 +301,33 @@ static unsigned long next_boundary(unsigned long addr, unsigned long end)
 
 	if (addr < __pa_symbol(__srwx_boundary))
 		return __pa_symbol(__srwx_boundary);
+=======
+	if (addr < __pa_symbol(__init_begin))
+		return __pa_symbol(__init_begin);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	return end;
 }
 
 static int __meminit create_physical_mapping(unsigned long start,
 					     unsigned long end,
+<<<<<<< HEAD
+=======
+					     unsigned long max_mapping_size,
+>>>>>>> b7ba80a49124 (Commit)
 					     int nid, pgprot_t _prot)
 {
 	unsigned long vaddr, addr, mapping_size = 0;
 	bool prev_exec, exec = false;
 	pgprot_t prot;
 	int psize;
+<<<<<<< HEAD
 	unsigned long max_mapping_size = radix_mem_block_size;
 
 	if (debug_pagealloc_enabled_or_kfence())
 		max_mapping_size = PAGE_SIZE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	start = ALIGN(start, PAGE_SIZE);
 	end   = ALIGN_DOWN(end, PAGE_SIZE);
@@ -382,6 +406,10 @@ static void __init radix_init_pgtable(void)
 		}
 
 		WARN_ON(create_physical_mapping(start, end,
+<<<<<<< HEAD
+=======
+						radix_mem_block_size,
+>>>>>>> b7ba80a49124 (Commit)
 						-1, PAGE_KERNEL));
 	}
 
@@ -879,7 +907,11 @@ int __meminit radix__create_section_mapping(unsigned long start,
 	}
 
 	return create_physical_mapping(__pa(start), __pa(end),
+<<<<<<< HEAD
 				       nid, prot);
+=======
+				       radix_mem_block_size, nid, prot);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int __meminit radix__remove_section_mapping(unsigned long start, unsigned long end)
@@ -925,6 +957,7 @@ void __meminit radix__vmemmap_remove_mapping(unsigned long start, unsigned long 
 #endif
 #endif
 
+<<<<<<< HEAD
 #if defined(CONFIG_DEBUG_PAGEALLOC) || defined(CONFIG_KFENCE)
 void radix__kernel_map_pages(struct page *page, int numpages, int enable)
 {
@@ -936,6 +969,12 @@ void radix__kernel_map_pages(struct page *page, int numpages, int enable)
 		set_memory_p(addr, numpages);
 	else
 		set_memory_np(addr, numpages);
+=======
+#ifdef CONFIG_DEBUG_PAGEALLOC
+void radix__kernel_map_pages(struct page *page, int numpages, int enable)
+{
+	pr_warn_once("DEBUG_PAGEALLOC not supported in radix mode\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif
 

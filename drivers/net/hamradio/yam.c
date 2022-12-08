@@ -626,7 +626,11 @@ static void yam_arbitrate(struct net_device *dev)
 	yp->slotcnt = yp->slot / 10;
 
 	/* is random > persist ? */
+<<<<<<< HEAD
 	if (get_random_u8() > yp->pers)
+=======
+	if ((prandom_u32() % 256) > yp->pers)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	yam_start_tx(dev, yp);

@@ -58,6 +58,7 @@ static bool force_load;
 module_param(force_load, bool, 0444);
 MODULE_PARM_DESC(force_load, "Force load this driver on supported older platforms (experimental)");
 
+<<<<<<< HEAD
 static int amd_pmf_pwr_src_notify_call(struct notifier_block *nb, unsigned long event, void *data)
 {
 	struct amd_pmf_dev *pmf = container_of(nb, struct amd_pmf_dev, pwr_src_notifier);
@@ -77,6 +78,8 @@ static int amd_pmf_pwr_src_notify_call(struct notifier_block *nb, unsigned long 
 	return NOTIFY_OK;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int current_power_limits_show(struct seq_file *seq, void *unused)
 {
 	struct amd_pmf_dev *dev = seq->private;
@@ -142,11 +145,14 @@ static void amd_pmf_get_metrics(struct work_struct *work)
 		amd_pmf_trans_automode(dev, socket_power, time_elapsed_ms);
 	}
 
+<<<<<<< HEAD
 	if (dev->cnqf_enabled) {
 		/* Apply the CnQF transition */
 		amd_pmf_trans_cnqf(dev, socket_power, time_elapsed_ms);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev->start_time = ktime_to_ms(ktime_get());
 	schedule_delayed_work(&dev->work_buffer, msecs_to_jiffies(metrics_table_loop_ms));
 	mutex_unlock(&dev->update_mutex);
@@ -276,8 +282,11 @@ int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev)
 
 static void amd_pmf_init_features(struct amd_pmf_dev *dev)
 {
+<<<<<<< HEAD
 	int ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Enable Static Slider */
 	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR)) {
 		amd_pmf_init_sps(dev);
@@ -288,12 +297,15 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
 	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
 		amd_pmf_init_auto_mode(dev);
 		dev_dbg(dev->dev, "Auto Mode Init done\n");
+<<<<<<< HEAD
 	} else if (is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC) ||
 			  is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_DC)) {
 		/* Enable Cool n Quiet Framework (CnQF) */
 		ret = amd_pmf_init_cnqf(dev);
 		if (ret)
 			dev_warn(dev->dev, "CnQF Init failed\n");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -302,12 +314,17 @@ static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
 	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR))
 		amd_pmf_deinit_sps(dev);
 
+<<<<<<< HEAD
 	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
 		amd_pmf_deinit_auto_mode(dev);
 	} else if (is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC) ||
 			  is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_DC)) {
 		amd_pmf_deinit_cnqf(dev);
 	}
+=======
+	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE))
+		amd_pmf_deinit_auto_mode(dev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id amd_pmf_acpi_ids[] = {
@@ -385,6 +402,7 @@ static int amd_pmf_probe(struct platform_device *pdev)
 	if (!dev->regbase)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	mutex_init(&dev->lock);
 	mutex_init(&dev->update_mutex);
 
@@ -397,11 +415,21 @@ static int amd_pmf_probe(struct platform_device *pdev)
 	dev->pwr_src_notifier.notifier_call = amd_pmf_pwr_src_notify_call;
 	power_supply_reg_notifier(&dev->pwr_src_notifier);
 
+=======
+	apmf_acpi_init(dev);
+	platform_set_drvdata(pdev, dev);
+	amd_pmf_init_features(dev);
+	amd_pmf_dbgfs_register(dev);
+
+	mutex_init(&dev->lock);
+	mutex_init(&dev->update_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	dev_info(dev->dev, "registered PMF device successfully\n");
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static void amd_pmf_remove(struct platform_device *pdev)
 {
 	struct amd_pmf_dev *dev = platform_get_drvdata(pdev);
@@ -420,14 +448,35 @@ static const struct attribute_group *amd_pmf_driver_groups[] = {
 	NULL,
 };
 
+=======
+static int amd_pmf_remove(struct platform_device *pdev)
+{
+	struct amd_pmf_dev *dev = platform_get_drvdata(pdev);
+
+	mutex_destroy(&dev->lock);
+	mutex_destroy(&dev->update_mutex);
+	amd_pmf_deinit_features(dev);
+	apmf_acpi_deinit(dev);
+	amd_pmf_dbgfs_unregister(dev);
+	kfree(dev->buf);
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver amd_pmf_driver = {
 	.driver = {
 		.name = "amd-pmf",
 		.acpi_match_table = amd_pmf_acpi_ids,
+<<<<<<< HEAD
 		.dev_groups = amd_pmf_driver_groups,
 	},
 	.probe = amd_pmf_probe,
 	.remove_new = amd_pmf_remove,
+=======
+	},
+	.probe = amd_pmf_probe,
+	.remove = amd_pmf_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(amd_pmf_driver);
 

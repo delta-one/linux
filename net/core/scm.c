@@ -229,8 +229,11 @@ int put_cmsg(struct msghdr * msg, int level, int type, int len, void *data)
 	if (msg->msg_control_is_user) {
 		struct cmsghdr __user *cm = msg->msg_control_user;
 
+<<<<<<< HEAD
 		check_object_size(data, cmlen - sizeof(*cm), true);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (!user_write_access_begin(cm, cmlen))
 			goto efault;
 

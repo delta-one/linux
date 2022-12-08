@@ -44,7 +44,12 @@ obj-y			+= head_$(BITS).o
 obj-y			+= head$(BITS).o
 obj-y			+= ebda.o
 obj-y			+= platform-quirks.o
+<<<<<<< HEAD
 obj-y			+= process_$(BITS).o signal.o signal_$(BITS).o
+=======
+obj-y			+= process_$(BITS).o signal.o
+obj-$(CONFIG_COMPAT)	+= signal_compat.o
+>>>>>>> b7ba80a49124 (Commit)
 obj-y			+= traps.o idt.o irq.o irq_$(BITS).o dumpstack_$(BITS).o
 obj-y			+= time.o ioport.o dumpstack.o nmi.o
 obj-$(CONFIG_MODIFY_LDT_SYSCALL)	+= ldt.o
@@ -53,7 +58,11 @@ obj-$(CONFIG_JUMP_LABEL)	+= jump_label.o
 obj-$(CONFIG_IRQ_WORK)  += irq_work.o
 obj-y			+= probe_roms.o
 obj-$(CONFIG_X86_32)	+= sys_ia32.o
+<<<<<<< HEAD
 obj-$(CONFIG_IA32_EMULATION)	+= sys_ia32.o signal_32.o
+=======
+obj-$(CONFIG_IA32_EMULATION)	+= sys_ia32.o
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_X86_64)	+= sys_x86_64.o
 obj-$(CONFIG_X86_ESPFIX64)	+= espfix_64.o
 obj-$(CONFIG_SYSFS)	+= ksysfs.o
@@ -140,6 +149,7 @@ obj-$(CONFIG_UNWINDER_GUESS)		+= unwind_guess.o
 
 obj-$(CONFIG_AMD_MEM_ENCRYPT)		+= sev.o
 
+<<<<<<< HEAD
 obj-$(CONFIG_CFI_CLANG)			+= cfi.o
 
 obj-$(CONFIG_CALL_THUNKS)		+= callthunks.o
@@ -148,6 +158,8 @@ obj-$(CONFIG_X86_CET)			+= cet.o
 
 obj-$(CONFIG_X86_USER_SHADOW_STACK)	+= shstk.o
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ###
 # 64 bit specific files
 ifeq ($(CONFIG_X86_64),y)

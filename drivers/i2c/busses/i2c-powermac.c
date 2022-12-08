@@ -284,7 +284,11 @@ static bool i2c_powermac_get_type(struct i2c_adapter *adap,
 	 */
 
 	/* First try proper modalias */
+<<<<<<< HEAD
 	if (of_alias_from_compatible(node, tmp, sizeof(tmp)) >= 0) {
+=======
+	if (of_modalias_node(node, tmp, sizeof(tmp)) >= 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		snprintf(type, type_size, "MAC,%s", tmp);
 		return true;
 	}

@@ -10,7 +10,11 @@ maintainers:
   - Anson Huang <Anson.Huang@nxp.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: nvmem.yaml#
+=======
+  - $ref: "nvmem.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

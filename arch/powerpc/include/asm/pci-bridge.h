@@ -8,7 +8,10 @@
 #include <linux/list.h>
 #include <linux/ioport.h>
 #include <linux/numa.h>
+<<<<<<< HEAD
 #include <linux/iommu.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct device_node;
 
@@ -45,9 +48,12 @@ struct pci_controller_ops {
 #endif
 
 	void		(*shutdown)(struct pci_controller *hose);
+<<<<<<< HEAD
 
 	struct iommu_group *(*device_group)(struct pci_controller *hose,
 					    struct pci_dev *pdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -135,9 +141,12 @@ struct pci_controller {
 	struct irq_domain	*dev_domain;
 	struct irq_domain	*msi_domain;
 	struct fwnode_handle	*fwnode;
+<<<<<<< HEAD
 
 	/* iommu_ops support */
 	struct iommu_device	iommu;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* These are used for config access before all the PCI probing
@@ -183,10 +192,15 @@ extern int pci_device_from_OF_node(struct device_node *node,
 #endif
 #ifndef CONFIG_PPC64
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_PCI_OF_BUS_MAP
 extern void pci_create_OF_bus_map(void);
 #else
 static inline void pci_create_OF_bus_map(void) {}
+=======
+#ifdef CONFIG_PPC_CHRP
+extern void pci_create_OF_bus_map(void);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #else	/* CONFIG_PPC64 */

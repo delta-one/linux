@@ -150,6 +150,7 @@ enum tpm_sub_capabilities {
 	TPM_CAP_PROP_TIS_DURATION = 0x120,
 };
 
+<<<<<<< HEAD
 enum tpm2_pt_props {
 	TPM2_PT_NONE = 0x00000000,
 	TPM2_PT_GROUP = 0x00000100,
@@ -223,6 +224,8 @@ enum tpm2_pt_props {
 	TPM2_PT_AUDIT_COUNTER_0 = TPM2_PT_VAR + 19,
 	TPM2_PT_AUDIT_COUNTER_1 = TPM2_PT_VAR + 20,
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* 128 bytes is an arbitrary cap. This could be as large as TPM_BUFSIZE - 18
  * bytes, but 128 is still a relatively large number of random bytes and
@@ -256,7 +259,10 @@ int tpm1_get_pcr_allocation(struct tpm_chip *chip);
 unsigned long tpm_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal);
 int tpm_pm_suspend(struct device *dev);
 int tpm_pm_resume(struct device *dev);
+<<<<<<< HEAD
 int tpm_class_shutdown(struct device *dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void tpm_msleep(unsigned int delay_msec)
 {

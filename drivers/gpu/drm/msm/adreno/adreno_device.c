@@ -438,16 +438,28 @@ struct msm_gpu *adreno_load_gpu(struct drm_device *dev)
 	 */
 	pm_runtime_enable(&pdev->dev);
 
+<<<<<<< HEAD
 	ret = pm_runtime_get_sync(&pdev->dev);
 	if (ret < 0) {
 		pm_runtime_put_noidle(&pdev->dev);
 		DRM_DEV_ERROR(dev->dev, "Couldn't power up the GPU: %d\n", ret);
 		goto err_disable_rpm;
+=======
+	/* Make sure pm runtime is active and reset any previous errors */
+	pm_runtime_set_active(&pdev->dev);
+
+	ret = pm_runtime_get_sync(&pdev->dev);
+	if (ret < 0) {
+		pm_runtime_put_sync(&pdev->dev);
+		DRM_DEV_ERROR(dev->dev, "Couldn't power up the GPU: %d\n", ret);
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	mutex_lock(&gpu->lock);
 	ret = msm_gpu_hw_init(gpu);
 	mutex_unlock(&gpu->lock);
+<<<<<<< HEAD
 	if (ret) {
 		DRM_DEV_ERROR(dev->dev, "gpu hw init failed: %d\n", ret);
 		goto err_put_rpm;
@@ -455,6 +467,14 @@ struct msm_gpu *adreno_load_gpu(struct drm_device *dev)
 
 	pm_runtime_put_autosuspend(&pdev->dev);
 
+=======
+	pm_runtime_put_autosuspend(&pdev->dev);
+	if (ret) {
+		DRM_DEV_ERROR(dev->dev, "gpu hw init failed: %d\n", ret);
+		return NULL;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_DEBUG_FS
 	if (gpu->funcs->debugfs_init) {
 		gpu->funcs->debugfs_init(gpu, dev->primary);
@@ -463,6 +483,7 @@ struct msm_gpu *adreno_load_gpu(struct drm_device *dev)
 #endif
 
 	return gpu;
+<<<<<<< HEAD
 
 err_put_rpm:
 	pm_runtime_put_sync(&pdev->dev);
@@ -470,6 +491,8 @@ err_disable_rpm:
 	pm_runtime_disable(&pdev->dev);
 
 	return NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int find_chipid(struct device *dev, struct adreno_rev *rev)
@@ -553,6 +576,7 @@ static int adreno_bind(struct device *dev, struct device *master, void *data)
 		return PTR_ERR(gpu);
 	}
 
+<<<<<<< HEAD
 	ret = dev_pm_opp_of_find_icc_paths(dev, NULL);
 	if (ret)
 		return ret;
@@ -561,22 +585,36 @@ static int adreno_bind(struct device *dev, struct device *master, void *data)
 }
 
 static int adreno_system_suspend(struct device *dev);
+=======
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void adreno_unbind(struct device *dev, struct device *master,
 		void *data)
 {
 	struct msm_drm_private *priv = dev_get_drvdata(master);
 	struct msm_gpu *gpu = dev_to_gpu(dev);
 
+<<<<<<< HEAD
 	if (pm_runtime_enabled(dev))
 		WARN_ON_ONCE(adreno_system_suspend(dev));
+=======
+	pm_runtime_force_suspend(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	gpu->funcs->destroy(gpu);
 
 	priv->gpu_pdev = NULL;
 }
 
 static const struct component_ops a3xx_ops = {
+<<<<<<< HEAD
 	.bind   = adreno_bind,
 	.unbind = adreno_unbind,
+=======
+		.bind   = adreno_bind,
+		.unbind = adreno_unbind,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void adreno_device_register_headless(void)
@@ -620,7 +658,11 @@ static int adreno_remove(struct platform_device *pdev)
 
 static void adreno_shutdown(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	WARN_ON_ONCE(adreno_system_suspend(&pdev->dev));
+=======
+	pm_runtime_force_suspend(&pdev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id dt_match[] = {
@@ -690,9 +732,12 @@ static int adreno_system_suspend(struct device *dev)
 	struct msm_gpu *gpu = dev_to_gpu(dev);
 	int remaining, ret;
 
+<<<<<<< HEAD
 	if (!gpu)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	suspend_scheduler(gpu);
 
 	remaining = wait_event_timeout(gpu->retire_event,
@@ -714,12 +759,16 @@ out:
 
 static int adreno_system_resume(struct device *dev)
 {
+<<<<<<< HEAD
 	struct msm_gpu *gpu = dev_to_gpu(dev);
 
 	if (!gpu)
 		return 0;
 
 	resume_scheduler(gpu);
+=======
+	resume_scheduler(dev_to_gpu(dev));
+>>>>>>> b7ba80a49124 (Commit)
 	return pm_runtime_force_resume(dev);
 }
 

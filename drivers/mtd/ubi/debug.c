@@ -504,7 +504,10 @@ int ubi_debugfs_init_dev(struct ubi_device *ubi)
 {
 	unsigned long ubi_num = ubi->ubi_num;
 	struct ubi_debug_info *d = &ubi->dbg;
+<<<<<<< HEAD
 	umode_t mode = S_IRUSR | S_IWUSR;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int n;
 
 	if (!IS_ENABLED(CONFIG_DEBUG_FS))
@@ -519,6 +522,7 @@ int ubi_debugfs_init_dev(struct ubi_device *ubi)
 
 	d->dfs_dir = debugfs_create_dir(d->dfs_dir_name, dfs_rootdir);
 
+<<<<<<< HEAD
 	d->dfs_chk_gen = debugfs_create_file("chk_gen", mode, d->dfs_dir,
 					     (void *)ubi_num, &dfs_fops);
 
@@ -530,30 +534,63 @@ int ubi_debugfs_init_dev(struct ubi_device *ubi)
 						 &dfs_fops);
 
 	d->dfs_disable_bgt = debugfs_create_file("tst_disable_bgt", mode,
+=======
+	d->dfs_chk_gen = debugfs_create_file("chk_gen", S_IWUSR, d->dfs_dir,
+					     (void *)ubi_num, &dfs_fops);
+
+	d->dfs_chk_io = debugfs_create_file("chk_io", S_IWUSR, d->dfs_dir,
+					    (void *)ubi_num, &dfs_fops);
+
+	d->dfs_chk_fastmap = debugfs_create_file("chk_fastmap", S_IWUSR,
+						 d->dfs_dir, (void *)ubi_num,
+						 &dfs_fops);
+
+	d->dfs_disable_bgt = debugfs_create_file("tst_disable_bgt", S_IWUSR,
+>>>>>>> b7ba80a49124 (Commit)
 						 d->dfs_dir, (void *)ubi_num,
 						 &dfs_fops);
 
 	d->dfs_emulate_bitflips = debugfs_create_file("tst_emulate_bitflips",
+<<<<<<< HEAD
 						      mode, d->dfs_dir,
+=======
+						      S_IWUSR, d->dfs_dir,
+>>>>>>> b7ba80a49124 (Commit)
 						      (void *)ubi_num,
 						      &dfs_fops);
 
 	d->dfs_emulate_io_failures = debugfs_create_file("tst_emulate_io_failures",
+<<<<<<< HEAD
 							 mode, d->dfs_dir,
+=======
+							 S_IWUSR, d->dfs_dir,
+>>>>>>> b7ba80a49124 (Commit)
 							 (void *)ubi_num,
 							 &dfs_fops);
 
 	d->dfs_emulate_power_cut = debugfs_create_file("tst_emulate_power_cut",
+<<<<<<< HEAD
 						       mode, d->dfs_dir,
+=======
+						       S_IWUSR, d->dfs_dir,
+>>>>>>> b7ba80a49124 (Commit)
 						       (void *)ubi_num,
 						       &dfs_fops);
 
 	d->dfs_power_cut_min = debugfs_create_file("tst_emulate_power_cut_min",
+<<<<<<< HEAD
 						   mode, d->dfs_dir,
 						   (void *)ubi_num, &dfs_fops);
 
 	d->dfs_power_cut_max = debugfs_create_file("tst_emulate_power_cut_max",
 						   mode, d->dfs_dir,
+=======
+						   S_IWUSR, d->dfs_dir,
+						   (void *)ubi_num, &dfs_fops);
+
+	d->dfs_power_cut_max = debugfs_create_file("tst_emulate_power_cut_max",
+						   S_IWUSR, d->dfs_dir,
+>>>>>>> b7ba80a49124 (Commit)
 						   (void *)ubi_num, &dfs_fops);
 
 	debugfs_create_file("detailed_erase_block_info", S_IRUSR, d->dfs_dir,
@@ -591,7 +628,11 @@ int ubi_dbg_power_cut(struct ubi_device *ubi, int caller)
 
 		if (ubi->dbg.power_cut_max > ubi->dbg.power_cut_min) {
 			range = ubi->dbg.power_cut_max - ubi->dbg.power_cut_min;
+<<<<<<< HEAD
 			ubi->dbg.power_cut_counter += get_random_u32_below(range);
+=======
+			ubi->dbg.power_cut_counter += prandom_u32() % range;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		return 0;
 	}

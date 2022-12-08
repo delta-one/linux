@@ -267,7 +267,11 @@ static inline int wbsd_next_sg(struct wbsd_host *host)
 
 static inline char *wbsd_map_sg(struct wbsd_host *host)
 {
+<<<<<<< HEAD
 	return kmap_local_page(sg_page(host->cur_sg)) + host->cur_sg->offset;
+=======
+	return kmap_atomic(sg_page(host->cur_sg)) + host->cur_sg->offset;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void wbsd_sg_to_dma(struct wbsd_host *host, struct mmc_data *data)
@@ -439,7 +443,11 @@ static void wbsd_empty_fifo(struct wbsd_host *host)
 			 * End of scatter list entry?
 			 */
 			if (host->remain == 0) {
+<<<<<<< HEAD
 				kunmap_local(buffer);
+=======
+				kunmap_atomic(buffer);
+>>>>>>> b7ba80a49124 (Commit)
 				/*
 				 * Get next entry. Check if last.
 				 */
@@ -451,7 +459,11 @@ static void wbsd_empty_fifo(struct wbsd_host *host)
 			}
 		}
 	}
+<<<<<<< HEAD
 	kunmap_local(buffer);
+=======
+	kunmap_atomic(buffer);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * This is a very dirty hack to solve a
@@ -505,7 +517,11 @@ static void wbsd_fill_fifo(struct wbsd_host *host)
 			 * End of scatter list entry?
 			 */
 			if (host->remain == 0) {
+<<<<<<< HEAD
 				kunmap_local(buffer);
+=======
+				kunmap_atomic(buffer);
+>>>>>>> b7ba80a49124 (Commit)
 				/*
 				 * Get next entry. Check if last.
 				 */
@@ -517,7 +533,11 @@ static void wbsd_fill_fifo(struct wbsd_host *host)
 			}
 		}
 	}
+<<<<<<< HEAD
 	kunmap_local(buffer);
+=======
+	kunmap_atomic(buffer);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * The controller stops sending interrupts for
@@ -1698,6 +1718,7 @@ static int wbsd_init(struct device *dev, int base, int irq, int dma,
 	 */
 	wbsd_init_device(host);
 
+<<<<<<< HEAD
 	ret = mmc_add_host(mmc);
 	if (ret) {
 		if (!pnp)
@@ -1709,6 +1730,9 @@ static int wbsd_init(struct device *dev, int base, int irq, int dma,
 		mmc_free_host(mmc);
 		return ret;
 	}
+=======
+	mmc_add_host(mmc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_info("%s: W83L51xD", mmc_hostname(mmc));
 	if (host->chip_id != 0)

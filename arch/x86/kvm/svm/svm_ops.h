@@ -61,4 +61,12 @@ static __always_inline void vmsave(unsigned long pa)
 	svm_asm1(vmsave, "a" (pa), "memory");
 }
 
+<<<<<<< HEAD
+=======
+static __always_inline void vmload(unsigned long pa)
+{
+	svm_asm1(vmload, "a" (pa), "memory");
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __KVM_X86_SVM_OPS_H */

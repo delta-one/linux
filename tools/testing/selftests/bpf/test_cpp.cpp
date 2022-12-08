@@ -1,9 +1,16 @@
 /* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
 #include <iostream>
+<<<<<<< HEAD
 #include <unistd.h>
 #include <linux/bpf.h>
 #include <linux/btf.h>
 #include <bpf/libbpf.h>
+=======
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#include <bpf/libbpf.h>
+#pragma GCC diagnostic pop
+>>>>>>> b7ba80a49124 (Commit)
 #include <bpf/bpf.h>
 #include <bpf/btf.h>
 #include "test_core_extern.skel.h"
@@ -91,7 +98,11 @@ static void try_skeleton_template()
 
 	skel.detach();
 
+<<<<<<< HEAD
 	/* destructor will destroy underlying skeleton */
+=======
+	/* destructor will destory underlying skeleton */
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int main(int argc, char *argv[])
@@ -99,7 +110,10 @@ int main(int argc, char *argv[])
 	struct btf_dump_opts opts = { };
 	struct test_core_extern *skel;
 	struct btf *btf;
+<<<<<<< HEAD
 	int fd;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	try_skeleton_template();
 
@@ -118,12 +132,15 @@ int main(int argc, char *argv[])
 	skel = test_core_extern__open_and_load();
 	test_core_extern__destroy(skel);
 
+<<<<<<< HEAD
 	fd = bpf_enable_stats(BPF_STATS_RUN_TIME);
 	if (fd < 0)
 		std::cout << "FAILED to enable stats: " << fd << std::endl;
 	else
 		::close(fd);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	std::cout << "DONE!" << std::endl;
 
 	return 0;

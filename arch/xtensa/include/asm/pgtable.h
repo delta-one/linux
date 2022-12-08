@@ -96,7 +96,11 @@
  *		+- - - - - - - - - - - - - - - - - - - - -+
  *   (PAGE_NONE)|    PPN    | 0 | 00 | ADW | 01 | 11 | 11 |
  *		+-----------------------------------------+
+<<<<<<< HEAD
  *   swap	|     index     |   type   | 01 | 11 | e0 |
+=======
+ *   swap	|     index     |   type   | 01 | 11 | 00 |
+>>>>>>> b7ba80a49124 (Commit)
  *		+-----------------------------------------+
  *
  * For T1050 hardware and earlier the layout differs for present and (PAGE_NONE)
@@ -112,7 +116,10 @@
  *   RI         ring (0=privileged, 1=user, 2 and 3 are unused)
  *   CA		cache attribute: 00 bypass, 01 writeback, 10 writethrough
  *		(11 is invalid and used to mark pages that are not present)
+<<<<<<< HEAD
  *   e		exclusive marker in swap PTEs
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *   w		page is writable (hw)
  *   x		page is executable (hw)
  *   index      swap offset / PAGE_SIZE (bit 11-31: 21 bits -> 8 GB)
@@ -159,9 +166,12 @@
 #define _PAGE_DIRTY		(1<<7)	/* software: page dirty */
 #define _PAGE_ACCESSED		(1<<8)	/* software: page accessed (read) */
 
+<<<<<<< HEAD
 /* We borrow bit 1 to store the exclusive marker in swap PTEs. */
 #define _PAGE_SWP_EXCLUSIVE	(1<<1)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_MMU
 
 #define _PAGE_CHG_MASK	   (PAGE_MASK | _PAGE_ACCESSED | _PAGE_DIRTY)
@@ -262,7 +272,11 @@ static inline pte_t pte_mkdirty(pte_t pte)
 	{ pte_val(pte) |= _PAGE_DIRTY; return pte; }
 static inline pte_t pte_mkyoung(pte_t pte)
 	{ pte_val(pte) |= _PAGE_ACCESSED; return pte; }
+<<<<<<< HEAD
 static inline pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
+=======
+static inline pte_t pte_mkwrite(pte_t pte)
+>>>>>>> b7ba80a49124 (Commit)
 	{ pte_val(pte) |= _PAGE_WRITABLE; return pte; }
 
 #define pgprot_noncached(prot) \
@@ -347,19 +361,31 @@ ptep_set_wrprotect(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
 }
 
 /*
+<<<<<<< HEAD
  * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
  * are !pte_none() && !pte_present().
  */
 #define MAX_SWAPFILES_CHECK() BUILD_BUG_ON(MAX_SWAPFILES_SHIFT > 5)
+=======
+ * Encode and decode a swap and file entry.
+ */
+#define SWP_TYPE_BITS		5
+#define MAX_SWAPFILES_CHECK() BUILD_BUG_ON(MAX_SWAPFILES_SHIFT > SWP_TYPE_BITS)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define __swp_type(entry)	(((entry).val >> 6) & 0x1f)
 #define __swp_offset(entry)	((entry).val >> 11)
 #define __swp_entry(type,offs)	\
+<<<<<<< HEAD
 	((swp_entry_t){(((type) & 0x1f) << 6) | ((offs) << 11) | \
+=======
+	((swp_entry_t){((type) << 6) | ((offs) << 11) | \
+>>>>>>> b7ba80a49124 (Commit)
 	 _PAGE_CA_INVALID | _PAGE_USER})
 #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
 #define __swp_entry_to_pte(x)	((pte_t) { (x).val })
 
+<<<<<<< HEAD
 static inline int pte_swp_exclusive(pte_t pte)
 {
 	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
@@ -377,6 +403,8 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
 	return pte;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /*  !defined (__ASSEMBLY__) */
 
 
@@ -407,6 +435,11 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
 
 #else
 
+<<<<<<< HEAD
+=======
+#define kern_addr_valid(addr)	(1)
+
+>>>>>>> b7ba80a49124 (Commit)
 extern  void update_mmu_cache(struct vm_area_struct * vma,
 			      unsigned long address, pte_t *ptep);
 

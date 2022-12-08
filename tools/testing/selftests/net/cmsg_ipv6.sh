@@ -6,7 +6,11 @@ ksft_skip=4
 NS=ns
 IP6=2001:db8:1::1/64
 TGT6=2001:db8:1::2
+<<<<<<< HEAD
 TMPF=$(mktemp --suffix ".pcap")
+=======
+TMPF=`mktemp`
+>>>>>>> b7ba80a49124 (Commit)
 
 cleanup()
 {

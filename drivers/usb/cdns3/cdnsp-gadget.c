@@ -378,7 +378,11 @@ int cdnsp_ep_enqueue(struct cdnsp_ep *pep, struct cdnsp_request *preq)
 		ret = cdnsp_queue_bulk_tx(pdev, preq);
 		break;
 	case USB_ENDPOINT_XFER_ISOC:
+<<<<<<< HEAD
 		ret = cdnsp_queue_isoc_tx(pdev, preq);
+=======
+		ret = cdnsp_queue_isoc_tx_prepare(pdev, preq);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (ret)
@@ -600,11 +604,19 @@ int cdnsp_halt_endpoint(struct cdnsp_device *pdev,
 
 	trace_cdnsp_ep_halt(value ? "Set" : "Clear");
 
+<<<<<<< HEAD
 	ret = cdnsp_cmd_stop_ep(pdev, pep);
 	if (ret)
 		return ret;
 
 	if (value) {
+=======
+	if (value) {
+		ret = cdnsp_cmd_stop_ep(pdev, pep);
+		if (ret)
+			return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (GET_EP_CTX_STATE(pep->out_ctx) == EP_STATE_STOPPED) {
 			cdnsp_queue_halt_endpoint(pdev, pep->idx);
 			cdnsp_ring_cmd_db(pdev);
@@ -613,6 +625,13 @@ int cdnsp_halt_endpoint(struct cdnsp_device *pdev,
 
 		pep->ep_state |= EP_HALTED;
 	} else {
+<<<<<<< HEAD
+=======
+		/*
+		 * In device mode driver can call reset endpoint command
+		 * from any endpoint state.
+		 */
+>>>>>>> b7ba80a49124 (Commit)
 		cdnsp_queue_reset_ep(pdev, pep->idx);
 		cdnsp_ring_cmd_db(pdev);
 		ret = cdnsp_wait_for_cmd_compl(pdev);

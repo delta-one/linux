@@ -67,7 +67,11 @@
 		reg = <0x5b0e0200 0x200>;
 	};
 
+<<<<<<< HEAD
 	usbphy2: usbphy@5b110000 {
+=======
+	usbphy2: usbphy@0x5b110000 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "fsl,imx8dxl-usbphy", "fsl,imx7ulp-usbphy";
 		reg = <0x5b110000 0x1000>;
 		clocks = <&usb2_2_lpcg IMX_LPCG_CLK_7>;
@@ -140,6 +144,7 @@
 	compatible = "fsl,imx8dxl-usdhc", "fsl,imx8qxp-usdhc";
 	interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
 };
+<<<<<<< HEAD
 
 &usbotg1 {
 	interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
@@ -150,3 +155,5 @@
 	 */
 	clocks = <&clk_dummy>;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

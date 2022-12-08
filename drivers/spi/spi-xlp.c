@@ -139,7 +139,11 @@ static int xlp_spi_setup(struct spi_device *spi)
 	int cs;
 
 	xspi = spi_master_get_devdata(spi->master);
+<<<<<<< HEAD
 	cs = spi_get_chipselect(spi, 0);
+=======
+	cs = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * The value of fdiv must be between 4 and 65535.
 	 */
@@ -350,7 +354,11 @@ static int xlp_spi_transfer_one(struct spi_master *master,
 	struct xlp_spi_priv *xspi = spi_master_get_devdata(master);
 	int ret = 0;
 
+<<<<<<< HEAD
 	xspi->cs = spi_get_chipselect(spi, 0);
+=======
+	xspi->cs = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 	xspi->dev = spi->dev;
 
 	if (spi_transfer_is_last(master, t))

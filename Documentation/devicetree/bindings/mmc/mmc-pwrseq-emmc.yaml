@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/mmc/mmc-pwrseq-emmc.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Simple eMMC hardware reset provider
+=======
+title: Simple eMMC hardware reset provider binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Ulf Hansson <ulf.hansson@linaro.org>
@@ -41,7 +45,11 @@ additionalProperties: false
 examples:
   - |
     #include <dt-bindings/gpio/gpio.h>
+<<<<<<< HEAD
     pwrseq {
+=======
+    sdhci0_pwrseq {
+>>>>>>> b7ba80a49124 (Commit)
       compatible = "mmc-pwrseq-emmc";
       reset-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
     };

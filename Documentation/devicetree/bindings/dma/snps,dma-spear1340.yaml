@@ -11,7 +11,11 @@ maintainers:
   - Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: dma-controller.yaml#
+=======
+  - $ref: "dma-controller.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

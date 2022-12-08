@@ -773,9 +773,12 @@ static struct pci_driver carmine_pci_driver = {
 
 static int __init carminefb_init(void)
 {
+<<<<<<< HEAD
 	if (fb_modesetting_disabled("carminefb"))
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!(fb_displays &
 		(CARMINE_USE_DISPLAY0 | CARMINE_USE_DISPLAY1))) {
 		printk(KERN_ERR "If you disable both displays than you don't "

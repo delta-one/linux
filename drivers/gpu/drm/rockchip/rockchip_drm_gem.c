@@ -9,7 +9,10 @@
 #include <linux/vmalloc.h>
 
 #include <drm/drm.h>
+<<<<<<< HEAD
 #include <drm/drm_fb_helper.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_gem.h>
 #include <drm/drm_gem_dma_helper.h>
 #include <drm/drm_prime.h>
@@ -251,7 +254,12 @@ static int rockchip_drm_gem_object_mmap(struct drm_gem_object *obj,
 	 * We allocated a struct page table for rk_obj, so clear
 	 * VM_PFNMAP flag that was set by drm_gem_mmap_obj()/drm_gem_mmap().
 	 */
+<<<<<<< HEAD
 	vm_flags_mod(vma, VM_IO | VM_DONTEXPAND | VM_DONTDUMP, VM_PFNMAP);
+=======
+	vma->vm_flags |= VM_IO | VM_DONTEXPAND | VM_DONTDUMP;
+	vma->vm_flags &= ~VM_PFNMAP;
+>>>>>>> b7ba80a49124 (Commit)
 
 	vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
 	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
@@ -261,6 +269,12 @@ static int rockchip_drm_gem_object_mmap(struct drm_gem_object *obj,
 	else
 		ret = rockchip_drm_gem_object_mmap_dma(obj, vma);
 
+<<<<<<< HEAD
+=======
+	if (ret)
+		drm_gem_vm_close(vma);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -361,12 +375,18 @@ rockchip_gem_create_with_handle(struct drm_file *file_priv,
 {
 	struct rockchip_gem_object *rk_obj;
 	struct drm_gem_object *obj;
+<<<<<<< HEAD
 	bool is_framebuffer;
 	int ret;
 
 	is_framebuffer = drm->fb_helper && file_priv == drm->fb_helper->client.file;
 
 	rk_obj = rockchip_gem_create_object(drm, size, is_framebuffer);
+=======
+	int ret;
+
+	rk_obj = rockchip_gem_create_object(drm, size, false);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(rk_obj))
 		return ERR_CAST(rk_obj);
 
@@ -515,6 +535,7 @@ int rockchip_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map)
 	struct rockchip_gem_object *rk_obj = to_rockchip_obj(obj);
 
 	if (rk_obj->pages) {
+<<<<<<< HEAD
 		void *vaddr;
 
 		if (rk_obj->kvaddr)
@@ -523,6 +544,10 @@ int rockchip_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map)
 			vaddr = vmap(rk_obj->pages, rk_obj->num_pages, VM_MAP,
 				     pgprot_writecombine(PAGE_KERNEL));
 
+=======
+		void *vaddr = vmap(rk_obj->pages, rk_obj->num_pages, VM_MAP,
+				  pgprot_writecombine(PAGE_KERNEL));
+>>>>>>> b7ba80a49124 (Commit)
 		if (!vaddr)
 			return -ENOMEM;
 		iosys_map_set_vaddr(map, vaddr);
@@ -542,8 +567,12 @@ void rockchip_gem_prime_vunmap(struct drm_gem_object *obj,
 	struct rockchip_gem_object *rk_obj = to_rockchip_obj(obj);
 
 	if (rk_obj->pages) {
+<<<<<<< HEAD
 		if (map->vaddr != rk_obj->kvaddr)
 			vunmap(map->vaddr);
+=======
+		vunmap(map->vaddr);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 

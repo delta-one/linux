@@ -116,11 +116,14 @@ bool dm_helpers_dp_mst_start_top_mgr(
 bool dm_helpers_dp_mst_stop_top_mgr(
 		struct dc_context *ctx,
 		struct dc_link *link);
+<<<<<<< HEAD
 
 void dm_helpers_dp_mst_update_branch_bandwidth(
 		struct dc_context *ctx,
 		struct dc_link *link);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * OS specific aux read callback.
  */
@@ -161,12 +164,15 @@ enum dc_edid_status dm_helpers_read_local_edid(
 		struct dc_link *link,
 		struct dc_sink *sink);
 
+<<<<<<< HEAD
 bool dm_helpers_dp_handle_test_pattern_request(
 		struct dc_context *ctx,
 		const struct dc_link *link,
 		union link_test_pattern dpcd_test_pattern,
 		union test_misc dpcd_test_params);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void dm_set_dcn_clocks(
 		struct dc_context *ctx,
 		struct dc_clocks *clks);
@@ -199,7 +205,10 @@ int dm_helpers_dmub_set_config_sync(struct dc_context *ctx,
 		const struct dc_link *link,
 		struct set_config_cmd_payload *payload,
 		enum set_config_status *operation_result);
+<<<<<<< HEAD
 enum adaptive_sync_type dm_get_adaptive_sync_support_type(struct dc_link *link);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum dc_edid_status dm_helpers_get_sbios_edid(struct dc_link *link, struct dc_edid *edid);
 

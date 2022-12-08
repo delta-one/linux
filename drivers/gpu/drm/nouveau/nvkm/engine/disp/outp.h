@@ -2,6 +2,10 @@
 #ifndef __NVKM_DISP_OUTP_H__
 #define __NVKM_DISP_OUTP_H__
 #include "priv.h"
+<<<<<<< HEAD
+=======
+#include <core/notify.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <subdev/bios.h>
 #include <subdev/bios/dcb.h>
@@ -27,19 +31,27 @@ struct nvkm_outp {
 
 	union {
 		struct {
+<<<<<<< HEAD
 			bool dual;
 			bool bpc8;
 		} lvds;
 
 		struct {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			struct nvbios_dpout info;
 			u8 version;
 
 			struct nvkm_i2c_aux *aux;
 
+<<<<<<< HEAD
 			bool enabled;
 			bool aux_pwr;
 			bool aux_pwr_pu;
+=======
+			struct nvkm_notify hpd;
+			bool present;
+>>>>>>> b7ba80a49124 (Commit)
 			u8 lttpr[6];
 			u8 lttprs;
 			u8 dpcd[16];
@@ -54,17 +66,23 @@ struct nvkm_outp {
 			struct mutex mutex;
 			struct {
 				atomic_t done;
+<<<<<<< HEAD
 				u8 nr;
 				u8 bw;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				bool mst;
 			} lt;
 		} dp;
 	};
 
 	struct nvkm_object object;
+<<<<<<< HEAD
 	struct {
 		struct nvkm_head *head;
 	} asy;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int nvkm_outp_new_(const struct nvkm_outp_func *, struct nvkm_disp *, int index,

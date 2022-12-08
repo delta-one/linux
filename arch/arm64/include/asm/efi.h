@@ -14,6 +14,7 @@
 
 #ifdef CONFIG_EFI
 extern void efi_init(void);
+<<<<<<< HEAD
 
 bool efi_runtime_fixup_exception(struct pt_regs *regs, const char *msg);
 #else
@@ -29,12 +30,23 @@ bool efi_runtime_fixup_exception(struct pt_regs *regs, const char *msg)
 int efi_create_mapping(struct mm_struct *mm, efi_memory_desc_t *md);
 int efi_set_mapping_permissions(struct mm_struct *mm, efi_memory_desc_t *md,
 				bool has_bti);
+=======
+#else
+#define efi_init()
+#endif
+
+int efi_create_mapping(struct mm_struct *mm, efi_memory_desc_t *md);
+int efi_set_mapping_permissions(struct mm_struct *mm, efi_memory_desc_t *md);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define arch_efi_call_virt_setup()					\
 ({									\
 	efi_virtmap_load();						\
 	__efi_fpsimd_begin();						\
+<<<<<<< HEAD
 	raw_spin_lock(&efi_rt_lock);					\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 })
 
 #undef arch_efi_call_virt
@@ -43,11 +55,15 @@ int efi_set_mapping_permissions(struct mm_struct *mm, efi_memory_desc_t *md,
 
 #define arch_efi_call_virt_teardown()					\
 ({									\
+<<<<<<< HEAD
 	raw_spin_unlock(&efi_rt_lock);					\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__efi_fpsimd_end();						\
 	efi_virtmap_unload();						\
 })
 
+<<<<<<< HEAD
 extern raw_spinlock_t efi_rt_lock;
 extern u64 *efi_rt_stack_top;
 efi_status_t __efi_rt_asm_wrapper(void *, const char *, ...);
@@ -60,6 +76,10 @@ efi_status_t __efi_rt_asm_wrapper(void *, const char *, ...);
 	(!preemptible() && efi_rt_stack_top != NULL &&			\
 	 on_task_stack(current, READ_ONCE(efi_rt_stack_top[-1]), 1))
 
+=======
+efi_status_t __efi_rt_asm_wrapper(void *, const char *, ...);
+
+>>>>>>> b7ba80a49124 (Commit)
 #define ARCH_EFI_IRQ_FLAGS_MASK (PSR_D_BIT | PSR_A_BIT | PSR_I_BIT | PSR_F_BIT)
 
 /*
@@ -97,6 +117,7 @@ static inline unsigned long efi_get_max_initrd_addr(unsigned long image_addr)
 	return (image_addr & ~(SZ_1G - 1UL)) + (1UL << (VA_BITS_MIN - 1));
 }
 
+<<<<<<< HEAD
 static inline unsigned long efi_get_kimg_min_align(void)
 {
 	extern bool efi_nokaslr;
@@ -116,6 +137,15 @@ static inline unsigned long efi_get_kimg_min_align(void)
 #define EFI_ALLOC_LIMIT		((1UL << 48) - 1)
 
 extern unsigned long primary_entry_offset(void);
+=======
+#define alloc_screen_info(x...)		&screen_info
+
+static inline void free_screen_info(struct screen_info *si)
+{
+}
+
+#define EFI_ALLOC_ALIGN		SZ_64K
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * On ARM systems, virtually remapped UEFI runtime services are set up in two

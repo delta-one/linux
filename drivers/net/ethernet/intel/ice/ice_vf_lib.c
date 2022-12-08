@@ -237,15 +237,19 @@ static void ice_vf_clear_counters(struct ice_vf *vf)
  */
 static void ice_vf_pre_vsi_rebuild(struct ice_vf *vf)
 {
+<<<<<<< HEAD
 	/* Close any IRQ mapping now */
 	if (vf->vf_ops->irq_close)
 		vf->vf_ops->irq_close(vf);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ice_vf_clear_counters(vf);
 	vf->vf_ops->clear_reset_trigger(vf);
 }
 
 /**
+<<<<<<< HEAD
  * ice_vf_recreate_vsi - Release and re-create the VF's VSI
  * @vf: VF to recreate the VSI for
  *
@@ -273,13 +277,18 @@ static int ice_vf_recreate_vsi(struct ice_vf *vf)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ice_vf_rebuild_vsi - rebuild the VF's VSI
  * @vf: VF to rebuild the VSI for
  *
  * This is only called when all VF(s) are being reset (i.e. PCIe Reset on the
  * host, PFR, CORER, etc.).
+<<<<<<< HEAD
  *
  * It reprograms the VSI configuration back into hardware.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int ice_vf_rebuild_vsi(struct ice_vf *vf)
 {
@@ -289,7 +298,11 @@ static int ice_vf_rebuild_vsi(struct ice_vf *vf)
 	if (WARN_ON(!vsi))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (ice_vsi_rebuild(vsi, ICE_VSI_FLAG_INIT)) {
+=======
+	if (ice_vsi_rebuild(vsi, true)) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(ice_pf_to_dev(pf), "failed to rebuild VF %d VSI\n",
 			vf->vf_id);
 		return -EIO;
@@ -304,6 +317,7 @@ static int ice_vf_rebuild_vsi(struct ice_vf *vf)
 }
 
 /**
+<<<<<<< HEAD
  * ice_vf_post_vsi_rebuild - Reset tasks that occur after VSI rebuild
  * @vf: the VF being reset
  *
@@ -319,6 +333,8 @@ static void ice_vf_post_vsi_rebuild(struct ice_vf *vf)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ice_is_any_vf_in_unicast_promisc - check if any VF(s)
  * are in unicast promiscuous mode
  * @pf: PF structure for accessing VF(s)
@@ -496,7 +512,14 @@ void ice_reset_all_vfs(struct ice_pf *pf)
 
 	/* clear all malicious info if the VFs are getting reset */
 	ice_for_each_vf(pf, bkt, vf)
+<<<<<<< HEAD
 		ice_mbx_clear_malvf(&vf->mbx_info);
+=======
+		if (ice_mbx_clear_malvf(&hw->mbx_snapshot, pf->vfs.malvfs,
+					ICE_MAX_SRIOV_VFS, vf->vf_id))
+			dev_dbg(dev, "failed to clear malicious VF state for VF %u\n",
+				vf->vf_id);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* If VFs have been disabled, there is no need to reset */
 	if (test_and_set_bit(ICE_VF_DIS, pf->state)) {
@@ -540,7 +563,11 @@ void ice_reset_all_vfs(struct ice_pf *pf)
 
 		ice_vf_pre_vsi_rebuild(vf);
 		ice_vf_rebuild_vsi(vf);
+<<<<<<< HEAD
 		ice_vf_post_vsi_rebuild(vf);
+=======
+		vf->vf_ops->post_vsi_rebuild(vf);
+>>>>>>> b7ba80a49124 (Commit)
 
 		mutex_unlock(&vf->cfg_lock);
 	}
@@ -598,10 +625,18 @@ int ice_reset_vf(struct ice_vf *vf, u32 flags)
 	struct ice_pf *pf = vf->pf;
 	struct ice_vsi *vsi;
 	struct device *dev;
+<<<<<<< HEAD
+=======
+	struct ice_hw *hw;
+>>>>>>> b7ba80a49124 (Commit)
 	int err = 0;
 	bool rsd;
 
 	dev = ice_pf_to_dev(pf);
+<<<<<<< HEAD
+=======
+	hw = &pf->hw;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (flags & ICE_VF_RESET_NOTIFY)
 		ice_notify_vf_reset(vf);
@@ -619,10 +654,14 @@ int ice_reset_vf(struct ice_vf *vf, u32 flags)
 			return -EINVAL;
 		}
 		ice_vsi_stop_lan_tx_rings(vsi, ICE_NO_RESET, vf->vf_id);
+<<<<<<< HEAD
 
 		if (ice_vsi_is_rx_queue_active(vsi))
 			ice_vsi_stop_all_rx_rings(vsi);
 
+=======
+		ice_vsi_stop_all_rx_rings(vsi);
+>>>>>>> b7ba80a49124 (Commit)
 		dev_dbg(dev, "VF is already disabled, there is no need for resetting it, telling VM, all is fine %d\n",
 			vf->vf_id);
 		return 0;
@@ -682,14 +721,22 @@ int ice_reset_vf(struct ice_vf *vf, u32 flags)
 
 	ice_vf_pre_vsi_rebuild(vf);
 
+<<<<<<< HEAD
 	if (ice_vf_recreate_vsi(vf)) {
+=======
+	if (vf->vf_ops->vsi_rebuild(vf)) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(dev, "Failed to release and setup the VF%u's VSI\n",
 			vf->vf_id);
 		err = -EFAULT;
 		goto out_unlock;
 	}
 
+<<<<<<< HEAD
 	ice_vf_post_vsi_rebuild(vf);
+=======
+	vf->vf_ops->post_vsi_rebuild(vf);
+>>>>>>> b7ba80a49124 (Commit)
 	vsi = ice_get_vf_vsi(vf);
 	if (WARN_ON(!vsi)) {
 		err = -EINVAL;
@@ -700,7 +747,14 @@ int ice_reset_vf(struct ice_vf *vf, u32 flags)
 	ice_eswitch_replay_vf_mac_rule(vf);
 
 	/* if the VF has been reset allow it to come up again */
+<<<<<<< HEAD
 	ice_mbx_clear_malvf(&vf->mbx_info);
+=======
+	if (ice_mbx_clear_malvf(&hw->mbx_snapshot, pf->vfs.malvfs,
+				ICE_MAX_SRIOV_VFS, vf->vf_id))
+		dev_dbg(dev, "failed to clear malicious VF state for VF %u\n",
+			vf->vf_id);
+>>>>>>> b7ba80a49124 (Commit)
 
 out_unlock:
 	if (flags & ICE_VF_RESET_LOCK)
@@ -713,7 +767,11 @@ out_unlock:
  * ice_set_vf_state_qs_dis - Set VF queues state to disabled
  * @vf: pointer to the VF structure
  */
+<<<<<<< HEAD
 static void ice_set_vf_state_qs_dis(struct ice_vf *vf)
+=======
+void ice_set_vf_state_qs_dis(struct ice_vf *vf)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* Clear Rx/Tx enabled queues flag */
 	bitmap_zero(vf->txq_ena, ICE_MAX_RSS_QS_PER_VF);
@@ -721,6 +779,7 @@ static void ice_set_vf_state_qs_dis(struct ice_vf *vf)
 	clear_bit(ICE_VF_STATE_QS_ENA, vf->vf_states);
 }
 
+<<<<<<< HEAD
 /**
  * ice_set_vf_state_dis - Set VF state to disabled
  * @vf: pointer to the VF structure
@@ -763,6 +822,11 @@ void ice_initialize_vf_entry(struct ice_vf *vf)
 }
 
 /**
+=======
+/* Private functions only accessed from other virtualization files */
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * ice_dis_vf_qs - Disable the VF queues
  * @vf: pointer to the VF structure
  */
@@ -779,6 +843,7 @@ void ice_dis_vf_qs(struct ice_vf *vf)
 }
 
 /**
+<<<<<<< HEAD
  * ice_err_to_virt_err - translate errors for VF return code
  * @err: error return code
  */
@@ -803,6 +868,8 @@ enum virtchnl_status_code ice_err_to_virt_err(int err)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ice_check_vf_init - helper to check if VF init complete
  * @vf: the pointer to the VF to check
  */
@@ -1003,18 +1070,31 @@ static int ice_vf_rebuild_host_mac_cfg(struct ice_vf *vf)
 
 	vf->num_mac++;
 
+<<<<<<< HEAD
 	if (is_valid_ether_addr(vf->hw_lan_addr)) {
 		status = ice_fltr_add_mac(vsi, vf->hw_lan_addr,
 					  ICE_FWD_TO_VSI);
 		if (status) {
 			dev_err(dev, "failed to add default unicast MAC filter %pM for VF %u, error %d\n",
 				&vf->hw_lan_addr[0], vf->vf_id,
+=======
+	if (is_valid_ether_addr(vf->hw_lan_addr.addr)) {
+		status = ice_fltr_add_mac(vsi, vf->hw_lan_addr.addr,
+					  ICE_FWD_TO_VSI);
+		if (status) {
+			dev_err(dev, "failed to add default unicast MAC filter %pM for VF %u, error %d\n",
+				&vf->hw_lan_addr.addr[0], vf->vf_id,
+>>>>>>> b7ba80a49124 (Commit)
 				status);
 			return status;
 		}
 		vf->num_mac++;
 
+<<<<<<< HEAD
 		ether_addr_copy(vf->dev_lan_addr, vf->hw_lan_addr);
+=======
+		ether_addr_copy(vf->dev_lan_addr.addr, vf->hw_lan_addr.addr);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -1194,6 +1274,7 @@ void ice_vf_ctrl_vsi_release(struct ice_vf *vf)
  */
 struct ice_vsi *ice_vf_ctrl_vsi_setup(struct ice_vf *vf)
 {
+<<<<<<< HEAD
 	struct ice_vsi_cfg_params params = {};
 	struct ice_pf *pf = vf->pf;
 	struct ice_vsi *vsi;
@@ -1204,6 +1285,13 @@ struct ice_vsi *ice_vf_ctrl_vsi_setup(struct ice_vf *vf)
 	params.flags = ICE_VSI_FLAG_INIT;
 
 	vsi = ice_vsi_setup(pf, &params);
+=======
+	struct ice_port_info *pi = ice_vf_get_port_info(vf);
+	struct ice_pf *pf = vf->pf;
+	struct ice_vsi *vsi;
+
+	vsi = ice_vsi_setup(pf, pi, ICE_VSI_CTRL, vf, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!vsi) {
 		dev_err(ice_pf_to_dev(pf), "Failed to create VF control VSI\n");
 		ice_vf_ctrl_invalidate_vsi(vf);
@@ -1213,6 +1301,7 @@ struct ice_vsi *ice_vf_ctrl_vsi_setup(struct ice_vf *vf)
 }
 
 /**
+<<<<<<< HEAD
  * ice_vf_init_host_cfg - Initialize host admin configuration
  * @vf: VF to initialize
  * @vsi: the VSI created at initialization
@@ -1267,6 +1356,8 @@ int ice_vf_init_host_cfg(struct ice_vf *vf, struct ice_vsi *vsi)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ice_vf_invalidate_vsi - invalidate vsi_idx/vsi_num to remove VSI access
  * @vf: VF to remove access to VSI for
  */
@@ -1277,6 +1368,7 @@ void ice_vf_invalidate_vsi(struct ice_vf *vf)
 }
 
 /**
+<<<<<<< HEAD
  * ice_vf_vsi_release - Release the VF VSI and invalidate indexes
  * @vf: pointer to the VF structure
  *
@@ -1295,6 +1387,8 @@ void ice_vf_vsi_release(struct ice_vf *vf)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ice_vf_set_initialized - VF is ready for VIRTCHNL communication
  * @vf: VF to set in initialized state
  *

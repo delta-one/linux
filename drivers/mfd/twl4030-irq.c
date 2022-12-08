@@ -14,7 +14,10 @@
  * by syed khasim <x0khasim@ti.com>
  */
 
+<<<<<<< HEAD
 #include <linux/device.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/export.h>
 #include <linux/interrupt.h>
 #include <linux/irq.h>

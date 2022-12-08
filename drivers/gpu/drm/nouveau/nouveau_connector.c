@@ -47,7 +47,12 @@
 #include "nouveau_crtc.h"
 
 #include <nvif/class.h>
+<<<<<<< HEAD
 #include <nvif/if0011.h>
+=======
+#include <nvif/cl0046.h>
+#include <nvif/event.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 struct drm_display_mode *
 nouveau_conn_native_mode(struct drm_connector *connector)
@@ -395,8 +400,12 @@ static void
 nouveau_connector_destroy(struct drm_connector *connector)
 {
 	struct nouveau_connector *nv_connector = nouveau_connector(connector);
+<<<<<<< HEAD
 	nvif_event_dtor(&nv_connector->irq);
 	nvif_event_dtor(&nv_connector->hpd);
+=======
+	nvif_notify_dtor(&nv_connector->hpd);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(nv_connector->edid);
 	drm_connector_unregister(connector);
 	drm_connector_cleanup(connector);
@@ -1162,6 +1171,7 @@ nouveau_connector_funcs_lvds = {
 };
 
 void
+<<<<<<< HEAD
 nouveau_connector_hpd(struct nouveau_connector *nv_connector, u64 bits)
 {
 	struct nouveau_drm *drm = nouveau_drm(nv_connector->base.dev);
@@ -1194,6 +1204,41 @@ nouveau_connector_hotplug(struct nvif_event *event, void *repv, u32 repc)
 
 	nouveau_connector_hpd(nv_connector, rep->types);
 	return NVIF_EVENT_KEEP;
+=======
+nouveau_connector_hpd(struct drm_connector *connector)
+{
+	struct nouveau_drm *drm = nouveau_drm(connector->dev);
+	u32 mask = drm_connector_mask(connector);
+
+	mutex_lock(&drm->hpd_lock);
+	if (!(drm->hpd_pending & mask)) {
+		drm->hpd_pending |= mask;
+		schedule_work(&drm->hpd_work);
+	}
+	mutex_unlock(&drm->hpd_lock);
+}
+
+static int
+nouveau_connector_hotplug(struct nvif_notify *notify)
+{
+	struct nouveau_connector *nv_connector =
+		container_of(notify, typeof(*nv_connector), hpd);
+	struct drm_connector *connector = &nv_connector->base;
+	struct drm_device *dev = connector->dev;
+	struct nouveau_drm *drm = nouveau_drm(dev);
+	const struct nvif_notify_conn_rep_v0 *rep = notify->data;
+	bool plugged = (rep->mask != NVIF_NOTIFY_CONN_V0_UNPLUG);
+
+	if (rep->mask & NVIF_NOTIFY_CONN_V0_IRQ) {
+		nouveau_dp_irq(drm, nv_connector);
+		return NVIF_NOTIFY_KEEP;
+	}
+
+	NV_DEBUG(drm, "%splugged %s\n", plugged ? "" : "un", connector->name);
+	nouveau_connector_hpd(connector);
+
+	return NVIF_NOTIFY_KEEP;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t
@@ -1289,7 +1334,10 @@ nouveau_connector_create(struct drm_device *dev,
 
 	connector = &nv_connector->base;
 	nv_connector->index = index;
+<<<<<<< HEAD
 	INIT_WORK(&nv_connector->irq_work, nouveau_dp_irq);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* attempt to parse vbios connector type and hotplug gpio */
 	nv_connector->dcb = olddcb_conn(dev, index);
@@ -1401,7 +1449,10 @@ nouveau_connector_create(struct drm_device *dev,
 
 	drm_connector_init(dev, connector, funcs, type);
 	drm_connector_helper_add(connector, &nouveau_connector_helper_funcs);
+<<<<<<< HEAD
 	connector->polled = DRM_CONNECTOR_POLL_CONNECT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (nv_connector->dcb && (disp->disp.conn_mask & BIT(nv_connector->index))) {
 		ret = nvif_conn_ctor(&disp->disp, nv_connector->base.name, nv_connector->index,
@@ -1410,6 +1461,7 @@ nouveau_connector_create(struct drm_device *dev,
 			kfree(nv_connector);
 			return ERR_PTR(ret);
 		}
+<<<<<<< HEAD
 
 		ret = nvif_conn_event_ctor(&nv_connector->conn, "kmsHotplug",
 					   nouveau_connector_hotplug,
@@ -1429,6 +1481,8 @@ nouveau_connector_create(struct drm_device *dev,
 				return ERR_PTR(ret);
 			}
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	connector->funcs->reset(connector);
@@ -1472,6 +1526,24 @@ nouveau_connector_create(struct drm_device *dev,
 		break;
 	}
 
+<<<<<<< HEAD
+=======
+	ret = nvif_notify_ctor(&disp->disp.object, "kmsHotplug",
+			       nouveau_connector_hotplug,
+			       true, NV04_DISP_NTFY_CONN,
+			       &(struct nvif_notify_conn_req_v0) {
+				.mask = NVIF_NOTIFY_CONN_V0_ANY,
+				.conn = index,
+			       },
+			       sizeof(struct nvif_notify_conn_req_v0),
+			       sizeof(struct nvif_notify_conn_rep_v0),
+			       &nv_connector->hpd);
+	if (ret)
+		connector->polled = DRM_CONNECTOR_POLL_CONNECT;
+	else
+		connector->polled = DRM_CONNECTOR_POLL_HPD;
+
+>>>>>>> b7ba80a49124 (Commit)
 	drm_connector_register(connector);
 	return connector;
 }

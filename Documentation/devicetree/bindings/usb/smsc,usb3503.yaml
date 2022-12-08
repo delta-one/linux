@@ -14,7 +14,10 @@ properties:
     enum:
       - smsc,usb3503
       - smsc,usb3503a
+<<<<<<< HEAD
       - smsc,usb3803
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -34,12 +37,15 @@ properties:
     description: >
       GPIO for reset
 
+<<<<<<< HEAD
   bypass-gpios:
     maxItems: 1
     description: >
       GPIO for bypass.
       Control signal to select between HUB MODE and BYPASS MODE.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   disabled-ports:
     $ref: /schemas/types.yaml#/definitions/uint32-array
     minItems: 1
@@ -53,10 +59,16 @@ properties:
 
   initial-mode:
     $ref: /schemas/types.yaml#/definitions/uint32
+<<<<<<< HEAD
     description: >
       Specifies initial mode. 1 for Hub mode, 2 for standby mode and 3 for bypass mode.
       In bypass mode the downstream port 3 is connected to the upstream port with low
       switch resistance R_on.
+=======
+    enum: [1, 2]
+    description: >
+      Specifies initial mode. 1 for Hub mode, 2 for standby mode.
+>>>>>>> b7ba80a49124 (Commit)
 
   clocks:
     maxItems: 1
@@ -79,6 +91,7 @@ properties:
 required:
   - compatible
 
+<<<<<<< HEAD
 allOf:
   - if:
       not:
@@ -102,6 +115,8 @@ allOf:
         initial-mode:
           enum: [1, 2]
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 additionalProperties: false
 
 examples:
@@ -124,6 +139,7 @@ examples:
       };
 
   - |
+<<<<<<< HEAD
       i2c {
           #address-cells = <1>;
           #size-cells = <0>;
@@ -143,6 +159,8 @@ examples:
       };
 
   - |
+=======
+>>>>>>> b7ba80a49124 (Commit)
       #include <dt-bindings/gpio/gpio.h>
 
       usb-hub {

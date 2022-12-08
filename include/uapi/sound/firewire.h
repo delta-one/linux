@@ -14,7 +14,10 @@
 #define SNDRV_FIREWIRE_EVENT_MOTU_NOTIFICATION	0x64776479
 #define SNDRV_FIREWIRE_EVENT_TASCAM_CONTROL	0x7473636d
 #define SNDRV_FIREWIRE_EVENT_MOTU_REGISTER_DSP_CHANGE	0x4d545244
+<<<<<<< HEAD
 #define SNDRV_FIREWIRE_EVENT_FF400_MESSAGE	0x4f6c6761
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct snd_firewire_event_common {
 	unsigned int type; /* SNDRV_FIREWIRE_EVENT_xxx */
@@ -73,6 +76,7 @@ struct snd_firewire_event_motu_register_dsp_change {
 	__u32 changes[];	/* Encoded event for change of register DSP. */
 };
 
+<<<<<<< HEAD
 /**
  * struct snd_firewire_event_ff400_message - the container for message from Fireface 400 when
  *					     operating hardware knob.
@@ -97,6 +101,8 @@ struct snd_firewire_event_ff400_message {
 	} messages[];
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 union snd_firewire_event {
 	struct snd_firewire_event_common            common;
 	struct snd_firewire_event_lock_status       lock_status;
@@ -106,7 +112,10 @@ union snd_firewire_event {
 	struct snd_firewire_event_tascam_control    tascam_control;
 	struct snd_firewire_event_motu_notification motu_notification;
 	struct snd_firewire_event_motu_register_dsp_change motu_register_dsp_change;
+<<<<<<< HEAD
 	struct snd_firewire_event_ff400_message	    ff400_message;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 

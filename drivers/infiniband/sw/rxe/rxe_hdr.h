@@ -608,6 +608,7 @@ static inline void reth_set_len(struct rxe_pkt_info *pkt, u32 len)
 }
 
 /******************************************************************************
+<<<<<<< HEAD
  * FLUSH Extended Transport Header
  ******************************************************************************/
 
@@ -654,6 +655,8 @@ static inline void feth_init(struct rxe_pkt_info *pkt, u8 type, u8 level)
 }
 
 /******************************************************************************
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Atomic Extended Transport Header
  ******************************************************************************/
 struct rxe_atmeth {
@@ -788,6 +791,10 @@ enum aeth_syndrome {
 	AETH_NAK_INVALID_REQ	= 0x61,
 	AETH_NAK_REM_ACC_ERR	= 0x62,
 	AETH_NAK_REM_OP_ERR	= 0x63,
+<<<<<<< HEAD
+=======
+	AETH_NAK_INV_RD_REQ	= 0x64,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline u8 __aeth_syn(void *arg)
@@ -955,7 +962,10 @@ enum rxe_hdr_length {
 	RXE_ATMETH_BYTES	= sizeof(struct rxe_atmeth),
 	RXE_IETH_BYTES		= sizeof(struct rxe_ieth),
 	RXE_RDETH_BYTES		= sizeof(struct rxe_rdeth),
+<<<<<<< HEAD
 	RXE_FETH_BYTES		= sizeof(struct rxe_feth),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline size_t header_size(struct rxe_pkt_info *pkt)

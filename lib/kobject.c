@@ -10,8 +10,11 @@
  * about using the kobject interface.
  */
 
+<<<<<<< HEAD
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kobject.h>
 #include <linux/string.h>
 #include <linux/export.h>
@@ -27,7 +30,11 @@
  * and thus @kobj should have a namespace tag associated with it.  Returns
  * %NULL otherwise.
  */
+<<<<<<< HEAD
 const void *kobject_namespace(const struct kobject *kobj)
+=======
+const void *kobject_namespace(struct kobject *kobj)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct kobj_ns_type_operations *ns_ops = kobj_ns_ops(kobj);
 
@@ -47,7 +54,11 @@ const void *kobject_namespace(const struct kobject *kobj)
  * representation of given kobject. Normally used to adjust ownership of
  * objects in a container.
  */
+<<<<<<< HEAD
 void kobject_get_ownership(const struct kobject *kobj, kuid_t *uid, kgid_t *gid)
+=======
+void kobject_get_ownership(struct kobject *kobj, kuid_t *uid, kgid_t *gid)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	*uid = GLOBAL_ROOT_UID;
 	*gid = GLOBAL_ROOT_GID;
@@ -96,10 +107,17 @@ static int create_dir(struct kobject *kobj)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int get_kobj_path_length(const struct kobject *kobj)
 {
 	int length = 1;
 	const struct kobject *parent = kobj;
+=======
+static int get_kobj_path_length(struct kobject *kobj)
+{
+	int length = 1;
+	struct kobject *parent = kobj;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* walk up the ancestors until we hit the one pointing to the
 	 * root.
@@ -114,25 +132,39 @@ static int get_kobj_path_length(const struct kobject *kobj)
 	return length;
 }
 
+<<<<<<< HEAD
 static int fill_kobj_path(const struct kobject *kobj, char *path, int length)
 {
 	const struct kobject *parent;
+=======
+static void fill_kobj_path(struct kobject *kobj, char *path, int length)
+{
+	struct kobject *parent;
+>>>>>>> b7ba80a49124 (Commit)
 
 	--length;
 	for (parent = kobj; parent; parent = parent->parent) {
 		int cur = strlen(kobject_name(parent));
 		/* back up enough to print this name with '/' */
 		length -= cur;
+<<<<<<< HEAD
 		if (length <= 0)
 			return -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		memcpy(path + length, kobject_name(parent), cur);
 		*(path + --length) = '/';
 	}
 
+<<<<<<< HEAD
 	pr_debug("'%s' (%p): %s: path = '%s'\n", kobject_name(kobj),
 		 kobj, __func__, path);
 
 	return 0;
+=======
+	pr_debug("kobject: '%s' (%p): %s: path = '%s'\n", kobject_name(kobj),
+		 kobj, __func__, path);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -142,22 +174,33 @@ static int fill_kobj_path(const struct kobject *kobj, char *path, int length)
  *
  * Return: The newly allocated memory, caller must free with kfree().
  */
+<<<<<<< HEAD
 char *kobject_get_path(const struct kobject *kobj, gfp_t gfp_mask)
+=======
+char *kobject_get_path(struct kobject *kobj, gfp_t gfp_mask)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	char *path;
 	int len;
 
+<<<<<<< HEAD
 retry:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	len = get_kobj_path_length(kobj);
 	if (len == 0)
 		return NULL;
 	path = kzalloc(len, gfp_mask);
 	if (!path)
 		return NULL;
+<<<<<<< HEAD
 	if (fill_kobj_path(kobj, path, len)) {
 		kfree(path);
 		goto retry;
 	}
+=======
+	fill_kobj_path(kobj, path, len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return path;
 }
@@ -225,7 +268,11 @@ static int kobject_add_internal(struct kobject *kobj)
 		kobj->parent = parent;
 	}
 
+<<<<<<< HEAD
 	pr_debug("'%s' (%p): %s: parent: '%s', set: '%s'\n",
+=======
+	pr_debug("kobject: '%s' (%p): %s: parent: '%s', set: '%s'\n",
+>>>>>>> b7ba80a49124 (Commit)
 		 kobject_name(kobj), kobj, __func__,
 		 parent ? kobject_name(parent) : "<NULL>",
 		 kobj->kset ? kobject_name(&kobj->kset->kobj) : "<NULL>");
@@ -340,7 +387,11 @@ void kobject_init(struct kobject *kobj, const struct kobj_type *ktype)
 		/* do not error out as sometimes we can recover */
 		pr_err("kobject (%p): tried to init an initialized object, something is seriously wrong.\n",
 		       kobj);
+<<<<<<< HEAD
 		dump_stack_lvl(KERN_ERR);
+=======
+		dump_stack();
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	kobject_init_internal(kobj);
@@ -349,7 +400,11 @@ void kobject_init(struct kobject *kobj, const struct kobj_type *ktype)
 
 error:
 	pr_err("kobject (%p): %s\n", kobj, err_str);
+<<<<<<< HEAD
 	dump_stack_lvl(KERN_ERR);
+=======
+	dump_stack();
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(kobject_init);
 
@@ -361,7 +416,11 @@ static __printf(3, 0) int kobject_add_varg(struct kobject *kobj,
 
 	retval = kobject_set_name_vargs(kobj, fmt, vargs);
 	if (retval) {
+<<<<<<< HEAD
 		pr_err("can not set name properly!\n");
+=======
+		pr_err("kobject: can not set name properly!\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return retval;
 	}
 	kobj->parent = parent;
@@ -413,7 +472,11 @@ int kobject_add(struct kobject *kobj, struct kobject *parent,
 	if (!kobj->state_initialized) {
 		pr_err("kobject '%s' (%p): tried to add an uninitialized object, something is seriously wrong.\n",
 		       kobject_name(kobj), kobj);
+<<<<<<< HEAD
 		dump_stack_lvl(KERN_ERR);
+=======
+		dump_stack();
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 	va_start(args, fmt);
@@ -590,7 +653,11 @@ static void __kobject_del(struct kobject *kobj)
 
 	/* send "remove" if the caller did not do it but sent "add" */
 	if (kobj->state_add_uevent_sent && !kobj->state_remove_uevent_sent) {
+<<<<<<< HEAD
 		pr_debug("'%s' (%p): auto cleanup 'remove' event\n",
+=======
+		pr_debug("kobject: '%s' (%p): auto cleanup 'remove' event\n",
+>>>>>>> b7ba80a49124 (Commit)
 			 kobject_name(kobj), kobj);
 		kobject_uevent(kobj, KOBJ_REMOVE);
 	}
@@ -660,16 +727,28 @@ static void kobject_cleanup(struct kobject *kobj)
 	const struct kobj_type *t = get_ktype(kobj);
 	const char *name = kobj->name;
 
+<<<<<<< HEAD
 	pr_debug("'%s' (%p): %s, parent %p\n",
 		 kobject_name(kobj), kobj, __func__, kobj->parent);
 
 	if (t && !t->release)
 		pr_debug("'%s' (%p): does not have a release() function, it is broken and must be fixed. See Documentation/core-api/kobject.rst.\n",
+=======
+	pr_debug("kobject: '%s' (%p): %s, parent %p\n",
+		 kobject_name(kobj), kobj, __func__, kobj->parent);
+
+	if (t && !t->release)
+		pr_debug("kobject: '%s' (%p): does not have a release() function, it is broken and must be fixed. See Documentation/core-api/kobject.rst.\n",
+>>>>>>> b7ba80a49124 (Commit)
 			 kobject_name(kobj), kobj);
 
 	/* remove from sysfs if the caller did not do it */
 	if (kobj->state_in_sysfs) {
+<<<<<<< HEAD
 		pr_debug("'%s' (%p): auto cleanup kobject_del\n",
+=======
+		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+>>>>>>> b7ba80a49124 (Commit)
 			 kobject_name(kobj), kobj);
 		__kobject_del(kobj);
 	} else {
@@ -678,14 +757,22 @@ static void kobject_cleanup(struct kobject *kobj)
 	}
 
 	if (t && t->release) {
+<<<<<<< HEAD
 		pr_debug("'%s' (%p): calling ktype release\n",
+=======
+		pr_debug("kobject: '%s' (%p): calling ktype release\n",
+>>>>>>> b7ba80a49124 (Commit)
 			 kobject_name(kobj), kobj);
 		t->release(kobj);
 	}
 
 	/* free name if we allocated it */
 	if (name) {
+<<<<<<< HEAD
 		pr_debug("'%s': free name\n", name);
+=======
+		pr_debug("kobject: '%s': free name\n", name);
+>>>>>>> b7ba80a49124 (Commit)
 		kfree_const(name);
 	}
 
@@ -704,9 +791,15 @@ static void kobject_release(struct kref *kref)
 {
 	struct kobject *kobj = container_of(kref, struct kobject, kref);
 #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
+<<<<<<< HEAD
 	unsigned long delay = HZ + HZ * get_random_u32_below(4);
 	pr_info("'%s' (%p): %s, parent %p (delayed %ld)\n",
 		kobject_name(kobj), kobj, __func__, kobj->parent, delay);
+=======
+	unsigned long delay = HZ + HZ * (get_random_int() & 0x3);
+	pr_info("kobject: '%s' (%p): %s, parent %p (delayed %ld)\n",
+		 kobject_name(kobj), kobj, __func__, kobj->parent, delay);
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_DELAYED_WORK(&kobj->release, kobject_delayed_cleanup);
 
 	schedule_delayed_work(&kobj->release, delay);
@@ -735,11 +828,19 @@ EXPORT_SYMBOL(kobject_put);
 
 static void dynamic_kobj_release(struct kobject *kobj)
 {
+<<<<<<< HEAD
 	pr_debug("(%p): %s\n", kobj, __func__);
 	kfree(kobj);
 }
 
 static const struct kobj_type dynamic_kobj_ktype = {
+=======
+	pr_debug("kobject: (%p): %s\n", kobj, __func__);
+	kfree(kobj);
+}
+
+static struct kobj_type dynamic_kobj_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release	= dynamic_kobj_release,
 	.sysfs_ops	= &kobj_sysfs_ops,
 };
@@ -844,9 +945,12 @@ EXPORT_SYMBOL_GPL(kobj_sysfs_ops);
 /**
  * kset_register() - Initialize and add a kset.
  * @k: kset.
+<<<<<<< HEAD
  *
  * NOTE: On error, the kset.kobj.name allocated by() kobj_set_name()
  * is freed, it can not be used any more.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 int kset_register(struct kset *k)
 {
@@ -857,12 +961,17 @@ int kset_register(struct kset *k)
 
 	kset_init(k);
 	err = kobject_add_internal(&k->kobj);
+<<<<<<< HEAD
 	if (err) {
 		kfree_const(k->kobj.name);
 		/* Set it to NULL to avoid accessing bad pointer in callers. */
 		k->kobj.name = NULL;
 		return err;
 	}
+=======
+	if (err)
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 	kobject_uevent(&k->kobj, KOBJ_ADD);
 	return 0;
 }
@@ -912,18 +1021,30 @@ EXPORT_SYMBOL_GPL(kset_find_obj);
 static void kset_release(struct kobject *kobj)
 {
 	struct kset *kset = container_of(kobj, struct kset, kobj);
+<<<<<<< HEAD
 	pr_debug("'%s' (%p): %s\n",
+=======
+	pr_debug("kobject: '%s' (%p): %s\n",
+>>>>>>> b7ba80a49124 (Commit)
 		 kobject_name(kobj), kobj, __func__);
 	kfree(kset);
 }
 
+<<<<<<< HEAD
 static void kset_get_ownership(const struct kobject *kobj, kuid_t *uid, kgid_t *gid)
+=======
+static void kset_get_ownership(struct kobject *kobj, kuid_t *uid, kgid_t *gid)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (kobj->parent)
 		kobject_get_ownership(kobj->parent, uid, gid);
 }
 
+<<<<<<< HEAD
 static const struct kobj_type kset_ktype = {
+=======
+static struct kobj_type kset_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops	= &kobj_sysfs_ops,
 	.release	= kset_release,
 	.get_ownership	= kset_get_ownership,
@@ -1049,7 +1170,11 @@ int kobj_ns_type_registered(enum kobj_ns_type type)
 	return registered;
 }
 
+<<<<<<< HEAD
 const struct kobj_ns_type_operations *kobj_child_ns_ops(const struct kobject *parent)
+=======
+const struct kobj_ns_type_operations *kobj_child_ns_ops(struct kobject *parent)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct kobj_ns_type_operations *ops = NULL;
 
@@ -1059,7 +1184,11 @@ const struct kobj_ns_type_operations *kobj_child_ns_ops(const struct kobject *pa
 	return ops;
 }
 
+<<<<<<< HEAD
 const struct kobj_ns_type_operations *kobj_ns_ops(const struct kobject *kobj)
+=======
+const struct kobj_ns_type_operations *kobj_ns_ops(struct kobject *kobj)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return kobj_child_ns_ops(kobj->parent);
 }

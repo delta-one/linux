@@ -197,10 +197,22 @@ static const struct watchdog_ops lpc18xx_wdt_ops = {
 	.restart        = lpc18xx_wdt_restart,
 };
 
+<<<<<<< HEAD
+=======
+static void lpc18xx_clk_disable_unprepare(void *data)
+{
+	clk_disable_unprepare(data);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int lpc18xx_wdt_probe(struct platform_device *pdev)
 {
 	struct lpc18xx_wdt_dev *lpc18xx_wdt;
 	struct device *dev = &pdev->dev;
+<<<<<<< HEAD
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	lpc18xx_wdt = devm_kzalloc(dev, sizeof(*lpc18xx_wdt), GFP_KERNEL);
 	if (!lpc18xx_wdt)
@@ -210,18 +222,49 @@ static int lpc18xx_wdt_probe(struct platform_device *pdev)
 	if (IS_ERR(lpc18xx_wdt->base))
 		return PTR_ERR(lpc18xx_wdt->base);
 
+<<<<<<< HEAD
 	lpc18xx_wdt->reg_clk = devm_clk_get_enabled(dev, "reg");
+=======
+	lpc18xx_wdt->reg_clk = devm_clk_get(dev, "reg");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(lpc18xx_wdt->reg_clk)) {
 		dev_err(dev, "failed to get the reg clock\n");
 		return PTR_ERR(lpc18xx_wdt->reg_clk);
 	}
 
+<<<<<<< HEAD
 	lpc18xx_wdt->wdt_clk = devm_clk_get_enabled(dev, "wdtclk");
+=======
+	lpc18xx_wdt->wdt_clk = devm_clk_get(dev, "wdtclk");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(lpc18xx_wdt->wdt_clk)) {
 		dev_err(dev, "failed to get the wdt clock\n");
 		return PTR_ERR(lpc18xx_wdt->wdt_clk);
 	}
 
+<<<<<<< HEAD
+=======
+	ret = clk_prepare_enable(lpc18xx_wdt->reg_clk);
+	if (ret) {
+		dev_err(dev, "could not prepare or enable sys clock\n");
+		return ret;
+	}
+	ret = devm_add_action_or_reset(dev, lpc18xx_clk_disable_unprepare,
+				       lpc18xx_wdt->reg_clk);
+	if (ret)
+		return ret;
+
+	ret = clk_prepare_enable(lpc18xx_wdt->wdt_clk);
+	if (ret) {
+		dev_err(dev, "could not prepare or enable wdt clock\n");
+		return ret;
+	}
+	ret = devm_add_action_or_reset(dev, lpc18xx_clk_disable_unprepare,
+				       lpc18xx_wdt->wdt_clk);
+	if (ret)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* We use the clock rate to calculate timeouts */
 	lpc18xx_wdt->clk_rate = clk_get_rate(lpc18xx_wdt->wdt_clk);
 	if (lpc18xx_wdt->clk_rate == 0) {

@@ -114,7 +114,11 @@ void ksmbd_conn_enqueue_request(struct ksmbd_work *work)
 
 	if (conn->ops->get_cmd_val(work) != SMB2_CANCEL_HE) {
 		requests_queue = &conn->requests;
+<<<<<<< HEAD
 		work->synchronous = true;
+=======
+		work->syncronous = true;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (requests_queue) {
@@ -139,7 +143,11 @@ int ksmbd_conn_try_dequeue_request(struct ksmbd_work *work)
 	spin_lock(&conn->request_lock);
 	if (!work->multiRsp) {
 		list_del_init(&work->request_entry);
+<<<<<<< HEAD
 		if (!work->synchronous)
+=======
+		if (work->syncronous == false)
+>>>>>>> b7ba80a49124 (Commit)
 			list_del_init(&work->async_request_entry);
 		ret = 0;
 	}
@@ -280,7 +288,11 @@ int ksmbd_conn_handler_loop(void *p)
 {
 	struct ksmbd_conn *conn = (struct ksmbd_conn *)p;
 	struct ksmbd_transport *t = conn->transport;
+<<<<<<< HEAD
 	unsigned int pdu_size, max_allowed_pdu_size;
+=======
+	unsigned int pdu_size;
+>>>>>>> b7ba80a49124 (Commit)
 	char hdr_buf[4] = {0,};
 	int size;
 
@@ -298,13 +310,18 @@ int ksmbd_conn_handler_loop(void *p)
 		kvfree(conn->request_buf);
 		conn->request_buf = NULL;
 
+<<<<<<< HEAD
 		size = t->ops->read(t, hdr_buf, sizeof(hdr_buf), -1);
+=======
+		size = t->ops->read(t, hdr_buf, sizeof(hdr_buf));
+>>>>>>> b7ba80a49124 (Commit)
 		if (size != sizeof(hdr_buf))
 			break;
 
 		pdu_size = get_rfc1002_len(hdr_buf);
 		ksmbd_debug(CONN, "RFC1002 header %u bytes\n", pdu_size);
 
+<<<<<<< HEAD
 		if (conn->status == KSMBD_SESS_GOOD)
 			max_allowed_pdu_size =
 				SMB3_MAX_MSGSIZE + conn->vals->max_write_size;
@@ -332,6 +349,22 @@ int ksmbd_conn_handler_loop(void *p)
 					     __GFP_NORETRY);
 		if (!conn->request_buf)
 			break;
+=======
+		/*
+		 * Check if pdu size is valid (min : smb header size,
+		 * max : 0x00FFFFFF).
+		 */
+		if (pdu_size < __SMB2_HEADER_STRUCTURE_SIZE ||
+		    pdu_size > MAX_STREAM_PROT_LEN) {
+			continue;
+		}
+
+		/* 4 for rfc1002 length field */
+		size = pdu_size + 4;
+		conn->request_buf = kvmalloc(size, GFP_KERNEL);
+		if (!conn->request_buf)
+			continue;
+>>>>>>> b7ba80a49124 (Commit)
 
 		memcpy(conn->request_buf, hdr_buf, sizeof(hdr_buf));
 		if (!ksmbd_smb_request(conn))
@@ -341,7 +374,11 @@ int ksmbd_conn_handler_loop(void *p)
 		 * We already read 4 bytes to find out PDU size, now
 		 * read in PDU
 		 */
+<<<<<<< HEAD
 		size = t->ops->read(t, conn->request_buf + 4, pdu_size, 2);
+=======
+		size = t->ops->read(t, conn->request_buf + 4, pdu_size);
+>>>>>>> b7ba80a49124 (Commit)
 		if (size < 0) {
 			pr_err("sock_read failed: %d\n", size);
 			break;

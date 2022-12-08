@@ -68,9 +68,12 @@ void output_task_defines(void)
 	OFFSET(TASK_FLAGS, task_struct, flags);
 	OFFSET(TASK_MM, task_struct, mm);
 	OFFSET(TASK_PID, task_struct, pid);
+<<<<<<< HEAD
 #if defined(CONFIG_STACKPROTECTOR)
 	OFFSET(TASK_STACK_CANARY, task_struct, stack_canary);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	DEFINE(TASK_STRUCT_SIZE, sizeof(struct task_struct));
 	BLANK();
 }
@@ -260,6 +263,7 @@ void output_smpboot_defines(void)
 	BLANK();
 }
 #endif
+<<<<<<< HEAD
 
 #ifdef CONFIG_HIBERNATION
 void output_pbe_defines(void)
@@ -272,3 +276,5 @@ void output_pbe_defines(void)
 	BLANK();
 }
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)

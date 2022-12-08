@@ -13,13 +13,19 @@
 #include <linux/delay.h>
 #include <linux/of_irq.h>
 #include <linux/pm_runtime.h>
+<<<<<<< HEAD
 #include <linux/of_device.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define NPCM_RNGCS_REG		0x00	/* Control and status register */
 #define NPCM_RNGD_REG		0x04	/* Data register */
 #define NPCM_RNGMODE_REG	0x08	/* Mode register */
 
+<<<<<<< HEAD
 #define NPCM_RNG_CLK_SET_62_5MHZ	BIT(2) /* 60-80 MHz */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define NPCM_RNG_CLK_SET_25MHZ	GENMASK(4, 3) /* 20-25 MHz */
 #define NPCM_RNG_DATA_VALID	BIT(1)
 #define NPCM_RNG_ENABLE		BIT(0)
@@ -33,14 +39,22 @@
 struct npcm_rng {
 	void __iomem *base;
 	struct hwrng rng;
+<<<<<<< HEAD
 	u32 clkp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int npcm_rng_init(struct hwrng *rng)
 {
 	struct npcm_rng *priv = to_npcm_rng(rng);
 
+<<<<<<< HEAD
 	writel(priv->clkp | NPCM_RNG_ENABLE, priv->base + NPCM_RNGCS_REG);
+=======
+	writel(NPCM_RNG_CLK_SET_25MHZ | NPCM_RNG_ENABLE,
+	       priv->base + NPCM_RNGCS_REG);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -49,7 +63,11 @@ static void npcm_rng_cleanup(struct hwrng *rng)
 {
 	struct npcm_rng *priv = to_npcm_rng(rng);
 
+<<<<<<< HEAD
 	writel(priv->clkp, priv->base + NPCM_RNGCS_REG);
+=======
+	writel(NPCM_RNG_CLK_SET_25MHZ, priv->base + NPCM_RNGCS_REG);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int npcm_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
@@ -111,7 +129,11 @@ static int npcm_rng_probe(struct platform_device *pdev)
 	priv->rng.name = pdev->name;
 	priv->rng.read = npcm_rng_read;
 	priv->rng.priv = (unsigned long)&pdev->dev;
+<<<<<<< HEAD
 	priv->clkp = (u32)(uintptr_t)of_device_get_match_data(&pdev->dev);
+=======
+	priv->rng.quality = 1000;
+>>>>>>> b7ba80a49124 (Commit)
 
 	writel(NPCM_RNG_M1ROSEL, priv->base + NPCM_RNGMODE_REG);
 
@@ -164,10 +186,14 @@ static const struct dev_pm_ops npcm_rng_pm_ops = {
 };
 
 static const struct of_device_id rng_dt_id[] __maybe_unused = {
+<<<<<<< HEAD
 	{ .compatible = "nuvoton,npcm750-rng",
 		.data = (void *)NPCM_RNG_CLK_SET_25MHZ },
 	{ .compatible = "nuvoton,npcm845-rng",
 		.data = (void *)NPCM_RNG_CLK_SET_62_5MHZ },
+=======
+	{ .compatible = "nuvoton,npcm750-rng",  },
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 MODULE_DEVICE_TABLE(of, rng_dt_id);

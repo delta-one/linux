@@ -58,7 +58,10 @@ properties:
       - items:
           - enum:
               - mediatek,mt6795-evb
+<<<<<<< HEAD
               - sony,xperia-m5
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - const: mediatek,mt6795
       - items:
           - enum:
@@ -84,7 +87,10 @@ properties:
           - const: mediatek,mt7629
       - items:
           - enum:
+<<<<<<< HEAD
               - bananapi,bpi-r3
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - mediatek,mt7986a-rfb
           - const: mediatek,mt7986a
       - items:
@@ -246,10 +252,13 @@ properties:
           - const: mediatek,mt8183
       - items:
           - enum:
+<<<<<<< HEAD
               - mediatek,mt8365-evk
           - const: mediatek,mt8365
       - items:
           - enum:
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - mediatek,mt8516-pumpkin
           - const: mediatek,mt8516
 

@@ -46,6 +46,7 @@ enum hinic_port_cmd {
 	HINIC_PORT_CMD_VF_REGISTER = 0x0,
 	HINIC_PORT_CMD_VF_UNREGISTER = 0x1,
 
+<<<<<<< HEAD
 	HINIC_PORT_CMD_CHANGE_MTU = 0x2,
 
 	HINIC_PORT_CMD_ADD_VLAN = 0x3,
@@ -210,6 +211,106 @@ enum hinic_port_cmd {
 	HINIC_PORT_CMD_TCAM_FILTER = 0xFE,
 
 	HINIC_PORT_CMD_SET_VLAN_FILTER = 0xFF,
+=======
+	HINIC_PORT_CMD_CHANGE_MTU       = 2,
+
+	HINIC_PORT_CMD_ADD_VLAN         = 3,
+	HINIC_PORT_CMD_DEL_VLAN         = 4,
+
+	HINIC_PORT_CMD_SET_PFC		= 5,
+
+	HINIC_PORT_CMD_SET_MAC          = 9,
+	HINIC_PORT_CMD_GET_MAC          = 10,
+	HINIC_PORT_CMD_DEL_MAC          = 11,
+
+	HINIC_PORT_CMD_SET_RX_MODE      = 12,
+
+	HINIC_PORT_CMD_GET_PAUSE_INFO	= 20,
+	HINIC_PORT_CMD_SET_PAUSE_INFO	= 21,
+
+	HINIC_PORT_CMD_GET_LINK_STATE   = 24,
+
+	HINIC_PORT_CMD_SET_LRO		= 25,
+
+	HINIC_PORT_CMD_SET_RX_CSUM	= 26,
+
+	HINIC_PORT_CMD_SET_RX_VLAN_OFFLOAD = 27,
+
+	HINIC_PORT_CMD_GET_PORT_STATISTICS = 28,
+
+	HINIC_PORT_CMD_CLEAR_PORT_STATISTICS = 29,
+
+	HINIC_PORT_CMD_GET_VPORT_STAT	= 30,
+
+	HINIC_PORT_CMD_CLEAN_VPORT_STAT	= 31,
+
+	HINIC_PORT_CMD_GET_RSS_TEMPLATE_INDIR_TBL = 37,
+
+	HINIC_PORT_CMD_SET_PORT_STATE   = 41,
+
+	HINIC_PORT_CMD_SET_RSS_TEMPLATE_TBL = 43,
+
+	HINIC_PORT_CMD_GET_RSS_TEMPLATE_TBL = 44,
+
+	HINIC_PORT_CMD_SET_RSS_HASH_ENGINE = 45,
+
+	HINIC_PORT_CMD_GET_RSS_HASH_ENGINE = 46,
+
+	HINIC_PORT_CMD_GET_RSS_CTX_TBL  = 47,
+
+	HINIC_PORT_CMD_SET_RSS_CTX_TBL  = 48,
+
+	HINIC_PORT_CMD_RSS_TEMP_MGR	= 49,
+
+	HINIC_PORT_CMD_RD_LINE_TBL	= 57,
+
+	HINIC_PORT_CMD_RSS_CFG		= 66,
+
+	HINIC_PORT_CMD_FWCTXT_INIT      = 69,
+
+	HINIC_PORT_CMD_GET_LOOPBACK_MODE = 72,
+	HINIC_PORT_CMD_SET_LOOPBACK_MODE,
+
+	HINIC_PORT_CMD_ENABLE_SPOOFCHK = 78,
+
+	HINIC_PORT_CMD_GET_MGMT_VERSION = 88,
+
+	HINIC_PORT_CMD_SET_FUNC_STATE   = 93,
+
+	HINIC_PORT_CMD_GET_GLOBAL_QPN   = 102,
+
+	HINIC_PORT_CMD_SET_VF_RATE = 105,
+
+	HINIC_PORT_CMD_SET_VF_VLAN	= 106,
+
+	HINIC_PORT_CMD_CLR_VF_VLAN,
+
+	HINIC_PORT_CMD_SET_TSO          = 112,
+
+	HINIC_PORT_CMD_UPDATE_FW	= 114,
+
+	HINIC_PORT_CMD_SET_RQ_IQ_MAP	= 115,
+
+	HINIC_PORT_CMD_LINK_STATUS_REPORT = 160,
+
+	HINIC_PORT_CMD_UPDATE_MAC = 164,
+
+	HINIC_PORT_CMD_GET_CAP          = 170,
+
+	HINIC_PORT_CMD_GET_LINK_MODE	= 217,
+
+	HINIC_PORT_CMD_SET_SPEED	= 218,
+
+	HINIC_PORT_CMD_SET_AUTONEG	= 219,
+
+	HINIC_PORT_CMD_GET_STD_SFP_INFO = 240,
+
+	HINIC_PORT_CMD_SET_LRO_TIMER	= 244,
+
+	HINIC_PORT_CMD_SET_VF_MAX_MIN_RATE = 249,
+
+	HINIC_PORT_CMD_GET_SFP_ABS	= 251,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* cmd of mgmt CPU message for HILINK module */
@@ -632,6 +733,11 @@ struct hinic_hwdev *hinic_init_hwdev(struct pci_dev *pdev, struct devlink *devli
 
 void hinic_free_hwdev(struct hinic_hwdev *hwdev);
 
+<<<<<<< HEAD
+=======
+int hinic_hwdev_max_num_qps(struct hinic_hwdev *hwdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 int hinic_hwdev_num_qps(struct hinic_hwdev *hwdev);
 
 struct hinic_sq *hinic_hwdev_get_sq(struct hinic_hwdev *hwdev, int i);
@@ -651,6 +757,12 @@ int hinic_hwdev_hw_ci_addr_set(struct hinic_hwdev *hwdev, struct hinic_sq *sq,
 void hinic_hwdev_set_msix_state(struct hinic_hwdev *hwdev, u16 msix_index,
 				enum hinic_msix_state flag);
 
+<<<<<<< HEAD
+=======
+int hinic_get_interrupt_cfg(struct hinic_hwdev *hwdev,
+			    struct hinic_msix_config *interrupt_info);
+
+>>>>>>> b7ba80a49124 (Commit)
 int hinic_set_interrupt_cfg(struct hinic_hwdev *hwdev,
 			    struct hinic_msix_config *interrupt_info);
 

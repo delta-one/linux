@@ -27,7 +27,11 @@ DEFINE_INTERRUPT_HANDLER_ASYNC(doorbell_exception)
 
 	ppc_msgsync();
 
+<<<<<<< HEAD
 	if (should_hard_irq_enable(regs))
+=======
+	if (should_hard_irq_enable())
+>>>>>>> b7ba80a49124 (Commit)
 		do_hard_irq_enable();
 
 	kvmppc_clear_host_ipi(smp_processor_id());

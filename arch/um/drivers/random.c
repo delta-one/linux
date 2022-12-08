@@ -82,6 +82,10 @@ static int __init rng_init (void)
 	sigio_broken(random_fd);
 	hwrng.name = RNG_MODULE_NAME;
 	hwrng.read = rng_dev_read;
+<<<<<<< HEAD
+=======
+	hwrng.quality = 1024;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = hwrng_register(&hwrng);
 	if (err) {

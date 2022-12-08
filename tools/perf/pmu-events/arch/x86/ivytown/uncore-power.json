@@ -1,6 +1,10 @@
 [
     {
         "BriefDescription": "pclk Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventName": "UNC_P_CLOCKTICKS",
         "PerPkg": "1",
         "PublicDescription": "The PCU runs off a fixed 800 MHz clock.  This event counts the number of pclk cycles measured while the counter was enabled.  The pclk, like the Memory Controller's dclk, counts at a constant rate making it a good measure of actual wall time.",
@@ -8,6 +12,10 @@
     },
     {
         "BriefDescription": "Core 0 C State Transition Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x70",
         "EventName": "UNC_P_CORE0_TRANSITION_CYCLES",
         "PerPkg": "1",
@@ -16,6 +24,10 @@
     },
     {
         "BriefDescription": "Core 10 C State Transition Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x7a",
         "EventName": "UNC_P_CORE10_TRANSITION_CYCLES",
         "PerPkg": "1",
@@ -24,6 +36,10 @@
     },
     {
         "BriefDescription": "Core 11 C State Transition Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x7b",
         "EventName": "UNC_P_CORE11_TRANSITION_CYCLES",
         "PerPkg": "1",
@@ -32,6 +48,10 @@
     },
     {
         "BriefDescription": "Core 12 C State Transition Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x7c",
         "EventName": "UNC_P_CORE12_TRANSITION_CYCLES",
         "PerPkg": "1",
@@ -40,6 +60,10 @@
     },
     {
         "BriefDescription": "Core 13 C State Transition Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x7d",
         "EventName": "UNC_P_CORE13_TRANSITION_CYCLES",
         "PerPkg": "1",
@@ -48,6 +72,10 @@
     },
     {
         "BriefDescription": "Core 14 C State Transition Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x7e",
         "EventName": "UNC_P_CORE14_TRANSITION_CYCLES",
         "PerPkg": "1",
@@ -56,6 +84,10 @@
     },
     {
         "BriefDescription": "Core 1 C State Transition Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x71",
         "EventName": "UNC_P_CORE1_TRANSITION_CYCLES",
         "PerPkg": "1",
@@ -64,6 +96,10 @@
     },
     {
         "BriefDescription": "Core 2 C State Transition Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x72",
         "EventName": "UNC_P_CORE2_TRANSITION_CYCLES",
         "PerPkg": "1",
@@ -72,6 +108,10 @@
     },
     {
         "BriefDescription": "Core 3 C State Transition Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x73",
         "EventName": "UNC_P_CORE3_TRANSITION_CYCLES",
         "PerPkg": "1",
@@ -80,6 +120,10 @@
     },
     {
         "BriefDescription": "Core 4 C State Transition Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x74",
         "EventName": "UNC_P_CORE4_TRANSITION_CYCLES",
         "PerPkg": "1",
@@ -88,6 +132,10 @@
     },
     {
         "BriefDescription": "Core 5 C State Transition Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x75",
         "EventName": "UNC_P_CORE5_TRANSITION_CYCLES",
         "PerPkg": "1",
@@ -96,6 +144,10 @@
     },
     {
         "BriefDescription": "Core 6 C State Transition Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x76",
         "EventName": "UNC_P_CORE6_TRANSITION_CYCLES",
         "PerPkg": "1",
@@ -104,6 +156,10 @@
     },
     {
         "BriefDescription": "Core 7 C State Transition Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x77",
         "EventName": "UNC_P_CORE7_TRANSITION_CYCLES",
         "PerPkg": "1",
@@ -112,6 +168,10 @@
     },
     {
         "BriefDescription": "Core 8 C State Transition Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x78",
         "EventName": "UNC_P_CORE8_TRANSITION_CYCLES",
         "PerPkg": "1",
@@ -120,6 +180,10 @@
     },
     {
         "BriefDescription": "Core 9 C State Transition Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x79",
         "EventName": "UNC_P_CORE9_TRANSITION_CYCLES",
         "PerPkg": "1",
@@ -128,126 +192,235 @@
     },
     {
         "BriefDescription": "Deep C State Rejection - Core 0",
+<<<<<<< HEAD
         "EventCode": "0x17",
         "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE0",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x17",
+        "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE0",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Number of times that a deep C state was requested, but the delayed C state algorithm rejected the deep sleep state.  In other words, a wake event occurred before the timer expired that causes a transition into the deeper C state.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Deep C State Rejection - Core 1",
+<<<<<<< HEAD
         "EventCode": "0x18",
         "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE1",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x18",
+        "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE1",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Number of times that a deep C state was requested, but the delayed C state algorithm rejected the deep sleep state.  In other words, a wake event occurred before the timer expired that causes a transition into the deeper C state.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Deep C State Rejection - Core 10",
+<<<<<<< HEAD
         "EventCode": "0x21",
         "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE10",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x21",
+        "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE10",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Number of times that a deep C state was requested, but the delayed C state algorithm rejected the deep sleep state.  In other words, a wake event occurred before the timer expired that causes a transition into the deeper C state.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Deep C State Rejection - Core 11",
+<<<<<<< HEAD
         "EventCode": "0x22",
         "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE11",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x22",
+        "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE11",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Number of times that a deep C state was requested, but the delayed C state algorithm rejected the deep sleep state.  In other words, a wake event occurred before the timer expired that causes a transition into the deeper C state.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Deep C State Rejection - Core 12",
+<<<<<<< HEAD
         "EventCode": "0x23",
         "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE12",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x23",
+        "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE12",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Number of times that a deep C state was requested, but the delayed C state algorithm rejected the deep sleep state.  In other words, a wake event occurred before the timer expired that causes a transition into the deeper C state.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Deep C State Rejection - Core 13",
+<<<<<<< HEAD
         "EventCode": "0x24",
         "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE13",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x24",
+        "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE13",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Number of times that a deep C state was requested, but the delayed C state algorithm rejected the deep sleep state.  In other words, a wake event occurred before the timer expired that causes a transition into the deeper C state.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Deep C State Rejection - Core 14",
+<<<<<<< HEAD
         "EventCode": "0x25",
         "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE14",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x25",
+        "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE14",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Number of times that a deep C state was requested, but the delayed C state algorithm rejected the deep sleep state.  In other words, a wake event occurred before the timer expired that causes a transition into the deeper C state.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Deep C State Rejection - Core 2",
+<<<<<<< HEAD
         "EventCode": "0x19",
         "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE2",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x19",
+        "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE2",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Number of times that a deep C state was requested, but the delayed C state algorithm rejected the deep sleep state.  In other words, a wake event occurred before the timer expired that causes a transition into the deeper C state.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Deep C State Rejection - Core 3",
+<<<<<<< HEAD
         "EventCode": "0x1a",
         "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE3",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x1a",
+        "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE3",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Number of times that a deep C state was requested, but the delayed C state algorithm rejected the deep sleep state.  In other words, a wake event occurred before the timer expired that causes a transition into the deeper C state.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Deep C State Rejection - Core 4",
+<<<<<<< HEAD
         "EventCode": "0x1b",
         "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE4",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x1b",
+        "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE4",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Number of times that a deep C state was requested, but the delayed C state algorithm rejected the deep sleep state.  In other words, a wake event occurred before the timer expired that causes a transition into the deeper C state.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Deep C State Rejection - Core 5",
+<<<<<<< HEAD
         "EventCode": "0x1c",
         "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE5",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x1c",
+        "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE5",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Number of times that a deep C state was requested, but the delayed C state algorithm rejected the deep sleep state.  In other words, a wake event occurred before the timer expired that causes a transition into the deeper C state.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Deep C State Rejection - Core 6",
+<<<<<<< HEAD
         "EventCode": "0x1d",
         "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE6",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x1d",
+        "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE6",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Number of times that a deep C state was requested, but the delayed C state algorithm rejected the deep sleep state.  In other words, a wake event occurred before the timer expired that causes a transition into the deeper C state.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Deep C State Rejection - Core 7",
+<<<<<<< HEAD
         "EventCode": "0x1e",
         "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE7",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x1e",
+        "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE7",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Number of times that a deep C state was requested, but the delayed C state algorithm rejected the deep sleep state.  In other words, a wake event occurred before the timer expired that causes a transition into the deeper C state.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Deep C State Rejection - Core 8",
+<<<<<<< HEAD
         "EventCode": "0x1f",
         "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE8",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x1f",
+        "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE8",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Number of times that a deep C state was requested, but the delayed C state algorithm rejected the deep sleep state.  In other words, a wake event occurred before the timer expired that causes a transition into the deeper C state.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Deep C State Rejection - Core 9",
+<<<<<<< HEAD
         "EventCode": "0x20",
         "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE9",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x20",
+        "EventName": "UNC_P_DELAYED_C_STATE_ABORT_CORE9",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Number of times that a deep C state was requested, but the delayed C state algorithm rejected the deep sleep state.  In other words, a wake event occurred before the timer expired that causes a transition into the deeper C state.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Core 0 C State Demotions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x1e",
         "EventName": "UNC_P_DEMOTIONS_CORE0",
         "PerPkg": "1",
@@ -256,6 +429,10 @@
     },
     {
         "BriefDescription": "Core 1 C State Demotions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x1f",
         "EventName": "UNC_P_DEMOTIONS_CORE1",
         "PerPkg": "1",
@@ -264,6 +441,10 @@
     },
     {
         "BriefDescription": "Core 10 C State Demotions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x42",
         "EventName": "UNC_P_DEMOTIONS_CORE10",
         "PerPkg": "1",
@@ -272,6 +453,10 @@
     },
     {
         "BriefDescription": "Core 11 C State Demotions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x43",
         "EventName": "UNC_P_DEMOTIONS_CORE11",
         "PerPkg": "1",
@@ -280,6 +465,10 @@
     },
     {
         "BriefDescription": "Core 12 C State Demotions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x44",
         "EventName": "UNC_P_DEMOTIONS_CORE12",
         "PerPkg": "1",
@@ -288,6 +477,10 @@
     },
     {
         "BriefDescription": "Core 13 C State Demotions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x45",
         "EventName": "UNC_P_DEMOTIONS_CORE13",
         "PerPkg": "1",
@@ -296,6 +489,10 @@
     },
     {
         "BriefDescription": "Core 14 C State Demotions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x46",
         "EventName": "UNC_P_DEMOTIONS_CORE14",
         "PerPkg": "1",
@@ -304,6 +501,10 @@
     },
     {
         "BriefDescription": "Core 2 C State Demotions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x20",
         "EventName": "UNC_P_DEMOTIONS_CORE2",
         "PerPkg": "1",
@@ -312,6 +513,10 @@
     },
     {
         "BriefDescription": "Core 3 C State Demotions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x21",
         "EventName": "UNC_P_DEMOTIONS_CORE3",
         "PerPkg": "1",
@@ -320,6 +525,10 @@
     },
     {
         "BriefDescription": "Core 4 C State Demotions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x22",
         "EventName": "UNC_P_DEMOTIONS_CORE4",
         "PerPkg": "1",
@@ -328,6 +537,10 @@
     },
     {
         "BriefDescription": "Core 5 C State Demotions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x23",
         "EventName": "UNC_P_DEMOTIONS_CORE5",
         "PerPkg": "1",
@@ -336,6 +549,10 @@
     },
     {
         "BriefDescription": "Core 6 C State Demotions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "UNC_P_DEMOTIONS_CORE6",
         "PerPkg": "1",
@@ -344,6 +561,10 @@
     },
     {
         "BriefDescription": "Core 7 C State Demotions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x25",
         "EventName": "UNC_P_DEMOTIONS_CORE7",
         "PerPkg": "1",
@@ -352,6 +573,10 @@
     },
     {
         "BriefDescription": "Core 8 C State Demotions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x40",
         "EventName": "UNC_P_DEMOTIONS_CORE8",
         "PerPkg": "1",
@@ -360,6 +585,10 @@
     },
     {
         "BriefDescription": "Core 9 C State Demotions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x41",
         "EventName": "UNC_P_DEMOTIONS_CORE9",
         "PerPkg": "1",
@@ -368,6 +597,10 @@
     },
     {
         "BriefDescription": "Frequency Residency",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xb",
         "EventName": "UNC_P_FREQ_BAND0_CYCLES",
         "PerPkg": "1",
@@ -376,6 +609,10 @@
     },
     {
         "BriefDescription": "Frequency Residency",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc",
         "EventName": "UNC_P_FREQ_BAND1_CYCLES",
         "PerPkg": "1",
@@ -384,6 +621,10 @@
     },
     {
         "BriefDescription": "Frequency Residency",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xd",
         "EventName": "UNC_P_FREQ_BAND2_CYCLES",
         "PerPkg": "1",
@@ -392,6 +633,10 @@
     },
     {
         "BriefDescription": "Frequency Residency",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xe",
         "EventName": "UNC_P_FREQ_BAND3_CYCLES",
         "PerPkg": "1",
@@ -400,6 +645,10 @@
     },
     {
         "BriefDescription": "Current Strongest Upper Limit Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x7",
         "EventName": "UNC_P_FREQ_MAX_CURRENT_CYCLES",
         "PerPkg": "1",
@@ -408,6 +657,10 @@
     },
     {
         "BriefDescription": "Thermal Strongest Upper Limit Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x4",
         "EventName": "UNC_P_FREQ_MAX_LIMIT_THERMAL_CYCLES",
         "PerPkg": "1",
@@ -416,6 +669,10 @@
     },
     {
         "BriefDescription": "OS Strongest Upper Limit Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x6",
         "EventName": "UNC_P_FREQ_MAX_OS_CYCLES",
         "PerPkg": "1",
@@ -424,6 +681,10 @@
     },
     {
         "BriefDescription": "Power Strongest Upper Limit Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5",
         "EventName": "UNC_P_FREQ_MAX_POWER_CYCLES",
         "PerPkg": "1",
@@ -432,6 +693,10 @@
     },
     {
         "BriefDescription": "IO P Limit Strongest Lower Limit Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x61",
         "EventName": "UNC_P_FREQ_MIN_IO_P_CYCLES",
         "PerPkg": "1",
@@ -440,6 +705,10 @@
     },
     {
         "BriefDescription": "Perf P Limit Strongest Lower Limit Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x62",
         "EventName": "UNC_P_FREQ_MIN_PERF_P_CYCLES",
         "PerPkg": "1",
@@ -448,6 +717,10 @@
     },
     {
         "BriefDescription": "Cycles spent changing Frequency",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x60",
         "EventName": "UNC_P_FREQ_TRANS_CYCLES",
         "PerPkg": "1",
@@ -456,6 +729,10 @@
     },
     {
         "BriefDescription": "Memory Phase Shedding Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2f",
         "EventName": "UNC_P_MEMORY_PHASE_SHEDDING_CYCLES",
         "PerPkg": "1",
@@ -464,78 +741,148 @@
     },
     {
         "BriefDescription": "Package C State Exit Latency",
+<<<<<<< HEAD
         "EventCode": "0x26",
         "EventName": "UNC_P_PKG_C_EXIT_LATENCY",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x26",
+        "EventName": "UNC_P_PKG_C_EXIT_LATENCY",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Counts the number of cycles that the package is transitioning from package C2 to C3.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Package C State Exit Latency",
+<<<<<<< HEAD
         "EventCode": "0x26",
         "EventName": "UNC_P_PKG_C_EXIT_LATENCY_SEL",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x26",
+        "EventName": "UNC_P_PKG_C_EXIT_LATENCY_SEL",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Counts the number of cycles that the package is transitioning from package C2 to C3.",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Package C State Residency - C0",
+<<<<<<< HEAD
         "EventCode": "0x2a",
         "EventName": "UNC_P_PKG_C_STATE_RESIDENCY_C0_CYCLES",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x2a",
+        "EventName": "UNC_P_PKG_C_STATE_RESIDENCY_C0_CYCLES",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Counts the number of cycles that the package is in C0",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Package C State Residency - C2",
+<<<<<<< HEAD
         "EventCode": "0x2b",
         "EventName": "UNC_P_PKG_C_STATE_RESIDENCY_C2_CYCLES",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x2b",
+        "EventName": "UNC_P_PKG_C_STATE_RESIDENCY_C2_CYCLES",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Counts the number of cycles that the package is in C2",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Package C State Residency - C3",
+<<<<<<< HEAD
         "EventCode": "0x2c",
         "EventName": "UNC_P_PKG_C_STATE_RESIDENCY_C3_CYCLES",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x2c",
+        "EventName": "UNC_P_PKG_C_STATE_RESIDENCY_C3_CYCLES",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Counts the number of cycles that the package is in C3",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Package C State Residency - C6",
+<<<<<<< HEAD
         "EventCode": "0x2d",
         "EventName": "UNC_P_PKG_C_STATE_RESIDENCY_C6_CYCLES",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x2d",
+        "EventName": "UNC_P_PKG_C_STATE_RESIDENCY_C6_CYCLES",
+        "ExtSel": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "PerPkg": "1",
         "PublicDescription": "Counts the number of cycles that the package is in C6",
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Number of cores in C-State; C0 and C1",
+<<<<<<< HEAD
         "EventCode": "0x80",
         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C0",
         "PerPkg": "1",
         "PublicDescription": "This is an occupancy event that tracks the number of cores that are in the chosen C-State.  It can be used by itself to get the average number of cores in that C-state with thresholding to generate histograms, or with other PCU events and occupancy triggering to capture other details.",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x80",
+        "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C0",
+        "PerPkg": "1",
+        "PublicDescription": "This is an occupancy event that tracks the number of cores that are in the chosen C-State.  It can be used by itself to get the average number of cores in that C-state with threshholding to generate histograms, or with other PCU events and occupancy triggering to capture other details.",
+>>>>>>> b7ba80a49124 (Commit)
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Number of cores in C-State; C3",
+<<<<<<< HEAD
         "EventCode": "0x80",
         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C3",
         "PerPkg": "1",
         "PublicDescription": "This is an occupancy event that tracks the number of cores that are in the chosen C-State.  It can be used by itself to get the average number of cores in that C-state with thresholding to generate histograms, or with other PCU events and occupancy triggering to capture other details.",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x80",
+        "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C3",
+        "PerPkg": "1",
+        "PublicDescription": "This is an occupancy event that tracks the number of cores that are in the chosen C-State.  It can be used by itself to get the average number of cores in that C-state with threshholding to generate histograms, or with other PCU events and occupancy triggering to capture other details.",
+>>>>>>> b7ba80a49124 (Commit)
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Number of cores in C-State; C6 and C7",
+<<<<<<< HEAD
         "EventCode": "0x80",
         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C6",
         "PerPkg": "1",
         "PublicDescription": "This is an occupancy event that tracks the number of cores that are in the chosen C-State.  It can be used by itself to get the average number of cores in that C-state with thresholding to generate histograms, or with other PCU events and occupancy triggering to capture other details.",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x80",
+        "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C6",
+        "PerPkg": "1",
+        "PublicDescription": "This is an occupancy event that tracks the number of cores that are in the chosen C-State.  It can be used by itself to get the average number of cores in that C-state with threshholding to generate histograms, or with other PCU events and occupancy triggering to capture other details.",
+>>>>>>> b7ba80a49124 (Commit)
         "Unit": "PCU"
     },
     {
         "BriefDescription": "External Prochot",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xa",
         "EventName": "UNC_P_PROCHOT_EXTERNAL_CYCLES",
         "PerPkg": "1",
@@ -544,14 +891,26 @@
     },
     {
         "BriefDescription": "Internal Prochot",
+<<<<<<< HEAD
         "EventCode": "0x9",
         "EventName": "UNC_P_PROCHOT_INTERNAL_CYCLES",
         "PerPkg": "1",
         "PublicDescription": "Counts the number of cycles that we are in Internal PROCHOT mode.  This mode is triggered when a sensor on the die determines that we are too hot and must throttle to avoid damaging the chip.",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x9",
+        "EventName": "UNC_P_PROCHOT_INTERNAL_CYCLES",
+        "PerPkg": "1",
+        "PublicDescription": "Counts the number of cycles that we are in Interal PROCHOT mode.  This mode is triggered when a sensor on the die determines that we are too hot and must throttle to avoid damaging the chip.",
+>>>>>>> b7ba80a49124 (Commit)
         "Unit": "PCU"
     },
     {
         "BriefDescription": "Total Core C State Transition Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x63",
         "EventName": "UNC_P_TOTAL_TRANSITION_CYCLES",
         "PerPkg": "1",
@@ -560,6 +919,10 @@
     },
     {
         "BriefDescription": "Cycles Changing Voltage",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x3",
         "EventName": "UNC_P_VOLT_TRANS_CYCLES_CHANGE",
         "PerPkg": "1",
@@ -568,6 +931,10 @@
     },
     {
         "BriefDescription": "Cycles Decreasing Voltage",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2",
         "EventName": "UNC_P_VOLT_TRANS_CYCLES_DECREASE",
         "PerPkg": "1",
@@ -576,6 +943,10 @@
     },
     {
         "BriefDescription": "Cycles Increasing Voltage",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x1",
         "EventName": "UNC_P_VOLT_TRANS_CYCLES_INCREASE",
         "PerPkg": "1",
@@ -584,6 +955,10 @@
     },
     {
         "BriefDescription": "VR Hot",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x32",
         "EventName": "UNC_P_VR_HOT_CYCLES",
         "PerPkg": "1",

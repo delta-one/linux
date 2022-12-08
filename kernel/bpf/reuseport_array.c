@@ -59,7 +59,11 @@ static void *reuseport_array_lookup_elem(struct bpf_map *map, void *key)
 }
 
 /* Called from syscall only */
+<<<<<<< HEAD
 static long reuseport_array_delete_elem(struct bpf_map *map, void *key)
+=======
+static int reuseport_array_delete_elem(struct bpf_map *map, void *key)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct reuseport_array *array = reuseport_array(map);
 	u32 index = *(u32 *)key;
@@ -335,6 +339,7 @@ static int reuseport_array_get_next_key(struct bpf_map *map, void *key,
 	return 0;
 }
 
+<<<<<<< HEAD
 static u64 reuseport_array_mem_usage(const struct bpf_map *map)
 {
 	struct reuseport_array *array;
@@ -342,6 +347,8 @@ static u64 reuseport_array_mem_usage(const struct bpf_map *map)
 	return struct_size(array, ptrs, map->max_entries);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 BTF_ID_LIST_SINGLE(reuseport_array_map_btf_ids, struct, reuseport_array)
 const struct bpf_map_ops reuseport_array_ops = {
 	.map_meta_equal = bpf_map_meta_equal,
@@ -351,6 +358,9 @@ const struct bpf_map_ops reuseport_array_ops = {
 	.map_lookup_elem = reuseport_array_lookup_elem,
 	.map_get_next_key = reuseport_array_get_next_key,
 	.map_delete_elem = reuseport_array_delete_elem,
+<<<<<<< HEAD
 	.map_mem_usage = reuseport_array_mem_usage,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.map_btf_id = &reuseport_array_map_btf_ids[0],
 };

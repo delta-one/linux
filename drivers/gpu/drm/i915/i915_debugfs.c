@@ -52,6 +52,10 @@
 #include "i915_irq.h"
 #include "i915_scheduler.h"
 #include "intel_mchbar_regs.h"
+<<<<<<< HEAD
+=======
+#include "intel_pm.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline struct drm_i915_private *node_to_i915(struct drm_info_node *node)
 {
@@ -182,7 +186,11 @@ i915_debugfs_describe_obj(struct seq_file *m, struct drm_i915_gem_object *obj)
 
 		seq_printf(m, " (%s offset: %08llx, size: %08llx, pages: %s",
 			   stringify_vma_type(vma),
+<<<<<<< HEAD
 			   i915_vma_offset(vma), i915_vma_size(vma),
+=======
+			   vma->node.start, vma->node.size,
+>>>>>>> b7ba80a49124 (Commit)
 			   stringify_page_sizes(vma->resource->page_sizes_gtt,
 						NULL, 0));
 		if (i915_vma_is_ggtt(vma) || i915_vma_is_dpt(vma)) {
@@ -647,14 +655,21 @@ i915_drop_caches_get(void *data, u64 *val)
 
 	return 0;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int
 gt_drop_caches(struct intel_gt *gt, u64 val)
 {
 	int ret;
 
 	if (val & DROP_RESET_ACTIVE &&
+<<<<<<< HEAD
 	    wait_for(intel_engines_are_idle(gt), 200))
+=======
+	    wait_for(intel_engines_are_idle(gt), I915_IDLE_ENGINES_TIMEOUT))
+>>>>>>> b7ba80a49124 (Commit)
 		intel_gt_set_wedged(gt);
 
 	if (val & DROP_RETIRE)
@@ -688,8 +703,13 @@ i915_drop_caches_set(void *data, u64 val)
 	unsigned int flags;
 	int ret;
 
+<<<<<<< HEAD
 	drm_dbg(&i915->drm, "Dropping caches: 0x%08llx [0x%08llx]\n",
 		val, val & DROP_ALL);
+=======
+	DRM_DEBUG("Dropping caches: 0x%08llx [0x%08llx]\n",
+		  val, val & DROP_ALL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = gt_drop_caches(to_gt(i915), val);
 	if (ret)
@@ -762,6 +782,10 @@ static const struct drm_info_list i915_debugfs_list[] = {
 	{"i915_sseu_status", i915_sseu_status, 0},
 	{"i915_rps_boost_info", i915_rps_boost_info, 0},
 };
+<<<<<<< HEAD
+=======
+#define I915_DEBUGFS_ENTRIES ARRAY_SIZE(i915_debugfs_list)
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i915_debugfs_files {
 	const char *name;
@@ -794,6 +818,10 @@ void i915_debugfs_register(struct drm_i915_private *dev_priv)
 	}
 
 	drm_debugfs_create_files(i915_debugfs_list,
+<<<<<<< HEAD
 				 ARRAY_SIZE(i915_debugfs_list),
+=======
+				 I915_DEBUGFS_ENTRIES,
+>>>>>>> b7ba80a49124 (Commit)
 				 minor->debugfs_root, minor);
 }

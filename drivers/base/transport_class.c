@@ -155,11 +155,15 @@ static int transport_add_class_device(struct attribute_container *cont,
 				      struct device *dev,
 				      struct device *classdev)
 {
+<<<<<<< HEAD
 	struct transport_class *tclass = class_to_transport_class(cont->class);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int error = attribute_container_add_class_device(classdev);
 	struct transport_container *tcont = 
 		attribute_container_to_transport_container(cont);
 
+<<<<<<< HEAD
 	if (error)
 		goto err_remove;
 
@@ -176,6 +180,10 @@ err_del:
 err_remove:
 	if (tclass->remove)
 		tclass->remove(tcont, dev, classdev);
+=======
+	if (!error && tcont->statistics)
+		error = sysfs_create_group(&classdev->kobj, tcont->statistics);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return error;
 }

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+// SPDX-License-Identifier: GPL-2.0-or-later
+>>>>>>> b7ba80a49124 (Commit)
 /*
    drbd_receiver.c
 
@@ -413,7 +417,11 @@ void __drbd_free_peer_req(struct drbd_device *device, struct drbd_peer_request *
 	drbd_free_pages(device, peer_req->pages, is_net);
 	D_ASSERT(device, atomic_read(&peer_req->pending_bios) == 0);
 	D_ASSERT(device, drbd_interval_empty(&peer_req->i));
+<<<<<<< HEAD
 	if (!expect(device, !(peer_req->flags & EE_CALL_AL_COMPLETE_IO))) {
+=======
+	if (!expect(!(peer_req->flags & EE_CALL_AL_COMPLETE_IO))) {
+>>>>>>> b7ba80a49124 (Commit)
 		peer_req->flags &= ~EE_CALL_AL_COMPLETE_IO;
 		drbd_al_complete_io(device, &peer_req->i);
 	}
@@ -507,7 +515,11 @@ static int drbd_recv_short(struct socket *sock, void *buf, size_t size, int flag
 	struct msghdr msg = {
 		.msg_flags = (flags ? flags : MSG_WAITALL | MSG_NOSIGNAL)
 	};
+<<<<<<< HEAD
 	iov_iter_kvec(&msg.msg_iter, ITER_DEST, &iov, 1, size);
+=======
+	iov_iter_kvec(&msg.msg_iter, READ, &iov, 1, size);
+>>>>>>> b7ba80a49124 (Commit)
 	return sock_recvmsg(sock, &msg, msg.msg_flags);
 }
 
@@ -781,7 +793,11 @@ static struct socket *drbd_wait_for_connect(struct drbd_connection *connection, 
 
 	timeo = connect_int * HZ;
 	/* 28.5% random jitter */
+<<<<<<< HEAD
 	timeo += get_random_u32_below(2) ? timeo / 7 : -timeo / 7;
+=======
+	timeo += (prandom_u32() & 1) ? timeo / 7 : -timeo / 7;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = wait_for_completion_interruptible_timeout(&ad->door_bell, timeo);
 	if (err <= 0)
@@ -1004,7 +1020,11 @@ retry:
 				drbd_warn(connection, "Error receiving initial packet\n");
 				sock_release(s);
 randomize:
+<<<<<<< HEAD
 				if (get_random_u32_below(2))
+=======
+				if (prandom_u32() & 1)
+>>>>>>> b7ba80a49124 (Commit)
 					goto retry;
 			}
 		}
@@ -1030,9 +1050,12 @@ randomize:
 	sock.socket->sk->sk_allocation = GFP_NOIO;
 	msock.socket->sk->sk_allocation = GFP_NOIO;
 
+<<<<<<< HEAD
 	sock.socket->sk->sk_use_task_frag = false;
 	msock.socket->sk->sk_use_task_frag = false;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sock.socket->sk->sk_priority = TC_PRIO_INTERACTIVE_BULK;
 	msock.socket->sk->sk_priority = TC_PRIO_INTERACTIVE;
 
@@ -1606,6 +1629,7 @@ static void drbd_issue_peer_discard_or_zero_out(struct drbd_device *device, stru
 	drbd_endio_write_sec_final(peer_req);
 }
 
+<<<<<<< HEAD
 static int peer_request_fault_type(struct drbd_peer_request *peer_req)
 {
 	if (peer_req_op(peer_req) == REQ_OP_READ) {
@@ -1619,6 +1643,11 @@ static int peer_request_fault_type(struct drbd_peer_request *peer_req)
 
 /**
  * drbd_submit_peer_request()
+=======
+/**
+ * drbd_submit_peer_request()
+ * @device:	DRBD device.
+>>>>>>> b7ba80a49124 (Commit)
  * @peer_req:	peer request
  *
  * May spread the pages to multiple bios,
@@ -1632,9 +1661,16 @@ static int peer_request_fault_type(struct drbd_peer_request *peer_req)
  *  on certain Xen deployments.
  */
 /* TODO allocate from our own bio_set. */
+<<<<<<< HEAD
 int drbd_submit_peer_request(struct drbd_peer_request *peer_req)
 {
 	struct drbd_device *device = peer_req->peer_device->device;
+=======
+int drbd_submit_peer_request(struct drbd_device *device,
+			     struct drbd_peer_request *peer_req,
+			     const blk_opf_t opf, const int fault_type)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct bio *bios = NULL;
 	struct bio *bio;
 	struct page *page = peer_req->pages;
@@ -1679,6 +1715,7 @@ int drbd_submit_peer_request(struct drbd_peer_request *peer_req)
 	 * generated bio, but a bio allocated on behalf of the peer.
 	 */
 next_bio:
+<<<<<<< HEAD
 	/* _DISCARD, _WRITE_ZEROES handled above.
 	 * REQ_OP_FLUSH (empty flush) not expected,
 	 * should have been mapped to a "drbd protocol barrier".
@@ -1691,6 +1728,9 @@ next_bio:
 	}
 
 	bio = bio_alloc(device->ldev->backing_bdev, nr_pages, peer_req->opf, GFP_NOIO);
+=======
+	bio = bio_alloc(device->ldev->backing_bdev, nr_pages, opf, GFP_NOIO);
+>>>>>>> b7ba80a49124 (Commit)
 	/* > peer_req->i.sector, unless this is the first bio */
 	bio->bi_iter.bi_sector = sector;
 	bio->bi_private = peer_req;
@@ -1720,7 +1760,11 @@ next_bio:
 		bios = bios->bi_next;
 		bio->bi_next = NULL;
 
+<<<<<<< HEAD
 		drbd_submit_bio_noacct(device, peer_request_fault_type(peer_req), bio);
+=======
+		drbd_submit_bio_noacct(device, fault_type, bio);
+>>>>>>> b7ba80a49124 (Commit)
 	} while (bios);
 	return 0;
 }
@@ -1876,21 +1920,38 @@ read_in_block(struct drbd_peer_device *peer_device, u64 id, sector_t sector,
 	/* assume request_size == data_size, but special case trim. */
 	ds = data_size;
 	if (trim) {
+<<<<<<< HEAD
 		if (!expect(peer_device, data_size == 0))
 			return NULL;
 		ds = be32_to_cpu(trim->size);
 	} else if (zeroes) {
 		if (!expect(peer_device, data_size == 0))
+=======
+		if (!expect(data_size == 0))
+			return NULL;
+		ds = be32_to_cpu(trim->size);
+	} else if (zeroes) {
+		if (!expect(data_size == 0))
+>>>>>>> b7ba80a49124 (Commit)
 			return NULL;
 		ds = be32_to_cpu(zeroes->size);
 	}
 
+<<<<<<< HEAD
 	if (!expect(peer_device, IS_ALIGNED(ds, 512)))
 		return NULL;
 	if (trim || zeroes) {
 		if (!expect(peer_device, ds <= (DRBD_MAX_BBIO_SECTORS << 9)))
 			return NULL;
 	} else if (!expect(peer_device, ds <= DRBD_MAX_BIO_SIZE))
+=======
+	if (!expect(IS_ALIGNED(ds, 512)))
+		return NULL;
+	if (trim || zeroes) {
+		if (!expect(ds <= (DRBD_MAX_BBIO_SECTORS << 9)))
+			return NULL;
+	} else if (!expect(ds <= DRBD_MAX_BIO_SIZE))
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	/* even though we trust out peer,
@@ -2074,7 +2135,10 @@ static int recv_resync_read(struct drbd_peer_device *peer_device, sector_t secto
 	 * respective _drbd_clear_done_ee */
 
 	peer_req->w.cb = e_end_resync_block;
+<<<<<<< HEAD
 	peer_req->opf = REQ_OP_WRITE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	peer_req->submit_jif = jiffies;
 
 	spin_lock_irq(&device->resource->req_lock);
@@ -2082,7 +2146,12 @@ static int recv_resync_read(struct drbd_peer_device *peer_device, sector_t secto
 	spin_unlock_irq(&device->resource->req_lock);
 
 	atomic_add(pi->size >> 9, &device->rs_sect_ev);
+<<<<<<< HEAD
 	if (drbd_submit_peer_request(peer_req) == 0)
+=======
+	if (drbd_submit_peer_request(device, peer_req, REQ_OP_WRITE,
+				     DRBD_FAULT_RS_WR) == 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	/* don't care for the reason here */
@@ -2168,7 +2237,11 @@ static int receive_RSDataReply(struct drbd_connection *connection, struct packet
 		 * or in drbd_peer_request_endio. */
 		err = recv_resync_read(peer_device, sector, pi);
 	} else {
+<<<<<<< HEAD
 		if (drbd_ratelimit())
+=======
+		if (__ratelimit(&drbd_ratelimit_state))
+>>>>>>> b7ba80a49124 (Commit)
 			drbd_err(device, "Can not write resync data to local disk.\n");
 
 		err = drbd_drain_block(peer_device, pi->size);
@@ -2398,6 +2471,19 @@ static int wait_for_and_update_peer_seq(struct drbd_peer_device *peer_device, co
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+/* see also bio_flags_to_wire()
+ * DRBD_REQ_*, because we need to semantically map the flags to data packet
+ * flags and back. We may replicate to other kernel versions. */
+static blk_opf_t wire_flags_to_bio_flags(u32 dpf)
+{
+	return  (dpf & DP_RW_SYNC ? REQ_SYNC : 0) |
+		(dpf & DP_FUA ? REQ_FUA : 0) |
+		(dpf & DP_FLUSH ? REQ_PREFLUSH : 0);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static enum req_op wire_flags_to_bio_op(u32 dpf)
 {
 	if (dpf & DP_ZEROES)
@@ -2408,6 +2494,7 @@ static enum req_op wire_flags_to_bio_op(u32 dpf)
 		return REQ_OP_WRITE;
 }
 
+<<<<<<< HEAD
 /* see also bio_flags_to_wire() */
 static blk_opf_t wire_flags_to_bio(struct drbd_connection *connection, u32 dpf)
 {
@@ -2417,6 +2504,8 @@ static blk_opf_t wire_flags_to_bio(struct drbd_connection *connection, u32 dpf)
 		(dpf & DP_FLUSH ? REQ_PREFLUSH : 0);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void fail_postponed_requests(struct drbd_device *device, sector_t sector,
 				    unsigned int size)
 {
@@ -2560,6 +2649,11 @@ static int receive_Data(struct drbd_connection *connection, struct packet_info *
 	struct drbd_peer_request *peer_req;
 	struct p_data *p = pi->data;
 	u32 peer_seq = be32_to_cpu(p->seq_num);
+<<<<<<< HEAD
+=======
+	enum req_op op;
+	blk_opf_t op_flags;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 dp_flags;
 	int err, tp;
 
@@ -2598,10 +2692,18 @@ static int receive_Data(struct drbd_connection *connection, struct packet_info *
 	peer_req->flags |= EE_APPLICATION;
 
 	dp_flags = be32_to_cpu(p->dp_flags);
+<<<<<<< HEAD
 	peer_req->opf = wire_flags_to_bio(connection, dp_flags);
 	if (pi->cmd == P_TRIM) {
 		D_ASSERT(peer_device, peer_req->i.size > 0);
 		D_ASSERT(peer_device, peer_req_op(peer_req) == REQ_OP_DISCARD);
+=======
+	op = wire_flags_to_bio_op(dp_flags);
+	op_flags = wire_flags_to_bio_flags(dp_flags);
+	if (pi->cmd == P_TRIM) {
+		D_ASSERT(peer_device, peer_req->i.size > 0);
+		D_ASSERT(peer_device, op == REQ_OP_DISCARD);
+>>>>>>> b7ba80a49124 (Commit)
 		D_ASSERT(peer_device, peer_req->pages == NULL);
 		/* need to play safe: an older DRBD sender
 		 * may mean zero-out while sending P_TRIM. */
@@ -2609,7 +2711,11 @@ static int receive_Data(struct drbd_connection *connection, struct packet_info *
 			peer_req->flags |= EE_ZEROOUT;
 	} else if (pi->cmd == P_ZEROES) {
 		D_ASSERT(peer_device, peer_req->i.size > 0);
+<<<<<<< HEAD
 		D_ASSERT(peer_device, peer_req_op(peer_req) == REQ_OP_WRITE_ZEROES);
+=======
+		D_ASSERT(peer_device, op == REQ_OP_WRITE_ZEROES);
+>>>>>>> b7ba80a49124 (Commit)
 		D_ASSERT(peer_device, peer_req->pages == NULL);
 		/* Do (not) pass down BLKDEV_ZERO_NOUNMAP? */
 		if (dp_flags & DP_DISCARD)
@@ -2696,7 +2802,12 @@ static int receive_Data(struct drbd_connection *connection, struct packet_info *
 		peer_req->flags |= EE_CALL_AL_COMPLETE_IO;
 	}
 
+<<<<<<< HEAD
 	err = drbd_submit_peer_request(peer_req);
+=======
+	err = drbd_submit_peer_request(device, peer_req, op | op_flags,
+				       DRBD_FAULT_DT_WR);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!err)
 		return 0;
 
@@ -2807,6 +2918,10 @@ static int receive_DataRequest(struct drbd_connection *connection, struct packet
 	struct drbd_peer_request *peer_req;
 	struct digest_info *di = NULL;
 	int size, verb;
+<<<<<<< HEAD
+=======
+	unsigned int fault_type;
+>>>>>>> b7ba80a49124 (Commit)
 	struct p_block_req *p =	pi->data;
 
 	peer_device = conn_peer_device(connection, pi->vnr);
@@ -2849,7 +2964,11 @@ static int receive_DataRequest(struct drbd_connection *connection, struct packet
 		default:
 			BUG();
 		}
+<<<<<<< HEAD
 		if (verb && drbd_ratelimit())
+=======
+		if (verb && __ratelimit(&drbd_ratelimit_state))
+>>>>>>> b7ba80a49124 (Commit)
 			drbd_err(device, "Can not satisfy peer's read request, "
 			    "no local data.\n");
 
@@ -2866,11 +2985,18 @@ static int receive_DataRequest(struct drbd_connection *connection, struct packet
 		put_ldev(device);
 		return -ENOMEM;
 	}
+<<<<<<< HEAD
 	peer_req->opf = REQ_OP_READ;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (pi->cmd) {
 	case P_DATA_REQUEST:
 		peer_req->w.cb = w_e_end_data_req;
+<<<<<<< HEAD
+=======
+		fault_type = DRBD_FAULT_DT_RD;
+>>>>>>> b7ba80a49124 (Commit)
 		/* application IO, don't drbd_rs_begin_io */
 		peer_req->flags |= EE_APPLICATION;
 		goto submit;
@@ -2884,12 +3010,20 @@ static int receive_DataRequest(struct drbd_connection *connection, struct packet
 		fallthrough;
 	case P_RS_DATA_REQUEST:
 		peer_req->w.cb = w_e_end_rsdata_req;
+<<<<<<< HEAD
+=======
+		fault_type = DRBD_FAULT_RS_RD;
+>>>>>>> b7ba80a49124 (Commit)
 		/* used in the sector offset progress display */
 		device->bm_resync_fo = BM_SECT_TO_BIT(sector);
 		break;
 
 	case P_OV_REPLY:
 	case P_CSUM_RS_REQUEST:
+<<<<<<< HEAD
+=======
+		fault_type = DRBD_FAULT_RS_RD;
+>>>>>>> b7ba80a49124 (Commit)
 		di = kmalloc(sizeof(*di) + pi->size, GFP_NOIO);
 		if (!di)
 			goto out_free_e;
@@ -2938,6 +3072,10 @@ static int receive_DataRequest(struct drbd_connection *connection, struct packet
 					(unsigned long long)sector);
 		}
 		peer_req->w.cb = w_e_end_ov_req;
+<<<<<<< HEAD
+=======
+		fault_type = DRBD_FAULT_RS_RD;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	default:
@@ -2989,7 +3127,12 @@ submit_for_resync:
 submit:
 	update_receiver_timing_details(connection, drbd_submit_peer_request);
 	inc_unacked(device);
+<<<<<<< HEAD
 	if (drbd_submit_peer_request(peer_req) == 0)
+=======
+	if (drbd_submit_peer_request(device, peer_req, REQ_OP_READ,
+				     fault_type) == 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	/* don't care for the reason here */
@@ -3759,7 +3902,11 @@ static int receive_protocol(struct drbd_connection *connection, struct packet_in
 		drbd_info(connection, "peer data-integrity-alg: %s\n",
 			  integrity_alg[0] ? integrity_alg : "(none)");
 
+<<<<<<< HEAD
 	kvfree_rcu_mightsleep(old_net_conf);
+=======
+	kvfree_rcu(old_net_conf);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 disconnect_rcu_unlock:
@@ -4127,7 +4274,11 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info 
 
 			rcu_assign_pointer(device->ldev->disk_conf, new_disk_conf);
 			mutex_unlock(&connection->resource->conf_update);
+<<<<<<< HEAD
 			kvfree_rcu_mightsleep(old_disk_conf);
+=======
+			kvfree_rcu(old_disk_conf);
+>>>>>>> b7ba80a49124 (Commit)
 
 			drbd_info(device, "Peer sets u_size to %lu sectors (old: %lu)\n",
 				 (unsigned long)p_usize, (unsigned long)my_usize);
@@ -4960,6 +5111,10 @@ static int receive_rs_deallocated(struct drbd_connection *connection, struct pac
 
 	if (get_ldev(device)) {
 		struct drbd_peer_request *peer_req;
+<<<<<<< HEAD
+=======
+		const enum req_op op = REQ_OP_WRITE_ZEROES;
+>>>>>>> b7ba80a49124 (Commit)
 
 		peer_req = drbd_alloc_peer_req(peer_device, ID_SYNCER, sector,
 					       size, 0, GFP_NOIO);
@@ -4969,7 +5124,10 @@ static int receive_rs_deallocated(struct drbd_connection *connection, struct pac
 		}
 
 		peer_req->w.cb = e_end_resync_block;
+<<<<<<< HEAD
 		peer_req->opf = REQ_OP_DISCARD;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		peer_req->submit_jif = jiffies;
 		peer_req->flags |= EE_TRIM;
 
@@ -4978,7 +5136,12 @@ static int receive_rs_deallocated(struct drbd_connection *connection, struct pac
 		spin_unlock_irq(&device->resource->req_lock);
 
 		atomic_add(pi->size >> 9, &device->rs_sect_ev);
+<<<<<<< HEAD
 		err = drbd_submit_peer_request(peer_req);
+=======
+		err = drbd_submit_peer_request(device, peer_req, op,
+					       DRBD_FAULT_RS_WR);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (err) {
 			spin_lock_irq(&device->resource->req_lock);

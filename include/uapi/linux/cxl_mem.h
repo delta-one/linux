@@ -11,19 +11,28 @@
 /**
  * DOC: UAPI
  *
+<<<<<<< HEAD
  * Not all of the commands that the driver supports are available for use by
  * userspace at all times.  Userspace can check the result of the QUERY command
  * to determine the live set of commands.  Alternatively, it can issue the
  * command and check for failure.
+=======
+ * Not all of all commands that the driver supports are always available for use
+ * by userspace. Userspace must check the results from the QUERY command in
+ * order to determine the live set of commands.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #define CXL_MEM_QUERY_COMMANDS _IOR(0xCE, 1, struct cxl_mem_query_commands)
 #define CXL_MEM_SEND_COMMAND _IOWR(0xCE, 2, struct cxl_send_command)
 
+<<<<<<< HEAD
 /*
  * NOTE: New defines must be added to the end of the list to preserve
  * compatibility because this enum is exported to user space.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CXL_CMDS                                                          \
 	___C(INVALID, "Invalid Command"),                                 \
 	___C(IDENTIFY, "Identify Command"),                               \
@@ -73,6 +82,7 @@ static const struct {
  * struct cxl_command_info - Command information returned from a query.
  * @id: ID number for the command.
  * @flags: Flags that specify command behavior.
+<<<<<<< HEAD
  *
  *         CXL_MEM_COMMAND_FLAG_USER_ENABLED
  *
@@ -86,6 +96,8 @@ static const struct {
  *         the label-storage-area can not be written while the kernel is
  *         actively managing that space.
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @size_in: Expected input size, or ~0 if variable length.
  * @size_out: Expected output size, or ~0 if variable length.
  *
@@ -95,7 +107,11 @@ static const struct {
  * bytes of output.
  *
  *  - @id = 10
+<<<<<<< HEAD
  *  - @flags = CXL_MEM_COMMAND_FLAG_ENABLED
+=======
+ *  - @flags = 0
+>>>>>>> b7ba80a49124 (Commit)
  *  - @size_in = ~0
  *  - @size_out = 0
  *
@@ -105,9 +121,13 @@ struct cxl_command_info {
 	__u32 id;
 
 	__u32 flags;
+<<<<<<< HEAD
 #define CXL_MEM_COMMAND_FLAG_MASK		GENMASK(1, 0)
 #define CXL_MEM_COMMAND_FLAG_ENABLED		BIT(0)
 #define CXL_MEM_COMMAND_FLAG_EXCLUSIVE		BIT(1)
+=======
+#define CXL_MEM_COMMAND_FLAG_MASK GENMASK(0, 0)
+>>>>>>> b7ba80a49124 (Commit)
 
 	__u32 size_in;
 	__u32 size_out;

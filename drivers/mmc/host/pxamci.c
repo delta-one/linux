@@ -763,12 +763,16 @@ static int pxamci_probe(struct platform_device *pdev)
 			dev_warn(dev, "gpio_ro and get_ro() both defined\n");
 	}
 
+<<<<<<< HEAD
 	ret = mmc_add_host(mmc);
 	if (ret) {
 		if (host->pdata && host->pdata->exit)
 			host->pdata->exit(dev, mmc);
 		goto out;
 	}
+=======
+	mmc_add_host(mmc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 

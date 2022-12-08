@@ -172,7 +172,11 @@ config PINCTRL_DA9062
 
 config PINCTRL_DIGICOLOR
 	bool
+<<<<<<< HEAD
 	depends on ARCH_DIGICOLOR || COMPILE_TEST
+=======
+	depends on OF && (ARCH_DIGICOLOR || COMPILE_TEST)
+>>>>>>> b7ba80a49124 (Commit)
 	select PINMUX
 	select GENERIC_PINCONF
 
@@ -258,6 +262,7 @@ config PINCTRL_FALCON
 	depends on SOC_FALCON
 	depends on PINCTRL_LANTIQ
 
+<<<<<<< HEAD
 config PINCTRL_LOONGSON2
 	tristate "Pinctrl driver for the Loongson-2 SoC"
 	depends on OF && (LOONGARCH || COMPILE_TEST)
@@ -269,6 +274,8 @@ config PINCTRL_LOONGSON2
 	 pull-down functions are not supported. Say yes to enable
 	 pinctrl for Loongson-2 SoC.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config PINCTRL_XWAY
 	bool
 	depends on SOC_TYPE_XWAY
@@ -445,6 +452,26 @@ config PINCTRL_ST
 	select PINCONF
 	select GPIOLIB_IRQCHIP
 
+<<<<<<< HEAD
+=======
+config PINCTRL_STARFIVE
+	tristate "Pinctrl and GPIO driver for the StarFive JH7100 SoC"
+	depends on SOC_STARFIVE || COMPILE_TEST
+	depends on OF
+	default SOC_STARFIVE
+	select GENERIC_PINCTRL_GROUPS
+	select GENERIC_PINMUX_FUNCTIONS
+	select GENERIC_PINCONF
+	select GPIOLIB
+	select GPIOLIB_IRQCHIP
+	select OF_GPIO
+	help
+	  Say yes here to support pin control on the StarFive JH7100 SoC.
+	  This also provides an interface to the GPIO pins not used by other
+	  peripherals supporting inputs, outputs, configuring pull-up/pull-down
+	  and interrupts on input changes.
+
+>>>>>>> b7ba80a49124 (Commit)
 config PINCTRL_STMFX
 	tristate "STMicroelectronics STMFX GPIO expander pinctrl driver"
 	depends on I2C
@@ -523,6 +550,7 @@ config PINCTRL_ZYNQMP
 	  This driver can also be built as a module. If so, the module
 	  will be called pinctrl-zynqmp.
 
+<<<<<<< HEAD
 config PINCTRL_MLXBF3
 	tristate "NVIDIA BlueField-3 SoC Pinctrl driver"
 	depends on (MELLANOX_PLATFORM && ARM64) || COMPILE_TEST
@@ -536,6 +564,8 @@ config PINCTRL_MLXBF3
 	  each pin. This driver can also be built as a module called
 	  pinctrl-mlxbf3.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 source "drivers/pinctrl/actions/Kconfig"
 source "drivers/pinctrl/aspeed/Kconfig"
 source "drivers/pinctrl/bcm/Kconfig"
@@ -548,14 +578,23 @@ source "drivers/pinctrl/meson/Kconfig"
 source "drivers/pinctrl/mvebu/Kconfig"
 source "drivers/pinctrl/nomadik/Kconfig"
 source "drivers/pinctrl/nuvoton/Kconfig"
+<<<<<<< HEAD
 source "drivers/pinctrl/nxp/Kconfig"
 source "drivers/pinctrl/pxa/Kconfig"
 source "drivers/pinctrl/qcom/Kconfig"
+=======
+source "drivers/pinctrl/pxa/Kconfig"
+source "drivers/pinctrl/qcom/Kconfig"
+source "drivers/pinctrl/ralink/Kconfig"
+>>>>>>> b7ba80a49124 (Commit)
 source "drivers/pinctrl/renesas/Kconfig"
 source "drivers/pinctrl/samsung/Kconfig"
 source "drivers/pinctrl/spear/Kconfig"
 source "drivers/pinctrl/sprd/Kconfig"
+<<<<<<< HEAD
 source "drivers/pinctrl/starfive/Kconfig"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 source "drivers/pinctrl/stm32/Kconfig"
 source "drivers/pinctrl/sunplus/Kconfig"
 source "drivers/pinctrl/sunxi/Kconfig"

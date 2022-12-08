@@ -17,7 +17,10 @@
 #include <linux/console.h>
 #include <linux/delay.h>
 #include <linux/irq.h>
+<<<<<<< HEAD
 #include <linux/seq_buf.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/seq_file.h>
 #include <linux/of.h>
 #include <linux/of_fdt.h>
@@ -208,6 +211,7 @@ static void __init pnv_setup_arch(void)
 	pnv_rng_init();
 }
 
+<<<<<<< HEAD
 static void __init pnv_add_hw_description(void)
 {
 	struct device_node *dn;
@@ -231,6 +235,10 @@ static void __init pnv_init(void)
 {
 	pnv_add_hw_description();
 
+=======
+static void __init pnv_init(void)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Initialize the LPC bus now so that legacy serial
 	 * ports can be found on it
@@ -512,6 +520,12 @@ static void __init pnv_setup_machdep_opal(void)
 
 static int __init pnv_probe(void)
 {
+<<<<<<< HEAD
+=======
+	if (!of_machine_is_compatible("ibm,powernv"))
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (firmware_has_feature(FW_FEATURE_OPAL))
 		pnv_setup_machdep_opal();
 
@@ -575,7 +589,10 @@ static long pnv_machine_check_early(struct pt_regs *regs)
 
 define_machine(powernv) {
 	.name			= "PowerNV",
+<<<<<<< HEAD
 	.compatible		= "ibm,powernv",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.probe			= pnv_probe,
 	.setup_arch		= pnv_setup_arch,
 	.init_IRQ		= pnv_init_IRQ,
@@ -585,6 +602,10 @@ define_machine(powernv) {
 	.progress		= pnv_progress,
 	.machine_shutdown	= pnv_shutdown,
 	.power_save             = NULL,
+<<<<<<< HEAD
+=======
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.machine_check_early	= pnv_machine_check_early,
 #ifdef CONFIG_KEXEC_CORE
 	.kexec_cpu_down		= pnv_kexec_cpu_down,

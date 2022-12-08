@@ -26,6 +26,7 @@
 
 #include <core/option.h>
 #include <core/pci.h>
+<<<<<<< HEAD
 
 void
 nvkm_pci_msi_rearm(struct nvkm_device *device)
@@ -35,6 +36,9 @@ nvkm_pci_msi_rearm(struct nvkm_device *device)
 	if (pci && pci->msi)
 		pci->func->msi_rearm(pci);
 }
+=======
+#include <subdev/mc.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 u32
 nvkm_pci_rd32(struct nvkm_pci *pci, u16 addr)
@@ -73,6 +77,27 @@ nvkm_pci_rom_shadow(struct nvkm_pci *pci, bool shadow)
 	nvkm_pci_wr32(pci, 0x0050, data);
 }
 
+<<<<<<< HEAD
+=======
+static irqreturn_t
+nvkm_pci_intr(int irq, void *arg)
+{
+	struct nvkm_pci *pci = arg;
+	struct nvkm_device *device = pci->subdev.device;
+	bool handled = false;
+
+	if (pci->irq < 0)
+		return IRQ_HANDLED;
+
+	nvkm_mc_intr_unarm(device);
+	if (pci->msi)
+		pci->func->msi_rearm(pci);
+	nvkm_mc_intr(device, &handled);
+	nvkm_mc_intr_rearm(device);
+	return handled ? IRQ_HANDLED : IRQ_NONE;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int
 nvkm_pci_fini(struct nvkm_subdev *subdev, bool suspend)
 {
@@ -97,6 +122,10 @@ static int
 nvkm_pci_oneinit(struct nvkm_subdev *subdev)
 {
 	struct nvkm_pci *pci = nvkm_pci(subdev);
+<<<<<<< HEAD
+=======
+	struct pci_dev *pdev = pci->pdev;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (pci_is_pcie(pci->pdev)) {
@@ -105,6 +134,14 @@ nvkm_pci_oneinit(struct nvkm_subdev *subdev)
 			return ret;
 	}
 
+<<<<<<< HEAD
+=======
+	ret = request_irq(pdev->irq, nvkm_pci_intr, IRQF_SHARED, "nvkm", pci);
+	if (ret)
+		return ret;
+
+	pci->irq = pdev->irq;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -141,6 +178,18 @@ nvkm_pci_dtor(struct nvkm_subdev *subdev)
 
 	nvkm_agp_dtor(pci);
 
+<<<<<<< HEAD
+=======
+	if (pci->irq >= 0) {
+		/* freq_irq() will call the handler, we use pci->irq == -1
+		 * to signal that it's been torn down and should be a noop.
+		 */
+		int irq = pci->irq;
+		pci->irq = -1;
+		free_irq(irq, pci);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (pci->msi)
 		pci_disable_msi(pci->pdev);
 
@@ -167,6 +216,10 @@ nvkm_pci_new_(const struct nvkm_pci_func *func, struct nvkm_device *device,
 	nvkm_subdev_ctor(&nvkm_pci_func, device, type, inst, &pci->subdev);
 	pci->func = func;
 	pci->pdev = device->func->pci(device)->pdev;
+<<<<<<< HEAD
+=======
+	pci->irq = -1;
+>>>>>>> b7ba80a49124 (Commit)
 	pci->pcie.speed = -1;
 	pci->pcie.width = -1;
 

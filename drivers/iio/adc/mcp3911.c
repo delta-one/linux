@@ -29,8 +29,11 @@
 #define MCP3911_REG_MOD			0x06
 #define MCP3911_REG_PHASE		0x07
 #define MCP3911_REG_GAIN		0x09
+<<<<<<< HEAD
 #define MCP3911_GAIN_MASK(ch)		(GENMASK(2, 0) << 3 * ch)
 #define MCP3911_GAIN_VAL(ch, val)      ((val << 3 * ch) & MCP3911_GAIN_MASK(ch))
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MCP3911_REG_STATUSCOM		0x0a
 #define MCP3911_STATUSCOM_DRHIZ         BIT(12)
@@ -57,6 +60,7 @@
 /* Internal voltage reference in mV */
 #define MCP3911_INT_VREF_MV		1200
 
+<<<<<<< HEAD
 #define MCP3911_REG_READ(reg, id)	((((reg) << 1) | ((id) << 6) | (1 << 0)) & 0xff)
 #define MCP3911_REG_WRITE(reg, id)	((((reg) << 1) | ((id) << 6) | (0 << 0)) & 0xff)
 #define MCP3911_REG_MASK		GENMASK(4, 1)
@@ -66,6 +70,14 @@
 
 static const int mcp3911_osr_table[] = { 32, 64, 128, 256, 512, 1024, 2048, 4096 };
 static u32 mcp3911_scale_table[MCP3911_NUM_SCALES][2];
+=======
+#define MCP3911_REG_READ(reg, id)	((((reg) << 1) | ((id) << 5) | (1 << 0)) & 0xff)
+#define MCP3911_REG_WRITE(reg, id)	((((reg) << 1) | ((id) << 5) | (0 << 0)) & 0xff)
+
+#define MCP3911_NUM_CHANNELS		2
+
+static const int mcp3911_osr_table[] = { 32, 64, 128, 256, 512, 1024, 2048, 4096 };
+>>>>>>> b7ba80a49124 (Commit)
 
 struct mcp3911 {
 	struct spi_device *spi;
@@ -74,7 +86,10 @@ struct mcp3911 {
 	struct clk *clki;
 	u32 dev_addr;
 	struct iio_trigger *trig;
+<<<<<<< HEAD
 	u32 gain[MCP3911_NUM_CHANNELS];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct {
 		u32 channels[MCP3911_NUM_CHANNELS];
 		s64 ts __aligned(8);
@@ -95,8 +110,13 @@ static int mcp3911_read(struct mcp3911 *adc, u8 reg, u32 *val, u8 len)
 
 	be32_to_cpus(val);
 	*val >>= ((4 - len) * 8);
+<<<<<<< HEAD
 	dev_dbg(&adc->spi->dev, "reading 0x%x from register 0x%lx\n", *val,
 		FIELD_GET(MCP3911_REG_MASK, reg));
+=======
+	dev_dbg(&adc->spi->dev, "reading 0x%x from register 0x%x\n", *val,
+		reg >> 1);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -151,11 +171,14 @@ static int mcp3911_read_avail(struct iio_dev *indio_dev,
 		*vals = mcp3911_osr_table;
 		*length = ARRAY_SIZE(mcp3911_osr_table);
 		return IIO_AVAIL_LIST;
+<<<<<<< HEAD
 	case IIO_CHAN_INFO_SCALE:
 		*type = IIO_VAL_INT_PLUS_NANO;
 		*vals = (int *)mcp3911_scale_table;
 		*length = ARRAY_SIZE(mcp3911_scale_table) * 2;
 		return IIO_AVAIL_LIST;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -EINVAL;
 	}
@@ -200,9 +223,35 @@ static int mcp3911_read_raw(struct iio_dev *indio_dev,
 		break;
 
 	case IIO_CHAN_INFO_SCALE:
+<<<<<<< HEAD
 		*val = mcp3911_scale_table[ilog2(adc->gain[channel->channel])][0];
 		*val2 = mcp3911_scale_table[ilog2(adc->gain[channel->channel])][1];
 		ret = IIO_VAL_INT_PLUS_NANO;
+=======
+		if (adc->vref) {
+			ret = regulator_get_voltage(adc->vref);
+			if (ret < 0) {
+				dev_err(indio_dev->dev.parent,
+					"failed to get vref voltage: %d\n",
+				       ret);
+				goto out;
+			}
+
+			*val = ret / 1000;
+		} else {
+			*val = MCP3911_INT_VREF_MV;
+		}
+
+		/*
+		 * For 24bit Conversion
+		 * Raw = ((Voltage)/(Vref) * 2^23 * Gain * 1.5
+		 * Voltage = Raw * (Vref)/(2^23 * Gain * 1.5)
+		 */
+
+		/* val2 = (2^23 * 1.5) */
+		*val2 = 12582912;
+		ret = IIO_VAL_FRACTIONAL;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -220,6 +269,7 @@ static int mcp3911_write_raw(struct iio_dev *indio_dev,
 
 	mutex_lock(&adc->lock);
 	switch (mask) {
+<<<<<<< HEAD
 	case IIO_CHAN_INFO_SCALE:
 		for (int i = 0; i < MCP3911_NUM_SCALES; i++) {
 			if (val == mcp3911_scale_table[i][0] &&
@@ -232,6 +282,8 @@ static int mcp3911_write_raw(struct iio_dev *indio_dev,
 			}
 		}
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case IIO_CHAN_INFO_OFFSET:
 		if (val2 != 0) {
 			ret = -EINVAL;
@@ -251,7 +303,11 @@ static int mcp3911_write_raw(struct iio_dev *indio_dev,
 		break;
 
 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+<<<<<<< HEAD
 		for (int i = 0; i < ARRAY_SIZE(mcp3911_osr_table); i++) {
+=======
+		for (int i = 0; i < sizeof(mcp3911_osr_table); i++) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (val == mcp3911_osr_table[i]) {
 				val = FIELD_PREP(MCP3911_CONFIG_OSR, i);
 				ret = mcp3911_update(adc, MCP3911_REG_CONFIG, MCP3911_CONFIG_OSR,
@@ -267,6 +323,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int mcp3911_calc_scale_table(struct mcp3911 *adc)
 {
 	u32 ref = MCP3911_INT_VREF_MV;
@@ -305,6 +362,8 @@ static int mcp3911_calc_scale_table(struct mcp3911 *adc)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MCP3911_CHAN(idx) {					\
 		.type = IIO_VOLTAGE,				\
 		.indexed = 1,					\
@@ -314,10 +373,15 @@ static int mcp3911_calc_scale_table(struct mcp3911 *adc)
 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |	\
 			BIT(IIO_CHAN_INFO_OFFSET) |		\
 			BIT(IIO_CHAN_INFO_SCALE),		\
+<<<<<<< HEAD
 		.info_mask_shared_by_type_available =           \
 			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
 		.info_mask_separate_available =			\
 			BIT(IIO_CHAN_INFO_SCALE),		\
+=======
+		.info_mask_shared_by_type_available =		\
+			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
+>>>>>>> b7ba80a49124 (Commit)
 		.scan_type = {					\
 			.sign = 's',				\
 			.realbits = 24,				\
@@ -524,6 +588,7 @@ static int mcp3911_probe(struct spi_device *spi)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = mcp3911_calc_scale_table(adc);
 	if (ret)
 		return ret;
@@ -538,6 +603,8 @@ static int mcp3911_probe(struct spi_device *spi)
 			return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	indio_dev->name = spi_get_device_id(spi)->name;
 	indio_dev->modes = INDIO_DIRECT_MODE;
 	indio_dev->info = &mcp3911_info;
@@ -553,7 +620,11 @@ static int mcp3911_probe(struct spi_device *spi)
 				indio_dev->name,
 				iio_device_id(indio_dev));
 		if (!adc->trig)
+<<<<<<< HEAD
 			return -ENOMEM;
+=======
+			return PTR_ERR(adc->trig);
+>>>>>>> b7ba80a49124 (Commit)
 
 		adc->trig->ops = &mcp3911_trigger_ops;
 		iio_trigger_set_drvdata(adc->trig, adc);

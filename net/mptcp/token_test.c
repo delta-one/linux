@@ -57,9 +57,12 @@ static struct mptcp_sock *build_msk(struct kunit *test)
 	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, msk);
 	refcount_set(&((struct sock *)msk)->sk_refcnt, 1);
 	sock_net_set((struct sock *)msk, &init_net);
+<<<<<<< HEAD
 
 	/* be sure the token helpers can dereference sk->sk_prot */
 	((struct sock *)msk)->sk_prot = &tcp_prot;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return msk;
 }
 

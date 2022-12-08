@@ -99,7 +99,10 @@ static void pm8001_map_queues(struct Scsi_Host *shost)
 static struct scsi_host_template pm8001_sht = {
 	.module			= THIS_MODULE,
 	.name			= DRV_NAME,
+<<<<<<< HEAD
 	.proc_name		= DRV_NAME,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.queuecommand		= sas_queuecommand,
 	.dma_need_drain		= ata_scsi_dma_need_drain,
 	.target_alloc		= sas_target_alloc,
@@ -197,7 +200,11 @@ static void pm8001_free(struct pm8001_hba_info *pm8001_ha)
 	}
 	PM8001_CHIP_DISP->chip_iounmap(pm8001_ha);
 	flush_workqueue(pm8001_wq);
+<<<<<<< HEAD
 	bitmap_free(pm8001_ha->rsvd_tags);
+=======
+	bitmap_free(pm8001_ha->tags);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(pm8001_ha);
 }
 
@@ -437,6 +444,11 @@ static int pm8001_alloc(struct pm8001_hba_info *pm8001_ha,
 		atomic_set(&pm8001_ha->devices[i].running_req, 0);
 	}
 	pm8001_ha->flags = PM8001F_INIT_TIME;
+<<<<<<< HEAD
+=======
+	/* Initialize tags */
+	pm8001_tag_init(pm8001_ha);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_out_nodev:
@@ -1209,15 +1221,28 @@ static int pm8001_init_ccb_tag(struct pm8001_hba_info *pm8001_ha)
 	struct Scsi_Host *shost = pm8001_ha->shost;
 	struct device *dev = pm8001_ha->dev;
 	u32 max_out_io, ccb_count;
+<<<<<<< HEAD
+=======
+	u32 can_queue;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	max_out_io = pm8001_ha->main_cfg_tbl.pm80xx_tbl.max_out_io;
 	ccb_count = min_t(int, PM8001_MAX_CCB, max_out_io);
 
+<<<<<<< HEAD
 	shost->can_queue = ccb_count - PM8001_RESERVE_SLOT;
 
 	pm8001_ha->rsvd_tags = bitmap_zalloc(PM8001_RESERVE_SLOT, GFP_KERNEL);
 	if (!pm8001_ha->rsvd_tags)
+=======
+	/* Update to the scsi host*/
+	can_queue = ccb_count - PM8001_RESERVE_SLOT;
+	shost->can_queue = can_queue;
+
+	pm8001_ha->tags = bitmap_zalloc(ccb_count, GFP_KERNEL);
+	if (!pm8001_ha->tags)
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_out;
 
 	/* Memory region for ccb_info*/
@@ -1242,6 +1267,10 @@ static int pm8001_init_ccb_tag(struct pm8001_hba_info *pm8001_ha)
 		pm8001_ha->ccb_info[i].task = NULL;
 		pm8001_ha->ccb_info[i].ccb_tag = PM8001_INVALID_TAG;
 		pm8001_ha->ccb_info[i].device = NULL;
+<<<<<<< HEAD
+=======
+		++pm8001_ha->tags_num;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;

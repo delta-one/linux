@@ -114,6 +114,7 @@ void nvme_failover_req(struct request *req)
 	kblockd_schedule_work(&ns->head->requeue_work);
 }
 
+<<<<<<< HEAD
 void nvme_mpath_start_request(struct request *rq)
 {
 	struct nvme_ns *ns = rq->q->queuedata;
@@ -139,6 +140,8 @@ void nvme_mpath_end_request(struct request *rq)
 			 nvme_req(rq)->start_time);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void nvme_kick_requeue_lists(struct nvme_ctrl *ctrl)
 {
 	struct nvme_ns *ns;
@@ -199,18 +202,28 @@ void nvme_mpath_revalidate_paths(struct nvme_ns *ns)
 	struct nvme_ns_head *head = ns->head;
 	sector_t capacity = get_capacity(head->disk);
 	int node;
+<<<<<<< HEAD
 	int srcu_idx;
 
 	srcu_idx = srcu_read_lock(&head->srcu);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry_rcu(ns, &head->list, siblings) {
 		if (capacity != get_capacity(ns->disk))
 			clear_bit(NVME_NS_READY, &ns->flags);
 	}
+<<<<<<< HEAD
 	srcu_read_unlock(&head->srcu, srcu_idx);
 
 	for_each_node(node)
 		rcu_assign_pointer(head->current_path[node], NULL);
 	kblockd_schedule_work(&head->requeue_work);
+=======
+
+	for_each_node(node)
+		rcu_assign_pointer(head->current_path[node], NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool nvme_path_is_disabled(struct nvme_ns *ns)
@@ -376,8 +389,11 @@ static void nvme_ns_head_submit_bio(struct bio *bio)
 	 * pool from the original queue to allocate the bvecs from.
 	 */
 	bio = bio_split_to_limits(bio);
+<<<<<<< HEAD
 	if (!bio)
 		return;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	srcu_idx = srcu_read_lock(&head->srcu);
 	ns = nvme_find_path(head);
@@ -533,7 +549,10 @@ int nvme_mpath_alloc_disk(struct nvme_ctrl *ctrl, struct nvme_ns_head *head)
 
 	blk_queue_flag_set(QUEUE_FLAG_NONROT, head->disk->queue);
 	blk_queue_flag_set(QUEUE_FLAG_NOWAIT, head->disk->queue);
+<<<<<<< HEAD
 	blk_queue_flag_set(QUEUE_FLAG_IO_STAT, head->disk->queue);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * This assumes all controllers that refer to a namespace either
 	 * support poll queues or not.  That is not a strict guarantee,
@@ -547,7 +566,10 @@ int nvme_mpath_alloc_disk(struct nvme_ctrl *ctrl, struct nvme_ns_head *head)
 	/* set to a default value of 512 until the disk is validated */
 	blk_queue_logical_block_size(head->disk->queue, 512);
 	blk_set_stacking_limits(&head->disk->queue->limits);
+<<<<<<< HEAD
 	blk_queue_dma_alignment(head->disk->queue, 3);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* we need to propagate up the VMC settings */
 	if (ctrl->vwc & NVME_CTRL_VWC_PRESENT)

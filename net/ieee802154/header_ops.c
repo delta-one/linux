@@ -120,6 +120,7 @@ ieee802154_hdr_push(struct sk_buff *skb, struct ieee802154_hdr *hdr)
 }
 EXPORT_SYMBOL_GPL(ieee802154_hdr_push);
 
+<<<<<<< HEAD
 int ieee802154_beacon_push(struct sk_buff *skb,
 			   struct ieee802154_beacon_frame *beacon)
 {
@@ -144,6 +145,8 @@ int ieee802154_beacon_push(struct sk_buff *skb,
 }
 EXPORT_SYMBOL_GPL(ieee802154_beacon_push);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int
 ieee802154_hdr_get_addr(const u8 *buf, int mode, bool omit_pan,
 			struct ieee802154_addr *addr)

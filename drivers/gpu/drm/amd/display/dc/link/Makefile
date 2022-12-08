@@ -23,6 +23,7 @@
 # It abstracts the control and status of back end pipe such as DIO, HPO, DPIA,
 # PHY, HPD, DDC and etc).
 
+<<<<<<< HEAD
 LINK = link_detection.o link_dpms.o link_factory.o link_resource.o \
 link_validation.o
 
@@ -61,3 +62,10 @@ AMD_DAL_LINK_PROTOCOLS = $(addprefix $(AMDDALPATH)/dc/link/protocols/, \
 $(LINK_PROTOCOLS))
 
 AMD_DISPLAY_FILES += $(AMD_DAL_LINK_PROTOCOLS)
+=======
+LINK = link_hwss_dio.o link_hwss_dpia.o link_hwss_hpo_dp.o link_dp_trace.o
+
+AMD_DAL_LINK = $(addprefix $(AMDDALPATH)/dc/link/,$(LINK))
+
+AMD_DISPLAY_FILES += $(AMD_DAL_LINK)
+>>>>>>> b7ba80a49124 (Commit)

@@ -649,7 +649,11 @@ static int kmx61_chip_update_thresholds(struct kmx61_data *data)
 					KMX61_REG_WUF_TIMER,
 					data->wake_duration);
 	if (ret < 0) {
+<<<<<<< HEAD
 		dev_err(&data->client->dev, "Error writing reg_wuf_timer\n");
+=======
+		dev_err(&data->client->dev, "Errow writing reg_wuf_timer\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 
@@ -1276,9 +1280,15 @@ static struct iio_trigger *kmx61_trigger_setup(struct kmx61_data *data,
 	return trig;
 }
 
+<<<<<<< HEAD
 static int kmx61_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int kmx61_probe(struct i2c_client *client,
+		       const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 	struct kmx61_data *data;
 	const char *name = NULL;
@@ -1517,7 +1527,11 @@ static struct i2c_driver kmx61_driver = {
 		.acpi_match_table = ACPI_PTR(kmx61_acpi_match),
 		.pm = pm_ptr(&kmx61_pm_ops),
 	},
+<<<<<<< HEAD
 	.probe_new	= kmx61_probe,
+=======
+	.probe		= kmx61_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= kmx61_remove,
 	.id_table	= kmx61_id,
 };

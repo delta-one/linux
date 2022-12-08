@@ -75,10 +75,13 @@ static __always_inline void pai_kernel_exit(struct pt_regs *regs)
 	WRITE_ONCE(S390_lowcore.ccd, S390_lowcore.ccd & ~PAI_CRYPTO_KERNEL_OFFSET);
 }
 
+<<<<<<< HEAD
 enum paievt_mode {
 	PAI_MODE_NONE,
 	PAI_MODE_SAMPLING,
 	PAI_MODE_COUNTING,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

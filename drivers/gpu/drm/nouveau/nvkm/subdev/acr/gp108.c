@@ -25,6 +25,7 @@
 
 #include <nvfw/flcn.h>
 
+<<<<<<< HEAD
 int
 gp108_acr_hsfw_load_bld(struct nvkm_falcon_fw *fw)
 {
@@ -38,10 +39,26 @@ gp108_acr_hsfw_load_bld(struct nvkm_falcon_fw *fw)
 		.code_entry_point = 0,
 		.data_dma_base = fw->vma->addr + fw->dmem_base_img,
 		.data_size = fw->dmem_size,
+=======
+void
+gp108_acr_hsfw_bld(struct nvkm_acr *acr, struct nvkm_acr_hsf *hsf)
+{
+	struct flcn_bl_dmem_desc_v2 hsdesc = {
+		.ctx_dma = FALCON_DMAIDX_VIRT,
+		.code_dma_base = hsf->vma->addr,
+		.non_sec_code_off = hsf->non_sec_addr,
+		.non_sec_code_size = hsf->non_sec_size,
+		.sec_code_off = hsf->sec_addr,
+		.sec_code_size = hsf->sec_size,
+		.code_entry_point = 0,
+		.data_dma_base = hsf->vma->addr + hsf->data_addr,
+		.data_size = hsf->data_size,
+>>>>>>> b7ba80a49124 (Commit)
 		.argc = 0,
 		.argv = 0,
 	};
 
+<<<<<<< HEAD
 	flcn_bl_dmem_desc_v2_dump(fw->falcon->user, &hsdesc);
 
 	return nvkm_falcon_pio_wr(fw->falcon, (u8 *)&hsdesc, 0, 0, DMEM, 0, sizeof(hsdesc), 0, 0);
@@ -54,11 +71,24 @@ gp108_acr_hsfw_0 = {
 	.load = gm200_flcn_fw_load,
 	.load_bld = gp108_acr_hsfw_load_bld,
 	.boot = gm200_flcn_fw_boot,
+=======
+	flcn_bl_dmem_desc_v2_dump(&acr->subdev, &hsdesc);
+
+	nvkm_falcon_load_dmem(hsf->falcon, &hsdesc, 0, sizeof(hsdesc), 0);
+}
+
+const struct nvkm_acr_hsf_func
+gp108_acr_unload_0 = {
+	.load = gm200_acr_unload_load,
+	.boot = gm200_acr_unload_boot,
+	.bld = gp108_acr_hsfw_bld,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 MODULE_FIRMWARE("nvidia/gp108/acr/unload_bl.bin");
 MODULE_FIRMWARE("nvidia/gp108/acr/ucode_unload.bin");
 
+<<<<<<< HEAD
 static const struct nvkm_acr_hsf_fwif
 gp108_acr_unload_fwif[] = {
 	{ 0, gm200_acr_hsfw_ctor, &gp108_acr_hsfw_0, NVKM_ACR_HSF_PMU, 0x1d, 0x00000010 },
@@ -73,14 +103,39 @@ gp108_acr_load_0 = {
 	.load = gm200_flcn_fw_load,
 	.load_bld = gp108_acr_hsfw_load_bld,
 	.boot = gm200_flcn_fw_boot,
+=======
+MODULE_FIRMWARE("nvidia/gv100/acr/unload_bl.bin");
+MODULE_FIRMWARE("nvidia/gv100/acr/ucode_unload.bin");
+
+static const struct nvkm_acr_hsf_fwif
+gp108_acr_unload_fwif[] = {
+	{ 0, nvkm_acr_hsfw_load, &gp108_acr_unload_0 },
+	{}
+};
+
+static const struct nvkm_acr_hsf_func
+gp108_acr_load_0 = {
+	.load = gp102_acr_load_load,
+	.boot = gm200_acr_load_boot,
+	.bld = gp108_acr_hsfw_bld,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 MODULE_FIRMWARE("nvidia/gp108/acr/bl.bin");
 MODULE_FIRMWARE("nvidia/gp108/acr/ucode_load.bin");
 
+<<<<<<< HEAD
 static const struct nvkm_acr_hsf_fwif
 gp108_acr_load_fwif[] = {
 	{ 0, gm200_acr_hsfw_ctor, &gp108_acr_load_0, NVKM_ACR_HSF_SEC2, 0, 0x00000010 },
+=======
+MODULE_FIRMWARE("nvidia/gv100/acr/bl.bin");
+MODULE_FIRMWARE("nvidia/gv100/acr/ucode_load.bin");
+
+static const struct nvkm_acr_hsf_fwif
+gp108_acr_load_fwif[] = {
+	{ 0, nvkm_acr_hsfw_load, &gp108_acr_load_0 },
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 

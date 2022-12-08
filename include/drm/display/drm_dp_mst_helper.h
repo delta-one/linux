@@ -841,8 +841,12 @@ int drm_dp_add_payload_part2(struct drm_dp_mst_topology_mgr *mgr,
 			     struct drm_dp_mst_atomic_payload *payload);
 void drm_dp_remove_payload(struct drm_dp_mst_topology_mgr *mgr,
 			   struct drm_dp_mst_topology_state *mst_state,
+<<<<<<< HEAD
 			   const struct drm_dp_mst_atomic_payload *old_payload,
 			   struct drm_dp_mst_atomic_payload *new_payload);
+=======
+			   struct drm_dp_mst_atomic_payload *payload);
+>>>>>>> b7ba80a49124 (Commit)
 
 int drm_dp_check_act_status(struct drm_dp_mst_topology_mgr *mgr);
 
@@ -868,9 +872,12 @@ struct drm_dp_mst_topology_state *
 drm_atomic_get_mst_topology_state(struct drm_atomic_state *state,
 				  struct drm_dp_mst_topology_mgr *mgr);
 struct drm_dp_mst_topology_state *
+<<<<<<< HEAD
 drm_atomic_get_old_mst_topology_state(struct drm_atomic_state *state,
 				      struct drm_dp_mst_topology_mgr *mgr);
 struct drm_dp_mst_topology_state *
+=======
+>>>>>>> b7ba80a49124 (Commit)
 drm_atomic_get_new_mst_topology_state(struct drm_atomic_state *state,
 				      struct drm_dp_mst_topology_mgr *mgr);
 struct drm_dp_mst_atomic_payload *

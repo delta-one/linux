@@ -10,6 +10,7 @@
 #include <linux/module.h>
 #include <linux/platform_device.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/of_device.h>
 #include <linux/usb/phy.h>
 
@@ -22,12 +23,28 @@
 
 /*
 * - The V3 firmware is for all R-Car Gen3
+=======
+#include <linux/usb/phy.h>
+#include <linux/sys_soc.h>
+
+#include "xhci.h"
+#include "xhci-plat.h"
+#include "xhci-rcar.h"
+
+/*
+* - The V3 firmware is for almost all R-Car Gen3 (except r8a7795 ES1.x)
+* - The V2 firmware is for r8a7795 ES1.x.
+>>>>>>> b7ba80a49124 (Commit)
 * - The V2 firmware is possible to use on R-Car Gen2. However, the V2 causes
 *   performance degradation. So, this driver continues to use the V1 if R-Car
 *   Gen2.
 * - The V1 firmware is impossible to use on R-Car Gen3.
 */
 MODULE_FIRMWARE(XHCI_RCAR_FIRMWARE_NAME_V1);
+<<<<<<< HEAD
+=======
+MODULE_FIRMWARE(XHCI_RCAR_FIRMWARE_NAME_V2);
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_FIRMWARE(XHCI_RCAR_FIRMWARE_NAME_V3);
 
 /*** Register Offset ***/
@@ -74,6 +91,21 @@ MODULE_FIRMWARE(XHCI_RCAR_FIRMWARE_NAME_V3);
 #define RCAR_USB3_RX_POL_VAL	BIT(21)
 #define RCAR_USB3_TX_POL_VAL	BIT(4)
 
+<<<<<<< HEAD
+=======
+/* For soc_device_attribute */
+#define RCAR_XHCI_FIRMWARE_V2   BIT(0) /* FIRMWARE V2 */
+#define RCAR_XHCI_FIRMWARE_V3   BIT(1) /* FIRMWARE V3 */
+
+static const struct soc_device_attribute rcar_quirks_match[]  = {
+	{
+		.soc_id = "r8a7795", .revision = "ES1.*",
+		.data = (void *)RCAR_XHCI_FIRMWARE_V2,
+	},
+	{ /* sentinel */ }
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static void xhci_rcar_start_gen2(struct usb_hcd *hcd)
 {
 	/* LCLK Select */
@@ -97,7 +129,11 @@ static int xhci_rcar_is_gen2(struct device *dev)
 		of_device_is_compatible(node, "renesas,rcar-gen2-xhci");
 }
 
+<<<<<<< HEAD
 static void xhci_rcar_start(struct usb_hcd *hcd)
+=======
+void xhci_rcar_start(struct usb_hcd *hcd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 temp;
 
@@ -119,6 +155,12 @@ static int xhci_rcar_download_firmware(struct usb_hcd *hcd)
 	const struct firmware *fw;
 	int retval, index, j;
 	u32 data, val, temp;
+<<<<<<< HEAD
+=======
+	u32 quirks = 0;
+	const struct soc_device_attribute *attr;
+	const char *firmware_name;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * According to the datasheet, "Upon the completion of FW Download,
@@ -127,8 +169,24 @@ static int xhci_rcar_download_firmware(struct usb_hcd *hcd)
 	if (readl(regs + RCAR_USB3_DL_CTRL) & RCAR_USB3_DL_CTRL_FW_SUCCESS)
 		return 0;
 
+<<<<<<< HEAD
 	/* request R-Car USB3.0 firmware */
 	retval = request_firmware(&fw, priv->firmware_name, dev);
+=======
+	attr = soc_device_match(rcar_quirks_match);
+	if (attr)
+		quirks = (uintptr_t)attr->data;
+
+	if (quirks & RCAR_XHCI_FIRMWARE_V2)
+		firmware_name = XHCI_RCAR_FIRMWARE_NAME_V2;
+	else if (quirks & RCAR_XHCI_FIRMWARE_V3)
+		firmware_name = XHCI_RCAR_FIRMWARE_NAME_V3;
+	else
+		firmware_name = priv->firmware_name;
+
+	/* request R-Car USB3.0 firmware */
+	retval = request_firmware(&fw, firmware_name, dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (retval)
 		return retval;
 
@@ -178,7 +236,11 @@ static bool xhci_rcar_wait_for_pll_active(struct usb_hcd *hcd)
 }
 
 /* This function needs to initialize a "phy" of usb before */
+<<<<<<< HEAD
 static int xhci_rcar_init_quirk(struct usb_hcd *hcd)
+=======
+int xhci_rcar_init_quirk(struct usb_hcd *hcd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* If hcd->regs is NULL, we don't just call the following function */
 	if (!hcd->regs)
@@ -190,7 +252,11 @@ static int xhci_rcar_init_quirk(struct usb_hcd *hcd)
 	return xhci_rcar_download_firmware(hcd);
 }
 
+<<<<<<< HEAD
 static int xhci_rcar_resume_quirk(struct usb_hcd *hcd)
+=======
+int xhci_rcar_resume_quirk(struct usb_hcd *hcd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
@@ -200,6 +266,7 @@ static int xhci_rcar_resume_quirk(struct usb_hcd *hcd)
 
 	return ret;
 }
+<<<<<<< HEAD
 
 /*
  * On R-Car Gen2 and Gen3, the AC64 bit (bit 0) of HCCPARAMS1 is set
@@ -289,3 +356,5 @@ module_platform_driver(usb_xhci_renesas_driver);
 
 MODULE_DESCRIPTION("xHCI Platform Host Controller Driver for Renesas R-Car and RZ");
 MODULE_LICENSE("GPL");
+=======
+>>>>>>> b7ba80a49124 (Commit)

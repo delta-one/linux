@@ -10,7 +10,10 @@
 #include <net/tso.h>
 #include <linux/bpf.h>
 #include <linux/bpf_trace.h>
+<<<<<<< HEAD
 #include <net/ip6_checksum.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "otx2_reg.h"
 #include "otx2_common.h"
@@ -442,7 +445,10 @@ static int otx2_tx_napi_handler(struct otx2_nic *pfvf,
 				struct otx2_cq_queue *cq, int budget)
 {
 	int tx_pkts = 0, tx_bytes = 0, qidx;
+<<<<<<< HEAD
 	struct otx2_snd_queue *sq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct nix_cqe_tx_s *cqe;
 	int processed_cqe = 0;
 
@@ -453,9 +459,12 @@ static int otx2_tx_napi_handler(struct otx2_nic *pfvf,
 		return 0;
 
 process_cqe:
+<<<<<<< HEAD
 	qidx = cq->cq_idx - pfvf->hw.rx_queues;
 	sq = &pfvf->qset.sq[qidx];
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	while (likely(processed_cqe < budget) && cq->pend_cqe) {
 		cqe = (struct nix_cqe_tx_s *)otx2_get_next_cqe(cq);
 		if (unlikely(!cqe)) {
@@ -463,6 +472,7 @@ process_cqe:
 				return 0;
 			break;
 		}
+<<<<<<< HEAD
 
 		if (cq->cq_type == CQ_XDP) {
 			otx2_xdp_snd_pkt_handler(pfvf, sq, cqe);
@@ -477,6 +487,20 @@ process_cqe:
 
 		sq->cons_head++;
 		sq->cons_head &= (sq->sqe_cnt - 1);
+=======
+		if (cq->cq_type == CQ_XDP) {
+			qidx = cq->cq_idx - pfvf->hw.rx_queues;
+			otx2_xdp_snd_pkt_handler(pfvf, &pfvf->qset.sq[qidx],
+						 cqe);
+		} else {
+			otx2_snd_pkt_handler(pfvf, cq,
+					     &pfvf->qset.sq[cq->cint_idx],
+					     cqe, budget, &tx_pkts, &tx_bytes);
+		}
+		cqe->hdr.cqe_type = NIX_XQE_TYPE_INVALID;
+		processed_cqe++;
+		cq->pend_cqe--;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Free CQEs to HW */
@@ -700,7 +724,11 @@ static void otx2_sqe_add_ext(struct otx2_nic *pfvf, struct otx2_snd_queue *sq,
 
 static void otx2_sqe_add_mem(struct otx2_snd_queue *sq, int *offset,
 			     int alg, u64 iova, int ptp_offset,
+<<<<<<< HEAD
 			     u64 base_ns, bool udp_csum_crt)
+=======
+			     u64 base_ns, int udp_csum)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nix_sqe_mem_s *mem;
 
@@ -712,7 +740,11 @@ static void otx2_sqe_add_mem(struct otx2_snd_queue *sq, int *offset,
 
 	if (ptp_offset) {
 		mem->start_offset = ptp_offset;
+<<<<<<< HEAD
 		mem->udp_csum_crt = !!udp_csum_crt;
+=======
+		mem->udp_csum_crt = udp_csum;
+>>>>>>> b7ba80a49124 (Commit)
 		mem->base_ns = base_ns;
 		mem->step_type = 1;
 	}
@@ -987,11 +1019,18 @@ static bool otx2_validate_network_transport(struct sk_buff *skb)
 	return false;
 }
 
+<<<<<<< HEAD
 static bool otx2_ptp_is_sync(struct sk_buff *skb, int *offset, bool *udp_csum_crt)
 {
 	struct ethhdr *eth = (struct ethhdr *)(skb->data);
 	u16 nix_offload_hlen = 0, inner_vhlen = 0;
 	bool udp_hdr_present = false, is_sync;
+=======
+static bool otx2_ptp_is_sync(struct sk_buff *skb, int *offset, int *udp_csum)
+{
+	struct ethhdr *eth = (struct ethhdr *)(skb->data);
+	u16 nix_offload_hlen = 0, inner_vhlen = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 *data = skb->data, *msgtype;
 	__be16 proto = eth->h_proto;
 	int network_depth = 0;
@@ -1031,6 +1070,7 @@ static bool otx2_ptp_is_sync(struct sk_buff *skb, int *offset, bool *udp_csum_cr
 		if (!otx2_validate_network_transport(skb))
 			return false;
 
+<<<<<<< HEAD
 		*offset = nix_offload_hlen + skb_transport_offset(skb) +
 			  sizeof(struct udphdr);
 		udp_hdr_present = true;
@@ -1046,11 +1086,23 @@ static bool otx2_ptp_is_sync(struct sk_buff *skb, int *offset, bool *udp_csum_cr
 		*offset = 0;
 
 	return is_sync;
+=======
+		*udp_csum = 1;
+		*offset = nix_offload_hlen + skb_transport_offset(skb) +
+			  sizeof(struct udphdr);
+	}
+
+	msgtype = data + *offset;
+
+	/* Check PTP messageId is SYNC or not */
+	return (*msgtype & 0xf) == 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void otx2_set_txtstamp(struct otx2_nic *pfvf, struct sk_buff *skb,
 			      struct otx2_snd_queue *sq, int *offset)
 {
+<<<<<<< HEAD
 	struct ethhdr	*eth = (struct ethhdr *)(skb->data);
 	struct ptpv2_tstamp *origin_tstamp;
 	bool udp_csum_crt = false;
@@ -1058,10 +1110,16 @@ static void otx2_set_txtstamp(struct otx2_nic *pfvf, struct sk_buff *skb,
 	struct timespec64 ts;
 	int ptp_offset = 0;
 	__wsum skb_csum;
+=======
+	struct ptpv2_tstamp *origin_tstamp;
+	int ptp_offset = 0, udp_csum = 0;
+	struct timespec64 ts;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 iova;
 
 	if (unlikely(!skb_shinfo(skb)->gso_size &&
 		     (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP))) {
+<<<<<<< HEAD
 		if (unlikely(pfvf->flags & OTX2_FLAG_PTP_ONESTEP_SYNC &&
 			     otx2_ptp_is_sync(skb, &ptp_offset, &udp_csum_crt))) {
 			origin_tstamp = (struct ptpv2_tstamp *)
@@ -1099,13 +1157,30 @@ static void otx2_set_txtstamp(struct otx2_nic *pfvf, struct sk_buff *skb,
 									      IPPROTO_UDP,
 									      skb_csum);
 				}
+=======
+		if (unlikely(pfvf->flags & OTX2_FLAG_PTP_ONESTEP_SYNC)) {
+			if (otx2_ptp_is_sync(skb, &ptp_offset, &udp_csum)) {
+				origin_tstamp = (struct ptpv2_tstamp *)
+						((u8 *)skb->data + ptp_offset +
+						 PTP_SYNC_SEC_OFFSET);
+				ts = ns_to_timespec64(pfvf->ptp->tstamp);
+				origin_tstamp->seconds_msb = htons((ts.tv_sec >> 32) & 0xffff);
+				origin_tstamp->seconds_lsb = htonl(ts.tv_sec & 0xffffffff);
+				origin_tstamp->nanoseconds = htonl(ts.tv_nsec);
+				/* Point to correction field in PTP packet */
+				ptp_offset += 8;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		} else {
 			skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
 		}
 		iova = sq->timestamps->iova + (sq->head * sizeof(u64));
 		otx2_sqe_add_mem(sq, offset, NIX_SENDMEMALG_E_SETTSTMP, iova,
+<<<<<<< HEAD
 				 ptp_offset, pfvf->ptp->base_ns, udp_csum_crt);
+=======
+				 ptp_offset, pfvf->ptp->base_ns, udp_csum);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		skb_tx_timestamp(skb);
 	}
@@ -1116,6 +1191,7 @@ bool otx2_sq_append_skb(struct net_device *netdev, struct otx2_snd_queue *sq,
 {
 	struct netdev_queue *txq = netdev_get_tx_queue(netdev, qidx);
 	struct otx2_nic *pfvf = netdev_priv(netdev);
+<<<<<<< HEAD
 	int offset, num_segs, free_desc;
 	struct nix_sqe_hdr_s *sqe_hdr;
 
@@ -1127,6 +1203,19 @@ bool otx2_sq_append_skb(struct net_device *netdev, struct otx2_snd_queue *sq,
 		return false;
 
 	if (free_desc < otx2_get_sqe_count(pfvf, skb))
+=======
+	int offset, num_segs, free_sqe;
+	struct nix_sqe_hdr_s *sqe_hdr;
+
+	/* Check if there is room for new SQE.
+	 * 'Num of SQBs freed to SQ's pool - SQ's Aura count'
+	 * will give free SQE count.
+	 */
+	free_sqe = (sq->num_sqbs - *sq->aura_fc_addr) * sq->sqe_per_sqb;
+
+	if (free_sqe < sq->sqe_thresh ||
+	    free_sqe < otx2_get_sqe_count(pfvf, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	num_segs = skb_shinfo(skb)->nr_frags + 1;

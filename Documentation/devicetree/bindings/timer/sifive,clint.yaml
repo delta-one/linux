@@ -20,6 +20,7 @@ description:
   property of "/cpus" DT node. The "timebase-frequency" DT property is
   described in Documentation/devicetree/bindings/riscv/cpus.yaml
 
+<<<<<<< HEAD
   T-Head C906/C910 CPU cores include an implementation of CLINT too, however
   their implementation lacks a memory-mapped MTIME register, thus not
   compatible with SiFive ones.
@@ -42,6 +43,16 @@ properties:
           - const: riscv,clint0
         deprecated: true
         description: For the QEMU virt machine only
+=======
+properties:
+  compatible:
+    items:
+      - enum:
+          - sifive,fu540-c000-clint
+          - starfive,jh7100-clint
+          - canaan,k210-clint
+      - const: sifive,clint0
+>>>>>>> b7ba80a49124 (Commit)
 
     description:
       Should be "<vendor>,<chip>-clint" and "sifive,clint<version>".

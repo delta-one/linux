@@ -433,7 +433,11 @@ static int __init vimc_init(void)
 	if (ret) {
 		dev_err(&vimc_pdev.dev,
 			"platform driver registration failed (err=%d)\n", ret);
+<<<<<<< HEAD
 		platform_device_unregister(&vimc_pdev);
+=======
+		platform_driver_unregister(&vimc_pdrv);
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 

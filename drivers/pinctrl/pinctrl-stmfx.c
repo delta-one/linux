@@ -10,8 +10,11 @@
 #include <linux/mfd/stmfx.h>
 #include <linux/module.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/seq_file.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pinctrl/pinconf.h>
 #include <linux/pinctrl/pinmux.h>
 

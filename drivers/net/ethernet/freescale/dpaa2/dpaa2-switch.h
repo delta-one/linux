@@ -161,8 +161,11 @@ struct ethsw_port_priv {
 
 	struct dpaa2_switch_filter_block *filter_block;
 	struct dpaa2_mac	*mac;
+<<<<<<< HEAD
 	/* Protects against changes to port_priv->mac */
 	struct mutex		mac_lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Switch data */
@@ -232,7 +235,16 @@ static inline bool dpaa2_switch_supports_cpu_traffic(struct ethsw_core *ethsw)
 static inline bool
 dpaa2_switch_port_is_type_phy(struct ethsw_port_priv *port_priv)
 {
+<<<<<<< HEAD
 	return dpaa2_mac_is_type_phy(port_priv->mac);
+=======
+	if (port_priv->mac &&
+	    (port_priv->mac->attr.link_type == DPMAC_LINK_TYPE_PHY ||
+	     port_priv->mac->attr.link_type == DPMAC_LINK_TYPE_BACKPLANE))
+		return true;
+
+	return false;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool dpaa2_switch_port_has_mac(struct ethsw_port_priv *port_priv)

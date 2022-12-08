@@ -26,7 +26,11 @@ patternProperties:
   "^(reg11|reg18|usb33)$":
     type: object
 
+<<<<<<< HEAD
     $ref: regulator.yaml#
+=======
+    $ref: "regulator.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible

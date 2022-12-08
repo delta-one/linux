@@ -9,9 +9,12 @@ title: Renesas RZ/{G2L,V2L} ASoC Sound Serial Interface (SSIF-2)
 maintainers:
   - Biju Das <biju.das.jz@bp.renesas.com>
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     items:
@@ -25,6 +28,7 @@ properties:
     maxItems: 1
 
   interrupts:
+<<<<<<< HEAD
     minItems: 2
     maxItems: 3
 
@@ -37,6 +41,16 @@ properties:
       - items:
           - const: int_req
           - const: dma_rt
+=======
+    maxItems: 4
+
+  interrupt-names:
+    items:
+      - const: int_req
+      - const: dma_rx
+      - const: dma_tx
+      - const: dma_rt
+>>>>>>> b7ba80a49124 (Commit)
 
   clocks:
     maxItems: 4
@@ -97,7 +111,11 @@ required:
   - resets
   - '#sound-dai-cells'
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |
@@ -110,8 +128,14 @@ examples:
             reg = <0x10049c00 0x400>;
             interrupts = <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>,
                          <GIC_SPI 327 IRQ_TYPE_EDGE_RISING>,
+<<<<<<< HEAD
                          <GIC_SPI 328 IRQ_TYPE_EDGE_RISING>;
             interrupt-names = "int_req", "dma_rx", "dma_tx";
+=======
+                         <GIC_SPI 328 IRQ_TYPE_EDGE_RISING>,
+                         <GIC_SPI 329 IRQ_TYPE_EDGE_RISING>;
+            interrupt-names = "int_req", "dma_rx", "dma_tx", "dma_rt";
+>>>>>>> b7ba80a49124 (Commit)
             clocks = <&cpg CPG_MOD R9A07G044_SSI0_PCLK2>,
                      <&cpg CPG_MOD R9A07G044_SSI0_PCLK_SFR>,
                      <&audio_clk1>,

@@ -313,7 +313,11 @@ static void h5_pkt_cull(struct h5 *h5)
 			break;
 
 		__skb_unlink(skb, &h5->unack);
+<<<<<<< HEAD
 		dev_kfree_skb_irq(skb);
+=======
+		kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (skb_queue_empty(&h5->unack))
@@ -936,8 +940,11 @@ static int h5_btrtl_setup(struct h5 *h5)
 	err = btrtl_download_firmware(h5->hu->hdev, btrtl_dev);
 	/* Give the device some time before the hci-core sends it a reset */
 	usleep_range(10000, 20000);
+<<<<<<< HEAD
 	if (err)
 		goto out_free;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	btrtl_set_quirks(h5->hu->hdev, btrtl_dev);
 
@@ -1102,8 +1109,11 @@ static const struct of_device_id rtl_bluetooth_of_match[] = {
 	  .data = (const void *)&h5_data_rtl8822cs },
 	{ .compatible = "realtek,rtl8723bs-bt",
 	  .data = (const void *)&h5_data_rtl8723bs },
+<<<<<<< HEAD
 	{ .compatible = "realtek,rtl8723cs-bt",
 	  .data = (const void *)&h5_data_rtl8723bs },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "realtek,rtl8723ds-bt",
 	  .data = (const void *)&h5_data_rtl8723bs },
 #endif

@@ -336,9 +336,12 @@ int j1939_send_one(struct j1939_priv *priv, struct sk_buff *skb)
 	/* re-claim the CAN_HDR from the SKB */
 	cf = skb_push(skb, J1939_CAN_HDR);
 
+<<<<<<< HEAD
 	/* initialize header structure */
 	memset(cf, 0, J1939_CAN_HDR);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* make it a full can frame again */
 	skb_put(skb, J1939_CAN_FTR + (8 - dlc));
 

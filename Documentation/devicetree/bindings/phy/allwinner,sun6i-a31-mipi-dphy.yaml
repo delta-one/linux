@@ -17,6 +17,7 @@ properties:
   compatible:
     oneOf:
       - const: allwinner,sun6i-a31-mipi-dphy
+<<<<<<< HEAD
       - const: allwinner,sun50i-a100-mipi-dphy
       - items:
           - const: allwinner,sun50i-a64-mipi-dphy
@@ -24,13 +25,21 @@ properties:
       - items:
           - const: allwinner,sun20i-d1-mipi-dphy
           - const: allwinner,sun50i-a100-mipi-dphy
+=======
+      - items:
+          - const: allwinner,sun50i-a64-mipi-dphy
+          - const: allwinner,sun6i-a31-mipi-dphy
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
 
+<<<<<<< HEAD
   interrupts:
     maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   clocks:
     items:
       - description: Bus Clock
@@ -60,7 +69,10 @@ required:
   - "#phy-cells"
   - compatible
   - reg
+<<<<<<< HEAD
   - interrupts
+=======
+>>>>>>> b7ba80a49124 (Commit)
   - clocks
   - clock-names
   - resets
@@ -69,12 +81,18 @@ additionalProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     #include <dt-bindings/interrupt-controller/arm-gic.h>
 
     dphy0: d-phy@1ca1000 {
         compatible = "allwinner,sun6i-a31-mipi-dphy";
         reg = <0x01ca1000 0x1000>;
         interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+=======
+    dphy0: d-phy@1ca1000 {
+        compatible = "allwinner,sun6i-a31-mipi-dphy";
+        reg = <0x01ca1000 0x1000>;
+>>>>>>> b7ba80a49124 (Commit)
         clocks = <&ccu 23>, <&ccu 97>;
         clock-names = "bus", "mod";
         resets = <&ccu 4>;

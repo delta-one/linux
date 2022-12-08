@@ -434,12 +434,15 @@ static const struct dpu_format dpu_format_map[] = {
 		DPU_CHROMA_H2V1, DPU_FORMAT_FLAG_YUV,
 		DPU_FETCH_LINEAR, 2),
 
+<<<<<<< HEAD
 	PSEUDO_YUV_FMT_LOOSE(P010,
 		0, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
 		C1_B_Cb, C2_R_Cr,
 		DPU_CHROMA_420, DPU_FORMAT_FLAG_DX | DPU_FORMAT_FLAG_YUV,
 		DPU_FETCH_LINEAR, 2),
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	INTERLEAVED_YUV_FMT(VYUY,
 		0, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
 		C2_R_Cr, C0_G_Y, C1_B_Cb, C0_G_Y,
@@ -530,18 +533,22 @@ static const struct dpu_format dpu_format_map_ubwc[] = {
 		true, 4, DPU_FORMAT_FLAG_DX | DPU_FORMAT_FLAG_COMPRESSED,
 		DPU_FETCH_UBWC, 2, DPU_TILE_HEIGHT_UBWC),
 
+<<<<<<< HEAD
 	INTERLEAVED_RGB_FMT_TILED(XRGB2101010,
 		COLOR_8BIT, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
 		C2_R_Cr, C0_G_Y, C1_B_Cb, C3_ALPHA, 4,
 		true, 4, DPU_FORMAT_FLAG_DX | DPU_FORMAT_FLAG_COMPRESSED,
 		DPU_FETCH_UBWC, 2, DPU_TILE_HEIGHT_UBWC),
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	PSEUDO_YUV_FMT_TILED(NV12,
 		0, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
 		C1_B_Cb, C2_R_Cr,
 		DPU_CHROMA_420, DPU_FORMAT_FLAG_YUV |
 				DPU_FORMAT_FLAG_COMPRESSED,
 		DPU_FETCH_UBWC, 4, DPU_TILE_HEIGHT_NV12),
+<<<<<<< HEAD
 
 	PSEUDO_YUV_FMT_TILED(P010,
 		0, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
@@ -550,6 +557,8 @@ static const struct dpu_format dpu_format_map_ubwc[] = {
 				DPU_FORMAT_FLAG_YUV |
 				DPU_FORMAT_FLAG_COMPRESSED,
 		DPU_FETCH_UBWC, 4, DPU_TILE_HEIGHT_UBWC),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* _dpu_get_v_h_subsample_rate - Get subsample rates for all formats we support
@@ -591,15 +600,22 @@ static int _dpu_format_get_media_color_ubwc(const struct dpu_format *fmt)
 		{DRM_FORMAT_XBGR8888, COLOR_FMT_RGBA8888_UBWC},
 		{DRM_FORMAT_XRGB8888, COLOR_FMT_RGBA8888_UBWC},
 		{DRM_FORMAT_ABGR2101010, COLOR_FMT_RGBA1010102_UBWC},
+<<<<<<< HEAD
 		{DRM_FORMAT_XRGB2101010, COLOR_FMT_RGBA1010102_UBWC},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		{DRM_FORMAT_XBGR2101010, COLOR_FMT_RGBA1010102_UBWC},
 		{DRM_FORMAT_BGR565, COLOR_FMT_RGB565_UBWC},
 	};
 	int color_fmt = -1;
 	int i;
 
+<<<<<<< HEAD
 	if (fmt->base.pixel_format == DRM_FORMAT_NV12 ||
 	    fmt->base.pixel_format == DRM_FORMAT_P010) {
+=======
+	if (fmt->base.pixel_format == DRM_FORMAT_NV12) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (DPU_FORMAT_IS_DX(fmt)) {
 			if (fmt->unpack_tight)
 				color_fmt = COLOR_FMT_NV12_BPP10_UBWC;

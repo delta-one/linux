@@ -71,7 +71,11 @@ void __cpu_die(unsigned int cpu)
 /*
  * Called from the idle thread for the CPU which has been shutdown.
  */
+<<<<<<< HEAD
 void __noreturn arch_cpu_idle_dead(void)
+=======
+void arch_cpu_idle_dead(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	idle_task_exit();
 

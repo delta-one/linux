@@ -2,14 +2,25 @@
 # Copyright 2019 BayLibre, SAS
 %YAML 1.2
 ---
+<<<<<<< HEAD
 $id: http://devicetree.org/schemas/spi/amlogic,meson-gx-spicc.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
+=======
+$id: "http://devicetree.org/schemas/spi/amlogic,meson-gx-spicc.yaml#"
+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 title: Amlogic Meson SPI Communication Controller
 
 maintainers:
   - Neil Armstrong <neil.armstrong@linaro.org>
 
+<<<<<<< HEAD
+=======
+allOf:
+  - $ref: "spi-controller.yaml#"
+
+>>>>>>> b7ba80a49124 (Commit)
 description: |
   The Meson SPICC is a generic SPI controller for general purpose Full-Duplex
   communications with dedicated 16 words RX/TX PIO FIFOs.
@@ -40,6 +51,7 @@ properties:
     minItems: 1
     maxItems: 2
 
+<<<<<<< HEAD
 allOf:
   - $ref: spi-controller.yaml#
   - if:
@@ -87,6 +99,33 @@ allOf:
             - const: default
             - const: idle-high
             - const: idle-low
+=======
+if:
+  properties:
+    compatible:
+      contains:
+        enum:
+          - amlogic,meson-g12a-spicc
+
+then:
+  properties:
+    clocks:
+      minItems: 2
+
+    clock-names:
+      items:
+        - const: core
+        - const: pclk
+
+else:
+  properties:
+    clocks:
+      maxItems: 1
+
+    clock-names:
+      items:
+        - const: core
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible
@@ -100,6 +139,7 @@ unevaluatedProperties: false
 examples:
   - |
     spi@c1108d80 {
+<<<<<<< HEAD
         compatible = "amlogic,meson-gx-spicc";
         reg = <0xc1108d80 0x80>;
         interrupts = <112>;
@@ -113,4 +153,19 @@ examples:
             spi-max-frequency = <1000000>;
             reg = <0>;
         };
+=======
+          compatible = "amlogic,meson-gx-spicc";
+          reg = <0xc1108d80 0x80>;
+          interrupts = <112>;
+          clocks = <&clk81>;
+          clock-names = "core";
+          #address-cells = <1>;
+          #size-cells = <0>;
+
+          display@0 {
+              compatible = "lg,lg4573";
+              spi-max-frequency = <1000000>;
+              reg = <0>;
+          };
+>>>>>>> b7ba80a49124 (Commit)
     };

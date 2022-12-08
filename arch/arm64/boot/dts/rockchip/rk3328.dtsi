@@ -102,7 +102,10 @@
 
 		l2: l2-cache0 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -1026,6 +1029,7 @@
 		      (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
 	};
 
+<<<<<<< HEAD
 	crypto: crypto@ff060000 {
 		compatible = "rockchip,rk3328-crypto";
 		reg = <0x0 0xff060000 0x0 0x4000>;
@@ -1037,6 +1041,8 @@
 		reset-names = "crypto-rst";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl: pinctrl {
 		compatible = "rockchip,rk3328-pinctrl";
 		rockchip,grf = <&grf>;

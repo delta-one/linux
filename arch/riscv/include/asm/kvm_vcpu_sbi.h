@@ -11,6 +11,7 @@
 
 #define KVM_SBI_IMPID 3
 
+<<<<<<< HEAD
 #define KVM_SBI_VERSION_MAJOR 1
 #define KVM_SBI_VERSION_MINOR 0
 
@@ -24,6 +25,10 @@ struct kvm_vcpu_sbi_return {
 	struct kvm_cpu_trap *utrap;
 	bool uexit;
 };
+=======
+#define KVM_SBI_VERSION_MAJOR 0
+#define KVM_SBI_VERSION_MINOR 3
+>>>>>>> b7ba80a49124 (Commit)
 
 struct kvm_vcpu_sbi_extension {
 	unsigned long extid_start;
@@ -34,19 +39,28 @@ struct kvm_vcpu_sbi_extension {
 	 * specific error codes.
 	 */
 	int (*handler)(struct kvm_vcpu *vcpu, struct kvm_run *run,
+<<<<<<< HEAD
 		       struct kvm_vcpu_sbi_return *retdata);
 
 	/* Extension specific probe function */
 	unsigned long (*probe)(struct kvm_vcpu *vcpu);
+=======
+		       unsigned long *out_val, struct kvm_cpu_trap *utrap,
+		       bool *exit);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void kvm_riscv_vcpu_sbi_forward(struct kvm_vcpu *vcpu, struct kvm_run *run);
 void kvm_riscv_vcpu_sbi_system_reset(struct kvm_vcpu *vcpu,
 				     struct kvm_run *run,
 				     u32 type, u64 flags);
+<<<<<<< HEAD
 int kvm_riscv_vcpu_sbi_return(struct kvm_vcpu *vcpu, struct kvm_run *run);
 const struct kvm_vcpu_sbi_extension *kvm_vcpu_sbi_find_ext(unsigned long extid);
 int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu, struct kvm_run *run);
+=======
+const struct kvm_vcpu_sbi_extension *kvm_vcpu_sbi_find_ext(unsigned long extid);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_RISCV_SBI_V01
 extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_v01;

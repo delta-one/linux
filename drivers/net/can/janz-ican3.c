@@ -1693,7 +1693,11 @@ static netdev_tx_t ican3_xmit(struct sk_buff *skb, struct net_device *ndev)
 	void __iomem *desc_addr;
 	unsigned long flags;
 
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(ndev, skb))
+=======
+	if (can_dropped_invalid_skb(ndev, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	spin_lock_irqsave(&mod->lock, flags);

@@ -11,10 +11,18 @@
 #ifndef __LINUX_PINCTRL_PINMUX_H
 #define __LINUX_PINCTRL_PINMUX_H
 
+<<<<<<< HEAD
 #include <linux/types.h>
 
 struct pinctrl_dev;
 struct pinctrl_gpio_range;
+=======
+#include <linux/list.h>
+#include <linux/seq_file.h>
+#include <linux/pinctrl/pinctrl.h>
+
+struct pinctrl_dev;
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct pinmux_ops - pinmux operations, to be implemented by pin controller

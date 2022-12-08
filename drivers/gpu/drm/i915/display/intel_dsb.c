@@ -7,7 +7,10 @@
 #include "gem/i915_gem_internal.h"
 
 #include "i915_drv.h"
+<<<<<<< HEAD
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_de.h"
 #include "intel_display_types.h"
 #include "intel_dsb.h"
@@ -24,6 +27,7 @@ enum dsb_id {
 
 struct intel_dsb {
 	enum dsb_id id;
+<<<<<<< HEAD
 
 	u32 *cmd_buf;
 	struct i915_vma *vma;
@@ -48,6 +52,27 @@ struct intel_dsb {
 	unsigned int ins_start_offset;
 };
 
+=======
+	u32 *cmd_buf;
+	struct i915_vma *vma;
+
+	/*
+	 * free_pos will point the first free entry position
+	 * and help in calculating tail of command buffer.
+	 */
+	int free_pos;
+
+	/*
+	 * ins_start_offset will help to store start address of the dsb
+	 * instuction and help in identifying the batch of auto-increment
+	 * register.
+	 */
+	u32 ins_start_offset;
+};
+
+#define DSB_BUF_SIZE    (2 * PAGE_SIZE)
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * DOC: DSB
  *
@@ -67,6 +92,7 @@ struct intel_dsb {
 
 /* DSB opcodes. */
 #define DSB_OPCODE_SHIFT		24
+<<<<<<< HEAD
 #define DSB_OPCODE_NOOP			0x0
 #define DSB_OPCODE_MMIO_WRITE		0x1
 #define DSB_OPCODE_WAIT_USEC		0x2
@@ -77,10 +103,15 @@ struct intel_dsb {
 #define DSB_OPCODE_INTERRUPT		0x7
 #define DSB_OPCODE_INDEXED_WRITE	0x9
 #define DSB_OPCODE_POLL			0xA
+=======
+#define DSB_OPCODE_MMIO_WRITE		0x1
+#define DSB_OPCODE_INDEXED_WRITE	0x9
+>>>>>>> b7ba80a49124 (Commit)
 #define DSB_BYTE_EN			0xF
 #define DSB_BYTE_EN_SHIFT		20
 #define DSB_REG_VALUE_MASK		0xfffff
 
+<<<<<<< HEAD
 static bool assert_dsb_has_room(struct intel_dsb *dsb)
 {
 	struct intel_crtc *crtc = dsb->crtc;
@@ -139,15 +170,90 @@ static bool intel_dsb_prev_ins_is_indexed_write(struct intel_dsb *dsb, i915_reg_
 /**
  * intel_dsb_reg_write() - Emit register wriite to the DSB context
  * @dsb: DSB context
+=======
+static bool is_dsb_busy(struct drm_i915_private *i915, enum pipe pipe,
+			enum dsb_id id)
+{
+	return DSB_STATUS & intel_de_read(i915, DSB_CTRL(pipe, id));
+}
+
+static bool intel_dsb_enable_engine(struct drm_i915_private *i915,
+				    enum pipe pipe, enum dsb_id id)
+{
+	u32 dsb_ctrl;
+
+	dsb_ctrl = intel_de_read(i915, DSB_CTRL(pipe, id));
+	if (DSB_STATUS & dsb_ctrl) {
+		drm_dbg_kms(&i915->drm, "DSB engine is busy.\n");
+		return false;
+	}
+
+	dsb_ctrl |= DSB_ENABLE;
+	intel_de_write(i915, DSB_CTRL(pipe, id), dsb_ctrl);
+
+	intel_de_posting_read(i915, DSB_CTRL(pipe, id));
+	return true;
+}
+
+static bool intel_dsb_disable_engine(struct drm_i915_private *i915,
+				     enum pipe pipe, enum dsb_id id)
+{
+	u32 dsb_ctrl;
+
+	dsb_ctrl = intel_de_read(i915, DSB_CTRL(pipe, id));
+	if (DSB_STATUS & dsb_ctrl) {
+		drm_dbg_kms(&i915->drm, "DSB engine is busy.\n");
+		return false;
+	}
+
+	dsb_ctrl &= ~DSB_ENABLE;
+	intel_de_write(i915, DSB_CTRL(pipe, id), dsb_ctrl);
+
+	intel_de_posting_read(i915, DSB_CTRL(pipe, id));
+	return true;
+}
+
+/**
+ * intel_dsb_indexed_reg_write() -Write to the DSB context for auto
+ * increment register.
+ * @crtc_state: intel_crtc_state structure
+>>>>>>> b7ba80a49124 (Commit)
  * @reg: register address.
  * @val: value.
  *
  * This function is used for writing register-value pair in command
+<<<<<<< HEAD
  * buffer of DSB.
  */
 void intel_dsb_reg_write(struct intel_dsb *dsb,
 			 i915_reg_t reg, u32 val)
 {
+=======
+ * buffer of DSB for auto-increment register. During command buffer overflow,
+ * a warning is thrown and rest all erroneous condition register programming
+ * is done through mmio write.
+ */
+
+void intel_dsb_indexed_reg_write(const struct intel_crtc_state *crtc_state,
+				 i915_reg_t reg, u32 val)
+{
+	struct intel_dsb *dsb = crtc_state->dsb;
+	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
+	struct drm_i915_private *dev_priv = to_i915(crtc->base.dev);
+	u32 *buf;
+	u32 reg_val;
+
+	if (!dsb) {
+		intel_de_write_fw(dev_priv, reg, val);
+		return;
+	}
+	buf = dsb->cmd_buf;
+	if (drm_WARN_ON(&dev_priv->drm, dsb->free_pos >= DSB_BUF_SIZE)) {
+		drm_dbg_kms(&dev_priv->drm, "DSB buffer overflow\n");
+		return;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * For example the buffer will look like below for 3 dwords for auto
 	 * increment register:
@@ -164,6 +270,7 @@ void intel_dsb_reg_write(struct intel_dsb *dsb,
 	 * we are writing odd no of dwords, Zeros will be added in the end for
 	 * padding.
 	 */
+<<<<<<< HEAD
 	if (!intel_dsb_prev_ins_is_mmio_write(dsb, reg) &&
 	    !intel_dsb_prev_ins_is_indexed_write(dsb, reg)) {
 		intel_dsb_emit(dsb, val,
@@ -216,10 +323,80 @@ static void intel_dsb_align_tail(struct intel_dsb *dsb)
 void intel_dsb_finish(struct intel_dsb *dsb)
 {
 	intel_dsb_align_tail(dsb);
+=======
+	reg_val = buf[dsb->ins_start_offset + 1] & DSB_REG_VALUE_MASK;
+	if (reg_val != i915_mmio_reg_offset(reg)) {
+		/* Every instruction should be 8 byte aligned. */
+		dsb->free_pos = ALIGN(dsb->free_pos, 2);
+
+		dsb->ins_start_offset = dsb->free_pos;
+
+		/* Update the size. */
+		buf[dsb->free_pos++] = 1;
+
+		/* Update the opcode and reg. */
+		buf[dsb->free_pos++] = (DSB_OPCODE_INDEXED_WRITE  <<
+					DSB_OPCODE_SHIFT) |
+					i915_mmio_reg_offset(reg);
+
+		/* Update the value. */
+		buf[dsb->free_pos++] = val;
+	} else {
+		/* Update the new value. */
+		buf[dsb->free_pos++] = val;
+
+		/* Update the size. */
+		buf[dsb->ins_start_offset]++;
+	}
+
+	/* if number of data words is odd, then the last dword should be 0.*/
+	if (dsb->free_pos & 0x1)
+		buf[dsb->free_pos] = 0;
+}
+
+/**
+ * intel_dsb_reg_write() -Write to the DSB context for normal
+ * register.
+ * @crtc_state: intel_crtc_state structure
+ * @reg: register address.
+ * @val: value.
+ *
+ * This function is used for writing register-value pair in command
+ * buffer of DSB. During command buffer overflow, a warning  is thrown
+ * and rest all erroneous condition register programming is done
+ * through mmio write.
+ */
+void intel_dsb_reg_write(const struct intel_crtc_state *crtc_state,
+			 i915_reg_t reg, u32 val)
+{
+	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
+	struct drm_i915_private *dev_priv = to_i915(crtc->base.dev);
+	struct intel_dsb *dsb;
+	u32 *buf;
+
+	dsb = crtc_state->dsb;
+	if (!dsb) {
+		intel_de_write_fw(dev_priv, reg, val);
+		return;
+	}
+
+	buf = dsb->cmd_buf;
+	if (drm_WARN_ON(&dev_priv->drm, dsb->free_pos >= DSB_BUF_SIZE)) {
+		drm_dbg_kms(&dev_priv->drm, "DSB buffer overflow\n");
+		return;
+	}
+
+	dsb->ins_start_offset = dsb->free_pos;
+	buf[dsb->free_pos++] = val;
+	buf[dsb->free_pos++] = (DSB_OPCODE_MMIO_WRITE  << DSB_OPCODE_SHIFT) |
+			       (DSB_BYTE_EN << DSB_BYTE_EN_SHIFT) |
+			       i915_mmio_reg_offset(reg);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
  * intel_dsb_commit() - Trigger workload execution of DSB.
+<<<<<<< HEAD
  * @dsb: DSB context
  * @wait_for_vblank: wait for vblank before executing
  *
@@ -266,10 +443,66 @@ void intel_dsb_wait(struct intel_dsb *dsb)
 	dsb->free_pos = 0;
 	dsb->ins_start_offset = 0;
 	intel_de_write(dev_priv, DSB_CTRL(pipe, dsb->id), 0);
+=======
+ * @crtc_state: intel_crtc_state structure
+ *
+ * This function is used to do actual write to hardware using DSB.
+ * On errors, fall back to MMIO. Also this function help to reset the context.
+ */
+void intel_dsb_commit(const struct intel_crtc_state *crtc_state)
+{
+	struct intel_dsb *dsb = crtc_state->dsb;
+	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
+	struct drm_device *dev = crtc->base.dev;
+	struct drm_i915_private *dev_priv = to_i915(dev);
+	enum pipe pipe = crtc->pipe;
+	u32 tail;
+
+	if (!(dsb && dsb->free_pos))
+		return;
+
+	if (!intel_dsb_enable_engine(dev_priv, pipe, dsb->id))
+		goto reset;
+
+	if (is_dsb_busy(dev_priv, pipe, dsb->id)) {
+		drm_err(&dev_priv->drm,
+			"HEAD_PTR write failed - dsb engine is busy.\n");
+		goto reset;
+	}
+	intel_de_write(dev_priv, DSB_HEAD(pipe, dsb->id),
+		       i915_ggtt_offset(dsb->vma));
+
+	tail = ALIGN(dsb->free_pos * 4, CACHELINE_BYTES);
+	if (tail > dsb->free_pos * 4)
+		memset(&dsb->cmd_buf[dsb->free_pos], 0,
+		       (tail - dsb->free_pos * 4));
+
+	if (is_dsb_busy(dev_priv, pipe, dsb->id)) {
+		drm_err(&dev_priv->drm,
+			"TAIL_PTR write failed - dsb engine is busy.\n");
+		goto reset;
+	}
+	drm_dbg_kms(&dev_priv->drm,
+		    "DSB execution started - head 0x%x, tail 0x%x\n",
+		    i915_ggtt_offset(dsb->vma), tail);
+	intel_de_write(dev_priv, DSB_TAIL(pipe, dsb->id),
+		       i915_ggtt_offset(dsb->vma) + tail);
+	if (wait_for(!is_dsb_busy(dev_priv, pipe, dsb->id), 1)) {
+		drm_err(&dev_priv->drm,
+			"Timed out waiting for DSB workload completion.\n");
+		goto reset;
+	}
+
+reset:
+	dsb->free_pos = 0;
+	dsb->ins_start_offset = 0;
+	intel_dsb_disable_engine(dev_priv, pipe, dsb->id);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
  * intel_dsb_prepare() - Allocate, pin and map the DSB command buffer.
+<<<<<<< HEAD
  * @crtc: the CRTC
  * @max_cmds: number of commands we need to fit into command buffer
  *
@@ -305,16 +538,55 @@ struct intel_dsb *intel_dsb_prepare(struct intel_crtc *crtc,
 	obj = i915_gem_object_create_internal(i915, PAGE_ALIGN(size));
 	if (IS_ERR(obj))
 		goto out_put_rpm;
+=======
+ * @crtc_state: intel_crtc_state structure to prepare associated dsb instance.
+ *
+ * This function prepare the command buffer which is used to store dsb
+ * instructions with data.
+ */
+void intel_dsb_prepare(struct intel_crtc_state *crtc_state)
+{
+	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
+	struct drm_i915_private *i915 = to_i915(crtc->base.dev);
+	struct intel_dsb *dsb;
+	struct drm_i915_gem_object *obj;
+	struct i915_vma *vma;
+	u32 *buf;
+	intel_wakeref_t wakeref;
+
+	if (!HAS_DSB(i915))
+		return;
+
+	dsb = kmalloc(sizeof(*dsb), GFP_KERNEL);
+	if (!dsb) {
+		drm_err(&i915->drm, "DSB object creation failed\n");
+		return;
+	}
+
+	wakeref = intel_runtime_pm_get(&i915->runtime_pm);
+
+	obj = i915_gem_object_create_internal(i915, DSB_BUF_SIZE);
+	if (IS_ERR(obj)) {
+		kfree(dsb);
+		goto out;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	vma = i915_gem_object_ggtt_pin(obj, NULL, 0, 0, 0);
 	if (IS_ERR(vma)) {
 		i915_gem_object_put(obj);
+<<<<<<< HEAD
 		goto out_put_rpm;
+=======
+		kfree(dsb);
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	buf = i915_gem_object_pin_map_unlocked(vma->obj, I915_MAP_WC);
 	if (IS_ERR(buf)) {
 		i915_vma_unpin_and_release(&vma, I915_VMA_RELEASE_MAP);
+<<<<<<< HEAD
 		goto out_put_rpm;
 	}
 
@@ -339,17 +611,50 @@ out:
 		      crtc->base.base.id, crtc->base.name, DSB1);
 
 	return NULL;
+=======
+		kfree(dsb);
+		goto out;
+	}
+
+	dsb->id = DSB1;
+	dsb->vma = vma;
+	dsb->cmd_buf = buf;
+	dsb->free_pos = 0;
+	dsb->ins_start_offset = 0;
+	crtc_state->dsb = dsb;
+out:
+	if (!crtc_state->dsb)
+		drm_info(&i915->drm,
+			 "DSB queue setup failed, will fallback to MMIO for display HW programming\n");
+
+	intel_runtime_pm_put(&i915->runtime_pm, wakeref);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
  * intel_dsb_cleanup() - To cleanup DSB context.
+<<<<<<< HEAD
  * @dsb: DSB context
+=======
+ * @crtc_state: intel_crtc_state structure to cleanup associated dsb instance.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This function cleanup the DSB context by unpinning and releasing
  * the VMA object associated with it.
  */
+<<<<<<< HEAD
 void intel_dsb_cleanup(struct intel_dsb *dsb)
 {
 	i915_vma_unpin_and_release(&dsb->vma, I915_VMA_RELEASE_MAP);
 	kfree(dsb);
+=======
+void intel_dsb_cleanup(struct intel_crtc_state *crtc_state)
+{
+	if (!crtc_state->dsb)
+		return;
+
+	i915_vma_unpin_and_release(&crtc_state->dsb->vma, I915_VMA_RELEASE_MAP);
+	kfree(crtc_state->dsb);
+	crtc_state->dsb = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }

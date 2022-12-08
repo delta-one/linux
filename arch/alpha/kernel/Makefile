@@ -47,6 +47,13 @@ else
 # Misc support
 obj-$(CONFIG_ALPHA_SRM)		+= srmcons.o
 
+<<<<<<< HEAD
+=======
+ifdef CONFIG_BINFMT_AOUT
+obj-y	+= binfmt_loader.o
+endif
+
+>>>>>>> b7ba80a49124 (Commit)
 # Core logic support
 obj-$(CONFIG_ALPHA_APECS)	+= core_apecs.o
 obj-$(CONFIG_ALPHA_CIA)		+= core_cia.o

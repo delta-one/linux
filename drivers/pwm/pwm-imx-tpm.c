@@ -132,9 +132,15 @@ static int pwm_imx_tpm_round_state(struct pwm_chip *chip,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int pwm_imx_tpm_get_state(struct pwm_chip *chip,
 				 struct pwm_device *pwm,
 				 struct pwm_state *state)
+=======
+static void pwm_imx_tpm_get_state(struct pwm_chip *chip,
+				  struct pwm_device *pwm,
+				  struct pwm_state *state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
 	u32 rate, val, prescale;
@@ -164,8 +170,11 @@ static int pwm_imx_tpm_get_state(struct pwm_chip *chip,
 
 	/* get channel status */
 	state->enabled = FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val) ? true : false;
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* this function is supposed to be called with mutex hold */

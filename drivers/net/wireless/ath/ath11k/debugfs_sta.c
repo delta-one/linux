@@ -751,6 +751,7 @@ static const struct file_operations fops_htt_peer_stats_reset = {
 	.llseek = default_llseek,
 };
 
+<<<<<<< HEAD
 static ssize_t ath11k_dbg_sta_read_peer_ps_state(struct file *file,
 						 char __user *user_buf,
 						 size_t count, loff_t *ppos)
@@ -847,6 +848,8 @@ static const struct file_operations fops_total_ps_duration = {
 	.llseek = default_llseek,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void ath11k_debugfs_sta_op_add(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 			       struct ieee80211_sta *sta, struct dentry *dir)
 {
@@ -874,6 +877,7 @@ void ath11k_debugfs_sta_op_add(struct ieee80211_hw *hw, struct ieee80211_vif *vi
 		     ar->ab->wmi_ab.svc_map))
 		debugfs_create_file("htt_peer_stats_reset", 0600, dir, sta,
 				    &fops_htt_peer_stats_reset);
+<<<<<<< HEAD
 
 	debugfs_create_file("peer_ps_state", 0400, dir, sta,
 			    &fops_peer_ps_state);
@@ -885,4 +889,6 @@ void ath11k_debugfs_sta_op_add(struct ieee80211_hw *hw, struct ieee80211_vif *vi
 		debugfs_create_file("total_ps_duration", 0440, dir, sta,
 				    &fops_total_ps_duration);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

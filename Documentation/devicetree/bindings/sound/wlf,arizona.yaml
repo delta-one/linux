@@ -16,9 +16,12 @@ description: |
   This document lists sound specific bindings, see the primary binding
   document ../mfd/arizona.yaml
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   '#sound-dai-cells':
     description:

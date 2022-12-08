@@ -22,7 +22,12 @@ extern const struct dev_pm_ops cs42xx8_pm;
 extern const struct cs42xx8_driver_data cs42448_data;
 extern const struct cs42xx8_driver_data cs42888_data;
 extern const struct regmap_config cs42xx8_regmap_config;
+<<<<<<< HEAD
 int cs42xx8_probe(struct device *dev, struct regmap *regmap, struct cs42xx8_driver_data *drvdata);
+=======
+extern const struct of_device_id cs42xx8_of_match[];
+int cs42xx8_probe(struct device *dev, struct regmap *regmap);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* CS42888 register map */
 #define CS42XX8_CHIPID				0x01	/* Chip ID */

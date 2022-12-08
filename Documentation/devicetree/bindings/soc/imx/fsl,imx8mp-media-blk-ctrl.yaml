@@ -23,12 +23,15 @@ properties:
   reg:
     maxItems: 1
 
+<<<<<<< HEAD
   '#address-cells':
     const: 1
 
   '#size-cells':
     const: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   '#power-domain-cells':
     const: 1
 
@@ -84,6 +87,7 @@ properties:
       - const: isp1
       - const: dwe
 
+<<<<<<< HEAD
   bridge@5c:
     type: object
     $ref: /schemas/display/bridge/fsl,ldb.yaml#
@@ -94,6 +98,11 @@ required:
   - reg
   - '#address-cells'
   - '#size-cells'
+=======
+required:
+  - compatible
+  - reg
+>>>>>>> b7ba80a49124 (Commit)
   - '#power-domain-cells'
   - power-domains
   - power-domain-names
@@ -107,7 +116,11 @@ examples:
     #include <dt-bindings/clock/imx8mp-clock.h>
     #include <dt-bindings/power/imx8mp-power.h>
 
+<<<<<<< HEAD
     blk-ctrl@32ec0000 {
+=======
+    media_blk_ctl: blk-ctl@32ec0000 {
+>>>>>>> b7ba80a49124 (Commit)
         compatible = "fsl,imx8mp-media-blk-ctrl", "syscon";
         reg = <0x32ec0000 0x138>;
         power-domains = <&mediamix_pd>, <&mipi_phy1_pd>, <&mipi_phy1_pd>,
@@ -127,6 +140,7 @@ examples:
         clock-names = "apb", "axi", "cam1", "cam2", "disp1", "disp2",
                       "isp", "phy";
         #power-domain-cells = <1>;
+<<<<<<< HEAD
         #address-cells = <1>;
         #size-cells = <1>;
 
@@ -165,5 +179,7 @@ examples:
                 };
             };
         };
+=======
+>>>>>>> b7ba80a49124 (Commit)
     };
 ...

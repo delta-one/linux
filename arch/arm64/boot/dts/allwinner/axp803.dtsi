@@ -25,6 +25,19 @@
 		compatible = "x-powers,axp803-gpio", "x-powers,axp813-gpio";
 		gpio-controller;
 		#gpio-cells = <2>;
+<<<<<<< HEAD
+=======
+
+		gpio0_ldo: gpio0-ldo-pin {
+			pins = "GPIO0";
+			function = "ldo";
+		};
+
+		gpio1_ldo: gpio1-ldo-pin {
+			pins = "GPIO1";
+			function = "ldo";
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	battery_power_supply: battery-power {

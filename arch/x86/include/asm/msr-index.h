@@ -4,7 +4,16 @@
 
 #include <linux/bits.h>
 
+<<<<<<< HEAD
 /* CPU model specific register (MSR) numbers. */
+=======
+/*
+ * CPU model specific register (MSR) numbers.
+ *
+ * Do not add new entries to this file unless the definitions are shared
+ * between multiple compilation units.
+ */
+>>>>>>> b7ba80a49124 (Commit)
 
 /* x86-64 specific MSRs */
 #define MSR_EFER		0xc0000080 /* extended feature register */
@@ -25,7 +34,10 @@
 #define _EFER_SVME		12 /* Enable virtualization */
 #define _EFER_LMSLE		13 /* Long Mode Segment Limit Enable */
 #define _EFER_FFXSR		14 /* Enable Fast FXSAVE/FXRSTOR */
+<<<<<<< HEAD
 #define _EFER_AUTOIBRS		21 /* Enable Automatic IBRS */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define EFER_SCE		(1<<_EFER_SCE)
 #define EFER_LME		(1<<_EFER_LME)
@@ -34,7 +46,10 @@
 #define EFER_SVME		(1<<_EFER_SVME)
 #define EFER_LMSLE		(1<<_EFER_LMSLE)
 #define EFER_FFXSR		(1<<_EFER_FFXSR)
+<<<<<<< HEAD
 #define EFER_AUTOIBRS		(1<<_EFER_AUTOIBRS)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Intel MSRs. Some also available on other CPUs */
 
@@ -51,10 +66,13 @@
 #define SPEC_CTRL_RRSBA_DIS_S_SHIFT	6	   /* Disable RRSBA behavior */
 #define SPEC_CTRL_RRSBA_DIS_S		BIT(SPEC_CTRL_RRSBA_DIS_S_SHIFT)
 
+<<<<<<< HEAD
 /* A mask for bits which the kernel toggles when controlling mitigations */
 #define SPEC_CTRL_MITIGATIONS_MASK	(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP | SPEC_CTRL_SSBD \
 							| SPEC_CTRL_RRSBA_DIS_S)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MSR_IA32_PRED_CMD		0x00000049 /* Prediction Command */
 #define PRED_CMD_IBPB			BIT(0)	   /* Indirect Branch Prediction Barrier */
 
@@ -195,9 +213,12 @@
 #define MSR_TURBO_RATIO_LIMIT1		0x000001ae
 #define MSR_TURBO_RATIO_LIMIT2		0x000001af
 
+<<<<<<< HEAD
 #define MSR_SNOOP_RSP_0			0x00001328
 #define MSR_SNOOP_RSP_1			0x00001329
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MSR_LBR_SELECT			0x000001c8
 #define MSR_LBR_TOS			0x000001c9
 
@@ -539,11 +560,14 @@
 #define MSR_AMD64_CPUID_FN_1		0xc0011004
 #define MSR_AMD64_LS_CFG		0xc0011020
 #define MSR_AMD64_DC_CFG		0xc0011022
+<<<<<<< HEAD
 
 #define MSR_AMD64_DE_CFG		0xc0011029
 #define MSR_AMD64_DE_CFG_LFENCE_SERIALIZE_BIT	 1
 #define MSR_AMD64_DE_CFG_LFENCE_SERIALIZE	BIT_ULL(MSR_AMD64_DE_CFG_LFENCE_SERIALIZE_BIT)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MSR_AMD64_BU_CFG2		0xc001102a
 #define MSR_AMD64_IBSFETCHCTL		0xc0011030
 #define MSR_AMD64_IBSFETCHLINAD		0xc0011031
@@ -575,6 +599,7 @@
 #define MSR_AMD64_SEV_ES_ENABLED	BIT_ULL(MSR_AMD64_SEV_ES_ENABLED_BIT)
 #define MSR_AMD64_SEV_SNP_ENABLED	BIT_ULL(MSR_AMD64_SEV_SNP_ENABLED_BIT)
 
+<<<<<<< HEAD
 /* SNP feature bits enabled by the hypervisor */
 #define MSR_AMD64_SNP_VTOM			BIT_ULL(3)
 #define MSR_AMD64_SNP_REFLECT_VC		BIT_ULL(4)
@@ -595,6 +620,8 @@
 #define MSR_AMD64_SNP_RESERVED_BIT15		BIT_ULL(15)
 #define MSR_AMD64_SNP_RESERVED_MASK		GENMASK_ULL(63, 18)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MSR_AMD64_VIRT_SPEC_CTRL	0xc001011f
 
 /* AMD Collaborative Processor Performance Control MSRs */
@@ -669,6 +696,12 @@
 #define FAM10H_MMIO_CONF_BASE_MASK	0xfffffffULL
 #define FAM10H_MMIO_CONF_BASE_SHIFT	20
 #define MSR_FAM10H_NODE_ID		0xc001100c
+<<<<<<< HEAD
+=======
+#define MSR_F10H_DECFG			0xc0011029
+#define MSR_F10H_DECFG_LFENCE_SERIALIZE_BIT	1
+#define MSR_F10H_DECFG_LFENCE_SERIALIZE		BIT_ULL(MSR_F10H_DECFG_LFENCE_SERIALIZE_BIT)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* K8 MSRs */
 #define MSR_K8_TOP_MEM1			0xc001001a
@@ -822,7 +855,10 @@
 #define ENERGY_PERF_BIAS_PERFORMANCE		0
 #define ENERGY_PERF_BIAS_BALANCE_PERFORMANCE	4
 #define ENERGY_PERF_BIAS_NORMAL			6
+<<<<<<< HEAD
 #define ENERGY_PERF_BIAS_NORMAL_POWERSAVE	7
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ENERGY_PERF_BIAS_BALANCE_POWERSAVE	8
 #define ENERGY_PERF_BIAS_POWERSAVE		15
 
@@ -1077,6 +1113,7 @@
 #define VMX_BASIC_MEM_TYPE_WB	6LLU
 #define VMX_BASIC_INOUT		0x0040000000000000LLU
 
+<<<<<<< HEAD
 /* Resctrl MSRs: */
 /* - Intel: */
 #define MSR_IA32_L3_QOS_CFG		0xc81
@@ -1093,6 +1130,8 @@
 #define MSR_IA32_SMBA_BW_BASE		0xc0000280
 #define MSR_IA32_EVT_CFG_BASE		0xc0000400
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* MSR_IA32_VMX_MISC bits */
 #define MSR_IA32_VMX_MISC_INTEL_PT                 (1ULL << 14)
 #define MSR_IA32_VMX_MISC_VMWRITE_SHADOW_RO_FIELDS (1ULL << 29)

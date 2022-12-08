@@ -215,13 +215,22 @@ err_regulator:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void pistachio_internal_dac_remove(struct platform_device *pdev)
+=======
+static int pistachio_internal_dac_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pistachio_internal_dac *dac = dev_get_drvdata(&pdev->dev);
 
 	pm_runtime_disable(&pdev->dev);
 	pistachio_internal_dac_pwr_off(dac);
 	regulator_disable(dac->supply);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM
@@ -271,7 +280,11 @@ static struct platform_driver pistachio_internal_dac_plat_driver = {
 		.pm = &pistachio_internal_dac_pm_ops
 	},
 	.probe = pistachio_internal_dac_probe,
+<<<<<<< HEAD
 	.remove_new = pistachio_internal_dac_remove
+=======
+	.remove = pistachio_internal_dac_remove
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(pistachio_internal_dac_plat_driver);
 

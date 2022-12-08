@@ -22,6 +22,7 @@
 #endif
 
 #ifdef CONFIG_PPC64
+<<<<<<< HEAD
 #define cpu_relax()							\
 	asm volatile(ASM_FTR_IFCLR(					\
 		/* Pre-POWER10 uses low ; medium priority nops */	\
@@ -29,6 +30,9 @@
 		/* POWER10 onward uses pause_short (wait 2,0) */	\
 		PPC_WAIT(2, 0),						\
 		%0) :: "i" (CPU_FTR_ARCH_31) : "memory")
+=======
+#define cpu_relax()	do { HMT_low(); HMT_medium(); barrier(); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 #else
 #define cpu_relax()	barrier()
 #endif

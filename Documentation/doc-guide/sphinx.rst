@@ -48,6 +48,13 @@ or ``virtualenv``, depending on how your distribution packaged Python 3.
       on the Sphinx version, it should be installed separately,
       with ``pip install sphinx_rtd_theme``.
 
+<<<<<<< HEAD
+=======
+   #) Some ReST pages contain math expressions. Due to the way Sphinx works,
+      those expressions are written using LaTeX notation. It needs texlive
+      installed with amsfonts and amsmath in order to evaluate them.
+
+>>>>>>> b7ba80a49124 (Commit)
 In summary, if you want to install Sphinx version 2.4.4, you should do::
 
        $ virtualenv sphinx_2.4.4
@@ -82,6 +89,7 @@ Depending on the distribution, you may also need to install a series of
 ``texlive`` packages that provide the minimal set of functionalities
 required for ``XeLaTeX`` to work.
 
+<<<<<<< HEAD
 Math Expressions in HTML
 ------------------------
 
@@ -103,6 +111,8 @@ further info.
 .. _imgmath: https://www.sphinx-doc.org/en/master/usage/extensions/math.html#module-sphinx.ext.imgmath
 .. _mathjax: https://www.sphinx-doc.org/en/master/usage/extensions/math.html#module-sphinx.ext.mathjax
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 .. _sphinx-pre-install:
 
 Checking for Sphinx dependencies
@@ -147,9 +157,17 @@ section of ``make help``. The generated documentation is placed in
 format-specific subdirectories under ``Documentation/output``.
 
 To generate documentation, Sphinx (``sphinx-build``) must obviously be
+<<<<<<< HEAD
 installed.  For PDF output you'll also need ``XeLaTeX`` and ``convert(1)``
 from ImageMagick (https://www.imagemagick.org).\ [#ink]_ All of these are
 widely available and packaged in distributions.
+=======
+installed. For prettier HTML output, the Read the Docs Sphinx theme
+(``sphinx_rtd_theme``) is used if available. For PDF output you'll also need
+``XeLaTeX`` and ``convert(1)`` from ImageMagick
+(https://www.imagemagick.org).\ [#ink]_
+All of these are widely available and packaged in distributions.
+>>>>>>> b7ba80a49124 (Commit)
 
 To pass extra options to Sphinx, you can use the ``SPHINXOPTS`` make
 variable. For example, use ``make SPHINXOPTS=-v htmldocs`` to get more verbose
@@ -158,8 +176,17 @@ output.
 It is also possible to pass an extra DOCS_CSS overlay file, in order to customize
 the html layout, by using the ``DOCS_CSS`` make variable.
 
+<<<<<<< HEAD
 By default, the "Alabaster" theme is used to build the HTML documentation;
 this theme is bundled with Sphinx and need not be installed separately.
+=======
+By default, the build will try to use the Read the Docs sphinx theme:
+
+    https://github.com/readthedocs/sphinx_rtd_theme
+
+If the theme is not available, it will fall-back to the classic one.
+
+>>>>>>> b7ba80a49124 (Commit)
 The Sphinx theme can be overridden by using the ``DOCS_THEME`` make variable.
 
 There is another make variable ``SPHINXDIRS``, which is useful when test
@@ -175,6 +202,7 @@ To remove the generated documentation, run ``make cleandocs``.
 	  as well would improve the quality of images embedded in PDF
 	  documents, especially for kernel releases 5.18 and later.
 
+<<<<<<< HEAD
 Choice of Math Renderer
 -----------------------
 
@@ -207,6 +235,8 @@ The choice can be overridden by setting an environment variable
 .. [#sph1_8] Fallback of math renderer requires Sphinx >=1.8.
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Writing Documentation
 =====================
 

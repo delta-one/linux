@@ -339,7 +339,12 @@ static int fun_alloc_queue_irqs(struct net_device *dev, unsigned int ntx,
 			return PTR_ERR(irq);
 
 		fp->num_rx_irqs++;
+<<<<<<< HEAD
 		netif_napi_add(dev, &irq->napi, fun_rxq_napi_poll);
+=======
+		netif_napi_add(dev, &irq->napi, fun_rxq_napi_poll,
+			       NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	netif_info(fp, intr, dev, "Reserved %u/%u IRQs for Tx/Rx queues\n",
@@ -1160,11 +1165,14 @@ static int fun_xdp_setup(struct net_device *dev, struct netdev_bpf *xdp)
 			WRITE_ONCE(rxqs[i]->xdp_prog, prog);
 	}
 
+<<<<<<< HEAD
 	if (prog)
 		xdp_features_set_redirect_target(dev, true);
 	else
 		xdp_features_clear_redirect_target(dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev->max_mtu = prog ? XDP_MAX_MTU : FUN_MAX_MTU;
 	old_prog = xchg(&fp->xdp_prog, prog);
 	if (old_prog)
@@ -1183,6 +1191,16 @@ static int fun_xdp(struct net_device *dev, struct netdev_bpf *xdp)
 	}
 }
 
+<<<<<<< HEAD
+=======
+static struct devlink_port *fun_get_devlink_port(struct net_device *netdev)
+{
+	struct funeth_priv *fp = netdev_priv(netdev);
+
+	return &fp->dl_port;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int fun_init_vports(struct fun_ethdev *ed, unsigned int n)
 {
 	if (ed->num_vports)
@@ -1348,6 +1366,10 @@ static const struct net_device_ops fun_netdev_ops = {
 	.ndo_set_vf_vlan	= fun_set_vf_vlan,
 	.ndo_set_vf_rate	= fun_set_vf_rate,
 	.ndo_get_vf_config	= fun_get_vf_config,
+<<<<<<< HEAD
+=======
+	.ndo_get_devlink_port	= fun_get_devlink_port,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define GSO_ENCAP_FLAGS (NETIF_F_GSO_GRE | NETIF_F_GSO_IPXIP4 | \
@@ -1757,7 +1779,10 @@ static int fun_create_netdev(struct fun_ethdev *ed, unsigned int portid)
 		goto free_rss;
 
 	SET_NETDEV_DEV(netdev, fdev->dev);
+<<<<<<< HEAD
 	SET_NETDEV_DEVLINK_PORT(netdev, &fp->dl_port);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	netdev->netdev_ops = &fun_netdev_ops;
 
 	netdev->hw_features = NETIF_F_SG | NETIF_F_RXHASH | NETIF_F_RXCSUM;
@@ -1770,7 +1795,10 @@ static int fun_create_netdev(struct fun_ethdev *ed, unsigned int portid)
 	netdev->vlan_features = netdev->features & VLAN_FEAT;
 	netdev->mpls_features = netdev->vlan_features;
 	netdev->hw_enc_features = netdev->hw_features;
+<<<<<<< HEAD
 	netdev->xdp_features = NETDEV_XDP_ACT_BASIC | NETDEV_XDP_ACT_REDIRECT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	netdev->min_mtu = ETH_MIN_MTU;
 	netdev->max_mtu = FUN_MAX_MTU;
@@ -1799,6 +1827,12 @@ static int fun_create_netdev(struct fun_ethdev *ed, unsigned int portid)
 	rc = register_netdev(netdev);
 	if (rc)
 		goto unreg_devlink;
+<<<<<<< HEAD
+=======
+
+	devlink_port_type_eth_set(&fp->dl_port, netdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 unreg_devlink:
@@ -1823,8 +1857,14 @@ static void fun_destroy_netdev(struct net_device *netdev)
 	struct funeth_priv *fp;
 
 	fp = netdev_priv(netdev);
+<<<<<<< HEAD
 	unregister_netdev(netdev);
 	devlink_port_unregister(&fp->dl_port);
+=======
+	devlink_port_type_clear(&fp->dl_port);
+	devlink_port_unregister(&fp->dl_port);
+	unregister_netdev(netdev);
+>>>>>>> b7ba80a49124 (Commit)
 	fun_ktls_cleanup(fp);
 	fun_free_stats_area(fp);
 	fun_free_rss(fp);

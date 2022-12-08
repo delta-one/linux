@@ -10,6 +10,10 @@
 #include <linux/module.h>
 #include <linux/platform_device.h>
 #include <linux/interrupt.h>
+<<<<<<< HEAD
+=======
+#include <linux/msi.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/dma-mapping.h>
 #include <linux/delay.h>
 #include <linux/io.h>

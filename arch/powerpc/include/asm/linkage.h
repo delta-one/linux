@@ -4,9 +4,12 @@
 
 #include <asm/types.h>
 
+<<<<<<< HEAD
 #define __ALIGN		.align 2
 #define __ALIGN_STR	".align 2"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PPC64_ELF_ABI_V1
 #define cond_syscall(x) \
 	asm ("\t.weak " #x "\n\t.set " #x ", sys_ni_syscall\n"		\

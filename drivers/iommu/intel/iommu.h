@@ -22,7 +22,10 @@
 #include <linux/ioasid.h>
 #include <linux/bitfield.h>
 #include <linux/xarray.h>
+<<<<<<< HEAD
 #include <linux/perf_event.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/cacheflush.h>
 #include <asm/iommu.h>
@@ -126,6 +129,7 @@
 #define DMAR_MTRR_PHYSMASK8_REG 0x208
 #define DMAR_MTRR_PHYSBASE9_REG 0x210
 #define DMAR_MTRR_PHYSMASK9_REG 0x218
+<<<<<<< HEAD
 #define DMAR_PERFCAP_REG	0x300
 #define DMAR_PERFCFGOFF_REG	0x310
 #define DMAR_PERFOVFOFF_REG	0x318
@@ -137,6 +141,8 @@
 #define DMAR_ECEO_REG		0x408
 #define DMAR_ECRSP_REG		0x410
 #define DMAR_ECCAP_REG		0x430
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DMAR_VCCAP_REG		0xe30 /* Virtual command capability register */
 #define DMAR_VCMD_REG		0xe00 /* Virtual command register */
 #define DMAR_VCRSP_REG		0xe10 /* Virtual command response register */
@@ -158,10 +164,14 @@
 /*
  * Decoding Capability Register
  */
+<<<<<<< HEAD
 #define cap_esrtps(c)		(((c) >> 63) & 1)
 #define cap_esirtps(c)		(((c) >> 62) & 1)
 #define cap_ecmds(c)		(((c) >> 61) & 1)
 #define cap_fl5lp_support(c)	(((c) >> 60) & 1)
+=======
+#define cap_5lp_support(c)	(((c) >> 60) & 1)
+>>>>>>> b7ba80a49124 (Commit)
 #define cap_pi_support(c)	(((c) >> 59) & 1)
 #define cap_fl1gp_support(c)	(((c) >> 56) & 1)
 #define cap_read_drain(c)	(((c) >> 55) & 1)
@@ -192,8 +202,12 @@
  * Extended Capability Register
  */
 
+<<<<<<< HEAD
 #define ecap_pms(e)		(((e) >> 51) & 0x1)
 #define ecap_rps(e)		(((e) >> 49) & 0x1)
+=======
+#define	ecap_rps(e)		(((e) >> 49) & 0x1)
+>>>>>>> b7ba80a49124 (Commit)
 #define ecap_smpwc(e)		(((e) >> 48) & 0x1)
 #define ecap_flts(e)		(((e) >> 47) & 0x1)
 #define ecap_slts(e)		(((e) >> 46) & 0x1)
@@ -224,6 +238,7 @@
 #define ecap_max_handle_mask(e) (((e) >> 20) & 0xf)
 #define ecap_sc_support(e)	(((e) >> 7) & 0x1) /* Snooping Control */
 
+<<<<<<< HEAD
 /*
  * Decoding Perf Capability Register
  */
@@ -240,6 +255,8 @@
  */
 #define pecap_es(p)		((p) & 0xfffffff)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Virtual command interface capability */
 #define vccap_pasid(v)		(((v) & DMA_VCS_PAS)) /* PASID allocation */
 
@@ -311,6 +328,7 @@
 #define DMA_CCMD_SID(s) (((u64)((s) & 0xffff)) << 16)
 #define DMA_CCMD_DID(d) ((u64)((d) & 0xffff))
 
+<<<<<<< HEAD
 /* ECMD_REG */
 #define DMA_MAX_NUM_ECMD		256
 #define DMA_MAX_NUM_ECMDCAP		(DMA_MAX_NUM_ECMD / 64)
@@ -331,6 +349,8 @@
 					 DMA_ECMD_ECCAP3_FCNTS |	\
 					 DMA_ECMD_ECCAP3_UFCNTS)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* FECTL_REG */
 #define DMA_FECTL_IM (((u32)1) << 31)
 
@@ -359,9 +379,12 @@
 
 #define DMA_VCS_PAS	((u64)1)
 
+<<<<<<< HEAD
 /* PERFINTRSTS_REG */
 #define DMA_PERFINTRSTS_PIS	((u32)1)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define IOMMU_WAIT_OP(iommu, offset, op, cond, sts)			\
 do {									\
 	cycles_t start_time = get_cycles();				\
@@ -491,11 +514,14 @@ struct q_inval {
 	int             free_cnt;
 };
 
+<<<<<<< HEAD
 /* Page Request Queue depth */
 #define PRQ_ORDER	4
 #define PRQ_RING_MASK	((0x1000 << PRQ_ORDER) - 0x20)
 #define PRQ_DEPTH	((0x1000 << PRQ_ORDER) >> 5)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct dmar_pci_notify_info;
 
 #ifdef CONFIG_IRQ_REMAP
@@ -538,6 +564,11 @@ enum {
 #define VTD_FLAG_IRQ_REMAP_PRE_ENABLED	(1 << 1)
 #define VTD_FLAG_SVM_CAPABLE		(1 << 2)
 
+<<<<<<< HEAD
+=======
+extern int intel_iommu_sm;
+
+>>>>>>> b7ba80a49124 (Commit)
 #define sm_supported(iommu)	(intel_iommu_sm && ecap_smts((iommu)->ecap))
 #define pasid_supported(iommu)	(sm_supported(iommu) &&			\
 				 ecap_pasid((iommu)->ecap))
@@ -573,6 +604,17 @@ struct context_entry {
 	u64 hi;
 };
 
+<<<<<<< HEAD
+=======
+/*
+ * When VT-d works in the scalable mode, it allows DMA translation to
+ * happen through either first level or second level page table. This
+ * bit marks that the DMA translation for the domain goes through the
+ * first level page table, otherwise, it goes through the second level.
+ */
+#define DOMAIN_FLAG_USE_FIRST_LEVEL		BIT(1)
+
+>>>>>>> b7ba80a49124 (Commit)
 struct iommu_domain_info {
 	struct intel_iommu *iommu;
 	unsigned int refcnt;		/* Refcount of devices per iommu */
@@ -589,11 +631,14 @@ struct dmar_domain {
 	u8 iommu_coherency: 1;		/* indicate coherency of iommu access */
 	u8 force_snooping : 1;		/* Create IOPTEs with snoop control */
 	u8 set_pte_snp:1;
+<<<<<<< HEAD
 	u8 use_first_level:1;		/* DMA translation for the domain goes
 					 * through the first level page table,
 					 * otherwise, goes through the second
 					 * level.
 					 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	spinlock_t lock;		/* Protect device tracking lists */
 	struct list_head devices;	/* all devices' list */
@@ -603,6 +648,11 @@ struct dmar_domain {
 
 	/* adjusted guest address width, 0 is level 2 30-bit */
 	int		agaw;
+<<<<<<< HEAD
+=======
+
+	int		flags;		/* flags to find out type of domain */
+>>>>>>> b7ba80a49124 (Commit)
 	int		iommu_superpage;/* Level of superpages supported:
 					   0 == 4KiB (no superpages), 1 == 2MiB,
 					   2 == 1GiB, 3 == 512GiB, 4 == 1TiB */
@@ -612,6 +662,7 @@ struct dmar_domain {
 					   iommu core */
 };
 
+<<<<<<< HEAD
 /*
  * In theory, the VT-d 4.0 spec can support up to 2 ^ 16 counters.
  * But in practice, there are only 14 counters for the existing
@@ -646,6 +697,8 @@ struct iommu_pmu {
 #define IOMMU_IRQ_ID_OFFSET_PRQ		(DMAR_UNITS_SUPPORTED)
 #define IOMMU_IRQ_ID_OFFSET_PERF	(2 * DMAR_UNITS_SUPPORTED)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct intel_iommu {
 	void __iomem	*reg; /* Pointer to hardware regs, virtual addr */
 	u64 		reg_phys; /* physical address of hw register set */
@@ -653,13 +706,20 @@ struct intel_iommu {
 	u64		cap;
 	u64		ecap;
 	u64		vccap;
+<<<<<<< HEAD
 	u64		ecmdcap[DMA_MAX_NUM_ECMDCAP];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32		gcmd; /* Holds TE, EAFL. Don't need SRTP, SFL, WBF */
 	raw_spinlock_t	register_lock; /* protect register handling */
 	int		seq_id;	/* sequence id of the iommu */
 	int		agaw; /* agaw of this iommu */
 	int		msagaw; /* max sagaw of this iommu */
+<<<<<<< HEAD
 	unsigned int	irq, pr_irq, perf_irq;
+=======
+	unsigned int 	irq, pr_irq;
+>>>>>>> b7ba80a49124 (Commit)
 	u16		segment;     /* PCI segment# */
 	unsigned char 	name[13];    /* Device Name */
 
@@ -674,7 +734,10 @@ struct intel_iommu {
 #ifdef CONFIG_INTEL_IOMMU_SVM
 	struct page_req_dsc *prq;
 	unsigned char prq_name[16];    /* Name for PRQ interrupt */
+<<<<<<< HEAD
 	unsigned long prq_seq_number;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct completion prq_complete;
 	struct ioasid_allocator_ops pasid_allocator; /* Custom allocator for PASIDs */
 #endif
@@ -686,6 +749,10 @@ struct intel_iommu {
 #ifdef CONFIG_IRQ_REMAP
 	struct ir_table *ir_table;	/* Interrupt remapping info */
 	struct irq_domain *ir_domain;
+<<<<<<< HEAD
+=======
+	struct irq_domain *ir_msi_domain;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	struct iommu_device iommu;  /* IOMMU core code handle */
 	int		node;
@@ -693,8 +760,11 @@ struct intel_iommu {
 
 	struct dmar_drhd_unit *drhd;
 	void *perf_statistic;
+<<<<<<< HEAD
 
 	struct iommu_pmu *pmu;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* PCI domain-device relationship */
@@ -710,7 +780,10 @@ struct device_domain_info {
 	u8 pri_enabled:1;
 	u8 ats_supported:1;
 	u8 ats_enabled:1;
+<<<<<<< HEAD
 	u8 dtlb_extra_inval:1;	/* Quirk for devices need extra flush */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8 ats_qdep;
 	struct device *dev; /* it's NULL for PCIe-to-PCI bridge */
 	struct intel_iommu *iommu; /* IOMMU used by this device */
@@ -816,9 +889,12 @@ void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u32 pasid, u64 addr,
 void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid, u16 pfsid,
 			      u32 pasid, u16 qdep, u64 addr,
 			      unsigned int size_order);
+<<<<<<< HEAD
 void quirk_extra_dev_tlb_flush(struct device_domain_info *info,
 			       unsigned long address, unsigned long pages,
 			       u32 pasid, u16 qdep);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64 granu,
 			  u32 pasid);
 
@@ -832,37 +908,68 @@ int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
 
 extern int dmar_ir_support(void);
 
+<<<<<<< HEAD
 void *alloc_pgtable_page(int node, gfp_t gfp);
 void free_pgtable_page(void *vaddr);
 void iommu_flush_write_buffer(struct intel_iommu *iommu);
+=======
+void *alloc_pgtable_page(int node);
+void free_pgtable_page(void *vaddr);
+void iommu_flush_write_buffer(struct intel_iommu *iommu);
+int intel_iommu_enable_pasid(struct intel_iommu *iommu, struct device *dev);
+>>>>>>> b7ba80a49124 (Commit)
 struct intel_iommu *device_to_iommu(struct device *dev, u8 *bus, u8 *devfn);
 
 #ifdef CONFIG_INTEL_IOMMU_SVM
 extern void intel_svm_check(struct intel_iommu *iommu);
 extern int intel_svm_enable_prq(struct intel_iommu *iommu);
 extern int intel_svm_finish_prq(struct intel_iommu *iommu);
+<<<<<<< HEAD
 int intel_svm_page_response(struct device *dev, struct iommu_fault_event *evt,
 			    struct iommu_page_response *msg);
 struct iommu_domain *intel_svm_domain_alloc(void);
 void intel_svm_remove_dev_pasid(struct device *dev, ioasid_t pasid);
+=======
+struct iommu_sva *intel_svm_bind(struct device *dev, struct mm_struct *mm,
+				 void *drvdata);
+void intel_svm_unbind(struct iommu_sva *handle);
+u32 intel_svm_get_pasid(struct iommu_sva *handle);
+int intel_svm_page_response(struct device *dev, struct iommu_fault_event *evt,
+			    struct iommu_page_response *msg);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct intel_svm_dev {
 	struct list_head list;
 	struct rcu_head rcu;
 	struct device *dev;
 	struct intel_iommu *iommu;
+<<<<<<< HEAD
 	u16 did;
+=======
+	struct iommu_sva sva;
+	unsigned long prq_seq_number;
+	u32 pasid;
+	int users;
+	u16 did;
+	u16 dev_iotlb:1;
+>>>>>>> b7ba80a49124 (Commit)
 	u16 sid, qdep;
 };
 
 struct intel_svm {
 	struct mmu_notifier notifier;
 	struct mm_struct *mm;
+<<<<<<< HEAD
+=======
+
+	unsigned int flags;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 pasid;
 	struct list_head devs;
 };
 #else
 static inline void intel_svm_check(struct intel_iommu *iommu) {}
+<<<<<<< HEAD
 static inline struct iommu_domain *intel_svm_domain_alloc(void)
 {
 	return NULL;
@@ -871,6 +978,8 @@ static inline struct iommu_domain *intel_svm_domain_alloc(void)
 static inline void intel_svm_remove_dev_pasid(struct device *dev, ioasid_t pasid)
 {
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #ifdef CONFIG_INTEL_IOMMU_DEBUGFS
@@ -886,6 +995,7 @@ struct context_entry *iommu_context_addr(struct intel_iommu *iommu, u8 bus,
 extern const struct iommu_ops intel_iommu_ops;
 
 #ifdef CONFIG_INTEL_IOMMU
+<<<<<<< HEAD
 extern int intel_iommu_sm;
 extern int iommu_calculate_agaw(struct intel_iommu *iommu);
 extern int iommu_calculate_max_sagaw(struct intel_iommu *iommu);
@@ -897,6 +1007,10 @@ static inline bool ecmd_has_pmu_essential(struct intel_iommu *iommu)
 		DMA_ECMD_ECCAP3_ESSENTIAL;
 }
 
+=======
+extern int iommu_calculate_agaw(struct intel_iommu *iommu);
+extern int iommu_calculate_max_sagaw(struct intel_iommu *iommu);
+>>>>>>> b7ba80a49124 (Commit)
 extern int dmar_disabled;
 extern int intel_iommu_enabled;
 #else
@@ -910,7 +1024,10 @@ static inline int iommu_calculate_max_sagaw(struct intel_iommu *iommu)
 }
 #define dmar_disabled	(1)
 #define intel_iommu_enabled (0)
+<<<<<<< HEAD
 #define intel_iommu_sm (0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 static inline const char *decode_prq_descriptor(char *str, size_t size,

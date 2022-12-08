@@ -2,7 +2,10 @@
 /* Copyright (c) 2018-2019 Hisilicon Limited. */
 
 #include <linux/device.h>
+<<<<<<< HEAD
 #include <linux/sched/clock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "hclge_debugfs.h"
 #include "hclge_err.h"

@@ -117,12 +117,20 @@ int rt2x00usb_vendor_request_buff(struct rt2x00_dev *rt2x00dev,
 				  const u16 buffer_length)
 {
 	int status = 0;
+<<<<<<< HEAD
 	u8 *tb;
+=======
+	unsigned char *tb;
+>>>>>>> b7ba80a49124 (Commit)
 	u16 off, len, bsize;
 
 	mutex_lock(&rt2x00dev->csr_mutex);
 
+<<<<<<< HEAD
 	tb  = (u8 *)buffer;
+=======
+	tb  = (char *)buffer;
+>>>>>>> b7ba80a49124 (Commit)
 	off = offset;
 	len = buffer_length;
 	while (len && !status) {
@@ -215,7 +223,11 @@ void rt2x00usb_register_read_async(struct rt2x00_dev *rt2x00dev,
 	rd->cr.wLength = cpu_to_le16(sizeof(u32));
 
 	usb_fill_control_urb(urb, usb_dev, usb_rcvctrlpipe(usb_dev, 0),
+<<<<<<< HEAD
 			     (u8 *)(&rd->cr), &rd->reg, sizeof(rd->reg),
+=======
+			     (unsigned char *)(&rd->cr), &rd->reg, sizeof(rd->reg),
+>>>>>>> b7ba80a49124 (Commit)
 			     rt2x00usb_register_read_async_cb, rd);
 	usb_anchor_urb(urb, rt2x00dev->anchor);
 	if (usb_submit_urb(urb, GFP_ATOMIC) < 0) {

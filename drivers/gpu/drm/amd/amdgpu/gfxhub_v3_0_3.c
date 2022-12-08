@@ -154,6 +154,7 @@ static void gfxhub_v3_0_3_init_system_aperture_regs(struct amdgpu_device *adev)
 {
 	uint64_t value;
 
+<<<<<<< HEAD
 	if (amdgpu_sriov_vf(adev))
 		return;
 
@@ -170,6 +171,21 @@ static void gfxhub_v3_0_3_init_system_aperture_regs(struct amdgpu_device *adev)
 
 	/* Set default page address. */
 	value = adev->mem_scratch.gpu_addr - adev->gmc.vram_start
+=======
+	/* Disable AGP. */
+	WREG32_SOC15(GC, 0, regGCMC_VM_AGP_BASE, 0);
+	WREG32_SOC15(GC, 0, regGCMC_VM_AGP_TOP, 0);
+	WREG32_SOC15(GC, 0, regGCMC_VM_AGP_BOT, 0x00FFFFFF);
+
+	/* Program the system aperture low logical page number. */
+	WREG32_SOC15(GC, 0, regGCMC_VM_SYSTEM_APERTURE_LOW_ADDR,
+		     adev->gmc.vram_start >> 18);
+	WREG32_SOC15(GC, 0, regGCMC_VM_SYSTEM_APERTURE_HIGH_ADDR,
+		     adev->gmc.vram_end >> 18);
+
+	/* Set default page address. */
+	value = adev->vram_scratch.gpu_addr - adev->gmc.vram_start
+>>>>>>> b7ba80a49124 (Commit)
 		+ adev->vm_manager.vram_base_offset;
 	WREG32_SOC15(GC, 0, regGCMC_VM_SYSTEM_APERTURE_DEFAULT_ADDR_LSB,
 		     (u32)(value >> 12));
@@ -357,6 +373,21 @@ static void gfxhub_v3_0_3_program_invalidation(struct amdgpu_device *adev)
 
 static int gfxhub_v3_0_3_gart_enable(struct amdgpu_device *adev)
 {
+<<<<<<< HEAD
+=======
+	if (amdgpu_sriov_vf(adev)) {
+		/*
+		 * GCMC_VM_FB_LOCATION_BASE/TOP is NULL for VF, becuase they are
+		 * VF copy registers so vbios post doesn't program them, for
+		 * SRIOV driver need to program them
+		 */
+		WREG32_SOC15(GC, 0, regGCMC_VM_FB_LOCATION_BASE,
+			     adev->gmc.vram_start >> 24);
+		WREG32_SOC15(GC, 0, regGCMC_VM_FB_LOCATION_TOP,
+			     adev->gmc.vram_end >> 24);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* GART Enable. */
 	gfxhub_v3_0_3_init_gart_aperture_regs(adev);
 	gfxhub_v3_0_3_init_system_aperture_regs(adev);

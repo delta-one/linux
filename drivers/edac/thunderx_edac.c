@@ -2114,9 +2114,12 @@ static int __init thunderx_edac_init(void)
 {
 	int rc = 0;
 
+<<<<<<< HEAD
 	if (ghes_get_devices())
 		return -EBUSY;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rc = pci_register_driver(&thunderx_lmc_driver);
 	if (rc)
 		return rc;

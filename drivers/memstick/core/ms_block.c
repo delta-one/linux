@@ -2116,11 +2116,14 @@ static int msb_init_disk(struct memstick_dev *card)
 	dbg("Set total disk size to %lu sectors", capacity);
 
 	msb->io_queue = alloc_ordered_workqueue("ms_block", WQ_MEM_RECLAIM);
+<<<<<<< HEAD
 	if (!msb->io_queue) {
 		rc = -ENOMEM;
 		goto out_cleanup_disk;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_WORK(&msb->io_work, msb_io_work);
 	sg_init_table(msb->prealloc_sg, MS_BLOCK_MAX_SEGS+1);
 
@@ -2130,12 +2133,19 @@ static int msb_init_disk(struct memstick_dev *card)
 	msb_start(card);
 	rc = device_add_disk(&card->dev, msb->disk, NULL);
 	if (rc)
+<<<<<<< HEAD
 		goto out_destroy_workqueue;
 	dbg("Disk added");
 	return 0;
 
 out_destroy_workqueue:
 	destroy_workqueue(msb->io_queue);
+=======
+		goto out_cleanup_disk;
+	dbg("Disk added");
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 out_cleanup_disk:
 	put_disk(msb->disk);
 out_free_tag_set:

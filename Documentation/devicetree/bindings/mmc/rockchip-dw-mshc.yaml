@@ -14,7 +14,11 @@ description:
   file and the Rockchip specific extensions.
 
 allOf:
+<<<<<<< HEAD
   - $ref: synopsys-dw-mshc-common.yaml#
+=======
+  - $ref: "synopsys-dw-mshc-common.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Heiko Stuebner <heiko@sntech.de>
@@ -39,7 +43,10 @@ properties:
               - rockchip,rk3368-dw-mshc
               - rockchip,rk3399-dw-mshc
               - rockchip,rk3568-dw-mshc
+<<<<<<< HEAD
               - rockchip,rk3588-dw-mshc
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - rockchip,rv1108-dw-mshc
               - rockchip,rv1126-dw-mshc
           - const: rockchip,rk3288-dw-mshc
@@ -72,9 +79,12 @@ properties:
       to control the clock phases, "ciu-sample" is required for tuning
       high speed modes.
 
+<<<<<<< HEAD
   power-domains:
     maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   rockchip,default-sample-phase:
     $ref: /schemas/types.yaml#/definitions/uint32
     minimum: 0

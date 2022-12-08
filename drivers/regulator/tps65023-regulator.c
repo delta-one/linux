@@ -257,9 +257,15 @@ static struct tps_driver_data tps65023_drv_data = {
 	.core_regulator = TPS65023_DCDC_1,
 };
 
+<<<<<<< HEAD
 static int tps_65023_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int tps_65023_probe(struct i2c_client *client,
+				     const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct regulator_init_data *init_data = dev_get_platdata(&client->dev);
 	struct regulator_config config = { };
 	struct tps_pmic *tps;
@@ -334,10 +340,16 @@ MODULE_DEVICE_TABLE(i2c, tps_65023_id);
 static struct i2c_driver tps_65023_i2c_driver = {
 	.driver = {
 		.name = "tps65023",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 		.of_match_table = of_match_ptr(tps65023_of_match),
 	},
 	.probe_new = tps_65023_probe,
+=======
+		.of_match_table = of_match_ptr(tps65023_of_match),
+	},
+	.probe = tps_65023_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = tps_65023_id,
 };
 

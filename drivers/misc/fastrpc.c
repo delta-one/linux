@@ -6,7 +6,10 @@
 #include <linux/device.h>
 #include <linux/dma-buf.h>
 #include <linux/dma-mapping.h>
+<<<<<<< HEAD
 #include <linux/dma-resv.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/idr.h>
 #include <linux/list.h>
 #include <linux/miscdevice.h>
@@ -18,9 +21,14 @@
 #include <linux/rpmsg.h>
 #include <linux/scatterlist.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/firmware/qcom/qcom_scm.h>
 #include <uapi/misc/fastrpc.h>
 #include <linux/of_reserved_mem.h>
+=======
+#include <linux/qcom_scm.h>
+#include <uapi/misc/fastrpc.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define ADSP_DOMAIN_ID (0)
 #define MDSP_DOMAIN_ID (1)
@@ -38,6 +46,7 @@
 #define FASTRPC_DSP_UTILITIES_HANDLE	2
 #define FASTRPC_CTXID_MASK (0xFF0)
 #define INIT_FILELEN_MAX (2 * 1024 * 1024)
+<<<<<<< HEAD
 #define INIT_FILE_NAMELEN_MAX (128)
 #define FASTRPC_DEVICE_NAME	"fastrpc"
 
@@ -52,6 +61,10 @@
 /* Add memory to userPD pool, for LLC heap */
 #define ADSP_MMAP_ADD_PAGES_LLC 0x3000,
 
+=======
+#define FASTRPC_DEVICE_NAME	"fastrpc"
+#define ADSP_MMAP_ADD_PAGES 0x1000
+>>>>>>> b7ba80a49124 (Commit)
 #define DSP_UNSUPPORTED_API (0x80000414)
 /* MAX NUMBER of DSP ATTRIBUTES SUPPORTED */
 #define FASTRPC_MAX_DSP_ATTRIBUTES (256)
@@ -85,7 +98,10 @@
 		FASTRPC_BUILD_SCALARS(0, method, in, out, 0, 0)
 
 #define FASTRPC_CREATE_PROCESS_NARGS	6
+<<<<<<< HEAD
 #define FASTRPC_CREATE_STATIC_PROCESS_NARGS	3
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Remote Method id table */
 #define FASTRPC_RMID_INIT_ATTACH	0
 #define FASTRPC_RMID_INIT_RELEASE	1
@@ -98,7 +114,11 @@
 #define FASTRPC_RMID_INIT_MEM_UNMAP    11
 
 /* Protection Domain(PD) ids */
+<<<<<<< HEAD
 #define ROOT_PD		(0)
+=======
+#define AUDIO_PD	(0) /* also GUEST_OS PD? */
+>>>>>>> b7ba80a49124 (Commit)
 #define USER_PD		(1)
 #define SENSORS_PD	(2)
 
@@ -262,7 +282,11 @@ struct fastrpc_channel_ctx {
 	int domain_id;
 	int sesscount;
 	int vmcount;
+<<<<<<< HEAD
 	u64 perms;
+=======
+	u32 perms;
+>>>>>>> b7ba80a49124 (Commit)
 	struct qcom_scm_vmperm vmperms[FASTRPC_MAX_VMIDS];
 	struct rpmsg_device *rpdev;
 	struct fastrpc_session_ctx session[FASTRPC_MAX_SESSIONS];
@@ -275,11 +299,16 @@ struct fastrpc_channel_ctx {
 	u32 dsp_attributes[FASTRPC_MAX_DSP_ATTRIBUTES];
 	struct fastrpc_device *secure_fdevice;
 	struct fastrpc_device *fdevice;
+<<<<<<< HEAD
 	struct fastrpc_buf *remote_heap;
 	struct list_head invoke_interrupted_mmaps;
 	bool secure;
 	bool unsigned_support;
 	u64 dma_mask;
+=======
+	bool secure;
+	bool unsigned_support;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct fastrpc_device {
@@ -321,19 +350,29 @@ static void fastrpc_free_map(struct kref *ref)
 			perm.vmid = QCOM_SCM_VMID_HLOS;
 			perm.perm = QCOM_SCM_PERM_RWX;
 			err = qcom_scm_assign_mem(map->phys, map->size,
+<<<<<<< HEAD
 				&map->fl->cctx->perms, &perm, 1);
+=======
+				&(map->fl->cctx->vmperms[0].vmid), &perm, 1);
+>>>>>>> b7ba80a49124 (Commit)
 			if (err) {
 				dev_err(map->fl->sctx->dev, "Failed to assign memory phys 0x%llx size 0x%llx err %d",
 						map->phys, map->size, err);
 				return;
 			}
 		}
+<<<<<<< HEAD
 		dma_buf_unmap_attachment_unlocked(map->attach, map->table,
 						  DMA_BIDIRECTIONAL);
+=======
+		dma_buf_unmap_attachment(map->attach, map->table,
+					 DMA_BIDIRECTIONAL);
+>>>>>>> b7ba80a49124 (Commit)
 		dma_buf_detach(map->buf, map->attach);
 		dma_buf_put(map->buf);
 	}
 
+<<<<<<< HEAD
 	if (map->fl) {
 		spin_lock(&map->fl->lock);
 		list_del(&map->node);
@@ -341,6 +380,8 @@ static void fastrpc_free_map(struct kref *ref)
 		map->fl = NULL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(map);
 }
 
@@ -350,16 +391,24 @@ static void fastrpc_map_put(struct fastrpc_map *map)
 		kref_put(&map->refcount, fastrpc_free_map);
 }
 
+<<<<<<< HEAD
 static int fastrpc_map_get(struct fastrpc_map *map)
 {
 	if (!map)
 		return -ENOENT;
 
 	return kref_get_unless_zero(&map->refcount) ? 0 : -ENOENT;
+=======
+static void fastrpc_map_get(struct fastrpc_map *map)
+{
+	if (map)
+		kref_get(&map->refcount);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 
 static int fastrpc_map_lookup(struct fastrpc_user *fl, int fd,
+<<<<<<< HEAD
 			    struct fastrpc_map **ppmap, bool take_ref)
 {
 	struct fastrpc_session_ctx *sess = fl->sctx;
@@ -385,6 +434,32 @@ static int fastrpc_map_lookup(struct fastrpc_user *fl, int fd,
 		break;
 	}
 	spin_unlock(&fl->lock);
+=======
+			    struct fastrpc_map **ppmap)
+{
+	struct fastrpc_map *map = NULL;
+
+	mutex_lock(&fl->mutex);
+	list_for_each_entry(map, &fl->maps, node) {
+		if (map->fd == fd) {
+			*ppmap = map;
+			mutex_unlock(&fl->mutex);
+			return 0;
+		}
+	}
+	mutex_unlock(&fl->mutex);
+
+	return -ENOENT;
+}
+
+static int fastrpc_map_find(struct fastrpc_user *fl, int fd,
+			    struct fastrpc_map **ppmap)
+{
+	int ret = fastrpc_map_lookup(fl, fd, ppmap);
+
+	if (!ret)
+		fastrpc_map_get(*ppmap);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -396,7 +471,11 @@ static void fastrpc_buf_free(struct fastrpc_buf *buf)
 	kfree(buf);
 }
 
+<<<<<<< HEAD
 static int __fastrpc_buf_alloc(struct fastrpc_user *fl, struct device *dev,
+=======
+static int fastrpc_buf_alloc(struct fastrpc_user *fl, struct device *dev,
+>>>>>>> b7ba80a49124 (Commit)
 			     u64 size, struct fastrpc_buf **obuf)
 {
 	struct fastrpc_buf *buf;
@@ -424,6 +503,7 @@ static int __fastrpc_buf_alloc(struct fastrpc_user *fl, struct device *dev,
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	*obuf = buf;
 
 	return 0;
@@ -455,6 +535,16 @@ static int fastrpc_remote_heap_alloc(struct fastrpc_user *fl, struct device *dev
 	return  __fastrpc_buf_alloc(fl, rdev, size, obuf);
 }
 
+=======
+	if (fl->sctx && fl->sctx->sid)
+		buf->phys += ((u64)fl->sctx->sid << 32);
+
+	*obuf = buf;
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void fastrpc_channel_ctx_free(struct kref *ref)
 {
 	struct fastrpc_channel_ctx *cctx;
@@ -733,8 +823,11 @@ static int fastrpc_mmap(struct dma_buf *dmabuf,
 	struct fastrpc_buf *buf = dmabuf->priv;
 	size_t size = vma->vm_end - vma->vm_start;
 
+<<<<<<< HEAD
 	dma_resv_assert_held(dmabuf->resv);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return dma_mmap_coherent(buf->dev, vma, buf->virt,
 				 FASTRPC_PHYS(buf->phys), size);
 }
@@ -756,7 +849,11 @@ static int fastrpc_map_create(struct fastrpc_user *fl, int fd,
 	struct fastrpc_map *map = NULL;
 	int err = 0;
 
+<<<<<<< HEAD
 	if (!fastrpc_map_lookup(fl, fd, ppmap, true))
+=======
+	if (!fastrpc_map_find(fl, fd, ppmap))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	map = kzalloc(sizeof(*map), GFP_KERNEL);
@@ -764,8 +861,11 @@ static int fastrpc_map_create(struct fastrpc_user *fl, int fd,
 		return -ENOMEM;
 
 	INIT_LIST_HEAD(&map->node);
+<<<<<<< HEAD
 	kref_init(&map->refcount);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	map->fl = fl;
 	map->fd = fd;
 	map->buf = dma_buf_get(fd);
@@ -781,7 +881,11 @@ static int fastrpc_map_create(struct fastrpc_user *fl, int fd,
 		goto attach_err;
 	}
 
+<<<<<<< HEAD
 	map->table = dma_buf_map_attachment_unlocked(map->attach, DMA_BIDIRECTIONAL);
+=======
+	map->table = dma_buf_map_attachment(map->attach, DMA_BIDIRECTIONAL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(map->table)) {
 		err = PTR_ERR(map->table);
 		goto map_err;
@@ -792,14 +896,25 @@ static int fastrpc_map_create(struct fastrpc_user *fl, int fd,
 	map->size = len;
 	map->va = sg_virt(map->table->sgl);
 	map->len = len;
+<<<<<<< HEAD
+=======
+	kref_init(&map->refcount);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (attr & FASTRPC_ATTR_SECUREMAP) {
 		/*
 		 * If subsystem VMIDs are defined in DTSI, then do
 		 * hyp_assign from HLOS to those VM(s)
 		 */
+<<<<<<< HEAD
 		map->attr = attr;
 		err = qcom_scm_assign_mem(map->phys, (u64)map->size, &fl->cctx->perms,
+=======
+		unsigned int perms = BIT(QCOM_SCM_VMID_HLOS);
+
+		map->attr = attr;
+		err = qcom_scm_assign_mem(map->phys, (u64)map->size, &perms,
+>>>>>>> b7ba80a49124 (Commit)
 				fl->cctx->vmperms, fl->cctx->vmcount);
 		if (err) {
 			dev_err(sess->dev, "Failed to assign memory with phys 0x%llx size 0x%llx err %d",
@@ -819,7 +934,11 @@ map_err:
 attach_err:
 	dma_buf_put(map->buf);
 get_err:
+<<<<<<< HEAD
 	fastrpc_map_put(map);
+=======
+	kfree(map);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return err;
 }
@@ -1078,7 +1197,11 @@ static int fastrpc_put_args(struct fastrpc_invoke_ctx *ctx,
 	for (i = 0; i < FASTRPC_MAX_FDLIST; i++) {
 		if (!fdlist[i])
 			break;
+<<<<<<< HEAD
 		if (!fastrpc_map_lookup(fl, (int)fdlist[i], &mmap, false))
+=======
+		if (!fastrpc_map_lookup(fl, (int)fdlist[i], &mmap))
+>>>>>>> b7ba80a49124 (Commit)
 			fastrpc_map_put(mmap);
 	}
 
@@ -1122,8 +1245,11 @@ static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
 				   struct fastrpc_invoke_args *args)
 {
 	struct fastrpc_invoke_ctx *ctx = NULL;
+<<<<<<< HEAD
 	struct fastrpc_buf *buf, *b;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err = 0;
 
 	if (!fl->sctx)
@@ -1186,6 +1312,7 @@ bail:
 		spin_unlock(&fl->lock);
 		fastrpc_context_put(ctx);
 	}
+<<<<<<< HEAD
 
 	if (err == -ERESTARTSYS) {
 		list_for_each_entry_safe(buf, b, &fl->mmaps, node) {
@@ -1194,6 +1321,8 @@ bail:
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		dev_dbg(fl->sctx->dev, "Error: Invoke Failed %d\n", err);
 
@@ -1218,6 +1347,7 @@ static bool is_session_rejected(struct fastrpc_user *fl, bool unsigned_pd_reques
 	return false;
 }
 
+<<<<<<< HEAD
 static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
 					      char __user *argp)
 {
@@ -1331,6 +1461,8 @@ err:
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int fastrpc_init_create_process(struct fastrpc_user *fl,
 					char __user *argp)
 {
@@ -1440,7 +1572,16 @@ err_invoke:
 	fl->init_mem = NULL;
 	fastrpc_buf_free(imem);
 err_alloc:
+<<<<<<< HEAD
 	fastrpc_map_put(map);
+=======
+	if (map) {
+		spin_lock(&fl->lock);
+		list_del(&map->node);
+		spin_unlock(&fl->lock);
+		fastrpc_map_put(map);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 err:
 	kfree(args);
 
@@ -1516,8 +1657,15 @@ static int fastrpc_device_release(struct inode *inode, struct file *file)
 		fastrpc_context_put(ctx);
 	}
 
+<<<<<<< HEAD
 	list_for_each_entry_safe(map, m, &fl->maps, node)
 		fastrpc_map_put(map);
+=======
+	list_for_each_entry_safe(map, m, &fl->maps, node) {
+		list_del(&map->node);
+		fastrpc_map_put(map);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	list_for_each_entry_safe(buf, b, &fl->mmaps, node) {
 		list_del(&buf->node);
@@ -1770,14 +1918,39 @@ static int fastrpc_get_dsp_info(struct fastrpc_user *fl, char __user *argp)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int fastrpc_req_munmap_impl(struct fastrpc_user *fl, struct fastrpc_buf *buf)
 {
 	struct fastrpc_invoke_args args[1] = { [0] = { 0 } };
+=======
+static int fastrpc_req_munmap_impl(struct fastrpc_user *fl,
+				   struct fastrpc_req_munmap *req)
+{
+	struct fastrpc_invoke_args args[1] = { [0] = { 0 } };
+	struct fastrpc_buf *buf = NULL, *iter, *b;
+>>>>>>> b7ba80a49124 (Commit)
 	struct fastrpc_munmap_req_msg req_msg;
 	struct device *dev = fl->sctx->dev;
 	int err;
 	u32 sc;
 
+<<<<<<< HEAD
+=======
+	spin_lock(&fl->lock);
+	list_for_each_entry_safe(iter, b, &fl->mmaps, node) {
+		if ((iter->raddr == req->vaddrout) && (iter->size == req->size)) {
+			buf = iter;
+			break;
+		}
+	}
+	spin_unlock(&fl->lock);
+
+	if (!buf) {
+		dev_err(dev, "mmap not in list\n");
+		return -EINVAL;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	req_msg.pgid = fl->tgid;
 	req_msg.size = buf->size;
 	req_msg.vaddr = buf->raddr;
@@ -1803,13 +1976,18 @@ static int fastrpc_req_munmap_impl(struct fastrpc_user *fl, struct fastrpc_buf *
 
 static int fastrpc_req_munmap(struct fastrpc_user *fl, char __user *argp)
 {
+<<<<<<< HEAD
 	struct fastrpc_buf *buf = NULL, *iter, *b;
 	struct fastrpc_req_munmap req;
 	struct device *dev = fl->sctx->dev;
+=======
+	struct fastrpc_req_munmap req;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (copy_from_user(&req, argp, sizeof(req)))
 		return -EFAULT;
 
+<<<<<<< HEAD
 	spin_lock(&fl->lock);
 	list_for_each_entry_safe(iter, b, &fl->mmaps, node) {
 		if ((iter->raddr == req.vaddrout) && (iter->size == req.size)) {
@@ -1826,6 +2004,9 @@ static int fastrpc_req_munmap(struct fastrpc_user *fl, char __user *argp)
 	}
 
 	return fastrpc_req_munmap_impl(fl, buf);
+=======
+	return fastrpc_req_munmap_impl(fl, &req);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int fastrpc_req_mmap(struct fastrpc_user *fl, char __user *argp)
@@ -1834,6 +2015,10 @@ static int fastrpc_req_mmap(struct fastrpc_user *fl, char __user *argp)
 	struct fastrpc_buf *buf = NULL;
 	struct fastrpc_mmap_req_msg req_msg;
 	struct fastrpc_mmap_rsp_msg rsp_msg;
+<<<<<<< HEAD
+=======
+	struct fastrpc_req_munmap req_unmap;
+>>>>>>> b7ba80a49124 (Commit)
 	struct fastrpc_phy_page pages;
 	struct fastrpc_req_mmap req;
 	struct device *dev = fl->sctx->dev;
@@ -1843,9 +2028,14 @@ static int fastrpc_req_mmap(struct fastrpc_user *fl, char __user *argp)
 	if (copy_from_user(&req, argp, sizeof(req)))
 		return -EFAULT;
 
+<<<<<<< HEAD
 	if (req.flags != ADSP_MMAP_ADD_PAGES && req.flags != ADSP_MMAP_REMOTE_HEAP_ADDR) {
 		dev_err(dev, "flag not supported 0x%x\n", req.flags);
 
+=======
+	if (req.flags != ADSP_MMAP_ADD_PAGES) {
+		dev_err(dev, "flag not supported 0x%x\n", req.flags);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -1891,6 +2081,7 @@ static int fastrpc_req_mmap(struct fastrpc_user *fl, char __user *argp)
 	/* let the client know the address to use */
 	req.vaddrout = rsp_msg.vaddr;
 
+<<<<<<< HEAD
 	/* Add memory to static PD pool, protection thru hypervisor */
 	if (req.flags != ADSP_MMAP_REMOTE_HEAP_ADDR && fl->cctx->vmcount) {
 		struct qcom_scm_vmperm perm;
@@ -1906,13 +2097,23 @@ static int fastrpc_req_mmap(struct fastrpc_user *fl, char __user *argp)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock(&fl->lock);
 	list_add_tail(&buf->node, &fl->mmaps);
 	spin_unlock(&fl->lock);
 
 	if (copy_to_user((void __user *)argp, &req, sizeof(req))) {
+<<<<<<< HEAD
 		err = -EFAULT;
 		goto err_assign;
+=======
+		/* unmap the memory and release the buffer */
+		req_unmap.vaddrout = buf->raddr;
+		req_unmap.size = buf->size;
+		fastrpc_req_munmap_impl(fl, &req_unmap);
+		return -EFAULT;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	dev_dbg(dev, "mmap\t\tpt 0x%09lx OK [len 0x%08llx]\n",
@@ -1920,8 +2121,11 @@ static int fastrpc_req_mmap(struct fastrpc_user *fl, char __user *argp)
 
 	return 0;
 
+<<<<<<< HEAD
 err_assign:
 	fastrpc_req_munmap_impl(fl, buf);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_invoke:
 	fastrpc_buf_free(buf);
 
@@ -2069,14 +2273,21 @@ static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
 		err = fastrpc_invoke(fl, argp);
 		break;
 	case FASTRPC_IOCTL_INIT_ATTACH:
+<<<<<<< HEAD
 		err = fastrpc_init_attach(fl, ROOT_PD);
+=======
+		err = fastrpc_init_attach(fl, AUDIO_PD);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case FASTRPC_IOCTL_INIT_ATTACH_SNS:
 		err = fastrpc_init_attach(fl, SENSORS_PD);
 		break;
+<<<<<<< HEAD
 	case FASTRPC_IOCTL_INIT_CREATE_STATIC:
 		err = fastrpc_init_create_static_process(fl, argp);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case FASTRPC_IOCTL_INIT_CREATE:
 		err = fastrpc_init_create_process(fl, argp);
 		break;
@@ -2251,9 +2462,12 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if (of_reserved_mem_device_init_by_idx(rdev, rdev->of_node, 0))
 		dev_info(rdev, "no reserved DMA memory for FASTRPC\n");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vmcount = of_property_read_variable_u32_array(rdev->of_node,
 				"qcom,vmids", &vmids[0], 0, FASTRPC_MAX_VMIDS);
 	if (vmcount < 0)
@@ -2306,15 +2520,21 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
 	kref_init(&data->refcount);
 
 	dev_set_drvdata(&rpdev->dev, data);
+<<<<<<< HEAD
 	rdev->dma_mask = &data->dma_mask;
 	dma_set_mask_and_coherent(rdev, DMA_BIT_MASK(32));
 	INIT_LIST_HEAD(&data->users);
 	INIT_LIST_HEAD(&data->invoke_interrupted_mmaps);
+=======
+	dma_set_mask_and_coherent(rdev, DMA_BIT_MASK(32));
+	INIT_LIST_HEAD(&data->users);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_init(&data->lock);
 	idr_init(&data->ctx_idr);
 	data->domain_id = domain_id;
 	data->rpdev = rpdev;
 
+<<<<<<< HEAD
 	err = of_platform_populate(rdev->of_node, NULL, NULL, rdev);
 	if (err)
 		goto populate_error;
@@ -2327,6 +2547,9 @@ populate_error:
 	if (data->secure_fdevice)
 		misc_deregister(&data->secure_fdevice->miscdev);
 
+=======
+	return of_platform_populate(rdev->of_node, NULL, NULL, rdev);
+>>>>>>> b7ba80a49124 (Commit)
 fdev_error:
 	kfree(data);
 	return err;
@@ -2345,7 +2568,10 @@ static void fastrpc_notify_users(struct fastrpc_user *user)
 static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
 {
 	struct fastrpc_channel_ctx *cctx = dev_get_drvdata(&rpdev->dev);
+<<<<<<< HEAD
 	struct fastrpc_buf *buf, *b;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct fastrpc_user *user;
 	unsigned long flags;
 
@@ -2360,12 +2586,15 @@ static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
 	if (cctx->secure_fdevice)
 		misc_deregister(&cctx->secure_fdevice->miscdev);
 
+<<<<<<< HEAD
 	list_for_each_entry_safe(buf, b, &cctx->invoke_interrupted_mmaps, node)
 		list_del(&buf->node);
 
 	if (cctx->remote_heap)
 		fastrpc_buf_free(cctx->remote_heap);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	of_platform_depopulate(&rpdev->dev);
 
 	cctx->rpdev = NULL;

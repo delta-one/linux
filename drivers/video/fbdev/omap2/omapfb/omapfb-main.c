@@ -2599,7 +2599,11 @@ err0:
 	return r;
 }
 
+<<<<<<< HEAD
 static void omapfb_remove(struct platform_device *pdev)
+=======
+static int omapfb_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct omapfb2_device *fbdev = platform_get_drvdata(pdev);
 
@@ -2610,11 +2614,20 @@ static void omapfb_remove(struct platform_device *pdev)
 	omapfb_free_resources(fbdev);
 
 	omapdss_compat_uninit();
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver omapfb_driver = {
 	.probe		= omapfb_probe,
+<<<<<<< HEAD
 	.remove_new     = omapfb_remove,
+=======
+	.remove         = omapfb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver         = {
 		.name   = "omapfb",
 	},

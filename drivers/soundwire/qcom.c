@@ -25,12 +25,16 @@
 
 #define SWRM_COMP_SW_RESET					0x008
 #define SWRM_COMP_STATUS					0x014
+<<<<<<< HEAD
 #define SWRM_LINK_MANAGER_EE					0x018
 #define SWRM_EE_CPU						1
 #define SWRM_FRM_GEN_ENABLED					BIT(0)
 #define SWRM_VERSION_1_3_0					0x01030000
 #define SWRM_VERSION_1_5_1					0x01050001
 #define SWRM_VERSION_1_7_0					0x01070000
+=======
+#define SWRM_FRM_GEN_ENABLED					BIT(0)
+>>>>>>> b7ba80a49124 (Commit)
 #define SWRM_COMP_HW_VERSION					0x00
 #define SWRM_COMP_CFG_ADDR					0x04
 #define SWRM_COMP_CFG_IRQ_LEVEL_OR_PULSE_MSK			BIT(1)
@@ -109,6 +113,10 @@
 #define SWRM_REG_VAL_PACK(data, dev, id, reg)	\
 			((reg) | ((id) << 16) | ((dev) << 20) | ((data) << 24))
 
+<<<<<<< HEAD
+=======
+#define SWRM_SPECIAL_CMD_ID	0xF
+>>>>>>> b7ba80a49124 (Commit)
 #define MAX_FREQ_NUM		1
 #define TIMEOUT_MS		100
 #define QCOM_SWRM_MAX_RD_LEN	0x1
@@ -348,6 +356,7 @@ static int qcom_swrm_cmd_fifo_wr_cmd(struct qcom_swrm_ctrl *swrm, u8 cmd_data,
 	if (swrm_wait_for_wr_fifo_avail(swrm))
 		return SDW_CMD_FAIL_OTHER;
 
+<<<<<<< HEAD
 	if (cmd_id == SWR_BROADCAST_CMD_ID)
 		reinit_completion(&swrm->broadcast);
 
@@ -355,6 +364,13 @@ static int qcom_swrm_cmd_fifo_wr_cmd(struct qcom_swrm_ctrl *swrm, u8 cmd_data,
 	swrm->reg_write(swrm, SWRM_CMD_FIFO_WR_CMD, val);
 
 	if (swrm->version <= SWRM_VERSION_1_3_0)
+=======
+	/* Its assumed that write is okay as we do not get any status back */
+	swrm->reg_write(swrm, SWRM_CMD_FIFO_WR_CMD, val);
+
+	/* version 1.3 or less */
+	if (swrm->version <= 0x01030000)
+>>>>>>> b7ba80a49124 (Commit)
 		usleep_range(150, 155);
 
 	if (cmd_id == SWR_BROADCAST_CMD_ID) {
@@ -383,12 +399,15 @@ static int qcom_swrm_cmd_fifo_rd_cmd(struct qcom_swrm_ctrl *swrm,
 
 	val = swrm_get_packed_reg_val(&swrm->rcmd_id, len, dev_addr, reg_addr);
 
+<<<<<<< HEAD
 	/*
 	 * Check for outstanding cmd wrt. write fifo depth to avoid
 	 * overflow as read will also increase write fifo cnt.
 	 */
 	swrm_wait_for_wr_fifo_avail(swrm);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* wait for FIFO RD to complete to avoid overflow */
 	usleep_range(100, 105);
 	swrm->reg_write(swrm, SWRM_CMD_FIFO_RD_CMD, val);
@@ -697,6 +716,7 @@ static int qcom_swrm_init(struct qcom_swrm_ctrl *ctrl)
 	u32p_replace_bits(&val, SWRM_DEF_CMD_NO_PINGS, SWRM_MCP_CFG_MAX_NUM_OF_CMD_NO_PINGS_BMSK);
 	ctrl->reg_write(ctrl, SWRM_MCP_CFG_ADDR, val);
 
+<<<<<<< HEAD
 	if (ctrl->version >= SWRM_VERSION_1_7_0) {
 		ctrl->reg_write(ctrl, SWRM_LINK_MANAGER_EE, SWRM_EE_CPU);
 		ctrl->reg_write(ctrl, SWRM_MCP_BUS_CTRL,
@@ -707,6 +727,12 @@ static int qcom_swrm_init(struct qcom_swrm_ctrl *ctrl)
 
 	/* Configure number of retries of a read/write cmd */
 	if (ctrl->version >= SWRM_VERSION_1_5_1) {
+=======
+	ctrl->reg_write(ctrl, SWRM_MCP_BUS_CTRL, SWRM_MCP_BUS_CLK_START);
+	/* Configure number of retries of a read/write cmd */
+	if (ctrl->version > 0x01050001) {
+		/* Only for versions >= 1.5.1 */
+>>>>>>> b7ba80a49124 (Commit)
 		ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CFG_ADDR,
 				SWRM_RD_WR_CMD_RETRIES |
 				SWRM_CONTINUE_EXEC_ON_CMD_IGNORE);
@@ -1218,9 +1244,12 @@ static int qcom_swrm_get_port_config(struct qcom_swrm_ctrl *ctrl)
 	ctrl->num_dout_ports = val;
 
 	nports = ctrl->num_dout_ports + ctrl->num_din_ports;
+<<<<<<< HEAD
 	if (nports > QCOM_SDW_MAX_PORTS)
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Valid port numbers are from 1-14, so mask out port 0 explicitly */
 	set_bit(0, &ctrl->dout_port_mask);
 	set_bit(0, &ctrl->din_port_mask);
@@ -1243,7 +1272,11 @@ static int qcom_swrm_get_port_config(struct qcom_swrm_ctrl *ctrl)
 	ret = of_property_read_u8_array(np, "qcom,ports-block-pack-mode",
 					bp_mode, nports);
 	if (ret) {
+<<<<<<< HEAD
 		if (ctrl->version <= SWRM_VERSION_1_3_0)
+=======
+		if (ctrl->version <= 0x01030000)
+>>>>>>> b7ba80a49124 (Commit)
 			memset(bp_mode, SWR_INVALID_PARAM, QCOM_SDW_MAX_PORTS);
 		else
 			return ret;
@@ -1343,8 +1376,13 @@ static int qcom_swrm_probe(struct platform_device *pdev)
 	}
 
 	if (data->sw_clk_gate_required) {
+<<<<<<< HEAD
 		ctrl->audio_cgcr = devm_reset_control_get_optional_exclusive(dev, "swr_audio_cgcr");
 		if (IS_ERR(ctrl->audio_cgcr)) {
+=======
+		ctrl->audio_cgcr = devm_reset_control_get_exclusive(dev, "swr_audio_cgcr");
+		if (IS_ERR_OR_NULL(ctrl->audio_cgcr)) {
+>>>>>>> b7ba80a49124 (Commit)
 			dev_err(dev, "Failed to get cgcr reset ctrl required for SW gating\n");
 			ret = PTR_ERR(ctrl->audio_cgcr);
 			goto err_init;
@@ -1446,7 +1484,11 @@ static int qcom_swrm_probe(struct platform_device *pdev)
 	pm_runtime_enable(dev);
 
 	/* Clk stop is not supported on WSA Soundwire masters */
+<<<<<<< HEAD
 	if (ctrl->version <= SWRM_VERSION_1_3_0) {
+=======
+	if (ctrl->version <= 0x01030000) {
+>>>>>>> b7ba80a49124 (Commit)
 		ctrl->clock_stop_not_supported = true;
 	} else {
 		ctrl->reg_read(ctrl, SWRM_COMP_MASTER_ID, &val);
@@ -1531,6 +1573,7 @@ static int __maybe_unused swrm_runtime_resume(struct device *dev)
 	} else {
 		reset_control_reset(ctrl->audio_cgcr);
 
+<<<<<<< HEAD
 		if (ctrl->version >= SWRM_VERSION_1_7_0) {
 			ctrl->reg_write(ctrl, SWRM_LINK_MANAGER_EE, SWRM_EE_CPU);
 			ctrl->reg_write(ctrl, SWRM_MCP_BUS_CTRL,
@@ -1538,6 +1581,9 @@ static int __maybe_unused swrm_runtime_resume(struct device *dev)
 		} else {
 			ctrl->reg_write(ctrl, SWRM_MCP_BUS_CTRL, SWRM_MCP_BUS_CLK_START);
 		}
+=======
+		ctrl->reg_write(ctrl, SWRM_MCP_BUS_CTRL, SWRM_MCP_BUS_CLK_START);
+>>>>>>> b7ba80a49124 (Commit)
 		ctrl->reg_write(ctrl, SWRM_INTERRUPT_CLEAR,
 			SWRM_INTERRUPT_STATUS_MASTER_CLASH_DET);
 
@@ -1601,7 +1647,10 @@ static const struct of_device_id qcom_swrm_of_match[] = {
 	{ .compatible = "qcom,soundwire-v1.3.0", .data = &swrm_v1_3_data },
 	{ .compatible = "qcom,soundwire-v1.5.1", .data = &swrm_v1_5_data },
 	{ .compatible = "qcom,soundwire-v1.6.0", .data = &swrm_v1_6_data },
+<<<<<<< HEAD
 	{ .compatible = "qcom,soundwire-v1.7.0", .data = &swrm_v1_5_data },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{/* sentinel */},
 };
 

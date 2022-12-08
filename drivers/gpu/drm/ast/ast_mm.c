@@ -28,12 +28,20 @@
 
 #include <linux/pci.h>
 
+<<<<<<< HEAD
+=======
+#include <drm/drm_gem_vram_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_managed.h>
 #include <drm/drm_print.h>
 
 #include "ast_drv.h"
 
+<<<<<<< HEAD
 static u32 ast_get_vram_size(struct ast_device *ast)
+=======
+static u32 ast_get_vram_size(struct ast_private *ast)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u8 jreg;
 	u32 vram_size;
@@ -73,12 +81,20 @@ static u32 ast_get_vram_size(struct ast_device *ast)
 	return vram_size;
 }
 
+<<<<<<< HEAD
 int ast_mm_init(struct ast_device *ast)
+=======
+int ast_mm_init(struct ast_private *ast)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drm_device *dev = &ast->base;
 	struct pci_dev *pdev = to_pci_dev(dev->dev);
 	resource_size_t base, size;
 	u32 vram_size;
+<<<<<<< HEAD
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	base = pci_resource_start(pdev, 0);
 	size = pci_resource_len(pdev, 0);
@@ -89,6 +105,7 @@ int ast_mm_init(struct ast_device *ast)
 
 	vram_size = ast_get_vram_size(ast);
 
+<<<<<<< HEAD
 	ast->vram = devm_ioremap_wc(dev->dev, base, vram_size);
 	if (!ast->vram)
 		return -ENOMEM;
@@ -96,6 +113,13 @@ int ast_mm_init(struct ast_device *ast)
 	ast->vram_base = base;
 	ast->vram_size = vram_size;
 	ast->vram_fb_available = vram_size;
+=======
+	ret = drmm_vram_helper_init(dev, base, vram_size);
+	if (ret) {
+		drm_err(dev, "Error initializing VRAM MM; %d\n", ret);
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

@@ -21,7 +21,11 @@
  * Then:
  *
  * # insmod kernel/trace/kprobe_event_gen_test.ko
+<<<<<<< HEAD
  * # cat /sys/kernel/tracing/trace
+=======
+ * # cat /sys/kernel/debug/tracing/trace
+>>>>>>> b7ba80a49124 (Commit)
  *
  * You should see many instances of the "gen_kprobe_test" and
  * "gen_kretprobe_test" events in the trace buffer.
@@ -35,6 +39,7 @@
 static struct trace_event_file *gen_kprobe_test;
 static struct trace_event_file *gen_kretprobe_test;
 
+<<<<<<< HEAD
 #define KPROBE_GEN_TEST_FUNC	"do_sys_open"
 
 /* X86 */
@@ -78,6 +83,8 @@ static bool trace_event_file_is_valid(struct trace_event_file *input)
 	return input && !IS_ERR(input);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Test to make sure we can create a kprobe event, then add more
  * fields.
@@ -101,6 +108,7 @@ static int __init test_gen_kprobe_cmd(void)
 	 * fields.
 	 */
 	ret = kprobe_event_gen_cmd_start(&cmd, "gen_kprobe_test",
+<<<<<<< HEAD
 					 KPROBE_GEN_TEST_FUNC,
 					 KPROBE_GEN_TEST_ARG0, KPROBE_GEN_TEST_ARG1);
 	if (ret)
@@ -111,13 +119,29 @@ static int __init test_gen_kprobe_cmd(void)
 	ret = kprobe_event_add_fields(&cmd, KPROBE_GEN_TEST_ARG2, KPROBE_GEN_TEST_ARG3);
 	if (ret)
 		goto out;
+=======
+					 "do_sys_open",
+					 "dfd=%ax", "filename=%dx");
+	if (ret)
+		goto free;
+
+	/* Use kprobe_event_add_fields to add the rest of the fields */
+
+	ret = kprobe_event_add_fields(&cmd, "flags=%cx", "mode=+4($stack)");
+	if (ret)
+		goto free;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * This actually creates the event.
 	 */
 	ret = kprobe_event_gen_cmd_end(&cmd);
 	if (ret)
+<<<<<<< HEAD
 		goto out;
+=======
+		goto free;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Now get the gen_kprobe_test event file.  We need to prevent
@@ -140,6 +164,7 @@ static int __init test_gen_kprobe_cmd(void)
 		goto delete;
 	}
  out:
+<<<<<<< HEAD
 	kfree(buf);
 	return ret;
  delete:
@@ -147,6 +172,15 @@ static int __init test_gen_kprobe_cmd(void)
 		gen_kprobe_test = NULL;
 	/* We got an error after creating the event, delete it */
 	kprobe_event_delete("gen_kprobe_test");
+=======
+	return ret;
+ delete:
+	/* We got an error after creating the event, delete it */
+	ret = kprobe_event_delete("gen_kprobe_test");
+ free:
+	kfree(buf);
+
+>>>>>>> b7ba80a49124 (Commit)
 	goto out;
 }
 
@@ -171,17 +205,28 @@ static int __init test_gen_kretprobe_cmd(void)
 	 * Define the kretprobe event.
 	 */
 	ret = kretprobe_event_gen_cmd_start(&cmd, "gen_kretprobe_test",
+<<<<<<< HEAD
 					    KPROBE_GEN_TEST_FUNC,
 					    "$retval");
 	if (ret)
 		goto out;
+=======
+					    "do_sys_open",
+					    "$retval");
+	if (ret)
+		goto free;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * This actually creates the event.
 	 */
 	ret = kretprobe_event_gen_cmd_end(&cmd);
 	if (ret)
+<<<<<<< HEAD
 		goto out;
+=======
+		goto free;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Now get the gen_kretprobe_test event file.  We need to
@@ -205,6 +250,7 @@ static int __init test_gen_kretprobe_cmd(void)
 		goto delete;
 	}
  out:
+<<<<<<< HEAD
 	kfree(buf);
 	return ret;
  delete:
@@ -212,6 +258,15 @@ static int __init test_gen_kretprobe_cmd(void)
 		gen_kretprobe_test = NULL;
 	/* We got an error after creating the event, delete it */
 	kprobe_event_delete("gen_kretprobe_test");
+=======
+	return ret;
+ delete:
+	/* We got an error after creating the event, delete it */
+	ret = kprobe_event_delete("gen_kretprobe_test");
+ free:
+	kfree(buf);
+
+>>>>>>> b7ba80a49124 (Commit)
 	goto out;
 }
 
@@ -225,12 +280,19 @@ static int __init kprobe_event_gen_test_init(void)
 
 	ret = test_gen_kretprobe_cmd();
 	if (ret) {
+<<<<<<< HEAD
 		if (trace_event_file_is_valid(gen_kretprobe_test)) {
 			WARN_ON(trace_array_set_clr_event(gen_kretprobe_test->tr,
 							  "kprobes",
 							  "gen_kretprobe_test", false));
 			trace_put_event_file(gen_kretprobe_test);
 		}
+=======
+		WARN_ON(trace_array_set_clr_event(gen_kretprobe_test->tr,
+						  "kprobes",
+						  "gen_kretprobe_test", false));
+		trace_put_event_file(gen_kretprobe_test);
+>>>>>>> b7ba80a49124 (Commit)
 		WARN_ON(kprobe_event_delete("gen_kretprobe_test"));
 	}
 
@@ -239,6 +301,7 @@ static int __init kprobe_event_gen_test_init(void)
 
 static void __exit kprobe_event_gen_test_exit(void)
 {
+<<<<<<< HEAD
 	if (trace_event_file_is_valid(gen_kprobe_test)) {
 		/* Disable the event or you can't remove it */
 		WARN_ON(trace_array_set_clr_event(gen_kprobe_test->tr,
@@ -249,10 +312,20 @@ static void __exit kprobe_event_gen_test_exit(void)
 		trace_put_event_file(gen_kprobe_test);
 	}
 
+=======
+	/* Disable the event or you can't remove it */
+	WARN_ON(trace_array_set_clr_event(gen_kprobe_test->tr,
+					  "kprobes",
+					  "gen_kprobe_test", false));
+
+	/* Now give the file and instance back */
+	trace_put_event_file(gen_kprobe_test);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Now unregister and free the event */
 	WARN_ON(kprobe_event_delete("gen_kprobe_test"));
 
+<<<<<<< HEAD
 	if (trace_event_file_is_valid(gen_kretprobe_test)) {
 		/* Disable the event or you can't remove it */
 		WARN_ON(trace_array_set_clr_event(gen_kretprobe_test->tr,
@@ -263,6 +336,15 @@ static void __exit kprobe_event_gen_test_exit(void)
 		trace_put_event_file(gen_kretprobe_test);
 	}
 
+=======
+	/* Disable the event or you can't remove it */
+	WARN_ON(trace_array_set_clr_event(gen_kprobe_test->tr,
+					  "kprobes",
+					  "gen_kretprobe_test", false));
+
+	/* Now give the file and instance back */
+	trace_put_event_file(gen_kretprobe_test);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Now unregister and free the event */
 	WARN_ON(kprobe_event_delete("gen_kretprobe_test"));

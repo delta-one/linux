@@ -726,12 +726,19 @@ static void drm_test_buddy_alloc_limit(struct kunit *test)
 	drm_buddy_fini(&mm);
 }
 
+<<<<<<< HEAD
 static int drm_buddy_suite_init(struct kunit_suite *suite)
 {
 	while (!random_seed)
 		random_seed = get_random_u32();
 
 	kunit_info(suite, "Testing DRM buddy manager, with random_seed=0x%x\n", random_seed);
+=======
+static int drm_buddy_init_test(struct kunit *test)
+{
+	while (!random_seed)
+		random_seed = get_random_int();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -748,7 +755,11 @@ static struct kunit_case drm_buddy_tests[] = {
 
 static struct kunit_suite drm_buddy_test_suite = {
 	.name = "drm_buddy",
+<<<<<<< HEAD
 	.suite_init = drm_buddy_suite_init,
+=======
+	.init = drm_buddy_init_test,
+>>>>>>> b7ba80a49124 (Commit)
 	.test_cases = drm_buddy_tests,
 };
 

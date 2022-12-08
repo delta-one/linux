@@ -1551,6 +1551,11 @@ static int bcm_sf2_sw_remove(struct platform_device *pdev)
 	if (priv->type == BCM7278_DEVICE_ID)
 		reset_control_assert(priv->rcdev);
 
+<<<<<<< HEAD
+=======
+	platform_set_drvdata(pdev, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

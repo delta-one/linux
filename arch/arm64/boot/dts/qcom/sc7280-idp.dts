@@ -10,6 +10,10 @@
 #include <dt-bindings/iio/qcom,spmi-adc7-pmr735a.h>
 #include "sc7280-idp.dtsi"
 #include "pmr735a.dtsi"
+<<<<<<< HEAD
+=======
+#include "sc7280-herobrine-lte-sku.dtsi"
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	model = "Qualcomm Technologies, Inc. sc7280 IDP SKU1 platform";
@@ -60,6 +64,14 @@
 	vddio-supply = <&vreg_l19b_1p8>;
 };
 
+<<<<<<< HEAD
+=======
+&ipa {
+	status = "okay";
+	modem-init;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &pmk8350_rtc {
 	status = "okay";
 };

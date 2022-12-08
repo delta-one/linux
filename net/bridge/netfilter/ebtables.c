@@ -1090,7 +1090,11 @@ static int do_replace_finish(struct net *net, struct ebt_replace *repl,
 
 	audit_log_nfcfg(repl->name, AF_BRIDGE, repl->nentries,
 			AUDIT_XT_OP_REPLACE, GFP_KERNEL);
+<<<<<<< HEAD
 	return 0;
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 free_unlock:
 	mutex_unlock(&ebt_mutex);

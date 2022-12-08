@@ -25,7 +25,11 @@
 
 	firmware@203f000 {
 		compatible = "samsung,secure-firmware";
+<<<<<<< HEAD
 		reg = <0x0203f000 0x1000>;
+=======
+		reg = <0x0203F000 0x1000>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	fixed-rate-clocks {

@@ -1354,7 +1354,11 @@ static int mlxsw_sp_fid_8021q_port_vid_map(struct mlxsw_sp_fid *fid,
 					   u16 vid)
 {
 	struct mlxsw_sp *mlxsw_sp = mlxsw_sp_port->mlxsw_sp;
+<<<<<<< HEAD
 	u16 local_port = mlxsw_sp_port->local_port;
+=======
+	u8 local_port = mlxsw_sp_port->local_port;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	/* In case there are no {Port, VID} => FID mappings on the port,
@@ -1391,7 +1395,11 @@ mlxsw_sp_fid_8021q_port_vid_unmap(struct mlxsw_sp_fid *fid,
 				  struct mlxsw_sp_port *mlxsw_sp_port, u16 vid)
 {
 	struct mlxsw_sp *mlxsw_sp = mlxsw_sp_port->mlxsw_sp;
+<<<<<<< HEAD
 	u16 local_port = mlxsw_sp_port->local_port;
+=======
+	u8 local_port = mlxsw_sp_port->local_port;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mlxsw_sp_fid_port_vid_list_del(fid, mlxsw_sp_port->local_port, vid);
 	mlxsw_sp_fid_evid_map(fid, local_port, vid, false);

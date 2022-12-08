@@ -49,6 +49,10 @@ struct atmel_lcdfb_info {
 	struct clk		*lcdc_clk;
 
 	struct backlight_device	*backlight;
+<<<<<<< HEAD
+=======
+	u8			bl_power;
+>>>>>>> b7ba80a49124 (Commit)
 	u8			saved_lcdcon;
 
 	u32			pseudo_palette[16];
@@ -108,7 +112,26 @@ static u32 contrast_ctr = ATMEL_LCDC_PS_DIV8
 static int atmel_bl_update_status(struct backlight_device *bl)
 {
 	struct atmel_lcdfb_info *sinfo = bl_get_data(bl);
+<<<<<<< HEAD
 	int			brightness = backlight_get_brightness(bl);
+=======
+	int			power = sinfo->bl_power;
+	int			brightness = bl->props.brightness;
+
+	/* REVISIT there may be a meaningful difference between
+	 * fb_blank and power ... there seem to be some cases
+	 * this doesn't handle correctly.
+	 */
+	if (bl->props.fb_blank != sinfo->bl_power)
+		power = bl->props.fb_blank;
+	else if (bl->props.power != sinfo->bl_power)
+		power = bl->props.power;
+
+	if (brightness < 0 && power == FB_BLANK_UNBLANK)
+		brightness = lcdc_readl(sinfo, ATMEL_LCDC_CONTRAST_VAL);
+	else if (power != FB_BLANK_UNBLANK)
+		brightness = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	lcdc_writel(sinfo, ATMEL_LCDC_CONTRAST_VAL, brightness);
 	if (contrast_ctr & ATMEL_LCDC_POL_POSITIVE)
@@ -117,6 +140,11 @@ static int atmel_bl_update_status(struct backlight_device *bl)
 	else
 		lcdc_writel(sinfo, ATMEL_LCDC_CONTRAST_CTR, contrast_ctr);
 
+<<<<<<< HEAD
+=======
+	bl->props.fb_blank = bl->props.power = sinfo->bl_power = power;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -137,6 +165,11 @@ static void init_backlight(struct atmel_lcdfb_info *sinfo)
 	struct backlight_properties props;
 	struct backlight_device	*bl;
 
+<<<<<<< HEAD
+=======
+	sinfo->bl_power = FB_BLANK_UNBLANK;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (sinfo->backlight)
 		return;
 

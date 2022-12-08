@@ -431,6 +431,7 @@ static const struct mtk_i2c_compatible mt8168_compat = {
 	.max_dma_support = 33,
 };
 
+<<<<<<< HEAD
 static const struct mtk_i2c_compatible mt7986_compat = {
 	.quirks = &mt7622_i2c_quirks,
 	.regs = mt_i2c_regs_v1,
@@ -444,6 +445,8 @@ static const struct mtk_i2c_compatible mt7986_compat = {
 	.max_dma_support = 32,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct mtk_i2c_compatible mt8173_compat = {
 	.regs = mt_i2c_regs_v1,
 	.pmic_i2c = 0,
@@ -516,7 +519,10 @@ static const struct of_device_id mtk_i2c_of_match[] = {
 	{ .compatible = "mediatek,mt6577-i2c", .data = &mt6577_compat },
 	{ .compatible = "mediatek,mt6589-i2c", .data = &mt6589_compat },
 	{ .compatible = "mediatek,mt7622-i2c", .data = &mt7622_compat },
+<<<<<<< HEAD
 	{ .compatible = "mediatek,mt7986-i2c", .data = &mt7986_compat },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "mediatek,mt8168-i2c", .data = &mt8168_compat },
 	{ .compatible = "mediatek,mt8173-i2c", .data = &mt8173_compat },
 	{ .compatible = "mediatek,mt8183-i2c", .data = &mt8183_compat },
@@ -1366,17 +1372,31 @@ static int mtk_i2c_probe(struct platform_device *pdev)
 {
 	int ret = 0;
 	struct mtk_i2c *i2c;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	int i, irq, speed_clk;
 
 	i2c = devm_kzalloc(&pdev->dev, sizeof(*i2c), GFP_KERNEL);
 	if (!i2c)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	i2c->base = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
 	if (IS_ERR(i2c->base))
 		return PTR_ERR(i2c->base);
 
 	i2c->pdmabase = devm_platform_get_and_ioremap_resource(pdev, 1, NULL);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	i2c->base = devm_ioremap_resource(&pdev->dev, res);
+	if (IS_ERR(i2c->base))
+		return PTR_ERR(i2c->base);
+
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+	i2c->pdmabase = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(i2c->pdmabase))
 		return PTR_ERR(i2c->pdmabase);
 
@@ -1546,7 +1566,11 @@ static struct platform_driver mtk_i2c_driver = {
 	.driver = {
 		.name = I2C_DRV_NAME,
 		.pm = &mtk_i2c_pm,
+<<<<<<< HEAD
 		.of_match_table = mtk_i2c_of_match,
+=======
+		.of_match_table = of_match_ptr(mtk_i2c_of_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

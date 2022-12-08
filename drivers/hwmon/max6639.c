@@ -571,6 +571,10 @@ static int max6639_probe(struct i2c_client *client)
 	return PTR_ERR_OR_ZERO(hwmon_dev);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int max6639_suspend(struct device *dev)
 {
 	struct i2c_client *client = to_i2c_client(dev);
@@ -608,6 +612,10 @@ static int max6639_resume(struct device *dev)
 	return i2c_smbus_write_byte_data(client,
 			MAX6639_REG_GCONFIG, ret & ~MAX6639_GCONFIG_STANDBY);
 }
+<<<<<<< HEAD
+=======
+#endif /* CONFIG_PM_SLEEP */
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id max6639_id[] = {
 	{"max6639", 0},
@@ -616,13 +624,21 @@ static const struct i2c_device_id max6639_id[] = {
 
 MODULE_DEVICE_TABLE(i2c, max6639_id);
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(max6639_pm_ops, max6639_suspend, max6639_resume);
+=======
+static SIMPLE_DEV_PM_OPS(max6639_pm_ops, max6639_suspend, max6639_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct i2c_driver max6639_driver = {
 	.class = I2C_CLASS_HWMON,
 	.driver = {
 		   .name = "max6639",
+<<<<<<< HEAD
 		   .pm = pm_sleep_ptr(&max6639_pm_ops),
+=======
+		   .pm = &max6639_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		   },
 	.probe_new = max6639_probe,
 	.id_table = max6639_id,

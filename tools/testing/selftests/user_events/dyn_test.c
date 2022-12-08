@@ -16,7 +16,11 @@
 
 #include "../kselftest_harness.h"
 
+<<<<<<< HEAD
 const char *dyn_file = "/sys/kernel/tracing/dynamic_events";
+=======
+const char *dyn_file = "/sys/kernel/debug/tracing/dynamic_events";
+>>>>>>> b7ba80a49124 (Commit)
 const char *clear = "!u:__test_event";
 
 static int Append(const char *value)

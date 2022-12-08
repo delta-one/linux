@@ -137,8 +137,12 @@ static void __user *io_ring_buffer_select(struct io_kiocb *req, size_t *len,
 		return NULL;
 
 	head &= bl->mask;
+<<<<<<< HEAD
 	/* mmaped buffers are always contig */
 	if (bl->is_mmap || head < IO_BUFFER_LIST_BUF_PER_PAGE) {
+=======
+	if (head < IO_BUFFER_LIST_BUF_PER_PAGE) {
+>>>>>>> b7ba80a49124 (Commit)
 		buf = &br->bufs[head];
 	} else {
 		int off = head & (IO_BUFFER_LIST_BUF_PER_PAGE - 1);
@@ -180,7 +184,11 @@ void __user *io_buffer_select(struct io_kiocb *req, size_t *len,
 
 	bl = io_buffer_get_list(ctx, req->buf_index);
 	if (likely(bl)) {
+<<<<<<< HEAD
 		if (bl->is_mapped)
+=======
+		if (bl->buf_nr_pages)
+>>>>>>> b7ba80a49124 (Commit)
 			ret = io_ring_buffer_select(req, len, bl, issue_flags);
 		else
 			ret = io_provided_buffer_select(req, len, bl);
@@ -215,6 +223,7 @@ static int __io_remove_buffers(struct io_ring_ctx *ctx,
 	if (!nbufs)
 		return 0;
 
+<<<<<<< HEAD
 	if (bl->is_mapped) {
 		i = bl->buf_ring->tail - bl->head;
 		if (bl->is_mmap) {
@@ -239,6 +248,19 @@ static int __io_remove_buffers(struct io_ring_ctx *ctx,
 		/* make sure it's seen as empty */
 		INIT_LIST_HEAD(&bl->buf_list);
 		bl->is_mapped = 0;
+=======
+	if (bl->buf_nr_pages) {
+		int j;
+
+		i = bl->buf_ring->tail - bl->head;
+		for (j = 0; j < bl->buf_nr_pages; j++)
+			unpin_user_page(bl->buf_pages[j]);
+		kvfree(bl->buf_pages);
+		bl->buf_pages = NULL;
+		bl->buf_nr_pages = 0;
+		/* make sure it's seen as empty */
+		INIT_LIST_HEAD(&bl->buf_list);
+>>>>>>> b7ba80a49124 (Commit)
 		return i;
 	}
 
@@ -317,6 +339,7 @@ int io_remove_buffers(struct io_kiocb *req, unsigned int issue_flags)
 	if (bl) {
 		ret = -EINVAL;
 		/* can't use provide/remove buffers command on mapped buffers */
+<<<<<<< HEAD
 		if (!bl->is_mapped)
 			ret = __io_remove_buffers(ctx, bl, p->nbufs);
 	}
@@ -325,6 +348,19 @@ int io_remove_buffers(struct io_kiocb *req, unsigned int issue_flags)
 		req_set_fail(req);
 	io_req_set_res(req, ret, 0);
 	return IOU_OK;
+=======
+		if (!bl->buf_nr_pages)
+			ret = __io_remove_buffers(ctx, bl, p->nbufs);
+	}
+	if (ret < 0)
+		req_set_fail(req);
+
+	/* complete before unlock, IOPOLL may need the lock */
+	io_req_set_res(req, ret, 0);
+	__io_req_complete(req, issue_flags);
+	io_ring_submit_unlock(ctx, issue_flags);
+	return IOU_ISSUE_SKIP_COMPLETE;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int io_provide_buffers_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
@@ -357,8 +393,11 @@ int io_provide_buffers_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe
 	tmp = READ_ONCE(sqe->off);
 	if (tmp > USHRT_MAX)
 		return -E2BIG;
+<<<<<<< HEAD
 	if (tmp + p->nbufs >= USHRT_MAX)
 		return -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	p->bid = tmp;
 	return 0;
 }
@@ -462,13 +501,18 @@ int io_provide_buffers(struct io_kiocb *req, unsigned int issue_flags)
 		}
 	}
 	/* can't add buffers via this command for a mapped buffer ring */
+<<<<<<< HEAD
 	if (bl->is_mapped) {
+=======
+	if (bl->buf_nr_pages) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EINVAL;
 		goto err;
 	}
 
 	ret = io_add_buffers(ctx, p, bl);
 err:
+<<<<<<< HEAD
 	io_ring_submit_unlock(ctx, issue_flags);
 
 	if (ret < 0)
@@ -533,17 +577,35 @@ static int io_alloc_pbuf_ring(struct io_uring_buf_reg *reg,
 	bl->is_mapped = 1;
 	bl->is_mmap = 1;
 	return 0;
+=======
+	if (ret < 0)
+		req_set_fail(req);
+	/* complete before unlock, IOPOLL may need the lock */
+	io_req_set_res(req, ret, 0);
+	__io_req_complete(req, issue_flags);
+	io_ring_submit_unlock(ctx, issue_flags);
+	return IOU_ISSUE_SKIP_COMPLETE;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int io_register_pbuf_ring(struct io_ring_ctx *ctx, void __user *arg)
 {
+<<<<<<< HEAD
 	struct io_uring_buf_reg reg;
 	struct io_buffer_list *bl, *free_bl = NULL;
 	int ret;
+=======
+	struct io_uring_buf_ring *br;
+	struct io_uring_buf_reg reg;
+	struct io_buffer_list *bl, *free_bl = NULL;
+	struct page **pages;
+	int nr_pages;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (copy_from_user(&reg, arg, sizeof(reg)))
 		return -EFAULT;
 
+<<<<<<< HEAD
 	if (reg.resv[0] || reg.resv[1] || reg.resv[2])
 		return -EINVAL;
 	if (reg.flags & ~IOU_PBUF_RING_MMAP)
@@ -558,6 +620,14 @@ int io_register_pbuf_ring(struct io_ring_ctx *ctx, void __user *arg)
 			return -EINVAL;
 	}
 
+=======
+	if (reg.pad || reg.resv[0] || reg.resv[1] || reg.resv[2])
+		return -EINVAL;
+	if (!reg.ring_addr)
+		return -EFAULT;
+	if (reg.ring_addr & ~PAGE_MASK)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	if (!is_power_of_2(reg.ring_entries))
 		return -EINVAL;
 
@@ -574,7 +644,11 @@ int io_register_pbuf_ring(struct io_ring_ctx *ctx, void __user *arg)
 	bl = io_buffer_get_list(ctx, reg.bgid);
 	if (bl) {
 		/* if mapped buffer ring OR classic exists, don't allow */
+<<<<<<< HEAD
 		if (bl->is_mapped || !list_empty(&bl->buf_list))
+=======
+		if (bl->buf_nr_pages || !list_empty(&bl->buf_list))
+>>>>>>> b7ba80a49124 (Commit)
 			return -EEXIST;
 	} else {
 		free_bl = bl = kzalloc(sizeof(*bl), GFP_KERNEL);
@@ -582,6 +656,7 @@ int io_register_pbuf_ring(struct io_ring_ctx *ctx, void __user *arg)
 			return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	if (!(reg.flags & IOU_PBUF_RING_MMAP))
 		ret = io_pin_pbuf_ring(&reg, bl);
 	else
@@ -597,6 +672,24 @@ int io_register_pbuf_ring(struct io_ring_ctx *ctx, void __user *arg)
 
 	kfree(free_bl);
 	return ret;
+=======
+	pages = io_pin_pages(reg.ring_addr,
+			     struct_size(br, bufs, reg.ring_entries),
+			     &nr_pages);
+	if (IS_ERR(pages)) {
+		kfree(free_bl);
+		return PTR_ERR(pages);
+	}
+
+	br = page_address(pages[0]);
+	bl->buf_pages = pages;
+	bl->buf_nr_pages = nr_pages;
+	bl->nr_entries = reg.ring_entries;
+	bl->buf_ring = br;
+	bl->mask = reg.ring_entries - 1;
+	io_buffer_add_list(ctx, bl, reg.bgid);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int io_unregister_pbuf_ring(struct io_ring_ctx *ctx, void __user *arg)
@@ -606,15 +699,23 @@ int io_unregister_pbuf_ring(struct io_ring_ctx *ctx, void __user *arg)
 
 	if (copy_from_user(&reg, arg, sizeof(reg)))
 		return -EFAULT;
+<<<<<<< HEAD
 	if (reg.resv[0] || reg.resv[1] || reg.resv[2])
 		return -EINVAL;
 	if (reg.flags)
+=======
+	if (reg.pad || reg.resv[0] || reg.resv[1] || reg.resv[2])
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	bl = io_buffer_get_list(ctx, reg.bgid);
 	if (!bl)
 		return -ENOENT;
+<<<<<<< HEAD
 	if (!bl->is_mapped)
+=======
+	if (!bl->buf_nr_pages)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	__io_remove_buffers(ctx, bl, -1U);
@@ -624,6 +725,7 @@ int io_unregister_pbuf_ring(struct io_ring_ctx *ctx, void __user *arg)
 	}
 	return 0;
 }
+<<<<<<< HEAD
 
 void *io_pbuf_get_address(struct io_ring_ctx *ctx, unsigned long bgid)
 {
@@ -635,3 +737,5 @@ void *io_pbuf_get_address(struct io_ring_ctx *ctx, unsigned long bgid)
 
 	return bl->buf_ring;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

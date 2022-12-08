@@ -24,6 +24,7 @@
 			polling-delay = <0>;
 			polling-delay-passive = <0>;
 			thermal-sensors = <&bat_therm>;
+<<<<<<< HEAD
 
 			trips {
 				battery-crit-hi {
@@ -32,6 +33,8 @@
 					type = "critical";
 				};
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -92,20 +95,32 @@
 				clock-mode = /bits/ 8 <2>;
 				#address-cells = <1>;
 				#size-cells = <0>;
+<<<<<<< HEAD
 				led@0 {
+=======
+				chan@0 {
+>>>>>>> b7ba80a49124 (Commit)
 					reg = <0>;
 					led-cur = /bits/ 8 <0x2f>;
 					max-cur = /bits/ 8 <0x5f>;
 					color = <LED_COLOR_ID_BLUE>;
 					linux,default-trigger = "heartbeat";
 				};
+<<<<<<< HEAD
 				led@1 {
+=======
+				chan@1 {
+>>>>>>> b7ba80a49124 (Commit)
 					reg = <1>;
 					led-cur = /bits/ 8 <0x2f>;
 					max-cur = /bits/ 8 <0x5f>;
 					color = <LED_COLOR_ID_BLUE>;
 				};
+<<<<<<< HEAD
 				led@2 {
+=======
+				chan@2 {
+>>>>>>> b7ba80a49124 (Commit)
 					reg = <2>;
 					led-cur = /bits/ 8 <0x2f>;
 					max-cur = /bits/ 8 <0x5f>;
@@ -119,19 +134,31 @@
 				clock-mode = /bits/ 8 <2>;
 				#address-cells = <1>;
 				#size-cells = <0>;
+<<<<<<< HEAD
 				led@0 {
+=======
+				chan@0 {
+>>>>>>> b7ba80a49124 (Commit)
 					reg = <0>;
 					led-cur = /bits/ 8 <0x2f>;
 					max-cur = /bits/ 8 <0x5f>;
 					color = <LED_COLOR_ID_BLUE>;
 				};
+<<<<<<< HEAD
 				led@1 {
+=======
+				chan@1 {
+>>>>>>> b7ba80a49124 (Commit)
 					reg = <1>;
 					led-cur = /bits/ 8 <0x2f>;
 					max-cur = /bits/ 8 <0x5f>;
 					color = <LED_COLOR_ID_BLUE>;
 				};
+<<<<<<< HEAD
 				led@2 {
+=======
+				chan@2 {
+>>>>>>> b7ba80a49124 (Commit)
 					reg = <2>;
 					led-cur = /bits/ 8 <0x2f>;
 					max-cur = /bits/ 8 <0x5f>;

@@ -159,8 +159,12 @@
 	| MEMBARRIER_CMD_PRIVATE_EXPEDITED				\
 	| MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED			\
 	| MEMBARRIER_PRIVATE_EXPEDITED_SYNC_CORE_BITMASK		\
+<<<<<<< HEAD
 	| MEMBARRIER_PRIVATE_EXPEDITED_RSEQ_BITMASK			\
 	| MEMBARRIER_CMD_GET_REGISTRATIONS)
+=======
+	| MEMBARRIER_PRIVATE_EXPEDITED_RSEQ_BITMASK)
+>>>>>>> b7ba80a49124 (Commit)
 
 static void ipi_mb(void *info)
 {
@@ -541,6 +545,7 @@ static int membarrier_register_private_expedited(int flags)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int membarrier_get_registrations(void)
 {
 	struct task_struct *p = current;
@@ -575,6 +580,8 @@ static int membarrier_get_registrations(void)
 	return registrations_mask;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * sys_membarrier - issue memory barriers on a set of threads
  * @cmd:    Takes command values defined in enum membarrier_cmd.
@@ -658,8 +665,11 @@ SYSCALL_DEFINE3(membarrier, int, cmd, unsigned int, flags, int, cpu_id)
 		return membarrier_private_expedited(MEMBARRIER_FLAG_RSEQ, cpu_id);
 	case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ:
 		return membarrier_register_private_expedited(MEMBARRIER_FLAG_RSEQ);
+<<<<<<< HEAD
 	case MEMBARRIER_CMD_GET_REGISTRATIONS:
 		return membarrier_get_registrations();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -EINVAL;
 	}

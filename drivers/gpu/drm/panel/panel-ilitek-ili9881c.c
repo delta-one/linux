@@ -7,6 +7,10 @@
 #include <linux/device.h>
 #include <linux/err.h>
 #include <linux/errno.h>
+<<<<<<< HEAD
+=======
+#include <linux/fb.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/of_device.h>

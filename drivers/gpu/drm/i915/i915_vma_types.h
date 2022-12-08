@@ -197,15 +197,24 @@ struct i915_vma {
 	struct i915_fence_reg *fence;
 
 	u64 size;
+<<<<<<< HEAD
+=======
+	u64 display_alignment;
+>>>>>>> b7ba80a49124 (Commit)
 	struct i915_page_sizes page_sizes;
 
 	/* mmap-offset associated with fencing for this vma */
 	struct i915_mmap_offset	*mmo;
 
+<<<<<<< HEAD
 	u32 guard; /* padding allocated around vma->pages within the node */
 	u32 fence_size;
 	u32 fence_alignment;
 	u32 display_alignment;
+=======
+	u32 fence_size;
+	u32 fence_alignment;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/**
 	 * Count of the number of times this vma has been opened by different

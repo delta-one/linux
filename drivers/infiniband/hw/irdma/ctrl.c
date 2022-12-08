@@ -1867,6 +1867,11 @@ void irdma_sc_vsi_init(struct irdma_sc_vsi  *vsi,
 	vsi->mtu = info->params->mtu;
 	vsi->exception_lan_q = info->exception_lan_q;
 	vsi->vsi_idx = info->pf_data_vsi_num;
+<<<<<<< HEAD
+=======
+	if (vsi->dev->hw_attrs.uk_attrs.hw_rev == IRDMA_GEN_1)
+		vsi->fcn_id = info->dev->hmc_fn_id;
+>>>>>>> b7ba80a49124 (Commit)
 
 	irdma_set_qos_info(vsi, info->params);
 	for (i = 0; i < IRDMA_MAX_USER_PRIORITY; i++) {
@@ -1885,6 +1890,7 @@ void irdma_sc_vsi_init(struct irdma_sc_vsi  *vsi,
 }
 
 /**
+<<<<<<< HEAD
  * irdma_get_stats_idx - Return stats index
  * @vsi: pointer to the vsi
  */
@@ -1895,11 +1901,25 @@ static u8 irdma_get_stats_idx(struct irdma_sc_vsi *vsi)
 	u8 i;
 
 	if (dev->hw_attrs.uk_attrs.hw_rev >= IRDMA_GEN_2) {
+=======
+ * irdma_get_fcn_id - Return the function id
+ * @vsi: pointer to the vsi
+ */
+static u8 irdma_get_fcn_id(struct irdma_sc_vsi *vsi)
+{
+	struct irdma_stats_inst_info stats_info = {};
+	struct irdma_sc_dev *dev = vsi->dev;
+	u8 fcn_id = IRDMA_INVALID_FCN_ID;
+	u8 start_idx, max_stats, i;
+
+	if (dev->hw_attrs.uk_attrs.hw_rev != IRDMA_GEN_1) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!irdma_cqp_stats_inst_cmd(vsi, IRDMA_OP_STATS_ALLOCATE,
 					      &stats_info))
 			return stats_info.stats_idx;
 	}
 
+<<<<<<< HEAD
 	for (i = 0; i < IRDMA_MAX_STATS_COUNT_GEN_1; i++) {
 		if (!dev->stats_idx_array[i]) {
 			dev->stats_idx_array[i] = true;
@@ -1935,6 +1955,18 @@ static void irdma_hw_stats_init_gen1(struct irdma_sc_vsi *vsi)
 		else
 			stat_reg[i] = regs[i] + stats_reg_set * sizeof(u64);
 	}
+=======
+	start_idx = 1;
+	max_stats = 16;
+	for (i = start_idx; i < max_stats; i++)
+		if (!dev->fcn_id_array[i]) {
+			fcn_id = i;
+			dev->fcn_id_array[i] = true;
+			break;
+		}
+
+	return fcn_id;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1945,6 +1977,10 @@ static void irdma_hw_stats_init_gen1(struct irdma_sc_vsi *vsi)
 int irdma_vsi_stats_init(struct irdma_sc_vsi *vsi,
 			 struct irdma_vsi_stats_info *info)
 {
+<<<<<<< HEAD
+=======
+	u8 fcn_id = info->fcn_id;
+>>>>>>> b7ba80a49124 (Commit)
 	struct irdma_dma_mem *stats_buff_mem;
 
 	vsi->pestat = info->pestat;
@@ -1965,6 +2001,7 @@ int irdma_vsi_stats_init(struct irdma_sc_vsi *vsi,
 			 IRDMA_GATHER_STATS_BUF_SIZE);
 
 	irdma_hw_stats_start_timer(vsi);
+<<<<<<< HEAD
 
 	/* when stat allocation is not required default to fcn_id. */
 	vsi->stats_idx = info->fcn_id;
@@ -1983,6 +2020,28 @@ int irdma_vsi_stats_init(struct irdma_sc_vsi *vsi,
 		irdma_hw_stats_init_gen1(vsi);
 
 	return 0;
+=======
+	if (info->alloc_fcn_id)
+		fcn_id = irdma_get_fcn_id(vsi);
+	if (fcn_id == IRDMA_INVALID_FCN_ID)
+		goto stats_error;
+
+	vsi->stats_fcn_id_alloc = info->alloc_fcn_id;
+	vsi->fcn_id = fcn_id;
+	if (info->alloc_fcn_id) {
+		vsi->pestat->gather_info.use_stats_inst = true;
+		vsi->pestat->gather_info.stats_inst_index = fcn_id;
+	}
+
+	return 0;
+
+stats_error:
+	dma_free_coherent(vsi->pestat->hw->device, stats_buff_mem->size,
+			  stats_buff_mem->va, stats_buff_mem->pa);
+	stats_buff_mem->va = NULL;
+
+	return -EIO;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1992,19 +2051,34 @@ int irdma_vsi_stats_init(struct irdma_sc_vsi *vsi,
 void irdma_vsi_stats_free(struct irdma_sc_vsi *vsi)
 {
 	struct irdma_stats_inst_info stats_info = {};
+<<<<<<< HEAD
 	struct irdma_sc_dev *dev = vsi->dev;
 	u8 stats_idx = vsi->stats_idx;
 
 	if (dev->hw_attrs.uk_attrs.hw_rev >= IRDMA_GEN_2) {
 		if (vsi->stats_inst_alloc) {
 			stats_info.stats_idx = vsi->stats_idx;
+=======
+	u8 fcn_id = vsi->fcn_id;
+	struct irdma_sc_dev *dev = vsi->dev;
+
+	if (dev->hw_attrs.uk_attrs.hw_rev != IRDMA_GEN_1) {
+		if (vsi->stats_fcn_id_alloc) {
+			stats_info.stats_idx = vsi->fcn_id;
+>>>>>>> b7ba80a49124 (Commit)
 			irdma_cqp_stats_inst_cmd(vsi, IRDMA_OP_STATS_FREE,
 						 &stats_info);
 		}
 	} else {
+<<<<<<< HEAD
 		if (vsi->stats_inst_alloc &&
 		    stats_idx < vsi->dev->hw_attrs.max_stat_inst)
 			vsi->dev->stats_idx_array[stats_idx] = false;
+=======
+		if (vsi->stats_fcn_id_alloc &&
+		    fcn_id < vsi->dev->hw_attrs.max_stat_inst)
+			vsi->dev->fcn_id_array[fcn_id] = false;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (!vsi->pestat)
@@ -5316,8 +5390,12 @@ void sc_vsi_update_stats(struct irdma_sc_vsi *vsi)
 	gather_stats = vsi->pestat->gather_info.gather_stats_va;
 	last_gather_stats = vsi->pestat->gather_info.last_gather_stats_va;
 	irdma_update_stats(&vsi->pestat->hw_stats, gather_stats,
+<<<<<<< HEAD
 			   last_gather_stats, vsi->dev->hw_stats_map,
 			   vsi->dev->hw_attrs.max_stat_idx);
+=======
+			   last_gather_stats);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -5425,6 +5503,7 @@ int irdma_sc_dev_init(enum irdma_vers ver, struct irdma_sc_dev *dev,
 }
 
 /**
+<<<<<<< HEAD
  * irdma_stat_val - Extract HW counter value from statistics buffer
  * @stats_val: pointer to statistics buffer
  * @byteoff: byte offset of counter value in the buffer (8B-aligned)
@@ -5455,10 +5534,13 @@ static inline u64 irdma_stat_delta(u64 new_val, u64 old_val, u64 max_val)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * irdma_update_stats - Update statistics
  * @hw_stats: hw_stats instance to update
  * @gather_stats: updated stat counters
  * @last_gather_stats: last stat counters
+<<<<<<< HEAD
  * @map: HW stat map (hw_stats => gather_stats)
  * @max_stat_idx: number of HW stats
  */
@@ -5481,5 +5563,183 @@ void irdma_update_stats(struct irdma_dev_hw_stats *hw_stats,
 			irdma_stat_delta(new_val, last_val, map[i].bitmask);
 	}
 
+=======
+ */
+void irdma_update_stats(struct irdma_dev_hw_stats *hw_stats,
+			struct irdma_gather_stats *gather_stats,
+			struct irdma_gather_stats *last_gather_stats)
+{
+	u64 *stats_val = hw_stats->stats_val_32;
+
+	stats_val[IRDMA_HW_STAT_INDEX_RXVLANERR] +=
+		IRDMA_STATS_DELTA(gather_stats->rxvlanerr,
+				  last_gather_stats->rxvlanerr,
+				  IRDMA_MAX_STATS_32);
+	stats_val[IRDMA_HW_STAT_INDEX_IP4RXDISCARD] +=
+		IRDMA_STATS_DELTA(gather_stats->ip4rxdiscard,
+				  last_gather_stats->ip4rxdiscard,
+				  IRDMA_MAX_STATS_32);
+	stats_val[IRDMA_HW_STAT_INDEX_IP4RXTRUNC] +=
+		IRDMA_STATS_DELTA(gather_stats->ip4rxtrunc,
+				  last_gather_stats->ip4rxtrunc,
+				  IRDMA_MAX_STATS_32);
+	stats_val[IRDMA_HW_STAT_INDEX_IP4TXNOROUTE] +=
+		IRDMA_STATS_DELTA(gather_stats->ip4txnoroute,
+				  last_gather_stats->ip4txnoroute,
+				  IRDMA_MAX_STATS_32);
+	stats_val[IRDMA_HW_STAT_INDEX_IP6RXDISCARD] +=
+		IRDMA_STATS_DELTA(gather_stats->ip6rxdiscard,
+				  last_gather_stats->ip6rxdiscard,
+				  IRDMA_MAX_STATS_32);
+	stats_val[IRDMA_HW_STAT_INDEX_IP6RXTRUNC] +=
+		IRDMA_STATS_DELTA(gather_stats->ip6rxtrunc,
+				  last_gather_stats->ip6rxtrunc,
+				  IRDMA_MAX_STATS_32);
+	stats_val[IRDMA_HW_STAT_INDEX_IP6TXNOROUTE] +=
+		IRDMA_STATS_DELTA(gather_stats->ip6txnoroute,
+				  last_gather_stats->ip6txnoroute,
+				  IRDMA_MAX_STATS_32);
+	stats_val[IRDMA_HW_STAT_INDEX_TCPRTXSEG] +=
+		IRDMA_STATS_DELTA(gather_stats->tcprtxseg,
+				  last_gather_stats->tcprtxseg,
+				  IRDMA_MAX_STATS_32);
+	stats_val[IRDMA_HW_STAT_INDEX_TCPRXOPTERR] +=
+		IRDMA_STATS_DELTA(gather_stats->tcprxopterr,
+				  last_gather_stats->tcprxopterr,
+				  IRDMA_MAX_STATS_32);
+	stats_val[IRDMA_HW_STAT_INDEX_TCPRXPROTOERR] +=
+		IRDMA_STATS_DELTA(gather_stats->tcprxprotoerr,
+				  last_gather_stats->tcprxprotoerr,
+				  IRDMA_MAX_STATS_32);
+	stats_val[IRDMA_HW_STAT_INDEX_RXRPCNPHANDLED] +=
+		IRDMA_STATS_DELTA(gather_stats->rxrpcnphandled,
+				  last_gather_stats->rxrpcnphandled,
+				  IRDMA_MAX_STATS_32);
+	stats_val[IRDMA_HW_STAT_INDEX_RXRPCNPIGNORED] +=
+		IRDMA_STATS_DELTA(gather_stats->rxrpcnpignored,
+				  last_gather_stats->rxrpcnpignored,
+				  IRDMA_MAX_STATS_32);
+	stats_val[IRDMA_HW_STAT_INDEX_TXNPCNPSENT] +=
+		IRDMA_STATS_DELTA(gather_stats->txnpcnpsent,
+				  last_gather_stats->txnpcnpsent,
+				  IRDMA_MAX_STATS_32);
+	stats_val = hw_stats->stats_val_64;
+	stats_val[IRDMA_HW_STAT_INDEX_IP4RXOCTS] +=
+		IRDMA_STATS_DELTA(gather_stats->ip4rxocts,
+				  last_gather_stats->ip4rxocts,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_IP4RXPKTS] +=
+		IRDMA_STATS_DELTA(gather_stats->ip4rxpkts,
+				  last_gather_stats->ip4rxpkts,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_IP4RXFRAGS] +=
+		IRDMA_STATS_DELTA(gather_stats->ip4txfrag,
+				  last_gather_stats->ip4txfrag,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_IP4RXMCPKTS] +=
+		IRDMA_STATS_DELTA(gather_stats->ip4rxmcpkts,
+				  last_gather_stats->ip4rxmcpkts,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_IP4TXOCTS] +=
+		IRDMA_STATS_DELTA(gather_stats->ip4txocts,
+				  last_gather_stats->ip4txocts,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_IP4TXPKTS] +=
+		IRDMA_STATS_DELTA(gather_stats->ip4txpkts,
+				  last_gather_stats->ip4txpkts,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_IP4TXFRAGS] +=
+		IRDMA_STATS_DELTA(gather_stats->ip4txfrag,
+				  last_gather_stats->ip4txfrag,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_IP4TXMCPKTS] +=
+		IRDMA_STATS_DELTA(gather_stats->ip4txmcpkts,
+				  last_gather_stats->ip4txmcpkts,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_IP6RXOCTS] +=
+		IRDMA_STATS_DELTA(gather_stats->ip6rxocts,
+				  last_gather_stats->ip6rxocts,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_IP6RXPKTS] +=
+		IRDMA_STATS_DELTA(gather_stats->ip6rxpkts,
+				  last_gather_stats->ip6rxpkts,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_IP6RXFRAGS] +=
+		IRDMA_STATS_DELTA(gather_stats->ip6txfrags,
+				  last_gather_stats->ip6txfrags,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_IP6RXMCPKTS] +=
+		IRDMA_STATS_DELTA(gather_stats->ip6rxmcpkts,
+				  last_gather_stats->ip6rxmcpkts,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_IP6TXOCTS] +=
+		IRDMA_STATS_DELTA(gather_stats->ip6txocts,
+				  last_gather_stats->ip6txocts,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_IP6TXPKTS] +=
+		IRDMA_STATS_DELTA(gather_stats->ip6txpkts,
+				  last_gather_stats->ip6txpkts,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_IP6TXFRAGS] +=
+		IRDMA_STATS_DELTA(gather_stats->ip6txfrags,
+				  last_gather_stats->ip6txfrags,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_IP6TXMCPKTS] +=
+		IRDMA_STATS_DELTA(gather_stats->ip6txmcpkts,
+				  last_gather_stats->ip6txmcpkts,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_TCPRXSEGS] +=
+		IRDMA_STATS_DELTA(gather_stats->tcprxsegs,
+				  last_gather_stats->tcprxsegs,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_TCPTXSEG] +=
+		IRDMA_STATS_DELTA(gather_stats->tcptxsegs,
+				  last_gather_stats->tcptxsegs,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_RDMARXRDS] +=
+		IRDMA_STATS_DELTA(gather_stats->rdmarxrds,
+				  last_gather_stats->rdmarxrds,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_RDMARXSNDS] +=
+		IRDMA_STATS_DELTA(gather_stats->rdmarxsnds,
+				  last_gather_stats->rdmarxsnds,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_RDMARXWRS] +=
+		IRDMA_STATS_DELTA(gather_stats->rdmarxwrs,
+				  last_gather_stats->rdmarxwrs,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_RDMATXRDS] +=
+		IRDMA_STATS_DELTA(gather_stats->rdmatxrds,
+				  last_gather_stats->rdmatxrds,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_RDMATXSNDS] +=
+		IRDMA_STATS_DELTA(gather_stats->rdmatxsnds,
+				  last_gather_stats->rdmatxsnds,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_RDMATXWRS] +=
+		IRDMA_STATS_DELTA(gather_stats->rdmatxwrs,
+				  last_gather_stats->rdmatxwrs,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_RDMAVBND] +=
+		IRDMA_STATS_DELTA(gather_stats->rdmavbn,
+				  last_gather_stats->rdmavbn,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_RDMAVINV] +=
+		IRDMA_STATS_DELTA(gather_stats->rdmavinv,
+				  last_gather_stats->rdmavinv,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_UDPRXPKTS] +=
+		IRDMA_STATS_DELTA(gather_stats->udprxpkts,
+				  last_gather_stats->udprxpkts,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_UDPTXPKTS] +=
+		IRDMA_STATS_DELTA(gather_stats->udptxpkts,
+				  last_gather_stats->udptxpkts,
+				  IRDMA_MAX_STATS_48);
+	stats_val[IRDMA_HW_STAT_INDEX_RXNPECNMARKEDPKTS] +=
+		IRDMA_STATS_DELTA(gather_stats->rxnpecnmrkpkts,
+				  last_gather_stats->rxnpecnmrkpkts,
+				  IRDMA_MAX_STATS_48);
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(last_gather_stats, gather_stats, sizeof(*last_gather_stats));
 }

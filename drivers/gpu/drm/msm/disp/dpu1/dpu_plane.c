@@ -69,11 +69,17 @@ static const uint32_t qcom_compressed_supported_formats[] = {
 	DRM_FORMAT_ARGB8888,
 	DRM_FORMAT_XBGR8888,
 	DRM_FORMAT_XRGB8888,
+<<<<<<< HEAD
 	DRM_FORMAT_XRGB2101010,
 	DRM_FORMAT_BGR565,
 
 	DRM_FORMAT_NV12,
 	DRM_FORMAT_P010,
+=======
+	DRM_FORMAT_BGR565,
+
+	DRM_FORMAT_NV12,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -1126,7 +1132,11 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane)
 	struct dpu_plane_state *pstate = to_dpu_plane_state(state);
 	struct drm_crtc *crtc = state->crtc;
 	struct drm_framebuffer *fb = state->fb;
+<<<<<<< HEAD
 	bool is_rt_pipe;
+=======
+	bool is_rt_pipe, update_qos_remap;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct dpu_format *fmt =
 		to_dpu_format(msm_framebuffer_format(fb));
 	struct dpu_hw_pipe_cfg pipe_cfg;
@@ -1138,9 +1148,12 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane)
 	pstate->pending = true;
 
 	is_rt_pipe = (dpu_crtc_get_client_type(crtc) != NRT_CLIENT);
+<<<<<<< HEAD
 	pstate->needs_qos_remap |= (is_rt_pipe != pdpu->is_rt_pipe);
 	pdpu->is_rt_pipe = is_rt_pipe;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	_dpu_plane_set_qos_ctrl(plane, false, DPU_PLANE_QOS_PANIC_CTRL);
 
 	DPU_DEBUG_PLANE(pdpu, "FB[%u] " DRM_RECT_FP_FMT "->crtc%u " DRM_RECT_FMT
@@ -1222,8 +1235,19 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane)
 		_dpu_plane_set_ot_limit(plane, crtc, &pipe_cfg);
 	}
 
+<<<<<<< HEAD
 	if (pstate->needs_qos_remap) {
 		pstate->needs_qos_remap = false;
+=======
+	update_qos_remap = (is_rt_pipe != pdpu->is_rt_pipe) ||
+			pstate->needs_qos_remap;
+
+	if (update_qos_remap) {
+		if (is_rt_pipe != pdpu->is_rt_pipe)
+			pdpu->is_rt_pipe = is_rt_pipe;
+		else if (pstate->needs_qos_remap)
+			pstate->needs_qos_remap = false;
+>>>>>>> b7ba80a49124 (Commit)
 		_dpu_plane_set_qos_remap(plane);
 	}
 

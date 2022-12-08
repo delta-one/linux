@@ -499,6 +499,10 @@ static void kvmppc_set_msr_pr(struct kvm_vcpu *vcpu, u64 msr)
 	if (msr & MSR_POW) {
 		if (!vcpu->arch.pending_exceptions) {
 			kvm_vcpu_halt(vcpu);
+<<<<<<< HEAD
+=======
+			kvm_clear_request(KVM_REQ_UNHALT, vcpu);
+>>>>>>> b7ba80a49124 (Commit)
 			vcpu->stat.generic.halt_wakeup++;
 
 			/* Unset POW bit after we woke up */
@@ -2042,8 +2046,13 @@ static int kvmppc_core_check_processor_compat_pr(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int kvm_arch_vm_ioctl_pr(struct file *filp,
 				unsigned int ioctl, unsigned long arg)
+=======
+static long kvm_arch_vm_ioctl_pr(struct file *filp,
+				 unsigned int ioctl, unsigned long arg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return -ENOTTY;
 }

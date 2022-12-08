@@ -438,6 +438,7 @@ int of_irq_get(struct device_node *dev, int index)
 		return rc;
 
 	domain = irq_find_host(oirq.np);
+<<<<<<< HEAD
 	if (!domain) {
 		rc = -EPROBE_DEFER;
 		goto out;
@@ -448,6 +449,12 @@ out:
 	of_node_put(oirq.np);
 
 	return rc;
+=======
+	if (!domain)
+		return -EPROBE_DEFER;
+
+	return irq_create_of_mapping(&oirq);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(of_irq_get);
 
@@ -736,7 +743,10 @@ struct irq_domain *of_msi_get_domain(struct device *dev,
 
 	return NULL;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(of_msi_get_domain);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * of_msi_configure - Set the msi_domain field of a device

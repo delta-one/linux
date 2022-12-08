@@ -315,8 +315,21 @@ static int acp3x_dai_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct platform_driver acp3x_dai_driver = {
 	.probe = acp3x_dai_probe,
+=======
+static int acp3x_dai_remove(struct platform_device *pdev)
+{
+	/* As we use devm_ memory alloc there is nothing TBD here */
+
+	return 0;
+}
+
+static struct platform_driver acp3x_dai_driver = {
+	.probe = acp3x_dai_probe,
+	.remove = acp3x_dai_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "acp3x_i2s_playcap",
 	},

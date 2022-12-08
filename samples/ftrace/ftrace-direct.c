@@ -17,7 +17,10 @@ extern void my_tramp(void *);
 #ifdef CONFIG_X86_64
 
 #include <asm/ibt.h>
+<<<<<<< HEAD
 #include <asm/nospec-branch.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 asm (
 "	.pushsection    .text, \"ax\", @progbits\n"
@@ -27,7 +30,10 @@ asm (
 	ASM_ENDBR
 "	pushq %rbp\n"
 "	movq %rsp, %rbp\n"
+<<<<<<< HEAD
 	CALL_DEPTH_ACCOUNT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 "	pushq %rdi\n"
 "	call my_direct_func\n"
 "	popq %rdi\n"
@@ -63,6 +69,7 @@ asm (
 
 #endif /* CONFIG_S390 */
 
+<<<<<<< HEAD
 static struct ftrace_ops direct;
 
 static int __init ftrace_direct_init(void)
@@ -70,11 +77,22 @@ static int __init ftrace_direct_init(void)
 	ftrace_set_filter_ip(&direct, (unsigned long) wake_up_process, 0, 0);
 
 	return register_ftrace_direct(&direct, (unsigned long) my_tramp);
+=======
+static int __init ftrace_direct_init(void)
+{
+	return register_ftrace_direct((unsigned long)wake_up_process,
+				     (unsigned long)my_tramp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __exit ftrace_direct_exit(void)
 {
+<<<<<<< HEAD
 	unregister_ftrace_direct(&direct, (unsigned long)my_tramp, true);
+=======
+	unregister_ftrace_direct((unsigned long)wake_up_process,
+				 (unsigned long)my_tramp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 module_init(ftrace_direct_init);

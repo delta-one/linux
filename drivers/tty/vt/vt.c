@@ -316,10 +316,25 @@ void schedule_console_callback(void)
  * Code to manage unicode-based screen buffers
  */
 
+<<<<<<< HEAD
+=======
+#ifdef NO_VC_UNI_SCREEN
+/* this disables and optimizes related code away at compile time */
+#define get_vc_uniscr(vc) NULL
+#else
+#define get_vc_uniscr(vc) vc->vc_uni_screen
+#endif
+
+#define VC_UNI_SCREEN_DEBUG 0
+
+typedef uint32_t char32_t;
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Our screen buffer is preceded by an array of line pointers so that
  * scrolling only implies some pointer shuffling.
  */
+<<<<<<< HEAD
 
 static u32 **vc_uniscr_alloc(unsigned int cols, unsigned int rows)
 {
@@ -359,12 +374,65 @@ static void vc_uniscr_putc(struct vc_data *vc, u32 uc)
 {
 	if (vc->vc_uni_lines)
 		vc->vc_uni_lines[vc->state.y][vc->state.x] = uc;
+=======
+struct uni_screen {
+	char32_t *lines[0];
+};
+
+static struct uni_screen *vc_uniscr_alloc(unsigned int cols, unsigned int rows)
+{
+	struct uni_screen *uniscr;
+	void *p;
+	unsigned int memsize, i;
+
+	/* allocate everything in one go */
+	memsize = cols * rows * sizeof(char32_t);
+	memsize += rows * sizeof(char32_t *);
+	p = vzalloc(memsize);
+	if (!p)
+		return NULL;
+
+	/* initial line pointers */
+	uniscr = p;
+	p = uniscr->lines + rows;
+	for (i = 0; i < rows; i++) {
+		uniscr->lines[i] = p;
+		p += cols * sizeof(char32_t);
+	}
+	return uniscr;
+}
+
+static void vc_uniscr_free(struct uni_screen *uniscr)
+{
+	vfree(uniscr);
+}
+
+static void vc_uniscr_set(struct vc_data *vc, struct uni_screen *new_uniscr)
+{
+	vc_uniscr_free(vc->vc_uni_screen);
+	vc->vc_uni_screen = new_uniscr;
+}
+
+static void vc_uniscr_putc(struct vc_data *vc, char32_t uc)
+{
+	struct uni_screen *uniscr = get_vc_uniscr(vc);
+
+	if (uniscr)
+		uniscr->lines[vc->state.y][vc->state.x] = uc;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void vc_uniscr_insert(struct vc_data *vc, unsigned int nr)
 {
+<<<<<<< HEAD
 	if (vc->vc_uni_lines) {
 		u32 *ln = vc->vc_uni_lines[vc->state.y];
+=======
+	struct uni_screen *uniscr = get_vc_uniscr(vc);
+
+	if (uniscr) {
+		char32_t *ln = uniscr->lines[vc->state.y];
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned int x = vc->state.x, cols = vc->vc_cols;
 
 		memmove(&ln[x + nr], &ln[x], (cols - x - nr) * sizeof(*ln));
@@ -374,8 +442,15 @@ static void vc_uniscr_insert(struct vc_data *vc, unsigned int nr)
 
 static void vc_uniscr_delete(struct vc_data *vc, unsigned int nr)
 {
+<<<<<<< HEAD
 	if (vc->vc_uni_lines) {
 		u32 *ln = vc->vc_uni_lines[vc->state.y];
+=======
+	struct uni_screen *uniscr = get_vc_uniscr(vc);
+
+	if (uniscr) {
+		char32_t *ln = uniscr->lines[vc->state.y];
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned int x = vc->state.x, cols = vc->vc_cols;
 
 		memcpy(&ln[x], &ln[x + nr], (cols - x - nr) * sizeof(*ln));
@@ -386,13 +461,24 @@ static void vc_uniscr_delete(struct vc_data *vc, unsigned int nr)
 static void vc_uniscr_clear_line(struct vc_data *vc, unsigned int x,
 				 unsigned int nr)
 {
+<<<<<<< HEAD
 	if (vc->vc_uni_lines)
 		memset32(&vc->vc_uni_lines[vc->state.y][x], ' ', nr);
+=======
+	struct uni_screen *uniscr = get_vc_uniscr(vc);
+
+	if (uniscr) {
+		char32_t *ln = uniscr->lines[vc->state.y];
+
+		memset32(&ln[x], ' ', nr);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void vc_uniscr_clear_lines(struct vc_data *vc, unsigned int y,
 				  unsigned int nr)
 {
+<<<<<<< HEAD
 	if (vc->vc_uni_lines)
 		while (nr--)
 			memset32(vc->vc_uni_lines[y++], ' ', vc->vc_cols);
@@ -443,12 +529,62 @@ static void vc_uniscr_copy_area(u32 **dst_lines,
 				unsigned int dst_cols,
 				unsigned int dst_rows,
 				u32 **src_lines,
+=======
+	struct uni_screen *uniscr = get_vc_uniscr(vc);
+
+	if (uniscr) {
+		unsigned int cols = vc->vc_cols;
+
+		while (nr--)
+			memset32(uniscr->lines[y++], ' ', cols);
+	}
+}
+
+static void vc_uniscr_scroll(struct vc_data *vc, unsigned int t, unsigned int b,
+			     enum con_scroll dir, unsigned int nr)
+{
+	struct uni_screen *uniscr = get_vc_uniscr(vc);
+
+	if (uniscr) {
+		unsigned int i, j, k, sz, d, clear;
+
+		sz = b - t;
+		clear = b - nr;
+		d = nr;
+		if (dir == SM_DOWN) {
+			clear = t;
+			d = sz - nr;
+		}
+		for (i = 0; i < gcd(d, sz); i++) {
+			char32_t *tmp = uniscr->lines[t + i];
+			j = i;
+			while (1) {
+				k = j + d;
+				if (k >= sz)
+					k -= sz;
+				if (k == i)
+					break;
+				uniscr->lines[t + j] = uniscr->lines[t + k];
+				j = k;
+			}
+			uniscr->lines[t + j] = tmp;
+		}
+		vc_uniscr_clear_lines(vc, clear, nr);
+	}
+}
+
+static void vc_uniscr_copy_area(struct uni_screen *dst,
+				unsigned int dst_cols,
+				unsigned int dst_rows,
+				struct uni_screen *src,
+>>>>>>> b7ba80a49124 (Commit)
 				unsigned int src_cols,
 				unsigned int src_top_row,
 				unsigned int src_bot_row)
 {
 	unsigned int dst_row = 0;
 
+<<<<<<< HEAD
 	if (!dst_lines)
 		return;
 
@@ -457,13 +593,27 @@ static void vc_uniscr_copy_area(u32 **dst_lines,
 		u32 *dst_line = dst_lines[dst_row];
 
 		memcpy(dst_line, src_line, src_cols * sizeof(*src_line));
+=======
+	if (!dst)
+		return;
+
+	while (src_top_row < src_bot_row) {
+		char32_t *src_line = src->lines[src_top_row];
+		char32_t *dst_line = dst->lines[dst_row];
+
+		memcpy(dst_line, src_line, src_cols * sizeof(char32_t));
+>>>>>>> b7ba80a49124 (Commit)
 		if (dst_cols - src_cols)
 			memset32(dst_line + src_cols, ' ', dst_cols - src_cols);
 		src_top_row++;
 		dst_row++;
 	}
 	while (dst_row < dst_rows) {
+<<<<<<< HEAD
 		u32 *dst_line = dst_lines[dst_row];
+=======
+		char32_t *dst_line = dst->lines[dst_row];
+>>>>>>> b7ba80a49124 (Commit)
 
 		memset32(dst_line, ' ', dst_cols);
 		dst_row++;
@@ -478,20 +628,38 @@ static void vc_uniscr_copy_area(u32 **dst_lines,
  */
 int vc_uniscr_check(struct vc_data *vc)
 {
+<<<<<<< HEAD
 	u32 **uni_lines;
 	unsigned short *p;
 	int x, y, mask;
 
+=======
+	struct uni_screen *uniscr;
+	unsigned short *p;
+	int x, y, mask;
+
+	if (__is_defined(NO_VC_UNI_SCREEN))
+		return -EOPNOTSUPP;
+
+>>>>>>> b7ba80a49124 (Commit)
 	WARN_CONSOLE_UNLOCKED();
 
 	if (!vc->vc_utf)
 		return -ENODATA;
 
+<<<<<<< HEAD
 	if (vc->vc_uni_lines)
 		return 0;
 
 	uni_lines = vc_uniscr_alloc(vc->vc_cols, vc->vc_rows);
 	if (!uni_lines)
+=======
+	if (vc->vc_uni_screen)
+		return 0;
+
+	uniscr = vc_uniscr_alloc(vc->vc_cols, vc->vc_rows);
+	if (!uniscr)
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOMEM;
 
 	/*
@@ -503,15 +671,23 @@ int vc_uniscr_check(struct vc_data *vc)
 	p = (unsigned short *)vc->vc_origin;
 	mask = vc->vc_hi_font_mask | 0xff;
 	for (y = 0; y < vc->vc_rows; y++) {
+<<<<<<< HEAD
 		u32 *line = uni_lines[y];
+=======
+		char32_t *line = uniscr->lines[y];
+>>>>>>> b7ba80a49124 (Commit)
 		for (x = 0; x < vc->vc_cols; x++) {
 			u16 glyph = scr_readw(p++) & mask;
 			line[x] = inverse_translate(vc, glyph, true);
 		}
 	}
 
+<<<<<<< HEAD
 	vc->vc_uni_lines = uni_lines;
 
+=======
+	vc->vc_uni_screen = uniscr;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -523,12 +699,20 @@ int vc_uniscr_check(struct vc_data *vc)
 void vc_uniscr_copy_line(const struct vc_data *vc, void *dest, bool viewed,
 			 unsigned int row, unsigned int col, unsigned int nr)
 {
+<<<<<<< HEAD
 	u32 **uni_lines = vc->vc_uni_lines;
 	int offset = row * vc->vc_size_row + col * 2;
 	unsigned long pos;
 
 	if (WARN_ON_ONCE(!uni_lines))
 		return;
+=======
+	struct uni_screen *uniscr = get_vc_uniscr(vc);
+	int offset = row * vc->vc_size_row + col * 2;
+	unsigned long pos;
+
+	BUG_ON(!uniscr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pos = (unsigned long)screenpos(vc, offset, viewed);
 	if (pos >= vc->vc_origin && pos < vc->vc_scr_end) {
@@ -539,7 +723,11 @@ void vc_uniscr_copy_line(const struct vc_data *vc, void *dest, bool viewed,
 		 */
 		row = (pos - vc->vc_origin) / vc->vc_size_row;
 		col = ((pos - vc->vc_origin) % vc->vc_size_row) / 2;
+<<<<<<< HEAD
 		memcpy(dest, &uni_lines[row][col], nr * sizeof(u32));
+=======
+		memcpy(dest, &uniscr->lines[row][col], nr * sizeof(char32_t));
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		/*
 		 * Scrollback is active. For now let's simply backtranslate
@@ -549,7 +737,11 @@ void vc_uniscr_copy_line(const struct vc_data *vc, void *dest, bool viewed,
 		 */
 		u16 *p = (u16 *)pos;
 		int mask = vc->vc_hi_font_mask | 0xff;
+<<<<<<< HEAD
 		u32 *uni_buf = dest;
+=======
+		char32_t *uni_buf = dest;
+>>>>>>> b7ba80a49124 (Commit)
 		while (nr--) {
 			u16 glyph = scr_readw(p++) & mask;
 			*uni_buf++ = inverse_translate(vc, glyph, true);
@@ -557,6 +749,7 @@ void vc_uniscr_copy_line(const struct vc_data *vc, void *dest, bool viewed,
 	}
 }
 
+<<<<<<< HEAD
 static void con_scroll(struct vc_data *vc, unsigned int top,
 		       unsigned int bottom, enum con_scroll dir,
 		       unsigned int nr)
@@ -582,6 +775,66 @@ static void con_scroll(struct vc_data *vc, unsigned int top,
 		swap(src, dst);
 	}
 	scr_memmovew(dst, src, (rows - nr) * vc->vc_size_row);
+=======
+/* this is for validation and debugging only */
+static void vc_uniscr_debug_check(struct vc_data *vc)
+{
+	struct uni_screen *uniscr = get_vc_uniscr(vc);
+	unsigned short *p;
+	int x, y, mask;
+
+	if (!VC_UNI_SCREEN_DEBUG || !uniscr)
+		return;
+
+	WARN_CONSOLE_UNLOCKED();
+
+	/*
+	 * Make sure our unicode screen translates into the same glyphs
+	 * as the actual screen. This is brutal indeed.
+	 */
+	p = (unsigned short *)vc->vc_origin;
+	mask = vc->vc_hi_font_mask | 0xff;
+	for (y = 0; y < vc->vc_rows; y++) {
+		char32_t *line = uniscr->lines[y];
+		for (x = 0; x < vc->vc_cols; x++) {
+			u16 glyph = scr_readw(p++) & mask;
+			char32_t uc = line[x];
+			int tc = conv_uni_to_pc(vc, uc);
+			if (tc == -4)
+				tc = conv_uni_to_pc(vc, 0xfffd);
+			if (tc == -4)
+				tc = conv_uni_to_pc(vc, '?');
+			if (tc != glyph)
+				pr_err_ratelimited(
+					"%s: mismatch at %d,%d: glyph=%#x tc=%#x\n",
+					__func__, x, y, glyph, tc);
+		}
+	}
+}
+
+
+static void con_scroll(struct vc_data *vc, unsigned int t, unsigned int b,
+		enum con_scroll dir, unsigned int nr)
+{
+	u16 *clear, *d, *s;
+
+	if (t + nr >= b)
+		nr = b - t - 1;
+	if (b > vc->vc_rows || t >= b || nr < 1)
+		return;
+	vc_uniscr_scroll(vc, t, b, dir, nr);
+	if (con_is_visible(vc) && vc->vc_sw->con_scroll(vc, t, b, dir, nr))
+		return;
+
+	s = clear = (u16 *)(vc->vc_origin + vc->vc_size_row * t);
+	d = (u16 *)(vc->vc_origin + vc->vc_size_row * (t + nr));
+
+	if (dir == SM_UP) {
+		clear = s + (b - t - nr) * vc->vc_cols;
+		swap(s, d);
+	}
+	scr_memmovew(d, s, (b - t - nr) * vc->vc_size_row);
+>>>>>>> b7ba80a49124 (Commit)
 	scr_memsetw(clear, vc->vc_video_erase_char, vc->vc_size_row * nr);
 }
 
@@ -1145,7 +1398,11 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
 	unsigned int new_cols, new_rows, new_row_size, new_screen_size;
 	unsigned int user;
 	unsigned short *oldscreen, *newscreen;
+<<<<<<< HEAD
 	u32 **new_uniscr = NULL;
+=======
+	struct uni_screen *new_uniscr = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	WARN_CONSOLE_UNLOCKED();
 
@@ -1189,7 +1446,11 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
 	if (!newscreen)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	if (vc->vc_uni_lines) {
+=======
+	if (get_vc_uniscr(vc)) {
+>>>>>>> b7ba80a49124 (Commit)
 		new_uniscr = vc_uniscr_alloc(new_cols, new_rows);
 		if (!new_uniscr) {
 			kfree(newscreen);
@@ -1241,7 +1502,11 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
 	end = old_origin + old_row_size * min(old_rows, new_rows);
 
 	vc_uniscr_copy_area(new_uniscr, new_cols, new_rows,
+<<<<<<< HEAD
 			    vc->vc_uni_lines, rlth/2, first_copied_row,
+=======
+			    get_vc_uniscr(vc), rlth/2, first_copied_row,
+>>>>>>> b7ba80a49124 (Commit)
 			    min(old_rows, new_rows));
 	vc_uniscr_set(vc, new_uniscr);
 
@@ -2903,6 +3168,10 @@ rescan_last_byte:
 			goto rescan_last_byte;
 	}
 	con_flush(vc, &draw);
+<<<<<<< HEAD
+=======
+	vc_uniscr_debug_check(vc);
+>>>>>>> b7ba80a49124 (Commit)
 	console_conditional_schedule();
 	notify_update(vc);
 	console_unlock();
@@ -3099,6 +3368,7 @@ static struct tty_driver *vt_console_device(struct console *c, int *index)
 	return console_driver;
 }
 
+<<<<<<< HEAD
 static int vt_console_setup(struct console *co, char *options)
 {
 	return co->index >= MAX_NR_CONSOLES ? -EINVAL : 0;
@@ -3107,6 +3377,10 @@ static int vt_console_setup(struct console *co, char *options)
 static struct console vt_console_driver = {
 	.name		= "tty",
 	.setup		= vt_console_setup,
+=======
+static struct console vt_console_driver = {
+	.name		= "tty",
+>>>>>>> b7ba80a49124 (Commit)
 	.write		= vt_console_print,
 	.device		= vt_console_device,
 	.unblank	= unblank_screen,
@@ -4241,7 +4515,11 @@ static int __init vtconsole_class_init(void)
 {
 	int i;
 
+<<<<<<< HEAD
 	vtconsole_class = class_create("vtconsole");
+=======
+	vtconsole_class = class_create(THIS_MODULE, "vtconsole");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(vtconsole_class)) {
 		pr_warn("Unable to create vt console class; errno = %ld\n",
 			PTR_ERR(vtconsole_class));
@@ -4523,6 +4801,7 @@ void reset_palette(struct vc_data *vc)
 /*
  *  Font switching
  *
+<<<<<<< HEAD
  *  Currently we only support fonts up to 128 pixels wide, at a maximum height
  *  of 128 pixels. Userspace fontdata may have to be stored with 32 bytes
  *  (shorts/ints, depending on width) reserved for each character which is
@@ -4537,12 +4816,26 @@ void reset_palette(struct vc_data *vc)
 #define max_font_height	128
 #define max_font_glyphs	512
 #define max_font_size	(max_font_glyphs*max_font_width*max_font_height)
+=======
+ *  Currently we only support fonts up to 32 pixels wide, at a maximum height
+ *  of 32 pixels. Userspace fontdata is stored with 32 bytes (shorts/ints, 
+ *  depending on width) reserved for each character which is kinda wasty, but 
+ *  this is done in order to maintain compatibility with the EGA/VGA fonts. It 
+ *  is up to the actual low-level console-driver convert data into its favorite
+ *  format (maybe we should add a `fontoffset' field to the `display'
+ *  structure so we won't have to convert the fontdata all the time.
+ *  /Jes
+ */
+
+#define max_font_size 65536
+>>>>>>> b7ba80a49124 (Commit)
 
 static int con_font_get(struct vc_data *vc, struct console_font_op *op)
 {
 	struct console_font font;
 	int rc = -EINVAL;
 	int c;
+<<<<<<< HEAD
 	unsigned int vpitch = op->op == KD_FONT_OP_GET_TALL ? op->height : 32;
 
 	if (vpitch > max_font_height)
@@ -4550,6 +4843,11 @@ static int con_font_get(struct vc_data *vc, struct console_font_op *op)
 
 	if (op->data) {
 		font.data = kvmalloc(max_font_size, GFP_KERNEL);
+=======
+
+	if (op->data) {
+		font.data = kmalloc(max_font_size, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!font.data)
 			return -ENOMEM;
 	} else
@@ -4559,7 +4857,11 @@ static int con_font_get(struct vc_data *vc, struct console_font_op *op)
 	if (vc->vc_mode != KD_TEXT)
 		rc = -EINVAL;
 	else if (vc->vc_sw->con_font_get)
+<<<<<<< HEAD
 		rc = vc->vc_sw->con_font_get(vc, &font, vpitch);
+=======
+		rc = vc->vc_sw->con_font_get(vc, &font);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		rc = -ENOSYS;
 	console_unlock();
@@ -4567,7 +4869,11 @@ static int con_font_get(struct vc_data *vc, struct console_font_op *op)
 	if (rc)
 		goto out;
 
+<<<<<<< HEAD
 	c = (font.width+7)/8 * vpitch * font.charcount;
+=======
+	c = (font.width+7)/8 * 32 * font.charcount;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (op->data && font.charcount > op->charcount)
 		rc = -ENOSPC;
@@ -4584,7 +4890,11 @@ static int con_font_get(struct vc_data *vc, struct console_font_op *op)
 		rc = -EFAULT;
 
 out:
+<<<<<<< HEAD
 	kvfree(font.data);
+=======
+	kfree(font.data);
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -4593,12 +4903,16 @@ static int con_font_set(struct vc_data *vc, struct console_font_op *op)
 	struct console_font font;
 	int rc = -EINVAL;
 	int size;
+<<<<<<< HEAD
 	unsigned int vpitch = op->op == KD_FONT_OP_SET_TALL ? op->height : 32;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (vc->vc_mode != KD_TEXT)
 		return -EINVAL;
 	if (!op->data)
 		return -EINVAL;
+<<<<<<< HEAD
 	if (op->charcount > max_font_glyphs)
 		return -EINVAL;
 	if (op->width <= 0 || op->width > max_font_width || !op->height ||
@@ -4607,6 +4921,13 @@ static int con_font_set(struct vc_data *vc, struct console_font_op *op)
 	if (vpitch < op->height)
 		return -EINVAL;
 	size = (op->width+7)/8 * vpitch * op->charcount;
+=======
+	if (op->charcount > 512)
+		return -EINVAL;
+	if (op->width <= 0 || op->width > 32 || !op->height || op->height > 32)
+		return -EINVAL;
+	size = (op->width+7)/8 * 32 * op->charcount;
+>>>>>>> b7ba80a49124 (Commit)
 	if (size > max_font_size)
 		return -ENOSPC;
 
@@ -4624,7 +4945,11 @@ static int con_font_set(struct vc_data *vc, struct console_font_op *op)
 	else if (vc->vc_sw->con_font_set) {
 		if (vc_is_sel(vc))
 			clear_selection();
+<<<<<<< HEAD
 		rc = vc->vc_sw->con_font_set(vc, &font, vpitch, op->flags);
+=======
+		rc = vc->vc_sw->con_font_set(vc, &font, op->flags);
+>>>>>>> b7ba80a49124 (Commit)
 	} else
 		rc = -ENOSYS;
 	console_unlock();
@@ -4670,10 +4995,15 @@ int con_font_op(struct vc_data *vc, struct console_font_op *op)
 {
 	switch (op->op) {
 	case KD_FONT_OP_SET:
+<<<<<<< HEAD
 	case KD_FONT_OP_SET_TALL:
 		return con_font_set(vc, op);
 	case KD_FONT_OP_GET:
 	case KD_FONT_OP_GET_TALL:
+=======
+		return con_font_set(vc, op);
+	case KD_FONT_OP_GET:
+>>>>>>> b7ba80a49124 (Commit)
 		return con_font_get(vc, op);
 	case KD_FONT_OP_SET_DEFAULT:
 		return con_font_default(vc, op);
@@ -4702,11 +5032,18 @@ EXPORT_SYMBOL_GPL(screen_glyph);
 
 u32 screen_glyph_unicode(const struct vc_data *vc, int n)
 {
+<<<<<<< HEAD
 	u32 **uni_lines = vc->vc_uni_lines;
 
 	if (uni_lines)
 		return uni_lines[n / vc->vc_cols][n % vc->vc_cols];
 
+=======
+	struct uni_screen *uniscr = get_vc_uniscr(vc);
+
+	if (uniscr)
+		return uniscr->lines[n / vc->vc_cols][n % vc->vc_cols];
+>>>>>>> b7ba80a49124 (Commit)
 	return inverse_translate(vc, screen_glyph(vc, n * 2), true);
 }
 EXPORT_SYMBOL_GPL(screen_glyph_unicode);

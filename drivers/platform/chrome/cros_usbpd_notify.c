@@ -239,11 +239,15 @@ static int __init cros_usbpd_notify_init(void)
 		return ret;
 
 #ifdef CONFIG_ACPI
+<<<<<<< HEAD
 	ret = platform_driver_register(&cros_usbpd_notify_acpi_driver);
 	if (ret) {
 		platform_driver_unregister(&cros_usbpd_notify_plat_driver);
 		return ret;
 	}
+=======
+	platform_driver_register(&cros_usbpd_notify_acpi_driver);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	return 0;
 }

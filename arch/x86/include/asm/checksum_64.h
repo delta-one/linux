@@ -9,6 +9,10 @@
  */
 
 #include <linux/compiler.h>
+<<<<<<< HEAD
+=======
+#include <linux/uaccess.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/byteorder.h>
 
 /**

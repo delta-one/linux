@@ -19,6 +19,7 @@
 #include <linux/uaccess.h>
 #include <uapi/linux/isst_if.h>
 
+<<<<<<< HEAD
 #include <asm/cpu_device_id.h>
 #include <asm/intel-family.h>
 
@@ -26,6 +27,11 @@
 
 #define MSR_THREAD_ID_INFO	0x53
 #define MSR_PM_LOGICAL_ID	0x54
+=======
+#include "isst_if_common.h"
+
+#define MSR_THREAD_ID_INFO	0x53
+>>>>>>> b7ba80a49124 (Commit)
 #define MSR_CPU_BUS_NUMBER	0x128
 
 static struct isst_if_cmd_cb punit_callbacks[ISST_IF_DEV_MAX];
@@ -35,7 +41,10 @@ static int punit_msr_white_list[] = {
 	MSR_CONFIG_TDP_CONTROL,
 	MSR_TURBO_RATIO_LIMIT1,
 	MSR_TURBO_RATIO_LIMIT2,
+<<<<<<< HEAD
 	MSR_PM_LOGICAL_ID,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct isst_valid_cmd_ranges {
@@ -52,7 +61,11 @@ struct isst_cmd_set_req_type {
 
 static const struct isst_valid_cmd_ranges isst_valid_cmds[] = {
 	{0xD0, 0x00, 0x03},
+<<<<<<< HEAD
 	{0x7F, 0x00, 0x0C},
+=======
+	{0x7F, 0x00, 0x0B},
+>>>>>>> b7ba80a49124 (Commit)
 	{0x7F, 0x10, 0x12},
 	{0x7F, 0x20, 0x23},
 	{0x94, 0x03, 0x03},
@@ -78,8 +91,11 @@ struct isst_cmd {
 	u32 param;
 };
 
+<<<<<<< HEAD
 static bool isst_hpm_support;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static DECLARE_HASHTABLE(isst_hash, 8);
 static DEFINE_MUTEX(isst_hash_lock);
 
@@ -119,7 +135,10 @@ static void isst_delete_hash(void)
  * isst_store_cmd() - Store command to a hash table
  * @cmd: Mailbox command.
  * @sub_cmd: Mailbox sub-command or MSR id.
+<<<<<<< HEAD
  * @cpu: Target CPU for the command
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @mbox_cmd_type: Mailbox or MSR command.
  * @param: Mailbox parameter.
  * @data: Mailbox request data or MSR data.
@@ -269,13 +288,20 @@ bool isst_if_mbox_cmd_set_req(struct isst_if_mbox_cmd *cmd)
 }
 EXPORT_SYMBOL_GPL(isst_if_mbox_cmd_set_req);
 
+<<<<<<< HEAD
 static int isst_if_api_version;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int isst_if_get_platform_info(void __user *argp)
 {
 	struct isst_if_platform_info info;
 
+<<<<<<< HEAD
 	info.api_version = isst_if_api_version;
+=======
+	info.api_version = ISST_IF_API_VERSION;
+>>>>>>> b7ba80a49124 (Commit)
 	info.driver_version = ISST_IF_DRIVER_VERSION;
 	info.max_cmds_per_ioctl = ISST_IF_CMD_LIMIT;
 	info.mbox_supported = punit_callbacks[ISST_IF_DEV_MBOX].registered;
@@ -373,7 +399,11 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
 /**
  * isst_if_get_pci_dev() - Get the PCI device instance for a CPU
  * @cpu: Logical CPU number.
+<<<<<<< HEAD
  * @bus_no: The bus number assigned by the hardware.
+=======
+ * @bus_number: The bus number assigned by the hardware.
+>>>>>>> b7ba80a49124 (Commit)
  * @dev: The device number assigned by the hardware.
  * @fn: The function number assigned by the hardware.
  *
@@ -418,6 +448,7 @@ static int isst_if_cpu_online(unsigned int cpu)
 		isst_cpu_info[cpu].pci_dev[1] = _isst_if_get_pci_dev(cpu, 1, 30, 1);
 	}
 
+<<<<<<< HEAD
 	if (isst_hpm_support) {
 
 		ret = rdmsrl_safe(MSR_PM_LOGICAL_ID, &data);
@@ -425,13 +456,18 @@ static int isst_if_cpu_online(unsigned int cpu)
 			goto set_punit_id;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = rdmsrl_safe(MSR_THREAD_ID_INFO, &data);
 	if (ret) {
 		isst_cpu_info[cpu].punit_cpu_id = -1;
 		return ret;
 	}
+<<<<<<< HEAD
 
 set_punit_id:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	isst_cpu_info[cpu].punit_cpu_id = data;
 
 	isst_restore_msr_local(cpu);
@@ -606,7 +642,10 @@ static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
 	struct isst_if_cmd_cb cmd_cb;
 	struct isst_if_cmd_cb *cb;
 	long ret = -ENOTTY;
+<<<<<<< HEAD
 	int i;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (cmd) {
 	case ISST_IF_GET_PLATFORM_INFO:
@@ -635,6 +674,7 @@ static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
 		ret = isst_if_exec_multi_cmd(argp, &cmd_cb);
 		break;
 	default:
+<<<<<<< HEAD
 		for (i = 0; i < ISST_IF_DEV_MAX; ++i) {
 			struct isst_if_cmd_cb *cb = &punit_callbacks[i];
 			int ret;
@@ -645,6 +685,8 @@ static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
 					return ret;
 			}
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -653,7 +695,11 @@ static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
 
 /* Lock to prevent module registration when already opened by user space */
 static DEFINE_MUTEX(punit_misc_dev_open_lock);
+<<<<<<< HEAD
 /* Lock to allow one shared misc device for all ISST interfaces */
+=======
+/* Lock to allow one share misc device for all ISST interace */
+>>>>>>> b7ba80a49124 (Commit)
 static DEFINE_MUTEX(punit_misc_dev_reg_lock);
 static int misc_usage_count;
 static int misc_device_ret;
@@ -720,12 +766,15 @@ static struct miscdevice isst_if_char_driver = {
 	.fops		= &isst_if_char_driver_ops,
 };
 
+<<<<<<< HEAD
 static const struct x86_cpu_id hpm_cpu_ids[] = {
 	X86_MATCH_INTEL_FAM6_MODEL(GRANITERAPIDS_X,	NULL),
 	X86_MATCH_INTEL_FAM6_MODEL(SIERRAFOREST_X,	NULL),
 	{}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int isst_misc_reg(void)
 {
 	mutex_lock(&punit_misc_dev_reg_lock);
@@ -733,12 +782,15 @@ static int isst_misc_reg(void)
 		goto unlock_exit;
 
 	if (!misc_usage_count) {
+<<<<<<< HEAD
 		const struct x86_cpu_id *id;
 
 		id = x86_match_cpu(hpm_cpu_ids);
 		if (id)
 			isst_hpm_support = true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		misc_device_ret = isst_if_cpu_info_init();
 		if (misc_device_ret)
 			goto unlock_exit;
@@ -797,10 +849,13 @@ int isst_if_cdev_register(int device_type, struct isst_if_cmd_cb *cb)
 		mutex_unlock(&punit_misc_dev_open_lock);
 		return -EAGAIN;
 	}
+<<<<<<< HEAD
 	if (!cb->api_version)
 		cb->api_version = ISST_IF_API_VERSION;
 	if (cb->api_version > isst_if_api_version)
 		isst_if_api_version = cb->api_version;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(&punit_callbacks[device_type], cb, sizeof(*cb));
 	punit_callbacks[device_type].registered = 1;
 	mutex_unlock(&punit_misc_dev_open_lock);

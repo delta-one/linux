@@ -26,6 +26,7 @@
 
 unsigned long vectors_base;
 
+<<<<<<< HEAD
 /*
  * empty_zero_page is a special page that is used for
  * zero-initialized data and COW.
@@ -33,6 +34,8 @@ unsigned long vectors_base;
 struct page *empty_zero_page;
 EXPORT_SYMBOL(empty_zero_page);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_ARM_MPU
 struct mpu_rgn_info mpu_rgn_info;
 #endif
@@ -155,6 +158,7 @@ void __init adjust_lowmem_bounds(void)
  */
 void __init paging_init(const struct machine_desc *mdesc)
 {
+<<<<<<< HEAD
 	void *zero_page;
 
 	early_trap_init((void *)vectors_base);
@@ -170,6 +174,11 @@ void __init paging_init(const struct machine_desc *mdesc)
 
 	empty_zero_page = virt_to_page(zero_page);
 	flush_dcache_page(empty_zero_page);
+=======
+	early_trap_init((void *)vectors_base);
+	mpu_setup();
+	bootmem_init();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*

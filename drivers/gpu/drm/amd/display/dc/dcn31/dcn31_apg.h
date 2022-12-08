@@ -84,6 +84,13 @@ struct apg_funcs {
 		unsigned int az_inst,
 		struct audio_info *audio_info);
 
+<<<<<<< HEAD
+=======
+	void (*audio_mute_control)(
+		struct apg *apg,
+		bool mute);
+
+>>>>>>> b7ba80a49124 (Commit)
 	void (*enable_apg)(
 		struct apg *apg);
 

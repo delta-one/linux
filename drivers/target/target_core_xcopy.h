@@ -5,7 +5,11 @@
 #define XCOPY_TARGET_DESC_LEN		32
 #define XCOPY_SEGMENT_DESC_LEN		28
 #define XCOPY_NAA_IEEE_REGEX_LEN	16
+<<<<<<< HEAD
 #define XCOPY_MAX_BYTES			16777216 /* 16 MB */
+=======
+#define XCOPY_MAX_SECTORS		4096
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * SPC4r37 6.4.6.1

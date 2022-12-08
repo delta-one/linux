@@ -999,6 +999,10 @@ static inline bool nanddev_io_iter_end(struct nand_device *nand,
 
 bool nanddev_isbad(struct nand_device *nand, const struct nand_pos *pos);
 bool nanddev_isreserved(struct nand_device *nand, const struct nand_pos *pos);
+<<<<<<< HEAD
+=======
+int nanddev_erase(struct nand_device *nand, const struct nand_pos *pos);
+>>>>>>> b7ba80a49124 (Commit)
 int nanddev_markbad(struct nand_device *nand, const struct nand_pos *pos);
 
 /* ECC related functions */

@@ -446,9 +446,15 @@ static void tmp007_powerdown_action_cb(void *priv)
 	tmp007_powerdown(data);
 }
 
+<<<<<<< HEAD
 static int tmp007_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *tmp007_id = i2c_client_get_device_id(client);
+=======
+static int tmp007_probe(struct i2c_client *client,
+			const struct i2c_device_id *tmp007_id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct tmp007_data *data;
 	struct iio_dev *indio_dev;
 	int ret;
@@ -574,7 +580,11 @@ static struct i2c_driver tmp007_driver = {
 		.of_match_table = tmp007_of_match,
 		.pm	= pm_sleep_ptr(&tmp007_pm_ops),
 	},
+<<<<<<< HEAD
 	.probe_new	= tmp007_probe,
+=======
+	.probe		= tmp007_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= tmp007_id,
 };
 module_i2c_driver(tmp007_driver);

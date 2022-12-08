@@ -33,10 +33,17 @@ out:
 
 static int igt_gem_huge(void *arg)
 {
+<<<<<<< HEAD
 	const unsigned long nreal = 509; /* just to be awkward */
 	struct drm_i915_private *i915 = arg;
 	struct drm_i915_gem_object *obj;
 	unsigned long n;
+=======
+	const unsigned int nreal = 509; /* just to be awkward */
+	struct drm_i915_private *i915 = arg;
+	struct drm_i915_gem_object *obj;
+	unsigned int n;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	/* Basic sanitycheck of our huge fake object allocation */
@@ -49,7 +56,11 @@ static int igt_gem_huge(void *arg)
 
 	err = i915_gem_object_pin_pages_unlocked(obj);
 	if (err) {
+<<<<<<< HEAD
 		pr_err("Failed to allocate %lu pages (%lu total), err=%d\n",
+=======
+		pr_err("Failed to allocate %u pages (%lu total), err=%d\n",
+>>>>>>> b7ba80a49124 (Commit)
 		       nreal, obj->base.size / PAGE_SIZE, err);
 		goto out;
 	}
@@ -57,7 +68,11 @@ static int igt_gem_huge(void *arg)
 	for (n = 0; n < obj->base.size / PAGE_SIZE; n++) {
 		if (i915_gem_object_get_page(obj, n) !=
 		    i915_gem_object_get_page(obj, n % nreal)) {
+<<<<<<< HEAD
 			pr_err("Page lookup mismatch at index %lu [%lu]\n",
+=======
+			pr_err("Page lookup mismatch at index %u [%u]\n",
+>>>>>>> b7ba80a49124 (Commit)
 			       n, n % nreal);
 			err = -EINVAL;
 			goto out_unpin;

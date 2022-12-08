@@ -126,7 +126,11 @@ increase the chances of your change being accepted.
 * Use devm_hwmon_device_register_with_info() or, if your driver needs a remove
   function, hwmon_device_register_with_info() to register your driver with the
   hwmon subsystem. Try using devm_add_action() instead of a remove function if
+<<<<<<< HEAD
   possible. Do not use any of the deprecated registration functions.
+=======
+  possible. Do not use hwmon_device_register().
+>>>>>>> b7ba80a49124 (Commit)
 
 * Your driver should be buildable as module. If not, please be prepared to
   explain why it has to be built into the kernel.

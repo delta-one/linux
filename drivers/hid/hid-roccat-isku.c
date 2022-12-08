@@ -435,7 +435,11 @@ static struct hid_driver isku_driver = {
 static int __init isku_init(void)
 {
 	int retval;
+<<<<<<< HEAD
 	isku_class = class_create("isku");
+=======
+	isku_class = class_create(THIS_MODULE, "isku");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(isku_class))
 		return PTR_ERR(isku_class);
 	isku_class->dev_groups = isku_groups;

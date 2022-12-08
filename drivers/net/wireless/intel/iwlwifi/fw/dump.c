@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
 /*
+<<<<<<< HEAD
  * Copyright (C) 2012-2014, 2018-2022 Intel Corporation
+=======
+ * Copyright (C) 2012-2014, 2018-2021 Intel Corporation
+>>>>>>> b7ba80a49124 (Commit)
  * Copyright (C) 2013-2014 Intel Mobile Communications GmbH
  * Copyright (C) 2015-2017 Intel Deutschland GmbH
  */
@@ -14,6 +18,7 @@
 #include "iwl-csr.h"
 #include "pnvm.h"
 
+<<<<<<< HEAD
 #define FW_ASSERT_LMAC_FATAL			0x70
 #define FW_ASSERT_LMAC2_FATAL			0x72
 #define FW_ASSERT_UMAC_FATAL			0x71
@@ -21,6 +26,8 @@
 #define RT_NMI_INTERRUPT_OTHER_LMAC_FATAL	0x73
 #define FW_ASSERT_NMI_UNKNOWN			0x84
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Note: This structure is read from the device with IO accesses,
  * and the reading already does the endian conversion. As it is
@@ -103,6 +110,7 @@ struct iwl_umac_error_event_table {
 #define ERROR_START_OFFSET  (1 * sizeof(u32))
 #define ERROR_ELEM_SIZE     (7 * sizeof(u32))
 
+<<<<<<< HEAD
 static bool iwl_fwrt_if_errorid_other_cpu(u32 err_id)
 {
 	err_id &= 0xFF;
@@ -114,6 +122,8 @@ static bool iwl_fwrt_if_errorid_other_cpu(u32 err_id)
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void iwl_fwrt_dump_umac_error_log(struct iwl_fw_runtime *fwrt)
 {
 	struct iwl_trans *trans = fwrt->trans;
@@ -131,6 +141,7 @@ static void iwl_fwrt_dump_umac_error_log(struct iwl_fw_runtime *fwrt)
 	if (table.valid)
 		fwrt->dump.umac_err_id = table.error_id;
 
+<<<<<<< HEAD
 	if (!iwl_fwrt_if_errorid_other_cpu(fwrt->dump.umac_err_id) &&
 	    !fwrt->trans->dbg.dump_file_name_ext_valid) {
 		fwrt->trans->dbg.dump_file_name_ext_valid = true;
@@ -138,6 +149,8 @@ static void iwl_fwrt_dump_umac_error_log(struct iwl_fw_runtime *fwrt)
 			 "0x%x", fwrt->dump.umac_err_id);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (ERROR_START_OFFSET <= table.valid * ERROR_ELEM_SIZE) {
 		IWL_ERR(trans, "Start IWL Error Log Dump:\n");
 		IWL_ERR(trans, "Transport status: 0x%08lX, valid: %d\n",
@@ -182,8 +195,12 @@ static void iwl_fwrt_dump_lmac_error_log(struct iwl_fw_runtime *fwrt, u8 lmac_nu
 			base = fwrt->fw->inst_errlog_ptr;
 	}
 
+<<<<<<< HEAD
 	if ((fwrt->trans->trans_cfg->device_family >= IWL_DEVICE_FAMILY_BZ && !base) ||
 	    (fwrt->trans->trans_cfg->device_family < IWL_DEVICE_FAMILY_BZ && base < 0x400000)) {
+=======
+	if (base < 0x400000) {
+>>>>>>> b7ba80a49124 (Commit)
 		IWL_ERR(fwrt,
 			"Not valid error log pointer 0x%08X for %s uCode\n",
 			base,
@@ -214,6 +231,7 @@ static void iwl_fwrt_dump_lmac_error_log(struct iwl_fw_runtime *fwrt, u8 lmac_nu
 	if (table.valid)
 		fwrt->dump.lmac_err_id[lmac_num] = table.error_id;
 
+<<<<<<< HEAD
 	if (!iwl_fwrt_if_errorid_other_cpu(fwrt->dump.lmac_err_id[lmac_num]) &&
 	    !fwrt->trans->dbg.dump_file_name_ext_valid) {
 		fwrt->trans->dbg.dump_file_name_ext_valid = true;
@@ -221,6 +239,8 @@ static void iwl_fwrt_dump_lmac_error_log(struct iwl_fw_runtime *fwrt, u8 lmac_nu
 			 "0x%x", fwrt->dump.lmac_err_id[lmac_num]);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (ERROR_START_OFFSET <= table.valid * ERROR_ELEM_SIZE) {
 		IWL_ERR(trans, "Start IWL Error Log Dump:\n");
 		IWL_ERR(trans, "Transport status: 0x%08lX, valid: %d\n",
@@ -306,6 +326,7 @@ static void iwl_fwrt_dump_tcm_error_log(struct iwl_fw_runtime *fwrt, int idx)
 
 	iwl_trans_read_mem_bytes(trans, base, &table, sizeof(table));
 
+<<<<<<< HEAD
 	if (table.valid)
 		fwrt->dump.tcm_err_id[idx] = table.error_id;
 
@@ -316,6 +337,8 @@ static void iwl_fwrt_dump_tcm_error_log(struct iwl_fw_runtime *fwrt, int idx)
 			 "0x%x", fwrt->dump.tcm_err_id[idx]);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	IWL_ERR(fwrt, "TCM%d status:\n", idx + 1);
 	IWL_ERR(fwrt, "0x%08X | error ID\n", table.error_id);
 	IWL_ERR(fwrt, "0x%08X | tcm branchlink2\n", table.blink2);
@@ -379,6 +402,7 @@ static void iwl_fwrt_dump_rcm_error_log(struct iwl_fw_runtime *fwrt, int idx)
 
 	iwl_trans_read_mem_bytes(trans, base, &table, sizeof(table));
 
+<<<<<<< HEAD
 	if (table.valid)
 		fwrt->dump.rcm_err_id[idx] = table.error_id;
 
@@ -389,6 +413,8 @@ static void iwl_fwrt_dump_rcm_error_log(struct iwl_fw_runtime *fwrt, int idx)
 			 "0x%x", fwrt->dump.rcm_err_id[idx]);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	IWL_ERR(fwrt, "RCM%d status:\n", idx + 1);
 	IWL_ERR(fwrt, "0x%08X | error ID\n", table.error_id);
 	IWL_ERR(fwrt, "0x%08X | rcm branchlink2\n", table.blink2);
@@ -429,7 +455,11 @@ static void iwl_fwrt_dump_iml_error_log(struct iwl_fw_runtime *fwrt)
 		return;
 	}
 
+<<<<<<< HEAD
 	error = iwl_read_umac_prph(trans, error);
+=======
+	error = iwl_read_umac_prph(trans, UMAG_SB_CPU_2_STATUS);
+>>>>>>> b7ba80a49124 (Commit)
 
 	IWL_ERR(trans, "IML/ROM dump:\n");
 
@@ -496,10 +526,15 @@ void iwl_fwrt_dump_error_logs(struct iwl_fw_runtime *fwrt)
 	iwl_fwrt_dump_umac_error_log(fwrt);
 	iwl_fwrt_dump_tcm_error_log(fwrt, 0);
 	iwl_fwrt_dump_rcm_error_log(fwrt, 0);
+<<<<<<< HEAD
 	if (fwrt->trans->dbg.tcm_error_event_table[1])
 		iwl_fwrt_dump_tcm_error_log(fwrt, 1);
 	if (fwrt->trans->dbg.rcm_error_event_table[1])
 		iwl_fwrt_dump_rcm_error_log(fwrt, 1);
+=======
+	iwl_fwrt_dump_tcm_error_log(fwrt, 1);
+	iwl_fwrt_dump_rcm_error_log(fwrt, 1);
+>>>>>>> b7ba80a49124 (Commit)
 	iwl_fwrt_dump_iml_error_log(fwrt);
 	iwl_fwrt_dump_fseq_regs(fwrt);
 

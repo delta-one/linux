@@ -4,7 +4,11 @@
  * Copyright 2006-2007	Jiri Benc <jbenc@suse.cz>
  * Copyright 2013-2014  Intel Mobile Communications GmbH
  * Copyright (C) 2015 - 2017 Intel Deutschland GmbH
+<<<<<<< HEAD
  * Copyright (C) 2018-2022 Intel Corporation
+=======
+ * Copyright (C) 2018-2021 Intel Corporation
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/module.h>
@@ -140,6 +144,7 @@ static void __cleanup_single_sta(struct sta_info *sta)
 		atomic_dec(&ps->num_sta_ps);
 	}
 
+<<<<<<< HEAD
 	for (i = 0; i < ARRAY_SIZE(sta->sta.txq); i++) {
 		struct txq_info *txqi;
 
@@ -149,6 +154,19 @@ static void __cleanup_single_sta(struct sta_info *sta)
 		txqi = to_txq_info(sta->sta.txq[i]);
 
 		ieee80211_txq_purge(local, txqi);
+=======
+	if (sta->sta.txq[0]) {
+		for (i = 0; i < ARRAY_SIZE(sta->sta.txq); i++) {
+			struct txq_info *txqi;
+
+			if (!sta->sta.txq[i])
+				continue;
+
+			txqi = to_txq_info(sta->sta.txq[i]);
+
+			ieee80211_txq_purge(local, txqi);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (ac = 0; ac < IEEE80211_NUM_ACS; ac++) {
@@ -364,9 +382,12 @@ static void sta_remove_link(struct sta_info *sta, unsigned int link_id,
 	if (unhash)
 		link_sta_info_hash_del(sta->local, link_sta);
 
+<<<<<<< HEAD
 	if (test_sta_flag(sta, WLAN_STA_INSERTED))
 		ieee80211_link_sta_debugfs_remove(link_sta);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (link_sta != &sta->deflink)
 		alloc = container_of(link_sta, typeof(*alloc), info);
 
@@ -426,7 +447,12 @@ void sta_info_free(struct ieee80211_local *local, struct sta_info *sta)
 
 	sta_dbg(sta->sdata, "Destroyed STA %pM\n", sta->sta.addr);
 
+<<<<<<< HEAD
 	kfree(to_txq_info(sta->sta.txq[0]));
+=======
+	if (sta->sta.txq[0])
+		kfree(to_txq_info(sta->sta.txq[0]));
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(rcu_dereference_raw(sta->sta.rates));
 #ifdef CONFIG_MAC80211_MESH
 	kfree(sta->mesh);
@@ -511,7 +537,10 @@ static void sta_info_add_link(struct sta_info *sta,
 	link_info->sta = sta;
 	link_info->link_id = link_id;
 	link_info->pub = link_sta;
+<<<<<<< HEAD
 	link_info->pub->sta = &sta->sta;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	link_sta->link_id = link_id;
 	rcu_assign_pointer(sta->link[link_id], link_info);
 	rcu_assign_pointer(sta->sta.link[link_id], link_sta);
@@ -528,8 +557,11 @@ __sta_info_alloc(struct ieee80211_sub_if_data *sdata,
 	struct ieee80211_local *local = sdata->local;
 	struct ieee80211_hw *hw = &local->hw;
 	struct sta_info *sta;
+<<<<<<< HEAD
 	void *txq_data;
 	int size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	sta = kzalloc(sizeof(*sta) + hw->sta_data_size, gfp);
@@ -594,14 +626,18 @@ __sta_info_alloc(struct ieee80211_sub_if_data *sdata,
 
 	sta->sta_state = IEEE80211_STA_NONE;
 
+<<<<<<< HEAD
 	if (sdata->vif.type == NL80211_IFTYPE_MESH_POINT)
 		sta->amsdu_mesh_control = -1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Mark TID as unreserved */
 	sta->reserved_tid = IEEE80211_TID_UNRESERVED;
 
 	sta->last_connected = ktime_get_seconds();
 
+<<<<<<< HEAD
 	size = sizeof(struct txq_info) +
 	       ALIGN(hw->txq_data_size, sizeof(void *));
 
@@ -614,6 +650,23 @@ __sta_info_alloc(struct ieee80211_sub_if_data *sdata,
 
 		/* might not do anything for the (bufferable) MMPDU TXQ */
 		ieee80211_txq_init(sdata, sta, txq, i);
+=======
+	if (local->ops->wake_tx_queue) {
+		void *txq_data;
+		int size = sizeof(struct txq_info) +
+			   ALIGN(hw->txq_data_size, sizeof(void *));
+
+		txq_data = kcalloc(ARRAY_SIZE(sta->sta.txq), size, gfp);
+		if (!txq_data)
+			goto free;
+
+		for (i = 0; i < ARRAY_SIZE(sta->sta.txq); i++) {
+			struct txq_info *txq = txq_data + i * size;
+
+			/* might not do anything for the bufferable MMPDU TXQ */
+			ieee80211_txq_init(sdata, sta, txq, i);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (sta_prepare_rate_control(local, sta, gfp))
@@ -687,7 +740,12 @@ __sta_info_alloc(struct ieee80211_sub_if_data *sdata,
 	return sta;
 
 free_txq:
+<<<<<<< HEAD
 	kfree(to_txq_info(sta->sta.txq[0]));
+=======
+	if (sta->sta.txq[0])
+		kfree(to_txq_info(sta->sta.txq[0]));
+>>>>>>> b7ba80a49124 (Commit)
 free:
 	sta_info_free_link(&sta->deflink);
 #ifdef CONFIG_MAC80211_MESH
@@ -876,6 +934,7 @@ static int sta_info_insert_finish(struct sta_info *sta) __acquires(RCU)
 
 	ieee80211_sta_debugfs_add(sta);
 	rate_control_add_sta_debugfs(sta);
+<<<<<<< HEAD
 	if (sta->sta.valid_links) {
 		int i;
 
@@ -896,6 +955,8 @@ static int sta_info_insert_finish(struct sta_info *sta) __acquires(RCU)
 		ieee80211_link_sta_debugfs_add(&sta->deflink);
 		ieee80211_link_sta_debugfs_drv_add(&sta->deflink);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	sinfo->generation = local->sta_generation;
 	cfg80211_new_sta(sdata->dev, sta->sta.addr, sinfo, GFP_KERNEL);
@@ -1980,6 +2041,12 @@ ieee80211_sta_ps_deliver_response(struct sta_info *sta,
 		 * TIM recalculation.
 		 */
 
+<<<<<<< HEAD
+=======
+		if (!sta->sta.txq[0])
+			return;
+
+>>>>>>> b7ba80a49124 (Commit)
 		for (tid = 0; tid < ARRAY_SIZE(sta->sta.txq); tid++) {
 			if (!sta->sta.txq[tid] ||
 			    !(driver_release_tids & BIT(tid)) ||
@@ -2146,6 +2213,7 @@ void ieee80211_sta_register_airtime(struct ieee80211_sta *pubsta, u8 tid,
 }
 EXPORT_SYMBOL(ieee80211_sta_register_airtime);
 
+<<<<<<< HEAD
 void __ieee80211_sta_recalc_aggregates(struct sta_info *sta, u16 active_links)
 {
 	bool first = true;
@@ -2153,10 +2221,22 @@ void __ieee80211_sta_recalc_aggregates(struct sta_info *sta, u16 active_links)
 
 	if (!sta->sta.valid_links || !sta->sta.mlo) {
 		sta->sta.cur = &sta->sta.deflink.agg;
+=======
+void ieee80211_sta_recalc_aggregates(struct ieee80211_sta *pubsta)
+{
+	struct sta_info *sta = container_of(pubsta, struct sta_info, sta);
+	struct ieee80211_link_sta *link_sta;
+	int link_id, i;
+	bool first = true;
+
+	if (!pubsta->valid_links || !pubsta->mlo) {
+		pubsta->cur = &pubsta->deflink.agg;
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
 	rcu_read_lock();
+<<<<<<< HEAD
 	for (link_id = 0; link_id < ARRAY_SIZE((sta)->link); link_id++) {
 		struct ieee80211_link_sta *link_sta;
 		int i;
@@ -2170,6 +2250,11 @@ void __ieee80211_sta_recalc_aggregates(struct sta_info *sta, u16 active_links)
 
 		if (first) {
 			sta->cur = sta->sta.deflink.agg;
+=======
+	for_each_sta_active_link(&sta->sdata->vif, pubsta, link_sta, link_id) {
+		if (first) {
+			sta->cur = pubsta->deflink.agg;
+>>>>>>> b7ba80a49124 (Commit)
 			first = false;
 			continue;
 		}
@@ -2188,6 +2273,7 @@ void __ieee80211_sta_recalc_aggregates(struct sta_info *sta, u16 active_links)
 	}
 	rcu_read_unlock();
 
+<<<<<<< HEAD
 	sta->sta.cur = &sta->cur;
 }
 
@@ -2196,6 +2282,9 @@ void ieee80211_sta_recalc_aggregates(struct ieee80211_sta *pubsta)
 	struct sta_info *sta = container_of(pubsta, struct sta_info, sta);
 
 	__ieee80211_sta_recalc_aggregates(sta, sta->sdata->vif.active_links);
+=======
+	pubsta->cur = &sta->cur;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(ieee80211_sta_recalc_aggregates);
 
@@ -2409,6 +2498,7 @@ static void sta_stats_decode_rate(struct ieee80211_local *local, u32 rate,
 		rinfo->he_ru_alloc = STA_STATS_GET(HE_RU, rate);
 		rinfo->he_dcm = STA_STATS_GET(HE_DCM, rate);
 		break;
+<<<<<<< HEAD
 	case STA_STATS_RATE_TYPE_EHT:
 		rinfo->flags = RATE_INFO_FLAGS_EHT_MCS;
 		rinfo->mcs = STA_STATS_GET(EHT_MCS, rate);
@@ -2416,12 +2506,18 @@ static void sta_stats_decode_rate(struct ieee80211_local *local, u32 rate,
 		rinfo->eht_gi = STA_STATS_GET(EHT_GI, rate);
 		rinfo->eht_ru_alloc = STA_STATS_GET(EHT_RU, rate);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
 static int sta_set_rate_info_rx(struct sta_info *sta, struct rate_info *rinfo)
 {
+<<<<<<< HEAD
 	u32 rate = READ_ONCE(sta_get_last_rx_stats(sta)->last_rate);
+=======
+	u16 rate = READ_ONCE(sta_get_last_rx_stats(sta)->last_rate);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rate == STA_STATS_RATE_INVALID)
 		return -EINVAL;
@@ -2437,9 +2533,15 @@ static inline u64 sta_get_tidstats_msdu(struct ieee80211_sta_rx_stats *rxstats,
 	u64 value;
 
 	do {
+<<<<<<< HEAD
 		start = u64_stats_fetch_begin(&rxstats->syncp);
 		value = rxstats->msdu[tid];
 	} while (u64_stats_fetch_retry(&rxstats->syncp, start));
+=======
+		start = u64_stats_fetch_begin_irq(&rxstats->syncp);
+		value = rxstats->msdu[tid];
+	} while (u64_stats_fetch_retry_irq(&rxstats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return value;
 }
@@ -2486,7 +2588,11 @@ static void sta_set_tidstats(struct sta_info *sta,
 		tidstats->tx_msdu_failed = sta->deflink.status_stats.msdu_failed[tid];
 	}
 
+<<<<<<< HEAD
 	if (tid < IEEE80211_NUM_TIDS) {
+=======
+	if (local->ops->wake_tx_queue && tid < IEEE80211_NUM_TIDS) {
+>>>>>>> b7ba80a49124 (Commit)
 		spin_lock_bh(&local->fq.lock);
 		rcu_read_lock();
 
@@ -2505,9 +2611,15 @@ static inline u64 sta_get_stats_bytes(struct ieee80211_sta_rx_stats *rxstats)
 	u64 value;
 
 	do {
+<<<<<<< HEAD
 		start = u64_stats_fetch_begin(&rxstats->syncp);
 		value = rxstats->bytes;
 	} while (u64_stats_fetch_retry(&rxstats->syncp, start));
+=======
+		start = u64_stats_fetch_begin_irq(&rxstats->syncp);
+		value = rxstats->bytes;
+	} while (u64_stats_fetch_retry_irq(&rxstats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return value;
 }
@@ -2814,6 +2926,12 @@ unsigned long ieee80211_sta_last_active(struct sta_info *sta)
 
 static void sta_update_codel_params(struct sta_info *sta, u32 thr)
 {
+<<<<<<< HEAD
+=======
+	if (!sta->sdata->local->ops->wake_tx_queue)
+		return;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (thr && thr < STA_SLOW_THRESHOLD * sta->local->num_sta) {
 		sta->cparams.target = MS2TIME(50);
 		sta->cparams.interval = MS2TIME(300);
@@ -2861,8 +2979,11 @@ int ieee80211_sta_allocate_link(struct sta_info *sta, unsigned int link_id)
 
 	sta_info_add_link(sta, link_id, &alloc->info, &alloc->sta);
 
+<<<<<<< HEAD
 	ieee80211_link_sta_debugfs_add(&alloc->info);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

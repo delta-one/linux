@@ -6,6 +6,7 @@
  */
 
 #include <linux/err.h>
+<<<<<<< HEAD
 #include <linux/gpio/consumer.h>
 #include <linux/hte.h>
 #include <linux/interrupt.h>
@@ -14,6 +15,16 @@
 #include <linux/platform_device.h>
 #include <linux/timer.h>
 #include <linux/workqueue.h>
+=======
+#include <linux/module.h>
+#include <linux/moduleparam.h>
+#include <linux/interrupt.h>
+#include <linux/gpio.h>
+#include <linux/timer.h>
+#include <linux/platform_device.h>
+#include <linux/workqueue.h>
+#include <linux/hte.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * This sample HTE GPIO test driver demonstrates HTE API usage by enabling

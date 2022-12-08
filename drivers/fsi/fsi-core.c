@@ -897,10 +897,17 @@ static const struct attribute_group *cfam_attr_groups[] = {
 	NULL,
 };
 
+<<<<<<< HEAD
 static char *cfam_devnode(const struct device *dev, umode_t *mode,
 			  kuid_t *uid, kgid_t *gid)
 {
 	const struct fsi_slave *slave = to_fsi_slave(dev);
+=======
+static char *cfam_devnode(struct device *dev, umode_t *mode,
+			  kuid_t *uid, kgid_t *gid)
+{
+	struct fsi_slave *slave = to_fsi_slave(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_FSI_NEW_DEV_NODE
 	return kasprintf(GFP_KERNEL, "fsi/cfam%d", slave->cdev_idx);
@@ -915,7 +922,11 @@ static const struct device_type cfam_type = {
 	.groups = cfam_attr_groups
 };
 
+<<<<<<< HEAD
 static char *fsi_cdev_devnode(const struct device *dev, umode_t *mode,
+=======
+static char *fsi_cdev_devnode(struct device *dev, umode_t *mode,
+>>>>>>> b7ba80a49124 (Commit)
 			      kuid_t *uid, kgid_t *gid)
 {
 #ifdef CONFIG_FSI_NEW_DEV_NODE
@@ -1314,9 +1325,12 @@ int fsi_master_register(struct fsi_master *master)
 
 	mutex_init(&master->scan_lock);
 	master->idx = ida_simple_get(&master_ida, 0, INT_MAX, GFP_KERNEL);
+<<<<<<< HEAD
 	if (master->idx < 0)
 		return master->idx;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev_set_name(&master->dev, "fsi%d", master->idx);
 	master->dev.class = &fsi_master_class;
 

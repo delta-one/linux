@@ -866,7 +866,10 @@ int iosapic_serial_irq(struct parisc_device *dev)
 
 	return vi->txn_irq;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(iosapic_serial_irq);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 

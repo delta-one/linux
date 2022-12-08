@@ -148,7 +148,10 @@ DEFINE_EVENT(iomap_class, name,	\
 	TP_ARGS(inode, iomap))
 DEFINE_IOMAP_EVENT(iomap_iter_dstmap);
 DEFINE_IOMAP_EVENT(iomap_iter_srcmap);
+<<<<<<< HEAD
 DEFINE_IOMAP_EVENT(iomap_writepage_map);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 TRACE_EVENT(iomap_iter,
 	TP_PROTO(struct iomap_iter *iter, const void *ops,

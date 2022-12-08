@@ -26,7 +26,10 @@
 #include <linux/dma-fence-array.h>
 #include <drm/drm_gem.h>
 
+<<<<<<< HEAD
 #include "display/intel_display.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "display/intel_frontbuffer.h"
 #include "gem/i915_gem_lmem.h"
 #include "gem/i915_gem_tiling.h"
@@ -74,16 +77,26 @@ static void vma_print_allocator(struct i915_vma *vma, const char *reason)
 	char buf[512];
 
 	if (!vma->node.stack) {
+<<<<<<< HEAD
 		drm_dbg(&to_i915(vma->obj->base.dev)->drm,
 			"vma.node [%08llx + %08llx] %s: unknown owner\n",
 			vma->node.start, vma->node.size, reason);
+=======
+		DRM_DEBUG_DRIVER("vma.node [%08llx + %08llx] %s: unknown owner\n",
+				 vma->node.start, vma->node.size, reason);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
 	stack_depot_snprint(vma->node.stack, buf, sizeof(buf), 0);
+<<<<<<< HEAD
 	drm_dbg(&to_i915(vma->obj->base.dev)->drm,
 		"vma.node [%08llx + %08llx] %s: inserted at %s\n",
 		vma->node.start, vma->node.size, reason, buf);
+=======
+	DRM_DEBUG_DRIVER("vma.node [%08llx + %08llx] %s: inserted at %s\n",
+			 vma->node.start, vma->node.size, reason, buf);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #else
@@ -419,8 +432,13 @@ i915_vma_resource_init_from_vma(struct i915_vma_resource *vma_res,
 	i915_vma_resource_init(vma_res, vma->vm, vma->pages, &vma->page_sizes,
 			       obj->mm.rsgt, i915_gem_object_is_readonly(obj),
 			       i915_gem_object_is_lmem(obj), obj->mm.region,
+<<<<<<< HEAD
 			       vma->ops, vma->private, __i915_vma_offset(vma),
 			       __i915_vma_size(vma), vma->size, vma->guard);
+=======
+			       vma->ops, vma->private, vma->node.start,
+			       vma->node.size, vma->size);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -448,7 +466,11 @@ int i915_vma_bind(struct i915_vma *vma,
 
 	lockdep_assert_held(&vma->vm->mutex);
 	GEM_BUG_ON(!drm_mm_node_allocated(&vma->node));
+<<<<<<< HEAD
 	GEM_BUG_ON(vma->size > i915_vma_size(vma));
+=======
+	GEM_BUG_ON(vma->size > vma->node.size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (GEM_DEBUG_WARN_ON(range_overflows(vma->node.start,
 					      vma->node.size,
@@ -570,8 +592,13 @@ void __iomem *i915_vma_pin_iomap(struct i915_vma *vma)
 							  vma->obj->base.size);
 		} else if (i915_vma_is_map_and_fenceable(vma)) {
 			ptr = io_mapping_map_wc(&i915_vm_to_ggtt(vma->vm)->iomap,
+<<<<<<< HEAD
 						i915_vma_offset(vma),
 						i915_vma_size(vma));
+=======
+						vma->node.start,
+						vma->node.size);
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			ptr = (void __iomem *)
 				i915_gem_object_pin_map(vma->obj, I915_MAP_WC);
@@ -660,17 +687,26 @@ bool i915_vma_misplaced(const struct i915_vma *vma,
 	if (test_bit(I915_VMA_ERROR_BIT, __i915_vma_flags(vma)))
 		return true;
 
+<<<<<<< HEAD
 	if (i915_vma_size(vma) < size)
 		return true;
 
 	GEM_BUG_ON(alignment && !is_power_of_2(alignment));
 	if (alignment && !IS_ALIGNED(i915_vma_offset(vma), alignment))
+=======
+	if (vma->node.size < size)
+		return true;
+
+	GEM_BUG_ON(alignment && !is_power_of_2(alignment));
+	if (alignment && !IS_ALIGNED(vma->node.start, alignment))
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 
 	if (flags & PIN_MAPPABLE && !i915_vma_is_map_and_fenceable(vma))
 		return true;
 
 	if (flags & PIN_OFFSET_BIAS &&
+<<<<<<< HEAD
 	    i915_vma_offset(vma) < (flags & PIN_OFFSET_MASK))
 		return true;
 
@@ -680,6 +716,13 @@ bool i915_vma_misplaced(const struct i915_vma *vma,
 
 	if (flags & PIN_OFFSET_GUARD &&
 	    vma->guard < (flags & PIN_OFFSET_MASK))
+=======
+	    vma->node.start < (flags & PIN_OFFSET_MASK))
+		return true;
+
+	if (flags & PIN_OFFSET_FIXED &&
+	    vma->node.start != (flags & PIN_OFFSET_MASK))
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 
 	return false;
@@ -692,11 +735,18 @@ void __i915_vma_set_map_and_fenceable(struct i915_vma *vma)
 	GEM_BUG_ON(!i915_vma_is_ggtt(vma));
 	GEM_BUG_ON(!vma->fence_size);
 
+<<<<<<< HEAD
 	fenceable = (i915_vma_size(vma) >= vma->fence_size &&
 		     IS_ALIGNED(i915_vma_offset(vma), vma->fence_alignment));
 
 	mappable = i915_ggtt_offset(vma) + vma->fence_size <=
 		   i915_vm_to_ggtt(vma->vm)->mappable_end;
+=======
+	fenceable = (vma->node.size >= vma->fence_size &&
+		     IS_ALIGNED(vma->node.start, vma->fence_alignment));
+
+	mappable = vma->node.start + vma->fence_size <= i915_vm_to_ggtt(vma->vm)->mappable_end;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (mappable && fenceable)
 		set_bit(I915_VMA_CAN_FENCE_BIT, __i915_vma_flags(vma));
@@ -754,16 +804,26 @@ static int
 i915_vma_insert(struct i915_vma *vma, struct i915_gem_ww_ctx *ww,
 		u64 size, u64 alignment, u64 flags)
 {
+<<<<<<< HEAD
 	unsigned long color, guard;
+=======
+	unsigned long color;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 start, end;
 	int ret;
 
 	GEM_BUG_ON(i915_vma_is_bound(vma, I915_VMA_GLOBAL_BIND | I915_VMA_LOCAL_BIND));
 	GEM_BUG_ON(drm_mm_node_allocated(&vma->node));
+<<<<<<< HEAD
 	GEM_BUG_ON(hweight64(flags & (PIN_OFFSET_GUARD | PIN_OFFSET_FIXED | PIN_OFFSET_BIAS)) > 1);
 
 	size = max(size, vma->size);
 	alignment = max_t(typeof(alignment), alignment, vma->display_alignment);
+=======
+
+	size = max(size, vma->size);
+	alignment = max(alignment, vma->display_alignment);
+>>>>>>> b7ba80a49124 (Commit)
 	if (flags & PIN_MAPPABLE) {
 		size = max_t(typeof(size), size, vma->fence_size);
 		alignment = max_t(typeof(alignment),
@@ -774,6 +834,7 @@ i915_vma_insert(struct i915_vma *vma, struct i915_gem_ww_ctx *ww,
 	GEM_BUG_ON(!IS_ALIGNED(alignment, I915_GTT_MIN_ALIGNMENT));
 	GEM_BUG_ON(!is_power_of_2(alignment));
 
+<<<<<<< HEAD
 	guard = vma->guard; /* retain guard across rebinds */
 	if (flags & PIN_OFFSET_GUARD) {
 		GEM_BUG_ON(overflows_type(flags & PIN_OFFSET_MASK, u32));
@@ -786,6 +847,8 @@ i915_vma_insert(struct i915_vma *vma, struct i915_gem_ww_ctx *ww,
 	 */
 	guard = ALIGN(guard, alignment);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	start = flags & PIN_OFFSET_BIAS ? flags & PIN_OFFSET_MASK : 0;
 	GEM_BUG_ON(!IS_ALIGNED(start, I915_GTT_PAGE_SIZE));
 
@@ -797,6 +860,7 @@ i915_vma_insert(struct i915_vma *vma, struct i915_gem_ww_ctx *ww,
 	GEM_BUG_ON(!IS_ALIGNED(end, I915_GTT_PAGE_SIZE));
 
 	alignment = max(alignment, i915_vm_obj_min_alignment(vma->vm, vma->obj));
+<<<<<<< HEAD
 
 	/*
 	 * If binding the object/GGTT view requires more space than the entire
@@ -807,6 +871,23 @@ i915_vma_insert(struct i915_vma *vma, struct i915_gem_ww_ctx *ww,
 		drm_dbg(&to_i915(vma->obj->base.dev)->drm,
 			"Attempting to bind an object larger than the aperture: request=%llu > %s aperture=%llu\n",
 			size, flags & PIN_MAPPABLE ? "mappable" : "total", end);
+=======
+	/*
+	 * for compact-pt we round up the reservation to prevent
+	 * any smaller pages being used within the same PDE
+	 */
+	if (NEEDS_COMPACT_PT(vma->vm->i915))
+		size = round_up(size, alignment);
+
+	/* If binding the object/GGTT view requires more space than the entire
+	 * aperture has, reject it early before evicting everything in a vain
+	 * attempt to find space.
+	 */
+	if (size > end) {
+		DRM_DEBUG("Attempting to bind an object larger than the aperture: request=%llu > %s aperture=%llu\n",
+			  size, flags & PIN_MAPPABLE ? "mappable" : "total",
+			  end);
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOSPC;
 	}
 
@@ -820,6 +901,7 @@ i915_vma_insert(struct i915_vma *vma, struct i915_gem_ww_ctx *ww,
 		if (!IS_ALIGNED(offset, alignment) ||
 		    range_overflows(offset, size, end))
 			return -EINVAL;
+<<<<<<< HEAD
 		/*
 		 * The caller knows not of the guard added by others and
 		 * requests for the offset of the start of its buffer
@@ -837,6 +919,15 @@ i915_vma_insert(struct i915_vma *vma, struct i915_gem_ww_ctx *ww,
 			return ret;
 	} else {
 		size += 2 * guard;
+=======
+
+		ret = i915_gem_gtt_reserve(vma->vm, ww, &vma->node,
+					   size, offset, color,
+					   flags);
+		if (ret)
+			return ret;
+	} else {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * We only support huge gtt pages through the 48b PPGTT,
 		 * however we also don't want to force any alignment for
@@ -846,8 +937,12 @@ i915_vma_insert(struct i915_vma *vma, struct i915_gem_ww_ctx *ww,
 		 * forseeable future. See also i915_ggtt_offset().
 		 */
 		if (upper_32_bits(end - 1) &&
+<<<<<<< HEAD
 		    vma->page_sizes.sg > I915_GTT_PAGE_SIZE &&
 		    !HAS_64K_PAGES(vma->vm->i915)) {
+=======
+		    vma->page_sizes.sg > I915_GTT_PAGE_SIZE) {
+>>>>>>> b7ba80a49124 (Commit)
 			/*
 			 * We can't mix 64K and 4K PTEs in the same page-table
 			 * (2M block), and so to avoid the ugliness and
@@ -884,7 +979,10 @@ i915_vma_insert(struct i915_vma *vma, struct i915_gem_ww_ctx *ww,
 	GEM_BUG_ON(!i915_gem_valid_gtt_space(vma, color));
 
 	list_move_tail(&vma->vm_link, &vma->vm->bound_list);
+<<<<<<< HEAD
 	vma->guard = guard;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -937,7 +1035,11 @@ rotate_pages(struct drm_i915_gem_object *obj, unsigned int offset,
 	     struct sg_table *st, struct scatterlist *sg)
 {
 	unsigned int column, row;
+<<<<<<< HEAD
 	pgoff_t src_idx;
+=======
+	unsigned int src_idx;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (column = 0; column < width; column++) {
 		unsigned int left;
@@ -1043,7 +1145,11 @@ add_padding_pages(unsigned int count,
 
 static struct scatterlist *
 remap_tiled_color_plane_pages(struct drm_i915_gem_object *obj,
+<<<<<<< HEAD
 			      unsigned long offset, unsigned int alignment_pad,
+=======
+			      unsigned int offset, unsigned int alignment_pad,
+>>>>>>> b7ba80a49124 (Commit)
 			      unsigned int width, unsigned int height,
 			      unsigned int src_stride, unsigned int dst_stride,
 			      struct sg_table *st, struct scatterlist *sg,
@@ -1102,7 +1208,11 @@ remap_tiled_color_plane_pages(struct drm_i915_gem_object *obj,
 
 static struct scatterlist *
 remap_contiguous_pages(struct drm_i915_gem_object *obj,
+<<<<<<< HEAD
 		       pgoff_t obj_offset,
+=======
+		       unsigned int obj_offset,
+>>>>>>> b7ba80a49124 (Commit)
 		       unsigned int count,
 		       struct sg_table *st, struct scatterlist *sg)
 {
@@ -1135,7 +1245,11 @@ remap_contiguous_pages(struct drm_i915_gem_object *obj,
 
 static struct scatterlist *
 remap_linear_color_plane_pages(struct drm_i915_gem_object *obj,
+<<<<<<< HEAD
 			       pgoff_t obj_offset, unsigned int alignment_pad,
+=======
+			       unsigned int obj_offset, unsigned int alignment_pad,
+>>>>>>> b7ba80a49124 (Commit)
 			       unsigned int size,
 			       struct sg_table *st, struct scatterlist *sg,
 			       unsigned int *gtt_offset)
@@ -1575,8 +1689,11 @@ static int __i915_ggtt_pin(struct i915_vma *vma, struct i915_gem_ww_ctx *ww,
 			   u32 align, unsigned int flags)
 {
 	struct i915_address_space *vm = vma->vm;
+<<<<<<< HEAD
 	struct intel_gt *gt;
 	struct i915_ggtt *ggtt = i915_vm_to_ggtt(vm);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	do {
@@ -1592,15 +1709,23 @@ static int __i915_ggtt_pin(struct i915_vma *vma, struct i915_gem_ww_ctx *ww,
 		}
 
 		/* Unlike i915_vma_pin, we don't take no for an answer! */
+<<<<<<< HEAD
 		list_for_each_entry(gt, &ggtt->gt_list, ggtt_link)
 			flush_idle_contexts(gt);
+=======
+		flush_idle_contexts(vm->gt);
+>>>>>>> b7ba80a49124 (Commit)
 		if (mutex_lock_interruptible(&vm->mutex) == 0) {
 			/*
 			 * We pass NULL ww here, as we don't want to unbind
 			 * locked objects when called from execbuf when pinning
 			 * is removed. This would probably regress badly.
 			 */
+<<<<<<< HEAD
 			i915_gem_evict_vm(vm, NULL, NULL);
+=======
+			i915_gem_evict_vm(vm, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 			mutex_unlock(&vm->mutex);
 		}
 	} while (1);
@@ -1878,11 +2003,14 @@ int _i915_vma_move_to_active(struct i915_vma *vma,
 
 	GEM_BUG_ON(!vma->pages);
 
+<<<<<<< HEAD
 	if (!(flags & __EXEC_OBJECT_NO_REQUEST_AWAIT)) {
 		err = i915_request_await_object(rq, vma->obj, flags & EXEC_OBJECT_WRITE);
 		if (unlikely(err))
 			return err;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = __i915_vma_move_to_active(vma, rq);
 	if (unlikely(err))
 		return err;
@@ -2150,7 +2278,11 @@ int i915_vma_unbind_async(struct i915_vma *vma, bool trylock_vm)
 	if (!obj->mm.rsgt)
 		return -EBUSY;
 
+<<<<<<< HEAD
 	err = dma_resv_reserve_fences(obj->base.resv, 2);
+=======
+	err = dma_resv_reserve_fences(obj->base.resv, 1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return -EBUSY;
 

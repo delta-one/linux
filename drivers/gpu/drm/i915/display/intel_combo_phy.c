@@ -3,7 +3,10 @@
  * Copyright © 2018 Intel Corporation
  */
 
+<<<<<<< HEAD
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_combo_phy.h"
 #include "intel_combo_phy_regs.h"
 #include "intel_de.h"
@@ -54,6 +57,10 @@ static const struct icl_procmon {
 static const struct icl_procmon *
 icl_get_procmon_ref_values(struct drm_i915_private *dev_priv, enum phy phy)
 {
+<<<<<<< HEAD
+=======
+	const struct icl_procmon *procmon;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 val;
 
 	val = intel_de_read(dev_priv, ICL_PORT_COMP_DW3(phy));
@@ -62,6 +69,7 @@ icl_get_procmon_ref_values(struct drm_i915_private *dev_priv, enum phy phy)
 		MISSING_CASE(val);
 		fallthrough;
 	case VOLTAGE_INFO_0_85V | PROCESS_INFO_DOT_0:
+<<<<<<< HEAD
 		return &icl_procmon_values[PROCMON_0_85V_DOT_0];
 	case VOLTAGE_INFO_0_95V | PROCESS_INFO_DOT_0:
 		return &icl_procmon_values[PROCMON_0_95V_DOT_0];
@@ -72,17 +80,47 @@ icl_get_procmon_ref_values(struct drm_i915_private *dev_priv, enum phy phy)
 	case VOLTAGE_INFO_1_05V | PROCESS_INFO_DOT_1:
 		return &icl_procmon_values[PROCMON_1_05V_DOT_1];
 	}
+=======
+		procmon = &icl_procmon_values[PROCMON_0_85V_DOT_0];
+		break;
+	case VOLTAGE_INFO_0_95V | PROCESS_INFO_DOT_0:
+		procmon = &icl_procmon_values[PROCMON_0_95V_DOT_0];
+		break;
+	case VOLTAGE_INFO_0_95V | PROCESS_INFO_DOT_1:
+		procmon = &icl_procmon_values[PROCMON_0_95V_DOT_1];
+		break;
+	case VOLTAGE_INFO_1_05V | PROCESS_INFO_DOT_0:
+		procmon = &icl_procmon_values[PROCMON_1_05V_DOT_0];
+		break;
+	case VOLTAGE_INFO_1_05V | PROCESS_INFO_DOT_1:
+		procmon = &icl_procmon_values[PROCMON_1_05V_DOT_1];
+		break;
+	}
+
+	return procmon;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void icl_set_procmon_ref_values(struct drm_i915_private *dev_priv,
 				       enum phy phy)
 {
 	const struct icl_procmon *procmon;
+<<<<<<< HEAD
 
 	procmon = icl_get_procmon_ref_values(dev_priv, phy);
 
 	intel_de_rmw(dev_priv, ICL_PORT_COMP_DW1(phy),
 		     (0xff << 16) | 0xff, procmon->dw1);
+=======
+	u32 val;
+
+	procmon = icl_get_procmon_ref_values(dev_priv, phy);
+
+	val = intel_de_read(dev_priv, ICL_PORT_COMP_DW1(phy));
+	val &= ~((0xff << 16) | 0xff);
+	val |= procmon->dw1;
+	intel_de_write(dev_priv, ICL_PORT_COMP_DW1(phy), val);
+>>>>>>> b7ba80a49124 (Commit)
 
 	intel_de_write(dev_priv, ICL_PORT_COMP_DW9(phy), procmon->dw9);
 	intel_de_write(dev_priv, ICL_PORT_COMP_DW10(phy), procmon->dw10);
@@ -233,7 +271,12 @@ static bool icl_combo_phy_verify_state(struct drm_i915_private *dev_priv,
 				     ICL_PORT_TX_DW8_ODCC_CLK_DIV_SEL_DIV2);
 
 		ret &= check_phy_reg(dev_priv, phy, ICL_PORT_PCS_DW1_LN(0, phy),
+<<<<<<< HEAD
 				     DCC_MODE_SELECT_MASK, RUN_DCC_ONCE);
+=======
+				     DCC_MODE_SELECT_MASK,
+				     DCC_MODE_SELECT_CONTINUOSLY);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret &= icl_verify_procmon_ref_values(dev_priv, phy);
@@ -263,6 +306,10 @@ void intel_combo_phy_power_up_lanes(struct drm_i915_private *dev_priv,
 				    int lane_count, bool lane_reversal)
 {
 	u8 lane_mask;
+<<<<<<< HEAD
+=======
+	u32 val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (is_dsi) {
 		drm_WARN_ON(&dev_priv->drm, lane_reversal);
@@ -303,8 +350,15 @@ void intel_combo_phy_power_up_lanes(struct drm_i915_private *dev_priv,
 		}
 	}
 
+<<<<<<< HEAD
 	intel_de_rmw(dev_priv, ICL_PORT_CL_DW10(phy),
 		     PWR_DOWN_LN_MASK, lane_mask);
+=======
+	val = intel_de_read(dev_priv, ICL_PORT_CL_DW10(phy));
+	val &= ~PWR_DOWN_LN_MASK;
+	val |= lane_mask;
+	intel_de_write(dev_priv, ICL_PORT_CL_DW10(phy), val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void icl_combo_phys_init(struct drm_i915_private *dev_priv)
@@ -353,12 +407,17 @@ skip_phy_misc:
 
 			val = intel_de_read(dev_priv, ICL_PORT_PCS_DW1_LN(0, phy));
 			val &= ~DCC_MODE_SELECT_MASK;
+<<<<<<< HEAD
 			val |= RUN_DCC_ONCE;
+=======
+			val |= DCC_MODE_SELECT_CONTINUOSLY;
+>>>>>>> b7ba80a49124 (Commit)
 			intel_de_write(dev_priv, ICL_PORT_PCS_DW1_GRP(phy), val);
 		}
 
 		icl_set_procmon_ref_values(dev_priv, phy);
 
+<<<<<<< HEAD
 		if (phy_is_master(dev_priv, phy))
 			intel_de_rmw(dev_priv, ICL_PORT_COMP_DW8(phy),
 				     0, IREFGEN);
@@ -366,6 +425,21 @@ skip_phy_misc:
 		intel_de_rmw(dev_priv, ICL_PORT_COMP_DW0(phy), 0, COMP_INIT);
 		intel_de_rmw(dev_priv, ICL_PORT_CL_DW5(phy),
 			     0, CL_POWER_DOWN_ENABLE);
+=======
+		if (phy_is_master(dev_priv, phy)) {
+			val = intel_de_read(dev_priv, ICL_PORT_COMP_DW8(phy));
+			val |= IREFGEN;
+			intel_de_write(dev_priv, ICL_PORT_COMP_DW8(phy), val);
+		}
+
+		val = intel_de_read(dev_priv, ICL_PORT_COMP_DW0(phy));
+		val |= COMP_INIT;
+		intel_de_write(dev_priv, ICL_PORT_COMP_DW0(phy), val);
+
+		val = intel_de_read(dev_priv, ICL_PORT_CL_DW5(phy));
+		val |= CL_POWER_DOWN_ENABLE;
+		intel_de_write(dev_priv, ICL_PORT_CL_DW5(phy), val);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -374,6 +448,11 @@ static void icl_combo_phys_uninit(struct drm_i915_private *dev_priv)
 	enum phy phy;
 
 	for_each_combo_phy_reverse(dev_priv, phy) {
+<<<<<<< HEAD
+=======
+		u32 val;
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (phy == PHY_A &&
 		    !icl_combo_phy_verify_state(dev_priv, phy)) {
 			if (IS_TIGERLAKE(dev_priv) || IS_DG1(dev_priv)) {
@@ -395,11 +474,22 @@ static void icl_combo_phys_uninit(struct drm_i915_private *dev_priv)
 		if (!has_phy_misc(dev_priv, phy))
 			goto skip_phy_misc;
 
+<<<<<<< HEAD
 		intel_de_rmw(dev_priv, ICL_PHY_MISC(phy), 0,
 			     ICL_PHY_MISC_DE_IO_COMP_PWR_DOWN);
 
 skip_phy_misc:
 		intel_de_rmw(dev_priv, ICL_PORT_COMP_DW0(phy), COMP_INIT, 0);
+=======
+		val = intel_de_read(dev_priv, ICL_PHY_MISC(phy));
+		val |= ICL_PHY_MISC_DE_IO_COMP_PWR_DOWN;
+		intel_de_write(dev_priv, ICL_PHY_MISC(phy), val);
+
+skip_phy_misc:
+		val = intel_de_read(dev_priv, ICL_PORT_COMP_DW0(phy));
+		val &= ~COMP_INIT;
+		intel_de_write(dev_priv, ICL_PORT_COMP_DW0(phy), val);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

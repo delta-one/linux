@@ -345,6 +345,7 @@ static struct flexcan_devtype_data fsl_imx8mp_devtype_data = {
 		FLEXCAN_QUIRK_SUPPORT_RX_MAILBOX_RTR,
 };
 
+<<<<<<< HEAD
 static struct flexcan_devtype_data fsl_imx93_devtype_data = {
 	.quirks = FLEXCAN_QUIRK_DISABLE_RXFG | FLEXCAN_QUIRK_ENABLE_EACEN_RRS |
 		FLEXCAN_QUIRK_DISABLE_MECR | FLEXCAN_QUIRK_USE_RX_MAILBOX |
@@ -354,6 +355,8 @@ static struct flexcan_devtype_data fsl_imx93_devtype_data = {
 		FLEXCAN_QUIRK_SUPPORT_RX_MAILBOX_RTR,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct flexcan_devtype_data fsl_vf610_devtype_data = {
 	.quirks = FLEXCAN_QUIRK_DISABLE_RXFG | FLEXCAN_QUIRK_ENABLE_EACEN_RRS |
 		FLEXCAN_QUIRK_DISABLE_MECR | FLEXCAN_QUIRK_USE_RX_MAILBOX |
@@ -541,6 +544,7 @@ static inline int flexcan_enter_stop_mode(struct flexcan_priv *priv)
 		ret = flexcan_stop_mode_enable_scfw(priv, true);
 		if (ret < 0)
 			return ret;
+<<<<<<< HEAD
 	} else if (priv->devtype_data.quirks & FLEXCAN_QUIRK_SETUP_STOP_MODE_GPR) {
 		regmap_update_bits(priv->stm.gpr, priv->stm.req_gpr,
 				   1 << priv->stm.req_bit, 1 << priv->stm.req_bit);
@@ -549,6 +553,11 @@ static inline int flexcan_enter_stop_mode(struct flexcan_priv *priv)
 		 * all the operation automatically after system go into low power mode.
 		 */
 		return 0;
+=======
+	} else {
+		regmap_update_bits(priv->stm.gpr, priv->stm.req_gpr,
+				   1 << priv->stm.req_bit, 1 << priv->stm.req_bit);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return flexcan_low_power_enter_ack(priv);
@@ -565,7 +574,11 @@ static inline int flexcan_exit_stop_mode(struct flexcan_priv *priv)
 		ret = flexcan_stop_mode_enable_scfw(priv, false);
 		if (ret < 0)
 			return ret;
+<<<<<<< HEAD
 	} else if (priv->devtype_data.quirks & FLEXCAN_QUIRK_SETUP_STOP_MODE_GPR) {
+=======
+	} else {
+>>>>>>> b7ba80a49124 (Commit)
 		regmap_update_bits(priv->stm.gpr, priv->stm.req_gpr,
 				   1 << priv->stm.req_bit, 0);
 	}
@@ -574,12 +587,15 @@ static inline int flexcan_exit_stop_mode(struct flexcan_priv *priv)
 	reg_mcr &= ~FLEXCAN_MCR_SLF_WAK;
 	priv->write(reg_mcr, &regs->mcr);
 
+<<<<<<< HEAD
 	/* For the auto stop mode, hardware will exist stop mode
 	 * automatically after system go out of low power mode.
 	 */
 	if (priv->devtype_data.quirks & FLEXCAN_QUIRK_AUTO_STOP_MODE)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return flexcan_low_power_exit_ack(priv);
 }
 
@@ -762,7 +778,11 @@ static netdev_tx_t flexcan_start_xmit(struct sk_buff *skb, struct net_device *de
 	u32 ctrl = FLEXCAN_MB_CODE_TX_DATA | ((can_fd_len2dlc(cfd->len)) << 16);
 	int i;
 
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(dev, skb))
+=======
+	if (can_dropped_invalid_skb(dev, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	netif_stop_queue(dev);
@@ -1994,8 +2014,11 @@ static int flexcan_setup_stop_mode(struct platform_device *pdev)
 		ret = flexcan_setup_stop_mode_scfw(pdev);
 	else if (priv->devtype_data.quirks & FLEXCAN_QUIRK_SETUP_STOP_MODE_GPR)
 		ret = flexcan_setup_stop_mode_gpr(pdev);
+<<<<<<< HEAD
 	else if (priv->devtype_data.quirks & FLEXCAN_QUIRK_AUTO_STOP_MODE)
 		ret = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		/* return 0 directly if doesn't support stop mode feature */
 		return 0;
@@ -2014,7 +2037,10 @@ static int flexcan_setup_stop_mode(struct platform_device *pdev)
 static const struct of_device_id flexcan_of_match[] = {
 	{ .compatible = "fsl,imx8qm-flexcan", .data = &fsl_imx8qm_devtype_data, },
 	{ .compatible = "fsl,imx8mp-flexcan", .data = &fsl_imx8mp_devtype_data, },
+<<<<<<< HEAD
 	{ .compatible = "fsl,imx93-flexcan", .data = &fsl_imx93_devtype_data, },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "fsl,imx6q-flexcan", .data = &fsl_imx6q_devtype_data, },
 	{ .compatible = "fsl,imx28-flexcan", .data = &fsl_imx28_devtype_data, },
 	{ .compatible = "fsl,imx53-flexcan", .data = &fsl_imx25_devtype_data, },
@@ -2322,6 +2348,7 @@ static int __maybe_unused flexcan_noirq_suspend(struct device *device)
 	if (netif_running(dev)) {
 		int err;
 
+<<<<<<< HEAD
 		if (device_may_wakeup(device)) {
 			flexcan_enable_wakeup_irq(priv, true);
 			/* For auto stop mode, need to keep the clock on before
@@ -2332,6 +2359,10 @@ static int __maybe_unused flexcan_noirq_suspend(struct device *device)
 			if (priv->devtype_data.quirks & FLEXCAN_QUIRK_AUTO_STOP_MODE)
 				return 0;
 		}
+=======
+		if (device_may_wakeup(device))
+			flexcan_enable_wakeup_irq(priv, true);
+>>>>>>> b7ba80a49124 (Commit)
 
 		err = pm_runtime_force_suspend(device);
 		if (err)
@@ -2349,6 +2380,7 @@ static int __maybe_unused flexcan_noirq_resume(struct device *device)
 	if (netif_running(dev)) {
 		int err;
 
+<<<<<<< HEAD
 		/* For the wakeup in auto stop mode, no need to gate on the
 		 * clock here, hardware will do this automatically.
 		 */
@@ -2358,6 +2390,11 @@ static int __maybe_unused flexcan_noirq_resume(struct device *device)
 			if (err)
 				return err;
 		}
+=======
+		err = pm_runtime_force_resume(device);
+		if (err)
+			return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (device_may_wakeup(device))
 			flexcan_enable_wakeup_irq(priv, false);

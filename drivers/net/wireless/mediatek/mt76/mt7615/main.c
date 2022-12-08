@@ -83,7 +83,11 @@ static int mt7615_start(struct ieee80211_hw *hw)
 	ieee80211_queue_delayed_work(hw, &phy->mt76->mac_work, timeout);
 
 	if (!running)
+<<<<<<< HEAD
 		mt7615_mac_reset_counters(phy);
+=======
+		mt7615_mac_reset_counters(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	mt7615_mutex_release(dev);
@@ -320,7 +324,11 @@ int mt7615_set_channel(struct mt7615_phy *phy)
 	if (ret)
 		goto out;
 
+<<<<<<< HEAD
 	mt7615_mac_reset_counters(phy);
+=======
+	mt7615_mac_reset_counters(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	phy->noise = 0;
 	phy->chfreq = mt76_rr(dev, MT_CHFREQ(ext_phy));
 
@@ -572,9 +580,12 @@ static void mt7615_bss_info_changed(struct ieee80211_hw *hw,
 		}
 	}
 
+<<<<<<< HEAD
 	if (changed & BSS_CHANGED_ERP_CTS_PROT)
 		mt7615_mac_enable_rtscts(dev, vif, info->use_cts_prot);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (changed & BSS_CHANGED_BEACON_ENABLED && info->enable_beacon) {
 		mt7615_mcu_add_bss_info(phy, vif, NULL, true);
 		mt7615_mcu_sta_add(phy, vif, NULL, true);

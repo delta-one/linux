@@ -972,6 +972,10 @@ static int imxfb_probe(struct platform_device *pdev)
 
 	fbi->regs = devm_ioremap_resource(&pdev->dev, res);
 	if (IS_ERR(fbi->regs)) {
+<<<<<<< HEAD
+=======
+		dev_err(&pdev->dev, "Cannot map frame buffer registers\n");
+>>>>>>> b7ba80a49124 (Commit)
 		ret = PTR_ERR(fbi->regs);
 		goto failed_ioremap;
 	}
@@ -1051,7 +1055,11 @@ failed_init:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void imxfb_remove(struct platform_device *pdev)
+=======
+static int imxfb_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = platform_get_drvdata(pdev);
 	struct imxfb_info *fbi = info->par;
@@ -1064,6 +1072,11 @@ static void imxfb_remove(struct platform_device *pdev)
 		    fbi->map_dma);
 	kfree(info->pseudo_palette);
 	framebuffer_release(info);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused imxfb_suspend(struct device *dev)
@@ -1095,7 +1108,11 @@ static struct platform_driver imxfb_driver = {
 		.pm	= &imxfb_pm_ops,
 	},
 	.probe		= imxfb_probe,
+<<<<<<< HEAD
 	.remove_new	= imxfb_remove,
+=======
+	.remove		= imxfb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= imxfb_devtype,
 };
 module_platform_driver(imxfb_driver);

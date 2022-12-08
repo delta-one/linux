@@ -2,6 +2,7 @@
 
 //! String representations.
 
+<<<<<<< HEAD
 use alloc::vec::Vec;
 use core::fmt::{self, Write};
 use core::ops::{self, Deref, Index};
@@ -373,6 +374,9 @@ mod tests {
         assert_eq!(unchecked_str, "🐧");
     }
 }
+=======
+use core::fmt;
+>>>>>>> b7ba80a49124 (Commit)
 
 /// Allows formatting of [`fmt::Arguments`] into a raw buffer.
 ///
@@ -385,12 +389,17 @@ mod tests {
 /// is less than `end`.
 pub(crate) struct RawFormatter {
     // Use `usize` to use `saturating_*` functions.
+<<<<<<< HEAD
+=======
+    #[allow(dead_code)]
+>>>>>>> b7ba80a49124 (Commit)
     beg: usize,
     pos: usize,
     end: usize,
 }
 
 impl RawFormatter {
+<<<<<<< HEAD
     /// Creates a new instance of [`RawFormatter`] with an empty buffer.
     fn new() -> Self {
         // INVARIANT: The buffer is empty, so the region that needs to be writable is empty.
@@ -401,6 +410,8 @@ impl RawFormatter {
         }
     }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     /// Creates a new instance of [`RawFormatter`] with the given buffer pointers.
     ///
     /// # Safety
@@ -416,6 +427,7 @@ impl RawFormatter {
         }
     }
 
+<<<<<<< HEAD
     /// Creates a new instance of [`RawFormatter`] with the given buffer.
     ///
     /// # Safety
@@ -433,17 +445,22 @@ impl RawFormatter {
         }
     }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     /// Returns the current insert position.
     ///
     /// N.B. It may point to invalid memory.
     pub(crate) fn pos(&self) -> *mut u8 {
         self.pos as _
     }
+<<<<<<< HEAD
 
     /// Return the number of bytes written to the formatter.
     pub(crate) fn bytes_written(&self) -> usize {
         self.pos - self.beg
     }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 impl fmt::Write for RawFormatter {
@@ -471,6 +488,7 @@ impl fmt::Write for RawFormatter {
         Ok(())
     }
 }
+<<<<<<< HEAD
 
 /// Allows formatting of [`fmt::Arguments`] into a raw buffer.
 ///
@@ -589,3 +607,5 @@ impl Deref for CString {
 macro_rules! fmt {
     ($($f:tt)*) => ( core::format_args!($($f)*) )
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

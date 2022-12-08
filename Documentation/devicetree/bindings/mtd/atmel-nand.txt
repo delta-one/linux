@@ -45,8 +45,15 @@ Optional properties:
 - atmel,rb: an integer identifying the native Ready/Busy pin. Only meaningful
 	    on sama5 SoCs.
 
+<<<<<<< HEAD
 All generic properties are described in the generic yaml files under
 Documentation/devicetree/bindings/mtd/.
+=======
+All generic properties described in
+Documentation/devicetree/bindings/mtd/{common,nand}.txt also apply to the NAND
+device node, and NAND partitions should be defined under the NAND node as
+described in Documentation/devicetree/bindings/mtd/partition.txt.
+>>>>>>> b7ba80a49124 (Commit)
 
 * ECC engine (PMECC) bindings:
 

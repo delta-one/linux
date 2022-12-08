@@ -91,7 +91,11 @@ int mlx5_esw_offloads_devlink_port_register(struct mlx5_eswitch *esw, u16 vport_
 	if (err)
 		goto reg_err;
 
+<<<<<<< HEAD
 	err = devl_rate_leaf_create(dl_port, vport, NULL);
+=======
+	err = devl_rate_leaf_create(dl_port, vport);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto rate_err;
 
@@ -160,7 +164,11 @@ int mlx5_esw_devlink_sf_port_register(struct mlx5_eswitch *esw, struct devlink_p
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	err = devl_rate_leaf_create(dl_port, vport, NULL);
+=======
+	err = devl_rate_leaf_create(dl_port, vport);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto rate_err;
 

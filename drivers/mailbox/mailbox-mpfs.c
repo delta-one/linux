@@ -2,7 +2,11 @@
 /*
  * Microchip PolarFire SoC (MPFS) system controller/mailbox controller driver
  *
+<<<<<<< HEAD
  * Copyright (c) 2020-2022 Microchip Corporation. All rights reserved.
+=======
+ * Copyright (c) 2020 Microchip Corporation. All rights reserved.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Author: Conor Dooley <conor.dooley@microchip.com>
  *
@@ -56,13 +60,20 @@
 #define SCB_STATUS_NOTIFY_MASK BIT(SCB_STATUS_NOTIFY)
 
 #define SCB_STATUS_POS (16)
+<<<<<<< HEAD
 #define SCB_STATUS_MASK GENMASK(SCB_STATUS_POS + SCB_MASK_WIDTH - 1, SCB_STATUS_POS)
+=======
+#define SCB_STATUS_MASK GENMASK_ULL(SCB_STATUS_POS + SCB_MASK_WIDTH, SCB_STATUS_POS)
+>>>>>>> b7ba80a49124 (Commit)
 
 struct mpfs_mbox {
 	struct mbox_controller controller;
 	struct device *dev;
 	int irq;
+<<<<<<< HEAD
 	void __iomem *ctrl_base;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem *mbox_base;
 	void __iomem *int_reg;
 	struct mbox_chan chans[1];
@@ -74,7 +85,11 @@ static bool mpfs_mbox_busy(struct mpfs_mbox *mbox)
 {
 	u32 status;
 
+<<<<<<< HEAD
 	status = readl_relaxed(mbox->ctrl_base + SERVICES_SR_OFFSET);
+=======
+	status = readl_relaxed(mbox->mbox_base + SERVICES_SR_OFFSET);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return status & SCB_STATUS_BUSY_MASK;
 }
@@ -100,27 +115,45 @@ static int mpfs_mbox_send_data(struct mbox_chan *chan, void *data)
 
 		for (index = 0; index < (msg->cmd_data_size / 4); index++)
 			writel_relaxed(word_buf[index],
+<<<<<<< HEAD
 				       mbox->mbox_base + msg->mbox_offset + index * 0x4);
+=======
+				       mbox->mbox_base + MAILBOX_REG_OFFSET + index * 0x4);
+>>>>>>> b7ba80a49124 (Commit)
 		if (extra_bits) {
 			u8 i;
 			u8 byte_off = ALIGN_DOWN(msg->cmd_data_size, 4);
 			u8 *byte_buf = msg->cmd_data + byte_off;
 
+<<<<<<< HEAD
 			val = readl_relaxed(mbox->mbox_base + msg->mbox_offset + index * 0x4);
+=======
+			val = readl_relaxed(mbox->mbox_base +
+					    MAILBOX_REG_OFFSET + index * 0x4);
+>>>>>>> b7ba80a49124 (Commit)
 
 			for (i = 0u; i < extra_bits; i++) {
 				val &= ~(0xffu << (i * 8u));
 				val |= (byte_buf[i] << (i * 8u));
 			}
 
+<<<<<<< HEAD
 			writel_relaxed(val, mbox->mbox_base + msg->mbox_offset + index * 0x4);
+=======
+			writel_relaxed(val,
+				       mbox->mbox_base + MAILBOX_REG_OFFSET + index * 0x4);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
 	opt_sel = ((msg->mbox_offset << 7u) | (msg->cmd_opcode & 0x7fu));
 	tx_trigger = (opt_sel << SCB_CTRL_POS) & SCB_CTRL_MASK;
 	tx_trigger |= SCB_CTRL_REQ_MASK | SCB_STATUS_NOTIFY_MASK;
+<<<<<<< HEAD
 	writel_relaxed(tx_trigger, mbox->ctrl_base + SERVICES_CR_OFFSET);
+=======
+	writel_relaxed(tx_trigger, mbox->mbox_base + SERVICES_CR_OFFSET);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -130,13 +163,18 @@ static void mpfs_mbox_rx_data(struct mbox_chan *chan)
 	struct mpfs_mbox *mbox = (struct mpfs_mbox *)chan->con_priv;
 	struct mpfs_mss_response *response = mbox->response;
 	u16 num_words = ALIGN((response->resp_size), (4)) / 4U;
+<<<<<<< HEAD
 	u32 i, status;
+=======
+	u32 i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!response->resp_msg) {
 		dev_err(mbox->dev, "failed to assign memory for response %d\n", -ENOMEM);
 		return;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * The status is stored in bits 31:16 of the SERVICES_SR register.
 	 * It is only valid when BUSY == 0.
@@ -166,6 +204,12 @@ static void mpfs_mbox_rx_data(struct mbox_chan *chan)
 		for (i = 0; i < num_words; i++) {
 			response->resp_msg[i] =
 				readl_relaxed(mbox->mbox_base
+=======
+	if (!mpfs_mbox_busy(mbox)) {
+		for (i = 0; i < num_words; i++) {
+			response->resp_msg[i] =
+				readl_relaxed(mbox->mbox_base + MAILBOX_REG_OFFSET
+>>>>>>> b7ba80a49124 (Commit)
 					      + mbox->resp_offset + i * 0x4);
 		}
 	}
@@ -224,18 +268,27 @@ static int mpfs_mbox_probe(struct platform_device *pdev)
 	if (!mbox)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	mbox->ctrl_base = devm_platform_get_and_ioremap_resource(pdev, 0, &regs);
 	if (IS_ERR(mbox->ctrl_base))
 		return PTR_ERR(mbox->ctrl_base);
+=======
+	mbox->mbox_base = devm_platform_get_and_ioremap_resource(pdev, 0, &regs);
+	if (IS_ERR(mbox->mbox_base))
+		return PTR_ERR(mbox->mbox_base);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mbox->int_reg = devm_platform_get_and_ioremap_resource(pdev, 1, &regs);
 	if (IS_ERR(mbox->int_reg))
 		return PTR_ERR(mbox->int_reg);
 
+<<<<<<< HEAD
 	mbox->mbox_base = devm_platform_get_and_ioremap_resource(pdev, 2, &regs);
 	if (IS_ERR(mbox->mbox_base)) // account for the old dt-binding w/ 2 regs
 		mbox->mbox_base = mbox->ctrl_base + MAILBOX_REG_OFFSET;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mbox->irq = platform_get_irq(pdev, 0);
 	if (mbox->irq < 0)
 		return mbox->irq;

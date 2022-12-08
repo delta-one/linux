@@ -203,7 +203,11 @@
  *	prb_rec_init_wr(&r, 5);
  *
  *	// try to extend, but only if it does not exceed 32 bytes
+<<<<<<< HEAD
  *	if (prb_reserve_in_last(&e, &test_rb, &r, printk_caller_id(), 32)) {
+=======
+ *	if (prb_reserve_in_last(&e, &test_rb, &r, printk_caller_id()), 32) {
+>>>>>>> b7ba80a49124 (Commit)
  *		snprintf(&r.text_buf[r.info->text_len],
  *			 r.text_buf_size - r.info->text_len, "hello");
  *

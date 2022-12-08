@@ -16,12 +16,17 @@
  */
 
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/sizes.h>
 #include <linux/slab.h>
 
 #include <asm/cpu_device_id.h>
 #include <asm/resctrl.h>
 
+=======
+#include <linux/slab.h>
+#include <asm/cpu_device_id.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include "internal.h"
 
 struct rmid_entry {
@@ -41,8 +46,13 @@ static LIST_HEAD(rmid_free_lru);
  * @rmid_limbo_count     count of currently unused but (potentially)
  *     dirty RMIDs.
  *     This counts RMIDs that no one is currently using but that
+<<<<<<< HEAD
  *     may have a occupancy value > resctrl_rmid_realloc_threshold. User can
  *     change the threshold occupancy value.
+=======
+ *     may have a occupancy value > intel_cqm_threshold. User can change
+ *     the threshold occupancy value.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static unsigned int rmid_limbo_count;
 
@@ -63,6 +73,7 @@ bool rdt_mon_capable;
 unsigned int rdt_mon_features;
 
 /*
+<<<<<<< HEAD
  * This is the threshold cache occupancy in bytes at which we will consider an
  * RMID available for re-allocation.
  */
@@ -72,6 +83,12 @@ unsigned int resctrl_rmid_realloc_threshold;
  * This is the maximum value for the reallocation threshold, in bytes.
  */
 unsigned int resctrl_rmid_realloc_limit;
+=======
+ * This is the threshold cache occupancy at which we will consider an
+ * RMID available for re-allocation.
+ */
+unsigned int resctrl_cqm_threshold;
+>>>>>>> b7ba80a49124 (Commit)
 
 #define CF(cf)	((unsigned long)(1048576 * (cf) + 0.5))
 
@@ -146,9 +163,15 @@ static inline struct rmid_entry *__rmid_entry(u32 rmid)
 	return entry;
 }
 
+<<<<<<< HEAD
 static int __rmid_read(u32 rmid, enum resctrl_event_id eventid, u64 *val)
 {
 	u64 msr_val;
+=======
+static u64 __rmid_read(u32 rmid, u32 eventid)
+{
+	u64 val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * As per the SDM, when IA32_QM_EVTSEL.EvtID (bits 7:0) is configured
@@ -159,6 +182,7 @@ static int __rmid_read(u32 rmid, enum resctrl_event_id eventid, u64 *val)
 	 * are error bits.
 	 */
 	wrmsr(MSR_IA32_QM_EVTSEL, eventid, rmid);
+<<<<<<< HEAD
 	rdmsrl(MSR_IA32_QM_CTR, msr_val);
 
 	if (msr_val & RMID_VAL_ERROR)
@@ -258,6 +282,18 @@ int resctrl_arch_rmid_read(struct rdt_resource *r, struct rdt_domain *d,
 	*val = chunks * hw_res->mon_scale;
 
 	return 0;
+=======
+	rdmsrl(MSR_IA32_QM_CTR, val);
+
+	return val;
+}
+
+static bool rmid_dirty(struct rmid_entry *entry)
+{
+	u64 val = __rmid_read(entry->rmid, QOS_L3_OCCUP_EVENT_ID);
+
+	return val >= resctrl_cqm_threshold;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -268,11 +304,19 @@ int resctrl_arch_rmid_read(struct rdt_resource *r, struct rdt_domain *d,
  */
 void __check_limbo(struct rdt_domain *d, bool force_free)
 {
+<<<<<<< HEAD
 	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
 	struct rmid_entry *entry;
 	u32 crmid = 1, nrmid;
 	bool rmid_dirty;
 	u64 val = 0;
+=======
+	struct rmid_entry *entry;
+	struct rdt_resource *r;
+	u32 crmid = 1, nrmid;
+
+	r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Skip RMID 0 and start from RMID 1 and check all the RMIDs that
@@ -286,6 +330,7 @@ void __check_limbo(struct rdt_domain *d, bool force_free)
 			break;
 
 		entry = __rmid_entry(nrmid);
+<<<<<<< HEAD
 
 		if (resctrl_arch_rmid_read(r, d, entry->rmid,
 					   QOS_L3_OCCUP_EVENT_ID, &val)) {
@@ -295,6 +340,9 @@ void __check_limbo(struct rdt_domain *d, bool force_free)
 		}
 
 		if (force_free || !rmid_dirty) {
+=======
+		if (force_free || !rmid_dirty(entry)) {
+>>>>>>> b7ba80a49124 (Commit)
 			clear_bit(entry->rmid, d->rmid_busy_llc);
 			if (!--entry->busy) {
 				rmid_limbo_count--;
@@ -333,19 +381,33 @@ int alloc_rmid(void)
 
 static void add_rmid_to_limbo(struct rmid_entry *entry)
 {
+<<<<<<< HEAD
 	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
 	struct rdt_domain *d;
 	int cpu, err;
 	u64 val = 0;
+=======
+	struct rdt_resource *r;
+	struct rdt_domain *d;
+	int cpu;
+	u64 val;
+
+	r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
+>>>>>>> b7ba80a49124 (Commit)
 
 	entry->busy = 0;
 	cpu = get_cpu();
 	list_for_each_entry(d, &r->domains, list) {
 		if (cpumask_test_cpu(cpu, &d->cpu_mask)) {
+<<<<<<< HEAD
 			err = resctrl_arch_rmid_read(r, d, entry->rmid,
 						     QOS_L3_OCCUP_EVENT_ID,
 						     &val);
 			if (err || val <= resctrl_rmid_realloc_threshold)
+=======
+			val = __rmid_read(entry->rmid, QOS_L3_OCCUP_EVENT_ID);
+			if (val <= resctrl_cqm_threshold)
+>>>>>>> b7ba80a49124 (Commit)
 				continue;
 		}
 
@@ -383,6 +445,7 @@ void free_rmid(u32 rmid)
 		list_add_tail(&entry->list, &rmid_free_lru);
 }
 
+<<<<<<< HEAD
 static struct mbm_state *get_mbm_state(struct rdt_domain *d, u32 rmid,
 				       enum resctrl_event_id evtid)
 {
@@ -414,11 +477,61 @@ static int __mon_event_count(u32 rmid, struct rmid_read *rr)
 		return rr->err;
 
 	rr->val += tval;
+=======
+static u64 mbm_overflow_count(u64 prev_msr, u64 cur_msr, unsigned int width)
+{
+	u64 shift = 64 - width, chunks;
+
+	chunks = (cur_msr << shift) - (prev_msr << shift);
+	return chunks >> shift;
+}
+
+static u64 __mon_event_count(u32 rmid, struct rmid_read *rr)
+{
+	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(rr->r);
+	struct mbm_state *m;
+	u64 chunks, tval;
+
+	tval = __rmid_read(rmid, rr->evtid);
+	if (tval & (RMID_VAL_ERROR | RMID_VAL_UNAVAIL)) {
+		return tval;
+	}
+	switch (rr->evtid) {
+	case QOS_L3_OCCUP_EVENT_ID:
+		rr->val += tval;
+		return 0;
+	case QOS_L3_MBM_TOTAL_EVENT_ID:
+		m = &rr->d->mbm_total[rmid];
+		break;
+	case QOS_L3_MBM_LOCAL_EVENT_ID:
+		m = &rr->d->mbm_local[rmid];
+		break;
+	default:
+		/*
+		 * Code would never reach here because an invalid
+		 * event id would fail the __rmid_read.
+		 */
+		return RMID_VAL_ERROR;
+	}
+
+	if (rr->first) {
+		memset(m, 0, sizeof(struct mbm_state));
+		m->prev_bw_msr = m->prev_msr = tval;
+		return 0;
+	}
+
+	chunks = mbm_overflow_count(m->prev_msr, tval, hw_res->mbm_width);
+	m->chunks += chunks;
+	m->prev_msr = tval;
+
+	rr->val += get_corrected_mbm_count(rmid, m->chunks);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 /*
+<<<<<<< HEAD
  * mbm_bw_count() - Update bw count from values previously read by
  *		    __mon_event_count().
  * @rmid:	The rmid used to identify the cached mbm_state.
@@ -439,11 +552,32 @@ static void mbm_bw_count(u32 rmid, struct rmid_read *rr)
 	m->prev_bw_bytes = cur_bytes;
 
 	cur_bw = bytes / SZ_1M;
+=======
+ * Supporting function to calculate the memory bandwidth
+ * and delta bandwidth in MBps.
+ */
+static void mbm_bw_count(u32 rmid, struct rmid_read *rr)
+{
+	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(rr->r);
+	struct mbm_state *m = &rr->d->mbm_local[rmid];
+	u64 tval, cur_bw, chunks;
+
+	tval = __rmid_read(rmid, rr->evtid);
+	if (tval & (RMID_VAL_ERROR | RMID_VAL_UNAVAIL))
+		return;
+
+	chunks = mbm_overflow_count(m->prev_bw_msr, tval, hw_res->mbm_width);
+	cur_bw = (get_corrected_mbm_count(rmid, chunks) * hw_res->mon_scale) >> 20;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (m->delta_comp)
 		m->delta_bw = abs(cur_bw - m->prev_bw);
 	m->delta_comp = false;
 	m->prev_bw = cur_bw;
+<<<<<<< HEAD
+=======
+	m->prev_bw_msr = tval;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -455,11 +589,19 @@ void mon_event_count(void *info)
 	struct rdtgroup *rdtgrp, *entry;
 	struct rmid_read *rr = info;
 	struct list_head *head;
+<<<<<<< HEAD
 	int ret;
 
 	rdtgrp = rr->rgrp;
 
 	ret = __mon_event_count(rdtgrp->mon.rmid, rr);
+=======
+	u64 ret_val;
+
+	rdtgrp = rr->rgrp;
+
+	ret_val = __mon_event_count(rdtgrp->mon.rmid, rr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * For Ctrl groups read data from child monitor groups and
@@ -471,6 +613,7 @@ void mon_event_count(void *info)
 	if (rdtgrp->type == RDTCTRL_GROUP) {
 		list_for_each_entry(entry, head, mon.crdtgrp_list) {
 			if (__mon_event_count(entry->mon.rmid, rr) == 0)
+<<<<<<< HEAD
 				ret = 0;
 		}
 	}
@@ -482,6 +625,15 @@ void mon_event_count(void *info)
 	 */
 	if (ret == 0)
 		rr->err = 0;
+=======
+				ret_val = 0;
+		}
+	}
+
+	/* Report error if none of rmid_reads are successful */
+	if (ret_val)
+		rr->val = ret_val;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -518,8 +670,15 @@ void mon_event_count(void *info)
  */
 static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_domain *dom_mbm)
 {
+<<<<<<< HEAD
 	u32 closid, rmid, cur_msr_val, new_msr_val;
 	struct mbm_state *pmbm_data, *cmbm_data;
+=======
+	u32 closid, rmid, cur_msr, cur_msr_val, new_msr_val;
+	struct mbm_state *pmbm_data, *cmbm_data;
+	struct rdt_hw_resource *hw_r_mba;
+	struct rdt_hw_domain *hw_dom_mba;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 cur_bw, delta_bw, user_bw;
 	struct rdt_resource *r_mba;
 	struct rdt_domain *dom_mba;
@@ -529,8 +688,13 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_domain *dom_mbm)
 	if (!is_mbm_local_enabled())
 		return;
 
+<<<<<<< HEAD
 	r_mba = &rdt_resources_all[RDT_RESOURCE_MBA].r_resctrl;
 
+=======
+	hw_r_mba = &rdt_resources_all[RDT_RESOURCE_MBA];
+	r_mba = &hw_r_mba->r_resctrl;
+>>>>>>> b7ba80a49124 (Commit)
 	closid = rgrp->closid;
 	rmid = rgrp->mon.rmid;
 	pmbm_data = &dom_mbm->mbm_local[rmid];
@@ -540,6 +704,7 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_domain *dom_mbm)
 		pr_warn_once("Failure to get domain for MBA update\n");
 		return;
 	}
+<<<<<<< HEAD
 
 	cur_bw = pmbm_data->prev_bw;
 	user_bw = dom_mba->mbps_val[closid];
@@ -547,6 +712,18 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_domain *dom_mbm)
 
 	/* MBA resource doesn't support CDP */
 	cur_msr_val = resctrl_arch_get_config(r_mba, dom_mba, closid, CDP_NONE);
+=======
+	hw_dom_mba = resctrl_to_arch_dom(dom_mba);
+
+	cur_bw = pmbm_data->prev_bw;
+	user_bw = resctrl_arch_get_config(r_mba, dom_mba, closid, CDP_NONE);
+	delta_bw = pmbm_data->delta_bw;
+	/*
+	 * resctrl_arch_get_config() chooses the mbps/ctrl value to return
+	 * based on is_mba_sc(). For now, reach into the hw_dom.
+	 */
+	cur_msr_val = hw_dom_mba->ctrl_val[closid];
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * For Ctrl groups read data from child monitor groups.
@@ -581,7 +758,13 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_domain *dom_mbm)
 		return;
 	}
 
+<<<<<<< HEAD
 	resctrl_arch_update_one(r_mba, dom_mba, closid, CDP_NONE, new_msr_val);
+=======
+	cur_msr = hw_r_mba->msr_base + closid;
+	wrmsrl(cur_msr, delay_bw_map(new_msr_val, r_mba));
+	hw_dom_mba->ctrl_val[closid] = new_msr_val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Delta values are updated dynamically package wise for each
@@ -614,12 +797,18 @@ static void mbm_update(struct rdt_resource *r, struct rdt_domain *d, int rmid)
 	 */
 	if (is_mbm_total_enabled()) {
 		rr.evtid = QOS_L3_MBM_TOTAL_EVENT_ID;
+<<<<<<< HEAD
 		rr.val = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		__mon_event_count(rmid, &rr);
 	}
 	if (is_mbm_local_enabled()) {
 		rr.evtid = QOS_L3_MBM_LOCAL_EVENT_ID;
+<<<<<<< HEAD
 		rr.val = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		__mon_event_count(rmid, &rr);
 
 		/*
@@ -775,6 +964,7 @@ static void l3_mon_evt_init(struct rdt_resource *r)
 		list_add_tail(&mbm_local_event.list, &r->evt_list);
 }
 
+<<<<<<< HEAD
 int __init rdt_get_mon_l3_config(struct rdt_resource *r)
 {
 	unsigned int mbm_offset = boot_cpu_data.x86_cache_mbm_width_offset;
@@ -783,6 +973,15 @@ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
 	int ret;
 
 	resctrl_rmid_realloc_limit = boot_cpu_data.x86_cache_size * 1024;
+=======
+int rdt_get_mon_l3_config(struct rdt_resource *r)
+{
+	unsigned int mbm_offset = boot_cpu_data.x86_cache_mbm_width_offset;
+	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
+	unsigned int cl_size = boot_cpu_data.x86_cache_size;
+	int ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	hw_res->mon_scale = boot_cpu_data.x86_cache_occ_scale;
 	r->num_rmid = boot_cpu_data.x86_cache_max_rmid + 1;
 	hw_res->mbm_width = MBM_CNTR_WIDTH_BASE;
@@ -799,6 +998,7 @@ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
 	 *
 	 * For a 35MB LLC and 56 RMIDs, this is ~1.8% of the LLC.
 	 */
+<<<<<<< HEAD
 	threshold = resctrl_rmid_realloc_limit / r->num_rmid;
 
 	/*
@@ -807,11 +1007,18 @@ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
 	 * value the hardware will measure. mon_scale may not be a power of 2.
 	 */
 	resctrl_rmid_realloc_threshold = resctrl_arch_round_mon_val(threshold);
+=======
+	resctrl_cqm_threshold = cl_size * 1024 / r->num_rmid;
+
+	/* h/w works in units of "boot_cpu_data.x86_cache_occ_scale" */
+	resctrl_cqm_threshold /= hw_res->mon_scale;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = dom_data_init(r);
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (rdt_cpu_has(X86_FEATURE_BMEC)) {
 		if (rdt_cpu_has(X86_FEATURE_CQM_MBM_TOTAL)) {
 			mbm_total_event.configurable = true;
@@ -826,6 +1033,12 @@ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
 	l3_mon_evt_init(r);
 
 	r->mon_capable = true;
+=======
+	l3_mon_evt_init(r);
+
+	r->mon_capable = true;
+	r->mon_enabled = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

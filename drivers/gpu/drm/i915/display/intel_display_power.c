@@ -129,6 +129,7 @@ intel_display_power_domain_str(enum intel_display_power_domain domain)
 		return "AUDIO_MMIO";
 	case POWER_DOMAIN_AUDIO_PLAYBACK:
 		return "AUDIO_PLAYBACK";
+<<<<<<< HEAD
 	case POWER_DOMAIN_AUX_IO_A:
 		return "AUX_IO_A";
 	case POWER_DOMAIN_AUX_IO_B:
@@ -141,6 +142,8 @@ intel_display_power_domain_str(enum intel_display_power_domain domain)
 		return "AUX_IO_E";
 	case POWER_DOMAIN_AUX_IO_F:
 		return "AUX_IO_F";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case POWER_DOMAIN_AUX_A:
 		return "AUX_A";
 	case POWER_DOMAIN_AUX_B:
@@ -165,6 +168,11 @@ intel_display_power_domain_str(enum intel_display_power_domain domain)
 		return "AUX_USBC5";
 	case POWER_DOMAIN_AUX_USBC6:
 		return "AUX_USBC6";
+<<<<<<< HEAD
+=======
+	case POWER_DOMAIN_AUX_IO_A:
+		return "AUX_IO_A";
+>>>>>>> b7ba80a49124 (Commit)
 	case POWER_DOMAIN_AUX_TBT1:
 		return "AUX_TBT1";
 	case POWER_DOMAIN_AUX_TBT2:
@@ -264,10 +272,16 @@ bool intel_display_power_is_enabled(struct drm_i915_private *dev_priv,
 }
 
 static u32
+<<<<<<< HEAD
 sanitize_target_dc_state(struct drm_i915_private *i915,
 			 u32 target_dc_state)
 {
 	struct i915_power_domains *power_domains = &i915->display.power.domains;
+=======
+sanitize_target_dc_state(struct drm_i915_private *dev_priv,
+			 u32 target_dc_state)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	static const u32 states[] = {
 		DC_STATE_EN_UPTO_DC6,
 		DC_STATE_EN_UPTO_DC5,
@@ -280,7 +294,11 @@ sanitize_target_dc_state(struct drm_i915_private *i915,
 		if (target_dc_state != states[i])
 			continue;
 
+<<<<<<< HEAD
 		if (power_domains->allowed_dc_mask & target_dc_state)
+=======
+		if (dev_priv->display.dmc.allowed_dc_mask & target_dc_state)
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		target_dc_state = states[i + 1];
@@ -313,7 +331,11 @@ void intel_display_power_set_target_dc_state(struct drm_i915_private *dev_priv,
 
 	state = sanitize_target_dc_state(dev_priv, state);
 
+<<<<<<< HEAD
 	if (state == power_domains->target_dc_state)
+=======
+	if (state == dev_priv->display.dmc.target_dc_state)
+>>>>>>> b7ba80a49124 (Commit)
 		goto unlock;
 
 	dc_off_enabled = intel_power_well_is_enabled(dev_priv, power_well);
@@ -324,7 +346,11 @@ void intel_display_power_set_target_dc_state(struct drm_i915_private *dev_priv,
 	if (!dc_off_enabled)
 		intel_power_well_enable(dev_priv, power_well);
 
+<<<<<<< HEAD
 	power_domains->target_dc_state = state;
+=======
+	dev_priv->display.dmc.target_dc_state = state;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!dc_off_enabled)
 		intel_power_well_disable(dev_priv, power_well);
@@ -993,10 +1019,17 @@ int intel_power_domains_init(struct drm_i915_private *dev_priv)
 	dev_priv->params.disable_power_well =
 		sanitize_disable_power_well_option(dev_priv,
 						   dev_priv->params.disable_power_well);
+<<<<<<< HEAD
 	power_domains->allowed_dc_mask =
 		get_allowed_dc_mask(dev_priv, dev_priv->params.enable_dc);
 
 	power_domains->target_dc_state =
+=======
+	dev_priv->display.dmc.allowed_dc_mask =
+		get_allowed_dc_mask(dev_priv, dev_priv->params.enable_dc);
+
+	dev_priv->display.dmc.target_dc_state =
+>>>>>>> b7ba80a49124 (Commit)
 		sanitize_target_dc_state(dev_priv, DC_STATE_EN_UPTO_DC6);
 
 	mutex_init(&power_domains->lock);
@@ -1159,9 +1192,16 @@ static void hsw_assert_cdclk(struct drm_i915_private *dev_priv)
 
 static void assert_can_disable_lcpll(struct drm_i915_private *dev_priv)
 {
+<<<<<<< HEAD
 	struct intel_crtc *crtc;
 
 	for_each_intel_crtc(&dev_priv->drm, crtc)
+=======
+	struct drm_device *dev = &dev_priv->drm;
+	struct intel_crtc *crtc;
+
+	for_each_intel_crtc(dev, crtc)
+>>>>>>> b7ba80a49124 (Commit)
 		I915_STATE_WARN(crtc->active, "CRTC for pipe %c enabled\n",
 				pipe_name(crtc->pipe));
 
@@ -1261,7 +1301,13 @@ static void hsw_disable_lcpll(struct drm_i915_private *dev_priv,
 		drm_err(&dev_priv->drm, "D_COMP RCOMP still in progress\n");
 
 	if (allow_power_down) {
+<<<<<<< HEAD
 		intel_de_rmw(dev_priv, LCPLL_CTL, 0, LCPLL_POWER_DOWN_ALLOW);
+=======
+		val = intel_de_read(dev_priv, LCPLL_CTL);
+		val |= LCPLL_POWER_DOWN_ALLOW;
+		intel_de_write(dev_priv, LCPLL_CTL, val);
+>>>>>>> b7ba80a49124 (Commit)
 		intel_de_posting_read(dev_priv, LCPLL_CTL);
 	}
 }
@@ -1305,7 +1351,13 @@ static void hsw_restore_lcpll(struct drm_i915_private *dev_priv)
 		drm_err(&dev_priv->drm, "LCPLL not locked yet\n");
 
 	if (val & LCPLL_CD_SOURCE_FCLK) {
+<<<<<<< HEAD
 		intel_de_rmw(dev_priv, LCPLL_CTL, LCPLL_CD_SOURCE_FCLK, 0);
+=======
+		val = intel_de_read(dev_priv, LCPLL_CTL);
+		val &= ~LCPLL_CD_SOURCE_FCLK;
+		intel_de_write(dev_priv, LCPLL_CTL, val);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (wait_for_us((intel_de_read(dev_priv, LCPLL_CTL) &
 				 LCPLL_CD_SOURCE_FCLK_DONE) == 0, 1))
@@ -1344,11 +1396,23 @@ static void hsw_restore_lcpll(struct drm_i915_private *dev_priv)
  */
 static void hsw_enable_pc8(struct drm_i915_private *dev_priv)
 {
+<<<<<<< HEAD
 	drm_dbg_kms(&dev_priv->drm, "Enabling package C8+\n");
 
 	if (HAS_PCH_LPT_LP(dev_priv))
 		intel_de_rmw(dev_priv, SOUTH_DSPCLK_GATE_D,
 			     PCH_LP_PARTITION_LEVEL_DISABLE, 0);
+=======
+	u32 val;
+
+	drm_dbg_kms(&dev_priv->drm, "Enabling package C8+\n");
+
+	if (HAS_PCH_LPT_LP(dev_priv)) {
+		val = intel_de_read(dev_priv, SOUTH_DSPCLK_GATE_D);
+		val &= ~PCH_LP_PARTITION_LEVEL_DISABLE;
+		intel_de_write(dev_priv, SOUTH_DSPCLK_GATE_D, val);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	lpt_disable_clkout_dp(dev_priv);
 	hsw_disable_lcpll(dev_priv, true, true);
@@ -1356,21 +1420,38 @@ static void hsw_enable_pc8(struct drm_i915_private *dev_priv)
 
 static void hsw_disable_pc8(struct drm_i915_private *dev_priv)
 {
+<<<<<<< HEAD
+=======
+	u32 val;
+
+>>>>>>> b7ba80a49124 (Commit)
 	drm_dbg_kms(&dev_priv->drm, "Disabling package C8+\n");
 
 	hsw_restore_lcpll(dev_priv);
 	intel_init_pch_refclk(dev_priv);
 
+<<<<<<< HEAD
 	if (HAS_PCH_LPT_LP(dev_priv))
 		intel_de_rmw(dev_priv, SOUTH_DSPCLK_GATE_D,
 			     0, PCH_LP_PARTITION_LEVEL_DISABLE);
+=======
+	if (HAS_PCH_LPT_LP(dev_priv)) {
+		val = intel_de_read(dev_priv, SOUTH_DSPCLK_GATE_D);
+		val |= PCH_LP_PARTITION_LEVEL_DISABLE;
+		intel_de_write(dev_priv, SOUTH_DSPCLK_GATE_D, val);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void intel_pch_reset_handshake(struct drm_i915_private *dev_priv,
 				      bool enable)
 {
 	i915_reg_t reg;
+<<<<<<< HEAD
 	u32 reset_bits;
+=======
+	u32 reset_bits, val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_IVYBRIDGE(dev_priv)) {
 		reg = GEN7_MSG_CTL;
@@ -1383,7 +1464,18 @@ static void intel_pch_reset_handshake(struct drm_i915_private *dev_priv,
 	if (DISPLAY_VER(dev_priv) >= 14)
 		reset_bits |= MTL_RESET_PICA_HANDSHAKE_EN;
 
+<<<<<<< HEAD
 	intel_de_rmw(dev_priv, reg, reset_bits, enable ? reset_bits : 0);
+=======
+	val = intel_de_read(dev_priv, reg);
+
+	if (enable)
+		val |= reset_bits;
+	else
+		val &= ~reset_bits;
+
+	intel_de_write(dev_priv, reg, val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void skl_display_core_init(struct drm_i915_private *dev_priv,
@@ -1562,8 +1654,15 @@ static void tgl_bw_buddy_init(struct drm_i915_private *dev_priv)
 		return;
 
 	if (IS_ALDERLAKE_S(dev_priv) ||
+<<<<<<< HEAD
 	    IS_RKL_DISPLAY_STEP(dev_priv, STEP_A0, STEP_B0))
 		/* Wa_1409767108 */
+=======
+	    IS_DG1_DISPLAY_STEP(dev_priv, STEP_A0, STEP_B0) ||
+	    IS_RKL_DISPLAY_STEP(dev_priv, STEP_A0, STEP_B0) ||
+	    IS_TGL_DISPLAY_STEP(dev_priv, STEP_A0, STEP_C0))
+		/* Wa_1409767108:tgl,dg1,adl-s */
+>>>>>>> b7ba80a49124 (Commit)
 		table = wa_1409767108_buddy_page_masks;
 	else
 		table = tgl_buddy_page_masks;
@@ -1598,6 +1697,10 @@ static void icl_display_core_init(struct drm_i915_private *dev_priv,
 {
 	struct i915_power_domains *power_domains = &dev_priv->display.power.domains;
 	struct i915_power_well *well;
+<<<<<<< HEAD
+=======
+	u32 val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	gen9_set_dc_state(dev_priv, DC_STATE_DISABLE);
 
@@ -1625,10 +1728,13 @@ static void icl_display_core_init(struct drm_i915_private *dev_priv,
 	intel_power_well_enable(dev_priv, well);
 	mutex_unlock(&power_domains->lock);
 
+<<<<<<< HEAD
 	if (DISPLAY_VER(dev_priv) == 14)
 		intel_de_rmw(dev_priv, DC_STATE_EN,
 			     HOLD_PHY_PG1_LATCH | HOLD_PHY_CLKREQ_PG1_LATCH, 0);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* 4. Enable CDCLK. */
 	intel_cdclk_init_hw(dev_priv);
 
@@ -1653,10 +1759,18 @@ static void icl_display_core_init(struct drm_i915_private *dev_priv,
 		intel_dmc_load_program(dev_priv);
 
 	/* Wa_14011508470:tgl,dg1,rkl,adl-s,adl-p */
+<<<<<<< HEAD
 	if (DISPLAY_VER(dev_priv) >= 12)
 		intel_de_rmw(dev_priv, GEN11_CHICKEN_DCPR_2, 0,
 			     DCPR_CLEAR_MEMSTAT_DIS | DCPR_SEND_RESP_IMM |
 			     DCPR_MASK_LPMODE | DCPR_MASK_MAXLATENCY_MEMUP_CLR);
+=======
+	if (DISPLAY_VER(dev_priv) >= 12) {
+		val = DCPR_CLEAR_MEMSTAT_DIS | DCPR_SEND_RESP_IMM |
+		      DCPR_MASK_LPMODE | DCPR_MASK_MAXLATENCY_MEMUP_CLR;
+		intel_uncore_rmw(&dev_priv->uncore, GEN11_CHICKEN_DCPR_2, 0, val);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Wa_14011503030:xelpd */
 	if (DISPLAY_VER(dev_priv) >= 13)
@@ -1682,10 +1796,13 @@ static void icl_display_core_uninit(struct drm_i915_private *dev_priv)
 	/* 3. Disable CD clock */
 	intel_cdclk_uninit_hw(dev_priv);
 
+<<<<<<< HEAD
 	if (DISPLAY_VER(dev_priv) == 14)
 		intel_de_rmw(dev_priv, DC_STATE_EN, 0,
 			     HOLD_PHY_PG1_LATCH | HOLD_PHY_CLKREQ_PG1_LATCH);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * 4. Disable Power Well 1 (PG1).
 	 *    The AUX IO power wells are toggled on demand, so they are already
@@ -2041,7 +2158,11 @@ void intel_power_domains_suspend(struct drm_i915_private *i915,
 	 * resources as required and also enable deeper system power states
 	 * that would be blocked if the firmware was inactive.
 	 */
+<<<<<<< HEAD
 	if (!(power_domains->allowed_dc_mask & DC_STATE_EN_DC9) &&
+=======
+	if (!(i915->display.dmc.allowed_dc_mask & DC_STATE_EN_DC9) &&
+>>>>>>> b7ba80a49124 (Commit)
 	    suspend_mode == I915_DRM_SUSPEND_IDLE &&
 	    intel_dmc_has_payload(i915)) {
 		intel_display_power_flush_work(i915);
@@ -2230,22 +2351,37 @@ void intel_display_power_suspend(struct drm_i915_private *i915)
 
 void intel_display_power_resume(struct drm_i915_private *i915)
 {
+<<<<<<< HEAD
 	struct i915_power_domains *power_domains = &i915->display.power.domains;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (DISPLAY_VER(i915) >= 11) {
 		bxt_disable_dc9(i915);
 		icl_display_core_init(i915, true);
 		if (intel_dmc_has_payload(i915)) {
+<<<<<<< HEAD
 			if (power_domains->allowed_dc_mask & DC_STATE_EN_UPTO_DC6)
 				skl_enable_dc6(i915);
 			else if (power_domains->allowed_dc_mask & DC_STATE_EN_UPTO_DC5)
+=======
+			if (i915->display.dmc.allowed_dc_mask &
+			    DC_STATE_EN_UPTO_DC6)
+				skl_enable_dc6(i915);
+			else if (i915->display.dmc.allowed_dc_mask &
+				 DC_STATE_EN_UPTO_DC5)
+>>>>>>> b7ba80a49124 (Commit)
 				gen9_enable_dc5(i915);
 		}
 	} else if (IS_GEMINILAKE(i915) || IS_BROXTON(i915)) {
 		bxt_disable_dc9(i915);
 		bxt_display_core_init(i915, true);
 		if (intel_dmc_has_payload(i915) &&
+<<<<<<< HEAD
 		    (power_domains->allowed_dc_mask & DC_STATE_EN_UPTO_DC5))
+=======
+		    (i915->display.dmc.allowed_dc_mask & DC_STATE_EN_UPTO_DC5))
+>>>>>>> b7ba80a49124 (Commit)
 			gen9_enable_dc5(i915);
 	} else if (IS_HASWELL(i915) || IS_BROADWELL(i915)) {
 		hsw_disable_pc8(i915);
@@ -2285,7 +2421,10 @@ struct intel_ddi_port_domains {
 
 	enum intel_display_power_domain ddi_lanes;
 	enum intel_display_power_domain ddi_io;
+<<<<<<< HEAD
 	enum intel_display_power_domain aux_io;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	enum intel_display_power_domain aux_legacy_usbc;
 	enum intel_display_power_domain aux_tbt;
 };
@@ -2300,7 +2439,10 @@ i9xx_port_domains[] = {
 
 		.ddi_lanes = POWER_DOMAIN_PORT_DDI_LANES_A,
 		.ddi_io = POWER_DOMAIN_PORT_DDI_IO_A,
+<<<<<<< HEAD
 		.aux_io = POWER_DOMAIN_AUX_IO_A,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.aux_legacy_usbc = POWER_DOMAIN_AUX_A,
 		.aux_tbt = POWER_DOMAIN_INVALID,
 	},
@@ -2316,7 +2458,10 @@ d11_port_domains[] = {
 
 		.ddi_lanes = POWER_DOMAIN_PORT_DDI_LANES_A,
 		.ddi_io = POWER_DOMAIN_PORT_DDI_IO_A,
+<<<<<<< HEAD
 		.aux_io = POWER_DOMAIN_AUX_IO_A,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.aux_legacy_usbc = POWER_DOMAIN_AUX_A,
 		.aux_tbt = POWER_DOMAIN_INVALID,
 	}, {
@@ -2327,7 +2472,10 @@ d11_port_domains[] = {
 
 		.ddi_lanes = POWER_DOMAIN_PORT_DDI_LANES_C,
 		.ddi_io = POWER_DOMAIN_PORT_DDI_IO_C,
+<<<<<<< HEAD
 		.aux_io = POWER_DOMAIN_AUX_IO_C,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.aux_legacy_usbc = POWER_DOMAIN_AUX_C,
 		.aux_tbt = POWER_DOMAIN_AUX_TBT1,
 	},
@@ -2343,7 +2491,10 @@ d12_port_domains[] = {
 
 		.ddi_lanes = POWER_DOMAIN_PORT_DDI_LANES_A,
 		.ddi_io = POWER_DOMAIN_PORT_DDI_IO_A,
+<<<<<<< HEAD
 		.aux_io = POWER_DOMAIN_AUX_IO_A,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.aux_legacy_usbc = POWER_DOMAIN_AUX_A,
 		.aux_tbt = POWER_DOMAIN_INVALID,
 	}, {
@@ -2354,7 +2505,10 @@ d12_port_domains[] = {
 
 		.ddi_lanes = POWER_DOMAIN_PORT_DDI_LANES_TC1,
 		.ddi_io = POWER_DOMAIN_PORT_DDI_IO_TC1,
+<<<<<<< HEAD
 		.aux_io = POWER_DOMAIN_INVALID,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.aux_legacy_usbc = POWER_DOMAIN_AUX_USBC1,
 		.aux_tbt = POWER_DOMAIN_AUX_TBT1,
 	},
@@ -2370,7 +2524,10 @@ d13_port_domains[] = {
 
 		.ddi_lanes = POWER_DOMAIN_PORT_DDI_LANES_A,
 		.ddi_io = POWER_DOMAIN_PORT_DDI_IO_A,
+<<<<<<< HEAD
 		.aux_io = POWER_DOMAIN_AUX_IO_A,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.aux_legacy_usbc = POWER_DOMAIN_AUX_A,
 		.aux_tbt = POWER_DOMAIN_INVALID,
 	}, {
@@ -2381,7 +2538,10 @@ d13_port_domains[] = {
 
 		.ddi_lanes = POWER_DOMAIN_PORT_DDI_LANES_TC1,
 		.ddi_io = POWER_DOMAIN_PORT_DDI_IO_TC1,
+<<<<<<< HEAD
 		.aux_io = POWER_DOMAIN_INVALID,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.aux_legacy_usbc = POWER_DOMAIN_AUX_USBC1,
 		.aux_tbt = POWER_DOMAIN_AUX_TBT1,
 	}, {
@@ -2392,7 +2552,10 @@ d13_port_domains[] = {
 
 		.ddi_lanes = POWER_DOMAIN_PORT_DDI_LANES_D,
 		.ddi_io = POWER_DOMAIN_PORT_DDI_IO_D,
+<<<<<<< HEAD
 		.aux_io = POWER_DOMAIN_AUX_IO_D,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.aux_legacy_usbc = POWER_DOMAIN_AUX_D,
 		.aux_tbt = POWER_DOMAIN_INVALID,
 	},
@@ -2438,7 +2601,11 @@ intel_display_power_ddi_io_domain(struct drm_i915_private *i915, enum port port)
 {
 	const struct intel_ddi_port_domains *domains = intel_port_domains_for_port(i915, port);
 
+<<<<<<< HEAD
 	if (drm_WARN_ON(&i915->drm, !domains || domains->ddi_io == POWER_DOMAIN_INVALID))
+=======
+	if (drm_WARN_ON(&i915->drm, !domains) || domains->ddi_io == POWER_DOMAIN_INVALID)
+>>>>>>> b7ba80a49124 (Commit)
 		return POWER_DOMAIN_PORT_DDI_IO_A;
 
 	return domains->ddi_io + (int)(port - domains->port_start);
@@ -2449,7 +2616,11 @@ intel_display_power_ddi_lanes_domain(struct drm_i915_private *i915, enum port po
 {
 	const struct intel_ddi_port_domains *domains = intel_port_domains_for_port(i915, port);
 
+<<<<<<< HEAD
 	if (drm_WARN_ON(&i915->drm, !domains || domains->ddi_lanes == POWER_DOMAIN_INVALID))
+=======
+	if (drm_WARN_ON(&i915->drm, !domains) || domains->ddi_lanes == POWER_DOMAIN_INVALID)
+>>>>>>> b7ba80a49124 (Commit)
 		return POWER_DOMAIN_PORT_DDI_LANES_A;
 
 	return domains->ddi_lanes + (int)(port - domains->port_start);
@@ -2471,6 +2642,7 @@ intel_port_domains_for_aux_ch(struct drm_i915_private *i915, enum aux_ch aux_ch)
 }
 
 enum intel_display_power_domain
+<<<<<<< HEAD
 intel_display_power_aux_io_domain(struct drm_i915_private *i915, enum aux_ch aux_ch)
 {
 	const struct intel_ddi_port_domains *domains = intel_port_domains_for_aux_ch(i915, aux_ch);
@@ -2482,11 +2654,17 @@ intel_display_power_aux_io_domain(struct drm_i915_private *i915, enum aux_ch aux
 }
 
 enum intel_display_power_domain
+=======
+>>>>>>> b7ba80a49124 (Commit)
 intel_display_power_legacy_aux_domain(struct drm_i915_private *i915, enum aux_ch aux_ch)
 {
 	const struct intel_ddi_port_domains *domains = intel_port_domains_for_aux_ch(i915, aux_ch);
 
+<<<<<<< HEAD
 	if (drm_WARN_ON(&i915->drm, !domains || domains->aux_legacy_usbc == POWER_DOMAIN_INVALID))
+=======
+	if (drm_WARN_ON(&i915->drm, !domains) || domains->aux_legacy_usbc == POWER_DOMAIN_INVALID)
+>>>>>>> b7ba80a49124 (Commit)
 		return POWER_DOMAIN_AUX_A;
 
 	return domains->aux_legacy_usbc + (int)(aux_ch - domains->aux_ch_start);
@@ -2497,7 +2675,11 @@ intel_display_power_tbt_aux_domain(struct drm_i915_private *i915, enum aux_ch au
 {
 	const struct intel_ddi_port_domains *domains = intel_port_domains_for_aux_ch(i915, aux_ch);
 
+<<<<<<< HEAD
 	if (drm_WARN_ON(&i915->drm, !domains || domains->aux_tbt == POWER_DOMAIN_INVALID))
+=======
+	if (drm_WARN_ON(&i915->drm, !domains) || domains->aux_tbt == POWER_DOMAIN_INVALID)
+>>>>>>> b7ba80a49124 (Commit)
 		return POWER_DOMAIN_AUX_TBT1;
 
 	return domains->aux_tbt + (int)(aux_ch - domains->aux_ch_start);

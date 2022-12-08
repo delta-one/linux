@@ -12,7 +12,10 @@ struct io_poll {
 	struct file			*file;
 	struct wait_queue_head		*head;
 	__poll_t			events;
+<<<<<<< HEAD
 	int				retries;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct wait_queue_entry		wait;
 };
 

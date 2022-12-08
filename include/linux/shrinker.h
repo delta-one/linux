@@ -2,9 +2,12 @@
 #ifndef _LINUX_SHRINKER_H
 #define _LINUX_SHRINKER_H
 
+<<<<<<< HEAD
 #include <linux/atomic.h>
 #include <linux/types.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This struct is used to pass information from page reclaim to the shrinkers.
  * We consolidate the values for easier extension later.
@@ -107,7 +110,11 @@ extern void synchronize_shrinkers(void);
 
 #ifdef CONFIG_SHRINKER_DEBUG
 extern int shrinker_debugfs_add(struct shrinker *shrinker);
+<<<<<<< HEAD
 extern struct dentry *shrinker_debugfs_remove(struct shrinker *shrinker);
+=======
+extern void shrinker_debugfs_remove(struct shrinker *shrinker);
+>>>>>>> b7ba80a49124 (Commit)
 extern int __printf(2, 3) shrinker_debugfs_rename(struct shrinker *shrinker,
 						  const char *fmt, ...);
 #else /* CONFIG_SHRINKER_DEBUG */
@@ -115,9 +122,14 @@ static inline int shrinker_debugfs_add(struct shrinker *shrinker)
 {
 	return 0;
 }
+<<<<<<< HEAD
 static inline struct dentry *shrinker_debugfs_remove(struct shrinker *shrinker)
 {
 	return NULL;
+=======
+static inline void shrinker_debugfs_remove(struct shrinker *shrinker)
+{
+>>>>>>> b7ba80a49124 (Commit)
 }
 static inline __printf(2, 3)
 int shrinker_debugfs_rename(struct shrinker *shrinker, const char *fmt, ...)

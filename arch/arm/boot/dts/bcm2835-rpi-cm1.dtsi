@@ -2,8 +2,11 @@
 /dts-v1/;
 #include "bcm2835.dtsi"
 #include "bcm2835-rpi.dtsi"
+<<<<<<< HEAD
 #include "bcm2835-rpi-common.dtsi"
 #include "bcm283x-rpi-led-deprecated.dtsi"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	leds {
@@ -34,10 +37,13 @@
 	};
 };
 
+<<<<<<< HEAD
 &led_act {
 	gpios = <&gpio 47 GPIO_ACTIVE_LOW>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &sdhost {
 	non-removable;
 	vmmc-supply = <&reg_3v3>;

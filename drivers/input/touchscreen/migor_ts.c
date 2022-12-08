@@ -116,7 +116,12 @@ static void migor_ts_close(struct input_dev *dev)
 	enable_irq(priv->irq);
 }
 
+<<<<<<< HEAD
 static int migor_ts_probe(struct i2c_client *client)
+=======
+static int migor_ts_probe(struct i2c_client *client,
+			  const struct i2c_device_id *idp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct migor_ts_priv *priv;
 	struct input_dev *input;
@@ -186,7 +191,11 @@ static void migor_ts_remove(struct i2c_client *client)
 	dev_set_drvdata(&client->dev, NULL);
 }
 
+<<<<<<< HEAD
 static int migor_ts_suspend(struct device *dev)
+=======
+static int __maybe_unused migor_ts_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct migor_ts_priv *priv = i2c_get_clientdata(client);
@@ -197,7 +206,11 @@ static int migor_ts_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int migor_ts_resume(struct device *dev)
+=======
+static int __maybe_unused migor_ts_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct migor_ts_priv *priv = i2c_get_clientdata(client);
@@ -208,7 +221,11 @@ static int migor_ts_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(migor_ts_pm, migor_ts_suspend, migor_ts_resume);
+=======
+static SIMPLE_DEV_PM_OPS(migor_ts_pm, migor_ts_suspend, migor_ts_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id migor_ts_id[] = {
 	{ "migor_ts", 0 },
@@ -219,9 +236,15 @@ MODULE_DEVICE_TABLE(i2c, migor_ts_id);
 static struct i2c_driver migor_ts_driver = {
 	.driver = {
 		.name = "migor_ts",
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&migor_ts_pm),
 	},
 	.probe_new = migor_ts_probe,
+=======
+		.pm = &migor_ts_pm,
+	},
+	.probe = migor_ts_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = migor_ts_remove,
 	.id_table = migor_ts_id,
 };

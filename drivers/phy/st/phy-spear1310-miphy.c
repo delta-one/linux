@@ -246,7 +246,11 @@ static struct platform_driver spear1310_miphy_driver = {
 	.probe		= spear1310_miphy_probe,
 	.driver = {
 		.name = "spear1310-miphy",
+<<<<<<< HEAD
 		.of_match_table = spear1310_miphy_of_match,
+=======
+		.of_match_table = of_match_ptr(spear1310_miphy_of_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

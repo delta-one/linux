@@ -659,7 +659,10 @@ struct hci_dev {
 	int (*set_diag)(struct hci_dev *hdev, bool enable);
 	int (*set_bdaddr)(struct hci_dev *hdev, const bdaddr_t *bdaddr);
 	void (*cmd_timeout)(struct hci_dev *hdev);
+<<<<<<< HEAD
 	void (*reset)(struct hci_dev *hdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool (*wakeup)(struct hci_dev *hdev);
 	int (*set_quality_report)(struct hci_dev *hdev, bool enable);
 	int (*get_data_path_id)(struct hci_dev *hdev, __u8 *data_path);
@@ -978,7 +981,11 @@ static inline bool hci_conn_sc_enabled(struct hci_conn *conn)
 static inline void hci_conn_hash_add(struct hci_dev *hdev, struct hci_conn *c)
 {
 	struct hci_conn_hash *h = &hdev->conn_hash;
+<<<<<<< HEAD
 	list_add_tail_rcu(&c->list, &h->list);
+=======
+	list_add_rcu(&c->list, &h->list);
+>>>>>>> b7ba80a49124 (Commit)
 	switch (c->type) {
 	case ACL_LINK:
 		h->acl_num++;
@@ -1613,7 +1620,10 @@ void hci_conn_add_sysfs(struct hci_conn *conn);
 void hci_conn_del_sysfs(struct hci_conn *conn);
 
 #define SET_HCIDEV_DEV(hdev, pdev) ((hdev)->dev.parent = (pdev))
+<<<<<<< HEAD
 #define GET_HCIDEV_DEV(hdev) ((hdev)->dev.parent)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* ----- LMP capabilities ----- */
 #define lmp_encrypt_capable(dev)   ((dev)->features[0][0] & LMP_ENCRYPT)
@@ -1691,9 +1701,13 @@ void hci_conn_del_sysfs(struct hci_conn *conn);
 
 /* Use ext scanning if set ext scan param and ext scan enable is supported */
 #define use_ext_scan(dev) (((dev)->commands[37] & 0x20) && \
+<<<<<<< HEAD
 			   ((dev)->commands[37] & 0x40) && \
 			   !test_bit(HCI_QUIRK_BROKEN_EXT_SCAN, &(dev)->quirks))
 
+=======
+			   ((dev)->commands[37] & 0x40))
+>>>>>>> b7ba80a49124 (Commit)
 /* Use ext create connection if command is supported */
 #define use_ext_conn(dev) ((dev)->commands[37] & 0x80)
 
@@ -1721,9 +1735,12 @@ void hci_conn_del_sysfs(struct hci_conn *conn);
 	((dev)->le_features[3] & HCI_LE_CIS_PERIPHERAL)
 #define bis_capable(dev) ((dev)->le_features[3] & HCI_LE_ISO_BROADCASTER)
 
+<<<<<<< HEAD
 #define mws_transport_config_capable(dev) (((dev)->commands[30] & 0x08) && \
 	(!test_bit(HCI_QUIRK_BROKEN_MWS_TRANSPORT_CONFIG, &(dev)->quirks)))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* ----- HCI protocols ----- */
 #define HCI_PROTO_DEFER             0x01
 

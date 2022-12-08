@@ -14,6 +14,7 @@
 #include "sof-priv.h"
 #include "ops.h"
 
+<<<<<<< HEAD
 /* The module ID includes the id of the library it is part of at offset 12 */
 #define SOF_IPC4_MOD_LIB_ID_SHIFT	12
 
@@ -23,6 +24,14 @@ static ssize_t sof_ipc4_fw_parse_ext_man(struct snd_sof_dev *sdev,
 	struct sof_ipc4_fw_data *ipc4_data = sdev->private;
 	const struct firmware *fw = fw_lib->sof_fw.fw;
 	struct sof_man4_fw_binary_header *fw_header;
+=======
+static size_t sof_ipc4_fw_parse_ext_man(struct snd_sof_dev *sdev)
+{
+	struct sof_ipc4_fw_data *ipc4_data = sdev->private;
+	struct snd_sof_pdata *plat_data = sdev->pdata;
+	struct sof_man4_fw_binary_header *fw_header;
+	const struct firmware *fw = plat_data->fw;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sof_ext_manifest4_hdr *ext_man_hdr;
 	struct sof_man4_module_config *fm_config;
 	struct sof_ipc4_fw_module *fw_module;
@@ -74,6 +83,7 @@ static ssize_t sof_ipc4_fw_parse_ext_man(struct snd_sof_dev *sdev,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	dev_info(sdev->dev, "Loaded firmware library: %s, version: %u.%u.%u.%u\n",
 		 fw_header->name, fw_header->major_version, fw_header->minor_version,
 		 fw_header->hotfix_version, fw_header->build_version);
@@ -88,6 +98,22 @@ static ssize_t sof_ipc4_fw_parse_ext_man(struct snd_sof_dev *sdev,
 	fw_lib->name = fw_header->name;
 	fw_lib->num_modules = fw_header->num_module_entries;
 	fw_module = fw_lib->modules;
+=======
+	dev_info(sdev->dev, "Loaded firmware version: %u.%u.%u.%u\n",
+		 fw_header->major_version, fw_header->minor_version,
+		 fw_header->hotfix_version, fw_header->build_version);
+	dev_dbg(sdev->dev, "Firmware name: %s, header length: %u, module count: %u\n",
+		fw_header->name, fw_header->len, fw_header->num_module_entries);
+
+	ipc4_data->fw_modules = devm_kmalloc_array(sdev->dev,
+						   fw_header->num_module_entries,
+						   sizeof(*fw_module), GFP_KERNEL);
+	if (!ipc4_data->fw_modules)
+		return -ENOMEM;
+
+	ipc4_data->num_fw_modules = fw_header->num_module_entries;
+	fw_module = ipc4_data->fw_modules;
+>>>>>>> b7ba80a49124 (Commit)
 
 	fm_entry = (struct sof_man4_module *)((u8 *)fw_header + fw_header->len);
 	remaining -= fw_header->len;
@@ -137,6 +163,7 @@ static ssize_t sof_ipc4_fw_parse_ext_man(struct snd_sof_dev *sdev,
 	return ext_man_hdr->len;
 }
 
+<<<<<<< HEAD
 static size_t sof_ipc4_fw_parse_basefw_ext_man(struct snd_sof_dev *sdev)
 {
 	struct sof_ipc4_fw_data *ipc4_data = sdev->private;
@@ -307,12 +334,20 @@ struct sof_ipc4_fw_module *sof_ipc4_find_module_by_uuid(struct snd_sof_dev *sdev
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int sof_ipc4_validate_firmware(struct snd_sof_dev *sdev)
 {
 	struct sof_ipc4_fw_data *ipc4_data = sdev->private;
 	u32 fw_hdr_offset = ipc4_data->manifest_fw_hdr_offset;
+<<<<<<< HEAD
 	struct sof_man4_fw_binary_header *fw_header;
 	const struct firmware *fw = sdev->basefw.fw;
+=======
+	struct snd_sof_pdata *plat_data = sdev->pdata;
+	struct sof_man4_fw_binary_header *fw_header;
+	const struct firmware *fw = plat_data->fw;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sof_ext_manifest4_hdr *ext_man_hdr;
 
 	ext_man_hdr = (struct sof_ext_manifest4_hdr *)fw->data;
@@ -328,7 +363,11 @@ static int sof_ipc4_validate_firmware(struct snd_sof_dev *sdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 int sof_ipc4_query_fw_configuration(struct snd_sof_dev *sdev)
+=======
+static int sof_ipc4_query_fw_configuration(struct snd_sof_dev *sdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sof_ipc4_fw_data *ipc4_data = sdev->private;
 	const struct sof_ipc_ops *iops = sdev->ipc->ops;
@@ -376,6 +415,7 @@ int sof_ipc4_query_fw_configuration(struct snd_sof_dev *sdev)
 			trace_sof_ipc4_fw_config(sdev, "Trace log size", *tuple->value);
 			ipc4_data->mtrace_log_bytes = *tuple->value;
 			break;
+<<<<<<< HEAD
 		case SOF_IPC4_FW_CFG_MAX_LIBS_COUNT:
 			trace_sof_ipc4_fw_config(sdev, "maximum number of libraries",
 						 *tuple->value);
@@ -394,6 +434,8 @@ int sof_ipc4_query_fw_configuration(struct snd_sof_dev *sdev)
 				goto out;
 			}
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		default:
 			break;
 		}
@@ -407,6 +449,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 int sof_ipc4_reload_fw_libraries(struct snd_sof_dev *sdev)
 {
 	struct sof_ipc4_fw_data *ipc4_data = sdev->private;
@@ -429,4 +472,10 @@ int sof_ipc4_reload_fw_libraries(struct snd_sof_dev *sdev)
 const struct sof_ipc_fw_loader_ops ipc4_loader_ops = {
 	.validate = sof_ipc4_validate_firmware,
 	.parse_ext_manifest = sof_ipc4_fw_parse_basefw_ext_man,
+=======
+const struct sof_ipc_fw_loader_ops ipc4_loader_ops = {
+	.validate = sof_ipc4_validate_firmware,
+	.parse_ext_manifest = sof_ipc4_fw_parse_ext_man,
+	.query_fw_configuration = sof_ipc4_query_fw_configuration,
+>>>>>>> b7ba80a49124 (Commit)
 };

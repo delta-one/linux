@@ -456,8 +456,11 @@ static inline u32 vc4_hdmi_read(struct vc4_hdmi *hdmi,
 
 	WARN_ON(pm_runtime_status_suspended(&hdmi->pdev->dev));
 
+<<<<<<< HEAD
 	kunit_fail_current_test("Accessing an HDMI register in a unit test!\n");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (reg >= variant->num_registers) {
 		dev_warn(&hdmi->pdev->dev,
 			 "Invalid register ID %u\n", reg);
@@ -488,8 +491,11 @@ static inline void vc4_hdmi_write(struct vc4_hdmi *hdmi,
 
 	WARN_ON(pm_runtime_status_suspended(&hdmi->pdev->dev));
 
+<<<<<<< HEAD
 	kunit_fail_current_test("Accessing an HDMI register in a unit test!\n");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (reg >= variant->num_registers) {
 		dev_warn(&hdmi->pdev->dev,
 			 "Invalid register ID %u\n", reg);

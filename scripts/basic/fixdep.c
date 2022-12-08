@@ -70,7 +70,11 @@
  *
  * It first generates a line
  *
+<<<<<<< HEAD
  *   savedcmd_<target> = <cmdline>
+=======
+ *   cmd_<target> = <cmdline>
+>>>>>>> b7ba80a49124 (Commit)
  *
  * and then basically copies the .<target>.d file to stdout, in the
  * process filtering out the dependency on autoconf.h and adding
@@ -94,7 +98,11 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+<<<<<<< HEAD
 #include <stdbool.h>
+=======
+#include <stdarg.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -113,7 +121,11 @@ struct item {
 };
 
 #define HASHSZ 256
+<<<<<<< HEAD
 static struct item *config_hashtab[HASHSZ], *file_hashtab[HASHSZ];
+=======
+static struct item *hashtab[HASHSZ];
+>>>>>>> b7ba80a49124 (Commit)
 
 static unsigned int strhash(const char *str, unsigned int sz)
 {
@@ -126,10 +138,31 @@ static unsigned int strhash(const char *str, unsigned int sz)
 }
 
 /*
+<<<<<<< HEAD
  * Add a new value to the configuration string.
  */
 static void add_to_hashtable(const char *name, int len, unsigned int hash,
 			     struct item *hashtab[])
+=======
+ * Lookup a value in the configuration string.
+ */
+static int is_defined_config(const char *name, int len, unsigned int hash)
+{
+	struct item *aux;
+
+	for (aux = hashtab[hash % HASHSZ]; aux; aux = aux->next) {
+		if (aux->hash == hash && aux->len == len &&
+		    memcmp(aux->name, name, len) == 0)
+			return 1;
+	}
+	return 0;
+}
+
+/*
+ * Add a new value to the configuration string.
+ */
+static void define_config(const char *name, int len, unsigned int hash)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct item *aux = malloc(sizeof(*aux) + len);
 
@@ -145,6 +178,7 @@ static void add_to_hashtable(const char *name, int len, unsigned int hash,
 }
 
 /*
+<<<<<<< HEAD
  * Lookup a string in the hash table. If found, just return true.
  * If not, add it to the hashtable and return false.
  */
@@ -165,13 +199,24 @@ static bool in_hashtable(const char *name, int len, struct item *hashtab[])
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Record the use of a CONFIG_* word.
  */
 static void use_config(const char *m, int slen)
 {
+<<<<<<< HEAD
 	if (in_hashtable(m, slen, config_hashtab))
 		return;
 
+=======
+	unsigned int hash = strhash(m, slen);
+
+	if (is_defined_config(m, slen, hash))
+	    return;
+
+	define_config(m, slen, hash);
+>>>>>>> b7ba80a49124 (Commit)
 	/* Print out a dependency path from a symbol name. */
 	printf("    $(wildcard include/config/%.*s) \\\n", slen, m);
 }
@@ -250,6 +295,7 @@ static int is_ignored_file(const char *s, int len)
 	       str_ends_with(s, len, "include/generated/autoksyms.h");
 }
 
+<<<<<<< HEAD
 /* Do not parse these files */
 static int is_no_parse_file(const char *s, int len)
 {
@@ -259,11 +305,14 @@ static int is_no_parse_file(const char *s, int len)
 	       str_ends_with(s, len, ".so");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Important: The below generated source_foo.o and deps_foo.o variable
  * assignments are parsed not only by make, but also by the rather simple
  * parser in scripts/mod/sumversion.c.
  */
+<<<<<<< HEAD
 static void parse_dep_file(char *p, const char *target)
 {
 	bool saw_any_target = false;
@@ -395,13 +444,83 @@ static void parse_dep_file(char *p, const char *target)
 			void *buf;
 
 			buf = read_file(p);
+=======
+static void parse_dep_file(char *m, const char *target)
+{
+	char *p;
+	int is_last, is_target;
+	int saw_any_target = 0;
+	int is_first_dep = 0;
+	void *buf;
+
+	while (1) {
+		/* Skip any "white space" */
+		while (*m == ' ' || *m == '\\' || *m == '\n')
+			m++;
+
+		if (!*m)
+			break;
+
+		/* Find next "white space" */
+		p = m;
+		while (*p && *p != ' ' && *p != '\\' && *p != '\n')
+			p++;
+		is_last = (*p == '\0');
+		/* Is the token we found a target name? */
+		is_target = (*(p-1) == ':');
+		/* Don't write any target names into the dependency file */
+		if (is_target) {
+			/* The /next/ file is the first dependency */
+			is_first_dep = 1;
+		} else if (!is_ignored_file(m, p - m)) {
+			*p = '\0';
+
+			/*
+			 * Do not list the source file as dependency, so that
+			 * kbuild is not confused if a .c file is rewritten
+			 * into .S or vice versa. Storing it in source_* is
+			 * needed for modpost to compute srcversions.
+			 */
+			if (is_first_dep) {
+				/*
+				 * If processing the concatenation of multiple
+				 * dependency files, only process the first
+				 * target name, which will be the original
+				 * source name, and ignore any other target
+				 * names, which will be intermediate temporary
+				 * files.
+				 */
+				if (!saw_any_target) {
+					saw_any_target = 1;
+					printf("source_%s := %s\n\n",
+					       target, m);
+					printf("deps_%s := \\\n", target);
+				}
+				is_first_dep = 0;
+			} else {
+				printf("  %s \\\n", m);
+			}
+
+			buf = read_file(m);
+>>>>>>> b7ba80a49124 (Commit)
 			parse_config_file(buf);
 			free(buf);
 		}
 
+<<<<<<< HEAD
 		is_source = false;
 		*q = saved_c;
 		p = q;
+=======
+		if (is_last)
+			break;
+
+		/*
+		 * Start searching for next token immediately after the first
+		 * "whitespace" character that follows this token.
+		 */
+		m = p + 1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (!saw_any_target) {
@@ -425,7 +544,11 @@ int main(int argc, char *argv[])
 	target = argv[2];
 	cmdline = argv[3];
 
+<<<<<<< HEAD
 	printf("savedcmd_%s := %s\n\n", target, cmdline);
+=======
+	printf("cmd_%s := %s\n\n", target, cmdline);
+>>>>>>> b7ba80a49124 (Commit)
 
 	buf = read_file(depfile);
 	parse_dep_file(buf, target);

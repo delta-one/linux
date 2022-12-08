@@ -41,14 +41,21 @@ VMX_EXIT_REASONS = {
     'EXCEPTION_NMI':        0,
     'EXTERNAL_INTERRUPT':   1,
     'TRIPLE_FAULT':         2,
+<<<<<<< HEAD
     'INIT_SIGNAL':          3,
     'SIPI_SIGNAL':          4,
     'INTERRUPT_WINDOW':     7,
+=======
+    'PENDING_INTERRUPT':    7,
+>>>>>>> b7ba80a49124 (Commit)
     'NMI_WINDOW':           8,
     'TASK_SWITCH':          9,
     'CPUID':                10,
     'HLT':                  12,
+<<<<<<< HEAD
     'INVD':                 13,
+=======
+>>>>>>> b7ba80a49124 (Commit)
     'INVLPG':               14,
     'RDPMC':                15,
     'RDTSC':                16,
@@ -68,14 +75,19 @@ VMX_EXIT_REASONS = {
     'MSR_READ':             31,
     'MSR_WRITE':            32,
     'INVALID_STATE':        33,
+<<<<<<< HEAD
     'MSR_LOAD_FAIL':        34,
     'MWAIT_INSTRUCTION':    36,
     'MONITOR_TRAP_FLAG':    37,
+=======
+    'MWAIT_INSTRUCTION':    36,
+>>>>>>> b7ba80a49124 (Commit)
     'MONITOR_INSTRUCTION':  39,
     'PAUSE_INSTRUCTION':    40,
     'MCE_DURING_VMENTRY':   41,
     'TPR_BELOW_THRESHOLD':  43,
     'APIC_ACCESS':          44,
+<<<<<<< HEAD
     'EOI_INDUCED':          45,
     'GDTR_IDTR':            46,
     'LDTR_TR':              47,
@@ -100,16 +112,30 @@ VMX_EXIT_REASONS = {
     'TPAUSE':               68,
     'BUS_LOCK':             74,
     'NOTIFY':               75,
+=======
+    'EPT_VIOLATION':        48,
+    'EPT_MISCONFIG':        49,
+    'WBINVD':               54,
+    'XSETBV':               55,
+    'APIC_WRITE':           56,
+    'INVPCID':              58,
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 SVM_EXIT_REASONS = {
     'READ_CR0':       0x000,
+<<<<<<< HEAD
     'READ_CR2':       0x002,
+=======
+>>>>>>> b7ba80a49124 (Commit)
     'READ_CR3':       0x003,
     'READ_CR4':       0x004,
     'READ_CR8':       0x008,
     'WRITE_CR0':      0x010,
+<<<<<<< HEAD
     'WRITE_CR2':      0x012,
+=======
+>>>>>>> b7ba80a49124 (Commit)
     'WRITE_CR3':      0x013,
     'WRITE_CR4':      0x014,
     'WRITE_CR8':      0x018,
@@ -130,7 +156,10 @@ SVM_EXIT_REASONS = {
     'WRITE_DR6':      0x036,
     'WRITE_DR7':      0x037,
     'EXCP_BASE':      0x040,
+<<<<<<< HEAD
     'LAST_EXCP':      0x05f,
+=======
+>>>>>>> b7ba80a49124 (Commit)
     'INTR':           0x060,
     'NMI':            0x061,
     'SMI':            0x062,
@@ -177,6 +206,7 @@ SVM_EXIT_REASONS = {
     'MWAIT':          0x08b,
     'MWAIT_COND':     0x08c,
     'XSETBV':         0x08d,
+<<<<<<< HEAD
     'RDPRU':          0x08e,
     'EFER_WRITE_TRAP':           0x08f,
     'CR0_WRITE_TRAP':            0x090,
@@ -206,16 +236,30 @@ SVM_EXIT_REASONS = {
 AARCH64_EXIT_REASONS = {
     'UNKNOWN':      0x00,
     'WFx':          0x01,
+=======
+    'NPF':            0x400,
+}
+
+# EC definition of HSR (from arch/arm64/include/asm/kvm_arm.h)
+AARCH64_EXIT_REASONS = {
+    'UNKNOWN':      0x00,
+    'WFI':          0x01,
+>>>>>>> b7ba80a49124 (Commit)
     'CP15_32':      0x03,
     'CP15_64':      0x04,
     'CP14_MR':      0x05,
     'CP14_LS':      0x06,
     'FP_ASIMD':     0x07,
     'CP10_ID':      0x08,
+<<<<<<< HEAD
     'PAC':          0x09,
     'CP14_64':      0x0C,
     'BTI':          0x0D,
     'ILL':          0x0E,
+=======
+    'CP14_64':      0x0C,
+    'ILL_ISS':      0x0E,
+>>>>>>> b7ba80a49124 (Commit)
     'SVC32':        0x11,
     'HVC32':        0x12,
     'SMC32':        0x13,
@@ -223,6 +267,7 @@ AARCH64_EXIT_REASONS = {
     'HVC64':        0x16,
     'SMC64':        0x17,
     'SYS64':        0x18,
+<<<<<<< HEAD
     'SVE':          0x19,
     'ERET':         0x1A,
     'FPAC':         0x1C,
@@ -233,16 +278,32 @@ AARCH64_EXIT_REASONS = {
     'PC_ALIGN':     0x22,
     'DABT_LOW':     0x24,
     'DABT_CUR':     0x25,
+=======
+    'IABT':         0x20,
+    'IABT_HYP':     0x21,
+    'PC_ALIGN':     0x22,
+    'DABT':         0x24,
+    'DABT_HYP':     0x25,
+>>>>>>> b7ba80a49124 (Commit)
     'SP_ALIGN':     0x26,
     'FP_EXC32':     0x28,
     'FP_EXC64':     0x2C,
     'SERROR':       0x2F,
+<<<<<<< HEAD
     'BREAKPT_LOW':  0x30,
     'BREAKPT_CUR':  0x31,
     'SOFTSTP_LOW':  0x32,
     'SOFTSTP_CUR':  0x33,
     'WATCHPT_LOW':  0x34,
     'WATCHPT_CUR':  0x35,
+=======
+    'BREAKPT':      0x30,
+    'BREAKPT_HYP':  0x31,
+    'SOFTSTP':      0x32,
+    'SOFTSTP_HYP':  0x33,
+    'WATCHPT':      0x34,
+    'WATCHPT_HYP':  0x35,
+>>>>>>> b7ba80a49124 (Commit)
     'BKPT32':       0x38,
     'VECTOR32':     0x3A,
     'BRK64':        0x3C,
@@ -275,6 +336,7 @@ USERSPACE_EXIT_REASONS = {
     'S390_TSCH':        22,
     'EPR':              23,
     'SYSTEM_EVENT':     24,
+<<<<<<< HEAD
     'S390_STSI':        25,
     'IOAPIC_EOI':       26,
     'HYPERV':           27,
@@ -288,6 +350,8 @@ USERSPACE_EXIT_REASONS = {
     'RISCV_SBI':        35,
     'RISCV_CSR':        36,
     'NOTIFY':           37,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 IOCTL_NUMBERS = {
@@ -627,7 +691,11 @@ class TracepointProvider(Provider):
         name)'.
 
         All available events have directories under
+<<<<<<< HEAD
         /sys/kernel/tracing/events/ which export information
+=======
+        /sys/kernel/debug/tracing/events/ which export information
+>>>>>>> b7ba80a49124 (Commit)
         about the specific event. Therefore, listing the dirs gives us
         a list of all available events.
 
@@ -1824,7 +1892,11 @@ def assign_globals():
 
     debugfs = ''
     for line in open('/proc/mounts'):
+<<<<<<< HEAD
         if line.split(' ')[2] == 'debugfs':
+=======
+        if line.split(' ')[0] == 'debugfs':
+>>>>>>> b7ba80a49124 (Commit)
             debugfs = line.split(' ')[1]
             break
     if debugfs == '':

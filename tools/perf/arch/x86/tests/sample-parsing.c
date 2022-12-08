@@ -10,7 +10,10 @@
 #include "event.h"
 #include "evsel.h"
 #include "debug.h"
+<<<<<<< HEAD
 #include "util/sample.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "util/synthetic-events.h"
 
 #include "tests/tests.h"
@@ -27,10 +30,15 @@ static bool samples_same(const struct perf_sample *s1,
 			 const struct perf_sample *s2,
 			 u64 type)
 {
+<<<<<<< HEAD
 	if (type & PERF_SAMPLE_WEIGHT_STRUCT) {
 		COMP(ins_lat);
 		COMP(retire_lat);
 	}
+=======
+	if (type & PERF_SAMPLE_WEIGHT_STRUCT)
+		COMP(ins_lat);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return true;
 }
@@ -50,7 +58,10 @@ static int do_test(u64 sample_type)
 	struct perf_sample sample = {
 		.weight		= 101,
 		.ins_lat        = 102,
+<<<<<<< HEAD
 		.retire_lat     = 103,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	struct perf_sample sample_out;
 	size_t i, sz, bufsz;

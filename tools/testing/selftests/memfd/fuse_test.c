@@ -22,7 +22,10 @@
 #include <linux/falloc.h>
 #include <fcntl.h>
 #include <linux/memfd.h>
+<<<<<<< HEAD
 #include <linux/types.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <sched.h>
 #include <stdio.h>
 #include <stdlib.h>

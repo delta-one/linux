@@ -15,7 +15,11 @@ static inline void tlb_flush_pgtable(struct mmu_gather *tlb,
 {
 
 }
+<<<<<<< HEAD
 #endif /* !CONFIG_PPC_BOOK3E_64 */
+=======
+#endif /* !CONFIG_PPC_BOOK3E */
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline pgd_t *pgd_alloc(struct mm_struct *mm)
 {

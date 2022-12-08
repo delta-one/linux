@@ -78,7 +78,10 @@ struct mlxsw_core {
 		spinlock_t trans_list_lock; /* protects trans_list writes */
 		bool use_emad;
 		bool enable_string_tlv;
+<<<<<<< HEAD
 		bool enable_latency_tlv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} emad;
 	struct {
 		u16 *mapping; /* lag_id+port_index to local_port mapping */
@@ -379,6 +382,7 @@ MLXSW_ITEM32(emad, string_tlv, len, 0x00, 16, 11);
 MLXSW_ITEM_BUF(emad, string_tlv, string, 0x04,
 	       MLXSW_EMAD_STRING_TLV_STRING_LEN);
 
+<<<<<<< HEAD
 /* emad_latency_tlv_type
  * Type of the TLV.
  * Must be set to 0x4 (latency TLV).
@@ -395,6 +399,8 @@ MLXSW_ITEM32(emad, latency_tlv, len, 0x00, 16, 11);
  */
 MLXSW_ITEM32(emad, latency_tlv, latency_time, 0x04, 0, 32);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* emad_reg_tlv_type
  * Type of the TLV.
  * Must be set to 0x3 (register TLV).
@@ -478,12 +484,15 @@ static void mlxsw_emad_pack_op_tlv(char *op_tlv,
 	mlxsw_emad_op_tlv_tid_set(op_tlv, tid);
 }
 
+<<<<<<< HEAD
 static void mlxsw_emad_pack_latency_tlv(char *latency_tlv)
 {
 	mlxsw_emad_latency_tlv_type_set(latency_tlv, MLXSW_EMAD_TLV_TYPE_LATENCY);
 	mlxsw_emad_latency_tlv_len_set(latency_tlv, MLXSW_EMAD_LATENCY_TLV_LEN);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mlxsw_emad_construct_eth_hdr(struct sk_buff *skb)
 {
 	char *eth_hdr = skb_push(skb, MLXSW_EMAD_ETH_HDR_LEN);
@@ -499,11 +508,19 @@ static int mlxsw_emad_construct_eth_hdr(struct sk_buff *skb)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void mlxsw_emad_construct(const struct mlxsw_core *mlxsw_core,
 				 struct sk_buff *skb,
 				 const struct mlxsw_reg_info *reg,
 				 char *payload,
 				 enum mlxsw_core_reg_access_type type, u64 tid)
+=======
+static void mlxsw_emad_construct(struct sk_buff *skb,
+				 const struct mlxsw_reg_info *reg,
+				 char *payload,
+				 enum mlxsw_core_reg_access_type type,
+				 u64 tid, bool enable_string_tlv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	char *buf;
 
@@ -513,12 +530,16 @@ static void mlxsw_emad_construct(const struct mlxsw_core *mlxsw_core,
 	buf = skb_push(skb, reg->len + sizeof(u32));
 	mlxsw_emad_pack_reg_tlv(buf, reg, payload);
 
+<<<<<<< HEAD
 	if (mlxsw_core->emad.enable_latency_tlv) {
 		buf = skb_push(skb, MLXSW_EMAD_LATENCY_TLV_LEN * sizeof(u32));
 		mlxsw_emad_pack_latency_tlv(buf);
 	}
 
 	if (mlxsw_core->emad.enable_string_tlv) {
+=======
+	if (enable_string_tlv) {
+>>>>>>> b7ba80a49124 (Commit)
 		buf = skb_push(skb, MLXSW_EMAD_STRING_TLV_LEN * sizeof(u32));
 		mlxsw_emad_pack_string_tlv(buf);
 	}
@@ -532,7 +553,10 @@ static void mlxsw_emad_construct(const struct mlxsw_core *mlxsw_core,
 struct mlxsw_emad_tlv_offsets {
 	u16 op_tlv;
 	u16 string_tlv;
+<<<<<<< HEAD
 	u16 latency_tlv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 reg_tlv;
 };
 
@@ -543,6 +567,7 @@ static bool mlxsw_emad_tlv_is_string_tlv(const char *tlv)
 	return tlv_type == MLXSW_EMAD_TLV_TYPE_STRING;
 }
 
+<<<<<<< HEAD
 static bool mlxsw_emad_tlv_is_latency_tlv(const char *tlv)
 {
 	u8 tlv_type = mlxsw_emad_latency_tlv_type_get(tlv);
@@ -550,6 +575,8 @@ static bool mlxsw_emad_tlv_is_latency_tlv(const char *tlv)
 	return tlv_type == MLXSW_EMAD_TLV_TYPE_LATENCY;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void mlxsw_emad_tlv_parse(struct sk_buff *skb)
 {
 	struct mlxsw_emad_tlv_offsets *offsets =
@@ -557,8 +584,11 @@ static void mlxsw_emad_tlv_parse(struct sk_buff *skb)
 
 	offsets->op_tlv = MLXSW_EMAD_ETH_HDR_LEN;
 	offsets->string_tlv = 0;
+<<<<<<< HEAD
 	offsets->latency_tlv = 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	offsets->reg_tlv = MLXSW_EMAD_ETH_HDR_LEN +
 			   MLXSW_EMAD_OP_TLV_LEN * sizeof(u32);
 
@@ -567,11 +597,14 @@ static void mlxsw_emad_tlv_parse(struct sk_buff *skb)
 		offsets->string_tlv = offsets->reg_tlv;
 		offsets->reg_tlv += MLXSW_EMAD_STRING_TLV_LEN * sizeof(u32);
 	}
+<<<<<<< HEAD
 
 	if (mlxsw_emad_tlv_is_latency_tlv(skb->data + offsets->reg_tlv)) {
 		offsets->latency_tlv = offsets->reg_tlv;
 		offsets->reg_tlv += MLXSW_EMAD_LATENCY_TLV_LEN * sizeof(u32);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static char *mlxsw_emad_op_tlv(const struct sk_buff *skb)
@@ -837,6 +870,7 @@ static const struct mlxsw_listener mlxsw_emad_rx_listener =
 	MLXSW_RXL(mlxsw_emad_rx_listener_func, ETHEMAD, TRAP_TO_CPU, false,
 		  EMAD, DISCARD);
 
+<<<<<<< HEAD
 static int mlxsw_emad_tlv_enable(struct mlxsw_core *mlxsw_core)
 {
 	char mgir_pl[MLXSW_REG_MGIR_LEN];
@@ -863,6 +897,8 @@ static void mlxsw_emad_tlv_disable(struct mlxsw_core *mlxsw_core)
 	mlxsw_core->emad.enable_string_tlv = false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mlxsw_emad_init(struct mlxsw_core *mlxsw_core)
 {
 	struct workqueue_struct *emad_wq;
@@ -893,17 +929,23 @@ static int mlxsw_emad_init(struct mlxsw_core *mlxsw_core)
 	if (err)
 		goto err_trap_register;
 
+<<<<<<< HEAD
 	err = mlxsw_emad_tlv_enable(mlxsw_core);
 	if (err)
 		goto err_emad_tlv_enable;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mlxsw_core->emad.use_emad = true;
 
 	return 0;
 
+<<<<<<< HEAD
 err_emad_tlv_enable:
 	mlxsw_core_trap_unregister(mlxsw_core, &mlxsw_emad_rx_listener,
 				   mlxsw_core);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_trap_register:
 	destroy_workqueue(mlxsw_core->emad_wq);
 	return err;
@@ -916,14 +958,21 @@ static void mlxsw_emad_fini(struct mlxsw_core *mlxsw_core)
 		return;
 
 	mlxsw_core->emad.use_emad = false;
+<<<<<<< HEAD
 	mlxsw_emad_tlv_disable(mlxsw_core);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mlxsw_core_trap_unregister(mlxsw_core, &mlxsw_emad_rx_listener,
 				   mlxsw_core);
 	destroy_workqueue(mlxsw_core->emad_wq);
 }
 
 static struct sk_buff *mlxsw_emad_alloc(const struct mlxsw_core *mlxsw_core,
+<<<<<<< HEAD
 					u16 reg_len)
+=======
+					u16 reg_len, bool enable_string_tlv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sk_buff *skb;
 	u16 emad_len;
@@ -931,10 +980,15 @@ static struct sk_buff *mlxsw_emad_alloc(const struct mlxsw_core *mlxsw_core,
 	emad_len = (reg_len + sizeof(u32) + MLXSW_EMAD_ETH_HDR_LEN +
 		    (MLXSW_EMAD_OP_TLV_LEN + MLXSW_EMAD_END_TLV_LEN) *
 		    sizeof(u32) + mlxsw_core->driver->txhdr_len);
+<<<<<<< HEAD
 	if (mlxsw_core->emad.enable_string_tlv)
 		emad_len += MLXSW_EMAD_STRING_TLV_LEN * sizeof(u32);
 	if (mlxsw_core->emad.enable_latency_tlv)
 		emad_len +=  MLXSW_EMAD_LATENCY_TLV_LEN * sizeof(u32);
+=======
+	if (enable_string_tlv)
+		emad_len += MLXSW_EMAD_STRING_TLV_LEN * sizeof(u32);
+>>>>>>> b7ba80a49124 (Commit)
 	if (emad_len > MLXSW_EMAD_MAX_FRAME_LEN)
 		return NULL;
 
@@ -956,6 +1010,10 @@ static int mlxsw_emad_reg_access(struct mlxsw_core *mlxsw_core,
 				 mlxsw_reg_trans_cb_t *cb,
 				 unsigned long cb_priv, u64 tid)
 {
+<<<<<<< HEAD
+=======
+	bool enable_string_tlv;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sk_buff *skb;
 	int err;
 
@@ -963,7 +1021,16 @@ static int mlxsw_emad_reg_access(struct mlxsw_core *mlxsw_core,
 		tid, reg->id, mlxsw_reg_id_str(reg->id),
 		mlxsw_core_reg_access_type_str(type));
 
+<<<<<<< HEAD
 	skb = mlxsw_emad_alloc(mlxsw_core, reg->len);
+=======
+	/* Since this can be changed during emad_reg_access, read it once and
+	 * use the value all the way.
+	 */
+	enable_string_tlv = mlxsw_core->emad.enable_string_tlv;
+
+	skb = mlxsw_emad_alloc(mlxsw_core, reg->len, enable_string_tlv);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!skb)
 		return -ENOMEM;
 
@@ -980,7 +1047,12 @@ static int mlxsw_emad_reg_access(struct mlxsw_core *mlxsw_core,
 	trans->reg = reg;
 	trans->type = type;
 
+<<<<<<< HEAD
 	mlxsw_emad_construct(mlxsw_core, skb, reg, payload, type, trans->tid);
+=======
+	mlxsw_emad_construct(skb, reg, payload, type, trans->tid,
+			     enable_string_tlv);
+>>>>>>> b7ba80a49124 (Commit)
 	mlxsw_core->driver->txhdr_construct(skb, &trans->tx_info);
 
 	spin_lock_bh(&mlxsw_core->emad.trans_list_lock);
@@ -1243,9 +1315,15 @@ static int mlxsw_core_fw_rev_validate(struct mlxsw_core *mlxsw_core,
 		return 0;
 
 	/* Don't check if devlink 'fw_load_policy' param is 'flash' */
+<<<<<<< HEAD
 	err = devl_param_driverinit_value_get(priv_to_devlink(mlxsw_core),
 					      DEVLINK_PARAM_GENERIC_ID_FW_LOAD_POLICY,
 					      &value);
+=======
+	err = devlink_param_driverinit_value_get(priv_to_devlink(mlxsw_core),
+						 DEVLINK_PARAM_GENERIC_ID_FW_LOAD_POLICY,
+						 &value);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 	if (value.vu8 == DEVLINK_PARAM_FW_LOAD_POLICY_VALUE_FLASH)
@@ -1316,22 +1394,36 @@ static int mlxsw_core_fw_params_register(struct mlxsw_core *mlxsw_core)
 	union devlink_param_value value;
 	int err;
 
+<<<<<<< HEAD
 	err = devl_params_register(devlink, mlxsw_core_fw_devlink_params,
 				   ARRAY_SIZE(mlxsw_core_fw_devlink_params));
+=======
+	err = devlink_params_register(devlink, mlxsw_core_fw_devlink_params,
+				      ARRAY_SIZE(mlxsw_core_fw_devlink_params));
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 
 	value.vu8 = DEVLINK_PARAM_FW_LOAD_POLICY_VALUE_DRIVER;
+<<<<<<< HEAD
 	devl_param_driverinit_value_set(devlink,
 					DEVLINK_PARAM_GENERIC_ID_FW_LOAD_POLICY,
 					value);
+=======
+	devlink_param_driverinit_value_set(devlink, DEVLINK_PARAM_GENERIC_ID_FW_LOAD_POLICY, value);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static void mlxsw_core_fw_params_unregister(struct mlxsw_core *mlxsw_core)
 {
+<<<<<<< HEAD
 	devl_params_unregister(priv_to_devlink(mlxsw_core), mlxsw_core_fw_devlink_params,
 			       ARRAY_SIZE(mlxsw_core_fw_devlink_params));
+=======
+	devlink_params_unregister(priv_to_devlink(mlxsw_core), mlxsw_core_fw_devlink_params,
+				  ARRAY_SIZE(mlxsw_core_fw_devlink_params));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void *__dl_port(struct devlink_port *devlink_port)
@@ -1533,6 +1625,14 @@ mlxsw_devlink_info_get(struct devlink *devlink, struct devlink_info_req *req,
 	char buf[32];
 	int err;
 
+<<<<<<< HEAD
+=======
+	err = devlink_info_driver_name_put(req,
+					   mlxsw_core->bus_info->device_kind);
+	if (err)
+		return err;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mlxsw_reg_mgir_pack(mgir_pl);
 	err = mlxsw_reg_query(mlxsw_core, MLXSW_REG(mgir), mgir_pl);
 	if (err)
@@ -1750,12 +1850,36 @@ static const struct devlink_ops mlxsw_devlink_ops = {
 
 static int mlxsw_core_params_register(struct mlxsw_core *mlxsw_core)
 {
+<<<<<<< HEAD
 	return mlxsw_core_fw_params_register(mlxsw_core);
+=======
+	int err;
+
+	err = mlxsw_core_fw_params_register(mlxsw_core);
+	if (err)
+		return err;
+
+	if (mlxsw_core->driver->params_register) {
+		err = mlxsw_core->driver->params_register(mlxsw_core);
+		if (err)
+			goto err_params_register;
+	}
+	return 0;
+
+err_params_register:
+	mlxsw_core_fw_params_unregister(mlxsw_core);
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mlxsw_core_params_unregister(struct mlxsw_core *mlxsw_core)
 {
 	mlxsw_core_fw_params_unregister(mlxsw_core);
+<<<<<<< HEAD
+=======
+	if (mlxsw_core->driver->params_register)
+		mlxsw_core->driver->params_unregister(mlxsw_core);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct mlxsw_core_health_event {
@@ -2108,8 +2232,13 @@ static int mlxsw_core_health_init(struct mlxsw_core *mlxsw_core)
 	if (!(mlxsw_core->bus->features & MLXSW_BUS_F_TXRX))
 		return 0;
 
+<<<<<<< HEAD
 	fw_fatal = devl_health_reporter_create(devlink, &mlxsw_core_health_fw_fatal_ops,
 					       0, mlxsw_core);
+=======
+	fw_fatal = devlink_health_reporter_create(devlink, &mlxsw_core_health_fw_fatal_ops,
+						  0, mlxsw_core);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(fw_fatal)) {
 		dev_err(mlxsw_core->bus_info->dev, "Failed to create fw fatal reporter");
 		return PTR_ERR(fw_fatal);
@@ -2129,7 +2258,11 @@ static int mlxsw_core_health_init(struct mlxsw_core *mlxsw_core)
 err_fw_fatal_config:
 	mlxsw_core_trap_unregister(mlxsw_core, &mlxsw_core_health_listener, mlxsw_core);
 err_trap_register:
+<<<<<<< HEAD
 	devl_health_reporter_destroy(mlxsw_core->health.fw_fatal);
+=======
+	devlink_health_reporter_destroy(mlxsw_core->health.fw_fatal);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -2142,7 +2275,11 @@ static void mlxsw_core_health_fini(struct mlxsw_core *mlxsw_core)
 	mlxsw_core_trap_unregister(mlxsw_core, &mlxsw_core_health_listener, mlxsw_core);
 	/* Make sure there is no more event work scheduled */
 	mlxsw_core_flush_owq();
+<<<<<<< HEAD
 	devl_health_reporter_destroy(mlxsw_core->health.fw_fatal);
+=======
+	devlink_health_reporter_destroy(mlxsw_core->health.fw_fatal);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mlxsw_core_irq_event_handler_init(struct mlxsw_core *mlxsw_core)
@@ -2184,7 +2321,10 @@ __mlxsw_core_bus_device_register(const struct mlxsw_bus_info *mlxsw_bus_info,
 			goto err_devlink_alloc;
 		}
 		devl_lock(devlink);
+<<<<<<< HEAD
 		devl_register(devlink);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	mlxsw_core = devlink_priv(devlink);
@@ -2268,8 +2408,16 @@ __mlxsw_core_bus_device_register(const struct mlxsw_bus_info *mlxsw_bus_info,
 			goto err_driver_init;
 	}
 
+<<<<<<< HEAD
 	if (!reload)
 		devl_unlock(devlink);
+=======
+	if (!reload) {
+		devlink_set_features(devlink, DEVLINK_F_RELOAD);
+		devl_unlock(devlink);
+		devlink_register(devlink);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_driver_init:
@@ -2301,7 +2449,10 @@ err_register_resources:
 err_bus_init:
 	mlxsw_core_irq_event_handler_fini(mlxsw_core);
 	if (!reload) {
+<<<<<<< HEAD
 		devl_unregister(devlink);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		devl_unlock(devlink);
 		devlink_free(devlink);
 	}
@@ -2340,8 +2491,15 @@ void mlxsw_core_bus_device_unregister(struct mlxsw_core *mlxsw_core,
 {
 	struct devlink *devlink = priv_to_devlink(mlxsw_core);
 
+<<<<<<< HEAD
 	if (!reload)
 		devl_lock(devlink);
+=======
+	if (!reload) {
+		devlink_unregister(devlink);
+		devl_lock(devlink);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (devlink_is_reload_failed(devlink)) {
 		if (!reload)
@@ -2370,7 +2528,10 @@ void mlxsw_core_bus_device_unregister(struct mlxsw_core *mlxsw_core,
 	mlxsw_core->bus->fini(mlxsw_core->bus_priv);
 	mlxsw_core_irq_event_handler_fini(mlxsw_core);
 	if (!reload) {
+<<<<<<< HEAD
 		devl_unregister(devlink);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		devl_unlock(devlink);
 		devlink_free(devlink);
 	}
@@ -2380,7 +2541,10 @@ void mlxsw_core_bus_device_unregister(struct mlxsw_core *mlxsw_core,
 reload_fail_deinit:
 	mlxsw_core_params_unregister(mlxsw_core);
 	devl_resources_unregister(devlink);
+<<<<<<< HEAD
 	devl_unregister(devlink);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	devl_unlock(devlink);
 	devlink_free(devlink);
 }
@@ -3223,17 +3387,40 @@ void mlxsw_core_cpu_port_fini(struct mlxsw_core *mlxsw_core)
 }
 EXPORT_SYMBOL(mlxsw_core_cpu_port_fini);
 
+<<<<<<< HEAD
 void mlxsw_core_port_netdev_link(struct mlxsw_core *mlxsw_core, u16 local_port,
 				 void *port_driver_priv, struct net_device *dev)
+=======
+void mlxsw_core_port_eth_set(struct mlxsw_core *mlxsw_core, u16 local_port,
+			     void *port_driver_priv, struct net_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mlxsw_core_port *mlxsw_core_port =
 					&mlxsw_core->ports[local_port];
 	struct devlink_port *devlink_port = &mlxsw_core_port->devlink_port;
 
 	mlxsw_core_port->port_driver_priv = port_driver_priv;
+<<<<<<< HEAD
 	SET_NETDEV_DEVLINK_PORT(dev, devlink_port);
 }
 EXPORT_SYMBOL(mlxsw_core_port_netdev_link);
+=======
+	devlink_port_type_eth_set(devlink_port, dev);
+}
+EXPORT_SYMBOL(mlxsw_core_port_eth_set);
+
+void mlxsw_core_port_clear(struct mlxsw_core *mlxsw_core, u16 local_port,
+			   void *port_driver_priv)
+{
+	struct mlxsw_core_port *mlxsw_core_port =
+					&mlxsw_core->ports[local_port];
+	struct devlink_port *devlink_port = &mlxsw_core_port->devlink_port;
+
+	mlxsw_core_port->port_driver_priv = port_driver_priv;
+	devlink_port_type_clear(devlink_port);
+}
+EXPORT_SYMBOL(mlxsw_core_port_clear);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct devlink_port *
 mlxsw_core_port_devlink_port_get(struct mlxsw_core *mlxsw_core,
@@ -3433,6 +3620,15 @@ bool mlxsw_core_sdq_supports_cqe_v2(struct mlxsw_core *mlxsw_core)
 }
 EXPORT_SYMBOL(mlxsw_core_sdq_supports_cqe_v2);
 
+<<<<<<< HEAD
+=======
+void mlxsw_core_emad_string_tlv_enable(struct mlxsw_core *mlxsw_core)
+{
+	mlxsw_core->emad.enable_string_tlv = true;
+}
+EXPORT_SYMBOL(mlxsw_core_emad_string_tlv_enable);
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __init mlxsw_core_module_init(void)
 {
 	int err;

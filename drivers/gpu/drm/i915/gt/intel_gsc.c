@@ -7,7 +7,10 @@
 #include <linux/mei_aux.h>
 #include "i915_drv.h"
 #include "i915_reg.h"
+<<<<<<< HEAD
 #include "gem/i915_gem_lmem.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "gem/i915_gem_region.h"
 #include "gt/intel_gsc.h"
 #include "gt/intel_gt.h"
@@ -70,7 +73,11 @@ out_put:
 
 static void gsc_ext_om_destroy(struct intel_gsc_intf *intf)
 {
+<<<<<<< HEAD
 	struct drm_i915_gem_object *obj = __xchg(&intf->gem_obj, 0);
+=======
+	struct drm_i915_gem_object *obj = fetch_and_zero(&intf->gem_obj);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!obj)
 		return;
@@ -143,6 +150,7 @@ static void gsc_destroy_one(struct drm_i915_private *i915,
 	struct intel_gsc_intf *intf = &gsc->intf[intf_id];
 
 	if (intf->adev) {
+<<<<<<< HEAD
 		struct auxiliary_device *aux_dev = &intf->adev->aux_dev;
 
 		if (intf_id == 0)
@@ -151,6 +159,10 @@ static void gsc_destroy_one(struct drm_i915_private *i915,
 
 		auxiliary_device_delete(aux_dev);
 		auxiliary_device_uninit(aux_dev);
+=======
+		auxiliary_device_delete(&intf->adev->aux_dev);
+		auxiliary_device_uninit(&intf->adev->aux_dev);
+>>>>>>> b7ba80a49124 (Commit)
 		intf->adev = NULL;
 	}
 
@@ -174,6 +186,7 @@ static void gsc_init_one(struct drm_i915_private *i915, struct intel_gsc *gsc,
 	intf->irq = -1;
 	intf->id = intf_id;
 
+<<<<<<< HEAD
 	/*
 	 * On the multi-tile setups the GSC is functional on the first tile only
 	 */
@@ -182,6 +195,8 @@ static void gsc_init_one(struct drm_i915_private *i915, struct intel_gsc *gsc,
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (intf_id == 0 && !HAS_HECI_PXP(i915))
 		return;
 
@@ -257,6 +272,7 @@ add_device:
 		goto fail;
 	}
 
+<<<<<<< HEAD
 	intf->adev = adev; /* needed by the notifier */
 
 	if (intf_id == 0)
@@ -271,10 +287,19 @@ add_device:
 							  aux_dev->dev.bus);
 		intf->adev = NULL;
 
+=======
+	ret = auxiliary_device_add(aux_dev);
+	if (ret < 0) {
+		drm_err(&i915->drm, "gsc aux add failed %d\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 		/* adev will be freed with the put_device() and .release sequence */
 		auxiliary_device_uninit(aux_dev);
 		goto fail;
 	}
+<<<<<<< HEAD
+=======
+	intf->adev = adev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return;
 fail:

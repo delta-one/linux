@@ -12,7 +12,10 @@
 #include <linux/init.h>
 #include <linux/device.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/panic_notifier.h>
 #include <linux/reboot.h>
 #include <linux/ctype.h>
@@ -40,8 +43,11 @@
 
 #define IPL_UNKNOWN_STR		"unknown"
 #define IPL_CCW_STR		"ccw"
+<<<<<<< HEAD
 #define IPL_ECKD_STR		"eckd"
 #define IPL_ECKD_DUMP_STR	"eckd_dump"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define IPL_FCP_STR		"fcp"
 #define IPL_FCP_DUMP_STR	"fcp_dump"
 #define IPL_NVME_STR		"nvme"
@@ -49,7 +55,10 @@
 #define IPL_NSS_STR		"nss"
 
 #define DUMP_CCW_STR		"ccw"
+<<<<<<< HEAD
 #define DUMP_ECKD_STR		"eckd"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DUMP_FCP_STR		"fcp"
 #define DUMP_NVME_STR		"nvme"
 #define DUMP_NONE_STR		"none"
@@ -96,10 +105,13 @@ static char *ipl_type_str(enum ipl_type type)
 	switch (type) {
 	case IPL_TYPE_CCW:
 		return IPL_CCW_STR;
+<<<<<<< HEAD
 	case IPL_TYPE_ECKD:
 		return IPL_ECKD_STR;
 	case IPL_TYPE_ECKD_DUMP:
 		return IPL_ECKD_DUMP_STR;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case IPL_TYPE_FCP:
 		return IPL_FCP_STR;
 	case IPL_TYPE_FCP_DUMP:
@@ -121,7 +133,10 @@ enum dump_type {
 	DUMP_TYPE_CCW	= 2,
 	DUMP_TYPE_FCP	= 4,
 	DUMP_TYPE_NVME	= 8,
+<<<<<<< HEAD
 	DUMP_TYPE_ECKD	= 16,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static char *dump_type_str(enum dump_type type)
@@ -131,8 +146,11 @@ static char *dump_type_str(enum dump_type type)
 		return DUMP_NONE_STR;
 	case DUMP_TYPE_CCW:
 		return DUMP_CCW_STR;
+<<<<<<< HEAD
 	case DUMP_TYPE_ECKD:
 		return DUMP_ECKD_STR;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case DUMP_TYPE_FCP:
 		return DUMP_FCP_STR;
 	case DUMP_TYPE_NVME:
@@ -158,7 +176,10 @@ static enum ipl_type reipl_type = IPL_TYPE_UNKNOWN;
 static struct ipl_parameter_block *reipl_block_fcp;
 static struct ipl_parameter_block *reipl_block_nvme;
 static struct ipl_parameter_block *reipl_block_ccw;
+<<<<<<< HEAD
 static struct ipl_parameter_block *reipl_block_eckd;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct ipl_parameter_block *reipl_block_nss;
 static struct ipl_parameter_block *reipl_block_actual;
 
@@ -167,14 +188,20 @@ static enum dump_type dump_type = DUMP_TYPE_NONE;
 static struct ipl_parameter_block *dump_block_fcp;
 static struct ipl_parameter_block *dump_block_nvme;
 static struct ipl_parameter_block *dump_block_ccw;
+<<<<<<< HEAD
 static struct ipl_parameter_block *dump_block_eckd;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct sclp_ipl_info sclp_ipl_info;
 
 static bool reipl_nvme_clear;
 static bool reipl_fcp_clear;
 static bool reipl_ccw_clear;
+<<<<<<< HEAD
 static bool reipl_eckd_clear;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline int __diag308(unsigned long subcode, void *addr)
 {
@@ -232,14 +259,22 @@ IPL_ATTR_SHOW_FN(_prefix, _name, "0.%x.%04x\n",				\
 		 _ipl_blk.ssid, _ipl_blk.devno);			\
 IPL_ATTR_CCW_STORE_FN(_prefix, _name, _ipl_blk);			\
 static struct kobj_attribute sys_##_prefix##_##_name##_attr =		\
+<<<<<<< HEAD
 	__ATTR(_name, 0644,						\
+=======
+	__ATTR(_name, (S_IRUGO | S_IWUSR),				\
+>>>>>>> b7ba80a49124 (Commit)
 	       sys_##_prefix##_##_name##_show,				\
 	       sys_##_prefix##_##_name##_store)				\
 
 #define DEFINE_IPL_ATTR_RO(_prefix, _name, _format, _value)		\
 IPL_ATTR_SHOW_FN(_prefix, _name, _format, _value)			\
 static struct kobj_attribute sys_##_prefix##_##_name##_attr =		\
+<<<<<<< HEAD
 	__ATTR(_name, 0444, sys_##_prefix##_##_name##_show, NULL)
+=======
+	__ATTR(_name, S_IRUGO, sys_##_prefix##_##_name##_show, NULL)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DEFINE_IPL_ATTR_RW(_prefix, _name, _fmt_out, _fmt_in, _value)	\
 IPL_ATTR_SHOW_FN(_prefix, _name, _fmt_out, (unsigned long long) _value)	\
@@ -254,7 +289,11 @@ static ssize_t sys_##_prefix##_##_name##_store(struct kobject *kobj,	\
 	return len;							\
 }									\
 static struct kobj_attribute sys_##_prefix##_##_name##_attr =		\
+<<<<<<< HEAD
 	__ATTR(_name, 0644,						\
+=======
+	__ATTR(_name,(S_IRUGO | S_IWUSR),				\
+>>>>>>> b7ba80a49124 (Commit)
 			sys_##_prefix##_##_name##_show,			\
 			sys_##_prefix##_##_name##_store)
 
@@ -269,7 +308,11 @@ static ssize_t sys_##_prefix##_##_name##_store(struct kobject *kobj,	\
 	return len;							\
 }									\
 static struct kobj_attribute sys_##_prefix##_##_name##_attr =		\
+<<<<<<< HEAD
 	__ATTR(_name, 0644,						\
+=======
+	__ATTR(_name,(S_IRUGO | S_IWUSR),				\
+>>>>>>> b7ba80a49124 (Commit)
 			sys_##_prefix##_##_name##_show,			\
 			sys_##_prefix##_##_name##_store)
 
@@ -295,11 +338,14 @@ static __init enum ipl_type get_ipl_type(void)
 			return IPL_TYPE_NVME_DUMP;
 		else
 			return IPL_TYPE_NVME;
+<<<<<<< HEAD
 	case IPL_PBT_ECKD:
 		if (ipl_block.eckd.opt == IPL_PB0_ECKD_OPT_DUMP)
 			return IPL_TYPE_ECKD_DUMP;
 		else
 			return IPL_TYPE_ECKD;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return IPL_TYPE_UNKNOWN;
 }
@@ -344,7 +390,11 @@ static ssize_t ipl_vm_parm_show(struct kobject *kobj,
 }
 
 static struct kobj_attribute sys_ipl_vm_parm_attr =
+<<<<<<< HEAD
 	__ATTR(parm, 0444, ipl_vm_parm_show, NULL);
+=======
+	__ATTR(parm, S_IRUGO, ipl_vm_parm_show, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 static ssize_t sys_ipl_device_show(struct kobject *kobj,
 				   struct kobj_attribute *attr, char *page)
@@ -353,10 +403,13 @@ static ssize_t sys_ipl_device_show(struct kobject *kobj,
 	case IPL_TYPE_CCW:
 		return sprintf(page, "0.%x.%04x\n", ipl_block.ccw.ssid,
 			       ipl_block.ccw.devno);
+<<<<<<< HEAD
 	case IPL_TYPE_ECKD:
 	case IPL_TYPE_ECKD_DUMP:
 		return sprintf(page, "0.%x.%04x\n", ipl_block.eckd.ssid,
 			       ipl_block.eckd.devno);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case IPL_TYPE_FCP:
 	case IPL_TYPE_FCP_DUMP:
 		return sprintf(page, "0.0.%04x\n", ipl_block.fcp.devno);
@@ -369,7 +422,11 @@ static ssize_t sys_ipl_device_show(struct kobject *kobj,
 }
 
 static struct kobj_attribute sys_ipl_device_attr =
+<<<<<<< HEAD
 	__ATTR(device, 0444, sys_ipl_device_show, NULL);
+=======
+	__ATTR(device, S_IRUGO, sys_ipl_device_show, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 static ssize_t ipl_parameter_read(struct file *filp, struct kobject *kobj,
 				  struct bin_attribute *attr, char *buf,
@@ -379,7 +436,11 @@ static ssize_t ipl_parameter_read(struct file *filp, struct kobject *kobj,
 				       ipl_block.hdr.len);
 }
 static struct bin_attribute ipl_parameter_attr =
+<<<<<<< HEAD
 	__BIN_ATTR(binary_parameter, 0444, ipl_parameter_read, NULL,
+=======
+	__BIN_ATTR(binary_parameter, S_IRUGO, ipl_parameter_read, NULL,
+>>>>>>> b7ba80a49124 (Commit)
 		   PAGE_SIZE);
 
 static ssize_t ipl_scp_data_read(struct file *filp, struct kobject *kobj,
@@ -402,6 +463,7 @@ static ssize_t ipl_nvme_scp_data_read(struct file *filp, struct kobject *kobj,
 	return memory_read_from_buffer(buf, count, &off, scp_data, size);
 }
 
+<<<<<<< HEAD
 static ssize_t ipl_eckd_scp_data_read(struct file *filp, struct kobject *kobj,
 				      struct bin_attribute *attr, char *buf,
 				      loff_t off, size_t count)
@@ -420,6 +482,13 @@ static struct bin_attribute ipl_nvme_scp_data_attr =
 
 static struct bin_attribute ipl_eckd_scp_data_attr =
 	__BIN_ATTR(scp_data, 0444, ipl_eckd_scp_data_read, NULL, PAGE_SIZE);
+=======
+static struct bin_attribute ipl_scp_data_attr =
+	__BIN_ATTR(scp_data, S_IRUGO, ipl_scp_data_read, NULL, PAGE_SIZE);
+
+static struct bin_attribute ipl_nvme_scp_data_attr =
+	__BIN_ATTR(scp_data, S_IRUGO, ipl_nvme_scp_data_read, NULL, PAGE_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct bin_attribute *ipl_fcp_bin_attrs[] = {
 	&ipl_parameter_attr,
@@ -433,12 +502,15 @@ static struct bin_attribute *ipl_nvme_bin_attrs[] = {
 	NULL,
 };
 
+<<<<<<< HEAD
 static struct bin_attribute *ipl_eckd_bin_attrs[] = {
 	&ipl_parameter_attr,
 	&ipl_eckd_scp_data_attr,
 	NULL,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* FCP ipl device attributes */
 
 DEFINE_IPL_ATTR_RO(ipl_fcp, wwpn, "0x%016llx\n",
@@ -460,6 +532,7 @@ DEFINE_IPL_ATTR_RO(ipl_nvme, bootprog, "%lld\n",
 DEFINE_IPL_ATTR_RO(ipl_nvme, br_lba, "%lld\n",
 		   (unsigned long long)ipl_block.nvme.br_lba);
 
+<<<<<<< HEAD
 /* ECKD ipl device attributes */
 DEFINE_IPL_ATTR_RO(ipl_eckd, bootprog, "%lld\n",
 		   (unsigned long long)ipl_block.eckd.bootprog);
@@ -538,6 +611,8 @@ IPL_ATTR_BR_CHR_STORE_FN(reipl, reipl_block_eckd->eckd);
 static struct kobj_attribute sys_reipl_eckd_br_chr_attr =
 	__ATTR(br_chr, 0644, eckd_reipl_br_chr_show, eckd_reipl_br_chr_store);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t ipl_ccw_loadparm_show(struct kobject *kobj,
 				     struct kobj_attribute *attr, char *page)
 {
@@ -589,6 +664,7 @@ static struct attribute_group ipl_nvme_attr_group = {
 	.bin_attrs = ipl_nvme_bin_attrs,
 };
 
+<<<<<<< HEAD
 static struct attribute *ipl_eckd_attrs[] = {
 	&sys_ipl_type_attr.attr,
 	&sys_ipl_eckd_bootprog_attr.attr,
@@ -604,6 +680,8 @@ static struct attribute_group ipl_eckd_attr_group = {
 	.attrs = ipl_eckd_attrs,
 	.bin_attrs = ipl_eckd_bin_attrs,
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* CCW ipl device attributes */
 
@@ -649,6 +727,10 @@ static struct kset *ipl_kset;
 
 static void __ipl_run(void *unused)
 {
+<<<<<<< HEAD
+=======
+	__bpon();
+>>>>>>> b7ba80a49124 (Commit)
 	diag308(DIAG308_LOAD_CLEAR, NULL);
 }
 
@@ -675,9 +757,12 @@ static int __init ipl_init(void)
 			rc = sysfs_create_group(&ipl_kset->kobj,
 						&ipl_ccw_attr_group_lpar);
 		break;
+<<<<<<< HEAD
 	case IPL_TYPE_ECKD:
 		rc = sysfs_create_group(&ipl_kset->kobj, &ipl_eckd_attr_group);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case IPL_TYPE_FCP:
 	case IPL_TYPE_FCP_DUMP:
 		rc = sysfs_create_group(&ipl_kset->kobj, &ipl_fcp_attr_group);
@@ -779,11 +864,19 @@ static ssize_t reipl_ccw_vmparm_store(struct kobject *kobj,
 }
 
 static struct kobj_attribute sys_reipl_nss_vmparm_attr =
+<<<<<<< HEAD
 	__ATTR(parm, 0644, reipl_nss_vmparm_show,
 	       reipl_nss_vmparm_store);
 static struct kobj_attribute sys_reipl_ccw_vmparm_attr =
 	__ATTR(parm, 0644, reipl_ccw_vmparm_show,
 	       reipl_ccw_vmparm_store);
+=======
+	__ATTR(parm, S_IRUGO | S_IWUSR, reipl_nss_vmparm_show,
+					reipl_nss_vmparm_store);
+static struct kobj_attribute sys_reipl_ccw_vmparm_attr =
+	__ATTR(parm, S_IRUGO | S_IWUSR, reipl_ccw_vmparm_show,
+					reipl_ccw_vmparm_store);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* FCP reipl device attributes */
 
@@ -823,7 +916,11 @@ static ssize_t reipl_fcp_scpdata_write(struct file *filp, struct kobject *kobj,
 	return count;
 }
 static struct bin_attribute sys_reipl_fcp_scp_data_attr =
+<<<<<<< HEAD
 	__BIN_ATTR(scp_data, 0644, reipl_fcp_scpdata_read,
+=======
+	__BIN_ATTR(scp_data, (S_IRUGO | S_IWUSR), reipl_fcp_scpdata_read,
+>>>>>>> b7ba80a49124 (Commit)
 		   reipl_fcp_scpdata_write, DIAG308_SCPDATA_SIZE);
 
 static struct bin_attribute *reipl_fcp_bin_attrs[] = {
@@ -888,6 +985,7 @@ static ssize_t reipl_generic_loadparm_store(struct ipl_parameter_block *ipb,
 	return len;
 }
 
+<<<<<<< HEAD
 #define DEFINE_GENERIC_LOADPARM(name)							\
 static ssize_t reipl_##name##_loadparm_show(struct kobject *kobj,			\
 					    struct kobj_attribute *attr, char *page)	\
@@ -909,6 +1007,25 @@ DEFINE_GENERIC_LOADPARM(nvme);
 DEFINE_GENERIC_LOADPARM(ccw);
 DEFINE_GENERIC_LOADPARM(nss);
 DEFINE_GENERIC_LOADPARM(eckd);
+=======
+/* FCP wrapper */
+static ssize_t reipl_fcp_loadparm_show(struct kobject *kobj,
+				       struct kobj_attribute *attr, char *page)
+{
+	return reipl_generic_loadparm_show(reipl_block_fcp, page);
+}
+
+static ssize_t reipl_fcp_loadparm_store(struct kobject *kobj,
+					struct kobj_attribute *attr,
+					const char *buf, size_t len)
+{
+	return reipl_generic_loadparm_store(reipl_block_fcp, buf, len);
+}
+
+static struct kobj_attribute sys_reipl_fcp_loadparm_attr =
+	__ATTR(loadparm, S_IRUGO | S_IWUSR, reipl_fcp_loadparm_show,
+					    reipl_fcp_loadparm_store);
+>>>>>>> b7ba80a49124 (Commit)
 
 static ssize_t reipl_fcp_clear_show(struct kobject *kobj,
 				    struct kobj_attribute *attr, char *page)
@@ -920,7 +1037,11 @@ static ssize_t reipl_fcp_clear_store(struct kobject *kobj,
 				     struct kobj_attribute *attr,
 				     const char *buf, size_t len)
 {
+<<<<<<< HEAD
 	if (kstrtobool(buf, &reipl_fcp_clear) < 0)
+=======
+	if (strtobool(buf, &reipl_fcp_clear) < 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	return len;
 }
@@ -981,7 +1102,11 @@ static ssize_t reipl_nvme_scpdata_write(struct file *filp, struct kobject *kobj,
 }
 
 static struct bin_attribute sys_reipl_nvme_scp_data_attr =
+<<<<<<< HEAD
 	__BIN_ATTR(scp_data, 0644, reipl_nvme_scpdata_read,
+=======
+	__BIN_ATTR(scp_data, (S_IRUGO | S_IWUSR), reipl_nvme_scpdata_read,
+>>>>>>> b7ba80a49124 (Commit)
 		   reipl_nvme_scpdata_write, DIAG308_SCPDATA_SIZE);
 
 static struct bin_attribute *reipl_nvme_bin_attrs[] = {
@@ -998,6 +1123,27 @@ DEFINE_IPL_ATTR_RW(reipl_nvme, bootprog, "%lld\n", "%lld\n",
 DEFINE_IPL_ATTR_RW(reipl_nvme, br_lba, "%lld\n", "%lld\n",
 		   reipl_block_nvme->nvme.br_lba);
 
+<<<<<<< HEAD
+=======
+/* nvme wrapper */
+static ssize_t reipl_nvme_loadparm_show(struct kobject *kobj,
+				       struct kobj_attribute *attr, char *page)
+{
+	return reipl_generic_loadparm_show(reipl_block_nvme, page);
+}
+
+static ssize_t reipl_nvme_loadparm_store(struct kobject *kobj,
+					struct kobj_attribute *attr,
+					const char *buf, size_t len)
+{
+	return reipl_generic_loadparm_store(reipl_block_nvme, buf, len);
+}
+
+static struct kobj_attribute sys_reipl_nvme_loadparm_attr =
+	__ATTR(loadparm, S_IRUGO | S_IWUSR, reipl_nvme_loadparm_show,
+					    reipl_nvme_loadparm_store);
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct attribute *reipl_nvme_attrs[] = {
 	&sys_reipl_nvme_fid_attr.attr,
 	&sys_reipl_nvme_nsid_attr.attr,
@@ -1022,7 +1168,11 @@ static ssize_t reipl_nvme_clear_store(struct kobject *kobj,
 				      struct kobj_attribute *attr,
 				      const char *buf, size_t len)
 {
+<<<<<<< HEAD
 	if (kstrtobool(buf, &reipl_nvme_clear) < 0)
+=======
+	if (strtobool(buf, &reipl_nvme_clear) < 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	return len;
 }
@@ -1033,6 +1183,41 @@ static struct kobj_attribute sys_reipl_nvme_clear_attr =
 /* CCW reipl device attributes */
 DEFINE_IPL_CCW_ATTR_RW(reipl_ccw, device, reipl_block_ccw->ccw);
 
+<<<<<<< HEAD
+=======
+/* NSS wrapper */
+static ssize_t reipl_nss_loadparm_show(struct kobject *kobj,
+				       struct kobj_attribute *attr, char *page)
+{
+	return reipl_generic_loadparm_show(reipl_block_nss, page);
+}
+
+static ssize_t reipl_nss_loadparm_store(struct kobject *kobj,
+					struct kobj_attribute *attr,
+					const char *buf, size_t len)
+{
+	return reipl_generic_loadparm_store(reipl_block_nss, buf, len);
+}
+
+/* CCW wrapper */
+static ssize_t reipl_ccw_loadparm_show(struct kobject *kobj,
+				       struct kobj_attribute *attr, char *page)
+{
+	return reipl_generic_loadparm_show(reipl_block_ccw, page);
+}
+
+static ssize_t reipl_ccw_loadparm_store(struct kobject *kobj,
+					struct kobj_attribute *attr,
+					const char *buf, size_t len)
+{
+	return reipl_generic_loadparm_store(reipl_block_ccw, buf, len);
+}
+
+static struct kobj_attribute sys_reipl_ccw_loadparm_attr =
+	__ATTR(loadparm, S_IRUGO | S_IWUSR, reipl_ccw_loadparm_show,
+					    reipl_ccw_loadparm_store);
+
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t reipl_ccw_clear_show(struct kobject *kobj,
 				    struct kobj_attribute *attr, char *page)
 {
@@ -1043,7 +1228,11 @@ static ssize_t reipl_ccw_clear_store(struct kobject *kobj,
 				     struct kobj_attribute *attr,
 				     const char *buf, size_t len)
 {
+<<<<<<< HEAD
 	if (kstrtobool(buf, &reipl_ccw_clear) < 0)
+=======
+	if (strtobool(buf, &reipl_ccw_clear) < 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	return len;
 }
@@ -1076,6 +1265,7 @@ static struct attribute_group reipl_ccw_attr_group_lpar = {
 	.attrs = reipl_ccw_attrs_lpar,
 };
 
+<<<<<<< HEAD
 /* ECKD reipl device attributes */
 
 static ssize_t reipl_eckd_scpdata_read(struct file *filp, struct kobject *kobj,
@@ -1156,6 +1346,8 @@ static ssize_t reipl_eckd_clear_store(struct kobject *kobj,
 
 static struct kobj_attribute sys_reipl_eckd_clear_attr =
 	__ATTR(clear, 0644, reipl_eckd_clear_show, reipl_eckd_clear_store);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* NSS reipl device attributes */
 static void reipl_get_ascii_nss_name(char *dst,
@@ -1203,8 +1395,17 @@ static ssize_t reipl_nss_name_store(struct kobject *kobj,
 }
 
 static struct kobj_attribute sys_reipl_nss_name_attr =
+<<<<<<< HEAD
 	__ATTR(name, 0644, reipl_nss_name_show,
 	       reipl_nss_name_store);
+=======
+	__ATTR(name, S_IRUGO | S_IWUSR, reipl_nss_name_show,
+					reipl_nss_name_store);
+
+static struct kobj_attribute sys_reipl_nss_loadparm_attr =
+	__ATTR(loadparm, S_IRUGO | S_IWUSR, reipl_nss_loadparm_show,
+					    reipl_nss_loadparm_store);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct attribute *reipl_nss_attrs[] = {
 	&sys_reipl_nss_name_attr.attr,
@@ -1235,9 +1436,12 @@ static int reipl_set_type(enum ipl_type type)
 	case IPL_TYPE_CCW:
 		reipl_block_actual = reipl_block_ccw;
 		break;
+<<<<<<< HEAD
 	case IPL_TYPE_ECKD:
 		reipl_block_actual = reipl_block_eckd;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case IPL_TYPE_FCP:
 		reipl_block_actual = reipl_block_fcp;
 		break;
@@ -1268,8 +1472,11 @@ static ssize_t reipl_type_store(struct kobject *kobj,
 
 	if (strncmp(buf, IPL_CCW_STR, strlen(IPL_CCW_STR)) == 0)
 		rc = reipl_set_type(IPL_TYPE_CCW);
+<<<<<<< HEAD
 	else if (strncmp(buf, IPL_ECKD_STR, strlen(IPL_ECKD_STR)) == 0)
 		rc = reipl_set_type(IPL_TYPE_ECKD);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	else if (strncmp(buf, IPL_FCP_STR, strlen(IPL_FCP_STR)) == 0)
 		rc = reipl_set_type(IPL_TYPE_FCP);
 	else if (strncmp(buf, IPL_NVME_STR, strlen(IPL_NVME_STR)) == 0)
@@ -1285,7 +1492,10 @@ static struct kobj_attribute reipl_type_attr =
 static struct kset *reipl_kset;
 static struct kset *reipl_fcp_kset;
 static struct kset *reipl_nvme_kset;
+<<<<<<< HEAD
 static struct kset *reipl_eckd_kset;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void __reipl_run(void *unused)
 {
@@ -1297,6 +1507,7 @@ static void __reipl_run(void *unused)
 		else
 			diag308(DIAG308_LOAD_NORMAL_DUMP, NULL);
 		break;
+<<<<<<< HEAD
 	case IPL_TYPE_ECKD:
 		diag308(DIAG308_SET, reipl_block_eckd);
 		if (reipl_eckd_clear)
@@ -1304,6 +1515,8 @@ static void __reipl_run(void *unused)
 		else
 			diag308(DIAG308_LOAD_NORMAL, NULL);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case IPL_TYPE_FCP:
 		diag308(DIAG308_SET, reipl_block_fcp);
 		if (reipl_fcp_clear)
@@ -1327,7 +1540,10 @@ static void __reipl_run(void *unused)
 		break;
 	case IPL_TYPE_FCP_DUMP:
 	case IPL_TYPE_NVME_DUMP:
+<<<<<<< HEAD
 	case IPL_TYPE_ECKD_DUMP:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 	disabled_wait();
@@ -1525,6 +1741,7 @@ out1:
 	return rc;
 }
 
+<<<<<<< HEAD
 static int __init reipl_eckd_init(void)
 {
 	int rc;
@@ -1577,6 +1794,8 @@ out1:
 	return rc;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __init reipl_type_init(void)
 {
 	enum ipl_type reipl_type = ipl_info.type;
@@ -1598,9 +1817,12 @@ static int __init reipl_type_init(void)
 	} else if (reipl_block->pb0_hdr.pbt == IPL_PBT_CCW) {
 		memcpy(reipl_block_ccw, reipl_block, size);
 		reipl_type = IPL_TYPE_CCW;
+<<<<<<< HEAD
 	} else if (reipl_block->pb0_hdr.pbt == IPL_PBT_ECKD) {
 		memcpy(reipl_block_eckd, reipl_block, size);
 		reipl_type = IPL_TYPE_ECKD;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 out:
 	return reipl_set_type(reipl_type);
@@ -1621,9 +1843,12 @@ static int __init reipl_init(void)
 	rc = reipl_ccw_init();
 	if (rc)
 		return rc;
+<<<<<<< HEAD
 	rc = reipl_eckd_init();
 	if (rc)
 		return rc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rc = reipl_fcp_init();
 	if (rc)
 		return rc;
@@ -1696,6 +1921,7 @@ static struct attribute_group dump_nvme_attr_group = {
 	.attrs = dump_nvme_attrs,
 };
 
+<<<<<<< HEAD
 /* ECKD dump device attributes */
 DEFINE_IPL_CCW_ATTR_RW(dump_eckd, device, dump_block_eckd->eckd);
 DEFINE_IPL_ATTR_RW(dump_eckd, bootprog, "%lld\n", "%llx\n",
@@ -1719,6 +1945,8 @@ static struct attribute_group dump_eckd_attr_group = {
 	.attrs = dump_eckd_attrs,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* CCW dump device attributes */
 DEFINE_IPL_CCW_ATTR_RW(dump_ccw, device, dump_block_ccw->ccw);
 
@@ -1758,8 +1986,11 @@ static ssize_t dump_type_store(struct kobject *kobj,
 		rc = dump_set_type(DUMP_TYPE_NONE);
 	else if (strncmp(buf, DUMP_CCW_STR, strlen(DUMP_CCW_STR)) == 0)
 		rc = dump_set_type(DUMP_TYPE_CCW);
+<<<<<<< HEAD
 	else if (strncmp(buf, DUMP_ECKD_STR, strlen(DUMP_ECKD_STR)) == 0)
 		rc = dump_set_type(DUMP_TYPE_ECKD);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	else if (strncmp(buf, DUMP_FCP_STR, strlen(DUMP_FCP_STR)) == 0)
 		rc = dump_set_type(DUMP_TYPE_FCP);
 	else if (strncmp(buf, DUMP_NVME_STR, strlen(DUMP_NVME_STR)) == 0)
@@ -1788,9 +2019,12 @@ static void __dump_run(void *unused)
 	case DUMP_TYPE_CCW:
 		diag308_dump(dump_block_ccw);
 		break;
+<<<<<<< HEAD
 	case DUMP_TYPE_ECKD:
 		diag308_dump(dump_block_eckd);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case DUMP_TYPE_FCP:
 		diag308_dump(dump_block_fcp);
 		break;
@@ -1876,6 +2110,7 @@ static int __init dump_nvme_init(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int __init dump_eckd_init(void)
 {
 	int rc;
@@ -1899,6 +2134,8 @@ static int __init dump_eckd_init(void)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __init dump_init(void)
 {
 	int rc;
@@ -1914,9 +2151,12 @@ static int __init dump_init(void)
 	rc = dump_ccw_init();
 	if (rc)
 		return rc;
+<<<<<<< HEAD
 	rc = dump_eckd_init();
 	if (rc)
 		return rc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rc = dump_fcp_init();
 	if (rc)
 		return rc;
@@ -1937,14 +2177,25 @@ static void dump_reipl_run(struct shutdown_trigger *trigger)
 {
 	unsigned long ipib = (unsigned long) reipl_block_actual;
 	struct lowcore *abs_lc;
+<<<<<<< HEAD
+=======
+	unsigned long flags;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int csum;
 
 	csum = (__force unsigned int)
 	       csum_partial(reipl_block_actual, reipl_block_actual->hdr.len, 0);
+<<<<<<< HEAD
 	abs_lc = get_abs_lowcore();
 	abs_lc->ipib = ipib;
 	abs_lc->ipib_checksum = csum;
 	put_abs_lowcore(abs_lc);
+=======
+	abs_lc = get_abs_lowcore(&flags);
+	abs_lc->ipib = ipib;
+	abs_lc->ipib_checksum = csum;
+	put_abs_lowcore(abs_lc, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	dump_run(trigger);
 }
 
@@ -2349,11 +2600,14 @@ void __init setup_ipl(void)
 		ipl_info.data.ccw.dev_id.ssid = ipl_block.ccw.ssid;
 		ipl_info.data.ccw.dev_id.devno = ipl_block.ccw.devno;
 		break;
+<<<<<<< HEAD
 	case IPL_TYPE_ECKD:
 	case IPL_TYPE_ECKD_DUMP:
 		ipl_info.data.eckd.dev_id.ssid = ipl_block.eckd.ssid;
 		ipl_info.data.eckd.dev_id.devno = ipl_block.eckd.devno;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case IPL_TYPE_FCP:
 	case IPL_TYPE_FCP_DUMP:
 		ipl_info.data.fcp.dev_id.ssid = 0;

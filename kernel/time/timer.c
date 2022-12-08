@@ -1017,7 +1017,11 @@ __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int option
 	unsigned int idx = UINT_MAX;
 	int ret = 0;
 
+<<<<<<< HEAD
 	debug_assert_init(timer);
+=======
+	BUG_ON(!timer->function);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * This is a common optimization triggered by the networking code - if
@@ -1044,6 +1048,7 @@ __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int option
 		 * dequeue/enqueue dance.
 		 */
 		base = lock_timer_base(timer, &flags);
+<<<<<<< HEAD
 		/*
 		 * Has @timer been shutdown? This needs to be evaluated
 		 * while holding base lock to prevent a race against the
@@ -1052,6 +1057,8 @@ __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int option
 		if (!timer->function)
 			goto out_unlock;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		forward_timer_base(base);
 
 		if (timer_pending(timer) && (options & MOD_TIMER_REDUCE) &&
@@ -1078,6 +1085,7 @@ __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int option
 		}
 	} else {
 		base = lock_timer_base(timer, &flags);
+<<<<<<< HEAD
 		/*
 		 * Has @timer been shutdown? This needs to be evaluated
 		 * while holding base lock to prevent a race against the
@@ -1086,6 +1094,8 @@ __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int option
 		if (!timer->function)
 			goto out_unlock;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		forward_timer_base(base);
 	}
 
@@ -1099,7 +1109,11 @@ __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int option
 		/*
 		 * We are trying to schedule the timer on the new base.
 		 * However we can't change timer's base while it is running,
+<<<<<<< HEAD
 		 * otherwise timer_delete_sync() can't detect that the timer's
+=======
+		 * otherwise del_timer_sync() can't detect that the timer's
+>>>>>>> b7ba80a49124 (Commit)
 		 * handler yet has not finished. This also guarantees that the
 		 * timer is serialized wrt itself.
 		 */
@@ -1137,6 +1151,7 @@ out_unlock:
 }
 
 /**
+<<<<<<< HEAD
  * mod_timer_pending - Modify a pending timer's timeout
  * @timer:	The pending timer to be modified
  * @expires:	New absolute timeout in jiffies
@@ -1151,6 +1166,16 @@ out_unlock:
  * * %0 - The timer was inactive and not modified or was in
  *	  shutdown state and the operation was discarded
  * * %1 - The timer was active and requeued to expire at @expires
+=======
+ * mod_timer_pending - modify a pending timer's timeout
+ * @timer: the pending timer to be modified
+ * @expires: new timeout in jiffies
+ *
+ * mod_timer_pending() is the same for pending timers as mod_timer(),
+ * but will not re-activate and modify already deleted timers.
+ *
+ * It is useful for unserialized use of timers.
+>>>>>>> b7ba80a49124 (Commit)
  */
 int mod_timer_pending(struct timer_list *timer, unsigned long expires)
 {
@@ -1159,22 +1184,35 @@ int mod_timer_pending(struct timer_list *timer, unsigned long expires)
 EXPORT_SYMBOL(mod_timer_pending);
 
 /**
+<<<<<<< HEAD
  * mod_timer - Modify a timer's timeout
  * @timer:	The timer to be modified
  * @expires:	New absolute timeout in jiffies
+=======
+ * mod_timer - modify a timer's timeout
+ * @timer: the timer to be modified
+ * @expires: new timeout in jiffies
+ *
+ * mod_timer() is a more efficient way to update the expire field of an
+ * active timer (if the timer is inactive it will be activated)
+>>>>>>> b7ba80a49124 (Commit)
  *
  * mod_timer(timer, expires) is equivalent to:
  *
  *     del_timer(timer); timer->expires = expires; add_timer(timer);
  *
+<<<<<<< HEAD
  * mod_timer() is more efficient than the above open coded sequence. In
  * case that the timer is inactive, the del_timer() part is a NOP. The
  * timer is in any case activated with the new expiry time @expires.
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Note that if there are multiple unserialized concurrent users of the
  * same timer, then mod_timer() is the only safe way to modify the timeout,
  * since add_timer() cannot modify an already running timer.
  *
+<<<<<<< HEAD
  * If @timer->function == NULL then the start operation is silently
  * discarded. In this case the return value is 0 and meaningless.
  *
@@ -1184,6 +1222,11 @@ EXPORT_SYMBOL(mod_timer_pending);
  * * %1 - The timer was active and requeued to expire at @expires or
  *	  the timer was active and not modified because @expires did
  *	  not change the effective expiry time
+=======
+ * The function returns whether it has modified a pending timer or not.
+ * (ie. mod_timer() of an inactive timer returns 0, mod_timer() of an
+ * active timer returns 1.)
+>>>>>>> b7ba80a49124 (Commit)
  */
 int mod_timer(struct timer_list *timer, unsigned long expires)
 {
@@ -1194,6 +1237,7 @@ EXPORT_SYMBOL(mod_timer);
 /**
  * timer_reduce - Modify a timer's timeout if it would reduce the timeout
  * @timer:	The timer to be modified
+<<<<<<< HEAD
  * @expires:	New absolute timeout in jiffies
  *
  * timer_reduce() is very similar to mod_timer(), except that it will only
@@ -1210,6 +1254,13 @@ EXPORT_SYMBOL(mod_timer);
  *	  the timer was active and not modified because @expires
  *	  did not change the effective expiry time such that the
  *	  timer would expire earlier than already scheduled
+=======
+ * @expires:	New timeout in jiffies
+ *
+ * timer_reduce() is very similar to mod_timer(), except that it will only
+ * modify a running timer if that would reduce the expiration time (it will
+ * start a timer that isn't running).
+>>>>>>> b7ba80a49124 (Commit)
  */
 int timer_reduce(struct timer_list *timer, unsigned long expires)
 {
@@ -1218,6 +1269,7 @@ int timer_reduce(struct timer_list *timer, unsigned long expires)
 EXPORT_SYMBOL(timer_reduce);
 
 /**
+<<<<<<< HEAD
  * add_timer - Start a timer
  * @timer:	The timer to be started
  *
@@ -1241,11 +1293,30 @@ void add_timer(struct timer_list *timer)
 {
 	if (WARN_ON_ONCE(timer_pending(timer)))
 		return;
+=======
+ * add_timer - start a timer
+ * @timer: the timer to be added
+ *
+ * The kernel will do a ->function(@timer) callback from the
+ * timer interrupt at the ->expires point in the future. The
+ * current time is 'jiffies'.
+ *
+ * The timer's ->expires, ->function fields must be set prior calling this
+ * function.
+ *
+ * Timers with an ->expires field in the past will be executed in the next
+ * timer tick.
+ */
+void add_timer(struct timer_list *timer)
+{
+	BUG_ON(timer_pending(timer));
+>>>>>>> b7ba80a49124 (Commit)
 	__mod_timer(timer, timer->expires, MOD_TIMER_NOTPENDING);
 }
 EXPORT_SYMBOL(add_timer);
 
 /**
+<<<<<<< HEAD
  * add_timer_on - Start a timer on a particular CPU
  * @timer:	The timer to be started
  * @cpu:	The CPU to start it on
@@ -1253,16 +1324,27 @@ EXPORT_SYMBOL(add_timer);
  * Same as add_timer() except that it starts the timer on the given CPU.
  *
  * See add_timer() for further details.
+=======
+ * add_timer_on - start a timer on a particular CPU
+ * @timer: the timer to be added
+ * @cpu: the CPU to start it on
+ *
+ * This is not very scalable on SMP. Double adds are not possible.
+>>>>>>> b7ba80a49124 (Commit)
  */
 void add_timer_on(struct timer_list *timer, int cpu)
 {
 	struct timer_base *new_base, *base;
 	unsigned long flags;
 
+<<<<<<< HEAD
 	debug_assert_init(timer);
 
 	if (WARN_ON_ONCE(timer_pending(timer)))
 		return;
+=======
+	BUG_ON(timer_pending(timer) || !timer->function);
+>>>>>>> b7ba80a49124 (Commit)
 
 	new_base = get_timer_cpu_base(timer->flags, cpu);
 
@@ -1272,6 +1354,7 @@ void add_timer_on(struct timer_list *timer, int cpu)
 	 * wrong base locked.  See lock_timer_base().
 	 */
 	base = lock_timer_base(timer, &flags);
+<<<<<<< HEAD
 	/*
 	 * Has @timer been shutdown? This needs to be evaluated while
 	 * holding base lock to prevent a race against the shutdown code.
@@ -1279,6 +1362,8 @@ void add_timer_on(struct timer_list *timer, int cpu)
 	if (!timer->function)
 		goto out_unlock;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (base != new_base) {
 		timer->flags |= TIMER_MIGRATING;
 
@@ -1292,12 +1377,16 @@ void add_timer_on(struct timer_list *timer, int cpu)
 
 	debug_timer_activate(timer);
 	internal_add_timer(base, timer);
+<<<<<<< HEAD
 out_unlock:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	raw_spin_unlock_irqrestore(&base->lock, flags);
 }
 EXPORT_SYMBOL_GPL(add_timer_on);
 
 /**
+<<<<<<< HEAD
  * __timer_delete - Internal function: Deactivate a timer
  * @timer:	The timer to be deactivated
  * @shutdown:	If true, this indicates that the timer is about to be
@@ -1313,6 +1402,19 @@ EXPORT_SYMBOL_GPL(add_timer_on);
  * * %1 - The timer was pending and deactivated
  */
 static int __timer_delete(struct timer_list *timer, bool shutdown)
+=======
+ * del_timer - deactivate a timer.
+ * @timer: the timer to be deactivated
+ *
+ * del_timer() deactivates a timer - this works on both active and inactive
+ * timers.
+ *
+ * The function returns whether it has deactivated a pending timer or not.
+ * (ie. del_timer() of an inactive timer returns 0, del_timer() of an
+ * active timer returns 1.)
+ */
+int del_timer(struct timer_list *timer)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct timer_base *base;
 	unsigned long flags;
@@ -1320,6 +1422,7 @@ static int __timer_delete(struct timer_list *timer, bool shutdown)
 
 	debug_assert_init(timer);
 
+<<<<<<< HEAD
 	/*
 	 * If @shutdown is set then the lock has to be taken whether the
 	 * timer is pending or not to protect against a concurrent rearm
@@ -1336,11 +1439,17 @@ static int __timer_delete(struct timer_list *timer, bool shutdown)
 		ret = detach_if_pending(timer, base, true);
 		if (shutdown)
 			timer->function = NULL;
+=======
+	if (timer_pending(timer)) {
+		base = lock_timer_base(timer, &flags);
+		ret = detach_if_pending(timer, base, true);
+>>>>>>> b7ba80a49124 (Commit)
 		raw_spin_unlock_irqrestore(&base->lock, flags);
 	}
 
 	return ret;
 }
+<<<<<<< HEAD
 
 /**
  * timer_delete - Deactivate a timer
@@ -1404,6 +1513,18 @@ EXPORT_SYMBOL_GPL(timer_shutdown);
  * * %-1 - The timer callback function is running on a different CPU
  */
 static int __try_to_del_timer_sync(struct timer_list *timer, bool shutdown)
+=======
+EXPORT_SYMBOL(del_timer);
+
+/**
+ * try_to_del_timer_sync - Try to deactivate a timer
+ * @timer: timer to delete
+ *
+ * This function tries to deactivate a timer. Upon successful (ret >= 0)
+ * exit the timer is not queued and the handler is not running on any CPU.
+ */
+int try_to_del_timer_sync(struct timer_list *timer)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct timer_base *base;
 	unsigned long flags;
@@ -1415,13 +1536,17 @@ static int __try_to_del_timer_sync(struct timer_list *timer, bool shutdown)
 
 	if (base->running_timer != timer)
 		ret = detach_if_pending(timer, base, true);
+<<<<<<< HEAD
 	if (shutdown)
 		timer->function = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	raw_spin_unlock_irqrestore(&base->lock, flags);
 
 	return ret;
 }
+<<<<<<< HEAD
 
 /**
  * try_to_del_timer_sync - Try to deactivate a timer
@@ -1443,6 +1568,8 @@ int try_to_del_timer_sync(struct timer_list *timer)
 {
 	return __try_to_del_timer_sync(timer, false);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL(try_to_del_timer_sync);
 
 #ifdef CONFIG_PREEMPT_RT
@@ -1518,6 +1645,7 @@ static inline void timer_sync_wait_running(struct timer_base *base) { }
 static inline void del_timer_wait_running(struct timer_list *timer) { }
 #endif
 
+<<<<<<< HEAD
 /**
  * __timer_delete_sync - Internal function: Deactivate a timer and wait
  *			 for the handler to finish.
@@ -1541,6 +1669,46 @@ static inline void del_timer_wait_running(struct timer_list *timer) { }
  * * %1	- The timer was pending and deactivated
  */
 static int __timer_delete_sync(struct timer_list *timer, bool shutdown)
+=======
+#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT_RT)
+/**
+ * del_timer_sync - deactivate a timer and wait for the handler to finish.
+ * @timer: the timer to be deactivated
+ *
+ * This function only differs from del_timer() on SMP: besides deactivating
+ * the timer it also makes sure the handler has finished executing on other
+ * CPUs.
+ *
+ * Synchronization rules: Callers must prevent restarting of the timer,
+ * otherwise this function is meaningless. It must not be called from
+ * interrupt contexts unless the timer is an irqsafe one. The caller must
+ * not hold locks which would prevent completion of the timer's
+ * handler. The timer's handler must not call add_timer_on(). Upon exit the
+ * timer is not queued and the handler is not running on any CPU.
+ *
+ * Note: For !irqsafe timers, you must not hold locks that are held in
+ *   interrupt context while calling this function. Even if the lock has
+ *   nothing to do with the timer in question.  Here's why::
+ *
+ *    CPU0                             CPU1
+ *    ----                             ----
+ *                                     <SOFTIRQ>
+ *                                       call_timer_fn();
+ *                                       base->running_timer = mytimer;
+ *    spin_lock_irq(somelock);
+ *                                     <IRQ>
+ *                                        spin_lock(somelock);
+ *    del_timer_sync(mytimer);
+ *    while (base->running_timer == mytimer);
+ *
+ * Now del_timer_sync() will never return and never release somelock.
+ * The interrupt on the other CPU is waiting to grab somelock but
+ * it has interrupted the softirq that CPU0 is waiting to finish.
+ *
+ * The function returns whether it has deactivated a pending timer or not.
+ */
+int del_timer_sync(struct timer_list *timer)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
@@ -1560,7 +1728,11 @@ static int __timer_delete_sync(struct timer_list *timer, bool shutdown)
 	 * don't use it in hardirq context, because it
 	 * could lead to deadlock.
 	 */
+<<<<<<< HEAD
 	WARN_ON(in_hardirq() && !(timer->flags & TIMER_IRQSAFE));
+=======
+	WARN_ON(in_irq() && !(timer->flags & TIMER_IRQSAFE));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Must be able to sleep on PREEMPT_RT because of the slowpath in
@@ -1570,7 +1742,11 @@ static int __timer_delete_sync(struct timer_list *timer, bool shutdown)
 		lockdep_assert_preemption_enabled();
 
 	do {
+<<<<<<< HEAD
 		ret = __try_to_del_timer_sync(timer, shutdown);
+=======
+		ret = try_to_del_timer_sync(timer);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (unlikely(ret < 0)) {
 			del_timer_wait_running(timer);
@@ -1580,6 +1756,7 @@ static int __timer_delete_sync(struct timer_list *timer, bool shutdown)
 
 	return ret;
 }
+<<<<<<< HEAD
 
 /**
  * timer_delete_sync - Deactivate a timer and wait for the handler to finish.
@@ -1670,6 +1847,10 @@ int timer_shutdown_sync(struct timer_list *timer)
 	return __timer_delete_sync(timer, true);
 }
 EXPORT_SYMBOL_GPL(timer_shutdown_sync);
+=======
+EXPORT_SYMBOL(del_timer_sync);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static void call_timer_fn(struct timer_list *timer,
 			  void (*fn)(struct timer_list *),
@@ -1691,8 +1872,13 @@ static void call_timer_fn(struct timer_list *timer,
 #endif
 	/*
 	 * Couple the lock chain with the lock chain at
+<<<<<<< HEAD
 	 * timer_delete_sync() by acquiring the lock_map around the fn()
 	 * call here and in timer_delete_sync().
+=======
+	 * del_timer_sync() by acquiring the lock_map around the fn()
+	 * call here and in del_timer_sync().
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	lock_map_acquire(&lockdep_map);
 
@@ -1735,12 +1921,15 @@ static void expire_timers(struct timer_base *base, struct hlist_head *head)
 
 		fn = timer->function;
 
+<<<<<<< HEAD
 		if (WARN_ON_ONCE(!fn)) {
 			/* Should never happen. Emphasis on should! */
 			base->running_timer = NULL;
 			continue;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (timer->flags & TIMER_IRQSAFE) {
 			raw_spin_unlock(&base->lock);
 			call_timer_fn(timer, fn, baseclk);
@@ -2165,7 +2354,11 @@ signed long __sched schedule_timeout(signed long timeout)
 	timer_setup_on_stack(&timer.timer, process_timeout, 0);
 	__mod_timer(&timer.timer, expire, MOD_TIMER_NOTPENDING);
 	schedule();
+<<<<<<< HEAD
 	del_timer_sync(&timer.timer);
+=======
+	del_singleshot_timer_sync(&timer.timer);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Remove the timer from the object tracker */
 	destroy_timer_on_stack(&timer.timer);
@@ -2249,6 +2442,11 @@ int timers_dead_cpu(unsigned int cpu)
 	struct timer_base *new_base;
 	int b, i;
 
+<<<<<<< HEAD
+=======
+	BUG_ON(cpu_online(cpu));
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (b = 0; b < NR_BASES; b++) {
 		old_base = per_cpu_ptr(&timer_bases[b], cpu);
 		new_base = get_cpu_ptr(&timer_bases[b]);
@@ -2265,8 +2463,12 @@ int timers_dead_cpu(unsigned int cpu)
 		 */
 		forward_timer_base(new_base);
 
+<<<<<<< HEAD
 		WARN_ON_ONCE(old_base->running_timer);
 		old_base->running_timer = NULL;
+=======
+		BUG_ON(old_base->running_timer);
+>>>>>>> b7ba80a49124 (Commit)
 
 		for (i = 0; i < WHEEL_SIZE; i++)
 			migrate_timer_list(new_base, old_base->vectors + i);

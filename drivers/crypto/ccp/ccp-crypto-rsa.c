@@ -44,7 +44,11 @@ static inline int ccp_copy_and_save_keypart(u8 **kpbuf, unsigned int *kplen,
 static int ccp_rsa_complete(struct crypto_async_request *async_req, int ret)
 {
 	struct akcipher_request *req = akcipher_request_cast(async_req);
+<<<<<<< HEAD
 	struct ccp_rsa_req_ctx *rctx = akcipher_request_ctx_dma(req);
+=======
+	struct ccp_rsa_req_ctx *rctx = akcipher_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ret)
 		return ret;
@@ -56,7 +60,11 @@ static int ccp_rsa_complete(struct crypto_async_request *async_req, int ret)
 
 static unsigned int ccp_rsa_maxsize(struct crypto_akcipher *tfm)
 {
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct ccp_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ctx->u.rsa.n_len;
 }
@@ -64,8 +72,13 @@ static unsigned int ccp_rsa_maxsize(struct crypto_akcipher *tfm)
 static int ccp_rsa_crypt(struct akcipher_request *req, bool encrypt)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
 	struct ccp_rsa_req_ctx *rctx = akcipher_request_ctx_dma(req);
+=======
+	struct ccp_ctx *ctx = akcipher_tfm_ctx(tfm);
+	struct ccp_rsa_req_ctx *rctx = akcipher_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 
 	memset(&rctx->cmd, 0, sizeof(rctx->cmd));
@@ -126,7 +139,11 @@ static void ccp_rsa_free_key_bufs(struct ccp_ctx *ctx)
 static int ccp_rsa_setkey(struct crypto_akcipher *tfm, const void *key,
 			  unsigned int keylen, bool private)
 {
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct ccp_ctx *ctx = akcipher_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct rsa_key raw_key;
 	int ret;
 
@@ -192,9 +209,15 @@ static int ccp_rsa_setpubkey(struct crypto_akcipher *tfm, const void *key,
 
 static int ccp_rsa_init_tfm(struct crypto_akcipher *tfm)
 {
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
 
 	akcipher_set_reqsize_dma(tfm, sizeof(struct ccp_rsa_req_ctx));
+=======
+	struct ccp_ctx *ctx = akcipher_tfm_ctx(tfm);
+
+	akcipher_set_reqsize(tfm, sizeof(struct ccp_rsa_req_ctx));
+>>>>>>> b7ba80a49124 (Commit)
 	ctx->complete = ccp_rsa_complete;
 
 	return 0;
@@ -202,7 +225,11 @@ static int ccp_rsa_init_tfm(struct crypto_akcipher *tfm)
 
 static void ccp_rsa_exit_tfm(struct crypto_akcipher *tfm)
 {
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = akcipher_tfm_ctx_dma(tfm);
+=======
+	struct ccp_ctx *ctx = crypto_tfm_ctx(&tfm->base);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ccp_rsa_free_key_bufs(ctx);
 }
@@ -220,7 +247,11 @@ static struct akcipher_alg ccp_rsa_defaults = {
 		.cra_driver_name = "rsa-ccp",
 		.cra_priority = CCP_CRA_PRIORITY,
 		.cra_module = THIS_MODULE,
+<<<<<<< HEAD
 		.cra_ctxsize = 2 * sizeof(struct ccp_ctx) + CRYPTO_DMA_PADDING,
+=======
+		.cra_ctxsize = 2 * sizeof(struct ccp_ctx),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

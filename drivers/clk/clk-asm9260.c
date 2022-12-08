@@ -80,7 +80,11 @@ struct asm9260_mux_clock {
 	u8			mask;
 	u32			*table;
 	const char		*name;
+<<<<<<< HEAD
 	const struct clk_parent_data *parent_data;
+=======
+	const char		**parent_names;
+>>>>>>> b7ba80a49124 (Commit)
 	u8			num_parents;
 	unsigned long		offset;
 	unsigned long		flags;
@@ -232,10 +236,17 @@ static const struct asm9260_gate_data asm9260_ahb_gates[] __initconst = {
 		HW_AHBCLKCTRL1,	16 },
 };
 
+<<<<<<< HEAD
 static struct clk_parent_data __initdata main_mux_p[] =   { { .index = 0, }, { .name = "pll" } };
 static struct clk_parent_data __initdata i2s0_mux_p[] =   { { .index = 0, }, { .name = "pll" }, { .name = "i2s0m_div"} };
 static struct clk_parent_data __initdata i2s1_mux_p[] =   { { .index = 0, }, { .name = "pll" }, { .name = "i2s1m_div"} };
 static struct clk_parent_data __initdata clkout_mux_p[] = { { .index = 0, }, { .name = "pll" }, { .name = "rtc"} };
+=======
+static const char __initdata *main_mux_p[] =   { NULL, NULL };
+static const char __initdata *i2s0_mux_p[] =   { NULL, NULL, "i2s0m_div"};
+static const char __initdata *i2s1_mux_p[] =   { NULL, NULL, "i2s1m_div"};
+static const char __initdata *clkout_mux_p[] = { NULL, NULL, "rtc"};
+>>>>>>> b7ba80a49124 (Commit)
 static u32 three_mux_table[] = {0, 1, 3};
 
 static struct asm9260_mux_clock asm9260_mux_clks[] __initdata = {
@@ -255,10 +266,16 @@ static struct asm9260_mux_clock asm9260_mux_clks[] __initdata = {
 
 static void __init asm9260_acc_init(struct device_node *np)
 {
+<<<<<<< HEAD
 	struct clk_hw *hw, *pll_hw;
 	struct clk_hw **hws;
 	const char *pll_clk = "pll";
 	struct clk_parent_data pll_parent_data = { .index = 0 };
+=======
+	struct clk_hw *hw;
+	struct clk_hw **hws;
+	const char *ref_clk, *pll_clk = "pll";
+>>>>>>> b7ba80a49124 (Commit)
 	u32 rate;
 	int n;
 
@@ -275,15 +292,31 @@ static void __init asm9260_acc_init(struct device_node *np)
 	/* register pll */
 	rate = (ioread32(base + HW_SYSPLLCTRL) & 0xffff) * 1000000;
 
+<<<<<<< HEAD
 	pll_hw = clk_hw_register_fixed_rate_parent_accuracy(NULL, pll_clk, &pll_parent_data,
 							0, rate);
 	if (IS_ERR(pll_hw))
+=======
+	/* TODO: Convert to DT parent scheme */
+	ref_clk = of_clk_get_parent_name(np, 0);
+	hw = __clk_hw_register_fixed_rate(NULL, NULL, pll_clk,
+			ref_clk, NULL, NULL, 0, rate, 0,
+			CLK_FIXED_RATE_PARENT_ACCURACY);
+
+	if (IS_ERR(hw))
+>>>>>>> b7ba80a49124 (Commit)
 		panic("%pOFn: can't register REFCLK. Check DT!", np);
 
 	for (n = 0; n < ARRAY_SIZE(asm9260_mux_clks); n++) {
 		const struct asm9260_mux_clock *mc = &asm9260_mux_clks[n];
 
+<<<<<<< HEAD
 		hw = clk_hw_register_mux_table_parent_data(NULL, mc->name, mc->parent_data,
+=======
+		mc->parent_names[0] = ref_clk;
+		mc->parent_names[1] = pll_clk;
+		hw = clk_hw_register_mux_table(NULL, mc->name, mc->parent_names,
+>>>>>>> b7ba80a49124 (Commit)
 				mc->num_parents, mc->flags, base + mc->offset,
 				0, mc->mask, 0, mc->table, &asm9260_clk_lock);
 	}

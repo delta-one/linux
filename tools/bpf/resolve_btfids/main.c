@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
 
 /*
+<<<<<<< HEAD
  * resolve_btfids scans ELF object for .BTF_ids section and resolves
+=======
+ * resolve_btfids scans Elf object for .BTF_ids section and resolves
+>>>>>>> b7ba80a49124 (Commit)
  * its symbols with BTF ID values.
  *
  * Each symbol points to 4 bytes data and is expected to have
@@ -75,7 +79,11 @@
 #include <linux/err.h>
 #include <bpf/btf.h>
 #include <bpf/libbpf.h>
+<<<<<<< HEAD
 #include <subcmd/parse-options.h>
+=======
+#include <parse-options.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define BTF_IDS_SECTION	".BTF_ids"
 #define BTF_ID		"__BTF_ID__"

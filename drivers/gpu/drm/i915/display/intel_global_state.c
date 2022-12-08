@@ -45,14 +45,22 @@ void intel_atomic_global_obj_init(struct drm_i915_private *dev_priv,
 
 	obj->state = state;
 	obj->funcs = funcs;
+<<<<<<< HEAD
 	list_add_tail(&obj->head, &dev_priv->display.global.obj_list);
+=======
+	list_add_tail(&obj->head, &dev_priv->global_obj_list);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void intel_atomic_global_obj_cleanup(struct drm_i915_private *dev_priv)
 {
 	struct intel_global_obj *obj, *next;
 
+<<<<<<< HEAD
 	list_for_each_entry_safe(obj, next, &dev_priv->display.global.obj_list, head) {
+=======
+	list_for_each_entry_safe(obj, next, &dev_priv->global_obj_list, head) {
+>>>>>>> b7ba80a49124 (Commit)
 		list_del(&obj->head);
 
 		drm_WARN_ON(&dev_priv->drm, kref_read(&obj->state->ref) != 1);

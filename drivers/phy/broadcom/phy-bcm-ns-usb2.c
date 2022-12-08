@@ -107,7 +107,11 @@ static int bcm_ns_usb2_probe(struct platform_device *pdev)
 		return -ENOMEM;
 	usb2->dev = dev;
 
+<<<<<<< HEAD
 	if (of_property_present(dev->of_node, "brcm,syscon-clkset")) {
+=======
+	if (of_find_property(dev->of_node, "brcm,syscon-clkset", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		usb2->base = devm_platform_ioremap_resource(pdev, 0);
 		if (IS_ERR(usb2->base)) {
 			dev_err(dev, "Failed to map control reg\n");

@@ -397,6 +397,10 @@ struct tty_operations {
 /**
  * struct tty_driver -- driver for TTY devices
  *
+<<<<<<< HEAD
+=======
+ * @magic: set to %TTY_DRIVER_MAGIC in __tty_alloc_driver()
+>>>>>>> b7ba80a49124 (Commit)
  * @kref: reference counting. Reaching zero frees all the internals and the
  *	  driver.
  * @cdevs: allocated/registered character /dev devices
@@ -432,6 +436,10 @@ struct tty_operations {
  * @driver_name, @name, @type, @subtype, @init_termios, and @ops.
  */
 struct tty_driver {
+<<<<<<< HEAD
+=======
+	int	magic;
+>>>>>>> b7ba80a49124 (Commit)
 	struct kref kref;
 	struct cdev **cdevs;
 	struct module	*owner;
@@ -488,6 +496,12 @@ static inline void tty_set_operations(struct tty_driver *driver,
 	driver->ops = op;
 }
 
+<<<<<<< HEAD
+=======
+/* tty driver magic number */
+#define TTY_DRIVER_MAGIC		0x5402
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * DOC: TTY Driver Flags
  *

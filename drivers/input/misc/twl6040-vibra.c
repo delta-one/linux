@@ -210,7 +210,11 @@ static void twl6040_vibra_close(struct input_dev *input)
 		twl6040_vibra_disable(info);
 }
 
+<<<<<<< HEAD
 static int twl6040_vibra_suspend(struct device *dev)
+=======
+static int __maybe_unused twl6040_vibra_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *pdev = to_platform_device(dev);
 	struct vibra_info *info = platform_get_drvdata(pdev);
@@ -223,8 +227,12 @@ static int twl6040_vibra_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(twl6040_vibra_pm_ops,
 				twl6040_vibra_suspend, NULL);
+=======
+static SIMPLE_DEV_PM_OPS(twl6040_vibra_pm_ops, twl6040_vibra_suspend, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 static int twl6040_vibra_probe(struct platform_device *pdev)
 {
@@ -355,7 +363,11 @@ static struct platform_driver twl6040_vibra_driver = {
 	.probe		= twl6040_vibra_probe,
 	.driver		= {
 		.name	= "twl6040-vibra",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&twl6040_vibra_pm_ops),
+=======
+		.pm	= &twl6040_vibra_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 module_platform_driver(twl6040_vibra_driver);

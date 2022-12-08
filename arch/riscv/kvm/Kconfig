@@ -20,14 +20,23 @@ if VIRTUALIZATION
 config KVM
 	tristate "Kernel-based Virtual Machine (KVM) support (EXPERIMENTAL)"
 	depends on RISCV_SBI && MMU
+<<<<<<< HEAD
 	select KVM_GENERIC_HARDWARE_ENABLING
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select MMU_NOTIFIER
 	select PREEMPT_NOTIFIERS
 	select KVM_MMIO
 	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
+<<<<<<< HEAD
 	select KVM_XFER_TO_GUEST_WORK
 	select HAVE_KVM_VCPU_ASYNC_IOCTL
 	select HAVE_KVM_EVENTFD
+=======
+	select HAVE_KVM_VCPU_ASYNC_IOCTL
+	select HAVE_KVM_EVENTFD
+	select SRCU
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Support hosting virtualized guest machines.
 

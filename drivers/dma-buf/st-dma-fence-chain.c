@@ -400,7 +400,11 @@ static int __find_race(void *arg)
 		struct dma_fence *fence = dma_fence_get(data->fc.tail);
 		int seqno;
 
+<<<<<<< HEAD
 		seqno = get_random_u32_inclusive(1, data->fc.chain_length);
+=======
+		seqno = prandom_u32_max(data->fc.chain_length) + 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 		err = dma_fence_chain_find_seqno(&fence, seqno);
 		if (err) {
@@ -429,7 +433,11 @@ static int __find_race(void *arg)
 		dma_fence_put(fence);
 
 signal:
+<<<<<<< HEAD
 		seqno = get_random_u32_below(data->fc.chain_length - 1);
+=======
+		seqno = prandom_u32_max(data->fc.chain_length - 1);
+>>>>>>> b7ba80a49124 (Commit)
 		dma_fence_signal(data->fc.fences[seqno]);
 		cond_resched();
 	}
@@ -637,7 +645,11 @@ static void randomise_fences(struct fence_chains *fc)
 	while (--count) {
 		unsigned int swp;
 
+<<<<<<< HEAD
 		swp = get_random_u32_below(count + 1);
+=======
+		swp = prandom_u32_max(count + 1);
+>>>>>>> b7ba80a49124 (Commit)
 		if (swp == count)
 			continue;
 

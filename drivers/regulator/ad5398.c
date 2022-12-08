@@ -212,9 +212,15 @@ static const struct i2c_device_id ad5398_id[] = {
 };
 MODULE_DEVICE_TABLE(i2c, ad5398_id);
 
+<<<<<<< HEAD
 static int ad5398_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int ad5398_probe(struct i2c_client *client,
+				const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct regulator_init_data *init_data = dev_get_platdata(&client->dev);
 	struct regulator_config config = { };
 	struct ad5398_chip_info *chip;
@@ -254,10 +260,16 @@ static int ad5398_probe(struct i2c_client *client)
 }
 
 static struct i2c_driver ad5398_driver = {
+<<<<<<< HEAD
 	.probe_new = ad5398_probe,
 	.driver		= {
 		.name	= "ad5398",
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+	.probe = ad5398_probe,
+	.driver		= {
+		.name	= "ad5398",
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.id_table	= ad5398_id,
 };

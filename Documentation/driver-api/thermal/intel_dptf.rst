@@ -84,9 +84,12 @@ DPTF ACPI Drivers interface
 	https:/github.com/intel/thermal_daemon for decoding
 	thermal table.
 
+<<<<<<< HEAD
 ``production_mode`` (RO)
 	When different from zero, manufacturer locked thermal configuration
 	from further changes.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 ACPI Thermal Relationship table interface
 ------------------------------------------

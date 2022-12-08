@@ -112,7 +112,11 @@ static void optimized_callback(struct optimized_kprobe *op,
 		__this_cpu_write(current_kprobe, NULL);
 	}
 
+<<<<<<< HEAD
 	preempt_enable();
+=======
+	preempt_enable_no_resched();
+>>>>>>> b7ba80a49124 (Commit)
 }
 NOKPROBE_SYMBOL(optimized_callback);
 

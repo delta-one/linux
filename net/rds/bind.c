@@ -104,7 +104,11 @@ static int rds_add_bound(struct rds_sock *rs, const struct in6_addr *addr,
 			return -EINVAL;
 		last = rover;
 	} else {
+<<<<<<< HEAD
 		rover = max_t(u16, get_random_u16(), 2);
+=======
+		rover = max_t(u16, prandom_u32(), 2);
+>>>>>>> b7ba80a49124 (Commit)
 		last = rover - 1;
 	}
 

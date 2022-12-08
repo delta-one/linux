@@ -49,6 +49,7 @@ const struct clk_ops clk_fixed_rate_ops = {
 };
 EXPORT_SYMBOL_GPL(clk_fixed_rate_ops);
 
+<<<<<<< HEAD
 static void devm_clk_hw_register_fixed_rate_release(struct device *dev, void *res)
 {
 	struct clk_fixed_rate *fix = res;
@@ -61,12 +62,18 @@ static void devm_clk_hw_register_fixed_rate_release(struct device *dev, void *re
 	clk_hw_unregister(&fix->hw);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct clk_hw *__clk_hw_register_fixed_rate(struct device *dev,
 		struct device_node *np, const char *name,
 		const char *parent_name, const struct clk_hw *parent_hw,
 		const struct clk_parent_data *parent_data, unsigned long flags,
 		unsigned long fixed_rate, unsigned long fixed_accuracy,
+<<<<<<< HEAD
 		unsigned long clk_fixed_flags, bool devm)
+=======
+		unsigned long clk_fixed_flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct clk_fixed_rate *fixed;
 	struct clk_hw *hw;
@@ -74,11 +81,15 @@ struct clk_hw *__clk_hw_register_fixed_rate(struct device *dev,
 	int ret = -EINVAL;
 
 	/* allocate fixed-rate clock */
+<<<<<<< HEAD
 	if (devm)
 		fixed = devres_alloc(devm_clk_hw_register_fixed_rate_release,
 				     sizeof(*fixed), GFP_KERNEL);
 	else
 		fixed = kzalloc(sizeof(*fixed), GFP_KERNEL);
+=======
+	fixed = kzalloc(sizeof(*fixed), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!fixed)
 		return ERR_PTR(-ENOMEM);
 
@@ -106,6 +117,7 @@ struct clk_hw *__clk_hw_register_fixed_rate(struct device *dev,
 	else
 		ret = of_clk_hw_register(np, hw);
 	if (ret) {
+<<<<<<< HEAD
 		if (devm)
 			devres_free(fixed);
 		else
@@ -113,6 +125,11 @@ struct clk_hw *__clk_hw_register_fixed_rate(struct device *dev,
 		hw = ERR_PTR(ret);
 	} else if (devm)
 		devres_add(dev, fixed);
+=======
+		kfree(fixed);
+		hw = ERR_PTR(ret);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return hw;
 }

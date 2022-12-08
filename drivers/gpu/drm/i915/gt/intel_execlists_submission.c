@@ -110,7 +110,10 @@
 #include <linux/string_helpers.h>
 
 #include "i915_drv.h"
+<<<<<<< HEAD
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "i915_trace.h"
 #include "i915_vgpu.h"
 #include "gen8_engine_cs.h"
@@ -1242,9 +1245,12 @@ static unsigned long active_preempt_timeout(struct intel_engine_cs *engine,
 	if (!rq)
 		return 0;
 
+<<<<<<< HEAD
 	/* Only allow ourselves to force reset the currently active context */
 	engine->execlists.preempt_target = rq;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Force a fast reset for terminated contexts (ignoring sysfs!) */
 	if (unlikely(intel_context_is_banned(rq->context) || bad_request(rq)))
 		return INTEL_CONTEXT_BANNED_PREEMPT_TIMEOUT_MS;
@@ -2431,6 +2437,7 @@ static void execlists_submission_tasklet(struct tasklet_struct *t)
 	GEM_BUG_ON(inactive - post > ARRAY_SIZE(post));
 
 	if (unlikely(preempt_timeout(engine))) {
+<<<<<<< HEAD
 		const struct i915_request *rq = *engine->execlists.active;
 
 		/*
@@ -2449,6 +2456,10 @@ static void execlists_submission_tasklet(struct tasklet_struct *t)
 		else
 			set_timer_ms(&engine->execlists.preempt,
 				     active_preempt_timeout(engine, rq));
+=======
+		cancel_timer(&engine->execlists.preempt);
+		engine->execlists.error_interrupt |= ERROR_PREEMPT;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (unlikely(READ_ONCE(engine->execlists.error_interrupt))) {
@@ -2989,12 +3000,19 @@ static void execlists_reset_prepare(struct intel_engine_cs *engine)
 	intel_engine_stop_cs(engine);
 
 	/*
+<<<<<<< HEAD
 	 * Wa_22011802037: In addition to stopping the cs, we need
 	 * to wait for any pending mi force wakeups
 	 */
 	if (IS_MTL_GRAPHICS_STEP(engine->i915, M, STEP_A0, STEP_B0) ||
 	    (GRAPHICS_VER(engine->i915) >= 11 &&
 	    GRAPHICS_VER_FULL(engine->i915) < IP_VER(12, 70)))
+=======
+	 * Wa_22011802037:gen11/gen12: In addition to stopping the cs, we need
+	 * to wait for any pending mi force wakeups
+	 */
+	if (IS_GRAPHICS_VER(engine->i915, 11, 12))
+>>>>>>> b7ba80a49124 (Commit)
 		intel_engine_wait_for_pending_mi_fw(engine);
 
 	engine->execlists.reset_ccid = active_ccid(engine);
@@ -3199,7 +3217,11 @@ static void execlists_reset_cancel(struct intel_engine_cs *engine)
 		RB_CLEAR_NODE(rb);
 
 		spin_lock(&ve->base.sched_engine->lock);
+<<<<<<< HEAD
 		rq = __xchg(&ve->request, NULL);
+=======
+		rq = fetch_and_zero(&ve->request);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rq) {
 			if (i915_request_mark_eio(rq)) {
 				rq->engine = engine;
@@ -3474,9 +3496,15 @@ logical_ring_default_vfuncs(struct intel_engine_cs *engine)
 
 	if (GRAPHICS_VER_FULL(engine->i915) >= IP_VER(12, 50)) {
 		if (intel_engine_has_preemption(engine))
+<<<<<<< HEAD
 			engine->emit_bb_start = xehp_emit_bb_start;
 		else
 			engine->emit_bb_start = xehp_emit_bb_start_noarb;
+=======
+			engine->emit_bb_start = gen125_emit_bb_start;
+		else
+			engine->emit_bb_start = gen125_emit_bb_start_noarb;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		if (intel_engine_has_preemption(engine))
 			engine->emit_bb_start = gen8_emit_bb_start;
@@ -3604,7 +3632,11 @@ static void rcu_virtual_context_destroy(struct work_struct *wrk)
 
 		spin_lock_irq(&ve->base.sched_engine->lock);
 
+<<<<<<< HEAD
 		old = __xchg(&ve->request, NULL);
+=======
+		old = fetch_and_zero(&ve->request);
+>>>>>>> b7ba80a49124 (Commit)
 		if (old) {
 			GEM_BUG_ON(!__i915_request_is_complete(old));
 			__i915_request_submit(old);
@@ -3692,7 +3724,11 @@ static void virtual_engine_initial_hint(struct virtual_engine *ve)
 	 * NB This does not force us to execute on this engine, it will just
 	 * typically be the first we inspect for submission.
 	 */
+<<<<<<< HEAD
 	swp = get_random_u32_below(ve->num_siblings);
+=======
+	swp = prandom_u32_max(ve->num_siblings);
+>>>>>>> b7ba80a49124 (Commit)
 	if (swp)
 		swap(ve->siblings[swp], ve->siblings[0]);
 }
@@ -3924,7 +3960,10 @@ static struct intel_context *
 execlists_create_virtual(struct intel_engine_cs **siblings, unsigned int count,
 			 unsigned long flags)
 {
+<<<<<<< HEAD
 	struct drm_i915_private *i915 = siblings[0]->i915;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct virtual_engine *ve;
 	unsigned int n;
 	int err;
@@ -3933,7 +3972,11 @@ execlists_create_virtual(struct intel_engine_cs **siblings, unsigned int count,
 	if (!ve)
 		return ERR_PTR(-ENOMEM);
 
+<<<<<<< HEAD
 	ve->base.i915 = i915;
+=======
+	ve->base.i915 = siblings[0]->i915;
+>>>>>>> b7ba80a49124 (Commit)
 	ve->base.gt = siblings[0]->gt;
 	ve->base.uncore = siblings[0]->uncore;
 	ve->base.id = -1;
@@ -3992,9 +4035,14 @@ execlists_create_virtual(struct intel_engine_cs **siblings, unsigned int count,
 
 		GEM_BUG_ON(!is_power_of_2(sibling->mask));
 		if (sibling->mask & ve->base.mask) {
+<<<<<<< HEAD
 			drm_dbg(&i915->drm,
 				"duplicate %s entry in load balancer\n",
 				sibling->name);
+=======
+			DRM_DEBUG("duplicate %s entry in load balancer\n",
+				  sibling->name);
+>>>>>>> b7ba80a49124 (Commit)
 			err = -EINVAL;
 			goto err_put;
 		}
@@ -4028,9 +4076,14 @@ execlists_create_virtual(struct intel_engine_cs **siblings, unsigned int count,
 		 */
 		if (ve->base.class != OTHER_CLASS) {
 			if (ve->base.class != sibling->class) {
+<<<<<<< HEAD
 				drm_dbg(&i915->drm,
 					"invalid mixing of engine class, sibling %d, already %d\n",
 					sibling->class, ve->base.class);
+=======
+				DRM_DEBUG("invalid mixing of engine class, sibling %d, already %d\n",
+					  sibling->class, ve->base.class);
+>>>>>>> b7ba80a49124 (Commit)
 				err = -EINVAL;
 				goto err_put;
 			}
@@ -4150,6 +4203,7 @@ void intel_execlists_show_requests(struct intel_engine_cs *engine,
 	spin_unlock_irqrestore(&sched_engine->lock, flags);
 }
 
+<<<<<<< HEAD
 void intel_execlists_dump_active_requests(struct intel_engine_cs *engine,
 					  struct i915_request *hung_rq,
 					  struct drm_printer *m)
@@ -4166,6 +4220,8 @@ void intel_execlists_dump_active_requests(struct intel_engine_cs *engine,
 	spin_unlock_irqrestore(&engine->sched_engine->lock, flags);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if IS_ENABLED(CONFIG_DRM_I915_SELFTEST)
 #include "selftest_execlists.c"
 #endif

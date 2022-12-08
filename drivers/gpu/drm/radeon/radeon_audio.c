@@ -23,7 +23,10 @@
  */
 
 #include <linux/gcd.h>
+<<<<<<< HEAD
 #include <linux/component.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <drm/drm_crtc.h>
 #include "dce6_afmt.h"
@@ -181,8 +184,11 @@ static struct radeon_audio_funcs dce6_dp_funcs = {
 	.dpms = evergreen_dp_enable,
 };
 
+<<<<<<< HEAD
 static void radeon_audio_component_notify(struct radeon_device *rdev, int port);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void radeon_audio_enable(struct radeon_device *rdev,
 				struct r600_audio_pin *pin, u8 enable_mask)
 {
@@ -210,8 +216,11 @@ static void radeon_audio_enable(struct radeon_device *rdev,
 
 	if (rdev->audio.funcs->enable)
 		rdev->audio.funcs->enable(rdev, pin, enable_mask);
+<<<<<<< HEAD
 
 	radeon_audio_component_notify(rdev, pin->id);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void radeon_audio_interface_init(struct radeon_device *rdev)
@@ -726,6 +735,7 @@ unsigned int radeon_audio_decode_dfs_div(unsigned int div)
 	else
 		return 0;
 }
+<<<<<<< HEAD
 
 /*
  * Audio component support
@@ -838,3 +848,5 @@ void radeon_audio_component_fini(struct radeon_device *rdev)
 		rdev->audio.component_registered = false;
 	}
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

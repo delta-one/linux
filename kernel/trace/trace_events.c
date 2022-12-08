@@ -114,7 +114,11 @@ trace_find_event_field(struct trace_event_call *call, char *name)
 
 static int __trace_define_field(struct list_head *head, const char *type,
 				const char *name, int offset, int size,
+<<<<<<< HEAD
 				int is_signed, int filter_type, int len)
+=======
+				int is_signed, int filter_type)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ftrace_event_field *field;
 
@@ -133,7 +137,10 @@ static int __trace_define_field(struct list_head *head, const char *type,
 	field->offset = offset;
 	field->size = size;
 	field->is_signed = is_signed;
+<<<<<<< HEAD
 	field->len = len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	list_add(&field->link, head);
 
@@ -151,6 +158,7 @@ int trace_define_field(struct trace_event_call *call, const char *type,
 
 	head = trace_get_fields(call);
 	return __trace_define_field(head, type, name, offset, size,
+<<<<<<< HEAD
 				    is_signed, filter_type, 0);
 }
 EXPORT_SYMBOL_GPL(trace_define_field);
@@ -173,6 +181,16 @@ static int trace_define_field_ext(struct trace_event_call *call, const char *typ
 	ret = __trace_define_field(&ftrace_generic_fields, #type,	\
 				   #item, 0, 0, is_signed_type(type),	\
 				   filter_type, 0);			\
+=======
+				    is_signed, filter_type);
+}
+EXPORT_SYMBOL_GPL(trace_define_field);
+
+#define __generic_field(type, item, filter_type)			\
+	ret = __trace_define_field(&ftrace_generic_fields, #type,	\
+				   #item, 0, 0, is_signed_type(type),	\
+				   filter_type);			\
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)							\
 		return ret;
 
@@ -181,7 +199,11 @@ static int trace_define_field_ext(struct trace_event_call *call, const char *typ
 				   "common_" #item,			\
 				   offsetof(typeof(ent), item),		\
 				   sizeof(ent.item),			\
+<<<<<<< HEAD
 				   is_signed_type(type), FILTER_OTHER, 0);	\
+=======
+				   is_signed_type(type), FILTER_OTHER);	\
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)							\
 		return ret;
 
@@ -1603,6 +1625,7 @@ static int f_show(struct seq_file *m, void *v)
 		seq_printf(m, "\tfield:%s %s;\toffset:%u;\tsize:%u;\tsigned:%d;\n",
 			   field->type, field->name, field->offset,
 			   field->size, !!field->is_signed);
+<<<<<<< HEAD
 	else if (field->len)
 		seq_printf(m, "\tfield:%.*s %s[%d];\toffset:%u;\tsize:%u;\tsigned:%d;\n",
 			   (int)(array_descriptor - field->type),
@@ -1614,6 +1637,14 @@ static int f_show(struct seq_file *m, void *v)
 				(int)(array_descriptor - field->type),
 				field->type, field->name,
 				field->offset, field->size, !!field->is_signed);
+=======
+	else
+		seq_printf(m, "\tfield:%.*s %s%s;\toffset:%u;\tsize:%u;\tsigned:%d;\n",
+			   (int)(array_descriptor - field->type),
+			   field->type, field->name,
+			   array_descriptor, field->offset,
+			   field->size, !!field->is_signed);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -2281,6 +2312,11 @@ create_new_subsystem(const char *name)
 	if (!system->name)
 		goto out_free;
 
+<<<<<<< HEAD
+=======
+	system->filter = NULL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	system->filter = kzalloc(sizeof(struct event_filter), GFP_KERNEL);
 	if (!system->filter)
 		goto out_free;
@@ -2397,10 +2433,16 @@ event_define_fields(struct trace_event_call *call)
 			}
 
 			offset = ALIGN(offset, field->align);
+<<<<<<< HEAD
 			ret = trace_define_field_ext(call, field->type, field->name,
 						 offset, field->size,
 						 field->is_signed, field->filter_type,
 						 field->len);
+=======
+			ret = trace_define_field(call, field->type, field->name,
+						 offset, field->size,
+						 field->is_signed, field->filter_type);
+>>>>>>> b7ba80a49124 (Commit)
 			if (WARN_ON_ONCE(ret)) {
 				pr_err("error code is %d\n", ret);
 				break;
@@ -2815,6 +2857,7 @@ trace_create_new_event(struct trace_event_call *call,
 	return file;
 }
 
+<<<<<<< HEAD
 #define MAX_BOOT_TRIGGERS 32
 
 static struct boot_triggers {
@@ -2851,6 +2894,8 @@ static __init int setup_trace_triggers(char *str)
 }
 __setup("trace_trigger=", setup_trace_triggers);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Add an event to a trace directory */
 static int
 __trace_add_new_event(struct trace_event_call *call, struct trace_array *tr)
@@ -2867,6 +2912,7 @@ __trace_add_new_event(struct trace_event_call *call, struct trace_array *tr)
 		return event_define_fields(call);
 }
 
+<<<<<<< HEAD
 static void trace_early_triggers(struct trace_event_file *file, const char *name)
 {
 	int ret;
@@ -2885,6 +2931,8 @@ static void trace_early_triggers(struct trace_event_file *file, const char *name
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Just create a descriptor for early init. A descriptor is required
  * for enabling events at boot. We want to enable events before
@@ -2895,12 +2943,16 @@ __trace_early_add_new_event(struct trace_event_call *call,
 			    struct trace_array *tr)
 {
 	struct trace_event_file *file;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	file = trace_create_new_event(call, tr);
 	if (!file)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	ret = event_define_fields(call);
 	if (ret)
 		return ret;
@@ -2908,6 +2960,9 @@ __trace_early_add_new_event(struct trace_event_call *call,
 	trace_early_triggers(file, trace_event_name(call));
 
 	return 0;
+=======
+	return event_define_fields(call);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct ftrace_module_file_ops;
@@ -2960,10 +3015,14 @@ static int probe_remove_event_call(struct trace_event_call *call)
 		 * TRACE_REG_UNREGISTER.
 		 */
 		if (file->flags & EVENT_FILE_FL_ENABLED)
+<<<<<<< HEAD
 			goto busy;
 
 		if (file->flags & EVENT_FILE_FL_WAS_ENABLED)
 			tr->clear_trace = true;
+=======
+			return -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * The do_for_each_event_file_safe() is
 		 * a double loop. After finding the call for this
@@ -2976,12 +3035,15 @@ static int probe_remove_event_call(struct trace_event_call *call)
 	__trace_remove_event_call(call);
 
 	return 0;
+<<<<<<< HEAD
  busy:
 	/* No need to clear the trace now */
 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
 		tr->clear_trace = false;
 	}
 	return -EBUSY;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Remove an event_call */
@@ -3061,7 +3123,11 @@ static void trace_module_remove_events(struct module *mod)
 	 * over from this module may be passed to the new module events and
 	 * unexpected results may occur.
 	 */
+<<<<<<< HEAD
 	tracing_reset_all_online_cpus_unlocked();
+=======
+	tracing_reset_all_online_cpus();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int trace_module_notify(struct notifier_block *self,
@@ -3769,9 +3835,16 @@ static __init int event_trace_memsetup(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 __init void
 early_enable_events(struct trace_array *tr, char *buf, bool disable_first)
 {
+=======
+static __init void
+early_enable_events(struct trace_array *tr, bool disable_first)
+{
+	char *buf = bootup_event_buf;
+>>>>>>> b7ba80a49124 (Commit)
 	char *token;
 	int ret;
 
@@ -3814,8 +3887,11 @@ static __init int event_trace_enable(void)
 			list_add(&call->list, &ftrace_events);
 	}
 
+<<<<<<< HEAD
 	register_trigger_cmds();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * We need the top trace array to have a working set of trace
 	 * points at early init, before the debug files and directories
@@ -3824,12 +3900,20 @@ static __init int event_trace_enable(void)
 	 */
 	__trace_early_add_events(tr);
 
+<<<<<<< HEAD
 	early_enable_events(tr, bootup_event_buf, false);
+=======
+	early_enable_events(tr, false);
+>>>>>>> b7ba80a49124 (Commit)
 
 	trace_printk_start_comm();
 
 	register_event_cmds();
 
+<<<<<<< HEAD
+=======
+	register_trigger_cmds();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -3852,7 +3936,11 @@ static __init int event_trace_enable_again(void)
 	if (!tr)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	early_enable_events(tr, bootup_event_buf, true);
+=======
+	early_enable_events(tr, true);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

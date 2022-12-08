@@ -3309,6 +3309,7 @@ int drm_dp_add_payload_part1(struct drm_dp_mst_topology_mgr *mgr,
 	int ret;
 
 	port = drm_dp_mst_topology_get_port_validated(mgr, payload->port);
+<<<<<<< HEAD
 	if (!port) {
 		drm_dbg_kms(mgr->dev,
 			    "VCPI %d for port %p not in topology, not creating a payload\n",
@@ -3316,6 +3317,10 @@ int drm_dp_add_payload_part1(struct drm_dp_mst_topology_mgr *mgr,
 		payload->vc_start_slot = -1;
 		return 0;
 	}
+=======
+	if (!port)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (mgr->payload_count == 0)
 		mgr->next_start_slot = mst_state->start_slot;
@@ -3342,8 +3347,12 @@ EXPORT_SYMBOL(drm_dp_add_payload_part1);
  * drm_dp_remove_payload() - Remove an MST payload
  * @mgr: Manager to use.
  * @mst_state: The MST atomic state
+<<<<<<< HEAD
  * @old_payload: The payload with its old state
  * @new_payload: The payload to write
+=======
+ * @payload: The payload to write
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Removes a payload from an MST topology if it was successfully assigned a start slot. Also updates
  * the starting time slots of all other payloads which would have been shifted towards the start of
@@ -3351,13 +3360,18 @@ EXPORT_SYMBOL(drm_dp_add_payload_part1);
  */
 void drm_dp_remove_payload(struct drm_dp_mst_topology_mgr *mgr,
 			   struct drm_dp_mst_topology_state *mst_state,
+<<<<<<< HEAD
 			   const struct drm_dp_mst_atomic_payload *old_payload,
 			   struct drm_dp_mst_atomic_payload *new_payload)
+=======
+			   struct drm_dp_mst_atomic_payload *payload)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drm_dp_mst_atomic_payload *pos;
 	bool send_remove = false;
 
 	/* We failed to make the payload, so nothing to do */
+<<<<<<< HEAD
 	if (new_payload->vc_start_slot == -1)
 		return;
 
@@ -3382,6 +3396,29 @@ void drm_dp_remove_payload(struct drm_dp_mst_topology_mgr *mgr,
 
 	if (new_payload->delete)
 		drm_dp_mst_put_port_malloc(new_payload->port);
+=======
+	if (payload->vc_start_slot == -1)
+		return;
+
+	mutex_lock(&mgr->lock);
+	send_remove = drm_dp_mst_port_downstream_of_branch(payload->port, mgr->mst_primary);
+	mutex_unlock(&mgr->lock);
+
+	if (send_remove)
+		drm_dp_destroy_payload_step1(mgr, mst_state, payload);
+	else
+		drm_dbg_kms(mgr->dev, "Payload for VCPI %d not in topology, not sending remove\n",
+			    payload->vcpi);
+
+	list_for_each_entry(pos, &mst_state->payloads, next) {
+		if (pos != payload && pos->vc_start_slot > payload->vc_start_slot)
+			pos->vc_start_slot -= payload->time_slots;
+	}
+	payload->vc_start_slot = -1;
+
+	mgr->payload_count--;
+	mgr->next_start_slot -= payload->time_slots;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(drm_dp_remove_payload);
 
@@ -3651,9 +3688,12 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
 		drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
 		ret = 0;
 		mgr->payload_id_table_cleared = false;
+<<<<<<< HEAD
 
 		memset(&mgr->down_rep_recv, 0, sizeof(mgr->down_rep_recv));
 		memset(&mgr->up_req_recv, 0, sizeof(mgr->up_req_recv));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 out_unlock:
@@ -3866,7 +3906,11 @@ static int drm_dp_mst_handle_down_rep(struct drm_dp_mst_topology_mgr *mgr)
 	struct drm_dp_sideband_msg_rx *msg = &mgr->down_rep_recv;
 
 	if (!drm_dp_get_one_sb_msg(mgr, false, &mstb))
+<<<<<<< HEAD
 		goto out_clear_reply;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Multi-packet message transmission, don't clear the reply */
 	if (!msg->have_eomt)
@@ -4340,6 +4384,10 @@ int drm_dp_atomic_release_time_slots(struct drm_atomic_state *state,
 
 	drm_dbg_atomic(mgr->dev, "[MST PORT:%p] TU %d -> 0\n", port, payload->time_slots);
 	if (!payload->delete) {
+<<<<<<< HEAD
+=======
+		drm_dp_mst_put_port_malloc(port);
+>>>>>>> b7ba80a49124 (Commit)
 		payload->pbn = 0;
 		payload->delete = true;
 		topology_state->payload_mask &= ~BIT(payload->vcpi - 1);
@@ -5198,7 +5246,11 @@ int drm_dp_mst_add_affected_dsc_crtcs(struct drm_atomic_state *state, struct drm
 	mst_state = drm_atomic_get_mst_topology_state(state, mgr);
 
 	if (IS_ERR(mst_state))
+<<<<<<< HEAD
 		return PTR_ERR(mst_state);
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	list_for_each_entry(pos, &mst_state->payloads, next) {
 
@@ -5365,6 +5417,7 @@ struct drm_dp_mst_topology_state *drm_atomic_get_mst_topology_state(struct drm_a
 EXPORT_SYMBOL(drm_atomic_get_mst_topology_state);
 
 /**
+<<<<<<< HEAD
  * drm_atomic_get_old_mst_topology_state: get old MST topology state in atomic state, if any
  * @state: global atomic state
  * @mgr: MST topology manager, also the private object in this case
@@ -5390,27 +5443,44 @@ drm_atomic_get_old_mst_topology_state(struct drm_atomic_state *state,
 EXPORT_SYMBOL(drm_atomic_get_old_mst_topology_state);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * drm_atomic_get_new_mst_topology_state: get new MST topology state in atomic state, if any
  * @state: global atomic state
  * @mgr: MST topology manager, also the private object in this case
  *
+<<<<<<< HEAD
  * This function wraps drm_atomic_get_new_private_obj_state() passing in the MST atomic
+=======
+ * This function wraps drm_atomic_get_priv_obj_state() passing in the MST atomic
+>>>>>>> b7ba80a49124 (Commit)
  * state vtable so that the private object state returned is that of a MST
  * topology object.
  *
  * Returns:
  *
+<<<<<<< HEAD
  * The new MST topology state, or NULL if there's no topology state for this MST mgr
+=======
+ * The MST topology state, or NULL if there's no topology state for this MST mgr
+>>>>>>> b7ba80a49124 (Commit)
  * in the global atomic state
  */
 struct drm_dp_mst_topology_state *
 drm_atomic_get_new_mst_topology_state(struct drm_atomic_state *state,
 				      struct drm_dp_mst_topology_mgr *mgr)
 {
+<<<<<<< HEAD
 	struct drm_private_state *new_priv_state =
 		drm_atomic_get_new_private_obj_state(state, &mgr->base);
 
 	return new_priv_state ? to_dp_mst_topology_state(new_priv_state) : NULL;
+=======
+	struct drm_private_state *priv_state =
+		drm_atomic_get_new_private_obj_state(state, &mgr->base);
+
+	return priv_state ? to_dp_mst_topology_state(priv_state) : NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(drm_atomic_get_new_mst_topology_state);
 

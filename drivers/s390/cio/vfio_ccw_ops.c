@@ -11,6 +11,10 @@
  */
 
 #include <linux/vfio.h>
+<<<<<<< HEAD
+=======
+#include <linux/mdev.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/nospec.h>
 #include <linux/slab.h>
 
@@ -44,11 +48,57 @@ static void vfio_ccw_dma_unmap(struct vfio_device *vdev, u64 iova, u64 length)
 	vfio_ccw_mdev_reset(private);
 }
 
+<<<<<<< HEAD
+=======
+static ssize_t name_show(struct mdev_type *mtype,
+			 struct mdev_type_attribute *attr, char *buf)
+{
+	return sprintf(buf, "I/O subchannel (Non-QDIO)\n");
+}
+static MDEV_TYPE_ATTR_RO(name);
+
+static ssize_t device_api_show(struct mdev_type *mtype,
+			       struct mdev_type_attribute *attr, char *buf)
+{
+	return sprintf(buf, "%s\n", VFIO_DEVICE_API_CCW_STRING);
+}
+static MDEV_TYPE_ATTR_RO(device_api);
+
+static ssize_t available_instances_show(struct mdev_type *mtype,
+					struct mdev_type_attribute *attr,
+					char *buf)
+{
+	struct vfio_ccw_private *private =
+		dev_get_drvdata(mtype_get_parent_dev(mtype));
+
+	return sprintf(buf, "%d\n", atomic_read(&private->avail));
+}
+static MDEV_TYPE_ATTR_RO(available_instances);
+
+static struct attribute *mdev_types_attrs[] = {
+	&mdev_type_attr_name.attr,
+	&mdev_type_attr_device_api.attr,
+	&mdev_type_attr_available_instances.attr,
+	NULL,
+};
+
+static struct attribute_group mdev_type_group = {
+	.name  = "io",
+	.attrs = mdev_types_attrs,
+};
+
+static struct attribute_group *mdev_type_groups[] = {
+	&mdev_type_group,
+	NULL,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static int vfio_ccw_mdev_init_dev(struct vfio_device *vdev)
 {
 	struct vfio_ccw_private *private =
 		container_of(vdev, struct vfio_ccw_private, vdev);
 
+<<<<<<< HEAD
 	mutex_init(&private->io_mutex);
 	private->state = VFIO_CCW_STATE_STANDBY;
 	INIT_LIST_HEAD(&private->crw);
@@ -93,10 +143,15 @@ out_free_cp:
 out_free_private:
 	mutex_destroy(&private->io_mutex);
 	return -ENOMEM;
+=======
+	init_completion(&private->release_comp);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int vfio_ccw_mdev_probe(struct mdev_device *mdev)
 {
+<<<<<<< HEAD
 	struct subchannel *sch = to_subchannel(mdev->dev.parent);
 	struct vfio_ccw_parent *parent = dev_get_drvdata(&sch->dev);
 	struct vfio_ccw_private *private;
@@ -113,6 +168,25 @@ static int vfio_ccw_mdev_probe(struct mdev_device *mdev)
 			   sch->schid.cssid,
 			   sch->schid.ssid,
 			   sch->schid.sch_no);
+=======
+	struct vfio_ccw_private *private = dev_get_drvdata(mdev->dev.parent);
+	int ret;
+
+	if (private->state == VFIO_CCW_STATE_NOT_OPER)
+		return -ENODEV;
+
+	if (atomic_dec_if_positive(&private->avail) < 0)
+		return -EPERM;
+
+	ret = vfio_init_device(&private->vdev, &mdev->dev, &vfio_ccw_dev_ops);
+	if (ret)
+		return ret;
+
+	VFIO_CCW_MSG_EVENT(2, "sch %x.%x.%04x: create\n",
+			   private->sch->schid.cssid,
+			   private->sch->schid.ssid,
+			   private->sch->schid.sch_no);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = vfio_register_emulated_iommu_dev(&private->vdev);
 	if (ret)
@@ -121,8 +195,13 @@ static int vfio_ccw_mdev_probe(struct mdev_device *mdev)
 	return 0;
 
 err_put_vdev:
+<<<<<<< HEAD
 	dev_set_drvdata(&parent->dev, NULL);
 	vfio_put_device(&private->vdev);
+=======
+	vfio_put_device(&private->vdev);
+	atomic_inc(&private->avail);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -130,6 +209,7 @@ static void vfio_ccw_mdev_release_dev(struct vfio_device *vdev)
 {
 	struct vfio_ccw_private *private =
 		container_of(vdev, struct vfio_ccw_private, vdev);
+<<<<<<< HEAD
 	struct vfio_ccw_crw *crw, *temp;
 
 	list_for_each_entry_safe(crw, temp, &private->crw, next) {
@@ -143,10 +223,24 @@ static void vfio_ccw_mdev_release_dev(struct vfio_device *vdev)
 	kmem_cache_free(vfio_ccw_io_region, private->io_region);
 	kfree(private->cp.guest_cp);
 	mutex_destroy(&private->io_mutex);
+=======
+
+	/*
+	 * We cannot free vfio_ccw_private here because it includes
+	 * parent info which must be free'ed by css driver.
+	 *
+	 * Use a workaround by memset'ing the core device part and
+	 * then notifying the remove path that all active references
+	 * to this device have been released.
+	 */
+	memset(vdev, 0, sizeof(*vdev));
+	complete(&private->release_comp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void vfio_ccw_mdev_remove(struct mdev_device *mdev)
 {
+<<<<<<< HEAD
 	struct subchannel *sch = to_subchannel(mdev->dev.parent);
 	struct vfio_ccw_parent *parent = dev_get_drvdata(&sch->dev);
 	struct vfio_ccw_private *private = dev_get_drvdata(&parent->dev);
@@ -160,6 +254,29 @@ static void vfio_ccw_mdev_remove(struct mdev_device *mdev)
 
 	dev_set_drvdata(&parent->dev, NULL);
 	vfio_put_device(&private->vdev);
+=======
+	struct vfio_ccw_private *private = dev_get_drvdata(mdev->dev.parent);
+
+	VFIO_CCW_MSG_EVENT(2, "sch %x.%x.%04x: remove\n",
+			   private->sch->schid.cssid,
+			   private->sch->schid.ssid,
+			   private->sch->schid.sch_no);
+
+	vfio_unregister_group_dev(&private->vdev);
+
+	vfio_put_device(&private->vdev);
+	/*
+	 * Wait for all active references on mdev are released so it
+	 * is safe to defer kfree() to a later point.
+	 *
+	 * TODO: the clean fix is to split parent/mdev info from ccw
+	 * private structure so each can be managed in its own life
+	 * cycle.
+	 */
+	wait_for_completion(&private->release_comp);
+
+	atomic_inc(&private->avail);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int vfio_ccw_mdev_open_device(struct vfio_device *vdev)
@@ -629,6 +746,7 @@ static const struct vfio_device_ops vfio_ccw_dev_ops = {
 	.ioctl = vfio_ccw_mdev_ioctl,
 	.request = vfio_ccw_mdev_request,
 	.dma_unmap = vfio_ccw_dma_unmap,
+<<<<<<< HEAD
 	.bind_iommufd = vfio_iommufd_emulated_bind,
 	.unbind_iommufd = vfio_iommufd_emulated_unbind,
 	.attach_ioas = vfio_iommufd_emulated_attach_ioas,
@@ -637,6 +755,11 @@ static const struct vfio_device_ops vfio_ccw_dev_ops = {
 struct mdev_driver vfio_ccw_mdev_driver = {
 	.device_api = VFIO_DEVICE_API_CCW_STRING,
 	.max_instances = 1,
+=======
+};
+
+struct mdev_driver vfio_ccw_mdev_driver = {
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "vfio_ccw_mdev",
 		.owner = THIS_MODULE,
@@ -644,4 +767,8 @@ struct mdev_driver vfio_ccw_mdev_driver = {
 	},
 	.probe = vfio_ccw_mdev_probe,
 	.remove = vfio_ccw_mdev_remove,
+<<<<<<< HEAD
+=======
+	.supported_type_groups  = mdev_type_groups,
+>>>>>>> b7ba80a49124 (Commit)
 };

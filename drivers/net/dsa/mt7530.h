@@ -364,8 +364,51 @@ enum mt7530_vlan_port_acc_frm {
 					 CCR_TX_OCT_CNT_BAD)
 
 /* MT7531 SGMII register group */
+<<<<<<< HEAD
 #define MT7531_SGMII_REG_BASE(p)	(0x5000 + ((p) - 5) * 0x1000)
 #define MT7531_PHYA_CTRL_SIGNAL3	0x128
+=======
+#define MT7531_SGMII_REG_BASE		0x5000
+#define MT7531_SGMII_REG(p, r)		(MT7531_SGMII_REG_BASE + \
+					((p) - 5) * 0x1000 + (r))
+
+/* Register forSGMII PCS_CONTROL_1 */
+#define MT7531_PCS_CONTROL_1(p)		MT7531_SGMII_REG(p, 0x00)
+#define  MT7531_SGMII_LINK_STATUS	BIT(18)
+#define  MT7531_SGMII_AN_ENABLE		BIT(12)
+#define  MT7531_SGMII_AN_RESTART	BIT(9)
+
+/* Register for SGMII PCS_SPPED_ABILITY */
+#define MT7531_PCS_SPEED_ABILITY(p)	MT7531_SGMII_REG(p, 0x08)
+#define  MT7531_SGMII_TX_CONFIG_MASK	GENMASK(15, 0)
+#define  MT7531_SGMII_TX_CONFIG		BIT(0)
+
+/* Register for SGMII_MODE */
+#define MT7531_SGMII_MODE(p)		MT7531_SGMII_REG(p, 0x20)
+#define  MT7531_SGMII_REMOTE_FAULT_DIS	BIT(8)
+#define  MT7531_SGMII_IF_MODE_MASK	GENMASK(5, 1)
+#define  MT7531_SGMII_FORCE_DUPLEX	BIT(4)
+#define  MT7531_SGMII_FORCE_SPEED_MASK	GENMASK(3, 2)
+#define  MT7531_SGMII_FORCE_SPEED_1000	BIT(3)
+#define  MT7531_SGMII_FORCE_SPEED_100	BIT(2)
+#define  MT7531_SGMII_FORCE_SPEED_10	0
+#define  MT7531_SGMII_SPEED_DUPLEX_AN	BIT(1)
+
+enum mt7531_sgmii_force_duplex {
+	MT7531_SGMII_FORCE_FULL_DUPLEX = 0,
+	MT7531_SGMII_FORCE_HALF_DUPLEX = 0x10,
+};
+
+/* Fields of QPHY_PWR_STATE_CTRL */
+#define MT7531_QPHY_PWR_STATE_CTRL(p)	MT7531_SGMII_REG(p, 0xe8)
+#define  MT7531_SGMII_PHYA_PWD		BIT(4)
+
+/* Values of SGMII SPEED */
+#define MT7531_PHYA_CTRL_SIGNAL3(p)	MT7531_SGMII_REG(p, 0x128)
+#define  MT7531_RG_TPHY_SPEED_MASK	(BIT(2) | BIT(3))
+#define  MT7531_RG_TPHY_SPEED_1_25G	0x0
+#define  MT7531_RG_TPHY_SPEED_3_125G	BIT(2)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Register for system reset */
 #define MT7530_SYS_CTRL			0x7000
@@ -664,13 +707,21 @@ struct mt7530_fdb {
  * @pm:		The matrix used to show all connections with the port.
  * @pvid:	The VLAN specified is to be considered a PVID at ingress.  Any
  *		untagged frames will be assigned to the related VLAN.
+<<<<<<< HEAD
  * @sgmii_pcs:	Pointer to PCS instance for SerDes ports
+=======
+ * @vlan_filtering: The flags indicating whether the port that can recognize
+ *		    VLAN-tagged frames.
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct mt7530_port {
 	bool enable;
 	u32 pm;
 	u16 pvid;
+<<<<<<< HEAD
 	struct phylink_pcs *sgmii_pcs;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Port 5 interface select definitions */
@@ -711,10 +762,15 @@ struct mt753x_pcs {
 /* struct mt753x_info -	This is the main data structure for holding the specific
  *			part for each supported device
  * @sw_setup:		Holding the handler to a device initialization
+<<<<<<< HEAD
  * @phy_read_c22:	Holding the way reading PHY port using C22
  * @phy_write_c22:	Holding the way writing PHY port using C22
  * @phy_read_c45:	Holding the way reading PHY port using C45
  * @phy_write_c45:	Holding the way writing PHY port using C45
+=======
+ * @phy_read:		Holding the way reading PHY port
+ * @phy_write:		Holding the way writing PHY port
+>>>>>>> b7ba80a49124 (Commit)
  * @pad_setup:		Holding the way setting up the bus pad for a certain
  *			MAC port
  * @phy_mode_supported:	Check if the PHY type is being supported on a certain
@@ -730,6 +786,7 @@ struct mt753x_info {
 	const struct phylink_pcs_ops *pcs_ops;
 
 	int (*sw_setup)(struct dsa_switch *ds);
+<<<<<<< HEAD
 	int (*phy_read_c22)(struct mt7530_priv *priv, int port, int regnum);
 	int (*phy_write_c22)(struct mt7530_priv *priv, int port, int regnum,
 			     u16 val);
@@ -737,6 +794,10 @@ struct mt753x_info {
 			    int regnum);
 	int (*phy_write_c45)(struct mt7530_priv *priv, int port, int devad,
 			     int regnum, u16 val);
+=======
+	int (*phy_read)(struct mt7530_priv *priv, int port, int regnum);
+	int (*phy_write)(struct mt7530_priv *priv, int port, int regnum, u16 val);
+>>>>>>> b7ba80a49124 (Commit)
 	int (*pad_setup)(struct dsa_switch *ds, phy_interface_t interface);
 	int (*cpu_port_config)(struct dsa_switch *ds, int port);
 	void (*mac_port_get_caps)(struct dsa_switch *ds, int port,

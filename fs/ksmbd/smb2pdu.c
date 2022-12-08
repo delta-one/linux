@@ -12,7 +12,10 @@
 #include <linux/ethtool.h>
 #include <linux/falloc.h>
 #include <linux/mount.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "glob.h"
 #include "smbfsctl.h"
@@ -75,7 +78,18 @@ static inline bool check_session_id(struct ksmbd_conn *conn, u64 id)
 
 struct channel *lookup_chann_list(struct ksmbd_session *sess, struct ksmbd_conn *conn)
 {
+<<<<<<< HEAD
 	return xa_load(&sess->ksmbd_chann_list, (long)conn);
+=======
+	struct channel *chann;
+
+	list_for_each_entry(chann, &sess->ksmbd_chann_list, chann_list) {
+		if (chann->conn == conn)
+			return chann;
+	}
+
+	return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -274,7 +288,12 @@ int init_smb2_neg_rsp(struct ksmbd_work *work)
 		le16_to_cpu(rsp->SecurityBufferOffset));
 	inc_rfc1001_len(work->response_buf,
 			sizeof(struct smb2_negotiate_rsp) -
+<<<<<<< HEAD
 			sizeof(struct smb2_hdr) + AUTH_GSS_LENGTH);
+=======
+			sizeof(struct smb2_hdr) - sizeof(rsp->Buffer) +
+			AUTH_GSS_LENGTH);
+>>>>>>> b7ba80a49124 (Commit)
 	rsp->SecurityMode = SMB2_NEGOTIATE_SIGNING_ENABLED_LE;
 	if (server_conf.signing == KSMBD_CONFIG_OPT_MANDATORY)
 		rsp->SecurityMode |= SMB2_NEGOTIATE_SIGNING_REQUIRED_LE;
@@ -498,7 +517,11 @@ int init_smb2_rsp_hdr(struct ksmbd_work *work)
 	rsp_hdr->SessionId = rcv_hdr->SessionId;
 	memcpy(rsp_hdr->Signature, rcv_hdr->Signature, 16);
 
+<<<<<<< HEAD
 	work->synchronous = true;
+=======
+	work->syncronous = true;
+>>>>>>> b7ba80a49124 (Commit)
 	if (work->async_id) {
 		ksmbd_release_id(&conn->async_ida, work->async_id);
 		work->async_id = 0;
@@ -588,7 +611,10 @@ static void destroy_previous_session(struct ksmbd_conn *conn,
 	struct ksmbd_session *prev_sess = ksmbd_session_lookup_slowpath(id);
 	struct ksmbd_user *prev_user;
 	struct channel *chann;
+<<<<<<< HEAD
 	long index;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!prev_sess)
 		return;
@@ -602,8 +628,15 @@ static void destroy_previous_session(struct ksmbd_conn *conn,
 		return;
 
 	prev_sess->state = SMB2_SESSION_EXPIRED;
+<<<<<<< HEAD
 	xa_for_each(&prev_sess->ksmbd_chann_list, index, chann)
 		chann->conn->status = KSMBD_SESS_EXITING;
+=======
+	write_lock(&prev_sess->chann_lock);
+	list_for_each_entry(chann, &prev_sess->ksmbd_chann_list, chann_list)
+		chann->conn->status = KSMBD_SESS_EXITING;
+	write_unlock(&prev_sess->chann_lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -644,7 +677,11 @@ int setup_async_work(struct ksmbd_work *work, void (*fn)(void **), void **arg)
 		pr_err("Failed to alloc async message id\n");
 		return id;
 	}
+<<<<<<< HEAD
 	work->synchronous = false;
+=======
+	work->syncronous = false;
+>>>>>>> b7ba80a49124 (Commit)
 	work->async_id = id;
 	rsp_hdr->Id.AsyncId = cpu_to_le64(id);
 
@@ -895,7 +932,11 @@ static void decode_encrypt_ctxt(struct ksmbd_conn *conn,
 		return;
 	}
 
+<<<<<<< HEAD
 	if (server_conf.flags & KSMBD_GLOBAL_FLAG_SMB2_ENCRYPTION_OFF)
+=======
+	if (!(server_conf.flags & KSMBD_GLOBAL_FLAG_SMB2_ENCRYPTION))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	for (i = 0; i < cph_cnt; i++) {
@@ -917,7 +958,11 @@ static void decode_encrypt_ctxt(struct ksmbd_conn *conn,
  *
  * Return:	true if connection should be encrypted, else false
  */
+<<<<<<< HEAD
 bool smb3_encryption_negotiated(struct ksmbd_conn *conn)
+=======
+static bool smb3_encryption_negotiated(struct ksmbd_conn *conn)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!conn->ops->generate_encryptionkey)
 		return false;
@@ -1204,7 +1249,12 @@ int smb2_handle_negotiate(struct ksmbd_work *work)
 	ksmbd_copy_gss_neg_header((char *)(&rsp->hdr) +
 				  le16_to_cpu(rsp->SecurityBufferOffset));
 	inc_rfc1001_len(work->response_buf, sizeof(struct smb2_negotiate_rsp) -
+<<<<<<< HEAD
 			sizeof(struct smb2_hdr) + AUTH_GSS_LENGTH);
+=======
+			sizeof(struct smb2_hdr) - sizeof(rsp->Buffer) +
+			 AUTH_GSS_LENGTH);
+>>>>>>> b7ba80a49124 (Commit)
 	rsp->SecurityMode = SMB2_NEGOTIATE_SIGNING_ENABLED_LE;
 	conn->use_spnego = true;
 
@@ -1499,8 +1549,12 @@ static int ntlm_authenticate(struct ksmbd_work *work)
 			return -EINVAL;
 		}
 		sess->enc = true;
+<<<<<<< HEAD
 		if (server_conf.flags & KSMBD_GLOBAL_FLAG_SMB2_ENCRYPTION)
 			rsp->SessionFlags = SMB2_SESSION_FLAG_ENCRYPT_DATA_LE;
+=======
+		rsp->SessionFlags = SMB2_SESSION_FLAG_ENCRYPT_DATA_LE;
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * signing is disable if encryption is enable
 		 * on this session
@@ -1510,14 +1564,27 @@ static int ntlm_authenticate(struct ksmbd_work *work)
 
 binding_session:
 	if (conn->dialect >= SMB30_PROT_ID) {
+<<<<<<< HEAD
 		chann = lookup_chann_list(sess, conn);
+=======
+		read_lock(&sess->chann_lock);
+		chann = lookup_chann_list(sess, conn);
+		read_unlock(&sess->chann_lock);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!chann) {
 			chann = kmalloc(sizeof(struct channel), GFP_KERNEL);
 			if (!chann)
 				return -ENOMEM;
 
 			chann->conn = conn;
+<<<<<<< HEAD
 			xa_store(&sess->ksmbd_chann_list, (long)conn, chann, GFP_KERNEL);
+=======
+			INIT_LIST_HEAD(&chann->chann_list);
+			write_lock(&sess->chann_lock);
+			list_add(&chann->chann_list, &sess->ksmbd_chann_list);
+			write_unlock(&sess->chann_lock);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -1586,20 +1653,37 @@ static int krb5_authenticate(struct ksmbd_work *work)
 			return -EINVAL;
 		}
 		sess->enc = true;
+<<<<<<< HEAD
 		if (server_conf.flags & KSMBD_GLOBAL_FLAG_SMB2_ENCRYPTION)
 			rsp->SessionFlags = SMB2_SESSION_FLAG_ENCRYPT_DATA_LE;
+=======
+		rsp->SessionFlags = SMB2_SESSION_FLAG_ENCRYPT_DATA_LE;
+>>>>>>> b7ba80a49124 (Commit)
 		sess->sign = false;
 	}
 
 	if (conn->dialect >= SMB30_PROT_ID) {
+<<<<<<< HEAD
 		chann = lookup_chann_list(sess, conn);
+=======
+		read_lock(&sess->chann_lock);
+		chann = lookup_chann_list(sess, conn);
+		read_unlock(&sess->chann_lock);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!chann) {
 			chann = kmalloc(sizeof(struct channel), GFP_KERNEL);
 			if (!chann)
 				return -ENOMEM;
 
 			chann->conn = conn;
+<<<<<<< HEAD
 			xa_store(&sess->ksmbd_chann_list, (long)conn, chann, GFP_KERNEL);
+=======
+			INIT_LIST_HEAD(&chann->chann_list);
+			write_lock(&sess->chann_lock);
+			list_add(&chann->chann_list, &sess->ksmbd_chann_list);
+			write_unlock(&sess->chann_lock);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -1909,13 +1993,22 @@ int smb2_tree_connect(struct ksmbd_work *work)
 	if (conn->posix_ext_supported)
 		status.tree_conn->posix_extensions = true;
 
+<<<<<<< HEAD
 	rsp->StructureSize = cpu_to_le16(16);
 	inc_rfc1001_len(work->response_buf, 16);
 out_err1:
+=======
+out_err1:
+	rsp->StructureSize = cpu_to_le16(16);
+>>>>>>> b7ba80a49124 (Commit)
 	rsp->Capabilities = 0;
 	rsp->Reserved = 0;
 	/* default manual caching */
 	rsp->ShareFlags = SMB2_SHAREFLAG_MANUAL_CACHING;
+<<<<<<< HEAD
+=======
+	inc_rfc1001_len(work->response_buf, 16);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!IS_ERR(treename))
 		kfree(treename);
@@ -1948,9 +2041,12 @@ out_err1:
 		rsp->hdr.Status = STATUS_ACCESS_DENIED;
 	}
 
+<<<<<<< HEAD
 	if (status.ret != KSMBD_TREE_CONN_STATUS_OK)
 		smb2_set_err_rsp(work);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -2173,7 +2269,11 @@ out:
 static int smb2_set_ea(struct smb2_ea_info *eabuf, unsigned int buf_len,
 		       const struct path *path)
 {
+<<<<<<< HEAD
 	struct mnt_idmap *idmap = mnt_idmap(path->mnt);
+=======
+	struct user_namespace *user_ns = mnt_user_ns(path->mnt);
+>>>>>>> b7ba80a49124 (Commit)
 	char *attr_name = NULL, *value;
 	int rc = 0;
 	unsigned int next = 0;
@@ -2209,7 +2309,11 @@ static int smb2_set_ea(struct smb2_ea_info *eabuf, unsigned int buf_len,
 		value = (char *)&eabuf->name + eabuf->EaNameLength + 1;
 
 		if (!eabuf->EaValueLength) {
+<<<<<<< HEAD
 			rc = ksmbd_vfs_casexattr_len(idmap,
+=======
+			rc = ksmbd_vfs_casexattr_len(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 						     path->dentry,
 						     attr_name,
 						     XATTR_USER_PREFIX_LEN +
@@ -2217,7 +2321,11 @@ static int smb2_set_ea(struct smb2_ea_info *eabuf, unsigned int buf_len,
 
 			/* delete the EA only when it exits */
 			if (rc > 0) {
+<<<<<<< HEAD
 				rc = ksmbd_vfs_remove_xattr(idmap,
+=======
+				rc = ksmbd_vfs_remove_xattr(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 							    path->dentry,
 							    attr_name);
 
@@ -2232,7 +2340,11 @@ static int smb2_set_ea(struct smb2_ea_info *eabuf, unsigned int buf_len,
 			/* if the EA doesn't exist, just do nothing. */
 			rc = 0;
 		} else {
+<<<<<<< HEAD
 			rc = ksmbd_vfs_setxattr(idmap,
+=======
+			rc = ksmbd_vfs_setxattr(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 						path->dentry, attr_name, value,
 						le16_to_cpu(eabuf->EaValueLength), 0);
 			if (rc < 0) {
@@ -2262,7 +2374,11 @@ static noinline int smb2_set_stream_name_xattr(const struct path *path,
 					       struct ksmbd_file *fp,
 					       char *stream_name, int s_type)
 {
+<<<<<<< HEAD
 	struct mnt_idmap *idmap = mnt_idmap(path->mnt);
+=======
+	struct user_namespace *user_ns = mnt_user_ns(path->mnt);
+>>>>>>> b7ba80a49124 (Commit)
 	size_t xattr_stream_size;
 	char *xattr_stream_name;
 	int rc;
@@ -2278,7 +2394,11 @@ static noinline int smb2_set_stream_name_xattr(const struct path *path,
 	fp->stream.size = xattr_stream_size;
 
 	/* Check if there is stream prefix in xattr space */
+<<<<<<< HEAD
 	rc = ksmbd_vfs_casexattr_len(idmap,
+=======
+	rc = ksmbd_vfs_casexattr_len(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 				     path->dentry,
 				     xattr_stream_name,
 				     xattr_stream_size);
@@ -2290,7 +2410,11 @@ static noinline int smb2_set_stream_name_xattr(const struct path *path,
 		return -EBADF;
 	}
 
+<<<<<<< HEAD
 	rc = ksmbd_vfs_setxattr(idmap, path->dentry,
+=======
+	rc = ksmbd_vfs_setxattr(user_ns, path->dentry,
+>>>>>>> b7ba80a49124 (Commit)
 				xattr_stream_name, NULL, 0, 0);
 	if (rc < 0)
 		pr_err("Failed to store XATTR stream name :%d\n", rc);
@@ -2299,7 +2423,11 @@ static noinline int smb2_set_stream_name_xattr(const struct path *path,
 
 static int smb2_remove_smb_xattrs(const struct path *path)
 {
+<<<<<<< HEAD
 	struct mnt_idmap *idmap = mnt_idmap(path->mnt);
+=======
+	struct user_namespace *user_ns = mnt_user_ns(path->mnt);
+>>>>>>> b7ba80a49124 (Commit)
 	char *name, *xattr_list = NULL;
 	ssize_t xattr_list_len;
 	int err = 0;
@@ -2319,7 +2447,11 @@ static int smb2_remove_smb_xattrs(const struct path *path)
 		if (!strncmp(name, XATTR_USER_PREFIX, XATTR_USER_PREFIX_LEN) &&
 		    !strncmp(&name[XATTR_USER_PREFIX_LEN], STREAM_PREFIX,
 			     STREAM_PREFIX_LEN)) {
+<<<<<<< HEAD
 			err = ksmbd_vfs_remove_xattr(idmap, path->dentry,
+=======
+			err = ksmbd_vfs_remove_xattr(user_ns, path->dentry,
+>>>>>>> b7ba80a49124 (Commit)
 						     name);
 			if (err)
 				ksmbd_debug(SMB, "remove xattr failed : %s\n",
@@ -2366,7 +2498,11 @@ static void smb2_new_xattrs(struct ksmbd_tree_connect *tcon, const struct path *
 	da.flags = XATTR_DOSINFO_ATTRIB | XATTR_DOSINFO_CREATE_TIME |
 		XATTR_DOSINFO_ITIME;
 
+<<<<<<< HEAD
 	rc = ksmbd_vfs_set_dos_attrib_xattr(mnt_idmap(path->mnt),
+=======
+	rc = ksmbd_vfs_set_dos_attrib_xattr(mnt_user_ns(path->mnt),
+>>>>>>> b7ba80a49124 (Commit)
 					    path->dentry, &da);
 	if (rc)
 		ksmbd_debug(SMB, "failed to store file attribute into xattr\n");
@@ -2385,7 +2521,11 @@ static void smb2_update_xattrs(struct ksmbd_tree_connect *tcon,
 				    KSMBD_SHARE_FLAG_STORE_DOS_ATTRS))
 		return;
 
+<<<<<<< HEAD
 	rc = ksmbd_vfs_get_dos_attrib_xattr(mnt_idmap(path->mnt),
+=======
+	rc = ksmbd_vfs_get_dos_attrib_xattr(mnt_user_ns(path->mnt),
+>>>>>>> b7ba80a49124 (Commit)
 					    path->dentry, &da);
 	if (rc > 0) {
 		fp->f_ci->m_fattr = cpu_to_le32(da.attr);
@@ -2460,11 +2600,19 @@ static int smb2_create_sd_buffer(struct ksmbd_work *work,
 }
 
 static void ksmbd_acls_fattr(struct smb_fattr *fattr,
+<<<<<<< HEAD
 			     struct mnt_idmap *idmap,
 			     struct inode *inode)
 {
 	vfsuid_t vfsuid = i_uid_into_vfsuid(idmap, inode);
 	vfsgid_t vfsgid = i_gid_into_vfsgid(idmap, inode);
+=======
+			     struct user_namespace *mnt_userns,
+			     struct inode *inode)
+{
+	vfsuid_t vfsuid = i_uid_into_vfsuid(mnt_userns, inode);
+	vfsgid_t vfsgid = i_gid_into_vfsgid(mnt_userns, inode);
+>>>>>>> b7ba80a49124 (Commit)
 
 	fattr->cf_uid = vfsuid_into_kuid(vfsuid);
 	fattr->cf_gid = vfsgid_into_kgid(vfsgid);
@@ -2473,9 +2621,15 @@ static void ksmbd_acls_fattr(struct smb_fattr *fattr,
 	fattr->cf_dacls = NULL;
 
 	if (IS_ENABLED(CONFIG_FS_POSIX_ACL)) {
+<<<<<<< HEAD
 		fattr->cf_acls = get_inode_acl(inode, ACL_TYPE_ACCESS);
 		if (S_ISDIR(inode->i_mode))
 			fattr->cf_dacls = get_inode_acl(inode, ACL_TYPE_DEFAULT);
+=======
+		fattr->cf_acls = get_acl(inode, ACL_TYPE_ACCESS);
+		if (S_ISDIR(inode->i_mode))
+			fattr->cf_dacls = get_acl(inode, ACL_TYPE_DEFAULT);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -2496,7 +2650,11 @@ int smb2_open(struct ksmbd_work *work)
 	struct ksmbd_share_config *share = tcon->share_conf;
 	struct ksmbd_file *fp = NULL;
 	struct file *filp = NULL;
+<<<<<<< HEAD
 	struct mnt_idmap *idmap = NULL;
+=======
+	struct user_namespace *user_ns = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	struct kstat stat;
 	struct create_context *context;
 	struct lease_ctx_info *lc = NULL;
@@ -2749,7 +2907,11 @@ int smb2_open(struct ksmbd_work *work)
 		rc = 0;
 	} else {
 		file_present = true;
+<<<<<<< HEAD
 		idmap = mnt_idmap(path.mnt);
+=======
+		user_ns = mnt_user_ns(path.mnt);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (stream_name) {
 		if (req->CreateOptions & FILE_DIRECTORY_FILE_LE) {
@@ -2812,7 +2974,11 @@ int smb2_open(struct ksmbd_work *work)
 		if (!file_present) {
 			daccess = cpu_to_le32(GENERIC_ALL_FLAGS);
 		} else {
+<<<<<<< HEAD
 			rc = ksmbd_vfs_query_maximal_access(idmap,
+=======
+			rc = ksmbd_vfs_query_maximal_access(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 							    path.dentry,
 							    &daccess);
 			if (rc)
@@ -2848,7 +3014,11 @@ int smb2_open(struct ksmbd_work *work)
 		}
 
 		created = true;
+<<<<<<< HEAD
 		idmap = mnt_idmap(path.mnt);
+=======
+		user_ns = mnt_user_ns(path.mnt);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ea_buf) {
 			if (le32_to_cpu(ea_buf->ccontext.DataLength) <
 			    sizeof(struct smb2_ea_info)) {
@@ -2870,7 +3040,11 @@ int smb2_open(struct ksmbd_work *work)
 		 * is already granted.
 		 */
 		if (daccess & ~(FILE_READ_ATTRIBUTES_LE | FILE_READ_CONTROL_LE)) {
+<<<<<<< HEAD
 			rc = inode_permission(idmap,
+=======
+			rc = inode_permission(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 					      d_inode(path.dentry),
 					      may_flags);
 			if (rc)
@@ -2878,7 +3052,11 @@ int smb2_open(struct ksmbd_work *work)
 
 			if ((daccess & FILE_DELETE_LE) ||
 			    (req->CreateOptions & FILE_DELETE_ON_CLOSE_LE)) {
+<<<<<<< HEAD
 				rc = ksmbd_vfs_may_delete(idmap,
+=======
+				rc = ksmbd_vfs_may_delete(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 							  path.dentry);
 				if (rc)
 					goto err_out;
@@ -2941,8 +3119,13 @@ int smb2_open(struct ksmbd_work *work)
 		int posix_acl_rc;
 		struct inode *inode = d_inode(path.dentry);
 
+<<<<<<< HEAD
 		posix_acl_rc = ksmbd_vfs_inherit_posix_acl(idmap,
 							   path.dentry,
+=======
+		posix_acl_rc = ksmbd_vfs_inherit_posix_acl(user_ns,
+							   inode,
+>>>>>>> b7ba80a49124 (Commit)
 							   d_inode(path.dentry->d_parent));
 		if (posix_acl_rc)
 			ksmbd_debug(SMB, "inherit posix acl failed : %d\n", posix_acl_rc);
@@ -2957,8 +3140,13 @@ int smb2_open(struct ksmbd_work *work)
 			rc = smb2_create_sd_buffer(work, req, &path);
 			if (rc) {
 				if (posix_acl_rc)
+<<<<<<< HEAD
 					ksmbd_vfs_set_init_posix_acl(idmap,
 								     path.dentry);
+=======
+					ksmbd_vfs_set_init_posix_acl(user_ns,
+								     inode);
+>>>>>>> b7ba80a49124 (Commit)
 
 				if (test_share_config_flag(work->tcon->share_conf,
 							   KSMBD_SHARE_FLAG_ACL_XATTR)) {
@@ -2966,7 +3154,11 @@ int smb2_open(struct ksmbd_work *work)
 					struct smb_ntsd *pntsd;
 					int pntsd_size, ace_num = 0;
 
+<<<<<<< HEAD
 					ksmbd_acls_fattr(&fattr, idmap, inode);
+=======
+					ksmbd_acls_fattr(&fattr, user_ns, inode);
+>>>>>>> b7ba80a49124 (Commit)
 					if (fattr.cf_acls)
 						ace_num = fattr.cf_acls->a_count;
 					if (fattr.cf_dacls)
@@ -2977,6 +3169,7 @@ int smb2_open(struct ksmbd_work *work)
 							sizeof(struct smb_acl) +
 							sizeof(struct smb_ace) * ace_num * 2,
 							GFP_KERNEL);
+<<<<<<< HEAD
 					if (!pntsd) {
 						posix_acl_release(fattr.cf_acls);
 						posix_acl_release(fattr.cf_dacls);
@@ -2984,6 +3177,12 @@ int smb2_open(struct ksmbd_work *work)
 					}
 
 					rc = build_sec_desc(idmap,
+=======
+					if (!pntsd)
+						goto err_out;
+
+					rc = build_sec_desc(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 							    pntsd, NULL, 0,
 							    OWNER_SECINFO |
 							    GROUP_SECINFO |
@@ -2997,7 +3196,11 @@ int smb2_open(struct ksmbd_work *work)
 					}
 
 					rc = ksmbd_vfs_set_sd_xattr(conn,
+<<<<<<< HEAD
 								    idmap,
+=======
+								    user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 								    path.dentry,
 								    pntsd,
 								    pntsd_size);
@@ -3193,7 +3396,11 @@ int smb2_open(struct ksmbd_work *work)
 		struct create_context *mxac_ccontext;
 
 		if (maximal_access == 0)
+<<<<<<< HEAD
 			ksmbd_vfs_query_maximal_access(idmap,
+=======
+			ksmbd_vfs_query_maximal_access(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 						       path.dentry,
 						       &maximal_access);
 		mxac_ccontext = (struct create_context *)(rsp->Buffer +
@@ -3427,7 +3634,11 @@ static int smb2_populate_readdir_entry(struct ksmbd_conn *conn, int info_level,
 		goto free_conv_name;
 	}
 
+<<<<<<< HEAD
 	struct_sz = readdir_info_level_struct_sz(info_level) + conv_len;
+=======
+	struct_sz = readdir_info_level_struct_sz(info_level) - 1 + conv_len;
+>>>>>>> b7ba80a49124 (Commit)
 	next_entry_offset = ALIGN(struct_sz, KSMBD_DIR_INFO_ALIGNMENT);
 	d_info->last_entry_off_align = next_entry_offset - struct_sz;
 
@@ -3554,13 +3765,18 @@ static int smb2_populate_readdir_entry(struct ksmbd_conn *conn, int info_level,
 		posix_info->AllocationSize = cpu_to_le64(ksmbd_kstat->kstat->blocks << 9);
 		posix_info->DeviceId = cpu_to_le32(ksmbd_kstat->kstat->rdev);
 		posix_info->HardLinks = cpu_to_le32(ksmbd_kstat->kstat->nlink);
+<<<<<<< HEAD
 		posix_info->Mode = cpu_to_le32(ksmbd_kstat->kstat->mode & 0777);
+=======
+		posix_info->Mode = cpu_to_le32(ksmbd_kstat->kstat->mode);
+>>>>>>> b7ba80a49124 (Commit)
 		posix_info->Inode = cpu_to_le64(ksmbd_kstat->kstat->ino);
 		posix_info->DosAttributes =
 			S_ISDIR(ksmbd_kstat->kstat->mode) ?
 				FILE_ATTRIBUTE_DIRECTORY_LE : FILE_ATTRIBUTE_ARCHIVE_LE;
 		if (d_info->hide_dot_file && d_info->name[0] == '.')
 			posix_info->DosAttributes |= FILE_ATTRIBUTE_HIDDEN_LE;
+<<<<<<< HEAD
 		/*
 		 * SidBuffer(32) contain two sids(Domain sid(16), UNIX group sid(16)).
 		 * UNIX sid(16) = revision(1) + num_subauth(1) + authority(6) +
@@ -3570,6 +3786,12 @@ static int smb2_populate_readdir_entry(struct ksmbd_conn *conn, int info_level,
 			  SIDUNIX_USER, (struct smb_sid *)&posix_info->SidBuffer[0]);
 		id_to_sid(from_kgid_munged(&init_user_ns, ksmbd_kstat->kstat->gid),
 			  SIDUNIX_GROUP, (struct smb_sid *)&posix_info->SidBuffer[16]);
+=======
+		id_to_sid(from_kuid_munged(&init_user_ns, ksmbd_kstat->kstat->uid),
+			  SIDNFS_USER, (struct smb_sid *)&posix_info->SidBuffer[0]);
+		id_to_sid(from_kgid_munged(&init_user_ns, ksmbd_kstat->kstat->gid),
+			  SIDNFS_GROUP, (struct smb_sid *)&posix_info->SidBuffer[20]);
+>>>>>>> b7ba80a49124 (Commit)
 		memcpy(posix_info->name, conv_name, conv_len);
 		posix_info->name_len = cpu_to_le32(conv_len);
 		posix_info->NextEntryOffset = cpu_to_le32(next_entry_offset);
@@ -3618,7 +3840,11 @@ static void unlock_dir(struct ksmbd_file *dir_fp)
 
 static int process_query_dir_entries(struct smb2_query_dir_private *priv)
 {
+<<<<<<< HEAD
 	struct mnt_idmap	*idmap = file_mnt_idmap(priv->dir_fp->filp);
+=======
+	struct user_namespace	*user_ns = file_mnt_user_ns(priv->dir_fp->filp);
+>>>>>>> b7ba80a49124 (Commit)
 	struct kstat		kstat;
 	struct ksmbd_kstat	ksmbd_kstat;
 	int			rc;
@@ -3631,7 +3857,11 @@ static int process_query_dir_entries(struct smb2_query_dir_private *priv)
 			return -EINVAL;
 
 		lock_dir(priv->dir_fp);
+<<<<<<< HEAD
 		dent = lookup_one(idmap, priv->d_info->name,
+=======
+		dent = lookup_one(user_ns, priv->d_info->name,
+>>>>>>> b7ba80a49124 (Commit)
 				  priv->dir_fp->filp->f_path.dentry,
 				  priv->d_info->name_len);
 		unlock_dir(priv->dir_fp);
@@ -3652,7 +3882,11 @@ static int process_query_dir_entries(struct smb2_query_dir_private *priv)
 		ksmbd_kstat.kstat = &kstat;
 		if (priv->info_level != FILE_NAMES_INFORMATION)
 			ksmbd_vfs_fill_dentry_attrs(priv->work,
+<<<<<<< HEAD
 						    idmap,
+=======
+						    user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 						    dent,
 						    &ksmbd_kstat);
 
@@ -3679,7 +3913,11 @@ static int reserve_populate_dentry(struct ksmbd_dir_info *d_info,
 		return -EOPNOTSUPP;
 
 	conv_len = (d_info->name_len + 1) * 2;
+<<<<<<< HEAD
 	next_entry_offset = ALIGN(struct_sz + conv_len,
+=======
+	next_entry_offset = ALIGN(struct_sz - 1 + conv_len,
+>>>>>>> b7ba80a49124 (Commit)
 				  KSMBD_DIR_INFO_ALIGNMENT);
 
 	if (next_entry_offset > d_info->out_buf_len) {
@@ -3882,7 +4120,11 @@ int smb2_query_dir(struct ksmbd_work *work)
 	}
 
 	if (!(dir_fp->daccess & FILE_LIST_DIRECTORY_LE) ||
+<<<<<<< HEAD
 	    inode_permission(file_mnt_idmap(dir_fp->filp),
+=======
+	    inode_permission(file_mnt_user_ns(dir_fp->filp),
+>>>>>>> b7ba80a49124 (Commit)
 			     file_inode(dir_fp->filp),
 			     MAY_READ | MAY_EXEC)) {
 		pr_err("no right to enumerate directory (%pD)\n", dir_fp->filp);
@@ -4148,7 +4390,11 @@ static int smb2_get_ea(struct ksmbd_work *work, struct ksmbd_file *fp,
 	ssize_t buf_free_len, alignment_bytes, next_offset, rsp_data_cnt = 0;
 	struct smb2_ea_info_req *ea_req = NULL;
 	const struct path *path;
+<<<<<<< HEAD
 	struct mnt_idmap *idmap = file_mnt_idmap(fp->filp);
+=======
+	struct user_namespace *user_ns = file_mnt_user_ns(fp->filp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!(fp->daccess & FILE_READ_EA_LE)) {
 		pr_err("Not permitted to read ext attr : 0x%x\n",
@@ -4228,7 +4474,11 @@ static int smb2_get_ea(struct ksmbd_work *work, struct ksmbd_file *fp,
 		buf_free_len -= (offsetof(struct smb2_ea_info, name) +
 				name_len + 1);
 		/* bailout if xattr can't fit in buf_free_len */
+<<<<<<< HEAD
 		value_len = ksmbd_vfs_getxattr(idmap, path->dentry,
+=======
+		value_len = ksmbd_vfs_getxattr(user_ns, path->dentry,
+>>>>>>> b7ba80a49124 (Commit)
 					       name, &buf);
 		if (value_len <= 0) {
 			rc = -ENOENT;
@@ -4318,7 +4568,11 @@ static int get_file_basic_info(struct smb2_query_info_rsp *rsp,
 	}
 
 	basic_info = (struct smb2_file_basic_info *)rsp->Buffer;
+<<<<<<< HEAD
 	generic_fillattr(file_mnt_idmap(fp->filp), file_inode(fp->filp),
+=======
+	generic_fillattr(file_mnt_user_ns(fp->filp), file_inode(fp->filp),
+>>>>>>> b7ba80a49124 (Commit)
 			 &stat);
 	basic_info->CreationTime = cpu_to_le64(fp->create_time);
 	time = ksmbd_UnixTimeToNT(stat.atime);
@@ -4359,7 +4613,11 @@ static void get_file_standard_info(struct smb2_query_info_rsp *rsp,
 	struct kstat stat;
 
 	inode = file_inode(fp->filp);
+<<<<<<< HEAD
 	generic_fillattr(file_mnt_idmap(fp->filp), inode, &stat);
+=======
+	generic_fillattr(file_mnt_user_ns(fp->filp), inode, &stat);
+>>>>>>> b7ba80a49124 (Commit)
 
 	sinfo = (struct smb2_file_standard_info *)rsp->Buffer;
 	delete_pending = ksmbd_inode_pending_delete(fp);
@@ -4413,7 +4671,11 @@ static int get_file_all_info(struct ksmbd_work *work,
 		return PTR_ERR(filename);
 
 	inode = file_inode(fp->filp);
+<<<<<<< HEAD
 	generic_fillattr(file_mnt_idmap(fp->filp), inode, &stat);
+=======
+	generic_fillattr(file_mnt_user_ns(fp->filp), inode, &stat);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ksmbd_debug(SMB, "filename = %s\n", filename);
 	delete_pending = ksmbd_inode_pending_delete(fp);
@@ -4490,7 +4752,11 @@ static void get_file_stream_info(struct ksmbd_work *work,
 	int buf_free_len;
 	struct smb2_query_info_req *req = ksmbd_req_buf_next(work);
 
+<<<<<<< HEAD
 	generic_fillattr(file_mnt_idmap(fp->filp), file_inode(fp->filp),
+=======
+	generic_fillattr(file_mnt_user_ns(fp->filp), file_inode(fp->filp),
+>>>>>>> b7ba80a49124 (Commit)
 			 &stat);
 	file_info = (struct smb2_file_stream_info *)rsp->Buffer;
 
@@ -4581,7 +4847,11 @@ static void get_file_internal_info(struct smb2_query_info_rsp *rsp,
 	struct smb2_file_internal_info *file_info;
 	struct kstat stat;
 
+<<<<<<< HEAD
 	generic_fillattr(file_mnt_idmap(fp->filp), file_inode(fp->filp),
+=======
+	generic_fillattr(file_mnt_user_ns(fp->filp), file_inode(fp->filp),
+>>>>>>> b7ba80a49124 (Commit)
 			 &stat);
 	file_info = (struct smb2_file_internal_info *)rsp->Buffer;
 	file_info->IndexNumber = cpu_to_le64(stat.ino);
@@ -4607,7 +4877,11 @@ static int get_file_network_open_info(struct smb2_query_info_rsp *rsp,
 	file_info = (struct smb2_file_ntwrk_info *)rsp->Buffer;
 
 	inode = file_inode(fp->filp);
+<<<<<<< HEAD
 	generic_fillattr(file_mnt_idmap(fp->filp), inode, &stat);
+=======
+	generic_fillattr(file_mnt_user_ns(fp->filp), inode, &stat);
+>>>>>>> b7ba80a49124 (Commit)
 
 	file_info->CreationTime = cpu_to_le64(fp->create_time);
 	time = ksmbd_UnixTimeToNT(stat.atime);
@@ -4668,7 +4942,11 @@ static void get_file_compression_info(struct smb2_query_info_rsp *rsp,
 	struct smb2_file_comp_info *file_info;
 	struct kstat stat;
 
+<<<<<<< HEAD
 	generic_fillattr(file_mnt_idmap(fp->filp), file_inode(fp->filp),
+=======
+	generic_fillattr(file_mnt_user_ns(fp->filp), file_inode(fp->filp),
+>>>>>>> b7ba80a49124 (Commit)
 			 &stat);
 
 	file_info = (struct smb2_file_comp_info *)rsp->Buffer;
@@ -4709,11 +4987,15 @@ static int find_file_posix_info(struct smb2_query_info_rsp *rsp,
 {
 	struct smb311_posix_qinfo *file_info;
 	struct inode *inode = file_inode(fp->filp);
+<<<<<<< HEAD
 	struct mnt_idmap *idmap = file_mnt_idmap(fp->filp);
 	vfsuid_t vfsuid = i_uid_into_vfsuid(idmap, inode);
 	vfsgid_t vfsgid = i_gid_into_vfsgid(idmap, inode);
 	u64 time;
 	int out_buf_len = sizeof(struct smb311_posix_qinfo) + 32;
+=======
+	u64 time;
+>>>>>>> b7ba80a49124 (Commit)
 
 	file_info = (struct smb311_posix_qinfo *)rsp->Buffer;
 	file_info->CreationTime = cpu_to_le64(fp->create_time);
@@ -4728,6 +5010,7 @@ static int find_file_posix_info(struct smb2_query_info_rsp *rsp,
 	file_info->EndOfFile = cpu_to_le64(inode->i_size);
 	file_info->AllocationSize = cpu_to_le64(inode->i_blocks << 9);
 	file_info->HardLinks = cpu_to_le32(inode->i_nlink);
+<<<<<<< HEAD
 	file_info->Mode = cpu_to_le32(inode->i_mode & 0777);
 	file_info->DeviceId = cpu_to_le32(inode->i_rdev);
 
@@ -4744,6 +5027,14 @@ static int find_file_posix_info(struct smb2_query_info_rsp *rsp,
 	rsp->OutputBufferLength = cpu_to_le32(out_buf_len);
 	inc_rfc1001_len(rsp_org, out_buf_len);
 	return out_buf_len;
+=======
+	file_info->Mode = cpu_to_le32(inode->i_mode);
+	file_info->DeviceId = cpu_to_le32(inode->i_rdev);
+	rsp->OutputBufferLength =
+		cpu_to_le32(sizeof(struct smb311_posix_qinfo));
+	inc_rfc1001_len(rsp_org, sizeof(struct smb311_posix_qinfo));
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int smb2_get_info_file(struct ksmbd_work *work,
@@ -4863,8 +5154,13 @@ static int smb2_get_info_file(struct ksmbd_work *work,
 			pr_err("client doesn't negotiate with SMB3.1.1 POSIX Extensions\n");
 			rc = -EOPNOTSUPP;
 		} else {
+<<<<<<< HEAD
 			file_infoclass_size = find_file_posix_info(rsp, fp,
 					work->response_buf);
+=======
+			rc = find_file_posix_info(rsp, fp, work->response_buf);
+			file_infoclass_size = sizeof(struct smb311_posix_qinfo);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		break;
 	default:
@@ -4937,10 +5233,13 @@ static int smb2_get_info_filesystem(struct ksmbd_work *work,
 
 		info->Attributes |= cpu_to_le32(server_conf.share_fake_fscaps);
 
+<<<<<<< HEAD
 		if (test_share_config_flag(work->tcon->share_conf,
 		    KSMBD_SHARE_FLAG_STREAMS))
 			info->Attributes |= cpu_to_le32(FILE_NAMED_STREAMS);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		info->MaxPathNameComponentLength = cpu_to_le32(stfs.f_namelen);
 		len = smbConvertToUTF16((__le16 *)info->FileSystemName,
 					"NTFS", PATH_MAX, conn->local_nls, 0);
@@ -5115,7 +5414,11 @@ static int smb2_get_info_sec(struct ksmbd_work *work,
 			     struct smb2_query_info_rsp *rsp)
 {
 	struct ksmbd_file *fp;
+<<<<<<< HEAD
 	struct mnt_idmap *idmap;
+=======
+	struct user_namespace *user_ns;
+>>>>>>> b7ba80a49124 (Commit)
 	struct smb_ntsd *pntsd = (struct smb_ntsd *)rsp->Buffer, *ppntsd = NULL;
 	struct smb_fattr fattr = {{0}};
 	struct inode *inode;
@@ -5162,6 +5465,7 @@ static int smb2_get_info_sec(struct ksmbd_work *work,
 	if (!fp)
 		return -ENOENT;
 
+<<<<<<< HEAD
 	idmap = file_mnt_idmap(fp->filp);
 	inode = file_inode(fp->filp);
 	ksmbd_acls_fattr(&fattr, idmap, inode);
@@ -5169,12 +5473,25 @@ static int smb2_get_info_sec(struct ksmbd_work *work,
 	if (test_share_config_flag(work->tcon->share_conf,
 				   KSMBD_SHARE_FLAG_ACL_XATTR))
 		ppntsd_size = ksmbd_vfs_get_sd_xattr(work->conn, idmap,
+=======
+	user_ns = file_mnt_user_ns(fp->filp);
+	inode = file_inode(fp->filp);
+	ksmbd_acls_fattr(&fattr, user_ns, inode);
+
+	if (test_share_config_flag(work->tcon->share_conf,
+				   KSMBD_SHARE_FLAG_ACL_XATTR))
+		ppntsd_size = ksmbd_vfs_get_sd_xattr(work->conn, user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 						     fp->filp->f_path.dentry,
 						     &ppntsd);
 
 	/* Check if sd buffer size exceeds response buffer size */
 	if (smb2_resp_buf_len(work, 8) > ppntsd_size)
+<<<<<<< HEAD
 		rc = build_sec_desc(idmap, pntsd, ppntsd, ppntsd_size,
+=======
+		rc = build_sec_desc(user_ns, pntsd, ppntsd, ppntsd_size,
+>>>>>>> b7ba80a49124 (Commit)
 				    addition_info, &secdesclen, &fattr);
 	posix_acl_release(fattr.cf_acls);
 	posix_acl_release(fattr.cf_dacls);
@@ -5404,7 +5721,11 @@ int smb2_echo(struct ksmbd_work *work)
 
 static int smb2_rename(struct ksmbd_work *work,
 		       struct ksmbd_file *fp,
+<<<<<<< HEAD
 		       struct mnt_idmap *idmap,
+=======
+		       struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct smb2_file_rename_info *file_info,
 		       struct nls_table *local_nls)
 {
@@ -5467,7 +5788,11 @@ static int smb2_rename(struct ksmbd_work *work,
 		if (rc)
 			goto out;
 
+<<<<<<< HEAD
 		rc = ksmbd_vfs_setxattr(idmap,
+=======
+		rc = ksmbd_vfs_setxattr(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 					fp->filp->f_path.dentry,
 					xattr_stream_name,
 					NULL, 0, 0);
@@ -5606,7 +5931,11 @@ static int set_file_basic_info(struct ksmbd_file *fp,
 	struct iattr attrs;
 	struct file *filp;
 	struct inode *inode;
+<<<<<<< HEAD
 	struct mnt_idmap *idmap;
+=======
+	struct user_namespace *user_ns;
+>>>>>>> b7ba80a49124 (Commit)
 	int rc = 0;
 
 	if (!(fp->daccess & FILE_WRITE_ATTRIBUTES_LE))
@@ -5615,7 +5944,11 @@ static int set_file_basic_info(struct ksmbd_file *fp,
 	attrs.ia_valid = 0;
 	filp = fp->filp;
 	inode = file_inode(filp);
+<<<<<<< HEAD
 	idmap = file_mnt_idmap(filp);
+=======
+	user_ns = file_mnt_user_ns(filp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (file_info->CreationTime)
 		fp->create_time = le64_to_cpu(file_info->CreationTime);
@@ -5659,7 +5992,11 @@ static int set_file_basic_info(struct ksmbd_file *fp,
 		da.flags = XATTR_DOSINFO_ATTRIB | XATTR_DOSINFO_CREATE_TIME |
 			XATTR_DOSINFO_ITIME;
 
+<<<<<<< HEAD
 		rc = ksmbd_vfs_set_dos_attrib_xattr(idmap,
+=======
+		rc = ksmbd_vfs_set_dos_attrib_xattr(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 						    filp->f_path.dentry, &da);
 		if (rc)
 			ksmbd_debug(SMB,
@@ -5677,7 +6014,11 @@ static int set_file_basic_info(struct ksmbd_file *fp,
 		inode_lock(inode);
 		inode->i_ctime = attrs.ia_ctime;
 		attrs.ia_valid &= ~ATTR_CTIME;
+<<<<<<< HEAD
 		rc = notify_change(idmap, dentry, &attrs, NULL);
+=======
+		rc = notify_change(user_ns, dentry, &attrs, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		inode_unlock(inode);
 	}
 	return rc;
@@ -5770,7 +6111,11 @@ static int set_rename_info(struct ksmbd_work *work, struct ksmbd_file *fp,
 			   struct smb2_file_rename_info *rename_info,
 			   unsigned int buf_len)
 {
+<<<<<<< HEAD
 	struct mnt_idmap *idmap;
+=======
+	struct user_namespace *user_ns;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ksmbd_file *parent_fp;
 	struct dentry *parent;
 	struct dentry *dentry = fp->filp->f_path.dentry;
@@ -5785,12 +6130,20 @@ static int set_rename_info(struct ksmbd_work *work, struct ksmbd_file *fp,
 			le32_to_cpu(rename_info->FileNameLength))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	idmap = file_mnt_idmap(fp->filp);
+=======
+	user_ns = file_mnt_user_ns(fp->filp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ksmbd_stream_fd(fp))
 		goto next;
 
 	parent = dget_parent(dentry);
+<<<<<<< HEAD
 	ret = ksmbd_vfs_lock_parent(idmap, parent, dentry);
+=======
+	ret = ksmbd_vfs_lock_parent(user_ns, parent, dentry);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dput(parent);
 		return ret;
@@ -5809,7 +6162,11 @@ static int set_rename_info(struct ksmbd_work *work, struct ksmbd_file *fp,
 		ksmbd_fd_put(work, parent_fp);
 	}
 next:
+<<<<<<< HEAD
 	return smb2_rename(work, fp, idmap, rename_info,
+=======
+	return smb2_rename(work, fp, user_ns, rename_info,
+>>>>>>> b7ba80a49124 (Commit)
 			   work->conn->local_nls);
 }
 
@@ -6632,7 +6989,11 @@ int smb2_cancel(struct ksmbd_work *work)
 	struct ksmbd_conn *conn = work->conn;
 	struct smb2_hdr *hdr = smb2_get_msg(work->request_buf);
 	struct smb2_hdr *chdr;
+<<<<<<< HEAD
 	struct ksmbd_work *iter;
+=======
+	struct ksmbd_work *cancel_work = NULL, *iter;
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head *command_list;
 
 	ksmbd_debug(SMB, "smb2 cancel called on mid %llu, async flags 0x%x\n",
@@ -6654,9 +7015,13 @@ int smb2_cancel(struct ksmbd_work *work)
 				    "smb2 with AsyncId %llu cancelled command = 0x%x\n",
 				    le64_to_cpu(hdr->Id.AsyncId),
 				    le16_to_cpu(chdr->Command));
+<<<<<<< HEAD
 			iter->state = KSMBD_WORK_CANCELLED;
 			if (iter->cancel_fn)
 				iter->cancel_fn(iter->cancel_argv);
+=======
+			cancel_work = iter;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 		spin_unlock(&conn->request_lock);
@@ -6675,12 +7040,25 @@ int smb2_cancel(struct ksmbd_work *work)
 				    "smb2 with mid %llu cancelled command = 0x%x\n",
 				    le64_to_cpu(hdr->MessageId),
 				    le16_to_cpu(chdr->Command));
+<<<<<<< HEAD
 			iter->state = KSMBD_WORK_CANCELLED;
+=======
+			cancel_work = iter;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 		spin_unlock(&conn->request_lock);
 	}
 
+<<<<<<< HEAD
+=======
+	if (cancel_work) {
+		cancel_work->state = KSMBD_WORK_CANCELLED;
+		if (cancel_work->cancel_fn)
+			cancel_work->cancel_fn(cancel_work->cancel_argv);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* For SMB2_CANCEL command itself send no response*/
 	work->send_no_response = 1;
 	return 0;
@@ -6740,7 +7118,11 @@ static int smb2_set_flock_flags(struct file_lock *flock, int flags)
 	case SMB2_LOCKFLAG_UNLOCK:
 		ksmbd_debug(SMB, "received unlock request\n");
 		flock->fl_type = F_UNLCK;
+<<<<<<< HEAD
 		cmd = F_SETLK;
+=======
+		cmd = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -6844,7 +7226,10 @@ int smb2_lock(struct ksmbd_work *work)
 		if (lock_start > U64_MAX - lock_length) {
 			pr_err("Invalid lock range requested\n");
 			rsp->hdr.Status = STATUS_INVALID_LOCK_RANGE;
+<<<<<<< HEAD
 			locks_free_lock(flock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 		}
 
@@ -6864,7 +7249,10 @@ int smb2_lock(struct ksmbd_work *work)
 				    "the end offset(%llx) is smaller than the start offset(%llx)\n",
 				    flock->fl_end, flock->fl_start);
 			rsp->hdr.Status = STATUS_INVALID_LOCK_RANGE;
+<<<<<<< HEAD
 			locks_free_lock(flock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 		}
 
@@ -6876,7 +7264,10 @@ int smb2_lock(struct ksmbd_work *work)
 				    flock->fl_type != F_UNLCK) {
 					pr_err("conflict two locks in one request\n");
 					err = -EINVAL;
+<<<<<<< HEAD
 					locks_free_lock(flock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 					goto out;
 				}
 			}
@@ -6885,7 +7276,10 @@ int smb2_lock(struct ksmbd_work *work)
 		smb_lock = smb2_lock_init(flock, cmd, flags, &lock_list);
 		if (!smb_lock) {
 			err = -EINVAL;
+<<<<<<< HEAD
 			locks_free_lock(flock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 		}
 	}
@@ -7045,6 +7439,7 @@ skip:
 
 				ksmbd_vfs_posix_lock_wait(flock);
 
+<<<<<<< HEAD
 				spin_lock(&work->conn->request_lock);
 				spin_lock(&fp->f_lock);
 				list_del(&work->fp_entry);
@@ -7053,6 +7448,8 @@ skip:
 				spin_unlock(&fp->f_lock);
 				spin_unlock(&work->conn->request_lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				if (work->state != KSMBD_WORK_ACTIVE) {
 					list_del(&smb_lock->llist);
 					spin_lock(&work->conn->llist_lock);
@@ -7061,6 +7458,12 @@ skip:
 					locks_free_lock(flock);
 
 					if (work->state == KSMBD_WORK_CANCELLED) {
+<<<<<<< HEAD
+=======
+						spin_lock(&fp->f_lock);
+						list_del(&work->fp_entry);
+						spin_unlock(&fp->f_lock);
+>>>>>>> b7ba80a49124 (Commit)
 						rsp->hdr.Status =
 							STATUS_CANCELLED;
 						kfree(smb_lock);
@@ -7082,6 +7485,12 @@ skip:
 				list_del(&smb_lock->clist);
 				spin_unlock(&work->conn->llist_lock);
 
+<<<<<<< HEAD
+=======
+				spin_lock(&fp->f_lock);
+				list_del(&work->fp_entry);
+				spin_unlock(&fp->f_lock);
+>>>>>>> b7ba80a49124 (Commit)
 				goto retry;
 			} else if (!rc) {
 				spin_lock(&work->conn->llist_lock);
@@ -7124,7 +7533,11 @@ out:
 		rlock->fl_start = smb_lock->start;
 		rlock->fl_end = smb_lock->end;
 
+<<<<<<< HEAD
 		rc = vfs_lock_file(filp, F_SETLK, rlock, NULL);
+=======
+		rc = vfs_lock_file(filp, 0, rlock, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rc)
 			pr_err("rollback unlock fail : %d\n", rc);
 
@@ -7451,16 +7864,25 @@ static int fsctl_query_allocated_ranges(struct ksmbd_work *work, u64 id,
 	if (in_count == 0)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	start = le64_to_cpu(qar_req->file_offset);
 	length = le64_to_cpu(qar_req->length);
 
 	if (start < 0 || length < 0)
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	fp = ksmbd_lookup_fd_fast(work, id);
 	if (!fp)
 		return -ENOENT;
 
+<<<<<<< HEAD
+=======
+	start = le64_to_cpu(qar_req->file_offset);
+	length = le64_to_cpu(qar_req->length);
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ksmbd_vfs_fqar_lseek(fp, start, length,
 				   qar_rsp, in_count, out_count);
 	if (ret && ret != -E2BIG)
@@ -7519,14 +7941,22 @@ static inline int fsctl_set_sparse(struct ksmbd_work *work, u64 id,
 				   struct file_sparse *sparse)
 {
 	struct ksmbd_file *fp;
+<<<<<<< HEAD
 	struct mnt_idmap *idmap;
+=======
+	struct user_namespace *user_ns;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 	__le32 old_fattr;
 
 	fp = ksmbd_lookup_fd_fast(work, id);
 	if (!fp)
 		return -ENOENT;
+<<<<<<< HEAD
 	idmap = file_mnt_idmap(fp->filp);
+=======
+	user_ns = file_mnt_user_ns(fp->filp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	old_fattr = fp->f_ci->m_fattr;
 	if (sparse->SetSparse)
@@ -7539,13 +7969,21 @@ static inline int fsctl_set_sparse(struct ksmbd_work *work, u64 id,
 				   KSMBD_SHARE_FLAG_STORE_DOS_ATTRS)) {
 		struct xattr_dos_attrib da;
 
+<<<<<<< HEAD
 		ret = ksmbd_vfs_get_dos_attrib_xattr(idmap,
+=======
+		ret = ksmbd_vfs_get_dos_attrib_xattr(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 						     fp->filp->f_path.dentry, &da);
 		if (ret <= 0)
 			goto out;
 
 		da.attr = le32_to_cpu(fp->f_ci->m_fattr);
+<<<<<<< HEAD
 		ret = ksmbd_vfs_set_dos_attrib_xattr(idmap,
+=======
+		ret = ksmbd_vfs_set_dos_attrib_xattr(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 						     fp->filp->f_path.dentry, &da);
 		if (ret)
 			fp->f_ci->m_fattr = old_fattr;
@@ -7655,6 +8093,7 @@ int smb2_ioctl(struct ksmbd_work *work)
 			goto out;
 		}
 
+<<<<<<< HEAD
 		if (in_buf_len < offsetof(struct validate_negotiate_info_req,
 					  Dialects)) {
 			ret = -EINVAL;
@@ -7665,6 +8104,13 @@ int smb2_ioctl(struct ksmbd_work *work)
 			ret = -EINVAL;
 			goto out;
 		}
+=======
+		if (in_buf_len < sizeof(struct validate_negotiate_info_req))
+			return -EINVAL;
+
+		if (out_buf_len < sizeof(struct validate_negotiate_info_rsp))
+			return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 		ret = fsctl_validate_negotiate_info(conn,
 			(struct validate_negotiate_info_req *)&req->Buffer[0],
@@ -7761,7 +8207,11 @@ int smb2_ioctl(struct ksmbd_work *work)
 
 		off = le64_to_cpu(zero_data->FileOffset);
 		bfz = le64_to_cpu(zero_data->BeyondFinalZero);
+<<<<<<< HEAD
 		if (off < 0 || bfz < 0 || off > bfz) {
+=======
+		if (off > bfz) {
+>>>>>>> b7ba80a49124 (Commit)
 			ret = -EINVAL;
 			goto out;
 		}
@@ -8398,11 +8848,22 @@ int smb3_check_sign_req(struct ksmbd_work *work)
 	if (le16_to_cpu(hdr->Command) == SMB2_SESSION_SETUP_HE) {
 		signing_key = work->sess->smb3signingkey;
 	} else {
+<<<<<<< HEAD
 		chann = lookup_chann_list(work->sess, conn);
 		if (!chann) {
 			return 0;
 		}
 		signing_key = chann->smb3signingkey;
+=======
+		read_lock(&work->sess->chann_lock);
+		chann = lookup_chann_list(work->sess, conn);
+		if (!chann) {
+			read_unlock(&work->sess->chann_lock);
+			return 0;
+		}
+		signing_key = chann->smb3signingkey;
+		read_unlock(&work->sess->chann_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (!signing_key) {
@@ -8462,11 +8923,22 @@ void smb3_set_sign_rsp(struct ksmbd_work *work)
 	    le16_to_cpu(hdr->Command) == SMB2_SESSION_SETUP_HE) {
 		signing_key = work->sess->smb3signingkey;
 	} else {
+<<<<<<< HEAD
 		chann = lookup_chann_list(work->sess, work->conn);
 		if (!chann) {
 			return;
 		}
 		signing_key = chann->smb3signingkey;
+=======
+		read_lock(&work->sess->chann_lock);
+		chann = lookup_chann_list(work->sess, work->conn);
+		if (!chann) {
+			read_unlock(&work->sess->chann_lock);
+			return;
+		}
+		signing_key = chann->smb3signingkey;
+		read_unlock(&work->sess->chann_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (!signing_key)
@@ -8584,7 +9056,11 @@ int smb3_encrypt_resp(struct ksmbd_work *work)
 	buf_size += iov[1].iov_len;
 	work->resp_hdr_sz = iov[1].iov_len;
 
+<<<<<<< HEAD
 	rc = ksmbd_crypt_message(work, iov, rq_nvec, 1);
+=======
+	rc = ksmbd_crypt_message(work->conn, iov, rq_nvec, 1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 
@@ -8603,6 +9079,10 @@ bool smb3_is_transform_hdr(void *buf)
 
 int smb3_decrypt_req(struct ksmbd_work *work)
 {
+<<<<<<< HEAD
+=======
+	struct ksmbd_conn *conn = work->conn;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ksmbd_session *sess;
 	char *buf = work->request_buf;
 	unsigned int pdu_length = get_rfc1002_len(buf);
@@ -8622,7 +9102,11 @@ int smb3_decrypt_req(struct ksmbd_work *work)
 		return -ECONNABORTED;
 	}
 
+<<<<<<< HEAD
 	sess = ksmbd_session_lookup_all(work->conn, le64_to_cpu(tr_hdr->SessionId));
+=======
+	sess = ksmbd_session_lookup_all(conn, le64_to_cpu(tr_hdr->SessionId));
+>>>>>>> b7ba80a49124 (Commit)
 	if (!sess) {
 		pr_err("invalid session id(%llx) in transform header\n",
 		       le64_to_cpu(tr_hdr->SessionId));
@@ -8633,7 +9117,11 @@ int smb3_decrypt_req(struct ksmbd_work *work)
 	iov[0].iov_len = sizeof(struct smb2_transform_hdr) + 4;
 	iov[1].iov_base = buf + sizeof(struct smb2_transform_hdr) + 4;
 	iov[1].iov_len = buf_data_size;
+<<<<<<< HEAD
 	rc = ksmbd_crypt_message(work, iov, 2, 0);
+=======
+	rc = ksmbd_crypt_message(conn, iov, 2, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 
@@ -8646,7 +9134,10 @@ int smb3_decrypt_req(struct ksmbd_work *work)
 bool smb3_11_final_sess_setup_resp(struct ksmbd_work *work)
 {
 	struct ksmbd_conn *conn = work->conn;
+<<<<<<< HEAD
 	struct ksmbd_session *sess = work->sess;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct smb2_hdr *rsp = smb2_get_msg(work->response_buf);
 
 	if (conn->dialect < SMB30_PROT_ID)
@@ -8656,7 +9147,10 @@ bool smb3_11_final_sess_setup_resp(struct ksmbd_work *work)
 		rsp = ksmbd_resp_buf_next(work);
 
 	if (le16_to_cpu(rsp->Command) == SMB2_SESSION_SETUP_HE &&
+<<<<<<< HEAD
 	    sess->user && !user_guest(sess->user) &&
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	    rsp->Status == STATUS_SUCCESS)
 		return true;
 	return false;

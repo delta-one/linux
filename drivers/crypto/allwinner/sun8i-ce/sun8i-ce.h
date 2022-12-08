@@ -105,7 +105,11 @@
 
 #define MAX_SG 8
 
+<<<<<<< HEAD
 #define CE_MAX_CLOCKS 4
+=======
+#define CE_MAX_CLOCKS 3
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MAXFLOW 4
 

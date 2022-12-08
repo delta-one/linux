@@ -1,19 +1,28 @@
 // SPDX-License-Identifier: GPL-2.0+
 /*
+<<<<<<< HEAD
  * maple_tree.c: Userspace testing for maple tree test-suite
  * Copyright (c) 2018-2022 Oracle Corporation
  * Author: Liam R. Howlett <Liam.Howlett@Oracle.com>
  *
  * Any tests that require internal knowledge of the tree or threads and other
  * difficult to handle in kernel tests.
+=======
+ * maple_tree.c: Userspace shim for maple tree test-suite
+ * Copyright (c) 2018 Liam R. Howlett <Liam.Howlett@Oracle.com>
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #define CONFIG_DEBUG_MAPLE_TREE
 #define CONFIG_MAPLE_SEARCH
+<<<<<<< HEAD
 #define MAPLE_32BIT (MAPLE_NODE_SLOTS > 31)
 #include "test.h"
 #include <stdlib.h>
 #include <time.h>
+=======
+#include "test.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define module_init(x)
 #define module_exit(x)
@@ -25,6 +34,7 @@
 #undef CONFIG_DEBUG_MAPLE_TREE
 #include "../../../lib/test_maple_tree.c"
 
+<<<<<<< HEAD
 #define RCU_RANGE_COUNT 1000
 #define RCU_MT_BUG_ON(test, y) {if (y) { test->stop = true; } MT_BUG_ON(test->mt, y); }
 
@@ -35751,6 +35761,8 @@ static noinline void check_locky(struct maple_tree *mt)
 
 extern void test_kmem_cache_bulk(void);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void farmer_tests(void)
 {
 	struct maple_node *node;
@@ -35771,6 +35783,7 @@ void farmer_tests(void)
 	tree.ma_root = mt_mk_node(node, maple_leaf_64);
 	mt_dump(&tree);
 
+<<<<<<< HEAD
 	node->parent = ma_parent_ptr(node);
 	ma_free_rcu(node);
 
@@ -35826,6 +35839,9 @@ void farmer_tests(void)
 
 	/* No memory handling */
 	check_nomem(&tree);
+=======
+	ma_free_rcu(node);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void maple_tree_tests(void)

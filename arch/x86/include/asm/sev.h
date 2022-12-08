@@ -9,8 +9,11 @@
 #define __ASM_ENCRYPTED_STATE_H
 
 #include <linux/types.h>
+<<<<<<< HEAD
 #include <linux/sev-guest.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/insn.h>
 #include <asm/sev-common.h>
 #include <asm/bootparam.h>
@@ -187,9 +190,12 @@ static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate)
 
 	return rc;
 }
+<<<<<<< HEAD
 
 struct snp_guest_request_ioctl;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void setup_ghcb(void);
 void __init early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
 					 unsigned int npages);
@@ -201,7 +207,11 @@ void snp_set_memory_private(unsigned long vaddr, unsigned int npages);
 void snp_set_wakeup_secondary_cpu(void);
 bool snp_init(struct boot_params *bp);
 void __init __noreturn snp_abort(void);
+<<<<<<< HEAD
 int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input, struct snp_guest_request_ioctl *rio);
+=======
+int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input, unsigned long *fw_err);
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline void sev_es_ist_enter(struct pt_regs *regs) { }
 static inline void sev_es_ist_exit(void) { }
@@ -221,7 +231,12 @@ static inline void snp_set_memory_private(unsigned long vaddr, unsigned int npag
 static inline void snp_set_wakeup_secondary_cpu(void) { }
 static inline bool snp_init(struct boot_params *bp) { return false; }
 static inline void snp_abort(void) { }
+<<<<<<< HEAD
 static inline int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input, struct snp_guest_request_ioctl *rio)
+=======
+static inline int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input,
+					  unsigned long *fw_err)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return -ENOTTY;
 }

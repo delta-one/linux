@@ -40,7 +40,11 @@ bool within_error_injection_list(unsigned long addr)
 int get_injectable_error_type(unsigned long addr)
 {
 	struct ei_entry *ent;
+<<<<<<< HEAD
 	int ei_type = -EINVAL;
+=======
+	int ei_type = EI_ETYPE_NONE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&ei_mutex);
 	list_for_each_entry(ent, &error_injection_list, list) {

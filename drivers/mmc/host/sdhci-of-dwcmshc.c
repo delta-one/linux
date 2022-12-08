@@ -48,7 +48,10 @@
 #define DWCMSHC_EMMC_DLL_RXCLK_SRCSEL	29
 #define DWCMSHC_EMMC_DLL_START_POINT	16
 #define DWCMSHC_EMMC_DLL_INC		8
+<<<<<<< HEAD
 #define DWCMSHC_EMMC_DLL_BYPASS		BIT(24)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DWCMSHC_EMMC_DLL_DLYENA		BIT(27)
 #define DLL_TXCLK_TAPNUM_DEFAULT	0x10
 #define DLL_TXCLK_TAPNUM_90_DEGREES	0xA
@@ -61,7 +64,10 @@
 #define DLL_RXCLK_NO_INVERTER		1
 #define DLL_RXCLK_INVERTER		0
 #define DLL_CMDOUT_TAPNUM_90_DEGREES	0x8
+<<<<<<< HEAD
 #define DLL_RXCLK_ORI_GATE		BIT(31)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DLL_CMDOUT_TAPNUM_FROM_SW	BIT(24)
 #define DLL_CMDOUT_SRC_CLK_NEG		BIT(28)
 #define DLL_CMDOUT_EN_SRC_CLK_NEG	BIT(29)
@@ -126,6 +132,7 @@ static unsigned int dwcmshc_get_max_clock(struct sdhci_host *host)
 		return pltfm_host->clock;
 }
 
+<<<<<<< HEAD
 static unsigned int rk35xx_get_max_clock(struct sdhci_host *host)
 {
 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
@@ -133,6 +140,8 @@ static unsigned int rk35xx_get_max_clock(struct sdhci_host *host)
 	return clk_round_rate(pltfm_host->clk, ULONG_MAX);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void dwcmshc_check_auto_cmd23(struct mmc_host *mmc,
 				     struct mmc_request *mrq)
 {
@@ -243,12 +252,18 @@ static void dwcmshc_rk3568_set_clock(struct sdhci_host *host, unsigned int clock
 	sdhci_writel(host, extra, reg);
 
 	if (clock <= 52000000) {
+<<<<<<< HEAD
 		/*
 		 * Disable DLL and reset both of sample and drive clock.
 		 * The bypass bit and start bit need to be set if DLL is not locked.
 		 */
 		sdhci_writel(host, DWCMSHC_EMMC_DLL_BYPASS | DWCMSHC_EMMC_DLL_START, DWCMSHC_EMMC_DLL_CTRL);
 		sdhci_writel(host, DLL_RXCLK_ORI_GATE, DWCMSHC_EMMC_DLL_RXCLK);
+=======
+		/* Disable DLL and reset both of sample and drive clock */
+		sdhci_writel(host, 0, DWCMSHC_EMMC_DLL_CTRL);
+		sdhci_writel(host, 0, DWCMSHC_EMMC_DLL_RXCLK);
+>>>>>>> b7ba80a49124 (Commit)
 		sdhci_writel(host, 0, DWCMSHC_EMMC_DLL_TXCLK);
 		sdhci_writel(host, 0, DECMSHC_EMMC_DLL_CMDOUT);
 		/*
@@ -291,7 +306,11 @@ static void dwcmshc_rk3568_set_clock(struct sdhci_host *host, unsigned int clock
 	}
 
 	extra = 0x1 << 16 | /* tune clock stop en */
+<<<<<<< HEAD
 		0x3 << 17 | /* pre-change delay */
+=======
+		0x2 << 17 | /* pre-change delay */
+>>>>>>> b7ba80a49124 (Commit)
 		0x3 << 19;  /* post-change delay */
 	sdhci_writel(host, extra, dwc_priv->vendor_specific_area1 + DWCMSHC_EMMC_ATCTRL);
 
@@ -350,7 +369,11 @@ static const struct sdhci_ops sdhci_dwcmshc_rk35xx_ops = {
 	.set_clock		= dwcmshc_rk3568_set_clock,
 	.set_bus_width		= sdhci_set_bus_width,
 	.set_uhs_signaling	= dwcmshc_set_uhs_signaling,
+<<<<<<< HEAD
 	.get_max_clock		= rk35xx_get_max_clock,
+=======
+	.get_max_clock		= sdhci_pltfm_clk_get_max_clock,
+>>>>>>> b7ba80a49124 (Commit)
 	.reset			= rk35xx_sdhci_reset,
 	.adma_write_desc	= dwcmshc_adma_write_desc,
 };
@@ -458,7 +481,10 @@ static const struct acpi_device_id sdhci_dwcmshc_acpi_ids[] = {
 	},
 	{}
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(acpi, sdhci_dwcmshc_acpi_ids);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 static int dwcmshc_probe(struct platform_device *pdev)
@@ -541,11 +567,14 @@ static int dwcmshc_probe(struct platform_device *pdev)
 			goto err_clk;
 	}
 
+<<<<<<< HEAD
 #ifdef CONFIG_ACPI
 	if (pltfm_data == &sdhci_dwcmshc_bf3_pdata)
 		sdhci_enable_v4_mode(host);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	host->mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY;
 
 	err = sdhci_setup_host(host);

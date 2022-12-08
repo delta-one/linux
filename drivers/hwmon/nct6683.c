@@ -412,7 +412,11 @@ nct6683_create_attr_group(struct device *dev,
 	struct sensor_device_attr_u *su;
 	struct attribute_group *group;
 	struct attribute **attrs;
+<<<<<<< HEAD
 	int i, count;
+=======
+	int i, j, count;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (repeat <= 0)
 		return ERR_PTR(-EINVAL);
@@ -443,7 +447,11 @@ nct6683_create_attr_group(struct device *dev,
 
 	for (i = 0; i < repeat; i++) {
 		t = tg->templates;
+<<<<<<< HEAD
 		while (*t) {
+=======
+		for (j = 0; *t != NULL; j++) {
+>>>>>>> b7ba80a49124 (Commit)
 			snprintf(su->name, sizeof(su->name),
 				 (*t)->dev_attr.attr.name, tg->base + i);
 			if ((*t)->s2) {

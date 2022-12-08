@@ -7,8 +7,11 @@
 #include <cxlmem.h>
 #include <cxlpci.h>
 
+<<<<<<< HEAD
 #include "core.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * DOC: cxl registers
  *
@@ -61,15 +64,23 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
 
 	for (cap = 1; cap <= cap_count; cap++) {
 		void __iomem *register_block;
+<<<<<<< HEAD
 		struct cxl_reg_map *rmap;
 		u16 cap_id, offset;
 		u32 length, hdr;
+=======
+		u32 hdr;
+		int decoder_cnt;
+		u16 cap_id, offset;
+		u32 length;
+>>>>>>> b7ba80a49124 (Commit)
 
 		hdr = readl(base + cap * 0x4);
 
 		cap_id = FIELD_GET(CXL_CM_CAP_HDR_ID_MASK, hdr);
 		offset = FIELD_GET(CXL_CM_CAP_PTR_MASK, hdr);
 		register_block = base + offset;
+<<<<<<< HEAD
 		hdr = readl(register_block);
 
 		rmap = NULL;
@@ -90,12 +101,29 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
 				offset);
 			length = CXL_RAS_CAPABILITY_LENGTH;
 			rmap = &map->ras;
+=======
+
+		switch (cap_id) {
+		case CXL_CM_CAP_CAP_ID_HDM:
+			dev_dbg(dev, "found HDM decoder capability (0x%x)\n",
+				offset);
+
+			hdr = readl(register_block);
+
+			decoder_cnt = cxl_hdm_decoder_count(hdr);
+			length = 0x20 * decoder_cnt + 0x10;
+
+			map->hdm_decoder.valid = true;
+			map->hdm_decoder.offset = CXL_CM_OFFSET + offset;
+			map->hdm_decoder.size = length;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		default:
 			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
 				offset);
 			break;
 		}
+<<<<<<< HEAD
 
 		if (!rmap)
 			continue;
@@ -103,6 +131,8 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
 		rmap->id = cap_id;
 		rmap->offset = CXL_CM_OFFSET + offset;
 		rmap->size = length;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 EXPORT_SYMBOL_NS_GPL(cxl_probe_component_regs, CXL);
@@ -131,7 +161,10 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
 	cap_count = FIELD_GET(CXLDEV_CAP_ARRAY_COUNT_MASK, cap_array);
 
 	for (cap = 1; cap <= cap_count; cap++) {
+<<<<<<< HEAD
 		struct cxl_reg_map *rmap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		u32 offset, length;
 		u16 cap_id;
 
@@ -140,6 +173,7 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
 		offset = readl(base + cap * 0x10 + 0x4);
 		length = readl(base + cap * 0x10 + 0x8);
 
+<<<<<<< HEAD
 		rmap = NULL;
 		switch (cap_id) {
 		case CXLDEV_CAP_CAP_ID_DEVICE_STATUS:
@@ -149,13 +183,34 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
 		case CXLDEV_CAP_CAP_ID_PRIMARY_MAILBOX:
 			dev_dbg(dev, "found Mailbox capability (0x%x)\n", offset);
 			rmap = &map->mbox;
+=======
+		switch (cap_id) {
+		case CXLDEV_CAP_CAP_ID_DEVICE_STATUS:
+			dev_dbg(dev, "found Status capability (0x%x)\n", offset);
+
+			map->status.valid = true;
+			map->status.offset = offset;
+			map->status.size = length;
+			break;
+		case CXLDEV_CAP_CAP_ID_PRIMARY_MAILBOX:
+			dev_dbg(dev, "found Mailbox capability (0x%x)\n", offset);
+			map->mbox.valid = true;
+			map->mbox.offset = offset;
+			map->mbox.size = length;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case CXLDEV_CAP_CAP_ID_SECONDARY_MAILBOX:
 			dev_dbg(dev, "found Secondary Mailbox capability (0x%x)\n", offset);
 			break;
 		case CXLDEV_CAP_CAP_ID_MEMDEV:
 			dev_dbg(dev, "found Memory Device capability (0x%x)\n", offset);
+<<<<<<< HEAD
 			rmap = &map->memdev;
+=======
+			map->memdev.valid = true;
+			map->memdev.offset = offset;
+			map->memdev.size = length;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		default:
 			if (cap_id >= 0x8000)
@@ -164,6 +219,7 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
 				dev_dbg(dev, "Unknown cap ID: %#x offset: %#x\n", cap_id, offset);
 			break;
 		}
+<<<<<<< HEAD
 
 		if (!rmap)
 			continue;
@@ -171,6 +227,8 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
 		rmap->id = cap_id;
 		rmap->offset = offset;
 		rmap->size = length;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 EXPORT_SYMBOL_NS_GPL(cxl_probe_device_regs, CXL);
@@ -181,9 +239,12 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
 	void __iomem *ret_val;
 	struct resource *res;
 
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(addr == CXL_RESOURCE_NONE))
 		return NULL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	res = devm_request_mem_region(dev, addr, length, dev_name(dev));
 	if (!res) {
 		resource_size_t end = addr + length - 1;
@@ -199,6 +260,7 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
 	return ret_val;
 }
 
+<<<<<<< HEAD
 int cxl_map_component_regs(struct device *dev, struct cxl_component_regs *regs,
 			   struct cxl_register_map *map, unsigned long map_mask)
 {
@@ -226,11 +288,30 @@ int cxl_map_component_regs(struct device *dev, struct cxl_component_regs *regs,
 		if (!*(mi->addr))
 			return -ENOMEM;
 	}
+=======
+int cxl_map_component_regs(struct pci_dev *pdev,
+			   struct cxl_component_regs *regs,
+			   struct cxl_register_map *map)
+{
+	struct device *dev = &pdev->dev;
+	resource_size_t phys_addr;
+	resource_size_t length;
+
+	phys_addr = pci_resource_start(pdev, map->barno);
+	phys_addr += map->block_offset;
+
+	phys_addr += map->component_map.hdm_decoder.offset;
+	length = map->component_map.hdm_decoder.size;
+	regs->hdm_decoder = devm_cxl_iomap_block(dev, phys_addr, length);
+	if (!regs->hdm_decoder)
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 EXPORT_SYMBOL_NS_GPL(cxl_map_component_regs, CXL);
 
+<<<<<<< HEAD
 int cxl_map_device_regs(struct device *dev,
 			struct cxl_device_regs *regs,
 			struct cxl_register_map *map)
@@ -258,6 +339,48 @@ int cxl_map_device_regs(struct device *dev,
 		length = mi->rmap->size;
 		*(mi->addr) = devm_cxl_iomap_block(dev, addr, length);
 		if (!*(mi->addr))
+=======
+int cxl_map_device_regs(struct pci_dev *pdev,
+			struct cxl_device_regs *regs,
+			struct cxl_register_map *map)
+{
+	struct device *dev = &pdev->dev;
+	resource_size_t phys_addr;
+
+	phys_addr = pci_resource_start(pdev, map->barno);
+	phys_addr += map->block_offset;
+
+	if (map->device_map.status.valid) {
+		resource_size_t addr;
+		resource_size_t length;
+
+		addr = phys_addr + map->device_map.status.offset;
+		length = map->device_map.status.size;
+		regs->status = devm_cxl_iomap_block(dev, addr, length);
+		if (!regs->status)
+			return -ENOMEM;
+	}
+
+	if (map->device_map.mbox.valid) {
+		resource_size_t addr;
+		resource_size_t length;
+
+		addr = phys_addr + map->device_map.mbox.offset;
+		length = map->device_map.mbox.size;
+		regs->mbox = devm_cxl_iomap_block(dev, addr, length);
+		if (!regs->mbox)
+			return -ENOMEM;
+	}
+
+	if (map->device_map.memdev.valid) {
+		resource_size_t addr;
+		resource_size_t length;
+
+		addr = phys_addr + map->device_map.memdev.offset;
+		length = map->device_map.memdev.size;
+		regs->memdev = devm_cxl_iomap_block(dev, addr, length);
+		if (!regs->memdev)
+>>>>>>> b7ba80a49124 (Commit)
 			return -ENOMEM;
 	}
 
@@ -265,6 +388,7 @@ int cxl_map_device_regs(struct device *dev,
 }
 EXPORT_SYMBOL_NS_GPL(cxl_map_device_regs, CXL);
 
+<<<<<<< HEAD
 static bool cxl_decode_regblock(struct pci_dev *pdev, u32 reg_lo, u32 reg_hi,
 				struct cxl_register_map *map)
 {
@@ -283,6 +407,15 @@ static bool cxl_decode_regblock(struct pci_dev *pdev, u32 reg_lo, u32 reg_hi,
 	map->resource = pci_resource_start(pdev, bar) + offset;
 	map->max_size = pci_resource_len(pdev, bar) - offset;
 	return true;
+=======
+static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
+				struct cxl_register_map *map)
+{
+	map->block_offset = ((u64)reg_hi << 32) |
+			    (reg_lo & CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK);
+	map->barno = FIELD_GET(CXL_DVSEC_REG_LOCATOR_BIR_MASK, reg_lo);
+	map->reg_type = FIELD_GET(CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK, reg_lo);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -302,7 +435,11 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
 	u32 regloc_size, regblocks;
 	int regloc, i;
 
+<<<<<<< HEAD
 	map->resource = CXL_RESOURCE_NONE;
+=======
+	map->block_offset = U64_MAX;
+>>>>>>> b7ba80a49124 (Commit)
 	regloc = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
 					   CXL_DVSEC_REG_LOCATOR);
 	if (!regloc)
@@ -320,13 +457,18 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
 		pci_read_config_dword(pdev, regloc, &reg_lo);
 		pci_read_config_dword(pdev, regloc + 4, &reg_hi);
 
+<<<<<<< HEAD
 		if (!cxl_decode_regblock(pdev, reg_lo, reg_hi, map))
 			continue;
+=======
+		cxl_decode_regblock(reg_lo, reg_hi, map);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (map->reg_type == type)
 			return 0;
 	}
 
+<<<<<<< HEAD
 	map->resource = CXL_RESOURCE_NONE;
 	return -ENODEV;
 }
@@ -396,3 +538,9 @@ resource_size_t cxl_rcrb_to_component(struct device *dev,
 	return component_reg_phys;
 }
 EXPORT_SYMBOL_NS_GPL(cxl_rcrb_to_component, CXL);
+=======
+	map->block_offset = U64_MAX;
+	return -ENODEV;
+}
+EXPORT_SYMBOL_NS_GPL(cxl_find_regblock, CXL);
+>>>>>>> b7ba80a49124 (Commit)

@@ -62,10 +62,25 @@ static struct ctl_table nmi_wd_lpm_factor_ctl_table[] = {
 	},
 	{}
 };
+<<<<<<< HEAD
 
 static int __init register_nmi_wd_lpm_factor_sysctl(void)
 {
 	register_sysctl("kernel", nmi_wd_lpm_factor_ctl_table);
+=======
+static struct ctl_table nmi_wd_lpm_factor_sysctl_root[] = {
+	{
+		.procname       = "kernel",
+		.mode           = 0555,
+		.child          = nmi_wd_lpm_factor_ctl_table,
+	},
+	{}
+};
+
+static int __init register_nmi_wd_lpm_factor_sysctl(void)
+{
+	register_sysctl_table(nmi_wd_lpm_factor_sysctl_root);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -187,7 +202,11 @@ static int update_dt_node(struct device_node *dn, s32 scope)
 	u32 nprops;
 	u32 vd;
 
+<<<<<<< HEAD
 	update_properties_token = rtas_function_token(RTAS_FN_IBM_UPDATE_PROPERTIES);
+=======
+	update_properties_token = rtas_token("ibm,update-properties");
+>>>>>>> b7ba80a49124 (Commit)
 	if (update_properties_token == RTAS_UNKNOWN_SERVICE)
 		return -EINVAL;
 
@@ -298,7 +317,11 @@ static int pseries_devicetree_update(s32 scope)
 	int update_nodes_token;
 	int rc;
 
+<<<<<<< HEAD
 	update_nodes_token = rtas_function_token(RTAS_FN_IBM_UPDATE_NODES);
+=======
+	update_nodes_token = rtas_token("ibm,update-nodes");
+>>>>>>> b7ba80a49124 (Commit)
 	if (update_nodes_token == RTAS_UNKNOWN_SERVICE)
 		return 0;
 
@@ -627,6 +650,7 @@ retry:
 		prod_others();
 	}
 	/*
+<<<<<<< HEAD
 	 * Execution may have been suspended for several seconds, so reset
 	 * the watchdogs. touch_nmi_watchdog() also touches the soft lockup
 	 * watchdog.
@@ -634,6 +658,12 @@ retry:
 	rcu_cpu_stall_reset();
 	touch_nmi_watchdog();
 
+=======
+	 * Execution may have been suspended for several seconds, so
+	 * reset the watchdog.
+	 */
+	touch_nmi_watchdog();
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -735,6 +765,7 @@ static int pseries_migrate_partition(u64 handle)
 #ifdef CONFIG_PPC_WATCHDOG
 	factor = nmi_wd_lpm_factor;
 #endif
+<<<<<<< HEAD
 	/*
 	 * When the migration is initiated, the hypervisor changes VAS
 	 * mappings to prepare before OS gets the notification and
@@ -748,6 +779,13 @@ static int pseries_migrate_partition(u64 handle)
 	ret = wait_for_vasi_session_suspending(handle);
 	if (ret)
 		goto out;
+=======
+	ret = wait_for_vasi_session_suspending(handle);
+	if (ret)
+		return ret;
+
+	vas_migration_handler(VAS_SUSPEND);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (factor)
 		watchdog_nmi_set_timeout_pct(factor);
@@ -768,7 +806,10 @@ static int pseries_migrate_partition(u64 handle)
 	if (factor)
 		watchdog_nmi_set_timeout_pct(0);
 
+<<<<<<< HEAD
 out:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vas_migration_handler(VAS_RESUME);
 
 	return ret;

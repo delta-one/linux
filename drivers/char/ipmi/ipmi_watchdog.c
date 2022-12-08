@@ -23,7 +23,10 @@
 #include <linux/init.h>
 #include <linux/completion.h>
 #include <linux/kdebug.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/rwsem.h>
 #include <linux/errno.h>
 #include <linux/uaccess.h>
@@ -213,7 +216,12 @@ static int set_param_str(const char *val, const struct kernel_param *kp)
 	char       valcp[16];
 	char       *s;
 
+<<<<<<< HEAD
 	strscpy(valcp, val, 16);
+=======
+	strncpy(valcp, val, 15);
+	valcp[15] = '\0';
+>>>>>>> b7ba80a49124 (Commit)
 
 	s = strstrip(valcp);
 

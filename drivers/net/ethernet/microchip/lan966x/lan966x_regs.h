@@ -25,7 +25,10 @@ enum lan966x_target {
 	TARGET_QSYS = 46,
 	TARGET_REW = 47,
 	TARGET_SYS = 52,
+<<<<<<< HEAD
 	TARGET_VCAP = 61,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	NUM_TARGETS = 66
 };
 
@@ -91,6 +94,7 @@ enum lan966x_target {
 #define ANA_AUTOAGE_AGE_PERIOD_GET(x)\
 	FIELD_GET(ANA_AUTOAGE_AGE_PERIOD, x)
 
+<<<<<<< HEAD
 /*      ANA:ANA:MIRRORPORTS */
 #define ANA_MIRRORPORTS           __REG(TARGET_ANA, 0, 1, 29824, 0, 1, 244, 60, 0, 1, 4)
 
@@ -109,6 +113,8 @@ enum lan966x_target {
 #define ANA_EMIRRORPORTS_EMIRRORPORTS_GET(x)\
 	FIELD_GET(ANA_EMIRRORPORTS_EMIRRORPORTS, x)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*      ANA:ANA:FLOODING */
 #define ANA_FLOODING(r)           __REG(TARGET_ANA, 0, 1, 29824, 0, 1, 244, 68, r, 8, 4)
 
@@ -316,6 +322,7 @@ enum lan966x_target {
 #define ANA_DROP_CFG_DROP_MC_SMAC_ENA_GET(x)\
 	FIELD_GET(ANA_DROP_CFG_DROP_MC_SMAC_ENA, x)
 
+<<<<<<< HEAD
 /*      ANA:PORT:VCAP_CFG */
 #define ANA_VCAP_CFG(g)           __REG(TARGET_ANA, 0, 1, 28672, g, 9, 128, 12, 0, 1, 4)
 
@@ -415,6 +422,8 @@ enum lan966x_target {
 #define ANA_VCAP_S2_CFG_OAM_DIS_GET(x)\
 	FIELD_GET(ANA_VCAP_S2_CFG_OAM_DIS, x)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*      ANA:PORT:CPU_FWD_CFG */
 #define ANA_CPU_FWD_CFG(g)        __REG(TARGET_ANA, 0, 1, 28672, g, 9, 128, 96, 0, 1, 4)
 
@@ -448,12 +457,15 @@ enum lan966x_target {
 /*      ANA:PORT:PORT_CFG */
 #define ANA_PORT_CFG(g)           __REG(TARGET_ANA, 0, 1, 28672, g, 9, 128, 112, 0, 1, 4)
 
+<<<<<<< HEAD
 #define ANA_PORT_CFG_SRC_MIRROR_ENA              BIT(13)
 #define ANA_PORT_CFG_SRC_MIRROR_ENA_SET(x)\
 	FIELD_PREP(ANA_PORT_CFG_SRC_MIRROR_ENA, x)
 #define ANA_PORT_CFG_SRC_MIRROR_ENA_GET(x)\
 	FIELD_GET(ANA_PORT_CFG_SRC_MIRROR_ENA, x)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ANA_PORT_CFG_LEARNAUTO                   BIT(6)
 #define ANA_PORT_CFG_LEARNAUTO_SET(x)\
 	FIELD_PREP(ANA_PORT_CFG_LEARNAUTO, x)
@@ -478,6 +490,7 @@ enum lan966x_target {
 #define ANA_PORT_CFG_PORTID_VAL_GET(x)\
 	FIELD_GET(ANA_PORT_CFG_PORTID_VAL, x)
 
+<<<<<<< HEAD
 /*      ANA:PORT:POL_CFG */
 #define ANA_POL_CFG(g)            __REG(TARGET_ANA, 0, 1, 28672, g, 9, 128, 116, 0, 1, 4)
 
@@ -493,6 +506,8 @@ enum lan966x_target {
 #define ANA_POL_CFG_POL_ORDER_GET(x)\
 	FIELD_GET(ANA_POL_CFG_POL_ORDER, x)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*      ANA:PFC:PFC_CFG */
 #define ANA_PFC_CFG(g)            __REG(TARGET_ANA, 0, 1, 30720, g, 8, 64, 0, 0, 1, 4)
 
@@ -547,6 +562,7 @@ enum lan966x_target {
 #define ANA_AGGR_CFG_AC_IP4_TCPUDP_ENA_GET(x)\
 	FIELD_GET(ANA_AGGR_CFG_AC_IP4_TCPUDP_ENA, x)
 
+<<<<<<< HEAD
 /*      ANA:POL:POL_PIR_CFG */
 #define ANA_POL_PIR_CFG(g)        __REG(TARGET_ANA, 0, 1, 16384, g, 345, 32, 0, 0, 1, 4)
 
@@ -604,6 +620,8 @@ enum lan966x_target {
 #define ANA_POL_PIR_STATE_PIR_LVL_GET(x)\
 	FIELD_GET(ANA_POL_PIR_STATE_PIR_LVL, x)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*      CHIP_TOP:CUPHY_CFG:CUPHY_PORT_CFG */
 #define CHIP_TOP_CUPHY_PORT_CFG(r) __REG(TARGET_CHIP_TOP, 0, 1, 16, 0, 1, 20, 8, r, 2, 4)
 
@@ -685,6 +703,7 @@ enum lan966x_target {
 #define DEV_MAC_MAXLEN_CFG_MAX_LEN_GET(x)\
 	FIELD_GET(DEV_MAC_MAXLEN_CFG_MAX_LEN, x)
 
+<<<<<<< HEAD
 /*      DEV:MAC_CFG_STATUS:MAC_TAGS_CFG */
 #define DEV_MAC_TAGS_CFG(t)       __REG(TARGET_DEV, t, 8, 28, 0, 1, 44, 12, 0, 1, 4)
 
@@ -700,6 +719,8 @@ enum lan966x_target {
 #define DEV_MAC_TAGS_CFG_VLAN_AWR_ENA_GET(x)\
 	FIELD_GET(DEV_MAC_TAGS_CFG_VLAN_AWR_ENA, x)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*      DEV:MAC_CFG_STATUS:MAC_IFG_CFG */
 #define DEV_MAC_IFG_CFG(t)        __REG(TARGET_DEV, t, 8, 28, 0, 1, 44, 20, 0, 1, 4)
 
@@ -1229,6 +1250,7 @@ enum lan966x_target {
 /*      QSYS:RES_CTRL:RES_CFG */
 #define QSYS_RES_CFG(g)           __REG(TARGET_QSYS, 0, 1, 32768, g, 1024, 8, 0, 0, 1, 4)
 
+<<<<<<< HEAD
 /*      QSYS:HSCH:CIR_CFG */
 #define QSYS_CIR_CFG(g)           __REG(TARGET_QSYS, 0, 1, 16384, g, 90, 128, 0, 0, 1, 4)
 
@@ -1438,6 +1460,8 @@ enum lan966x_target {
 #define QSYS_TAS_GATE_STATE_TAS_GATE_STATE_GET(x)\
 	FIELD_GET(QSYS_TAS_GATE_STATE_TAS_GATE_STATE, x)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*      REW:PORT:PORT_VLAN_CFG */
 #define REW_PORT_VLAN_CFG(g)      __REG(TARGET_REW, 0, 1, 0, g, 10, 128, 0, 0, 1, 4)
 
@@ -1606,6 +1630,7 @@ enum lan966x_target {
 #define SYS_RAM_INIT_RAM_INIT_GET(x)\
 	FIELD_GET(SYS_RAM_INIT_RAM_INIT, x)
 
+<<<<<<< HEAD
 /*      VCAP:VCAP_CORE_CFG:VCAP_UPDATE_CTRL */
 #define VCAP_UPDATE_CTRL(t)       __REG(TARGET_VCAP, t, 3, 0, 0, 1, 8, 0, 0, 1, 4)
 
@@ -1738,4 +1763,6 @@ enum lan966x_target {
 /*      VCAP:VCAP_CONST:IF_CNT */
 #define VCAP_IF_CNT(t)            __REG(TARGET_VCAP, t, 3, 924, 0, 1, 40, 36, 0, 1, 4)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _LAN966X_REGS_H_ */

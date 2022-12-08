@@ -434,7 +434,11 @@ out:
 	return res;
 }
 
+<<<<<<< HEAD
 static int hfsplus_symlink(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int hfsplus_symlink(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 			   struct dentry *dentry, const char *symname)
 {
 	struct hfsplus_sb_info *sbi = HFSPLUS_SB(dir->i_sb);
@@ -476,7 +480,11 @@ out:
 	return res;
 }
 
+<<<<<<< HEAD
 static int hfsplus_mknod(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int hfsplus_mknod(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 			 struct dentry *dentry, umode_t mode, dev_t rdev)
 {
 	struct hfsplus_sb_info *sbi = HFSPLUS_SB(dir->i_sb);
@@ -517,6 +525,7 @@ out:
 	return res;
 }
 
+<<<<<<< HEAD
 static int hfsplus_create(struct mnt_idmap *idmap, struct inode *dir,
 			  struct dentry *dentry, umode_t mode, bool excl)
 {
@@ -530,6 +539,21 @@ static int hfsplus_mkdir(struct mnt_idmap *idmap, struct inode *dir,
 }
 
 static int hfsplus_rename(struct mnt_idmap *idmap,
+=======
+static int hfsplus_create(struct user_namespace *mnt_userns, struct inode *dir,
+			  struct dentry *dentry, umode_t mode, bool excl)
+{
+	return hfsplus_mknod(&init_user_ns, dir, dentry, mode, 0);
+}
+
+static int hfsplus_mkdir(struct user_namespace *mnt_userns, struct inode *dir,
+			 struct dentry *dentry, umode_t mode)
+{
+	return hfsplus_mknod(&init_user_ns, dir, dentry, mode | S_IFDIR, 0);
+}
+
+static int hfsplus_rename(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			  struct inode *old_dir, struct dentry *old_dentry,
 			  struct inode *new_dir, struct dentry *new_dentry,
 			  unsigned int flags)

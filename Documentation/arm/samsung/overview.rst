@@ -12,10 +12,27 @@ Introduction
 
   The currently supported SoCs are:
 
+<<<<<<< HEAD
+=======
+  - S3C24XX: See Documentation/arm/samsung-s3c24xx/overview.rst for full list
+>>>>>>> b7ba80a49124 (Commit)
   - S3C64XX: S3C6400 and S3C6410
   - S5PC110 / S5PV210
 
 
+<<<<<<< HEAD
+=======
+S3C24XX Systems
+---------------
+
+  There is still documentation in Documnetation/arm/Samsung-S3C24XX/ which
+  deals with the architecture and drivers specific to these devices.
+
+  See Documentation/arm/samsung-s3c24xx/overview.rst for more information
+  on the implementation details and specific support.
+
+
+>>>>>>> b7ba80a49124 (Commit)
 Configuration
 -------------
 
@@ -40,6 +57,11 @@ Layout
   specific information. It contains the base clock, GPIO and device definitions
   to get the system running.
 
+<<<<<<< HEAD
+=======
+  plat-s3c24xx is for s3c24xx specific builds, see the S3C24XX docs.
+
+>>>>>>> b7ba80a49124 (Commit)
   plat-s5p is for s5p specific builds, and contains common support for the
   S5P specific systems. Not all S5Ps use all the features in this directory
   due to differences in the hardware.

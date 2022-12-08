@@ -192,10 +192,16 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
 	provider->pre_aggregate = qcom_icc_pre_aggregate;
 	provider->aggregate = qcom_icc_aggregate;
 	provider->xlate_extended = qcom_icc_xlate_extended;
+<<<<<<< HEAD
 	provider->data = data;
 
 	icc_provider_init(provider);
 
+=======
+	INIT_LIST_HEAD(&provider->nodes);
+	provider->data = data;
+
+>>>>>>> b7ba80a49124 (Commit)
 	qp->dev = dev;
 	qp->bcms = desc->bcms;
 	qp->num_bcms = desc->num_bcms;
@@ -204,6 +210,13 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
 	if (IS_ERR(qp->voter))
 		return PTR_ERR(qp->voter);
 
+<<<<<<< HEAD
+=======
+	ret = icc_provider_add(provider);
+	if (ret)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < qp->num_bcms; i++)
 		qcom_icc_bcm_init(qp->bcms[i], dev);
 
@@ -215,7 +228,11 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
 		node = icc_node_create(qn->id);
 		if (IS_ERR(node)) {
 			ret = PTR_ERR(node);
+<<<<<<< HEAD
 			goto err_remove_nodes;
+=======
+			goto err;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		node->name = qn->name;
@@ -229,6 +246,7 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
 	}
 
 	data->num_nodes = num_nodes;
+<<<<<<< HEAD
 
 	ret = icc_provider_register(provider);
 	if (ret)
@@ -250,6 +268,18 @@ err_deregister_provider:
 err_remove_nodes:
 	icc_nodes_remove(provider);
 
+=======
+	platform_set_drvdata(pdev, qp);
+
+	/* Populate child NoC devices if any */
+	if (of_get_child_count(dev->of_node) > 0)
+		return of_platform_populate(dev->of_node, NULL, NULL, dev);
+
+	return 0;
+err:
+	icc_nodes_remove(provider);
+	icc_provider_del(provider);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 EXPORT_SYMBOL_GPL(qcom_icc_rpmh_probe);
@@ -258,8 +288,13 @@ int qcom_icc_rpmh_remove(struct platform_device *pdev)
 {
 	struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	icc_provider_deregister(&qp->provider);
 	icc_nodes_remove(&qp->provider);
+=======
+	icc_nodes_remove(&qp->provider);
+	icc_provider_del(&qp->provider);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

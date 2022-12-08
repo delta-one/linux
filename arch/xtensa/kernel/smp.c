@@ -322,7 +322,11 @@ void __cpu_die(unsigned int cpu)
 	pr_err("CPU%u: unable to kill\n", cpu);
 }
 
+<<<<<<< HEAD
 void __noreturn arch_cpu_idle_dead(void)
+=======
+void arch_cpu_idle_dead(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	cpu_die();
 }
@@ -341,8 +345,11 @@ void __ref cpu_die(void)
 	__asm__ __volatile__(
 			"	movi	a2, cpu_restart\n"
 			"	jx	a2\n");
+<<<<<<< HEAD
 
 	BUG();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #endif /* CONFIG_HOTPLUG_CPU */

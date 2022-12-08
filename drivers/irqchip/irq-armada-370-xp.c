@@ -454,7 +454,12 @@ static __init void armada_xp_ipi_init(struct device_node *node)
 		return;
 
 	irq_domain_update_bus_token(ipi_domain, DOMAIN_BUS_IPI);
+<<<<<<< HEAD
 	base_ipi = irq_domain_alloc_irqs(ipi_domain, IPI_DOORBELL_END, NUMA_NO_NODE, NULL);
+=======
+	base_ipi = __irq_domain_alloc_irqs(ipi_domain, -1, IPI_DOORBELL_END,
+					   NUMA_NO_NODE, NULL, false, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (WARN_ON(!base_ipi))
 		return;
 

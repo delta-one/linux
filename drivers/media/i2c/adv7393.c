@@ -381,7 +381,12 @@ static int adv7393_initialize(struct v4l2_subdev *sd)
 	return err;
 }
 
+<<<<<<< HEAD
 static int adv7393_probe(struct i2c_client *client)
+=======
+static int adv7393_probe(struct i2c_client *client,
+				const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct adv7393_state *state;
 	int err;
@@ -455,7 +460,11 @@ static struct i2c_driver adv7393_driver = {
 	.driver = {
 		.name	= "adv7393",
 	},
+<<<<<<< HEAD
 	.probe_new	= adv7393_probe,
+=======
+	.probe		= adv7393_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= adv7393_remove,
 	.id_table	= adv7393_id,
 };

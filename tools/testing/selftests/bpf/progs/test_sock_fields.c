@@ -121,7 +121,11 @@ static void tpcpy(struct bpf_tcp_sock *dst,
 SEC("cgroup_skb/egress")
 int egress_read_sock_fields(struct __sk_buff *skb)
 {
+<<<<<<< HEAD
 	struct bpf_spinlock_cnt cli_cnt_init = { .lock = {}, .cnt = 0xeB9F };
+=======
+	struct bpf_spinlock_cnt cli_cnt_init = { .lock = 0, .cnt = 0xeB9F };
+>>>>>>> b7ba80a49124 (Commit)
 	struct bpf_spinlock_cnt *pkt_out_cnt, *pkt_out_cnt10;
 	struct bpf_tcp_sock *tp, *tp_ret;
 	struct bpf_sock *sk, *sk_ret;

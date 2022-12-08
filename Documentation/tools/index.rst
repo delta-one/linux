@@ -11,7 +11,10 @@ more additions are needed here:
    :maxdepth: 1
 
    rtla/index
+<<<<<<< HEAD
    rv/index
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 .. only::  subproject and html
 

@@ -21,6 +21,7 @@ config AD_SIGMA_DELTA
 	select IIO_BUFFER
 	select IIO_TRIGGERED_BUFFER
 
+<<<<<<< HEAD
 config AD4130
 	tristate "Analog Device AD4130 ADC Driver"
 	depends on SPI
@@ -36,6 +37,8 @@ config AD4130
 	  To compile this driver as a module, choose M here: the module will be
 	  called ad4130.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config AD7091R5
 	tristate "Analog Devices AD7091R5 ADC Driver"
 	depends on I2C
@@ -441,8 +444,12 @@ config ENVELOPE_DETECTOR
 
 config EP93XX_ADC
 	tristate "Cirrus Logic EP93XX ADC driver"
+<<<<<<< HEAD
 	depends on ARCH_EP93XX || COMPILE_TEST
 	depends on HAS_IOMEM
+=======
+	depends on ARCH_EP93XX
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Driver for the ADC module on the EP93XX series of SoC from Cirrus Logic.
 	  It's recommended to switch on CONFIG_HIGH_RES_TIMERS option, in this
@@ -453,11 +460,19 @@ config EP93XX_ADC
 
 config EXYNOS_ADC
 	tristate "Exynos ADC driver support"
+<<<<<<< HEAD
 	depends on ARCH_EXYNOS || ARCH_S3C64XX || ARCH_S5PV210 || (OF && COMPILE_TEST)
 	depends on HAS_IOMEM
 	help
 	  Driver for the ADC block found in the Samsung S3C6410, S5Pv210 and
 	  Exynos SoCs.
+=======
+	depends on ARCH_EXYNOS || ARCH_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210 || (OF && COMPILE_TEST)
+	depends on HAS_IOMEM
+	help
+	  Driver for the ADC block found in the Samsung S3C (S3C2410, S3C2416,
+	  S3C2440, S3C2443, S3C6410), S5Pv210 and Exynos SoCs.
+>>>>>>> b7ba80a49124 (Commit)
 	  Choose Y here only if you build for such Samsung SoC.
 
 	  To compile this driver as a module, choose M here: the module will be
@@ -566,6 +581,7 @@ config IMX8QXP_ADC
 	  This driver can also be built as a module. If so, the module will be
 	  called imx8qxp-adc.
 
+<<<<<<< HEAD
 config IMX93_ADC
 	tristate "IMX93 ADC driver"
 	depends on ARCH_MXC || COMPILE_TEST
@@ -576,6 +592,8 @@ config IMX93_ADC
 	  This driver can also be built as a module. If so, the module will be
 	  called imx93_adc.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config LP8788_ADC
 	tristate "LP8788 ADC driver"
 	depends on MFD_LP8788
@@ -693,6 +711,7 @@ config MAX11205
 	  To compile this driver as a module, choose M here: the module will be
 	  called max11205.
 
+<<<<<<< HEAD
 config MAX11410
 	tristate "Analog Devices MAX11410 ADC driver"
 	depends on SPI
@@ -706,6 +725,8 @@ config MAX11410
 	  To compile this driver as a module, choose M here: the module will be
 	  called max11410.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config MAX1241
 	tristate "Maxim max1241 ADC driver"
 	depends on SPI_MASTER
@@ -791,6 +812,7 @@ config MEDIATEK_MT6360_ADC
 	  is used in smartphones and tablets and supports a 11 channel
 	  general purpose ADC.
 
+<<<<<<< HEAD
 config MEDIATEK_MT6370_ADC
 	tristate "MediaTek MT6370 ADC driver"
 	depends on MFD_MT6370
@@ -803,6 +825,8 @@ config MEDIATEK_MT6370_ADC
 	  This driver can also be built as a module. If so, the module
 	  will be called "mt6370-adc".
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config MEDIATEK_MT6577_AUXADC
 	tristate "MediaTek AUXADC driver"
 	depends on ARCH_MEDIATEK || COMPILE_TEST
@@ -1218,6 +1242,7 @@ config TI_ADS1015
 	  This driver can also be built as a module. If so, the module will be
 	  called ti-ads1015.
 
+<<<<<<< HEAD
 config TI_ADS7924
 	tristate "Texas Instruments ADS7924 ADC"
 	depends on I2C
@@ -1239,6 +1264,8 @@ config TI_ADS1100
 	  This driver can also be built as a module. If so, the module will be
 	  called ti-ads1100.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config TI_ADS7950
 	tristate "Texas Instruments ADS7950 ADC driver"
 	depends on SPI && GPIOLIB
@@ -1306,6 +1333,7 @@ config TI_AM335X_ADC
 	  To compile this driver as a module, choose M here: the module will be
 	  called ti_am335x_adc.
 
+<<<<<<< HEAD
 config TI_LMP92064
 	tristate "Texas Instruments LMP92064 ADC driver"
 	depends on SPI
@@ -1316,6 +1344,8 @@ config TI_LMP92064
 	  This driver can also be built as a module. If so, the module will be called
 	  ti-lmp92064.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config TI_TLC4541
 	tristate "Texas Instruments TLC4541 ADC driver"
 	depends on SPI

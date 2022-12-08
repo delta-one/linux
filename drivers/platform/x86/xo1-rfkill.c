@@ -56,11 +56,19 @@ static int xo1_rfkill_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void xo1_rfkill_remove(struct platform_device *pdev)
+=======
+static int xo1_rfkill_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rfkill *rfk = platform_get_drvdata(pdev);
 	rfkill_unregister(rfk);
 	rfkill_destroy(rfk);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver xo1_rfkill_driver = {
@@ -68,7 +76,11 @@ static struct platform_driver xo1_rfkill_driver = {
 		.name = "xo1-rfkill",
 	},
 	.probe		= xo1_rfkill_probe,
+<<<<<<< HEAD
 	.remove_new	= xo1_rfkill_remove,
+=======
+	.remove		= xo1_rfkill_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(xo1_rfkill_driver);

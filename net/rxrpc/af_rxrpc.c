@@ -39,7 +39,11 @@ atomic_t rxrpc_debug_id;
 EXPORT_SYMBOL(rxrpc_debug_id);
 
 /* count of skbs currently in use */
+<<<<<<< HEAD
 atomic_t rxrpc_n_rx_skbs;
+=======
+atomic_t rxrpc_n_tx_skbs, rxrpc_n_rx_skbs;
+>>>>>>> b7ba80a49124 (Commit)
 
 struct workqueue_struct *rxrpc_workqueue;
 
@@ -93,11 +97,20 @@ static int rxrpc_validate_address(struct rxrpc_sock *rx,
 	    srx->transport_len > len)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	switch (srx->transport.family) {
 	case AF_INET:
 		if (rx->family != AF_INET &&
 		    rx->family != AF_INET6)
 			return -EAFNOSUPPORT;
+=======
+	if (srx->transport.family != rx->family &&
+	    srx->transport.family == AF_INET && rx->family != AF_INET6)
+		return -EAFNOSUPPORT;
+
+	switch (srx->transport.family) {
+	case AF_INET:
+>>>>>>> b7ba80a49124 (Commit)
 		if (srx->transport_len < sizeof(struct sockaddr_in))
 			return -EINVAL;
 		tail = offsetof(struct sockaddr_rxrpc, transport.sin.__pad);
@@ -105,8 +118,11 @@ static int rxrpc_validate_address(struct rxrpc_sock *rx,
 
 #ifdef CONFIG_AF_RXRPC_IPV6
 	case AF_INET6:
+<<<<<<< HEAD
 		if (rx->family != AF_INET6)
 			return -EAFNOSUPPORT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (srx->transport_len < sizeof(struct sockaddr_in6))
 			return -EINVAL;
 		tail = offsetof(struct sockaddr_rxrpc, transport) +
@@ -155,10 +171,17 @@ static int rxrpc_bind(struct socket *sock, struct sockaddr *saddr, int len)
 
 		if (service_id) {
 			write_lock(&local->services_lock);
+<<<<<<< HEAD
 			if (local->service)
 				goto service_in_use;
 			rx->local = local;
 			local->service = rx;
+=======
+			if (rcu_access_pointer(local->service))
+				goto service_in_use;
+			rx->local = local;
+			rcu_assign_pointer(local->service, rx);
+>>>>>>> b7ba80a49124 (Commit)
 			write_unlock(&local->services_lock);
 
 			rx->sk.sk_state = RXRPC_SERVER_BOUND;
@@ -194,8 +217,13 @@ static int rxrpc_bind(struct socket *sock, struct sockaddr *saddr, int len)
 
 service_in_use:
 	write_unlock(&local->services_lock);
+<<<<<<< HEAD
 	rxrpc_unuse_local(local, rxrpc_local_unuse_bind);
 	rxrpc_put_local(local, rxrpc_local_put_bind);
+=======
+	rxrpc_unuse_local(local);
+	rxrpc_put_local(local);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = -EADDRINUSE;
 error_unlock:
 	release_sock(&rx->sk);
@@ -328,6 +356,10 @@ struct rxrpc_call *rxrpc_kernel_begin_call(struct socket *sock,
 		mutex_unlock(&call->user_mutex);
 	}
 
+<<<<<<< HEAD
+=======
+	rxrpc_put_peer(cp.peer);
+>>>>>>> b7ba80a49124 (Commit)
 	_leave(" = %p", call);
 	return call;
 }
@@ -358,9 +390,15 @@ void rxrpc_kernel_end_call(struct socket *sock, struct rxrpc_call *call)
 
 	/* Make sure we're not going to call back into a kernel service */
 	if (call->notify_rx) {
+<<<<<<< HEAD
 		spin_lock(&call->notify_lock);
 		call->notify_rx = rxrpc_dummy_notify_rx;
 		spin_unlock(&call->notify_lock);
+=======
+		spin_lock_bh(&call->notify_lock);
+		call->notify_rx = rxrpc_dummy_notify_rx;
+		spin_unlock_bh(&call->notify_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	mutex_unlock(&call->user_mutex);
@@ -373,17 +411,26 @@ EXPORT_SYMBOL(rxrpc_kernel_end_call);
  * @sock: The socket the call is on
  * @call: The call to check
  *
+<<<<<<< HEAD
  * Allow a kernel service to find out whether a call is still alive - whether
  * it has completed successfully and all received data has been consumed.
+=======
+ * Allow a kernel service to find out whether a call is still alive -
+ * ie. whether it has completed.
+>>>>>>> b7ba80a49124 (Commit)
  */
 bool rxrpc_kernel_check_life(const struct socket *sock,
 			     const struct rxrpc_call *call)
 {
+<<<<<<< HEAD
 	if (!rxrpc_call_is_complete(call))
 		return true;
 	if (call->completion != RXRPC_CALL_SUCCEEDED)
 		return false;
 	return !skb_queue_empty(&call->recvmsg_queue);
+=======
+	return call->state != RXRPC_CALL_COMPLETE;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(rxrpc_kernel_check_life);
 
@@ -786,7 +833,11 @@ static int rxrpc_create(struct net *net, struct socket *sock, int protocol,
 	INIT_LIST_HEAD(&rx->sock_calls);
 	INIT_LIST_HEAD(&rx->to_be_accepted);
 	INIT_LIST_HEAD(&rx->recvmsg_q);
+<<<<<<< HEAD
 	spin_lock_init(&rx->recvmsg_lock);
+=======
+	rwlock_init(&rx->recvmsg_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	rwlock_init(&rx->call_lock);
 	memset(&rx->srx, 0, sizeof(rx->srx));
 
@@ -815,12 +866,20 @@ static int rxrpc_shutdown(struct socket *sock, int flags)
 
 	lock_sock(sk);
 
+<<<<<<< HEAD
+=======
+	spin_lock_bh(&sk->sk_receive_queue.lock);
+>>>>>>> b7ba80a49124 (Commit)
 	if (sk->sk_state < RXRPC_CLOSE) {
 		sk->sk_state = RXRPC_CLOSE;
 		sk->sk_shutdown = SHUTDOWN_MASK;
 	} else {
 		ret = -ESHUTDOWN;
 	}
+<<<<<<< HEAD
+=======
+	spin_unlock_bh(&sk->sk_receive_queue.lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rxrpc_discard_prealloc(rx);
 
@@ -873,11 +932,21 @@ static int rxrpc_release_sock(struct sock *sk)
 		break;
 	}
 
+<<<<<<< HEAD
 	sk->sk_state = RXRPC_CLOSE;
 
 	if (rx->local && rx->local->service == rx) {
 		write_lock(&rx->local->services_lock);
 		rx->local->service = NULL;
+=======
+	spin_lock_bh(&sk->sk_receive_queue.lock);
+	sk->sk_state = RXRPC_CLOSE;
+	spin_unlock_bh(&sk->sk_receive_queue.lock);
+
+	if (rx->local && rcu_access_pointer(rx->local->service) == rx) {
+		write_lock(&rx->local->services_lock);
+		rcu_assign_pointer(rx->local->service, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		write_unlock(&rx->local->services_lock);
 	}
 
@@ -887,8 +956,13 @@ static int rxrpc_release_sock(struct sock *sk)
 	flush_workqueue(rxrpc_workqueue);
 	rxrpc_purge_queue(&sk->sk_receive_queue);
 
+<<<<<<< HEAD
 	rxrpc_unuse_local(rx->local, rxrpc_local_unuse_release_sock);
 	rxrpc_put_local(rx->local, rxrpc_local_put_release_sock);
+=======
+	rxrpc_unuse_local(rx->local);
+	rxrpc_put_local(rx->local);
+>>>>>>> b7ba80a49124 (Commit)
 	rx->local = NULL;
 	key_put(rx->key);
 	rx->key = NULL;
@@ -960,9 +1034,22 @@ static const struct net_proto_family rxrpc_family_ops = {
 static int __init af_rxrpc_init(void)
 {
 	int ret = -1;
+<<<<<<< HEAD
 
 	BUILD_BUG_ON(sizeof(struct rxrpc_skb_priv) > sizeof_field(struct sk_buff, cb));
 
+=======
+	unsigned int tmp;
+
+	BUILD_BUG_ON(sizeof(struct rxrpc_skb_priv) > sizeof_field(struct sk_buff, cb));
+
+	get_random_bytes(&tmp, sizeof(tmp));
+	tmp &= 0x3fffffff;
+	if (tmp == 0)
+		tmp = 1;
+	idr_set_cursor(&rxrpc_client_conn_ids, tmp);
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = -ENOMEM;
 	rxrpc_call_jar = kmem_cache_create(
 		"rxrpc_call_jar", sizeof(struct rxrpc_call), 0,
@@ -972,7 +1059,11 @@ static int __init af_rxrpc_init(void)
 		goto error_call_jar;
 	}
 
+<<<<<<< HEAD
 	rxrpc_workqueue = alloc_workqueue("krxrpcd", WQ_HIGHPRI | WQ_MEM_RECLAIM | WQ_UNBOUND, 1);
+=======
+	rxrpc_workqueue = alloc_workqueue("krxrpcd", 0, 1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!rxrpc_workqueue) {
 		pr_notice("Failed to allocate work queue\n");
 		goto error_work_queue;
@@ -1052,12 +1143,20 @@ static void __exit af_rxrpc_exit(void)
 	sock_unregister(PF_RXRPC);
 	proto_unregister(&rxrpc_proto);
 	unregister_pernet_device(&rxrpc_net_ops);
+<<<<<<< HEAD
+=======
+	ASSERTCMP(atomic_read(&rxrpc_n_tx_skbs), ==, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	ASSERTCMP(atomic_read(&rxrpc_n_rx_skbs), ==, 0);
 
 	/* Make sure the local and peer records pinned by any dying connections
 	 * are released.
 	 */
 	rcu_barrier();
+<<<<<<< HEAD
+=======
+	rxrpc_destroy_client_conn_ids();
+>>>>>>> b7ba80a49124 (Commit)
 
 	destroy_workqueue(rxrpc_workqueue);
 	rxrpc_exit_security();

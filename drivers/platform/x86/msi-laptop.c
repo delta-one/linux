@@ -1066,7 +1066,11 @@ static int __init msi_init(void)
 
 	/* Register platform stuff */
 
+<<<<<<< HEAD
 	msipf_device = platform_device_alloc("msi-laptop-pf", PLATFORM_DEVID_NONE);
+=======
+	msipf_device = platform_device_alloc("msi-laptop-pf", -1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!msipf_device) {
 		ret = -ENOMEM;
 		goto fail_platform_driver;

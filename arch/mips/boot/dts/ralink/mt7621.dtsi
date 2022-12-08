@@ -33,6 +33,14 @@
 		compatible = "mti,cpu-interrupt-controller";
 	};
 
+<<<<<<< HEAD
+=======
+	aliases {
+		serial0 = &uartlite;
+	};
+
+
+>>>>>>> b7ba80a49124 (Commit)
 	mmc_fixed_3v3: regulator-3v3 {
 		compatible = "regulator-fixed";
 		regulator-name = "mmc_power";
@@ -70,10 +78,16 @@
 					     "250m", "270m";
 		};
 
+<<<<<<< HEAD
 		wdt: watchdog@100 {
 			compatible = "mediatek,mt7621-wdt";
 			reg = <0x100 0x100>;
 			mediatek,sysctl = <&sysc>;
+=======
+		wdt: wdt@100 {
+			compatible = "mediatek,mt7621-wdt";
+			reg = <0x100 0x100>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		gpio: gpio@600 {
@@ -106,16 +120,28 @@
 			pinctrl-0 = <&i2c_pins>;
 		};
 
+<<<<<<< HEAD
 		memc: memory-controller@5000 {
+=======
+		memc: syscon@5000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "mediatek,mt7621-memc", "syscon";
 			reg = <0x5000 0x1000>;
 		};
 
+<<<<<<< HEAD
 		serial0: serial@c00 {
+=======
+		uartlite: uartlite@c00 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "ns16550a";
 			reg = <0xc00 0x100>;
 
 			clocks = <&sysc MT7621_CLK_UART1>;
+<<<<<<< HEAD
+=======
+			clock-names = "uart1";
+>>>>>>> b7ba80a49124 (Commit)
 
 			interrupt-parent = <&gic>;
 			interrupts = <GIC_SHARED 26 IRQ_TYPE_LEVEL_HIGH>;
@@ -231,7 +257,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	mmc: mmc@1e130000 {
+=======
+	sdhci: sdhci@1e130000 {
+>>>>>>> b7ba80a49124 (Commit)
 		status = "disabled";
 
 		compatible = "mediatek,mt7620-mmc";
@@ -257,8 +287,13 @@
 		interrupts = <GIC_SHARED 20 IRQ_TYPE_LEVEL_HIGH>;
 	};
 
+<<<<<<< HEAD
 	usb: usb@1e1c0000 {
 		compatible = "mediatek,mt8173-xhci", "mediatek,mtk-xhci";
+=======
+	xhci: xhci@1e1c0000 {
+		compatible = "mediatek,mt8173-xhci";
+>>>>>>> b7ba80a49124 (Commit)
 		reg = <0x1e1c0000 0x1000
 		       0x1e1d0700 0x0100>;
 		reg-names = "mac", "ippc";
@@ -333,6 +368,7 @@
 		gmac1: mac@1 {
 			compatible = "mediatek,eth-mac";
 			reg = <1>;
+<<<<<<< HEAD
 			phy-mode = "rgmii";
 
 			fixed-link {
@@ -340,20 +376,34 @@
 				full-duplex;
 				pause;
 			};
+=======
+			status = "off";
+			phy-mode = "rgmii-rxid";
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		mdio: mdio-bus {
 			#address-cells = <1>;
 			#size-cells = <0>;
 
+<<<<<<< HEAD
 			switch0: switch@1f {
 				compatible = "mediatek,mt7621";
 				reg = <0x1f>;
+=======
+			switch0: switch0@0 {
+				compatible = "mediatek,mt7621";
+				reg = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 				mediatek,mcm;
 				resets = <&sysc MT7621_RST_MCM>;
 				reset-names = "mcm";
 				interrupt-controller;
 				#interrupt-cells = <1>;
+<<<<<<< HEAD
+=======
+				interrupt-parent = <&gic>;
+>>>>>>> b7ba80a49124 (Commit)
 				interrupts = <GIC_SHARED 23 IRQ_TYPE_LEVEL_HIGH>;
 
 				ports {
@@ -361,6 +411,7 @@
 					#size-cells = <0>;
 
 					port@0 {
+<<<<<<< HEAD
 						status = "disabled";
 						reg = <0>;
 						label = "swp0";
@@ -400,10 +451,43 @@
 							full-duplex;
 							pause;
 						};
+=======
+						status = "off";
+						reg = <0>;
+						label = "lan0";
+					};
+
+					port@1 {
+						status = "off";
+						reg = <1>;
+						label = "lan1";
+					};
+
+					port@2 {
+						status = "off";
+						reg = <2>;
+						label = "lan2";
+					};
+
+					port@3 {
+						status = "off";
+						reg = <3>;
+						label = "lan3";
+					};
+
+					port@4 {
+						status = "off";
+						reg = <4>;
+						label = "lan4";
+>>>>>>> b7ba80a49124 (Commit)
 					};
 
 					port@6 {
 						reg = <6>;
+<<<<<<< HEAD
+=======
+						label = "cpu";
+>>>>>>> b7ba80a49124 (Commit)
 						ethernet = <&gmac0>;
 						phy-mode = "trgmii";
 

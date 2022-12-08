@@ -50,10 +50,13 @@
 	};
 };
 
+<<<<<<< HEAD
 &clk_pwm {
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &pronto {
 	iris {
 		compatible = "qcom,wcn3660b";
@@ -65,12 +68,17 @@
 	vdd-supply = <&reg_touch_key>;
 };
 
+<<<<<<< HEAD
 &vibrator {
 	status = "okay";
 };
 
 &msmgpio {
 	tkey_en_default: tkey-en-default-state {
+=======
+&msmgpio {
+	tkey_en_default: tkey-en-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio97";
 		function = "gpio";
 

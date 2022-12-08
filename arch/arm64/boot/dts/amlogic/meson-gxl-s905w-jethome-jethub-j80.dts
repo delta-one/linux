@@ -86,11 +86,19 @@
 };
 
 &efuse {
+<<<<<<< HEAD
 	bt_mac: bt-mac@6 {
 		reg = <0x6 0x6>;
 	};
 
 	wifi_mac: wifi-mac@c {
+=======
+	bt_mac: bt_mac@6 {
+		reg = <0x6 0x6>;
+	};
+
+	wifi_mac: wifi_mac@C {
+>>>>>>> b7ba80a49124 (Commit)
 		reg = <0xc 0x6>;
 	};
 };
@@ -239,7 +247,11 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c_b_pins>;
 
+<<<<<<< HEAD
 	pcf8563: rtc@51 {
+=======
+	pcf8563: pcf8563@51 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "nxp,pcf8563";
 		reg = <0x51>;
 		status = "okay";

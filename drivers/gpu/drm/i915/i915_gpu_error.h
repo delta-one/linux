@@ -94,7 +94,11 @@ struct intel_engine_coredump {
 	struct intel_instdone instdone;
 
 	/* GuC matched capture-lists info */
+<<<<<<< HEAD
 	struct intel_guc_state_capture *guc_capture;
+=======
+	struct intel_guc_state_capture *capture;
+>>>>>>> b7ba80a49124 (Commit)
 	struct __guc_capture_parsed_output *guc_capture_node;
 
 	struct i915_gem_context_coredump {
@@ -107,7 +111,10 @@ struct intel_engine_coredump {
 		int active;
 		int guilty;
 		struct i915_sched_attr sched_attr;
+<<<<<<< HEAD
 		u32 hwsp_seqno;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} context;
 
 	struct i915_vma_coredump *vma;

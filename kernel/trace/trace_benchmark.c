@@ -51,7 +51,11 @@ static void trace_do_benchmark(void)
 
 	local_irq_disable();
 	start = trace_clock_local();
+<<<<<<< HEAD
 	trace_benchmark_event(bm_str, bm_last);
+=======
+	trace_benchmark_event(bm_str);
+>>>>>>> b7ba80a49124 (Commit)
 	stop = trace_clock_local();
 	local_irq_enable();
 

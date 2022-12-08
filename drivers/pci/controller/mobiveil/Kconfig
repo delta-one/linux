@@ -8,14 +8,22 @@ config PCIE_MOBIVEIL
 
 config PCIE_MOBIVEIL_HOST
 	bool
+<<<<<<< HEAD
 	depends on PCI_MSI
+=======
+	depends on PCI_MSI_IRQ_DOMAIN
+>>>>>>> b7ba80a49124 (Commit)
 	select PCIE_MOBIVEIL
 
 config PCIE_MOBIVEIL_PLAT
 	bool "Mobiveil AXI PCIe controller"
 	depends on ARCH_ZYNQMP || COMPILE_TEST
 	depends on OF
+<<<<<<< HEAD
 	depends on PCI_MSI
+=======
+	depends on PCI_MSI_IRQ_DOMAIN
+>>>>>>> b7ba80a49124 (Commit)
 	select PCIE_MOBIVEIL_HOST
 	help
 	  Say Y here if you want to enable support for the Mobiveil AXI PCIe
@@ -25,7 +33,11 @@ config PCIE_MOBIVEIL_PLAT
 config PCIE_LAYERSCAPE_GEN4
 	bool "Freescale Layerscape PCIe Gen4 controller"
 	depends on ARCH_LAYERSCAPE || COMPILE_TEST
+<<<<<<< HEAD
 	depends on PCI_MSI
+=======
+	depends on PCI_MSI_IRQ_DOMAIN
+>>>>>>> b7ba80a49124 (Commit)
 	select PCIE_MOBIVEIL_HOST
 	help
 	  Say Y here if you want PCIe Gen4 controller support on

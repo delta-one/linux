@@ -70,7 +70,11 @@ static const struct clk_ops mtk_ref2usb_tx_ops = {
 	.unprepare	= mtk_ref2usb_tx_unprepare,
 };
 
+<<<<<<< HEAD
 struct clk_hw *mtk_clk_register_ref2usb_tx(const char *name,
+=======
+struct clk_hw * __init mtk_clk_register_ref2usb_tx(const char *name,
+>>>>>>> b7ba80a49124 (Commit)
 			const char *parent_name, void __iomem *reg)
 {
 	struct mtk_ref2usb_tx *tx;
@@ -98,6 +102,7 @@ struct clk_hw *mtk_clk_register_ref2usb_tx(const char *name,
 
 	return &tx->hw;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(mtk_clk_register_ref2usb_tx);
 
 void mtk_clk_unregister_ref2usb_tx(struct clk_hw *hw)
@@ -108,5 +113,7 @@ void mtk_clk_unregister_ref2usb_tx(struct clk_hw *hw)
 	kfree(tx);
 }
 EXPORT_SYMBOL_GPL(mtk_clk_unregister_ref2usb_tx);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_LICENSE("GPL");

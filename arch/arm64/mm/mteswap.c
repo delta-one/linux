@@ -24,7 +24,11 @@ int mte_save_tags(struct page *page)
 {
 	void *tag_storage, *ret;
 
+<<<<<<< HEAD
 	if (!page_mte_tagged(page))
+=======
+	if (!test_bit(PG_mte_tagged, &page->flags))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	tag_storage = mte_allocate_tag_storage();
@@ -46,17 +50,29 @@ int mte_save_tags(struct page *page)
 	return 0;
 }
 
+<<<<<<< HEAD
 void mte_restore_tags(swp_entry_t entry, struct page *page)
+=======
+bool mte_restore_tags(swp_entry_t entry, struct page *page)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	void *tags = xa_load(&mte_pages, entry.val);
 
 	if (!tags)
+<<<<<<< HEAD
 		return;
 
 	if (try_page_mte_tagging(page)) {
 		mte_restore_page_tags(page_address(page), tags);
 		set_page_mte_tagged(page);
 	}
+=======
+		return false;
+
+	mte_restore_page_tags(page_address(page), tags);
+
+	return true;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void mte_invalidate_tags(int type, pgoff_t offset)

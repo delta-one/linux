@@ -683,9 +683,15 @@ static const struct regmap_config pfuze_regmap_config = {
 	.cache_type = REGCACHE_RBTREE,
 };
 
+<<<<<<< HEAD
 static int pfuze100_regulator_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int pfuze100_regulator_probe(struct i2c_client *client,
+				    const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct pfuze_chip *pfuze_chip;
 	struct regulator_config config = { };
 	int i, ret;
@@ -845,10 +851,16 @@ static int pfuze100_regulator_probe(struct i2c_client *client)
 static struct i2c_driver pfuze_driver = {
 	.driver = {
 		.name = "pfuze100-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 		.of_match_table = pfuze_dt_ids,
 	},
 	.probe_new = pfuze100_regulator_probe,
+=======
+		.of_match_table = pfuze_dt_ids,
+	},
+	.probe = pfuze100_regulator_probe,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_i2c_driver(pfuze_driver);
 

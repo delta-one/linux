@@ -9,8 +9,12 @@ struct sfp;
 struct sfp_quirk {
 	const char *vendor;
 	const char *part;
+<<<<<<< HEAD
 	void (*modes)(const struct sfp_eeprom_id *id, unsigned long *modes,
 		      unsigned long *interfaces);
+=======
+	void (*modes)(const struct sfp_eeprom_id *id, unsigned long *modes);
+>>>>>>> b7ba80a49124 (Commit)
 	void (*fixup)(struct sfp *sfp);
 };
 

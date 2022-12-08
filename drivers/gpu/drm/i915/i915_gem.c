@@ -229,9 +229,14 @@ i915_gem_shmem_pread(struct drm_i915_gem_object *obj,
 		     struct drm_i915_gem_pread *args)
 {
 	unsigned int needs_clflush;
+<<<<<<< HEAD
 	char __user *user_data;
 	unsigned long offset;
 	pgoff_t idx;
+=======
+	unsigned int idx, offset;
+	char __user *user_data;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 remain;
 	int ret;
 
@@ -384,17 +389,26 @@ i915_gem_gtt_pread(struct drm_i915_gem_object *obj,
 {
 	struct drm_i915_private *i915 = to_i915(obj->base.dev);
 	struct i915_ggtt *ggtt = to_gt(i915)->ggtt;
+<<<<<<< HEAD
 	unsigned long remain, offset;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	intel_wakeref_t wakeref;
 	struct drm_mm_node node;
 	void __user *user_data;
 	struct i915_vma *vma;
+<<<<<<< HEAD
 	int ret = 0;
 
 	if (overflows_type(args->size, remain) ||
 	    overflows_type(args->offset, offset))
 		return -EINVAL;
 
+=======
+	u64 remain, offset;
+	int ret = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	wakeref = intel_runtime_pm_get(&i915->runtime_pm);
 
 	vma = i915_gem_gtt_prepare(obj, &node, false);
@@ -545,6 +559,7 @@ i915_gem_gtt_pwrite_fast(struct drm_i915_gem_object *obj,
 	struct drm_i915_private *i915 = to_i915(obj->base.dev);
 	struct i915_ggtt *ggtt = to_gt(i915)->ggtt;
 	struct intel_runtime_pm *rpm = &i915->runtime_pm;
+<<<<<<< HEAD
 	unsigned long remain, offset;
 	intel_wakeref_t wakeref;
 	struct drm_mm_node node;
@@ -556,6 +571,15 @@ i915_gem_gtt_pwrite_fast(struct drm_i915_gem_object *obj,
 	    overflows_type(args->offset, offset))
 		return -EINVAL;
 
+=======
+	intel_wakeref_t wakeref;
+	struct drm_mm_node node;
+	struct i915_vma *vma;
+	u64 remain, offset;
+	void __user *user_data;
+	int ret = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (i915_gem_object_has_struct_page(obj)) {
 		/*
 		 * Avoid waking the device up if we can fallback, as
@@ -663,9 +687,14 @@ i915_gem_shmem_pwrite(struct drm_i915_gem_object *obj,
 {
 	unsigned int partial_cacheline_write;
 	unsigned int needs_clflush;
+<<<<<<< HEAD
 	void __user *user_data;
 	unsigned long offset;
 	pgoff_t idx;
+=======
+	unsigned int offset, idx;
+	void __user *user_data;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 remain;
 	int ret;
 
@@ -853,7 +882,11 @@ void i915_gem_runtime_suspend(struct drm_i915_private *i915)
 		__i915_gem_object_release_mmap_gtt(obj);
 
 	list_for_each_entry_safe(obj, on,
+<<<<<<< HEAD
 				 &i915->runtime_pm.lmem_userfault_list, userfault_link)
+=======
+				 &to_gt(i915)->lmem_userfault_list, userfault_link)
+>>>>>>> b7ba80a49124 (Commit)
 		i915_gem_object_runtime_pm_release_mmap_offset(obj);
 
 	/*
@@ -1109,7 +1142,11 @@ void i915_gem_drain_freed_objects(struct drm_i915_private *i915)
 {
 	while (atomic_read(&i915->mm.free_count)) {
 		flush_work(&i915->mm.free_work);
+<<<<<<< HEAD
 		drain_workqueue(i915->bdev.wq);
+=======
+		flush_delayed_work(&i915->bdev.wq);
+>>>>>>> b7ba80a49124 (Commit)
 		rcu_barrier();
 	}
 }
@@ -1138,8 +1175,11 @@ void i915_gem_drain_workqueue(struct drm_i915_private *i915)
 
 int i915_gem_init(struct drm_i915_private *dev_priv)
 {
+<<<<<<< HEAD
 	struct intel_gt *gt;
 	unsigned int i;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	/* We need to fallback to 4K pages if host doesn't support huge gtt. */
@@ -1150,12 +1190,17 @@ int i915_gem_init(struct drm_i915_private *dev_priv)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	for_each_gt(gt, dev_priv, i) {
 		intel_uc_fetch_firmwares(&gt->uc);
 		intel_wopcm_init(&gt->wopcm);
 		if (GRAPHICS_VER(dev_priv) >= 8)
 			setup_private_pat(gt);
 	}
+=======
+	intel_uc_fetch_firmwares(&to_gt(dev_priv)->uc);
+	intel_wopcm_init(&dev_priv->wopcm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = i915_init_ggtt(dev_priv);
 	if (ret) {
@@ -1174,11 +1219,17 @@ int i915_gem_init(struct drm_i915_private *dev_priv)
 	 */
 	intel_init_clock_gating(dev_priv);
 
+<<<<<<< HEAD
 	for_each_gt(gt, dev_priv, i) {
 		ret = intel_gt_init(gt);
 		if (ret)
 			goto err_unlock;
 	}
+=======
+	ret = intel_gt_init(to_gt(dev_priv));
+	if (ret)
+		goto err_unlock;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -1191,6 +1242,7 @@ int i915_gem_init(struct drm_i915_private *dev_priv)
 err_unlock:
 	i915_gem_drain_workqueue(dev_priv);
 
+<<<<<<< HEAD
 	if (ret != -EIO) {
 		for_each_gt(gt, dev_priv, i) {
 			intel_gt_driver_remove(gt);
@@ -1198,6 +1250,10 @@ err_unlock:
 			intel_uc_cleanup_firmwares(&gt->uc);
 		}
 	}
+=======
+	if (ret != -EIO)
+		intel_uc_cleanup_firmwares(&to_gt(dev_priv)->uc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ret == -EIO) {
 		/*
@@ -1205,12 +1261,19 @@ err_unlock:
 		 * as wedged. But we only want to do this when the GPU is angry,
 		 * for all other failure, such as an allocation failure, bail.
 		 */
+<<<<<<< HEAD
 		for_each_gt(gt, dev_priv, i) {
 			if (!intel_gt_is_wedged(gt)) {
 				i915_probe_error(dev_priv,
 						 "Failed to initialize GPU, declaring it wedged!\n");
 				intel_gt_set_wedged(gt);
 			}
+=======
+		if (!intel_gt_is_wedged(to_gt(dev_priv))) {
+			i915_probe_error(dev_priv,
+					 "Failed to initialize GPU, declaring it wedged!\n");
+			intel_gt_set_wedged(to_gt(dev_priv));
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		/* Minimal basic recovery for KMS */
@@ -1238,20 +1301,33 @@ void i915_gem_driver_unregister(struct drm_i915_private *i915)
 
 void i915_gem_driver_remove(struct drm_i915_private *dev_priv)
 {
+<<<<<<< HEAD
 	struct intel_gt *gt;
 	unsigned int i;
 
 	i915_gem_suspend_late(dev_priv);
 	for_each_gt(gt, dev_priv, i)
 		intel_gt_driver_remove(gt);
+=======
+	intel_wakeref_auto_fini(&to_gt(dev_priv)->userfault_wakeref);
+
+	i915_gem_suspend_late(dev_priv);
+	intel_gt_driver_remove(to_gt(dev_priv));
+>>>>>>> b7ba80a49124 (Commit)
 	dev_priv->uabi_engines = RB_ROOT;
 
 	/* Flush any outstanding unpin_work. */
 	i915_gem_drain_workqueue(dev_priv);
+<<<<<<< HEAD
+=======
+
+	i915_gem_drain_freed_objects(dev_priv);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void i915_gem_driver_release(struct drm_i915_private *dev_priv)
 {
+<<<<<<< HEAD
 	struct intel_gt *gt;
 	unsigned int i;
 
@@ -1259,6 +1335,11 @@ void i915_gem_driver_release(struct drm_i915_private *dev_priv)
 		intel_gt_driver_release(gt);
 		intel_uc_cleanup_firmwares(&gt->uc);
 	}
+=======
+	intel_gt_driver_release(to_gt(dev_priv));
+
+	intel_uc_cleanup_firmwares(&to_gt(dev_priv)->uc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Flush any outstanding work, including i915_gem_context.release_work. */
 	i915_gem_drain_workqueue(dev_priv);
@@ -1288,7 +1369,11 @@ void i915_gem_init_early(struct drm_i915_private *dev_priv)
 
 void i915_gem_cleanup_early(struct drm_i915_private *dev_priv)
 {
+<<<<<<< HEAD
 	i915_gem_drain_workqueue(dev_priv);
+=======
+	i915_gem_drain_freed_objects(dev_priv);
+>>>>>>> b7ba80a49124 (Commit)
 	GEM_BUG_ON(!llist_empty(&dev_priv->mm.free_list));
 	GEM_BUG_ON(atomic_read(&dev_priv->mm.free_count));
 	drm_WARN_ON(&dev_priv->drm, dev_priv->mm.shrink_count);
@@ -1300,7 +1385,11 @@ int i915_gem_open(struct drm_i915_private *i915, struct drm_file *file)
 	struct i915_drm_client *client;
 	int ret = -ENOMEM;
 
+<<<<<<< HEAD
 	drm_dbg(&i915->drm, "\n");
+=======
+	DRM_DEBUG("\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	file_priv = kzalloc(sizeof(*file_priv), GFP_KERNEL);
 	if (!file_priv)

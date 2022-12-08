@@ -3443,7 +3443,10 @@ static int hclge_update_tp_port_info(struct hclge_dev *hdev)
 	hdev->hw.mac.autoneg = cmd.base.autoneg;
 	hdev->hw.mac.speed = cmd.base.speed;
 	hdev->hw.mac.duplex = cmd.base.duplex;
+<<<<<<< HEAD
 	linkmode_copy(hdev->hw.mac.advertising, cmd.link_modes.advertising);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -3910,6 +3913,7 @@ static int hclge_set_all_vf_rst(struct hclge_dev *hdev, bool reset)
 			return ret;
 		}
 
+<<<<<<< HEAD
 		if (!reset ||
 		    !test_bit(HCLGE_VPORT_STATE_INITED, &vport->state))
 			continue;
@@ -3921,6 +3925,11 @@ static int hclge_set_all_vf_rst(struct hclge_dev *hdev, bool reset)
 			continue;
 		}
 
+=======
+		if (!reset || !test_bit(HCLGE_VPORT_STATE_ALIVE, &vport->state))
+			continue;
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* Inform VF to process the reset.
 		 * hclge_inform_reset_assert_to_vf may fail if VF
 		 * driver is not loaded.
@@ -4617,15 +4626,19 @@ static void hclge_reset_service_task(struct hclge_dev *hdev)
 
 static void hclge_update_vport_alive(struct hclge_dev *hdev)
 {
+<<<<<<< HEAD
 #define HCLGE_ALIVE_SECONDS_NORMAL		8
 
 	unsigned long alive_time = HCLGE_ALIVE_SECONDS_NORMAL * HZ;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	/* start from vport 1 for PF is always alive */
 	for (i = 1; i < hdev->num_alloc_vport; i++) {
 		struct hclge_vport *vport = &hdev->vport[i];
 
+<<<<<<< HEAD
 		if (!test_bit(HCLGE_VPORT_STATE_INITED, &vport->state) ||
 		    !test_bit(HCLGE_VPORT_STATE_ALIVE, &vport->state))
 			continue;
@@ -4636,6 +4649,14 @@ static void hclge_update_vport_alive(struct hclge_dev *hdev)
 				 "VF %u heartbeat timeout\n",
 				 i - HCLGE_VF_VPORT_START_NUM);
 		}
+=======
+		if (time_after(jiffies, vport->last_active_jiffies + 8 * HZ))
+			clear_bit(HCLGE_VPORT_STATE_ALIVE, &vport->state);
+
+		/* If vf is not alive, set to default value */
+		if (!test_bit(HCLGE_VPORT_STATE_ALIVE, &vport->state))
+			vport->mps = HCLGE_MAC_DEFAULT_FRAME;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -4875,6 +4896,10 @@ static int hclge_set_rss_tuple(struct hnae3_handle *handle,
 		return ret;
 	}
 
+<<<<<<< HEAD
+=======
+	hclge_comm_get_rss_type(&vport->nic, &hdev->rss_cfg.rss_tuple_sets);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -8079,11 +8104,17 @@ int hclge_vport_start(struct hclge_vport *vport)
 {
 	struct hclge_dev *hdev = vport->back;
 
+<<<<<<< HEAD
 	set_bit(HCLGE_VPORT_STATE_INITED, &vport->state);
 	set_bit(HCLGE_VPORT_STATE_ALIVE, &vport->state);
 	set_bit(HCLGE_VPORT_STATE_PROMISC_CHANGE, &vport->state);
 	vport->last_active_jiffies = jiffies;
 	vport->need_notify = 0;
+=======
+	set_bit(HCLGE_VPORT_STATE_ALIVE, &vport->state);
+	set_bit(HCLGE_VPORT_STATE_PROMISC_CHANGE, &vport->state);
+	vport->last_active_jiffies = jiffies;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (test_bit(vport->vport_id, hdev->vport_config_block)) {
 		if (vport->vport_id) {
@@ -8101,9 +8132,13 @@ int hclge_vport_start(struct hclge_vport *vport)
 
 void hclge_vport_stop(struct hclge_vport *vport)
 {
+<<<<<<< HEAD
 	clear_bit(HCLGE_VPORT_STATE_INITED, &vport->state);
 	clear_bit(HCLGE_VPORT_STATE_ALIVE, &vport->state);
 	vport->need_notify = 0;
+=======
+	clear_bit(HCLGE_VPORT_STATE_ALIVE, &vport->state);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int hclge_client_start(struct hnae3_handle *handle)
@@ -9227,8 +9262,12 @@ static int hclge_set_vf_mac(struct hnae3_handle *handle, int vf,
 		return 0;
 	}
 
+<<<<<<< HEAD
 	dev_info(&hdev->pdev->dev,
 		 "MAC of VF %d has been set to %s, will be active after VF reset\n",
+=======
+	dev_info(&hdev->pdev->dev, "MAC of VF %d has been set to %s\n",
+>>>>>>> b7ba80a49124 (Commit)
 		 vf, format_mac_addr);
 	return 0;
 }
@@ -10485,6 +10524,7 @@ static int hclge_set_vf_vlan_filter(struct hnae3_handle *handle, int vfid,
 	 * for DEVICE_VERSION_V3, vf doesn't need to know about the port based
 	 * VLAN state.
 	 */
+<<<<<<< HEAD
 	if (ae_dev->dev_version < HNAE3_DEVICE_VERSION_V3) {
 		if (test_bit(HCLGE_VPORT_STATE_ALIVE, &vport->state))
 			(void)hclge_push_vf_port_base_vlan_info(&hdev->vport[0],
@@ -10495,6 +10535,14 @@ static int hclge_set_vf_vlan_filter(struct hnae3_handle *handle, int vfid,
 			set_bit(HCLGE_VPORT_NEED_NOTIFY_VF_VLAN,
 				&vport->need_notify);
 	}
+=======
+	if (ae_dev->dev_version < HNAE3_DEVICE_VERSION_V3 &&
+	    test_bit(HCLGE_VPORT_STATE_ALIVE, &vport->state))
+		(void)hclge_push_vf_port_base_vlan_info(&hdev->vport[0],
+							vport->vport_id,
+							state, &vlan_info);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -11611,12 +11659,18 @@ static int hclge_init_ae_dev(struct hnae3_ae_dev *ae_dev)
 	if (ret)
 		goto err_msi_irq_uninit;
 
+<<<<<<< HEAD
 	if (hdev->hw.mac.media_type == HNAE3_MEDIA_TYPE_COPPER) {
 		if (hnae3_dev_phy_imp_supported(hdev))
 			ret = hclge_update_tp_port_info(hdev);
 		else
 			ret = hclge_mac_mdio_config(hdev);
 
+=======
+	if (hdev->hw.mac.media_type == HNAE3_MEDIA_TYPE_COPPER &&
+	    !hnae3_dev_phy_imp_supported(hdev)) {
+		ret = hclge_mac_mdio_config(hdev);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			goto err_msi_irq_uninit;
 	}
@@ -11965,7 +12019,11 @@ static void hclge_reset_vport_state(struct hclge_dev *hdev)
 	int i;
 
 	for (i = 0; i < hdev->num_alloc_vport; i++) {
+<<<<<<< HEAD
 		clear_bit(HCLGE_VPORT_STATE_ALIVE, &vport->state);
+=======
+		hclge_vport_stop(vport);
+>>>>>>> b7ba80a49124 (Commit)
 		vport++;
 	}
 }
@@ -12778,6 +12836,7 @@ static int hclge_gro_en(struct hnae3_handle *handle, bool enable)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int hclge_sync_vport_promisc_mode(struct hclge_vport *vport)
 {
 	struct hnae3_handle *handle = &vport->nic;
@@ -12787,12 +12846,22 @@ static int hclge_sync_vport_promisc_mode(struct hclge_vport *vport)
 	u8 tmp_flags;
 	bool bc_en;
 	int ret;
+=======
+static void hclge_sync_promisc_mode(struct hclge_dev *hdev)
+{
+	struct hclge_vport *vport = &hdev->vport[0];
+	struct hnae3_handle *handle = &vport->nic;
+	u8 tmp_flags;
+	int ret;
+	u16 i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (vport->last_promisc_flags != vport->overflow_promisc_flags) {
 		set_bit(HCLGE_VPORT_STATE_PROMISC_CHANGE, &vport->state);
 		vport->last_promisc_flags = vport->overflow_promisc_flags;
 	}
 
+<<<<<<< HEAD
 	if (!test_and_clear_bit(HCLGE_VPORT_STATE_PROMISC_CHANGE,
 				&vport->state))
 		return 0;
@@ -12843,6 +12912,49 @@ static void hclge_sync_promisc_mode(struct hclge_dev *hdev)
 		ret = hclge_sync_vport_promisc_mode(vport);
 		if (ret)
 			return;
+=======
+	if (test_bit(HCLGE_VPORT_STATE_PROMISC_CHANGE, &vport->state)) {
+		tmp_flags = handle->netdev_flags | vport->last_promisc_flags;
+		ret = hclge_set_promisc_mode(handle, tmp_flags & HNAE3_UPE,
+					     tmp_flags & HNAE3_MPE);
+		if (!ret) {
+			clear_bit(HCLGE_VPORT_STATE_PROMISC_CHANGE,
+				  &vport->state);
+			set_bit(HCLGE_VPORT_STATE_VLAN_FLTR_CHANGE,
+				&vport->state);
+		}
+	}
+
+	for (i = 1; i < hdev->num_alloc_vport; i++) {
+		bool uc_en = false;
+		bool mc_en = false;
+		bool bc_en;
+
+		vport = &hdev->vport[i];
+
+		if (!test_and_clear_bit(HCLGE_VPORT_STATE_PROMISC_CHANGE,
+					&vport->state))
+			continue;
+
+		if (vport->vf_info.trusted) {
+			uc_en = vport->vf_info.request_uc_en > 0 ||
+				vport->overflow_promisc_flags &
+				HNAE3_OVERFLOW_UPE;
+			mc_en = vport->vf_info.request_mc_en > 0 ||
+				vport->overflow_promisc_flags &
+				HNAE3_OVERFLOW_MPE;
+		}
+		bc_en = vport->vf_info.request_bc_en > 0;
+
+		ret = hclge_cmd_set_promisc_mode(hdev, vport->vport_id, uc_en,
+						 mc_en, bc_en);
+		if (ret) {
+			set_bit(HCLGE_VPORT_STATE_PROMISC_CHANGE,
+				&vport->state);
+			return;
+		}
+		hclge_set_vport_vlan_fltr_change(vport);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -12979,11 +13091,14 @@ static void hclge_clear_vport_vf_info(struct hclge_vport *vport, int vfid)
 	struct hclge_vlan_info vlan_info;
 	int ret;
 
+<<<<<<< HEAD
 	clear_bit(HCLGE_VPORT_STATE_INITED, &vport->state);
 	clear_bit(HCLGE_VPORT_STATE_ALIVE, &vport->state);
 	vport->need_notify = 0;
 	vport->mps = 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* after disable sriov, clean VF rate configured by PF */
 	ret = hclge_tm_qs_shaper_cfg(vport, 0);
 	if (ret)
@@ -13027,16 +13142,26 @@ static void hclge_clean_vport_config(struct hnae3_ae_dev *ae_dev, int num_vfs)
 static int hclge_get_dscp_prio(struct hnae3_handle *h, u8 dscp, u8 *tc_mode,
 			       u8 *priority)
 {
+<<<<<<< HEAD
 	struct hclge_vport *vport = hclge_get_vport(h);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (dscp >= HNAE3_MAX_DSCP)
 		return -EINVAL;
 
 	if (tc_mode)
+<<<<<<< HEAD
 		*tc_mode = vport->nic.kinfo.tc_map_mode;
 	if (priority)
 		*priority = vport->nic.kinfo.dscp_prio[dscp] == HNAE3_PRIO_ID_INVALID ? 0 :
 			    vport->nic.kinfo.dscp_prio[dscp];
+=======
+		*tc_mode = h->kinfo.tc_map_mode;
+	if (priority)
+		*priority = h->kinfo.dscp_prio[dscp] == HNAE3_PRIO_ID_INVALID ? 0 :
+			    h->kinfo.dscp_prio[dscp];
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

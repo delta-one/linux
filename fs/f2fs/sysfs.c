@@ -53,9 +53,15 @@ static const char *gc_mode_names[MAX_GC_MODE] = {
 
 struct f2fs_attr {
 	struct attribute attr;
+<<<<<<< HEAD
 	ssize_t (*show)(struct f2fs_attr *a, struct f2fs_sb_info *sbi, char *buf);
 	ssize_t (*store)(struct f2fs_attr *a, struct f2fs_sb_info *sbi,
 			 const char *buf, size_t len);
+=======
+	ssize_t (*show)(struct f2fs_attr *, struct f2fs_sb_info *, char *);
+	ssize_t (*store)(struct f2fs_attr *, struct f2fs_sb_info *,
+			 const char *, size_t);
+>>>>>>> b7ba80a49124 (Commit)
 	int struct_type;
 	int offset;
 	int id;
@@ -95,28 +101,44 @@ static unsigned char *__struct_ptr(struct f2fs_sb_info *sbi, int struct_type)
 static ssize_t dirty_segments_show(struct f2fs_attr *a,
 		struct f2fs_sb_info *sbi, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%llu\n",
+=======
+	return sprintf(buf, "%llu\n",
+>>>>>>> b7ba80a49124 (Commit)
 			(unsigned long long)(dirty_segments(sbi)));
 }
 
 static ssize_t free_segments_show(struct f2fs_attr *a,
 		struct f2fs_sb_info *sbi, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%llu\n",
+=======
+	return sprintf(buf, "%llu\n",
+>>>>>>> b7ba80a49124 (Commit)
 			(unsigned long long)(free_segments(sbi)));
 }
 
 static ssize_t ovp_segments_show(struct f2fs_attr *a,
 		struct f2fs_sb_info *sbi, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%llu\n",
+=======
+	return sprintf(buf, "%llu\n",
+>>>>>>> b7ba80a49124 (Commit)
 			(unsigned long long)(overprovision_segments(sbi)));
 }
 
 static ssize_t lifetime_write_kbytes_show(struct f2fs_attr *a,
 		struct f2fs_sb_info *sbi, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%llu\n",
+=======
+	return sprintf(buf, "%llu\n",
+>>>>>>> b7ba80a49124 (Commit)
 			(unsigned long long)(sbi->kbytes_written +
 			((f2fs_get_sectors_written(sbi) -
 				sbi->sectors_written_start) >> 1)));
@@ -125,6 +147,7 @@ static ssize_t lifetime_write_kbytes_show(struct f2fs_attr *a,
 static ssize_t sb_status_show(struct f2fs_attr *a,
 		struct f2fs_sb_info *sbi, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%lx\n", sbi->s_flag);
 }
 
@@ -132,6 +155,9 @@ static ssize_t cp_status_show(struct f2fs_attr *a,
 		struct f2fs_sb_info *sbi, char *buf)
 {
 	return sysfs_emit(buf, "%x\n", le32_to_cpu(F2FS_CKPT(sbi)->ckpt_flags));
+=======
+	return sprintf(buf, "%lx\n", sbi->s_flag);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t pending_discard_show(struct f2fs_attr *a,
@@ -139,6 +165,7 @@ static ssize_t pending_discard_show(struct f2fs_attr *a,
 {
 	if (!SM_I(sbi)->dcc_info)
 		return -EINVAL;
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%llu\n", (unsigned long long)atomic_read(
 				&SM_I(sbi)->dcc_info->discard_cmd_cnt));
 }
@@ -149,6 +176,12 @@ static ssize_t gc_mode_show(struct f2fs_attr *a,
 	return sysfs_emit(buf, "%s\n", gc_mode_names[sbi->gc_mode]);
 }
 
+=======
+	return sprintf(buf, "%llu\n", (unsigned long long)atomic_read(
+				&SM_I(sbi)->dcc_info->discard_cmd_cnt));
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t features_show(struct f2fs_attr *a,
 		struct f2fs_sb_info *sbi, char *buf)
 {
@@ -205,7 +238,11 @@ static ssize_t features_show(struct f2fs_attr *a,
 static ssize_t current_reserved_blocks_show(struct f2fs_attr *a,
 					struct f2fs_sb_info *sbi, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", sbi->current_reserved_blocks);
+=======
+	return sprintf(buf, "%u\n", sbi->current_reserved_blocks);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t unusable_show(struct f2fs_attr *a,
@@ -217,7 +254,11 @@ static ssize_t unusable_show(struct f2fs_attr *a,
 		unusable = sbi->unusable_block_count;
 	else
 		unusable = f2fs_get_unusable_blocks(sbi);
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%llu\n", (unsigned long long)unusable);
+=======
+	return sprintf(buf, "%llu\n", (unsigned long long)unusable);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t encoding_show(struct f2fs_attr *a,
@@ -232,13 +273,21 @@ static ssize_t encoding_show(struct f2fs_attr *a,
 			(sb->s_encoding->version >> 8) & 0xff,
 			sb->s_encoding->version & 0xff);
 #endif
+<<<<<<< HEAD
 	return sysfs_emit(buf, "(none)\n");
+=======
+	return sprintf(buf, "(none)");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t mounted_time_sec_show(struct f2fs_attr *a,
 		struct f2fs_sb_info *sbi, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%llu\n", SIT_I(sbi)->mounted_time);
+=======
+	return sprintf(buf, "%llu", SIT_I(sbi)->mounted_time);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_F2FS_STAT_FS
@@ -247,7 +296,11 @@ static ssize_t moved_blocks_foreground_show(struct f2fs_attr *a,
 {
 	struct f2fs_stat_info *si = F2FS_STAT(sbi);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%llu\n",
+=======
+	return sprintf(buf, "%llu\n",
+>>>>>>> b7ba80a49124 (Commit)
 		(unsigned long long)(si->tot_blks -
 			(si->bg_data_blks + si->bg_node_blks)));
 }
@@ -257,7 +310,11 @@ static ssize_t moved_blocks_background_show(struct f2fs_attr *a,
 {
 	struct f2fs_stat_info *si = F2FS_STAT(sbi);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%llu\n",
+=======
+	return sprintf(buf, "%llu\n",
+>>>>>>> b7ba80a49124 (Commit)
 		(unsigned long long)(si->bg_data_blks + si->bg_node_blks));
 }
 
@@ -268,7 +325,11 @@ static ssize_t avg_vblocks_show(struct f2fs_attr *a,
 
 	si->dirty_count = dirty_segments(sbi);
 	f2fs_update_sit_info(sbi);
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%llu\n", (unsigned long long)(si->avg_vblocks));
+=======
+	return sprintf(buf, "%llu\n", (unsigned long long)(si->avg_vblocks));
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif
 
@@ -338,8 +399,18 @@ static ssize_t f2fs_sbi_show(struct f2fs_attr *a,
 		return sysfs_emit(buf, "%u\n", sbi->compr_new_inode);
 #endif
 
+<<<<<<< HEAD
 	if (!strcmp(a->attr.name, "gc_segment_mode"))
 		return sysfs_emit(buf, "%u\n", sbi->gc_segment_mode);
+=======
+	if (!strcmp(a->attr.name, "gc_urgent"))
+		return sysfs_emit(buf, "%s\n",
+				gc_mode_names[sbi->gc_mode]);
+
+	if (!strcmp(a->attr.name, "gc_segment_mode"))
+		return sysfs_emit(buf, "%s\n",
+				gc_mode_names[sbi->gc_segment_mode]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!strcmp(a->attr.name, "gc_reclaimed_segments")) {
 		return sysfs_emit(buf, "%u\n",
@@ -363,7 +434,11 @@ static ssize_t f2fs_sbi_show(struct f2fs_attr *a,
 
 	ui = (unsigned int *)(ptr + a->offset);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", *ui);
+=======
+	return sprintf(buf, "%u\n", *ui);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t __sbi_store(struct f2fs_attr *a,
@@ -452,7 +527,11 @@ out:
 	if (ret < 0)
 		return ret;
 #ifdef CONFIG_F2FS_FAULT_INJECTION
+<<<<<<< HEAD
 	if (a->struct_type == FAULT_INFO_TYPE && t >= BIT(FAULT_MAX))
+=======
+	if (a->struct_type == FAULT_INFO_TYPE && t >= (1 << FAULT_MAX))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	if (a->struct_type == FAULT_INFO_RATE && t >= UINT_MAX)
 		return -EINVAL;
@@ -473,6 +552,7 @@ out:
 		return count;
 	}
 
+<<<<<<< HEAD
 	if (!strcmp(a->attr.name, "discard_io_aware_gran")) {
 		if (t > MAX_PLIST_NUM)
 			return -EINVAL;
@@ -484,6 +564,8 @@ out:
 		return count;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!strcmp(a->attr.name, "discard_granularity")) {
 		if (t == 0 || t > MAX_PLIST_NUM)
 			return -EINVAL;
@@ -495,6 +577,7 @@ out:
 		return count;
 	}
 
+<<<<<<< HEAD
 	if (!strcmp(a->attr.name, "max_ordered_discard")) {
 		if (t == 0 || t > MAX_PLIST_NUM)
 			return -EINVAL;
@@ -511,18 +594,30 @@ out:
 		return count;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!strcmp(a->attr.name, "migration_granularity")) {
 		if (t == 0 || t > sbi->segs_per_sec)
 			return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	if (!strcmp(a->attr.name, "trim_sections"))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!strcmp(a->attr.name, "gc_urgent")) {
 		if (t == 0) {
 			sbi->gc_mode = GC_NORMAL;
 		} else if (t == 1) {
 			sbi->gc_mode = GC_URGENT_HIGH;
 			if (sbi->gc_thread) {
+<<<<<<< HEAD
 				sbi->gc_thread->gc_wake = true;
+=======
+				sbi->gc_thread->gc_wake = 1;
+>>>>>>> b7ba80a49124 (Commit)
 				wake_up_interruptible_all(
 					&sbi->gc_thread->gc_wait_queue_head);
 				wake_up_discard_thread(sbi, true);
@@ -532,7 +627,11 @@ out:
 		} else if (t == 3) {
 			sbi->gc_mode = GC_URGENT_MID;
 			if (sbi->gc_thread) {
+<<<<<<< HEAD
 				sbi->gc_thread->gc_wake = true;
+=======
+				sbi->gc_thread->gc_wake = 1;
+>>>>>>> b7ba80a49124 (Commit)
 				wake_up_interruptible_all(
 					&sbi->gc_thread->gc_wait_queue_head);
 			}
@@ -556,10 +655,17 @@ out:
 		return count;
 	}
 
+<<<<<<< HEAD
 	if (!strcmp(a->attr.name, "gc_remaining_trials")) {
 		spin_lock(&sbi->gc_remaining_trials_lock);
 		sbi->gc_remaining_trials = t;
 		spin_unlock(&sbi->gc_remaining_trials_lock);
+=======
+	if (!strcmp(a->attr.name, "gc_urgent_high_remaining")) {
+		spin_lock(&sbi->gc_urgent_high_lock);
+		sbi->gc_urgent_high_remaining = t;
+		spin_unlock(&sbi->gc_urgent_high_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 		return count;
 	}
@@ -598,6 +704,7 @@ out:
 		sbi->compr_new_inode = 0;
 		return count;
 	}
+<<<<<<< HEAD
 
 	if (!strcmp(a->attr.name, "compress_percent")) {
 		if (t == 0 || t > 100)
@@ -612,6 +719,8 @@ out:
 		*ui = t;
 		return count;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	if (!strcmp(a->attr.name, "atgc_candidate_ratio")) {
@@ -688,6 +797,7 @@ out:
 		return count;
 	}
 
+<<<<<<< HEAD
 	if (!strcmp(a->attr.name, "readdir_ra")) {
 		sbi->readdir_ra = !!t;
 		return count;
@@ -729,6 +839,8 @@ out:
 		return count;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	*ui = (unsigned int)t;
 
 	return count;
@@ -801,7 +913,11 @@ static void f2fs_sb_release(struct kobject *kobj)
 static ssize_t f2fs_feature_show(struct f2fs_attr *a,
 		struct f2fs_sb_info *sbi, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "supported\n");
+=======
+	return sprintf(buf, "supported\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define F2FS_FEATURE_RO_ATTR(_name)				\
@@ -814,8 +930,13 @@ static ssize_t f2fs_sb_feature_show(struct f2fs_attr *a,
 		struct f2fs_sb_info *sbi, char *buf)
 {
 	if (F2FS_HAS_FEATURE(sbi, a->id))
+<<<<<<< HEAD
 		return sysfs_emit(buf, "supported\n");
 	return sysfs_emit(buf, "unsupported\n");
+=======
+		return sprintf(buf, "supported\n");
+	return sprintf(buf, "unsupported\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define F2FS_SB_FEATURE_RO_ATTR(_name, _feat)			\
@@ -868,11 +989,17 @@ F2FS_RW_ATTR(DCC_INFO, discard_cmd_control, max_discard_request, max_discard_req
 F2FS_RW_ATTR(DCC_INFO, discard_cmd_control, min_discard_issue_time, min_discard_issue_time);
 F2FS_RW_ATTR(DCC_INFO, discard_cmd_control, mid_discard_issue_time, mid_discard_issue_time);
 F2FS_RW_ATTR(DCC_INFO, discard_cmd_control, max_discard_issue_time, max_discard_issue_time);
+<<<<<<< HEAD
 F2FS_RW_ATTR(DCC_INFO, discard_cmd_control, discard_io_aware_gran, discard_io_aware_gran);
 F2FS_RW_ATTR(DCC_INFO, discard_cmd_control, discard_urgent_util, discard_urgent_util);
 F2FS_RW_ATTR(DCC_INFO, discard_cmd_control, discard_granularity, discard_granularity);
 F2FS_RW_ATTR(DCC_INFO, discard_cmd_control, max_ordered_discard, max_ordered_discard);
 F2FS_RW_ATTR(RESERVED_BLOCKS, f2fs_sb_info, reserved_blocks, reserved_blocks);
+=======
+F2FS_RW_ATTR(DCC_INFO, discard_cmd_control, discard_granularity, discard_granularity);
+F2FS_RW_ATTR(RESERVED_BLOCKS, f2fs_sb_info, reserved_blocks, reserved_blocks);
+F2FS_RW_ATTR(SM_INFO, f2fs_sm_info, batched_trim_sections, trim_sections);
+>>>>>>> b7ba80a49124 (Commit)
 F2FS_RW_ATTR(SM_INFO, f2fs_sm_info, ipu_policy, ipu_policy);
 F2FS_RW_ATTR(SM_INFO, f2fs_sm_info, min_ipu_util, min_ipu_util);
 F2FS_RW_ATTR(SM_INFO, f2fs_sm_info, min_fsync_blocks, min_fsync_blocks);
@@ -907,7 +1034,11 @@ F2FS_RW_ATTR(FAULT_INFO_TYPE, f2fs_fault_info, inject_type, inject_type);
 #endif
 F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, data_io_flag, data_io_flag);
 F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, node_io_flag, node_io_flag);
+<<<<<<< HEAD
 F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, gc_remaining_trials, gc_remaining_trials);
+=======
+F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, gc_urgent_high_remaining, gc_urgent_high_remaining);
+>>>>>>> b7ba80a49124 (Commit)
 F2FS_RW_ATTR(CPRC_INFO, ckpt_req_control, ckpt_thread_ioprio, ckpt_thread_ioprio);
 F2FS_GENERAL_RO_ATTR(dirty_segments);
 F2FS_GENERAL_RO_ATTR(free_segments);
@@ -920,7 +1051,10 @@ F2FS_GENERAL_RO_ATTR(encoding);
 F2FS_GENERAL_RO_ATTR(mounted_time_sec);
 F2FS_GENERAL_RO_ATTR(main_blkaddr);
 F2FS_GENERAL_RO_ATTR(pending_discard);
+<<<<<<< HEAD
 F2FS_GENERAL_RO_ATTR(gc_mode);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_F2FS_STAT_FS
 F2FS_STAT_ATTR(STAT_INFO, f2fs_stat_info, cp_foreground_calls, cp_count);
 F2FS_STAT_ATTR(STAT_INFO, f2fs_stat_info, cp_background_calls, bg_cp_count);
@@ -964,8 +1098,11 @@ F2FS_FEATURE_RO_ATTR(compression);
 F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, compr_written_block, compr_written_block);
 F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, compr_saved_block, compr_saved_block);
 F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, compr_new_inode, compr_new_inode);
+<<<<<<< HEAD
 F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, compress_percent, compress_percent);
 F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, compress_watermark, compress_watermark);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 F2FS_FEATURE_RO_ATTR(pin_file);
 
@@ -987,11 +1124,14 @@ F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, peak_atomic_write, peak_atomic_write);
 F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, committed_atomic_block, committed_atomic_block);
 F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, revoked_atomic_block, revoked_atomic_block);
 
+<<<<<<< HEAD
 /* For block age extent cache */
 F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, hot_data_age_threshold, hot_data_age_threshold);
 F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, warm_data_age_threshold, warm_data_age_threshold);
 F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, last_age_weight, last_age_weight);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ATTR_LIST(name) (&f2fs_attr_##name.attr)
 static struct attribute *f2fs_attrs[] = {
 	ATTR_LIST(gc_urgent_sleep_time),
@@ -1007,12 +1147,18 @@ static struct attribute *f2fs_attrs[] = {
 	ATTR_LIST(min_discard_issue_time),
 	ATTR_LIST(mid_discard_issue_time),
 	ATTR_LIST(max_discard_issue_time),
+<<<<<<< HEAD
 	ATTR_LIST(discard_io_aware_gran),
 	ATTR_LIST(discard_urgent_util),
 	ATTR_LIST(discard_granularity),
 	ATTR_LIST(max_ordered_discard),
 	ATTR_LIST(pending_discard),
 	ATTR_LIST(gc_mode),
+=======
+	ATTR_LIST(discard_granularity),
+	ATTR_LIST(pending_discard),
+	ATTR_LIST(batched_trim_sections),
+>>>>>>> b7ba80a49124 (Commit)
 	ATTR_LIST(ipu_policy),
 	ATTR_LIST(min_ipu_util),
 	ATTR_LIST(min_fsync_blocks),
@@ -1045,7 +1191,11 @@ static struct attribute *f2fs_attrs[] = {
 #endif
 	ATTR_LIST(data_io_flag),
 	ATTR_LIST(node_io_flag),
+<<<<<<< HEAD
 	ATTR_LIST(gc_remaining_trials),
+=======
+	ATTR_LIST(gc_urgent_high_remaining),
+>>>>>>> b7ba80a49124 (Commit)
 	ATTR_LIST(ckpt_thread_ioprio),
 	ATTR_LIST(dirty_segments),
 	ATTR_LIST(free_segments),
@@ -1073,8 +1223,11 @@ static struct attribute *f2fs_attrs[] = {
 	ATTR_LIST(compr_written_block),
 	ATTR_LIST(compr_saved_block),
 	ATTR_LIST(compr_new_inode),
+<<<<<<< HEAD
 	ATTR_LIST(compress_percent),
 	ATTR_LIST(compress_watermark),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	/* For ATGC */
 	ATTR_LIST(atgc_candidate_ratio),
@@ -1090,9 +1243,12 @@ static struct attribute *f2fs_attrs[] = {
 	ATTR_LIST(peak_atomic_write),
 	ATTR_LIST(committed_atomic_block),
 	ATTR_LIST(revoked_atomic_block),
+<<<<<<< HEAD
 	ATTR_LIST(hot_data_age_threshold),
 	ATTR_LIST(warm_data_age_threshold),
 	ATTR_LIST(last_age_weight),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	NULL,
 };
 ATTRIBUTE_GROUPS(f2fs);
@@ -1133,10 +1289,15 @@ static struct attribute *f2fs_feat_attrs[] = {
 ATTRIBUTE_GROUPS(f2fs_feat);
 
 F2FS_GENERAL_RO_ATTR(sb_status);
+<<<<<<< HEAD
 F2FS_GENERAL_RO_ATTR(cp_status);
 static struct attribute *f2fs_stat_attrs[] = {
 	ATTR_LIST(sb_status),
 	ATTR_LIST(cp_status),
+=======
+static struct attribute *f2fs_stat_attrs[] = {
+	ATTR_LIST(sb_status),
+>>>>>>> b7ba80a49124 (Commit)
 	NULL,
 };
 ATTRIBUTE_GROUPS(f2fs_stat);
@@ -1180,13 +1341,21 @@ static const struct sysfs_ops f2fs_attr_ops = {
 	.store	= f2fs_attr_store,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type f2fs_sb_ktype = {
+=======
+static struct kobj_type f2fs_sb_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.default_groups = f2fs_groups,
 	.sysfs_ops	= &f2fs_attr_ops,
 	.release	= f2fs_sb_release,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type f2fs_ktype = {
+=======
+static struct kobj_type f2fs_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops	= &f2fs_attr_ops,
 };
 
@@ -1194,7 +1363,11 @@ static struct kset f2fs_kset = {
 	.kobj	= {.ktype = &f2fs_ktype},
 };
 
+<<<<<<< HEAD
 static const struct kobj_type f2fs_feat_ktype = {
+=======
+static struct kobj_type f2fs_feat_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.default_groups = f2fs_feat_groups,
 	.sysfs_ops	= &f2fs_attr_ops,
 };
@@ -1235,7 +1408,11 @@ static const struct sysfs_ops f2fs_stat_attr_ops = {
 	.store	= f2fs_stat_attr_store,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type f2fs_stat_ktype = {
+=======
+static struct kobj_type f2fs_stat_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.default_groups = f2fs_stat_groups,
 	.sysfs_ops	= &f2fs_stat_attr_ops,
 	.release	= f2fs_stat_kobj_release,
@@ -1262,7 +1439,11 @@ static const struct sysfs_ops f2fs_feature_list_attr_ops = {
 	.show	= f2fs_sb_feat_attr_show,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type f2fs_feature_list_ktype = {
+=======
+static struct kobj_type f2fs_feature_list_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.default_groups = f2fs_sb_feat_groups,
 	.sysfs_ops	= &f2fs_feature_list_attr_ops,
 	.release	= f2fs_feature_list_kobj_release,
@@ -1341,6 +1522,7 @@ static int __maybe_unused victim_bits_seq_show(struct seq_file *seq,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int __maybe_unused discard_plist_seq_show(struct seq_file *seq,
 						void *offset)
 {
@@ -1379,6 +1561,8 @@ static int __maybe_unused discard_plist_seq_show(struct seq_file *seq,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int __init f2fs_init_sysfs(void)
 {
 	int ret;
@@ -1449,8 +1633,11 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
 #endif
 		proc_create_single_data("victim_bits", 0444, sbi->s_proc,
 				victim_bits_seq_show, sb);
+<<<<<<< HEAD
 		proc_create_single_data("discard_plist_info", 0444, sbi->s_proc,
 				discard_plist_seq_show, sb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return 0;
 put_feature_list_kobj:
@@ -1474,7 +1661,10 @@ void f2fs_unregister_sysfs(struct f2fs_sb_info *sbi)
 		remove_proc_entry("segment_info", sbi->s_proc);
 		remove_proc_entry("segment_bits", sbi->s_proc);
 		remove_proc_entry("victim_bits", sbi->s_proc);
+<<<<<<< HEAD
 		remove_proc_entry("discard_plist_info", sbi->s_proc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		remove_proc_entry(sbi->sb->s_id, f2fs_proc_root);
 	}
 

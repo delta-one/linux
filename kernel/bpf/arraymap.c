@@ -306,9 +306,23 @@ static int array_map_get_next_key(struct bpf_map *map, void *key, void *next_key
 	return 0;
 }
 
+<<<<<<< HEAD
 /* Called from syscall or from eBPF program */
 static long array_map_update_elem(struct bpf_map *map, void *key, void *value,
 				  u64 map_flags)
+=======
+static void check_and_free_fields(struct bpf_array *arr, void *val)
+{
+	if (map_value_has_timer(&arr->map))
+		bpf_timer_cancel_and_free(val + arr->map.timer_off);
+	if (map_value_has_kptrs(&arr->map))
+		bpf_map_free_kptrs(&arr->map, val);
+}
+
+/* Called from syscall or from eBPF program */
+static int array_map_update_elem(struct bpf_map *map, void *key, void *value,
+				 u64 map_flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_array *array = container_of(map, struct bpf_array, map);
 	u32 index = *(u32 *)key;
@@ -327,13 +341,21 @@ static long array_map_update_elem(struct bpf_map *map, void *key, void *value,
 		return -EEXIST;
 
 	if (unlikely((map_flags & BPF_F_LOCK) &&
+<<<<<<< HEAD
 		     !btf_record_has_field(map->record, BPF_SPIN_LOCK)))
+=======
+		     !map_value_has_spin_lock(map)))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (array->map.map_type == BPF_MAP_TYPE_PERCPU_ARRAY) {
 		val = this_cpu_ptr(array->pptrs[index & array->index_mask]);
 		copy_map_value(map, val, value);
+<<<<<<< HEAD
 		bpf_obj_free_fields(array->map.record, val);
+=======
+		check_and_free_fields(array, val);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		val = array->value +
 			(u64)array->elem_size * (index & array->index_mask);
@@ -341,7 +363,11 @@ static long array_map_update_elem(struct bpf_map *map, void *key, void *value,
 			copy_map_value_locked(map, val, value, false);
 		else
 			copy_map_value(map, val, value);
+<<<<<<< HEAD
 		bpf_obj_free_fields(array->map.record, val);
+=======
+		check_and_free_fields(array, val);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return 0;
 }
@@ -378,7 +404,11 @@ int bpf_percpu_array_update(struct bpf_map *map, void *key, void *value,
 	pptr = array->pptrs[index & array->index_mask];
 	for_each_possible_cpu(cpu) {
 		copy_map_value_long(map, per_cpu_ptr(pptr, cpu), value + off);
+<<<<<<< HEAD
 		bpf_obj_free_fields(array->map.record, per_cpu_ptr(pptr, cpu));
+=======
+		check_and_free_fields(array, per_cpu_ptr(pptr, cpu));
+>>>>>>> b7ba80a49124 (Commit)
 		off += size;
 	}
 	rcu_read_unlock();
@@ -386,7 +416,11 @@ int bpf_percpu_array_update(struct bpf_map *map, void *key, void *value,
 }
 
 /* Called from syscall or from eBPF program */
+<<<<<<< HEAD
 static long array_map_delete_elem(struct bpf_map *map, void *key)
+=======
+static int array_map_delete_elem(struct bpf_map *map, void *key)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return -EINVAL;
 }
@@ -401,12 +435,21 @@ static void array_map_free_timers(struct bpf_map *map)
 	struct bpf_array *array = container_of(map, struct bpf_array, map);
 	int i;
 
+<<<<<<< HEAD
 	/* We don't reset or free fields other than timer on uref dropping to zero. */
 	if (!btf_record_has_field(map->record, BPF_TIMER))
 		return;
 
 	for (i = 0; i < array->map.max_entries; i++)
 		bpf_obj_free_timer(map->record, array_map_elem_ptr(array, i));
+=======
+	/* We don't reset or free kptr on uref dropping to zero. */
+	if (!map_value_has_timer(map))
+		return;
+
+	for (i = 0; i < array->map.max_entries; i++)
+		bpf_timer_cancel_and_free(array_map_elem_ptr(array, i) + map->timer_off);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Called when map->refcnt goes to zero, either from workqueue or from syscall */
@@ -415,21 +458,35 @@ static void array_map_free(struct bpf_map *map)
 	struct bpf_array *array = container_of(map, struct bpf_array, map);
 	int i;
 
+<<<<<<< HEAD
 	if (!IS_ERR_OR_NULL(map->record)) {
+=======
+	if (map_value_has_kptrs(map)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (array->map.map_type == BPF_MAP_TYPE_PERCPU_ARRAY) {
 			for (i = 0; i < array->map.max_entries; i++) {
 				void __percpu *pptr = array->pptrs[i & array->index_mask];
 				int cpu;
 
 				for_each_possible_cpu(cpu) {
+<<<<<<< HEAD
 					bpf_obj_free_fields(map->record, per_cpu_ptr(pptr, cpu));
+=======
+					bpf_map_free_kptrs(map, per_cpu_ptr(pptr, cpu));
+>>>>>>> b7ba80a49124 (Commit)
 					cond_resched();
 				}
 			}
 		} else {
 			for (i = 0; i < array->map.max_entries; i++)
+<<<<<<< HEAD
 				bpf_obj_free_fields(map->record, array_map_elem_ptr(array, i));
 		}
+=======
+				bpf_map_free_kptrs(map, array_map_elem_ptr(array, i));
+		}
+		bpf_map_free_kptr_off_tab(map);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (array->map.map_type == BPF_MAP_TYPE_PERCPU_ARRAY)
@@ -686,8 +743,13 @@ static const struct bpf_iter_seq_info iter_seq_info = {
 	.seq_priv_size		= sizeof(struct bpf_iter_seq_array_map_info),
 };
 
+<<<<<<< HEAD
 static long bpf_for_each_array_elem(struct bpf_map *map, bpf_callback_t callback_fn,
 				    void *callback_ctx, u64 flags)
+=======
+static int bpf_for_each_array_elem(struct bpf_map *map, bpf_callback_t callback_fn,
+				   void *callback_ctx, u64 flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 i, key, num_elems = 0;
 	struct bpf_array *array;
@@ -721,6 +783,7 @@ static long bpf_for_each_array_elem(struct bpf_map *map, bpf_callback_t callback
 	return num_elems;
 }
 
+<<<<<<< HEAD
 static u64 array_map_mem_usage(const struct bpf_map *map)
 {
 	struct bpf_array *array = container_of(map, struct bpf_array, map);
@@ -743,6 +806,8 @@ static u64 array_map_mem_usage(const struct bpf_map *map)
 	return usage;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 BTF_ID_LIST_SINGLE(array_map_btf_ids, struct, bpf_array)
 const struct bpf_map_ops array_map_ops = {
 	.map_meta_equal = array_map_meta_equal,
@@ -764,7 +829,10 @@ const struct bpf_map_ops array_map_ops = {
 	.map_update_batch = generic_map_update_batch,
 	.map_set_for_each_callback_args = map_set_for_each_callback_args,
 	.map_for_each_callback = bpf_for_each_array_elem,
+<<<<<<< HEAD
 	.map_mem_usage = array_map_mem_usage,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.map_btf_id = &array_map_btf_ids[0],
 	.iter_seq_info = &iter_seq_info,
 };
@@ -785,7 +853,10 @@ const struct bpf_map_ops percpu_array_map_ops = {
 	.map_update_batch = generic_map_update_batch,
 	.map_set_for_each_callback_args = map_set_for_each_callback_args,
 	.map_for_each_callback = bpf_for_each_array_elem,
+<<<<<<< HEAD
 	.map_mem_usage = array_map_mem_usage,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.map_btf_id = &array_map_btf_ids[0],
 	.iter_seq_info = &iter_seq_info,
 };
@@ -871,7 +942,11 @@ int bpf_fd_array_map_update_elem(struct bpf_map *map, struct file *map_file,
 	return 0;
 }
 
+<<<<<<< HEAD
 static long fd_array_map_delete_elem(struct bpf_map *map, void *key)
+=======
+static int fd_array_map_delete_elem(struct bpf_map *map, void *key)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_array *array = container_of(map, struct bpf_array, map);
 	void *old_ptr;
@@ -1180,7 +1255,10 @@ const struct bpf_map_ops prog_array_map_ops = {
 	.map_fd_sys_lookup_elem = prog_fd_array_sys_lookup_elem,
 	.map_release_uref = prog_array_map_clear,
 	.map_seq_show_elem = prog_array_map_seq_show_elem,
+<<<<<<< HEAD
 	.map_mem_usage = array_map_mem_usage,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.map_btf_id = &array_map_btf_ids[0],
 };
 
@@ -1282,7 +1360,10 @@ const struct bpf_map_ops perf_event_array_map_ops = {
 	.map_fd_put_ptr = perf_event_fd_array_put_ptr,
 	.map_release = perf_event_fd_array_release,
 	.map_check_btf = map_check_no_btf,
+<<<<<<< HEAD
 	.map_mem_usage = array_map_mem_usage,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.map_btf_id = &array_map_btf_ids[0],
 };
 
@@ -1317,7 +1398,10 @@ const struct bpf_map_ops cgroup_array_map_ops = {
 	.map_fd_get_ptr = cgroup_fd_array_get_ptr,
 	.map_fd_put_ptr = cgroup_fd_array_put_ptr,
 	.map_check_btf = map_check_no_btf,
+<<<<<<< HEAD
 	.map_mem_usage = array_map_mem_usage,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.map_btf_id = &array_map_btf_ids[0],
 };
 #endif
@@ -1406,6 +1490,9 @@ const struct bpf_map_ops array_of_maps_map_ops = {
 	.map_lookup_batch = generic_map_lookup_batch,
 	.map_update_batch = generic_map_update_batch,
 	.map_check_btf = map_check_no_btf,
+<<<<<<< HEAD
 	.map_mem_usage = array_map_mem_usage,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.map_btf_id = &array_map_btf_ids[0],
 };

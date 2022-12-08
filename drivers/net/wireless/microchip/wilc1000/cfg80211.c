@@ -959,6 +959,7 @@ static inline void wilc_wfi_cfg_parse_ch_attr(u8 *buf, u32 len, u8 sta_ch)
 		return;
 
 	while (index + sizeof(*e) <= len) {
+<<<<<<< HEAD
 		u16 attr_size;
 
 		e = (struct wilc_attr_entry *)&buf[index];
@@ -1000,10 +1001,35 @@ static inline void wilc_wfi_cfg_parse_ch_attr(u8 *buf, u32 len, u8 sta_ch)
 			if (i > elem_size)
 				break;
 
+=======
+		e = (struct wilc_attr_entry *)&buf[index];
+		if (e->attr_type == IEEE80211_P2P_ATTR_CHANNEL_LIST)
+			ch_list_idx = index;
+		else if (e->attr_type == IEEE80211_P2P_ATTR_OPER_CHANNEL)
+			op_ch_idx = index;
+		if (ch_list_idx && op_ch_idx)
+			break;
+		index += le16_to_cpu(e->attr_len) + sizeof(*e);
+	}
+
+	if (ch_list_idx) {
+		u16 attr_size;
+		struct wilc_ch_list_elem *e;
+		int i;
+
+		ch_list = (struct wilc_attr_ch_list *)&buf[ch_list_idx];
+		attr_size = le16_to_cpu(ch_list->attr_len);
+		for (i = 0; i < attr_size;) {
+			e = (struct wilc_ch_list_elem *)(ch_list->elem + i);
+>>>>>>> b7ba80a49124 (Commit)
 			if (e->op_class == WILC_WLAN_OPERATING_CLASS_2_4GHZ) {
 				memset(e->ch_list, sta_ch, e->no_of_channels);
 				break;
 			}
+<<<<<<< HEAD
+=======
+			i += e->no_of_channels;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -1182,7 +1208,11 @@ static int mgmt_tx(struct wiphy *wiphy,
 	const u8 *vendor_ie;
 	int ret = 0;
 
+<<<<<<< HEAD
 	*cookie = get_random_u32();
+=======
+	*cookie = prandom_u32();
+>>>>>>> b7ba80a49124 (Commit)
 	priv->tx_cookie = *cookie;
 	mgmt = (const struct ieee80211_mgmt *)buf;
 

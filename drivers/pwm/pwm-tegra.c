@@ -145,6 +145,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
 		 * source clock rate as required_clk_rate, PWM controller will
 		 * be able to configure the requested period.
 		 */
+<<<<<<< HEAD
 		required_clk_rate = DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC << PWM_DUTY_WIDTH,
 						     period_ns);
 
@@ -158,6 +159,10 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
 			 * the requested period.
 			 */
 			required_clk_rate *= 2;
+=======
+		required_clk_rate =
+			(NSEC_PER_SEC / period_ns) << PWM_DUTY_WIDTH;
+>>>>>>> b7ba80a49124 (Commit)
 
 		err = dev_pm_opp_set_rate(pc->dev, required_clk_rate);
 		if (err < 0)

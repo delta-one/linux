@@ -96,11 +96,14 @@ enum {
 	MV_PCS_PORT_INFO_NPORTS_MASK	= 0x0380,
 	MV_PCS_PORT_INFO_NPORTS_SHIFT	= 7,
 
+<<<<<<< HEAD
 	/* SerDes reinitialization 88E21X0 */
 	MV_AN_21X0_SERDES_CTRL2	= 0x800f,
 	MV_AN_21X0_SERDES_CTRL2_AUTO_INIT_DIS	= BIT(13),
 	MV_AN_21X0_SERDES_CTRL2_RUN_INIT	= BIT(15),
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* These registers appear at 0x800X and 0xa00X - the 0xa00X control
 	 * registers appear to set themselves to the 0x800X when AN is
 	 * restarted, but status registers appear readable from either.
@@ -122,6 +125,7 @@ enum {
 	MV_V2_33X0_PORT_CTRL_MACTYPE_10GBASER_NO_SGMII_AN	= 0x5,
 	MV_V2_33X0_PORT_CTRL_MACTYPE_10GBASER_RATE_MATCH	= 0x6,
 	MV_V2_33X0_PORT_CTRL_MACTYPE_USXGMII			= 0x7,
+<<<<<<< HEAD
 	MV_V2_PORT_INTR_STS		= 0xf040,
 	MV_V2_PORT_INTR_MASK		= 0xf043,
 	MV_V2_PORT_INTR_STS_WOL_EN	= BIT(8),
@@ -132,6 +136,18 @@ enum {
 	MV_V2_WOL_CTRL			= 0xf06e,
 	MV_V2_WOL_CTRL_CLEAR_STS	= BIT(15),
 	MV_V2_WOL_CTRL_MAGIC_PKT_EN	= BIT(0),
+=======
+	MV_V2_PORT_INTR_STS     = 0xf040,
+	MV_V2_PORT_INTR_MASK    = 0xf043,
+	MV_V2_PORT_INTR_STS_WOL_EN      = BIT(8),
+	MV_V2_MAGIC_PKT_WORD0   = 0xf06b,
+	MV_V2_MAGIC_PKT_WORD1   = 0xf06c,
+	MV_V2_MAGIC_PKT_WORD2   = 0xf06d,
+	/* Wake on LAN registers */
+	MV_V2_WOL_CTRL          = 0xf06e,
+	MV_V2_WOL_CTRL_CLEAR_STS        = BIT(15),
+	MV_V2_WOL_CTRL_MAGIC_PKT_EN     = BIT(0),
+>>>>>>> b7ba80a49124 (Commit)
 	/* Temperature control/read registers (88X3310 only) */
 	MV_V2_TEMP_CTRL		= 0xf08a,
 	MV_V2_TEMP_CTRL_MASK	= 0xc000,
@@ -145,8 +161,11 @@ struct mv3310_chip {
 	bool (*has_downshift)(struct phy_device *phydev);
 	void (*init_supported_interfaces)(unsigned long *mask);
 	int (*get_mactype)(struct phy_device *phydev);
+<<<<<<< HEAD
 	int (*set_mactype)(struct phy_device *phydev, int mactype);
 	int (*select_mactype)(unsigned long *interfaces);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int (*init_interface)(struct phy_device *phydev, int mactype);
 
 #ifdef CONFIG_HWMON
@@ -473,10 +492,16 @@ static int mv3310_sfp_insert(void *upstream, const struct sfp_eeprom_id *id)
 {
 	struct phy_device *phydev = upstream;
 	__ETHTOOL_DECLARE_LINK_MODE_MASK(support) = { 0, };
+<<<<<<< HEAD
 	DECLARE_PHY_INTERFACE_MASK(interfaces);
 	phy_interface_t iface;
 
 	sfp_parse_support(phydev->sfp_bus, id, support, interfaces);
+=======
+	phy_interface_t iface;
+
+	sfp_parse_support(phydev->sfp_bus, id, support);
+>>>>>>> b7ba80a49124 (Commit)
 	iface = sfp_select_interface(phydev->sfp_bus, support);
 
 	if (iface != PHY_INTERFACE_MODE_10GBASER) {
@@ -601,6 +626,7 @@ static int mv2110_get_mactype(struct phy_device *phydev)
 	return mactype & MV_PMA_21X0_PORT_CTRL_MACTYPE_MASK;
 }
 
+<<<<<<< HEAD
 static int mv2110_set_mactype(struct phy_device *phydev, int mactype)
 {
 	int err, val;
@@ -644,6 +670,8 @@ static int mv2110_select_mactype(unsigned long *interfaces)
 		return -1;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mv3310_get_mactype(struct phy_device *phydev)
 {
 	int mactype;
@@ -655,6 +683,7 @@ static int mv3310_get_mactype(struct phy_device *phydev)
 	return mactype & MV_V2_33X0_PORT_CTRL_MACTYPE_MASK;
 }
 
+<<<<<<< HEAD
 static int mv3310_set_mactype(struct phy_device *phydev, int mactype)
 {
 	int ret;
@@ -695,6 +724,8 @@ static int mv3310_select_mactype(unsigned long *interfaces)
 		return -1;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mv2110_init_interface(struct phy_device *phydev, int mactype)
 {
 	struct mv3310_priv *priv = dev_get_drvdata(&phydev->mdio.dev);
@@ -778,6 +809,7 @@ static int mv3310_config_init(struct phy_device *phydev)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	/* If host provided host supported interface modes, try to select the
 	 * best one
 	 */
@@ -792,6 +824,8 @@ static int mv3310_config_init(struct phy_device *phydev)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mactype = chip->get_mactype(phydev);
 	if (mactype < 0)
 		return mactype;
@@ -1154,8 +1188,11 @@ static const struct mv3310_chip mv3310_type = {
 	.has_downshift = mv3310_has_downshift,
 	.init_supported_interfaces = mv3310_init_supported_interfaces,
 	.get_mactype = mv3310_get_mactype,
+<<<<<<< HEAD
 	.set_mactype = mv3310_set_mactype,
 	.select_mactype = mv3310_select_mactype,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.init_interface = mv3310_init_interface,
 
 #ifdef CONFIG_HWMON
@@ -1167,8 +1204,11 @@ static const struct mv3310_chip mv3340_type = {
 	.has_downshift = mv3310_has_downshift,
 	.init_supported_interfaces = mv3340_init_supported_interfaces,
 	.get_mactype = mv3310_get_mactype,
+<<<<<<< HEAD
 	.set_mactype = mv3310_set_mactype,
 	.select_mactype = mv3310_select_mactype,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.init_interface = mv3340_init_interface,
 
 #ifdef CONFIG_HWMON
@@ -1179,8 +1219,11 @@ static const struct mv3310_chip mv3340_type = {
 static const struct mv3310_chip mv2110_type = {
 	.init_supported_interfaces = mv2110_init_supported_interfaces,
 	.get_mactype = mv2110_get_mactype,
+<<<<<<< HEAD
 	.set_mactype = mv2110_set_mactype,
 	.select_mactype = mv2110_select_mactype,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.init_interface = mv2110_init_interface,
 
 #ifdef CONFIG_HWMON
@@ -1191,8 +1234,11 @@ static const struct mv3310_chip mv2110_type = {
 static const struct mv3310_chip mv2111_type = {
 	.init_supported_interfaces = mv2111_init_supported_interfaces,
 	.get_mactype = mv2110_get_mactype,
+<<<<<<< HEAD
 	.set_mactype = mv2110_set_mactype,
 	.select_mactype = mv2110_select_mactype,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.init_interface = mv2110_init_interface,
 
 #ifdef CONFIG_HWMON

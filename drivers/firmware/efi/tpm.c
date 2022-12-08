@@ -97,7 +97,11 @@ int __init efi_tpm_eventlog_init(void)
 		goto out_calc;
 	}
 
+<<<<<<< HEAD
 	memblock_reserve(efi.tpm_final_log,
+=======
+	memblock_reserve((unsigned long)final_tbl,
+>>>>>>> b7ba80a49124 (Commit)
 			 tbl_size + sizeof(*final_tbl));
 	efi_tpm_final_log_size = tbl_size;
 

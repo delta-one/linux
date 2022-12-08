@@ -91,7 +91,11 @@ static int ms5611_spi_probe(struct spi_device *spi)
 	spi_set_drvdata(spi, indio_dev);
 
 	spi->mode = SPI_MODE_0;
+<<<<<<< HEAD
 	spi->max_speed_hz = min(spi->max_speed_hz, 20000000U);
+=======
+	spi->max_speed_hz = 20000000;
+>>>>>>> b7ba80a49124 (Commit)
 	spi->bits_per_word = 8;
 	ret = spi_setup(spi);
 	if (ret < 0)
@@ -107,6 +111,14 @@ static int ms5611_spi_probe(struct spi_device *spi)
 			    spi_get_device_id(spi)->driver_data);
 }
 
+<<<<<<< HEAD
+=======
+static void ms5611_spi_remove(struct spi_device *spi)
+{
+	ms5611_remove(spi_get_drvdata(spi));
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id ms5611_spi_matches[] = {
 	{ .compatible = "meas,ms5611" },
 	{ .compatible = "meas,ms5607" },
@@ -128,6 +140,10 @@ static struct spi_driver ms5611_driver = {
 	},
 	.id_table = ms5611_id,
 	.probe = ms5611_spi_probe,
+<<<<<<< HEAD
+=======
+	.remove = ms5611_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_spi_driver(ms5611_driver);
 

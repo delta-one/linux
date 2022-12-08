@@ -8,7 +8,11 @@
 #ifndef __ASM_SYSCALL_WRAPPER_H
 #define __ASM_SYSCALL_WRAPPER_H
 
+<<<<<<< HEAD
 #include <asm/ptrace.h>
+=======
+struct pt_regs;
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SC_ARM64_REGS_TO_ARGS(x, ...)				\
 	__MAP(x,__SC_ARGS					\

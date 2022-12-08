@@ -15,6 +15,7 @@ extern struct static_call_site __start_static_call_sites[],
 extern struct static_call_tramp_key __start_static_call_tramp_key[],
 				    __stop_static_call_tramp_key[];
 
+<<<<<<< HEAD
 static int static_call_initialized;
 
 /*
@@ -27,6 +28,9 @@ void static_call_force_reinit(void)
 
 	static_call_initialized++;
 }
+=======
+static bool static_call_initialized;
+>>>>>>> b7ba80a49124 (Commit)
 
 /* mutex to protect key modules/sites */
 static DEFINE_MUTEX(static_call_mutex);
@@ -486,8 +490,12 @@ int __init static_call_init(void)
 {
 	int ret;
 
+<<<<<<< HEAD
 	/* See static_call_force_reinit(). */
 	if (static_call_initialized == 1)
+=======
+	if (static_call_initialized)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	cpus_read_lock();
@@ -502,12 +510,20 @@ int __init static_call_init(void)
 		BUG();
 	}
 
+<<<<<<< HEAD
 #ifdef CONFIG_MODULES
 	if (!static_call_initialized)
 		register_module_notifier(&static_call_module_nb);
 #endif
 
 	static_call_initialized = 1;
+=======
+	static_call_initialized = true;
+
+#ifdef CONFIG_MODULES
+	register_module_notifier(&static_call_module_nb);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 early_initcall(static_call_init);

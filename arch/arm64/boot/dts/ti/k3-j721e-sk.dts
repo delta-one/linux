@@ -400,6 +400,7 @@
 			J721E_IOPAD(0x124, PIN_INPUT, 7) /* (Y24) PRG0_PRU1_GPO9.GPIO0_72 */
 		>;
 	};
+<<<<<<< HEAD
 
 	main_i2c5_pins_default: main-i2c5-pins-default {
 		pinctrl-single,pins = <
@@ -441,6 +442,8 @@
 			J721E_IOPAD(0x234, PIN_INPUT, 7) /* (U3) EXT_REFCLK1.GPIO1_12 */
 		>;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &wkup_pmx0 {
@@ -516,6 +519,7 @@
 	status = "reserved";
 };
 
+<<<<<<< HEAD
 &mcu_uart0 {
 	status = "okay";
 	/* Default pinmux */
@@ -523,15 +527,54 @@
 
 &main_uart0 {
 	status = "okay";
+=======
+&main_uart0 {
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_uart0_pins_default>;
 	/* Shared with ATF on this platform */
 	power-domains = <&k3_pds 146 TI_SCI_PD_SHARED>;
 };
 
+<<<<<<< HEAD
 &main_uart1 {
 	status = "okay";
 	/* Default pinmux */
+=======
+&main_uart2 {
+	/* Brought out on RPi header */
+	status = "disabled";
+};
+
+&main_uart3 {
+	/* UART not brought out */
+	status = "disabled";
+};
+
+&main_uart5 {
+	/* UART not brought out */
+	status = "disabled";
+};
+
+&main_uart6 {
+	/* UART not brought out */
+	status = "disabled";
+};
+
+&main_uart7 {
+	/* UART not brought out */
+	status = "disabled";
+};
+
+&main_uart8 {
+	/* UART not brought out */
+	status = "disabled";
+};
+
+&main_uart9 {
+	/* Brought out on M.2 E Key */
+	status = "disabled";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &main_sdhci0 {
@@ -578,7 +621,10 @@
 };
 
 &main_i2c0 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_i2c0_pins_default>;
 	clock-frequency = <400000>;
@@ -606,15 +652,27 @@
 };
 
 &main_i2c1 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_i2c1_pins_default>;
 	/* i2c1 is used for DVI DDC, so we need to use 100kHz */
 	clock-frequency = <100000>;
 };
 
+<<<<<<< HEAD
 &main_i2c3 {
 	status = "okay";
+=======
+&main_i2c2 {
+	/* Unused */
+	status = "disabled";
+};
+
+&main_i2c3 {
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_i2c3_pins_default>;
 	clock-frequency = <400000>;
@@ -641,6 +699,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &main_i2c5 {
 	/* Brought out on RPi Header */
 	status = "okay";
@@ -657,6 +716,21 @@
 &main_gpio1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&rpi_header_gpio1_pins_default>;
+=======
+&main_i2c4 {
+	/* Unused */
+	status = "disabled";
+};
+
+&main_i2c5 {
+	/* Brought out on RPi Header */
+	status = "disabled";
+};
+
+&main_i2c6 {
+	/* Unused */
+	status = "disabled";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &main_gpio2 {
@@ -687,6 +761,13 @@
 	status = "disabled";
 };
 
+<<<<<<< HEAD
+=======
+&main_r5fss0_core0{
+	firmware-name = "pdk-ipc/ipc_echo_test_mcu2_0_release_strip.xer5f";
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &usb_serdes_mux {
 	idle-states = <1>, <1>; /* USB0 to SERDES3, USB1 to SERDES2 */
 };
@@ -851,6 +932,69 @@
 	};
 };
 
+<<<<<<< HEAD
+=======
+&mcasp0 {
+	/* Unused */
+	status = "disabled";
+};
+
+&mcasp1 {
+	/* Unused */
+	status = "disabled";
+};
+
+&mcasp2 {
+	/* Unused */
+	status = "disabled";
+};
+
+&mcasp3 {
+	/* Unused */
+	status = "disabled";
+};
+
+&mcasp4 {
+	/* Unused */
+	status = "disabled";
+};
+
+&mcasp5 {
+	/* Unused */
+	status = "disabled";
+};
+
+&mcasp6 {
+	/* Brought out on RPi header */
+	status = "disabled";
+};
+
+&mcasp7 {
+	/* Unused */
+	status = "disabled";
+};
+
+&mcasp8 {
+	/* Unused */
+	status = "disabled";
+};
+
+&mcasp9 {
+	/* Unused */
+	status = "disabled";
+};
+
+&mcasp10 {
+	/* Unused */
+	status = "disabled";
+};
+
+&mcasp11 {
+	/* Brought out on M.2 E Key */
+	status = "disabled";
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &serdes0 {
 	serdes0_pcie_link: phy@0 {
 		reg = <0>;
@@ -938,7 +1082,10 @@
 };
 
 &mailbox0_cluster0 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	interrupts = <436>;
 
 	mbox_mcu_r5fss0_core0: mbox-mcu-r5fss0-core0 {
@@ -953,7 +1100,10 @@
 };
 
 &mailbox0_cluster1 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	interrupts = <432>;
 
 	mbox_main_r5fss0_core0: mbox-main-r5fss0-core0 {
@@ -968,7 +1118,10 @@
 };
 
 &mailbox0_cluster2 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	interrupts = <428>;
 
 	mbox_main_r5fss1_core0: mbox-main-r5fss1-core0 {
@@ -983,7 +1136,10 @@
 };
 
 &mailbox0_cluster3 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	interrupts = <424>;
 
 	mbox_c66_0: mbox-c66-0 {
@@ -998,7 +1154,10 @@
 };
 
 &mailbox0_cluster4 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	interrupts = <420>;
 
 	mbox_c71_0: mbox-c71-0 {
@@ -1007,6 +1166,37 @@
 	};
 };
 
+<<<<<<< HEAD
+=======
+&mailbox0_cluster5 {
+	status = "disabled";
+};
+
+&mailbox0_cluster6 {
+	status = "disabled";
+};
+
+&mailbox0_cluster7 {
+	status = "disabled";
+};
+
+&mailbox0_cluster8 {
+	status = "disabled";
+};
+
+&mailbox0_cluster9 {
+	status = "disabled";
+};
+
+&mailbox0_cluster10 {
+	status = "disabled";
+};
+
+&mailbox0_cluster11 {
+	status = "disabled";
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &mcu_r5fss0_core0 {
 	mboxes = <&mailbox0_cluster0 &mbox_mcu_r5fss0_core0>;
 	memory-region = <&mcu_r5fss0_core0_dma_memory_region>,

@@ -174,7 +174,12 @@ static void daemonize(char *rundir, char *pidfile)
 		close(i);
 
 	i = open("/dev/null", O_RDWR);
+<<<<<<< HEAD
 	if (i < 0)
+=======
+	ret = dup(i);
+	if (ret == -1)
+>>>>>>> b7ba80a49124 (Commit)
 		exit(EXIT_FAILURE);
 
 	ret = dup(i);

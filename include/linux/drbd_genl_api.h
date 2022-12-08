@@ -47,7 +47,11 @@ enum drbd_state_info_bcast_reason {
 #undef linux
 
 #include <linux/drbd.h>
+<<<<<<< HEAD
 #define GENL_MAGIC_VERSION	1
+=======
+#define GENL_MAGIC_VERSION	API_VERSION
+>>>>>>> b7ba80a49124 (Commit)
 #define GENL_MAGIC_FAMILY	drbd
 #define GENL_MAGIC_FAMILY_HDRSZ	sizeof(struct drbd_genlmsghdr)
 #define GENL_MAGIC_INCLUDE_FILE <linux/drbd_genl.h>

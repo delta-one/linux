@@ -127,8 +127,13 @@ xchk_refcountbt_rmap_check(
 		 * is healthy each rmap_irec we see will be in agbno order
 		 * so we don't need insertion sort here.
 		 */
+<<<<<<< HEAD
 		frag = kmalloc(sizeof(struct xchk_refcnt_frag),
 				XCHK_GFP_FLAGS);
+=======
+		frag = kmem_alloc(sizeof(struct xchk_refcnt_frag),
+				KM_MAYFAIL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!frag)
 			return -ENOMEM;
 		memcpy(&frag->rm, rec, sizeof(frag->rm));
@@ -215,7 +220,11 @@ xchk_refcountbt_process_rmap_fragments(
 				continue;
 			}
 			list_del(&frag->list);
+<<<<<<< HEAD
 			kfree(frag);
+=======
+			kmem_free(frag);
+>>>>>>> b7ba80a49124 (Commit)
 			nr++;
 		}
 
@@ -257,11 +266,19 @@ done:
 	/* Delete fragments and work list. */
 	list_for_each_entry_safe(frag, n, &worklist, list) {
 		list_del(&frag->list);
+<<<<<<< HEAD
 		kfree(frag);
 	}
 	list_for_each_entry_safe(frag, n, &refchk->fragments, list) {
 		list_del(&frag->list);
 		kfree(frag);
+=======
+		kmem_free(frag);
+	}
+	list_for_each_entry_safe(frag, n, &refchk->fragments, list) {
+		list_del(&frag->list);
+		kmem_free(frag);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -269,6 +286,7 @@ done:
 STATIC void
 xchk_refcountbt_xref_rmap(
 	struct xfs_scrub		*sc,
+<<<<<<< HEAD
 	const struct xfs_refcount_irec	*irec)
 {
 	struct xchk_refcnt_check	refchk = {
@@ -276,6 +294,17 @@ xchk_refcountbt_xref_rmap(
 		.bno			= irec->rc_startblock,
 		.len			= irec->rc_blockcount,
 		.refcount		= irec->rc_refcount,
+=======
+	xfs_agblock_t			bno,
+	xfs_extlen_t			len,
+	xfs_nlink_t			refcount)
+{
+	struct xchk_refcnt_check	refchk = {
+		.sc = sc,
+		.bno = bno,
+		.len = len,
+		.refcount = refcount,
+>>>>>>> b7ba80a49124 (Commit)
 		.seen = 0,
 	};
 	struct xfs_rmap_irec		low;
@@ -289,9 +318,15 @@ xchk_refcountbt_xref_rmap(
 
 	/* Cross-reference with the rmapbt to confirm the refcount. */
 	memset(&low, 0, sizeof(low));
+<<<<<<< HEAD
 	low.rm_startblock = irec->rc_startblock;
 	memset(&high, 0xFF, sizeof(high));
 	high.rm_startblock = irec->rc_startblock + irec->rc_blockcount - 1;
+=======
+	low.rm_startblock = bno;
+	memset(&high, 0xFF, sizeof(high));
+	high.rm_startblock = bno + len - 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	INIT_LIST_HEAD(&refchk.fragments);
 	error = xfs_rmap_query_range(sc->sa.rmap_cur, &low, &high,
@@ -300,29 +335,50 @@ xchk_refcountbt_xref_rmap(
 		goto out_free;
 
 	xchk_refcountbt_process_rmap_fragments(&refchk);
+<<<<<<< HEAD
 	if (irec->rc_refcount != refchk.seen)
+=======
+	if (refcount != refchk.seen)
+>>>>>>> b7ba80a49124 (Commit)
 		xchk_btree_xref_set_corrupt(sc, sc->sa.rmap_cur, 0);
 
 out_free:
 	list_for_each_entry_safe(frag, n, &refchk.fragments, list) {
 		list_del(&frag->list);
+<<<<<<< HEAD
 		kfree(frag);
+=======
+		kmem_free(frag);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
 /* Cross-reference with the other btrees. */
 STATIC void
 xchk_refcountbt_xref(
+<<<<<<< HEAD
 	struct xfs_scrub		*sc,
 	const struct xfs_refcount_irec	*irec)
+=======
+	struct xfs_scrub	*sc,
+	xfs_agblock_t		agbno,
+	xfs_extlen_t		len,
+	xfs_nlink_t		refcount)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
 		return;
 
+<<<<<<< HEAD
 	xchk_xref_is_used_space(sc, irec->rc_startblock, irec->rc_blockcount);
 	xchk_xref_is_not_inode_chunk(sc, irec->rc_startblock,
 			irec->rc_blockcount);
 	xchk_refcountbt_xref_rmap(sc, irec);
+=======
+	xchk_xref_is_used_space(sc, agbno, len);
+	xchk_xref_is_not_inode_chunk(sc, agbno, len);
+	xchk_refcountbt_xref_rmap(sc, agbno, len, refcount);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Scrub a refcountbt record. */
@@ -331,6 +387,7 @@ xchk_refcountbt_rec(
 	struct xchk_btree	*bs,
 	const union xfs_btree_rec *rec)
 {
+<<<<<<< HEAD
 	struct xfs_refcount_irec irec;
 	xfs_agblock_t		*cow_blocks = bs->private;
 	struct xfs_perag	*pag = bs->cur->bc_ag.pag;
@@ -352,6 +409,37 @@ xchk_refcountbt_rec(
 		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
 
 	xchk_refcountbt_xref(bs->sc, &irec);
+=======
+	xfs_agblock_t		*cow_blocks = bs->private;
+	struct xfs_perag	*pag = bs->cur->bc_ag.pag;
+	xfs_agblock_t		bno;
+	xfs_extlen_t		len;
+	xfs_nlink_t		refcount;
+	bool			has_cowflag;
+
+	bno = be32_to_cpu(rec->refc.rc_startblock);
+	len = be32_to_cpu(rec->refc.rc_blockcount);
+	refcount = be32_to_cpu(rec->refc.rc_refcount);
+
+	/* Only CoW records can have refcount == 1. */
+	has_cowflag = (bno & XFS_REFC_COW_START);
+	if ((refcount == 1 && !has_cowflag) || (refcount != 1 && has_cowflag))
+		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
+	if (has_cowflag)
+		(*cow_blocks) += len;
+
+	/* Check the extent. */
+	bno &= ~XFS_REFC_COW_START;
+	if (bno + len <= bno ||
+	    !xfs_verify_agbno(pag, bno) ||
+	    !xfs_verify_agbno(pag, bno + len - 1))
+		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
+
+	if (refcount == 0)
+		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
+
+	xchk_refcountbt_xref(bs->sc, bno, len, refcount);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -415,6 +503,10 @@ xchk_xref_is_cow_staging(
 	xfs_extlen_t			len)
 {
 	struct xfs_refcount_irec	rc;
+<<<<<<< HEAD
+=======
+	bool				has_cowflag;
+>>>>>>> b7ba80a49124 (Commit)
 	int				has_refcount;
 	int				error;
 
@@ -422,8 +514,13 @@ xchk_xref_is_cow_staging(
 		return;
 
 	/* Find the CoW staging extent. */
+<<<<<<< HEAD
 	error = xfs_refcount_lookup_le(sc->sa.refc_cur, XFS_REFC_DOMAIN_COW,
 			agbno, &has_refcount);
+=======
+	error = xfs_refcount_lookup_le(sc->sa.refc_cur,
+			agbno + XFS_REFC_COW_START, &has_refcount);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!xchk_should_check_xref(sc, &error, &sc->sa.refc_cur))
 		return;
 	if (!has_refcount) {
@@ -439,8 +536,14 @@ xchk_xref_is_cow_staging(
 		return;
 	}
 
+<<<<<<< HEAD
 	/* CoW lookup returned a shared extent record? */
 	if (rc.rc_domain != XFS_REFC_DOMAIN_COW)
+=======
+	/* CoW flag must be set, refcount must be 1. */
+	has_cowflag = (rc.rc_startblock & XFS_REFC_COW_START);
+	if (!has_cowflag || rc.rc_refcount != 1)
+>>>>>>> b7ba80a49124 (Commit)
 		xchk_btree_xref_set_corrupt(sc, sc->sa.refc_cur, 0);
 
 	/* Must be at least as long as what was passed in */
@@ -464,8 +567,12 @@ xchk_xref_is_not_shared(
 	if (!sc->sa.refc_cur || xchk_skip_xref(sc->sm))
 		return;
 
+<<<<<<< HEAD
 	error = xfs_refcount_has_record(sc->sa.refc_cur, XFS_REFC_DOMAIN_SHARED,
 			agbno, len, &shared);
+=======
+	error = xfs_refcount_has_record(sc->sa.refc_cur, agbno, len, &shared);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!xchk_should_check_xref(sc, &error, &sc->sa.refc_cur))
 		return;
 	if (shared)

@@ -1305,6 +1305,7 @@ axienet_get_stats64(struct net_device *dev, struct rtnl_link_stats64 *stats)
 	netdev_stats_to_stats64(stats, &dev->stats);
 
 	do {
+<<<<<<< HEAD
 		start = u64_stats_fetch_begin(&lp->rx_stat_sync);
 		stats->rx_packets = u64_stats_read(&lp->rx_packets);
 		stats->rx_bytes = u64_stats_read(&lp->rx_bytes);
@@ -1315,6 +1316,18 @@ axienet_get_stats64(struct net_device *dev, struct rtnl_link_stats64 *stats)
 		stats->tx_packets = u64_stats_read(&lp->tx_packets);
 		stats->tx_bytes = u64_stats_read(&lp->tx_bytes);
 	} while (u64_stats_fetch_retry(&lp->tx_stat_sync, start));
+=======
+		start = u64_stats_fetch_begin_irq(&lp->rx_stat_sync);
+		stats->rx_packets = u64_stats_read(&lp->rx_packets);
+		stats->rx_bytes = u64_stats_read(&lp->rx_bytes);
+	} while (u64_stats_fetch_retry_irq(&lp->rx_stat_sync, start));
+
+	do {
+		start = u64_stats_fetch_begin_irq(&lp->tx_stat_sync);
+		stats->tx_packets = u64_stats_read(&lp->tx_packets);
+		stats->tx_bytes = u64_stats_read(&lp->tx_bytes);
+	} while (u64_stats_fetch_retry_irq(&lp->tx_stat_sync, start));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct net_device_ops axienet_netdev_ops = {
@@ -1736,6 +1749,10 @@ static void axienet_mac_link_up(struct phylink_config *config,
 }
 
 static const struct phylink_mac_ops axienet_phylink_ops = {
+<<<<<<< HEAD
+=======
+	.validate = phylink_generic_validate,
+>>>>>>> b7ba80a49124 (Commit)
 	.mac_select_pcs = axienet_mac_select_pcs,
 	.mac_config = axienet_mac_config,
 	.mac_link_down = axienet_mac_link_down,
@@ -1878,8 +1895,13 @@ static int axienet_probe(struct platform_device *pdev)
 	u64_stats_init(&lp->rx_stat_sync);
 	u64_stats_init(&lp->tx_stat_sync);
 
+<<<<<<< HEAD
 	netif_napi_add(ndev, &lp->napi_rx, axienet_rx_poll);
 	netif_napi_add(ndev, &lp->napi_tx, axienet_tx_poll);
+=======
+	netif_napi_add(ndev, &lp->napi_rx, axienet_rx_poll, NAPI_POLL_WEIGHT);
+	netif_napi_add(ndev, &lp->napi_tx, axienet_tx_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	lp->axi_clk = devm_clk_get_optional(&pdev->dev, "s_axi_lite_clk");
 	if (!lp->axi_clk) {
@@ -2216,6 +2238,7 @@ static void axienet_shutdown(struct platform_device *pdev)
 	rtnl_unlock();
 }
 
+<<<<<<< HEAD
 static int axienet_suspend(struct device *dev)
 {
 	struct net_device *ndev = dev_get_drvdata(dev);
@@ -2251,13 +2274,18 @@ static int axienet_resume(struct device *dev)
 static DEFINE_SIMPLE_DEV_PM_OPS(axienet_pm_ops,
 				axienet_suspend, axienet_resume);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver axienet_driver = {
 	.probe = axienet_probe,
 	.remove = axienet_remove,
 	.shutdown = axienet_shutdown,
 	.driver = {
 		 .name = "xilinx_axienet",
+<<<<<<< HEAD
 		 .pm = &axienet_pm_ops,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		 .of_match_table = axienet_of_match,
 	},
 };

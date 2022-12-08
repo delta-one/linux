@@ -32,9 +32,12 @@
 #define MT7921_MCU_INIT_RETRY_COUNT	10
 #define MT7921_WFSYS_INIT_RETRY_COUNT	2
 
+<<<<<<< HEAD
 #define MT7921_FW_TAG_FEATURE		4
 #define MT7921_FW_CAP_CNM		BIT(7)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MT7921_FIRMWARE_WM		"mediatek/WIFI_RAM_CODE_MT7961_1.bin"
 #define MT7921_ROM_PATCH		"mediatek/WIFI_MT7961_patch_mcu_1_2_hdr.bin"
 
@@ -56,6 +59,7 @@
 #define MT7921_SDIO_HDR_TX_BYTES	GENMASK(15, 0)
 #define MT7921_SDIO_HDR_PKT_TYPE	GENMASK(17, 16)
 
+<<<<<<< HEAD
 #define MCU_UNI_EVENT_ROC  0x27
 
 enum {
@@ -105,6 +109,8 @@ struct mt7921_roc_grant_tlv {
 	__le32 max_interval;
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum mt7921_sdio_pkt_type {
 	MT7921_SDIO_TXD,
 	MT7921_SDIO_DATA,
@@ -144,8 +150,11 @@ enum mt7921_rxq_id {
 	MT7921_RXQ_MCU_WM = 0,
 };
 
+<<<<<<< HEAD
 DECLARE_EWMA(avg_signal, 10, 8)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mt7921_sta {
 	struct mt76_wcid wcid; /* must be first */
 
@@ -154,9 +163,12 @@ struct mt7921_sta {
 	struct list_head poll_list;
 	u32 airtime_ac[8];
 
+<<<<<<< HEAD
 	int ack_signal;
 	struct ewma_avg_signal avg_ack_signal;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long last_txs;
 	unsigned long ampdu_state;
 
@@ -176,7 +188,10 @@ struct mt7921_vif {
 	struct ewma_rssi rssi;
 
 	struct ieee80211_tx_queue_params queue_params[IEEE80211_NUM_ACS];
+<<<<<<< HEAD
 	struct ieee80211_chanctx_conf *ctx;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mib_stats {
@@ -229,7 +244,11 @@ struct mt7921_clc {
 	u8 type;
 	u8 rsv[8];
 	u8 data[];
+<<<<<<< HEAD
 } __packed;
+=======
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 struct mt7921_phy {
 	struct mt76_phy *mt76;
@@ -258,12 +277,15 @@ struct mt7921_phy {
 #endif
 
 	struct mt7921_clc *clc[MT7921_CLC_MAX_NUM];
+<<<<<<< HEAD
 
 	struct work_struct roc_work;
 	struct timer_list roc_timer;
 	wait_queue_head_t roc_wait;
 	u8 roc_token_id;
 	bool roc_grant;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define mt7921_init_reset(dev)		((dev)->hif_ops->init_reset(dev))
@@ -300,7 +322,10 @@ struct mt7921_dev {
 	struct work_struct init_work;
 
 	u8 fw_debug;
+<<<<<<< HEAD
 	u8 fw_features;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct mt76_connac_pm pm;
 	struct mt76_connac_coredump coredump;
@@ -309,8 +334,11 @@ struct mt7921_dev {
 	struct work_struct ipv6_ns_work;
 	/* IPv6 addresses for WoWLAN */
 	struct sk_buff_head ipv6_ns_list;
+<<<<<<< HEAD
 
 	enum environment_cap country_ie_env;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum {
@@ -388,8 +416,11 @@ int mt7921_mcu_get_rx_rate(struct mt7921_phy *phy, struct ieee80211_vif *vif,
 			   struct ieee80211_sta *sta, struct rate_info *rate);
 int mt7921_mcu_fw_log_2_host(struct mt7921_dev *dev, u8 ctrl);
 void mt7921_mcu_rx_event(struct mt7921_dev *dev, struct sk_buff *skb);
+<<<<<<< HEAD
 int mt7921_mcu_set_rxfilter(struct mt7921_dev *dev, u32 fif,
 			    u8 bit_op, u32 bit_map);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void mt7921_irq_enable(struct mt7921_dev *dev, u32 mask)
 {
@@ -477,7 +508,11 @@ void mt7921_tx_worker(struct mt76_worker *w);
 void mt7921_tx_token_put(struct mt7921_dev *dev);
 bool mt7921_rx_check(struct mt76_dev *mdev, void *data, int len);
 void mt7921_queue_rx_skb(struct mt76_dev *mdev, enum mt76_rxq_id q,
+<<<<<<< HEAD
 			 struct sk_buff *skb, u32 *info);
+=======
+			 struct sk_buff *skb);
+>>>>>>> b7ba80a49124 (Commit)
 void mt7921_sta_ps(struct mt76_dev *mdev, struct ieee80211_sta *sta, bool ps);
 void mt7921_stats_work(struct work_struct *work);
 void mt7921_set_stream_he_caps(struct mt7921_phy *phy);
@@ -494,8 +529,11 @@ int mt7921_mcu_uni_rx_ba(struct mt7921_dev *dev,
 			 struct ieee80211_ampdu_params *params,
 			 bool enable);
 void mt7921_scan_work(struct work_struct *work);
+<<<<<<< HEAD
 void mt7921_roc_work(struct work_struct *work);
 void mt7921_roc_timer(struct timer_list *timer);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int mt7921_mcu_uni_bss_ps(struct mt7921_dev *dev, struct ieee80211_vif *vif);
 int mt7921_mcu_drv_pmctrl(struct mt7921_dev *dev);
 int mt7921_mcu_fw_pmctrl(struct mt7921_dev *dev);
@@ -536,8 +574,11 @@ void mt7921_set_ipv6_ns_work(struct work_struct *work);
 
 int mt7921_mcu_set_sniffer(struct mt7921_dev *dev, struct ieee80211_vif *vif,
 			   bool enable);
+<<<<<<< HEAD
 int mt7921_mcu_config_sniffer(struct mt7921_vif *vif,
 			      struct ieee80211_chanctx_conf *ctx);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int mt7921_usb_sdio_tx_prepare_skb(struct mt76_dev *mdev, void *txwi_ptr,
 				   enum mt76_txq_id qid, struct mt76_wcid *wcid,
@@ -563,7 +604,10 @@ int mt7921_mcu_uni_add_beacon_offload(struct mt7921_dev *dev,
 #ifdef CONFIG_ACPI
 int mt7921_init_acpi_sar(struct mt7921_dev *dev);
 int mt7921_init_acpi_sar_power(struct mt7921_phy *phy, bool set_default);
+<<<<<<< HEAD
 u8 mt7921_acpi_get_flags(struct mt7921_phy *phy);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline int
 mt7921_init_acpi_sar(struct mt7921_dev *dev)
@@ -576,22 +620,28 @@ mt7921_init_acpi_sar_power(struct mt7921_phy *phy, bool set_default)
 {
 	return 0;
 }
+<<<<<<< HEAD
 
 static inline u8
 mt7921_acpi_get_flags(struct mt7921_phy *phy)
 {
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 int mt7921_set_tx_sar_pwr(struct ieee80211_hw *hw,
 			  const struct cfg80211_sar_specs *sar);
 
 int mt7921_mcu_set_clc(struct mt7921_dev *dev, u8 *alpha2,
 		       enum environment_cap env_cap);
+<<<<<<< HEAD
 int mt7921_mcu_set_roc(struct mt7921_phy *phy, struct mt7921_vif *vif,
 		       struct ieee80211_channel *chan, int duration,
 		       enum mt7921_roc_req type, u8 token_id);
 int mt7921_mcu_abort_roc(struct mt7921_phy *phy, struct mt7921_vif *vif,
 			 u8 token_id);
 u8 mt7921_check_offload_capability(struct device *dev, const char *fw_wm);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

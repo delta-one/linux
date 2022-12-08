@@ -90,10 +90,14 @@ the same sub-device is not defined.
       - ``interval``
       - Period, in seconds, between consecutive video frames.
     * - __u32
+<<<<<<< HEAD
       - ``stream``
       - Stream identifier.
     * - __u32
       - ``reserved``\ [8]
+=======
+      - ``reserved``\ [9]
+>>>>>>> b7ba80a49124 (Commit)
       - Reserved for future extensions. Applications and drivers must set
 	the array to zero.
 

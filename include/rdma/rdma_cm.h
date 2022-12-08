@@ -52,6 +52,7 @@ struct rdma_addr {
 struct rdma_route {
 	struct rdma_addr addr;
 	struct sa_path_rec *path_rec;
+<<<<<<< HEAD
 
 	/* Optional path records of primary path */
 	struct sa_path_rec *path_rec_inbound;
@@ -63,6 +64,9 @@ struct rdma_route {
 	 * 2 - Both primary and alternate path are available
 	 */
 	int num_pri_alt_paths;
+=======
+	int num_paths;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct rdma_conn_param {

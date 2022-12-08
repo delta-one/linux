@@ -45,7 +45,10 @@
 # 5) Tunnel protocol handler, ex: vxlan_rcv, decap the packet
 # 6) Forward the packet to the overlay tnl dev
 
+<<<<<<< HEAD
 BPF_FILE="test_tunnel_kern.bpf.o"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 BPF_PIN_TUNNEL_DIR="/sys/fs/bpf/tc/tunnel"
 PING_ARG="-c 3 -w 10 -q"
 ret=0
@@ -66,6 +69,7 @@ config_device()
 
 add_gre_tunnel()
 {
+<<<<<<< HEAD
 	tun_key=
 	if [ -n "$1" ]; then
 		tun_key="key $1"
@@ -74,12 +78,21 @@ add_gre_tunnel()
 	# at_ns0 namespace
 	ip netns exec at_ns0 \
         ip link add dev $DEV_NS type $TYPE seq $tun_key \
+=======
+	# at_ns0 namespace
+	ip netns exec at_ns0 \
+        ip link add dev $DEV_NS type $TYPE seq key 2 \
+>>>>>>> b7ba80a49124 (Commit)
 		local 172.16.1.100 remote 172.16.1.200
 	ip netns exec at_ns0 ip link set dev $DEV_NS up
 	ip netns exec at_ns0 ip addr add dev $DEV_NS 10.1.1.100/24
 
 	# root namespace
+<<<<<<< HEAD
 	ip link add dev $DEV type $TYPE $tun_key external
+=======
+	ip link add dev $DEV type $TYPE key 2 external
+>>>>>>> b7ba80a49124 (Commit)
 	ip link set dev $DEV up
 	ip addr add dev $DEV 10.1.1.200/24
 }
@@ -243,6 +256,7 @@ test_gre()
 
 	check $TYPE
 	config_device
+<<<<<<< HEAD
 	add_gre_tunnel 2
 	attach_bpf $DEV gre_set_tunnel gre_get_tunnel
 	ping $PING_ARG 10.1.1.100
@@ -269,6 +283,10 @@ test_gre_no_tunnel_key()
 	config_device
 	add_gre_tunnel
 	attach_bpf $DEV gre_set_tunnel_no_key gre_get_tunnel
+=======
+	add_gre_tunnel
+	attach_bpf $DEV gre_set_tunnel gre_get_tunnel
+>>>>>>> b7ba80a49124 (Commit)
 	ping $PING_ARG 10.1.1.100
 	check_err $?
 	ip netns exec at_ns0 ping $PING_ARG 10.1.1.200
@@ -571,6 +589,7 @@ setup_xfrm_tunnel()
 
 test_xfrm_tunnel()
 {
+<<<<<<< HEAD
 	if [[ -e /sys/kernel/tracing/trace ]]; then
 		TRACE=/sys/kernel/tracing/trace
 	else
@@ -581,16 +600,31 @@ test_xfrm_tunnel()
 	setup_xfrm_tunnel
 	mkdir -p ${BPF_PIN_TUNNEL_DIR}
 	bpftool prog loadall ${BPF_FILE} ${BPF_PIN_TUNNEL_DIR}
+=======
+	config_device
+	> /sys/kernel/debug/tracing/trace
+	setup_xfrm_tunnel
+	mkdir -p ${BPF_PIN_TUNNEL_DIR}
+	bpftool prog loadall ./test_tunnel_kern.o ${BPF_PIN_TUNNEL_DIR}
+>>>>>>> b7ba80a49124 (Commit)
 	tc qdisc add dev veth1 clsact
 	tc filter add dev veth1 proto ip ingress bpf da object-pinned \
 		${BPF_PIN_TUNNEL_DIR}/xfrm_get_state
 	ip netns exec at_ns0 ping $PING_ARG 10.1.1.200
 	sleep 1
+<<<<<<< HEAD
 	grep "reqid 1" ${TRACE}
 	check_err $?
 	grep "spi 0x1" ${TRACE}
 	check_err $?
 	grep "remote ip 0xac100164" ${TRACE}
+=======
+	grep "reqid 1" /sys/kernel/debug/tracing/trace
+	check_err $?
+	grep "spi 0x1" /sys/kernel/debug/tracing/trace
+	check_err $?
+	grep "remote ip 0xac100164" /sys/kernel/debug/tracing/trace
+>>>>>>> b7ba80a49124 (Commit)
 	check_err $?
 	cleanup
 
@@ -607,7 +641,11 @@ attach_bpf()
 	SET=$2
 	GET=$3
 	mkdir -p ${BPF_PIN_TUNNEL_DIR}
+<<<<<<< HEAD
 	bpftool prog loadall ${BPF_FILE} ${BPF_PIN_TUNNEL_DIR}/
+=======
+	bpftool prog loadall ./test_tunnel_kern.o ${BPF_PIN_TUNNEL_DIR}/
+>>>>>>> b7ba80a49124 (Commit)
 	tc qdisc add dev $DEV clsact
 	tc filter add dev $DEV egress bpf da object-pinned ${BPF_PIN_TUNNEL_DIR}/$SET
 	tc filter add dev $DEV ingress bpf da object-pinned ${BPF_PIN_TUNNEL_DIR}/$GET
@@ -623,7 +661,10 @@ cleanup()
 	ip link del ipip6tnl11 2> /dev/null
 	ip link del ip6ip6tnl11 2> /dev/null
 	ip link del gretap11 2> /dev/null
+<<<<<<< HEAD
 	ip link del gre11 2> /dev/null
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ip link del ip6gre11 2> /dev/null
 	ip link del ip6gretap11 2> /dev/null
 	ip link del geneve11 2> /dev/null
@@ -676,10 +717,13 @@ bpf_tunnel_test()
 	test_gre
 	errors=$(( $errors + $? ))
 
+<<<<<<< HEAD
 	echo "Testing GRE tunnel (without tunnel keys)..."
 	test_gre_no_tunnel_key
 	errors=$(( $errors + $? ))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	echo "Testing IP6GRE tunnel..."
 	test_ip6gre
 	errors=$(( $errors + $? ))

@@ -14,6 +14,7 @@
 #include <media/v4l2-subdev.h>
 
 /* External clock (extclk) frequencies */
+<<<<<<< HEAD
 #define AR0521_EXTCLK_MIN		(10 * 1000 * 1000)
 #define AR0521_EXTCLK_MAX		(48 * 1000 * 1000)
 
@@ -47,6 +48,28 @@
 #define AR0521_ANA_GAIN_MAX		0x3f
 #define AR0521_ANA_GAIN_STEP		0x01
 #define AR0521_ANA_GAIN_DEFAULT		0x00
+=======
+#define AR0521_EXTCLK_MIN	  (10 * 1000 * 1000)
+#define AR0521_EXTCLK_MAX	  (48 * 1000 * 1000)
+
+/* PLL and PLL2 */
+#define AR0521_PLL_MIN		 (320 * 1000 * 1000)
+#define AR0521_PLL_MAX		(1280 * 1000 * 1000)
+
+/* Effective pixel clocks, the registers may be DDR */
+#define AR0521_PIXEL_CLOCK_RATE	 (184 * 1000 * 1000)
+#define AR0521_PIXEL_CLOCK_MIN	 (168 * 1000 * 1000)
+#define AR0521_PIXEL_CLOCK_MAX	 (414 * 1000 * 1000)
+
+#define AR0521_WIDTH_MIN	       8u
+#define AR0521_WIDTH_MAX	    2608u
+#define AR0521_HEIGHT_MIN	       8u
+#define AR0521_HEIGHT_MAX	    1958u
+
+#define AR0521_WIDTH_BLANKING_MIN     572u
+#define AR0521_HEIGHT_BLANKING_MIN     38u /* must be even */
+#define AR0521_TOTAL_WIDTH_MIN	     2968u
+>>>>>>> b7ba80a49124 (Commit)
 
 /* AR0521 registers */
 #define AR0521_REG_VT_PIX_CLK_DIV		0x0300
@@ -63,8 +86,11 @@
 #define   AR0521_REG_RESET_RESTART		  BIT(1)
 #define   AR0521_REG_RESET_INIT			  BIT(0)
 
+<<<<<<< HEAD
 #define AR0521_REG_ANA_GAIN_CODE_GLOBAL		0x3028
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define AR0521_REG_GREEN1_GAIN			0x3056
 #define AR0521_REG_BLUE_GAIN			0x3058
 #define AR0521_REG_RED_GAIN			0x305A
@@ -90,10 +116,13 @@ static const char * const ar0521_supply_names[] = {
 	"vaa",		/* Analog (2.7V) supply */
 };
 
+<<<<<<< HEAD
 static const s64 ar0521_link_frequencies[] = {
 	184000000,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ar0521_ctrls {
 	struct v4l2_ctrl_handler handler;
 	struct {
@@ -126,6 +155,7 @@ struct ar0521_dev {
 	struct v4l2_mbus_framefmt fmt;
 	struct ar0521_ctrls ctrls;
 	unsigned int lane_count;
+<<<<<<< HEAD
 	struct {
 		u16 pre;
 		u16 mult;
@@ -134,6 +164,14 @@ struct ar0521_dev {
 		u16 vt_pix;
 	} pll;
 
+=======
+	u16 total_width;
+	u16 total_height;
+	u16 pll_pre;
+	u16 pll_mult;
+	u16 pll_pre2;
+	u16 pll_mult2;
+>>>>>>> b7ba80a49124 (Commit)
 	bool streaming;
 };
 
@@ -158,6 +196,7 @@ static u32 div64_round_up(u64 v, u32 d)
 	return div_u64(v + d - 1, d);
 }
 
+<<<<<<< HEAD
 static int ar0521_code_to_bpp(struct ar0521_dev *sensor)
 {
 	switch (sensor->fmt.code) {
@@ -168,6 +207,8 @@ static int ar0521_code_to_bpp(struct ar0521_dev *sensor)
 	return -EINVAL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Data must be BE16, the first value is the register address */
 static int ar0521_write_regs(struct ar0521_dev *sensor, const __be16 *data,
 			     unsigned int count)
@@ -200,6 +241,7 @@ static int ar0521_write_reg(struct ar0521_dev *sensor, u16 reg, u16 val)
 
 static int ar0521_set_geometry(struct ar0521_dev *sensor)
 {
+<<<<<<< HEAD
 	/* Center the image in the visible output window. */
 	u16 x = clamp((AR0521_WIDTH_MAX - sensor->fmt.width) / 2,
 		       AR0521_MIN_X_ADDR_START, AR0521_MAX_X_ADDR_END);
@@ -211,6 +253,15 @@ static int ar0521_set_geometry(struct ar0521_dev *sensor)
 		be(AR0521_REG_FRAME_LENGTH_LINES),
 		be(sensor->fmt.height + sensor->ctrls.vblank->val),
 		be(sensor->fmt.width + sensor->ctrls.hblank->val),
+=======
+	/* All dimensions are unsigned 12-bit integers */
+	u16 x = (AR0521_WIDTH_MAX - sensor->fmt.width) / 2;
+	u16 y = ((AR0521_HEIGHT_MAX - sensor->fmt.height) / 2) & ~1;
+	__be16 regs[] = {
+		be(AR0521_REG_FRAME_LENGTH_LINES),
+		be(sensor->total_height),
+		be(sensor->total_width),
+>>>>>>> b7ba80a49124 (Commit)
 		be(x),
 		be(y),
 		be(x + sensor->fmt.width - 1),
@@ -243,7 +294,12 @@ static int ar0521_set_gains(struct ar0521_dev *sensor)
 	return ar0521_write_regs(sensor, regs, ARRAY_SIZE(regs));
 }
 
+<<<<<<< HEAD
 static u32 calc_pll(struct ar0521_dev *sensor, u32 freq, u16 *pre_ptr, u16 *mult_ptr)
+=======
+static u32 calc_pll(struct ar0521_dev *sensor, int num, u32 freq, u16 *pre_ptr,
+		    u16 *mult_ptr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u16 pre = 1, mult = 1, new_pre;
 	u32 pll = AR0521_PLL_MAX + 1;
@@ -278,6 +334,7 @@ static u32 calc_pll(struct ar0521_dev *sensor, u32 freq, u16 *pre_ptr, u16 *mult
 	return pll;
 }
 
+<<<<<<< HEAD
 static void ar0521_calc_pll(struct ar0521_dev *sensor)
 {
 	unsigned int pixel_clock;
@@ -356,6 +413,71 @@ static int ar0521_pll_config(struct ar0521_dev *sensor)
 
 	ar0521_calc_pll(sensor);
 	return ar0521_write_regs(sensor, pll_regs, ARRAY_SIZE(pll_regs));
+=======
+#define DIV 4
+static void ar0521_calc_mode(struct ar0521_dev *sensor)
+{
+	unsigned int speed_mod = 4 / sensor->lane_count; /* 1 with 4 DDR lanes */
+	u16 total_width = max(sensor->fmt.width + AR0521_WIDTH_BLANKING_MIN,
+			      AR0521_TOTAL_WIDTH_MIN);
+	u16 total_height = sensor->fmt.height + AR0521_HEIGHT_BLANKING_MIN;
+
+	/* Calculate approximate pixel clock first */
+	u64 pix_clk = AR0521_PIXEL_CLOCK_RATE;
+
+	/* PLL1 drives pixel clock - dual rate */
+	pix_clk = calc_pll(sensor, 1, pix_clk * (DIV / 2), &sensor->pll_pre,
+			   &sensor->pll_mult);
+	pix_clk = div64_round(pix_clk, (DIV / 2));
+	calc_pll(sensor, 2, pix_clk * (DIV / 2) * speed_mod, &sensor->pll_pre2,
+		 &sensor->pll_mult2);
+
+	sensor->total_width = total_width;
+	sensor->total_height = total_height;
+}
+
+static int ar0521_write_mode(struct ar0521_dev *sensor)
+{
+	__be16 pll_regs[] = {
+		be(AR0521_REG_VT_PIX_CLK_DIV),
+		/* 0x300 */ be(4), /* vt_pix_clk_div = number of bits / 2 */
+		/* 0x302 */ be(1), /* vt_sys_clk_div */
+		/* 0x304 */ be((sensor->pll_pre2 << 8) | sensor->pll_pre),
+		/* 0x306 */ be((sensor->pll_mult2 << 8) | sensor->pll_mult),
+		/* 0x308 */ be(8), /* op_pix_clk_div = 2 * vt_pix_clk_div */
+		/* 0x30A */ be(1)  /* op_sys_clk_div */
+	};
+	int ret;
+
+	/* Stop streaming for just a moment */
+	ret = ar0521_write_reg(sensor, AR0521_REG_RESET,
+			       AR0521_REG_RESET_DEFAULTS);
+	if (ret)
+		return ret;
+
+	ret = ar0521_set_geometry(sensor);
+	if (ret)
+		return ret;
+
+	ret = ar0521_write_regs(sensor, pll_regs, ARRAY_SIZE(pll_regs));
+	if (ret)
+		return ret;
+
+	ret = ar0521_write_reg(sensor, AR0521_REG_COARSE_INTEGRATION_TIME,
+			       sensor->ctrls.exposure->val);
+	if (ret)
+		return ret;
+
+	ret = ar0521_write_reg(sensor, AR0521_REG_RESET,
+			       AR0521_REG_RESET_DEFAULTS |
+			       AR0521_REG_RESET_STREAM);
+	if (ret)
+		return ret;
+
+	ret = ar0521_write_reg(sensor, AR0521_REG_TEST_PATTERN_MODE,
+			       sensor->ctrls.test_pattern->val);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ar0521_set_stream(struct ar0521_dev *sensor, bool on)
@@ -367,6 +489,7 @@ static int ar0521_set_stream(struct ar0521_dev *sensor, bool on)
 		if (ret < 0)
 			return ret;
 
+<<<<<<< HEAD
 		/* Stop streaming for just a moment */
 		ret = ar0521_write_reg(sensor, AR0521_REG_RESET,
 				       AR0521_REG_RESET_DEFAULTS);
@@ -382,6 +505,14 @@ static int ar0521_set_stream(struct ar0521_dev *sensor, bool on)
 			goto err;
 
 		ret =  __v4l2_ctrl_handler_setup(&sensor->ctrls.handler);
+=======
+		ar0521_calc_mode(sensor);
+		ret = ar0521_write_mode(sensor);
+		if (ret)
+			goto err;
+
+		ret = ar0521_set_gains(sensor);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			goto err;
 
@@ -464,8 +595,12 @@ static int ar0521_set_fmt(struct v4l2_subdev *sd,
 			  struct v4l2_subdev_format *format)
 {
 	struct ar0521_dev *sensor = to_ar0521_dev(sd);
+<<<<<<< HEAD
 	int max_vblank, max_hblank, exposure_max;
 	int ret;
+=======
+	int ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ar0521_adj_fmt(&format->format);
 
@@ -476,6 +611,7 @@ static int ar0521_set_fmt(struct v4l2_subdev *sd,
 
 		fmt = v4l2_subdev_get_try_format(sd, sd_state, 0 /* pad */);
 		*fmt = format->format;
+<<<<<<< HEAD
 
 		mutex_unlock(&sensor->lock);
 
@@ -524,6 +660,14 @@ static int ar0521_set_fmt(struct v4l2_subdev *sd,
 unlock:
 	mutex_unlock(&sensor->lock);
 
+=======
+	} else {
+		sensor->fmt = format->format;
+		ar0521_calc_mode(sensor);
+	}
+
+	mutex_unlock(&sensor->lock);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -531,18 +675,33 @@ static int ar0521_s_ctrl(struct v4l2_ctrl *ctrl)
 {
 	struct v4l2_subdev *sd = ctrl_to_sd(ctrl);
 	struct ar0521_dev *sensor = to_ar0521_dev(sd);
+<<<<<<< HEAD
 	int exp_max;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	/* v4l2_ctrl_lock() locks our own mutex */
 
 	switch (ctrl->id) {
+<<<<<<< HEAD
 	case V4L2_CID_VBLANK:
 		exp_max = sensor->fmt.height + ctrl->val - 4;
 		__v4l2_ctrl_modify_range(sensor->ctrls.exposure,
 					 sensor->ctrls.exposure->minimum,
 					 exp_max, sensor->ctrls.exposure->step,
 					 sensor->ctrls.exposure->default_value);
+=======
+	case V4L2_CID_HBLANK:
+	case V4L2_CID_VBLANK:
+		sensor->total_width = sensor->fmt.width +
+			sensor->ctrls.hblank->val;
+		sensor->total_height = sensor->fmt.width +
+			sensor->ctrls.vblank->val;
+		break;
+	default:
+		ret = -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -555,10 +714,13 @@ static int ar0521_s_ctrl(struct v4l2_ctrl *ctrl)
 	case V4L2_CID_VBLANK:
 		ret = ar0521_set_geometry(sensor);
 		break;
+<<<<<<< HEAD
 	case V4L2_CID_ANALOGUE_GAIN:
 		ret = ar0521_write_reg(sensor, AR0521_REG_ANA_GAIN_CODE_GLOBAL,
 				       ctrl->val);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case V4L2_CID_GAIN:
 	case V4L2_CID_RED_BALANCE:
 	case V4L2_CID_BLUE_BALANCE:
@@ -573,11 +735,14 @@ static int ar0521_s_ctrl(struct v4l2_ctrl *ctrl)
 		ret = ar0521_write_reg(sensor, AR0521_REG_TEST_PATTERN_MODE,
 				       ctrl->val);
 		break;
+<<<<<<< HEAD
 	default:
 		dev_err(&sensor->i2c_client->dev,
 			"Unsupported control %x\n", ctrl->id);
 		ret = -EINVAL;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	pm_runtime_put(&sensor->i2c_client->dev);
@@ -600,8 +765,11 @@ static int ar0521_init_controls(struct ar0521_dev *sensor)
 	const struct v4l2_ctrl_ops *ops = &ar0521_ctrl_ops;
 	struct ar0521_ctrls *ctrls = &sensor->ctrls;
 	struct v4l2_ctrl_handler *hdl = &ctrls->handler;
+<<<<<<< HEAD
 	int max_vblank, max_hblank, exposure_max;
 	struct v4l2_ctrl *link_freq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	v4l2_ctrl_handler_init(hdl, 32);
@@ -609,11 +777,14 @@ static int ar0521_init_controls(struct ar0521_dev *sensor)
 	/* We can use our own mutex for the ctrl lock */
 	hdl->lock = &sensor->lock;
 
+<<<<<<< HEAD
 	/* Analog gain */
 	v4l2_ctrl_new_std(hdl, ops, V4L2_CID_ANALOGUE_GAIN,
 			  AR0521_ANA_GAIN_MIN, AR0521_ANA_GAIN_MAX,
 			  AR0521_ANA_GAIN_STEP, AR0521_ANA_GAIN_DEFAULT);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Manual gain */
 	ctrls->gain = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_GAIN, 0, 511, 1, 0);
 	ctrls->red_balance = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_RED_BALANCE,
@@ -622,6 +793,7 @@ static int ar0521_init_controls(struct ar0521_dev *sensor)
 						-512, 511, 1, 0);
 	v4l2_ctrl_cluster(3, &ctrls->gain);
 
+<<<<<<< HEAD
 	/* Initialize blanking limits using the default 2592x1944 format. */
 	max_hblank = AR0521_TOTAL_WIDTH_MAX - AR0521_WIDTH_MAX;
 	ctrls->hblank = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_HBLANK,
@@ -633,6 +805,13 @@ static int ar0521_init_controls(struct ar0521_dev *sensor)
 	ctrls->vblank = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_VBLANK,
 					  AR0521_HEIGHT_BLANKING_MIN,
 					  max_vblank, 2,
+=======
+	ctrls->hblank = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_HBLANK,
+					  AR0521_WIDTH_BLANKING_MIN, 4094, 1,
+					  AR0521_WIDTH_BLANKING_MIN);
+	ctrls->vblank = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_VBLANK,
+					  AR0521_HEIGHT_BLANKING_MIN, 4094, 2,
+>>>>>>> b7ba80a49124 (Commit)
 					  AR0521_HEIGHT_BLANKING_MIN);
 	v4l2_ctrl_cluster(2, &ctrls->hblank);
 
@@ -642,6 +821,7 @@ static int ar0521_init_controls(struct ar0521_dev *sensor)
 					   AR0521_PIXEL_CLOCK_MAX, 1,
 					   AR0521_PIXEL_CLOCK_RATE);
 
+<<<<<<< HEAD
 	/* Manual exposure time: max exposure time = visible + blank - 4 */
 	exposure_max = AR0521_HEIGHT_MAX + AR0521_HEIGHT_BLANKING_MIN - 4;
 	ctrls->exposure = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_EXPOSURE, 0,
@@ -652,6 +832,11 @@ static int ar0521_init_controls(struct ar0521_dev *sensor)
 					0, ar0521_link_frequencies);
 	if (link_freq)
 		link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+=======
+	/* Manual exposure time */
+	ctrls->exposure = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_EXPOSURE, 0,
+					    65535, 1, 360);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctrls->test_pattern = v4l2_ctrl_new_std_menu_items(hdl, ops,
 					V4L2_CID_TEST_PATTERN,
@@ -884,12 +1069,19 @@ static int ar0521_power_on(struct device *dev)
 		gpiod_set_value(sensor->reset_gpio, 0);
 	usleep_range(4500, 5000); /* min 45000 clocks */
 
+<<<<<<< HEAD
 	for (cnt = 0; cnt < ARRAY_SIZE(initial_regs); cnt++) {
 		ret = ar0521_write_regs(sensor, initial_regs[cnt].data,
 					initial_regs[cnt].count);
 		if (ret)
 			goto off;
 	}
+=======
+	for (cnt = 0; cnt < ARRAY_SIZE(initial_regs); cnt++)
+		if (ar0521_write_regs(sensor, initial_regs[cnt].data,
+				      initial_regs[cnt].count))
+			goto off;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = ar0521_write_reg(sensor, AR0521_REG_SERIAL_FORMAT,
 			       AR0521_REG_SERIAL_FORMAT_MIPI |
@@ -928,6 +1120,7 @@ static int ar0521_enum_mbus_code(struct v4l2_subdev *sd,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ar0521_enum_frame_size(struct v4l2_subdev *sd,
 				  struct v4l2_subdev_state *sd_state,
 				  struct v4l2_subdev_frame_size_enum *fse)
@@ -946,6 +1139,8 @@ static int ar0521_enum_frame_size(struct v4l2_subdev *sd,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ar0521_pre_streamon(struct v4l2_subdev *sd, u32 flags)
 {
 	struct ar0521_dev *sensor = to_ar0521_dev(sd);
@@ -1012,7 +1207,10 @@ static const struct v4l2_subdev_video_ops ar0521_video_ops = {
 
 static const struct v4l2_subdev_pad_ops ar0521_pad_ops = {
 	.enum_mbus_code = ar0521_enum_mbus_code,
+<<<<<<< HEAD
 	.enum_frame_size = ar0521_enum_frame_size,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.get_fmt = ar0521_get_fmt,
 	.set_fmt = ar0521_set_fmt,
 };

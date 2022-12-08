@@ -5,7 +5,10 @@
 
 #include <drm/drm_fourcc.h>
 
+<<<<<<< HEAD
 #include "display/intel_display.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "gem/i915_gem_ioctls.h"
 #include "gem/i915_gem_lmem.h"
 #include "gem/i915_gem_region.h"
@@ -385,7 +388,11 @@ static int ext_set_protected(struct i915_user_extension __user *base, void *data
 	if (ext.flags)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (!intel_pxp_is_enabled(ext_data->i915->pxp))
+=======
+	if (!intel_pxp_is_enabled(&to_gt(ext_data->i915)->pxp))
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODEV;
 
 	ext_data->flags |= I915_BO_PROTECTED;

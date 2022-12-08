@@ -31,7 +31,11 @@ required:
   - compatible
 
 dependencies:
+<<<<<<< HEAD
   interrupts: [ reg ]
+=======
+  interrupts: [ 'reg' ]
+>>>>>>> b7ba80a49124 (Commit)
 
 additionalProperties: false
 

@@ -18,7 +18,10 @@ enum io_pgtable_fmt {
 	AMD_IOMMU_V1,
 	AMD_IOMMU_V2,
 	APPLE_DART,
+<<<<<<< HEAD
 	APPLE_DART2,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	IO_PGTABLE_NUM_FMTS,
 };
 
@@ -150,7 +153,13 @@ struct io_pgtable_cfg {
 /**
  * struct io_pgtable_ops - Page table manipulation API for IOMMU drivers.
  *
+<<<<<<< HEAD
  * @map_pages:    Map a physically contiguous range of pages of the same size.
+=======
+ * @map:          Map a physically contiguous memory region.
+ * @map_pages:    Map a physically contiguous range of pages of the same size.
+ * @unmap:        Unmap a physically contiguous memory region.
+>>>>>>> b7ba80a49124 (Commit)
  * @unmap_pages:  Unmap a range of virtually contiguous pages of the same size.
  * @iova_to_phys: Translate iova to physical address.
  *
@@ -158,9 +167,19 @@ struct io_pgtable_cfg {
  * the same names.
  */
 struct io_pgtable_ops {
+<<<<<<< HEAD
 	int (*map_pages)(struct io_pgtable_ops *ops, unsigned long iova,
 			 phys_addr_t paddr, size_t pgsize, size_t pgcount,
 			 int prot, gfp_t gfp, size_t *mapped);
+=======
+	int (*map)(struct io_pgtable_ops *ops, unsigned long iova,
+		   phys_addr_t paddr, size_t size, int prot, gfp_t gfp);
+	int (*map_pages)(struct io_pgtable_ops *ops, unsigned long iova,
+			 phys_addr_t paddr, size_t pgsize, size_t pgcount,
+			 int prot, gfp_t gfp, size_t *mapped);
+	size_t (*unmap)(struct io_pgtable_ops *ops, unsigned long iova,
+			size_t size, struct iommu_iotlb_gather *gather);
+>>>>>>> b7ba80a49124 (Commit)
 	size_t (*unmap_pages)(struct io_pgtable_ops *ops, unsigned long iova,
 			      size_t pgsize, size_t pgcount,
 			      struct iommu_iotlb_gather *gather);

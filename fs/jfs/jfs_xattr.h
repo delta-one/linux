@@ -25,7 +25,11 @@ struct jfs_ea_list {
 	struct jfs_ea ea[];	/* Variable length list */
 };
 
+<<<<<<< HEAD
 /* Macros for defining maximum number of bytes supported for EAs */
+=======
+/* Macros for defining maxiumum number of bytes supported for EAs */
+>>>>>>> b7ba80a49124 (Commit)
 #define MAXEASIZE	65535
 #define MAXEALISTSIZE	MAXEASIZE
 

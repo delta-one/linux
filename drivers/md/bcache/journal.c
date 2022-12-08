@@ -149,8 +149,12 @@ add:
 				    bytes, GFP_KERNEL);
 			if (!i)
 				return -ENOMEM;
+<<<<<<< HEAD
 			unsafe_memcpy(&i->j, j, bytes,
 				/* "bytes" was calculated by set_bytes() above */);
+=======
+			memcpy(&i->j, j, bytes);
+>>>>>>> b7ba80a49124 (Commit)
 			/* Add to the location after 'where' points to */
 			list_add(&i->list, where);
 			ret = 1;

@@ -45,6 +45,10 @@ description:
   from S-mode. So add thead,c900-plic to distinguish them.
 
 maintainers:
+<<<<<<< HEAD
+=======
+  - Sagar Kadam <sagar.kadam@sifive.com>
+>>>>>>> b7ba80a49124 (Commit)
   - Paul Walmsley  <paul.walmsley@sifive.com>
   - Palmer Dabbelt <palmer@dabbelt.com>
 
@@ -65,11 +69,14 @@ properties:
           - enum:
               - allwinner,sun20i-d1-plic
           - const: thead,c900-plic
+<<<<<<< HEAD
       - items:
           - const: sifive,plic-1.0.0
           - const: riscv,plic0
         deprecated: true
         description: For the QEMU virt machine only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1

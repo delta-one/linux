@@ -95,6 +95,7 @@ static inline u32 tcf_skbedit_priority(const struct tc_action *a)
 	return priority;
 }
 
+<<<<<<< HEAD
 static inline u16 tcf_skbedit_rx_queue_mapping(const struct tc_action *a)
 {
 	u16 rx_queue;
@@ -106,12 +107,15 @@ static inline u16 tcf_skbedit_rx_queue_mapping(const struct tc_action *a)
 	return rx_queue;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Return true iff action is queue_mapping */
 static inline bool is_tcf_skbedit_queue_mapping(const struct tc_action *a)
 {
 	return is_tcf_skbedit_with_flag(a, SKBEDIT_F_QUEUE_MAPPING);
 }
 
+<<<<<<< HEAD
 /* Return true if action is on ingress traffic */
 static inline bool is_tcf_skbedit_ingress(u32 flags)
 {
@@ -130,6 +134,8 @@ static inline bool is_tcf_skbedit_rx_queue_mapping(const struct tc_action *a)
 	       is_tcf_skbedit_ingress(a->tcfa_flags);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Return true iff action is inheritdsfield */
 static inline bool is_tcf_skbedit_inheritdsfield(const struct tc_action *a)
 {

@@ -82,10 +82,16 @@ static bool xenvif_rx_ring_slots_available(struct xenvif_queue *queue)
 	return false;
 }
 
+<<<<<<< HEAD
 bool xenvif_rx_queue_tail(struct xenvif_queue *queue, struct sk_buff *skb)
 {
 	unsigned long flags;
 	bool ret = true;
+=======
+void xenvif_rx_queue_tail(struct xenvif_queue *queue, struct sk_buff *skb)
+{
+	unsigned long flags;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irqsave(&queue->rx_queue.lock, flags);
 
@@ -93,7 +99,12 @@ bool xenvif_rx_queue_tail(struct xenvif_queue *queue, struct sk_buff *skb)
 		struct net_device *dev = queue->vif->dev;
 
 		netif_tx_stop_queue(netdev_get_tx_queue(dev, queue->id));
+<<<<<<< HEAD
 		ret = false;
+=======
+		kfree_skb(skb);
+		queue->vif->dev->stats.rx_dropped++;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		if (skb_queue_empty(&queue->rx_queue))
 			xenvif_update_needed_slots(queue, skb);
@@ -104,8 +115,11 @@ bool xenvif_rx_queue_tail(struct xenvif_queue *queue, struct sk_buff *skb)
 	}
 
 	spin_unlock_irqrestore(&queue->rx_queue.lock, flags);
+<<<<<<< HEAD
 
 	return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct sk_buff *xenvif_rx_dequeue(struct xenvif_queue *queue)

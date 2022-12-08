@@ -45,7 +45,11 @@ enum rave_sp_eeprom_header_size {
  * @type:	Access type (see enum rave_sp_eeprom_access_type)
  * @success:	Success flag (Success = 1, Failure = 0)
  * @data:	Read data
+<<<<<<< HEAD
  *
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
  * Note this structure corresponds to RSP_*_EEPROM payload from RAVE
  * SP ICD
  */

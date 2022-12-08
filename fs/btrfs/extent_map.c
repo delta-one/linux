@@ -3,7 +3,10 @@
 #include <linux/err.h>
 #include <linux/slab.h>
 #include <linux/spinlock.h>
+<<<<<<< HEAD
 #include "messages.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "ctree.h"
 #include "volumes.h"
 #include "extent_map.h"
@@ -28,9 +31,18 @@ void __cold extent_map_exit(void)
 	kmem_cache_destroy(extent_map_cache);
 }
 
+<<<<<<< HEAD
 /*
  * Initialize the extent tree @tree.  Should be called for each new inode or
  * other user of the extent_map interface.
+=======
+/**
+ * extent_map_tree_init - initialize extent map tree
+ * @tree:		tree to initialize
+ *
+ * Initialize the extent tree @tree.  Should be called for each new inode
+ * or other user of the extent_map interface.
+>>>>>>> b7ba80a49124 (Commit)
  */
 void extent_map_tree_init(struct extent_map_tree *tree)
 {
@@ -39,9 +51,18 @@ void extent_map_tree_init(struct extent_map_tree *tree)
 	rwlock_init(&tree->lock);
 }
 
+<<<<<<< HEAD
 /*
  * Allocate a new extent_map structure.  The new structure is returned with a
  * reference count of one and needs to be freed using free_extent_map()
+=======
+/**
+ * alloc_extent_map - allocate new extent map structure
+ *
+ * Allocate a new extent_map structure.  The new structure is
+ * returned with a reference count of one and needs to be
+ * freed using free_extent_map()
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct extent_map *alloc_extent_map(void)
 {
@@ -56,9 +77,18 @@ struct extent_map *alloc_extent_map(void)
 	return em;
 }
 
+<<<<<<< HEAD
 /*
  * Drop the reference out on @em by one and free the structure if the reference
  * count hits zero.
+=======
+/**
+ * free_extent_map - drop reference count of an extent_map
+ * @em:		extent map being released
+ *
+ * Drops the reference out on @em by one and free the structure
+ * if the reference count hits zero.
+>>>>>>> b7ba80a49124 (Commit)
  */
 void free_extent_map(struct extent_map *em)
 {
@@ -73,7 +103,11 @@ void free_extent_map(struct extent_map *em)
 	}
 }
 
+<<<<<<< HEAD
 /* Do the math around the end of an extent, handling wrapping. */
+=======
+/* simple helper to do math around the end of an extent, handling wrap */
+>>>>>>> b7ba80a49124 (Commit)
 static u64 range_end(u64 start, u64 len)
 {
 	if (start + len < start)
@@ -129,8 +163,13 @@ static int tree_insert(struct rb_root_cached *root, struct extent_map *em)
 }
 
 /*
+<<<<<<< HEAD
  * Search through the tree for an extent_map with a given offset.  If it can't
  * be found, try to find some neighboring extents
+=======
+ * search through the tree for an extent_map with a given offset.  If
+ * it can't be found, try to find some neighboring extents
+>>>>>>> b7ba80a49124 (Commit)
  */
 static struct rb_node *__tree_search(struct rb_root *root, u64 offset,
 				     struct rb_node **prev_or_next_ret)
@@ -141,8 +180,11 @@ static struct rb_node *__tree_search(struct rb_root *root, u64 offset,
 	struct extent_map *entry;
 	struct extent_map *prev_entry = NULL;
 
+<<<<<<< HEAD
 	ASSERT(prev_or_next_ret);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	while (n) {
 		entry = rb_entry(n, struct extent_map, rb_node);
 		prev = n;
@@ -182,7 +224,11 @@ static struct rb_node *__tree_search(struct rb_root *root, u64 offset,
 	return NULL;
 }
 
+<<<<<<< HEAD
 /* Check to see if two extent_map structs are adjacent and safe to merge. */
+=======
+/* check to see if two extent_map structs are adjacent and safe to merge */
+>>>>>>> b7ba80a49124 (Commit)
 static int mergable_maps(struct extent_map *prev, struct extent_map *next)
 {
 	if (test_bit(EXTENT_FLAG_PINNED, &prev->flags))
@@ -280,9 +326,14 @@ static void try_merge_map(struct extent_map_tree *tree, struct extent_map *em)
 	}
 }
 
+<<<<<<< HEAD
 /*
  * Unpin an extent from the cache.
  *
+=======
+/**
+ * unpin_extent_cache - unpin an extent from the cache
+>>>>>>> b7ba80a49124 (Commit)
  * @tree:	tree to unpin the extent in
  * @start:	logical offset in the file
  * @len:	length of the extent
@@ -385,7 +436,11 @@ static void extent_map_device_clear_bits(struct extent_map *em, unsigned bits)
 	}
 }
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * Add new extent map to the extent tree
  *
  * @tree:	tree to insert new map in
@@ -444,9 +499,14 @@ __lookup_extent_mapping(struct extent_map_tree *tree,
 	return em;
 }
 
+<<<<<<< HEAD
 /*
  * Lookup extent_map that intersects @start + @len range.
  *
+=======
+/**
+ * lookup_extent_mapping - lookup extent_map
+>>>>>>> b7ba80a49124 (Commit)
  * @tree:	tree to lookup in
  * @start:	byte offset to start the search
  * @len:	length of the lookup range
@@ -462,9 +522,14 @@ struct extent_map *lookup_extent_mapping(struct extent_map_tree *tree,
 	return __lookup_extent_mapping(tree, start, len, 1);
 }
 
+<<<<<<< HEAD
 /*
  * Find a nearby extent map intersecting @start + @len (not an exact search).
  *
+=======
+/**
+ * search_extent_mapping - find a nearby extent map
+>>>>>>> b7ba80a49124 (Commit)
  * @tree:	tree to lookup in
  * @start:	byte offset to start the search
  * @len:	length of the lookup range
@@ -480,6 +545,7 @@ struct extent_map *search_extent_mapping(struct extent_map_tree *tree,
 	return __lookup_extent_mapping(tree, start, len, 0);
 }
 
+<<<<<<< HEAD
 /*
  * Remove an extent_map from the extent tree.
  *
@@ -488,6 +554,15 @@ struct extent_map *search_extent_mapping(struct extent_map_tree *tree,
  *
  * Remove @em from @tree.  No reference counts are dropped, and no checks
  * are done to see if the range is in use.
+=======
+/**
+ * remove_extent_mapping - removes an extent_map from the extent tree
+ * @tree:	extent tree to remove from
+ * @em:		extent map being removed
+ *
+ * Removes @em from @tree.  No reference counts are dropped, and no checks
+ * are done to see if the range is in use
+>>>>>>> b7ba80a49124 (Commit)
  */
 void remove_extent_mapping(struct extent_map_tree *tree, struct extent_map *em)
 {
@@ -519,7 +594,11 @@ void replace_extent_mapping(struct extent_map_tree *tree,
 	setup_extent_mapping(tree, new, modified);
 }
 
+<<<<<<< HEAD
 static struct extent_map *next_extent_map(const struct extent_map *em)
+=======
+static struct extent_map *next_extent_map(struct extent_map *em)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rb_node *next;
 
@@ -581,8 +660,13 @@ static noinline int merge_extent_mapping(struct extent_map_tree *em_tree,
 	return add_extent_mapping(em_tree, em, 0);
 }
 
+<<<<<<< HEAD
 /*
  * Add extent mapping into em_tree.
+=======
+/**
+ * Add extent mapping into em_tree
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @fs_info:  the filesystem
  * @em_tree:  extent tree into which we want to insert the extent mapping
@@ -609,6 +693,7 @@ int btrfs_add_extent_mapping(struct btrfs_fs_info *fs_info,
 	int ret;
 	struct extent_map *em = *em_in;
 
+<<<<<<< HEAD
 	/*
 	 * Tree-checker should have rejected any inline extent with non-zero
 	 * file offset. Here just do a sanity check.
@@ -616,6 +701,8 @@ int btrfs_add_extent_mapping(struct btrfs_fs_info *fs_info,
 	if (em->block_start == EXTENT_MAP_INLINE)
 		ASSERT(em->start == 0);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = add_extent_mapping(em_tree, em, 0);
 	/* it is possible that someone inserted the extent into the tree
 	 * while we had the lock dropped.  It is also possible that
@@ -763,6 +850,7 @@ void btrfs_drop_extent_map_range(struct btrfs_inode *inode, u64 start, u64 end,
 			goto next;
 		}
 
+<<<<<<< HEAD
 		flags = em->flags;
 		clear_bit(EXTENT_FLAG_PINNED, &em->flags);
 		/*
@@ -770,6 +858,9 @@ void btrfs_drop_extent_map_range(struct btrfs_inode *inode, u64 start, u64 end,
 		 * EXTENT_FLAG_LOGGING flag on our extent map, but we don't want
 		 * it on the new extent maps.
 		 */
+=======
+		clear_bit(EXTENT_FLAG_PINNED, &em->flags);
+>>>>>>> b7ba80a49124 (Commit)
 		clear_bit(EXTENT_FLAG_LOGGING, &flags);
 		modified = !list_empty(&em->list);
 
@@ -780,6 +871,10 @@ void btrfs_drop_extent_map_range(struct btrfs_inode *inode, u64 start, u64 end,
 		if (em->start >= start && em_end <= end)
 			goto remove_em;
 
+<<<<<<< HEAD
+=======
+		flags = em->flags;
+>>>>>>> b7ba80a49124 (Commit)
 		gen = em->generation;
 		compressed = test_bit(EXTENT_FLAG_COMPRESSED, &em->flags);
 

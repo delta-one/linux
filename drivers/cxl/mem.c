@@ -45,6 +45,7 @@ static int cxl_mem_dpa_show(struct seq_file *file, void *data)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
 				 struct cxl_dport *parent_dport)
 {
@@ -99,6 +100,11 @@ static int cxl_mem_probe(struct device *dev)
 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
 	struct device *endpoint_parent;
+=======
+static int cxl_mem_probe(struct device *dev)
+{
+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	struct cxl_port *parent_port;
 	struct cxl_dport *dport;
 	struct dentry *dentry;
@@ -131,6 +137,7 @@ static int cxl_mem_probe(struct device *dev)
 		return -ENXIO;
 	}
 
+<<<<<<< HEAD
 	if (dport->rch)
 		endpoint_parent = parent_port->uport;
 	else
@@ -140,17 +147,30 @@ static int cxl_mem_probe(struct device *dev)
 	if (!endpoint_parent->driver) {
 		dev_err(dev, "CXL port topology %s not enabled\n",
 			dev_name(endpoint_parent));
+=======
+	device_lock(&parent_port->dev);
+	if (!parent_port->dev.driver) {
+		dev_err(dev, "CXL port topology %s not enabled\n",
+			dev_name(&parent_port->dev));
+>>>>>>> b7ba80a49124 (Commit)
 		rc = -ENXIO;
 		goto unlock;
 	}
 
+<<<<<<< HEAD
 	rc = devm_cxl_add_endpoint(endpoint_parent, cxlmd, dport);
 unlock:
 	device_unlock(endpoint_parent);
+=======
+	rc = devm_cxl_add_endpoint(cxlmd, dport);
+unlock:
+	device_unlock(&parent_port->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	put_device(&parent_port->dev);
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
 	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM)) {
 		rc = devm_cxl_add_nvdimm(cxlmd);
 		if (rc == -ENODEV)
@@ -159,6 +179,8 @@ unlock:
 			return rc;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * The kernel may be operating out of CXL memory on this device,
 	 * there is no spec defined way to determine whether this device

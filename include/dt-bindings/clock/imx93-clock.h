@@ -28,9 +28,19 @@
 #define IMX93_CLK_M33_SYSTICK		19
 #define IMX93_CLK_FLEXIO1		20
 #define IMX93_CLK_FLEXIO2		21
+<<<<<<< HEAD
 #define IMX93_CLK_LPTMR1		24
 #define IMX93_CLK_LPTMR2		25
 #define IMX93_CLK_TPM2			27
+=======
+#define IMX93_CLK_LPIT1			22
+#define IMX93_CLK_LPIT2			23
+#define IMX93_CLK_LPTMR1		24
+#define IMX93_CLK_LPTMR2		25
+#define IMX93_CLK_TPM1			26
+#define IMX93_CLK_TPM2			27
+#define IMX93_CLK_TPM3			28
+>>>>>>> b7ba80a49124 (Commit)
 #define IMX93_CLK_TPM4			29
 #define IMX93_CLK_TPM5			30
 #define IMX93_CLK_TPM6			31

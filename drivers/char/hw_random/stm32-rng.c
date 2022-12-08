@@ -44,11 +44,16 @@ static int stm32_rng_read(struct hwrng *rng, void *data, size_t max, bool wait)
 
 	pm_runtime_get_sync((struct device *) priv->rng.priv);
 
+<<<<<<< HEAD
 	while (max >= sizeof(u32)) {
+=======
+	while (max > sizeof(u32)) {
+>>>>>>> b7ba80a49124 (Commit)
 		sr = readl_relaxed(priv->base + RNG_SR);
 		/* Manage timeout which is based on timer and take */
 		/* care of initial delay time when enabling rng	*/
 		if (!sr && wait) {
+<<<<<<< HEAD
 			int err;
 
 			err = readl_relaxed_poll_timeout_atomic(priv->base
@@ -56,6 +61,13 @@ static int stm32_rng_read(struct hwrng *rng, void *data, size_t max, bool wait)
 								   sr, sr,
 								   10, 50000);
 			if (err)
+=======
+			retval = readl_relaxed_poll_timeout_atomic(priv->base
+								   + RNG_SR,
+								   sr, sr,
+								   10, 50000);
+			if (retval)
+>>>>>>> b7ba80a49124 (Commit)
 				dev_err((struct device *)priv->rng.priv,
 					"%s: timeout %x!\n", __func__, sr);
 		}

@@ -207,6 +207,7 @@ extern void platform_device_put(struct platform_device *pdev);
 
 struct platform_driver {
 	int (*probe)(struct platform_device *);
+<<<<<<< HEAD
 
 	/*
 	 * Traditionally the remove callback returned an int which however is
@@ -219,6 +220,9 @@ struct platform_driver {
 	int (*remove)(struct platform_device *);
 	void (*remove_new)(struct platform_device *);
 
+=======
+	int (*remove)(struct platform_device *);
+>>>>>>> b7ba80a49124 (Commit)
 	void (*shutdown)(struct platform_device *);
 	int (*suspend)(struct platform_device *, pm_message_t state);
 	int (*resume)(struct platform_device *);

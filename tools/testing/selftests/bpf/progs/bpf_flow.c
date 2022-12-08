@@ -337,7 +337,11 @@ PROG(IPV6)(struct __sk_buff *skb)
 	keys->ip_proto = ip6h->nexthdr;
 	keys->flow_label = ip6_flowlabel(ip6h);
 
+<<<<<<< HEAD
 	if (keys->flow_label && keys->flags & BPF_FLOW_DISSECTOR_F_STOP_AT_FLOW_LABEL)
+=======
+	if (keys->flags & BPF_FLOW_DISSECTOR_F_STOP_AT_FLOW_LABEL)
+>>>>>>> b7ba80a49124 (Commit)
 		return export_flow_keys(keys, BPF_OK);
 
 	return parse_ipv6_proto(skb, ip6h->nexthdr);

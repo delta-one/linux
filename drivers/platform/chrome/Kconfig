@@ -119,6 +119,7 @@ config CROS_EC_SPI
 	  response time cannot be guaranteed, we support ignoring
 	  'pre-amble' bytes before the response actually starts.
 
+<<<<<<< HEAD
 config CROS_EC_UART
 	tristate "ChromeOS Embedded Controller (UART)"
 	depends on CROS_EC && ACPI && SERIAL_DEV_BUS
@@ -129,6 +130,8 @@ config CROS_EC_UART
 	  To compile this driver as a module, choose M here: the
 	  module will be called cros_ec_uart.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config CROS_EC_LPC
 	tristate "ChromeOS Embedded Controller (LPC)"
 	depends on CROS_EC && ACPI && (X86 || COMPILE_TEST)
@@ -236,6 +239,7 @@ config CROS_EC_TYPEC
 	  information from the Chrome OS EC.
 
 	  To compile this driver as a module, choose M here: the module will be
+<<<<<<< HEAD
 	  called cros-ec-typec.
 
 config CROS_HPS_I2C
@@ -247,6 +251,9 @@ config CROS_HPS_I2C
 	  sensor connected to the I2C bus and exposes it as a character device.
 	  To save power, the sensor is automatically powered down when no
 	  clients are accessing it.
+=======
+	  called cros_ec_typec.
+>>>>>>> b7ba80a49124 (Commit)
 
 config CROS_USBPD_LOGGER
 	tristate "Logging driver for USB PD charger"

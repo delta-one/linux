@@ -381,7 +381,10 @@ COND_SYSCALL(vm86old);
 COND_SYSCALL(modify_ldt);
 COND_SYSCALL(vm86);
 COND_SYSCALL(kexec_file_load);
+<<<<<<< HEAD
 COND_SYSCALL(map_shadow_stack);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* s390 */
 COND_SYSCALL(s390_pci_mmio_read);

@@ -336,9 +336,12 @@ int virtio_gpu_modeset_init(struct virtio_gpu_device *vgdev)
 {
 	int i, ret;
 
+<<<<<<< HEAD
 	if (!vgdev->num_scanouts)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = drmm_mode_config_init(vgdev->ddev);
 	if (ret)
 		return ret;
@@ -365,9 +368,12 @@ void virtio_gpu_modeset_fini(struct virtio_gpu_device *vgdev)
 {
 	int i;
 
+<<<<<<< HEAD
 	if (!vgdev->num_scanouts)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0 ; i < vgdev->num_scanouts; ++i)
 		kfree(vgdev->outputs[i].edid);
 }

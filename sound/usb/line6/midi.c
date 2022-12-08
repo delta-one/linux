@@ -44,8 +44,12 @@ static void line6_midi_transmit(struct snd_rawmidi_substream *substream)
 	int req, done;
 
 	for (;;) {
+<<<<<<< HEAD
 		req = min3(line6_midibuf_bytes_free(mb), line6->max_packet_size,
 			   LINE6_FALLBACK_MAXPACKETSIZE);
+=======
+		req = min(line6_midibuf_bytes_free(mb), line6->max_packet_size);
+>>>>>>> b7ba80a49124 (Commit)
 		done = snd_rawmidi_transmit_peek(substream, chunk, req);
 
 		if (done == 0)
@@ -57,8 +61,12 @@ static void line6_midi_transmit(struct snd_rawmidi_substream *substream)
 
 	for (;;) {
 		done = line6_midibuf_read(mb, chunk,
+<<<<<<< HEAD
 					  LINE6_FALLBACK_MAXPACKETSIZE,
 					  LINE6_MIDIBUF_READ_TX);
+=======
+					  LINE6_FALLBACK_MAXPACKETSIZE);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (done == 0)
 			break;

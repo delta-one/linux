@@ -38,7 +38,11 @@ do
 done
 echo "#endif /* HAVE_LIBELF_SUPPORT */"
 
+<<<<<<< HEAD
 echo "#if defined(HAVE_LIBTRACEEVENT) && (defined(HAVE_LIBAUDIT_SUPPORT) || defined(HAVE_SYSCALL_TABLE_SUPPORT))"
+=======
+echo "#if defined(HAVE_LIBAUDIT_SUPPORT) || defined(HAVE_SYSCALL_TABLE_SUPPORT)"
+>>>>>>> b7ba80a49124 (Commit)
 sed -n -e 's/^perf-\([^ 	]*\)[ 	].* audit*/\1/p' command-list.txt |
 sort |
 while read cmd
@@ -51,6 +55,7 @@ do
 	    p
      }' "Documentation/perf-$cmd.txt"
 done
+<<<<<<< HEAD
 echo "#endif /* HAVE_LIBTRACEEVENT && (HAVE_LIBAUDIT_SUPPORT || HAVE_SYSCALL_TABLE_SUPPORT) */"
 
 echo "#ifdef HAVE_LIBTRACEEVENT"
@@ -67,4 +72,7 @@ do
      }' "Documentation/perf-$cmd.txt"
 done
 echo "#endif /* HAVE_LIBTRACEEVENT */"
+=======
+echo "#endif /* HAVE_LIBELF_SUPPORT */"
+>>>>>>> b7ba80a49124 (Commit)
 echo "};"

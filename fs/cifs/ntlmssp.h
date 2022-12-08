@@ -83,7 +83,11 @@ typedef struct _NEGOTIATE_MESSAGE {
 	SECURITY_BUFFER WorkstationName;	/* RFC 1001 and ASCII */
 	/* SECURITY_BUFFER for version info not present since we
 	   do not set the version is present flag */
+<<<<<<< HEAD
 	char DomainString[];
+=======
+	char DomainString[0];
+>>>>>>> b7ba80a49124 (Commit)
 	/* followed by WorkstationString */
 } __attribute__((packed)) NEGOTIATE_MESSAGE, *PNEGOTIATE_MESSAGE;
 
@@ -135,7 +139,11 @@ typedef struct _AUTHENTICATE_MESSAGE {
 	__le32 NegotiateFlags;
 	/* SECURITY_BUFFER for version info not present since we
 	   do not set the version is present flag */
+<<<<<<< HEAD
 	char UserString[];
+=======
+	char UserString[0];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) AUTHENTICATE_MESSAGE, *PAUTHENTICATE_MESSAGE;
 
 /*

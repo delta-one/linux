@@ -57,14 +57,22 @@ struct orc_entry {
 	unsigned	sp_reg:4;
 	unsigned	bp_reg:4;
 	unsigned	type:2;
+<<<<<<< HEAD
 	unsigned	signal:1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned	end:1;
 #elif defined(__BIG_ENDIAN_BITFIELD)
 	unsigned	bp_reg:4;
 	unsigned	sp_reg:4;
+<<<<<<< HEAD
 	unsigned	unused:4;
 	unsigned	end:1;
 	unsigned	signal:1;
+=======
+	unsigned	unused:5;
+	unsigned	end:1;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned	type:2;
 #endif
 } __packed;

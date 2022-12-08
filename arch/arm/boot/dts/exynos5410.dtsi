@@ -81,7 +81,11 @@
 
 		clock_audss: audss-clock-controller@3810000 {
 			compatible = "samsung,exynos5410-audss-clock";
+<<<<<<< HEAD
 			reg = <0x03810000 0x0c>;
+=======
+			reg = <0x03810000 0x0C>;
+>>>>>>> b7ba80a49124 (Commit)
 			#clock-cells = <1>;
 			clocks = <&fin_pll>, <&clock CLK_FOUT_EPLL>;
 			clock-names = "pll_ref", "pll_in";

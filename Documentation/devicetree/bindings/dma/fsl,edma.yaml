@@ -64,7 +64,11 @@ required:
   - dma-channels
 
 allOf:
+<<<<<<< HEAD
   - $ref: dma-controller.yaml#
+=======
+  - $ref: "dma-controller.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:

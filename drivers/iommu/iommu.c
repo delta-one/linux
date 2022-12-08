@@ -21,7 +21,10 @@
 #include <linux/idr.h>
 #include <linux/err.h>
 #include <linux/pci.h>
+<<<<<<< HEAD
 #include <linux/pci-ats.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/bitops.h>
 #include <linux/platform_device.h>
 #include <linux/property.h>
@@ -29,6 +32,7 @@
 #include <linux/module.h>
 #include <linux/cc_platform.h>
 #include <trace/events/iommu.h>
+<<<<<<< HEAD
 #include <linux/sched/mm.h>
 #include <linux/msi.h>
 
@@ -36,6 +40,11 @@
 
 #include "iommu-sva.h"
 
+=======
+
+#include "dma-iommu.h"
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct kset *iommu_group_kset;
 static DEFINE_IDA(iommu_group_ida);
 
@@ -47,7 +56,10 @@ struct iommu_group {
 	struct kobject kobj;
 	struct kobject *devices_kobj;
 	struct list_head devices;
+<<<<<<< HEAD
 	struct xarray pasid_array;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct mutex mutex;
 	void *iommu_data;
 	void (*iommu_data_release)(void *iommu_data);
@@ -284,6 +296,7 @@ static void dev_iommu_free(struct device *dev)
 	kfree(param);
 }
 
+<<<<<<< HEAD
 static u32 dev_iommu_get_max_pasids(struct device *dev)
 {
 	u32 max_pasids = 0, bits = 0;
@@ -302,16 +315,22 @@ static u32 dev_iommu_get_max_pasids(struct device *dev)
 	return min_t(u32, max_pasids, dev->iommu->iommu_dev->max_pasids);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __iommu_probe_device(struct device *dev, struct list_head *group_list)
 {
 	const struct iommu_ops *ops = dev->bus->iommu_ops;
 	struct iommu_device *iommu_dev;
 	struct iommu_group *group;
+<<<<<<< HEAD
 	static DEFINE_MUTEX(iommu_probe_device_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (!ops)
 		return -ENODEV;
+<<<<<<< HEAD
 	/*
 	 * Serialise to avoid races between IOMMU drivers registering in
 	 * parallel and/or the "replay" calls from ACPI/OF code via client
@@ -324,6 +343,11 @@ static int __iommu_probe_device(struct device *dev, struct list_head *group_list
 		ret = -ENOMEM;
 		goto err_unlock;
 	}
+=======
+
+	if (!dev_iommu_get(dev))
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!try_module_get(ops->owner)) {
 		ret = -EINVAL;
@@ -337,13 +361,17 @@ static int __iommu_probe_device(struct device *dev, struct list_head *group_list
 	}
 
 	dev->iommu->iommu_dev = iommu_dev;
+<<<<<<< HEAD
 	dev->iommu->max_pasids = dev_iommu_get_max_pasids(dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	group = iommu_group_get_for_dev(dev);
 	if (IS_ERR(group)) {
 		ret = PTR_ERR(group);
 		goto out_release;
 	}
+<<<<<<< HEAD
 
 	mutex_lock(&group->mutex);
 	if (group_list && !group->default_domain && list_empty(&group->entry))
@@ -352,6 +380,13 @@ static int __iommu_probe_device(struct device *dev, struct list_head *group_list
 	iommu_group_put(group);
 
 	mutex_unlock(&iommu_probe_device_lock);
+=======
+	iommu_group_put(group);
+
+	if (group_list && !group->default_domain && list_empty(&group->entry))
+		list_add_tail(&group->entry, group_list);
+
+>>>>>>> b7ba80a49124 (Commit)
 	iommu_device_link(iommu_dev, dev);
 
 	return 0;
@@ -366,6 +401,7 @@ out_module_put:
 err_free:
 	dev_iommu_free(dev);
 
+<<<<<<< HEAD
 err_unlock:
 	mutex_unlock(&iommu_probe_device_lock);
 
@@ -396,6 +432,11 @@ static int iommu_group_do_dma_first_attach(struct device *dev, void *data)
 	return __iommu_attach_device(domain, dev);
 }
 
+=======
+	return ret;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int iommu_probe_device(struct device *dev)
 {
 	const struct iommu_ops *ops;
@@ -426,7 +467,11 @@ int iommu_probe_device(struct device *dev)
 	 * attach the default domain.
 	 */
 	if (group->default_domain && !group->owner) {
+<<<<<<< HEAD
 		ret = iommu_group_do_dma_first_attach(dev, group->default_domain);
+=======
+		ret = __iommu_attach_device(group->default_domain, dev);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret) {
 			mutex_unlock(&group->mutex);
 			iommu_group_put(group);
@@ -453,6 +498,7 @@ err_out:
 
 }
 
+<<<<<<< HEAD
 /*
  * Remove a device from a group's device list and return the group device
  * if successful.
@@ -500,10 +546,18 @@ void iommu_release_device(struct device *dev)
 	const struct iommu_ops *ops;
 
 	if (!dev->iommu || !group)
+=======
+void iommu_release_device(struct device *dev)
+{
+	const struct iommu_ops *ops;
+
+	if (!dev->iommu)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	iommu_device_unlink(dev->iommu->iommu_dev, dev);
 
+<<<<<<< HEAD
 	mutex_lock(&group->mutex);
 	device = __iommu_group_remove_device(group, dev);
 
@@ -533,6 +587,13 @@ void iommu_release_device(struct device *dev)
 	if (device)
 		__iommu_group_release_device(group, device);
 
+=======
+	ops = dev_iommu_ops(dev);
+	if (ops->release_device)
+		ops->release_device(dev);
+
+	iommu_group_remove_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	module_put(ops->owner);
 	dev_iommu_free(dev);
 }
@@ -616,7 +677,11 @@ static void iommu_group_remove_file(struct iommu_group *group,
 
 static ssize_t iommu_group_show_name(struct iommu_group *group, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", group->name);
+=======
+	return sprintf(buf, "%s\n", group->name);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -635,7 +700,11 @@ static int iommu_insert_resv_region(struct iommu_resv_region *new,
 	LIST_HEAD(stack);
 
 	nr = iommu_alloc_resv_region(new->start, new->length,
+<<<<<<< HEAD
 				     new->prot, new->type, GFP_KERNEL);
+=======
+				     new->prot, new->type);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!nr)
 		return -ENOMEM;
 
@@ -729,12 +798,17 @@ static ssize_t iommu_group_show_resv_regions(struct iommu_group *group,
 {
 	struct iommu_resv_region *region, *next;
 	struct list_head group_resv_regions;
+<<<<<<< HEAD
 	int offset = 0;
+=======
+	char *str = buf;
+>>>>>>> b7ba80a49124 (Commit)
 
 	INIT_LIST_HEAD(&group_resv_regions);
 	iommu_get_group_resv_regions(group, &group_resv_regions);
 
 	list_for_each_entry_safe(region, next, &group_resv_regions, list) {
+<<<<<<< HEAD
 		offset += sysfs_emit_at(buf, offset, "0x%016llx 0x%016llx %s\n",
 					(long long)region->start,
 					(long long)(region->start +
@@ -744,17 +818,33 @@ static ssize_t iommu_group_show_resv_regions(struct iommu_group *group,
 	}
 
 	return offset;
+=======
+		str += sprintf(str, "0x%016llx 0x%016llx %s\n",
+			       (long long int)region->start,
+			       (long long int)(region->start +
+						region->length - 1),
+			       iommu_group_resv_type_string[region->type]);
+		kfree(region);
+	}
+
+	return (str - buf);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t iommu_group_show_type(struct iommu_group *group,
 				     char *buf)
 {
+<<<<<<< HEAD
 	char *type = "unknown";
+=======
+	char *type = "unknown\n";
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&group->mutex);
 	if (group->default_domain) {
 		switch (group->default_domain->type) {
 		case IOMMU_DOMAIN_BLOCKED:
+<<<<<<< HEAD
 			type = "blocked";
 			break;
 		case IOMMU_DOMAIN_IDENTITY:
@@ -768,12 +858,33 @@ static ssize_t iommu_group_show_type(struct iommu_group *group,
 			break;
 		case IOMMU_DOMAIN_DMA_FQ:
 			type = "DMA-FQ";
+=======
+			type = "blocked\n";
+			break;
+		case IOMMU_DOMAIN_IDENTITY:
+			type = "identity\n";
+			break;
+		case IOMMU_DOMAIN_UNMANAGED:
+			type = "unmanaged\n";
+			break;
+		case IOMMU_DOMAIN_DMA:
+			type = "DMA\n";
+			break;
+		case IOMMU_DOMAIN_DMA_FQ:
+			type = "DMA-FQ\n";
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 	}
 	mutex_unlock(&group->mutex);
+<<<<<<< HEAD
 
 	return sysfs_emit(buf, "%s\n", type);
+=======
+	strcpy(buf, type);
+
+	return strlen(type);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static IOMMU_GROUP_ATTR(name, S_IRUGO, iommu_group_show_name, NULL);
@@ -804,7 +915,11 @@ static void iommu_group_release(struct kobject *kobj)
 	kfree(group);
 }
 
+<<<<<<< HEAD
 static const struct kobj_type iommu_group_ktype = {
+=======
+static struct kobj_type iommu_group_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops = &iommu_group_sysfs_ops,
 	.release = iommu_group_release,
 };
@@ -833,7 +948,10 @@ struct iommu_group *iommu_group_alloc(void)
 	mutex_init(&group->mutex);
 	INIT_LIST_HEAD(&group->devices);
 	INIT_LIST_HEAD(&group->entry);
+<<<<<<< HEAD
 	xa_init(&group->pasid_array);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = ida_alloc(&iommu_group_ida, GFP_KERNEL);
 	if (ret < 0) {
@@ -864,6 +982,7 @@ struct iommu_group *iommu_group_alloc(void)
 
 	ret = iommu_group_create_file(group,
 				      &iommu_group_attr_reserved_regions);
+<<<<<<< HEAD
 	if (ret) {
 		kobject_put(group->devices_kobj);
 		return ERR_PTR(ret);
@@ -874,6 +993,14 @@ struct iommu_group *iommu_group_alloc(void)
 		kobject_put(group->devices_kobj);
 		return ERR_PTR(ret);
 	}
+=======
+	if (ret)
+		return ERR_PTR(ret);
+
+	ret = iommu_group_create_file(group, &iommu_group_attr_type);
+	if (ret)
+		return ERR_PTR(ret);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_debug("Allocated group %d\n", group->id);
 
@@ -1024,7 +1151,11 @@ map_end:
 			if (map_size) {
 				ret = iommu_map(domain, addr - map_size,
 						addr - map_size, map_size,
+<<<<<<< HEAD
 						entry->prot, GFP_KERNEL);
+=======
+						entry->prot);
+>>>>>>> b7ba80a49124 (Commit)
 				if (ret)
 					goto out;
 				map_size = 0;
@@ -1041,6 +1172,19 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static bool iommu_is_attach_deferred(struct device *dev)
+{
+	const struct iommu_ops *ops = dev_iommu_ops(dev);
+
+	if (ops->is_attach_deferred)
+		return ops->is_attach_deferred(dev);
+
+	return false;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * iommu_group_add_device - add a device to an iommu group
  * @group: the group into which to add the device (reference should be held)
@@ -1093,8 +1237,13 @@ rename:
 
 	mutex_lock(&group->mutex);
 	list_add_tail(&device->list, &group->devices);
+<<<<<<< HEAD
 	if (group->domain)
 		ret = iommu_group_do_dma_first_attach(dev, group->domain);
+=======
+	if (group->domain  && !iommu_is_attach_deferred(dev))
+		ret = __iommu_attach_device(group->domain, dev);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&group->mutex);
 	if (ret)
 		goto err_put_group;
@@ -1133,7 +1282,11 @@ EXPORT_SYMBOL_GPL(iommu_group_add_device);
 void iommu_group_remove_device(struct device *dev)
 {
 	struct iommu_group *group = dev->iommu_group;
+<<<<<<< HEAD
 	struct group_device *device;
+=======
+	struct group_device *tmp_device, *device = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!group)
 		return;
@@ -1141,11 +1294,35 @@ void iommu_group_remove_device(struct device *dev)
 	dev_info(dev, "Removing from iommu group %d\n", group->id);
 
 	mutex_lock(&group->mutex);
+<<<<<<< HEAD
 	device = __iommu_group_remove_device(group, dev);
 	mutex_unlock(&group->mutex);
 
 	if (device)
 		__iommu_group_release_device(group, device);
+=======
+	list_for_each_entry(tmp_device, &group->devices, list) {
+		if (tmp_device->dev == dev) {
+			device = tmp_device;
+			list_del(&device->list);
+			break;
+		}
+	}
+	mutex_unlock(&group->mutex);
+
+	if (!device)
+		return;
+
+	sysfs_remove_link(group->devices_kobj, device->name);
+	sysfs_remove_link(&dev->kobj, "iommu_group");
+
+	trace_remove_device_from_group(group->id, dev);
+
+	kfree(device->name);
+	kfree(device);
+	dev->iommu_group = NULL;
+	kobject_put(group->devices_kobj);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(iommu_group_remove_device);
 
@@ -1844,10 +2021,28 @@ static void probe_alloc_default_domain(struct bus_type *bus,
 
 }
 
+<<<<<<< HEAD
 static int __iommu_group_dma_first_attach(struct iommu_group *group)
 {
 	return __iommu_group_for_each_dev(group, group->default_domain,
 					  iommu_group_do_dma_first_attach);
+=======
+static int iommu_group_do_dma_attach(struct device *dev, void *data)
+{
+	struct iommu_domain *domain = data;
+	int ret = 0;
+
+	if (!iommu_is_attach_deferred(dev))
+		ret = __iommu_attach_device(domain, dev);
+
+	return ret;
+}
+
+static int __iommu_group_dma_attach(struct iommu_group *group)
+{
+	return __iommu_group_for_each_dev(group, group->default_domain,
+					  iommu_group_do_dma_attach);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int iommu_group_do_probe_finalize(struct device *dev, void *data)
@@ -1897,11 +2092,19 @@ int bus_iommu_probe(struct bus_type *bus)
 		return ret;
 
 	list_for_each_entry_safe(group, next, &group_list, entry) {
+<<<<<<< HEAD
 		mutex_lock(&group->mutex);
 
 		/* Remove item from the list */
 		list_del_init(&group->entry);
 
+=======
+		/* Remove item from the list */
+		list_del_init(&group->entry);
+
+		mutex_lock(&group->mutex);
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* Try to allocate default domain */
 		probe_alloc_default_domain(bus, group);
 
@@ -1912,7 +2115,11 @@ int bus_iommu_probe(struct bus_type *bus)
 
 		iommu_group_create_direct_mappings(group);
 
+<<<<<<< HEAD
 		ret = __iommu_group_dma_first_attach(group);
+=======
+		ret = __iommu_group_dma_attach(group);
+>>>>>>> b7ba80a49124 (Commit)
 
 		mutex_unlock(&group->mutex);
 
@@ -1955,6 +2162,7 @@ bool device_iommu_capable(struct device *dev, enum iommu_cap cap)
 EXPORT_SYMBOL_GPL(device_iommu_capable);
 
 /**
+<<<<<<< HEAD
  * iommu_group_has_isolated_msi() - Compute msi_device_has_isolated_msi()
  *       for a group
  * @group: Group to query
@@ -1978,6 +2186,8 @@ bool iommu_group_has_isolated_msi(struct iommu_group *group)
 EXPORT_SYMBOL_GPL(iommu_group_has_isolated_msi);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * iommu_set_fault_handler() - set a fault handler for an iommu domain
  * @domain: iommu domain
  * @handler: fault handler
@@ -2033,8 +2243,11 @@ EXPORT_SYMBOL_GPL(iommu_domain_alloc);
 
 void iommu_domain_free(struct iommu_domain *domain)
 {
+<<<<<<< HEAD
 	if (domain->type == IOMMU_DOMAIN_SVA)
 		mmdrop(domain->mm);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	iommu_put_dma_cookie(domain);
 	domain->ops->free(domain);
 }
@@ -2067,6 +2280,7 @@ static int __iommu_attach_device(struct iommu_domain *domain,
 		return -ENODEV;
 
 	ret = domain->ops->attach_dev(domain, dev);
+<<<<<<< HEAD
 	if (ret)
 		return ret;
 	dev->iommu->attach_deferred = 0;
@@ -2086,6 +2300,13 @@ static int __iommu_attach_device(struct iommu_domain *domain,
  * the device. In this case attaching a different domain to the
  * device may succeed.
  */
+=======
+	if (!ret)
+		trace_attach_device_to_domain(dev);
+	return ret;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int iommu_attach_device(struct iommu_domain *domain, struct device *dev)
 {
 	struct iommu_group *group;
@@ -2116,12 +2337,29 @@ EXPORT_SYMBOL_GPL(iommu_attach_device);
 
 int iommu_deferred_attach(struct device *dev, struct iommu_domain *domain)
 {
+<<<<<<< HEAD
 	if (dev->iommu && dev->iommu->attach_deferred)
+=======
+	if (iommu_is_attach_deferred(dev))
+>>>>>>> b7ba80a49124 (Commit)
 		return __iommu_attach_device(domain, dev);
 
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void __iommu_detach_device(struct iommu_domain *domain,
+				  struct device *dev)
+{
+	if (iommu_is_attach_deferred(dev))
+		return;
+
+	domain->ops->detach_dev(domain, dev);
+	trace_detach_device_from_domain(dev);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 void iommu_detach_device(struct iommu_domain *domain, struct device *dev)
 {
 	struct iommu_group *group;
@@ -2196,6 +2434,7 @@ static int __iommu_attach_group(struct iommu_domain *domain,
 
 	ret = __iommu_group_for_each_dev(group, domain,
 					 iommu_group_do_attach_device);
+<<<<<<< HEAD
 	if (ret == 0) {
 		group->domain = domain;
 	} else {
@@ -2212,10 +2451,15 @@ static int __iommu_attach_group(struct iommu_domain *domain,
 		WARN(__iommu_group_set_domain(group, old_domain),
 		     "iommu driver failed to attach a compatible domain");
 	}
+=======
+	if (ret == 0)
+		group->domain = domain;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
 
+<<<<<<< HEAD
 /**
  * iommu_attach_group - Attach an IOMMU domain to an IOMMU group
  * @domain: IOMMU domain to attach
@@ -2228,6 +2472,8 @@ static int __iommu_attach_group(struct iommu_domain *domain,
  * the group. In this case attaching a different domain to the
  * group may succeed.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int iommu_attach_group(struct iommu_domain *domain, struct iommu_group *group)
 {
 	int ret;
@@ -2240,12 +2486,20 @@ int iommu_attach_group(struct iommu_domain *domain, struct iommu_group *group)
 }
 EXPORT_SYMBOL_GPL(iommu_attach_group);
 
+<<<<<<< HEAD
 static int iommu_group_do_set_platform_dma(struct device *dev, void *data)
 {
 	const struct iommu_ops *ops = dev_iommu_ops(dev);
 
 	if (!WARN_ON(!ops->set_platform_dma_ops))
 		ops->set_platform_dma_ops(dev);
+=======
+static int iommu_group_do_detach_device(struct device *dev, void *data)
+{
+	struct iommu_domain *domain = data;
+
+	__iommu_detach_device(domain, dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -2259,6 +2513,7 @@ static int __iommu_group_set_domain(struct iommu_group *group,
 		return 0;
 
 	/*
+<<<<<<< HEAD
 	 * New drivers should support default domains, so set_platform_dma()
 	 * op will never be called. Otherwise the NULL domain represents some
 	 * platform specific behavior.
@@ -2266,6 +2521,17 @@ static int __iommu_group_set_domain(struct iommu_group *group,
 	if (!new_domain) {
 		__iommu_group_for_each_dev(group, NULL,
 					   iommu_group_do_set_platform_dma);
+=======
+	 * New drivers should support default domains and so the detach_dev() op
+	 * will never be called. Otherwise the NULL domain represents some
+	 * platform specific behavior.
+	 */
+	if (!new_domain) {
+		if (WARN_ON(!group->domain->ops->detach_dev))
+			return -EINVAL;
+		__iommu_group_for_each_dev(group, group->domain,
+					   iommu_group_do_detach_device);
+>>>>>>> b7ba80a49124 (Commit)
 		group->domain = NULL;
 		return 0;
 	}
@@ -2445,12 +2711,18 @@ static int __iommu_map(struct iommu_domain *domain, unsigned long iova,
 	return ret;
 }
 
+<<<<<<< HEAD
 int iommu_map(struct iommu_domain *domain, unsigned long iova,
 	      phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+=======
+static int _iommu_map(struct iommu_domain *domain, unsigned long iova,
+		      phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct iommu_domain_ops *ops = domain->ops;
 	int ret;
 
+<<<<<<< HEAD
 	might_sleep_if(gfpflags_allow_blocking(gfp));
 
 	/* Discourage passing strange GFP flags */
@@ -2458,14 +2730,35 @@ int iommu_map(struct iommu_domain *domain, unsigned long iova,
 				__GFP_HIGHMEM)))
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = __iommu_map(domain, iova, paddr, size, prot, gfp);
 	if (ret == 0 && ops->iotlb_sync_map)
 		ops->iotlb_sync_map(domain, iova, size);
 
 	return ret;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(iommu_map);
 
+=======
+
+int iommu_map(struct iommu_domain *domain, unsigned long iova,
+	      phys_addr_t paddr, size_t size, int prot)
+{
+	might_sleep();
+	return _iommu_map(domain, iova, paddr, size, prot, GFP_KERNEL);
+}
+EXPORT_SYMBOL_GPL(iommu_map);
+
+int iommu_map_atomic(struct iommu_domain *domain, unsigned long iova,
+	      phys_addr_t paddr, size_t size, int prot)
+{
+	return _iommu_map(domain, iova, paddr, size, prot, GFP_ATOMIC);
+}
+EXPORT_SYMBOL_GPL(iommu_map_atomic);
+
+>>>>>>> b7ba80a49124 (Commit)
 static size_t __iommu_unmap_pages(struct iommu_domain *domain,
 				  unsigned long iova, size_t size,
 				  struct iommu_iotlb_gather *iotlb_gather)
@@ -2555,9 +2848,15 @@ size_t iommu_unmap_fast(struct iommu_domain *domain,
 }
 EXPORT_SYMBOL_GPL(iommu_unmap_fast);
 
+<<<<<<< HEAD
 ssize_t iommu_map_sg(struct iommu_domain *domain, unsigned long iova,
 		     struct scatterlist *sg, unsigned int nents, int prot,
 		     gfp_t gfp)
+=======
+static ssize_t __iommu_map_sg(struct iommu_domain *domain, unsigned long iova,
+		struct scatterlist *sg, unsigned int nents, int prot,
+		gfp_t gfp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct iommu_domain_ops *ops = domain->ops;
 	size_t len = 0, mapped = 0;
@@ -2565,6 +2864,7 @@ ssize_t iommu_map_sg(struct iommu_domain *domain, unsigned long iova,
 	unsigned int i = 0;
 	int ret;
 
+<<<<<<< HEAD
 	might_sleep_if(gfpflags_allow_blocking(gfp));
 
 	/* Discourage passing strange GFP flags */
@@ -2572,6 +2872,8 @@ ssize_t iommu_map_sg(struct iommu_domain *domain, unsigned long iova,
 				__GFP_HIGHMEM)))
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	while (i <= nents) {
 		phys_addr_t s_phys = sg_phys(sg);
 
@@ -2611,8 +2913,26 @@ out_err:
 
 	return ret;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(iommu_map_sg);
 
+=======
+
+ssize_t iommu_map_sg(struct iommu_domain *domain, unsigned long iova,
+		     struct scatterlist *sg, unsigned int nents, int prot)
+{
+	might_sleep();
+	return __iommu_map_sg(domain, iova, sg, nents, prot, GFP_KERNEL);
+}
+EXPORT_SYMBOL_GPL(iommu_map_sg);
+
+ssize_t iommu_map_sg_atomic(struct iommu_domain *domain, unsigned long iova,
+		    struct scatterlist *sg, unsigned int nents, int prot)
+{
+	return __iommu_map_sg(domain, iova, sg, nents, prot, GFP_ATOMIC);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * report_iommu_fault() - report about an IOMMU fault to the IOMMU framework
  * @domain: the iommu domain where the fault has happened
@@ -2718,12 +3038,20 @@ EXPORT_SYMBOL(iommu_put_resv_regions);
 
 struct iommu_resv_region *iommu_alloc_resv_region(phys_addr_t start,
 						  size_t length, int prot,
+<<<<<<< HEAD
 						  enum iommu_resv_type type,
 						  gfp_t gfp)
 {
 	struct iommu_resv_region *region;
 
 	region = kzalloc(sizeof(*region), gfp);
+=======
+						  enum iommu_resv_type type)
+{
+	struct iommu_resv_region *region;
+
+	region = kzalloc(sizeof(*region), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!region)
 		return NULL;
 
@@ -2865,11 +3193,112 @@ int iommu_dev_disable_feature(struct device *dev, enum iommu_dev_features feat)
 }
 EXPORT_SYMBOL_GPL(iommu_dev_disable_feature);
 
+<<<<<<< HEAD
 /*
  * Changes the default domain of an iommu group
  *
  * @group: The group for which the default domain should be changed
  * @dev: The first device in the group
+=======
+/**
+ * iommu_sva_bind_device() - Bind a process address space to a device
+ * @dev: the device
+ * @mm: the mm to bind, caller must hold a reference to it
+ * @drvdata: opaque data pointer to pass to bind callback
+ *
+ * Create a bond between device and address space, allowing the device to access
+ * the mm using the returned PASID. If a bond already exists between @device and
+ * @mm, it is returned and an additional reference is taken. Caller must call
+ * iommu_sva_unbind_device() to release each reference.
+ *
+ * iommu_dev_enable_feature(dev, IOMMU_DEV_FEAT_SVA) must be called first, to
+ * initialize the required SVA features.
+ *
+ * On error, returns an ERR_PTR value.
+ */
+struct iommu_sva *
+iommu_sva_bind_device(struct device *dev, struct mm_struct *mm, void *drvdata)
+{
+	struct iommu_group *group;
+	struct iommu_sva *handle = ERR_PTR(-EINVAL);
+	const struct iommu_ops *ops = dev_iommu_ops(dev);
+
+	if (!ops->sva_bind)
+		return ERR_PTR(-ENODEV);
+
+	group = iommu_group_get(dev);
+	if (!group)
+		return ERR_PTR(-ENODEV);
+
+	/* Ensure device count and domain don't change while we're binding */
+	mutex_lock(&group->mutex);
+
+	/*
+	 * To keep things simple, SVA currently doesn't support IOMMU groups
+	 * with more than one device. Existing SVA-capable systems are not
+	 * affected by the problems that required IOMMU groups (lack of ACS
+	 * isolation, device ID aliasing and other hardware issues).
+	 */
+	if (iommu_group_device_count(group) != 1)
+		goto out_unlock;
+
+	handle = ops->sva_bind(dev, mm, drvdata);
+
+out_unlock:
+	mutex_unlock(&group->mutex);
+	iommu_group_put(group);
+
+	return handle;
+}
+EXPORT_SYMBOL_GPL(iommu_sva_bind_device);
+
+/**
+ * iommu_sva_unbind_device() - Remove a bond created with iommu_sva_bind_device
+ * @handle: the handle returned by iommu_sva_bind_device()
+ *
+ * Put reference to a bond between device and address space. The device should
+ * not be issuing any more transaction for this PASID. All outstanding page
+ * requests for this PASID must have been flushed to the IOMMU.
+ */
+void iommu_sva_unbind_device(struct iommu_sva *handle)
+{
+	struct iommu_group *group;
+	struct device *dev = handle->dev;
+	const struct iommu_ops *ops = dev_iommu_ops(dev);
+
+	if (!ops->sva_unbind)
+		return;
+
+	group = iommu_group_get(dev);
+	if (!group)
+		return;
+
+	mutex_lock(&group->mutex);
+	ops->sva_unbind(handle);
+	mutex_unlock(&group->mutex);
+
+	iommu_group_put(group);
+}
+EXPORT_SYMBOL_GPL(iommu_sva_unbind_device);
+
+u32 iommu_sva_get_pasid(struct iommu_sva *handle)
+{
+	const struct iommu_ops *ops = dev_iommu_ops(handle->dev);
+
+	if (!ops->sva_get_pasid)
+		return IOMMU_PASID_INVALID;
+
+	return ops->sva_get_pasid(handle);
+}
+EXPORT_SYMBOL_GPL(iommu_sva_get_pasid);
+
+/*
+ * Changes the default domain of an iommu group that has *only* one device
+ *
+ * @group: The group for which the default domain should be changed
+ * @prev_dev: The device in the group (this is used to make sure that the device
+ *	 hasn't changed after the caller has called this function)
+>>>>>>> b7ba80a49124 (Commit)
  * @type: The type of the new default domain that gets associated with the group
  *
  * Returns 0 on success and error code on failure
@@ -2880,6 +3309,7 @@ EXPORT_SYMBOL_GPL(iommu_dev_disable_feature);
  *    Please take a closer look if intended to use for other purposes.
  */
 static int iommu_change_dev_def_domain(struct iommu_group *group,
+<<<<<<< HEAD
 				       struct device *dev, int type)
 {
 	struct __group_domain_type gtype = {NULL, 0};
@@ -2891,32 +3321,110 @@ static int iommu_change_dev_def_domain(struct iommu_group *group,
 	prev_dom = group->default_domain;
 	__iommu_group_for_each_dev(group, &gtype,
 				   probe_get_default_domain_type);
+=======
+				       struct device *prev_dev, int type)
+{
+	struct iommu_domain *prev_dom;
+	struct group_device *grp_dev;
+	int ret, dev_def_dom;
+	struct device *dev;
+
+	mutex_lock(&group->mutex);
+
+	if (group->default_domain != group->domain) {
+		dev_err_ratelimited(prev_dev, "Group not assigned to default domain\n");
+		ret = -EBUSY;
+		goto out;
+	}
+
+	/*
+	 * iommu group wasn't locked while acquiring device lock in
+	 * iommu_group_store_type(). So, make sure that the device count hasn't
+	 * changed while acquiring device lock.
+	 *
+	 * Changing default domain of an iommu group with two or more devices
+	 * isn't supported because there could be a potential deadlock. Consider
+	 * the following scenario. T1 is trying to acquire device locks of all
+	 * the devices in the group and before it could acquire all of them,
+	 * there could be another thread T2 (from different sub-system and use
+	 * case) that has already acquired some of the device locks and might be
+	 * waiting for T1 to release other device locks.
+	 */
+	if (iommu_group_device_count(group) != 1) {
+		dev_err_ratelimited(prev_dev, "Cannot change default domain: Group has more than one device\n");
+		ret = -EINVAL;
+		goto out;
+	}
+
+	/* Since group has only one device */
+	grp_dev = list_first_entry(&group->devices, struct group_device, list);
+	dev = grp_dev->dev;
+
+	if (prev_dev != dev) {
+		dev_err_ratelimited(prev_dev, "Cannot change default domain: Device has been changed\n");
+		ret = -EBUSY;
+		goto out;
+	}
+
+	prev_dom = group->default_domain;
+	if (!prev_dom) {
+		ret = -EINVAL;
+		goto out;
+	}
+
+	dev_def_dom = iommu_get_def_domain_type(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!type) {
 		/*
 		 * If the user hasn't requested any specific type of domain and
 		 * if the device supports both the domains, then default to the
 		 * domain the device was booted with
 		 */
+<<<<<<< HEAD
 		type = gtype.type ? : iommu_def_domain_type;
 	} else if (gtype.type && type != gtype.type) {
 		dev_err_ratelimited(dev, "Device cannot be in %s domain\n",
 				    iommu_domain_type_str(type));
 		return -EINVAL;
+=======
+		type = dev_def_dom ? : iommu_def_domain_type;
+	} else if (dev_def_dom && type != dev_def_dom) {
+		dev_err_ratelimited(prev_dev, "Device cannot be in %s domain\n",
+				    iommu_domain_type_str(type));
+		ret = -EINVAL;
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
 	 * Switch to a new domain only if the requested domain type is different
 	 * from the existing default domain type
 	 */
+<<<<<<< HEAD
 	if (prev_dom->type == type)
 		return 0;
 
 	group->default_domain = NULL;
 	group->domain = NULL;
+=======
+	if (prev_dom->type == type) {
+		ret = 0;
+		goto out;
+	}
+
+	/* We can bring up a flush queue without tearing down the domain */
+	if (type == IOMMU_DOMAIN_DMA_FQ && prev_dom->type == IOMMU_DOMAIN_DMA) {
+		ret = iommu_dma_init_fq(prev_dom);
+		if (!ret)
+			prev_dom->type = IOMMU_DOMAIN_DMA_FQ;
+		goto out;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Sets group->default_domain to the newly allocated domain */
 	ret = iommu_group_alloc_default_domain(dev->bus, group, type);
 	if (ret)
+<<<<<<< HEAD
 		goto restore_old_domain;
 
 	ret = iommu_group_create_direct_mappings(group);
@@ -2929,14 +3437,48 @@ static int iommu_change_dev_def_domain(struct iommu_group *group,
 
 	iommu_domain_free(prev_dom);
 
+=======
+		goto out;
+
+	ret = iommu_create_device_direct_mappings(group, dev);
+	if (ret)
+		goto free_new_domain;
+
+	ret = __iommu_attach_device(group->default_domain, dev);
+	if (ret)
+		goto free_new_domain;
+
+	group->domain = group->default_domain;
+
+	/*
+	 * Release the mutex here because ops->probe_finalize() call-back of
+	 * some vendor IOMMU drivers calls arm_iommu_attach_device() which
+	 * in-turn might call back into IOMMU core code, where it tries to take
+	 * group->mutex, resulting in a deadlock.
+	 */
+	mutex_unlock(&group->mutex);
+
+	/* Make sure dma_ops is appropriatley set */
+	iommu_group_do_probe_finalize(dev, group->default_domain);
+	iommu_domain_free(prev_dom);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 free_new_domain:
 	iommu_domain_free(group->default_domain);
+<<<<<<< HEAD
 restore_old_domain:
 	group->default_domain = prev_dom;
 	group->domain = prev_dom;
 
+=======
+	group->default_domain = prev_dom;
+	group->domain = prev_dom;
+
+out:
+	mutex_unlock(&group->mutex);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -2946,7 +3488,11 @@ restore_old_domain:
  * transition. Return failure if this isn't met.
  *
  * We need to consider the race between this and the device release path.
+<<<<<<< HEAD
  * group->mutex is used here to guarantee that the device release path
+=======
+ * device_lock(dev) is used here to guarantee that the device release path
+>>>>>>> b7ba80a49124 (Commit)
  * will not be entered at the same time.
  */
 static ssize_t iommu_group_store_type(struct iommu_group *group,
@@ -2973,6 +3519,7 @@ static ssize_t iommu_group_store_type(struct iommu_group *group,
 	else
 		return -EINVAL;
 
+<<<<<<< HEAD
 	mutex_lock(&group->mutex);
 	/* We can bring up a flush queue without tearing down the domain. */
 	if (req_type == IOMMU_DOMAIN_DMA_FQ &&
@@ -3009,6 +3556,69 @@ static ssize_t iommu_group_store_type(struct iommu_group *group,
 		__iommu_group_dma_finalize(group);
 
 	return ret ?: count;
+=======
+	/*
+	 * Lock/Unlock the group mutex here before device lock to
+	 * 1. Make sure that the iommu group has only one device (this is a
+	 *    prerequisite for step 2)
+	 * 2. Get struct *dev which is needed to lock device
+	 */
+	mutex_lock(&group->mutex);
+	if (iommu_group_device_count(group) != 1) {
+		mutex_unlock(&group->mutex);
+		pr_err_ratelimited("Cannot change default domain: Group has more than one device\n");
+		return -EINVAL;
+	}
+
+	/* Since group has only one device */
+	grp_dev = list_first_entry(&group->devices, struct group_device, list);
+	dev = grp_dev->dev;
+	get_device(dev);
+
+	/*
+	 * Don't hold the group mutex because taking group mutex first and then
+	 * the device lock could potentially cause a deadlock as below. Assume
+	 * two threads T1 and T2. T1 is trying to change default domain of an
+	 * iommu group and T2 is trying to hot unplug a device or release [1] VF
+	 * of a PCIe device which is in the same iommu group. T1 takes group
+	 * mutex and before it could take device lock assume T2 has taken device
+	 * lock and is yet to take group mutex. Now, both the threads will be
+	 * waiting for the other thread to release lock. Below, lock order was
+	 * suggested.
+	 * device_lock(dev);
+	 *	mutex_lock(&group->mutex);
+	 *		iommu_change_dev_def_domain();
+	 *	mutex_unlock(&group->mutex);
+	 * device_unlock(dev);
+	 *
+	 * [1] Typical device release path
+	 * device_lock() from device/driver core code
+	 *  -> bus_notifier()
+	 *   -> iommu_bus_notifier()
+	 *    -> iommu_release_device()
+	 *     -> ops->release_device() vendor driver calls back iommu core code
+	 *      -> mutex_lock() from iommu core code
+	 */
+	mutex_unlock(&group->mutex);
+
+	/* Check if the device in the group still has a driver bound to it */
+	device_lock(dev);
+	if (device_is_bound(dev) && !(req_type == IOMMU_DOMAIN_DMA_FQ &&
+	    group->default_domain->type == IOMMU_DOMAIN_DMA)) {
+		pr_err_ratelimited("Device is still bound to driver\n");
+		ret = -EBUSY;
+		goto out;
+	}
+
+	ret = iommu_change_dev_def_domain(group, dev, req_type);
+	ret = ret ?: count;
+
+out:
+	device_unlock(dev);
+	put_device(dev);
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool iommu_is_default_domain(struct iommu_group *group)
@@ -3047,8 +3657,12 @@ int iommu_device_use_default_domain(struct device *dev)
 
 	mutex_lock(&group->mutex);
 	if (group->owner_cnt) {
+<<<<<<< HEAD
 		if (group->owner || !iommu_is_default_domain(group) ||
 		    !xa_empty(&group->pasid_array)) {
+=======
+		if (group->owner || !iommu_is_default_domain(group)) {
+>>>>>>> b7ba80a49124 (Commit)
 			ret = -EBUSY;
 			goto unlock_out;
 		}
@@ -3079,7 +3693,11 @@ void iommu_device_unuse_default_domain(struct device *dev)
 		return;
 
 	mutex_lock(&group->mutex);
+<<<<<<< HEAD
 	if (!WARN_ON(!group->owner_cnt || !xa_empty(&group->pasid_array)))
+=======
+	if (!WARN_ON(!group->owner_cnt))
+>>>>>>> b7ba80a49124 (Commit)
 		group->owner_cnt--;
 
 	mutex_unlock(&group->mutex);
@@ -3109,6 +3727,7 @@ static int __iommu_group_alloc_blocking_domain(struct iommu_group *group)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int __iommu_take_dma_ownership(struct iommu_group *group, void *owner)
 {
 	int ret;
@@ -3129,29 +3748,60 @@ static int __iommu_take_dma_ownership(struct iommu_group *group, void *owner)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * iommu_group_claim_dma_owner() - Set DMA ownership of a group
  * @group: The group.
  * @owner: Caller specified pointer. Used for exclusive ownership.
  *
+<<<<<<< HEAD
  * This is to support backward compatibility for vfio which manages the dma
  * ownership in iommu_group level. New invocations on this interface should be
  * prohibited. Only a single owner may exist for a group.
+=======
+ * This is to support backward compatibility for vfio which manages
+ * the dma ownership in iommu_group level. New invocations on this
+ * interface should be prohibited.
+>>>>>>> b7ba80a49124 (Commit)
  */
 int iommu_group_claim_dma_owner(struct iommu_group *group, void *owner)
 {
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (WARN_ON(!owner))
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&group->mutex);
 	if (group->owner_cnt) {
 		ret = -EPERM;
 		goto unlock_out;
+<<<<<<< HEAD
 	}
 
 	ret = __iommu_take_dma_ownership(group, owner);
+=======
+	} else {
+		if (group->domain && group->domain != group->default_domain) {
+			ret = -EBUSY;
+			goto unlock_out;
+		}
+
+		ret = __iommu_group_alloc_blocking_domain(group);
+		if (ret)
+			goto unlock_out;
+
+		ret = __iommu_group_set_domain(group, group->blocking_domain);
+		if (ret)
+			goto unlock_out;
+		group->owner = owner;
+	}
+
+	group->owner_cnt++;
+>>>>>>> b7ba80a49124 (Commit)
 unlock_out:
 	mutex_unlock(&group->mutex);
 
@@ -3160,6 +3810,7 @@ unlock_out:
 EXPORT_SYMBOL_GPL(iommu_group_claim_dma_owner);
 
 /**
+<<<<<<< HEAD
  * iommu_device_claim_dma_owner() - Set DMA ownership of a device
  * @dev: The device.
  * @owner: Caller specified pointer. Used for exclusive ownership.
@@ -3216,18 +3867,38 @@ static void __iommu_release_dma_ownership(struct iommu_group *group)
 /**
  * iommu_group_release_dma_owner() - Release DMA ownership of a group
  * @dev: The device
+=======
+ * iommu_group_release_dma_owner() - Release DMA ownership of a group
+ * @group: The group.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Release the DMA ownership claimed by iommu_group_claim_dma_owner().
  */
 void iommu_group_release_dma_owner(struct iommu_group *group)
 {
+<<<<<<< HEAD
 	mutex_lock(&group->mutex);
 	__iommu_release_dma_ownership(group);
+=======
+	int ret;
+
+	mutex_lock(&group->mutex);
+	if (WARN_ON(!group->owner_cnt || !group->owner))
+		goto unlock_out;
+
+	group->owner_cnt = 0;
+	group->owner = NULL;
+	ret = __iommu_group_set_domain(group, group->default_domain);
+	WARN(ret, "iommu driver failed to attach the default domain");
+
+unlock_out:
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&group->mutex);
 }
 EXPORT_SYMBOL_GPL(iommu_group_release_dma_owner);
 
 /**
+<<<<<<< HEAD
  * iommu_device_release_dma_owner() - Release DMA ownership of a device
  * @group: The device.
  *
@@ -3248,6 +3919,8 @@ void iommu_device_release_dma_owner(struct device *dev)
 EXPORT_SYMBOL_GPL(iommu_device_release_dma_owner);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * iommu_group_dma_owner_claimed() - Query group dma ownership status
  * @group: The group.
  *
@@ -3265,6 +3938,7 @@ bool iommu_group_dma_owner_claimed(struct iommu_group *group)
 	return user;
 }
 EXPORT_SYMBOL_GPL(iommu_group_dma_owner_claimed);
+<<<<<<< HEAD
 
 static int __iommu_set_group_pasid(struct iommu_domain *domain,
 				   struct iommu_group *group, ioasid_t pasid)
@@ -3412,3 +4086,5 @@ struct iommu_domain *iommu_sva_domain_alloc(struct device *dev,
 
 	return domain;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

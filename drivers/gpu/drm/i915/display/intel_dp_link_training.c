@@ -1379,6 +1379,13 @@ intel_dp_128b132b_lane_cds(struct intel_dp *intel_dp,
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	/* FIXME: Should DP_TRAINING_PATTERN_DISABLE be written first? */
+	if (intel_dp->set_idle_link_train)
+		intel_dp->set_idle_link_train(intel_dp, crtc_state);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -1429,11 +1436,15 @@ intel_dp_128b132b_link_train(struct intel_dp *intel_dp,
 void intel_dp_start_link_train(struct intel_dp *intel_dp,
 			       const struct intel_crtc_state *crtc_state)
 {
+<<<<<<< HEAD
 	struct drm_i915_private *i915 = dp_to_i915(intel_dp);
 	struct intel_connector *connector = intel_dp->attached_connector;
 	struct intel_encoder *encoder = &dp_to_dig_port(intel_dp)->base;
 	bool passed;
 
+=======
+	bool passed;
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * TODO: Reiniting LTTPRs here won't be needed once proper connector
 	 * HW state readout is added.
@@ -1451,6 +1462,7 @@ void intel_dp_start_link_train(struct intel_dp *intel_dp,
 	else
 		passed = intel_dp_link_train_all_phys(intel_dp, crtc_state, lttpr_count);
 
+<<<<<<< HEAD
 	/*
 	 * Ignore the link failure in CI
 	 *
@@ -1494,3 +1506,8 @@ void intel_dp_128b132b_sdp_crc16(struct intel_dp *intel_dp,
 
 	drm_dbg_kms(&i915->drm, "DP2.0 SDP CRC16 for 128b/132b enabled\n");
 }
+=======
+	if (!passed)
+		intel_dp_schedule_fallback_link_training(intel_dp, crtc_state);
+}
+>>>>>>> b7ba80a49124 (Commit)

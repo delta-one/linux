@@ -19,7 +19,10 @@
 #include <net/devlink.h>
 #include <linux/time64.h>
 #include <linux/dim.h>
+<<<<<<< HEAD
 #include <uapi/linux/if_macsec.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <mbox.h>
 #include <npc.h>
@@ -28,16 +31,22 @@
 #include "otx2_devlink.h"
 #include <rvu_trace.h>
 
+<<<<<<< HEAD
 /* IPv4 flag more fragment bit */
 #define IPV4_FLAG_MORE				0x20
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* PCI device IDs */
 #define PCI_DEVID_OCTEONTX2_RVU_PF              0xA063
 #define PCI_DEVID_OCTEONTX2_RVU_VF		0xA064
 #define PCI_DEVID_OCTEONTX2_RVU_AFVF		0xA0F8
 
 #define PCI_SUBSYS_DEVID_96XX_RVU_PFVF		0xB200
+<<<<<<< HEAD
 #define PCI_SUBSYS_DEVID_CN10K_B_RVU_PFVF	0xBD00
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* PCI BAR nos */
 #define PCI_CFG_REG_BAR_NUM                     2
@@ -249,7 +258,10 @@ struct otx2_hw {
 #define CN10K_LMTST		2
 #define CN10K_RPM		3
 #define CN10K_PTP_ONESTEP	4
+<<<<<<< HEAD
 #define CN10K_HW_MACSEC		5
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long		cap_flag;
 
 #define LMT_LINE_SIZE		128
@@ -357,6 +369,7 @@ struct dev_hw_ops {
 	void	(*aura_freeptr)(void *dev, int aura, u64 buf);
 };
 
+<<<<<<< HEAD
 #define CN10K_MCS_SA_PER_SC	4
 
 /* Stats which need to be accumulated in software because
@@ -417,6 +430,8 @@ struct cn10k_mcs_cfg {
 	struct list_head rxsc_list;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct otx2_nic {
 	void __iomem		*reg_base;
 	struct net_device	*netdev;
@@ -504,10 +519,13 @@ struct otx2_nic {
 
 	/* napi event count. It is needed for adaptive irq coalescing. */
 	u32 napi_events;
+<<<<<<< HEAD
 
 #if IS_ENABLED(CONFIG_MACSEC)
 	struct cn10k_mcs_cfg	*macsec_cfg;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline bool is_otx2_lbkvf(struct pci_dev *pdev)
@@ -547,11 +565,14 @@ static inline bool is_dev_otx2(struct pci_dev *pdev)
 		midr == PCI_REVISION_ID_95XXMM || midr == PCI_REVISION_ID_95XXO);
 }
 
+<<<<<<< HEAD
 static inline bool is_dev_cn10kb(struct pci_dev *pdev)
 {
 	return pdev->subsystem_device == PCI_SUBSYS_DEVID_CN10K_B_RVU_PFVF;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void otx2_setup_dev_hw_settings(struct otx2_nic *pfvf)
 {
 	struct otx2_hw *hw = &pfvf->hw;
@@ -583,9 +604,12 @@ static inline void otx2_setup_dev_hw_settings(struct otx2_nic *pfvf)
 		__set_bit(CN10K_RPM, &hw->cap_flag);
 		__set_bit(CN10K_PTP_ONESTEP, &hw->cap_flag);
 	}
+<<<<<<< HEAD
 
 	if (is_dev_cn10kb(pfvf->pdev))
 		__set_bit(CN10K_HW_MACSEC, &hw->cap_flag);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Register read/write APIs */
@@ -736,10 +760,15 @@ static inline void cn10k_aura_freeptr(void *dev, int aura, u64 buf)
 	u64 ptrs[2];
 
 	ptrs[1] = buf;
+<<<<<<< HEAD
 	get_cpu();
 	/* Free only one buffer at time during init and teardown */
 	__cn10k_aura_freeptr(pfvf, aura, ptrs, 2);
 	put_cpu();
+=======
+	/* Free only one buffer at time during init and teardown */
+	__cn10k_aura_freeptr(pfvf, aura, ptrs, 2);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Alloc pointer from pool/aura */
@@ -843,7 +872,10 @@ otx2_mbox_up_handler_ ## _fn_name(struct otx2_nic *pfvf,		\
 				struct _rsp_type *rsp);			\
 
 MBOX_UP_CGX_MESSAGES
+<<<<<<< HEAD
 MBOX_UP_MCS_MESSAGES
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #undef M
 
 /* Time to wait before watchdog kicks off */
@@ -889,7 +921,11 @@ static inline void otx2_dma_unmap_page(struct otx2_nic *pfvf,
 static inline u16 otx2_get_smq_idx(struct otx2_nic *pfvf, u16 qidx)
 {
 #ifdef CONFIG_DCB
+<<<<<<< HEAD
 	if (qidx < NIX_PF_PFC_PRIO_MAX && pfvf->pfc_alloc_status[qidx])
+=======
+	if (pfvf->pfc_alloc_status[qidx])
+>>>>>>> b7ba80a49124 (Commit)
 		return pfvf->pfc_schq_list[NIX_TXSCH_LVL_SMQ][qidx];
 #endif
 
@@ -1026,6 +1062,7 @@ int otx2_pfc_txschq_alloc(struct otx2_nic *pfvf);
 int otx2_pfc_txschq_update(struct otx2_nic *pfvf);
 int otx2_pfc_txschq_stop(struct otx2_nic *pfvf);
 #endif
+<<<<<<< HEAD
 
 #if IS_ENABLED(CONFIG_MACSEC)
 /* MACSEC offload support */
@@ -1040,4 +1077,6 @@ static inline void cn10k_handle_mcs_event(struct otx2_nic *pfvf,
 {}
 #endif /* CONFIG_MACSEC */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* OTX2_COMMON_H */

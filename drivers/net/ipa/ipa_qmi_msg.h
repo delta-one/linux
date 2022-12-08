@@ -1,7 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 
 /* Copyright (c) 2018, The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (C) 2018-2022 Linaro Ltd.
+=======
+ * Copyright (C) 2018-2020 Linaro Ltd.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #ifndef _IPA_QMI_MSG_H_
 #define _IPA_QMI_MSG_H_
@@ -247,6 +251,7 @@ struct ipa_init_modem_driver_rsp {
 };
 
 /* Message structure definitions defined in "ipa_qmi_msg.c" */
+<<<<<<< HEAD
 extern const struct qmi_elem_info ipa_indication_register_req_ei[];
 extern const struct qmi_elem_info ipa_indication_register_rsp_ei[];
 extern const struct qmi_elem_info ipa_driver_init_complete_req_ei[];
@@ -257,5 +262,17 @@ extern const struct qmi_elem_info ipa_mem_array_ei[];
 extern const struct qmi_elem_info ipa_mem_range_ei[];
 extern const struct qmi_elem_info ipa_init_modem_driver_req_ei[];
 extern const struct qmi_elem_info ipa_init_modem_driver_rsp_ei[];
+=======
+extern struct qmi_elem_info ipa_indication_register_req_ei[];
+extern struct qmi_elem_info ipa_indication_register_rsp_ei[];
+extern struct qmi_elem_info ipa_driver_init_complete_req_ei[];
+extern struct qmi_elem_info ipa_driver_init_complete_rsp_ei[];
+extern struct qmi_elem_info ipa_init_complete_ind_ei[];
+extern struct qmi_elem_info ipa_mem_bounds_ei[];
+extern struct qmi_elem_info ipa_mem_array_ei[];
+extern struct qmi_elem_info ipa_mem_range_ei[];
+extern struct qmi_elem_info ipa_init_modem_driver_req_ei[];
+extern struct qmi_elem_info ipa_init_modem_driver_rsp_ei[];
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* !_IPA_QMI_MSG_H_ */

@@ -22,7 +22,11 @@
 #include "priv.h"
 
 static int
+<<<<<<< HEAD
 ga100_top_parse(struct nvkm_top *top)
+=======
+ga100_top_oneinit(struct nvkm_top *top)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nvkm_subdev *subdev = &top->subdev;
 	struct nvkm_device *device = subdev->device;
@@ -97,7 +101,11 @@ ga100_top_parse(struct nvkm_top *top)
 
 static const struct nvkm_top_func
 ga100_top = {
+<<<<<<< HEAD
 	.parse = ga100_top_parse,
+=======
+	.oneinit = ga100_top_oneinit,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int

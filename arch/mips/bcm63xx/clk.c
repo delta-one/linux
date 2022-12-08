@@ -361,8 +361,11 @@ static struct clk clk_periph = {
  */
 int clk_enable(struct clk *clk)
 {
+<<<<<<< HEAD
 	if (!clk)
 		return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&clocks_mutex);
 	clk_enable_unlocked(clk);
 	mutex_unlock(&clocks_mutex);

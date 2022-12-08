@@ -524,9 +524,17 @@ static int tegra186_dspk_platform_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void tegra186_dspk_platform_remove(struct platform_device *pdev)
 {
 	pm_runtime_disable(&pdev->dev);
+=======
+static int tegra186_dspk_platform_remove(struct platform_device *pdev)
+{
+	pm_runtime_disable(&pdev->dev);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct dev_pm_ops tegra186_dspk_pm_ops = {
@@ -543,7 +551,11 @@ static struct platform_driver tegra186_dspk_driver = {
 		.pm = &tegra186_dspk_pm_ops,
 	},
 	.probe = tegra186_dspk_platform_probe,
+<<<<<<< HEAD
 	.remove_new = tegra186_dspk_platform_remove,
+=======
+	.remove = tegra186_dspk_platform_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(tegra186_dspk_driver);
 

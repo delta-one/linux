@@ -876,12 +876,21 @@ err_pm_disable:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void mt6797_afe_pcm_dev_remove(struct platform_device *pdev)
+=======
+static int mt6797_afe_pcm_dev_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pm_runtime_disable(&pdev->dev);
 	if (!pm_runtime_status_suspended(&pdev->dev))
 		mt6797_afe_runtime_suspend(&pdev->dev);
 	pm_runtime_put_sync(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id mt6797_afe_pcm_dt_match[] = {
@@ -902,7 +911,11 @@ static struct platform_driver mt6797_afe_pcm_driver = {
 		   .pm = &mt6797_afe_pm_ops,
 	},
 	.probe = mt6797_afe_pcm_dev_probe,
+<<<<<<< HEAD
 	.remove_new = mt6797_afe_pcm_dev_remove,
+=======
+	.remove = mt6797_afe_pcm_dev_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(mt6797_afe_pcm_driver);

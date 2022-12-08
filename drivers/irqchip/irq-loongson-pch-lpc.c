@@ -13,7 +13,10 @@
 #include <linux/irqchip/chained_irq.h>
 #include <linux/irqdomain.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/syscore_ops.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Registers */
 #define LPC_INT_CTL		0x00
@@ -35,7 +38,10 @@ struct pch_lpc {
 	u32			saved_reg_pol;
 };
 
+<<<<<<< HEAD
 static struct pch_lpc *pch_lpc_priv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct fwnode_handle *pch_lpc_handle;
 
 static void lpc_irq_ack(struct irq_data *d)
@@ -149,6 +155,7 @@ static int pch_lpc_disabled(struct pch_lpc *priv)
 			(readl(priv->base + LPC_INT_STS) == 0xffffffff);
 }
 
+<<<<<<< HEAD
 static int pch_lpc_suspend(void)
 {
 	pch_lpc_priv->saved_reg_ctl = readl(pch_lpc_priv->base + LPC_INT_CTL);
@@ -169,6 +176,8 @@ static struct syscore_ops pch_lpc_syscore_ops = {
 	.resume = pch_lpc_resume,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int __init pch_lpc_acpi_init(struct irq_domain *parent,
 					struct acpi_madt_lpc_pic *acpi_pchlpc)
 {
@@ -213,10 +222,14 @@ int __init pch_lpc_acpi_init(struct irq_domain *parent,
 	parent_irq = irq_create_fwspec_mapping(&fwspec);
 	irq_set_chained_handler_and_data(parent_irq, lpc_irq_dispatch, priv);
 
+<<<<<<< HEAD
 	pch_lpc_priv = priv;
 	pch_lpc_handle = irq_handle;
 	register_syscore_ops(&pch_lpc_syscore_ops);
 
+=======
+	pch_lpc_handle = irq_handle;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 free_irq_handle:

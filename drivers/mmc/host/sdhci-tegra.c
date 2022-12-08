@@ -3,6 +3,7 @@
  * Copyright (C) 2010 Google, Inc.
  */
 
+<<<<<<< HEAD
 #include <linux/bitfield.h>
 #include <linux/clk.h>
 #include <linux/delay.h>
@@ -23,14 +24,40 @@
 #include <linux/of.h>
 #include <linux/pinctrl/consumer.h>
 #include <linux/platform_device.h>
+=======
+#include <linux/delay.h>
+#include <linux/dma-mapping.h>
+#include <linux/err.h>
+#include <linux/module.h>
+#include <linux/init.h>
+#include <linux/iopoll.h>
+#include <linux/platform_device.h>
+#include <linux/clk.h>
+#include <linux/io.h>
+#include <linux/of.h>
+#include <linux/of_device.h>
+#include <linux/pinctrl/consumer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pm_opp.h>
 #include <linux/pm_runtime.h>
 #include <linux/regulator/consumer.h>
 #include <linux/reset.h>
+<<<<<<< HEAD
 
 #include <soc/tegra/common.h>
 
 #include "sdhci-cqhci.h"
+=======
+#include <linux/mmc/card.h>
+#include <linux/mmc/host.h>
+#include <linux/mmc/mmc.h>
+#include <linux/mmc/slot-gpio.h>
+#include <linux/gpio/consumer.h>
+#include <linux/ktime.h>
+
+#include <soc/tegra/common.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #include "sdhci-pltfm.h"
 #include "cqhci.h"
 
@@ -97,8 +124,11 @@
 #define SDHCI_TEGRA_AUTO_CAL_STATUS			0x1ec
 #define SDHCI_TEGRA_AUTO_CAL_ACTIVE			BIT(31)
 
+<<<<<<< HEAD
 #define SDHCI_TEGRA_CIF2AXI_CTRL_0			0x1fc
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define NVQUIRK_FORCE_SDHCI_SPEC_200			BIT(0)
 #define NVQUIRK_ENABLE_BLOCK_GAP_DET			BIT(1)
 #define NVQUIRK_ENABLE_SDHCI_SPEC_300			BIT(2)
@@ -126,7 +156,10 @@
 #define NVQUIRK_HAS_TMCLK				BIT(10)
 
 #define NVQUIRK_HAS_ANDROID_GPT_SECTOR			BIT(11)
+<<<<<<< HEAD
 #define NVQUIRK_PROGRAM_STREAMID			BIT(12)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* SDMMC CQE Base Address for Tegra Host Ver 4.1 and Higher */
 #define SDHCI_TEGRA_CQE_BASE_ADDR			0xF000
@@ -183,7 +216,10 @@ struct sdhci_tegra {
 	bool enable_hwcq;
 	unsigned long curr_clk_rate;
 	u8 tuned_tap_delay;
+<<<<<<< HEAD
 	u32 stream_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static u16 tegra_sdhci_readw(struct sdhci_host *host, int reg)
@@ -274,9 +310,19 @@ static void tegra210_sdhci_writew(struct sdhci_host *host, u16 val, int reg)
 {
 	bool is_tuning_cmd = 0;
 	bool clk_enabled;
+<<<<<<< HEAD
 
 	if (reg == SDHCI_COMMAND)
 		is_tuning_cmd = mmc_op_tuning(SDHCI_GET_CMD(val));
+=======
+	u8 cmd;
+
+	if (reg == SDHCI_COMMAND) {
+		cmd = SDHCI_GET_CMD(val);
+		is_tuning_cmd = cmd == MMC_SEND_TUNING_BLOCK ||
+				cmd == MMC_SEND_TUNING_BLOCK_HS200;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (is_tuning_cmd)
 		clk_enabled = tegra_sdhci_configure_card_clk(host, 0);
@@ -370,7 +416,11 @@ static void tegra_sdhci_reset(struct sdhci_host *host, u8 mask)
 	const struct sdhci_tegra_soc_data *soc_data = tegra_host->soc_data;
 	u32 misc_ctrl, clk_ctrl, pad_ctrl;
 
+<<<<<<< HEAD
 	sdhci_and_cqhci_reset(host, mask);
+=======
+	sdhci_reset(host, mask);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!(mask & SDHCI_RESET_ALL))
 		return;
@@ -776,7 +826,11 @@ static void tegra_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
 		dev_err(dev, "failed to set clk rate to %luHz: %d\n",
 			host_clk, err);
 
+<<<<<<< HEAD
 	tegra_host->curr_clk_rate = clk_get_rate(pltfm_host->clk);
+=======
+	tegra_host->curr_clk_rate = host_clk;
+>>>>>>> b7ba80a49124 (Commit)
 	if (tegra_host->ddr_signaling)
 		host->max_clk = host_clk;
 	else
@@ -1528,8 +1582,12 @@ static const struct sdhci_pltfm_data sdhci_tegra186_pdata = {
 		  SDHCI_QUIRK_NO_HISPD_BIT |
 		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
 		  SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
+<<<<<<< HEAD
 	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
 		   SDHCI_QUIRK2_ISSUE_CMD_DAT_RESET_TOGETHER,
+=======
+	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+>>>>>>> b7ba80a49124 (Commit)
 	.ops  = &tegra186_sdhci_ops,
 };
 
@@ -1560,6 +1618,7 @@ static const struct sdhci_tegra_soc_data soc_data_tegra194 = {
 	.max_tap_delay = 139,
 };
 
+<<<<<<< HEAD
 static const struct sdhci_tegra_soc_data soc_data_tegra234 = {
 	.pdata = &sdhci_tegra186_pdata,
 	.dma_mask = DMA_BIT_MASK(39),
@@ -1576,6 +1635,9 @@ static const struct sdhci_tegra_soc_data soc_data_tegra234 = {
 
 static const struct of_device_id sdhci_tegra_dt_match[] = {
 	{ .compatible = "nvidia,tegra234-sdhci", .data = &soc_data_tegra234 },
+=======
+static const struct of_device_id sdhci_tegra_dt_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "nvidia,tegra194-sdhci", .data = &soc_data_tegra194 },
 	{ .compatible = "nvidia,tegra186-sdhci", .data = &soc_data_tegra186 },
 	{ .compatible = "nvidia,tegra210-sdhci", .data = &soc_data_tegra210 },
@@ -1635,6 +1697,7 @@ cleanup:
 	return ret;
 }
 
+<<<<<<< HEAD
 /* Program MC streamID for DMA transfers */
 static void sdhci_tegra_program_stream_id(struct sdhci_host *host)
 {
@@ -1648,6 +1711,8 @@ static void sdhci_tegra_program_stream_id(struct sdhci_host *host)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int sdhci_tegra_probe(struct platform_device *pdev)
 {
 	const struct sdhci_tegra_soc_data *soc_data;
@@ -1708,12 +1773,15 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
 
 	tegra_sdhci_parse_dt(host);
 
+<<<<<<< HEAD
 	if (tegra_host->soc_data->nvquirks & NVQUIRK_PROGRAM_STREAMID &&
 	    !tegra_dev_iommu_get_stream_id(&pdev->dev, &tegra_host->stream_id)) {
 		dev_warn(mmc_dev(host->mmc), "missing IOMMU stream ID\n");
 		tegra_host->stream_id = 0x7f;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tegra_host->power_gpio = devm_gpiod_get_optional(&pdev->dev, "power",
 							 GPIOD_OUT_HIGH);
 	if (IS_ERR(tegra_host->power_gpio)) {
@@ -1799,8 +1867,11 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
 	if (rc)
 		goto err_add_host;
 
+<<<<<<< HEAD
 	sdhci_tegra_program_stream_id(host);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_add_host:
@@ -1897,8 +1968,11 @@ static int sdhci_tegra_resume(struct device *dev)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	sdhci_tegra_program_stream_id(host);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = sdhci_resume_host(host);
 	if (ret)
 		goto disable_clk;

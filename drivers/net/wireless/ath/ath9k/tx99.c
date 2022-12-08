@@ -189,7 +189,11 @@ static ssize_t write_file_tx99(struct file *file, const char __user *user_buf,
 
 	buf[len] = '\0';
 
+<<<<<<< HEAD
 	if (kstrtobool(buf, &start))
+=======
+	if (strtobool(buf, &start))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	mutex_lock(&sc->mutex);

@@ -30,8 +30,11 @@
 *  Basic Types
 *****************************************************************/
 typedef uint8_t  BYTE;
+<<<<<<< HEAD
 typedef uint8_t  U8;
 typedef int8_t   S8;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 typedef uint16_t U16;
 typedef int16_t  S16;
 typedef uint32_t U32;

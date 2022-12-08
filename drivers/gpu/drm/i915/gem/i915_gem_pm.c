@@ -22,12 +22,18 @@
 
 void i915_gem_suspend(struct drm_i915_private *i915)
 {
+<<<<<<< HEAD
 	struct intel_gt *gt;
 	unsigned int i;
 
 	GEM_TRACE("%s\n", dev_name(i915->drm.dev));
 
 	intel_wakeref_auto(&i915->runtime_pm.userfault_wakeref, 0);
+=======
+	GEM_TRACE("%s\n", dev_name(i915->drm.dev));
+
+	intel_wakeref_auto(&to_gt(i915)->userfault_wakeref, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	flush_workqueue(i915->wq);
 
 	/*
@@ -39,8 +45,12 @@ void i915_gem_suspend(struct drm_i915_private *i915)
 	 * state. Fortunately, the kernel_context is disposable and we do
 	 * not rely on its state.
 	 */
+<<<<<<< HEAD
 	for_each_gt(gt, i915, i)
 		intel_gt_suspend_prepare(gt);
+=======
+	intel_gt_suspend_prepare(to_gt(i915));
+>>>>>>> b7ba80a49124 (Commit)
 
 	i915_gem_drain_freed_objects(i915);
 }
@@ -135,9 +145,13 @@ void i915_gem_suspend_late(struct drm_i915_private *i915)
 		&i915->mm.purge_list,
 		NULL
 	}, **phase;
+<<<<<<< HEAD
 	struct intel_gt *gt;
 	unsigned long flags;
 	unsigned int i;
+=======
+	unsigned long flags;
+>>>>>>> b7ba80a49124 (Commit)
 	bool flush = false;
 
 	/*
@@ -160,8 +174,12 @@ void i915_gem_suspend_late(struct drm_i915_private *i915)
 	 * machine in an unusable condition.
 	 */
 
+<<<<<<< HEAD
 	for_each_gt(gt, i915, i)
 		intel_gt_suspend_late(gt);
+=======
+	intel_gt_suspend_late(to_gt(i915));
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irqsave(&i915->mm.obj_lock, flags);
 	for (phase = phases; *phase; phase++) {
@@ -219,8 +237,12 @@ int i915_gem_freeze_late(struct drm_i915_private *i915)
 
 void i915_gem_resume(struct drm_i915_private *i915)
 {
+<<<<<<< HEAD
 	struct intel_gt *gt;
 	int ret, i, j;
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	GEM_TRACE("%s\n", dev_name(i915->drm.dev));
 
@@ -232,6 +254,7 @@ void i915_gem_resume(struct drm_i915_private *i915)
 	 * guarantee that the context image is complete. So let's just reset
 	 * it and start again.
 	 */
+<<<<<<< HEAD
 	for_each_gt(gt, i915, i)
 		if (intel_gt_resume(gt))
 			goto err_wedged;
@@ -253,4 +276,10 @@ err_wedged:
 		if (j == i)
 			break;
 	}
+=======
+	intel_gt_resume(to_gt(i915));
+
+	ret = lmem_restore(i915, I915_TTM_BACKUP_ALLOW_GPU);
+	GEM_WARN_ON(ret);
+>>>>>>> b7ba80a49124 (Commit)
 }

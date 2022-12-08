@@ -3,7 +3,10 @@
  * Copyright �� 2019 Intel Corporation
  */
 
+<<<<<<< HEAD
 #include "gt/intel_gt_print.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "selftests/igt_spinner.h"
 #include "selftests/igt_reset.h"
 #include "selftests/intel_scheduler_helpers.h"
@@ -116,30 +119,49 @@ static int __intel_guc_multi_lrc_basic(struct intel_gt *gt, unsigned int class)
 
 	parent = multi_lrc_create_parent(gt, class, 0);
 	if (IS_ERR(parent)) {
+<<<<<<< HEAD
 		gt_err(gt, "Failed creating contexts: %pe\n", parent);
 		return PTR_ERR(parent);
 	} else if (!parent) {
 		gt_dbg(gt, "Not enough engines in class: %d\n", class);
+=======
+		drm_err(&gt->i915->drm, "Failed creating contexts: %ld", PTR_ERR(parent));
+		return PTR_ERR(parent);
+	} else if (!parent) {
+		drm_dbg(&gt->i915->drm, "Not enough engines in class: %d", class);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
 	rq = multi_lrc_nop_request(parent);
 	if (IS_ERR(rq)) {
 		ret = PTR_ERR(rq);
+<<<<<<< HEAD
 		gt_err(gt, "Failed creating requests: %pe\n", rq);
+=======
+		drm_err(&gt->i915->drm, "Failed creating requests: %d", ret);
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
 	ret = intel_selftest_wait_for_rq(rq);
 	if (ret)
+<<<<<<< HEAD
 		gt_err(gt, "Failed waiting on request: %pe\n", ERR_PTR(ret));
+=======
+		drm_err(&gt->i915->drm, "Failed waiting on request: %d", ret);
+>>>>>>> b7ba80a49124 (Commit)
 
 	i915_request_put(rq);
 
 	if (ret >= 0) {
 		ret = intel_gt_wait_for_idle(gt, HZ * 5);
 		if (ret < 0)
+<<<<<<< HEAD
 			gt_err(gt, "GT failed to idle: %pe\n", ERR_PTR(ret));
+=======
+			drm_err(&gt->i915->drm, "GT failed to idle: %d\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 out:

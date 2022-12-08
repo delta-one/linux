@@ -89,7 +89,11 @@ struct printer_dev {
 	u8			printer_cdev_open;
 	wait_queue_head_t	wait;
 	unsigned		q_len;
+<<<<<<< HEAD
 	char			**pnp_string;	/* We don't own memory! */
+=======
+	char			*pnp_string;	/* We don't own memory! */
+>>>>>>> b7ba80a49124 (Commit)
 	struct usb_function	function;
 };
 
@@ -364,7 +368,11 @@ printer_open(struct inode *inode, struct file *fd)
 	spin_unlock_irqrestore(&dev->lock, flags);
 
 	kref_get(&dev->kref);
+<<<<<<< HEAD
 
+=======
+	DBG(dev, "printer_open returned %x\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -382,6 +390,10 @@ printer_close(struct inode *inode, struct file *fd)
 	spin_unlock_irqrestore(&dev->lock, flags);
 
 	kref_put(&dev->kref, printer_dev_free);
+<<<<<<< HEAD
+=======
+	DBG(dev, "printer_close\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -847,6 +859,11 @@ static void printer_reset_interface(struct printer_dev *dev)
 	if (dev->interface < 0)
 		return;
 
+<<<<<<< HEAD
+=======
+	DBG(dev, "%s\n", __func__);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (dev->in_ep->desc)
 		usb_ep_disable(dev->in_ep);
 
@@ -884,6 +901,11 @@ static void printer_soft_reset(struct printer_dev *dev)
 {
 	struct usb_request	*req;
 
+<<<<<<< HEAD
+=======
+	INFO(dev, "Received Printer Reset Request\n");
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (usb_ep_disable(dev->in_ep))
 		DBG(dev, "Failed to disable USB in_ep\n");
 	if (usb_ep_disable(dev->out_ep))
@@ -995,6 +1017,7 @@ static int printer_func_setup(struct usb_function *f,
 			if ((wIndex>>8) != dev->interface)
 				break;
 
+<<<<<<< HEAD
 			if (!*dev->pnp_string) {
 				value = 0;
 				break;
@@ -1005,6 +1028,18 @@ static int printer_func_setup(struct usb_function *f,
 			memcpy(buf + 2, *dev->pnp_string, value);
 			DBG(dev, "1284 PNP String: %x %s\n", value,
 			    *dev->pnp_string);
+=======
+			if (!dev->pnp_string) {
+				value = 0;
+				break;
+			}
+			value = strlen(dev->pnp_string);
+			buf[0] = (value >> 8) & 0xFF;
+			buf[1] = value & 0xFF;
+			memcpy(buf + 2, dev->pnp_string, value);
+			DBG(dev, "1284 PNP String: %x %s\n", value,
+			    dev->pnp_string);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		case GET_PORT_STATUS: /* Get Port Status */
@@ -1180,6 +1215,11 @@ static void printer_func_disable(struct usb_function *f)
 {
 	struct printer_dev *dev = func_to_printer(f);
 
+<<<<<<< HEAD
+=======
+	DBG(dev, "%s\n", __func__);
+
+>>>>>>> b7ba80a49124 (Commit)
 	printer_reset_interface(dev);
 }
 
@@ -1468,7 +1508,11 @@ static struct usb_function *gprinter_alloc(struct usb_function_instance *fi)
 	kref_init(&dev->kref);
 	++opts->refcnt;
 	dev->minor = opts->minor;
+<<<<<<< HEAD
 	dev->pnp_string = &opts->pnp_string;
+=======
+	dev->pnp_string = opts->pnp_string;
+>>>>>>> b7ba80a49124 (Commit)
 	dev->q_len = opts->q_len;
 	mutex_unlock(&opts->lock);
 
@@ -1512,7 +1556,11 @@ static int gprinter_setup(int count)
 	int status;
 	dev_t devt;
 
+<<<<<<< HEAD
 	usb_gadget_class = class_create("usb_printer_gadget");
+=======
+	usb_gadget_class = class_create(THIS_MODULE, "usb_printer_gadget");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(usb_gadget_class)) {
 		status = PTR_ERR(usb_gadget_class);
 		usb_gadget_class = NULL;

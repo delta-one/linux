@@ -100,7 +100,11 @@
 #define A3700_SPI_CLK_CAPT_EDGE		BIT(7)
 
 struct a3700_spi {
+<<<<<<< HEAD
 	struct spi_controller *host;
+=======
+	struct spi_master *master;
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem *base;
 	struct clk *clk;
 	unsigned int irq;
@@ -174,7 +178,11 @@ static int a3700_spi_pin_mode_set(struct a3700_spi *a3700_spi,
 			val |= A3700_SPI_ADDR_PIN;
 		break;
 	default:
+<<<<<<< HEAD
 		dev_err(&a3700_spi->host->dev, "wrong pin mode %u", pin_mode);
+=======
+		dev_err(&a3700_spi->master->dev, "wrong pin mode %u", pin_mode);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -278,7 +286,11 @@ static int a3700_spi_fifo_flush(struct a3700_spi *a3700_spi)
 
 static void a3700_spi_init(struct a3700_spi *a3700_spi)
 {
+<<<<<<< HEAD
 	struct spi_controller *host = a3700_spi->host;
+=======
+	struct spi_master *master = a3700_spi->master;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 val;
 	int i;
 
@@ -295,14 +307,22 @@ static void a3700_spi_init(struct a3700_spi *a3700_spi)
 
 	/* Disable AUTO_CS and deactivate all chip-selects */
 	a3700_spi_auto_cs_unset(a3700_spi);
+<<<<<<< HEAD
 	for (i = 0; i < host->num_chipselect; i++)
+=======
+	for (i = 0; i < master->num_chipselect; i++)
+>>>>>>> b7ba80a49124 (Commit)
 		a3700_spi_deactivate_cs(a3700_spi, i);
 
 	/* Enable FIFO mode */
 	a3700_spi_fifo_mode_set(a3700_spi, true);
 
 	/* Set SPI mode */
+<<<<<<< HEAD
 	a3700_spi_mode_set(a3700_spi, host->mode_bits);
+=======
+	a3700_spi_mode_set(a3700_spi, master->mode_bits);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Reset counters */
 	spireg_write(a3700_spi, A3700_SPI_IF_HDR_CNT_REG, 0);
@@ -315,11 +335,19 @@ static void a3700_spi_init(struct a3700_spi *a3700_spi)
 
 static irqreturn_t a3700_spi_interrupt(int irq, void *dev_id)
 {
+<<<<<<< HEAD
 	struct spi_controller *host = dev_id;
 	struct a3700_spi *a3700_spi;
 	u32 cause;
 
 	a3700_spi = spi_controller_get_devdata(host);
+=======
+	struct spi_master *master = dev_id;
+	struct a3700_spi *a3700_spi;
+	u32 cause;
+
+	a3700_spi = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Get interrupt causes */
 	cause = spireg_read(a3700_spi, A3700_SPI_INT_STAT_REG);
@@ -344,7 +372,11 @@ static bool a3700_spi_wait_completion(struct spi_device *spi)
 	unsigned int ctrl_reg;
 	unsigned long timeout_jiffies;
 
+<<<<<<< HEAD
 	a3700_spi = spi_controller_get_devdata(spi->controller);
+=======
+	a3700_spi = spi_master_get_devdata(spi->master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* SPI interrupt is edge-triggered, which means an interrupt will
 	 * be generated only when detecting a specific status bit changed
@@ -393,7 +425,11 @@ static bool a3700_spi_transfer_wait(struct spi_device *spi,
 {
 	struct a3700_spi *a3700_spi;
 
+<<<<<<< HEAD
 	a3700_spi = spi_controller_get_devdata(spi->controller);
+=======
+	a3700_spi = spi_master_get_devdata(spi->master);
+>>>>>>> b7ba80a49124 (Commit)
 	a3700_spi->wait_mask = bit_mask;
 
 	return a3700_spi_wait_completion(spi);
@@ -417,7 +453,11 @@ static void a3700_spi_transfer_setup(struct spi_device *spi,
 {
 	struct a3700_spi *a3700_spi;
 
+<<<<<<< HEAD
 	a3700_spi = spi_controller_get_devdata(spi->controller);
+=======
+	a3700_spi = spi_master_get_devdata(spi->master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	a3700_spi_clock_set(a3700_spi, xfer->speed_hz);
 
@@ -434,12 +474,21 @@ static void a3700_spi_transfer_setup(struct spi_device *spi,
 
 static void a3700_spi_set_cs(struct spi_device *spi, bool enable)
 {
+<<<<<<< HEAD
 	struct a3700_spi *a3700_spi = spi_controller_get_devdata(spi->controller);
 
 	if (!enable)
 		a3700_spi_activate_cs(a3700_spi, spi_get_chipselect(spi, 0));
 	else
 		a3700_spi_deactivate_cs(a3700_spi, spi_get_chipselect(spi, 0));
+=======
+	struct a3700_spi *a3700_spi = spi_master_get_devdata(spi->master);
+
+	if (!enable)
+		a3700_spi_activate_cs(a3700_spi, spi->chip_select);
+	else
+		a3700_spi_deactivate_cs(a3700_spi, spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void a3700_spi_header_set(struct a3700_spi *a3700_spi)
@@ -565,10 +614,17 @@ static void a3700_spi_transfer_abort_fifo(struct a3700_spi *a3700_spi)
 	spireg_write(a3700_spi, A3700_SPI_IF_CFG_REG, val);
 }
 
+<<<<<<< HEAD
 static int a3700_spi_prepare_message(struct spi_controller *host,
 				     struct spi_message *message)
 {
 	struct a3700_spi *a3700_spi = spi_controller_get_devdata(host);
+=======
+static int a3700_spi_prepare_message(struct spi_master *master,
+				     struct spi_message *message)
+{
+	struct a3700_spi *a3700_spi = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 	struct spi_device *spi = message->spi;
 	int ret;
 
@@ -588,11 +644,19 @@ static int a3700_spi_prepare_message(struct spi_controller *host,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int a3700_spi_transfer_one_fifo(struct spi_controller *host,
 				  struct spi_device *spi,
 				  struct spi_transfer *xfer)
 {
 	struct a3700_spi *a3700_spi = spi_controller_get_devdata(host);
+=======
+static int a3700_spi_transfer_one_fifo(struct spi_master *master,
+				  struct spi_device *spi,
+				  struct spi_transfer *xfer)
+{
+	struct a3700_spi *a3700_spi = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0, timeout = A3700_SPI_TIMEOUT;
 	unsigned int nbits = 0, byte_len;
 	u32 val;
@@ -732,16 +796,28 @@ static int a3700_spi_transfer_one_fifo(struct spi_controller *host,
 error:
 	a3700_spi_transfer_abort_fifo(a3700_spi);
 out:
+<<<<<<< HEAD
 	spi_finalize_current_transfer(host);
+=======
+	spi_finalize_current_transfer(master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
 
+<<<<<<< HEAD
 static int a3700_spi_transfer_one_full_duplex(struct spi_controller *host,
 				  struct spi_device *spi,
 				  struct spi_transfer *xfer)
 {
 	struct a3700_spi *a3700_spi = spi_controller_get_devdata(host);
+=======
+static int a3700_spi_transfer_one_full_duplex(struct spi_master *master,
+				  struct spi_device *spi,
+				  struct spi_transfer *xfer)
+{
+	struct a3700_spi *a3700_spi = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 	u32 val;
 
 	/* Disable FIFO mode */
@@ -777,18 +853,27 @@ static int a3700_spi_transfer_one_full_duplex(struct spi_controller *host,
 
 	}
 
+<<<<<<< HEAD
 	spi_finalize_current_transfer(host);
+=======
+	spi_finalize_current_transfer(master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int a3700_spi_transfer_one(struct spi_controller *host,
+=======
+static int a3700_spi_transfer_one(struct spi_master *master,
+>>>>>>> b7ba80a49124 (Commit)
 				  struct spi_device *spi,
 				  struct spi_transfer *xfer)
 {
 	a3700_spi_transfer_setup(spi, xfer);
 
 	if (xfer->tx_buf && xfer->rx_buf)
+<<<<<<< HEAD
 		return a3700_spi_transfer_one_full_duplex(host, spi, xfer);
 
 	return a3700_spi_transfer_one_fifo(host, spi, xfer);
@@ -798,6 +883,17 @@ static int a3700_spi_unprepare_message(struct spi_controller *host,
 				       struct spi_message *message)
 {
 	struct a3700_spi *a3700_spi = spi_controller_get_devdata(host);
+=======
+		return a3700_spi_transfer_one_full_duplex(master, spi, xfer);
+
+	return a3700_spi_transfer_one_fifo(master, spi, xfer);
+}
+
+static int a3700_spi_unprepare_message(struct spi_master *master,
+				       struct spi_message *message)
+{
+	struct a3700_spi *a3700_spi = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	clk_disable(a3700_spi->clk);
 
@@ -815,14 +911,24 @@ static int a3700_spi_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 	struct device_node *of_node = dev->of_node;
+<<<<<<< HEAD
 	struct spi_controller *host;
+=======
+	struct spi_master *master;
+>>>>>>> b7ba80a49124 (Commit)
 	struct a3700_spi *spi;
 	u32 num_cs = 0;
 	int irq, ret = 0;
 
+<<<<<<< HEAD
 	host = spi_alloc_host(dev, sizeof(*spi));
 	if (!host) {
 		dev_err(dev, "host allocation failed\n");
+=======
+	master = spi_alloc_master(dev, sizeof(*spi));
+	if (!master) {
+		dev_err(dev, "master allocation failed\n");
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -ENOMEM;
 		goto out;
 	}
@@ -833,6 +939,7 @@ static int a3700_spi_probe(struct platform_device *pdev)
 		goto error;
 	}
 
+<<<<<<< HEAD
 	host->bus_num = pdev->id;
 	host->dev.of_node = of_node;
 	host->mode_bits = SPI_MODE_3;
@@ -850,6 +957,25 @@ static int a3700_spi_probe(struct platform_device *pdev)
 	spi = spi_controller_get_devdata(host);
 
 	spi->host = host;
+=======
+	master->bus_num = pdev->id;
+	master->dev.of_node = of_node;
+	master->mode_bits = SPI_MODE_3;
+	master->num_chipselect = num_cs;
+	master->bits_per_word_mask = SPI_BPW_MASK(8) | SPI_BPW_MASK(32);
+	master->prepare_message =  a3700_spi_prepare_message;
+	master->transfer_one = a3700_spi_transfer_one;
+	master->unprepare_message = a3700_spi_unprepare_message;
+	master->set_cs = a3700_spi_set_cs;
+	master->mode_bits |= (SPI_RX_DUAL | SPI_TX_DUAL |
+			      SPI_RX_QUAD | SPI_TX_QUAD);
+
+	platform_set_drvdata(pdev, master);
+
+	spi = spi_master_get_devdata(master);
+
+	spi->master = master;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spi->base = devm_platform_ioremap_resource(pdev, 0);
 	if (IS_ERR(spi->base)) {
@@ -878,23 +1004,39 @@ static int a3700_spi_probe(struct platform_device *pdev)
 		goto error;
 	}
 
+<<<<<<< HEAD
 	host->max_speed_hz = min_t(unsigned long, A3700_SPI_MAX_SPEED_HZ,
 					clk_get_rate(spi->clk));
 	host->min_speed_hz = DIV_ROUND_UP(clk_get_rate(spi->clk),
+=======
+	master->max_speed_hz = min_t(unsigned long, A3700_SPI_MAX_SPEED_HZ,
+					clk_get_rate(spi->clk));
+	master->min_speed_hz = DIV_ROUND_UP(clk_get_rate(spi->clk),
+>>>>>>> b7ba80a49124 (Commit)
 						A3700_SPI_MAX_PRESCALE);
 
 	a3700_spi_init(spi);
 
 	ret = devm_request_irq(dev, spi->irq, a3700_spi_interrupt, 0,
+<<<<<<< HEAD
 			       dev_name(dev), host);
+=======
+			       dev_name(dev), master);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(dev, "could not request IRQ: %d\n", ret);
 		goto error_clk;
 	}
 
+<<<<<<< HEAD
 	ret = devm_spi_register_controller(dev, host);
 	if (ret) {
 		dev_err(dev, "Failed to register host\n");
+=======
+	ret = devm_spi_register_master(dev, master);
+	if (ret) {
+		dev_err(dev, "Failed to register master\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto error_clk;
 	}
 
@@ -903,17 +1045,32 @@ static int a3700_spi_probe(struct platform_device *pdev)
 error_clk:
 	clk_unprepare(spi->clk);
 error:
+<<<<<<< HEAD
 	spi_controller_put(host);
+=======
+	spi_master_put(master);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void a3700_spi_remove(struct platform_device *pdev)
 {
 	struct spi_controller *host = platform_get_drvdata(pdev);
 	struct a3700_spi *spi = spi_controller_get_devdata(host);
 
 	clk_unprepare(spi->clk);
+=======
+static int a3700_spi_remove(struct platform_device *pdev)
+{
+	struct spi_master *master = platform_get_drvdata(pdev);
+	struct a3700_spi *spi = spi_master_get_devdata(master);
+
+	clk_unprepare(spi->clk);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver a3700_spi_driver = {
@@ -922,7 +1079,11 @@ static struct platform_driver a3700_spi_driver = {
 		.of_match_table = of_match_ptr(a3700_spi_dt_ids),
 	},
 	.probe		= a3700_spi_probe,
+<<<<<<< HEAD
 	.remove_new	= a3700_spi_remove,
+=======
+	.remove		= a3700_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(a3700_spi_driver);

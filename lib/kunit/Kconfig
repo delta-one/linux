@@ -59,6 +59,7 @@ config KUNIT_ALL_TESTS
 
 	  If unsure, say N.
 
+<<<<<<< HEAD
 config KUNIT_DEFAULT_ENABLED
 	bool "Default value of kunit.enable"
 	default y
@@ -70,4 +71,6 @@ config KUNIT_DEFAULT_ENABLED
 	  In most cases this should be left as Y. Only if additional opt-in
 	  behavior is needed should this be set to N.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endif # KUNIT

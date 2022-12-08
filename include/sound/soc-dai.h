@@ -423,6 +423,7 @@ struct snd_soc_dai_driver {
 	int remove_order;
 };
 
+<<<<<<< HEAD
 /* for Playback/Capture */
 struct snd_soc_dai_stream {
 	struct snd_soc_dapm_widget *widget;
@@ -433,6 +434,8 @@ struct snd_soc_dai_stream {
 	void *dma_data;		/* DAI DMA data */
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Digital Audio Interface runtime data.
  *
@@ -447,7 +450,18 @@ struct snd_soc_dai {
 	struct snd_soc_dai_driver *driver;
 
 	/* DAI runtime info */
+<<<<<<< HEAD
 	struct snd_soc_dai_stream stream[SNDRV_PCM_STREAM_LAST + 1];
+=======
+	unsigned int stream_active[SNDRV_PCM_STREAM_LAST + 1]; /* usage count */
+
+	struct snd_soc_dapm_widget *playback_widget;
+	struct snd_soc_dapm_widget *capture_widget;
+
+	/* DAI DMA data */
+	void *playback_dma_data;
+	void *capture_dma_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Symmetry data - only valid if symmetry is being enforced */
 	unsigned int rate;
@@ -457,6 +471,13 @@ struct snd_soc_dai {
 	/* parent platform/codec */
 	struct snd_soc_component *component;
 
+<<<<<<< HEAD
+=======
+	/* CODEC TDM slot masks and params (for fixup) */
+	unsigned int tx_mask;
+	unsigned int rx_mask;
+
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head list;
 
 	/* function mark */
@@ -476,6 +497,7 @@ snd_soc_dai_get_pcm_stream(const struct snd_soc_dai *dai, int stream)
 		&dai->driver->playback : &dai->driver->capture;
 }
 
+<<<<<<< HEAD
 #define snd_soc_dai_get_widget_playback(dai)	snd_soc_dai_get_widget(dai, SNDRV_PCM_STREAM_PLAYBACK)
 #define snd_soc_dai_get_widget_capture(dai)	snd_soc_dai_get_widget(dai, SNDRV_PCM_STREAM_CAPTURE)
 static inline
@@ -529,6 +551,38 @@ static inline unsigned int snd_soc_dai_stream_active(struct snd_soc_dai *dai, in
 {
 	/* see snd_soc_dai_action() for setup */
 	return dai->stream[stream].active;
+=======
+static inline
+struct snd_soc_dapm_widget *snd_soc_dai_get_widget(
+	struct snd_soc_dai *dai, int stream)
+{
+	return (stream == SNDRV_PCM_STREAM_PLAYBACK) ?
+		dai->playback_widget : dai->capture_widget;
+}
+
+static inline void *snd_soc_dai_get_dma_data(const struct snd_soc_dai *dai,
+					     const struct snd_pcm_substream *ss)
+{
+	return (ss->stream == SNDRV_PCM_STREAM_PLAYBACK) ?
+		dai->playback_dma_data : dai->capture_dma_data;
+}
+
+static inline void snd_soc_dai_set_dma_data(struct snd_soc_dai *dai,
+					    const struct snd_pcm_substream *ss,
+					    void *data)
+{
+	if (ss->stream == SNDRV_PCM_STREAM_PLAYBACK)
+		dai->playback_dma_data = data;
+	else
+		dai->capture_dma_data = data;
+}
+
+static inline void snd_soc_dai_init_dma_data(struct snd_soc_dai *dai,
+					     void *playback, void *capture)
+{
+	dai->playback_dma_data = playback;
+	dai->capture_dma_data = capture;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void snd_soc_dai_set_drvdata(struct snd_soc_dai *dai,
@@ -583,4 +637,13 @@ static inline void *snd_soc_dai_get_stream(struct snd_soc_dai *dai,
 		return ERR_PTR(-ENOTSUPP);
 }
 
+<<<<<<< HEAD
+=======
+static inline unsigned int
+snd_soc_dai_stream_active(struct snd_soc_dai *dai, int stream)
+{
+	return dai->stream_active[stream];
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif

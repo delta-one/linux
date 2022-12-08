@@ -8,6 +8,14 @@
 #include <linux/netdevice.h>
 
 /************ NGBE_register.h ************/
+<<<<<<< HEAD
+=======
+/* Vendor ID */
+#ifndef PCI_VENDOR_ID_WANGXUN
+#define PCI_VENDOR_ID_WANGXUN			0x8088
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Device IDs */
 #define NGBE_DEV_ID_EM_WX1860AL_W		0x0100
 #define NGBE_DEV_ID_EM_WX1860A2			0x0101
@@ -42,6 +50,7 @@
 #define NGBE_WOL_SUP				0x4000
 #define NGBE_WOL_MASK				0x4000
 
+<<<<<<< HEAD
 /**************** EM Registers ****************************/
 /* chip control Registers */
 #define NGBE_MIS_PRB_CTL			0x10010
@@ -151,4 +160,6 @@ enum NGBE_MSCA_CMD_value {
 
 extern char ngbe_driver_name[];
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _NGBE_TYPE_H_ */

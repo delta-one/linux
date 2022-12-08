@@ -9,6 +9,10 @@
 #include <linux/module.h>
 
 #include <drm/drm_damage_helper.h>
+<<<<<<< HEAD
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_fourcc.h>
 #include <drm/drm_framebuffer.h>
 #include <drm/drm_gem.h>
@@ -353,7 +357,11 @@ int drm_gem_fb_vmap(struct drm_framebuffer *fb, struct iosys_map *map,
 			ret = -EINVAL;
 			goto err_drm_gem_vunmap;
 		}
+<<<<<<< HEAD
 		ret = drm_gem_vmap_unlocked(obj, &map[i]);
+=======
+		ret = drm_gem_vmap(obj, &map[i]);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			goto err_drm_gem_vunmap;
 	}
@@ -375,7 +383,11 @@ err_drm_gem_vunmap:
 		obj = drm_gem_fb_get_obj(fb, i);
 		if (!obj)
 			continue;
+<<<<<<< HEAD
 		drm_gem_vunmap_unlocked(obj, &map[i]);
+=======
+		drm_gem_vunmap(obj, &map[i]);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret;
 }
@@ -402,7 +414,11 @@ void drm_gem_fb_vunmap(struct drm_framebuffer *fb, struct iosys_map *map)
 			continue;
 		if (iosys_map_is_null(&map[i]))
 			continue;
+<<<<<<< HEAD
 		drm_gem_vunmap_unlocked(obj, &map[i]);
+=======
+		drm_gem_vunmap(obj, &map[i]);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 EXPORT_SYMBOL(drm_gem_fb_vunmap);

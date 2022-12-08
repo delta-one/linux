@@ -429,6 +429,10 @@ struct saa7134_board {
 /* ----------------------------------------------------------- */
 /* device / file handle status                                 */
 
+<<<<<<< HEAD
+=======
+#define RESOURCE_OVERLAY       1
+>>>>>>> b7ba80a49124 (Commit)
 #define RESOURCE_VIDEO         2
 #define RESOURCE_VBI           4
 #define RESOURCE_EMPRESS       8
@@ -588,6 +592,20 @@ struct saa7134_dev {
 	unsigned char              eedata[256];
 	int			   has_rds;
 
+<<<<<<< HEAD
+=======
+	/* video overlay */
+	struct v4l2_framebuffer    ovbuf;
+	struct saa7134_format      *ovfmt;
+	unsigned int               ovenable;
+	enum v4l2_field            ovfield;
+	struct v4l2_window         win;
+	struct v4l2_clip           clips[8];
+	unsigned int               nclips;
+	struct v4l2_fh		   *overlay_owner;
+
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* video+ts+vbi capture */
 	struct saa7134_dmaqueue    video_q;
 	struct vb2_queue           video_vbq;
@@ -733,6 +751,10 @@ static inline bool is_empress(struct file *file)
 
 extern struct list_head  saa7134_devlist;
 extern struct mutex saa7134_devlist_lock;
+<<<<<<< HEAD
+=======
+extern int saa7134_no_overlay;
+>>>>>>> b7ba80a49124 (Commit)
 extern bool saa7134_userptr;
 
 void saa7134_track_gpio(struct saa7134_dev *dev, const char *msg);
@@ -853,6 +875,10 @@ int saa7134_ts_stop(struct saa7134_dev *dev);
 /* saa7134-vbi.c                                               */
 
 extern const struct vb2_ops saa7134_vbi_qops;
+<<<<<<< HEAD
+=======
+extern struct video_device saa7134_vbi_template;
+>>>>>>> b7ba80a49124 (Commit)
 
 int saa7134_vbi_init1(struct saa7134_dev *dev);
 int saa7134_vbi_fini(struct saa7134_dev *dev);
@@ -883,6 +909,12 @@ void saa7134_enable_i2s(struct saa7134_dev *dev);
 /* ----------------------------------------------------------- */
 /* saa7134-oss.c                                               */
 
+<<<<<<< HEAD
+=======
+extern const struct file_operations saa7134_dsp_fops;
+extern const struct file_operations saa7134_mixer_fops;
+
+>>>>>>> b7ba80a49124 (Commit)
 int saa7134_oss_init1(struct saa7134_dev *dev);
 int saa7134_oss_fini(struct saa7134_dev *dev);
 void saa7134_irq_oss_done(struct saa7134_dev *dev, unsigned long status);

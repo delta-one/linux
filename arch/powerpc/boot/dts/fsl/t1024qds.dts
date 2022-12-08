@@ -151,7 +151,11 @@
 		};
 
 		i2c@118000 {
+<<<<<<< HEAD
 			i2c-mux@77 {
+=======
+			pca9547@77 {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "nxp,pca9547";
 				reg = <0x77>;
 				#address-cells = <1>;

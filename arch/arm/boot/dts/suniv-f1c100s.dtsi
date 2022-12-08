@@ -133,6 +133,7 @@
 			#size-cells = <0>;
 		};
 
+<<<<<<< HEAD
 		usb_otg: usb@1c13000 {
 			compatible = "allwinner,suniv-f1c100s-musb";
 			reg = <0x01c13000 0x0400>;
@@ -159,6 +160,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ccu: clock@1c20000 {
 			compatible = "allwinner,suniv-f1c100s-ccu";
 			reg = <0x01c20000 0x400>;
@@ -192,12 +195,15 @@
 				drive-strength = <30>;
 			};
 
+<<<<<<< HEAD
 			/omit-if-no-ref/
 			i2c0_pd_pins: i2c0-pd-pins {
 				pins = "PD0", "PD12";
 				function = "i2c0";
 			};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			spi0_pc_pins: spi0-pc-pins {
 				pins = "PC0", "PC1", "PC2", "PC3";
 				function = "spi0";
@@ -207,6 +213,7 @@
 				pins = "PE0", "PE1";
 				function = "uart0";
 			};
+<<<<<<< HEAD
 
 			/omit-if-no-ref/
 			uart1_pa_pins: uart1-pa-pins {
@@ -249,6 +256,8 @@
 			#address-cells = <1>;
 			#size-cells = <0>;
 			status = "disabled";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		timer@1c20c00 {
@@ -266,6 +275,7 @@
 			clocks = <&osc32k>;
 		};
 
+<<<<<<< HEAD
 		pwm: pwm@1c21000 {
 			compatible = "allwinner,suniv-f1c100s-pwm",
 				     "allwinner,sun7i-a20-pwm";
@@ -294,6 +304,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		uart0: serial@1c25000 {
 			compatible = "snps,dw-apb-uart";
 			reg = <0x01c25000 0x400>;

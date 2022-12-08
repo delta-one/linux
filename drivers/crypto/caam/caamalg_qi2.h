@@ -7,14 +7,21 @@
 #ifndef _CAAMALG_QI2_H_
 #define _CAAMALG_QI2_H_
 
+<<<<<<< HEAD
 #include <crypto/internal/skcipher.h>
 #include <linux/compiler_attributes.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <soc/fsl/dpaa2-io.h>
 #include <soc/fsl/dpaa2-fd.h>
 #include <linux/threads.h>
 #include <linux/netdevice.h>
 #include "dpseci.h"
 #include "desc_constr.h"
+<<<<<<< HEAD
+=======
+#include <crypto/skcipher.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DPAA2_CAAM_STORE_SIZE	16
 /* NAPI weight *must* be a multiple of the store size. */
@@ -37,6 +44,11 @@
  * @tx_queue_attr: array of Tx queue attributes
  * @cscn_mem: pointer to memory region containing the congestion SCN
  *	it's size is larger than to accommodate alignment
+<<<<<<< HEAD
+=======
+ * @cscn_mem_aligned: pointer to congestion SCN; it is computed as
+ *	PTR_ALIGN(cscn_mem, DPAA2_CSCN_ALIGN)
+>>>>>>> b7ba80a49124 (Commit)
  * @cscn_dma: dma address used by the QMAN to write CSCN messages
  * @dev: device associated with the DPSECI object
  * @mc_io: pointer to MC portal's I/O object
@@ -57,6 +69,10 @@ struct dpaa2_caam_priv {
 
 	/* congestion */
 	void *cscn_mem;
+<<<<<<< HEAD
+=======
+	void *cscn_mem_aligned;
+>>>>>>> b7ba80a49124 (Commit)
 	dma_addr_t cscn_dma;
 
 	struct device *dev;
@@ -156,7 +172,11 @@ struct ahash_edesc {
 struct caam_flc {
 	u32 flc[16];
 	u32 sh_desc[MAX_SDLEN];
+<<<<<<< HEAD
 } __aligned(CRYPTO_DMA_ALIGN);
+=======
+} ____cacheline_aligned;
+>>>>>>> b7ba80a49124 (Commit)
 
 enum optype {
 	ENCRYPT = 0,
@@ -178,7 +198,11 @@ enum optype {
  * @edesc: extended descriptor; points to one of {skcipher,aead}_edesc
  */
 struct caam_request {
+<<<<<<< HEAD
 	struct dpaa2_fl_entry fd_flt[2] __aligned(CRYPTO_DMA_ALIGN);
+=======
+	struct dpaa2_fl_entry fd_flt[2];
+>>>>>>> b7ba80a49124 (Commit)
 	dma_addr_t fd_flt_dma;
 	struct caam_flc *flc;
 	dma_addr_t flc_dma;

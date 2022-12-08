@@ -131,7 +131,14 @@ static int ptp_clock_adjtime(struct posix_clock *pc, struct __kernel_timex *tx)
 		long ppb = scaled_ppm_to_ppb(tx->freq);
 		if (ppb > ops->max_adj || ppb < -ops->max_adj)
 			return -ERANGE;
+<<<<<<< HEAD
 		err = ops->adjfine(ops, tx->freq);
+=======
+		if (ops->adjfine)
+			err = ops->adjfine(ops, tx->freq);
+		else
+			err = ops->adjfreq(ops, ppb);
+>>>>>>> b7ba80a49124 (Commit)
 		ptp->dialed_frequency = tx->freq;
 	} else if (tx->modes & ADJ_OFFSET) {
 		if (ops->adjphase) {
@@ -171,7 +178,11 @@ static void ptp_clock_release(struct device *dev)
 	mutex_destroy(&ptp->tsevq_mux);
 	mutex_destroy(&ptp->pincfg_mux);
 	mutex_destroy(&ptp->n_vclocks_mux);
+<<<<<<< HEAD
 	ida_free(&ptp_clocks_map, ptp->index);
+=======
+	ida_simple_remove(&ptp_clocks_map, ptp->index);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(ptp);
 }
 
@@ -214,7 +225,11 @@ struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
 	if (ptp == NULL)
 		goto no_memory;
 
+<<<<<<< HEAD
 	index = ida_alloc_max(&ptp_clocks_map, MINORMASK, GFP_KERNEL);
+=======
+	index = ida_simple_get(&ptp_clocks_map, 0, MINORMASK + 1, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (index < 0) {
 		err = index;
 		goto no_slot;
@@ -329,7 +344,11 @@ kworker_err:
 	mutex_destroy(&ptp->tsevq_mux);
 	mutex_destroy(&ptp->pincfg_mux);
 	mutex_destroy(&ptp->n_vclocks_mux);
+<<<<<<< HEAD
 	ida_free(&ptp_clocks_map, index);
+=======
+	ida_simple_remove(&ptp_clocks_map, index);
+>>>>>>> b7ba80a49124 (Commit)
 no_slot:
 	kfree(ptp);
 no_memory:
@@ -460,7 +479,11 @@ static int __init ptp_init(void)
 {
 	int err;
 
+<<<<<<< HEAD
 	ptp_class = class_create("ptp");
+=======
+	ptp_class = class_create(THIS_MODULE, "ptp");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(ptp_class)) {
 		pr_err("ptp: failed to allocate class\n");
 		return PTR_ERR(ptp_class);

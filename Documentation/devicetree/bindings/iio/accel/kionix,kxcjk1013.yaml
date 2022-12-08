@@ -44,7 +44,11 @@ examples:
 
         accel@f {
             compatible = "kionix,kxtf9";
+<<<<<<< HEAD
             reg = <0xf>;
+=======
+            reg = <0x0F>;
+>>>>>>> b7ba80a49124 (Commit)
             mount-matrix = "0", "1", "0",
                            "1", "0", "0",
                            "0", "0", "1";

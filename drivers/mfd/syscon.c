@@ -20,7 +20,10 @@
 #include <linux/platform_data/syscon.h>
 #include <linux/platform_device.h>
 #include <linux/regmap.h>
+<<<<<<< HEAD
 #include <linux/reset.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mfd/syscon.h>
 #include <linux/slab.h>
 
@@ -32,7 +35,10 @@ static LIST_HEAD(syscon_list);
 struct syscon {
 	struct device_node *np;
 	struct regmap *regmap;
+<<<<<<< HEAD
 	struct reset_control *reset;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head list;
 };
 
@@ -42,7 +48,11 @@ static const struct regmap_config syscon_regmap_config = {
 	.reg_stride = 4,
 };
 
+<<<<<<< HEAD
 static struct syscon *of_syscon_register(struct device_node *np, bool check_res)
+=======
+static struct syscon *of_syscon_register(struct device_node *np, bool check_clk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct clk *clk;
 	struct syscon *syscon;
@@ -52,7 +62,10 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_res)
 	int ret;
 	struct regmap_config syscon_config = syscon_regmap_config;
 	struct resource res;
+<<<<<<< HEAD
 	struct reset_control *reset;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	syscon = kzalloc(sizeof(*syscon), GFP_KERNEL);
 	if (!syscon)
@@ -117,7 +130,11 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_res)
 		goto err_regmap;
 	}
 
+<<<<<<< HEAD
 	if (check_res) {
+=======
+	if (check_clk) {
+>>>>>>> b7ba80a49124 (Commit)
 		clk = of_clk_get(np, 0);
 		if (IS_ERR(clk)) {
 			ret = PTR_ERR(clk);
@@ -127,6 +144,7 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_res)
 		} else {
 			ret = regmap_mmio_attach_clk(regmap, clk);
 			if (ret)
+<<<<<<< HEAD
 				goto err_attach_clk;
 		}
 
@@ -139,6 +157,10 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_res)
 		ret = reset_control_deassert(reset);
 		if (ret)
 			goto err_reset;
+=======
+				goto err_attach;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	syscon->regmap = regmap;
@@ -150,9 +172,13 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_res)
 
 	return syscon;
 
+<<<<<<< HEAD
 err_reset:
 	reset_control_put(reset);
 err_attach_clk:
+=======
+err_attach:
+>>>>>>> b7ba80a49124 (Commit)
 	if (!IS_ERR(clk))
 		clk_put(clk);
 err_clk:
@@ -165,7 +191,11 @@ err_map:
 }
 
 static struct regmap *device_node_get_regmap(struct device_node *np,
+<<<<<<< HEAD
 					     bool check_res)
+=======
+					     bool check_clk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct syscon *entry, *syscon = NULL;
 
@@ -180,7 +210,11 @@ static struct regmap *device_node_get_regmap(struct device_node *np,
 	spin_unlock(&syscon_list_slock);
 
 	if (!syscon)
+<<<<<<< HEAD
 		syscon = of_syscon_register(np, check_res);
+=======
+		syscon = of_syscon_register(np, check_clk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_ERR(syscon))
 		return ERR_CAST(syscon);

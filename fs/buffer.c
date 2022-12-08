@@ -48,20 +48,32 @@
 #include <linux/sched/mm.h>
 #include <trace/events/block.h>
 #include <linux/fscrypt.h>
+<<<<<<< HEAD
 #include <linux/fsverity.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "internal.h"
 
 static int fsync_buffers_list(spinlock_t *lock, struct list_head *list);
+<<<<<<< HEAD
 static void submit_bh_wbc(blk_opf_t opf, struct buffer_head *bh,
 			  struct writeback_control *wbc);
+=======
+static int submit_bh_wbc(blk_opf_t opf, struct buffer_head *bh,
+			 struct writeback_control *wbc);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define BH_ENTRY(list) list_entry((list), struct buffer_head, b_assoc_buffers)
 
 inline void touch_buffer(struct buffer_head *bh)
 {
 	trace_block_touch_buffer(bh);
+<<<<<<< HEAD
 	folio_mark_accessed(bh->b_folio);
+=======
+	mark_page_accessed(bh->b_page);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(touch_buffer);
 
@@ -247,18 +259,31 @@ static void end_buffer_async_read(struct buffer_head *bh, int uptodate)
 	unsigned long flags;
 	struct buffer_head *first;
 	struct buffer_head *tmp;
+<<<<<<< HEAD
 	struct folio *folio;
 	int folio_uptodate = 1;
 
 	BUG_ON(!buffer_async_read(bh));
 
 	folio = bh->b_folio;
+=======
+	struct page *page;
+	int page_uptodate = 1;
+
+	BUG_ON(!buffer_async_read(bh));
+
+	page = bh->b_page;
+>>>>>>> b7ba80a49124 (Commit)
 	if (uptodate) {
 		set_buffer_uptodate(bh);
 	} else {
 		clear_buffer_uptodate(bh);
 		buffer_io_error(bh, ", async page read");
+<<<<<<< HEAD
 		folio_set_error(folio);
+=======
+		SetPageError(page);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -266,14 +291,22 @@ static void end_buffer_async_read(struct buffer_head *bh, int uptodate)
 	 * two buffer heads end IO at almost the same time and both
 	 * decide that the page is now completely done.
 	 */
+<<<<<<< HEAD
 	first = folio_buffers(folio);
+=======
+	first = page_buffers(page);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_irqsave(&first->b_uptodate_lock, flags);
 	clear_buffer_async_read(bh);
 	unlock_buffer(bh);
 	tmp = bh;
 	do {
 		if (!buffer_uptodate(tmp))
+<<<<<<< HEAD
 			folio_uptodate = 0;
+=======
+			page_uptodate = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		if (buffer_async_read(tmp)) {
 			BUG_ON(!buffer_locked(tmp));
 			goto still_busy;
@@ -286,9 +319,15 @@ static void end_buffer_async_read(struct buffer_head *bh, int uptodate)
 	 * If all of the buffers are uptodate then we can set the page
 	 * uptodate.
 	 */
+<<<<<<< HEAD
 	if (folio_uptodate)
 		folio_mark_uptodate(folio);
 	folio_unlock(folio);
+=======
+	if (page_uptodate)
+		SetPageUptodate(page);
+	unlock_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 	return;
 
 still_busy:
@@ -296,11 +335,16 @@ still_busy:
 	return;
 }
 
+<<<<<<< HEAD
 struct postprocess_bh_ctx {
+=======
+struct decrypt_bh_ctx {
+>>>>>>> b7ba80a49124 (Commit)
 	struct work_struct work;
 	struct buffer_head *bh;
 };
 
+<<<<<<< HEAD
 static void verify_bh(struct work_struct *work)
 {
 	struct postprocess_bh_ctx *ctx =
@@ -342,6 +386,17 @@ static void decrypt_bh(struct work_struct *work)
 		fsverity_enqueue_verify_work(&ctx->work);
 		return;
 	}
+=======
+static void decrypt_bh(struct work_struct *work)
+{
+	struct decrypt_bh_ctx *ctx =
+		container_of(work, struct decrypt_bh_ctx, work);
+	struct buffer_head *bh = ctx->bh;
+	int err;
+
+	err = fscrypt_decrypt_pagecache_blocks(bh->b_page, bh->b_size,
+					       bh_offset(bh));
+>>>>>>> b7ba80a49124 (Commit)
 	end_buffer_async_read(bh, err == 0);
 	kfree(ctx);
 }
@@ -352,6 +407,7 @@ static void decrypt_bh(struct work_struct *work)
  */
 static void end_buffer_async_read_io(struct buffer_head *bh, int uptodate)
 {
+<<<<<<< HEAD
 	struct inode *inode = bh->b_folio->mapping->host;
 	bool decrypt = fscrypt_inode_uses_fs_layer_crypto(inode);
 	bool verify = need_fsverity(bh);
@@ -370,6 +426,17 @@ static void end_buffer_async_read_io(struct buffer_head *bh, int uptodate)
 				INIT_WORK(&ctx->work, verify_bh);
 				fsverity_enqueue_verify_work(&ctx->work);
 			}
+=======
+	/* Decrypt if needed */
+	if (uptodate &&
+	    fscrypt_inode_uses_fs_layer_crypto(bh->b_page->mapping->host)) {
+		struct decrypt_bh_ctx *ctx = kmalloc(sizeof(*ctx), GFP_ATOMIC);
+
+		if (ctx) {
+			INIT_WORK(&ctx->work, decrypt_bh);
+			ctx->bh = bh;
+			fscrypt_enqueue_decrypt_work(&ctx->work);
+>>>>>>> b7ba80a49124 (Commit)
 			return;
 		}
 		uptodate = 0;
@@ -386,21 +453,36 @@ void end_buffer_async_write(struct buffer_head *bh, int uptodate)
 	unsigned long flags;
 	struct buffer_head *first;
 	struct buffer_head *tmp;
+<<<<<<< HEAD
 	struct folio *folio;
 
 	BUG_ON(!buffer_async_write(bh));
 
 	folio = bh->b_folio;
+=======
+	struct page *page;
+
+	BUG_ON(!buffer_async_write(bh));
+
+	page = bh->b_page;
+>>>>>>> b7ba80a49124 (Commit)
 	if (uptodate) {
 		set_buffer_uptodate(bh);
 	} else {
 		buffer_io_error(bh, ", lost async page write");
 		mark_buffer_write_io_error(bh);
 		clear_buffer_uptodate(bh);
+<<<<<<< HEAD
 		folio_set_error(folio);
 	}
 
 	first = folio_buffers(folio);
+=======
+		SetPageError(page);
+	}
+
+	first = page_buffers(page);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_irqsave(&first->b_uptodate_lock, flags);
 
 	clear_buffer_async_write(bh);
@@ -414,7 +496,11 @@ void end_buffer_async_write(struct buffer_head *bh, int uptodate)
 		tmp = tmp->b_this_page;
 	}
 	spin_unlock_irqrestore(&first->b_uptodate_lock, flags);
+<<<<<<< HEAD
 	folio_end_writeback(folio);
+=======
+	end_page_writeback(page);
+>>>>>>> b7ba80a49124 (Commit)
 	return;
 
 still_busy:
@@ -612,7 +698,11 @@ void write_boundary_block(struct block_device *bdev,
 void mark_buffer_dirty_inode(struct buffer_head *bh, struct inode *inode)
 {
 	struct address_space *mapping = inode->i_mapping;
+<<<<<<< HEAD
 	struct address_space *buffer_mapping = bh->b_folio->mapping;
+=======
+	struct address_space *buffer_mapping = bh->b_page->mapping;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mark_buffer_dirty(bh);
 	if (!mapping->private_data) {
@@ -1115,7 +1205,11 @@ __getblk_slow(struct block_device *bdev, sector_t block,
  * and then attach the address_space's inode to its superblock's dirty
  * inode list.
  *
+<<<<<<< HEAD
  * mark_buffer_dirty() is atomic.  It takes bh->b_folio->mapping->private_lock,
+=======
+ * mark_buffer_dirty() is atomic.  It takes bh->b_page->mapping->private_lock,
+>>>>>>> b7ba80a49124 (Commit)
  * i_pages lock and mapping->host->i_lock.
  */
 void mark_buffer_dirty(struct buffer_head *bh)
@@ -1137,6 +1231,7 @@ void mark_buffer_dirty(struct buffer_head *bh)
 	}
 
 	if (!test_set_buffer_dirty(bh)) {
+<<<<<<< HEAD
 		struct folio *folio = bh->b_folio;
 		struct address_space *mapping = NULL;
 
@@ -1147,6 +1242,18 @@ void mark_buffer_dirty(struct buffer_head *bh)
 				__folio_mark_dirty(folio, mapping, 0);
 		}
 		folio_memcg_unlock(folio);
+=======
+		struct page *page = bh->b_page;
+		struct address_space *mapping = NULL;
+
+		lock_page_memcg(page);
+		if (!TestSetPageDirty(page)) {
+			mapping = page_mapping(page);
+			if (mapping)
+				__set_page_dirty(page, mapping, 0);
+		}
+		unlock_page_memcg(page);
+>>>>>>> b7ba80a49124 (Commit)
 		if (mapping)
 			__mark_inode_dirty(mapping->host, I_DIRTY_PAGES);
 	}
@@ -1159,8 +1266,13 @@ void mark_buffer_write_io_error(struct buffer_head *bh)
 
 	set_buffer_write_io_error(bh);
 	/* FIXME: do we need to set this in both places? */
+<<<<<<< HEAD
 	if (bh->b_folio && bh->b_folio->mapping)
 		mapping_set_error(bh->b_folio->mapping, -EIO);
+=======
+	if (bh->b_page && bh->b_page->mapping)
+		mapping_set_error(bh->b_page->mapping, -EIO);
+>>>>>>> b7ba80a49124 (Commit)
 	if (bh->b_assoc_map)
 		mapping_set_error(bh->b_assoc_map, -EIO);
 	rcu_read_lock();
@@ -1196,7 +1308,11 @@ void __bforget(struct buffer_head *bh)
 {
 	clear_buffer_dirty(bh);
 	if (bh->b_assoc_map) {
+<<<<<<< HEAD
 		struct address_space *buffer_mapping = bh->b_folio->mapping;
+=======
+		struct address_space *buffer_mapping = bh->b_page->mapping;
+>>>>>>> b7ba80a49124 (Commit)
 
 		spin_lock(&buffer_mapping->private_lock);
 		list_del_init(&bh->b_assoc_buffers);
@@ -2287,11 +2403,14 @@ int block_read_full_folio(struct folio *folio, get_block_t *get_block)
 	int nr, i;
 	int fully_mapped = 1;
 	bool page_error = false;
+<<<<<<< HEAD
 	loff_t limit = i_size_read(inode);
 
 	/* This is needed for ext4. */
 	if (IS_ENABLED(CONFIG_FS_VERITY) && IS_VERITY(inode))
 		limit = inode->i_sb->s_maxbytes;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	VM_BUG_ON_FOLIO(folio_test_large(folio), folio);
 
@@ -2300,7 +2419,11 @@ int block_read_full_folio(struct folio *folio, get_block_t *get_block)
 	bbits = block_size_bits(blocksize);
 
 	iblock = (sector_t)folio->index << (PAGE_SHIFT - bbits);
+<<<<<<< HEAD
 	lblock = (limit+blocksize-1) >> bbits;
+=======
+	lblock = (i_size_read(inode)+blocksize-1) >> bbits;
+>>>>>>> b7ba80a49124 (Commit)
 	bh = head;
 	nr = 0;
 	i = 0;
@@ -2703,8 +2826,13 @@ static void end_bio_bh_io_sync(struct bio *bio)
 	bio_put(bio);
 }
 
+<<<<<<< HEAD
 static void submit_bh_wbc(blk_opf_t opf, struct buffer_head *bh,
 			  struct writeback_control *wbc)
+=======
+static int submit_bh_wbc(blk_opf_t opf, struct buffer_head *bh,
+			 struct writeback_control *wbc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const enum req_op op = opf & REQ_OP_MASK;
 	struct bio *bio;
@@ -2747,11 +2875,20 @@ static void submit_bh_wbc(blk_opf_t opf, struct buffer_head *bh,
 	}
 
 	submit_bio(bio);
+<<<<<<< HEAD
 }
 
 void submit_bh(blk_opf_t opf, struct buffer_head *bh)
 {
 	submit_bh_wbc(opf, bh, NULL);
+=======
+	return 0;
+}
+
+int submit_bh(blk_opf_t opf, struct buffer_head *bh)
+{
+	return submit_bh_wbc(opf, bh, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(submit_bh);
 
@@ -2775,6 +2912,11 @@ EXPORT_SYMBOL(write_dirty_buffer);
  */
 int __sync_dirty_buffer(struct buffer_head *bh, blk_opf_t op_flags)
 {
+<<<<<<< HEAD
+=======
+	int ret = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	WARN_ON(atomic_read(&bh->b_count) < 1);
 	lock_buffer(bh);
 	if (test_clear_buffer_dirty(bh)) {
@@ -2789,6 +2931,7 @@ int __sync_dirty_buffer(struct buffer_head *bh, blk_opf_t op_flags)
 
 		get_bh(bh);
 		bh->b_end_io = end_buffer_write_sync;
+<<<<<<< HEAD
 		submit_bh(REQ_OP_WRITE | op_flags, bh);
 		wait_on_buffer(bh);
 		if (!buffer_uptodate(bh))
@@ -2797,6 +2940,16 @@ int __sync_dirty_buffer(struct buffer_head *bh, blk_opf_t op_flags)
 		unlock_buffer(bh);
 	}
 	return 0;
+=======
+		ret = submit_bh(REQ_OP_WRITE | op_flags, bh);
+		wait_on_buffer(bh);
+		if (!ret && !buffer_uptodate(bh))
+			ret = -EIO;
+	} else {
+		unlock_buffer(bh);
+	}
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(__sync_dirty_buffer);
 

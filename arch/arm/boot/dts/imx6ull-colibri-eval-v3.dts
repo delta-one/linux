@@ -12,6 +12,7 @@
 	model = "Toradex Colibri iMX6ULL 256/512MB on Colibri Evaluation Board V3";
 	compatible = "toradex,colibri-imx6ull-eval", "fsl,imx6ull";
 };
+<<<<<<< HEAD
 
 &ad7879_ts {
 	status = "okay";
@@ -36,3 +37,5 @@
 &pwm4 {
 	status = "okay";
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

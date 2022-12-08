@@ -27,7 +27,10 @@ enum ipl_pbt {
 	IPL_PBT_FCP = 0,
 	IPL_PBT_SCP_DATA = 1,
 	IPL_PBT_CCW = 2,
+<<<<<<< HEAD
 	IPL_PBT_ECKD = 3,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	IPL_PBT_NVME = 4,
 };
 
@@ -112,6 +115,7 @@ struct ipl_pb0_ccw {
 	__u8  reserved5[8];
 } __packed;
 
+<<<<<<< HEAD
 /* IPL Parameter Block 0 for ECKD */
 struct ipl_pb0_eckd {
 	__u32 len;
@@ -140,6 +144,8 @@ struct ipl_pb0_eckd {
 #define IPL_PB0_ECKD_OPT_IPL	0x10
 #define IPL_PB0_ECKD_OPT_DUMP	0x20
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define IPL_PB0_CCW_VM_FLAG_NSS		0x80
 #define IPL_PB0_CCW_VM_FLAG_VP		0x40
 

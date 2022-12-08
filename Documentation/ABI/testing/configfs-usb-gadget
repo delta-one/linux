@@ -143,6 +143,7 @@ Description:
 		qw_sign		an identifier to be reported as "OS String"
 				proper
 		=============	===============================================
+<<<<<<< HEAD
 
 What:		/config/usb-gadget/gadget/webusb
 Date:		Dec 2022
@@ -156,3 +157,5 @@ Description:
 		bVendorCode	one-byte value used for custom per-device
 		landingPage	UTF-8 encoded URL of the device's landing page
 		=============	===============================================
+=======
+>>>>>>> b7ba80a49124 (Commit)

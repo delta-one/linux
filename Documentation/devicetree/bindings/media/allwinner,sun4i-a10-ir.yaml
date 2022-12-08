@@ -21,7 +21,10 @@ properties:
       - const: allwinner,sun6i-a31-ir
       - items:
           - enum:
+<<<<<<< HEAD
               - allwinner,suniv-f1c100s-ir
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - allwinner,sun8i-a83t-ir
               - allwinner,sun8i-r40-ir
               - allwinner,sun50i-a64-ir

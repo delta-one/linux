@@ -183,7 +183,11 @@ struct aspeed_sham_ctx {
 	struct aspeed_hace_dev		*hace_dev;
 	unsigned long			flags;	/* hmac flag */
 
+<<<<<<< HEAD
 	struct aspeed_sha_hmac_ctx	base[];
+=======
+	struct aspeed_sha_hmac_ctx	base[0];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct aspeed_sham_reqctx {

@@ -20,6 +20,10 @@
 #include <linux/pci.h>
 #include <linux/workqueue.h>
 #include <linux/wait.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/interrupt.h>
 #include <linux/ethtool.h>
 #include <linux/timer.h>
@@ -38,9 +42,13 @@
 #include <linux/avf/virtchnl.h>
 #include <linux/cpu_rmap.h>
 #include <linux/dim.h>
+<<<<<<< HEAD
 #include <linux/gnss.h>
 #include <net/pkt_cls.h>
 #include <net/pkt_sched.h>
+=======
+#include <net/pkt_cls.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/tc_act/tc_mirred.h>
 #include <net/tc_act/tc_gact.h>
 #include <net/ip.h>
@@ -122,8 +130,11 @@
 
 #define ICE_MAX_MTU	(ICE_AQ_SET_MAC_FRAME_SIZE_MAX - ICE_ETH_PKT_HDR_PAD)
 
+<<<<<<< HEAD
 #define ICE_MAX_TSO_SIZE 131072
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ICE_UP_TABLE_TRANSLATE(val, i) \
 		(((val) << ICE_AQ_VSI_UP_TABLE_UP##i##_S) & \
 		  ICE_AQ_VSI_UP_TABLE_UP##i##_M)
@@ -140,6 +151,7 @@
  */
 #define ICE_BW_KBPS_DIVISOR		125
 
+<<<<<<< HEAD
 /* Default recipes have priority 4 and below, hence priority values between 5..7
  * can be used as filter priority for advanced switch filter (advanced switch
  * filters need new recipe to be created for specified extraction sequence
@@ -155,6 +167,8 @@
 #define ICE_SWITCH_FLTR_PRIO_VSI	5
 #define ICE_SWITCH_FLTR_PRIO_QGRP	ICE_SWITCH_FLTR_PRIO_VSI
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Macro for each VSI in a PF */
 #define ice_for_each_vsi(pf, i) \
 	for ((i) = 0; (i) < (pf)->num_alloc_vsi; (i)++)
@@ -323,11 +337,14 @@ enum ice_vsi_state {
 	ICE_VSI_STATE_NBITS		/* must be last */
 };
 
+<<<<<<< HEAD
 struct ice_vsi_stats {
 	struct ice_ring_stats **tx_ring_stats;  /* Tx ring stats array */
 	struct ice_ring_stats **rx_ring_stats;  /* Rx ring stats array */
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* struct that defines a VSI, associated with a dev */
 struct ice_vsi {
 	struct net_device *netdev;
@@ -355,6 +372,10 @@ struct ice_vsi {
 
 	struct ice_vf *vf;		/* VF associated with this VSI */
 
+<<<<<<< HEAD
+=======
+	u16 ethtype;			/* Ethernet protocol for pause frame */
+>>>>>>> b7ba80a49124 (Commit)
 	u16 num_gfltr;
 	u16 num_bfltr;
 
@@ -380,7 +401,10 @@ struct ice_vsi {
 
 	/* VSI stats */
 	struct rtnl_link_stats64 net_stats;
+<<<<<<< HEAD
 	struct rtnl_link_stats64 net_stats_prev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct ice_eth_stats eth_stats;
 	struct ice_eth_stats eth_stats_prev;
 
@@ -508,7 +532,10 @@ enum ice_pf_flags {
 	ICE_FLAG_VF_VLAN_PRUNING,
 	ICE_FLAG_LINK_LENIENT_MODE_ENA,
 	ICE_FLAG_PLUG_AUX_DEV,
+<<<<<<< HEAD
 	ICE_FLAG_UNPLUG_AUX_DEV,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ICE_FLAG_MTU_CHANGED,
 	ICE_FLAG_GNSS,			/* GNSS successfully initialized */
 	ICE_PF_FLAGS_NBITS		/* must be last */
@@ -549,7 +576,10 @@ struct ice_pf {
 	u16 ctrl_vsi_idx;		/* control VSI index in pf->vsi array */
 
 	struct ice_vsi **vsi;		/* VSIs created by the driver */
+<<<<<<< HEAD
 	struct ice_vsi_stats **vsi_stats;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct ice_sw *first_sw;	/* first switch created by firmware */
 	u16 eswitch_mode;		/* current mode of eswitch */
 	struct ice_vfs vfs;
@@ -568,8 +598,14 @@ struct ice_pf {
 	struct mutex adev_mutex;	/* lock to protect aux device access */
 	u32 msg_enable;
 	struct ice_ptp ptp;
+<<<<<<< HEAD
 	struct gnss_serial *gnss_serial;
 	struct gnss_device *gnss_dev;
+=======
+	struct tty_driver *ice_gnss_tty_driver;
+	struct tty_port *gnss_tty_port[ICE_GNSS_TTY_MINOR_DEVICES];
+	struct gnss_serial *gnss_serial[ICE_GNSS_TTY_MINOR_DEVICES];
+>>>>>>> b7ba80a49124 (Commit)
 	u16 num_rdma_msix;		/* Total MSIX vectors for RDMA driver */
 	u16 rdma_base_vector;
 
@@ -618,8 +654,11 @@ struct ice_pf {
 	u16 num_dmac_chnl_fltrs;
 	struct hlist_head tc_flower_fltr_list;
 
+<<<<<<< HEAD
 	u64 supported_rxdids;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__le64 nvm_phy_type_lo; /* NVM PHY type low */
 	__le64 nvm_phy_type_hi; /* NVM PHY type high */
 	struct ice_link_default_override_tlv link_dflt_override;
@@ -882,7 +921,11 @@ void ice_set_ethtool_repr_ops(struct net_device *netdev);
 void ice_set_ethtool_safe_mode_ops(struct net_device *netdev);
 u16 ice_get_avail_txq_count(struct ice_pf *pf);
 u16 ice_get_avail_rxq_count(struct ice_pf *pf);
+<<<<<<< HEAD
 int ice_vsi_recfg_qs(struct ice_vsi *vsi, int new_rx, int new_tx, bool locked);
+=======
+int ice_vsi_recfg_qs(struct ice_vsi *vsi, int new_rx, int new_tx);
+>>>>>>> b7ba80a49124 (Commit)
 void ice_update_vsi_stats(struct ice_vsi *vsi);
 void ice_update_pf_stats(struct ice_pf *pf);
 void
@@ -891,7 +934,11 @@ ice_fetch_u64_stats_per_ring(struct u64_stats_sync *syncp,
 int ice_up(struct ice_vsi *vsi);
 int ice_down(struct ice_vsi *vsi);
 int ice_down_up(struct ice_vsi *vsi);
+<<<<<<< HEAD
 int ice_vsi_cfg_lan(struct ice_vsi *vsi);
+=======
+int ice_vsi_cfg(struct ice_vsi *vsi);
+>>>>>>> b7ba80a49124 (Commit)
 struct ice_vsi *ice_lb_vsi_setup(struct ice_pf *pf, struct ice_port_info *pi);
 int ice_vsi_determine_xdp_res(struct ice_vsi *vsi);
 int ice_prepare_xdp_rings(struct ice_vsi *vsi, struct bpf_prog *prog);
@@ -909,7 +956,10 @@ void ice_print_link_msg(struct ice_vsi *vsi, bool isup);
 int ice_plug_aux_dev(struct ice_pf *pf);
 void ice_unplug_aux_dev(struct ice_pf *pf);
 int ice_init_rdma(struct ice_pf *pf);
+<<<<<<< HEAD
 void ice_deinit_rdma(struct ice_pf *pf);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const char *ice_aq_str(enum ice_aq_err aq_err);
 bool ice_is_wol_supported(struct ice_hw *hw);
 void ice_fdir_del_all_fltrs(struct ice_vsi *vsi);
@@ -934,8 +984,11 @@ int ice_open(struct net_device *netdev);
 int ice_open_internal(struct net_device *netdev);
 int ice_stop(struct net_device *netdev);
 void ice_service_task_schedule(struct ice_pf *pf);
+<<<<<<< HEAD
 int ice_load(struct ice_pf *pf);
 void ice_unload(struct ice_pf *pf);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * ice_set_rdma_cap - enable RDMA support
@@ -955,11 +1008,24 @@ static inline void ice_set_rdma_cap(struct ice_pf *pf)
  */
 static inline void ice_clear_rdma_cap(struct ice_pf *pf)
 {
+<<<<<<< HEAD
 	/* defer unplug to service task to avoid RTNL lock and
 	 * clear PLUG bit so that pending plugs don't interfere
 	 */
 	clear_bit(ICE_FLAG_PLUG_AUX_DEV, pf->flags);
 	set_bit(ICE_FLAG_UNPLUG_AUX_DEV, pf->flags);
+=======
+	/* We can directly unplug aux device here only if the flag bit
+	 * ICE_FLAG_PLUG_AUX_DEV is not set because ice_unplug_aux_dev()
+	 * could race with ice_plug_aux_dev() called from
+	 * ice_service_task(). In this case we only clear that bit now and
+	 * aux device will be unplugged later once ice_plug_aux_device()
+	 * called from ice_service_task() finishes (see ice_service_task()).
+	 */
+	if (!test_and_clear_bit(ICE_FLAG_PLUG_AUX_DEV, pf->flags))
+		ice_unplug_aux_dev(pf);
+
+>>>>>>> b7ba80a49124 (Commit)
 	clear_bit(ICE_FLAG_RDMA_ENA, pf->flags);
 }
 #endif /* _ICE_H_ */

@@ -8,7 +8,10 @@ void serial_test_xdp_info(void)
 {
 	__u32 len = sizeof(struct bpf_prog_info), duration = 0, prog_id;
 	const char *file = "./xdp_dummy.bpf.o";
+<<<<<<< HEAD
 	LIBBPF_OPTS(bpf_xdp_query_opts, opts);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct bpf_prog_info info = {};
 	struct bpf_object *obj;
 	int err, prog_fd;
@@ -34,7 +37,11 @@ void serial_test_xdp_info(void)
 	if (CHECK_FAIL(err))
 		return;
 
+<<<<<<< HEAD
 	err = bpf_prog_get_info_by_fd(prog_fd, &info, &len);
+=======
+	err = bpf_obj_get_info_by_fd(prog_fd, &info, &len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (CHECK(err, "get_prog_info", "errno=%d\n", errno))
 		goto out_close;
 
@@ -62,6 +69,7 @@ void serial_test_xdp_info(void)
 	if (CHECK(prog_id, "prog_id_drv", "unexpected prog_id=%u\n", prog_id))
 		goto out;
 
+<<<<<<< HEAD
 	/* Check xdp features supported by lo device */
 	opts.feature_flags = ~0;
 	err = bpf_xdp_query(IFINDEX_LO, XDP_FLAGS_DRV_MODE, &opts);
@@ -69,6 +77,8 @@ void serial_test_xdp_info(void)
 		goto out;
 
 	ASSERT_EQ(opts.feature_flags, 0, "opts.feature_flags");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	bpf_xdp_detach(IFINDEX_LO, 0, NULL);
 out_close:

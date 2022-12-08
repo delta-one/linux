@@ -10,13 +10,17 @@
 ksft_skip=4
 
 testns=testns-$(mktemp -u "XXXXXXXX")
+<<<<<<< HEAD
 tmp=""
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 tables="foo bar baz quux"
 global_ret=0
 eret=0
 lret=0
 
+<<<<<<< HEAD
 cleanup() {
 	ip netns pids "$testns" | xargs kill 2>/dev/null
 	ip netns del "$testns"
@@ -24,6 +28,8 @@ cleanup() {
 	rm -f "$tmp"
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 check_result()
 {
 	local r=$1
@@ -51,7 +57,10 @@ if [ $? -ne 0 ];then
 	exit $ksft_skip
 fi
 
+<<<<<<< HEAD
 trap cleanup EXIT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 tmp=$(mktemp)
 
 for table in $tables; do
@@ -148,4 +157,14 @@ done
 
 check_result $lret "add/delete with nftrace enabled"
 
+<<<<<<< HEAD
+=======
+pkill -9 ping
+
+wait
+
+rm -f "$tmp"
+ip netns del "$testns"
+
+>>>>>>> b7ba80a49124 (Commit)
 exit $global_ret

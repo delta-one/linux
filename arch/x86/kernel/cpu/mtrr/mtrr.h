@@ -14,8 +14,16 @@ extern unsigned int mtrr_usage_table[MTRR_MAX_VAR_RANGES];
 
 struct mtrr_ops {
 	u32	vendor;
+<<<<<<< HEAD
 	void	(*set)(unsigned int reg, unsigned long base,
 		       unsigned long size, mtrr_type type);
+=======
+	u32	use_intel_if;
+	void	(*set)(unsigned int reg, unsigned long base,
+		       unsigned long size, mtrr_type type);
+	void	(*set_all)(void);
+
+>>>>>>> b7ba80a49124 (Commit)
 	void	(*get)(unsigned int reg, unsigned long *base,
 		       unsigned long *size, mtrr_type *type);
 	int	(*get_free_region)(unsigned long base, unsigned long size,
@@ -50,11 +58,21 @@ void set_mtrr_prepare_save(struct set_mtrr_context *ctxt);
 void fill_mtrr_var_range(unsigned int index,
 		u32 base_lo, u32 base_hi, u32 mask_lo, u32 mask_hi);
 bool get_mtrr_state(void);
+<<<<<<< HEAD
+=======
+void mtrr_bp_pat_init(void);
+
+extern void __init set_mtrr_ops(const struct mtrr_ops *ops);
+>>>>>>> b7ba80a49124 (Commit)
 
 extern u64 size_or_mask, size_and_mask;
 extern const struct mtrr_ops *mtrr_if;
 
 #define is_cpu(vnd)	(mtrr_if && mtrr_if->vendor == X86_VENDOR_##vnd)
+<<<<<<< HEAD
+=======
+#define use_intel()	(mtrr_if && mtrr_if->use_intel_if == 1)
+>>>>>>> b7ba80a49124 (Commit)
 
 extern unsigned int num_var_ranges;
 extern u64 mtrr_tom2;
@@ -64,10 +82,17 @@ void mtrr_state_warn(void);
 const char *mtrr_attrib_to_str(int x);
 void mtrr_wrmsr(unsigned, unsigned, unsigned);
 
+<<<<<<< HEAD
 /* CPU specific mtrr_ops vectors. */
 extern const struct mtrr_ops amd_mtrr_ops;
 extern const struct mtrr_ops cyrix_mtrr_ops;
 extern const struct mtrr_ops centaur_mtrr_ops;
+=======
+/* CPU specific mtrr init functions */
+int amd_init_mtrr(void);
+int cyrix_init_mtrr(void);
+int centaur_init_mtrr(void);
+>>>>>>> b7ba80a49124 (Commit)
 
 extern int changed_by_mtrr_cleanup;
 extern int mtrr_cleanup(unsigned address_bits);

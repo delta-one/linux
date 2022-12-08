@@ -389,10 +389,17 @@ static void be_get_ethtool_stats(struct net_device *netdev,
 		struct be_rx_stats *stats = rx_stats(rxo);
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&stats->sync);
 			data[base] = stats->rx_bytes;
 			data[base + 1] = stats->rx_pkts;
 		} while (u64_stats_fetch_retry(&stats->sync, start));
+=======
+			start = u64_stats_fetch_begin_irq(&stats->sync);
+			data[base] = stats->rx_bytes;
+			data[base + 1] = stats->rx_pkts;
+		} while (u64_stats_fetch_retry_irq(&stats->sync, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		for (i = 2; i < ETHTOOL_RXSTATS_NUM; i++) {
 			p = (u8 *)stats + et_rx_stats[i].offset;
@@ -405,19 +412,32 @@ static void be_get_ethtool_stats(struct net_device *netdev,
 		struct be_tx_stats *stats = tx_stats(txo);
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&stats->sync_compl);
 			data[base] = stats->tx_compl;
 		} while (u64_stats_fetch_retry(&stats->sync_compl, start));
 
 		do {
 			start = u64_stats_fetch_begin(&stats->sync);
+=======
+			start = u64_stats_fetch_begin_irq(&stats->sync_compl);
+			data[base] = stats->tx_compl;
+		} while (u64_stats_fetch_retry_irq(&stats->sync_compl, start));
+
+		do {
+			start = u64_stats_fetch_begin_irq(&stats->sync);
+>>>>>>> b7ba80a49124 (Commit)
 			for (i = 1; i < ETHTOOL_TXSTATS_NUM; i++) {
 				p = (u8 *)stats + et_tx_stats[i].offset;
 				data[base + i] =
 					(et_tx_stats[i].size == sizeof(u64)) ?
 						*(u64 *)p : *(u32 *)p;
 			}
+<<<<<<< HEAD
 		} while (u64_stats_fetch_retry(&stats->sync, start));
+=======
+		} while (u64_stats_fetch_retry_irq(&stats->sync, start));
+>>>>>>> b7ba80a49124 (Commit)
 		base += ETHTOOL_TXSTATS_NUM;
 	}
 }

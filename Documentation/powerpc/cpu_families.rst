@@ -10,7 +10,10 @@ Book3S (aka sPAPR)
 ------------------
 
 - Hash MMU (except 603 and e300)
+<<<<<<< HEAD
 - Radix MMU (POWER9 and later)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 - Software loaded TLB (603 and e300)
 - Selectable Software loaded TLB in addition to hash MMU (755, 7450, e600)
 - Mix of 32 & 64 bit::
@@ -102,6 +105,7 @@ Book3S (aka sPAPR)
    +--------------+
    |    POWER8    |
    +--------------+
+<<<<<<< HEAD
           |
           |
           v
@@ -114,6 +118,8 @@ Book3S (aka sPAPR)
    +--------------+
    |   POWER10    |
    +--------------+
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 
    +---------------+

@@ -13,7 +13,10 @@
  */
 
 #include <dt-bindings/dma/xlnx-zynqmp-dpdma.h>
+<<<<<<< HEAD
 #include <dt-bindings/gpio/gpio.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <dt-bindings/power/xlnx-zynqmp-power.h>
 #include <dt-bindings/reset/xlnx-zynqmp-resets.h>
 
@@ -76,7 +79,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	cpu_opp_table: opp-table-cpu {
+=======
+	cpu_opp_table: cpu-opp-table {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "operating-points-v2";
 		opp-shared;
 		opp00 {
@@ -101,6 +108,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	reserved-memory {
 		#address-cells = <2>;
 		#size-cells = <2>;
@@ -117,6 +125,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	zynqmp_ipi: zynqmp_ipi {
 		compatible = "xlnx,zynqmp-ipi-mailbox";
 		interrupt-parent = <&gic>;
@@ -200,12 +210,15 @@
 				compatible = "xlnx,zynqmp-pinctrl";
 				status = "disabled";
 			};
+<<<<<<< HEAD
 
 			modepin_gpio: gpio {
 				compatible = "xlnx,zynqmp-gpio-modepin";
 				gpio-controller;
 				#gpio-cells = <2>;
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -226,6 +239,7 @@
 		ranges;
 	};
 
+<<<<<<< HEAD
 	remoteproc {
 		compatible = "xlnx,zynqmp-r5fss";
 		xlnx,cluster-mode = <1>;
@@ -243,6 +257,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	amba: axi {
 		compatible = "simple-bus";
 		#address-cells = <2>;
@@ -540,12 +556,20 @@
 		};
 
 		gem0: ethernet@ff0b0000 {
+<<<<<<< HEAD
 			compatible = "xlnx,zynqmp-gem", "cdns,gem";
+=======
+			compatible = "cdns,zynqmp-gem", "cdns,gem";
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 			interrupt-parent = <&gic>;
 			interrupts = <0 57 4>, <0 57 4>;
 			reg = <0x0 0xff0b0000 0x0 0x1000>;
+<<<<<<< HEAD
 			clock-names = "pclk", "hclk", "tx_clk", "rx_clk", "tsu_clk";
+=======
+			clock-names = "pclk", "hclk", "tx_clk";
+>>>>>>> b7ba80a49124 (Commit)
 			#address-cells = <1>;
 			#size-cells = <0>;
 			iommus = <&smmu 0x874>;
@@ -555,12 +579,20 @@
 		};
 
 		gem1: ethernet@ff0c0000 {
+<<<<<<< HEAD
 			compatible = "xlnx,zynqmp-gem", "cdns,gem";
+=======
+			compatible = "cdns,zynqmp-gem", "cdns,gem";
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 			interrupt-parent = <&gic>;
 			interrupts = <0 59 4>, <0 59 4>;
 			reg = <0x0 0xff0c0000 0x0 0x1000>;
+<<<<<<< HEAD
 			clock-names = "pclk", "hclk", "tx_clk", "rx_clk", "tsu_clk";
+=======
+			clock-names = "pclk", "hclk", "tx_clk";
+>>>>>>> b7ba80a49124 (Commit)
 			#address-cells = <1>;
 			#size-cells = <0>;
 			iommus = <&smmu 0x875>;
@@ -570,12 +602,20 @@
 		};
 
 		gem2: ethernet@ff0d0000 {
+<<<<<<< HEAD
 			compatible = "xlnx,zynqmp-gem", "cdns,gem";
+=======
+			compatible = "cdns,zynqmp-gem", "cdns,gem";
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 			interrupt-parent = <&gic>;
 			interrupts = <0 61 4>, <0 61 4>;
 			reg = <0x0 0xff0d0000 0x0 0x1000>;
+<<<<<<< HEAD
 			clock-names = "pclk", "hclk", "tx_clk", "rx_clk", "tsu_clk";
+=======
+			clock-names = "pclk", "hclk", "tx_clk";
+>>>>>>> b7ba80a49124 (Commit)
 			#address-cells = <1>;
 			#size-cells = <0>;
 			iommus = <&smmu 0x876>;
@@ -585,12 +625,20 @@
 		};
 
 		gem3: ethernet@ff0e0000 {
+<<<<<<< HEAD
 			compatible = "xlnx,zynqmp-gem", "cdns,gem";
+=======
+			compatible = "cdns,zynqmp-gem", "cdns,gem";
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 			interrupt-parent = <&gic>;
 			interrupts = <0 63 4>, <0 63 4>;
 			reg = <0x0 0xff0e0000 0x0 0x1000>;
+<<<<<<< HEAD
 			clock-names = "pclk", "hclk", "tx_clk", "rx_clk", "tsu_clk";
+=======
+			clock-names = "pclk", "hclk", "tx_clk";
+>>>>>>> b7ba80a49124 (Commit)
 			#address-cells = <1>;
 			#size-cells = <0>;
 			iommus = <&smmu 0x877>;
@@ -854,7 +902,10 @@
 				 <&zynqmp_reset ZYNQMP_RESET_USB0_HIBERRESET>,
 				 <&zynqmp_reset ZYNQMP_RESET_USB0_APB>;
 			reset-names = "usb_crst", "usb_hibrst", "usb_apbrst";
+<<<<<<< HEAD
 			reset-gpios = <&modepin_gpio 1 GPIO_ACTIVE_LOW>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			ranges;
 
 			dwc3_0: usb@fe200000 {
@@ -866,7 +917,10 @@
 				clock-names = "bus_early", "ref";
 				iommus = <&smmu 0x860>;
 				snps,quirk-frame-length-adjustment = <0x20>;
+<<<<<<< HEAD
 				snps,resume-hs-terminations;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				/* dma-coherent; */
 			};
 		};
@@ -893,7 +947,10 @@
 				clock-names = "bus_early", "ref";
 				iommus = <&smmu 0x861>;
 				snps,quirk-frame-length-adjustment = <0x20>;
+<<<<<<< HEAD
 				snps,resume-hs-terminations;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				/* dma-coherent; */
 			};
 		};
@@ -973,6 +1030,7 @@
 			       <&zynqmp_dpdma ZYNQMP_DPDMA_VIDEO1>,
 			       <&zynqmp_dpdma ZYNQMP_DPDMA_VIDEO2>,
 			       <&zynqmp_dpdma ZYNQMP_DPDMA_GRAPHICS>;
+<<<<<<< HEAD
 
 			ports {
 				#address-cells = <1>;
@@ -997,6 +1055,8 @@
 					reg = <5>;
 				};
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };

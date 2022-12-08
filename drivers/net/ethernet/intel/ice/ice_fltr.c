@@ -208,11 +208,14 @@ static int ice_fltr_remove_eth_list(struct ice_vsi *vsi, struct list_head *list)
 void ice_fltr_remove_all(struct ice_vsi *vsi)
 {
 	ice_remove_vsi_fltr(&vsi->back->hw, vsi->idx);
+<<<<<<< HEAD
 	/* sync netdev filters if exist */
 	if (vsi->netdev) {
 		__dev_uc_unsync(vsi->netdev, NULL);
 		__dev_mc_unsync(vsi->netdev, NULL);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

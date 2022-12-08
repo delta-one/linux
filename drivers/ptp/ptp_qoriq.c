@@ -48,6 +48,7 @@ static void tmr_cnt_write(struct ptp_qoriq *ptp_qoriq, u64 ns)
 	ptp_qoriq->write(&regs->ctrl_regs->tmr_cnt_h, hi);
 }
 
+<<<<<<< HEAD
 static u64 tmr_offset_read(struct ptp_qoriq *ptp_qoriq)
 {
 	struct ptp_qoriq_registers *regs = &ptp_qoriq->regs;
@@ -71,6 +72,8 @@ static void tmr_offset_write(struct ptp_qoriq *ptp_qoriq, u64 delta_ns)
 	ptp_qoriq->write(&regs->ctrl_regs->tmroff_h, hi);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Caller must hold ptp_qoriq->lock. */
 static void set_alarm(struct ptp_qoriq *ptp_qoriq)
 {
@@ -78,9 +81,13 @@ static void set_alarm(struct ptp_qoriq *ptp_qoriq)
 	u64 ns;
 	u32 lo, hi;
 
+<<<<<<< HEAD
 	ns = tmr_cnt_read(ptp_qoriq) + tmr_offset_read(ptp_qoriq)
 				     + 1500000000ULL;
 
+=======
+	ns = tmr_cnt_read(ptp_qoriq) + 1500000000ULL;
+>>>>>>> b7ba80a49124 (Commit)
 	ns = div_u64(ns, 1000000000UL) * 1000000000ULL;
 	ns -= ptp_qoriq->tclk_period;
 	hi = ns >> 32;
@@ -232,6 +239,7 @@ EXPORT_SYMBOL_GPL(ptp_qoriq_adjfine);
 
 int ptp_qoriq_adjtime(struct ptp_clock_info *ptp, s64 delta)
 {
+<<<<<<< HEAD
 	struct ptp_qoriq *ptp_qoriq = container_of(ptp, struct ptp_qoriq, caps);
 	s64 now, curr_delta;
 	unsigned long flags;
@@ -250,6 +258,17 @@ int ptp_qoriq_adjtime(struct ptp_clock_info *ptp, s64 delta)
 		curr_delta += delta;
 		tmr_offset_write(ptp_qoriq, curr_delta);
 	}
+=======
+	s64 now;
+	unsigned long flags;
+	struct ptp_qoriq *ptp_qoriq = container_of(ptp, struct ptp_qoriq, caps);
+
+	spin_lock_irqsave(&ptp_qoriq->lock, flags);
+
+	now = tmr_cnt_read(ptp_qoriq);
+	now += delta;
+	tmr_cnt_write(ptp_qoriq, now);
+>>>>>>> b7ba80a49124 (Commit)
 	set_fipers(ptp_qoriq);
 
 	spin_unlock_irqrestore(&ptp_qoriq->lock, flags);
@@ -266,7 +285,11 @@ int ptp_qoriq_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
 
 	spin_lock_irqsave(&ptp_qoriq->lock, flags);
 
+<<<<<<< HEAD
 	ns = tmr_cnt_read(ptp_qoriq) + tmr_offset_read(ptp_qoriq);
+=======
+	ns = tmr_cnt_read(ptp_qoriq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_unlock_irqrestore(&ptp_qoriq->lock, flags);
 
@@ -287,7 +310,10 @@ int ptp_qoriq_settime(struct ptp_clock_info *ptp,
 
 	spin_lock_irqsave(&ptp_qoriq->lock, flags);
 
+<<<<<<< HEAD
 	tmr_offset_write(ptp_qoriq, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tmr_cnt_write(ptp_qoriq, ns);
 	set_fipers(ptp_qoriq);
 
@@ -523,7 +549,10 @@ int ptp_qoriq_init(struct ptp_qoriq *ptp_qoriq, void __iomem *base,
 
 	/* The eTSEC uses differnt memory map with DPAA/ENETC */
 	if (of_device_is_compatible(node, "fsl,etsec-ptp")) {
+<<<<<<< HEAD
 		ptp_qoriq->etsec = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ptp_qoriq->regs.ctrl_regs = base + ETSEC_CTRL_REGS_OFFSET;
 		ptp_qoriq->regs.alarm_regs = base + ETSEC_ALARM_REGS_OFFSET;
 		ptp_qoriq->regs.fiper_regs = base + ETSEC_FIPER_REGS_OFFSET;

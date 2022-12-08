@@ -93,7 +93,11 @@ size_t ubi_calc_fm_size(struct ubi_device *ubi)
 
 
 /**
+<<<<<<< HEAD
  * new_fm_vbuf() - allocate a new volume header for fastmap usage.
+=======
+ * new_fm_vhdr - allocate a new volume header for fastmap usage.
+>>>>>>> b7ba80a49124 (Commit)
  * @ubi: UBI device description object
  * @vol_id: the VID of the new header
  *

@@ -14,11 +14,18 @@
  * Copyright (c) 2004 Aaron Grothe ajgrothe@yahoo.com
  */
 
+<<<<<<< HEAD
 #include <crypto/algapi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/mm.h>
 #include <asm/byteorder.h>
+<<<<<<< HEAD
+=======
+#include <linux/crypto.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/types.h>
 
 #define TEA_KEY_SIZE		16

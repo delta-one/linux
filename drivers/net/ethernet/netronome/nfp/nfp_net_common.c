@@ -27,6 +27,10 @@
 #include <linux/page_ref.h>
 #include <linux/pci.h>
 #include <linux/pci_regs.h>
+<<<<<<< HEAD
+=======
+#include <linux/msi.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/ethtool.h>
 #include <linux/log2.h>
 #include <linux/if_vlan.h>
@@ -38,7 +42,10 @@
 #include <net/tls.h>
 #include <net/vxlan.h>
 #include <net/xdp_sock_drv.h>
+<<<<<<< HEAD
 #include <net/xfrm.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "nfpcore/nfp_dev.h"
 #include "nfpcore/nfp_nsp.h"
@@ -735,9 +742,14 @@ static unsigned int nfp_net_calc_fl_bufsz_xsk(struct nfp_net_dp *dp)
  */
 static void nfp_net_vecs_init(struct nfp_net *nn)
 {
+<<<<<<< HEAD
 	int numa_node = dev_to_node(&nn->pdev->dev);
 	struct nfp_net_r_vector *r_vec;
 	unsigned int r;
+=======
+	struct nfp_net_r_vector *r_vec;
+	int r;
+>>>>>>> b7ba80a49124 (Commit)
 
 	nn->lsc_handler = nfp_net_irq_lsc;
 	nn->exn_handler = nfp_net_irq_exn;
@@ -763,7 +775,11 @@ static void nfp_net_vecs_init(struct nfp_net *nn)
 			tasklet_disable(&r_vec->tasklet);
 		}
 
+<<<<<<< HEAD
 		cpumask_set_cpu(cpumask_local_spread(r, numa_node), &r_vec->affinity_mask);
+=======
+		cpumask_set_cpu(r, &r_vec->affinity_mask);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -772,7 +788,13 @@ nfp_net_napi_add(struct nfp_net_dp *dp, struct nfp_net_r_vector *r_vec, int idx)
 {
 	if (dp->netdev)
 		netif_napi_add(dp->netdev, &r_vec->napi,
+<<<<<<< HEAD
 			       nfp_net_has_xsk_pool_slow(dp, idx) ? dp->ops->xsk_poll : dp->ops->poll);
+=======
+			       nfp_net_has_xsk_pool_slow(dp, idx) ?
+			       dp->ops->xsk_poll : dp->ops->poll,
+			       NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		tasklet_enable(&r_vec->tasklet);
 }
@@ -1008,7 +1030,10 @@ static int nfp_net_set_config_and_enable(struct nfp_net *nn)
 		new_ctrl |= NFP_NET_CFG_CTRL_RINGCFG;
 
 	nn_writel(nn, NFP_NET_CFG_CTRL, new_ctrl);
+<<<<<<< HEAD
 	nn_writel(nn, NFP_NET_CFG_CTRL_WORD1, nn->dp.ctrl_w1);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = nfp_net_reconfig(nn, update);
 	if (err) {
 		nfp_net_clear_config_and_disable(nn);
@@ -1335,6 +1360,7 @@ err_unlock:
 	return err;
 }
 
+<<<<<<< HEAD
 int nfp_net_sched_mbox_amsg_work(struct nfp_net *nn, u32 cmd, const void *data, size_t len,
 				 int (*cb)(struct nfp_net *, struct nfp_mbox_amsg_entry *))
 {
@@ -1426,17 +1452,28 @@ static void nfp_net_set_rx_mode(struct net_device *netdev)
 
 	new_ctrl = nn->dp.ctrl;
 	new_ctrl_w1 = nn->dp.ctrl_w1;
+=======
+static void nfp_net_set_rx_mode(struct net_device *netdev)
+{
+	struct nfp_net *nn = netdev_priv(netdev);
+	u32 new_ctrl;
+
+	new_ctrl = nn->dp.ctrl;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!netdev_mc_empty(netdev) || netdev->flags & IFF_ALLMULTI)
 		new_ctrl |= nn->cap & NFP_NET_CFG_CTRL_L2MC;
 	else
 		new_ctrl &= ~NFP_NET_CFG_CTRL_L2MC;
 
+<<<<<<< HEAD
 	if (netdev->flags & IFF_ALLMULTI)
 		new_ctrl_w1 &= ~NFP_NET_CFG_CTRL_MCAST_FILTER;
 	else
 		new_ctrl_w1 |= nn->cap_w1 & NFP_NET_CFG_CTRL_MCAST_FILTER;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (netdev->flags & IFF_PROMISC) {
 		if (nn->cap & NFP_NET_CFG_CTRL_PROMISC)
 			new_ctrl |= NFP_NET_CFG_CTRL_PROMISC;
@@ -1446,6 +1483,7 @@ static void nfp_net_set_rx_mode(struct net_device *netdev)
 		new_ctrl &= ~NFP_NET_CFG_CTRL_PROMISC;
 	}
 
+<<<<<<< HEAD
 	if ((nn->cap_w1 & NFP_NET_CFG_CTRL_MCAST_FILTER) &&
 	    __dev_mc_sync(netdev, nfp_net_mc_sync, nfp_net_mc_unsync))
 		netdev_err(netdev, "Sync mc address failed\n");
@@ -1461,6 +1499,15 @@ static void nfp_net_set_rx_mode(struct net_device *netdev)
 
 	nn->dp.ctrl = new_ctrl;
 	nn->dp.ctrl_w1 = new_ctrl_w1;
+=======
+	if (new_ctrl == nn->dp.ctrl)
+		return;
+
+	nn_writel(nn, NFP_NET_CFG_CTRL, new_ctrl);
+	nfp_net_reconfig_post(nn, NFP_NET_CFG_UPDATE_GEN);
+
+	nn->dp.ctrl = new_ctrl;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void nfp_net_rss_init_itbl(struct nfp_net *nn)
@@ -1731,21 +1778,37 @@ static void nfp_net_stat64(struct net_device *netdev,
 		unsigned int start;
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&r_vec->rx_sync);
 			data[0] = r_vec->rx_pkts;
 			data[1] = r_vec->rx_bytes;
 			data[2] = r_vec->rx_drops;
 		} while (u64_stats_fetch_retry(&r_vec->rx_sync, start));
+=======
+			start = u64_stats_fetch_begin_irq(&r_vec->rx_sync);
+			data[0] = r_vec->rx_pkts;
+			data[1] = r_vec->rx_bytes;
+			data[2] = r_vec->rx_drops;
+		} while (u64_stats_fetch_retry_irq(&r_vec->rx_sync, start));
+>>>>>>> b7ba80a49124 (Commit)
 		stats->rx_packets += data[0];
 		stats->rx_bytes += data[1];
 		stats->rx_dropped += data[2];
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&r_vec->tx_sync);
 			data[0] = r_vec->tx_pkts;
 			data[1] = r_vec->tx_bytes;
 			data[2] = r_vec->tx_errors;
 		} while (u64_stats_fetch_retry(&r_vec->tx_sync, start));
+=======
+			start = u64_stats_fetch_begin_irq(&r_vec->tx_sync);
+			data[0] = r_vec->tx_pkts;
+			data[1] = r_vec->tx_bytes;
+			data[2] = r_vec->tx_errors;
+		} while (u64_stats_fetch_retry_irq(&r_vec->tx_sync, start));
+>>>>>>> b7ba80a49124 (Commit)
 		stats->tx_packets += data[0];
 		stats->tx_bytes += data[1];
 		stats->tx_errors += data[2];
@@ -1898,9 +1961,12 @@ nfp_net_features_check(struct sk_buff *skb, struct net_device *dev,
 			features &= ~NETIF_F_GSO_MASK;
 	}
 
+<<<<<<< HEAD
 	if (xfrm_offload(skb))
 		return features;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* VXLAN/GRE check */
 	switch (vlan_get_protocol(skb)) {
 	case htons(ETH_P_IP):
@@ -2116,6 +2182,10 @@ const struct net_device_ops nfp_nfd3_netdev_ops = {
 	.ndo_get_phys_port_name	= nfp_net_get_phys_port_name,
 	.ndo_bpf		= nfp_net_xdp,
 	.ndo_xsk_wakeup		= nfp_net_xsk_wakeup,
+<<<<<<< HEAD
+=======
+	.ndo_get_devlink_port	= nfp_devlink_get_devlink_port,
+>>>>>>> b7ba80a49124 (Commit)
 	.ndo_bridge_getlink     = nfp_net_bridge_getlink,
 	.ndo_bridge_setlink     = nfp_net_bridge_setlink,
 };
@@ -2146,6 +2216,10 @@ const struct net_device_ops nfp_nfdk_netdev_ops = {
 	.ndo_features_check	= nfp_net_features_check,
 	.ndo_get_phys_port_name	= nfp_net_get_phys_port_name,
 	.ndo_bpf		= nfp_net_xdp,
+<<<<<<< HEAD
+=======
+	.ndo_get_devlink_port	= nfp_devlink_get_devlink_port,
+>>>>>>> b7ba80a49124 (Commit)
 	.ndo_bridge_getlink     = nfp_net_bridge_getlink,
 	.ndo_bridge_setlink     = nfp_net_bridge_setlink,
 };
@@ -2195,7 +2269,11 @@ void nfp_net_info(struct nfp_net *nn)
 		nn->fw_ver.extend, nn->fw_ver.class,
 		nn->fw_ver.major, nn->fw_ver.minor,
 		nn->max_mtu);
+<<<<<<< HEAD
 	nn_info(nn, "CAP: %#x %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s\n",
+=======
+	nn_info(nn, "CAP: %#x %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s\n",
+>>>>>>> b7ba80a49124 (Commit)
 		nn->cap,
 		nn->cap & NFP_NET_CFG_CTRL_PROMISC  ? "PROMISC "  : "",
 		nn->cap & NFP_NET_CFG_CTRL_L2BC     ? "L2BCFILT " : "",
@@ -2223,7 +2301,10 @@ void nfp_net_info(struct nfp_net *nn)
 		nn->cap & NFP_NET_CFG_CTRL_CSUM_COMPLETE ?
 						      "RXCSUM_COMPLETE " : "",
 		nn->cap & NFP_NET_CFG_CTRL_LIVE_ADDR ? "LIVE_ADDR " : "",
+<<<<<<< HEAD
 		nn->cap_w1 & NFP_NET_CFG_CTRL_MCAST_FILTER ? "MULTICAST_FILTER " : "",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		nfp_app_extra_cap(nn->app, nn));
 }
 
@@ -2475,12 +2556,15 @@ static void nfp_net_netdev_init(struct nfp_net *nn)
 	}
 	if (nn->cap & NFP_NET_CFG_CTRL_RSS_ANY)
 		netdev->hw_features |= NETIF_F_RXHASH;
+<<<<<<< HEAD
 
 #ifdef CONFIG_NFP_NET_IPSEC
 	if (nn->cap_w1 & NFP_NET_CFG_CTRL_IPSEC)
 		netdev->hw_features |= NETIF_F_HW_ESP | NETIF_F_HW_ESP_TX_CSUM;
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (nn->cap & NFP_NET_CFG_CTRL_VXLAN) {
 		if (nn->cap & NFP_NET_CFG_CTRL_LSO) {
 			netdev->hw_features |= NETIF_F_GSO_UDP_TUNNEL |
@@ -2535,15 +2619,21 @@ static void nfp_net_netdev_init(struct nfp_net *nn)
 	netdev->features &= ~NETIF_F_HW_VLAN_STAG_RX;
 	nn->dp.ctrl &= ~NFP_NET_CFG_CTRL_RXQINQ;
 
+<<<<<<< HEAD
 	netdev->xdp_features = NETDEV_XDP_ACT_BASIC;
 	if (nn->app && nn->app->type->id == NFP_APP_BPF_NIC)
 		netdev->xdp_features |= NETDEV_XDP_ACT_HW_OFFLOAD;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Finalise the netdev setup */
 	switch (nn->dp.ops->version) {
 	case NFP_NFD_VER_NFD3:
 		netdev->netdev_ops = &nfp_nfd3_netdev_ops;
+<<<<<<< HEAD
 		netdev->xdp_features |= NETDEV_XDP_ACT_XSK_ZEROCOPY;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case NFP_NFD_VER_NFDK:
 		netdev->netdev_ops = &nfp_nfdk_netdev_ops;
@@ -2567,7 +2657,10 @@ static int nfp_net_read_caps(struct nfp_net *nn)
 {
 	/* Get some of the read-only fields from the BAR */
 	nn->cap = nn_readl(nn, NFP_NET_CFG_CAP);
+<<<<<<< HEAD
 	nn->cap_w1 = nn_readl(nn, NFP_NET_CFG_CAP_WORD1);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	nn->max_mtu = nn_readl(nn, NFP_NET_CFG_MAX_MTU);
 
 	/* ABI 4.x and ctrl vNIC always use chained metadata, in other cases
@@ -2657,9 +2750,12 @@ int nfp_net_init(struct nfp_net *nn)
 	if (nn->cap & NFP_NET_CFG_CTRL_TXRWB)
 		nn->dp.ctrl |= NFP_NET_CFG_CTRL_TXRWB;
 
+<<<<<<< HEAD
 	if (nn->cap_w1 & NFP_NET_CFG_CTRL_MCAST_FILTER)
 		nn->dp.ctrl_w1 |= NFP_NET_CFG_CTRL_MCAST_FILTER;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Stash the re-configuration queue away.  First odd queue in TX Bar */
 	nn->qcp_cfg = nn->tx_bar + NFP_QCP_QUEUE_ADDR_SZ;
 
@@ -2667,7 +2763,10 @@ int nfp_net_init(struct nfp_net *nn)
 	nn_writel(nn, NFP_NET_CFG_CTRL, 0);
 	nn_writeq(nn, NFP_NET_CFG_TXRS_ENABLE, 0);
 	nn_writeq(nn, NFP_NET_CFG_RXRS_ENABLE, 0);
+<<<<<<< HEAD
 	nn_writel(nn, NFP_NET_CFG_CTRL_WORD1, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = nfp_net_reconfig(nn, NFP_NET_CFG_UPDATE_RING |
 				   NFP_NET_CFG_UPDATE_GEN);
 	if (err)
@@ -2683,19 +2782,25 @@ int nfp_net_init(struct nfp_net *nn)
 		err = nfp_net_tls_init(nn);
 		if (err)
 			goto err_clean_mbox;
+<<<<<<< HEAD
 
 		nfp_net_ipsec_init(nn);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	nfp_net_vecs_init(nn);
 
 	if (!nn->dp.netdev)
 		return 0;
+<<<<<<< HEAD
 
 	spin_lock_init(&nn->mbox_amsg.lock);
 	INIT_LIST_HEAD(&nn->mbox_amsg.list);
 	INIT_WORK(&nn->mbox_amsg.work, nfp_net_mbox_amsg_work);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return register_netdev(nn->dp.netdev);
 
 err_clean_mbox:
@@ -2713,8 +2818,12 @@ void nfp_net_clean(struct nfp_net *nn)
 		return;
 
 	unregister_netdev(nn->dp.netdev);
+<<<<<<< HEAD
 	nfp_net_ipsec_clean(nn);
 	nfp_ccm_mbox_clean(nn);
 	flush_work(&nn->mbox_amsg.work);
+=======
+	nfp_ccm_mbox_clean(nn);
+>>>>>>> b7ba80a49124 (Commit)
 	nfp_net_reconfig_wait_posted(nn);
 }

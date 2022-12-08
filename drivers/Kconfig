@@ -99,8 +99,11 @@ source "drivers/media/Kconfig"
 
 source "drivers/video/Kconfig"
 
+<<<<<<< HEAD
 source "drivers/accel/Kconfig"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 source "sound/Kconfig"
 
 source "drivers/hid/Kconfig"

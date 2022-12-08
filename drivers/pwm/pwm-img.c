@@ -161,9 +161,15 @@ static int img_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
 	val |= BIT(pwm->hwpwm);
 	img_pwm_writel(imgchip, PWM_CTRL_CFG, val);
 
+<<<<<<< HEAD
 	regmap_clear_bits(imgchip->periph_regs, PERIP_PWM_PDM_CONTROL,
 			  PERIP_PWM_PDM_CONTROL_CH_MASK <<
 			  PERIP_PWM_PDM_CONTROL_CH_SHIFT(pwm->hwpwm));
+=======
+	regmap_update_bits(imgchip->periph_regs, PERIP_PWM_PDM_CONTROL,
+			   PERIP_PWM_PDM_CONTROL_CH_MASK <<
+			   PERIP_PWM_PDM_CONTROL_CH_SHIFT(pwm->hwpwm), 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -397,10 +403,18 @@ static int img_pwm_resume(struct device *dev)
 
 	for (i = 0; i < imgchip->chip.npwm; i++)
 		if (imgchip->suspend_ctrl_cfg & BIT(i))
+<<<<<<< HEAD
 			regmap_clear_bits(imgchip->periph_regs,
 					  PERIP_PWM_PDM_CONTROL,
 					  PERIP_PWM_PDM_CONTROL_CH_MASK <<
 					  PERIP_PWM_PDM_CONTROL_CH_SHIFT(i));
+=======
+			regmap_update_bits(imgchip->periph_regs,
+					   PERIP_PWM_PDM_CONTROL,
+					   PERIP_PWM_PDM_CONTROL_CH_MASK <<
+					   PERIP_PWM_PDM_CONTROL_CH_SHIFT(i),
+					   0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (pm_runtime_status_suspended(dev))
 		img_pwm_runtime_suspend(dev);

@@ -24,23 +24,40 @@ bool __mt76_poll(struct mt76_dev *dev, u32 offset, u32 mask, u32 val,
 }
 EXPORT_SYMBOL_GPL(__mt76_poll);
 
+<<<<<<< HEAD
 bool ____mt76_poll_msec(struct mt76_dev *dev, u32 offset, u32 mask, u32 val,
 			int timeout, int tick)
 {
 	u32 cur;
 
 	timeout /= tick;
+=======
+bool __mt76_poll_msec(struct mt76_dev *dev, u32 offset, u32 mask, u32 val,
+		      int timeout)
+{
+	u32 cur;
+
+	timeout /= 10;
+>>>>>>> b7ba80a49124 (Commit)
 	do {
 		cur = __mt76_rr(dev, offset) & mask;
 		if (cur == val)
 			return true;
 
+<<<<<<< HEAD
 		usleep_range(1000 * tick, 2000 * tick);
+=======
+		usleep_range(10000, 20000);
+>>>>>>> b7ba80a49124 (Commit)
 	} while (timeout-- > 0);
 
 	return false;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(____mt76_poll_msec);
+=======
+EXPORT_SYMBOL_GPL(__mt76_poll_msec);
+>>>>>>> b7ba80a49124 (Commit)
 
 int mt76_wcid_alloc(u32 *mask, int size)
 {

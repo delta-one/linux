@@ -3128,8 +3128,13 @@ static inline void wcd938x_mbhc_get_result_params(struct wcd938x_priv *wcd938x,
 	s16 c1;
 	s32 x1, d1;
 	int32_t denom;
+<<<<<<< HEAD
 	static const int minCode_param[] = {
 		3277, 1639, 820, 410, 205, 103, 52, 26
+=======
+	int minCode_param[] = {
+			3277, 1639, 820, 410, 205, 103, 52, 26
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	regmap_update_bits(wcd938x->regmap, WCD938X_ANA_MBHC_ZDET, 0x20, 0x20);
@@ -4529,9 +4534,17 @@ static int wcd938x_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void wcd938x_remove(struct platform_device *pdev)
 {
 	component_master_del(&pdev->dev, &wcd938x_comp_ops);
+=======
+static int wcd938x_remove(struct platform_device *pdev)
+{
+	component_master_del(&pdev->dev, &wcd938x_comp_ops);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #if defined(CONFIG_OF)
@@ -4545,7 +4558,11 @@ MODULE_DEVICE_TABLE(of, wcd938x_dt_match);
 
 static struct platform_driver wcd938x_codec_driver = {
 	.probe = wcd938x_probe,
+<<<<<<< HEAD
 	.remove_new = wcd938x_remove,
+=======
+	.remove = wcd938x_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "wcd938x_codec",
 		.of_match_table = of_match_ptr(wcd938x_dt_match),

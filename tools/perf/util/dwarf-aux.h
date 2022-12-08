@@ -50,9 +50,12 @@ int die_get_call_lineno(Dwarf_Die *in_die);
 /* Get callsite file name of inlined function instance */
 const char *die_get_call_file(Dwarf_Die *in_die);
 
+<<<<<<< HEAD
 /* Get declared file name of a DIE */
 const char *die_get_decl_file(Dwarf_Die *dw_die);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Get type die */
 Dwarf_Die *die_get_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem);
 

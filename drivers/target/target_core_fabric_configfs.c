@@ -11,7 +11,10 @@
 *
  ****************************************************************************/
 
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <linux/utsname.h>
@@ -830,12 +833,17 @@ static ssize_t target_fabric_tpg_base_enable_store(struct config_item *item,
 	int ret;
 	bool op;
 
+<<<<<<< HEAD
 	ret = kstrtobool(page, &op);
+=======
+	ret = strtobool(page, &op);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
 	if (se_tpg->enabled == op)
 		return count;
+<<<<<<< HEAD
 	if (op)
 		ret = target_tpg_enable(se_tpg);
 	else
@@ -873,19 +881,34 @@ static ssize_t target_fabric_tpg_base_rtpi_store(struct config_item *item,
 
 	se_tpg->tpg_rtpi = val;
 	se_tpg->rtpi_manual = true;
+=======
+
+	ret = se_tpg->se_tpg_tfo->fabric_enable_tpg(se_tpg, op);
+	if (ret)
+		return ret;
+
+	se_tpg->enabled = op;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return count;
 }
 
 CONFIGFS_ATTR(target_fabric_tpg_base_, enable);
+<<<<<<< HEAD
 CONFIGFS_ATTR(target_fabric_tpg_base_, rtpi);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int
 target_fabric_setup_tpg_base_cit(struct target_fabric_configfs *tf)
 {
 	struct config_item_type *cit = &tf->tf_tpg_base_cit;
 	struct configfs_attribute **attrs = NULL;
+<<<<<<< HEAD
 	size_t nr_attrs = 1;
+=======
+	size_t nr_attrs = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int i = 0;
 
 	if (tf->tf_ops->tfc_tpg_base_attrs)
@@ -908,9 +931,13 @@ target_fabric_setup_tpg_base_cit(struct target_fabric_configfs *tf)
 			attrs[i] = tf->tf_ops->tfc_tpg_base_attrs[i];
 
 	if (tf->tf_ops->fabric_enable_tpg)
+<<<<<<< HEAD
 		attrs[i++] = &target_fabric_tpg_base_attr_enable;
 
 	attrs[i++] = &target_fabric_tpg_base_attr_rtpi;
+=======
+		attrs[i] = &target_fabric_tpg_base_attr_enable;
+>>>>>>> b7ba80a49124 (Commit)
 
 done:
 	cit->ct_item_ops = &target_fabric_tpg_base_item_ops;

@@ -19,6 +19,7 @@ config GOOGLE_SMI
 	  driver provides an interface for reading and writing NVRAM
 	  variables.
 
+<<<<<<< HEAD
 config GOOGLE_CBMEM
 	tristate "CBMEM entries in sysfs"
 	depends on GOOGLE_COREBOOT_TABLE
@@ -34,6 +35,8 @@ config GOOGLE_CBMEM
 	  memory for each entry in sysfs under
 	  /sys/bus/coreboot/devices/cbmem-<id>.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config GOOGLE_COREBOOT_TABLE
 	tristate "Coreboot Table Access"
 	depends on HAS_IOMEM && (ACPI || OF)
@@ -44,6 +47,17 @@ config GOOGLE_COREBOOT_TABLE
 	  device tree node /firmware/coreboot.
 	  If unsure say N.
 
+<<<<<<< HEAD
+=======
+config GOOGLE_COREBOOT_TABLE_ACPI
+	tristate
+	select GOOGLE_COREBOOT_TABLE
+
+config GOOGLE_COREBOOT_TABLE_OF
+	tristate
+	select GOOGLE_COREBOOT_TABLE
+
+>>>>>>> b7ba80a49124 (Commit)
 config GOOGLE_MEMCONSOLE
 	tristate
 	depends on GOOGLE_MEMCONSOLE_X86_LEGACY || GOOGLE_MEMCONSOLE_COREBOOT

@@ -126,7 +126,11 @@ static void via_rtc_send(__u8 data)
 
 	reg = via1[vBufB] & ~(VIA1B_vRTCClk | VIA1B_vRTCData);
 
+<<<<<<< HEAD
 	/* The bits of the byte go into the RTC in MSB order */
+=======
+	/* The bits of the byte go in in MSB order */
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0 ; i < 8 ; i++) {
 		bit = data & 0x80? 1 : 0;

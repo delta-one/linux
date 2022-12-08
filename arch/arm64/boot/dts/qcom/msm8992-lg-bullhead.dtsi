@@ -1,9 +1,15 @@
 // SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 /*
  * Copyright (c) 2015, LGE Inc. All rights reserved.
  * Copyright (c) 2016, The Linux Foundation. All rights reserved.
  * Copyright (c) 2021-2022, Petr Vorel <petr.vorel@gmail.com>
  * Copyright (c) 2022, Dominik Kobinski <dominikkobinski314@gmail.com>
+=======
+/* Copyright (c) 2015, LGE Inc. All rights reserved.
+ * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2021, Petr Vorel <petr.vorel@gmail.com>
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 /dts-v1/;
@@ -15,9 +21,12 @@
 /* cont_splash_mem has different memory mapping */
 /delete-node/ &cont_splash_mem;
 
+<<<<<<< HEAD
 /* disabled on downstream, conflicts with cont_splash_mem */
 /delete-node/ &dfps_data_mem;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 / {
 	model = "LG Nexus 5X";
 	compatible = "lg,bullhead", "qcom,msm8992";
@@ -52,6 +61,7 @@
 		};
 
 		cont_splash_mem: memory@3400000 {
+<<<<<<< HEAD
 			reg = <0 0x03400000 0 0xc00000>;
 			no-map;
 		};
@@ -63,6 +73,9 @@
 
 		reserved@6c00000 {
 			reg = <0x0 0x06c00000 0x0 0x400000>;
+=======
+			reg = <0 0x03400000 0 0x1200000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 	};
@@ -73,7 +86,11 @@
 };
 
 &rpm_requests {
+<<<<<<< HEAD
 	pm8994_regulators: regulators-0 {
+=======
+	pm8994_regulators: pm8994-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pm8994-regulators";
 
 		vdd_l1-supply = <&pm8994_s1>;
@@ -94,8 +111,13 @@
 		/* S1, S2, S6 and S12 are managed by RPMPD */
 
 		pm8994_s1: s1 {
+<<<<<<< HEAD
 			regulator-min-microvolt = <1025000>;
 			regulator-max-microvolt = <1025000>;
+=======
+			regulator-min-microvolt = <800000>;
+			regulator-max-microvolt = <800000>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		pm8994_s2: s2 {
@@ -251,8 +273,14 @@
 		};
 
 		pm8994_l26: l26 {
+<<<<<<< HEAD
 			regulator-min-microvolt = <987500>;
 			regulator-max-microvolt = <987500>;
+=======
+			/* TODO: value from downstream
+			regulator-min-microvolt = <987500>;
+			fails to apply */
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		pm8994_l27: l27 {
@@ -266,6 +294,7 @@
 		};
 
 		pm8994_l29: l29 {
+<<<<<<< HEAD
 			regulator-min-microvolt = <2800000>;
 			regulator-max-microvolt = <2800000>;
 		};
@@ -273,6 +302,21 @@
 		pm8994_l30: l30 {
 			regulator-min-microvolt = <1800000>;
 			regulator-max-microvolt = <1800000>;
+=======
+			/* TODO: Unsupported voltage range.
+			regulator-min-microvolt = <2800000>;
+			regulator-max-microvolt = <2800000>;
+			qcom,init-voltage = <2800000>;
+			*/
+		};
+
+		pm8994_l30: l30 {
+			/* TODO: get this verified
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <1800000>;
+			qcom,init-voltage = <1800000>;
+			*/
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		pm8994_l31: l31 {
@@ -281,12 +325,24 @@
 		};
 
 		pm8994_l32: l32 {
+<<<<<<< HEAD
 			regulator-min-microvolt = <1800000>;
 			regulator-max-microvolt = <1800000>;
 		};
 	};
 
 	pmi8994_regulators: regulators-1 {
+=======
+			/* TODO: get this verified
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <1800000>;
+			qcom,init-voltage = <1800000>;
+			*/
+		};
+	};
+
+	pmi8994_regulators: pmi8994-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pmi8994-regulators";
 
 		vdd_s1-supply = <&vph_pwr>;

@@ -1189,14 +1189,22 @@ static struct snd_soc_dai_driver fsl_ssi_ac97_dai = {
 	.symmetric_channels = 1,
 	.probe = fsl_ssi_dai_probe,
 	.playback = {
+<<<<<<< HEAD
 		.stream_name = "CPU AC97 Playback",
+=======
+		.stream_name = "AC97 Playback",
+>>>>>>> b7ba80a49124 (Commit)
 		.channels_min = 2,
 		.channels_max = 2,
 		.rates = SNDRV_PCM_RATE_8000_48000,
 		.formats = SNDRV_PCM_FMTBIT_S16 | SNDRV_PCM_FMTBIT_S20,
 	},
 	.capture = {
+<<<<<<< HEAD
 		.stream_name = "CPU AC97 Capture",
+=======
+		.stream_name = "AC97 Capture",
+>>>>>>> b7ba80a49124 (Commit)
 		.channels_min = 2,
 		.channels_max = 2,
 		.rates = SNDRV_PCM_RATE_48000,
@@ -1447,7 +1455,11 @@ static int fsl_ssi_probe_from_dt(struct fsl_ssi *ssi)
 			return -EINVAL;
 		}
 		strcpy(ssi->card_name, "ac97-codec");
+<<<<<<< HEAD
 	} else if (!of_property_read_bool(np, "fsl,ssi-asynchronous")) {
+=======
+	} else if (!of_find_property(np, "fsl,ssi-asynchronous", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * In synchronous mode, STCK and STFS ports are used by RX
 		 * as well. So the software should limit the sample rates,
@@ -1671,7 +1683,11 @@ error_ac97_ops:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void fsl_ssi_remove(struct platform_device *pdev)
+=======
+static int fsl_ssi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fsl_ssi *ssi = dev_get_drvdata(&pdev->dev);
 
@@ -1690,6 +1706,11 @@ static void fsl_ssi_remove(struct platform_device *pdev)
 		snd_soc_set_ac97_ops(NULL);
 		mutex_destroy(&ssi->ac97_reg_lock);
 	}
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -1735,7 +1756,11 @@ static struct platform_driver fsl_ssi_driver = {
 		.pm = &fsl_ssi_pm,
 	},
 	.probe = fsl_ssi_probe,
+<<<<<<< HEAD
 	.remove_new = fsl_ssi_remove,
+=======
+	.remove = fsl_ssi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(fsl_ssi_driver);

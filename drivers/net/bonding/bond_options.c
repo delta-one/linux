@@ -842,6 +842,22 @@ static bool bond_set_xfrm_features(struct bonding *bond)
 	return true;
 }
 
+<<<<<<< HEAD
+=======
+static bool bond_set_tls_features(struct bonding *bond)
+{
+	if (!IS_ENABLED(CONFIG_TLS_DEVICE))
+		return false;
+
+	if (bond_sk_check(bond))
+		bond->dev->wanted_features |= BOND_TLS_FEATURES;
+	else
+		bond->dev->wanted_features &= ~BOND_TLS_FEATURES;
+
+	return true;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int bond_option_mode_set(struct bonding *bond,
 				const struct bond_opt_value *newval)
 {
@@ -872,6 +888,10 @@ static int bond_option_mode_set(struct bonding *bond,
 		bool update = false;
 
 		update |= bond_set_xfrm_features(bond);
+<<<<<<< HEAD
+=======
+		update |= bond_set_tls_features(bond);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (update)
 			netdev_update_features(bond->dev);
@@ -1404,6 +1424,13 @@ static int bond_option_xmit_hash_policy_set(struct bonding *bond,
 		   newval->string, newval->value);
 	bond->params.xmit_policy = newval->value;
 
+<<<<<<< HEAD
+=======
+	if (bond->dev->reg_state == NETREG_REGISTERED)
+		if (bond_set_tls_features(bond))
+			netdev_update_features(bond->dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

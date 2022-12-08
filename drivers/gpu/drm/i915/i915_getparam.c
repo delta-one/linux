@@ -175,11 +175,16 @@ int i915_getparam_ioctl(struct drm_device *dev, void *data,
 	case I915_PARAM_PERF_REVISION:
 		value = i915_perf_ioctl_version();
 		break;
+<<<<<<< HEAD
 	case I915_PARAM_OA_TIMESTAMP_FREQUENCY:
 		value = i915_perf_oa_timestamp_frequency(i915);
 		break;
 	default:
 		drm_dbg(&i915->drm, "Unknown parameter %d\n", param->param);
+=======
+	default:
+		DRM_DEBUG("Unknown parameter %d\n", param->param);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 

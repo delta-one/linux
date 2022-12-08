@@ -153,6 +153,7 @@
  * situation when probing.
  */
 
+<<<<<<< HEAD
 /**
  * DOC: dsi bridge operations
  *
@@ -192,6 +193,8 @@
  * driver.
  */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static DEFINE_MUTEX(bridge_lock);
 static LIST_HEAD(bridge_list);
 
@@ -549,6 +552,64 @@ drm_bridge_chain_mode_valid(struct drm_bridge *bridge,
 EXPORT_SYMBOL(drm_bridge_chain_mode_valid);
 
 /**
+<<<<<<< HEAD
+=======
+ * drm_bridge_chain_disable - disables all bridges in the encoder chain
+ * @bridge: bridge control structure
+ *
+ * Calls &drm_bridge_funcs.disable op for all the bridges in the encoder
+ * chain, starting from the last bridge to the first. These are called before
+ * calling the encoder's prepare op.
+ *
+ * Note: the bridge passed should be the one closest to the encoder
+ */
+void drm_bridge_chain_disable(struct drm_bridge *bridge)
+{
+	struct drm_encoder *encoder;
+	struct drm_bridge *iter;
+
+	if (!bridge)
+		return;
+
+	encoder = bridge->encoder;
+	list_for_each_entry_reverse(iter, &encoder->bridge_chain, chain_node) {
+		if (iter->funcs->disable)
+			iter->funcs->disable(iter);
+
+		if (iter == bridge)
+			break;
+	}
+}
+EXPORT_SYMBOL(drm_bridge_chain_disable);
+
+/**
+ * drm_bridge_chain_post_disable - cleans up after disabling all bridges in the
+ *				   encoder chain
+ * @bridge: bridge control structure
+ *
+ * Calls &drm_bridge_funcs.post_disable op for all the bridges in the
+ * encoder chain, starting from the first bridge to the last. These are called
+ * after completing the encoder's prepare op.
+ *
+ * Note: the bridge passed should be the one closest to the encoder
+ */
+void drm_bridge_chain_post_disable(struct drm_bridge *bridge)
+{
+	struct drm_encoder *encoder;
+
+	if (!bridge)
+		return;
+
+	encoder = bridge->encoder;
+	list_for_each_entry_from(bridge, &encoder->bridge_chain, chain_node) {
+		if (bridge->funcs->post_disable)
+			bridge->funcs->post_disable(bridge);
+	}
+}
+EXPORT_SYMBOL(drm_bridge_chain_post_disable);
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * drm_bridge_chain_mode_set - set proposed mode for all bridges in the
  *			       encoder chain
  * @bridge: bridge control structure
@@ -578,6 +639,64 @@ void drm_bridge_chain_mode_set(struct drm_bridge *bridge,
 EXPORT_SYMBOL(drm_bridge_chain_mode_set);
 
 /**
+<<<<<<< HEAD
+=======
+ * drm_bridge_chain_pre_enable - prepares for enabling all bridges in the
+ *				 encoder chain
+ * @bridge: bridge control structure
+ *
+ * Calls &drm_bridge_funcs.pre_enable op for all the bridges in the encoder
+ * chain, starting from the last bridge to the first. These are called
+ * before calling the encoder's commit op.
+ *
+ * Note: the bridge passed should be the one closest to the encoder
+ */
+void drm_bridge_chain_pre_enable(struct drm_bridge *bridge)
+{
+	struct drm_encoder *encoder;
+	struct drm_bridge *iter;
+
+	if (!bridge)
+		return;
+
+	encoder = bridge->encoder;
+	list_for_each_entry_reverse(iter, &encoder->bridge_chain, chain_node) {
+		if (iter->funcs->pre_enable)
+			iter->funcs->pre_enable(iter);
+
+		if (iter == bridge)
+			break;
+	}
+}
+EXPORT_SYMBOL(drm_bridge_chain_pre_enable);
+
+/**
+ * drm_bridge_chain_enable - enables all bridges in the encoder chain
+ * @bridge: bridge control structure
+ *
+ * Calls &drm_bridge_funcs.enable op for all the bridges in the encoder
+ * chain, starting from the first bridge to the last. These are called
+ * after completing the encoder's commit op.
+ *
+ * Note that the bridge passed should be the one closest to the encoder
+ */
+void drm_bridge_chain_enable(struct drm_bridge *bridge)
+{
+	struct drm_encoder *encoder;
+
+	if (!bridge)
+		return;
+
+	encoder = bridge->encoder;
+	list_for_each_entry_from(bridge, &encoder->bridge_chain, chain_node) {
+		if (bridge->funcs->enable)
+			bridge->funcs->enable(bridge);
+	}
+}
+EXPORT_SYMBOL(drm_bridge_chain_enable);
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * drm_atomic_bridge_chain_disable - disables all bridges in the encoder chain
  * @bridge: bridge control structure
  * @old_state: old atomic state
@@ -620,6 +739,7 @@ void drm_atomic_bridge_chain_disable(struct drm_bridge *bridge,
 }
 EXPORT_SYMBOL(drm_atomic_bridge_chain_disable);
 
+<<<<<<< HEAD
 static void drm_atomic_bridge_call_post_disable(struct drm_bridge *bridge,
 						struct drm_atomic_state *old_state)
 {
@@ -639,6 +759,8 @@ static void drm_atomic_bridge_call_post_disable(struct drm_bridge *bridge,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * drm_atomic_bridge_chain_post_disable - cleans up after disabling all bridges
  *					  in the encoder chain
@@ -650,22 +772,29 @@ static void drm_atomic_bridge_call_post_disable(struct drm_bridge *bridge,
  * starting from the first bridge to the last. These are called after completing
  * &drm_encoder_helper_funcs.atomic_disable
  *
+<<<<<<< HEAD
  * If a bridge sets @pre_enable_prev_first, then the @post_disable for that
  * bridge will be called before the previous one to reverse the @pre_enable
  * calling direction.
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Note: the bridge passed should be the one closest to the encoder
  */
 void drm_atomic_bridge_chain_post_disable(struct drm_bridge *bridge,
 					  struct drm_atomic_state *old_state)
 {
 	struct drm_encoder *encoder;
+<<<<<<< HEAD
 	struct drm_bridge *next, *limit;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!bridge)
 		return;
 
 	encoder = bridge->encoder;
+<<<<<<< HEAD
 
 	list_for_each_entry_from(bridge, &encoder->bridge_chain, chain_node) {
 		limit = NULL;
@@ -708,10 +837,28 @@ void drm_atomic_bridge_chain_post_disable(struct drm_bridge *bridge,
 		if (limit)
 			/* Jump all bridges that we have already post_disabled */
 			bridge = limit;
+=======
+	list_for_each_entry_from(bridge, &encoder->bridge_chain, chain_node) {
+		if (bridge->funcs->atomic_post_disable) {
+			struct drm_bridge_state *old_bridge_state;
+
+			old_bridge_state =
+				drm_atomic_get_old_bridge_state(old_state,
+								bridge);
+			if (WARN_ON(!old_bridge_state))
+				return;
+
+			bridge->funcs->atomic_post_disable(bridge,
+							   old_bridge_state);
+		} else if (bridge->funcs->post_disable) {
+			bridge->funcs->post_disable(bridge);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 EXPORT_SYMBOL(drm_atomic_bridge_chain_post_disable);
 
+<<<<<<< HEAD
 static void drm_atomic_bridge_call_pre_enable(struct drm_bridge *bridge,
 					      struct drm_atomic_state *old_state)
 {
@@ -730,6 +877,8 @@ static void drm_atomic_bridge_call_pre_enable(struct drm_bridge *bridge,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * drm_atomic_bridge_chain_pre_enable - prepares for enabling all bridges in
  *					the encoder chain
@@ -741,21 +890,29 @@ static void drm_atomic_bridge_call_pre_enable(struct drm_bridge *bridge,
  * starting from the last bridge to the first. These are called before calling
  * &drm_encoder_helper_funcs.atomic_enable
  *
+<<<<<<< HEAD
  * If a bridge sets @pre_enable_prev_first, then the pre_enable for the
  * prev bridge will be called before pre_enable of this bridge.
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Note: the bridge passed should be the one closest to the encoder
  */
 void drm_atomic_bridge_chain_pre_enable(struct drm_bridge *bridge,
 					struct drm_atomic_state *old_state)
 {
 	struct drm_encoder *encoder;
+<<<<<<< HEAD
 	struct drm_bridge *iter, *next, *limit;
+=======
+	struct drm_bridge *iter;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!bridge)
 		return;
 
 	encoder = bridge->encoder;
+<<<<<<< HEAD
 
 	list_for_each_entry_reverse(iter, &encoder->bridge_chain, chain_node) {
 		if (iter->pre_enable_prev_first) {
@@ -796,6 +953,23 @@ void drm_atomic_bridge_chain_pre_enable(struct drm_bridge *bridge,
 			/* Jump all bridges that we have already pre_enabled */
 			iter = limit;
 
+=======
+	list_for_each_entry_reverse(iter, &encoder->bridge_chain, chain_node) {
+		if (iter->funcs->atomic_pre_enable) {
+			struct drm_bridge_state *old_bridge_state;
+
+			old_bridge_state =
+				drm_atomic_get_old_bridge_state(old_state,
+								iter);
+			if (WARN_ON(!old_bridge_state))
+				return;
+
+			iter->funcs->atomic_pre_enable(iter, old_bridge_state);
+		} else if (iter->funcs->pre_enable) {
+			iter->funcs->pre_enable(iter);
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (iter == bridge)
 			break;
 	}

@@ -3,7 +3,10 @@
 #define __LOCKD_NETNS_H__
 
 #include <linux/fs.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/netns/generic.h>
 
 struct lockd_net {

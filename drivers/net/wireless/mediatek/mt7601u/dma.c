@@ -123,8 +123,12 @@ static u16 mt7601u_rx_next_seg_len(u8 *data, u32 data_len)
 	if (data_len < min_seg_len ||
 	    WARN_ON_ONCE(!dma_len) ||
 	    WARN_ON_ONCE(dma_len + MT_DMA_HDRS > data_len) ||
+<<<<<<< HEAD
 	    WARN_ON_ONCE(dma_len & 0x3) ||
 	    WARN_ON_ONCE(dma_len < min_seg_len))
+=======
+	    WARN_ON_ONCE(dma_len & 0x3))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	return MT_DMA_HDRS + dma_len;

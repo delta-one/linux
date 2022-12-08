@@ -124,16 +124,27 @@ int frwr_mr_init(struct rpcrdma_xprt *r_xprt, struct rpcrdma_mr *mr)
 	unsigned int depth = ep->re_max_fr_depth;
 	struct scatterlist *sg;
 	struct ib_mr *frmr;
+<<<<<<< HEAD
 
 	sg = kcalloc_node(depth, sizeof(*sg), XPRTRDMA_GFP_FLAGS,
 			  ibdev_to_node(ep->re_id->device));
 	if (!sg)
 		return -ENOMEM;
+=======
+	int rc;
+>>>>>>> b7ba80a49124 (Commit)
 
 	frmr = ib_alloc_mr(ep->re_pd, ep->re_mrtype, depth);
 	if (IS_ERR(frmr))
 		goto out_mr_err;
 
+<<<<<<< HEAD
+=======
+	sg = kmalloc_array(depth, sizeof(*sg), GFP_KERNEL);
+	if (!sg)
+		goto out_list_err;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mr->mr_xprt = r_xprt;
 	mr->mr_ibmr = frmr;
 	mr->mr_device = NULL;
@@ -146,9 +157,19 @@ int frwr_mr_init(struct rpcrdma_xprt *r_xprt, struct rpcrdma_mr *mr)
 	return 0;
 
 out_mr_err:
+<<<<<<< HEAD
 	kfree(sg);
 	trace_xprtrdma_frwr_alloc(mr, PTR_ERR(frmr));
 	return PTR_ERR(frmr);
+=======
+	rc = PTR_ERR(frmr);
+	trace_xprtrdma_frwr_alloc(mr, rc);
+	return rc;
+
+out_list_err:
+	ib_dereg_mr(frmr);
+	return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

@@ -74,12 +74,16 @@
 #define DFH_REVISION		GENMASK_ULL(15, 12)	/* Feature revision */
 #define DFH_NEXT_HDR_OFST	GENMASK_ULL(39, 16)	/* Offset to next DFH */
 #define DFH_EOL			BIT_ULL(40)		/* End of list */
+<<<<<<< HEAD
 #define DFH_VERSION		GENMASK_ULL(59, 52)	/* DFH version */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DFH_TYPE		GENMASK_ULL(63, 60)	/* Feature type */
 #define DFH_TYPE_AFU		1
 #define DFH_TYPE_PRIVATE	3
 #define DFH_TYPE_FIU		4
 
+<<<<<<< HEAD
 /*
  * DFHv1 Register Offset definitons
  * In DHFv1, DFH + GUID + CSR_START + CSR_SIZE_GROUP + PARAM_HDR + PARAM_DATA
@@ -115,6 +119,8 @@
 #define DFHv1_PARAM_MSI_X_NUMV		GENMASK_ULL(63, 32)
 #define DFHv1_PARAM_MSI_X_STARTV	GENMASK_ULL(31, 0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Next AFU Register Bitfield */
 #define NEXT_AFU_NEXT_DFH_OFST	GENMASK_ULL(23, 0)	/* Offset to next AFU */
 
@@ -267,7 +273,10 @@ struct dfl_feature_irq_ctx {
  *
  * @dev: ptr to pdev of the feature device which has the sub feature.
  * @id: sub feature id.
+<<<<<<< HEAD
  * @revision: revision of this sub feature.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @resource_index: each sub feature has one mmio resource for its registers.
  *		    this index is used to find its mmio resource from the
  *		    feature dev (platform device)'s resources.
@@ -277,9 +286,12 @@ struct dfl_feature_irq_ctx {
  * @ops: ops of this sub feature.
  * @ddev: ptr to the dfl device of this sub feature.
  * @priv: priv data of this feature.
+<<<<<<< HEAD
  * @dfh_version: version of the DFH
  * @param_size: size of dfh parameters
  * @params: point to memory copy of dfh parameters
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct dfl_feature {
 	struct platform_device *dev;
@@ -292,9 +304,12 @@ struct dfl_feature {
 	const struct dfl_feature_ops *ops;
 	struct dfl_device *ddev;
 	void *priv;
+<<<<<<< HEAD
 	u8 dfh_version;
 	unsigned int param_size;
 	void *params;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define FEATURE_DEV_ID_UNUSED	(-1)

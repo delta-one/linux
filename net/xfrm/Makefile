@@ -3,6 +3,7 @@
 # Makefile for the XFRM subsystem.
 #
 
+<<<<<<< HEAD
 xfrm_interface-$(CONFIG_XFRM_INTERFACE) += xfrm_interface_core.o
 
 ifeq ($(CONFIG_XFRM_INTERFACE),m)
@@ -11,6 +12,8 @@ else ifeq ($(CONFIG_XFRM_INTERFACE),y)
 xfrm_interface-$(CONFIG_DEBUG_INFO_BTF) += xfrm_interface_bpf.o
 endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_XFRM) := xfrm_policy.o xfrm_state.o xfrm_hash.o \
 		      xfrm_input.o xfrm_output.o \
 		      xfrm_sysctl.o xfrm_replay.o xfrm_device.o

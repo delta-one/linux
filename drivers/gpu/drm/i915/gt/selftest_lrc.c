@@ -452,7 +452,13 @@ retry:
 	*cs++ = i915_ggtt_offset(scratch) + RING_TAIL_IDX * sizeof(u32);
 	*cs++ = 0;
 
+<<<<<<< HEAD
 	err = i915_vma_move_to_active(scratch, rq, EXEC_OBJECT_WRITE);
+=======
+	err = i915_request_await_object(rq, scratch->obj, true);
+	if (!err)
+		err = i915_vma_move_to_active(scratch, rq, EXEC_OBJECT_WRITE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	i915_request_get(rq);
 	i915_request_add(rq);
@@ -599,7 +605,15 @@ __gpr_read(struct intel_context *ce, struct i915_vma *scratch, u32 *slot)
 		*cs++ = 0;
 	}
 
+<<<<<<< HEAD
 	err = igt_vma_move_to_active_unlocked(scratch, rq, EXEC_OBJECT_WRITE);
+=======
+	i915_vma_lock(scratch);
+	err = i915_request_await_object(rq, scratch->obj, true);
+	if (!err)
+		err = i915_vma_move_to_active(scratch, rq, EXEC_OBJECT_WRITE);
+	i915_vma_unlock(scratch);
+>>>>>>> b7ba80a49124 (Commit)
 
 	i915_request_get(rq);
 	i915_request_add(rq);
@@ -1028,8 +1042,13 @@ store_context(struct intel_context *ce, struct i915_vma *scratch)
 		while (len--) {
 			*cs++ = MI_STORE_REGISTER_MEM_GEN8;
 			*cs++ = hw[dw];
+<<<<<<< HEAD
 			*cs++ = lower_32_bits(i915_vma_offset(scratch) + x);
 			*cs++ = upper_32_bits(i915_vma_offset(scratch) + x);
+=======
+			*cs++ = lower_32_bits(scratch->node.start + x);
+			*cs++ = upper_32_bits(scratch->node.start + x);
+>>>>>>> b7ba80a49124 (Commit)
 
 			dw += 2;
 			x += 4;
@@ -1047,6 +1066,24 @@ store_context(struct intel_context *ce, struct i915_vma *scratch)
 	return batch;
 }
 
+<<<<<<< HEAD
+=======
+static int move_to_active(struct i915_request *rq,
+			  struct i915_vma *vma,
+			  unsigned int flags)
+{
+	int err;
+
+	i915_vma_lock(vma);
+	err = i915_request_await_object(rq, vma->obj, flags);
+	if (!err)
+		err = i915_vma_move_to_active(vma, rq, flags);
+	i915_vma_unlock(vma);
+
+	return err;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct i915_request *
 record_registers(struct intel_context *ce,
 		 struct i915_vma *before,
@@ -1072,6 +1109,7 @@ record_registers(struct intel_context *ce,
 	if (IS_ERR(rq))
 		goto err_after;
 
+<<<<<<< HEAD
 	err = igt_vma_move_to_active_unlocked(before, rq, EXEC_OBJECT_WRITE);
 	if (err)
 		goto err_rq;
@@ -1085,6 +1123,21 @@ record_registers(struct intel_context *ce,
 		goto err_rq;
 
 	err = igt_vma_move_to_active_unlocked(b_after, rq, 0);
+=======
+	err = move_to_active(rq, before, EXEC_OBJECT_WRITE);
+	if (err)
+		goto err_rq;
+
+	err = move_to_active(rq, b_before, 0);
+	if (err)
+		goto err_rq;
+
+	err = move_to_active(rq, after, EXEC_OBJECT_WRITE);
+	if (err)
+		goto err_rq;
+
+	err = move_to_active(rq, b_after, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto err_rq;
 
@@ -1096,8 +1149,13 @@ record_registers(struct intel_context *ce,
 
 	*cs++ = MI_ARB_ON_OFF | MI_ARB_DISABLE;
 	*cs++ = MI_BATCH_BUFFER_START_GEN8 | BIT(8);
+<<<<<<< HEAD
 	*cs++ = lower_32_bits(i915_vma_offset(b_before));
 	*cs++ = upper_32_bits(i915_vma_offset(b_before));
+=======
+	*cs++ = lower_32_bits(b_before->node.start);
+	*cs++ = upper_32_bits(b_before->node.start);
+>>>>>>> b7ba80a49124 (Commit)
 
 	*cs++ = MI_ARB_ON_OFF | MI_ARB_ENABLE;
 	*cs++ = MI_SEMAPHORE_WAIT |
@@ -1112,8 +1170,13 @@ record_registers(struct intel_context *ce,
 
 	*cs++ = MI_ARB_ON_OFF | MI_ARB_DISABLE;
 	*cs++ = MI_BATCH_BUFFER_START_GEN8 | BIT(8);
+<<<<<<< HEAD
 	*cs++ = lower_32_bits(i915_vma_offset(b_after));
 	*cs++ = upper_32_bits(i915_vma_offset(b_after));
+=======
+	*cs++ = lower_32_bits(b_after->node.start);
+	*cs++ = upper_32_bits(b_after->node.start);
+>>>>>>> b7ba80a49124 (Commit)
 
 	intel_ring_advance(rq, cs);
 
@@ -1222,7 +1285,11 @@ static int poison_registers(struct intel_context *ce, u32 poison, u32 *sema)
 		goto err_batch;
 	}
 
+<<<<<<< HEAD
 	err = igt_vma_move_to_active_unlocked(batch, rq, 0);
+=======
+	err = move_to_active(rq, batch, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto err_rq;
 
@@ -1234,8 +1301,13 @@ static int poison_registers(struct intel_context *ce, u32 poison, u32 *sema)
 
 	*cs++ = MI_ARB_ON_OFF | MI_ARB_DISABLE;
 	*cs++ = MI_BATCH_BUFFER_START_GEN8 | BIT(8);
+<<<<<<< HEAD
 	*cs++ = lower_32_bits(i915_vma_offset(batch));
 	*cs++ = upper_32_bits(i915_vma_offset(batch));
+=======
+	*cs++ = lower_32_bits(batch->node.start);
+	*cs++ = upper_32_bits(batch->node.start);
+>>>>>>> b7ba80a49124 (Commit)
 
 	*cs++ = MI_STORE_DWORD_IMM_GEN4 | MI_USE_GGTT;
 	*cs++ = i915_ggtt_offset(ce->engine->status_page.vma) +

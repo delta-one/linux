@@ -209,7 +209,11 @@ __remove_wait_queue(struct wait_queue_head *wq_head, struct wait_queue_entry *wq
 	list_del(&wq_entry->entry);
 }
 
+<<<<<<< HEAD
 int __wake_up(struct wait_queue_head *wq_head, unsigned int mode, int nr, void *key);
+=======
+void __wake_up(struct wait_queue_head *wq_head, unsigned int mode, int nr, void *key);
+>>>>>>> b7ba80a49124 (Commit)
 void __wake_up_locked_key(struct wait_queue_head *wq_head, unsigned int mode, void *key);
 void __wake_up_locked_key_bookmark(struct wait_queue_head *wq_head,
 		unsigned int mode, void *key, wait_queue_entry_t *bookmark);
@@ -281,7 +285,11 @@ static inline void wake_up_pollfree(struct wait_queue_head *wq_head)
 
 #define ___wait_is_interruptible(state)						\
 	(!__builtin_constant_p(state) ||					\
+<<<<<<< HEAD
 	 (state & (TASK_INTERRUPTIBLE | TASK_WAKEKILL)))
+=======
+		state == TASK_INTERRUPTIBLE || state == TASK_KILLABLE)		\
+>>>>>>> b7ba80a49124 (Commit)
 
 extern void init_wait_entry(struct wait_queue_entry *wq_entry, int flags);
 

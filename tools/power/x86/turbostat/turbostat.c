@@ -3,7 +3,11 @@
  * turbostat -- show CPU frequency and C-state residency
  * on modern Intel and AMD processors.
  *
+<<<<<<< HEAD
  * Copyright (c) 2023 Intel Corporation.
+=======
+ * Copyright (c) 2022 Intel Corporation.
+>>>>>>> b7ba80a49124 (Commit)
  * Len Brown <len.brown@intel.com>
  */
 
@@ -230,7 +234,10 @@ unsigned int do_slm_cstates;
 unsigned int use_c1_residency_msr;
 unsigned int has_aperf;
 unsigned int has_epb;
+<<<<<<< HEAD
 unsigned int has_turbo;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 unsigned int is_hybrid;
 unsigned int do_irtl_snb;
 unsigned int do_irtl_hsw;
@@ -670,7 +677,11 @@ static int perf_instr_count_open(int cpu_num)
 	/* counter for cpu_num, including user + kernel and all processes */
 	fd = perf_event_open(&pea, -1, cpu_num, -1, 0);
 	if (fd == -1) {
+<<<<<<< HEAD
 		warnx("capget(CAP_PERFMON) failed, try \"# setcap cap_sys_admin=ep %s\"", progname);
+=======
+		warn("cpu%d: perf instruction counter", cpu_num);
+>>>>>>> b7ba80a49124 (Commit)
 		BIC_NOT_PRESENT(BIC_IPC);
 	}
 
@@ -2538,7 +2549,11 @@ static void dump_turbo_ratio_limits(int trl_msr_offset, int family, int model)
 
 	get_msr(base_cpu, trl_msr_offset, &msr);
 	fprintf(outf, "cpu%d: MSR_%sTURBO_RATIO_LIMIT: 0x%08llx\n",
+<<<<<<< HEAD
 		base_cpu, trl_msr_offset == MSR_SECONDARY_TURBO_RATIO_LIMIT ? "SECONDARY_" : "", msr);
+=======
+		base_cpu, trl_msr_offset == MSR_SECONDARY_TURBO_RATIO_LIMIT ? "SECONDARY" : "", msr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (has_turbo_ratio_group_limits(family, model)) {
 		get_msr(base_cpu, MSR_TURBO_RATIO_LIMIT1, &core_counts);
@@ -3502,6 +3517,12 @@ release_msr:
 /*
  * set_my_sched_priority(pri)
  * return previous
+<<<<<<< HEAD
+=======
+ *
+ * if non-root, do this:
+ * # /sbin/setcap cap_sys_rawio,cap_sys_nice=+ep /usr/bin/turbostat
+>>>>>>> b7ba80a49124 (Commit)
  */
 int set_my_sched_priority(int priority)
 {
@@ -3515,7 +3536,11 @@ int set_my_sched_priority(int priority)
 
 	retval = setpriority(PRIO_PROCESS, 0, priority);
 	if (retval)
+<<<<<<< HEAD
 		errx(retval, "capget(CAP_SYS_NICE) failed,try \"# setcap cap_sys_nice=ep %s\"", progname);
+=======
+		err(retval, "setpriority(%d)", priority);
+>>>>>>> b7ba80a49124 (Commit)
 
 	errno = 0;
 	retval = getpriority(PRIO_PROCESS, 0);
@@ -4078,11 +4103,21 @@ static void remove_underbar(char *s)
 	*to = 0;
 }
 
+<<<<<<< HEAD
 static void dump_turbo_ratio_info(unsigned int family, unsigned int model)
 {
 	if (!has_turbo)
 		return;
 
+=======
+static void dump_cstate_pstate_config_info(unsigned int family, unsigned int model)
+{
+	if (!do_nhm_platform_info)
+		return;
+
+	dump_nhm_platform_info();
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (has_hsw_turbo_ratio_limit(family, model))
 		dump_hsw_turbo_ratio_limits();
 
@@ -4104,6 +4139,7 @@ static void dump_turbo_ratio_info(unsigned int family, unsigned int model)
 
 	if (has_config_tdp(family, model))
 		dump_config_tdp();
+<<<<<<< HEAD
 }
 
 static void dump_cstate_pstate_config_info(unsigned int family, unsigned int model)
@@ -4113,6 +4149,9 @@ static void dump_cstate_pstate_config_info(unsigned int family, unsigned int mod
 
 	dump_nhm_platform_info();
 	dump_turbo_ratio_info(family, model);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	dump_nhm_cst_cfg();
 }
 
@@ -4423,7 +4462,11 @@ int print_hwp(struct thread_data *t, struct core_data *c, struct pkg_data *p)
 
 	fprintf(outf, "cpu%d: MSR_HWP_STATUS: 0x%08llx "
 		"(%sGuaranteed_Perf_Change, %sExcursion_Min)\n",
+<<<<<<< HEAD
 		cpu, msr, ((msr) & 0x1) ? "" : "No-", ((msr) & 0x4) ? "" : "No-");
+=======
+		cpu, msr, ((msr) & 0x1) ? "" : "No-", ((msr) & 0x2) ? "" : "No-");
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -4564,6 +4607,10 @@ static double rapl_dram_energy_units_probe(int model, double rapl_energy_units)
 	case INTEL_FAM6_SKYLAKE_X:	/* SKX */
 	case INTEL_FAM6_XEON_PHI_KNL:	/* KNL */
 	case INTEL_FAM6_ICELAKE_X:	/* ICX */
+<<<<<<< HEAD
+=======
+	case INTEL_FAM6_SAPPHIRERAPIDS_X:	/* SPR */
+>>>>>>> b7ba80a49124 (Commit)
 		return (rapl_dram_energy_units = 15.3 / 1000000);
 	default:
 		return (rapl_energy_units);
@@ -5450,9 +5497,12 @@ unsigned int intel_model_duplicates(unsigned int model)
 	case INTEL_FAM6_ALDERLAKE_N:
 	case INTEL_FAM6_RAPTORLAKE:
 	case INTEL_FAM6_RAPTORLAKE_P:
+<<<<<<< HEAD
 	case INTEL_FAM6_RAPTORLAKE_S:
 	case INTEL_FAM6_METEORLAKE:
 	case INTEL_FAM6_METEORLAKE_L:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return INTEL_FAM6_CANNONLAKE_L;
 
 	case INTEL_FAM6_ATOM_TREMONT_L:
@@ -5460,9 +5510,12 @@ unsigned int intel_model_duplicates(unsigned int model)
 
 	case INTEL_FAM6_ICELAKE_D:
 		return INTEL_FAM6_ICELAKE_X;
+<<<<<<< HEAD
 
 	case INTEL_FAM6_EMERALDRAPIDS_X:
 		return INTEL_FAM6_SAPPHIRERAPIDS_X;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return model;
 }
@@ -5476,13 +5529,21 @@ void print_dev_latency(void)
 
 	fd = open(path, O_RDONLY);
 	if (fd < 0) {
+<<<<<<< HEAD
 		warnx("capget(CAP_SYS_ADMIN) failed, try \"# setcap cap_sys_admin=ep %s\"", progname);
+=======
+		warn("fopen %s\n", path);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
 	retval = read(fd, (void *)&value, sizeof(int));
 	if (retval != sizeof(int)) {
+<<<<<<< HEAD
 		warn("read failed %s", path);
+=======
+		warn("read %s\n", path);
+>>>>>>> b7ba80a49124 (Commit)
 		close(fd);
 		return;
 	}
@@ -5514,6 +5575,10 @@ void process_cpuid()
 {
 	unsigned int eax, ebx, ecx, edx;
 	unsigned int fms, family, model, stepping, ecx_flags, edx_flags;
+<<<<<<< HEAD
+=======
+	unsigned int has_turbo;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long long ucode_patch = 0;
 
 	eax = ebx = ecx = edx = 0;
@@ -5543,7 +5608,11 @@ void process_cpuid()
 	edx_flags = edx;
 
 	if (get_msr(sched_getcpu(), MSR_IA32_UCODE_REV, &ucode_patch))
+<<<<<<< HEAD
 		warnx("get_msr(UCODE)");
+=======
+		warnx("get_msr(UCODE)\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * check max extended function levels of CPUID.
@@ -6225,7 +6294,11 @@ int get_and_dump_counters(void)
 
 void print_version()
 {
+<<<<<<< HEAD
 	fprintf(outf, "turbostat version 2023.03.17 - Len Brown <lenb@kernel.org>\n");
+=======
+	fprintf(outf, "turbostat version 2022.07.28 - Len Brown <lenb@kernel.org>\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define COMMAND_LINE_SIZE 2048

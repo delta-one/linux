@@ -144,7 +144,14 @@ static unsigned long get_ftrace_location(void *func)
 
 static int fprobe_test_init(struct kunit *test)
 {
+<<<<<<< HEAD
 	rand1 = get_random_u32_above(div_factor);
+=======
+	do {
+		rand1 = prandom_u32();
+	} while (rand1 <= div_factor);
+
+>>>>>>> b7ba80a49124 (Commit)
 	target = fprobe_selftest_target;
 	target2 = fprobe_selftest_target2;
 	target_ip = get_ftrace_location(target);
@@ -168,3 +175,7 @@ static struct kunit_suite fprobe_test_suite = {
 
 kunit_test_suites(&fprobe_test_suite);
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

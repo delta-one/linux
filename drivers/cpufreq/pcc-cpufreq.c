@@ -384,7 +384,11 @@ out_free:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int __init pcc_cpufreq_evaluate(void)
+=======
+static int __init pcc_cpufreq_probe(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	acpi_status status;
 	struct acpi_buffer output = {ACPI_ALLOCATE_BUFFER, NULL};
@@ -576,7 +580,11 @@ static struct cpufreq_driver pcc_cpufreq_driver = {
 	.name = "pcc-cpufreq",
 };
 
+<<<<<<< HEAD
 static int __init pcc_cpufreq_probe(struct platform_device *pdev)
+=======
+static int __init pcc_cpufreq_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
@@ -587,9 +595,15 @@ static int __init pcc_cpufreq_probe(struct platform_device *pdev)
 	if (acpi_disabled)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	ret = pcc_cpufreq_evaluate();
 	if (ret) {
 		pr_debug("pcc_cpufreq_probe: PCCH evaluation failed\n");
+=======
+	ret = pcc_cpufreq_probe();
+	if (ret) {
+		pr_debug("pcc_cpufreq_init: PCCH evaluation failed\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 
@@ -607,13 +621,18 @@ static int __init pcc_cpufreq_probe(struct platform_device *pdev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int pcc_cpufreq_remove(struct platform_device *pdev)
+=======
+static void __exit pcc_cpufreq_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	cpufreq_unregister_driver(&pcc_cpufreq_driver);
 
 	pcc_clear_mapping();
 
 	free_percpu(pcc_cpu_info);
+<<<<<<< HEAD
 
 	return 0;
 }
@@ -636,6 +655,16 @@ static void __exit pcc_cpufreq_exit(void)
 }
 
 MODULE_ALIAS("platform:pcc-cpufreq");
+=======
+}
+
+static const struct acpi_device_id __maybe_unused processor_device_ids[] = {
+	{ACPI_PROCESSOR_OBJECT_HID, },
+	{ACPI_PROCESSOR_DEVICE_HID, },
+	{},
+};
+MODULE_DEVICE_TABLE(acpi, processor_device_ids);
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_AUTHOR("Matthew Garrett, Naga Chumbalkar");
 MODULE_VERSION(PCC_VERSION);

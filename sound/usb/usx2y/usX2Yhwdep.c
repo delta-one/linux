@@ -61,7 +61,11 @@ static int snd_us428ctls_mmap(struct snd_hwdep *hw, struct file *filp, struct vm
 	}
 
 	area->vm_ops = &us428ctls_vm_ops;
+<<<<<<< HEAD
 	vm_flags_set(area, VM_DONTEXPAND | VM_DONTDUMP);
+=======
+	area->vm_flags |= VM_DONTEXPAND | VM_DONTDUMP;
+>>>>>>> b7ba80a49124 (Commit)
 	area->vm_private_data = hw->private_data;
 	return 0;
 }

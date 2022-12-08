@@ -55,8 +55,11 @@ struct liointc_priv {
 	struct liointc_handler_data	handler[LIOINTC_NUM_PARENT];
 	void __iomem			*core_isr[LIOINTC_NUM_CORES];
 	u8				map_cache[LIOINTC_CHIP_IRQ];
+<<<<<<< HEAD
 	u32				int_pol;
 	u32				int_edge;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool				has_lpc_irq_errata;
 };
 
@@ -140,6 +143,7 @@ static int liointc_set_type(struct irq_data *data, unsigned int type)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void liointc_suspend(struct irq_chip_generic *gc)
 {
 	struct liointc_priv *priv = gc->private;
@@ -148,6 +152,8 @@ static void liointc_suspend(struct irq_chip_generic *gc)
 	priv->int_edge = readl(gc->reg_base + LIOINTC_REG_INTC_EDGE);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void liointc_resume(struct irq_chip_generic *gc)
 {
 	struct liointc_priv *priv = gc->private;
@@ -160,8 +166,11 @@ static void liointc_resume(struct irq_chip_generic *gc)
 	/* Restore map cache */
 	for (i = 0; i < LIOINTC_CHIP_IRQ; i++)
 		writeb(priv->map_cache[i], gc->reg_base + i);
+<<<<<<< HEAD
 	writel(priv->int_pol, gc->reg_base + LIOINTC_REG_INTC_POL);
 	writel(priv->int_edge, gc->reg_base + LIOINTC_REG_INTC_EDGE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Restore mask cache */
 	writel(gc->mask_cache, gc->reg_base + LIOINTC_REG_INTC_ENABLE);
 	irq_gc_unlock_irqrestore(gc, flags);
@@ -179,12 +188,16 @@ static int liointc_domain_xlate(struct irq_domain *d, struct device_node *ctrlr,
 	if (WARN_ON(intsize < 1))
 		return -EINVAL;
 	*out_hwirq = intspec[0] - GSI_MIN_CPU_IRQ;
+<<<<<<< HEAD
 
 	if (intsize > 1)
 		*out_type = intspec[1] & IRQ_TYPE_SENSE_MASK;
 	else
 		*out_type = IRQ_TYPE_NONE;
 
+=======
+	*out_type = IRQ_TYPE_NONE;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -224,6 +237,7 @@ static int liointc_init(phys_addr_t addr, unsigned long size, int revision,
 					"reg-names", core_reg_names[i]);
 
 			if (index < 0)
+<<<<<<< HEAD
 				continue;
 
 			priv->core_isr[i] = of_iomap(node, index);
@@ -231,6 +245,12 @@ static int liointc_init(phys_addr_t addr, unsigned long size, int revision,
 
 		if (!priv->core_isr[0])
 			goto out_iounmap;
+=======
+				goto out_iounmap;
+
+			priv->core_isr[i] = of_iomap(node, index);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Setup IRQ domain */
@@ -281,7 +301,10 @@ static int liointc_init(phys_addr_t addr, unsigned long size, int revision,
 	gc->private = priv;
 	gc->reg_base = base;
 	gc->domain = domain;
+<<<<<<< HEAD
 	gc->suspend = liointc_suspend;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gc->resume = liointc_resume;
 
 	ct = gc->chip_types;
@@ -370,6 +393,7 @@ IRQCHIP_DECLARE(loongson_liointc_2_0, "loongson,liointc-2.0", liointc_of_init);
 #endif
 
 #ifdef CONFIG_ACPI
+<<<<<<< HEAD
 static int __init htintc_parse_madt(union acpi_subtable_headers *header,
 					const unsigned long end)
 {
@@ -390,6 +414,8 @@ static int __init acpi_cascade_irqdomain_init(void)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int __init liointc_acpi_init(struct irq_domain *parent, struct acpi_madt_lio_pic *acpi_liointc)
 {
 	int ret;
@@ -406,12 +432,18 @@ int __init liointc_acpi_init(struct irq_domain *parent, struct acpi_madt_lio_pic
 		pr_err("Unable to allocate domain handle\n");
 		return -ENOMEM;
 	}
+<<<<<<< HEAD
 
 	ret = liointc_init(acpi_liointc->address, acpi_liointc->size,
 			   1, domain_handle, NULL);
 	if (ret == 0)
 		ret = acpi_cascade_irqdomain_init();
 	else
+=======
+	ret = liointc_init(acpi_liointc->address, acpi_liointc->size,
+			   1, domain_handle, NULL);
+	if (ret)
+>>>>>>> b7ba80a49124 (Commit)
 		irq_domain_free_fwnode(domain_handle);
 
 	return ret;

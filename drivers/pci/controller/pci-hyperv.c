@@ -611,7 +611,24 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
 	return cfg->vector;
 }
 
+<<<<<<< HEAD
 #define hv_msi_prepare		pci_msi_prepare
+=======
+static int hv_msi_prepare(struct irq_domain *domain, struct device *dev,
+			  int nvec, msi_alloc_info_t *info)
+{
+	int ret = pci_msi_prepare(domain, dev, nvec, info);
+
+	/*
+	 * By using the interrupt remapper in the hypervisor IOMMU, contiguous
+	 * CPU vectors is not needed for multi-MSI
+	 */
+	if (info->type == X86_IRQ_ALLOC_TYPE_PCI_MSI)
+		info->flags &= ~X86_IRQ_ALLOC_CONTIGUOUS_VECTORS;
+
+	return ret;
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * hv_arch_irq_unmask() - "Unmask" the IRQ by setting its current
@@ -722,9 +739,15 @@ exit_unlock:
 	 * during hibernation does not matter (at this time all the devices
 	 * have been frozen). Note: the correct affinity info is still updated
 	 * into the irqdata data structure in migrate_one_irq() ->
+<<<<<<< HEAD
 	 * irq_do_set_affinity(), so later when the VM resumes,
 	 * hv_pci_restore_msi_state() is able to correctly restore the
 	 * interrupt with the correct affinity.
+=======
+	 * irq_do_set_affinity() -> hv_set_affinity(), so later when the VM
+	 * resumes, hv_pci_restore_msi_state() is able to correctly restore
+	 * the interrupt with the correct affinity.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	if (!hv_result_success(res) && hbus->state != hv_pcibus_removing)
 		dev_err(&hbus->hdev->device,
@@ -1600,8 +1623,13 @@ out:
 }
 
 static u32 hv_compose_msi_req_v1(
+<<<<<<< HEAD
 	struct pci_create_interrupt *int_pkt,
 	u32 slot, u8 vector, u16 vector_count)
+=======
+	struct pci_create_interrupt *int_pkt, const struct cpumask *affinity,
+	u32 slot, u8 vector, u8 vector_count)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int_pkt->message_type.type = PCI_CREATE_INTERRUPT_MESSAGE;
 	int_pkt->wslot.slot = slot;
@@ -1619,6 +1647,7 @@ static u32 hv_compose_msi_req_v1(
 }
 
 /*
+<<<<<<< HEAD
  * The vCPU selected by hv_compose_multi_msi_req_get_cpu() and
  * hv_compose_msi_req_get_cpu() is a "dummy" vCPU because the final vCPU to be
  * interrupted is specified later in hv_irq_unmask() and communicated to Hyper-V
@@ -1648,6 +1677,8 @@ static u32 hv_compose_msi_req_v1(
  */
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Create MSI w/ dummy vCPU set targeting just one vCPU, overwritten
  * by subsequent retarget in hv_irq_unmask().
  */
@@ -1656,6 +1687,7 @@ static int hv_compose_msi_req_get_cpu(const struct cpumask *affinity)
 	return cpumask_first_and(affinity, cpu_online_mask);
 }
 
+<<<<<<< HEAD
 /*
  * Make sure the dummy vCPU values for multi-MSI don't all point to vCPU0.
  */
@@ -1684,11 +1716,23 @@ static u32 hv_compose_msi_req_v2(
 	struct pci_create_interrupt2 *int_pkt, int cpu,
 	u32 slot, u8 vector, u16 vector_count)
 {
+=======
+static u32 hv_compose_msi_req_v2(
+	struct pci_create_interrupt2 *int_pkt, const struct cpumask *affinity,
+	u32 slot, u8 vector, u8 vector_count)
+{
+	int cpu;
+
+>>>>>>> b7ba80a49124 (Commit)
 	int_pkt->message_type.type = PCI_CREATE_INTERRUPT_MESSAGE2;
 	int_pkt->wslot.slot = slot;
 	int_pkt->int_desc.vector = vector;
 	int_pkt->int_desc.vector_count = vector_count;
 	int_pkt->int_desc.delivery_mode = DELIVERY_MODE;
+<<<<<<< HEAD
+=======
+	cpu = hv_compose_msi_req_get_cpu(affinity);
+>>>>>>> b7ba80a49124 (Commit)
 	int_pkt->int_desc.processor_array[0] =
 		hv_cpu_number_to_vp_number(cpu);
 	int_pkt->int_desc.processor_count = 1;
@@ -1697,15 +1741,27 @@ static u32 hv_compose_msi_req_v2(
 }
 
 static u32 hv_compose_msi_req_v3(
+<<<<<<< HEAD
 	struct pci_create_interrupt3 *int_pkt, int cpu,
 	u32 slot, u32 vector, u16 vector_count)
 {
+=======
+	struct pci_create_interrupt3 *int_pkt, const struct cpumask *affinity,
+	u32 slot, u32 vector, u8 vector_count)
+{
+	int cpu;
+
+>>>>>>> b7ba80a49124 (Commit)
 	int_pkt->message_type.type = PCI_CREATE_INTERRUPT_MESSAGE3;
 	int_pkt->wslot.slot = slot;
 	int_pkt->int_desc.vector = vector;
 	int_pkt->int_desc.reserved = 0;
 	int_pkt->int_desc.vector_count = vector_count;
 	int_pkt->int_desc.delivery_mode = DELIVERY_MODE;
+<<<<<<< HEAD
+=======
+	cpu = hv_compose_msi_req_get_cpu(affinity);
+>>>>>>> b7ba80a49124 (Commit)
 	int_pkt->int_desc.processor_array[0] =
 		hv_cpu_number_to_vp_number(cpu);
 	int_pkt->int_desc.processor_count = 1;
@@ -1735,12 +1791,16 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
 	struct compose_comp_ctxt comp;
 	struct tran_int_desc *int_desc;
 	struct msi_desc *msi_desc;
+<<<<<<< HEAD
 	/*
 	 * vector_count should be u16: see hv_msi_desc, hv_msi_desc2
 	 * and hv_msi_desc3. vector must be u32: see hv_msi_desc3.
 	 */
 	u16 vector_count;
 	u32 vector;
+=======
+	u8 vector, vector_count;
+>>>>>>> b7ba80a49124 (Commit)
 	struct {
 		struct pci_packet pci_pkt;
 		union {
@@ -1749,6 +1809,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
 			struct pci_create_interrupt3 v3;
 		} int_pkts;
 	} __packed ctxt;
+<<<<<<< HEAD
 	bool multi_msi;
 	u64 trans_id;
 	u32 size;
@@ -1761,6 +1822,14 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
 
 	/* Reuse the previous allocation */
 	if (data->chip_data && multi_msi) {
+=======
+	u64 trans_id;
+	u32 size;
+	int ret;
+
+	/* Reuse the previous allocation */
+	if (data->chip_data) {
+>>>>>>> b7ba80a49124 (Commit)
 		int_desc = data->chip_data;
 		msg->address_hi = int_desc->address >> 32;
 		msg->address_lo = int_desc->address & 0xffffffff;
@@ -1768,6 +1837,10 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
 		return;
 	}
 
+<<<<<<< HEAD
+=======
+	msi_desc  = irq_data_get_msi_desc(data);
+>>>>>>> b7ba80a49124 (Commit)
 	pdev = msi_desc_to_pci_dev(msi_desc);
 	dest = irq_data_get_effective_affinity_mask(data);
 	pbus = pdev->bus;
@@ -1777,6 +1850,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
 	if (!hpdev)
 		goto return_null_message;
 
+<<<<<<< HEAD
 	/* Free any previous message that might have already been composed. */
 	if (data->chip_data && !multi_msi) {
 		int_desc = data->chip_data;
@@ -1784,11 +1858,17 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
 		hv_int_desc_free(hpdev, int_desc);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int_desc = kzalloc(sizeof(*int_desc), GFP_ATOMIC);
 	if (!int_desc)
 		goto drop_reference;
 
+<<<<<<< HEAD
 	if (multi_msi) {
+=======
+	if (!msi_desc->pci.msi_attrib.is_msix && msi_desc->nvec_used > 1) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * If this is not the first MSI of Multi MSI, we already have
 		 * a mapping.  Can exit early.
@@ -1813,6 +1893,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
 		 */
 		vector = 32;
 		vector_count = msi_desc->nvec_used;
+<<<<<<< HEAD
 		cpu = hv_compose_multi_msi_req_get_cpu();
 	} else {
 		vector = hv_msi_get_int_vector(data);
@@ -1825,6 +1906,13 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
 	 * can't exceed u8. Cast 'vector' down to u8 for v1/v2 explicitly
 	 * for better readability.
 	 */
+=======
+	} else {
+		vector = hv_msi_get_int_vector(data);
+		vector_count = 1;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	memset(&ctxt, 0, sizeof(ctxt));
 	init_completion(&comp.comp_pkt.host_event);
 	ctxt.pci_pkt.completion_func = hv_pci_compose_compl;
@@ -1833,23 +1921,39 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
 	switch (hbus->protocol_version) {
 	case PCI_PROTOCOL_VERSION_1_1:
 		size = hv_compose_msi_req_v1(&ctxt.int_pkts.v1,
+<<<<<<< HEAD
 					hpdev->desc.win_slot.slot,
 					(u8)vector,
+=======
+					dest,
+					hpdev->desc.win_slot.slot,
+					vector,
+>>>>>>> b7ba80a49124 (Commit)
 					vector_count);
 		break;
 
 	case PCI_PROTOCOL_VERSION_1_2:
 	case PCI_PROTOCOL_VERSION_1_3:
 		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
+<<<<<<< HEAD
 					cpu,
 					hpdev->desc.win_slot.slot,
 					(u8)vector,
+=======
+					dest,
+					hpdev->desc.win_slot.slot,
+					vector,
+>>>>>>> b7ba80a49124 (Commit)
 					vector_count);
 		break;
 
 	case PCI_PROTOCOL_VERSION_1_4:
 		size = hv_compose_msi_req_v3(&ctxt.int_pkts.v3,
+<<<<<<< HEAD
 					cpu,
+=======
+					dest,
+>>>>>>> b7ba80a49124 (Commit)
 					hpdev->desc.win_slot.slot,
 					vector,
 					vector_count);
@@ -3800,10 +3904,20 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
 /**
  * hv_pci_remove() - Remove routine for this VMBus channel
  * @hdev:	VMBus's tracking struct for this root PCI bus
+<<<<<<< HEAD
  */
 static void hv_pci_remove(struct hv_device *hdev)
 {
 	struct hv_pcibus_device *hbus;
+=======
+ *
+ * Return: 0 on success, -errno on failure
+ */
+static int hv_pci_remove(struct hv_device *hdev)
+{
+	struct hv_pcibus_device *hbus;
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	hbus = hv_get_drvdata(hdev);
 	if (hbus->state == hv_pcibus_installed) {
@@ -3826,7 +3940,11 @@ static void hv_pci_remove(struct hv_device *hdev)
 		pci_unlock_rescan_remove();
 	}
 
+<<<<<<< HEAD
 	hv_pci_bus_exit(hdev, false);
+=======
+	ret = hv_pci_bus_exit(hdev, false);
+>>>>>>> b7ba80a49124 (Commit)
 
 	vmbus_close(hdev->channel);
 
@@ -3839,6 +3957,10 @@ static void hv_pci_remove(struct hv_device *hdev)
 	hv_put_dom_num(hbus->bridge->domain_nr);
 
 	kfree(hbus);
+<<<<<<< HEAD
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int hv_pci_suspend(struct hv_device *hdev)

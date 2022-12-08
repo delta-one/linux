@@ -91,12 +91,21 @@ static int atmel_sha204a_rng_read(struct hwrng *rng, void *data, size_t max,
 	return max;
 }
 
+<<<<<<< HEAD
 static int atmel_sha204a_probe(struct i2c_client *client)
+=======
+static int atmel_sha204a_probe(struct i2c_client *client,
+			       const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct atmel_i2c_client_priv *i2c_priv;
 	int ret;
 
+<<<<<<< HEAD
 	ret = atmel_i2c_probe(client);
+=======
+	ret = atmel_i2c_probe(client, id);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -106,6 +115,10 @@ static int atmel_sha204a_probe(struct i2c_client *client)
 
 	i2c_priv->hwrng.name = dev_name(&client->dev);
 	i2c_priv->hwrng.read = atmel_sha204a_rng_read;
+<<<<<<< HEAD
+=======
+	i2c_priv->hwrng.quality = 1024;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = devm_hwrng_register(&client->dev, &i2c_priv->hwrng);
 	if (ret)
@@ -126,7 +139,11 @@ static void atmel_sha204a_remove(struct i2c_client *client)
 	kfree((void *)i2c_priv->hwrng.priv);
 }
 
+<<<<<<< HEAD
 static const struct of_device_id atmel_sha204a_dt_ids[] __maybe_unused = {
+=======
+static const struct of_device_id atmel_sha204a_dt_ids[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "atmel,atsha204", },
 	{ .compatible = "atmel,atsha204a", },
 	{ /* sentinel */ }
@@ -141,7 +158,11 @@ static const struct i2c_device_id atmel_sha204a_id[] = {
 MODULE_DEVICE_TABLE(i2c, atmel_sha204a_id);
 
 static struct i2c_driver atmel_sha204a_driver = {
+<<<<<<< HEAD
 	.probe_new		= atmel_sha204a_probe,
+=======
+	.probe			= atmel_sha204a_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove			= atmel_sha204a_remove,
 	.id_table		= atmel_sha204a_id,
 

@@ -250,7 +250,11 @@ static int macsec_fs_tx_create(struct mlx5e_macsec_fs *macsec_fs)
 	struct mlx5_flow_handle *rule;
 	struct mlx5_flow_spec *spec;
 	u32 *flow_group_in;
+<<<<<<< HEAD
 	int err;
+=======
+	int err = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ns = mlx5_get_flow_namespace(macsec_fs->mdev, MLX5_FLOW_NAMESPACE_EGRESS_MACSEC);
 	if (!ns)
@@ -261,10 +265,15 @@ static int macsec_fs_tx_create(struct mlx5e_macsec_fs *macsec_fs)
 		return -ENOMEM;
 
 	flow_group_in = kvzalloc(inlen, GFP_KERNEL);
+<<<<<<< HEAD
 	if (!flow_group_in) {
 		err = -ENOMEM;
 		goto out_spec;
 	}
+=======
+	if (!flow_group_in)
+		goto out_spec;
+>>>>>>> b7ba80a49124 (Commit)
 
 	tx_tables = &tx_fs->tables;
 	ft_crypto = &tx_tables->ft_crypto;
@@ -900,7 +909,11 @@ static int macsec_fs_rx_create(struct mlx5e_macsec_fs *macsec_fs)
 	struct mlx5_flow_handle *rule;
 	struct mlx5_flow_spec *spec;
 	u32 *flow_group_in;
+<<<<<<< HEAD
 	int err;
+=======
+	int err = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ns = mlx5_get_flow_namespace(macsec_fs->mdev, MLX5_FLOW_NAMESPACE_KERNEL_RX_MACSEC);
 	if (!ns)
@@ -911,10 +924,15 @@ static int macsec_fs_rx_create(struct mlx5e_macsec_fs *macsec_fs)
 		return -ENOMEM;
 
 	flow_group_in = kvzalloc(inlen, GFP_KERNEL);
+<<<<<<< HEAD
 	if (!flow_group_in) {
 		err = -ENOMEM;
 		goto free_spec;
 	}
+=======
+	if (!flow_group_in)
+		goto free_spec;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rx_tables = &rx_fs->tables;
 	ft_crypto = &rx_tables->ft_crypto;
@@ -1146,10 +1164,17 @@ macsec_fs_rx_add_rule(struct mlx5e_macsec_fs *macsec_fs,
 	ft_crypto = &rx_tables->ft_crypto;
 
 	/* Set bit[31 - 30] macsec marker - 0x01 */
+<<<<<<< HEAD
 	/* Set bit[15-0] fs id */
 	MLX5_SET(set_action_in, action, action_type, MLX5_ACTION_TYPE_SET);
 	MLX5_SET(set_action_in, action, field, MLX5_ACTION_IN_FIELD_METADATA_REG_B);
 	MLX5_SET(set_action_in, action, data, MLX5_MACSEC_RX_METADAT_HANDLE(fs_id) | BIT(30));
+=======
+	/* Set bit[3-0] fs id */
+	MLX5_SET(set_action_in, action, action_type, MLX5_ACTION_TYPE_SET);
+	MLX5_SET(set_action_in, action, field, MLX5_ACTION_IN_FIELD_METADATA_REG_B);
+	MLX5_SET(set_action_in, action, data, fs_id | BIT(30));
+>>>>>>> b7ba80a49124 (Commit)
 	MLX5_SET(set_action_in, action, offset, 0);
 	MLX5_SET(set_action_in, action, length, 32);
 
@@ -1184,7 +1209,11 @@ macsec_fs_rx_add_rule(struct mlx5e_macsec_fs *macsec_fs,
 	rx_rule->rule[0] = rule;
 
 	/* Rx crypto table without SCI rule */
+<<<<<<< HEAD
 	if ((cpu_to_be64((__force u64)attrs->sci) & 0xFFFF) == ntohs(MACSEC_PORT_ES)) {
+=======
+	if (cpu_to_be64((__force u64)attrs->sci) & ntohs(MACSEC_PORT_ES)) {
+>>>>>>> b7ba80a49124 (Commit)
 		memset(spec, 0, sizeof(struct mlx5_flow_spec));
 		memset(&dest, 0, sizeof(struct mlx5_flow_destination));
 		memset(&flow_act, 0, sizeof(flow_act));
@@ -1209,7 +1238,10 @@ macsec_fs_rx_add_rule(struct mlx5e_macsec_fs *macsec_fs,
 		rx_rule->rule[1] = rule;
 	}
 
+<<<<<<< HEAD
 	kvfree(spec);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return macsec_rule;
 
 err:

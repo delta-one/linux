@@ -15,6 +15,10 @@
 
 #include <platform.h>
 #include <loongson1.h>
+<<<<<<< HEAD
+=======
+#include <cpufreq.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <dma.h>
 #include <nand.h>
 
@@ -61,6 +65,24 @@ void __init ls1x_serial_set_uartclk(struct platform_device *pdev)
 		p->uartclk = clk_get_rate(clk);
 }
 
+<<<<<<< HEAD
+=======
+/* CPUFreq */
+static struct plat_ls1x_cpufreq ls1x_cpufreq_pdata = {
+	.clk_name	= "cpu_clk",
+	.osc_clk_name	= "osc_clk",
+	.max_freq	= 266 * 1000,
+	.min_freq	= 33 * 1000,
+};
+
+struct platform_device ls1x_cpufreq_pdev = {
+	.name		= "ls1x-cpufreq",
+	.dev		= {
+		.platform_data = &ls1x_cpufreq_pdata,
+	},
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Synopsys Ethernet GMAC */
 static struct stmmac_mdio_bus_data ls1x_mdio_bus_data = {
 	.phy_mask	= 0,

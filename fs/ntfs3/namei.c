@@ -7,8 +7,11 @@
 
 #include <linux/fs.h>
 #include <linux/nls.h>
+<<<<<<< HEAD
 #include <linux/ctype.h>
 #include <linux/posix_acl.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "debug.h"
 #include "ntfs.h"
@@ -88,6 +91,7 @@ static struct dentry *ntfs_lookup(struct inode *dir, struct dentry *dentry,
 		__putname(uni);
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Check for a null pointer
 	 * If the MFT record of ntfs inode is not a base record, inode->i_op can be NULL.
@@ -98,18 +102,28 @@ static struct dentry *ntfs_lookup(struct inode *dir, struct dentry *dentry,
 		inode = ERR_PTR(-EINVAL);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return d_splice_alias(inode, dentry);
 }
 
 /*
  * ntfs_create - inode_operations::create
  */
+<<<<<<< HEAD
 static int ntfs_create(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int ntfs_create(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct dentry *dentry, umode_t mode, bool excl)
 {
 	struct inode *inode;
 
+<<<<<<< HEAD
 	inode = ntfs_create_inode(idmap, dir, dentry, NULL, S_IFREG | mode,
+=======
+	inode = ntfs_create_inode(mnt_userns, dir, dentry, NULL, S_IFREG | mode,
+>>>>>>> b7ba80a49124 (Commit)
 				  0, NULL, 0, NULL);
 
 	return IS_ERR(inode) ? PTR_ERR(inode) : 0;
@@ -120,12 +134,20 @@ static int ntfs_create(struct mnt_idmap *idmap, struct inode *dir,
  *
  * inode_operations::mknod
  */
+<<<<<<< HEAD
 static int ntfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int ntfs_mknod(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *dentry, umode_t mode, dev_t rdev)
 {
 	struct inode *inode;
 
+<<<<<<< HEAD
 	inode = ntfs_create_inode(idmap, dir, dentry, NULL, mode, rdev,
+=======
+	inode = ntfs_create_inode(mnt_userns, dir, dentry, NULL, mode, rdev,
+>>>>>>> b7ba80a49124 (Commit)
 				  NULL, 0, NULL);
 
 	return IS_ERR(inode) ? PTR_ERR(inode) : 0;
@@ -193,13 +215,21 @@ static int ntfs_unlink(struct inode *dir, struct dentry *dentry)
 /*
  * ntfs_symlink - inode_operations::symlink
  */
+<<<<<<< HEAD
 static int ntfs_symlink(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int ntfs_symlink(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 			struct dentry *dentry, const char *symname)
 {
 	u32 size = strlen(symname);
 	struct inode *inode;
 
+<<<<<<< HEAD
 	inode = ntfs_create_inode(idmap, dir, dentry, NULL, S_IFLNK | 0777,
+=======
+	inode = ntfs_create_inode(mnt_userns, dir, dentry, NULL, S_IFLNK | 0777,
+>>>>>>> b7ba80a49124 (Commit)
 				  0, symname, size, NULL);
 
 	return IS_ERR(inode) ? PTR_ERR(inode) : 0;
@@ -208,12 +238,20 @@ static int ntfs_symlink(struct mnt_idmap *idmap, struct inode *dir,
 /*
  * ntfs_mkdir- inode_operations::mkdir
  */
+<<<<<<< HEAD
 static int ntfs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int ntfs_mkdir(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *dentry, umode_t mode)
 {
 	struct inode *inode;
 
+<<<<<<< HEAD
 	inode = ntfs_create_inode(idmap, dir, dentry, NULL, S_IFDIR | mode,
+=======
+	inode = ntfs_create_inode(mnt_userns, dir, dentry, NULL, S_IFDIR | mode,
+>>>>>>> b7ba80a49124 (Commit)
 				  0, NULL, 0, NULL);
 
 	return IS_ERR(inode) ? PTR_ERR(inode) : 0;
@@ -239,7 +277,11 @@ static int ntfs_rmdir(struct inode *dir, struct dentry *dentry)
 /*
  * ntfs_rename - inode_operations::rename
  */
+<<<<<<< HEAD
 static int ntfs_rename(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int ntfs_rename(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct dentry *dentry, struct inode *new_dir,
 		       struct dentry *new_dentry, u32 flags)
 {
@@ -315,8 +357,11 @@ static int ntfs_rename(struct mnt_idmap *idmap, struct inode *dir,
 
 	ni_lock_dir(dir_ni);
 	ni_lock(ni);
+<<<<<<< HEAD
 	if (dir_ni != new_dir_ni)
 		ni_lock_dir2(new_dir_ni);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	is_bad = false;
 	err = ni_rename(dir_ni, new_dir_ni, ni, de, new_de, &is_bad);
@@ -340,8 +385,11 @@ static int ntfs_rename(struct mnt_idmap *idmap, struct inode *dir,
 			ntfs_sync_inode(inode);
 	}
 
+<<<<<<< HEAD
 	if (dir_ni != new_dir_ni)
 		ni_unlock(new_dir_ni);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ni_unlock(ni);
 	ni_unlock(dir_ni);
 out:
@@ -349,6 +397,7 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 /*
  * ntfs_atomic_open
  *
@@ -447,6 +496,8 @@ out:
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct dentry *ntfs3_get_parent(struct dentry *child)
 {
 	struct inode *inode = d_inode(child);
@@ -469,6 +520,7 @@ struct dentry *ntfs3_get_parent(struct dentry *child)
 	return ERR_PTR(-ENOENT);
 }
 
+<<<<<<< HEAD
 /*
  * dentry_operations::d_hash
  */
@@ -596,6 +648,8 @@ out:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 // clang-format off
 const struct inode_operations ntfs_dir_inode_operations = {
 	.lookup		= ntfs_lookup,
@@ -607,12 +661,19 @@ const struct inode_operations ntfs_dir_inode_operations = {
 	.rmdir		= ntfs_rmdir,
 	.mknod		= ntfs_mknod,
 	.rename		= ntfs_rename,
+<<<<<<< HEAD
+=======
+	.permission	= ntfs_permission,
+>>>>>>> b7ba80a49124 (Commit)
 	.get_acl	= ntfs_get_acl,
 	.set_acl	= ntfs_set_acl,
 	.setattr	= ntfs3_setattr,
 	.getattr	= ntfs_getattr,
 	.listxattr	= ntfs_listxattr,
+<<<<<<< HEAD
 	.atomic_open	= ntfs_atomic_open,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.fiemap		= ntfs_fiemap,
 };
 
@@ -623,10 +684,13 @@ const struct inode_operations ntfs_special_inode_operations = {
 	.get_acl	= ntfs_get_acl,
 	.set_acl	= ntfs_set_acl,
 };
+<<<<<<< HEAD
 
 const struct dentry_operations ntfs_dentry_ops = {
 	.d_hash		= ntfs_d_hash,
 	.d_compare	= ntfs_d_compare,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 // clang-format on

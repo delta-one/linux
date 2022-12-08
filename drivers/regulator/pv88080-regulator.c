@@ -374,9 +374,15 @@ error_i2c:
 /*
  * I2C driver interface functions
  */
+<<<<<<< HEAD
 static int pv88080_i2c_probe(struct i2c_client *i2c)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(i2c);
+=======
+static int pv88080_i2c_probe(struct i2c_client *i2c,
+		const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct regulator_init_data *init_data = dev_get_platdata(&i2c->dev);
 	struct pv88080 *chip;
 	const struct pv88080_compatible_regmap *regmap_config;
@@ -557,10 +563,16 @@ MODULE_DEVICE_TABLE(i2c, pv88080_i2c_id);
 static struct i2c_driver pv88080_regulator_driver = {
 	.driver = {
 		.name = "pv88080",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 		.of_match_table = of_match_ptr(pv88080_dt_ids),
 	},
 	.probe_new = pv88080_i2c_probe,
+=======
+		.of_match_table = of_match_ptr(pv88080_dt_ids),
+	},
+	.probe = pv88080_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = pv88080_i2c_id,
 };
 

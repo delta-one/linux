@@ -221,6 +221,7 @@ static ssize_t __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter,
 			bio_endio(bio);
 			break;
 		}
+<<<<<<< HEAD
 		if (iocb->ki_flags & IOCB_NOWAIT) {
 			/*
 			 * This is nonblocking IO, and we need to allocate
@@ -239,6 +240,8 @@ static ssize_t __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter,
 			}
 			bio->bi_opf |= REQ_NOWAIT;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (is_read) {
 			if (dio->flags & DIO_SHOULD_DIRTY)
@@ -246,6 +249,12 @@ static ssize_t __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter,
 		} else {
 			task_io_account_write(bio->bi_iter.bi_size);
 		}
+<<<<<<< HEAD
+=======
+		if (iocb->ki_flags & IOCB_NOWAIT)
+			bio->bi_opf |= REQ_NOWAIT;
+
+>>>>>>> b7ba80a49124 (Commit)
 		dio->size += bio->bi_iter.bi_size;
 		pos += bio->bi_iter.bi_size;
 
@@ -420,6 +429,15 @@ static int blkdev_write_end(struct file *file, struct address_space *mapping,
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static int blkdev_writepages(struct address_space *mapping,
+			     struct writeback_control *wbc)
+{
+	return generic_writepages(mapping, wbc);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 const struct address_space_operations def_blk_aops = {
 	.dirty_folio	= block_dirty_folio,
 	.invalidate_folio = block_invalidate_folio,
@@ -428,6 +446,10 @@ const struct address_space_operations def_blk_aops = {
 	.writepage	= blkdev_writepage,
 	.write_begin	= blkdev_write_begin,
 	.write_end	= blkdev_write_end,
+<<<<<<< HEAD
+=======
+	.writepages	= blkdev_writepages,
+>>>>>>> b7ba80a49124 (Commit)
 	.direct_IO	= blkdev_direct_IO,
 	.migrate_folio	= buffer_migrate_folio_norefs,
 	.is_dirty_writeback = buffer_check_dirty_writeback,

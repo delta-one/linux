@@ -5,8 +5,11 @@
  * Copyright (C) 2018, Google LLC.
  */
 
+<<<<<<< HEAD
 #include <asm/msr-index.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "test_util.h"
 #include "kvm_util.h"
 #include "processor.h"
@@ -109,6 +112,21 @@ vcpu_alloc_vmx(struct kvm_vm *vm, vm_vaddr_t *p_vmx_gva)
 	vmx->vmwrite_gpa = addr_gva2gpa(vm, (uintptr_t)vmx->vmwrite);
 	memset(vmx->vmwrite_hva, 0, getpagesize());
 
+<<<<<<< HEAD
+=======
+	/* Setup of a region of guest memory for the VP Assist page. */
+	vmx->vp_assist = (void *)vm_vaddr_alloc_page(vm);
+	vmx->vp_assist_hva = addr_gva2hva(vm, (uintptr_t)vmx->vp_assist);
+	vmx->vp_assist_gpa = addr_gva2gpa(vm, (uintptr_t)vmx->vp_assist);
+
+	/* Setup of a region of guest memory for the enlightened VMCS. */
+	vmx->enlightened_vmcs = (void *)vm_vaddr_alloc_page(vm);
+	vmx->enlightened_vmcs_hva =
+		addr_gva2hva(vm, (uintptr_t)vmx->enlightened_vmcs);
+	vmx->enlightened_vmcs_gpa =
+		addr_gva2gpa(vm, (uintptr_t)vmx->enlightened_vmcs);
+
+>>>>>>> b7ba80a49124 (Commit)
 	*p_vmx_gva = vmx_gva;
 	return vmx;
 }
@@ -159,6 +177,7 @@ bool prepare_for_vmx_operation(struct vmx_pages *vmx)
 
 bool load_vmcs(struct vmx_pages *vmx)
 {
+<<<<<<< HEAD
 	/* Load a VMCS. */
 	*(uint32_t *)(vmx->vmcs) = vmcs_revision();
 	if (vmclear(vmx->vmcs_gpa))
@@ -171,6 +190,28 @@ bool load_vmcs(struct vmx_pages *vmx)
 	*(uint32_t *)(vmx->shadow_vmcs) = vmcs_revision() | 0x80000000ul;
 	if (vmclear(vmx->shadow_vmcs_gpa))
 		return false;
+=======
+	if (!enable_evmcs) {
+		/* Load a VMCS. */
+		*(uint32_t *)(vmx->vmcs) = vmcs_revision();
+		if (vmclear(vmx->vmcs_gpa))
+			return false;
+
+		if (vmptrld(vmx->vmcs_gpa))
+			return false;
+
+		/* Setup shadow VMCS, do not load it yet. */
+		*(uint32_t *)(vmx->shadow_vmcs) =
+			vmcs_revision() | 0x80000000ul;
+		if (vmclear(vmx->shadow_vmcs_gpa))
+			return false;
+	} else {
+		if (evmcs_vmptrld(vmx->enlightened_vmcs_gpa,
+				  vmx->enlightened_vmcs))
+			return false;
+		current_evmcs->revision_id = EVMCS_VERSION;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return true;
 }
@@ -524,6 +565,7 @@ void nested_identity_map_1g(struct vmx_pages *vmx, struct kvm_vm *vm,
 	__nested_map(vmx, vm, addr, addr, size, PG_LEVEL_1G);
 }
 
+<<<<<<< HEAD
 bool kvm_cpu_has_ept(void)
 {
 	uint64_t ctrl;
@@ -541,6 +583,11 @@ void prepare_eptp(struct vmx_pages *vmx, struct kvm_vm *vm,
 {
 	TEST_ASSERT(kvm_cpu_has_ept(), "KVM doesn't support nested EPT");
 
+=======
+void prepare_eptp(struct vmx_pages *vmx, struct kvm_vm *vm,
+		  uint32_t eptp_memslot)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	vmx->eptp = (void *)vm_vaddr_alloc_page(vm);
 	vmx->eptp_hva = addr_gva2hva(vm, (uintptr_t)vmx->eptp);
 	vmx->eptp_gpa = addr_gva2gpa(vm, (uintptr_t)vmx->eptp);

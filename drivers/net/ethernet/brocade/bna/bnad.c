@@ -1891,7 +1891,11 @@ bnad_napi_add(struct bnad *bnad, u32 rx_id)
 	for (i = 0; i <	bnad->num_rxp_per_rx; i++) {
 		rx_ctrl = &bnad->rx_info[rx_id].rx_ctrl[i];
 		netif_napi_add(bnad->netdev, &rx_ctrl->napi,
+<<<<<<< HEAD
 			       bnad_napi_poll_rx);
+=======
+			       bnad_napi_poll_rx, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

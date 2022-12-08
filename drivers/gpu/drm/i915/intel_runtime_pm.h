@@ -53,6 +53,7 @@ struct intel_runtime_pm {
 	bool irqs_enabled;
 	bool no_wakeref_tracking;
 
+<<<<<<< HEAD
 	/*
 	 *  Protects access to lmem usefault list.
 	 *  It is required, if we are outside of the runtime suspend path,
@@ -75,6 +76,8 @@ struct intel_runtime_pm {
 	/* Manual runtime pm autosuspend delay for user GGTT/lmem mmaps */
 	struct intel_wakeref_auto userfault_wakeref;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if IS_ENABLED(CONFIG_DRM_I915_DEBUG_RUNTIME_PM)
 	/*
 	 * To aide detection of wakeref leaks and general misuse, we
@@ -96,7 +99,11 @@ struct intel_runtime_pm {
 };
 
 #define BITS_PER_WAKEREF	\
+<<<<<<< HEAD
 	BITS_PER_TYPE(typeof_member(struct intel_runtime_pm, wakeref_count))
+=======
+	BITS_PER_TYPE(struct_member(struct intel_runtime_pm, wakeref_count))
+>>>>>>> b7ba80a49124 (Commit)
 #define INTEL_RPM_WAKELOCK_SHIFT	(BITS_PER_WAKEREF / 2)
 #define INTEL_RPM_WAKELOCK_BIAS		(1 << INTEL_RPM_WAKELOCK_SHIFT)
 #define INTEL_RPM_RAW_WAKEREF_MASK	(INTEL_RPM_WAKELOCK_BIAS - 1)

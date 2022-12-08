@@ -455,7 +455,10 @@ Protocol:	2.00+
 	11 Minimal Linux Bootloader
 	   <http://sebastian-plotz.blogspot.de>
 	12 OVMF UEFI virtualization stack
+<<<<<<< HEAD
 	13 barebox
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	== =======================================
 
   Please contact <hpa@zytor.com> if you need a bootloader ID value assigned.

@@ -1208,9 +1208,13 @@ static int viacam_probe(struct platform_device *pdev)
 	 * Convince the system that we can do DMA.
 	 */
 	pdev->dev.dma_mask = &viadev->pdev->dma_mask;
+<<<<<<< HEAD
 	ret = dma_set_mask(&pdev->dev, 0xffffffff);
 	if (ret)
 		goto out_ctrl_hdl_free;
+=======
+	dma_set_mask(&pdev->dev, 0xffffffff);
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Fire up the capture port.  The write to 0x78 looks purely
 	 * OLPCish; any system will need to tweak 0x1e.

@@ -327,7 +327,11 @@ static struct akcipher_alg rsa = {
 	},
 };
 
+<<<<<<< HEAD
 static int __init rsa_init(void)
+=======
+static int rsa_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 
@@ -344,7 +348,11 @@ static int __init rsa_init(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void __exit rsa_exit(void)
+=======
+static void rsa_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	crypto_unregister_template(&rsa_pkcs1pad_tmpl);
 	crypto_unregister_akcipher(&rsa);

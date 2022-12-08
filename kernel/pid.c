@@ -519,7 +519,10 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
 {
 	return idr_get_next(&ns->idr, &nr);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(find_ge_pid);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct pid *pidfd_get_pid(unsigned int fd, unsigned int *flags)
 {

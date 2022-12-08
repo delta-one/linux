@@ -143,7 +143,11 @@ static __init int parse_no_stealacc(char *arg)
 }
 early_param("no-steal-acc", parse_no_stealacc);
 
+<<<<<<< HEAD
 static noinstr u64 vmware_sched_clock(void)
+=======
+static unsigned long long notrace vmware_sched_clock(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long long ns;
 

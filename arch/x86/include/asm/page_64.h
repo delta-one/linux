@@ -39,6 +39,13 @@ extern unsigned long __phys_addr_symbol(unsigned long);
 
 #define __phys_reloc_hide(x)	(x)
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_FLATMEM
+#define pfn_valid(pfn)          ((pfn) < max_pfn)
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 void clear_page_orig(void *page);
 void clear_page_rep(void *page);
 void clear_page_erms(void *page);

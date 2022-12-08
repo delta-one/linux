@@ -21,7 +21,10 @@
  *
  */
 
+<<<<<<< HEAD
 #include <linux/firmware.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "amdgpu.h"
 #include "amdgpu_sdma.h"
 #include "amdgpu_ras.h"
@@ -151,6 +154,7 @@ int amdgpu_sdma_process_ecc_irq(struct amdgpu_device *adev,
 	amdgpu_ras_interrupt_dispatch(adev, &ih_data);
 	return 0;
 }
+<<<<<<< HEAD
 
 static int amdgpu_sdma_init_inst_ctx(struct amdgpu_sdma_instance *sdma_inst)
 {
@@ -340,3 +344,5 @@ int amdgpu_sdma_ras_sw_init(struct amdgpu_device *adev)
 
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

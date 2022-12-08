@@ -67,6 +67,7 @@ probe_mem_read(void *dest, void *src, size_t size);
 static nokprobe_inline int
 probe_mem_read_user(void *dest, void *src, size_t size);
 
+<<<<<<< HEAD
 static nokprobe_inline int
 fetch_store_symstrlen(unsigned long addr)
 {
@@ -118,6 +119,8 @@ process_common_fetch_insn(struct fetch_insn *code, unsigned long *val)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* From the 2nd stage, routine is same */
 static nokprobe_inline int
 process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
@@ -150,6 +153,7 @@ stage2:
 stage3:
 	/* 3rd stage: store value to buffer */
 	if (unlikely(!dest)) {
+<<<<<<< HEAD
 		switch (code->op) {
 		case FETCH_OP_ST_STRING:
 			ret = fetch_store_strlen(val + code->offset);
@@ -166,6 +170,18 @@ stage3:
 		default:
 			return -EILSEQ;
 		}
+=======
+		if (code->op == FETCH_OP_ST_STRING) {
+			ret = fetch_store_strlen(val + code->offset);
+			code++;
+			goto array;
+		} else if (code->op == FETCH_OP_ST_USTRING) {
+			ret += fetch_store_strlen_user(val + code->offset);
+			code++;
+			goto array;
+		} else
+			return -EILSEQ;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	switch (code->op) {
@@ -186,10 +202,13 @@ stage3:
 		loc = *(u32 *)dest;
 		ret = fetch_store_string_user(val + code->offset, dest, base);
 		break;
+<<<<<<< HEAD
 	case FETCH_OP_ST_SYMSTR:
 		loc = *(u32 *)dest;
 		ret = fetch_store_symstring(val + code->offset, dest, base);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -EILSEQ;
 	}
@@ -273,3 +292,34 @@ store_trace_args(void *data, struct trace_probe *tp, void *rec,
 		}
 	}
 }
+<<<<<<< HEAD
+=======
+
+static inline int
+print_probe_args(struct trace_seq *s, struct probe_arg *args, int nr_args,
+		 u8 *data, void *field)
+{
+	void *p;
+	int i, j;
+
+	for (i = 0; i < nr_args; i++) {
+		struct probe_arg *a = args + i;
+
+		trace_seq_printf(s, " %s=", a->name);
+		if (likely(!a->count)) {
+			if (!a->type->print(s, data + a->offset, field))
+				return -ENOMEM;
+			continue;
+		}
+		trace_seq_putc(s, '{');
+		p = data + a->offset;
+		for (j = 0; j < a->count; j++) {
+			if (!a->type->print(s, p, field))
+				return -ENOMEM;
+			trace_seq_putc(s, j == a->count - 1 ? '}' : ',');
+			p += a->type->size;
+		}
+	}
+	return 0;
+}
+>>>>>>> b7ba80a49124 (Commit)

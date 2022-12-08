@@ -68,6 +68,7 @@
 	FN(IP_INADDRERRORS)		\
 	FN(IP_INNOROUTES)		\
 	FN(PKT_TOO_BIG)			\
+<<<<<<< HEAD
 	FN(DUP_FRAG)			\
 	FN(FRAG_REASM_TIMEOUT)		\
 	FN(FRAG_TOO_FAR)		\
@@ -78,6 +79,8 @@
 	FN(IPV6_NDISC_BAD_CODE)		\
 	FN(IPV6_NDISC_BAD_OPTIONS)	\
 	FN(IPV6_NDISC_NS_OTHERHOST)	\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	FNe(MAX)
 
 /**
@@ -90,8 +93,11 @@ enum skb_drop_reason {
 	 * @SKB_NOT_DROPPED_YET: skb is not dropped yet (used for no-drop case)
 	 */
 	SKB_NOT_DROPPED_YET = 0,
+<<<<<<< HEAD
 	/** @SKB_CONSUMED: packet has been consumed */
 	SKB_CONSUMED,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/** @SKB_DROP_REASON_NOT_SPECIFIED: drop reason is not specified */
 	SKB_DROP_REASON_NOT_SPECIFIED,
 	/** @SKB_DROP_REASON_NO_SOCKET: socket not found */
@@ -310,6 +316,7 @@ enum skb_drop_reason {
 	 * MTU)
 	 */
 	SKB_DROP_REASON_PKT_TOO_BIG,
+<<<<<<< HEAD
 	/** @SKB_DROP_REASON_DUP_FRAG: duplicate fragment */
 	SKB_DROP_REASON_DUP_FRAG,
 	/** @SKB_DROP_REASON_FRAG_REASM_TIMEOUT: fragment reassembly timeout */
@@ -338,6 +345,8 @@ enum skb_drop_reason {
 	 * for another host.
 	 */
 	SKB_DROP_REASON_IPV6_NDISC_NS_OTHERHOST,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/**
 	 * @SKB_DROP_REASON_MAX: the maximum of drop reason, which shouldn't be
 	 * used as a real 'reason'

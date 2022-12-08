@@ -8,7 +8,10 @@ Required properties:
 	"fsl,imx6sx-usbmisc" for imx6sx
 	"fsl,imx7d-usbmisc" for imx7d
 	"fsl,imx7ulp-usbmisc" for imx7ulp
+<<<<<<< HEAD
 	"fsl,imx8mm-usbmisc" for imx8mm
+=======
+>>>>>>> b7ba80a49124 (Commit)
 - reg: Should contain registers location and length
 
 Examples:

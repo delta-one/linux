@@ -84,6 +84,7 @@ int sof_ipc_tx_message(struct snd_sof_ipc *ipc, void *msg_data, size_t msg_bytes
 }
 EXPORT_SYMBOL(sof_ipc_tx_message);
 
+<<<<<<< HEAD
 /* IPC set or get data from host to DSP */
 int sof_ipc_set_get_data(struct snd_sof_ipc *ipc, void *msg_data,
 			 size_t msg_bytes, bool set)
@@ -92,6 +93,8 @@ int sof_ipc_set_get_data(struct snd_sof_ipc *ipc, void *msg_data,
 }
 EXPORT_SYMBOL(sof_ipc_set_get_data);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * send IPC message from host to DSP without modifying the DSP state.
  * This will be used for IPC's that can be handled by the DSP
@@ -208,9 +211,12 @@ struct snd_sof_ipc *snd_sof_ipc_init(struct snd_sof_dev *sdev)
 		return NULL;
 	}
 
+<<<<<<< HEAD
 	if (ops->init && ops->init(sdev))
 		return NULL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ipc->ops = ops;
 
 	return ipc;
@@ -228,8 +234,11 @@ void snd_sof_ipc_free(struct snd_sof_dev *sdev)
 	mutex_lock(&ipc->tx_mutex);
 	ipc->disable_ipc_tx = true;
 	mutex_unlock(&ipc->tx_mutex);
+<<<<<<< HEAD
 
 	if (ipc->ops->exit)
 		ipc->ops->exit(sdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(snd_sof_ipc_free);

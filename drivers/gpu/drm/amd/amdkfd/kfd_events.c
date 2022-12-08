@@ -506,7 +506,10 @@ int kfd_criu_restore_event(struct file *devkfd,
 		ret = create_other_event(p, ev, &ev_priv->event_id);
 		break;
 	}
+<<<<<<< HEAD
 	mutex_unlock(&p->event_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 exit:
 	if (ret)
@@ -514,6 +517,11 @@ exit:
 
 	kfree(ev_priv);
 
+<<<<<<< HEAD
+=======
+	mutex_unlock(&p->event_mutex);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -778,6 +786,7 @@ static struct kfd_event_waiter *alloc_event_waiters(uint32_t num_events)
 	struct kfd_event_waiter *event_waiters;
 	uint32_t i;
 
+<<<<<<< HEAD
 	event_waiters = kcalloc(num_events, sizeof(struct kfd_event_waiter),
 				GFP_KERNEL);
 	if (!event_waiters)
@@ -785,6 +794,18 @@ static struct kfd_event_waiter *alloc_event_waiters(uint32_t num_events)
 
 	for (i = 0; i < num_events; i++)
 		init_wait(&event_waiters[i].wait);
+=======
+	event_waiters = kmalloc_array(num_events,
+					sizeof(struct kfd_event_waiter),
+					GFP_KERNEL);
+	if (!event_waiters)
+		return NULL;
+
+	for (i = 0; (event_waiters) && (i < num_events) ; i++) {
+		init_wait(&event_waiters[i].wait);
+		event_waiters[i].activated = false;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return event_waiters;
 }
@@ -1049,8 +1070,13 @@ int kfd_event_mmap(struct kfd_process *p, struct vm_area_struct *vma)
 	pfn = __pa(page->kernel_address);
 	pfn >>= PAGE_SHIFT;
 
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_IO | VM_DONTCOPY | VM_DONTEXPAND | VM_NORESERVE
 		       | VM_DONTDUMP | VM_PFNMAP);
+=======
+	vma->vm_flags |= VM_IO | VM_DONTCOPY | VM_DONTEXPAND | VM_NORESERVE
+		       | VM_DONTDUMP | VM_PFNMAP;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_debug("Mapping signal page\n");
 	pr_debug("     start user address  == 0x%08lx\n", vma->vm_start);

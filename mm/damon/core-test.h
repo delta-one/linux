@@ -289,6 +289,7 @@ static void damon_test_set_regions(struct kunit *test)
 	damon_destroy_target(t);
 }
 
+<<<<<<< HEAD
 static void damon_test_update_monitoring_result(struct kunit *test)
 {
 	struct damon_attrs old_attrs = {
@@ -318,6 +319,8 @@ static void damon_test_update_monitoring_result(struct kunit *test)
 	KUNIT_EXPECT_EQ(test, r->age, 20);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct kunit_case damon_test_cases[] = {
 	KUNIT_CASE(damon_test_target),
 	KUNIT_CASE(damon_test_regions),
@@ -328,7 +331,10 @@ static struct kunit_case damon_test_cases[] = {
 	KUNIT_CASE(damon_test_split_regions_of),
 	KUNIT_CASE(damon_test_ops_registration),
 	KUNIT_CASE(damon_test_set_regions),
+<<<<<<< HEAD
 	KUNIT_CASE(damon_test_update_monitoring_result),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 

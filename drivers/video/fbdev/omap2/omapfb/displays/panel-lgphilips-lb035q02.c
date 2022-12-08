@@ -11,7 +11,11 @@
 #include <linux/delay.h>
 #include <linux/spi/spi.h>
 #include <linux/mutex.h>
+<<<<<<< HEAD
 #include <linux/gpio/consumer.h>
+=======
+#include <linux/gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <video/omapfb_dss.h>
 
@@ -46,6 +50,12 @@ struct panel_drv_data {
 
 	struct omap_video_timings videomode;
 
+<<<<<<< HEAD
+=======
+	/* used for non-DT boot, to be removed */
+	int backlight_gpio;
+
+>>>>>>> b7ba80a49124 (Commit)
 	struct gpio_desc *enable_gpio;
 };
 
@@ -163,6 +173,12 @@ static int lb035q02_enable(struct omap_dss_device *dssdev)
 	if (ddata->enable_gpio)
 		gpiod_set_value_cansleep(ddata->enable_gpio, 1);
 
+<<<<<<< HEAD
+=======
+	if (gpio_is_valid(ddata->backlight_gpio))
+		gpio_set_value_cansleep(ddata->backlight_gpio, 1);
+
+>>>>>>> b7ba80a49124 (Commit)
 	dssdev->state = OMAP_DSS_DISPLAY_ACTIVE;
 
 	return 0;
@@ -179,6 +195,12 @@ static void lb035q02_disable(struct omap_dss_device *dssdev)
 	if (ddata->enable_gpio)
 		gpiod_set_value_cansleep(ddata->enable_gpio, 0);
 
+<<<<<<< HEAD
+=======
+	if (gpio_is_valid(ddata->backlight_gpio))
+		gpio_set_value_cansleep(ddata->backlight_gpio, 0);
+
+>>>>>>> b7ba80a49124 (Commit)
 	in->ops.dpi->disable(in);
 
 	dssdev->state = OMAP_DSS_DISPLAY_DISABLED;
@@ -241,6 +263,11 @@ static int lb035q02_probe_of(struct spi_device *spi)
 
 	ddata->enable_gpio = gpio;
 
+<<<<<<< HEAD
+=======
+	ddata->backlight_gpio = -ENOENT;
+
+>>>>>>> b7ba80a49124 (Commit)
 	in = omapdss_of_find_source_for_first_ep(node);
 	if (IS_ERR(in)) {
 		dev_err(&spi->dev, "failed to find video source\n");
@@ -273,6 +300,16 @@ static int lb035q02_panel_spi_probe(struct spi_device *spi)
 	if (r)
 		return r;
 
+<<<<<<< HEAD
+=======
+	if (gpio_is_valid(ddata->backlight_gpio)) {
+		r = devm_gpio_request_one(&spi->dev, ddata->backlight_gpio,
+				GPIOF_OUT_INIT_LOW, "panel backlight");
+		if (r)
+			goto err_gpio;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	ddata->videomode = lb035q02_timings;
 
 	dssdev = &ddata->dssdev;
@@ -292,6 +329,10 @@ static int lb035q02_panel_spi_probe(struct spi_device *spi)
 	return 0;
 
 err_reg:
+<<<<<<< HEAD
+=======
+err_gpio:
+>>>>>>> b7ba80a49124 (Commit)
 	omap_dss_put_device(ddata->in);
 	return r;
 }

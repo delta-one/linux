@@ -14,6 +14,12 @@ obj-$(CONFIG_SOC_SAMV7)		+= samv7.o
 # Power Management
 obj-$(CONFIG_ATMEL_PM)		+= pm.o pm_suspend.o
 
+<<<<<<< HEAD
+=======
+ifeq ($(CONFIG_CPU_V7),y)
+AFLAGS_pm_suspend.o := -march=armv7-a
+endif
+>>>>>>> b7ba80a49124 (Commit)
 ifeq ($(CONFIG_PM_DEBUG),y)
 CFLAGS_pm.o += -DDEBUG
 endif

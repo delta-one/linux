@@ -2367,7 +2367,11 @@ static int pl08x_dma_init_virtual_channels(struct pl08x_driver_data *pl08x,
 	INIT_LIST_HEAD(&dmadev->channels);
 
 	/*
+<<<<<<< HEAD
 	 * Register as many memcpy as we have physical channels,
+=======
+	 * Register as many many memcpy as we have physical channels,
+>>>>>>> b7ba80a49124 (Commit)
 	 * we won't always be able to use all but the code will have
 	 * to cope with that situation.
 	 */

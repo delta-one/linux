@@ -14,6 +14,7 @@
 #include <uapi/linux/kvm_para.h>
 #include <linux/ptp_clock_kernel.h>
 #include <linux/ptp_kvm.h>
+<<<<<<< HEAD
 #include <linux/set_memory.h>
 
 static phys_addr_t clock_pair_gpa;
@@ -23,11 +24,20 @@ static struct kvm_clock_pairing *clock_pair;
 int kvm_arch_ptp_init(void)
 {
 	struct page *p;
+=======
+
+static phys_addr_t clock_pair_gpa;
+static struct kvm_clock_pairing clock_pair;
+
+int kvm_arch_ptp_init(void)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	long ret;
 
 	if (!kvm_para_available())
 		return -ENODEV;
 
+<<<<<<< HEAD
 	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
 		p = alloc_page(GFP_KERNEL | __GFP_ZERO);
 		if (!p)
@@ -72,6 +82,18 @@ void kvm_arch_ptp_exit(void)
 		free_page((unsigned long)clock_pair);
 		clock_pair = NULL;
 	}
+=======
+	clock_pair_gpa = slow_virt_to_phys(&clock_pair);
+	if (!pvclock_get_pvti_cpu0_va())
+		return -ENODEV;
+
+	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING, clock_pair_gpa,
+			     KVM_CLOCK_PAIRING_WALLCLOCK);
+	if (ret == -KVM_ENOSYS)
+		return -ENODEV;
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int kvm_arch_ptp_get_clock(struct timespec64 *ts)
@@ -86,8 +108,13 @@ int kvm_arch_ptp_get_clock(struct timespec64 *ts)
 		return -EOPNOTSUPP;
 	}
 
+<<<<<<< HEAD
 	ts->tv_sec = clock_pair->sec;
 	ts->tv_nsec = clock_pair->nsec;
+=======
+	ts->tv_sec = clock_pair.sec;
+	ts->tv_nsec = clock_pair.nsec;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -118,9 +145,15 @@ int kvm_arch_ptp_get_crosststamp(u64 *cycle, struct timespec64 *tspec,
 			pr_err_ratelimited("clock pairing hypercall ret %lu\n", ret);
 			return -EOPNOTSUPP;
 		}
+<<<<<<< HEAD
 		tspec->tv_sec = clock_pair->sec;
 		tspec->tv_nsec = clock_pair->nsec;
 		*cycle = __pvclock_read_cycles(src, clock_pair->tsc);
+=======
+		tspec->tv_sec = clock_pair.sec;
+		tspec->tv_nsec = clock_pair.nsec;
+		*cycle = __pvclock_read_cycles(src, clock_pair.tsc);
+>>>>>>> b7ba80a49124 (Commit)
 	} while (pvclock_read_retry(src, version));
 
 	*cs = &kvm_clock;

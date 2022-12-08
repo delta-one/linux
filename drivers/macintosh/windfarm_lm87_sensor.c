@@ -95,7 +95,12 @@ static const struct wf_sensor_ops wf_lm87_ops = {
 	.owner		= THIS_MODULE,
 };
 
+<<<<<<< HEAD
 static int wf_lm87_probe(struct i2c_client *client)
+=======
+static int wf_lm87_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {	
 	struct wf_lm87_sensor *lm;
 	const char *name = NULL, *loc;
@@ -172,7 +177,11 @@ static struct i2c_driver wf_lm87_driver = {
 		.name	= "wf_lm87",
 		.of_match_table = wf_lm87_of_id,
 	},
+<<<<<<< HEAD
 	.probe_new	= wf_lm87_probe,
+=======
+	.probe		= wf_lm87_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= wf_lm87_remove,
 	.id_table	= wf_lm87_id,
 };

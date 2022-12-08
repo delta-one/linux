@@ -12,11 +12,19 @@
  */
 #ifdef CONFIG_NFS_V3_ACL
 extern struct posix_acl *nfs3_get_acl(struct inode *inode, int type, bool rcu);
+<<<<<<< HEAD
 extern int nfs3_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+extern int nfs3_set_acl(struct user_namespace *mnt_userns, struct inode *inode,
+>>>>>>> b7ba80a49124 (Commit)
 			struct posix_acl *acl, int type);
 extern int nfs3_proc_setacls(struct inode *inode, struct posix_acl *acl,
 		struct posix_acl *dfacl);
 extern ssize_t nfs3_listxattr(struct dentry *, char *, size_t);
+<<<<<<< HEAD
+=======
+extern const struct xattr_handler *nfs3_xattr_handlers[];
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline int nfs3_proc_setacls(struct inode *inode, struct posix_acl *acl,
 		struct posix_acl *dfacl)

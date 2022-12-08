@@ -102,7 +102,10 @@ void arch_cpu_idle(void)
 	raw_local_irq_enable();
 	if (mfspr(SPR_UPR) & SPR_UPR_PMP)
 		mtspr(SPR_PMR, mfspr(SPR_PMR) | SPR_PMR_DME);
+<<<<<<< HEAD
 	raw_local_irq_disable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void (*pm_power_off)(void) = NULL;

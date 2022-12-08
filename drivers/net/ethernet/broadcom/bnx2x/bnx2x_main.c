@@ -29,6 +29,10 @@
 #include <linux/slab.h>
 #include <linux/interrupt.h>
 #include <linux/pci.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/init.h>
 #include <linux/netdevice.h>
 #include <linux/etherdevice.h>
@@ -13036,6 +13040,17 @@ static const struct net_device_ops bnx2x_netdev_ops = {
 	.ndo_features_check	= bnx2x_features_check,
 };
 
+<<<<<<< HEAD
+=======
+static void bnx2x_disable_pcie_error_reporting(struct bnx2x *bp)
+{
+	if (bp->flags & AER_ENABLED) {
+		pci_disable_pcie_error_reporting(bp->pdev);
+		bp->flags &= ~AER_ENABLED;
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int bnx2x_init_dev(struct bnx2x *bp, struct pci_dev *pdev,
 			  struct net_device *dev, unsigned long board_type)
 {
@@ -13148,6 +13163,16 @@ static int bnx2x_init_dev(struct bnx2x *bp, struct pci_dev *pdev,
 	/* Set PCIe reset type to fundamental for EEH recovery */
 	pdev->needs_freset = 1;
 
+<<<<<<< HEAD
+=======
+	/* AER (Advanced Error reporting) configuration */
+	rc = pci_enable_pcie_error_reporting(pdev);
+	if (!rc)
+		bp->flags |= AER_ENABLED;
+	else
+		BNX2X_DEV_INFO("Failed To configure PCIe AER [%d]\n", rc);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Clean the following indirect addresses for all functions since it
 	 * is not used by the driver.
@@ -13655,13 +13680,18 @@ static int bnx2x_send_update_drift_ramrod(struct bnx2x *bp, int drift_dir,
 	return bnx2x_func_state_change(bp, &func_params);
 }
 
+<<<<<<< HEAD
 static int bnx2x_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
+=======
+static int bnx2x_ptp_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bnx2x *bp = container_of(ptp, struct bnx2x, ptp_clock_info);
 	int rc;
 	int drift_dir = 1;
 	int val, period, period1, period2, dif, dif1, dif2;
 	int best_dif = BNX2X_MAX_PHC_DRIFT, best_period = 0, best_val = 0;
+<<<<<<< HEAD
 	s32 ppb = scaled_ppm_to_ppb(scaled_ppm);
 
 	DP(BNX2X_MSG_PTP, "PTP adjfine called, ppb = %d\n", ppb);
@@ -13669,6 +13699,14 @@ static int bnx2x_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
 	if (!netif_running(bp->dev)) {
 		DP(BNX2X_MSG_PTP,
 		   "PTP adjfine called while the interface is down\n");
+=======
+
+	DP(BNX2X_MSG_PTP, "PTP adjfreq called, ppb = %d\n", ppb);
+
+	if (!netif_running(bp->dev)) {
+		DP(BNX2X_MSG_PTP,
+		   "PTP adjfreq called while the interface is down\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENETDOWN;
 	}
 
@@ -13803,7 +13841,11 @@ void bnx2x_register_phc(struct bnx2x *bp)
 	bp->ptp_clock_info.n_ext_ts = 0;
 	bp->ptp_clock_info.n_per_out = 0;
 	bp->ptp_clock_info.pps = 0;
+<<<<<<< HEAD
 	bp->ptp_clock_info.adjfine = bnx2x_ptp_adjfine;
+=======
+	bp->ptp_clock_info.adjfreq = bnx2x_ptp_adjfreq;
+>>>>>>> b7ba80a49124 (Commit)
 	bp->ptp_clock_info.adjtime = bnx2x_ptp_adjtime;
 	bp->ptp_clock_info.gettime64 = bnx2x_ptp_gettime;
 	bp->ptp_clock_info.settime64 = bnx2x_ptp_settime;
@@ -14004,6 +14046,11 @@ init_one_freemem:
 	bnx2x_free_mem_bp(bp);
 
 init_one_exit:
+<<<<<<< HEAD
+=======
+	bnx2x_disable_pcie_error_reporting(bp);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (bp->regview)
 		iounmap(bp->regview);
 
@@ -14084,6 +14131,10 @@ static void __bnx2x_remove(struct pci_dev *pdev,
 		pci_set_power_state(pdev, PCI_D3hot);
 	}
 
+<<<<<<< HEAD
+=======
+	bnx2x_disable_pcie_error_reporting(bp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (remove_netdev) {
 		if (bp->regview)
 			iounmap(bp->regview);

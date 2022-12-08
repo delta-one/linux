@@ -31,7 +31,11 @@
 
 	firmware@203f000 {
 		compatible = "samsung,secure-firmware";
+<<<<<<< HEAD
 		reg = <0x0203f000 0x1000>;
+=======
+		reg = <0x0203F000 0x1000>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	mmc_reg: regulator-0 {
@@ -95,7 +99,11 @@
 };
 
 &ehci {
+<<<<<<< HEAD
 	samsung,vbus-gpio = <&gpx3 5 GPIO_ACTIVE_HIGH>;
+=======
+	samsung,vbus-gpio = <&gpx3 5 1>;
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 	phys = <&exynos_usbphy 2>, <&exynos_usbphy 3>;
 	phy-names = "hsic0", "hsic1";

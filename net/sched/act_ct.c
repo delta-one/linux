@@ -24,7 +24,10 @@
 #include <net/ipv6_frag.h>
 #include <uapi/linux/tc_act/tc_ct.h>
 #include <net/tc_act/tc_ct.h>
+<<<<<<< HEAD
 #include <net/tc_wrapper.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <net/netfilter/nf_flow_table.h>
 #include <net/netfilter/nf_conntrack.h>
@@ -34,7 +37,10 @@
 #include <net/netfilter/nf_conntrack_acct.h>
 #include <net/netfilter/ipv6/nf_defrag_ipv6.h>
 #include <net/netfilter/nf_conntrack_act_ct.h>
+<<<<<<< HEAD
 #include <net/netfilter/nf_conntrack_seqadj.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <uapi/linux/netfilter/nf_nat.h>
 
 static struct workqueue_struct *act_ct_wq;
@@ -170,18 +176,32 @@ tcf_ct_flow_table_add_action_nat_udp(const struct nf_conntrack_tuple *tuple,
 
 static void tcf_ct_flow_table_add_action_meta(struct nf_conn *ct,
 					      enum ip_conntrack_dir dir,
+<<<<<<< HEAD
 					      enum ip_conntrack_info ctinfo,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 					      struct flow_action *action)
 {
 	struct nf_conn_labels *ct_labels;
 	struct flow_action_entry *entry;
+<<<<<<< HEAD
+=======
+	enum ip_conntrack_info ctinfo;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 *act_ct_labels;
 
 	entry = tcf_ct_flow_table_flow_action_get_next(action);
 	entry->id = FLOW_ACTION_CT_METADATA;
 #if IS_ENABLED(CONFIG_NF_CONNTRACK_MARK)
+<<<<<<< HEAD
 	entry->ct_metadata.mark = READ_ONCE(ct->mark);
 #endif
+=======
+	entry->ct_metadata.mark = ct->mark;
+#endif
+	ctinfo = dir == IP_CT_DIR_ORIGINAL ? IP_CT_ESTABLISHED :
+					     IP_CT_ESTABLISHED_REPLY;
+>>>>>>> b7ba80a49124 (Commit)
 	/* aligns with the CT reference on the SKB nf_ct_set */
 	entry->ct_metadata.cookie = (unsigned long)ct | ctinfo;
 	entry->ct_metadata.orig_dir = dir == IP_CT_DIR_ORIGINAL;
@@ -235,20 +255,28 @@ static int tcf_ct_flow_table_add_action_nat(struct net *net,
 }
 
 static int tcf_ct_flow_table_fill_actions(struct net *net,
+<<<<<<< HEAD
 					  struct flow_offload *flow,
+=======
+					  const struct flow_offload *flow,
+>>>>>>> b7ba80a49124 (Commit)
 					  enum flow_offload_tuple_dir tdir,
 					  struct nf_flow_rule *flow_rule)
 {
 	struct flow_action *action = &flow_rule->rule->action;
 	int num_entries = action->num_entries;
 	struct nf_conn *ct = flow->ct;
+<<<<<<< HEAD
 	enum ip_conntrack_info ctinfo;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	enum ip_conntrack_dir dir;
 	int i, err;
 
 	switch (tdir) {
 	case FLOW_OFFLOAD_DIR_ORIGINAL:
 		dir = IP_CT_DIR_ORIGINAL;
+<<<<<<< HEAD
 		ctinfo = test_bit(IPS_SEEN_REPLY_BIT, &ct->status) ?
 			IP_CT_ESTABLISHED : IP_CT_NEW;
 		if (ctinfo == IP_CT_ESTABLISHED)
@@ -257,6 +285,11 @@ static int tcf_ct_flow_table_fill_actions(struct net *net,
 	case FLOW_OFFLOAD_DIR_REPLY:
 		dir = IP_CT_DIR_REPLY;
 		ctinfo = IP_CT_ESTABLISHED_REPLY;
+=======
+		break;
+	case FLOW_OFFLOAD_DIR_REPLY:
+		dir = IP_CT_DIR_REPLY;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		return -EOPNOTSUPP;
@@ -266,7 +299,11 @@ static int tcf_ct_flow_table_fill_actions(struct net *net,
 	if (err)
 		goto err_nat;
 
+<<<<<<< HEAD
 	tcf_ct_flow_table_add_action_meta(ct, dir, ctinfo, action);
+=======
+	tcf_ct_flow_table_add_action_meta(ct, dir, action);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_nat:
@@ -351,9 +388,17 @@ static void tcf_ct_flow_table_cleanup_work(struct work_struct *work)
 	module_put(THIS_MODULE);
 }
 
+<<<<<<< HEAD
 static void tcf_ct_flow_table_put(struct tcf_ct_flow_table *ct_ft)
 {
 	if (refcount_dec_and_test(&ct_ft->ref)) {
+=======
+static void tcf_ct_flow_table_put(struct tcf_ct_params *params)
+{
+	struct tcf_ct_flow_table *ct_ft = params->ct_ft;
+
+	if (refcount_dec_and_test(&params->ct_ft->ref)) {
+>>>>>>> b7ba80a49124 (Commit)
 		rhashtable_remove_fast(&zones_ht, &ct_ft->node, zones_params);
 		INIT_RCU_WORK(&ct_ft->rwork, tcf_ct_flow_table_cleanup_work);
 		queue_rcu_work(act_ct_wq, &ct_ft->rwork);
@@ -369,7 +414,11 @@ static void tcf_ct_flow_tc_ifidx(struct flow_offload *entry,
 
 static void tcf_ct_flow_table_add(struct tcf_ct_flow_table *ct_ft,
 				  struct nf_conn *ct,
+<<<<<<< HEAD
 				  bool tcp, bool bidirectional)
+=======
+				  bool tcp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nf_conn_act_ct_ext *act_ct_ext;
 	struct flow_offload *entry;
@@ -388,8 +437,11 @@ static void tcf_ct_flow_table_add(struct tcf_ct_flow_table *ct_ft,
 		ct->proto.tcp.seen[0].flags |= IP_CT_TCP_FLAG_BE_LIBERAL;
 		ct->proto.tcp.seen[1].flags |= IP_CT_TCP_FLAG_BE_LIBERAL;
 	}
+<<<<<<< HEAD
 	if (bidirectional)
 		__set_bit(NF_FLOW_HW_BIDIRECTIONAL, &entry->flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	act_ct_ext = nf_conn_act_ct_ext_find(ct);
 	if (act_ct_ext) {
@@ -413,6 +465,7 @@ static void tcf_ct_flow_table_process_conn(struct tcf_ct_flow_table *ct_ft,
 					   struct nf_conn *ct,
 					   enum ip_conntrack_info ctinfo)
 {
+<<<<<<< HEAD
 	bool tcp = false, bidirectional = true;
 
 	switch (nf_ct_protonum(ct)) {
@@ -430,17 +483,37 @@ static void tcf_ct_flow_table_process_conn(struct tcf_ct_flow_table *ct_ft,
 			return;
 		if (!test_bit(IPS_ASSURED_BIT, &ct->status))
 			bidirectional = false;
+=======
+	bool tcp = false;
+
+	if ((ctinfo != IP_CT_ESTABLISHED && ctinfo != IP_CT_ESTABLISHED_REPLY) ||
+	    !test_bit(IPS_ASSURED_BIT, &ct->status))
+		return;
+
+	switch (nf_ct_protonum(ct)) {
+	case IPPROTO_TCP:
+		tcp = true;
+		if (ct->proto.tcp.state != TCP_CONNTRACK_ESTABLISHED)
+			return;
+		break;
+	case IPPROTO_UDP:
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 #ifdef CONFIG_NF_CT_PROTO_GRE
 	case IPPROTO_GRE: {
 		struct nf_conntrack_tuple *tuple;
 
+<<<<<<< HEAD
 		if ((ctinfo != IP_CT_ESTABLISHED &&
 		     ctinfo != IP_CT_ESTABLISHED_REPLY) ||
 		    !test_bit(IPS_ASSURED_BIT, &ct->status) ||
 		    ct->status & IPS_NAT_MASK)
 			return;
 
+=======
+		if (ct->status & IPS_NAT_MASK)
+			return;
+>>>>>>> b7ba80a49124 (Commit)
 		tuple = &ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple;
 		/* No support for GRE v1 */
 		if (tuple->src.u.gre.key || tuple->dst.u.gre.key)
@@ -456,7 +529,11 @@ static void tcf_ct_flow_table_process_conn(struct tcf_ct_flow_table *ct_ft,
 	    ct->status & IPS_SEQ_ADJUST)
 		return;
 
+<<<<<<< HEAD
 	tcf_ct_flow_table_add(ct_ft, ct, tcp, bidirectional);
+=======
+	tcf_ct_flow_table_add(ct_ft, ct, tcp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool
@@ -635,6 +712,7 @@ static bool tcf_ct_flow_table_lookup(struct tcf_ct_params *p,
 	flow = container_of(tuplehash, struct flow_offload, tuplehash[dir]);
 	ct = flow->ct;
 
+<<<<<<< HEAD
 	if (dir == FLOW_OFFLOAD_DIR_REPLY &&
 	    !test_bit(NF_FLOW_HW_BIDIRECTIONAL, &flow->flags)) {
 		/* Only offload reply direction after connection became
@@ -649,16 +727,23 @@ static bool tcf_ct_flow_table_lookup(struct tcf_ct_params *p,
 			return false;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (tcph && (unlikely(tcph->fin || tcph->rst))) {
 		flow_offload_teardown(flow);
 		return false;
 	}
 
+<<<<<<< HEAD
 	if (dir == FLOW_OFFLOAD_DIR_ORIGINAL)
 		ctinfo = test_bit(IPS_SEEN_REPLY_BIT, &ct->status) ?
 			IP_CT_ESTABLISHED : IP_CT_NEW;
 	else
 		ctinfo = IP_CT_ESTABLISHED_REPLY;
+=======
+	ctinfo = dir == FLOW_OFFLOAD_DIR_ORIGINAL ? IP_CT_ESTABLISHED :
+						    IP_CT_ESTABLISHED_REPLY;
+>>>>>>> b7ba80a49124 (Commit)
 
 	flow_offload_refresh(nf_ft, flow);
 	nf_conntrack_get(&ct->ct_general);
@@ -688,7 +773,11 @@ struct tc_ct_action_net {
 
 /* Determine whether skb->_nfct is equal to the result of conntrack lookup. */
 static bool tcf_ct_skb_nfct_cached(struct net *net, struct sk_buff *skb,
+<<<<<<< HEAD
 				   struct tcf_ct_params *p)
+=======
+				   u16 zone_id, bool force)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	enum ip_conntrack_info ctinfo;
 	struct nf_conn *ct;
@@ -698,6 +787,7 @@ static bool tcf_ct_skb_nfct_cached(struct net *net, struct sk_buff *skb,
 		return false;
 	if (!net_eq(net, read_pnet(&ct->ct_net)))
 		goto drop_ct;
+<<<<<<< HEAD
 	if (nf_ct_zone(ct)->id != p->zone)
 		goto drop_ct;
 	if (p->helper) {
@@ -711,6 +801,13 @@ static bool tcf_ct_skb_nfct_cached(struct net *net, struct sk_buff *skb,
 	/* Force conntrack entry direction. */
 	if ((p->ct_action & TCA_CT_ACT_FORCE) &&
 	    CTINFO2DIR(ctinfo) != IP_CT_DIR_ORIGINAL) {
+=======
+	if (nf_ct_zone(ct)->id != zone_id)
+		goto drop_ct;
+
+	/* Force conntrack entry direction. */
+	if (force && CTINFO2DIR(ctinfo) != IP_CT_DIR_ORIGINAL) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (nf_ct_is_confirmed(ct))
 			nf_ct_kill(ct);
 
@@ -726,6 +823,34 @@ drop_ct:
 	return false;
 }
 
+<<<<<<< HEAD
+=======
+/* Trim the skb to the length specified by the IP/IPv6 header,
+ * removing any trailing lower-layer padding. This prepares the skb
+ * for higher-layer processing that assumes skb->len excludes padding
+ * (such as nf_ip_checksum). The caller needs to pull the skb to the
+ * network header, and ensure ip_hdr/ipv6_hdr points to valid data.
+ */
+static int tcf_ct_skb_network_trim(struct sk_buff *skb, int family)
+{
+	unsigned int len;
+
+	switch (family) {
+	case NFPROTO_IPV4:
+		len = ntohs(ip_hdr(skb)->tot_len);
+		break;
+	case NFPROTO_IPV6:
+		len = sizeof(struct ipv6hdr)
+			+ ntohs(ipv6_hdr(skb)->payload_len);
+		break;
+	default:
+		len = skb->len;
+	}
+
+	return pskb_trim_rcsum(skb, len);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static u8 tcf_ct_skb_nf_family(struct sk_buff *skb)
 {
 	u8 family = NFPROTO_UNSPEC;
@@ -785,7 +910,10 @@ static int tcf_ct_handle_fragments(struct net *net, struct sk_buff *skb,
 	struct nf_conn *ct;
 	int err = 0;
 	bool frag;
+<<<<<<< HEAD
 	u8 proto;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 mru;
 
 	/* Previously seen (loopback)? Ignore. */
@@ -801,6 +929,7 @@ static int tcf_ct_handle_fragments(struct net *net, struct sk_buff *skb,
 		return err;
 
 	skb_get(skb);
+<<<<<<< HEAD
 	err = nf_ct_handle_fragments(net, skb, zone, family, &proto, &mru);
 	if (err)
 		return err;
@@ -822,11 +951,67 @@ static void tcf_ct_params_free(struct tcf_ct_params *params)
 	}
 	if (params->ct_ft)
 		tcf_ct_flow_table_put(params->ct_ft);
+=======
+	mru = tc_skb_cb(skb)->mru;
+
+	if (family == NFPROTO_IPV4) {
+		enum ip_defrag_users user = IP_DEFRAG_CONNTRACK_IN + zone;
+
+		memset(IPCB(skb), 0, sizeof(struct inet_skb_parm));
+		local_bh_disable();
+		err = ip_defrag(net, skb, user);
+		local_bh_enable();
+		if (err && err != -EINPROGRESS)
+			return err;
+
+		if (!err) {
+			*defrag = true;
+			mru = IPCB(skb)->frag_max_size;
+		}
+	} else { /* NFPROTO_IPV6 */
+#if IS_ENABLED(CONFIG_NF_DEFRAG_IPV6)
+		enum ip6_defrag_users user = IP6_DEFRAG_CONNTRACK_IN + zone;
+
+		memset(IP6CB(skb), 0, sizeof(struct inet6_skb_parm));
+		err = nf_ct_frag6_gather(net, skb, user);
+		if (err && err != -EINPROGRESS)
+			goto out_free;
+
+		if (!err) {
+			*defrag = true;
+			mru = IP6CB(skb)->frag_max_size;
+		}
+#else
+		err = -EOPNOTSUPP;
+		goto out_free;
+#endif
+	}
+
+	if (err != -EINPROGRESS)
+		tc_skb_cb(skb)->mru = mru;
+	skb_clear_hash(skb);
+	skb->ignore_df = 1;
+	return err;
+
+out_free:
+	kfree_skb(skb);
+	return err;
+}
+
+static void tcf_ct_params_free(struct rcu_head *head)
+{
+	struct tcf_ct_params *params = container_of(head,
+						    struct tcf_ct_params, rcu);
+
+	tcf_ct_flow_table_put(params);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (params->tmpl)
 		nf_ct_put(params->tmpl);
 	kfree(params);
 }
 
+<<<<<<< HEAD
 static void tcf_ct_params_free_rcu(struct rcu_head *head)
 {
 	struct tcf_ct_params *params;
@@ -834,6 +1019,91 @@ static void tcf_ct_params_free_rcu(struct rcu_head *head)
 	params = container_of(head, struct tcf_ct_params, rcu);
 	tcf_ct_params_free(params);
 }
+=======
+#if IS_ENABLED(CONFIG_NF_NAT)
+/* Modelled after nf_nat_ipv[46]_fn().
+ * range is only used for new, uninitialized NAT state.
+ * Returns either NF_ACCEPT or NF_DROP.
+ */
+static int ct_nat_execute(struct sk_buff *skb, struct nf_conn *ct,
+			  enum ip_conntrack_info ctinfo,
+			  const struct nf_nat_range2 *range,
+			  enum nf_nat_manip_type maniptype)
+{
+	__be16 proto = skb_protocol(skb, true);
+	int hooknum, err = NF_ACCEPT;
+
+	/* See HOOK2MANIP(). */
+	if (maniptype == NF_NAT_MANIP_SRC)
+		hooknum = NF_INET_LOCAL_IN; /* Source NAT */
+	else
+		hooknum = NF_INET_LOCAL_OUT; /* Destination NAT */
+
+	switch (ctinfo) {
+	case IP_CT_RELATED:
+	case IP_CT_RELATED_REPLY:
+		if (proto == htons(ETH_P_IP) &&
+		    ip_hdr(skb)->protocol == IPPROTO_ICMP) {
+			if (!nf_nat_icmp_reply_translation(skb, ct, ctinfo,
+							   hooknum))
+				err = NF_DROP;
+			goto out;
+		} else if (IS_ENABLED(CONFIG_IPV6) && proto == htons(ETH_P_IPV6)) {
+			__be16 frag_off;
+			u8 nexthdr = ipv6_hdr(skb)->nexthdr;
+			int hdrlen = ipv6_skip_exthdr(skb,
+						      sizeof(struct ipv6hdr),
+						      &nexthdr, &frag_off);
+
+			if (hdrlen >= 0 && nexthdr == IPPROTO_ICMPV6) {
+				if (!nf_nat_icmpv6_reply_translation(skb, ct,
+								     ctinfo,
+								     hooknum,
+								     hdrlen))
+					err = NF_DROP;
+				goto out;
+			}
+		}
+		/* Non-ICMP, fall thru to initialize if needed. */
+		fallthrough;
+	case IP_CT_NEW:
+		/* Seen it before?  This can happen for loopback, retrans,
+		 * or local packets.
+		 */
+		if (!nf_nat_initialized(ct, maniptype)) {
+			/* Initialize according to the NAT action. */
+			err = (range && range->flags & NF_NAT_RANGE_MAP_IPS)
+				/* Action is set up to establish a new
+				 * mapping.
+				 */
+				? nf_nat_setup_info(ct, range, maniptype)
+				: nf_nat_alloc_null_binding(ct, hooknum);
+			if (err != NF_ACCEPT)
+				goto out;
+		}
+		break;
+
+	case IP_CT_ESTABLISHED:
+	case IP_CT_ESTABLISHED_REPLY:
+		break;
+
+	default:
+		err = NF_DROP;
+		goto out;
+	}
+
+	err = nf_nat_packet(ct, ctinfo, hooknum, skb);
+	if (err == NF_ACCEPT) {
+		if (maniptype == NF_NAT_MANIP_SRC)
+			tc_skb_cb(skb)->post_ct_snat = 1;
+		if (maniptype == NF_NAT_MANIP_DST)
+			tc_skb_cb(skb)->post_ct_dnat = 1;
+	}
+out:
+	return err;
+}
+#endif /* CONFIG_NF_NAT */
+>>>>>>> b7ba80a49124 (Commit)
 
 static void tcf_ct_act_set_mark(struct nf_conn *ct, u32 mark, u32 mask)
 {
@@ -843,9 +1113,15 @@ static void tcf_ct_act_set_mark(struct nf_conn *ct, u32 mark, u32 mask)
 	if (!mask)
 		return;
 
+<<<<<<< HEAD
 	new_mark = mark | (READ_ONCE(ct->mark) & ~(mask));
 	if (READ_ONCE(ct->mark) != new_mark) {
 		WRITE_ONCE(ct->mark, new_mark);
+=======
+	new_mark = mark | (ct->mark & ~(mask));
+	if (ct->mark != new_mark) {
+		ct->mark = new_mark;
+>>>>>>> b7ba80a49124 (Commit)
 		if (nf_ct_is_confirmed(ct))
 			nf_conntrack_event_cache(IPCT_MARK, ct);
 	}
@@ -874,6 +1150,7 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
 			  bool commit)
 {
 #if IS_ENABLED(CONFIG_NF_NAT)
+<<<<<<< HEAD
 	int err, action = 0;
 
 	if (!(ct_action & TCA_CT_ACT_NAT))
@@ -890,24 +1167,85 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
 	if (action & BIT(NF_NAT_MANIP_DST))
 		tc_skb_cb(skb)->post_ct_dnat = 1;
 
+=======
+	int err;
+	enum nf_nat_manip_type maniptype;
+
+	if (!(ct_action & TCA_CT_ACT_NAT))
+		return NF_ACCEPT;
+
+	/* Add NAT extension if not confirmed yet. */
+	if (!nf_ct_is_confirmed(ct) && !nf_ct_nat_ext_add(ct))
+		return NF_DROP;   /* Can't NAT. */
+
+	if (ctinfo != IP_CT_NEW && (ct->status & IPS_NAT_MASK) &&
+	    (ctinfo != IP_CT_RELATED || commit)) {
+		/* NAT an established or related connection like before. */
+		if (CTINFO2DIR(ctinfo) == IP_CT_DIR_REPLY)
+			/* This is the REPLY direction for a connection
+			 * for which NAT was applied in the forward
+			 * direction.  Do the reverse NAT.
+			 */
+			maniptype = ct->status & IPS_SRC_NAT
+				? NF_NAT_MANIP_DST : NF_NAT_MANIP_SRC;
+		else
+			maniptype = ct->status & IPS_SRC_NAT
+				? NF_NAT_MANIP_SRC : NF_NAT_MANIP_DST;
+	} else if (ct_action & TCA_CT_ACT_NAT_SRC) {
+		maniptype = NF_NAT_MANIP_SRC;
+	} else if (ct_action & TCA_CT_ACT_NAT_DST) {
+		maniptype = NF_NAT_MANIP_DST;
+	} else {
+		return NF_ACCEPT;
+	}
+
+	err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+	if (err == NF_ACCEPT && ct->status & IPS_DST_NAT) {
+		if (ct->status & IPS_SRC_NAT) {
+			if (maniptype == NF_NAT_MANIP_SRC)
+				maniptype = NF_NAT_MANIP_DST;
+			else
+				maniptype = NF_NAT_MANIP_SRC;
+
+			err = ct_nat_execute(skb, ct, ctinfo, range,
+					     maniptype);
+		} else if (CTINFO2DIR(ctinfo) == IP_CT_DIR_ORIGINAL) {
+			err = ct_nat_execute(skb, ct, ctinfo, NULL,
+					     NF_NAT_MANIP_SRC);
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 #else
 	return NF_ACCEPT;
 #endif
 }
 
+<<<<<<< HEAD
 TC_INDIRECT_SCOPE int tcf_ct_act(struct sk_buff *skb, const struct tc_action *a,
 				 struct tcf_result *res)
 {
 	struct net *net = dev_net(skb->dev);
+=======
+static int tcf_ct_act(struct sk_buff *skb, const struct tc_action *a,
+		      struct tcf_result *res)
+{
+	struct net *net = dev_net(skb->dev);
+	bool cached, commit, clear, force;
+>>>>>>> b7ba80a49124 (Commit)
 	enum ip_conntrack_info ctinfo;
 	struct tcf_ct *c = to_ct(a);
 	struct nf_conn *tmpl = NULL;
 	struct nf_hook_state state;
+<<<<<<< HEAD
 	bool cached, commit, clear;
 	int nh_ofs, err, retval;
 	struct tcf_ct_params *p;
 	bool add_helper = false;
+=======
+	int nh_ofs, err, retval;
+	struct tcf_ct_params *p;
+>>>>>>> b7ba80a49124 (Commit)
 	bool skip_add = false;
 	bool defrag = false;
 	struct nf_conn *ct;
@@ -918,6 +1256,10 @@ TC_INDIRECT_SCOPE int tcf_ct_act(struct sk_buff *skb, const struct tc_action *a,
 	retval = READ_ONCE(c->tcf_action);
 	commit = p->ct_action & TCA_CT_ACT_COMMIT;
 	clear = p->ct_action & TCA_CT_ACT_CLEAR;
+<<<<<<< HEAD
+=======
+	force = p->ct_action & TCA_CT_ACT_FORCE;
+>>>>>>> b7ba80a49124 (Commit)
 	tmpl = p->tmpl;
 
 	tcf_lastuse_update(&c->tcf_tm);
@@ -951,7 +1293,11 @@ TC_INDIRECT_SCOPE int tcf_ct_act(struct sk_buff *skb, const struct tc_action *a,
 	if (err)
 		goto drop;
 
+<<<<<<< HEAD
 	err = nf_ct_skb_network_trim(skb, family);
+=======
+	err = tcf_ct_skb_network_trim(skb, family);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto drop;
 
@@ -960,7 +1306,11 @@ TC_INDIRECT_SCOPE int tcf_ct_act(struct sk_buff *skb, const struct tc_action *a,
 	 * actually run the packet through conntrack twice unless it's for a
 	 * different zone.
 	 */
+<<<<<<< HEAD
 	cached = tcf_ct_skb_nfct_cached(net, skb, p);
+=======
+	cached = tcf_ct_skb_nfct_cached(net, skb, p->zone, force);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!cached) {
 		if (tcf_ct_flow_table_lookup(p, skb, family)) {
 			skip_add = true;
@@ -993,6 +1343,7 @@ do_nat:
 	if (err != NF_ACCEPT)
 		goto drop;
 
+<<<<<<< HEAD
 	if (!nf_ct_is_confirmed(ct) && commit && p->helper && !nfct_help(ct)) {
 		err = __nf_ct_try_assign_helper(ct, p->tmpl, GFP_ATOMIC);
 		if (err)
@@ -1009,6 +1360,8 @@ do_nat:
 			goto drop;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (commit) {
 		tcf_ct_act_set_mark(ct, p->mark, p->mark_mask);
 		tcf_ct_act_set_labels(ct, p->labels, p->labels_mask);
@@ -1057,9 +1410,12 @@ static const struct nla_policy ct_policy[TCA_CT_MAX + 1] = {
 	[TCA_CT_NAT_IPV6_MAX] = NLA_POLICY_EXACT_LEN(sizeof(struct in6_addr)),
 	[TCA_CT_NAT_PORT_MIN] = { .type = NLA_U16 },
 	[TCA_CT_NAT_PORT_MAX] = { .type = NLA_U16 },
+<<<<<<< HEAD
 	[TCA_CT_HELPER_NAME] = { .type = NLA_STRING, .len = NF_CT_HELPER_NAME_LEN },
 	[TCA_CT_HELPER_FAMILY] = { .type = NLA_U8 },
 	[TCA_CT_HELPER_PROTO] = { .type = NLA_U8 },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int tcf_ct_fill_params_nat(struct tcf_ct_params *p,
@@ -1149,9 +1505,14 @@ static int tcf_ct_fill_params(struct net *net,
 {
 	struct tc_ct_action_net *tn = net_generic(net, act_ct_ops.net_id);
 	struct nf_conntrack_zone zone;
+<<<<<<< HEAD
 	int err, family, proto, len;
 	struct nf_conn *tmpl;
 	char *name;
+=======
+	struct nf_conn *tmpl;
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	p->zone = NF_CT_DEFAULT_ZONE_ID;
 
@@ -1212,6 +1573,7 @@ static int tcf_ct_fill_params(struct net *net,
 		NL_SET_ERR_MSG_MOD(extack, "Failed to allocate conntrack template");
 		return -ENOMEM;
 	}
+<<<<<<< HEAD
 	p->tmpl = tmpl;
 	if (tb[TCA_CT_HELPER_NAME]) {
 		name = nla_data(tb[TCA_CT_HELPER_NAME]);
@@ -1237,6 +1599,12 @@ err:
 	nf_ct_put(p->tmpl);
 	p->tmpl = NULL;
 	return err;
+=======
+	__set_bit(IPS_CONFIRMED_BIT, &tmpl->status);
+	p->tmpl = tmpl;
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int tcf_ct_init(struct net *net, struct nlattr *nla,
@@ -1319,15 +1687,23 @@ static int tcf_ct_init(struct net *net, struct nlattr *nla,
 	if (goto_ch)
 		tcf_chain_put_by_act(goto_ch);
 	if (params)
+<<<<<<< HEAD
 		call_rcu(&params->rcu, tcf_ct_params_free_rcu);
+=======
+		call_rcu(&params->rcu, tcf_ct_params_free);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return res;
 
 cleanup:
 	if (goto_ch)
 		tcf_chain_put_by_act(goto_ch);
+<<<<<<< HEAD
 	if (params)
 		tcf_ct_params_free(params);
+=======
+	kfree(params);
+>>>>>>> b7ba80a49124 (Commit)
 	tcf_idr_release(*a, bind);
 	return err;
 }
@@ -1339,7 +1715,11 @@ static void tcf_ct_cleanup(struct tc_action *a)
 
 	params = rcu_dereference_protected(c->params, 1);
 	if (params)
+<<<<<<< HEAD
 		call_rcu(&params->rcu, tcf_ct_params_free_rcu);
+=======
+		call_rcu(&params->rcu, tcf_ct_params_free);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int tcf_ct_dump_key_val(struct sk_buff *skb,
@@ -1405,6 +1785,7 @@ static int tcf_ct_dump_nat(struct sk_buff *skb, struct tcf_ct_params *p)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int tcf_ct_dump_helper(struct sk_buff *skb, struct nf_conntrack_helper *helper)
 {
 	if (!helper)
@@ -1418,6 +1799,8 @@ static int tcf_ct_dump_helper(struct sk_buff *skb, struct nf_conntrack_helper *h
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int tcf_ct_dump(struct sk_buff *skb, struct tc_action *a,
 			      int bind, int ref)
 {
@@ -1470,9 +1853,12 @@ static inline int tcf_ct_dump(struct sk_buff *skb, struct tc_action *a,
 	if (tcf_ct_dump_nat(skb, p))
 		goto nla_put_failure;
 
+<<<<<<< HEAD
 	if (tcf_ct_dump_helper(skb, p->helper))
 		goto nla_put_failure;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 skip_dump:
 	if (nla_put(skb, TCA_CT_PARMS, sizeof(opt), &opt))
 		goto nla_put_failure;

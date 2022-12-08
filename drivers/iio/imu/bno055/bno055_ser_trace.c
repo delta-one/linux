@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0
+=======
+//SPDX-License-Identifier: GPL-2.0
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * bno055_ser Trace Support

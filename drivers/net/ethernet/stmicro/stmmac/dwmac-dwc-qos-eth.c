@@ -159,13 +159,22 @@ disable:
 	return err;
 }
 
+<<<<<<< HEAD
 static void dwc_qos_remove(struct platform_device *pdev)
+=======
+static int dwc_qos_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct net_device *ndev = platform_get_drvdata(pdev);
 	struct stmmac_priv *priv = netdev_priv(ndev);
 
 	clk_disable_unprepare(priv->plat->pclk);
 	clk_disable_unprepare(priv->plat->stmmac_clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define SDMEMCOMPPADCTRL 0x8800
@@ -382,7 +391,11 @@ error:
 	return err;
 }
 
+<<<<<<< HEAD
 static void tegra_eqos_remove(struct platform_device *pdev)
+=======
+static int tegra_eqos_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tegra_eqos *eqos = get_stmmac_bsp_priv(&pdev->dev);
 
@@ -392,13 +405,22 @@ static void tegra_eqos_remove(struct platform_device *pdev)
 	clk_disable_unprepare(eqos->clk_rx);
 	clk_disable_unprepare(eqos->clk_slave);
 	clk_disable_unprepare(eqos->clk_master);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct dwc_eth_dwmac_data {
 	int (*probe)(struct platform_device *pdev,
 		     struct plat_stmmacenet_data *data,
 		     struct stmmac_resources *res);
+<<<<<<< HEAD
 	void (*remove)(struct platform_device *pdev);
+=======
+	int (*remove)(struct platform_device *pdev);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct dwc_eth_dwmac_data dwc_qos_data = {
@@ -469,6 +491,7 @@ static int dwc_eth_dwmac_remove(struct platform_device *pdev)
 	struct net_device *ndev = platform_get_drvdata(pdev);
 	struct stmmac_priv *priv = netdev_priv(ndev);
 	const struct dwc_eth_dwmac_data *data;
+<<<<<<< HEAD
 
 	data = device_get_match_data(&pdev->dev);
 
@@ -479,6 +502,23 @@ static int dwc_eth_dwmac_remove(struct platform_device *pdev)
 	stmmac_remove_config_dt(pdev, priv->plat);
 
 	return 0;
+=======
+	int err;
+
+	data = device_get_match_data(&pdev->dev);
+
+	err = stmmac_dvr_remove(&pdev->dev);
+	if (err < 0)
+		dev_err(&pdev->dev, "failed to remove platform: %d\n", err);
+
+	err = data->remove(pdev);
+	if (err < 0)
+		dev_err(&pdev->dev, "failed to remove subdriver: %d\n", err);
+
+	stmmac_remove_config_dt(pdev, priv->plat);
+
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id dwc_eth_dwmac_match[] = {

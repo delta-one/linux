@@ -12,7 +12,10 @@
 #include "maps.h"
 #include "symbol.h"
 #include "symsrc.h"
+<<<<<<< HEAD
 #include "demangle-cxx.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "demangle-ocaml.h"
 #include "demangle-java.h"
 #include "demangle-rust.h"
@@ -26,11 +29,14 @@
 #include <symbol/kallsyms.h>
 #include <internal/lib.h>
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBBFD_SUPPORT
 #define PACKAGE 'perf'
 #include <bfd.h>
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef EM_AARCH64
 #define EM_AARCH64	183  /* ARM 64 bit */
 #endif
@@ -51,6 +57,37 @@
 
 typedef Elf64_Nhdr GElf_Nhdr;
 
+<<<<<<< HEAD
+=======
+#ifndef DMGL_PARAMS
+#define DMGL_NO_OPTS     0              /* For readability... */
+#define DMGL_PARAMS      (1 << 0)       /* Include function args */
+#define DMGL_ANSI        (1 << 1)       /* Include const, volatile, etc */
+#endif
+
+#ifdef HAVE_LIBBFD_SUPPORT
+#define PACKAGE 'perf'
+#include <bfd.h>
+#else
+#ifdef HAVE_CPLUS_DEMANGLE_SUPPORT
+extern char *cplus_demangle(const char *, int);
+
+static inline char *bfd_demangle(void __maybe_unused *v, const char *c, int i)
+{
+	return cplus_demangle(c, i);
+}
+#else
+#ifdef NO_DEMANGLE
+static inline char *bfd_demangle(void __maybe_unused *v,
+				 const char __maybe_unused *c,
+				 int __maybe_unused i)
+{
+	return NULL;
+}
+#endif
+#endif
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifndef HAVE_ELF_GETPHDRNUM_SUPPORT
 static int elf_getphdrnum(Elf *elf, size_t *dst)
@@ -191,7 +228,11 @@ Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
 	Elf_Scn *sec = NULL;
 	size_t cnt = 1;
 
+<<<<<<< HEAD
 	/* ELF is corrupted/truncated, avoid calling elf_strptr. */
+=======
+	/* Elf is corrupted/truncated, avoid calling elf_strptr. */
+>>>>>>> b7ba80a49124 (Commit)
 	if (!elf_rawdata(elf_getscn(elf, ep->e_shstrndx), NULL))
 		return NULL;
 
@@ -211,6 +252,7 @@ Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
 	return NULL;
 }
 
+<<<<<<< HEAD
 bool filename__has_section(const char *filename, const char *sec)
 {
 	int fd;
@@ -239,6 +281,8 @@ out:
 	return found;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int elf_read_program_header(Elf *elf, u64 vaddr, GElf_Phdr *phdr)
 {
 	size_t i, phdrnum;
@@ -273,6 +317,10 @@ static bool want_demangle(bool is_kernel_sym)
 
 static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
 {
+<<<<<<< HEAD
+=======
+	int demangle_flags = verbose > 0 ? (DMGL_PARAMS | DMGL_ANSI) : DMGL_NO_OPTS;
+>>>>>>> b7ba80a49124 (Commit)
 	char *demangled = NULL;
 
 	/*
@@ -283,7 +331,11 @@ static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
 	if (!want_demangle(dso->kernel || kmodule))
 	    return demangled;
 
+<<<<<<< HEAD
 	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
+=======
+	demangled = bfd_demangle(NULL, elf_name, demangle_flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (demangled == NULL) {
 		demangled = ocaml_demangle_sym(elf_name);
 		if (demangled == NULL) {
@@ -300,6 +352,7 @@ static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
 	return demangled;
 }
 
+<<<<<<< HEAD
 struct rel_info {
 	u32		nr_entries;
 	u32		*sorted;
@@ -619,6 +672,17 @@ out:
 	exit_rela_dyn(&di);
 	return err;
 }
+=======
+#define elf_section__for_each_rel(reldata, pos, pos_mem, idx, nr_entries) \
+	for (idx = 0, pos = gelf_getrel(reldata, 0, &pos_mem); \
+	     idx < nr_entries; \
+	     ++idx, pos = gelf_getrel(reldata, idx, &pos_mem))
+
+#define elf_section__for_each_rela(reldata, pos, pos_mem, idx, nr_entries) \
+	for (idx = 0, pos = gelf_getrela(reldata, 0, &pos_mem); \
+	     idx < nr_entries; \
+	     ++idx, pos = gelf_getrela(reldata, idx, &pos_mem))
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * We need to check if we have a .dynsym, so that we can handle the
@@ -629,6 +693,7 @@ out:
  */
 int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
 {
+<<<<<<< HEAD
 	uint32_t idx;
 	GElf_Sym sym;
 	u64 plt_offset, plt_header_size, plt_entry_size;
@@ -643,10 +708,29 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
 	int nr = 0, err = -1;
 	struct rel_info ri = { .is_rela = false };
 	bool lazy_plt;
+=======
+	uint32_t nr_rel_entries, idx;
+	GElf_Sym sym;
+	u64 plt_offset, plt_header_size, plt_entry_size;
+	GElf_Shdr shdr_plt;
+	struct symbol *f;
+	GElf_Shdr shdr_rel_plt, shdr_dynsym;
+	Elf_Data *reldata, *syms, *symstrs;
+	Elf_Scn *scn_plt_rel, *scn_symstrs, *scn_dynsym;
+	size_t dynsym_idx;
+	GElf_Ehdr ehdr;
+	char sympltname[1024];
+	Elf *elf;
+	int nr = 0, symidx, err = 0;
+
+	if (!ss->dynsym)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	elf = ss->elf;
 	ehdr = ss->ehdr;
 
+<<<<<<< HEAD
 	if (!elf_section_by_name(elf, &ehdr, &shdr_plt, ".plt", NULL))
 		return 0;
 
@@ -687,6 +771,14 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
 		plt_offset = shdr_plt.sh_offset;
 		lazy_plt = true;
 	}
+=======
+	scn_dynsym = ss->dynsym;
+	shdr_dynsym = ss->dynshdr;
+	dynsym_idx = ss->dynsym_idx;
+
+	if (scn_dynsym == NULL)
+		goto out_elf_end;
+>>>>>>> b7ba80a49124 (Commit)
 
 	scn_plt_rel = elf_section_by_name(elf, &ehdr, &shdr_rel_plt,
 					  ".rela.plt", NULL);
@@ -694,6 +786,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
 		scn_plt_rel = elf_section_by_name(elf, &ehdr, &shdr_rel_plt,
 						  ".rel.plt", NULL);
 		if (scn_plt_rel == NULL)
+<<<<<<< HEAD
 			return 0;
 	}
 
@@ -720,13 +813,30 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
 
 	if (!scn_dynsym)
 		return 0;
+=======
+			goto out_elf_end;
+	}
+
+	err = -1;
+
+	if (shdr_rel_plt.sh_link != dynsym_idx)
+		goto out_elf_end;
+
+	if (elf_section_by_name(elf, &ehdr, &shdr_plt, ".plt", NULL) == NULL)
+		goto out_elf_end;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Fetch the relocation section to find the idxes to the GOT
 	 * and the symbols in the .dynsym they refer to.
 	 */
+<<<<<<< HEAD
 	ri.reldata = elf_getdata(scn_plt_rel, NULL);
 	if (!ri.reldata)
+=======
+	reldata = elf_getdata(scn_plt_rel, NULL);
+	if (reldata == NULL)
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_elf_end;
 
 	syms = elf_getdata(scn_dynsym, NULL);
@@ -744,6 +854,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
 	if (symstrs->d_size == 0)
 		goto out_elf_end;
 
+<<<<<<< HEAD
 	ri.nr_entries = shdr_rel_plt.sh_size / shdr_rel_plt.sh_entsize;
 
 	ri.is_rela = shdr_rel_plt.sh_type == SHT_RELA;
@@ -790,11 +901,99 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
 		plt_offset += plt_entry_size;
 		symbols__insert(&dso->symbols, f);
 		++nr;
+=======
+	nr_rel_entries = shdr_rel_plt.sh_size / shdr_rel_plt.sh_entsize;
+	plt_offset = shdr_plt.sh_offset;
+	switch (ehdr.e_machine) {
+		case EM_ARM:
+			plt_header_size = 20;
+			plt_entry_size = 12;
+			break;
+
+		case EM_AARCH64:
+			plt_header_size = 32;
+			plt_entry_size = 16;
+			break;
+
+		case EM_SPARC:
+			plt_header_size = 48;
+			plt_entry_size = 12;
+			break;
+
+		case EM_SPARCV9:
+			plt_header_size = 128;
+			plt_entry_size = 32;
+			break;
+
+		default: /* FIXME: s390/alpha/mips/parisc/poperpc/sh/xtensa need to be checked */
+			plt_header_size = shdr_plt.sh_entsize;
+			plt_entry_size = shdr_plt.sh_entsize;
+			break;
+	}
+	plt_offset += plt_header_size;
+
+	if (shdr_rel_plt.sh_type == SHT_RELA) {
+		GElf_Rela pos_mem, *pos;
+
+		elf_section__for_each_rela(reldata, pos, pos_mem, idx,
+					   nr_rel_entries) {
+			const char *elf_name = NULL;
+			char *demangled = NULL;
+			symidx = GELF_R_SYM(pos->r_info);
+			gelf_getsym(syms, symidx, &sym);
+
+			elf_name = elf_sym__name(&sym, symstrs);
+			demangled = demangle_sym(dso, 0, elf_name);
+			if (demangled != NULL)
+				elf_name = demangled;
+			snprintf(sympltname, sizeof(sympltname),
+				 "%s@plt", elf_name);
+			free(demangled);
+
+			f = symbol__new(plt_offset, plt_entry_size,
+					STB_GLOBAL, STT_FUNC, sympltname);
+			if (!f)
+				goto out_elf_end;
+
+			plt_offset += plt_entry_size;
+			symbols__insert(&dso->symbols, f);
+			++nr;
+		}
+	} else if (shdr_rel_plt.sh_type == SHT_REL) {
+		GElf_Rel pos_mem, *pos;
+		elf_section__for_each_rel(reldata, pos, pos_mem, idx,
+					  nr_rel_entries) {
+			const char *elf_name = NULL;
+			char *demangled = NULL;
+			symidx = GELF_R_SYM(pos->r_info);
+			gelf_getsym(syms, symidx, &sym);
+
+			elf_name = elf_sym__name(&sym, symstrs);
+			demangled = demangle_sym(dso, 0, elf_name);
+			if (demangled != NULL)
+				elf_name = demangled;
+			snprintf(sympltname, sizeof(sympltname),
+				 "%s@plt", elf_name);
+			free(demangled);
+
+			f = symbol__new(plt_offset, plt_entry_size,
+					STB_GLOBAL, STT_FUNC, sympltname);
+			if (!f)
+				goto out_elf_end;
+
+			plt_offset += plt_entry_size;
+			symbols__insert(&dso->symbols, f);
+			++nr;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	err = 0;
 out_elf_end:
+<<<<<<< HEAD
 	exit_rel(&ri);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (err == 0)
 		return nr;
 	pr_debug("%s: problems reading %s PLT info.\n",
@@ -1245,9 +1444,14 @@ int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
 
 	ss->is_64_bit = (gelf_getclass(elf) == ELFCLASS64);
 
+<<<<<<< HEAD
 	ss->symtab_idx = 0;
 	ss->symtab = elf_section_by_name(elf, &ehdr, &ss->symshdr, ".symtab",
 			&ss->symtab_idx);
+=======
+	ss->symtab = elf_section_by_name(elf, &ehdr, &ss->symshdr, ".symtab",
+			NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ss->symshdr.sh_type != SHT_SYMTAB)
 		ss->symtab = NULL;
 
@@ -1631,7 +1835,11 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
 			   (!used_opd && syms_ss->adjust_symbols)) {
 			GElf_Phdr phdr;
 
+<<<<<<< HEAD
 			if (elf_read_program_header(runtime_ss->elf,
+=======
+			if (elf_read_program_header(syms_ss->elf,
+>>>>>>> b7ba80a49124 (Commit)
 						    (u64)sym.st_value, &phdr)) {
 				pr_debug4("%s: failed to find program header for "
 					   "symbol: %s st_value: %#" PRIx64 "\n",

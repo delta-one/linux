@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 
 #define pr_fmt(fmt) "PCI: " fmt
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pci.h>
 #include <linux/acpi.h>
 #include <linux/init.h>
@@ -40,15 +43,24 @@ static int __init set_nouse_crs(const struct dmi_system_id *id)
 
 static int __init set_ignore_seg(const struct dmi_system_id *id)
 {
+<<<<<<< HEAD
 	pr_info("%s detected: ignoring ACPI _SEG\n", id->ident);
+=======
+	printk(KERN_INFO "PCI: %s detected: ignoring ACPI _SEG\n", id->ident);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_ignore_seg = true;
 	return 0;
 }
 
 static int __init set_no_e820(const struct dmi_system_id *id)
 {
+<<<<<<< HEAD
 	pr_info("%s detected: not clipping E820 regions from _CRS\n",
 	        id->ident);
+=======
+	printk(KERN_INFO "PCI: %s detected: not clipping E820 regions from _CRS\n",
+	       id->ident);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_use_e820 = false;
 	return 0;
 }
@@ -234,9 +246,16 @@ void __init pci_acpi_crs_quirks(void)
 	else if (pci_probe & PCI_USE__CRS)
 		pci_use_crs = true;
 
+<<<<<<< HEAD
 	pr_info("%s host bridge windows from ACPI; if necessary, use \"pci=%s\" and report a bug\n",
 	        pci_use_crs ? "Using" : "Ignoring",
 	        pci_use_crs ? "nocrs" : "use_crs");
+=======
+	printk(KERN_INFO "PCI: %s host bridge windows from ACPI; "
+	       "if necessary, use \"pci=%s\" and report a bug\n",
+	       pci_use_crs ? "Using" : "Ignoring",
+	       pci_use_crs ? "nocrs" : "use_crs");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* "pci=use_e820"/"pci=no_e820" on the kernel cmdline takes precedence */
 	if (pci_probe & PCI_NO_E820)
@@ -244,17 +263,30 @@ void __init pci_acpi_crs_quirks(void)
 	else if (pci_probe & PCI_USE_E820)
 		pci_use_e820 = true;
 
+<<<<<<< HEAD
 	pr_info("%s E820 reservations for host bridge windows\n",
 	        pci_use_e820 ? "Using" : "Ignoring");
 	if (pci_probe & (PCI_NO_E820 | PCI_USE_E820))
 		pr_info("Please notify linux-pci@vger.kernel.org so future kernels can do this automatically\n");
+=======
+	printk(KERN_INFO "PCI: %s E820 reservations for host bridge windows\n",
+	       pci_use_e820 ? "Using" : "Ignoring");
+	if (pci_probe & (PCI_NO_E820 | PCI_USE_E820))
+		printk(KERN_INFO "PCI: Please notify linux-pci@vger.kernel.org so future kernels can this automatically\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef	CONFIG_PCI_MMCONFIG
 static int check_segment(u16 seg, struct device *dev, char *estr)
 {
 	if (seg) {
+<<<<<<< HEAD
 		dev_err(dev, "%s can't access configuration space under this host bridge\n",
+=======
+		dev_err(dev,
+			"%s can't access PCI configuration "
+			"space under this host bridge.\n",
+>>>>>>> b7ba80a49124 (Commit)
 			estr);
 		return -EIO;
 	}
@@ -264,7 +296,13 @@ static int check_segment(u16 seg, struct device *dev, char *estr)
 	 * just can't access extended configuration space of
 	 * devices under this host bridge.
 	 */
+<<<<<<< HEAD
 	dev_warn(dev, "%s can't access extended configuration space under this bridge\n",
+=======
+	dev_warn(dev,
+		 "%s can't access extended PCI configuration "
+		 "space under this bridge.\n",
+>>>>>>> b7ba80a49124 (Commit)
 		 estr);
 
 	return 0;
@@ -419,8 +457,14 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
 		root->segment = domain = 0;
 
 	if (domain && !pci_domains_supported) {
+<<<<<<< HEAD
 		pr_warn("pci_bus %04x:%02x: ignored (multiple domains not supported)\n",
 		        domain, busnum);
+=======
+		printk(KERN_WARNING "pci_bus %04x:%02x: "
+		       "ignored (multiple domains not supported)\n",
+		       domain, busnum);
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 	}
 
@@ -488,7 +532,11 @@ int __init pci_acpi_init(void)
 	if (acpi_noirq)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	pr_info("Using ACPI for IRQ routing\n");
+=======
+	printk(KERN_INFO "PCI: Using ACPI for IRQ routing\n");
+>>>>>>> b7ba80a49124 (Commit)
 	acpi_irq_penalty_init();
 	pcibios_enable_irq = acpi_pci_irq_enable;
 	pcibios_disable_irq = acpi_pci_irq_disable;
@@ -500,7 +548,11 @@ int __init pci_acpi_init(void)
 		 * also do it here in case there are still broken drivers that
 		 * don't use pci_enable_device().
 		 */
+<<<<<<< HEAD
 		pr_info("Routing PCI interrupts for all devices because \"pci=routeirq\" specified\n");
+=======
+		printk(KERN_INFO "PCI: Routing PCI interrupts for all devices because \"pci=routeirq\" specified\n");
+>>>>>>> b7ba80a49124 (Commit)
 		for_each_pci_dev(dev)
 			acpi_pci_irq_enable(dev);
 	}

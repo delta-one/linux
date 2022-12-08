@@ -1910,8 +1910,12 @@ There are some more advanced barrier functions:
 
      These are for use with consistent memory to guarantee the ordering
      of writes or reads of shared memory accessible to both the CPU and a
+<<<<<<< HEAD
      DMA capable device. See Documentation/core-api/dma-api.rst file for more
      information about consistent memory.
+=======
+     DMA capable device.
+>>>>>>> b7ba80a49124 (Commit)
 
      For example, consider a device driver that shares memory with a device
      and uses a descriptor status value to indicate if the descriptor belongs
@@ -1932,6 +1936,7 @@ There are some more advanced barrier functions:
 		/* assign ownership */
 		desc->status = DEVICE_OWN;
 
+<<<<<<< HEAD
 		/* Make descriptor status visible to the device followed by
 		 * notify device of new descriptor
 		 */
@@ -1947,6 +1952,24 @@ There are some more advanced barrier functions:
      Note that the dma_*() barriers do not provide any ordering guarantees for
      accesses to MMIO regions.  See the later "KERNEL I/O BARRIER EFFECTS"
      subsection for more information about I/O accessors and MMIO ordering.
+=======
+		/* notify device of new descriptors */
+		writel(DESC_NOTIFY, doorbell);
+	}
+
+     The dma_rmb() allows us guarantee the device has released ownership
+     before we read the data from the descriptor, and the dma_wmb() allows
+     us to guarantee the data is written to the descriptor before the device
+     can see it now has ownership.  The dma_mb() implies both a dma_rmb() and
+     a dma_wmb().  Note that, when using writel(), a prior wmb() is not needed
+     to guarantee that the cache coherent memory writes have completed before
+     writing to the MMIO region.  The cheaper writel_relaxed() does not provide
+     this guarantee and must not be used here.
+
+     See the subsection "Kernel I/O barrier effects" for more information on
+     relaxed I/O accessors and the Documentation/core-api/dma-api.rst file for
+     more information on consistent memory.
+>>>>>>> b7ba80a49124 (Commit)
 
  (*) pmem_wmb();
 
@@ -1966,7 +1989,11 @@ There are some more advanced barrier functions:
  (*) io_stop_wc();
 
      For memory accesses with write-combining attributes (e.g. those returned
+<<<<<<< HEAD
      by ioremap_wc()), the CPU may wait for prior accesses to be merged with
+=======
+     by ioremap_wc(), the CPU may wait for prior accesses to be merged with
+>>>>>>> b7ba80a49124 (Commit)
      subsequent ones. io_stop_wc() can be used to prevent the merging of
      write-combining memory accesses before this macro with those after it when
      such wait has performance implications.

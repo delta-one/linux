@@ -599,7 +599,12 @@ static int pxa3xx_gcu_probe(struct platform_device *pdev)
 	priv->misc_dev.fops	= &pxa3xx_gcu_miscdev_fops;
 
 	/* handle IO resources */
+<<<<<<< HEAD
 	priv->mmio_base = devm_platform_get_and_ioremap_resource(pdev, 0, &r);
+=======
+	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	priv->mmio_base = devm_ioremap_resource(dev, r);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(priv->mmio_base))
 		return PTR_ERR(priv->mmio_base);
 
@@ -675,7 +680,11 @@ err_free_dma:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void pxa3xx_gcu_remove(struct platform_device *pdev)
+=======
+static int pxa3xx_gcu_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pxa3xx_gcu_priv *priv = platform_get_drvdata(pdev);
 	struct device *dev = &pdev->dev;
@@ -685,6 +694,11 @@ static void pxa3xx_gcu_remove(struct platform_device *pdev)
 	dma_free_coherent(dev, SHARED_SIZE, priv->shared, priv->shared_phys);
 	clk_disable_unprepare(priv->clk);
 	pxa3xx_gcu_free_buffers(dev, priv);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_OF
@@ -697,7 +711,11 @@ MODULE_DEVICE_TABLE(of, pxa3xx_gcu_of_match);
 
 static struct platform_driver pxa3xx_gcu_driver = {
 	.probe	  = pxa3xx_gcu_probe,
+<<<<<<< HEAD
 	.remove_new	 = pxa3xx_gcu_remove,
+=======
+	.remove	 = pxa3xx_gcu_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	 = {
 		.name   = DRV_NAME,
 		.of_match_table = of_match_ptr(pxa3xx_gcu_of_match),

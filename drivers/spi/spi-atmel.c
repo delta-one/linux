@@ -327,10 +327,17 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
 	int chip_select;
 	u32 mr;
 
+<<<<<<< HEAD
 	if (spi_get_csgpiod(spi, 0))
 		chip_select = as->native_cs_for_gpio;
 	else
 		chip_select = spi_get_chipselect(spi, 0);
+=======
+	if (spi->cs_gpiod)
+		chip_select = as->native_cs_for_gpio;
+	else
+		chip_select = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (atmel_spi_is_v2(as)) {
 		spi_writel(as, CSR0 + 4 * chip_select, asd->csr);
@@ -358,7 +365,11 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
 		u32 csr;
 
 		/* Make sure clock polarity is correct */
+<<<<<<< HEAD
 		for (i = 0; i < spi->controller->num_chipselect; i++) {
+=======
+		for (i = 0; i < spi->master->num_chipselect; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 			csr = spi_readl(as, CSR0 + 4 * i);
 			if ((csr ^ cpol) & SPI_BIT(CPOL))
 				spi_writel(as, CSR0 + 4 * i,
@@ -378,10 +389,17 @@ static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
 	int chip_select;
 	u32 mr;
 
+<<<<<<< HEAD
 	if (spi_get_csgpiod(spi, 0))
 		chip_select = as->native_cs_for_gpio;
 	else
 		chip_select = spi_get_chipselect(spi, 0);
+=======
+	if (spi->cs_gpiod)
+		chip_select = as->native_cs_for_gpio;
+	else
+		chip_select = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* only deactivate *this* device; sometimes transfers to
 	 * another device may be active when this routine is called.
@@ -394,7 +412,11 @@ static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
 
 	dev_dbg(&spi->dev, "DEactivate NPCS, mr %08x\n", mr);
 
+<<<<<<< HEAD
 	if (!spi_get_csgpiod(spi, 0))
+=======
+	if (!spi->cs_gpiod)
+>>>>>>> b7ba80a49124 (Commit)
 		spi_writel(as, CR, SPI_BIT(LASTXFER));
 }
 
@@ -419,11 +441,19 @@ static inline bool atmel_spi_use_dma(struct atmel_spi *as,
 	return as->use_dma && xfer->len >= DMA_MIN_BYTES;
 }
 
+<<<<<<< HEAD
 static bool atmel_spi_can_dma(struct spi_controller *host,
 			      struct spi_device *spi,
 			      struct spi_transfer *xfer)
 {
 	struct atmel_spi *as = spi_controller_get_devdata(host);
+=======
+static bool atmel_spi_can_dma(struct spi_master *master,
+			      struct spi_device *spi,
+			      struct spi_transfer *xfer)
+{
+	struct atmel_spi *as = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_ENABLED(CONFIG_SOC_SAM_V4_V5))
 		return atmel_spi_use_dma(as, xfer) &&
@@ -435,7 +465,11 @@ static bool atmel_spi_can_dma(struct spi_controller *host,
 
 static int atmel_spi_dma_slave_config(struct atmel_spi *as, u8 bits_per_word)
 {
+<<<<<<< HEAD
 	struct spi_controller *host = platform_get_drvdata(as->pdev);
+=======
+	struct spi_master *master = platform_get_drvdata(as->pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	struct dma_slave_config	slave_config;
 	int err = 0;
 
@@ -467,21 +501,33 @@ static int atmel_spi_dma_slave_config(struct atmel_spi *as, u8 bits_per_word)
 	 * So we'd rather write only one data at the time. Hence the transmit
 	 * path works the same whether FIFOs are available (and enabled) or not.
 	 */
+<<<<<<< HEAD
 	if (dmaengine_slave_config(host->dma_tx, &slave_config)) {
+=======
+	if (dmaengine_slave_config(master->dma_tx, &slave_config)) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(&as->pdev->dev,
 			"failed to configure tx dma channel\n");
 		err = -EINVAL;
 	}
 
 	/*
+<<<<<<< HEAD
 	 * This driver configures the spi controller for host mode (MSTR bit
+=======
+	 * This driver configures the spi controller for master mode (MSTR bit
+>>>>>>> b7ba80a49124 (Commit)
 	 * set to '1' in the Mode Register).
 	 * So according to the datasheet, when FIFOs are available (and
 	 * enabled), the Receive FIFO operates in Single Data Mode.
 	 * So the receive path works the same whether FIFOs are available (and
 	 * enabled) or not.
 	 */
+<<<<<<< HEAD
 	if (dmaengine_slave_config(host->dma_rx, &slave_config)) {
+=======
+	if (dmaengine_slave_config(master->dma_rx, &slave_config)) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(&as->pdev->dev,
 			"failed to configure rx dma channel\n");
 		err = -EINVAL;
@@ -490,22 +536,38 @@ static int atmel_spi_dma_slave_config(struct atmel_spi *as, u8 bits_per_word)
 	return err;
 }
 
+<<<<<<< HEAD
 static int atmel_spi_configure_dma(struct spi_controller *host,
+=======
+static int atmel_spi_configure_dma(struct spi_master *master,
+>>>>>>> b7ba80a49124 (Commit)
 				   struct atmel_spi *as)
 {
 	struct device *dev = &as->pdev->dev;
 	int err;
 
+<<<<<<< HEAD
 	host->dma_tx = dma_request_chan(dev, "tx");
 	if (IS_ERR(host->dma_tx)) {
 		err = PTR_ERR(host->dma_tx);
+=======
+	master->dma_tx = dma_request_chan(dev, "tx");
+	if (IS_ERR(master->dma_tx)) {
+		err = PTR_ERR(master->dma_tx);
+>>>>>>> b7ba80a49124 (Commit)
 		dev_dbg(dev, "No TX DMA channel, DMA is disabled\n");
 		goto error_clear;
 	}
 
+<<<<<<< HEAD
 	host->dma_rx = dma_request_chan(dev, "rx");
 	if (IS_ERR(host->dma_rx)) {
 		err = PTR_ERR(host->dma_rx);
+=======
+	master->dma_rx = dma_request_chan(dev, "rx");
+	if (IS_ERR(master->dma_rx)) {
+		err = PTR_ERR(master->dma_rx);
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * No reason to check EPROBE_DEFER here since we have already
 		 * requested tx channel.
@@ -520,6 +582,7 @@ static int atmel_spi_configure_dma(struct spi_controller *host,
 
 	dev_info(&as->pdev->dev,
 			"Using %s (tx) and %s (rx) for DMA transfers\n",
+<<<<<<< HEAD
 			dma_chan_name(host->dma_tx),
 			dma_chan_name(host->dma_rx));
 
@@ -551,14 +614,52 @@ static void atmel_spi_release_dma(struct spi_controller *host)
 	if (host->dma_tx) {
 		dma_release_channel(host->dma_tx);
 		host->dma_tx = NULL;
+=======
+			dma_chan_name(master->dma_tx),
+			dma_chan_name(master->dma_rx));
+
+	return 0;
+error:
+	if (!IS_ERR(master->dma_rx))
+		dma_release_channel(master->dma_rx);
+	if (!IS_ERR(master->dma_tx))
+		dma_release_channel(master->dma_tx);
+error_clear:
+	master->dma_tx = master->dma_rx = NULL;
+	return err;
+}
+
+static void atmel_spi_stop_dma(struct spi_master *master)
+{
+	if (master->dma_rx)
+		dmaengine_terminate_all(master->dma_rx);
+	if (master->dma_tx)
+		dmaengine_terminate_all(master->dma_tx);
+}
+
+static void atmel_spi_release_dma(struct spi_master *master)
+{
+	if (master->dma_rx) {
+		dma_release_channel(master->dma_rx);
+		master->dma_rx = NULL;
+	}
+	if (master->dma_tx) {
+		dma_release_channel(master->dma_tx);
+		master->dma_tx = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
 /* This function is called by the DMA driver from tasklet context */
 static void dma_callback(void *data)
 {
+<<<<<<< HEAD
 	struct spi_controller	*host = data;
 	struct atmel_spi	*as = spi_controller_get_devdata(host);
+=======
+	struct spi_master	*master = data;
+	struct atmel_spi	*as = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (is_vmalloc_addr(as->current_transfer->rx_buf) &&
 	    IS_ENABLED(CONFIG_SOC_SAM_V4_V5)) {
@@ -571,6 +672,7 @@ static void dma_callback(void *data)
 /*
  * Next transfer using PIO without FIFO.
  */
+<<<<<<< HEAD
 static void atmel_spi_next_xfer_single(struct spi_controller *host,
 				       struct spi_transfer *xfer)
 {
@@ -578,6 +680,15 @@ static void atmel_spi_next_xfer_single(struct spi_controller *host,
 	unsigned long xfer_pos = xfer->len - as->current_remaining_bytes;
 
 	dev_vdbg(host->dev.parent, "atmel_spi_next_xfer_pio\n");
+=======
+static void atmel_spi_next_xfer_single(struct spi_master *master,
+				       struct spi_transfer *xfer)
+{
+	struct atmel_spi	*as = spi_master_get_devdata(master);
+	unsigned long xfer_pos = xfer->len - as->current_remaining_bytes;
+
+	dev_vdbg(master->dev.parent, "atmel_spi_next_xfer_pio\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Make sure data is not remaining in RDR */
 	spi_readl(as, RDR);
@@ -591,7 +702,11 @@ static void atmel_spi_next_xfer_single(struct spi_controller *host,
 	else
 		spi_writel(as, TDR, *(u8 *)(xfer->tx_buf + xfer_pos));
 
+<<<<<<< HEAD
 	dev_dbg(host->dev.parent,
+=======
+	dev_dbg(master->dev.parent,
+>>>>>>> b7ba80a49124 (Commit)
 		"  start pio xfer %p: len %u tx %p rx %p bitpw %d\n",
 		xfer, xfer->len, xfer->tx_buf, xfer->rx_buf,
 		xfer->bits_per_word);
@@ -603,10 +718,17 @@ static void atmel_spi_next_xfer_single(struct spi_controller *host,
 /*
  * Next transfer using PIO with FIFO.
  */
+<<<<<<< HEAD
 static void atmel_spi_next_xfer_fifo(struct spi_controller *host,
 				     struct spi_transfer *xfer)
 {
 	struct atmel_spi *as = spi_controller_get_devdata(host);
+=======
+static void atmel_spi_next_xfer_fifo(struct spi_master *master,
+				     struct spi_transfer *xfer)
+{
+	struct atmel_spi *as = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 	u32 current_remaining_data, num_data;
 	u32 offset = xfer->len - as->current_remaining_bytes;
 	const u16 *words = (const u16 *)((u8 *)xfer->tx_buf + offset);
@@ -614,7 +736,11 @@ static void atmel_spi_next_xfer_fifo(struct spi_controller *host,
 	u16 td0, td1;
 	u32 fifomr;
 
+<<<<<<< HEAD
 	dev_vdbg(host->dev.parent, "atmel_spi_next_xfer_fifo\n");
+=======
+	dev_vdbg(master->dev.parent, "atmel_spi_next_xfer_fifo\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Compute the number of data to transfer in the current iteration */
 	current_remaining_data = ((xfer->bits_per_word > 8) ?
@@ -658,7 +784,11 @@ static void atmel_spi_next_xfer_fifo(struct spi_controller *host,
 		num_data--;
 	}
 
+<<<<<<< HEAD
 	dev_dbg(host->dev.parent,
+=======
+	dev_dbg(master->dev.parent,
+>>>>>>> b7ba80a49124 (Commit)
 		"  start fifo xfer %p: len %u tx %p rx %p bitpw %d\n",
 		xfer, xfer->len, xfer->tx_buf, xfer->rx_buf,
 		xfer->bits_per_word);
@@ -673,6 +803,7 @@ static void atmel_spi_next_xfer_fifo(struct spi_controller *host,
 /*
  * Next transfer using PIO.
  */
+<<<<<<< HEAD
 static void atmel_spi_next_xfer_pio(struct spi_controller *host,
 				    struct spi_transfer *xfer)
 {
@@ -682,11 +813,23 @@ static void atmel_spi_next_xfer_pio(struct spi_controller *host,
 		atmel_spi_next_xfer_fifo(host, xfer);
 	else
 		atmel_spi_next_xfer_single(host, xfer);
+=======
+static void atmel_spi_next_xfer_pio(struct spi_master *master,
+				    struct spi_transfer *xfer)
+{
+	struct atmel_spi *as = spi_master_get_devdata(master);
+
+	if (as->fifo_size)
+		atmel_spi_next_xfer_fifo(master, xfer);
+	else
+		atmel_spi_next_xfer_single(master, xfer);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
  * Submit next transfer for DMA.
  */
+<<<<<<< HEAD
 static int atmel_spi_next_xfer_dma_submit(struct spi_controller *host,
 				struct spi_transfer *xfer,
 				u32 *plen)
@@ -694,11 +837,24 @@ static int atmel_spi_next_xfer_dma_submit(struct spi_controller *host,
 	struct atmel_spi	*as = spi_controller_get_devdata(host);
 	struct dma_chan		*rxchan = host->dma_rx;
 	struct dma_chan		*txchan = host->dma_tx;
+=======
+static int atmel_spi_next_xfer_dma_submit(struct spi_master *master,
+				struct spi_transfer *xfer,
+				u32 *plen)
+{
+	struct atmel_spi	*as = spi_master_get_devdata(master);
+	struct dma_chan		*rxchan = master->dma_rx;
+	struct dma_chan		*txchan = master->dma_tx;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dma_async_tx_descriptor *rxdesc;
 	struct dma_async_tx_descriptor *txdesc;
 	dma_cookie_t		cookie;
 
+<<<<<<< HEAD
 	dev_vdbg(host->dev.parent, "atmel_spi_next_xfer_dma_submit\n");
+=======
+	dev_vdbg(master->dev.parent, "atmel_spi_next_xfer_dma_submit\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Check that the channels are available */
 	if (!rxchan || !txchan)
@@ -749,7 +905,11 @@ static int atmel_spi_next_xfer_dma_submit(struct spi_controller *host,
 	if (!txdesc)
 		goto err_dma;
 
+<<<<<<< HEAD
 	dev_dbg(host->dev.parent,
+=======
+	dev_dbg(master->dev.parent,
+>>>>>>> b7ba80a49124 (Commit)
 		"  start dma xfer %p: len %u tx %p/%08llx rx %p/%08llx\n",
 		xfer, xfer->len, xfer->tx_buf, (unsigned long long)xfer->tx_dma,
 		xfer->rx_buf, (unsigned long long)xfer->rx_dma);
@@ -759,7 +919,11 @@ static int atmel_spi_next_xfer_dma_submit(struct spi_controller *host,
 
 	/* Put the callback on the RX transfer only, that should finish last */
 	rxdesc->callback = dma_callback;
+<<<<<<< HEAD
 	rxdesc->callback_param = host;
+=======
+	rxdesc->callback_param = master;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Submit and fire RX and TX with TX last so we're ready to read! */
 	cookie = rxdesc->tx_submit(rxdesc);
@@ -775,12 +939,20 @@ static int atmel_spi_next_xfer_dma_submit(struct spi_controller *host,
 
 err_dma:
 	spi_writel(as, IDR, SPI_BIT(OVRES));
+<<<<<<< HEAD
 	atmel_spi_stop_dma(host);
+=======
+	atmel_spi_stop_dma(master);
+>>>>>>> b7ba80a49124 (Commit)
 err_exit:
 	return -ENOMEM;
 }
 
+<<<<<<< HEAD
 static void atmel_spi_next_xfer_data(struct spi_controller *host,
+=======
+static void atmel_spi_next_xfer_data(struct spi_master *master,
+>>>>>>> b7ba80a49124 (Commit)
 				struct spi_transfer *xfer,
 				dma_addr_t *tx_dma,
 				dma_addr_t *rx_dma,
@@ -788,8 +960,13 @@ static void atmel_spi_next_xfer_data(struct spi_controller *host,
 {
 	*rx_dma = xfer->rx_dma + xfer->len - *plen;
 	*tx_dma = xfer->tx_dma + xfer->len - *plen;
+<<<<<<< HEAD
 	if (*plen > host->max_dma_len)
 		*plen = host->max_dma_len;
+=======
+	if (*plen > master->max_dma_len)
+		*plen = master->max_dma_len;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int atmel_spi_set_xfer_speed(struct atmel_spi *as,
@@ -800,10 +977,17 @@ static int atmel_spi_set_xfer_speed(struct atmel_spi *as,
 	unsigned long		bus_hz;
 	int chip_select;
 
+<<<<<<< HEAD
 	if (spi_get_csgpiod(spi, 0))
 		chip_select = as->native_cs_for_gpio;
 	else
 		chip_select = spi_get_chipselect(spi, 0);
+=======
+	if (spi->cs_gpiod)
+		chip_select = as->native_cs_for_gpio;
+	else
+		chip_select = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* v1 chips start out at half the peripheral bus speed. */
 	bus_hz = as->spi_clk;
@@ -844,17 +1028,28 @@ static int atmel_spi_set_xfer_speed(struct atmel_spi *as,
  * Submit next transfer for PDC.
  * lock is held, spi irq is blocked
  */
+<<<<<<< HEAD
 static void atmel_spi_pdc_next_xfer(struct spi_controller *host,
 					struct spi_transfer *xfer)
 {
 	struct atmel_spi	*as = spi_controller_get_devdata(host);
+=======
+static void atmel_spi_pdc_next_xfer(struct spi_master *master,
+					struct spi_transfer *xfer)
+{
+	struct atmel_spi	*as = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 	u32			len;
 	dma_addr_t		tx_dma, rx_dma;
 
 	spi_writel(as, PTCR, SPI_BIT(RXTDIS) | SPI_BIT(TXTDIS));
 
 	len = as->current_remaining_bytes;
+<<<<<<< HEAD
 	atmel_spi_next_xfer_data(host, xfer, &tx_dma, &rx_dma, &len);
+=======
+	atmel_spi_next_xfer_data(master, xfer, &tx_dma, &rx_dma, &len);
+>>>>>>> b7ba80a49124 (Commit)
 	as->current_remaining_bytes -= len;
 
 	spi_writel(as, RPR, rx_dma);
@@ -865,7 +1060,11 @@ static void atmel_spi_pdc_next_xfer(struct spi_controller *host,
 	spi_writel(as, RCR, len);
 	spi_writel(as, TCR, len);
 
+<<<<<<< HEAD
 	dev_dbg(&host->dev,
+=======
+	dev_dbg(&master->dev,
+>>>>>>> b7ba80a49124 (Commit)
 		"  start xfer %p: len %u tx %p/%08llx rx %p/%08llx\n",
 		xfer, xfer->len, xfer->tx_buf,
 		(unsigned long long)xfer->tx_dma, xfer->rx_buf,
@@ -873,7 +1072,11 @@ static void atmel_spi_pdc_next_xfer(struct spi_controller *host,
 
 	if (as->current_remaining_bytes) {
 		len = as->current_remaining_bytes;
+<<<<<<< HEAD
 		atmel_spi_next_xfer_data(host, xfer, &tx_dma, &rx_dma, &len);
+=======
+		atmel_spi_next_xfer_data(master, xfer, &tx_dma, &rx_dma, &len);
+>>>>>>> b7ba80a49124 (Commit)
 		as->current_remaining_bytes -= len;
 
 		spi_writel(as, RNPR, rx_dma);
@@ -884,7 +1087,11 @@ static void atmel_spi_pdc_next_xfer(struct spi_controller *host,
 		spi_writel(as, RNCR, len);
 		spi_writel(as, TNCR, len);
 
+<<<<<<< HEAD
 		dev_dbg(&host->dev,
+=======
+		dev_dbg(&master->dev,
+>>>>>>> b7ba80a49124 (Commit)
 			"  next xfer %p: len %u tx %p/%08llx rx %p/%08llx\n",
 			xfer, xfer->len, xfer->tx_buf,
 			(unsigned long long)xfer->tx_dma, xfer->rx_buf,
@@ -944,6 +1151,7 @@ atmel_spi_dma_map_xfer(struct atmel_spi *as, struct spi_transfer *xfer)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void atmel_spi_dma_unmap_xfer(struct spi_controller *host,
 				     struct spi_transfer *xfer)
 {
@@ -952,6 +1160,16 @@ static void atmel_spi_dma_unmap_xfer(struct spi_controller *host,
 				 xfer->len, DMA_TO_DEVICE);
 	if (xfer->rx_dma != INVALID_DMA_ADDRESS)
 		dma_unmap_single(host->dev.parent, xfer->rx_dma,
+=======
+static void atmel_spi_dma_unmap_xfer(struct spi_master *master,
+				     struct spi_transfer *xfer)
+{
+	if (xfer->tx_dma != INVALID_DMA_ADDRESS)
+		dma_unmap_single(master->dev.parent, xfer->tx_dma,
+				 xfer->len, DMA_TO_DEVICE);
+	if (xfer->rx_dma != INVALID_DMA_ADDRESS)
+		dma_unmap_single(master->dev.parent, xfer->rx_dma,
+>>>>>>> b7ba80a49124 (Commit)
 				 xfer->len, DMA_FROM_DEVICE);
 }
 
@@ -1039,8 +1257,13 @@ atmel_spi_pump_pio_data(struct atmel_spi *as, struct spi_transfer *xfer)
 static irqreturn_t
 atmel_spi_pio_interrupt(int irq, void *dev_id)
 {
+<<<<<<< HEAD
 	struct spi_controller	*host = dev_id;
 	struct atmel_spi	*as = spi_controller_get_devdata(host);
+=======
+	struct spi_master	*master = dev_id;
+	struct atmel_spi	*as = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 	u32			status, pending, imr;
 	struct spi_transfer	*xfer;
 	int			ret = IRQ_NONE;
@@ -1052,7 +1275,11 @@ atmel_spi_pio_interrupt(int irq, void *dev_id)
 	if (pending & SPI_BIT(OVRES)) {
 		ret = IRQ_HANDLED;
 		spi_writel(as, IDR, SPI_BIT(OVRES));
+<<<<<<< HEAD
 		dev_warn(host->dev.parent, "overrun\n");
+=======
+		dev_warn(master->dev.parent, "overrun\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * When we get an overrun, we disregard the current
@@ -1097,8 +1324,13 @@ atmel_spi_pio_interrupt(int irq, void *dev_id)
 static irqreturn_t
 atmel_spi_pdc_interrupt(int irq, void *dev_id)
 {
+<<<<<<< HEAD
 	struct spi_controller	*host = dev_id;
 	struct atmel_spi	*as = spi_controller_get_devdata(host);
+=======
+	struct spi_master	*master = dev_id;
+	struct atmel_spi	*as = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 	u32			status, pending, imr;
 	int			ret = IRQ_NONE;
 
@@ -1152,12 +1384,20 @@ static int atmel_word_delay_csr(struct spi_device *spi, struct atmel_spi *as)
 static void initialize_native_cs_for_gpio(struct atmel_spi *as)
 {
 	int i;
+<<<<<<< HEAD
 	struct spi_controller *host = platform_get_drvdata(as->pdev);
+=======
+	struct spi_master *master = platform_get_drvdata(as->pdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!as->native_cs_free)
 		return; /* already initialized */
 
+<<<<<<< HEAD
 	if (!host->cs_gpiods)
+=======
+	if (!master->cs_gpiods)
+>>>>>>> b7ba80a49124 (Commit)
 		return; /* No CS GPIO */
 
 	/*
@@ -1170,7 +1410,11 @@ static void initialize_native_cs_for_gpio(struct atmel_spi *as)
 		i = 1;
 
 	for (; i < 4; i++)
+<<<<<<< HEAD
 		if (host->cs_gpiods[i])
+=======
+		if (master->cs_gpiods[i])
+>>>>>>> b7ba80a49124 (Commit)
 			as->native_cs_free |= BIT(i);
 
 	if (as->native_cs_free)
@@ -1186,10 +1430,17 @@ static int atmel_spi_setup(struct spi_device *spi)
 	int chip_select;
 	int			word_delay_csr;
 
+<<<<<<< HEAD
 	as = spi_controller_get_devdata(spi->controller);
 
 	/* see notes above re chipselect */
 	if (!spi_get_csgpiod(spi, 0) && (spi->mode & SPI_CS_HIGH)) {
+=======
+	as = spi_master_get_devdata(spi->master);
+
+	/* see notes above re chipselect */
+	if (!spi->cs_gpiod && (spi->mode & SPI_CS_HIGH)) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_warn(&spi->dev, "setup: non GPIO CS can't be active-high\n");
 		return -EINVAL;
 	}
@@ -1201,16 +1452,27 @@ static int atmel_spi_setup(struct spi_device *spi)
 	 */
 	initialize_native_cs_for_gpio(as);
 
+<<<<<<< HEAD
 	if (spi_get_csgpiod(spi, 0) && as->native_cs_free) {
+=======
+	if (spi->cs_gpiod && as->native_cs_free) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(&spi->dev,
 			"No native CS available to support this GPIO CS\n");
 		return -EBUSY;
 	}
 
+<<<<<<< HEAD
 	if (spi_get_csgpiod(spi, 0))
 		chip_select = as->native_cs_for_gpio;
 	else
 		chip_select = spi_get_chipselect(spi, 0);
+=======
+	if (spi->cs_gpiod)
+		chip_select = as->native_cs_for_gpio;
+	else
+		chip_select = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 
 	csr = SPI_BF(BITS, bits - 8);
 	if (spi->mode & SPI_CPOL)
@@ -1218,7 +1480,11 @@ static int atmel_spi_setup(struct spi_device *spi)
 	if (!(spi->mode & SPI_CPHA))
 		csr |= SPI_BIT(NCPHA);
 
+<<<<<<< HEAD
 	if (!spi_get_csgpiod(spi, 0))
+=======
+	if (!spi->cs_gpiod)
+>>>>>>> b7ba80a49124 (Commit)
 		csr |= SPI_BIT(CSAAT);
 	csr |= SPI_BF(DLYBS, 0);
 
@@ -1244,7 +1510,11 @@ static int atmel_spi_setup(struct spi_device *spi)
 
 	dev_dbg(&spi->dev,
 		"setup: bpw %u mode 0x%x -> csr%d %08x\n",
+<<<<<<< HEAD
 		bits, spi->mode, spi_get_chipselect(spi, 0), csr);
+=======
+		bits, spi->mode, spi->chip_select, csr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!atmel_spi_is_v2(as))
 		spi_writel(as, CSR0 + 4 * chip_select, csr);
@@ -1254,7 +1524,11 @@ static int atmel_spi_setup(struct spi_device *spi)
 
 static void atmel_spi_set_cs(struct spi_device *spi, bool enable)
 {
+<<<<<<< HEAD
 	struct atmel_spi *as = spi_controller_get_devdata(spi->controller);
+=======
+	struct atmel_spi *as = spi_master_get_devdata(spi->master);
+>>>>>>> b7ba80a49124 (Commit)
 	/* the core doesn't really pass us enable/disable, but CS HIGH vs CS LOW
 	 * since we already have routines for activate/deactivate translate
 	 * high/low to active/inactive
@@ -1269,7 +1543,11 @@ static void atmel_spi_set_cs(struct spi_device *spi, bool enable)
 
 }
 
+<<<<<<< HEAD
 static int atmel_spi_one_transfer(struct spi_controller *host,
+=======
+static int atmel_spi_one_transfer(struct spi_master *master,
+>>>>>>> b7ba80a49124 (Commit)
 					struct spi_device *spi,
 					struct spi_transfer *xfer)
 {
@@ -1281,7 +1559,11 @@ static int atmel_spi_one_transfer(struct spi_controller *host,
 	int			ret;
 	unsigned long		dma_timeout;
 
+<<<<<<< HEAD
 	as = spi_controller_get_devdata(host);
+=======
+	as = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	asd = spi->controller_state;
 	bits = (asd->csr >> 4) & 0xf;
@@ -1295,7 +1577,11 @@ static int atmel_spi_one_transfer(struct spi_controller *host,
 	 * DMA map early, for performance (empties dcache ASAP) and
 	 * better fault reporting.
 	 */
+<<<<<<< HEAD
 	if ((!host->cur_msg->is_dma_mapped)
+=======
+	if ((!master->cur_msg->is_dma_mapped)
+>>>>>>> b7ba80a49124 (Commit)
 		&& as->use_pdc) {
 		if (atmel_spi_dma_map_xfer(as, xfer) < 0)
 			return -ENOMEM;
@@ -1311,11 +1597,19 @@ static int atmel_spi_one_transfer(struct spi_controller *host,
 
 		if (as->use_pdc) {
 			atmel_spi_lock(as);
+<<<<<<< HEAD
 			atmel_spi_pdc_next_xfer(host, xfer);
 			atmel_spi_unlock(as);
 		} else if (atmel_spi_use_dma(as, xfer)) {
 			len = as->current_remaining_bytes;
 			ret = atmel_spi_next_xfer_dma_submit(host,
+=======
+			atmel_spi_pdc_next_xfer(master, xfer);
+			atmel_spi_unlock(as);
+		} else if (atmel_spi_use_dma(as, xfer)) {
+			len = as->current_remaining_bytes;
+			ret = atmel_spi_next_xfer_dma_submit(master,
+>>>>>>> b7ba80a49124 (Commit)
 								xfer, &len);
 			if (ret) {
 				dev_err(&spi->dev,
@@ -1329,7 +1623,11 @@ static int atmel_spi_one_transfer(struct spi_controller *host,
 			}
 		} else {
 			atmel_spi_lock(as);
+<<<<<<< HEAD
 			atmel_spi_next_xfer_pio(host, xfer);
+=======
+			atmel_spi_next_xfer_pio(master, xfer);
+>>>>>>> b7ba80a49124 (Commit)
 			atmel_spi_unlock(as);
 		}
 
@@ -1346,7 +1644,11 @@ static int atmel_spi_one_transfer(struct spi_controller *host,
 
 	if (as->done_status) {
 		if (as->use_pdc) {
+<<<<<<< HEAD
 			dev_warn(host->dev.parent,
+=======
+			dev_warn(master->dev.parent,
+>>>>>>> b7ba80a49124 (Commit)
 				"overrun (%u/%u remaining)\n",
 				spi_readl(as, TCR), spi_readl(as, RCR));
 
@@ -1362,7 +1664,11 @@ static int atmel_spi_one_transfer(struct spi_controller *host,
 				if (spi_readl(as, SR) & SPI_BIT(TXEMPTY))
 					break;
 			if (!timeout)
+<<<<<<< HEAD
 				dev_warn(host->dev.parent,
+=======
+				dev_warn(master->dev.parent,
+>>>>>>> b7ba80a49124 (Commit)
 					 "timeout waiting for TXEMPTY");
 			while (spi_readl(as, SR) & SPI_BIT(RDRF))
 				spi_readl(as, RDR);
@@ -1371,6 +1677,7 @@ static int atmel_spi_one_transfer(struct spi_controller *host,
 			spi_readl(as, SR);
 
 		} else if (atmel_spi_use_dma(as, xfer)) {
+<<<<<<< HEAD
 			atmel_spi_stop_dma(host);
 		}
 	}
@@ -1378,6 +1685,15 @@ static int atmel_spi_one_transfer(struct spi_controller *host,
 	if (!host->cur_msg->is_dma_mapped
 		&& as->use_pdc)
 		atmel_spi_dma_unmap_xfer(host, xfer);
+=======
+			atmel_spi_stop_dma(master);
+		}
+	}
+
+	if (!master->cur_msg->is_dma_mapped
+		&& as->use_pdc)
+		atmel_spi_dma_unmap_xfer(master, xfer);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (as->use_pdc)
 		atmel_spi_disable_pdc_transfer(as);
@@ -1440,7 +1756,11 @@ static int atmel_spi_probe(struct platform_device *pdev)
 	int			irq;
 	struct clk		*clk;
 	int			ret;
+<<<<<<< HEAD
 	struct spi_controller	*host;
+=======
+	struct spi_master	*master;
+>>>>>>> b7ba80a49124 (Commit)
 	struct atmel_spi	*as;
 
 	/* Select default pin state */
@@ -1459,6 +1779,7 @@ static int atmel_spi_probe(struct platform_device *pdev)
 		return PTR_ERR(clk);
 
 	/* setup spi core then atmel-specific driver state */
+<<<<<<< HEAD
 	host = spi_alloc_host(&pdev->dev, sizeof(*as));
 	if (!host)
 		return -ENOMEM;
@@ -1482,6 +1803,31 @@ static int atmel_spi_probe(struct platform_device *pdev)
 	platform_set_drvdata(pdev, host);
 
 	as = spi_controller_get_devdata(host);
+=======
+	master = spi_alloc_master(&pdev->dev, sizeof(*as));
+	if (!master)
+		return -ENOMEM;
+
+	/* the spi->mode bits understood by this driver: */
+	master->use_gpio_descriptors = true;
+	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
+	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 16);
+	master->dev.of_node = pdev->dev.of_node;
+	master->bus_num = pdev->id;
+	master->num_chipselect = 4;
+	master->setup = atmel_spi_setup;
+	master->flags = (SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX |
+			SPI_MASTER_GPIO_SS);
+	master->transfer_one = atmel_spi_one_transfer;
+	master->set_cs = atmel_spi_set_cs;
+	master->cleanup = atmel_spi_cleanup;
+	master->auto_runtime_pm = true;
+	master->max_dma_len = SPI_MAX_DMA_XFER;
+	master->can_dma = atmel_spi_can_dma;
+	platform_set_drvdata(pdev, master);
+
+	as = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_init(&as->lock);
 
@@ -1502,7 +1848,11 @@ static int atmel_spi_probe(struct platform_device *pdev)
 	as->use_dma = false;
 	as->use_pdc = false;
 	if (as->caps.has_dma_support) {
+<<<<<<< HEAD
 		ret = atmel_spi_configure_dma(host, as);
+=======
+		ret = atmel_spi_configure_dma(master, as);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret == 0) {
 			as->use_dma = true;
 		} else if (ret == -EPROBE_DEFER) {
@@ -1532,7 +1882,11 @@ static int atmel_spi_probe(struct platform_device *pdev)
 			}
 		}
 		if (!as->use_dma)
+<<<<<<< HEAD
 			dev_info(host->dev.parent,
+=======
+			dev_info(master->dev.parent,
+>>>>>>> b7ba80a49124 (Commit)
 				 "  can not allocate dma coherent memory\n");
 	}
 
@@ -1541,10 +1895,17 @@ static int atmel_spi_probe(struct platform_device *pdev)
 
 	if (as->use_pdc) {
 		ret = devm_request_irq(&pdev->dev, irq, atmel_spi_pdc_interrupt,
+<<<<<<< HEAD
 					0, dev_name(&pdev->dev), host);
 	} else {
 		ret = devm_request_irq(&pdev->dev, irq, atmel_spi_pio_interrupt,
 					0, dev_name(&pdev->dev), host);
+=======
+					0, dev_name(&pdev->dev), master);
+	} else {
+		ret = devm_request_irq(&pdev->dev, irq, atmel_spi_pio_interrupt,
+					0, dev_name(&pdev->dev), master);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (ret)
 		goto out_unmap_regs;
@@ -1569,7 +1930,11 @@ static int atmel_spi_probe(struct platform_device *pdev)
 	pm_runtime_set_active(&pdev->dev);
 	pm_runtime_enable(&pdev->dev);
 
+<<<<<<< HEAD
 	ret = devm_spi_register_controller(&pdev->dev, host);
+=======
+	ret = devm_spi_register_master(&pdev->dev, master);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto out_free_dma;
 
@@ -1585,13 +1950,18 @@ out_free_dma:
 	pm_runtime_set_suspended(&pdev->dev);
 
 	if (as->use_dma)
+<<<<<<< HEAD
 		atmel_spi_release_dma(host);
+=======
+		atmel_spi_release_dma(master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spi_writel(as, CR, SPI_BIT(SWRST));
 	spi_writel(as, CR, SPI_BIT(SWRST)); /* AT91SAM9263 Rev B workaround */
 	clk_disable_unprepare(clk);
 out_free_irq:
 out_unmap_regs:
+<<<<<<< HEAD
 	spi_controller_put(host);
 	return ret;
 }
@@ -1600,13 +1970,28 @@ static void atmel_spi_remove(struct platform_device *pdev)
 {
 	struct spi_controller	*host = platform_get_drvdata(pdev);
 	struct atmel_spi	*as = spi_controller_get_devdata(host);
+=======
+	spi_master_put(master);
+	return ret;
+}
+
+static int atmel_spi_remove(struct platform_device *pdev)
+{
+	struct spi_master	*master = platform_get_drvdata(pdev);
+	struct atmel_spi	*as = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pm_runtime_get_sync(&pdev->dev);
 
 	/* reset the hardware and block queue progress */
 	if (as->use_dma) {
+<<<<<<< HEAD
 		atmel_spi_stop_dma(host);
 		atmel_spi_release_dma(host);
+=======
+		atmel_spi_stop_dma(master);
+		atmel_spi_release_dma(master);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ENABLED(CONFIG_SOC_SAM_V4_V5)) {
 			dma_free_coherent(&pdev->dev, SPI_MAX_DMA_XFER,
 					  as->addr_tx_bbuf,
@@ -1627,12 +2012,22 @@ static void atmel_spi_remove(struct platform_device *pdev)
 
 	pm_runtime_put_noidle(&pdev->dev);
 	pm_runtime_disable(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int atmel_spi_runtime_suspend(struct device *dev)
 {
+<<<<<<< HEAD
 	struct spi_controller *host = dev_get_drvdata(dev);
 	struct atmel_spi *as = spi_controller_get_devdata(host);
+=======
+	struct spi_master *master = dev_get_drvdata(dev);
+	struct atmel_spi *as = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	clk_disable_unprepare(as->clk);
 	pinctrl_pm_select_sleep_state(dev);
@@ -1642,8 +2037,13 @@ static int atmel_spi_runtime_suspend(struct device *dev)
 
 static int atmel_spi_runtime_resume(struct device *dev)
 {
+<<<<<<< HEAD
 	struct spi_controller *host = dev_get_drvdata(dev);
 	struct atmel_spi *as = spi_controller_get_devdata(host);
+=======
+	struct spi_master *master = dev_get_drvdata(dev);
+	struct atmel_spi *as = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pinctrl_pm_select_default_state(dev);
 
@@ -1652,11 +2052,19 @@ static int atmel_spi_runtime_resume(struct device *dev)
 
 static int atmel_spi_suspend(struct device *dev)
 {
+<<<<<<< HEAD
 	struct spi_controller *host = dev_get_drvdata(dev);
 	int ret;
 
 	/* Stop the queue running */
 	ret = spi_controller_suspend(host);
+=======
+	struct spi_master *master = dev_get_drvdata(dev);
+	int ret;
+
+	/* Stop the queue running */
+	ret = spi_master_suspend(master);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -1668,8 +2076,13 @@ static int atmel_spi_suspend(struct device *dev)
 
 static int atmel_spi_resume(struct device *dev)
 {
+<<<<<<< HEAD
 	struct spi_controller *host = dev_get_drvdata(dev);
 	struct atmel_spi *as = spi_controller_get_devdata(host);
+=======
+	struct spi_master *master = dev_get_drvdata(dev);
+	struct atmel_spi *as = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	ret = clk_prepare_enable(as->clk);
@@ -1687,7 +2100,11 @@ static int atmel_spi_resume(struct device *dev)
 	}
 
 	/* Start the queue running */
+<<<<<<< HEAD
 	return spi_controller_resume(host);
+=======
+	return spi_master_resume(master);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct dev_pm_ops atmel_spi_pm_ops = {
@@ -1710,7 +2127,11 @@ static struct platform_driver atmel_spi_driver = {
 		.of_match_table	= atmel_spi_dt_ids,
 	},
 	.probe		= atmel_spi_probe,
+<<<<<<< HEAD
 	.remove_new	= atmel_spi_remove,
+=======
+	.remove		= atmel_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(atmel_spi_driver);
 

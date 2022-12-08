@@ -214,11 +214,17 @@ int __init efi_memblock_x86_reserve_range(void)
 	data.desc_size		= e->efi_memdesc_size;
 	data.desc_version	= e->efi_memdesc_version;
 
+<<<<<<< HEAD
 	if (!efi_enabled(EFI_PARAVIRT)) {
 		rv = efi_memmap_init_early(&data);
 		if (rv)
 			return rv;
 	}
+=======
+	rv = efi_memmap_init_early(&data);
+	if (rv)
+		return rv;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (add_efi_memmap || do_efi_soft_reserve())
 		do_add_efi_memmap();
@@ -305,6 +311,7 @@ static void __init efi_clean_memmap(void)
 	}
 }
 
+<<<<<<< HEAD
 /*
  * Firmware can use EfiMemoryMappedIO to request that MMIO regions be
  * mapped by the OS so they can be accessed by EFI runtime services, but
@@ -349,6 +356,8 @@ static void __init efi_remove_e820_mmio(void)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void __init efi_print_memmap(void)
 {
 	efi_memory_desc_t *md;
@@ -380,7 +389,11 @@ static int __init efi_systab_init(unsigned long phys)
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	ret = efi_systab_check_header(hdr);
+=======
+	ret = efi_systab_check_header(hdr, 1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		early_memunmap(p, size);
 		return ret;
@@ -520,8 +533,11 @@ void __init efi_init(void)
 	set_bit(EFI_RUNTIME_SERVICES, &efi.flags);
 	efi_clean_memmap();
 
+<<<<<<< HEAD
 	efi_remove_e820_mmio();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (efi_enabled(EFI_DBG))
 		efi_print_memmap();
 }

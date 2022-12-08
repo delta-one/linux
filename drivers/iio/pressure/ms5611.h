@@ -13,6 +13,11 @@
 #include <linux/iio/iio.h>
 #include <linux/mutex.h>
 
+<<<<<<< HEAD
+=======
+struct regulator;
+
+>>>>>>> b7ba80a49124 (Commit)
 #define MS5611_RESET			0x1e
 #define MS5611_READ_ADC			0x00
 #define MS5611_READ_PROM_WORD		0xA0
@@ -23,6 +28,16 @@ enum {
 	MS5607,
 };
 
+<<<<<<< HEAD
+=======
+struct ms5611_chip_info {
+	u16 prom[MS5611_PROM_WORDS_NB];
+
+	int (*temp_and_pressure_compensate)(struct ms5611_chip_info *chip_info,
+					    s32 *temp, s32 *pressure);
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * OverSampling Rate descriptor.
  * Warning: cmd MUST be kept aligned on a word boundary (see
@@ -41,18 +56,30 @@ struct ms5611_state {
 	const struct ms5611_osr *pressure_osr;
 	const struct ms5611_osr *temp_osr;
 
+<<<<<<< HEAD
 	u16 prom[MS5611_PROM_WORDS_NB];
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int (*reset)(struct ms5611_state *st);
 	int (*read_prom_word)(struct ms5611_state *st, int index, u16 *word);
 	int (*read_adc_temp_and_pressure)(struct ms5611_state *st,
 					  s32 *temp, s32 *pressure);
 
+<<<<<<< HEAD
 	int (*compensate_temp_and_pressure)(struct ms5611_state *st, s32 *temp,
 					  s32 *pressure);
+=======
+	struct ms5611_chip_info *chip_info;
+	struct regulator *vdd;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int ms5611_probe(struct iio_dev *indio_dev, struct device *dev,
 		 const char *name, int type);
+<<<<<<< HEAD
+=======
+void ms5611_remove(struct iio_dev *indio_dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _MS5611_H */

@@ -16,9 +16,14 @@
 #include "dns_resolve.h"
 
 ssize_t nfs_dns_resolve_name(struct net *net, char *name, size_t namelen,
+<<<<<<< HEAD
 		struct sockaddr_storage *ss, size_t salen)
 {
 	struct sockaddr *sa = (struct sockaddr *)ss;
+=======
+		struct sockaddr *sa, size_t salen)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	ssize_t ret;
 	char *ip_addr = NULL;
 	int ip_len;
@@ -342,7 +347,11 @@ out:
 }
 
 ssize_t nfs_dns_resolve_name(struct net *net, char *name,
+<<<<<<< HEAD
 		size_t namelen, struct sockaddr_storage *ss, size_t salen)
+=======
+		size_t namelen, struct sockaddr *sa, size_t salen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nfs_dns_ent key = {
 		.hostname = name,
@@ -355,7 +364,11 @@ ssize_t nfs_dns_resolve_name(struct net *net, char *name,
 	ret = do_cache_lookup_wait(nn->nfs_dns_resolve, &key, &item);
 	if (ret == 0) {
 		if (salen >= item->addrlen) {
+<<<<<<< HEAD
 			memcpy(ss, &item->addr, item->addrlen);
+=======
+			memcpy(sa, &item->addr, item->addrlen);
+>>>>>>> b7ba80a49124 (Commit)
 			ret = item->addrlen;
 		} else
 			ret = -EOVERFLOW;

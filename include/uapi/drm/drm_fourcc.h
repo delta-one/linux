@@ -88,6 +88,7 @@ extern "C" {
  *
  * The authoritative list of format modifier codes is found in
  * `include/uapi/drm/drm_fourcc.h`
+<<<<<<< HEAD
  *
  * Open Source User Waiver
  * -----------------------
@@ -100,6 +101,8 @@ extern "C" {
  * To ensure, as much as feasible, compatibility across stacks and avoid
  * confusion with incompatible enumerations stakeholders for all relevant driver
  * stacks should approve additions.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #define fourcc_code(a, b, c, d) ((__u32)(a) | ((__u32)(b) << 8) | \
@@ -756,6 +759,7 @@ extern "C" {
  */
 #define DRM_FORMAT_MOD_VIVANTE_SPLIT_SUPER_TILED fourcc_mod_code(VIVANTE, 4)
 
+<<<<<<< HEAD
 /*
  * Vivante TS (tile-status) buffer modifiers. They can be combined with all of
  * the color buffer tiling modifiers defined above. When TS is present it's a
@@ -785,6 +789,8 @@ extern "C" {
 #define VIVANTE_MOD_EXT_MASK              (VIVANTE_MOD_TS_MASK | \
                                            VIVANTE_MOD_COMP_MASK)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* NVIDIA frame buffer modifiers */
 
 /*

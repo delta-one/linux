@@ -39,7 +39,10 @@ properties:
       - rc-avertv-303
       - rc-azurewave-ad-tu700
       - rc-beelink-gs1
+<<<<<<< HEAD
       - rc-beelink-mxiii
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - rc-behold
       - rc-behold-columbus
       - rc-budget-ci-old
@@ -56,7 +59,10 @@ properties:
       - rc-dm1105-nec
       - rc-dntv-live-dvb-t
       - rc-dntv-live-dvbt-pro
+<<<<<<< HEAD
       - rc-dreambox
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - rc-dtt200u
       - rc-dvbsky
       - rc-dvico-mce

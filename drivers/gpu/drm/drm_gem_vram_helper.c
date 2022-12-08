@@ -19,7 +19,10 @@
 #include <drm/drm_simple_kms_helper.h>
 
 #include <drm/ttm/ttm_range_manager.h>
+<<<<<<< HEAD
 #include <drm/ttm/ttm_tt.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct drm_gem_object_funcs drm_gem_vram_object_funcs;
 
@@ -434,19 +437,39 @@ int drm_gem_vram_vmap(struct drm_gem_vram_object *gbo, struct iosys_map *map)
 {
 	int ret;
 
+<<<<<<< HEAD
 	dma_resv_assert_held(gbo->bo.base.resv);
 
 	ret = drm_gem_vram_pin_locked(gbo, 0);
 	if (ret)
 		return ret;
+=======
+	ret = ttm_bo_reserve(&gbo->bo, true, false, NULL);
+	if (ret)
+		return ret;
+
+	ret = drm_gem_vram_pin_locked(gbo, 0);
+	if (ret)
+		goto err_ttm_bo_unreserve;
+>>>>>>> b7ba80a49124 (Commit)
 	ret = drm_gem_vram_kmap_locked(gbo, map);
 	if (ret)
 		goto err_drm_gem_vram_unpin_locked;
 
+<<<<<<< HEAD
+=======
+	ttm_bo_unreserve(&gbo->bo);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_drm_gem_vram_unpin_locked:
 	drm_gem_vram_unpin_locked(gbo);
+<<<<<<< HEAD
+=======
+err_ttm_bo_unreserve:
+	ttm_bo_unreserve(&gbo->bo);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 EXPORT_SYMBOL(drm_gem_vram_vmap);
@@ -462,10 +485,23 @@ EXPORT_SYMBOL(drm_gem_vram_vmap);
 void drm_gem_vram_vunmap(struct drm_gem_vram_object *gbo,
 			 struct iosys_map *map)
 {
+<<<<<<< HEAD
 	dma_resv_assert_held(gbo->bo.base.resv);
 
 	drm_gem_vram_kunmap_locked(gbo, map);
 	drm_gem_vram_unpin_locked(gbo);
+=======
+	int ret;
+
+	ret = ttm_bo_reserve(&gbo->bo, false, false, NULL);
+	if (WARN_ONCE(ret, "ttm_bo_reserve_failed(): ret=%d\n", ret))
+		return;
+
+	drm_gem_vram_kunmap_locked(gbo, map);
+	drm_gem_vram_unpin_locked(gbo);
+
+	ttm_bo_unreserve(&gbo->bo);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(drm_gem_vram_vunmap);
 
@@ -916,6 +952,7 @@ static int bo_driver_move(struct ttm_buffer_object *bo,
 {
 	struct drm_gem_vram_object *gbo;
 
+<<<<<<< HEAD
 	if (!bo->resource) {
 		if (new_mem->mem_type != TTM_PL_SYSTEM) {
 			hop->mem_type = TTM_PL_SYSTEM;
@@ -927,6 +964,8 @@ static int bo_driver_move(struct ttm_buffer_object *bo,
 		return 0;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gbo = drm_gem_vram_of_bo(bo);
 
 	return drm_gem_vram_bo_driver_move(gbo, evict, ctx, new_mem);
@@ -968,8 +1007,13 @@ static struct ttm_device_funcs bo_driver = {
 
 static int drm_vram_mm_debugfs(struct seq_file *m, void *data)
 {
+<<<<<<< HEAD
 	struct drm_debugfs_entry *entry = m->private;
 	struct drm_vram_mm *vmm = entry->dev->vram_mm;
+=======
+	struct drm_info_node *node = (struct drm_info_node *) m->private;
+	struct drm_vram_mm *vmm = node->minor->dev->vram_mm;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ttm_resource_manager *man = ttm_manager_type(&vmm->bdev, TTM_PL_VRAM);
 	struct drm_printer p = drm_seq_file_printer(m);
 
@@ -977,7 +1021,11 @@ static int drm_vram_mm_debugfs(struct seq_file *m, void *data)
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct drm_debugfs_info drm_vram_mm_debugfs_list[] = {
+=======
+static const struct drm_info_list drm_vram_mm_debugfs_list[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ "vram-mm", drm_vram_mm_debugfs, 0, NULL },
 };
 
@@ -989,8 +1037,14 @@ static const struct drm_debugfs_info drm_vram_mm_debugfs_list[] = {
  */
 void drm_vram_mm_debugfs_init(struct drm_minor *minor)
 {
+<<<<<<< HEAD
 	drm_debugfs_add_files(minor->dev, drm_vram_mm_debugfs_list,
 			      ARRAY_SIZE(drm_vram_mm_debugfs_list));
+=======
+	drm_debugfs_create_files(drm_vram_mm_debugfs_list,
+				 ARRAY_SIZE(drm_vram_mm_debugfs_list),
+				 minor->debugfs_root, minor);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(drm_vram_mm_debugfs_init);
 

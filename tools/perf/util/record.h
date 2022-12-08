@@ -13,6 +13,10 @@ struct option;
 
 struct record_opts {
 	struct target target;
+<<<<<<< HEAD
+=======
+	bool	      group;
+>>>>>>> b7ba80a49124 (Commit)
 	bool	      inherit_stat;
 	bool	      no_buffering;
 	bool	      no_inherit;
@@ -65,6 +69,10 @@ struct record_opts {
 	const char    *auxtrace_snapshot_opts;
 	const char    *auxtrace_sample_opts;
 	bool	      sample_transaction;
+<<<<<<< HEAD
+=======
+	int	      initial_delay;
+>>>>>>> b7ba80a49124 (Commit)
 	bool	      use_clockid;
 	clockid_t     clockid;
 	u64	      clockid_res_ns;

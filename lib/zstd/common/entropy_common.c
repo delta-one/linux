@@ -212,7 +212,11 @@ static size_t FSE_readNCount_body_default(
 }
 
 #if DYNAMIC_BMI2
+<<<<<<< HEAD
 BMI2_TARGET_ATTRIBUTE static size_t FSE_readNCount_body_bmi2(
+=======
+TARGET_ATTRIBUTE("bmi2") static size_t FSE_readNCount_body_bmi2(
+>>>>>>> b7ba80a49124 (Commit)
         short* normalizedCounter, unsigned* maxSVPtr, unsigned* tableLogPtr,
         const void* headerBuffer, size_t hbSize)
 {
@@ -294,7 +298,11 @@ HUF_readStats_body(BYTE* huffWeight, size_t hwSize, U32* rankStats,
     ZSTD_memset(rankStats, 0, (HUF_TABLELOG_MAX + 1) * sizeof(U32));
     weightTotal = 0;
     {   U32 n; for (n=0; n<oSize; n++) {
+<<<<<<< HEAD
             if (huffWeight[n] > HUF_TABLELOG_MAX) return ERROR(corruption_detected);
+=======
+            if (huffWeight[n] >= HUF_TABLELOG_MAX) return ERROR(corruption_detected);
+>>>>>>> b7ba80a49124 (Commit)
             rankStats[huffWeight[n]]++;
             weightTotal += (1 << huffWeight[n]) >> 1;
     }   }
@@ -332,7 +340,11 @@ static size_t HUF_readStats_body_default(BYTE* huffWeight, size_t hwSize, U32* r
 }
 
 #if DYNAMIC_BMI2
+<<<<<<< HEAD
 static BMI2_TARGET_ATTRIBUTE size_t HUF_readStats_body_bmi2(BYTE* huffWeight, size_t hwSize, U32* rankStats,
+=======
+static TARGET_ATTRIBUTE("bmi2") size_t HUF_readStats_body_bmi2(BYTE* huffWeight, size_t hwSize, U32* rankStats,
+>>>>>>> b7ba80a49124 (Commit)
                      U32* nbSymbolsPtr, U32* tableLogPtr,
                      const void* src, size_t srcSize,
                      void* workSpace, size_t wkspSize)

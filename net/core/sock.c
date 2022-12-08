@@ -901,20 +901,27 @@ int sock_set_timestamping(struct sock *sk, int optname,
 	if (val & ~SOF_TIMESTAMPING_MASK)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (val & SOF_TIMESTAMPING_OPT_ID_TCP &&
 	    !(val & SOF_TIMESTAMPING_OPT_ID))
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (val & SOF_TIMESTAMPING_OPT_ID &&
 	    !(sk->sk_tsflags & SOF_TIMESTAMPING_OPT_ID)) {
 		if (sk_is_tcp(sk)) {
 			if ((1 << sk->sk_state) &
 			    (TCPF_CLOSE | TCPF_LISTEN))
 				return -EINVAL;
+<<<<<<< HEAD
 			if (val & SOF_TIMESTAMPING_OPT_ID_TCP)
 				atomic_set(&sk->sk_tskey, tcp_sk(sk)->write_seq);
 			else
 				atomic_set(&sk->sk_tskey, tcp_sk(sk)->snd_una);
+=======
+			atomic_set(&sk->sk_tskey, tcp_sk(sk)->snd_una);
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			atomic_set(&sk->sk_tskey, 0);
 		}
@@ -1443,7 +1450,11 @@ set_sndbuf:
 		break;
 		}
 	case SO_INCOMING_CPU:
+<<<<<<< HEAD
 		reuseport_update_incoming_cpu(sk, val);
+=======
+		WRITE_ONCE(sk->sk_incoming_cpu, val);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case SO_CNX_ADVICE:
@@ -1531,8 +1542,11 @@ set_sndbuf:
 			ret = -EINVAL;
 			break;
 		}
+<<<<<<< HEAD
 		if ((u8)val == SOCK_TXREHASH_DEFAULT)
 			val = READ_ONCE(sock_net(sk)->core.sysctl_txrehash);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Paired with READ_ONCE() in tcp_rtx_synack() */
 		WRITE_ONCE(sk->sk_txrehash, (u8)val);
 		break;
@@ -1802,8 +1816,12 @@ int sk_getsockopt(struct sock *sk, int level, int optname,
 		break;
 
 	case SO_PEERSEC:
+<<<<<<< HEAD
 		return security_socket_getpeersec_stream(sock,
 							 optval, optlen, len);
+=======
+		return security_socket_getpeersec_stream(sock, optval.user, optlen.user, len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	case SO_MARK:
 		v.val = sk->sk_mark;
@@ -2104,9 +2122,12 @@ struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
 		if (likely(sk->sk_net_refcnt)) {
 			get_net_track(net, &sk->ns_tracker, priority);
 			sock_inuse_add(net, 1);
+<<<<<<< HEAD
 		} else {
 			__netns_tracker_alloc(net, &sk->ns_tracker,
 					      false, priority);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		sock_net_set(sk, net);
@@ -2162,9 +2183,12 @@ static void __sk_destruct(struct rcu_head *head)
 
 	if (likely(sk->sk_net_refcnt))
 		put_net_track(sock_net(sk), &sk->ns_tracker);
+<<<<<<< HEAD
 	else
 		__netns_tracker_free(sock_net(sk), &sk->ns_tracker, false);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sk_prot_free(sk->sk_prot_creator, sk);
 }
 
@@ -2253,6 +2277,7 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
 	if (likely(newsk->sk_net_refcnt)) {
 		get_net_track(sock_net(newsk), &newsk->ns_tracker, priority);
 		sock_inuse_add(sock_net(newsk), 1);
+<<<<<<< HEAD
 	} else {
 		/* Kernel sockets are not elevating the struct net refcount.
 		 * Instead, use a tracker to more easily detect if a layer
@@ -2261,6 +2286,8 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
 		 */
 		__netns_tracker_alloc(sock_net(newsk), &newsk->ns_tracker,
 				      false, priority);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	sk_node_init(&newsk->sk_node);
 	sock_lock_init(newsk);
@@ -2340,6 +2367,20 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
 	smp_wmb();
 	refcount_set(&newsk->sk_refcnt, 2);
 
+<<<<<<< HEAD
+=======
+	/* Increment the counter in the same struct proto as the master
+	 * sock (sk_refcnt_debug_inc uses newsk->sk_prot->socks, that
+	 * is the same as sk->sk_prot->socks, as this field was copied
+	 * with memcpy).
+	 *
+	 * This _changes_ the previous behaviour, where
+	 * tcp_create_openreq_child always was incrementing the
+	 * equivalent to tcp_prot->socks (inet_sock_nr), so this have
+	 * to be taken into account in all callers. -acme
+	 */
+	sk_refcnt_debug_inc(newsk);
+>>>>>>> b7ba80a49124 (Commit)
 	sk_set_socket(newsk, NULL);
 	sk_tx_queue_clear(newsk);
 	RCU_INIT_POINTER(newsk->sk_wq, NULL);
@@ -2364,6 +2405,7 @@ void sk_free_unlock_clone(struct sock *sk)
 }
 EXPORT_SYMBOL_GPL(sk_free_unlock_clone);
 
+<<<<<<< HEAD
 static u32 sk_dst_gso_max_size(struct sock *sk, struct dst_entry *dst)
 {
 	bool is_ipv6 = false;
@@ -2380,6 +2422,19 @@ static u32 sk_dst_gso_max_size(struct sock *sk, struct dst_entry *dst)
 		max_size = GSO_LEGACY_MAX_SIZE;
 
 	return max_size - (MAX_TCP_HEADER + 1);
+=======
+static void sk_trim_gso_size(struct sock *sk)
+{
+	if (sk->sk_gso_max_size <= GSO_LEGACY_MAX_SIZE)
+		return;
+#if IS_ENABLED(CONFIG_IPV6)
+	if (sk->sk_family == AF_INET6 &&
+	    sk_is_tcp(sk) &&
+	    !ipv6_addr_v4mapped(&sk->sk_v6_rcv_saddr))
+		return;
+#endif
+	sk->sk_gso_max_size = GSO_LEGACY_MAX_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void sk_setup_caps(struct sock *sk, struct dst_entry *dst)
@@ -2399,7 +2454,14 @@ void sk_setup_caps(struct sock *sk, struct dst_entry *dst)
 			sk->sk_route_caps &= ~NETIF_F_GSO_MASK;
 		} else {
 			sk->sk_route_caps |= NETIF_F_SG | NETIF_F_HW_CSUM;
+<<<<<<< HEAD
 			sk->sk_gso_max_size = sk_dst_gso_max_size(sk, dst);
+=======
+			/* pairs with the WRITE_ONCE() in netif_set_gso_max_size() */
+			sk->sk_gso_max_size = READ_ONCE(dst->dev->gso_max_size);
+			sk_trim_gso_size(sk);
+			sk->sk_gso_max_size -= (MAX_TCP_HEADER + 1);
+>>>>>>> b7ba80a49124 (Commit)
 			/* pairs with the WRITE_ONCE() in netif_set_gso_max_segs() */
 			max_segs = max_t(u32, READ_ONCE(dst->dev->gso_max_segs), 1);
 		}
@@ -2745,7 +2807,11 @@ failure:
 }
 EXPORT_SYMBOL(sock_alloc_send_pskb);
 
+<<<<<<< HEAD
 int __sock_cmsg_send(struct sock *sk, struct cmsghdr *cmsg,
+=======
+int __sock_cmsg_send(struct sock *sk, struct msghdr *msg, struct cmsghdr *cmsg,
+>>>>>>> b7ba80a49124 (Commit)
 		     struct sockcm_cookie *sockc)
 {
 	u32 tsflags;
@@ -2799,7 +2865,11 @@ int sock_cmsg_send(struct sock *sk, struct msghdr *msg,
 			return -EINVAL;
 		if (cmsg->cmsg_level != SOL_SOCKET)
 			continue;
+<<<<<<< HEAD
 		ret = __sock_cmsg_send(sk, cmsg, sockc);
+=======
+		ret = __sock_cmsg_send(sk, msg, cmsg, sockc);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			return ret;
 	}
@@ -2818,8 +2888,12 @@ static void sk_enter_memory_pressure(struct sock *sk)
 static void sk_leave_memory_pressure(struct sock *sk)
 {
 	if (sk->sk_prot->leave_memory_pressure) {
+<<<<<<< HEAD
 		INDIRECT_CALL_INET_1(sk->sk_prot->leave_memory_pressure,
 				     tcp_leave_memory_pressure, sk);
+=======
+		sk->sk_prot->leave_memory_pressure(sk);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		unsigned long *memory_pressure = sk->sk_prot->memory_pressure;
 
@@ -3285,8 +3359,11 @@ void sock_def_readable(struct sock *sk)
 {
 	struct socket_wq *wq;
 
+<<<<<<< HEAD
 	trace_sk_data_ready(sk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_read_lock();
 	wq = rcu_dereference(sk->sk_wq);
 	if (skwq_has_sleeper(wq))
@@ -3375,7 +3452,11 @@ void sk_stop_timer_sync(struct sock *sk, struct timer_list *timer)
 }
 EXPORT_SYMBOL(sk_stop_timer_sync);
 
+<<<<<<< HEAD
 void sock_init_data_uid(struct socket *sock, struct sock *sk, kuid_t uid)
+=======
+void sock_init_data(struct socket *sock, struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	sk_init_common(sk);
 	sk->sk_send_head	=	NULL;
@@ -3386,7 +3467,10 @@ void sock_init_data_uid(struct socket *sock, struct sock *sk, kuid_t uid)
 	sk->sk_rcvbuf		=	READ_ONCE(sysctl_rmem_default);
 	sk->sk_sndbuf		=	READ_ONCE(sysctl_wmem_default);
 	sk->sk_state		=	TCP_CLOSE;
+<<<<<<< HEAD
 	sk->sk_use_task_frag	=	true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sk_set_socket(sk, sock);
 
 	sock_set_flag(sk, SOCK_ZAPPED);
@@ -3395,10 +3479,18 @@ void sock_init_data_uid(struct socket *sock, struct sock *sk, kuid_t uid)
 		sk->sk_type	=	sock->type;
 		RCU_INIT_POINTER(sk->sk_wq, &sock->wq);
 		sock->sk	=	sk;
+<<<<<<< HEAD
 	} else {
 		RCU_INIT_POINTER(sk->sk_wq, NULL);
 	}
 	sk->sk_uid	=	uid;
+=======
+		sk->sk_uid	=	SOCK_INODE(sock)->i_uid;
+	} else {
+		RCU_INIT_POINTER(sk->sk_wq, NULL);
+		sk->sk_uid	=	make_kuid(sock_net(sk)->user_ns, 0);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	rwlock_init(&sk->sk_callback_lock);
 	if (sk->sk_kern_sock)
@@ -3446,6 +3538,10 @@ void sock_init_data_uid(struct socket *sock, struct sock *sk, kuid_t uid)
 	sk->sk_pacing_rate = ~0UL;
 	WRITE_ONCE(sk->sk_pacing_shift, 10);
 	sk->sk_incoming_cpu = -1;
+<<<<<<< HEAD
+=======
+	sk->sk_txrehash = SOCK_TXREHASH_DEFAULT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	sk_rx_queue_clear(sk);
 	/*
@@ -3456,6 +3552,7 @@ void sock_init_data_uid(struct socket *sock, struct sock *sk, kuid_t uid)
 	refcount_set(&sk->sk_refcnt, 1);
 	atomic_set(&sk->sk_drops, 0);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(sock_init_data_uid);
 
 void sock_init_data(struct socket *sock, struct sock *sk)
@@ -3466,6 +3563,8 @@ void sock_init_data(struct socket *sock, struct sock *sk)
 
 	sock_init_data_uid(sock, sk, uid);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL(sock_init_data);
 
 void lock_sock_nested(struct sock *sk, int subclass)
@@ -3637,8 +3736,12 @@ int sock_common_getsockopt(struct socket *sock, int level, int optname,
 {
 	struct sock *sk = sock->sk;
 
+<<<<<<< HEAD
 	/* IPV6_ADDRFORM can change sk->sk_prot under us. */
 	return READ_ONCE(sk->sk_prot)->getsockopt(sk, level, optname, optval, optlen);
+=======
+	return sk->sk_prot->getsockopt(sk, level, optname, optval, optlen);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(sock_common_getsockopt);
 
@@ -3664,8 +3767,12 @@ int sock_common_setsockopt(struct socket *sock, int level, int optname,
 {
 	struct sock *sk = sock->sk;
 
+<<<<<<< HEAD
 	/* IPV6_ADDRFORM can change sk->sk_prot under us. */
 	return READ_ONCE(sk->sk_prot)->setsockopt(sk, level, optname, optval, optlen);
+=======
+	return sk->sk_prot->setsockopt(sk, level, optname, optval, optlen);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(sock_common_setsockopt);
 
@@ -3700,6 +3807,11 @@ void sk_common_release(struct sock *sk)
 
 	xfrm_sk_free_policy(sk);
 
+<<<<<<< HEAD
+=======
+	sk_refcnt_debug_release(sk);
+
+>>>>>>> b7ba80a49124 (Commit)
 	sock_put(sk);
 }
 EXPORT_SYMBOL(sk_common_release);

@@ -15,14 +15,21 @@
 
 #include <net/inet_sock.h>
 #include <net/protocol.h>
+<<<<<<< HEAD
 #include <net/netns/hash.h>
 #include <linux/hash.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/icmp.h>
 
 extern struct proto raw_prot;
 
 extern struct raw_hashinfo raw_v4_hashinfo;
+<<<<<<< HEAD
 bool raw_v4_match(struct net *net, const struct sock *sk, unsigned short num,
+=======
+bool raw_v4_match(struct net *net, struct sock *sk, unsigned short num,
+>>>>>>> b7ba80a49124 (Commit)
 		  __be32 raddr, __be32 laddr, int dif, int sdif);
 
 int raw_abort(struct sock *sk, int err);
@@ -31,6 +38,7 @@ int raw_local_deliver(struct sk_buff *, int);
 
 int raw_rcv(struct sock *, struct sk_buff *);
 
+<<<<<<< HEAD
 #define RAW_HTABLE_LOG	8
 #define RAW_HTABLE_SIZE	(1U << RAW_HTABLE_LOG)
 
@@ -45,6 +53,15 @@ static inline u32 raw_hashfunc(const struct net *net, u32 proto)
 	return hash_32(net_hash_mix(net) ^ proto, RAW_HTABLE_LOG);
 }
 
+=======
+#define RAW_HTABLE_SIZE	MAX_INET_PROTOS
+
+struct raw_hashinfo {
+	spinlock_t lock;
+	struct hlist_nulls_head ht[RAW_HTABLE_SIZE];
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void raw_hashinfo_init(struct raw_hashinfo *hashinfo)
 {
 	int i;
@@ -83,7 +100,14 @@ struct raw_sock {
 	u32		   ipmr_table;
 };
 
+<<<<<<< HEAD
 #define raw_sk(ptr) container_of_const(ptr, struct raw_sock, inet.sk)
+=======
+static inline struct raw_sock *raw_sk(const struct sock *sk)
+{
+	return (struct raw_sock *)sk;
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline bool raw_sk_bound_dev_eq(struct net *net, int bound_dev_if,
 				       int dif, int sdif)

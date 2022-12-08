@@ -55,7 +55,11 @@ static bool intel_gvt_is_valid_gfn(struct intel_vgpu *vgpu, unsigned long gfn)
 	int idx;
 	bool ret;
 
+<<<<<<< HEAD
 	if (!test_bit(INTEL_VGPU_STATUS_ATTACHED, vgpu->status))
+=======
+	if (!vgpu->attached)
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	idx = srcu_read_lock(&kvm->srcu);
@@ -282,6 +286,14 @@ static inline int get_next_pt_type(int type)
 	return gtt_type_table[type].next_pt_type;
 }
 
+<<<<<<< HEAD
+=======
+static inline int get_pt_type(int type)
+{
+	return gtt_type_table[type].pt_type;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline int get_entry_type(int type)
 {
 	return gtt_type_table[type].entry_type;
@@ -1178,7 +1190,11 @@ static int is_2MB_gtt_possible(struct intel_vgpu *vgpu,
 	if (!HAS_PAGE_SIZES(vgpu->gvt->gt->i915, I915_GTT_PAGE_SIZE_2M))
 		return 0;
 
+<<<<<<< HEAD
 	if (!test_bit(INTEL_VGPU_STATUS_ATTACHED, vgpu->status))
+=======
+	if (!vgpu->attached)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	pfn = gfn_to_pfn(vgpu->vfio_device.kvm, ops->get_pfn(entry));
 	if (is_error_noslot_pfn(pfn))
@@ -1209,8 +1225,15 @@ static int split_2MB_gtt_entry(struct intel_vgpu *vgpu,
 	for_each_shadow_entry(sub_spt, &sub_se, sub_index) {
 		ret = intel_gvt_dma_map_guest_page(vgpu, start_gfn + sub_index,
 						   PAGE_SIZE, &dma_addr);
+<<<<<<< HEAD
 		if (ret)
 			goto err;
+=======
+		if (ret) {
+			ppgtt_invalidate_spt(spt);
+			return ret;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		sub_se.val64 = se->val64;
 
 		/* Copy the PAT field from PDE. */
@@ -1229,6 +1252,7 @@ static int split_2MB_gtt_entry(struct intel_vgpu *vgpu,
 	ops->set_pfn(se, sub_spt->shadow_page.mfn);
 	ppgtt_set_shadow_entry(spt, se, index);
 	return 0;
+<<<<<<< HEAD
 err:
 	/* Cancel the existing addess mappings of DMA addr. */
 	for_each_present_shadow_entry(sub_spt, &sub_se, sub_index) {
@@ -1240,6 +1264,8 @@ err:
 		sub_spt->guest_page.gfn, sub_spt->shadow_page.type);
 	ppgtt_free_spt(sub_spt);
 	return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int split_64KB_gtt_entry(struct intel_vgpu *vgpu,
@@ -2789,7 +2815,11 @@ int intel_gvt_init_gtt(struct intel_gvt *gvt)
  * intel_gvt_clean_gtt - clean up mm components of a GVT device
  * @gvt: GVT device
  *
+<<<<<<< HEAD
  * This function is called at the driver unloading stage, to clean up
+=======
+ * This function is called at the driver unloading stage, to clean up the
+>>>>>>> b7ba80a49124 (Commit)
  * the mm components of a GVT device.
  *
  */

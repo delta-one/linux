@@ -421,10 +421,13 @@ nf_flow_offload_ip_hook(void *priv, struct sk_buff *skb,
 		if (ret == NF_DROP)
 			flow_offload_teardown(flow);
 		break;
+<<<<<<< HEAD
 	default:
 		WARN_ON_ONCE(1);
 		ret = NF_DROP;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;
@@ -686,10 +689,13 @@ nf_flow_offload_ipv6_hook(void *priv, struct sk_buff *skb,
 		if (ret == NF_DROP)
 			flow_offload_teardown(flow);
 		break;
+<<<<<<< HEAD
 	default:
 		WARN_ON_ONCE(1);
 		ret = NF_DROP;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;

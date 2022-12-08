@@ -42,10 +42,13 @@ struct dpu_hw_dsc_ops {
 	 */
 	void (*dsc_config_thresh)(struct dpu_hw_dsc *hw_dsc,
 				  struct drm_dsc_config *dsc);
+<<<<<<< HEAD
 
 	void (*dsc_bind_pingpong_blk)(struct dpu_hw_dsc *hw_dsc,
 				  bool enable,
 				  enum dpu_pingpong pp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct dpu_hw_dsc {

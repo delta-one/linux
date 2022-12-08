@@ -197,6 +197,7 @@ void synchronize_srcu(struct srcu_struct *ssp)
 {
 	struct rcu_synchronize rs;
 
+<<<<<<< HEAD
 	srcu_lock_sync(&ssp->dep_map);
 
 	RCU_LOCKDEP_WARN(lockdep_is_held(ssp) ||
@@ -209,6 +210,8 @@ void synchronize_srcu(struct srcu_struct *ssp)
 		return;
 
 	might_sleep();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	init_rcu_head_on_stack(&rs.head);
 	init_completion(&rs.completion);
 	call_srcu(ssp, &rs.head, wakeme_after_rcu);

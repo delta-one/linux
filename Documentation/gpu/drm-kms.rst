@@ -520,12 +520,15 @@ HDMI Specific Connector Properties
 .. kernel-doc:: drivers/gpu/drm/drm_connector.c
    :doc: HDMI connector properties
 
+<<<<<<< HEAD
 Analog TV Specific Connector Properties
 ---------------------------------------
 
 .. kernel-doc:: drivers/gpu/drm/drm_connector.c
    :doc: Analog TV Connector Properties
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Standard CRTC Properties
 ------------------------
 

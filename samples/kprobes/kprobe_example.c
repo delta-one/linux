@@ -55,10 +55,13 @@ static int __kprobes handler_pre(struct kprobe *p, struct pt_regs *regs)
 	pr_info("<%s> p->addr, 0x%p, ip = 0x%lx, flags = 0x%lx\n",
 		p->symbol_name, p->addr, regs->psw.addr, regs->flags);
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_LOONGARCH
 	pr_info("<%s> p->addr = 0x%p, era = 0x%lx, estat = 0x%lx\n",
 		p->symbol_name, p->addr, regs->csr_era, regs->csr_estat);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* A dump_stack() here will give a stack backtrace */
 	return 0;
@@ -96,10 +99,13 @@ static void __kprobes handler_post(struct kprobe *p, struct pt_regs *regs,
 	pr_info("<%s> p->addr, 0x%p, flags = 0x%lx\n",
 		p->symbol_name, p->addr, regs->flags);
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_LOONGARCH
 	pr_info("<%s> p->addr = 0x%p, estat = 0x%lx\n",
 		p->symbol_name, p->addr, regs->csr_estat);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __init kprobe_init(void)

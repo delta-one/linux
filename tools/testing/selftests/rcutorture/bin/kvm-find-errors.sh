@@ -32,11 +32,19 @@ for i in ${rundir}/*/Make.out
 do
 	scenariodir="`dirname $i`"
 	scenariobasedir="`echo ${scenariodir} | sed -e 's/\.[0-9]*$//'`"
+<<<<<<< HEAD
 	if grep -E -q "error:|warning:|^ld: .*undefined reference to" < $i
 	then
 		grep -E "error:|warning:|^ld: .*undefined reference to" < $i > $i.diags
 		files="$files $i.diags $i"
 	elif ! test -f ${scenariobasedir}/vmlinux && ! test -f ${scenariobasedir}/vmlinux.xz && ! test -f "${rundir}/re-run"
+=======
+	if egrep -q "error:|warning:|^ld: .*undefined reference to" < $i
+	then
+		egrep "error:|warning:|^ld: .*undefined reference to" < $i > $i.diags
+		files="$files $i.diags $i"
+	elif ! test -f ${scenariobasedir}/vmlinux && ! test -f "${rundir}/re-run"
+>>>>>>> b7ba80a49124 (Commit)
 	then
 		echo No ${scenariobasedir}/vmlinux file > $i.diags
 		files="$files $i.diags $i"

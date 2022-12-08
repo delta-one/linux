@@ -39,7 +39,10 @@ int acp_pcm_hw_params(struct snd_sof_dev *sdev, struct snd_pcm_substream *substr
 	platform_params->use_phy_address = true;
 	platform_params->phy_addr = stream->reg_offset;
 	platform_params->stream_tag = stream->stream_tag;
+<<<<<<< HEAD
 	platform_params->cont_update_posn = 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* write buffer size of stream in scratch memory */
 
@@ -85,6 +88,7 @@ int acp_pcm_close(struct snd_sof_dev *sdev, struct snd_pcm_substream *substream)
 	return acp_dsp_stream_put(sdev, stream);
 }
 EXPORT_SYMBOL_NS(acp_pcm_close, SND_SOC_SOF_AMD_COMMON);
+<<<<<<< HEAD
 
 snd_pcm_uframes_t acp_pcm_pointer(struct snd_sof_dev *sdev,
 				  struct snd_pcm_substream *substream)
@@ -118,3 +122,5 @@ snd_pcm_uframes_t acp_pcm_pointer(struct snd_sof_dev *sdev,
 	return pos;
 }
 EXPORT_SYMBOL_NS(acp_pcm_pointer, SND_SOC_SOF_AMD_COMMON);
+=======
+>>>>>>> b7ba80a49124 (Commit)

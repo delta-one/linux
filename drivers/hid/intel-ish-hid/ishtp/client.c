@@ -841,6 +841,10 @@ void recv_ishtp_cl_msg(struct ishtp_device *dev,
 	unsigned char *buffer = NULL;
 	struct ishtp_cl_rb *complete_rb = NULL;
 	unsigned long	flags;
+<<<<<<< HEAD
+=======
+	int	rb_count;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ishtp_hdr->reserved) {
 		dev_err(dev->devc, "corrupted message header.\n");
@@ -854,7 +858,13 @@ void recv_ishtp_cl_msg(struct ishtp_device *dev,
 	}
 
 	spin_lock_irqsave(&dev->read_list_spinlock, flags);
+<<<<<<< HEAD
 	list_for_each_entry(rb, &dev->read_list.list, list) {
+=======
+	rb_count = -1;
+	list_for_each_entry(rb, &dev->read_list.list, list) {
+		++rb_count;
+>>>>>>> b7ba80a49124 (Commit)
 		cl = rb->cl;
 		if (!cl || !(cl->host_client_id == ishtp_hdr->host_addr &&
 				cl->fw_client_id == ishtp_hdr->fw_addr) ||

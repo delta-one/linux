@@ -6,6 +6,7 @@
 #ifndef BTRFS_TREE_CHECKER_H
 #define BTRFS_TREE_CHECKER_H
 
+<<<<<<< HEAD
 #include <uapi/linux/btrfs_tree.h>
 
 struct extent_buffer;
@@ -39,6 +40,10 @@ struct btrfs_tree_parent_check {
 	/* The expected level. Should always be set. */
 	u8 level;
 };
+=======
+#include "ctree.h"
+#include "extent_io.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Comprehensive leaf checker.

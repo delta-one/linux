@@ -15,8 +15,11 @@ struct q6apm_graph;
 #define MODULE_ID_PCM_CNV		0x07001003
 #define MODULE_ID_PCM_ENC		0x07001004
 #define MODULE_ID_PCM_DEC		0x07001005
+<<<<<<< HEAD
 #define MODULE_ID_SAL			0x07001010
 #define MODULE_ID_MFC			0x07001015
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MODULE_ID_CODEC_DMA_SINK	0x07001023
 #define MODULE_ID_CODEC_DMA_SOURCE	0x07001024
 #define MODULE_ID_I2S_SINK		0x0700100A
@@ -501,6 +504,7 @@ struct data_logging_config {
 	uint32_t mode;
 } __packed;
 
+<<<<<<< HEAD
 #define PARAM_ID_SAL_OUTPUT_CFG			0x08001016
 struct param_id_sal_output_config {
 	uint32_t bits_per_sample;
@@ -511,6 +515,8 @@ struct param_id_sal_limiter_enable {
 	uint32_t enable_lim;
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PARAM_ID_MFC_OUTPUT_MEDIA_FORMAT	0x08001024
 
 struct param_id_mfc_media_format {
@@ -537,11 +543,14 @@ struct payload_media_fmt_pcm {
 	uint8_t channel_mapping[];
 } __packed;
 
+<<<<<<< HEAD
 #define PARAM_ID_MODULE_ENABLE			0x08001026
 struct param_id_module_enable {
 	uint32_t enable;
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PARAM_ID_CODEC_DMA_INTF_CFG		0x08001063
 
 struct param_id_codec_dma_intf_cfg {
@@ -612,11 +621,15 @@ struct audioreach_graph_info {
 	int id;
 	uint32_t num_sub_graphs;
 	struct list_head sg_list;
+<<<<<<< HEAD
 	/* DPCM connection from FE Graph to BE graph */
 	uint32_t src_mod_inst_id;
 	uint32_t src_mod_op_port_id;
 	uint32_t dst_mod_inst_id;
 	uint32_t dst_mod_ip_port_id;
+=======
+	struct list_head connection_list;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct audioreach_sub_graph {
@@ -644,8 +657,11 @@ struct audioreach_container {
 	struct audioreach_sub_graph *sub_graph;
 };
 
+<<<<<<< HEAD
 #define AR_MAX_MOD_LINKS	8
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct audioreach_module {
 	uint32_t module_id;
 	uint32_t instance_id;
@@ -656,12 +672,20 @@ struct audioreach_module {
 	uint32_t in_port;
 	uint32_t out_port;
 
+<<<<<<< HEAD
 	uint32_t num_connections;
 	/* Connections */
 	uint32_t src_mod_inst_id;
 	uint32_t src_mod_op_port_id[AR_MAX_MOD_LINKS];
 	uint32_t dst_mod_inst_id[AR_MAX_MOD_LINKS];
 	uint32_t dst_mod_ip_port_id[AR_MAX_MOD_LINKS];
+=======
+	/* Connections */
+	uint32_t src_mod_inst_id;
+	uint32_t src_mod_op_port_id;
+	uint32_t dst_mod_inst_id;
+	uint32_t dst_mod_ip_port_id;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Format specifics */
 	uint32_t ch_fmt;
@@ -718,8 +742,14 @@ void *audioreach_alloc_apm_pkt(int pkt_size, uint32_t opcode, uint32_t token,
 void *audioreach_alloc_pkt(int payload_size, uint32_t opcode,
 			   uint32_t token, uint32_t src_port,
 			   uint32_t dest_port);
+<<<<<<< HEAD
 void *audioreach_alloc_graph_pkt(struct q6apm *apm, struct audioreach_graph_info
 				 *info);
+=======
+void *audioreach_alloc_graph_pkt(struct q6apm *apm,
+				 struct list_head *sg_list,
+				  int graph_id);
+>>>>>>> b7ba80a49124 (Commit)
 /* Topology specific */
 int audioreach_tplg_init(struct snd_soc_component *component);
 
@@ -740,4 +770,17 @@ int audioreach_set_media_format(struct q6apm_graph *graph,
 int audioreach_shared_memory_send_eos(struct q6apm_graph *graph);
 int audioreach_gain_set_vol_ctrl(struct q6apm *apm,
 				 struct audioreach_module *module, int vol);
+<<<<<<< HEAD
+=======
+struct audioreach_module *audioreach_get_container_last_module(
+				struct audioreach_container *container);
+struct audioreach_module *audioreach_get_container_first_module(
+				struct audioreach_container *container);
+struct audioreach_module *audioreach_get_container_next_module(
+				struct audioreach_container *container,
+				struct audioreach_module *module);
+#define list_for_each_container_module(mod, cont) \
+	for (mod = audioreach_get_container_first_module(cont); mod != NULL; \
+	     mod = audioreach_get_container_next_module(cont, mod))
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __AUDIOREACH_H__ */

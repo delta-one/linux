@@ -120,7 +120,11 @@ You can tell you are in a softirq (or tasklet) using the
 .. warning::
 
     Beware that this will return a false positive if a
+<<<<<<< HEAD
     :ref:`bottom half lock <local_bh_disable>` is held.
+=======
+    :ref:`botton half lock <local_bh_disable>` is held.
+>>>>>>> b7ba80a49124 (Commit)
 
 Some Basic Rules
 ================

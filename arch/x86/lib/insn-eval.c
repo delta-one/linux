@@ -1595,16 +1595,28 @@ bool insn_decode_from_regs(struct insn *insn, struct pt_regs *regs,
  * Returns:
  *
  * Type of the instruction. Size of the memory operand is stored in
+<<<<<<< HEAD
  * @bytes. If decode failed, INSN_MMIO_DECODE_FAILED returned.
  */
 enum insn_mmio_type insn_decode_mmio(struct insn *insn, int *bytes)
 {
 	enum insn_mmio_type type = INSN_MMIO_DECODE_FAILED;
+=======
+ * @bytes. If decode failed, MMIO_DECODE_FAILED returned.
+ */
+enum mmio_type insn_decode_mmio(struct insn *insn, int *bytes)
+{
+	enum mmio_type type = MMIO_DECODE_FAILED;
+>>>>>>> b7ba80a49124 (Commit)
 
 	*bytes = 0;
 
 	if (insn_get_opcode(insn))
+<<<<<<< HEAD
 		return INSN_MMIO_DECODE_FAILED;
+=======
+		return MMIO_DECODE_FAILED;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (insn->opcode.bytes[0]) {
 	case 0x88: /* MOV m8,r8 */
@@ -1613,7 +1625,11 @@ enum insn_mmio_type insn_decode_mmio(struct insn *insn, int *bytes)
 	case 0x89: /* MOV m16/m32/m64, r16/m32/m64 */
 		if (!*bytes)
 			*bytes = insn->opnd_bytes;
+<<<<<<< HEAD
 		type = INSN_MMIO_WRITE;
+=======
+		type = MMIO_WRITE;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case 0xc6: /* MOV m8, imm8 */
@@ -1622,7 +1638,11 @@ enum insn_mmio_type insn_decode_mmio(struct insn *insn, int *bytes)
 	case 0xc7: /* MOV m16/m32/m64, imm16/imm32/imm64 */
 		if (!*bytes)
 			*bytes = insn->opnd_bytes;
+<<<<<<< HEAD
 		type = INSN_MMIO_WRITE_IMM;
+=======
+		type = MMIO_WRITE_IMM;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case 0x8a: /* MOV r8, m8 */
@@ -1631,7 +1651,11 @@ enum insn_mmio_type insn_decode_mmio(struct insn *insn, int *bytes)
 	case 0x8b: /* MOV r16/r32/r64, m16/m32/m64 */
 		if (!*bytes)
 			*bytes = insn->opnd_bytes;
+<<<<<<< HEAD
 		type = INSN_MMIO_READ;
+=======
+		type = MMIO_READ;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case 0xa4: /* MOVS m8, m8 */
@@ -1640,7 +1664,11 @@ enum insn_mmio_type insn_decode_mmio(struct insn *insn, int *bytes)
 	case 0xa5: /* MOVS m16/m32/m64, m16/m32/m64 */
 		if (!*bytes)
 			*bytes = insn->opnd_bytes;
+<<<<<<< HEAD
 		type = INSN_MMIO_MOVS;
+=======
+		type = MMIO_MOVS;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case 0x0f: /* Two-byte instruction */
@@ -1651,7 +1679,11 @@ enum insn_mmio_type insn_decode_mmio(struct insn *insn, int *bytes)
 		case 0xb7: /* MOVZX r32/r64, m16 */
 			if (!*bytes)
 				*bytes = 2;
+<<<<<<< HEAD
 			type = INSN_MMIO_READ_ZERO_EXTEND;
+=======
+			type = MMIO_READ_ZERO_EXTEND;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		case 0xbe: /* MOVSX r16/r32/r64, m8 */
@@ -1660,7 +1692,11 @@ enum insn_mmio_type insn_decode_mmio(struct insn *insn, int *bytes)
 		case 0xbf: /* MOVSX r32/r64, m16 */
 			if (!*bytes)
 				*bytes = 2;
+<<<<<<< HEAD
 			type = INSN_MMIO_READ_SIGN_EXTEND;
+=======
+			type = MMIO_READ_SIGN_EXTEND;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 		break;

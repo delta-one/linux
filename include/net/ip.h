@@ -340,8 +340,12 @@ static inline u64 snmp_fold_field64(void __percpu *mib, int offt, size_t syncp_o
 	} \
 }
 
+<<<<<<< HEAD
 void inet_get_local_port_range(const struct net *net, int *low, int *high);
 void inet_sk_get_local_port_range(const struct sock *sk, int *low, int *high);
+=======
+void inet_get_local_port_range(struct net *net, int *low, int *high);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_SYSCTL
 static inline bool inet_is_local_reserved_port(struct net *net, unsigned short port)
@@ -564,7 +568,11 @@ static inline void iph_to_flow_copy_v4addrs(struct flow_keys *flow,
 	BUILD_BUG_ON(offsetof(typeof(flow->addrs), v4addrs.dst) !=
 		     offsetof(typeof(flow->addrs), v4addrs.src) +
 			      sizeof(flow->addrs.v4addrs.src));
+<<<<<<< HEAD
 	memcpy(&flow->addrs.v4addrs, &iph->addrs, sizeof(flow->addrs.v4addrs));
+=======
+	memcpy(&flow->addrs.v4addrs, &iph->saddr, sizeof(flow->addrs.v4addrs));
+>>>>>>> b7ba80a49124 (Commit)
 	flow->control.addr_type = FLOW_DISSECTOR_KEY_IPV4_ADDRS;
 }
 

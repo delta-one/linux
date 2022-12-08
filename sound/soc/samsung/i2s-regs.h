@@ -132,7 +132,10 @@
 #define EXYNOS7_MOD_RCLK_192FS	7
 
 #define PSR_PSREN		(1 << 15)
+<<<<<<< HEAD
 #define PSR_PSVAL(x)		((((x) - 1) << 8) & 0x3f00)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define FIC_TX2COUNT(x)		(((x) >>  24) & 0xf)
 #define FIC_TX1COUNT(x)		(((x) >>  16) & 0xf)

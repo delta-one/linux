@@ -38,12 +38,30 @@
 #include <asm/hardware/cache-l2x0.h>
 
 #include "i2c.h"
+<<<<<<< HEAD
+=======
+#include "serial.h"
+
+#include "usb.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define OMAP_INTC_START		NR_IRQS
 
 extern int (*omap_pm_soc_init)(void);
 int omap_pm_nop_init(void);
 
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_PM) && defined(CONFIG_ARCH_OMAP2)
+int omap2_pm_init(void);
+#else
+static inline int omap2_pm_init(void)
+{
+	return 0;
+}
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #if defined(CONFIG_PM) && defined(CONFIG_ARCH_OMAP3)
 int omap3_pm_init(void);
 #else
@@ -78,6 +96,15 @@ static inline int amx3_common_pm_init(void)
 }
 #endif
 
+<<<<<<< HEAD
+=======
+extern void omap2_init_common_infrastructure(void);
+
+extern void omap_init_time(void);
+extern void omap3_secure_sync32k_timer_init(void);
+extern void omap3_gptimer_timer_init(void);
+extern void omap4_local_timer_init(void);
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_CACHE_L2X0
 int omap_l2_cache_init(void);
 #define OMAP_L2C_AUX_CTRL	(L2C_AUX_CTRL_SHARED_OVERRIDE | \
@@ -105,7 +132,13 @@ static inline void omap5_realtime_timer_init(void)
 void omap2420_init_early(void);
 void omap2430_init_early(void);
 void omap3430_init_early(void);
+<<<<<<< HEAD
 void omap3630_init_early(void);
+=======
+void omap35xx_init_early(void);
+void omap3630_init_early(void);
+void omap3_init_early(void);	/* Do not use this one */
+>>>>>>> b7ba80a49124 (Commit)
 void am33xx_init_early(void);
 void am35xx_init_early(void);
 void ti814x_init_early(void);
@@ -116,9 +149,18 @@ void omap4430_init_early(void);
 void omap5_init_early(void);
 void omap3_init_late(void);
 void omap4430_init_late(void);
+<<<<<<< HEAD
 void ti81xx_init_late(void);
 void am33xx_init_late(void);
 void omap5_init_late(void);
+=======
+void omap2420_init_late(void);
+void omap2430_init_late(void);
+void ti81xx_init_late(void);
+void am33xx_init_late(void);
+void omap5_init_late(void);
+int omap2_common_pm_late_init(void);
+>>>>>>> b7ba80a49124 (Commit)
 void dra7xx_init_early(void);
 void dra7xx_init_late(void);
 
@@ -212,6 +254,14 @@ void __init ti81xx_map_io(void);
 	}							\
 })
 
+<<<<<<< HEAD
+=======
+extern struct device *omap2_get_mpuss_device(void);
+extern struct device *omap2_get_iva_device(void);
+extern struct device *omap2_get_l3_device(void);
+extern struct device *omap4_get_dsp_device(void);
+
+>>>>>>> b7ba80a49124 (Commit)
 void omap_gic_of_init(void);
 
 #ifdef CONFIG_CACHE_L2X0
@@ -256,6 +306,7 @@ extern u32 omap4_get_cpu1_ns_pa_addr(void);
 
 #if defined(CONFIG_SMP) && defined(CONFIG_PM)
 extern int omap4_mpuss_init(void);
+<<<<<<< HEAD
 extern int omap4_enter_lowpower(unsigned int cpu, unsigned int power_state,
 				bool rcuidle);
 extern int omap4_hotplug_cpu(unsigned int cpu, unsigned int power_state);
@@ -263,6 +314,13 @@ extern int omap4_hotplug_cpu(unsigned int cpu, unsigned int power_state);
 static inline int omap4_enter_lowpower(unsigned int cpu,
 					unsigned int power_state,
 					bool rcuidle)
+=======
+extern int omap4_enter_lowpower(unsigned int cpu, unsigned int power_state);
+extern int omap4_hotplug_cpu(unsigned int cpu, unsigned int power_state);
+#else
+static inline int omap4_enter_lowpower(unsigned int cpu,
+					unsigned int power_state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	cpu_do_idle();
 	return 0;

@@ -25,9 +25,15 @@
 #include <linux/slab.h>
 #include <linux/io.h>
 #include <linux/kref.h>
+<<<<<<< HEAD
 #include <linux/interrupt.h>
 #include <linux/debugfs.h>
 #include <acpi/apei.h>
+=======
+#include <linux/rculist.h>
+#include <linux/interrupt.h>
+#include <linux/debugfs.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/unaligned.h>
 
 #include "apei-internal.h"
@@ -125,9 +131,18 @@ EXPORT_SYMBOL_GPL(apei_exec_write_register);
 int apei_exec_write_register_value(struct apei_exec_context *ctx,
 				   struct acpi_whea_header *entry)
 {
+<<<<<<< HEAD
 	ctx->value = entry->value;
 
 	return apei_exec_write_register(ctx, entry);
+=======
+	int rc;
+
+	ctx->value = entry->value;
+	rc = apei_exec_write_register(ctx, entry);
+
+	return rc;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(apei_exec_write_register_value);
 

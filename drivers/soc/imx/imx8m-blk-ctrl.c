@@ -4,7 +4,10 @@
  * Copyright 2021 Pengutronix, Lucas Stach <kernel@pengutronix.de>
  */
 
+<<<<<<< HEAD
 #include <linux/bitfield.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/device.h>
 #include <linux/interconnect.h>
 #include <linux/module.h>
@@ -210,6 +213,7 @@ static int imx8m_blk_ctrl_probe(struct platform_device *pdev)
 	if (!bc->onecell_data.domains)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	bc->bus_power_dev = dev_pm_domain_attach_by_name(dev, "bus");
 	if (IS_ERR(bc->bus_power_dev)) {
 		if (PTR_ERR(bc->bus_power_dev) == -ENODEV)
@@ -219,6 +223,12 @@ static int imx8m_blk_ctrl_probe(struct platform_device *pdev)
 			return dev_err_probe(dev, PTR_ERR(bc->bus_power_dev),
 					     "failed to attach power domain \"bus\"\n");
 	}
+=======
+	bc->bus_power_dev = genpd_dev_pm_attach_by_name(dev, "bus");
+	if (IS_ERR(bc->bus_power_dev))
+		return dev_err_probe(dev, PTR_ERR(bc->bus_power_dev),
+				     "failed to attach power domain \"bus\"\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < bc_data->num_domains; i++) {
 		const struct imx8m_blk_ctrl_domain_data *data = &bc_data->domains[i];
@@ -310,10 +320,13 @@ static int imx8m_blk_ctrl_probe(struct platform_device *pdev)
 
 	dev_set_drvdata(dev, bc);
 
+<<<<<<< HEAD
 	ret = devm_of_platform_populate(dev);
 	if (ret)
 		goto cleanup_provider;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 cleanup_provider:
@@ -659,10 +672,13 @@ static const struct imx8m_blk_ctrl_data imx8mn_disp_blk_ctl_dev_data = {
 	.num_domains = ARRAY_SIZE(imx8mn_disp_blk_ctl_domain_data),
 };
 
+<<<<<<< HEAD
 #define LCDIF_ARCACHE_CTRL	0x4c
 #define  LCDIF_1_RD_HURRY	GENMASK(15, 13)
 #define  LCDIF_0_RD_HURRY	GENMASK(12, 10)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int imx8mp_media_power_notifier(struct notifier_block *nb,
 				unsigned long action, void *data)
 {
@@ -676,6 +692,7 @@ static int imx8mp_media_power_notifier(struct notifier_block *nb,
 	regmap_set_bits(bc->regmap, BLK_CLK_EN, BIT(8));
 	regmap_set_bits(bc->regmap, BLK_SFT_RSTN, BIT(8));
 
+<<<<<<< HEAD
 	if (action == GENPD_NOTIFY_ON) {
 		/*
 		 * On power up we have no software backchannel to the GPC to
@@ -694,6 +711,16 @@ static int imx8mp_media_power_notifier(struct notifier_block *nb,
 				FIELD_PREP(LCDIF_0_RD_HURRY, 7));
 	}
 
+=======
+	/*
+	 * On power up we have no software backchannel to the GPC to
+	 * wait for the ADB handshake to happen, so we just delay for a
+	 * bit. On power down the GPC driver waits for the handshake.
+	 */
+	if (action == GENPD_NOTIFY_ON)
+		udelay(5);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return NOTIFY_OK;
 }
 
@@ -895,4 +922,7 @@ static struct platform_driver imx8m_blk_ctrl_driver = {
 	},
 };
 module_platform_driver(imx8m_blk_ctrl_driver);
+<<<<<<< HEAD
 MODULE_LICENSE("GPL");
+=======
+>>>>>>> b7ba80a49124 (Commit)

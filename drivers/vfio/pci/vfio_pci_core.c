@@ -27,9 +27,12 @@
 #include <linux/vgaarb.h>
 #include <linux/nospec.h>
 #include <linux/sched/mm.h>
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_EEH)
 #include <asm/eeh.h>
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "vfio_pci_priv.h"
 
@@ -144,8 +147,12 @@ static void vfio_pci_probe_mmaps(struct vfio_pci_core_device *vdev)
 			 * of the exclusive page in case that hot-add
 			 * device's bar is assigned into it.
 			 */
+<<<<<<< HEAD
 			dummy_res =
 				kzalloc(sizeof(*dummy_res), GFP_KERNEL_ACCOUNT);
+=======
+			dummy_res = kzalloc(sizeof(*dummy_res), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 			if (dummy_res == NULL)
 				goto no_mmap;
 
@@ -690,9 +697,13 @@ void vfio_pci_core_close_device(struct vfio_device *core_vdev)
 		vdev->sriov_pf_core_dev->vf_token->users--;
 		mutex_unlock(&vdev->sriov_pf_core_dev->vf_token->lock);
 	}
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_EEH)
 	eeh_dev_release(vdev->pdev);
 #endif
+=======
+	vfio_spapr_pci_eeh_release(vdev->pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	vfio_pci_core_disable(vdev);
 
 	mutex_lock(&vdev->igate);
@@ -711,9 +722,13 @@ EXPORT_SYMBOL_GPL(vfio_pci_core_close_device);
 void vfio_pci_core_finish_enable(struct vfio_pci_core_device *vdev)
 {
 	vfio_pci_probe_mmaps(vdev);
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_EEH)
 	eeh_dev_open(vdev->pdev);
 #endif
+=======
+	vfio_spapr_pci_eeh_open(vdev->pdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (vdev->sriov_pf_core_dev) {
 		mutex_lock(&vdev->sriov_pf_core_dev->vf_token->lock);
@@ -864,7 +879,11 @@ int vfio_pci_core_register_dev_region(struct vfio_pci_core_device *vdev,
 
 	region = krealloc(vdev->region,
 			  (vdev->num_regions + 1) * sizeof(*region),
+<<<<<<< HEAD
 			  GFP_KERNEL_ACCOUNT);
+=======
+			  GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!region)
 		return -ENOMEM;
 
@@ -1321,7 +1340,11 @@ static int vfio_pci_ioctl_pci_hot_reset(struct vfio_pci_core_device *vdev,
 		}
 
 		/* Ensure the FD is a vfio group FD.*/
+<<<<<<< HEAD
 		if (!vfio_file_is_group(file)) {
+=======
+		if (!vfio_file_iommu_group(file)) {
+>>>>>>> b7ba80a49124 (Commit)
 			fput(file);
 			ret = -EINVAL;
 			break;
@@ -1645,7 +1668,11 @@ static int __vfio_pci_add_vma(struct vfio_pci_core_device *vdev,
 {
 	struct vfio_pci_mmap_vma *mmap_vma;
 
+<<<<<<< HEAD
 	mmap_vma = kmalloc(sizeof(*mmap_vma), GFP_KERNEL_ACCOUNT);
+=======
+	mmap_vma = kmalloc(sizeof(*mmap_vma), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!mmap_vma)
 		return -ENOMEM;
 
@@ -1800,7 +1827,11 @@ int vfio_pci_core_mmap(struct vfio_device *core_vdev, struct vm_area_struct *vma
 	 * See remap_pfn_range(), called from vfio_pci_fault() but we can't
 	 * change vm_flags within the fault handler.  Set them now.
 	 */
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP);
+=======
+	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_ops = &vfio_pci_mmap_ops;
 
 	return 0;
@@ -2117,6 +2148,10 @@ void vfio_pci_core_release_dev(struct vfio_device *core_vdev)
 	mutex_destroy(&vdev->vma_lock);
 	kfree(vdev->region);
 	kfree(vdev->pm_save);
+<<<<<<< HEAD
+=======
+	vfio_free_device(core_vdev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(vfio_pci_core_release_dev);
 
@@ -2135,8 +2170,12 @@ int vfio_pci_core_register_device(struct vfio_pci_core_device *vdev)
 
 	if (vdev->vdev.mig_ops) {
 		if (!(vdev->vdev.mig_ops->migration_get_state &&
+<<<<<<< HEAD
 		      vdev->vdev.mig_ops->migration_set_state &&
 		      vdev->vdev.mig_ops->migration_get_data_size) ||
+=======
+		      vdev->vdev.mig_ops->migration_set_state) ||
+>>>>>>> b7ba80a49124 (Commit)
 		    !(vdev->vdev.migration_flags & VFIO_MIGRATION_STOP_COPY))
 			return -EINVAL;
 	}
@@ -2496,12 +2535,21 @@ static bool vfio_pci_dev_set_needs_reset(struct vfio_device_set *dev_set)
 	struct vfio_pci_core_device *cur;
 	bool needs_reset = false;
 
+<<<<<<< HEAD
 	/* No other VFIO device in the set can be open. */
 	if (vfio_device_set_open_count(dev_set) > 1)
 		return false;
 
 	list_for_each_entry(cur, &dev_set->device_list, vdev.dev_set_list)
 		needs_reset |= cur->needs_reset;
+=======
+	list_for_each_entry(cur, &dev_set->device_list, vdev.dev_set_list) {
+		/* No VFIO device in the set can have an open device FD */
+		if (cur->vdev.open_count)
+			return false;
+		needs_reset |= cur->needs_reset;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return needs_reset;
 }
 

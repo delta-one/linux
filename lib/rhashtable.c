@@ -231,7 +231,10 @@ static int rhashtable_rehash_one(struct rhashtable *ht,
 	struct rhash_head *head, *next, *entry;
 	struct rhash_head __rcu **pprev = NULL;
 	unsigned int new_hash;
+<<<<<<< HEAD
 	unsigned long flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (new_tbl->nest)
 		goto out;
@@ -254,14 +257,22 @@ static int rhashtable_rehash_one(struct rhashtable *ht,
 
 	new_hash = head_hashfn(ht, new_tbl, entry);
 
+<<<<<<< HEAD
 	flags = rht_lock_nested(new_tbl, &new_tbl->buckets[new_hash],
 				SINGLE_DEPTH_NESTING);
+=======
+	rht_lock_nested(new_tbl, &new_tbl->buckets[new_hash], SINGLE_DEPTH_NESTING);
+>>>>>>> b7ba80a49124 (Commit)
 
 	head = rht_ptr(new_tbl->buckets + new_hash, new_tbl, new_hash);
 
 	RCU_INIT_POINTER(entry->next, head);
 
+<<<<<<< HEAD
 	rht_assign_unlock(new_tbl, &new_tbl->buckets[new_hash], entry, flags);
+=======
+	rht_assign_unlock(new_tbl, &new_tbl->buckets[new_hash], entry);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (pprev)
 		rcu_assign_pointer(*pprev, next);
@@ -278,19 +289,30 @@ static int rhashtable_rehash_chain(struct rhashtable *ht,
 {
 	struct bucket_table *old_tbl = rht_dereference(ht->tbl, ht);
 	struct rhash_lock_head __rcu **bkt = rht_bucket_var(old_tbl, old_hash);
+<<<<<<< HEAD
 	unsigned long flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	if (!bkt)
 		return 0;
+<<<<<<< HEAD
 	flags = rht_lock(old_tbl, bkt);
+=======
+	rht_lock(old_tbl, bkt);
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (!(err = rhashtable_rehash_one(ht, bkt, old_hash)))
 		;
 
 	if (err == -ENOENT)
 		err = 0;
+<<<<<<< HEAD
 	rht_unlock(old_tbl, bkt, flags);
+=======
+	rht_unlock(old_tbl, bkt);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return err;
 }
@@ -593,7 +615,10 @@ static void *rhashtable_try_insert(struct rhashtable *ht, const void *key,
 	struct bucket_table *new_tbl;
 	struct bucket_table *tbl;
 	struct rhash_lock_head __rcu **bkt;
+<<<<<<< HEAD
 	unsigned long flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int hash;
 	void *data;
 
@@ -611,7 +636,11 @@ static void *rhashtable_try_insert(struct rhashtable *ht, const void *key,
 			new_tbl = rht_dereference_rcu(tbl->future_tbl, ht);
 			data = ERR_PTR(-EAGAIN);
 		} else {
+<<<<<<< HEAD
 			flags = rht_lock(tbl, bkt);
+=======
+			rht_lock(tbl, bkt);
+>>>>>>> b7ba80a49124 (Commit)
 			data = rhashtable_lookup_one(ht, bkt, tbl,
 						     hash, key, obj);
 			new_tbl = rhashtable_insert_one(ht, bkt, tbl,
@@ -619,7 +648,11 @@ static void *rhashtable_try_insert(struct rhashtable *ht, const void *key,
 			if (PTR_ERR(new_tbl) != -EEXIST)
 				data = ERR_CAST(new_tbl);
 
+<<<<<<< HEAD
 			rht_unlock(tbl, bkt, flags);
+=======
+			rht_unlock(tbl, bkt);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	} while (!IS_ERR_OR_NULL(new_tbl));
 

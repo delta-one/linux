@@ -118,9 +118,15 @@ static void ena_safe_update_stat(u64 *src, u64 *dst,
 	unsigned int start;
 
 	do {
+<<<<<<< HEAD
 		start = u64_stats_fetch_begin(syncp);
 		*(dst) = *src;
 	} while (u64_stats_fetch_retry(syncp, start));
+=======
+		start = u64_stats_fetch_begin_irq(syncp);
+		*(dst) = *src;
+	} while (u64_stats_fetch_retry_irq(syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ena_queue_stats(struct ena_adapter *adapter, u64 **data)
@@ -850,6 +856,7 @@ static int ena_set_channels(struct net_device *netdev,
 	struct ena_adapter *adapter = netdev_priv(netdev);
 	u32 count = channels->combined_count;
 	/* The check for max value is already done in ethtool */
+<<<<<<< HEAD
 	if (count < ENA_MIN_NUM_IO_QUEUES)
 		return -EINVAL;
 
@@ -864,6 +871,13 @@ static int ena_set_channels(struct net_device *netdev,
 				      NETDEV_XDP_ACT_REDIRECT);
 	}
 
+=======
+	if (count < ENA_MIN_NUM_IO_QUEUES ||
+	    (ena_xdp_present(adapter) &&
+	    !ena_xdp_legal_queue_count(adapter, count)))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ena_update_queue_count(adapter, count);
 }
 
@@ -896,7 +910,15 @@ static int ena_set_tunable(struct net_device *netdev,
 	switch (tuna->id) {
 	case ETHTOOL_RX_COPYBREAK:
 		len = *(u32 *)data;
+<<<<<<< HEAD
 		ret = ena_set_rx_copybreak(adapter, len);
+=======
+		if (len > adapter->netdev->mtu) {
+			ret = -EINVAL;
+			break;
+		}
+		adapter->rx_copybreak = len;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		ret = -EINVAL;

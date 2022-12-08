@@ -152,12 +152,20 @@ const struct clk_ops mtk_clk_gate_ops_no_setclr_inv = {
 };
 EXPORT_SYMBOL_GPL(mtk_clk_gate_ops_no_setclr_inv);
 
+<<<<<<< HEAD
 static struct clk_hw *mtk_clk_register_gate(struct device *dev, const char *name,
+=======
+static struct clk_hw *mtk_clk_register_gate(const char *name,
+>>>>>>> b7ba80a49124 (Commit)
 					 const char *parent_name,
 					 struct regmap *regmap, int set_ofs,
 					 int clr_ofs, int sta_ofs, u8 bit,
 					 const struct clk_ops *ops,
+<<<<<<< HEAD
 					 unsigned long flags)
+=======
+					 unsigned long flags, struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mtk_clk_gate *cg;
 	int ret;
@@ -202,9 +210,16 @@ static void mtk_clk_unregister_gate(struct clk_hw *hw)
 	kfree(cg);
 }
 
+<<<<<<< HEAD
 int mtk_clk_register_gates(struct device *dev, struct device_node *node,
 			   const struct mtk_gate *clks, int num,
 			   struct clk_hw_onecell_data *clk_data)
+=======
+int mtk_clk_register_gates_with_dev(struct device_node *node,
+				    const struct mtk_gate *clks, int num,
+				    struct clk_hw_onecell_data *clk_data,
+				    struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 	struct clk_hw *hw;
@@ -228,13 +243,21 @@ int mtk_clk_register_gates(struct device *dev, struct device_node *node,
 			continue;
 		}
 
+<<<<<<< HEAD
 		hw = mtk_clk_register_gate(dev, gate->name, gate->parent_name,
+=======
+		hw = mtk_clk_register_gate(gate->name, gate->parent_name,
+>>>>>>> b7ba80a49124 (Commit)
 					    regmap,
 					    gate->regs->set_ofs,
 					    gate->regs->clr_ofs,
 					    gate->regs->sta_ofs,
 					    gate->shift, gate->ops,
+<<<<<<< HEAD
 					    gate->flags);
+=======
+					    gate->flags, dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (IS_ERR(hw)) {
 			pr_err("Failed to register clk %s: %pe\n", gate->name,
@@ -260,6 +283,16 @@ err:
 
 	return PTR_ERR(hw);
 }
+<<<<<<< HEAD
+=======
+
+int mtk_clk_register_gates(struct device_node *node,
+			   const struct mtk_gate *clks, int num,
+			   struct clk_hw_onecell_data *clk_data)
+{
+	return mtk_clk_register_gates_with_dev(node, clks, num, clk_data, NULL);
+}
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL_GPL(mtk_clk_register_gates);
 
 void mtk_clk_unregister_gates(const struct mtk_gate *clks, int num,

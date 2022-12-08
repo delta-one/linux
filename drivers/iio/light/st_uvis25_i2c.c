@@ -25,7 +25,12 @@ static const struct regmap_config st_uvis25_i2c_regmap_config = {
 	.read_flag_mask = UVIS25_I2C_AUTO_INCREMENT,
 };
 
+<<<<<<< HEAD
 static int st_uvis25_i2c_probe(struct i2c_client *client)
+=======
+static int st_uvis25_i2c_probe(struct i2c_client *client,
+			       const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct regmap *regmap;
 
@@ -57,7 +62,11 @@ static struct i2c_driver st_uvis25_driver = {
 		.pm = pm_sleep_ptr(&st_uvis25_pm_ops),
 		.of_match_table = st_uvis25_i2c_of_match,
 	},
+<<<<<<< HEAD
 	.probe_new = st_uvis25_i2c_probe,
+=======
+	.probe = st_uvis25_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = st_uvis25_i2c_id_table,
 };
 module_i2c_driver(st_uvis25_driver);

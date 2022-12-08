@@ -5,6 +5,7 @@
  *
  */
 
+<<<<<<< HEAD
 #include <linux/clk.h>
 #include <linux/interrupt.h>
 #include <linux/irq.h>
@@ -26,6 +27,13 @@
 #include <media/v4l2-event.h>
 
 #include "mtk_jpeg_core.h"
+=======
+#include <linux/io.h>
+#include <linux/kernel.h>
+#include <media/videobuf2-core.h>
+#include <media/videobuf2-dma-contig.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #include "mtk_jpeg_enc_hw.h"
 
 static const struct mtk_jpeg_enc_qlt mtk_jpeg_enc_quality[] = {
@@ -46,6 +54,7 @@ static const struct mtk_jpeg_enc_qlt mtk_jpeg_enc_quality[] = {
 	{.quality_param = 97, .hardware_value = JPEG_ENC_QUALITY_Q97},
 };
 
+<<<<<<< HEAD
 #if defined(CONFIG_OF)
 static const struct of_device_id mtk_jpegenc_drv_ids[] = {
 	{
@@ -56,20 +65,28 @@ static const struct of_device_id mtk_jpegenc_drv_ids[] = {
 MODULE_DEVICE_TABLE(of, mtk_jpegenc_drv_ids);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void mtk_jpeg_enc_reset(void __iomem *base)
 {
 	writel(0, base + JPEG_ENC_RSTB);
 	writel(JPEG_ENC_RESET_BIT, base + JPEG_ENC_RSTB);
 	writel(0, base + JPEG_ENC_CODEC_SEL);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(mtk_jpeg_enc_reset);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 u32 mtk_jpeg_enc_get_file_size(void __iomem *base)
 {
 	return readl(base + JPEG_ENC_DMA_ADDR0) -
 	       readl(base + JPEG_ENC_DST_ADDR0);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(mtk_jpeg_enc_get_file_size);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void mtk_jpeg_enc_start(void __iomem *base)
 {
@@ -79,7 +96,10 @@ void mtk_jpeg_enc_start(void __iomem *base)
 	value |= JPEG_ENC_CTRL_INT_EN_BIT | JPEG_ENC_CTRL_ENABLE_BIT;
 	writel(value, base + JPEG_ENC_CTRL);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(mtk_jpeg_enc_start);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void mtk_jpeg_set_enc_src(struct mtk_jpeg_ctx *ctx,  void __iomem *base,
 			  struct vb2_buffer *src_buf)
@@ -96,7 +116,10 @@ void mtk_jpeg_set_enc_src(struct mtk_jpeg_ctx *ctx,  void __iomem *base,
 			writel(dma_addr, base + JPEG_ENC_SRC_CHROMA_ADDR);
 	}
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(mtk_jpeg_set_enc_src);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void mtk_jpeg_set_enc_dst(struct mtk_jpeg_ctx *ctx, void __iomem *base,
 			  struct vb2_buffer *dst_buf)
@@ -116,7 +139,10 @@ void mtk_jpeg_set_enc_dst(struct mtk_jpeg_ctx *ctx, void __iomem *base,
 	writel(dma_addr & ~0xf, base + JPEG_ENC_DST_ADDR0);
 	writel((dma_addr + size) & ~0xf, base + JPEG_ENC_STALL_ADDR0);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(mtk_jpeg_set_enc_dst);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void mtk_jpeg_set_enc_params(struct mtk_jpeg_ctx *ctx,  void __iomem *base)
 {
@@ -183,6 +209,7 @@ void mtk_jpeg_set_enc_params(struct mtk_jpeg_ctx *ctx,  void __iomem *base)
 
 	writel(ctx->restart_interval, base + JPEG_ENC_RST_MCU_NUM);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(mtk_jpeg_set_enc_params);
 
 static void mtk_jpegenc_put_buf(struct mtk_jpegenc_comp_dev *jpeg)
@@ -407,3 +434,5 @@ module_platform_driver(mtk_jpegenc_hw_driver);
 
 MODULE_DESCRIPTION("MediaTek JPEG encode HW driver");
 MODULE_LICENSE("GPL");
+=======
+>>>>>>> b7ba80a49124 (Commit)

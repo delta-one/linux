@@ -320,7 +320,11 @@ static ssize_t temp1_limit_show(struct device *dev,
 	u8 index = to_sensor_dev_attr(attr)->index;
 	int temperature_limit = data->temperature_limits[index];
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", temperature_limit);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%d\n", temperature_limit);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t humidity1_limit_show(struct device *dev,
@@ -331,7 +335,11 @@ static ssize_t humidity1_limit_show(struct device *dev,
 	u8 index = to_sensor_dev_attr(attr)->index;
 	u32 humidity_limit = data->humidity_limits[index];
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", humidity_limit);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%u\n", humidity_limit);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -483,7 +491,11 @@ static ssize_t temp1_alarm_show(struct device *dev,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", !!(buffer[0] & 0x04));
+=======
+	return scnprintf(buf, PAGE_SIZE, "%d\n", !!(buffer[0] & 0x04));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t humidity1_alarm_show(struct device *dev,
@@ -498,7 +510,11 @@ static ssize_t humidity1_alarm_show(struct device *dev,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", !!(buffer[0] & 0x08));
+=======
+	return scnprintf(buf, PAGE_SIZE, "%d\n", !!(buffer[0] & 0x08));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t heater_enable_show(struct device *dev,
@@ -513,7 +529,11 @@ static ssize_t heater_enable_show(struct device *dev,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", !!(buffer[0] & 0x20));
+=======
+	return scnprintf(buf, PAGE_SIZE, "%d\n", !!(buffer[0] & 0x20));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t heater_enable_store(struct device *dev,
@@ -550,7 +570,11 @@ static ssize_t update_interval_show(struct device *dev,
 {
 	struct sht3x_data *data = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n",
+=======
+	return scnprintf(buf, PAGE_SIZE, "%u\n",
+>>>>>>> b7ba80a49124 (Commit)
 			 mode_to_update_interval[data->mode]);
 }
 

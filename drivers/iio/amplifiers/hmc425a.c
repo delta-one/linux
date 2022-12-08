@@ -34,6 +34,10 @@ struct hmc425a_chip_info {
 };
 
 struct hmc425a_state {
+<<<<<<< HEAD
+=======
+	struct	regulator *reg;
+>>>>>>> b7ba80a49124 (Commit)
 	struct	mutex lock; /* protect sensor state */
 	struct	hmc425a_chip_info *chip_info;
 	struct	gpio_descs *gpios;
@@ -161,6 +165,16 @@ static const struct of_device_id hmc425a_of_match[] = {
 };
 MODULE_DEVICE_TABLE(of, hmc425a_of_match);
 
+<<<<<<< HEAD
+=======
+static void hmc425a_reg_disable(void *data)
+{
+	struct hmc425a_state *st = data;
+
+	regulator_disable(st->reg);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct hmc425a_chip_info hmc425a_chip_info_tbl[] = {
 	[ID_HMC425A] = {
 		.name = "hmc425a",
@@ -203,7 +217,18 @@ static int hmc425a_probe(struct platform_device *pdev)
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
 	ret = devm_regulator_get_enable(&pdev->dev, "vcc-supply");
+=======
+	st->reg = devm_regulator_get(&pdev->dev, "vcc-supply");
+	if (IS_ERR(st->reg))
+		return PTR_ERR(st->reg);
+
+	ret = regulator_enable(st->reg);
+	if (ret)
+		return ret;
+	ret = devm_add_action_or_reset(&pdev->dev, hmc425a_reg_disable, st);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 

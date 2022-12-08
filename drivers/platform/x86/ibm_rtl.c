@@ -199,6 +199,7 @@ static int rtl_setup_sysfs(void) {
 
 	ret = subsys_system_register(&rtl_subsys, NULL);
 	if (!ret) {
+<<<<<<< HEAD
 		struct device *dev_root = bus_get_dev_root(&rtl_subsys);
 
 		if (dev_root) {
@@ -206,11 +207,16 @@ static int rtl_setup_sysfs(void) {
 				device_create_file(dev_root, rtl_attributes[i]);
 			put_device(dev_root);
 		}
+=======
+		for (i = 0; rtl_attributes[i]; i ++)
+			device_create_file(rtl_subsys.dev_root, rtl_attributes[i]);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret;
 }
 
 static void rtl_teardown_sysfs(void) {
+<<<<<<< HEAD
 	struct device *dev_root = bus_get_dev_root(&rtl_subsys);
 	int i;
 
@@ -219,6 +225,11 @@ static void rtl_teardown_sysfs(void) {
 			device_remove_file(dev_root, rtl_attributes[i]);
 		put_device(dev_root);
 	}
+=======
+	int i;
+	for (i = 0; rtl_attributes[i]; i ++)
+		device_remove_file(rtl_subsys.dev_root, rtl_attributes[i]);
+>>>>>>> b7ba80a49124 (Commit)
 	bus_unregister(&rtl_subsys);
 }
 

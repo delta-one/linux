@@ -116,7 +116,11 @@ static int qla4xxx_iface_set_param(struct Scsi_Host *shost, void *data,
 static int qla4xxx_get_iface_param(struct iscsi_iface *iface,
 				   enum iscsi_param_type param_type,
 				   int param, char *buf);
+<<<<<<< HEAD
 static enum scsi_timeout_action qla4xxx_eh_cmd_timed_out(struct scsi_cmnd *sc);
+=======
+static enum blk_eh_timer_return qla4xxx_eh_cmd_timed_out(struct scsi_cmnd *sc);
+>>>>>>> b7ba80a49124 (Commit)
 static struct iscsi_endpoint *qla4xxx_ep_connect(struct Scsi_Host *shost,
 						 struct sockaddr *dst_addr,
 						 int non_blocking);
@@ -1871,17 +1875,29 @@ exit_get_stats:
 	return;
 }
 
+<<<<<<< HEAD
 static enum scsi_timeout_action qla4xxx_eh_cmd_timed_out(struct scsi_cmnd *sc)
 {
 	struct iscsi_cls_session *session;
 	unsigned long flags;
 	enum scsi_timeout_action ret = SCSI_EH_NOT_HANDLED;
+=======
+static enum blk_eh_timer_return qla4xxx_eh_cmd_timed_out(struct scsi_cmnd *sc)
+{
+	struct iscsi_cls_session *session;
+	unsigned long flags;
+	enum blk_eh_timer_return ret = BLK_EH_DONE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	session = starget_to_session(scsi_target(sc->device));
 
 	spin_lock_irqsave(&session->lock, flags);
 	if (session->state == ISCSI_SESSION_FAILED)
+<<<<<<< HEAD
 		ret = SCSI_EH_RESET_TIMER;
+=======
+		ret = BLK_EH_RESET_TIMER;
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irqrestore(&session->lock, flags);
 
 	return ret;
@@ -8639,6 +8655,11 @@ static int qla4xxx_probe_adapter(struct pci_dev *pdev,
 	ha->host_no = host->host_no;
 	ha->func_num = PCI_FUNC(ha->pdev->devfn);
 
+<<<<<<< HEAD
+=======
+	pci_enable_pcie_error_reporting(pdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Setup Runtime configurable options */
 	if (is_qla8022(ha)) {
 		ha->isp_ops = &qla4_82xx_isp_ops;
@@ -8865,6 +8886,10 @@ probe_failed:
 	qla4xxx_free_adapter(ha);
 
 probe_failed_ioconfig:
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	scsi_host_put(ha->host);
 
 probe_disable_device:
@@ -9019,6 +9044,10 @@ static void qla4xxx_remove_adapter(struct pci_dev *pdev)
 
 	scsi_host_put(ha->host);
 
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_disable_device(pdev);
 }
 

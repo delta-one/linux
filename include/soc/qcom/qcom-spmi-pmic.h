@@ -26,6 +26,7 @@
 #define PM8901_SUBTYPE		0x0f
 #define PM8950_SUBTYPE		0x10
 #define PMI8950_SUBTYPE		0x11
+<<<<<<< HEAD
 #define PMK8001_SUBTYPE		0x12
 #define PMI8996_SUBTYPE		0x13
 #define PM8998_SUBTYPE		0x14
@@ -34,10 +35,19 @@
 #define PM660L_SUBTYPE		0x1a
 #define PM660_SUBTYPE		0x1b
 #define PM8150_SUBTYPE		0x1e
+=======
+#define PM8998_SUBTYPE		0x14
+#define PMI8998_SUBTYPE		0x15
+#define PM8005_SUBTYPE		0x18
+#define PM660L_SUBTYPE		0x1A
+#define PM660_SUBTYPE		0x1B
+#define PM8150_SUBTYPE		0x1E
+>>>>>>> b7ba80a49124 (Commit)
 #define PM8150L_SUBTYPE		0x1f
 #define PM8150B_SUBTYPE		0x20
 #define PMK8002_SUBTYPE		0x21
 #define PM8009_SUBTYPE		0x24
+<<<<<<< HEAD
 #define PMI632_SUBTYPE		0x25
 #define PM8150C_SUBTYPE		0x26
 #define PM6150_SUBTYPE		0x28
@@ -49,6 +59,10 @@
 #define PMR735B_SUBTYPE		0x34
 #define PM6350_SUBTYPE		0x36
 #define PM2250_SUBTYPE		0x37
+=======
+#define PM8150C_SUBTYPE		0x26
+#define SMB2351_SUBTYPE		0x29
+>>>>>>> b7ba80a49124 (Commit)
 
 #define PMI8998_FAB_ID_SMIC	0x11
 #define PMI8998_FAB_ID_GF	0x30

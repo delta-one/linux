@@ -273,9 +273,15 @@ static struct attribute *i3c_device_attrs[] = {
 };
 ATTRIBUTE_GROUPS(i3c_device);
 
+<<<<<<< HEAD
 static int i3c_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct i3c_device *i3cdev = dev_to_i3cdev(dev);
+=======
+static int i3c_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct i3c_device *i3cdev = dev_to_i3cdev(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	struct i3c_device_info devinfo;
 	u16 manuf, part, ext;
 
@@ -1379,9 +1385,12 @@ static int i3c_master_reattach_i3c_dev(struct i3c_dev_desc *dev,
 		i3c_bus_set_addr_slot_status(&master->bus,
 					     dev->info.dyn_addr,
 					     I3C_ADDR_SLOT_I3C_DEV);
+<<<<<<< HEAD
 		if (old_dyn_addr)
 			i3c_bus_set_addr_slot_status(&master->bus, old_dyn_addr,
 						     I3C_ADDR_SLOT_FREE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (master->ops->reattach_i3c_dev) {
@@ -1438,7 +1447,10 @@ static int i3c_master_early_i3c_dev_add(struct i3c_master_controller *master,
 {
 	struct i3c_device_info info = {
 		.static_addr = boardinfo->static_addr,
+<<<<<<< HEAD
 		.pid = boardinfo->pid,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	struct i3c_dev_desc *i3cdev;
 	int ret;
@@ -1912,6 +1924,13 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
 		i3c_master_free_i3c_dev(olddev);
 	}
 
+<<<<<<< HEAD
+=======
+	ret = i3c_master_reattach_i3c_dev(newdev, old_dyn_addr);
+	if (ret)
+		goto err_detach_dev;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Depending on our previous state, the expected dynamic address might
 	 * differ:
@@ -2695,13 +2714,21 @@ EXPORT_SYMBOL_GPL(i3c_master_register);
  * @master: master used to send frames on the bus
  *
  * Basically undo everything done in i3c_master_register().
+<<<<<<< HEAD
  */
 void i3c_master_unregister(struct i3c_master_controller *master)
+=======
+ *
+ * Return: 0 in case of success, a negative error code otherwise.
+ */
+int i3c_master_unregister(struct i3c_master_controller *master)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	i3c_master_i2c_adapter_cleanup(master);
 	i3c_master_unregister_i3c_devs(master);
 	i3c_master_bus_cleanup(master);
 	device_unregister(&master->dev);
+<<<<<<< HEAD
 }
 EXPORT_SYMBOL_GPL(i3c_master_unregister);
 
@@ -2724,6 +2751,13 @@ int i3c_dev_setdasa_locked(struct i3c_dev_desc *dev)
 						dev->boardinfo->init_dyn_addr);
 }
 
+=======
+
+	return 0;
+}
+EXPORT_SYMBOL_GPL(i3c_master_unregister);
+
+>>>>>>> b7ba80a49124 (Commit)
 int i3c_dev_do_priv_xfers_locked(struct i3c_dev_desc *dev,
 				 struct i3c_priv_xfer *xfers,
 				 int nxfers)

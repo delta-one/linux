@@ -38,7 +38,10 @@ struct link_resource;
 struct pipe_ctx;
 struct encoder_set_dp_phy_pattern_param;
 struct link_mst_stream_allocation_table;
+<<<<<<< HEAD
 struct audio_output;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct link_hwss_ext {
 	/* function pointers below may require to check for NULL if caller
@@ -80,10 +83,13 @@ struct link_hwss {
 	void (*disable_link_output)(struct dc_link *link,
 			const struct link_resource *link_res,
 			enum signal_type signal);
+<<<<<<< HEAD
 	void (*setup_audio_output)(struct pipe_ctx *pipe_ctx,
 			struct audio_output *audio_output, uint32_t audio_inst);
 	void (*enable_audio_packet)(struct pipe_ctx *pipe_ctx);
 	void (*disable_audio_packet)(struct pipe_ctx *pipe_ctx);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 #endif /* __DC_LINK_HWSS_H__ */
 

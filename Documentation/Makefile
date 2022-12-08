@@ -28,7 +28,11 @@ BUILDDIR      = $(obj)/output
 PDFLATEX      = xelatex
 LATEXOPTS     = -interaction=batchmode -no-shell-escape
 
+<<<<<<< HEAD
 ifeq ($(findstring 1, $(KBUILD_VERBOSE)),)
+=======
+ifeq ($(KBUILD_VERBOSE),0)
+>>>>>>> b7ba80a49124 (Commit)
 SPHINXOPTS    += "-q"
 endif
 
@@ -95,6 +99,7 @@ htmldocs:
 	@$(srctree)/scripts/sphinx-pre-install --version-check
 	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,html,$(var),,$(var)))
 
+<<<<<<< HEAD
 texinfodocs:
 	@$(srctree)/scripts/sphinx-pre-install --version-check
 	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,texinfo,$(var),texinfo,$(var)))
@@ -104,6 +109,8 @@ texinfodocs:
 infodocs: texinfodocs
 	$(MAKE) -C $(BUILDDIR)/texinfo info
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 linkcheckdocs:
 	@$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,linkcheck,$(var),,$(var)))
 
@@ -152,8 +159,11 @@ cleandocs:
 dochelp:
 	@echo  ' Linux kernel internal documentation in different formats from ReST:'
 	@echo  '  htmldocs        - HTML'
+<<<<<<< HEAD
 	@echo  '  texinfodocs     - Texinfo'
 	@echo  '  infodocs        - Info'
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	@echo  '  latexdocs       - LaTeX'
 	@echo  '  pdfdocs         - PDF'
 	@echo  '  epubdocs        - EPUB'

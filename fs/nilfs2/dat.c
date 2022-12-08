@@ -40,6 +40,7 @@ static inline struct nilfs_dat_info *NILFS_DAT_I(struct inode *dat)
 static int nilfs_dat_prepare_entry(struct inode *dat,
 				   struct nilfs_palloc_req *req, int create)
 {
+<<<<<<< HEAD
 	int ret;
 
 	ret = nilfs_palloc_get_entry_block(dat, req->pr_entry_nr,
@@ -55,6 +56,10 @@ static int nilfs_dat_prepare_entry(struct inode *dat,
 		ret = -EINVAL;
 	}
 	return ret;
+=======
+	return nilfs_palloc_get_entry_block(dat, req->pr_entry_nr,
+					    create, &req->pr_entry_bh);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void nilfs_dat_commit_entry(struct inode *dat,
@@ -124,6 +129,7 @@ static void nilfs_dat_commit_free(struct inode *dat,
 	kunmap_atomic(kaddr);
 
 	nilfs_dat_commit_entry(dat, req);
+<<<<<<< HEAD
 
 	if (unlikely(req->pr_desc_bh == NULL || req->pr_bitmap_bh == NULL)) {
 		nilfs_error(dat->i_sb,
@@ -131,12 +137,22 @@ static void nilfs_dat_commit_free(struct inode *dat,
 			    (unsigned long long)req->pr_entry_nr);
 		return;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	nilfs_palloc_commit_free_entry(dat, req);
 }
 
 int nilfs_dat_prepare_start(struct inode *dat, struct nilfs_palloc_req *req)
 {
+<<<<<<< HEAD
 	return nilfs_dat_prepare_entry(dat, req, 0);
+=======
+	int ret;
+
+	ret = nilfs_dat_prepare_entry(dat, req, 0);
+	WARN_ON(ret == -ENOENT);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void nilfs_dat_commit_start(struct inode *dat, struct nilfs_palloc_req *req,
@@ -158,19 +174,32 @@ void nilfs_dat_commit_start(struct inode *dat, struct nilfs_palloc_req *req,
 int nilfs_dat_prepare_end(struct inode *dat, struct nilfs_palloc_req *req)
 {
 	struct nilfs_dat_entry *entry;
+<<<<<<< HEAD
 	__u64 start;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sector_t blocknr;
 	void *kaddr;
 	int ret;
 
 	ret = nilfs_dat_prepare_entry(dat, req, 0);
+<<<<<<< HEAD
 	if (ret < 0)
 		return ret;
+=======
+	if (ret < 0) {
+		WARN_ON(ret == -ENOENT);
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	kaddr = kmap_atomic(req->pr_entry_bh->b_page);
 	entry = nilfs_palloc_block_get_entry(dat, req->pr_entry_nr,
 					     req->pr_entry_bh, kaddr);
+<<<<<<< HEAD
 	start = le64_to_cpu(entry->de_start);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	blocknr = le64_to_cpu(entry->de_blocknr);
 	kunmap_atomic(kaddr);
 
@@ -181,6 +210,7 @@ int nilfs_dat_prepare_end(struct inode *dat, struct nilfs_palloc_req *req)
 			return ret;
 		}
 	}
+<<<<<<< HEAD
 	if (unlikely(start > nilfs_mdt_cno(dat))) {
 		nilfs_err(dat->i_sb,
 			  "vblocknr = %llu has abnormal lifetime: start cno (= %llu) > current cno (= %llu)",
@@ -190,6 +220,8 @@ int nilfs_dat_prepare_end(struct inode *dat, struct nilfs_palloc_req *req)
 		nilfs_dat_abort_entry(dat, req);
 		return -EINVAL;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

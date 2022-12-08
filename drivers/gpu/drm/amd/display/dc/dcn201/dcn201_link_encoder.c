@@ -29,6 +29,10 @@
 #include "link_encoder.h"
 #include "dcn201_link_encoder.h"
 #include "stream_encoder.h"
+<<<<<<< HEAD
+=======
+#include "i2caux_interface.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "dc_bios_types.h"
 
 #include "gpio_service_interface.h"

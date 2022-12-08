@@ -29,6 +29,7 @@
 #include <linux/sched_clock.h>
 #include <asm/mach/time.h>
 
+<<<<<<< HEAD
 #include "regs-timers.h"
 #include <linux/soc/mmp/cputype.h>
 
@@ -46,13 +47,40 @@ static inline uint32_t timer_read(void)
 {
 	uint32_t val;
 	int delay = 3;
+=======
+#include "addr-map.h"
+#include "regs-timers.h"
+#include "regs-apbc.h"
+#include "irqs.h"
+#include <linux/soc/mmp/cputype.h>
+
+#define TIMERS_VIRT_BASE	TIMERS1_VIRT_BASE
+
+#define MAX_DELTA		(0xfffffffe)
+#define MIN_DELTA		(16)
+
+static void __iomem *mmp_timer_base = TIMERS_VIRT_BASE;
+
+/*
+ * FIXME: the timer needs some delay to stablize the counter capture
+ */
+static inline uint32_t timer_read(void)
+{
+	int delay = 100;
+>>>>>>> b7ba80a49124 (Commit)
 
 	__raw_writel(1, mmp_timer_base + TMR_CVWR(1));
 
 	while (delay--)
+<<<<<<< HEAD
 		val = __raw_readl(mmp_timer_base + TMR_CVWR(1));
 
 	return val;
+=======
+		cpu_relax();
+
+	return __raw_readl(mmp_timer_base + TMR_CVWR(1));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static u64 notrace mmp_read_sched_clock(void)
@@ -172,7 +200,11 @@ static void __init timer_config(void)
 	__raw_writel(0x2, mmp_timer_base + TMR_CER);
 }
 
+<<<<<<< HEAD
 static void __init mmp_timer_init(int irq, unsigned long rate)
+=======
+void __init mmp_timer_init(int irq, unsigned long rate)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	timer_config();
 

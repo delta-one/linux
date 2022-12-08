@@ -180,9 +180,15 @@ static const struct iio_info mb1232_info = {
 	.read_raw = mb1232_read_raw,
 };
 
+<<<<<<< HEAD
 static int mb1232_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int mb1232_probe(struct i2c_client *client,
+					 const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct iio_dev *indio_dev;
 	struct mb1232_data *data;
 	int ret;
@@ -264,7 +270,11 @@ static struct i2c_driver mb1232_driver = {
 		.name	= "maxbotix-mb1232",
 		.of_match_table	= of_mb1232_match,
 	},
+<<<<<<< HEAD
 	.probe_new = mb1232_probe,
+=======
+	.probe = mb1232_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = mb1232_id,
 };
 module_i2c_driver(mb1232_driver);

@@ -2242,6 +2242,7 @@ static void arcturus_get_unique_id(struct smu_context *smu)
 static int arcturus_set_df_cstate(struct smu_context *smu,
 				  enum pp_df_cstate state)
 {
+<<<<<<< HEAD
 	struct amdgpu_device *adev = smu->adev;
 	uint32_t smu_version;
 	int ret;
@@ -2253,6 +2254,11 @@ static int arcturus_set_df_cstate(struct smu_context *smu,
 	if (amdgpu_in_reset(adev) || adev->in_suspend)
 		return 0;
 
+=======
+	uint32_t smu_version;
+	int ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = smu_cmn_get_smc_version(smu, NULL, &smu_version);
 	if (ret) {
 		dev_err(smu->adev->dev, "Failed to get smu version!\n");

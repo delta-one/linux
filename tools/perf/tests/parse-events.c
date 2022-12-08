@@ -20,8 +20,11 @@
 #define PERF_TP_SAMPLE_TYPE (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME | \
 			     PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD)
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if defined(__s390x__)
 /* Return true if kvm module is available and loaded. Test this
  * and return success when trace point kvm_s390_create_vm
@@ -53,7 +56,11 @@ static int test__checkevent_tracepoint(struct evlist *evlist)
 	struct evsel *evsel = evlist__first(evlist);
 
 	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
+<<<<<<< HEAD
 	TEST_ASSERT_VAL("wrong number of groups", 0 == evlist__nr_groups(evlist));
+=======
+	TEST_ASSERT_VAL("wrong number of groups", 0 == evlist->core.nr_groups);
+>>>>>>> b7ba80a49124 (Commit)
 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_TRACEPOINT == evsel->core.attr.type);
 	TEST_ASSERT_VAL("wrong sample_type",
 		PERF_TP_SAMPLE_TYPE == evsel->core.attr.sample_type);
@@ -66,7 +73,11 @@ static int test__checkevent_tracepoint_multi(struct evlist *evlist)
 	struct evsel *evsel;
 
 	TEST_ASSERT_VAL("wrong number of entries", evlist->core.nr_entries > 1);
+<<<<<<< HEAD
 	TEST_ASSERT_VAL("wrong number of groups", 0 == evlist__nr_groups(evlist));
+=======
+	TEST_ASSERT_VAL("wrong number of groups", 0 == evlist->core.nr_groups);
+>>>>>>> b7ba80a49124 (Commit)
 
 	evlist__for_each_entry(evlist, evsel) {
 		TEST_ASSERT_VAL("wrong type",
@@ -78,7 +89,10 @@ static int test__checkevent_tracepoint_multi(struct evlist *evlist)
 	}
 	return TEST_OK;
 }
+<<<<<<< HEAD
 #endif /* HAVE_LIBTRACEEVENT */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int test__checkevent_raw(struct evlist *evlist)
 {
@@ -225,7 +239,10 @@ static int test__checkevent_breakpoint_rw(struct evlist *evlist)
 	return TEST_OK;
 }
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int test__checkevent_tracepoint_modifier(struct evlist *evlist)
 {
 	struct evsel *evsel = evlist__first(evlist);
@@ -256,7 +273,10 @@ test__checkevent_tracepoint_multi_modifier(struct evlist *evlist)
 
 	return test__checkevent_tracepoint_multi(evlist);
 }
+<<<<<<< HEAD
 #endif /* HAVE_LIBTRACEEVENT */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int test__checkevent_raw_modifier(struct evlist *evlist)
 {
@@ -458,7 +478,10 @@ static int test__checkevent_pmu(struct evlist *evlist)
 	return TEST_OK;
 }
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int test__checkevent_list(struct evlist *evlist)
 {
 	struct evsel *evsel = evlist__first(evlist);
@@ -497,7 +520,10 @@ static int test__checkevent_list(struct evlist *evlist)
 
 	return TEST_OK;
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int test__checkevent_pmu_name(struct evlist *evlist)
 {
@@ -677,7 +703,11 @@ static int test__group1(struct evlist *evlist)
 	struct evsel *evsel, *leader;
 
 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
+<<<<<<< HEAD
 	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist__nr_groups(evlist));
+=======
+	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist->core.nr_groups);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* instructions:k */
 	evsel = leader = evlist__first(evlist);
@@ -719,7 +749,11 @@ static int test__group2(struct evlist *evlist)
 	struct evsel *evsel, *leader;
 
 	TEST_ASSERT_VAL("wrong number of entries", 3 == evlist->core.nr_entries);
+<<<<<<< HEAD
 	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist__nr_groups(evlist));
+=======
+	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist->core.nr_groups);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* faults + :ku modifier */
 	evsel = leader = evlist__first(evlist);
@@ -769,13 +803,20 @@ static int test__group2(struct evlist *evlist)
 	return TEST_OK;
 }
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int test__group3(struct evlist *evlist __maybe_unused)
 {
 	struct evsel *evsel, *leader;
 
 	TEST_ASSERT_VAL("wrong number of entries", 5 == evlist->core.nr_entries);
+<<<<<<< HEAD
 	TEST_ASSERT_VAL("wrong number of groups", 2 == evlist__nr_groups(evlist));
+=======
+	TEST_ASSERT_VAL("wrong number of groups", 2 == evlist->core.nr_groups);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* group1 syscalls:sys_enter_openat:H */
 	evsel = leader = evlist__first(evlist);
@@ -861,14 +902,21 @@ static int test__group3(struct evlist *evlist __maybe_unused)
 
 	return TEST_OK;
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int test__group4(struct evlist *evlist __maybe_unused)
 {
 	struct evsel *evsel, *leader;
 
 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
+<<<<<<< HEAD
 	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist__nr_groups(evlist));
+=======
+	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist->core.nr_groups);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* cycles:u + p */
 	evsel = leader = evlist__first(evlist);
@@ -912,7 +960,11 @@ static int test__group5(struct evlist *evlist __maybe_unused)
 	struct evsel *evsel, *leader;
 
 	TEST_ASSERT_VAL("wrong number of entries", 5 == evlist->core.nr_entries);
+<<<<<<< HEAD
 	TEST_ASSERT_VAL("wrong number of groups", 2 == evlist__nr_groups(evlist));
+=======
+	TEST_ASSERT_VAL("wrong number of groups", 2 == evlist->core.nr_groups);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* cycles + G */
 	evsel = leader = evlist__first(evlist);
@@ -998,7 +1050,11 @@ static int test__group_gh1(struct evlist *evlist)
 	struct evsel *evsel, *leader;
 
 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
+<<<<<<< HEAD
 	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist__nr_groups(evlist));
+=======
+	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist->core.nr_groups);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* cycles + :H group modifier */
 	evsel = leader = evlist__first(evlist);
@@ -1038,7 +1094,11 @@ static int test__group_gh2(struct evlist *evlist)
 	struct evsel *evsel, *leader;
 
 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
+<<<<<<< HEAD
 	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist__nr_groups(evlist));
+=======
+	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist->core.nr_groups);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* cycles + :G group modifier */
 	evsel = leader = evlist__first(evlist);
@@ -1078,7 +1138,11 @@ static int test__group_gh3(struct evlist *evlist)
 	struct evsel *evsel, *leader;
 
 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
+<<<<<<< HEAD
 	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist__nr_groups(evlist));
+=======
+	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist->core.nr_groups);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* cycles:G + :u group modifier */
 	evsel = leader = evlist__first(evlist);
@@ -1118,7 +1182,11 @@ static int test__group_gh4(struct evlist *evlist)
 	struct evsel *evsel, *leader;
 
 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
+<<<<<<< HEAD
 	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist__nr_groups(evlist));
+=======
+	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist->core.nr_groups);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* cycles:G + :uG group modifier */
 	evsel = leader = evlist__first(evlist);
@@ -1469,7 +1537,10 @@ static int test__sym_event_dc(struct evlist *evlist)
 	return TEST_OK;
 }
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int count_tracepoints(void)
 {
 	struct dirent *events_ent;
@@ -1523,7 +1594,10 @@ static int test__all_tracepoints(struct evlist *evlist)
 
 	return test__checkevent_tracepoint_multi(evlist);
 }
+<<<<<<< HEAD
 #endif /* HAVE_LIBTRACEVENT */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int test__hybrid_hw_event_with_pmu(struct evlist *evlist)
 {
@@ -1653,7 +1727,10 @@ struct evlist_test {
 };
 
 static const struct evlist_test test__events[] = {
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.name  = "syscalls:sys_enter_openat",
 		.check = test__checkevent_tracepoint,
@@ -1664,7 +1741,10 @@ static const struct evlist_test test__events[] = {
 		.check = test__checkevent_tracepoint_multi,
 		/* 1 */
 	},
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.name  = "r1a",
 		.check = test__checkevent_raw,
@@ -1715,7 +1795,10 @@ static const struct evlist_test test__events[] = {
 		.check = test__checkevent_breakpoint_w,
 		/* 1 */
 	},
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.name  = "syscalls:sys_enter_openat:k",
 		.check = test__checkevent_tracepoint_modifier,
@@ -1726,7 +1809,10 @@ static const struct evlist_test test__events[] = {
 		.check = test__checkevent_tracepoint_multi_modifier,
 		/* 3 */
 	},
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.name  = "r1a:kp",
 		.check = test__checkevent_raw_modifier,
@@ -1772,13 +1858,19 @@ static const struct evlist_test test__events[] = {
 		.check = test__checkevent_breakpoint_w_modifier,
 		/* 2 */
 	},
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.name  = "r1,syscalls:sys_enter_openat:k,1:1:hp",
 		.check = test__checkevent_list,
 		/* 3 */
 	},
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.name  = "instructions:G",
 		.check = test__checkevent_exclude_host_modifier,
@@ -1809,13 +1901,19 @@ static const struct evlist_test test__events[] = {
 		.check = test__group2,
 		/* 9 */
 	},
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.name  = "group1{syscalls:sys_enter_openat:H,cycles:kppp},group2{cycles,1:3}:G,instructions:u",
 		.check = test__group3,
 		/* 0 */
 	},
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.name  = "{cycles:u,instructions:kp}:p",
 		.check = test__group4,
@@ -1826,13 +1924,19 @@ static const struct evlist_test test__events[] = {
 		.check = test__group5,
 		/* 2 */
 	},
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.name  = "*:*",
 		.check = test__all_tracepoints,
 		/* 3 */
 	},
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.name  = "{cycles,cache-misses:G}:H",
 		.check = test__group_gh1,
@@ -1888,7 +1992,11 @@ static const struct evlist_test test__events[] = {
 		.check = test__checkevent_breakpoint_len_rw_modifier,
 		/* 4 */
 	},
+<<<<<<< HEAD
 #if defined(__s390x__) && defined(HAVE_LIBTRACEEVENT)
+=======
+#if defined(__s390x__)
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.name  = "kvm-s390:kvm_s390_create_vm",
 		.check = test__checkevent_tracepoint,
@@ -2103,7 +2211,11 @@ static int test_event_fake_pmu(const char *str)
 
 	parse_events_error__init(&err);
 	perf_pmu__test_parse_init();
+<<<<<<< HEAD
 	ret = __parse_events(evlist, str, &err, &perf_pmu__fake, /*warn_if_reordered=*/true);
+=======
+	ret = __parse_events(evlist, str, &err, &perf_pmu__fake);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		pr_debug("failed to parse event '%s', err %d, str '%s'\n",
 			 str, ret, err.str);
@@ -2258,6 +2370,7 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest 
 			pr_debug("Test PMU event failed for '%s'", name);
 			ret = combine_test_results(ret, test_ret);
 		}
+<<<<<<< HEAD
 		/*
 		 * Names containing '-' are recognized as prefixes and suffixes
 		 * due to '-' being a legacy PMU separator. This fails when the
@@ -2271,6 +2384,8 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest 
 		if (strchr(ent->d_name, '-'))
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		snprintf(name, sizeof(name), "%s:u,cpu/event=%s/u", ent->d_name, ent->d_name);
 		e.name  = name;
 		e.check = test__checkevent_pmu_events_mix;

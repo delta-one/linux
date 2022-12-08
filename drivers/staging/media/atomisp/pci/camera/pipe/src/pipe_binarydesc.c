@@ -13,9 +13,12 @@
  * more details.
  */
 
+<<<<<<< HEAD
 #include <linux/kernel.h>
 #include <linux/math.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "ia_css_pipe_binarydesc.h"
 #include "ia_css_frame_format.h"
 #include "ia_css_pipe.h"
@@ -26,6 +29,10 @@
 #include <assert_support.h>
 /* HRT_GDC_N */
 #include "gdc_device.h"
+<<<<<<< HEAD
+=======
+#include <linux/kernel.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 /* This module provides a binary descriptions to used to find a binary. Since,
  * every stage is associated with a binary, it implicity helps stage
@@ -128,6 +135,7 @@ void ia_css_pipe_get_vfpp_binarydesc(
 	IA_CSS_LEAVE_PRIVATE("");
 }
 
+<<<<<<< HEAD
 static struct u32_fract bds_factors_list[] = {
 	[SH_CSS_BDS_FACTOR_1_00] = {1, 1},
 	[SH_CSS_BDS_FACTOR_1_25] = {5, 4},
@@ -151,6 +159,42 @@ int sh_css_bds_factor_get_fract(unsigned int bds_factor, struct u32_fract *bds)
 
 	*bds = bds_factors_list[bds_factor];
 	return 0;
+=======
+static struct sh_css_bds_factor bds_factors_list[] = {
+	{1, 1, SH_CSS_BDS_FACTOR_1_00},
+	{5, 4, SH_CSS_BDS_FACTOR_1_25},
+	{3, 2, SH_CSS_BDS_FACTOR_1_50},
+	{2, 1, SH_CSS_BDS_FACTOR_2_00},
+	{9, 4, SH_CSS_BDS_FACTOR_2_25},
+	{5, 2, SH_CSS_BDS_FACTOR_2_50},
+	{3, 1, SH_CSS_BDS_FACTOR_3_00},
+	{4, 1, SH_CSS_BDS_FACTOR_4_00},
+	{9, 2, SH_CSS_BDS_FACTOR_4_50},
+	{5, 1, SH_CSS_BDS_FACTOR_5_00},
+	{6, 1, SH_CSS_BDS_FACTOR_6_00},
+	{8, 1, SH_CSS_BDS_FACTOR_8_00}
+};
+
+int sh_css_bds_factor_get_numerator_denominator(
+    unsigned int bds_factor,
+    unsigned int *bds_factor_numerator,
+    unsigned int *bds_factor_denominator)
+{
+	unsigned int i;
+
+	/* Loop over all bds factors until a match is found */
+	for (i = 0; i < ARRAY_SIZE(bds_factors_list); i++) {
+		if (bds_factors_list[i].bds_factor == bds_factor) {
+			*bds_factor_numerator = bds_factors_list[i].numerator;
+			*bds_factor_denominator = bds_factors_list[i].denominator;
+			return 0;
+		}
+	}
+
+	/* Throw an error since bds_factor cannot be found
+	in bds_factors_list */
+	return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int binarydesc_calculate_bds_factor(
@@ -185,7 +229,11 @@ int binarydesc_calculate_bds_factor(
 			    (out_h * num / den <= in_h);
 
 		if (cond) {
+<<<<<<< HEAD
 			*bds_factor = i;
+=======
+			*bds_factor = bds_factors_list[i].bds_factor;
+>>>>>>> b7ba80a49124 (Commit)
 			return 0;
 		}
 	}

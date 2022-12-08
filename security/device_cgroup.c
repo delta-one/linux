@@ -82,6 +82,7 @@ free_and_exit:
 	return -ENOMEM;
 }
 
+<<<<<<< HEAD
 static void dev_exceptions_move(struct list_head *dest, struct list_head *orig)
 {
 	struct dev_exception_item *ex, *tmp;
@@ -93,6 +94,8 @@ static void dev_exceptions_move(struct list_head *dest, struct list_head *orig)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * called under devcgroup_mutex
  */
@@ -216,7 +219,11 @@ static void devcgroup_offline(struct cgroup_subsys_state *css)
 }
 
 /*
+<<<<<<< HEAD
  * called from kernel/cgroup/cgroup.c with cgroup_lock() held.
+=======
+ * called from kernel/cgroup.c with cgroup_lock() held.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static struct cgroup_subsys_state *
 devcgroup_css_alloc(struct cgroup_subsys_state *parent_css)
@@ -615,13 +622,19 @@ static int devcgroup_update_access(struct dev_cgroup *devcgroup,
 	int count, rc = 0;
 	struct dev_exception_item ex;
 	struct dev_cgroup *parent = css_to_devcgroup(devcgroup->css.parent);
+<<<<<<< HEAD
 	struct dev_cgroup tmp_devcgrp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!capable(CAP_SYS_ADMIN))
 		return -EPERM;
 
 	memset(&ex, 0, sizeof(ex));
+<<<<<<< HEAD
 	memset(&tmp_devcgrp, 0, sizeof(tmp_devcgrp));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	b = buffer;
 
 	switch (*b) {
@@ -633,6 +646,7 @@ static int devcgroup_update_access(struct dev_cgroup *devcgroup,
 
 			if (!may_allow_all(parent))
 				return -EPERM;
+<<<<<<< HEAD
 			if (!parent) {
 				devcgroup->behavior = DEVCG_DEFAULT_ALLOW;
 				dev_exception_clean(devcgroup);
@@ -654,6 +668,17 @@ static int devcgroup_update_access(struct dev_cgroup *devcgroup,
 			}
 			devcgroup->behavior = DEVCG_DEFAULT_ALLOW;
 			dev_exception_clean(&tmp_devcgrp);
+=======
+			dev_exception_clean(devcgroup);
+			devcgroup->behavior = DEVCG_DEFAULT_ALLOW;
+			if (!parent)
+				break;
+
+			rc = dev_exceptions_copy(&devcgroup->exceptions,
+						 &parent->exceptions);
+			if (rc)
+				return rc;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case DEVCG_DENY:
 			if (css_has_online_children(&devcgroup->css))

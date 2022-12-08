@@ -65,7 +65,11 @@ int mlx4_en_create_tx_ring(struct mlx4_en_priv *priv,
 	ring->size = size;
 	ring->size_mask = size - 1;
 	ring->sp_stride = stride;
+<<<<<<< HEAD
 	ring->full_size = ring->size - HEADROOM - MLX4_MAX_DESC_TXBBS;
+=======
+	ring->full_size = ring->size - HEADROOM - MAX_DESC_TXBBS;
+>>>>>>> b7ba80a49124 (Commit)
 
 	tmp = size * sizeof(struct mlx4_en_tx_info);
 	ring->tx_info = kvmalloc_node(tmp, GFP_KERNEL, node);
@@ -77,11 +81,17 @@ int mlx4_en_create_tx_ring(struct mlx4_en_priv *priv,
 	en_dbg(DRV, priv, "Allocated tx_info ring at addr:%p size:%d\n",
 		 ring->tx_info, tmp);
 
+<<<<<<< HEAD
 	ring->bounce_buf = kmalloc_node(MLX4_TX_BOUNCE_BUFFER_SIZE,
 					GFP_KERNEL, node);
 	if (!ring->bounce_buf) {
 		ring->bounce_buf = kmalloc(MLX4_TX_BOUNCE_BUFFER_SIZE,
 					   GFP_KERNEL);
+=======
+	ring->bounce_buf = kmalloc_node(MAX_DESC_SIZE, GFP_KERNEL, node);
+	if (!ring->bounce_buf) {
+		ring->bounce_buf = kmalloc(MAX_DESC_SIZE, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!ring->bounce_buf) {
 			err = -ENOMEM;
 			goto err_info;
@@ -699,17 +709,27 @@ static void build_inline_wqe(struct mlx4_en_tx_desc *tx_desc,
 			inl->byte_count = cpu_to_be32(1 << 31 | skb->len);
 		} else {
 			inl->byte_count = cpu_to_be32(1 << 31 | MIN_PKT_LEN);
+<<<<<<< HEAD
 			memset(inl->data + skb->len, 0,
 			       MIN_PKT_LEN - skb->len);
 		}
 		skb_copy_from_linear_data(skb, inl->data, hlen);
 		if (shinfo->nr_frags)
 			memcpy(inl->data + hlen, fragptr,
+=======
+			memset(((void *)(inl + 1)) + skb->len, 0,
+			       MIN_PKT_LEN - skb->len);
+		}
+		skb_copy_from_linear_data(skb, inl + 1, hlen);
+		if (shinfo->nr_frags)
+			memcpy(((void *)(inl + 1)) + hlen, fragptr,
+>>>>>>> b7ba80a49124 (Commit)
 			       skb_frag_size(&shinfo->frags[0]));
 
 	} else {
 		inl->byte_count = cpu_to_be32(1 << 31 | spc);
 		if (hlen <= spc) {
+<<<<<<< HEAD
 			skb_copy_from_linear_data(skb, inl->data, hlen);
 			if (hlen < spc) {
 				memcpy(inl->data + hlen,
@@ -725,6 +745,23 @@ static void build_inline_wqe(struct mlx4_en_tx_desc *tx_desc,
 							 hlen - spc);
 			if (shinfo->nr_frags)
 				memcpy(inl->data + hlen - spc,
+=======
+			skb_copy_from_linear_data(skb, inl + 1, hlen);
+			if (hlen < spc) {
+				memcpy(((void *)(inl + 1)) + hlen,
+				       fragptr, spc - hlen);
+				fragptr +=  spc - hlen;
+			}
+			inl = (void *) (inl + 1) + spc;
+			memcpy(((void *)(inl + 1)), fragptr, skb->len - spc);
+		} else {
+			skb_copy_from_linear_data(skb, inl + 1, spc);
+			inl = (void *) (inl + 1) + spc;
+			skb_copy_from_linear_data_offset(skb, spc, inl + 1,
+							 hlen - spc);
+			if (shinfo->nr_frags)
+				memcpy(((void *)(inl + 1)) + hlen - spc,
+>>>>>>> b7ba80a49124 (Commit)
 				       fragptr,
 				       skb_frag_size(&shinfo->frags[0]));
 		}
@@ -911,6 +948,14 @@ netdev_tx_t mlx4_en_xmit(struct sk_buff *skb, struct net_device *dev)
 	/* Align descriptor to TXBB size */
 	desc_size = ALIGN(real_size, TXBB_SIZE);
 	nr_txbb = desc_size >> LOG_TXBB_SIZE;
+<<<<<<< HEAD
+=======
+	if (unlikely(nr_txbb > MAX_DESC_TXBBS)) {
+		if (netif_msg_tx_err(priv))
+			en_warn(priv, "Oversized header or SG list\n");
+		goto tx_drop_count;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	bf_ok = ring->bf_enabled;
 	if (skb_vlan_tag_present(skb)) {
@@ -938,11 +983,14 @@ netdev_tx_t mlx4_en_xmit(struct sk_buff *skb, struct net_device *dev)
 	if (likely(index + nr_txbb <= ring->size))
 		tx_desc = ring->buf + (index << LOG_TXBB_SIZE);
 	else {
+<<<<<<< HEAD
 		if (unlikely(nr_txbb > MLX4_MAX_DESC_TXBBS)) {
 			if (netif_msg_tx_err(priv))
 				en_warn(priv, "Oversized header or SG list\n");
 			goto tx_drop_count;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		tx_desc = (struct mlx4_en_tx_desc *) ring->bounce_buf;
 		bounce = true;
 		bf_ok = false;

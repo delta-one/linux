@@ -3,16 +3,30 @@
  * Archs are free to supply their own linker scripts.  ld will
  * combine them automatically.
  */
+<<<<<<< HEAD
 #ifdef CONFIG_UNWIND_TABLES
 #define DISCARD_EH_FRAME
 #else
 #define DISCARD_EH_FRAME	*(.eh_frame)
+=======
+#ifdef CONFIG_CFI_CLANG
+# include <asm/page.h>
+# define ALIGN_CFI 		ALIGN(PAGE_SIZE)
+# define SANITIZER_DISCARDS	*(.eh_frame)
+#else
+# define ALIGN_CFI
+# define SANITIZER_DISCARDS
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 SECTIONS {
 	/DISCARD/ : {
 		*(.discard)
 		*(.discard.*)
+<<<<<<< HEAD
+=======
+		SANITIZER_DISCARDS
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	__ksymtab		0 : { *(SORT(___ksymtab+*)) }
@@ -29,10 +43,13 @@ SECTIONS {
 
 	__patchable_function_entries : { *(__patchable_function_entries) }
 
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_USES_CFI_TRAPS
 	__kcfi_traps 		: { KEEP(*(.kcfi_traps)) }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_LTO_CLANG
 	/*
 	 * With CONFIG_LTO_CLANG, LLD always enables -fdata-sections and
@@ -53,6 +70,18 @@ SECTIONS {
 		*(.rodata .rodata.[0-9a-zA-Z_]*)
 		*(.rodata..L*)
 	}
+<<<<<<< HEAD
+=======
+
+	/*
+	 * With CONFIG_CFI_CLANG, we assume __cfi_check is at the beginning
+	 * of the .text section, and is aligned to PAGE_SIZE.
+	 */
+	.text : ALIGN_CFI {
+		*(.text.__cfi_check)
+		*(.text .text.[0-9a-zA-Z_]* .text..L.cfi*)
+	}
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 }
 

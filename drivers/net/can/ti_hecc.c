@@ -470,7 +470,11 @@ static netdev_tx_t ti_hecc_xmit(struct sk_buff *skb, struct net_device *ndev)
 	u32 mbxno, mbx_mask, data;
 	unsigned long flags;
 
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(ndev, skb))
+=======
+	if (can_dropped_invalid_skb(ndev, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	mbxno = get_tx_head_mb(priv);

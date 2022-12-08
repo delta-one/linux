@@ -20,6 +20,7 @@ static inline unsigned long huge_pte_dirty(pte_t pte)
 	return pte_dirty(pte);
 }
 
+<<<<<<< HEAD
 static inline pte_t huge_pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
 {
 	return pte_mkwrite(pte, vma);
@@ -32,6 +33,13 @@ static inline pte_t huge_pte_wrprotect(pte_t pte)
 }
 #endif
 
+=======
+static inline pte_t huge_pte_mkwrite(pte_t pte)
+{
+	return pte_mkwrite(pte);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline pte_t huge_pte_mkdirty(pte_t pte)
 {
 	return pte_mkdirty(pte);
@@ -44,7 +52,11 @@ static inline pte_t huge_pte_modify(pte_t pte, pgprot_t newprot)
 
 static inline pte_t huge_pte_mkuffd_wp(pte_t pte)
 {
+<<<<<<< HEAD
 	return huge_pte_wrprotect(pte_mkuffd_wp(pte));
+=======
+	return pte_mkuffd_wp(pte);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline pte_t huge_pte_clear_uffd_wp(pte_t pte)
@@ -111,6 +123,16 @@ static inline int huge_pte_none_mostly(pte_t pte)
 	return huge_pte_none(pte) || is_pte_marker(pte);
 }
 
+<<<<<<< HEAD
+=======
+#ifndef __HAVE_ARCH_HUGE_PTE_WRPROTECT
+static inline pte_t huge_pte_wrprotect(pte_t pte)
+{
+	return pte_wrprotect(pte);
+}
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
 static inline int prepare_hugepage_range(struct file *file,
 		unsigned long addr, unsigned long len)

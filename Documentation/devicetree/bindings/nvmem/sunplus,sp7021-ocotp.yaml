@@ -11,7 +11,11 @@ maintainers:
   - Vincent Shih <vincent.sunplus@gmail.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: nvmem.yaml#
+=======
+  - $ref: "nvmem.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

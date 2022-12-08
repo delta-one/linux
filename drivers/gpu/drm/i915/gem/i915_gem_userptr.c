@@ -128,6 +128,7 @@ static void i915_gem_object_userptr_drop_ref(struct drm_i915_gem_object *obj)
 
 static int i915_gem_userptr_get_pages(struct drm_i915_gem_object *obj)
 {
+<<<<<<< HEAD
 	unsigned int max_segment = i915_sg_segment_size(obj->base.dev->dev);
 	struct sg_table *st;
 	struct page **pvec;
@@ -138,6 +139,15 @@ static int i915_gem_userptr_get_pages(struct drm_i915_gem_object *obj)
 		return -E2BIG;
 
 	num_pages = obj->base.size >> PAGE_SHIFT;
+=======
+	const unsigned long num_pages = obj->base.size >> PAGE_SHIFT;
+	unsigned int max_segment = i915_sg_segment_size();
+	struct sg_table *st;
+	unsigned int sg_page_sizes;
+	struct page **pvec;
+	int ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	st = kmalloc(sizeof(*st), GFP_KERNEL);
 	if (!st)
 		return -ENOMEM;
@@ -173,7 +183,12 @@ alloc_table:
 	if (i915_gem_object_can_bypass_llc(obj))
 		obj->cache_dirty = true;
 
+<<<<<<< HEAD
 	__i915_gem_object_set_pages(obj, st);
+=======
+	sg_page_sizes = i915_sg_dma_sizes(st->sgl);
+	__i915_gem_object_set_pages(obj, st, sg_page_sizes);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -294,7 +309,11 @@ int i915_gem_object_userptr_submit_init(struct drm_i915_gem_object *obj)
 	if (!i915_gem_object_is_readonly(obj))
 		gup_flags |= FOLL_WRITE;
 
+<<<<<<< HEAD
 	pinned = 0;
+=======
+	pinned = ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	while (pinned < num_pages) {
 		ret = pin_user_pages_fast(obj->userptr.ptr + pinned * PAGE_SIZE,
 					  num_pages - pinned, gup_flags,
@@ -304,6 +323,10 @@ int i915_gem_object_userptr_submit_init(struct drm_i915_gem_object *obj)
 
 		pinned += ret;
 	}
+<<<<<<< HEAD
+=======
+	ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = i915_gem_object_lock_interruptible(obj, NULL);
 	if (ret)
@@ -429,10 +452,16 @@ probe_range(struct mm_struct *mm, unsigned long addr, unsigned long len)
 {
 	VMA_ITERATOR(vmi, mm, addr);
 	struct vm_area_struct *vma;
+<<<<<<< HEAD
 	unsigned long end = addr + len;
 
 	mmap_read_lock(mm);
 	for_each_vma_range(vmi, vma, end) {
+=======
+
+	mmap_read_lock(mm);
+	for_each_vma_range(vmi, vma, addr + len) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Check for holes, note that we also update the addr below */
 		if (vma->vm_start > addr)
 			break;
@@ -444,7 +473,11 @@ probe_range(struct mm_struct *mm, unsigned long addr, unsigned long len)
 	}
 	mmap_read_unlock(mm);
 
+<<<<<<< HEAD
 	if (vma || addr < end)
+=======
+	if (vma)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EFAULT;
 	return 0;
 }

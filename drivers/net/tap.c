@@ -533,7 +533,11 @@ static int tap_open(struct inode *inode, struct file *file)
 	q->sock.state = SS_CONNECTED;
 	q->sock.file = file;
 	q->sock.ops = &tap_socket_ops;
+<<<<<<< HEAD
 	sock_init_data_uid(&q->sock, &q->sk, inode->i_uid);
+=======
+	sock_init_data(&q->sock, &q->sk);
+>>>>>>> b7ba80a49124 (Commit)
 	q->sk.sk_write_space = tap_sock_write_space;
 	q->sk.sk_destruct = tap_sock_destruct;
 	q->flags = IFF_VNET_HDR | IFF_NO_PI | IFF_TAP;
@@ -555,9 +559,12 @@ static int tap_open(struct inode *inode, struct file *file)
 		goto err_put;
 	}
 
+<<<<<<< HEAD
 	/* tap groks IOCB_NOWAIT just fine, mark it as such */
 	file->f_mode |= FMODE_NOWAIT;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev_put(tap->dev);
 
 	rtnl_unlock();
@@ -774,12 +781,17 @@ static ssize_t tap_write_iter(struct kiocb *iocb, struct iov_iter *from)
 {
 	struct file *file = iocb->ki_filp;
 	struct tap_queue *q = file->private_data;
+<<<<<<< HEAD
 	int noblock = 0;
 
 	if ((file->f_flags & O_NONBLOCK) || (iocb->ki_flags & IOCB_NOWAIT))
 		noblock = 1;
 
 	return tap_get_user(q, NULL, from, noblock);
+=======
+
+	return tap_get_user(q, NULL, from, file->f_flags & O_NONBLOCK);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Put packet to the user space buffer */
@@ -895,12 +907,17 @@ static ssize_t tap_read_iter(struct kiocb *iocb, struct iov_iter *to)
 	struct file *file = iocb->ki_filp;
 	struct tap_queue *q = file->private_data;
 	ssize_t len = iov_iter_count(to), ret;
+<<<<<<< HEAD
 	int noblock = 0;
 
 	if ((file->f_flags & O_NONBLOCK) || (iocb->ki_flags & IOCB_NOWAIT))
 		noblock = 1;
 
 	ret = tap_do_read(q, to, noblock, NULL);
+=======
+
+	ret = tap_do_read(q, to, file->f_flags & O_NONBLOCK, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = min_t(ssize_t, ret, len);
 	if (ret > 0)
 		iocb->ki_pos = ret;
@@ -968,10 +985,13 @@ static int set_offload(struct tap_queue *q, unsigned long arg)
 			if (arg & TUN_F_TSO6)
 				feature_mask |= NETIF_F_TSO6;
 		}
+<<<<<<< HEAD
 
 		/* TODO: for now USO4 and USO6 should work simultaneously */
 		if ((arg & (TUN_F_USO4 | TUN_F_USO6)) == (TUN_F_USO4 | TUN_F_USO6))
 			features |= NETIF_F_GSO_UDP_L4;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* tun/tap driver inverts the usage for TSO offloads, where
@@ -982,8 +1002,12 @@ static int set_offload(struct tap_queue *q, unsigned long arg)
 	 * When user space turns off TSO, we turn off GSO/LRO so that
 	 * user-space will not receive TSO frames.
 	 */
+<<<<<<< HEAD
 	if (feature_mask & (NETIF_F_TSO | NETIF_F_TSO6) ||
 	    (feature_mask & (TUN_F_USO4 | TUN_F_USO6)) == (TUN_F_USO4 | TUN_F_USO6))
+=======
+	if (feature_mask & (NETIF_F_TSO | NETIF_F_TSO6))
+>>>>>>> b7ba80a49124 (Commit)
 		features |= RX_OFFLOADS;
 	else
 		features &= ~RX_OFFLOADS;
@@ -1107,8 +1131,12 @@ static long tap_ioctl(struct file *file, unsigned int cmd,
 	case TUNSETOFFLOAD:
 		/* let the user check for future flags */
 		if (arg & ~(TUN_F_CSUM | TUN_F_TSO4 | TUN_F_TSO6 |
+<<<<<<< HEAD
 			    TUN_F_TSO_ECN | TUN_F_UFO |
 			    TUN_F_USO4 | TUN_F_USO6))
+=======
+			    TUN_F_TSO_ECN | TUN_F_UFO))
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 
 		rtnl_lock();

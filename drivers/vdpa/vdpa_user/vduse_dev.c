@@ -673,6 +673,7 @@ static void vduse_vdpa_get_config(struct vdpa_device *vdpa, unsigned int offset,
 {
 	struct vduse_dev *dev = vdpa_to_vduse(vdpa);
 
+<<<<<<< HEAD
 	/* Initialize the buffer in case of partial copy. */
 	memset(buf, 0, len);
 
@@ -682,6 +683,12 @@ static void vduse_vdpa_get_config(struct vdpa_device *vdpa, unsigned int offset,
 	if (len > dev->config_size - offset)
 		len = dev->config_size - offset;
 
+=======
+	if (offset > dev->config_size ||
+	    len > dev->config_size - offset)
+		return;
+
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(buf, dev->config + offset, len);
 }
 
@@ -1440,9 +1447,12 @@ static bool vduse_validate_config(struct vduse_dev_config *config)
 	if (config->config_size > PAGE_SIZE)
 		return false;
 
+<<<<<<< HEAD
 	if (config->vq_num > 0xffff)
 		return false;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!device_is_allowed(config->device_id))
 		return false;
 
@@ -1659,7 +1669,11 @@ static const struct file_operations vduse_ctrl_fops = {
 	.llseek		= noop_llseek,
 };
 
+<<<<<<< HEAD
 static char *vduse_devnode(const struct device *dev, umode_t *mode)
+=======
+static char *vduse_devnode(struct device *dev, umode_t *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return kasprintf(GFP_KERNEL, "vduse/%s", dev_name(dev));
 }
@@ -1793,7 +1807,11 @@ static int vduse_init(void)
 	int ret;
 	struct device *dev;
 
+<<<<<<< HEAD
 	vduse_class = class_create("vduse");
+=======
+	vduse_class = class_create(THIS_MODULE, "vduse");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(vduse_class))
 		return PTR_ERR(vduse_class);
 

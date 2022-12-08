@@ -66,6 +66,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	ir-receiver {
 		compatible = "gpio-ir-receiver";
 		gpios = <&gpio0 RK_PC2 GPIO_ACTIVE_LOW>;
@@ -73,6 +74,8 @@
 		pinctrl-0 = <&ir_receiver_pin>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vcc3v3_sys: vcc3v3-sys-regulator {
 		compatible = "regulator-fixed";
 		regulator-name = "vcc3v3_sys";
@@ -507,6 +510,10 @@
 		interrupt-parent = <&gpio0>;
 		interrupts = <RK_PD3 IRQ_TYPE_EDGE_FALLING>;
 		#clock-cells = <0>;
+<<<<<<< HEAD
+=======
+		clock-frequency = <32768>;
+>>>>>>> b7ba80a49124 (Commit)
 		clock-output-names = "rtcic_32kout";
 		pinctrl-names = "default";
 		pinctrl-0 = <&hym8563_int>;
@@ -621,12 +628,15 @@
 		};
 	};
 
+<<<<<<< HEAD
 	ir-receiver {
 		ir_receiver_pin: ir-receiver-pin {
 			rockchip,pins = <0 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pcie {
 		minipcie_enable_h: minipcie-enable-h {
 			rockchip,pins = <0 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none_drv_level_5>;

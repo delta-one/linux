@@ -95,11 +95,14 @@ struct perf_raw_record {
 	u32				size;
 };
 
+<<<<<<< HEAD
 static __always_inline bool perf_raw_frag_last(const struct perf_raw_frag *frag)
 {
 	return frag->pad < sizeof(u64);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * branch stack layout:
  *  nr: number of taken branches stored in entries[]
@@ -271,7 +274,10 @@ struct hw_perf_event {
 };
 
 struct perf_event;
+<<<<<<< HEAD
 struct perf_event_pmu_context;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Common implementation detail of pmu::{start,commit,cancel}_txn
@@ -314,7 +320,11 @@ struct pmu {
 	int				capabilities;
 
 	int __percpu			*pmu_disable_count;
+<<<<<<< HEAD
 	struct perf_cpu_pmu_context __percpu *cpu_pmu_context;
+=======
+	struct perf_cpu_context __percpu *pmu_cpu_context;
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_t			exclusive_cnt; /* < 0: cpu; > 0: tsk */
 	int				task_ctx_nr;
 	int				hrtimer_interval_ms;
@@ -449,7 +459,11 @@ struct pmu {
 	/*
 	 * context-switches callback
 	 */
+<<<<<<< HEAD
 	void (*sched_task)		(struct perf_event_pmu_context *pmu_ctx,
+=======
+	void (*sched_task)		(struct perf_event_context *ctx,
+>>>>>>> b7ba80a49124 (Commit)
 					bool sched_in);
 
 	/*
@@ -463,8 +477,13 @@ struct pmu {
 	 * implementation and Perf core context switch handling callbacks for usage
 	 * examples.
 	 */
+<<<<<<< HEAD
 	void (*swap_task_ctx)		(struct perf_event_pmu_context *prev_epc,
 					 struct perf_event_pmu_context *next_epc);
+=======
+	void (*swap_task_ctx)		(struct perf_event_context *prev,
+					 struct perf_event_context *next);
+>>>>>>> b7ba80a49124 (Commit)
 					/* optional */
 
 	/*
@@ -528,10 +547,16 @@ struct pmu {
 					/* optional */
 
 	/*
+<<<<<<< HEAD
 	 * Skip programming this PMU on the given CPU. Typically needed for
 	 * big.LITTLE things.
 	 */
 	bool (*filter)			(struct pmu *pmu, int cpu); /* optional */
+=======
+	 * Filter events for PMU-specific reasons.
+	 */
+	int (*filter_match)		(struct perf_event *event); /* optional */
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
@@ -651,7 +676,11 @@ struct pmu_event_list {
 #ifdef CONFIG_PROVE_LOCKING
 #define lockdep_assert_event_ctx(event)				\
 	WARN_ON_ONCE(__lockdep_enabled &&			\
+<<<<<<< HEAD
 		     (this_cpu_read(hardirqs_enabled) &&	\
+=======
+		     (this_cpu_read(hardirqs_enabled) ||	\
+>>>>>>> b7ba80a49124 (Commit)
 		      lockdep_is_held(&(event)->ctx->mutex) != LOCK_STATE_HELD))
 #else
 #define lockdep_assert_event_ctx(event)
@@ -702,11 +731,14 @@ struct perf_event {
 	int				group_caps;
 
 	struct perf_event		*group_leader;
+<<<<<<< HEAD
 	/*
 	 * event->pmu will always point to pmu in which this event belongs.
 	 * Whereas event->pmu_ctx->pmu may point to other pmu when group of
 	 * different pmu events is created.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct pmu			*pmu;
 	void				*pmu_private;
 
@@ -732,12 +764,15 @@ struct perf_event {
 	struct hw_perf_event		hw;
 
 	struct perf_event_context	*ctx;
+<<<<<<< HEAD
 	/*
 	 * event->pmu_ctx points to perf_event_pmu_context in which the event
 	 * is added. This pmu_ctx can be of other pmu for sw event when that
 	 * sw event is part of a group which also contains non-sw events.
 	 */
 	struct perf_event_pmu_context	*pmu_ctx;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_long_t			refcount;
 
 	/*
@@ -774,6 +809,7 @@ struct perf_event {
 	struct fasync_struct		*fasync;
 
 	/* delayed work for NMIs and such */
+<<<<<<< HEAD
 	unsigned int			pending_wakeup;
 	unsigned int			pending_kill;
 	unsigned int			pending_disable;
@@ -782,6 +818,13 @@ struct perf_event {
 	struct irq_work			pending_irq;
 	struct callback_head		pending_task;
 	unsigned int			pending_work;
+=======
+	int				pending_wakeup;
+	int				pending_kill;
+	int				pending_disable;
+	unsigned long			pending_addr;	/* SIGTRAP */
+	struct irq_work			pending;
+>>>>>>> b7ba80a49124 (Commit)
 
 	atomic_t			event_limit;
 
@@ -830,6 +873,7 @@ struct perf_event {
 #endif /* CONFIG_PERF_EVENTS */
 };
 
+<<<<<<< HEAD
 /*
  *           ,-----------------------[1:n]----------------------.
  *           V                                                  V
@@ -880,19 +924,28 @@ struct perf_event_pmu_context {
 	 */
 	int				rotate_necessary;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct perf_event_groups {
 	struct rb_root	tree;
 	u64		index;
 };
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct perf_event_context - event context structure
  *
  * Used as a container for task events and CPU events as well:
  */
 struct perf_event_context {
+<<<<<<< HEAD
+=======
+	struct pmu			*pmu;
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Protect the states of the events in the list,
 	 * nr_active, and the list:
@@ -905,11 +958,16 @@ struct perf_event_context {
 	 */
 	struct mutex			mutex;
 
+<<<<<<< HEAD
 	struct list_head		pmu_ctx_list;
+=======
+	struct list_head		active_ctx_list;
+>>>>>>> b7ba80a49124 (Commit)
 	struct perf_event_groups	pinned_groups;
 	struct perf_event_groups	flexible_groups;
 	struct list_head		event_list;
 
+<<<<<<< HEAD
 	int				nr_events;
 	int				nr_user;
 	int				is_active;
@@ -920,6 +978,24 @@ struct perf_event_context {
 	int				rotate_disable;
 
 	refcount_t			refcount; /* event <-> ctx */
+=======
+	struct list_head		pinned_active;
+	struct list_head		flexible_active;
+
+	int				nr_events;
+	int				nr_active;
+	int				nr_user;
+	int				is_active;
+	int				nr_stat;
+	int				nr_freq;
+	int				rotate_disable;
+	/*
+	 * Set when nr_events != nr_active, except tolerant to events not
+	 * necessary to be active due to scheduling constraints, such as cgroups.
+	 */
+	int				rotate_necessary;
+	refcount_t			refcount;
+>>>>>>> b7ba80a49124 (Commit)
 	struct task_struct		*task;
 
 	/*
@@ -940,6 +1016,7 @@ struct perf_event_context {
 #ifdef CONFIG_CGROUP_PERF
 	int				nr_cgroups;	 /* cgroup evts */
 #endif
+<<<<<<< HEAD
 	struct rcu_head			rcu_head;
 
 	/*
@@ -949,6 +1026,10 @@ struct perf_event_context {
 	 * that until the signal is delivered.
 	 */
 	local_t				nr_pending;
+=======
+	void				*task_ctx_data; /* pmu specific data */
+	struct rcu_head			rcu_head;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -957,6 +1038,7 @@ struct perf_event_context {
  */
 #define PERF_NR_CONTEXTS	4
 
+<<<<<<< HEAD
 struct perf_cpu_pmu_context {
 	struct perf_event_pmu_context	epc;
 	struct perf_event_pmu_context	*task_epc;
@@ -964,6 +1046,14 @@ struct perf_cpu_pmu_context {
 	struct list_head		sched_cb_entry;
 	int				sched_cb_usage;
 
+=======
+/**
+ * struct perf_cpu_context - per cpu event context structure
+ */
+struct perf_cpu_context {
+	struct perf_event_context	ctx;
+	struct perf_event_context	*task_ctx;
+>>>>>>> b7ba80a49124 (Commit)
 	int				active_oncpu;
 	int				exclusive;
 
@@ -971,6 +1061,7 @@ struct perf_cpu_pmu_context {
 	struct hrtimer			hrtimer;
 	ktime_t				hrtimer_interval;
 	unsigned int			hrtimer_active;
+<<<<<<< HEAD
 };
 
 /**
@@ -985,6 +1076,18 @@ struct perf_cpu_context {
 	struct perf_cgroup		*cgrp;
 #endif
 
+=======
+
+#ifdef CONFIG_CGROUP_PERF
+	struct perf_cgroup		*cgrp;
+	struct list_head		cgrp_cpuctx_entry;
+#endif
+
+	struct list_head		sched_cb_entry;
+	int				sched_cb_usage;
+
+	int				online;
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Per-CPU storage for iterators used in visit_groups_merge. The default
 	 * storage is of size 2 to hold the CPU and any CPU event iterators.
@@ -1048,8 +1151,11 @@ perf_cgroup_from_task(struct task_struct *task, struct perf_event_context *ctx)
 
 #ifdef CONFIG_PERF_EVENTS
 
+<<<<<<< HEAD
 extern struct perf_event_context *perf_cpu_task_ctx(void);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern void *perf_aux_output_begin(struct perf_output_handle *handle,
 				   struct perf_event *event);
 extern void perf_aux_output_end(struct perf_output_handle *handle,
@@ -1100,6 +1206,7 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
 extern u64 perf_event_read_value(struct perf_event *event,
 				 u64 *enabled, u64 *running);
 
+<<<<<<< HEAD
 extern struct perf_callchain_entry *perf_callchain(struct perf_event *event, struct pt_regs *regs);
 
 static inline bool branch_sample_no_flags(const struct perf_event *event)
@@ -1142,16 +1249,45 @@ struct perf_sample_data {
 	 * group so as to minimize the cachelines touched.
 	 */
 	u64				type;
+=======
+
+struct perf_sample_data {
+	/*
+	 * Fields set by perf_sample_data_init(), group so as to
+	 * minimize the cachelines touched.
+	 */
+	u64				sample_flags;
+	u64				addr;
+	struct perf_raw_record		*raw;
+	u64				period;
+
+	/*
+	 * The other fields, optionally {set,used} by
+	 * perf_{prepare,output}_sample().
+	 */
+	struct perf_branch_stack	*br_stack;
+	union perf_sample_weight	weight;
+	union  perf_mem_data_src	data_src;
+	u64				txn;
+
+	u64				type;
+	u64				ip;
+>>>>>>> b7ba80a49124 (Commit)
 	struct {
 		u32	pid;
 		u32	tid;
 	}				tid_entry;
 	u64				time;
 	u64				id;
+<<<<<<< HEAD
+=======
+	u64				stream_id;
+>>>>>>> b7ba80a49124 (Commit)
 	struct {
 		u32	cpu;
 		u32	reserved;
 	}				cpu_entry;
+<<<<<<< HEAD
 
 	/*
 	 * The other fields, optionally {set,used} by
@@ -1164,11 +1300,16 @@ struct perf_sample_data {
 	union perf_sample_weight	weight;
 	union  perf_mem_data_src	data_src;
 	u64				txn;
+=======
+	struct perf_callchain_entry	*callchain;
+	u64				aux_size;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct perf_regs		regs_user;
 	struct perf_regs		regs_intr;
 	u64				stack_user_size;
 
+<<<<<<< HEAD
 	u64				stream_id;
 	u64				cgroup;
 	u64				addr;
@@ -1176,6 +1317,12 @@ struct perf_sample_data {
 	u64				data_page_size;
 	u64				code_page_size;
 	u64				aux_size;
+=======
+	u64				phys_addr;
+	u64				cgroup;
+	u64				data_page_size;
+	u64				code_page_size;
+>>>>>>> b7ba80a49124 (Commit)
 } ____cacheline_aligned;
 
 /* default value for data source */
@@ -1189,6 +1336,7 @@ static inline void perf_sample_data_init(struct perf_sample_data *data,
 					 u64 addr, u64 period)
 {
 	/* remaining struct members initialized in perf_prepare_sample() */
+<<<<<<< HEAD
 	data->sample_flags = PERF_SAMPLE_PERIOD;
 	data->period = period;
 	data->dyn_size = 0;
@@ -1259,6 +1407,12 @@ static inline u32 perf_sample_data_size(struct perf_sample_data *data,
 	size += data->dyn_size;
 
 	return size;
+=======
+	data->sample_flags = 0;
+	data->addr = addr;
+	data->raw  = NULL;
+	data->period = period;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1282,10 +1436,14 @@ extern void perf_output_sample(struct perf_output_handle *handle,
 			       struct perf_event_header *header,
 			       struct perf_sample_data *data,
 			       struct perf_event *event);
+<<<<<<< HEAD
 extern void perf_prepare_sample(struct perf_sample_data *data,
 				struct perf_event *event,
 				struct pt_regs *regs);
 extern void perf_prepare_header(struct perf_event_header *header,
+=======
+extern void perf_prepare_sample(struct perf_event_header *header,
+>>>>>>> b7ba80a49124 (Commit)
 				struct perf_sample_data *data,
 				struct perf_event *event,
 				struct pt_regs *regs);
@@ -1353,7 +1511,11 @@ static inline int is_software_event(struct perf_event *event)
  */
 static inline int in_software_context(struct perf_event *event)
 {
+<<<<<<< HEAD
 	return event->pmu_ctx->pmu->task_ctx_nr == perf_sw_context;
+=======
+	return event->ctx->pmu->task_ctx_nr == perf_sw_context;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline int is_exclusive_pmu(struct pmu *pmu)
@@ -1505,6 +1667,10 @@ extern void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct
 extern struct perf_callchain_entry *
 get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
 		   u32 max_stack, bool crosstask, bool add_mark);
+<<<<<<< HEAD
+=======
+extern struct perf_callchain_entry *perf_callchain(struct perf_event *event, struct pt_regs *regs);
+>>>>>>> b7ba80a49124 (Commit)
 extern int get_callchain_buffers(int max_stack);
 extern void put_callchain_buffers(void);
 extern struct perf_callchain_entry *get_callchain_entry(int *rctx);
@@ -1772,6 +1938,14 @@ extern void perf_restore_debug_store(void);
 static inline void perf_restore_debug_store(void)			{ }
 #endif
 
+<<<<<<< HEAD
+=======
+static __always_inline bool perf_raw_frag_last(const struct perf_raw_frag *frag)
+{
+	return frag->pad < sizeof(u64);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #define perf_output_put(handle, x) perf_output_copy((handle), &(x), sizeof(x))
 
 struct perf_pmu_events_attr {
@@ -1821,7 +1995,11 @@ static struct perf_pmu_events_attr _var = {				    \
 		  .id = _id, }						\
 	})[0].attr.attr)
 
+<<<<<<< HEAD
 #define PMU_FORMAT_ATTR_SHOW(_name, _format)				\
+=======
+#define PMU_FORMAT_ATTR(_name, _format)					\
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t								\
 _name##_show(struct device *dev,					\
 			       struct device_attribute *attr,		\
@@ -1830,9 +2008,12 @@ _name##_show(struct device *dev,					\
 	BUILD_BUG_ON(sizeof(_format) >= PAGE_SIZE);			\
 	return sprintf(page, _format "\n");				\
 }									\
+<<<<<<< HEAD
 
 #define PMU_FORMAT_ATTR(_name, _format)					\
 	PMU_FORMAT_ATTR_SHOW(_name, _format)				\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 									\
 static struct device_attribute format_attr_##_name = __ATTR_RO(_name)
 
@@ -1881,4 +2062,33 @@ static inline void perf_lopwr_cb(bool mode)
 }
 #endif
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PERF_EVENTS
+static inline bool branch_sample_no_flags(const struct perf_event *event)
+{
+	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_NO_FLAGS;
+}
+
+static inline bool branch_sample_no_cycles(const struct perf_event *event)
+{
+	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_NO_CYCLES;
+}
+
+static inline bool branch_sample_type(const struct perf_event *event)
+{
+	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_TYPE_SAVE;
+}
+
+static inline bool branch_sample_hw_index(const struct perf_event *event)
+{
+	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_HW_INDEX;
+}
+
+static inline bool branch_sample_priv(const struct perf_event *event)
+{
+	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_PRIV_SAVE;
+}
+#endif /* CONFIG_PERF_EVENTS */
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _LINUX_PERF_EVENT_H */

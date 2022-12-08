@@ -5,16 +5,22 @@
 #include <linux/rcupdate.h>
 #include <linux/regmap.h>
 #include <linux/pci.h>
+<<<<<<< HEAD
 #include <linux/skbuff.h>
 
 #define MTK_WED_TX_QUEUES		2
 #define MTK_WED_RX_QUEUES		2
 
 #define WED_WO_STA_REC			0x6
+=======
+
+#define MTK_WED_TX_QUEUES		2
+>>>>>>> b7ba80a49124 (Commit)
 
 struct mtk_wed_hw;
 struct mtk_wdma_desc;
 
+<<<<<<< HEAD
 enum mtk_wed_wo_cmd {
 	MTK_WED_WO_CMD_WED_CFG,
 	MTK_WED_WO_CMD_WED_RX_STAT,
@@ -49,23 +55,32 @@ struct mtk_rxbm_desc {
 	__le32 token;
 } __packed __aligned(4);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum mtk_wed_bus_tye {
 	MTK_WED_BUS_PCIE,
 	MTK_WED_BUS_AXI,
 };
 
+<<<<<<< HEAD
 #define MTK_WED_RING_CONFIGURED		BIT(0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mtk_wed_ring {
 	struct mtk_wdma_desc *desc;
 	dma_addr_t desc_phys;
 	u32 desc_size;
 	int size;
+<<<<<<< HEAD
 	u32 flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	u32 reg_base;
 	void __iomem *wpdma;
 };
 
+<<<<<<< HEAD
 struct mtk_wed_wo_rx_stats {
 	__le16 wlan_idx;
 	__le16 tid;
@@ -75,6 +90,8 @@ struct mtk_wed_wo_rx_stats {
 	__le32 rx_drop_cnt;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mtk_wed_device {
 #ifdef CONFIG_NET_MEDIATEK_SOC_WED
 	const struct mtk_wed_ops *ops;
@@ -83,6 +100,7 @@ struct mtk_wed_device {
 	bool init_done, running;
 	int wdma_idx;
 	int irq;
+<<<<<<< HEAD
 	u8 version;
 
 	/* used by wlan driver */
@@ -93,12 +111,19 @@ struct mtk_wed_device {
 	struct mtk_wed_ring txfree_ring;
 	struct mtk_wed_ring tx_wdma[MTK_WED_TX_QUEUES];
 	struct mtk_wed_ring rx_wdma[MTK_WED_RX_QUEUES];
+=======
+
+	struct mtk_wed_ring tx_ring[MTK_WED_TX_QUEUES];
+	struct mtk_wed_ring txfree_ring;
+	struct mtk_wed_ring tx_wdma[MTK_WED_TX_QUEUES];
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct {
 		int size;
 		void **pages;
 		struct mtk_wdma_desc *desc;
 		dma_addr_t desc_phys;
+<<<<<<< HEAD
 	} tx_buf_ring;
 
 	struct {
@@ -112,6 +137,9 @@ struct mtk_wed_device {
 		dma_addr_t miod_phys;
 		dma_addr_t fdbk_phys;
 	} rro;
+=======
+	} buf_ring;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* filled by driver: */
 	struct {
@@ -120,14 +148,18 @@ struct mtk_wed_device {
 			struct pci_dev *pci_dev;
 		};
 		enum mtk_wed_bus_tye bus_type;
+<<<<<<< HEAD
 		void __iomem *base;
 		u32 phy_base;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		u32 wpdma_phys;
 		u32 wpdma_int;
 		u32 wpdma_mask;
 		u32 wpdma_tx;
 		u32 wpdma_txfree;
+<<<<<<< HEAD
 		u32 wpdma_rx_glo;
 		u32 wpdma_rx;
 
@@ -141,17 +173,27 @@ struct mtk_wed_device {
 
 		u8 tx_tbit[MTK_WED_TX_QUEUES];
 		u8 rx_tbit[MTK_WED_RX_QUEUES];
+=======
+
+		u16 token_start;
+		unsigned int nbuf;
+
+		u8 tx_tbit[MTK_WED_TX_QUEUES];
+>>>>>>> b7ba80a49124 (Commit)
 		u8 txfree_tbit;
 
 		u32 (*init_buf)(void *ptr, dma_addr_t phys, int token_id);
 		int (*offload_enable)(struct mtk_wed_device *wed);
 		void (*offload_disable)(struct mtk_wed_device *wed);
+<<<<<<< HEAD
 		u32 (*init_rx_buf)(struct mtk_wed_device *wed, int size);
 		void (*release_rx_buf)(struct mtk_wed_device *wed);
 		void (*update_wo_rx_stats)(struct mtk_wed_device *wed,
 					   struct mtk_wed_wo_rx_stats *stats);
 		int (*reset)(struct mtk_wed_device *wed);
 		void (*reset_complete)(struct mtk_wed_device *wed);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} wlan;
 #endif
 };
@@ -159,6 +201,7 @@ struct mtk_wed_device {
 struct mtk_wed_ops {
 	int (*attach)(struct mtk_wed_device *dev);
 	int (*tx_ring_setup)(struct mtk_wed_device *dev, int ring,
+<<<<<<< HEAD
 			     void __iomem *regs, bool reset);
 	int (*rx_ring_setup)(struct mtk_wed_device *dev, int ring,
 			     void __iomem *regs, bool reset);
@@ -169,6 +212,12 @@ struct mtk_wed_ops {
 	void (*detach)(struct mtk_wed_device *dev);
 	void (*ppe_check)(struct mtk_wed_device *dev, struct sk_buff *skb,
 			  u32 reason, u32 hash);
+=======
+			     void __iomem *regs);
+	int (*txfree_ring_setup)(struct mtk_wed_device *dev,
+				 void __iomem *regs);
+	void (*detach)(struct mtk_wed_device *dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	void (*stop)(struct mtk_wed_device *dev);
 	void (*start)(struct mtk_wed_device *dev, u32 irq_mask);
@@ -203,6 +252,7 @@ mtk_wed_device_attach(struct mtk_wed_device *dev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static inline bool
 mtk_wed_get_rx_capa(struct mtk_wed_device *dev)
 {
@@ -213,12 +263,19 @@ mtk_wed_get_rx_capa(struct mtk_wed_device *dev)
 #endif
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_NET_MEDIATEK_SOC_WED
 #define mtk_wed_device_active(_dev) !!(_dev)->ops
 #define mtk_wed_device_detach(_dev) (_dev)->ops->detach(_dev)
 #define mtk_wed_device_start(_dev, _mask) (_dev)->ops->start(_dev, _mask)
+<<<<<<< HEAD
 #define mtk_wed_device_tx_ring_setup(_dev, _ring, _regs, _reset) \
 	(_dev)->ops->tx_ring_setup(_dev, _ring, _regs, _reset)
+=======
+#define mtk_wed_device_tx_ring_setup(_dev, _ring, _regs) \
+	(_dev)->ops->tx_ring_setup(_dev, _ring, _regs)
+>>>>>>> b7ba80a49124 (Commit)
 #define mtk_wed_device_txfree_ring_setup(_dev, _regs) \
 	(_dev)->ops->txfree_ring_setup(_dev, _regs)
 #define mtk_wed_device_reg_read(_dev, _reg) \
@@ -229,6 +286,7 @@ mtk_wed_get_rx_capa(struct mtk_wed_device *dev)
 	(_dev)->ops->irq_get(_dev, _mask)
 #define mtk_wed_device_irq_set_mask(_dev, _mask) \
 	(_dev)->ops->irq_set_mask(_dev, _mask)
+<<<<<<< HEAD
 #define mtk_wed_device_rx_ring_setup(_dev, _ring, _regs, _reset) \
 	(_dev)->ops->rx_ring_setup(_dev, _ring, _regs, _reset)
 #define mtk_wed_device_ppe_check(_dev, _skb, _reason, _hash) \
@@ -237,6 +295,8 @@ mtk_wed_get_rx_capa(struct mtk_wed_device *dev)
 	(_dev)->ops->msg_update(_dev, _id, _msg, _len)
 #define mtk_wed_device_stop(_dev) (_dev)->ops->stop(_dev)
 #define mtk_wed_device_dma_reset(_dev) (_dev)->ops->reset_dma(_dev)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline bool mtk_wed_device_active(struct mtk_wed_device *dev)
 {
@@ -244,17 +304,24 @@ static inline bool mtk_wed_device_active(struct mtk_wed_device *dev)
 }
 #define mtk_wed_device_detach(_dev) do {} while (0)
 #define mtk_wed_device_start(_dev, _mask) do {} while (0)
+<<<<<<< HEAD
 #define mtk_wed_device_tx_ring_setup(_dev, _ring, _regs, _reset) -ENODEV
+=======
+#define mtk_wed_device_tx_ring_setup(_dev, _ring, _regs) -ENODEV
+>>>>>>> b7ba80a49124 (Commit)
 #define mtk_wed_device_txfree_ring_setup(_dev, _ring, _regs) -ENODEV
 #define mtk_wed_device_reg_read(_dev, _reg) 0
 #define mtk_wed_device_reg_write(_dev, _reg, _val) do {} while (0)
 #define mtk_wed_device_irq_get(_dev, _mask) 0
 #define mtk_wed_device_irq_set_mask(_dev, _mask) do {} while (0)
+<<<<<<< HEAD
 #define mtk_wed_device_rx_ring_setup(_dev, _ring, _regs, _reset) -ENODEV
 #define mtk_wed_device_ppe_check(_dev, _skb, _reason, _hash)  do {} while (0)
 #define mtk_wed_device_update_msg(_dev, _id, _msg, _len) -ENODEV
 #define mtk_wed_device_stop(_dev) do {} while (0)
 #define mtk_wed_device_dma_reset(_dev) do {} while (0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #endif

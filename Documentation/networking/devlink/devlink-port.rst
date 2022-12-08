@@ -110,7 +110,11 @@ devlink ports for both the controllers.
 Function configuration
 ======================
 
+<<<<<<< HEAD
 Users can configure one or more function attributes before enumerating the PCI
+=======
+A user can configure the function attribute before enumerating the PCI
+>>>>>>> b7ba80a49124 (Commit)
 function. Usually it means, user should configure function attribute
 before a bus specific device for the function is created. However, when
 SRIOV is enabled, virtual function devices are created on the PCI bus.
@@ -119,6 +123,7 @@ function device to the driver. For subfunctions, this means user should
 configure port function attribute before activating the port function.
 
 A user may set the hardware address of the function using
+<<<<<<< HEAD
 `devlink port function set hw_addr` command. For Ethernet port function
 this means a MAC address.
 
@@ -240,6 +245,11 @@ Attach VF to the VM.
 Start the VM.
 Perform live migration.
 
+=======
+'devlink port function set hw_addr' command. For Ethernet port function
+this means a MAC address.
+
+>>>>>>> b7ba80a49124 (Commit)
 Subfunction
 ============
 
@@ -248,11 +258,18 @@ it is deployed. Subfunction is created and deployed in unit of 1. Unlike
 SRIOV VFs, a subfunction doesn't require its own PCI virtual function.
 A subfunction communicates with the hardware through the parent PCI function.
 
+<<<<<<< HEAD
 To use a subfunction, 3 steps setup sequence is followed:
 
 1) create - create a subfunction;
 2) configure - configure subfunction attributes;
 3) deploy - deploy the subfunction;
+=======
+To use a subfunction, 3 steps setup sequence is followed.
+(1) create - create a subfunction;
+(2) configure - configure subfunction attributes;
+(3) deploy - deploy the subfunction;
+>>>>>>> b7ba80a49124 (Commit)
 
 Subfunction management is done using devlink port user interface.
 User performs setup on the subfunction management device.
@@ -310,6 +327,7 @@ API allows to configure following rate object's parameters:
 ``tx_max``
   Maximum TX rate value.
 
+<<<<<<< HEAD
 ``tx_priority``
   Allows for usage of strict priority arbiter among siblings. This
   arbitration scheme attempts to schedule nodes based on their priority
@@ -325,11 +343,14 @@ API allows to configure following rate object's parameters:
   points, they basically tell how much BW should node take relative to
   it's siblings.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ``parent``
   Parent node name. Parent node rate limits are considered as additional limits
   to all node children limits. ``tx_max`` is an upper limit for children.
   ``tx_share`` is a total bandwidth distributed among children.
 
+<<<<<<< HEAD
 ``tx_priority`` and ``tx_weight`` can be used simultaneously. In that case
 nodes with the same priority form a WFQ subgroup in the sibling group
 and arbitration among them is based on assigned weights.
@@ -352,6 +373,10 @@ Arbitration flow from the high level:
 Driver implementations are allowed to support both or either rate object types
 and setting methods of their parameters. Additionally driver implementation
 may export nodes/leafs and their child-parent relationships.
+=======
+Driver implementations are allowed to support both or either rate object types
+and setting methods of their parameters.
+>>>>>>> b7ba80a49124 (Commit)
 
 Terms and Definitions
 =====================

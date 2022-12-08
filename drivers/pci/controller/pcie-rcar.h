@@ -11,7 +11,11 @@
 
 #define PCIECAR			0x000010
 #define PCIECCTLR		0x000018
+<<<<<<< HEAD
 #define  PCIECCTLR_CCIE		BIT(31)
+=======
+#define  CONFIG_SEND_ENABLE	BIT(31)
+>>>>>>> b7ba80a49124 (Commit)
 #define  TYPE0			(0 << 8)
 #define  TYPE1			BIT(8)
 #define PCIECDR			0x000020

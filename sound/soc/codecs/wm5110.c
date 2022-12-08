@@ -2500,13 +2500,20 @@ err_dsp_irq:
 	arizona_set_irq_wake(arizona, ARIZONA_IRQ_DSP_IRQ1, 0);
 	arizona_free_irq(arizona, ARIZONA_IRQ_DSP_IRQ1, wm5110);
 err_jack_codec_dev:
+<<<<<<< HEAD
 	pm_runtime_disable(&pdev->dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	arizona_jack_codec_dev_remove(&wm5110->core);
 
 	return ret;
 }
 
+<<<<<<< HEAD
 static void wm5110_remove(struct platform_device *pdev)
+=======
+static int wm5110_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct wm5110_priv *wm5110 = platform_get_drvdata(pdev);
 	struct arizona *arizona = wm5110->core.arizona;
@@ -2523,6 +2530,11 @@ static void wm5110_remove(struct platform_device *pdev)
 	arizona_free_irq(arizona, ARIZONA_IRQ_DSP_IRQ1, wm5110);
 
 	arizona_jack_codec_dev_remove(&wm5110->core);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver wm5110_codec_driver = {
@@ -2530,7 +2542,11 @@ static struct platform_driver wm5110_codec_driver = {
 		.name = "wm5110-codec",
 	},
 	.probe = wm5110_probe,
+<<<<<<< HEAD
 	.remove_new = wm5110_remove,
+=======
+	.remove = wm5110_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(wm5110_codec_driver);

@@ -175,10 +175,15 @@ static void bsg_device_release(struct device *dev)
 
 void bsg_unregister_queue(struct bsg_device *bd)
 {
+<<<<<<< HEAD
 	struct gendisk *disk = bd->queue->disk;
 
 	if (disk && disk->queue_kobj.sd)
 		sysfs_remove_link(&disk->queue_kobj, "bsg");
+=======
+	if (bd->queue->kobj.sd)
+		sysfs_remove_link(&bd->queue->kobj, "bsg");
+>>>>>>> b7ba80a49124 (Commit)
 	cdev_device_del(&bd->cdev, &bd->device);
 	put_device(&bd->device);
 }
@@ -218,9 +223,14 @@ struct bsg_device *bsg_register_queue(struct request_queue *q,
 	if (ret)
 		goto out_put_device;
 
+<<<<<<< HEAD
 	if (q->disk && q->disk->queue_kobj.sd) {
 		ret = sysfs_create_link(&q->disk->queue_kobj, &bd->device.kobj,
 					"bsg");
+=======
+	if (q->kobj.sd) {
+		ret = sysfs_create_link(&q->kobj, &bd->device.kobj, "bsg");
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			goto out_device_del;
 	}
@@ -235,7 +245,11 @@ out_put_device:
 }
 EXPORT_SYMBOL_GPL(bsg_register_queue);
 
+<<<<<<< HEAD
 static char *bsg_devnode(const struct device *dev, umode_t *mode)
+=======
+static char *bsg_devnode(struct device *dev, umode_t *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return kasprintf(GFP_KERNEL, "bsg/%s", dev_name(dev));
 }
@@ -245,7 +259,11 @@ static int __init bsg_init(void)
 	dev_t devid;
 	int ret;
 
+<<<<<<< HEAD
 	bsg_class = class_create("bsg");
+=======
+	bsg_class = class_create(THIS_MODULE, "bsg");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(bsg_class))
 		return PTR_ERR(bsg_class);
 	bsg_class->devnode = bsg_devnode;

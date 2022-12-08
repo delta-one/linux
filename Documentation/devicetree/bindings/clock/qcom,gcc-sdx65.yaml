@@ -4,16 +4,28 @@
 $id: http://devicetree.org/schemas/clock/qcom,gcc-sdx65.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Qualcomm Global Clock & Reset Controller on SDX65
+=======
+title: Qualcomm Global Clock & Reset Controller Binding for SDX65
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Vamsi krishna Lanka <quic_vamslank@quicinc.com>
 
 description: |
+<<<<<<< HEAD
   Qualcomm global clock control module provides the clocks, resets and power
   domains on SDX65
 
   See also:: include/dt-bindings/clock/qcom,gcc-sdx65.h
+=======
+  Qualcomm global clock control module which supports the clocks, resets and
+  power domains on SDX65
+
+  See also:
+  - dt-bindings/clock/qcom,gcc-sdx65.h
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -26,6 +38,11 @@ properties:
       - description: Sleep clock source
       - description: PCIE Pipe clock source
       - description: USB3 phy wrapper pipe clock source
+<<<<<<< HEAD
+=======
+      - description: PLL test clock source (Optional clock)
+    minItems: 5
+>>>>>>> b7ba80a49124 (Commit)
 
   clock-names:
     items:
@@ -34,6 +51,11 @@ properties:
       - const: sleep_clk
       - const: pcie_pipe_clk
       - const: usb3_phy_wrapper_gcc_usb30_pipe_clk
+<<<<<<< HEAD
+=======
+      - const: core_bi_pll_test_se # Optional clock
+    minItems: 5
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible
@@ -52,9 +74,15 @@ examples:
       compatible = "qcom,gcc-sdx65";
       reg = <0x100000 0x1f7400>;
       clocks = <&rpmhcc RPMH_CXO_CLK>, <&rpmhcc RPMH_CXO_CLK_A>, <&sleep_clk>,
+<<<<<<< HEAD
                <&pcie_pipe_clk>, <&usb3_phy_wrapper_gcc_usb30_pipe_clk>;
       clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk",
                     "pcie_pipe_clk", "usb3_phy_wrapper_gcc_usb30_pipe_clk";
+=======
+               <&pcie_pipe_clk>, <&usb3_phy_wrapper_gcc_usb30_pipe_clk>, <&pll_test_clk>;
+      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk",
+                    "pcie_pipe_clk", "usb3_phy_wrapper_gcc_usb30_pipe_clk", "core_bi_pll_test_se";
+>>>>>>> b7ba80a49124 (Commit)
       #clock-cells = <1>;
       #reset-cells = <1>;
       #power-domain-cells = <1>;

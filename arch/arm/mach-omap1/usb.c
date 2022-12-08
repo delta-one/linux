@@ -190,6 +190,15 @@ static struct platform_device udc_device = {
 
 static inline void udc_device_init(struct omap_usb_config *pdata)
 {
+<<<<<<< HEAD
+=======
+	/* IRQ numbers for omap7xx */
+	if(cpu_is_omap7xx()) {
+		udc_resources[1].start = INT_7XX_USB_GENI;
+		udc_resources[2].start = INT_7XX_USB_NON_ISO;
+		udc_resources[3].start = INT_7XX_USB_ISO;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	pdata->udc_device = &udc_device;
 }
 
@@ -232,6 +241,11 @@ static inline void ohci_device_init(struct omap_usb_config *pdata)
 	if (!IS_ENABLED(CONFIG_USB_OHCI_HCD))
 		return;
 
+<<<<<<< HEAD
+=======
+	if (cpu_is_omap7xx())
+		ohci_resources[1].start = INT_7XX_USB_HHC_1;
+>>>>>>> b7ba80a49124 (Commit)
 	pdata->ohci_device = &ohci_device;
 	pdata->ocpi_enable = &ocpi_enable;
 }
@@ -259,6 +273,11 @@ static struct platform_device otg_device = {
 
 static inline void otg_device_init(struct omap_usb_config *pdata)
 {
+<<<<<<< HEAD
+=======
+	if (cpu_is_omap7xx())
+		otg_resources[1].start = INT_7XX_USB_OTG;
+>>>>>>> b7ba80a49124 (Commit)
 	pdata->otg_device = &otg_device;
 }
 
@@ -287,7 +306,18 @@ static u32 __init omap1_usb0_init(unsigned nwires, unsigned is_device)
 	}
 
 	if (is_device) {
+<<<<<<< HEAD
 		omap_cfg_reg(W4_USB_PUEN);
+=======
+		if (cpu_is_omap7xx()) {
+			omap_cfg_reg(AA17_7XX_USB_DM);
+			omap_cfg_reg(W16_7XX_USB_PU_EN);
+			omap_cfg_reg(W17_7XX_USB_VBUSI);
+			omap_cfg_reg(W18_7XX_USB_DMCK_OUT);
+			omap_cfg_reg(W19_7XX_USB_DCRST);
+		} else
+			omap_cfg_reg(W4_USB_PUEN);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (nwires == 2) {
@@ -307,11 +337,22 @@ static u32 __init omap1_usb0_init(unsigned nwires, unsigned is_device)
 		 *  - OTG support on this port not yet written
 		 */
 
+<<<<<<< HEAD
 		l = omap_readl(USB_TRANSCEIVER_CTRL);
 		l &= ~(7 << 4);
 		if (!is_device)
 			l |= (3 << 1);
 		omap_writel(l, USB_TRANSCEIVER_CTRL);
+=======
+		/* Don't do this for omap7xx -- it causes USB to not work correctly */
+		if (!cpu_is_omap7xx()) {
+			l = omap_readl(USB_TRANSCEIVER_CTRL);
+			l &= ~(7 << 4);
+			if (!is_device)
+				l |= (3 << 1);
+			omap_writel(l, USB_TRANSCEIVER_CTRL);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		return 3 << 16;
 	}
@@ -678,7 +719,11 @@ void __init omap1_usb_init(struct omap_usb_config *_pdata)
 	ohci_device_init(pdata);
 	otg_device_init(pdata);
 
+<<<<<<< HEAD
 	if (cpu_is_omap16xx())
+=======
+	if (cpu_is_omap7xx() || cpu_is_omap16xx())
+>>>>>>> b7ba80a49124 (Commit)
 		omap_otg_init(pdata);
 	else if (cpu_is_omap15xx())
 		omap_1510_usb_init(pdata);

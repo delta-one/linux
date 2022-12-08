@@ -106,9 +106,15 @@ static const struct parent_map gpu_xo_gpupll0_map[] = {
 	{ P_GPUPLL0_OUT_EVEN, 1 },
 };
 
+<<<<<<< HEAD
 static const struct clk_hw *gpu_xo_gpupll0[] = {
 	&gpucc_cxo_clk.clkr.hw,
 	&gpupll0_out_even.clkr.hw,
+=======
+static const struct clk_parent_data gpu_xo_gpupll0[] = {
+	{ .hw = &gpucc_cxo_clk.clkr.hw },
+	{ .hw = &gpupll0_out_even.clkr.hw },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct freq_tbl ftbl_rbcpr_clk_src[] = {
@@ -142,7 +148,11 @@ static struct clk_rcg2 gfx3d_clk_src = {
 	.freq_tbl = ftbl_gfx3d_clk_src,
 	.clkr.hw.init = &(struct clk_init_data){
 		.name = "gfx3d_clk_src",
+<<<<<<< HEAD
 		.parent_hws = gpu_xo_gpupll0,
+=======
+		.parent_data = gpu_xo_gpupll0,
+>>>>>>> b7ba80a49124 (Commit)
 		.num_parents = ARRAY_SIZE(gpu_xo_gpupll0),
 		.ops = &clk_rcg2_ops,
 		.flags = CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE,

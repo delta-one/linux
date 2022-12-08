@@ -62,6 +62,7 @@ int rvu_sdp_init(struct rvu *rvu)
 		pfvf->sdp_info = devm_kzalloc(rvu->dev,
 					      sizeof(struct sdp_node_info),
 					      GFP_KERNEL);
+<<<<<<< HEAD
 		if (!pfvf->sdp_info) {
 			pci_dev_put(pdev);
 			return -ENOMEM;
@@ -74,6 +75,17 @@ int rvu_sdp_init(struct rvu *rvu)
 
 	pci_dev_put(pdev);
 
+=======
+		if (!pfvf->sdp_info)
+			return -ENOMEM;
+
+		dev_info(rvu->dev, "SDP PF number:%d\n", sdp_pf_num[i]);
+
+		put_device(&pdev->dev);
+		i++;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

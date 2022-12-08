@@ -168,7 +168,12 @@ static void cy8ctmg110_shut_off(void *_ts)
 	cy8ctmg110_power(ts, false);
 }
 
+<<<<<<< HEAD
 static int cy8ctmg110_probe(struct i2c_client *client)
+=======
+static int cy8ctmg110_probe(struct i2c_client *client,
+					const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cy8ctmg110 *ts;
 	struct input_dev *input_dev;
@@ -237,7 +242,11 @@ static int cy8ctmg110_probe(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int cy8ctmg110_suspend(struct device *dev)
+=======
+static int __maybe_unused cy8ctmg110_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct cy8ctmg110 *ts = i2c_get_clientdata(client);
@@ -250,7 +259,11 @@ static int cy8ctmg110_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int cy8ctmg110_resume(struct device *dev)
+=======
+static int __maybe_unused cy8ctmg110_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct cy8ctmg110 *ts = i2c_get_clientdata(client);
@@ -263,8 +276,12 @@ static int cy8ctmg110_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(cy8ctmg110_pm,
 				cy8ctmg110_suspend, cy8ctmg110_resume);
+=======
+static SIMPLE_DEV_PM_OPS(cy8ctmg110_pm, cy8ctmg110_suspend, cy8ctmg110_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id cy8ctmg110_idtable[] = {
 	{ CY8CTMG110_DRIVER_NAME, 1 },
@@ -276,10 +293,17 @@ MODULE_DEVICE_TABLE(i2c, cy8ctmg110_idtable);
 static struct i2c_driver cy8ctmg110_driver = {
 	.driver		= {
 		.name	= CY8CTMG110_DRIVER_NAME,
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&cy8ctmg110_pm),
 	},
 	.id_table	= cy8ctmg110_idtable,
 	.probe_new	= cy8ctmg110_probe,
+=======
+		.pm	= &cy8ctmg110_pm,
+	},
+	.id_table	= cy8ctmg110_idtable,
+	.probe		= cy8ctmg110_probe,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_i2c_driver(cy8ctmg110_driver);

@@ -493,9 +493,15 @@ static int video_start_streaming(struct vb2_queue *q, unsigned int count)
 	struct v4l2_subdev *subdev;
 	int ret;
 
+<<<<<<< HEAD
 	ret = video_device_pipeline_start(vdev, &video->pipe);
 	if (ret < 0)
 		goto flush_buffers;
+=======
+	ret = media_pipeline_start(&vdev->entity, &video->pipe);
+	if (ret < 0)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = video_check_format(video);
 	if (ret < 0)
@@ -522,9 +528,14 @@ static int video_start_streaming(struct vb2_queue *q, unsigned int count)
 	return 0;
 
 error:
+<<<<<<< HEAD
 	video_device_pipeline_stop(vdev);
 
 flush_buffers:
+=======
+	media_pipeline_stop(&vdev->entity);
+
+>>>>>>> b7ba80a49124 (Commit)
 	video->ops->flush_buffers(video, VB2_BUF_STATE_QUEUED);
 
 	return ret;
@@ -554,7 +565,11 @@ static void video_stop_streaming(struct vb2_queue *q)
 		v4l2_subdev_call(subdev, video, s_stream, 0);
 	}
 
+<<<<<<< HEAD
 	video_device_pipeline_stop(vdev);
+=======
+	media_pipeline_stop(&vdev->entity);
+>>>>>>> b7ba80a49124 (Commit)
 
 	video->ops->flush_buffers(video, VB2_BUF_STATE_ERROR);
 }

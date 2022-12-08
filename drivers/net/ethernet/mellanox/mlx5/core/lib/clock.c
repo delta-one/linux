@@ -69,6 +69,7 @@ enum {
 	MLX5_MTPPS_FS_OUT_PULSE_DURATION_NS     = BIT(0xa),
 };
 
+<<<<<<< HEAD
 enum {
 	MLX5_MTUTC_OPERATION_ADJUST_TIME_MIN          = S16_MIN,
 	MLX5_MTUTC_OPERATION_ADJUST_TIME_MAX          = S16_MAX,
@@ -76,6 +77,8 @@ enum {
 	MLX5_MTUTC_OPERATION_ADJUST_TIME_EXTENDED_MAX = 200000,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool mlx5_real_time_mode(struct mlx5_core_dev *mdev)
 {
 	return (mlx5_is_real_time_rq(mdev) || mlx5_is_real_time_sq(mdev));
@@ -93,6 +96,7 @@ static bool mlx5_modify_mtutc_allowed(struct mlx5_core_dev *mdev)
 	return MLX5_CAP_MCAM_FEATURE(mdev, ptpcyc2realtime_modify);
 }
 
+<<<<<<< HEAD
 static bool mlx5_is_mtutc_time_adj_cap(struct mlx5_core_dev *mdev, s64 delta)
 {
 	s64 min = MLX5_MTUTC_OPERATION_ADJUST_TIME_MIN;
@@ -109,6 +113,8 @@ static bool mlx5_is_mtutc_time_adj_cap(struct mlx5_core_dev *mdev, s64 delta)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mlx5_set_mtutc(struct mlx5_core_dev *dev, u32 *mtutc, u32 size)
 {
 	u32 out[MLX5_ST_SZ_DW(mtutc_reg)] = {};
@@ -311,8 +317,13 @@ static int mlx5_ptp_adjtime_real_time(struct mlx5_core_dev *mdev, s64 delta)
 	if (!mlx5_modify_mtutc_allowed(mdev))
 		return 0;
 
+<<<<<<< HEAD
 	/* HW time adjustment range is checked. If out of range, settime instead */
 	if (!mlx5_is_mtutc_time_adj_cap(mdev, delta)) {
+=======
+	/* HW time adjustment range is s16. If out of range, settime instead */
+	if (delta < S16_MIN || delta > S16_MAX) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct timespec64 ts;
 		s64 ns;
 
@@ -349,6 +360,7 @@ static int mlx5_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mlx5_ptp_adjphase(struct ptp_clock_info *ptp, s32 delta)
 {
 	struct mlx5_clock *clock = container_of(ptp, struct mlx5_clock, ptp_info);
@@ -363,6 +375,9 @@ static int mlx5_ptp_adjphase(struct ptp_clock_info *ptp, s32 delta)
 }
 
 static int mlx5_ptp_freq_adj_real_time(struct mlx5_core_dev *mdev, long scaled_ppm)
+=======
+static int mlx5_ptp_adjfreq_real_time(struct mlx5_core_dev *mdev, s32 freq)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 in[MLX5_ST_SZ_DW(mtutc_reg)] = {};
 
@@ -370,6 +385,7 @@ static int mlx5_ptp_freq_adj_real_time(struct mlx5_core_dev *mdev, long scaled_p
 		return 0;
 
 	MLX5_SET(mtutc_reg, in, operation, MLX5_MTUTC_OPERATION_ADJUST_FREQ_UTC);
+<<<<<<< HEAD
 
 	if (MLX5_CAP_MCAM_FEATURE(mdev, mtutc_freq_adj_units)) {
 		MLX5_SET(mtutc_reg, in, freq_adj_units,
@@ -379,16 +395,24 @@ static int mlx5_ptp_freq_adj_real_time(struct mlx5_core_dev *mdev, long scaled_p
 		MLX5_SET(mtutc_reg, in, freq_adj_units, MLX5_MTUTC_FREQ_ADJ_UNITS_PPB);
 		MLX5_SET(mtutc_reg, in, freq_adjustment, scaled_ppm_to_ppb(scaled_ppm));
 	}
+=======
+	MLX5_SET(mtutc_reg, in, freq_adjustment, freq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return mlx5_set_mtutc(mdev, in, sizeof(in));
 }
 
+<<<<<<< HEAD
 static int mlx5_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
+=======
+static int mlx5_ptp_adjfreq(struct ptp_clock_info *ptp, s32 delta)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mlx5_clock *clock = container_of(ptp, struct mlx5_clock, ptp_info);
 	struct mlx5_timer *timer = &clock->timer;
 	struct mlx5_core_dev *mdev;
 	unsigned long flags;
+<<<<<<< HEAD
 	u32 mult;
 	int err;
 
@@ -403,6 +427,31 @@ static int mlx5_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
 	write_seqlock_irqsave(&clock->lock, flags);
 	timecounter_read(&timer->tc);
 	timer->cycles.mult = mult;
+=======
+	int neg_adj = 0;
+	u32 diff;
+	u64 adj;
+	int err;
+
+	mdev = container_of(clock, struct mlx5_core_dev, clock);
+	err = mlx5_ptp_adjfreq_real_time(mdev, delta);
+	if (err)
+		return err;
+
+	if (delta < 0) {
+		neg_adj = 1;
+		delta = -delta;
+	}
+
+	adj = timer->nominal_c_mult;
+	adj *= delta;
+	diff = div_u64(adj, 1000000000ULL);
+
+	write_seqlock_irqsave(&clock->lock, flags);
+	timecounter_read(&timer->tc);
+	timer->cycles.mult = neg_adj ? timer->nominal_c_mult - diff :
+				       timer->nominal_c_mult + diff;
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5_update_clock_info_page(mdev);
 	write_sequnlock_irqrestore(&clock->lock, flags);
 
@@ -726,14 +775,22 @@ static int mlx5_ptp_verify(struct ptp_clock_info *ptp, unsigned int pin,
 static const struct ptp_clock_info mlx5_ptp_clock_info = {
 	.owner		= THIS_MODULE,
 	.name		= "mlx5_ptp",
+<<<<<<< HEAD
 	.max_adj	= 50000000,
+=======
+	.max_adj	= 100000000,
+>>>>>>> b7ba80a49124 (Commit)
 	.n_alarm	= 0,
 	.n_ext_ts	= 0,
 	.n_per_out	= 0,
 	.n_pins		= 0,
 	.pps		= 0,
+<<<<<<< HEAD
 	.adjfine	= mlx5_ptp_adjfine,
 	.adjphase	= mlx5_ptp_adjphase,
+=======
+	.adjfreq	= mlx5_ptp_adjfreq,
+>>>>>>> b7ba80a49124 (Commit)
 	.adjtime	= mlx5_ptp_adjtime,
 	.gettimex64	= mlx5_ptp_gettimex,
 	.settime64	= mlx5_ptp_settime,

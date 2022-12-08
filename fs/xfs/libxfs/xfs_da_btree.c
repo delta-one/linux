@@ -2192,8 +2192,13 @@ xfs_da_grow_inode_int(
 		 */
 		mapp = kmem_alloc(sizeof(*mapp) * count, 0);
 		for (b = *bno, mapi = 0; b < *bno + count; ) {
+<<<<<<< HEAD
 			c = (int)(*bno + count - b);
 			nmap = min(XFS_BMAP_MAX_NMAP, c);
+=======
+			nmap = min(XFS_BMAP_MAX_NMAP, count);
+			c = (int)(*bno + count - b);
+>>>>>>> b7ba80a49124 (Commit)
 			error = xfs_bmapi_write(tp, dp, b, c,
 					xfs_bmapi_aflag(w)|XFS_BMAPI_METADATA,
 					args->total, &mapp[mapi], &nmap);

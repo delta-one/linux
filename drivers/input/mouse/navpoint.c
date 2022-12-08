@@ -315,7 +315,11 @@ static int navpoint_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int navpoint_suspend(struct device *dev)
+=======
+static int __maybe_unused navpoint_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *pdev = to_platform_device(dev);
 	struct navpoint *navpoint = platform_get_drvdata(pdev);
@@ -329,7 +333,11 @@ static int navpoint_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int navpoint_resume(struct device *dev)
+=======
+static int __maybe_unused navpoint_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *pdev = to_platform_device(dev);
 	struct navpoint *navpoint = platform_get_drvdata(pdev);
@@ -343,15 +351,23 @@ static int navpoint_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(navpoint_pm_ops,
 				navpoint_suspend, navpoint_resume);
+=======
+static SIMPLE_DEV_PM_OPS(navpoint_pm_ops, navpoint_suspend, navpoint_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_driver navpoint_driver = {
 	.probe		= navpoint_probe,
 	.remove		= navpoint_remove,
 	.driver = {
 		.name	= "navpoint",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&navpoint_pm_ops),
+=======
+		.pm	= &navpoint_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

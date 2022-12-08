@@ -362,8 +362,12 @@ MODULE_DEVICE_TABLE(i2c, mp886x_id);
 static struct i2c_driver mp886x_regulator_driver = {
 	.driver = {
 		.name = "mp886x-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 		.of_match_table = mp886x_dt_ids,
+=======
+		.of_match_table = of_match_ptr(mp886x_dt_ids),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe_new = mp886x_i2c_probe,
 	.id_table = mp886x_id,

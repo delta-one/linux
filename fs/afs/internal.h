@@ -9,7 +9,10 @@
 #include <linux/kernel.h>
 #include <linux/ktime.h>
 #include <linux/fs.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pagemap.h>
 #include <linux/rxrpc.h>
 #include <linux/key.h>
@@ -973,6 +976,16 @@ extern void afs_merge_fs_addr4(struct afs_addr_list *, __be32, u16);
 extern void afs_merge_fs_addr6(struct afs_addr_list *, __be32 *, u16);
 
 /*
+<<<<<<< HEAD
+=======
+ * cache.c
+ */
+#ifdef CONFIG_AFS_FSCACHE
+extern struct fscache_netfs afs_cache_netfs;
+#endif
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * callback.c
  */
 extern void afs_invalidate_mmap_work(struct work_struct *);
@@ -1171,9 +1184,15 @@ extern struct inode *afs_iget(struct afs_operation *, struct afs_vnode_param *);
 extern struct inode *afs_root_iget(struct super_block *, struct key *);
 extern bool afs_check_validity(struct afs_vnode *);
 extern int afs_validate(struct afs_vnode *, struct key *);
+<<<<<<< HEAD
 extern int afs_getattr(struct mnt_idmap *idmap, const struct path *,
 		       struct kstat *, u32, unsigned int);
 extern int afs_setattr(struct mnt_idmap *idmap, struct dentry *, struct iattr *);
+=======
+extern int afs_getattr(struct user_namespace *mnt_userns, const struct path *,
+		       struct kstat *, u32, unsigned int);
+extern int afs_setattr(struct user_namespace *mnt_userns, struct dentry *, struct iattr *);
+>>>>>>> b7ba80a49124 (Commit)
 extern void afs_evict_inode(struct inode *);
 extern int afs_drop_inode(struct inode *);
 
@@ -1295,7 +1314,11 @@ static inline void afs_extract_begin(struct afs_call *call, void *buf, size_t si
 	call->iov_len = size;
 	call->kvec[0].iov_base = buf;
 	call->kvec[0].iov_len = size;
+<<<<<<< HEAD
 	iov_iter_kvec(&call->def_iter, ITER_DEST, call->kvec, 1, size);
+=======
+	iov_iter_kvec(&call->def_iter, READ, call->kvec, 1, size);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void afs_extract_to_tmp(struct afs_call *call)
@@ -1313,7 +1336,11 @@ static inline void afs_extract_to_tmp64(struct afs_call *call)
 static inline void afs_extract_discard(struct afs_call *call, size_t size)
 {
 	call->iov_len = size;
+<<<<<<< HEAD
 	iov_iter_discard(&call->def_iter, ITER_DEST, size);
+=======
+	iov_iter_discard(&call->def_iter, READ, size);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void afs_extract_to_buf(struct afs_call *call, size_t size)
@@ -1385,10 +1412,18 @@ extern void afs_put_permits(struct afs_permits *);
 extern void afs_clear_permits(struct afs_vnode *);
 extern void afs_cache_permit(struct afs_vnode *, struct key *, unsigned int,
 			     struct afs_status_cb *);
+<<<<<<< HEAD
 extern struct key *afs_request_key(struct afs_cell *);
 extern struct key *afs_request_key_rcu(struct afs_cell *);
 extern int afs_check_permit(struct afs_vnode *, struct key *, afs_access_t *);
 extern int afs_permission(struct mnt_idmap *, struct inode *, int);
+=======
+extern void afs_zap_permits(struct rcu_head *);
+extern struct key *afs_request_key(struct afs_cell *);
+extern struct key *afs_request_key_rcu(struct afs_cell *);
+extern int afs_check_permit(struct afs_vnode *, struct key *, afs_access_t *);
+extern int afs_permission(struct user_namespace *, struct inode *, int);
+>>>>>>> b7ba80a49124 (Commit)
 extern void __exit afs_clean_up_permit_cache(void);
 
 /*

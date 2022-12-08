@@ -21,16 +21,22 @@
  */
 #define nvkm_uconn(p) container_of((p), struct nvkm_conn, object)
 #include "conn.h"
+<<<<<<< HEAD
 #include "outp.h"
 
 #include <core/client.h>
 #include <core/event.h>
 #include <subdev/gpio.h>
 #include <subdev/i2c.h>
+=======
+
+#include <subdev/gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <nvif/if0011.h>
 
 static int
+<<<<<<< HEAD
 nvkm_uconn_uevent_aux(struct nvkm_object *object, u64 token, u32 bits)
 {
 	union nvif_conn_event_args args;
@@ -101,6 +107,8 @@ nvkm_uconn_uevent(struct nvkm_object *object, void *argv, u32 argc, struct nvkm_
 }
 
 static int
+=======
+>>>>>>> b7ba80a49124 (Commit)
 nvkm_uconn_mthd_hpd_status(struct nvkm_conn *conn, void *argv, u32 argc)
 {
 	struct nvkm_gpio *gpio = conn->disp->engine.subdev.device->gpio;
@@ -156,7 +164,10 @@ static const struct nvkm_object_func
 nvkm_uconn = {
 	.dtor = nvkm_uconn_dtor,
 	.mthd = nvkm_uconn_mthd,
+<<<<<<< HEAD
 	.uevent = nvkm_uconn_uevent,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int

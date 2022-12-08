@@ -223,6 +223,14 @@ int ft_write_pending(struct se_cmd *se_cmd)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+int ft_get_cmd_state(struct se_cmd *se_cmd)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * FC sequence response handler for follow-on sequences (data) and aborts.
  */

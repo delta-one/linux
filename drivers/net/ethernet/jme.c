@@ -3009,7 +3009,11 @@ jme_init_one(struct pci_dev *pdev,
 		jwrite32(jme, JME_APMC, apmc);
 	}
 
+<<<<<<< HEAD
 	netif_napi_add(netdev, &jme->napi, jme_poll);
+=======
+	netif_napi_add(netdev, &jme->napi, jme_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_init(&jme->phy_lock);
 	spin_lock_init(&jme->macaddr_lock);

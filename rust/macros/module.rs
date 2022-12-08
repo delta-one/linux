@@ -108,11 +108,19 @@ impl ModuleInfo {
 
             match key.as_str() {
                 "type" => info.type_ = expect_ident(it),
+<<<<<<< HEAD
                 "name" => info.name = expect_string_ascii(it),
                 "author" => info.author = Some(expect_string(it)),
                 "description" => info.description = Some(expect_string(it)),
                 "license" => info.license = expect_string_ascii(it),
                 "alias" => info.alias = Some(expect_string_ascii(it)),
+=======
+                "name" => info.name = expect_byte_string(it),
+                "author" => info.author = Some(expect_byte_string(it)),
+                "description" => info.description = Some(expect_byte_string(it)),
+                "license" => info.license = expect_byte_string(it),
+                "alias" => info.alias = Some(expect_byte_string(it)),
+>>>>>>> b7ba80a49124 (Commit)
                 _ => panic!(
                     "Unknown key \"{}\". Valid keys are: {:?}.",
                     key, EXPECTED_KEYS

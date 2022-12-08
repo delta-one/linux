@@ -35,7 +35,10 @@ static const struct diag_desc diag_map[NR_DIAG_STAT] = {
 	[DIAG_STAT_X014] = { .code = 0x014, .name = "Spool File Services" },
 	[DIAG_STAT_X044] = { .code = 0x044, .name = "Voluntary Timeslice End" },
 	[DIAG_STAT_X064] = { .code = 0x064, .name = "NSS Manipulation" },
+<<<<<<< HEAD
 	[DIAG_STAT_X08C] = { .code = 0x08c, .name = "Access 3270 Display Device Information" },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	[DIAG_STAT_X09C] = { .code = 0x09c, .name = "Relinquish Timeslice" },
 	[DIAG_STAT_X0DC] = { .code = 0x0dc, .name = "Appldata Control" },
 	[DIAG_STAT_X204] = { .code = 0x204, .name = "Logical-CPU Utilization" },
@@ -58,16 +61,22 @@ struct diag_ops __amode31_ref diag_amode31_ops = {
 	.diag26c = _diag26c_amode31,
 	.diag14 = _diag14_amode31,
 	.diag0c = _diag0c_amode31,
+<<<<<<< HEAD
 	.diag8c = _diag8c_amode31,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.diag308_reset = _diag308_reset_amode31
 };
 
 static struct diag210 _diag210_tmp_amode31 __section(".amode31.data");
 struct diag210 __amode31_ref *__diag210_tmp_amode31 = &_diag210_tmp_amode31;
 
+<<<<<<< HEAD
 static struct diag8c _diag8c_tmp_amode31 __section(".amode31.data");
 static struct diag8c __amode31_ref *__diag8c_tmp_amode31 = &_diag8c_tmp_amode31;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int show_diag_stat(struct seq_file *m, void *v)
 {
 	struct diag_stat *stat;
@@ -199,6 +208,7 @@ int diag210(struct diag210 *addr)
 }
 EXPORT_SYMBOL(diag210);
 
+<<<<<<< HEAD
 /*
  * Diagnose 210: Get information about a virtual device
  */
@@ -220,6 +230,8 @@ int diag8c(struct diag8c *addr, struct ccw_dev_id *devno)
 }
 EXPORT_SYMBOL(diag8c);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int diag224(void *ptr)
 {
 	int rc = -EOPNOTSUPP;

@@ -7,9 +7,23 @@
 #include <bpf/bpf_core_read.h>
 #include <bpf/bpf_helpers.h>
 
+<<<<<<< HEAD
 #include "net_shared.h"
 #include "xdp_sample_shared.h"
 
+=======
+#include "xdp_sample_shared.h"
+
+#define ETH_ALEN 6
+#define ETH_P_802_3_MIN 0x0600
+#define ETH_P_8021Q 0x8100
+#define ETH_P_8021AD 0x88A8
+#define ETH_P_IP 0x0800
+#define ETH_P_IPV6 0x86DD
+#define ETH_P_ARP 0x0806
+#define IPPROTO_ICMPV6 58
+
+>>>>>>> b7ba80a49124 (Commit)
 #define EINVAL 22
 #define ENETDOWN 100
 #define EMSGSIZE 90
@@ -47,6 +61,21 @@ static __always_inline void swap_src_dst_mac(void *data)
 	p[5] = dst[2];
 }
 
+<<<<<<< HEAD
+=======
+#if defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && \
+	__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#define bpf_ntohs(x)		__builtin_bswap16(x)
+#define bpf_htons(x)		__builtin_bswap16(x)
+#elif defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) && \
+	__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#define bpf_ntohs(x)		(x)
+#define bpf_htons(x)		(x)
+#else
+# error "Endianness detection needs to be set up for your compiler?!"
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Note: including linux/compiler.h or linux/kernel.h for the macros below
  * conflicts with vmlinux.h include in BPF files, so we define them here.

@@ -76,19 +76,31 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_h100_leds>;
 
+<<<<<<< HEAD
 		led0: led-power {
+=======
+		led0: power {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "power";
 			gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
 			default-state = "on";
 		};
 
+<<<<<<< HEAD
 		led1: led-stream {
+=======
+		led1: stream {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "stream";
 			gpios = <&gpio2 29 GPIO_ACTIVE_LOW>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led2: led-rec {
+=======
+		led2: rec {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "rec";
 			gpios = <&gpio2 28 GPIO_ACTIVE_LOW>;
 			default-state = "off";

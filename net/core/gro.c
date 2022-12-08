@@ -160,6 +160,7 @@ int skb_gro_receive(struct sk_buff *p, struct sk_buff *skb)
 	unsigned int gro_max_size;
 	unsigned int new_truesize;
 	struct sk_buff *lp;
+<<<<<<< HEAD
 	int segs;
 
 	/* Do not splice page pool based packets w/ non-page pool
@@ -175,19 +176,33 @@ int skb_gro_receive(struct sk_buff *p, struct sk_buff *skb)
 	gro_max_size = p->protocol == htons(ETH_P_IPV6) ?
 			READ_ONCE(p->dev->gro_max_size) :
 			READ_ONCE(p->dev->gro_ipv4_max_size);
+=======
+
+	/* pairs with WRITE_ONCE() in netif_set_gro_max_size() */
+	gro_max_size = READ_ONCE(p->dev->gro_max_size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unlikely(p->len + len >= gro_max_size || NAPI_GRO_CB(skb)->flush))
 		return -E2BIG;
 
 	if (unlikely(p->len + len >= GRO_LEGACY_MAX_SIZE)) {
+<<<<<<< HEAD
 		if (NAPI_GRO_CB(skb)->proto != IPPROTO_TCP ||
 		    (p->protocol == htons(ETH_P_IPV6) &&
 		     skb_headroom(p) < sizeof(struct hop_jumbo_hdr)) ||
+=======
+		if (p->protocol != htons(ETH_P_IPV6) ||
+		    skb_headroom(p) < sizeof(struct hop_jumbo_hdr) ||
+		    ipv6_hdr(p)->nexthdr != IPPROTO_TCP ||
+>>>>>>> b7ba80a49124 (Commit)
 		    p->encapsulation)
 			return -E2BIG;
 	}
 
+<<<<<<< HEAD
 	segs = NAPI_GRO_CB(skb)->count;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	lp = NAPI_GRO_CB(p)->last;
 	pinfo = skb_shinfo(lp);
 
@@ -278,7 +293,11 @@ merge:
 	lp = p;
 
 done:
+<<<<<<< HEAD
 	NAPI_GRO_CB(p)->count += segs;
+=======
+	NAPI_GRO_CB(p)->count++;
+>>>>>>> b7ba80a49124 (Commit)
 	p->data_len += len;
 	p->truesize += delta_truesize;
 	p->len += len;
@@ -381,7 +400,13 @@ static void gro_list_prepare(const struct list_head *head,
 		}
 
 		diffs = (unsigned long)p->dev ^ (unsigned long)skb->dev;
+<<<<<<< HEAD
 		diffs |= p->vlan_all ^ skb->vlan_all;
+=======
+		diffs |= skb_vlan_tag_present(p) ^ skb_vlan_tag_present(skb);
+		if (skb_vlan_tag_present(p))
+			diffs |= skb_vlan_tag_get(p) ^ skb_vlan_tag_get(skb);
+>>>>>>> b7ba80a49124 (Commit)
 		diffs |= skb_metadata_differs(p, skb);
 		if (maclen == ETH_HLEN)
 			diffs |= compare_ether_header(skb_mac_header(p),
@@ -498,6 +523,7 @@ static enum gro_result dev_gro_receive(struct napi_struct *napi, struct sk_buff 
 
 	rcu_read_lock();
 	list_for_each_entry_rcu(ptype, head, list) {
+<<<<<<< HEAD
 		if (ptype->type == type && ptype->callbacks.gro_receive)
 			goto found_ptype;
 	}
@@ -539,6 +565,41 @@ found_ptype:
 
 	rcu_read_unlock();
 
+=======
+		if (ptype->type != type || !ptype->callbacks.gro_receive)
+			continue;
+
+		skb_set_network_header(skb, skb_gro_offset(skb));
+		skb_reset_mac_len(skb);
+		BUILD_BUG_ON(sizeof_field(struct napi_gro_cb, zeroed) != sizeof(u32));
+		BUILD_BUG_ON(!IS_ALIGNED(offsetof(struct napi_gro_cb, zeroed),
+					 sizeof(u32))); /* Avoid slow unaligned acc */
+		*(u32 *)&NAPI_GRO_CB(skb)->zeroed = 0;
+		NAPI_GRO_CB(skb)->flush = skb_is_gso(skb) || skb_has_frag_list(skb);
+		NAPI_GRO_CB(skb)->is_atomic = 1;
+
+		/* Setup for GRO checksum validation */
+		switch (skb->ip_summed) {
+		case CHECKSUM_COMPLETE:
+			NAPI_GRO_CB(skb)->csum = skb->csum;
+			NAPI_GRO_CB(skb)->csum_valid = 1;
+			break;
+		case CHECKSUM_UNNECESSARY:
+			NAPI_GRO_CB(skb)->csum_cnt = skb->csum_level + 1;
+			break;
+		}
+
+		pp = INDIRECT_CALL_INET(ptype->callbacks.gro_receive,
+					ipv6_gro_receive, inet_gro_receive,
+					&gro_list->list, skb);
+		break;
+	}
+	rcu_read_unlock();
+
+	if (&ptype->list == head)
+		goto normal;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (PTR_ERR(pp) == -EINPROGRESS) {
 		ret = GRO_CONSUMED;
 		goto ok;
@@ -564,10 +625,17 @@ found_ptype:
 	else
 		gro_list->count++;
 
+<<<<<<< HEAD
 	NAPI_GRO_CB(skb)->age = jiffies;
 	NAPI_GRO_CB(skb)->last = skb;
 	if (!skb_is_gso(skb))
 		skb_shinfo(skb)->gso_size = skb_gro_len(skb);
+=======
+	NAPI_GRO_CB(skb)->count = 1;
+	NAPI_GRO_CB(skb)->age = jiffies;
+	NAPI_GRO_CB(skb)->last = skb;
+	skb_shinfo(skb)->gso_size = skb_gro_len(skb);
+>>>>>>> b7ba80a49124 (Commit)
 	list_add(&skb->list, &gro_list->list);
 	ret = GRO_HELD;
 
@@ -679,7 +747,10 @@ static void napi_reuse_skb(struct napi_struct *napi, struct sk_buff *skb)
 
 	skb->encapsulation = 0;
 	skb_shinfo(skb)->gso_type = 0;
+<<<<<<< HEAD
 	skb_shinfo(skb)->gso_size = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(skb->slow_gro)) {
 		skb_orphan(skb);
 		skb_ext_reset(skb);

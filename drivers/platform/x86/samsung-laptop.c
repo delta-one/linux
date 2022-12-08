@@ -1474,7 +1474,11 @@ static int __init samsung_platform_init(struct samsung_laptop *samsung)
 {
 	struct platform_device *pdev;
 
+<<<<<<< HEAD
 	pdev = platform_device_register_simple("samsung", PLATFORM_DEVID_NONE, NULL, 0);
+=======
+	pdev = platform_device_register_simple("samsung", -1, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(pdev))
 		return PTR_ERR(pdev);
 

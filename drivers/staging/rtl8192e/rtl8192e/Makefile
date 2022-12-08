@@ -4,7 +4,11 @@ r8192e_pci-objs :=		\
 	r8192E_phy.o		\
 	r8192E_firmware.o	\
 	r8192E_cmdpkt.o		\
+<<<<<<< HEAD
 	table.o			\
+=======
+	r8192E_hwimg.o		\
+>>>>>>> b7ba80a49124 (Commit)
 	r8190P_rtl8256.o	\
 	rtl_cam.o		\
 	rtl_core.o		\

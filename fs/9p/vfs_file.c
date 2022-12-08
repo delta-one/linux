@@ -9,7 +9,10 @@
 #include <linux/module.h>
 #include <linux/errno.h>
 #include <linux/fs.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sched.h>
 #include <linux/file.h>
 #include <linux/stat.h>
@@ -19,6 +22,10 @@
 #include <linux/pagemap.h>
 #include <linux/utsname.h>
 #include <linux/uaccess.h>
+<<<<<<< HEAD
+=======
+#include <linux/idr.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/uio.h>
 #include <linux/slab.h>
 #include <net/9p/9p.h>
@@ -29,6 +36,10 @@
 #include "fid.h"
 #include "cache.h"
 
+<<<<<<< HEAD
+=======
+static const struct vm_operations_struct v9fs_file_vm_ops;
+>>>>>>> b7ba80a49124 (Commit)
 static const struct vm_operations_struct v9fs_mmap_file_vm_ops;
 
 /**
@@ -73,7 +84,12 @@ int v9fs_file_open(struct inode *inode, struct file *file)
 	}
 
 	mutex_lock(&v9inode->v_mutex);
+<<<<<<< HEAD
 	if ((v9ses->cache >= CACHE_WRITEBACK) && !v9inode->writeback_fid &&
+=======
+	if ((v9ses->cache == CACHE_LOOSE || v9ses->cache == CACHE_FSCACHE) &&
+	    !v9inode->writeback_fid &&
+>>>>>>> b7ba80a49124 (Commit)
 	    ((file->f_flags & O_ACCMODE) != O_RDONLY)) {
 		/*
 		 * clone a fid and add it to writeback_fid
@@ -91,11 +107,17 @@ int v9fs_file_open(struct inode *inode, struct file *file)
 		v9inode->writeback_fid = (void *) writeback_fid;
 	}
 	mutex_unlock(&v9inode->v_mutex);
+<<<<<<< HEAD
 #ifdef CONFIG_9P_FSCACHE
 	if (v9ses->cache == CACHE_FSCACHE)
 		fscache_use_cookie(v9fs_inode_cookie(v9inode),
 				   file->f_mode & FMODE_WRITE);
 #endif
+=======
+	if (v9ses->cache == CACHE_LOOSE || v9ses->cache == CACHE_FSCACHE)
+		fscache_use_cookie(v9fs_inode_cookie(v9inode),
+				   file->f_mode & FMODE_WRITE);
+>>>>>>> b7ba80a49124 (Commit)
 	v9fs_open_fid_add(inode, &fid);
 	return 0;
 out_error:
@@ -367,15 +389,21 @@ v9fs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
 {
 	struct p9_fid *fid = iocb->ki_filp->private_data;
 	int ret, err = 0;
+<<<<<<< HEAD
 	struct inode *inode = file_inode(iocb->ki_filp);
 	struct v9fs_session_info *v9ses = v9fs_inode2v9ses(inode);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	p9_debug(P9_DEBUG_VFS, "count %zu offset %lld\n",
 		 iov_iter_count(to), iocb->ki_pos);
 
+<<<<<<< HEAD
 	if (v9ses->cache > CACHE_MMAP)
 		return generic_file_read_iter(iocb, to);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (iocb->ki_filp->f_flags & O_NONBLOCK)
 		ret = p9_client_read_once(fid, iocb->ki_pos, to, &err);
 	else
@@ -400,11 +428,14 @@ v9fs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
 	ssize_t retval;
 	loff_t origin;
 	int err = 0;
+<<<<<<< HEAD
 	struct inode *inode = file_inode(iocb->ki_filp);
 	struct v9fs_session_info *v9ses = v9fs_inode2v9ses(inode);
 
 	if (v9ses->cache >= CACHE_WRITEBACK)
 		return generic_file_write_iter(iocb, from);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	retval = generic_write_checks(iocb, from);
 	if (retval <= 0)
@@ -487,6 +518,7 @@ static int
 v9fs_file_mmap(struct file *filp, struct vm_area_struct *vma)
 {
 	int retval;
+<<<<<<< HEAD
 	struct inode *inode = file_inode(filp);
 	struct v9fs_inode *v9inode = V9FS_I(inode);
 	struct v9fs_session_info *v9ses = v9fs_inode2v9ses(inode);
@@ -497,6 +529,27 @@ v9fs_file_mmap(struct file *filp, struct vm_area_struct *vma)
 		return generic_file_readonly_mmap(filp, vma);
 	}
 
+=======
+
+
+	retval = generic_file_mmap(filp, vma);
+	if (!retval)
+		vma->vm_ops = &v9fs_file_vm_ops;
+
+	return retval;
+}
+
+static int
+v9fs_mmap_file_mmap(struct file *filp, struct vm_area_struct *vma)
+{
+	int retval;
+	struct inode *inode;
+	struct v9fs_inode *v9inode;
+	struct p9_fid *fid;
+
+	inode = file_inode(filp);
+	v9inode = V9FS_I(inode);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&v9inode->v_mutex);
 	if (!v9inode->writeback_fid &&
 	    (vma->vm_flags & VM_SHARED) &&
@@ -564,6 +617,38 @@ out_unlock:
 	return VM_FAULT_NOPAGE;
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * v9fs_mmap_file_read_iter - read from a file
+ * @iocb: The operation parameters
+ * @to: The buffer to read into
+ *
+ */
+static ssize_t
+v9fs_mmap_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+{
+	/* TODO: Check if there are dirty pages */
+	return v9fs_file_read_iter(iocb, to);
+}
+
+/**
+ * v9fs_mmap_file_write_iter - write to a file
+ * @iocb: The operation parameters
+ * @from: The data to write
+ *
+ */
+static ssize_t
+v9fs_mmap_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
+{
+	/*
+	 * TODO: invalidate mmaps on filp's inode between
+	 * offset and offset+count
+	 */
+	return v9fs_file_write_iter(iocb, from);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void v9fs_mmap_vm_close(struct vm_area_struct *vma)
 {
 	struct inode *inode;
@@ -586,6 +671,16 @@ static void v9fs_mmap_vm_close(struct vm_area_struct *vma)
 	filemap_fdatawrite_wbc(inode->i_mapping, &wbc);
 }
 
+<<<<<<< HEAD
+=======
+
+static const struct vm_operations_struct v9fs_file_vm_ops = {
+	.fault = filemap_fault,
+	.map_pages = filemap_map_pages,
+	.page_mkwrite = v9fs_vm_page_mkwrite,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct vm_operations_struct v9fs_mmap_file_vm_ops = {
 	.close = v9fs_mmap_vm_close,
 	.fault = filemap_fault,
@@ -593,6 +688,37 @@ static const struct vm_operations_struct v9fs_mmap_file_vm_ops = {
 	.page_mkwrite = v9fs_vm_page_mkwrite,
 };
 
+<<<<<<< HEAD
+=======
+
+const struct file_operations v9fs_cached_file_operations = {
+	.llseek = generic_file_llseek,
+	.read_iter = generic_file_read_iter,
+	.write_iter = generic_file_write_iter,
+	.open = v9fs_file_open,
+	.release = v9fs_dir_release,
+	.lock = v9fs_file_lock,
+	.mmap = v9fs_file_mmap,
+	.splice_read = generic_file_splice_read,
+	.splice_write = iter_file_splice_write,
+	.fsync = v9fs_file_fsync,
+};
+
+const struct file_operations v9fs_cached_file_operations_dotl = {
+	.llseek = generic_file_llseek,
+	.read_iter = generic_file_read_iter,
+	.write_iter = generic_file_write_iter,
+	.open = v9fs_file_open,
+	.release = v9fs_dir_release,
+	.lock = v9fs_file_lock_dotl,
+	.flock = v9fs_file_flock_dotl,
+	.mmap = v9fs_file_mmap,
+	.splice_read = generic_file_splice_read,
+	.splice_write = iter_file_splice_write,
+	.fsync = v9fs_file_fsync_dotl,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 const struct file_operations v9fs_file_operations = {
 	.llseek = generic_file_llseek,
 	.read_iter = v9fs_file_read_iter,
@@ -614,7 +740,38 @@ const struct file_operations v9fs_file_operations_dotl = {
 	.release = v9fs_dir_release,
 	.lock = v9fs_file_lock_dotl,
 	.flock = v9fs_file_flock_dotl,
+<<<<<<< HEAD
 	.mmap = v9fs_file_mmap,
+=======
+	.mmap = generic_file_readonly_mmap,
+	.splice_read = generic_file_splice_read,
+	.splice_write = iter_file_splice_write,
+	.fsync = v9fs_file_fsync_dotl,
+};
+
+const struct file_operations v9fs_mmap_file_operations = {
+	.llseek = generic_file_llseek,
+	.read_iter = v9fs_mmap_file_read_iter,
+	.write_iter = v9fs_mmap_file_write_iter,
+	.open = v9fs_file_open,
+	.release = v9fs_dir_release,
+	.lock = v9fs_file_lock,
+	.mmap = v9fs_mmap_file_mmap,
+	.splice_read = generic_file_splice_read,
+	.splice_write = iter_file_splice_write,
+	.fsync = v9fs_file_fsync,
+};
+
+const struct file_operations v9fs_mmap_file_operations_dotl = {
+	.llseek = generic_file_llseek,
+	.read_iter = v9fs_mmap_file_read_iter,
+	.write_iter = v9fs_mmap_file_write_iter,
+	.open = v9fs_file_open,
+	.release = v9fs_dir_release,
+	.lock = v9fs_file_lock_dotl,
+	.flock = v9fs_file_flock_dotl,
+	.mmap = v9fs_mmap_file_mmap,
+>>>>>>> b7ba80a49124 (Commit)
 	.splice_read = generic_file_splice_read,
 	.splice_write = iter_file_splice_write,
 	.fsync = v9fs_file_fsync_dotl,

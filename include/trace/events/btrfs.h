@@ -32,7 +32,10 @@ struct prelim_ref;
 struct btrfs_space_info;
 struct btrfs_raid_bio;
 struct raid56_bio_trace_info;
+<<<<<<< HEAD
 struct find_free_extent_ctl;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define show_ref_type(type)						\
 	__print_symbolic(type,						\
@@ -99,7 +102,11 @@ struct find_free_extent_ctl;
 	EM( FLUSH_DELALLOC_WAIT,	"FLUSH_DELALLOC_WAIT")		\
 	EM( FLUSH_DELALLOC_FULL,	"FLUSH_DELALLOC_FULL")		\
 	EM( FLUSH_DELAYED_REFS_NR,	"FLUSH_DELAYED_REFS_NR")	\
+<<<<<<< HEAD
 	EM( FLUSH_DELAYED_REFS,		"FLUSH_DELAYED_REFS")		\
+=======
+	EM( FLUSH_DELAYED_REFS,		"FLUSH_ELAYED_REFS")		\
+>>>>>>> b7ba80a49124 (Commit)
 	EM( ALLOC_CHUNK,		"ALLOC_CHUNK")			\
 	EM( ALLOC_CHUNK_FORCE,		"ALLOC_CHUNK_FORCE")		\
 	EM( RUN_DELAYED_IPUTS,		"RUN_DELAYED_IPUTS")		\
@@ -1242,27 +1249,45 @@ DEFINE_EVENT(btrfs__reserved_extent,  btrfs_reserved_extent_free,
 
 TRACE_EVENT(find_free_extent,
 
+<<<<<<< HEAD
 	TP_PROTO(const struct btrfs_root *root,
 		 const struct find_free_extent_ctl *ffe_ctl),
 
 	TP_ARGS(root, ffe_ctl),
+=======
+	TP_PROTO(const struct btrfs_root *root, u64 num_bytes,
+		 u64 empty_size, u64 data),
+
+	TP_ARGS(root, num_bytes, empty_size, data),
+>>>>>>> b7ba80a49124 (Commit)
 
 	TP_STRUCT__entry_btrfs(
 		__field(	u64,	root_objectid		)
 		__field(	u64,	num_bytes		)
 		__field(	u64,	empty_size		)
+<<<<<<< HEAD
 		__field(	u64,	flags			)
+=======
+		__field(	u64,	data			)
+>>>>>>> b7ba80a49124 (Commit)
 	),
 
 	TP_fast_assign_btrfs(root->fs_info,
 		__entry->root_objectid	= root->root_key.objectid;
+<<<<<<< HEAD
 		__entry->num_bytes	= ffe_ctl->num_bytes;
 		__entry->empty_size	= ffe_ctl->empty_size;
 		__entry->flags		= ffe_ctl->flags;
+=======
+		__entry->num_bytes	= num_bytes;
+		__entry->empty_size	= empty_size;
+		__entry->data		= data;
+>>>>>>> b7ba80a49124 (Commit)
 	),
 
 	TP_printk_btrfs("root=%llu(%s) len=%llu empty_size=%llu flags=%llu(%s)",
 		  show_root_type(__entry->root_objectid),
+<<<<<<< HEAD
 		  __entry->num_bytes, __entry->empty_size, __entry->flags,
 		  __print_flags((unsigned long)__entry->flags, "|",
 				 BTRFS_GROUP_FLAGS))
@@ -1336,30 +1361,47 @@ TRACE_EVENT(find_free_extent_have_block_group,
 		  __entry->loop, __entry->hinted,
 		  __entry->bg_start, __entry->bg_flags,
 		  __print_flags((unsigned long)__entry->bg_flags, "|",
+=======
+		  __entry->num_bytes, __entry->empty_size, __entry->data,
+		  __print_flags((unsigned long)__entry->data, "|",
+>>>>>>> b7ba80a49124 (Commit)
 				 BTRFS_GROUP_FLAGS))
 );
 
 DECLARE_EVENT_CLASS(btrfs__reserve_extent,
 
+<<<<<<< HEAD
 	TP_PROTO(const struct btrfs_block_group *block_group,
 		 const struct find_free_extent_ctl *ffe_ctl),
 
 	TP_ARGS(block_group, ffe_ctl),
+=======
+	TP_PROTO(const struct btrfs_block_group *block_group, u64 start,
+		 u64 len),
+
+	TP_ARGS(block_group, start, len),
+>>>>>>> b7ba80a49124 (Commit)
 
 	TP_STRUCT__entry_btrfs(
 		__field(	u64,	bg_objectid		)
 		__field(	u64,	flags			)
+<<<<<<< HEAD
 		__field(	int,	bg_size_class		)
 		__field(	u64,	start			)
 		__field(	u64,	len			)
 		__field(	u64,	loop			)
 		__field(	bool,	hinted			)
 		__field(	int,	size_class		)
+=======
+		__field(	u64,	start			)
+		__field(	u64,	len			)
+>>>>>>> b7ba80a49124 (Commit)
 	),
 
 	TP_fast_assign_btrfs(block_group->fs_info,
 		__entry->bg_objectid	= block_group->start;
 		__entry->flags		= block_group->flags;
+<<<<<<< HEAD
 		__entry->bg_size_class	= block_group->size_class;
 		__entry->start		= ffe_ctl->search_start;
 		__entry->len		= ffe_ctl->num_bytes;
@@ -1370,28 +1412,54 @@ DECLARE_EVENT_CLASS(btrfs__reserve_extent,
 
 	TP_printk_btrfs(
 "root=%llu(%s) block_group=%llu flags=%llu(%s) bg_size_class=%d start=%llu len=%llu loop=%llu hinted=%d size_class=%d",
+=======
+		__entry->start		= start;
+		__entry->len		= len;
+	),
+
+	TP_printk_btrfs("root=%llu(%s) block_group=%llu flags=%llu(%s) "
+		  "start=%llu len=%llu",
+>>>>>>> b7ba80a49124 (Commit)
 		  show_root_type(BTRFS_EXTENT_TREE_OBJECTID),
 		  __entry->bg_objectid,
 		  __entry->flags, __print_flags((unsigned long)__entry->flags,
 						"|", BTRFS_GROUP_FLAGS),
+<<<<<<< HEAD
 		  __entry->bg_size_class, __entry->start, __entry->len,
 		  __entry->loop, __entry->hinted, __entry->size_class)
+=======
+		  __entry->start, __entry->len)
+>>>>>>> b7ba80a49124 (Commit)
 );
 
 DEFINE_EVENT(btrfs__reserve_extent, btrfs_reserve_extent,
 
+<<<<<<< HEAD
 	TP_PROTO(const struct btrfs_block_group *block_group,
 		 const struct find_free_extent_ctl *ffe_ctl),
 
 	TP_ARGS(block_group, ffe_ctl)
+=======
+	TP_PROTO(const struct btrfs_block_group *block_group, u64 start,
+		 u64 len),
+
+	TP_ARGS(block_group, start, len)
+>>>>>>> b7ba80a49124 (Commit)
 );
 
 DEFINE_EVENT(btrfs__reserve_extent, btrfs_reserve_extent_cluster,
 
+<<<<<<< HEAD
 	TP_PROTO(const struct btrfs_block_group *block_group,
 		 const struct find_free_extent_ctl *ffe_ctl),
 
 	TP_ARGS(block_group, ffe_ctl)
+=======
+	TP_PROTO(const struct btrfs_block_group *block_group, u64 start,
+		 u64 len),
+
+	TP_ARGS(block_group, start, len)
+>>>>>>> b7ba80a49124 (Commit)
 );
 
 TRACE_EVENT(btrfs_find_cluster,
@@ -2074,11 +2142,20 @@ TRACE_EVENT(btrfs_set_extent_bit,
 
 	TP_fast_assign_btrfs(tree->fs_info,
 		__entry->owner = tree->owner;
+<<<<<<< HEAD
 		if (tree->inode) {
 			const struct btrfs_inode *inode = tree->inode;
 
 			__entry->ino	= btrfs_ino(inode);
 			__entry->rootid	= inode->root->root_key.objectid;
+=======
+		if (tree->private_data) {
+			const struct inode *inode = tree->private_data;
+
+			__entry->ino	= btrfs_ino(BTRFS_I(inode));
+			__entry->rootid	=
+				BTRFS_I(inode)->root->root_key.objectid;
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			__entry->ino	= 0;
 			__entry->rootid	= 0;
@@ -2112,11 +2189,20 @@ TRACE_EVENT(btrfs_clear_extent_bit,
 
 	TP_fast_assign_btrfs(tree->fs_info,
 		__entry->owner = tree->owner;
+<<<<<<< HEAD
 		if (tree->inode) {
 			const struct btrfs_inode *inode = tree->inode;
 
 			__entry->ino	= btrfs_ino(inode);
 			__entry->rootid	= inode->root->root_key.objectid;
+=======
+		if (tree->private_data) {
+			const struct inode *inode = tree->private_data;
+
+			__entry->ino	= btrfs_ino(BTRFS_I(inode));
+			__entry->rootid	=
+				BTRFS_I(inode)->root->root_key.objectid;
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			__entry->ino	= 0;
 			__entry->rootid	= 0;
@@ -2151,11 +2237,20 @@ TRACE_EVENT(btrfs_convert_extent_bit,
 
 	TP_fast_assign_btrfs(tree->fs_info,
 		__entry->owner = tree->owner;
+<<<<<<< HEAD
 		if (tree->inode) {
 			const struct btrfs_inode *inode = tree->inode;
 
 			__entry->ino	= btrfs_ino(inode);
 			__entry->rootid	= inode->root->root_key.objectid;
+=======
+		if (tree->private_data) {
+			const struct inode *inode = tree->private_data;
+
+			__entry->ino	= btrfs_ino(BTRFS_I(inode));
+			__entry->rootid	=
+				BTRFS_I(inode)->root->root_key.objectid;
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			__entry->ino	= 0;
 			__entry->rootid	= 0;

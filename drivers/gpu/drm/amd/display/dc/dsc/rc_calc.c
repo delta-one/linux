@@ -39,7 +39,10 @@
  */
 void calc_rc_params(struct rc_params *rc, const struct drm_dsc_config *pps)
 {
+<<<<<<< HEAD
 #if defined(CONFIG_DRM_AMD_DC_FP)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	enum colour_mode mode;
 	enum bits_per_comp bpc;
 	bool is_navite_422_or_420;
@@ -60,5 +63,8 @@ void calc_rc_params(struct rc_params *rc, const struct drm_dsc_config *pps)
 			   slice_width, slice_height,
 			   pps->dsc_version_minor);
 	DC_FP_END();
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

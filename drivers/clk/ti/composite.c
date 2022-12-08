@@ -176,7 +176,11 @@ static void __init _register_composite(void *user,
 				     &ti_composite_gate_ops, 0);
 
 	if (!IS_ERR(clk)) {
+<<<<<<< HEAD
 		ret = ti_clk_add_alias(clk, name);
+=======
+		ret = ti_clk_add_alias(NULL, clk, name);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret) {
 			clk_unregister(clk);
 			goto cleanup;

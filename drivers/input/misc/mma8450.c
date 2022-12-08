@@ -146,7 +146,12 @@ static void mma8450_close(struct input_dev *input)
 /*
  * I2C init/probing/exit functions
  */
+<<<<<<< HEAD
 static int mma8450_probe(struct i2c_client *c)
+=======
+static int mma8450_probe(struct i2c_client *c,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct input_dev *input;
 	int err;
@@ -202,7 +207,11 @@ static struct i2c_driver mma8450_driver = {
 		.name	= MMA8450_DRV_NAME,
 		.of_match_table = mma8450_dt_ids,
 	},
+<<<<<<< HEAD
 	.probe_new	= mma8450_probe,
+=======
+	.probe		= mma8450_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= mma8450_id,
 };
 

@@ -2008,24 +2008,37 @@ static int hi846_parse_dt(struct hi846 *hi846, struct device *dev)
 	    bus_cfg.bus.mipi_csi2.num_data_lanes != 4) {
 		dev_err(dev, "number of CSI2 data lanes %d is not supported",
 			bus_cfg.bus.mipi_csi2.num_data_lanes);
+<<<<<<< HEAD
 		ret = -EINVAL;
 		goto check_hwcfg_error;
+=======
+		v4l2_fwnode_endpoint_free(&bus_cfg);
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	hi846->nr_lanes = bus_cfg.bus.mipi_csi2.num_data_lanes;
 
 	if (!bus_cfg.nr_of_link_frequencies) {
 		dev_err(dev, "link-frequency property not found in DT\n");
+<<<<<<< HEAD
 		ret = -EINVAL;
 		goto check_hwcfg_error;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Check that link frequences for all the modes are in device tree */
 	fq = hi846_check_link_freqs(hi846, &bus_cfg);
 	if (fq) {
 		dev_err(dev, "Link frequency of %lld is not supported\n", fq);
+<<<<<<< HEAD
 		ret = -EINVAL;
 		goto check_hwcfg_error;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	v4l2_fwnode_endpoint_free(&bus_cfg);
@@ -2046,10 +2059,13 @@ static int hi846_parse_dt(struct hi846 *hi846, struct device *dev)
 	}
 
 	return 0;
+<<<<<<< HEAD
 
 check_hwcfg_error:
 	v4l2_fwnode_endpoint_free(&bus_cfg);
 	return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int hi846_probe(struct i2c_client *client)

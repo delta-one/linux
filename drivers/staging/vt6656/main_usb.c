@@ -957,7 +957,10 @@ static void vnt_reset_tsf(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
 
 static const struct ieee80211_ops vnt_mac_ops = {
 	.tx			= vnt_tx_80211,
+<<<<<<< HEAD
 	.wake_tx_queue		= ieee80211_handle_wake_tx_queue,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.start			= vnt_start,
 	.stop			= vnt_stop,
 	.add_interface		= vnt_add_interface,

@@ -30,7 +30,16 @@ struct amdgpu_mca_ras {
 	struct amdgpu_mca_ras_block *ras;
 };
 
+<<<<<<< HEAD
 struct amdgpu_mca {
+=======
+struct amdgpu_mca_funcs {
+	void (*init)(struct amdgpu_device *adev);
+};
+
+struct amdgpu_mca {
+	const struct amdgpu_mca_funcs *funcs;
+>>>>>>> b7ba80a49124 (Commit)
 	struct amdgpu_mca_ras mp0;
 	struct amdgpu_mca_ras mp1;
 	struct amdgpu_mca_ras mpio;
@@ -50,7 +59,11 @@ void amdgpu_mca_reset_error_count(struct amdgpu_device *adev,
 void amdgpu_mca_query_ras_error_count(struct amdgpu_device *adev,
 				      uint64_t mc_status_addr,
 				      void *ras_error_status);
+<<<<<<< HEAD
 int amdgpu_mca_mp0_ras_sw_init(struct amdgpu_device *adev);
 int amdgpu_mca_mp1_ras_sw_init(struct amdgpu_device *adev);
 int amdgpu_mca_mpio_ras_sw_init(struct amdgpu_device *adev);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif

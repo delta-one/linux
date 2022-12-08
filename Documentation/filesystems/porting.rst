@@ -462,8 +462,13 @@ ERR_PTR(...).
 argument; instead of passing IPERM_FLAG_RCU we add MAY_NOT_BLOCK into mask.
 
 generic_permission() has also lost the check_acl argument; ACL checking
+<<<<<<< HEAD
 has been taken to VFS and filesystems need to provide a non-NULL
 ->i_op->get_inode_acl to read an ACL from disk.
+=======
+has been taken to VFS and filesystems need to provide a non-NULL ->i_op->get_acl
+to read an ACL from disk.
+>>>>>>> b7ba80a49124 (Commit)
 
 ---
 
@@ -933,6 +938,7 @@ to) and true - "keep going" (as 0 in old calling conventions).  Rationale:
 callers never looked at specific -E... values anyway.  ->iterate() and
 ->iterate_shared() instance require no changes at all, all filldir_t ones in
 the tree converted.
+<<<<<<< HEAD
 
 ---
 
@@ -943,3 +949,5 @@ file pointer instead of struct dentry pointer.  d_tmpfile() is similarly
 changed to simplify callers.  The passed file is in a non-open state and on
 success must be opened before returning (e.g. by calling
 finish_open_simple()).
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _highmem:
+
+>>>>>>> b7ba80a49124 (Commit)
 ====================
 High Memory Handling
 ====================
@@ -55,8 +60,12 @@ list shows them in order of preference of use.
   It can be invoked from any context (including interrupts) but the mappings
   can only be used in the context which acquired them.
 
+<<<<<<< HEAD
   This function should always be used, whereas kmap_atomic() and kmap() have
   been deprecated.
+=======
+  This function should be preferred, where feasible, over all the others.
+>>>>>>> b7ba80a49124 (Commit)
 
   These mappings are thread-local and CPU-local, meaning that the mapping
   can only be accessed from within this thread and the thread is bound to the
@@ -81,7 +90,11 @@ list shows them in order of preference of use.
   for pages which are known to not come from ZONE_HIGHMEM. However, it is
   always safe to use kmap_local_page() / kunmap_local().
 
+<<<<<<< HEAD
   While it is significantly faster than kmap(), for the highmem case it
+=======
+  While it is significantly faster than kmap(), for the higmem case it
+>>>>>>> b7ba80a49124 (Commit)
   comes with restrictions about the pointers validity. Contrary to kmap()
   mappings, the local mappings are only valid in the context of the caller
   and cannot be handed to other contexts. This implies that users must
@@ -99,6 +112,7 @@ list shows them in order of preference of use.
   (included in the "Functions" section) for details on how to manage nested
   mappings.
 
+<<<<<<< HEAD
 * kmap_atomic(). This function has been deprecated; use kmap_local_page().
 
   NOTE: Conversions to kmap_local_page() must take care to follow the mapping
@@ -114,6 +128,12 @@ list shows them in order of preference of use.
   mapping is restricted to the CPU that issued it, it performs well, but
   the issuing task is therefore required to stay on that CPU until it has
   finished, lest some other task displace its mappings.
+=======
+* kmap_atomic().  This permits a very short duration mapping of a single
+  page.  Since the mapping is restricted to the CPU that issued it, it
+  performs well, but the issuing task is therefore required to stay on that
+  CPU until it has finished, lest some other task displace its mappings.
+>>>>>>> b7ba80a49124 (Commit)
 
   kmap_atomic() may also be used by interrupt contexts, since it does not
   sleep and the callers too may not sleep until after kunmap_atomic() is
@@ -125,6 +145,7 @@ list shows them in order of preference of use.
 
   It is assumed that k[un]map_atomic() won't fail.
 
+<<<<<<< HEAD
 * kmap(). This function has been deprecated; use kmap_local_page().
 
   NOTE: Conversions to kmap_local_page() must take care to follow the mapping
@@ -139,6 +160,13 @@ list shows them in order of preference of use.
   space is restricted and protected by a global lock for synchronization. When
   mapping is no longer needed, the address that the page was mapped to must be
   released with kunmap().
+=======
+* kmap().  This should be used to make short duration mapping of a single
+  page with no restrictions on preemption or migration. It comes with an
+  overhead as mapping space is restricted and protected by a global lock
+  for synchronization. When mapping is no longer needed, the address that
+  the page was mapped to must be released with kunmap().
+>>>>>>> b7ba80a49124 (Commit)
 
   Mapping changes must be propagated across all the CPUs. kmap() also
   requires global TLB invalidation when the kmap's pool wraps and it might

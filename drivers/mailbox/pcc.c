@@ -676,7 +676,11 @@ static int pcc_mbox_probe(struct platform_device *pdev)
 
 		if (pcct_entry->type == ACPI_PCCT_TYPE_EXT_PCC_SLAVE_SUBSPACE &&
 		    !pcc_mbox_ctrl->txdone_irq) {
+<<<<<<< HEAD
 			pr_err("Platform Interrupt flag must be set to 1");
+=======
+			pr_err("Plaform Interrupt flag must be set to 1");
+>>>>>>> b7ba80a49124 (Commit)
 			rc = -EINVAL;
 			goto err;
 		}
@@ -743,7 +747,10 @@ static int __init pcc_init(void)
 
 	if (IS_ERR(pcc_pdev)) {
 		pr_debug("Err creating PCC platform bundle\n");
+<<<<<<< HEAD
 		pcc_chan_count = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return PTR_ERR(pcc_pdev);
 	}
 

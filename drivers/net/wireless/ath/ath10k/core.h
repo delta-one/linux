@@ -76,7 +76,11 @@
 /* The magic used by QCA spec */
 #define ATH10K_SMBIOS_BDF_EXT_MAGIC "BDF_"
 
+<<<<<<< HEAD
 /* Default Airtime weight multiplier (Tuned for multiclient performance) */
+=======
+/* Default Airtime weight multipler (Tuned for multiclient performance) */
+>>>>>>> b7ba80a49124 (Commit)
 #define ATH10K_AIRTIME_WEIGHT_MULTIPLIER  4
 
 #define ATH10K_MAX_RETRY_COUNT 30
@@ -857,7 +861,11 @@ enum ath10k_dev_flags {
 	/* Disable HW crypto engine */
 	ATH10K_FLAG_HW_CRYPTO_DISABLED,
 
+<<<<<<< HEAD
 	/* Bluetooth coexistence enabled */
+=======
+	/* Bluetooth coexistance enabled */
+>>>>>>> b7ba80a49124 (Commit)
 	ATH10K_FLAG_BTCOEX,
 
 	/* Per Station statistics service */

@@ -806,12 +806,21 @@ err_rtc:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void max77686_rtc_remove(struct platform_device *pdev)
+=======
+static int max77686_rtc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct max77686_rtc_info *info = platform_get_drvdata(pdev);
 
 	free_irq(info->virq, info);
 	regmap_del_irq_chip(info->rtc_irq, info->rtc_irq_data);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -875,7 +884,11 @@ static struct platform_driver max77686_rtc_driver = {
 		.pm	= &max77686_rtc_pm_ops,
 	},
 	.probe		= max77686_rtc_probe,
+<<<<<<< HEAD
 	.remove_new	= max77686_rtc_remove,
+=======
+	.remove		= max77686_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= rtc_id,
 };
 

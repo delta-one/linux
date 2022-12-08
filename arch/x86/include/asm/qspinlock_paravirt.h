@@ -14,6 +14,11 @@
 
 __PV_CALLEE_SAVE_REGS_THUNK(__pv_queued_spin_unlock_slowpath, ".spinlock.text");
 #define __pv_queued_spin_unlock	__pv_queued_spin_unlock
+<<<<<<< HEAD
+=======
+#define PV_UNLOCK		"__raw_callee_save___pv_queued_spin_unlock"
+#define PV_UNLOCK_SLOWPATH	"__raw_callee_save___pv_queued_spin_unlock_slowpath"
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Optimized assembly version of __raw_callee_save___pv_queued_spin_unlock
@@ -35,6 +40,7 @@ __PV_CALLEE_SAVE_REGS_THUNK(__pv_queued_spin_unlock_slowpath, ".spinlock.text");
  *   rsi = lockval           (second argument)
  *   rdx = internal variable (set to 0)
  */
+<<<<<<< HEAD
 #define PV_UNLOCK_ASM							\
 	FRAME_BEGIN							\
 	"push  %rdx\n\t"						\
@@ -56,6 +62,34 @@ __PV_CALLEE_SAVE_REGS_THUNK(__pv_queued_spin_unlock_slowpath, ".spinlock.text");
 
 DEFINE_PARAVIRT_ASM(__raw_callee_save___pv_queued_spin_unlock,
 		    PV_UNLOCK_ASM, .spinlock.text);
+=======
+asm    (".pushsection .spinlock.text;"
+	".globl " PV_UNLOCK ";"
+	".type " PV_UNLOCK ", @function;"
+	".align 4,0x90;"
+	PV_UNLOCK ": "
+	ASM_ENDBR
+	FRAME_BEGIN
+	"push  %rdx;"
+	"mov   $0x1,%eax;"
+	"xor   %edx,%edx;"
+	LOCK_PREFIX "cmpxchg %dl,(%rdi);"
+	"cmp   $0x1,%al;"
+	"jne   .slowpath;"
+	"pop   %rdx;"
+	FRAME_END
+	ASM_RET
+	".slowpath: "
+	"push   %rsi;"
+	"movzbl %al,%esi;"
+	"call " PV_UNLOCK_SLOWPATH ";"
+	"pop    %rsi;"
+	"pop    %rdx;"
+	FRAME_END
+	ASM_RET
+	".size " PV_UNLOCK ", .-" PV_UNLOCK ";"
+	".popsection");
+>>>>>>> b7ba80a49124 (Commit)
 
 #else /* CONFIG_64BIT */
 

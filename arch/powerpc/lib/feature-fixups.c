@@ -117,6 +117,7 @@ void do_feature_fixups(unsigned long value, void *fixup_start, void *fixup_end)
 	}
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BARRIER_NOSPEC
 static bool is_fixup_addr_valid(void *dest, size_t size)
 {
@@ -175,6 +176,12 @@ static int do_patch_entry_fixups(long *start, long *end, unsigned int *instrs,
 static void do_stf_entry_barrier_fixups(enum stf_barrier_type types)
 {
 	unsigned int instrs[3];
+=======
+#ifdef CONFIG_PPC_BOOK3S_64
+static void do_stf_entry_barrier_fixups(enum stf_barrier_type types)
+{
+	unsigned int instrs[3], *dest;
+>>>>>>> b7ba80a49124 (Commit)
 	long *start, *end;
 	int i;
 
@@ -198,8 +205,28 @@ static void do_stf_entry_barrier_fixups(enum stf_barrier_type types)
 		instrs[i++] = PPC_RAW_ORI(_R31, _R31, 0); /* speculation barrier */
 	}
 
+<<<<<<< HEAD
 	i = do_patch_entry_fixups(start, end, instrs, types & STF_BARRIER_FALLBACK,
 				  &stf_barrier_fallback);
+=======
+	for (i = 0; start < end; start++, i++) {
+		dest = (void *)start + *start;
+
+		pr_devel("patching dest %lx\n", (unsigned long)dest);
+
+		// See comment in do_entry_flush_fixups() RE order of patching
+		if (types & STF_BARRIER_FALLBACK) {
+			patch_instruction(dest, ppc_inst(instrs[0]));
+			patch_instruction(dest + 2, ppc_inst(instrs[2]));
+			patch_branch(dest + 1,
+				     (unsigned long)&stf_barrier_fallback, BRANCH_SET_LINK);
+		} else {
+			patch_instruction(dest + 1, ppc_inst(instrs[1]));
+			patch_instruction(dest + 2, ppc_inst(instrs[2]));
+			patch_instruction(dest, ppc_inst(instrs[0]));
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	printk(KERN_DEBUG "stf-barrier: patched %d entry locations (%s barrier)\n", i,
 		(types == STF_BARRIER_NONE)                  ? "no" :
@@ -211,7 +238,11 @@ static void do_stf_entry_barrier_fixups(enum stf_barrier_type types)
 
 static void do_stf_exit_barrier_fixups(enum stf_barrier_type types)
 {
+<<<<<<< HEAD
 	unsigned int instrs[6];
+=======
+	unsigned int instrs[6], *dest;
+>>>>>>> b7ba80a49124 (Commit)
 	long *start, *end;
 	int i;
 
@@ -245,8 +276,23 @@ static void do_stf_exit_barrier_fixups(enum stf_barrier_type types)
 		instrs[i++] = PPC_RAW_EIEIO() | 0x02000000; /* eieio + bit 6 hint */
 	}
 
+<<<<<<< HEAD
 	i = do_patch_fixups(start, end, instrs, ARRAY_SIZE(instrs));
 
+=======
+	for (i = 0; start < end; start++, i++) {
+		dest = (void *)start + *start;
+
+		pr_devel("patching dest %lx\n", (unsigned long)dest);
+
+		patch_instruction(dest, ppc_inst(instrs[0]));
+		patch_instruction(dest + 1, ppc_inst(instrs[1]));
+		patch_instruction(dest + 2, ppc_inst(instrs[2]));
+		patch_instruction(dest + 3, ppc_inst(instrs[3]));
+		patch_instruction(dest + 4, ppc_inst(instrs[4]));
+		patch_instruction(dest + 5, ppc_inst(instrs[5]));
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	printk(KERN_DEBUG "stf-barrier: patched %d exit locations (%s barrier)\n", i,
 		(types == STF_BARRIER_NONE)                  ? "no" :
 		(types == STF_BARRIER_FALLBACK)              ? "fallback" :
@@ -303,7 +349,11 @@ void do_stf_barrier_fixups(enum stf_barrier_type types)
 
 void do_uaccess_flush_fixups(enum l1d_flush_type types)
 {
+<<<<<<< HEAD
 	unsigned int instrs[4];
+=======
+	unsigned int instrs[4], *dest;
+>>>>>>> b7ba80a49124 (Commit)
 	long *start, *end;
 	int i;
 
@@ -329,7 +379,21 @@ void do_uaccess_flush_fixups(enum l1d_flush_type types)
 	if (types & L1D_FLUSH_MTTRIG)
 		instrs[i++] = PPC_RAW_MTSPR(SPRN_TRIG2, _R0);
 
+<<<<<<< HEAD
 	i = do_patch_fixups(start, end, instrs, ARRAY_SIZE(instrs));
+=======
+	for (i = 0; start < end; start++, i++) {
+		dest = (void *)start + *start;
+
+		pr_devel("patching dest %lx\n", (unsigned long)dest);
+
+		patch_instruction(dest, ppc_inst(instrs[0]));
+
+		patch_instruction(dest + 1, ppc_inst(instrs[1]));
+		patch_instruction(dest + 2, ppc_inst(instrs[2]));
+		patch_instruction(dest + 3, ppc_inst(instrs[3]));
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	printk(KERN_DEBUG "uaccess-flush: patched %d locations (%s flush)\n", i,
 		(types == L1D_FLUSH_NONE)       ? "no" :
@@ -344,7 +408,11 @@ void do_uaccess_flush_fixups(enum l1d_flush_type types)
 static int __do_entry_flush_fixups(void *data)
 {
 	enum l1d_flush_type types = *(enum l1d_flush_type *)data;
+<<<<<<< HEAD
 	unsigned int instrs[3];
+=======
+	unsigned int instrs[3], *dest;
+>>>>>>> b7ba80a49124 (Commit)
 	long *start, *end;
 	int i;
 
@@ -394,6 +462,7 @@ static int __do_entry_flush_fixups(void *data)
 
 	start = PTRRELOC(&__start___entry_flush_fixup);
 	end = PTRRELOC(&__stop___entry_flush_fixup);
+<<<<<<< HEAD
 	i = do_patch_entry_fixups(start, end, instrs, types == L1D_FLUSH_FALLBACK,
 				  &entry_flush_fallback);
 
@@ -401,6 +470,44 @@ static int __do_entry_flush_fixups(void *data)
 	end = PTRRELOC(&__stop___scv_entry_flush_fixup);
 	i += do_patch_entry_fixups(start, end, instrs, types == L1D_FLUSH_FALLBACK,
 				   &scv_entry_flush_fallback);
+=======
+	for (i = 0; start < end; start++, i++) {
+		dest = (void *)start + *start;
+
+		pr_devel("patching dest %lx\n", (unsigned long)dest);
+
+		if (types == L1D_FLUSH_FALLBACK) {
+			patch_instruction(dest, ppc_inst(instrs[0]));
+			patch_instruction(dest + 2, ppc_inst(instrs[2]));
+			patch_branch(dest + 1,
+				     (unsigned long)&entry_flush_fallback, BRANCH_SET_LINK);
+		} else {
+			patch_instruction(dest + 1, ppc_inst(instrs[1]));
+			patch_instruction(dest + 2, ppc_inst(instrs[2]));
+			patch_instruction(dest, ppc_inst(instrs[0]));
+		}
+	}
+
+	start = PTRRELOC(&__start___scv_entry_flush_fixup);
+	end = PTRRELOC(&__stop___scv_entry_flush_fixup);
+	for (; start < end; start++, i++) {
+		dest = (void *)start + *start;
+
+		pr_devel("patching dest %lx\n", (unsigned long)dest);
+
+		if (types == L1D_FLUSH_FALLBACK) {
+			patch_instruction(dest, ppc_inst(instrs[0]));
+			patch_instruction(dest + 2, ppc_inst(instrs[2]));
+			patch_branch(dest + 1,
+				     (unsigned long)&scv_entry_flush_fallback, BRANCH_SET_LINK);
+		} else {
+			patch_instruction(dest + 1, ppc_inst(instrs[1]));
+			patch_instruction(dest + 2, ppc_inst(instrs[2]));
+			patch_instruction(dest, ppc_inst(instrs[0]));
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 
 	printk(KERN_DEBUG "entry-flush: patched %d locations (%s flush)\n", i,
 		(types == L1D_FLUSH_NONE)       ? "no" :
@@ -428,7 +535,11 @@ void do_entry_flush_fixups(enum l1d_flush_type types)
 static int __do_rfi_flush_fixups(void *data)
 {
 	enum l1d_flush_type types = *(enum l1d_flush_type *)data;
+<<<<<<< HEAD
 	unsigned int instrs[3];
+=======
+	unsigned int instrs[3], *dest;
+>>>>>>> b7ba80a49124 (Commit)
 	long *start, *end;
 	int i;
 
@@ -452,7 +563,19 @@ static int __do_rfi_flush_fixups(void *data)
 	if (types & L1D_FLUSH_MTTRIG)
 		instrs[i++] = PPC_RAW_MTSPR(SPRN_TRIG2, _R0);
 
+<<<<<<< HEAD
 	i = do_patch_fixups(start, end, instrs, ARRAY_SIZE(instrs));
+=======
+	for (i = 0; start < end; start++, i++) {
+		dest = (void *)start + *start;
+
+		pr_devel("patching dest %lx\n", (unsigned long)dest);
+
+		patch_instruction(dest, ppc_inst(instrs[0]));
+		patch_instruction(dest + 1, ppc_inst(instrs[1]));
+		patch_instruction(dest + 2, ppc_inst(instrs[2]));
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	printk(KERN_DEBUG "rfi-flush: patched %d locations (%s flush)\n", i,
 		(types == L1D_FLUSH_NONE)       ? "no" :
@@ -494,7 +617,11 @@ void do_rfi_flush_fixups(enum l1d_flush_type types)
 
 void do_barrier_nospec_fixups_range(bool enable, void *fixup_start, void *fixup_end)
 {
+<<<<<<< HEAD
 	unsigned int instr;
+=======
+	unsigned int instr, *dest;
+>>>>>>> b7ba80a49124 (Commit)
 	long *start, *end;
 	int i;
 
@@ -508,7 +635,16 @@ void do_barrier_nospec_fixups_range(bool enable, void *fixup_start, void *fixup_
 		instr = PPC_RAW_ORI(_R31, _R31, 0); /* speculation barrier */
 	}
 
+<<<<<<< HEAD
 	i = do_patch_fixups(start, end, &instr, 1);
+=======
+	for (i = 0; start < end; start++, i++) {
+		dest = (void *)start + *start;
+
+		pr_devel("patching dest %lx\n", (unsigned long)dest);
+		patch_instruction(dest, ppc_inst(instr));
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	printk(KERN_DEBUG "barrier-nospec: patched %d locations\n", i);
 }
@@ -527,10 +663,17 @@ void do_barrier_nospec_fixups(bool enable)
 }
 #endif /* CONFIG_PPC_BARRIER_NOSPEC */
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_E500
 void do_barrier_nospec_fixups_range(bool enable, void *fixup_start, void *fixup_end)
 {
 	unsigned int instr[2];
+=======
+#ifdef CONFIG_PPC_FSL_BOOK3E
+void do_barrier_nospec_fixups_range(bool enable, void *fixup_start, void *fixup_end)
+{
+	unsigned int instr[2], *dest;
+>>>>>>> b7ba80a49124 (Commit)
 	long *start, *end;
 	int i;
 
@@ -546,7 +689,17 @@ void do_barrier_nospec_fixups_range(bool enable, void *fixup_start, void *fixup_
 		instr[1] = PPC_RAW_SYNC();
 	}
 
+<<<<<<< HEAD
 	i = do_patch_fixups(start, end, instr, ARRAY_SIZE(instr));
+=======
+	for (i = 0; start < end; start++, i++) {
+		dest = (void *)start + *start;
+
+		pr_devel("patching dest %lx\n", (unsigned long)dest);
+		patch_instruction(dest, ppc_inst(instr[0]));
+		patch_instruction(dest + 1, ppc_inst(instr[1]));
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	printk(KERN_DEBUG "barrier-nospec: patched %d locations\n", i);
 }
@@ -573,7 +726,11 @@ void __init do_btb_flush_fixups(void)
 	for (; start < end; start += 2)
 		patch_btb_flush_section(start);
 }
+<<<<<<< HEAD
 #endif /* CONFIG_PPC_E500 */
+=======
+#endif /* CONFIG_PPC_FSL_BOOK3E */
+>>>>>>> b7ba80a49124 (Commit)
 
 void do_lwsync_fixups(unsigned long value, void *fixup_start, void *fixup_end)
 {

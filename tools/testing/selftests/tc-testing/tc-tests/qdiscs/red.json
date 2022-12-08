@@ -181,6 +181,7 @@
             "$TC qdisc del dev $DUMMY handle 1: root",
             "$IP link del dev $DUMMY type dummy"
         ]
+<<<<<<< HEAD
     },
     {
         "id": "290a",
@@ -204,5 +205,7 @@
             "$TC qdisc del dev $DUMMY handle 1: root",
             "$IP link del dev $DUMMY type dummy"
         ]
+=======
+>>>>>>> b7ba80a49124 (Commit)
     }
 ]

@@ -78,8 +78,12 @@ static int __init set_permissions(pte_t *ptep, unsigned long addr, void *data)
 }
 
 int __init efi_set_mapping_permissions(struct mm_struct *mm,
+<<<<<<< HEAD
 				       efi_memory_desc_t *md,
 				       bool ignored)
+=======
+				       efi_memory_desc_t *md)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	BUG_ON(md->type != EFI_RUNTIME_SERVICES_CODE &&
 	       md->type != EFI_RUNTIME_SERVICES_DATA);

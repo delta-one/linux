@@ -17,5 +17,8 @@ KVM
 
    locking
    vcpu-requests
+<<<<<<< HEAD
    halt-polling
+=======
+>>>>>>> b7ba80a49124 (Commit)
    review-checklist

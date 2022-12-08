@@ -869,8 +869,13 @@ static int vcodec_domains_get(struct venus_core *core)
 	for (i = 0; i < res->vcodec_pmdomains_num; i++) {
 		pd = dev_pm_domain_attach_by_name(dev,
 						  res->vcodec_pmdomains[i]);
+<<<<<<< HEAD
 		if (IS_ERR_OR_NULL(pd))
 			return PTR_ERR(pd) ? : -ENODATA;
+=======
+		if (IS_ERR(pd))
+			return PTR_ERR(pd);
+>>>>>>> b7ba80a49124 (Commit)
 		core->pmdomains[i] = pd;
 	}
 

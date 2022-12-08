@@ -274,8 +274,13 @@ struct smu_cpu_power_sensor {
 	struct list_head	link;
 	struct wf_sensor	*volts;
 	struct wf_sensor	*amps;
+<<<<<<< HEAD
 	unsigned int		fake_volts : 1;
 	unsigned int		quadratic : 1;
+=======
+	int			fake_volts : 1;
+	int			quadratic : 1;
+>>>>>>> b7ba80a49124 (Commit)
 	struct wf_sensor	sens;
 };
 #define to_smu_cpu_power(c) container_of(c, struct smu_cpu_power_sensor, sens)

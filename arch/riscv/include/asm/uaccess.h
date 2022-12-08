@@ -165,7 +165,11 @@ do {								\
 	might_fault();						\
 	access_ok(__p, sizeof(*__p)) ?		\
 		__get_user((x), __p) :				\
+<<<<<<< HEAD
 		((x) = (__force __typeof__(x))0, -EFAULT);	\
+=======
+		((x) = 0, -EFAULT);				\
+>>>>>>> b7ba80a49124 (Commit)
 })
 
 #define __put_user_asm(insn, x, ptr, err)			\

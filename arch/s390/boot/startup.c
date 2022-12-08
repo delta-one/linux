@@ -3,7 +3,10 @@
 #include <linux/elf.h>
 #include <asm/boot_data.h>
 #include <asm/sections.h>
+<<<<<<< HEAD
 #include <asm/maccess.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/cpu_mf.h>
 #include <asm/setup.h>
 #include <asm/kasan.h>
@@ -12,7 +15,10 @@
 #include <asm/diag.h>
 #include <asm/uv.h>
 #include <asm/abs_lowcore.h>
+<<<<<<< HEAD
 #include <asm/physmem_info.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "decompressor.h"
 #include "boot.h"
 #include "uv.h"
@@ -20,7 +26,11 @@
 unsigned long __bootdata_preserved(__kaslr_offset);
 unsigned long __bootdata_preserved(__abs_lowcore);
 unsigned long __bootdata_preserved(__memcpy_real_area);
+<<<<<<< HEAD
 pte_t *__bootdata_preserved(memcpy_real_ptep);
+=======
+unsigned long __bootdata(__amode31_base);
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long __bootdata_preserved(VMALLOC_START);
 unsigned long __bootdata_preserved(VMALLOC_END);
 struct page *__bootdata_preserved(vmemmap);
@@ -28,13 +38,21 @@ unsigned long __bootdata_preserved(vmemmap_size);
 unsigned long __bootdata_preserved(MODULES_VADDR);
 unsigned long __bootdata_preserved(MODULES_END);
 unsigned long __bootdata(ident_map_size);
+<<<<<<< HEAD
+=======
+int __bootdata(is_full_image) = 1;
+struct initrd_data __bootdata(initrd_data);
+>>>>>>> b7ba80a49124 (Commit)
 
 u64 __bootdata_preserved(stfle_fac_list[16]);
 u64 __bootdata_preserved(alt_stfle_fac_list[16]);
 struct oldmem_data __bootdata_preserved(oldmem_data);
 
+<<<<<<< HEAD
 struct machine_info machine;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void error(char *x)
 {
 	sclp_early_printk("\n\n");
@@ -44,6 +62,7 @@ void error(char *x)
 	disabled_wait();
 }
 
+<<<<<<< HEAD
 static void detect_facilities(void)
 {
 	if (test_facility(8)) {
@@ -58,6 +77,8 @@ static void detect_facilities(void)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void setup_lpp(void)
 {
 	S390_lowcore.current_pid = 0;
@@ -73,6 +94,7 @@ unsigned long mem_safe_offset(void)
 }
 #endif
 
+<<<<<<< HEAD
 static void rescue_initrd(unsigned long min, unsigned long max)
 {
 	unsigned long old_addr, addr, size;
@@ -87,6 +109,18 @@ static void rescue_initrd(unsigned long min, unsigned long max)
 	physmem_free(RR_INITRD);
 	addr = physmem_alloc_top_down(RR_INITRD, size, 0);
 	memmove((void *)addr, (void *)old_addr, size);
+=======
+static void rescue_initrd(unsigned long addr)
+{
+	if (!IS_ENABLED(CONFIG_BLK_DEV_INITRD))
+		return;
+	if (!initrd_data.start || !initrd_data.size)
+		return;
+	if (addr <= initrd_data.start)
+		return;
+	memmove((void *)addr, (void *)initrd_data.start, initrd_data.size);
+	initrd_data.start = addr;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void copy_bootdata(void)
@@ -140,7 +174,11 @@ static void handle_relocs(unsigned long offset)
  *
  * Consider the following factors:
  * 1. max_physmem_end - end of physical memory online or standby.
+<<<<<<< HEAD
  *    Always >= end of the last online memory range (get_physmem_online_end()).
+=======
+ *    Always <= end of the last online memory block (get_mem_detect_end()).
+>>>>>>> b7ba80a49124 (Commit)
  * 2. CONFIG_MAX_PHYSMEM_BITS - the maximum size of physical memory the
  *    kernel is able to support.
  * 3. "mem=" kernel command line option which limits physical memory usage.
@@ -170,10 +208,16 @@ static void setup_ident_map_size(unsigned long max_physmem_end)
 #endif
 }
 
+<<<<<<< HEAD
 static unsigned long setup_kernel_memory_layout(void)
 {
 	unsigned long vmemmap_start;
 	unsigned long asce_limit;
+=======
+static void setup_kernel_memory_layout(void)
+{
+	unsigned long vmemmap_start;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long rte_size;
 	unsigned long pages;
 	unsigned long vmax;
@@ -188,10 +232,17 @@ static unsigned long setup_kernel_memory_layout(void)
 	    vmalloc_size > _REGION2_SIZE ||
 	    vmemmap_start + vmemmap_size + vmalloc_size + MODULES_LEN >
 		    _REGION2_SIZE) {
+<<<<<<< HEAD
 		asce_limit = _REGION1_SIZE;
 		rte_size = _REGION2_SIZE;
 	} else {
 		asce_limit = _REGION2_SIZE;
+=======
+		vmax = _REGION1_SIZE;
+		rte_size = _REGION2_SIZE;
+	} else {
+		vmax = _REGION2_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 		rte_size = _REGION3_SIZE;
 	}
 	/*
@@ -199,7 +250,11 @@ static unsigned long setup_kernel_memory_layout(void)
 	 * secure storage limit, so that any vmalloc allocation
 	 * we do could be used to back secure guest storage.
 	 */
+<<<<<<< HEAD
 	vmax = adjust_to_uv_max(asce_limit);
+=======
+	vmax = adjust_to_uv_max(vmax);
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_KASAN
 	/* force vmalloc and modules below kasan shadow */
 	vmax = min(vmax, KASAN_SHADOW_START);
@@ -228,8 +283,11 @@ static unsigned long setup_kernel_memory_layout(void)
 	/* make sure vmemmap doesn't overlay with vmalloc area */
 	VMALLOC_START = max(vmemmap_start + vmemmap_size, VMALLOC_START);
 	vmemmap = (struct page *)vmemmap_start;
+<<<<<<< HEAD
 
 	return asce_limit;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -263,6 +321,7 @@ static void offset_vmlinux_info(unsigned long offset)
 	vmlinux.rela_dyn_start += offset;
 	vmlinux.rela_dyn_end += offset;
 	vmlinux.dynsym_start += offset;
+<<<<<<< HEAD
 	vmlinux.init_mm_off += offset;
 	vmlinux.swapper_pg_dir_off += offset;
 	vmlinux.invalid_pg_dir_off += offset;
@@ -273,10 +332,19 @@ static void offset_vmlinux_info(unsigned long offset)
 	vmlinux.kasan_early_shadow_pud_off += offset;
 	vmlinux.kasan_early_shadow_p4d_off += offset;
 #endif
+=======
+}
+
+static unsigned long reserve_amode31(unsigned long safe_addr)
+{
+	__amode31_base = PAGE_ALIGN(safe_addr);
+	return safe_addr + vmlinux.amode31_size;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void startup_kernel(void)
 {
+<<<<<<< HEAD
 	unsigned long max_physmem_end;
 	unsigned long random_lma;
 	unsigned long asce_limit;
@@ -317,6 +385,34 @@ void startup_kernel(void)
 
 	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) && kaslr_enabled) {
 		random_lma = get_random_base();
+=======
+	unsigned long random_lma;
+	unsigned long safe_addr;
+	void *img;
+
+	initrd_data.start = parmarea.initrd_start;
+	initrd_data.size = parmarea.initrd_size;
+	oldmem_data.start = parmarea.oldmem_base;
+	oldmem_data.size = parmarea.oldmem_size;
+
+	setup_lpp();
+	store_ipl_parmblock();
+	safe_addr = mem_safe_offset();
+	safe_addr = reserve_amode31(safe_addr);
+	safe_addr = read_ipl_report(safe_addr);
+	uv_query_info();
+	rescue_initrd(safe_addr);
+	sclp_early_read_info();
+	setup_boot_command_line();
+	parse_boot_command_line();
+	sanitize_prot_virt_host();
+	setup_ident_map_size(detect_memory());
+	setup_vmalloc_size();
+	setup_kernel_memory_layout();
+
+	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) && kaslr_enabled) {
+		random_lma = get_random_base(safe_addr);
+>>>>>>> b7ba80a49124 (Commit)
 		if (random_lma) {
 			__kaslr_offset = random_lma - vmlinux.default_lma;
 			img = (void *)vmlinux.default_lma;
@@ -327,6 +423,7 @@ void startup_kernel(void)
 	if (!IS_ENABLED(CONFIG_KERNEL_UNCOMPRESSED)) {
 		img = decompress_kernel();
 		memmove((void *)vmlinux.default_lma, img, vmlinux.image_size);
+<<<<<<< HEAD
 	} else if (__kaslr_offset) {
 		memcpy((void *)vmlinux.default_lma, img, vmlinux.image_size);
 		memset(img, 0, vmlinux.image_size);
@@ -368,4 +465,25 @@ void startup_kernel(void)
 	psw.addr = vmlinux.entry;
 	psw.mask = PSW_KERNEL_BITS;
 	__load_psw(psw);
+=======
+	} else if (__kaslr_offset)
+		memcpy((void *)vmlinux.default_lma, img, vmlinux.image_size);
+
+	clear_bss_section();
+	copy_bootdata();
+	if (IS_ENABLED(CONFIG_RELOCATABLE))
+		handle_relocs(__kaslr_offset);
+
+	if (__kaslr_offset) {
+		/*
+		 * Save KASLR offset for early dumps, before vmcore_info is set.
+		 * Mark as uneven to distinguish from real vmcore_info pointer.
+		 */
+		S390_lowcore.vmcore_info = __kaslr_offset | 0x1UL;
+		/* Clear non-relocated kernel */
+		if (IS_ENABLED(CONFIG_KERNEL_UNCOMPRESSED))
+			memset(img, 0, vmlinux.image_size);
+	}
+	vmlinux.entry();
+>>>>>>> b7ba80a49124 (Commit)
 }

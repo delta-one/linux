@@ -131,18 +131,28 @@ __wrap_nvdimm_bus_register(struct device *dev,
 }
 EXPORT_SYMBOL_GPL(__wrap_nvdimm_bus_register);
 
+<<<<<<< HEAD
 struct cxl_hdm *__wrap_devm_cxl_setup_hdm(struct cxl_port *port,
 					  struct cxl_endpoint_dvsec_info *info)
 
+=======
+struct cxl_hdm *__wrap_devm_cxl_setup_hdm(struct cxl_port *port)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int index;
 	struct cxl_hdm *cxlhdm;
 	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
 
 	if (ops && ops->is_mock_port(port->uport))
+<<<<<<< HEAD
 		cxlhdm = ops->devm_cxl_setup_hdm(port, info);
 	else
 		cxlhdm = devm_cxl_setup_hdm(port, info);
+=======
+		cxlhdm = ops->devm_cxl_setup_hdm(port);
+	else
+		cxlhdm = devm_cxl_setup_hdm(port);
+>>>>>>> b7ba80a49124 (Commit)
 	put_cxl_mock_ops(index);
 
 	return cxlhdm;
@@ -164,17 +174,27 @@ int __wrap_devm_cxl_add_passthrough_decoder(struct cxl_port *port)
 }
 EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_add_passthrough_decoder, CXL);
 
+<<<<<<< HEAD
 int __wrap_devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
 				       struct cxl_endpoint_dvsec_info *info)
+=======
+int __wrap_devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int rc, index;
 	struct cxl_port *port = cxlhdm->port;
 	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
 
 	if (ops && ops->is_mock_port(port->uport))
+<<<<<<< HEAD
 		rc = ops->devm_cxl_enumerate_decoders(cxlhdm, info);
 	else
 		rc = devm_cxl_enumerate_decoders(cxlhdm, info);
+=======
+		rc = ops->devm_cxl_enumerate_decoders(cxlhdm);
+	else
+		rc = devm_cxl_enumerate_decoders(cxlhdm);
+>>>>>>> b7ba80a49124 (Commit)
 	put_cxl_mock_ops(index);
 
 	return rc;
@@ -212,8 +232,12 @@ int __wrap_cxl_await_media_ready(struct cxl_dev_state *cxlds)
 EXPORT_SYMBOL_NS_GPL(__wrap_cxl_await_media_ready, CXL);
 
 int __wrap_cxl_hdm_decode_init(struct cxl_dev_state *cxlds,
+<<<<<<< HEAD
 			       struct cxl_hdm *cxlhdm,
 			       struct cxl_endpoint_dvsec_info *info)
+=======
+			       struct cxl_hdm *cxlhdm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int rc = 0, index;
 	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
@@ -221,13 +245,18 @@ int __wrap_cxl_hdm_decode_init(struct cxl_dev_state *cxlds,
 	if (ops && ops->is_mock_dev(cxlds->dev))
 		rc = 0;
 	else
+<<<<<<< HEAD
 		rc = cxl_hdm_decode_init(cxlds, cxlhdm, info);
+=======
+		rc = cxl_hdm_decode_init(cxlds, cxlhdm);
+>>>>>>> b7ba80a49124 (Commit)
 	put_cxl_mock_ops(index);
 
 	return rc;
 }
 EXPORT_SYMBOL_NS_GPL(__wrap_cxl_hdm_decode_init, CXL);
 
+<<<<<<< HEAD
 int __wrap_cxl_dvsec_rr_decode(struct device *dev, int dvsec,
 			       struct cxl_endpoint_dvsec_info *info)
 {
@@ -263,6 +292,8 @@ resource_size_t __wrap_cxl_rcrb_to_component(struct device *dev,
 }
 EXPORT_SYMBOL_NS_GPL(__wrap_cxl_rcrb_to_component, CXL);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_LICENSE("GPL v2");
 MODULE_IMPORT_NS(ACPI);
 MODULE_IMPORT_NS(CXL);

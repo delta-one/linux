@@ -84,10 +84,13 @@ static int get_huge_pages(struct drm_i915_gem_object *obj)
 	unsigned int sg_page_sizes;
 	u64 rem;
 
+<<<<<<< HEAD
 	/* restricted by sg_alloc_table */
 	if (overflows_type(obj->base.size >> PAGE_SHIFT, unsigned int))
 		return -E2BIG;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	st = kmalloc(sizeof(*st), GFP);
 	if (!st)
 		return -ENOMEM;
@@ -115,7 +118,11 @@ static int get_huge_pages(struct drm_i915_gem_object *obj)
 		do {
 			struct page *page;
 
+<<<<<<< HEAD
 			GEM_BUG_ON(order > MAX_ORDER);
+=======
+			GEM_BUG_ON(order >= MAX_ORDER);
+>>>>>>> b7ba80a49124 (Commit)
 			page = alloc_pages(GFP | __GFP_ZERO, order);
 			if (!page)
 				goto err;
@@ -140,7 +147,11 @@ static int get_huge_pages(struct drm_i915_gem_object *obj)
 		goto err;
 
 	GEM_BUG_ON(sg_page_sizes != obj->mm.page_mask);
+<<<<<<< HEAD
 	__i915_gem_object_set_pages(obj, st);
+=======
+	__i915_gem_object_set_pages(obj, st, sg_page_sizes);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -214,12 +225,18 @@ static int fake_get_huge_pages(struct drm_i915_gem_object *obj)
 	const u64 max_len = rounddown_pow_of_two(UINT_MAX);
 	struct sg_table *st;
 	struct scatterlist *sg;
+<<<<<<< HEAD
 	u64 rem;
 
 	/* restricted by sg_alloc_table */
 	if (overflows_type(obj->base.size >> PAGE_SHIFT, unsigned int))
 		return -E2BIG;
 
+=======
+	unsigned int sg_page_sizes;
+	u64 rem;
+
+>>>>>>> b7ba80a49124 (Commit)
 	st = kmalloc(sizeof(*st), GFP);
 	if (!st)
 		return -ENOMEM;
@@ -233,6 +250,10 @@ static int fake_get_huge_pages(struct drm_i915_gem_object *obj)
 	rem = obj->base.size;
 	sg = st->sgl;
 	st->nents = 0;
+<<<<<<< HEAD
+=======
+	sg_page_sizes = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	do {
 		unsigned int page_size = get_largest_page_size(i915, rem);
 		unsigned int len = min(page_size * div_u64(rem, page_size),
@@ -245,6 +266,11 @@ static int fake_get_huge_pages(struct drm_i915_gem_object *obj)
 		sg_dma_len(sg) = len;
 		sg_dma_address(sg) = page_size;
 
+<<<<<<< HEAD
+=======
+		sg_page_sizes |= len;
+
+>>>>>>> b7ba80a49124 (Commit)
 		st->nents++;
 
 		rem -= len;
@@ -258,7 +284,11 @@ static int fake_get_huge_pages(struct drm_i915_gem_object *obj)
 
 	i915_sg_trim(st);
 
+<<<<<<< HEAD
 	__i915_gem_object_set_pages(obj, st);
+=======
+	__i915_gem_object_set_pages(obj, st, sg_page_sizes);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -290,7 +320,11 @@ static int fake_get_huge_pages_single(struct drm_i915_gem_object *obj)
 	sg_dma_len(sg) = obj->base.size;
 	sg_dma_address(sg) = page_size;
 
+<<<<<<< HEAD
 	__i915_gem_object_set_pages(obj, st);
+=======
+	__i915_gem_object_set_pages(obj, st, sg->length);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 #undef GFP
@@ -408,7 +442,11 @@ static int igt_check_page_sizes(struct i915_vma *vma)
 	 * Maintaining alignment is required to utilise huge pages in the ppGGT.
 	 */
 	if (i915_gem_object_is_lmem(obj) &&
+<<<<<<< HEAD
 	    IS_ALIGNED(i915_vma_offset(vma), SZ_2M) &&
+=======
+	    IS_ALIGNED(vma->node.start, SZ_2M) &&
+>>>>>>> b7ba80a49124 (Commit)
 	    vma->page_sizes.sg & SZ_2M &&
 	    vma->resource->page_sizes_gtt < SZ_2M) {
 		pr_err("gtt pages mismatch for LMEM, expected 2M GTT pages, sg(%u), gtt(%u)\n",
@@ -1165,8 +1203,12 @@ static int igt_write_huge(struct drm_i915_private *i915,
 	GEM_BUG_ON(!i915_gem_object_has_pinned_pages(obj));
 
 	size = obj->base.size;
+<<<<<<< HEAD
 	if (obj->mm.page_sizes.sg & I915_GTT_PAGE_SIZE_64K &&
 	    !HAS_64K_PAGES(i915))
+=======
+	if (obj->mm.page_sizes.sg & I915_GTT_PAGE_SIZE_64K)
+>>>>>>> b7ba80a49124 (Commit)
 		size = round_up(size, I915_GTT_PAGE_SIZE_2M);
 
 	n = 0;
@@ -1219,10 +1261,13 @@ static int igt_write_huge(struct drm_i915_private *i915,
 		 * size and ensure the vma offset is at the start of the pt
 		 * boundary, however to improve coverage we opt for testing both
 		 * aligned and unaligned offsets.
+<<<<<<< HEAD
 		 *
 		 * With PS64 this is no longer the case, but to ensure we
 		 * sometimes get the compact layout for smaller objects, apply
 		 * the round_up anyway.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		 */
 		if (obj->mm.page_sizes.sg & I915_GTT_PAGE_SIZE_64K)
 			offset_low = round_down(offset_low,
@@ -1420,7 +1465,10 @@ static int igt_ppgtt_sanity_check(void *arg)
 		{ SZ_2M + SZ_4K,	SZ_64K | SZ_4K	},
 		{ SZ_2M + SZ_4K,	SZ_2M  | SZ_4K	},
 		{ SZ_2M + SZ_64K,	SZ_2M  | SZ_64K },
+<<<<<<< HEAD
 		{ SZ_2M + SZ_64K,	SZ_64K		},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	int i, j;
 	int err;
@@ -1550,6 +1598,7 @@ out_put:
 	return err;
 }
 
+<<<<<<< HEAD
 static int igt_ppgtt_mixed(void *arg)
 {
 	struct drm_i915_private *i915 = arg;
@@ -1698,6 +1747,8 @@ out:
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int igt_tmpfs_fallback(void *arg)
 {
 	struct drm_i915_private *i915 = arg;
@@ -1855,7 +1906,11 @@ static int igt_shrink_thp(void *arg)
 			I915_SHRINK_ACTIVE);
 	i915_vma_unpin(vma);
 	if (err)
+<<<<<<< HEAD
 		goto out_wf;
+=======
+		goto out_put;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Now that the pages are *unpinned* shrinking should invoke
@@ -1871,19 +1926,31 @@ static int igt_shrink_thp(void *arg)
 		pr_err("unexpected pages mismatch, should_swap=%s\n",
 		       str_yes_no(should_swap));
 		err = -EINVAL;
+<<<<<<< HEAD
 		goto out_wf;
+=======
+		goto out_put;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (should_swap == (obj->mm.page_sizes.sg || obj->mm.page_sizes.phys)) {
 		pr_err("unexpected residual page-size bits, should_swap=%s\n",
 		       str_yes_no(should_swap));
 		err = -EINVAL;
+<<<<<<< HEAD
 		goto out_wf;
+=======
+		goto out_put;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	err = i915_vma_pin(vma, 0, 0, flags);
 	if (err)
+<<<<<<< HEAD
 		goto out_wf;
+=======
+		goto out_put;
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (n--) {
 		err = cpu_check(obj, n, 0xdeadbeaf);
@@ -1961,7 +2028,10 @@ int i915_gem_huge_page_live_selftests(struct drm_i915_private *i915)
 		SUBTEST(igt_ppgtt_smoke_huge),
 		SUBTEST(igt_ppgtt_sanity_check),
 		SUBTEST(igt_ppgtt_compact),
+<<<<<<< HEAD
 		SUBTEST(igt_ppgtt_mixed),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	if (!HAS_PPGTT(i915)) {

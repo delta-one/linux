@@ -59,6 +59,7 @@ const struct vpu_format *vpu_helper_find_format(struct vpu_inst *inst, u32 type,
 	return NULL;
 }
 
+<<<<<<< HEAD
 const struct vpu_format *vpu_helper_find_sibling(struct vpu_inst *inst, u32 type, u32 pixelfmt)
 {
 	const struct vpu_format *fmt;
@@ -89,6 +90,8 @@ bool vpu_helper_match_format(struct vpu_inst *inst, u32 type, u32 fmta, u32 fmtb
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct vpu_format *vpu_helper_enum_format(struct vpu_inst *inst, u32 type, int index)
 {
 	const struct vpu_format *pfmt;
@@ -153,10 +156,16 @@ static u32 get_nv12_plane_size(u32 width, u32 height, int plane_no,
 	u32 bytesperline;
 	u32 size = 0;
 
+<<<<<<< HEAD
 	bytesperline = width;
 	if (pbl)
 		bytesperline = max(bytesperline, *pbl);
 	bytesperline = ALIGN(bytesperline, stride);
+=======
+	bytesperline = ALIGN(width, stride);
+	if (pbl)
+		bytesperline = max(bytesperline, *pbl);
+>>>>>>> b7ba80a49124 (Commit)
 	height = ALIGN(height, 2);
 	if (plane_no == 0)
 		size = bytesperline * height;
@@ -179,6 +188,7 @@ static u32 get_tiled_8l128_plane_size(u32 fmt, u32 width, u32 height, int plane_
 
 	if (interlaced)
 		hs++;
+<<<<<<< HEAD
 	if (fmt == V4L2_PIX_FMT_NV12M_10BE_8L128 || fmt == V4L2_PIX_FMT_NV12_10BE_8L128)
 		bitdepth = 10;
 	bytesperline = DIV_ROUND_UP(width * bitdepth, BITS_PER_BYTE);
@@ -186,6 +196,15 @@ static u32 get_tiled_8l128_plane_size(u32 fmt, u32 width, u32 height, int plane_
 		bytesperline = max(bytesperline, *pbl);
 	bytesperline = ALIGN(bytesperline, 1 << ws);
 	bytesperline = ALIGN(bytesperline, stride);
+=======
+	if (fmt == V4L2_PIX_FMT_NV12M_10BE_8L128)
+		bitdepth = 10;
+	bytesperline = DIV_ROUND_UP(width * bitdepth, BITS_PER_BYTE);
+	bytesperline = ALIGN(bytesperline, 1 << ws);
+	bytesperline = ALIGN(bytesperline, stride);
+	if (pbl)
+		bytesperline = max(bytesperline, *pbl);
+>>>>>>> b7ba80a49124 (Commit)
 	height = ALIGN(height, 1 << hs);
 	if (plane_no == 0)
 		size = bytesperline * height;
@@ -203,10 +222,16 @@ static u32 get_default_plane_size(u32 width, u32 height, int plane_no,
 	u32 bytesperline;
 	u32 size = 0;
 
+<<<<<<< HEAD
 	bytesperline = width;
 	if (pbl)
 		bytesperline = max(bytesperline, *pbl);
 	bytesperline = ALIGN(bytesperline, stride);
+=======
+	bytesperline = ALIGN(width, stride);
+	if (pbl)
+		bytesperline = max(bytesperline, *pbl);
+>>>>>>> b7ba80a49124 (Commit)
 	if (plane_no == 0)
 		size = bytesperline * height;
 	if (pbl)
@@ -219,12 +244,18 @@ u32 vpu_helper_get_plane_size(u32 fmt, u32 w, u32 h, int plane_no,
 			      u32 stride, u32 interlaced, u32 *pbl)
 {
 	switch (fmt) {
+<<<<<<< HEAD
 	case V4L2_PIX_FMT_NV12:
 	case V4L2_PIX_FMT_NV12M:
 		return get_nv12_plane_size(w, h, plane_no, stride, interlaced, pbl);
 	case V4L2_PIX_FMT_NV12_8L128:
 	case V4L2_PIX_FMT_NV12M_8L128:
 	case V4L2_PIX_FMT_NV12_10BE_8L128:
+=======
+	case V4L2_PIX_FMT_NV12M:
+		return get_nv12_plane_size(w, h, plane_no, stride, interlaced, pbl);
+	case V4L2_PIX_FMT_NV12M_8L128:
+>>>>>>> b7ba80a49124 (Commit)
 	case V4L2_PIX_FMT_NV12M_10BE_8L128:
 		return get_tiled_8l128_plane_size(fmt, w, h, plane_no, stride, interlaced, pbl);
 	default:

@@ -41,8 +41,11 @@
 
 #define DA9062_MILLI_CELSIUS(t)			((t) * 1000)
 
+<<<<<<< HEAD
 static unsigned int pp_tmp = DA9062_DEFAULT_POLLING_MS_PERIOD;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct da9062_thermal_config {
 	const char *name;
 };
@@ -97,10 +100,14 @@ static void da9062_thermal_poll_on(struct work_struct *work)
 		thermal_zone_device_update(thermal->zone,
 					   THERMAL_EVENT_UNSPECIFIED);
 
+<<<<<<< HEAD
 		/*
 		 * pp_tmp is between 1s and 10s, so we can round the jiffies
 		 */
 		delay = round_jiffies(msecs_to_jiffies(pp_tmp));
+=======
+		delay = thermal->zone->passive_delay_jiffies;
+>>>>>>> b7ba80a49124 (Commit)
 		queue_delayed_work(system_freezable_wq, &thermal->work, delay);
 		return;
 	}
@@ -128,7 +135,11 @@ static irqreturn_t da9062_thermal_irq_handler(int irq, void *data)
 static int da9062_thermal_get_temp(struct thermal_zone_device *z,
 				   int *temp)
 {
+<<<<<<< HEAD
 	struct da9062_thermal *thermal = thermal_zone_device_priv(z);
+=======
+	struct da9062_thermal *thermal = z->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&thermal->lock);
 	*temp = thermal->temperature;
@@ -160,6 +171,10 @@ static int da9062_thermal_probe(struct platform_device *pdev)
 {
 	struct da9062 *chip = dev_get_drvdata(pdev->dev.parent);
 	struct da9062_thermal *thermal;
+<<<<<<< HEAD
+=======
+	unsigned int pp_tmp = DA9062_DEFAULT_POLLING_MS_PERIOD;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct of_device_id *match;
 	int ret = 0;
 
@@ -212,7 +227,12 @@ static int da9062_thermal_probe(struct platform_device *pdev)
 	}
 
 	dev_dbg(&pdev->dev,
+<<<<<<< HEAD
 		"TJUNC temperature polling period set at %d ms\n", pp_tmp);
+=======
+		"TJUNC temperature polling period set at %d ms\n",
+		jiffies_to_msecs(thermal->zone->passive_delay_jiffies));
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = platform_get_irq_byname(pdev, "THERMAL");
 	if (ret < 0)

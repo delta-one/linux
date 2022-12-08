@@ -241,8 +241,12 @@ gf100_ltc = {
 	.intr = gf100_ltc_intr,
 	.cbc_clear = gf100_ltc_cbc_clear,
 	.cbc_wait = gf100_ltc_cbc_wait,
+<<<<<<< HEAD
 	.zbc_color = 16,
 	.zbc_depth = 16,
+=======
+	.zbc = 16,
+>>>>>>> b7ba80a49124 (Commit)
 	.zbc_clear_color = gf100_ltc_zbc_clear_color,
 	.zbc_clear_depth = gf100_ltc_zbc_clear_depth,
 	.invalidate = gf100_ltc_invalidate,

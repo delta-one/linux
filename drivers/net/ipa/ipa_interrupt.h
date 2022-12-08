@@ -1,7 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 
 /* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (C) 2018-2022 Linaro Ltd.
+=======
+ * Copyright (C) 2018-2020 Linaro Ltd.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #ifndef _IPA_INTERRUPT_H_
 #define _IPA_INTERRUPT_H_
@@ -11,7 +15,43 @@
 
 struct ipa;
 struct ipa_interrupt;
+<<<<<<< HEAD
 enum ipa_irq_id;
+=======
+
+/**
+ * typedef ipa_irq_handler_t - IPA interrupt handler function type
+ * @ipa:	IPA pointer
+ * @irq_id:	interrupt type
+ *
+ * Callback function registered by ipa_interrupt_add() to handle a specific
+ * IPA interrupt type
+ */
+typedef void (*ipa_irq_handler_t)(struct ipa *ipa, enum ipa_irq_id irq_id);
+
+/**
+ * ipa_interrupt_add() - Register a handler for an IPA interrupt type
+ * @interrupt:	IPA interrupt structure
+ * @irq_id:	IPA interrupt type
+ * @handler:	Handler function for the interrupt
+ *
+ * Add a handler for an IPA interrupt and enable it.  IPA interrupt
+ * handlers are run in threaded interrupt context, so are allowed to
+ * block.
+ */
+void ipa_interrupt_add(struct ipa_interrupt *interrupt, enum ipa_irq_id irq_id,
+		       ipa_irq_handler_t handler);
+
+/**
+ * ipa_interrupt_remove() - Remove the handler for an IPA interrupt type
+ * @interrupt:	IPA interrupt structure
+ * @irq_id:	IPA interrupt type
+ *
+ * Remove an IPA interrupt handler and disable it.
+ */
+void ipa_interrupt_remove(struct ipa_interrupt *interrupt,
+			  enum ipa_irq_id irq_id);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * ipa_interrupt_suspend_enable - Enable TX_SUSPEND for an endpoint
@@ -54,6 +94,7 @@ void ipa_interrupt_suspend_clear_all(struct ipa_interrupt *interrupt);
 void ipa_interrupt_simulate_suspend(struct ipa_interrupt *interrupt);
 
 /**
+<<<<<<< HEAD
  * ipa_interrupt_enable() - Enable an IPA interrupt type
  * @ipa:	IPA pointer
  * @ipa_irq:	IPA interrupt ID
@@ -84,6 +125,8 @@ void ipa_interrupt_irq_enable(struct ipa *ipa);
 void ipa_interrupt_irq_disable(struct ipa *ipa);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ipa_interrupt_config() - Configure the IPA interrupt framework
  * @ipa:	IPA pointer
  *

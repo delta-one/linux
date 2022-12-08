@@ -12,7 +12,11 @@
 #include <drm/drm_drv.h>
 #include <drm/drm_edid.h>
 #include <drm/drm_fb_dma_helper.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_dma.h>
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_fourcc.h>
 #include <drm/drm_framebuffer.h>
 #include <drm/drm_gem_dma_helper.h>
@@ -394,7 +398,11 @@ static int arcpgu_probe(struct platform_device *pdev)
 	if (ret)
 		goto err_unload;
 
+<<<<<<< HEAD
 	drm_fbdev_dma_setup(&arcpgu->drm, 16);
+=======
+	drm_fbdev_generic_setup(&arcpgu->drm, 16);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 

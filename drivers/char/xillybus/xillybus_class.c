@@ -227,22 +227,36 @@ int xillybus_find_inode(struct inode *inode,
 			break;
 		}
 
+<<<<<<< HEAD
 	if (!unit) {
 		mutex_unlock(&unit_mutex);
 		return -ENODEV;
 	}
+=======
+	mutex_unlock(&unit_mutex);
+
+	if (!unit)
+		return -ENODEV;
+>>>>>>> b7ba80a49124 (Commit)
 
 	*private_data = unit->private_data;
 	*index = minor - unit->lowest_minor;
 
+<<<<<<< HEAD
 	mutex_unlock(&unit_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 EXPORT_SYMBOL(xillybus_find_inode);
 
 static int __init xillybus_class_init(void)
 {
+<<<<<<< HEAD
 	xillybus_class = class_create("xillybus");
+=======
+	xillybus_class = class_create(THIS_MODULE, "xillybus");
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_ERR(xillybus_class)) {
 		pr_warn("Failed to register xillybus class\n");

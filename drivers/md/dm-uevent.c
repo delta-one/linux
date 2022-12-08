@@ -3,7 +3,11 @@
  * Device Mapper Uevent Support (dm-uevent)
  *
  * Copyright IBM Corporation, 2007
+<<<<<<< HEAD
  *	Author: Mike Anderson <andmike@linux.vnet.ibm.com>
+=======
+ * 	Author: Mike Anderson <andmike@linux.vnet.ibm.com>
+>>>>>>> b7ba80a49124 (Commit)
  */
 #include <linux/list.h>
 #include <linux/slab.h>
@@ -60,7 +64,11 @@ static struct dm_uevent *dm_build_path_uevent(struct mapped_device *md,
 					      enum kobject_action action,
 					      const char *dm_action,
 					      const char *path,
+<<<<<<< HEAD
 					      unsigned int nr_valid_paths)
+=======
+					      unsigned nr_valid_paths)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dm_uevent *event;
 
@@ -168,7 +176,11 @@ EXPORT_SYMBOL_GPL(dm_send_uevents);
  *
  */
 void dm_path_uevent(enum dm_uevent_type event_type, struct dm_target *ti,
+<<<<<<< HEAD
 		   const char *path, unsigned int nr_valid_paths)
+=======
+		   const char *path, unsigned nr_valid_paths)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mapped_device *md = dm_table_get_md(ti->table);
 	struct dm_uevent *event;

@@ -18,7 +18,11 @@ __u32 get_map_id(struct bpf_object *obj, const char *name)
 	if (CHECK(!map, "find map", "NULL map"))
 		return 0;
 
+<<<<<<< HEAD
 	err = bpf_map_get_info_by_fd(bpf_map__fd(map),
+=======
+	err = bpf_obj_get_info_by_fd(bpf_map__fd(map),
+>>>>>>> b7ba80a49124 (Commit)
 				     &map_info, &map_info_len);
 	CHECK(err, "get map info", "err %d errno %d", err, errno);
 	return map_info.id;

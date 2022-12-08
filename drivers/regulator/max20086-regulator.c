@@ -286,7 +286,11 @@ static const struct i2c_device_id max20086_i2c_id[] = {
 
 MODULE_DEVICE_TABLE(i2c, max20086_i2c_id);
 
+<<<<<<< HEAD
 static const struct of_device_id max20086_dt_ids[] __maybe_unused = {
+=======
+static const struct of_device_id max20086_dt_ids[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.compatible = "maxim,max20086",
 		.data = &(const struct max20086_chip_info) {
@@ -320,7 +324,10 @@ MODULE_DEVICE_TABLE(of, max20086_dt_ids);
 static struct i2c_driver max20086_regulator_driver = {
 	.driver = {
 		.name = "max20086",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = of_match_ptr(max20086_dt_ids),
 	},
 	.probe_new = max20086_i2c_probe,

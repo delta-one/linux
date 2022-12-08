@@ -86,6 +86,21 @@ static int channels_fill_reply(struct sk_buff *skb,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+const struct ethnl_request_ops ethnl_channels_request_ops = {
+	.request_cmd		= ETHTOOL_MSG_CHANNELS_GET,
+	.reply_cmd		= ETHTOOL_MSG_CHANNELS_GET_REPLY,
+	.hdr_attr		= ETHTOOL_A_CHANNELS_HEADER,
+	.req_info_size		= sizeof(struct channels_req_info),
+	.reply_data_size	= sizeof(struct channels_reply_data),
+
+	.prepare_data		= channels_prepare_data,
+	.reply_size		= channels_reply_size,
+	.fill_reply		= channels_fill_reply,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* CHANNELS_SET */
 
 const struct nla_policy ethnl_channels_set_policy[] = {
@@ -97,6 +112,7 @@ const struct nla_policy ethnl_channels_set_policy[] = {
 	[ETHTOOL_A_CHANNELS_COMBINED_COUNT]	= { .type = NLA_U32 },
 };
 
+<<<<<<< HEAD
 static int
 ethnl_set_channels_validate(struct ethnl_req_info *req_info,
 			    struct genl_info *info)
@@ -119,6 +135,37 @@ ethnl_set_channels(struct ethnl_req_info *req_info, struct genl_info *info)
 	int ret;
 
 	dev->ethtool_ops->get_channels(dev, &channels);
+=======
+int ethnl_set_channels(struct sk_buff *skb, struct genl_info *info)
+{
+	unsigned int from_channel, old_total, i;
+	bool mod = false, mod_combined = false;
+	struct ethtool_channels channels = {};
+	struct ethnl_req_info req_info = {};
+	struct nlattr **tb = info->attrs;
+	u32 err_attr, max_rx_in_use = 0;
+	const struct ethtool_ops *ops;
+	struct net_device *dev;
+	int ret;
+
+	ret = ethnl_parse_header_dev_get(&req_info,
+					 tb[ETHTOOL_A_CHANNELS_HEADER],
+					 genl_info_net(info), info->extack,
+					 true);
+	if (ret < 0)
+		return ret;
+	dev = req_info.dev;
+	ops = dev->ethtool_ops;
+	ret = -EOPNOTSUPP;
+	if (!ops->get_channels || !ops->set_channels)
+		goto out_dev;
+
+	rtnl_lock();
+	ret = ethnl_ops_begin(dev);
+	if (ret < 0)
+		goto out_rtnl;
+	ops->get_channels(dev, &channels);
+>>>>>>> b7ba80a49124 (Commit)
 	old_total = channels.combined_count +
 		    max(channels.rx_count, channels.tx_count);
 
@@ -131,8 +178,14 @@ ethnl_set_channels(struct ethnl_req_info *req_info, struct genl_info *info)
 	ethnl_update_u32(&channels.combined_count,
 			 tb[ETHTOOL_A_CHANNELS_COMBINED_COUNT], &mod_combined);
 	mod |= mod_combined;
+<<<<<<< HEAD
 	if (!mod)
 		return 0;
+=======
+	ret = 0;
+	if (!mod)
+		goto out_ops;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* ensure new channel counts are within limits */
 	if (channels.rx_count > channels.max_rx)
@@ -146,9 +199,16 @@ ethnl_set_channels(struct ethnl_req_info *req_info, struct genl_info *info)
 	else
 		err_attr = 0;
 	if (err_attr) {
+<<<<<<< HEAD
 		NL_SET_ERR_MSG_ATTR(info->extack, tb[err_attr],
 				    "requested channel count exceeds maximum");
 		return -EINVAL;
+=======
+		ret = -EINVAL;
+		NL_SET_ERR_MSG_ATTR(info->extack, tb[err_attr],
+				    "requested channel count exceeds maximum");
+		goto out_ops;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* ensure there is at least one RX and one TX channel */
@@ -161,6 +221,7 @@ ethnl_set_channels(struct ethnl_req_info *req_info, struct genl_info *info)
 	if (err_attr) {
 		if (mod_combined)
 			err_attr = ETHTOOL_A_CHANNELS_COMBINED_COUNT;
+<<<<<<< HEAD
 		NL_SET_ERR_MSG_ATTR(info->extack, tb[err_attr],
 				    "requested channel counts would result in no RX or TX channel being configured");
 		return -EINVAL;
@@ -181,6 +242,23 @@ ethnl_set_channels(struct ethnl_req_info *req_info, struct genl_info *info)
 	if (channels.combined_count + channels.rx_count <= max_rxnfc_in_use) {
 		GENL_SET_ERR_MSG(info, "requested channel counts are too low for existing ntuple filter settings");
 		return -EINVAL;
+=======
+		ret = -EINVAL;
+		NL_SET_ERR_MSG_ATTR(info->extack, tb[err_attr],
+				    "requested channel counts would result in no RX or TX channel being configured");
+		goto out_ops;
+	}
+
+	/* ensure the new Rx count fits within the configured Rx flow
+	 * indirection table settings
+	 */
+	if (netif_is_rxfh_configured(dev) &&
+	    !ethtool_get_max_rxfh_channel(dev, &max_rx_in_use) &&
+	    (channels.combined_count + channels.rx_count) <= max_rx_in_use) {
+		ret = -EINVAL;
+		GENL_SET_ERR_MSG(info, "requested channel counts are too low for existing indirection table settings");
+		goto out_ops;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Disabling channels, query zero-copy AF_XDP sockets */
@@ -188,6 +266,7 @@ ethnl_set_channels(struct ethnl_req_info *req_info, struct genl_info *info)
 		       min(channels.rx_count, channels.tx_count);
 	for (i = from_channel; i < old_total; i++)
 		if (xsk_get_pool_from_qid(dev, i)) {
+<<<<<<< HEAD
 			GENL_SET_ERR_MSG(info, "requested channel counts are too low for existing zerocopy AF_XDP sockets");
 			return -EINVAL;
 		}
@@ -211,3 +290,23 @@ const struct ethnl_request_ops ethnl_channels_request_ops = {
 	.set			= ethnl_set_channels,
 	.set_ntf_cmd		= ETHTOOL_MSG_CHANNELS_NTF,
 };
+=======
+			ret = -EINVAL;
+			GENL_SET_ERR_MSG(info, "requested channel counts are too low for existing zerocopy AF_XDP sockets");
+			goto out_ops;
+		}
+
+	ret = dev->ethtool_ops->set_channels(dev, &channels);
+	if (ret < 0)
+		goto out_ops;
+	ethtool_notify(dev, ETHTOOL_MSG_CHANNELS_NTF, NULL);
+
+out_ops:
+	ethnl_ops_complete(dev);
+out_rtnl:
+	rtnl_unlock();
+out_dev:
+	ethnl_parse_header_dev_put(&req_info);
+	return ret;
+}
+>>>>>>> b7ba80a49124 (Commit)

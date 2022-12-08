@@ -4,16 +4,28 @@
 $id: http://devicetree.org/schemas/clock/qcom,gcc-sm6115.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Qualcomm Global Clock & Reset Controller on SM6115 and SM4250
+=======
+title: Qualcomm Global Clock & Reset Controller Binding for SM6115 and SM4250
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Iskren Chernev <iskren.chernev@gmail.com>
 
 description: |
+<<<<<<< HEAD
   Qualcomm global clock control module provides the clocks, resets and power
   domains on SM4250/6115.
 
   See also:: include/dt-bindings/clock/qcom,gcc-sm6115.h
+=======
+  Qualcomm global clock control module which supports the clocks, resets and
+  power domains on SM4250/6115.
+
+  See also:
+  - dt-bindings/clock/qcom,gcc-sm6115.h
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

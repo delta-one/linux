@@ -9,7 +9,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
+<<<<<<< HEAD
 #include <pthread.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/bits.h>
 
@@ -27,7 +30,10 @@ enum mop_target {
 enum mop_access_mode {
 	READ,
 	WRITE,
+<<<<<<< HEAD
 	CMPXCHG,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mop_desc {
@@ -46,13 +52,17 @@ struct mop_desc {
 	enum mop_access_mode mode;
 	void *buf;
 	uint32_t sida_offset;
+<<<<<<< HEAD
 	void *old;
 	uint8_t old_value[16];
 	bool *cmpxchg_success;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	uint8_t ar;
 	uint8_t key;
 };
 
+<<<<<<< HEAD
 const uint8_t NO_KEY = 0xff;
 
 static struct kvm_s390_mem_op ksmo_from_desc(struct mop_desc *desc)
@@ -87,10 +97,40 @@ static struct kvm_s390_mem_op ksmo_from_desc(struct mop_desc *desc)
 			ksmo.old_addr = (uint64_t)desc->old;
 			memcpy(desc->old_value, desc->old, desc->size);
 		}
+=======
+static struct kvm_s390_mem_op ksmo_from_desc(struct mop_desc desc)
+{
+	struct kvm_s390_mem_op ksmo = {
+		.gaddr = (uintptr_t)desc.gaddr,
+		.size = desc.size,
+		.buf = ((uintptr_t)desc.buf),
+		.reserved = "ignored_ignored_ignored_ignored"
+	};
+
+	switch (desc.target) {
+	case LOGICAL:
+		if (desc.mode == READ)
+			ksmo.op = KVM_S390_MEMOP_LOGICAL_READ;
+		if (desc.mode == WRITE)
+			ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
+		break;
+	case SIDA:
+		if (desc.mode == READ)
+			ksmo.op = KVM_S390_MEMOP_SIDA_READ;
+		if (desc.mode == WRITE)
+			ksmo.op = KVM_S390_MEMOP_SIDA_WRITE;
+		break;
+	case ABSOLUTE:
+		if (desc.mode == READ)
+			ksmo.op = KVM_S390_MEMOP_ABSOLUTE_READ;
+		if (desc.mode == WRITE)
+			ksmo.op = KVM_S390_MEMOP_ABSOLUTE_WRITE;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case INVALID:
 		ksmo.op = -1;
 	}
+<<<<<<< HEAD
 	if (desc->f_check)
 		ksmo.flags |= KVM_S390_MEMOP_F_CHECK_ONLY;
 	if (desc->f_inject)
@@ -107,6 +147,24 @@ static struct kvm_s390_mem_op ksmo_from_desc(struct mop_desc *desc)
 		ksmo.ar = 0;
 	if (desc->_sida_offset)
 		ksmo.sida_offset = desc->sida_offset;
+=======
+	if (desc.f_check)
+		ksmo.flags |= KVM_S390_MEMOP_F_CHECK_ONLY;
+	if (desc.f_inject)
+		ksmo.flags |= KVM_S390_MEMOP_F_INJECT_EXCEPTION;
+	if (desc._set_flags)
+		ksmo.flags = desc.set_flags;
+	if (desc.f_key) {
+		ksmo.flags |= KVM_S390_MEMOP_F_SKEY_PROTECTION;
+		ksmo.key = desc.key;
+	}
+	if (desc._ar)
+		ksmo.ar = desc.ar;
+	else
+		ksmo.ar = 0;
+	if (desc._sida_offset)
+		ksmo.sida_offset = desc.sida_offset;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ksmo;
 }
@@ -145,6 +203,7 @@ static void print_memop(struct kvm_vcpu *vcpu, const struct kvm_s390_mem_op *ksm
 	case KVM_S390_MEMOP_ABSOLUTE_WRITE:
 		printf("ABSOLUTE, WRITE, ");
 		break;
+<<<<<<< HEAD
 	case KVM_S390_MEMOP_ABSOLUTE_CMPXCHG:
 		printf("ABSOLUTE, CMPXCHG, ");
 		break;
@@ -152,6 +211,11 @@ static void print_memop(struct kvm_vcpu *vcpu, const struct kvm_s390_mem_op *ksm
 	printf("gaddr=%llu, size=%u, buf=%llu, ar=%u, key=%u, old_addr=%llx",
 	       ksmo->gaddr, ksmo->size, ksmo->buf, ksmo->ar, ksmo->key,
 	       ksmo->old_addr);
+=======
+	}
+	printf("gaddr=%llu, size=%u, buf=%llu, ar=%u, key=%u",
+	       ksmo->gaddr, ksmo->size, ksmo->buf, ksmo->ar, ksmo->key);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ksmo->flags & KVM_S390_MEMOP_F_CHECK_ONLY)
 		printf(", CHECK_ONLY");
 	if (ksmo->flags & KVM_S390_MEMOP_F_INJECT_EXCEPTION)
@@ -161,8 +225,22 @@ static void print_memop(struct kvm_vcpu *vcpu, const struct kvm_s390_mem_op *ksm
 	puts(")");
 }
 
+<<<<<<< HEAD
 static int err_memop_ioctl(struct test_info info, struct kvm_s390_mem_op *ksmo,
 			   struct mop_desc *desc)
+=======
+static void memop_ioctl(struct test_info info, struct kvm_s390_mem_op *ksmo)
+{
+	struct kvm_vcpu *vcpu = info.vcpu;
+
+	if (!vcpu)
+		vm_ioctl(info.vm, KVM_S390_MEM_OP, ksmo);
+	else
+		vcpu_ioctl(vcpu, KVM_S390_MEM_OP, ksmo);
+}
+
+static int err_memop_ioctl(struct test_info info, struct kvm_s390_mem_op *ksmo)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct kvm_vcpu *vcpu = info.vcpu;
 
@@ -172,6 +250,7 @@ static int err_memop_ioctl(struct test_info info, struct kvm_s390_mem_op *ksmo,
 		return __vcpu_ioctl(vcpu, KVM_S390_MEM_OP, ksmo);
 }
 
+<<<<<<< HEAD
 static void memop_ioctl(struct test_info info, struct kvm_s390_mem_op *ksmo,
 			struct mop_desc *desc)
 {
@@ -187,6 +266,8 @@ static void memop_ioctl(struct test_info info, struct kvm_s390_mem_op *ksmo,
 	TEST_ASSERT(!r, __KVM_IOCTL_ERROR("KVM_S390_MEM_OP", r));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MEMOP(err, info_p, mop_target_p, access_mode_p, buf_p, size_p, ...)	\
 ({										\
 	struct test_info __info = (info_p);					\
@@ -205,9 +286,15 @@ static void memop_ioctl(struct test_info info, struct kvm_s390_mem_op *ksmo,
 		else								\
 			__desc.gaddr = __desc.gaddr_v;				\
 	}									\
+<<<<<<< HEAD
 	__ksmo = ksmo_from_desc(&__desc);					\
 	print_memop(__info.vcpu, &__ksmo);					\
 	err##memop_ioctl(__info, &__ksmo, &__desc);				\
+=======
+	__ksmo = ksmo_from_desc(__desc);					\
+	print_memop(__info.vcpu, &__ksmo);					\
+	err##memop_ioctl(__info, &__ksmo);					\
+>>>>>>> b7ba80a49124 (Commit)
 })
 
 #define MOP(...) MEMOP(, __VA_ARGS__)
@@ -221,8 +308,11 @@ static void memop_ioctl(struct test_info info, struct kvm_s390_mem_op *ksmo,
 #define AR(a) ._ar = 1, .ar = (a)
 #define KEY(a) .f_key = 1, .key = (a)
 #define INJECT .f_inject = 1
+<<<<<<< HEAD
 #define CMPXCHG_OLD(o) .old = (o)
 #define CMPXCHG_SUCCESS(s) .cmpxchg_success = (s)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define CHECK_N_DO(f, ...) ({ f(__VA_ARGS__, CHECK_ONLY); f(__VA_ARGS__); })
 
@@ -232,8 +322,13 @@ static void memop_ioctl(struct test_info info, struct kvm_s390_mem_op *ksmo,
 #define CR0_FETCH_PROTECTION_OVERRIDE	(1UL << (63 - 38))
 #define CR0_STORAGE_PROTECTION_OVERRIDE	(1UL << (63 - 39))
 
+<<<<<<< HEAD
 static uint8_t __aligned(PAGE_SIZE) mem1[65536];
 static uint8_t __aligned(PAGE_SIZE) mem2[65536];
+=======
+static uint8_t mem1[65536];
+static uint8_t mem2[65536];
+>>>>>>> b7ba80a49124 (Commit)
 
 struct test_default {
 	struct kvm_vm *kvm_vm;
@@ -265,8 +360,11 @@ enum stage {
 	STAGE_SKEYS_SET,
 	/* Guest copied memory (locations up to test case) */
 	STAGE_COPIED,
+<<<<<<< HEAD
 	/* End of guest code reached */
 	STAGE_DONE,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define HOST_SYNC(info_p, stage)					\
@@ -278,9 +376,12 @@ enum stage {
 									\
 	vcpu_run(__vcpu);						\
 	get_ucall(__vcpu, &uc);						\
+<<<<<<< HEAD
 	if (uc.cmd == UCALL_ABORT) {					\
 		REPORT_GUEST_ASSERT_2(uc, "hints: %lu, %lu");		\
 	}								\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ASSERT_EQ(uc.cmd, UCALL_SYNC);					\
 	ASSERT_EQ(uc.args[1], __stage);					\
 })									\
@@ -297,6 +398,7 @@ static void prepare_mem12(void)
 #define ASSERT_MEM_EQ(p1, p2, size) \
 	TEST_ASSERT(!memcmp(p1, p2, size), "Memory contents do not match!")
 
+<<<<<<< HEAD
 static void default_write_read(struct test_info copy_cpu, struct test_info mop_cpu,
 			       enum mop_target mop_target, uint32_t size, uint8_t key)
 {
@@ -357,6 +459,36 @@ static void default_cmpxchg(struct test_default *test, uint8_t key)
 		}
 	}
 }
+=======
+#define DEFAULT_WRITE_READ(copy_cpu, mop_cpu, mop_target_p, size, ...)		\
+({										\
+	struct test_info __copy_cpu = (copy_cpu), __mop_cpu = (mop_cpu);	\
+	enum mop_target __target = (mop_target_p);				\
+	uint32_t __size = (size);						\
+										\
+	prepare_mem12();							\
+	CHECK_N_DO(MOP, __mop_cpu, __target, WRITE, mem1, __size,		\
+			GADDR_V(mem1), ##__VA_ARGS__);				\
+	HOST_SYNC(__copy_cpu, STAGE_COPIED);					\
+	CHECK_N_DO(MOP, __mop_cpu, __target, READ, mem2, __size,		\
+			GADDR_V(mem2), ##__VA_ARGS__);				\
+	ASSERT_MEM_EQ(mem1, mem2, __size);					\
+})
+
+#define DEFAULT_READ(copy_cpu, mop_cpu, mop_target_p, size, ...)		\
+({										\
+	struct test_info __copy_cpu = (copy_cpu), __mop_cpu = (mop_cpu);	\
+	enum mop_target __target = (mop_target_p);				\
+	uint32_t __size = (size);						\
+										\
+	prepare_mem12();							\
+	CHECK_N_DO(MOP, __mop_cpu, __target, WRITE, mem1, __size,		\
+			GADDR_V(mem1));						\
+	HOST_SYNC(__copy_cpu, STAGE_COPIED);					\
+	CHECK_N_DO(MOP, __mop_cpu, __target, READ, mem2, __size, ##__VA_ARGS__);\
+	ASSERT_MEM_EQ(mem1, mem2, __size);					\
+})
+>>>>>>> b7ba80a49124 (Commit)
 
 static void guest_copy(void)
 {
@@ -371,7 +503,11 @@ static void test_copy(void)
 
 	HOST_SYNC(t.vcpu, STAGE_INITED);
 
+<<<<<<< HEAD
 	default_write_read(t.vcpu, t.vcpu, LOGICAL, t.size, NO_KEY);
+=======
+	DEFAULT_WRITE_READ(t.vcpu, t.vcpu, LOGICAL, t.size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kvm_vm_free(t.kvm_vm);
 }
@@ -418,6 +554,7 @@ static void test_copy_key(void)
 	HOST_SYNC(t.vcpu, STAGE_SKEYS_SET);
 
 	/* vm, no key */
+<<<<<<< HEAD
 	default_write_read(t.vcpu, t.vm, ABSOLUTE, t.size, NO_KEY);
 
 	/* vm/vcpu, machting key or key 0 */
@@ -425,11 +562,21 @@ static void test_copy_key(void)
 	default_write_read(t.vcpu, t.vcpu, LOGICAL, t.size, 9);
 	default_write_read(t.vcpu, t.vm, ABSOLUTE, t.size, 0);
 	default_write_read(t.vcpu, t.vm, ABSOLUTE, t.size, 9);
+=======
+	DEFAULT_WRITE_READ(t.vcpu, t.vm, ABSOLUTE, t.size);
+
+	/* vm/vcpu, machting key or key 0 */
+	DEFAULT_WRITE_READ(t.vcpu, t.vcpu, LOGICAL, t.size, KEY(0));
+	DEFAULT_WRITE_READ(t.vcpu, t.vcpu, LOGICAL, t.size, KEY(9));
+	DEFAULT_WRITE_READ(t.vcpu, t.vm, ABSOLUTE, t.size, KEY(0));
+	DEFAULT_WRITE_READ(t.vcpu, t.vm, ABSOLUTE, t.size, KEY(9));
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * There used to be different code paths for key handling depending on
 	 * if the region crossed a page boundary.
 	 * There currently are not, but the more tests the merrier.
 	 */
+<<<<<<< HEAD
 	default_write_read(t.vcpu, t.vcpu, LOGICAL, 1, 0);
 	default_write_read(t.vcpu, t.vcpu, LOGICAL, 1, 9);
 	default_write_read(t.vcpu, t.vm, ABSOLUTE, 1, 0);
@@ -680,6 +827,16 @@ static void test_cmpxchg_key_concurrent(void)
 	MOP(t.vcpu, LOGICAL, READ, mem2, max_block, GADDR_V(mem2));
 	TEST_ASSERT(popcount_eq(*(__uint128_t *)mem1, *(__uint128_t *)mem2),
 		    "Must retain number of set bits");
+=======
+	DEFAULT_WRITE_READ(t.vcpu, t.vcpu, LOGICAL, 1, KEY(0));
+	DEFAULT_WRITE_READ(t.vcpu, t.vcpu, LOGICAL, 1, KEY(9));
+	DEFAULT_WRITE_READ(t.vcpu, t.vm, ABSOLUTE, 1, KEY(0));
+	DEFAULT_WRITE_READ(t.vcpu, t.vm, ABSOLUTE, 1, KEY(9));
+
+	/* vm/vcpu, mismatching keys on read, but no fetch protection */
+	DEFAULT_READ(t.vcpu, t.vcpu, LOGICAL, t.size, GADDR_V(mem2), KEY(2));
+	DEFAULT_READ(t.vcpu, t.vm, ABSOLUTE, t.size, GADDR_V(mem1), KEY(2));
+>>>>>>> b7ba80a49124 (Commit)
 
 	kvm_vm_free(t.kvm_vm);
 }
@@ -712,7 +869,11 @@ static void test_copy_key_storage_prot_override(void)
 	HOST_SYNC(t.vcpu, STAGE_SKEYS_SET);
 
 	/* vcpu, mismatching keys, storage protection override in effect */
+<<<<<<< HEAD
 	default_write_read(t.vcpu, t.vcpu, LOGICAL, t.size, 2);
+=======
+	DEFAULT_WRITE_READ(t.vcpu, t.vcpu, LOGICAL, t.size, KEY(2));
+>>>>>>> b7ba80a49124 (Commit)
 
 	kvm_vm_free(t.kvm_vm);
 }
@@ -725,8 +886,13 @@ static void test_copy_key_fetch_prot(void)
 	HOST_SYNC(t.vcpu, STAGE_SKEYS_SET);
 
 	/* vm/vcpu, matching key, fetch protection in effect */
+<<<<<<< HEAD
 	default_read(t.vcpu, t.vcpu, LOGICAL, t.size, 9);
 	default_read(t.vcpu, t.vm, ABSOLUTE, t.size, 9);
+=======
+	DEFAULT_READ(t.vcpu, t.vcpu, LOGICAL, t.size, GADDR_V(mem2), KEY(9));
+	DEFAULT_READ(t.vcpu, t.vm, ABSOLUTE, t.size, GADDR_V(mem2), KEY(9));
+>>>>>>> b7ba80a49124 (Commit)
 
 	kvm_vm_free(t.kvm_vm);
 }
@@ -757,6 +923,7 @@ static void test_errors_key(void)
 
 	/* vm/vcpu, mismatching keys, fetch protection in effect */
 	CHECK_N_DO(ERR_PROT_MOP, t.vcpu, LOGICAL, WRITE, mem1, t.size, GADDR_V(mem1), KEY(2));
+<<<<<<< HEAD
 	CHECK_N_DO(ERR_PROT_MOP, t.vcpu, LOGICAL, READ, mem2, t.size, GADDR_V(mem1), KEY(2));
 	CHECK_N_DO(ERR_PROT_MOP, t.vm, ABSOLUTE, WRITE, mem1, t.size, GADDR_V(mem1), KEY(2));
 	CHECK_N_DO(ERR_PROT_MOP, t.vm, ABSOLUTE, READ, mem2, t.size, GADDR_V(mem1), KEY(2));
@@ -778,6 +945,11 @@ static void test_errors_cmpxchg_key(void)
 		ERR_PROT_MOP(t.vm, ABSOLUTE, CMPXCHG, mem2, i, GADDR_V(mem2),
 			     CMPXCHG_OLD(&old), KEY(2));
 	}
+=======
+	CHECK_N_DO(ERR_PROT_MOP, t.vcpu, LOGICAL, READ, mem2, t.size, GADDR_V(mem2), KEY(2));
+	CHECK_N_DO(ERR_PROT_MOP, t.vm, ABSOLUTE, WRITE, mem1, t.size, GADDR_V(mem1), KEY(2));
+	CHECK_N_DO(ERR_PROT_MOP, t.vm, ABSOLUTE, READ, mem2, t.size, GADDR_V(mem2), KEY(2));
+>>>>>>> b7ba80a49124 (Commit)
 
 	kvm_vm_free(t.kvm_vm);
 }
@@ -839,7 +1011,11 @@ static void guest_copy_key_fetch_prot_override(void)
 	GUEST_SYNC(STAGE_INITED);
 	set_storage_key_range(0, PAGE_SIZE, 0x18);
 	set_storage_key_range((void *)last_page_addr, PAGE_SIZE, 0x0);
+<<<<<<< HEAD
 	asm volatile ("sske %[key],%[addr]\n" :: [addr] "r"(0L), [key] "r"(0x18) : "cc");
+=======
+	asm volatile ("sske %[key],%[addr]\n" :: [addr] "r"(0), [key] "r"(0x18) : "cc");
+>>>>>>> b7ba80a49124 (Commit)
 	GUEST_SYNC(STAGE_SKEYS_SET);
 
 	for (;;) {
@@ -927,7 +1103,11 @@ static void test_errors_key_fetch_prot_override_enabled(void)
 
 	/*
 	 * vcpu, mismatching keys on fetch,
+<<<<<<< HEAD
 	 * fetch protection override does not apply because memory range exceeded
+=======
+	 * fetch protection override does not apply because memory range acceeded
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	CHECK_N_DO(ERR_PROT_MOP, t.vcpu, LOGICAL, READ, mem2, 2048 + 1, GADDR_V(0), KEY(2));
 	CHECK_N_DO(ERR_PROT_MOP, t.vcpu, LOGICAL, READ, mem2, PAGE_SIZE + 2048 + 1,
@@ -966,9 +1146,13 @@ static void _test_errors_common(struct test_info info, enum mop_target target, i
 
 	/* Bad guest address: */
 	rv = ERR_MOP(info, target, WRITE, mem1, size, GADDR((void *)~0xfffUL), CHECK_ONLY);
+<<<<<<< HEAD
 	TEST_ASSERT(rv > 0, "ioctl does not report bad guest memory address with CHECK_ONLY");
 	rv = ERR_MOP(info, target, WRITE, mem1, size, GADDR((void *)~0xfffUL));
 	TEST_ASSERT(rv > 0, "ioctl does not report bad guest memory address on write");
+=======
+	TEST_ASSERT(rv > 0, "ioctl does not report bad guest memory access");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Bad host address: */
 	rv = ERR_MOP(info, target, WRITE, 0, size, GADDR_V(mem1));
@@ -1017,6 +1201,7 @@ static void test_errors(void)
 	kvm_vm_free(t.kvm_vm);
 }
 
+<<<<<<< HEAD
 static void test_errors_cmpxchg(void)
 {
 	struct test_default t = test_default_init(guest_idle);
@@ -1049,12 +1234,74 @@ static void test_errors_cmpxchg(void)
 
 	kvm_vm_free(t.kvm_vm);
 }
+=======
+struct testdef {
+	const char *name;
+	void (*test)(void);
+	int extension;
+} testlist[] = {
+	{
+		.name = "simple copy",
+		.test = test_copy,
+	},
+	{
+		.name = "generic error checks",
+		.test = test_errors,
+	},
+	{
+		.name = "copy with storage keys",
+		.test = test_copy_key,
+		.extension = 1,
+	},
+	{
+		.name = "copy with key storage protection override",
+		.test = test_copy_key_storage_prot_override,
+		.extension = 1,
+	},
+	{
+		.name = "copy with key fetch protection",
+		.test = test_copy_key_fetch_prot,
+		.extension = 1,
+	},
+	{
+		.name = "copy with key fetch protection override",
+		.test = test_copy_key_fetch_prot_override,
+		.extension = 1,
+	},
+	{
+		.name = "error checks with key",
+		.test = test_errors_key,
+		.extension = 1,
+	},
+	{
+		.name = "termination",
+		.test = test_termination,
+		.extension = 1,
+	},
+	{
+		.name = "error checks with key storage protection override",
+		.test = test_errors_key_storage_prot_override,
+		.extension = 1,
+	},
+	{
+		.name = "error checks without key fetch prot override",
+		.test = test_errors_key_fetch_prot_override_not_enabled,
+		.extension = 1,
+	},
+	{
+		.name = "error checks with key fetch prot override",
+		.test = test_errors_key_fetch_prot_override_enabled,
+		.extension = 1,
+	},
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 int main(int argc, char *argv[])
 {
 	int extension_cap, idx;
 
 	TEST_REQUIRE(kvm_has_cap(KVM_CAP_S390_MEM_OP));
+<<<<<<< HEAD
 	extension_cap = kvm_check_cap(KVM_CAP_S390_MEM_OP_EXTENSION);
 
 	struct testdef {
@@ -1149,6 +1396,24 @@ int main(int argc, char *argv[])
 		} else {
 			ksft_test_result_skip("%s - requirements not met (kernel has extension cap %#x)\n",
 					      testlist[idx].name, extension_cap);
+=======
+
+	setbuf(stdout, NULL);	/* Tell stdout not to buffer its content */
+
+	ksft_print_header();
+
+	ksft_set_plan(ARRAY_SIZE(testlist));
+
+	extension_cap = kvm_check_cap(KVM_CAP_S390_MEM_OP_EXTENSION);
+	for (idx = 0; idx < ARRAY_SIZE(testlist); idx++) {
+		if (extension_cap >= testlist[idx].extension) {
+			testlist[idx].test();
+			ksft_test_result_pass("%s\n", testlist[idx].name);
+		} else {
+			ksft_test_result_skip("%s - extension level %d not supported\n",
+					      testlist[idx].name,
+					      testlist[idx].extension);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 

@@ -694,7 +694,10 @@ static void pch_request_dma(struct uart_port *port)
 	if (!chan) {
 		dev_err(priv->port.dev, "%s:dma_request_channel FAILS(Tx)\n",
 			__func__);
+<<<<<<< HEAD
 		pci_dev_put(dma_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 	priv->chan_tx = chan;
@@ -711,7 +714,10 @@ static void pch_request_dma(struct uart_port *port)
 			__func__);
 		dma_release_channel(priv->chan_tx);
 		priv->chan_tx = NULL;
+<<<<<<< HEAD
 		pci_dev_put(dma_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -719,8 +725,11 @@ static void pch_request_dma(struct uart_port *port)
 	priv->rx_buf_virt = dma_alloc_coherent(port->dev, port->fifosize,
 				    &priv->rx_buf_dma, GFP_KERNEL);
 	priv->chan_rx = chan;
+<<<<<<< HEAD
 
 	pci_dev_put(dma_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void pch_dma_rx_complete(void *arg)
@@ -742,6 +751,7 @@ static void pch_dma_tx_complete(void *arg)
 {
 	struct eg20t_port *priv = arg;
 	struct uart_port *port = &priv->port;
+<<<<<<< HEAD
 	struct scatterlist *sg = priv->sg_tx_p;
 	int i;
 
@@ -750,6 +760,19 @@ static void pch_dma_tx_complete(void *arg)
 
 	async_tx_ack(priv->desc_tx);
 	dma_unmap_sg(port->dev, priv->sg_tx_p, priv->orig_nent, DMA_TO_DEVICE);
+=======
+	struct circ_buf *xmit = &port->state->xmit;
+	struct scatterlist *sg = priv->sg_tx_p;
+	int i;
+
+	for (i = 0; i < priv->nent; i++, sg++) {
+		xmit->tail += sg_dma_len(sg);
+		port->icount.tx += sg_dma_len(sg);
+	}
+	xmit->tail &= UART_XMIT_SIZE - 1;
+	async_tx_ack(priv->desc_tx);
+	dma_unmap_sg(port->dev, sg, priv->orig_nent, DMA_TO_DEVICE);
+>>>>>>> b7ba80a49124 (Commit)
 	priv->tx_dma_use = 0;
 	priv->nent = 0;
 	priv->orig_nent = 0;
@@ -844,7 +867,12 @@ static unsigned int handle_tx(struct eg20t_port *priv)
 
 	while (!uart_tx_stopped(port) && !uart_circ_empty(xmit) && fifo_size) {
 		iowrite8(xmit->buf[xmit->tail], priv->membase + PCH_UART_THR);
+<<<<<<< HEAD
 		uart_xmit_advance(port, 1);
+=======
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+		port->icount.tx++;
+>>>>>>> b7ba80a49124 (Commit)
 		fifo_size--;
 		tx_empty = 0;
 	}
@@ -1775,7 +1803,11 @@ static void pch_uart_exit_port(struct eg20t_port *priv)
 	char name[32];
 
 	snprintf(name, sizeof(name), "uart%d_regs", priv->port.line);
+<<<<<<< HEAD
 	debugfs_lookup_and_remove(name, NULL);
+=======
+	debugfs_remove(debugfs_lookup(name, NULL));
+>>>>>>> b7ba80a49124 (Commit)
 	uart_remove_one_port(&pch_uart_driver, &priv->port);
 	free_page((unsigned long)priv->rxbuf.buf);
 }

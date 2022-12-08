@@ -23,14 +23,23 @@ post_kprobe_handler(struct kprobe *, struct kprobe_ctlblk *, struct pt_regs *);
 
 static void __kprobes arch_prepare_ss_slot(struct kprobe *p)
 {
+<<<<<<< HEAD
 	u32 insn = __BUG_INSN_32;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long offset = GET_INSN_LENGTH(p->opcode);
 
 	p->ainsn.api.restore = (unsigned long)p->addr + offset;
 
+<<<<<<< HEAD
 	patch_text(p->ainsn.api.insn, &p->opcode, 1);
 	patch_text((void *)((unsigned long)(p->ainsn.api.insn) + offset),
 		   &insn, 1);
+=======
+	patch_text(p->ainsn.api.insn, p->opcode);
+	patch_text((void *)((unsigned long)(p->ainsn.api.insn) + offset),
+		   __BUG_INSN_32);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __kprobes arch_prepare_simulate(struct kprobe *p)
@@ -49,6 +58,7 @@ static void __kprobes arch_simulate_insn(struct kprobe *p, struct pt_regs *regs)
 	post_kprobe_handler(p, kcb, regs);
 }
 
+<<<<<<< HEAD
 static bool __kprobes arch_check_kprobe(struct kprobe *p)
 {
 	unsigned long tmp  = (unsigned long)p->addr - p->offset;
@@ -78,6 +88,17 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
 	p->opcode = (kprobe_opcode_t)(*insn++);
 	if (GET_INSN_LENGTH(p->opcode) == 4)
 		p->opcode |= (kprobe_opcode_t)(*insn) << 16;
+=======
+int __kprobes arch_prepare_kprobe(struct kprobe *p)
+{
+	unsigned long probe_addr = (unsigned long)p->addr;
+
+	if (probe_addr & 0x1)
+		return -EILSEQ;
+
+	/* copy instruction */
+	p->opcode = *p->addr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* decode instruction */
 	switch (riscv_probe_decode_insn(p->addr, &p->ainsn.api)) {
@@ -117,16 +138,27 @@ void *alloc_insn_page(void)
 /* install breakpoint in text */
 void __kprobes arch_arm_kprobe(struct kprobe *p)
 {
+<<<<<<< HEAD
 	u32 insn = (p->opcode & __INSN_LENGTH_MASK) == __INSN_LENGTH_32 ?
 		   __BUG_INSN_32 : __BUG_INSN_16;
 
 	patch_text(p->addr, &insn, 1);
+=======
+	if ((p->opcode & __INSN_LENGTH_MASK) == __INSN_LENGTH_32)
+		patch_text(p->addr, __BUG_INSN_32);
+	else
+		patch_text(p->addr, __BUG_INSN_16);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* remove breakpoint from text */
 void __kprobes arch_disarm_kprobe(struct kprobe *p)
 {
+<<<<<<< HEAD
 	patch_text(p->addr, &p->opcode, 1);
+=======
+	patch_text(p->addr, p->opcode);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void __kprobes arch_remove_kprobe(struct kprobe *p)
@@ -366,6 +398,22 @@ int __init arch_populate_kprobe_blacklist(void)
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+void __kprobes __used *trampoline_probe_handler(struct pt_regs *regs)
+{
+	return (void *)kretprobe_trampoline_handler(regs, NULL);
+}
+
+void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
+				      struct pt_regs *regs)
+{
+	ri->ret_addr = (kprobe_opcode_t *)regs->ra;
+	ri->fp = NULL;
+	regs->ra = (unsigned long) &__kretprobe_trampoline;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int __kprobes arch_trampoline_kprobe(struct kprobe *p)
 {
 	return 0;

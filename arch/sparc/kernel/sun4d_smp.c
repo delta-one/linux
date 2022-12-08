@@ -268,7 +268,11 @@ static void sun4d_ipi_resched(int cpu)
 }
 
 static struct smp_funcall {
+<<<<<<< HEAD
 	void *func;
+=======
+	smpfunc_t func;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long arg1;
 	unsigned long arg2;
 	unsigned long arg3;
@@ -281,7 +285,11 @@ static struct smp_funcall {
 static DEFINE_SPINLOCK(cross_call_lock);
 
 /* Cross calls must be serialized, at least currently. */
+<<<<<<< HEAD
 static void sun4d_cross_call(void *func, cpumask_t mask, unsigned long arg1,
+=======
+static void sun4d_cross_call(smpfunc_t func, cpumask_t mask, unsigned long arg1,
+>>>>>>> b7ba80a49124 (Commit)
 			     unsigned long arg2, unsigned long arg3,
 			     unsigned long arg4)
 {
@@ -296,7 +304,11 @@ static void sun4d_cross_call(void *func, cpumask_t mask, unsigned long arg1,
 			 * If you make changes here, make sure
 			 * gcc generates proper code...
 			 */
+<<<<<<< HEAD
 			register void *f asm("i0") = func;
+=======
+			register smpfunc_t f asm("i0") = func;
+>>>>>>> b7ba80a49124 (Commit)
 			register unsigned long a1 asm("i1") = arg1;
 			register unsigned long a2 asm("i2") = arg2;
 			register unsigned long a3 asm("i3") = arg3;
@@ -353,6 +365,7 @@ static void sun4d_cross_call(void *func, cpumask_t mask, unsigned long arg1,
 /* Running cross calls. */
 void smp4d_cross_call_irq(void)
 {
+<<<<<<< HEAD
 	void (*func)(unsigned long, unsigned long, unsigned long, unsigned long,
 		     unsigned long) = ccall_info.func;
 	int i = hard_smp_processor_id();
@@ -360,6 +373,13 @@ void smp4d_cross_call_irq(void)
 	ccall_info.processors_in[i] = 1;
 	func(ccall_info.arg1, ccall_info.arg2, ccall_info.arg3, ccall_info.arg4,
 	     ccall_info.arg5);
+=======
+	int i = hard_smp_processor_id();
+
+	ccall_info.processors_in[i] = 1;
+	ccall_info.func(ccall_info.arg1, ccall_info.arg2, ccall_info.arg3,
+			ccall_info.arg4, ccall_info.arg5);
+>>>>>>> b7ba80a49124 (Commit)
 	ccall_info.processors_out[i] = 1;
 }
 

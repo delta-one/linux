@@ -88,6 +88,7 @@ int __kprobes aarch64_insn_write(void *addr, u32 insn)
 	return __aarch64_insn_write(addr, cpu_to_le32(insn));
 }
 
+<<<<<<< HEAD
 noinstr int aarch64_insn_write_literal_u64(void *addr, u64 val)
 {
 	u64 *waddr;
@@ -105,6 +106,8 @@ noinstr int aarch64_insn_write_literal_u64(void *addr, u64 val)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int __kprobes aarch64_insn_patch_text_nosync(void *addr, u32 insn)
 {
 	u32 *tp = addr;

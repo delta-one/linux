@@ -37,7 +37,11 @@
  * Setup the architecture
  *
  */
+<<<<<<< HEAD
 static void __init p1023_rdb_setup_arch(void)
+=======
+static void __init mpc85xx_rdb_setup_arch(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device_node *np;
 
@@ -83,7 +87,11 @@ static void __init p1023_rdb_setup_arch(void)
 
 machine_arch_initcall(p1023_rdb, mpc85xx_common_publish_devices);
 
+<<<<<<< HEAD
 static void __init p1023_rdb_pic_init(void)
+=======
+static void __init mpc85xx_rdb_pic_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mpic *mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN |
 		MPIC_SINGLE_DEST_CPU,
@@ -94,12 +102,28 @@ static void __init p1023_rdb_pic_init(void)
 	mpic_init(mpic);
 }
 
+<<<<<<< HEAD
 define_machine(p1023_rdb) {
 	.name			= "P1023 RDB",
 	.compatible		= "fsl,P1023RDB",
 	.setup_arch		= p1023_rdb_setup_arch,
 	.init_IRQ		= p1023_rdb_pic_init,
 	.get_irq		= mpic_get_irq,
+=======
+static int __init p1023_rdb_probe(void)
+{
+	return of_machine_is_compatible("fsl,P1023RDB");
+
+}
+
+define_machine(p1023_rdb) {
+	.name			= "P1023 RDB",
+	.probe			= p1023_rdb_probe,
+	.setup_arch		= mpc85xx_rdb_setup_arch,
+	.init_IRQ		= mpc85xx_rdb_pic_init,
+	.get_irq		= mpic_get_irq,
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.progress		= udbg_progress,
 #ifdef CONFIG_PCI
 	.pcibios_fixup_bus	= fsl_pcibios_fixup_bus,

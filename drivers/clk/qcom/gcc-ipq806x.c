@@ -79,9 +79,13 @@ static struct clk_regmap pll4_vote = {
 	.enable_mask = BIT(4),
 	.hw.init = &(struct clk_init_data){
 		.name = "pll4_vote",
+<<<<<<< HEAD
 		.parent_data = &(const struct clk_parent_data){
 			.fw_name = "pll4", .name = "pll4",
 		},
+=======
+		.parent_names = (const char *[]){ "pll4" },
+>>>>>>> b7ba80a49124 (Commit)
 		.num_parents = 1,
 		.ops = &clk_pll_vote_ops,
 	},

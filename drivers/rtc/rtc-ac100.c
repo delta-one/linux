@@ -613,11 +613,20 @@ static int ac100_rtc_probe(struct platform_device *pdev)
 	return devm_rtc_register_device(chip->rtc);
 }
 
+<<<<<<< HEAD
 static void ac100_rtc_remove(struct platform_device *pdev)
+=======
+static int ac100_rtc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ac100_rtc_dev *chip = platform_get_drvdata(pdev);
 
 	ac100_rtc_unregister_clks(chip);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id ac100_rtc_match[] = {
@@ -628,7 +637,11 @@ MODULE_DEVICE_TABLE(of, ac100_rtc_match);
 
 static struct platform_driver ac100_rtc_driver = {
 	.probe		= ac100_rtc_probe,
+<<<<<<< HEAD
 	.remove_new	= ac100_rtc_remove,
+=======
+	.remove		= ac100_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name		= "ac100-rtc",
 		.of_match_table	= of_match_ptr(ac100_rtc_match),

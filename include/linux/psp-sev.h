@@ -14,6 +14,17 @@
 
 #include <uapi/linux/psp-sev.h>
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_X86
+#include <linux/mem_encrypt.h>
+
+#define __psp_pa(x)	__sme_pa(x)
+#else
+#define __psp_pa(x)	__pa(x)
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #define SEV_FW_BLOB_MAX_SIZE	0x4000	/* 16KB */
 
 /**

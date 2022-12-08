@@ -34,6 +34,7 @@ atomisp_format_bridge *atomisp_get_format_bridge(unsigned int pixelformat);
 const struct
 atomisp_format_bridge *atomisp_get_format_bridge_from_mbus(u32 mbus_code);
 
+<<<<<<< HEAD
 int atomisp_pipe_check(struct atomisp_video_pipe *pipe, bool streaming_ok);
 
 int atomisp_alloc_css_stat_bufs(struct atomisp_sub_device *asd,
@@ -41,12 +42,34 @@ int atomisp_alloc_css_stat_bufs(struct atomisp_sub_device *asd,
 
 int atomisp_start_streaming(struct vb2_queue *vq, unsigned int count);
 void atomisp_stop_streaming(struct vb2_queue *vq);
+=======
+int atomisp_alloc_css_stat_bufs(struct atomisp_sub_device *asd,
+				uint16_t stream_id);
+
+int __atomisp_streamoff(struct file *file, void *fh, enum v4l2_buf_type type);
+int __atomisp_reqbufs(struct file *file, void *fh,
+		      struct v4l2_requestbuffers *req);
+
+int atomisp_reqbufs(struct file *file, void *fh,
+		    struct v4l2_requestbuffers *req);
+>>>>>>> b7ba80a49124 (Commit)
 
 enum ia_css_pipe_id atomisp_get_css_pipe_id(struct atomisp_sub_device
 	*asd);
 
+<<<<<<< HEAD
 extern const struct v4l2_ioctl_ops atomisp_ioctl_ops;
 
+=======
+void atomisp_videobuf_free_buf(struct videobuf_buffer *vb);
+
+extern const struct v4l2_file_operations atomisp_file_fops;
+
+extern const struct v4l2_ioctl_ops atomisp_ioctl_ops;
+
+extern const struct v4l2_ioctl_ops atomisp_file_ioctl_ops;
+
+>>>>>>> b7ba80a49124 (Commit)
 unsigned int atomisp_streaming_count(struct atomisp_device *isp);
 
 /* compat_ioctl for 32bit userland app and 64bit kernel */
@@ -55,8 +78,11 @@ long atomisp_compat_ioctl32(struct file *file,
 
 int atomisp_stream_on_master_slave_sensor(struct atomisp_device *isp,
 	bool isp_timeout);
+<<<<<<< HEAD
 
 int atomisp_start_streaming(struct vb2_queue *vq, unsigned int count);
 void atomisp_stop_streaming(struct vb2_queue *vq);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __ATOMISP_IOCTL_H__ */

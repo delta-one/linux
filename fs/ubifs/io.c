@@ -488,7 +488,11 @@ void ubifs_prep_grp_node(struct ubifs_info *c, void *node, int len, int last)
 }
 
 /**
+<<<<<<< HEAD
  * wbuf_timer_callback_nolock - write-buffer timer callback function.
+=======
+ * wbuf_timer_callback - write-buffer timer callback function.
+>>>>>>> b7ba80a49124 (Commit)
  * @timer: timer data (write-buffer descriptor)
  *
  * This function is called when the write-buffer timer expires.
@@ -505,7 +509,11 @@ static enum hrtimer_restart wbuf_timer_callback_nolock(struct hrtimer *timer)
 }
 
 /**
+<<<<<<< HEAD
  * new_wbuf_timer_nolock - start new write-buffer timer.
+=======
+ * new_wbuf_timer - start new write-buffer timer.
+>>>>>>> b7ba80a49124 (Commit)
  * @c: UBIFS file-system description object
  * @wbuf: write-buffer descriptor
  */
@@ -531,7 +539,11 @@ static void new_wbuf_timer_nolock(struct ubifs_info *c, struct ubifs_wbuf *wbuf)
 }
 
 /**
+<<<<<<< HEAD
  * cancel_wbuf_timer_nolock - cancel write-buffer timer.
+=======
+ * cancel_wbuf_timer - cancel write-buffer timer.
+>>>>>>> b7ba80a49124 (Commit)
  * @wbuf: write-buffer descriptor
  */
 static void cancel_wbuf_timer_nolock(struct ubifs_wbuf *wbuf)

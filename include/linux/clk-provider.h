@@ -42,9 +42,12 @@ struct dentry;
  * struct clk_rate_request - Structure encoding the clk constraints that
  * a clock user might require.
  *
+<<<<<<< HEAD
  * Should be initialized by calling clk_hw_init_rate_request().
  *
  * @core: 		Pointer to the struct clk_core affected by this request
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @rate:		Requested clock rate. This field will be adjusted by
  *			clock drivers according to hardware capabilities.
  * @min_rate:		Minimum rate imposed by clk users.
@@ -56,7 +59,10 @@ struct dentry;
  *
  */
 struct clk_rate_request {
+<<<<<<< HEAD
 	struct clk_core *core;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long rate;
 	unsigned long min_rate;
 	unsigned long max_rate;
@@ -64,6 +70,7 @@ struct clk_rate_request {
 	struct clk_hw *best_parent_hw;
 };
 
+<<<<<<< HEAD
 void clk_hw_init_rate_request(const struct clk_hw *hw,
 			      struct clk_rate_request *req,
 			      unsigned long rate);
@@ -73,6 +80,8 @@ void clk_hw_forward_rate_request(const struct clk_hw *core,
 				 struct clk_rate_request *req,
 				 unsigned long parent_rate);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct clk_duty - Struture encoding the duty cycle ratio of a clock
  *
@@ -131,9 +140,14 @@ struct clk_duty {
  *
  * @recalc_rate	Recalculate the rate of this clock, by querying hardware. The
  *		parent rate is an input parameter.  It is up to the caller to
+<<<<<<< HEAD
  *		ensure that the prepare_mutex is held across this call. If the
  *		driver cannot figure out a rate for this clock, it must return
  *		0. Returns the calculated rate. Optional, but recommended - if
+=======
+ *		ensure that the prepare_mutex is held across this call.
+ *		Returns the calculated rate.  Optional, but recommended - if
+>>>>>>> b7ba80a49124 (Commit)
  *		this op is not set then clock rate will be initialized to 0.
  *
  * @round_rate:	Given a target rate as input, returns the closest rate actually
@@ -364,7 +378,11 @@ struct clk_hw *__clk_hw_register_fixed_rate(struct device *dev,
 		const char *parent_name, const struct clk_hw *parent_hw,
 		const struct clk_parent_data *parent_data, unsigned long flags,
 		unsigned long fixed_rate, unsigned long fixed_accuracy,
+<<<<<<< HEAD
 		unsigned long clk_fixed_flags, bool devm);
+=======
+		unsigned long clk_fixed_flags);
+>>>>>>> b7ba80a49124 (Commit)
 struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
 		const char *parent_name, unsigned long flags,
 		unsigned long fixed_rate);
@@ -379,6 +397,7 @@ struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
  */
 #define clk_hw_register_fixed_rate(dev, name, parent_name, flags, fixed_rate)  \
 	__clk_hw_register_fixed_rate((dev), NULL, (name), (parent_name), NULL, \
+<<<<<<< HEAD
 				     NULL, (flags), (fixed_rate), 0, 0, false)
 
 /**
@@ -393,6 +412,9 @@ struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
 #define devm_clk_hw_register_fixed_rate(dev, name, parent_name, flags, fixed_rate)  \
 	__clk_hw_register_fixed_rate((dev), NULL, (name), (parent_name), NULL, \
 				     NULL, (flags), (fixed_rate), 0, 0, true)
+=======
+				     NULL, (flags), (fixed_rate), 0, 0)
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * clk_hw_register_fixed_rate_parent_hw - register fixed-rate clock with
  * the clock framework
@@ -405,7 +427,11 @@ struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
 #define clk_hw_register_fixed_rate_parent_hw(dev, name, parent_hw, flags,     \
 					     fixed_rate)		      \
 	__clk_hw_register_fixed_rate((dev), NULL, (name), NULL, (parent_hw),  \
+<<<<<<< HEAD
 				     NULL, (flags), (fixed_rate), 0, 0, false)
+=======
+				     NULL, (flags), (fixed_rate), 0, 0)
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * clk_hw_register_fixed_rate_parent_data - register fixed-rate clock with
  * the clock framework
@@ -419,7 +445,11 @@ struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
 					     fixed_rate)		      \
 	__clk_hw_register_fixed_rate((dev), NULL, (name), NULL, NULL,	      \
 				     (parent_data), (flags), (fixed_rate), 0, \
+<<<<<<< HEAD
 				     0, false)
+=======
+				     0)
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * clk_hw_register_fixed_rate_with_accuracy - register fixed-rate clock with
  * the clock framework
@@ -435,7 +465,11 @@ struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
 						 fixed_accuracy)	      \
 	__clk_hw_register_fixed_rate((dev), NULL, (name), (parent_name),      \
 				     NULL, NULL, (flags), (fixed_rate),       \
+<<<<<<< HEAD
 				     (fixed_accuracy), 0, false)
+=======
+				     (fixed_accuracy), 0)
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * clk_hw_register_fixed_rate_with_accuracy_parent_hw - register fixed-rate
  * clock with the clock framework
@@ -450,7 +484,11 @@ struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
 		parent_hw, flags, fixed_rate, fixed_accuracy)		      \
 	__clk_hw_register_fixed_rate((dev), NULL, (name), NULL, (parent_hw)   \
 				     NULL, NULL, (flags), (fixed_rate),	      \
+<<<<<<< HEAD
 				     (fixed_accuracy), 0, false)
+=======
+				     (fixed_accuracy), 0)
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * clk_hw_register_fixed_rate_with_accuracy_parent_data - register fixed-rate
  * clock with the clock framework
@@ -465,6 +503,7 @@ struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
 		parent_data, flags, fixed_rate, fixed_accuracy)		      \
 	__clk_hw_register_fixed_rate((dev), NULL, (name), NULL, NULL,	      \
 				     (parent_data), NULL, (flags),	      \
+<<<<<<< HEAD
 				     (fixed_rate), (fixed_accuracy), 0, false)
 /**
  * clk_hw_register_fixed_rate_parent_accuracy - register fixed-rate clock with
@@ -480,6 +519,9 @@ struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
 	__clk_hw_register_fixed_rate((dev), NULL, (name), NULL, NULL,      \
 				     (parent_data), (flags), (fixed_rate), 0,    \
 				     CLK_FIXED_RATE_PARENT_ACCURACY, false)
+=======
+				     (fixed_rate), (fixed_accuracy), 0)
+>>>>>>> b7ba80a49124 (Commit)
 
 void clk_unregister_fixed_rate(struct clk *clk);
 void clk_hw_unregister_fixed_rate(struct clk_hw *hw);
@@ -608,6 +650,7 @@ struct clk *clk_register_gate(struct device *dev, const char *name,
 	__devm_clk_hw_register_gate((dev), NULL, (name), (parent_name), NULL, \
 			       NULL, (flags), (reg), (bit_idx),		      \
 			       (clk_gate_flags), (lock))
+<<<<<<< HEAD
 /**
  * devm_clk_hw_register_gate_parent_data - register a gate clock with the
  * clock framework
@@ -627,6 +670,8 @@ struct clk *clk_register_gate(struct device *dev, const char *name,
 				    (parent_data), (flags), (reg), (bit_idx), \
 				    (clk_gate_flags), (lock))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void clk_unregister_gate(struct clk *clk);
 void clk_hw_unregister_gate(struct clk_hw *hw);
 int clk_gate_is_enabled(struct clk_hw *hw);
@@ -1017,6 +1062,7 @@ struct clk *clk_register_mux_table(struct device *dev, const char *name,
 			      (parent_names), NULL, NULL, (flags), (reg),     \
 			      (shift), (mask), (clk_mux_flags), (table),      \
 			      (lock))
+<<<<<<< HEAD
 #define clk_hw_register_mux_table_parent_data(dev, name, parent_data,	      \
 				  num_parents, flags, reg, shift, mask,	      \
 				  clk_mux_flags, table, lock)		      \
@@ -1024,6 +1070,8 @@ struct clk *clk_register_mux_table(struct device *dev, const char *name,
 			      NULL, NULL, (parent_data), (flags), (reg),      \
 			      (shift), (mask), (clk_mux_flags), (table),      \
 			      (lock))
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define clk_hw_register_mux(dev, name, parent_names, num_parents, flags, reg, \
 			    shift, width, clk_mux_flags, lock)		      \
 	__clk_hw_register_mux((dev), NULL, (name), (num_parents),	      \
@@ -1041,6 +1089,7 @@ struct clk *clk_register_mux_table(struct device *dev, const char *name,
 	__clk_hw_register_mux((dev), NULL, (name), (num_parents), NULL, NULL, \
 			      (parent_data), (flags), (reg), (shift),	      \
 			      BIT((width)) - 1, (clk_mux_flags), NULL, (lock))
+<<<<<<< HEAD
 #define clk_hw_register_mux_parent_data_table(dev, name, parent_data,	      \
 					      num_parents, flags, reg, shift, \
 					      width, clk_mux_flags, table,    \
@@ -1048,6 +1097,8 @@ struct clk *clk_register_mux_table(struct device *dev, const char *name,
 	__clk_hw_register_mux((dev), NULL, (name), (num_parents), NULL, NULL, \
 			      (parent_data), (flags), (reg), (shift),	      \
 			      BIT((width)) - 1, (clk_mux_flags), table, (lock))
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define devm_clk_hw_register_mux(dev, name, parent_names, num_parents, flags, reg, \
 			    shift, width, clk_mux_flags, lock)		      \
 	__devm_clk_hw_register_mux((dev), NULL, (name), (num_parents),	      \
@@ -1061,6 +1112,7 @@ struct clk *clk_register_mux_table(struct device *dev, const char *name,
 				   (parent_hws), NULL, (flags), (reg),        \
 				   (shift), BIT((width)) - 1,		      \
 				   (clk_mux_flags), NULL, (lock))
+<<<<<<< HEAD
 #define devm_clk_hw_register_mux_parent_data_table(dev, name, parent_data,    \
 					      num_parents, flags, reg, shift, \
 					      width, clk_mux_flags, table,    \
@@ -1068,6 +1120,8 @@ struct clk *clk_register_mux_table(struct device *dev, const char *name,
 	__devm_clk_hw_register_mux((dev), NULL, (name), (num_parents), NULL,  \
 			      NULL, (parent_data), (flags), (reg), (shift),   \
 			      BIT((width)) - 1, (clk_mux_flags), table, (lock))
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int clk_mux_val_to_index(struct clk_hw *hw, const u32 *table, unsigned int flags,
 			 unsigned int val);
@@ -1336,8 +1390,11 @@ int clk_mux_determine_rate_flags(struct clk_hw *hw,
 				 struct clk_rate_request *req,
 				 unsigned long flags);
 void clk_hw_reparent(struct clk_hw *hw, struct clk_hw *new_parent);
+<<<<<<< HEAD
 void clk_hw_get_rate_range(struct clk_hw *hw, unsigned long *min_rate,
 			   unsigned long *max_rate);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void clk_hw_set_rate_range(struct clk_hw *hw, unsigned long min_rate,
 			   unsigned long max_rate);
 
@@ -1382,6 +1439,7 @@ struct clk_hw_onecell_data {
 	struct clk_hw *hws[];
 };
 
+<<<<<<< HEAD
 #define CLK_OF_DECLARE(name, compat, fn) \
 	static void __init __##name##_of_clk_init_declare(struct device_node *np) \
 	{								\
@@ -1389,6 +1447,9 @@ struct clk_hw_onecell_data {
 		fwnode_dev_initialized(of_fwnode_handle(np), true);	\
 	}								\
 	OF_DECLARE_1(clk, name, compat, __##name##_of_clk_init_declare)
+=======
+#define CLK_OF_DECLARE(name, compat, fn) OF_DECLARE_1(clk, name, compat, fn)
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Use this macro when you have a driver that requires two initialization
@@ -1543,7 +1604,11 @@ int devm_of_clk_add_hw_provider(struct device *dev,
 						 void *data),
 			   void *data);
 void of_clk_del_provider(struct device_node *np);
+<<<<<<< HEAD
 
+=======
+void devm_of_clk_del_provider(struct device *dev);
+>>>>>>> b7ba80a49124 (Commit)
 struct clk *of_clk_src_simple_get(struct of_phandle_args *clkspec,
 				  void *data);
 struct clk_hw *of_clk_hw_simple_get(struct of_phandle_args *clkspec,
@@ -1580,7 +1645,11 @@ static inline int devm_of_clk_add_hw_provider(struct device *dev,
 	return 0;
 }
 static inline void of_clk_del_provider(struct device_node *np) {}
+<<<<<<< HEAD
 
+=======
+static inline void devm_of_clk_del_provider(struct device *dev) {}
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct clk *of_clk_src_simple_get(
 	struct of_phandle_args *clkspec, void *data)
 {

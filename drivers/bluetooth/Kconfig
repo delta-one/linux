@@ -45,6 +45,7 @@ config BT_HCIBTUSB_AUTOSUSPEND
 	  This can be overridden by passing btusb.enable_autosuspend=[y|n]
 	  on the kernel commandline.
 
+<<<<<<< HEAD
 config BT_HCIBTUSB_POLL_SYNC
 	bool "Enable USB poll_sync for Bluetooth USB devices by default"
 	depends on BT_HCIBTUSB
@@ -56,6 +57,8 @@ config BT_HCIBTUSB_POLL_SYNC
 	  Say Y here to enable USB poll_sync for Bluetooth USB devices by
 	  default.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config BT_HCIBTUSB_BCM
 	bool "Broadcom protocol support"
 	depends on BT_HCIBTUSB
@@ -285,6 +288,7 @@ config BT_HCIBCM203X
 	  Say Y here to compile support for HCI BCM203x devices into the
 	  kernel or say M to compile it as module (bcm203x).
 
+<<<<<<< HEAD
 
 config BT_HCIBCM4377
 	tristate "HCI BCM4377/4378/4387 PCIe driver"
@@ -297,6 +301,8 @@ config BT_HCIBCM4377
 	  Say Y here to compile support for HCI BCM4377 family devices into the
 	  kernel or say M to compile it as module (hci_bcm4377).
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config BT_HCIBPA10X
 	tristate "HCI BPA10x USB driver"
 	depends on USB
@@ -465,6 +471,7 @@ config BT_VIRTIO
 	  Say Y here to compile support for HCI over Virtio into the
 	  kernel or say M to compile as a module.
 
+<<<<<<< HEAD
 config BT_NXPUART
 	tristate "NXP protocol support"
 	depends on SERIAL_DEV_BUS
@@ -478,4 +485,6 @@ config BT_NXPUART
 	  the kernel, or say M here to compile as a module (btnxpuart).
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endmenu

@@ -13,9 +13,12 @@
  * must be implemented by each architecture.
  */
 
+<<<<<<< HEAD
 /* arch may override to do additional checking of ELF header architecture */
 bool module_elf_check_arch(Elf_Ehdr *hdr);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Adjust arch-specific sections.  Return 0 on success.  */
 int module_frob_arch_sections(Elf_Ehdr *hdr,
 			      Elf_Shdr *sechdrs,
@@ -75,6 +78,7 @@ int apply_relocate_add(Elf_Shdr *sechdrs,
 		       unsigned int symindex,
 		       unsigned int relsec,
 		       struct module *mod);
+<<<<<<< HEAD
 #ifdef CONFIG_LIVEPATCH
 /*
  * Some architectures (namely x86_64 and ppc64) perform sanity checks when
@@ -92,6 +96,8 @@ void clear_relocate_add(Elf_Shdr *sechdrs,
 		   unsigned int relsec,
 		   struct module *me);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline int apply_relocate_add(Elf_Shdr *sechdrs,
 				     const char *strtab,

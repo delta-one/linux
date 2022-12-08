@@ -48,8 +48,12 @@ bool br_vlan_opts_eq_range(const struct net_bridge_vlan *v_curr,
 	       curr_mc_rtr == range_mc_rtr;
 }
 
+<<<<<<< HEAD
 bool br_vlan_opts_fill(struct sk_buff *skb, const struct net_bridge_vlan *v,
 		       const struct net_bridge_port *p)
+=======
+bool br_vlan_opts_fill(struct sk_buff *skb, const struct net_bridge_vlan *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (nla_put_u8(skb, BRIDGE_VLANDB_ENTRY_STATE, br_vlan_get_state(v)) ||
 	    !__vlan_tun_put(skb, v))
@@ -59,12 +63,15 @@ bool br_vlan_opts_fill(struct sk_buff *skb, const struct net_bridge_vlan *v,
 	if (nla_put_u8(skb, BRIDGE_VLANDB_ENTRY_MCAST_ROUTER,
 		       br_vlan_multicast_router(v)))
 		return false;
+<<<<<<< HEAD
 	if (p && !br_multicast_port_ctx_vlan_disabled(&v->port_mcast_ctx) &&
 	    (nla_put_u32(skb, BRIDGE_VLANDB_ENTRY_MCAST_N_GROUPS,
 			 br_multicast_ngroups_get(&v->port_mcast_ctx)) ||
 	     nla_put_u32(skb, BRIDGE_VLANDB_ENTRY_MCAST_MAX_GROUPS,
 			 br_multicast_ngroups_get_max(&v->port_mcast_ctx))))
 		return false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	return true;
@@ -77,8 +84,11 @@ size_t br_vlan_opts_nl_size(void)
 	       + nla_total_size(sizeof(u32)) /* BRIDGE_VLANDB_TINFO_ID */
 #ifdef CONFIG_BRIDGE_IGMP_SNOOPING
 	       + nla_total_size(sizeof(u8)) /* BRIDGE_VLANDB_ENTRY_MCAST_ROUTER */
+<<<<<<< HEAD
 	       + nla_total_size(sizeof(u32)) /* BRIDGE_VLANDB_ENTRY_MCAST_N_GROUPS */
 	       + nla_total_size(sizeof(u32)) /* BRIDGE_VLANDB_ENTRY_MCAST_MAX_GROUPS */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	       + 0;
 }
@@ -221,6 +231,7 @@ static int br_vlan_process_one_opts(const struct net_bridge *br,
 			return err;
 		*changed = true;
 	}
+<<<<<<< HEAD
 	if (tb[BRIDGE_VLANDB_ENTRY_MCAST_MAX_GROUPS]) {
 		u32 val;
 
@@ -237,6 +248,8 @@ static int br_vlan_process_one_opts(const struct net_bridge *br,
 		br_multicast_ngroups_set_max(&v->port_mcast_ctx, val);
 		*changed = true;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	return 0;

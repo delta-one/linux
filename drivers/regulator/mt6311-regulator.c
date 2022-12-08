@@ -151,7 +151,10 @@ MODULE_DEVICE_TABLE(of, mt6311_dt_ids);
 static struct i2c_driver mt6311_regulator_driver = {
 	.driver = {
 		.name = "mt6311",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = of_match_ptr(mt6311_dt_ids),
 	},
 	.probe_new = mt6311_i2c_probe,

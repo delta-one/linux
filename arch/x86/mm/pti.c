@@ -592,7 +592,11 @@ static void pti_set_kernel_image_nonglobal(void)
 	 * of the image.
 	 */
 	unsigned long start = PFN_ALIGN(_text);
+<<<<<<< HEAD
 	unsigned long end = ALIGN((unsigned long)_end, PMD_SIZE);
+=======
+	unsigned long end = ALIGN((unsigned long)_end, PMD_PAGE_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * This clears _PAGE_GLOBAL from the entire kernel image.

@@ -45,8 +45,11 @@ struct system_device_crosststamp;
 
 /**
  * struct ptp_system_timestamp - system time corresponding to a PHC timestamp
+<<<<<<< HEAD
  * @pre_ts: system timestamp before capturing PHC
  * @post_ts: system timestamp after capturing PHC
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct ptp_system_timestamp {
 	struct timespec64 pre_ts;
@@ -77,6 +80,15 @@ struct ptp_system_timestamp {
  *            nominal frequency in parts per million, but with a
  *            16 bit binary fractional field.
  *
+<<<<<<< HEAD
+=======
+ * @adjfreq:  Adjusts the frequency of the hardware clock.
+ *            This method is deprecated.  New drivers should implement
+ *            the @adjfine method instead.
+ *            parameter delta: Desired frequency offset from nominal frequency
+ *            in parts per billion
+ *
+>>>>>>> b7ba80a49124 (Commit)
  * @adjphase:  Adjusts the phase offset of the hardware clock.
  *             parameter delta: Desired change in nanoseconds.
  *
@@ -168,6 +180,10 @@ struct ptp_clock_info {
 	int pps;
 	struct ptp_pin_desc *pin_config;
 	int (*adjfine)(struct ptp_clock_info *ptp, long scaled_ppm);
+<<<<<<< HEAD
+=======
+	int (*adjfreq)(struct ptp_clock_info *ptp, s32 delta);
+>>>>>>> b7ba80a49124 (Commit)
 	int (*adjphase)(struct ptp_clock_info *ptp, s32 phase);
 	int (*adjtime)(struct ptp_clock_info *ptp, s64 delta);
 	int (*gettime64)(struct ptp_clock_info *ptp, struct timespec64 *ts);
@@ -241,6 +257,7 @@ static inline long scaled_ppm_to_ppb(long ppm)
 	return (long)ppb;
 }
 
+<<<<<<< HEAD
 /**
  * diff_by_scaled_ppm - Calculate difference using scaled ppm
  * @base: the base increment value to adjust
@@ -287,6 +304,8 @@ static inline u64 adjust_by_scaled_ppm(u64 base, long scaled_ppm)
 	return base + diff;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if IS_ENABLED(CONFIG_PTP_1588_CLOCK)
 
 /**
@@ -357,11 +376,14 @@ int ptp_find_pin(struct ptp_clock *ptp,
  * should most likely call ptp_find_pin() directly from their
  * ptp_clock_info::enable() method.
  *
+<<<<<<< HEAD
 * @ptp:    The clock obtained from ptp_clock_register().
 * @func:   One of the ptp_pin_function enumerated values.
 * @chan:   The particular functional channel to find.
 * Return:  Pin index in the range of zero to ptp_clock_caps.n_pins - 1,
 *          or -1 if the auxiliary function cannot be found.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 int ptp_find_pin_unlocked(struct ptp_clock *ptp,

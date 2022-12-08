@@ -43,13 +43,21 @@ void musb_host_finish_resume(struct work_struct *work)
 	musb->port1_status |= USB_PORT_STAT_C_SUSPEND << 16;
 	usb_hcd_poll_rh_status(musb->hcd);
 	/* NOTE: it might really be A_WAIT_BCON ... */
+<<<<<<< HEAD
 	musb_set_state(musb, OTG_STATE_A_HOST);
+=======
+	musb->xceiv->otg->state = OTG_STATE_A_HOST;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_unlock_irqrestore(&musb->lock, flags);
 }
 
 int musb_port_suspend(struct musb *musb, bool do_suspend)
 {
+<<<<<<< HEAD
+=======
+	struct usb_otg	*otg = musb->xceiv->otg;
+>>>>>>> b7ba80a49124 (Commit)
 	u8		power;
 	void __iomem	*mbase = musb->mregs;
 
@@ -84,11 +92,18 @@ int musb_port_suspend(struct musb *musb, bool do_suspend)
 		musb_dbg(musb, "Root port suspended, power %02x", power);
 
 		musb->port1_status |= USB_PORT_STAT_SUSPEND;
+<<<<<<< HEAD
 		switch (musb_get_state(musb)) {
 		case OTG_STATE_A_HOST:
 			musb_set_state(musb, OTG_STATE_A_SUSPEND);
 			musb->is_active = musb->xceiv &&
 				musb->xceiv->otg->host->b_hnp_enable;
+=======
+		switch (musb->xceiv->otg->state) {
+		case OTG_STATE_A_HOST:
+			musb->xceiv->otg->state = OTG_STATE_A_SUSPEND;
+			musb->is_active = otg->host->b_hnp_enable;
+>>>>>>> b7ba80a49124 (Commit)
 			if (musb->is_active)
 				mod_timer(&musb->otg_timer, jiffies
 					+ msecs_to_jiffies(
@@ -96,14 +111,23 @@ int musb_port_suspend(struct musb *musb, bool do_suspend)
 			musb_platform_try_idle(musb, 0);
 			break;
 		case OTG_STATE_B_HOST:
+<<<<<<< HEAD
 			musb_set_state(musb, OTG_STATE_B_WAIT_ACON);
 			musb->is_active = musb->xceiv &&
 				musb->xceiv->otg->host->b_hnp_enable;
+=======
+			musb->xceiv->otg->state = OTG_STATE_B_WAIT_ACON;
+			musb->is_active = otg->host->b_hnp_enable;
+>>>>>>> b7ba80a49124 (Commit)
 			musb_platform_try_idle(musb, 0);
 			break;
 		default:
 			musb_dbg(musb, "bogus rh suspend? %s",
+<<<<<<< HEAD
 				 musb_otg_state_string(musb));
+=======
+				usb_otg_state_string(musb->xceiv->otg->state));
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	} else if (power & MUSB_POWER_SUSPENDM) {
 		power &= ~MUSB_POWER_SUSPENDM;
@@ -124,7 +148,11 @@ void musb_port_reset(struct musb *musb, bool do_reset)
 	u8		power;
 	void __iomem	*mbase = musb->mregs;
 
+<<<<<<< HEAD
 	if (musb_get_state(musb) == OTG_STATE_B_IDLE) {
+=======
+	if (musb->xceiv->otg->state == OTG_STATE_B_IDLE) {
+>>>>>>> b7ba80a49124 (Commit)
 		musb_dbg(musb, "HNP: Returning from HNP; no hub reset from b_idle");
 		musb->port1_status &= ~USB_PORT_STAT_RESET;
 		return;
@@ -197,21 +225,34 @@ void musb_port_reset(struct musb *musb, bool do_reset)
 
 void musb_root_disconnect(struct musb *musb)
 {
+<<<<<<< HEAD
+=======
+	struct usb_otg	*otg = musb->xceiv->otg;
+
+>>>>>>> b7ba80a49124 (Commit)
 	musb->port1_status = USB_PORT_STAT_POWER
 			| (USB_PORT_STAT_C_CONNECTION << 16);
 
 	usb_hcd_poll_rh_status(musb->hcd);
 	musb->is_active = 0;
 
+<<<<<<< HEAD
 	switch (musb_get_state(musb)) {
 	case OTG_STATE_A_SUSPEND:
 		if (musb->xceiv && musb->xceiv->otg->host->b_hnp_enable) {
 			musb_set_state(musb, OTG_STATE_A_PERIPHERAL);
+=======
+	switch (musb->xceiv->otg->state) {
+	case OTG_STATE_A_SUSPEND:
+		if (otg->host->b_hnp_enable) {
+			musb->xceiv->otg->state = OTG_STATE_A_PERIPHERAL;
+>>>>>>> b7ba80a49124 (Commit)
 			musb->g.is_a_peripheral = 1;
 			break;
 		}
 		fallthrough;
 	case OTG_STATE_A_HOST:
+<<<<<<< HEAD
 		musb_set_state(musb, OTG_STATE_A_WAIT_BCON);
 		musb->is_active = 0;
 		break;
@@ -221,6 +262,17 @@ void musb_root_disconnect(struct musb *musb)
 	default:
 		musb_dbg(musb, "host disconnect (%s)",
 			 musb_otg_state_string(musb));
+=======
+		musb->xceiv->otg->state = OTG_STATE_A_WAIT_BCON;
+		musb->is_active = 0;
+		break;
+	case OTG_STATE_A_WAIT_VFALL:
+		musb->xceiv->otg->state = OTG_STATE_B_IDLE;
+		break;
+	default:
+		musb_dbg(musb, "host disconnect (%s)",
+			usb_otg_state_string(musb->xceiv->otg->state));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 EXPORT_SYMBOL_GPL(musb_root_disconnect);

@@ -170,9 +170,12 @@ int swap_cgroup_swapon(int type, unsigned long max_pages)
 	unsigned long length;
 	struct swap_cgroup_ctrl *ctrl;
 
+<<<<<<< HEAD
 	if (mem_cgroup_disabled())
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	length = DIV_ROUND_UP(max_pages, SC_PER_PAGE);
 
 	array = vcalloc(length, sizeof(void *));
@@ -207,9 +210,12 @@ void swap_cgroup_swapoff(int type)
 	unsigned long i, length;
 	struct swap_cgroup_ctrl *ctrl;
 
+<<<<<<< HEAD
 	if (mem_cgroup_disabled())
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&swap_cgroup_mutex);
 	ctrl = &swap_cgroup_ctrl[type];
 	map = ctrl->map;

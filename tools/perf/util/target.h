@@ -18,7 +18,10 @@ struct target {
 	bool	     per_thread;
 	bool	     use_bpf;
 	bool	     hybrid;
+<<<<<<< HEAD
 	int	     initial_delay;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const char   *attr_map;
 };
 
@@ -73,6 +76,7 @@ static inline bool target__none(struct target *target)
 	return !target__has_task(target) && !target__has_cpu(target);
 }
 
+<<<<<<< HEAD
 static inline bool target__enable_on_exec(struct target *target)
 {
 	/*
@@ -84,6 +88,8 @@ static inline bool target__enable_on_exec(struct target *target)
 	return target__none(target) && !target->initial_delay;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool target__has_per_thread(struct target *target)
 {
 	return target->system_wide && target->per_thread;

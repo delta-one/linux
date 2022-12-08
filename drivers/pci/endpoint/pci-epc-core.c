@@ -613,7 +613,11 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
 	if (type == SECONDARY_INTERFACE && epf->sec_epc)
 		return -EBUSY;
 
+<<<<<<< HEAD
 	mutex_lock(&epc->list_lock);
+=======
+	mutex_lock(&epc->lock);
+>>>>>>> b7ba80a49124 (Commit)
 	func_no = find_first_zero_bit(&epc->function_num_map,
 				      BITS_PER_LONG);
 	if (func_no >= BITS_PER_LONG) {
@@ -640,7 +644,11 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
 
 	list_add_tail(list, &epc->pci_epf);
 ret:
+<<<<<<< HEAD
 	mutex_unlock(&epc->list_lock);
+=======
+	mutex_unlock(&epc->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -672,11 +680,19 @@ void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf,
 		list = &epf->sec_epc_list;
 	}
 
+<<<<<<< HEAD
 	mutex_lock(&epc->list_lock);
 	clear_bit(func_no, &epc->function_num_map);
 	list_del(list);
 	epf->epc = NULL;
 	mutex_unlock(&epc->list_lock);
+=======
+	mutex_lock(&epc->lock);
+	clear_bit(func_no, &epc->function_num_map);
+	list_del(list);
+	epf->epc = NULL;
+	mutex_unlock(&epc->lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(pci_epc_remove_epf);
 
@@ -690,6 +706,7 @@ EXPORT_SYMBOL_GPL(pci_epc_remove_epf);
  */
 void pci_epc_linkup(struct pci_epc *epc)
 {
+<<<<<<< HEAD
 	struct pci_epf *epf;
 
 	if (!epc || IS_ERR(epc))
@@ -703,6 +720,12 @@ void pci_epc_linkup(struct pci_epc *epc)
 		mutex_unlock(&epf->lock);
 	}
 	mutex_unlock(&epc->list_lock);
+=======
+	if (!epc || IS_ERR(epc))
+		return;
+
+	atomic_notifier_call_chain(&epc->notifier, LINK_UP, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(pci_epc_linkup);
 
@@ -716,6 +739,7 @@ EXPORT_SYMBOL_GPL(pci_epc_linkup);
  */
 void pci_epc_init_notify(struct pci_epc *epc)
 {
+<<<<<<< HEAD
 	struct pci_epf *epf;
 
 	if (!epc || IS_ERR(epc))
@@ -729,6 +753,12 @@ void pci_epc_init_notify(struct pci_epc *epc)
 		mutex_unlock(&epf->lock);
 	}
 	mutex_unlock(&epc->list_lock);
+=======
+	if (!epc || IS_ERR(epc))
+		return;
+
+	atomic_notifier_call_chain(&epc->notifier, CORE_INIT, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(pci_epc_init_notify);
 
@@ -742,6 +772,10 @@ void pci_epc_destroy(struct pci_epc *epc)
 {
 	pci_ep_cfs_remove_epc_group(epc->group);
 	device_unregister(&epc->dev);
+<<<<<<< HEAD
+=======
+	kfree(epc);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(pci_epc_destroy);
 
@@ -763,11 +797,14 @@ void devm_pci_epc_destroy(struct device *dev, struct pci_epc *epc)
 }
 EXPORT_SYMBOL_GPL(devm_pci_epc_destroy);
 
+<<<<<<< HEAD
 static void pci_epc_release(struct device *dev)
 {
 	kfree(to_pci_epc(dev));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * __pci_epc_create() - create a new endpoint controller (EPC) device
  * @dev: device that is creating the new EPC
@@ -795,13 +832,21 @@ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
 	}
 
 	mutex_init(&epc->lock);
+<<<<<<< HEAD
 	mutex_init(&epc->list_lock);
 	INIT_LIST_HEAD(&epc->pci_epf);
+=======
+	INIT_LIST_HEAD(&epc->pci_epf);
+	ATOMIC_INIT_NOTIFIER_HEAD(&epc->notifier);
+>>>>>>> b7ba80a49124 (Commit)
 
 	device_initialize(&epc->dev);
 	epc->dev.class = pci_epc_class;
 	epc->dev.parent = dev;
+<<<<<<< HEAD
 	epc->dev.release = pci_epc_release;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	epc->ops = ops;
 
 	ret = dev_set_name(&epc->dev, "%s", dev_name(dev));
@@ -860,7 +905,11 @@ EXPORT_SYMBOL_GPL(__devm_pci_epc_create);
 
 static int __init pci_epc_init(void)
 {
+<<<<<<< HEAD
 	pci_epc_class = class_create("pci_epc");
+=======
+	pci_epc_class = class_create(THIS_MODULE, "pci_epc");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(pci_epc_class)) {
 		pr_err("failed to create pci epc class --> %ld\n",
 		       PTR_ERR(pci_epc_class));
@@ -879,3 +928,7 @@ module_exit(pci_epc_exit);
 
 MODULE_DESCRIPTION("PCI EPC Library");
 MODULE_AUTHOR("Kishon Vijay Abraham I <kishon@ti.com>");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

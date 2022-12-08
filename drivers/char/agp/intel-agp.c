@@ -817,15 +817,25 @@ static void agp_intel_remove(struct pci_dev *pdev)
 	agp_put_bridge(bridge);
 }
 
+<<<<<<< HEAD
 static int agp_intel_resume(struct device *dev)
 {
 	struct pci_dev *pdev = to_pci_dev(dev);
+=======
+#ifdef CONFIG_PM
+static int agp_intel_resume(struct pci_dev *pdev)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct agp_bridge_data *bridge = pci_get_drvdata(pdev);
 
 	bridge->driver->configure();
 
 	return 0;
 }
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct pci_device_id agp_intel_pci_table[] = {
 #define ID(x)						\
@@ -894,14 +904,23 @@ static const struct pci_device_id agp_intel_pci_table[] = {
 
 MODULE_DEVICE_TABLE(pci, agp_intel_pci_table);
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(agp_intel_pm_ops, NULL, agp_intel_resume);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct pci_driver agp_intel_pci_driver = {
 	.name		= "agpgart-intel",
 	.id_table	= agp_intel_pci_table,
 	.probe		= agp_intel_probe,
 	.remove		= agp_intel_remove,
+<<<<<<< HEAD
 	.driver.pm	= &agp_intel_pm_ops,
+=======
+#ifdef CONFIG_PM
+	.resume		= agp_intel_resume,
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init agp_intel_init(void)

@@ -60,6 +60,10 @@
 #include <linux/ktime.h>
 #include <linux/kthread.h>
 #include <asm/page.h>        /* To get host page size per arch */
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 
 #include "mpt3sas_base.h"
@@ -2991,7 +2995,12 @@ _base_config_dma_addressing(struct MPT3SAS_ADAPTER *ioc, struct pci_dev *pdev)
 	struct sysinfo s;
 	u64 coherent_dma_mask, dma_mask;
 
+<<<<<<< HEAD
 	if (ioc->is_mcpu_endpoint || sizeof(dma_addr_t) == 4) {
+=======
+	if (ioc->is_mcpu_endpoint || sizeof(dma_addr_t) == 4 ||
+	    dma_get_required_mask(&pdev->dev) <= DMA_BIT_MASK(32)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ioc->dma_mask = 32;
 		coherent_dma_mask = dma_mask = DMA_BIT_MASK(32);
 	/* Set 63 bit DMA mask for all SAS3 and SAS35 controllers */
@@ -3534,6 +3543,10 @@ mpt3sas_base_unmap_resources(struct MPT3SAS_ADAPTER *ioc)
 
 	if (pci_is_enabled(pdev)) {
 		pci_release_selected_regions(ioc->pdev, ioc->bars);
+<<<<<<< HEAD
+=======
+		pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 		pci_disable_device(pdev);
 	}
 }
@@ -3613,6 +3626,12 @@ mpt3sas_base_map_resources(struct MPT3SAS_ADAPTER *ioc)
 		goto out_fail;
 	}
 
+<<<<<<< HEAD
+=======
+/* AER (Advanced Error Reporting) hooks */
+	pci_enable_pcie_error_reporting(pdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	pci_set_master(pdev);
 
 
@@ -4314,7 +4333,11 @@ _base_put_smid_scsi_io_atomic(struct MPT3SAS_ADAPTER *ioc, u16 smid,
 	descriptor.MSIxIndex = _base_set_and_get_msix_index(ioc, smid);
 	descriptor.SMID = cpu_to_le16(smid);
 
+<<<<<<< HEAD
 	writel(cpu_to_le32(*request), &ioc->chip->AtomicRequestDescriptorPost);
+=======
+	writel(*request, &ioc->chip->AtomicRequestDescriptorPost);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -4336,7 +4359,11 @@ _base_put_smid_fast_path_atomic(struct MPT3SAS_ADAPTER *ioc, u16 smid,
 	descriptor.MSIxIndex = _base_set_and_get_msix_index(ioc, smid);
 	descriptor.SMID = cpu_to_le16(smid);
 
+<<<<<<< HEAD
 	writel(cpu_to_le32(*request), &ioc->chip->AtomicRequestDescriptorPost);
+=======
+	writel(*request, &ioc->chip->AtomicRequestDescriptorPost);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -4359,7 +4386,11 @@ _base_put_smid_hi_priority_atomic(struct MPT3SAS_ADAPTER *ioc, u16 smid,
 	descriptor.MSIxIndex = msix_task;
 	descriptor.SMID = cpu_to_le16(smid);
 
+<<<<<<< HEAD
 	writel(cpu_to_le32(*request), &ioc->chip->AtomicRequestDescriptorPost);
+=======
+	writel(*request, &ioc->chip->AtomicRequestDescriptorPost);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -4380,7 +4411,11 @@ _base_put_smid_default_atomic(struct MPT3SAS_ADAPTER *ioc, u16 smid)
 	descriptor.MSIxIndex = _base_set_and_get_msix_index(ioc, smid);
 	descriptor.SMID = cpu_to_le16(smid);
 
+<<<<<<< HEAD
 	writel(cpu_to_le32(*request), &ioc->chip->AtomicRequestDescriptorPost);
+=======
+	writel(*request, &ioc->chip->AtomicRequestDescriptorPost);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -5844,9 +5879,12 @@ _base_release_memory_pools(struct MPT3SAS_ADAPTER *ioc)
 		}
 		dma_pool_destroy(ioc->pcie_sgl_dma_pool);
 	}
+<<<<<<< HEAD
 	kfree(ioc->pcie_sg_lookup);
 	ioc->pcie_sg_lookup = NULL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (ioc->config_page) {
 		dexitprintk(ioc,
 			    ioc_info(ioc, "config_page(0x%p): free\n",
@@ -7060,7 +7098,11 @@ _base_handshake_req_reply_wait(struct MPT3SAS_ADAPTER *ioc, int request_bytes,
 
 	/* send message 32-bits at a time */
 	for (i = 0, failed = 0; i < request_bytes/4 && !failed; i++) {
+<<<<<<< HEAD
 		writel(cpu_to_le32(request[i]), &ioc->chip->Doorbell);
+=======
+		writel(request[i], &ioc->chip->Doorbell);
+>>>>>>> b7ba80a49124 (Commit)
 		if ((_base_wait_for_doorbell_ack(ioc, 5)))
 			failed = 1;
 	}
@@ -7079,16 +7121,26 @@ _base_handshake_req_reply_wait(struct MPT3SAS_ADAPTER *ioc, int request_bytes,
 	}
 
 	/* read the first two 16-bits, it gives the total length of the reply */
+<<<<<<< HEAD
 	reply[0] = le16_to_cpu(ioc->base_readl(&ioc->chip->Doorbell)
 	    & MPI2_DOORBELL_DATA_MASK);
+=======
+	reply[0] = ioc->base_readl(&ioc->chip->Doorbell)
+		& MPI2_DOORBELL_DATA_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 	writel(0, &ioc->chip->HostInterruptStatus);
 	if ((_base_wait_for_doorbell_int(ioc, 5))) {
 		ioc_err(ioc, "doorbell handshake int failed (line=%d)\n",
 			__LINE__);
 		return -EFAULT;
 	}
+<<<<<<< HEAD
 	reply[1] = le16_to_cpu(ioc->base_readl(&ioc->chip->Doorbell)
 	    & MPI2_DOORBELL_DATA_MASK);
+=======
+	reply[1] = ioc->base_readl(&ioc->chip->Doorbell)
+		& MPI2_DOORBELL_DATA_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 	writel(0, &ioc->chip->HostInterruptStatus);
 
 	for (i = 2; i < default_reply->MsgLength * 2; i++)  {
@@ -7100,9 +7152,14 @@ _base_handshake_req_reply_wait(struct MPT3SAS_ADAPTER *ioc, int request_bytes,
 		if (i >=  reply_bytes/2) /* overflow case */
 			ioc->base_readl(&ioc->chip->Doorbell);
 		else
+<<<<<<< HEAD
 			reply[i] = le16_to_cpu(
 			    ioc->base_readl(&ioc->chip->Doorbell)
 			    & MPI2_DOORBELL_DATA_MASK);
+=======
+			reply[i] = ioc->base_readl(&ioc->chip->Doorbell)
+				& MPI2_DOORBELL_DATA_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 		writel(0, &ioc->chip->HostInterruptStatus);
 	}
 

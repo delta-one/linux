@@ -543,7 +543,11 @@ static int fujitsu_laptop_platform_add(struct acpi_device *device)
 	struct fujitsu_laptop *priv = acpi_driver_data(device);
 	int ret;
 
+<<<<<<< HEAD
 	priv->pf_device = platform_device_alloc("fujitsu-laptop", PLATFORM_DEVID_NONE);
+=======
+	priv->pf_device = platform_device_alloc("fujitsu-laptop", -1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!priv->pf_device)
 		return -ENOMEM;
 
@@ -847,13 +851,22 @@ err_free_fifo:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void acpi_fujitsu_laptop_remove(struct acpi_device *device)
+=======
+static int acpi_fujitsu_laptop_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fujitsu_laptop *priv = acpi_driver_data(device);
 
 	fujitsu_laptop_platform_remove(device);
 
 	kfifo_free(&priv->fifo);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void acpi_fujitsu_laptop_press(struct acpi_device *device, int scancode)

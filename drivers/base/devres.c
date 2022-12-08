@@ -101,9 +101,12 @@ static bool check_dr_size(size_t size, size_t *tot_size)
 					size, tot_size)))
 		return false;
 
+<<<<<<< HEAD
 	/* Actually allocate the full kmalloc bucket size. */
 	*tot_size = kmalloc_size_roundup(*tot_size);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -722,21 +725,37 @@ static void devm_action_release(struct device *dev, void *res)
 }
 
 /**
+<<<<<<< HEAD
  * __devm_add_action() - add a custom action to list of managed resources
  * @dev: Device that owns the action
  * @action: Function that should be called
  * @data: Pointer to data passed to @action implementation
  * @name: Name of the resource (for debugging purposes)
+=======
+ * devm_add_action() - add a custom action to list of managed resources
+ * @dev: Device that owns the action
+ * @action: Function that should be called
+ * @data: Pointer to data passed to @action implementation
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This adds a custom action to the list of managed resources so that
  * it gets executed as part of standard resource unwinding.
  */
+<<<<<<< HEAD
 int __devm_add_action(struct device *dev, void (*action)(void *), void *data, const char *name)
 {
 	struct action_devres *devres;
 
 	devres = __devres_alloc_node(devm_action_release, sizeof(struct action_devres),
 				     GFP_KERNEL, NUMA_NO_NODE, name);
+=======
+int devm_add_action(struct device *dev, void (*action)(void *), void *data)
+{
+	struct action_devres *devres;
+
+	devres = devres_alloc(devm_action_release,
+			      sizeof(struct action_devres), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!devres)
 		return -ENOMEM;
 
@@ -746,7 +765,11 @@ int __devm_add_action(struct device *dev, void (*action)(void *), void *data, co
 	devres_add(dev, devres);
 	return 0;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(__devm_add_action);
+=======
+EXPORT_SYMBOL_GPL(devm_add_action);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * devm_remove_action() - removes previously added custom action

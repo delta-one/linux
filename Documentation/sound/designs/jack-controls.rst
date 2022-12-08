@@ -8,7 +8,11 @@ Why we need Jack kcontrols
 ALSA uses kcontrols to export audio controls(switch, volume, Mux, ...)
 to user space. This means userspace applications like pulseaudio can
 switch off headphones and switch on speakers when no headphones are
+<<<<<<< HEAD
 plugged in.
+=======
+pluged in.
+>>>>>>> b7ba80a49124 (Commit)
 
 The old ALSA jack code only created input devices for each registered
 jack. These jack input devices are not readable by userspace devices

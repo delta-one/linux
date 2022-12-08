@@ -10,7 +10,11 @@ Authors:
 Description:
 ------------
 This driver implements support for ASPEED AST2400/2500 PWM and Fan Tacho
+<<<<<<< HEAD
 controller. The PWM controller supports up to 8 PWM outputs. The Fan tacho
+=======
+controller. The PWM controller supports upto 8 PWM outputs. The Fan tacho
+>>>>>>> b7ba80a49124 (Commit)
 controller supports up to 16 tachometer inputs.
 
 The driver provides the following sensor accesses in sysfs:

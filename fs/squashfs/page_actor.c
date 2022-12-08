@@ -71,13 +71,19 @@ static void *handle_next_page(struct squashfs_page_actor *actor)
 			(actor->next_index != actor->page[actor->next_page]->index)) {
 		actor->next_index++;
 		actor->returned_pages++;
+<<<<<<< HEAD
 		actor->last_page = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return actor->alloc_buffer ? actor->tmp_buffer : ERR_PTR(-ENOMEM);
 	}
 
 	actor->next_index++;
 	actor->returned_pages++;
+<<<<<<< HEAD
 	actor->last_page = actor->page[actor->next_page];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return actor->pageaddr = kmap_local_page(actor->page[actor->next_page++]);
 }
 
@@ -127,7 +133,10 @@ struct squashfs_page_actor *squashfs_page_actor_init_special(struct squashfs_sb_
 	actor->returned_pages = 0;
 	actor->next_index = page[0]->index & ~((1 << (msblk->block_log - PAGE_SHIFT)) - 1);
 	actor->pageaddr = NULL;
+<<<<<<< HEAD
 	actor->last_page = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	actor->alloc_buffer = msblk->decompressor->alloc_buffer;
 	actor->squashfs_first_page = direct_first_page;
 	actor->squashfs_next_page = direct_next_page;

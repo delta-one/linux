@@ -511,7 +511,11 @@ static void ib_device_release(struct device *device)
 	kfree_rcu(dev, rcu_head);
 }
 
+<<<<<<< HEAD
 static int ib_device_uevent(const struct device *device,
+=======
+static int ib_device_uevent(struct device *device,
+>>>>>>> b7ba80a49124 (Commit)
 			    struct kobj_uevent_env *env)
 {
 	if (add_uevent_var(env, "NAME=%s", dev_name(device)))
@@ -524,9 +528,15 @@ static int ib_device_uevent(const struct device *device,
 	return 0;
 }
 
+<<<<<<< HEAD
 static const void *net_namespace(const struct device *d)
 {
 	const struct ib_core_device *coredev =
+=======
+static const void *net_namespace(struct device *d)
+{
+	struct ib_core_device *coredev =
+>>>>>>> b7ba80a49124 (Commit)
 			container_of(d, struct ib_core_device, dev);
 
 	return read_pnet(&coredev->rdma_net);
@@ -2159,16 +2169,25 @@ int ib_device_set_netdev(struct ib_device *ib_dev, struct net_device *ndev,
 		return 0;
 	}
 
+<<<<<<< HEAD
 	if (old_ndev)
 		netdev_tracker_free(ndev, &pdata->netdev_tracker);
 	if (ndev)
 		netdev_hold(ndev, &pdata->netdev_tracker, GFP_ATOMIC);
+=======
+	if (ndev)
+		dev_hold(ndev);
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_assign_pointer(pdata->netdev, ndev);
 	spin_unlock_irqrestore(&pdata->netdev_lock, flags);
 
 	add_ndev_hash(pdata);
 	if (old_ndev)
+<<<<<<< HEAD
 		__dev_put(old_ndev);
+=======
+		dev_put(old_ndev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -2201,7 +2220,11 @@ static void free_netdevs(struct ib_device *ib_dev)
 			 * comparisons after the put
 			 */
 			rcu_assign_pointer(pdata->netdev, NULL);
+<<<<<<< HEAD
 			netdev_put(ndev, &pdata->netdev_tracker);
+=======
+			dev_put(ndev);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		spin_unlock_irqrestore(&pdata->netdev_lock, flags);
 	}
@@ -2817,6 +2840,7 @@ static int __init ib_core_init(void)
 
 	nldev_init();
 	rdma_nl_register(RDMA_NL_LS, ibnl_ls_cb_table);
+<<<<<<< HEAD
 	ret = roce_gid_mgmt_init();
 	if (ret) {
 		pr_warn("Couldn't init RoCE GID management\n");
@@ -2829,6 +2853,12 @@ err_parent:
 	rdma_nl_unregister(RDMA_NL_LS);
 	nldev_exit();
 	unregister_pernet_device(&rdma_dev_net_ops);
+=======
+	roce_gid_mgmt_init();
+
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 err_compat:
 	unregister_blocking_lsm_notifier(&ibdev_lsm_nb);
 err_sa:
@@ -2853,8 +2883,13 @@ err:
 static void __exit ib_core_cleanup(void)
 {
 	roce_gid_mgmt_cleanup();
+<<<<<<< HEAD
 	rdma_nl_unregister(RDMA_NL_LS);
 	nldev_exit();
+=======
+	nldev_exit();
+	rdma_nl_unregister(RDMA_NL_LS);
+>>>>>>> b7ba80a49124 (Commit)
 	unregister_pernet_device(&rdma_dev_net_ops);
 	unregister_blocking_lsm_notifier(&ibdev_lsm_nb);
 	ib_sa_cleanup();

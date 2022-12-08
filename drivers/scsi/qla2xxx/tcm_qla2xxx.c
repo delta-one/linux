@@ -377,6 +377,14 @@ static void tcm_qla2xxx_close_session(struct se_session *se_sess)
 	tcm_qla2xxx_put_sess(sess);
 }
 
+<<<<<<< HEAD
+=======
+static u32 tcm_qla2xxx_sess_get_index(struct se_session *se_sess)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int tcm_qla2xxx_write_pending(struct se_cmd *se_cmd)
 {
 	struct qla_tgt_cmd *cmd = container_of(se_cmd,
@@ -416,6 +424,14 @@ static int tcm_qla2xxx_write_pending(struct se_cmd *se_cmd)
 	return qlt_rdy_to_xfer(cmd);
 }
 
+<<<<<<< HEAD
+=======
+static void tcm_qla2xxx_set_default_node_attrs(struct se_node_acl *nacl)
+{
+	return;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int tcm_qla2xxx_get_cmd_state(struct se_cmd *se_cmd)
 {
 	if (!(se_cmd->se_cmd_flags & SCF_SCSI_TMR_CDB)) {
@@ -1542,7 +1558,10 @@ static const struct qla_tgt_func_tmpl tcm_qla2xxx_template = {
 static int tcm_qla2xxx_init_lport(struct tcm_qla2xxx_lport *lport)
 {
 	int rc;
+<<<<<<< HEAD
 	size_t map_sz;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = btree_init32(&lport->lport_fcport_map);
 	if (rc) {
@@ -1550,6 +1569,7 @@ static int tcm_qla2xxx_init_lport(struct tcm_qla2xxx_lport *lport)
 		return rc;
 	}
 
+<<<<<<< HEAD
 	map_sz = array_size(65536, sizeof(struct tcm_qla2xxx_fc_loopid));
 
 	lport->lport_loopid_map = vzalloc(map_sz);
@@ -1559,6 +1579,19 @@ static int tcm_qla2xxx_init_lport(struct tcm_qla2xxx_lport *lport)
 		return -ENOMEM;
 	}
 	pr_debug("qla2xxx: Allocated lport_loopid_map of %zu bytes\n", map_sz);
+=======
+	lport->lport_loopid_map =
+		vzalloc(array_size(65536,
+				   sizeof(struct tcm_qla2xxx_fc_loopid)));
+	if (!lport->lport_loopid_map) {
+		pr_err("Unable to allocate lport->lport_loopid_map of %zu bytes\n",
+		    sizeof(struct tcm_qla2xxx_fc_loopid) * 65536);
+		btree_destroy32(&lport->lport_fcport_map);
+		return -ENOMEM;
+	}
+	pr_debug("qla2xxx: Allocated lport_loopid_map of %zu bytes\n",
+	       sizeof(struct tcm_qla2xxx_fc_loopid) * 65536);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1801,8 +1834,15 @@ static const struct target_core_fabric_ops tcm_qla2xxx_ops = {
 	.check_stop_free		= tcm_qla2xxx_check_stop_free,
 	.release_cmd			= tcm_qla2xxx_release_cmd,
 	.close_session			= tcm_qla2xxx_close_session,
+<<<<<<< HEAD
 	.sess_get_initiator_sid		= NULL,
 	.write_pending			= tcm_qla2xxx_write_pending,
+=======
+	.sess_get_index			= tcm_qla2xxx_sess_get_index,
+	.sess_get_initiator_sid		= NULL,
+	.write_pending			= tcm_qla2xxx_write_pending,
+	.set_default_node_attributes	= tcm_qla2xxx_set_default_node_attrs,
+>>>>>>> b7ba80a49124 (Commit)
 	.get_cmd_state			= tcm_qla2xxx_get_cmd_state,
 	.queue_data_in			= tcm_qla2xxx_queue_data_in,
 	.queue_status			= tcm_qla2xxx_queue_status,
@@ -1840,8 +1880,15 @@ static const struct target_core_fabric_ops tcm_qla2xxx_npiv_ops = {
 	.check_stop_free                = tcm_qla2xxx_check_stop_free,
 	.release_cmd			= tcm_qla2xxx_release_cmd,
 	.close_session			= tcm_qla2xxx_close_session,
+<<<<<<< HEAD
 	.sess_get_initiator_sid		= NULL,
 	.write_pending			= tcm_qla2xxx_write_pending,
+=======
+	.sess_get_index			= tcm_qla2xxx_sess_get_index,
+	.sess_get_initiator_sid		= NULL,
+	.write_pending			= tcm_qla2xxx_write_pending,
+	.set_default_node_attributes	= tcm_qla2xxx_set_default_node_attrs,
+>>>>>>> b7ba80a49124 (Commit)
 	.get_cmd_state			= tcm_qla2xxx_get_cmd_state,
 	.queue_data_in			= tcm_qla2xxx_queue_data_in,
 	.queue_status			= tcm_qla2xxx_queue_status,

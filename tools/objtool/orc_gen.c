@@ -27,7 +27,10 @@ static int init_orc_entry(struct orc_entry *orc, struct cfi_state *cfi,
 	}
 
 	orc->end = cfi->end;
+<<<<<<< HEAD
 	orc->signal = cfi->signal;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (cfi->cfa.base == CFI_UNDEFINED) {
 		orc->sp_reg = ORC_REG_UNDEFINED;
@@ -98,8 +101,13 @@ static int write_orc_entry(struct elf *elf, struct section *orc_sec,
 	/* populate ORC data */
 	orc = (struct orc_entry *)orc_sec->data->d_buf + idx;
 	memcpy(orc, o, sizeof(*orc));
+<<<<<<< HEAD
 	orc->sp_offset = bswap_if_needed(elf, orc->sp_offset);
 	orc->bp_offset = bswap_if_needed(elf, orc->bp_offset);
+=======
+	orc->sp_offset = bswap_if_needed(orc->sp_offset);
+	orc->bp_offset = bswap_if_needed(orc->bp_offset);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* populate reloc for ip */
 	if (elf_add_reloc_to_insn(elf, ip_sec, idx * sizeof(int), R_X86_64_PC32,

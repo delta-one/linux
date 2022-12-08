@@ -382,7 +382,11 @@ static void one_packet(dma_addr_t phys)
 		if (req_ctx->hmac_virt)
 			finish_scattered_hmac(crypt);
 
+<<<<<<< HEAD
 		aead_request_complete(req, failed);
+=======
+		req->base.complete(&req->base, failed);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 	case CTL_FLAG_PERFORM_ABLK: {
@@ -407,7 +411,11 @@ static void one_packet(dma_addr_t phys)
 			free_buf_chain(dev, req_ctx->dst, crypt->dst_buf);
 
 		free_buf_chain(dev, req_ctx->src, crypt->src_buf);
+<<<<<<< HEAD
 		skcipher_request_complete(req, failed);
+=======
+		req->base.complete(&req->base, failed);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 	case CTL_FLAG_GEN_ICV:
@@ -420,7 +428,11 @@ static void one_packet(dma_addr_t phys)
 		break;
 	case CTL_FLAG_GEN_REVAES:
 		ctx = crypto_tfm_ctx(crypt->data.tfm);
+<<<<<<< HEAD
 		*(__be32 *)ctx->decrypt.npe_ctx &= cpu_to_be32(~CIPH_ENCR);
+=======
+		*(u32 *)ctx->decrypt.npe_ctx &= cpu_to_be32(~CIPH_ENCR);
+>>>>>>> b7ba80a49124 (Commit)
 		if (atomic_dec_and_test(&ctx->configuring))
 			complete(&ctx->completion);
 		break;
@@ -720,7 +732,11 @@ static int register_chain_var(struct crypto_tfm *tfm, u8 xpad, u32 target,
 	crypt->init_len = init_len;
 	crypt->ctl_flags |= CTL_FLAG_GEN_ICV;
 
+<<<<<<< HEAD
 	buf->next = NULL;
+=======
+	buf->next = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	buf->buf_len = HMAC_PAD_BLOCKLEN;
 	buf->pkt_len = 0;
 	buf->phys_addr = pad_phys;
@@ -751,7 +767,11 @@ static int setup_auth(struct crypto_tfm *tfm, int encrypt, unsigned int authsize
 #ifndef __ARMEB__
 	cfgword ^= 0xAA000000; /* change the "byte swap" flags */
 #endif
+<<<<<<< HEAD
 	*(__be32 *)cinfo = cpu_to_be32(cfgword);
+=======
+	*(u32 *)cinfo = cpu_to_be32(cfgword);
+>>>>>>> b7ba80a49124 (Commit)
 	cinfo += sizeof(cfgword);
 
 	/* write ICV to cryptinfo */
@@ -788,7 +808,11 @@ static int gen_rev_aes_key(struct crypto_tfm *tfm)
 	if (!crypt)
 		return -EAGAIN;
 
+<<<<<<< HEAD
 	*(__be32 *)dir->npe_ctx |= cpu_to_be32(CIPH_ENCR);
+=======
+	*(u32 *)dir->npe_ctx |= cpu_to_be32(CIPH_ENCR);
+>>>>>>> b7ba80a49124 (Commit)
 
 	crypt->data.tfm = tfm;
 	crypt->crypt_offs = 0;
@@ -846,7 +870,11 @@ static int setup_cipher(struct crypto_tfm *tfm, int encrypt, const u8 *key,
 			return err;
 	}
 	/* write cfg word to cryptinfo */
+<<<<<<< HEAD
 	*(__be32 *)cinfo = cpu_to_be32(cipher_cfg);
+=======
+	*(u32 *)cinfo = cpu_to_be32(cipher_cfg);
+>>>>>>> b7ba80a49124 (Commit)
 	cinfo += sizeof(cipher_cfg);
 
 	/* write cipher key to cryptinfo */

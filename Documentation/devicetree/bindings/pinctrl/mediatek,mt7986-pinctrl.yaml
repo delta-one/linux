@@ -4,12 +4,20 @@
 $id: http://devicetree.org/schemas/pinctrl/mediatek,mt7986-pinctrl.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: MediaTek MT7986 Pin Controller
+=======
+title: Mediatek MT7986 Pin Controller
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Sean Wang <sean.wang@kernel.org>
 
+<<<<<<< HEAD
 description:
+=======
+description: |+
+>>>>>>> b7ba80a49124 (Commit)
   The MediaTek's MT7986 Pin controller is used to control SoC pins.
 
 properties:
@@ -37,15 +45,26 @@ properties:
 
   "#gpio-cells":
     const: 2
+<<<<<<< HEAD
     description:
       Number of cells in GPIO specifier. Since the generic GPIO binding is used,
       the amount of cells must be specified as 2. See the below mentioned gpio
       binding representation for description of particular cells.
+=======
+    description: |
+      Number of cells in GPIO specifier. Since the generic GPIO
+      binding is used, the amount of cells must be specified as 2. See the below
+      mentioned gpio binding representation for description of particular cells.
+>>>>>>> b7ba80a49124 (Commit)
 
   gpio-ranges:
     minItems: 1
     maxItems: 5
+<<<<<<< HEAD
     description:
+=======
+    description: |
+>>>>>>> b7ba80a49124 (Commit)
       GPIO valid number range.
 
   interrupt-controller: true
@@ -57,7 +76,11 @@ properties:
     const: 2
 
 allOf:
+<<<<<<< HEAD
   - $ref: pinctrl.yaml#
+=======
+  - $ref: "pinctrl.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible
@@ -72,7 +95,11 @@ patternProperties:
     additionalProperties: false
 
     patternProperties:
+<<<<<<< HEAD
       '^.*mux.*$':
+=======
+      '.*mux.*':
+>>>>>>> b7ba80a49124 (Commit)
         type: object
         additionalProperties: false
         description: |
@@ -81,14 +108,21 @@ patternProperties:
           The following table shows the effective values of "group", "function"
           properties and chip pinout pins
 
+<<<<<<< HEAD
           groups            function    pins (in pin#)
+=======
+          groups	    function    pins (in pin#)
+>>>>>>> b7ba80a49124 (Commit)
           ---------------------------------------------------------------------
           "watchdog"        "watchdog"  0
           "wifi_led"        "led"       1, 2
           "i2c"             "i2c"       3, 4
           "uart1_0"         "uart"      7, 8, 9, 10
+<<<<<<< HEAD
           "uart1_rx_tx"     "uart"      42, 43
           "uart1_cts_rts"   "uart"      44, 45
+=======
+>>>>>>> b7ba80a49124 (Commit)
           "pcie_clk"        "pcie"      9
           "pcie_wake"       "pcie"      10
           "spi1_0"          "spi"       11, 12, 13, 14
@@ -97,6 +131,7 @@ patternProperties:
           "pwm1_0"          "pwm"       22,
           "snfi"            "flash"     23, 24, 25, 26, 27, 28
           "spi1_2"          "spi"       29, 30, 31, 32
+<<<<<<< HEAD
           "emmc_45"         "emmc"      22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
                                         32
 
@@ -106,6 +141,14 @@ patternProperties:
           "uart1_1"         "uart"      23, 24, 25, 26
           "uart2_0_rx_tx"   "uart"      29, 30
           "uart2_0_cts_rts" "uart"      31, 32
+=======
+          "emmc_45"         "emmc"      22, 23, 24, 25, 26, 27, 28, 29, 30,
+                                        31, 32
+          "spi1_1"          "spi"       23, 24, 25, 26
+          "uart1_2"         "uart"      29, 30, 31, 32
+          "uart1_1"         "uart"      23, 24, 25, 26
+          "uart2_0"         "uart"      29, 30, 31, 32
+>>>>>>> b7ba80a49124 (Commit)
           "spi0"            "spi"       33, 34, 35, 36
           "spi0_wp_hold"    "spi"       37, 38
           "uart1_3_rx_tx"   "uart"      35, 36
@@ -116,9 +159,14 @@ patternProperties:
           "pcie_pereset"    "pcie"      41
           "uart1"           "uart"      42, 43, 44, 45
           "uart2"           "uart"      46, 47, 48, 49
+<<<<<<< HEAD
           "emmc_51"         "emmc"      50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
                                         60, 61
 
+=======
+          "emmc_51"         "emmc"      50, 51, 52, 53, 54, 55, 56, 57, 57,
+                                        59, 60, 61
+>>>>>>> b7ba80a49124 (Commit)
           "pcm"             "audio"     62, 63, 64, 65
           "i2s"             "audio"     62, 63, 64, 65
           "switch_int"      "eth"       66
@@ -128,20 +176,35 @@ patternProperties:
           "wf_dbdc"         "wifi"      74, 75, 76, 77, 78, 79, 80, 81, 82, 83,
                                         84, 85
 
+<<<<<<< HEAD
         $ref: /schemas/pinctrl/pinmux-node.yaml
         properties:
           function:
             description:
+=======
+        $ref: "/schemas/pinctrl/pinmux-node.yaml"
+        properties:
+          function:
+            description: |
+>>>>>>> b7ba80a49124 (Commit)
               A string containing the name of the function to mux to the group.
               There is no "audio", "pcie" functions on mt7986b, you can only use
               those functions on mt7986a.
             enum: [audio, emmc, eth, i2c, led, flash, pcie, pwm, spi, uart,
                    watchdog, wifi]
           groups:
+<<<<<<< HEAD
             description:
               An array of strings. Each string contains the name of a group.
               There is no "pcie_pereset", "uart1", "uart2" "emmc_51", "pcm", and
               "i2s" groups on mt7986b, you can only use those groups on mt7986a.
+=======
+            description: |
+              An array of strings. Each string contains the name of a group.
+              There is no "pcie_pereset", "uart1", "uart2" "emmc_51", "pcm",
+              and "i2s" groups on mt7986b, you can only use those groups on
+              mt7986a.
+>>>>>>> b7ba80a49124 (Commit)
         required:
           - function
           - groups
@@ -162,7 +225,11 @@ patternProperties:
             then:
               properties:
                 groups:
+<<<<<<< HEAD
                   enum: [emmc_45, emmc_51]
+=======
+                  enum: [emmc, emmc_rst]
+>>>>>>> b7ba80a49124 (Commit)
           - if:
               properties:
                 function:
@@ -202,9 +269,13 @@ patternProperties:
             then:
               properties:
                 groups:
+<<<<<<< HEAD
                   items:
                     enum: [pcie_clk, pcie_wake, pcie_pereset]
                   maxItems: 3
+=======
+                  enum: [pcie_clk, pcie_wake, pcie_pereset]
+>>>>>>> b7ba80a49124 (Commit)
           - if:
               properties:
                 function:
@@ -212,9 +283,13 @@ patternProperties:
             then:
               properties:
                 groups:
+<<<<<<< HEAD
                   items:
                     enum: [pwm0, pwm1_0, pwm1_1]
                   maxItems: 2
+=======
+                  enum: [pwm0, pwm1_0, pwm1_1]
+>>>>>>> b7ba80a49124 (Commit)
           - if:
               properties:
                 function:
@@ -222,9 +297,13 @@ patternProperties:
             then:
               properties:
                 groups:
+<<<<<<< HEAD
                   items:
                     enum: [spi0, spi0_wp_hold, spi1_0, spi1_1, spi1_2, spi1_3]
                   maxItems: 2
+=======
+                  enum: [spi0, spi0_wp_hold, spi1_0, spi1_1, spi1_2, spi1_3]
+>>>>>>> b7ba80a49124 (Commit)
           - if:
               properties:
                 function:
@@ -232,12 +311,17 @@ patternProperties:
             then:
               properties:
                 groups:
+<<<<<<< HEAD
                   items:
                     enum: [uart1_0, uart1_rx_tx, uart1_cts_rts, uart1_1,
                            uart1_2_rx_tx, uart1_2_cts_rts, uart1_3_rx_tx,
                            uart1_3_cts_rts, uart2_0_rx_tx, uart2_0_cts_rts,
                            uart2_1, uart0, uart1, uart2]
                   maxItems: 2
+=======
+                  enum: [uart1_0, uart1_1, uart1_2, uart1_3_rx_tx,
+                         uart1_3_cts_rts, uart2_0, uart2_1, uart0, uart1, uart2]
+>>>>>>> b7ba80a49124 (Commit)
           - if:
               properties:
                 function:
@@ -256,6 +340,7 @@ patternProperties:
                   items:
                     enum: [wf_2g, wf_5g, wf_dbdc]
                   maxItems: 3
+<<<<<<< HEAD
       '^.*conf.*$':
         type: object
         additionalProperties: false
@@ -283,6 +368,34 @@ patternProperties:
                      EMMC_DATA_4, EMMC_DATA_5, EMMC_DATA_6, EMMC_DATA_7,
                      EMMC_CMD, EMMC_CK, EMMC_DSL, EMMC_RSTB, PCM_DTX, PCM_DRX,
                      PCM_CLK, PCM_FS, MT7531_INT, SMI_MDC, SMI_MDIO,
+=======
+      '.*conf.*':
+        type: object
+        additionalProperties: false
+        description: |
+          pinconf configuration nodes.
+        $ref: "/schemas/pinctrl/pincfg-node.yaml"
+
+        properties:
+          pins:
+            description: |
+              An array of strings. Each string contains the name of a pin.
+              There is no PIN 41 to PIN 65 above on mt7686b, you can only use
+              those pins on mt7986a.
+            items:
+              enum: [SYS_WATCHDOG, WF2G_LED, WF5G_LED, I2C_SCL, I2C_SDA, GPIO_0,
+                     GPIO_1, GPIO_2, GPIO_3, GPIO_4, GPIO_5, GPIO_6, GPIO_7,
+                     GPIO_8, GPIO_9, GPIO_10, GPIO_11, GPIO_12, GPIO_13, GPIO_14,
+                     GPIO_15, PWM0, PWM1, SPI0_CLK, SPI0_MOSI, SPI0_MISO, SPI0_CS,
+                     SPI0_HOLD, SPI0_WP, SPI1_CLK, SPI1_MOSI, SPI1_MISO, SPI1_CS,
+                     SPI2_CLK, SPI2_MOSI, SPI2_MISO, SPI2_CS, SPI2_HOLD, SPI2_WP,
+                     UART0_RXD, UART0_TXD, PCIE_PERESET_N, UART1_RXD, UART1_TXD,
+                     UART1_CTS, UART1_RTS, UART2_RXD, UART2_TXD, UART2_CTS,
+                     UART2_RTS, EMMC_DATA_0, EMMC_DATA_1, EMMC_DATA_2,
+                     EMMC_DATA_3, EMMC_DATA_4, EMMC_DATA_5, EMMC_DATA_6,
+                     EMMC_DATA_7, EMMC_CMD, EMMC_CK, EMMC_DSL, EMMC_RSTB, PCM_DTX,
+                     PCM_DRX, PCM_CLK, PCM_FS, MT7531_INT, SMI_MDC, SMI_MDIO,
+>>>>>>> b7ba80a49124 (Commit)
                      WF0_DIG_RESETB, WF0_CBA_RESETB, WF0_XO_REQ, WF0_TOP_CLK,
                      WF0_TOP_DATA, WF0_HB1, WF0_HB2, WF0_HB3, WF0_HB4, WF0_HB0,
                      WF0_HB0_B, WF0_HB5, WF0_HB6, WF0_HB7, WF0_HB8, WF0_HB9,
@@ -294,6 +407,7 @@ patternProperties:
 
           bias-disable: true
 
+<<<<<<< HEAD
           bias-pull-up:
             oneOf:
               - type: boolean
@@ -311,6 +425,11 @@ patternProperties:
                 description:
                   PUPD/R1/R0 pull down type. See MTK_PUPD_SET_R1R0 defines in
                   dt-bindings/pinctrl/mt65xx.h.
+=======
+          bias-pull-up: true
+
+          bias-pull-down: true
+>>>>>>> b7ba80a49124 (Commit)
 
           input-enable: true
 
@@ -362,7 +481,10 @@ examples:
   - |
     #include <dt-bindings/interrupt-controller/irq.h>
     #include <dt-bindings/interrupt-controller/arm-gic.h>
+<<<<<<< HEAD
     #include <dt-bindings/pinctrl/mt65xx.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
     soc {
       #address-cells = <2>;
@@ -387,6 +509,7 @@ examples:
         interrupt-parent = <&gic>;
         #interrupt-cells = <2>;
 
+<<<<<<< HEAD
         pcie_pins: pcie-pins {
           mux {
             function = "pcie";
@@ -408,6 +531,8 @@ examples:
           };
         };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
         uart1_pins: uart1-pins {
           mux {
             function = "uart";
@@ -415,6 +540,7 @@ examples:
           };
         };
 
+<<<<<<< HEAD
         uart1_3_pins: uart1-3-pins {
           mux {
             function = "uart";
@@ -422,6 +548,8 @@ examples:
           };
         };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
         uart2_pins: uart2-pins {
           mux {
             function = "uart";
@@ -429,6 +557,7 @@ examples:
           };
         };
 
+<<<<<<< HEAD
         mmc0_pins_default: mmc0-pins {
           mux {
             function = "emmc";
@@ -458,5 +587,7 @@ examples:
           };
         };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       };
     };

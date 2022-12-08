@@ -148,7 +148,11 @@ static void widget_release(struct kobject *kobj)
 	kfree(kobj);
 }
 
+<<<<<<< HEAD
 static const struct kobj_type widget_ktype = {
+=======
+static struct kobj_type widget_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release	= widget_release,
 	.sysfs_ops	= &widget_sysfs_ops,
 };
@@ -346,10 +350,15 @@ static int add_widget_node(struct kobject *parent, hda_nid_t nid,
 		return -ENOMEM;
 	kobject_init(kobj, &widget_ktype);
 	err = kobject_add(kobj, parent, "%02x", nid);
+<<<<<<< HEAD
 	if (err < 0) {
 		kobject_put(kobj);
 		return err;
 	}
+=======
+	if (err < 0)
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 	err = sysfs_create_group(kobj, group);
 	if (err < 0) {
 		kobject_put(kobj);

@@ -34,8 +34,13 @@ struct virtqueue {
 	unsigned int index;
 	unsigned int num_free;
 	unsigned int num_max;
+<<<<<<< HEAD
 	bool reset;
 	void *priv;
+=======
+	void *priv;
+	bool reset;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int virtqueue_add_outbuf(struct virtqueue *vq,
@@ -61,8 +66,11 @@ int virtqueue_add_sgs(struct virtqueue *vq,
 		      void *data,
 		      gfp_t gfp);
 
+<<<<<<< HEAD
 struct device *virtqueue_dma_dev(struct virtqueue *vq);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool virtqueue_kick(struct virtqueue *vq);
 
 bool virtqueue_kick_prepare(struct virtqueue *vq);
@@ -86,6 +94,7 @@ bool virtqueue_enable_cb_delayed(struct virtqueue *vq);
 
 void *virtqueue_detach_unused_buf(struct virtqueue *vq);
 
+<<<<<<< HEAD
 unsigned int virtqueue_get_vring_size(const struct virtqueue *vq);
 
 bool virtqueue_is_broken(const struct virtqueue *vq);
@@ -99,6 +108,19 @@ int virtqueue_resize(struct virtqueue *vq, u32 num,
 		     void (*recycle)(struct virtqueue *vq, void *buf));
 int virtqueue_reset(struct virtqueue *vq,
 		    void (*recycle)(struct virtqueue *vq, void *buf));
+=======
+unsigned int virtqueue_get_vring_size(struct virtqueue *vq);
+
+bool virtqueue_is_broken(struct virtqueue *vq);
+
+const struct vring *virtqueue_get_vring(struct virtqueue *vq);
+dma_addr_t virtqueue_get_desc_addr(struct virtqueue *vq);
+dma_addr_t virtqueue_get_avail_addr(struct virtqueue *vq);
+dma_addr_t virtqueue_get_used_addr(struct virtqueue *vq);
+
+int virtqueue_resize(struct virtqueue *vq, u32 num,
+		     void (*recycle)(struct virtqueue *vq, void *buf));
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct virtio_device - representation of a device using virtio
@@ -131,7 +153,14 @@ struct virtio_device {
 	void *priv;
 };
 
+<<<<<<< HEAD
 #define dev_to_virtio(_dev)	container_of_const(_dev, struct virtio_device, dev)
+=======
+static inline struct virtio_device *dev_to_virtio(struct device *_dev)
+{
+	return container_of(_dev, struct virtio_device, dev);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 void virtio_add_status(struct virtio_device *dev, unsigned int status);
 int register_virtio_device(struct virtio_device *dev);
@@ -151,7 +180,11 @@ int virtio_device_restore(struct virtio_device *dev);
 #endif
 void virtio_reset_device(struct virtio_device *dev);
 
+<<<<<<< HEAD
 size_t virtio_max_dma_size(const struct virtio_device *vdev);
+=======
+size_t virtio_max_dma_size(struct virtio_device *vdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define virtio_device_for_each_vq(vdev, vq) \
 	list_for_each_entry(vq, &vdev->vqs, list)

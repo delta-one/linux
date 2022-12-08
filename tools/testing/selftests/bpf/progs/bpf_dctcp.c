@@ -11,7 +11,10 @@
 #include <linux/types.h>
 #include <linux/stddef.h>
 #include <linux/tcp.h>
+<<<<<<< HEAD
 #include <errno.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_tracing.h>
 #include "bpf_tcp_helpers.h"
@@ -24,7 +27,10 @@ const char tcp_cdg[] = "cdg";
 char cc_res[TCP_CA_NAME_MAX];
 int tcp_cdg_res = 0;
 int stg_result = 0;
+<<<<<<< HEAD
 int ebusy_cnt = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct {
 	__uint(type, BPF_MAP_TYPE_SK_STORAGE);
@@ -66,6 +72,7 @@ void BPF_PROG(dctcp_init, struct sock *sk)
 
 	if (!(tp->ecn_flags & TCP_ECN_OK) && fallback[0]) {
 		/* Switch to fallback */
+<<<<<<< HEAD
 		if (bpf_setsockopt(sk, SOL_TCP, TCP_CONGESTION,
 				   (void *)fallback, sizeof(fallback)) == -EBUSY)
 			ebusy_cnt++;
@@ -83,6 +90,18 @@ void BPF_PROG(dctcp_init, struct sock *sk)
 				   (void *)fallback, sizeof(fallback)) == -EBUSY)
 			ebusy_cnt++;
 
+=======
+		bpf_setsockopt(sk, SOL_TCP, TCP_CONGESTION,
+			       (void *)fallback, sizeof(fallback));
+		/* Switch back to myself which the bpf trampoline
+		 * stopped calling dctcp_init recursively.
+		 */
+		bpf_setsockopt(sk, SOL_TCP, TCP_CONGESTION,
+			       (void *)bpf_dctcp, sizeof(bpf_dctcp));
+		/* Switch back to fallback */
+		bpf_setsockopt(sk, SOL_TCP, TCP_CONGESTION,
+			       (void *)fallback, sizeof(fallback));
+>>>>>>> b7ba80a49124 (Commit)
 		/* Expecting -ENOTSUPP for tcp_cdg_res */
 		tcp_cdg_res = bpf_setsockopt(sk, SOL_TCP, TCP_CONGESTION,
 					     (void *)tcp_cdg, sizeof(tcp_cdg));

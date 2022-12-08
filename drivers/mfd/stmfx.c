@@ -410,7 +410,12 @@ static void stmfx_chip_exit(struct i2c_client *client)
 	}
 }
 
+<<<<<<< HEAD
 static int stmfx_probe(struct i2c_client *client)
+=======
+static int stmfx_probe(struct i2c_client *client,
+		       const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &client->dev;
 	struct stmfx *stmfx;
@@ -473,6 +478,10 @@ static void stmfx_remove(struct i2c_client *client)
 	stmfx_chip_exit(client);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int stmfx_suspend(struct device *dev)
 {
 	struct stmfx *stmfx = dev_get_drvdata(dev);
@@ -538,8 +547,14 @@ static int stmfx_resume(struct device *dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 static DEFINE_SIMPLE_DEV_PM_OPS(stmfx_dev_pm_ops, stmfx_suspend, stmfx_resume);
+=======
+#endif
+
+static SIMPLE_DEV_PM_OPS(stmfx_dev_pm_ops, stmfx_suspend, stmfx_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct of_device_id stmfx_of_match[] = {
 	{ .compatible = "st,stmfx-0300", },
@@ -551,9 +566,15 @@ static struct i2c_driver stmfx_driver = {
 	.driver = {
 		.name = "stmfx-core",
 		.of_match_table = stmfx_of_match,
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&stmfx_dev_pm_ops),
 	},
 	.probe_new = stmfx_probe,
+=======
+		.pm = &stmfx_dev_pm_ops,
+	},
+	.probe = stmfx_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = stmfx_remove,
 };
 module_i2c_driver(stmfx_driver);

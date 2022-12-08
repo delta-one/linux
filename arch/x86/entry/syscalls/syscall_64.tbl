@@ -372,7 +372,10 @@
 448	common	process_mrelease	sys_process_mrelease
 449	common	futex_waitv		sys_futex_waitv
 450	common	set_mempolicy_home_node	sys_set_mempolicy_home_node
+<<<<<<< HEAD
 451	64	map_shadow_stack	sys_map_shadow_stack
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #
 # Due to a historical design error, certain syscalls are numbered differently

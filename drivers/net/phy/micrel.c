@@ -268,9 +268,12 @@ struct kszphy_type {
 	u16 interrupt_level_mask;
 	u16 cable_diag_reg;
 	unsigned long pair_mask;
+<<<<<<< HEAD
 	u16 disable_dll_tx_bit;
 	u16 disable_dll_rx_bit;
 	u16 disable_dll_mask;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool has_broadcast_disable;
 	bool has_nand_tree_disable;
 	bool has_rmii_ref_clk_sel;
@@ -313,12 +316,15 @@ struct kszphy_ptp_priv {
 	enum hwtstamp_rx_filters rx_filter;
 	int layer;
 	int version;
+<<<<<<< HEAD
 
 	struct ptp_clock *ptp_clock;
 	struct ptp_clock_info ptp_clock_info;
 	/* Lock for ptp_clock */
 	struct mutex ptp_lock;
 	struct ptp_pin_desc *pin_config;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct kszphy_priv {
@@ -373,6 +379,7 @@ static const struct kszphy_type ksz9021_type = {
 	.interrupt_level_mask	= BIT(14),
 };
 
+<<<<<<< HEAD
 static const struct kszphy_type ksz9131_type = {
 	.interrupt_level_mask	= BIT(14),
 	.disable_dll_tx_bit	= BIT(12),
@@ -388,6 +395,8 @@ static const struct kszphy_type lan8841_type = {
 	.pair_mask		= LAN8814_WIRE_PAIR_MASK,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int kszphy_extended_write(struct phy_device *phydev,
 				u32 regnum, u16 val)
 {
@@ -436,9 +445,17 @@ static int kszphy_config_intr(struct phy_device *phydev)
 		if (err)
 			return err;
 
+<<<<<<< HEAD
 		err = phy_write(phydev, MII_KSZPHY_INTCS, KSZPHY_INTCS_ALL);
 	} else {
 		err = phy_write(phydev, MII_KSZPHY_INTCS, 0);
+=======
+		temp = KSZPHY_INTCS_ALL;
+		err = phy_write(phydev, MII_KSZPHY_INTCS, temp);
+	} else {
+		temp = 0;
+		err = phy_write(phydev, MII_KSZPHY_INTCS, temp);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			return err;
 
@@ -1194,18 +1211,32 @@ static int ksz9131_of_load_skew_values(struct phy_device *phydev,
 #define KSZ9131RN_MMD_COMMON_CTRL_REG	2
 #define KSZ9131RN_RXC_DLL_CTRL		76
 #define KSZ9131RN_TXC_DLL_CTRL		77
+<<<<<<< HEAD
 #define KSZ9131RN_DLL_ENABLE_DELAY	0
 
 static int ksz9131_config_rgmii_delay(struct phy_device *phydev)
 {
 	const struct kszphy_type *type = phydev->drv->driver_data;
+=======
+#define KSZ9131RN_DLL_CTRL_BYPASS	BIT_MASK(12)
+#define KSZ9131RN_DLL_ENABLE_DELAY	0
+#define KSZ9131RN_DLL_DISABLE_DELAY	BIT(12)
+
+static int ksz9131_config_rgmii_delay(struct phy_device *phydev)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	u16 rxcdll_val, txcdll_val;
 	int ret;
 
 	switch (phydev->interface) {
 	case PHY_INTERFACE_MODE_RGMII:
+<<<<<<< HEAD
 		rxcdll_val = type->disable_dll_rx_bit;
 		txcdll_val = type->disable_dll_tx_bit;
+=======
+		rxcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
+		txcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case PHY_INTERFACE_MODE_RGMII_ID:
 		rxcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
@@ -1213,10 +1244,17 @@ static int ksz9131_config_rgmii_delay(struct phy_device *phydev)
 		break;
 	case PHY_INTERFACE_MODE_RGMII_RXID:
 		rxcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
+<<<<<<< HEAD
 		txcdll_val = type->disable_dll_tx_bit;
 		break;
 	case PHY_INTERFACE_MODE_RGMII_TXID:
 		rxcdll_val = type->disable_dll_rx_bit;
+=======
+		txcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
+		break;
+	case PHY_INTERFACE_MODE_RGMII_TXID:
+		rxcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
+>>>>>>> b7ba80a49124 (Commit)
 		txcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
 		break;
 	default:
@@ -1224,13 +1262,21 @@ static int ksz9131_config_rgmii_delay(struct phy_device *phydev)
 	}
 
 	ret = phy_modify_mmd(phydev, KSZ9131RN_MMD_COMMON_CTRL_REG,
+<<<<<<< HEAD
 			     KSZ9131RN_RXC_DLL_CTRL, type->disable_dll_mask,
+=======
+			     KSZ9131RN_RXC_DLL_CTRL, KSZ9131RN_DLL_CTRL_BYPASS,
+>>>>>>> b7ba80a49124 (Commit)
 			     rxcdll_val);
 	if (ret < 0)
 		return ret;
 
 	return phy_modify_mmd(phydev, KSZ9131RN_MMD_COMMON_CTRL_REG,
+<<<<<<< HEAD
 			      KSZ9131RN_TXC_DLL_CTRL, type->disable_dll_mask,
+=======
+			      KSZ9131RN_TXC_DLL_CTRL, KSZ9131RN_DLL_CTRL_BYPASS,
+>>>>>>> b7ba80a49124 (Commit)
 			      txcdll_val);
 }
 
@@ -1316,6 +1362,7 @@ static int ksz9131_config_init(struct phy_device *phydev)
 	return 0;
 }
 
+<<<<<<< HEAD
 #define MII_KSZ9131_AUTO_MDIX		0x1C
 #define MII_KSZ9131_AUTO_MDI_SET	BIT(7)
 #define MII_KSZ9131_AUTO_MDIX_SWAP_OFF	BIT(6)
@@ -1411,6 +1458,8 @@ static int ksz9477_get_features(struct phy_device *phydev)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define KSZ8873MLL_GLOBAL_CONTROL_4	0x06
 #define KSZ8873MLL_GLOBAL_CONTROL_4_DUPLEX	BIT(6)
 #define KSZ8873MLL_GLOBAL_CONTROL_4_SPEED	BIT(4)
@@ -1954,7 +2003,11 @@ static int ksz886x_cable_test_start(struct phy_device *phydev)
 	return phy_clear_bits(phydev, MII_BMCR, BMCR_ANENABLE | BMCR_SPEED100);
 }
 
+<<<<<<< HEAD
 static __always_inline int ksz886x_cable_test_result_trans(u16 status, u16 mask)
+=======
+static int ksz886x_cable_test_result_trans(u16 status, u16 mask)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (FIELD_GET(mask, status)) {
 	case KSZ8081_LMD_STAT_NORMAL:
@@ -1970,13 +2023,21 @@ static __always_inline int ksz886x_cable_test_result_trans(u16 status, u16 mask)
 	}
 }
 
+<<<<<<< HEAD
 static __always_inline bool ksz886x_cable_test_failed(u16 status, u16 mask)
+=======
+static bool ksz886x_cable_test_failed(u16 status, u16 mask)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return FIELD_GET(mask, status) ==
 		KSZ8081_LMD_STAT_FAIL;
 }
 
+<<<<<<< HEAD
 static __always_inline bool ksz886x_cable_test_fault_length_valid(u16 status, u16 mask)
+=======
+static bool ksz886x_cable_test_fault_length_valid(u16 status, u16 mask)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (FIELD_GET(mask, status)) {
 	case KSZ8081_LMD_STAT_OPEN:
@@ -1987,8 +2048,12 @@ static __always_inline bool ksz886x_cable_test_fault_length_valid(u16 status, u1
 	return false;
 }
 
+<<<<<<< HEAD
 static __always_inline int ksz886x_cable_test_fault_length(struct phy_device *phydev,
 							   u16 status, u16 data_mask)
+=======
+static int ksz886x_cable_test_fault_length(struct phy_device *phydev, u16 status, u16 data_mask)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int dt;
 
@@ -2129,8 +2194,12 @@ static int ksz886x_cable_test_get_status(struct phy_device *phydev,
 	const struct kszphy_type *type = phydev->drv->driver_data;
 	unsigned long pair_mask = type->pair_mask;
 	int retries = 20;
+<<<<<<< HEAD
 	int ret = 0;
 	int pair;
+=======
+	int pair, ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	*finished = false;
 
@@ -2422,8 +2491,13 @@ static void lan8814_get_sig_rx(struct sk_buff *skb, u16 *sig)
 	*sig = (__force u16)(ntohs(ptp_header->sequence_id));
 }
 
+<<<<<<< HEAD
 static bool lan8814_match_rx_skb(struct kszphy_ptp_priv *ptp_priv,
 				 struct sk_buff *skb)
+=======
+static bool lan8814_match_rx_ts(struct kszphy_ptp_priv *ptp_priv,
+				struct sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct skb_shared_hwtstamps *shhwtstamps;
 	struct lan8814_ptp_rx_ts *rx_ts, *tmp;
@@ -2472,7 +2546,11 @@ static bool lan8814_rxtstamp(struct mii_timestamper *mii_ts, struct sk_buff *skb
 	/* If we failed to match then add it to the queue for when the timestamp
 	 * will come
 	 */
+<<<<<<< HEAD
 	if (!lan8814_match_rx_skb(ptp_priv, skb))
+=======
+	if (!lan8814_match_rx_ts(ptp_priv, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		skb_queue_tail(&ptp_priv->rx_queue, skb);
 
 	return true;
@@ -2722,6 +2800,7 @@ static void lan8814_get_sig_tx(struct sk_buff *skb, u16 *sig)
 	*sig = (__force u16)(ntohs(ptp_header->sequence_id));
 }
 
+<<<<<<< HEAD
 static void lan8814_match_tx_skb(struct kszphy_ptp_priv *ptp_priv,
 				 u32 seconds, u32 nsec, u16 seq_id)
 {
@@ -2730,6 +2809,20 @@ static void lan8814_match_tx_skb(struct kszphy_ptp_priv *ptp_priv,
 	unsigned long flags;
 	bool ret = false;
 	u16 skb_sig;
+=======
+static void lan8814_dequeue_tx_skb(struct kszphy_ptp_priv *ptp_priv)
+{
+	struct phy_device *phydev = ptp_priv->phydev;
+	struct skb_shared_hwtstamps shhwtstamps;
+	struct sk_buff *skb, *skb_tmp;
+	unsigned long flags;
+	u32 seconds, nsec;
+	bool ret = false;
+	u16 skb_sig;
+	u16 seq_id;
+
+	lan8814_ptp_tx_ts_get(phydev, &seconds, &nsec, &seq_id);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irqsave(&ptp_priv->tx_queue.lock, flags);
 	skb_queue_walk_safe(&ptp_priv->tx_queue, skb, skb_tmp) {
@@ -2751,6 +2844,7 @@ static void lan8814_match_tx_skb(struct kszphy_ptp_priv *ptp_priv,
 	}
 }
 
+<<<<<<< HEAD
 static void lan8814_dequeue_tx_skb(struct kszphy_ptp_priv *ptp_priv)
 {
 	struct phy_device *phydev = ptp_priv->phydev;
@@ -2761,6 +2855,8 @@ static void lan8814_dequeue_tx_skb(struct kszphy_ptp_priv *ptp_priv)
 	lan8814_match_tx_skb(ptp_priv, seconds, nsec, seq_id);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void lan8814_get_tx_ts(struct kszphy_ptp_priv *ptp_priv)
 {
 	struct phy_device *phydev = ptp_priv->phydev;
@@ -2809,6 +2905,7 @@ static bool lan8814_match_skb(struct kszphy_ptp_priv *ptp_priv,
 	return ret;
 }
 
+<<<<<<< HEAD
 static void lan8814_match_rx_ts(struct kszphy_ptp_priv *ptp_priv,
 				struct lan8814_ptp_rx_ts *rx_ts)
 {
@@ -2826,10 +2923,16 @@ static void lan8814_match_rx_ts(struct kszphy_ptp_priv *ptp_priv,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void lan8814_get_rx_ts(struct kszphy_ptp_priv *ptp_priv)
 {
 	struct phy_device *phydev = ptp_priv->phydev;
 	struct lan8814_ptp_rx_ts *rx_ts;
+<<<<<<< HEAD
+=======
+	unsigned long flags;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 reg;
 
 	do {
@@ -2839,7 +2942,21 @@ static void lan8814_get_rx_ts(struct kszphy_ptp_priv *ptp_priv)
 
 		lan8814_ptp_rx_ts_get(phydev, &rx_ts->seconds, &rx_ts->nsec,
 				      &rx_ts->seq_id);
+<<<<<<< HEAD
 		lan8814_match_rx_ts(ptp_priv, rx_ts);
+=======
+
+		/* If we failed to match the skb add it to the queue for when
+		 * the frame will come
+		 */
+		if (!lan8814_match_skb(ptp_priv, rx_ts)) {
+			spin_lock_irqsave(&ptp_priv->rx_ts_lock, flags);
+			list_add(&rx_ts->list, &ptp_priv->rx_ts_list);
+			spin_unlock_irqrestore(&ptp_priv->rx_ts_lock, flags);
+		} else {
+			kfree(rx_ts);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* If other timestamps are available in the FIFO,
 		 * process them.
@@ -2848,11 +2965,21 @@ static void lan8814_get_rx_ts(struct kszphy_ptp_priv *ptp_priv)
 	} while (PTP_CAP_INFO_RX_TS_CNT_GET_(reg) > 0);
 }
 
+<<<<<<< HEAD
 static void lan8814_handle_ptp_interrupt(struct phy_device *phydev, u16 status)
 {
 	struct kszphy_priv *priv = phydev->priv;
 	struct kszphy_ptp_priv *ptp_priv = &priv->ptp_priv;
 
+=======
+static void lan8814_handle_ptp_interrupt(struct phy_device *phydev)
+{
+	struct kszphy_priv *priv = phydev->priv;
+	struct kszphy_ptp_priv *ptp_priv = &priv->ptp_priv;
+	u16 status;
+
+	status = lanphy_read_page_reg(phydev, 5, PTP_TSU_INT_STS);
+>>>>>>> b7ba80a49124 (Commit)
 	if (status & PTP_TSU_INT_STS_PTP_TX_TS_EN_)
 		lan8814_get_tx_ts(ptp_priv);
 
@@ -2951,8 +3078,13 @@ static int lan8804_config_intr(struct phy_device *phydev)
 
 static irqreturn_t lan8814_handle_interrupt(struct phy_device *phydev)
 {
+<<<<<<< HEAD
 	int ret = IRQ_NONE;
 	int irq_status;
+=======
+	int irq_status, tsu_irq_status;
+	int ret = IRQ_NONE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	irq_status = phy_read(phydev, LAN8814_INTS);
 	if (irq_status < 0) {
@@ -2965,6 +3097,7 @@ static irqreturn_t lan8814_handle_interrupt(struct phy_device *phydev)
 		ret = IRQ_HANDLED;
 	}
 
+<<<<<<< HEAD
 	while (true) {
 		irq_status = lanphy_read_page_reg(phydev, 5, PTP_TSU_INT_STS);
 		if (!irq_status)
@@ -2972,6 +3105,22 @@ static irqreturn_t lan8814_handle_interrupt(struct phy_device *phydev)
 
 		lan8814_handle_ptp_interrupt(phydev, irq_status);
 		ret = IRQ_HANDLED;
+=======
+	while (1) {
+		tsu_irq_status = lanphy_read_page_reg(phydev, 4,
+						      LAN8814_INTR_STS_REG);
+
+		if (tsu_irq_status > 0 &&
+		    (tsu_irq_status & (LAN8814_INTR_STS_REG_1588_TSU0_ |
+				       LAN8814_INTR_STS_REG_1588_TSU1_ |
+				       LAN8814_INTR_STS_REG_1588_TSU2_ |
+				       LAN8814_INTR_STS_REG_1588_TSU3_))) {
+			lan8814_handle_ptp_interrupt(phydev);
+			ret = IRQ_HANDLED;
+		} else {
+			break;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;
@@ -3061,6 +3210,13 @@ static int lan8814_ptp_probe_once(struct phy_device *phydev)
 {
 	struct lan8814_shared_priv *shared = phydev->shared->priv;
 
+<<<<<<< HEAD
+=======
+	if (!IS_ENABLED(CONFIG_PTP_1588_CLOCK) ||
+	    !IS_ENABLED(CONFIG_NETWORK_PHY_TIMESTAMPING))
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Initialise shared lock for clock*/
 	mutex_init(&shared->shared_lock);
 
@@ -3080,16 +3236,23 @@ static int lan8814_ptp_probe_once(struct phy_device *phydev)
 
 	shared->ptp_clock = ptp_clock_register(&shared->ptp_clock_info,
 					       &phydev->mdio.dev);
+<<<<<<< HEAD
 	if (IS_ERR(shared->ptp_clock)) {
+=======
+	if (IS_ERR_OR_NULL(shared->ptp_clock)) {
+>>>>>>> b7ba80a49124 (Commit)
 		phydev_err(phydev, "ptp_clock_register failed %lu\n",
 			   PTR_ERR(shared->ptp_clock));
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	/* Check if PHC support is missing at the configuration level */
 	if (!shared->ptp_clock)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	phydev_dbg(phydev, "successfully registered ptp clock\n");
 
 	shared->phydev = phydev;
@@ -3205,6 +3368,7 @@ static int lan8814_probe(struct phy_device *phydev)
 	return 0;
 }
 
+<<<<<<< HEAD
 #define LAN8841_MMD_TIMER_REG			0
 #define LAN8841_MMD0_REGISTER_17		17
 #define LAN8841_MMD0_REGISTER_17_DROP_OPT(x)	((x) & 0x3)
@@ -4289,6 +4453,8 @@ static int lan8841_probe(struct phy_device *phydev)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct phy_driver ksphy_driver[] = {
 {
 	.phy_id		= PHY_ID_KS8737,
@@ -4499,6 +4665,7 @@ static struct phy_driver ksphy_driver[] = {
 	.config_intr	= lan8804_config_intr,
 	.handle_interrupt = lan8804_handle_interrupt,
 }, {
+<<<<<<< HEAD
 	.phy_id		= PHY_ID_LAN8841,
 	.phy_id_mask	= MICREL_PHY_ID_MASK,
 	.name		= "Microchip LAN8841 Gigabit PHY",
@@ -4517,17 +4684,26 @@ static struct phy_driver ksphy_driver[] = {
 	.cable_test_start	= lan8814_cable_test_start,
 	.cable_test_get_status	= ksz886x_cable_test_get_status,
 }, {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.phy_id		= PHY_ID_KSZ9131,
 	.phy_id_mask	= MICREL_PHY_ID_MASK,
 	.name		= "Microchip KSZ9131 Gigabit PHY",
 	/* PHY_GBIT_FEATURES */
 	.flags		= PHY_POLL_CABLE_TEST,
+<<<<<<< HEAD
 	.driver_data	= &ksz9131_type,
 	.probe		= kszphy_probe,
 	.config_init	= ksz9131_config_init,
 	.config_intr	= kszphy_config_intr,
 	.config_aneg	= ksz9131_config_aneg,
 	.read_status	= ksz9131_read_status,
+=======
+	.driver_data	= &ksz9021_type,
+	.probe		= kszphy_probe,
+	.config_init	= ksz9131_config_init,
+	.config_intr	= kszphy_config_intr,
+>>>>>>> b7ba80a49124 (Commit)
 	.handle_interrupt = kszphy_handle_interrupt,
 	.get_sset_count = kszphy_get_sset_count,
 	.get_strings	= kszphy_get_strings,
@@ -4573,11 +4749,16 @@ static struct phy_driver ksphy_driver[] = {
 	.name		= "Microchip KSZ9477",
 	/* PHY_GBIT_FEATURES */
 	.config_init	= kszphy_config_init,
+<<<<<<< HEAD
 	.config_intr	= kszphy_config_intr,
 	.handle_interrupt = kszphy_handle_interrupt,
 	.suspend	= genphy_suspend,
 	.resume		= genphy_resume,
 	.get_features	= ksz9477_get_features,
+=======
+	.suspend	= genphy_suspend,
+	.resume		= genphy_resume,
+>>>>>>> b7ba80a49124 (Commit)
 } };
 
 module_phy_driver(ksphy_driver);
@@ -4602,7 +4783,10 @@ static struct mdio_device_id __maybe_unused micrel_tbl[] = {
 	{ PHY_ID_KSZ886X, MICREL_PHY_ID_MASK },
 	{ PHY_ID_LAN8814, MICREL_PHY_ID_MASK },
 	{ PHY_ID_LAN8804, MICREL_PHY_ID_MASK },
+<<<<<<< HEAD
 	{ PHY_ID_LAN8841, MICREL_PHY_ID_MASK },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 

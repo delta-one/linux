@@ -107,6 +107,7 @@ static int lpass_cc_sc7280_probe(struct platform_device *pdev)
 	const struct qcom_cc_desc *desc;
 	int ret;
 
+<<<<<<< HEAD
 	ret = devm_pm_runtime_enable(&pdev->dev);
 	if (ret)
 		return ret;
@@ -114,6 +115,12 @@ static int lpass_cc_sc7280_probe(struct platform_device *pdev)
 	ret = pm_clk_create(&pdev->dev);
 	if (ret)
 		return ret;
+=======
+	pm_runtime_enable(&pdev->dev);
+	ret = pm_clk_create(&pdev->dev);
+	if (ret)
+		goto disable_pm_runtime;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = pm_clk_add(&pdev->dev, "iface");
 	if (ret < 0) {
@@ -140,6 +147,12 @@ static int lpass_cc_sc7280_probe(struct platform_device *pdev)
 destroy_pm_clk:
 	pm_clk_destroy(&pdev->dev);
 
+<<<<<<< HEAD
+=======
+disable_pm_runtime:
+	pm_runtime_disable(&pdev->dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

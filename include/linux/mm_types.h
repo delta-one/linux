@@ -18,7 +18,10 @@
 #include <linux/page-flags-layout.h>
 #include <linux/workqueue.h>
 #include <linux/seqlock.h>
+<<<<<<< HEAD
 #include <linux/percpu_counter.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/mmu.h>
 
@@ -68,7 +71,11 @@ struct mem_cgroup;
 #ifdef CONFIG_HAVE_ALIGNED_STRUCT_PAGE
 #define _struct_page_alignment	__aligned(2 * sizeof(unsigned long))
 #else
+<<<<<<< HEAD
 #define _struct_page_alignment	__aligned(sizeof(unsigned long))
+=======
+#define _struct_page_alignment
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 struct page {
@@ -104,10 +111,14 @@ struct page {
 			};
 			/* See page-flags.h for PAGE_MAPPING_FLAGS */
 			struct address_space *mapping;
+<<<<<<< HEAD
 			union {
 				pgoff_t index;		/* Our offset within mapping. */
 				unsigned long share;	/* share count for fsdax */
 			};
+=======
+			pgoff_t index;		/* Our offset within mapping. */
+>>>>>>> b7ba80a49124 (Commit)
 			/**
 			 * @private: Mapping-private opaque data.
 			 * Usually used for buffer_heads if PagePrivate.
@@ -140,6 +151,24 @@ struct page {
 		};
 		struct {	/* Tail pages of compound page */
 			unsigned long compound_head;	/* Bit zero is set */
+<<<<<<< HEAD
+=======
+
+			/* First tail page only */
+			unsigned char compound_dtor;
+			unsigned char compound_order;
+			atomic_t compound_mapcount;
+			atomic_t compound_pincount;
+#ifdef CONFIG_64BIT
+			unsigned int compound_nr; /* 1 << compound_order */
+#endif
+		};
+		struct {	/* Second tail page of compound page */
+			unsigned long _compound_pad_1;	/* compound_head */
+			unsigned long _compound_pad_2;
+			/* For both global and memcg */
+			struct list_head deferred_list;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 		struct {	/* Page table pages */
 			unsigned long _pt_pad_1;	/* compound_head */
@@ -230,6 +259,7 @@ struct page {
 #endif
 } _struct_page_alignment;
 
+<<<<<<< HEAD
 /*
  * struct encoded_page - a nonexistent type marking this pointer
  *
@@ -262,6 +292,8 @@ static inline struct page *encoded_page_ptr(struct encoded_page *page)
 	return (struct page *)(~ENCODE_PAGE_BITS & (unsigned long)page);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct folio - Represents a contiguous set of bytes.
  * @flags: Identical to the page flags.
@@ -278,6 +310,7 @@ static inline struct page *encoded_page_ptr(struct encoded_page *page)
  * @_refcount: Do not access this member directly.  Use folio_ref_count()
  *    to find how many references there are to this folio.
  * @memcg_data: Memory Control Group data.
+<<<<<<< HEAD
  * @_folio_dtor: Which destructor to use for this folio.
  * @_folio_order: Do not use directly, call folio_order().
  * @_entire_mapcount: Do not use directly, call folio_entire_mapcount().
@@ -289,6 +322,15 @@ static inline struct page *encoded_page_ptr(struct encoded_page *page)
  * @_hugetlb_cgroup_rsvd: Do not use directly, use accessor in hugetlb_cgroup.h.
  * @_hugetlb_hwpoison: Do not use directly, call raw_hwp_list_head().
  * @_deferred_list: Folios to be split under memory pressure.
+=======
+ * @_flags_1: For large folios, additional page flags.
+ * @__head: Points to the folio.  Do not use.
+ * @_folio_dtor: Which destructor to use for this folio.
+ * @_folio_order: Do not use directly, call folio_order().
+ * @_total_mapcount: Do not use directly, call folio_entire_mapcount().
+ * @_pincount: Do not use directly, call folio_maybe_dma_pinned().
+ * @_folio_nr_pages: Do not use directly, call folio_nr_pages().
+>>>>>>> b7ba80a49124 (Commit)
  *
  * A folio is a physically, virtually and logically contiguous set
  * of bytes.  It is a power-of-two in size, and it is aligned to that
@@ -327,6 +369,7 @@ struct folio {
 		};
 		struct page page;
 	};
+<<<<<<< HEAD
 	union {
 		struct {
 			unsigned long _flags_1;
@@ -364,6 +407,17 @@ struct folio {
 		};
 		struct page __page_2;
 	};
+=======
+	unsigned long _flags_1;
+	unsigned long __head;
+	unsigned char _folio_dtor;
+	unsigned char _folio_order;
+	atomic_t _total_mapcount;
+	atomic_t _pincount;
+#ifdef CONFIG_64BIT
+	unsigned int _folio_nr_pages;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define FOLIO_MATCH(pg, fl)						\
@@ -384,6 +438,7 @@ FOLIO_MATCH(memcg_data, memcg_data);
 	static_assert(offsetof(struct folio, fl) ==			\
 			offsetof(struct page, pg) + sizeof(struct page))
 FOLIO_MATCH(flags, _flags_1);
+<<<<<<< HEAD
 FOLIO_MATCH(compound_head, _head_1);
 #undef FOLIO_MATCH
 #define FOLIO_MATCH(pg, fl)						\
@@ -393,6 +448,34 @@ FOLIO_MATCH(flags, _flags_2);
 FOLIO_MATCH(compound_head, _head_2);
 #undef FOLIO_MATCH
 
+=======
+FOLIO_MATCH(compound_head, __head);
+FOLIO_MATCH(compound_dtor, _folio_dtor);
+FOLIO_MATCH(compound_order, _folio_order);
+FOLIO_MATCH(compound_mapcount, _total_mapcount);
+FOLIO_MATCH(compound_pincount, _pincount);
+#ifdef CONFIG_64BIT
+FOLIO_MATCH(compound_nr, _folio_nr_pages);
+#endif
+#undef FOLIO_MATCH
+
+static inline atomic_t *folio_mapcount_ptr(struct folio *folio)
+{
+	struct page *tail = &folio->page + 1;
+	return &tail->compound_mapcount;
+}
+
+static inline atomic_t *compound_mapcount_ptr(struct page *page)
+{
+	return &page[1].compound_mapcount;
+}
+
+static inline atomic_t *compound_pincount_ptr(struct page *page)
+{
+	return &page[1].compound_pincount;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Used for sizing the vmemmap region on some architectures
  */
@@ -471,6 +554,7 @@ struct anon_vma_name {
 	char name[];
 };
 
+<<<<<<< HEAD
 struct vma_lock {
 	struct rw_semaphore lock;
 };
@@ -481,6 +565,8 @@ struct vma_numab_state {
 	unsigned long access_pids[2];
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This struct describes a virtual memory area. There is one of these
  * per VM-area/task. A VM area is any part of the process virtual memory
@@ -490,6 +576,7 @@ struct vma_numab_state {
 struct vm_area_struct {
 	/* The first cache line has the info for VMA tree walking. */
 
+<<<<<<< HEAD
 	union {
 		struct {
 			/* VMA covers [vm_start; vm_end) addresses within mm */
@@ -520,16 +607,48 @@ struct vm_area_struct {
 	/* Flag to indicate areas detached from the mm->mm_mt tree */
 	bool detached;
 #endif
+=======
+	unsigned long vm_start;		/* Our start address within vm_mm. */
+	unsigned long vm_end;		/* The first byte after our end address
+					   within vm_mm. */
+
+	struct mm_struct *vm_mm;	/* The address space we belong to. */
+
+	/*
+	 * Access permissions of this VMA.
+	 * See vmf_insert_mixed_prot() for discussion.
+	 */
+	pgprot_t vm_page_prot;
+	unsigned long vm_flags;		/* Flags, see mm.h. */
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * For areas with an address space and backing store,
 	 * linkage into the address_space->i_mmap interval tree.
 	 *
+<<<<<<< HEAD
 	 */
 	struct {
 		struct rb_node rb;
 		unsigned long rb_subtree_last;
 	} shared;
+=======
+	 * For private anonymous mappings, a pointer to a null terminated string
+	 * containing the name given to the vma, or NULL if unnamed.
+	 */
+
+	union {
+		struct {
+			struct rb_node rb;
+			unsigned long rb_subtree_last;
+		} shared;
+		/*
+		 * Serialized by mmap_sem. Never use directly because it is
+		 * valid only when vm_file is NULL. Use anon_vma_name instead.
+		 */
+		struct anon_vma_name *anon_name;
+	};
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * A file's MAP_PRIVATE vma can be in both i_mmap tree and anon_vma
@@ -550,6 +669,7 @@ struct vm_area_struct {
 	struct file * vm_file;		/* File we map to (can be NULL). */
 	void * vm_private_data;		/* was vm_pte (shared mem) */
 
+<<<<<<< HEAD
 #ifdef CONFIG_ANON_VMA_NAME
 	/*
 	 * For private and shared anonymous mappings, a pointer to a null
@@ -558,6 +678,8 @@ struct vm_area_struct {
 	 */
 	struct anon_vma_name *anon_name;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SWAP
 	atomic_long_t swap_readahead_info;
 #endif
@@ -567,9 +689,12 @@ struct vm_area_struct {
 #ifdef CONFIG_NUMA
 	struct mempolicy *vm_policy;	/* NUMA policy for the VMA */
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_NUMA_BALANCING
 	struct vma_numab_state *numab_state;	/* NUMA Balancing state */
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
 } __randomize_layout;
 
@@ -621,6 +746,7 @@ struct mm_struct {
 		 * &struct mm_struct is freed.
 		 */
 		atomic_t mm_count;
+<<<<<<< HEAD
 #ifdef CONFIG_SCHED_MM_CID
 		/**
 		 * @cid_lock: Protect cid bitmap updates vs lookups.
@@ -635,6 +761,11 @@ struct mm_struct {
 #endif
 #ifdef CONFIG_MMU
 		atomic_long_t pgtables_bytes;	/* size of all page tables */
+=======
+
+#ifdef CONFIG_MMU
+		atomic_long_t pgtables_bytes;	/* PTE page table pages */
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 		int map_count;			/* number of VMAs */
 
@@ -660,9 +791,12 @@ struct mm_struct {
 					  * init_mm.mmlist, and are protected
 					  * by mmlist_lock
 					  */
+<<<<<<< HEAD
 #ifdef CONFIG_PER_VMA_LOCK
 		int mm_lock_seq;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 
 		unsigned long hiwater_rss; /* High-watermark of RSS usage */
@@ -691,7 +825,15 @@ struct mm_struct {
 
 		unsigned long saved_auxv[AT_VECTOR_SIZE]; /* for /proc/PID/auxv */
 
+<<<<<<< HEAD
 		struct percpu_counter rss_stat[NR_MM_COUNTERS];
+=======
+		/*
+		 * Special counters, in some configurations protected by the
+		 * page_table_lock, in other configurations by being atomic.
+		 */
+		struct mm_rss_stat rss_stat;
+>>>>>>> b7ba80a49124 (Commit)
 
 		struct linux_binfmt *binfmt;
 
@@ -766,7 +908,11 @@ struct mm_struct {
 #ifdef CONFIG_KSM
 		/*
 		 * Represent how many pages of this process are involved in KSM
+<<<<<<< HEAD
 		 * merging (not including ksm_zero_pages_sharing).
+=======
+		 * merging.
+>>>>>>> b7ba80a49124 (Commit)
 		 */
 		unsigned long ksm_merging_pages;
 		/*
@@ -774,11 +920,14 @@ struct mm_struct {
 		 * including merged and not merged.
 		 */
 		unsigned long ksm_rmap_items;
+<<<<<<< HEAD
 		/*
 		 * Represent how many empty pages are merged with kernel zero
 		 * pages when enabling KSM use_zero_pages.
 		 */
 		unsigned long ksm_zero_pages_sharing;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 #ifdef CONFIG_LRU_GEN
 		struct {
@@ -805,8 +954,12 @@ struct mm_struct {
 	unsigned long cpu_bitmap[];
 };
 
+<<<<<<< HEAD
 #define MM_MT_FLAGS	(MT_FLAGS_ALLOC_RANGE | MT_FLAGS_LOCK_EXTERN | \
 			 MT_FLAGS_USE_RCU)
+=======
+#define MM_MT_FLAGS	(MT_FLAGS_ALLOC_RANGE | MT_FLAGS_LOCK_EXTERN)
+>>>>>>> b7ba80a49124 (Commit)
 extern struct mm_struct init_mm;
 
 /* Pointer magic because the dynamic array size confuses some compilers. */
@@ -900,6 +1053,7 @@ struct vma_iterator {
 static inline void vma_iter_init(struct vma_iterator *vmi,
 		struct mm_struct *mm, unsigned long addr)
 {
+<<<<<<< HEAD
 	mas_init(&vmi->mas, &mm->mm_mt, addr);
 }
 
@@ -933,6 +1087,13 @@ static inline unsigned int mm_cid_size(void)
 }
 #endif /* CONFIG_SCHED_MM_CID */
 
+=======
+	vmi->mas.tree = &mm->mm_mt;
+	vmi->mas.index = addr;
+	vmi->mas.node = MAS_START;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 struct mmu_gather;
 extern void tlb_gather_mmu(struct mmu_gather *tlb, struct mm_struct *mm);
 extern void tlb_gather_mmu_fullmm(struct mmu_gather *tlb, struct mm_struct *mm);
@@ -956,6 +1117,10 @@ typedef __bitwise unsigned int vm_fault_t;
  * @VM_FAULT_OOM:		Out Of Memory
  * @VM_FAULT_SIGBUS:		Bad access
  * @VM_FAULT_MAJOR:		Page read from storage
+<<<<<<< HEAD
+=======
+ * @VM_FAULT_WRITE:		Special case for get_user_pages
+>>>>>>> b7ba80a49124 (Commit)
  * @VM_FAULT_HWPOISON:		Hit poisoned small page
  * @VM_FAULT_HWPOISON_LARGE:	Hit poisoned large page. Index encoded
  *				in upper bits
@@ -976,6 +1141,10 @@ enum vm_fault_reason {
 	VM_FAULT_OOM            = (__force vm_fault_t)0x000001,
 	VM_FAULT_SIGBUS         = (__force vm_fault_t)0x000002,
 	VM_FAULT_MAJOR          = (__force vm_fault_t)0x000004,
+<<<<<<< HEAD
+=======
+	VM_FAULT_WRITE          = (__force vm_fault_t)0x000008,
+>>>>>>> b7ba80a49124 (Commit)
 	VM_FAULT_HWPOISON       = (__force vm_fault_t)0x000010,
 	VM_FAULT_HWPOISON_LARGE = (__force vm_fault_t)0x000020,
 	VM_FAULT_SIGSEGV        = (__force vm_fault_t)0x000040,
@@ -1001,6 +1170,10 @@ enum vm_fault_reason {
 	{ VM_FAULT_OOM,                 "OOM" },	\
 	{ VM_FAULT_SIGBUS,              "SIGBUS" },	\
 	{ VM_FAULT_MAJOR,               "MAJOR" },	\
+<<<<<<< HEAD
+=======
+	{ VM_FAULT_WRITE,               "WRITE" },	\
+>>>>>>> b7ba80a49124 (Commit)
 	{ VM_FAULT_HWPOISON,            "HWPOISON" },	\
 	{ VM_FAULT_HWPOISON_LARGE,      "HWPOISON_LARGE" },	\
 	{ VM_FAULT_SIGSEGV,             "SIGSEGV" },	\
@@ -1063,12 +1236,20 @@ typedef struct {
  * @FAULT_FLAG_REMOTE: The fault is not for current task/mm.
  * @FAULT_FLAG_INSTRUCTION: The fault was during an instruction fetch.
  * @FAULT_FLAG_INTERRUPTIBLE: The fault can be interrupted by non-fatal signals.
+<<<<<<< HEAD
  * @FAULT_FLAG_UNSHARE: The fault is an unsharing request to break COW in a
  *                      COW mapping, making sure that an exclusive anon page is
  *                      mapped after the fault.
  * @FAULT_FLAG_ORIG_PTE_VALID: whether the fault has vmf->orig_pte cached.
  *                        We should only access orig_pte if this flag set.
  * @FAULT_FLAG_VMA_LOCK: The fault is handled under VMA lock.
+=======
+ * @FAULT_FLAG_UNSHARE: The fault is an unsharing request to unshare (and mark
+ *                      exclusive) a possibly shared anonymous page that is
+ *                      mapped R/O.
+ * @FAULT_FLAG_ORIG_PTE_VALID: whether the fault has vmf->orig_pte cached.
+ *                        We should only access orig_pte if this flag set.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * About @FAULT_FLAG_ALLOW_RETRY and @FAULT_FLAG_TRIED: we can specify
  * whether we would allow page faults to retry by specifying these two
@@ -1091,7 +1272,11 @@ typedef struct {
  *
  * The combination FAULT_FLAG_WRITE|FAULT_FLAG_UNSHARE is illegal.
  * FAULT_FLAG_UNSHARE is ignored and treated like an ordinary read fault when
+<<<<<<< HEAD
  * applied to mappings that are not COW mappings.
+=======
+ * no existing R/O-mapped anonymous page is encountered.
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum fault_flag {
 	FAULT_FLAG_WRITE =		1 << 0,
@@ -1106,11 +1291,15 @@ enum fault_flag {
 	FAULT_FLAG_INTERRUPTIBLE =	1 << 9,
 	FAULT_FLAG_UNSHARE =		1 << 10,
 	FAULT_FLAG_ORIG_PTE_VALID =	1 << 11,
+<<<<<<< HEAD
 	FAULT_FLAG_VMA_LOCK =		1 << 12,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 typedef unsigned int __bitwise zap_flags_t;
 
+<<<<<<< HEAD
 /*
  * FOLL_PIN and FOLL_LONGTERM may be used in various combinations with each
  * other. Here is what they mean, and how to use them:
@@ -1194,4 +1383,6 @@ enum {
 	/* See also internal only FOLL flags in mm/internal.h */
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _LINUX_MM_TYPES_H */

@@ -18,7 +18,11 @@ static unsigned long *get_bitmap(const char *str, int nbits)
 
 	if (map && bm) {
 		for (i = 0; i < perf_cpu_map__nr(map); i++)
+<<<<<<< HEAD
 			__set_bit(perf_cpu_map__cpu(map, i).cpu, bm);
+=======
+			set_bit(perf_cpu_map__cpu(map, i).cpu, bm);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (map)

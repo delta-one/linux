@@ -129,7 +129,11 @@ static struct throtl_data *sq_to_td(struct throtl_service_queue *sq)
 /*
  * cgroup's limit in LIMIT_MAX is scaled if low limit is set. This scale is to
  * make the IO dispatch more smooth.
+<<<<<<< HEAD
  * Scale up: linearly scale up according to elapsed time since upgrade. For
+=======
+ * Scale up: linearly scale up according to lapsed time since upgrade. For
+>>>>>>> b7ba80a49124 (Commit)
  *           every throtl_slice, the limit scales up 1/2 .low limit till the
  *           limit hits .max limit
  * Scale down: exponentially scale down if a cgroup doesn't hit its .low limit
@@ -335,13 +339,23 @@ static void throtl_service_queue_init(struct throtl_service_queue *sq)
 	timer_setup(&sq->pending_timer, throtl_pending_timer_fn, 0);
 }
 
+<<<<<<< HEAD
 static struct blkg_policy_data *throtl_pd_alloc(struct gendisk *disk,
 		struct blkcg *blkcg, gfp_t gfp)
+=======
+static struct blkg_policy_data *throtl_pd_alloc(gfp_t gfp,
+						struct request_queue *q,
+						struct blkcg *blkcg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct throtl_grp *tg;
 	int rw;
 
+<<<<<<< HEAD
 	tg = kzalloc_node(sizeof(*tg), gfp, disk->node_id);
+=======
+	tg = kzalloc_node(sizeof(*tg), gfp, q->node);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!tg)
 		return NULL;
 
@@ -394,9 +408,14 @@ static void throtl_pd_init(struct blkg_policy_data *pd)
 	 * If on the default hierarchy, we switch to properly hierarchical
 	 * behavior where limits on a given throtl_grp are applied to the
 	 * whole subtree rather than just the group itself.  e.g. If 16M
+<<<<<<< HEAD
 	 * read_bps limit is set on a parent group, summary bps of
 	 * parent group and its subtree groups can't exceed 16M for the
 	 * device.
+=======
+	 * read_bps limit is set on the root group, the whole system can't
+	 * exceed 16M for the device.
+>>>>>>> b7ba80a49124 (Commit)
 	 *
 	 * If not on the default hierarchy, the broken flat hierarchy
 	 * behavior is retained where all throtl_grps are treated as if
@@ -420,6 +439,7 @@ static void tg_update_has_rules(struct throtl_grp *tg)
 	struct throtl_grp *parent_tg = sq_to_tg(tg->service_queue.parent_sq);
 	struct throtl_data *td = tg->td;
 	int rw;
+<<<<<<< HEAD
 
 	for (rw = READ; rw <= WRITE; rw++) {
 		tg->has_rules_iops[rw] =
@@ -431,6 +451,26 @@ static void tg_update_has_rules(struct throtl_grp *tg)
 			(td->limit_valid[td->limit_index] &&
 			 (tg_bps_limit(tg, rw) != U64_MAX));
 	}
+=======
+	int has_iops_limit = 0;
+
+	for (rw = READ; rw <= WRITE; rw++) {
+		unsigned int iops_limit = tg_iops_limit(tg, rw);
+
+		tg->has_rules[rw] = (parent_tg && parent_tg->has_rules[rw]) ||
+			(td->limit_valid[td->limit_index] &&
+			 (tg_bps_limit(tg, rw) != U64_MAX ||
+			  iops_limit != UINT_MAX));
+
+		if (iops_limit != UINT_MAX)
+			has_iops_limit = 1;
+	}
+
+	if (has_iops_limit)
+		tg->flags |= THROTL_TG_HAS_IOPS_LIMIT;
+	else
+		tg->flags &= ~THROTL_TG_HAS_IOPS_LIMIT;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void throtl_pd_online(struct blkg_policy_data *pd)
@@ -644,7 +684,11 @@ static inline void throtl_start_new_slice_with_credit(struct throtl_grp *tg,
 	 * that bandwidth. Do try to make use of that bandwidth while giving
 	 * credit.
 	 */
+<<<<<<< HEAD
 	if (time_after(start, tg->slice_start[rw]))
+=======
+	if (time_after_eq(start, tg->slice_start[rw]))
+>>>>>>> b7ba80a49124 (Commit)
 		tg->slice_start[rw] = start;
 
 	tg->slice_end[rw] = jiffies + tg->td->throtl_slice;
@@ -821,15 +865,26 @@ static void tg_update_carryover(struct throtl_grp *tg)
 		   tg->carryover_ios[READ], tg->carryover_ios[WRITE]);
 }
 
+<<<<<<< HEAD
 static unsigned long tg_within_iops_limit(struct throtl_grp *tg, struct bio *bio,
 				 u32 iops_limit)
+=======
+static bool tg_within_iops_limit(struct throtl_grp *tg, struct bio *bio,
+				 u32 iops_limit, unsigned long *wait)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	bool rw = bio_data_dir(bio);
 	unsigned int io_allowed;
 	unsigned long jiffy_elapsed, jiffy_wait, jiffy_elapsed_rnd;
 
 	if (iops_limit == UINT_MAX) {
+<<<<<<< HEAD
 		return 0;
+=======
+		if (wait)
+			*wait = 0;
+		return true;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	jiffy_elapsed = jiffies - tg->slice_start[rw];
@@ -839,16 +894,33 @@ static unsigned long tg_within_iops_limit(struct throtl_grp *tg, struct bio *bio
 	io_allowed = calculate_io_allowed(iops_limit, jiffy_elapsed_rnd) +
 		     tg->carryover_ios[rw];
 	if (tg->io_disp[rw] + 1 <= io_allowed) {
+<<<<<<< HEAD
 		return 0;
+=======
+		if (wait)
+			*wait = 0;
+		return true;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Calc approx time to dispatch */
 	jiffy_wait = jiffy_elapsed_rnd - jiffy_elapsed;
+<<<<<<< HEAD
 	return jiffy_wait;
 }
 
 static unsigned long tg_within_bps_limit(struct throtl_grp *tg, struct bio *bio,
 				u64 bps_limit)
+=======
+
+	if (wait)
+		*wait = jiffy_wait;
+	return false;
+}
+
+static bool tg_within_bps_limit(struct throtl_grp *tg, struct bio *bio,
+				u64 bps_limit, unsigned long *wait)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	bool rw = bio_data_dir(bio);
 	u64 bytes_allowed, extra_bytes;
@@ -857,7 +929,13 @@ static unsigned long tg_within_bps_limit(struct throtl_grp *tg, struct bio *bio,
 
 	/* no need to throttle if this bio's bytes have been accounted */
 	if (bps_limit == U64_MAX || bio_flagged(bio, BIO_BPS_THROTTLED)) {
+<<<<<<< HEAD
 		return 0;
+=======
+		if (wait)
+			*wait = 0;
+		return true;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	jiffy_elapsed = jiffy_elapsed_rnd = jiffies - tg->slice_start[rw];
@@ -870,7 +948,13 @@ static unsigned long tg_within_bps_limit(struct throtl_grp *tg, struct bio *bio,
 	bytes_allowed = calculate_bytes_allowed(bps_limit, jiffy_elapsed_rnd) +
 			tg->carryover_bytes[rw];
 	if (tg->bytes_disp[rw] + bio_size <= bytes_allowed) {
+<<<<<<< HEAD
 		return 0;
+=======
+		if (wait)
+			*wait = 0;
+		return true;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Calc approx time to dispatch */
@@ -885,7 +969,13 @@ static unsigned long tg_within_bps_limit(struct throtl_grp *tg, struct bio *bio,
 	 * up we did. Add that time also.
 	 */
 	jiffy_wait = jiffy_wait + (jiffy_elapsed_rnd - jiffy_elapsed);
+<<<<<<< HEAD
 	return jiffy_wait;
+=======
+	if (wait)
+		*wait = jiffy_wait;
+	return false;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -933,9 +1023,14 @@ static bool tg_may_dispatch(struct throtl_grp *tg, struct bio *bio,
 				jiffies + tg->td->throtl_slice);
 	}
 
+<<<<<<< HEAD
 	bps_wait = tg_within_bps_limit(tg, bio, bps_limit);
 	iops_wait = tg_within_iops_limit(tg, bio, iops_limit);
 	if (bps_wait + iops_wait == 0) {
+=======
+	if (tg_within_bps_limit(tg, bio, bps_limit, &bps_wait) &&
+	    tg_within_iops_limit(tg, bio, iops_limit, &iops_wait)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (wait)
 			*wait = 0;
 		return true;
@@ -1054,6 +1149,10 @@ static void tg_dispatch_one_bio(struct throtl_grp *tg, bool rw)
 	sq->nr_queued[rw]--;
 
 	throtl_charge_bio(tg, bio);
+<<<<<<< HEAD
+=======
+	bio_set_flag(bio, BIO_BPS_THROTTLED);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * If our parent is another tg, we just need to transfer @bio to
@@ -1066,7 +1165,10 @@ static void tg_dispatch_one_bio(struct throtl_grp *tg, bool rw)
 		throtl_add_bio_tg(bio, &tg->qnode_on_parent[rw], parent_tg);
 		start_parent_slice_with_credit(tg, parent_tg, rw);
 	} else {
+<<<<<<< HEAD
 		bio_set_flag(bio, BIO_BPS_THROTTLED);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		throtl_qnode_add_bio(bio, &tg->qnode_on_parent[rw],
 				     &parent_sq->queued[rw]);
 		BUG_ON(tg->td->nr_queued[rw] <= 0);
@@ -1704,9 +1806,14 @@ struct blkcg_policy blkcg_policy_throtl = {
 	.pd_free_fn		= throtl_pd_free,
 };
 
+<<<<<<< HEAD
 void blk_throtl_cancel_bios(struct gendisk *disk)
 {
 	struct request_queue *q = disk->queue;
+=======
+void blk_throtl_cancel_bios(struct request_queue *q)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct cgroup_subsys_state *pos_css;
 	struct blkcg_gq *blkg;
 
@@ -1725,6 +1832,7 @@ void blk_throtl_cancel_bios(struct gendisk *disk)
 		 * Set the flag to make sure throtl_pending_timer_fn() won't
 		 * stop until all throttled bios are dispatched.
 		 */
+<<<<<<< HEAD
 		tg->flags |= THROTL_TG_CANCELING;
 
 		/*
@@ -1737,6 +1845,9 @@ void blk_throtl_cancel_bios(struct gendisk *disk)
 		if (!(tg->flags & THROTL_TG_PENDING))
 			continue;
 
+=======
+		blkg_to_tg(blkg)->flags |= THROTL_TG_CANCELING;
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Update disptime after setting the above flag to make sure
 		 * throtl_select_dispatch() won't exit without dispatching.
@@ -1761,6 +1872,10 @@ static unsigned long __tg_last_low_overflow_time(struct throtl_grp *tg)
 	return min(rtime, wtime);
 }
 
+<<<<<<< HEAD
+=======
+/* tg should not be an intermediate node */
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned long tg_last_low_overflow_time(struct throtl_grp *tg)
 {
 	struct throtl_service_queue *parent_sq;
@@ -1814,6 +1929,7 @@ static bool throtl_tg_is_idle(struct throtl_grp *tg)
 	return ret;
 }
 
+<<<<<<< HEAD
 static bool throtl_low_limit_reached(struct throtl_grp *tg, int rw)
 {
 	struct throtl_service_queue *sq = &tg->service_queue;
@@ -1837,6 +1953,26 @@ static bool throtl_tg_can_upgrade(struct throtl_grp *tg)
 	 */
 	if (throtl_low_limit_reached(tg, READ) &&
 	    throtl_low_limit_reached(tg, WRITE))
+=======
+static bool throtl_tg_can_upgrade(struct throtl_grp *tg)
+{
+	struct throtl_service_queue *sq = &tg->service_queue;
+	bool read_limit, write_limit;
+
+	/*
+	 * if cgroup reaches low limit (if low limit is 0, the cgroup always
+	 * reaches), it's ok to upgrade to next limit
+	 */
+	read_limit = tg->bps[READ][LIMIT_LOW] || tg->iops[READ][LIMIT_LOW];
+	write_limit = tg->bps[WRITE][LIMIT_LOW] || tg->iops[WRITE][LIMIT_LOW];
+	if (!read_limit && !write_limit)
+		return true;
+	if (read_limit && sq->nr_queued[READ] &&
+	    (!write_limit || sq->nr_queued[WRITE]))
+		return true;
+	if (write_limit && sq->nr_queued[WRITE] &&
+	    (!read_limit || sq->nr_queued[READ]))
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 
 	if (time_after_eq(jiffies,
@@ -1954,7 +2090,12 @@ static bool throtl_tg_can_downgrade(struct throtl_grp *tg)
 	 * If cgroup is below low limit, consider downgrade and throttle other
 	 * cgroups
 	 */
+<<<<<<< HEAD
 	if (time_after_eq(now, tg_last_low_overflow_time(tg) +
+=======
+	if (time_after_eq(now, td->low_upgrade_time + td->throtl_slice) &&
+	    time_after_eq(now, tg_last_low_overflow_time(tg) +
+>>>>>>> b7ba80a49124 (Commit)
 					td->throtl_slice) &&
 	    (!throtl_tg_is_idle(tg) ||
 	     !list_empty(&tg_to_blkg(tg)->blkcg->css.children)))
@@ -1964,11 +2105,14 @@ static bool throtl_tg_can_downgrade(struct throtl_grp *tg)
 
 static bool throtl_hierarchy_can_downgrade(struct throtl_grp *tg)
 {
+<<<<<<< HEAD
 	struct throtl_data *td = tg->td;
 
 	if (time_before(jiffies, td->low_upgrade_time + td->throtl_slice))
 		return false;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	while (true) {
 		if (!throtl_tg_can_downgrade(tg))
 			return false;
@@ -2359,9 +2503,14 @@ void blk_throtl_bio_endio(struct bio *bio)
 }
 #endif
 
+<<<<<<< HEAD
 int blk_throtl_init(struct gendisk *disk)
 {
 	struct request_queue *q = disk->queue;
+=======
+int blk_throtl_init(struct request_queue *q)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct throtl_data *td;
 	int ret;
 
@@ -2394,7 +2543,11 @@ int blk_throtl_init(struct gendisk *disk)
 	td->low_downgrade_time = jiffies;
 
 	/* activate policy */
+<<<<<<< HEAD
 	ret = blkcg_activate_policy(disk, &blkcg_policy_throtl);
+=======
+	ret = blkcg_activate_policy(q, &blkcg_policy_throtl);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		free_percpu(td->latency_buckets[READ]);
 		free_percpu(td->latency_buckets[WRITE]);
@@ -2403,6 +2556,7 @@ int blk_throtl_init(struct gendisk *disk)
 	return ret;
 }
 
+<<<<<<< HEAD
 void blk_throtl_exit(struct gendisk *disk)
 {
 	struct request_queue *q = disk->queue;
@@ -2411,14 +2565,27 @@ void blk_throtl_exit(struct gendisk *disk)
 	del_timer_sync(&q->td->service_queue.pending_timer);
 	throtl_shutdown_wq(q);
 	blkcg_deactivate_policy(disk, &blkcg_policy_throtl);
+=======
+void blk_throtl_exit(struct request_queue *q)
+{
+	BUG_ON(!q->td);
+	del_timer_sync(&q->td->service_queue.pending_timer);
+	throtl_shutdown_wq(q);
+	blkcg_deactivate_policy(q, &blkcg_policy_throtl);
+>>>>>>> b7ba80a49124 (Commit)
 	free_percpu(q->td->latency_buckets[READ]);
 	free_percpu(q->td->latency_buckets[WRITE]);
 	kfree(q->td);
 }
 
+<<<<<<< HEAD
 void blk_throtl_register(struct gendisk *disk)
 {
 	struct request_queue *q = disk->queue;
+=======
+void blk_throtl_register_queue(struct request_queue *q)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct throtl_data *td;
 	int i;
 

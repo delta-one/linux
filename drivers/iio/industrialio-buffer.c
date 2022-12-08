@@ -203,18 +203,22 @@ static ssize_t iio_buffer_write(struct file *filp, const char __user *buf,
 				break;
 			}
 
+<<<<<<< HEAD
 			if (filp->f_flags & O_NONBLOCK) {
 				if (!written)
 					ret = -EAGAIN;
 				break;
 			}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			wait_woken(&wait, TASK_INTERRUPTIBLE,
 					MAX_SCHEDULE_TIMEOUT);
 			continue;
 		}
 
 		ret = rb->access->write(rb, n - written, buf + written);
+<<<<<<< HEAD
 		if (ret < 0)
 			break;
 
@@ -224,6 +228,20 @@ static ssize_t iio_buffer_write(struct file *filp, const char __user *buf,
 	remove_wait_queue(&rb->pollq, &wait);
 
 	return ret < 0 ? ret : written;
+=======
+		if (ret == 0 && (filp->f_flags & O_NONBLOCK))
+			ret = -EAGAIN;
+
+		if (ret > 0) {
+			written += ret;
+			if (written != n && !(filp->f_flags & O_NONBLOCK))
+				continue;
+		}
+	} while (ret == 0);
+	remove_wait_queue(&rb->pollq, &wait);
+
+	return ret < 0 ? ret : n;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -510,14 +528,21 @@ static ssize_t iio_scan_el_store(struct device *dev,
 	int ret;
 	bool state;
 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+<<<<<<< HEAD
 	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct iio_dev_attr *this_attr = to_iio_dev_attr(attr);
 	struct iio_buffer *buffer = this_attr->buffer;
 
 	ret = kstrtobool(buf, &state);
 	if (ret < 0)
 		return ret;
+<<<<<<< HEAD
 	mutex_lock(&iio_dev_opaque->mlock);
+=======
+	mutex_lock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 	if (iio_buffer_is_active(buffer)) {
 		ret = -EBUSY;
 		goto error_ret;
@@ -536,7 +561,11 @@ static ssize_t iio_scan_el_store(struct device *dev,
 	}
 
 error_ret:
+<<<<<<< HEAD
 	mutex_unlock(&iio_dev_opaque->mlock);
+=======
+	mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret < 0 ? ret : len;
 
@@ -558,7 +587,10 @@ static ssize_t iio_scan_el_ts_store(struct device *dev,
 {
 	int ret;
 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+<<<<<<< HEAD
 	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct iio_buffer *buffer = to_iio_dev_attr(attr)->buffer;
 	bool state;
 
@@ -566,14 +598,22 @@ static ssize_t iio_scan_el_ts_store(struct device *dev,
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	mutex_lock(&iio_dev_opaque->mlock);
+=======
+	mutex_lock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 	if (iio_buffer_is_active(buffer)) {
 		ret = -EBUSY;
 		goto error_ret;
 	}
 	buffer->scan_timestamp = state;
 error_ret:
+<<<<<<< HEAD
 	mutex_unlock(&iio_dev_opaque->mlock);
+=======
+	mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret ? ret : len;
 }
@@ -647,7 +687,10 @@ static ssize_t length_store(struct device *dev, struct device_attribute *attr,
 			    const char *buf, size_t len)
 {
 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+<<<<<<< HEAD
 	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct iio_buffer *buffer = to_iio_dev_attr(attr)->buffer;
 	unsigned int val;
 	int ret;
@@ -659,7 +702,11 @@ static ssize_t length_store(struct device *dev, struct device_attribute *attr,
 	if (val == buffer->length)
 		return len;
 
+<<<<<<< HEAD
 	mutex_lock(&iio_dev_opaque->mlock);
+=======
+	mutex_lock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 	if (iio_buffer_is_active(buffer)) {
 		ret = -EBUSY;
 	} else {
@@ -671,7 +718,11 @@ static ssize_t length_store(struct device *dev, struct device_attribute *attr,
 	if (buffer->length && buffer->length < buffer->watermark)
 		buffer->watermark = buffer->length;
 out:
+<<<<<<< HEAD
 	mutex_unlock(&iio_dev_opaque->mlock);
+=======
+	mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret ? ret : len;
 }
@@ -1262,7 +1313,11 @@ int iio_update_buffers(struct iio_dev *indio_dev,
 		return -EINVAL;
 
 	mutex_lock(&iio_dev_opaque->info_exist_lock);
+<<<<<<< HEAD
 	mutex_lock(&iio_dev_opaque->mlock);
+=======
+	mutex_lock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (insert_buffer && iio_buffer_is_active(insert_buffer))
 		insert_buffer = NULL;
@@ -1283,7 +1338,11 @@ int iio_update_buffers(struct iio_dev *indio_dev,
 	ret = __iio_update_buffers(indio_dev, insert_buffer, remove_buffer);
 
 out_unlock:
+<<<<<<< HEAD
 	mutex_unlock(&iio_dev_opaque->mlock);
+=======
+	mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&iio_dev_opaque->info_exist_lock);
 
 	return ret;
@@ -1302,7 +1361,10 @@ static ssize_t enable_store(struct device *dev, struct device_attribute *attr,
 	int ret;
 	bool requested_state;
 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+<<<<<<< HEAD
 	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct iio_buffer *buffer = to_iio_dev_attr(attr)->buffer;
 	bool inlist;
 
@@ -1310,7 +1372,11 @@ static ssize_t enable_store(struct device *dev, struct device_attribute *attr,
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	mutex_lock(&iio_dev_opaque->mlock);
+=======
+	mutex_lock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Find out if it is in the list */
 	inlist = iio_buffer_is_active(buffer);
@@ -1324,7 +1390,11 @@ static ssize_t enable_store(struct device *dev, struct device_attribute *attr,
 		ret = __iio_update_buffers(indio_dev, NULL, buffer);
 
 done:
+<<<<<<< HEAD
 	mutex_unlock(&iio_dev_opaque->mlock);
+=======
+	mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 	return (ret < 0) ? ret : len;
 }
 
@@ -1341,7 +1411,10 @@ static ssize_t watermark_store(struct device *dev,
 			       const char *buf, size_t len)
 {
 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+<<<<<<< HEAD
 	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct iio_buffer *buffer = to_iio_dev_attr(attr)->buffer;
 	unsigned int val;
 	int ret;
@@ -1352,7 +1425,11 @@ static ssize_t watermark_store(struct device *dev,
 	if (!val)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	mutex_lock(&iio_dev_opaque->mlock);
+=======
+	mutex_lock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (val > buffer->length) {
 		ret = -EINVAL;
@@ -1366,7 +1443,11 @@ static ssize_t watermark_store(struct device *dev,
 
 	buffer->watermark = val;
 out:
+<<<<<<< HEAD
 	mutex_unlock(&iio_dev_opaque->mlock);
+=======
+	mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret ? ret : len;
 }
@@ -1608,7 +1689,10 @@ static int __iio_buffer_alloc_sysfs_and_mask(struct iio_buffer *buffer,
 {
 	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
 	struct iio_dev_attr *p;
+<<<<<<< HEAD
 	const struct iio_dev_attr *id_attr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct attribute **attr;
 	int ret, i, attrn, scan_el_attrcount, buffer_attrcount;
 	const struct iio_chan_spec *channels;
@@ -1618,7 +1702,10 @@ static int __iio_buffer_alloc_sysfs_and_mask(struct iio_buffer *buffer,
 		while (buffer->attrs[buffer_attrcount] != NULL)
 			buffer_attrcount++;
 	}
+<<<<<<< HEAD
 	buffer_attrcount += ARRAY_SIZE(iio_buffer_attrs);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	scan_el_attrcount = 0;
 	INIT_LIST_HEAD(&buffer->buffer_attr_list);
@@ -1661,7 +1748,11 @@ static int __iio_buffer_alloc_sysfs_and_mask(struct iio_buffer *buffer,
 		}
 	}
 
+<<<<<<< HEAD
 	attrn = buffer_attrcount + scan_el_attrcount;
+=======
+	attrn = buffer_attrcount + scan_el_attrcount + ARRAY_SIZE(iio_buffer_attrs);
+>>>>>>> b7ba80a49124 (Commit)
 	attr = kcalloc(attrn + 1, sizeof(*attr), GFP_KERNEL);
 	if (!attr) {
 		ret = -ENOMEM;
@@ -1676,11 +1767,18 @@ static int __iio_buffer_alloc_sysfs_and_mask(struct iio_buffer *buffer,
 		attr[2] = &dev_attr_watermark_ro.attr;
 
 	if (buffer->attrs)
+<<<<<<< HEAD
 		for (i = 0, id_attr = buffer->attrs[i];
 		     (id_attr = buffer->attrs[i]); i++)
 			attr[ARRAY_SIZE(iio_buffer_attrs) + i] =
 				(struct attribute *)&id_attr->dev_attr.attr;
 
+=======
+		memcpy(&attr[ARRAY_SIZE(iio_buffer_attrs)], buffer->attrs,
+		       sizeof(struct attribute *) * buffer_attrcount);
+
+	buffer_attrcount += ARRAY_SIZE(iio_buffer_attrs);
+>>>>>>> b7ba80a49124 (Commit)
 	buffer->buffer_group.attrs = attr;
 
 	for (i = 0; i < buffer_attrcount; i++) {

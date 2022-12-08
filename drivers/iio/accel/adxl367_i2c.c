@@ -41,7 +41,12 @@ static const struct adxl367_ops adxl367_i2c_ops = {
 	.read_fifo = adxl367_i2c_read_fifo,
 };
 
+<<<<<<< HEAD
 static int adxl367_i2c_probe(struct i2c_client *client)
+=======
+static int adxl367_i2c_probe(struct i2c_client *client,
+			     const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct adxl367_i2c_state *st;
 	struct regmap *regmap;
@@ -77,7 +82,11 @@ static struct i2c_driver adxl367_i2c_driver = {
 		.name = "adxl367_i2c",
 		.of_match_table = adxl367_of_match,
 	},
+<<<<<<< HEAD
 	.probe_new = adxl367_i2c_probe,
+=======
+	.probe = adxl367_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = adxl367_i2c_id,
 };
 

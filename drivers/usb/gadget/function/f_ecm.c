@@ -685,7 +685,11 @@ ecm_bind(struct usb_configuration *c, struct usb_function *f)
 	struct usb_composite_dev *cdev = c->cdev;
 	struct f_ecm		*ecm = func_to_ecm(f);
 	struct usb_string	*us;
+<<<<<<< HEAD
 	int			status = 0;
+=======
+	int			status;
+>>>>>>> b7ba80a49124 (Commit)
 	struct usb_ep		*ep;
 
 	struct f_ecm_opts	*ecm_opts;
@@ -695,6 +699,7 @@ ecm_bind(struct usb_configuration *c, struct usb_function *f)
 
 	ecm_opts = container_of(f->fi, struct f_ecm_opts, func_inst);
 
+<<<<<<< HEAD
 	mutex_lock(&ecm_opts->lock);
 
 	gether_set_gadget(ecm_opts->net, cdev->gadget);
@@ -708,6 +713,25 @@ ecm_bind(struct usb_configuration *c, struct usb_function *f)
 	if (status)
 		return status;
 
+=======
+	/*
+	 * in drivers/usb/gadget/configfs.c:configfs_composite_bind()
+	 * configurations are bound in sequence with list_for_each_entry,
+	 * in each configuration its functions are bound in sequence
+	 * with list_for_each_entry, so we assume no race condition
+	 * with regard to ecm_opts->bound access
+	 */
+	if (!ecm_opts->bound) {
+		mutex_lock(&ecm_opts->lock);
+		gether_set_gadget(ecm_opts->net, cdev->gadget);
+		status = gether_register_netdev(ecm_opts->net);
+		mutex_unlock(&ecm_opts->lock);
+		if (status)
+			return status;
+		ecm_opts->bound = true;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	ecm_string_defs[1].s = ecm->ethaddr;
 
 	us = usb_gstrings_attach(cdev, ecm_strings,

@@ -108,7 +108,11 @@ static void sh_sci_spi_chipselect(struct spi_device *dev, int value)
 	struct sh_sci_spi *sp = spi_master_get_devdata(dev->master);
 
 	if (sp->info->chip_select)
+<<<<<<< HEAD
 		(sp->info->chip_select)(sp->info, spi_get_chipselect(dev, 0), value);
+=======
+		(sp->info->chip_select)(sp->info, dev->chip_select, value);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int sh_sci_spi_probe(struct platform_device *dev)
@@ -171,7 +175,11 @@ static int sh_sci_spi_probe(struct platform_device *dev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void sh_sci_spi_remove(struct platform_device *dev)
+=======
+static int sh_sci_spi_remove(struct platform_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sh_sci_spi *sp = platform_get_drvdata(dev);
 
@@ -179,11 +187,19 @@ static void sh_sci_spi_remove(struct platform_device *dev)
 	setbits(sp, PIN_INIT, 0);
 	iounmap(sp->membase);
 	spi_master_put(sp->bitbang.master);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver sh_sci_spi_drv = {
 	.probe		= sh_sci_spi_probe,
+<<<<<<< HEAD
 	.remove_new	= sh_sci_spi_remove,
+=======
+	.remove		= sh_sci_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "spi_sh_sci",
 	},

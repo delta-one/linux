@@ -12,12 +12,16 @@
 #include <linux/if_vlan.h>
 #include <net/switchdev.h>
 
+<<<<<<< HEAD
 #include "dsa.h"
 #include "netlink.h"
 #include "port.h"
 #include "slave.h"
 #include "switch.h"
 #include "tag_8021q.h"
+=======
+#include "dsa_priv.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 static unsigned int dsa_switch_fastest_ageing_time(struct dsa_switch *ds,
 						   unsigned int ageing_time)
@@ -1018,6 +1022,7 @@ static int dsa_switch_event(struct notifier_block *nb,
 	return notifier_from_errno(err);
 }
 
+<<<<<<< HEAD
 /**
  * dsa_tree_notify - Execute code for all switches in a DSA switch tree.
  * @dst: collection of struct dsa_switch devices to notify.
@@ -1064,6 +1069,8 @@ int dsa_broadcast(unsigned long e, void *v)
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int dsa_switch_register_notifier(struct dsa_switch *ds)
 {
 	ds->nb.notifier_call = dsa_switch_event;

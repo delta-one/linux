@@ -590,7 +590,11 @@ static void atmel_tdes_finish_req(struct atmel_tdes_dev *dd, int err)
 	if (!err && (rctx->mode & TDES_FLAGS_OPMODE_MASK) != TDES_FLAGS_ECB)
 		atmel_tdes_set_iv_as_last_ciphertext_block(dd);
 
+<<<<<<< HEAD
 	skcipher_request_complete(req, err);
+=======
+	req->base.complete(&req->base, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int atmel_tdes_handle_queue(struct atmel_tdes_dev *dd,
@@ -619,7 +623,11 @@ static int atmel_tdes_handle_queue(struct atmel_tdes_dev *dd,
 		return ret;
 
 	if (backlog)
+<<<<<<< HEAD
 		crypto_request_complete(backlog, -EINPROGRESS);
+=======
+		backlog->complete(backlog, -EINPROGRESS);
+>>>>>>> b7ba80a49124 (Commit)
 
 	req = skcipher_request_cast(async_req);
 

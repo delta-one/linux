@@ -6,12 +6,15 @@
  * Copyright(c) 2020-2022 Intel Corporation. All rights reserved.
  */
 
+<<<<<<< HEAD
 /* HDA Registers */
 #define MTL_PPLCLLPL_BASE		0x948
 #define MTL_PPLCLLPU_STRIDE		0x10
 #define MTL_PPLCLLPL(x)			(MTL_PPLCLLPL_BASE + (x) * MTL_PPLCLLPU_STRIDE)
 #define MTL_PPLCLLPU(x)			(MTL_PPLCLLPL_BASE + 0x4 + (x) * MTL_PPLCLLPU_STRIDE)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* DSP Registers */
 #define MTL_HFDSSCS			0x1000
 #define MTL_HFDSSCS_SPA_MASK		BIT(16)
@@ -27,8 +30,11 @@
 #define MTL_IRQ_INTEN_L_SOUNDWIRE_MASK	BIT(6)
 #define MTL_HFINTIPPTR_PTR_MASK		GENMASK(20, 0)
 
+<<<<<<< HEAD
 #define MTL_HDA_VS_D0I3C		0x1D4A
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MTL_DSP2CXCAP_PRIMARY_CORE	0x178D00
 #define MTL_DSP2CXCTL_PRIMARY_CORE	0x178D04
 #define MTL_DSP2CXCTL_PRIMARY_CORE_SPA_MASK BIT(0)

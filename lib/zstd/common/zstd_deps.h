@@ -84,7 +84,11 @@ static uint64_t ZSTD_div64(uint64_t dividend, uint32_t divisor) {
 
 #include <linux/kernel.h>
 
+<<<<<<< HEAD
 #define assert(x) WARN_ON(!(x))
+=======
+#define assert(x) WARN_ON((x))
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* ZSTD_DEPS_ASSERT */
 #endif /* ZSTD_DEPS_NEED_ASSERT */

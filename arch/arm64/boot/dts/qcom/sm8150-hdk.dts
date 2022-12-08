@@ -56,7 +56,11 @@
 };
 
 &apps_rsc {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pm8150-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8150-rpmh-regulators";
 		qcom,pmic-id = "a";
 
@@ -211,7 +215,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-1 {
+=======
+	pm8150l-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8150l-rpmh-regulators";
 		qcom,pmic-id = "c";
 
@@ -324,7 +332,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-2 {
+=======
+	pm8009-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8009-rpmh-regulators";
 		qcom,pmic-id = "f";
 

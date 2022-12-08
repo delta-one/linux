@@ -765,14 +765,22 @@ failed_free_info:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void pxa168fb_remove(struct platform_device *pdev)
+=======
+static int pxa168fb_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pxa168fb_info *fbi = platform_get_drvdata(pdev);
 	struct fb_info *info;
 	unsigned int data;
 
 	if (!fbi)
+<<<<<<< HEAD
 		return;
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* disable DMA transfer */
 	data = readl(fbi->reg_base + LCD_SPU_DMA_CTRL0);
@@ -794,6 +802,11 @@ static void pxa168fb_remove(struct platform_device *pdev)
 	clk_disable_unprepare(fbi->clk);
 
 	framebuffer_release(info);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver pxa168fb_driver = {
@@ -801,7 +814,11 @@ static struct platform_driver pxa168fb_driver = {
 		.name	= "pxa168-fb",
 	},
 	.probe		= pxa168fb_probe,
+<<<<<<< HEAD
 	.remove_new	= pxa168fb_remove,
+=======
+	.remove		= pxa168fb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(pxa168fb_driver);

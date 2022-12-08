@@ -25,8 +25,11 @@
 #define CPUID_EXT_ISAR3	0x6c
 #define CPUID_EXT_ISAR4	0x70
 #define CPUID_EXT_ISAR5	0x74
+<<<<<<< HEAD
 #define CPUID_EXT_ISAR6	0x7c
 #define CPUID_EXT_PFR2	0x90
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 #define CPUID_EXT_PFR0	"c1, 0"
 #define CPUID_EXT_PFR1	"c1, 1"
@@ -42,8 +45,11 @@
 #define CPUID_EXT_ISAR3	"c2, 3"
 #define CPUID_EXT_ISAR4	"c2, 4"
 #define CPUID_EXT_ISAR5	"c2, 5"
+<<<<<<< HEAD
 #define CPUID_EXT_ISAR6	"c2, 7"
 #define CPUID_EXT_PFR2	"c3, 4"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #define MPIDR_SMP_BITMASK (0x3 << 30)

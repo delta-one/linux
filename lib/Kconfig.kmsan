@@ -12,7 +12,10 @@ config KMSAN
 	bool "KMSAN: detector of uninitialized values use"
 	depends on HAVE_ARCH_KMSAN && HAVE_KMSAN_COMPILER
 	depends on SLUB && DEBUG_KERNEL && !KASAN && !KCSAN
+<<<<<<< HEAD
 	depends on !PREEMPT_RT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select STACKDEPOT
 	select STACKDEPOT_ALWAYS_INIT
 	help

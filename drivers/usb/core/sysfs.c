@@ -13,7 +13,10 @@
 
 
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/string.h>
 #include <linux/usb.h>
 #include <linux/usb/hcd.h>
@@ -506,7 +509,11 @@ static ssize_t usb2_hardware_lpm_store(struct device *dev,
 	if (ret < 0)
 		return -EINTR;
 
+<<<<<<< HEAD
 	ret = kstrtobool(buf, &value);
+=======
+	ret = strtobool(buf, &value);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!ret) {
 		udev->usb2_hw_lpm_allowed = value;
@@ -869,7 +876,15 @@ read_descriptors(struct file *filp, struct kobject *kobj,
 	size_t srclen, n;
 	int cfgno;
 	void *src;
+<<<<<<< HEAD
 
+=======
+	int retval;
+
+	retval = usb_lock_device_interruptible(udev);
+	if (retval < 0)
+		return -EINTR;
+>>>>>>> b7ba80a49124 (Commit)
 	/* The binary attribute begins with the device descriptor.
 	 * Following that are the raw descriptor entries for all the
 	 * configurations (config plus subsidiary descriptors).
@@ -894,6 +909,10 @@ read_descriptors(struct file *filp, struct kobject *kobj,
 			off -= srclen;
 		}
 	}
+<<<<<<< HEAD
+=======
+	usb_unlock_device(udev);
+>>>>>>> b7ba80a49124 (Commit)
 	return count - nleft;
 }
 
@@ -971,7 +990,11 @@ static ssize_t interface_authorized_default_store(struct device *dev,
 	int rc = count;
 	bool val;
 
+<<<<<<< HEAD
 	if (kstrtobool(buf, &val) != 0)
+=======
+	if (strtobool(buf, &val) != 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (val)
@@ -1172,7 +1195,11 @@ static ssize_t interface_authorized_store(struct device *dev,
 	struct usb_interface *intf = to_usb_interface(dev);
 	bool val;
 
+<<<<<<< HEAD
 	if (kstrtobool(buf, &val) != 0)
+=======
+	if (strtobool(buf, &val) != 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (val)

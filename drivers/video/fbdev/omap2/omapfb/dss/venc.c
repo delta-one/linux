@@ -347,9 +347,17 @@ static int venc_runtime_get(void)
 
 	DSSDBG("venc_runtime_get\n");
 
+<<<<<<< HEAD
 	r = pm_runtime_resume_and_get(&venc.pdev->dev);
 	if (WARN_ON(r < 0))
 		return r;
+=======
+	r = pm_runtime_get_sync(&venc.pdev->dev);
+	if (WARN_ON(r < 0)) {
+		pm_runtime_put_sync(&venc.pdev->dev);
+		return r;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -880,9 +888,16 @@ static int venc_probe(struct platform_device *pdev)
 	return component_add(&pdev->dev, &venc_component_ops);
 }
 
+<<<<<<< HEAD
 static void venc_remove(struct platform_device *pdev)
 {
 	component_del(&pdev->dev, &venc_component_ops);
+=======
+static int venc_remove(struct platform_device *pdev)
+{
+	component_del(&pdev->dev, &venc_component_ops);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int venc_runtime_suspend(struct device *dev)
@@ -921,7 +936,11 @@ static const struct of_device_id venc_of_match[] = {
 
 static struct platform_driver omap_venchw_driver = {
 	.probe		= venc_probe,
+<<<<<<< HEAD
 	.remove_new	= venc_remove,
+=======
+	.remove		= venc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver         = {
 		.name   = "omapdss_venc",
 		.pm	= &venc_pm_ops,

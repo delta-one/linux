@@ -15,7 +15,10 @@
 #include <linux/highuid.h>
 #include <linux/fs.h>
 #include <linux/kmod.h>
+<<<<<<< HEAD
 #include <linux/ksm.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/perf_event.h>
 #include <linux/resource.h>
 #include <linux/kernel.h>
@@ -26,7 +29,10 @@
 #include <linux/times.h>
 #include <linux/posix-timers.h>
 #include <linux/security.h>
+<<<<<<< HEAD
 #include <linux/random.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/suspend.h>
 #include <linux/tty.h>
 #include <linux/signal.h>
@@ -665,7 +671,10 @@ long __sys_setresuid(uid_t ruid, uid_t euid, uid_t suid)
 	struct cred *new;
 	int retval;
 	kuid_t kruid, keuid, ksuid;
+<<<<<<< HEAD
 	bool ruid_new, euid_new, suid_new;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	kruid = make_kuid(ns, ruid);
 	keuid = make_kuid(ns, euid);
@@ -680,6 +689,7 @@ long __sys_setresuid(uid_t ruid, uid_t euid, uid_t suid)
 	if ((suid != (uid_t) -1) && !uid_valid(ksuid))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	old = current_cred();
 
 	/* check for no-op */
@@ -699,10 +709,30 @@ long __sys_setresuid(uid_t ruid, uid_t euid, uid_t suid)
 	    !ns_capable_setid(old->user_ns, CAP_SETUID))
 		return -EPERM;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	new = prepare_creds();
 	if (!new)
 		return -ENOMEM;
 
+<<<<<<< HEAD
+=======
+	old = current_cred();
+
+	retval = -EPERM;
+	if (!ns_capable_setid(old->user_ns, CAP_SETUID)) {
+		if (ruid != (uid_t) -1        && !uid_eq(kruid, old->uid) &&
+		    !uid_eq(kruid, old->euid) && !uid_eq(kruid, old->suid))
+			goto error;
+		if (euid != (uid_t) -1        && !uid_eq(keuid, old->uid) &&
+		    !uid_eq(keuid, old->euid) && !uid_eq(keuid, old->suid))
+			goto error;
+		if (suid != (uid_t) -1        && !uid_eq(ksuid, old->uid) &&
+		    !uid_eq(ksuid, old->euid) && !uid_eq(ksuid, old->suid))
+			goto error;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (ruid != (uid_t) -1) {
 		new->uid = kruid;
 		if (!uid_eq(kruid, old->uid)) {
@@ -767,7 +797,10 @@ long __sys_setresgid(gid_t rgid, gid_t egid, gid_t sgid)
 	struct cred *new;
 	int retval;
 	kgid_t krgid, kegid, ksgid;
+<<<<<<< HEAD
 	bool rgid_new, egid_new, sgid_new;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	krgid = make_kgid(ns, rgid);
 	kegid = make_kgid(ns, egid);
@@ -780,6 +813,7 @@ long __sys_setresgid(gid_t rgid, gid_t egid, gid_t sgid)
 	if ((sgid != (gid_t) -1) && !gid_valid(ksgid))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	old = current_cred();
 
 	/* check for no-op */
@@ -802,6 +836,25 @@ long __sys_setresgid(gid_t rgid, gid_t egid, gid_t sgid)
 	new = prepare_creds();
 	if (!new)
 		return -ENOMEM;
+=======
+	new = prepare_creds();
+	if (!new)
+		return -ENOMEM;
+	old = current_cred();
+
+	retval = -EPERM;
+	if (!ns_capable_setid(old->user_ns, CAP_SETGID)) {
+		if (rgid != (gid_t) -1        && !gid_eq(krgid, old->gid) &&
+		    !gid_eq(krgid, old->egid) && !gid_eq(krgid, old->sgid))
+			goto error;
+		if (egid != (gid_t) -1        && !gid_eq(kegid, old->gid) &&
+		    !gid_eq(kegid, old->egid) && !gid_eq(kegid, old->sgid))
+			goto error;
+		if (sgid != (gid_t) -1        && !gid_eq(ksgid, old->gid) &&
+		    !gid_eq(ksgid, old->egid) && !gid_eq(ksgid, old->sgid))
+			goto error;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rgid != (gid_t) -1)
 		new->gid = krgid;
@@ -1379,7 +1432,10 @@ SYSCALL_DEFINE2(sethostname, char __user *, name, int, len)
 	if (!copy_from_user(tmp, name, len)) {
 		struct new_utsname *u;
 
+<<<<<<< HEAD
 		add_device_randomness(tmp, len);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		down_write(&uts_sem);
 		u = utsname();
 		memcpy(u->nodename, tmp, len);
@@ -1433,7 +1489,10 @@ SYSCALL_DEFINE2(setdomainname, char __user *, name, int, len)
 	if (!copy_from_user(tmp, name, len)) {
 		struct new_utsname *u;
 
+<<<<<<< HEAD
 		add_device_randomness(tmp, len);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		down_write(&uts_sem);
 		u = utsname();
 		memcpy(u->domainname, tmp, len);
@@ -1454,8 +1513,11 @@ static int do_prlimit(struct task_struct *tsk, unsigned int resource,
 
 	if (resource >= RLIM_NLIMITS)
 		return -EINVAL;
+<<<<<<< HEAD
 	resource = array_index_nospec(resource, RLIM_NLIMITS);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (new_rlim) {
 		if (new_rlim->rlim_cur > new_rlim->rlim_max)
 			return -EINVAL;
@@ -2362,6 +2424,7 @@ static int prctl_set_vma(unsigned long opt, unsigned long start,
 }
 #endif /* CONFIG_ANON_VMA_NAME */
 
+<<<<<<< HEAD
 static inline int prctl_set_mdwe(unsigned long bits, unsigned long arg3,
 				 unsigned long arg4, unsigned long arg5)
 {
@@ -2389,6 +2452,8 @@ static inline int prctl_get_mdwe(unsigned long arg2, unsigned long arg3,
 		PR_MDWE_REFUSE_EXEC_GAIN : 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
 		unsigned long, arg4, unsigned long, arg5)
 {
@@ -2664,6 +2729,7 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
 		error = sched_core_share_pid(arg2, arg3, arg4, arg5);
 		break;
 #endif
+<<<<<<< HEAD
 	case PR_SET_MDWE:
 		error = prctl_set_mdwe(arg2, arg3, arg4, arg5);
 		break;
@@ -2699,6 +2765,11 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
 		error = !!test_bit(MMF_VM_MERGE_ANY, &me->mm->flags);
 		break;
 #endif
+=======
+	case PR_SET_VMA:
+		error = prctl_set_vma(arg2, arg3, arg4, arg5);
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		error = -EINVAL;
 		break;

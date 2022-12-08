@@ -21,6 +21,7 @@ u32 kvm_dirty_ring_get_rsvd_entries(void)
 	return KVM_DIRTY_RING_RSVD_ENTRIES + kvm_cpu_dirty_log_size();
 }
 
+<<<<<<< HEAD
 bool kvm_use_dirty_bitmap(struct kvm *kvm)
 {
 	lockdep_assert_held(&kvm->slots_lock);
@@ -35,12 +36,18 @@ bool kvm_arch_allow_write_without_running_vcpu(struct kvm *kvm)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static u32 kvm_dirty_ring_used(struct kvm_dirty_ring *ring)
 {
 	return READ_ONCE(ring->dirty_index) - READ_ONCE(ring->reset_index);
 }
 
+<<<<<<< HEAD
 static bool kvm_dirty_ring_soft_full(struct kvm_dirty_ring *ring)
+=======
+bool kvm_dirty_ring_soft_full(struct kvm_dirty_ring *ring)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return kvm_dirty_ring_used(ring) >= ring->soft_limit;
 }
@@ -88,7 +95,11 @@ int kvm_dirty_ring_alloc(struct kvm_dirty_ring *ring, int index, u32 size)
 
 static inline void kvm_dirty_gfn_set_invalid(struct kvm_dirty_gfn *gfn)
 {
+<<<<<<< HEAD
 	smp_store_release(&gfn->flags, 0);
+=======
+	gfn->flags = 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void kvm_dirty_gfn_set_dirtied(struct kvm_dirty_gfn *gfn)
@@ -98,7 +109,11 @@ static inline void kvm_dirty_gfn_set_dirtied(struct kvm_dirty_gfn *gfn)
 
 static inline bool kvm_dirty_gfn_harvested(struct kvm_dirty_gfn *gfn)
 {
+<<<<<<< HEAD
 	return smp_load_acquire(&gfn->flags) & KVM_DIRTY_GFN_F_RESET;
+=======
+	return gfn->flags & KVM_DIRTY_GFN_F_RESET;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring)
@@ -156,19 +171,27 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring)
 
 	kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
 
+<<<<<<< HEAD
 	/*
 	 * The request KVM_REQ_DIRTY_RING_SOFT_FULL will be cleared
 	 * by the VCPU thread next time when it enters the guest.
 	 */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	trace_kvm_dirty_ring_reset(ring);
 
 	return count;
 }
 
+<<<<<<< HEAD
 void kvm_dirty_ring_push(struct kvm_vcpu *vcpu, u32 slot, u64 offset)
 {
 	struct kvm_dirty_ring *ring = &vcpu->dirty_ring;
+=======
+void kvm_dirty_ring_push(struct kvm_dirty_ring *ring, u32 slot, u64 offset)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct kvm_dirty_gfn *entry;
 
 	/* It should never get full */
@@ -186,6 +209,7 @@ void kvm_dirty_ring_push(struct kvm_vcpu *vcpu, u32 slot, u64 offset)
 	kvm_dirty_gfn_set_dirtied(entry);
 	ring->dirty_index++;
 	trace_kvm_dirty_ring_push(ring, slot, offset);
+<<<<<<< HEAD
 
 	if (kvm_dirty_ring_soft_full(ring))
 		kvm_make_request(KVM_REQ_DIRTY_RING_SOFT_FULL, vcpu);
@@ -208,6 +232,8 @@ bool kvm_dirty_ring_check_request(struct kvm_vcpu *vcpu)
 	}
 
 	return false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct page *kvm_dirty_ring_get_page(struct kvm_dirty_ring *ring, u32 offset)

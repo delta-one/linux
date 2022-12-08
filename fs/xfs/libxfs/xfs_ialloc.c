@@ -169,9 +169,16 @@ xfs_inobt_insert_rec(
  */
 STATIC int
 xfs_inobt_insert(
+<<<<<<< HEAD
 	struct xfs_perag	*pag,
 	struct xfs_trans	*tp,
 	struct xfs_buf		*agbp,
+=======
+	struct xfs_mount	*mp,
+	struct xfs_trans	*tp,
+	struct xfs_buf		*agbp,
+	struct xfs_perag	*pag,
+>>>>>>> b7ba80a49124 (Commit)
 	xfs_agino_t		newino,
 	xfs_agino_t		newlen,
 	xfs_btnum_t		btnum)
@@ -181,7 +188,11 @@ xfs_inobt_insert(
 	int			i;
 	int			error;
 
+<<<<<<< HEAD
 	cur = xfs_inobt_init_cursor(pag, tp, agbp, btnum);
+=======
+	cur = xfs_inobt_init_cursor(mp, tp, agbp, pag, btnum);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (thisino = newino;
 	     thisino < newino + newlen;
@@ -513,20 +524,34 @@ __xfs_inobt_rec_merge(
  */
 STATIC int
 xfs_inobt_insert_sprec(
+<<<<<<< HEAD
 	struct xfs_perag		*pag,
 	struct xfs_trans		*tp,
 	struct xfs_buf			*agbp,
+=======
+	struct xfs_mount		*mp,
+	struct xfs_trans		*tp,
+	struct xfs_buf			*agbp,
+	struct xfs_perag		*pag,
+>>>>>>> b7ba80a49124 (Commit)
 	int				btnum,
 	struct xfs_inobt_rec_incore	*nrec,	/* in/out: new/merged rec. */
 	bool				merge)	/* merge or replace */
 {
+<<<<<<< HEAD
 	struct xfs_mount		*mp = pag->pag_mount;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfs_btree_cur		*cur;
 	int				error;
 	int				i;
 	struct xfs_inobt_rec_incore	rec;
 
+<<<<<<< HEAD
 	cur = xfs_inobt_init_cursor(pag, tp, agbp, btnum);
+=======
+	cur = xfs_inobt_init_cursor(mp, tp, agbp, pag, btnum);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* the new record is pre-aligned so we know where to look */
 	error = xfs_inobt_lookup(cur, nrec->ir_startino, XFS_LOOKUP_EQ, &i);
@@ -608,9 +633,15 @@ error:
  */
 STATIC int
 xfs_ialloc_ag_alloc(
+<<<<<<< HEAD
 	struct xfs_perag	*pag,
 	struct xfs_trans	*tp,
 	struct xfs_buf		*agbp)
+=======
+	struct xfs_trans	*tp,
+	struct xfs_buf		*agbp,
+	struct xfs_perag	*pag)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct xfs_agi		*agi;
 	struct xfs_alloc_arg	args;
@@ -630,13 +661,20 @@ xfs_ialloc_ag_alloc(
 	args.mp = tp->t_mountp;
 	args.fsbno = NULLFSBLOCK;
 	args.oinfo = XFS_RMAP_OINFO_INODES;
+<<<<<<< HEAD
 	args.pag = pag;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef DEBUG
 	/* randomly do sparse inode allocations */
 	if (xfs_has_sparseinodes(tp->t_mountp) &&
 	    igeo->ialloc_min_blks < igeo->ialloc_blks)
+<<<<<<< HEAD
 		do_sparse = get_random_u32_below(2);
+=======
+		do_sparse = prandom_u32() & 1;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	/*
@@ -662,6 +700,11 @@ xfs_ialloc_ag_alloc(
 		goto sparse_alloc;
 	if (likely(newino != NULLAGINO &&
 		  (args.agbno < be32_to_cpu(agi->agi_length)))) {
+<<<<<<< HEAD
+=======
+		args.fsbno = XFS_AGB_TO_FSB(args.mp, pag->pag_agno, args.agbno);
+		args.type = XFS_ALLOCTYPE_THIS_BNO;
+>>>>>>> b7ba80a49124 (Commit)
 		args.prod = 1;
 
 		/*
@@ -682,10 +725,14 @@ xfs_ialloc_ag_alloc(
 
 		/* Allow space for the inode btree to split. */
 		args.minleft = igeo->inobt_maxlevels;
+<<<<<<< HEAD
 		error = xfs_alloc_vextent_exact_bno(&args,
 				XFS_AGB_TO_FSB(args.mp, pag->pag_agno,
 						args.agbno));
 		if (error)
+=======
+		if ((error = xfs_alloc_vextent(&args)))
+>>>>>>> b7ba80a49124 (Commit)
 			return error;
 
 		/*
@@ -718,17 +765,34 @@ xfs_ialloc_ag_alloc(
 		} else
 			args.alignment = igeo->cluster_align;
 		/*
+<<<<<<< HEAD
 		 * Allocate a fixed-size extent of inodes.
 		 */
+=======
+		 * Need to figure out where to allocate the inode blocks.
+		 * Ideally they should be spaced out through the a.g.
+		 * For now, just allocate blocks up front.
+		 */
+		args.agbno = be32_to_cpu(agi->agi_root);
+		args.fsbno = XFS_AGB_TO_FSB(args.mp, pag->pag_agno, args.agbno);
+		/*
+		 * Allocate a fixed-size extent of inodes.
+		 */
+		args.type = XFS_ALLOCTYPE_NEAR_BNO;
+>>>>>>> b7ba80a49124 (Commit)
 		args.prod = 1;
 		/*
 		 * Allow space for the inode btree to split.
 		 */
 		args.minleft = igeo->inobt_maxlevels;
+<<<<<<< HEAD
 		error = xfs_alloc_vextent_near_bno(&args,
 				XFS_AGB_TO_FSB(args.mp, pag->pag_agno,
 						be32_to_cpu(agi->agi_root)));
 		if (error)
+=======
+		if ((error = xfs_alloc_vextent(&args)))
+>>>>>>> b7ba80a49124 (Commit)
 			return error;
 	}
 
@@ -737,11 +801,19 @@ xfs_ialloc_ag_alloc(
 	 * alignment.
 	 */
 	if (isaligned && args.fsbno == NULLFSBLOCK) {
+<<<<<<< HEAD
 		args.alignment = igeo->cluster_align;
 		error = xfs_alloc_vextent_near_bno(&args,
 				XFS_AGB_TO_FSB(args.mp, pag->pag_agno,
 						be32_to_cpu(agi->agi_root)));
 		if (error)
+=======
+		args.type = XFS_ALLOCTYPE_NEAR_BNO;
+		args.agbno = be32_to_cpu(agi->agi_root);
+		args.fsbno = XFS_AGB_TO_FSB(args.mp, pag->pag_agno, args.agbno);
+		args.alignment = igeo->cluster_align;
+		if ((error = xfs_alloc_vextent(&args)))
+>>>>>>> b7ba80a49124 (Commit)
 			return error;
 	}
 
@@ -753,6 +825,12 @@ xfs_ialloc_ag_alloc(
 	    igeo->ialloc_min_blks < igeo->ialloc_blks &&
 	    args.fsbno == NULLFSBLOCK) {
 sparse_alloc:
+<<<<<<< HEAD
+=======
+		args.type = XFS_ALLOCTYPE_NEAR_BNO;
+		args.agbno = be32_to_cpu(agi->agi_root);
+		args.fsbno = XFS_AGB_TO_FSB(args.mp, pag->pag_agno, args.agbno);
+>>>>>>> b7ba80a49124 (Commit)
 		args.alignment = args.mp->m_sb.sb_spino_align;
 		args.prod = 1;
 
@@ -774,9 +852,13 @@ sparse_alloc:
 					    args.mp->m_sb.sb_inoalignmt) -
 				 igeo->ialloc_blks;
 
+<<<<<<< HEAD
 		error = xfs_alloc_vextent_near_bno(&args,
 				XFS_AGB_TO_FSB(args.mp, pag->pag_agno,
 						be32_to_cpu(agi->agi_root)));
+=======
+		error = xfs_alloc_vextent(&args);
+>>>>>>> b7ba80a49124 (Commit)
 		if (error)
 			return error;
 
@@ -800,7 +882,11 @@ sparse_alloc:
 	 * number from being easily guessable.
 	 */
 	error = xfs_ialloc_inode_init(args.mp, tp, NULL, newlen, pag->pag_agno,
+<<<<<<< HEAD
 			args.agbno, args.len, get_random_u32());
+=======
+			args.agbno, args.len, prandom_u32());
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (error)
 		return error;
@@ -826,7 +912,11 @@ sparse_alloc:
 		 * if necessary. If a merge does occur, rec is updated to the
 		 * merged record.
 		 */
+<<<<<<< HEAD
 		error = xfs_inobt_insert_sprec(pag, tp, agbp,
+=======
+		error = xfs_inobt_insert_sprec(args.mp, tp, agbp, pag,
+>>>>>>> b7ba80a49124 (Commit)
 				XFS_BTNUM_INO, &rec, true);
 		if (error == -EFSCORRUPTED) {
 			xfs_alert(args.mp,
@@ -851,20 +941,32 @@ sparse_alloc:
 		 * existing record with this one.
 		 */
 		if (xfs_has_finobt(args.mp)) {
+<<<<<<< HEAD
 			error = xfs_inobt_insert_sprec(pag, tp, agbp,
+=======
+			error = xfs_inobt_insert_sprec(args.mp, tp, agbp, pag,
+>>>>>>> b7ba80a49124 (Commit)
 				       XFS_BTNUM_FINO, &rec, false);
 			if (error)
 				return error;
 		}
 	} else {
 		/* full chunk - insert new records to both btrees */
+<<<<<<< HEAD
 		error = xfs_inobt_insert(pag, tp, agbp, newino, newlen,
+=======
+		error = xfs_inobt_insert(args.mp, tp, agbp, pag, newino, newlen,
+>>>>>>> b7ba80a49124 (Commit)
 					 XFS_BTNUM_INO);
 		if (error)
 			return error;
 
 		if (xfs_has_finobt(args.mp)) {
+<<<<<<< HEAD
 			error = xfs_inobt_insert(pag, tp, agbp, newino,
+=======
+			error = xfs_inobt_insert(args.mp, tp, agbp, pag, newino,
+>>>>>>> b7ba80a49124 (Commit)
 						 newlen, XFS_BTNUM_FINO);
 			if (error)
 				return error;
@@ -976,9 +1078,15 @@ xfs_inobt_first_free_inode(
  */
 STATIC int
 xfs_dialloc_ag_inobt(
+<<<<<<< HEAD
 	struct xfs_perag	*pag,
 	struct xfs_trans	*tp,
 	struct xfs_buf		*agbp,
+=======
+	struct xfs_trans	*tp,
+	struct xfs_buf		*agbp,
+	struct xfs_perag	*pag,
+>>>>>>> b7ba80a49124 (Commit)
 	xfs_ino_t		parent,
 	xfs_ino_t		*inop)
 {
@@ -994,12 +1102,21 @@ xfs_dialloc_ag_inobt(
 	int			i, j;
 	int			searchdistance = 10;
 
+<<<<<<< HEAD
 	ASSERT(xfs_perag_initialised_agi(pag));
 	ASSERT(xfs_perag_allows_inodes(pag));
 	ASSERT(pag->pagi_freecount > 0);
 
  restart_pagno:
 	cur = xfs_inobt_init_cursor(pag, tp, agbp, XFS_BTNUM_INO);
+=======
+	ASSERT(pag->pagi_init);
+	ASSERT(pag->pagi_inodeok);
+	ASSERT(pag->pagi_freecount > 0);
+
+ restart_pagno:
+	cur = xfs_inobt_init_cursor(mp, tp, agbp, pag, XFS_BTNUM_INO);
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * If pagino is 0 (this is the root inode allocation) use newino.
 	 * This must work because we've just allocated some.
@@ -1424,9 +1541,15 @@ xfs_dialloc_ag_update_inobt(
  */
 static int
 xfs_dialloc_ag(
+<<<<<<< HEAD
 	struct xfs_perag	*pag,
 	struct xfs_trans	*tp,
 	struct xfs_buf		*agbp,
+=======
+	struct xfs_trans	*tp,
+	struct xfs_buf		*agbp,
+	struct xfs_perag	*pag,
+>>>>>>> b7ba80a49124 (Commit)
 	xfs_ino_t		parent,
 	xfs_ino_t		*inop)
 {
@@ -1443,7 +1566,11 @@ xfs_dialloc_ag(
 	int				i;
 
 	if (!xfs_has_finobt(mp))
+<<<<<<< HEAD
 		return xfs_dialloc_ag_inobt(pag, tp, agbp, parent, inop);
+=======
+		return xfs_dialloc_ag_inobt(tp, agbp, pag, parent, inop);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * If pagino is 0 (this is the root inode allocation) use newino.
@@ -1452,7 +1579,11 @@ xfs_dialloc_ag(
 	if (!pagino)
 		pagino = be32_to_cpu(agi->agi_newino);
 
+<<<<<<< HEAD
 	cur = xfs_inobt_init_cursor(pag, tp, agbp, XFS_BTNUM_FINO);
+=======
+	cur = xfs_inobt_init_cursor(mp, tp, agbp, pag, XFS_BTNUM_FINO);
+>>>>>>> b7ba80a49124 (Commit)
 
 	error = xfs_check_agi_freecount(cur);
 	if (error)
@@ -1495,7 +1626,11 @@ xfs_dialloc_ag(
 	 * the original freecount. If all is well, make the equivalent update to
 	 * the inobt using the finobt record and offset information.
 	 */
+<<<<<<< HEAD
 	icur = xfs_inobt_init_cursor(pag, tp, agbp, XFS_BTNUM_INO);
+=======
+	icur = xfs_inobt_init_cursor(mp, tp, agbp, pag, XFS_BTNUM_INO);
+>>>>>>> b7ba80a49124 (Commit)
 
 	error = xfs_check_agi_freecount(icur);
 	if (error)
@@ -1572,10 +1707,32 @@ xfs_dialloc_roll(
 	return error;
 }
 
+<<<<<<< HEAD
 static bool
 xfs_dialloc_good_ag(
 	struct xfs_perag	*pag,
 	struct xfs_trans	*tp,
+=======
+static xfs_agnumber_t
+xfs_ialloc_next_ag(
+	xfs_mount_t	*mp)
+{
+	xfs_agnumber_t	agno;
+
+	spin_lock(&mp->m_agirotor_lock);
+	agno = mp->m_agirotor;
+	if (++mp->m_agirotor >= mp->m_maxagi)
+		mp->m_agirotor = 0;
+	spin_unlock(&mp->m_agirotor_lock);
+
+	return agno;
+}
+
+static bool
+xfs_dialloc_good_ag(
+	struct xfs_trans	*tp,
+	struct xfs_perag	*pag,
+>>>>>>> b7ba80a49124 (Commit)
 	umode_t			mode,
 	int			flags,
 	bool			ok_alloc)
@@ -1586,12 +1743,19 @@ xfs_dialloc_good_ag(
 	int			needspace;
 	int			error;
 
+<<<<<<< HEAD
 	if (!pag)
 		return false;
 	if (!xfs_perag_allows_inodes(pag))
 		return false;
 
 	if (!xfs_perag_initialised_agi(pag)) {
+=======
+	if (!pag->pagi_inodeok)
+		return false;
+
+	if (!pag->pagi_init) {
+>>>>>>> b7ba80a49124 (Commit)
 		error = xfs_ialloc_read_agi(pag, tp, NULL);
 		if (error)
 			return false;
@@ -1602,7 +1766,11 @@ xfs_dialloc_good_ag(
 	if (!ok_alloc)
 		return false;
 
+<<<<<<< HEAD
 	if (!xfs_perag_initialised_agf(pag)) {
+=======
+	if (!pag->pagf_init) {
+>>>>>>> b7ba80a49124 (Commit)
 		error = xfs_alloc_read_agf(pag, tp, flags, NULL);
 		if (error)
 			return false;
@@ -1647,8 +1815,13 @@ xfs_dialloc_good_ag(
 
 static int
 xfs_dialloc_try_ag(
+<<<<<<< HEAD
 	struct xfs_perag	*pag,
 	struct xfs_trans	**tpp,
+=======
+	struct xfs_trans	**tpp,
+	struct xfs_perag	*pag,
+>>>>>>> b7ba80a49124 (Commit)
 	xfs_ino_t		parent,
 	xfs_ino_t		*new_ino,
 	bool			ok_alloc)
@@ -1671,7 +1844,11 @@ xfs_dialloc_try_ag(
 			goto out_release;
 		}
 
+<<<<<<< HEAD
 		error = xfs_ialloc_ag_alloc(pag, *tpp, agbp);
+=======
+		error = xfs_ialloc_ag_alloc(*tpp, agbp, pag);
+>>>>>>> b7ba80a49124 (Commit)
 		if (error < 0)
 			goto out_release;
 
@@ -1687,7 +1864,11 @@ xfs_dialloc_try_ag(
 	}
 
 	/* Allocate an inode in the found AG */
+<<<<<<< HEAD
 	error = xfs_dialloc_ag(pag, *tpp, agbp, parent, &ino);
+=======
+	error = xfs_dialloc_ag(*tpp, agbp, pag, parent, &ino);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!error)
 		*new_ino = ino;
 	return error;
@@ -1719,9 +1900,14 @@ xfs_dialloc(
 	struct xfs_perag	*pag;
 	struct xfs_ino_geometry	*igeo = M_IGEO(mp);
 	bool			ok_alloc = true;
+<<<<<<< HEAD
 	bool			low_space = false;
 	int			flags;
 	xfs_ino_t		ino = NULLFSINO;
+=======
+	int			flags;
+	xfs_ino_t		ino;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Directories, symlinks, and regular files frequently allocate at least
@@ -1729,8 +1915,12 @@ xfs_dialloc(
 	 * an AG has enough space for file creation.
 	 */
 	if (S_ISDIR(mode))
+<<<<<<< HEAD
 		start_agno = (atomic_inc_return(&mp->m_agirotor) - 1) %
 				mp->m_maxagi;
+=======
+		start_agno = xfs_ialloc_next_ag(mp);
+>>>>>>> b7ba80a49124 (Commit)
 	else {
 		start_agno = XFS_INO_TO_AGNO(mp, parent);
 		if (start_agno >= mp->m_maxagi)
@@ -1752,6 +1942,7 @@ xfs_dialloc(
 	}
 
 	/*
+<<<<<<< HEAD
 	 * If we are near to ENOSPC, we want to prefer allocation from AGs that
 	 * have free inodes in them rather than use up free space allocating new
 	 * inode chunks. Hence we turn off allocation for the first non-blocking
@@ -1766,10 +1957,13 @@ xfs_dialloc(
 	}
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * Loop until we find an allocation group that either has free inodes
 	 * or in which we can allocate some inodes.  Iterate through the
 	 * allocation groups upward, wrapping at the end.
 	 */
+<<<<<<< HEAD
 	flags = XFS_ALLOC_FLAG_TRYLOCK;
 retry:
 	for_each_perag_wrap_at(mp, start_agno, mp->m_maxagi, agno, pag) {
@@ -1779,12 +1973,24 @@ retry:
 			if (error != -EAGAIN)
 				break;
 			error = 0;
+=======
+	agno = start_agno;
+	flags = XFS_ALLOC_FLAG_TRYLOCK;
+	for (;;) {
+		pag = xfs_perag_get(mp, agno);
+		if (xfs_dialloc_good_ag(*tpp, pag, mode, flags, ok_alloc)) {
+			error = xfs_dialloc_try_ag(tpp, pag, parent,
+					&ino, ok_alloc);
+			if (error != -EAGAIN)
+				break;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (xfs_is_shutdown(mp)) {
 			error = -EFSCORRUPTED;
 			break;
 		}
+<<<<<<< HEAD
 	}
 	if (pag)
 		xfs_perag_rele(pag);
@@ -1801,6 +2007,24 @@ retry:
 	}
 	*new_ino = ino;
 	return 0;
+=======
+		if (++agno == mp->m_maxagi)
+			agno = 0;
+		if (agno == start_agno) {
+			if (!flags) {
+				error = -ENOSPC;
+				break;
+			}
+			flags = 0;
+		}
+		xfs_perag_put(pag);
+	}
+
+	if (!error)
+		*new_ino = ino;
+	xfs_perag_put(pag);
+	return error;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1883,14 +2107,24 @@ next:
 
 STATIC int
 xfs_difree_inobt(
+<<<<<<< HEAD
 	struct xfs_perag		*pag,
 	struct xfs_trans		*tp,
 	struct xfs_buf			*agbp,
+=======
+	struct xfs_mount		*mp,
+	struct xfs_trans		*tp,
+	struct xfs_buf			*agbp,
+	struct xfs_perag		*pag,
+>>>>>>> b7ba80a49124 (Commit)
 	xfs_agino_t			agino,
 	struct xfs_icluster		*xic,
 	struct xfs_inobt_rec_incore	*orec)
 {
+<<<<<<< HEAD
 	struct xfs_mount		*mp = pag->pag_mount;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfs_agi			*agi = agbp->b_addr;
 	struct xfs_btree_cur		*cur;
 	struct xfs_inobt_rec_incore	rec;
@@ -1905,7 +2139,11 @@ xfs_difree_inobt(
 	/*
 	 * Initialize the cursor.
 	 */
+<<<<<<< HEAD
 	cur = xfs_inobt_init_cursor(pag, tp, agbp, XFS_BTNUM_INO);
+=======
+	cur = xfs_inobt_init_cursor(mp, tp, agbp, pag, XFS_BTNUM_INO);
+>>>>>>> b7ba80a49124 (Commit)
 
 	error = xfs_check_agi_freecount(cur);
 	if (error)
@@ -2017,6 +2255,7 @@ error0:
  */
 STATIC int
 xfs_difree_finobt(
+<<<<<<< HEAD
 	struct xfs_perag		*pag,
 	struct xfs_trans		*tp,
 	struct xfs_buf			*agbp,
@@ -2024,13 +2263,26 @@ xfs_difree_finobt(
 	struct xfs_inobt_rec_incore	*ibtrec) /* inobt record */
 {
 	struct xfs_mount		*mp = pag->pag_mount;
+=======
+	struct xfs_mount		*mp,
+	struct xfs_trans		*tp,
+	struct xfs_buf			*agbp,
+	struct xfs_perag		*pag,
+	xfs_agino_t			agino,
+	struct xfs_inobt_rec_incore	*ibtrec) /* inobt record */
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfs_btree_cur		*cur;
 	struct xfs_inobt_rec_incore	rec;
 	int				offset = agino - ibtrec->ir_startino;
 	int				error;
 	int				i;
 
+<<<<<<< HEAD
 	cur = xfs_inobt_init_cursor(pag, tp, agbp, XFS_BTNUM_FINO);
+=======
+	cur = xfs_inobt_init_cursor(mp, tp, agbp, pag, XFS_BTNUM_FINO);
+>>>>>>> b7ba80a49124 (Commit)
 
 	error = xfs_inobt_lookup(cur, ibtrec->ir_startino, XFS_LOOKUP_EQ, &i);
 	if (error)
@@ -2177,7 +2429,11 @@ xfs_difree(
 	/*
 	 * Fix up the inode allocation btree.
 	 */
+<<<<<<< HEAD
 	error = xfs_difree_inobt(pag, tp, agbp, agino, xic, &rec);
+=======
+	error = xfs_difree_inobt(mp, tp, agbp, pag, agino, xic, &rec);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		goto error0;
 
@@ -2185,7 +2441,11 @@ xfs_difree(
 	 * Fix up the free inode btree.
 	 */
 	if (xfs_has_finobt(mp)) {
+<<<<<<< HEAD
 		error = xfs_difree_finobt(pag, tp, agbp, agino, &rec);
+=======
+		error = xfs_difree_finobt(mp, tp, agbp, pag, agino, &rec);
+>>>>>>> b7ba80a49124 (Commit)
 		if (error)
 			goto error0;
 	}
@@ -2198,15 +2458,24 @@ error0:
 
 STATIC int
 xfs_imap_lookup(
+<<<<<<< HEAD
 	struct xfs_perag	*pag,
 	struct xfs_trans	*tp,
+=======
+	struct xfs_mount	*mp,
+	struct xfs_trans	*tp,
+	struct xfs_perag	*pag,
+>>>>>>> b7ba80a49124 (Commit)
 	xfs_agino_t		agino,
 	xfs_agblock_t		agbno,
 	xfs_agblock_t		*chunk_agbno,
 	xfs_agblock_t		*offset_agbno,
 	int			flags)
 {
+<<<<<<< HEAD
 	struct xfs_mount	*mp = pag->pag_mount;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfs_inobt_rec_incore rec;
 	struct xfs_btree_cur	*cur;
 	struct xfs_buf		*agbp;
@@ -2227,7 +2496,11 @@ xfs_imap_lookup(
 	 * we have a record, we need to ensure it contains the inode number
 	 * we are looking up.
 	 */
+<<<<<<< HEAD
 	cur = xfs_inobt_init_cursor(pag, tp, agbp, XFS_BTNUM_INO);
+=======
+	cur = xfs_inobt_init_cursor(mp, tp, agbp, pag, XFS_BTNUM_INO);
+>>>>>>> b7ba80a49124 (Commit)
 	error = xfs_inobt_lookup(cur, agino, XFS_LOOKUP_LE, &i);
 	if (!error) {
 		if (i)
@@ -2261,13 +2534,21 @@ xfs_imap_lookup(
  */
 int
 xfs_imap(
+<<<<<<< HEAD
 	struct xfs_perag	*pag,
 	struct xfs_trans	*tp,
+=======
+	struct xfs_mount	 *mp,	/* file system mount structure */
+	struct xfs_trans	 *tp,	/* transaction pointer */
+>>>>>>> b7ba80a49124 (Commit)
 	xfs_ino_t		ino,	/* inode to locate */
 	struct xfs_imap		*imap,	/* location map structure */
 	uint			flags)	/* flags for inode btree lookup */
 {
+<<<<<<< HEAD
 	struct xfs_mount	*mp = pag->pag_mount;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	xfs_agblock_t		agbno;	/* block number of inode in the alloc group */
 	xfs_agino_t		agino;	/* inode number within alloc group */
 	xfs_agblock_t		chunk_agbno;	/* first block in inode chunk */
@@ -2275,15 +2556,26 @@ xfs_imap(
 	int			error;	/* error code */
 	int			offset;	/* index of inode in its buffer */
 	xfs_agblock_t		offset_agbno;	/* blks from chunk start to inode */
+<<<<<<< HEAD
+=======
+	struct xfs_perag	*pag;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT(ino != NULLFSINO);
 
 	/*
 	 * Split up the inode number into its parts.
 	 */
+<<<<<<< HEAD
 	agino = XFS_INO_TO_AGINO(mp, ino);
 	agbno = XFS_AGINO_TO_AGBNO(mp, agino);
 	if (agbno >= mp->m_sb.sb_agblocks ||
+=======
+	pag = xfs_perag_get(mp, XFS_INO_TO_AGNO(mp, ino));
+	agino = XFS_INO_TO_AGINO(mp, ino);
+	agbno = XFS_AGINO_TO_AGBNO(mp, agino);
+	if (!pag || agbno >= mp->m_sb.sb_agblocks ||
+>>>>>>> b7ba80a49124 (Commit)
 	    ino != XFS_AGINO_TO_INO(mp, pag->pag_agno, agino)) {
 		error = -EINVAL;
 #ifdef DEBUG
@@ -2292,14 +2584,28 @@ xfs_imap(
 		 * as they can be invalid without implying corruption.
 		 */
 		if (flags & XFS_IGET_UNTRUSTED)
+<<<<<<< HEAD
 			return error;
+=======
+			goto out_drop;
+		if (!pag) {
+			xfs_alert(mp,
+				"%s: agno (%d) >= mp->m_sb.sb_agcount (%d)",
+				__func__, XFS_INO_TO_AGNO(mp, ino),
+				mp->m_sb.sb_agcount);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		if (agbno >= mp->m_sb.sb_agblocks) {
 			xfs_alert(mp,
 		"%s: agbno (0x%llx) >= mp->m_sb.sb_agblocks (0x%lx)",
 				__func__, (unsigned long long)agbno,
 				(unsigned long)mp->m_sb.sb_agblocks);
 		}
+<<<<<<< HEAD
 		if (ino != XFS_AGINO_TO_INO(mp, pag->pag_agno, agino)) {
+=======
+		if (pag && ino != XFS_AGINO_TO_INO(mp, pag->pag_agno, agino)) {
+>>>>>>> b7ba80a49124 (Commit)
 			xfs_alert(mp,
 		"%s: ino (0x%llx) != XFS_AGINO_TO_INO() (0x%llx)",
 				__func__, ino,
@@ -2307,7 +2613,11 @@ xfs_imap(
 		}
 		xfs_stack_trace();
 #endif /* DEBUG */
+<<<<<<< HEAD
 		return error;
+=======
+		goto out_drop;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -2318,10 +2628,17 @@ xfs_imap(
 	 * in all cases where an untrusted inode number is passed.
 	 */
 	if (flags & XFS_IGET_UNTRUSTED) {
+<<<<<<< HEAD
 		error = xfs_imap_lookup(pag, tp, agino, agbno,
 					&chunk_agbno, &offset_agbno, flags);
 		if (error)
 			return error;
+=======
+		error = xfs_imap_lookup(mp, tp, pag, agino, agbno,
+					&chunk_agbno, &offset_agbno, flags);
+		if (error)
+			goto out_drop;
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_map;
 	}
 
@@ -2337,7 +2654,12 @@ xfs_imap(
 		imap->im_len = XFS_FSB_TO_BB(mp, 1);
 		imap->im_boffset = (unsigned short)(offset <<
 							mp->m_sb.sb_inodelog);
+<<<<<<< HEAD
 		return 0;
+=======
+		error = 0;
+		goto out_drop;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -2349,10 +2671,17 @@ xfs_imap(
 		offset_agbno = agbno & M_IGEO(mp)->inoalign_mask;
 		chunk_agbno = agbno - offset_agbno;
 	} else {
+<<<<<<< HEAD
 		error = xfs_imap_lookup(pag, tp, agino, agbno,
 					&chunk_agbno, &offset_agbno, flags);
 		if (error)
 			return error;
+=======
+		error = xfs_imap_lookup(mp, tp, pag, agino, agbno,
+					&chunk_agbno, &offset_agbno, flags);
+		if (error)
+			goto out_drop;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 out_map:
@@ -2380,9 +2709,20 @@ out_map:
 			__func__, (unsigned long long) imap->im_blkno,
 			(unsigned long long) imap->im_len,
 			XFS_FSB_TO_BB(mp, mp->m_sb.sb_dblocks));
+<<<<<<< HEAD
 		return -EINVAL;
 	}
 	return 0;
+=======
+		error = -EINVAL;
+		goto out_drop;
+	}
+	error = 0;
+out_drop:
+	if (pag)
+		xfs_perag_put(pag);
+	return error;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -2598,10 +2938,17 @@ xfs_ialloc_read_agi(
 		return error;
 
 	agi = agibp->b_addr;
+<<<<<<< HEAD
 	if (!xfs_perag_initialised_agi(pag)) {
 		pag->pagi_freecount = be32_to_cpu(agi->agi_freecount);
 		pag->pagi_count = be32_to_cpu(agi->agi_count);
 		set_bit(XFS_AGSTATE_AGI_INIT, &pag->pag_opstate);
+=======
+	if (!pag->pagi_init) {
+		pag->pagi_freecount = be32_to_cpu(agi->agi_freecount);
+		pag->pagi_count = be32_to_cpu(agi->agi_count);
+		pag->pagi_init = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -2909,13 +3256,19 @@ xfs_ialloc_calc_rootino(
  */
 int
 xfs_ialloc_check_shrink(
+<<<<<<< HEAD
 	struct xfs_perag	*pag,
 	struct xfs_trans	*tp,
+=======
+	struct xfs_trans	*tp,
+	xfs_agnumber_t		agno,
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfs_buf		*agibp,
 	xfs_agblock_t		new_length)
 {
 	struct xfs_inobt_rec_incore rec;
 	struct xfs_btree_cur	*cur;
+<<<<<<< HEAD
 	xfs_agino_t		agino;
 	int			has;
 	int			error;
@@ -2927,6 +3280,21 @@ xfs_ialloc_check_shrink(
 
 	/* Look up the inobt record that would correspond to the new EOFS. */
 	agino = XFS_AGB_TO_AGINO(pag->pag_mount, new_length);
+=======
+	struct xfs_mount	*mp = tp->t_mountp;
+	struct xfs_perag	*pag;
+	xfs_agino_t		agino = XFS_AGB_TO_AGINO(mp, new_length);
+	int			has;
+	int			error;
+
+	if (!xfs_has_sparseinodes(mp))
+		return 0;
+
+	pag = xfs_perag_get(mp, agno);
+	cur = xfs_inobt_init_cursor(mp, tp, agibp, pag, XFS_BTNUM_INO);
+
+	/* Look up the inobt record that would correspond to the new EOFS. */
+>>>>>>> b7ba80a49124 (Commit)
 	error = xfs_inobt_lookup(cur, agino, XFS_LOOKUP_LE, &has);
 	if (error || !has)
 		goto out;
@@ -2947,5 +3315,9 @@ xfs_ialloc_check_shrink(
 	}
 out:
 	xfs_btree_del_cursor(cur, error);
+<<<<<<< HEAD
+=======
+	xfs_perag_put(pag);
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }

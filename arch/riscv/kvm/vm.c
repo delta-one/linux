@@ -87,7 +87,12 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
 	return r;
 }
 
+<<<<<<< HEAD
 int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+=======
+long kvm_arch_vm_ioctl(struct file *filp,
+		       unsigned int ioctl, unsigned long arg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return -EINVAL;
 }

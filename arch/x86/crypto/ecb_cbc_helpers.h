@@ -13,14 +13,22 @@
 
 #define ECB_WALK_START(req, bsize, fpu_blocks) do {			\
 	void *ctx = crypto_skcipher_ctx(crypto_skcipher_reqtfm(req));	\
+<<<<<<< HEAD
 	const int __fpu_blocks = (fpu_blocks);				\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const int __bsize = (bsize);					\
 	struct skcipher_walk walk;					\
 	int err = skcipher_walk_virt(&walk, (req), false);		\
 	while (walk.nbytes > 0) {					\
 		unsigned int nbytes = walk.nbytes;			\
+<<<<<<< HEAD
 		bool do_fpu = __fpu_blocks != -1 &&			\
 			      nbytes >= __fpu_blocks * __bsize;		\
+=======
+		bool do_fpu = (fpu_blocks) != -1 &&			\
+			      nbytes >= (fpu_blocks) * __bsize;		\
+>>>>>>> b7ba80a49124 (Commit)
 		const u8 *src = walk.src.virt.addr;			\
 		u8 *dst = walk.dst.virt.addr;				\
 		u8 __maybe_unused buf[(bsize)];				\
@@ -36,12 +44,16 @@
 } while (0)
 
 #define ECB_BLOCK(blocks, func) do {					\
+<<<<<<< HEAD
 	const int __blocks = (blocks);					\
 	if (do_fpu && __blocks < __fpu_blocks) {			\
 		kernel_fpu_end();					\
 		do_fpu = false;						\
 	}								\
 	while (nbytes >= __blocks * __bsize) {				\
+=======
+	while (nbytes >= (blocks) * __bsize) {				\
+>>>>>>> b7ba80a49124 (Commit)
 		(func)(ctx, dst, src);					\
 		ECB_WALK_ADVANCE(blocks);				\
 	}								\
@@ -59,12 +71,16 @@
 } while (0)
 
 #define CBC_DEC_BLOCK(blocks, func) do {				\
+<<<<<<< HEAD
 	const int __blocks = (blocks);					\
 	if (do_fpu && __blocks <  __fpu_blocks) {			\
 		kernel_fpu_end();					\
 		do_fpu = false;						\
 	}								\
 	while (nbytes >= __blocks * __bsize) {				\
+=======
+	while (nbytes >= (blocks) * __bsize) {				\
+>>>>>>> b7ba80a49124 (Commit)
 		const u8 *__iv = src + ((blocks) - 1) * __bsize;	\
 		if (dst == src)						\
 			__iv = memcpy(buf, __iv, __bsize);		\

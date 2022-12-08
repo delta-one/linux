@@ -1384,9 +1384,15 @@ static const struct yas5xx_chip_info yas5xx_chip_info_tbl[] = {
 	},
 };
 
+<<<<<<< HEAD
 static int yas5xx_probe(struct i2c_client *i2c)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(i2c);
+=======
+static int yas5xx_probe(struct i2c_client *i2c,
+			const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct iio_dev *indio_dev;
 	struct device *dev = &i2c->dev;
 	struct yas5xx *yas5xx;
@@ -1605,7 +1611,11 @@ static struct i2c_driver yas5xx_driver = {
 		.of_match_table = yas5xx_of_match,
 		.pm = pm_ptr(&yas5xx_dev_pm_ops),
 	},
+<<<<<<< HEAD
 	.probe_new = yas5xx_probe,
+=======
+	.probe	  = yas5xx_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove	  = yas5xx_remove,
 	.id_table = yas5xx_id,
 };

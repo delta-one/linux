@@ -480,7 +480,11 @@ static int vpif_probe(struct platform_device *pdev)
 		ret = irq;
 		goto err_put_rpm;
 	}
+<<<<<<< HEAD
 	res_irq = DEFINE_RES_IRQ_NAMED(irq, of_node_full_name(pdev->dev.of_node));
+=======
+	res_irq = (struct resource)DEFINE_RES_IRQ_NAMED(irq, of_node_full_name(pdev->dev.of_node));
+>>>>>>> b7ba80a49124 (Commit)
 	res_irq.flags |= irq_get_trigger_type(irq);
 
 	pdev_capture = kzalloc(sizeof(*pdev_capture), GFP_KERNEL);

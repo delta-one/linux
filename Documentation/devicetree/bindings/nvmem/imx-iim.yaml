@@ -14,7 +14,11 @@ description: |
   i.MX25, i.MX27, i.MX31, i.MX35, i.MX51 and i.MX53 SoCs.
 
 allOf:
+<<<<<<< HEAD
   - $ref: nvmem.yaml#
+=======
+  - $ref: "nvmem.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

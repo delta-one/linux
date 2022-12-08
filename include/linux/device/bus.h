@@ -66,6 +66,11 @@ struct fwnode_handle;
  * @iommu_ops:  IOMMU specific operations for this bus, used to attach IOMMU
  *              driver implementations to a bus and allow the driver to do
  *              bus-specific setup
+<<<<<<< HEAD
+=======
+ * @p:		The private data of the driver core, only the driver core can
+ *		touch this.
+>>>>>>> b7ba80a49124 (Commit)
  * @lock_key:	Lock class key for use by the lock validator
  * @need_parent_lock:	When probing or removing a device on this bus, the
  *			device core should lock the device's parent.
@@ -88,7 +93,11 @@ struct bus_type {
 	const struct attribute_group **drv_groups;
 
 	int (*match)(struct device *dev, struct device_driver *drv);
+<<<<<<< HEAD
 	int (*uevent)(const struct device *dev, struct kobj_uevent_env *env);
+=======
+	int (*uevent)(struct device *dev, struct kobj_uevent_env *env);
+>>>>>>> b7ba80a49124 (Commit)
 	int (*probe)(struct device *dev);
 	void (*sync_state)(struct device *dev);
 	void (*remove)(struct device *dev);
@@ -109,12 +118,22 @@ struct bus_type {
 
 	const struct iommu_ops *iommu_ops;
 
+<<<<<<< HEAD
+=======
+	struct subsys_private *p;
+	struct lock_class_key lock_key;
+
+>>>>>>> b7ba80a49124 (Commit)
 	bool need_parent_lock;
 };
 
 extern int __must_check bus_register(struct bus_type *bus);
 
+<<<<<<< HEAD
 extern void bus_unregister(const struct bus_type *bus);
+=======
+extern void bus_unregister(struct bus_type *bus);
+>>>>>>> b7ba80a49124 (Commit)
 
 extern int __must_check bus_rescan_devices(struct bus_type *bus);
 
@@ -131,8 +150,14 @@ struct bus_attribute {
 #define BUS_ATTR_WO(_name) \
 	struct bus_attribute bus_attr_##_name = __ATTR_WO(_name)
 
+<<<<<<< HEAD
 int __must_check bus_create_file(const struct bus_type *bus, struct bus_attribute *attr);
 void bus_remove_file(const struct bus_type *bus, struct bus_attribute *attr);
+=======
+extern int __must_check bus_create_file(struct bus_type *,
+					struct bus_attribute *);
+extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Generic device matching functions that all busses can use to match with */
 int device_match_name(struct device *dev, const void *name);
@@ -144,9 +169,26 @@ int device_match_acpi_handle(struct device *dev, const void *handle);
 int device_match_any(struct device *dev, const void *unused);
 
 /* iterator helpers for buses */
+<<<<<<< HEAD
 int bus_for_each_dev(const struct bus_type *bus, struct device *start, void *data,
 		     int (*fn)(struct device *dev, void *data));
 struct device *bus_find_device(const struct bus_type *bus, struct device *start,
+=======
+struct subsys_dev_iter {
+	struct klist_iter		ki;
+	const struct device_type	*type;
+};
+void subsys_dev_iter_init(struct subsys_dev_iter *iter,
+			 struct bus_type *subsys,
+			 struct device *start,
+			 const struct device_type *type);
+struct device *subsys_dev_iter_next(struct subsys_dev_iter *iter);
+void subsys_dev_iter_exit(struct subsys_dev_iter *iter);
+
+int bus_for_each_dev(struct bus_type *bus, struct device *start, void *data,
+		     int (*fn)(struct device *dev, void *data));
+struct device *bus_find_device(struct bus_type *bus, struct device *start,
+>>>>>>> b7ba80a49124 (Commit)
 			       const void *data,
 			       int (*match)(struct device *dev, const void *data));
 /**
@@ -156,7 +198,11 @@ struct device *bus_find_device(const struct bus_type *bus, struct device *start,
  * @start: Device to begin with
  * @name: name of the device to match
  */
+<<<<<<< HEAD
 static inline struct device *bus_find_device_by_name(const struct bus_type *bus,
+=======
+static inline struct device *bus_find_device_by_name(struct bus_type *bus,
+>>>>>>> b7ba80a49124 (Commit)
 						     struct device *start,
 						     const char *name)
 {
@@ -170,7 +216,11 @@ static inline struct device *bus_find_device_by_name(const struct bus_type *bus,
  * @np: of_node of the device to match.
  */
 static inline struct device *
+<<<<<<< HEAD
 bus_find_device_by_of_node(const struct bus_type *bus, const struct device_node *np)
+=======
+bus_find_device_by_of_node(struct bus_type *bus, const struct device_node *np)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return bus_find_device(bus, NULL, np, device_match_of_node);
 }
@@ -182,7 +232,11 @@ bus_find_device_by_of_node(const struct bus_type *bus, const struct device_node 
  * @fwnode: fwnode of the device to match.
  */
 static inline struct device *
+<<<<<<< HEAD
 bus_find_device_by_fwnode(const struct bus_type *bus, const struct fwnode_handle *fwnode)
+=======
+bus_find_device_by_fwnode(struct bus_type *bus, const struct fwnode_handle *fwnode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return bus_find_device(bus, NULL, fwnode, device_match_fwnode);
 }
@@ -193,7 +247,11 @@ bus_find_device_by_fwnode(const struct bus_type *bus, const struct fwnode_handle
  * @bus: bus type
  * @devt: device type of the device to match.
  */
+<<<<<<< HEAD
 static inline struct device *bus_find_device_by_devt(const struct bus_type *bus,
+=======
+static inline struct device *bus_find_device_by_devt(struct bus_type *bus,
+>>>>>>> b7ba80a49124 (Commit)
 						     dev_t devt)
 {
 	return bus_find_device(bus, NULL, &devt, device_match_devt);
@@ -206,7 +264,11 @@ static inline struct device *bus_find_device_by_devt(const struct bus_type *bus,
  * @cur: device to begin the search with.
  */
 static inline struct device *
+<<<<<<< HEAD
 bus_find_next_device(const struct bus_type *bus,struct device *cur)
+=======
+bus_find_next_device(struct bus_type *bus,struct device *cur)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return bus_find_device(bus, cur, NULL, device_match_any);
 }
@@ -221,19 +283,33 @@ struct acpi_device;
  * @adev: ACPI COMPANION device to match.
  */
 static inline struct device *
+<<<<<<< HEAD
 bus_find_device_by_acpi_dev(const struct bus_type *bus, const struct acpi_device *adev)
+=======
+bus_find_device_by_acpi_dev(struct bus_type *bus, const struct acpi_device *adev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return bus_find_device(bus, NULL, adev, device_match_acpi_dev);
 }
 #else
 static inline struct device *
+<<<<<<< HEAD
 bus_find_device_by_acpi_dev(const struct bus_type *bus, const void *adev)
+=======
+bus_find_device_by_acpi_dev(struct bus_type *bus, const void *adev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return NULL;
 }
 #endif
 
+<<<<<<< HEAD
 int bus_for_each_drv(const struct bus_type *bus, struct device_driver *start,
+=======
+struct device *subsys_find_device_by_id(struct bus_type *bus, unsigned int id,
+					struct device *hint);
+int bus_for_each_drv(struct bus_type *bus, struct device_driver *start,
+>>>>>>> b7ba80a49124 (Commit)
 		     void *data, int (*fn)(struct device_driver *, void *));
 void bus_sort_breadthfirst(struct bus_type *bus,
 			   int (*compare)(const struct device *a,
@@ -246,6 +322,7 @@ void bus_sort_breadthfirst(struct bus_type *bus,
  */
 struct notifier_block;
 
+<<<<<<< HEAD
 extern int bus_register_notifier(const struct bus_type *bus,
 				 struct notifier_block *nb);
 extern int bus_unregister_notifier(const struct bus_type *bus,
@@ -283,5 +360,30 @@ enum bus_notifier_event {
 
 extern struct kset *bus_get_kset(const struct bus_type *bus);
 struct device *bus_get_dev_root(const struct bus_type *bus);
+=======
+extern int bus_register_notifier(struct bus_type *bus,
+				 struct notifier_block *nb);
+extern int bus_unregister_notifier(struct bus_type *bus,
+				   struct notifier_block *nb);
+
+/* All 4 notifers below get called with the target struct device *
+ * as an argument. Note that those functions are likely to be called
+ * with the device lock held in the core, so be careful.
+ */
+#define BUS_NOTIFY_ADD_DEVICE		0x00000001 /* device added */
+#define BUS_NOTIFY_DEL_DEVICE		0x00000002 /* device to be removed */
+#define BUS_NOTIFY_REMOVED_DEVICE	0x00000003 /* device removed */
+#define BUS_NOTIFY_BIND_DRIVER		0x00000004 /* driver about to be
+						      bound */
+#define BUS_NOTIFY_BOUND_DRIVER		0x00000005 /* driver bound to device */
+#define BUS_NOTIFY_UNBIND_DRIVER	0x00000006 /* driver about to be
+						      unbound */
+#define BUS_NOTIFY_UNBOUND_DRIVER	0x00000007 /* driver is unbound
+						      from the device */
+#define BUS_NOTIFY_DRIVER_NOT_BOUND	0x00000008 /* driver fails to be bound */
+
+extern struct kset *bus_get_kset(struct bus_type *bus);
+extern struct klist *bus_get_device_klist(struct bus_type *bus);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

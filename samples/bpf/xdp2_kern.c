@@ -112,10 +112,13 @@ int xdp_prog1(struct xdp_md *ctx)
 
 	if (ipproto == IPPROTO_UDP) {
 		swap_src_dst_mac(data);
+<<<<<<< HEAD
 
 		if (bpf_xdp_store_bytes(ctx, 0, pkt, sizeof(pkt)))
 			return rc;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		rc = XDP_TX;
 	}
 

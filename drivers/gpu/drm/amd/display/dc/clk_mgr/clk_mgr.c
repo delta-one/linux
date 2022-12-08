@@ -29,7 +29,10 @@
 #include "dc_types.h"
 #include "dccg.h"
 #include "clk_mgr_internal.h"
+<<<<<<< HEAD
 #include "link.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "dce100/dce_clk_mgr.h"
 #include "dce110/dce110_clk_mgr.h"
@@ -104,7 +107,11 @@ void clk_mgr_exit_optimized_pwr_state(const struct dc *dc, struct clk_mgr *clk_m
 	int edp_num;
 	unsigned int panel_inst;
 
+<<<<<<< HEAD
 	dc_get_edp_links(dc, edp_links, &edp_num);
+=======
+	get_edp_links(dc, edp_links, &edp_num);
+>>>>>>> b7ba80a49124 (Commit)
 	if (dc->hwss.exit_optimized_pwr_state)
 		dc->hwss.exit_optimized_pwr_state(dc, dc->current_state);
 
@@ -116,7 +123,11 @@ void clk_mgr_exit_optimized_pwr_state(const struct dc *dc, struct clk_mgr *clk_m
 			if (!edp_link->psr_settings.psr_feature_enabled)
 				continue;
 			clk_mgr->psr_allow_active_cache = edp_link->psr_settings.psr_allow_active;
+<<<<<<< HEAD
 			dc->link_srv->edp_set_psr_allow_active(edp_link, &allow_active, false, false, NULL);
+=======
+			dc_link_set_psr_allow_active(edp_link, &allow_active, false, false, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -129,13 +140,21 @@ void clk_mgr_optimize_pwr_state(const struct dc *dc, struct clk_mgr *clk_mgr)
 	int edp_num;
 	unsigned int panel_inst;
 
+<<<<<<< HEAD
 	dc_get_edp_links(dc, edp_links, &edp_num);
+=======
+	get_edp_links(dc, edp_links, &edp_num);
+>>>>>>> b7ba80a49124 (Commit)
 	if (edp_num) {
 		for (panel_inst = 0; panel_inst < edp_num; panel_inst++) {
 			edp_link = edp_links[panel_inst];
 			if (!edp_link->psr_settings.psr_feature_enabled)
 				continue;
+<<<<<<< HEAD
 			dc->link_srv->edp_set_psr_allow_active(edp_link,
+=======
+			dc_link_set_psr_allow_active(edp_link,
+>>>>>>> b7ba80a49124 (Commit)
 					&clk_mgr->psr_allow_active_cache, false, false, NULL);
 		}
 	}
@@ -221,7 +240,11 @@ struct clk_mgr *dc_clk_mgr_create(struct dc_context *ctx, struct pp_smu_funcs *p
 			dce120_clk_mgr_construct(ctx, clk_mgr);
 		return &clk_mgr->base;
 	}
+<<<<<<< HEAD
 #if defined(CONFIG_DRM_AMD_DC_FP)
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+>>>>>>> b7ba80a49124 (Commit)
 	case FAMILY_RV: {
 		struct clk_mgr_internal *clk_mgr = kzalloc(sizeof(*clk_mgr), GFP_KERNEL);
 
@@ -351,7 +374,11 @@ struct clk_mgr *dc_clk_mgr_create(struct dc_context *ctx, struct pp_smu_funcs *p
 	}
 	break;
 
+<<<<<<< HEAD
 #endif /* CONFIG_DRM_AMD_DC_FP - Family RV */
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		ASSERT(0); /* Unknown Asic */
 		break;
@@ -364,7 +391,11 @@ void dc_destroy_clk_mgr(struct clk_mgr *clk_mgr_base)
 {
 	struct clk_mgr_internal *clk_mgr = TO_CLK_MGR_INTERNAL(clk_mgr_base);
 
+<<<<<<< HEAD
 #ifdef CONFIG_DRM_AMD_DC_FP
+=======
+#ifdef CONFIG_DRM_AMD_DC_DCN
+>>>>>>> b7ba80a49124 (Commit)
 	switch (clk_mgr_base->ctx->asic_id.chip_family) {
 	case FAMILY_NV:
 		if (ASICREV_IS_SIENNA_CICHLID_P(clk_mgr_base->ctx->asic_id.hw_internal_rev)) {
@@ -405,7 +436,11 @@ void dc_destroy_clk_mgr(struct clk_mgr *clk_mgr_base)
 	default:
 		break;
 	}
+<<<<<<< HEAD
 #endif /* CONFIG_DRM_AMD_DC_FP */
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(clk_mgr);
 }

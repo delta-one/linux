@@ -1405,10 +1405,13 @@ static int cpsw_create_ports(struct cpsw_common *cpsw)
 		ndev->features |= NETIF_F_HW_VLAN_CTAG_FILTER |
 				  NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_NETNS_LOCAL | NETIF_F_HW_TC;
 
+<<<<<<< HEAD
 		ndev->xdp_features = NETDEV_XDP_ACT_BASIC |
 				     NETDEV_XDP_ACT_REDIRECT |
 				     NETDEV_XDP_ACT_NDO_XMIT;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ndev->netdev_ops = &cpsw_netdev_ops;
 		ndev->ethtool_ops = &cpsw_ethtool_ops;
 		SET_NETDEV_DEV(ndev, dev);
@@ -1420,7 +1423,13 @@ static int cpsw_create_ports(struct cpsw_common *cpsw)
 			 * accordingly.
 			 */
 			netif_napi_add(ndev, &cpsw->napi_rx,
+<<<<<<< HEAD
 				       cpsw->quirk_irq ? cpsw_rx_poll : cpsw_rx_mq_poll);
+=======
+				       cpsw->quirk_irq ?
+				       cpsw_rx_poll : cpsw_rx_mq_poll,
+				       NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 			netif_napi_add_tx(ndev, &cpsw->napi_tx,
 					  cpsw->quirk_irq ?
 					  cpsw_tx_poll : cpsw_tx_mq_poll);

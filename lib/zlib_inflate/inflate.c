@@ -17,7 +17,11 @@
 
 /* architecture-specific bits */
 #ifdef CONFIG_ZLIB_DFLTCC
+<<<<<<< HEAD
 #  include "../zlib_dfltcc/dfltcc_inflate.h"
+=======
+#  include "../zlib_dfltcc/dfltcc.h"
+>>>>>>> b7ba80a49124 (Commit)
 #else
 #define INFLATE_RESET_HOOK(strm) do {} while (0)
 #define INFLATE_TYPEDO_HOOK(strm, flush) do {} while (0)

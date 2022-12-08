@@ -67,7 +67,11 @@ MODULE_PARM_DESC(video,
 	"Video memory size in MB, width, height in pixels (default 2,800,600)");
 
 static void xenfb_make_preferred_console(void);
+<<<<<<< HEAD
 static void xenfb_remove(struct xenbus_device *);
+=======
+static int xenfb_remove(struct xenbus_device *);
+>>>>>>> b7ba80a49124 (Commit)
 static void xenfb_init_shared_page(struct xenfb_info *, struct fb_info *);
 static int xenfb_connect_backend(struct xenbus_device *, struct xenfb_info *);
 static void xenfb_disconnect_backend(struct xenfb_info *);
@@ -504,14 +508,28 @@ static void xenfb_make_preferred_console(void)
 	if (console_set_on_cmdline)
 		return;
 
+<<<<<<< HEAD
 	console_list_lock();
+=======
+	console_lock();
+>>>>>>> b7ba80a49124 (Commit)
 	for_each_console(c) {
 		if (!strcmp(c->name, "tty") && c->index == 0)
 			break;
 	}
+<<<<<<< HEAD
 	if (c)
 		console_force_preferred_locked(c);
 	console_list_unlock();
+=======
+	console_unlock();
+	if (c) {
+		unregister_console(c);
+		c->flags |= CON_CONSDEV;
+		c->flags &= ~CON_PRINTBUFFER; /* don't print again */
+		register_console(c);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int xenfb_resume(struct xenbus_device *dev)
@@ -523,7 +541,11 @@ static int xenfb_resume(struct xenbus_device *dev)
 	return xenfb_connect_backend(dev, info);
 }
 
+<<<<<<< HEAD
 static void xenfb_remove(struct xenbus_device *dev)
+=======
+static int xenfb_remove(struct xenbus_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct xenfb_info *info = dev_get_drvdata(&dev->dev);
 
@@ -538,6 +560,11 @@ static void xenfb_remove(struct xenbus_device *dev)
 	vfree(info->gfns);
 	vfree(info->fb);
 	kfree(info);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static unsigned long vmalloc_to_gfn(void *address)

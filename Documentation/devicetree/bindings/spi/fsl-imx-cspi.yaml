@@ -10,7 +10,11 @@ maintainers:
   - Shawn Guo <shawnguo@kernel.org>
 
 allOf:
+<<<<<<< HEAD
   - $ref: /schemas/spi/spi-controller.yaml#
+=======
+  - $ref: "/schemas/spi/spi-controller.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -23,9 +27,12 @@ properties:
       - const: fsl,imx51-ecspi
       - const: fsl,imx53-ecspi
       - items:
+<<<<<<< HEAD
           - const: fsl,imx8mp-ecspi
           - const: fsl,imx6ul-ecspi
       - items:
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - enum:
               - fsl,imx50-ecspi
               - fsl,imx6q-ecspi
@@ -37,6 +44,10 @@ properties:
               - fsl,imx8mq-ecspi
               - fsl,imx8mm-ecspi
               - fsl,imx8mn-ecspi
+<<<<<<< HEAD
+=======
+              - fsl,imx8mp-ecspi
+>>>>>>> b7ba80a49124 (Commit)
           - const: fsl,imx51-ecspi
 
   reg:

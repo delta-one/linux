@@ -29,6 +29,7 @@ enum {
 	ETH_WK_SRC,
 
 	/* Add new registers above */
+<<<<<<< HEAD
 	MAX_LAN743X_ETH_COMMON_REGS
 };
 
@@ -99,6 +100,9 @@ enum {
 
 	/* Add new registers above */
 	MAX_LAN743X_ETH_SGMII_REGS
+=======
+	MAX_LAN743X_ETH_REGS
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 extern const struct ethtool_ops lan743x_ethtool_ops;

@@ -59,8 +59,11 @@ static struct mpc52xx_lpbfifo lpbfifo;
 
 /**
  * mpc52xx_lpbfifo_kick - Trigger the next block of data to be transferred
+<<<<<<< HEAD
  *
  * @req: Pointer to request structure
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 static void mpc52xx_lpbfifo_kick(struct mpc52xx_lpbfifo_request *req)
 {
@@ -180,8 +183,11 @@ static void mpc52xx_lpbfifo_kick(struct mpc52xx_lpbfifo_request *req)
 
 /**
  * mpc52xx_lpbfifo_irq - IRQ handler for LPB FIFO
+<<<<<<< HEAD
  * @irq: IRQ number to be handled
  * @dev_id: device ID cookie
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * On transmit, the dma completion irq triggers before the fifo completion
  * triggers.  Handle the dma completion here instead of the LPB FIFO Bestcomm
@@ -220,8 +226,11 @@ static void mpc52xx_lpbfifo_kick(struct mpc52xx_lpbfifo_request *req)
  * or nested spinlock condition.  The out path is non-trivial, so
  * extra fiddling is done to make sure all paths lead to the same
  * outbound code.
+<<<<<<< HEAD
  *
  * Return: irqreturn code (%IRQ_HANDLED)
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 static irqreturn_t mpc52xx_lpbfifo_irq(int irq, void *dev_id)
 {
@@ -326,12 +335,17 @@ static irqreturn_t mpc52xx_lpbfifo_irq(int irq, void *dev_id)
 
 /**
  * mpc52xx_lpbfifo_bcom_irq - IRQ handler for LPB FIFO Bestcomm task
+<<<<<<< HEAD
  * @irq: IRQ number to be handled
  * @dev_id: device ID cookie
  *
  * Only used when receiving data.
  *
  * Return: irqreturn code (%IRQ_HANDLED)
+=======
+ *
+ * Only used when receiving data.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static irqreturn_t mpc52xx_lpbfifo_bcom_irq(int irq, void *dev_id)
 {
@@ -382,7 +396,11 @@ static irqreturn_t mpc52xx_lpbfifo_bcom_irq(int irq, void *dev_id)
 }
 
 /**
+<<<<<<< HEAD
  * mpc52xx_lpbfifo_poll - Poll for DMA completion
+=======
+ * mpc52xx_lpbfifo_bcom_poll - Poll for DMA completion
+>>>>>>> b7ba80a49124 (Commit)
  */
 void mpc52xx_lpbfifo_poll(void)
 {
@@ -403,8 +421,11 @@ EXPORT_SYMBOL(mpc52xx_lpbfifo_poll);
 /**
  * mpc52xx_lpbfifo_submit - Submit an LPB FIFO transfer request.
  * @req: Pointer to request structure
+<<<<<<< HEAD
  *
  * Return: %0 on success, -errno code on error
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 int mpc52xx_lpbfifo_submit(struct mpc52xx_lpbfifo_request *req)
 {
@@ -543,7 +564,10 @@ static int mpc52xx_lpbfifo_probe(struct platform_device *op)
  err_bcom_rx_irq:
 	bcom_gen_bd_rx_release(lpbfifo.bcom_rx_task);
  err_bcom_rx:
+<<<<<<< HEAD
 	free_irq(lpbfifo.irq, &lpbfifo);
+=======
+>>>>>>> b7ba80a49124 (Commit)
  err_irq:
 	iounmap(lpbfifo.regs);
 	lpbfifo.regs = NULL;

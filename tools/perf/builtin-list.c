@@ -15,6 +15,7 @@
 #include "util/pmu-hybrid.h"
 #include "util/debug.h"
 #include "util/metricgroup.h"
+<<<<<<< HEAD
 #include "util/string2.h"
 #include "util/strlist.h"
 #include "util/strbuf.h"
@@ -416,10 +417,20 @@ static void json_print_metric(void *ps __maybe_unused, const char *group,
 	printf("%s}", need_sep ? "\n" : "");
 	strbuf_release(&buf);
 }
+=======
+#include <subcmd/pager.h>
+#include <subcmd/parse-options.h>
+#include <stdio.h>
+
+static bool desc_flag = true;
+static bool details_flag;
+static const char *hybrid_type;
+>>>>>>> b7ba80a49124 (Commit)
 
 int cmd_list(int argc, const char **argv)
 {
 	int i, ret = 0;
+<<<<<<< HEAD
 	struct print_state default_ps = {};
 	struct print_state json_ps = {};
 	void *ps = &default_ps;
@@ -447,6 +458,25 @@ int cmd_list(int argc, const char **argv)
 			   "Limit PMU or metric printing to the given hybrid PMU (e.g. core or atom)."),
 		OPT_STRING(0, "unit", &unit_name, "PMU name",
 			   "Limit PMU or metric printing to the specified PMU."),
+=======
+	bool raw_dump = false;
+	bool long_desc_flag = false;
+	bool deprecated = false;
+	char *pmu_name = NULL;
+	struct option list_options[] = {
+		OPT_BOOLEAN(0, "raw-dump", &raw_dump, "Dump raw events"),
+		OPT_BOOLEAN('d', "desc", &desc_flag,
+			    "Print extra event descriptions. --no-desc to not print."),
+		OPT_BOOLEAN('v', "long-desc", &long_desc_flag,
+			    "Print longer event descriptions."),
+		OPT_BOOLEAN(0, "details", &details_flag,
+			    "Print information on the perf event names and expressions used internally by events."),
+		OPT_BOOLEAN(0, "deprecated", &deprecated,
+			    "Print deprecated events."),
+		OPT_STRING(0, "cputype", &hybrid_type, "hybrid cpu type",
+			   "Print events applying cpu with this type for hybrid platform "
+			   "(e.g. core or atom)"),
+>>>>>>> b7ba80a49124 (Commit)
 		OPT_INCR(0, "debug", &verbose,
 			     "Enable debugging output"),
 		OPT_END()
@@ -457,14 +487,18 @@ int cmd_list(int argc, const char **argv)
 	};
 
 	set_option_flag(list_options, 0, "raw-dump", PARSE_OPT_HIDDEN);
+<<<<<<< HEAD
 	/* Hide hybrid flag for the more generic 'unit' flag. */
 	set_option_flag(list_options, 0, "cputype", PARSE_OPT_HIDDEN);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	argc = parse_options(argc, argv, list_options, list_usage,
 			     PARSE_OPT_STOP_AT_NON_OPTION);
 
 	setup_pager();
 
+<<<<<<< HEAD
 	if (!default_ps.name_only)
 		setup_pager();
 
@@ -496,6 +530,20 @@ int cmd_list(int argc, const char **argv)
 		default_ps.metrics = true;
 		default_ps.metricgroups = true;
 		print_events(&print_cb, ps);
+=======
+	if (!raw_dump && pager_in_use())
+		printf("\nList of pre-defined events (to be used in -e):\n\n");
+
+	if (hybrid_type) {
+		pmu_name = perf_pmu__hybrid_type_to_pmu(hybrid_type);
+		if (!pmu_name)
+			pr_warning("WARNING: hybrid cputype is not supported!\n");
+	}
+
+	if (argc == 0) {
+		print_events(NULL, raw_dump, !desc_flag, long_desc_flag,
+				details_flag, deprecated, pmu_name);
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -503,6 +551,7 @@ int cmd_list(int argc, const char **argv)
 		char *sep, *s;
 
 		if (strcmp(argv[i], "tracepoint") == 0)
+<<<<<<< HEAD
 			print_tracepoint_events(&print_cb, ps);
 		else if (strcmp(argv[i], "hw") == 0 ||
 			 strcmp(argv[i], "hardware") == 0)
@@ -534,10 +583,42 @@ int cmd_list(int argc, const char **argv)
 
 			default_ps.event_glob = strdup(argv[i]);
 			if (!default_ps.event_glob) {
+=======
+			print_tracepoint_events(NULL, NULL, raw_dump);
+		else if (strcmp(argv[i], "hw") == 0 ||
+			 strcmp(argv[i], "hardware") == 0)
+			print_symbol_events(NULL, PERF_TYPE_HARDWARE,
+					event_symbols_hw, PERF_COUNT_HW_MAX, raw_dump);
+		else if (strcmp(argv[i], "sw") == 0 ||
+			 strcmp(argv[i], "software") == 0) {
+			print_symbol_events(NULL, PERF_TYPE_SOFTWARE,
+					event_symbols_sw, PERF_COUNT_SW_MAX, raw_dump);
+			print_tool_events(NULL, raw_dump);
+		} else if (strcmp(argv[i], "cache") == 0 ||
+			 strcmp(argv[i], "hwcache") == 0)
+			print_hwcache_events(NULL, raw_dump);
+		else if (strcmp(argv[i], "pmu") == 0)
+			print_pmu_events(NULL, raw_dump, !desc_flag,
+						long_desc_flag, details_flag,
+						deprecated, pmu_name);
+		else if (strcmp(argv[i], "sdt") == 0)
+			print_sdt_events(NULL, NULL, raw_dump);
+		else if (strcmp(argv[i], "metric") == 0 || strcmp(argv[i], "metrics") == 0)
+			metricgroup__print(true, false, NULL, raw_dump, details_flag, pmu_name);
+		else if (strcmp(argv[i], "metricgroup") == 0 || strcmp(argv[i], "metricgroups") == 0)
+			metricgroup__print(false, true, NULL, raw_dump, details_flag, pmu_name);
+		else if ((sep = strchr(argv[i], ':')) != NULL) {
+			int sep_idx;
+
+			sep_idx = sep - argv[i];
+			s = strdup(argv[i]);
+			if (s == NULL) {
+>>>>>>> b7ba80a49124 (Commit)
 				ret = -1;
 				goto out;
 			}
 
+<<<<<<< HEAD
 			print_tracepoint_events(&print_cb, ps);
 			print_sdt_events(&print_cb, ps);
 			default_ps.metrics = true;
@@ -545,11 +626,19 @@ int cmd_list(int argc, const char **argv)
 			metricgroup__print(&print_cb, ps);
 			zfree(&default_ps.event_glob);
 			default_ps.pmu_glob = old_pmu_glob;
+=======
+			s[sep_idx] = '\0';
+			print_tracepoint_events(s, s + sep_idx + 1, raw_dump);
+			print_sdt_events(s, s + sep_idx + 1, raw_dump);
+			metricgroup__print(true, true, s, raw_dump, details_flag, pmu_name);
+			free(s);
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			if (asprintf(&s, "*%s*", argv[i]) < 0) {
 				printf("Critical: Not enough memory! Trying to continue...\n");
 				continue;
 			}
+<<<<<<< HEAD
 			default_ps.event_glob = s;
 			print_symbol_events(&print_cb, ps, PERF_TYPE_HARDWARE,
 					event_symbols_hw, PERF_COUNT_HW_MAX);
@@ -563,15 +652,35 @@ int cmd_list(int argc, const char **argv)
 			default_ps.metrics = true;
 			default_ps.metricgroups = true;
 			metricgroup__print(&print_cb, ps);
+=======
+			print_symbol_events(s, PERF_TYPE_HARDWARE,
+					    event_symbols_hw, PERF_COUNT_HW_MAX, raw_dump);
+			print_symbol_events(s, PERF_TYPE_SOFTWARE,
+					    event_symbols_sw, PERF_COUNT_SW_MAX, raw_dump);
+			print_tool_events(s, raw_dump);
+			print_hwcache_events(s, raw_dump);
+			print_pmu_events(s, raw_dump, !desc_flag,
+						long_desc_flag,
+						details_flag,
+						deprecated,
+						pmu_name);
+			print_tracepoint_events(NULL, s, raw_dump);
+			print_sdt_events(NULL, s, raw_dump);
+			metricgroup__print(true, true, s, raw_dump, details_flag, pmu_name);
+>>>>>>> b7ba80a49124 (Commit)
 			free(s);
 		}
 	}
 
 out:
+<<<<<<< HEAD
 	print_cb.print_end(ps);
 	free(default_ps.pmu_glob);
 	free(default_ps.last_topic);
 	free(default_ps.last_metricgroups);
 	strlist__delete(default_ps.visited_metrics);
+=======
+	free(pmu_name);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }

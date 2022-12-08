@@ -548,8 +548,15 @@ static int iss_pipeline_is_last(struct media_entity *me)
 	struct iss_pipeline *pipe;
 	struct media_pad *pad;
 
+<<<<<<< HEAD
 	pipe = to_iss_pipeline(me);
 	if (!pipe || pipe->stream_state == ISS_PIPELINE_STREAM_STOPPED)
+=======
+	if (!me->pipe)
+		return 0;
+	pipe = to_iss_pipeline(me);
+	if (pipe->stream_state == ISS_PIPELINE_STREAM_STOPPED)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	pad = media_pad_remote_pad_first(&pipe->output->pad);
 	return pad->entity == me;

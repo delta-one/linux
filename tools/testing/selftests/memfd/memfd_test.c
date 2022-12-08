@@ -28,6 +28,7 @@
 #define MFD_DEF_SIZE 8192
 #define STACK_SIZE 65536
 
+<<<<<<< HEAD
 #define F_SEAL_EXEC	0x0020
 
 #define F_WX_SEALS (F_SEAL_SHRINK | \
@@ -38,12 +39,15 @@
 
 #define MFD_NOEXEC_SEAL	0x0008U
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Default is not to test hugetlbfs
  */
 static size_t mfd_def_size = MFD_DEF_SIZE;
 static const char *memfd_str = MEMFD_STR;
 
+<<<<<<< HEAD
 static ssize_t fd2name(int fd, char *buf, size_t bufsize)
 {
 	char buf1[PATH_MAX];
@@ -68,6 +72,8 @@ static ssize_t fd2name(int fd, char *buf, size_t bufsize)
 	return nbytes;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mfd_assert_new(const char *name, loff_t sz, unsigned int flags)
 {
 	int r, fd;
@@ -88,6 +94,7 @@ static int mfd_assert_new(const char *name, loff_t sz, unsigned int flags)
 	return fd;
 }
 
+<<<<<<< HEAD
 static void sysctl_assert_write(const char *val)
 {
 	int fd = open("/proc/sys/vm/memfd_noexec", O_WRONLY | O_CLOEXEC);
@@ -119,6 +126,8 @@ static void sysctl_fail_write(const char *val)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mfd_assert_reopen_fd(int fd_in)
 {
 	int fd;
@@ -163,6 +172,7 @@ static unsigned int mfd_assert_get_seals(int fd)
 
 static void mfd_assert_has_seals(int fd, unsigned int seals)
 {
+<<<<<<< HEAD
 	char buf[PATH_MAX];
 	int nbytes;
 	unsigned int s;
@@ -171,6 +181,13 @@ static void mfd_assert_has_seals(int fd, unsigned int seals)
 	s = mfd_assert_get_seals(fd);
 	if (s != seals) {
 		printf("%u != %u = GET_SEALS(%s)\n", seals, s, buf);
+=======
+	unsigned int s;
+
+	s = mfd_assert_get_seals(fd);
+	if (s != seals) {
+		printf("%u != %u = GET_SEALS(%d)\n", seals, s, fd);
+>>>>>>> b7ba80a49124 (Commit)
 		abort();
 	}
 }
@@ -662,6 +679,7 @@ static void mfd_fail_grow_write(int fd)
 	}
 }
 
+<<<<<<< HEAD
 static void mfd_assert_mode(int fd, int mode)
 {
 	struct stat st;
@@ -720,6 +738,8 @@ static void mfd_fail_chmod(int fd, int mode)
 	mfd_assert_mode(fd, st.st_mode & 07777);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int idle_thread_fn(void *arg)
 {
 	sigset_t set;
@@ -797,9 +817,12 @@ static void test_create(void)
 	mfd_fail_new("", ~0);
 	mfd_fail_new("", 0x80000000U);
 
+<<<<<<< HEAD
 	/* verify EXEC and NOEXEC_SEAL can't both be set */
 	mfd_fail_new("", MFD_EXEC | MFD_NOEXEC_SEAL);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* verify MFD_CLOEXEC is allowed */
 	fd = mfd_assert_new("", 0, MFD_CLOEXEC);
 	close(fd);
@@ -1010,6 +1033,7 @@ static void test_seal_resize(void)
 }
 
 /*
+<<<<<<< HEAD
  * Test SEAL_EXEC
  * Test fd is created with exec and allow sealing.
  * chmod() cannot change x bits after sealing.
@@ -1215,6 +1239,8 @@ static void test_sysctl(void)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Test sharing via dup()
  * Test that seals are shared between dupped FDs and they're all equal.
  */
@@ -1387,9 +1413,12 @@ int main(int argc, char **argv)
 
 	test_create();
 	test_basic();
+<<<<<<< HEAD
 	test_exec_seal();
 	test_exec_no_seal();
 	test_noexec_seal();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	test_seal_write();
 	test_seal_future_write();
@@ -1411,8 +1440,11 @@ int main(int argc, char **argv)
 	test_share_fork("SHARE-FORK", SHARED_FT_STR);
 	join_idle_thread(pid);
 
+<<<<<<< HEAD
 	test_sysctl();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	printf("memfd: DONE\n");
 
 	return 0;

@@ -418,7 +418,10 @@ struct dma_features {
 	unsigned int frpbs;
 	unsigned int frpes;
 	unsigned int addr64;
+<<<<<<< HEAD
 	unsigned int host_dma_width;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int rssen;
 	unsigned int vlhash;
 	unsigned int sphen;

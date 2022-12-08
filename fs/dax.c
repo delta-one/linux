@@ -334,6 +334,7 @@ static unsigned long dax_end_pfn(void *entry)
 	for (pfn = dax_to_pfn(entry); \
 			pfn < dax_end_pfn(entry); pfn++)
 
+<<<<<<< HEAD
 static inline bool dax_page_is_shared(struct page *page)
 {
 	return page->mapping == PAGE_MAPPING_DAX_SHARED;
@@ -346,11 +347,25 @@ static inline bool dax_page_is_shared(struct page *page)
 static inline void dax_page_share_get(struct page *page)
 {
 	if (page->mapping != PAGE_MAPPING_DAX_SHARED) {
+=======
+static inline bool dax_mapping_is_cow(struct address_space *mapping)
+{
+	return (unsigned long)mapping == PAGE_MAPPING_DAX_COW;
+}
+
+/*
+ * Set the page->mapping with FS_DAX_MAPPING_COW flag, increase the refcount.
+ */
+static inline void dax_mapping_set_cow(struct page *page)
+{
+	if ((uintptr_t)page->mapping != PAGE_MAPPING_DAX_COW) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Reset the index if the page was already mapped
 		 * regularly before.
 		 */
 		if (page->mapping)
+<<<<<<< HEAD
 			page->share = 1;
 		page->mapping = PAGE_MAPPING_DAX_SHARED;
 	}
@@ -369,6 +384,21 @@ static inline unsigned long dax_page_share_put(struct page *page)
  */
 static void dax_associate_entry(void *entry, struct address_space *mapping,
 		struct vm_area_struct *vma, unsigned long address, bool shared)
+=======
+			page->index = 1;
+		page->mapping = (void *)PAGE_MAPPING_DAX_COW;
+	}
+	page->index++;
+}
+
+/*
+ * When it is called in dax_insert_entry(), the cow flag will indicate that
+ * whether this entry is shared by multiple files.  If so, set the page->mapping
+ * FS_DAX_MAPPING_COW, and use page->index as refcount.
+ */
+static void dax_associate_entry(void *entry, struct address_space *mapping,
+		struct vm_area_struct *vma, unsigned long address, bool cow)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long size = dax_entry_size(entry), pfn, index;
 	int i = 0;
@@ -380,8 +410,13 @@ static void dax_associate_entry(void *entry, struct address_space *mapping,
 	for_each_mapped_pfn(entry, pfn) {
 		struct page *page = pfn_to_page(pfn);
 
+<<<<<<< HEAD
 		if (shared) {
 			dax_page_share_get(page);
+=======
+		if (cow) {
+			dax_mapping_set_cow(page);
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			WARN_ON_ONCE(page->mapping);
 			page->mapping = mapping;
@@ -402,9 +437,15 @@ static void dax_disassociate_entry(void *entry, struct address_space *mapping,
 		struct page *page = pfn_to_page(pfn);
 
 		WARN_ON_ONCE(trunc && page_ref_count(page) > 1);
+<<<<<<< HEAD
 		if (dax_page_is_shared(page)) {
 			/* keep the shared flag if this page is still shared */
 			if (dax_page_share_put(page) > 0)
+=======
+		if (dax_mapping_is_cow(page->mapping)) {
+			/* keep the CoW flag if this page is still shared */
+			if (page->index-- > 0)
+>>>>>>> b7ba80a49124 (Commit)
 				continue;
 		} else
 			WARN_ON_ONCE(page->mapping && page->mapping != mapping);
@@ -846,6 +887,15 @@ static bool dax_fault_is_synchronous(const struct iomap_iter *iter,
 		(iter->iomap.flags & IOMAP_F_DIRTY);
 }
 
+<<<<<<< HEAD
+=======
+static bool dax_fault_is_cow(const struct iomap_iter *iter)
+{
+	return (iter->flags & IOMAP_WRITE) &&
+		(iter->iomap.flags & IOMAP_F_SHARED);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * By this point grab_mapping_entry() has ensured that we have a locked entry
  * of the appropriate size so we don't have to worry about downgrading PMDs to
@@ -859,14 +909,23 @@ static void *dax_insert_entry(struct xa_state *xas, struct vm_fault *vmf,
 {
 	struct address_space *mapping = vmf->vma->vm_file->f_mapping;
 	void *new_entry = dax_make_entry(pfn, flags);
+<<<<<<< HEAD
 	bool write = iter->flags & IOMAP_WRITE;
 	bool dirty = write && !dax_fault_is_synchronous(iter, vmf->vma);
 	bool shared = iter->iomap.flags & IOMAP_F_SHARED;
+=======
+	bool dirty = !dax_fault_is_synchronous(iter, vmf->vma);
+	bool cow = dax_fault_is_cow(iter);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dirty)
 		__mark_inode_dirty(mapping->host, I_DIRTY_PAGES);
 
+<<<<<<< HEAD
 	if (shared || (dax_is_zero_entry(entry) && !(flags & DAX_ZERO_PAGE))) {
+=======
+	if (cow || (dax_is_zero_entry(entry) && !(flags & DAX_ZERO_PAGE))) {
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned long index = xas->xa_index;
 		/* we are replacing a zero page with block mapping */
 		if (dax_is_pmd_entry(entry))
@@ -878,12 +937,20 @@ static void *dax_insert_entry(struct xa_state *xas, struct vm_fault *vmf,
 
 	xas_reset(xas);
 	xas_lock_irq(xas);
+<<<<<<< HEAD
 	if (shared || dax_is_zero_entry(entry) || dax_is_empty_entry(entry)) {
+=======
+	if (cow || dax_is_zero_entry(entry) || dax_is_empty_entry(entry)) {
+>>>>>>> b7ba80a49124 (Commit)
 		void *old;
 
 		dax_disassociate_entry(entry, mapping, false);
 		dax_associate_entry(new_entry, mapping, vmf->vma, vmf->address,
+<<<<<<< HEAD
 				shared);
+=======
+				cow);
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Only swap our new entry into the page cache if the current
 		 * entry is a zero page or an empty entry.  If a normal PTE or
@@ -903,7 +970,11 @@ static void *dax_insert_entry(struct xa_state *xas, struct vm_fault *vmf,
 	if (dirty)
 		xas_set_mark(xas, PAGECACHE_TAG_DIRTY);
 
+<<<<<<< HEAD
 	if (write && shared)
+=======
+	if (cow)
+>>>>>>> b7ba80a49124 (Commit)
 		xas_set_mark(xas, PAGECACHE_TAG_TOWRITE);
 
 	xas_unlock_irq(xas);
@@ -1087,8 +1158,12 @@ out:
 }
 
 /**
+<<<<<<< HEAD
  * dax_iomap_copy_around - Prepare for an unaligned write to a shared/cow page
  * by copying the data before and after the range to be written.
+=======
+ * dax_iomap_cow_copy - Copy the data from source to destination before write
+>>>>>>> b7ba80a49124 (Commit)
  * @pos:	address to do copy from.
  * @length:	size of copy operation.
  * @align_size:	aligned w.r.t align_size (either PMD_SIZE or PAGE_SIZE)
@@ -1097,6 +1172,7 @@ out:
  *
  * This can be called from two places. Either during DAX write fault (page
  * aligned), to copy the length size data to daddr. Or, while doing normal DAX
+<<<<<<< HEAD
  * write operation, dax_iomap_iter() might call this to do the copy of either
  * start or end unaligned address. In the latter case the rest of the copy of
  * aligned ranges is taken care by dax_iomap_iter() itself.
@@ -1104,12 +1180,20 @@ out:
  * area to make sure no old data remains.
  */
 static int dax_iomap_copy_around(loff_t pos, uint64_t length, size_t align_size,
+=======
+ * write operation, dax_iomap_actor() might call this to do the copy of either
+ * start or end unaligned address. In the latter case the rest of the copy of
+ * aligned ranges is taken care by dax_iomap_actor() itself.
+ */
+static int dax_iomap_cow_copy(loff_t pos, uint64_t length, size_t align_size,
+>>>>>>> b7ba80a49124 (Commit)
 		const struct iomap *srcmap, void *daddr)
 {
 	loff_t head_off = pos & (align_size - 1);
 	size_t size = ALIGN(head_off + length, align_size);
 	loff_t end = pos + length;
 	loff_t pg_end = round_up(end, align_size);
+<<<<<<< HEAD
 	/* copy_all is usually in page fault case */
 	bool copy_all = head_off == 0 && end == pg_end;
 	/* zero the edges if srcmap is a HOLE or IOMAP_UNWRITTEN */
@@ -1130,10 +1214,24 @@ static int dax_iomap_copy_around(loff_t pos, uint64_t length, size_t align_size,
 		else
 			ret = copy_mc_to_kernel(daddr, saddr, length);
 		goto out;
+=======
+	bool copy_all = head_off == 0 && end == pg_end;
+	void *saddr = 0;
+	int ret = 0;
+
+	ret = dax_iomap_direct_access(srcmap, pos, size, &saddr, NULL);
+	if (ret)
+		return ret;
+
+	if (copy_all) {
+		ret = copy_mc_to_kernel(daddr, saddr, length);
+		return ret ? -EIO : 0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Copy the head part of the range */
 	if (head_off) {
+<<<<<<< HEAD
 		if (zero_edge)
 			memset(daddr, 0, head_off);
 		else {
@@ -1141,6 +1239,11 @@ static int dax_iomap_copy_around(loff_t pos, uint64_t length, size_t align_size,
 			if (ret)
 				return -EIO;
 		}
+=======
+		ret = copy_mc_to_kernel(daddr, saddr, head_off);
+		if (ret)
+			return -EIO;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Copy the tail part of the range */
@@ -1148,6 +1251,7 @@ static int dax_iomap_copy_around(loff_t pos, uint64_t length, size_t align_size,
 		loff_t tail_off = head_off + length;
 		loff_t tail_len = pg_end - end;
 
+<<<<<<< HEAD
 		if (zero_edge)
 			memset(daddr + tail_off, 0, tail_len);
 		else {
@@ -1161,6 +1265,14 @@ out:
 	if (zero_edge)
 		dax_flush(srcmap->dax_dev, daddr, size);
 	return ret ? -EIO : 0;
+=======
+		ret = copy_mc_to_kernel(daddr + tail_off, saddr + tail_off,
+					tail_len);
+		if (ret)
+			return -EIO;
+	}
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1245,6 +1357,7 @@ static vm_fault_t dax_pmd_load_hole(struct xa_state *xas, struct vm_fault *vmf,
 }
 #endif /* CONFIG_FS_DAX_PMD */
 
+<<<<<<< HEAD
 static s64 dax_unshare_iter(struct iomap_iter *iter)
 {
 	struct iomap *iomap = &iter->iomap;
@@ -1303,6 +1416,8 @@ int dax_file_unshare(struct inode *inode, loff_t pos, loff_t len,
 }
 EXPORT_SYMBOL_GPL(dax_file_unshare);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int dax_memzero(struct iomap_iter *iter, loff_t pos, size_t size)
 {
 	const struct iomap *iomap = &iter->iomap;
@@ -1317,10 +1432,20 @@ static int dax_memzero(struct iomap_iter *iter, loff_t pos, size_t size)
 	if (ret < 0)
 		return ret;
 	memset(kaddr + offset, 0, size);
+<<<<<<< HEAD
 	if (iomap->flags & IOMAP_F_SHARED)
 		ret = dax_iomap_copy_around(pos, size, PAGE_SIZE, srcmap,
 					    kaddr);
 	else
+=======
+	if (srcmap->addr != iomap->addr) {
+		ret = dax_iomap_cow_copy(pos, size, PAGE_SIZE, srcmap,
+					 kaddr);
+		if (ret < 0)
+			return ret;
+		dax_flush(iomap->dax_dev, kaddr, PAGE_SIZE);
+	} else
+>>>>>>> b7ba80a49124 (Commit)
 		dax_flush(iomap->dax_dev, kaddr + offset, size);
 	return ret;
 }
@@ -1337,6 +1462,7 @@ static s64 dax_zero_iter(struct iomap_iter *iter, bool *did_zero)
 	if (srcmap->type == IOMAP_HOLE || srcmap->type == IOMAP_UNWRITTEN)
 		return length;
 
+<<<<<<< HEAD
 	/*
 	 * invalidate the pages whose sharing state is to be changed
 	 * because of CoW.
@@ -1346,6 +1472,8 @@ static s64 dax_zero_iter(struct iomap_iter *iter, bool *did_zero)
 					      pos >> PAGE_SHIFT,
 					      (pos + length - 1) >> PAGE_SHIFT);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	do {
 		unsigned offset = offset_in_page(pos);
 		unsigned size = min_t(u64, PAGE_SIZE - offset, length);
@@ -1406,13 +1534,20 @@ static loff_t dax_iomap_iter(const struct iomap_iter *iomi,
 		struct iov_iter *iter)
 {
 	const struct iomap *iomap = &iomi->iomap;
+<<<<<<< HEAD
 	const struct iomap *srcmap = iomap_iter_srcmap(iomi);
+=======
+	const struct iomap *srcmap = &iomi->srcmap;
+>>>>>>> b7ba80a49124 (Commit)
 	loff_t length = iomap_length(iomi);
 	loff_t pos = iomi->pos;
 	struct dax_device *dax_dev = iomap->dax_dev;
 	loff_t end = pos + length, done = 0;
 	bool write = iov_iter_rw(iter) == WRITE;
+<<<<<<< HEAD
 	bool cow = write && iomap->flags & IOMAP_F_SHARED;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ssize_t ret = 0;
 	size_t xfer;
 	int id;
@@ -1439,7 +1574,11 @@ static loff_t dax_iomap_iter(const struct iomap_iter *iomi,
 	 * into page tables. We have to tear down these mappings so that data
 	 * written by write(2) is visible in mmap.
 	 */
+<<<<<<< HEAD
 	if (iomap->flags & IOMAP_F_NEW || cow) {
+=======
+	if (iomap->flags & IOMAP_F_NEW) {
+>>>>>>> b7ba80a49124 (Commit)
 		invalidate_inode_pages2_range(iomi->inode->i_mapping,
 					      pos >> PAGE_SHIFT,
 					      (end - 1) >> PAGE_SHIFT);
@@ -1473,9 +1612,16 @@ static loff_t dax_iomap_iter(const struct iomap_iter *iomi,
 			break;
 		}
 
+<<<<<<< HEAD
 		if (cow) {
 			ret = dax_iomap_copy_around(pos, length, PAGE_SIZE,
 						    srcmap, kaddr);
+=======
+		if (write &&
+		    srcmap->type != IOMAP_HOLE && srcmap->addr != iomap->addr) {
+			ret = dax_iomap_cow_copy(pos, length, PAGE_SIZE, srcmap,
+						 kaddr);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret)
 				break;
 		}
@@ -1620,7 +1766,11 @@ static vm_fault_t dax_fault_iter(struct vm_fault *vmf,
 		struct xa_state *xas, void **entry, bool pmd)
 {
 	const struct iomap *iomap = &iter->iomap;
+<<<<<<< HEAD
 	const struct iomap *srcmap = iomap_iter_srcmap(iter);
+=======
+	const struct iomap *srcmap = &iter->srcmap;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t size = pmd ? PMD_SIZE : PAGE_SIZE;
 	loff_t pos = (loff_t)xas->xa_index << PAGE_SHIFT;
 	bool write = iter->flags & IOMAP_WRITE;
@@ -1651,8 +1801,14 @@ static vm_fault_t dax_fault_iter(struct vm_fault *vmf,
 
 	*entry = dax_insert_entry(xas, vmf, iter, *entry, pfn, entry_flags);
 
+<<<<<<< HEAD
 	if (write && iomap->flags & IOMAP_F_SHARED) {
 		err = dax_iomap_copy_around(pos, size, size, srcmap, kaddr);
+=======
+	if (write &&
+	    srcmap->type != IOMAP_HOLE && srcmap->addr != iomap->addr) {
+		err = dax_iomap_cow_copy(pos, size, size, srcmap, kaddr);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			return dax_fault_return(err);
 	}
@@ -2023,6 +2179,7 @@ int dax_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
 		.len		= len,
 		.flags		= IOMAP_DAX,
 	};
+<<<<<<< HEAD
 	int ret, compared = 0;
 
 	while ((ret = iomap_iter(&src_iter, ops)) > 0 &&
@@ -2032,6 +2189,17 @@ int dax_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
 		if (compared < 0)
 			return ret;
 		src_iter.processed = dst_iter.processed = compared;
+=======
+	int ret;
+
+	while ((ret = iomap_iter(&src_iter, ops)) > 0) {
+		while ((ret = iomap_iter(&dst_iter, ops)) > 0) {
+			dst_iter.processed = dax_range_compare_iter(&src_iter,
+						&dst_iter, len, same);
+		}
+		if (ret <= 0)
+			src_iter.processed = ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret;
 }

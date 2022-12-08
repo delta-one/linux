@@ -8,12 +8,18 @@
 #define MT7921_ASAR_MAX_DYN		8
 #define MT7921_ASAR_MIN_GEO		3
 #define MT7921_ASAR_MAX_GEO		8
+<<<<<<< HEAD
 #define MT7921_ASAR_MIN_FG		8
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MT7921_ACPI_MTCL		"MTCL"
 #define MT7921_ACPI_MTDS		"MTDS"
 #define MT7921_ACPI_MTGS		"MTGS"
+<<<<<<< HEAD
 #define MT7921_ACPI_MTFG		"MTFG"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct mt7921_asar_dyn_limit {
 	u8 idx;
@@ -79,6 +85,7 @@ struct mt7921_asar_cl {
 	u8 cl6g[6];
 } __packed;
 
+<<<<<<< HEAD
 struct mt7921_asar_fg {
 	u8 names[4];
 	u8 version;
@@ -88,6 +95,8 @@ struct mt7921_asar_fg {
 	u8 flag[0];
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mt7921_acpi_sar {
 	u8 ver;
 	union {
@@ -99,7 +108,10 @@ struct mt7921_acpi_sar {
 		struct mt7921_asar_geo_v2 *geo_v2;
 	};
 	struct mt7921_asar_cl *countrylist;
+<<<<<<< HEAD
 	struct mt7921_asar_fg *fg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #endif

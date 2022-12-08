@@ -40,7 +40,11 @@ int radeon_semaphore_create(struct radeon_device *rdev,
 	if (*semaphore == NULL) {
 		return -ENOMEM;
 	}
+<<<<<<< HEAD
 	r = radeon_sa_bo_new(&rdev->ring_tmp_bo,
+=======
+	r = radeon_sa_bo_new(rdev, &rdev->ring_tmp_bo,
+>>>>>>> b7ba80a49124 (Commit)
 			     &(*semaphore)->sa_bo, 8, 8);
 	if (r) {
 		kfree(*semaphore);
@@ -100,7 +104,11 @@ void radeon_semaphore_free(struct radeon_device *rdev,
 		dev_err(rdev->dev, "semaphore %p has more waiters than signalers,"
 			" hardware lockup imminent!\n", *semaphore);
 	}
+<<<<<<< HEAD
 	radeon_sa_bo_free(&(*semaphore)->sa_bo, fence);
+=======
+	radeon_sa_bo_free(rdev, &(*semaphore)->sa_bo, fence);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(*semaphore);
 	*semaphore = NULL;
 }

@@ -116,8 +116,12 @@ enum e1000_boards {
 	board_pch_spt,
 	board_pch_cnp,
 	board_pch_tgp,
+<<<<<<< HEAD
 	board_pch_adp,
 	board_pch_mtp
+=======
+	board_pch_adp
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct e1000_ps_page {
@@ -505,7 +509,10 @@ extern const struct e1000_info e1000_pch_spt_info;
 extern const struct e1000_info e1000_pch_cnp_info;
 extern const struct e1000_info e1000_pch_tgp_info;
 extern const struct e1000_info e1000_pch_adp_info;
+<<<<<<< HEAD
 extern const struct e1000_info e1000_pch_mtp_info;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern const struct e1000_info e1000_es2_info;
 
 void e1000e_ptp_init(struct e1000_adapter *adapter);

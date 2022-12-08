@@ -215,11 +215,20 @@ static int lvds_codec_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void lvds_codec_remove(struct platform_device *pdev)
+=======
+static int lvds_codec_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lvds_codec *lvds_codec = platform_get_drvdata(pdev);
 
 	drm_bridge_remove(&lvds_codec->bridge);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id lvds_codec_match[] = {
@@ -241,7 +250,11 @@ MODULE_DEVICE_TABLE(of, lvds_codec_match);
 
 static struct platform_driver lvds_codec_driver = {
 	.probe	= lvds_codec_probe,
+<<<<<<< HEAD
 	.remove_new = lvds_codec_remove,
+=======
+	.remove	= lvds_codec_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name		= "lvds-codec",
 		.of_match_table	= lvds_codec_match,

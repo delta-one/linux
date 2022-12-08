@@ -70,13 +70,18 @@ static struct cmd_struct commands[] = {
 	{ "report",	cmd_report,	0 },
 	{ "bench",	cmd_bench,	0 },
 	{ "stat",	cmd_stat,	0 },
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 	{ "timechart",	cmd_timechart,	0 },
 #endif
+=======
+	{ "timechart",	cmd_timechart,	0 },
+>>>>>>> b7ba80a49124 (Commit)
 	{ "top",	cmd_top,	0 },
 	{ "annotate",	cmd_annotate,	0 },
 	{ "version",	cmd_version,	0 },
 	{ "script",	cmd_script,	0 },
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 	{ "sched",	cmd_sched,	0 },
 #endif
@@ -90,6 +95,17 @@ static struct cmd_struct commands[] = {
 	{ "kvm",	cmd_kvm,	0 },
 	{ "test",	cmd_test,	0 },
 #if defined(HAVE_LIBTRACEEVENT) && (defined(HAVE_LIBAUDIT_SUPPORT) || defined(HAVE_SYSCALL_TABLE_SUPPORT))
+=======
+	{ "sched",	cmd_sched,	0 },
+#ifdef HAVE_LIBELF_SUPPORT
+	{ "probe",	cmd_probe,	0 },
+#endif
+	{ "kmem",	cmd_kmem,	0 },
+	{ "lock",	cmd_lock,	0 },
+	{ "kvm",	cmd_kvm,	0 },
+	{ "test",	cmd_test,	0 },
+#if defined(HAVE_LIBAUDIT_SUPPORT) || defined(HAVE_SYSCALL_TABLE_SUPPORT)
+>>>>>>> b7ba80a49124 (Commit)
 	{ "trace",	cmd_trace,	0 },
 #endif
 	{ "inject",	cmd_inject,	0 },
@@ -97,9 +113,13 @@ static struct cmd_struct commands[] = {
 	{ "data",	cmd_data,	0 },
 	{ "ftrace",	cmd_ftrace,	0 },
 	{ "daemon",	cmd_daemon,	0 },
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 	{ "kwork",	cmd_kwork,	0 },
 #endif
+=======
+	{ "kwork",	cmd_kwork,	0 },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct pager_config {
@@ -508,6 +528,7 @@ int main(int argc, const char **argv)
 		argv[0] = cmd;
 	}
 	if (strstarts(cmd, "trace")) {
+<<<<<<< HEAD
 #ifndef HAVE_LIBTRACEEVENT
 		fprintf(stderr,
 			"trace command not available: missing libtraceevent devel package at build time.\n");
@@ -520,6 +541,16 @@ int main(int argc, const char **argv)
 		setup_path();
 		argv[0] = "trace";
 		return cmd_trace(argc, argv);
+=======
+#if defined(HAVE_LIBAUDIT_SUPPORT) || defined(HAVE_SYSCALL_TABLE_SUPPORT)
+		setup_path();
+		argv[0] = "trace";
+		return cmd_trace(argc, argv);
+#else
+		fprintf(stderr,
+			"trace command not available: missing audit-libs devel package at build time.\n");
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	}
 	/* Look for flags.. */

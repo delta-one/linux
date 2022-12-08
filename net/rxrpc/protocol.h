@@ -84,7 +84,11 @@ struct rxrpc_jumbo_header {
 		__be16	_rsvd;		/* reserved */
 		__be16	cksum;		/* kerberos security checksum */
 	};
+<<<<<<< HEAD
 } __packed;
+=======
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 #define RXRPC_JUMBO_DATALEN	1412	/* non-terminal jumbo packet data length */
 #define RXRPC_JUMBO_SUBPKTLEN	(RXRPC_JUMBO_DATALEN + sizeof(struct rxrpc_jumbo_header))
@@ -132,6 +136,16 @@ struct rxrpc_ackpacket {
 
 } __packed;
 
+<<<<<<< HEAD
+=======
+/* Some ACKs refer to specific packets and some are general and can be updated. */
+#define RXRPC_ACK_UPDATEABLE ((1 << RXRPC_ACK_REQUESTED)	|	\
+			      (1 << RXRPC_ACK_PING_RESPONSE)	|	\
+			      (1 << RXRPC_ACK_DELAY)		|	\
+			      (1 << RXRPC_ACK_IDLE))
+
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * ACK packets can have a further piece of information tagged on the end
  */

@@ -136,8 +136,11 @@ ethnl_tunnel_info_fill_reply(const struct ethnl_req_info *req_base,
 			goto err_cancel_table;
 
 		entry = nla_nest_start(skb, ETHTOOL_A_TUNNEL_UDP_TABLE_ENTRY);
+<<<<<<< HEAD
 		if (!entry)
 			goto err_cancel_entry;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (nla_put_be16(skb, ETHTOOL_A_TUNNEL_UDP_ENTRY_PORT,
 				 htons(IANA_VXLAN_UDP_PORT)) ||

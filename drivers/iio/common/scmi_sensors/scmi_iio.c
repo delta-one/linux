@@ -15,7 +15,10 @@
 #include <linux/kernel.h>
 #include <linux/kthread.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/mutex.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/scmi_protocol.h>
 #include <linux/time.h>
 #include <linux/types.h>
@@ -28,8 +31,11 @@ struct scmi_iio_priv {
 	struct scmi_protocol_handle *ph;
 	const struct scmi_sensor_info *sensor_info;
 	struct iio_dev *indio_dev;
+<<<<<<< HEAD
 	/* lock to protect against multiple access to the device */
 	struct mutex lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* adding one additional channel for timestamp */
 	s64 iio_buf[SCMI_IIO_NUM_OF_AXIS + 1];
 	struct notifier_block sensor_update_nb;
@@ -201,14 +207,23 @@ static int scmi_iio_write_raw(struct iio_dev *iio_dev,
 			      struct iio_chan_spec const *chan, int val,
 			      int val2, long mask)
 {
+<<<<<<< HEAD
 	struct scmi_iio_priv *sensor = iio_priv(iio_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	switch (mask) {
 	case IIO_CHAN_INFO_SAMP_FREQ:
+<<<<<<< HEAD
 		mutex_lock(&sensor->lock);
 		err = scmi_iio_set_odr_val(iio_dev, val, val2);
 		mutex_unlock(&sensor->lock);
+=======
+		mutex_lock(&iio_dev->mlock);
+		err = scmi_iio_set_odr_val(iio_dev, val, val2);
+		mutex_unlock(&iio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 		return err;
 	default:
 		return -EINVAL;
@@ -400,12 +415,20 @@ static ssize_t scmi_iio_get_raw_available(struct iio_dev *iio_dev,
 			rem = do_div(resolution,
 				     int_pow(10, abs(exponent))
 				     );
+<<<<<<< HEAD
 			len = sysfs_emit(buf,
+=======
+			len = scnprintf(buf, PAGE_SIZE,
+>>>>>>> b7ba80a49124 (Commit)
 					"[%lld %llu.%llu %lld]\n", min_range,
 					resolution, rem, max_range);
 		} else {
 			resolution = resolution * int_pow(10, exponent);
+<<<<<<< HEAD
 			len = sysfs_emit(buf, "[%lld %llu %lld]\n",
+=======
+			len = scnprintf(buf, PAGE_SIZE, "[%lld %llu %lld]\n",
+>>>>>>> b7ba80a49124 (Commit)
 					min_range, resolution, max_range);
 		}
 	}
@@ -590,7 +613,10 @@ scmi_alloc_iiodev(struct scmi_device *sdev,
 	sensor->sensor_info = sensor_info;
 	sensor->sensor_update_nb.notifier_call = scmi_iio_sensor_update_cb;
 	sensor->indio_dev = iiodev;
+<<<<<<< HEAD
 	mutex_init(&sensor->lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* adding one additional channel for timestamp */
 	iiodev->num_channels = sensor_info->num_axis + 1;

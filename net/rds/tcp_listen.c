@@ -34,7 +34,10 @@
 #include <linux/gfp.h>
 #include <linux/in.h>
 #include <net/tcp.h>
+<<<<<<< HEAD
 #include <trace/events/sock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "rds.h"
 #include "tcp.h"
@@ -235,7 +238,10 @@ void rds_tcp_listen_data_ready(struct sock *sk)
 {
 	void (*ready)(struct sock *sk);
 
+<<<<<<< HEAD
 	trace_sk_data_ready(sk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rdsdebug("listen data ready sk %p\n", sk);
 
 	read_lock_bh(&sk->sk_callback_lock);

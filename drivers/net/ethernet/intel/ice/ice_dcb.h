@@ -144,8 +144,11 @@ ice_aq_get_dcb_cfg(struct ice_hw *hw, u8 mib_type, u8 bridgetype,
 		   struct ice_dcbx_cfg *dcbcfg);
 int ice_get_dcb_cfg(struct ice_port_info *pi);
 int ice_set_dcb_cfg(struct ice_port_info *pi);
+<<<<<<< HEAD
 void ice_get_dcb_cfg_from_mib_change(struct ice_port_info *pi,
 				     struct ice_rq_event_info *event);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ice_init_dcb(struct ice_hw *hw, bool enable_mib_change);
 int
 ice_query_port_ets(struct ice_port_info *pi,

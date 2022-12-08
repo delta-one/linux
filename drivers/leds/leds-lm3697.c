@@ -299,7 +299,12 @@ child_out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int lm3697_probe(struct i2c_client *client)
+=======
+static int lm3697_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &client->dev;
 	struct lm3697 *led;
@@ -376,7 +381,11 @@ static struct i2c_driver lm3697_driver = {
 		.name	= "lm3697",
 		.of_match_table = of_lm3697_leds_match,
 	},
+<<<<<<< HEAD
 	.probe_new	= lm3697_probe,
+=======
+	.probe		= lm3697_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= lm3697_remove,
 	.id_table	= lm3697_id,
 };

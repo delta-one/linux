@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/arm/bcm/brcm,nsp.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Broadcom Northstar Plus
+=======
+title: Broadcom Northstar Plus device tree bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 description:
   Broadcom Northstar Plus family of SoCs are used for switching control

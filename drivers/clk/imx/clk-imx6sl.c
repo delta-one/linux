@@ -440,6 +440,10 @@ static void __init imx6sl_clocks_init(struct device_node *ccm_node)
 	clk_set_parent(hws[IMX6SL_CLK_LCDIF_AXI_SEL]->clk,
 		       hws[IMX6SL_CLK_PLL2_PFD2]->clk);
 
+<<<<<<< HEAD
 	imx_register_uart_clocks();
+=======
+	imx_register_uart_clocks(2);
+>>>>>>> b7ba80a49124 (Commit)
 }
 CLK_OF_DECLARE(imx6sl, "fsl,imx6sl-ccm", imx6sl_clocks_init);

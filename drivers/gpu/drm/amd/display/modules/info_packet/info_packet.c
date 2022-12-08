@@ -132,8 +132,12 @@ enum ColorimetryYCCDP {
 
 void mod_build_vsc_infopacket(const struct dc_stream_state *stream,
 		struct dc_info_packet *info_packet,
+<<<<<<< HEAD
 		enum dc_color_space cs,
 		enum color_transfer_func tf)
+=======
+		enum dc_color_space cs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int vsc_packet_revision = vsc_packet_undefined;
 	unsigned int i;
@@ -383,9 +387,12 @@ void mod_build_vsc_infopacket(const struct dc_stream_state *stream,
 				colorimetryFormat = ColorimetryYCC_DP_AdobeYCC;
 			else if (cs == COLOR_SPACE_2020_YCBCR)
 				colorimetryFormat = ColorimetryYCC_DP_ITU2020YCbCr;
+<<<<<<< HEAD
 
 			if (cs == COLOR_SPACE_2020_YCBCR && tf == TRANSFER_FUNC_GAMMA_22)
 				colorimetryFormat = ColorimetryYCC_DP_ITU709;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		default:
@@ -519,6 +526,7 @@ void mod_build_hf_vsif_infopacket(const struct dc_stream_state *stream,
 		info_packet->valid = true;
 }
 
+<<<<<<< HEAD
 void mod_build_adaptive_sync_infopacket(const struct dc_stream_state *stream,
 		enum adaptive_sync_type asType,
 		const struct AS_Df_params *param,
@@ -574,3 +582,5 @@ void mod_build_adaptive_sync_infopacket_v2(const struct dc_stream_state *stream,
 	info_packet->sb[6] = param->decrease.frame_duration_hex;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)

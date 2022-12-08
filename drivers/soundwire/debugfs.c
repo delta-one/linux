@@ -4,7 +4,10 @@
 #include <linux/device.h>
 #include <linux/debugfs.h>
 #include <linux/mod_devicetable.h>
+<<<<<<< HEAD
 #include <linux/pm_runtime.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/soundwire/sdw.h>
 #include <linux/soundwire/sdw_registers.h>
@@ -36,7 +39,11 @@ static ssize_t sdw_sprintf(struct sdw_slave *slave,
 {
 	int value;
 
+<<<<<<< HEAD
 	value = sdw_read_no_pm(slave, reg);
+=======
+	value = sdw_read(slave, reg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (value < 0)
 		return scnprintf(buf + pos, RD_BUF - pos, "%3x\tXX\n", reg);
@@ -56,12 +63,15 @@ static int sdw_slave_reg_show(struct seq_file *s_file, void *data)
 	if (!buf)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	ret = pm_runtime_resume_and_get(&slave->dev);
 	if (ret < 0 && ret != -EACCES) {
 		kfree(buf);
 		return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = scnprintf(buf, RD_BUF, "Register  Value\n");
 
 	/* DP0 non-banked registers */
@@ -119,10 +129,13 @@ static int sdw_slave_reg_show(struct seq_file *s_file, void *data)
 	}
 
 	seq_printf(s_file, "%s", buf);
+<<<<<<< HEAD
 
 	pm_runtime_mark_last_busy(&slave->dev);
 	pm_runtime_put(&slave->dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(buf);
 
 	return 0;

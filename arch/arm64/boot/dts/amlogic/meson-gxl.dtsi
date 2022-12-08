@@ -312,8 +312,13 @@
 };
 
 &gpio_intc {
+<<<<<<< HEAD
 	compatible = "amlogic,meson-gxl-gpio-intc",
 		     "amlogic,meson-gpio-intc";
+=======
+	compatible = "amlogic,meson-gpio-intc",
+		     "amlogic,meson-gxl-gpio-intc";
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 
@@ -429,6 +434,7 @@
 			};
 		};
 
+<<<<<<< HEAD
 		spi_idle_high_pins: spi-idle-high-pins {
 			mux {
 				groups = "spi_sclk";
@@ -443,6 +449,8 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		spi_ss0_pins: spi-ss0 {
 			mux {
 				groups = "spi_ss0";
@@ -773,6 +781,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	eth_phy_mux: mdio@558 {
 		reg = <0x0 0x558 0x0 0xc>;
 		compatible = "amlogic,gxl-mdio-mux";
@@ -790,6 +799,18 @@
 
 		internal_mdio: mdio@1 {
 			reg = <0x1>;
+=======
+	eth-phy-mux {
+		compatible = "mdio-mux-mmioreg", "mdio-mux";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		reg = <0x0 0x55c 0x0 0x4>;
+		mux-mask = <0xffffffff>;
+		mdio-parent-bus = <&mdio0>;
+
+		internal_mdio: mdio@e40908ff {
+			reg = <0xe40908ff>;
+>>>>>>> b7ba80a49124 (Commit)
 			#address-cells = <1>;
 			#size-cells = <0>;
 
@@ -800,6 +821,15 @@
 				max-speed = <100>;
 			};
 		};
+<<<<<<< HEAD
+=======
+
+		external_mdio: mdio@2009087f {
+			reg = <0x2009087f>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 

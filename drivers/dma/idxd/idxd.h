@@ -11,7 +11,10 @@
 #include <linux/idr.h>
 #include <linux/pci.h>
 #include <linux/ioasid.h>
+<<<<<<< HEAD
 #include <linux/bitmap.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/perf_event.h>
 #include <uapi/linux/idxd.h>
 #include "registers.h"
@@ -96,8 +99,11 @@ struct idxd_group {
 	u8 rdbufs_reserved;
 	int tc_a;
 	int tc_b;
+<<<<<<< HEAD
 	int desc_progress_limit;
 	int batch_progress_limit;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct idxd_pmu {
@@ -135,7 +141,10 @@ enum idxd_wq_state {
 enum idxd_wq_flag {
 	WQ_FLAG_DEDICATED = 0,
 	WQ_FLAG_BLOCK_ON_FAULT,
+<<<<<<< HEAD
 	WQ_FLAG_ATS_DISABLE,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum idxd_wq_type {
@@ -198,8 +207,11 @@ struct idxd_wq {
 	enum idxd_wq_state state;
 	unsigned long flags;
 	union wqcfg *wqcfg;
+<<<<<<< HEAD
 	unsigned long *opcap_bmap;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct dsa_hw_desc **hw_descs;
 	int num_descs;
 	union {
@@ -214,6 +226,10 @@ struct idxd_wq {
 	char name[WQ_NAME_SIZE + 1];
 	u64 max_xfer_bytes;
 	u32 max_batch_size;
+<<<<<<< HEAD
+=======
+	bool ats_dis;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct idxd_engine {
@@ -304,7 +320,10 @@ struct idxd_device {
 	int rdbuf_limit;
 	int nr_rdbufs;		/* non-reserved read buffers */
 	unsigned int wqcfg_size;
+<<<<<<< HEAD
 	unsigned long *wq_enable_map;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	union sw_err_reg sw_err;
 	wait_queue_head_t cmd_waitq;
@@ -314,8 +333,11 @@ struct idxd_device {
 	struct work_struct work;
 
 	struct idxd_pmu *idxd_pmu;
+<<<<<<< HEAD
 
 	unsigned long *opcap_bmap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* IDXD software descriptor */
@@ -548,6 +570,7 @@ static inline int idxd_wq_refcount(struct idxd_wq *wq)
 	return wq->client_count;
 };
 
+<<<<<<< HEAD
 /*
  * Intel IAA does not support batch processing.
  * The max batch size of device, max batch size of wq and
@@ -580,6 +603,8 @@ static inline void idxd_wqcfg_set_max_batch_shift(int idxd_type, union wqcfg *wq
 		wqcfg->max_batch_shift = max_batch_shift;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int __must_check __idxd_driver_register(struct idxd_device_driver *idxd_drv,
 					struct module *module, const char *mod_name);
 #define idxd_driver_register(driver) \

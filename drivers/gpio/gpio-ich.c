@@ -457,7 +457,11 @@ static int ichx_gpio_probe(struct platform_device *pdev)
 
 init:
 	ichx_gpiolib_setup(&ichx_priv.chip);
+<<<<<<< HEAD
 	err = devm_gpiochip_add_data(dev, &ichx_priv.chip, NULL);
+=======
+	err = gpiochip_add_data(&ichx_priv.chip, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		dev_err(dev, "Failed to register GPIOs\n");
 		return err;
@@ -469,11 +473,25 @@ init:
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int ichx_gpio_remove(struct platform_device *pdev)
+{
+	gpiochip_remove(&ichx_priv.chip);
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver ichx_gpio_driver = {
 	.driver		= {
 		.name	= DRV_NAME,
 	},
 	.probe		= ichx_gpio_probe,
+<<<<<<< HEAD
+=======
+	.remove		= ichx_gpio_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(ichx_gpio_driver);

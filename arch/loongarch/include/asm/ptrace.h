@@ -6,7 +6,10 @@
 #define _ASM_PTRACE_H
 
 #include <asm/page.h>
+<<<<<<< HEAD
 #include <asm/irqflags.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/thread_info.h>
 #include <uapi/asm/ptrace.h>
 
@@ -30,7 +33,11 @@ struct pt_regs {
 	unsigned long csr_euen;
 	unsigned long csr_ecfg;
 	unsigned long csr_estat;
+<<<<<<< HEAD
 	unsigned long __last[];
+=======
+	unsigned long __last[0];
+>>>>>>> b7ba80a49124 (Commit)
 } __aligned(8);
 
 static inline int regs_irqs_disabled(struct pt_regs *regs)
@@ -110,6 +117,7 @@ static inline unsigned long regs_get_kernel_stack_nth(struct pt_regs *regs, unsi
 
 struct task_struct;
 
+<<<<<<< HEAD
 /**
  * regs_get_kernel_argument() - get Nth function argument in kernel
  * @regs:       pt_regs of that context
@@ -144,6 +152,8 @@ static inline unsigned long regs_get_kernel_argument(struct pt_regs *regs,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Does the process account for user or for system time?
  */
@@ -168,7 +178,11 @@ static inline void die_if_kernel(const char *str, struct pt_regs *regs)
 #define current_pt_regs()						\
 ({									\
 	unsigned long sp = (unsigned long)__builtin_frame_address(0);	\
+<<<<<<< HEAD
 	(struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1) - 1;		\
+=======
+	(struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1 - 32) - 1;	\
+>>>>>>> b7ba80a49124 (Commit)
 })
 
 /* Helpers for working with the user stack pointer */
@@ -184,8 +198,11 @@ static inline void user_stack_pointer_set(struct pt_regs *regs,
 	regs->regs[3] = val;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_HAVE_HW_BREAKPOINT
 #define arch_has_single_step()		(1)
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_PTRACE_H */

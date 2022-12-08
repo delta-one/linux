@@ -30,16 +30,20 @@ properties:
           - const: amarula,vyasa-rk3288
           - const: rockchip,rk3288
 
+<<<<<<< HEAD
       - description: Anbernic RG351M
         items:
           - const: anbernic,rg351m
           - const: rockchip,rk3326
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: Anbernic RG353P
         items:
           - const: anbernic,rg353p
           - const: rockchip,rk3566
 
+<<<<<<< HEAD
       - description: Anbernic RG353V
         items:
           - const: anbernic,rg353v
@@ -50,6 +54,8 @@ properties:
           - const: anbernic,rg353vs
           - const: rockchip,rk3566
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: Anbernic RG503
         items:
           - const: anbernic,rg503
@@ -90,6 +96,7 @@ properties:
           - const: chipspark,rayeager-px2
           - const: rockchip,rk3066a
 
+<<<<<<< HEAD
       - description: Edgeble Neural Compute Module 2(Neu2) SoM based boards
         items:
           - const: edgeble,neural-compute-module-2-io   # Edgeble Neural Compute Module 2 IO Board
@@ -102,11 +109,14 @@ properties:
           - const: edgeble,neural-compute-module-6a     # Edgeble Neural Compute Module 6A SoM
           - const: rockchip,rk3588
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: Elgin RV1108 R1
         items:
           - const: elgin,rv1108-r1
           - const: rockchip,rv1108
 
+<<<<<<< HEAD
       - description: EmbedFire LubanCat 1
         items:
           - const: embedfire,lubancat-1
@@ -117,6 +127,8 @@ properties:
           - const: embedfire,lubancat-2
           - const: rockchip,rk3568
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: Engicam PX30.Core C.TOUCH 2.0
         items:
           - const: engicam,px30-core-ctouch2
@@ -201,6 +213,7 @@ properties:
               - friendlyarm,nanopi-r4s-enterprise
           - const: rockchip,rk3399
 
+<<<<<<< HEAD
       - description: FriendlyElec NanoPi R5 series boards
         items:
           - enum:
@@ -208,6 +221,8 @@ properties:
               - friendlyarm,nanopi-r5s
           - const: rockchip,rk3568
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: GeekBuying GeekBox
         items:
           - const: geekbuying,geekbox
@@ -512,6 +527,7 @@ properties:
           - const: hardkernel,rk3326-odroid-go2
           - const: rockchip,rk3326
 
+<<<<<<< HEAD
       - description: Hardkernel Odroid Go Advance Black Edition
         items:
           - const: hardkernel,rk3326-odroid-go2-v11
@@ -527,6 +543,8 @@ properties:
           - const: rockchip,rk3568-odroid-m1
           - const: rockchip,rk3568
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: Hugsun X99 TV Box
         items:
           - const: hugsun,x99
@@ -540,11 +558,14 @@ properties:
               - khadas,edge-v
           - const: rockchip,rk3399
 
+<<<<<<< HEAD
       - description: Khadas Edge2 series boards
         items:
           - const: khadas,edge2
           - const: rockchip,rk3588s
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: Kobol Helios64
         items:
           - const: kobol,helios64
@@ -627,6 +648,7 @@ properties:
       - description: Pine64 SoQuartz SoM
         items:
           - enum:
+<<<<<<< HEAD
               - pine64,soquartz-blade
               - pine64,soquartz-cm4io
               - pine64,soquartz-model-a
@@ -647,6 +669,12 @@ properties:
           - const: radxa,cm3i
           - const: rockchip,rk3568
 
+=======
+              - pine64,soquartz-cm4io
+          - const: pine64,soquartz
+          - const: rockchip,rk3566
+
+>>>>>>> b7ba80a49124 (Commit)
       - description: Radxa Rock
         items:
           - const: radxa,rock
@@ -700,6 +728,7 @@ properties:
           - const: radxa,rock3a
           - const: rockchip,rk3568
 
+<<<<<<< HEAD
       - description: Radxa ROCK 5 Model A
         items:
           - const: radxa,rock-5a
@@ -710,6 +739,8 @@ properties:
           - const: radxa,rock-5b
           - const: rockchip,rk3588
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: Rikomagic MK808 v1
         items:
           - const: rikomagic,mk808
@@ -747,11 +778,14 @@ properties:
           - const: rockchip,rk3036-evb
           - const: rockchip,rk3036
 
+<<<<<<< HEAD
       - description: Rockchip RK3128 Evaluation board
         items:
           - const: rockchip,rk3128-evb
           - const: rockchip,rk3128
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: Rockchip RK3228 Evaluation board
         items:
           - const: rockchip,rk3228-evb
@@ -799,21 +833,27 @@ properties:
           - const: rockchip,rk3399-sapphire-excavator
           - const: rockchip,rk3399
 
+<<<<<<< HEAD
       - description: Rockchip RK3588 Evaluation board
         items:
           - const: rockchip,rk3588-evb1-v10
           - const: rockchip,rk3588
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: Rockchip RV1108 Evaluation board
         items:
           - const: rockchip,rv1108-evb
           - const: rockchip,rv1108
 
+<<<<<<< HEAD
       - description: Theobroma Systems PX30-uQ7 with Haikou baseboard
         items:
           - const: tsd,px30-ringneck-haikou
           - const: rockchip,px30
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: Theobroma Systems RK3368-uQ7 with Haikou baseboard
         items:
           - const: tsd,rk3368-lion-haikou
@@ -829,21 +869,27 @@ properties:
           - const: tronsmart,orion-r68-meta
           - const: rockchip,rk3368
 
+<<<<<<< HEAD
       - description: Xunlong Orange Pi R1 Plus
         items:
           - const: xunlong,orangepi-r1-plus
           - const: rockchip,rk3328
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: Zkmagic A95X Z2
         items:
           - const: zkmagic,a95x-z2
           - const: rockchip,rk3318
 
+<<<<<<< HEAD
       - description: Rockchip RK3566 BOX Evaluation Demo board
         items:
           - const: rockchip,rk3566-box-demo
           - const: rockchip,rk3566
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: Rockchip RK3568 Evaluation board
         items:
           - const: rockchip,rk3568-evb1-v10

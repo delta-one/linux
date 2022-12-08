@@ -959,8 +959,11 @@ int __br_vlan_set_proto(struct net_bridge *br, __be16 proto,
 	list_for_each_entry(p, &br->port_list, list) {
 		vg = nbp_vlan_group(p);
 		list_for_each_entry(vlan, &vg->vlan_list, vlist) {
+<<<<<<< HEAD
 			if (vlan->priv_flags & BR_VLFLAG_ADDED_BY_SWITCHDEV)
 				continue;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			err = vlan_vid_add(p->dev, proto, vlan->vid);
 			if (err)
 				goto err_filt;
@@ -975,11 +978,16 @@ int __br_vlan_set_proto(struct net_bridge *br, __be16 proto,
 	/* Delete VLANs for the old proto from the device filter. */
 	list_for_each_entry(p, &br->port_list, list) {
 		vg = nbp_vlan_group(p);
+<<<<<<< HEAD
 		list_for_each_entry(vlan, &vg->vlan_list, vlist) {
 			if (vlan->priv_flags & BR_VLFLAG_ADDED_BY_SWITCHDEV)
 				continue;
 			vlan_vid_del(p->dev, oldproto, vlan->vid);
 		}
+=======
+		list_for_each_entry(vlan, &vg->vlan_list, vlist)
+			vlan_vid_del(p->dev, oldproto, vlan->vid);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -988,6 +996,7 @@ err_filt:
 	attr.u.vlan_protocol = ntohs(oldproto);
 	switchdev_port_attr_set(br->dev, &attr, NULL);
 
+<<<<<<< HEAD
 	list_for_each_entry_continue_reverse(vlan, &vg->vlan_list, vlist) {
 		if (vlan->priv_flags & BR_VLFLAG_ADDED_BY_SWITCHDEV)
 			continue;
@@ -1001,6 +1010,15 @@ err_filt:
 				continue;
 			vlan_vid_del(p->dev, proto, vlan->vid);
 		}
+=======
+	list_for_each_entry_continue_reverse(vlan, &vg->vlan_list, vlist)
+		vlan_vid_del(p->dev, proto, vlan->vid);
+
+	list_for_each_entry_continue_reverse(p, &br->port_list, list) {
+		vg = nbp_vlan_group(p);
+		list_for_each_entry(vlan, &vg->vlan_list, vlist)
+			vlan_vid_del(p->dev, proto, vlan->vid);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return err;
@@ -1389,12 +1407,20 @@ void br_vlan_get_stats(const struct net_bridge_vlan *v,
 
 		cpu_stats = per_cpu_ptr(v->stats, i);
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&cpu_stats->syncp);
+=======
+			start = u64_stats_fetch_begin_irq(&cpu_stats->syncp);
+>>>>>>> b7ba80a49124 (Commit)
 			rxpackets = u64_stats_read(&cpu_stats->rx_packets);
 			rxbytes = u64_stats_read(&cpu_stats->rx_bytes);
 			txbytes = u64_stats_read(&cpu_stats->tx_bytes);
 			txpackets = u64_stats_read(&cpu_stats->tx_packets);
+<<<<<<< HEAD
 		} while (u64_stats_fetch_retry(&cpu_stats->syncp, start));
+=======
+		} while (u64_stats_fetch_retry_irq(&cpu_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		u64_stats_add(&stats->rx_packets, rxpackets);
 		u64_stats_add(&stats->rx_bytes, rxbytes);
@@ -1816,7 +1842,10 @@ out_err:
 /* v_opts is used to dump the options which must be equal in the whole range */
 static bool br_vlan_fill_vids(struct sk_buff *skb, u16 vid, u16 vid_range,
 			      const struct net_bridge_vlan *v_opts,
+<<<<<<< HEAD
 			      const struct net_bridge_port *p,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			      u16 flags,
 			      bool dump_stats)
 {
@@ -1843,7 +1872,11 @@ static bool br_vlan_fill_vids(struct sk_buff *skb, u16 vid, u16 vid_range,
 		goto out_err;
 
 	if (v_opts) {
+<<<<<<< HEAD
 		if (!br_vlan_opts_fill(skb, v_opts, p))
+=======
+		if (!br_vlan_opts_fill(skb, v_opts))
+>>>>>>> b7ba80a49124 (Commit)
 			goto out_err;
 
 		if (dump_stats && !br_vlan_stats_fill(skb, v_opts))
@@ -1926,7 +1959,11 @@ void br_vlan_notify(const struct net_bridge *br,
 		goto out_kfree;
 	}
 
+<<<<<<< HEAD
 	if (!br_vlan_fill_vids(skb, vid, vid_range, v, p, flags, false))
+=======
+	if (!br_vlan_fill_vids(skb, vid, vid_range, v, flags, false))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_err;
 
 	nlmsg_end(skb, nlh);
@@ -2031,7 +2068,11 @@ static int br_vlan_dump_dev(const struct net_device *dev,
 
 			if (!br_vlan_fill_vids(skb, range_start->vid,
 					       range_end->vid, range_start,
+<<<<<<< HEAD
 					       p, vlan_flags, dump_stats)) {
+=======
+					       vlan_flags, dump_stats)) {
+>>>>>>> b7ba80a49124 (Commit)
 				err = -EMSGSIZE;
 				break;
 			}
@@ -2057,7 +2098,11 @@ update_end:
 		else if (!dump_global &&
 			 !br_vlan_fill_vids(skb, range_start->vid,
 					    range_end->vid, range_start,
+<<<<<<< HEAD
 					    p, br_vlan_flags(range_start, pvid),
+=======
+					    br_vlan_flags(range_start, pvid),
+>>>>>>> b7ba80a49124 (Commit)
 					    dump_stats))
 			err = -EMSGSIZE;
 	}
@@ -2132,8 +2177,11 @@ static const struct nla_policy br_vlan_db_policy[BRIDGE_VLANDB_ENTRY_MAX + 1] = 
 	[BRIDGE_VLANDB_ENTRY_STATE]	= { .type = NLA_U8 },
 	[BRIDGE_VLANDB_ENTRY_TUNNEL_INFO] = { .type = NLA_NESTED },
 	[BRIDGE_VLANDB_ENTRY_MCAST_ROUTER]	= { .type = NLA_U8 },
+<<<<<<< HEAD
 	[BRIDGE_VLANDB_ENTRY_MCAST_N_GROUPS]	= { .type = NLA_REJECT },
 	[BRIDGE_VLANDB_ENTRY_MCAST_MAX_GROUPS]	= { .type = NLA_U32 },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int br_vlan_rtm_process_one(struct net_device *dev,

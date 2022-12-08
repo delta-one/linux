@@ -326,7 +326,11 @@ static struct clk *_register_divider(struct device_node *node,
 	div->hw.init = &init;
 
 	/* register the clock */
+<<<<<<< HEAD
 	clk = of_ti_clk_register(node, &div->hw, name);
+=======
+	clk = ti_clk_register(NULL, &div->hw, name);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_ERR(clk))
 		kfree(div);

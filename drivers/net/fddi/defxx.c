@@ -3831,6 +3831,7 @@ static int dfx_init(void)
 	int status;
 
 	status = pci_register_driver(&dfx_pci_driver);
+<<<<<<< HEAD
 	if (status)
 		goto err_pci_register;
 
@@ -3849,6 +3850,12 @@ err_tc_register:
 err_eisa_register:
 	pci_unregister_driver(&dfx_pci_driver);
 err_pci_register:
+=======
+	if (!status)
+		status = eisa_driver_register(&dfx_eisa_driver);
+	if (!status)
+		status = tc_register_driver(&dfx_tc_driver);
+>>>>>>> b7ba80a49124 (Commit)
 	return status;
 }
 

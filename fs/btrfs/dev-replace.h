@@ -25,6 +25,7 @@ int __pure btrfs_dev_replace_is_ongoing(struct btrfs_dev_replace *dev_replace);
 bool btrfs_finish_block_group_to_copy(struct btrfs_device *srcdev,
 				      struct btrfs_block_group *cache,
 				      u64 physical);
+<<<<<<< HEAD
 void btrfs_bio_counter_inc_blocked(struct btrfs_fs_info *fs_info);
 void btrfs_bio_counter_sub(struct btrfs_fs_info *fs_info, s64 amount);
 
@@ -33,5 +34,7 @@ static inline void btrfs_bio_counter_dec(struct btrfs_fs_info *fs_info)
 	btrfs_bio_counter_sub(fs_info, 1);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

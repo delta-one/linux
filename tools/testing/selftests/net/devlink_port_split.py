@@ -59,8 +59,11 @@ class devlink_ports(object):
         assert stderr == ""
         ports = json.loads(stdout)['port']
 
+<<<<<<< HEAD
         validate_devlink_output(ports, 'flavour')
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
         for port in ports:
             if dev in port:
                 if ports[port]['flavour'] == 'physical':
@@ -222,6 +225,7 @@ def split_splittable_port(port, k, lanes, dev):
     unsplit(port.bus_info)
 
 
+<<<<<<< HEAD
 def validate_devlink_output(devlink_data, target_property=None):
     """
     Determine if test should be skipped by checking:
@@ -243,6 +247,8 @@ def validate_devlink_output(devlink_data, target_property=None):
         sys.exit(KSFT_SKIP)
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 def make_parser():
     parser = argparse.ArgumentParser(description='A test for port splitting.')
     parser.add_argument('--dev',
@@ -263,9 +269,18 @@ def main(cmdline=None):
         stdout, stderr = run_command(cmd)
         assert stderr == ""
 
+<<<<<<< HEAD
         validate_devlink_output(json.loads(stdout))
         devs = json.loads(stdout)['dev']
         dev = list(devs.keys())[0]
+=======
+        devs = json.loads(stdout)['dev']
+        if devs:
+            dev = list(devs.keys())[0]
+        else:
+            print("no devlink device was found, test skipped")
+            sys.exit(KSFT_SKIP)
+>>>>>>> b7ba80a49124 (Commit)
 
     cmd = "devlink dev show %s" % dev
     stdout, stderr = run_command(cmd)
@@ -275,7 +290,10 @@ def main(cmdline=None):
 
     ports = devlink_ports(dev)
 
+<<<<<<< HEAD
     found_max_lanes = False
+=======
+>>>>>>> b7ba80a49124 (Commit)
     for port in ports.if_names:
         max_lanes = get_max_lanes(port.name)
 
@@ -298,11 +316,14 @@ def main(cmdline=None):
                 split_splittable_port(port, lane, max_lanes, dev)
 
                 lane //= 2
+<<<<<<< HEAD
         found_max_lanes = True
 
     if not found_max_lanes:
         print(f"Test not started, no port of device {dev} reports max_lanes")
         sys.exit(KSFT_SKIP)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 
 if __name__ == "__main__":

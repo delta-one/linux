@@ -6,7 +6,10 @@
 
 #include <linux/kvm_host.h>
 #include <linux/memblock.h>
+<<<<<<< HEAD
 #include <linux/mutex.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sort.h>
 
 #include <asm/kvm_pkvm.h>
@@ -54,7 +57,11 @@ static int __init register_memblock_regions(void)
 
 void __init kvm_hyp_reserve(void)
 {
+<<<<<<< HEAD
 	u64 hyp_mem_pages = 0;
+=======
+	u64 nr_pages, prev, hyp_mem_pages = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (!is_hyp_mode_available() || is_kernel_in_hyp_mode())
@@ -72,8 +79,26 @@ void __init kvm_hyp_reserve(void)
 
 	hyp_mem_pages += hyp_s1_pgtable_pages();
 	hyp_mem_pages += host_s2_pgtable_pages();
+<<<<<<< HEAD
 	hyp_mem_pages += hyp_vm_table_pages();
 	hyp_mem_pages += hyp_vmemmap_pages(STRUCT_HYP_PAGE_SIZE);
+=======
+
+	/*
+	 * The hyp_vmemmap needs to be backed by pages, but these pages
+	 * themselves need to be present in the vmemmap, so compute the number
+	 * of pages needed by looking for a fixed point.
+	 */
+	nr_pages = 0;
+	do {
+		prev = nr_pages;
+		nr_pages = hyp_mem_pages + prev;
+		nr_pages = DIV_ROUND_UP(nr_pages * STRUCT_HYP_PAGE_SIZE,
+					PAGE_SIZE);
+		nr_pages += __hyp_pgtable_max_pages(nr_pages);
+	} while (nr_pages != prev);
+	hyp_mem_pages += nr_pages;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Try to allocate a PMD-aligned region to reduce TLB pressure once
@@ -95,6 +120,7 @@ void __init kvm_hyp_reserve(void)
 	kvm_info("Reserved %lld MiB at 0x%llx\n", hyp_mem_size >> 20,
 		 hyp_mem_base);
 }
+<<<<<<< HEAD
 
 /*
  * Allocates and donates memory for hypervisor VM structs at EL2.
@@ -213,3 +239,5 @@ int pkvm_init_host_vm(struct kvm *host_kvm)
 	mutex_init(&host_kvm->lock);
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

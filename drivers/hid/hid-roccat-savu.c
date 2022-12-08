@@ -204,7 +204,11 @@ static int __init savu_init(void)
 {
 	int retval;
 
+<<<<<<< HEAD
 	savu_class = class_create("savu");
+=======
+	savu_class = class_create(THIS_MODULE, "savu");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(savu_class))
 		return PTR_ERR(savu_class);
 	savu_class->dev_groups = savu_groups;

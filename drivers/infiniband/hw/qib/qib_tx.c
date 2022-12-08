@@ -82,6 +82,10 @@ int qib_disarm_piobufs_ifneeded(struct qib_ctxtdata *rcd)
 	struct qib_devdata *dd = rcd->dd;
 	unsigned i;
 	unsigned last;
+<<<<<<< HEAD
+=======
+	unsigned n = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	last = rcd->pio_base + rcd->piocnt;
 	/*
@@ -101,8 +105,15 @@ int qib_disarm_piobufs_ifneeded(struct qib_ctxtdata *rcd)
 	}
 	spin_lock_irq(&dd->pioavail_lock);
 	for (i = rcd->pio_base; i < last; i++) {
+<<<<<<< HEAD
 		if (__test_and_clear_bit(i, dd->pio_need_disarm))
 			dd->f_sendctrl(rcd->ppd, QIB_SENDCTRL_DISARM_BUF(i));
+=======
+		if (__test_and_clear_bit(i, dd->pio_need_disarm)) {
+			n++;
+			dd->f_sendctrl(rcd->ppd, QIB_SENDCTRL_DISARM_BUF(i));
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	spin_unlock_irq(&dd->pioavail_lock);
 	return 0;

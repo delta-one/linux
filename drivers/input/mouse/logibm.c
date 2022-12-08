@@ -14,6 +14,12 @@
  * Logitech Bus Mouse Driver for Linux
  */
 
+<<<<<<< HEAD
+=======
+/*
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/delay.h>
 #include <linux/ioport.h>

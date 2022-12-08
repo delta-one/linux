@@ -73,17 +73,30 @@ config SERIAL_AMBA_PL011_CONSOLE
 	  your boot loader (lilo or loadlin) about how to pass options to the
 	  kernel at boot time.)
 
+<<<<<<< HEAD
 config SERIAL_EARLYCON_SEMIHOST
 	bool "Early console using Arm compatible semihosting"
 	depends on ARM64 || ARM || RISCV
+=======
+config SERIAL_EARLYCON_ARM_SEMIHOST
+	bool "Early console using ARM semihosting"
+	depends on ARM64 || ARM
+>>>>>>> b7ba80a49124 (Commit)
 	select SERIAL_CORE
 	select SERIAL_CORE_CONSOLE
 	select SERIAL_EARLYCON
 	help
+<<<<<<< HEAD
 	  Support for early debug console using Arm compatible semihosting.
 	  This enables the console before standard serial driver is probed.
 	  This is enabled with "earlycon=smh" on the kernel command line.
 	  The console is enabled when early_param is processed.
+=======
+	  Support for early debug console using ARM semihosting. This enables
+	  the console before standard serial driver is probed. This is enabled
+	  with "earlycon=smh" on the kernel command line. The console is
+	  enabled when early_param is processed.
+>>>>>>> b7ba80a49124 (Commit)
 
 config SERIAL_EARLYCON_RISCV_SBI
 	bool "Early console using RISC-V SBI"
@@ -127,7 +140,10 @@ config SERIAL_SB1250_DUART_CONSOLE
 
 config SERIAL_ATMEL
 	bool "AT91 on-chip serial port support"
+<<<<<<< HEAD
 	depends on COMMON_CLK
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	depends on ARCH_AT91 || COMPILE_TEST
 	select SERIAL_CORE
 	select SERIAL_MCTRL_GPIO if GPIOLIB
@@ -242,23 +258,38 @@ config SERIAL_SAMSUNG
 	select SERIAL_CORE
 	help
 	  Support for the on-chip UARTs on the Samsung
+<<<<<<< HEAD
 	  S3C64xx/S5Pv210/Exynos and Apple M1 SoCs, providing
 	  /dev/ttySAC0, 1 and 2 (note, some machines may not provide all of
 	  these ports, depending on how the serial port pins are configured.
 
+=======
+	  S3C24xx/S3C64xx/S5Pv210/Exynos and Apple M1 SoCs, providing
+	  /dev/ttySAC0, 1 and 2 (note, some machines may not provide all of
+	  these ports, depending on how the serial port pins are configured.
+>>>>>>> b7ba80a49124 (Commit)
 	  Choose Y/M here only if you build for such SoC.
 
 config SERIAL_SAMSUNG_UARTS_4
 	bool
 	depends on SERIAL_SAMSUNG
+<<<<<<< HEAD
 	default y
+=======
+	default y if !(CPU_S3C2410 || CPU_S3C2412 || CPU_S3C2440 || CPU_S3C2442)
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Internal node for the common case of 4 Samsung compatible UARTs
 
 config SERIAL_SAMSUNG_UARTS
 	int
 	depends on SERIAL_SAMSUNG
+<<<<<<< HEAD
 	default 4
+=======
+	default 4 if SERIAL_SAMSUNG_UARTS_4 || CPU_S3C2416
+	default 3
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Select the number of available UART ports for the Samsung S3C
 	  serial driver
@@ -428,7 +459,11 @@ config SERIAL_PXA
 
 config SERIAL_PXA_NON8250
 	bool
+<<<<<<< HEAD
 	depends on !SERIAL_8250 || COMPILE_TEST
+=======
+	depends on !SERIAL_8250
+>>>>>>> b7ba80a49124 (Commit)
 
 config SERIAL_PXA_CONSOLE
 	bool "Console on PXA serial port (DEPRECATED)"
@@ -603,6 +638,24 @@ config SERIAL_MUX_CONSOLE
 	select SERIAL_CORE_CONSOLE
 	default y
 
+<<<<<<< HEAD
+=======
+config PDC_CONSOLE
+	bool "PDC software console support"
+	depends on PARISC && !SERIAL_MUX && VT
+	help
+	  Saying Y here will enable the software based PDC console to be 
+	  used as the system console.  This is useful for machines in 
+	  which the hardware based console has not been written yet.  The
+	  following steps must be completed to use the PDC console:
+
+	    1. create the device entry (mknod /dev/ttyB0 c 11 0)
+	    2. Edit the /etc/inittab to start a getty listening on /dev/ttyB0
+	    3. Add device ttyB0 to /etc/securetty (if you want to log on as
+		 root on this console.)
+	    4. Change the kernel command console parameter to: console=ttyB0
+
+>>>>>>> b7ba80a49124 (Commit)
 config SERIAL_SUNSAB
 	tristate "Sun Siemens SAB82532 serial support"
 	depends on SPARC && PCI
@@ -958,7 +1011,10 @@ config SERIAL_OMAP_CONSOLE
 config SERIAL_SIFIVE
 	tristate "SiFive UART support"
 	depends on OF
+<<<<<<< HEAD
 	default SOC_SIFIVE || SOC_CANAAN
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select SERIAL_CORE
 	help
 	  Select this option if you are building a kernel for a device that
@@ -968,7 +1024,10 @@ config SERIAL_SIFIVE
 config SERIAL_SIFIVE_CONSOLE
 	bool "Console on SiFive UART"
 	depends on SERIAL_SIFIVE=y
+<<<<<<< HEAD
 	default SOC_SIFIVE || SOC_CANAAN
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select SERIAL_CORE_CONSOLE
 	select SERIAL_EARLYCON
 	help
@@ -1313,7 +1372,11 @@ config SERIAL_FSL_LPUART
 
 config SERIAL_FSL_LPUART_CONSOLE
 	bool "Console on Freescale lpuart serial port"
+<<<<<<< HEAD
 	depends on SERIAL_FSL_LPUART=y
+=======
+	depends on SERIAL_FSL_LPUART
+>>>>>>> b7ba80a49124 (Commit)
 	select SERIAL_CORE_CONSOLE
 	select SERIAL_EARLYCON
 	help
@@ -1507,7 +1570,11 @@ config SERIAL_MILBEAUT_USIO_CONSOLE
 config SERIAL_LITEUART
 	tristate "LiteUART serial port support"
 	depends on HAS_IOMEM
+<<<<<<< HEAD
 	depends on OF
+=======
+	depends on OF || COMPILE_TEST
+>>>>>>> b7ba80a49124 (Commit)
 	depends on LITEX || COMPILE_TEST
 	select SERIAL_CORE
 	help

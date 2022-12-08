@@ -79,7 +79,10 @@ struct sw_flow *ovs_flow_alloc(void)
 		return ERR_PTR(-ENOMEM);
 
 	flow->stats_last_writer = -1;
+<<<<<<< HEAD
 	flow->cpu_used_mask = (struct cpumask *)&flow->stats[nr_cpu_ids];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Initialize the default stat node. */
 	stats = kmem_cache_alloc_node(flow_stats_cache,
@@ -92,7 +95,11 @@ struct sw_flow *ovs_flow_alloc(void)
 
 	RCU_INIT_POINTER(flow->stats[0], stats);
 
+<<<<<<< HEAD
 	cpumask_set_cpu(0, flow->cpu_used_mask);
+=======
+	cpumask_set_cpu(0, &flow->cpu_used_mask);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return flow;
 err:
@@ -116,7 +123,11 @@ static void flow_free(struct sw_flow *flow)
 					  flow->sf_acts);
 	/* We open code this to make sure cpu 0 is always considered */
 	for (cpu = 0; cpu < nr_cpu_ids;
+<<<<<<< HEAD
 	     cpu = cpumask_next(cpu, flow->cpu_used_mask)) {
+=======
+	     cpu = cpumask_next(cpu, &flow->cpu_used_mask)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (flow->stats[cpu])
 			kmem_cache_free(flow_stats_cache,
 					(struct sw_flow_stats __force *)flow->stats[cpu]);
@@ -206,9 +217,15 @@ static void tbl_mask_array_reset_counters(struct mask_array *ma)
 
 			stats = per_cpu_ptr(ma->masks_usage_stats, cpu);
 			do {
+<<<<<<< HEAD
 				start = u64_stats_fetch_begin(&stats->syncp);
 				counter = stats->usage_cntrs[i];
 			} while (u64_stats_fetch_retry(&stats->syncp, start));
+=======
+				start = u64_stats_fetch_begin_irq(&stats->syncp);
+				counter = stats->usage_cntrs[i];
+			} while (u64_stats_fetch_retry_irq(&stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 			ma->masks_usage_zero_cntr[i] += counter;
 		}
@@ -1013,7 +1030,11 @@ static int flow_mask_insert(struct flow_table *tbl, struct sw_flow *flow,
 
 	mask = flow_mask_find(tbl, new);
 	if (!mask) {
+<<<<<<< HEAD
 		/* Allocate a new mask if none exists. */
+=======
+		/* Allocate a new mask if none exsits. */
+>>>>>>> b7ba80a49124 (Commit)
 		mask = mask_alloc();
 		if (!mask)
 			return -ENOMEM;
@@ -1137,9 +1158,16 @@ void ovs_flow_masks_rebalance(struct flow_table *table)
 
 			stats = per_cpu_ptr(ma->masks_usage_stats, cpu);
 			do {
+<<<<<<< HEAD
 				start = u64_stats_fetch_begin(&stats->syncp);
 				counter = stats->usage_cntrs[i];
 			} while (u64_stats_fetch_retry(&stats->syncp, start));
+=======
+				start = u64_stats_fetch_begin_irq(&stats->syncp);
+				counter = stats->usage_cntrs[i];
+			} while (u64_stats_fetch_retry_irq(&stats->syncp,
+							   start));
+>>>>>>> b7ba80a49124 (Commit)
 
 			masks_and_count[i].counter += counter;
 		}
@@ -1197,8 +1225,12 @@ int ovs_flow_init(void)
 
 	flow_cache = kmem_cache_create("sw_flow", sizeof(struct sw_flow)
 				       + (nr_cpu_ids
+<<<<<<< HEAD
 					  * sizeof(struct sw_flow_stats *))
 				       + cpumask_size(),
+=======
+					  * sizeof(struct sw_flow_stats *)),
+>>>>>>> b7ba80a49124 (Commit)
 				       0, 0, NULL);
 	if (flow_cache == NULL)
 		return -ENOMEM;

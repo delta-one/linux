@@ -291,4 +291,8 @@ MODULE_AUTHOR("Enrico Weigelt, metux IT consult <info@metux.net>");
 MODULE_DESCRIPTION("PC Engines APUv2/APUv3 board GPIO/LEDs/keys driver");
 MODULE_LICENSE("GPL");
 MODULE_DEVICE_TABLE(dmi, apu_gpio_dmi_table);
+<<<<<<< HEAD
+=======
+MODULE_ALIAS("platform:pcengines-apuv2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_SOFTDEP("pre: platform:" AMD_FCH_GPIO_DRIVER_NAME " platform:leds-gpio platform:gpio_keys_polled");

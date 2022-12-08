@@ -4,7 +4,13 @@
 # Sanitizer runtimes are unavailable and cannot be linked here.
  KCSAN_SANITIZE			:= n
 
+<<<<<<< HEAD
 # Include the generic Makefile to check the built vdso.
+=======
+# Absolute relocation type $(ARCH_REL_TYPE_ABS) needs to be defined before
+# the inclusion of generic Makefile.
+ARCH_REL_TYPE_ABS := R_MIPS_JUMP_SLOT|R_MIPS_GLOB_DAT
+>>>>>>> b7ba80a49124 (Commit)
 include $(srctree)/lib/vdso/Makefile
 
 obj-vdso-y := elf.o vgettimeofday.o sigreturn.o
@@ -50,6 +56,12 @@ endif
 CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE)
 
 ifdef CONFIG_MIPS_DISABLE_VDSO
+<<<<<<< HEAD
+=======
+  ifndef CONFIG_MIPS_LD_CAN_LINK_VDSO
+    $(warning MIPS VDSO requires binutils >= 2.25)
+  endif
+>>>>>>> b7ba80a49124 (Commit)
   obj-vdso-y := $(filter-out vgettimeofday.o, $(obj-vdso-y))
 endif
 
@@ -66,7 +78,11 @@ KCOV_INSTRUMENT := n
 
 # Check that we don't have PIC 'jalr t9' calls left
 quiet_cmd_vdso_mips_check = VDSOCHK $@
+<<<<<<< HEAD
       cmd_vdso_mips_check = if $(OBJDUMP) --disassemble $@ | grep -E -h "jalr.*t9" > /dev/null; \
+=======
+      cmd_vdso_mips_check = if $(OBJDUMP) --disassemble $@ | egrep -h "jalr.*t9" > /dev/null; \
+>>>>>>> b7ba80a49124 (Commit)
 		       then (echo >&2 "$@: PIC 'jalr t9' calls are not supported"; \
 			     rm -f $@; /bin/false); fi
 

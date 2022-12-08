@@ -38,6 +38,16 @@
 
 #endif
 
+<<<<<<< HEAD
+=======
+extern const char *drbd_buildtag(void);
+#define REL_VERSION "8.4.11"
+#define API_VERSION 1
+#define PRO_VERSION_MIN 86
+#define PRO_VERSION_MAX 101
+
+
+>>>>>>> b7ba80a49124 (Commit)
 enum drbd_io_error_p {
 	EP_PASS_ON, /* FIXME should the better be named "Ignore"? */
 	EP_CALL_HELPER,

@@ -320,7 +320,11 @@ void acct_exit_ns(struct pid_namespace *ns)
 }
 
 /*
+<<<<<<< HEAD
  *  encode an u64 into a comp_t
+=======
+ *  encode an unsigned long into a comp_t
+>>>>>>> b7ba80a49124 (Commit)
  *
  *  This routine has been adopted from the encode_comp_t() function in
  *  the kern_acct.c file of the FreeBSD operating system. The encoding
@@ -331,7 +335,11 @@ void acct_exit_ns(struct pid_namespace *ns)
 #define	EXPSIZE		3			/* Base 8 (3 bit) exponent. */
 #define	MAXFRACT	((1 << MANTSIZE) - 1)	/* Maximum fractional value. */
 
+<<<<<<< HEAD
 static comp_t encode_comp_t(u64 value)
+=======
+static comp_t encode_comp_t(unsigned long value)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int exp, rnd;
 
@@ -350,8 +358,11 @@ static comp_t encode_comp_t(u64 value)
 		exp++;
 	}
 
+<<<<<<< HEAD
 	if (exp > (((comp_t) ~0U) >> MANTSIZE))
 		return (comp_t) ~0U;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Clean it up and polish it off.
 	 */

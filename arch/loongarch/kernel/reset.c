@@ -15,7 +15,10 @@
 #include <acpi/reboot.h>
 #include <asm/idle.h>
 #include <asm/loongarch.h>
+<<<<<<< HEAD
 #include <asm/loongson.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void (*pm_power_off)(void);
 EXPORT_SYMBOL(pm_power_off);
@@ -43,10 +46,13 @@ void machine_power_off(void)
 	preempt_disable();
 	smp_send_stop();
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_PM
 	if (!acpi_disabled)
 		enable_pci_wakeup();
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	do_kernel_power_off();
 #ifdef CONFIG_EFI
 	efi.reset_system(EFI_RESET_SHUTDOWN, EFI_SUCCESS, 0, NULL);

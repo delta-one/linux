@@ -38,7 +38,10 @@ struct nvme_ns_info {
 	bool is_shared;
 	bool is_readonly;
 	bool is_ready;
+<<<<<<< HEAD
 	bool is_removed;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 unsigned int admin_timeout = 60;
@@ -385,8 +388,11 @@ static inline void nvme_end_req(struct request *req)
 		nvme_log_error(req);
 	nvme_end_req_zoned(req);
 	nvme_trace_bio_complete(req);
+<<<<<<< HEAD
 	if (req->cmd_flags & REQ_NVME_MPATH)
 		nvme_mpath_end_request(req);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	blk_mq_end_request(req, status);
 }
 
@@ -678,7 +684,10 @@ void nvme_init_request(struct request *req, struct nvme_command *cmd)
 	if (req->mq_hctx->type == HCTX_TYPE_POLL)
 		req->cmd_flags |= REQ_POLLED;
 	nvme_clear_nvme_request(req);
+<<<<<<< HEAD
 	req->rq_flags |= RQF_QUIET;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(nvme_req(req)->cmd, cmd, sizeof(*cmd));
 }
 EXPORT_SYMBOL_GPL(nvme_init_request);
@@ -781,6 +790,7 @@ static blk_status_t nvme_setup_discard(struct nvme_ns *ns, struct request *req,
 		range = page_address(ns->ctrl->discard_page);
 	}
 
+<<<<<<< HEAD
 	if (queue_max_discard_segments(req->q) == 1) {
 		u64 slba = nvme_sect_to_lba(ns, blk_rq_pos(req));
 		u32 nlb = blk_rq_sectors(req) >> (ns->lba_shift - 9);
@@ -801,6 +811,18 @@ static blk_status_t nvme_setup_discard(struct nvme_ns *ns, struct request *req,
 			}
 			n++;
 		}
+=======
+	__rq_for_each_bio(bio, req) {
+		u64 slba = nvme_sect_to_lba(ns, bio->bi_iter.bi_sector);
+		u32 nlb = bio->bi_iter.bi_size >> ns->lba_shift;
+
+		if (n < segments) {
+			range[n].cattr = cpu_to_le32(0);
+			range[n].nlb = cpu_to_le32(nlb);
+			range[n].slba = cpu_to_le64(slba);
+		}
+		n++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (WARN_ON_ONCE(n != segments)) {
@@ -817,7 +839,13 @@ static blk_status_t nvme_setup_discard(struct nvme_ns *ns, struct request *req,
 	cmnd->dsm.nr = cpu_to_le32(segments - 1);
 	cmnd->dsm.attributes = cpu_to_le32(NVME_DSMGMT_AD);
 
+<<<<<<< HEAD
 	bvec_set_virt(&req->special_vec, range, alloc_size);
+=======
+	req->special_vec.bv_page = virt_to_page(range);
+	req->special_vec.bv_offset = offset_in_page(range);
+	req->special_vec.bv_len = alloc_size;
+>>>>>>> b7ba80a49124 (Commit)
 	req->rq_flags |= RQF_SPECIAL_PAYLOAD;
 
 	return BLK_STS_OK;
@@ -862,11 +890,16 @@ static inline blk_status_t nvme_setup_write_zeroes(struct nvme_ns *ns,
 	cmnd->write_zeroes.length =
 		cpu_to_le16((blk_rq_bytes(req) >> ns->lba_shift) - 1);
 
+<<<<<<< HEAD
 	if (!(req->cmd_flags & REQ_NOUNMAP) && (ns->features & NVME_NS_DEAC))
 		cmnd->write_zeroes.control |= cpu_to_le16(NVME_WZ_DEAC);
 
 	if (nvme_ns_has_pi(ns)) {
 		cmnd->write_zeroes.control |= cpu_to_le16(NVME_RW_PRINFO_PRACT);
+=======
+	if (nvme_ns_has_pi(ns)) {
+		cmnd->write_zeroes.control = cpu_to_le16(NVME_RW_PRINFO_PRACT);
+>>>>>>> b7ba80a49124 (Commit)
 
 		switch (ns->pi_type) {
 		case NVME_NS_DPS_PI_TYPE1:
@@ -1013,7 +1046,11 @@ EXPORT_SYMBOL_GPL(nvme_setup_cmd);
  * >0: nvme controller's cqe status response
  * <0: kernel error in lieu of controller response
  */
+<<<<<<< HEAD
 int nvme_execute_rq(struct request *rq, bool at_head)
+=======
+static int nvme_execute_rq(struct request *rq, bool at_head)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	blk_status_t status;
 
@@ -1024,7 +1061,10 @@ int nvme_execute_rq(struct request *rq, bool at_head)
 		return nvme_req(rq)->status;
 	return blk_status_to_errno(status);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_NS_GPL(nvme_execute_rq, NVME_TARGET_PASSTHRU);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Returns 0 on success.  If the result is negative, it's a Linux error code;
@@ -1053,6 +1093,10 @@ int __nvme_submit_sync_cmd(struct request_queue *q, struct nvme_command *cmd,
 			goto out;
 	}
 
+<<<<<<< HEAD
+=======
+	req->rq_flags |= RQF_QUIET;
+>>>>>>> b7ba80a49124 (Commit)
 	ret = nvme_execute_rq(req, at_head);
 	if (result && ret >= 0)
 		*result = nvme_req(req)->result;
@@ -1070,11 +1114,29 @@ int nvme_submit_sync_cmd(struct request_queue *q, struct nvme_command *cmd,
 }
 EXPORT_SYMBOL_GPL(nvme_submit_sync_cmd);
 
+<<<<<<< HEAD
+=======
+static u32 nvme_known_admin_effects(u8 opcode)
+{
+	switch (opcode) {
+	case nvme_admin_format_nvm:
+		return NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_NCC |
+			NVME_CMD_EFFECTS_CSE_MASK;
+	case nvme_admin_sanitize_nvm:
+		return NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK;
+	default:
+		break;
+	}
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns, u8 opcode)
 {
 	u32 effects = 0;
 
 	if (ns) {
+<<<<<<< HEAD
 		effects = le32_to_cpu(ns->head->effects->iocs[opcode]);
 		if (effects & ~(NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC))
 			dev_warn_once(ctrl->device,
@@ -1091,11 +1153,31 @@ u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns, u8 opcode)
 		effects = le32_to_cpu(ctrl->effects->acs[opcode]);
 	}
 
+=======
+		if (ns->head->effects)
+			effects = le32_to_cpu(ns->head->effects->iocs[opcode]);
+		if (effects & ~(NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC))
+			dev_warn_once(ctrl->device,
+				"IO command:%02x has unhandled effects:%08x\n",
+				opcode, effects);
+		return 0;
+	}
+
+	if (ctrl->effects)
+		effects = le32_to_cpu(ctrl->effects->acs[opcode]);
+	effects |= nvme_known_admin_effects(opcode);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return effects;
 }
 EXPORT_SYMBOL_NS_GPL(nvme_command_effects, NVME_TARGET_PASSTHRU);
 
+<<<<<<< HEAD
 u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns, u8 opcode)
+=======
+static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+			       u8 opcode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 effects = nvme_command_effects(ctrl, ns, opcode);
 
@@ -1113,21 +1195,35 @@ u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns, u8 opcode)
 	}
 	return effects;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_NS_GPL(nvme_passthru_start, NVME_TARGET_PASSTHRU);
 
 void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects,
 		       struct nvme_command *cmd, int status)
+=======
+
+static void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects,
+			      struct nvme_command *cmd, int status)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (effects & NVME_CMD_EFFECTS_CSE_MASK) {
 		nvme_unfreeze(ctrl);
 		nvme_mpath_unfreeze(ctrl->subsys);
 		mutex_unlock(&ctrl->subsys->lock);
+<<<<<<< HEAD
 		mutex_unlock(&ctrl->scan_lock);
 	}
 	if (effects & NVME_CMD_EFFECTS_CCC) {
 		dev_info(ctrl->device,
 "controller capabilities changed, reset may be required to take effect.\n");
 	}
+=======
+		nvme_remove_invalid_namespaces(ctrl, NVME_NSID_ALL);
+		mutex_unlock(&ctrl->scan_lock);
+	}
+	if (effects & NVME_CMD_EFFECTS_CCC)
+		nvme_init_ctrl_finish(ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 	if (effects & (NVME_CMD_EFFECTS_NIC | NVME_CMD_EFFECTS_NCC)) {
 		nvme_queue_scan(ctrl);
 		flush_work(&ctrl->scan_work);
@@ -1153,7 +1249,27 @@ void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects,
 		break;
 	}
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_NS_GPL(nvme_passthru_end, NVME_TARGET_PASSTHRU);
+=======
+
+int nvme_execute_passthru_rq(struct request *rq)
+{
+	struct nvme_command *cmd = nvme_req(rq)->cmd;
+	struct nvme_ctrl *ctrl = nvme_req(rq)->ctrl;
+	struct nvme_ns *ns = rq->q->queuedata;
+	u32 effects;
+	int  ret;
+
+	effects = nvme_passthru_start(ctrl, ns, cmd->common.opcode);
+	ret = nvme_execute_rq(rq, false);
+	if (effects) /* nothing to be done for zero cmd effects */
+		nvme_passthru_end(ctrl, effects, cmd, ret);
+
+	return ret;
+}
+EXPORT_SYMBOL_NS_GPL(nvme_execute_passthru_rq, NVME_TARGET_PASSTHRU);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Recommended frequency for KATO commands per NVMe 1.4 section 7.12.1:
@@ -1166,8 +1282,12 @@ static void nvme_queue_keep_alive_work(struct nvme_ctrl *ctrl)
 	queue_delayed_work(nvme_wq, &ctrl->ka_work, ctrl->kato * HZ / 2);
 }
 
+<<<<<<< HEAD
 static enum rq_end_io_ret nvme_keep_alive_end_io(struct request *rq,
 						 blk_status_t status)
+=======
+static void nvme_keep_alive_end_io(struct request *rq, blk_status_t status)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nvme_ctrl *ctrl = rq->end_io_data;
 	unsigned long flags;
@@ -1179,7 +1299,11 @@ static enum rq_end_io_ret nvme_keep_alive_end_io(struct request *rq,
 		dev_err(ctrl->device,
 			"failed nvme_keep_alive_end_io error=%d\n",
 				status);
+<<<<<<< HEAD
 		return RQ_END_IO_NONE;
+=======
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ctrl->comp_seen = false;
@@ -1190,7 +1314,10 @@ static enum rq_end_io_ret nvme_keep_alive_end_io(struct request *rq,
 	spin_unlock_irqrestore(&ctrl->lock, flags);
 	if (startka)
 		nvme_queue_keep_alive_work(ctrl);
+<<<<<<< HEAD
 	return RQ_END_IO_NONE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void nvme_keep_alive_work(struct work_struct *work)
@@ -1221,6 +1348,10 @@ static void nvme_keep_alive_work(struct work_struct *work)
 	rq->timeout = ctrl->kato * HZ;
 	rq->end_io = nvme_keep_alive_end_io;
 	rq->end_io_data = ctrl;
+<<<<<<< HEAD
+=======
+	rq->rq_flags |= RQF_QUIET;
+>>>>>>> b7ba80a49124 (Commit)
 	blk_execute_rq_nowait(rq, false);
 }
 
@@ -1413,8 +1544,21 @@ static int nvme_identify_ns(struct nvme_ctrl *ctrl, unsigned nsid,
 	error = nvme_submit_sync_cmd(ctrl->admin_q, &c, *id, sizeof(**id));
 	if (error) {
 		dev_warn(ctrl->device, "Identify namespace failed (%d)\n", error);
+<<<<<<< HEAD
 		kfree(*id);
 	}
+=======
+		goto out_free_id;
+	}
+
+	error = NVME_SC_INVALID_NS | NVME_SC_DNR;
+	if ((*id)->ncap == 0) /* namespace not allocated or attached */
+		goto out_free_id;
+	return 0;
+
+out_free_id:
+	kfree(*id);
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }
 
@@ -1428,6 +1572,7 @@ static int nvme_ns_info_from_identify(struct nvme_ctrl *ctrl,
 	ret = nvme_identify_ns(ctrl, info->nsid, &id);
 	if (ret)
 		return ret;
+<<<<<<< HEAD
 
 	if (id->ncap == 0) {
 		/* namespace not allocated or attached */
@@ -1435,6 +1580,8 @@ static int nvme_ns_info_from_identify(struct nvme_ctrl *ctrl,
 		return -ENODEV;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	info->anagrpid = id->anagrpid;
 	info->is_shared = id->nmic & NVME_NS_NMIC_SHARED;
 	info->is_readonly = id->nsattr & NVME_NS_ATTR_RO;
@@ -1996,6 +2143,7 @@ static int nvme_update_ns_info_block(struct nvme_ns *ns,
 		}
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Only set the DEAC bit if the device guarantees that reads from
 	 * deallocated data return zeroes.  While the DEAC bit does not
@@ -2004,6 +2152,8 @@ static int nvme_update_ns_info_block(struct nvme_ns *ns,
 	 */
 	if ((id->dlfeat & 0x7) == 0x1 && (id->dlfeat & (1 << 3)))
 		ns->features |= NVME_NS_DEAC;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	set_disk_ro(ns->disk, nvme_ns_is_readonly(ns, info));
 	set_bit(NVME_NS_READY, &ns->flags);
 	blk_mq_unfreeze_queue(ns->disk->queue);
@@ -2104,6 +2254,7 @@ static int nvme_send_ns_pr_command(struct nvme_ns *ns, struct nvme_command *c,
 	return nvme_submit_sync_cmd(ns->queue, c, data, 16);
 }
 
+<<<<<<< HEAD
 static int nvme_sc_to_pr_err(int nvme_sc)
 {
 	if (nvme_is_path_error(nvme_sc))
@@ -2126,12 +2277,17 @@ static int nvme_sc_to_pr_err(int nvme_sc)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int nvme_pr_command(struct block_device *bdev, u32 cdw10,
 				u64 key, u64 sa_key, u8 op)
 {
 	struct nvme_command c = { };
 	u8 data[16] = { 0, };
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	put_unaligned_le64(key, &data[0]);
 	put_unaligned_le64(sa_key, &data[8]);
@@ -2141,6 +2297,7 @@ static int nvme_pr_command(struct block_device *bdev, u32 cdw10,
 
 	if (IS_ENABLED(CONFIG_NVME_MULTIPATH) &&
 	    bdev->bd_disk->fops == &nvme_ns_head_ops)
+<<<<<<< HEAD
 		ret = nvme_send_ns_head_pr_command(bdev, &c, data);
 	else
 		ret = nvme_send_ns_pr_command(bdev->bd_disk->private_data, &c,
@@ -2149,6 +2306,10 @@ static int nvme_pr_command(struct block_device *bdev, u32 cdw10,
 		return ret;
 
 	return nvme_sc_to_pr_err(ret);
+=======
+		return nvme_send_ns_head_pr_command(bdev, &c, data);
+	return nvme_send_ns_pr_command(bdev->bd_disk->private_data, &c, data);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int nvme_pr_register(struct block_device *bdev, u64 old,
@@ -2188,14 +2349,24 @@ static int nvme_pr_preempt(struct block_device *bdev, u64 old, u64 new,
 
 static int nvme_pr_clear(struct block_device *bdev, u64 key)
 {
+<<<<<<< HEAD
 	u32 cdw10 = 1 | (key ? 0 : 1 << 3);
 
 	return nvme_pr_command(bdev, cdw10, key, 0, nvme_cmd_resv_release);
+=======
+	u32 cdw10 = 1 | (key ? 1 << 3 : 0);
+
+	return nvme_pr_command(bdev, cdw10, key, 0, nvme_cmd_resv_register);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int nvme_pr_release(struct block_device *bdev, u64 key, enum pr_type type)
 {
+<<<<<<< HEAD
 	u32 cdw10 = nvme_pr_type(type) << 8 | (key ? 0 : 1 << 3);
+=======
+	u32 cdw10 = nvme_pr_type(type) << 8 | (key ? 1 << 3 : 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return nvme_pr_command(bdev, cdw10, key, 0, nvme_cmd_resv_release);
 }
@@ -2209,7 +2380,11 @@ const struct pr_ops nvme_pr_ops = {
 };
 
 #ifdef CONFIG_BLK_SED_OPAL
+<<<<<<< HEAD
 static int nvme_sec_submit(void *data, u16 spsp, u8 secp, void *buffer, size_t len,
+=======
+int nvme_sec_submit(void *data, u16 spsp, u8 secp, void *buffer, size_t len,
+>>>>>>> b7ba80a49124 (Commit)
 		bool send)
 {
 	struct nvme_ctrl *ctrl = data;
@@ -2226,6 +2401,7 @@ static int nvme_sec_submit(void *data, u16 spsp, u8 secp, void *buffer, size_t l
 	return __nvme_submit_sync_cmd(ctrl->admin_q, &cmd, NULL, buffer, len,
 			NVME_QID_ANY, 1, 0);
 }
+<<<<<<< HEAD
 
 static void nvme_configure_opal(struct nvme_ctrl *ctrl, bool was_suspended)
 {
@@ -2243,6 +2419,9 @@ static void nvme_configure_opal(struct nvme_ctrl *ctrl, bool was_suspended)
 static void nvme_configure_opal(struct nvme_ctrl *ctrl, bool was_suspended)
 {
 }
+=======
+EXPORT_SYMBOL_GPL(nvme_sec_submit);
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_BLK_SED_OPAL */
 
 #ifdef CONFIG_BLK_DEV_ZONED
@@ -2267,17 +2446,28 @@ static const struct block_device_operations nvme_bdev_ops = {
 	.pr_ops		= &nvme_pr_ops,
 };
 
+<<<<<<< HEAD
 static int nvme_wait_ready(struct nvme_ctrl *ctrl, u32 mask, u32 val,
 		u32 timeout, const char *op)
 {
 	unsigned long timeout_jiffies = jiffies + timeout * HZ;
 	u32 csts;
+=======
+static int nvme_wait_ready(struct nvme_ctrl *ctrl, u32 timeout, bool enabled)
+{
+	unsigned long timeout_jiffies = ((timeout + 1) * HZ / 2) + jiffies;
+	u32 csts, bit = enabled ? NVME_CSTS_RDY : 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	while ((ret = ctrl->ops->reg_read32(ctrl, NVME_REG_CSTS, &csts)) == 0) {
 		if (csts == ~0)
 			return -ENODEV;
+<<<<<<< HEAD
 		if ((csts & mask) == val)
+=======
+		if ((csts & NVME_CSTS_RDY) == bit)
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		usleep_range(1000, 2000);
@@ -2286,7 +2476,11 @@ static int nvme_wait_ready(struct nvme_ctrl *ctrl, u32 mask, u32 val,
 		if (time_after(jiffies, timeout_jiffies)) {
 			dev_err(ctrl->device,
 				"Device not ready; aborting %s, CSTS=0x%x\n",
+<<<<<<< HEAD
 				op, csts);
+=======
+				enabled ? "initialisation" : "reset", csts);
+>>>>>>> b7ba80a49124 (Commit)
 			return -ENODEV;
 		}
 	}
@@ -2294,20 +2488,35 @@ static int nvme_wait_ready(struct nvme_ctrl *ctrl, u32 mask, u32 val,
 	return ret;
 }
 
+<<<<<<< HEAD
 int nvme_disable_ctrl(struct nvme_ctrl *ctrl, bool shutdown)
+=======
+/*
+ * If the device has been passed off to us in an enabled state, just clear
+ * the enabled bit.  The spec says we should set the 'shutdown notification
+ * bits', but doing so may cause the device to complete commands to the
+ * admin queue ... and we don't know what memory that might be pointing at!
+ */
+int nvme_disable_ctrl(struct nvme_ctrl *ctrl)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
 	ctrl->ctrl_config &= ~NVME_CC_SHN_MASK;
+<<<<<<< HEAD
 	if (shutdown)
 		ctrl->ctrl_config |= NVME_CC_SHN_NORMAL;
 	else
 		ctrl->ctrl_config &= ~NVME_CC_ENABLE;
+=======
+	ctrl->ctrl_config &= ~NVME_CC_ENABLE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = ctrl->ops->reg_write32(ctrl, NVME_REG_CC, ctrl->ctrl_config);
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (shutdown) {
 		return nvme_wait_ready(ctrl, NVME_CSTS_SHST_MASK,
 				       NVME_CSTS_SHST_CMPLT,
@@ -2317,6 +2526,12 @@ int nvme_disable_ctrl(struct nvme_ctrl *ctrl, bool shutdown)
 		msleep(NVME_QUIRK_DELAY_AMOUNT);
 	return nvme_wait_ready(ctrl, NVME_CSTS_RDY, 0,
 			       (NVME_CAP_TIMEOUT(ctrl->cap) + 1) / 2, "reset");
+=======
+	if (ctrl->quirks & NVME_QUIRK_DELAY_BEFORE_CHK_RDY)
+		msleep(NVME_QUIRK_DELAY_AMOUNT);
+
+	return nvme_wait_ready(ctrl, NVME_CAP_TIMEOUT(ctrl->cap), false);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(nvme_disable_ctrl);
 
@@ -2381,11 +2596,49 @@ int nvme_enable_ctrl(struct nvme_ctrl *ctrl)
 	ret = ctrl->ops->reg_write32(ctrl, NVME_REG_CC, ctrl->ctrl_config);
 	if (ret)
 		return ret;
+<<<<<<< HEAD
 	return nvme_wait_ready(ctrl, NVME_CSTS_RDY, NVME_CSTS_RDY,
 			       (timeout + 1) / 2, "initialisation");
 }
 EXPORT_SYMBOL_GPL(nvme_enable_ctrl);
 
+=======
+	return nvme_wait_ready(ctrl, timeout, true);
+}
+EXPORT_SYMBOL_GPL(nvme_enable_ctrl);
+
+int nvme_shutdown_ctrl(struct nvme_ctrl *ctrl)
+{
+	unsigned long timeout = jiffies + (ctrl->shutdown_timeout * HZ);
+	u32 csts;
+	int ret;
+
+	ctrl->ctrl_config &= ~NVME_CC_SHN_MASK;
+	ctrl->ctrl_config |= NVME_CC_SHN_NORMAL;
+
+	ret = ctrl->ops->reg_write32(ctrl, NVME_REG_CC, ctrl->ctrl_config);
+	if (ret)
+		return ret;
+
+	while ((ret = ctrl->ops->reg_read32(ctrl, NVME_REG_CSTS, &csts)) == 0) {
+		if ((csts & NVME_CSTS_SHST_MASK) == NVME_CSTS_SHST_CMPLT)
+			break;
+
+		msleep(100);
+		if (fatal_signal_pending(current))
+			return -EINTR;
+		if (time_after(jiffies, timeout)) {
+			dev_err(ctrl->device,
+				"Device shutdown incomplete; abort shutdown\n");
+			return -ENODEV;
+		}
+	}
+
+	return ret;
+}
+EXPORT_SYMBOL_GPL(nvme_shutdown_ctrl);
+
+>>>>>>> b7ba80a49124 (Commit)
 static int nvme_configure_timestamp(struct nvme_ctrl *ctrl)
 {
 	__le64 ts;
@@ -2913,6 +3166,10 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
 	nvme_init_subnqn(subsys, ctrl, id);
 	memcpy(subsys->serial, id->sn, sizeof(subsys->serial));
 	memcpy(subsys->model, id->mn, sizeof(subsys->model));
+<<<<<<< HEAD
+=======
+	memcpy(subsys->firmware_rev, id->fr, sizeof(subsys->firmware_rev));
+>>>>>>> b7ba80a49124 (Commit)
 	subsys->vendor_id = le16_to_cpu(id->vid);
 	subsys->cmic = id->cmic;
 
@@ -3068,7 +3325,11 @@ static int nvme_init_non_mdts_limits(struct nvme_ctrl *ctrl)
 
 	id = kzalloc(sizeof(*id), GFP_KERNEL);
 	if (!id)
+<<<<<<< HEAD
 		return -ENOMEM;
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	c.identify.opcode = nvme_admin_identify;
 	c.identify.cns = NVME_ID_CNS_CS_CTRL;
@@ -3089,6 +3350,7 @@ free_data:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void nvme_init_known_nvm_effects(struct nvme_ctrl *ctrl)
 {
 	struct nvme_effects_log	*log = ctrl->effects;
@@ -3145,6 +3407,8 @@ static int nvme_init_effects(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int nvme_init_identify(struct nvme_ctrl *ctrl)
 {
 	struct nvme_id_ctrl *id;
@@ -3158,12 +3422,28 @@ static int nvme_init_identify(struct nvme_ctrl *ctrl)
 		return -EIO;
 	}
 
+<<<<<<< HEAD
+=======
+	if (id->lpa & NVME_CTRL_LPA_CMD_EFFECTS_LOG) {
+		ret = nvme_get_effects_log(ctrl, NVME_CSI_NVM, &ctrl->effects);
+		if (ret < 0)
+			goto out_free;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!(ctrl->ops->flags & NVME_F_FABRICS))
 		ctrl->cntlid = le16_to_cpu(id->cntlid);
 
 	if (!ctrl->identified) {
 		unsigned int i;
 
+<<<<<<< HEAD
+=======
+		ret = nvme_init_subsystem(ctrl, id);
+		if (ret)
+			goto out_free;
+
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Check for quirks.  Quirk can depend on firmware version,
 		 * so, in principle, the set of quirks present can change
@@ -3176,6 +3456,7 @@ static int nvme_init_identify(struct nvme_ctrl *ctrl)
 			if (quirk_matches(id, &core_quirks[i]))
 				ctrl->quirks |= core_quirks[i].quirks;
 		}
+<<<<<<< HEAD
 
 		ret = nvme_init_subsystem(ctrl, id);
 		if (ret)
@@ -3187,6 +3468,9 @@ static int nvme_init_identify(struct nvme_ctrl *ctrl)
 	}
 	memcpy(ctrl->subsys->firmware_rev, id->fr,
 	       sizeof(ctrl->subsys->firmware_rev));
+=======
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (force_apst && (ctrl->quirks & NVME_QUIRK_NO_DEEPEST_PS)) {
 		dev_warn(ctrl->device, "forcibly allowing all power states due to nvme_core.force_apst -- use at your own risk\n");
@@ -3302,7 +3586,11 @@ out_free:
  * register in our nvme_ctrl structure.  This should be called as soon as
  * the admin queue is fully up and running.
  */
+<<<<<<< HEAD
 int nvme_init_ctrl_finish(struct nvme_ctrl *ctrl, bool was_suspended)
+=======
+int nvme_init_ctrl_finish(struct nvme_ctrl *ctrl)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
@@ -3333,6 +3621,7 @@ int nvme_init_ctrl_finish(struct nvme_ctrl *ctrl, bool was_suspended)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	nvme_configure_opal(ctrl, was_suspended);
 
 	if (!ctrl->identified && !nvme_discovery_ctrl(ctrl)) {
@@ -3342,6 +3631,11 @@ int nvme_init_ctrl_finish(struct nvme_ctrl *ctrl, bool was_suspended)
 		 */
 		ret = nvme_hwmon_init(ctrl);
 		if (ret == -EINTR)
+=======
+	if (!ctrl->identified && !nvme_discovery_ctrl(ctrl)) {
+		ret = nvme_hwmon_init(ctrl);
+		if (ret < 0)
+>>>>>>> b7ba80a49124 (Commit)
 			return ret;
 	}
 
@@ -3820,19 +4114,30 @@ static ssize_t nvme_ctrl_dhchap_secret_store(struct device *dev,
 	memcpy(dhchap_secret, buf, count);
 	nvme_auth_stop(ctrl);
 	if (strcmp(dhchap_secret, opts->dhchap_secret)) {
+<<<<<<< HEAD
 		struct nvme_dhchap_key *key, *host_key;
 		int ret;
 
 		ret = nvme_auth_generate_key(dhchap_secret, &key);
+=======
+		int ret;
+
+		ret = nvme_auth_generate_key(dhchap_secret, &ctrl->host_key);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			return ret;
 		kfree(opts->dhchap_secret);
 		opts->dhchap_secret = dhchap_secret;
+<<<<<<< HEAD
 		host_key = ctrl->host_key;
 		mutex_lock(&ctrl->dhchap_auth_mutex);
 		ctrl->host_key = key;
 		mutex_unlock(&ctrl->dhchap_auth_mutex);
 		nvme_auth_free_key(host_key);
+=======
+		/* Key has changed; re-authentication with new key */
+		nvme_auth_reset(ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	/* Start re-authentication */
 	dev_info(ctrl->device, "re-authenticating controller\n");
@@ -3874,19 +4179,30 @@ static ssize_t nvme_ctrl_dhchap_ctrl_secret_store(struct device *dev,
 	memcpy(dhchap_secret, buf, count);
 	nvme_auth_stop(ctrl);
 	if (strcmp(dhchap_secret, opts->dhchap_ctrl_secret)) {
+<<<<<<< HEAD
 		struct nvme_dhchap_key *key, *ctrl_key;
 		int ret;
 
 		ret = nvme_auth_generate_key(dhchap_secret, &key);
+=======
+		int ret;
+
+		ret = nvme_auth_generate_key(dhchap_secret, &ctrl->ctrl_key);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			return ret;
 		kfree(opts->dhchap_ctrl_secret);
 		opts->dhchap_ctrl_secret = dhchap_secret;
+<<<<<<< HEAD
 		ctrl_key = ctrl->ctrl_key;
 		mutex_lock(&ctrl->dhchap_auth_mutex);
 		ctrl->ctrl_key = key;
 		mutex_unlock(&ctrl->dhchap_auth_mutex);
 		nvme_auth_free_key(ctrl_key);
+=======
+		/* Key has changed; re-authentication with new key */
+		nvme_auth_reset(ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	/* Start re-authentication */
 	dev_info(ctrl->device, "re-authenticating controller\n");
@@ -3958,11 +4274,18 @@ static umode_t nvme_dev_attrs_are_visible(struct kobject *kobj,
 	return a->mode;
 }
 
+<<<<<<< HEAD
 const struct attribute_group nvme_dev_attrs_group = {
 	.attrs		= nvme_dev_attrs,
 	.is_visible	= nvme_dev_attrs_are_visible,
 };
 EXPORT_SYMBOL_GPL(nvme_dev_attrs_group);
+=======
+static const struct attribute_group nvme_dev_attrs_group = {
+	.attrs		= nvme_dev_attrs,
+	.is_visible	= nvme_dev_attrs_are_visible,
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct attribute_group *nvme_dev_attr_groups[] = {
 	&nvme_dev_attrs_group,
@@ -4388,7 +4711,11 @@ static void nvme_ns_remove(struct nvme_ns *ns)
 	mutex_unlock(&ns->ctrl->subsys->lock);
 
 	/* guarantee not available in head->list */
+<<<<<<< HEAD
 	synchronize_srcu(&ns->head->srcu);
+=======
+	synchronize_rcu();
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!nvme_ns_head_multipath(ns->head))
 		nvme_cdev_del(&ns->cdev, &ns->cdev_device);
@@ -4417,6 +4744,13 @@ static void nvme_validate_ns(struct nvme_ns *ns, struct nvme_ns_info *info)
 {
 	int ret = NVME_SC_INVALID_NS | NVME_SC_DNR;
 
+<<<<<<< HEAD
+=======
+	if (test_bit(NVME_NS_DEAD, &ns->flags))
+		goto out;
+
+	ret = NVME_SC_INVALID_NS | NVME_SC_DNR;
+>>>>>>> b7ba80a49124 (Commit)
 	if (!nvme_ns_ids_equal(&ns->head->ids, &info->ids)) {
 		dev_err(ns->ctrl->device,
 			"identifiers changed for nsid %d\n", ns->head->ns_id);
@@ -4439,7 +4773,10 @@ static void nvme_scan_ns(struct nvme_ctrl *ctrl, unsigned nsid)
 {
 	struct nvme_ns_info info = { .nsid = nsid };
 	struct nvme_ns *ns;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (nvme_identify_ns_descs(ctrl, &info))
 		return;
@@ -4456,6 +4793,7 @@ static void nvme_scan_ns(struct nvme_ctrl *ctrl, unsigned nsid)
 	 * set up a namespace.  If not fall back to the legacy version.
 	 */
 	if ((ctrl->cap & NVME_CAP_CRMS_CRIMS) ||
+<<<<<<< HEAD
 	    (info.ids.csi != NVME_CSI_NVM && info.ids.csi != NVME_CSI_ZNS))
 		ret = nvme_ns_info_from_id_cs_indep(ctrl, &info);
 	else
@@ -4463,12 +4801,25 @@ static void nvme_scan_ns(struct nvme_ctrl *ctrl, unsigned nsid)
 
 	if (info.is_removed)
 		nvme_ns_remove_by_nsid(ctrl, nsid);
+=======
+	    (info.ids.csi != NVME_CSI_NVM && info.ids.csi != NVME_CSI_ZNS)) {
+		if (nvme_ns_info_from_id_cs_indep(ctrl, &info))
+			return;
+	} else {
+		if (nvme_ns_info_from_identify(ctrl, &info))
+			return;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Ignore the namespace if it is not ready. We will get an AEN once it
 	 * becomes ready and restart the scan.
 	 */
+<<<<<<< HEAD
 	if (ret || !info.is_ready)
+=======
+	if (!info.is_ready)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	ns = nvme_find_get_ns(ctrl, nsid);
@@ -4488,7 +4839,11 @@ static void nvme_remove_invalid_namespaces(struct nvme_ctrl *ctrl,
 
 	down_write(&ctrl->namespaces_rwsem);
 	list_for_each_entry_safe(ns, next, &ctrl->namespaces, list) {
+<<<<<<< HEAD
 		if (ns->head->ns_id > nsid)
+=======
+		if (ns->head->ns_id > nsid || test_bit(NVME_NS_DEAD, &ns->flags))
+>>>>>>> b7ba80a49124 (Commit)
 			list_move_tail(&ns->list, &rm_list);
 	}
 	up_write(&ctrl->namespaces_rwsem);
@@ -4505,6 +4860,12 @@ static int nvme_scan_ns_list(struct nvme_ctrl *ctrl)
 	u32 prev = 0;
 	int ret = 0, i;
 
+<<<<<<< HEAD
+=======
+	if (nvme_ctrl_limited_cns(ctrl))
+		return -EOPNOTSUPP;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ns_list = kzalloc(NVME_IDENTIFY_DATA_SIZE, GFP_KERNEL);
 	if (!ns_list)
 		return -ENOMEM;
@@ -4612,6 +4973,7 @@ static void nvme_scan_work(struct work_struct *work)
 	}
 
 	mutex_lock(&ctrl->scan_lock);
+<<<<<<< HEAD
 	if (nvme_ctrl_limited_cns(ctrl)) {
 		nvme_scan_ns_sequential(ctrl);
 	} else {
@@ -4624,6 +4986,10 @@ static void nvme_scan_work(struct work_struct *work)
 		if (ret > 0 && ret & NVME_SC_DNR)
 			nvme_scan_ns_sequential(ctrl);
 	}
+=======
+	if (nvme_scan_ns_list(ctrl) != 0)
+		nvme_scan_ns_sequential(ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&ctrl->scan_lock);
 }
 
@@ -4653,10 +5019,15 @@ void nvme_remove_namespaces(struct nvme_ctrl *ctrl)
 	 * removing the namespaces' disks; fail all the queues now to avoid
 	 * potentially having to clean up the failed sync later.
 	 */
+<<<<<<< HEAD
 	if (ctrl->state == NVME_CTRL_DEAD) {
 		nvme_mark_namespaces_dead(ctrl);
 		nvme_unquiesce_io_queues(ctrl);
 	}
+=======
+	if (ctrl->state == NVME_CTRL_DEAD)
+		nvme_kill_queues(ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* this is a no-op when called from the controller reset handler */
 	nvme_change_ctrl_state(ctrl, NVME_CTRL_DELETING_NOIO);
@@ -4670,9 +5041,15 @@ void nvme_remove_namespaces(struct nvme_ctrl *ctrl)
 }
 EXPORT_SYMBOL_GPL(nvme_remove_namespaces);
 
+<<<<<<< HEAD
 static int nvme_class_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct nvme_ctrl *ctrl =
+=======
+static int nvme_class_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct nvme_ctrl *ctrl =
+>>>>>>> b7ba80a49124 (Commit)
 		container_of(dev, struct nvme_ctrl, ctrl_device);
 	struct nvmf_ctrl_options *opts = ctrl->opts;
 	int ret;
@@ -4782,7 +5159,11 @@ static void nvme_fw_act_work(struct work_struct *work)
 		fw_act_timeout = jiffies +
 				msecs_to_jiffies(admin_timeout * 1000);
 
+<<<<<<< HEAD
 	nvme_quiesce_io_queues(ctrl);
+=======
+	nvme_stop_queues(ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 	while (nvme_ctrl_pp_status(ctrl)) {
 		if (time_after(jiffies, fw_act_timeout)) {
 			dev_warn(ctrl->device,
@@ -4796,7 +5177,11 @@ static void nvme_fw_act_work(struct work_struct *work)
 	if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
 		return;
 
+<<<<<<< HEAD
 	nvme_unquiesce_io_queues(ctrl);
+=======
+	nvme_start_queues(ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 	/* read FW slot information to clear the AER */
 	nvme_get_fw_slot_info(ctrl);
 
@@ -4900,6 +5285,7 @@ void nvme_complete_async_event(struct nvme_ctrl *ctrl, __le16 status,
 }
 EXPORT_SYMBOL_GPL(nvme_complete_async_event);
 
+<<<<<<< HEAD
 int nvme_alloc_admin_tag_set(struct nvme_ctrl *ctrl, struct blk_mq_tag_set *set,
 		const struct blk_mq_ops *ops, unsigned int cmd_size)
 {
@@ -5022,6 +5408,8 @@ void nvme_remove_io_tag_set(struct nvme_ctrl *ctrl)
 }
 EXPORT_SYMBOL_GPL(nvme_remove_io_tag_set);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void nvme_stop_ctrl(struct nvme_ctrl *ctrl)
 {
 	nvme_mpath_stop(ctrl);
@@ -5041,6 +5429,7 @@ void nvme_start_ctrl(struct nvme_ctrl *ctrl)
 
 	nvme_enable_aen(ctrl);
 
+<<<<<<< HEAD
 	/*
 	 * persistent discovery controllers need to send indication to userspace
 	 * to re-read the discovery log page to learn about possible changes
@@ -5054,6 +5443,11 @@ void nvme_start_ctrl(struct nvme_ctrl *ctrl)
 	if (ctrl->queue_count > 1) {
 		nvme_queue_scan(ctrl);
 		nvme_unquiesce_io_queues(ctrl);
+=======
+	if (ctrl->queue_count > 1) {
+		nvme_queue_scan(ctrl);
+		nvme_start_queues(ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 		nvme_mpath_update(ctrl);
 	}
 
@@ -5098,7 +5492,10 @@ static void nvme_free_ctrl(struct device *dev)
 	nvme_auth_stop(ctrl);
 	nvme_auth_free(ctrl);
 	__free_page(ctrl->discard_page);
+<<<<<<< HEAD
 	free_opal_dev(ctrl->opal_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (subsys) {
 		mutex_lock(&nvme_subsystems_lock);
@@ -5164,10 +5561,14 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
 			ctrl->instance);
 	ctrl->device->class = nvme_class;
 	ctrl->device->parent = ctrl->dev;
+<<<<<<< HEAD
 	if (ops->dev_attr_groups)
 		ctrl->device->groups = ops->dev_attr_groups;
 	else
 		ctrl->device->groups = nvme_dev_attr_groups;
+=======
+	ctrl->device->groups = nvme_dev_attr_groups;
+>>>>>>> b7ba80a49124 (Commit)
 	ctrl->device->release = nvme_free_ctrl;
 	dev_set_drvdata(ctrl->device, ctrl);
 	ret = dev_set_name(ctrl->device, "nvme%d", ctrl->instance);
@@ -5191,6 +5592,7 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
 
 	nvme_fault_inject_init(&ctrl->fault_inject, dev_name(ctrl->device));
 	nvme_mpath_init_ctrl(ctrl);
+<<<<<<< HEAD
 	ret = nvme_auth_init_ctrl(ctrl);
 	if (ret)
 		goto out_free_cdev;
@@ -5198,6 +5600,11 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
 	return 0;
 out_free_cdev:
 	cdev_device_del(&ctrl->cdev, ctrl->device);
+=======
+	nvme_auth_init_ctrl(ctrl);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 out_free_name:
 	nvme_put_ctrl(ctrl);
 	kfree_const(ctrl->device->kobj.name);
@@ -5210,17 +5617,75 @@ out:
 }
 EXPORT_SYMBOL_GPL(nvme_init_ctrl);
 
+<<<<<<< HEAD
 /* let I/O to all namespaces fail in preparation for surprise removal */
 void nvme_mark_namespaces_dead(struct nvme_ctrl *ctrl)
+=======
+static void nvme_start_ns_queue(struct nvme_ns *ns)
+{
+	if (test_and_clear_bit(NVME_NS_STOPPED, &ns->flags))
+		blk_mq_unquiesce_queue(ns->queue);
+}
+
+static void nvme_stop_ns_queue(struct nvme_ns *ns)
+{
+	if (!test_and_set_bit(NVME_NS_STOPPED, &ns->flags))
+		blk_mq_quiesce_queue(ns->queue);
+	else
+		blk_mq_wait_quiesce_done(ns->queue);
+}
+
+/*
+ * Prepare a queue for teardown.
+ *
+ * This must forcibly unquiesce queues to avoid blocking dispatch, and only set
+ * the capacity to 0 after that to avoid blocking dispatchers that may be
+ * holding bd_butex.  This will end buffered writers dirtying pages that can't
+ * be synced.
+ */
+static void nvme_set_queue_dying(struct nvme_ns *ns)
+{
+	if (test_and_set_bit(NVME_NS_DEAD, &ns->flags))
+		return;
+
+	blk_mark_disk_dead(ns->disk);
+	nvme_start_ns_queue(ns);
+
+	set_capacity_and_notify(ns->disk, 0);
+}
+
+/**
+ * nvme_kill_queues(): Ends all namespace queues
+ * @ctrl: the dead controller that needs to end
+ *
+ * Call this function when the driver determines it is unable to get the
+ * controller in a state capable of servicing IO.
+ */
+void nvme_kill_queues(struct nvme_ctrl *ctrl)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nvme_ns *ns;
 
 	down_read(&ctrl->namespaces_rwsem);
+<<<<<<< HEAD
 	list_for_each_entry(ns, &ctrl->namespaces, list)
 		blk_mark_disk_dead(ns->disk);
 	up_read(&ctrl->namespaces_rwsem);
 }
 EXPORT_SYMBOL_GPL(nvme_mark_namespaces_dead);
+=======
+
+	/* Forcibly unquiesce queues to avoid blocking dispatch */
+	if (ctrl->admin_q && !blk_queue_dying(ctrl->admin_q))
+		nvme_start_admin_queue(ctrl);
+
+	list_for_each_entry(ns, &ctrl->namespaces, list)
+		nvme_set_queue_dying(ns);
+
+	up_read(&ctrl->namespaces_rwsem);
+}
+EXPORT_SYMBOL_GPL(nvme_kill_queues);
+>>>>>>> b7ba80a49124 (Commit)
 
 void nvme_unfreeze(struct nvme_ctrl *ctrl)
 {
@@ -5270,6 +5735,7 @@ void nvme_start_freeze(struct nvme_ctrl *ctrl)
 }
 EXPORT_SYMBOL_GPL(nvme_start_freeze);
 
+<<<<<<< HEAD
 void nvme_quiesce_io_queues(struct nvme_ctrl *ctrl)
 {
 	if (!ctrl->tagset)
@@ -5291,20 +5757,57 @@ void nvme_unquiesce_io_queues(struct nvme_ctrl *ctrl)
 EXPORT_SYMBOL_GPL(nvme_unquiesce_io_queues);
 
 void nvme_quiesce_admin_queue(struct nvme_ctrl *ctrl)
+=======
+void nvme_stop_queues(struct nvme_ctrl *ctrl)
+{
+	struct nvme_ns *ns;
+
+	down_read(&ctrl->namespaces_rwsem);
+	list_for_each_entry(ns, &ctrl->namespaces, list)
+		nvme_stop_ns_queue(ns);
+	up_read(&ctrl->namespaces_rwsem);
+}
+EXPORT_SYMBOL_GPL(nvme_stop_queues);
+
+void nvme_start_queues(struct nvme_ctrl *ctrl)
+{
+	struct nvme_ns *ns;
+
+	down_read(&ctrl->namespaces_rwsem);
+	list_for_each_entry(ns, &ctrl->namespaces, list)
+		nvme_start_ns_queue(ns);
+	up_read(&ctrl->namespaces_rwsem);
+}
+EXPORT_SYMBOL_GPL(nvme_start_queues);
+
+void nvme_stop_admin_queue(struct nvme_ctrl *ctrl)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!test_and_set_bit(NVME_CTRL_ADMIN_Q_STOPPED, &ctrl->flags))
 		blk_mq_quiesce_queue(ctrl->admin_q);
 	else
+<<<<<<< HEAD
 		blk_mq_wait_quiesce_done(ctrl->admin_q->tag_set);
 }
 EXPORT_SYMBOL_GPL(nvme_quiesce_admin_queue);
 
 void nvme_unquiesce_admin_queue(struct nvme_ctrl *ctrl)
+=======
+		blk_mq_wait_quiesce_done(ctrl->admin_q);
+}
+EXPORT_SYMBOL_GPL(nvme_stop_admin_queue);
+
+void nvme_start_admin_queue(struct nvme_ctrl *ctrl)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (test_and_clear_bit(NVME_CTRL_ADMIN_Q_STOPPED, &ctrl->flags))
 		blk_mq_unquiesce_queue(ctrl->admin_q);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(nvme_unquiesce_admin_queue);
+=======
+EXPORT_SYMBOL_GPL(nvme_start_admin_queue);
+>>>>>>> b7ba80a49124 (Commit)
 
 void nvme_sync_io_queues(struct nvme_ctrl *ctrl)
 {
@@ -5391,14 +5894,22 @@ static int __init nvme_core_init(void)
 	if (result < 0)
 		goto destroy_delete_wq;
 
+<<<<<<< HEAD
 	nvme_class = class_create("nvme");
+=======
+	nvme_class = class_create(THIS_MODULE, "nvme");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(nvme_class)) {
 		result = PTR_ERR(nvme_class);
 		goto unregister_chrdev;
 	}
 	nvme_class->dev_uevent = nvme_class_uevent;
 
+<<<<<<< HEAD
 	nvme_subsys_class = class_create("nvme-subsystem");
+=======
+	nvme_subsys_class = class_create(THIS_MODULE, "nvme-subsystem");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(nvme_subsys_class)) {
 		result = PTR_ERR(nvme_subsys_class);
 		goto destroy_class;
@@ -5409,12 +5920,17 @@ static int __init nvme_core_init(void)
 	if (result < 0)
 		goto destroy_subsys_class;
 
+<<<<<<< HEAD
 	nvme_ns_chr_class = class_create("nvme-generic");
+=======
+	nvme_ns_chr_class = class_create(THIS_MODULE, "nvme-generic");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(nvme_ns_chr_class)) {
 		result = PTR_ERR(nvme_ns_chr_class);
 		goto unregister_generic_ns;
 	}
 
+<<<<<<< HEAD
 	result = nvme_init_auth();
 	if (result)
 		goto destroy_ns_chr;
@@ -5422,6 +5938,10 @@ static int __init nvme_core_init(void)
 
 destroy_ns_chr:
 	class_destroy(nvme_ns_chr_class);
+=======
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 unregister_generic_ns:
 	unregister_chrdev_region(nvme_ns_chr_devt, NVME_MINORS);
 destroy_subsys_class:
@@ -5442,7 +5962,10 @@ out:
 
 static void __exit nvme_core_exit(void)
 {
+<<<<<<< HEAD
 	nvme_exit_auth();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	class_destroy(nvme_ns_chr_class);
 	class_destroy(nvme_subsys_class);
 	class_destroy(nvme_class);

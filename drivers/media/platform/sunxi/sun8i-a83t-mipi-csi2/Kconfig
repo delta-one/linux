@@ -3,7 +3,11 @@ config VIDEO_SUN8I_A83T_MIPI_CSI2
 	tristate "Allwinner A83T MIPI CSI-2 Controller and D-PHY Driver"
 	depends on V4L_PLATFORM_DRIVERS && VIDEO_DEV
 	depends on ARCH_SUNXI || COMPILE_TEST
+<<<<<<< HEAD
 	depends on PM && COMMON_CLK && RESET_CONTROLLER
+=======
+	depends on PM && COMMON_CLK
+>>>>>>> b7ba80a49124 (Commit)
 	select MEDIA_CONTROLLER
 	select VIDEO_V4L2_SUBDEV_API
 	select V4L2_FWNODE

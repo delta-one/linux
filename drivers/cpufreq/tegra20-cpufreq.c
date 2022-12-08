@@ -25,7 +25,11 @@ static bool cpu0_node_has_opp_v2_prop(void)
 	struct device_node *np = of_cpu_device_node_get(0);
 	bool ret = false;
 
+<<<<<<< HEAD
 	if (of_property_present(np, "operating-points-v2"))
+=======
+	if (of_get_property(np, "operating-points-v2", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		ret = true;
 
 	of_node_put(np);

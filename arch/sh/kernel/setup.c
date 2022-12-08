@@ -244,7 +244,11 @@ void __init __weak plat_early_device_setup(void)
 {
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_OF_EARLY_FLATTREE
+=======
+#ifdef CONFIG_OF_FLATTREE
+>>>>>>> b7ba80a49124 (Commit)
 void __ref sh_fdt_init(phys_addr_t dt_phys)
 {
 	static int done = 0;
@@ -326,7 +330,11 @@ void __init setup_arch(char **cmdline_p)
 	/* Let earlyprintk output early console messages */
 	sh_early_platform_driver_probe("earlyprintk", 1, 1);
 
+<<<<<<< HEAD
 #ifdef CONFIG_OF_EARLY_FLATTREE
+=======
+#ifdef CONFIG_OF_FLATTREE
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_USE_BUILTIN_DTB
 	unflatten_and_copy_device_tree();
 #else

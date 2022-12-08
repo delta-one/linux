@@ -124,8 +124,13 @@ static int sunplus_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int sunplus_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 				 struct pwm_state *state)
+=======
+static void sunplus_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+				  struct pwm_state *state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sunplus_pwm *priv = to_sunplus_pwm(chip);
 	u32 mode0, dd_freq, duty;
@@ -155,8 +160,11 @@ static int sunplus_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 	}
 
 	state->polarity = PWM_POLARITY_NORMAL;
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct pwm_ops sunplus_pwm_ops = {

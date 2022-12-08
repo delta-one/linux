@@ -625,7 +625,11 @@ u32 __ieee80211_vht_handle_opmode(struct ieee80211_sub_if_data *sdata,
 	enum ieee80211_sta_rx_bandwidth new_bw;
 	struct sta_opmode_info sta_opmode = {};
 	u32 changed = 0;
+<<<<<<< HEAD
 	u8 nss, cur_nss;
+=======
+	u8 nss;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* ignore - no support for BF yet */
 	if (opmode & IEEE80211_OPMODE_NOTIF_RX_NSS_TYPE_BF)
@@ -636,6 +640,7 @@ u32 __ieee80211_vht_handle_opmode(struct ieee80211_sub_if_data *sdata,
 	nss += 1;
 
 	if (link_sta->pub->rx_nss != nss) {
+<<<<<<< HEAD
 		cur_nss = link_sta->pub->rx_nss;
 		/* Reset rx_nss and call ieee80211_sta_set_rx_nss() which
 		 * will set the same to max nss value calculated based on capability.
@@ -655,6 +660,12 @@ u32 __ieee80211_vht_handle_opmode(struct ieee80211_sub_if_data *sdata,
 			pr_warn_ratelimited("Ignoring NSS change in VHT Operating Mode Notification from %pM with invalid nss %d",
 					    link_sta->pub->addr, nss);
 		}
+=======
+		link_sta->pub->rx_nss = nss;
+		sta_opmode.rx_nss = nss;
+		changed |= IEEE80211_RC_NSS_CHANGED;
+		sta_opmode.changed |= STA_OPMODE_N_SS_CHANGED;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	switch (opmode & IEEE80211_OPMODE_NOTIF_CHANWIDTH_MASK) {

@@ -24,7 +24,10 @@
 #include <net/ip.h>
 #include <net/route.h>
 #include <net/flow_dissector.h>
+<<<<<<< HEAD
 #include <net/tc_wrapper.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #if IS_ENABLED(CONFIG_NF_CONNTRACK)
 #include <net/netfilter/nf_conntrack.h>
@@ -293,9 +296,14 @@ static u32 flow_key_get(struct sk_buff *skb, int key, struct flow_keys *flow)
 			  (1 << FLOW_KEY_NFCT_PROTO_SRC) |	\
 			  (1 << FLOW_KEY_NFCT_PROTO_DST))
 
+<<<<<<< HEAD
 TC_INDIRECT_SCOPE int flow_classify(struct sk_buff *skb,
 				    const struct tcf_proto *tp,
 				    struct tcf_result *res)
+=======
+static int flow_classify(struct sk_buff *skb, const struct tcf_proto *tp,
+			 struct tcf_result *res)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct flow_head *head = rcu_dereference_bh(tp->root);
 	struct flow_filter *f;
@@ -369,7 +377,11 @@ static const struct nla_policy flow_policy[TCA_FLOW_MAX + 1] = {
 
 static void __flow_destroy_filter(struct flow_filter *f)
 {
+<<<<<<< HEAD
 	timer_shutdown_sync(&f->perturb_timer);
+=======
+	del_timer_sync(&f->perturb_timer);
+>>>>>>> b7ba80a49124 (Commit)
 	tcf_exts_destroy(&f->exts);
 	tcf_em_tree_destroy(&f->ematches);
 	tcf_exts_put_net(&f->exts);

@@ -113,7 +113,13 @@ FUNC_START(CRC_FUNCTION_NAME)
 #endif
 
 #ifdef BYTESWAP_DATA
+<<<<<<< HEAD
 	LOAD_REG_ADDR(r3, .byteswap_constant)
+=======
+	addis	r3,r2,.byteswap_constant@toc@ha
+	addi	r3,r3,.byteswap_constant@toc@l
+
+>>>>>>> b7ba80a49124 (Commit)
 	lvx	byteswap,0,r3
 	addi	r3,r3,16
 #endif
@@ -148,7 +154,12 @@ FUNC_START(CRC_FUNCTION_NAME)
 	addi	r7,r7,-1
 	mtctr	r7
 
+<<<<<<< HEAD
 	LOAD_REG_ADDR(r3, .constants)
+=======
+	addis	r3,r2,.constants@toc@ha
+	addi	r3,r3,.constants@toc@l
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Find the start of our constants */
 	add	r3,r3,r8
@@ -503,7 +514,12 @@ FUNC_START(CRC_FUNCTION_NAME)
 
 .Lbarrett_reduction:
 	/* Barrett constants */
+<<<<<<< HEAD
 	LOAD_REG_ADDR(r3, .barrett_constants)
+=======
+	addis	r3,r2,.barrett_constants@toc@ha
+	addi	r3,r3,.barrett_constants@toc@l
+>>>>>>> b7ba80a49124 (Commit)
 
 	lvx	const1,0,r3
 	lvx	const2,off16,r3
@@ -606,7 +622,12 @@ FUNC_START(CRC_FUNCTION_NAME)
 	cmpdi	r5,0
 	beq	.Lzero
 
+<<<<<<< HEAD
 	LOAD_REG_ADDR(r3, .short_constants)
+=======
+	addis	r3,r2,.short_constants@toc@ha
+	addi	r3,r3,.short_constants@toc@l
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Calculate where in the constant table we need to start */
 	subfic	r6,r5,256

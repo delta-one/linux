@@ -219,7 +219,11 @@ instance::
     cat cocci.err
 
 You can use SPFLAGS to add debugging flags; for instance you may want to
+<<<<<<< HEAD
 add both ``--profile --show-trying`` to SPFLAGS when debugging. For example
+=======
+add both --profile --show-trying to SPFLAGS when debugging. For example
+>>>>>>> b7ba80a49124 (Commit)
 you may want to use::
 
     rm -f err.log
@@ -248,7 +252,11 @@ variables for .cocciconfig is as follows:
 
 - Your current user's home directory is processed first
 - Your directory from which spatch is called is processed next
+<<<<<<< HEAD
 - The directory provided with the ``--dir`` option is processed last, if used
+=======
+- The directory provided with the --dir option is processed last, if used
+>>>>>>> b7ba80a49124 (Commit)
 
 Since coccicheck runs through make, it naturally runs from the kernel
 proper dir; as such the second rule above would be implied for picking up a
@@ -265,8 +273,13 @@ The kernel coccicheck script has::
     fi
 
 KBUILD_EXTMOD is set when an explicit target with M= is used. For both cases
+<<<<<<< HEAD
 the spatch ``--dir`` argument is used, as such third rule applies when whether
 M= is used or not, and when M= is used the target directory can have its own
+=======
+the spatch --dir argument is used, as such third rule applies when whether M=
+is used or not, and when M= is used the target directory can have its own
+>>>>>>> b7ba80a49124 (Commit)
 .cocciconfig file. When M= is not passed as an argument to coccicheck the
 target directory is the same as the directory from where spatch was called.
 

@@ -144,7 +144,11 @@ static int get_pfrt_log_data_info(struct pfrt_log_data_info *data_info,
 	ret = 0;
 
 free_acpi_buffer:
+<<<<<<< HEAD
 	ACPI_FREE(out_obj);
+=======
+	kfree(out_obj);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -180,7 +184,11 @@ static int set_pfrt_log_level(int level, struct pfrt_log_device *pfrt_log_dev)
 		ret = -EBUSY;
 	}
 
+<<<<<<< HEAD
 	ACPI_FREE(out_obj);
+=======
+	kfree(out_obj);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -218,7 +226,11 @@ static int get_pfrt_log_level(struct pfrt_log_device *pfrt_log_dev)
 	ret = obj->integer.value;
 
 free_acpi_buffer:
+<<<<<<< HEAD
 	ACPI_FREE(out_obj);
+=======
+	kfree(out_obj);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -310,7 +322,11 @@ pfrt_log_mmap(struct file *file, struct vm_area_struct *vma)
 		return -EROFS;
 
 	/* changing from read to write with mprotect is not allowed */
+<<<<<<< HEAD
 	vm_flags_clear(vma, VM_MAYWRITE);
+=======
+	vma->vm_flags &= ~VM_MAYWRITE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pfrt_log_dev = to_pfrt_log_dev(file);
 

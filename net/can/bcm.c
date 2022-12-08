@@ -274,7 +274,10 @@ static void bcm_can_tx(struct bcm_op *op)
 	struct sk_buff *skb;
 	struct net_device *dev;
 	struct canfd_frame *cf = op->frames + op->cfsiz * op->currframe;
+<<<<<<< HEAD
 	int err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* no target device? => exit */
 	if (!op->ifindex)
@@ -299,11 +302,19 @@ static void bcm_can_tx(struct bcm_op *op)
 	/* send with loopback */
 	skb->dev = dev;
 	can_skb_set_owner(skb, op->sk);
+<<<<<<< HEAD
 	err = can_send(skb, 1);
 	if (!err)
 		op->frames_abs++;
 
 	op->currframe++;
+=======
+	can_send(skb, 1);
+
+	/* update statistics */
+	op->currframe++;
+	op->frames_abs++;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* reached last frame? */
 	if (op->currframe >= op->nframes)
@@ -1750,6 +1761,7 @@ static int __init bcm_module_init(void)
 
 	pr_info("can: broadcast manager protocol\n");
 
+<<<<<<< HEAD
 	err = register_pernet_subsys(&canbcm_pernet_ops);
 	if (err)
 		return err;
@@ -1771,6 +1783,17 @@ register_proto_failed:
 register_notifier_failed:
 	unregister_pernet_subsys(&canbcm_pernet_ops);
 	return err;
+=======
+	err = can_proto_register(&bcm_can_proto);
+	if (err < 0) {
+		printk(KERN_ERR "can: registration of bcm protocol failed\n");
+		return err;
+	}
+
+	register_pernet_subsys(&canbcm_pernet_ops);
+	register_netdevice_notifier(&canbcm_notifier);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __exit bcm_module_exit(void)

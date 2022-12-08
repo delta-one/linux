@@ -7,6 +7,10 @@
 #include <linux/io.h>
 #include <linux/delay.h>
 #include <linux/vmalloc.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 
 #include "hfi.h"
@@ -64,6 +68,10 @@ int hfi1_pcie_init(struct hfi1_devdata *dd)
 	}
 
 	pci_set_master(pdev);
+<<<<<<< HEAD
+=======
+	(void)pci_enable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 bail:

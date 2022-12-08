@@ -247,7 +247,10 @@ error:
 		for (i = 0; i < RX_URBS_COUNT; i++)
 			free_rx_urb(urbs[i]);
 	}
+<<<<<<< HEAD
 	kfree(urbs);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return r;
 }
 

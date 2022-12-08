@@ -7,7 +7,10 @@
 #include <linux/delay.h>
 #include <linux/export.h>
 #include <linux/clocksource.h>
+<<<<<<< HEAD
 #include <sound/compress_driver.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <sound/core.h>
 #include <sound/pcm.h>
 #include <sound/hdaudio.h>
@@ -104,6 +107,7 @@ void snd_hdac_stream_init(struct hdac_bus *bus, struct hdac_stream *azx_dev,
 	azx_dev->stream_tag = tag;
 	snd_hdac_dsp_lock_init(azx_dev);
 	list_add_tail(&azx_dev->list, &bus->stream_list);
+<<<<<<< HEAD
 
 	if (bus->spbcap) {
 		azx_dev->spib_addr = bus->spbcap + AZX_SPB_BASE +
@@ -118,16 +122,26 @@ void snd_hdac_stream_init(struct hdac_bus *bus, struct hdac_stream *azx_dev,
 	if (bus->drsmcap)
 		azx_dev->dpibr_addr = bus->drsmcap + AZX_DRSM_BASE +
 					AZX_DRSM_INTERVAL * idx;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(snd_hdac_stream_init);
 
 /**
  * snd_hdac_stream_start - start a stream
  * @azx_dev: HD-audio core stream to start
+<<<<<<< HEAD
  *
  * Start a stream, set start_wallclk and set the running flag.
  */
 void snd_hdac_stream_start(struct hdac_stream *azx_dev)
+=======
+ * @fresh_start: false = wallclock timestamp relative to period wallclock
+ *
+ * Start a stream, set start_wallclk and set the running flag.
+ */
+void snd_hdac_stream_start(struct hdac_stream *azx_dev, bool fresh_start)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hdac_bus *bus = azx_dev->bus;
 	int stripe_ctl;
@@ -135,6 +149,11 @@ void snd_hdac_stream_start(struct hdac_stream *azx_dev)
 	trace_snd_hdac_stream_start(bus, azx_dev);
 
 	azx_dev->start_wallclk = snd_hdac_chip_readl(bus, WALLCLK);
+<<<<<<< HEAD
+=======
+	if (!fresh_start)
+		azx_dev->start_wallclk -= azx_dev->period_wallclk;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* enable SIE */
 	snd_hdac_chip_updatel(bus, INTCTL,
@@ -485,13 +504,18 @@ int snd_hdac_stream_setup_periods(struct hdac_stream *azx_dev)
 {
 	struct hdac_bus *bus = azx_dev->bus;
 	struct snd_pcm_substream *substream = azx_dev->substream;
+<<<<<<< HEAD
 	struct snd_compr_stream *cstream = azx_dev->cstream;
 	struct snd_pcm_runtime *runtime = NULL;
 	struct snd_dma_buffer *dmab;
+=======
+	struct snd_pcm_runtime *runtime = substream->runtime;
+>>>>>>> b7ba80a49124 (Commit)
 	__le32 *bdl;
 	int i, ofs, periods, period_bytes;
 	int pos_adj, pos_align;
 
+<<<<<<< HEAD
 	if (substream) {
 		runtime = substream->runtime;
 		dmab = snd_pcm_get_dma_buf(substream);
@@ -502,6 +526,8 @@ int snd_hdac_stream_setup_periods(struct hdac_stream *azx_dev)
 		return -EINVAL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* reset BDL address */
 	snd_hdac_stream_writel(azx_dev, SD_BDLPL, 0);
 	snd_hdac_stream_writel(azx_dev, SD_BDLPU, 0);
@@ -515,7 +541,11 @@ int snd_hdac_stream_setup_periods(struct hdac_stream *azx_dev)
 	azx_dev->frags = 0;
 
 	pos_adj = bus->bdl_pos_adj;
+<<<<<<< HEAD
 	if (runtime && !azx_dev->no_period_wakeup && pos_adj > 0) {
+=======
+	if (!azx_dev->no_period_wakeup && pos_adj > 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		pos_align = pos_adj;
 		pos_adj = DIV_ROUND_UP(pos_adj * runtime->rate, 48000);
 		if (!pos_adj)
@@ -528,7 +558,12 @@ int snd_hdac_stream_setup_periods(struct hdac_stream *azx_dev)
 				 pos_adj);
 			pos_adj = 0;
 		} else {
+<<<<<<< HEAD
 			ofs = setup_bdle(bus, dmab, azx_dev,
+=======
+			ofs = setup_bdle(bus, snd_pcm_get_dma_buf(substream),
+					 azx_dev,
+>>>>>>> b7ba80a49124 (Commit)
 					 &bdl, ofs, pos_adj, true);
 			if (ofs < 0)
 				goto error;
@@ -538,11 +573,21 @@ int snd_hdac_stream_setup_periods(struct hdac_stream *azx_dev)
 
 	for (i = 0; i < periods; i++) {
 		if (i == periods - 1 && pos_adj)
+<<<<<<< HEAD
 			ofs = setup_bdle(bus, dmab, azx_dev,
 					 &bdl, ofs, period_bytes - pos_adj, 0);
 		else
 			ofs = setup_bdle(bus, dmab, azx_dev,
 					 &bdl, ofs, period_bytes,
+=======
+			ofs = setup_bdle(bus, snd_pcm_get_dma_buf(substream),
+					 azx_dev, &bdl, ofs,
+					 period_bytes - pos_adj, 0);
+		else
+			ofs = setup_bdle(bus, snd_pcm_get_dma_buf(substream),
+					 azx_dev, &bdl, ofs,
+					 period_bytes,
+>>>>>>> b7ba80a49124 (Commit)
 					 !azx_dev->no_period_wakeup);
 		if (ofs < 0)
 			goto error;
@@ -567,6 +612,7 @@ EXPORT_SYMBOL_GPL(snd_hdac_stream_setup_periods);
 int snd_hdac_stream_set_params(struct hdac_stream *azx_dev,
 				 unsigned int format_val)
 {
+<<<<<<< HEAD
 	struct snd_pcm_substream *substream = azx_dev->substream;
 	struct snd_compr_stream *cstream = azx_dev->cstream;
 	unsigned int bufsize, period_bytes;
@@ -584,15 +630,36 @@ int snd_hdac_stream_set_params(struct hdac_stream *azx_dev,
 	} else {
 		return -EINVAL;
 	}
+=======
+
+	unsigned int bufsize, period_bytes;
+	struct snd_pcm_substream *substream = azx_dev->substream;
+	struct snd_pcm_runtime *runtime;
+	int err;
+
+	if (!substream)
+		return -EINVAL;
+	runtime = substream->runtime;
+	bufsize = snd_pcm_lib_buffer_bytes(substream);
+	period_bytes = snd_pcm_lib_period_bytes(substream);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (bufsize != azx_dev->bufsize ||
 	    period_bytes != azx_dev->period_bytes ||
 	    format_val != azx_dev->format_val ||
+<<<<<<< HEAD
 	    no_period_wakeup != azx_dev->no_period_wakeup) {
 		azx_dev->bufsize = bufsize;
 		azx_dev->period_bytes = period_bytes;
 		azx_dev->format_val = format_val;
 		azx_dev->no_period_wakeup = no_period_wakeup;
+=======
+	    runtime->no_period_wakeup != azx_dev->no_period_wakeup) {
+		azx_dev->bufsize = bufsize;
+		azx_dev->period_bytes = period_bytes;
+		azx_dev->format_val = format_val;
+		azx_dev->no_period_wakeup = runtime->no_period_wakeup;
+>>>>>>> b7ba80a49124 (Commit)
 		err = snd_hdac_stream_setup_periods(azx_dev);
 		if (err < 0)
 			return err;
@@ -745,6 +812,7 @@ void snd_hdac_stream_sync(struct hdac_stream *azx_dev, bool start,
 }
 EXPORT_SYMBOL_GPL(snd_hdac_stream_sync);
 
+<<<<<<< HEAD
 /**
  * snd_hdac_stream_spbcap_enable - enable SPIB for a stream
  * @bus: HD-audio core bus
@@ -889,6 +957,8 @@ int snd_hdac_stream_set_lpib(struct hdac_stream *azx_dev, u32 value)
 }
 EXPORT_SYMBOL_GPL(snd_hdac_stream_set_lpib);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SND_HDA_DSP_LOADER
 /**
  * snd_hdac_dsp_prepare - prepare for DSP loading
@@ -963,7 +1033,11 @@ EXPORT_SYMBOL_GPL(snd_hdac_dsp_prepare);
 void snd_hdac_dsp_trigger(struct hdac_stream *azx_dev, bool start)
 {
 	if (start)
+<<<<<<< HEAD
 		snd_hdac_stream_start(azx_dev);
+=======
+		snd_hdac_stream_start(azx_dev, true);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		snd_hdac_stream_stop(azx_dev);
 }

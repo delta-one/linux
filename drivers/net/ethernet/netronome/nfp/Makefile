@@ -80,8 +80,12 @@ nfp-objs += \
 	    abm/main.o
 endif
 
+<<<<<<< HEAD
 nfp-$(CONFIG_NFP_NET_IPSEC) += crypto/ipsec.o nfd3/ipsec.o nfdk/ipsec.o
 
 nfp-$(CONFIG_NFP_DEBUG) += nfp_net_debugfs.o
 
 nfp-$(CONFIG_DCB) += nic/dcb.o
+=======
+nfp-$(CONFIG_NFP_DEBUG) += nfp_net_debugfs.o
+>>>>>>> b7ba80a49124 (Commit)

@@ -721,11 +721,14 @@ static int __maybe_unused nzxt_smart2_hid_reset_resume(struct hid_device *hdev)
 	return init_device(drvdata, drvdata->update_interval);
 }
 
+<<<<<<< HEAD
 static void mutex_fini(void *lock)
 {
 	mutex_destroy(lock);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int nzxt_smart2_hid_probe(struct hid_device *hdev,
 				 const struct hid_device_id *id)
 {
@@ -742,9 +745,14 @@ static int nzxt_smart2_hid_probe(struct hid_device *hdev,
 	init_waitqueue_head(&drvdata->wq);
 
 	mutex_init(&drvdata->mutex);
+<<<<<<< HEAD
 	ret = devm_add_action_or_reset(&hdev->dev, mutex_fini, &drvdata->mutex);
 	if (ret)
 		return ret;
+=======
+	devm_add_action(&hdev->dev, (void (*)(void *))mutex_destroy,
+			&drvdata->mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = hid_parse(hdev);
 	if (ret)
@@ -797,8 +805,11 @@ static const struct hid_device_id nzxt_smart2_hid_id_table[] = {
 	{ HID_USB_DEVICE(0x1e71, 0x2009) }, /* NZXT RGB & Fan Controller */
 	{ HID_USB_DEVICE(0x1e71, 0x200e) }, /* NZXT RGB & Fan Controller */
 	{ HID_USB_DEVICE(0x1e71, 0x2010) }, /* NZXT RGB & Fan Controller */
+<<<<<<< HEAD
 	{ HID_USB_DEVICE(0x1e71, 0x2011) }, /* NZXT RGB & Fan Controller (6 RGB) */
 	{ HID_USB_DEVICE(0x1e71, 0x2019) }, /* NZXT RGB & Fan Controller (6 RGB) */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 

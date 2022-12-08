@@ -96,7 +96,10 @@ int detect_extended_topology(struct cpuinfo_x86 *c)
 	unsigned int ht_mask_width, core_plus_mask_width, die_plus_mask_width;
 	unsigned int core_select_mask, core_level_siblings;
 	unsigned int die_select_mask, die_level_siblings;
+<<<<<<< HEAD
 	unsigned int pkg_mask_width;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool die_level_present = false;
 	int leaf;
 
@@ -112,10 +115,17 @@ int detect_extended_topology(struct cpuinfo_x86 *c)
 	core_level_siblings = smp_num_siblings = LEVEL_MAX_SIBLINGS(ebx);
 	core_plus_mask_width = ht_mask_width = BITS_SHIFT_NEXT_LEVEL(eax);
 	die_level_siblings = LEVEL_MAX_SIBLINGS(ebx);
+<<<<<<< HEAD
 	pkg_mask_width = die_plus_mask_width = BITS_SHIFT_NEXT_LEVEL(eax);
 
 	sub_index = 1;
 	while (true) {
+=======
+	die_plus_mask_width = BITS_SHIFT_NEXT_LEVEL(eax);
+
+	sub_index = 1;
+	do {
+>>>>>>> b7ba80a49124 (Commit)
 		cpuid_count(leaf, sub_index, &eax, &ebx, &ecx, &edx);
 
 		/*
@@ -133,6 +143,7 @@ int detect_extended_topology(struct cpuinfo_x86 *c)
 			die_plus_mask_width = BITS_SHIFT_NEXT_LEVEL(eax);
 		}
 
+<<<<<<< HEAD
 		if (LEAFB_SUBTYPE(ecx) != INVALID_TYPE)
 			pkg_mask_width = BITS_SHIFT_NEXT_LEVEL(eax);
 		else
@@ -142,6 +153,12 @@ int detect_extended_topology(struct cpuinfo_x86 *c)
 	}
 
 	core_select_mask = (~(-1 << pkg_mask_width)) >> ht_mask_width;
+=======
+		sub_index++;
+	} while (LEAFB_SUBTYPE(ecx) != INVALID_TYPE);
+
+	core_select_mask = (~(-1 << core_plus_mask_width)) >> ht_mask_width;
+>>>>>>> b7ba80a49124 (Commit)
 	die_select_mask = (~(-1 << die_plus_mask_width)) >>
 				core_plus_mask_width;
 
@@ -154,7 +171,11 @@ int detect_extended_topology(struct cpuinfo_x86 *c)
 	}
 
 	c->phys_proc_id = apic->phys_pkg_id(c->initial_apicid,
+<<<<<<< HEAD
 				pkg_mask_width);
+=======
+				die_plus_mask_width);
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Reinit the apicid, now that we have extended initial_apicid.
 	 */

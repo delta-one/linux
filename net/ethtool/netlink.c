@@ -269,6 +269,7 @@ static const struct ethnl_request_ops *
 ethnl_default_requests[__ETHTOOL_MSG_USER_CNT] = {
 	[ETHTOOL_MSG_STRSET_GET]	= &ethnl_strset_request_ops,
 	[ETHTOOL_MSG_LINKINFO_GET]	= &ethnl_linkinfo_request_ops,
+<<<<<<< HEAD
 	[ETHTOOL_MSG_LINKINFO_SET]	= &ethnl_linkinfo_request_ops,
 	[ETHTOOL_MSG_LINKMODES_GET]	= &ethnl_linkmodes_request_ops,
 	[ETHTOOL_MSG_LINKMODES_SET]	= &ethnl_linkmodes_request_ops,
@@ -292,11 +293,26 @@ ethnl_default_requests[__ETHTOOL_MSG_USER_CNT] = {
 	[ETHTOOL_MSG_EEE_SET]		= &ethnl_eee_request_ops,
 	[ETHTOOL_MSG_FEC_GET]		= &ethnl_fec_request_ops,
 	[ETHTOOL_MSG_FEC_SET]		= &ethnl_fec_request_ops,
+=======
+	[ETHTOOL_MSG_LINKMODES_GET]	= &ethnl_linkmodes_request_ops,
+	[ETHTOOL_MSG_LINKSTATE_GET]	= &ethnl_linkstate_request_ops,
+	[ETHTOOL_MSG_DEBUG_GET]		= &ethnl_debug_request_ops,
+	[ETHTOOL_MSG_WOL_GET]		= &ethnl_wol_request_ops,
+	[ETHTOOL_MSG_FEATURES_GET]	= &ethnl_features_request_ops,
+	[ETHTOOL_MSG_PRIVFLAGS_GET]	= &ethnl_privflags_request_ops,
+	[ETHTOOL_MSG_RINGS_GET]		= &ethnl_rings_request_ops,
+	[ETHTOOL_MSG_CHANNELS_GET]	= &ethnl_channels_request_ops,
+	[ETHTOOL_MSG_COALESCE_GET]	= &ethnl_coalesce_request_ops,
+	[ETHTOOL_MSG_PAUSE_GET]		= &ethnl_pause_request_ops,
+	[ETHTOOL_MSG_EEE_GET]		= &ethnl_eee_request_ops,
+	[ETHTOOL_MSG_FEC_GET]		= &ethnl_fec_request_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	[ETHTOOL_MSG_TSINFO_GET]	= &ethnl_tsinfo_request_ops,
 	[ETHTOOL_MSG_MODULE_EEPROM_GET]	= &ethnl_module_eeprom_request_ops,
 	[ETHTOOL_MSG_STATS_GET]		= &ethnl_stats_request_ops,
 	[ETHTOOL_MSG_PHC_VCLOCKS_GET]	= &ethnl_phc_vclocks_request_ops,
 	[ETHTOOL_MSG_MODULE_GET]	= &ethnl_module_request_ops,
+<<<<<<< HEAD
 	[ETHTOOL_MSG_MODULE_SET]	= &ethnl_module_request_ops,
 	[ETHTOOL_MSG_PSE_GET]		= &ethnl_pse_request_ops,
 	[ETHTOOL_MSG_PSE_SET]		= &ethnl_pse_request_ops,
@@ -306,6 +322,8 @@ ethnl_default_requests[__ETHTOOL_MSG_USER_CNT] = {
 	[ETHTOOL_MSG_PLCA_GET_STATUS]	= &ethnl_plca_status_request_ops,
 	[ETHTOOL_MSG_MM_GET]		= &ethnl_mm_request_ops,
 	[ETHTOOL_MSG_MM_SET]		= &ethnl_mm_request_ops,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct ethnl_dump_ctx *ethnl_dump_context(struct netlink_callback *cb)
@@ -606,6 +624,7 @@ static int ethnl_default_done(struct netlink_callback *cb)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ethnl_default_set_doit(struct sk_buff *skb, struct genl_info *info)
 {
 	const struct ethnl_request_ops *ops;
@@ -652,6 +671,8 @@ out_dev:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct ethnl_request_ops *
 ethnl_default_notify_ops[ETHTOOL_MSG_KERNEL_MAX + 1] = {
 	[ETHTOOL_MSG_LINKINFO_NTF]	= &ethnl_linkinfo_request_ops,
@@ -667,8 +688,11 @@ ethnl_default_notify_ops[ETHTOOL_MSG_KERNEL_MAX + 1] = {
 	[ETHTOOL_MSG_EEE_NTF]		= &ethnl_eee_request_ops,
 	[ETHTOOL_MSG_FEC_NTF]		= &ethnl_fec_request_ops,
 	[ETHTOOL_MSG_MODULE_NTF]	= &ethnl_module_request_ops,
+<<<<<<< HEAD
 	[ETHTOOL_MSG_PLCA_NTF]		= &ethnl_plca_cfg_request_ops,
 	[ETHTOOL_MSG_MM_NTF]		= &ethnl_mm_request_ops,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* default notification handler */
@@ -762,8 +786,11 @@ static const ethnl_notify_handler_t ethnl_notify_handlers[] = {
 	[ETHTOOL_MSG_EEE_NTF]		= ethnl_default_notify,
 	[ETHTOOL_MSG_FEC_NTF]		= ethnl_default_notify,
 	[ETHTOOL_MSG_MODULE_NTF]	= ethnl_default_notify,
+<<<<<<< HEAD
 	[ETHTOOL_MSG_PLCA_NTF]		= ethnl_default_notify,
 	[ETHTOOL_MSG_MM_NTF]		= ethnl_default_notify,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void ethtool_notify(struct net_device *dev, unsigned int cmd, const void *data)
@@ -828,7 +855,11 @@ static const struct genl_ops ethtool_genl_ops[] = {
 	{
 		.cmd	= ETHTOOL_MSG_LINKINFO_SET,
 		.flags	= GENL_UNS_ADMIN_PERM,
+<<<<<<< HEAD
 		.doit	= ethnl_default_set_doit,
+=======
+		.doit	= ethnl_set_linkinfo,
+>>>>>>> b7ba80a49124 (Commit)
 		.policy = ethnl_linkinfo_set_policy,
 		.maxattr = ARRAY_SIZE(ethnl_linkinfo_set_policy) - 1,
 	},
@@ -844,7 +875,11 @@ static const struct genl_ops ethtool_genl_ops[] = {
 	{
 		.cmd	= ETHTOOL_MSG_LINKMODES_SET,
 		.flags	= GENL_UNS_ADMIN_PERM,
+<<<<<<< HEAD
 		.doit	= ethnl_default_set_doit,
+=======
+		.doit	= ethnl_set_linkmodes,
+>>>>>>> b7ba80a49124 (Commit)
 		.policy = ethnl_linkmodes_set_policy,
 		.maxattr = ARRAY_SIZE(ethnl_linkmodes_set_policy) - 1,
 	},
@@ -869,7 +904,11 @@ static const struct genl_ops ethtool_genl_ops[] = {
 	{
 		.cmd	= ETHTOOL_MSG_DEBUG_SET,
 		.flags	= GENL_UNS_ADMIN_PERM,
+<<<<<<< HEAD
 		.doit	= ethnl_default_set_doit,
+=======
+		.doit	= ethnl_set_debug,
+>>>>>>> b7ba80a49124 (Commit)
 		.policy = ethnl_debug_set_policy,
 		.maxattr = ARRAY_SIZE(ethnl_debug_set_policy) - 1,
 	},
@@ -886,7 +925,11 @@ static const struct genl_ops ethtool_genl_ops[] = {
 	{
 		.cmd	= ETHTOOL_MSG_WOL_SET,
 		.flags	= GENL_UNS_ADMIN_PERM,
+<<<<<<< HEAD
 		.doit	= ethnl_default_set_doit,
+=======
+		.doit	= ethnl_set_wol,
+>>>>>>> b7ba80a49124 (Commit)
 		.policy = ethnl_wol_set_policy,
 		.maxattr = ARRAY_SIZE(ethnl_wol_set_policy) - 1,
 	},
@@ -918,7 +961,11 @@ static const struct genl_ops ethtool_genl_ops[] = {
 	{
 		.cmd	= ETHTOOL_MSG_PRIVFLAGS_SET,
 		.flags	= GENL_UNS_ADMIN_PERM,
+<<<<<<< HEAD
 		.doit	= ethnl_default_set_doit,
+=======
+		.doit	= ethnl_set_privflags,
+>>>>>>> b7ba80a49124 (Commit)
 		.policy = ethnl_privflags_set_policy,
 		.maxattr = ARRAY_SIZE(ethnl_privflags_set_policy) - 1,
 	},
@@ -934,7 +981,11 @@ static const struct genl_ops ethtool_genl_ops[] = {
 	{
 		.cmd	= ETHTOOL_MSG_RINGS_SET,
 		.flags	= GENL_UNS_ADMIN_PERM,
+<<<<<<< HEAD
 		.doit	= ethnl_default_set_doit,
+=======
+		.doit	= ethnl_set_rings,
+>>>>>>> b7ba80a49124 (Commit)
 		.policy = ethnl_rings_set_policy,
 		.maxattr = ARRAY_SIZE(ethnl_rings_set_policy) - 1,
 	},
@@ -950,7 +1001,11 @@ static const struct genl_ops ethtool_genl_ops[] = {
 	{
 		.cmd	= ETHTOOL_MSG_CHANNELS_SET,
 		.flags	= GENL_UNS_ADMIN_PERM,
+<<<<<<< HEAD
 		.doit	= ethnl_default_set_doit,
+=======
+		.doit	= ethnl_set_channels,
+>>>>>>> b7ba80a49124 (Commit)
 		.policy = ethnl_channels_set_policy,
 		.maxattr = ARRAY_SIZE(ethnl_channels_set_policy) - 1,
 	},
@@ -966,7 +1021,11 @@ static const struct genl_ops ethtool_genl_ops[] = {
 	{
 		.cmd	= ETHTOOL_MSG_COALESCE_SET,
 		.flags	= GENL_UNS_ADMIN_PERM,
+<<<<<<< HEAD
 		.doit	= ethnl_default_set_doit,
+=======
+		.doit	= ethnl_set_coalesce,
+>>>>>>> b7ba80a49124 (Commit)
 		.policy = ethnl_coalesce_set_policy,
 		.maxattr = ARRAY_SIZE(ethnl_coalesce_set_policy) - 1,
 	},
@@ -982,7 +1041,11 @@ static const struct genl_ops ethtool_genl_ops[] = {
 	{
 		.cmd	= ETHTOOL_MSG_PAUSE_SET,
 		.flags	= GENL_UNS_ADMIN_PERM,
+<<<<<<< HEAD
 		.doit	= ethnl_default_set_doit,
+=======
+		.doit	= ethnl_set_pause,
+>>>>>>> b7ba80a49124 (Commit)
 		.policy = ethnl_pause_set_policy,
 		.maxattr = ARRAY_SIZE(ethnl_pause_set_policy) - 1,
 	},
@@ -998,7 +1061,11 @@ static const struct genl_ops ethtool_genl_ops[] = {
 	{
 		.cmd	= ETHTOOL_MSG_EEE_SET,
 		.flags	= GENL_UNS_ADMIN_PERM,
+<<<<<<< HEAD
 		.doit	= ethnl_default_set_doit,
+=======
+		.doit	= ethnl_set_eee,
+>>>>>>> b7ba80a49124 (Commit)
 		.policy = ethnl_eee_set_policy,
 		.maxattr = ARRAY_SIZE(ethnl_eee_set_policy) - 1,
 	},
@@ -1045,7 +1112,11 @@ static const struct genl_ops ethtool_genl_ops[] = {
 	{
 		.cmd	= ETHTOOL_MSG_FEC_SET,
 		.flags	= GENL_UNS_ADMIN_PERM,
+<<<<<<< HEAD
 		.doit	= ethnl_default_set_doit,
+=======
+		.doit	= ethnl_set_fec,
+>>>>>>> b7ba80a49124 (Commit)
 		.policy = ethnl_fec_set_policy,
 		.maxattr = ARRAY_SIZE(ethnl_fec_set_policy) - 1,
 	},
@@ -1089,6 +1160,7 @@ static const struct genl_ops ethtool_genl_ops[] = {
 	{
 		.cmd	= ETHTOOL_MSG_MODULE_SET,
 		.flags	= GENL_UNS_ADMIN_PERM,
+<<<<<<< HEAD
 		.doit	= ethnl_default_set_doit,
 		.policy = ethnl_module_set_policy,
 		.maxattr = ARRAY_SIZE(ethnl_module_set_policy) - 1,
@@ -1156,6 +1228,12 @@ static const struct genl_ops ethtool_genl_ops[] = {
 		.policy = ethnl_mm_set_policy,
 		.maxattr = ARRAY_SIZE(ethnl_mm_set_policy) - 1,
 	},
+=======
+		.doit	= ethnl_set_module,
+		.policy = ethnl_module_set_policy,
+		.maxattr = ARRAY_SIZE(ethnl_module_set_policy) - 1,
+	},
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct genl_multicast_group ethtool_nl_mcgrps[] = {

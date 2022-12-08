@@ -785,7 +785,11 @@ static int xgene_ahci_probe(struct platform_device *pdev)
 	of_devid = of_match_device(xgene_ahci_of_match, dev);
 	if (of_devid) {
 		if (of_devid->data)
+<<<<<<< HEAD
 			version = (unsigned long) of_devid->data;
+=======
+			version = (enum xgene_ahci_version) of_devid->data;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 #ifdef CONFIG_ACPI
 	else {

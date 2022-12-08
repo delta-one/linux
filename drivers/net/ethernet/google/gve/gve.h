@@ -47,10 +47,13 @@
 
 #define GVE_RX_BUFFER_SIZE_DQO 2048
 
+<<<<<<< HEAD
 #define GVE_XDP_ACTIONS 5
 
 #define GVE_TX_MAX_HEADER_SIZE 182
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Each slot in the desc ring has a 1:1 mapping to a slot in the data ring */
 struct gve_rx_desc_queue {
 	struct gve_rx_desc *desc_ring; /* the descriptor ring */
@@ -64,8 +67,12 @@ struct gve_rx_slot_page_info {
 	void *page_address;
 	u32 page_offset; /* offset to write to in page */
 	int pagecnt_bias; /* expected pagecnt if only the driver has a ref */
+<<<<<<< HEAD
 	u16 pad; /* adjustment for rx padding */
 	u8 can_flip; /* tracks if the networking stack is using the page */
+=======
+	u8 can_flip;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* A list of pages registered with the device during setup and used by a queue
@@ -154,6 +161,7 @@ struct gve_rx_ctx {
 	/* head and tail of skb chain for the current packet or NULL if none */
 	struct sk_buff *skb_head;
 	struct sk_buff *skb_tail;
+<<<<<<< HEAD
 	u32 total_size;
 	u8 frag_cnt;
 	bool drop_pkt;
@@ -165,6 +173,12 @@ struct gve_rx_cnts {
 	u16 total_pkt_cnt;
 	u16 cont_pkt_cnt;
 	u16 desc_err_pkt_cnt;
+=======
+	u16 total_expected_size;
+	u8 expected_frag_cnt;
+	u8 curr_frag_cnt;
+	u8 reuse_frags;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Contains datapath state used to represent an RX queue. */
@@ -179,10 +193,13 @@ struct gve_rx_ring {
 			/* threshold for posting new buffs and descs */
 			u32 db_threshold;
 			u16 packet_buffer_size;
+<<<<<<< HEAD
 
 			u32 qpl_copy_pool_mask;
 			u32 qpl_copy_pool_head;
 			struct gve_rx_slot_page_info *qpl_copy_pool;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		/* DQO fields. */
@@ -232,12 +249,16 @@ struct gve_rx_ring {
 	u64 rx_desc_err_dropped_pkt; /* free-running count of packets dropped by descriptor error */
 	u64 rx_cont_packet_cnt; /* free-running multi-fragment packets received */
 	u64 rx_frag_flip_cnt; /* free-running count of rx segments where page_flip was used */
+<<<<<<< HEAD
 	u64 rx_frag_copy_cnt; /* free-running count of rx segments copied */
 	u64 rx_frag_alloc_cnt; /* free-running count of rx page allocations */
 	u64 xdp_tx_errors;
 	u64 xdp_redirect_errors;
 	u64 xdp_alloc_fails;
 	u64 xdp_actions[GVE_XDP_ACTIONS];
+=======
+	u64 rx_frag_copy_cnt; /* free-running count of rx segments copied into skb linear portion */
+>>>>>>> b7ba80a49124 (Commit)
 	u32 q_num; /* queue index */
 	u32 ntfy_id; /* notification block index */
 	struct gve_queue_resources *q_resources; /* head and tail pointer idx */
@@ -245,12 +266,15 @@ struct gve_rx_ring {
 	struct u64_stats_sync statss; /* sync stats for 32bit archs */
 
 	struct gve_rx_ctx ctx; /* Info for packet currently being processed in this ring. */
+<<<<<<< HEAD
 
 	/* XDP stuff */
 	struct xdp_rxq_info xdp_rxq;
 	struct xdp_rxq_info xsk_rxq;
 	struct xsk_buff_pool *xsk_pool;
 	struct page_frag_cache page_cache; /* Page cache to allocate XDP frames */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* A TX desc ring entry */
@@ -271,6 +295,7 @@ struct gve_tx_iovec {
  * ring entry but only used for a pkt_desc not a seg_desc
  */
 struct gve_tx_buffer_state {
+<<<<<<< HEAD
 	union {
 		struct sk_buff *skb; /* skb for this pkt */
 		struct xdp_frame *xdp_frame; /* xdp_frame */
@@ -279,6 +304,9 @@ struct gve_tx_buffer_state {
 		u16 size; /* size of xmitted xdp pkt */
 		u8 is_xsk; /* xsk buff */
 	} xdp;
+=======
+	struct sk_buff *skb; /* skb for this pkt */
+>>>>>>> b7ba80a49124 (Commit)
 	union {
 		struct gve_tx_iovec iov[GVE_TX_MAX_IOVEC]; /* segments of this pkt */
 		struct {
@@ -393,8 +421,11 @@ struct gve_tx_ring {
 		struct {
 			/* Spinlock for when cleanup in progress */
 			spinlock_t clean_lock;
+<<<<<<< HEAD
 			/* Spinlock for XDP tx traffic */
 			spinlock_t xdp_lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		/* DQO fields. */
@@ -472,12 +503,15 @@ struct gve_tx_ring {
 	dma_addr_t q_resources_bus; /* dma address of the queue resources */
 	dma_addr_t complq_bus_dqo; /* dma address of the dqo.compl_ring */
 	struct u64_stats_sync statss; /* sync stats for 32bit archs */
+<<<<<<< HEAD
 	struct xsk_buff_pool *xsk_pool;
 	u32 xdp_xsk_wakeup;
 	u32 xdp_xsk_done;
 	u64 xdp_xsk_sent;
 	u64 xdp_xmit;
 	u64 xdp_xmit_errors;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } ____cacheline_aligned;
 
 /* Wraps the info for one irq including the napi struct and the queues
@@ -554,11 +588,17 @@ struct gve_priv {
 	u16 rx_data_slot_cnt; /* rx buffer length */
 	u64 max_registered_pages;
 	u64 num_registered_pages; /* num pages registered with NIC */
+<<<<<<< HEAD
 	struct bpf_prog *xdp_prog; /* XDP BPF program */
 	u32 rx_copybreak; /* copy packets smaller than this */
 	u16 default_num_queues; /* default num queues to set up */
 
 	u16 num_xdp_queues;
+=======
+	u32 rx_copybreak; /* copy packets smaller than this */
+	u16 default_num_queues; /* default num queues to set up */
+
+>>>>>>> b7ba80a49124 (Commit)
 	struct gve_queue_config tx_cfg;
 	struct gve_queue_config rx_cfg;
 	struct gve_qpl_config qpl_cfg; /* map used QPL ids */
@@ -593,7 +633,10 @@ struct gve_priv {
 	u32 adminq_report_stats_cnt;
 	u32 adminq_report_link_speed_cnt;
 	u32 adminq_get_ptype_map_cnt;
+<<<<<<< HEAD
 	u32 adminq_verify_driver_compatibility_cnt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Global stats */
 	u32 interface_up_cnt; /* count of times interface turned up since last reset */
@@ -815,6 +858,7 @@ static inline u32 gve_num_tx_qpls(struct gve_priv *priv)
 	if (priv->queue_format != GVE_GQI_QPL_FORMAT)
 		return 0;
 
+<<<<<<< HEAD
 	return priv->tx_cfg.num_queues + priv->num_xdp_queues;
 }
 
@@ -826,6 +870,9 @@ static inline u32 gve_num_xdp_qpls(struct gve_priv *priv)
 		return 0;
 
 	return priv->num_xdp_queues;
+=======
+	return priv->tx_cfg.num_queues;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Returns the number of rx queue page lists
@@ -838,6 +885,7 @@ static inline u32 gve_num_rx_qpls(struct gve_priv *priv)
 	return priv->rx_cfg.num_queues;
 }
 
+<<<<<<< HEAD
 static inline u32 gve_tx_qpl_id(struct gve_priv *priv, int tx_qid)
 {
 	return tx_qid;
@@ -867,6 +915,18 @@ struct gve_queue_page_list *gve_assign_tx_qpl(struct gve_priv *priv, int tx_qid)
 
 	/* QPL already in use */
 	if (test_bit(id, priv->qpl_cfg.qpl_id_map))
+=======
+/* Returns a pointer to the next available tx qpl in the list of qpls
+ */
+static inline
+struct gve_queue_page_list *gve_assign_tx_qpl(struct gve_priv *priv)
+{
+	int id = find_first_zero_bit(priv->qpl_cfg.qpl_id_map,
+				     priv->qpl_cfg.qpl_map_size);
+
+	/* we are out of tx qpls */
+	if (id >= gve_num_tx_qpls(priv))
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	set_bit(id, priv->qpl_cfg.qpl_id_map);
@@ -876,12 +936,23 @@ struct gve_queue_page_list *gve_assign_tx_qpl(struct gve_priv *priv, int tx_qid)
 /* Returns a pointer to the next available rx qpl in the list of qpls
  */
 static inline
+<<<<<<< HEAD
 struct gve_queue_page_list *gve_assign_rx_qpl(struct gve_priv *priv, int rx_qid)
 {
 	int id = gve_rx_qpl_id(priv, rx_qid);
 
 	/* QPL already in use */
 	if (test_bit(id, priv->qpl_cfg.qpl_id_map))
+=======
+struct gve_queue_page_list *gve_assign_rx_qpl(struct gve_priv *priv)
+{
+	int id = find_next_zero_bit(priv->qpl_cfg.qpl_id_map,
+				    priv->qpl_cfg.qpl_map_size,
+				    gve_num_tx_qpls(priv));
+
+	/* we are out of rx qpls */
+	if (id == gve_num_tx_qpls(priv) + gve_num_rx_qpls(priv))
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	set_bit(id, priv->qpl_cfg.qpl_id_map);
@@ -900,7 +971,11 @@ static inline void gve_unassign_qpl(struct gve_priv *priv, int id)
 static inline enum dma_data_direction gve_qpl_dma_dir(struct gve_priv *priv,
 						      int id)
 {
+<<<<<<< HEAD
 	if (id < gve_rx_start_qpl_id(priv))
+=======
+	if (id < gve_num_tx_qpls(priv))
+>>>>>>> b7ba80a49124 (Commit)
 		return DMA_TO_DEVICE;
 	else
 		return DMA_FROM_DEVICE;
@@ -912,6 +987,7 @@ static inline bool gve_is_gqi(struct gve_priv *priv)
 		priv->queue_format == GVE_GQI_QPL_FORMAT;
 }
 
+<<<<<<< HEAD
 static inline u32 gve_num_tx_queues(struct gve_priv *priv)
 {
 	return priv->tx_cfg.num_queues + priv->num_xdp_queues;
@@ -927,6 +1003,8 @@ static inline u32 gve_xdp_tx_start_queue_id(struct gve_priv *priv)
 	return gve_xdp_tx_queue_id(priv, 0);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* buffers */
 int gve_alloc_page(struct gve_priv *priv, struct device *dev,
 		   struct page **page, dma_addr_t *dma,
@@ -935,6 +1013,7 @@ void gve_free_page(struct device *dev, struct page *page, dma_addr_t dma,
 		   enum dma_data_direction);
 /* tx handling */
 netdev_tx_t gve_tx(struct sk_buff *skb, struct net_device *dev);
+<<<<<<< HEAD
 int gve_xdp_xmit(struct net_device *dev, int n, struct xdp_frame **frames,
 		 u32 flags);
 int gve_xdp_xmit_one(struct gve_priv *priv, struct gve_tx_ring *tx,
@@ -944,6 +1023,11 @@ bool gve_tx_poll(struct gve_notify_block *block, int budget);
 bool gve_xdp_poll(struct gve_notify_block *block, int budget);
 int gve_tx_alloc_rings(struct gve_priv *priv, int start_id, int num_rings);
 void gve_tx_free_rings_gqi(struct gve_priv *priv, int start_id, int num_rings);
+=======
+bool gve_tx_poll(struct gve_notify_block *block, int budget);
+int gve_tx_alloc_rings(struct gve_priv *priv);
+void gve_tx_free_rings_gqi(struct gve_priv *priv);
+>>>>>>> b7ba80a49124 (Commit)
 u32 gve_tx_load_event_counter(struct gve_priv *priv,
 			      struct gve_tx_ring *tx);
 bool gve_tx_clean_pending(struct gve_priv *priv, struct gve_tx_ring *tx);

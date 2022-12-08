@@ -67,7 +67,11 @@ gf100_gr_zbc_color_get(struct gf100_gr *gr, int format,
 	struct nvkm_ltc *ltc = gr->base.engine.subdev.device->ltc;
 	int zbc = -ENOSPC, i;
 
+<<<<<<< HEAD
 	for (i = ltc->zbc_color_min; i <= ltc->zbc_color_max; i++) {
+=======
+	for (i = ltc->zbc_min; i <= ltc->zbc_max; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (gr->zbc_color[i].format) {
 			if (gr->zbc_color[i].format != format)
 				continue;
@@ -114,7 +118,11 @@ gf100_gr_zbc_depth_get(struct gf100_gr *gr, int format,
 	struct nvkm_ltc *ltc = gr->base.engine.subdev.device->ltc;
 	int zbc = -ENOSPC, i;
 
+<<<<<<< HEAD
 	for (i = ltc->zbc_depth_min; i <= ltc->zbc_depth_max; i++) {
+=======
+	for (i = ltc->zbc_min; i <= ltc->zbc_max; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (gr->zbc_depth[i].format) {
 			if (gr->zbc_depth[i].format != format)
 				continue;
@@ -355,6 +363,7 @@ static void *
 gf100_gr_chan_dtor(struct nvkm_object *object)
 {
 	struct gf100_gr_chan *chan = gf100_gr_chan(object);
+<<<<<<< HEAD
 
 	nvkm_vmm_put(chan->vmm, &chan->mmio_vma);
 	nvkm_memory_unref(&chan->mmio);
@@ -363,6 +372,17 @@ gf100_gr_chan_dtor(struct nvkm_object *object)
 	nvkm_vmm_put(chan->vmm, &chan->unknown);
 	nvkm_vmm_put(chan->vmm, &chan->bundle_cb);
 	nvkm_vmm_put(chan->vmm, &chan->pagepool);
+=======
+	int i;
+
+	for (i = 0; i < ARRAY_SIZE(chan->data); i++) {
+		nvkm_vmm_put(chan->vmm, &chan->data[i].vma);
+		nvkm_memory_unref(&chan->data[i].mem);
+	}
+
+	nvkm_vmm_put(chan->vmm, &chan->mmio_vma);
+	nvkm_memory_unref(&chan->mmio);
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_vmm_unref(&chan->vmm);
 	return chan;
 }
@@ -379,10 +399,19 @@ gf100_gr_chan_new(struct nvkm_gr *base, struct nvkm_fifo_chan *fifoch,
 		  struct nvkm_object **pobject)
 {
 	struct gf100_gr *gr = gf100_gr(base);
+<<<<<<< HEAD
 	struct gf100_gr_chan *chan;
 	struct gf100_vmm_map_v0 args = { .priv = 1 };
 	struct nvkm_device *device = gr->base.engine.subdev.device;
 	int ret;
+=======
+	struct gf100_gr_data *data = gr->mmio_data;
+	struct gf100_gr_mmio *mmio = gr->mmio_list;
+	struct gf100_gr_chan *chan;
+	struct gf100_vmm_map_v0 args = { .priv = 1 };
+	struct nvkm_device *device = gr->base.engine.subdev.device;
+	int ret, i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!(chan = kzalloc(sizeof(*chan), GFP_KERNEL)))
 		return -ENOMEM;
@@ -391,6 +420,7 @@ gf100_gr_chan_new(struct nvkm_gr *base, struct nvkm_fifo_chan *fifoch,
 	chan->vmm = nvkm_vmm_ref(fifoch->vmm);
 	*pobject = &chan->object;
 
+<<<<<<< HEAD
 	/* Map pagepool. */
 	ret = nvkm_vmm_get(chan->vmm, 12, nvkm_memory_size(gr->pagepool), &chan->pagepool);
 	if (ret)
@@ -448,6 +478,8 @@ gf100_gr_chan_new(struct nvkm_gr *base, struct nvkm_fifo_chan *fifoch,
 	}
 	mutex_unlock(&gr->fecs.mutex);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* allocate memory for a "mmio list" buffer that's used by the HUB
 	 * fuc to modify some per-context register settings on first load
 	 * of the context.
@@ -466,6 +498,7 @@ gf100_gr_chan_new(struct nvkm_gr *base, struct nvkm_fifo_chan *fifoch,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	/* finally, fill in the mmio list and point the context at it */
 	nvkm_kmap(chan->mmio);
 	gr->func->grctx->pagepool(chan, chan->pagepool->addr);
@@ -476,6 +509,47 @@ gf100_gr_chan_new(struct nvkm_gr *base, struct nvkm_fifo_chan *fifoch,
 		gr->func->grctx->patch_ltc(chan);
 	if (gr->func->grctx->unknown_size)
 		gr->func->grctx->unknown(chan, chan->unknown->addr, gr->func->grctx->unknown_size);
+=======
+	/* allocate buffers referenced by mmio list */
+	for (i = 0; data->size && i < ARRAY_SIZE(gr->mmio_data); i++) {
+		ret = nvkm_memory_new(device, NVKM_MEM_TARGET_INST,
+				      data->size, data->align, false,
+				      &chan->data[i].mem);
+		if (ret)
+			return ret;
+
+		ret = nvkm_vmm_get(fifoch->vmm, 12,
+				   nvkm_memory_size(chan->data[i].mem),
+				   &chan->data[i].vma);
+		if (ret)
+			return ret;
+
+		args.priv = data->priv;
+
+		ret = nvkm_memory_map(chan->data[i].mem, 0, chan->vmm,
+				      chan->data[i].vma, &args, sizeof(args));
+		if (ret)
+			return ret;
+
+		data++;
+	}
+
+	/* finally, fill in the mmio list and point the context at it */
+	nvkm_kmap(chan->mmio);
+	for (i = 0; mmio->addr && i < ARRAY_SIZE(gr->mmio_list); i++) {
+		u32 addr = mmio->addr;
+		u32 data = mmio->data;
+
+		if (mmio->buffer >= 0) {
+			u64 info = chan->data[mmio->buffer].vma->addr;
+			data |= info >> mmio->shift;
+		}
+
+		nvkm_wo32(chan->mmio, chan->mmio_nr++ * 4, addr);
+		nvkm_wo32(chan->mmio, chan->mmio_nr++ * 4, data);
+		mmio++;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_done(chan->mmio);
 	return 0;
 }
@@ -752,7 +826,11 @@ gf100_gr_fecs_ctrl_ctxsw(struct gf100_gr *gr, u32 mthd)
 	struct nvkm_device *device = gr->base.engine.subdev.device;
 
 	nvkm_wr32(device, 0x409804, 0xffffffff);
+<<<<<<< HEAD
 	nvkm_wr32(device, 0x409800, 0x00000000);
+=======
+	nvkm_wr32(device, 0x409840, 0xffffffff);
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_wr32(device, 0x409500, 0xffffffff);
 	nvkm_wr32(device, 0x409504, mthd);
 	nvkm_msec(device, 2000,
@@ -796,6 +874,7 @@ gf100_gr_fecs_stop_ctxsw(struct nvkm_gr *base)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int
 gf100_gr_fecs_halt_pipeline(struct gf100_gr *gr)
 {
@@ -829,12 +908,18 @@ gf100_gr_fecs_wfi_golden_save(struct gf100_gr *gr, u32 inst)
 	return -ETIMEDOUT;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int
 gf100_gr_fecs_bind_pointer(struct gf100_gr *gr, u32 inst)
 {
 	struct nvkm_device *device = gr->base.engine.subdev.device;
 
+<<<<<<< HEAD
 	nvkm_mask(device, 0x409800, 0x00000030, 0x00000000);
+=======
+	nvkm_wr32(device, 0x409840, 0x00000030);
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_wr32(device, 0x409500, inst);
 	nvkm_wr32(device, 0x409504, 0x00000003);
 	nvkm_msec(device, 2000,
@@ -925,7 +1010,11 @@ gf100_gr_fecs_discover_pm_image_size(struct gf100_gr *gr, u32 *psize)
 {
 	struct nvkm_device *device = gr->base.engine.subdev.device;
 
+<<<<<<< HEAD
 	nvkm_wr32(device, 0x409800, 0x00000000);
+=======
+	nvkm_wr32(device, 0x409840, 0xffffffff);
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_wr32(device, 0x409500, 0x00000000);
 	nvkm_wr32(device, 0x409504, 0x00000025);
 	nvkm_msec(device, 2000,
@@ -941,7 +1030,11 @@ gf100_gr_fecs_discover_zcull_image_size(struct gf100_gr *gr, u32 *psize)
 {
 	struct nvkm_device *device = gr->base.engine.subdev.device;
 
+<<<<<<< HEAD
 	nvkm_wr32(device, 0x409800, 0x00000000);
+=======
+	nvkm_wr32(device, 0x409840, 0xffffffff);
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_wr32(device, 0x409500, 0x00000000);
 	nvkm_wr32(device, 0x409504, 0x00000016);
 	nvkm_msec(device, 2000,
@@ -957,7 +1050,11 @@ gf100_gr_fecs_discover_image_size(struct gf100_gr *gr, u32 *psize)
 {
 	struct nvkm_device *device = gr->base.engine.subdev.device;
 
+<<<<<<< HEAD
 	nvkm_wr32(device, 0x409800, 0x00000000);
+=======
+	nvkm_wr32(device, 0x409840, 0xffffffff);
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_wr32(device, 0x409500, 0x00000000);
 	nvkm_wr32(device, 0x409504, 0x00000010);
 	nvkm_msec(device, 2000,
@@ -973,7 +1070,11 @@ gf100_gr_fecs_set_watchdog_timeout(struct gf100_gr *gr, u32 timeout)
 {
 	struct nvkm_device *device = gr->base.engine.subdev.device;
 
+<<<<<<< HEAD
 	nvkm_wr32(device, 0x409800, 0x00000000);
+=======
+	nvkm_wr32(device, 0x409840, 0xffffffff);
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_wr32(device, 0x409500, timeout);
 	nvkm_wr32(device, 0x409504, 0x00000021);
 }
@@ -1013,7 +1114,11 @@ gf100_gr_zbc_init(struct gf100_gr *gr)
 	const u32 f32_1[] = { 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000,
 			      0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000 };
 	struct nvkm_ltc *ltc = gr->base.engine.subdev.device->ltc;
+<<<<<<< HEAD
 	int index, c = ltc->zbc_color_min, d = ltc->zbc_depth_min, s = ltc->zbc_depth_min;
+=======
+	int index, c = ltc->zbc_min, d = ltc->zbc_min, s = ltc->zbc_min;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!gr->zbc_color[0].format) {
 		gf100_gr_zbc_color_get(gr, 1,  & zero[0],   &zero[4]); c++;
@@ -1029,6 +1134,7 @@ gf100_gr_zbc_init(struct gf100_gr *gr)
 		}
 	}
 
+<<<<<<< HEAD
 	for (index = c; index <= ltc->zbc_color_max; index++)
 		gr->func->zbc->clear_color(gr, index);
 	for (index = d; index <= ltc->zbc_depth_max; index++)
@@ -1036,6 +1142,15 @@ gf100_gr_zbc_init(struct gf100_gr *gr)
 
 	if (gr->func->zbc->clear_stencil) {
 		for (index = s; index <= ltc->zbc_depth_max; index++)
+=======
+	for (index = c; index <= ltc->zbc_max; index++)
+		gr->func->zbc->clear_color(gr, index);
+	for (index = d; index <= ltc->zbc_max; index++)
+		gr->func->zbc->clear_depth(gr, index);
+
+	if (gr->func->zbc->clear_stencil) {
+		for (index = s; index <= ltc->zbc_max; index++)
+>>>>>>> b7ba80a49124 (Commit)
 			gr->func->zbc->clear_stencil(gr, index);
 	}
 }
@@ -1061,7 +1176,11 @@ gf100_gr_wait_idle(struct gf100_gr *gr)
 		nvkm_rd32(device, 0x400700);
 
 		gr_enabled = nvkm_rd32(device, 0x200) & 0x1000;
+<<<<<<< HEAD
 		ctxsw_active = nvkm_fifo_ctxsw_in_progress(&gr->base.engine);
+=======
+		ctxsw_active = nvkm_rd32(device, 0x2640) & 0x8000;
+>>>>>>> b7ba80a49124 (Commit)
 		gr_busy = nvkm_rd32(device, 0x40060c) & 0x1;
 
 		if (!gr_enabled || (!gr_busy && !ctxsw_active))
@@ -1097,7 +1216,11 @@ gf100_gr_icmd(struct gf100_gr *gr, const struct gf100_gr_pack *p)
 	struct nvkm_device *device = gr->base.engine.subdev.device;
 	const struct gf100_gr_pack *pack;
 	const struct gf100_gr_init *init;
+<<<<<<< HEAD
 	u64 data = 0;
+=======
+	u32 data = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	nvkm_wr32(device, 0x400208, 0x80000000);
 
@@ -1107,8 +1230,11 @@ gf100_gr_icmd(struct gf100_gr *gr, const struct gf100_gr_pack *p)
 
 		if ((pack == p && init == p->init) || data != init->data) {
 			nvkm_wr32(device, 0x400204, init->data);
+<<<<<<< HEAD
 			if (pack->type == 64)
 				nvkm_wr32(device, 0x40020c, upper_32_bits(init->data));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			data = init->data;
 		}
 
@@ -1602,6 +1728,7 @@ gf100_gr_ctxctl_isr(struct gf100_gr *gr)
 	}
 }
 
+<<<<<<< HEAD
 static irqreturn_t
 gf100_gr_intr(struct nvkm_inth *inth)
 {
@@ -1609,6 +1736,15 @@ gf100_gr_intr(struct nvkm_inth *inth)
 	struct nvkm_subdev *subdev = &gr->base.engine.subdev;
 	struct nvkm_device *device = subdev->device;
 	struct nvkm_chan *chan;
+=======
+static void
+gf100_gr_intr(struct nvkm_gr *base)
+{
+	struct gf100_gr *gr = gf100_gr(base);
+	struct nvkm_subdev *subdev = &gr->base.engine.subdev;
+	struct nvkm_device *device = subdev->device;
+	struct nvkm_fifo_chan *chan;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flags;
 	u64 inst = nvkm_rd32(device, 0x409b00) & 0x0fffffff;
 	u32 stat = nvkm_rd32(device, 0x400100);
@@ -1621,10 +1757,17 @@ gf100_gr_intr(struct nvkm_inth *inth)
 	const char *name = "unknown";
 	int chid = -1;
 
+<<<<<<< HEAD
 	chan = nvkm_chan_get_inst(&gr->base.engine, (u64)inst << 12, &flags);
 	if (chan) {
 		name = chan->name;
 		chid = chan->id;
+=======
+	chan = nvkm_fifo_chan_inst(device->fifo, (u64)inst << 12, &flags);
+	if (chan) {
+		name = chan->object.client->name;
+		chid = chan->chid;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (device->card_type < NV_E0 || subc < 4)
@@ -1691,8 +1834,12 @@ gf100_gr_intr(struct nvkm_inth *inth)
 	}
 
 	nvkm_wr32(device, 0x400500, 0x00010001);
+<<<<<<< HEAD
 	nvkm_chan_put(&chan, flags);
 	return IRQ_HANDLED;
+=======
+	nvkm_fifo_chan_put(device->fifo, flags, &chan);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -1782,7 +1929,11 @@ gf100_gr_init_ctxctl_ext(struct gf100_gr *gr)
 	nvkm_mc_unk260(device, 1);
 
 	/* start both of them running */
+<<<<<<< HEAD
 	nvkm_wr32(device, 0x409800, 0x00000000);
+=======
+	nvkm_wr32(device, 0x409840, 0xffffffff);
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_wr32(device, 0x41a10c, 0x00000000);
 	nvkm_wr32(device, 0x40910c, 0x00000000);
 
@@ -1824,6 +1975,18 @@ gf100_gr_init_ctxctl_ext(struct gf100_gr *gr)
 			return ret;
 	}
 
+<<<<<<< HEAD
+=======
+	/* Generate golden context image. */
+	if (gr->data == NULL) {
+		int ret = gf100_grctx_generate(gr);
+		if (ret) {
+			nvkm_error(subdev, "failed to construct context\n");
+			return ret;
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1875,6 +2038,17 @@ gf100_gr_init_ctxctl_int(struct gf100_gr *gr)
 	}
 
 	gr->size = nvkm_rd32(device, 0x409804);
+<<<<<<< HEAD
+=======
+	if (gr->data == NULL) {
+		int ret = gf100_grctx_generate(gr);
+		if (ret) {
+			nvkm_error(subdev, "failed to construct context\n");
+			return ret;
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1891,11 +2065,18 @@ gf100_gr_init_ctxctl(struct gf100_gr *gr)
 	return ret;
 }
 
+<<<<<<< HEAD
 int
 gf100_gr_oneinit_sm_id(struct gf100_gr *gr)
 {
 	int tpc, gpc;
 
+=======
+void
+gf100_gr_oneinit_sm_id(struct gf100_gr *gr)
+{
+	int tpc, gpc;
+>>>>>>> b7ba80a49124 (Commit)
 	for (tpc = 0; tpc < gr->tpc_max; tpc++) {
 		for (gpc = 0; gpc < gr->gpc_nr; gpc++) {
 			if (tpc < gr->tpc_nr[gpc]) {
@@ -1905,8 +2086,11 @@ gf100_gr_oneinit_sm_id(struct gf100_gr *gr)
 			}
 		}
 	}
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void
@@ -1991,6 +2175,7 @@ gf100_gr_oneinit(struct nvkm_gr *base)
 	struct gf100_gr *gr = gf100_gr(base);
 	struct nvkm_subdev *subdev = &gr->base.engine.subdev;
 	struct nvkm_device *device = subdev->device;
+<<<<<<< HEAD
 	struct nvkm_intr *intr = &device->mc->intr;
 	enum nvkm_intr_type intr_type = NVKM_INTR_SUBDEV;
 	int ret, i, j;
@@ -2002,6 +2187,9 @@ gf100_gr_oneinit(struct nvkm_gr *base)
 			    gf100_gr_intr, &gr->base.engine.subdev.inth);
 	if (ret)
 		return ret;
+=======
+	int i, j;
+>>>>>>> b7ba80a49124 (Commit)
 
 	nvkm_pmu_pgob(device->pmu, false);
 
@@ -2011,14 +2199,22 @@ gf100_gr_oneinit(struct nvkm_gr *base)
 		gr->tpc_nr[i]  = nvkm_rd32(device, GPC_UNIT(i, 0x2608));
 		gr->tpc_max = max(gr->tpc_max, gr->tpc_nr[i]);
 		gr->tpc_total += gr->tpc_nr[i];
+<<<<<<< HEAD
 		for (j = 0; j < gr->func->ppc_nr; j++) {
+=======
+		gr->ppc_nr[i]  = gr->func->ppc_nr;
+		for (j = 0; j < gr->ppc_nr[i]; j++) {
+>>>>>>> b7ba80a49124 (Commit)
 			gr->ppc_tpc_mask[i][j] =
 				nvkm_rd32(device, GPC_UNIT(i, 0x0c30 + (j * 4)));
 			if (gr->ppc_tpc_mask[i][j] == 0)
 				continue;
+<<<<<<< HEAD
 
 			gr->ppc_nr[i]++;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			gr->ppc_mask[i] |= (1 << j);
 			gr->ppc_tpc_nr[i][j] = hweight8(gr->ppc_tpc_mask[i][j]);
 			if (gr->ppc_tpc_min == 0 ||
@@ -2027,6 +2223,7 @@ gf100_gr_oneinit(struct nvkm_gr *base)
 			if (gr->ppc_tpc_max < gr->ppc_tpc_nr[i][j])
 				gr->ppc_tpc_max = gr->ppc_tpc_nr[i][j];
 		}
+<<<<<<< HEAD
 
 		gr->ppc_total += gr->ppc_nr[i];
 	}
@@ -2052,12 +2249,19 @@ gf100_gr_oneinit(struct nvkm_gr *base)
 				      0x100, false, &gr->unknown);
 		if (ret)
 			return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	memset(gr->tile, 0xff, sizeof(gr->tile));
 	gr->func->oneinit_tiles(gr);
+<<<<<<< HEAD
 
 	return gr->func->oneinit_sm_id(gr);
+=======
+	gr->func->oneinit_sm_id(gr);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int
@@ -2067,7 +2271,11 @@ gf100_gr_init_(struct nvkm_gr *base)
 	struct nvkm_subdev *subdev = &base->engine.subdev;
 	struct nvkm_device *device = subdev->device;
 	bool reset = device->chipset == 0x137 || device->chipset == 0x138;
+<<<<<<< HEAD
 	int ret;
+=======
+	u32 ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* On certain GP107/GP108 boards, we trigger a weird issue where
 	 * GR will stop responding to PRI accesses after we've asked the
@@ -2103,12 +2311,16 @@ gf100_gr_init_(struct nvkm_gr *base)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = gr->func->init(gr);
 	if (ret)
 		return ret;
 
 	nvkm_inth_allow(&subdev->inth);
 	return 0;
+=======
+	return gr->func->init(gr);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int
@@ -2116,9 +2328,12 @@ gf100_gr_fini(struct nvkm_gr *base, bool suspend)
 {
 	struct gf100_gr *gr = gf100_gr(base);
 	struct nvkm_subdev *subdev = &gr->base.engine.subdev;
+<<<<<<< HEAD
 
 	nvkm_inth_block(&subdev->inth);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_falcon_put(&gr->gpccs.falcon, subdev);
 	nvkm_falcon_put(&gr->fecs.falcon, subdev);
 	return 0;
@@ -2131,11 +2346,14 @@ gf100_gr_dtor(struct nvkm_gr *base)
 
 	kfree(gr->data);
 
+<<<<<<< HEAD
 	nvkm_memory_unref(&gr->unknown);
 	nvkm_memory_unref(&gr->attrib_cb);
 	nvkm_memory_unref(&gr->bundle_cb);
 	nvkm_memory_unref(&gr->pagepool);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_falcon_dtor(&gr->gpccs.falcon);
 	nvkm_falcon_dtor(&gr->fecs.falcon);
 
@@ -2144,20 +2362,27 @@ gf100_gr_dtor(struct nvkm_gr *base)
 	nvkm_blob_dtor(&gr->gpccs.inst);
 	nvkm_blob_dtor(&gr->gpccs.data);
 
+<<<<<<< HEAD
 	vfree(gr->bundle64);
 	vfree(gr->bundle_veid);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vfree(gr->bundle);
 	vfree(gr->method);
 	vfree(gr->sw_ctx);
 	vfree(gr->sw_nonctx);
+<<<<<<< HEAD
 	vfree(gr->sw_nonctx1);
 	vfree(gr->sw_nonctx2);
 	vfree(gr->sw_nonctx3);
 	vfree(gr->sw_nonctx4);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return gr;
 }
 
+<<<<<<< HEAD
 static const struct nvkm_falcon_func
 gf100_gr_flcn = {
 	.load_imem = nvkm_falcon_v1_load_imem,
@@ -2165,6 +2390,75 @@ gf100_gr_flcn = {
 	.start = nvkm_falcon_v1_start,
 };
 
+=======
+static const struct nvkm_gr_func
+gf100_gr_ = {
+	.dtor = gf100_gr_dtor,
+	.oneinit = gf100_gr_oneinit,
+	.init = gf100_gr_init_,
+	.fini = gf100_gr_fini,
+	.intr = gf100_gr_intr,
+	.units = gf100_gr_units,
+	.chan_new = gf100_gr_chan_new,
+	.object_get = gf100_gr_object_get,
+	.chsw_load = gf100_gr_chsw_load,
+	.ctxsw.pause = gf100_gr_fecs_stop_ctxsw,
+	.ctxsw.resume = gf100_gr_fecs_start_ctxsw,
+	.ctxsw.inst = gf100_gr_ctxsw_inst,
+};
+
+static const struct nvkm_falcon_func
+gf100_gr_flcn = {
+	.fbif = 0x600,
+	.load_imem = nvkm_falcon_v1_load_imem,
+	.load_dmem = nvkm_falcon_v1_load_dmem,
+	.read_dmem = nvkm_falcon_v1_read_dmem,
+	.bind_context = nvkm_falcon_v1_bind_context,
+	.wait_for_halt = nvkm_falcon_v1_wait_for_halt,
+	.clear_interrupt = nvkm_falcon_v1_clear_interrupt,
+	.set_start_addr = nvkm_falcon_v1_set_start_addr,
+	.start = nvkm_falcon_v1_start,
+	.enable = nvkm_falcon_v1_enable,
+	.disable = nvkm_falcon_v1_disable,
+};
+
+int
+gf100_gr_new_(const struct gf100_gr_fwif *fwif, struct nvkm_device *device,
+	      enum nvkm_subdev_type type, int inst, struct nvkm_gr **pgr)
+{
+	struct gf100_gr *gr;
+	int ret;
+
+	if (!(gr = kzalloc(sizeof(*gr), GFP_KERNEL)))
+		return -ENOMEM;
+	*pgr = &gr->base;
+
+	ret = nvkm_gr_ctor(&gf100_gr_, device, type, inst, true, &gr->base);
+	if (ret)
+		return ret;
+
+	fwif = nvkm_firmware_load(&gr->base.engine.subdev, fwif, "Gr", gr);
+	if (IS_ERR(fwif))
+		return PTR_ERR(fwif);
+
+	gr->func = fwif->func;
+
+	ret = nvkm_falcon_ctor(&gf100_gr_flcn, &gr->base.engine.subdev,
+			       "fecs", 0x409000, &gr->fecs.falcon);
+	if (ret)
+		return ret;
+
+	mutex_init(&gr->fecs.mutex);
+
+	ret = nvkm_falcon_ctor(&gf100_gr_flcn, &gr->base.engine.subdev,
+			       "gpccs", 0x41a000, &gr->gpccs.falcon);
+	if (ret)
+		return ret;
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 void
 gf100_gr_init_num_tpc_per_gpc(struct gf100_gr *gr, bool pd, bool ds)
 {
@@ -2189,6 +2483,7 @@ gf100_gr_init_400054(struct gf100_gr *gr)
 }
 
 void
+<<<<<<< HEAD
 gf100_gr_init_exception2(struct gf100_gr *gr)
 {
 	struct nvkm_device *device = gr->base.engine.subdev.device;
@@ -2212,6 +2507,8 @@ gf100_gr_init_rop_exceptions(struct gf100_gr *gr)
 }
 
 void
+=======
+>>>>>>> b7ba80a49124 (Commit)
 gf100_gr_init_shader_exceptions(struct gf100_gr *gr, int gpc, int tpc)
 {
 	struct nvkm_device *device = gr->base.engine.subdev.device;
@@ -2318,6 +2615,7 @@ gf100_gr_init_vsc_stream_master(struct gf100_gr *gr)
 	nvkm_mask(device, TPC_UNIT(0, 0, 0x05c), 0x00000001, 0x00000001);
 }
 
+<<<<<<< HEAD
 static int
 gf100_gr_reset(struct nvkm_gr *base)
 {
@@ -2338,10 +2636,13 @@ gf100_gr_reset(struct nvkm_gr *base)
 	return subdev->func->init(subdev);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int
 gf100_gr_init(struct gf100_gr *gr)
 {
 	struct nvkm_device *device = gr->base.engine.subdev.device;
+<<<<<<< HEAD
 	int gpc, tpc;
 
 	nvkm_mask(device, 0x400500, 0x00010001, 0x00000000);
@@ -2359,6 +2660,19 @@ gf100_gr_init(struct gf100_gr *gr)
 	} else {
 		gf100_gr_mmio(gr, gr->func->mmio);
 	}
+=======
+	int gpc, tpc, rop;
+
+	if (gr->func->init_419bd8)
+		gr->func->init_419bd8(gr);
+
+	gr->func->init_gpc_mmu(gr);
+
+	if (gr->sw_nonctx)
+		gf100_gr_mmio(gr, gr->sw_nonctx);
+	else
+		gf100_gr_mmio(gr, gr->func->mmio);
+>>>>>>> b7ba80a49124 (Commit)
 
 	gf100_gr_wait_idle(gr);
 
@@ -2390,10 +2704,13 @@ gf100_gr_init(struct gf100_gr *gr)
 	nvkm_wr32(device, 0x400124, 0x00000002);
 
 	gr->func->init_fecs_exceptions(gr);
+<<<<<<< HEAD
 
 	if (gr->func->init_40a790)
 		gr->func->init_40a790(gr);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (gr->func->init_ds_hww_esr_2)
 		gr->func->init_ds_hww_esr_2(gr);
 
@@ -2442,14 +2759,28 @@ gf100_gr_init(struct gf100_gr *gr)
 		nvkm_wr32(device, GPC_UNIT(gpc, 0x2c94), 0xffffffff);
 	}
 
+<<<<<<< HEAD
 	gr->func->init_rop_exceptions(gr);
+=======
+	for (rop = 0; rop < gr->rop_nr; rop++) {
+		nvkm_wr32(device, ROP_UNIT(rop, 0x144), 0x40000000);
+		nvkm_wr32(device, ROP_UNIT(rop, 0x070), 0x40000000);
+		nvkm_wr32(device, ROP_UNIT(rop, 0x204), 0xffffffff);
+		nvkm_wr32(device, ROP_UNIT(rop, 0x208), 0xffffffff);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	nvkm_wr32(device, 0x400108, 0xffffffff);
 	nvkm_wr32(device, 0x400138, 0xffffffff);
 	nvkm_wr32(device, 0x400118, 0xffffffff);
 	nvkm_wr32(device, 0x400130, 0xffffffff);
+<<<<<<< HEAD
 	if (gr->func->init_exception2)
 		gr->func->init_exception2(gr);
+=======
+	nvkm_wr32(device, 0x40011c, 0xffffffff);
+	nvkm_wr32(device, 0x400134, 0xffffffff);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (gr->func->init_400054)
 		gr->func->init_400054(gr);
@@ -2462,6 +2793,7 @@ gf100_gr_init(struct gf100_gr *gr)
 	return gf100_gr_init_ctxctl(gr);
 }
 
+<<<<<<< HEAD
 void
 gf100_gr_fecs_reset(struct gf100_gr *gr)
 {
@@ -2474,6 +2806,8 @@ gf100_gr_fecs_reset(struct gf100_gr *gr)
 	nvkm_rd32(device, 0x409614);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "fuc/hubgf100.fuc3.h"
 
 struct gf100_gr_ucode
@@ -2494,6 +2828,7 @@ gf100_gr_gpccs_ucode = {
 	.data.size = sizeof(gf100_grgpc_data),
 };
 
+<<<<<<< HEAD
 static const struct nvkm_gr_func
 gf100_gr_ = {
 	.dtor = gf100_gr_dtor,
@@ -2510,6 +2845,8 @@ gf100_gr_ = {
 	.ctxsw.inst = gf100_gr_ctxsw_inst,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct gf100_gr_func
 gf100_gr = {
 	.oneinit_tiles = gf100_gr_oneinit_tiles,
@@ -2525,13 +2862,19 @@ gf100_gr = {
 	.init_419eb4 = gf100_gr_init_419eb4,
 	.init_tex_hww_esr = gf100_gr_init_tex_hww_esr,
 	.init_shader_exceptions = gf100_gr_init_shader_exceptions,
+<<<<<<< HEAD
 	.init_rop_exceptions = gf100_gr_init_rop_exceptions,
 	.init_exception2 = gf100_gr_init_exception2,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.init_400054 = gf100_gr_init_400054,
 	.trap_mp = gf100_gr_trap_mp,
 	.mmio = gf100_gr_pack_mmio,
 	.fecs.ucode = &gf100_gr_fecs_ucode,
+<<<<<<< HEAD
 	.fecs.reset = gf100_gr_fecs_reset,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.gpccs.ucode = &gf100_gr_gpccs_ucode,
 	.rops = gf100_gr_rops,
 	.grctx = &gf100_grctx,
@@ -2605,6 +2948,7 @@ gf100_gr_fwif[] = {
 };
 
 int
+<<<<<<< HEAD
 gf100_gr_new_(const struct gf100_gr_fwif *fwif, struct nvkm_device *device,
 	      enum nvkm_subdev_type type, int inst, struct nvkm_gr **pgr)
 {
@@ -2641,6 +2985,8 @@ gf100_gr_new_(const struct gf100_gr_fwif *fwif, struct nvkm_device *device,
 }
 
 int
+=======
+>>>>>>> b7ba80a49124 (Commit)
 gf100_gr_new(struct nvkm_device *device, enum nvkm_subdev_type type, int inst, struct nvkm_gr **pgr)
 {
 	return gf100_gr_new_(gf100_gr_fwif, device, type, inst, pgr);

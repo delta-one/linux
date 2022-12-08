@@ -708,7 +708,11 @@ static struct task_struct *current_set[NR_CPUS];
 static void smp_store_cpu_info(int id)
 {
 	per_cpu(cpu_pvr, id) = mfspr(SPRN_PVR);
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_E500
+=======
+#ifdef CONFIG_PPC_FSL_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	per_cpu(next_tlbcam_idx, id)
 		= (mfspr(SPRN_TLB1CFG) & TLBnCFG_N_ENTRY) - 1;
 #endif
@@ -1249,7 +1253,11 @@ static void cpu_idle_thread_init(unsigned int cpu, struct task_struct *idle)
 #ifdef CONFIG_PPC64
 	paca_ptrs[cpu]->__current = idle;
 	paca_ptrs[cpu]->kstack = (unsigned long)task_stack_page(idle) +
+<<<<<<< HEAD
 				 THREAD_SIZE - STACK_FRAME_MIN_SIZE;
+=======
+				 THREAD_SIZE - STACK_FRAME_OVERHEAD;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	task_thread_info(idle)->cpu = cpu;
 	secondary_current = current_set[cpu] = idle;
@@ -1257,12 +1265,16 @@ static void cpu_idle_thread_init(unsigned int cpu, struct task_struct *idle)
 
 int __cpu_up(unsigned int cpu, struct task_struct *tidle)
 {
+<<<<<<< HEAD
 	const unsigned long boot_spin_ms = 5 * MSEC_PER_SEC;
 	const bool booting = system_state < SYSTEM_RUNNING;
 	const unsigned long hp_spin_ms = 1;
 	unsigned long deadline;
 	int rc;
 	const unsigned long spin_wait_ms = booting ? boot_spin_ms : hp_spin_ms;
+=======
+	int rc, c;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Don't allow secondary threads to come online if inhibited
@@ -1307,6 +1319,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
 	}
 
 	/*
+<<<<<<< HEAD
 	 * At boot time, simply spin on the callin word until the
 	 * deadline passes.
 	 *
@@ -1324,6 +1337,24 @@ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
 		while (!cpu_callin_map[cpu] && time_is_after_jiffies(deadline))
 			fsleep(sleep_interval_us);
 	}
+=======
+	 * wait to see if the cpu made a callin (is actually up).
+	 * use this value that I found through experimentation.
+	 * -- Cort
+	 */
+	if (system_state < SYSTEM_RUNNING)
+		for (c = 50000; c && !cpu_callin_map[cpu]; c--)
+			udelay(100);
+#ifdef CONFIG_HOTPLUG_CPU
+	else
+		/*
+		 * CPUs can take much longer to come up in the
+		 * hotplug case.  Wait five seconds.
+		 */
+		for (c = 5000; c && !cpu_callin_map[cpu]; c--)
+			msleep(1);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!cpu_callin_map[cpu]) {
 		printk(KERN_ERR "Processor %u is stuck.\n", cpu);
@@ -1611,7 +1642,11 @@ void start_secondary(void *unused)
 	if (IS_ENABLED(CONFIG_PPC32))
 		setup_kup();
 
+<<<<<<< HEAD
 	mmgrab_lazy_tlb(&init_mm);
+=======
+	mmgrab(&init_mm);
+>>>>>>> b7ba80a49124 (Commit)
 	current->active_mm = &init_mm;
 
 	smp_store_cpu_info(cpu);
@@ -1752,7 +1787,11 @@ void __cpu_die(unsigned int cpu)
 		smp_ops->cpu_die(cpu);
 }
 
+<<<<<<< HEAD
 void __noreturn arch_cpu_idle_dead(void)
+=======
+void arch_cpu_idle_dead(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/*
 	 * Disable on the down path. This will be re-enabled by

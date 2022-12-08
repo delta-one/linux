@@ -6,6 +6,7 @@
 #include <linux/module.h>
 #include <linux/regmap.h>
 #include <linux/soundwire/sdw.h>
+<<<<<<< HEAD
 #include <linux/types.h>
 #include "internal.h"
 
@@ -46,13 +47,50 @@ static const struct regmap_bus regmap_sdw = {
 	.write = regmap_sdw_write,
 	.gather_write = regmap_sdw_gather_write,
 	.read = regmap_sdw_read,
+=======
+#include "internal.h"
+
+static int regmap_sdw_write(void *context, unsigned int reg, unsigned int val)
+{
+	struct device *dev = context;
+	struct sdw_slave *slave = dev_to_sdw_dev(dev);
+
+	return sdw_write_no_pm(slave, reg, val);
+}
+
+static int regmap_sdw_read(void *context, unsigned int reg, unsigned int *val)
+{
+	struct device *dev = context;
+	struct sdw_slave *slave = dev_to_sdw_dev(dev);
+	int read;
+
+	read = sdw_read_no_pm(slave, reg);
+	if (read < 0)
+		return read;
+
+	*val = read;
+	return 0;
+}
+
+static const struct regmap_bus regmap_sdw = {
+	.reg_read = regmap_sdw_read,
+	.reg_write = regmap_sdw_write,
+>>>>>>> b7ba80a49124 (Commit)
 	.reg_format_endian_default = REGMAP_ENDIAN_LITTLE,
 	.val_format_endian_default = REGMAP_ENDIAN_LITTLE,
 };
 
 static int regmap_sdw_config_check(const struct regmap_config *config)
 {
+<<<<<<< HEAD
 	/* Register addresses are 32 bits wide */
+=======
+	/* All register are 8-bits wide as per MIPI Soundwire 1.0 Spec */
+	if (config->val_bits != 8)
+		return -ENOTSUPP;
+
+	/* Registers are 32 bits wide */
+>>>>>>> b7ba80a49124 (Commit)
 	if (config->reg_bits != 32)
 		return -ENOTSUPP;
 

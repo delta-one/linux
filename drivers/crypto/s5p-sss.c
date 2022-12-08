@@ -499,7 +499,11 @@ static void s5p_sg_done(struct s5p_aes_dev *dev)
 /* Calls the completion. Cannot be called with dev->lock hold. */
 static void s5p_aes_complete(struct skcipher_request *req, int err)
 {
+<<<<<<< HEAD
 	skcipher_request_complete(req, err);
+=======
+	req->base.complete(&req->base, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void s5p_unset_outdata(struct s5p_aes_dev *dev)
@@ -1355,7 +1359,11 @@ static void s5p_hash_finish_req(struct ahash_request *req, int err)
 	spin_unlock_irqrestore(&dd->hash_lock, flags);
 
 	if (req->base.complete)
+<<<<<<< HEAD
 		ahash_request_complete(req, err);
+=======
+		req->base.complete(&req->base, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1397,7 +1405,11 @@ retry:
 		return ret;
 
 	if (backlog)
+<<<<<<< HEAD
 		crypto_request_complete(backlog, -EINPROGRESS);
+=======
+		backlog->complete(backlog, -EINPROGRESS);
+>>>>>>> b7ba80a49124 (Commit)
 
 	req = ahash_request_cast(async_req);
 	dd->hash_req = req;
@@ -1991,7 +2003,11 @@ static void s5p_tasklet_cb(unsigned long data)
 	spin_unlock_irqrestore(&dev->lock, flags);
 
 	if (backlog)
+<<<<<<< HEAD
 		crypto_request_complete(backlog, -EINPROGRESS);
+=======
+		backlog->complete(backlog, -EINPROGRESS);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev->req = skcipher_request_cast(async_req);
 	dev->ctx = crypto_tfm_ctx(dev->req->base.tfm);

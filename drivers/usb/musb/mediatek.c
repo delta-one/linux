@@ -294,8 +294,12 @@ static int mtk_musb_init(struct musb *musb)
 err_phy_power_on:
 	phy_exit(glue->phy);
 err_phy_init:
+<<<<<<< HEAD
 	if (musb->port_mode == MUSB_OTG)
 		mtk_otg_switch_exit(glue);
+=======
+	mtk_otg_switch_exit(glue);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

@@ -198,3 +198,7 @@ module_exit(altr_sysmgr_exit);
 
 MODULE_AUTHOR("Thor Thayer <>");
 MODULE_DESCRIPTION("SOCFPGA System Manager driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

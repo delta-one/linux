@@ -170,7 +170,11 @@ __u8 bt_status(int err)
 	case -EMLINK:
 		return 0x09;
 
+<<<<<<< HEAD
 	case -EALREADY:
+=======
+	case EALREADY:
+>>>>>>> b7ba80a49124 (Commit)
 		return 0x0b;
 
 	case -EBUSY:
@@ -191,7 +195,11 @@ __u8 bt_status(int err)
 	case -ECONNABORTED:
 		return 0x16;
 
+<<<<<<< HEAD
 	case -ELOOP:
+=======
+	case ELOOP:
+>>>>>>> b7ba80a49124 (Commit)
 		return 0x17;
 
 	case -EPROTONOSUPPORT:

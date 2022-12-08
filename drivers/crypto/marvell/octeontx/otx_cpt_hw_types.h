@@ -534,7 +534,11 @@ union otx_cptx_vqx_misc_ena_w1s {
  * Word0
  *  reserved_20_63:44 [63:20] Reserved.
  *  dbell_cnt:20 [19:0](R/W/H) Number of instruction queue 64-bit words to add
+<<<<<<< HEAD
  *	to the CPT instruction doorbell count. Readback value is the
+=======
+ *	to the CPT instruction doorbell count. Readback value is the the
+>>>>>>> b7ba80a49124 (Commit)
  *	current number of pending doorbell requests. If counter overflows
  *	CPT()_VQ()_MISC_INT[DBELL_DOVF] is set. To reset the count back to
  *	zero, write one to clear CPT()_VQ()_MISC_INT_ENA_W1C[DBELL_DOVF],

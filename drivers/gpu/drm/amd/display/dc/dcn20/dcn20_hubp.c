@@ -617,6 +617,7 @@ void hubp2_cursor_set_attributes(
 			CURSOR0_DST_Y_OFFSET, 0,
 			 /* used to shift the cursor chunk request deadline */
 			CURSOR0_CHUNK_HDL_ADJUST, 3);
+<<<<<<< HEAD
 
 	hubp->att.SURFACE_ADDR_HIGH  = attr->address.high_part;
 	hubp->att.SURFACE_ADDR       = attr->address.low_part;
@@ -632,6 +633,8 @@ void hubp2_cursor_set_attributes(
 	hubp->att.cur_ctl.bits.cur_2x_magnify = attr->attribute_flags.bits.ENABLE_MAGNIFICATION;
 	hubp->att.settings.bits.dst_y_offset  = 0;
 	hubp->att.settings.bits.chunk_hdl_adjust = 3;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void hubp2_dmdata_set_attributes(
@@ -973,12 +976,19 @@ void hubp2_cursor_set_position(
 		const struct dc_cursor_mi_param *param)
 {
 	struct dcn20_hubp *hubp2 = TO_DCN20_HUBP(hubp);
+<<<<<<< HEAD
 	int x_pos = pos->x - param->viewport.x;
 	int y_pos = pos->y - param->viewport.y;
 	int x_hotspot = pos->x_hotspot;
 	int y_hotspot = pos->y_hotspot;
 	int src_x_offset = x_pos - pos->x_hotspot;
 	int src_y_offset = y_pos - pos->y_hotspot;
+=======
+	int src_x_offset = pos->x - pos->x_hotspot - param->viewport.x;
+	int src_y_offset = pos->y - pos->y_hotspot - param->viewport.y;
+	int x_hotspot = pos->x_hotspot;
+	int y_hotspot = pos->y_hotspot;
+>>>>>>> b7ba80a49124 (Commit)
 	int cursor_height = (int)hubp->curs_attr.height;
 	int cursor_width = (int)hubp->curs_attr.width;
 	uint32_t dst_x_offset;
@@ -996,6 +1006,7 @@ void hubp2_cursor_set_position(
 	if (hubp->curs_attr.address.quad_part == 0)
 		return;
 
+<<<<<<< HEAD
 	// Transform cursor width / height and hotspots for offset calculations
 	if (param->rotation == ROTATION_ANGLE_90 || param->rotation == ROTATION_ANGLE_270) {
 		swap(cursor_height, cursor_width);
@@ -1016,6 +1027,20 @@ void hubp2_cursor_set_position(
 			src_x_offset = x_pos - (cursor_width - x_hotspot);
 
 		src_y_offset = y_pos - (cursor_height - y_hotspot);
+=======
+	// Rotated cursor width/height and hotspots tweaks for offset calculation
+	if (param->rotation == ROTATION_ANGLE_90 || param->rotation == ROTATION_ANGLE_270) {
+		swap(cursor_height, cursor_width);
+		if (param->rotation == ROTATION_ANGLE_90) {
+			src_x_offset = pos->x - pos->y_hotspot - param->viewport.x;
+			src_y_offset = pos->y - pos->x_hotspot - param->viewport.y;
+		}
+	} else if (param->rotation == ROTATION_ANGLE_180) {
+		if (!param->mirror)
+			src_x_offset = pos->x - param->viewport.x;
+
+		src_y_offset = pos->y - param->viewport.y;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	dst_x_offset = (src_x_offset >= 0) ? src_x_offset : 0;
@@ -1052,12 +1077,18 @@ void hubp2_cursor_set_position(
 			CURSOR_Y_POSITION, pos->y);
 
 	REG_SET_2(CURSOR_HOT_SPOT, 0,
+<<<<<<< HEAD
 			CURSOR_HOT_SPOT_X, pos->x_hotspot,
 			CURSOR_HOT_SPOT_Y, pos->y_hotspot);
+=======
+			CURSOR_HOT_SPOT_X, x_hotspot,
+			CURSOR_HOT_SPOT_Y, y_hotspot);
+>>>>>>> b7ba80a49124 (Commit)
 
 	REG_SET(CURSOR_DST_OFFSET, 0,
 			CURSOR_DST_X_OFFSET, dst_x_offset);
 	/* TODO Handle surface pixel formats other than 4:4:4 */
+<<<<<<< HEAD
 	/* Cursor Position Register Config */
 	hubp->pos.cur_ctl.bits.cur_enable = cur_en;
 	hubp->pos.position.bits.x_pos = pos->x;
@@ -1077,6 +1108,8 @@ void hubp2_cursor_set_position(
 	/* Save necessary cursor info x, y position. w, h is saved in attribute func. */
 	hubp->cur_rect.x = src_x_offset + param->viewport.x;
 	hubp->cur_rect.y = src_y_offset + param->viewport.y;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void hubp2_clk_cntl(struct hubp *hubp, bool enable)

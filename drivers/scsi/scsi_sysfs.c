@@ -441,17 +441,31 @@ static void scsi_device_cls_release(struct device *class_dev)
 	put_device(&sdev->sdev_gendev);
 }
 
+<<<<<<< HEAD
 static void scsi_device_dev_release(struct device *dev)
 {
 	struct scsi_device *sdev = to_scsi_device(dev);
+=======
+static void scsi_device_dev_release_usercontext(struct work_struct *work)
+{
+	struct scsi_device *sdev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *parent;
 	struct list_head *this, *tmp;
 	struct scsi_vpd *vpd_pg80 = NULL, *vpd_pg83 = NULL;
 	struct scsi_vpd *vpd_pg0 = NULL, *vpd_pg89 = NULL;
 	struct scsi_vpd *vpd_pgb0 = NULL, *vpd_pgb1 = NULL, *vpd_pgb2 = NULL;
 	unsigned long flags;
+<<<<<<< HEAD
 
 	might_sleep();
+=======
+	struct module *mod;
+
+	sdev = container_of(work, struct scsi_device, ew.work);
+
+	mod = sdev->host->hostt->module;
+>>>>>>> b7ba80a49124 (Commit)
 
 	scsi_dh_release_device(sdev);
 
@@ -515,6 +529,22 @@ static void scsi_device_dev_release(struct device *dev)
 
 	if (parent)
 		put_device(parent);
+<<<<<<< HEAD
+=======
+	module_put(mod);
+}
+
+static void scsi_device_dev_release(struct device *dev)
+{
+	struct scsi_device *sdp = to_scsi_device(dev);
+
+	/* Set module pointer as NULL in case of module unloading */
+	if (!try_module_get(sdp->host->hostt->module))
+		sdp->host->hostt->module = NULL;
+
+	execute_in_process_context(scsi_device_dev_release_usercontext,
+				   &sdp->ew);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct class sdev_class = {
@@ -536,9 +566,15 @@ static int scsi_bus_match(struct device *dev, struct device_driver *gendrv)
 	return (sdp->inq_periph_qual == SCSI_INQ_PQ_CON)? 1: 0;
 }
 
+<<<<<<< HEAD
 static int scsi_bus_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct scsi_device *sdev;
+=======
+static int scsi_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct scsi_device *sdev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dev->type != &scsi_dev_type)
 		return 0;
@@ -812,6 +848,7 @@ store_state_field(struct device *dev, struct device_attribute *attr,
 	}
 
 	mutex_lock(&sdev->state_mutex);
+<<<<<<< HEAD
 	switch (sdev->sdev_state) {
 	case SDEV_RUNNING:
 	case SDEV_OFFLINE:
@@ -820,6 +857,8 @@ store_state_field(struct device *dev, struct device_attribute *attr,
 		mutex_unlock(&sdev->state_mutex);
 		return -EINVAL;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (sdev->sdev_state == SDEV_RUNNING && state == SDEV_RUNNING) {
 		ret = 0;
 	} else {
@@ -968,7 +1007,10 @@ static DEVICE_ATTR(field, S_IRUGO, show_iostat_##field, NULL)
 show_sdev_iostat(iorequest_cnt);
 show_sdev_iostat(iodone_cnt);
 show_sdev_iostat(ioerr_cnt);
+<<<<<<< HEAD
 show_sdev_iostat(iotmo_cnt);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static ssize_t
 sdev_show_modalias(struct device *dev, struct device_attribute *attr, char *buf)
@@ -1288,7 +1330,10 @@ static struct attribute *scsi_sdev_attrs[] = {
 	&dev_attr_iorequest_cnt.attr,
 	&dev_attr_iodone_cnt.attr,
 	&dev_attr_ioerr_cnt.attr,
+<<<<<<< HEAD
 	&dev_attr_iotmo_cnt.attr,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	&dev_attr_modalias.attr,
 	&dev_attr_queue_depth.attr,
 	&dev_attr_queue_type.attr,

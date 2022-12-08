@@ -45,6 +45,7 @@
 };
 
 &serial0 {
+<<<<<<< HEAD
 	status = "okay";
 };
 
@@ -70,13 +71,44 @@
 
 &mmc0 {
 	status = "okay";
+=======
+	status = "ok";
+};
+
+&sata1 {
+	status = "ok";
+};
+
+&sata2 {
+	status = "ok";
+};
+
+&sata3 {
+	status = "ok";
+};
+
+&sgenet0 {
+	status = "ok";
+};
+
+&xgenet1 {
+	status = "ok";
+};
+
+&mmc0 {
+	status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &i2c4 {
 	rtc68: rtc@68 {
 		compatible = "dallas,ds1337";
 		reg = <0x68>;
+<<<<<<< HEAD
 		status = "okay";
+=======
+		status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 

@@ -101,7 +101,11 @@ static inline int pte_write(pte_t pte)
 
 #define pte_write pte_write
 
+<<<<<<< HEAD
 static inline pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
+=======
+static inline pte_t pte_mkwrite(pte_t pte)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return __pte(pte_val(pte) & ~_PAGE_RO);
 }

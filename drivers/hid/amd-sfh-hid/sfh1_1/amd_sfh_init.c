@@ -110,8 +110,11 @@ static int amd_sfh1_1_hid_client_init(struct amd_mp2_dev *privdata)
 	amd_sfh1_1_set_desc_ops(mp2_ops);
 
 	cl_data->num_hid_devices = amd_sfh_get_sensor_num(privdata, &cl_data->sensor_idx[0]);
+<<<<<<< HEAD
 	if (cl_data->num_hid_devices == 0)
 		return -ENODEV;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	INIT_DELAYED_WORK(&cl_data->work, amd_sfh_work);
 	INIT_DELAYED_WORK(&cl_data->work_buffer, amd_sfh_work_buffer);
@@ -160,7 +163,11 @@ static int amd_sfh1_1_hid_client_init(struct amd_mp2_dev *privdata)
 		}
 		rc = mp2_ops->get_rep_desc(cl_idx, cl_data->report_descr[i]);
 		if (rc)
+<<<<<<< HEAD
 			goto cleanup;
+=======
+			return rc;
+>>>>>>> b7ba80a49124 (Commit)
 
 		writel(0, privdata->mmio + AMD_P2C_MSG(0));
 		mp2_ops->start(privdata, info);
@@ -288,13 +295,21 @@ int amd_sfh1_1_init(struct amd_mp2_dev *mp2)
 
 	phy_base <<= 21;
 	if (!devm_request_mem_region(dev, phy_base, 128 * 1024, "amd_sfh")) {
+<<<<<<< HEAD
 		dev_dbg(dev, "can't reserve mmio registers\n");
+=======
+		dev_err(dev, "can't reserve mmio registers\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOMEM;
 	}
 
 	mp2->vsbase = devm_ioremap(dev, phy_base, 128 * 1024);
 	if (!mp2->vsbase) {
+<<<<<<< HEAD
 		dev_dbg(dev, "failed to remap vsbase\n");
+=======
+		dev_err(dev, "failed to remap vsbase\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOMEM;
 	}
 
@@ -303,7 +318,11 @@ int amd_sfh1_1_init(struct amd_mp2_dev *mp2)
 
 	memcpy_fromio(&binfo, mp2->vsbase, sizeof(struct sfh_base_info));
 	if (binfo.sbase.fw_info.fw_ver == 0 || binfo.sbase.s_list.sl.sensors == 0) {
+<<<<<<< HEAD
 		dev_dbg(dev, "failed to get sensors\n");
+=======
+		dev_err(dev, "failed to get sensors\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOPNOTSUPP;
 	}
 	dev_dbg(dev, "firmware version 0x%x\n", binfo.sbase.fw_info.fw_ver);

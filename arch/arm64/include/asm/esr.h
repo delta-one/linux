@@ -114,6 +114,7 @@
 #define ESR_ELx_FSC_ACCESS	(0x08)
 #define ESR_ELx_FSC_FAULT	(0x04)
 #define ESR_ELx_FSC_PERM	(0x0C)
+<<<<<<< HEAD
 #define ESR_ELx_FSC_SEA_TTW0	(0x14)
 #define ESR_ELx_FSC_SEA_TTW1	(0x15)
 #define ESR_ELx_FSC_SEA_TTW2	(0x16)
@@ -123,6 +124,8 @@
 #define ESR_ELx_FSC_SECC_TTW1	(0x1d)
 #define ESR_ELx_FSC_SECC_TTW2	(0x1e)
 #define ESR_ELx_FSC_SECC_TTW3	(0x1f)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* ISS field definitions for Data Aborts */
 #define ESR_ELx_ISV_SHIFT	(24)
@@ -272,10 +275,13 @@
 		(((e) & ESR_ELx_SYS64_ISS_OP2_MASK) >>		\
 		 ESR_ELx_SYS64_ISS_OP2_SHIFT))
 
+<<<<<<< HEAD
 /* ISS field definitions for ERET/ERETAA/ERETAB trapping */
 #define ESR_ELx_ERET_ISS_ERET		0x2
 #define ESR_ELx_ERET_ISS_ERETA		0x1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * ISS field definitions for floating-point exception traps
  * (FP_EXC_32/FP_EXC_64).
@@ -354,7 +360,10 @@
 #define ESR_ELx_SME_ISS_ILL		1
 #define ESR_ELx_SME_ISS_SM_DISABLED	2
 #define ESR_ELx_SME_ISS_ZA_DISABLED	3
+<<<<<<< HEAD
 #define ESR_ELx_SME_ISS_ZT_DISABLED	4
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifndef __ASSEMBLY__
 #include <asm/types.h>

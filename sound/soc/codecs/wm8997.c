@@ -1187,13 +1187,20 @@ static int wm8997_probe(struct platform_device *pdev)
 err_spk_irqs:
 	arizona_free_spk_irqs(arizona);
 err_jack_codec_dev:
+<<<<<<< HEAD
 	pm_runtime_disable(&pdev->dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	arizona_jack_codec_dev_remove(&wm8997->core);
 
 	return ret;
 }
 
+<<<<<<< HEAD
 static void wm8997_remove(struct platform_device *pdev)
+=======
+static int wm8997_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct wm8997_priv *wm8997 = platform_get_drvdata(pdev);
 	struct arizona *arizona = wm8997->core.arizona;
@@ -1203,6 +1210,11 @@ static void wm8997_remove(struct platform_device *pdev)
 	arizona_free_spk_irqs(arizona);
 
 	arizona_jack_codec_dev_remove(&wm8997->core);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver wm8997_codec_driver = {
@@ -1210,7 +1222,11 @@ static struct platform_driver wm8997_codec_driver = {
 		.name = "wm8997-codec",
 	},
 	.probe = wm8997_probe,
+<<<<<<< HEAD
 	.remove_new = wm8997_remove,
+=======
+	.remove = wm8997_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(wm8997_codec_driver);

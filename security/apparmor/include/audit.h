@@ -107,7 +107,10 @@ enum audit_type {
 struct apparmor_audit_data {
 	int error;
 	int type;
+<<<<<<< HEAD
 	u16 class;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const char *op;
 	struct aa_label *label;
 	const char *name;
@@ -156,12 +159,18 @@ struct apparmor_audit_data {
 
 /* macros for dealing with  apparmor_audit_data structure */
 #define aad(SA) ((SA)->apparmor_audit_data)
+<<<<<<< HEAD
 #define DEFINE_AUDIT_DATA(NAME, T, C, X)				\
 	/* TODO: cleanup audit init so we don't need _aad = {0,} */	\
 	struct apparmor_audit_data NAME ## _aad = {                     \
 		.class = (C),						\
 		.op = (X),                                              \
 	};                                                              \
+=======
+#define DEFINE_AUDIT_DATA(NAME, T, X)					\
+	/* TODO: cleanup audit init so we don't need _aad = {0,} */	\
+	struct apparmor_audit_data NAME ## _aad = { .op = (X), };	\
+>>>>>>> b7ba80a49124 (Commit)
 	struct common_audit_data NAME =					\
 	{								\
 	.type = (T),							\

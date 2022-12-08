@@ -269,19 +269,33 @@ static int sof_wm8804_probe(struct platform_device *pdev)
 	if (adev) {
 		snprintf(codec_name, sizeof(codec_name),
 			 "%s%s", "i2c-", acpi_dev_name(adev));
+<<<<<<< HEAD
 		dailink[dai_index].codecs->name = codec_name;
 	}
 	acpi_dev_put(adev);
+=======
+		put_device(&adev->dev);
+		dailink[dai_index].codecs->name = codec_name;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	snd_soc_card_set_drvdata(card, ctx);
 
 	return devm_snd_soc_register_card(&pdev->dev, card);
 }
 
+<<<<<<< HEAD
 static void sof_wm8804_remove(struct platform_device *pdev)
 {
 	if (sof_wm8804_quirk & SOF_WM8804_UP2_QUIRK)
 		gpiod_remove_lookup_table(&up2_gpios_table);
+=======
+static int sof_wm8804_remove(struct platform_device *pdev)
+{
+	if (sof_wm8804_quirk & SOF_WM8804_UP2_QUIRK)
+		gpiod_remove_lookup_table(&up2_gpios_table);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver sof_wm8804_driver = {
@@ -290,7 +304,11 @@ static struct platform_driver sof_wm8804_driver = {
 		.pm = &snd_soc_pm_ops,
 	},
 	.probe = sof_wm8804_probe,
+<<<<<<< HEAD
 	.remove_new = sof_wm8804_remove,
+=======
+	.remove = sof_wm8804_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(sof_wm8804_driver);
 

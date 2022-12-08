@@ -145,7 +145,11 @@ requested using gpio_request()::
 	/* export the GPIO to userspace */
 	int gpiod_export(struct gpio_desc *desc, bool direction_may_change);
 
+<<<<<<< HEAD
 	/* reverse gpiod_export() */
+=======
+	/* reverse gpio_export() */
+>>>>>>> b7ba80a49124 (Commit)
 	void gpiod_unexport(struct gpio_desc *desc);
 
 	/* create a sysfs link to an exported GPIO node */

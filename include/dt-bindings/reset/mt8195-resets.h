@@ -35,6 +35,7 @@
 #define MT8195_INFRA_RST2_PCIE_P1_SWRST        4
 #define MT8195_INFRA_RST2_USBSIF_P1_SWRST      5
 
+<<<<<<< HEAD
 /* VDOSYS1 */
 #define MT8195_VDOSYS1_SW0_RST_B_SMI_LARB2                     0
 #define MT8195_VDOSYS1_SW0_RST_B_SMI_LARB3                     1
@@ -80,4 +81,6 @@
 #define MT8195_VDOSYS1_SW1_RST_B_HDR_GFX_FE1_DL_ASYNC          54
 #define MT8195_VDOSYS1_SW1_RST_B_HDR_VDO_BE_DL_ASYNC           55
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT8195 */

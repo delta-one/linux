@@ -303,6 +303,10 @@ struct mlme_priv {
 	struct __queue	free_bss_pool;
 	struct __queue	scanned_queue;
 	u8 *free_bss_buf;
+<<<<<<< HEAD
+=======
+	u32 num_of_scanned;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct ndis_802_11_ssid	assoc_ssid;
 	u8 assoc_bssid[6];
@@ -489,6 +493,28 @@ static inline void _clr_fwstate_(struct mlme_priv *pmlmepriv, signed int state)
 		pmlmepriv->bScanInProcess = false;
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * No Limit on the calling context,
+ * therefore set it to be the critical section...
+ */
+static inline void clr_fwstate(struct mlme_priv *pmlmepriv, signed int state)
+{
+	spin_lock_bh(&pmlmepriv->lock);
+	if (check_fwstate(pmlmepriv, state) == true)
+		pmlmepriv->fw_state ^= state;
+	spin_unlock_bh(&pmlmepriv->lock);
+}
+
+static inline void set_scanned_network_val(struct mlme_priv *pmlmepriv, signed int val)
+{
+	spin_lock_bh(&pmlmepriv->lock);
+	pmlmepriv->num_of_scanned = val;
+	spin_unlock_bh(&pmlmepriv->lock);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 extern u16 rtw_get_capability(struct wlan_bssid_ex *bss);
 extern void rtw_update_scanned_network(struct adapter *adapter, struct wlan_bssid_ex *target);
 extern void rtw_disconnect_hdl_under_linked(struct adapter *adapter, struct sta_info *psta, u8 free_assoc);

@@ -84,7 +84,10 @@ struct cqspi_st {
 	u32			trigger_address;
 	u32			wr_delay;
 	bool			use_direct_mode;
+<<<<<<< HEAD
 	bool			use_direct_mode_wr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct cqspi_flash_pdata f_pdata[CQSPI_MAX_CHIPSELECT];
 	bool			use_dma_read;
 	u32			pd_dev_id;
@@ -532,6 +535,7 @@ static int cqspi_command_read(struct cqspi_flash_pdata *f_pdata,
 	/* 0 means 1 byte. */
 	reg |= (((n_rx - 1) & CQSPI_REG_CMDCTRL_RD_BYTES_MASK)
 		<< CQSPI_REG_CMDCTRL_RD_BYTES_LSB);
+<<<<<<< HEAD
 
 	/* setup ADDR BIT field */
 	if (op->addr.nbytes) {
@@ -543,6 +547,8 @@ static int cqspi_command_read(struct cqspi_flash_pdata *f_pdata,
 		writel(op->addr.val, reg_base + CQSPI_REG_CMDADDRESS);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	status = cqspi_exec_flash_cmd(cqspi, reg);
 	if (status)
 		return status;
@@ -561,9 +567,12 @@ static int cqspi_command_read(struct cqspi_flash_pdata *f_pdata,
 		memcpy(rxbuf, &reg, read_len);
 	}
 
+<<<<<<< HEAD
 	/* Reset CMD_CTRL Reg once command read completes */
 	writel(0, reg_base + CQSPI_REG_CMDCTRL);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -628,12 +637,16 @@ static int cqspi_command_write(struct cqspi_flash_pdata *f_pdata,
 		}
 	}
 
+<<<<<<< HEAD
 	ret = cqspi_exec_flash_cmd(cqspi, reg);
 
 	/* Reset CMD_CTRL Reg once command write completes */
 	writel(0, reg_base + CQSPI_REG_CMDCTRL);
 
 	return ret;
+=======
+	return cqspi_exec_flash_cmd(cqspi, reg);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cqspi_read_setup(struct cqspi_flash_pdata *f_pdata,
@@ -786,7 +799,11 @@ failrd:
 	writel(0, reg_base + CQSPI_REG_IRQMASK);
 
 	/* Cancel the indirect read */
+<<<<<<< HEAD
 	writel(CQSPI_REG_INDIRECTRD_CANCEL_MASK,
+=======
+	writel(CQSPI_REG_INDIRECTWR_CANCEL_MASK,
+>>>>>>> b7ba80a49124 (Commit)
 	       reg_base + CQSPI_REG_INDIRECTRD);
 	return ret;
 }
@@ -957,12 +974,15 @@ static int cqspi_write_setup(struct cqspi_flash_pdata *f_pdata,
 		reg = readl(reg_base + CQSPI_REG_WR_COMPLETION_CTRL);
 		reg |= CQSPI_REG_WR_DISABLE_AUTO_POLL;
 		writel(reg, reg_base + CQSPI_REG_WR_COMPLETION_CTRL);
+<<<<<<< HEAD
 		/*
 		 * DAC mode require auto polling as flash needs to be polled
 		 * for write completion in case of bubble in SPI transaction
 		 * due to slow CPU/DMA master.
 		 */
 		cqspi->use_direct_mode_wr = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	reg = readl(reg_base + CQSPI_REG_SIZE);
@@ -1145,6 +1165,7 @@ static void cqspi_config_baudrate_div(struct cqspi_st *cqspi)
 	/* Recalculate the baudrate divisor based on QSPI specification. */
 	div = DIV_ROUND_UP(ref_clk_hz, 2 * cqspi->sclk) - 1;
 
+<<<<<<< HEAD
 	/* Maximum baud divisor */
 	if (div > CQSPI_REG_CONFIG_BAUD_MASK) {
 		div = CQSPI_REG_CONFIG_BAUD_MASK;
@@ -1153,6 +1174,8 @@ static void cqspi_config_baudrate_div(struct cqspi_st *cqspi)
 			cqspi->sclk, ref_clk_hz/((div+1)*2));
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	reg = readl(reg_base + CQSPI_REG_CONFIG);
 	reg &= ~(CQSPI_REG_CONFIG_BAUD_MASK << CQSPI_REG_CONFIG_BAUD_LSB);
 	reg |= (div & CQSPI_REG_CONFIG_BAUD_MASK) << CQSPI_REG_CONFIG_BAUD_LSB;
@@ -1248,7 +1271,11 @@ static ssize_t cqspi_write(struct cqspi_flash_pdata *f_pdata,
 	 * data.
 	 */
 	if (!op->cmd.dtr && cqspi->use_direct_mode &&
+<<<<<<< HEAD
 	    cqspi->use_direct_mode_wr && ((to + len) <= cqspi->ahb_size)) {
+=======
+	    ((to + len) <= cqspi->ahb_size)) {
+>>>>>>> b7ba80a49124 (Commit)
 		memcpy_toio(cqspi->ahb_base + to, buf, len);
 		return cqspi_wait_idle(cqspi);
 	}
@@ -1355,6 +1382,7 @@ static int cqspi_mem_process(struct spi_mem *mem, const struct spi_mem_op *op)
 	struct cqspi_st *cqspi = spi_master_get_devdata(mem->spi->master);
 	struct cqspi_flash_pdata *f_pdata;
 
+<<<<<<< HEAD
 	f_pdata = &cqspi->f_pdata[spi_get_chipselect(mem->spi, 0)];
 	cqspi_configure(f_pdata, mem->spi->max_speed_hz);
 
@@ -1366,6 +1394,13 @@ static int cqspi_mem_process(struct spi_mem *mem, const struct spi_mem_op *op)
 	 */
 		if (!op->addr.nbytes ||
 		    op->data.nbytes <= CQSPI_STIG_DATA_LEN_MAX)
+=======
+	f_pdata = &cqspi->f_pdata[mem->spi->chip_select];
+	cqspi_configure(f_pdata, mem->spi->max_speed_hz);
+
+	if (op->data.dir == SPI_MEM_DATA_IN && op->data.buf.in) {
+		if (!op->addr.nbytes)
+>>>>>>> b7ba80a49124 (Commit)
 			return cqspi_command_read(f_pdata, op);
 
 		return cqspi_read(f_pdata, op);
@@ -1561,8 +1596,12 @@ static const char *cqspi_get_name(struct spi_mem *mem)
 	struct cqspi_st *cqspi = spi_master_get_devdata(mem->spi->master);
 	struct device *dev = &cqspi->pdev->dev;
 
+<<<<<<< HEAD
 	return devm_kasprintf(dev, GFP_KERNEL, "%s.%d", dev_name(dev),
 			      spi_get_chipselect(mem->spi, 0));
+=======
+	return devm_kasprintf(dev, GFP_KERNEL, "%s.%d", dev_name(dev), mem->spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct spi_controller_mem_ops cqspi_mem_ops = {
@@ -1616,11 +1655,19 @@ static int cqspi_setup_flash(struct cqspi_st *cqspi)
 static int cqspi_probe(struct platform_device *pdev)
 {
 	const struct cqspi_driver_platdata *ddata;
+<<<<<<< HEAD
 	struct reset_control *rstc, *rstc_ocp, *rstc_ref;
+=======
+	struct reset_control *rstc, *rstc_ocp;
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = &pdev->dev;
 	struct spi_master *master;
 	struct resource *res_ahb;
 	struct cqspi_st *cqspi;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 	int irq;
 
@@ -1656,7 +1703,12 @@ static int cqspi_probe(struct platform_device *pdev)
 	}
 
 	/* Obtain and remap controller address. */
+<<<<<<< HEAD
 	cqspi->iobase = devm_platform_ioremap_resource(pdev, 0);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	cqspi->iobase = devm_ioremap_resource(dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(cqspi->iobase)) {
 		dev_err(dev, "Cannot remap controller address.\n");
 		ret = PTR_ERR(cqspi->iobase);
@@ -1664,7 +1716,12 @@ static int cqspi_probe(struct platform_device *pdev)
 	}
 
 	/* Obtain and remap AHB address. */
+<<<<<<< HEAD
 	cqspi->ahb_base = devm_platform_get_and_ioremap_resource(pdev, 1, &res_ahb);
+=======
+	res_ahb = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+	cqspi->ahb_base = devm_ioremap_resource(dev, res_ahb);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(cqspi->ahb_base)) {
 		dev_err(dev, "Cannot remap AHB address.\n");
 		ret = PTR_ERR(cqspi->ahb_base);
@@ -1683,7 +1740,11 @@ static int cqspi_probe(struct platform_device *pdev)
 	pm_runtime_enable(dev);
 	ret = pm_runtime_resume_and_get(dev);
 	if (ret < 0)
+<<<<<<< HEAD
 		goto probe_pm_failed;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = clk_prepare_enable(cqspi->clk);
 	if (ret) {
@@ -1706,6 +1767,7 @@ static int cqspi_probe(struct platform_device *pdev)
 		goto probe_reset_failed;
 	}
 
+<<<<<<< HEAD
 	if (of_device_is_compatible(pdev->dev.of_node, "starfive,jh7110-qspi")) {
 		rstc_ref = devm_reset_control_get_optional_exclusive(dev, "rstc_ref");
 		if (IS_ERR(rstc_ref)) {
@@ -1717,6 +1779,8 @@ static int cqspi_probe(struct platform_device *pdev)
 		reset_control_deassert(rstc_ref);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	reset_control_assert(rstc);
 	reset_control_deassert(rstc);
 
@@ -1736,10 +1800,15 @@ static int cqspi_probe(struct platform_device *pdev)
 						cqspi->master_ref_clk_hz);
 		if (ddata->hwcaps_mask & CQSPI_SUPPORTS_OCTAL)
 			master->mode_bits |= SPI_RX_OCTAL | SPI_TX_OCTAL;
+<<<<<<< HEAD
 		if (!(ddata->quirks & CQSPI_DISABLE_DAC_MODE)) {
 			cqspi->use_direct_mode = true;
 			cqspi->use_direct_mode_wr = true;
 		}
+=======
+		if (!(ddata->quirks & CQSPI_DISABLE_DAC_MODE))
+			cqspi->use_direct_mode = true;
+>>>>>>> b7ba80a49124 (Commit)
 		if (ddata->quirks & CQSPI_SUPPORT_EXTERNAL_DMA)
 			cqspi->use_dma_read = true;
 		if (ddata->quirks & CQSPI_NO_SUPPORT_WR_COMPLETION)
@@ -1791,12 +1860,19 @@ probe_reset_failed:
 	clk_disable_unprepare(cqspi->clk);
 probe_clk_failed:
 	pm_runtime_put_sync(dev);
+<<<<<<< HEAD
 probe_pm_failed:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_disable(dev);
 	return ret;
 }
 
+<<<<<<< HEAD
 static void cqspi_remove(struct platform_device *pdev)
+=======
+static int cqspi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cqspi_st *cqspi = platform_get_drvdata(pdev);
 
@@ -1810,6 +1886,11 @@ static void cqspi_remove(struct platform_device *pdev)
 
 	pm_runtime_put_sync(&pdev->dev);
 	pm_runtime_disable(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -1869,10 +1950,13 @@ static const struct cqspi_driver_platdata versal_ospi = {
 	.get_dma_status = cqspi_get_versal_dma_status,
 };
 
+<<<<<<< HEAD
 static const struct cqspi_driver_platdata jh7110_qspi = {
 	.quirks = CQSPI_DISABLE_DAC_MODE,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id cqspi_dt_ids[] = {
 	{
 		.compatible = "cdns,qspi-nor",
@@ -1898,10 +1982,13 @@ static const struct of_device_id cqspi_dt_ids[] = {
 		.compatible = "intel,socfpga-qspi",
 		.data = &socfpga_qspi,
 	},
+<<<<<<< HEAD
 	{
 		.compatible = "starfive,jh7110-qspi",
 		.data = &jh7110_qspi,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ /* end of table */ }
 };
 
@@ -1909,7 +1996,11 @@ MODULE_DEVICE_TABLE(of, cqspi_dt_ids);
 
 static struct platform_driver cqspi_platform_driver = {
 	.probe = cqspi_probe,
+<<<<<<< HEAD
 	.remove_new = cqspi_remove,
+=======
+	.remove = cqspi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = CQSPI_NAME,
 		.pm = CQSPI_DEV_PM_OPS,

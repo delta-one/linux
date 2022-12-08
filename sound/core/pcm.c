@@ -387,7 +387,11 @@ static void snd_pcm_substream_proc_hw_params_read(struct snd_info_entry *entry,
 		snd_iprintf(buffer, "closed\n");
 		goto unlock;
 	}
+<<<<<<< HEAD
 	if (runtime->state == SNDRV_PCM_STATE_OPEN) {
+=======
+	if (runtime->status->state == SNDRV_PCM_STATE_OPEN) {
+>>>>>>> b7ba80a49124 (Commit)
 		snd_iprintf(buffer, "no setup\n");
 		goto unlock;
 	}
@@ -424,7 +428,11 @@ static void snd_pcm_substream_proc_sw_params_read(struct snd_info_entry *entry,
 		snd_iprintf(buffer, "closed\n");
 		goto unlock;
 	}
+<<<<<<< HEAD
 	if (runtime->state == SNDRV_PCM_STATE_OPEN) {
+=======
+	if (runtime->status->state == SNDRV_PCM_STATE_OPEN) {
+>>>>>>> b7ba80a49124 (Commit)
 		snd_iprintf(buffer, "no setup\n");
 		goto unlock;
 	}
@@ -970,7 +978,11 @@ int snd_pcm_attach_substream(struct snd_pcm *pcm, int stream,
 	init_waitqueue_head(&runtime->sleep);
 	init_waitqueue_head(&runtime->tsleep);
 
+<<<<<<< HEAD
 	__snd_pcm_set_state(runtime, SNDRV_PCM_STATE_OPEN);
+=======
+	runtime->status->state = SNDRV_PCM_STATE_OPEN;
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&runtime->buffer_mutex);
 	atomic_set(&runtime->buffer_accessing, 0);
 
@@ -1112,8 +1124,12 @@ static int snd_pcm_dev_disconnect(struct snd_device *device)
 			if (snd_pcm_running(substream))
 				snd_pcm_stop(substream, SNDRV_PCM_STATE_DISCONNECTED);
 			/* to be sure, set the state unconditionally */
+<<<<<<< HEAD
 			__snd_pcm_set_state(substream->runtime,
 					    SNDRV_PCM_STATE_DISCONNECTED);
+=======
+			substream->runtime->status->state = SNDRV_PCM_STATE_DISCONNECTED;
+>>>>>>> b7ba80a49124 (Commit)
 			wake_up(&substream->runtime->sleep);
 			wake_up(&substream->runtime->tsleep);
 		}

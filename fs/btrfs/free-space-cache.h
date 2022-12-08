@@ -43,6 +43,7 @@ static inline bool btrfs_free_space_trimming_bitmap(
 	return (info->trim_state == BTRFS_TRIM_STATE_TRIMMING);
 }
 
+<<<<<<< HEAD
 /*
  * Deltas are an effective way to populate global statistics.  Give macro names
  * to make it clear what we're doing.  An example is discard_extents in
@@ -54,6 +55,8 @@ enum {
 	BTRFS_STAT_NR_ENTRIES,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct btrfs_free_space_ctl {
 	spinlock_t tree_lock;
 	struct rb_root free_space_offset;
@@ -90,8 +93,11 @@ struct btrfs_io_ctl {
 	int bitmaps;
 };
 
+<<<<<<< HEAD
 int __init btrfs_free_space_init(void);
 void __cold btrfs_free_space_exit(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct inode *lookup_free_space_inode(struct btrfs_block_group *block_group,
 		struct btrfs_path *path);
 int create_free_space_inode(struct btrfs_trans_handle *trans,

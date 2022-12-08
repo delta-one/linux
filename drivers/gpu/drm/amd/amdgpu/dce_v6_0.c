@@ -24,8 +24,11 @@
 #include <linux/pci.h>
 
 #include <drm/drm_fourcc.h>
+<<<<<<< HEAD
 #include <drm/drm_modeset_helper.h>
 #include <drm/drm_modeset_helper_vtables.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_vblank.h>
 
 #include "amdgpu.h"
@@ -2677,6 +2680,10 @@ static int dce_v6_0_sw_init(void *handle)
 	adev_to_drm(adev)->mode_config.preferred_depth = 24;
 	adev_to_drm(adev)->mode_config.prefer_shadow = 1;
 	adev_to_drm(adev)->mode_config.fb_modifiers_not_supported = true;
+<<<<<<< HEAD
+=======
+	adev_to_drm(adev)->mode_config.fb_base = adev->gmc.aper_base;
+>>>>>>> b7ba80a49124 (Commit)
 
 	r = amdgpu_display_modeset_create_props(adev);
 	if (r)
@@ -2707,6 +2714,7 @@ static int dce_v6_0_sw_init(void *handle)
 	if (r)
 		return r;
 
+<<<<<<< HEAD
 	/* Disable vblank IRQs aggressively for power-saving */
 	/* XXX: can this be enabled for DC? */
 	adev_to_drm(adev)->vblank_disable_immediate = true;
@@ -2719,6 +2727,8 @@ static int dce_v6_0_sw_init(void *handle)
 	INIT_DELAYED_WORK(&adev->hotplug_work,
 		  amdgpu_display_hotplug_work_func);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	drm_kms_helper_poll_init(adev_to_drm(adev));
 
 	return r;
@@ -2777,8 +2787,11 @@ static int dce_v6_0_hw_fini(void *handle)
 
 	dce_v6_0_pageflip_interrupt_fini(adev);
 
+<<<<<<< HEAD
 	flush_delayed_work(&adev->hotplug_work);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -3104,7 +3117,11 @@ static int dce_v6_0_hpd_irq(struct amdgpu_device *adev,
 		tmp = RREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd]);
 		tmp |= DC_HPD1_INT_CONTROL__DC_HPD1_INT_ACK_MASK;
 		WREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd], tmp);
+<<<<<<< HEAD
 		schedule_delayed_work(&adev->hotplug_work, 0);
+=======
+		schedule_work(&adev->hotplug_work);
+>>>>>>> b7ba80a49124 (Commit)
 		DRM_DEBUG("IH: HPD%d\n", hpd + 1);
 	}
 

@@ -31,8 +31,11 @@
 #elif defined(CONFIG_PPC64)
 #include <asm/switch_to.h>
 #include <asm/cputable.h>
+<<<<<<< HEAD
 #elif defined(CONFIG_ARM64)
 #include <asm/neon.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 /**
@@ -101,8 +104,11 @@ void dc_fpu_begin(const char *function_name, const int line)
 			preempt_disable();
 			enable_kernel_fp();
 		}
+<<<<<<< HEAD
 #elif defined(CONFIG_ARM64)
 		kernel_neon_begin();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	}
 
@@ -140,8 +146,11 @@ void dc_fpu_end(const char *function_name, const int line)
 			disable_kernel_fp();
 			preempt_enable();
 		}
+<<<<<<< HEAD
 #elif defined(CONFIG_ARM64)
 		kernel_neon_end();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	}
 

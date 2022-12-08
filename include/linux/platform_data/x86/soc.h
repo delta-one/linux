@@ -8,6 +8,7 @@
 #ifndef __PLATFORM_DATA_X86_SOC_H
 #define __PLATFORM_DATA_X86_SOC_H
 
+<<<<<<< HEAD
 #include <linux/types.h>
 
 #if IS_ENABLED(CONFIG_X86)
@@ -15,6 +16,12 @@
 #include <linux/mod_devicetable.h>
 
 #include <asm/cpu_device_id.h>
+=======
+#if IS_ENABLED(CONFIG_X86)
+
+#include <asm/cpu_device_id.h>
+#include <asm/intel-family.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SOC_INTEL_IS_CPU(soc, type)				\
 static inline bool soc_intel_is_##soc(void)			\
@@ -37,8 +44,11 @@ SOC_INTEL_IS_CPU(apl, ATOM_GOLDMONT);
 SOC_INTEL_IS_CPU(glk, ATOM_GOLDMONT_PLUS);
 SOC_INTEL_IS_CPU(cml, KABYLAKE_L);
 
+<<<<<<< HEAD
 #undef SOC_INTEL_IS_CPU
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else /* IS_ENABLED(CONFIG_X86) */
 
 static inline bool soc_intel_is_byt(void)

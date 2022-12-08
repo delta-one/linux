@@ -1186,6 +1186,7 @@ expression used.  For instance:
 	#endif /* CONFIG_SOMETHING */
 
 
+<<<<<<< HEAD
 22) Do not crash the kernel
 ---------------------------
 
@@ -1248,6 +1249,8 @@ Use BUILD_BUG_ON() for compile-time assertions
 The use of BUILD_BUG_ON() is acceptable and encouraged, because it is a
 compile-time assertion that has no effect at runtime.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Appendix I) References
 ----------------------
 
@@ -1267,5 +1270,9 @@ gcc internals and indent, all available from https://www.gnu.org/manual/
 WG14 is the international standardization working group for the programming
 language C, URL: http://www.open-std.org/JTC1/SC22/WG14/
 
+<<<<<<< HEAD
 Kernel CodingStyle, by greg@kroah.com at OLS 2002:
+=======
+Kernel :ref:`process/coding-style.rst <codingstyle>`, by greg@kroah.com at OLS 2002:
+>>>>>>> b7ba80a49124 (Commit)
 http://www.kroah.com/linux/talks/ols_2002_kernel_codingstyle_talk/html/

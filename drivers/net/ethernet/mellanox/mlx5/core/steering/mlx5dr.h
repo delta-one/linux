@@ -140,6 +140,7 @@ mlx5dr_action_create_aso(struct mlx5dr_domain *dmn,
 			 u8 init_color,
 			 u8 meter_id);
 
+<<<<<<< HEAD
 struct mlx5dr_action *
 mlx5dr_action_create_dest_match_range(struct mlx5dr_domain *dmn,
 				      u32 field,
@@ -155,6 +156,10 @@ int mlx5dr_definer_get(struct mlx5dr_domain *dmn, u16 format_id,
 		       u8 *match_mask, u32 *definer_id);
 void mlx5dr_definer_put(struct mlx5dr_domain *dmn, u32 definer_id);
 
+=======
+int mlx5dr_action_destroy(struct mlx5dr_action *action);
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool
 mlx5dr_is_supported(struct mlx5_core_dev *dev)
 {
@@ -177,9 +182,22 @@ struct mlx5dr_icm_buddy_mem {
 	struct mlx5dr_icm_mr	*icm_mr;
 	struct mlx5dr_icm_pool	*pool;
 
+<<<<<<< HEAD
 	/* Amount of memory in used chunks - HW may be accessing this memory */
 	u64			used_memory;
 
+=======
+	/* This is the list of used chunks. HW may be accessing this memory */
+	struct list_head	used_list;
+	u64			used_memory;
+
+	/* Hardware may be accessing this memory but at some future,
+	 * undetermined time, it might cease to do so.
+	 * sync_ste command sets them free.
+	 */
+	struct list_head	hot_list;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Memory optimisation */
 	struct mlx5dr_ste	*ste_arr;
 	struct list_head	*miss_list;

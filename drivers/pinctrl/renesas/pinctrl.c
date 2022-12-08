@@ -12,6 +12,7 @@
 #include <linux/io.h>
 #include <linux/module.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/seq_file.h>
 #include <linux/slab.h>
 #include <linux/spinlock.h>
@@ -22,6 +23,16 @@
 #include <linux/pinctrl/pinconf.h>
 #include <linux/pinctrl/pinctrl.h>
 #include <linux/pinctrl/pinmux.h>
+=======
+#include <linux/pinctrl/consumer.h>
+#include <linux/pinctrl/machine.h>
+#include <linux/pinctrl/pinconf.h>
+#include <linux/pinctrl/pinconf-generic.h>
+#include <linux/pinctrl/pinctrl.h>
+#include <linux/pinctrl/pinmux.h>
+#include <linux/slab.h>
+#include <linux/spinlock.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "core.h"
 #include "../core.h"
@@ -40,6 +51,13 @@ struct sh_pfc_pinctrl {
 
 	struct pinctrl_pin_desc *pins;
 	struct sh_pfc_pin_config *configs;
+<<<<<<< HEAD
+=======
+
+	const char *func_prop_name;
+	const char *groups_prop_name;
+	const char *pins_prop_name;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int sh_pfc_get_groups_count(struct pinctrl_dev *pctldev)
@@ -116,10 +134,34 @@ static int sh_pfc_dt_subnode_to_map(struct pinctrl_dev *pctldev,
 	const char *pin;
 	int ret;
 
+<<<<<<< HEAD
 	/* Parse the function and configuration properties. At least a function
 	 * or one configuration must be specified.
 	 */
 	ret = of_property_read_string(np, "function", &function);
+=======
+	/* Support both the old Renesas-specific properties and the new standard
+	 * properties. Mixing old and new properties isn't allowed, neither
+	 * inside a subnode nor across subnodes.
+	 */
+	if (!pmx->func_prop_name) {
+		if (of_find_property(np, "groups", NULL) ||
+		    of_find_property(np, "pins", NULL)) {
+			pmx->func_prop_name = "function";
+			pmx->groups_prop_name = "groups";
+			pmx->pins_prop_name = "pins";
+		} else {
+			pmx->func_prop_name = "renesas,function";
+			pmx->groups_prop_name = "renesas,groups";
+			pmx->pins_prop_name = "renesas,pins";
+		}
+	}
+
+	/* Parse the function and configuration properties. At least a function
+	 * or one configuration must be specified.
+	 */
+	ret = of_property_read_string(np, pmx->func_prop_name, &function);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0 && ret != -EINVAL) {
 		dev_err(dev, "Invalid function in DT\n");
 		return ret;
@@ -137,7 +179,11 @@ static int sh_pfc_dt_subnode_to_map(struct pinctrl_dev *pctldev,
 	}
 
 	/* Count the number of pins and groups and reallocate mappings. */
+<<<<<<< HEAD
 	ret = of_property_count_strings(np, "pins");
+=======
+	ret = of_property_count_strings(np, pmx->pins_prop_name);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret == -EINVAL) {
 		num_pins = 0;
 	} else if (ret < 0) {
@@ -147,7 +193,11 @@ static int sh_pfc_dt_subnode_to_map(struct pinctrl_dev *pctldev,
 		num_pins = ret;
 	}
 
+<<<<<<< HEAD
 	ret = of_property_count_strings(np, "groups");
+=======
+	ret = of_property_count_strings(np, pmx->groups_prop_name);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret == -EINVAL) {
 		num_groups = 0;
 	} else if (ret < 0) {
@@ -178,7 +228,11 @@ static int sh_pfc_dt_subnode_to_map(struct pinctrl_dev *pctldev,
 	*num_maps = nmaps;
 
 	/* Iterate over pins and groups and create the mappings. */
+<<<<<<< HEAD
 	of_property_for_each_string(np, "groups", prop, group) {
+=======
+	of_property_for_each_string(np, pmx->groups_prop_name, prop, group) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (function) {
 			maps[idx].type = PIN_MAP_TYPE_MUX_GROUP;
 			maps[idx].data.mux.group = group;
@@ -202,7 +256,11 @@ static int sh_pfc_dt_subnode_to_map(struct pinctrl_dev *pctldev,
 		goto done;
 	}
 
+<<<<<<< HEAD
 	of_property_for_each_string(np, "pins", prop, pin) {
+=======
+	of_property_for_each_string(np, pmx->pins_prop_name, prop, pin) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = sh_pfc_map_add_config(&maps[idx], pin,
 					    PIN_MAP_TYPE_CONFIGS_PIN,
 					    configs, num_configs);

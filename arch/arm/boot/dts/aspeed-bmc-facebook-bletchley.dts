@@ -60,7 +60,11 @@
 		compatible = "gpio-leds";
 		sys_log_id {
 			default-state = "off";
+<<<<<<< HEAD
 			gpios = <&front_leds 0 GPIO_ACTIVE_LOW>;
+=======
+			gpios = <&front_leds 0 GPIO_ACTIVE_HIGH>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -191,6 +195,7 @@
 			gpios = <&sled6_leds 1 GPIO_ACTIVE_LOW>;
 		};
 	};
+<<<<<<< HEAD
 
 	gpio-keys {
 		compatible = "gpio-keys";
@@ -280,6 +285,8 @@
 		gpio = <&sled6_ioexp 1 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &mac2 {
@@ -307,7 +314,11 @@
 	flash@1 {
 		status = "okay";
 		m25p,fast-read;
+<<<<<<< HEAD
 		label = "alt-bmc";
+=======
+		label = "flash1";
+>>>>>>> b7ba80a49124 (Commit)
 		spi-max-frequency = <50000000>;
 	};
 };
@@ -391,6 +402,7 @@
 		compatible = "fcs,fusb302";
 		reg = <0x22>;
 
+<<<<<<< HEAD
 		interrupt-parent = <&gpio0>;
 		interrupts = <ASPEED_GPIO(B, 0) IRQ_TYPE_LEVEL_LOW>;
 		vbus-supply = <&vbus_sled1>;
@@ -402,6 +414,19 @@
 			data-role = "host";
 			pd-disable;
 			typec-power-opmode = "default";
+=======
+		connector {
+			compatible = "usb-c-connector";
+			label = "USB-C";
+			power-role = "dual";
+			try-power-role = "sink";
+			data-role = "dual";
+			source-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
+			sink-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)
+					PDO_VAR(3000, 12000, 3000)
+					PDO_PPS_APDO(3000, 11000, 3000)>;
+			op-sink-microwatt = <10000000>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -477,6 +502,7 @@
 		compatible = "fcs,fusb302";
 		reg = <0x22>;
 
+<<<<<<< HEAD
 		interrupt-parent = <&gpio0>;
 		interrupts = <ASPEED_GPIO(B, 1) IRQ_TYPE_LEVEL_LOW>;
 		vbus-supply = <&vbus_sled2>;
@@ -488,6 +514,19 @@
 			data-role = "host";
 			pd-disable;
 			typec-power-opmode = "default";
+=======
+		connector {
+			compatible = "usb-c-connector";
+			label = "USB-C";
+			power-role = "dual";
+			try-power-role = "sink";
+			data-role = "dual";
+			source-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
+			sink-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)
+					PDO_VAR(3000, 12000, 3000)
+					PDO_PPS_APDO(3000, 11000, 3000)>;
+			op-sink-microwatt = <10000000>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -563,6 +602,7 @@
 		compatible = "fcs,fusb302";
 		reg = <0x22>;
 
+<<<<<<< HEAD
 		interrupt-parent = <&gpio0>;
 		interrupts = <ASPEED_GPIO(B, 7) IRQ_TYPE_LEVEL_LOW>;
 		vbus-supply = <&vbus_sled3>;
@@ -574,6 +614,19 @@
 			data-role = "host";
 			pd-disable;
 			typec-power-opmode = "default";
+=======
+		connector {
+			compatible = "usb-c-connector";
+			label = "USB-C";
+			power-role = "dual";
+			try-power-role = "sink";
+			data-role = "dual";
+			source-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
+			sink-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)
+					PDO_VAR(3000, 12000, 3000)
+					PDO_PPS_APDO(3000, 11000, 3000)>;
+			op-sink-microwatt = <10000000>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -649,6 +702,7 @@
 		compatible = "fcs,fusb302";
 		reg = <0x22>;
 
+<<<<<<< HEAD
 		interrupt-parent = <&gpio0>;
 		interrupts = <ASPEED_GPIO(S, 7) IRQ_TYPE_LEVEL_LOW>;
 		vbus-supply = <&vbus_sled4>;
@@ -660,6 +714,19 @@
 			data-role = "host";
 			pd-disable;
 			typec-power-opmode = "default";
+=======
+		connector {
+			compatible = "usb-c-connector";
+			label = "USB-C";
+			power-role = "dual";
+			try-power-role = "sink";
+			data-role = "dual";
+			source-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
+			sink-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)
+					PDO_VAR(3000, 12000, 3000)
+					PDO_PPS_APDO(3000, 11000, 3000)>;
+			op-sink-microwatt = <10000000>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -735,6 +802,7 @@
 		compatible = "fcs,fusb302";
 		reg = <0x22>;
 
+<<<<<<< HEAD
 		interrupt-parent = <&gpio0>;
 		interrupts = <ASPEED_GPIO(Y, 3) IRQ_TYPE_LEVEL_LOW>;
 		vbus-supply = <&vbus_sled5>;
@@ -746,6 +814,19 @@
 			data-role = "host";
 			pd-disable;
 			typec-power-opmode = "default";
+=======
+		connector {
+			compatible = "usb-c-connector";
+			label = "USB-C";
+			power-role = "dual";
+			try-power-role = "sink";
+			data-role = "dual";
+			source-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
+			sink-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)
+					PDO_VAR(3000, 12000, 3000)
+					PDO_PPS_APDO(3000, 11000, 3000)>;
+			op-sink-microwatt = <10000000>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -821,6 +902,7 @@
 		compatible = "fcs,fusb302";
 		reg = <0x22>;
 
+<<<<<<< HEAD
 		interrupt-parent = <&gpio0>;
 		interrupts = <ASPEED_GPIO(I, 7) IRQ_TYPE_LEVEL_LOW>;
 		vbus-supply = <&vbus_sled6>;
@@ -832,6 +914,19 @@
 			data-role = "host";
 			pd-disable;
 			typec-power-opmode = "default";
+=======
+		connector {
+			compatible = "usb-c-connector";
+			label = "USB-C";
+			power-role = "dual";
+			try-power-role = "sink";
+			data-role = "dual";
+			source-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
+			sink-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)
+					PDO_VAR(3000, 12000, 3000)
+					PDO_PPS_APDO(3000, 11000, 3000)>;
+			op-sink-microwatt = <10000000>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -952,9 +1047,12 @@
 };
 
 &gpio0 {
+<<<<<<< HEAD
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_gpiov2_unbiased_default>;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gpio-line-names =
 	/*A0-A7*/	"","","","","","","","",
 	/*B0-B7*/	"FUSB302_SLED1_INT_N","FUSB302_SLED2_INT_N",
@@ -984,11 +1082,19 @@
 	/*M0-M7*/	"ALERT_SLED1_N","ALERT_SLED2_N",
 			"ALERT_SLED3_N","ALERT_SLED4_N",
 			"ALERT_SLED5_N","ALERT_SLED6_N",
+<<<<<<< HEAD
 			"","USB_DEBUG_PWR_BTN_N",
 	/*N0-N7*/	"LED_POSTCODE_0","LED_POSTCODE_1",
 			"LED_POSTCODE_2","LED_POSTCODE_3",
 			"LED_POSTCODE_4","LED_POSTCODE_5",
 			"LED_POSTCODE_6","LED_POSTCODE_7",
+=======
+			"","",
+	/*N0-N7*/	"LED_POSTCODE_0","LED_POSTCODE_1",
+			"LED_POSTCODE_2","LED_POSTCODE_3",
+			"LED_POSTCODE_4","LED_POSTCODE_5",
+			"LED_POSTCODE_5","LED_POSTCODE_7",
+>>>>>>> b7ba80a49124 (Commit)
 	/*O0-O7*/	"","","","",
 			"","BOARD_ID0","BOARD_ID1","BOARD_ID2",
 	/*P0-P7*/	"","","","","","","","BMC_HEARTBEAT",
@@ -1045,6 +1151,7 @@
 &ehci0 {
 	status = "okay";
 };
+<<<<<<< HEAD
 
 &ehci1 {
 	status = "okay";
@@ -1075,3 +1182,5 @@
 	aspeed,ext-active-high;
 	aspeed,ext-pulse-duration = <256>;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

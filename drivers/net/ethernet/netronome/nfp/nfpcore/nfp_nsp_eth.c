@@ -27,7 +27,10 @@
 #define NSP_ETH_PORT_PHYLABEL		GENMASK_ULL(59, 54)
 #define NSP_ETH_PORT_FEC_SUPP_BASER	BIT_ULL(60)
 #define NSP_ETH_PORT_FEC_SUPP_RS	BIT_ULL(61)
+<<<<<<< HEAD
 #define NSP_ETH_PORT_SUPP_ANEG		BIT_ULL(63)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define NSP_ETH_PORT_LANES_MASK		cpu_to_le64(NSP_ETH_PORT_LANES)
 
@@ -41,7 +44,10 @@
 #define NSP_ETH_STATE_OVRD_CHNG		BIT_ULL(22)
 #define NSP_ETH_STATE_ANEG		GENMASK_ULL(25, 23)
 #define NSP_ETH_STATE_FEC		GENMASK_ULL(27, 26)
+<<<<<<< HEAD
 #define NSP_ETH_STATE_ACT_FEC		GENMASK_ULL(29, 28)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define NSP_ETH_CTRL_CONFIGURED		BIT_ULL(0)
 #define NSP_ETH_CTRL_ENABLED		BIT_ULL(1)
@@ -172,6 +178,7 @@ nfp_eth_port_translate(struct nfp_nsp *nsp, const union eth_table_entry *src,
 	if (dst->fec_modes_supported)
 		dst->fec_modes_supported |= NFP_FEC_AUTO | NFP_FEC_DISABLED;
 
+<<<<<<< HEAD
 	dst->fec = FIELD_GET(NSP_ETH_STATE_FEC, state);
 	dst->act_fec = dst->fec;
 
@@ -180,6 +187,9 @@ nfp_eth_port_translate(struct nfp_nsp *nsp, const union eth_table_entry *src,
 
 	dst->act_fec = FIELD_GET(NSP_ETH_STATE_ACT_FEC, state);
 	dst->supp_aneg = FIELD_GET(NSP_ETH_PORT_SUPP_ANEG, port);
+=======
+	dst->fec = 1 << FIELD_GET(NSP_ETH_STATE_FEC, state);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -647,6 +657,7 @@ int __nfp_eth_set_split(struct nfp_nsp *nsp, unsigned int lanes)
 	return NFP_ETH_SET_BIT_CONFIG(nsp, NSP_ETH_RAW_PORT, NSP_ETH_PORT_LANES,
 				      lanes, NSP_ETH_CTRL_SET_LANES);
 }
+<<<<<<< HEAD
 
 int nfp_eth_read_media(struct nfp_cpp *cpp, struct nfp_eth_media_buf *ethm)
 {
@@ -673,3 +684,5 @@ exit_close_nsp:
 	nfp_nsp_close(nsp);
 	return ret;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

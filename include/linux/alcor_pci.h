@@ -268,6 +268,16 @@ struct alcor_pci_priv {
 	unsigned long id; /* idr id */
 
 	struct alcor_dev_cfg	*cfg;
+<<<<<<< HEAD
+=======
+
+	/* PCI ASPM related vars */
+	int pdev_cap_off;
+	u8  pdev_aspm_cap;
+	int parent_cap_off;
+	u8  parent_aspm_cap;
+	u8 ext_config_dev_aspm;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void alcor_write8(struct alcor_pci_priv *priv, u8 val, unsigned int addr);

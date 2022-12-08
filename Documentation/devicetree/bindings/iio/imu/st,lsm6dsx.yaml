@@ -32,14 +32,18 @@ properties:
           - st,lsm6dsrx
           - st,lsm6dst
           - st,lsm6dsop
+<<<<<<< HEAD
           - st,lsm6dsv
           - st,lsm6dso16is
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - items:
           - const: st,asm330lhhx
           - const: st,lsm6dsr
       - items:
           - const: st,lsm6dstx
           - const: st,lsm6dst
+<<<<<<< HEAD
       - items:
           - const: st,lsm6dsv16x
           - const: st,lsm6dsv
@@ -49,6 +53,8 @@ properties:
       - items:
           - const: st,asm330lhb
           - const: st,asm330lhh
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -66,7 +72,11 @@ properties:
     description: if defined provides VDD IO power to the sensor.
 
   st,drdy-int-pin:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/uint32
+=======
+    $ref: '/schemas/types.yaml#/definitions/uint32'
+>>>>>>> b7ba80a49124 (Commit)
     description: |
       The pin on the package that will be used to signal data ready
     enum:

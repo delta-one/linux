@@ -24,7 +24,10 @@
 #include <sound/pcm.h>
 #include <sound/pcm_params.h>
 #include <sound/jack.h>
+<<<<<<< HEAD
 #include <sound/sdw.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <sound/soc.h>
 #include <sound/soc-dapm.h>
 #include <sound/initval.h>
@@ -107,7 +110,14 @@ static int rt5682_set_sdw_stream(struct snd_soc_dai *dai, void *sdw_stream,
 	stream->sdw_stream = sdw_stream;
 
 	/* Use tx_mask or rx_mask to configure stream tag and set dma_data */
+<<<<<<< HEAD
 	snd_soc_dai_dma_data_set(dai, direction, stream);
+=======
+	if (direction == SNDRV_PCM_STREAM_PLAYBACK)
+		dai->playback_dma_data = stream;
+	else
+		dai->capture_dma_data = stream;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -128,10 +138,18 @@ static int rt5682_sdw_hw_params(struct snd_pcm_substream *substream,
 {
 	struct snd_soc_component *component = dai->component;
 	struct rt5682_priv *rt5682 = snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
 	struct sdw_stream_config stream_config = {0};
 	struct sdw_port_config port_config = {0};
 	struct sdw_stream_data *stream;
 	int retval;
+=======
+	struct sdw_stream_config stream_config;
+	struct sdw_port_config port_config;
+	enum sdw_data_direction direction;
+	struct sdw_stream_data *stream;
+	int retval, port, num_channels;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int val_p = 0, val_c = 0, osr_p = 0, osr_c = 0;
 
 	dev_dbg(dai->dev, "%s %s", __func__, dai->name);
@@ -144,12 +162,31 @@ static int rt5682_sdw_hw_params(struct snd_pcm_substream *substream,
 		return -EINVAL;
 
 	/* SoundWire specific configuration */
+<<<<<<< HEAD
 	snd_sdw_params_to_config(substream, params, &stream_config, &port_config);
 
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
 		port_config.num = 1;
 	else
 		port_config.num = 2;
+=======
+	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+		direction = SDW_DATA_DIR_RX;
+		port = 1;
+	} else {
+		direction = SDW_DATA_DIR_TX;
+		port = 2;
+	}
+
+	stream_config.frame_rate = params_rate(params);
+	stream_config.ch_count = params_channels(params);
+	stream_config.bps = snd_pcm_format_width(params_format(params));
+	stream_config.direction = direction;
+
+	num_channels = params_channels(params);
+	port_config.ch_mask = (1 << (num_channels)) - 1;
+	port_config.num = port;
+>>>>>>> b7ba80a49124 (Commit)
 
 	retval = sdw_stream_add_slave(rt5682->slave, &stream_config,
 				      &port_config, 1, stream->sdw_stream);

@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "mmu.h"
 #include "mmu_internal.h"
@@ -11,17 +14,37 @@
 #include <asm/cmpxchg.h>
 #include <trace/events/kvm.h>
 
+<<<<<<< HEAD
+=======
+static bool __read_mostly tdp_mmu_enabled = true;
+module_param_named(tdp_mmu, tdp_mmu_enabled, bool, 0644);
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Initializes the TDP MMU for the VM, if enabled. */
 int kvm_mmu_init_tdp_mmu(struct kvm *kvm)
 {
 	struct workqueue_struct *wq;
 
+<<<<<<< HEAD
+=======
+	if (!tdp_enabled || !READ_ONCE(tdp_mmu_enabled))
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	wq = alloc_workqueue("kvm", WQ_UNBOUND|WQ_MEM_RECLAIM|WQ_CPU_INTENSIVE, 0);
 	if (!wq)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	INIT_LIST_HEAD(&kvm->arch.tdp_mmu_roots);
 	spin_lock_init(&kvm->arch.tdp_mmu_pages_lock);
+=======
+	/* This should not be changed for the lifetime of the VM. */
+	kvm->arch.tdp_mmu_enabled = true;
+	INIT_LIST_HEAD(&kvm->arch.tdp_mmu_roots);
+	spin_lock_init(&kvm->arch.tdp_mmu_pages_lock);
+	INIT_LIST_HEAD(&kvm->arch.tdp_mmu_pages);
+>>>>>>> b7ba80a49124 (Commit)
 	kvm->arch.tdp_mmu_zap_wq = wq;
 	return 1;
 }
@@ -40,10 +63,20 @@ static __always_inline bool kvm_lockdep_assert_mmu_lock_held(struct kvm *kvm,
 
 void kvm_mmu_uninit_tdp_mmu(struct kvm *kvm)
 {
+<<<<<<< HEAD
 	/* Also waits for any queued work items.  */
 	destroy_workqueue(kvm->arch.tdp_mmu_zap_wq);
 
 	WARN_ON(atomic64_read(&kvm->arch.tdp_mmu_pages));
+=======
+	if (!kvm->arch.tdp_mmu_enabled)
+		return;
+
+	/* Also waits for any queued work items.  */
+	destroy_workqueue(kvm->arch.tdp_mmu_zap_wq);
+
+	WARN_ON(!list_empty(&kvm->arch.tdp_mmu_pages));
+>>>>>>> b7ba80a49124 (Commit)
 	WARN_ON(!list_empty(&kvm->arch.tdp_mmu_roots));
 
 	/*
@@ -134,7 +167,11 @@ void kvm_tdp_mmu_put_root(struct kvm *kvm, struct kvm_mmu_page *root,
 	if (!refcount_dec_and_test(&root->tdp_mmu_root_count))
 		return;
 
+<<<<<<< HEAD
 	WARN_ON(!is_tdp_mmu_page(root));
+=======
+	WARN_ON(!root->tdp_mmu_page);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * The root now has refcount=0.  It is valid, but readers already
@@ -273,8 +310,11 @@ static struct kvm_mmu_page *tdp_mmu_alloc_sp(struct kvm_vcpu *vcpu)
 static void tdp_mmu_init_sp(struct kvm_mmu_page *sp, tdp_ptep_t sptep,
 			    gfn_t gfn, union kvm_mmu_page_role role)
 {
+<<<<<<< HEAD
 	INIT_LIST_HEAD(&sp->possible_nx_huge_page_link);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	set_page_private(virt_to_page(sp->spt), (unsigned long)sp);
 
 	sp->role = role;
@@ -363,6 +403,7 @@ static void handle_changed_spte_dirty_log(struct kvm *kvm, int as_id, gfn_t gfn,
 	}
 }
 
+<<<<<<< HEAD
 static void tdp_account_mmu_page(struct kvm *kvm, struct kvm_mmu_page *sp)
 {
 	kvm_account_pgtable_pages((void *)sp->spt, +1);
@@ -375,6 +416,8 @@ static void tdp_unaccount_mmu_page(struct kvm *kvm, struct kvm_mmu_page *sp)
 	atomic64_dec(&kvm->arch.tdp_mmu_pages);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * tdp_mmu_unlink_sp() - Remove a shadow page from the list of used pages
  *
@@ -387,18 +430,27 @@ static void tdp_unaccount_mmu_page(struct kvm *kvm, struct kvm_mmu_page *sp)
 static void tdp_mmu_unlink_sp(struct kvm *kvm, struct kvm_mmu_page *sp,
 			      bool shared)
 {
+<<<<<<< HEAD
 	tdp_unaccount_mmu_page(kvm, sp);
 
 	if (!sp->nx_huge_page_disallowed)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (shared)
 		spin_lock(&kvm->arch.tdp_mmu_pages_lock);
 	else
 		lockdep_assert_held_write(&kvm->mmu_lock);
 
+<<<<<<< HEAD
 	sp->nx_huge_page_disallowed = false;
 	untrack_possible_nx_huge_page(kvm, sp);
+=======
+	list_del(&sp->link);
+	if (sp->lpage_disallowed)
+		unaccount_huge_nx_page(kvm, sp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (shared)
 		spin_unlock(&kvm->arch.tdp_mmu_pages_lock);
@@ -680,7 +732,12 @@ static inline int tdp_mmu_zap_spte_atomic(struct kvm *kvm,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	kvm_flush_remote_tlbs_gfn(kvm, iter->gfn, iter->level);
+=======
+	kvm_flush_remote_tlbs_with_address(kvm, iter->gfn,
+					   KVM_PAGES_PER_HPAGE(iter->level));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * No other thread can overwrite the removed SPTE as they must either
@@ -1063,9 +1120,13 @@ static int tdp_mmu_map_handle_target_level(struct kvm_vcpu *vcpu,
 	int ret = RET_PF_FIXED;
 	bool wrprot = false;
 
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(sp->role.level != fault->goal_level))
 		return RET_PF_RETRY;
 
+=======
+	WARN_ON(sp->role.level != fault->goal_level);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(!fault->slot))
 		new_spte = make_mmio_spte(vcpu, iter->gfn, ACC_ALL);
 	else
@@ -1079,7 +1140,12 @@ static int tdp_mmu_map_handle_target_level(struct kvm_vcpu *vcpu,
 		return RET_PF_RETRY;
 	else if (is_shadow_present_pte(iter->old_spte) &&
 		 !is_last_spte(iter->old_spte, iter->level))
+<<<<<<< HEAD
 		kvm_flush_remote_tlbs_gfn(vcpu->kvm, iter->gfn, iter->level);
+=======
+		kvm_flush_remote_tlbs_with_address(vcpu->kvm, sp->gfn,
+						   KVM_PAGES_PER_HPAGE(iter->level + 1));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * If the page fault was caused by a write but the page is write
@@ -1112,13 +1178,23 @@ static int tdp_mmu_map_handle_target_level(struct kvm_vcpu *vcpu,
  * @kvm: kvm instance
  * @iter: a tdp_iter instance currently on the SPTE that should be set
  * @sp: The new TDP page table to install.
+<<<<<<< HEAD
+=======
+ * @account_nx: True if this page table is being installed to split a
+ *              non-executable huge page.
+>>>>>>> b7ba80a49124 (Commit)
  * @shared: This operation is running under the MMU lock in read mode.
  *
  * Returns: 0 if the new page table was installed. Non-0 if the page table
  *          could not be installed (e.g. the atomic compare-exchange failed).
  */
 static int tdp_mmu_link_sp(struct kvm *kvm, struct tdp_iter *iter,
+<<<<<<< HEAD
 			   struct kvm_mmu_page *sp, bool shared)
+=======
+			   struct kvm_mmu_page *sp, bool account_nx,
+			   bool shared)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u64 spte = make_nonleaf_spte(sp->spt, !kvm_ad_enabled());
 	int ret = 0;
@@ -1131,14 +1207,25 @@ static int tdp_mmu_link_sp(struct kvm *kvm, struct tdp_iter *iter,
 		tdp_mmu_set_spte(kvm, iter, spte);
 	}
 
+<<<<<<< HEAD
 	tdp_account_mmu_page(kvm, sp);
+=======
+	spin_lock(&kvm->arch.tdp_mmu_pages_lock);
+	list_add(&sp->link, &kvm->arch.tdp_mmu_pages);
+	if (account_nx)
+		account_huge_nx_page(kvm, sp);
+	spin_unlock(&kvm->arch.tdp_mmu_pages_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int tdp_mmu_split_huge_page(struct kvm *kvm, struct tdp_iter *iter,
 				   struct kvm_mmu_page *sp, bool shared);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Handle a TDP page fault (NPT/EPT violation/misconfiguration) by installing
  * page tables and SPTEs to translate the faulting guest physical address.
@@ -1146,10 +1233,16 @@ static int tdp_mmu_split_huge_page(struct kvm *kvm, struct tdp_iter *iter,
 int kvm_tdp_mmu_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
 {
 	struct kvm_mmu *mmu = vcpu->arch.mmu;
+<<<<<<< HEAD
 	struct kvm *kvm = vcpu->kvm;
 	struct tdp_iter iter;
 	struct kvm_mmu_page *sp;
 	int ret = RET_PF_RETRY;
+=======
+	struct tdp_iter iter;
+	struct kvm_mmu_page *sp;
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	kvm_mmu_hugepage_adjust(vcpu, fault);
 
@@ -1158,6 +1251,7 @@ int kvm_tdp_mmu_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
 	rcu_read_lock();
 
 	tdp_mmu_for_each_pte(iter, mmu, fault->gfn, fault->gfn + 1) {
+<<<<<<< HEAD
 		int r;
 
 		if (fault->nx_huge_page_workaround_enabled)
@@ -1207,10 +1301,56 @@ int kvm_tdp_mmu_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
 			if (sp->nx_huge_page_disallowed)
 				track_possible_nx_huge_page(kvm, sp);
 			spin_unlock(&kvm->arch.tdp_mmu_pages_lock);
+=======
+		if (fault->nx_huge_page_workaround_enabled)
+			disallowed_hugepage_adjust(fault, iter.old_spte, iter.level);
+
+		if (iter.level == fault->goal_level)
+			break;
+
+		/*
+		 * If there is an SPTE mapping a large page at a higher level
+		 * than the target, that SPTE must be cleared and replaced
+		 * with a non-leaf SPTE.
+		 */
+		if (is_shadow_present_pte(iter.old_spte) &&
+		    is_large_pte(iter.old_spte)) {
+			if (tdp_mmu_zap_spte_atomic(vcpu->kvm, &iter))
+				break;
+
+			/*
+			 * The iter must explicitly re-read the spte here
+			 * because the new value informs the !present
+			 * path below.
+			 */
+			iter.old_spte = kvm_tdp_mmu_read_spte(iter.sptep);
+		}
+
+		if (!is_shadow_present_pte(iter.old_spte)) {
+			bool account_nx = fault->huge_page_disallowed &&
+					  fault->req_level >= iter.level;
+
+			/*
+			 * If SPTE has been frozen by another thread, just
+			 * give up and retry, avoiding unnecessary page table
+			 * allocation and free.
+			 */
+			if (is_removed_spte(iter.old_spte))
+				break;
+
+			sp = tdp_mmu_alloc_sp(vcpu);
+			tdp_mmu_init_child_sp(sp, &iter);
+
+			if (tdp_mmu_link_sp(vcpu->kvm, &iter, sp, account_nx, true)) {
+				tdp_mmu_free_sp(sp);
+				break;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
 	/*
+<<<<<<< HEAD
 	 * The walk aborted before reaching the target level, e.g. because the
 	 * iterator detected an upper level SPTE was frozen during traversal.
 	 */
@@ -1222,6 +1362,19 @@ map_target_level:
 
 retry:
 	rcu_read_unlock();
+=======
+	 * Force the guest to retry the access if the upper level SPTEs aren't
+	 * in place, or if the target leaf SPTE is frozen by another CPU.
+	 */
+	if (iter.level != fault->goal_level || is_removed_spte(iter.old_spte)) {
+		rcu_read_unlock();
+		return RET_PF_RETRY;
+	}
+
+	ret = tdp_mmu_map_handle_target_level(vcpu, fault, &iter);
+	rcu_read_unlock();
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -1470,7 +1623,10 @@ static struct kvm_mmu_page *tdp_mmu_alloc_sp_for_split(struct kvm *kvm,
 	return sp;
 }
 
+<<<<<<< HEAD
 /* Note, the caller is responsible for initializing @sp. */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int tdp_mmu_split_huge_page(struct kvm *kvm, struct tdp_iter *iter,
 				   struct kvm_mmu_page *sp, bool shared)
 {
@@ -1478,6 +1634,11 @@ static int tdp_mmu_split_huge_page(struct kvm *kvm, struct tdp_iter *iter,
 	const int level = iter->level;
 	int ret, i;
 
+<<<<<<< HEAD
+=======
+	tdp_mmu_init_child_sp(sp, iter);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * No need for atomics when writing to sp->spt since the page table has
 	 * not been linked in yet and thus is not reachable from any other CPU.
@@ -1493,7 +1654,11 @@ static int tdp_mmu_split_huge_page(struct kvm *kvm, struct tdp_iter *iter,
 	 * correctness standpoint since the translation will be the same either
 	 * way.
 	 */
+<<<<<<< HEAD
 	ret = tdp_mmu_link_sp(kvm, iter, sp, shared);
+=======
+	ret = tdp_mmu_link_sp(kvm, iter, sp, false, shared);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto out;
 
@@ -1553,8 +1718,11 @@ retry:
 				continue;
 		}
 
+<<<<<<< HEAD
 		tdp_mmu_init_child_sp(sp, &iter);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (tdp_mmu_split_huge_page(kvm, &iter, sp, shared))
 			goto retry;
 

@@ -8,10 +8,13 @@ enum {
 	MLX5E_STATIC_PARAMS_CONTEXT_TLS_1_2 = 0x2,
 };
 
+<<<<<<< HEAD
 enum {
 	MLX5E_ENCRYPTION_STANDARD_TLS = 0x1,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define EXTRACT_INFO_FIELDS do { \
 	salt    = info->salt;    \
 	rec_seq = info->rec_seq; \
@@ -20,8 +23,13 @@ enum {
 } while (0)
 
 static void
+<<<<<<< HEAD
 fill_static_params(struct mlx5_wqe_tls_static_params_seg *params,
 		   union mlx5e_crypto_info *crypto_info,
+=======
+fill_static_params(struct mlx5_wqe_transport_static_params_seg *params,
+		   struct tls12_crypto_info_aes_gcm_128 *info,
+>>>>>>> b7ba80a49124 (Commit)
 		   u32 key_id, u32 resync_tcp_sn)
 {
 	char *initial_rn, *gcm_iv;
@@ -32,6 +40,7 @@ fill_static_params(struct mlx5_wqe_tls_static_params_seg *params,
 
 	ctx = params->ctx;
 
+<<<<<<< HEAD
 	switch (crypto_info->crypto_info.cipher_type) {
 	case TLS_CIPHER_AES_GCM_128: {
 		struct tls12_crypto_info_aes_gcm_128 *info =
@@ -55,12 +64,19 @@ fill_static_params(struct mlx5_wqe_tls_static_params_seg *params,
 
 	gcm_iv      = MLX5_ADDR_OF(tls_static_params, ctx, gcm_iv);
 	initial_rn  = MLX5_ADDR_OF(tls_static_params, ctx, initial_record_number);
+=======
+	EXTRACT_INFO_FIELDS;
+
+	gcm_iv      = MLX5_ADDR_OF(transport_static_params, ctx, gcm_iv);
+	initial_rn  = MLX5_ADDR_OF(transport_static_params, ctx, initial_record_number);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memcpy(gcm_iv,      salt,    salt_sz);
 	memcpy(initial_rn,  rec_seq, rec_seq_sz);
 
 	tls_version = MLX5E_STATIC_PARAMS_CONTEXT_TLS_1_2;
 
+<<<<<<< HEAD
 	MLX5_SET(tls_static_params, ctx, tls_version, tls_version);
 	MLX5_SET(tls_static_params, ctx, const_1, 1);
 	MLX5_SET(tls_static_params, ctx, const_2, 2);
@@ -74,12 +90,28 @@ void
 mlx5e_ktls_build_static_params(struct mlx5e_set_tls_static_params_wqe *wqe,
 			       u16 pc, u32 sqn,
 			       union mlx5e_crypto_info *crypto_info,
+=======
+	MLX5_SET(transport_static_params, ctx, tls_version, tls_version);
+	MLX5_SET(transport_static_params, ctx, const_1, 1);
+	MLX5_SET(transport_static_params, ctx, const_2, 2);
+	MLX5_SET(transport_static_params, ctx, acc_type,
+		 MLX5_TRANSPORT_STATIC_PARAMS_ACC_TYPE_TLS);
+	MLX5_SET(transport_static_params, ctx, resync_tcp_sn, resync_tcp_sn);
+	MLX5_SET(transport_static_params, ctx, dek_index, key_id);
+}
+
+void
+mlx5e_ktls_build_static_params(struct mlx5e_set_transport_static_params_wqe *wqe,
+			       u16 pc, u32 sqn,
+			       struct tls12_crypto_info_aes_gcm_128 *info,
+>>>>>>> b7ba80a49124 (Commit)
 			       u32 tis_tir_num, u32 key_id, u32 resync_tcp_sn,
 			       bool fence, enum tls_offload_ctx_dir direction)
 {
 	struct mlx5_wqe_umr_ctrl_seg *ucseg = &wqe->uctrl;
 	struct mlx5_wqe_ctrl_seg     *cseg  = &wqe->ctrl;
 	u8 opmod = direction == TLS_OFFLOAD_CTX_DIR_TX ?
+<<<<<<< HEAD
 		MLX5_OPC_MOD_TLS_TIS_STATIC_PARAMS :
 		MLX5_OPC_MOD_TLS_TIR_STATIC_PARAMS;
 
@@ -88,13 +120,27 @@ mlx5e_ktls_build_static_params(struct mlx5e_set_tls_static_params_wqe *wqe,
 	cseg->opmod_idx_opcode = cpu_to_be32((pc << 8) | MLX5_OPCODE_UMR | (opmod << 24));
 	cseg->qpn_ds           = cpu_to_be32((sqn << MLX5_WQE_CTRL_QPN_SHIFT) |
 					     STATIC_PARAMS_DS_CNT);
+=======
+		MLX5_OPC_MOD_TRANSPORT_TIS_STATIC_PARAMS :
+		MLX5_OPC_MOD_TRANSPORT_TIR_STATIC_PARAMS;
+
+	cseg->opmod_idx_opcode = cpu_to_be32((pc << 8) | MLX5_OPCODE_UMR | (opmod << 24));
+	cseg->qpn_ds           = cpu_to_be32((sqn << MLX5_WQE_CTRL_QPN_SHIFT) |
+					     MLX5E_TRANSPORT_STATIC_PARAMS_DS_CNT);
+>>>>>>> b7ba80a49124 (Commit)
 	cseg->fm_ce_se         = fence ? MLX5_FENCE_MODE_INITIATOR_SMALL : 0;
 	cseg->tis_tir_num      = cpu_to_be32(tis_tir_num << 8);
 
 	ucseg->flags = MLX5_UMR_INLINE;
+<<<<<<< HEAD
 	ucseg->bsf_octowords = cpu_to_be16(MLX5_ST_SZ_BYTES(tls_static_params) / 16);
 
 	fill_static_params(&wqe->params, crypto_info, key_id, resync_tcp_sn);
+=======
+	ucseg->bsf_octowords = cpu_to_be16(MLX5E_TRANSPORT_STATIC_PARAMS_OCTWORD_SIZE);
+
+	fill_static_params(&wqe->params, info, key_id, resync_tcp_sn);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void

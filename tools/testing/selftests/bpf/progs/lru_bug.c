@@ -4,7 +4,11 @@
 #include <bpf/bpf_helpers.h>
 
 struct map_value {
+<<<<<<< HEAD
 	struct task_struct __kptr_untrusted *ptr;
+=======
+	struct task_struct __kptr *ptr;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct {

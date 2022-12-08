@@ -4,13 +4,20 @@
  *
  * Copyright (c) 2014 Peter Meerwald <pmeerw@pmeerw.net>
  *
+<<<<<<< HEAD
  * TODO: synchronization with system suspend
+=======
+ * TODO: shutdown pin
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/module.h>
 #include <linux/iio/iio.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
 #include <linux/gpio/consumer.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "mpl115.h"
 
@@ -28,7 +35,10 @@ struct mpl115_data {
 	s16 a0;
 	s16 b1, b2;
 	s16 c12;
+<<<<<<< HEAD
 	struct gpio_desc *shutdown;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const struct mpl115_ops *ops;
 };
 
@@ -104,6 +114,7 @@ static int mpl115_read_raw(struct iio_dev *indio_dev,
 
 	switch (mask) {
 	case IIO_CHAN_INFO_PROCESSED:
+<<<<<<< HEAD
 		pm_runtime_get_sync(data->dev);
 		ret = mpl115_comp_pressure(data, val, val2);
 		if (ret < 0)
@@ -114,14 +125,25 @@ static int mpl115_read_raw(struct iio_dev *indio_dev,
 		return IIO_VAL_INT_PLUS_MICRO;
 	case IIO_CHAN_INFO_RAW:
 		pm_runtime_get_sync(data->dev);
+=======
+		ret = mpl115_comp_pressure(data, val, val2);
+		if (ret < 0)
+			return ret;
+		return IIO_VAL_INT_PLUS_MICRO;
+	case IIO_CHAN_INFO_RAW:
+>>>>>>> b7ba80a49124 (Commit)
 		/* temperature -5.35 C / LSB, 472 LSB is 25 C */
 		ret = mpl115_read_temp(data);
 		if (ret < 0)
 			return ret;
+<<<<<<< HEAD
 		pm_runtime_mark_last_busy(data->dev);
 		pm_runtime_put_autosuspend(data->dev);
 		*val = ret >> 6;
 
+=======
+		*val = ret >> 6;
+>>>>>>> b7ba80a49124 (Commit)
 		return IIO_VAL_INT;
 	case IIO_CHAN_INFO_OFFSET:
 		*val = -605;
@@ -178,8 +200,11 @@ int mpl115_probe(struct device *dev, const char *name,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	dev_set_drvdata(dev, indio_dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = data->ops->read(data->dev, MPL115_A0);
 	if (ret < 0)
 		return ret;
@@ -197,6 +222,7 @@ int mpl115_probe(struct device *dev, const char *name,
 		return ret;
 	data->c12 = ret;
 
+<<<<<<< HEAD
 	data->shutdown = devm_gpiod_get_optional(dev, "shutdown",
 						 GPIOD_OUT_LOW);
 	if (IS_ERR(data->shutdown))
@@ -223,10 +249,13 @@ int mpl115_probe(struct device *dev, const char *name,
 	} else
 		dev_dbg(dev, "low-power mode disabled");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return devm_iio_device_register(dev, indio_dev);
 }
 EXPORT_SYMBOL_NS_GPL(mpl115_probe, IIO_MPL115);
 
+<<<<<<< HEAD
 static int mpl115_runtime_suspend(struct device *dev)
 {
 	struct mpl115_data *data = iio_priv(dev_get_drvdata(dev));
@@ -249,6 +278,8 @@ static int mpl115_runtime_resume(struct device *dev)
 EXPORT_NS_RUNTIME_DEV_PM_OPS(mpl115_dev_pm_ops, mpl115_runtime_suspend,
 			  mpl115_runtime_resume, NULL, IIO_MPL115);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("Peter Meerwald <pmeerw@pmeerw.net>");
 MODULE_DESCRIPTION("Freescale MPL115 pressure/temperature driver");
 MODULE_LICENSE("GPL");

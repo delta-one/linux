@@ -126,9 +126,12 @@
 #define L_PTE_SHARED		(_AT(pteval_t, 1) << 10)	/* shared(v6), coherent(xsc3) */
 #define L_PTE_NONE		(_AT(pteval_t, 1) << 11)
 
+<<<<<<< HEAD
 /* We borrow bit 7 to store the exclusive marker in swap PTEs. */
 #define L_PTE_SWP_EXCLUSIVE	L_PTE_RDONLY
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * These are the memory types, defined to be compatible with
  * pre-ARMv6 CPUs cacheable and bufferable bits: n/a,n/a,C,B

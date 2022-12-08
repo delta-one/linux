@@ -33,7 +33,11 @@ MODULE_PARM_DESC(completion_timeout,
 static int idle_timeout = 2000;
 module_param(idle_timeout, int, 0644);
 MODULE_PARM_DESC(idle_timeout,
+<<<<<<< HEAD
 		"set ioat idle timeout [msec] (default 2000 [msec])");
+=======
+		"set ioat idel timeout [msec] (default 2000 [msec])");
+>>>>>>> b7ba80a49124 (Commit)
 
 #define IDLE_TIMEOUT msecs_to_jiffies(idle_timeout)
 #define COMPLETION_TIMEOUT msecs_to_jiffies(completion_timeout)
@@ -656,7 +660,11 @@ static void __cleanup(struct ioatdma_chan *ioat_chan, dma_addr_t phys_complete)
 	if (active - i == 0) {
 		dev_dbg(to_dev(ioat_chan), "%s: cancel completion timeout\n",
 			__func__);
+<<<<<<< HEAD
 		mod_timer_pending(&ioat_chan->timer, jiffies + IDLE_TIMEOUT);
+=======
+		mod_timer(&ioat_chan->timer, jiffies + IDLE_TIMEOUT);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* microsecond delay by sysfs variable  per pending descriptor */
@@ -682,7 +690,11 @@ static void ioat_cleanup(struct ioatdma_chan *ioat_chan)
 
 		if (chanerr &
 		    (IOAT_CHANERR_HANDLE_MASK | IOAT_CHANERR_RECOVER_MASK)) {
+<<<<<<< HEAD
 			mod_timer_pending(&ioat_chan->timer, jiffies + IDLE_TIMEOUT);
+=======
+			mod_timer(&ioat_chan->timer, jiffies + IDLE_TIMEOUT);
+>>>>>>> b7ba80a49124 (Commit)
 			ioat_eh(ioat_chan);
 		}
 	}
@@ -879,7 +891,11 @@ static void check_active(struct ioatdma_chan *ioat_chan)
 	}
 
 	if (test_and_clear_bit(IOAT_CHAN_ACTIVE, &ioat_chan->state))
+<<<<<<< HEAD
 		mod_timer_pending(&ioat_chan->timer, jiffies + IDLE_TIMEOUT);
+=======
+		mod_timer(&ioat_chan->timer, jiffies + IDLE_TIMEOUT);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ioat_reboot_chan(struct ioatdma_chan *ioat_chan)

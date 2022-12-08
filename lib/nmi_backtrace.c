@@ -64,7 +64,10 @@ void nmi_trigger_cpumask_backtrace(const cpumask_t *mask,
 	if (!cpumask_empty(to_cpumask(backtrace_mask))) {
 		pr_info("Sending NMI from CPU %d to CPUs %*pbl:\n",
 			this_cpu, nr_cpumask_bits, to_cpumask(backtrace_mask));
+<<<<<<< HEAD
 		nmi_backtrace_stall_snap(to_cpumask(backtrace_mask));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		raise(to_cpumask(backtrace_mask));
 	}
 
@@ -75,7 +78,10 @@ void nmi_trigger_cpumask_backtrace(const cpumask_t *mask,
 		mdelay(1);
 		touch_softlockup_watchdog();
 	}
+<<<<<<< HEAD
 	nmi_backtrace_stall_check(to_cpumask(backtrace_mask));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Force flush any remote buffers that might be stuck in IRQ context

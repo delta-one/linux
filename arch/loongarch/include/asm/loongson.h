@@ -14,6 +14,11 @@
 #include <asm/addrspace.h>
 #include <asm/bootinfo.h>
 
+<<<<<<< HEAD
+=======
+extern const struct plat_smp_ops loongson3_smp_ops;
+
+>>>>>>> b7ba80a49124 (Commit)
 #define LOONGSON_REG(x) \
 	(*(volatile u32 *)((char *)TO_UNCACHE(LOONGSON_REG_BASE) + (x)))
 
@@ -136,7 +141,10 @@ typedef enum {
 #define ls7a_writel(val, addr)	*(volatile unsigned int   *)TO_UNCACHE(addr) = (val)
 #define ls7a_writeq(val, addr)	*(volatile unsigned long  *)TO_UNCACHE(addr) = (val)
 
+<<<<<<< HEAD
 void enable_gpe_wakeup(void);
 void enable_pci_wakeup(void);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __ASM_LOONGSON_H */

@@ -723,8 +723,12 @@ typedef u32 acpi_event_type;
 #define ACPI_EVENT_POWER_BUTTON         2
 #define ACPI_EVENT_SLEEP_BUTTON         3
 #define ACPI_EVENT_RTC                  4
+<<<<<<< HEAD
 #define ACPI_EVENT_PCIE_WAKE            5
 #define ACPI_EVENT_MAX                  5
+=======
+#define ACPI_EVENT_MAX                  4
+>>>>>>> b7ba80a49124 (Commit)
 #define ACPI_NUM_FIXED_EVENTS           ACPI_EVENT_MAX + 1
 
 /*
@@ -1116,6 +1120,7 @@ struct acpi_pcc_info {
 	u8 *internal_buffer;
 };
 
+<<<<<<< HEAD
 /* Special Context data for FFH Opregion (ACPI 6.5) */
 
 struct acpi_ffh_info {
@@ -1123,6 +1128,8 @@ struct acpi_ffh_info {
 	u64 length;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 typedef
 acpi_status (*acpi_adr_space_setup) (acpi_handle region_handle,
 				     u32 function,

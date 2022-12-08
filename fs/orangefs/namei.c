@@ -15,7 +15,11 @@
 /*
  * Get a newly allocated inode to go with a negative dentry.
  */
+<<<<<<< HEAD
 static int orangefs_create(struct mnt_idmap *idmap,
+=======
+static int orangefs_create(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			struct inode *dir,
 			struct dentry *dentry,
 			umode_t mode,
@@ -216,7 +220,11 @@ static int orangefs_unlink(struct inode *dir, struct dentry *dentry)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int orangefs_symlink(struct mnt_idmap *idmap,
+=======
+static int orangefs_symlink(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		         struct inode *dir,
 			 struct dentry *dentry,
 			 const char *symname)
@@ -305,7 +313,11 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int orangefs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int orangefs_mkdir(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 			  struct dentry *dentry, umode_t mode)
 {
 	struct orangefs_inode_s *parent = ORANGEFS_I(dir);
@@ -375,7 +387,11 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int orangefs_rename(struct mnt_idmap *idmap,
+=======
+static int orangefs_rename(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			struct inode *old_dir,
 			struct dentry *old_dentry,
 			struct inode *new_dir,
@@ -430,7 +446,11 @@ static int orangefs_rename(struct mnt_idmap *idmap,
 /* ORANGEFS implementation of VFS inode operations for directories */
 const struct inode_operations orangefs_dir_inode_operations = {
 	.lookup = orangefs_lookup,
+<<<<<<< HEAD
 	.get_inode_acl = orangefs_get_acl,
+=======
+	.get_acl = orangefs_get_acl,
+>>>>>>> b7ba80a49124 (Commit)
 	.set_acl = orangefs_set_acl,
 	.create = orangefs_create,
 	.unlink = orangefs_unlink,

@@ -16,6 +16,7 @@ maintainers:
 
 properties:
   compatible:
+<<<<<<< HEAD
     oneOf:
       - items:
           - enum:
@@ -23,23 +24,34 @@ properties:
           - const: qcom,pm8941-coincell
 
       - const: qcom,pm8941-coincell
+=======
+    const: qcom,pm8941-coincell
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
 
   qcom,rset-ohms:
+<<<<<<< HEAD
     description: |
       Resistance (in ohms) for current-limiting resistor. If unspecified,
       inherit the previous configuration (e.g. from bootloader or hardware
       default value).
+=======
+    description: resistance (in ohms) for current-limiting resistor
+>>>>>>> b7ba80a49124 (Commit)
     enum: [ 800, 1200, 1700, 2100 ]
 
   qcom,vset-millivolts:
     $ref: /schemas/types.yaml#/definitions/uint32
+<<<<<<< HEAD
     description: |
       Voltage (in millivolts) to apply for charging. If unspecified, inherit
       the previous configuration (e.g. from bootloader or hardware default
       value).
+=======
+    description: voltage (in millivolts) to apply for charging
+>>>>>>> b7ba80a49124 (Commit)
     enum: [ 2500, 3000, 3100, 3200 ]
 
   qcom,charger-disable:
@@ -49,6 +61,11 @@ properties:
 required:
   - compatible
   - reg
+<<<<<<< HEAD
+=======
+  - qcom,rset-ohms
+  - qcom,vset-millivolts
+>>>>>>> b7ba80a49124 (Commit)
 
 additionalProperties: false
 

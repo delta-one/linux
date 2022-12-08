@@ -17,13 +17,18 @@ AMD refers to this feature as AMD Platform Quality of Service(AMD QoS).
 This feature is enabled by the CONFIG_X86_CPU_RESCTRL and the x86 /proc/cpuinfo
 flag bits:
 
+<<<<<<< HEAD
 ===============================================	================================
+=======
+=============================================	================================
+>>>>>>> b7ba80a49124 (Commit)
 RDT (Resource Director Technology) Allocation	"rdt_a"
 CAT (Cache Allocation Technology)		"cat_l3", "cat_l2"
 CDP (Code and Data Prioritization)		"cdp_l3", "cdp_l2"
 CQM (Cache QoS Monitoring)			"cqm_llc", "cqm_occup_llc"
 MBM (Memory Bandwidth Monitoring)		"cqm_mbm_total", "cqm_mbm_local"
 MBA (Memory Bandwidth Allocation)		"mba"
+<<<<<<< HEAD
 SMBA (Slow Memory Bandwidth Allocation)         ""
 BMEC (Bandwidth Monitoring Event Configuration) ""
 ===============================================	================================
@@ -32,6 +37,9 @@ Historically, new features were made visible by default in /proc/cpuinfo. This
 resulted in the feature flags becoming hard to parse by humans. Adding a new
 flag to /proc/cpuinfo should be avoided if user space can obtain information
 about the feature from resctrl's info directory.
+=======
+=============================================	================================
+>>>>>>> b7ba80a49124 (Commit)
 
 To use the feature mount the file system::
 
@@ -168,6 +176,7 @@ with the following files:
 "mon_features":
 		Lists the monitoring events if
 		monitoring is enabled for the resource.
+<<<<<<< HEAD
 		Example::
 
 			# cat /sys/fs/resctrl/info/L3_MON/mon_features
@@ -245,6 +254,8 @@ with the following files:
 
 	    # cat /sys/fs/resctrl/info/L3_MON/mbm_local_bytes_config
 	    0=0x30;1=0x30;3=0x15;4=0x15
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 "max_threshold_occupancy":
 		Read/write file provides the largest value (in
@@ -548,6 +559,7 @@ Memory bandwidth domain is L3 cache.
 
 	MB:<cache_id0>=bw_MBps0;<cache_id1>=bw_MBps1;...
 
+<<<<<<< HEAD
 Slow Memory Bandwidth Allocation (SMBA)
 ---------------------------------------
 AMD hardware supports Slow Memory Bandwidth Allocation (SMBA).
@@ -567,6 +579,8 @@ is formatted as:
 
 	SMBA:<cache_id0>=bandwidth0;<cache_id1>=bandwidth1;...
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Reading/writing the schemata file
 ---------------------------------
 Reading the schemata file will show the state of all resources
@@ -582,6 +596,7 @@ which you wish to change.  E.g.
   L3DATA:0=fffff;1=fffff;2=3c0;3=fffff
   L3CODE:0=fffff;1=fffff;2=fffff;3=fffff
 
+<<<<<<< HEAD
 Reading/writing the schemata file (on AMD systems)
 --------------------------------------------------
 Reading the schemata file will show the current bandwidth limit on all
@@ -622,6 +637,8 @@ For example, to allocate 8GB/s limit on the first cache id:
       MB:0=2048;1=2048;2=2048;3=2048
       L3:0=ffff;1=ffff;2=ffff;3=ffff
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Cache Pseudo-Locking
 ====================
 CAT enables a user to specify the amount of cache space that an
@@ -751,12 +768,21 @@ how we can measure the latency in cycles of reading from this region and
 visualize this data with a histogram that is available if CONFIG_HIST_TRIGGERS
 is set::
 
+<<<<<<< HEAD
   # :> /sys/kernel/tracing/trace
   # echo 'hist:keys=latency' > /sys/kernel/tracing/events/resctrl/pseudo_lock_mem_latency/trigger
   # echo 1 > /sys/kernel/tracing/events/resctrl/pseudo_lock_mem_latency/enable
   # echo 1 > /sys/kernel/debug/resctrl/newlock/pseudo_lock_measure
   # echo 0 > /sys/kernel/tracing/events/resctrl/pseudo_lock_mem_latency/enable
   # cat /sys/kernel/tracing/events/resctrl/pseudo_lock_mem_latency/hist
+=======
+  # :> /sys/kernel/debug/tracing/trace
+  # echo 'hist:keys=latency' > /sys/kernel/debug/tracing/events/resctrl/pseudo_lock_mem_latency/trigger
+  # echo 1 > /sys/kernel/debug/tracing/events/resctrl/pseudo_lock_mem_latency/enable
+  # echo 1 > /sys/kernel/debug/resctrl/newlock/pseudo_lock_measure
+  # echo 0 > /sys/kernel/debug/tracing/events/resctrl/pseudo_lock_mem_latency/enable
+  # cat /sys/kernel/debug/tracing/events/resctrl/pseudo_lock_mem_latency/hist
+>>>>>>> b7ba80a49124 (Commit)
 
   # event histogram
   #
@@ -785,11 +811,19 @@ cache of a platform. Here is how we can obtain details of the cache hits
 and misses using the platform's precision counters.
 ::
 
+<<<<<<< HEAD
   # :> /sys/kernel/tracing/trace
   # echo 1 > /sys/kernel/tracing/events/resctrl/pseudo_lock_l2/enable
   # echo 2 > /sys/kernel/debug/resctrl/newlock/pseudo_lock_measure
   # echo 0 > /sys/kernel/tracing/events/resctrl/pseudo_lock_l2/enable
   # cat /sys/kernel/tracing/trace
+=======
+  # :> /sys/kernel/debug/tracing/trace
+  # echo 1 > /sys/kernel/debug/tracing/events/resctrl/pseudo_lock_l2/enable
+  # echo 2 > /sys/kernel/debug/resctrl/newlock/pseudo_lock_measure
+  # echo 0 > /sys/kernel/debug/tracing/events/resctrl/pseudo_lock_l2/enable
+  # cat /sys/kernel/debug/tracing/trace
+>>>>>>> b7ba80a49124 (Commit)
 
   # tracer: nop
   #

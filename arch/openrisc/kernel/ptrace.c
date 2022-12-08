@@ -66,9 +66,16 @@ static int genregs_set(struct task_struct *target,
 	int ret;
 
 	/* ignore r0 */
+<<<<<<< HEAD
 	user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, 0, 4);
 	/* r1 - r31 */
 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+=======
+	ret = user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, 0, 4);
+	/* r1 - r31 */
+	if (!ret)
+		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+>>>>>>> b7ba80a49124 (Commit)
 					 regs->gpr+1, 4, 4*32);
 	/* PC */
 	if (!ret)
@@ -79,7 +86,12 @@ static int genregs_set(struct task_struct *target,
 	 * the Supervision register
 	 */
 	if (!ret)
+<<<<<<< HEAD
 		user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, 4*33, -1);
+=======
+		ret = user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+						4*33, -1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }

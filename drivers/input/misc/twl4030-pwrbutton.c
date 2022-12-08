@@ -26,7 +26,10 @@
 #include <linux/errno.h>
 #include <linux/input.h>
 #include <linux/interrupt.h>
+<<<<<<< HEAD
 #include <linux/of.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <linux/mfd/twl.h>
 

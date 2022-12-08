@@ -28,7 +28,10 @@
 #include "reg_helper.h"
 #include "dcn20_dsc.h"
 #include "dsc/dscc_types.h"
+<<<<<<< HEAD
 #include "dsc/rc_calc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void dsc_log_pps(struct display_stream_compressor *dsc, struct drm_dsc_config *pps);
 static bool dsc_prepare_config(const struct dsc_config *dsc_cfg, struct dsc_reg_values *dsc_reg_vals,
@@ -50,7 +53,11 @@ static void dsc2_enable(struct display_stream_compressor *dsc, int opp_pipe);
 static void dsc2_disable(struct display_stream_compressor *dsc);
 static void dsc2_disconnect(struct display_stream_compressor *dsc);
 
+<<<<<<< HEAD
 static const struct dsc_funcs dcn20_dsc_funcs = {
+=======
+const struct dsc_funcs dcn20_dsc_funcs = {
+>>>>>>> b7ba80a49124 (Commit)
 	.dsc_get_enc_caps = dsc2_get_enc_caps,
 	.dsc_read_state = dsc2_read_state,
 	.dsc_validate_stream = dsc2_validate_stream,
@@ -201,6 +208,10 @@ static void dsc2_set_config(struct display_stream_compressor *dsc, const struct 
 	bool is_config_ok;
 	struct dcn20_dsc *dsc20 = TO_DCN20_DSC(dsc);
 
+<<<<<<< HEAD
+=======
+	DC_LOG_DSC(" ");
+>>>>>>> b7ba80a49124 (Commit)
 	DC_LOG_DSC("Setting DSC Config at DSC inst %d", dsc->inst);
 	dsc_config_log(dsc, dsc_cfg);
 	is_config_ok = dsc_prepare_config(dsc_cfg, &dsc20->reg_vals, dsc_optc_cfg);
@@ -345,6 +356,7 @@ static void dsc_log_pps(struct display_stream_compressor *dsc, struct drm_dsc_co
 	}
 }
 
+<<<<<<< HEAD
 static void dsc_override_rc_params(struct rc_params *rc, const struct dc_dsc_rc_params_override *override)
 {
 	uint8_t i;
@@ -372,11 +384,16 @@ static void dsc_override_rc_params(struct rc_params *rc, const struct dc_dsc_rc_
 	rc->flatness_det_thresh = override->flatness_det_thresh;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool dsc_prepare_config(const struct dsc_config *dsc_cfg, struct dsc_reg_values *dsc_reg_vals,
 			struct dsc_optc_config *dsc_optc_cfg)
 {
 	struct dsc_parameters dsc_params;
+<<<<<<< HEAD
 	struct rc_params rc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Validate input parameters */
 	ASSERT(dsc_cfg->dc_dsc_cfg.num_slices_h);
@@ -441,12 +458,16 @@ static bool dsc_prepare_config(const struct dsc_config *dsc_cfg, struct dsc_reg_
 	dsc_reg_vals->pps.native_420 = (dsc_reg_vals->pixel_format == DSC_PIXFMT_NATIVE_YCBCR420);
 	dsc_reg_vals->pps.simple_422 = (dsc_reg_vals->pixel_format == DSC_PIXFMT_SIMPLE_YCBCR422);
 
+<<<<<<< HEAD
 	calc_rc_params(&rc, &dsc_reg_vals->pps);
 
 	if (dsc_cfg->dc_dsc_cfg.rc_params_ovrd)
 		dsc_override_rc_params(&rc, dsc_cfg->dc_dsc_cfg.rc_params_ovrd);
 
 	if (dscc_compute_dsc_parameters(&dsc_reg_vals->pps, &rc, &dsc_params)) {
+=======
+	if (dscc_compute_dsc_parameters(&dsc_reg_vals->pps, &dsc_params)) {
+>>>>>>> b7ba80a49124 (Commit)
 		dm_output_to_console("%s: DSC config failed\n", __func__);
 		return false;
 	}

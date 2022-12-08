@@ -79,7 +79,10 @@ static int sky81452_reg_probe(struct platform_device *pdev)
 static struct platform_driver sky81452_reg_driver = {
 	.driver = {
 		.name = "sky81452-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = sky81452_reg_probe,
 };

@@ -181,13 +181,21 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-speaker-enable {
+=======
+		speaker-enable {
+>>>>>>> b7ba80a49124 (Commit)
 			gpios = <&gpio1 29 GPIO_ACTIVE_HIGH>;
 			retain-state-suspended;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-ttymxc4-rs232 {
+=======
+		ttymxc4-rs232 {
+>>>>>>> b7ba80a49124 (Commit)
 			gpios = <&gpio6 10 GPIO_ACTIVE_HIGH>;
 			retain-state-suspended;
 			default-state = "on";

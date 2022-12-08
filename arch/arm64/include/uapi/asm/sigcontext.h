@@ -62,10 +62,13 @@ struct sigcontext {
  * context. Such structures must be placed after the rt_sigframe on the stack
  * and be 16-byte aligned. The last structure must be a dummy one with the
  * magic and size set to 0.
+<<<<<<< HEAD
  *
  * Note that the values allocated for use as magic should be chosen to
  * be meaningful in ASCII to aid manual parsing, ZA doesn't follow this
  * convention due to oversight but it should be observed for future additions.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct _aarch64_ctx {
 	__u32 magic;
@@ -144,6 +147,7 @@ struct sve_context {
 
 #define SVE_SIG_FLAG_SM	0x1	/* Context describes streaming mode */
 
+<<<<<<< HEAD
 /* TPIDR2_EL0 context */
 #define TPIDR2_MAGIC	0x54504902
 
@@ -152,6 +156,8 @@ struct tpidr2_context {
 	__u64 tpidr2;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ZA_MAGIC	0x54366345
 
 struct za_context {
@@ -160,6 +166,7 @@ struct za_context {
 	__u16 __reserved[3];
 };
 
+<<<<<<< HEAD
 #define ZT_MAGIC	0x5a544e01
 
 struct zt_context {
@@ -168,6 +175,8 @@ struct zt_context {
 	__u16 __reserved[3];
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* !__ASSEMBLY__ */
 
 #include <asm/sve_context.h>
@@ -320,6 +329,7 @@ struct zt_context {
 #define ZA_SIG_CONTEXT_SIZE(vq) \
 		(ZA_SIG_REGS_OFFSET + ZA_SIG_REGS_SIZE(vq))
 
+<<<<<<< HEAD
 #define ZT_SIG_REG_SIZE 512
 
 #define ZT_SIG_REG_BYTES (ZT_SIG_REG_SIZE / 8)
@@ -331,4 +341,6 @@ struct zt_context {
 #define ZT_SIG_CONTEXT_SIZE(n) \
 	(sizeof(struct zt_context) + ZT_SIG_REGS_SIZE(n))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _UAPI__ASM_SIGCONTEXT_H */

@@ -244,6 +244,7 @@ static bool clk_core_is_enabled(struct clk_core *core)
 		}
 	}
 
+<<<<<<< HEAD
 	/*
 	 * This could be called with the enable lock held, or from atomic
 	 * context. If the parent isn't enabled already, we can't do
@@ -255,6 +256,8 @@ static bool clk_core_is_enabled(struct clk_core *core)
 			goto done;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = core->ops->is_enabled(core->hw);
 done:
 	if (core->rpm_enabled)
@@ -547,6 +550,7 @@ static bool mux_is_better_rate(unsigned long rate, unsigned long now,
 	return now <= rate && now > best;
 }
 
+<<<<<<< HEAD
 static void clk_core_init_rate_req(struct clk_core * const core,
 				   struct clk_rate_request *req,
 				   unsigned long rate);
@@ -594,6 +598,8 @@ clk_core_forward_rate_req(struct clk_core *core,
 		req->max_rate = old_req->max_rate;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int clk_mux_determine_rate_flags(struct clk_hw *hw,
 				 struct clk_rate_request *req,
 				 unsigned long flags)
@@ -601,11 +607,16 @@ int clk_mux_determine_rate_flags(struct clk_hw *hw,
 	struct clk_core *core = hw->core, *parent, *best_parent = NULL;
 	int i, num_parents, ret;
 	unsigned long best = 0;
+<<<<<<< HEAD
+=======
+	struct clk_rate_request parent_req = *req;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* if NO_REPARENT flag set, pass through to current parent */
 	if (core->flags & CLK_SET_RATE_NO_REPARENT) {
 		parent = core->parent;
 		if (core->flags & CLK_SET_RATE_PARENT) {
+<<<<<<< HEAD
 			struct clk_rate_request parent_req;
 
 			if (!parent) {
@@ -623,6 +634,13 @@ int clk_mux_determine_rate_flags(struct clk_hw *hw,
 
 			trace_clk_rate_request_done(&parent_req);
 
+=======
+			ret = __clk_determine_rate(parent ? parent->hw : NULL,
+						   &parent_req);
+			if (ret)
+				return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 			best = parent_req.rate;
 		} else if (parent) {
 			best = clk_core_get_rate_nolock(parent);
@@ -636,13 +654,17 @@ int clk_mux_determine_rate_flags(struct clk_hw *hw,
 	/* find the parent that can provide the fastest rate <= rate */
 	num_parents = core->num_parents;
 	for (i = 0; i < num_parents; i++) {
+<<<<<<< HEAD
 		unsigned long parent_rate;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		parent = clk_core_get_parent_by_index(core, i);
 		if (!parent)
 			continue;
 
 		if (core->flags & CLK_SET_RATE_PARENT) {
+<<<<<<< HEAD
 			struct clk_rate_request parent_req;
 
 			clk_core_forward_rate_req(core, req, parent, &parent_req, req->rate);
@@ -664,6 +686,20 @@ int clk_mux_determine_rate_flags(struct clk_hw *hw,
 				       best, flags)) {
 			best_parent = parent;
 			best = parent_rate;
+=======
+			parent_req = *req;
+			ret = __clk_determine_rate(parent->hw, &parent_req);
+			if (ret)
+				continue;
+		} else {
+			parent_req.rate = clk_core_get_rate_nolock(parent);
+		}
+
+		if (mux_is_better_rate(req->rate, parent_req.rate,
+				       best, flags)) {
+			best_parent = parent;
+			best = parent_req.rate;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -705,6 +741,7 @@ static void clk_core_get_boundaries(struct clk_core *core,
 		*max_rate = min(*max_rate, clk_user->max_rate);
 }
 
+<<<<<<< HEAD
 /*
  * clk_hw_get_rate_range() - returns the clock rate range for a hw clk
  * @hw: the hw clk we want to get the range from
@@ -721,6 +758,8 @@ void clk_hw_get_rate_range(struct clk_hw *hw, unsigned long *min_rate,
 }
 EXPORT_SYMBOL_GPL(clk_hw_get_rate_range);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool clk_core_check_boundaries(struct clk_core *core,
 				      unsigned long min_rate,
 				      unsigned long max_rate)
@@ -1066,12 +1105,20 @@ static void clk_core_disable(struct clk_core *core)
 	if (--core->enable_count > 0)
 		return;
 
+<<<<<<< HEAD
 	trace_clk_disable(core);
+=======
+	trace_clk_disable_rcuidle(core);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (core->ops->disable)
 		core->ops->disable(core->hw);
 
+<<<<<<< HEAD
 	trace_clk_disable_complete(core);
+=======
+	trace_clk_disable_complete_rcuidle(core);
+>>>>>>> b7ba80a49124 (Commit)
 
 	clk_core_disable(core->parent);
 }
@@ -1125,12 +1172,20 @@ static int clk_core_enable(struct clk_core *core)
 		if (ret)
 			return ret;
 
+<<<<<<< HEAD
 		trace_clk_enable(core);
+=======
+		trace_clk_enable_rcuidle(core);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (core->ops->enable)
 			ret = core->ops->enable(core->hw);
 
+<<<<<<< HEAD
 		trace_clk_enable_complete(core);
+=======
+		trace_clk_enable_complete_rcuidle(core);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (ret) {
 			clk_core_disable(core->parent);
@@ -1436,6 +1491,7 @@ static int clk_core_determine_round_nolock(struct clk_core *core,
 	if (!core)
 		return 0;
 
+<<<<<<< HEAD
 	/*
 	 * Some clock providers hand-craft their clk_rate_requests and
 	 * might not fill min_rate and max_rate.
@@ -1449,6 +1505,9 @@ static int clk_core_determine_round_nolock(struct clk_core *core,
 			__func__, core->name);
 	else
 		req->rate = clamp(req->rate, req->min_rate, req->max_rate);
+=======
+	req->rate = clamp(req->rate, req->min_rate, req->max_rate);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * At this point, core protection will be disabled
@@ -1475,6 +1534,7 @@ static int clk_core_determine_round_nolock(struct clk_core *core,
 }
 
 static void clk_core_init_rate_req(struct clk_core * const core,
+<<<<<<< HEAD
 				   struct clk_rate_request *req,
 				   unsigned long rate)
 {
@@ -1493,6 +1553,15 @@ static void clk_core_init_rate_req(struct clk_core * const core,
 	req->rate = rate;
 	clk_core_get_boundaries(core, &req->min_rate, &req->max_rate);
 
+=======
+				   struct clk_rate_request *req)
+{
+	struct clk_core *parent;
+
+	if (WARN_ON(!core || !req))
+		return;
+
+>>>>>>> b7ba80a49124 (Commit)
 	parent = core->parent;
 	if (parent) {
 		req->best_parent_hw = parent->hw;
@@ -1503,6 +1572,7 @@ static void clk_core_init_rate_req(struct clk_core * const core,
 	}
 }
 
+<<<<<<< HEAD
 /**
  * clk_hw_init_rate_request - Initializes a clk_rate_request
  * @hw: the clk for which we want to submit a rate request
@@ -1548,6 +1618,8 @@ void clk_hw_forward_rate_request(const struct clk_hw *hw,
 				  parent_rate);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool clk_core_can_round(struct clk_core * const core)
 {
 	return core->ops->determine_rate || core->ops->round_rate;
@@ -1556,8 +1628,11 @@ static bool clk_core_can_round(struct clk_core * const core)
 static int clk_core_round_rate_nolock(struct clk_core *core,
 				      struct clk_rate_request *req)
 {
+<<<<<<< HEAD
 	int ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	lockdep_assert_held(&prepare_lock);
 
 	if (!core) {
@@ -1565,6 +1640,7 @@ static int clk_core_round_rate_nolock(struct clk_core *core,
 		return 0;
 	}
 
+<<<<<<< HEAD
 	if (clk_core_can_round(core))
 		return clk_core_determine_round_nolock(core, req);
 
@@ -1586,6 +1662,14 @@ static int clk_core_round_rate_nolock(struct clk_core *core,
 
 		return 0;
 	}
+=======
+	clk_core_init_rate_req(core, req);
+
+	if (clk_core_can_round(core))
+		return clk_core_determine_round_nolock(core, req);
+	else if (core->flags & CLK_SET_RATE_PARENT)
+		return clk_core_round_rate_nolock(core->parent, req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	req->rate = core->rate;
 	return 0;
@@ -1629,16 +1713,24 @@ unsigned long clk_hw_round_rate(struct clk_hw *hw, unsigned long rate)
 	int ret;
 	struct clk_rate_request req;
 
+<<<<<<< HEAD
 	clk_core_init_rate_req(hw->core, &req, rate);
 
 	trace_clk_rate_request_start(&req);
+=======
+	clk_core_get_boundaries(hw->core, &req.min_rate, &req.max_rate);
+	req.rate = rate;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = clk_core_round_rate_nolock(hw->core, &req);
 	if (ret)
 		return 0;
 
+<<<<<<< HEAD
 	trace_clk_rate_request_done(&req);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return req.rate;
 }
 EXPORT_SYMBOL_GPL(clk_hw_round_rate);
@@ -1665,6 +1757,7 @@ long clk_round_rate(struct clk *clk, unsigned long rate)
 	if (clk->exclusive_count)
 		clk_core_rate_unprotect(clk->core);
 
+<<<<<<< HEAD
 	clk_core_init_rate_req(clk->core, &req, rate);
 
 	trace_clk_rate_request_start(&req);
@@ -1673,6 +1766,13 @@ long clk_round_rate(struct clk *clk, unsigned long rate)
 
 	trace_clk_rate_request_done(&req);
 
+=======
+	clk_core_get_boundaries(clk->core, &req.min_rate, &req.max_rate);
+	req.rate = rate;
+
+	ret = clk_core_round_rate_nolock(clk->core, &req);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (clk->exclusive_count)
 		clk_core_rate_protect(clk->core);
 
@@ -1798,7 +1898,10 @@ static unsigned long clk_recalc(struct clk_core *core,
 /**
  * __clk_recalc_rates
  * @core: first clk in the subtree
+<<<<<<< HEAD
  * @update_req: Whether req_rate should be updated with the new rate
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @msg: notification type (see include/linux/clk.h)
  *
  * Walks the subtree of clks starting with clk and recalculates rates as it
@@ -1808,8 +1911,12 @@ static unsigned long clk_recalc(struct clk_core *core,
  * clk_recalc_rates also propagates the POST_RATE_CHANGE notification,
  * if necessary.
  */
+<<<<<<< HEAD
 static void __clk_recalc_rates(struct clk_core *core, bool update_req,
 			       unsigned long msg)
+=======
+static void __clk_recalc_rates(struct clk_core *core, unsigned long msg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long old_rate;
 	unsigned long parent_rate = 0;
@@ -1823,8 +1930,11 @@ static void __clk_recalc_rates(struct clk_core *core, bool update_req,
 		parent_rate = core->parent->rate;
 
 	core->rate = clk_recalc(core, parent_rate);
+<<<<<<< HEAD
 	if (update_req)
 		core->req_rate = core->rate;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * ignore NOTIFY_STOP and NOTIFY_BAD return values for POST_RATE_CHANGE
@@ -1834,13 +1944,21 @@ static void __clk_recalc_rates(struct clk_core *core, bool update_req,
 		__clk_notify(core, msg, old_rate, core->rate);
 
 	hlist_for_each_entry(child, &core->children, child_node)
+<<<<<<< HEAD
 		__clk_recalc_rates(child, update_req, msg);
+=======
+		__clk_recalc_rates(child, msg);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static unsigned long clk_core_get_rate_recalc(struct clk_core *core)
 {
 	if (core && (core->flags & CLK_GET_RATE_NOCACHE))
+<<<<<<< HEAD
 		__clk_recalc_rates(core, false, 0);
+=======
+		__clk_recalc_rates(core, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return clk_core_get_rate_nolock(core);
 }
@@ -1850,9 +1968,14 @@ static unsigned long clk_core_get_rate_recalc(struct clk_core *core)
  * @clk: the clk whose rate is being returned
  *
  * Simply returns the cached rate of the clk, unless CLK_GET_RATE_NOCACHE flag
+<<<<<<< HEAD
  * is set, which means a recalc_rate will be issued. Can be called regardless of
  * the clock enabledness. If clk is NULL, or if an error occurred, then returns
  * 0.
+=======
+ * is set, which means a recalc_rate will be issued.
+ * If clk is NULL then returns 0.
+>>>>>>> b7ba80a49124 (Commit)
  */
 unsigned long clk_get_rate(struct clk *clk)
 {
@@ -2056,7 +2179,10 @@ static int __clk_set_parent(struct clk_core *core, struct clk_core *parent,
 		flags = clk_enable_lock();
 		clk_reparent(core, old_parent);
 		clk_enable_unlock(flags);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		__clk_set_parent_after(core, old_parent, parent);
 
 		return ret;
@@ -2162,16 +2288,27 @@ static struct clk_core *clk_calc_new_rates(struct clk_core *core,
 	if (clk_core_can_round(core)) {
 		struct clk_rate_request req;
 
+<<<<<<< HEAD
 		clk_core_init_rate_req(core, &req, rate);
 
 		trace_clk_rate_request_start(&req);
+=======
+		req.rate = rate;
+		req.min_rate = min_rate;
+		req.max_rate = max_rate;
+
+		clk_core_init_rate_req(core, &req);
+>>>>>>> b7ba80a49124 (Commit)
 
 		ret = clk_core_determine_round_nolock(core, &req);
 		if (ret < 0)
 			return NULL;
 
+<<<<<<< HEAD
 		trace_clk_rate_request_done(&req);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		best_parent_rate = req.best_parent_rate;
 		new_rate = req.rate;
 		parent = req.best_parent_hw ? req.best_parent_hw->core : NULL;
@@ -2365,6 +2502,7 @@ static unsigned long clk_core_req_round_rate_nolock(struct clk_core *core,
 	if (cnt < 0)
 		return cnt;
 
+<<<<<<< HEAD
 	clk_core_init_rate_req(core, &req, req_rate);
 
 	trace_clk_rate_request_start(&req);
@@ -2373,6 +2511,13 @@ static unsigned long clk_core_req_round_rate_nolock(struct clk_core *core,
 
 	trace_clk_rate_request_done(&req);
 
+=======
+	clk_core_get_boundaries(core, &req.min_rate, &req.max_rate);
+	req.rate = req_rate;
+
+	ret = clk_core_round_rate_nolock(core, &req);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* restore the protection */
 	clk_core_rate_restore_protect(core, cnt);
 
@@ -2520,15 +2665,30 @@ int clk_set_rate_exclusive(struct clk *clk, unsigned long rate)
 }
 EXPORT_SYMBOL_GPL(clk_set_rate_exclusive);
 
+<<<<<<< HEAD
 static int clk_set_rate_range_nolock(struct clk *clk,
 				     unsigned long min,
 				     unsigned long max)
+=======
+/**
+ * clk_set_rate_range - set a rate range for a clock source
+ * @clk: clock source
+ * @min: desired minimum clock rate in Hz, inclusive
+ * @max: desired maximum clock rate in Hz, inclusive
+ *
+ * Returns success (0) or negative errno.
+ */
+int clk_set_rate_range(struct clk *clk, unsigned long min, unsigned long max)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret = 0;
 	unsigned long old_min, old_max, rate;
 
+<<<<<<< HEAD
 	lockdep_assert_held(&prepare_lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!clk)
 		return 0;
 
@@ -2541,6 +2701,11 @@ static int clk_set_rate_range_nolock(struct clk *clk,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	clk_prepare_lock();
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (clk->exclusive_count)
 		clk_core_rate_unprotect(clk->core);
 
@@ -2555,10 +2720,13 @@ static int clk_set_rate_range_nolock(struct clk *clk,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	rate = clk->core->req_rate;
 	if (clk->core->flags & CLK_GET_RATE_NOCACHE)
 		rate = clk_core_get_rate_recalc(clk->core);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Since the boundaries have been changed, let's give the
 	 * opportunity to the provider to adjust the clock rate based on
@@ -2576,7 +2744,11 @@ static int clk_set_rate_range_nolock(struct clk *clk,
 	 * - the determine_rate() callback does not really check for
 	 *   this corner case when determining the rate
 	 */
+<<<<<<< HEAD
 	rate = clamp(rate, min, max);
+=======
+	rate = clamp(clk->core->req_rate, min, max);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = clk_core_set_rate_nolock(clk->core, rate);
 	if (ret) {
 		/* rollback the changes */
@@ -2588,6 +2760,7 @@ out:
 	if (clk->exclusive_count)
 		clk_core_rate_protect(clk->core);
 
+<<<<<<< HEAD
 	return ret;
 }
 
@@ -2610,6 +2783,8 @@ int clk_set_rate_range(struct clk *clk, unsigned long min, unsigned long max)
 
 	ret = clk_set_rate_range_nolock(clk, min, max);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	clk_prepare_unlock();
 
 	return ret;
@@ -2689,7 +2864,11 @@ static void clk_core_reparent(struct clk_core *core,
 {
 	clk_reparent(core, new_parent);
 	__clk_recalc_accuracies(core);
+<<<<<<< HEAD
 	__clk_recalc_rates(core, true, POST_RATE_CHANGE);
+=======
+	__clk_recalc_rates(core, POST_RATE_CHANGE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void clk_hw_reparent(struct clk_hw *hw, struct clk_hw *new_parent)
@@ -2710,13 +2889,36 @@ void clk_hw_reparent(struct clk_hw *hw, struct clk_hw *new_parent)
  *
  * Returns true if @parent is a possible parent for @clk, false otherwise.
  */
+<<<<<<< HEAD
 bool clk_has_parent(const struct clk *clk, const struct clk *parent)
 {
+=======
+bool clk_has_parent(struct clk *clk, struct clk *parent)
+{
+	struct clk_core *core, *parent_core;
+	int i;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* NULL clocks should be nops, so return success if either is NULL. */
 	if (!clk || !parent)
 		return true;
 
+<<<<<<< HEAD
 	return clk_core_has_parent(clk->core, parent->core);
+=======
+	core = clk->core;
+	parent_core = parent->core;
+
+	/* Optimize for the case where the parent is already the parent. */
+	if (core->parent == parent_core)
+		return true;
+
+	for (i = 0; i < core->num_parents; i++)
+		if (!strcmp(core->parents[i].name, parent_core->name))
+			return true;
+
+	return false;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(clk_has_parent);
 
@@ -2773,9 +2975,15 @@ static int clk_core_set_parent_nolock(struct clk_core *core,
 
 	/* propagate rate an accuracy recalculation accordingly */
 	if (ret) {
+<<<<<<< HEAD
 		__clk_recalc_rates(core, true, ABORT_RATE_CHANGE);
 	} else {
 		__clk_recalc_rates(core, true, POST_RATE_CHANGE);
+=======
+		__clk_recalc_rates(core, ABORT_RATE_CHANGE);
+	} else {
+		__clk_recalc_rates(core, POST_RATE_CHANGE);
+>>>>>>> b7ba80a49124 (Commit)
 		__clk_recalc_accuracies(core);
 	}
 
@@ -3194,7 +3402,11 @@ static void clk_summary_show_subtree(struct seq_file *s, struct clk_core *c,
 static int clk_summary_show(struct seq_file *s, void *data)
 {
 	struct clk_core *c;
+<<<<<<< HEAD
 	struct hlist_head **lists = s->private;
+=======
+	struct hlist_head **lists = (struct hlist_head **)s->private;
+>>>>>>> b7ba80a49124 (Commit)
 
 	seq_puts(s, "                                 enable  prepare  protect                                duty  hardware\n");
 	seq_puts(s, "   clock                          count    count    count        rate   accuracy phase  cycle    enable\n");
@@ -3253,7 +3465,11 @@ static int clk_dump_show(struct seq_file *s, void *data)
 {
 	struct clk_core *c;
 	bool first_node = true;
+<<<<<<< HEAD
 	struct hlist_head **lists = s->private;
+=======
+	struct hlist_head **lists = (struct hlist_head **)s->private;
+>>>>>>> b7ba80a49124 (Commit)
 
 	seq_putc(s, '{');
 	clk_prepare_lock();
@@ -3672,7 +3888,11 @@ static void clk_core_reparent_orphans_nolock(void)
 			__clk_set_parent_before(orphan, parent);
 			__clk_set_parent_after(orphan, parent, NULL);
 			__clk_recalc_accuracies(orphan);
+<<<<<<< HEAD
 			__clk_recalc_rates(orphan, true, 0);
+=======
+			__clk_recalc_rates(orphan, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 			/*
 			 * __clk_init_parent() will set the initial req_rate to
@@ -4548,10 +4768,16 @@ void __clk_put(struct clk *clk)
 	}
 
 	hlist_del(&clk->clks_node);
+<<<<<<< HEAD
 
 	/* If we had any boundaries on that clock, let's drop them. */
 	if (clk->min_rate > 0 || clk->max_rate < ULONG_MAX)
 		clk_set_rate_range_nolock(clk, 0, ULONG_MAX);
+=======
+	if (clk->min_rate > clk->core->req_rate ||
+	    clk->max_rate < clk->core->req_rate)
+		clk_core_set_rate_nolock(clk->core, clk->core->req_rate);
+>>>>>>> b7ba80a49124 (Commit)
 
 	owner = clk->core->owner;
 	kref_put(&clk->core->ref, __clk_release);
@@ -4880,8 +5106,13 @@ static struct device_node *get_clk_provider_node(struct device *dev)
 	np = dev->of_node;
 	parent_np = dev->parent ? dev->parent->of_node : NULL;
 
+<<<<<<< HEAD
 	if (!of_property_present(np, "#clock-cells"))
 		if (of_property_present(parent_np, "#clock-cells"))
+=======
+	if (!of_find_property(np, "#clock-cells", NULL))
+		if (of_find_property(parent_np, "#clock-cells", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 			np = parent_np;
 
 	return np;
@@ -4952,6 +5183,35 @@ void of_clk_del_provider(struct device_node *np)
 }
 EXPORT_SYMBOL_GPL(of_clk_del_provider);
 
+<<<<<<< HEAD
+=======
+static int devm_clk_provider_match(struct device *dev, void *res, void *data)
+{
+	struct device_node **np = res;
+
+	if (WARN_ON(!np || !*np))
+		return 0;
+
+	return *np == data;
+}
+
+/**
+ * devm_of_clk_del_provider() - Remove clock provider registered using devm
+ * @dev: Device to whose lifetime the clock provider was bound
+ */
+void devm_of_clk_del_provider(struct device *dev)
+{
+	int ret;
+	struct device_node *np = get_clk_provider_node(dev);
+
+	ret = devres_release(dev, devm_of_clk_release_provider,
+			     devm_clk_provider_match, np);
+
+	WARN_ON(ret);
+}
+EXPORT_SYMBOL(devm_of_clk_del_provider);
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * of_parse_clkspec() - Parse a DT clock specifier for a given device node
  * @np: device node to parse clock specifier from

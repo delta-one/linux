@@ -34,9 +34,12 @@ static const struct sof_dev_desc tgl_desc = {
 		[SOF_IPC] = "intel/sof",
 		[SOF_INTEL_IPC4] = "intel/avs/tgl",
 	},
+<<<<<<< HEAD
 	.default_lib_path = {
 		[SOF_INTEL_IPC4] = "intel/avs-lib/tgl",
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.default_tplg_path = {
 		[SOF_IPC] = "intel/sof-tplg",
 		[SOF_INTEL_IPC4] = "intel/avs-tplg",
@@ -48,7 +51,10 @@ static const struct sof_dev_desc tgl_desc = {
 	.nocodec_tplg_filename = "sof-tgl-nocodec.tplg",
 	.ops = &sof_tgl_ops,
 	.ops_init = sof_tgl_ops_init,
+<<<<<<< HEAD
 	.ops_free = hda_ops_free,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct sof_dev_desc tglh_desc = {
@@ -66,9 +72,12 @@ static const struct sof_dev_desc tglh_desc = {
 		[SOF_IPC] = "intel/sof",
 		[SOF_INTEL_IPC4] = "intel/avs/tgl-h",
 	},
+<<<<<<< HEAD
 	.default_lib_path = {
 		[SOF_INTEL_IPC4] = "intel/avs-lib/tgl-h",
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.default_tplg_path = {
 		[SOF_IPC] = "intel/sof-tplg",
 		[SOF_INTEL_IPC4] = "intel/avs-tplg",
@@ -97,9 +106,12 @@ static const struct sof_dev_desc ehl_desc = {
 		[SOF_IPC] = "intel/sof",
 		[SOF_INTEL_IPC4] = "intel/avs/ehl",
 	},
+<<<<<<< HEAD
 	.default_lib_path = {
 		[SOF_INTEL_IPC4] = "intel/avs-lib/ehl",
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.default_tplg_path = {
 		[SOF_IPC] = "intel/sof-tplg",
 		[SOF_INTEL_IPC4] = "intel/avs-tplg",
@@ -111,7 +123,10 @@ static const struct sof_dev_desc ehl_desc = {
 	.nocodec_tplg_filename = "sof-ehl-nocodec.tplg",
 	.ops = &sof_tgl_ops,
 	.ops_init = sof_tgl_ops_init,
+<<<<<<< HEAD
 	.ops_free = hda_ops_free,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct sof_dev_desc adls_desc = {
@@ -129,9 +144,12 @@ static const struct sof_dev_desc adls_desc = {
 		[SOF_IPC] = "intel/sof",
 		[SOF_INTEL_IPC4] = "intel/avs/adl-s",
 	},
+<<<<<<< HEAD
 	.default_lib_path = {
 		[SOF_INTEL_IPC4] = "intel/avs-lib/adl-s",
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.default_tplg_path = {
 		[SOF_IPC] = "intel/sof-tplg",
 		[SOF_INTEL_IPC4] = "intel/avs-tplg",
@@ -143,7 +161,10 @@ static const struct sof_dev_desc adls_desc = {
 	.nocodec_tplg_filename = "sof-adl-nocodec.tplg",
 	.ops = &sof_tgl_ops,
 	.ops_init = sof_tgl_ops_init,
+<<<<<<< HEAD
 	.ops_free = hda_ops_free,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct sof_dev_desc adl_desc = {
@@ -161,9 +182,12 @@ static const struct sof_dev_desc adl_desc = {
 		[SOF_IPC] = "intel/sof",
 		[SOF_INTEL_IPC4] = "intel/avs/adl",
 	},
+<<<<<<< HEAD
 	.default_lib_path = {
 		[SOF_INTEL_IPC4] = "intel/avs-lib/adl",
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.default_tplg_path = {
 		[SOF_IPC] = "intel/sof-tplg",
 		[SOF_INTEL_IPC4] = "intel/avs-tplg",
@@ -175,6 +199,7 @@ static const struct sof_dev_desc adl_desc = {
 	.nocodec_tplg_filename = "sof-adl-nocodec.tplg",
 	.ops = &sof_tgl_ops,
 	.ops_init = sof_tgl_ops_init,
+<<<<<<< HEAD
 	.ops_free = hda_ops_free,
 };
 
@@ -208,6 +233,8 @@ static const struct sof_dev_desc adl_n_desc = {
 	.ops = &sof_tgl_ops,
 	.ops_init = sof_tgl_ops_init,
 	.ops_free = hda_ops_free,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct sof_dev_desc rpls_desc = {
@@ -225,9 +252,12 @@ static const struct sof_dev_desc rpls_desc = {
 		[SOF_IPC] = "intel/sof",
 		[SOF_INTEL_IPC4] = "intel/avs/rpl-s",
 	},
+<<<<<<< HEAD
 	.default_lib_path = {
 		[SOF_INTEL_IPC4] = "intel/avs-lib/rpl-s",
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.default_tplg_path = {
 		[SOF_IPC] = "intel/sof-tplg",
 		[SOF_INTEL_IPC4] = "intel/avs-tplg",
@@ -239,7 +269,10 @@ static const struct sof_dev_desc rpls_desc = {
 	.nocodec_tplg_filename = "sof-rpl-nocodec.tplg",
 	.ops = &sof_tgl_ops,
 	.ops_init = sof_tgl_ops_init,
+<<<<<<< HEAD
 	.ops_free = hda_ops_free,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct sof_dev_desc rpl_desc = {
@@ -257,9 +290,12 @@ static const struct sof_dev_desc rpl_desc = {
 		[SOF_IPC] = "intel/sof",
 		[SOF_INTEL_IPC4] = "intel/avs/rpl",
 	},
+<<<<<<< HEAD
 	.default_lib_path = {
 		[SOF_INTEL_IPC4] = "intel/avs-lib/rpl",
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.default_tplg_path = {
 		[SOF_IPC] = "intel/sof-tplg",
 		[SOF_INTEL_IPC4] = "intel/avs-tplg",
@@ -271,7 +307,10 @@ static const struct sof_dev_desc rpl_desc = {
 	.nocodec_tplg_filename = "sof-rpl-nocodec.tplg",
 	.ops = &sof_tgl_ops,
 	.ops_init = sof_tgl_ops_init,
+<<<<<<< HEAD
 	.ops_free = hda_ops_free,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* PCI IDs */
@@ -305,7 +344,11 @@ static const struct pci_device_id sof_pci_ids[] = {
 	{ PCI_DEVICE(0x8086, 0x51cf), /* RPL-PX */
 		.driver_data = (unsigned long)&rpl_desc},
 	{ PCI_DEVICE(0x8086, 0x54c8), /* ADL-N */
+<<<<<<< HEAD
 		.driver_data = (unsigned long)&adl_n_desc},
+=======
+		.driver_data = (unsigned long)&adl_desc},
+>>>>>>> b7ba80a49124 (Commit)
 	{ 0, }
 };
 MODULE_DEVICE_TABLE(pci, sof_pci_ids);

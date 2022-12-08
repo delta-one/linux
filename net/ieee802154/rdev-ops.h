@@ -209,6 +209,7 @@ rdev_set_ackreq_default(struct cfg802154_registered_device *rdev,
 	return ret;
 }
 
+<<<<<<< HEAD
 static inline int rdev_trigger_scan(struct cfg802154_registered_device *rdev,
 				    struct cfg802154_scan_request *request)
 {
@@ -265,6 +266,8 @@ static inline int rdev_stop_beacons(struct cfg802154_registered_device *rdev,
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_IEEE802154_NL802154_EXPERIMENTAL
 /* TODO this is already a nl802154, so move into ieee802154 */
 static inline void

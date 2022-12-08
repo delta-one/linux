@@ -1460,6 +1460,7 @@ struct cfg80211_chan_def *wdev_chandef(struct wireless_dev *wdev,
 	}
 }
 EXPORT_SYMBOL(wdev_chandef);
+<<<<<<< HEAD
 
 struct cfg80211_per_bw_puncturing_values {
 	u8 len;
@@ -1529,3 +1530,5 @@ bool cfg80211_valid_disable_subchannel_bitmap(u16 *bitmap,
 	return false;
 }
 EXPORT_SYMBOL(cfg80211_valid_disable_subchannel_bitmap);
+=======
+>>>>>>> b7ba80a49124 (Commit)

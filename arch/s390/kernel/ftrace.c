@@ -49,6 +49,29 @@ struct ftrace_insn {
 	s32 disp;
 } __packed;
 
+<<<<<<< HEAD
+=======
+asm(
+	"	.align 16\n"
+	"ftrace_shared_hotpatch_trampoline_br:\n"
+	"	lmg	%r0,%r1,2(%r1)\n"
+	"	br	%r1\n"
+	"ftrace_shared_hotpatch_trampoline_br_end:\n"
+);
+
+#ifdef CONFIG_EXPOLINE
+asm(
+	"	.align 16\n"
+	"ftrace_shared_hotpatch_trampoline_exrl:\n"
+	"	lmg	%r0,%r1,2(%r1)\n"
+	"	exrl	%r0,0f\n"
+	"	j	.\n"
+	"0:	br	%r1\n"
+	"ftrace_shared_hotpatch_trampoline_exrl_end:\n"
+);
+#endif /* CONFIG_EXPOLINE */
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_MODULES
 static char *ftrace_plt;
 #endif /* CONFIG_MODULES */

@@ -27,7 +27,11 @@ int ext2_fileattr_get(struct dentry *dentry, struct fileattr *fa)
 	return 0;
 }
 
+<<<<<<< HEAD
 int ext2_fileattr_set(struct mnt_idmap *idmap,
+=======
+int ext2_fileattr_set(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *dentry, struct fileattr *fa)
 {
 	struct inode *inode = d_inode(dentry);
@@ -66,7 +70,11 @@ long ext2_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	case EXT2_IOC_SETVERSION: {
 		__u32 generation;
 
+<<<<<<< HEAD
 		if (!inode_owner_or_capable(&nop_mnt_idmap, inode))
+=======
+		if (!inode_owner_or_capable(&init_user_ns, inode))
+>>>>>>> b7ba80a49124 (Commit)
 			return -EPERM;
 		ret = mnt_want_write_file(filp);
 		if (ret)
@@ -99,7 +107,11 @@ setversion_out:
 		if (!test_opt(inode->i_sb, RESERVATION) ||!S_ISREG(inode->i_mode))
 			return -ENOTTY;
 
+<<<<<<< HEAD
 		if (!inode_owner_or_capable(&nop_mnt_idmap, inode))
+=======
+		if (!inode_owner_or_capable(&init_user_ns, inode))
+>>>>>>> b7ba80a49124 (Commit)
 			return -EACCES;
 
 		if (get_user(rsv_window_size, (int __user *)arg))

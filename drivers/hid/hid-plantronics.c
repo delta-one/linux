@@ -199,6 +199,7 @@ err:
 
 static const struct hid_device_id plantronics_devices[] = {
 	{ HID_USB_DEVICE(USB_VENDOR_ID_PLANTRONICS,
+<<<<<<< HEAD
 					 USB_DEVICE_ID_PLANTRONICS_BLACKWIRE_3210_SERIES),
 		.driver_data = PLT_QUIRK_DOUBLE_VOLUME_KEYS },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_PLANTRONICS,
@@ -210,6 +211,10 @@ static const struct hid_device_id plantronics_devices[] = {
 	{ HID_USB_DEVICE(USB_VENDOR_ID_PLANTRONICS,
 					 USB_DEVICE_ID_PLANTRONICS_BLACKWIRE_3225_SERIES),
 		.driver_data = PLT_QUIRK_DOUBLE_VOLUME_KEYS },
+=======
+					 USB_DEVICE_ID_PLANTRONICS_BLACKWIRE_3220_SERIES),
+		.driver_data = PLT_QUIRK_DOUBLE_VOLUME_KEYS },
+>>>>>>> b7ba80a49124 (Commit)
 	{ HID_USB_DEVICE(USB_VENDOR_ID_PLANTRONICS, HID_ANY_ID) },
 	{ }
 };

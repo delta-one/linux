@@ -866,7 +866,12 @@ static const struct acpi_gpio_mapping acpi_pn544_gpios[] = {
 	{ },
 };
 
+<<<<<<< HEAD
 static int pn544_hci_i2c_probe(struct i2c_client *client)
+=======
+static int pn544_hci_i2c_probe(struct i2c_client *client,
+			       const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &client->dev;
 	struct pn544_i2c_phy *phy;
@@ -953,7 +958,11 @@ static struct i2c_driver pn544_hci_i2c_driver = {
 		   .of_match_table = of_match_ptr(of_pn544_i2c_match),
 		   .acpi_match_table = ACPI_PTR(pn544_hci_i2c_acpi_match),
 		  },
+<<<<<<< HEAD
 	.probe_new = pn544_hci_i2c_probe,
+=======
+	.probe = pn544_hci_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = pn544_hci_i2c_id_table,
 	.remove = pn544_hci_i2c_remove,
 };

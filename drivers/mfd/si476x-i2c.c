@@ -683,9 +683,15 @@ bool si476x_core_is_powered_up(struct si476x_core *core)
 }
 EXPORT_SYMBOL_GPL(si476x_core_is_powered_up);
 
+<<<<<<< HEAD
 static int si476x_core_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int si476x_core_probe(struct i2c_client *client,
+			     const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	int rval;
 	struct si476x_core          *core;
 	struct si476x_platform_data *pdata;
@@ -866,7 +872,11 @@ static struct i2c_driver si476x_core_driver = {
 	.driver		= {
 		.name	= "si476x-core",
 	},
+<<<<<<< HEAD
 	.probe_new	= si476x_core_probe,
+=======
+	.probe		= si476x_core_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove         = si476x_core_remove,
 	.id_table       = si476x_id,
 };

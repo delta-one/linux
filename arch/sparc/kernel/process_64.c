@@ -59,6 +59,10 @@ void arch_cpu_idle(void)
 {
 	if (tlb_type != hypervisor) {
 		touch_nmi_watchdog();
+<<<<<<< HEAD
+=======
+		raw_local_irq_enable();
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		unsigned long pstate;
 
@@ -89,13 +93,20 @@ void arch_cpu_idle(void)
 			"wrpr %0, %%g0, %%pstate"
 			: "=&r" (pstate)
 			: "i" (PSTATE_IE));
+<<<<<<< HEAD
 
 		raw_local_irq_disable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
 #ifdef CONFIG_HOTPLUG_CPU
+<<<<<<< HEAD
 void __noreturn arch_cpu_idle_dead(void)
+=======
+void arch_cpu_idle_dead(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	sched_preempt_enable_no_resched();
 	cpu_play_dead();

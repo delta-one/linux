@@ -7,7 +7,11 @@ CFLAGS += -I. -I../../include -Wall -O2 -fsanitize=address \
 LDFLAGS += -fsanitize=address -fsanitize=undefined
 TARGETS = main
 TEST_OFILES = tests/alloc_nid_api.o tests/alloc_helpers_api.o tests/alloc_api.o \
+<<<<<<< HEAD
 		  tests/basic_api.o tests/common.o tests/alloc_exact_nid_api.o
+=======
+		  tests/basic_api.o tests/common.o
+>>>>>>> b7ba80a49124 (Commit)
 DEP_OFILES = memblock.o lib/slab.o mmzone.o slab.o
 OFILES = main.o $(DEP_OFILES) $(TEST_OFILES)
 EXTR_SRC = ../../../mm/memblock.c
@@ -29,14 +33,21 @@ include: ../../../include/linux/memblock.h ../../include/linux/*.h \
 
 	@mkdir -p linux
 	test -L linux/memblock.h || ln -s ../../../../include/linux/memblock.h linux/memblock.h
+<<<<<<< HEAD
 	test -L asm/asm.h || ln -s ../../../arch/x86/include/asm/asm.h asm/asm.h
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	test -L asm/cmpxchg.h || ln -s ../../../arch/x86/include/asm/cmpxchg.h asm/cmpxchg.h
 
 memblock.c: $(EXTR_SRC)
 	test -L memblock.c || ln -s $(EXTR_SRC) memblock.c
 
 clean:
+<<<<<<< HEAD
 	$(RM) $(TARGETS) $(OFILES) linux/memblock.h memblock.c asm/asm.h asm/cmpxchg.h
+=======
+	$(RM) $(TARGETS) $(OFILES) linux/memblock.h memblock.c asm/cmpxchg.h
+>>>>>>> b7ba80a49124 (Commit)
 
 help:
 	@echo  'Memblock simulator'

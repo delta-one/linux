@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+// SPDX-License-Identifier: GPL-2.0-or-later
+>>>>>>> b7ba80a49124 (Commit)
 /*
    drbd_worker.c
 
@@ -176,7 +180,11 @@ void drbd_peer_request_endio(struct bio *bio)
 	bool is_discard = bio_op(bio) == REQ_OP_WRITE_ZEROES ||
 			  bio_op(bio) == REQ_OP_DISCARD;
 
+<<<<<<< HEAD
 	if (bio->bi_status && drbd_ratelimit())
+=======
+	if (bio->bi_status && __ratelimit(&drbd_ratelimit_state))
+>>>>>>> b7ba80a49124 (Commit)
 		drbd_warn(device, "%s: error=%d s=%llus\n",
 				is_write ? (is_discard ? "discard" : "write")
 					: "read", bio->bi_status,
@@ -240,7 +248,11 @@ void drbd_request_endio(struct bio *bio)
 	 * though we still will complain noisily about it.
 	 */
 	if (unlikely(req->rq_state & RQ_LOCAL_ABORTED)) {
+<<<<<<< HEAD
 		if (drbd_ratelimit())
+=======
+		if (__ratelimit(&drbd_ratelimit_state))
+>>>>>>> b7ba80a49124 (Commit)
 			drbd_emerg(device, "delayed completion of aborted local request; disk-timeout may be too aggressive\n");
 
 		if (!bio->bi_status)
@@ -400,13 +412,21 @@ static int read_for_csum(struct drbd_peer_device *peer_device, sector_t sector, 
 		goto defer;
 
 	peer_req->w.cb = w_e_send_csum;
+<<<<<<< HEAD
 	peer_req->opf = REQ_OP_READ;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_irq(&device->resource->req_lock);
 	list_add_tail(&peer_req->w.list, &device->read_ee);
 	spin_unlock_irq(&device->resource->req_lock);
 
 	atomic_add(size >> 9, &device->rs_sect_ev);
+<<<<<<< HEAD
 	if (drbd_submit_peer_request(peer_req) == 0)
+=======
+	if (drbd_submit_peer_request(device, peer_req, REQ_OP_READ,
+				     DRBD_FAULT_RS_RD) == 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	/* If it failed because of ENOMEM, retry should help.  If it failed
@@ -1062,7 +1082,11 @@ int w_e_end_data_req(struct drbd_work *w, int cancel)
 	if (likely((peer_req->flags & EE_WAS_ERROR) == 0)) {
 		err = drbd_send_block(peer_device, P_DATA_REPLY, peer_req);
 	} else {
+<<<<<<< HEAD
 		if (drbd_ratelimit())
+=======
+		if (__ratelimit(&drbd_ratelimit_state))
+>>>>>>> b7ba80a49124 (Commit)
 			drbd_err(device, "Sending NegDReply. sector=%llus.\n",
 			    (unsigned long long)peer_req->i.sector);
 
@@ -1135,13 +1159,21 @@ int w_e_end_rsdata_req(struct drbd_work *w, int cancel)
 			else
 				err = drbd_send_block(peer_device, P_RS_DATA_REPLY, peer_req);
 		} else {
+<<<<<<< HEAD
 			if (drbd_ratelimit())
+=======
+			if (__ratelimit(&drbd_ratelimit_state))
+>>>>>>> b7ba80a49124 (Commit)
 				drbd_err(device, "Not sending RSDataReply, "
 				    "partner DISKLESS!\n");
 			err = 0;
 		}
 	} else {
+<<<<<<< HEAD
 		if (drbd_ratelimit())
+=======
+		if (__ratelimit(&drbd_ratelimit_state))
+>>>>>>> b7ba80a49124 (Commit)
 			drbd_err(device, "Sending NegRSDReply. sector %llus.\n",
 			    (unsigned long long)peer_req->i.sector);
 
@@ -1212,7 +1244,11 @@ int w_e_end_csum_rs_req(struct drbd_work *w, int cancel)
 		}
 	} else {
 		err = drbd_send_ack(peer_device, P_NEG_RS_DREPLY, peer_req);
+<<<<<<< HEAD
 		if (drbd_ratelimit())
+=======
+		if (__ratelimit(&drbd_ratelimit_state))
+>>>>>>> b7ba80a49124 (Commit)
 			drbd_err(device, "Sending NegDReply. I guess it gets messy.\n");
 	}
 

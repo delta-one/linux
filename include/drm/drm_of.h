@@ -15,8 +15,11 @@ struct drm_encoder;
 struct drm_panel;
 struct drm_bridge;
 struct device_node;
+<<<<<<< HEAD
 struct mipi_dsi_device_info;
 struct mipi_dsi_host;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * enum drm_lvds_dual_link_pixels - Pixel order of an LVDS dual-link connection
@@ -131,6 +134,7 @@ drm_of_get_data_lanes_count_ep(const struct device_node *port,
 }
 #endif
 
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_DRM_MIPI_DSI)
 struct mipi_dsi_host *drm_of_get_dsi_bus(struct device *dev);
 #else
@@ -141,6 +145,8 @@ mipi_dsi_host *drm_of_get_dsi_bus(struct device *dev)
 }
 #endif /* CONFIG_OF && CONFIG_DRM_MIPI_DSI */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * drm_of_panel_bridge_remove - remove panel bridge
  * @np: device tree node containing panel bridge output ports

@@ -10,7 +10,10 @@
 #include <sound/pcm_params.h>
 #include <sound/soc.h>
 #include "avs.h"
+<<<<<<< HEAD
 #include "control.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "path.h"
 #include "topology.h"
 
@@ -265,6 +268,7 @@ static int avs_copier_create(struct avs_dev *adev, struct avs_path_module *mod)
 	return ret;
 }
 
+<<<<<<< HEAD
 static struct avs_control_data *avs_get_module_control(struct avs_path_module *mod)
 {
 	struct avs_tplg_module *t = mod->template;
@@ -324,6 +328,8 @@ static int avs_peakvol_create(struct avs_dev *adev, struct avs_path_module *mod)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int avs_updown_mix_create(struct avs_dev *adev, struct avs_path_module *mod)
 {
 	struct avs_tplg_module *t = mod->template;
@@ -478,7 +484,11 @@ static int avs_modext_create(struct avs_dev *adev, struct avs_path_module *mod)
 	int ret, i;
 
 	num_pins = tcfg->generic.num_input_pins + tcfg->generic.num_output_pins;
+<<<<<<< HEAD
 	cfg_size = struct_size(cfg, pin_fmts, num_pins);
+=======
+	cfg_size = sizeof(*cfg) + sizeof(*cfg->pin_fmts) * num_pins;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cfg = kzalloc(cfg_size, GFP_KERNEL);
 	if (!cfg)
@@ -525,8 +535,11 @@ static struct avs_module_create avs_module_create[] = {
 	{ &AVS_MIXOUT_MOD_UUID, avs_modbase_create },
 	{ &AVS_KPBUFF_MOD_UUID, avs_modbase_create },
 	{ &AVS_COPIER_MOD_UUID, avs_copier_create },
+<<<<<<< HEAD
 	{ &AVS_PEAKVOL_MOD_UUID, avs_peakvol_create },
 	{ &AVS_GAIN_MOD_UUID, avs_peakvol_create },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ &AVS_MICSEL_MOD_UUID, avs_micsel_create },
 	{ &AVS_MUX_MOD_UUID, avs_mux_create },
 	{ &AVS_UPDWMIX_MOD_UUID, avs_updown_mix_create },

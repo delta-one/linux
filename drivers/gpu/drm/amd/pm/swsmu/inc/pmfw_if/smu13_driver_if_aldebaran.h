@@ -267,7 +267,10 @@ typedef struct {
   QuadraticInt_t SsCurve;             // Slow-slow curve (GHz->V)
 } DpmDescriptor_t;
 
+<<<<<<< HEAD
 #pragma pack(push, 1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 typedef struct {
   uint32_t Version;
 
@@ -449,7 +452,10 @@ typedef struct {
   uint32_t reserved[14];
 
 } PPTable_t;
+<<<<<<< HEAD
 #pragma pack(pop)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 typedef struct {
   // Time constant parameters for clock averages in ms

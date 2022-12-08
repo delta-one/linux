@@ -23,6 +23,7 @@ static void cacheless_tid_rb_remove(struct hfi1_filedata *fdata,
 static bool tid_rb_invalidate(struct mmu_interval_notifier *mni,
 			      const struct mmu_notifier_range *range,
 			      unsigned long cur_seq);
+<<<<<<< HEAD
 static bool tid_cover_invalidate(struct mmu_interval_notifier *mni,
 			         const struct mmu_notifier_range *range,
 			         unsigned long cur_seq);
@@ -33,14 +34,26 @@ static int program_rcvarray(struct hfi1_filedata *fd, struct tid_user_buf *,
 static int unprogram_rcvarray(struct hfi1_filedata *fd, u32 tidinfo);
 static void __clear_tid_node(struct hfi1_filedata *fd,
 			     struct tid_rb_node *node);
+=======
+static int program_rcvarray(struct hfi1_filedata *fd, struct tid_user_buf *,
+			    struct tid_group *grp,
+			    unsigned int start, u16 count,
+			    u32 *tidlist, unsigned int *tididx,
+			    unsigned int *pmapped);
+static int unprogram_rcvarray(struct hfi1_filedata *fd, u32 tidinfo,
+			      struct tid_group **grp);
+>>>>>>> b7ba80a49124 (Commit)
 static void clear_tid_node(struct hfi1_filedata *fd, struct tid_rb_node *node);
 
 static const struct mmu_interval_notifier_ops tid_mn_ops = {
 	.invalidate = tid_rb_invalidate,
 };
+<<<<<<< HEAD
 static const struct mmu_interval_notifier_ops tid_cover_ops = {
 	.invalidate = tid_cover_invalidate,
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Initialize context and file private data needed for Expected
@@ -159,11 +172,23 @@ static void unpin_rcv_pages(struct hfi1_filedata *fd,
 static int pin_rcv_pages(struct hfi1_filedata *fd, struct tid_user_buf *tidbuf)
 {
 	int pinned;
+<<<<<<< HEAD
 	unsigned int npages = tidbuf->npages;
+=======
+	unsigned int npages;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long vaddr = tidbuf->vaddr;
 	struct page **pages = NULL;
 	struct hfi1_devdata *dd = fd->uctxt->dd;
 
+<<<<<<< HEAD
+=======
+	/* Get the number of pages the user buffer spans */
+	npages = num_user_pages(vaddr, tidbuf->length);
+	if (!npages)
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (npages > fd->uctxt->expected_count) {
 		dd_dev_err(dd, "Expected buffer too big\n");
 		return -EINVAL;
@@ -190,6 +215,10 @@ static int pin_rcv_pages(struct hfi1_filedata *fd, struct tid_user_buf *tidbuf)
 		return pinned;
 	}
 	tidbuf->pages = pages;
+<<<<<<< HEAD
+=======
+	tidbuf->npages = npages;
+>>>>>>> b7ba80a49124 (Commit)
 	fd->tid_n_pinned += pinned;
 	return pinned;
 }
@@ -249,6 +278,7 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
 	int ret = 0, need_group = 0, pinned;
 	struct hfi1_ctxtdata *uctxt = fd->uctxt;
 	struct hfi1_devdata *dd = uctxt->dd;
+<<<<<<< HEAD
 	unsigned int ngroups, pageset_count,
 		tididx = 0, mapped, mapped_pages = 0;
 	u32 *tidlist = NULL;
@@ -259,11 +289,21 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
 		return -EINVAL;
 	if (tinfo->length == 0)
 		return -EINVAL;
+=======
+	unsigned int ngroups, pageidx = 0, pageset_count,
+		tididx = 0, mapped, mapped_pages = 0;
+	u32 *tidlist = NULL;
+	struct tid_user_buf *tidbuf;
+
+	if (!PAGE_ALIGNED(tinfo->vaddr))
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	tidbuf = kzalloc(sizeof(*tidbuf), GFP_KERNEL);
 	if (!tidbuf)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	mutex_init(&tidbuf->cover_mutex);
 	tidbuf->vaddr = tinfo->vaddr;
 	tidbuf->length = tinfo->length;
@@ -283,23 +323,47 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
 		if (ret)
 			goto fail_release_mem;
 		mmu_seq = mmu_interval_read_begin(&tidbuf->notifier);
+=======
+	tidbuf->vaddr = tinfo->vaddr;
+	tidbuf->length = tinfo->length;
+	tidbuf->psets = kcalloc(uctxt->expected_count, sizeof(*tidbuf->psets),
+				GFP_KERNEL);
+	if (!tidbuf->psets) {
+		kfree(tidbuf);
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	pinned = pin_rcv_pages(fd, tidbuf);
 	if (pinned <= 0) {
+<<<<<<< HEAD
 		ret = (pinned < 0) ? pinned : -ENOSPC;
 		goto fail_unpin;
+=======
+		kfree(tidbuf->psets);
+		kfree(tidbuf);
+		return pinned;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Find sets of physically contiguous pages */
 	tidbuf->n_psets = find_phys_blocks(tidbuf, pinned);
 
+<<<<<<< HEAD
 	/* Reserve the number of expected tids to be used. */
+=======
+	/*
+	 * We don't need to access this under a lock since tid_used is per
+	 * process and the same process cannot be in hfi1_user_exp_rcv_clear()
+	 * and hfi1_user_exp_rcv_setup() at the same time.
+	 */
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock(&fd->tid_lock);
 	if (fd->tid_used + tidbuf->n_psets > fd->tid_limit)
 		pageset_count = fd->tid_limit - fd->tid_used;
 	else
 		pageset_count = tidbuf->n_psets;
+<<<<<<< HEAD
 	fd->tid_used += pageset_count;
 	spin_unlock(&fd->tid_lock);
 
@@ -307,12 +371,22 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
 		ret = -ENOSPC;
 		goto fail_unreserve;
 	}
+=======
+	spin_unlock(&fd->tid_lock);
+
+	if (!pageset_count)
+		goto bail;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ngroups = pageset_count / dd->rcv_entries.group_size;
 	tidlist = kcalloc(pageset_count, sizeof(*tidlist), GFP_KERNEL);
 	if (!tidlist) {
 		ret = -ENOMEM;
+<<<<<<< HEAD
 		goto fail_unreserve;
+=======
+		goto nomem;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	tididx = 0;
@@ -331,7 +405,11 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
 			tid_group_pop(&uctxt->tid_group_list);
 
 		ret = program_rcvarray(fd, tidbuf, grp,
+<<<<<<< HEAD
 				       dd->rcv_entries.group_size,
+=======
+				       pageidx, dd->rcv_entries.group_size,
+>>>>>>> b7ba80a49124 (Commit)
 				       tidlist, &tididx, &mapped);
 		/*
 		 * If there was a failure to program the RcvArray
@@ -347,10 +425,18 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
 
 		tid_group_add_tail(grp, &uctxt->tid_full_list);
 		ngroups--;
+<<<<<<< HEAD
 		mapped_pages += mapped;
 	}
 
 	while (tididx < pageset_count) {
+=======
+		pageidx += ret;
+		mapped_pages += mapped;
+	}
+
+	while (pageidx < pageset_count) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct tid_group *grp, *ptr;
 		/*
 		 * If we don't have any partially used tid groups, check
@@ -372,11 +458,19 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
 		 */
 		list_for_each_entry_safe(grp, ptr, &uctxt->tid_used_list.list,
 					 list) {
+<<<<<<< HEAD
 			unsigned use = min_t(unsigned, pageset_count - tididx,
 					     grp->size - grp->used);
 
 			ret = program_rcvarray(fd, tidbuf, grp,
 					       use, tidlist,
+=======
+			unsigned use = min_t(unsigned, pageset_count - pageidx,
+					     grp->size - grp->used);
+
+			ret = program_rcvarray(fd, tidbuf, grp,
+					       pageidx, use, tidlist,
+>>>>>>> b7ba80a49124 (Commit)
 					       &tididx, &mapped);
 			if (ret < 0) {
 				hfi1_cdbg(TID,
@@ -388,10 +482,18 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
 					tid_group_move(grp,
 						       &uctxt->tid_used_list,
 						       &uctxt->tid_full_list);
+<<<<<<< HEAD
 				mapped_pages += mapped;
 				need_group = 0;
 				/* Check if we are done so we break out early */
 				if (tididx >= pageset_count)
+=======
+				pageidx += ret;
+				mapped_pages += mapped;
+				need_group = 0;
+				/* Check if we are done so we break out early */
+				if (pageidx >= pageset_count)
+>>>>>>> b7ba80a49124 (Commit)
 					break;
 			} else if (WARN_ON(ret == 0)) {
 				/*
@@ -406,6 +508,7 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
 	}
 unlock:
 	mutex_unlock(&uctxt->exp_mutex);
+<<<<<<< HEAD
 	hfi1_cdbg(TID, "total mapped: tidpairs:%u pages:%u (%d)", tididx,
 		  mapped_pages, ret);
 
@@ -478,6 +581,45 @@ fail_release_mem:
 	kfree(tidbuf);
 	kfree(tidlist);
 	return ret;
+=======
+nomem:
+	hfi1_cdbg(TID, "total mapped: tidpairs:%u pages:%u (%d)", tididx,
+		  mapped_pages, ret);
+	if (tididx) {
+		spin_lock(&fd->tid_lock);
+		fd->tid_used += tididx;
+		spin_unlock(&fd->tid_lock);
+		tinfo->tidcnt = tididx;
+		tinfo->length = mapped_pages * PAGE_SIZE;
+
+		if (copy_to_user(u64_to_user_ptr(tinfo->tidlist),
+				 tidlist, sizeof(tidlist[0]) * tididx)) {
+			/*
+			 * On failure to copy to the user level, we need to undo
+			 * everything done so far so we don't leak resources.
+			 */
+			tinfo->tidlist = (unsigned long)&tidlist;
+			hfi1_user_exp_rcv_clear(fd, tinfo);
+			tinfo->tidlist = 0;
+			ret = -EFAULT;
+			goto bail;
+		}
+	}
+
+	/*
+	 * If not everything was mapped (due to insufficient RcvArray entries,
+	 * for example), unpin all unmapped pages so we can pin them nex time.
+	 */
+	if (mapped_pages != pinned)
+		unpin_rcv_pages(fd, tidbuf, NULL, mapped_pages,
+				(pinned - mapped_pages), false);
+bail:
+	kfree(tidbuf->psets);
+	kfree(tidlist);
+	kfree(tidbuf->pages);
+	kfree(tidbuf);
+	return ret > 0 ? 0 : ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int hfi1_user_exp_rcv_clear(struct hfi1_filedata *fd,
@@ -498,7 +640,11 @@ int hfi1_user_exp_rcv_clear(struct hfi1_filedata *fd,
 
 	mutex_lock(&uctxt->exp_mutex);
 	for (tididx = 0; tididx < tinfo->tidcnt; tididx++) {
+<<<<<<< HEAD
 		ret = unprogram_rcvarray(fd, tidinfo[tididx]);
+=======
+		ret = unprogram_rcvarray(fd, tidinfo[tididx], NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret) {
 			hfi1_cdbg(TID, "Failed to unprogram rcv array %d",
 				  ret);
@@ -635,6 +781,10 @@ static u32 find_phys_blocks(struct tid_user_buf *tidbuf, unsigned int npages)
  *	  struct tid_pageset holding information on physically contiguous
  *	  chunks from the user buffer), and other fields.
  * @grp: RcvArray group
+<<<<<<< HEAD
+=======
+ * @start: starting index into sets array
+>>>>>>> b7ba80a49124 (Commit)
  * @count: number of struct tid_pageset's to program
  * @tidlist: the array of u32 elements when the information about the
  *           programmed RcvArray entries is to be encoded.
@@ -654,14 +804,22 @@ static u32 find_phys_blocks(struct tid_user_buf *tidbuf, unsigned int npages)
  * number of RcvArray entries programmed.
  */
 static int program_rcvarray(struct hfi1_filedata *fd, struct tid_user_buf *tbuf,
+<<<<<<< HEAD
 			    struct tid_group *grp, u16 count,
+=======
+			    struct tid_group *grp,
+			    unsigned int start, u16 count,
+>>>>>>> b7ba80a49124 (Commit)
 			    u32 *tidlist, unsigned int *tididx,
 			    unsigned int *pmapped)
 {
 	struct hfi1_ctxtdata *uctxt = fd->uctxt;
 	struct hfi1_devdata *dd = uctxt->dd;
 	u16 idx;
+<<<<<<< HEAD
 	unsigned int start = *tididx;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 tidinfo = 0, rcventry, useidx = 0;
 	int mapped = 0;
 
@@ -706,7 +864,12 @@ static int program_rcvarray(struct hfi1_filedata *fd, struct tid_user_buf *tbuf,
 			return ret;
 		mapped += npages;
 
+<<<<<<< HEAD
 		tidinfo = create_tid(rcventry - uctxt->expected_base, npages);
+=======
+		tidinfo = rcventry2tidinfo(rcventry - uctxt->expected_base) |
+			EXP_TID_SET(LEN, npages);
+>>>>>>> b7ba80a49124 (Commit)
 		tidlist[(*tididx)++] = tidinfo;
 		grp->used++;
 		grp->map |= 1 << useidx++;
@@ -750,7 +913,10 @@ static int set_rcvarray_entry(struct hfi1_filedata *fd,
 	}
 
 	node->fdata = fd;
+<<<<<<< HEAD
 	mutex_init(&node->invalidate_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	node->phys = page_to_phys(pages[0]);
 	node->npages = npages;
 	node->rcventry = rcventry;
@@ -766,6 +932,14 @@ static int set_rcvarray_entry(struct hfi1_filedata *fd,
 			&tid_mn_ops);
 		if (ret)
 			goto out_unmap;
+<<<<<<< HEAD
+=======
+		/*
+		 * FIXME: This is in the wrong order, the notifier should be
+		 * established before the pages are pinned by pin_rcv_pages.
+		 */
+		mmu_interval_read_begin(&node->notifier);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	fd->entry_to_rb[node->rcventry - uctxt->expected_base] = node;
 
@@ -785,29 +959,56 @@ out_unmap:
 	return -EFAULT;
 }
 
+<<<<<<< HEAD
 static int unprogram_rcvarray(struct hfi1_filedata *fd, u32 tidinfo)
+=======
+static int unprogram_rcvarray(struct hfi1_filedata *fd, u32 tidinfo,
+			      struct tid_group **grp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hfi1_ctxtdata *uctxt = fd->uctxt;
 	struct hfi1_devdata *dd = uctxt->dd;
 	struct tid_rb_node *node;
+<<<<<<< HEAD
 	u32 tidctrl = EXP_TID_GET(tidinfo, CTRL);
 	u32 tididx = EXP_TID_GET(tidinfo, IDX) << 1, rcventry;
 
 	if (tidctrl == 0x3 || tidctrl == 0x0)
+=======
+	u8 tidctrl = EXP_TID_GET(tidinfo, CTRL);
+	u32 tididx = EXP_TID_GET(tidinfo, IDX) << 1, rcventry;
+
+	if (tididx >= uctxt->expected_count) {
+		dd_dev_err(dd, "Invalid RcvArray entry (%u) index for ctxt %u\n",
+			   tididx, uctxt->ctxt);
+		return -EINVAL;
+	}
+
+	if (tidctrl == 0x3)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	rcventry = tididx + (tidctrl - 1);
 
+<<<<<<< HEAD
 	if (rcventry >= uctxt->expected_count) {
 		dd_dev_err(dd, "Invalid RcvArray entry (%u) index for ctxt %u\n",
 			   rcventry, uctxt->ctxt);
 		return -EINVAL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	node = fd->entry_to_rb[rcventry];
 	if (!node || node->rcventry != (uctxt->expected_base + rcventry))
 		return -EBADF;
 
+<<<<<<< HEAD
+=======
+	if (grp)
+		*grp = node->grp;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (fd->use_mn)
 		mmu_interval_notifier_remove(&node->notifier);
 	cacheless_tid_rb_remove(fd, node);
@@ -815,21 +1016,29 @@ static int unprogram_rcvarray(struct hfi1_filedata *fd, u32 tidinfo)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void __clear_tid_node(struct hfi1_filedata *fd, struct tid_rb_node *node)
+=======
+static void clear_tid_node(struct hfi1_filedata *fd, struct tid_rb_node *node)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hfi1_ctxtdata *uctxt = fd->uctxt;
 	struct hfi1_devdata *dd = uctxt->dd;
 
+<<<<<<< HEAD
 	mutex_lock(&node->invalidate_mutex);
 	if (node->freed)
 		goto done;
 	node->freed = true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	trace_hfi1_exp_tid_unreg(uctxt->ctxt, fd->subctxt, node->rcventry,
 				 node->npages,
 				 node->notifier.interval_tree.start, node->phys,
 				 node->dma_addr);
 
+<<<<<<< HEAD
 	/* Make sure device has seen the write before pages are unpinned */
 	hfi1_put_tid(dd, node->rcventry, PT_INVALID_FLUSH, 0, 0);
 
@@ -843,6 +1052,15 @@ static void clear_tid_node(struct hfi1_filedata *fd, struct tid_rb_node *node)
 	struct hfi1_ctxtdata *uctxt = fd->uctxt;
 
 	__clear_tid_node(fd, node);
+=======
+	/*
+	 * Make sure device has seen the write before we unpin the
+	 * pages.
+	 */
+	hfi1_put_tid(dd, node->rcventry, PT_INVALID_FLUSH, 0, 0);
+
+	unpin_rcv_pages(fd, NULL, node, 0, node->npages, true);
+>>>>>>> b7ba80a49124 (Commit)
 
 	node->grp->used--;
 	node->grp->map &= ~(1 << (node->rcventry - node->grp->base));
@@ -901,6 +1119,7 @@ static bool tid_rb_invalidate(struct mmu_interval_notifier *mni,
 	if (node->freed)
 		return true;
 
+<<<<<<< HEAD
 	/* take action only if unmapping */
 	if (range->event != MMU_NOTIFY_UNMAP)
 		return true;
@@ -911,12 +1130,24 @@ static bool tid_rb_invalidate(struct mmu_interval_notifier *mni,
 
 	/* clear the hardware rcvarray entry */
 	__clear_tid_node(fdata, node);
+=======
+	trace_hfi1_exp_tid_inval(uctxt->ctxt, fdata->subctxt,
+				 node->notifier.interval_tree.start,
+				 node->rcventry, node->npages, node->dma_addr);
+	node->freed = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock(&fdata->invalid_lock);
 	if (fdata->invalid_tid_idx < uctxt->expected_count) {
 		fdata->invalid_tids[fdata->invalid_tid_idx] =
+<<<<<<< HEAD
 			create_tid(node->rcventry - uctxt->expected_base,
 				   node->npages);
+=======
+			rcventry2tidinfo(node->rcventry - uctxt->expected_base);
+		fdata->invalid_tids[fdata->invalid_tid_idx] |=
+			EXP_TID_SET(LEN, node->npages);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!fdata->invalid_tid_idx) {
 			unsigned long *ev;
 
@@ -939,6 +1170,7 @@ static bool tid_rb_invalidate(struct mmu_interval_notifier *mni,
 	return true;
 }
 
+<<<<<<< HEAD
 static bool tid_cover_invalidate(struct mmu_interval_notifier *mni,
 			         const struct mmu_notifier_range *range,
 			         unsigned long cur_seq)
@@ -956,6 +1188,8 @@ static bool tid_cover_invalidate(struct mmu_interval_notifier *mni,
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void cacheless_tid_rb_remove(struct hfi1_filedata *fdata,
 				    struct tid_rb_node *tnode)
 {

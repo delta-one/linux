@@ -16,9 +16,14 @@ description:
 properties:
   interrupts:
     description:
+<<<<<<< HEAD
       TLMM summary IRQ and dirconn interrupts.
     minItems: 1
     maxItems: 9
+=======
+      Specifies the TLMM summary IRQ
+    maxItems: 1
+>>>>>>> b7ba80a49124 (Commit)
 
   interrupt-controller: true
 
@@ -66,6 +71,13 @@ additionalProperties: true
 
 $defs:
   qcom-tlmm-state:
+<<<<<<< HEAD
+=======
+    allOf:
+      - $ref: pincfg-node.yaml#
+      - $ref: pinmux-node.yaml#
+
+>>>>>>> b7ba80a49124 (Commit)
     properties:
       drive-strength:
         enum: [2, 4, 6, 8, 10, 12, 14, 16]
@@ -79,6 +91,7 @@ $defs:
       output-high: true
       output-low: true
 
+<<<<<<< HEAD
     allOf:
       - $ref: pincfg-node.yaml#
       - $ref: pinmux-node.yaml#
@@ -95,5 +108,7 @@ $defs:
           properties:
             function: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     additionalProperties: true
 ...

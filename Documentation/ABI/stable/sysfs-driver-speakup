@@ -35,6 +35,7 @@ Description:	This controls cursor delay when using arrow keys. When a
 		characters. Set this to a higher value to adjust for the delay
 		and better synchronisation between cursor position and speech.
 
+<<<<<<< HEAD
 What:		/sys/accessibility/speakup/cur_phonetic
 KernelVersion:	6.2
 Contact:	speakup@linux-speakup.org
@@ -44,6 +45,8 @@ Description:	This allows speakup to speak letters phoneticaly when arrowing thro
 		phoneticaly when arrowing over a letter. When cur_phonetic=0, speakup
 		will speak letters as normally.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 What:		/sys/accessibility/speakup/delimiters
 KernelVersion:	2.6
 Contact:	speakup@linux-speakup.org

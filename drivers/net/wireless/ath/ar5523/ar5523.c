@@ -241,11 +241,14 @@ static void ar5523_cmd_tx_cb(struct urb *urb)
 	}
 }
 
+<<<<<<< HEAD
 static void ar5523_cancel_tx_cmd(struct ar5523 *ar)
 {
 	usb_kill_urb(ar->tx_cmd.urb_tx);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ar5523_cmd(struct ar5523 *ar, u32 code, const void *idata,
 		      int ilen, void *odata, int olen, int flags)
 {
@@ -285,7 +288,10 @@ static int ar5523_cmd(struct ar5523 *ar, u32 code, const void *idata,
 	}
 
 	if (!wait_for_completion_timeout(&cmd->done, 2 * HZ)) {
+<<<<<<< HEAD
 		ar5523_cancel_tx_cmd(ar);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		cmd->odata = NULL;
 		ar5523_err(ar, "timeout waiting for command %02x reply\n",
 			   code);
@@ -1361,7 +1367,10 @@ static const struct ieee80211_ops ar5523_ops = {
 	.start			= ar5523_start,
 	.stop			= ar5523_stop,
 	.tx			= ar5523_tx,
+<<<<<<< HEAD
 	.wake_tx_queue		= ieee80211_handle_wake_tx_queue,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.set_rts_threshold	= ar5523_set_rts_threshold,
 	.add_interface		= ar5523_add_interface,
 	.remove_interface	= ar5523_remove_interface,

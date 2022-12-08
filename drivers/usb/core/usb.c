@@ -423,9 +423,15 @@ static void usb_release_dev(struct device *dev)
 	kfree(udev);
 }
 
+<<<<<<< HEAD
 static int usb_dev_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct usb_device *usb_dev;
+=======
+static int usb_dev_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct usb_device *usb_dev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	usb_dev = to_usb_device(dev);
 
@@ -505,10 +511,17 @@ static const struct dev_pm_ops usb_device_pm_ops = {
 #endif	/* CONFIG_PM */
 
 
+<<<<<<< HEAD
 static char *usb_devnode(const struct device *dev,
 			 umode_t *mode, kuid_t *uid, kgid_t *gid)
 {
 	const struct usb_device *usb_dev;
+=======
+static char *usb_devnode(struct device *dev,
+			 umode_t *mode, kuid_t *uid, kgid_t *gid)
+{
+	struct usb_device *usb_dev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	usb_dev = to_usb_device(dev);
 	return kasprintf(GFP_KERNEL, "bus/usb/%03d/%03d",
@@ -998,7 +1011,11 @@ static void usb_debugfs_init(void)
 
 static void usb_debugfs_cleanup(void)
 {
+<<<<<<< HEAD
 	debugfs_lookup_and_remove("devices", usb_debug_root);
+=======
+	debugfs_remove(debugfs_lookup("devices", usb_debug_root));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*

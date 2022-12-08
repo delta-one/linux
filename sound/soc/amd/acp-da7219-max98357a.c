@@ -21,6 +21,10 @@
 
 #include "acp.h"
 #include "../codecs/da7219.h"
+<<<<<<< HEAD
+=======
+#include "../codecs/da7219-aad.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "../codecs/rt5682.h"
 
 #define CZ_PLAT_CLK 48000000
@@ -81,7 +85,11 @@ static int cz_da7219_init(struct snd_soc_pcm_runtime *rtd)
 	snd_jack_set_key(cz_jack.jack, SND_JACK_BTN_2, KEY_VOLUMEDOWN);
 	snd_jack_set_key(cz_jack.jack, SND_JACK_BTN_3, KEY_VOICECOMMAND);
 
+<<<<<<< HEAD
 	snd_soc_component_set_jack(component, &cz_jack, NULL);
+=======
+	da7219_aad_jack_det(component, &cz_jack);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

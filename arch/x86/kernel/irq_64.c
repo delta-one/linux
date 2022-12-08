@@ -50,7 +50,11 @@ static int map_irq_stack(unsigned int cpu)
 		return -ENOMEM;
 
 	/* Store actual TOS to avoid adjustment in the hotpath */
+<<<<<<< HEAD
 	per_cpu(pcpu_hot.hardirq_stack_ptr, cpu) = va + IRQ_STACK_SIZE - 8;
+=======
+	per_cpu(hardirq_stack_ptr, cpu) = va + IRQ_STACK_SIZE - 8;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 #else
@@ -63,14 +67,22 @@ static int map_irq_stack(unsigned int cpu)
 	void *va = per_cpu_ptr(&irq_stack_backing_store, cpu);
 
 	/* Store actual TOS to avoid adjustment in the hotpath */
+<<<<<<< HEAD
 	per_cpu(pcpu_hot.hardirq_stack_ptr, cpu) = va + IRQ_STACK_SIZE - 8;
+=======
+	per_cpu(hardirq_stack_ptr, cpu) = va + IRQ_STACK_SIZE - 8;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 #endif
 
 int irq_init_percpu_irqstack(unsigned int cpu)
 {
+<<<<<<< HEAD
 	if (per_cpu(pcpu_hot.hardirq_stack_ptr, cpu))
+=======
+	if (per_cpu(hardirq_stack_ptr, cpu))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	return map_irq_stack(cpu);
 }

@@ -4,7 +4,10 @@
 #define BTRFS_BLOCK_RSV_H
 
 struct btrfs_trans_handle;
+<<<<<<< HEAD
 struct btrfs_root;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum btrfs_reserve_flush_enum;
 
 /*
@@ -63,7 +66,11 @@ void btrfs_free_block_rsv(struct btrfs_fs_info *fs_info,
 int btrfs_block_rsv_add(struct btrfs_fs_info *fs_info,
 			struct btrfs_block_rsv *block_rsv, u64 num_bytes,
 			enum btrfs_reserve_flush_enum flush);
+<<<<<<< HEAD
 int btrfs_block_rsv_check(struct btrfs_block_rsv *block_rsv, int min_percent);
+=======
+int btrfs_block_rsv_check(struct btrfs_block_rsv *block_rsv, int min_factor);
+>>>>>>> b7ba80a49124 (Commit)
 int btrfs_block_rsv_refill(struct btrfs_fs_info *fs_info,
 			   struct btrfs_block_rsv *block_rsv, u64 min_reserved,
 			   enum btrfs_reserve_flush_enum flush);
@@ -71,6 +78,12 @@ int btrfs_block_rsv_migrate(struct btrfs_block_rsv *src_rsv,
 			    struct btrfs_block_rsv *dst_rsv, u64 num_bytes,
 			    bool update_size);
 int btrfs_block_rsv_use_bytes(struct btrfs_block_rsv *block_rsv, u64 num_bytes);
+<<<<<<< HEAD
+=======
+int btrfs_cond_migrate_bytes(struct btrfs_fs_info *fs_info,
+			     struct btrfs_block_rsv *dest, u64 num_bytes,
+			     int min_factor);
+>>>>>>> b7ba80a49124 (Commit)
 void btrfs_block_rsv_add_bytes(struct btrfs_block_rsv *block_rsv,
 			       u64 num_bytes, bool update_size);
 u64 btrfs_block_rsv_release(struct btrfs_fs_info *fs_info,

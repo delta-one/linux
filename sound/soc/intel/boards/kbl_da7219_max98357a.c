@@ -19,6 +19,10 @@
 #include <sound/soc.h>
 #include "../../codecs/da7219.h"
 #include "../../codecs/hdac_hdmi.h"
+<<<<<<< HEAD
+=======
+#include "../../codecs/da7219-aad.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define KBL_DIALOG_CODEC_DAI "da7219-hifi"
 #define KBL_MAXIM_CODEC_DAI "HiFi"
@@ -206,7 +210,11 @@ static int kabylake_da7219_codec_init(struct snd_soc_pcm_runtime *rtd)
 	snd_jack_set_key(jack->jack, SND_JACK_BTN_1, KEY_VOLUMEUP);
 	snd_jack_set_key(jack->jack, SND_JACK_BTN_2, KEY_VOLUMEDOWN);
 	snd_jack_set_key(jack->jack, SND_JACK_BTN_3, KEY_VOICECOMMAND);
+<<<<<<< HEAD
 	snd_soc_component_set_jack(component, &ctx->kabylake_headset, NULL);
+=======
+	da7219_aad_jack_det(component, &ctx->kabylake_headset);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = snd_soc_dapm_ignore_suspend(&rtd->card->dapm, "SoC DMIC");
 	if (ret)

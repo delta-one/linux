@@ -3,7 +3,10 @@
 #define _ASM_POWERPC_MACHDEP_H
 #ifdef __KERNEL__
 
+<<<<<<< HEAD
 #include <linux/compiler.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/seq_file.h>
 #include <linux/init.h>
 #include <linux/dma-mapping.h>
@@ -20,8 +23,12 @@ struct kimage;
 struct pci_host_bridge;
 
 struct machdep_calls {
+<<<<<<< HEAD
 	const char	*name;
 	const char	*compatible;
+=======
+	char		*name;
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PPC64
 #ifdef CONFIG_PM
 	void		(*iommu_restore)(void);
@@ -206,6 +213,10 @@ struct machdep_calls {
 extern void e500_idle(void);
 extern void power4_idle(void);
 extern void ppc6xx_idle(void);
+<<<<<<< HEAD
+=======
+extern void book3e_idle(void);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * ppc_md contains a copy of the machine description structure for the
@@ -222,6 +233,7 @@ extern struct machdep_calls *machine_id;
 	EXPORT_SYMBOL(mach_##name);				\
 	struct machdep_calls mach_##name __machine_desc =
 
+<<<<<<< HEAD
 static inline bool __machine_is(const struct machdep_calls *md)
 {
 	WARN_ON(!machine_id); // complain if used before probe_machine()
@@ -232,6 +244,13 @@ static inline bool __machine_is(const struct machdep_calls *md)
 	({                                                      \
 		extern struct machdep_calls mach_##name __weak; \
 		__machine_is(&mach_##name);                     \
+=======
+#define machine_is(name) \
+	({ \
+		extern struct machdep_calls mach_##name \
+			__attribute__((weak));		 \
+		machine_id == &mach_##name; \
+>>>>>>> b7ba80a49124 (Commit)
 	})
 
 static inline void log_error(char *buf, unsigned int err_type, int fatal)

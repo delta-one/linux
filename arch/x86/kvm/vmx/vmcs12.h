@@ -208,8 +208,14 @@ struct __packed vmcs12 {
 /*
  * For save/restore compatibility, the vmcs12 field offsets must not change.
  */
+<<<<<<< HEAD
 #define CHECK_OFFSET(field, loc) \
 	ASSERT_STRUCT_OFFSET(struct vmcs12, field, loc)
+=======
+#define CHECK_OFFSET(field, loc)				\
+	BUILD_BUG_ON_MSG(offsetof(struct vmcs12, field) != (loc),	\
+		"Offset of " #field " in struct vmcs12 has changed.")
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void vmx_check_vmcs12_offsets(void)
 {

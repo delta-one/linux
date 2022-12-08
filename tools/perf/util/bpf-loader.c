@@ -27,7 +27,15 @@
 #include "util.h"
 #include "llvm-utils.h"
 #include "c++/clang-c.h"
+<<<<<<< HEAD
 #include "util/hashmap.h"
+=======
+#ifdef HAVE_LIBBPF_SUPPORT
+#include <bpf/hashmap.h>
+#else
+#include "util/hashmap.h"
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #include "asm/bug.h"
 
 #include <internal/xyarray.h>
@@ -296,7 +304,11 @@ static void bpf_program_hash_free(void)
 		return;
 
 	hashmap__for_each_entry(bpf_program_hash, cur, bkt)
+<<<<<<< HEAD
 		clear_prog_priv(cur->pkey, cur->pvalue);
+=======
+		clear_prog_priv(cur->key, cur->value);
+>>>>>>> b7ba80a49124 (Commit)
 
 	hashmap__free(bpf_program_hash);
 	bpf_program_hash = NULL;
@@ -317,12 +329,22 @@ void bpf__clear(void)
 	bpf_map_hash_free();
 }
 
+<<<<<<< HEAD
 static size_t ptr_hash(const long __key, void *ctx __maybe_unused)
 {
 	return __key;
 }
 
 static bool ptr_equal(long key1, long key2, void *ctx __maybe_unused)
+=======
+static size_t ptr_hash(const void *__key, void *ctx __maybe_unused)
+{
+	return (size_t) __key;
+}
+
+static bool ptr_equal(const void *key1, const void *key2,
+			  void *ctx __maybe_unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return key1 == key2;
 }
@@ -1162,7 +1184,11 @@ static void bpf_map_hash_free(void)
 		return;
 
 	hashmap__for_each_entry(bpf_map_hash, cur, bkt)
+<<<<<<< HEAD
 		bpf_map_priv__clear(cur->pkey, cur->pvalue);
+=======
+		bpf_map_priv__clear(cur->key, cur->value);
+>>>>>>> b7ba80a49124 (Commit)
 
 	hashmap__free(bpf_map_hash);
 	bpf_map_hash = NULL;

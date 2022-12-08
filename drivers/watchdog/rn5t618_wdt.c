@@ -144,8 +144,11 @@ static int rn5t618_wdt_probe(struct platform_device *pdev)
 	struct rn5t618 *rn5t618 = dev_get_drvdata(dev->parent);
 	struct rn5t618_wdt *wdt;
 	int min_timeout, max_timeout;
+<<<<<<< HEAD
 	int ret;
 	unsigned int val;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	wdt = devm_kzalloc(dev, sizeof(struct rn5t618_wdt), GFP_KERNEL);
 	if (!wdt)
@@ -162,6 +165,7 @@ static int rn5t618_wdt_probe(struct platform_device *pdev)
 	wdt->wdt_dev.timeout = max_timeout;
 	wdt->wdt_dev.parent = dev;
 
+<<<<<<< HEAD
 	/* Read out previous power-off factor */
 	ret = regmap_read(wdt->rn5t618->regmap, RN5T618_POFFHIS, &val);
 	if (ret)
@@ -172,6 +176,8 @@ static int rn5t618_wdt_probe(struct platform_device *pdev)
 	else if (val & RN5T618_POFFHIS_WDG)
 		wdt->wdt_dev.bootstatus = WDIOF_CARDRESET;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	watchdog_set_drvdata(&wdt->wdt_dev, wdt);
 	watchdog_init_timeout(&wdt->wdt_dev, timeout, dev);
 	watchdog_set_nowayout(&wdt->wdt_dev, nowayout);

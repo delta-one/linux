@@ -13,7 +13,10 @@
 #include <linux/blkdev.h>
 #include <linux/backing-dev.h>
 #include <linux/random.h>
+<<<<<<< HEAD
 #include <linux/log2.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/crc32.h>
 #include "nilfs.h"
 #include "segment.h"
@@ -194,6 +197,7 @@ static int nilfs_store_log_cursor(struct the_nilfs *nilfs,
 }
 
 /**
+<<<<<<< HEAD
  * nilfs_get_blocksize - get block size from raw superblock data
  * @sb: super block instance
  * @sbp: superblock raw data buffer
@@ -222,6 +226,8 @@ static int nilfs_get_blocksize(struct super_block *sb,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * load_nilfs - load and recover the nilfs
  * @nilfs: the_nilfs structure to be released
  * @sb: super block instance used to recover past segment
@@ -274,15 +280,22 @@ int load_nilfs(struct the_nilfs *nilfs, struct super_block *sb)
 		nilfs->ns_sbwtime = le64_to_cpu(sbp[0]->s_wtime);
 
 		/* verify consistency between two super blocks */
+<<<<<<< HEAD
 		err = nilfs_get_blocksize(sb, sbp[0], &blocksize);
 		if (err)
 			goto scan_error;
 
+=======
+		blocksize = BLOCK_SIZE << le32_to_cpu(sbp[0]->s_log_block_size);
+>>>>>>> b7ba80a49124 (Commit)
 		if (blocksize != nilfs->ns_blocksize) {
 			nilfs_warn(sb,
 				   "blocksize differs between two super blocks (%d != %d)",
 				   blocksize, nilfs->ns_blocksize);
+<<<<<<< HEAD
 			err = -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			goto scan_error;
 		}
 
@@ -476,6 +489,7 @@ static int nilfs_valid_sb(struct nilfs_super_block *sbp)
 	return crc == le32_to_cpu(sbp->s_sum);
 }
 
+<<<<<<< HEAD
 /**
  * nilfs_sb2_bad_offset - check the location of the second superblock
  * @sbp: superblock raw data buffer
@@ -503,6 +517,13 @@ static bool nilfs_sb2_bad_offset(struct nilfs_super_block *sbp, u64 offset)
 	index = offset >> (shift_bits + BLOCK_SIZE_BITS);
 	do_div(index, blocks_per_segment);
 	return index < nsegments;
+=======
+static int nilfs_sb2_bad_offset(struct nilfs_super_block *sbp, u64 offset)
+{
+	return offset < ((le64_to_cpu(sbp->s_nsegments) *
+			  le32_to_cpu(sbp->s_blocks_per_segment)) <<
+			 (le32_to_cpu(sbp->s_log_block_size) + 10));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void nilfs_release_super_block(struct the_nilfs *nilfs)
@@ -544,6 +565,7 @@ static int nilfs_load_super_block(struct the_nilfs *nilfs,
 {
 	struct nilfs_super_block **sbp = nilfs->ns_sbp;
 	struct buffer_head **sbh = nilfs->ns_sbh;
+<<<<<<< HEAD
 	u64 sb2off, devsize = bdev_nr_bytes(nilfs->ns_bdev);
 	int valid[2], swp = 0;
 
@@ -553,6 +575,11 @@ static int nilfs_load_super_block(struct the_nilfs *nilfs,
 	}
 	sb2off = NILFS_SB2_OFFSET_BYTES(devsize);
 
+=======
+	u64 sb2off = NILFS_SB2_OFFSET_BYTES(bdev_nr_bytes(nilfs->ns_bdev));
+	int valid[2], swp = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	sbp[0] = nilfs_read_super_block(sb, NILFS_SB_OFFSET_BYTES, blocksize,
 					&sbh[0]);
 	sbp[1] = nilfs_read_super_block(sb, sb2off, blocksize, &sbh[1]);
@@ -647,11 +674,17 @@ int init_nilfs(struct the_nilfs *nilfs, struct super_block *sb, char *data)
 	if (err)
 		goto failed_sbh;
 
+<<<<<<< HEAD
 	err = nilfs_get_blocksize(sb, sbp, &blocksize);
 	if (err)
 		goto failed_sbh;
 
 	if (blocksize < NILFS_MIN_BLOCK_SIZE) {
+=======
+	blocksize = BLOCK_SIZE << le32_to_cpu(sbp->s_log_block_size);
+	if (blocksize < NILFS_MIN_BLOCK_SIZE ||
+	    blocksize > NILFS_MAX_BLOCK_SIZE) {
+>>>>>>> b7ba80a49124 (Commit)
 		nilfs_err(sb,
 			  "couldn't mount because of unsupported filesystem blocksize %d",
 			  blocksize);
@@ -753,7 +786,13 @@ int nilfs_count_free_blocks(struct the_nilfs *nilfs, sector_t *nblocks)
 {
 	unsigned long ncleansegs;
 
+<<<<<<< HEAD
 	ncleansegs = nilfs_sufile_get_ncleansegs(nilfs->ns_sufile);
+=======
+	down_read(&NILFS_MDT(nilfs->ns_dat)->mi_sem);
+	ncleansegs = nilfs_sufile_get_ncleansegs(nilfs->ns_sufile);
+	up_read(&NILFS_MDT(nilfs->ns_dat)->mi_sem);
+>>>>>>> b7ba80a49124 (Commit)
 	*nblocks = (sector_t)ncleansegs * nilfs->ns_blocks_per_segment;
 	return 0;
 }

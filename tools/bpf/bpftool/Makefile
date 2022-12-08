@@ -53,7 +53,11 @@ $(LIBBPF_INTERNAL_HDRS): $(LIBBPF_HDRS_DIR)/%.h: $(BPF_DIR)/%.h | $(LIBBPF_HDRS_
 $(LIBBPF_BOOTSTRAP): $(wildcard $(BPF_DIR)/*.[ch] $(BPF_DIR)/Makefile) | $(LIBBPF_BOOTSTRAP_OUTPUT)
 	$(Q)$(MAKE) -C $(BPF_DIR) OUTPUT=$(LIBBPF_BOOTSTRAP_OUTPUT) \
 		DESTDIR=$(LIBBPF_BOOTSTRAP_DESTDIR:/=) prefix= \
+<<<<<<< HEAD
 		ARCH= CROSS_COMPILE= CC="$(HOSTCC)" LD="$(HOSTLD)" AR="$(HOSTAR)" $@ install_headers
+=======
+		ARCH= CROSS_COMPILE= CC=$(HOSTCC) LD=$(HOSTLD) AR=$(HOSTAR) $@ install_headers
+>>>>>>> b7ba80a49124 (Commit)
 
 $(LIBBPF_BOOTSTRAP_INTERNAL_HDRS): $(LIBBPF_BOOTSTRAP_HDRS_DIR)/%.h: $(BPF_DIR)/%.h | $(LIBBPF_BOOTSTRAP_HDRS_DIR)
 	$(call QUIET_INSTALL, $@)
@@ -93,6 +97,7 @@ INSTALL ?= install
 RM ?= rm -f
 
 FEATURE_USER = .bpftool
+<<<<<<< HEAD
 
 FEATURE_TESTS := clang-bpf-co-re
 FEATURE_TESTS += llvm
@@ -109,6 +114,13 @@ FEATURE_DISPLAY += libcap
 FEATURE_DISPLAY += libbfd
 FEATURE_DISPLAY += libbfd-liberty
 FEATURE_DISPLAY += libbfd-liberty-z
+=======
+FEATURE_TESTS = libbfd libbfd-liberty libbfd-liberty-z \
+	disassembler-four-args disassembler-init-styled libcap \
+	clang-bpf-co-re
+FEATURE_DISPLAY = libbfd libbfd-liberty libbfd-liberty-z \
+	libcap clang-bpf-co-re
+>>>>>>> b7ba80a49124 (Commit)
 
 check_feat := 1
 NON_CHECK_FEAT_TARGETS := clean uninstall doc doc-clean doc-install doc-uninstall
@@ -126,6 +138,16 @@ include $(FEATURES_DUMP)
 endif
 endif
 
+<<<<<<< HEAD
+=======
+ifeq ($(feature-disassembler-four-args), 1)
+CFLAGS += -DDISASM_FOUR_ARGS_SIGNATURE
+endif
+ifeq ($(feature-disassembler-init-styled), 1)
+    CFLAGS += -DDISASM_INIT_STYLED
+endif
+
+>>>>>>> b7ba80a49124 (Commit)
 LIBS = $(LIBBPF) -lelf -lz
 LIBS_BOOTSTRAP = $(LIBBPF_BOOTSTRAP) -lelf -lz
 ifeq ($(feature-libcap), 1)
@@ -137,6 +159,7 @@ include $(wildcard $(OUTPUT)*.d)
 
 all: $(OUTPUT)bpftool
 
+<<<<<<< HEAD
 SRCS := $(wildcard *.c)
 
 ifeq ($(feature-llvm),1)
@@ -176,6 +199,23 @@ endif
 ifeq ($(filter -DHAVE_LLVM_SUPPORT -DHAVE_LIBBFD_SUPPORT,$(CFLAGS)),)
   # No support for JIT disassembly
   SRCS := $(filter-out jit_disasm.c,$(SRCS))
+=======
+BFD_SRCS = jit_disasm.c
+
+SRCS = $(filter-out $(BFD_SRCS),$(wildcard *.c))
+
+ifeq ($(feature-libbfd),1)
+  LIBS += -lbfd -ldl -lopcodes
+else ifeq ($(feature-libbfd-liberty),1)
+  LIBS += -lbfd -ldl -lopcodes -liberty
+else ifeq ($(feature-libbfd-liberty-z),1)
+  LIBS += -lbfd -ldl -lopcodes -liberty -lz
+endif
+
+ifneq ($(filter -lbfd,$(LIBS)),)
+CFLAGS += -DHAVE_LIBBFD_SUPPORT
+SRCS += $(BFD_SRCS)
+>>>>>>> b7ba80a49124 (Commit)
 endif
 
 HOST_CFLAGS = $(subst -I$(LIBBPF_INCLUDE),-I$(LIBBPF_BOOTSTRAP_INCLUDE),\
@@ -215,8 +255,12 @@ $(OUTPUT)%.bpf.o: skeleton/%.bpf.c $(OUTPUT)vmlinux.h $(LIBBPF_BOOTSTRAP)
 		-I$(or $(OUTPUT),.) \
 		-I$(srctree)/tools/include/uapi/ \
 		-I$(LIBBPF_BOOTSTRAP_INCLUDE) \
+<<<<<<< HEAD
 		-g -O2 -Wall -fno-stack-protector \
 		-target bpf -c $< -o $@
+=======
+		-g -O2 -Wall -target bpf -c $< -o $@
+>>>>>>> b7ba80a49124 (Commit)
 	$(Q)$(LLVM_STRIP) -g $@
 
 $(OUTPUT)%.skel.h: $(OUTPUT)%.bpf.o $(BPFTOOL_BOOTSTRAP)
@@ -294,6 +338,9 @@ FORCE:
 .PHONY: all FORCE bootstrap clean install-bin install uninstall
 .PHONY: doc doc-clean doc-install doc-uninstall
 .DEFAULT_GOAL := all
+<<<<<<< HEAD
 
 # Delete partially updated (corrupted) files on error
 .DELETE_ON_ERROR:
+=======
+>>>>>>> b7ba80a49124 (Commit)

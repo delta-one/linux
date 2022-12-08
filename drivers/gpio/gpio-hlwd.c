@@ -11,7 +11,10 @@
 #include <linux/module.h>
 #include <linux/of.h>
 #include <linux/of_platform.h>
+<<<<<<< HEAD
 #include <linux/seq_file.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 
 /*
@@ -49,7 +52,11 @@
 
 struct hlwd_gpio {
 	struct gpio_chip gpioc;
+<<<<<<< HEAD
 	struct device *dev;
+=======
+	struct irq_chip irqc;
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem *regs;
 	int irq;
 	u32 edge_emulation;
@@ -124,7 +131,10 @@ static void hlwd_gpio_irq_mask(struct irq_data *data)
 	mask &= ~BIT(data->hwirq);
 	iowrite32be(mask, hlwd->regs + HW_GPIOB_INTMASK);
 	raw_spin_unlock_irqrestore(&hlwd->gpioc.bgpio_lock, flags);
+<<<<<<< HEAD
 	gpiochip_disable_irq(&hlwd->gpioc, irqd_to_hwirq(data));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void hlwd_gpio_irq_unmask(struct irq_data *data)
@@ -134,7 +144,10 @@ static void hlwd_gpio_irq_unmask(struct irq_data *data)
 	unsigned long flags;
 	u32 mask;
 
+<<<<<<< HEAD
 	gpiochip_enable_irq(&hlwd->gpioc, irqd_to_hwirq(data));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	raw_spin_lock_irqsave(&hlwd->gpioc.bgpio_lock, flags);
 	mask = ioread32be(hlwd->regs + HW_GPIOB_INTMASK);
 	mask |= BIT(data->hwirq);
@@ -205,6 +218,7 @@ static int hlwd_gpio_irq_set_type(struct irq_data *data, unsigned int flow_type)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void hlwd_gpio_irq_print_chip(struct irq_data *data, struct seq_file *p)
 {
 	struct hlwd_gpio *hlwd =
@@ -223,6 +237,8 @@ static const struct irq_chip hlwd_gpio_irq_chip = {
 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int hlwd_gpio_probe(struct platform_device *pdev)
 {
 	struct hlwd_gpio *hlwd;
@@ -237,8 +253,11 @@ static int hlwd_gpio_probe(struct platform_device *pdev)
 	if (IS_ERR(hlwd->regs))
 		return PTR_ERR(hlwd->regs);
 
+<<<<<<< HEAD
 	hlwd->dev = &pdev->dev;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Claim all GPIOs using the OWNER register. This will not work on
 	 * systems where the AHBPROT memory firewall hasn't been configured to
@@ -282,8 +301,19 @@ static int hlwd_gpio_probe(struct platform_device *pdev)
 			return hlwd->irq;
 		}
 
+<<<<<<< HEAD
 		girq = &hlwd->gpioc.irq;
 		gpio_irq_chip_set_chip(girq, &hlwd_gpio_irq_chip);
+=======
+		hlwd->irqc.name = dev_name(&pdev->dev);
+		hlwd->irqc.irq_mask = hlwd_gpio_irq_mask;
+		hlwd->irqc.irq_unmask = hlwd_gpio_irq_unmask;
+		hlwd->irqc.irq_enable = hlwd_gpio_irq_enable;
+		hlwd->irqc.irq_set_type = hlwd_gpio_irq_set_type;
+
+		girq = &hlwd->gpioc.irq;
+		girq->chip = &hlwd->irqc;
+>>>>>>> b7ba80a49124 (Commit)
 		girq->parent_handler = hlwd_gpio_irqhandler;
 		girq->num_parents = 1;
 		girq->parents = devm_kcalloc(&pdev->dev, 1,

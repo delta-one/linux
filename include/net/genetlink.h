@@ -18,11 +18,19 @@ struct genl_multicast_group {
 	u8			flags;
 };
 
+<<<<<<< HEAD
 struct genl_split_ops;
+=======
+struct genl_ops;
+>>>>>>> b7ba80a49124 (Commit)
 struct genl_info;
 
 /**
  * struct genl_family - generic netlink family
+<<<<<<< HEAD
+=======
+ * @id: protocol family identifier (private)
+>>>>>>> b7ba80a49124 (Commit)
  * @hdrsize: length of user specific header in bytes
  * @name: name of family
  * @version: protocol version
@@ -36,16 +44,26 @@ struct genl_info;
  *	do additional, common, filtering and return an error
  * @post_doit: called after an operation's doit callback, it may
  *	undo operations done by pre_doit, for example release locks
+<<<<<<< HEAD
  * @module: pointer to the owning module (set to THIS_MODULE)
  * @mcgrps: multicast groups used by this family
  * @n_mcgrps: number of multicast groups
  * @resv_start_op: first operation for which reserved fields of the header
  *	can be validated and policies are required (see below);
  *	new families should leave this field at zero
+=======
+ * @mcgrps: multicast groups used by this family
+ * @n_mcgrps: number of multicast groups
+ * @resv_start_op: first operation for which reserved fields of the header
+ *	can be validated, new families should leave this field at zero
+ * @mcgrp_offset: starting number of multicast group IDs in this family
+ *	(private)
+>>>>>>> b7ba80a49124 (Commit)
  * @ops: the operations supported by this family
  * @n_ops: number of operations supported by this family
  * @small_ops: the small-struct operations supported by this family
  * @n_small_ops: number of small-struct operations supported by this family
+<<<<<<< HEAD
  * @split_ops: the split do/dump form of operation definition
  * @n_split_ops: number of entries in @split_ops, not that with split do/dump
  *	ops the number of entries is not the same as number of commands
@@ -58,14 +76,24 @@ struct genl_info;
  * if policy is not provided core will reject all TLV attributes.
  */
 struct genl_family {
+=======
+ */
+struct genl_family {
+	int			id;		/* private */
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int		hdrsize;
 	char			name[GENL_NAMSIZ];
 	unsigned int		version;
 	unsigned int		maxattr;
+<<<<<<< HEAD
+=======
+	unsigned int		mcgrp_offset;	/* private */
+>>>>>>> b7ba80a49124 (Commit)
 	u8			netnsok:1;
 	u8			parallel_ops:1;
 	u8			n_ops;
 	u8			n_small_ops;
+<<<<<<< HEAD
 	u8			n_split_ops;
 	u8			n_mcgrps;
 	u8			resv_start_op;
@@ -74,10 +102,20 @@ struct genl_family {
 					    struct sk_buff *skb,
 					    struct genl_info *info);
 	void			(*post_doit)(const struct genl_split_ops *ops,
+=======
+	u8			n_mcgrps;
+	u8			resv_start_op;
+	const struct nla_policy *policy;
+	int			(*pre_doit)(const struct genl_ops *ops,
+					    struct sk_buff *skb,
+					    struct genl_info *info);
+	void			(*post_doit)(const struct genl_ops *ops,
+>>>>>>> b7ba80a49124 (Commit)
 					     struct sk_buff *skb,
 					     struct genl_info *info);
 	const struct genl_ops *	ops;
 	const struct genl_small_ops *small_ops;
+<<<<<<< HEAD
 	const struct genl_split_ops *split_ops;
 	const struct genl_multicast_group *mcgrps;
 	struct module		*module;
@@ -87,6 +125,10 @@ struct genl_family {
 	int			id;
 	/* starting number of multicast group IDs in this family */
 	unsigned int		mcgrp_offset;
+=======
+	const struct genl_multicast_group *mcgrps;
+	struct module		*module;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -125,9 +167,12 @@ static inline void genl_info_net_set(struct genl_info *info, struct net *net)
 
 #define GENL_SET_ERR_MSG(info, msg) NL_SET_ERR_MSG((info)->extack, msg)
 
+<<<<<<< HEAD
 #define GENL_SET_ERR_MSG_FMT(info, msg, args...) \
 	NL_SET_ERR_MSG_FMT((info)->extack, msg, ##args)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Report that a root attribute is missing */
 #define GENL_REQ_ATTR_CHECK(info, attr) ({				\
 	struct genl_info *__info = (info);				\
@@ -191,6 +236,7 @@ struct genl_ops {
 };
 
 /**
+<<<<<<< HEAD
  * struct genl_split_ops - generic netlink operations (do/dump split version)
  * @cmd: command identifier
  * @internal_flags: flags used by the family
@@ -246,11 +292,20 @@ struct genl_split_ops {
  * struct genl_dumpit_info - info that is available during dumpit op call
  * @family: generic netlink family - for internal genl code usage
  * @op: generic netlink ops - for internal genl code usage
+=======
+ * struct genl_info - info that is available during dumpit op call
+ * @family: generic netlink family - for internal genl code usage
+ * @ops: generic netlink ops - for internal genl code usage
+>>>>>>> b7ba80a49124 (Commit)
  * @attrs: netlink attributes
  */
 struct genl_dumpit_info {
 	const struct genl_family *family;
+<<<<<<< HEAD
 	struct genl_split_ops op;
+=======
+	struct genl_ops op;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nlattr **attrs;
 };
 
@@ -424,7 +479,10 @@ int genlmsg_multicast_allns(const struct genl_family *family,
 
 /**
  * genlmsg_unicast - unicast a netlink message
+<<<<<<< HEAD
  * @net: network namespace to look up @portid in
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @skb: netlink message as socket buffer
  * @portid: netlink portid of the destination socket
  */
@@ -444,7 +502,11 @@ static inline int genlmsg_reply(struct sk_buff *skb, struct genl_info *info)
 }
 
 /**
+<<<<<<< HEAD
  * genlmsg_data - head of message payload
+=======
+ * gennlmsg_data - head of message payload
+>>>>>>> b7ba80a49124 (Commit)
  * @gnlh: genetlink message header
  */
 static inline void *genlmsg_data(const struct genlmsghdr *gnlh)

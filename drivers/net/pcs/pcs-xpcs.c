@@ -188,18 +188,38 @@ static bool __xpcs_linkmode_supported(const struct xpcs_compat *compat,
 
 int xpcs_read(struct dw_xpcs *xpcs, int dev, u32 reg)
 {
+<<<<<<< HEAD
 	return mdiodev_c45_read(xpcs->mdiodev, dev, reg);
+=======
+	struct mii_bus *bus = xpcs->mdiodev->bus;
+	int addr = xpcs->mdiodev->addr;
+
+	return mdiobus_c45_read(bus, addr, dev, reg);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int xpcs_write(struct dw_xpcs *xpcs, int dev, u32 reg, u16 val)
 {
+<<<<<<< HEAD
 	return mdiodev_c45_write(xpcs->mdiodev, dev, reg, val);
+=======
+	struct mii_bus *bus = xpcs->mdiodev->bus;
+	int addr = xpcs->mdiodev->addr;
+
+	return mdiobus_c45_write(bus, addr, dev, reg, val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int xpcs_modify_changed(struct dw_xpcs *xpcs, int dev, u32 reg,
 			       u16 mask, u16 set)
 {
+<<<<<<< HEAD
 	return mdiodev_c45_modify_changed(xpcs->mdiodev, dev, reg, mask, set);
+=======
+	u32 reg_addr = mdiobus_c45_addr(dev, reg);
+
+	return mdiodev_modify_changed(xpcs->mdiodev, reg_addr, mask, set);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int xpcs_read_vendor(struct dw_xpcs *xpcs, int dev, u32 reg)
@@ -321,7 +341,11 @@ static int xpcs_read_fault_c73(struct dw_xpcs *xpcs,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int xpcs_read_link_c73(struct dw_xpcs *xpcs)
+=======
+static int xpcs_read_link_c73(struct dw_xpcs *xpcs, bool an)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	bool link = true;
 	int ret;
@@ -333,6 +357,18 @@ static int xpcs_read_link_c73(struct dw_xpcs *xpcs)
 	if (!(ret & MDIO_STAT1_LSTATUS))
 		link = false;
 
+<<<<<<< HEAD
+=======
+	if (an) {
+		ret = xpcs_read(xpcs, MDIO_MMD_AN, MDIO_STAT1);
+		if (ret < 0)
+			return ret;
+
+		if (!(ret & MDIO_STAT1_LSTATUS))
+			link = false;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return link;
 }
 
@@ -923,11 +959,18 @@ static int xpcs_get_state_c73(struct dw_xpcs *xpcs,
 			      struct phylink_link_state *state,
 			      const struct xpcs_compat *compat)
 {
+<<<<<<< HEAD
 	bool an_enabled;
 	int ret;
 
 	/* Link needs to be read first ... */
 	state->link = xpcs_read_link_c73(xpcs) > 0 ? 1 : 0;
+=======
+	int ret;
+
+	/* Link needs to be read first ... */
+	state->link = xpcs_read_link_c73(xpcs, state->an_enabled) > 0 ? 1 : 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* ... and then we check the faults. */
 	ret = xpcs_read_fault_c73(xpcs, state);
@@ -941,6 +984,7 @@ static int xpcs_get_state_c73(struct dw_xpcs *xpcs,
 		return xpcs_do_config(xpcs, state->interface, MLO_AN_INBAND, NULL);
 	}
 
+<<<<<<< HEAD
 	an_enabled = linkmode_test_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
 				       state->advertising);
 	if (an_enabled && xpcs_aneg_done_c73(xpcs, state, compat)) {
@@ -948,6 +992,13 @@ static int xpcs_get_state_c73(struct dw_xpcs *xpcs,
 		xpcs_read_lpa_c73(xpcs, state);
 		xpcs_resolve_lpa_c73(xpcs, state);
 	} else if (an_enabled) {
+=======
+	if (state->an_enabled && xpcs_aneg_done_c73(xpcs, state, compat)) {
+		state->an_complete = true;
+		xpcs_read_lpa_c73(xpcs, state);
+		xpcs_resolve_lpa_c73(xpcs, state);
+	} else if (state->an_enabled) {
+>>>>>>> b7ba80a49124 (Commit)
 		state->link = 0;
 	} else if (state->link) {
 		xpcs_resolve_pma(xpcs, state);
@@ -1002,8 +1053,12 @@ static int xpcs_get_state_c37_1000basex(struct dw_xpcs *xpcs,
 {
 	int lpa, bmsr;
 
+<<<<<<< HEAD
 	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
 			      state->advertising)) {
+=======
+	if (state->an_enabled) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Reset link state */
 		state->link = false;
 

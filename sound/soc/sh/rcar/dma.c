@@ -653,6 +653,7 @@ rsnd_gen2_dma_addr(struct rsnd_dai_stream *io,
 		dma_addrs[is_ssi][is_play][use_src + use_cmd].in_addr;
 }
 
+<<<<<<< HEAD
 /*
  *	Gen4 DMA read/write register offset
  *
@@ -683,24 +684,37 @@ rsnd_gen4_dma_addr(struct rsnd_dai_stream *io, struct rsnd_mod *mod,
 	return RDMA_SSI_SDMC(addr, busif);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static dma_addr_t rsnd_dma_addr(struct rsnd_dai_stream *io,
 				struct rsnd_mod *mod,
 				int is_play, int is_from)
 {
 	struct rsnd_priv *priv = rsnd_io_to_priv(io);
 
+<<<<<<< HEAD
 	if (!mod)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * gen1 uses default DMA addr
 	 */
 	if (rsnd_is_gen1(priv))
 		return 0;
+<<<<<<< HEAD
 	else if (rsnd_is_gen4(priv))
 		return rsnd_gen4_dma_addr(io, mod, is_play, is_from);
 	else
 		return rsnd_gen2_dma_addr(io, mod, is_play, is_from);
+=======
+
+	if (!mod)
+		return 0;
+
+	return rsnd_gen2_dma_addr(io, mod, is_play, is_from);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define MOD_MAX (RSND_MOD_MAX + 1) /* +Memory */
@@ -917,6 +931,7 @@ int rsnd_dma_probe(struct rsnd_priv *priv)
 	/*
 	 * for Gen2 or later
 	 */
+<<<<<<< HEAD
 	dmac = devm_kzalloc(dev, sizeof(*dmac), GFP_KERNEL);
 	if (!dmac) {
 		dev_err(dev, "dma allocate failed\n");
@@ -930,6 +945,12 @@ int rsnd_dma_probe(struct rsnd_priv *priv)
 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "audmapp");
 	if (!res) {
 		dev_err(dev, "lack of audmapp in DT\n");
+=======
+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "audmapp");
+	dmac = devm_kzalloc(dev, sizeof(*dmac), GFP_KERNEL);
+	if (!dmac || !res) {
+		dev_err(dev, "dma allocate failed\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return 0; /* it will be PIO mode */
 	}
 
@@ -938,7 +959,11 @@ int rsnd_dma_probe(struct rsnd_priv *priv)
 	dmac->ppbase = devm_ioremap_resource(dev, res);
 	if (IS_ERR(dmac->ppbase))
 		return PTR_ERR(dmac->ppbase);
+<<<<<<< HEAD
 audmapp_end:
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	priv->dma = dmac;
 
 	/* dummy mem mod for debug */

@@ -49,19 +49,30 @@ static int dp_aux_link_power_up(struct drm_dp_aux *aux,
 					struct dp_link_info *link)
 {
 	u8 value;
+<<<<<<< HEAD
 	ssize_t len;
 	int i;
+=======
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (link->revision < 0x11)
 		return 0;
 
+<<<<<<< HEAD
 	len = drm_dp_dpcd_readb(aux, DP_SET_POWER, &value);
 	if (len < 0)
 		return len;
+=======
+	err = drm_dp_dpcd_readb(aux, DP_SET_POWER, &value);
+	if (err < 0)
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	value &= ~DP_SET_POWER_MASK;
 	value |= DP_SET_POWER_D0;
 
+<<<<<<< HEAD
 	/* retry for 1ms to give the sink time to wake up */
 	for (i = 0; i < 3; i++) {
 		len = drm_dp_dpcd_writeb(aux, DP_SET_POWER, value);
@@ -69,6 +80,13 @@ static int dp_aux_link_power_up(struct drm_dp_aux *aux,
 		if (len == 1)
 			break;
 	}
+=======
+	err = drm_dp_dpcd_writeb(aux, DP_SET_POWER, value);
+	if (err < 0)
+		return err;
+
+	usleep_range(1000, 2000);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -937,6 +955,7 @@ static int dp_link_process_phy_test_pattern_request(
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool dp_link_read_psr_error_status(struct dp_link_private *link)
 {
 	u8 status;
@@ -969,6 +988,8 @@ static bool dp_link_psr_capability_changed(struct dp_link_private *link)
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static u8 get_link_status(const u8 link_status[DP_LINK_STATUS_SIZE], int r)
 {
 	return link_status[r - DP_LANE0_1_STATUS];
@@ -1087,10 +1108,13 @@ int dp_link_process_request(struct dp_link *dp_link)
 		dp_link->sink_request |= DP_TEST_LINK_TRAINING;
 	} else if (!dp_link_process_phy_test_pattern_request(link)) {
 		dp_link->sink_request |= DP_TEST_LINK_PHY_TEST_PATTERN;
+<<<<<<< HEAD
 	} else if (dp_link_read_psr_error_status(link)) {
 		DRM_ERROR("PSR IRQ_HPD received\n");
 	} else if (dp_link_psr_capability_changed(link)) {
 		drm_dbg_dp(link->drm_dev, "PSR Capabiity changed");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		ret = dp_link_process_link_status_update(link);
 		if (!ret) {

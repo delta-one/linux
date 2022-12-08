@@ -9,7 +9,11 @@ size=128
 config=0
 sample_period=*
 sample_type=263
+<<<<<<< HEAD
 read_format=0|4|20
+=======
+read_format=0|4
+>>>>>>> b7ba80a49124 (Commit)
 disabled=1
 inherit=1
 pinned=0

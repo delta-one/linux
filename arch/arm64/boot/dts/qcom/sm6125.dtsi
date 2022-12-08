@@ -5,7 +5,10 @@
 
 #include <dt-bindings/clock/qcom,gcc-sm6125.h>
 #include <dt-bindings/clock/qcom,rpmcc.h>
+<<<<<<< HEAD
 #include <dt-bindings/dma/qcom-gpi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/power/qcom-rpmpd.h>
@@ -46,7 +49,10 @@
 			next-level-cache = <&L2_0>;
 			L2_0: l2-cache {
 				compatible = "cache";
+<<<<<<< HEAD
 				cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 
@@ -86,7 +92,10 @@
 			next-level-cache = <&L2_1>;
 			L2_1: l2-cache {
 				compatible = "cache";
+<<<<<<< HEAD
 				cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 
@@ -410,13 +419,21 @@
 			};
 
 			sdc2_on_state: sdc2-on-state {
+<<<<<<< HEAD
 				clk-pins {
+=======
+				clk {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc2_clk";
 					drive-strength = <16>;
 					bias-disable;
 				};
 
+<<<<<<< HEAD
 				cmd-pins {
+=======
+				cmd-pins-pins {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "sdc2_cmd";
 					drive-strength = <10>;
 					bias-pull-up;
@@ -428,6 +445,7 @@
 					bias-pull-up;
 				};
 			};
+<<<<<<< HEAD
 
 			qup_i2c0_default: qup-i2c0-default-state {
 				pins = "gpio0", "gpio1";
@@ -652,6 +670,8 @@
 				drive-strength = <6>;
 				bias-disable;
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		gcc: clock-controller@1400000 {
@@ -669,9 +689,15 @@
 			reg = <0x01613000 0x180>;
 			#phy-cells = <0>;
 
+<<<<<<< HEAD
 			clocks = <&gcc GCC_AHB2PHY_USB_CLK>,
 				 <&rpmcc RPM_SMD_XO_CLK_SRC>;
 			clock-names = "cfg_ahb", "ref";
+=======
+			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
+				 <&gcc GCC_AHB2PHY_USB_CLK>;
+			clock-names = "ref", "cfg_ahb";
+>>>>>>> b7ba80a49124 (Commit)
 
 			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
 			status = "disabled";
@@ -685,7 +711,11 @@
 		sdhc_1: mmc@4744000 {
 			compatible = "qcom,sm6125-sdhci", "qcom,sdhci-msm-v5";
 			reg = <0x04744000 0x1000>, <0x04745000 0x1000>;
+<<<<<<< HEAD
 			reg-names = "hc", "cqhci";
+=======
+			reg-names = "hc", "core";
+>>>>>>> b7ba80a49124 (Commit)
 
 			interrupts = <GIC_SPI 348 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 352 IRQ_TYPE_LEVEL_HIGH>;
@@ -695,7 +725,10 @@
 				 <&gcc GCC_SDCC1_APPS_CLK>,
 				 <&xo_board>;
 			clock-names = "iface", "core", "xo";
+<<<<<<< HEAD
 			iommus = <&apps_smmu 0x160 0x0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 			power-domains = <&rpmpd SM6125_VDDCX>;
 
@@ -704,8 +737,11 @@
 
 			bus-width = <8>;
 			non-removable;
+<<<<<<< HEAD
 			supports-cqe;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 		};
 
@@ -722,7 +758,10 @@
 				 <&gcc GCC_SDCC2_APPS_CLK>,
 				 <&xo_board>;
 			clock-names = "iface", "core", "xo";
+<<<<<<< HEAD
 			iommus = <&apps_smmu 0x180 0x0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 			pinctrl-0 = <&sdc2_on_state>;
 			pinctrl-1 = <&sdc2_off_state>;
@@ -737,6 +776,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		gpi_dma0: dma-controller@4a00000 {
 			compatible = "qcom,sm6125-gpi-dma", "qcom,sdm845-gpi-dma";
 			reg = <0x04a00000 0x60000>;
@@ -1071,6 +1111,8 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		usb3: usb@4ef8800 {
 			compatible = "qcom,sm6125-dwc3", "qcom,dwc3";
 			reg = <0x04ef8800 0x400>;
@@ -1103,7 +1145,10 @@
 				compatible = "snps,dwc3";
 				reg = <0x04e00000 0xcd00>;
 				interrupts = <GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 				iommus = <&apps_smmu 0x100 0x0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				phys = <&hsusb_phy1>;
 				phy-names = "usb2-phy";
 				snps,dis_u2_susphy_quirk;
@@ -1134,6 +1179,7 @@
 			#size-cells = <0>;
 			interrupt-controller;
 			#interrupt-cells = <4>;
+<<<<<<< HEAD
 		};
 
 		apps_smmu: iommu@c600000 {
@@ -1207,6 +1253,9 @@
 
 			#global-interrupts = <1>;
 			#iommu-cells = <2>;
+=======
+			cell-index = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		apcs_glb: mailbox@f111000 {

@@ -1048,23 +1048,37 @@ static void felix_phylink_get_caps(struct dsa_switch *ds, int port,
 	 */
 	config->legacy_pre_march2020 = false;
 
+<<<<<<< HEAD
 	config->mac_capabilities = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
 				   MAC_10 | MAC_100 | MAC_1000FD |
 				   MAC_2500FD;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__set_bit(ocelot->ports[port]->phy_mode,
 		  config->supported_interfaces);
 }
 
+<<<<<<< HEAD
 static void felix_phylink_mac_config(struct dsa_switch *ds, int port,
 				     unsigned int mode,
 				     const struct phylink_link_state *state)
+=======
+static void felix_phylink_validate(struct dsa_switch *ds, int port,
+				   unsigned long *supported,
+				   struct phylink_link_state *state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ocelot *ocelot = ds->priv;
 	struct felix *felix = ocelot_to_felix(ocelot);
 
+<<<<<<< HEAD
 	if (felix->info->phylink_mac_config)
 		felix->info->phylink_mac_config(ocelot, port, mode, state);
+=======
+	if (felix->info->phylink_validate)
+		felix->info->phylink_validate(ocelot, port, supported, state);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct phylink_pcs *felix_phylink_mac_select_pcs(struct dsa_switch *ds,
@@ -1086,12 +1100,18 @@ static void felix_phylink_mac_link_down(struct dsa_switch *ds, int port,
 					phy_interface_t interface)
 {
 	struct ocelot *ocelot = ds->priv;
+<<<<<<< HEAD
 	struct felix *felix;
 
 	felix = ocelot_to_felix(ocelot);
 
 	ocelot_phylink_mac_link_down(ocelot, port, link_an_mode, interface,
 				     felix->info->quirks);
+=======
+
+	ocelot_phylink_mac_link_down(ocelot, port, link_an_mode, interface,
+				     FELIX_MAC_QUIRKS);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void felix_phylink_mac_link_up(struct dsa_switch *ds, int port,
@@ -1106,7 +1126,11 @@ static void felix_phylink_mac_link_up(struct dsa_switch *ds, int port,
 
 	ocelot_phylink_mac_link_up(ocelot, port, phydev, link_an_mode,
 				   interface, speed, duplex, tx_pause, rx_pause,
+<<<<<<< HEAD
 				   felix->info->quirks);
+=======
+				   FELIX_MAC_QUIRKS);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (felix->info->port_sched_speed_set)
 		felix->info->port_sched_speed_set(ocelot, port, speed);
@@ -1284,6 +1308,7 @@ static int felix_parse_ports_node(struct felix *felix,
 
 		err = felix_validate_phy_mode(felix, port, phy_mode);
 		if (err < 0) {
+<<<<<<< HEAD
 			dev_info(dev, "Unsupported PHY mode %s on port %d\n",
 				 phy_modes(phy_mode), port);
 			of_node_put(child);
@@ -1293,6 +1318,12 @@ static int felix_parse_ports_node(struct felix *felix,
 			 * best-effort to bring up as many ports as possible.
 			 */
 			continue;
+=======
+			dev_err(dev, "Unsupported PHY mode %s on port %d\n",
+				phy_modes(phy_mode), port);
+			of_node_put(child);
+			return err;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		port_phy_modes[port] = phy_mode;
@@ -1324,6 +1355,7 @@ static int felix_parse_dt(struct felix *felix, phy_interface_t *port_phy_modes)
 	return err;
 }
 
+<<<<<<< HEAD
 static struct regmap *felix_request_regmap_by_name(struct felix *felix,
 						   const char *resource_name)
 {
@@ -1375,11 +1407,17 @@ static struct regmap *felix_request_port_regmap(struct felix *felix, int port)
 	return felix_request_regmap_by_name(felix, resource_name);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int felix_init_structs(struct felix *felix, int num_phys_ports)
 {
 	struct ocelot *ocelot = &felix->ocelot;
 	phy_interface_t *port_phy_modes;
+<<<<<<< HEAD
 	struct regmap *target;
+=======
+	struct resource res;
+>>>>>>> b7ba80a49124 (Commit)
 	int port, i, err;
 
 	ocelot->num_phys_ports = num_phys_ports;
@@ -1389,6 +1427,10 @@ static int felix_init_structs(struct felix *felix, int num_phys_ports)
 		return -ENOMEM;
 
 	ocelot->map		= felix->info->map;
+<<<<<<< HEAD
+=======
+	ocelot->stats_layout	= felix->info->stats_layout;
+>>>>>>> b7ba80a49124 (Commit)
 	ocelot->num_mact_rows	= felix->info->num_mact_rows;
 	ocelot->vcap		= felix->info->vcap;
 	ocelot->vcap_pol.base	= felix->info->vcap_pol_base;
@@ -1412,11 +1454,28 @@ static int felix_init_structs(struct felix *felix, int num_phys_ports)
 	}
 
 	for (i = 0; i < TARGET_MAX; i++) {
+<<<<<<< HEAD
 		target = felix_request_regmap(felix, i);
 		if (IS_ERR(target)) {
 			dev_err(ocelot->dev,
 				"Failed to map device memory space: %pe\n",
 				target);
+=======
+		struct regmap *target;
+
+		if (!felix->info->target_io_res[i].name)
+			continue;
+
+		memcpy(&res, &felix->info->target_io_res[i], sizeof(res));
+		res.flags = IORESOURCE_MEM;
+		res.start += felix->switch_base;
+		res.end += felix->switch_base;
+
+		target = felix->info->init_regmap(ocelot, &res);
+		if (IS_ERR(target)) {
+			dev_err(ocelot->dev,
+				"Failed to map device memory space\n");
+>>>>>>> b7ba80a49124 (Commit)
 			kfree(port_phy_modes);
 			return PTR_ERR(target);
 		}
@@ -1433,6 +1492,10 @@ static int felix_init_structs(struct felix *felix, int num_phys_ports)
 
 	for (port = 0; port < num_phys_ports; port++) {
 		struct ocelot_port *ocelot_port;
+<<<<<<< HEAD
+=======
+		struct regmap *target;
+>>>>>>> b7ba80a49124 (Commit)
 
 		ocelot_port = devm_kzalloc(ocelot->dev,
 					   sizeof(struct ocelot_port),
@@ -1444,11 +1507,24 @@ static int felix_init_structs(struct felix *felix, int num_phys_ports)
 			return -ENOMEM;
 		}
 
+<<<<<<< HEAD
 		target = felix_request_port_regmap(felix, port);
 		if (IS_ERR(target)) {
 			dev_err(ocelot->dev,
 				"Failed to map memory space for port %d: %pe\n",
 				port, target);
+=======
+		memcpy(&res, &felix->info->port_io_res[port], sizeof(res));
+		res.flags = IORESOURCE_MEM;
+		res.start += felix->switch_base;
+		res.end += felix->switch_base;
+
+		target = felix->info->init_regmap(ocelot, &res);
+		if (IS_ERR(target)) {
+			dev_err(ocelot->dev,
+				"Failed to map memory space for port %d\n",
+				port);
+>>>>>>> b7ba80a49124 (Commit)
 			kfree(port_phy_modes);
 			return PTR_ERR(target);
 		}
@@ -1566,9 +1642,12 @@ static int felix_setup(struct dsa_switch *ds)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	if (ocelot->targets[HSIO])
 		ocelot_pll5_init(ocelot);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = ocelot_init(ocelot);
 	if (err)
 		goto out_mdiobus_free;
@@ -1585,10 +1664,13 @@ static int felix_setup(struct dsa_switch *ds)
 	dsa_switch_for_each_available_port(dp, ds) {
 		ocelot_init_port(ocelot, dp->index);
 
+<<<<<<< HEAD
 		if (felix->info->configure_serdes)
 			felix->info->configure_serdes(ocelot, dp->index,
 						      dp->dn);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Set the default QoS Classification based on PCP and DEI
 		 * bits of vlan tag.
 		 */
@@ -2057,6 +2139,7 @@ static int felix_port_del_dscp_prio(struct dsa_switch *ds, int port, u8 dscp,
 	return ocelot_port_del_dscp_prio(ocelot, port, dscp, prio);
 }
 
+<<<<<<< HEAD
 static int felix_get_mm(struct dsa_switch *ds, int port,
 			struct ethtool_mm_state *state)
 {
@@ -2082,6 +2165,8 @@ static void felix_get_mm_stats(struct dsa_switch *ds, int port,
 	ocelot_port_get_mm_stats(ocelot, port, stats);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct dsa_switch_ops felix_switch_ops = {
 	.get_tag_protocol		= felix_get_tag_protocol,
 	.change_tag_protocol		= felix_change_tag_protocol,
@@ -2089,9 +2174,12 @@ const struct dsa_switch_ops felix_switch_ops = {
 	.setup				= felix_setup,
 	.teardown			= felix_teardown,
 	.set_ageing_time		= felix_set_ageing_time,
+<<<<<<< HEAD
 	.get_mm				= felix_get_mm,
 	.set_mm				= felix_set_mm,
 	.get_mm_stats			= felix_get_mm_stats,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.get_stats64			= felix_get_stats64,
 	.get_pause_stats		= felix_get_pause_stats,
 	.get_rmon_stats			= felix_get_rmon_stats,
@@ -2103,7 +2191,11 @@ const struct dsa_switch_ops felix_switch_ops = {
 	.get_sset_count			= felix_get_sset_count,
 	.get_ts_info			= felix_get_ts_info,
 	.phylink_get_caps		= felix_phylink_get_caps,
+<<<<<<< HEAD
 	.phylink_mac_config		= felix_phylink_mac_config,
+=======
+	.phylink_validate		= felix_phylink_validate,
+>>>>>>> b7ba80a49124 (Commit)
 	.phylink_mac_select_pcs		= felix_phylink_mac_select_pcs,
 	.phylink_mac_link_down		= felix_phylink_mac_link_down,
 	.phylink_mac_link_up		= felix_phylink_mac_link_up,
@@ -2165,7 +2257,10 @@ const struct dsa_switch_ops felix_switch_ops = {
 	.port_set_host_flood		= felix_port_set_host_flood,
 	.port_change_master		= felix_port_change_master,
 };
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(felix_switch_ops);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct net_device *felix_port_to_netdev(struct ocelot *ocelot, int port)
 {
@@ -2177,7 +2272,10 @@ struct net_device *felix_port_to_netdev(struct ocelot *ocelot, int port)
 
 	return dsa_to_port(ds, port)->slave;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(felix_port_to_netdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int felix_netdev_to_port(struct net_device *dev)
 {
@@ -2189,7 +2287,10 @@ int felix_netdev_to_port(struct net_device *dev)
 
 	return dp->index;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(felix_netdev_to_port);
 
 MODULE_DESCRIPTION("Felix DSA library");
 MODULE_LICENSE("GPL");
+=======
+>>>>>>> b7ba80a49124 (Commit)

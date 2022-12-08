@@ -2,7 +2,10 @@
 #include <stddef.h>
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
+<<<<<<< HEAD
 #include "bpf_misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 __noinline int foo(int (*arr)[10])
 {
@@ -13,8 +16,12 @@ __noinline int foo(int (*arr)[10])
 }
 
 SEC("cgroup_skb/ingress")
+<<<<<<< HEAD
 __failure __msg("invalid indirect read from stack")
 int global_func16(struct __sk_buff *skb)
+=======
+int test_cls(struct __sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int array[10];
 

@@ -16,7 +16,10 @@
 #include <linux/kernel.h>
 #include <linux/version.h>
 
+<<<<<<< HEAD
 #include <linux/v4l2-subdev.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/videodev2.h>
 
 #include <media/media-device.h> /* for media_set_bus_info() */
@@ -32,6 +35,15 @@
 
 #include <trace/events/v4l2.h>
 
+<<<<<<< HEAD
+=======
+/* Zero out the end of the struct pointed to by p.  Everything after, but
+ * not including, the specified field is cleared. */
+#define CLEAR_AFTER_FIELD(p, field) \
+	memset((u8 *)(p) + offsetof(typeof(*(p)), field) + sizeof((p)->field), \
+	0, sizeof(*(p)) - offsetof(typeof(*(p)), field) - sizeof((p)->field))
+
+>>>>>>> b7ba80a49124 (Commit)
 #define is_valid_ioctl(vfd, cmd) test_bit(_IOC_NR(cmd), (vfd)->valid_ioctls)
 
 struct std_descr {
@@ -310,10 +322,21 @@ static void v4l_print_format(const void *arg, bool write_only)
 	case V4L2_BUF_TYPE_VIDEO_OVERLAY:
 	case V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY:
 		win = &p->fmt.win;
+<<<<<<< HEAD
 		pr_cont(", wxh=%dx%d, x,y=%d,%d, field=%s, chromakey=0x%08x, global_alpha=0x%02x\n",
 			win->w.width, win->w.height, win->w.left, win->w.top,
 			prt_names(win->field, v4l2_field_names),
 			win->chromakey, win->global_alpha);
+=======
+		/* Note: we can't print the clip list here since the clips
+		 * pointer is a userspace pointer, not a kernelspace
+		 * pointer. */
+		pr_cont(", wxh=%dx%d, x,y=%d,%d, field=%s, chromakey=0x%08x, clipcount=%u, clips=%p, bitmap=%p, global_alpha=0x%02x\n",
+			win->w.width, win->w.height, win->w.left, win->w.top,
+			prt_names(win->field, v4l2_field_names),
+			win->chromakey, win->clipcount, win->clips,
+			win->bitmap, win->global_alpha);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case V4L2_BUF_TYPE_VBI_CAPTURE:
 	case V4L2_BUF_TYPE_VBI_OUTPUT:
@@ -1295,9 +1318,12 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
 	case V4L2_PIX_FMT_BGRX32:	descr = "32-bit XBGR 8-8-8-8"; break;
 	case V4L2_PIX_FMT_RGBA32:	descr = "32-bit RGBA 8-8-8-8"; break;
 	case V4L2_PIX_FMT_RGBX32:	descr = "32-bit RGBX 8-8-8-8"; break;
+<<<<<<< HEAD
 	case V4L2_PIX_FMT_RGBX1010102:	descr = "32-bit RGBX 10-10-10-2"; break;
 	case V4L2_PIX_FMT_RGBA1010102:	descr = "32-bit RGBA 10-10-10-2"; break;
 	case V4L2_PIX_FMT_ARGB2101010:	descr = "32-bit ARGB 2-10-10-10"; break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case V4L2_PIX_FMT_GREY:		descr = "8-bit Greyscale"; break;
 	case V4L2_PIX_FMT_Y4:		descr = "4-bit Greyscale"; break;
 	case V4L2_PIX_FMT_Y6:		descr = "6-bit Greyscale"; break;
@@ -1341,6 +1367,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
 	case V4L2_PIX_FMT_YUV420:	descr = "Planar YUV 4:2:0"; break;
 	case V4L2_PIX_FMT_HI240:	descr = "8-bit Dithered RGB (BTTV)"; break;
 	case V4L2_PIX_FMT_M420:		descr = "YUV 4:2:0 (M420)"; break;
+<<<<<<< HEAD
 	case V4L2_PIX_FMT_NV12:		descr = "Y/UV 4:2:0"; break;
 	case V4L2_PIX_FMT_NV21:		descr = "Y/VU 4:2:0"; break;
 	case V4L2_PIX_FMT_NV16:		descr = "Y/UV 4:2:2"; break;
@@ -1358,6 +1385,25 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
 	case V4L2_PIX_FMT_NV61M:	descr = "Y/VU 4:2:2 (N-C)"; break;
 	case V4L2_PIX_FMT_NV12MT:	descr = "Y/UV 4:2:0 (64x32 MB, N-C)"; break;
 	case V4L2_PIX_FMT_NV12MT_16X16:	descr = "Y/UV 4:2:0 (16x16 MB, N-C)"; break;
+=======
+	case V4L2_PIX_FMT_NV12:		descr = "Y/CbCr 4:2:0"; break;
+	case V4L2_PIX_FMT_NV21:		descr = "Y/CrCb 4:2:0"; break;
+	case V4L2_PIX_FMT_NV16:		descr = "Y/CbCr 4:2:2"; break;
+	case V4L2_PIX_FMT_NV61:		descr = "Y/CrCb 4:2:2"; break;
+	case V4L2_PIX_FMT_NV24:		descr = "Y/CbCr 4:4:4"; break;
+	case V4L2_PIX_FMT_NV42:		descr = "Y/CrCb 4:4:4"; break;
+	case V4L2_PIX_FMT_P010:		descr = "10-bit Y/CbCr 4:2:0"; break;
+	case V4L2_PIX_FMT_NV12_4L4:	descr = "Y/CbCr 4:2:0 (4x4 Linear)"; break;
+	case V4L2_PIX_FMT_NV12_16L16:	descr = "Y/CbCr 4:2:0 (16x16 Linear)"; break;
+	case V4L2_PIX_FMT_NV12_32L32:   descr = "Y/CbCr 4:2:0 (32x32 Linear)"; break;
+	case V4L2_PIX_FMT_P010_4L4:	descr = "10-bit Y/CbCr 4:2:0 (4x4 Linear)"; break;
+	case V4L2_PIX_FMT_NV12M:	descr = "Y/CbCr 4:2:0 (N-C)"; break;
+	case V4L2_PIX_FMT_NV21M:	descr = "Y/CrCb 4:2:0 (N-C)"; break;
+	case V4L2_PIX_FMT_NV16M:	descr = "Y/CbCr 4:2:2 (N-C)"; break;
+	case V4L2_PIX_FMT_NV61M:	descr = "Y/CrCb 4:2:2 (N-C)"; break;
+	case V4L2_PIX_FMT_NV12MT:	descr = "Y/CbCr 4:2:0 (64x32 MB, N-C)"; break;
+	case V4L2_PIX_FMT_NV12MT_16X16:	descr = "Y/CbCr 4:2:0 (16x16 MB, N-C)"; break;
+>>>>>>> b7ba80a49124 (Commit)
 	case V4L2_PIX_FMT_YUV420M:	descr = "Planar YUV 4:2:0 (N-C)"; break;
 	case V4L2_PIX_FMT_YVU420M:	descr = "Planar YVU 4:2:0 (N-C)"; break;
 	case V4L2_PIX_FMT_YUV422M:	descr = "Planar YUV 4:2:2 (N-C)"; break;
@@ -1438,6 +1484,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
 	case V4L2_META_FMT_VIVID:       descr = "Vivid Metadata"; break;
 	case V4L2_META_FMT_RK_ISP1_PARAMS:	descr = "Rockchip ISP1 3A Parameters"; break;
 	case V4L2_META_FMT_RK_ISP1_STAT_3A:	descr = "Rockchip ISP1 3A Statistics"; break;
+<<<<<<< HEAD
 	case V4L2_PIX_FMT_NV12_8L128:	descr = "NV12 (8x128 Linear)"; break;
 	case V4L2_PIX_FMT_NV12M_8L128:	descr = "NV12M (8x128 Linear)"; break;
 	case V4L2_PIX_FMT_NV12_10BE_8L128:	descr = "10-bit NV12 (8x128 Linear, BE)"; break;
@@ -1445,6 +1492,10 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
 	case V4L2_PIX_FMT_Y210:		descr = "10-bit YUYV Packed"; break;
 	case V4L2_PIX_FMT_Y212:		descr = "12-bit YUYV Packed"; break;
 	case V4L2_PIX_FMT_Y216:		descr = "16-bit YUYV Packed"; break;
+=======
+	case V4L2_PIX_FMT_NV12M_8L128:	descr = "NV12M (8x128 Linear)"; break;
+	case V4L2_PIX_FMT_NV12M_10BE_8L128:	descr = "10-bit NV12M (8x128 Linear, BE)"; break;
+>>>>>>> b7ba80a49124 (Commit)
 
 	default:
 		/* Compressed formats */
@@ -1496,7 +1547,10 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
 		case V4L2_PIX_FMT_MT21C:	descr = "Mediatek Compressed Format"; break;
 		case V4L2_PIX_FMT_QC08C:	descr = "QCOM Compressed 8-bit Format"; break;
 		case V4L2_PIX_FMT_QC10C:	descr = "QCOM Compressed 10-bit Format"; break;
+<<<<<<< HEAD
 		case V4L2_PIX_FMT_AJPG:		descr = "Aspeed JPEG"; break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		default:
 			if (fmt->description[0])
 				return;
@@ -1530,7 +1584,11 @@ static int v4l_enum_fmt(const struct v4l2_ioctl_ops *ops,
 		p->mbus_code = 0;
 
 	mbus_code = p->mbus_code;
+<<<<<<< HEAD
 	memset_after(p, 0, type);
+=======
+	CLEAR_AFTER_FIELD(p, type);
+>>>>>>> b7ba80a49124 (Commit)
 	p->mbus_code = mbus_code;
 
 	switch (p->type) {
@@ -1614,7 +1672,33 @@ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	memset(&p->fmt, 0, sizeof(p->fmt));
+=======
+	/*
+	 * fmt can't be cleared for these overlay types due to the 'clips'
+	 * 'clipcount' and 'bitmap' pointers in struct v4l2_window.
+	 * Those are provided by the user. So handle these two overlay types
+	 * first, and then just do a simple memset for the other types.
+	 */
+	switch (p->type) {
+	case V4L2_BUF_TYPE_VIDEO_OVERLAY:
+	case V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY: {
+		struct v4l2_clip *clips = p->fmt.win.clips;
+		u32 clipcount = p->fmt.win.clipcount;
+		void __user *bitmap = p->fmt.win.bitmap;
+
+		memset(&p->fmt, 0, sizeof(p->fmt));
+		p->fmt.win.clips = clips;
+		p->fmt.win.clipcount = clipcount;
+		p->fmt.win.bitmap = bitmap;
+		break;
+	}
+	default:
+		memset(&p->fmt, 0, sizeof(p->fmt));
+		break;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (p->type) {
 	case V4L2_BUF_TYPE_VIDEO_CAPTURE:
@@ -1683,7 +1767,11 @@ static int v4l_s_fmt(const struct v4l2_ioctl_ops *ops,
 	case V4L2_BUF_TYPE_VIDEO_CAPTURE:
 		if (unlikely(!ops->vidioc_s_fmt_vid_cap))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.pix);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.pix);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = ops->vidioc_s_fmt_vid_cap(file, fh, arg);
 		/* just in case the driver zeroed it again */
 		p->fmt.pix.priv = V4L2_PIX_FMT_PRIV_MAGIC;
@@ -1693,33 +1781,56 @@ static int v4l_s_fmt(const struct v4l2_ioctl_ops *ops,
 	case V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE:
 		if (unlikely(!ops->vidioc_s_fmt_vid_cap_mplane))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.pix_mp.xfer_func);
 		for (i = 0; i < p->fmt.pix_mp.num_planes; i++)
 			memset_after(&p->fmt.pix_mp.plane_fmt[i],
 				     0, bytesperline);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.pix_mp.xfer_func);
+		for (i = 0; i < p->fmt.pix_mp.num_planes; i++)
+			CLEAR_AFTER_FIELD(&p->fmt.pix_mp.plane_fmt[i],
+					  bytesperline);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_s_fmt_vid_cap_mplane(file, fh, arg);
 	case V4L2_BUF_TYPE_VIDEO_OVERLAY:
 		if (unlikely(!ops->vidioc_s_fmt_vid_overlay))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.win);
 		p->fmt.win.clips = NULL;
 		p->fmt.win.clipcount = 0;
 		p->fmt.win.bitmap = NULL;
+=======
+		CLEAR_AFTER_FIELD(p, fmt.win);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_s_fmt_vid_overlay(file, fh, arg);
 	case V4L2_BUF_TYPE_VBI_CAPTURE:
 		if (unlikely(!ops->vidioc_s_fmt_vbi_cap))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.vbi.flags);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.vbi.flags);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_s_fmt_vbi_cap(file, fh, arg);
 	case V4L2_BUF_TYPE_SLICED_VBI_CAPTURE:
 		if (unlikely(!ops->vidioc_s_fmt_sliced_vbi_cap))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.sliced.io_size);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.sliced.io_size);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_s_fmt_sliced_vbi_cap(file, fh, arg);
 	case V4L2_BUF_TYPE_VIDEO_OUTPUT:
 		if (unlikely(!ops->vidioc_s_fmt_vid_out))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.pix);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.pix);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = ops->vidioc_s_fmt_vid_out(file, fh, arg);
 		/* just in case the driver zeroed it again */
 		p->fmt.pix.priv = V4L2_PIX_FMT_PRIV_MAGIC;
@@ -1727,48 +1838,83 @@ static int v4l_s_fmt(const struct v4l2_ioctl_ops *ops,
 	case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
 		if (unlikely(!ops->vidioc_s_fmt_vid_out_mplane))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.pix_mp.xfer_func);
 		for (i = 0; i < p->fmt.pix_mp.num_planes; i++)
 			memset_after(&p->fmt.pix_mp.plane_fmt[i],
 				     0, bytesperline);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.pix_mp.xfer_func);
+		for (i = 0; i < p->fmt.pix_mp.num_planes; i++)
+			CLEAR_AFTER_FIELD(&p->fmt.pix_mp.plane_fmt[i],
+					  bytesperline);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_s_fmt_vid_out_mplane(file, fh, arg);
 	case V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY:
 		if (unlikely(!ops->vidioc_s_fmt_vid_out_overlay))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.win);
 		p->fmt.win.clips = NULL;
 		p->fmt.win.clipcount = 0;
 		p->fmt.win.bitmap = NULL;
+=======
+		CLEAR_AFTER_FIELD(p, fmt.win);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_s_fmt_vid_out_overlay(file, fh, arg);
 	case V4L2_BUF_TYPE_VBI_OUTPUT:
 		if (unlikely(!ops->vidioc_s_fmt_vbi_out))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.vbi.flags);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.vbi.flags);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_s_fmt_vbi_out(file, fh, arg);
 	case V4L2_BUF_TYPE_SLICED_VBI_OUTPUT:
 		if (unlikely(!ops->vidioc_s_fmt_sliced_vbi_out))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.sliced.io_size);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.sliced.io_size);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_s_fmt_sliced_vbi_out(file, fh, arg);
 	case V4L2_BUF_TYPE_SDR_CAPTURE:
 		if (unlikely(!ops->vidioc_s_fmt_sdr_cap))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.sdr.buffersize);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.sdr.buffersize);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_s_fmt_sdr_cap(file, fh, arg);
 	case V4L2_BUF_TYPE_SDR_OUTPUT:
 		if (unlikely(!ops->vidioc_s_fmt_sdr_out))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.sdr.buffersize);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.sdr.buffersize);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_s_fmt_sdr_out(file, fh, arg);
 	case V4L2_BUF_TYPE_META_CAPTURE:
 		if (unlikely(!ops->vidioc_s_fmt_meta_cap))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.meta);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.meta);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_s_fmt_meta_cap(file, fh, arg);
 	case V4L2_BUF_TYPE_META_OUTPUT:
 		if (unlikely(!ops->vidioc_s_fmt_meta_out))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.meta);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.meta);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_s_fmt_meta_out(file, fh, arg);
 	}
 	return -EINVAL;
@@ -1791,7 +1937,11 @@ static int v4l_try_fmt(const struct v4l2_ioctl_ops *ops,
 	case V4L2_BUF_TYPE_VIDEO_CAPTURE:
 		if (unlikely(!ops->vidioc_try_fmt_vid_cap))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.pix);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.pix);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = ops->vidioc_try_fmt_vid_cap(file, fh, arg);
 		/* just in case the driver zeroed it again */
 		p->fmt.pix.priv = V4L2_PIX_FMT_PRIV_MAGIC;
@@ -1801,33 +1951,56 @@ static int v4l_try_fmt(const struct v4l2_ioctl_ops *ops,
 	case V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE:
 		if (unlikely(!ops->vidioc_try_fmt_vid_cap_mplane))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.pix_mp.xfer_func);
 		for (i = 0; i < p->fmt.pix_mp.num_planes; i++)
 			memset_after(&p->fmt.pix_mp.plane_fmt[i],
 				     0, bytesperline);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.pix_mp.xfer_func);
+		for (i = 0; i < p->fmt.pix_mp.num_planes; i++)
+			CLEAR_AFTER_FIELD(&p->fmt.pix_mp.plane_fmt[i],
+					  bytesperline);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_try_fmt_vid_cap_mplane(file, fh, arg);
 	case V4L2_BUF_TYPE_VIDEO_OVERLAY:
 		if (unlikely(!ops->vidioc_try_fmt_vid_overlay))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.win);
 		p->fmt.win.clips = NULL;
 		p->fmt.win.clipcount = 0;
 		p->fmt.win.bitmap = NULL;
+=======
+		CLEAR_AFTER_FIELD(p, fmt.win);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_try_fmt_vid_overlay(file, fh, arg);
 	case V4L2_BUF_TYPE_VBI_CAPTURE:
 		if (unlikely(!ops->vidioc_try_fmt_vbi_cap))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.vbi.flags);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.vbi.flags);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_try_fmt_vbi_cap(file, fh, arg);
 	case V4L2_BUF_TYPE_SLICED_VBI_CAPTURE:
 		if (unlikely(!ops->vidioc_try_fmt_sliced_vbi_cap))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.sliced.io_size);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.sliced.io_size);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_try_fmt_sliced_vbi_cap(file, fh, arg);
 	case V4L2_BUF_TYPE_VIDEO_OUTPUT:
 		if (unlikely(!ops->vidioc_try_fmt_vid_out))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.pix);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.pix);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = ops->vidioc_try_fmt_vid_out(file, fh, arg);
 		/* just in case the driver zeroed it again */
 		p->fmt.pix.priv = V4L2_PIX_FMT_PRIV_MAGIC;
@@ -1835,48 +2008,83 @@ static int v4l_try_fmt(const struct v4l2_ioctl_ops *ops,
 	case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
 		if (unlikely(!ops->vidioc_try_fmt_vid_out_mplane))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.pix_mp.xfer_func);
 		for (i = 0; i < p->fmt.pix_mp.num_planes; i++)
 			memset_after(&p->fmt.pix_mp.plane_fmt[i],
 				     0, bytesperline);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.pix_mp.xfer_func);
+		for (i = 0; i < p->fmt.pix_mp.num_planes; i++)
+			CLEAR_AFTER_FIELD(&p->fmt.pix_mp.plane_fmt[i],
+					  bytesperline);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_try_fmt_vid_out_mplane(file, fh, arg);
 	case V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY:
 		if (unlikely(!ops->vidioc_try_fmt_vid_out_overlay))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.win);
 		p->fmt.win.clips = NULL;
 		p->fmt.win.clipcount = 0;
 		p->fmt.win.bitmap = NULL;
+=======
+		CLEAR_AFTER_FIELD(p, fmt.win);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_try_fmt_vid_out_overlay(file, fh, arg);
 	case V4L2_BUF_TYPE_VBI_OUTPUT:
 		if (unlikely(!ops->vidioc_try_fmt_vbi_out))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.vbi.flags);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.vbi.flags);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_try_fmt_vbi_out(file, fh, arg);
 	case V4L2_BUF_TYPE_SLICED_VBI_OUTPUT:
 		if (unlikely(!ops->vidioc_try_fmt_sliced_vbi_out))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.sliced.io_size);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.sliced.io_size);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_try_fmt_sliced_vbi_out(file, fh, arg);
 	case V4L2_BUF_TYPE_SDR_CAPTURE:
 		if (unlikely(!ops->vidioc_try_fmt_sdr_cap))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.sdr.buffersize);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.sdr.buffersize);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_try_fmt_sdr_cap(file, fh, arg);
 	case V4L2_BUF_TYPE_SDR_OUTPUT:
 		if (unlikely(!ops->vidioc_try_fmt_sdr_out))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.sdr.buffersize);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.sdr.buffersize);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_try_fmt_sdr_out(file, fh, arg);
 	case V4L2_BUF_TYPE_META_CAPTURE:
 		if (unlikely(!ops->vidioc_try_fmt_meta_cap))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.meta);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.meta);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_try_fmt_meta_cap(file, fh, arg);
 	case V4L2_BUF_TYPE_META_OUTPUT:
 		if (unlikely(!ops->vidioc_try_fmt_meta_out))
 			break;
+<<<<<<< HEAD
 		memset_after(p, 0, fmt.meta);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.meta);
+>>>>>>> b7ba80a49124 (Commit)
 		return ops->vidioc_try_fmt_meta_out(file, fh, arg);
 	}
 	return -EINVAL;
@@ -2060,6 +2268,7 @@ static int v4l_s_hw_freq_seek(const struct v4l2_ioctl_ops *ops,
 	return ops->vidioc_s_hw_freq_seek(file, fh, p);
 }
 
+<<<<<<< HEAD
 static int v4l_s_fbuf(const struct v4l2_ioctl_ops *ops,
 		      struct file *file, void *fh, void *arg)
 {
@@ -2069,6 +2278,8 @@ static int v4l_s_fbuf(const struct v4l2_ioctl_ops *ops,
 	return ops->vidioc_s_fbuf(file, fh, p);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int v4l_overlay(const struct v4l2_ioctl_ops *ops,
 				struct file *file, void *fh, void *arg)
 {
@@ -2084,7 +2295,11 @@ static int v4l_reqbufs(const struct v4l2_ioctl_ops *ops,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	memset_after(p, 0, flags);
+=======
+	CLEAR_AFTER_FIELD(p, flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ops->vidioc_reqbufs(file, fh, p);
 }
@@ -2125,7 +2340,11 @@ static int v4l_create_bufs(const struct v4l2_ioctl_ops *ops,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	memset_after(create, 0, flags);
+=======
+	CLEAR_AFTER_FIELD(create, flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	v4l_sanitize_format(&create->format);
 
@@ -2788,6 +3007,10 @@ struct v4l2_ioctl_info {
 	}
 
 DEFINE_V4L_STUB_FUNC(g_fbuf)
+<<<<<<< HEAD
+=======
+DEFINE_V4L_STUB_FUNC(s_fbuf)
+>>>>>>> b7ba80a49124 (Commit)
 DEFINE_V4L_STUB_FUNC(expbuf)
 DEFINE_V4L_STUB_FUNC(g_std)
 DEFINE_V4L_STUB_FUNC(g_audio)
@@ -2821,7 +3044,11 @@ static const struct v4l2_ioctl_info v4l2_ioctls[] = {
 	IOCTL_INFO(VIDIOC_REQBUFS, v4l_reqbufs, v4l_print_requestbuffers, INFO_FL_PRIO | INFO_FL_QUEUE),
 	IOCTL_INFO(VIDIOC_QUERYBUF, v4l_querybuf, v4l_print_buffer, INFO_FL_QUEUE | INFO_FL_CLEAR(v4l2_buffer, length)),
 	IOCTL_INFO(VIDIOC_G_FBUF, v4l_stub_g_fbuf, v4l_print_framebuffer, 0),
+<<<<<<< HEAD
 	IOCTL_INFO(VIDIOC_S_FBUF, v4l_s_fbuf, v4l_print_framebuffer, INFO_FL_PRIO),
+=======
+	IOCTL_INFO(VIDIOC_S_FBUF, v4l_stub_s_fbuf, v4l_print_framebuffer, INFO_FL_PRIO),
+>>>>>>> b7ba80a49124 (Commit)
 	IOCTL_INFO(VIDIOC_OVERLAY, v4l_overlay, v4l_print_u32, INFO_FL_PRIO),
 	IOCTL_INFO(VIDIOC_QBUF, v4l_qbuf, v4l_print_buffer, INFO_FL_QUEUE),
 	IOCTL_INFO(VIDIOC_EXPBUF, v4l_stub_expbuf, v4l_print_exportbuffer, INFO_FL_QUEUE | INFO_FL_CLEAR(v4l2_exportbuffer, flags)),
@@ -2870,9 +3097,15 @@ static const struct v4l2_ioctl_info v4l2_ioctls[] = {
 	IOCTL_INFO(VIDIOC_S_PRIORITY, v4l_s_priority, v4l_print_u32, INFO_FL_PRIO),
 	IOCTL_INFO(VIDIOC_G_SLICED_VBI_CAP, v4l_g_sliced_vbi_cap, v4l_print_sliced_vbi_cap, INFO_FL_CLEAR(v4l2_sliced_vbi_cap, type)),
 	IOCTL_INFO(VIDIOC_LOG_STATUS, v4l_log_status, v4l_print_newline, 0),
+<<<<<<< HEAD
 	IOCTL_INFO(VIDIOC_G_EXT_CTRLS, v4l_g_ext_ctrls, v4l_print_ext_controls, INFO_FL_CTRL | INFO_FL_ALWAYS_COPY),
 	IOCTL_INFO(VIDIOC_S_EXT_CTRLS, v4l_s_ext_ctrls, v4l_print_ext_controls, INFO_FL_PRIO | INFO_FL_CTRL | INFO_FL_ALWAYS_COPY),
 	IOCTL_INFO(VIDIOC_TRY_EXT_CTRLS, v4l_try_ext_ctrls, v4l_print_ext_controls, INFO_FL_CTRL | INFO_FL_ALWAYS_COPY),
+=======
+	IOCTL_INFO(VIDIOC_G_EXT_CTRLS, v4l_g_ext_ctrls, v4l_print_ext_controls, INFO_FL_CTRL),
+	IOCTL_INFO(VIDIOC_S_EXT_CTRLS, v4l_s_ext_ctrls, v4l_print_ext_controls, INFO_FL_PRIO | INFO_FL_CTRL),
+	IOCTL_INFO(VIDIOC_TRY_EXT_CTRLS, v4l_try_ext_ctrls, v4l_print_ext_controls, INFO_FL_CTRL),
+>>>>>>> b7ba80a49124 (Commit)
 	IOCTL_INFO(VIDIOC_ENUM_FRAMESIZES, v4l_stub_enum_framesizes, v4l_print_frmsizeenum, INFO_FL_CLEAR(v4l2_frmsizeenum, pixel_format)),
 	IOCTL_INFO(VIDIOC_ENUM_FRAMEINTERVALS, v4l_stub_enum_frameintervals, v4l_print_frmivalenum, INFO_FL_CLEAR(v4l2_frmivalenum, height)),
 	IOCTL_INFO(VIDIOC_G_ENC_INDEX, v4l_stub_g_enc_index, v4l_print_enc_idx, 0),
@@ -3128,6 +3361,7 @@ static int check_array_args(unsigned int cmd, void *parg, size_t *array_size,
 		}
 		break;
 	}
+<<<<<<< HEAD
 
 	case VIDIOC_SUBDEV_G_ROUTING:
 	case VIDIOC_SUBDEV_S_ROUTING: {
@@ -3140,6 +3374,26 @@ static int check_array_args(unsigned int cmd, void *parg, size_t *array_size,
 		*kernel_ptr = (void **)&routing->routes;
 		*array_size = sizeof(struct v4l2_subdev_route)
 			    * routing->num_routes;
+=======
+	case VIDIOC_G_FMT:
+	case VIDIOC_S_FMT:
+	case VIDIOC_TRY_FMT: {
+		struct v4l2_format *fmt = parg;
+
+		if (fmt->type != V4L2_BUF_TYPE_VIDEO_OVERLAY &&
+		    fmt->type != V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY)
+			break;
+		if (fmt->fmt.win.clipcount > 2048)
+			return -EINVAL;
+		if (!fmt->fmt.win.clipcount)
+			break;
+
+		*user_ptr = (void __user *)fmt->fmt.win.clips;
+		*kernel_ptr = (void **)&fmt->fmt.win.clips;
+		*array_size = sizeof(struct v4l2_clip)
+				* fmt->fmt.win.clipcount;
+
+>>>>>>> b7ba80a49124 (Commit)
 		ret = 1;
 		break;
 	}
@@ -3359,7 +3613,12 @@ video_usercopy(struct file *file, unsigned int orig_cmd, unsigned long arg,
 		array_buf = kvmalloc(array_size, GFP_KERNEL);
 		err = -ENOMEM;
 		if (array_buf == NULL)
+<<<<<<< HEAD
 			goto out;
+=======
+			goto out_array_args;
+		err = -EFAULT;
+>>>>>>> b7ba80a49124 (Commit)
 		if (in_compat_syscall())
 			err = v4l2_compat_get_array_args(file, array_buf,
 							 user_ptr, array_size,
@@ -3368,7 +3627,11 @@ video_usercopy(struct file *file, unsigned int orig_cmd, unsigned long arg,
 			err = copy_from_user(array_buf, user_ptr, array_size) ?
 								-EFAULT : 0;
 		if (err)
+<<<<<<< HEAD
 			goto out;
+=======
+			goto out_array_args;
+>>>>>>> b7ba80a49124 (Commit)
 		*kernel_ptr = array_buf;
 	}
 
@@ -3386,6 +3649,7 @@ video_usercopy(struct file *file, unsigned int orig_cmd, unsigned long arg,
 			trace_v4l2_qbuf(video_devdata(file)->minor, parg);
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Some ioctls can return an error, but still have valid
 	 * results that must be returned.
@@ -3400,6 +3664,8 @@ video_usercopy(struct file *file, unsigned int orig_cmd, unsigned long arg,
 	if (err < 0 && !always_copy && cmd != VIDIOC_SUBDEV_G_ROUTING)
 		goto out;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (has_array_args) {
 		*kernel_ptr = (void __force *)user_ptr;
 		if (in_compat_syscall()) {
@@ -3414,8 +3680,21 @@ video_usercopy(struct file *file, unsigned int orig_cmd, unsigned long arg,
 		} else if (copy_to_user(user_ptr, array_buf, array_size)) {
 			err = -EFAULT;
 		}
+<<<<<<< HEAD
 	}
 
+=======
+		goto out_array_args;
+	}
+	/*
+	 * Some ioctls can return an error, but still have valid
+	 * results that must be returned.
+	 */
+	if (err < 0 && !always_copy)
+		goto out;
+
+out_array_args:
+>>>>>>> b7ba80a49124 (Commit)
 	if (video_put_user((void __user *)arg, parg, cmd, orig_cmd))
 		err = -EFAULT;
 out:

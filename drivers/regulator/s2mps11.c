@@ -1238,7 +1238,10 @@ MODULE_DEVICE_TABLE(platform, s2mps11_pmic_id);
 static struct platform_driver s2mps11_pmic_driver = {
 	.driver = {
 		.name = "s2mps11-pmic",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = s2mps11_pmic_probe,
 	.id_table = s2mps11_pmic_id,

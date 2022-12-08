@@ -743,7 +743,11 @@ static netdev_tx_t xcan_start_xmit(struct sk_buff *skb, struct net_device *ndev)
 	struct xcan_priv *priv = netdev_priv(ndev);
 	int ret;
 
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(ndev, skb))
+=======
+	if (can_dropped_invalid_skb(ndev, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	if (priv->devtype.flags & XCAN_FLAG_TX_MAILBOXES)

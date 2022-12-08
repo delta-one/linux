@@ -16,8 +16,11 @@
 #include <linux/thermal.h>
 #endif
 
+<<<<<<< HEAD
 #include <linux/ptp_clock_kernel.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/ktime.h>
 
 #include "iwl-op-mode.h"
@@ -74,7 +77,10 @@
 #define IWL_MVM_OFFCHANNEL_QUEUE 0
 
 extern const struct ieee80211_ops iwl_mvm_hw_ops;
+<<<<<<< HEAD
 extern const struct ieee80211_ops iwl_mvm_mld_hw_ops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct iwl_mvm_mod_params - module parameters for iwlmvm
@@ -504,7 +510,11 @@ struct iwl_mvm_tt_mgmt {
  * @tzone: thermal zone device data
 */
 struct iwl_mvm_thermal_device {
+<<<<<<< HEAD
 	struct thermal_trip trips[IWL_MAX_DTS_TRIPS];
+=======
+	s16 temp_trips[IWL_MAX_DTS_TRIPS];
+>>>>>>> b7ba80a49124 (Commit)
 	u8 fw_trips_index[IWL_MAX_DTS_TRIPS];
 	struct thermal_zone_device *tzone;
 };
@@ -732,10 +742,14 @@ struct iwl_mvm_txq {
 	struct list_head list;
 	u16 txq_id;
 	atomic_t tx_request;
+<<<<<<< HEAD
 #define IWL_MVM_TXQ_STATE_STOP_FULL	0
 #define IWL_MVM_TXQ_STATE_STOP_REDIRECT	1
 #define IWL_MVM_TXQ_STATE_READY		2
 	unsigned long state;
+=======
+	bool stopped;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct iwl_mvm_txq *
@@ -775,6 +789,7 @@ struct iwl_mvm_dqa_txq_info {
 	enum iwl_mvm_queue_status status;
 };
 
+<<<<<<< HEAD
 struct ptp_data {
 	struct ptp_clock *ptp_clock;
 	struct ptp_clock_info ptp_clock_info;
@@ -806,6 +821,8 @@ struct iwl_time_sync_data {
 	bool active;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct iwl_mvm {
 	/* for logger access */
 	struct device *dev;
@@ -864,7 +881,10 @@ struct iwl_mvm {
 		struct iwl_mvm_tvqm_txq_info tvqm_info[IWL_MAX_TVQM_QUEUES];
 	};
 	struct work_struct add_stream_wk; /* To add streams to queues */
+<<<<<<< HEAD
 	spinlock_t add_stream_lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	const char *nvm_file_name;
 	struct iwl_nvm_data *nvm_data;
@@ -898,7 +918,10 @@ struct iwl_mvm {
 
 	/* Scan status, cmd (pre-allocated) and auxiliary station */
 	unsigned int scan_status;
+<<<<<<< HEAD
 	size_t scan_cmd_size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void *scan_cmd;
 	struct iwl_mcast_filter_cmd *mcast_filter_cmd;
 	/* For CDB this is low band scan type, for non-CDB - type. */
@@ -1117,8 +1140,11 @@ struct iwl_mvm {
 
 	struct list_head resp_pasn_list;
 
+<<<<<<< HEAD
 	struct ptp_data ptp_data;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct {
 		u8 range_resp;
 	} cmd_ver;
@@ -1136,11 +1162,14 @@ struct iwl_mvm {
 
 	/* does a monitor vif exist (only one can exist hence bool) */
 	bool monitor_on;
+<<<<<<< HEAD
 	/*
 	 * primary channel position relative to he whole bandwidth,
 	 * in steps of 80 MHz
 	 */
 	u8 monitor_p80;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* sniffer data to include in radiotap */
 	__le16 cur_aid;
@@ -1150,10 +1179,13 @@ struct iwl_mvm {
 	unsigned long last_reset_or_resume_time_jiffies;
 
 	bool sta_remove_requires_queue_remove;
+<<<<<<< HEAD
 
 	bool pldr_sync;
 
 	struct iwl_time_sync_data time_sync;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Extract MVM priv from op_mode and _hw */
@@ -1353,7 +1385,11 @@ static inline bool iwl_mvm_is_csum_supported(struct iwl_mvm *mvm)
 {
 	return fw_has_capa(&mvm->fw->ucode_capa,
 			   IWL_UCODE_TLV_CAPA_CSUM_SUPPORT) &&
+<<<<<<< HEAD
 		!IWL_MVM_HW_CSUM_DISABLE;
+=======
+               !IWL_MVM_HW_CSUM_DISABLE;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool iwl_mvm_is_mplut_supported(struct iwl_mvm *mvm)
@@ -1519,7 +1555,10 @@ void iwl_mvm_hwrate_to_tx_rate_v1(u32 rate_n_flags,
 				  struct ieee80211_tx_rate *r);
 u8 iwl_mvm_mac80211_idx_to_hwrate(const struct iwl_fw *fw, int rate_idx);
 u8 iwl_mvm_mac80211_ac_to_ucode_ac(enum ieee80211_ac_numbers ac);
+<<<<<<< HEAD
 bool iwl_mvm_is_nic_ack_enabled(struct iwl_mvm *mvm, struct ieee80211_vif *vif);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void iwl_mvm_dump_nic_error_log(struct iwl_mvm *mvm)
 {
@@ -1666,7 +1705,10 @@ void iwl_mvm_rx_shared_mem_cfg_notif(struct iwl_mvm *mvm,
 				     struct iwl_rx_cmd_buffer *rxb);
 
 /* MVM PHY */
+<<<<<<< HEAD
 struct iwl_mvm_phy_ctxt *iwl_mvm_get_free_phy_ctxt(struct iwl_mvm *mvm);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int iwl_mvm_phy_ctxt_add(struct iwl_mvm *mvm, struct iwl_mvm_phy_ctxt *ctxt,
 			 struct cfg80211_chan_def *chandef,
 			 u8 chains_static, u8 chains_dynamic);
@@ -1682,6 +1724,7 @@ u8 iwl_mvm_get_channel_width(struct cfg80211_chan_def *chandef);
 u8 iwl_mvm_get_ctrl_pos(struct cfg80211_chan_def *chandef);
 
 /* MAC (virtual interface) programming */
+<<<<<<< HEAD
 
 bool iwl_mvm_mac_add_interface_common(struct iwl_mvm *mvm,
 				      struct ieee80211_hw *hw,
@@ -1718,6 +1761,8 @@ int iwl_mvm_mld_mac_ctxt_add(struct iwl_mvm *mvm, struct ieee80211_vif *vif);
 int iwl_mvm_mld_mac_ctxt_changed(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
 				 bool force_assoc_off);
 int iwl_mvm_mld_mac_ctxt_remove(struct iwl_mvm *mvm, struct ieee80211_vif *vif);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int iwl_mvm_mac_ctxt_init(struct iwl_mvm *mvm, struct ieee80211_vif *vif);
 int iwl_mvm_mac_ctxt_add(struct iwl_mvm *mvm, struct ieee80211_vif *vif);
 int iwl_mvm_mac_ctxt_changed(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
@@ -1731,8 +1776,12 @@ int iwl_mvm_mac_ctxt_send_beacon(struct iwl_mvm *mvm,
 int iwl_mvm_mac_ctxt_send_beacon_cmd(struct iwl_mvm *mvm,
 				     struct sk_buff *beacon,
 				     void *data, int len);
+<<<<<<< HEAD
 u8 iwl_mvm_mac_ctxt_get_beacon_rate(struct iwl_mvm *mvm,
 				    struct ieee80211_tx_info *info,
+=======
+u8 iwl_mvm_mac_ctxt_get_lowest_rate(struct ieee80211_tx_info *info,
+>>>>>>> b7ba80a49124 (Commit)
 				    struct ieee80211_vif *vif);
 u16 iwl_mvm_mac_ctxt_get_beacon_flags(const struct iwl_fw *fw,
 				      u8 rate_idx);
@@ -1764,6 +1813,7 @@ void iwl_mvm_channel_switch_error_notif(struct iwl_mvm *mvm,
 int iwl_mvm_binding_add_vif(struct iwl_mvm *mvm, struct ieee80211_vif *vif);
 int iwl_mvm_binding_remove_vif(struct iwl_mvm *mvm, struct ieee80211_vif *vif);
 
+<<<<<<< HEAD
 /* Links */
 int iwl_mvm_add_link(struct iwl_mvm *mvm, struct ieee80211_vif *vif);
 int iwl_mvm_link_changed(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
@@ -1776,6 +1826,8 @@ bool iwl_mvm_start_ap_ibss_common(struct ieee80211_hw *hw,
 void iwl_mvm_stop_ap_ibss_common(struct iwl_mvm *mvm,
 				 struct ieee80211_vif *vif);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Quota management */
 static inline size_t iwl_mvm_quota_cmd_size(struct iwl_mvm *mvm)
 {
@@ -1805,7 +1857,11 @@ int iwl_mvm_update_quotas(struct iwl_mvm *mvm, bool force_upload,
 int iwl_mvm_reg_scan_start(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
 			   struct cfg80211_scan_request *req,
 			   struct ieee80211_scan_ies *ies);
+<<<<<<< HEAD
 size_t iwl_mvm_scan_size(struct iwl_mvm *mvm);
+=======
+int iwl_mvm_scan_size(struct iwl_mvm *mvm);
+>>>>>>> b7ba80a49124 (Commit)
 int iwl_mvm_scan_stop(struct iwl_mvm *mvm, int type, bool notify);
 int iwl_mvm_max_scan_ie_len(struct iwl_mvm *mvm);
 void iwl_mvm_report_scan_aborted(struct iwl_mvm *mvm);
@@ -2168,9 +2224,12 @@ void iwl_mvm_event_frame_timeout_callback(struct iwl_mvm *mvm,
 					  const struct ieee80211_sta *sta,
 					  u16 tid);
 
+<<<<<<< HEAD
 void iwl_mvm_ptp_init(struct iwl_mvm *mvm);
 void iwl_mvm_ptp_remove(struct iwl_mvm *mvm);
 u64 iwl_mvm_ptp_get_adj_time(struct iwl_mvm *mvm, u64 base_time);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int iwl_mvm_sar_select_profile(struct iwl_mvm *mvm, int prof_a, int prof_b);
 int iwl_mvm_get_sar_geo_profile(struct iwl_mvm *mvm);
 int iwl_mvm_ppag_send_cmd(struct iwl_mvm *mvm);
@@ -2182,6 +2241,7 @@ void iwl_mvm_sta_add_debugfs(struct ieee80211_hw *hw,
 			     struct dentry *dir);
 #endif
 
+<<<<<<< HEAD
 /* new MLD related APIs */
 int iwl_mvm_sec_key_add(struct iwl_mvm *mvm,
 			struct ieee80211_vif *vif,
@@ -2194,6 +2254,8 @@ int iwl_mvm_sec_key_del(struct iwl_mvm *mvm,
 void iwl_mvm_sec_key_remove_ap(struct iwl_mvm *mvm,
 			       struct ieee80211_vif *vif);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int iwl_rfi_send_config_cmd(struct iwl_mvm *mvm,
 			    struct iwl_rfi_lut_entry *rfi_table);
 struct iwl_rfi_freq_table_resp_cmd *iwl_rfi_get_freq_table(struct iwl_mvm *mvm);
@@ -2215,6 +2277,7 @@ static inline u8 iwl_mvm_phy_band_from_nl80211(enum nl80211_band band)
 	}
 }
 
+<<<<<<< HEAD
 /* Channel Switch */
 void iwl_mvm_channel_switch_disconnect_wk(struct work_struct *wk);
 
@@ -2227,6 +2290,8 @@ bool __iwl_mvm_unassign_vif_chanctx_common(struct iwl_mvm *mvm,
 					   struct ieee80211_vif *vif,
 					   bool switching_chanctx);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Channel info utils */
 static inline bool iwl_mvm_has_ultra_hb_channel(struct iwl_mvm *mvm)
 {
@@ -2328,10 +2393,17 @@ static inline void iwl_mvm_mei_host_disassociated(struct iwl_mvm *mvm)
 		iwl_mei_host_disassociated();
 }
 
+<<<<<<< HEAD
 static inline void iwl_mvm_mei_device_state(struct iwl_mvm *mvm, bool up)
 {
 	if (mvm->mei_registered)
 		iwl_mei_device_state(up);
+=======
+static inline void iwl_mvm_mei_device_down(struct iwl_mvm *mvm)
+{
+	if (mvm->mei_registered)
+		iwl_mei_device_down();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void iwl_mvm_mei_set_sw_rfkill_state(struct iwl_mvm *mvm)
@@ -2347,5 +2419,9 @@ static inline void iwl_mvm_mei_set_sw_rfkill_state(struct iwl_mvm *mvm)
 void iwl_mvm_send_roaming_forbidden_event(struct iwl_mvm *mvm,
 					  struct ieee80211_vif *vif,
 					  bool forbidden);
+<<<<<<< HEAD
 bool iwl_mvm_is_vendor_in_approved_list(void);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __IWL_MVM_H__ */

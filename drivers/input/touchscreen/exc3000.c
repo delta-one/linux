@@ -109,11 +109,14 @@ static inline void exc3000_schedule_timer(struct exc3000_data *data)
 	mod_timer(&data->timer, jiffies + msecs_to_jiffies(EXC3000_TIMEOUT_MS));
 }
 
+<<<<<<< HEAD
 static void exc3000_shutdown_timer(void *timer)
 {
 	timer_shutdown_sync(timer);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int exc3000_read_frame(struct exc3000_data *data, u8 *buf)
 {
 	struct i2c_client *client = data->client;
@@ -391,11 +394,14 @@ static int exc3000_probe(struct i2c_client *client)
 	if (error)
 		return error;
 
+<<<<<<< HEAD
 	error = devm_add_action_or_reset(&client->dev, exc3000_shutdown_timer,
 					 &data->timer);
 	if (error)
 		return error;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	error = devm_request_threaded_irq(&client->dev, client->irq,
 					  NULL, exc3000_interrupt, IRQF_ONESHOT,
 					  client->name, data);

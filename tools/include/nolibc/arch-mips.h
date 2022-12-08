@@ -7,6 +7,21 @@
 #ifndef _NOLIBC_ARCH_MIPS_H
 #define _NOLIBC_ARCH_MIPS_H
 
+<<<<<<< HEAD
+=======
+/* O_* macros for fcntl/open are architecture-specific */
+#define O_RDONLY            0
+#define O_WRONLY            1
+#define O_RDWR              2
+#define O_APPEND       0x0008
+#define O_NONBLOCK     0x0080
+#define O_CREAT        0x0100
+#define O_TRUNC        0x0200
+#define O_EXCL         0x0400
+#define O_NOCTTY       0x0800
+#define O_DIRECTORY   0x10000
+
+>>>>>>> b7ba80a49124 (Commit)
 /* The struct returned by the stat() syscall. 88 bytes are returned by the
  * syscall.
  */
@@ -176,6 +191,7 @@ struct sys_stat_struct {
 	_arg4 ? -_num : _num;                                                 \
 })
 
+<<<<<<< HEAD
 char **environ __attribute__((weak));
 const unsigned long *_auxv __attribute__((weak));
 
@@ -220,5 +236,30 @@ void __attribute__((weak,noreturn,optimize("omit-frame-pointer"))) __start(void)
 	);
 	__builtin_unreachable();
 }
+=======
+/* startup code, note that it's called __start on MIPS */
+__asm__ (".section .text\n"
+    ".weak __start\n"
+    ".set nomips16\n"
+    ".set    noreorder\n"
+    ".option pic0\n"
+    ".ent __start\n"
+    "__start:\n"
+    "lw $a0,($sp)\n"              // argc was in the stack
+    "addiu  $a1, $sp, 4\n"        // argv = sp + 4
+    "sll $a2, $a0, 2\n"           // a2 = argc * 4
+    "add   $a2, $a2, $a1\n"       // envp = argv + 4*argc ...
+    "addiu $a2, $a2, 4\n"         //        ... + 4
+    "li $t0, -8\n"
+    "and $sp, $sp, $t0\n"         // sp must be 8-byte aligned
+    "addiu $sp,$sp,-16\n"         // the callee expects to save a0..a3 there!
+    "jal main\n"                  // main() returns the status code, we'll exit with it.
+    "nop\n"                       // delayed slot
+    "move $a0, $v0\n"             // retrieve 32-bit exit code from v0
+    "li $v0, 4001\n"              // NR_exit == 4001
+    "syscall\n"
+    ".end __start\n"
+    "");
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif // _NOLIBC_ARCH_MIPS_H

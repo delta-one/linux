@@ -898,7 +898,10 @@ static int otx2_sq_init(struct otx2_nic *pfvf, u16 qidx, u16 sqb_aura)
 	}
 
 	sq->head = 0;
+<<<<<<< HEAD
 	sq->cons_head = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sq->sqe_per_sqb = (pfvf->hw.sqb_size / sq->sqe_size) - 1;
 	sq->num_sqbs = (qset->sqe_cnt + sq->sqe_per_sqb) / sq->sqe_per_sqb;
 	/* Set SQE threshold to 10% of total SQEs */
@@ -1376,6 +1379,7 @@ int otx2_sq_aura_pool_init(struct otx2_nic *pfvf)
 		sq = &qset->sq[qidx];
 		sq->sqb_count = 0;
 		sq->sqb_ptrs = kcalloc(num_sqbs, sizeof(*sq->sqb_ptrs), GFP_KERNEL);
+<<<<<<< HEAD
 		if (!sq->sqb_ptrs) {
 			err = -ENOMEM;
 			goto err_mem;
@@ -1385,14 +1389,26 @@ int otx2_sq_aura_pool_init(struct otx2_nic *pfvf)
 			err = otx2_alloc_rbuf(pfvf, pool, &bufptr);
 			if (err)
 				goto err_mem;
+=======
+		if (!sq->sqb_ptrs)
+			return -ENOMEM;
+
+		for (ptr = 0; ptr < num_sqbs; ptr++) {
+			if (otx2_alloc_rbuf(pfvf, pool, &bufptr))
+				return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 			pfvf->hw_ops->aura_freeptr(pfvf, pool_id, bufptr);
 			sq->sqb_ptrs[sq->sqb_count++] = (u64)bufptr;
 		}
 	}
 
+<<<<<<< HEAD
 err_mem:
 	return err ? -ENOMEM : 0;
 
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 fail:
 	otx2_mbox_reset(&pfvf->mbox.mbox, 0);
 	otx2_aura_pool_free(pfvf);
@@ -1435,13 +1451,21 @@ int otx2_rq_aura_pool_init(struct otx2_nic *pfvf)
 	for (pool_id = 0; pool_id < hw->rqpool_cnt; pool_id++) {
 		pool = &pfvf->qset.pool[pool_id];
 		for (ptr = 0; ptr < num_ptrs; ptr++) {
+<<<<<<< HEAD
 			err = otx2_alloc_rbuf(pfvf, pool, &bufptr);
 			if (err)
+=======
+			if (otx2_alloc_rbuf(pfvf, pool, &bufptr))
+>>>>>>> b7ba80a49124 (Commit)
 				return -ENOMEM;
 			pfvf->hw_ops->aura_freeptr(pfvf, pool_id,
 						   bufptr + OTX2_HEAD_ROOM);
 		}
 	}
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 fail:
 	otx2_mbox_reset(&pfvf->mbox.mbox, 0);
@@ -1833,5 +1857,8 @@ otx2_mbox_up_handler_ ## _fn_name(struct otx2_nic *pfvf,		\
 }									\
 EXPORT_SYMBOL(otx2_mbox_up_handler_ ## _fn_name);
 MBOX_UP_CGX_MESSAGES
+<<<<<<< HEAD
 MBOX_UP_MCS_MESSAGES
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #undef M

@@ -235,7 +235,11 @@ static void __init _mx35_clocks_init(void)
 	 */
 	clk_prepare_enable(clk[scc_gate]);
 
+<<<<<<< HEAD
 	imx_register_uart_clocks();
+=======
+	imx_register_uart_clocks(4);
+>>>>>>> b7ba80a49124 (Commit)
 
 	imx_print_silicon_rev("i.MX35", mx35_revision());
 }

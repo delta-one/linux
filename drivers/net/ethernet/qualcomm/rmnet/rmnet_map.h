@@ -19,7 +19,11 @@ struct rmnet_map_control_command {
 			__be16 flow_control_seq_num;
 			__be32 qos_id;
 		} flow_control;
+<<<<<<< HEAD
 		DECLARE_FLEX_ARRAY(u8, data);
+=======
+		u8 data[0];
+>>>>>>> b7ba80a49124 (Commit)
 	};
 }  __aligned(1);
 
@@ -53,11 +57,14 @@ void rmnet_map_checksum_uplink_packet(struct sk_buff *skb,
 				      struct net_device *orig_dev,
 				      int csum_type);
 int rmnet_map_process_next_hdr_packet(struct sk_buff *skb, u16 len);
+<<<<<<< HEAD
 unsigned int rmnet_map_tx_aggregate(struct sk_buff *skb, struct rmnet_port *port,
 				    struct net_device *orig_dev);
 void rmnet_map_tx_aggregate_init(struct rmnet_port *port);
 void rmnet_map_tx_aggregate_exit(struct rmnet_port *port);
 void rmnet_map_update_ul_agg_config(struct rmnet_port *port, u32 size,
 				    u32 count, u32 time);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _RMNET_MAP_H_ */

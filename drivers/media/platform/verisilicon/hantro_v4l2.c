@@ -142,6 +142,11 @@ static int vidioc_querycap(struct file *file, void *priv,
 
 	strscpy(cap->driver, vpu->dev->driver->name, sizeof(cap->driver));
 	strscpy(cap->card, vdev->name, sizeof(cap->card));
+<<<<<<< HEAD
+=======
+	snprintf(cap->bus_info, sizeof(cap->bus_info), "platform: %s",
+		 vpu->dev->driver->name);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -159,11 +164,16 @@ static int vidioc_enum_framesizes(struct file *file, void *priv,
 	}
 
 	/* For non-coded formats check if postprocessing scaling is possible */
+<<<<<<< HEAD
 	if (fmt->codec_mode == HANTRO_MODE_NONE) {
 		if (hantro_needs_postproc(ctx, fmt))
 			return hanto_postproc_enum_framesizes(ctx, fsize);
 		else
 			return -ENOTTY;
+=======
+	if (fmt->codec_mode == HANTRO_MODE_NONE && hantro_needs_postproc(ctx, fmt)) {
+		return hanto_postproc_enum_framesizes(ctx, fsize);
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (fsize->index != 0) {
 		vpu_debug(0, "invalid frame size index (expected 0, got %d)\n",
 			  fsize->index);

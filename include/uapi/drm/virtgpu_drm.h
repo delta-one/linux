@@ -64,7 +64,10 @@ struct drm_virtgpu_map {
 	__u32 pad;
 };
 
+<<<<<<< HEAD
 /* fence_fd is modified on success if VIRTGPU_EXECBUF_FENCE_FD_OUT flag is set. */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct drm_virtgpu_execbuffer {
 	__u32 flags;
 	__u32 size;

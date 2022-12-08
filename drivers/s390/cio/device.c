@@ -80,7 +80,11 @@ ccw_bus_match (struct device * dev, struct device_driver * drv)
  * specified size. Return length of resulting string (excluding trailing '\0')
  * even if string doesn't fit buffer (snprintf semantics). */
 static int snprint_alias(char *buf, size_t size,
+<<<<<<< HEAD
 			 const struct ccw_device_id *id, const char *suffix)
+=======
+			 struct ccw_device_id *id, const char *suffix)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int len;
 
@@ -101,10 +105,17 @@ static int snprint_alias(char *buf, size_t size,
 
 /* Set up environment variables for ccw device uevent. Return 0 on success,
  * non-zero otherwise. */
+<<<<<<< HEAD
 static int ccw_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct ccw_device *cdev = to_ccwdev(dev);
 	const struct ccw_device_id *id = &(cdev->id);
+=======
+static int ccw_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct ccw_device *cdev = to_ccwdev(dev);
+	struct ccw_device_id *id = &(cdev->id);
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 	char modalias_buf[30];
 
@@ -244,13 +255,19 @@ int ccw_device_is_orphan(struct ccw_device *cdev)
 
 static void ccw_device_unregister(struct ccw_device *cdev)
 {
+<<<<<<< HEAD
 	mutex_lock(&cdev->reg_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (device_is_registered(&cdev->dev)) {
 		/* Undo device_add(). */
 		device_del(&cdev->dev);
 	}
+<<<<<<< HEAD
 	mutex_unlock(&cdev->reg_mutex);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (cdev->private->flags.initialized) {
 		cdev->private->flags.initialized = 0;
 		/* Release reference from device_initialize(). */
@@ -656,13 +673,19 @@ static void ccw_device_do_unbind_bind(struct ccw_device *cdev)
 {
 	int ret;
 
+<<<<<<< HEAD
 	mutex_lock(&cdev->reg_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (device_is_registered(&cdev->dev)) {
 		device_release_driver(&cdev->dev);
 		ret = device_attach(&cdev->dev);
 		WARN_ON(ret == -ENODEV);
 	}
+<<<<<<< HEAD
 	mutex_unlock(&cdev->reg_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -745,7 +768,10 @@ static int io_subchannel_initialize_dev(struct subchannel *sch,
 	INIT_LIST_HEAD(&priv->cmb_list);
 	init_waitqueue_head(&priv->wait_q);
 	timer_setup(&priv->timer, ccw_device_timeout, 0);
+<<<<<<< HEAD
 	mutex_init(&cdev->reg_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	atomic_set(&priv->onoff, 0);
 	cdev->ccwlock = sch->lock;
@@ -831,7 +857,10 @@ static void io_subchannel_register(struct ccw_device *cdev)
 	 * be registered). We need to reprobe since we may now have sense id
 	 * information.
 	 */
+<<<<<<< HEAD
 	mutex_lock(&cdev->reg_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (device_is_registered(&cdev->dev)) {
 		if (!cdev->drv) {
 			ret = device_reprobe(&cdev->dev);
@@ -854,14 +883,20 @@ static void io_subchannel_register(struct ccw_device *cdev)
 		spin_lock_irqsave(sch->lock, flags);
 		sch_set_cdev(sch, NULL);
 		spin_unlock_irqrestore(sch->lock, flags);
+<<<<<<< HEAD
 		mutex_unlock(&cdev->reg_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Release initial device reference. */
 		put_device(&cdev->dev);
 		goto out_err;
 	}
 out:
 	cdev->private->flags.recog_done = 1;
+<<<<<<< HEAD
 	mutex_unlock(&cdev->reg_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	wake_up(&cdev->private->wait_q);
 out_err:
 	if (adjust_init_count && atomic_dec_and_test(&ccw_device_init_count))
@@ -945,7 +980,11 @@ static int ccw_device_move_to_sch(struct ccw_device *cdev,
 		if (old_enabled) {
 			/* Try to reenable the old subchannel. */
 			spin_lock_irq(old_sch->lock);
+<<<<<<< HEAD
 			cio_enable_subchannel(old_sch, (u32)virt_to_phys(old_sch));
+=======
+			cio_enable_subchannel(old_sch, (u32)(addr_t)old_sch);
+>>>>>>> b7ba80a49124 (Commit)
 			spin_unlock_irq(old_sch->lock);
 		}
 		/* Release child reference for new parent. */

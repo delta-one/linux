@@ -41,6 +41,9 @@ unsigned int dcn314_calculate_dccg_k1_k2_values(struct pipe_ctx *pipe_ctx, unsig
 
 void dcn314_set_pixels_per_cycle(struct pipe_ctx *pipe_ctx);
 
+<<<<<<< HEAD
 void dcn314_hubp_pg_control(struct dce_hwseq *hws, unsigned int hubp_inst, bool power_on);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __DC_HWSS_DCN314_H__ */

@@ -296,7 +296,12 @@ static void sis_ts_reset(struct sis_ts_data *ts)
 	}
 }
 
+<<<<<<< HEAD
 static int sis_ts_probe(struct i2c_client *client)
+=======
+static int sis_ts_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sis_ts_data *ts;
 	struct input_dev *input;
@@ -393,7 +398,11 @@ static struct i2c_driver sis_ts_driver = {
 		.name	= SIS_I2C_NAME,
 		.of_match_table = of_match_ptr(sis_ts_dt_ids),
 	},
+<<<<<<< HEAD
 	.probe_new	= sis_ts_probe,
+=======
+	.probe		= sis_ts_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= sis_ts_id,
 };
 module_i2c_driver(sis_ts_driver);

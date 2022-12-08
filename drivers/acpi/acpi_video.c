@@ -70,7 +70,15 @@ module_param(device_id_scheme, bool, 0444);
 static int only_lcd = -1;
 module_param(only_lcd, int, 0444);
 
+<<<<<<< HEAD
 static int register_backlight_delay;
+=======
+/*
+ * Display probing is known to take up to 5 seconds, so delay the fallback
+ * backlight registration by 5 seconds + 3 seconds for some extra margin.
+ */
+static int register_backlight_delay = 8;
+>>>>>>> b7ba80a49124 (Commit)
 module_param(register_backlight_delay, int, 0444);
 MODULE_PARM_DESC(register_backlight_delay,
 	"Delay in seconds before doing fallback (non GPU driver triggered) "
@@ -82,7 +90,11 @@ static DEFINE_MUTEX(register_count_mutex);
 static DEFINE_MUTEX(video_list_lock);
 static LIST_HEAD(video_bus_head);
 static int acpi_video_bus_add(struct acpi_device *device);
+<<<<<<< HEAD
 static void acpi_video_bus_remove(struct acpi_device *device);
+=======
+static int acpi_video_bus_remove(struct acpi_device *device);
+>>>>>>> b7ba80a49124 (Commit)
 static void acpi_video_bus_notify(struct acpi_device *device, u32 event);
 static void acpi_video_bus_register_backlight_work(struct work_struct *ignored);
 static DECLARE_DELAYED_WORK(video_bus_register_backlight_work,
@@ -2063,13 +2075,21 @@ err_free_video:
 	return error;
 }
 
+<<<<<<< HEAD
 static void acpi_video_bus_remove(struct acpi_device *device)
+=======
+static int acpi_video_bus_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct acpi_video_bus *video = NULL;
 
 
 	if (!device || !acpi_driver_data(device))
+<<<<<<< HEAD
 		return;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	video = acpi_driver_data(device);
 
@@ -2083,6 +2103,11 @@ static void acpi_video_bus_remove(struct acpi_device *device)
 
 	kfree(video->attached_array);
 	kfree(video);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void acpi_video_bus_register_backlight_work(struct work_struct *ignored)
@@ -2172,6 +2197,7 @@ static bool should_check_lcd_flag(void)
 	return false;
 }
 
+<<<<<<< HEAD
 /*
  * At least one graphics driver has reported that no LCD is connected
  * via the native interface. cancel the registration for fallback acpi_video0.
@@ -2183,6 +2209,8 @@ void acpi_video_report_nolcd(void)
 }
 EXPORT_SYMBOL(acpi_video_report_nolcd);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int acpi_video_register(void)
 {
 	int ret = 0;

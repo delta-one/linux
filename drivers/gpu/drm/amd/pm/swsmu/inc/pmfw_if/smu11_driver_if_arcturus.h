@@ -464,7 +464,10 @@ typedef struct {
   uint16_t       Padding16;
 } DpmDescriptor_t;
 
+<<<<<<< HEAD
 #pragma pack(push, 1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 typedef struct {
   uint32_t Version;
 
@@ -734,7 +737,10 @@ typedef struct {
   uint32_t     MmHubPadding[8]; // SMU internal use
 
 } PPTable_t;
+<<<<<<< HEAD
 #pragma pack(pop)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 typedef struct {
   // Time constant parameters for clock averages in ms

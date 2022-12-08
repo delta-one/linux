@@ -137,6 +137,7 @@ check_locked_port_support()
 	fi
 }
 
+<<<<<<< HEAD
 check_port_mab_support()
 {
 	if ! bridge -d link show | grep -q "mab"; then
@@ -145,6 +146,8 @@ check_port_mab_support()
 	fi
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 if [[ "$(id -u)" -ne 0 ]]; then
 	echo "SKIP: need root privileges"
 	exit $ksft_skip
@@ -524,6 +527,30 @@ cmd_jq()
 	[ ! -z "$output" ]
 }
 
+<<<<<<< HEAD
+=======
+lldpad_app_wait_set()
+{
+	local dev=$1; shift
+
+	while lldptool -t -i $dev -V APP -c app | grep -Eq "pending|unknown"; do
+		echo "$dev: waiting for lldpad to push pending APP updates"
+		sleep 5
+	done
+}
+
+lldpad_app_wait_del()
+{
+	# Give lldpad a chance to push down the changes. If the device is downed
+	# too soon, the updates will be left pending. However, they will have
+	# been struck off the lldpad's DB already, so we won't be able to tell
+	# they are pending. Then on next test iteration this would cause
+	# weirdness as newly-added APP rules conflict with the old ones,
+	# sometimes getting stuck in an "unknown" state.
+	sleep 5
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 pre_cleanup()
 {
 	if [ "${PAUSE_ON_CLEANUP}" = "yes" ]; then
@@ -893,14 +920,22 @@ sysctl_set()
 	local value=$1; shift
 
 	SYSCTL_ORIG[$key]=$(sysctl -n $key)
+<<<<<<< HEAD
 	sysctl -qw $key="$value"
+=======
+	sysctl -qw $key=$value
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 sysctl_restore()
 {
 	local key=$1; shift
 
+<<<<<<< HEAD
 	sysctl -qw $key="${SYSCTL_ORIG[$key]}"
+=======
+	sysctl -qw $key=${SYSCTL_ORIG["$key"]}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 forwarding_enable()
@@ -1671,6 +1706,7 @@ hw_stats_monitor_test()
 
 	log_test "${type}_stats notifications"
 }
+<<<<<<< HEAD
 
 ipv4_to_bytes()
 {
@@ -1887,3 +1923,5 @@ mldv1_done_get()
 
 	payload_template_expand_checksum "$hbh$icmpv6" $checksum
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

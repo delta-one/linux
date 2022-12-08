@@ -10,7 +10,10 @@
 struct evlist;
 struct evsel;
 struct option;
+<<<<<<< HEAD
 struct print_callbacks;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct rblist;
 struct cgroup;
 
@@ -47,7 +50,10 @@ struct metric_expr {
 	const char *metric_expr;
 	/** The name of the meric such as "IPC". */
 	const char *metric_name;
+<<<<<<< HEAD
 	const char *metric_threshold;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/**
 	 * The "ScaleUnit" that scales and adds a unit to the metric during
 	 * output. For example, "6.4e-05MiB" means to scale the resulting metric
@@ -70,11 +76,15 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
 			      const char *str,
 			      bool metric_no_group,
 			      bool metric_no_merge,
+<<<<<<< HEAD
 			      bool metric_no_threshold,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			      const char *user_requested_cpu_list,
 			      bool system_wide,
 			      struct rblist *metric_events);
 int metricgroup__parse_groups_test(struct evlist *evlist,
+<<<<<<< HEAD
 				   const struct pmu_metrics_table *table,
 				   const char *str,
 				   struct rblist *metric_events);
@@ -83,6 +93,18 @@ void metricgroup__print(const struct print_callbacks *print_cb, void *print_stat
 bool metricgroup__has_metric(const char *metric);
 unsigned int metricgroups__topdown_max_level(void);
 int arch_get_runtimeparam(const struct pmu_metric *pm);
+=======
+				   const struct pmu_events_table *table,
+				   const char *str,
+				   bool metric_no_group,
+				   bool metric_no_merge,
+				   struct rblist *metric_events);
+
+void metricgroup__print(bool metrics, bool groups, char *filter,
+			bool raw, bool details, const char *pmu_name);
+bool metricgroup__has_metric(const char *metric);
+int arch_get_runtimeparam(const struct pmu_event *pe __maybe_unused);
+>>>>>>> b7ba80a49124 (Commit)
 void metricgroup__rblist_exit(struct rblist *metric_events);
 
 int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,

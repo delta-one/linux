@@ -309,13 +309,20 @@ int usbip_recv(struct socket *sock, void *buf, int size)
 	if (!sock || !buf || !size)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	iov_iter_kvec(&msg.msg_iter, ITER_DEST, &iov, 1, size);
+=======
+	iov_iter_kvec(&msg.msg_iter, READ, &iov, 1, size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	usbip_dbg_xmit("enter\n");
 
 	do {
 		sock->sk->sk_allocation = GFP_NOIO;
+<<<<<<< HEAD
 		sock->sk->sk_use_task_frag = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		result = sock_recvmsg(sock, &msg, MSG_WAITALL);
 		if (result <= 0)

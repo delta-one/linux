@@ -145,6 +145,11 @@ static inline void update_mmu_cache(struct vm_area_struct *vma,
 
 #endif /* !__ASSEMBLY__ */
 
+<<<<<<< HEAD
+=======
+#define kern_addr_valid(addr)	(1)
+
+>>>>>>> b7ba80a49124 (Commit)
 /* MMU-specific headers */
 
 #ifdef CONFIG_SUN3

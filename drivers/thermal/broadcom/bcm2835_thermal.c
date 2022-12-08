@@ -18,6 +18,10 @@
 #include <linux/platform_device.h>
 #include <linux/thermal.h>
 
+<<<<<<< HEAD
+=======
+#include "../thermal_core.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "../thermal_hwmon.h"
 
 #define BCM2835_TS_TSENSCTL			0x00
@@ -90,7 +94,11 @@ static int bcm2835_thermal_temp2adc(int temp, int offset, int slope)
 
 static int bcm2835_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	struct bcm2835_thermal_data *data = thermal_zone_device_priv(tz);
+=======
+	struct bcm2835_thermal_data *data = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 val = readl(data->regs + BCM2835_TS_TSENSSTAT);
 
 	if (!(val & BCM2835_TS_TSENSSTAT_VALID))
@@ -166,6 +174,10 @@ static int bcm2835_thermal_probe(struct platform_device *pdev)
 	const struct of_device_id *match;
 	struct thermal_zone_device *tz;
 	struct bcm2835_thermal_data *data;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	int err = 0;
 	u32 val;
 	unsigned long rate;
@@ -179,7 +191,12 @@ static int bcm2835_thermal_probe(struct platform_device *pdev)
 	if (!match)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	data->regs = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	data->regs = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(data->regs)) {
 		err = PTR_ERR(data->regs);
 		return err;
@@ -267,6 +284,10 @@ static int bcm2835_thermal_probe(struct platform_device *pdev)
 	 * Thermal_zone doesn't enable hwmon as default,
 	 * enable it here
 	 */
+<<<<<<< HEAD
+=======
+	tz->tzp->no_hwmon = false;
+>>>>>>> b7ba80a49124 (Commit)
 	err = thermal_add_hwmon_sysfs(tz);
 	if (err)
 		goto err_tz;

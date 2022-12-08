@@ -939,7 +939,11 @@ static int ms_lib_process_bootblock(struct us_data *us, u16 PhyBlock, u8 *PageDa
 	struct ms_lib_type_extdat ExtraData;
 	struct ene_ub6250_info *info = (struct ene_ub6250_info *) us->extra;
 
+<<<<<<< HEAD
 	PageBuffer = kzalloc(MS_BYTES_PER_PAGE * 2, GFP_KERNEL);
+=======
+	PageBuffer = kmalloc(MS_BYTES_PER_PAGE, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (PageBuffer == NULL)
 		return (u32)-1;
 

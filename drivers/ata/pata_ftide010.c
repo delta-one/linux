@@ -560,7 +560,11 @@ static const struct of_device_id pata_ftide010_of_match[] = {
 static struct platform_driver pata_ftide010_driver = {
 	.driver = {
 		.name = DRV_NAME,
+<<<<<<< HEAD
 		.of_match_table = pata_ftide010_of_match,
+=======
+		.of_match_table = of_match_ptr(pata_ftide010_of_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = pata_ftide010_probe,
 	.remove = pata_ftide010_remove,

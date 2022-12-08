@@ -4,6 +4,7 @@
  * Copyright (c) 2017 Jesper Dangaard Brouer, Red Hat Inc.
  */
 
+<<<<<<< HEAD
 /**
  * DOC: cpu map
  * The 'cpumap' is primarily used as a backend map for XDP BPF helper
@@ -14,6 +15,15 @@
  * CPU will do SKB-allocation and call the normal network stack.
  */
 /*
+=======
+/* The 'cpumap' is primarily used as a backend map for XDP BPF helper
+ * call bpf_redirect_map() and XDP_REDIRECT action, like 'devmap'.
+ *
+ * Unlike devmap which redirects XDP frames out another NIC device,
+ * this map type redirects raw XDP frames to another CPU.  The remote
+ * CPU will do SKB-allocation and call the normal network stack.
+ *
+>>>>>>> b7ba80a49124 (Commit)
  * This is a scalability and isolation mechanism, that allow
  * separating the early driver network XDP layer, from the rest of the
  * netstack, and assigning dedicated CPUs for this stage.  This
@@ -88,6 +98,10 @@ static struct bpf_map *cpu_map_alloc(union bpf_attr *attr)
 {
 	u32 value_size = attr->value_size;
 	struct bpf_cpu_map *cmap;
+<<<<<<< HEAD
+=======
+	int err = -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!bpf_capable())
 		return ERR_PTR(-EPERM);
@@ -99,26 +113,48 @@ static struct bpf_map *cpu_map_alloc(union bpf_attr *attr)
 	    attr->map_flags & ~BPF_F_NUMA_NODE)
 		return ERR_PTR(-EINVAL);
 
+<<<<<<< HEAD
 	/* Pre-limit array size based on NR_CPUS, not final CPU check */
 	if (attr->max_entries > NR_CPUS)
 		return ERR_PTR(-E2BIG);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cmap = bpf_map_area_alloc(sizeof(*cmap), NUMA_NO_NODE);
 	if (!cmap)
 		return ERR_PTR(-ENOMEM);
 
 	bpf_map_init_from_attr(&cmap->map, attr);
 
+<<<<<<< HEAD
+=======
+	/* Pre-limit array size based on NR_CPUS, not final CPU check */
+	if (cmap->map.max_entries > NR_CPUS) {
+		err = -E2BIG;
+		goto free_cmap;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Alloc array for possible remote "destination" CPUs */
 	cmap->cpu_map = bpf_map_area_alloc(cmap->map.max_entries *
 					   sizeof(struct bpf_cpu_map_entry *),
 					   cmap->map.numa_node);
+<<<<<<< HEAD
 	if (!cmap->cpu_map) {
 		bpf_map_area_free(cmap);
 		return ERR_PTR(-ENOMEM);
 	}
 
 	return &cmap->map;
+=======
+	if (!cmap->cpu_map)
+		goto free_cmap;
+
+	return &cmap->map;
+free_cmap:
+	bpf_map_area_free(cmap);
+	return ERR_PTR(err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void get_cpu_map_entry(struct bpf_cpu_map_entry *rcpu)
@@ -361,7 +397,11 @@ static int cpu_map_kthread_run(void *data)
 		/* Support running another XDP prog on this CPU */
 		nframes = cpu_map_bpf_prog_run(rcpu, frames, xdp_n, &stats, &list);
 		if (nframes) {
+<<<<<<< HEAD
 			m = kmem_cache_alloc_bulk(skbuff_cache, gfp, nframes, skbs);
+=======
+			m = kmem_cache_alloc_bulk(skbuff_head_cache, gfp, nframes, skbs);
+>>>>>>> b7ba80a49124 (Commit)
 			if (unlikely(m == 0)) {
 				for (i = 0; i < nframes; i++)
 					skbs[i] = NULL; /* effect: xdp_return_frame */
@@ -540,7 +580,11 @@ static void __cpu_map_entry_replace(struct bpf_cpu_map *cmap,
 	}
 }
 
+<<<<<<< HEAD
 static long cpu_map_delete_elem(struct bpf_map *map, void *key)
+=======
+static int cpu_map_delete_elem(struct bpf_map *map, void *key)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_cpu_map *cmap = container_of(map, struct bpf_cpu_map, map);
 	u32 key_cpu = *(u32 *)key;
@@ -553,8 +597,13 @@ static long cpu_map_delete_elem(struct bpf_map *map, void *key)
 	return 0;
 }
 
+<<<<<<< HEAD
 static long cpu_map_update_elem(struct bpf_map *map, void *key, void *value,
 				u64 map_flags)
+=======
+static int cpu_map_update_elem(struct bpf_map *map, void *key, void *value,
+			       u64 map_flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_cpu_map *cmap = container_of(map, struct bpf_cpu_map, map);
 	struct bpf_cpumap_val cpumap_value = {};
@@ -667,6 +716,7 @@ static int cpu_map_get_next_key(struct bpf_map *map, void *key, void *next_key)
 	return 0;
 }
 
+<<<<<<< HEAD
 static long cpu_map_redirect(struct bpf_map *map, u64 index, u64 flags)
 {
 	return __bpf_xdp_redirect_map(map, index, flags, 0,
@@ -682,6 +732,14 @@ static u64 cpu_map_mem_usage(const struct bpf_map *map)
 	return usage;
 }
 
+=======
+static int cpu_map_redirect(struct bpf_map *map, u32 ifindex, u64 flags)
+{
+	return __bpf_xdp_redirect_map(map, ifindex, flags, 0,
+				      __cpu_map_lookup_elem);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 BTF_ID_LIST_SINGLE(cpu_map_btf_ids, struct, bpf_cpu_map)
 const struct bpf_map_ops cpu_map_ops = {
 	.map_meta_equal		= bpf_map_meta_equal,
@@ -692,7 +750,10 @@ const struct bpf_map_ops cpu_map_ops = {
 	.map_lookup_elem	= cpu_map_lookup_elem,
 	.map_get_next_key	= cpu_map_get_next_key,
 	.map_check_btf		= map_check_no_btf,
+<<<<<<< HEAD
 	.map_mem_usage		= cpu_map_mem_usage,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.map_btf_id		= &cpu_map_btf_ids[0],
 	.map_redirect		= cpu_map_redirect,
 };

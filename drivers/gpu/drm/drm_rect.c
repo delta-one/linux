@@ -80,7 +80,11 @@ static u32 clip_scaled(int src, int dst, int *clip)
  * @dst: destination window rectangle
  * @clip: clip rectangle
  *
+<<<<<<< HEAD
  * Clip rectangle @dst by rectangle @clip. Clip rectangle @src by
+=======
+ * Clip rectangle @dst by rectangle @clip. Clip rectangle @src by the
+>>>>>>> b7ba80a49124 (Commit)
  * the corresponding amounts, retaining the vertical and horizontal scaling
  * factors from @src to @dst.
  *

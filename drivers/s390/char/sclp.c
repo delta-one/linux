@@ -69,7 +69,11 @@ static struct init_sccb *sclp_init_sccb;
 /* Number of console pages to allocate, used by sclp_con.c and sclp_vt220.c */
 int sclp_console_pages = SCLP_CONSOLE_PAGES;
 /* Flag to indicate if buffer pages are dropped on buffer full condition */
+<<<<<<< HEAD
 bool sclp_console_drop = true;
+=======
+int sclp_console_drop = 1;
+>>>>>>> b7ba80a49124 (Commit)
 /* Number of times the console dropped buffer pages */
 unsigned long sclp_console_full;
 
@@ -195,7 +199,16 @@ __setup("sclp_con_pages=", sclp_setup_console_pages);
 
 static int __init sclp_setup_console_drop(char *str)
 {
+<<<<<<< HEAD
 	return kstrtobool(str, &sclp_console_drop) == 0;
+=======
+	int drop, rc;
+
+	rc = kstrtoint(str, 0, &drop);
+	if (!rc)
+		sclp_console_drop = drop;
+	return 1;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 __setup("sclp_con_drop=", sclp_setup_console_drop);
@@ -1200,11 +1213,16 @@ static struct notifier_block sclp_reboot_notifier = {
 
 static ssize_t con_pages_show(struct device_driver *dev, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%i\n", sclp_console_pages);
+=======
+	return sprintf(buf, "%i\n", sclp_console_pages);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DRIVER_ATTR_RO(con_pages);
 
+<<<<<<< HEAD
 static ssize_t con_drop_store(struct device_driver *dev, const char *buf, size_t count)
 {
 	int rc;
@@ -1223,6 +1241,18 @@ static DRIVER_ATTR_RW(con_drop);
 static ssize_t con_full_show(struct device_driver *dev, char *buf)
 {
 	return sysfs_emit(buf, "%lu\n", sclp_console_full);
+=======
+static ssize_t con_drop_show(struct device_driver *dev, char *buf)
+{
+	return sprintf(buf, "%i\n", sclp_console_drop);
+}
+
+static DRIVER_ATTR_RO(con_drop);
+
+static ssize_t con_full_show(struct device_driver *dev, char *buf)
+{
+	return sprintf(buf, "%lu\n", sclp_console_full);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DRIVER_ATTR_RO(con_full);

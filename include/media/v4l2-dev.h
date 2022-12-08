@@ -539,6 +539,7 @@ static inline int video_is_registered(struct video_device *vdev)
 	return test_bit(V4L2_FL_REGISTERED, &vdev->flags);
 }
 
+<<<<<<< HEAD
 #if defined(CONFIG_MEDIA_CONTROLLER)
 
 /**
@@ -641,4 +642,6 @@ struct media_pipeline *video_device_pipeline(struct video_device *vdev);
 
 #endif /* CONFIG_MEDIA_CONTROLLER */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _V4L2_DEV_H */

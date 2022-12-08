@@ -995,6 +995,7 @@ enum HCLGE_VPORT_STATE {
 	HCLGE_VPORT_STATE_MAC_TBL_CHANGE,
 	HCLGE_VPORT_STATE_PROMISC_CHANGE,
 	HCLGE_VPORT_STATE_VLAN_FLTR_CHANGE,
+<<<<<<< HEAD
 	HCLGE_VPORT_STATE_INITED,
 	HCLGE_VPORT_STATE_MAX
 };
@@ -1004,6 +1005,11 @@ enum HCLGE_VPORT_NEED_NOTIFY {
 	HCLGE_VPORT_NEED_NOTIFY_VF_VLAN,
 };
 
+=======
+	HCLGE_VPORT_STATE_MAX
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct hclge_vlan_info {
 	u16 vlan_proto; /* so far support 802.1Q only */
 	u16 qos;
@@ -1050,7 +1056,10 @@ struct hclge_vport {
 	struct hnae3_handle roce;
 
 	unsigned long state;
+<<<<<<< HEAD
 	unsigned long need_notify;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long last_active_jiffies;
 	u32 mps; /* Max packet size */
 	struct hclge_vf_info vf_info;

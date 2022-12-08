@@ -82,6 +82,10 @@ static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
 
 static struct class intel_scu_ipc_class = {
 	.name = "intel_scu_ipc",
+<<<<<<< HEAD
+=======
+	.owner = THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -582,6 +586,10 @@ __intel_scu_ipc_register(struct device *parent,
 	scu->dev.parent = parent;
 	scu->dev.class = &intel_scu_ipc_class;
 	scu->dev.release = intel_scu_ipc_release;
+<<<<<<< HEAD
+=======
+	dev_set_name(&scu->dev, "intel_scu_ipc");
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!request_mem_region(scu_data->mem.start, resource_size(&scu_data->mem),
 				"intel_scu_ipc")) {
@@ -610,7 +618,10 @@ __intel_scu_ipc_register(struct device *parent,
 	 * After this point intel_scu_ipc_release() takes care of
 	 * releasing the SCU IPC resources once refcount drops to zero.
 	 */
+<<<<<<< HEAD
 	dev_set_name(&scu->dev, "intel_scu_ipc");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = device_register(&scu->dev);
 	if (err) {
 		put_device(&scu->dev);

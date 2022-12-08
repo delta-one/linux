@@ -2,14 +2,21 @@
 /*
  * PRU-ICSS remoteproc driver for various TI SoCs
  *
+<<<<<<< HEAD
  * Copyright (C) 2014-2022 Texas Instruments Incorporated - https://www.ti.com/
+=======
+ * Copyright (C) 2014-2020 Texas Instruments Incorporated - https://www.ti.com/
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Author(s):
  *	Suman Anna <s-anna@ti.com>
  *	Andrew F. Davis <afd@ti.com>
  *	Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org> for Texas Instruments
+<<<<<<< HEAD
  *	Puranjay Mohan <p-mohan@ti.com>
  *	Md Danish Anwar <danishanwar@ti.com>
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/bitops.h>
@@ -18,7 +25,10 @@
 #include <linux/module.h>
 #include <linux/of_device.h>
 #include <linux/of_irq.h>
+<<<<<<< HEAD
 #include <linux/remoteproc/pruss.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pruss_driver.h>
 #include <linux/remoteproc.h>
 
@@ -114,13 +124,19 @@ struct pru_private_data {
  * @rproc: remoteproc pointer for this PRU core
  * @data: PRU core specific data
  * @mem_regions: data for each of the PRU memory regions
+<<<<<<< HEAD
  * @client_np: client device node
  * @lock: mutex to protect client usage
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @fw_name: name of firmware image used during loading
  * @mapped_irq: virtual interrupt numbers of created fw specific mapping
  * @pru_interrupt_map: pointer to interrupt mapping description (firmware)
  * @pru_interrupt_map_sz: pru_interrupt_map size
+<<<<<<< HEAD
  * @rmw_lock: lock for read, modify, write operations on registers
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @dbg_single_step: debug state variable to set PRU into single step mode
  * @dbg_continuous: debug state variable to restore PRU execution mode
  * @evt_count: number of mapped events
@@ -132,13 +148,19 @@ struct pru_rproc {
 	struct rproc *rproc;
 	const struct pru_private_data *data;
 	struct pruss_mem_region mem_regions[PRU_IOMEM_MAX];
+<<<<<<< HEAD
 	struct device_node *client_np;
 	struct mutex lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const char *fw_name;
 	unsigned int *mapped_irq;
 	struct pru_irq_rsc *pru_interrupt_map;
 	size_t pru_interrupt_map_sz;
+<<<<<<< HEAD
 	spinlock_t rmw_lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 dbg_single_step;
 	u32 dbg_continuous;
 	u8 evt_count;
@@ -155,6 +177,7 @@ void pru_control_write_reg(struct pru_rproc *pru, unsigned int reg, u32 val)
 	writel_relaxed(val, pru->mem_regions[PRU_IOMEM_CTRL].va + reg);
 }
 
+<<<<<<< HEAD
 static inline
 void pru_control_set_reg(struct pru_rproc *pru, unsigned int reg,
 			 u32 mask, u32 set)
@@ -361,6 +384,8 @@ int pru_rproc_set_ctable(struct rproc *rproc, enum pru_ctable_idx c, u32 addr)
 }
 EXPORT_SYMBOL_GPL(pru_rproc_set_ctable);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline u32 pru_debug_read_reg(struct pru_rproc *pru, unsigned int reg)
 {
 	return readl_relaxed(pru->mem_regions[PRU_IOMEM_DEBUG].va + reg);
@@ -653,7 +678,11 @@ static void *pru_d_da_to_va(struct pru_rproc *pru, u32 da, size_t len)
 	dram0 = pruss->mem_regions[PRUSS_MEM_DRAM0];
 	dram1 = pruss->mem_regions[PRUSS_MEM_DRAM1];
 	/* PRU1 has its local RAM addresses reversed */
+<<<<<<< HEAD
 	if (pru->id == PRUSS_PRU1)
+=======
+	if (pru->id == 1)
+>>>>>>> b7ba80a49124 (Commit)
 		swap(dram0, dram1);
 	shrd_ram = pruss->mem_regions[PRUSS_MEM_SHRD_RAM2];
 
@@ -962,14 +991,22 @@ static int pru_rproc_set_id(struct pru_rproc *pru)
 	case RTU0_IRAM_ADDR_MASK:
 		fallthrough;
 	case PRU0_IRAM_ADDR_MASK:
+<<<<<<< HEAD
 		pru->id = PRUSS_PRU0;
+=======
+		pru->id = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case TX_PRU1_IRAM_ADDR_MASK:
 		fallthrough;
 	case RTU1_IRAM_ADDR_MASK:
 		fallthrough;
 	case PRU1_IRAM_ADDR_MASK:
+<<<<<<< HEAD
 		pru->id = PRUSS_PRU1;
+=======
+		pru->id = 1;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		ret = -EINVAL;
@@ -1031,9 +1068,12 @@ static int pru_rproc_probe(struct platform_device *pdev)
 	pru->pruss = platform_get_drvdata(ppdev);
 	pru->rproc = rproc;
 	pru->fw_name = fw_name;
+<<<<<<< HEAD
 	pru->client_np = NULL;
 	spin_lock_init(&pru->rmw_lock);
 	mutex_init(&pru->lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < ARRAY_SIZE(mem_names); i++) {
 		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
@@ -1122,7 +1162,11 @@ MODULE_DEVICE_TABLE(of, pru_rproc_match);
 
 static struct platform_driver pru_rproc_driver = {
 	.driver = {
+<<<<<<< HEAD
 		.name   = PRU_RPROC_DRVNAME,
+=======
+		.name   = "pru-rproc",
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = pru_rproc_match,
 		.suppress_bind_attrs = true,
 	},
@@ -1134,7 +1178,10 @@ module_platform_driver(pru_rproc_driver);
 MODULE_AUTHOR("Suman Anna <s-anna@ti.com>");
 MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
 MODULE_AUTHOR("Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>");
+<<<<<<< HEAD
 MODULE_AUTHOR("Puranjay Mohan <p-mohan@ti.com>");
 MODULE_AUTHOR("Md Danish Anwar <danishanwar@ti.com>");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_DESCRIPTION("PRU-ICSS Remote Processor Driver");
 MODULE_LICENSE("GPL v2");

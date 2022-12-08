@@ -677,7 +677,12 @@ static int pl011_dma_tx_refill(struct uart_amba_port *uap)
 	 * Now we know that DMA will fire, so advance the ring buffer
 	 * with the stuff we just dispatched.
 	 */
+<<<<<<< HEAD
 	uart_xmit_advance(&uap->port, count);
+=======
+	xmit->tail = (xmit->tail + count) & (UART_XMIT_SIZE - 1);
+	uap->port.icount.tx += count;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
 		uart_write_wakeup(&uap->port);
@@ -1044,9 +1049,12 @@ static void pl011_dma_rx_callback(void *data)
  */
 static inline void pl011_dma_rx_stop(struct uart_amba_port *uap)
 {
+<<<<<<< HEAD
 	if (!uap->using_rx_dma)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* FIXME.  Just disable the DMA enable */
 	uap->dmacr &= ~UART011_RXDMAE;
 	pl011_write(uap->dmacr, uap, REG_DMACR);
@@ -1466,10 +1474,13 @@ static bool pl011_tx_chars(struct uart_amba_port *uap, bool from_irq)
 	struct circ_buf *xmit = &uap->port.state->xmit;
 	int count = uap->fifosize >> 1;
 
+<<<<<<< HEAD
 	if ((uap->port.rs485.flags & SER_RS485_ENABLED) &&
 	    !uap->rs485_tx_started)
 		pl011_rs485_tx_start(uap);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (uap->port.x_char) {
 		if (!pl011_tx_char(uap, uap->port.x_char, from_irq))
 			return true;
@@ -1481,6 +1492,13 @@ static bool pl011_tx_chars(struct uart_amba_port *uap, bool from_irq)
 		return false;
 	}
 
+<<<<<<< HEAD
+=======
+	if ((uap->port.rs485.flags & SER_RS485_ENABLED) &&
+	    !uap->rs485_tx_started)
+		pl011_rs485_tx_start(uap);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* If we are using DMA mode, try to send some characters. */
 	if (pl011_dma_tx_irq(uap))
 		return true;
@@ -1830,6 +1848,7 @@ static void pl011_enable_interrupts(struct uart_amba_port *uap)
 static void pl011_unthrottle_rx(struct uart_port *port)
 {
 	struct uart_amba_port *uap = container_of(port, struct uart_amba_port, port);
+<<<<<<< HEAD
 	unsigned long flags;
 
 	spin_lock_irqsave(&uap->port.lock, flags);
@@ -1841,6 +1860,10 @@ static void pl011_unthrottle_rx(struct uart_port *port)
 	pl011_write(uap->im, uap, REG_IMSC);
 
 	spin_unlock_irqrestore(&uap->port.lock, flags);
+=======
+
+	pl011_enable_interrupts(uap);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int pl011_startup(struct uart_port *port)

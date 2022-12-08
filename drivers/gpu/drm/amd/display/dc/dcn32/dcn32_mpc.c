@@ -42,7 +42,11 @@
 	mpc30->mpc_shift->field_name, mpc30->mpc_mask->field_name
 
 
+<<<<<<< HEAD
 void mpc32_mpc_init(struct mpc *mpc)
+=======
+static void mpc32_mpc_init(struct mpc *mpc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dcn30_mpc *mpc30 = TO_DCN30_MPC(mpc);
 	int mpcc_id;
@@ -254,7 +258,11 @@ static void mpc32_program_post1dlut_pwl(
 	}
 }
 
+<<<<<<< HEAD
 bool mpc32_program_post1dlut(
+=======
+static bool mpc32_program_post1dlut(
+>>>>>>> b7ba80a49124 (Commit)
 		struct mpc *mpc,
 		const struct pwl_params *params,
 		uint32_t mpcc_id)
@@ -701,7 +709,11 @@ static void mpc32_power_on_shaper_3dlut(
 }
 
 
+<<<<<<< HEAD
 bool mpc32_program_shaper(
+=======
+static bool mpc32_program_shaper(
+>>>>>>> b7ba80a49124 (Commit)
 		struct mpc *mpc,
 		const struct pwl_params *params,
 		uint32_t mpcc_id)
@@ -897,7 +909,11 @@ static void mpc32_set_3dlut_mode(
 }
 
 
+<<<<<<< HEAD
 bool mpc32_program_3dlut(
+=======
+static bool mpc32_program_3dlut(
+>>>>>>> b7ba80a49124 (Commit)
 		struct mpc *mpc,
 		const struct tetrahedral_params *params,
 		int mpcc_id)
@@ -982,7 +998,11 @@ bool mpc32_program_3dlut(
 	return true;
 }
 
+<<<<<<< HEAD
 static const struct mpc_funcs dcn32_mpc_funcs = {
+=======
+const struct mpc_funcs dcn32_mpc_funcs = {
+>>>>>>> b7ba80a49124 (Commit)
 	.read_mpcc_state = mpc1_read_mpcc_state,
 	.insert_plane = mpc1_insert_plane,
 	.remove_mpcc = mpc1_remove_mpcc,

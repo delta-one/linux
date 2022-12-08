@@ -6,7 +6,12 @@
 #include <linux/irqchip.h>
 #include <linux/irqdomain.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/of_address.h>
+=======
+#include <linux/mfd/syscon.h>
+#include <linux/regmap.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 
 #include <dt-bindings/interrupt-controller/arm-gic.h>
@@ -15,14 +20,20 @@
 #define LS1021A_SCFGREVCR 0x200
 
 struct ls_extirq_data {
+<<<<<<< HEAD
 	void __iomem		*intpcr;
 	raw_spinlock_t		lock;
 	bool			big_endian;
+=======
+	struct regmap		*syscon;
+	u32			intpcr;
+>>>>>>> b7ba80a49124 (Commit)
 	bool			is_ls1021a_or_ls1043a;
 	u32			nirq;
 	struct irq_fwspec	map[MAXIRQ];
 };
 
+<<<<<<< HEAD
 static void ls_extirq_intpcr_rmw(struct ls_extirq_data *priv, u32 mask,
 				 u32 value)
 {
@@ -50,6 +61,8 @@ static void ls_extirq_intpcr_rmw(struct ls_extirq_data *priv, u32 mask,
 	raw_spin_unlock(&priv->lock);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int
 ls_extirq_set_type(struct irq_data *data, unsigned int type)
 {
@@ -78,8 +91,12 @@ ls_extirq_set_type(struct irq_data *data, unsigned int type)
 	default:
 		return -EINVAL;
 	}
+<<<<<<< HEAD
 
 	ls_extirq_intpcr_rmw(priv, mask, value);
+=======
+	regmap_update_bits(priv->syscon, priv->intpcr, mask, value);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return irq_chip_set_type_parent(data, type);
 }
@@ -171,6 +188,10 @@ ls_extirq_parse_map(struct ls_extirq_data *priv, struct device_node *node)
 static int __init
 ls_extirq_of_init(struct device_node *node, struct device_node *parent)
 {
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	struct irq_domain *domain, *parent_domain;
 	struct ls_extirq_data *priv;
 	int ret;
@@ -178,6 +199,7 @@ ls_extirq_of_init(struct device_node *node, struct device_node *parent)
 	parent_domain = irq_find_host(parent);
 	if (!parent_domain) {
 		pr_err("Cannot find parent domain\n");
+<<<<<<< HEAD
 		ret = -ENODEV;
 		goto err_irq_find_host;
 	}
@@ -197,10 +219,30 @@ ls_extirq_of_init(struct device_node *node, struct device_node *parent)
 		pr_err("Cannot ioremap OF node %pOF\n", node);
 		ret = -ENOMEM;
 		goto err_iomap;
+=======
+		return -ENODEV;
+	}
+
+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+	if (!priv)
+		return -ENOMEM;
+
+	priv->syscon = syscon_node_to_regmap(node->parent);
+	if (IS_ERR(priv->syscon)) {
+		ret = PTR_ERR(priv->syscon);
+		pr_err("Failed to lookup parent regmap\n");
+		goto out;
+	}
+	ret = of_property_read_u32(node, "reg", &priv->intpcr);
+	if (ret) {
+		pr_err("Missing INTPCR offset value\n");
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = ls_extirq_parse_map(priv, node);
 	if (ret)
+<<<<<<< HEAD
 		goto err_parse_map;
 
 	priv->big_endian = of_device_is_big_endian(node->parent);
@@ -224,6 +266,21 @@ err_iomap:
 	kfree(priv);
 err_alloc_priv:
 err_irq_find_host:
+=======
+		goto out;
+
+	priv->is_ls1021a_or_ls1043a = of_device_is_compatible(node, "fsl,ls1021a-extirq") ||
+				      of_device_is_compatible(node, "fsl,ls1043a-extirq");
+
+	domain = irq_domain_add_hierarchy(parent_domain, 0, priv->nirq, node,
+					  &extirq_domain_ops, priv);
+	if (!domain)
+		ret = -ENOMEM;
+
+out:
+	if (ret)
+		kfree(priv);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

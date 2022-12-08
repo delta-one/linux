@@ -269,7 +269,11 @@ void hci_req_add_ev(struct hci_request *req, u16 opcode, u32 plen,
 void hci_req_add(struct hci_request *req, u16 opcode, u32 plen,
 		 const void *param)
 {
+<<<<<<< HEAD
 	bt_dev_dbg(req->hdev, "HCI_REQ-0x%4.4x", opcode);
+=======
+	bt_dev_err(req->hdev, "HCI_REQ-0x%4.4x", opcode);
+>>>>>>> b7ba80a49124 (Commit)
 	hci_req_add_ev(req, opcode, plen, param, 0);
 }
 

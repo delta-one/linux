@@ -275,8 +275,18 @@ int amd_pmf_reset_amt(struct amd_pmf_dev *dev)
 	 */
 
 	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR)) {
+<<<<<<< HEAD
 		dev_dbg(dev->dev, "resetting AMT thermals\n");
 		amd_pmf_set_sps_power_limits(dev);
+=======
+		int mode = amd_pmf_get_pprof_modes(dev);
+
+		if (mode < 0)
+			return mode;
+
+		dev_dbg(dev->dev, "resetting AMT thermals\n");
+		amd_pmf_update_slider(dev, SLIDER_OP_SET, mode, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return 0;
 }
@@ -294,5 +304,10 @@ void amd_pmf_deinit_auto_mode(struct amd_pmf_dev *dev)
 void amd_pmf_init_auto_mode(struct amd_pmf_dev *dev)
 {
 	amd_pmf_load_defaults_auto_mode(dev);
+<<<<<<< HEAD
+=======
+	/* update the thermal limits for Automode */
+	amd_pmf_set_automode(dev, config_store.current_mode, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	amd_pmf_init_metrics_table(dev);
 }

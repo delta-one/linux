@@ -355,8 +355,12 @@ static u32 san_evt_bat_nf(struct ssam_event_notifier *nf,
 	INIT_DELAYED_WORK(&work->work, san_evt_bat_workfn);
 	work->dev = d->dev;
 
+<<<<<<< HEAD
 	work->event = *event;
 	memcpy(work->event.data, event->data, event->length);
+=======
+	memcpy(&work->event, event, sizeof(struct ssam_event) + event->length);
+>>>>>>> b7ba80a49124 (Commit)
 
 	queue_delayed_work(san_wq, &work->work, delay);
 	return SSAM_NOTIF_HANDLED;
@@ -590,7 +594,11 @@ static acpi_status san_rqst(struct san_data *d, struct gsb_buffer *buffer)
 		return san_rqst_fixup_suspended(d, &rqst, buffer);
 	}
 
+<<<<<<< HEAD
 	status = __ssam_retry(ssam_request_do_sync_onstack, SAN_REQUEST_NUM_TRIES,
+=======
+	status = __ssam_retry(ssam_request_sync_onstack, SAN_REQUEST_NUM_TRIES,
+>>>>>>> b7ba80a49124 (Commit)
 			      d->ctrl, &rqst, &rsp, SAN_GSB_MAX_RQSX_PAYLOAD);
 
 	if (!status) {

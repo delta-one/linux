@@ -28,7 +28,11 @@ test_offcpu_priv() {
     err=2
     return
   fi
+<<<<<<< HEAD
   if perf version --build-options 2>&1 | grep HAVE_BPF_SKEL | grep -q OFF
+=======
+  if perf record --off-cpu -o /dev/null --quiet true 2>&1 | grep BUILD_BPF_SKEL
+>>>>>>> b7ba80a49124 (Commit)
   then
     echo "off-cpu test [Skipped missing BPF support]"
     err=2
@@ -51,7 +55,11 @@ test_offcpu_basic() {
     err=1
     return
   fi
+<<<<<<< HEAD
   if ! perf report -i ${perfdata} -q --percent-limit=90 | grep -E -q sleep
+=======
+  if ! perf report -i ${perfdata} -q --percent-limit=90 | egrep -q sleep
+>>>>>>> b7ba80a49124 (Commit)
   then
     echo "Basic off-cpu test [Failed missing output]"
     err=1

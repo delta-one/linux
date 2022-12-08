@@ -19,19 +19,34 @@ struct strset {
 	struct hashmap *strs_hash;
 };
 
+<<<<<<< HEAD
 static size_t strset_hash_fn(long key, void *ctx)
 {
 	const struct strset *s = ctx;
 	const char *str = s->strs_data + key;
+=======
+static size_t strset_hash_fn(const void *key, void *ctx)
+{
+	const struct strset *s = ctx;
+	const char *str = s->strs_data + (long)key;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return str_hash(str);
 }
 
+<<<<<<< HEAD
 static bool strset_equal_fn(long key1, long key2, void *ctx)
 {
 	const struct strset *s = ctx;
 	const char *str1 = s->strs_data + key1;
 	const char *str2 = s->strs_data + key2;
+=======
+static bool strset_equal_fn(const void *key1, const void *key2, void *ctx)
+{
+	const struct strset *s = ctx;
+	const char *str1 = s->strs_data + (long)key1;
+	const char *str2 = s->strs_data + (long)key2;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return strcmp(str1, str2) == 0;
 }
@@ -67,7 +82,11 @@ struct strset *strset__new(size_t max_data_sz, const char *init_data, size_t ini
 			/* hashmap__add() returns EEXIST if string with the same
 			 * content already is in the hash map
 			 */
+<<<<<<< HEAD
 			err = hashmap__add(hash, off, off);
+=======
+			err = hashmap__add(hash, (void *)off, (void *)off);
+>>>>>>> b7ba80a49124 (Commit)
 			if (err == -EEXIST)
 				continue; /* duplicate */
 			if (err)
@@ -127,7 +146,11 @@ int strset__find_str(struct strset *set, const char *s)
 	new_off = set->strs_data_len;
 	memcpy(p, s, len);
 
+<<<<<<< HEAD
 	if (hashmap__find(set->strs_hash, new_off, &old_off))
+=======
+	if (hashmap__find(set->strs_hash, (void *)new_off, (void **)&old_off))
+>>>>>>> b7ba80a49124 (Commit)
 		return old_off;
 
 	return -ENOENT;
@@ -165,8 +188,13 @@ int strset__add_str(struct strset *set, const char *s)
 	 * contents doesn't exist already (HASHMAP_ADD strategy). If such
 	 * string exists, we'll get its offset in old_off (that's old_key).
 	 */
+<<<<<<< HEAD
 	err = hashmap__insert(set->strs_hash, new_off, new_off,
 			      HASHMAP_ADD, &old_off, NULL);
+=======
+	err = hashmap__insert(set->strs_hash, (void *)new_off, (void *)new_off,
+			      HASHMAP_ADD, (const void **)&old_off, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err == -EEXIST)
 		return old_off; /* duplicated string, return existing offset */
 	if (err)

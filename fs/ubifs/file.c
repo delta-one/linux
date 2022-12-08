@@ -1032,7 +1032,11 @@ static int ubifs_writepage(struct page *page, struct writeback_control *wbc)
 		if (page->index >= synced_i_size >> PAGE_SHIFT) {
 			err = inode->i_sb->s_op->write_inode(inode, NULL);
 			if (err)
+<<<<<<< HEAD
 				goto out_redirty;
+=======
+				goto out_unlock;
+>>>>>>> b7ba80a49124 (Commit)
 			/*
 			 * The inode has been written, but the write-buffer has
 			 * not been synchronized, so in case of an unclean
@@ -1060,6 +1064,7 @@ static int ubifs_writepage(struct page *page, struct writeback_control *wbc)
 	if (i_size > synced_i_size) {
 		err = inode->i_sb->s_op->write_inode(inode, NULL);
 		if (err)
+<<<<<<< HEAD
 			goto out_redirty;
 	}
 
@@ -1071,6 +1076,13 @@ out_redirty:
 	 * there is no need to do space budget for dirty inode.
 	 */
 	redirty_page_for_writepage(wbc, page);
+=======
+			goto out_unlock;
+	}
+
+	return do_writepage(page, len);
+
+>>>>>>> b7ba80a49124 (Commit)
 out_unlock:
 	unlock_page(page);
 	return err;
@@ -1264,7 +1276,11 @@ static int do_setattr(struct ubifs_info *c, struct inode *inode,
 	return err;
 }
 
+<<<<<<< HEAD
 int ubifs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+int ubifs_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		  struct iattr *attr)
 {
 	int err;
@@ -1273,7 +1289,11 @@ int ubifs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 
 	dbg_gen("ino %lu, mode %#x, ia_valid %#x",
 		inode->i_ino, inode->i_mode, attr->ia_valid);
+<<<<<<< HEAD
 	err = setattr_prepare(&nop_mnt_idmap, dentry, attr);
+=======
+	err = setattr_prepare(&init_user_ns, dentry, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 
@@ -1472,6 +1492,7 @@ static bool ubifs_release_folio(struct folio *folio, gfp_t unused_gfp_flags)
 	struct inode *inode = folio->mapping->host;
 	struct ubifs_info *c = inode->i_sb->s_fs_info;
 
+<<<<<<< HEAD
 	if (folio_test_writeback(folio))
 		return false;
 
@@ -1489,6 +1510,16 @@ static bool ubifs_release_folio(struct folio *folio, gfp_t unused_gfp_flags)
 		release_existing_page_budget(c);
 
 	atomic_long_dec(&c->dirty_pg_cnt);
+=======
+	/*
+	 * An attempt to release a dirty page without budgeting for it - should
+	 * not happen.
+	 */
+	if (folio_test_writeback(folio))
+		return false;
+	ubifs_assert(c, folio_test_private(folio));
+	ubifs_assert(c, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	folio_detach_private(folio);
 	folio_clear_checked(folio);
 	return true;
@@ -1623,11 +1654,19 @@ static const char *ubifs_get_link(struct dentry *dentry,
 	return fscrypt_get_symlink(inode, ui->data, ui->data_len, done);
 }
 
+<<<<<<< HEAD
 static int ubifs_symlink_getattr(struct mnt_idmap *idmap,
 				 const struct path *path, struct kstat *stat,
 				 u32 request_mask, unsigned int query_flags)
 {
 	ubifs_getattr(idmap, path, stat, request_mask, query_flags);
+=======
+static int ubifs_symlink_getattr(struct user_namespace *mnt_userns,
+				 const struct path *path, struct kstat *stat,
+				 u32 request_mask, unsigned int query_flags)
+{
+	ubifs_getattr(mnt_userns, path, stat, request_mask, query_flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_ENCRYPTED(d_inode(path->dentry)))
 		return fscrypt_symlink_getattr(path, stat);

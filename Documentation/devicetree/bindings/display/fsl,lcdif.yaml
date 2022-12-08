@@ -52,9 +52,12 @@ properties:
   interrupts:
     maxItems: 1
 
+<<<<<<< HEAD
   power-domains:
     maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   port:
     $ref: /schemas/graph.yaml#/properties/port
     description: The LCDIF output port
@@ -84,6 +87,7 @@ allOf:
           maxItems: 3
       required:
         - clock-names
+<<<<<<< HEAD
   - if:
       properties:
         compatible:
@@ -108,11 +112,15 @@ allOf:
                 - fsl,imx6sx-lcdif
                 - fsl,imx8mp-lcdif
     then:
+=======
+    else:
+>>>>>>> b7ba80a49124 (Commit)
       properties:
         clocks:
           maxItems: 1
         clock-names:
           maxItems: 1
+<<<<<<< HEAD
   - if:
       properties:
         compatible:
@@ -126,6 +134,8 @@ allOf:
     then:
       required:
         - power-domains
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |
@@ -140,7 +150,10 @@ examples:
                  <&clks IMX6SX_CLK_LCDIF_APB>,
                  <&clks IMX6SX_CLK_DISPLAY_AXI>;
         clock-names = "pix", "axi", "disp_axi";
+<<<<<<< HEAD
         power-domains = <&pd_disp>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
         port {
             endpoint {

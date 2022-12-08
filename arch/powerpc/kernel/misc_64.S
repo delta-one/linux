@@ -9,7 +9,10 @@
  * PPC64 updates by Dave Engebretsen (engebret@us.ibm.com)
  */
 
+<<<<<<< HEAD
 #include <linux/linkage.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sys.h>
 #include <asm/unistd.h>
 #include <asm/errno.h>
@@ -287,7 +290,11 @@ kexec_flag:
 
 
 #ifdef CONFIG_KEXEC_CORE
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * BOOK3E has no real MMU mode, so we have to setup the initial TLB
  * for a core to identity map v:0 to p:0.  This current implementation
@@ -354,8 +361,13 @@ _GLOBAL(kexec_smp_wait)
  *
  * don't overwrite r3 here, it is live for kexec_wait above.
  */
+<<<<<<< HEAD
 SYM_FUNC_START_LOCAL(real_mode)	/* assume normal blr return */
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+real_mode:	/* assume normal blr return */
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	/* Create an identity mapping. */
 	b	kexec_create_tlb
 #else
@@ -371,7 +383,10 @@ SYM_FUNC_START_LOCAL(real_mode)	/* assume normal blr return */
 	mtspr	SPRN_SRR0,r11
 	rfid
 #endif
+<<<<<<< HEAD
 SYM_FUNC_END(real_mode)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * kexec_sequence(newstack, start, image, control, clear_all(),
@@ -386,7 +401,11 @@ _GLOBAL(kexec_sequence)
 	std	r0,16(r1)
 
 	/* switch stacks to newstack -- &kexec_stack.stack */
+<<<<<<< HEAD
 	stdu	r1,THREAD_SIZE-STACK_FRAME_MIN_SIZE(r3)
+=======
+	stdu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r3)
+>>>>>>> b7ba80a49124 (Commit)
 	mr	r1,r3
 
 	li	r0,0
@@ -403,7 +422,11 @@ _GLOBAL(kexec_sequence)
 	std	r26,-48(r1)
 	std	r25,-56(r1)
 
+<<<<<<< HEAD
 	stdu	r1,-STACK_FRAME_MIN_SIZE-64(r1)
+=======
+	stdu	r1,-STACK_FRAME_OVERHEAD-64(r1)
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* save args into preserved regs */
 	mr	r31,r3			/* newstack (both) */
@@ -415,7 +438,11 @@ _GLOBAL(kexec_sequence)
 	lhz	r25,PACAHWCPUID(r13)	/* get our phys cpu from paca */
 
 	/* disable interrupts, we are overwriting kernel data next */
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	wrteei	0
 #else
 	mfmsr	r3

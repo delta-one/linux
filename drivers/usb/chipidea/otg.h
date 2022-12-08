@@ -14,7 +14,10 @@ int ci_hdrc_otg_init(struct ci_hdrc *ci);
 void ci_hdrc_otg_destroy(struct ci_hdrc *ci);
 enum ci_role ci_otg_role(struct ci_hdrc *ci);
 void ci_handle_vbus_change(struct ci_hdrc *ci);
+<<<<<<< HEAD
 void ci_handle_id_switch(struct ci_hdrc *ci);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void ci_otg_queue_work(struct ci_hdrc *ci)
 {
 	disable_irq_nosync(ci->irq);

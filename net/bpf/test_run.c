@@ -97,11 +97,16 @@ reset:
 struct xdp_page_head {
 	struct xdp_buff orig_ctx;
 	struct xdp_buff ctx;
+<<<<<<< HEAD
 	union {
 		/* ::data_hard_start starts here */
 		DECLARE_FLEX_ARRAY(struct xdp_frame, frame);
 		DECLARE_FLEX_ARRAY(u8, data);
 	};
+=======
+	struct xdp_frame frm;
+	u8 data[];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct xdp_test_data {
@@ -116,10 +121,13 @@ struct xdp_test_data {
 	u32 frame_cnt;
 };
 
+<<<<<<< HEAD
 /* tools/testing/selftests/bpf/prog_tests/xdp_do_redirect.c:%MAX_PKT_SIZE
  * must be updated accordingly this gets changed, otherwise BPF selftests
  * will fail.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define TEST_XDP_FRAME_SIZE (PAGE_SIZE - sizeof(struct xdp_page_head))
 #define TEST_XDP_MAX_BATCH 256
 
@@ -139,8 +147,13 @@ static void xdp_test_run_init_page(struct page *page, void *arg)
 	headroom -= meta_len;
 
 	new_ctx = &head->ctx;
+<<<<<<< HEAD
 	frm = head->frame;
 	data = head->data;
+=======
+	frm = &head->frm;
+	data = &head->data;
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(data + headroom, orig_ctx->data_meta, frm_len);
 
 	xdp_init_buff(new_ctx, TEST_XDP_FRAME_SIZE, &xdp->rxq);
@@ -215,6 +228,7 @@ static void xdp_test_run_teardown(struct xdp_test_data *xdp)
 	kfree(xdp->skbs);
 }
 
+<<<<<<< HEAD
 static bool frame_was_changed(const struct xdp_page_head *head)
 {
 	/* xdp_scrub_frame() zeroes the data pointer, flags is the last field,
@@ -225,6 +239,8 @@ static bool frame_was_changed(const struct xdp_page_head *head)
 	       head->frame->flags != head->orig_ctx.flags;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool ctx_was_changed(struct xdp_page_head *head)
 {
 	return head->orig_ctx.data != head->ctx.data ||
@@ -234,13 +250,21 @@ static bool ctx_was_changed(struct xdp_page_head *head)
 
 static void reset_ctx(struct xdp_page_head *head)
 {
+<<<<<<< HEAD
 	if (likely(!frame_was_changed(head) && !ctx_was_changed(head)))
+=======
+	if (likely(!ctx_was_changed(head)))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	head->ctx.data = head->orig_ctx.data;
 	head->ctx.data_meta = head->orig_ctx.data_meta;
 	head->ctx.data_end = head->orig_ctx.data_end;
+<<<<<<< HEAD
 	xdp_update_frame_from_buff(&head->ctx, head->frame);
+=======
+	xdp_update_frame_from_buff(&head->ctx, &head->frm);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int xdp_recv_frames(struct xdp_frame **frames, int nframes,
@@ -251,7 +275,11 @@ static int xdp_recv_frames(struct xdp_frame **frames, int nframes,
 	int i, n;
 	LIST_HEAD(list);
 
+<<<<<<< HEAD
 	n = kmem_cache_alloc_bulk(skbuff_cache, gfp, nframes, (void **)skbs);
+=======
+	n = kmem_cache_alloc_bulk(skbuff_head_cache, gfp, nframes, (void **)skbs);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(n == 0)) {
 		for (i = 0; i < nframes; i++)
 			xdp_return_frame(frames[i]);
@@ -302,7 +330,11 @@ static int xdp_test_run_batch(struct xdp_test_data *xdp, struct bpf_prog *prog,
 		head = phys_to_virt(page_to_phys(page));
 		reset_ctx(head);
 		ctx = &head->ctx;
+<<<<<<< HEAD
 		frm = head->frame;
+=======
+		frm = &head->frm;
+>>>>>>> b7ba80a49124 (Commit)
 		xdp->frame_cnt++;
 
 		act = bpf_prog_run_xdp(prog, ctx);
@@ -413,12 +445,18 @@ static int bpf_test_run(struct bpf_prog *prog, void *ctx, u32 repeat,
 	old_ctx = bpf_set_run_ctx(&run_ctx.run_ctx);
 	do {
 		run_ctx.prog_item = &item;
+<<<<<<< HEAD
 		local_bh_disable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (xdp)
 			*retval = bpf_prog_run_xdp(prog, ctx);
 		else
 			*retval = bpf_prog_run(prog, ctx);
+<<<<<<< HEAD
 		local_bh_enable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} while (bpf_test_timer_continue(&t, 1, repeat, &ret, time));
 	bpf_reset_run_ctx(old_ctx);
 	bpf_test_timer_leave(&t);
@@ -503,11 +541,19 @@ out:
 __diag_push();
 __diag_ignore_all("-Wmissing-prototypes",
 		  "Global functions as their definitions will be in vmlinux BTF");
+<<<<<<< HEAD
 __bpf_kfunc int bpf_fentry_test1(int a)
+=======
+int noinline bpf_fentry_test1(int a)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return a + 1;
 }
 EXPORT_SYMBOL_GPL(bpf_fentry_test1);
+<<<<<<< HEAD
+=======
+ALLOW_ERROR_INJECTION(bpf_fentry_test1, ERRNO);
+>>>>>>> b7ba80a49124 (Commit)
 
 int noinline bpf_fentry_test2(int a, u64 b)
 {
@@ -548,27 +594,44 @@ int noinline bpf_fentry_test8(struct bpf_fentry_test_t *arg)
 	return (long)arg->a;
 }
 
+<<<<<<< HEAD
 __bpf_kfunc int bpf_modify_return_test(int a, int *b)
+=======
+int noinline bpf_modify_return_test(int a, int *b)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	*b += 1;
 	return a + *b;
 }
 
+<<<<<<< HEAD
 __bpf_kfunc u64 bpf_kfunc_call_test1(struct sock *sk, u32 a, u64 b, u32 c, u64 d)
+=======
+u64 noinline bpf_kfunc_call_test1(struct sock *sk, u32 a, u64 b, u32 c, u64 d)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return a + b + c + d;
 }
 
+<<<<<<< HEAD
 __bpf_kfunc int bpf_kfunc_call_test2(struct sock *sk, u32 a, u32 b)
+=======
+int noinline bpf_kfunc_call_test2(struct sock *sk, u32 a, u32 b)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return a + b;
 }
 
+<<<<<<< HEAD
 __bpf_kfunc struct sock *bpf_kfunc_call_test3(struct sock *sk)
+=======
+struct sock * noinline bpf_kfunc_call_test3(struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return sk;
 }
 
+<<<<<<< HEAD
 long noinline bpf_kfunc_call_test4(signed char a, short b, int c, long d)
 {
 	/* Provoke the compiler to assume that the caller has sign-extended a,
@@ -582,6 +645,8 @@ int noinline bpf_fentry_shadow_test(int a)
 	return a + 1;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct prog_test_member1 {
 	int a;
 };
@@ -606,21 +671,33 @@ static struct prog_test_ref_kfunc prog_test_struct = {
 	.cnt = REFCOUNT_INIT(1),
 };
 
+<<<<<<< HEAD
 __bpf_kfunc struct prog_test_ref_kfunc *
+=======
+noinline struct prog_test_ref_kfunc *
+>>>>>>> b7ba80a49124 (Commit)
 bpf_kfunc_call_test_acquire(unsigned long *scalar_ptr)
 {
 	refcount_inc(&prog_test_struct.cnt);
 	return &prog_test_struct;
 }
 
+<<<<<<< HEAD
 __bpf_kfunc struct prog_test_member *
+=======
+noinline struct prog_test_member *
+>>>>>>> b7ba80a49124 (Commit)
 bpf_kfunc_call_memb_acquire(void)
 {
 	WARN_ON_ONCE(1);
 	return NULL;
 }
 
+<<<<<<< HEAD
 __bpf_kfunc void bpf_kfunc_call_test_release(struct prog_test_ref_kfunc *p)
+=======
+noinline void bpf_kfunc_call_test_release(struct prog_test_ref_kfunc *p)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!p)
 		return;
@@ -628,11 +705,19 @@ __bpf_kfunc void bpf_kfunc_call_test_release(struct prog_test_ref_kfunc *p)
 	refcount_dec(&p->cnt);
 }
 
+<<<<<<< HEAD
 __bpf_kfunc void bpf_kfunc_call_memb_release(struct prog_test_member *p)
 {
 }
 
 __bpf_kfunc void bpf_kfunc_call_memb1_release(struct prog_test_member1 *p)
+=======
+noinline void bpf_kfunc_call_memb_release(struct prog_test_member *p)
+{
+}
+
+noinline void bpf_kfunc_call_memb1_release(struct prog_test_member1 *p)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	WARN_ON_ONCE(1);
 }
@@ -645,14 +730,22 @@ static int *__bpf_kfunc_call_test_get_mem(struct prog_test_ref_kfunc *p, const i
 	return (int *)p;
 }
 
+<<<<<<< HEAD
 __bpf_kfunc int *bpf_kfunc_call_test_get_rdwr_mem(struct prog_test_ref_kfunc *p,
 						  const int rdwr_buf_size)
+=======
+noinline int *bpf_kfunc_call_test_get_rdwr_mem(struct prog_test_ref_kfunc *p, const int rdwr_buf_size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return __bpf_kfunc_call_test_get_mem(p, rdwr_buf_size);
 }
 
+<<<<<<< HEAD
 __bpf_kfunc int *bpf_kfunc_call_test_get_rdonly_mem(struct prog_test_ref_kfunc *p,
 						    const int rdonly_buf_size)
+=======
+noinline int *bpf_kfunc_call_test_get_rdonly_mem(struct prog_test_ref_kfunc *p, const int rdonly_buf_size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return __bpf_kfunc_call_test_get_mem(p, rdonly_buf_size);
 }
@@ -662,17 +755,29 @@ __bpf_kfunc int *bpf_kfunc_call_test_get_rdonly_mem(struct prog_test_ref_kfunc *
  * Acquire functions must return struct pointers, so these ones are
  * failing.
  */
+<<<<<<< HEAD
 __bpf_kfunc int *bpf_kfunc_call_test_acq_rdonly_mem(struct prog_test_ref_kfunc *p,
 						    const int rdonly_buf_size)
+=======
+noinline int *bpf_kfunc_call_test_acq_rdonly_mem(struct prog_test_ref_kfunc *p, const int rdonly_buf_size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return __bpf_kfunc_call_test_get_mem(p, rdonly_buf_size);
 }
 
+<<<<<<< HEAD
 __bpf_kfunc void bpf_kfunc_call_int_mem_release(int *p)
 {
 }
 
 __bpf_kfunc struct prog_test_ref_kfunc *
+=======
+noinline void bpf_kfunc_call_int_mem_release(int *p)
+{
+}
+
+noinline struct prog_test_ref_kfunc *
+>>>>>>> b7ba80a49124 (Commit)
 bpf_kfunc_call_test_kptr_get(struct prog_test_ref_kfunc **pp, int a, int b)
 {
 	struct prog_test_ref_kfunc *p = READ_ONCE(*pp);
@@ -721,6 +826,7 @@ struct prog_test_fail3 {
 	char arr2[];
 };
 
+<<<<<<< HEAD
 __bpf_kfunc void bpf_kfunc_call_test_pass_ctx(struct __sk_buff *skb)
 {
 }
@@ -769,10 +875,55 @@ __bpf_kfunc void bpf_kfunc_call_test_destructive(void)
 __bpf_kfunc static u32 bpf_kfunc_call_test_static_unused_arg(u32 arg, u32 unused)
 {
 	return arg;
+=======
+noinline void bpf_kfunc_call_test_pass_ctx(struct __sk_buff *skb)
+{
+}
+
+noinline void bpf_kfunc_call_test_pass1(struct prog_test_pass1 *p)
+{
+}
+
+noinline void bpf_kfunc_call_test_pass2(struct prog_test_pass2 *p)
+{
+}
+
+noinline void bpf_kfunc_call_test_fail1(struct prog_test_fail1 *p)
+{
+}
+
+noinline void bpf_kfunc_call_test_fail2(struct prog_test_fail2 *p)
+{
+}
+
+noinline void bpf_kfunc_call_test_fail3(struct prog_test_fail3 *p)
+{
+}
+
+noinline void bpf_kfunc_call_test_mem_len_pass1(void *mem, int mem__sz)
+{
+}
+
+noinline void bpf_kfunc_call_test_mem_len_fail1(void *mem, int len)
+{
+}
+
+noinline void bpf_kfunc_call_test_mem_len_fail2(u64 *mem, int len)
+{
+}
+
+noinline void bpf_kfunc_call_test_ref(struct prog_test_ref_kfunc *p)
+{
+}
+
+noinline void bpf_kfunc_call_test_destructive(void)
+{
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 __diag_pop();
 
+<<<<<<< HEAD
 BTF_SET8_START(bpf_test_modify_return_ids)
 BTF_ID_FLAGS(func, bpf_modify_return_test)
 BTF_ID_FLAGS(func, bpf_fentry_test1, KF_SLEEPABLE)
@@ -782,12 +933,18 @@ static const struct btf_kfunc_id_set bpf_test_modify_return_set = {
 	.owner = THIS_MODULE,
 	.set   = &bpf_test_modify_return_ids,
 };
+=======
+ALLOW_ERROR_INJECTION(bpf_modify_return_test, ERRNO);
+>>>>>>> b7ba80a49124 (Commit)
 
 BTF_SET8_START(test_sk_check_kfunc_ids)
 BTF_ID_FLAGS(func, bpf_kfunc_call_test1)
 BTF_ID_FLAGS(func, bpf_kfunc_call_test2)
 BTF_ID_FLAGS(func, bpf_kfunc_call_test3)
+<<<<<<< HEAD
 BTF_ID_FLAGS(func, bpf_kfunc_call_test4)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 BTF_ID_FLAGS(func, bpf_kfunc_call_test_acquire, KF_ACQUIRE | KF_RET_NULL)
 BTF_ID_FLAGS(func, bpf_kfunc_call_memb_acquire, KF_ACQUIRE | KF_RET_NULL)
 BTF_ID_FLAGS(func, bpf_kfunc_call_test_release, KF_RELEASE)
@@ -807,9 +964,14 @@ BTF_ID_FLAGS(func, bpf_kfunc_call_test_fail3)
 BTF_ID_FLAGS(func, bpf_kfunc_call_test_mem_len_pass1)
 BTF_ID_FLAGS(func, bpf_kfunc_call_test_mem_len_fail1)
 BTF_ID_FLAGS(func, bpf_kfunc_call_test_mem_len_fail2)
+<<<<<<< HEAD
 BTF_ID_FLAGS(func, bpf_kfunc_call_test_ref, KF_TRUSTED_ARGS | KF_RCU)
 BTF_ID_FLAGS(func, bpf_kfunc_call_test_destructive, KF_DESTRUCTIVE)
 BTF_ID_FLAGS(func, bpf_kfunc_call_test_static_unused_arg)
+=======
+BTF_ID_FLAGS(func, bpf_kfunc_call_test_ref, KF_TRUSTED_ARGS)
+BTF_ID_FLAGS(func, bpf_kfunc_call_test_destructive, KF_DESTRUCTIVE)
+>>>>>>> b7ba80a49124 (Commit)
 BTF_SET8_END(test_sk_check_kfunc_ids)
 
 static void *bpf_test_init(const union bpf_attr *kattr, u32 user_size,
@@ -824,7 +986,10 @@ static void *bpf_test_init(const union bpf_attr *kattr, u32 user_size,
 	if (user_size > size)
 		return ERR_PTR(-EMSGSIZE);
 
+<<<<<<< HEAD
 	size = SKB_DATA_ALIGN(size);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	data = kzalloc(size + headroom + tailroom, GFP_USER);
 	if (!data)
 		return ERR_PTR(-ENOMEM);
@@ -1030,6 +1195,12 @@ static int convert___skb_to_skb(struct sk_buff *skb, struct __sk_buff *__skb)
 {
 	struct qdisc_skb_cb *cb = (struct qdisc_skb_cb *)skb->cb;
 
+<<<<<<< HEAD
+=======
+	if (!skb->len)
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!__skb)
 		return 0;
 
@@ -1178,7 +1349,11 @@ int bpf_prog_test_run_skb(struct bpf_prog *prog, const union bpf_attr *kattr,
 	}
 	sock_init_data(NULL, sk);
 
+<<<<<<< HEAD
 	skb = slab_build_skb(data);
+=======
+	skb = build_skb(data, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!skb) {
 		kfree(data);
 		kfree(ctx);
@@ -1343,9 +1518,12 @@ int bpf_prog_test_run_xdp(struct bpf_prog *prog, const union bpf_attr *kattr,
 	if (kattr->test.flags & ~BPF_F_TEST_XDP_LIVE_FRAMES)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (bpf_prog_is_dev_bound(prog->aux))
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (do_live) {
 		if (!batch_size)
 			batch_size = NAPI_POLL_WEIGHT;
@@ -1719,8 +1897,12 @@ static int __init bpf_prog_test_run_init(void)
 	};
 	int ret;
 
+<<<<<<< HEAD
 	ret = register_btf_fmodret_id_set(&bpf_test_modify_return_set);
 	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_SCHED_CLS, &bpf_prog_test_kfunc_set);
+=======
+	ret = register_btf_kfunc_id_set(BPF_PROG_TYPE_SCHED_CLS, &bpf_prog_test_kfunc_set);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_TRACING, &bpf_prog_test_kfunc_set);
 	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_SYSCALL, &bpf_prog_test_kfunc_set);
 	return ret ?: register_btf_id_dtor_kfuncs(bpf_prog_test_dtor_kfunc,

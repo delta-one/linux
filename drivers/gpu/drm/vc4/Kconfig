@@ -34,6 +34,7 @@ config DRM_VC4_HDMI_CEC
 	help
 	  Choose this option if you have a Broadcom VC4 GPU
 	  and want to use CEC.
+<<<<<<< HEAD
 
 config DRM_VC4_KUNIT_TEST
 	tristate "KUnit tests for VC4" if !KUNIT_ALL_TESTS
@@ -50,3 +51,5 @@ config DRM_VC4_KUNIT_TEST
 	  Documentation/dev-tools/kunit/.
 
 	  If in doubt, say "N".
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -29,10 +29,18 @@
 #pragma pack(1)
 
 /*
+<<<<<<< HEAD
  * 4CC signature value for the CRAT ACPI table
  */
 
 #define CRAT_SIGNATURE	"CRAT"
+=======
+ * 4CC signature values for the CRAT and CDIT ACPI tables
+ */
+
+#define CRAT_SIGNATURE	"CRAT"
+#define CDIT_SIGNATURE	"CDIT"
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Component Resource Association Table (CRAT)
@@ -291,10 +299,35 @@ struct crat_subtype_generic {
 	uint32_t	flags;
 };
 
+<<<<<<< HEAD
+=======
+/*
+ * Component Locality Distance Information Table (CDIT)
+ */
+#define CDIT_OEMID_LENGTH	6
+#define CDIT_OEMTABLEID_LENGTH	8
+
+struct cdit_header {
+	uint32_t	signature;
+	uint32_t	length;
+	uint8_t		revision;
+	uint8_t		checksum;
+	uint8_t		oem_id[CDIT_OEMID_LENGTH];
+	uint8_t		oem_table_id[CDIT_OEMTABLEID_LENGTH];
+	uint32_t	oem_revision;
+	uint32_t	creator_id;
+	uint32_t	creator_revision;
+	uint32_t	total_entries;
+	uint16_t	num_domains;
+	uint8_t		entry[1];
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 #pragma pack()
 
 struct kfd_dev;
 
+<<<<<<< HEAD
 /* Static table to describe GPU Cache information */
 struct kfd_gpu_cache_info {
 	uint32_t	cache_size;
@@ -307,6 +340,8 @@ struct kfd_gpu_cache_info {
 };
 int kfd_get_gpu_cache_info(struct kfd_dev *kdev, struct kfd_gpu_cache_info **pcache_info);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int kfd_create_crat_image_acpi(void **crat_image, size_t *size);
 void kfd_destroy_crat_image(void *crat_image);
 int kfd_parse_crat_table(void *crat_image, struct list_head *device_list,

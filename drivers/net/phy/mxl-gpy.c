@@ -9,10 +9,15 @@
 #include <linux/module.h>
 #include <linux/bitfield.h>
 #include <linux/hwmon.h>
+<<<<<<< HEAD
 #include <linux/mutex.h>
 #include <linux/phy.h>
 #include <linux/polynomial.h>
 #include <linux/property.h>
+=======
+#include <linux/phy.h>
+#include <linux/polynomial.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/netdevice.h>
 
 /* PHY ID */
@@ -31,10 +36,13 @@
 #define PHY_ID_GPY241BM		0x67C9DE80
 #define PHY_ID_GPY245B		0x67C9DEC0
 
+<<<<<<< HEAD
 #define PHY_CTL1		0x13
 #define PHY_CTL1_MDICD		BIT(3)
 #define PHY_CTL1_MDIAB		BIT(2)
 #define PHY_CTL1_AMDIX		BIT(0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PHY_MIISTAT		0x18	/* MII state */
 #define PHY_IMASK		0x19	/* interrupt mask */
 #define PHY_ISTAT		0x1A	/* interrupt status */
@@ -65,6 +73,7 @@
 #define PHY_FWV_MAJOR_MASK	GENMASK(11, 8)
 #define PHY_FWV_MINOR_MASK	GENMASK(7, 0)
 
+<<<<<<< HEAD
 #define PHY_PMA_MGBT_POLARITY	0x82
 #define PHY_MDI_MDI_X_MASK	GENMASK(1, 0)
 #define PHY_MDI_MDI_X_NORMAL	0x3
@@ -72,6 +81,8 @@
 #define PHY_MDI_MDI_X_CD	0x1
 #define PHY_MDI_MDI_X_CROSS	0x0
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* SGMII */
 #define VSPEC1_SGMII_CTRL	0x08
 #define VSPEC1_SGMII_CTRL_ANEN	BIT(12)		/* Aneg enable */
@@ -80,6 +91,7 @@
 				 VSPEC1_SGMII_CTRL_ANRS)
 
 /* Temperature sensor */
+<<<<<<< HEAD
 #define VSPEC1_TEMP_STA	0x0E
 #define VSPEC1_TEMP_STA_DATA	GENMASK(9, 0)
 
@@ -90,6 +102,10 @@
 #define VSPEC1_MBOX_CMD_ADDRHI	GENMASK(7, 0)
 #define VSPEC1_MBOX_CMD_RD	(0 << 8)
 #define VSPEC1_MBOX_CMD_READY	BIT(15)
+=======
+#define VPSPEC1_TEMP_STA	0x0E
+#define VPSPEC1_TEMP_STA_DATA	GENMASK(9, 0)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* WoL */
 #define VPSPEC2_WOL_CTL		0x0E06
@@ -98,6 +114,7 @@
 #define VPSPEC2_WOL_AD45	0x0E0A
 #define WOL_EN			BIT(0)
 
+<<<<<<< HEAD
 /* Internal registers, access via mbox */
 #define REG_GPIO0_OUT		0xd3ce00
 
@@ -114,6 +131,11 @@ struct gpy_priv {
 	 * is enabled.
 	 */
 	u64 lb_dis_to;
+=======
+struct gpy_priv {
+	u8 fw_major;
+	u8 fw_minor;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct {
@@ -163,14 +185,22 @@ static int gpy_hwmon_read(struct device *dev,
 	struct phy_device *phydev = dev_get_drvdata(dev);
 	int ret;
 
+<<<<<<< HEAD
 	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, VSPEC1_TEMP_STA);
+=======
+	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, VPSPEC1_TEMP_STA);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 	if (!ret)
 		return -ENODATA;
 
 	*value = polynomial_calc(&poly_N_to_temp,
+<<<<<<< HEAD
 				 FIELD_GET(VSPEC1_TEMP_STA_DATA, ret));
+=======
+				 FIELD_GET(VPSPEC1_TEMP_STA_DATA, ret));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -221,6 +251,7 @@ static int gpy_hwmon_register(struct phy_device *phydev)
 }
 #endif
 
+<<<<<<< HEAD
 static int gpy_mbox_read(struct phy_device *phydev, u32 addr)
 {
 	struct gpy_priv *priv = phydev->priv;
@@ -260,6 +291,8 @@ out:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int gpy_config_init(struct phy_device *phydev)
 {
 	int ret;
@@ -274,6 +307,7 @@ static int gpy_config_init(struct phy_device *phydev)
 	return ret < 0 ? ret : 0;
 }
 
+<<<<<<< HEAD
 static bool gpy_has_broken_mdint(struct phy_device *phydev)
 {
 	/* At least these PHYs are known to have broken interrupt handling */
@@ -281,6 +315,8 @@ static bool gpy_has_broken_mdint(struct phy_device *phydev)
 	       phydev->drv->phy_id == PHY_ID_GPY215C;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int gpy_probe(struct phy_device *phydev)
 {
 	struct device *dev = &phydev->mdio.dev;
@@ -298,11 +334,14 @@ static int gpy_probe(struct phy_device *phydev)
 	if (!priv)
 		return -ENOMEM;
 	phydev->priv = priv;
+<<<<<<< HEAD
 	mutex_init(&priv->mbox_lock);
 
 	if (gpy_has_broken_mdint(phydev) &&
 	    !device_property_present(dev, "maxlinear,use-broken-interrupts"))
 		phydev->dev_flags |= PHY_F_NO_IRQ;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	fw_version = phy_read(phydev, PHY_FWV);
 	if (fw_version < 0)
@@ -374,6 +413,7 @@ static bool gpy_sgmii_aneg_en(struct phy_device *phydev)
 	return (ret & VSPEC1_SGMII_CTRL_ANEN) ? true : false;
 }
 
+<<<<<<< HEAD
 static int gpy_config_mdix(struct phy_device *phydev, u8 ctrl)
 {
 	int ret;
@@ -401,6 +441,8 @@ static int gpy_config_mdix(struct phy_device *phydev, u8 ctrl)
 	return genphy_c45_restart_aneg(phydev);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int gpy_config_aneg(struct phy_device *phydev)
 {
 	bool changed = false;
@@ -416,10 +458,13 @@ static int gpy_config_aneg(struct phy_device *phydev)
 			: genphy_c45_pma_setup_forced(phydev);
 	}
 
+<<<<<<< HEAD
 	ret = gpy_config_mdix(phydev,  phydev->mdix_ctrl);
 	if (ret < 0)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = genphy_c45_an_config_aneg(phydev);
 	if (ret < 0)
 		return ret;
@@ -486,6 +531,7 @@ static int gpy_config_aneg(struct phy_device *phydev)
 			      VSPEC1_SGMII_CTRL_ANRS, VSPEC1_SGMII_CTRL_ANRS);
 }
 
+<<<<<<< HEAD
 static int gpy_update_mdix(struct phy_device *phydev)
 {
 	int ret;
@@ -515,13 +561,20 @@ static int gpy_update_mdix(struct phy_device *phydev)
 }
 
 static int gpy_update_interface(struct phy_device *phydev)
+=======
+static void gpy_update_interface(struct phy_device *phydev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
 	/* Interface mode is fixed for USXGMII and integrated PHY */
 	if (phydev->interface == PHY_INTERFACE_MODE_USXGMII ||
 	    phydev->interface == PHY_INTERFACE_MODE_INTERNAL)
+<<<<<<< HEAD
 		return -EINVAL;
+=======
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Automatically switch SERDES interface between SGMII and 2500-BaseX
 	 * according to speed. Disable ANEG in 2500-BaseX mode.
@@ -531,12 +584,19 @@ static int gpy_update_interface(struct phy_device *phydev)
 		phydev->interface = PHY_INTERFACE_MODE_2500BASEX;
 		ret = phy_modify_mmd(phydev, MDIO_MMD_VEND1, VSPEC1_SGMII_CTRL,
 				     VSPEC1_SGMII_CTRL_ANEN, 0);
+<<<<<<< HEAD
 		if (ret < 0) {
 			phydev_err(phydev,
 				   "Error: Disable of SGMII ANEG failed: %d\n",
 				   ret);
 			return ret;
 		}
+=======
+		if (ret < 0)
+			phydev_err(phydev,
+				   "Error: Disable of SGMII ANEG failed: %d\n",
+				   ret);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case SPEED_1000:
 	case SPEED_100:
@@ -550,6 +610,7 @@ static int gpy_update_interface(struct phy_device *phydev)
 		ret = phy_modify_mmd(phydev, MDIO_MMD_VEND1, VSPEC1_SGMII_CTRL,
 				     VSPEC1_SGMII_ANEN_ANRS,
 				     VSPEC1_SGMII_ANEN_ANRS);
+<<<<<<< HEAD
 		if (ret < 0) {
 			phydev_err(phydev,
 				   "Error: Enable of SGMII ANEG failed: %d\n",
@@ -566,6 +627,17 @@ static int gpy_update_interface(struct phy_device *phydev)
 	}
 
 	return gpy_update_mdix(phydev);
+=======
+		if (ret < 0)
+			phydev_err(phydev,
+				   "Error: Enable of SGMII ANEG failed: %d\n",
+				   ret);
+		break;
+	}
+
+	if (phydev->speed == SPEED_2500 || phydev->speed == SPEED_1000)
+		genphy_read_master_slave(phydev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int gpy_read_status(struct phy_device *phydev)
@@ -616,11 +688,16 @@ static int gpy_read_status(struct phy_device *phydev)
 		break;
 	}
 
+<<<<<<< HEAD
 	if (phydev->link) {
 		ret = gpy_update_interface(phydev);
 		if (ret < 0)
 			return ret;
 	}
+=======
+	if (phydev->link)
+		gpy_update_interface(phydev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -648,6 +725,7 @@ static irqreturn_t gpy_handle_interrupt(struct phy_device *phydev)
 	if (!(reg & PHY_IMASK_MASK))
 		return IRQ_NONE;
 
+<<<<<<< HEAD
 	/* The PHY might leave the interrupt line asserted even after PHY_ISTAT
 	 * is read. To avoid interrupt storms, delay the interrupt handling as
 	 * long as the PHY drives the interrupt line. An internal bus read will
@@ -671,6 +749,8 @@ static irqreturn_t gpy_handle_interrupt(struct phy_device *phydev)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	phy_trigger_machine(phydev);
 
 	return IRQ_HANDLED;
@@ -776,6 +856,7 @@ static void gpy_get_wol(struct phy_device *phydev,
 
 static int gpy_loopback(struct phy_device *phydev, bool enable)
 {
+<<<<<<< HEAD
 	struct gpy_priv *priv = phydev->priv;
 	u16 set = 0;
 	int ret;
@@ -804,6 +885,20 @@ static int gpy_loopback(struct phy_device *phydev, bool enable)
 	}
 
 	return 0;
+=======
+	int ret;
+
+	ret = phy_modify(phydev, MII_BMCR, BMCR_LOOPBACK,
+			 enable ? BMCR_LOOPBACK : 0);
+	if (!ret) {
+		/* It takes some time for PHY device to switch
+		 * into/out-of loopback mode.
+		 */
+		msleep(100);
+	}
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int gpy115_loopback(struct phy_device *phydev, bool enable)

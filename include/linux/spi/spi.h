@@ -26,7 +26,10 @@ struct spi_controller;
 struct spi_transfer;
 struct spi_controller_mem_ops;
 struct spi_controller_mem_caps;
+<<<<<<< HEAD
 struct spi_message;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * INTERFACES between SPI master-side drivers and SPI slave protocol handlers,
@@ -120,8 +123,11 @@ struct spi_delay {
 
 extern int spi_delay_to_ns(struct spi_delay *_delay, struct spi_transfer *xfer);
 extern int spi_delay_exec(struct spi_delay *_delay, struct spi_transfer *xfer);
+<<<<<<< HEAD
 extern void spi_transfer_cs_change_delay_exec(struct spi_message *msg,
 						  struct spi_transfer *xfer);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct spi_device - Controller side proxy for an SPI slave device
@@ -226,7 +232,11 @@ struct spi_device {
 static_assert((SPI_MODE_KERNEL_MASK & SPI_MODE_USER_MASK) == 0,
 	      "SPI_MODE_USER_MASK & SPI_MODE_KERNEL_MASK must not overlap");
 
+<<<<<<< HEAD
 static inline struct spi_device *to_spi_device(const struct device *dev)
+=======
+static inline struct spi_device *to_spi_device(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return dev ? container_of(dev, struct spi_device, dev) : NULL;
 }
@@ -244,7 +254,11 @@ static inline void spi_dev_put(struct spi_device *spi)
 }
 
 /* ctldata is for the bus_controller driver's runtime state */
+<<<<<<< HEAD
 static inline void *spi_get_ctldata(const struct spi_device *spi)
+=======
+static inline void *spi_get_ctldata(struct spi_device *spi)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return spi->controller_state;
 }
@@ -261,11 +275,16 @@ static inline void spi_set_drvdata(struct spi_device *spi, void *data)
 	dev_set_drvdata(&spi->dev, data);
 }
 
+<<<<<<< HEAD
 static inline void *spi_get_drvdata(const struct spi_device *spi)
+=======
+static inline void *spi_get_drvdata(struct spi_device *spi)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return dev_get_drvdata(&spi->dev);
 }
 
+<<<<<<< HEAD
 static inline u8 spi_get_chipselect(const struct spi_device *spi, u8 idx)
 {
 	return spi->chip_select;
@@ -285,6 +304,9 @@ static inline void spi_set_csgpiod(struct spi_device *spi, u8 idx, struct gpio_d
 {
 	spi->cs_gpiod = csgpiod;
 }
+=======
+struct spi_message;
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct spi_driver - Host side "protocol" driver
@@ -377,7 +399,10 @@ extern struct spi_device *spi_new_ancillary_device(struct spi_device *spi, u8 ch
  * @max_speed_hz: Highest supported transfer speed
  * @flags: other constraints relevant to this driver
  * @slave: indicates that this is an SPI slave controller
+<<<<<<< HEAD
  * @target: indicates that this is an SPI target controller
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @devm_allocated: whether the allocation of this struct is devres-managed
  * @max_transfer_size: function that returns the max transfer size for
  *	a &spi_device; may be %NULL, so the default %SIZE_MAX will be used.
@@ -400,8 +425,11 @@ extern struct spi_device *spi_new_ancillary_device(struct spi_device *spi, u8 ch
  * @cleanup: frees controller-specific state
  * @can_dma: determine whether this controller supports DMA
  * @dma_map_dev: device which can be used for DMA mapping
+<<<<<<< HEAD
  * @cur_rx_dma_dev: device which is currently used for RX DMA mapping
  * @cur_tx_dma_dev: device which is currently used for TX DMA mapping
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @queued: whether this controller is providing an internal message queue
  * @kworker: pointer to thread struct for message pump
  * @pump_messages: work struct for scheduling work to the message pump
@@ -462,7 +490,10 @@ extern struct spi_device *spi_new_ancillary_device(struct spi_device *spi, u8 ch
  * @mem_caps: controller capabilities for the handling of memory operations.
  * @unprepare_message: undo any work done by prepare_message().
  * @slave_abort: abort the ongoing transfer request on an SPI slave controller
+<<<<<<< HEAD
  * @target_abort: abort the ongoing transfer request on an SPI target controller
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @cs_gpiods: Array of GPIO descs to use as chip select lines; one per CS
  *	number. Any individual value may be NULL for CS lines that
  *	are not GPIOs (driven by the SPI controller itself).
@@ -558,12 +589,17 @@ struct spi_controller {
 	/* Flag indicating if the allocation of this struct is devres-managed */
 	bool			devm_allocated;
 
+<<<<<<< HEAD
 	union {
 		/* Flag indicating this is an SPI slave controller */
 		bool			slave;
 		/* Flag indicating this is an SPI target controller */
 		bool			target;
 	};
+=======
+	/* Flag indicating this is an SPI slave controller */
+	bool			slave;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * on some hardware transfer / message size may be constrained
@@ -639,8 +675,11 @@ struct spi_controller {
 					   struct spi_device *spi,
 					   struct spi_transfer *xfer);
 	struct device *dma_map_dev;
+<<<<<<< HEAD
 	struct device *cur_rx_dma_dev;
 	struct device *cur_tx_dma_dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * These hooks are for drivers that want to use the generic
@@ -676,10 +715,14 @@ struct spi_controller {
 			       struct spi_message *message);
 	int (*unprepare_message)(struct spi_controller *ctlr,
 				 struct spi_message *message);
+<<<<<<< HEAD
 	union {
 		int (*slave_abort)(struct spi_controller *ctlr);
 		int (*target_abort)(struct spi_controller *ctlr);
 	};
+=======
+	int (*slave_abort)(struct spi_controller *ctlr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * These hooks are for drivers that use a generic implementation
@@ -757,11 +800,14 @@ static inline bool spi_controller_is_slave(struct spi_controller *ctlr)
 	return IS_ENABLED(CONFIG_SPI_SLAVE) && ctlr->slave;
 }
 
+<<<<<<< HEAD
 static inline bool spi_controller_is_target(struct spi_controller *ctlr)
 {
 	return IS_ENABLED(CONFIG_SPI_SLAVE) && ctlr->target;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* PM calls that need to be issued by the driver */
 extern int spi_controller_suspend(struct spi_controller *ctlr);
 extern int spi_controller_resume(struct spi_controller *ctlr);
@@ -798,6 +844,7 @@ static inline struct spi_controller *spi_alloc_slave(struct device *host,
 	return __spi_alloc_controller(host, size, true);
 }
 
+<<<<<<< HEAD
 static inline struct spi_controller *spi_alloc_host(struct device *dev,
 						    unsigned int size)
 {
@@ -813,6 +860,8 @@ static inline struct spi_controller *spi_alloc_target(struct device *dev,
 	return __spi_alloc_controller(dev, size, true);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct spi_controller *__devm_spi_alloc_controller(struct device *dev,
 						   unsigned int size,
 						   bool slave);
@@ -832,6 +881,7 @@ static inline struct spi_controller *devm_spi_alloc_slave(struct device *dev,
 	return __devm_spi_alloc_controller(dev, size, true);
 }
 
+<<<<<<< HEAD
 static inline struct spi_controller *devm_spi_alloc_host(struct device *dev,
 							 unsigned int size)
 {
@@ -847,6 +897,8 @@ static inline struct spi_controller *devm_spi_alloc_target(struct device *dev,
 	return __devm_spi_alloc_controller(dev, size, true);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern int spi_register_controller(struct spi_controller *ctlr);
 extern int devm_spi_register_controller(struct device *dev,
 					struct spi_controller *ctlr);
@@ -1022,9 +1074,12 @@ struct spi_transfer {
 	void		*rx_buf;
 	unsigned	len;
 
+<<<<<<< HEAD
 #define SPI_TRANS_FAIL_NO_START	BIT(0)
 	u16		error;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dma_addr_t	tx_dma;
 	dma_addr_t	rx_dma;
 	struct sg_table tx_sg;
@@ -1035,7 +1090,10 @@ struct spi_transfer {
 	unsigned	cs_change:1;
 	unsigned	tx_nbits:3;
 	unsigned	rx_nbits:3;
+<<<<<<< HEAD
 	unsigned	timestamped:1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define	SPI_NBITS_SINGLE	0x01 /* 1bit transfer */
 #define	SPI_NBITS_DUAL		0x02 /* 2bits transfer */
 #define	SPI_NBITS_QUAD		0x04 /* 4bits transfer */
@@ -1052,7 +1110,16 @@ struct spi_transfer {
 
 	struct ptp_system_timestamp *ptp_sts;
 
+<<<<<<< HEAD
 	struct list_head transfer_list;
+=======
+	bool		timestamped;
+
+	struct list_head transfer_list;
+
+#define SPI_TRANS_FAIL_NO_START	BIT(0)
+	u16		error;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -1093,9 +1160,12 @@ struct spi_message {
 
 	unsigned		is_dma_mapped:1;
 
+<<<<<<< HEAD
 	/* spi_prepare_message() was called for this message */
 	bool			prepared;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* REVISIT:  we might want a flag affecting the behavior of the
 	 * last transfer ... allowing things like "read 16 bit length L"
 	 * immediately followed by "read L bytes".  Basically imposing
@@ -1108,11 +1178,18 @@ struct spi_message {
 	 */
 
 	/* Completion is reported through a callback */
+<<<<<<< HEAD
 	int			status;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void			(*complete)(void *context);
 	void			*context;
 	unsigned		frame_length;
 	unsigned		actual_length;
+<<<<<<< HEAD
+=======
+	int			status;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* For optional use by whatever driver currently owns the
 	 * spi_message ...  between calls to spi_async and then later
@@ -1123,6 +1200,12 @@ struct spi_message {
 
 	/* List of spi_res reources when the spi message is processed */
 	struct list_head        resources;
+<<<<<<< HEAD
+=======
+
+	/* spi_prepare_message() was called for this message */
+	bool			prepared;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline void spi_message_init_no_memset(struct spi_message *m)
@@ -1205,7 +1288,10 @@ static inline void spi_message_free(struct spi_message *m)
 extern int spi_setup(struct spi_device *spi);
 extern int spi_async(struct spi_device *spi, struct spi_message *message);
 extern int spi_slave_abort(struct spi_device *spi);
+<<<<<<< HEAD
 extern int spi_target_abort(struct spi_device *spi);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline size_t
 spi_max_message_size(struct spi_device *spi)
@@ -1295,10 +1381,13 @@ extern int spi_split_transfers_maxsize(struct spi_controller *ctlr,
 				       struct spi_message *msg,
 				       size_t maxsize,
 				       gfp_t gfp);
+<<<<<<< HEAD
 extern int spi_split_transfers_maxwords(struct spi_controller *ctlr,
 					struct spi_message *msg,
 					size_t maxwords,
 					gfp_t gfp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*---------------------------------------------------------------------------*/
 
@@ -1583,9 +1672,12 @@ extern void spi_unregister_device(struct spi_device *spi);
 extern const struct spi_device_id *
 spi_get_device_id(const struct spi_device *sdev);
 
+<<<<<<< HEAD
 extern const void *
 spi_get_device_match_data(const struct spi_device *sdev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool
 spi_transfer_is_last(struct spi_controller *ctlr, struct spi_transfer *xfer)
 {

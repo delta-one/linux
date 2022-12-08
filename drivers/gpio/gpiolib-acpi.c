@@ -7,6 +7,7 @@
  *          Mika Westerberg <mika.westerberg@linux.intel.com>
  */
 
+<<<<<<< HEAD
 #include <linux/acpi.h>
 #include <linux/dmi.h>
 #include <linux/errno.h>
@@ -19,6 +20,18 @@
 #include <linux/gpio/consumer.h>
 #include <linux/gpio/driver.h>
 #include <linux/gpio/machine.h>
+=======
+#include <linux/dmi.h>
+#include <linux/errno.h>
+#include <linux/gpio/consumer.h>
+#include <linux/gpio/driver.h>
+#include <linux/gpio/machine.h>
+#include <linux/export.h>
+#include <linux/acpi.h>
+#include <linux/interrupt.h>
+#include <linux/mutex.h>
+#include <linux/pinctrl/pinctrl.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "gpiolib.h"
 #include "gpiolib-acpi.h"
@@ -91,6 +104,7 @@ struct acpi_gpio_chip {
 	struct list_head deferred_req_irqs_list_entry;
 };
 
+<<<<<<< HEAD
 /**
  * struct acpi_gpio_info - ACPI GPIO specific information
  * @adev: reference to ACPI device which consumes GPIO resource
@@ -115,6 +129,8 @@ struct acpi_gpio_info {
 	unsigned int quirks;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * For GPIO chips which call acpi_gpiochip_request_interrupts() before late_init
  * (so builtin drivers) we register the ACPI GpioInt IRQ handlers from a
@@ -128,7 +144,11 @@ static bool acpi_gpio_deferred_req_irqs_done;
 
 static int acpi_gpiochip_find(struct gpio_chip *gc, void *data)
 {
+<<<<<<< HEAD
 	return ACPI_HANDLE_FWNODE(gc->fwnode) == data;
+=======
+	return gc->parent && device_match_acpi_handle(gc->parent, data);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -387,7 +407,11 @@ err:
 }
 
 static bool acpi_gpio_irq_is_wake(struct device *parent,
+<<<<<<< HEAD
 				  const struct acpi_resource_gpio *agpio)
+=======
+				  struct acpi_resource_gpio *agpio)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int pin = agpio->pin_table[0];
 
@@ -538,10 +562,14 @@ void acpi_gpiochip_request_interrupts(struct gpio_chip *chip)
 	if (ACPI_FAILURE(status))
 		return;
 
+<<<<<<< HEAD
 	if (acpi_quirk_skip_gpio_event_handlers())
 		return;
 
 	acpi_walk_resources(handle, METHOD_NAME__AEI,
+=======
+	acpi_walk_resources(handle, "_AEI",
+>>>>>>> b7ba80a49124 (Commit)
 			    acpi_gpiochip_alloc_event, acpi_gpio);
 
 	mutex_lock(&acpi_gpio_deferred_req_irqs_lock);
@@ -648,7 +676,11 @@ static bool acpi_get_driver_gpio_data(struct acpi_device *adev,
 {
 	const struct acpi_gpio_mapping *gm;
 
+<<<<<<< HEAD
 	if (!adev || !adev->driver_gpios)
+=======
+	if (!adev->driver_gpios)
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	for (gm = adev->driver_gpios; gm->name; gm++)
@@ -699,8 +731,13 @@ __acpi_gpio_update_gpiod_flags(enum gpiod_flags *flags, enum gpiod_flags update)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int acpi_gpio_update_gpiod_flags(enum gpiod_flags *flags,
 				        struct acpi_gpio_info *info)
+=======
+int
+acpi_gpio_update_gpiod_flags(enum gpiod_flags *flags, struct acpi_gpio_info *info)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &info->adev->dev;
 	enum gpiod_flags old = *flags;
@@ -719,8 +756,13 @@ static int acpi_gpio_update_gpiod_flags(enum gpiod_flags *flags,
 	return ret;
 }
 
+<<<<<<< HEAD
 static int acpi_gpio_update_gpiod_lookup_flags(unsigned long *lookupflags,
 					       struct acpi_gpio_info *info)
+=======
+int acpi_gpio_update_gpiod_lookup_flags(unsigned long *lookupflags,
+					struct acpi_gpio_info *info)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (info->pin_config) {
 	case ACPI_PIN_CONFIG_PULLUP:
@@ -783,7 +825,10 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
 		lookup->info.pin_config = agpio->pin_config;
 		lookup->info.debounce = agpio->debounce_timeout;
 		lookup->info.gpioint = gpioint;
+<<<<<<< HEAD
 		lookup->info.wake_capable = acpi_gpio_irq_is_wake(&lookup->info.adev->dev, agpio);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * Polarity and triggering are only specified for GpioInt
@@ -842,10 +887,20 @@ static int acpi_gpio_property_lookup(struct fwnode_handle *fwnode,
 	ret = __acpi_node_get_property_reference(fwnode, propname, index, 3,
 						 &args);
 	if (ret) {
+<<<<<<< HEAD
 		struct acpi_device *adev;
 
 		adev = to_acpi_device_node(fwnode);
 		if (!acpi_get_driver_gpio_data(adev, propname, index, &args, &quirks))
+=======
+		struct acpi_device *adev = to_acpi_device_node(fwnode);
+
+		if (!adev)
+			return ret;
+
+		if (!acpi_get_driver_gpio_data(adev, propname, index, &args,
+					       &quirks))
+>>>>>>> b7ba80a49124 (Commit)
 			return ret;
 	}
 	/*
@@ -890,9 +945,14 @@ static int acpi_gpio_property_lookup(struct fwnode_handle *fwnode,
  * function only returns the first.
  */
 static struct gpio_desc *acpi_get_gpiod_by_index(struct acpi_device *adev,
+<<<<<<< HEAD
 						 const char *propname,
 						 int index,
 						 struct acpi_gpio_info *info)
+=======
+					  const char *propname, int index,
+					  struct acpi_gpio_info *info)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct acpi_gpio_lookup lookup;
 	int ret;
@@ -923,6 +983,7 @@ static struct gpio_desc *acpi_get_gpiod_by_index(struct acpi_device *adev,
 	return ret ? ERR_PTR(ret) : lookup.desc;
 }
 
+<<<<<<< HEAD
 /**
  * acpi_get_gpiod_from_data() - get a GPIO descriptor from ACPI data node
  * @fwnode: pointer to an ACPI firmware node to get the GPIO information from
@@ -961,6 +1022,8 @@ static struct gpio_desc *acpi_get_gpiod_from_data(struct fwnode_handle *fwnode,
 	return ret ? ERR_PTR(ret) : lookup.desc;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool acpi_can_fallback_to_crs(struct acpi_device *adev,
 				     const char *con_id)
 {
@@ -971,13 +1034,21 @@ static bool acpi_can_fallback_to_crs(struct acpi_device *adev,
 	return con_id == NULL;
 }
 
+<<<<<<< HEAD
 struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
+=======
+struct gpio_desc *acpi_find_gpio(struct device *dev,
+>>>>>>> b7ba80a49124 (Commit)
 				 const char *con_id,
 				 unsigned int idx,
 				 enum gpiod_flags *dflags,
 				 unsigned long *lookupflags)
 {
+<<<<<<< HEAD
 	struct acpi_device *adev = to_acpi_device_node(fwnode);
+=======
+	struct acpi_device *adev = ACPI_COMPANION(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	struct acpi_gpio_info info;
 	struct gpio_desc *desc;
 	char propname[32];
@@ -993,12 +1064,16 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
 				 gpio_suffixes[i]);
 		}
 
+<<<<<<< HEAD
 		if (adev)
 			desc = acpi_get_gpiod_by_index(adev,
 						       propname, idx, &info);
 		else
 			desc = acpi_get_gpiod_from_data(fwnode,
 						        propname, idx, &info);
+=======
+		desc = acpi_get_gpiod_by_index(adev, propname, idx, &info);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!IS_ERR(desc))
 			break;
 		if (PTR_ERR(desc) == -EPROBE_DEFER)
@@ -1007,7 +1082,11 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
 
 	/* Then from plain _CRS GPIOs */
 	if (IS_ERR(desc)) {
+<<<<<<< HEAD
 		if (!adev || !acpi_can_fallback_to_crs(adev, con_id))
+=======
+		if (!acpi_can_fallback_to_crs(adev, con_id))
+>>>>>>> b7ba80a49124 (Commit)
 			return ERR_PTR(-ENOENT);
 
 		desc = acpi_get_gpiod_by_index(adev, NULL, idx, &info);
@@ -1027,11 +1106,62 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
 }
 
 /**
+<<<<<<< HEAD
  * acpi_dev_gpio_irq_wake_get_by() - Find GpioInt and translate it to Linux IRQ number
  * @adev: pointer to a ACPI device to get IRQ from
  * @name: optional name of GpioInt resource
  * @index: index of GpioInt resource (starting from %0)
  * @wake_capable: Set to true if the IRQ is wake capable
+=======
+ * acpi_node_get_gpiod() - get a GPIO descriptor from ACPI resources
+ * @fwnode: pointer to an ACPI firmware node to get the GPIO information from
+ * @propname: Property name of the GPIO
+ * @index: index of GpioIo/GpioInt resource (starting from %0)
+ * @info: info pointer to fill in (optional)
+ *
+ * If @fwnode is an ACPI device object, call acpi_get_gpiod_by_index() for it.
+ * Otherwise (i.e. it is a data-only non-device object), use the property-based
+ * GPIO lookup to get to the GPIO resource with the relevant information and use
+ * that to obtain the GPIO descriptor to return.
+ *
+ * If the GPIO cannot be translated or there is an error an ERR_PTR is
+ * returned.
+ */
+struct gpio_desc *acpi_node_get_gpiod(struct fwnode_handle *fwnode,
+				      const char *propname, int index,
+				      struct acpi_gpio_info *info)
+{
+	struct acpi_gpio_lookup lookup;
+	struct acpi_device *adev;
+	int ret;
+
+	adev = to_acpi_device_node(fwnode);
+	if (adev)
+		return acpi_get_gpiod_by_index(adev, propname, index, info);
+
+	if (!is_acpi_data_node(fwnode))
+		return ERR_PTR(-ENODEV);
+
+	if (!propname)
+		return ERR_PTR(-EINVAL);
+
+	memset(&lookup, 0, sizeof(lookup));
+	lookup.index = index;
+
+	ret = acpi_gpio_property_lookup(fwnode, propname, index, &lookup);
+	if (ret)
+		return ERR_PTR(ret);
+
+	ret = acpi_gpio_resource_lookup(&lookup, info);
+	return ret ? ERR_PTR(ret) : lookup.desc;
+}
+
+/**
+ * acpi_dev_gpio_irq_get_by() - Find GpioInt and translate it to Linux IRQ number
+ * @adev: pointer to a ACPI device to get IRQ from
+ * @name: optional name of GpioInt resource
+ * @index: index of GpioInt resource (starting from %0)
+>>>>>>> b7ba80a49124 (Commit)
  *
  * If the device has one or more GpioInt resources, this function can be
  * used to translate from the GPIO offset in the resource to the Linux IRQ
@@ -1043,6 +1173,7 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
  * The function takes optional @name parameter. If the resource has a property
  * name, then only those will be taken into account.
  *
+<<<<<<< HEAD
  * The GPIO is considered wake capable if the GpioInt resource specifies
  * SharedAndWake or ExclusiveAndWake.
  *
@@ -1050,6 +1181,11 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
  */
 int acpi_dev_gpio_irq_wake_get_by(struct acpi_device *adev, const char *name, int index,
 				  bool *wake_capable)
+=======
+ * Return: Linux IRQ number (> %0) on success, negative errno on failure.
+ */
+int acpi_dev_gpio_irq_get_by(struct acpi_device *adev, const char *name, int index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int idx, i;
 	unsigned int irq_flags;
@@ -1106,17 +1242,24 @@ int acpi_dev_gpio_irq_wake_get_by(struct acpi_device *adev, const char *name, in
 				dev_dbg(&adev->dev, "IRQ %d already in use\n", irq);
 			}
 
+<<<<<<< HEAD
 			/* avoid suspend issues with GPIOs when systems are using S3 */
 			if (wake_capable && acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0)
 				*wake_capable = info.wake_capable;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			return irq;
 		}
 
 	}
 	return -ENOENT;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(acpi_dev_gpio_irq_wake_get_by);
+=======
+EXPORT_SYMBOL_GPL(acpi_dev_gpio_irq_get_by);
+>>>>>>> b7ba80a49124 (Commit)
 
 static acpi_status
 acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
@@ -1390,6 +1533,19 @@ void acpi_gpiochip_remove(struct gpio_chip *chip)
 	kfree(acpi_gpio);
 }
 
+<<<<<<< HEAD
+=======
+void acpi_gpio_dev_init(struct gpio_chip *gc, struct gpio_device *gdev)
+{
+	/* Set default fwnode to parent's one if present */
+	if (gc->parent)
+		ACPI_COMPANION_SET(&gdev->dev, ACPI_COMPANION(gc->parent));
+
+	if (gc->fwnode)
+		device_set_node(&gdev->dev, gc->fwnode);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int acpi_gpio_package_count(const union acpi_object *obj)
 {
 	const union acpi_object *element = obj->package.elements;
@@ -1616,6 +1772,7 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
 			.ignore_interrupt = "AMDI0030:00@18",
 		},
 	},
+<<<<<<< HEAD
 	{
 		/*
 		 * Spurious wakeups from TP_ATTN# pin
@@ -1654,6 +1811,8 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
 			.ignore_wake = "SYNA1202:00@16",
 		},
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{} /* Terminating entry */
 };
 

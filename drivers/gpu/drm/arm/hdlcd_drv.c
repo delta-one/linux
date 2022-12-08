@@ -26,7 +26,11 @@
 #include <drm/drm_crtc.h>
 #include <drm/drm_debugfs.h>
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_dma.h>
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_gem_dma_helper.h>
 #include <drm/drm_gem_framebuffer_helper.h>
 #include <drm/drm_modeset_helper.h>
@@ -98,8 +102,14 @@ static void hdlcd_irq_uninstall(struct hdlcd_drm_private *hdlcd)
 
 static int hdlcd_load(struct drm_device *drm, unsigned long flags)
 {
+<<<<<<< HEAD
 	struct hdlcd_drm_private *hdlcd = drm_to_hdlcd_priv(drm);
 	struct platform_device *pdev = to_platform_device(drm->dev);
+=======
+	struct hdlcd_drm_private *hdlcd = drm->dev_private;
+	struct platform_device *pdev = to_platform_device(drm->dev);
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 version;
 	int ret;
 
@@ -114,7 +124,12 @@ static int hdlcd_load(struct drm_device *drm, unsigned long flags)
 	atomic_set(&hdlcd->dma_end_count, 0);
 #endif
 
+<<<<<<< HEAD
 	hdlcd->mmio = devm_platform_ioremap_resource(pdev, 0);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	hdlcd->mmio = devm_ioremap_resource(drm->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(hdlcd->mmio)) {
 		DRM_ERROR("failed to map control registers area\n");
 		ret = PTR_ERR(hdlcd->mmio);
@@ -173,6 +188,7 @@ static const struct drm_mode_config_funcs hdlcd_mode_config_funcs = {
 	.atomic_commit = drm_atomic_helper_commit,
 };
 
+<<<<<<< HEAD
 static int hdlcd_setup_mode_config(struct drm_device *drm)
 {
 	int ret;
@@ -181,21 +197,35 @@ static int hdlcd_setup_mode_config(struct drm_device *drm)
 	if (ret)
 		return ret;
 
+=======
+static void hdlcd_setup_mode_config(struct drm_device *drm)
+{
+	drm_mode_config_init(drm);
+>>>>>>> b7ba80a49124 (Commit)
 	drm->mode_config.min_width = 0;
 	drm->mode_config.min_height = 0;
 	drm->mode_config.max_width = HDLCD_MAX_XRES;
 	drm->mode_config.max_height = HDLCD_MAX_YRES;
 	drm->mode_config.funcs = &hdlcd_mode_config_funcs;
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_DEBUG_FS
 static int hdlcd_show_underrun_count(struct seq_file *m, void *arg)
 {
+<<<<<<< HEAD
 	struct drm_debugfs_entry *entry = m->private;
 	struct drm_device *drm = entry->dev;
 	struct hdlcd_drm_private *hdlcd = drm_to_hdlcd_priv(drm);
+=======
+	struct drm_info_node *node = (struct drm_info_node *)m->private;
+	struct drm_device *drm = node->minor->dev;
+	struct hdlcd_drm_private *hdlcd = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 
 	seq_printf(m, "underrun : %d\n", atomic_read(&hdlcd->buffer_underrun_count));
 	seq_printf(m, "dma_end  : %d\n", atomic_read(&hdlcd->dma_end_count));
@@ -206,9 +236,15 @@ static int hdlcd_show_underrun_count(struct seq_file *m, void *arg)
 
 static int hdlcd_show_pxlclock(struct seq_file *m, void *arg)
 {
+<<<<<<< HEAD
 	struct drm_debugfs_entry *entry = m->private;
 	struct drm_device *drm = entry->dev;
 	struct hdlcd_drm_private *hdlcd = drm_to_hdlcd_priv(drm);
+=======
+	struct drm_info_node *node = (struct drm_info_node *)m->private;
+	struct drm_device *drm = node->minor->dev;
+	struct hdlcd_drm_private *hdlcd = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long clkrate = clk_get_rate(hdlcd->clk);
 	unsigned long mode_clock = hdlcd->crtc.mode.crtc_clock * 1000;
 
@@ -217,10 +253,24 @@ static int hdlcd_show_pxlclock(struct seq_file *m, void *arg)
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct drm_debugfs_info hdlcd_debugfs_list[] = {
 	{ "interrupt_count", hdlcd_show_underrun_count, 0 },
 	{ "clocks", hdlcd_show_pxlclock, 0 },
 };
+=======
+static struct drm_info_list hdlcd_debugfs_list[] = {
+	{ "interrupt_count", hdlcd_show_underrun_count, 0 },
+	{ "clocks", hdlcd_show_pxlclock, 0 },
+};
+
+static void hdlcd_debugfs_init(struct drm_minor *minor)
+{
+	drm_debugfs_create_files(hdlcd_debugfs_list,
+				 ARRAY_SIZE(hdlcd_debugfs_list),
+				 minor->debugfs_root, minor);
+}
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 DEFINE_DRM_GEM_DMA_FOPS(fops);
@@ -228,6 +278,12 @@ DEFINE_DRM_GEM_DMA_FOPS(fops);
 static const struct drm_driver hdlcd_driver = {
 	.driver_features = DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC,
 	DRM_GEM_DMA_DRIVER_OPS,
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_DEBUG_FS
+	.debugfs_init = hdlcd_debugfs_init,
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	.fops = &fops,
 	.name = "hdlcd",
 	.desc = "ARM HDLCD Controller DRM",
@@ -242,6 +298,7 @@ static int hdlcd_drm_bind(struct device *dev)
 	struct hdlcd_drm_private *hdlcd;
 	int ret;
 
+<<<<<<< HEAD
 	hdlcd = devm_drm_dev_alloc(dev, &hdlcd_driver, typeof(*hdlcd), base);
 	if (IS_ERR(hdlcd))
 		return PTR_ERR(hdlcd);
@@ -254,6 +311,20 @@ static int hdlcd_drm_bind(struct device *dev)
 	if (ret)
 		goto err_free;
 
+=======
+	hdlcd = devm_kzalloc(dev, sizeof(*hdlcd), GFP_KERNEL);
+	if (!hdlcd)
+		return -ENOMEM;
+
+	drm = drm_dev_alloc(&hdlcd_driver, dev);
+	if (IS_ERR(drm))
+		return PTR_ERR(drm);
+
+	drm->dev_private = hdlcd;
+	dev_set_drvdata(dev, drm);
+
+	hdlcd_setup_mode_config(drm);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = hdlcd_load(drm, 0);
 	if (ret)
 		goto err_free;
@@ -291,15 +362,22 @@ static int hdlcd_drm_bind(struct device *dev)
 	drm_mode_config_reset(drm);
 	drm_kms_helper_poll_init(drm);
 
+<<<<<<< HEAD
 #ifdef CONFIG_DEBUG_FS
 	drm_debugfs_add_files(drm, hdlcd_debugfs_list, ARRAY_SIZE(hdlcd_debugfs_list));
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = drm_dev_register(drm, 0);
 	if (ret)
 		goto err_register;
 
+<<<<<<< HEAD
 	drm_fbdev_dma_setup(drm, 32);
+=======
+	drm_fbdev_generic_setup(drm, 32);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -316,14 +394,25 @@ err_unload:
 	hdlcd_irq_uninstall(hdlcd);
 	of_reserved_mem_device_release(drm->dev);
 err_free:
+<<<<<<< HEAD
 	dev_set_drvdata(dev, NULL);
+=======
+	drm_mode_config_cleanup(drm);
+	dev_set_drvdata(dev, NULL);
+	drm_dev_put(drm);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
 static void hdlcd_drm_unbind(struct device *dev)
 {
 	struct drm_device *drm = dev_get_drvdata(dev);
+<<<<<<< HEAD
 	struct hdlcd_drm_private *hdlcd = drm_to_hdlcd_priv(drm);
+=======
+	struct hdlcd_drm_private *hdlcd = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_dev_unregister(drm);
 	drm_kms_helper_poll_fini(drm);
@@ -337,7 +426,14 @@ static void hdlcd_drm_unbind(struct device *dev)
 	if (pm_runtime_enabled(dev))
 		pm_runtime_disable(dev);
 	of_reserved_mem_device_release(dev);
+<<<<<<< HEAD
 	dev_set_drvdata(dev, NULL);
+=======
+	drm_mode_config_cleanup(drm);
+	drm->dev_private = NULL;
+	dev_set_drvdata(dev, NULL);
+	drm_dev_put(drm);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct component_master_ops hdlcd_master_ops = {

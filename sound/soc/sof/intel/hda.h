@@ -122,6 +122,7 @@
 #define SOF_HDA_ADSP_DPLBASE_ENABLE		0x01
 
 /* Stream Registers */
+<<<<<<< HEAD
 #define SOF_HDA_ADSP_REG_SD_CTL			0x00
 #define SOF_HDA_ADSP_REG_SD_STS			0x03
 #define SOF_HDA_ADSP_REG_SD_LPIB		0x04
@@ -133,6 +134,19 @@
 #define SOF_HDA_ADSP_REG_SD_FIFOL		0x14
 #define SOF_HDA_ADSP_REG_SD_BDLPL		0x18
 #define SOF_HDA_ADSP_REG_SD_BDLPU		0x1C
+=======
+#define SOF_HDA_ADSP_REG_CL_SD_CTL		0x00
+#define SOF_HDA_ADSP_REG_CL_SD_STS		0x03
+#define SOF_HDA_ADSP_REG_CL_SD_LPIB		0x04
+#define SOF_HDA_ADSP_REG_CL_SD_CBL		0x08
+#define SOF_HDA_ADSP_REG_CL_SD_LVI		0x0C
+#define SOF_HDA_ADSP_REG_CL_SD_FIFOW		0x0E
+#define SOF_HDA_ADSP_REG_CL_SD_FIFOSIZE		0x10
+#define SOF_HDA_ADSP_REG_CL_SD_FORMAT		0x12
+#define SOF_HDA_ADSP_REG_CL_SD_FIFOL		0x14
+#define SOF_HDA_ADSP_REG_CL_SD_BDLPL		0x18
+#define SOF_HDA_ADSP_REG_CL_SD_BDLPU		0x1C
+>>>>>>> b7ba80a49124 (Commit)
 #define SOF_HDA_ADSP_SD_ENTRY_SIZE		0x20
 
 /* CL: Software Position Based FIFO Capability Registers */
@@ -294,7 +308,10 @@
 #define HDA_DSP_REG_ADSPIC2		(HDA_DSP_GEN_BASE + 0x10)
 #define HDA_DSP_REG_ADSPIS2		(HDA_DSP_GEN_BASE + 0x14)
 
+<<<<<<< HEAD
 #define HDA_DSP_REG_ADSPIC2_SNDW	BIT(5)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define HDA_DSP_REG_ADSPIS2_SNDW	BIT(5)
 
 /* Intel HD Audio Inter-Processor Communication Registers */
@@ -308,7 +325,10 @@
 /* Intel Vendor Specific Registers */
 #define HDA_VS_INTEL_EM2		0x1030
 #define HDA_VS_INTEL_EM2_L1SEN		BIT(13)
+<<<<<<< HEAD
 #define HDA_VS_INTEL_LTRP		0x1048
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define HDA_VS_INTEL_LTRP_GB_MASK	0x3F
 
 /*  HIPCI */
@@ -483,7 +503,10 @@ enum sof_hda_D0_substate {
 struct sof_intel_hda_dev {
 	bool imrboot_supported;
 	bool skip_imr_boot;
+<<<<<<< HEAD
 	bool booted_from_imr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	int boot_iteration;
 
@@ -502,7 +525,11 @@ struct sof_intel_hda_dev {
 	u32 stream_max;
 
 	/* PM related */
+<<<<<<< HEAD
 	bool l1_disabled;/* is DMI link L1 disabled? */
+=======
+	bool l1_support_changed;/* during suspend, is L1SEN changed or not */
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* DMIC device */
 	struct platform_device *dmic_dev;
@@ -524,6 +551,7 @@ struct sof_intel_hda_dev {
 
 	/* Intel NHLT information */
 	struct nhlt_acpi_table *nhlt;
+<<<<<<< HEAD
 
 	/*
 	 * Pointing to the IPC message if immediate sending was not possible
@@ -532,6 +560,8 @@ struct sof_intel_hda_dev {
 	 * is received from the DSP for the previous message)
 	 */
 	struct snd_sof_ipc_msg *delayed_ipc_tx_msg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct hdac_bus *sof_to_bus(struct snd_sof_dev *s)
@@ -578,7 +608,10 @@ int hda_dsp_core_run(struct snd_sof_dev *sdev, unsigned int core_mask);
 int hda_dsp_enable_core(struct snd_sof_dev *sdev, unsigned int core_mask);
 int hda_dsp_core_reset_power_down(struct snd_sof_dev *sdev,
 				  unsigned int core_mask);
+<<<<<<< HEAD
 int hda_power_down_dsp(struct snd_sof_dev *sdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int hda_dsp_core_get(struct snd_sof_dev *sdev, int core);
 void hda_dsp_ipc_int_enable(struct snd_sof_dev *sdev);
 void hda_dsp_ipc_int_disable(struct snd_sof_dev *sdev);
@@ -592,14 +625,20 @@ int hda_dsp_resume(struct snd_sof_dev *sdev);
 int hda_dsp_runtime_suspend(struct snd_sof_dev *sdev);
 int hda_dsp_runtime_resume(struct snd_sof_dev *sdev);
 int hda_dsp_runtime_idle(struct snd_sof_dev *sdev);
+<<<<<<< HEAD
 int hda_dsp_shutdown_dma_flush(struct snd_sof_dev *sdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int hda_dsp_shutdown(struct snd_sof_dev *sdev);
 int hda_dsp_set_hw_params_upon_resume(struct snd_sof_dev *sdev);
 void hda_dsp_dump(struct snd_sof_dev *sdev, u32 flags);
 void hda_ipc_dump(struct snd_sof_dev *sdev);
 void hda_ipc_irq_dump(struct snd_sof_dev *sdev);
 void hda_dsp_d0i3_work(struct work_struct *work);
+<<<<<<< HEAD
 int hda_dsp_disable_interrupts(struct snd_sof_dev *sdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * DSP PCM Operations.
@@ -656,10 +695,17 @@ int hda_dsp_stream_spib_config(struct snd_sof_dev *sdev,
 			       int enable, u32 size);
 
 int hda_ipc_msg_data(struct snd_sof_dev *sdev,
+<<<<<<< HEAD
 		     struct snd_sof_pcm_stream *sps,
 		     void *p, size_t sz);
 int hda_set_stream_data_offset(struct snd_sof_dev *sdev,
 			       struct snd_sof_pcm_stream *sps,
+=======
+		     struct snd_pcm_substream *substream,
+		     void *p, size_t sz);
+int hda_set_stream_data_offset(struct snd_sof_dev *sdev,
+			       struct snd_pcm_substream *substream,
+>>>>>>> b7ba80a49124 (Commit)
 			       size_t posn_offset);
 
 /*
@@ -705,11 +751,16 @@ void hda_dsp_ctrl_ppcap_int_enable(struct snd_sof_dev *sdev, bool enable);
 int hda_dsp_ctrl_link_reset(struct snd_sof_dev *sdev, bool reset);
 void hda_dsp_ctrl_misc_clock_gating(struct snd_sof_dev *sdev, bool enable);
 int hda_dsp_ctrl_clock_power_gating(struct snd_sof_dev *sdev, bool enable);
+<<<<<<< HEAD
 int hda_dsp_ctrl_init_chip(struct snd_sof_dev *sdev);
+=======
+int hda_dsp_ctrl_init_chip(struct snd_sof_dev *sdev, bool full_reset);
+>>>>>>> b7ba80a49124 (Commit)
 void hda_dsp_ctrl_stop_chip(struct snd_sof_dev *sdev);
 /*
  * HDA bus operations.
  */
+<<<<<<< HEAD
 void sof_hda_bus_init(struct snd_sof_dev *sdev, struct device *dev);
 void sof_hda_bus_exit(struct snd_sof_dev *sdev);
 
@@ -750,6 +801,24 @@ static inline void hda_codec_device_remove(struct snd_sof_dev *sdev) { }
 #endif /* CONFIG_SND_SOC_SOF_HDA_AUDIO_CODEC */
 
 #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA_AUDIO_CODEC) && IS_ENABLED(CONFIG_SND_HDA_CODEC_HDMI)
+=======
+void sof_hda_bus_init(struct hdac_bus *bus, struct device *dev);
+
+#if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
+/*
+ * HDA Codec operations.
+ */
+void hda_codec_probe_bus(struct snd_sof_dev *sdev,
+			 bool hda_codec_use_common_hdmi);
+void hda_codec_jack_wake_enable(struct snd_sof_dev *sdev, bool enable);
+void hda_codec_jack_check(struct snd_sof_dev *sdev);
+
+#endif /* CONFIG_SND_SOC_SOF_HDA */
+
+#if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA) && \
+	(IS_ENABLED(CONFIG_SND_HDA_CODEC_HDMI) || \
+	 IS_ENABLED(CONFIG_SND_SOC_HDAC_HDMI))
+>>>>>>> b7ba80a49124 (Commit)
 
 void hda_codec_i915_display_power(struct snd_sof_dev *sdev, bool enable);
 int hda_codec_i915_init(struct snd_sof_dev *sdev);
@@ -757,12 +826,18 @@ int hda_codec_i915_exit(struct snd_sof_dev *sdev);
 
 #else
 
+<<<<<<< HEAD
 static inline void hda_codec_i915_display_power(struct snd_sof_dev *sdev, bool enable) { }
+=======
+static inline void hda_codec_i915_display_power(struct snd_sof_dev *sdev,
+						bool enable) { }
+>>>>>>> b7ba80a49124 (Commit)
 static inline int hda_codec_i915_init(struct snd_sof_dev *sdev) { return 0; }
 static inline int hda_codec_i915_exit(struct snd_sof_dev *sdev) { return 0; }
 
 #endif
 
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
 
 void hda_bus_ml_get_capabilities(struct hdac_bus *bus);
@@ -783,6 +858,8 @@ static inline int hda_bus_ml_suspend(struct hdac_bus *bus) { return 0; }
 
 #endif /* CONFIG_SND_SOC_SOF_HDA */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Trace Control.
  */
@@ -796,29 +873,39 @@ int hda_dsp_trace_trigger(struct snd_sof_dev *sdev, int cmd);
  */
 #if IS_ENABLED(CONFIG_SND_SOC_SOF_INTEL_SOUNDWIRE)
 
+<<<<<<< HEAD
 int hda_sdw_check_lcount_common(struct snd_sof_dev *sdev);
 int hda_sdw_startup(struct snd_sof_dev *sdev);
 void hda_common_enable_sdw_irq(struct snd_sof_dev *sdev, bool enable);
+=======
+int hda_sdw_startup(struct snd_sof_dev *sdev);
+>>>>>>> b7ba80a49124 (Commit)
 void hda_sdw_int_enable(struct snd_sof_dev *sdev, bool enable);
 void hda_sdw_process_wakeen(struct snd_sof_dev *sdev);
 bool hda_common_check_sdw_irq(struct snd_sof_dev *sdev);
 
 #else
 
+<<<<<<< HEAD
 static inline int hda_sdw_check_lcount_common(struct snd_sof_dev *sdev)
 {
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int hda_sdw_startup(struct snd_sof_dev *sdev)
 {
 	return 0;
 }
 
+<<<<<<< HEAD
 static inline void hda_common_enable_sdw_irq(struct snd_sof_dev *sdev, bool enable)
 {
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void hda_sdw_int_enable(struct snd_sof_dev *sdev, bool enable)
 {
 }
@@ -896,6 +983,13 @@ int hda_pci_intel_probe(struct pci_dev *pci, const struct pci_device_id *pci_id)
 
 struct snd_sof_dai;
 struct sof_ipc_dai_config;
+<<<<<<< HEAD
+=======
+int hda_ctrl_dai_widget_setup(struct snd_soc_dapm_widget *w, unsigned int quirk_flags,
+			      struct snd_sof_dai_config_data *data);
+int hda_ctrl_dai_widget_free(struct snd_soc_dapm_widget *w, unsigned int quirk_flags,
+			     struct snd_sof_dai_config_data *data);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SOF_HDA_POSITION_QUIRK_USE_SKYLAKE_LEGACY	(0) /* previous implementation */
 #define SOF_HDA_POSITION_QUIRK_USE_DPIB_REGISTERS	(1) /* recommended if VC0 only */
@@ -914,6 +1008,7 @@ int hda_dsp_core_stall_reset(struct snd_sof_dev *sdev, unsigned int core_mask);
 irqreturn_t cnl_ipc4_irq_thread(int irq, void *context);
 int cnl_ipc4_send_msg(struct snd_sof_dev *sdev, struct snd_sof_ipc_msg *msg);
 irqreturn_t hda_dsp_ipc4_irq_thread(int irq, void *context);
+<<<<<<< HEAD
 bool hda_ipc4_tx_is_busy(struct snd_sof_dev *sdev);
 void hda_dsp_ipc4_schedule_d0i3_work(struct sof_intel_hda_dev *hdev,
 				     struct snd_sof_ipc_msg *msg);
@@ -961,4 +1056,9 @@ hda_select_dai_widget_ops(struct snd_sof_dev *sdev, struct snd_sof_widget *swidg
 int hda_dai_config(struct snd_soc_dapm_widget *w, unsigned int flags,
 		   struct snd_sof_dai_config_data *data);
 
+=======
+int hda_dsp_ipc4_send_msg(struct snd_sof_dev *sdev, struct snd_sof_ipc_msg *msg);
+extern struct sdw_intel_ops sdw_callback;
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif

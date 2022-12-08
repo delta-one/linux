@@ -14,6 +14,7 @@ struct qcom_smmu {
 	u32 stall_enabled;
 };
 
+<<<<<<< HEAD
 enum qcom_smmu_impl_reg_offset {
 	QCOM_SMMU_TBU_PWR_STATUS,
 	QCOM_SMMU_STATS_SYNC_INV_TBU_ACK,
@@ -34,6 +35,17 @@ struct qcom_smmu_match_data {
 void qcom_smmu_tlb_sync_debug(struct arm_smmu_device *smmu);
 #else
 static inline void qcom_smmu_tlb_sync_debug(struct arm_smmu_device *smmu) { }
+=======
+#ifdef CONFIG_ARM_SMMU_QCOM_DEBUG
+void qcom_smmu_tlb_sync_debug(struct arm_smmu_device *smmu);
+const void *qcom_smmu_impl_data(struct arm_smmu_device *smmu);
+#else
+static inline void qcom_smmu_tlb_sync_debug(struct arm_smmu_device *smmu) { }
+static inline const void *qcom_smmu_impl_data(struct arm_smmu_device *smmu)
+{
+	return NULL;
+}
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #endif /* _ARM_SMMU_QCOM_H */

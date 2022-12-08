@@ -148,7 +148,11 @@ __ATTR(_name, 0444, show_##_name, NULL)
 		if (ret)						\
 			return ret;					\
 									\
+<<<<<<< HEAD
 		return sysfs_emit(buf, "%llu\n",		\
+=======
+		return scnprintf(buf, PAGE_SIZE, "%llu\n",		\
+>>>>>>> b7ba80a49124 (Commit)
 				(u64)st_name.member_name);		\
 	}								\
 	define_one_cppc_ro(member_name)
@@ -174,7 +178,11 @@ static ssize_t show_feedback_ctrs(struct kobject *kobj,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "ref:%llu del:%llu\n",
+=======
+	return scnprintf(buf, PAGE_SIZE, "ref:%llu del:%llu\n",
+>>>>>>> b7ba80a49124 (Commit)
 			fb_ctrs.reference, fb_ctrs.delivered);
 }
 define_one_cppc_ro(feedback_ctrs);
@@ -193,7 +201,11 @@ static struct attribute *cppc_attrs[] = {
 };
 ATTRIBUTE_GROUPS(cppc);
 
+<<<<<<< HEAD
 static const struct kobj_type cppc_ktype = {
+=======
+static struct kobj_type cppc_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops = &kobj_sysfs_ops,
 	.default_groups = cppc_groups,
 };
@@ -595,7 +607,10 @@ bool __weak cpc_supported_by_cpu(void)
 
 /**
  * pcc_data_alloc() - Allocate the pcc_data memory for pcc subspace
+<<<<<<< HEAD
  * @pcc_ss_id: PCC Subspace index as in the PCC client ACPI package.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Check and allocate the cppc_pcc_data memory.
  * In some processor configurations it is possible that same subspace
@@ -1155,6 +1170,7 @@ int cppc_get_nominal_perf(int cpunum, u64 *nominal_perf)
 }
 
 /**
+<<<<<<< HEAD
  * cppc_get_epp_perf - Get the epp register value.
  * @cpunum: CPU from which to get epp preference value.
  * @epp_perf: Return address.
@@ -1168,6 +1184,8 @@ int cppc_get_epp_perf(int cpunum, u64 *epp_perf)
 EXPORT_SYMBOL_GPL(cppc_get_epp_perf);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * cppc_get_perf_caps - Get a CPU's performance capabilities.
  * @cpunum: CPU from which to get capabilities info.
  * @perf_caps: ptr to cppc_perf_caps. See cppc_acpi.h
@@ -1258,6 +1276,7 @@ out_err:
 EXPORT_SYMBOL_GPL(cppc_get_perf_caps);
 
 /**
+<<<<<<< HEAD
  * cppc_perf_ctrs_in_pcc - Check if any perf counters are in a PCC region.
  *
  * CPPC has flexibility about how CPU performance counters are accessed.
@@ -1300,6 +1319,8 @@ bool cppc_perf_ctrs_in_pcc(void)
 EXPORT_SYMBOL_GPL(cppc_perf_ctrs_in_pcc);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * cppc_get_perf_ctrs - Read a CPU's performance feedback counters.
  * @cpunum: CPU from which to read counters.
  * @perf_fb_ctrs: ptr to cppc_perf_fb_ctrs. See cppc_acpi.h
@@ -1379,6 +1400,7 @@ out_err:
 }
 EXPORT_SYMBOL_GPL(cppc_get_perf_ctrs);
 
+<<<<<<< HEAD
 /*
  * Set Energy Performance Preference Register value through
  * Performance Controls Interface
@@ -1529,6 +1551,8 @@ int cppc_set_auto_sel(int cpu, bool enable)
 }
 EXPORT_SYMBOL_GPL(cppc_set_auto_sel);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * cppc_set_enable - Set to enable CPPC on the processor by writing the
  * Continuous Performance Control package EnableRegister field.
@@ -1584,7 +1608,11 @@ EXPORT_SYMBOL_GPL(cppc_set_enable);
 int cppc_set_perf(int cpu, struct cppc_perf_ctrls *perf_ctrls)
 {
 	struct cpc_desc *cpc_desc = per_cpu(cpc_desc_ptr, cpu);
+<<<<<<< HEAD
 	struct cpc_register_resource *desired_reg, *min_perf_reg, *max_perf_reg;
+=======
+	struct cpc_register_resource *desired_reg;
+>>>>>>> b7ba80a49124 (Commit)
 	int pcc_ss_id = per_cpu(cpu_pcc_subspace_idx, cpu);
 	struct cppc_pcc_data *pcc_ss_data = NULL;
 	int ret = 0;
@@ -1595,8 +1623,11 @@ int cppc_set_perf(int cpu, struct cppc_perf_ctrls *perf_ctrls)
 	}
 
 	desired_reg = &cpc_desc->cpc_regs[DESIRED_PERF];
+<<<<<<< HEAD
 	min_perf_reg = &cpc_desc->cpc_regs[MIN_PERF];
 	max_perf_reg = &cpc_desc->cpc_regs[MAX_PERF];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * This is Phase-I where we want to write to CPC registers
@@ -1605,7 +1636,11 @@ int cppc_set_perf(int cpu, struct cppc_perf_ctrls *perf_ctrls)
 	 * Since read_lock can be acquired by multiple CPUs simultaneously we
 	 * achieve that goal here
 	 */
+<<<<<<< HEAD
 	if (CPC_IN_PCC(desired_reg) || CPC_IN_PCC(min_perf_reg) || CPC_IN_PCC(max_perf_reg)) {
+=======
+	if (CPC_IN_PCC(desired_reg)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (pcc_ss_id < 0) {
 			pr_debug("Invalid pcc_ss_id\n");
 			return -ENODEV;
@@ -1628,6 +1663,7 @@ int cppc_set_perf(int cpu, struct cppc_perf_ctrls *perf_ctrls)
 		cpc_desc->write_cmd_status = 0;
 	}
 
+<<<<<<< HEAD
 	cpc_write(cpu, desired_reg, perf_ctrls->desired_perf);
 
 	/*
@@ -1641,6 +1677,15 @@ int cppc_set_perf(int cpu, struct cppc_perf_ctrls *perf_ctrls)
 		cpc_write(cpu, max_perf_reg, perf_ctrls->max_perf);
 
 	if (CPC_IN_PCC(desired_reg) || CPC_IN_PCC(min_perf_reg) || CPC_IN_PCC(max_perf_reg))
+=======
+	/*
+	 * Skip writing MIN/MAX until Linux knows how to come up with
+	 * useful values.
+	 */
+	cpc_write(cpu, desired_reg, perf_ctrls->desired_perf);
+
+	if (CPC_IN_PCC(desired_reg))
+>>>>>>> b7ba80a49124 (Commit)
 		up_read(&pcc_ss_data->pcc_lock);	/* END Phase-I */
 	/*
 	 * This is Phase-II where we transfer the ownership of PCC to Platform
@@ -1688,7 +1733,11 @@ int cppc_set_perf(int cpu, struct cppc_perf_ctrls *perf_ctrls)
 	 * case during a CMD_READ and if there are pending writes it delivers
 	 * the write command before servicing the read command
 	 */
+<<<<<<< HEAD
 	if (CPC_IN_PCC(desired_reg) || CPC_IN_PCC(min_perf_reg) || CPC_IN_PCC(max_perf_reg)) {
+=======
+	if (CPC_IN_PCC(desired_reg)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (down_write_trylock(&pcc_ss_data->pcc_lock)) {/* BEGIN Phase-II */
 			/* Update only if there are pending write commands */
 			if (pcc_ss_data->pending_pcc_write_cmd)
@@ -1708,7 +1757,10 @@ EXPORT_SYMBOL_GPL(cppc_set_perf);
 
 /**
  * cppc_get_transition_latency - returns frequency transition latency in ns
+<<<<<<< HEAD
  * @cpu_num: CPU number for per_cpu().
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * ACPI CPPC does not explicitly specify how a platform can specify the
  * transition latency for performance change requests. The closest we have

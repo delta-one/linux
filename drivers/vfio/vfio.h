@@ -3,6 +3,7 @@
  * Copyright (C) 2012 Red Hat, Inc.  All rights reserved.
  *     Author: Alex Williamson <alex.williamson@redhat.com>
  */
+<<<<<<< HEAD
 #ifndef __VFIO_VFIO_H__
 #define __VFIO_VFIO_H__
 
@@ -23,6 +24,8 @@ void vfio_device_close(struct vfio_device *device,
 		       struct iommufd_ctx *iommufd);
 
 extern const struct file_operations vfio_device_fops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum vfio_group_type {
 	/*
@@ -48,6 +51,7 @@ enum vfio_group_type {
 	VFIO_NO_IOMMU,
 };
 
+<<<<<<< HEAD
 struct vfio_group {
 	struct device 			dev;
 	struct cdev			cdev;
@@ -95,6 +99,13 @@ static inline bool vfio_device_is_noiommu(struct vfio_device *vdev)
 }
 
 #if IS_ENABLED(CONFIG_VFIO_CONTAINER)
+=======
+/* events for the backend driver notify callback */
+enum vfio_iommu_notify_type {
+	VFIO_IOMMU_CONTAINER_CLOSE = 0,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct vfio_iommu_driver_ops - VFIO IOMMU driver callbacks
  */
@@ -125,15 +136,21 @@ struct vfio_iommu_driver_ops {
 				  void *data, size_t count, bool write);
 	struct iommu_domain *(*group_iommu_domain)(void *iommu_data,
 						   struct iommu_group *group);
+<<<<<<< HEAD
 };
 
 struct vfio_iommu_driver {
 	const struct vfio_iommu_driver_ops	*ops;
 	struct list_head			vfio_next;
+=======
+	void		(*notify)(void *iommu_data,
+				  enum vfio_iommu_notify_type event);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int vfio_register_iommu_driver(const struct vfio_iommu_driver_ops *ops);
 void vfio_unregister_iommu_driver(const struct vfio_iommu_driver_ops *ops);
+<<<<<<< HEAD
 
 struct vfio_container *vfio_container_from_file(struct file *filep);
 int vfio_group_use_container(struct vfio_group *group);
@@ -265,3 +282,5 @@ static inline void vfio_device_put_kvm(struct vfio_device *device)
 #endif
 
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)

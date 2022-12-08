@@ -115,9 +115,16 @@ static int genregs_set(struct task_struct *target,
 
 	/* Ignore the rest, if needed */
 	if (!ret)
+<<<<<<< HEAD
 		user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
 			offsetof(struct user_regs_struct, pad1), -1);
 	else
+=======
+		ret = user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+					offsetof(struct user_regs_struct, pad1), -1);
+
+	if (ret)
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 
 	/*

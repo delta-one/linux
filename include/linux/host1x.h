@@ -8,7 +8,10 @@
 
 #include <linux/device.h>
 #include <linux/dma-direction.h>
+<<<<<<< HEAD
 #include <linux/dma-fence.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/spinlock.h>
 #include <linux/types.h>
 
@@ -222,9 +225,13 @@ u32 host1x_syncpt_base_id(struct host1x_syncpt_base *base);
 void host1x_syncpt_release_vblank_reservation(struct host1x_client *client,
 					      u32 syncpt_id);
 
+<<<<<<< HEAD
 struct dma_fence *host1x_fence_create(struct host1x_syncpt *sp, u32 threshold,
 				      bool timeout);
 void host1x_fence_cancel(struct dma_fence *fence);
+=======
+struct dma_fence *host1x_fence_create(struct host1x_syncpt *sp, u32 threshold);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * host1x channel
@@ -291,9 +298,14 @@ struct host1x_job {
 	u32 syncpt_incrs;
 	u32 syncpt_end;
 
+<<<<<<< HEAD
 	/* Completion fence for job tracking */
 	struct dma_fence *fence;
 	struct dma_fence_cb fence_cb;
+=======
+	/* Completion waiter ref */
+	void *waiter;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Maximum time to wait for this job */
 	unsigned int timeout;
@@ -479,7 +491,10 @@ void host1x_memory_context_get(struct host1x_memory_context *cd);
 void host1x_memory_context_put(struct host1x_memory_context *cd);
 #else
 static inline struct host1x_memory_context *host1x_memory_context_alloc(struct host1x *host1x,
+<<<<<<< HEAD
 									struct device *dev,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 									struct pid *pid)
 {
 	return NULL;

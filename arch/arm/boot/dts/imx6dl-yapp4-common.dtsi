@@ -274,7 +274,11 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
+<<<<<<< HEAD
 		led@0 {
+=======
+		chan@0 {
+>>>>>>> b7ba80a49124 (Commit)
 			chan-name = "R";
 			led-cur = /bits/ 8 <0x20>;
 			max-cur = /bits/ 8 <0x60>;
@@ -282,7 +286,11 @@
 			color = <LED_COLOR_ID_RED>;
 		};
 
+<<<<<<< HEAD
 		led@1 {
+=======
+		chan@1 {
+>>>>>>> b7ba80a49124 (Commit)
 			chan-name = "G";
 			led-cur = /bits/ 8 <0x20>;
 			max-cur = /bits/ 8 <0x60>;
@@ -290,7 +298,11 @@
 			color = <LED_COLOR_ID_GREEN>;
 		};
 
+<<<<<<< HEAD
 		led@2 {
+=======
+		chan@2 {
+>>>>>>> b7ba80a49124 (Commit)
 			chan-name = "B";
 			led-cur = /bits/ 8 <0x20>;
 			max-cur = /bits/ 8 <0x60>;
@@ -313,7 +325,11 @@
 		interrupt-parent = <&gpio4>;
 		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
 		attb-gpio = <&gpio4 5 GPIO_ACTIVE_HIGH>;
+<<<<<<< HEAD
 		reset-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+=======
+		reset-gpio = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+>>>>>>> b7ba80a49124 (Commit)
 		touchscreen-size-x = <800>;
 		touchscreen-size-y = <480>;
 		status = "disabled";

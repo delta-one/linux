@@ -102,6 +102,7 @@ static const struct abm_parameters abm_settings_config1[abm_defines_max_level] =
 	{0x82,   0x4d,    0x20,       0x00,     0x00,        0xff,     0xb3, 0x70,     0x70,     0xcccc,  0xcccc},
 };
 
+<<<<<<< HEAD
 static const struct abm_parameters abm_settings_config2[abm_defines_max_level] = {
 //  min_red  max_red  bright_pos  dark_pos  bright_gain  contrast  dev   min_knee  max_knee  blRed    blStart
 	{0xf0,   0xbf,    0x20,       0x00,     0x88,        0x99,     0xb3, 0x40,     0xe0,    0x0000,  0xcccc},
@@ -114,6 +115,11 @@ static const struct abm_parameters * const abm_settings[] = {
 	abm_settings_config0,
 	abm_settings_config1,
 	abm_settings_config2,
+=======
+static const struct abm_parameters * const abm_settings[] = {
+	abm_settings_config0,
+	abm_settings_config1,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define NUM_AMBI_LEVEL    5
@@ -678,8 +684,18 @@ bool dmub_init_abm_config(struct resource_pool *res_pool,
 	bool result = false;
 	uint32_t i, j = 0;
 
+<<<<<<< HEAD
 	if (res_pool->abm == NULL && res_pool->multiple_abms[inst] == NULL)
 		return false;
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+	if (res_pool->abm == NULL && res_pool->multiple_abms[inst] == NULL)
+		return false;
+#else
+	if (res_pool->abm == NULL)
+		return false;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(&ram_table, 0, sizeof(ram_table));
 	memset(&config, 0, sizeof(config));
@@ -732,10 +748,18 @@ bool dmub_init_abm_config(struct resource_pool *res_pool,
 
 	config.min_abm_backlight = ram_table.min_abm_backlight;
 
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+>>>>>>> b7ba80a49124 (Commit)
 	if (res_pool->multiple_abms[inst]) {
 		result = res_pool->multiple_abms[inst]->funcs->init_abm_config(
 			res_pool->multiple_abms[inst], (char *)(&config), sizeof(struct abm_config_table), inst);
 	} else
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 		result = res_pool->abm->funcs->init_abm_config(
 			res_pool->abm, (char *)(&config), sizeof(struct abm_config_table), 0);
 
@@ -909,6 +933,7 @@ bool mod_power_only_edp(const struct dc_state *context, const struct dc_stream_s
 {
 	return context && context->stream_count == 1 && dc_is_embedded_signal(stream->signal);
 }
+<<<<<<< HEAD
 
 bool psr_su_set_dsc_slice_height(struct dc *dc, struct dc_link *link,
 			      struct dc_stream_state *stream,
@@ -940,3 +965,5 @@ bool psr_su_set_dsc_slice_height(struct dc *dc, struct dc_link *link,
 
 	return true;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

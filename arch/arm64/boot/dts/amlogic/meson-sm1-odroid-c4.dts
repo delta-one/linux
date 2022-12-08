@@ -26,6 +26,7 @@
 	sound {
 		model = "ODROID-C4";
 	};
+<<<<<<< HEAD
 
 	/* USB hub supports both USB 2.0 and USB 3.0 root hub */
 	usb-hub {
@@ -50,6 +51,22 @@
 			reset-gpios = <&gpio GPIOH_4 GPIO_ACTIVE_LOW>;
 			vdd-supply = <&vcc_5v>;
 		};
+=======
+};
+
+&gpio {
+	/*
+	 * WARNING: The USB Hub on the Odroid-C4 needs a reset signal
+	 * to be turned high in order to be detected by the USB Controller
+	 * This signal should be handled by a USB specific power sequence
+	 * in order to reset the Hub when USB bus is powered down.
+	 */
+	hog-0 {
+		gpio-hog;
+		gpios = <GPIOH_4 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "usb-hub-reset";
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 

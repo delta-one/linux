@@ -76,6 +76,12 @@ static cpumask_t xmon_batch_cpus = CPU_MASK_NONE;
 #define xmon_owner 0
 #endif /* CONFIG_SMP */
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PPC_PSERIES
+static int set_indicator_token = RTAS_UNKNOWN_SERVICE;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned long in_xmon __read_mostly = 0;
 static int xmon_on = IS_ENABLED(CONFIG_XMON_DEFAULT);
 static bool xmon_is_ro = IS_ENABLED(CONFIG_XMON_DEFAULT_RO_MODE);
@@ -192,7 +198,11 @@ static int do_spu_cmd(void);
 #ifdef CONFIG_44x
 static void dump_tlb_44x(void);
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 static void dump_tlb_book3e(void);
 #endif
 
@@ -285,11 +295,19 @@ Commands:\n\
   t	print backtrace\n\
   x	exit monitor and recover\n\
   X	exit monitor and don't recover\n"
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_BOOK3S_64)
 "  u	dump segment table or SLB\n"
 #elif defined(CONFIG_PPC_BOOK3S_32)
 "  u	dump segment registers\n"
 #elif defined(CONFIG_44x) || defined(CONFIG_PPC_BOOK3E_64)
+=======
+#if defined(CONFIG_PPC64) && !defined(CONFIG_PPC_BOOK3E)
+"  u	dump segment table or SLB\n"
+#elif defined(CONFIG_PPC_BOOK3S_32)
+"  u	dump segment registers\n"
+#elif defined(CONFIG_44x) || defined(CONFIG_PPC_BOOK3E)
+>>>>>>> b7ba80a49124 (Commit)
 "  u	dump TLB\n"
 #endif
 "  U	show uptime information\n"
@@ -395,7 +413,10 @@ static inline void disable_surveillance(void)
 #ifdef CONFIG_PPC_PSERIES
 	/* Since this can't be a module, args should end up below 4GB. */
 	static struct rtas_args args;
+<<<<<<< HEAD
 	const s32 token = rtas_function_token(RTAS_FN_SET_INDICATOR);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * At this point we have got all the cpus we can into
@@ -404,10 +425,17 @@ static inline void disable_surveillance(void)
 	 * If we did try to take rtas.lock there would be a
 	 * real possibility of deadlock.
 	 */
+<<<<<<< HEAD
 	if (token == RTAS_UNKNOWN_SERVICE)
 		return;
 
 	rtas_call_unlocked(&args, token, 3, 1, NULL,
+=======
+	if (set_indicator_token == RTAS_UNKNOWN_SERVICE)
+		return;
+
+	rtas_call_unlocked(&args, set_indicator_token, 3, 1, NULL,
+>>>>>>> b7ba80a49124 (Commit)
 			   SURVEILLANCE_TOKEN, 0, 0);
 
 #endif /* CONFIG_PPC_PSERIES */
@@ -1164,7 +1192,11 @@ cmds(struct pt_regs *excp)
 		case 'u':
 			dump_tlb_44x();
 			break;
+<<<<<<< HEAD
 #elif defined(CONFIG_PPC_BOOK3E_64)
+=======
+#elif defined(CONFIG_PPC_BOOK3E)
+>>>>>>> b7ba80a49124 (Commit)
 		case 'u':
 			dump_tlb_book3e();
 			break;
@@ -1275,7 +1307,11 @@ static int xmon_batch_next_cpu(void)
 	while (!cpumask_empty(&xmon_batch_cpus)) {
 		cpu = cpumask_next_wrap(smp_processor_id(), &xmon_batch_cpus,
 					xmon_batch_start_cpu, true);
+<<<<<<< HEAD
 		if (cpu >= nr_cpu_ids)
+=======
+		if (cpu == nr_cpumask_bits)
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		if (xmon_batch_start_cpu == -1)
 			xmon_batch_start_cpu = cpu;
@@ -1523,9 +1559,15 @@ bpt_cmds(void)
 	cmd = inchar();
 
 	switch (cmd) {
+<<<<<<< HEAD
 	case 'd': {	/* bd - hardware data breakpoint */
 		static const char badaddr[] = "Only kernel addresses are permitted for breakpoints\n";
 		int mode;
+=======
+	static const char badaddr[] = "Only kernel addresses are permitted for breakpoints\n";
+	int mode;
+	case 'd':	/* bd - hardware data breakpoint */
+>>>>>>> b7ba80a49124 (Commit)
 		if (xmon_is_ro) {
 			printf(xmon_ro_msg);
 			break;
@@ -1558,7 +1600,10 @@ bpt_cmds(void)
 
 		force_enable_xmon();
 		break;
+<<<<<<< HEAD
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	case 'i':	/* bi - hardware instr breakpoint */
 		if (xmon_is_ro) {
@@ -1719,6 +1764,10 @@ static void get_function_bounds(unsigned long pc, unsigned long *startp,
 }
 
 #define LRSAVE_OFFSET		(STACK_FRAME_LR_SAVE * sizeof(unsigned long))
+<<<<<<< HEAD
+=======
+#define MARKER_OFFSET		(STACK_FRAME_MARKER * sizeof(unsigned long))
+>>>>>>> b7ba80a49124 (Commit)
 
 static void xmon_show_stack(unsigned long sp, unsigned long lr,
 			    unsigned long pc)
@@ -1779,6 +1828,7 @@ static void xmon_show_stack(unsigned long sp, unsigned long lr,
 			xmon_print_symbol(ip, " ", "\n");
 		}
 
+<<<<<<< HEAD
 		/* Look for "regs" marker to see if this is
 		   an exception frame. */
 		if (mread(sp + STACK_INT_FRAME_MARKER, &marker, sizeof(unsigned long))
@@ -1786,6 +1836,16 @@ static void xmon_show_stack(unsigned long sp, unsigned long lr,
 			if (mread(sp + STACK_INT_FRAME_REGS, &regs, sizeof(regs)) != sizeof(regs)) {
 				printf("Couldn't read registers at %lx\n",
 				       sp + STACK_INT_FRAME_REGS);
+=======
+		/* Look for "regshere" marker to see if this is
+		   an exception frame. */
+		if (mread(sp + MARKER_OFFSET, &marker, sizeof(unsigned long))
+		    && marker == STACK_FRAME_REGS_MARKER) {
+			if (mread(sp + STACK_FRAME_OVERHEAD, &regs, sizeof(regs))
+			    != sizeof(regs)) {
+				printf("Couldn't read registers at %lx\n",
+				       sp + STACK_FRAME_OVERHEAD);
+>>>>>>> b7ba80a49124 (Commit)
 				break;
 			}
 			printf("--- Exception: %lx %s at ", regs.trap,
@@ -2683,7 +2743,11 @@ static void dump_one_paca(int cpu)
 	DUMP(p, rfi_flush_fallback_area, "%-*px");
 #endif
 	DUMP(p, dscr_default, "%#-*llx");
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	DUMP(p, pgd, "%-*px");
 	DUMP(p, kernel_pgd, "%-*px");
 	DUMP(p, tcd_ptr, "%-*px");
@@ -2698,7 +2762,11 @@ static void dump_one_paca(int cpu)
 	DUMP(p, canary, "%#-*lx");
 #endif
 	DUMP(p, saved_r1, "%#-*llx");
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	DUMP(p, trap_save, "%#-*x");
 #endif
 	DUMP(p, irq_soft_mask, "%#-*x");
@@ -3820,7 +3888,11 @@ static void dump_tlb_44x(void)
 }
 #endif /* CONFIG_44x */
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 static void dump_tlb_book3e(void)
 {
 	u32 mmucfg, pidmask, lpidmask;
@@ -3962,7 +4034,11 @@ static void dump_tlb_book3e(void)
 		}
 	}
 }
+<<<<<<< HEAD
 #endif /* CONFIG_PPC_BOOK3E_64 */
+=======
+#endif /* CONFIG_PPC_BOOK3E */
+>>>>>>> b7ba80a49124 (Commit)
 
 static void xmon_init(int enable)
 {
@@ -3974,6 +4050,17 @@ static void xmon_init(int enable)
 		__debugger_iabr_match = xmon_iabr_match;
 		__debugger_break_match = xmon_break_match;
 		__debugger_fault_handler = xmon_fault_handler;
+<<<<<<< HEAD
+=======
+
+#ifdef CONFIG_PPC_PSERIES
+		/*
+		 * Get the token here to avoid trying to get a lock
+		 * during the crash, causing a deadlock.
+		 */
+		set_indicator_token = rtas_token("set-indicator");
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		__debugger = NULL;
 		__debugger_ipi = NULL;

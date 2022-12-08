@@ -12,6 +12,7 @@
 #define asmlinkage CPP_ASMLINKAGE __attribute__((regparm(0)))
 #endif /* CONFIG_X86_32 */
 
+<<<<<<< HEAD
 #define __ALIGN		.balign CONFIG_FUNCTION_ALIGNMENT, 0x90;
 #define __ALIGN_STR	__stringify(__ALIGN)
 
@@ -32,6 +33,15 @@
 
 #ifdef __ASSEMBLY__
 
+=======
+#ifdef __ASSEMBLY__
+
+#if defined(CONFIG_X86_64) || defined(CONFIG_X86_ALIGNMENT_16)
+#define __ALIGN		.p2align 4, 0x90
+#define __ALIGN_STR	__stringify(__ALIGN)
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #if defined(CONFIG_RETHUNK) && !defined(__DISABLE_EXPORTS) && !defined(BUILD_VDSO)
 #define RET	jmp __x86_return_thunk
 #else /* CONFIG_RETPOLINE */
@@ -56,6 +66,7 @@
 
 #endif /* __ASSEMBLY__ */
 
+<<<<<<< HEAD
 /*
  * Depending on -fpatchable-function-entry=N,N usage (CONFIG_CALL_PADDING) the
  * CFI symbol layout changes.
@@ -105,6 +116,11 @@
 /* SYM_FUNC_START -- use for global functions */
 #define SYM_FUNC_START(name)				\
 	SYM_START(name, SYM_L_GLOBAL, SYM_F_ALIGN)	\
+=======
+/* SYM_FUNC_START -- use for global functions */
+#define SYM_FUNC_START(name)				\
+	SYM_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)	\
+>>>>>>> b7ba80a49124 (Commit)
 	ENDBR
 
 /* SYM_FUNC_START_NOALIGN -- use for global functions, w/o alignment */
@@ -114,7 +130,11 @@
 
 /* SYM_FUNC_START_LOCAL -- use for local functions */
 #define SYM_FUNC_START_LOCAL(name)			\
+<<<<<<< HEAD
 	SYM_START(name, SYM_L_LOCAL, SYM_F_ALIGN)	\
+=======
+	SYM_START(name, SYM_L_LOCAL, SYM_A_ALIGN)	\
+>>>>>>> b7ba80a49124 (Commit)
 	ENDBR
 
 /* SYM_FUNC_START_LOCAL_NOALIGN -- use for local functions, w/o alignment */
@@ -124,7 +144,11 @@
 
 /* SYM_FUNC_START_WEAK -- use for weak functions */
 #define SYM_FUNC_START_WEAK(name)			\
+<<<<<<< HEAD
 	SYM_START(name, SYM_L_WEAK, SYM_F_ALIGN)	\
+=======
+	SYM_START(name, SYM_L_WEAK, SYM_A_ALIGN)	\
+>>>>>>> b7ba80a49124 (Commit)
 	ENDBR
 
 /* SYM_FUNC_START_WEAK_NOALIGN -- use for weak functions, w/o alignment */

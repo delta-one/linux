@@ -12,6 +12,10 @@
 #define    TBL_ID_FUNC_CFG_SM_INST                      1
 
 #define HINIC_FUNCTION_CONFIGURE_TABLE_SIZE             64
+<<<<<<< HEAD
+=======
+#define HINIC_FUNCTION_CONFIGURE_TABLE			1
+>>>>>>> b7ba80a49124 (Commit)
 
 struct hinic_cmd_lt_rd {
 	u8	status;

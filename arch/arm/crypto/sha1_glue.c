@@ -21,29 +21,51 @@
 
 #include "sha1.h"
 
+<<<<<<< HEAD
 asmlinkage void sha1_block_data_order(struct sha1_state *digest,
 		const u8 *data, int rounds);
+=======
+asmlinkage void sha1_block_data_order(u32 *digest,
+		const unsigned char *data, unsigned int rounds);
+>>>>>>> b7ba80a49124 (Commit)
 
 int sha1_update_arm(struct shash_desc *desc, const u8 *data,
 		    unsigned int len)
 {
+<<<<<<< HEAD
 	/* make sure signature matches sha1_block_fn() */
 	BUILD_BUG_ON(offsetof(struct sha1_state, state) != 0);
 
 	return sha1_base_do_update(desc, data, len, sha1_block_data_order);
+=======
+	/* make sure casting to sha1_block_fn() is safe */
+	BUILD_BUG_ON(offsetof(struct sha1_state, state) != 0);
+
+	return sha1_base_do_update(desc, data, len,
+				   (sha1_block_fn *)sha1_block_data_order);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(sha1_update_arm);
 
 static int sha1_final(struct shash_desc *desc, u8 *out)
 {
+<<<<<<< HEAD
 	sha1_base_do_finalize(desc, sha1_block_data_order);
+=======
+	sha1_base_do_finalize(desc, (sha1_block_fn *)sha1_block_data_order);
+>>>>>>> b7ba80a49124 (Commit)
 	return sha1_base_finish(desc, out);
 }
 
 int sha1_finup_arm(struct shash_desc *desc, const u8 *data,
 		   unsigned int len, u8 *out)
 {
+<<<<<<< HEAD
 	sha1_base_do_update(desc, data, len, sha1_block_data_order);
+=======
+	sha1_base_do_update(desc, data, len,
+			    (sha1_block_fn *)sha1_block_data_order);
+>>>>>>> b7ba80a49124 (Commit)
 	return sha1_final(desc, out);
 }
 EXPORT_SYMBOL_GPL(sha1_finup_arm);

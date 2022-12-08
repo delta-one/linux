@@ -62,7 +62,11 @@ gt215_devinit_pll_set(struct nvkm_devinit *init, u32 type, u32 freq)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void
+=======
+static u64
+>>>>>>> b7ba80a49124 (Commit)
 gt215_devinit_disable(struct nvkm_devinit *init)
 {
 	struct nvkm_device *device = init->subdev.device;
@@ -80,6 +84,11 @@ gt215_devinit_disable(struct nvkm_devinit *init)
 		nvkm_subdev_disable(device, NVKM_ENGINE_MSVLD, 0);
 	if (!(r00154c & 0x00000200))
 		nvkm_subdev_disable(device, NVKM_ENGINE_CE, 0);
+<<<<<<< HEAD
+=======
+
+	return 0ULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static u32

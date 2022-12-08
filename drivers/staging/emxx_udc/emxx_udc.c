@@ -1004,7 +1004,14 @@ static int _nbu2ss_in_dma(struct nbu2ss_udc *udc, struct nbu2ss_ep *ep,
 	/* MAX Packet Size */
 	mpkt = _nbu2ss_readl(&preg->EP_REGS[num].EP_PCKT_ADRS) & EPN_MPKT;
 
+<<<<<<< HEAD
 	i_write_length = min(DMA_MAX_COUNT * mpkt, length);
+=======
+	if ((DMA_MAX_COUNT * mpkt) < length)
+		i_write_length = DMA_MAX_COUNT * mpkt;
+	else
+		i_write_length = length;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*------------------------------------------------------------*/
 	/* Number of transmission packets */
@@ -2587,6 +2594,7 @@ static int nbu2ss_ep_queue(struct usb_ep *_ep,
 		req->unaligned = false;
 
 	if (req->unaligned) {
+<<<<<<< HEAD
 		if (!ep->virt_buf) {
 			ep->virt_buf = dma_alloc_coherent(udc->dev, PAGE_SIZE,
 							  &ep->phys_buf,
@@ -2596,6 +2604,12 @@ static int nbu2ss_ep_queue(struct usb_ep *_ep,
 				return -ENOMEM;
 			}
 		}
+=======
+		if (!ep->virt_buf)
+			ep->virt_buf = dma_alloc_coherent(udc->dev, PAGE_SIZE,
+							  &ep->phys_buf,
+							  GFP_ATOMIC | GFP_DMA);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ep->epnum > 0)  {
 			if (ep->direct == USB_DIR_IN)
 				memcpy(ep->virt_buf, req->req.buf,

@@ -16,8 +16,11 @@
 
 #include "proc-macros.S"
 
+<<<<<<< HEAD
 .arch armv7-a
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_CPU_ICACHE_MISMATCH_WORKAROUND
 .globl icache_size
 	.data

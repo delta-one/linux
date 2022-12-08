@@ -688,6 +688,7 @@ int btf__align_of(const struct btf *btf, __u32 id)
 			if (align <= 0)
 				return libbpf_err(align);
 			max_align = max(max_align, align);
+<<<<<<< HEAD
 
 			/* if field offset isn't aligned according to field
 			 * type's alignment, then struct must be packed
@@ -703,6 +704,10 @@ int btf__align_of(const struct btf *btf, __u32 id)
 		if ((t->size % max_align) != 0)
 			return 1;
 
+=======
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		return max_align;
 	}
 	default:
@@ -1000,9 +1005,16 @@ static struct btf *btf_parse_elf(const char *path, struct btf *base_btf,
 		}
 	}
 
+<<<<<<< HEAD
 	if (!btf_data) {
 		pr_warn("failed to find '%s' ELF section in %s\n", BTF_ELF_SEC, path);
 		err = -ENODATA;
+=======
+	err = 0;
+
+	if (!btf_data) {
+		err = -ENOENT;
+>>>>>>> b7ba80a49124 (Commit)
 		goto done;
 	}
 	btf = btf_new(btf_data->d_buf, btf_data->d_size, base_btf);
@@ -1348,9 +1360,15 @@ struct btf *btf_get_from_fd(int btf_fd, struct btf *base_btf)
 	void *ptr;
 	int err;
 
+<<<<<<< HEAD
 	/* we won't know btf_size until we call bpf_btf_get_info_by_fd(). so
 	 * let's start with a sane default - 4KiB here - and resize it only if
 	 * bpf_btf_get_info_by_fd() needs a bigger buffer.
+=======
+	/* we won't know btf_size until we call bpf_obj_get_info_by_fd(). so
+	 * let's start with a sane default - 4KiB here - and resize it only if
+	 * bpf_obj_get_info_by_fd() needs a bigger buffer.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	last_size = 4096;
 	ptr = malloc(last_size);
@@ -1360,7 +1378,11 @@ struct btf *btf_get_from_fd(int btf_fd, struct btf *base_btf)
 	memset(&btf_info, 0, sizeof(btf_info));
 	btf_info.btf = ptr_to_u64(ptr);
 	btf_info.btf_size = last_size;
+<<<<<<< HEAD
 	err = bpf_btf_get_info_by_fd(btf_fd, &btf_info, &len);
+=======
+	err = bpf_obj_get_info_by_fd(btf_fd, &btf_info, &len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!err && btf_info.btf_size > last_size) {
 		void *temp_ptr;
@@ -1378,7 +1400,11 @@ struct btf *btf_get_from_fd(int btf_fd, struct btf *base_btf)
 		btf_info.btf = ptr_to_u64(ptr);
 		btf_info.btf_size = last_size;
 
+<<<<<<< HEAD
 		err = bpf_btf_get_info_by_fd(btf_fd, &btf_info, &len);
+=======
+		err = bpf_obj_get_info_by_fd(btf_fd, &btf_info, &len);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (err || btf_info.btf_size > last_size) {
@@ -1571,15 +1597,24 @@ struct btf_pipe {
 static int btf_rewrite_str(__u32 *str_off, void *ctx)
 {
 	struct btf_pipe *p = ctx;
+<<<<<<< HEAD
 	long mapped_off;
+=======
+	void *mapped_off;
+>>>>>>> b7ba80a49124 (Commit)
 	int off, err;
 
 	if (!*str_off) /* nothing to do for empty strings */
 		return 0;
 
 	if (p->str_off_map &&
+<<<<<<< HEAD
 	    hashmap__find(p->str_off_map, *str_off, &mapped_off)) {
 		*str_off = mapped_off;
+=======
+	    hashmap__find(p->str_off_map, (void *)(long)*str_off, &mapped_off)) {
+		*str_off = (__u32)(long)mapped_off;
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
@@ -1591,7 +1626,11 @@ static int btf_rewrite_str(__u32 *str_off, void *ctx)
 	 * performing expensive string comparisons.
 	 */
 	if (p->str_off_map) {
+<<<<<<< HEAD
 		err = hashmap__append(p->str_off_map, *str_off, off);
+=======
+		err = hashmap__append(p->str_off_map, (void *)(long)*str_off, (void *)(long)off);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			return err;
 	}
@@ -1642,8 +1681,13 @@ static int btf_rewrite_type_ids(__u32 *type_id, void *ctx)
 	return 0;
 }
 
+<<<<<<< HEAD
 static size_t btf_dedup_identity_hash_fn(long key, void *ctx);
 static bool btf_dedup_equal_fn(long k1, long k2, void *ctx);
+=======
+static size_t btf_dedup_identity_hash_fn(const void *key, void *ctx);
+static bool btf_dedup_equal_fn(const void *k1, const void *k2, void *ctx);
+>>>>>>> b7ba80a49124 (Commit)
 
 int btf__add_btf(struct btf *btf, const struct btf *src_btf)
 {
@@ -1736,8 +1780,12 @@ err_out:
 	memset(btf->strs_data + old_strs_len, 0, btf->hdr->str_len - old_strs_len);
 
 	/* and now restore original strings section size; types data size
+<<<<<<< HEAD
 	 * wasn't modified, so doesn't need restoring, see big comment above
 	 */
+=======
+	 * wasn't modified, so doesn't need restoring, see big comment above */
+>>>>>>> b7ba80a49124 (Commit)
 	btf->hdr->str_len = old_strs_len;
 
 	hashmap__free(p.str_off_map);
@@ -2342,7 +2390,11 @@ int btf__add_restrict(struct btf *btf, int ref_type_id)
  */
 int btf__add_type_tag(struct btf *btf, const char *value, int ref_type_id)
 {
+<<<<<<< HEAD
 	if (!value || !value[0])
+=======
+	if (!value|| !value[0])
+>>>>>>> b7ba80a49124 (Commit)
 		return libbpf_err(-EINVAL);
 
 	return btf_add_ref_kind(btf, BTF_KIND_TYPE_TAG, value, ref_type_id);
@@ -2894,7 +2946,10 @@ static int btf_dedup_strings(struct btf_dedup *d);
 static int btf_dedup_prim_types(struct btf_dedup *d);
 static int btf_dedup_struct_types(struct btf_dedup *d);
 static int btf_dedup_ref_types(struct btf_dedup *d);
+<<<<<<< HEAD
 static int btf_dedup_resolve_fwds(struct btf_dedup *d);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int btf_dedup_compact_types(struct btf_dedup *d);
 static int btf_dedup_remap_types(struct btf_dedup *d);
 
@@ -3002,16 +3057,27 @@ static int btf_dedup_remap_types(struct btf_dedup *d);
  * Algorithm summary
  * =================
  *
+<<<<<<< HEAD
  * Algorithm completes its work in 7 separate passes:
+=======
+ * Algorithm completes its work in 6 separate passes:
+>>>>>>> b7ba80a49124 (Commit)
  *
  * 1. Strings deduplication.
  * 2. Primitive types deduplication (int, enum, fwd).
  * 3. Struct/union types deduplication.
+<<<<<<< HEAD
  * 4. Resolve unambiguous forward declarations.
  * 5. Reference types deduplication (pointers, typedefs, arrays, funcs, func
  *    protos, and const/volatile/restrict modifiers).
  * 6. Types compaction.
  * 7. Types remapping.
+=======
+ * 4. Reference types deduplication (pointers, typedefs, arrays, funcs, func
+ *    protos, and const/volatile/restrict modifiers).
+ * 5. Types compaction.
+ * 6. Types remapping.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Algorithm determines canonical type descriptor, which is a single
  * representative type for each truly unique type. This canonical type is the
@@ -3075,11 +3141,14 @@ int btf__dedup(struct btf *btf, const struct btf_dedup_opts *opts)
 		pr_debug("btf_dedup_struct_types failed:%d\n", err);
 		goto done;
 	}
+<<<<<<< HEAD
 	err = btf_dedup_resolve_fwds(d);
 	if (err < 0) {
 		pr_debug("btf_dedup_resolve_fwds failed:%d\n", err);
 		goto done;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = btf_dedup_ref_types(d);
 	if (err < 0) {
 		pr_debug("btf_dedup_ref_types failed:%d\n", err);
@@ -3146,11 +3215,20 @@ static long hash_combine(long h, long value)
 }
 
 #define for_each_dedup_cand(d, node, hash) \
+<<<<<<< HEAD
 	hashmap__for_each_key_entry(d->dedup_table, node, hash)
 
 static int btf_dedup_table_add(struct btf_dedup *d, long hash, __u32 type_id)
 {
 	return hashmap__append(d->dedup_table, hash, type_id);
+=======
+	hashmap__for_each_key_entry(d->dedup_table, node, (void *)hash)
+
+static int btf_dedup_table_add(struct btf_dedup *d, long hash, __u32 type_id)
+{
+	return hashmap__append(d->dedup_table,
+			       (void *)hash, (void *)(long)type_id);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int btf_dedup_hypot_map_add(struct btf_dedup *d,
@@ -3197,17 +3275,30 @@ static void btf_dedup_free(struct btf_dedup *d)
 	free(d);
 }
 
+<<<<<<< HEAD
 static size_t btf_dedup_identity_hash_fn(long key, void *ctx)
 {
 	return key;
 }
 
 static size_t btf_dedup_collision_hash_fn(long key, void *ctx)
+=======
+static size_t btf_dedup_identity_hash_fn(const void *key, void *ctx)
+{
+	return (size_t)key;
+}
+
+static size_t btf_dedup_collision_hash_fn(const void *key, void *ctx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool btf_dedup_equal_fn(long k1, long k2, void *ctx)
+=======
+static bool btf_dedup_equal_fn(const void *k1, const void *k2, void *ctx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return k1 == k2;
 }
@@ -3423,17 +3514,35 @@ static long btf_hash_enum(struct btf_type *t)
 {
 	long h;
 
+<<<<<<< HEAD
 	/* don't hash vlen, enum members and size to support enum fwd resolving */
 	h = hash_combine(0, t->name_off);
 	return h;
 }
 
 static bool btf_equal_enum_members(struct btf_type *t1, struct btf_type *t2)
+=======
+	/* don't hash vlen and enum members to support enum fwd resolving */
+	h = hash_combine(0, t->name_off);
+	h = hash_combine(h, t->info & ~0xffff);
+	h = hash_combine(h, t->size);
+	return h;
+}
+
+/* Check structural equality of two ENUMs. */
+static bool btf_equal_enum(struct btf_type *t1, struct btf_type *t2)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct btf_enum *m1, *m2;
 	__u16 vlen;
 	int i;
 
+<<<<<<< HEAD
+=======
+	if (!btf_equal_common(t1, t2))
+		return false;
+
+>>>>>>> b7ba80a49124 (Commit)
 	vlen = btf_vlen(t1);
 	m1 = btf_enum(t1);
 	m2 = btf_enum(t2);
@@ -3446,12 +3555,22 @@ static bool btf_equal_enum_members(struct btf_type *t1, struct btf_type *t2)
 	return true;
 }
 
+<<<<<<< HEAD
 static bool btf_equal_enum64_members(struct btf_type *t1, struct btf_type *t2)
+=======
+static bool btf_equal_enum64(struct btf_type *t1, struct btf_type *t2)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct btf_enum64 *m1, *m2;
 	__u16 vlen;
 	int i;
 
+<<<<<<< HEAD
+=======
+	if (!btf_equal_common(t1, t2))
+		return false;
+
+>>>>>>> b7ba80a49124 (Commit)
 	vlen = btf_vlen(t1);
 	m1 = btf_enum64(t1);
 	m2 = btf_enum64(t2);
@@ -3465,6 +3584,7 @@ static bool btf_equal_enum64_members(struct btf_type *t1, struct btf_type *t2)
 	return true;
 }
 
+<<<<<<< HEAD
 /* Check structural equality of two ENUMs or ENUM64s. */
 static bool btf_equal_enum(struct btf_type *t1, struct btf_type *t2)
 {
@@ -3478,6 +3598,8 @@ static bool btf_equal_enum(struct btf_type *t1, struct btf_type *t2)
 		return btf_equal_enum64_members(t1, t2);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool btf_is_enum_fwd(struct btf_type *t)
 {
 	return btf_is_any_enum(t) && btf_vlen(t) == 0;
@@ -3487,6 +3609,7 @@ static bool btf_compat_enum(struct btf_type *t1, struct btf_type *t2)
 {
 	if (!btf_is_enum_fwd(t1) && !btf_is_enum_fwd(t2))
 		return btf_equal_enum(t1, t2);
+<<<<<<< HEAD
 	/* At this point either t1 or t2 or both are forward declarations, thus:
 	 * - skip comparing vlen because it is zero for forward declarations;
 	 * - skip comparing size to allow enum forward declarations
@@ -3495,6 +3618,23 @@ static bool btf_compat_enum(struct btf_type *t1, struct btf_type *t2)
 	 */
 	return t1->name_off == t2->name_off &&
 	       btf_is_any_enum(t1) && btf_is_any_enum(t2);
+=======
+	/* ignore vlen when comparing */
+	return t1->name_off == t2->name_off &&
+	       (t1->info & ~0xffff) == (t2->info & ~0xffff) &&
+	       t1->size == t2->size;
+}
+
+static bool btf_compat_enum64(struct btf_type *t1, struct btf_type *t2)
+{
+	if (!btf_is_enum_fwd(t1) && !btf_is_enum_fwd(t2))
+		return btf_equal_enum64(t1, t2);
+
+	/* ignore vlen when comparing */
+	return t1->name_off == t2->name_off &&
+	       (t1->info & ~0xffff) == (t2->info & ~0xffff) &&
+	       t1->size == t2->size;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -3769,7 +3909,11 @@ static int btf_dedup_prim_type(struct btf_dedup *d, __u32 type_id)
 	case BTF_KIND_INT:
 		h = btf_hash_int_decl_tag(t);
 		for_each_dedup_cand(d, hash_entry, h) {
+<<<<<<< HEAD
 			cand_id = hash_entry->value;
+=======
+			cand_id = (__u32)(long)hash_entry->value;
+>>>>>>> b7ba80a49124 (Commit)
 			cand = btf_type_by_id(d->btf, cand_id);
 			if (btf_equal_int_tag(t, cand)) {
 				new_id = cand_id;
@@ -3779,10 +3923,16 @@ static int btf_dedup_prim_type(struct btf_dedup *d, __u32 type_id)
 		break;
 
 	case BTF_KIND_ENUM:
+<<<<<<< HEAD
 	case BTF_KIND_ENUM64:
 		h = btf_hash_enum(t);
 		for_each_dedup_cand(d, hash_entry, h) {
 			cand_id = hash_entry->value;
+=======
+		h = btf_hash_enum(t);
+		for_each_dedup_cand(d, hash_entry, h) {
+			cand_id = (__u32)(long)hash_entry->value;
+>>>>>>> b7ba80a49124 (Commit)
 			cand = btf_type_by_id(d->btf, cand_id);
 			if (btf_equal_enum(t, cand)) {
 				new_id = cand_id;
@@ -3800,11 +3950,39 @@ static int btf_dedup_prim_type(struct btf_dedup *d, __u32 type_id)
 		}
 		break;
 
+<<<<<<< HEAD
+=======
+	case BTF_KIND_ENUM64:
+		h = btf_hash_enum(t);
+		for_each_dedup_cand(d, hash_entry, h) {
+			cand_id = (__u32)(long)hash_entry->value;
+			cand = btf_type_by_id(d->btf, cand_id);
+			if (btf_equal_enum64(t, cand)) {
+				new_id = cand_id;
+				break;
+			}
+			if (btf_compat_enum64(t, cand)) {
+				if (btf_is_enum_fwd(t)) {
+					/* resolve fwd to full enum */
+					new_id = cand_id;
+					break;
+				}
+				/* resolve canonical enum fwd to full enum */
+				d->map[cand_id] = type_id;
+			}
+		}
+		break;
+
+>>>>>>> b7ba80a49124 (Commit)
 	case BTF_KIND_FWD:
 	case BTF_KIND_FLOAT:
 		h = btf_hash_common(t);
 		for_each_dedup_cand(d, hash_entry, h) {
+<<<<<<< HEAD
 			cand_id = hash_entry->value;
+=======
+			cand_id = (__u32)(long)hash_entry->value;
+>>>>>>> b7ba80a49124 (Commit)
 			cand = btf_type_by_id(d->btf, cand_id);
 			if (btf_equal_common(t, cand)) {
 				new_id = cand_id;
@@ -3883,14 +4061,22 @@ static inline __u16 btf_fwd_kind(struct btf_type *t)
 }
 
 /* Check if given two types are identical ARRAY definitions */
+<<<<<<< HEAD
 static bool btf_dedup_identical_arrays(struct btf_dedup *d, __u32 id1, __u32 id2)
+=======
+static int btf_dedup_identical_arrays(struct btf_dedup *d, __u32 id1, __u32 id2)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct btf_type *t1, *t2;
 
 	t1 = btf_type_by_id(d->btf, id1);
 	t2 = btf_type_by_id(d->btf, id2);
 	if (!btf_is_array(t1) || !btf_is_array(t2))
+<<<<<<< HEAD
 		return false;
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return btf_equal_array(t1, t2);
 }
@@ -3914,9 +4100,13 @@ static bool btf_dedup_identical_structs(struct btf_dedup *d, __u32 id1, __u32 id
 	m1 = btf_members(t1);
 	m2 = btf_members(t2);
 	for (i = 0, n = btf_vlen(t1); i < n; i++, m1++, m2++) {
+<<<<<<< HEAD
 		if (m1->type != m2->type &&
 		    !btf_dedup_identical_arrays(d, m1->type, m2->type) &&
 		    !btf_dedup_identical_structs(d, m1->type, m2->type))
+=======
+		if (m1->type != m2->type)
+>>>>>>> b7ba80a49124 (Commit)
 			return false;
 	}
 	return true;
@@ -4095,9 +4285,17 @@ static int btf_dedup_is_equiv(struct btf_dedup *d, __u32 cand_id,
 		return btf_equal_int_tag(cand_type, canon_type);
 
 	case BTF_KIND_ENUM:
+<<<<<<< HEAD
 	case BTF_KIND_ENUM64:
 		return btf_compat_enum(cand_type, canon_type);
 
+=======
+		return btf_compat_enum(cand_type, canon_type);
+
+	case BTF_KIND_ENUM64:
+		return btf_compat_enum64(cand_type, canon_type);
+
+>>>>>>> b7ba80a49124 (Commit)
 	case BTF_KIND_FWD:
 	case BTF_KIND_FLOAT:
 		return btf_equal_common(cand_type, canon_type);
@@ -4307,7 +4505,11 @@ static int btf_dedup_struct_type(struct btf_dedup *d, __u32 type_id)
 
 	h = btf_hash_struct(t);
 	for_each_dedup_cand(d, hash_entry, h) {
+<<<<<<< HEAD
 		__u32 cand_id = hash_entry->value;
+=======
+		__u32 cand_id = (__u32)(long)hash_entry->value;
+>>>>>>> b7ba80a49124 (Commit)
 		int eq;
 
 		/*
@@ -4412,7 +4614,11 @@ static int btf_dedup_ref_type(struct btf_dedup *d, __u32 type_id)
 
 		h = btf_hash_common(t);
 		for_each_dedup_cand(d, hash_entry, h) {
+<<<<<<< HEAD
 			cand_id = hash_entry->value;
+=======
+			cand_id = (__u32)(long)hash_entry->value;
+>>>>>>> b7ba80a49124 (Commit)
 			cand = btf_type_by_id(d->btf, cand_id);
 			if (btf_equal_common(t, cand)) {
 				new_id = cand_id;
@@ -4429,7 +4635,11 @@ static int btf_dedup_ref_type(struct btf_dedup *d, __u32 type_id)
 
 		h = btf_hash_int_decl_tag(t);
 		for_each_dedup_cand(d, hash_entry, h) {
+<<<<<<< HEAD
 			cand_id = hash_entry->value;
+=======
+			cand_id = (__u32)(long)hash_entry->value;
+>>>>>>> b7ba80a49124 (Commit)
 			cand = btf_type_by_id(d->btf, cand_id);
 			if (btf_equal_int_tag(t, cand)) {
 				new_id = cand_id;
@@ -4453,7 +4663,11 @@ static int btf_dedup_ref_type(struct btf_dedup *d, __u32 type_id)
 
 		h = btf_hash_array(t);
 		for_each_dedup_cand(d, hash_entry, h) {
+<<<<<<< HEAD
 			cand_id = hash_entry->value;
+=======
+			cand_id = (__u32)(long)hash_entry->value;
+>>>>>>> b7ba80a49124 (Commit)
 			cand = btf_type_by_id(d->btf, cand_id);
 			if (btf_equal_array(t, cand)) {
 				new_id = cand_id;
@@ -4485,7 +4699,11 @@ static int btf_dedup_ref_type(struct btf_dedup *d, __u32 type_id)
 
 		h = btf_hash_fnproto(t);
 		for_each_dedup_cand(d, hash_entry, h) {
+<<<<<<< HEAD
 			cand_id = hash_entry->value;
+=======
+			cand_id = (__u32)(long)hash_entry->value;
+>>>>>>> b7ba80a49124 (Commit)
 			cand = btf_type_by_id(d->btf, cand_id);
 			if (btf_equal_fnproto(t, cand)) {
 				new_id = cand_id;
@@ -4522,6 +4740,7 @@ static int btf_dedup_ref_types(struct btf_dedup *d)
 }
 
 /*
+<<<<<<< HEAD
  * Collect a map from type names to type ids for all canonical structs
  * and unions. If the same name is shared by several canonical types
  * use a special value 0 to indicate this fact.
@@ -4650,6 +4869,8 @@ exit:
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Compact types.
  *
  * After we established for each type its corresponding canonical representative
@@ -4788,7 +5009,11 @@ struct btf *btf__load_vmlinux_btf(void)
 	for (i = 0; i < ARRAY_SIZE(locations); i++) {
 		snprintf(path, PATH_MAX, locations[i], buf.release);
 
+<<<<<<< HEAD
 		if (faccessat(AT_FDCWD, path, R_OK, AT_EACCESS))
+=======
+		if (access(path, R_OK))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		btf = btf__parse(path, NULL);

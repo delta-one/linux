@@ -230,11 +230,14 @@ static const struct arm64_cpu_capabilities arm64_repeat_tlbi_list[] = {
 		ERRATA_MIDR_RANGE(MIDR_QCOM_KRYO_4XX_GOLD, 0xc, 0xe, 0xf, 0xe),
 	},
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_ARM64_ERRATUM_2441007
 	{
 		ERRATA_MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
 	},
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_ARM64_ERRATUM_2441009
 	{
 		/* Cortex-A510 r0p0 -> r1p1. Fixed in r1p2 */
@@ -661,6 +664,7 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
 		CAP_MIDR_RANGE_LIST(trbe_write_out_of_range_cpus),
 	},
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_ARM64_ERRATUM_2645198
 	{
 		.desc = "ARM erratum 2645198",
@@ -668,6 +672,8 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
 		ERRATA_MIDR_ALL_VERSIONS(MIDR_CORTEX_A715)
 	},
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_ARM64_ERRATUM_2077057
 	{
 		.desc = "ARM erratum 2077057",

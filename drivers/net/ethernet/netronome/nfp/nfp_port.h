@@ -38,6 +38,7 @@ enum nfp_port_flags {
 	NFP_PORT_CHANGED = 0,
 };
 
+<<<<<<< HEAD
 enum {
 	NFP_SPEED_1G,
 	NFP_SPEED_10G,
@@ -48,6 +49,8 @@ enum {
 	NFP_SUP_SPEED_NUMBER
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct nfp_port - structure representing NFP port
  * @netdev:	backpointer to associated netdev
@@ -62,7 +65,10 @@ enum {
  * @eth_forced:	for %NFP_PORT_PHYS_PORT port is forced UP or DOWN, don't change
  * @eth_port:	for %NFP_PORT_PHYS_PORT translated ETH Table port entry
  * @eth_stats:	for %NFP_PORT_PHYS_PORT MAC stats if available
+<<<<<<< HEAD
  * @speed_bitmap:	for %NFP_PORT_PHYS_PORT supported speed bitmap
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @pf_id:	for %NFP_PORT_PF_PORT, %NFP_PORT_VF_PORT ID of the PCI PF (0-3)
  * @vf_id:	for %NFP_PORT_VF_PORT ID of the PCI VF within @pf_id
  * @pf_split:	for %NFP_PORT_PF_PORT %true if PCI PF has more than one vNIC
@@ -89,7 +95,10 @@ struct nfp_port {
 			bool eth_forced;
 			struct nfp_eth_table_port *eth_port;
 			u8 __iomem *eth_stats;
+<<<<<<< HEAD
 			DECLARE_BITMAP(speed_bitmap, NFP_SUP_SPEED_NUMBER);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 		/* NFP_PORT_PF_PORT, NFP_PORT_VF_PORT */
 		struct {
@@ -141,6 +150,11 @@ int nfp_net_refresh_port_table_sync(struct nfp_pf *pf);
 
 int nfp_devlink_port_register(struct nfp_app *app, struct nfp_port *port);
 void nfp_devlink_port_unregister(struct nfp_port *port);
+<<<<<<< HEAD
+=======
+void nfp_devlink_port_type_eth_set(struct nfp_port *port);
+void nfp_devlink_port_type_clear(struct nfp_port *port);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Mac stats (0x0000 - 0x0200)
  * all counters are 64bit.

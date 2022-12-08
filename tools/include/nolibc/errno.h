@@ -9,9 +9,17 @@
 
 #include <asm/errno.h>
 
+<<<<<<< HEAD
 #ifndef NOLIBC_IGNORE_ERRNO
 #define SET_ERRNO(v) do { errno = (v); } while (0)
 int errno __attribute__((weak));
+=======
+/* this way it will be removed if unused */
+static int errno;
+
+#ifndef NOLIBC_IGNORE_ERRNO
+#define SET_ERRNO(v) do { errno = (v); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 #else
 #define SET_ERRNO(v) do { } while (0)
 #endif
@@ -22,7 +30,10 @@ int errno __attribute__((weak));
  */
 #define MAX_ERRNO 4095
 
+<<<<<<< HEAD
 /* make sure to include all global symbols */
 #include "nolibc.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _NOLIBC_ERRNO_H */

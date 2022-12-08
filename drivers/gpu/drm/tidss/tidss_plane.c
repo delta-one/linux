@@ -8,6 +8,10 @@
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_blend.h>
 #include <drm/drm_crtc.h>
+<<<<<<< HEAD
+=======
+#include <drm/drm_crtc_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_fourcc.h>
 #include <drm/drm_framebuffer.h>
 #include <drm/drm_gem_atomic_helper.h>
@@ -113,6 +117,10 @@ static void tidss_plane_atomic_update(struct drm_plane *plane,
 	struct drm_plane_state *new_state = drm_atomic_get_new_plane_state(state,
 									   plane);
 	u32 hw_videoport;
+<<<<<<< HEAD
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_dbg(ddev->dev, "%s\n", __func__);
 
@@ -123,6 +131,7 @@ static void tidss_plane_atomic_update(struct drm_plane *plane,
 
 	hw_videoport = to_tidss_crtc(new_state->crtc)->hw_videoport;
 
+<<<<<<< HEAD
 	dispc_plane_setup(tidss->dispc, tplane->hw_plane_id, new_state, hw_videoport);
 }
 
@@ -134,6 +143,17 @@ static void tidss_plane_atomic_enable(struct drm_plane *plane,
 	struct tidss_plane *tplane = to_tidss_plane(plane);
 
 	dev_dbg(ddev->dev, "%s\n", __func__);
+=======
+	ret = dispc_plane_setup(tidss->dispc, tplane->hw_plane_id,
+				new_state, hw_videoport);
+
+	if (ret) {
+		dev_err(plane->dev->dev, "%s: Failed to setup plane %d\n",
+			__func__, tplane->hw_plane_id);
+		dispc_plane_enable(tidss->dispc, tplane->hw_plane_id, false);
+		return;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	dispc_plane_enable(tidss->dispc, tplane->hw_plane_id, true);
 }
@@ -161,7 +181,10 @@ static void drm_plane_destroy(struct drm_plane *plane)
 static const struct drm_plane_helper_funcs tidss_plane_helper_funcs = {
 	.atomic_check = tidss_plane_atomic_check,
 	.atomic_update = tidss_plane_atomic_update,
+<<<<<<< HEAD
 	.atomic_enable = tidss_plane_atomic_enable,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.atomic_disable = tidss_plane_atomic_disable,
 };
 

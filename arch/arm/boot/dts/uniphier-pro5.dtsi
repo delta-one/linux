@@ -5,8 +5,11 @@
 // Copyright (C) 2015-2016 Socionext Inc.
 //   Author: Masahiro Yamada <yamada.masahiro@socionext.com>
 
+<<<<<<< HEAD
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 / {
 	compatible = "socionext,uniphier-pro5";
 	#address-cells = <1>;
@@ -137,8 +140,12 @@
 			compatible = "socionext,uniphier-system-cache";
 			reg = <0x500c0000 0x2000>, <0x503c0100 0x8>,
 			      <0x506c0000 0x400>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 190 4>, <0 191 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			cache-unified;
 			cache-size = <(2 * 1024 * 1024)>;
 			cache-sets = <512>;
@@ -151,8 +158,12 @@
 			compatible = "socionext,uniphier-system-cache";
 			reg = <0x500c8000 0x2000>, <0x503c8100 0x8>,
 			      <0x506c8000 0x400>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 174 4>, <0 175 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			cache-unified;
 			cache-size = <(2 * 1024 * 1024)>;
 			cache-sets = <512>;
@@ -166,7 +177,11 @@
 			reg = <0x54006000 0x100>;
 			#address-cells = <1>;
 			#size-cells = <0>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 39 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_spi0>;
 			clocks = <&peri_clk 11>;
@@ -179,7 +194,11 @@
 			reg = <0x54006100 0x100>;
 			#address-cells = <1>;
 			#size-cells = <0>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 216 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_spi1>;
 			clocks = <&peri_clk 11>;	/* common with spi0 */
@@ -190,7 +209,11 @@
 			compatible = "socionext,uniphier-uart";
 			status = "disabled";
 			reg = <0x54006800 0x40>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 33 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_uart0>;
 			clocks = <&peri_clk 0>;
@@ -201,7 +224,11 @@
 			compatible = "socionext,uniphier-uart";
 			status = "disabled";
 			reg = <0x54006900 0x40>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 35 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_uart1>;
 			clocks = <&peri_clk 1>;
@@ -212,7 +239,11 @@
 			compatible = "socionext,uniphier-uart";
 			status = "disabled";
 			reg = <0x54006a00 0x40>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 37 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_uart2>;
 			clocks = <&peri_clk 2>;
@@ -223,7 +254,11 @@
 			compatible = "socionext,uniphier-uart";
 			status = "disabled";
 			reg = <0x54006b00 0x40>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 177 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_uart3>;
 			clocks = <&peri_clk 3>;
@@ -250,7 +285,11 @@
 			reg = <0x58780000 0x80>;
 			#address-cells = <1>;
 			#size-cells = <0>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 41 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_i2c0>;
 			clocks = <&peri_clk 4>;
@@ -264,7 +303,11 @@
 			reg = <0x58781000 0x80>;
 			#address-cells = <1>;
 			#size-cells = <0>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 42 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_i2c1>;
 			clocks = <&peri_clk 5>;
@@ -278,7 +321,11 @@
 			reg = <0x58782000 0x80>;
 			#address-cells = <1>;
 			#size-cells = <0>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 43 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_i2c2>;
 			clocks = <&peri_clk 6>;
@@ -292,7 +339,11 @@
 			reg = <0x58783000 0x80>;
 			#address-cells = <1>;
 			#size-cells = <0>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 44 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_i2c3>;
 			clocks = <&peri_clk 7>;
@@ -308,7 +359,11 @@
 			reg = <0x58785000 0x80>;
 			#address-cells = <1>;
 			#size-cells = <0>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 25 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			clocks = <&peri_clk 9>;
 			resets = <&peri_rst 9>;
 			clock-frequency = <400000>;
@@ -320,7 +375,11 @@
 			reg = <0x58786000 0x80>;
 			#address-cells = <1>;
 			#size-cells = <0>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 26 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			clocks = <&peri_clk 10>;
 			resets = <&peri_rst 10>;
 			clock-frequency = <400000>;
@@ -341,39 +400,67 @@
 			reg = <0x59801000 0x400>;
 		};
 
+<<<<<<< HEAD
 		sdctrl: syscon@59810000 {
+=======
+		sdctrl@59810000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "socionext,uniphier-pro5-sdctrl",
 				     "simple-mfd", "syscon";
 			reg = <0x59810000 0x400>;
 
+<<<<<<< HEAD
 			sd_clk: clock-controller {
+=======
+			sd_clk: clock {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "socionext,uniphier-pro5-sd-clock";
 				#clock-cells = <1>;
 			};
 
+<<<<<<< HEAD
 			sd_rst: reset-controller {
+=======
+			sd_rst: reset {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "socionext,uniphier-pro5-sd-reset";
 				#reset-cells = <1>;
 			};
 		};
 
+<<<<<<< HEAD
 		syscon@59820000 {
+=======
+		perictrl@59820000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "socionext,uniphier-pro5-perictrl",
 				     "simple-mfd", "syscon";
 			reg = <0x59820000 0x200>;
 
+<<<<<<< HEAD
 			peri_clk: clock-controller {
+=======
+			peri_clk: clock {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "socionext,uniphier-pro5-peri-clock";
 				#clock-cells = <1>;
 			};
 
+<<<<<<< HEAD
 			peri_rst: reset-controller {
+=======
+			peri_rst: reset {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "socionext,uniphier-pro5-peri-reset";
 				#reset-cells = <1>;
 			};
 		};
 
+<<<<<<< HEAD
 		syscon@5f800000 {
+=======
+		soc-glue@5f800000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "socionext,uniphier-pro5-soc-glue",
 				     "simple-mfd", "syscon";
 			reg = <0x5f800000 0x2000>;
@@ -383,10 +470,16 @@
 			};
 		};
 
+<<<<<<< HEAD
 		syscon@5f900000 {
 			compatible = "socionext,uniphier-pro5-soc-glue-debug",
 				     "simple-mfd", "syscon";
 			reg = <0x5f900000 0x2000>;
+=======
+		soc-glue@5f900000 {
+			compatible = "socionext,uniphier-pro5-soc-glue-debug",
+				     "simple-mfd";
+>>>>>>> b7ba80a49124 (Commit)
 			#address-cells = <1>;
 			#size-cells = <1>;
 			ranges = <0 0x5f900000 0x2000>;
@@ -420,7 +513,11 @@
 		xdmac: dma-controller@5fc10000 {
 			compatible = "socionext,uniphier-xdmac";
 			reg = <0x5fc10000 0x5300>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 188 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			dma-channels = <16>;
 			#dma-cells = <2>;
 		};
@@ -435,16 +532,24 @@
 		timer@60000200 {
 			compatible = "arm,cortex-a9-global-timer";
 			reg = <0x60000200 0x20>;
+<<<<<<< HEAD
 			interrupts = <GIC_PPI 11
 				(GIC_CPU_MASK_RAW(3) | IRQ_TYPE_LEVEL_HIGH)>;
+=======
+			interrupts = <1 11 0x304>;
+>>>>>>> b7ba80a49124 (Commit)
 			clocks = <&arm_timer_clk>;
 		};
 
 		timer@60000600 {
 			compatible = "arm,cortex-a9-twd-timer";
 			reg = <0x60000600 0x20>;
+<<<<<<< HEAD
 			interrupts = <GIC_PPI 13
 				(GIC_CPU_MASK_RAW(3) | IRQ_TYPE_LEVEL_HIGH)>;
+=======
+			interrupts = <1 13 0x304>;
+>>>>>>> b7ba80a49124 (Commit)
 			clocks = <&arm_timer_clk>;
 		};
 
@@ -456,17 +561,29 @@
 			interrupt-controller;
 		};
 
+<<<<<<< HEAD
 		syscon@61840000 {
+=======
+		sysctrl@61840000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "socionext,uniphier-pro5-sysctrl",
 				     "simple-mfd", "syscon";
 			reg = <0x61840000 0x10000>;
 
+<<<<<<< HEAD
 			sys_clk: clock-controller {
+=======
+			sys_clk: clock {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "socionext,uniphier-pro5-clock";
 				#clock-cells = <1>;
 			};
 
+<<<<<<< HEAD
 			sys_rst: reset-controller {
+=======
+			sys_rst: reset {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "socionext,uniphier-pro5-reset";
 				#reset-cells = <1>;
 			};
@@ -477,7 +594,11 @@
 			status = "disabled";
 			reg = <0x65a00000 0xcd00>;
 			interrupt-names = "host";
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 134 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_usb0>;
 			clock-names = "ref", "bus_early", "suspend";
@@ -487,15 +608,25 @@
 			dr_mode = "host";
 		};
 
+<<<<<<< HEAD
 		usb-controller@65b00000 {
 			compatible = "socionext,uniphier-pro5-dwc3-glue",
 				     "simple-mfd";
 			reg = <0x65b00000 0x400>;
+=======
+		usb-glue@65b00000 {
+			compatible = "socionext,uniphier-pro5-dwc3-glue",
+				     "simple-mfd";
+>>>>>>> b7ba80a49124 (Commit)
 			#address-cells = <1>;
 			#size-cells = <1>;
 			ranges = <0 0x65b00000 0x400>;
 
+<<<<<<< HEAD
 			usb0_rst: reset-controller@0 {
+=======
+			usb0_rst: reset@0 {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "socionext,uniphier-pro5-usb3-reset";
 				reg = <0x0 0x4>;
 				#reset-cells = <1>;
@@ -514,7 +645,11 @@
 				resets = <&sys_rst 12>, <&sys_rst 14>;
 			};
 
+<<<<<<< HEAD
 			usb0_hsphy0: phy@280 {
+=======
+			usb0_hsphy0: hs-phy@280 {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "socionext,uniphier-pro5-usb3-hsphy";
 				reg = <0x280 0x10>;
 				#phy-cells = <0>;
@@ -525,7 +660,11 @@
 				vbus-supply = <&usb0_vbus0>;
 			};
 
+<<<<<<< HEAD
 			usb0_ssphy0: phy@380 {
+=======
+			usb0_ssphy0: ss-phy@380 {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "socionext,uniphier-pro5-usb3-ssphy";
 				reg = <0x380 0x10>;
 				#phy-cells = <0>;
@@ -542,7 +681,11 @@
 			status = "disabled";
 			reg = <0x65c00000 0xcd00>;
 			interrupt-names = "host";
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 137 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_usb1>, <&pinctrl_usb2>;
 			clock-names = "ref", "bus_early", "suspend";
@@ -552,15 +695,25 @@
 			dr_mode = "host";
 		};
 
+<<<<<<< HEAD
 		usb-controller@65d00000 {
 			compatible = "socionext,uniphier-pro5-dwc3-glue",
 				     "simple-mfd";
 			reg = <0x65d00000 0x400>;
+=======
+		usb-glue@65d00000 {
+			compatible = "socionext,uniphier-pro5-dwc3-glue",
+				     "simple-mfd";
+>>>>>>> b7ba80a49124 (Commit)
 			#address-cells = <1>;
 			#size-cells = <1>;
 			ranges = <0 0x65d00000 0x400>;
 
+<<<<<<< HEAD
 			usb1_rst: reset-controller@0 {
+=======
+			usb1_rst: reset@0 {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "socionext,uniphier-pro5-usb3-reset";
 				reg = <0x0 0x4>;
 				#reset-cells = <1>;
@@ -588,7 +741,11 @@
 				resets = <&sys_rst 12>, <&sys_rst 15>;
 			};
 
+<<<<<<< HEAD
 			usb1_hsphy0: phy@280 {
+=======
+			usb1_hsphy0: hs-phy@280 {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "socionext,uniphier-pro5-usb3-hsphy";
 				reg = <0x280 0x10>;
 				#phy-cells = <0>;
@@ -599,7 +756,11 @@
 				vbus-supply = <&usb1_vbus0>;
 			};
 
+<<<<<<< HEAD
 			usb1_hsphy1: phy@290 {
+=======
+			usb1_hsphy1: hs-phy@290 {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "socionext,uniphier-pro5-usb3-hsphy";
 				reg = <0x290 0x10>;
 				#phy-cells = <0>;
@@ -610,7 +771,11 @@
 				vbus-supply = <&usb1_vbus1>;
 			};
 
+<<<<<<< HEAD
 			usb1_ssphy0: phy@380 {
+=======
+			usb1_ssphy0: ss-phy@380 {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "socionext,uniphier-pro5-usb3-ssphy";
 				reg = <0x380 0x10>;
 				#phy-cells = <0>;
@@ -623,7 +788,12 @@
 		};
 
 		pcie_ep: pcie-ep@66000000 {
+<<<<<<< HEAD
 			compatible = "socionext,uniphier-pro5-pcie-ep";
+=======
+			compatible = "socionext,uniphier-pro5-pcie-ep",
+				     "snps,dw-pcie-ep";
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 			reg-names = "dbi", "dbi2", "link", "addr_space";
 			reg = <0x66000000 0x1000>, <0x66001000 0x1000>,
@@ -658,7 +828,11 @@
 			reg = <0x68000000 0x20>, <0x68100000 0x1000>;
 			#address-cells = <1>;
 			#size-cells = <0>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 65 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_nand>;
 			clock-names = "nand", "nand_x", "ecc";
@@ -671,7 +845,11 @@
 			compatible = "socionext,uniphier-sd-v3.1";
 			status = "disabled";
 			reg = <0x68400000 0x800>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 78 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_emmc>;
 			clocks = <&sd_clk 1>;
@@ -687,7 +865,11 @@
 			compatible = "socionext,uniphier-sd-v3.1";
 			status = "disabled";
 			reg = <0x68800000 0x800>;
+<<<<<<< HEAD
 			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <0 76 4>;
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default", "uhs";
 			pinctrl-0 = <&pinctrl_sd>;
 			pinctrl-1 = <&pinctrl_sd_uhs>;
@@ -699,7 +881,10 @@
 			sd-uhs-sdr12;
 			sd-uhs-sdr25;
 			sd-uhs-sdr50;
+<<<<<<< HEAD
 			socionext,syscon-uhs-mode = <&sdctrl 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };

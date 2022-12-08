@@ -463,8 +463,11 @@ static int lpi2c_imx_xfer(struct i2c_adapter *adapter,
 		if (num == 1 && msgs[0].len == 0)
 			goto stop;
 
+<<<<<<< HEAD
 		lpi2c_imx->rx_buf = NULL;
 		lpi2c_imx->tx_buf = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		lpi2c_imx->delivered = 0;
 		lpi2c_imx->msglen = msgs[i].len;
 		init_completion(&lpi2c_imx->complete);
@@ -505,6 +508,7 @@ disable:
 static irqreturn_t lpi2c_imx_isr(int irq, void *dev_id)
 {
 	struct lpi2c_imx_struct *lpi2c_imx = dev_id;
+<<<<<<< HEAD
 	unsigned int enabled;
 	unsigned int temp;
 
@@ -513,6 +517,12 @@ static irqreturn_t lpi2c_imx_isr(int irq, void *dev_id)
 	lpi2c_imx_intctrl(lpi2c_imx, 0);
 	temp = readl(lpi2c_imx->base + LPI2C_MSR);
 	temp &= enabled;
+=======
+	unsigned int temp;
+
+	lpi2c_imx_intctrl(lpi2c_imx, 0);
+	temp = readl(lpi2c_imx->base + LPI2C_MSR);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (temp & MSR_RDF)
 		lpi2c_imx_read_rxfifo(lpi2c_imx);

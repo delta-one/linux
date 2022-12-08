@@ -28,6 +28,7 @@
 
 #define DSP_RPROC_CLK_MAX			5
 
+<<<<<<< HEAD
 /*
  * Module parameters
  */
@@ -36,6 +37,8 @@ module_param_named(no_mailboxes, no_mailboxes, int, 0644);
 MODULE_PARM_DESC(no_mailboxes,
 		 "There is no mailbox between cores, so ignore remote proc reply after start, default is 0 (off).");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define REMOTE_IS_READY				BIT(0)
 #define REMOTE_READY_WAIT_MAX_RETRIES		500
 
@@ -180,9 +183,12 @@ static const struct imx_rproc_att imx_dsp_rproc_att_imx8ulp[] = {
 	{ 0x30000000, 0x90000000, 0x10000000, 0},
 };
 
+<<<<<<< HEAD
 /* Initialize the mailboxes between cores, if exists */
 static int (*imx_dsp_rproc_mbox_init)(struct imx_dsp_rproc *priv);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Reset function for DSP on i.MX8MP */
 static int imx8mp_dsp_reset(struct imx_dsp_rproc *priv)
 {
@@ -358,6 +364,12 @@ static int imx_dsp_rproc_stop(struct rproc *rproc)
 	struct device *dev = rproc->dev.parent;
 	int ret = 0;
 
+<<<<<<< HEAD
+=======
+	/* Make sure work is finished */
+	flush_work(&priv->rproc_work);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (rproc->state == RPROC_CRASHED) {
 		priv->flags &= ~REMOTE_IS_READY;
 		return 0;
@@ -440,6 +452,7 @@ static void imx_dsp_rproc_vq_work(struct work_struct *work)
 {
 	struct imx_dsp_rproc *priv = container_of(work, struct imx_dsp_rproc,
 						  rproc_work);
+<<<<<<< HEAD
 	struct rproc *rproc = priv->rproc;
 
 	mutex_lock(&rproc->lock);
@@ -452,6 +465,11 @@ static void imx_dsp_rproc_vq_work(struct work_struct *work)
 
 unlock_mutex:
 	mutex_unlock(&rproc->lock);
+=======
+
+	rproc_vq_interrupt(priv->rproc, 0);
+	rproc_vq_interrupt(priv->rproc, 1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -503,12 +521,20 @@ static void imx_dsp_rproc_rxdb_callback(struct mbox_client *cl, void *data)
 }
 
 /**
+<<<<<<< HEAD
  * imx_dsp_rproc_mbox_alloc() - request mailbox channels
+=======
+ * imx_dsp_rproc_mbox_init() - request mailbox channels
+>>>>>>> b7ba80a49124 (Commit)
  * @priv: private data pointer
  *
  * Request three mailbox channels (tx, rx, rxdb).
  */
+<<<<<<< HEAD
 static int imx_dsp_rproc_mbox_alloc(struct imx_dsp_rproc *priv)
+=======
+static int imx_dsp_rproc_mbox_init(struct imx_dsp_rproc *priv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = priv->rproc->dev.parent;
 	struct mbox_client *cl;
@@ -571,6 +597,7 @@ err_out:
 	return ret;
 }
 
+<<<<<<< HEAD
 /*
  * imx_dsp_rproc_mbox_no_alloc()
  *
@@ -583,6 +610,8 @@ static int imx_dsp_rproc_mbox_no_alloc(struct imx_dsp_rproc *priv)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void imx_dsp_rproc_free_mbox(struct imx_dsp_rproc *priv)
 {
 	mbox_free_channel(priv->tx_ch);
@@ -738,6 +767,7 @@ static void imx_dsp_rproc_kick(struct rproc *rproc, int vqid)
 		dev_err(dev, "%s: failed (%d, err:%d)\n", __func__, vqid, err);
 }
 
+<<<<<<< HEAD
 /*
  * Custom memory copy implementation for i.MX DSP Cores
  *
@@ -923,6 +953,8 @@ static int imx_dsp_rproc_elf_load_segments(struct rproc *rproc, const struct fir
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int imx_dsp_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
 {
 	if (rproc_elf_load_rsc_table(rproc, fw))
@@ -937,7 +969,11 @@ static const struct rproc_ops imx_dsp_rproc_ops = {
 	.start		= imx_dsp_rproc_start,
 	.stop		= imx_dsp_rproc_stop,
 	.kick		= imx_dsp_rproc_kick,
+<<<<<<< HEAD
 	.load		= imx_dsp_rproc_elf_load_segments,
+=======
+	.load		= rproc_elf_load_segments,
+>>>>>>> b7ba80a49124 (Commit)
 	.parse_fw	= imx_dsp_rproc_parse_fw,
 	.sanity_check	= rproc_elf_sanity_check,
 	.get_boot_addr	= rproc_elf_get_boot_addr,
@@ -1111,11 +1147,14 @@ static int imx_dsp_rproc_probe(struct platform_device *pdev)
 	priv->rproc = rproc;
 	priv->dsp_dcfg = dsp_dcfg;
 
+<<<<<<< HEAD
 	if (no_mailboxes)
 		imx_dsp_rproc_mbox_init = imx_dsp_rproc_mbox_no_alloc;
 	else
 		imx_dsp_rproc_mbox_init = imx_dsp_rproc_mbox_alloc;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev_set_drvdata(dev, rproc);
 
 	INIT_WORK(&priv->rproc_work, imx_dsp_rproc_vq_work);

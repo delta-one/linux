@@ -32,6 +32,7 @@
 #define SNVS_LPPGDR_INIT	0x41736166
 #define CNTR_TO_SECS_SH		15
 
+<<<<<<< HEAD
 /* The maximum RTC clock cycles that are allowed to pass between two
  * consecutive clock counter register reads. If the values are corrupted a
  * bigger difference is expected. The RTC frequency is 32kHz. With 320 cycles
@@ -40,6 +41,8 @@
  */
 #define MAX_RTC_READ_DIFF_CYCLES	320
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct snvs_rtc_data {
 	struct rtc_device *rtc;
 	struct regmap *regmap;
@@ -64,7 +67,10 @@ static u64 rtc_read_lpsrt(struct snvs_rtc_data *data)
 static u32 rtc_read_lp_counter(struct snvs_rtc_data *data)
 {
 	u64 read1, read2;
+<<<<<<< HEAD
 	s64 diff;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int timeout = 100;
 
 	/* As expected, the registers might update between the read of the LSB
@@ -75,8 +81,12 @@ static u32 rtc_read_lp_counter(struct snvs_rtc_data *data)
 	do {
 		read2 = read1;
 		read1 = rtc_read_lpsrt(data);
+<<<<<<< HEAD
 		diff = read1 - read2;
 	} while (((diff < 0) || (diff > MAX_RTC_READ_DIFF_CYCLES)) && --timeout);
+=======
+	} while (read1 != read2 && --timeout);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!timeout)
 		dev_err(&data->rtc->dev, "Timeout trying to get valid LPSRT Counter read\n");
 
@@ -88,15 +98,22 @@ static u32 rtc_read_lp_counter(struct snvs_rtc_data *data)
 static int rtc_read_lp_counter_lsb(struct snvs_rtc_data *data, u32 *lsb)
 {
 	u32 count1, count2;
+<<<<<<< HEAD
 	s32 diff;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int timeout = 100;
 
 	regmap_read(data->regmap, data->offset + SNVS_LPSRTCLR, &count1);
 	do {
 		count2 = count1;
 		regmap_read(data->regmap, data->offset + SNVS_LPSRTCLR, &count1);
+<<<<<<< HEAD
 		diff = count1 - count2;
 	} while (((diff < 0) || (diff > MAX_RTC_READ_DIFF_CYCLES)) && --timeout);
+=======
+	} while (count1 != count2 && --timeout);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!timeout) {
 		dev_err(&data->rtc->dev, "Timeout trying to get valid LPSRT Counter read\n");
 		return -ETIMEDOUT;

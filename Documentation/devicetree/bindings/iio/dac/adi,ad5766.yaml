@@ -8,7 +8,11 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
 title: Analog Devices AD5766 DAC device driver
 
 maintainers:
+<<<<<<< HEAD
   - Nuno Sá <nuno.sa@analog.com>
+=======
+  - Cristian Pop <cristian.pop@analog.com>
+>>>>>>> b7ba80a49124 (Commit)
 
 description: |
   Bindings for the Analog Devices AD5766 current DAC device. Datasheet can be
@@ -51,6 +55,7 @@ additionalProperties: false
 examples:
   - |
     spi {
+<<<<<<< HEAD
         #address-cells = <1>;
         #size-cells = <0>;
 
@@ -63,3 +68,17 @@ examples:
             reset-gpios = <&gpio 22 0>;
         };
     };
+=======
+          #address-cells = <1>;
+          #size-cells = <0>;
+
+          ad5766@0 {
+              compatible = "adi,ad5766";
+              output-range-microvolts = <(-5000000) 5000000>;
+              reg = <0>;
+              spi-cpol;
+              spi-max-frequency = <1000000>;
+              reset-gpios = <&gpio 22 0>;
+            };
+      };
+>>>>>>> b7ba80a49124 (Commit)

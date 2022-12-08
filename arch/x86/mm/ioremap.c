@@ -217,6 +217,7 @@ __ioremap_caller(resource_size_t phys_addr, unsigned long size,
 	 * Mappings have to be page-aligned
 	 */
 	offset = phys_addr & ~PAGE_MASK;
+<<<<<<< HEAD
 	phys_addr &= PAGE_MASK;
 	size = PAGE_ALIGN(last_addr+1) - phys_addr;
 
@@ -225,6 +226,10 @@ __ioremap_caller(resource_size_t phys_addr, unsigned long size,
 	 * address, like memory encryption bits.
 	 */
 	phys_addr &= PHYSICAL_PAGE_MASK;
+=======
+	phys_addr &= PHYSICAL_PAGE_MASK;
+	size = PAGE_ALIGN(last_addr+1) - phys_addr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	retval = memtype_reserve(phys_addr, (u64)phys_addr + size,
 						pcm, &new_pcm);

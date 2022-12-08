@@ -311,11 +311,19 @@ static int psc_ac97_of_probe(struct platform_device *op)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void psc_ac97_of_remove(struct platform_device *op)
+=======
+static int psc_ac97_of_remove(struct platform_device *op)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	mpc5200_audio_dma_destroy(op);
 	snd_soc_unregister_component(&op->dev);
 	snd_soc_set_ac97_ops(NULL);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Match table for of_platform binding */
@@ -328,7 +336,11 @@ MODULE_DEVICE_TABLE(of, psc_ac97_match);
 
 static struct platform_driver psc_ac97_driver = {
 	.probe = psc_ac97_of_probe,
+<<<<<<< HEAD
 	.remove_new = psc_ac97_of_remove,
+=======
+	.remove = psc_ac97_of_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "mpc5200-psc-ac97",
 		.of_match_table = psc_ac97_match,

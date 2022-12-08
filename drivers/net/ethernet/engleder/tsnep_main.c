@@ -26,6 +26,7 @@
 #include <linux/etherdevice.h>
 #include <linux/phy.h>
 #include <linux/iopoll.h>
+<<<<<<< HEAD
 #include <linux/bpf.h>
 #include <linux/bpf_trace.h>
 
@@ -33,6 +34,13 @@
 #define TSNEP_HEADROOM ALIGN(TSNEP_RX_OFFSET, 4)
 #define TSNEP_MAX_RX_BUF_SIZE (PAGE_SIZE - TSNEP_HEADROOM - \
 			       SKB_DATA_ALIGN(sizeof(struct skb_shared_info)))
+=======
+
+#define RX_SKB_LENGTH (round_up(TSNEP_RX_INLINE_METADATA_SIZE + ETH_HLEN + \
+				TSNEP_MAX_FRAME_SIZE + ETH_FCS_LEN, 4))
+#define RX_SKB_RESERVE ((16 - TSNEP_RX_INLINE_METADATA_SIZE) + NET_IP_ALIGN)
+#define RX_SKB_ALLOC_LENGTH (RX_SKB_RESERVE + RX_SKB_LENGTH)
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
 #define DMA_ADDR_HIGH(dma_addr) ((u32)(((dma_addr) >> 32) & 0xFFFFFFFF))
@@ -41,6 +49,7 @@
 #endif
 #define DMA_ADDR_LOW(dma_addr) ((u32)((dma_addr) & 0xFFFFFFFF))
 
+<<<<<<< HEAD
 #define TSNEP_COALESCE_USECS_DEFAULT 64
 #define TSNEP_COALESCE_USECS_MAX     ((ECM_INT_DELAY_MASK >> ECM_INT_DELAY_SHIFT) * \
 				      ECM_INT_DELAY_BASE_US + ECM_INT_DELAY_BASE_US - 1)
@@ -53,6 +62,8 @@
 #define TSNEP_XDP_TX		BIT(0)
 #define TSNEP_XDP_REDIRECT	BIT(1)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void tsnep_enable_irq(struct tsnep_adapter *adapter, u32 mask)
 {
 	iowrite32(mask, adapter->addr + ECM_INT_ENABLE);
@@ -74,6 +85,7 @@ static irqreturn_t tsnep_irq(int irq, void *arg)
 		iowrite32(active, adapter->addr + ECM_INT_ACKNOWLEDGE);
 
 	/* handle link interrupt */
+<<<<<<< HEAD
 	if ((active & ECM_INT_LINK) != 0)
 		phy_mac_interrupt(adapter->netdev->phydev);
 
@@ -81,11 +93,25 @@ static irqreturn_t tsnep_irq(int irq, void *arg)
 	if ((active & adapter->queue[0].irq_mask) != 0) {
 		tsnep_disable_irq(adapter, adapter->queue[0].irq_mask);
 		napi_schedule(&adapter->queue[0].napi);
+=======
+	if ((active & ECM_INT_LINK) != 0) {
+		if (adapter->netdev->phydev)
+			phy_mac_interrupt(adapter->netdev->phydev);
+	}
+
+	/* handle TX/RX queue 0 interrupt */
+	if ((active & adapter->queue[0].irq_mask) != 0) {
+		if (adapter->netdev) {
+			tsnep_disable_irq(adapter, adapter->queue[0].irq_mask);
+			napi_schedule(&adapter->queue[0].napi);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static irqreturn_t tsnep_irq_txrx(int irq, void *arg)
 {
 	struct tsnep_queue *queue = arg;
@@ -124,12 +150,20 @@ u32 tsnep_get_irq_coalesce(struct tsnep_queue *queue)
 	return usecs;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int tsnep_mdiobus_read(struct mii_bus *bus, int addr, int regnum)
 {
 	struct tsnep_adapter *adapter = bus->priv;
 	u32 md;
 	int retval;
 
+<<<<<<< HEAD
+=======
+	if (regnum & MII_ADDR_C45)
+		return -EOPNOTSUPP;
+
+>>>>>>> b7ba80a49124 (Commit)
 	md = ECM_MD_READ;
 	if (!adapter->suppress_preamble)
 		md |= ECM_MD_PREAMBLE;
@@ -151,6 +185,12 @@ static int tsnep_mdiobus_write(struct mii_bus *bus, int addr, int regnum,
 	u32 md;
 	int retval;
 
+<<<<<<< HEAD
+=======
+	if (regnum & MII_ADDR_C45)
+		return -EOPNOTSUPP;
+
+>>>>>>> b7ba80a49124 (Commit)
 	md = ECM_MD_WRITE;
 	if (!adapter->suppress_preamble)
 		md |= ECM_MD_PREAMBLE;
@@ -246,6 +286,10 @@ static void tsnep_phy_close(struct tsnep_adapter *adapter)
 {
 	phy_stop(adapter->netdev->phydev);
 	phy_disconnect(adapter->netdev->phydev);
+<<<<<<< HEAD
+=======
+	adapter->netdev->phydev = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void tsnep_tx_ring_cleanup(struct tsnep_tx *tx)
@@ -309,12 +353,19 @@ static void tsnep_tx_activate(struct tsnep_tx *tx, int index, int length,
 	struct tsnep_tx_entry *entry = &tx->entry[index];
 
 	entry->properties = 0;
+<<<<<<< HEAD
 	/* xdpf is union with skb */
 	if (entry->skb) {
 		entry->properties = length & TSNEP_DESC_LENGTH_MASK;
 		entry->properties |= TSNEP_DESC_INTERRUPT_FLAG;
 		if ((entry->type & TSNEP_TX_TYPE_SKB) &&
 		    (skb_shinfo(entry->skb)->tx_flags & SKBTX_IN_PROGRESS))
+=======
+	if (entry->skb) {
+		entry->properties = length & TSNEP_DESC_LENGTH_MASK;
+		entry->properties |= TSNEP_DESC_INTERRUPT_FLAG;
+		if (skb_shinfo(entry->skb)->tx_flags & SKBTX_IN_PROGRESS)
+>>>>>>> b7ba80a49124 (Commit)
 			entry->properties |= TSNEP_DESC_EXTENDED_WRITEBACK_FLAG;
 
 		/* toggle user flag to prevent false acknowledge
@@ -383,19 +434,29 @@ static int tsnep_tx_map(struct sk_buff *skb, struct tsnep_tx *tx, int count)
 	for (i = 0; i < count; i++) {
 		entry = &tx->entry[(tx->write + i) % TSNEP_RING_SIZE];
 
+<<<<<<< HEAD
 		if (!i) {
 			len = skb_headlen(skb);
 			dma = dma_map_single(dmadev, skb->data, len,
 					     DMA_TO_DEVICE);
 
 			entry->type = TSNEP_TX_TYPE_SKB;
+=======
+		if (i == 0) {
+			len = skb_headlen(skb);
+			dma = dma_map_single(dmadev, skb->data, len,
+					     DMA_TO_DEVICE);
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			len = skb_frag_size(&skb_shinfo(skb)->frags[i - 1]);
 			dma = skb_frag_dma_map(dmadev,
 					       &skb_shinfo(skb)->frags[i - 1],
 					       0, len, DMA_TO_DEVICE);
+<<<<<<< HEAD
 
 			entry->type = TSNEP_TX_TYPE_SKB_FRAG;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		if (dma_mapping_error(dmadev, dma))
 			return -ENOMEM;
@@ -422,13 +483,21 @@ static int tsnep_tx_unmap(struct tsnep_tx *tx, int index, int count)
 		entry = &tx->entry[(index + i) % TSNEP_RING_SIZE];
 
 		if (entry->len) {
+<<<<<<< HEAD
 			if (entry->type & TSNEP_TX_TYPE_SKB)
+=======
+			if (i == 0)
+>>>>>>> b7ba80a49124 (Commit)
 				dma_unmap_single(dmadev,
 						 dma_unmap_addr(entry, dma),
 						 dma_unmap_len(entry, len),
 						 DMA_TO_DEVICE);
+<<<<<<< HEAD
 			else if (entry->type &
 				 (TSNEP_TX_TYPE_SKB_FRAG | TSNEP_TX_TYPE_XDP_NDO))
+=======
+			else
+>>>>>>> b7ba80a49124 (Commit)
 				dma_unmap_page(dmadev,
 					       dma_unmap_addr(entry, dma),
 					       dma_unmap_len(entry, len),
@@ -444,6 +513,10 @@ static int tsnep_tx_unmap(struct tsnep_tx *tx, int index, int count)
 static netdev_tx_t tsnep_xmit_frame_ring(struct sk_buff *skb,
 					 struct tsnep_tx *tx)
 {
+<<<<<<< HEAD
+=======
+	unsigned long flags;
+>>>>>>> b7ba80a49124 (Commit)
 	int count = 1;
 	struct tsnep_tx_entry *entry;
 	int length;
@@ -453,11 +526,22 @@ static netdev_tx_t tsnep_xmit_frame_ring(struct sk_buff *skb,
 	if (skb_shinfo(skb)->nr_frags > 0)
 		count += skb_shinfo(skb)->nr_frags;
 
+<<<<<<< HEAD
+=======
+	spin_lock_irqsave(&tx->lock, flags);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (tsnep_tx_desc_available(tx) < count) {
 		/* ring full, shall not happen because queue is stopped if full
 		 * below
 		 */
+<<<<<<< HEAD
 		netif_stop_subqueue(tx->adapter->netdev, tx->queue_index);
+=======
+		netif_stop_queue(tx->adapter->netdev);
+
+		spin_unlock_irqrestore(&tx->lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 		return NETDEV_TX_BUSY;
 	}
@@ -473,6 +557,13 @@ static netdev_tx_t tsnep_xmit_frame_ring(struct sk_buff *skb,
 
 		tx->dropped++;
 
+<<<<<<< HEAD
+=======
+		spin_unlock_irqrestore(&tx->lock, flags);
+
+		netdev_err(tx->adapter->netdev, "TX DMA map failed\n");
+
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 	}
 	length = retval;
@@ -482,7 +573,11 @@ static netdev_tx_t tsnep_xmit_frame_ring(struct sk_buff *skb,
 
 	for (i = 0; i < count; i++)
 		tsnep_tx_activate(tx, (tx->write + i) % TSNEP_RING_SIZE, length,
+<<<<<<< HEAD
 				  i == count - 1);
+=======
+				  i == (count - 1));
+>>>>>>> b7ba80a49124 (Commit)
 	tx->write = (tx->write + count) % TSNEP_RING_SIZE;
 
 	skb_tx_timestamp(skb);
@@ -494,6 +589,7 @@ static netdev_tx_t tsnep_xmit_frame_ring(struct sk_buff *skb,
 
 	if (tsnep_tx_desc_available(tx) < (MAX_SKB_FRAGS + 1)) {
 		/* ring can get full with next frame */
+<<<<<<< HEAD
 		netif_stop_subqueue(tx->adapter->netdev, tx->queue_index);
 	}
 
@@ -637,6 +733,25 @@ static bool tsnep_tx_poll(struct tsnep_tx *tx, int napi_budget)
 
 	nq = netdev_get_tx_queue(tx->adapter->netdev, tx->queue_index);
 	__netif_tx_lock(nq, smp_processor_id());
+=======
+		netif_stop_queue(tx->adapter->netdev);
+	}
+
+	spin_unlock_irqrestore(&tx->lock, flags);
+
+	return NETDEV_TX_OK;
+}
+
+static bool tsnep_tx_poll(struct tsnep_tx *tx, int napi_budget)
+{
+	unsigned long flags;
+	int budget = 128;
+	struct tsnep_tx_entry *entry;
+	int count;
+	int length;
+
+	spin_lock_irqsave(&tx->lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	do {
 		if (tx->read == tx->write)
@@ -654,6 +769,7 @@ static bool tsnep_tx_poll(struct tsnep_tx *tx, int napi_budget)
 		dma_rmb();
 
 		count = 1;
+<<<<<<< HEAD
 		if ((entry->type & TSNEP_TX_TYPE_SKB) &&
 		    skb_shinfo(entry->skb)->nr_frags > 0)
 			count += skb_shinfo(entry->skb)->nr_frags;
@@ -665,6 +781,14 @@ static bool tsnep_tx_poll(struct tsnep_tx *tx, int napi_budget)
 
 		if ((entry->type & TSNEP_TX_TYPE_SKB) &&
 		    (skb_shinfo(entry->skb)->tx_flags & SKBTX_IN_PROGRESS) &&
+=======
+		if (skb_shinfo(entry->skb)->nr_frags > 0)
+			count += skb_shinfo(entry->skb)->nr_frags;
+
+		length = tsnep_tx_unmap(tx, tx->read, count);
+
+		if ((skb_shinfo(entry->skb)->tx_flags & SKBTX_IN_PROGRESS) &&
+>>>>>>> b7ba80a49124 (Commit)
 		    (__le32_to_cpu(entry->desc_wb->properties) &
 		     TSNEP_DESC_EXTENDED_WRITEBACK_FLAG)) {
 			struct skb_shared_hwtstamps hwtstamps;
@@ -684,11 +808,15 @@ static bool tsnep_tx_poll(struct tsnep_tx *tx, int napi_budget)
 			skb_tstamp_tx(entry->skb, &hwtstamps);
 		}
 
+<<<<<<< HEAD
 		if (entry->type & TSNEP_TX_TYPE_SKB)
 			napi_consume_skb(entry->skb, napi_budget);
 		else
 			xdp_return_frame_rx_napi(entry->xdpf);
 		/* xdpf is union with skb */
+=======
+		napi_consume_skb(entry->skb, budget);
+>>>>>>> b7ba80a49124 (Commit)
 		entry->skb = NULL;
 
 		tx->read = (tx->read + count) % TSNEP_RING_SIZE;
@@ -700,6 +828,7 @@ static bool tsnep_tx_poll(struct tsnep_tx *tx, int napi_budget)
 	} while (likely(budget));
 
 	if ((tsnep_tx_desc_available(tx) >= ((MAX_SKB_FRAGS + 1) * 2)) &&
+<<<<<<< HEAD
 	    netif_tx_queue_stopped(nq)) {
 		netif_tx_wake_queue(nq);
 	}
@@ -733,6 +862,19 @@ static bool tsnep_tx_pending(struct tsnep_tx *tx)
 
 static int tsnep_tx_open(struct tsnep_adapter *adapter, void __iomem *addr,
 			 int queue_index, struct tsnep_tx *tx)
+=======
+	    netif_queue_stopped(tx->adapter->netdev)) {
+		netif_wake_queue(tx->adapter->netdev);
+	}
+
+	spin_unlock_irqrestore(&tx->lock, flags);
+
+	return (budget != 0);
+}
+
+static int tsnep_tx_open(struct tsnep_adapter *adapter, void __iomem *addr,
+			 struct tsnep_tx *tx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	dma_addr_t dma;
 	int retval;
@@ -740,7 +882,10 @@ static int tsnep_tx_open(struct tsnep_adapter *adapter, void __iomem *addr,
 	memset(tx, 0, sizeof(*tx));
 	tx->adapter = adapter;
 	tx->addr = addr;
+<<<<<<< HEAD
 	tx->queue_index = queue_index;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	retval = tsnep_tx_ring_init(tx);
 	if (retval)
@@ -752,6 +897,11 @@ static int tsnep_tx_open(struct tsnep_adapter *adapter, void __iomem *addr,
 	tx->owner_counter = 1;
 	tx->increment_owner_counter = TSNEP_RING_SIZE - 1;
 
+<<<<<<< HEAD
+=======
+	spin_lock_init(&tx->lock);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -774,6 +924,7 @@ static void tsnep_rx_ring_cleanup(struct tsnep_rx *rx)
 
 	for (i = 0; i < TSNEP_RING_SIZE; i++) {
 		entry = &rx->entry[i];
+<<<<<<< HEAD
 		if (entry->page)
 			page_pool_put_full_page(rx->page_pool, entry->page,
 						false);
@@ -783,6 +934,16 @@ static void tsnep_rx_ring_cleanup(struct tsnep_rx *rx)
 	if (rx->page_pool)
 		page_pool_destroy(rx->page_pool);
 
+=======
+		if (dma_unmap_addr(entry, dma))
+			dma_unmap_single(dmadev, dma_unmap_addr(entry, dma),
+					 dma_unmap_len(entry, len),
+					 DMA_FROM_DEVICE);
+		if (entry->skb)
+			dev_kfree_skb(entry->skb);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	memset(rx->entry, 0, sizeof(rx->entry));
 
 	for (i = 0; i < TSNEP_RING_PAGE_COUNT; i++) {
@@ -795,11 +956,46 @@ static void tsnep_rx_ring_cleanup(struct tsnep_rx *rx)
 	}
 }
 
+<<<<<<< HEAD
+=======
+static int tsnep_rx_alloc_and_map_skb(struct tsnep_rx *rx,
+				      struct tsnep_rx_entry *entry)
+{
+	struct device *dmadev = rx->adapter->dmadev;
+	struct sk_buff *skb;
+	dma_addr_t dma;
+
+	skb = __netdev_alloc_skb(rx->adapter->netdev, RX_SKB_ALLOC_LENGTH,
+				 GFP_ATOMIC | GFP_DMA);
+	if (!skb)
+		return -ENOMEM;
+
+	skb_reserve(skb, RX_SKB_RESERVE);
+
+	dma = dma_map_single(dmadev, skb->data, RX_SKB_LENGTH,
+			     DMA_FROM_DEVICE);
+	if (dma_mapping_error(dmadev, dma)) {
+		dev_kfree_skb(skb);
+		return -ENOMEM;
+	}
+
+	entry->skb = skb;
+	entry->len = RX_SKB_LENGTH;
+	dma_unmap_addr_set(entry, dma, dma);
+	entry->desc->rx = __cpu_to_le64(dma);
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int tsnep_rx_ring_init(struct tsnep_rx *rx)
 {
 	struct device *dmadev = rx->adapter->dmadev;
 	struct tsnep_rx_entry *entry;
+<<<<<<< HEAD
 	struct page_pool_params pp_params = { 0 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct tsnep_rx_entry *next_entry;
 	int i, j;
 	int retval;
@@ -821,6 +1017,7 @@ static int tsnep_rx_ring_init(struct tsnep_rx *rx)
 			entry->desc_dma = rx->page_dma[i] + TSNEP_DESC_SIZE * j;
 		}
 	}
+<<<<<<< HEAD
 
 	pp_params.flags = PP_FLAG_DMA_MAP | PP_FLAG_DMA_SYNC_DEV;
 	pp_params.order = 0;
@@ -837,10 +1034,19 @@ static int tsnep_rx_ring_init(struct tsnep_rx *rx)
 		goto failed;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < TSNEP_RING_SIZE; i++) {
 		entry = &rx->entry[i];
 		next_entry = &rx->entry[(i + 1) % TSNEP_RING_SIZE];
 		entry->desc->next = __cpu_to_le64(next_entry->desc_dma);
+<<<<<<< HEAD
+=======
+
+		retval = tsnep_rx_alloc_and_map_skb(rx, entry);
+		if (retval)
+			goto failed;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -850,6 +1056,7 @@ failed:
 	return retval;
 }
 
+<<<<<<< HEAD
 static int tsnep_rx_desc_available(struct tsnep_rx *rx)
 {
 	if (rx->read <= rx->write)
@@ -889,11 +1096,17 @@ static void tsnep_rx_reuse_buffer(struct tsnep_rx *rx, int index)
 	read->page = NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void tsnep_rx_activate(struct tsnep_rx *rx, int index)
 {
 	struct tsnep_rx_entry *entry = &rx->entry[index];
 
+<<<<<<< HEAD
 	/* TSNEP_MAX_RX_BUF_SIZE is a multiple of 4 */
+=======
+	/* RX_SKB_LENGTH is a multiple of 4 */
+>>>>>>> b7ba80a49124 (Commit)
 	entry->properties = entry->len & TSNEP_DESC_LENGTH_MASK;
 	entry->properties |= TSNEP_DESC_INTERRUPT_FLAG;
 	if (index == rx->increment_owner_counter) {
@@ -916,6 +1129,7 @@ static void tsnep_rx_activate(struct tsnep_rx *rx, int index)
 	entry->desc->properties = __cpu_to_le32(entry->properties);
 }
 
+<<<<<<< HEAD
 static int tsnep_rx_refill(struct tsnep_rx *rx, int count, bool reuse)
 {
 	int index;
@@ -947,6 +1161,83 @@ static int tsnep_rx_refill(struct tsnep_rx *rx, int count, bool reuse)
 	if (enable) {
 		rx->write = (rx->write + i) % TSNEP_RING_SIZE;
 
+=======
+static int tsnep_rx_poll(struct tsnep_rx *rx, struct napi_struct *napi,
+			 int budget)
+{
+	struct device *dmadev = rx->adapter->dmadev;
+	int done = 0;
+	struct tsnep_rx_entry *entry;
+	struct sk_buff *skb;
+	size_t len;
+	dma_addr_t dma;
+	int length;
+	bool enable = false;
+	int retval;
+
+	while (likely(done < budget)) {
+		entry = &rx->entry[rx->read];
+		if ((__le32_to_cpu(entry->desc_wb->properties) &
+		     TSNEP_DESC_OWNER_COUNTER_MASK) !=
+		    (entry->properties & TSNEP_DESC_OWNER_COUNTER_MASK))
+			break;
+
+		/* descriptor properties shall be read first, because valid data
+		 * is signaled there
+		 */
+		dma_rmb();
+
+		skb = entry->skb;
+		len = dma_unmap_len(entry, len);
+		dma = dma_unmap_addr(entry, dma);
+
+		/* forward skb only if allocation is successful, otherwise
+		 * skb is reused and frame dropped
+		 */
+		retval = tsnep_rx_alloc_and_map_skb(rx, entry);
+		if (!retval) {
+			dma_unmap_single(dmadev, dma, len, DMA_FROM_DEVICE);
+
+			length = __le32_to_cpu(entry->desc_wb->properties) &
+				 TSNEP_DESC_LENGTH_MASK;
+			skb_put(skb, length - ETH_FCS_LEN);
+			if (rx->adapter->hwtstamp_config.rx_filter ==
+			    HWTSTAMP_FILTER_ALL) {
+				struct skb_shared_hwtstamps *hwtstamps =
+					skb_hwtstamps(skb);
+				struct tsnep_rx_inline *rx_inline =
+					(struct tsnep_rx_inline *)skb->data;
+
+				skb_shinfo(skb)->tx_flags |=
+					SKBTX_HW_TSTAMP_NETDEV;
+				memset(hwtstamps, 0, sizeof(*hwtstamps));
+				hwtstamps->netdev_data = rx_inline;
+			}
+			skb_pull(skb, TSNEP_RX_INLINE_METADATA_SIZE);
+			skb_record_rx_queue(skb, rx->queue_index);
+			skb->protocol = eth_type_trans(skb,
+						       rx->adapter->netdev);
+
+			rx->packets++;
+			rx->bytes += length - TSNEP_RX_INLINE_METADATA_SIZE;
+			if (skb->pkt_type == PACKET_MULTICAST)
+				rx->multicast++;
+
+			napi_gro_receive(napi, skb);
+			done++;
+		} else {
+			rx->dropped++;
+		}
+
+		tsnep_rx_activate(rx, rx->read);
+
+		enable = true;
+
+		rx->read = (rx->read + 1) % TSNEP_RING_SIZE;
+	}
+
+	if (enable) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* descriptor properties shall be valid before hardware is
 		 * notified
 		 */
@@ -955,6 +1246,7 @@ static int tsnep_rx_refill(struct tsnep_rx *rx, int count, bool reuse)
 		iowrite32(TSNEP_CONTROL_RX_ENABLE, rx->addr + TSNEP_CONTROL);
 	}
 
+<<<<<<< HEAD
 	return i;
 }
 
@@ -1181,10 +1473,19 @@ static bool tsnep_rx_pending(struct tsnep_rx *rx)
 	return false;
 }
 
+=======
+	return done;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int tsnep_rx_open(struct tsnep_adapter *adapter, void __iomem *addr,
 			 int queue_index, struct tsnep_rx *rx)
 {
 	dma_addr_t dma;
+<<<<<<< HEAD
+=======
+	int i;
+>>>>>>> b7ba80a49124 (Commit)
 	int retval;
 
 	memset(rx, 0, sizeof(*rx));
@@ -1202,7 +1503,17 @@ static int tsnep_rx_open(struct tsnep_adapter *adapter, void __iomem *addr,
 	rx->owner_counter = 1;
 	rx->increment_owner_counter = TSNEP_RING_SIZE - 1;
 
+<<<<<<< HEAD
 	tsnep_rx_refill(rx, tsnep_rx_desc_available(rx), false);
+=======
+	for (i = 0; i < TSNEP_RING_SIZE; i++)
+		tsnep_rx_activate(rx, i);
+
+	/* descriptor properties shall be valid before hardware is notified */
+	dma_wmb();
+
+	iowrite32(TSNEP_CONTROL_RX_ENABLE, rx->addr + TSNEP_CONTROL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1219,6 +1530,7 @@ static void tsnep_rx_close(struct tsnep_rx *rx)
 	tsnep_rx_ring_cleanup(rx);
 }
 
+<<<<<<< HEAD
 static bool tsnep_pending(struct tsnep_queue *queue)
 {
 	if (queue->tx && tsnep_tx_pending(queue->tx))
@@ -1230,6 +1542,8 @@ static bool tsnep_pending(struct tsnep_queue *queue)
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int tsnep_poll(struct napi_struct *napi, int budget)
 {
 	struct tsnep_queue *queue = container_of(napi, struct tsnep_queue,
@@ -1250,6 +1564,7 @@ static int tsnep_poll(struct napi_struct *napi, int budget)
 	if (!complete)
 		return budget;
 
+<<<<<<< HEAD
 	if (likely(napi_complete_done(napi, done))) {
 		tsnep_enable_irq(queue->adapter, queue->irq_mask);
 
@@ -1386,6 +1701,32 @@ static int tsnep_netdev_open(struct net_device *netdev)
 		if (adapter->queue[i].tx) {
 			addr = adapter->addr + TSNEP_QUEUE(tx_queue_index);
 			retval = tsnep_tx_open(adapter, addr, tx_queue_index,
+=======
+	if (likely(napi_complete_done(napi, done)))
+		tsnep_enable_irq(queue->adapter, queue->irq_mask);
+
+	return min(done, budget - 1);
+}
+
+static int tsnep_netdev_open(struct net_device *netdev)
+{
+	struct tsnep_adapter *adapter = netdev_priv(netdev);
+	int i;
+	void __iomem *addr;
+	int tx_queue_index = 0;
+	int rx_queue_index = 0;
+	int retval;
+
+	retval = tsnep_phy_open(adapter);
+	if (retval)
+		return retval;
+
+	for (i = 0; i < adapter->num_queues; i++) {
+		adapter->queue[i].adapter = adapter;
+		if (adapter->queue[i].tx) {
+			addr = adapter->addr + TSNEP_QUEUE(tx_queue_index);
+			retval = tsnep_tx_open(adapter, addr,
+>>>>>>> b7ba80a49124 (Commit)
 					       adapter->queue[i].tx);
 			if (retval)
 				goto failed;
@@ -1393,16 +1734,24 @@ static int tsnep_netdev_open(struct net_device *netdev)
 		}
 		if (adapter->queue[i].rx) {
 			addr = adapter->addr + TSNEP_QUEUE(rx_queue_index);
+<<<<<<< HEAD
 			retval = tsnep_rx_open(adapter, addr, rx_queue_index,
+=======
+			retval = tsnep_rx_open(adapter, addr,
+					       rx_queue_index,
+>>>>>>> b7ba80a49124 (Commit)
 					       adapter->queue[i].rx);
 			if (retval)
 				goto failed;
 			rx_queue_index++;
 		}
+<<<<<<< HEAD
 
 		retval = tsnep_queue_open(adapter, &adapter->queue[i], i == 0);
 		if (retval)
 			goto failed;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	retval = netif_set_real_num_tx_queues(adapter->netdev,
@@ -1414,12 +1763,18 @@ static int tsnep_netdev_open(struct net_device *netdev)
 	if (retval)
 		goto failed;
 
+<<<<<<< HEAD
 	tsnep_enable_irq(adapter, ECM_INT_LINK);
 	retval = tsnep_phy_open(adapter);
 	if (retval)
 		goto phy_failed;
 
 	for (i = 0; i < adapter->num_queues; i++) {
+=======
+	for (i = 0; i < adapter->num_queues; i++) {
+		netif_napi_add(adapter->netdev, &adapter->queue[i].napi,
+			       tsnep_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 		napi_enable(&adapter->queue[i].napi);
 
 		tsnep_enable_irq(adapter, adapter->queue[i].irq_mask);
@@ -1427,17 +1782,26 @@ static int tsnep_netdev_open(struct net_device *netdev)
 
 	return 0;
 
+<<<<<<< HEAD
 phy_failed:
 	tsnep_disable_irq(adapter, ECM_INT_LINK);
 failed:
 	for (i = 0; i < adapter->num_queues; i++) {
 		tsnep_queue_close(&adapter->queue[i], i == 0);
 
+=======
+failed:
+	for (i = 0; i < adapter->num_queues; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (adapter->queue[i].rx)
 			tsnep_rx_close(adapter->queue[i].rx);
 		if (adapter->queue[i].tx)
 			tsnep_tx_close(adapter->queue[i].tx);
 	}
+<<<<<<< HEAD
+=======
+	tsnep_phy_close(adapter);
+>>>>>>> b7ba80a49124 (Commit)
 	return retval;
 }
 
@@ -1446,15 +1810,22 @@ static int tsnep_netdev_close(struct net_device *netdev)
 	struct tsnep_adapter *adapter = netdev_priv(netdev);
 	int i;
 
+<<<<<<< HEAD
 	tsnep_disable_irq(adapter, ECM_INT_LINK);
 	tsnep_phy_close(adapter);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < adapter->num_queues; i++) {
 		tsnep_disable_irq(adapter, adapter->queue[i].irq_mask);
 
 		napi_disable(&adapter->queue[i].napi);
+<<<<<<< HEAD
 
 		tsnep_queue_close(&adapter->queue[i], i == 0);
+=======
+		netif_napi_del(&adapter->queue[i].napi);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (adapter->queue[i].rx)
 			tsnep_rx_close(adapter->queue[i].rx);
@@ -1462,6 +1833,11 @@ static int tsnep_netdev_close(struct net_device *netdev)
 			tsnep_tx_close(adapter->queue[i].tx);
 	}
 
+<<<<<<< HEAD
+=======
+	tsnep_phy_close(adapter);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1607,6 +1983,7 @@ static ktime_t tsnep_netdev_get_tstamp(struct net_device *netdev,
 	return ns_to_ktime(timestamp);
 }
 
+<<<<<<< HEAD
 static int tsnep_netdev_bpf(struct net_device *dev, struct netdev_bpf *bpf)
 {
 	struct tsnep_adapter *adapter = netdev_priv(dev);
@@ -1668,6 +2045,8 @@ static int tsnep_netdev_xdp_xmit(struct net_device *dev, int n,
 	return nxmit;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct net_device_ops tsnep_netdev_ops = {
 	.ndo_open = tsnep_netdev_open,
 	.ndo_stop = tsnep_netdev_close,
@@ -1679,8 +2058,11 @@ static const struct net_device_ops tsnep_netdev_ops = {
 	.ndo_set_features = tsnep_netdev_set_features,
 	.ndo_get_tstamp = tsnep_netdev_get_tstamp,
 	.ndo_setup_tc = tsnep_tc_setup,
+<<<<<<< HEAD
 	.ndo_bpf = tsnep_netdev_bpf,
 	.ndo_xdp_xmit = tsnep_netdev_xdp_xmit,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int tsnep_mac_init(struct tsnep_adapter *adapter)
@@ -1779,6 +2161,7 @@ static int tsnep_phy_init(struct tsnep_adapter *adapter)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int tsnep_queue_init(struct tsnep_adapter *adapter, int queue_count)
 {
 	u32 irq_mask = ECM_INT_TX_0 | ECM_INT_RX_0;
@@ -1836,6 +2219,8 @@ static int tsnep_queue_init(struct tsnep_adapter *adapter, int queue_count)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int tsnep_probe(struct platform_device *pdev)
 {
 	struct tsnep_adapter *adapter;
@@ -1844,7 +2229,10 @@ static int tsnep_probe(struct platform_device *pdev)
 	u32 type;
 	int revision;
 	int version;
+<<<<<<< HEAD
 	int queue_count;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int retval;
 
 	netdev = devm_alloc_etherdev_mqs(&pdev->dev,
@@ -1866,19 +2254,30 @@ static int tsnep_probe(struct platform_device *pdev)
 	netdev->max_mtu = TSNEP_MAX_FRAME_SIZE;
 
 	mutex_init(&adapter->gate_control_lock);
+<<<<<<< HEAD
 	mutex_init(&adapter->rxnfc_lock);
 	INIT_LIST_HEAD(&adapter->rxnfc_rules);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	adapter->addr = devm_ioremap_resource(&pdev->dev, io);
 	if (IS_ERR(adapter->addr))
 		return PTR_ERR(adapter->addr);
+<<<<<<< HEAD
 	netdev->mem_start = io->start;
 	netdev->mem_end = io->end;
+=======
+	adapter->irq = platform_get_irq(pdev, 0);
+	netdev->mem_start = io->start;
+	netdev->mem_end = io->end;
+	netdev->irq = adapter->irq;
+>>>>>>> b7ba80a49124 (Commit)
 
 	type = ioread32(adapter->addr + ECM_TYPE);
 	revision = (type & ECM_REVISION_MASK) >> ECM_REVISION_SHIFT;
 	version = (type & ECM_VERSION_MASK) >> ECM_VERSION_SHIFT;
+<<<<<<< HEAD
 	queue_count = (type & ECM_QUEUE_COUNT_MASK) >> ECM_QUEUE_COUNT_SHIFT;
 	adapter->gate_control = type & ECM_GATE_CONTROL;
 	adapter->rxnfc_max = TSNEP_RX_ASSIGN_ETHER_TYPE_COUNT;
@@ -1888,6 +2287,16 @@ static int tsnep_probe(struct platform_device *pdev)
 	retval = tsnep_queue_init(adapter, queue_count);
 	if (retval)
 		return retval;
+=======
+	adapter->gate_control = type & ECM_GATE_CONTROL;
+
+	adapter->num_tx_queues = TSNEP_QUEUES;
+	adapter->num_rx_queues = TSNEP_QUEUES;
+	adapter->num_queues = TSNEP_QUEUES;
+	adapter->queue[0].tx = &adapter->tx[0];
+	adapter->queue[0].rx = &adapter->rx[0];
+	adapter->queue[0].irq_mask = ECM_INT_TX_0 | ECM_INT_RX_0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	retval = dma_set_mask_and_coherent(&adapter->pdev->dev,
 					   DMA_BIT_MASK(64));
@@ -1896,9 +2305,25 @@ static int tsnep_probe(struct platform_device *pdev)
 		return retval;
 	}
 
+<<<<<<< HEAD
 	retval = tsnep_mac_init(adapter);
 	if (retval)
 		return retval;
+=======
+	tsnep_disable_irq(adapter, ECM_INT_ALL);
+	retval = devm_request_irq(&adapter->pdev->dev, adapter->irq, tsnep_irq,
+				  0, TSNEP, adapter);
+	if (retval != 0) {
+		dev_err(&adapter->pdev->dev, "can't get assigned irq %d.\n",
+			adapter->irq);
+		return retval;
+	}
+	tsnep_enable_irq(adapter, ECM_INT_LINK);
+
+	retval = tsnep_mac_init(adapter);
+	if (retval)
+		goto mac_init_failed;
+>>>>>>> b7ba80a49124 (Commit)
 
 	retval = tsnep_mdio_init(adapter);
 	if (retval)
@@ -1916,19 +2341,25 @@ static int tsnep_probe(struct platform_device *pdev)
 	if (retval)
 		goto tc_init_failed;
 
+<<<<<<< HEAD
 	retval = tsnep_rxnfc_init(adapter);
 	if (retval)
 		goto rxnfc_init_failed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	netdev->netdev_ops = &tsnep_netdev_ops;
 	netdev->ethtool_ops = &tsnep_ethtool_ops;
 	netdev->features = NETIF_F_SG;
 	netdev->hw_features = netdev->features | NETIF_F_LOOPBACK;
 
+<<<<<<< HEAD
 	netdev->xdp_features = NETDEV_XDP_ACT_BASIC | NETDEV_XDP_ACT_REDIRECT |
 			       NETDEV_XDP_ACT_NDO_XMIT |
 			       NETDEV_XDP_ACT_NDO_XMIT_SG;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* carrier off reporting is important to ethtool even BEFORE open */
 	netif_carrier_off(netdev);
 
@@ -1944,8 +2375,11 @@ static int tsnep_probe(struct platform_device *pdev)
 	return 0;
 
 register_failed:
+<<<<<<< HEAD
 	tsnep_rxnfc_cleanup(adapter);
 rxnfc_init_failed:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tsnep_tc_cleanup(adapter);
 tc_init_failed:
 	tsnep_ptp_cleanup(adapter);
@@ -1954,6 +2388,11 @@ phy_init_failed:
 	if (adapter->mdiobus)
 		mdiobus_unregister(adapter->mdiobus);
 mdio_init_failed:
+<<<<<<< HEAD
+=======
+mac_init_failed:
+	tsnep_disable_irq(adapter, ECM_INT_ALL);
+>>>>>>> b7ba80a49124 (Commit)
 	return retval;
 }
 
@@ -1963,8 +2402,11 @@ static int tsnep_remove(struct platform_device *pdev)
 
 	unregister_netdev(adapter->netdev);
 
+<<<<<<< HEAD
 	tsnep_rxnfc_cleanup(adapter);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tsnep_tc_cleanup(adapter);
 
 	tsnep_ptp_cleanup(adapter);

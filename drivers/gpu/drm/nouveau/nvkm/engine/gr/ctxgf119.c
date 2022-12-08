@@ -510,8 +510,11 @@ gf119_grctx = {
 	.bundle_size = 0x1800,
 	.pagepool = gf100_grctx_generate_pagepool,
 	.pagepool_size = 0x8000,
+<<<<<<< HEAD
 	.attrib_cb_size = gf100_grctx_generate_attrib_cb_size,
 	.attrib_cb = gf100_grctx_generate_attrib_cb,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.attrib = gf108_grctx_generate_attrib,
 	.attrib_nr_max = 0x324,
 	.attrib_nr = 0x218,

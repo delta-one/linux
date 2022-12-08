@@ -48,10 +48,13 @@
 
 /* size of brcmf_scan_params not including variable length array */
 #define BRCMF_SCAN_PARAMS_FIXED_SIZE	64
+<<<<<<< HEAD
 #define BRCMF_SCAN_PARAMS_V2_FIXED_SIZE	72
 
 /* version of brcmf_scan_params structure */
 #define BRCMF_SCAN_PARAMS_VERSION_V2	2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* masks for channel and ssid count */
 #define BRCMF_SCAN_PARAMS_COUNT_MASK	0x0000ffff
@@ -71,7 +74,10 @@
 #define BRCMF_PRIMARY_KEY		(1 << 1)
 #define DOT11_BSSTYPE_ANY		2
 #define BRCMF_ESCAN_REQ_VERSION		1
+<<<<<<< HEAD
 #define BRCMF_ESCAN_REQ_VERSION_V2	2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define BRCMF_MAXRATES_IN_SET		16	/* max # of rates in rateset */
 
@@ -140,7 +146,11 @@
 /* Link Down indication in WoWL mode: */
 #define BRCMF_WOWL_LINKDOWN		(1 << 31)
 
+<<<<<<< HEAD
 #define BRCMF_WOWL_MAXPATTERNS		16
+=======
+#define BRCMF_WOWL_MAXPATTERNS		8
+>>>>>>> b7ba80a49124 (Commit)
 #define BRCMF_WOWL_MAXPATTERNSIZE	128
 
 #define BRCMF_COUNTRY_BUF_SZ		4
@@ -174,10 +184,13 @@
 
 #define BRCMF_HE_CAP_MCS_MAP_NSS_MAX	8
 
+<<<<<<< HEAD
 #define BRCMF_PMKSA_VER_2		2
 #define BRCMF_PMKSA_VER_3		3
 #define BRCMF_PMKSA_NO_EXPIRY		0xffffffff
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* MAX_CHUNK_LEN is the maximum length for data passing to firmware in each
  * ioctl. It is relatively small because firmware has small maximum size input
  * playload restriction for ioctls.
@@ -359,12 +372,15 @@ struct brcmf_ssid_le {
 	unsigned char SSID[IEEE80211_MAX_SSID_LEN];
 };
 
+<<<<<<< HEAD
 /* Alternate SSID structure used in some places... */
 struct brcmf_ssid8_le {
 	u8 SSID_len;
 	unsigned char SSID[IEEE80211_MAX_SSID_LEN];
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct brcmf_scan_params_le {
 	struct brcmf_ssid_le ssid_le;	/* default: {0, ""} */
 	u8 bssid[ETH_ALEN];	/* default: bcast */
@@ -401,6 +417,7 @@ struct brcmf_scan_params_le {
 	__le16 channel_list[1];	/* list of chanspecs */
 };
 
+<<<<<<< HEAD
 struct brcmf_scan_params_v2_le {
 	__le16 version;		/* structure version */
 	__le16 length;		/* structure length */
@@ -440,6 +457,8 @@ struct brcmf_scan_params_v2_le {
 	__le16 channel_list[1];	/* list of chanspecs */
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct brcmf_scan_results {
 	u32 buflen;
 	u32 version;
@@ -451,10 +470,14 @@ struct brcmf_escan_params_le {
 	__le32 version;
 	__le16 action;
 	__le16 sync_id;
+<<<<<<< HEAD
 	union {
 		struct brcmf_scan_params_le params_le;
 		struct brcmf_scan_params_v2_le params_v2_le;
 	};
+=======
+	struct brcmf_scan_params_le params_le;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct brcmf_escan_result_le {
@@ -799,6 +822,7 @@ struct brcmf_rev_info_le {
 };
 
 /**
+<<<<<<< HEAD
  * struct brcmf_wlc_version_le - firmware revision info.
  *
  * @version: structure version.
@@ -824,6 +848,8 @@ struct brcmf_wlc_version_le {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct brcmf_assoclist_le - request assoc list.
  *
  * @count: indicates number of stations.
@@ -886,6 +912,7 @@ struct brcmf_pmksa {
 };
 
 /**
+<<<<<<< HEAD
  * struct brcmf_pmksa_v2 - PMK Security Association
  *
  * @length: Length of the structure.
@@ -931,6 +958,8 @@ struct brcmf_pmksa_v3 {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct brcmf_pmk_list_le - List of pmksa's.
  *
  * @npmk: Number of pmksa's.
@@ -942,6 +971,7 @@ struct brcmf_pmk_list_le {
 };
 
 /**
+<<<<<<< HEAD
  * struct brcmf_pmk_list_v2_le - List of pmksa's.
  *
  * @version: Request version.
@@ -970,6 +1000,8 @@ struct brcmf_pmk_op_v3_le {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct brcmf_pno_param_le - PNO scan configuration parameters
  *
  * @version: PNO parameters version.
@@ -1098,7 +1130,11 @@ struct brcmf_dload_data_le {
 	__le16 dload_type;
 	__le32 len;
 	__le32 crc;
+<<<<<<< HEAD
 	u8 data[];
+=======
+	u8 data[1];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -1204,7 +1240,11 @@ struct brcmf_gscan_config {
 	u8 count_of_channel_buckets;
 	u8 retry_threshold;
 	__le16  lost_ap_window;
+<<<<<<< HEAD
 	struct brcmf_gscan_bucket_config bucket[];
+=======
+	struct brcmf_gscan_bucket_config bucket[1];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**

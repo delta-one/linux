@@ -494,7 +494,10 @@ static int serdes_probe(struct platform_device *pdev)
 {
 	struct phy_provider *provider;
 	struct serdes_ctrl *ctrl;
+<<<<<<< HEAD
 	struct resource *res;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int i;
 	int ret;
 
@@ -504,6 +507,7 @@ static int serdes_probe(struct platform_device *pdev)
 
 	ctrl->dev = &pdev->dev;
 	ctrl->regs = syscon_node_to_regmap(pdev->dev.parent->of_node);
+<<<<<<< HEAD
 	if (IS_ERR(ctrl->regs)) {
 		/* Fall back to using IORESOURCE_REG, if possible */
 		res = platform_get_resource(pdev, IORESOURCE_REG, 0);
@@ -512,6 +516,8 @@ static int serdes_probe(struct platform_device *pdev)
 						    res->name);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(ctrl->regs))
 		return PTR_ERR(ctrl->regs);
 

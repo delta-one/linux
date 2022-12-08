@@ -1101,16 +1101,24 @@ static const struct component_ops sun6i_dsi_ops = {
 
 static int sun6i_dsi_probe(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	const struct sun6i_dsi_variant *variant;
 	struct device *dev = &pdev->dev;
+=======
+	struct device *dev = &pdev->dev;
+	const char *bus_clk_name = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sun6i_dsi *dsi;
 	void __iomem *base;
 	int ret;
 
+<<<<<<< HEAD
 	variant = device_get_match_data(dev);
 	if (!variant)
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dsi = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
 	if (!dsi)
 		return -ENOMEM;
@@ -1118,7 +1126,14 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
 	dsi->dev = dev;
 	dsi->host.ops = &sun6i_dsi_host_ops;
 	dsi->host.dev = dev;
+<<<<<<< HEAD
 	dsi->variant = variant;
+=======
+
+	if (of_device_is_compatible(dev->of_node,
+				    "allwinner,sun6i-a31-mipi-dsi"))
+		bus_clk_name = "bus";
+>>>>>>> b7ba80a49124 (Commit)
 
 	base = devm_platform_ioremap_resource(pdev, 0);
 	if (IS_ERR(base)) {
@@ -1143,7 +1158,11 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
 		return PTR_ERR(dsi->regs);
 	}
 
+<<<<<<< HEAD
 	dsi->bus_clk = devm_clk_get(dev, variant->has_mod_clk ? "bus" : NULL);
+=======
+	dsi->bus_clk = devm_clk_get(dev, bus_clk_name);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(dsi->bus_clk))
 		return dev_err_probe(dev, PTR_ERR(dsi->bus_clk),
 				     "Couldn't get the DSI bus clock\n");
@@ -1152,13 +1171,19 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (variant->has_mod_clk) {
+=======
+	if (of_device_is_compatible(dev->of_node,
+				    "allwinner,sun6i-a31-mipi-dsi")) {
+>>>>>>> b7ba80a49124 (Commit)
 		dsi->mod_clk = devm_clk_get(dev, "mod");
 		if (IS_ERR(dsi->mod_clk)) {
 			dev_err(dev, "Couldn't get the DSI mod clock\n");
 			ret = PTR_ERR(dsi->mod_clk);
 			goto err_attach_clk;
 		}
+<<<<<<< HEAD
 
 		/*
 		 * In order to operate properly, the module clock on the
@@ -1168,6 +1193,16 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
 			clk_set_rate_exclusive(dsi->mod_clk, 297000000);
 	}
 
+=======
+	}
+
+	/*
+	 * In order to operate properly, that clock seems to be always
+	 * set to 297MHz.
+	 */
+	clk_set_rate_exclusive(dsi->mod_clk, 297000000);
+
+>>>>>>> b7ba80a49124 (Commit)
 	dsi->dphy = devm_phy_get(dev, "dphy");
 	if (IS_ERR(dsi->dphy)) {
 		dev_err(dev, "Couldn't get the MIPI D-PHY\n");
@@ -1192,8 +1227,12 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
 err_remove_dsi_host:
 	mipi_dsi_host_unregister(&dsi->host);
 err_unprotect_clk:
+<<<<<<< HEAD
 	if (dsi->variant->has_mod_clk && dsi->variant->set_mod_clk)
 		clk_rate_exclusive_put(dsi->mod_clk);
+=======
+	clk_rate_exclusive_put(dsi->mod_clk);
+>>>>>>> b7ba80a49124 (Commit)
 err_attach_clk:
 	regmap_mmio_detach_clk(dsi->regs);
 
@@ -1207,14 +1246,19 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
 
 	component_del(&pdev->dev, &sun6i_dsi_ops);
 	mipi_dsi_host_unregister(&dsi->host);
+<<<<<<< HEAD
 	if (dsi->variant->has_mod_clk && dsi->variant->set_mod_clk)
 		clk_rate_exclusive_put(dsi->mod_clk);
+=======
+	clk_rate_exclusive_put(dsi->mod_clk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	regmap_mmio_detach_clk(dsi->regs);
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct sun6i_dsi_variant sun6i_a31_mipi_dsi_variant = {
 	.has_mod_clk	= true,
 	.set_mod_clk	= true,
@@ -1240,6 +1284,11 @@ static const struct of_device_id sun6i_dsi_of_table[] = {
 		.compatible	= "allwinner,sun50i-a100-mipi-dsi",
 		.data		= &sun50i_a100_mipi_dsi_variant,
 	},
+=======
+static const struct of_device_id sun6i_dsi_of_table[] = {
+	{ .compatible = "allwinner,sun6i-a31-mipi-dsi" },
+	{ .compatible = "allwinner,sun50i-a64-mipi-dsi" },
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(of, sun6i_dsi_of_table);

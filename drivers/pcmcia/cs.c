@@ -810,10 +810,17 @@ int pcmcia_reset_card(struct pcmcia_socket *skt)
 EXPORT_SYMBOL(pcmcia_reset_card);
 
 
+<<<<<<< HEAD
 static int pcmcia_socket_uevent(const struct device *dev,
 				struct kobj_uevent_env *env)
 {
 	const struct pcmcia_socket *s = container_of(dev, struct pcmcia_socket, dev);
+=======
+static int pcmcia_socket_uevent(struct device *dev,
+				struct kobj_uevent_env *env)
+{
+	struct pcmcia_socket *s = container_of(dev, struct pcmcia_socket, dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (add_uevent_var(env, "SOCKET_NO=%u", s->sock))
 		return -ENOMEM;

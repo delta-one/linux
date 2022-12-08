@@ -1170,7 +1170,11 @@ static int camss_init_subdevices(struct camss *camss)
 	}
 
 	/* note: SM8250 requires VFE to be initialized before CSID */
+<<<<<<< HEAD
 	for (i = 0; i < camss->vfe_num + camss->vfe_lite_num; i++) {
+=======
+	for (i = 0; i < camss->vfe_num; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = msm_vfe_subdev_init(camss, &camss->vfe[i],
 					  &vfe_res[i], i);
 		if (ret < 0) {
@@ -1242,7 +1246,11 @@ static int camss_register_entities(struct camss *camss)
 		goto err_reg_ispif;
 	}
 
+<<<<<<< HEAD
 	for (i = 0; i < camss->vfe_num + camss->vfe_lite_num; i++) {
+=======
+	for (i = 0; i < camss->vfe_num; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = msm_vfe_register_entities(&camss->vfe[i],
 						&camss->v4l2_dev);
 		if (ret < 0) {
@@ -1314,7 +1322,11 @@ static int camss_register_entities(struct camss *camss)
 				}
 	} else {
 		for (i = 0; i < camss->csid_num; i++)
+<<<<<<< HEAD
 			for (k = 0; k < camss->vfe_num + camss->vfe_lite_num; k++)
+=======
+			for (k = 0; k < camss->vfe_num; k++)
+>>>>>>> b7ba80a49124 (Commit)
 				for (j = 0; j < camss->vfe[k].line_num; j++) {
 					struct v4l2_subdev *csid = &camss->csid[i].subdev;
 					struct v4l2_subdev *vfe = &camss->vfe[k].line[j].subdev;
@@ -1338,7 +1350,11 @@ static int camss_register_entities(struct camss *camss)
 	return 0;
 
 err_link:
+<<<<<<< HEAD
 	i = camss->vfe_num + camss->vfe_lite_num;
+=======
+	i = camss->vfe_num;
+>>>>>>> b7ba80a49124 (Commit)
 err_reg_vfe:
 	for (i--; i >= 0; i--)
 		msm_vfe_unregister_entities(&camss->vfe[i]);
@@ -1377,7 +1393,11 @@ static void camss_unregister_entities(struct camss *camss)
 
 	msm_ispif_unregister_entities(camss->ispif);
 
+<<<<<<< HEAD
 	for (i = 0; i < camss->vfe_num + camss->vfe_lite_num; i++)
+=======
+	for (i = 0; i < camss->vfe_num; i++)
+>>>>>>> b7ba80a49124 (Commit)
 		msm_vfe_unregister_entities(&camss->vfe[i]);
 }
 
@@ -1453,6 +1473,10 @@ static const struct media_device_ops camss_media_ops = {
 static int camss_configure_pd(struct camss *camss)
 {
 	struct device *dev = camss->dev;
+<<<<<<< HEAD
+=======
+	int last_pm_domain = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 	int ret;
 
@@ -1464,6 +1488,7 @@ static int camss_configure_pd(struct camss *camss)
 		return camss->genpd_num;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * If a platform device has just one power domain, then it is attached
 	 * at platform_probe() level, thus there shall be no need and even no
@@ -1472,6 +1497,8 @@ static int camss_configure_pd(struct camss *camss)
 	if (camss->genpd_num == 1)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	camss->genpd = devm_kmalloc_array(dev, camss->genpd_num,
 					  sizeof(*camss->genpd), GFP_KERNEL);
 	if (!camss->genpd)
@@ -1483,17 +1510,21 @@ static int camss_configure_pd(struct camss *camss)
 	if (!camss->genpd_link)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	/*
 	 * VFE power domains are in the beginning of the list, and while all
 	 * power domains should be attached, only if TITAN_TOP power domain is
 	 * found in the list, it should be linked over here.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < camss->genpd_num; i++) {
 		camss->genpd[i] = dev_pm_domain_attach_by_id(camss->dev, i);
 		if (IS_ERR(camss->genpd[i])) {
 			ret = PTR_ERR(camss->genpd[i]);
 			goto fail_pm;
 		}
+<<<<<<< HEAD
 	}
 
 	if (i > camss->vfe_num) {
@@ -1504,13 +1535,33 @@ static int camss_configure_pd(struct camss *camss)
 			ret = -EINVAL;
 			goto fail_pm;
 		}
+=======
+
+		camss->genpd_link[i] = device_link_add(camss->dev, camss->genpd[i],
+						       DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME |
+						       DL_FLAG_RPM_ACTIVE);
+		if (!camss->genpd_link[i]) {
+			dev_pm_domain_detach(camss->genpd[i], true);
+			ret = -EINVAL;
+			goto fail_pm;
+		}
+
+		last_pm_domain = i;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
 
 fail_pm:
+<<<<<<< HEAD
 	for (--i ; i >= 0; i--)
 		dev_pm_domain_detach(camss->genpd[i], true);
+=======
+	for (i = 0; i < last_pm_domain; i++) {
+		device_link_del(camss->genpd_link[i]);
+		dev_pm_domain_detach(camss->genpd[i], true);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -1580,15 +1631,23 @@ static int camss_probe(struct platform_device *pdev)
 		camss->version = CAMSS_845;
 		camss->csiphy_num = 4;
 		camss->csid_num = 3;
+<<<<<<< HEAD
 		camss->vfe_num = 2;
 		camss->vfe_lite_num = 1;
+=======
+		camss->vfe_num = 3;
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (of_device_is_compatible(dev->of_node,
 					   "qcom,sm8250-camss")) {
 		camss->version = CAMSS_8250;
 		camss->csiphy_num = 6;
 		camss->csid_num = 4;
+<<<<<<< HEAD
 		camss->vfe_num = 2;
 		camss->vfe_lite_num = 2;
+=======
+		camss->vfe_num = 4;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		return -EINVAL;
 	}
@@ -1610,8 +1669,13 @@ static int camss_probe(struct platform_device *pdev)
 			return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	camss->vfe = devm_kcalloc(dev, camss->vfe_num + camss->vfe_lite_num,
 				  sizeof(*camss->vfe), GFP_KERNEL);
+=======
+	camss->vfe = devm_kcalloc(dev, camss->vfe_num, sizeof(*camss->vfe),
+				  GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!camss->vfe)
 		return -ENOMEM;
 
@@ -1709,6 +1773,7 @@ void camss_delete(struct camss *camss)
 
 	pm_runtime_disable(camss->dev);
 
+<<<<<<< HEAD
 	if (camss->genpd_num == 1)
 		return;
 
@@ -1717,6 +1782,12 @@ void camss_delete(struct camss *camss)
 
 	for (i = 0; i < camss->genpd_num; i++)
 		dev_pm_domain_detach(camss->genpd[i], true);
+=======
+	for (i = 0; i < camss->genpd_num; i++) {
+		device_link_del(camss->genpd_link[i]);
+		dev_pm_domain_detach(camss->genpd[i], true);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*

@@ -357,7 +357,11 @@ int vivid_fb_init(struct vivid_dev *dev)
 	int ret;
 
 	dev->video_buffer_size = MAX_OSD_HEIGHT * MAX_OSD_WIDTH * 2;
+<<<<<<< HEAD
 	dev->video_vbase = kzalloc(dev->video_buffer_size, GFP_KERNEL);
+=======
+	dev->video_vbase = kzalloc(dev->video_buffer_size, GFP_KERNEL | GFP_DMA32);
+>>>>>>> b7ba80a49124 (Commit)
 	if (dev->video_vbase == NULL)
 		return -ENOMEM;
 	dev->video_pbase = virt_to_phys(dev->video_vbase);

@@ -253,7 +253,12 @@ static const struct iio_info lidar_info = {
 	.read_raw = lidar_read_raw,
 };
 
+<<<<<<< HEAD
 static int lidar_probe(struct i2c_client *client)
+=======
+static int lidar_probe(struct i2c_client *client,
+		       const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lidar_data *data;
 	struct iio_dev *indio_dev;
@@ -365,7 +370,11 @@ static struct i2c_driver lidar_driver = {
 		.of_match_table	= lidar_dt_ids,
 		.pm	= pm_ptr(&lidar_pm_ops),
 	},
+<<<<<<< HEAD
 	.probe_new	= lidar_probe,
+=======
+	.probe		= lidar_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= lidar_remove,
 	.id_table	= lidar_id,
 };

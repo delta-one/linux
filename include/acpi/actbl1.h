@@ -45,13 +45,19 @@
 #define ACPI_SIG_HMAT           "HMAT"	/* Heterogeneous Memory Attributes Table */
 #define ACPI_SIG_HPET           "HPET"	/* High Precision Event Timer table */
 #define ACPI_SIG_IBFT           "IBFT"	/* iSCSI Boot Firmware Table */
+<<<<<<< HEAD
 #define ACPI_SIG_MSCT           "MSCT"	/* Maximum System Characteristics Table */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define ACPI_SIG_S3PT           "S3PT"	/* S3 Performance (sub)Table */
 #define ACPI_SIG_PCCS           "PCC"	/* PCC Shared Memory Region */
 
+<<<<<<< HEAD
 #define ACPI_SIG_NBFT		"NBFT"	/* NVMe Boot Firmware Table */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Reserved table signatures */
 
 #define ACPI_SIG_MATR           "MATR"	/* Memory Address Translation Table */
@@ -308,6 +314,7 @@ struct acpi_table_boot {
 
 /*******************************************************************************
  *
+<<<<<<< HEAD
  * CDAT - Coherent Device Attribute Table
  *        Version 1
  *
@@ -425,6 +432,12 @@ struct acpi_cdat_sslbe {
  *        Version 1
  *
  * Conforms to the "CXL Early Discovery Table" (CXL 2.0, October 2020)
+=======
+ * CEDT - CXL Early Discovery Table
+ *        Version 1
+ *
+ * Conforms to the "CXL Early Discovery Table" (CXL 2.0)
+>>>>>>> b7ba80a49124 (Commit)
  *
  ******************************************************************************/
 
@@ -445,9 +458,13 @@ struct acpi_cedt_header {
 enum acpi_cedt_type {
 	ACPI_CEDT_TYPE_CHBS = 0,
 	ACPI_CEDT_TYPE_CFMWS = 1,
+<<<<<<< HEAD
 	ACPI_CEDT_TYPE_CXIMS = 2,
 	ACPI_CEDT_TYPE_RDPAS = 3,
 	ACPI_CEDT_TYPE_RESERVED = 4,
+=======
+	ACPI_CEDT_TYPE_RESERVED = 2,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Values for version field above */
@@ -498,7 +515,10 @@ struct acpi_cedt_cfmws_target_element {
 /* Values for Interleave Arithmetic field above */
 
 #define ACPI_CEDT_CFMWS_ARITHMETIC_MODULO   (0)
+<<<<<<< HEAD
 #define ACPI_CEDT_CFMWS_ARITHMETIC_XOR      (1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Values for Restrictions field above */
 
@@ -508,6 +528,7 @@ struct acpi_cedt_cfmws_target_element {
 #define ACPI_CEDT_CFMWS_RESTRICT_PMEM       (1<<3)
 #define ACPI_CEDT_CFMWS_RESTRICT_FIXED      (1<<4)
 
+<<<<<<< HEAD
 /* 2: CXL XOR Interleave Math Structure */
 
 struct acpi_cedt_cxims {
@@ -538,6 +559,8 @@ struct acpi_cedt_rdpas {
 #define ACPI_CEDT_RDPAS_PROTOCOL_IO        (0)
 #define ACPI_CEDT_RDPAS_PROTOCOL_CACHEMEM  (1)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*******************************************************************************
  *
  * CPEP - Corrected Platform Error Polling table (ACPI 4.0)
@@ -804,7 +827,11 @@ struct acpi_dmar_pci_path {
 struct acpi_dmar_hardware_unit {
 	struct acpi_dmar_header header;
 	u8 flags;
+<<<<<<< HEAD
 	u8 size;		/* Size of the register set */
+=======
+	u8 reserved;
+>>>>>>> b7ba80a49124 (Commit)
 	u16 segment;
 	u64 address;		/* Register Base Address */
 };

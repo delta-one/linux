@@ -13,7 +13,10 @@
 #include <linux/percpu.h>
 #include <linux/perf/arm_pmu.h>
 
+<<<<<<< HEAD
 #include <asm/cpu.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/cputype.h>
 
 static DEFINE_PER_CPU(struct arm_pmu *, probed_pmus);
@@ -188,7 +191,11 @@ out_err:
 	return err;
 }
 
+<<<<<<< HEAD
 static struct arm_pmu *arm_pmu_acpi_find_pmu(void)
+=======
+static struct arm_pmu *arm_pmu_acpi_find_alloc_pmu(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long cpuid = read_cpuid_id();
 	struct arm_pmu *pmu;
@@ -202,7 +209,20 @@ static struct arm_pmu *arm_pmu_acpi_find_pmu(void)
 		return pmu;
 	}
 
+<<<<<<< HEAD
 	return NULL;
+=======
+	pmu = armpmu_alloc_atomic();
+	if (!pmu) {
+		pr_warn("Unable to allocate PMU for CPU%d\n",
+			smp_processor_id());
+		return NULL;
+	}
+
+	pmu->acpi_cpuid = cpuid;
+
+	return pmu;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -234,6 +254,7 @@ static bool pmu_irq_matches(struct arm_pmu *pmu, int irq)
 	return true;
 }
 
+<<<<<<< HEAD
 static void arm_pmu_acpi_associate_pmu_cpu(struct arm_pmu *pmu,
 					   unsigned int cpu)
 {
@@ -250,6 +271,8 @@ static void arm_pmu_acpi_associate_pmu_cpu(struct arm_pmu *pmu,
 	cpumask_set_cpu(cpu, &pmu->supported_cpus);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This must run before the common arm_pmu hotplug logic, so that we can
  * associate a CPU and its interrupt before the common code tries to manage the
@@ -262,11 +285,17 @@ static void arm_pmu_acpi_associate_pmu_cpu(struct arm_pmu *pmu,
 static int arm_pmu_acpi_cpu_starting(unsigned int cpu)
 {
 	struct arm_pmu *pmu;
+<<<<<<< HEAD
+=======
+	struct pmu_hw_events __percpu *hw_events;
+	int irq;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* If we've already probed this CPU, we have nothing to do */
 	if (per_cpu(probed_pmus, cpu))
 		return 0;
 
+<<<<<<< HEAD
 	pmu = arm_pmu_acpi_find_pmu();
 	if (!pmu) {
 		pr_warn_ratelimited("Unable to associate CPU%d with a PMU\n",
@@ -306,6 +335,37 @@ int arm_pmu_acpi_probe(armpmu_init_fn init_fn)
 					arm_pmu_acpi_cpu_starting, NULL);
 	if (ret)
 		return ret;
+=======
+	irq = per_cpu(pmu_irqs, cpu);
+
+	pmu = arm_pmu_acpi_find_alloc_pmu();
+	if (!pmu)
+		return -ENOMEM;
+
+	per_cpu(probed_pmus, cpu) = pmu;
+
+	if (pmu_irq_matches(pmu, irq)) {
+		hw_events = pmu->hw_events;
+		per_cpu(hw_events->irq, cpu) = irq;
+	}
+
+	cpumask_set_cpu(cpu, &pmu->supported_cpus);
+
+	/*
+	 * Ideally, we'd probe the PMU here when we find the first matching
+	 * CPU. We can't do that for several reasons; see the comment in
+	 * arm_pmu_acpi_init().
+	 *
+	 * So for the time being, we're done.
+	 */
+	return 0;
+}
+
+int arm_pmu_acpi_probe(armpmu_init_fn init_fn)
+{
+	int pmu_idx = 0;
+	int cpu, ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Initialise and register the set of PMUs which we know about right
@@ -320,6 +380,7 @@ int arm_pmu_acpi_probe(armpmu_init_fn init_fn)
 	 * For the moment, as with the platform/DT case, we need at least one
 	 * of a PMU's CPUs to be online at probe time.
 	 */
+<<<<<<< HEAD
 	for_each_online_cpu(cpu) {
 		struct arm_pmu *pmu = per_cpu(probed_pmus, cpu);
 		unsigned long cpuid;
@@ -341,6 +402,15 @@ int arm_pmu_acpi_probe(armpmu_init_fn init_fn)
 
 		arm_pmu_acpi_probe_matching_cpus(pmu, cpuid);
 
+=======
+	for_each_possible_cpu(cpu) {
+		struct arm_pmu *pmu = per_cpu(probed_pmus, cpu);
+		char *base_name;
+
+		if (!pmu || pmu->name)
+			continue;
+
+>>>>>>> b7ba80a49124 (Commit)
 		ret = init_fn(pmu);
 		if (ret == -ENODEV) {
 			/* PMU not handled by this driver, or not present */
@@ -365,16 +435,37 @@ int arm_pmu_acpi_probe(armpmu_init_fn init_fn)
 		}
 	}
 
+<<<<<<< HEAD
 	return ret;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int arm_pmu_acpi_init(void)
 {
+<<<<<<< HEAD
+=======
+	int ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (acpi_disabled)
 		return 0;
 
 	arm_spe_acpi_register_device();
 
+<<<<<<< HEAD
 	return 0;
+=======
+	ret = arm_pmu_acpi_parse_irqs();
+	if (ret)
+		return ret;
+
+	ret = cpuhp_setup_state(CPUHP_AP_PERF_ARM_ACPI_STARTING,
+				"perf/arm/pmu_acpi:starting",
+				arm_pmu_acpi_cpu_starting, NULL);
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 subsys_initcall(arm_pmu_acpi_init)

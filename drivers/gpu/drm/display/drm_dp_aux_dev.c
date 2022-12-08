@@ -330,7 +330,11 @@ int drm_dp_aux_dev_init(void)
 {
 	int res;
 
+<<<<<<< HEAD
 	drm_dp_aux_dev_class = class_create("drm_dp_aux_dev");
+=======
+	drm_dp_aux_dev_class = class_create(THIS_MODULE, "drm_dp_aux_dev");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(drm_dp_aux_dev_class)) {
 		return PTR_ERR(drm_dp_aux_dev_class);
 	}

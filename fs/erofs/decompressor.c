@@ -42,7 +42,11 @@ int z_erofs_load_lz4_config(struct super_block *sb,
 		if (!sbi->lz4.max_pclusterblks) {
 			sbi->lz4.max_pclusterblks = 1;	/* reserved case */
 		} else if (sbi->lz4.max_pclusterblks >
+<<<<<<< HEAD
 			   erofs_blknr(sb, Z_EROFS_PCLUSTER_MAX_SIZE)) {
+=======
+			   Z_EROFS_PCLUSTER_MAX_SIZE / EROFS_BLKSIZ) {
+>>>>>>> b7ba80a49124 (Commit)
 			erofs_err(sb, "too large lz4 pclusterblks %u",
 				  sbi->lz4.max_pclusterblks);
 			return -EINVAL;
@@ -221,13 +225,21 @@ static int z_erofs_lz4_decompress_mem(struct z_erofs_lz4_decompress_ctx *ctx,
 		support_0padding = true;
 		ret = z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
 				min_t(unsigned int, rq->inputsize,
+<<<<<<< HEAD
 				      rq->sb->s_blocksize - rq->pageofs_in));
+=======
+				      EROFS_BLKSIZ - rq->pageofs_in));
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret) {
 			kunmap_atomic(headpage);
 			return ret;
 		}
 		may_inplace = !((rq->pageofs_in + rq->inputsize) &
+<<<<<<< HEAD
 				(rq->sb->s_blocksize - 1));
+=======
+				(EROFS_BLKSIZ - 1));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	inputmargin = rq->pageofs_in;
@@ -317,15 +329,23 @@ dstmap_out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int z_erofs_transform_plain(struct z_erofs_decompress_req *rq,
 				   struct page **pagepool)
 {
 	const unsigned int inpages = PAGE_ALIGN(rq->inputsize) >> PAGE_SHIFT;
 	const unsigned int outpages =
+=======
+static int z_erofs_shifted_transform(struct z_erofs_decompress_req *rq,
+				     struct page **pagepool)
+{
+	const unsigned int nrpages_out =
+>>>>>>> b7ba80a49124 (Commit)
 		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
 	const unsigned int righthalf = min_t(unsigned int, rq->outputsize,
 					     PAGE_SIZE - rq->pageofs_out);
 	const unsigned int lefthalf = rq->outputsize - righthalf;
+<<<<<<< HEAD
 	const unsigned int interlaced_offset =
 		rq->alg == Z_EROFS_COMPRESSION_SHIFTED ? 0 : rq->pageofs_out;
 	unsigned char *src, *dst;
@@ -360,11 +380,44 @@ static int z_erofs_transform_plain(struct z_erofs_decompress_req *rq,
 		}
 	}
 	kunmap_local(src);
+=======
+	unsigned char *src, *dst;
+
+	if (nrpages_out > 2) {
+		DBG_BUGON(1);
+		return -EIO;
+	}
+
+	if (rq->out[0] == *rq->in) {
+		DBG_BUGON(nrpages_out != 1);
+		return 0;
+	}
+
+	src = kmap_atomic(*rq->in) + rq->pageofs_in;
+	if (rq->out[0]) {
+		dst = kmap_atomic(rq->out[0]);
+		memcpy(dst + rq->pageofs_out, src, righthalf);
+		kunmap_atomic(dst);
+	}
+
+	if (nrpages_out == 2) {
+		DBG_BUGON(!rq->out[1]);
+		if (rq->out[1] == *rq->in) {
+			memmove(src, src + righthalf, lefthalf);
+		} else {
+			dst = kmap_atomic(rq->out[1]);
+			memcpy(dst, src + righthalf, lefthalf);
+			kunmap_atomic(dst);
+		}
+	}
+	kunmap_atomic(src);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static struct z_erofs_decompressor decompressors[] = {
 	[Z_EROFS_COMPRESSION_SHIFTED] = {
+<<<<<<< HEAD
 		.decompress = z_erofs_transform_plain,
 		.name = "shifted"
 	},
@@ -372,6 +425,11 @@ static struct z_erofs_decompressor decompressors[] = {
 		.decompress = z_erofs_transform_plain,
 		.name = "interlaced"
 	},
+=======
+		.decompress = z_erofs_shifted_transform,
+		.name = "shifted"
+	},
+>>>>>>> b7ba80a49124 (Commit)
 	[Z_EROFS_COMPRESSION_LZ4] = {
 		.decompress = z_erofs_lz4_decompress,
 		.name = "lz4"

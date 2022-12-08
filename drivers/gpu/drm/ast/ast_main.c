@@ -29,13 +29,24 @@
 #include <linux/pci.h>
 
 #include <drm/drm_atomic_helper.h>
+<<<<<<< HEAD
 #include <drm/drm_drv.h>
 #include <drm/drm_gem.h>
+=======
+#include <drm/drm_crtc_helper.h>
+#include <drm/drm_drv.h>
+#include <drm/drm_gem.h>
+#include <drm/drm_gem_vram_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_managed.h>
 
 #include "ast_drv.h"
 
+<<<<<<< HEAD
 void ast_set_index_reg_mask(struct ast_device *ast,
+=======
+void ast_set_index_reg_mask(struct ast_private *ast,
+>>>>>>> b7ba80a49124 (Commit)
 			    uint32_t base, uint8_t index,
 			    uint8_t mask, uint8_t val)
 {
@@ -45,7 +56,11 @@ void ast_set_index_reg_mask(struct ast_device *ast,
 	ast_set_index_reg(ast, base, index, tmp);
 }
 
+<<<<<<< HEAD
 uint8_t ast_get_index_reg(struct ast_device *ast,
+=======
+uint8_t ast_get_index_reg(struct ast_private *ast,
+>>>>>>> b7ba80a49124 (Commit)
 			  uint32_t base, uint8_t index)
 {
 	uint8_t ret;
@@ -54,7 +69,11 @@ uint8_t ast_get_index_reg(struct ast_device *ast,
 	return ret;
 }
 
+<<<<<<< HEAD
 uint8_t ast_get_index_reg_mask(struct ast_device *ast,
+=======
+uint8_t ast_get_index_reg_mask(struct ast_private *ast,
+>>>>>>> b7ba80a49124 (Commit)
 			       uint32_t base, uint8_t index, uint8_t mask)
 {
 	uint8_t ret;
@@ -66,7 +85,11 @@ uint8_t ast_get_index_reg_mask(struct ast_device *ast,
 static void ast_detect_config_mode(struct drm_device *dev, u32 *scu_rev)
 {
 	struct device_node *np = dev->dev->of_node;
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	struct pci_dev *pdev = to_pci_dev(dev->dev);
 	uint32_t data, jregd0, jregd1;
 
@@ -122,7 +145,11 @@ static void ast_detect_config_mode(struct drm_device *dev, u32 *scu_rev)
 
 static int ast_detect_chip(struct drm_device *dev, bool *need_post)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	struct pci_dev *pdev = to_pci_dev(dev->dev);
 	uint32_t jreg, scu_rev;
 
@@ -271,7 +298,11 @@ static int ast_detect_chip(struct drm_device *dev, bool *need_post)
 static int ast_get_dram_info(struct drm_device *dev)
 {
 	struct device_node *np = dev->dev->of_node;
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t mcr_cfg, mcr_scu_mpll, mcr_scu_strap;
 	uint32_t denum, num, div, ref_pll, dsel;
 
@@ -394,12 +425,17 @@ static int ast_get_dram_info(struct drm_device *dev)
  */
 static void ast_device_release(void *data)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = data;
+=======
+	struct ast_private *ast = data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* enable standard VGA decode */
 	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x04);
 }
 
+<<<<<<< HEAD
 struct ast_device *ast_device_create(const struct drm_driver *drv,
 				     struct pci_dev *pdev,
 				     unsigned long flags)
@@ -410,6 +446,18 @@ struct ast_device *ast_device_create(const struct drm_driver *drv,
 	int ret = 0;
 
 	ast = devm_drm_dev_alloc(&pdev->dev, drv, struct ast_device, base);
+=======
+struct ast_private *ast_device_create(const struct drm_driver *drv,
+				      struct pci_dev *pdev,
+				      unsigned long flags)
+{
+	struct drm_device *dev;
+	struct ast_private *ast;
+	bool need_post;
+	int ret = 0;
+
+	ast = devm_drm_dev_alloc(&pdev->dev, drv, struct ast_private, base);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(ast))
 		return ast;
 	dev = &ast->base;
@@ -459,8 +507,13 @@ struct ast_device *ast_device_create(const struct drm_driver *drv,
 
 	/* map reserved buffer */
 	ast->dp501_fw_buf = NULL;
+<<<<<<< HEAD
 	if (ast->vram_size < pci_resource_len(pdev, 0)) {
 		ast->dp501_fw_buf = pci_iomap_range(pdev, 0, ast->vram_size, 0);
+=======
+	if (dev->vram_mm->vram_size < pci_resource_len(pdev, 0)) {
+		ast->dp501_fw_buf = pci_iomap_range(pdev, 0, dev->vram_mm->vram_size, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!ast->dp501_fw_buf)
 			drm_info(dev, "failed to map reserved buffer!\n");
 	}

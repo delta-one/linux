@@ -357,7 +357,11 @@ int btrfs_add_delayed_data_ref(struct btrfs_trans_handle *trans,
 int btrfs_add_delayed_extent_op(struct btrfs_trans_handle *trans,
 				u64 bytenr, u64 num_bytes,
 				struct btrfs_delayed_extent_op *extent_op);
+<<<<<<< HEAD
 void btrfs_merge_delayed_refs(struct btrfs_fs_info *fs_info,
+=======
+void btrfs_merge_delayed_refs(struct btrfs_trans_handle *trans,
+>>>>>>> b7ba80a49124 (Commit)
 			      struct btrfs_delayed_ref_root *delayed_refs,
 			      struct btrfs_delayed_ref_head *head);
 

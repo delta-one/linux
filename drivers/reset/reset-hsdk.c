@@ -135,3 +135,7 @@ builtin_platform_driver(hsdk_reset_driver);
 
 MODULE_AUTHOR("Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>");
 MODULE_DESCRIPTION("Synopsys HSDK SDP reset driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

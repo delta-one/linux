@@ -14,6 +14,7 @@ u8 iwl_mvm_get_channel_width(struct cfg80211_chan_def *chandef)
 	switch (chandef->width) {
 	case NL80211_CHAN_WIDTH_20_NOHT:
 	case NL80211_CHAN_WIDTH_20:
+<<<<<<< HEAD
 		return IWL_PHY_CHANNEL_MODE20;
 	case NL80211_CHAN_WIDTH_40:
 		return IWL_PHY_CHANNEL_MODE40;
@@ -26,6 +27,18 @@ u8 iwl_mvm_get_channel_width(struct cfg80211_chan_def *chandef)
 	default:
 		WARN(1, "Invalid channel width=%u", chandef->width);
 		return IWL_PHY_CHANNEL_MODE20;
+=======
+		return PHY_VHT_CHANNEL_MODE20;
+	case NL80211_CHAN_WIDTH_40:
+		return PHY_VHT_CHANNEL_MODE40;
+	case NL80211_CHAN_WIDTH_80:
+		return PHY_VHT_CHANNEL_MODE80;
+	case NL80211_CHAN_WIDTH_160:
+		return PHY_VHT_CHANNEL_MODE160;
+	default:
+		WARN(1, "Invalid channel width=%u", chandef->width);
+		return PHY_VHT_CHANNEL_MODE20;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -35,16 +48,41 @@ u8 iwl_mvm_get_channel_width(struct cfg80211_chan_def *chandef)
  */
 u8 iwl_mvm_get_ctrl_pos(struct cfg80211_chan_def *chandef)
 {
+<<<<<<< HEAD
 	int offs = chandef->chan->center_freq - chandef->center_freq1;
 	int abs_offs = abs(offs);
 	u8 ret;
 
 	if (offs == 0) {
+=======
+	switch (chandef->chan->center_freq - chandef->center_freq1) {
+	case -70:
+		return PHY_VHT_CTRL_POS_4_BELOW;
+	case -50:
+		return PHY_VHT_CTRL_POS_3_BELOW;
+	case -30:
+		return PHY_VHT_CTRL_POS_2_BELOW;
+	case -10:
+		return PHY_VHT_CTRL_POS_1_BELOW;
+	case  10:
+		return PHY_VHT_CTRL_POS_1_ABOVE;
+	case  30:
+		return PHY_VHT_CTRL_POS_2_ABOVE;
+	case  50:
+		return PHY_VHT_CTRL_POS_3_ABOVE;
+	case  70:
+		return PHY_VHT_CTRL_POS_4_ABOVE;
+	default:
+		WARN(1, "Invalid channel definition");
+		fallthrough;
+	case 0:
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * The FW is expected to check the control channel position only
 		 * when in HT/VHT and the channel width is not 20MHz. Return
 		 * this value as the default one.
 		 */
+<<<<<<< HEAD
 		return 0;
 	}
 
@@ -61,6 +99,10 @@ u8 iwl_mvm_get_ctrl_pos(struct cfg80211_chan_def *chandef)
 	ret |= (offs > 0) * IWL_PHY_CTRL_POS_ABOVE;
 
 	return ret;
+=======
+		return PHY_VHT_CTRL_POS_1_BELOW;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*

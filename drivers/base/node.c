@@ -434,7 +434,10 @@ static ssize_t node_read_meminfo(struct device *dev,
 			     "Node %d ShadowCallStack:%8lu kB\n"
 #endif
 			     "Node %d PageTables:     %8lu kB\n"
+<<<<<<< HEAD
 			     "Node %d SecPageTables:  %8lu kB\n"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			     "Node %d NFS_Unstable:   %8lu kB\n"
 			     "Node %d Bounce:         %8lu kB\n"
 			     "Node %d WritebackTmp:   %8lu kB\n"
@@ -461,7 +464,10 @@ static ssize_t node_read_meminfo(struct device *dev,
 			     nid, node_page_state(pgdat, NR_KERNEL_SCS_KB),
 #endif
 			     nid, K(node_page_state(pgdat, NR_PAGETABLE)),
+<<<<<<< HEAD
 			     nid, K(node_page_state(pgdat, NR_SECONDARY_PAGETABLE)),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			     nid, 0UL,
 			     nid, K(sum_zone_node_page_state(nid, NR_BOUNCE)),
 			     nid, K(node_page_state(pgdat, NR_WRITEBACK_TEMP)),
@@ -587,9 +593,12 @@ static const struct attribute_group *node_dev_groups[] = {
 #ifdef CONFIG_HAVE_ARCH_NODE_DEV_GROUP
 	&arch_node_dev_group,
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_MEMORY_FAILURE
 	&memory_failure_attr_group,
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	NULL
 };
 

@@ -17,6 +17,10 @@
 #include <linux/string.h>
 #include <linux/inet.h>
 #include <linux/namei.h>
+<<<<<<< HEAD
+=======
+#include <linux/idr.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sched.h>
 #include <linux/slab.h>
 #include <linux/xattr.h>
@@ -260,7 +264,11 @@ int v9fs_init_inode(struct v9fs_session_info *v9ses,
 {
 	int err = 0;
 
+<<<<<<< HEAD
 	inode_init_owner(&nop_mnt_idmap, inode, NULL, mode);
+=======
+	inode_init_owner(&init_user_ns, inode, NULL, mode);
+>>>>>>> b7ba80a49124 (Commit)
 	inode->i_blocks = 0;
 	inode->i_rdev = rdev;
 	inode->i_atime = inode->i_mtime = inode->i_ctime = current_time(inode);
@@ -287,10 +295,31 @@ int v9fs_init_inode(struct v9fs_session_info *v9ses,
 	case S_IFREG:
 		if (v9fs_proto_dotl(v9ses)) {
 			inode->i_op = &v9fs_file_inode_operations_dotl;
+<<<<<<< HEAD
 			inode->i_fop = &v9fs_file_operations_dotl;
 		} else {
 			inode->i_op = &v9fs_file_inode_operations;
 			inode->i_fop = &v9fs_file_operations;
+=======
+			if (v9ses->cache == CACHE_LOOSE ||
+			    v9ses->cache == CACHE_FSCACHE)
+				inode->i_fop =
+					&v9fs_cached_file_operations_dotl;
+			else if (v9ses->cache == CACHE_MMAP)
+				inode->i_fop = &v9fs_mmap_file_operations_dotl;
+			else
+				inode->i_fop = &v9fs_file_operations_dotl;
+		} else {
+			inode->i_op = &v9fs_file_inode_operations;
+			if (v9ses->cache == CACHE_LOOSE ||
+			    v9ses->cache == CACHE_FSCACHE)
+				inode->i_fop =
+					&v9fs_cached_file_operations;
+			else if (v9ses->cache == CACHE_MMAP)
+				inode->i_fop = &v9fs_mmap_file_operations;
+			else
+				inode->i_fop = &v9fs_file_operations;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		break;
@@ -658,7 +687,11 @@ error:
 
 /**
  * v9fs_vfs_create - VFS hook to create a regular file
+<<<<<<< HEAD
  * @idmap: idmap of the mount
+=======
+ * @mnt_userns: The user namespace of the mount
+>>>>>>> b7ba80a49124 (Commit)
  * @dir: The parent directory
  * @dentry: The name of file to be created
  * @mode: The UNIX file mode to set
@@ -670,7 +703,11 @@ error:
  */
 
 static int
+<<<<<<< HEAD
 v9fs_vfs_create(struct mnt_idmap *idmap, struct inode *dir,
+=======
+v9fs_vfs_create(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		struct dentry *dentry, umode_t mode, bool excl)
 {
 	struct v9fs_session_info *v9ses = v9fs_inode2v9ses(dir);
@@ -690,14 +727,22 @@ v9fs_vfs_create(struct mnt_idmap *idmap, struct inode *dir,
 
 /**
  * v9fs_vfs_mkdir - VFS mkdir hook to create a directory
+<<<<<<< HEAD
  * @idmap: idmap of the mount
+=======
+ * @mnt_userns: The user namespace of the mount
+>>>>>>> b7ba80a49124 (Commit)
  * @dir:  inode that is being unlinked
  * @dentry: dentry that is being unlinked
  * @mode: mode for new directory
  *
  */
 
+<<<<<<< HEAD
 static int v9fs_vfs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int v9fs_vfs_mkdir(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 			  struct dentry *dentry, umode_t mode)
 {
 	int err;
@@ -829,7 +874,12 @@ v9fs_vfs_atomic_open(struct inode *dir, struct dentry *dentry,
 	inode = d_inode(dentry);
 	v9inode = V9FS_I(inode);
 	mutex_lock(&v9inode->v_mutex);
+<<<<<<< HEAD
 	if ((v9ses->cache >= CACHE_WRITEBACK) && !v9inode->writeback_fid &&
+=======
+	if ((v9ses->cache == CACHE_LOOSE || v9ses->cache == CACHE_FSCACHE) &&
+	    !v9inode->writeback_fid &&
+>>>>>>> b7ba80a49124 (Commit)
 	    ((flags & O_ACCMODE) != O_RDONLY)) {
 		/*
 		 * clone a fid and add it to writeback_fid
@@ -893,7 +943,11 @@ int v9fs_vfs_rmdir(struct inode *i, struct dentry *d)
 
 /**
  * v9fs_vfs_rename - VFS hook to rename an inode
+<<<<<<< HEAD
  * @idmap: The idmap of the mount
+=======
+ * @mnt_userns: The user namespace of the mount
+>>>>>>> b7ba80a49124 (Commit)
  * @old_dir:  old dir inode
  * @old_dentry: old dentry
  * @new_dir: new dir inode
@@ -903,7 +957,11 @@ int v9fs_vfs_rmdir(struct inode *i, struct dentry *d)
  */
 
 int
+<<<<<<< HEAD
 v9fs_vfs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
+=======
+v9fs_vfs_rename(struct user_namespace *mnt_userns, struct inode *old_dir,
+>>>>>>> b7ba80a49124 (Commit)
 		struct dentry *old_dentry, struct inode *new_dir,
 		struct dentry *new_dentry, unsigned int flags)
 {
@@ -1003,7 +1061,11 @@ error:
 
 /**
  * v9fs_vfs_getattr - retrieve file metadata
+<<<<<<< HEAD
  * @idmap: idmap of the mount
+=======
+ * @mnt_userns: The user namespace of the mount
+>>>>>>> b7ba80a49124 (Commit)
  * @path: Object to query
  * @stat: metadata structure to populate
  * @request_mask: Mask of STATX_xxx flags indicating the caller's interests
@@ -1012,11 +1074,18 @@ error:
  */
 
 static int
+<<<<<<< HEAD
 v9fs_vfs_getattr(struct mnt_idmap *idmap, const struct path *path,
 		 struct kstat *stat, u32 request_mask, unsigned int flags)
 {
 	struct dentry *dentry = path->dentry;
 	struct inode *inode = d_inode(dentry);
+=======
+v9fs_vfs_getattr(struct user_namespace *mnt_userns, const struct path *path,
+		 struct kstat *stat, u32 request_mask, unsigned int flags)
+{
+	struct dentry *dentry = path->dentry;
+>>>>>>> b7ba80a49124 (Commit)
 	struct v9fs_session_info *v9ses;
 	struct p9_fid *fid;
 	struct p9_wstat *st;
@@ -1024,6 +1093,7 @@ v9fs_vfs_getattr(struct mnt_idmap *idmap, const struct path *path,
 	p9_debug(P9_DEBUG_VFS, "dentry: %p\n", dentry);
 	v9ses = v9fs_dentry2v9ses(dentry);
 	if (v9ses->cache == CACHE_LOOSE || v9ses->cache == CACHE_FSCACHE) {
+<<<<<<< HEAD
 		generic_fillattr(&nop_mnt_idmap, d_inode(dentry), stat);
 		return 0;
 	} else if (v9ses->cache >= CACHE_WRITEBACK) {
@@ -1032,6 +1102,10 @@ v9fs_vfs_getattr(struct mnt_idmap *idmap, const struct path *path,
 			if (retval)
 				p9_debug(P9_DEBUG_ERROR, "flushing writeback during getattr returned %d\n", retval);
 		}
+=======
+		generic_fillattr(&init_user_ns, d_inode(dentry), stat);
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	fid = v9fs_fid_lookup(dentry);
 	if (IS_ERR(fid))
@@ -1043,7 +1117,11 @@ v9fs_vfs_getattr(struct mnt_idmap *idmap, const struct path *path,
 		return PTR_ERR(st);
 
 	v9fs_stat2inode(st, d_inode(dentry), dentry->d_sb, 0);
+<<<<<<< HEAD
 	generic_fillattr(&nop_mnt_idmap, d_inode(dentry), stat);
+=======
+	generic_fillattr(&init_user_ns, d_inode(dentry), stat);
+>>>>>>> b7ba80a49124 (Commit)
 
 	p9stat_free(st);
 	kfree(st);
@@ -1052,13 +1130,21 @@ v9fs_vfs_getattr(struct mnt_idmap *idmap, const struct path *path,
 
 /**
  * v9fs_vfs_setattr - set file metadata
+<<<<<<< HEAD
  * @idmap: idmap of the mount
+=======
+ * @mnt_userns: The user namespace of the mount
+>>>>>>> b7ba80a49124 (Commit)
  * @dentry: file whose metadata to set
  * @iattr: metadata assignment structure
  *
  */
 
+<<<<<<< HEAD
 static int v9fs_vfs_setattr(struct mnt_idmap *idmap,
+=======
+static int v9fs_vfs_setattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			    struct dentry *dentry, struct iattr *iattr)
 {
 	int retval, use_dentry = 0;
@@ -1069,7 +1155,11 @@ static int v9fs_vfs_setattr(struct mnt_idmap *idmap,
 	struct p9_wstat wstat;
 
 	p9_debug(P9_DEBUG_VFS, "\n");
+<<<<<<< HEAD
 	retval = setattr_prepare(&nop_mnt_idmap, dentry, iattr);
+=======
+	retval = setattr_prepare(&init_user_ns, dentry, iattr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (retval)
 		return retval;
 
@@ -1108,11 +1198,16 @@ static int v9fs_vfs_setattr(struct mnt_idmap *idmap,
 	}
 
 	/* Write all dirty data */
+<<<<<<< HEAD
 	if (d_is_reg(dentry)) {
 		retval = filemap_fdatawrite(inode->i_mapping);
 		if (retval)
 			p9_debug(P9_DEBUG_ERROR, "flushing writeback during setattr returned %d\n", retval);
 	}
+=======
+	if (d_is_reg(dentry))
+		filemap_write_and_wait(inode->i_mapping);
+>>>>>>> b7ba80a49124 (Commit)
 
 	retval = p9_client_wstat(fid, &wstat);
 
@@ -1123,17 +1218,27 @@ static int v9fs_vfs_setattr(struct mnt_idmap *idmap,
 		return retval;
 
 	if ((iattr->ia_valid & ATTR_SIZE) &&
+<<<<<<< HEAD
 		 iattr->ia_size != i_size_read(inode)) {
 		truncate_setsize(inode, iattr->ia_size);
 		if (v9ses->cache == CACHE_FSCACHE)
 			fscache_resize_cookie(v9fs_inode_cookie(v9inode), iattr->ia_size);
 		else
 			invalidate_mapping_pages(&inode->i_data, 0, -1);
+=======
+	    iattr->ia_size != i_size_read(inode)) {
+		truncate_setsize(inode, iattr->ia_size);
+		fscache_resize_cookie(v9fs_inode_cookie(v9inode), iattr->ia_size);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	v9fs_invalidate_inode_attr(inode);
 
+<<<<<<< HEAD
 	setattr_copy(&nop_mnt_idmap, inode, iattr);
+=======
+	setattr_copy(&init_user_ns, inode, iattr);
+>>>>>>> b7ba80a49124 (Commit)
 	mark_inode_dirty(inode);
 	return 0;
 }
@@ -1298,7 +1403,11 @@ static int v9fs_vfs_mkspecial(struct inode *dir, struct dentry *dentry,
 
 /**
  * v9fs_vfs_symlink - helper function to create symlinks
+<<<<<<< HEAD
  * @idmap: idmap of the mount
+=======
+ * @mnt_userns: The user namespace of the mount
+>>>>>>> b7ba80a49124 (Commit)
  * @dir: directory inode containing symlink
  * @dentry: dentry for symlink
  * @symname: symlink data
@@ -1308,7 +1417,11 @@ static int v9fs_vfs_mkspecial(struct inode *dir, struct dentry *dentry,
  */
 
 static int
+<<<<<<< HEAD
 v9fs_vfs_symlink(struct mnt_idmap *idmap, struct inode *dir,
+=======
+v9fs_vfs_symlink(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		 struct dentry *dentry, const char *symname)
 {
 	p9_debug(P9_DEBUG_VFS, " %lu,%pd,%s\n",
@@ -1354,7 +1467,11 @@ v9fs_vfs_link(struct dentry *old_dentry, struct inode *dir,
 
 /**
  * v9fs_vfs_mknod - create a special file
+<<<<<<< HEAD
  * @idmap: idmap of the mount
+=======
+ * @mnt_userns: The user namespace of the mount
+>>>>>>> b7ba80a49124 (Commit)
  * @dir: inode destination for new link
  * @dentry: dentry for file
  * @mode: mode for creation
@@ -1363,7 +1480,11 @@ v9fs_vfs_link(struct dentry *old_dentry, struct inode *dir,
  */
 
 static int
+<<<<<<< HEAD
 v9fs_vfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
+=======
+v9fs_vfs_mknod(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 	       struct dentry *dentry, umode_t mode, dev_t rdev)
 {
 	struct v9fs_session_info *v9ses = v9fs_inode2v9ses(dir);

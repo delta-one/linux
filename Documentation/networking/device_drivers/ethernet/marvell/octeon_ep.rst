@@ -23,7 +23,10 @@ Supported Devices
 =================
 Currently, this driver support following devices:
  * Network controller: Cavium, Inc. Device b200
+<<<<<<< HEAD
  * Network controller: Cavium, Inc. Device b400
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 Interface Control
 =================

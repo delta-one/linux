@@ -425,7 +425,12 @@ static void ar933x_uart_tx_chars(struct ar933x_uart_port *up)
 
 		ar933x_uart_putc(up, xmit->buf[xmit->tail]);
 
+<<<<<<< HEAD
 		uart_xmit_advance(&up->port, 1);
+=======
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+		up->port.icount.tx++;
+>>>>>>> b7ba80a49124 (Commit)
 	} while (--count > 0);
 
 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
@@ -582,6 +587,7 @@ static const struct uart_ops ar933x_uart_ops = {
 static int ar933x_config_rs485(struct uart_port *port, struct ktermios *termios,
 				struct serial_rs485 *rs485conf)
 {
+<<<<<<< HEAD
 	struct ar933x_uart_port *up =
 			container_of(port, struct ar933x_uart_port, port);
 
@@ -589,6 +595,8 @@ static int ar933x_config_rs485(struct uart_port *port, struct ktermios *termios,
 		gpiod_set_value(up->rts_gpiod,
 			!!(rs485conf->flags & SER_RS485_RTS_AFTER_SEND));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

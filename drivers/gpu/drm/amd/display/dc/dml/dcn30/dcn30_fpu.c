@@ -520,7 +520,13 @@ void dcn30_fpu_calculate_wm_and_dlg(
 		pipe_idx++;
 	}
 
+<<<<<<< HEAD
 	dcn20_calculate_dlg_params(dc, context, pipes, pipe_cnt, vlevel);
+=======
+	DC_FP_START();
+	dcn20_calculate_dlg_params(dc, context, pipes, pipe_cnt, vlevel);
+	DC_FP_END();
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!pstate_en)
 		/* Restore full p-state latency */
@@ -634,7 +640,11 @@ int dcn30_find_dummy_latency_index_for_fw_based_mclk_switch(struct dc *dc,
 	while (dummy_latency_index < max_latency_table_entries) {
 		context->bw_ctx.dml.soc.dram_clock_change_latency_us =
 				dc->clk_mgr->bw_params->dummy_pstate_table[dummy_latency_index].dummy_pstate_latency_us;
+<<<<<<< HEAD
 		dcn30_internal_validate_bw(dc, context, pipes, &pipe_cnt, &vlevel, false, true);
+=======
+		dcn30_internal_validate_bw(dc, context, pipes, &pipe_cnt, &vlevel, false);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (context->bw_ctx.dml.soc.allow_dram_self_refresh_or_dram_clock_change_in_vblank ==
 			dm_allow_self_refresh_and_mclk_switch)

@@ -42,6 +42,10 @@
 #define DRV_NAME		TELEM_DEV_NAME
 #define TELEM_DEV_NAME_FMT	(TELEM_DEV_NAME "%d")
 static struct class telem_class = {
+<<<<<<< HEAD
+=======
+	.owner	= THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.name	= TELEM_CLASS_NAME,
 };
 

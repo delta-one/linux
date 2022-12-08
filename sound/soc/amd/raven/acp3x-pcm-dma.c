@@ -421,9 +421,16 @@ static int acp3x_audio_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void acp3x_audio_remove(struct platform_device *pdev)
 {
 	pm_runtime_disable(&pdev->dev);
+=======
+static int acp3x_audio_remove(struct platform_device *pdev)
+{
+	pm_runtime_disable(&pdev->dev);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int acp3x_resume(struct device *dev)
@@ -508,7 +515,11 @@ static const struct dev_pm_ops acp3x_pm_ops = {
 
 static struct platform_driver acp3x_dma_driver = {
 	.probe = acp3x_audio_probe,
+<<<<<<< HEAD
 	.remove_new = acp3x_audio_remove,
+=======
+	.remove = acp3x_audio_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "acp3x_rv_i2s_dma",
 		.pm = &acp3x_pm_ops,

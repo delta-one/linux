@@ -227,6 +227,7 @@ int amdgpu_dpm_mode2_reset(struct amdgpu_device *adev)
 	return ret;
 }
 
+<<<<<<< HEAD
 int amdgpu_dpm_enable_gfx_features(struct amdgpu_device *adev)
 {
 	const struct amd_pm_funcs *pp_funcs = adev->powerplay.pp_funcs;
@@ -245,6 +246,8 @@ int amdgpu_dpm_enable_gfx_features(struct amdgpu_device *adev)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int amdgpu_dpm_baco_reset(struct amdgpu_device *adev)
 {
 	const struct amd_pm_funcs *pp_funcs = adev->powerplay.pp_funcs;
@@ -456,6 +459,7 @@ int amdgpu_dpm_read_sensor(struct amdgpu_device *adev, enum amd_pp_sensors senso
 	return ret;
 }
 
+<<<<<<< HEAD
 int amdgpu_dpm_get_apu_thermal_limit(struct amdgpu_device *adev, uint32_t *limit)
 {
 	const struct amd_pm_funcs *pp_funcs = adev->powerplay.pp_funcs;
@@ -484,6 +488,8 @@ int amdgpu_dpm_set_apu_thermal_limit(struct amdgpu_device *adev, uint32_t limit)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void amdgpu_dpm_compute_clocks(struct amdgpu_device *adev)
 {
 	const struct amd_pm_funcs *pp_funcs = adev->powerplay.pp_funcs;

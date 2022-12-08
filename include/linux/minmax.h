@@ -37,6 +37,7 @@
 		__cmp(x, y, op), \
 		__cmp_once(x, y, __UNIQUE_ID(__x), __UNIQUE_ID(__y), op))
 
+<<<<<<< HEAD
 #define __clamp(val, lo, hi)	\
 	((val) >= (hi) ? (hi) : ((val) <= (lo) ? (lo) : (val)))
 
@@ -59,6 +60,8 @@
 		__clamp_once(val, lo, hi, __UNIQUE_ID(__val),		\
 			     __UNIQUE_ID(__lo), __UNIQUE_ID(__hi))); })
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * min - return minimum of two values of the same or compatible types
  * @x: first value
@@ -108,7 +111,11 @@
  * This macro does strict typechecking of @lo/@hi to make sure they are of the
  * same type as @val.  See the unnecessary pointer comparisons.
  */
+<<<<<<< HEAD
 #define clamp(val, lo, hi) __careful_clamp(val, lo, hi)
+=======
+#define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * ..and if you can't take the strict
@@ -143,7 +150,11 @@
  * This macro does no typechecking and uses temporary variables of type
  * @type to make all the comparisons.
  */
+<<<<<<< HEAD
 #define clamp_t(type, val, lo, hi) __careful_clamp((type)(val), (type)(lo), (type)(hi))
+=======
+#define clamp_t(type, val, lo, hi) min_t(type, max_t(type, val, lo), hi)
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * clamp_val - return a value clamped to a given range using val's type

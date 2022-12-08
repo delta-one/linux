@@ -55,7 +55,10 @@
 #include <linux/sunrpc/stats.h>
 #include <linux/sunrpc/xprt.h>
 
+<<<<<<< HEAD
 #include <trace/events/sock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <trace/events/sunrpc.h>
 
 #include "socklib.h"
@@ -253,12 +256,24 @@ static ssize_t svc_tcp_read_msg(struct svc_rqst *rqstp, size_t buflen,
 
 	clear_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
 
+<<<<<<< HEAD
 	for (i = 0, t = 0; t < buflen; i++, t += PAGE_SIZE)
 		bvec_set_page(&bvec[i], rqstp->rq_pages[i], PAGE_SIZE, 0);
 	rqstp->rq_respages = &rqstp->rq_pages[i];
 	rqstp->rq_next_page = rqstp->rq_respages + 1;
 
 	iov_iter_bvec(&msg.msg_iter, ITER_DEST, bvec, i, buflen);
+=======
+	for (i = 0, t = 0; t < buflen; i++, t += PAGE_SIZE) {
+		bvec[i].bv_page = rqstp->rq_pages[i];
+		bvec[i].bv_len = PAGE_SIZE;
+		bvec[i].bv_offset = 0;
+	}
+	rqstp->rq_respages = &rqstp->rq_pages[i];
+	rqstp->rq_next_page = rqstp->rq_respages + 1;
+
+	iov_iter_bvec(&msg.msg_iter, READ, bvec, i, buflen);
+>>>>>>> b7ba80a49124 (Commit)
 	if (seek) {
 		iov_iter_advance(&msg.msg_iter, seek);
 		buflen -= seek;
@@ -296,9 +311,15 @@ static void svc_sock_setbufsize(struct svc_sock *svsk, unsigned int nreqs)
 static void svc_sock_secure_port(struct svc_rqst *rqstp)
 {
 	if (svc_port_is_privileged(svc_addr(rqstp)))
+<<<<<<< HEAD
 		set_bit(RQ_SECURE, &rqstp->rq_flags);
 	else
 		clear_bit(RQ_SECURE, &rqstp->rq_flags);
+=======
+		__set_bit(RQ_SECURE, &rqstp->rq_flags);
+	else
+		__clear_bit(RQ_SECURE, &rqstp->rq_flags);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -308,8 +329,11 @@ static void svc_data_ready(struct sock *sk)
 {
 	struct svc_sock	*svsk = (struct svc_sock *)sk->sk_user_data;
 
+<<<<<<< HEAD
 	trace_sk_data_ready(sk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (svsk) {
 		/* Refer to svc_setup_socket() for details. */
 		rmb();
@@ -508,7 +532,10 @@ static int svc_udp_recvfrom(struct svc_rqst *rqstp)
 	if (serv->sv_stats)
 		serv->sv_stats->netudpcnt++;
 
+<<<<<<< HEAD
 	svc_sock_secure_port(rqstp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	svc_xprt_received(rqstp->rq_xprt);
 	return len;
 
@@ -637,6 +664,10 @@ static const struct svc_xprt_ops svc_udp_ops = {
 	.xpo_free = svc_sock_free,
 	.xpo_has_wspace = svc_udp_has_wspace,
 	.xpo_accept = svc_udp_accept,
+<<<<<<< HEAD
+=======
+	.xpo_secure_port = svc_sock_secure_port,
+>>>>>>> b7ba80a49124 (Commit)
 	.xpo_kill_temp_xprt = svc_udp_kill_temp_xprt,
 };
 
@@ -687,8 +718,11 @@ static void svc_tcp_listen_data_ready(struct sock *sk)
 {
 	struct svc_sock	*svsk = (struct svc_sock *)sk->sk_user_data;
 
+<<<<<<< HEAD
 	trace_sk_data_ready(sk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (svsk) {
 		/* Refer to svc_setup_socket() for details. */
 		rmb();
@@ -876,7 +910,11 @@ static ssize_t svc_tcp_read_marker(struct svc_sock *svsk,
 		want = sizeof(rpc_fraghdr) - svsk->sk_tcplen;
 		iov.iov_base = ((char *)&svsk->sk_marker) + svsk->sk_tcplen;
 		iov.iov_len  = want;
+<<<<<<< HEAD
 		iov_iter_kvec(&msg.msg_iter, ITER_DEST, &iov, 1, want);
+=======
+		iov_iter_kvec(&msg.msg_iter, READ, &iov, 1, want);
+>>>>>>> b7ba80a49124 (Commit)
 		len = sock_recvmsg(svsk->sk_sock, &msg, MSG_DONTWAIT);
 		if (len < 0)
 			return len;
@@ -1010,9 +1048,15 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
 	rqstp->rq_xprt_ctxt   = NULL;
 	rqstp->rq_prot	      = IPPROTO_TCP;
 	if (test_bit(XPT_LOCAL, &svsk->sk_xprt.xpt_flags))
+<<<<<<< HEAD
 		set_bit(RQ_LOCAL, &rqstp->rq_flags);
 	else
 		clear_bit(RQ_LOCAL, &rqstp->rq_flags);
+=======
+		__set_bit(RQ_LOCAL, &rqstp->rq_flags);
+	else
+		__clear_bit(RQ_LOCAL, &rqstp->rq_flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	p = (__be32 *)rqstp->rq_arg.head[0].iov_base;
 	calldir = p[1];
@@ -1030,7 +1074,10 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
 	if (serv->sv_stats)
 		serv->sv_stats->nettcpcnt++;
 
+<<<<<<< HEAD
 	svc_sock_secure_port(rqstp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	svc_xprt_received(rqstp->rq_xprt);
 	return rqstp->rq_arg.len;
 
@@ -1212,6 +1259,10 @@ static const struct svc_xprt_ops svc_tcp_ops = {
 	.xpo_free = svc_sock_free,
 	.xpo_has_wspace = svc_tcp_has_wspace,
 	.xpo_accept = svc_tcp_accept,
+<<<<<<< HEAD
+=======
+	.xpo_secure_port = svc_sock_secure_port,
+>>>>>>> b7ba80a49124 (Commit)
 	.xpo_kill_temp_xprt = svc_tcp_kill_temp_xprt,
 };
 

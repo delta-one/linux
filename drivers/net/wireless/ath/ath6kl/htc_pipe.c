@@ -960,8 +960,13 @@ static int ath6kl_htc_pipe_rx_complete(struct ath6kl *ar, struct sk_buff *skb,
 	 * Thus the possibility of ar->htc_target being NULL
 	 * via ath6kl_recv_complete -> ath6kl_usb_io_comp_work.
 	 */
+<<<<<<< HEAD
 	if (!target) {
 		ath6kl_dbg(ATH6KL_DBG_HTC, "Target not yet initialized\n");
+=======
+	if (WARN_ON_ONCE(!target)) {
+		ath6kl_err("Target not yet initialized\n");
+>>>>>>> b7ba80a49124 (Commit)
 		status = -EINVAL;
 		goto free_skb;
 	}

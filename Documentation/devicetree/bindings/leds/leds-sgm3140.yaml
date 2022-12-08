@@ -18,9 +18,13 @@ description: |
 
 properties:
   compatible:
+<<<<<<< HEAD
     enum:
       - ocs,ocp8110
       - sgmicro,sgm3140
+=======
+    const: sgmicro,sgm3140
+>>>>>>> b7ba80a49124 (Commit)
 
   enable-gpios:
     maxItems: 1
@@ -36,7 +40,10 @@ properties:
   led:
     type: object
     $ref: common.yaml#
+<<<<<<< HEAD
     unevaluatedProperties: false
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible

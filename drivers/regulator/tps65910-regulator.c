@@ -1255,7 +1255,10 @@ static void tps65910_shutdown(struct platform_device *pdev)
 static struct platform_driver tps65910_driver = {
 	.driver = {
 		.name = "tps65910-pmic",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = tps65910_probe,
 	.shutdown = tps65910_shutdown,

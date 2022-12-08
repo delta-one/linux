@@ -9,8 +9,14 @@ title: Qualcomm Technologies, Inc. SC7280 TLMM block
 maintainers:
   - Bjorn Andersson <andersson@kernel.org>
 
+<<<<<<< HEAD
 description:
   Top Level Mode Multiplexer pin controller in Qualcomm SC7280 SoC.
+=======
+description: |
+  This binding describes the Top Level Mode Multiplexer block found in the
+  SC7280 platform.
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -42,6 +48,7 @@ properties:
     maxItems: 1
 
   gpio-line-names:
+<<<<<<< HEAD
     maxItems: 175
 
   wakeup-parent: true
@@ -57,11 +64,23 @@ patternProperties:
 
 $defs:
   qcom-sc7280-tlmm-state:
+=======
+    maxItems: 174
+
+  wakeup-parent: true
+
+#PIN CONFIGURATION NODES
+patternProperties:
+  '-pins$':
+>>>>>>> b7ba80a49124 (Commit)
     type: object
     description:
       Pinctrl node's client devices use subnodes for desired pin configuration.
       Client device subnodes use below standard properties.
+<<<<<<< HEAD
     $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
     properties:
       pins:
@@ -70,7 +89,11 @@ $defs:
           subnode.
         items:
           oneOf:
+<<<<<<< HEAD
             - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-6][0-9]|17[0-4])$"
+=======
+            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-7][0-9]|18[0-2])$"
+>>>>>>> b7ba80a49124 (Commit)
             - enum: [ sdc1_rclk, sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk,
                       sdc2_cmd, sdc2_data, ufs_reset ]
         minItems: 1
@@ -110,6 +133,7 @@ $defs:
                 uim1_clk, uim1_data, uim1_present, uim1_reset, usb2phy_ac,
                 usb_phy, vfr_0, vfr_1, vsense_trigger ]
 
+<<<<<<< HEAD
       bias-pull-down: true
       bias-pull-up: true
       bias-bus-hold: true
@@ -117,11 +141,40 @@ $defs:
       drive-strength: true
       input-enable: true
       output-high: true
+=======
+      drive-strength:
+        enum: [2, 4, 6, 8, 10, 12, 14, 16]
+        default: 2
+        description:
+          Selects the drive strength for the specified pins, in mA.
+
+      bias-pull-down: true
+
+      bias-pull-up: true
+
+      bias-disable: true
+
+      output-high: true
+
+>>>>>>> b7ba80a49124 (Commit)
       output-low: true
 
     required:
       - pins
 
+<<<<<<< HEAD
+=======
+    allOf:
+      - $ref: /schemas/pinctrl/pincfg-node.yaml
+      - if:
+          properties:
+            pins:
+              pattern: "^gpio([0-9]|[1-9][0-9]|1[0-7][0-9]|18[0-2])$"
+        then:
+          required:
+            - function
+
+>>>>>>> b7ba80a49124 (Commit)
     additionalProperties: false
 
 allOf:
@@ -153,7 +206,11 @@ examples:
         gpio-ranges = <&tlmm 0 0 175>;
         wakeup-parent = <&pdc>;
 
+<<<<<<< HEAD
         qup_uart5_default: qup-uart5-state {
+=======
+        qup_uart5_default: qup-uart5-pins {
+>>>>>>> b7ba80a49124 (Commit)
             pins = "gpio46", "gpio47";
             function = "qup13";
             drive-strength = <2>;

@@ -43,8 +43,11 @@ struct intel_context_ops {
 	void (*revoke)(struct intel_context *ce, struct i915_request *rq,
 		       unsigned int preempt_timeout_ms);
 
+<<<<<<< HEAD
 	void (*close)(struct intel_context *ce);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int (*pre_pin)(struct intel_context *ce, struct i915_gem_ww_ctx *ww, void **vaddr);
 	int (*pin)(struct intel_context *ce, void *vaddr);
 	void (*unpin)(struct intel_context *ce);
@@ -199,6 +202,11 @@ struct intel_context {
 		 * context's submissions is complete.
 		 */
 		struct i915_sw_fence blocked;
+<<<<<<< HEAD
+=======
+		/** @number_committed_requests: number of committed requests */
+		int number_committed_requests;
+>>>>>>> b7ba80a49124 (Commit)
 		/** @requests: list of active requests on this context */
 		struct list_head requests;
 		/** @prio: the context's current guc priority */
@@ -208,11 +216,14 @@ struct intel_context {
 		 * each priority bucket
 		 */
 		u32 prio_count[GUC_CLIENT_PRIORITY_NUM];
+<<<<<<< HEAD
 		/**
 		 * @sched_disable_delay_work: worker to disable scheduling on this
 		 * context
 		 */
 		struct delayed_work sched_disable_delay_work;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} guc_state;
 
 	struct {

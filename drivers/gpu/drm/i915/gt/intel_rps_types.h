@@ -57,7 +57,11 @@ struct intel_rps {
 
 	/*
 	 * work, interrupts_enabled and pm_iir are protected by
+<<<<<<< HEAD
 	 * i915->irq_lock
+=======
+	 * dev_priv->irq_lock
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	struct timer_list timer;
 	struct work_struct work;

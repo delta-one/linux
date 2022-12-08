@@ -14,7 +14,11 @@ description: |
   for the UART peripheral bus.
 
 allOf:
+<<<<<<< HEAD
   - $ref: dma-controller.yaml#
+=======
+  - $ref: "dma-controller.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

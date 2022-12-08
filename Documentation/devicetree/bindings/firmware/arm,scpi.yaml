@@ -5,7 +5,11 @@
 $id: http://devicetree.org/schemas/firmware/arm,scpi.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: System Control and Power Interface (SCPI) Message Protocol
+=======
+title: System Control and Power Interface (SCPI) Message Protocol bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Sudeep Holla <sudeep.holla@arm.com>

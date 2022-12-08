@@ -4,7 +4,10 @@
  */
 /dts-v1/;
 #include "mt8192-asurada.dtsi"
+<<<<<<< HEAD
 #include "mt8192-asurada-audio-rt1015p-rt5682.dtsi"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	model = "Google Hayato rev1";

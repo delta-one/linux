@@ -49,13 +49,21 @@
 			&led_wkgpio_pins
 		>;
 
+<<<<<<< HEAD
 		led-heartbeat {
+=======
+		heartbeat {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "pandaboard::status1";
 			gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "heartbeat";
 		};
 
+<<<<<<< HEAD
 		led-mmc {
+=======
+		mmc {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "pandaboard::status2";
 			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "mmc0";

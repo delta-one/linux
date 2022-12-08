@@ -87,6 +87,7 @@ additionalProperties: false
 examples:
   - |
     spi {
+<<<<<<< HEAD
         #address-cells = <1>;
         #size-cells = <0>;
 
@@ -97,5 +98,17 @@ examples:
             /* accumulation only on positive current for energy2/charge2. */
             adi,accumulator-ctl-pol = <0 1>;
         };
+=======
+           #address-cells = <1>;
+           #size-cells = <0>;
+
+           ltc2947_spi: ltc2947@0 {
+                   compatible = "adi,ltc2947";
+                   reg = <0>;
+                   /* accumulation takes place always for energ1/charge1. */
+                   /* accumulation only on positive current for energy2/charge2. */
+                   adi,accumulator-ctl-pol = <0 1>;
+           };
+>>>>>>> b7ba80a49124 (Commit)
     };
 ...

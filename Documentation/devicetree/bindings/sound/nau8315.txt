@@ -2,7 +2,10 @@ Nuvoton NAU8315 Mono Class-D Amplifier
 
 Required properties:
 - compatible   : "nuvoton,nau8315"
+<<<<<<< HEAD
                  "nuvoton,nau8318"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 Optional properties:
 - enable-gpios : GPIO specifier for the chip's device enable input(EN) pin.
@@ -17,8 +20,11 @@ nau8315 {
 	compatible = "nuvoton,nau8315";
 	enable-gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
 };
+<<<<<<< HEAD
 
 nau8318 {
 	compatible = "nuvoton,nau8318";
 	enable-gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -632,7 +632,11 @@ static int bno055_set_regmask(struct bno055_priv *priv, int val, int val2,
 			return -EINVAL;
 		}
 		delta = abs(tbl_val - req_val);
+<<<<<<< HEAD
 		if (first || delta < best_delta) {
+=======
+		if (delta < best_delta || first) {
+>>>>>>> b7ba80a49124 (Commit)
 			best_delta = delta;
 			hwval = i;
 			first = false;

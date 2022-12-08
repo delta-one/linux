@@ -9,7 +9,10 @@
  *   Gleb Natapov <gleb@redhat.com>
  *   Wei Huang    <wei@redhat.com>
  */
+<<<<<<< HEAD
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/types.h>
 #include <linux/kvm_host.h>
@@ -29,6 +32,7 @@
 struct x86_pmu_capability __read_mostly kvm_pmu_cap;
 EXPORT_SYMBOL_GPL(kvm_pmu_cap);
 
+<<<<<<< HEAD
 /* Precise Distribution of Instructions Retired (PDIR) */
 static const struct x86_cpu_id vmx_pebs_pdir_cpu[] = {
 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D, NULL),
@@ -41,6 +45,11 @@ static const struct x86_cpu_id vmx_pebs_pdir_cpu[] = {
 /* Precise Distribution (PDist) */
 static const struct x86_cpu_id vmx_pebs_pdist_cpu[] = {
 	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X, NULL),
+=======
+static const struct x86_cpu_id vmx_icl_pebs_cpu[] = {
+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D, NULL),
+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X, NULL),
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 
@@ -66,7 +75,11 @@ static const struct x86_cpu_id vmx_pebs_pdist_cpu[] = {
  *        code. Each pmc, stored in kvm_pmc.idx field, is unique across
  *        all perf counters (both gp and fixed). The mapping relationship
  *        between pmc and perf counters is as the following:
+<<<<<<< HEAD
  *        * Intel: [0 .. KVM_INTEL_PMC_MAX_GENERIC-1] <=> gp counters
+=======
+ *        * Intel: [0 .. INTEL_PMC_MAX_GENERIC-1] <=> gp counters
+>>>>>>> b7ba80a49124 (Commit)
  *                 [INTEL_PMC_IDX_FIXED .. INTEL_PMC_IDX_FIXED + 2] <=> fixed
  *        * AMD:   [0 .. AMD64_NUM_COUNTERS-1] and, for families 15H
  *          and later, [0 .. AMD64_NUM_COUNTERS_CORE-1] <=> gp counters
@@ -111,6 +124,7 @@ static inline void __kvm_perf_overflow(struct kvm_pmc *pmc, bool in_pmi)
 	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
 	bool skip_pmi = false;
 
+<<<<<<< HEAD
 	if (pmc->perf_event && pmc->perf_event->attr.precise_ip) {
 		if (!in_pmi) {
 			/*
@@ -128,6 +142,20 @@ static inline void __kvm_perf_overflow(struct kvm_pmc *pmc, bool in_pmi)
 	} else {
 		__set_bit(pmc->idx, (unsigned long *)&pmu->global_status);
 	}
+=======
+	/* Ignore counters that have been reprogrammed already. */
+	if (test_and_set_bit(pmc->idx, pmu->reprogram_pmi))
+		return;
+
+	if (pmc->perf_event && pmc->perf_event->attr.precise_ip) {
+		/* Indicate PEBS overflow PMI to guest. */
+		skip_pmi = __test_and_set_bit(GLOBAL_STATUS_BUFFER_OVF_BIT,
+					      (unsigned long *)&pmu->global_status);
+	} else {
+		__set_bit(pmc->idx, (unsigned long *)&pmu->global_status);
+	}
+	kvm_make_request(KVM_REQ_PMU, pmc->vcpu);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!pmc->intr || skip_pmi)
 		return;
@@ -152,6 +180,7 @@ static void kvm_perf_overflow(struct perf_event *perf_event,
 {
 	struct kvm_pmc *pmc = perf_event->overflow_handler_context;
 
+<<<<<<< HEAD
 	/*
 	 * Ignore overflow events for counters that are scheduled to be
 	 * reprogrammed, e.g. if a PMI for the previous event races with KVM's
@@ -190,6 +219,14 @@ static u64 pmc_get_pebs_precise_level(struct kvm_pmc *pmc)
 static int pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type, u64 config,
 				 bool exclude_user, bool exclude_kernel,
 				 bool intr)
+=======
+	__kvm_perf_overflow(pmc, true);
+}
+
+static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+				  u64 config, bool exclude_user,
+				  bool exclude_kernel, bool intr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
 	struct perf_event *event;
@@ -218,12 +255,30 @@ static int pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type, u64 config,
 	}
 	if (pebs) {
 		/*
+<<<<<<< HEAD
+=======
+		 * The non-zero precision level of guest event makes the ordinary
+		 * guest event becomes a guest PEBS event and triggers the host
+		 * PEBS PMI handler to determine whether the PEBS overflow PMI
+		 * comes from the host counters or the guest.
+		 *
+>>>>>>> b7ba80a49124 (Commit)
 		 * For most PEBS hardware events, the difference in the software
 		 * precision levels of guest and host PEBS events will not affect
 		 * the accuracy of the PEBS profiling result, because the "event IP"
 		 * in the PEBS record is calibrated on the guest side.
+<<<<<<< HEAD
 		 */
 		attr.precise_ip = pmc_get_pebs_precise_level(pmc);
+=======
+		 *
+		 * On Icelake everything is fine. Other hardware (GLC+, TNT+) that
+		 * could possibly care here is unsupported and needs changes.
+		 */
+		attr.precise_ip = 1;
+		if (x86_match_cpu(vmx_icl_pebs_cpu) && pmc->idx == 32)
+			attr.precise_ip = 3;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	event = perf_event_create_kernel_counter(&attr, -1, current,
@@ -231,14 +286,24 @@ static int pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type, u64 config,
 	if (IS_ERR(event)) {
 		pr_debug_ratelimited("kvm_pmu: event creation failed %ld for pmc->idx = %d\n",
 			    PTR_ERR(event), pmc->idx);
+<<<<<<< HEAD
 		return PTR_ERR(event);
+=======
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	pmc->perf_event = event;
 	pmc_to_pmu(pmc)->event_count++;
+<<<<<<< HEAD
 	pmc->is_paused = false;
 	pmc->intr = intr || pebs;
 	return 0;
+=======
+	clear_bit(pmc->idx, pmc_to_pmu(pmc)->reprogram_pmi);
+	pmc->is_paused = false;
+	pmc->intr = intr || pebs;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void pmc_pause_counter(struct kvm_pmc *pmc)
@@ -260,6 +325,7 @@ static bool pmc_resume_counter(struct kvm_pmc *pmc)
 		return false;
 
 	/* recalibrate sample period and check if it's accepted by perf core */
+<<<<<<< HEAD
 	if (is_sampling_event(pmc->perf_event) &&
 	    perf_event_period(pmc->perf_event,
 			      get_sample_period(pmc, pmc->counter)))
@@ -267,12 +333,21 @@ static bool pmc_resume_counter(struct kvm_pmc *pmc)
 
 	if (test_bit(pmc->idx, (unsigned long *)&pmc_to_pmu(pmc)->pebs_enable) !=
 	    (!!pmc->perf_event->attr.precise_ip))
+=======
+	if (perf_event_period(pmc->perf_event,
+			      get_sample_period(pmc, pmc->counter)))
+		return false;
+
+	if (!test_bit(pmc->idx, (unsigned long *)&pmc_to_pmu(pmc)->pebs_enable) &&
+	    pmc->perf_event->attr.precise_ip)
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	/* reuse perf_event to serve as pmc_reprogram_counter() does*/
 	perf_event_enable(pmc->perf_event);
 	pmc->is_paused = false;
 
+<<<<<<< HEAD
 	return true;
 }
 
@@ -280,10 +355,21 @@ static int filter_cmp(const void *pa, const void *pb, u64 mask)
 {
 	u64 a = *(u64 *)pa & mask;
 	u64 b = *(u64 *)pb & mask;
+=======
+	clear_bit(pmc->idx, (unsigned long *)&pmc_to_pmu(pmc)->reprogram_pmi);
+	return true;
+}
+
+static int cmp_u64(const void *pa, const void *pb)
+{
+	u64 a = *(u64 *)pa;
+	u64 b = *(u64 *)pb;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return (a > b) - (a < b);
 }
 
+<<<<<<< HEAD
 
 static int filter_sort_cmp(const void *pa, const void *pb)
 {
@@ -386,12 +472,22 @@ static bool check_pmu_event_filter(struct kvm_pmc *pmc)
 {
 	struct kvm_x86_pmu_event_filter *filter;
 	struct kvm *kvm = pmc->vcpu->kvm;
+=======
+static bool check_pmu_event_filter(struct kvm_pmc *pmc)
+{
+	struct kvm_pmu_event_filter *filter;
+	struct kvm *kvm = pmc->vcpu->kvm;
+	bool allow_event = true;
+	__u64 key;
+	int idx;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!static_call(kvm_x86_pmu_hw_event_available)(pmc))
 		return false;
 
 	filter = srcu_dereference(kvm->arch.pmu_event_filter, &kvm->srcu);
 	if (!filter)
+<<<<<<< HEAD
 		return true;
 
 	if (pmc_is_gp(pmc))
@@ -401,6 +497,32 @@ static bool check_pmu_event_filter(struct kvm_pmc *pmc)
 }
 
 static void reprogram_counter(struct kvm_pmc *pmc)
+=======
+		goto out;
+
+	if (pmc_is_gp(pmc)) {
+		key = pmc->eventsel & AMD64_RAW_EVENT_MASK_NB;
+		if (bsearch(&key, filter->events, filter->nevents,
+			    sizeof(__u64), cmp_u64))
+			allow_event = filter->action == KVM_PMU_EVENT_ALLOW;
+		else
+			allow_event = filter->action == KVM_PMU_EVENT_DENY;
+	} else {
+		idx = pmc->idx - INTEL_PMC_IDX_FIXED;
+		if (filter->action == KVM_PMU_EVENT_DENY &&
+		    test_bit(idx, (ulong *)&filter->fixed_counter_bitmap))
+			allow_event = false;
+		if (filter->action == KVM_PMU_EVENT_ALLOW &&
+		    !test_bit(idx, (ulong *)&filter->fixed_counter_bitmap))
+			allow_event = false;
+	}
+
+out:
+	return allow_event;
+}
+
+void reprogram_counter(struct kvm_pmc *pmc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
 	u64 eventsel = pmc->eventsel;
@@ -410,6 +532,7 @@ static void reprogram_counter(struct kvm_pmc *pmc)
 	pmc_pause_counter(pmc);
 
 	if (!pmc_speculative_in_use(pmc) || !pmc_is_enabled(pmc))
+<<<<<<< HEAD
 		goto reprogram_complete;
 
 	if (!check_pmu_event_filter(pmc))
@@ -417,6 +540,12 @@ static void reprogram_counter(struct kvm_pmc *pmc)
 
 	if (pmc->counter < pmc->prev_counter)
 		__kvm_perf_overflow(pmc, false);
+=======
+		return;
+
+	if (!check_pmu_event_filter(pmc))
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (eventsel & ARCH_PERFMON_EVENTSEL_PIN_CONTROL)
 		printk_once("kvm pmu: pin control bit is ignored\n");
@@ -434,11 +563,16 @@ static void reprogram_counter(struct kvm_pmc *pmc)
 	}
 
 	if (pmc->current_config == new_config && pmc_resume_counter(pmc))
+<<<<<<< HEAD
 		goto reprogram_complete;
+=======
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pmc_release_perf_event(pmc);
 
 	pmc->current_config = new_config;
+<<<<<<< HEAD
 
 	/*
 	 * If reprogramming fails, e.g. due to contention, leave the counter's
@@ -457,6 +591,15 @@ reprogram_complete:
 	clear_bit(pmc->idx, (unsigned long *)&pmc_to_pmu(pmc)->reprogram_pmi);
 	pmc->prev_counter = 0;
 }
+=======
+	pmc_reprogram_counter(pmc, PERF_TYPE_RAW,
+			      (eventsel & pmu->raw_event_mask),
+			      !(eventsel & ARCH_PERFMON_EVENTSEL_USR),
+			      !(eventsel & ARCH_PERFMON_EVENTSEL_OS),
+			      eventsel & ARCH_PERFMON_EVENTSEL_INT);
+}
+EXPORT_SYMBOL_GPL(reprogram_counter);
+>>>>>>> b7ba80a49124 (Commit)
 
 void kvm_pmu_handle_event(struct kvm_vcpu *vcpu)
 {
@@ -466,11 +609,18 @@ void kvm_pmu_handle_event(struct kvm_vcpu *vcpu)
 	for_each_set_bit(bit, pmu->reprogram_pmi, X86_PMC_IDX_MAX) {
 		struct kvm_pmc *pmc = static_call(kvm_x86_pmu_pmc_idx_to_pmc)(pmu, bit);
 
+<<<<<<< HEAD
 		if (unlikely(!pmc)) {
 			clear_bit(bit, pmu->reprogram_pmi);
 			continue;
 		}
 
+=======
+		if (unlikely(!pmc || !pmc->perf_event)) {
+			clear_bit(bit, pmu->reprogram_pmi);
+			continue;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		reprogram_counter(pmc);
 	}
 
@@ -540,9 +690,15 @@ int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
 	if (!pmc)
 		return 1;
 
+<<<<<<< HEAD
 	if (!kvm_is_cr4_bit_set(vcpu, X86_CR4_PCE) &&
 	    (static_call(kvm_x86_get_cpl)(vcpu) != 0) &&
 	    kvm_is_cr0_bit_set(vcpu, X86_CR0_PE))
+=======
+	if (!(kvm_read_cr4(vcpu) & X86_CR4_PCE) &&
+	    (static_call(kvm_x86_get_cpl)(vcpu) != 0) &&
+	    (kvm_read_cr0(vcpu) & X86_CR0_PE))
+>>>>>>> b7ba80a49124 (Commit)
 		return 1;
 
 	*data = pmc_read_counter(pmc) & mask;
@@ -644,9 +800,20 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu)
 
 static void kvm_pmu_incr_counter(struct kvm_pmc *pmc)
 {
+<<<<<<< HEAD
 	pmc->prev_counter = pmc->counter;
 	pmc->counter = (pmc->counter + 1) & pmc_bitmask(pmc);
 	kvm_pmu_request_counter_reprogam(pmc);
+=======
+	u64 prev_count;
+
+	prev_count = pmc->counter;
+	pmc->counter = (pmc->counter + 1) & pmc_bitmask(pmc);
+
+	reprogram_counter(pmc);
+	if (pmc->counter < prev_count)
+		__kvm_perf_overflow(pmc, false);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool eventsel_match_perf_hw_id(struct kvm_pmc *pmc,
@@ -659,6 +826,7 @@ static inline bool eventsel_match_perf_hw_id(struct kvm_pmc *pmc,
 static inline bool cpl_is_matched(struct kvm_pmc *pmc)
 {
 	bool select_os, select_user;
+<<<<<<< HEAD
 	u64 config;
 
 	if (pmc_is_gp(pmc)) {
@@ -668,6 +836,14 @@ static inline bool cpl_is_matched(struct kvm_pmc *pmc)
 	} else {
 		config = fixed_ctrl_field(pmc_to_pmu(pmc)->fixed_ctr_ctrl,
 					  pmc->idx - INTEL_PMC_IDX_FIXED);
+=======
+	u64 config = pmc->current_config;
+
+	if (pmc_is_gp(pmc)) {
+		select_os = config & ARCH_PERFMON_EVENTSEL_OS;
+		select_user = config & ARCH_PERFMON_EVENTSEL_USR;
+	} else {
+>>>>>>> b7ba80a49124 (Commit)
 		select_os = config & 0x1;
 		select_user = config & 0x2;
 	}
@@ -694,6 +870,7 @@ void kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 perf_hw_id)
 }
 EXPORT_SYMBOL_GPL(kvm_pmu_trigger_event);
 
+<<<<<<< HEAD
 static bool is_masked_filter_valid(const struct kvm_x86_pmu_event_filter *filter)
 {
 	u64 mask = kvm_pmu_ops.EVENTSEL_EVENT |
@@ -786,19 +963,33 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
 	int r;
 
 	if (copy_from_user(&tmp, user_filter, sizeof(tmp)))
+=======
+int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
+{
+	struct kvm_pmu_event_filter tmp, *filter;
+	size_t size;
+	int r;
+
+	if (copy_from_user(&tmp, argp, sizeof(tmp)))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EFAULT;
 
 	if (tmp.action != KVM_PMU_EVENT_ALLOW &&
 	    tmp.action != KVM_PMU_EVENT_DENY)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (tmp.flags & ~KVM_PMU_EVENT_FLAGS_VALID_MASK)
+=======
+	if (tmp.flags != 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (tmp.nevents > KVM_PMU_EVENT_FILTER_MAX_EVENTS)
 		return -E2BIG;
 
 	size = struct_size(filter, events, tmp.nevents);
+<<<<<<< HEAD
 	filter = kzalloc(size, GFP_KERNEL_ACCOUNT);
 	if (!filter)
 		return -ENOMEM;
@@ -816,11 +1007,29 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
 	r = prepare_filter_lists(filter);
 	if (r)
 		goto cleanup;
+=======
+	filter = kmalloc(size, GFP_KERNEL_ACCOUNT);
+	if (!filter)
+		return -ENOMEM;
+
+	r = -EFAULT;
+	if (copy_from_user(filter, argp, size))
+		goto cleanup;
+
+	/* Ensure nevents can't be changed between the user copies. */
+	*filter = tmp;
+
+	/*
+	 * Sort the in-kernel list so that we can search it with bsearch.
+	 */
+	sort(&filter->events, filter->nevents, sizeof(__u64), cmp_u64, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&kvm->lock);
 	filter = rcu_replace_pointer(kvm->arch.pmu_event_filter, filter,
 				     mutex_is_locked(&kvm->lock));
 	mutex_unlock(&kvm->lock);
+<<<<<<< HEAD
 	synchronize_srcu_expedited(&kvm->srcu);
 
 	BUILD_BUG_ON(sizeof(((struct kvm_pmu *)0)->reprogram_pmi) >
@@ -831,6 +1040,10 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
 
 	kvm_make_all_cpus_request(kvm, KVM_REQ_PMU);
 
+=======
+
+	synchronize_srcu_expedited(&kvm->srcu);
+>>>>>>> b7ba80a49124 (Commit)
 	r = 0;
 cleanup:
 	kfree(filter);

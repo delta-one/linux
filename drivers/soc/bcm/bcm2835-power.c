@@ -701,8 +701,19 @@ fail:
 	return ret;
 }
 
+<<<<<<< HEAD
 static struct platform_driver bcm2835_power_driver = {
 	.probe		= bcm2835_power_probe,
+=======
+static int bcm2835_power_remove(struct platform_device *pdev)
+{
+	return 0;
+}
+
+static struct platform_driver bcm2835_power_driver = {
+	.probe		= bcm2835_power_probe,
+	.remove		= bcm2835_power_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name =	"bcm2835-power",
 	},
@@ -711,3 +722,7 @@ module_platform_driver(bcm2835_power_driver);
 
 MODULE_AUTHOR("Eric Anholt <eric@anholt.net>");
 MODULE_DESCRIPTION("Driver for Broadcom BCM2835 PM power domains and reset");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

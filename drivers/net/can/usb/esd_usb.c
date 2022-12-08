@@ -127,6 +127,7 @@ struct rx_msg {
 	u8 dlc;
 	__le32 ts;
 	__le32 id; /* upper 3 bits contain flags */
+<<<<<<< HEAD
 	union {
 		u8 data[8];
 		struct {
@@ -136,6 +137,9 @@ struct rx_msg {
 			u8 tec;    /* TX Error Counter */
 		} ev_can_err_ext;  /* For ESD_EV_CAN_ERROR_EXT */
 	};
+=======
+	u8 data[8];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct tx_msg {
@@ -237,6 +241,7 @@ static void esd_usb_rx_event(struct esd_usb_net_priv *priv,
 	u32 id = le32_to_cpu(msg->msg.rx.id) & ESD_IDMASK;
 
 	if (id == ESD_EV_CAN_ERROR_EXT) {
+<<<<<<< HEAD
 		u8 state = msg->msg.rx.ev_can_err_ext.status;
 		u8 ecc = msg->msg.rx.ev_can_err_ext.ecc;
 		u8 rxerr = msg->msg.rx.ev_can_err_ext.rec;
@@ -252,10 +257,25 @@ static void esd_usb_rx_event(struct esd_usb_net_priv *priv,
 			enum can_state tx_state, rx_state;
 			enum can_state new_state = CAN_STATE_ERROR_ACTIVE;
 
+=======
+		u8 state = msg->msg.rx.data[0];
+		u8 ecc = msg->msg.rx.data[1];
+		u8 rxerr = msg->msg.rx.data[2];
+		u8 txerr = msg->msg.rx.data[3];
+
+		skb = alloc_can_err_skb(priv->netdev, &cf);
+		if (skb == NULL) {
+			stats->rx_dropped++;
+			return;
+		}
+
+		if (state != priv->old_state) {
+>>>>>>> b7ba80a49124 (Commit)
 			priv->old_state = state;
 
 			switch (state & ESD_BUSSTATE_MASK) {
 			case ESD_BUSSTATE_BUSOFF:
+<<<<<<< HEAD
 				new_state = CAN_STATE_BUS_OFF;
 				can_bus_off(priv->netdev);
 				break;
@@ -283,6 +303,31 @@ static void esd_usb_rx_event(struct esd_usb_net_priv *priv,
 			stats->rx_errors++;
 
 			cf->can_id |= CAN_ERR_PROT | CAN_ERR_BUSERROR;
+=======
+				priv->can.state = CAN_STATE_BUS_OFF;
+				cf->can_id |= CAN_ERR_BUSOFF;
+				priv->can.can_stats.bus_off++;
+				can_bus_off(priv->netdev);
+				break;
+			case ESD_BUSSTATE_WARN:
+				priv->can.state = CAN_STATE_ERROR_WARNING;
+				priv->can.can_stats.error_warning++;
+				break;
+			case ESD_BUSSTATE_ERRPASSIVE:
+				priv->can.state = CAN_STATE_ERROR_PASSIVE;
+				priv->can.can_stats.error_passive++;
+				break;
+			default:
+				priv->can.state = CAN_STATE_ERROR_ACTIVE;
+				break;
+			}
+		} else {
+			priv->can.can_stats.bus_error++;
+			stats->rx_errors++;
+
+			cf->can_id |= CAN_ERR_PROT | CAN_ERR_BUSERROR |
+				      CAN_ERR_CNT;
+>>>>>>> b7ba80a49124 (Commit)
 
 			switch (ecc & SJA1000_ECC_MASK) {
 			case SJA1000_ECC_BIT:
@@ -295,6 +340,10 @@ static void esd_usb_rx_event(struct esd_usb_net_priv *priv,
 				cf->data[2] |= CAN_ERR_PROT_STUFF;
 				break;
 			default:
+<<<<<<< HEAD
+=======
+				cf->data[3] = ecc & SJA1000_ECC_SEG;
+>>>>>>> b7ba80a49124 (Commit)
 				break;
 			}
 
@@ -302,13 +351,25 @@ static void esd_usb_rx_event(struct esd_usb_net_priv *priv,
 			if (!(ecc & SJA1000_ECC_DIR))
 				cf->data[2] |= CAN_ERR_PROT_TX;
 
+<<<<<<< HEAD
 			/* Bit stream position in CAN frame as the error was detected */
 			cf->data[3] = ecc & SJA1000_ECC_SEG;
+=======
+			if (priv->can.state == CAN_STATE_ERROR_WARNING ||
+			    priv->can.state == CAN_STATE_ERROR_PASSIVE) {
+				cf->data[1] = (txerr > rxerr) ?
+					CAN_ERR_CRTL_TX_PASSIVE :
+					CAN_ERR_CRTL_RX_PASSIVE;
+			}
+			cf->data[6] = txerr;
+			cf->data[7] = rxerr;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		priv->bec.txerr = txerr;
 		priv->bec.rxerr = rxerr;
 
+<<<<<<< HEAD
 		if (skb) {
 			cf->can_id |= CAN_ERR_CNT;
 			cf->data[6] = txerr;
@@ -318,6 +379,9 @@ static void esd_usb_rx_event(struct esd_usb_net_priv *priv,
 		} else {
 			stats->rx_dropped++;
 		}
+=======
+		netif_rx(skb);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -741,7 +805,11 @@ static netdev_tx_t esd_usb_start_xmit(struct sk_buff *skb,
 	int ret = NETDEV_TX_OK;
 	size_t size = sizeof(struct esd_usb_msg);
 
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(netdev, skb))
+=======
+	if (can_dropped_invalid_skb(netdev, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	/* create a URB, and a buffer for it, and copy the data to the URB */

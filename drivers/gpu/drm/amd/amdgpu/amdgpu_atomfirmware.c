@@ -101,6 +101,7 @@ void amdgpu_atomfirmware_scratch_regs_init(struct amdgpu_device *adev)
 	}
 }
 
+<<<<<<< HEAD
 static int amdgpu_atomfirmware_allocate_fb_v2_1(struct amdgpu_device *adev,
 	struct vram_usagebyfirmware_v2_1 *fw_usage, int *usage_bytes)
 {
@@ -169,11 +170,14 @@ static int amdgpu_atomfirmware_allocate_fb_v2_2(struct amdgpu_device *adev,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int amdgpu_atomfirmware_allocate_fb_scratch(struct amdgpu_device *adev)
 {
 	struct atom_context *ctx = adev->mode_info.atom_context;
 	int index = get_index_into_master_table(atom_master_list_of_data_tables_v2_1,
 						vram_usagebyfirmware);
+<<<<<<< HEAD
 	struct vram_usagebyfirmware_v2_1 *fw_usage_v2_1;
 	struct vram_usagebyfirmware_v2_2 *fw_usage_v2_2;
 	u16 data_offset;
@@ -196,6 +200,36 @@ int amdgpu_atomfirmware_allocate_fb_scratch(struct amdgpu_device *adev)
 		}
 	}
 
+=======
+	struct vram_usagebyfirmware_v2_1 *firmware_usage;
+	uint32_t start_addr, size;
+	uint16_t data_offset;
+	int usage_bytes = 0;
+
+	if (amdgpu_atom_parse_data_header(ctx, index, NULL, NULL, NULL, &data_offset)) {
+		firmware_usage = (struct vram_usagebyfirmware_v2_1 *)(ctx->bios + data_offset);
+		DRM_DEBUG("atom firmware requested %08x %dkb fw %dkb drv\n",
+			  le32_to_cpu(firmware_usage->start_address_in_kb),
+			  le16_to_cpu(firmware_usage->used_by_firmware_in_kb),
+			  le16_to_cpu(firmware_usage->used_by_driver_in_kb));
+
+		start_addr = le32_to_cpu(firmware_usage->start_address_in_kb);
+		size = le16_to_cpu(firmware_usage->used_by_firmware_in_kb);
+
+		if ((uint32_t)(start_addr & ATOM_VRAM_OPERATION_FLAGS_MASK) ==
+			(uint32_t)(ATOM_VRAM_BLOCK_SRIOV_MSG_SHARE_RESERVATION <<
+			ATOM_VRAM_OPERATION_FLAGS_SHIFT)) {
+			/* Firmware request VRAM reservation for SR-IOV */
+			adev->mman.fw_vram_usage_start_offset = (start_addr &
+				(~ATOM_VRAM_OPERATION_FLAGS_MASK)) << 10;
+			adev->mman.fw_vram_usage_size = size << 10;
+			/* Use the default scratch size */
+			usage_bytes = 0;
+		} else {
+			usage_bytes = le16_to_cpu(firmware_usage->used_by_driver_in_kb) << 10;
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	ctx->scratch_size_bytes = 0;
 	if (usage_bytes == 0)
 		usage_bytes = 20 * 1024;

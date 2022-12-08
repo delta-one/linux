@@ -26,14 +26,22 @@
 		stdout-path = "serial0:921600n8";
 	};
 
+<<<<<<< HEAD
 	cpus_fixed_vproc0: regulator-vproc-buck0 {
+=======
+	cpus_fixed_vproc0: fixedregulator@0 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "vproc_buck0";
 		regulator-min-microvolt = <1000000>;
 		regulator-max-microvolt = <1000000>;
 	};
 
+<<<<<<< HEAD
 	cpus_fixed_vproc1: regulator-vproc-buck1 {
+=======
+	cpus_fixed_vproc1: fixedregulator@1 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "vproc_buck1";
 		regulator-min-microvolt = <1000000>;
@@ -50,7 +58,11 @@
 		id-gpio = <&pio 14 GPIO_ACTIVE_HIGH>;
 	};
 
+<<<<<<< HEAD
 	usb_p0_vbus: regulator-usb-p0-vbus {
+=======
+	usb_p0_vbus: regulator@2 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "p0_vbus";
 		regulator-min-microvolt = <5000000>;
@@ -59,7 +71,11 @@
 		enable-active-high;
 	};
 
+<<<<<<< HEAD
 	usb_p1_vbus: regulator-usb-p1-vbus {
+=======
+	usb_p1_vbus: regulator@3 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "p1_vbus";
 		regulator-min-microvolt = <5000000>;
@@ -68,7 +84,11 @@
 		enable-active-high;
 	};
 
+<<<<<<< HEAD
 	usb_p2_vbus: regulator-usb-p2-vbus {
+=======
+	usb_p2_vbus: regulator@4 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "p2_vbus";
 		regulator-min-microvolt = <5000000>;
@@ -77,7 +97,11 @@
 		enable-active-high;
 	};
 
+<<<<<<< HEAD
 	usb_p3_vbus: regulator-usb-p3-vbus {
+=======
+	usb_p3_vbus: regulator@5 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "p3_vbus";
 		regulator-min-microvolt = <5000000>;

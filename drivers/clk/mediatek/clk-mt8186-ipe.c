@@ -43,7 +43,10 @@ static const struct of_device_id of_match_clk_mt8186_ipe[] = {
 		/* sentinel */
 	}
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(of, of_match_clk_mt8186_ipe);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_driver clk_mt8186_ipe_drv = {
 	.probe = mtk_clk_simple_probe,
@@ -53,5 +56,9 @@ static struct platform_driver clk_mt8186_ipe_drv = {
 		.of_match_table = of_match_clk_mt8186_ipe,
 	},
 };
+<<<<<<< HEAD
 module_platform_driver(clk_mt8186_ipe_drv);
 MODULE_LICENSE("GPL");
+=======
+builtin_platform_driver(clk_mt8186_ipe_drv);
+>>>>>>> b7ba80a49124 (Commit)

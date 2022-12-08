@@ -21,14 +21,24 @@ static int brcmstb_qspi_probe(struct platform_device *pdev)
 	return bcm_qspi_probe(pdev, NULL);
 }
 
+<<<<<<< HEAD
 static void brcmstb_qspi_remove(struct platform_device *pdev)
 {
 	bcm_qspi_remove(pdev);
+=======
+static int brcmstb_qspi_remove(struct platform_device *pdev)
+{
+	return bcm_qspi_remove(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver brcmstb_qspi_driver = {
 	.probe			= brcmstb_qspi_probe,
+<<<<<<< HEAD
 	.remove_new		= brcmstb_qspi_remove,
+=======
+	.remove			= brcmstb_qspi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name		= "brcmstb_qspi",
 		.pm		= &bcm_qspi_pm_ops,

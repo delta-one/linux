@@ -5,7 +5,10 @@
  */
 
 #include <inttypes.h>
+<<<<<<< HEAD
 #include <linux/perf_event.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <stdio.h>
 #include <stdbool.h>
 #include <errno.h>
@@ -99,10 +102,13 @@ struct intel_pt {
 	u64 instructions_sample_type;
 	u64 instructions_id;
 
+<<<<<<< HEAD
 	bool sample_cycles;
 	u64 cycles_sample_type;
 	u64 cycles_id;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool sample_branches;
 	u32 branches_filter;
 	u64 branches_sample_type;
@@ -219,8 +225,11 @@ struct intel_pt_queue {
 	u64 ipc_cyc_cnt;
 	u64 last_in_insn_cnt;
 	u64 last_in_cyc_cnt;
+<<<<<<< HEAD
 	u64 last_cy_insn_cnt;
 	u64 last_cy_cyc_cnt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 last_br_insn_cnt;
 	u64 last_br_cyc_cnt;
 	unsigned int cbr_seen;
@@ -1326,7 +1335,11 @@ static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
 	if (pt->filts.cnt > 0)
 		params.pgd_ip = intel_pt_pgd_ip;
 
+<<<<<<< HEAD
 	if (pt->synth_opts.instructions || pt->synth_opts.cycles) {
+=======
+	if (pt->synth_opts.instructions) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (pt->synth_opts.period) {
 			switch (pt->synth_opts.period_type) {
 			case PERF_ITRACE_PERIOD_INSTRUCTIONS:
@@ -1837,6 +1850,7 @@ static int intel_pt_synth_instruction_sample(struct intel_pt_queue *ptq)
 					    pt->instructions_sample_type);
 }
 
+<<<<<<< HEAD
 static int intel_pt_synth_cycle_sample(struct intel_pt_queue *ptq)
 {
 	struct intel_pt *pt = ptq->pt;
@@ -1864,6 +1878,8 @@ static int intel_pt_synth_cycle_sample(struct intel_pt_queue *ptq)
 	return intel_pt_deliver_synth_event(pt, event, &sample, pt->cycles_sample_type);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int intel_pt_synth_transaction_sample(struct intel_pt_queue *ptq)
 {
 	struct intel_pt *pt = ptq->pt;
@@ -2632,6 +2648,7 @@ static int intel_pt_sample(struct intel_pt_queue *ptq)
 		}
 	}
 
+<<<<<<< HEAD
 	if (state->type & INTEL_PT_INSTRUCTION) {
 		if (pt->sample_instructions) {
 			err = intel_pt_synth_instruction_sample(ptq);
@@ -2643,6 +2660,12 @@ static int intel_pt_sample(struct intel_pt_queue *ptq)
 			if (err)
 				return err;
 		}
+=======
+	if (pt->sample_instructions && (state->type & INTEL_PT_INSTRUCTION)) {
+		err = intel_pt_synth_instruction_sample(ptq);
+		if (err)
+			return err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (pt->sample_transactions && (state->type & INTEL_PT_TRANSACTION)) {
@@ -3183,7 +3206,10 @@ static int intel_pt_sync_switch(struct intel_pt *pt, int cpu, pid_t tid,
 	return 1;
 }
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int intel_pt_process_switch(struct intel_pt *pt,
 				   struct perf_sample *sample)
 {
@@ -3207,7 +3233,10 @@ static int intel_pt_process_switch(struct intel_pt *pt,
 
 	return machine__set_current_tid(pt->machine, cpu, -1, tid);
 }
+<<<<<<< HEAD
 #endif /* HAVE_LIBTRACEEVENT */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int intel_pt_context_switch_in(struct intel_pt *pt,
 				      struct perf_sample *sample)
@@ -3476,12 +3505,18 @@ static int intel_pt_process_event(struct perf_session *session,
 			return err;
 	}
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 	if (pt->switch_evsel && event->header.type == PERF_RECORD_SAMPLE)
 		err = intel_pt_process_switch(pt, sample);
 	else
 #endif
 	if (event->header.type == PERF_RECORD_ITRACE_START)
+=======
+	if (pt->switch_evsel && event->header.type == PERF_RECORD_SAMPLE)
+		err = intel_pt_process_switch(pt, sample);
+	else if (event->header.type == PERF_RECORD_ITRACE_START)
+>>>>>>> b7ba80a49124 (Commit)
 		err = intel_pt_process_itrace_start(pt, event, sample);
 	else if (event->header.type == PERF_RECORD_AUX_OUTPUT_HW_ID)
 		err = intel_pt_process_aux_output_hw_id(pt, event, sample);
@@ -3772,6 +3807,7 @@ static int intel_pt_synth_events(struct intel_pt *pt,
 		id += 1;
 	}
 
+<<<<<<< HEAD
 	if (pt->synth_opts.cycles) {
 		attr.config = PERF_COUNT_HW_CPU_CYCLES;
 		if (pt->synth_opts.period_type == PERF_ITRACE_PERIOD_NANOSECS)
@@ -3788,6 +3824,8 @@ static int intel_pt_synth_events(struct intel_pt *pt,
 		id += 1;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	attr.sample_type &= ~(u64)PERF_SAMPLE_PERIOD;
 	attr.sample_period = 1;
 
@@ -4108,7 +4146,10 @@ static const char * const intel_pt_info_fmts[] = {
 	[INTEL_PT_SNAPSHOT_MODE]	= "  Snapshot mode       %"PRId64"\n",
 	[INTEL_PT_PER_CPU_MMAPS]	= "  Per-cpu maps        %"PRId64"\n",
 	[INTEL_PT_MTC_BIT]		= "  MTC bit             %#"PRIx64"\n",
+<<<<<<< HEAD
 	[INTEL_PT_MTC_FREQ_BITS]	= "  MTC freq bits       %#"PRIx64"\n",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	[INTEL_PT_TSC_CTC_N]		= "  TSC:CTC numerator   %"PRIu64"\n",
 	[INTEL_PT_TSC_CTC_D]		= "  TSC:CTC denominator %"PRIu64"\n",
 	[INTEL_PT_CYC_BIT]		= "  CYC bit             %#"PRIx64"\n",
@@ -4123,12 +4164,17 @@ static void intel_pt_print_info(__u64 *arr, int start, int finish)
 	if (!dump_trace)
 		return;
 
+<<<<<<< HEAD
 	for (i = start; i <= finish; i++) {
 		const char *fmt = intel_pt_info_fmts[i];
 
 		if (fmt)
 			fprintf(stdout, fmt, arr[i]);
 	}
+=======
+	for (i = start; i <= finish; i++)
+		fprintf(stdout, intel_pt_info_fmts[i], arr[i]);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void intel_pt_print_info_str(const char *name, const char *str)
@@ -4436,12 +4482,15 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
 
 	intel_pt_setup_pebs_events(pt);
 
+<<<<<<< HEAD
 	if (perf_data__is_pipe(session->data)) {
 		pr_warning("WARNING: Intel PT with pipe mode is not recommended.\n"
 			   "         The output cannot relied upon.  In particular,\n"
 			   "         timestamps and the order of events may be incorrect.\n");
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (pt->sampling_mode || list_empty(&session->auxtrace_index))
 		err = auxtrace_queue_data(session, true, true);
 	else

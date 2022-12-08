@@ -924,6 +924,7 @@ int drm_atomic_helper_check_plane_state(struct drm_plane_state *plane_state,
 EXPORT_SYMBOL(drm_atomic_helper_check_plane_state);
 
 /**
+<<<<<<< HEAD
  * drm_atomic_helper_check_crtc_primary_plane() - Check CRTC state for primary plane
  * @crtc_state: CRTC state to check
  *
@@ -953,6 +954,61 @@ int drm_atomic_helper_check_crtc_primary_plane(struct drm_crtc_state *crtc_state
 	return -EINVAL;
 }
 EXPORT_SYMBOL(drm_atomic_helper_check_crtc_primary_plane);
+=======
+ * drm_atomic_helper_check_crtc_state() - Check CRTC state for validity
+ * @crtc_state: CRTC state to check
+ * @can_disable_primary_planes: can the CRTC be enabled without a primary plane?
+ *
+ * Checks that a desired CRTC update is valid. Drivers that provide
+ * their own CRTC handling rather than helper-provided implementations may
+ * still wish to call this function to avoid duplication of error checking
+ * code.
+ *
+ * Note that @can_disable_primary_planes only tests if the CRTC can be
+ * enabled without a primary plane. To test if a primary plane can be updated
+ * without a CRTC, use drm_atomic_helper_check_plane_state() in the plane's
+ * atomic check.
+ *
+ * RETURNS:
+ * Zero if update appears valid, error code on failure
+ */
+int drm_atomic_helper_check_crtc_state(struct drm_crtc_state *crtc_state,
+				       bool can_disable_primary_planes)
+{
+	struct drm_device *dev = crtc_state->crtc->dev;
+	struct drm_atomic_state *state = crtc_state->state;
+
+	if (!crtc_state->enable)
+		return 0;
+
+	/* needs at least one primary plane to be enabled */
+	if (!can_disable_primary_planes) {
+		bool has_primary_plane = false;
+		struct drm_plane *plane;
+
+		drm_for_each_plane_mask(plane, dev, crtc_state->plane_mask) {
+			struct drm_plane_state *plane_state;
+
+			if (plane->type != DRM_PLANE_TYPE_PRIMARY)
+				continue;
+			plane_state = drm_atomic_get_plane_state(state, plane);
+			if (IS_ERR(plane_state))
+				return PTR_ERR(plane_state);
+			if (plane_state->fb && plane_state->crtc) {
+				has_primary_plane = true;
+				break;
+			}
+		}
+		if (!has_primary_plane) {
+			drm_dbg_kms(dev, "Cannot enable CRTC without a primary plane.\n");
+			return -EINVAL;
+		}
+	}
+
+	return 0;
+}
+EXPORT_SYMBOL(drm_atomic_helper_check_crtc_state);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * drm_atomic_helper_check_planes - validate state object for planes changes
@@ -2536,7 +2592,11 @@ int drm_atomic_helper_prepare_planes(struct drm_device *dev,
 		if (funcs->prepare_fb) {
 			ret = funcs->prepare_fb(plane, new_plane_state);
 			if (ret)
+<<<<<<< HEAD
 				goto fail_prepare_fb;
+=======
+				goto fail;
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			WARN_ON_ONCE(funcs->cleanup_fb);
 
@@ -2545,6 +2605,7 @@ int drm_atomic_helper_prepare_planes(struct drm_device *dev,
 
 			ret = drm_gem_plane_helper_prepare_fb(plane, new_plane_state);
 			if (ret)
+<<<<<<< HEAD
 				goto fail_prepare_fb;
 		}
 	}
@@ -2556,11 +2617,15 @@ int drm_atomic_helper_prepare_planes(struct drm_device *dev,
 			ret = funcs->begin_fb_access(plane, new_plane_state);
 			if (ret)
 				goto fail_begin_fb_access;
+=======
+				goto fail;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
 	return 0;
 
+<<<<<<< HEAD
 fail_begin_fb_access:
 	for_each_new_plane_in_state(state, plane, new_plane_state, j) {
 		const struct drm_plane_helper_funcs *funcs = plane->helper_private;
@@ -2573,6 +2638,9 @@ fail_begin_fb_access:
 	}
 	i = j; /* set i to upper limit to cleanup all planes */
 fail_prepare_fb:
+=======
+fail:
+>>>>>>> b7ba80a49124 (Commit)
 	for_each_new_plane_in_state(state, plane, new_plane_state, j) {
 		const struct drm_plane_helper_funcs *funcs;
 
@@ -2702,11 +2770,14 @@ void drm_atomic_helper_commit_planes(struct drm_device *dev,
 			funcs->atomic_disable(plane, old_state);
 		} else if (new_plane_state->crtc || disabling) {
 			funcs->atomic_update(plane, old_state);
+<<<<<<< HEAD
 
 			if (!disabling && funcs->atomic_enable) {
 				if (drm_atomic_plane_enabling(old_plane_state, new_plane_state))
 					funcs->atomic_enable(plane, old_state);
 			}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -2767,7 +2838,10 @@ drm_atomic_helper_commit_planes_on_crtc(struct drm_crtc_state *old_crtc_state)
 		struct drm_plane_state *new_plane_state =
 			drm_atomic_get_new_plane_state(old_state, plane);
 		const struct drm_plane_helper_funcs *plane_funcs;
+<<<<<<< HEAD
 		bool disabling;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		plane_funcs = plane->helper_private;
 
@@ -2777,6 +2851,7 @@ drm_atomic_helper_commit_planes_on_crtc(struct drm_crtc_state *old_crtc_state)
 		WARN_ON(new_plane_state->crtc &&
 			new_plane_state->crtc != crtc);
 
+<<<<<<< HEAD
 		disabling = drm_atomic_plane_disabling(old_plane_state, new_plane_state);
 
 		if (disabling && plane_funcs->atomic_disable) {
@@ -2789,6 +2864,14 @@ drm_atomic_helper_commit_planes_on_crtc(struct drm_crtc_state *old_crtc_state)
 					plane_funcs->atomic_enable(plane, old_state);
 			}
 		}
+=======
+		if (drm_atomic_plane_disabling(old_plane_state, new_plane_state) &&
+		    plane_funcs->atomic_disable)
+			plane_funcs->atomic_disable(plane, old_state);
+		else if (new_plane_state->crtc ||
+			 drm_atomic_plane_disabling(old_plane_state, new_plane_state))
+			plane_funcs->atomic_update(plane, old_state);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (crtc_funcs && crtc_funcs->atomic_flush)
@@ -2861,6 +2944,7 @@ void drm_atomic_helper_cleanup_planes(struct drm_device *dev,
 	int i;
 
 	for_each_oldnew_plane_in_state(old_state, plane, old_plane_state, new_plane_state, i) {
+<<<<<<< HEAD
 		const struct drm_plane_helper_funcs *funcs = plane->helper_private;
 
 		if (funcs->end_fb_access)
@@ -2868,6 +2952,8 @@ void drm_atomic_helper_cleanup_planes(struct drm_device *dev,
 	}
 
 	for_each_oldnew_plane_in_state(old_state, plane, old_plane_state, new_plane_state, i) {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		const struct drm_plane_helper_funcs *funcs;
 		struct drm_plane_state *plane_state;
 

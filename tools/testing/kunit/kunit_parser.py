@@ -10,9 +10,14 @@
 # Author: Rae Moar <rmoar@google.com>
 
 from __future__ import annotations
+<<<<<<< HEAD
 from dataclasses import dataclass
 import re
 import textwrap
+=======
+import re
+import sys
+>>>>>>> b7ba80a49124 (Commit)
 
 from enum import Enum, auto
 from typing import Iterable, Iterator, List, Optional, Tuple
@@ -59,10 +64,13 @@ class Test:
 		self.counts.errors += 1
 		stdout.print_with_timestamp(stdout.red('[ERROR]') + f' Test: {self.name}: {error_message}')
 
+<<<<<<< HEAD
 	def ok_status(self) -> bool:
 		"""Returns true if the status was ok, i.e. passed or skipped."""
 		return self.status in (TestStatus.SUCCESS, TestStatus.SKIPPED)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 class TestStatus(Enum):
 	"""An enumeration class to represent the status of a test."""
 	SUCCESS = auto()
@@ -72,17 +80,40 @@ class TestStatus(Enum):
 	NO_TESTS = auto()
 	FAILURE_TO_PARSE_TESTS = auto()
 
+<<<<<<< HEAD
 @dataclass
+=======
+>>>>>>> b7ba80a49124 (Commit)
 class TestCounts:
 	"""
 	Tracks the counts of statuses of all test cases and any errors within
 	a Test.
+<<<<<<< HEAD
 	"""
 	passed: int = 0
 	failed: int = 0
 	crashed: int = 0
 	skipped: int = 0
 	errors: int = 0
+=======
+
+	Attributes:
+	passed : int - the number of tests that have passed
+	failed : int - the number of tests that have failed
+	crashed : int - the number of tests that have crashed
+	skipped : int - the number of tests that have skipped
+	errors : int - the number of errors in the test and subtests
+	"""
+	def __init__(self):
+		"""Creates TestCounts object with counts of all test
+		statuses and test errors set to 0.
+		"""
+		self.passed = 0
+		self.failed = 0
+		self.crashed = 0
+		self.skipped = 0
+		self.errors = 0
+>>>>>>> b7ba80a49124 (Commit)
 
 	def __str__(self) -> str:
 		"""Returns the string representation of a TestCounts object."""
@@ -208,9 +239,15 @@ class LineStream:
 
 # Parsing helper methods:
 
+<<<<<<< HEAD
 KTAP_START = re.compile(r'\s*KTAP version ([0-9]+)$')
 TAP_START = re.compile(r'\s*TAP version ([0-9]+)$')
 KTAP_END = re.compile(r'\s*(List of all partitions:|'
+=======
+KTAP_START = re.compile(r'KTAP version ([0-9]+)$')
+TAP_START = re.compile(r'TAP version ([0-9]+)$')
+KTAP_END = re.compile('(List of all partitions:|'
+>>>>>>> b7ba80a49124 (Commit)
 	'Kernel panic - not syncing: VFS:|reboot: System halted)')
 
 def extract_tap_lines(kernel_output: Iterable[str]) -> LineStream:
@@ -239,8 +276,14 @@ def extract_tap_lines(kernel_output: Iterable[str]) -> LineStream:
 				# stop extracting KTAP lines
 				break
 			elif started:
+<<<<<<< HEAD
 				# remove the prefix, if any.
 				line = line[prefix_len:]
+=======
+				# remove prefix and any indention and yield
+				# line with line number
+				line = line[prefix_len:].lstrip()
+>>>>>>> b7ba80a49124 (Commit)
 				yield line_num, line
 	return LineStream(lines=isolate_ktap_output(kernel_output))
 
@@ -292,10 +335,17 @@ def parse_ktap_header(lines: LineStream, test: Test) -> bool:
 		check_version(version_num, TAP_VERSIONS, 'TAP', test)
 	else:
 		return False
+<<<<<<< HEAD
 	lines.pop()
 	return True
 
 TEST_HEADER = re.compile(r'^\s*# Subtest: (.*)$')
+=======
+	test.log.append(lines.pop())
+	return True
+
+TEST_HEADER = re.compile(r'^# Subtest: (.*)$')
+>>>>>>> b7ba80a49124 (Commit)
 
 def parse_test_header(lines: LineStream, test: Test) -> bool:
 	"""
@@ -315,11 +365,19 @@ def parse_test_header(lines: LineStream, test: Test) -> bool:
 	match = TEST_HEADER.match(lines.peek())
 	if not match:
 		return False
+<<<<<<< HEAD
 	test.name = match.group(1)
 	lines.pop()
 	return True
 
 TEST_PLAN = re.compile(r'^\s*1\.\.([0-9]+)')
+=======
+	test.log.append(lines.pop())
+	test.name = match.group(1)
+	return True
+
+TEST_PLAN = re.compile(r'1\.\.([0-9]+)')
+>>>>>>> b7ba80a49124 (Commit)
 
 def parse_test_plan(lines: LineStream, test: Test) -> bool:
 	"""
@@ -342,6 +400,7 @@ def parse_test_plan(lines: LineStream, test: Test) -> bool:
 	if not match:
 		test.expected_count = None
 		return False
+<<<<<<< HEAD
 	expected_count = int(match.group(1))
 	test.expected_count = expected_count
 	lines.pop()
@@ -350,6 +409,16 @@ def parse_test_plan(lines: LineStream, test: Test) -> bool:
 TEST_RESULT = re.compile(r'^\s*(ok|not ok) ([0-9]+) (- )?([^#]*)( # .*)?$')
 
 TEST_RESULT_SKIP = re.compile(r'^\s*(ok|not ok) ([0-9]+) (- )?(.*) # SKIP(.*)$')
+=======
+	test.log.append(lines.pop())
+	expected_count = int(match.group(1))
+	test.expected_count = expected_count
+	return True
+
+TEST_RESULT = re.compile(r'^(ok|not ok) ([0-9]+) (- )?([^#]*)( # .*)?$')
+
+TEST_RESULT_SKIP = re.compile(r'^(ok|not ok) ([0-9]+) (- )?(.*) # SKIP(.*)$')
+>>>>>>> b7ba80a49124 (Commit)
 
 def peek_test_name_match(lines: LineStream, test: Test) -> bool:
 	"""
@@ -406,7 +475,11 @@ def parse_test_result(lines: LineStream, test: Test,
 	# Check if line matches test result line format
 	if not match:
 		return False
+<<<<<<< HEAD
 	lines.pop()
+=======
+	test.log.append(lines.pop())
+>>>>>>> b7ba80a49124 (Commit)
 
 	# Set name of test object
 	if skip_match:
@@ -438,7 +511,10 @@ def parse_diagnostic(lines: LineStream) -> List[str]:
 	- '# Subtest: [test name]'
 	- '[ok|not ok] [test number] [-] [test name] [optional skip
 		directive]'
+<<<<<<< HEAD
 	- 'KTAP version [version number]'
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	Parameters:
 	lines - LineStream of KTAP output to parse
@@ -447,9 +523,14 @@ def parse_diagnostic(lines: LineStream) -> List[str]:
 	Log of diagnostic lines
 	"""
 	log = []  # type: List[str]
+<<<<<<< HEAD
 	non_diagnostic_lines = [TEST_RESULT, TEST_HEADER, KTAP_START]
 	while lines and not any(re.match(lines.peek())
 			for re in non_diagnostic_lines):
+=======
+	while lines and not TEST_RESULT.match(lines.peek()) and not \
+			TEST_HEADER.match(lines.peek()):
+>>>>>>> b7ba80a49124 (Commit)
 		log.append(lines.pop())
 	return log
 
@@ -495,6 +576,7 @@ def print_test_header(test: Test) -> None:
 	test - Test object representing current test being printed
 	"""
 	message = test.name
+<<<<<<< HEAD
 	if message != "":
 		# Add a leading space before the subtest counts only if a test name
 		# is provided using a "# Subtest" header line.
@@ -504,13 +586,25 @@ def print_test_header(test: Test) -> None:
 			message += '(1 subtest)'
 		else:
 			message += f'({test.expected_count} subtests)'
+=======
+	if test.expected_count:
+		if test.expected_count == 1:
+			message += ' (1 subtest)'
+		else:
+			message += f' ({test.expected_count} subtests)'
+>>>>>>> b7ba80a49124 (Commit)
 	stdout.print_with_timestamp(format_test_divider(message, len(message)))
 
 def print_log(log: Iterable[str]) -> None:
 	"""Prints all strings in saved log for test in yellow."""
+<<<<<<< HEAD
 	formatted = textwrap.dedent('\n'.join(log))
 	for line in formatted.splitlines():
 		stdout.print_with_timestamp(stdout.yellow(line))
+=======
+	for m in log:
+		stdout.print_with_timestamp(stdout.yellow(m))
+>>>>>>> b7ba80a49124 (Commit)
 
 def format_test_result(test: Test) -> str:
 	"""
@@ -564,6 +658,7 @@ def print_test_footer(test: Test) -> None:
 	stdout.print_with_timestamp(format_test_divider(message,
 		len(message) - stdout.color_len()))
 
+<<<<<<< HEAD
 
 
 def _summarize_failed_tests(test: Test) -> str:
@@ -598,6 +693,8 @@ def _summarize_failed_tests(test: Test) -> str:
 	return 'Failures: ' + ', '.join(failures)
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 def print_summary_line(test: Test) -> None:
 	"""
 	Prints summary line of test object. Color of line is dependent on
@@ -620,6 +717,7 @@ def print_summary_line(test: Test) -> None:
 		color = stdout.red
 	stdout.print_with_timestamp(color(f'Testing complete. {test.counts}'))
 
+<<<<<<< HEAD
 	# Summarize failures that might have gone off-screen since we had a lot
 	# of tests (arbitrarily defined as >=100 for now).
 	if test.ok_status() or test.counts.total() < 100:
@@ -629,6 +727,8 @@ def print_summary_line(test: Test) -> None:
 		return
 	stdout.print_with_timestamp(color(summarized))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # Other methods:
 
 def bubble_up_test_results(test: Test) -> None:
@@ -651,7 +751,11 @@ def bubble_up_test_results(test: Test) -> None:
 	elif test.counts.get_status() == TestStatus.TEST_CRASHED:
 		test.status = TestStatus.TEST_CRASHED
 
+<<<<<<< HEAD
 def parse_test(lines: LineStream, expected_num: int, log: List[str], is_subtest: bool) -> Test:
+=======
+def parse_test(lines: LineStream, expected_num: int, log: List[str]) -> Test:
+>>>>>>> b7ba80a49124 (Commit)
 	"""
 	Finds next test to parse in LineStream, creates new Test object,
 	parses any subtests of the test, populates Test object with all
@@ -669,6 +773,7 @@ def parse_test(lines: LineStream, expected_num: int, log: List[str], is_subtest:
 	1..4
 	[subtests]
 
+<<<<<<< HEAD
 	- Subtest header (must include either the KTAP version line or
 	  "# Subtest" header line)
 
@@ -682,12 +787,18 @@ def parse_test(lines: LineStream, expected_num: int, log: List[str], is_subtest:
 	ok 1 name
 
 	Example (only "# Subtest" line):
+=======
+	- Subtest header line
+
+	Example:
+>>>>>>> b7ba80a49124 (Commit)
 
 	# Subtest: name
 	1..3
 	[subtests]
 	ok 1 name
 
+<<<<<<< HEAD
 	Example (only KTAP version line, compliant with KTAP v1 spec):
 
 	KTAP version 1
@@ -695,6 +806,8 @@ def parse_test(lines: LineStream, expected_num: int, log: List[str], is_subtest:
 	[subtests]
 	ok 1 name
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	- Test result line
 
 	Example:
@@ -706,13 +819,17 @@ def parse_test(lines: LineStream, expected_num: int, log: List[str], is_subtest:
 	expected_num - expected test number for test to be parsed
 	log - list of strings containing any preceding diagnostic lines
 		corresponding to the current test
+<<<<<<< HEAD
 	is_subtest - boolean indicating whether test is a subtest
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	Return:
 	Test object populated with characteristics and any subtests
 	"""
 	test = Test()
 	test.log.extend(log)
+<<<<<<< HEAD
 	if not is_subtest:
 		# If parsing the main/top-level test, parse KTAP version line and
 		# test plan
@@ -729,6 +846,24 @@ def parse_test(lines: LineStream, expected_num: int, log: List[str], is_subtest:
 		if parent_test:
 			# If KTAP version line and/or subtest header is found, attempt
 			# to parse test plan and print test header
+=======
+	parent_test = False
+	main = parse_ktap_header(lines, test)
+	if main:
+		# If KTAP/TAP header is found, attempt to parse
+		# test plan
+		test.name = "main"
+		parse_test_plan(lines, test)
+		parent_test = True
+	else:
+		# If KTAP/TAP header is not found, test must be subtest
+		# header or test result line so parse attempt to parser
+		# subtest header
+		parent_test = parse_test_header(lines, test)
+		if parent_test:
+			# If subtest header is found, attempt to parse
+			# test plan and print header
+>>>>>>> b7ba80a49124 (Commit)
 			parse_test_plan(lines, test)
 			print_test_header(test)
 	expected_count = test.expected_count
@@ -743,7 +878,11 @@ def parse_test(lines: LineStream, expected_num: int, log: List[str], is_subtest:
 		sub_log = parse_diagnostic(lines)
 		sub_test = Test()
 		if not lines or (peek_test_name_match(lines, test) and
+<<<<<<< HEAD
 				is_subtest):
+=======
+				not main):
+>>>>>>> b7ba80a49124 (Commit)
 			if expected_count and test_num <= expected_count:
 				# If parser reaches end of test before
 				# parsing expected number of subtests, print
@@ -757,6 +896,7 @@ def parse_test(lines: LineStream, expected_num: int, log: List[str], is_subtest:
 				test.log.extend(sub_log)
 				break
 		else:
+<<<<<<< HEAD
 			sub_test = parse_test(lines, test_num, sub_log, True)
 		subtests.append(sub_test)
 		test_num += 1
@@ -770,6 +910,22 @@ def parse_test(lines: LineStream, expected_num: int, log: List[str], is_subtest:
 			parse_test_result(lines, test, expected_num)
 
 	# Check for there being no subtests within parent test
+=======
+			sub_test = parse_test(lines, test_num, sub_log)
+		subtests.append(sub_test)
+		test_num += 1
+	test.subtests = subtests
+	if not main:
+		# If not main test, look for test result line
+		test.log.extend(parse_diagnostic(lines))
+		if (parent_test and peek_test_name_match(lines, test)) or \
+				not parent_test:
+			parse_test_result(lines, test, expected_num)
+		else:
+			test.add_error('missing subtest result line!')
+
+	# Check for there being no tests
+>>>>>>> b7ba80a49124 (Commit)
 	if parent_test and len(subtests) == 0:
 		# Don't override a bad status if this test had one reported.
 		# Assumption: no subtests means CRASHED is from Test.__init__()
@@ -779,11 +935,19 @@ def parse_test(lines: LineStream, expected_num: int, log: List[str], is_subtest:
 
 	# Add statuses to TestCounts attribute in Test object
 	bubble_up_test_results(test)
+<<<<<<< HEAD
 	if parent_test and is_subtest:
 		# If test has subtests and is not the main test object, print
 		# footer.
 		print_test_footer(test)
 	elif is_subtest:
+=======
+	if parent_test and not main:
+		# If test has subtests and is not the main test object, print
+		# footer.
+		print_test_footer(test)
+	elif not main:
+>>>>>>> b7ba80a49124 (Commit)
 		print_test_result(test)
 	return test
 
@@ -803,10 +967,17 @@ def parse_run_tests(kernel_output: Iterable[str]) -> Test:
 	test = Test()
 	if not lines:
 		test.name = '<missing>'
+<<<<<<< HEAD
 		test.add_error('Could not find any KTAP output. Did any KUnit tests run?')
 		test.status = TestStatus.FAILURE_TO_PARSE_TESTS
 	else:
 		test = parse_test(lines, 0, [], False)
+=======
+		test.add_error('could not find any KTAP output!')
+		test.status = TestStatus.FAILURE_TO_PARSE_TESTS
+	else:
+		test = parse_test(lines, 0, [])
+>>>>>>> b7ba80a49124 (Commit)
 		if test.status != TestStatus.NO_TESTS:
 			test.status = test.counts.get_status()
 	stdout.print_with_timestamp(DIVIDER)

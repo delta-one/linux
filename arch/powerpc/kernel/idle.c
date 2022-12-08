@@ -51,9 +51,16 @@ void arch_cpu_idle(void)
 		 * Some power_save functions return with
 		 * interrupts enabled, some don't.
 		 */
+<<<<<<< HEAD
 		if (!irqs_disabled())
 			raw_local_irq_disable();
 	} else {
+=======
+		if (irqs_disabled())
+			raw_local_irq_enable();
+	} else {
+		raw_local_irq_enable();
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Go into low thread priority and possibly
 		 * low power mode.
@@ -107,11 +114,26 @@ static struct ctl_table powersave_nap_ctl_table[] = {
 	},
 	{}
 };
+<<<<<<< HEAD
+=======
+static struct ctl_table powersave_nap_sysctl_root[] = {
+	{
+		.procname	= "kernel",
+		.mode		= 0555,
+		.child		= powersave_nap_ctl_table,
+	},
+	{}
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static int __init
 register_powersave_nap_sysctl(void)
 {
+<<<<<<< HEAD
 	register_sysctl("kernel", powersave_nap_ctl_table);
+=======
+	register_sysctl_table(powersave_nap_sysctl_root);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

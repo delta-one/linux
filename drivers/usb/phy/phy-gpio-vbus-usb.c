@@ -366,6 +366,7 @@ static const struct dev_pm_ops gpio_vbus_dev_pm_ops = {
 
 MODULE_ALIAS("platform:gpio-vbus");
 
+<<<<<<< HEAD
 /*
  * NOTE: this driver matches against "gpio-usb-b-connector" for
  * devices that do NOT support role switch.
@@ -377,13 +378,18 @@ static const struct of_device_id gpio_vbus_of_match[] = {
 	{},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver gpio_vbus_driver = {
 	.driver = {
 		.name  = "gpio-vbus",
 #ifdef CONFIG_PM
 		.pm = &gpio_vbus_dev_pm_ops,
 #endif
+<<<<<<< HEAD
 		.of_match_table = gpio_vbus_of_match,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe		= gpio_vbus_probe,
 	.remove		= gpio_vbus_remove,

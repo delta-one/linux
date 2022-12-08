@@ -44,7 +44,11 @@ altro, utili riferimenti:
 - "C:  A Reference Manual" di Harbison and Steele [Prentice Hall]
 
 Il kernel è stato scritto usando GNU C e la toolchain GNU.
+<<<<<<< HEAD
 Sebbene si attenga allo standard ISO C11, esso utilizza una serie di
+=======
+Sebbene si attenga allo standard ISO C89, esso utilizza una serie di
+>>>>>>> b7ba80a49124 (Commit)
 estensioni che non sono previste in questo standard. Il kernel è un
 ambiente C indipendente, che non ha alcuna dipendenza dalle librerie
 C standard, così alcune parti del C standard non sono supportate.
@@ -394,7 +398,11 @@ trovati al sito:
 Ci sono diversi archivi della lista di discussione. Usate un qualsiasi motore
 di ricerca per trovarli. Per esempio:
 
+<<<<<<< HEAD
 	https://lore.kernel.org/lkml/
+=======
+	http://dir.gmane.org/gmane.linux.kernel
+>>>>>>> b7ba80a49124 (Commit)
 
 É caldamente consigliata una ricerca in questi archivi sul tema che volete
 sollevare, prima di pubblicarlo sulla lista. Molte cose sono già state

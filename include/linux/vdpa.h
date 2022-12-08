@@ -104,7 +104,10 @@ struct vdpa_iova_range {
 };
 
 struct vdpa_dev_set_config {
+<<<<<<< HEAD
 	u64 device_features;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct {
 		u8 mac[ETH_ALEN];
 		u16 mtu;
@@ -219,10 +222,14 @@ struct vdpa_map_file {
  * @reset:			Reset device
  *				@vdev: vdpa device
  *				Returns integer: success (0) or error (< 0)
+<<<<<<< HEAD
  * @suspend:			Suspend the device (optional)
  *				@vdev: vdpa device
  *				Returns integer: success (0) or error (< 0)
  * @resume:			Resume the device (optional)
+=======
+ * @suspend:			Suspend or resume the device (optional)
+>>>>>>> b7ba80a49124 (Commit)
  *				@vdev: vdpa device
  *				Returns integer: success (0) or error (< 0)
  * @get_config_size:		Get the size of the configuration space includes
@@ -285,6 +292,7 @@ struct vdpa_map_file {
  *				@iova: iova to be unmapped
  *				@size: size of the area
  *				Returns integer: success (0) or error (< 0)
+<<<<<<< HEAD
  * @get_vq_dma_dev:		Get the dma device for a specific
  *				virtqueue (optional)
  *				@vdev: vdpa device
@@ -298,6 +306,8 @@ struct vdpa_map_file {
  * @unbind_mm:			Unbind the device from the address space
  *				bound using the bind_mm callback. (optional)
  *				@vdev: vdpa device
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @free:			Free resources that belongs to vDPA (optional)
  *				@vdev: vdpa device
  */
@@ -340,7 +350,10 @@ struct vdpa_config_ops {
 	void (*set_status)(struct vdpa_device *vdev, u8 status);
 	int (*reset)(struct vdpa_device *vdev);
 	int (*suspend)(struct vdpa_device *vdev);
+<<<<<<< HEAD
 	int (*resume)(struct vdpa_device *vdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	size_t (*get_config_size)(struct vdpa_device *vdev);
 	void (*get_config)(struct vdpa_device *vdev, unsigned int offset,
 			   void *buf, unsigned int len);
@@ -358,9 +371,12 @@ struct vdpa_config_ops {
 			 u64 iova, u64 size);
 	int (*set_group_asid)(struct vdpa_device *vdev, unsigned int group,
 			      unsigned int asid);
+<<<<<<< HEAD
 	struct device *(*get_vq_dma_dev)(struct vdpa_device *vdev, u16 idx);
 	int (*bind_mm)(struct vdpa_device *vdev, struct mm_struct *mm);
 	void (*unbind_mm)(struct vdpa_device *vdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Free device resources */
 	void (*free)(struct vdpa_device *vdev);

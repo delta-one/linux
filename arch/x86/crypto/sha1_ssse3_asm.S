@@ -25,7 +25,10 @@
  */
 
 #include <linux/linkage.h>
+<<<<<<< HEAD
 #include <linux/cfi_types.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define CTX	%rdi	// arg1
 #define BUF	%rsi	// arg2
@@ -68,7 +71,11 @@
  * param: function's name
  */
 .macro SHA1_VECTOR_ASM  name
+<<<<<<< HEAD
 	SYM_TYPED_FUNC_START(\name)
+=======
+	SYM_FUNC_START(\name)
+>>>>>>> b7ba80a49124 (Commit)
 
 	push	%rbx
 	push	%r12

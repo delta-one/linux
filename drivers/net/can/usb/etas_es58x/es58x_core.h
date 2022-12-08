@@ -6,18 +6,30 @@
  *
  * Copyright (c) 2019 Robert Bosch Engineering and Business Solutions. All rights reserved.
  * Copyright (c) 2020 ETAS K.K.. All rights reserved.
+<<<<<<< HEAD
  * Copyright (c) 2020-2022 Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+=======
+ * Copyright (c) 2020, 2021 Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #ifndef __ES58X_COMMON_H__
 #define __ES58X_COMMON_H__
 
+<<<<<<< HEAD
 #include <linux/can.h>
 #include <linux/can/dev.h>
 #include <linux/netdevice.h>
 #include <linux/types.h>
 #include <linux/usb.h>
 #include <net/devlink.h>
+=======
+#include <linux/types.h>
+#include <linux/usb.h>
+#include <linux/netdevice.h>
+#include <linux/can.h>
+#include <linux/can/dev.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "es581_4.h"
 #include "es58x_fd.h"
@@ -231,7 +243,10 @@ union es58x_urb_cmd {
  * @can: struct can_priv must be the first member (Socket CAN relies
  *	on the fact that function netdev_priv() returns a pointer to
  *	a struct can_priv).
+<<<<<<< HEAD
  * @devlink_port: devlink instance for the network interface.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @es58x_dev: pointer to the corresponding ES58X device.
  * @tx_urb: Used as a buffer to concatenate the TX messages and to do
  *	a bulk send. Please refer to es58x_start_xmit() for more
@@ -257,7 +272,10 @@ union es58x_urb_cmd {
  */
 struct es58x_priv {
 	struct can_priv can;
+<<<<<<< HEAD
 	struct devlink_port devlink_port;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct es58x_device *es58x_dev;
 	struct urb *tx_urb;
 
@@ -360,6 +378,7 @@ struct es58x_operators {
 };
 
 /**
+<<<<<<< HEAD
  * struct es58x_sw_version - Version number of the firmware or the
  *	bootloader.
  * @major: Version major number, represented on two digits.
@@ -393,6 +412,8 @@ struct es58x_hw_revision {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct es58x_device - All information specific to an ES58X device.
  * @dev: Device information.
  * @udev: USB device information.
@@ -409,9 +430,12 @@ struct es58x_hw_revision {
  *	queue wake/stop logic should prevent this URB from getting
  *	empty. Please refer to es58x_get_tx_urb() for more details.
  * @tx_urbs_idle_cnt: number of urbs in @tx_urbs_idle.
+<<<<<<< HEAD
  * @firmware_version: The firmware version number.
  * @bootloader_version: The bootloader version number.
  * @hardware_revision: The hardware revision number.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @ktime_req_ns: kernel timestamp when es58x_set_realtime_diff_ns()
  *	was called.
  * @realtime_diff_ns: difference in nanoseconds between the clocks of
@@ -447,10 +471,13 @@ struct es58x_device {
 	struct usb_anchor tx_urbs_idle;
 	atomic_t tx_urbs_idle_cnt;
 
+<<<<<<< HEAD
 	struct es58x_sw_version firmware_version;
 	struct es58x_sw_version bootloader_version;
 	struct es58x_hw_revision hardware_revision;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 ktime_req_ns;
 	s64 realtime_diff_ns;
 
@@ -717,7 +744,10 @@ static inline enum es58x_flag es58x_get_flags(const struct sk_buff *skb)
 	return es58x_flags;
 }
 
+<<<<<<< HEAD
 /* es58x_core.c. */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int es58x_can_get_echo_skb(struct net_device *netdev, u32 packet_idx,
 			   u64 *tstamps, unsigned int pkts);
 int es58x_tx_ack_msg(struct net_device *netdev, u16 tx_free_entries,
@@ -735,6 +765,7 @@ int es58x_rx_cmd_ret_u32(struct net_device *netdev,
 int es58x_send_msg(struct es58x_device *es58x_dev, u8 cmd_type, u8 cmd_id,
 		   const void *msg, u16 cmd_len, int channel_idx);
 
+<<<<<<< HEAD
 /* es58x_devlink.c. */
 void es58x_parse_product_info(struct es58x_device *es58x_dev);
 extern const struct devlink_ops es58x_dl_ops;
@@ -744,6 +775,11 @@ extern const struct es58x_parameters es581_4_param;
 extern const struct es58x_operators es581_4_ops;
 
 /* es58x_fd.c. */
+=======
+extern const struct es58x_parameters es581_4_param;
+extern const struct es58x_operators es581_4_ops;
+
+>>>>>>> b7ba80a49124 (Commit)
 extern const struct es58x_parameters es58x_fd_param;
 extern const struct es58x_operators es58x_fd_ops;
 

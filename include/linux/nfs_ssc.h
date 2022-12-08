@@ -53,7 +53,10 @@ static inline void nfs42_ssc_close(struct file *filep)
 	if (nfs_ssc_client_tbl.ssc_nfs4_ops)
 		(*nfs_ssc_client_tbl.ssc_nfs4_ops->sco_close)(filep);
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct nfsd4_ssc_umount_item {
 	struct list_head nsui_list;
@@ -67,6 +70,10 @@ struct nfsd4_ssc_umount_item {
 	struct vfsmount *nsui_vfsmount;
 	char nsui_ipaddr[RPC_MAX_ADDRBUFLEN + 1];
 };
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * NFS_FS

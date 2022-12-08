@@ -16,11 +16,15 @@
 #include "audioreach.h"
 
 struct snd_ar_control {
+<<<<<<< HEAD
 	u32 graph_id; /* Graph ID */
 	u32 sgid; /* Sub Graph ID */
 	u32 module_instance_id; /* Connected Module Instance ID */
 	struct snd_soc_dapm_widget *w;
 	struct list_head node;
+=======
+	u32 sgid; /* Sub Graph ID */
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_soc_component *scomp;
 };
 
@@ -48,7 +52,11 @@ static struct audioreach_graph_info *audioreach_tplg_alloc_graph_info(struct q6a
 	INIT_LIST_HEAD(&info->sg_list);
 
 	mutex_lock(&apm->lock);
+<<<<<<< HEAD
 	ret = idr_alloc_u32(&apm->graph_info_idr, info, &graph_id, graph_id, GFP_KERNEL);
+=======
+	ret = idr_alloc(&apm->graph_info_idr, info, graph_id, graph_id + 1, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&apm->lock);
 
 	if (ret < 0) {
@@ -57,7 +65,11 @@ static struct audioreach_graph_info *audioreach_tplg_alloc_graph_info(struct q6a
 		return ERR_PTR(ret);
 	}
 
+<<<<<<< HEAD
 	info->id = graph_id;
+=======
+	info->id = ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return info;
 }
@@ -98,7 +110,11 @@ static struct audioreach_sub_graph *audioreach_tplg_alloc_sub_graph(struct q6apm
 	INIT_LIST_HEAD(&sg->container_list);
 
 	mutex_lock(&apm->lock);
+<<<<<<< HEAD
 	ret = idr_alloc_u32(&apm->sub_graphs_idr, sg, &sub_graph_id, sub_graph_id, GFP_KERNEL);
+=======
+	ret = idr_alloc(&apm->sub_graphs_idr, sg, sub_graph_id, sub_graph_id + 1, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&apm->lock);
 
 	if (ret < 0) {
@@ -107,7 +123,11 @@ static struct audioreach_sub_graph *audioreach_tplg_alloc_sub_graph(struct q6apm
 		return ERR_PTR(ret);
 	}
 
+<<<<<<< HEAD
 	sg->sub_graph_id = sub_graph_id;
+=======
+	sg->sub_graph_id = ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return sg;
 }
@@ -140,7 +160,11 @@ static struct audioreach_container *audioreach_tplg_alloc_container(struct q6apm
 	INIT_LIST_HEAD(&cont->modules_list);
 
 	mutex_lock(&apm->lock);
+<<<<<<< HEAD
 	ret = idr_alloc_u32(&apm->containers_idr, cont, &container_id, container_id, GFP_KERNEL);
+=======
+	ret = idr_alloc(&apm->containers_idr, cont, container_id, container_id + 1, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&apm->lock);
 
 	if (ret < 0) {
@@ -149,7 +173,11 @@ static struct audioreach_container *audioreach_tplg_alloc_container(struct q6apm
 		return ERR_PTR(ret);
 	}
 
+<<<<<<< HEAD
 	cont->container_id = container_id;
+=======
+	cont->container_id = ret;
+>>>>>>> b7ba80a49124 (Commit)
 	cont->sub_graph = sg;
 	/* add to container list */
 	list_add_tail(&cont->node, &sg->container_list);
@@ -185,7 +213,11 @@ static struct audioreach_module *audioreach_tplg_alloc_module(struct q6apm *apm,
 				       AR_MODULE_DYNAMIC_INSTANCE_ID_START,
 				       AR_MODULE_DYNAMIC_INSTANCE_ID_END, GFP_KERNEL);
 	} else {
+<<<<<<< HEAD
 		ret = idr_alloc_u32(&apm->modules_idr, mod, &module_id, module_id, GFP_KERNEL);
+=======
+		ret = idr_alloc(&apm->modules_idr, mod, module_id, module_id + 1, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	mutex_unlock(&apm->lock);
 
@@ -195,7 +227,11 @@ static struct audioreach_module *audioreach_tplg_alloc_module(struct q6apm *apm,
 		return ERR_PTR(ret);
 	}
 
+<<<<<<< HEAD
 	mod->instance_id = module_id;
+=======
+	mod->instance_id = ret;
+>>>>>>> b7ba80a49124 (Commit)
 	/* add to module list */
 	list_add_tail(&mod->node, &cont->modules_list);
 	mod->container = cont;
@@ -412,15 +448,21 @@ static struct audioreach_module *audioreach_parse_common_tokens(struct q6apm *ap
 							struct snd_soc_dapm_widget *w)
 {
 	uint32_t max_ip_port = 0, max_op_port = 0, in_port = 0, out_port = 0;
+<<<<<<< HEAD
 	uint32_t src_mod_op_port_id[AR_MAX_MOD_LINKS] = { 0, };
 	uint32_t dst_mod_inst_id[AR_MAX_MOD_LINKS] = { 0, };
 	uint32_t dst_mod_ip_port_id[AR_MAX_MOD_LINKS] = { 0, };
 	uint32_t src_mod_inst_id = 0;
 
+=======
+	uint32_t src_mod_inst_id = 0, src_mod_op_port_id = 0;
+	uint32_t dst_mod_inst_id = 0, dst_mod_ip_port_id = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int module_id = 0, instance_id = 0, tkn_count = 0;
 	struct snd_soc_tplg_vendor_value_elem *mod_elem;
 	struct snd_soc_tplg_vendor_array *mod_array;
 	struct audioreach_module *mod = NULL;
+<<<<<<< HEAD
 	uint32_t token;
 	bool found;
 	int max_tokens;
@@ -431,6 +473,15 @@ static struct audioreach_module *audioreach_parse_common_tokens(struct q6apm *ap
 	while (tkn_count <= (max_tokens - 1)) {
 		token = le32_to_cpu(mod_elem->token);
 		switch (token) {
+=======
+	bool found;
+
+	mod_array = audioreach_get_module_array(private);
+	mod_elem = mod_array->value;
+
+	while (tkn_count <= (le32_to_cpu(mod_array->num_elems) - 1)) {
+		switch (le32_to_cpu(mod_elem->token)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* common module info */
 		case AR_TKN_U32_MODULE_ID:
 			module_id = le32_to_cpu(mod_elem->value);
@@ -460,6 +511,7 @@ static struct audioreach_module *audioreach_parse_common_tokens(struct q6apm *ap
 		case AR_TKN_U32_MODULE_OUT_PORTS:
 			out_port = le32_to_cpu(mod_elem->value);
 			break;
+<<<<<<< HEAD
 		case AR_TKN_U32_MODULE_SRC_INSTANCE_ID:
 			src_mod_inst_id = le32_to_cpu(mod_elem->value);
 			break;
@@ -534,6 +586,19 @@ static struct audioreach_module *audioreach_parse_common_tokens(struct q6apm *ap
 			break;
 		case AR_TKN_U32_MODULE_DST_IN_PORT_ID7:
 			dst_mod_ip_port_id[7] = le32_to_cpu(mod_elem->value);
+=======
+		case AR_TKN_U32_MODULE_SRC_OP_PORT_ID:
+			src_mod_op_port_id = le32_to_cpu(mod_elem->value);
+			break;
+		case AR_TKN_U32_MODULE_SRC_INSTANCE_ID:
+			src_mod_inst_id = le32_to_cpu(mod_elem->value);
+			break;
+		case AR_TKN_U32_MODULE_DST_INSTANCE_ID:
+			dst_mod_inst_id = le32_to_cpu(mod_elem->value);
+			break;
+		case AR_TKN_U32_MODULE_DST_IN_PORT_ID:
+			dst_mod_ip_port_id = le32_to_cpu(mod_elem->value);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		default:
 			break;
@@ -544,13 +609,17 @@ static struct audioreach_module *audioreach_parse_common_tokens(struct q6apm *ap
 	}
 
 	if (mod) {
+<<<<<<< HEAD
 		int pn, id = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		mod->module_id = module_id;
 		mod->max_ip_port = max_ip_port;
 		mod->max_op_port = max_op_port;
 		mod->in_port = in_port;
 		mod->out_port = out_port;
 		mod->src_mod_inst_id = src_mod_inst_id;
+<<<<<<< HEAD
 		for (pn = 0; pn < mod->max_op_port; pn++) {
 			if (src_mod_op_port_id[pn] && dst_mod_inst_id[pn] &&
 			    dst_mod_ip_port_id[pn]) {
@@ -561,6 +630,11 @@ static struct audioreach_module *audioreach_parse_common_tokens(struct q6apm *ap
 				mod->num_connections = id;
 			}
 		}
+=======
+		mod->src_mod_op_port_id = src_mod_op_port_id;
+		mod->dst_mod_inst_id = dst_mod_inst_id;
+		mod->dst_mod_ip_port_id = dst_mod_ip_port_id;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return mod;
@@ -773,7 +847,10 @@ static int audioreach_widget_load_mixer(struct snd_soc_component *component,
 	struct snd_soc_tplg_vendor_value_elem *w_elem;
 	struct snd_soc_tplg_vendor_array *w_array;
 	struct snd_ar_control *scontrol;
+<<<<<<< HEAD
 	struct q6apm *data = dev_get_drvdata(component->dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_soc_dobj *dobj;
 	int tkn_count = 0;
 
@@ -793,9 +870,12 @@ static int audioreach_widget_load_mixer(struct snd_soc_component *component,
 		case AR_TKN_U32_SUB_GRAPH_INSTANCE_ID:
 			scontrol->sgid = le32_to_cpu(w_elem->value);
 			break;
+<<<<<<< HEAD
 		case AR_TKN_DAI_INDEX:
 			scontrol->graph_id = le32_to_cpu(w_elem->value);
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		default: /* ignore other tokens */
 			break;
 		}
@@ -803,9 +883,12 @@ static int audioreach_widget_load_mixer(struct snd_soc_component *component,
 		w_elem++;
 	}
 
+<<<<<<< HEAD
 	scontrol->w = w;
 	list_add_tail(&scontrol->node, &data->widget_list);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -907,10 +990,14 @@ static int audioreach_widget_unload(struct snd_soc_component *scomp,
 
 	if (w->id == snd_soc_dapm_mixer) {
 		/* virtual widget */
+<<<<<<< HEAD
 		struct snd_ar_control *scontrol = dobj->private;
 
 		list_del(&scontrol->node);
 		kfree(scontrol);
+=======
+		kfree(dobj->private);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
@@ -949,6 +1036,7 @@ static int audioreach_widget_unload(struct snd_soc_component *scomp,
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct snd_ar_control *audioreach_find_widget(struct snd_soc_component *comp,
 						     const char *name)
 {
@@ -964,6 +1052,9 @@ static struct snd_ar_control *audioreach_find_widget(struct snd_soc_component *c
 }
 
 static struct audioreach_module *audioreach_find_module(struct snd_soc_component *comp,
+=======
+static struct audioreach_module *audioreach_find_widget(struct snd_soc_component *comp,
+>>>>>>> b7ba80a49124 (Commit)
 							const char *name)
 {
 	struct q6apm *apm = dev_get_drvdata(comp->dev);
@@ -981,6 +1072,7 @@ static struct audioreach_module *audioreach_find_module(struct snd_soc_component
 static int audioreach_route_load(struct snd_soc_component *scomp, int index,
 				 struct snd_soc_dapm_route *route)
 {
+<<<<<<< HEAD
 	struct audioreach_module *src_module, *sink_module;
 	struct snd_ar_control *control;
 	struct snd_soc_dapm_widget *w;
@@ -1016,6 +1108,16 @@ static int audioreach_route_load(struct snd_soc_component *scomp, int index,
 			}
 		}
 
+=======
+	struct audioreach_module *src, *sink;
+
+	src = audioreach_find_widget(scomp, route->source);
+	sink = audioreach_find_widget(scomp, route->sink);
+
+	if (src && sink) {
+		src->dst_mod_inst_id = sink->instance_id;
+		sink->src_mod_inst_id = src->instance_id;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -1046,6 +1148,7 @@ static int audioreach_link_load(struct snd_soc_component *component, int index,
 	return 0;
 }
 
+<<<<<<< HEAD
 static void audioreach_connect_sub_graphs(struct q6apm *apm,
 					  struct snd_ar_control *m1,
 					  struct snd_ar_control *m2,
@@ -1088,6 +1191,8 @@ static bool audioreach_is_vmixer_connected(struct q6apm *apm,
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int audioreach_get_audio_mixer(struct snd_kcontrol *kcontrol,
 				      struct snd_ctl_elem_value *ucontrol)
 {
@@ -1100,7 +1205,11 @@ static int audioreach_get_audio_mixer(struct snd_kcontrol *kcontrol,
 	struct q6apm *data = dev_get_drvdata(c->dev);
 	bool connected;
 
+<<<<<<< HEAD
 	connected = audioreach_is_vmixer_connected(data, scontrol, dapm_scontrol);
+=======
+	connected = q6apm_is_sub_graphs_connected(data, scontrol->sgid, dapm_scontrol->sgid);
+>>>>>>> b7ba80a49124 (Commit)
 	if (connected)
 		ucontrol->value.integer.value[0] = 1;
 	else
@@ -1121,10 +1230,17 @@ static int audioreach_put_audio_mixer(struct snd_kcontrol *kcontrol,
 	struct q6apm *data = dev_get_drvdata(c->dev);
 
 	if (ucontrol->value.integer.value[0]) {
+<<<<<<< HEAD
 		audioreach_connect_sub_graphs(data, scontrol, dapm_scontrol, true);
 		snd_soc_dapm_mixer_update_power(dapm, kcontrol, 1, NULL);
 	} else {
 		audioreach_connect_sub_graphs(data, scontrol, dapm_scontrol, false);
+=======
+		q6apm_connect_sub_graphs(data, scontrol->sgid, dapm_scontrol->sgid, true);
+		snd_soc_dapm_mixer_update_power(dapm, kcontrol, 1, NULL);
+	} else {
+		q6apm_connect_sub_graphs(data, scontrol->sgid, dapm_scontrol->sgid, false);
+>>>>>>> b7ba80a49124 (Commit)
 		snd_soc_dapm_mixer_update_power(dapm, kcontrol, 0, NULL);
 	}
 	return 0;
@@ -1172,9 +1288,12 @@ static int audioreach_control_load_mix(struct snd_soc_component *scomp,
 		case AR_TKN_U32_SUB_GRAPH_INSTANCE_ID:
 			scontrol->sgid = le32_to_cpu(c_elem->value);
 			break;
+<<<<<<< HEAD
 		case AR_TKN_DAI_INDEX:
 			scontrol->graph_id = le32_to_cpu(c_elem->value);
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		default:
 			/* Ignore other tokens */
 			break;

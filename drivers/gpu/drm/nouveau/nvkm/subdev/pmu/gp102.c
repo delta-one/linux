@@ -23,6 +23,7 @@
  */
 #include "priv.h"
 
+<<<<<<< HEAD
 static const struct nvkm_falcon_func
 gp102_pmu_flcn = {
 	.disable = gm200_flcn_disable,
@@ -42,6 +43,27 @@ gp102_pmu_flcn = {
 static const struct nvkm_pmu_func
 gp102_pmu = {
 	.flcn = &gp102_pmu_flcn,
+=======
+void
+gp102_pmu_reset(struct nvkm_pmu *pmu)
+{
+	struct nvkm_device *device = pmu->subdev.device;
+	nvkm_mask(device, 0x10a3c0, 0x00000001, 0x00000001);
+	nvkm_mask(device, 0x10a3c0, 0x00000001, 0x00000000);
+}
+
+static bool
+gp102_pmu_enabled(struct nvkm_pmu *pmu)
+{
+	return !(nvkm_rd32(pmu->subdev.device, 0x10a3c0) & 0x00000001);
+}
+
+static const struct nvkm_pmu_func
+gp102_pmu = {
+	.flcn = &gm200_pmu_flcn,
+	.enabled = gp102_pmu_enabled,
+	.reset = gp102_pmu_reset,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct nvkm_pmu_fwif

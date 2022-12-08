@@ -38,7 +38,11 @@ static inline void _tlbil_pid(unsigned int pid)
 #else /* CONFIG_40x || CONFIG_PPC_8xx */
 extern void _tlbil_all(void);
 extern void _tlbil_pid(unsigned int pid);
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 extern void _tlbil_pid_noind(unsigned int pid);
 #else
 #define _tlbil_pid_noind(pid)	_tlbil_pid(pid)
@@ -55,7 +59,11 @@ static inline void _tlbil_va(unsigned long address, unsigned int pid,
 	asm volatile ("tlbie %0; sync" : : "r" (address) : "memory");
 	trace_tlbie(0, 0, address, pid, 0, 0, 0);
 }
+<<<<<<< HEAD
 #elif defined(CONFIG_PPC_BOOK3E_64)
+=======
+#elif defined(CONFIG_PPC_BOOK3E)
+>>>>>>> b7ba80a49124 (Commit)
 extern void _tlbil_va(unsigned long address, unsigned int pid,
 		      unsigned int tsize, unsigned int ind);
 #else
@@ -67,7 +75,11 @@ static inline void _tlbil_va(unsigned long address, unsigned int pid,
 }
 #endif /* CONFIG_PPC_8xx */
 
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_BOOK3E_64) || defined(CONFIG_PPC_47x)
+=======
+#if defined(CONFIG_PPC_BOOK3E) || defined(CONFIG_PPC_47x)
+>>>>>>> b7ba80a49124 (Commit)
 extern void _tlbivax_bcast(unsigned long address, unsigned int pid,
 			   unsigned int tsize, unsigned int ind);
 #else
@@ -111,7 +123,11 @@ void MMU_init_hw_patch(void);
 unsigned long mmu_mapin_ram(unsigned long base, unsigned long top);
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_E500
+=======
+#ifdef CONFIG_PPC_FSL_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 extern unsigned long map_mem_in_cams(unsigned long ram, int max_cam_idx,
 				     bool dryrun, bool init);
 #ifdef CONFIG_PPC32
@@ -120,7 +136,10 @@ extern int switch_to_as1(void);
 extern void restore_to_as0(int esel, int offset, void *dt_ptr, int bootcpu);
 void create_kaslr_tlb_entry(int entry, unsigned long virt, phys_addr_t phys);
 void reloc_kernel_entry(void *fdt, int addr);
+<<<<<<< HEAD
 void relocate_init(u64 dt_ptr, phys_addr_t start);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern int is_second_reloc;
 #endif
 extern void loadcam_entry(unsigned int index);
@@ -147,9 +166,15 @@ struct tlbcam {
 extern struct tlbcam TLBCAM[NUM_TLBCAMS];
 #endif
 
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_BOOK3S_32) || defined(CONFIG_PPC_85xx) || defined(CONFIG_PPC_8xx)
 /* 6xx have BATS */
 /* PPC_85xx have TLBCAM */
+=======
+#if defined(CONFIG_PPC_BOOK3S_32) || defined(CONFIG_FSL_BOOKE) || defined(CONFIG_PPC_8xx)
+/* 6xx have BATS */
+/* FSL_BOOKE have TLBCAM */
+>>>>>>> b7ba80a49124 (Commit)
 /* 8xx have LTLB */
 phys_addr_t v_block_mapped(unsigned long va);
 unsigned long p_block_mapped(phys_addr_t pa);
@@ -158,7 +183,11 @@ static inline phys_addr_t v_block_mapped(unsigned long va) { return 0; }
 static inline unsigned long p_block_mapped(phys_addr_t pa) { return 0; }
 #endif
 
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_BOOK3S_32) || defined(CONFIG_PPC_8xx) || defined(CONFIG_PPC_E500)
+=======
+#if defined(CONFIG_PPC_BOOK3S_32) || defined(CONFIG_PPC_8xx) || defined(CONFIG_PPC_FSL_BOOK3E)
+>>>>>>> b7ba80a49124 (Commit)
 void mmu_mark_initmem_nx(void);
 void mmu_mark_rodata_ro(void);
 #else

@@ -281,6 +281,7 @@ enum nix_sqint_e {
 			BIT_ULL(NIX_SQINT_SEND_ERR) | \
 			BIT_ULL(NIX_SQINT_SQB_ALLOC_FAIL))
 
+<<<<<<< HEAD
 enum nix_sqoperr_e {
 	NIX_SQOPERR_OOR = 0,
 	NIX_SQOPERR_CTX_FAULT = 1,
@@ -338,4 +339,6 @@ enum nix_snd_status_e {
 	NIX_SND_STATUS_MAX,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* OTX2_STRUCT_H */

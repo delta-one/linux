@@ -47,15 +47,21 @@ struct fsl_micfil {
 	struct clk *pll11k_clk;
 	struct snd_dmaengine_dai_dma_data dma_params_rx;
 	struct sdma_peripheral_config sdmacfg;
+<<<<<<< HEAD
 	struct snd_soc_card *card;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int dataline;
 	char name[32];
 	int irq[MICFIL_IRQ_LINES];
 	enum quality quality;
 	int dc_remover;
+<<<<<<< HEAD
 	int vad_init_mode;
 	int vad_enabled;
 	int vad_detected;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct fsl_micfil_soc_data {
@@ -63,7 +69,10 @@ struct fsl_micfil_soc_data {
 	unsigned int fifo_depth;
 	unsigned int dataline;
 	bool imx;
+<<<<<<< HEAD
 	bool use_edma;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64  formats;
 };
 
@@ -83,6 +92,7 @@ static struct fsl_micfil_soc_data fsl_micfil_imx8mp = {
 	.formats = SNDRV_PCM_FMTBIT_S32_LE,
 };
 
+<<<<<<< HEAD
 static struct fsl_micfil_soc_data fsl_micfil_imx93 = {
 	.imx = true,
 	.fifos = 8,
@@ -96,6 +106,11 @@ static const struct of_device_id fsl_micfil_dt_ids[] = {
 	{ .compatible = "fsl,imx8mm-micfil", .data = &fsl_micfil_imx8mm },
 	{ .compatible = "fsl,imx8mp-micfil", .data = &fsl_micfil_imx8mp },
 	{ .compatible = "fsl,imx93-micfil", .data = &fsl_micfil_imx93 },
+=======
+static const struct of_device_id fsl_micfil_dt_ids[] = {
+	{ .compatible = "fsl,imx8mm-micfil", .data = &fsl_micfil_imx8mm },
+	{ .compatible = "fsl,imx8mp-micfil", .data = &fsl_micfil_imx8mp },
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 MODULE_DEVICE_TABLE(of, fsl_micfil_dt_ids);
@@ -167,6 +182,7 @@ static int micfil_quality_set(struct snd_kcontrol *kcontrol,
 	return micfil_set_quality(micfil);
 }
 
+<<<<<<< HEAD
 static const char * const micfil_hwvad_enable[] = {
 	"Disable (Record only)",
 	"Enable (Record with Vad)",
@@ -354,6 +370,28 @@ static const struct snd_kcontrol_new fsl_micfil_snd_controls[] = {
 	SOC_SINGLE("HWVAD ZCD And Behavior Switch",
 		   REG_MICFIL_VAD0_ZCD, 4, 1, 0),
 	SOC_SINGLE_BOOL_EXT("VAD Detected", 0, hwvad_detected, NULL),
+=======
+static const struct snd_kcontrol_new fsl_micfil_snd_controls[] = {
+	SOC_SINGLE_SX_TLV("CH0 Volume", REG_MICFIL_OUT_CTRL,
+			  MICFIL_OUTGAIN_CHX_SHIFT(0), 0xF, 0x7, gain_tlv),
+	SOC_SINGLE_SX_TLV("CH1 Volume", REG_MICFIL_OUT_CTRL,
+			  MICFIL_OUTGAIN_CHX_SHIFT(1), 0xF, 0x7, gain_tlv),
+	SOC_SINGLE_SX_TLV("CH2 Volume", REG_MICFIL_OUT_CTRL,
+			  MICFIL_OUTGAIN_CHX_SHIFT(2), 0xF, 0x7, gain_tlv),
+	SOC_SINGLE_SX_TLV("CH3 Volume", REG_MICFIL_OUT_CTRL,
+			  MICFIL_OUTGAIN_CHX_SHIFT(3), 0xF, 0x7, gain_tlv),
+	SOC_SINGLE_SX_TLV("CH4 Volume", REG_MICFIL_OUT_CTRL,
+			  MICFIL_OUTGAIN_CHX_SHIFT(4), 0xF, 0x7, gain_tlv),
+	SOC_SINGLE_SX_TLV("CH5 Volume", REG_MICFIL_OUT_CTRL,
+			  MICFIL_OUTGAIN_CHX_SHIFT(5), 0xF, 0x7, gain_tlv),
+	SOC_SINGLE_SX_TLV("CH6 Volume", REG_MICFIL_OUT_CTRL,
+			  MICFIL_OUTGAIN_CHX_SHIFT(6), 0xF, 0x7, gain_tlv),
+	SOC_SINGLE_SX_TLV("CH7 Volume", REG_MICFIL_OUT_CTRL,
+			  MICFIL_OUTGAIN_CHX_SHIFT(7), 0xF, 0x7, gain_tlv),
+	SOC_ENUM_EXT("MICFIL Quality Select",
+		     fsl_micfil_quality_enum,
+		     micfil_quality_get, micfil_quality_set),
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* The SRES is a self-negated bit which provides the CPU with the
@@ -376,6 +414,7 @@ static int fsl_micfil_reset(struct device *dev)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	/*
 	 * SRES is self-cleared bit, but REG_MICFIL_CTRL1 is defined
 	 * as non-volatile register, so SRES still remain in regmap
@@ -395,6 +434,8 @@ static int fsl_micfil_reset(struct device *dev)
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -411,6 +452,7 @@ static int fsl_micfil_startup(struct snd_pcm_substream *substream,
 	return 0;
 }
 
+<<<<<<< HEAD
 /* Enable/disable hwvad interrupts */
 static int fsl_micfil_configure_hwvad_interrupts(struct fsl_micfil *micfil, int enable)
 {
@@ -572,6 +614,8 @@ static int fsl_micfil_hwvad_disable(struct fsl_micfil *micfil)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int fsl_micfil_trigger(struct snd_pcm_substream *substream, int cmd,
 			      struct snd_soc_dai *dai)
 {
@@ -607,16 +651,22 @@ static int fsl_micfil_trigger(struct snd_pcm_substream *substream, int cmd,
 		if (ret)
 			return ret;
 
+<<<<<<< HEAD
 		if (micfil->vad_enabled)
 			fsl_micfil_hwvad_enable(micfil);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case SNDRV_PCM_TRIGGER_STOP:
 	case SNDRV_PCM_TRIGGER_SUSPEND:
 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+<<<<<<< HEAD
 		if (micfil->vad_enabled)
 			fsl_micfil_hwvad_disable(micfil);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Disable the module */
 		ret = regmap_clear_bits(micfil->regmap, REG_MICFIL_CTRL1,
 					MICFIL_CTRL1_PDMIEN);
@@ -696,6 +746,7 @@ static int fsl_micfil_hw_params(struct snd_pcm_substream *substream,
 				 FIELD_PREP(MICFIL_CTRL2_CLKDIV, clk_div) |
 				 FIELD_PREP(MICFIL_CTRL2_CICOSR, 16 - osr));
 
+<<<<<<< HEAD
 	/* Configure CIC OSR in VADCICOSR */
 	regmap_update_bits(micfil->regmap, REG_MICFIL_VAD0_CTRL1,
 			   MICFIL_VAD0_CTRL1_CICOSR,
@@ -706,13 +757,18 @@ static int fsl_micfil_hw_params(struct snd_pcm_substream *substream,
 			   MICFIL_VAD0_CTRL1_CHSEL,
 			   FIELD_PREP(MICFIL_VAD0_CTRL1_CHSEL, (channels - 1)));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	micfil->dma_params_rx.peripheral_config = &micfil->sdmacfg;
 	micfil->dma_params_rx.peripheral_size = sizeof(micfil->sdmacfg);
 	micfil->sdmacfg.n_fifos_src = channels;
 	micfil->sdmacfg.sw_done = true;
 	micfil->dma_params_rx.maxburst = channels * MICFIL_DMA_MAXBURST_RX;
+<<<<<<< HEAD
 	if (micfil->soc->use_edma)
 		micfil->dma_params_rx.maxburst = channels;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -731,7 +787,10 @@ static int fsl_micfil_dai_probe(struct snd_soc_dai *cpu_dai)
 	int ret, i;
 
 	micfil->quality = QUALITY_VLOW0;
+<<<<<<< HEAD
 	micfil->card = cpu_dai->component->card;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* set default gain to 2 */
 	regmap_write(micfil->regmap, REG_MICFIL_OUT_CTRL, 0x22222222);
@@ -966,6 +1025,7 @@ static irqreturn_t micfil_err_isr(int irq, void *devid)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static irqreturn_t voice_detected_fn(int irq, void *devid)
 {
 	struct fsl_micfil *micfil = (struct fsl_micfil *)devid;
@@ -1031,6 +1091,8 @@ static irqreturn_t hwvad_err_isr(int irq, void *devid)
 	return IRQ_HANDLED;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int fsl_micfil_probe(struct platform_device *pdev)
 {
 	struct device_node *np = pdev->dev.of_node;
@@ -1123,6 +1185,7 @@ static int fsl_micfil_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	/* Digital Microphone interface voice activity detector event */
 	ret = devm_request_threaded_irq(&pdev->dev, micfil->irq[2],
 					hwvad_isr, voice_detected_fn,
@@ -1143,6 +1206,8 @@ static int fsl_micfil_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	micfil->dma_params_rx.chan_name = "rx";
 	micfil->dma_params_rx.addr = res->start + REG_MICFIL_DATACH0;
 	micfil->dma_params_rx.maxburst = MICFIL_DMA_MAXBURST_RX;

@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/mfd/actions,atc260x.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Actions Semi ATC260x Power Management IC
+=======
+title: Actions Semi ATC260x Power Management IC bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
@@ -129,7 +133,11 @@ required:
 examples:
   - |
     #include <dt-bindings/interrupt-controller/arm-gic.h>
+<<<<<<< HEAD
     i2c {
+=======
+    i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 

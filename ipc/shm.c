@@ -275,8 +275,15 @@ static inline void shm_rmid(struct shmid_kernel *s)
 }
 
 
+<<<<<<< HEAD
 static int __shm_open(struct shm_file_data *sfd)
 {
+=======
+static int __shm_open(struct vm_area_struct *vma)
+{
+	struct file *file = vma->vm_file;
+	struct shm_file_data *sfd = shm_file_data(file);
+>>>>>>> b7ba80a49124 (Commit)
 	struct shmid_kernel *shp;
 
 	shp = shm_lock(sfd->ns, sfd->id);
@@ -300,6 +307,7 @@ static int __shm_open(struct shm_file_data *sfd)
 /* This is called by fork, once for every shm attach. */
 static void shm_open(struct vm_area_struct *vma)
 {
+<<<<<<< HEAD
 	struct file *file = vma->vm_file;
 	struct shm_file_data *sfd = shm_file_data(file);
 	int err;
@@ -309,6 +317,9 @@ static void shm_open(struct vm_area_struct *vma)
 		sfd->vm_ops->open(vma);
 
 	err = __shm_open(sfd);
+=======
+	int err = __shm_open(vma);
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * We raced in the idr lookup or with shm_destroy().
 	 * Either way, the ID is busted.
@@ -365,8 +376,15 @@ static bool shm_may_destroy(struct shmid_kernel *shp)
  * The descriptor has already been removed from the current->mm->mmap list
  * and will later be kfree()d.
  */
+<<<<<<< HEAD
 static void __shm_close(struct shm_file_data *sfd)
 {
+=======
+static void shm_close(struct vm_area_struct *vma)
+{
+	struct file *file = vma->vm_file;
+	struct shm_file_data *sfd = shm_file_data(file);
+>>>>>>> b7ba80a49124 (Commit)
 	struct shmid_kernel *shp;
 	struct ipc_namespace *ns = sfd->ns;
 
@@ -392,6 +410,7 @@ done:
 	up_write(&shm_ids(ns).rwsem);
 }
 
+<<<<<<< HEAD
 static void shm_close(struct vm_area_struct *vma)
 {
 	struct file *file = vma->vm_file;
@@ -404,6 +423,8 @@ static void shm_close(struct vm_area_struct *vma)
 	__shm_close(sfd);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Called with ns->shm_ids(ns).rwsem locked */
 static int shm_try_destroy_orphaned(int id, void *p, void *data)
 {
@@ -599,13 +620,21 @@ static int shm_mmap(struct file *file, struct vm_area_struct *vma)
 	 * IPC ID that was removed, and possibly even reused by another shm
 	 * segment already.  Propagate this case as an error to caller.
 	 */
+<<<<<<< HEAD
 	ret = __shm_open(sfd);
+=======
+	ret = __shm_open(vma);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
 	ret = call_mmap(sfd->file, vma);
 	if (ret) {
+<<<<<<< HEAD
 		__shm_close(sfd);
+=======
+		shm_close(vma);
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 	sfd->vm_ops = vma->vm_ops;
@@ -1662,7 +1691,11 @@ long do_shmat(int shmid, char __user *shmaddr, int shmflg,
 			goto invalid;
 	}
 
+<<<<<<< HEAD
 	addr = do_mmap(file, addr, size, prot, flags, 0, 0, &populate, NULL);
+=======
+	addr = do_mmap(file, addr, size, prot, flags, 0, &populate, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	*raddr = addr;
 	err = 0;
 	if (IS_ERR_VALUE(addr))
@@ -1786,8 +1819,13 @@ long ksys_shmdt(char __user *shmaddr)
 			 */
 			file = vma->vm_file;
 			size = i_size_read(file_inode(vma->vm_file));
+<<<<<<< HEAD
 			do_vma_munmap(&vmi, vma, vma->vm_start, vma->vm_end,
 				      NULL, false);
+=======
+			do_munmap(mm, vma->vm_start, vma->vm_end - vma->vm_start, NULL);
+			mas_pause(&vmi.mas);
+>>>>>>> b7ba80a49124 (Commit)
 			/*
 			 * We discovered the size of the shm segment, so
 			 * break out of here and fall through to the next
@@ -1811,8 +1849,13 @@ long ksys_shmdt(char __user *shmaddr)
 		if ((vma->vm_ops == &shm_vm_ops) &&
 		    ((vma->vm_start - addr)/PAGE_SIZE == vma->vm_pgoff) &&
 		    (vma->vm_file == file)) {
+<<<<<<< HEAD
 			do_vma_munmap(&vmi, vma, vma->vm_start, vma->vm_end,
 				      NULL, false);
+=======
+			do_munmap(mm, vma->vm_start, vma->vm_end - vma->vm_start, NULL);
+			mas_pause(&vmi.mas);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		vma = vma_next(&vmi);

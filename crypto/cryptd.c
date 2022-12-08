@@ -68,11 +68,19 @@ struct aead_instance_ctx {
 
 struct cryptd_skcipher_ctx {
 	refcount_t refcnt;
+<<<<<<< HEAD
 	struct crypto_skcipher *child;
 };
 
 struct cryptd_skcipher_request_ctx {
 	struct skcipher_request req;
+=======
+	struct crypto_sync_skcipher *child;
+};
+
+struct cryptd_skcipher_request_ctx {
+	crypto_completion_t complete;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct cryptd_hash_ctx {
@@ -82,7 +90,10 @@ struct cryptd_hash_ctx {
 
 struct cryptd_hash_request_ctx {
 	crypto_completion_t complete;
+<<<<<<< HEAD
 	void *data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct shash_desc desc;
 };
 
@@ -92,7 +103,11 @@ struct cryptd_aead_ctx {
 };
 
 struct cryptd_aead_request_ctx {
+<<<<<<< HEAD
 	struct aead_request req;
+=======
+	crypto_completion_t complete;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void cryptd_queue_worker(struct work_struct *work);
@@ -177,8 +192,13 @@ static void cryptd_queue_worker(struct work_struct *work)
 		return;
 
 	if (backlog)
+<<<<<<< HEAD
 		crypto_request_complete(backlog, -EINPROGRESS);
 	crypto_request_complete(req, 0);
+=======
+		backlog->complete(backlog, -EINPROGRESS);
+	req->complete(req, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (cpu_queue->queue.qlen)
 		queue_work(cryptd_wq, &cpu_queue->work);
@@ -228,6 +248,7 @@ static int cryptd_skcipher_setkey(struct crypto_skcipher *parent,
 				  const u8 *key, unsigned int keylen)
 {
 	struct cryptd_skcipher_ctx *ctx = crypto_skcipher_ctx(parent);
+<<<<<<< HEAD
 	struct crypto_skcipher *child = ctx->child;
 
 	crypto_skcipher_clear_flags(child, CRYPTO_TFM_REQ_MASK);
@@ -255,11 +276,52 @@ static struct skcipher_request *cryptd_skcipher_prepare(
 	child = ctx->child;
 
 	skcipher_request_set_tfm(subreq, child);
+=======
+	struct crypto_sync_skcipher *child = ctx->child;
+
+	crypto_sync_skcipher_clear_flags(child, CRYPTO_TFM_REQ_MASK);
+	crypto_sync_skcipher_set_flags(child,
+				       crypto_skcipher_get_flags(parent) &
+					 CRYPTO_TFM_REQ_MASK);
+	return crypto_sync_skcipher_setkey(child, key, keylen);
+}
+
+static void cryptd_skcipher_complete(struct skcipher_request *req, int err)
+{
+	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+	struct cryptd_skcipher_ctx *ctx = crypto_skcipher_ctx(tfm);
+	struct cryptd_skcipher_request_ctx *rctx = skcipher_request_ctx(req);
+	int refcnt = refcount_read(&ctx->refcnt);
+
+	local_bh_disable();
+	rctx->complete(&req->base, err);
+	local_bh_enable();
+
+	if (err != -EINPROGRESS && refcnt && refcount_dec_and_test(&ctx->refcnt))
+		crypto_free_skcipher(tfm);
+}
+
+static void cryptd_skcipher_encrypt(struct crypto_async_request *base,
+				    int err)
+{
+	struct skcipher_request *req = skcipher_request_cast(base);
+	struct cryptd_skcipher_request_ctx *rctx = skcipher_request_ctx(req);
+	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+	struct cryptd_skcipher_ctx *ctx = crypto_skcipher_ctx(tfm);
+	struct crypto_sync_skcipher *child = ctx->child;
+	SYNC_SKCIPHER_REQUEST_ON_STACK(subreq, child);
+
+	if (unlikely(err == -EINPROGRESS))
+		goto out;
+
+	skcipher_request_set_sync_tfm(subreq, child);
+>>>>>>> b7ba80a49124 (Commit)
 	skcipher_request_set_callback(subreq, CRYPTO_TFM_REQ_MAY_SLEEP,
 				      NULL, NULL);
 	skcipher_request_set_crypt(subreq, req->src, req->dst, req->cryptlen,
 				   req->iv);
 
+<<<<<<< HEAD
 	return subreq;
 }
 
@@ -307,6 +369,43 @@ static void cryptd_skcipher_decrypt(void *data, int err)
 		err = crypto_skcipher_decrypt(subreq);
 
 	cryptd_skcipher_complete(req, err, cryptd_skcipher_decrypt);
+=======
+	err = crypto_skcipher_encrypt(subreq);
+	skcipher_request_zero(subreq);
+
+	req->base.complete = rctx->complete;
+
+out:
+	cryptd_skcipher_complete(req, err);
+}
+
+static void cryptd_skcipher_decrypt(struct crypto_async_request *base,
+				    int err)
+{
+	struct skcipher_request *req = skcipher_request_cast(base);
+	struct cryptd_skcipher_request_ctx *rctx = skcipher_request_ctx(req);
+	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+	struct cryptd_skcipher_ctx *ctx = crypto_skcipher_ctx(tfm);
+	struct crypto_sync_skcipher *child = ctx->child;
+	SYNC_SKCIPHER_REQUEST_ON_STACK(subreq, child);
+
+	if (unlikely(err == -EINPROGRESS))
+		goto out;
+
+	skcipher_request_set_sync_tfm(subreq, child);
+	skcipher_request_set_callback(subreq, CRYPTO_TFM_REQ_MAY_SLEEP,
+				      NULL, NULL);
+	skcipher_request_set_crypt(subreq, req->src, req->dst, req->cryptlen,
+				   req->iv);
+
+	err = crypto_skcipher_decrypt(subreq);
+	skcipher_request_zero(subreq);
+
+	req->base.complete = rctx->complete;
+
+out:
+	cryptd_skcipher_complete(req, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cryptd_skcipher_enqueue(struct skcipher_request *req,
@@ -314,6 +413,7 @@ static int cryptd_skcipher_enqueue(struct skcipher_request *req,
 {
 	struct cryptd_skcipher_request_ctx *rctx = skcipher_request_ctx(req);
 	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct skcipher_request *subreq = &rctx->req;
 	struct cryptd_queue *queue;
 
@@ -322,6 +422,13 @@ static int cryptd_skcipher_enqueue(struct skcipher_request *req,
 	subreq->base.data = req->base.data;
 	req->base.complete = compl;
 	req->base.data = req;
+=======
+	struct cryptd_queue *queue;
+
+	queue = cryptd_get_queue(crypto_skcipher_tfm(tfm));
+	rctx->complete = req->base.complete;
+	req->base.complete = compl;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return cryptd_enqueue_request(queue, &req->base);
 }
@@ -348,10 +455,16 @@ static int cryptd_skcipher_init_tfm(struct crypto_skcipher *tfm)
 	if (IS_ERR(cipher))
 		return PTR_ERR(cipher);
 
+<<<<<<< HEAD
 	ctx->child = cipher;
 	crypto_skcipher_set_reqsize(
 		tfm, sizeof(struct cryptd_skcipher_request_ctx) +
 		     crypto_skcipher_reqsize(cipher));
+=======
+	ctx->child = (struct crypto_sync_skcipher *)cipher;
+	crypto_skcipher_set_reqsize(
+		tfm, sizeof(struct cryptd_skcipher_request_ctx));
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -359,7 +472,11 @@ static void cryptd_skcipher_exit_tfm(struct crypto_skcipher *tfm)
 {
 	struct cryptd_skcipher_ctx *ctx = crypto_skcipher_ctx(tfm);
 
+<<<<<<< HEAD
 	crypto_free_skcipher(ctx->child);
+=======
+	crypto_free_sync_skcipher(ctx->child);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void cryptd_skcipher_free(struct skcipher_instance *inst)
@@ -474,13 +591,18 @@ static int cryptd_hash_enqueue(struct ahash_request *req,
 		cryptd_get_queue(crypto_ahash_tfm(tfm));
 
 	rctx->complete = req->base.complete;
+<<<<<<< HEAD
 	rctx->data = req->base.data;
 	req->base.complete = compl;
 	req->base.data = req;
+=======
+	req->base.complete = compl;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return cryptd_enqueue_request(queue, &req->base);
 }
 
+<<<<<<< HEAD
 static struct shash_desc *cryptd_hash_prepare(struct ahash_request *req,
 					      int err)
 {
@@ -523,14 +645,47 @@ static void cryptd_hash_init(void *data, int err)
 
 	desc = cryptd_hash_prepare(req, err);
 	if (unlikely(!desc))
+=======
+static void cryptd_hash_complete(struct ahash_request *req, int err)
+{
+	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
+	struct cryptd_hash_ctx *ctx = crypto_ahash_ctx(tfm);
+	struct cryptd_hash_request_ctx *rctx = ahash_request_ctx(req);
+	int refcnt = refcount_read(&ctx->refcnt);
+
+	local_bh_disable();
+	rctx->complete(&req->base, err);
+	local_bh_enable();
+
+	if (err != -EINPROGRESS && refcnt && refcount_dec_and_test(&ctx->refcnt))
+		crypto_free_ahash(tfm);
+}
+
+static void cryptd_hash_init(struct crypto_async_request *req_async, int err)
+{
+	struct cryptd_hash_ctx *ctx = crypto_tfm_ctx(req_async->tfm);
+	struct crypto_shash *child = ctx->child;
+	struct ahash_request *req = ahash_request_cast(req_async);
+	struct cryptd_hash_request_ctx *rctx = ahash_request_ctx(req);
+	struct shash_desc *desc = &rctx->desc;
+
+	if (unlikely(err == -EINPROGRESS))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	desc->tfm = child;
 
 	err = crypto_shash_init(desc);
 
+<<<<<<< HEAD
 out:
 	cryptd_hash_complete(req, err, cryptd_hash_init);
+=======
+	req->base.complete = rctx->complete;
+
+out:
+	cryptd_hash_complete(req, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cryptd_hash_init_enqueue(struct ahash_request *req)
@@ -538,6 +693,7 @@ static int cryptd_hash_init_enqueue(struct ahash_request *req)
 	return cryptd_hash_enqueue(req, cryptd_hash_init);
 }
 
+<<<<<<< HEAD
 static void cryptd_hash_update(void *data, int err)
 {
 	struct ahash_request *req = data;
@@ -548,6 +704,24 @@ static void cryptd_hash_update(void *data, int err)
 		err = shash_ahash_update(req, desc);
 
 	cryptd_hash_complete(req, err, cryptd_hash_update);
+=======
+static void cryptd_hash_update(struct crypto_async_request *req_async, int err)
+{
+	struct ahash_request *req = ahash_request_cast(req_async);
+	struct cryptd_hash_request_ctx *rctx;
+
+	rctx = ahash_request_ctx(req);
+
+	if (unlikely(err == -EINPROGRESS))
+		goto out;
+
+	err = shash_ahash_update(req, &rctx->desc);
+
+	req->base.complete = rctx->complete;
+
+out:
+	cryptd_hash_complete(req, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cryptd_hash_update_enqueue(struct ahash_request *req)
@@ -555,6 +729,7 @@ static int cryptd_hash_update_enqueue(struct ahash_request *req)
 	return cryptd_hash_enqueue(req, cryptd_hash_update);
 }
 
+<<<<<<< HEAD
 static void cryptd_hash_final(void *data, int err)
 {
 	struct ahash_request *req = data;
@@ -565,6 +740,22 @@ static void cryptd_hash_final(void *data, int err)
 		err = crypto_shash_final(desc, req->result);
 
 	cryptd_hash_complete(req, err, cryptd_hash_final);
+=======
+static void cryptd_hash_final(struct crypto_async_request *req_async, int err)
+{
+	struct ahash_request *req = ahash_request_cast(req_async);
+	struct cryptd_hash_request_ctx *rctx = ahash_request_ctx(req);
+
+	if (unlikely(err == -EINPROGRESS))
+		goto out;
+
+	err = crypto_shash_final(&rctx->desc, req->result);
+
+	req->base.complete = rctx->complete;
+
+out:
+	cryptd_hash_complete(req, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cryptd_hash_final_enqueue(struct ahash_request *req)
@@ -572,6 +763,7 @@ static int cryptd_hash_final_enqueue(struct ahash_request *req)
 	return cryptd_hash_enqueue(req, cryptd_hash_final);
 }
 
+<<<<<<< HEAD
 static void cryptd_hash_finup(void *data, int err)
 {
 	struct ahash_request *req = data;
@@ -582,6 +774,22 @@ static void cryptd_hash_finup(void *data, int err)
 		err = shash_ahash_finup(req, desc);
 
 	cryptd_hash_complete(req, err, cryptd_hash_finup);
+=======
+static void cryptd_hash_finup(struct crypto_async_request *req_async, int err)
+{
+	struct ahash_request *req = ahash_request_cast(req_async);
+	struct cryptd_hash_request_ctx *rctx = ahash_request_ctx(req);
+
+	if (unlikely(err == -EINPROGRESS))
+		goto out;
+
+	err = shash_ahash_finup(req, &rctx->desc);
+
+	req->base.complete = rctx->complete;
+
+out:
+	cryptd_hash_complete(req, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cryptd_hash_finup_enqueue(struct ahash_request *req)
@@ -589,6 +797,7 @@ static int cryptd_hash_finup_enqueue(struct ahash_request *req)
 	return cryptd_hash_enqueue(req, cryptd_hash_finup);
 }
 
+<<<<<<< HEAD
 static void cryptd_hash_digest(void *data, int err)
 {
 	struct ahash_request *req = data;
@@ -599,14 +808,32 @@ static void cryptd_hash_digest(void *data, int err)
 
 	desc = cryptd_hash_prepare(req, err);
 	if (unlikely(!desc))
+=======
+static void cryptd_hash_digest(struct crypto_async_request *req_async, int err)
+{
+	struct cryptd_hash_ctx *ctx = crypto_tfm_ctx(req_async->tfm);
+	struct crypto_shash *child = ctx->child;
+	struct ahash_request *req = ahash_request_cast(req_async);
+	struct cryptd_hash_request_ctx *rctx = ahash_request_ctx(req);
+	struct shash_desc *desc = &rctx->desc;
+
+	if (unlikely(err == -EINPROGRESS))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	desc->tfm = child;
 
 	err = shash_ahash_digest(req, desc);
 
+<<<<<<< HEAD
 out:
 	cryptd_hash_complete(req, err, cryptd_hash_digest);
+=======
+	req->base.complete = rctx->complete;
+
+out:
+	cryptd_hash_complete(req, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cryptd_hash_digest_enqueue(struct ahash_request *req)
@@ -719,6 +946,7 @@ static int cryptd_aead_setauthsize(struct crypto_aead *parent,
 }
 
 static void cryptd_aead_crypt(struct aead_request *req,
+<<<<<<< HEAD
 			      struct crypto_aead *child, int err,
 			      int (*crypt)(struct aead_request *req),
 			      crypto_completion_t compl)
@@ -726,18 +954,32 @@ static void cryptd_aead_crypt(struct aead_request *req,
 	struct cryptd_aead_request_ctx *rctx;
 	struct aead_request *subreq;
 	struct cryptd_aead_ctx *ctx;
+=======
+			struct crypto_aead *child,
+			int err,
+			int (*crypt)(struct aead_request *req))
+{
+	struct cryptd_aead_request_ctx *rctx;
+	struct cryptd_aead_ctx *ctx;
+	crypto_completion_t compl;
+>>>>>>> b7ba80a49124 (Commit)
 	struct crypto_aead *tfm;
 	int refcnt;
 
 	rctx = aead_request_ctx(req);
+<<<<<<< HEAD
 	subreq = &rctx->req;
 	req->base.complete = subreq->base.complete;
 	req->base.data = subreq->base.data;
+=======
+	compl = rctx->complete;
+>>>>>>> b7ba80a49124 (Commit)
 
 	tfm = crypto_aead_reqtfm(req);
 
 	if (unlikely(err == -EINPROGRESS))
 		goto out;
+<<<<<<< HEAD
 
 	aead_request_set_tfm(subreq, child);
 	aead_request_set_callback(subreq, CRYPTO_TFM_REQ_MAY_SLEEP,
@@ -747,12 +989,17 @@ static void cryptd_aead_crypt(struct aead_request *req,
 	aead_request_set_ad(subreq, req->assoclen);
 
 	err = crypt(subreq);
+=======
+	aead_request_set_tfm(req, child);
+	err = crypt( req );
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	ctx = crypto_aead_ctx(tfm);
 	refcnt = refcount_read(&ctx->refcnt);
 
 	local_bh_disable();
+<<<<<<< HEAD
 	aead_request_complete(req, err);
 	local_bh_enable();
 
@@ -787,6 +1034,33 @@ static void cryptd_aead_decrypt(void *data, int err)
 	child = ctx->child;
 	cryptd_aead_crypt(req, child, err, crypto_aead_alg(child)->decrypt,
 			  cryptd_aead_decrypt);
+=======
+	compl(&req->base, err);
+	local_bh_enable();
+
+	if (err != -EINPROGRESS && refcnt && refcount_dec_and_test(&ctx->refcnt))
+		crypto_free_aead(tfm);
+}
+
+static void cryptd_aead_encrypt(struct crypto_async_request *areq, int err)
+{
+	struct cryptd_aead_ctx *ctx = crypto_tfm_ctx(areq->tfm);
+	struct crypto_aead *child = ctx->child;
+	struct aead_request *req;
+
+	req = container_of(areq, struct aead_request, base);
+	cryptd_aead_crypt(req, child, err, crypto_aead_alg(child)->encrypt);
+}
+
+static void cryptd_aead_decrypt(struct crypto_async_request *areq, int err)
+{
+	struct cryptd_aead_ctx *ctx = crypto_tfm_ctx(areq->tfm);
+	struct crypto_aead *child = ctx->child;
+	struct aead_request *req;
+
+	req = container_of(areq, struct aead_request, base);
+	cryptd_aead_crypt(req, child, err, crypto_aead_alg(child)->decrypt);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cryptd_aead_enqueue(struct aead_request *req,
@@ -795,12 +1069,18 @@ static int cryptd_aead_enqueue(struct aead_request *req,
 	struct cryptd_aead_request_ctx *rctx = aead_request_ctx(req);
 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
 	struct cryptd_queue *queue = cryptd_get_queue(crypto_aead_tfm(tfm));
+<<<<<<< HEAD
 	struct aead_request *subreq = &rctx->req;
 
 	subreq->base.complete = req->base.complete;
 	subreq->base.data = req->base.data;
 	req->base.complete = compl;
 	req->base.data = req;
+=======
+
+	rctx->complete = req->base.complete;
+	req->base.complete = compl;
+>>>>>>> b7ba80a49124 (Commit)
 	return cryptd_enqueue_request(queue, &req->base);
 }
 
@@ -828,8 +1108,13 @@ static int cryptd_aead_init_tfm(struct crypto_aead *tfm)
 
 	ctx->child = cipher;
 	crypto_aead_set_reqsize(
+<<<<<<< HEAD
 		tfm, sizeof(struct cryptd_aead_request_ctx) +
 		     crypto_aead_reqsize(cipher));
+=======
+		tfm, max((unsigned)sizeof(struct cryptd_aead_request_ctx),
+			 crypto_aead_reqsize(cipher)));
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -961,7 +1246,11 @@ struct crypto_skcipher *cryptd_skcipher_child(struct cryptd_skcipher *tfm)
 {
 	struct cryptd_skcipher_ctx *ctx = crypto_skcipher_ctx(&tfm->base);
 
+<<<<<<< HEAD
 	return ctx->child;
+=======
+	return &ctx->child->base;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(cryptd_skcipher_child);
 

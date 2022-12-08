@@ -87,7 +87,11 @@
 };
 
 &rpm_requests {
+<<<<<<< HEAD
 	regulators {
+=======
+	pm8226-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pm8226-regulators";
 
 		pm8226_s3: s3 {

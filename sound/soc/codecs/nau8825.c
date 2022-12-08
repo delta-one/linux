@@ -1425,6 +1425,7 @@ static int nau8825_set_dai_fmt(struct snd_soc_dai *codec_dai, unsigned int fmt)
 	return 0;
 }
 
+<<<<<<< HEAD
 /**
  * nau8825_set_tdm_slot - configure DAI TDM.
  * @dai: DAI
@@ -1521,11 +1522,16 @@ static int nau8825_set_tdm_slot(struct snd_soc_dai *dai, unsigned int tx_mask,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_soc_dai_ops nau8825_dai_ops = {
 	.startup	= nau8825_dai_startup,
 	.hw_params	= nau8825_hw_params,
 	.set_fmt	= nau8825_set_dai_fmt,
+<<<<<<< HEAD
 	.set_tdm_slot	= nau8825_set_tdm_slot,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define NAU8825_RATES	SNDRV_PCM_RATE_8000_192000
@@ -1686,9 +1692,12 @@ static void nau8825_setup_auto_irq(struct nau8825 *nau8825)
 
 	/* Enable internal VCO needed for interruptions */
 	nau8825_configure_sysclk(nau8825, NAU8825_CLK_INTERNAL, 0);
+<<<<<<< HEAD
 	/* Raise up the internal clock for jack detection */
 	regmap_update_bits(regmap, NAU8825_REG_CLK_DIVIDER,
 			   NAU8825_CLK_MCLK_SRC_MASK, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Enable ADC needed for interruptions */
 	regmap_update_bits(regmap, NAU8825_REG_ENA_CTRL,
@@ -1736,6 +1745,7 @@ static int nau8825_button_decode(int value)
 	return buttons;
 }
 
+<<<<<<< HEAD
 static int nau8825_high_imped_detection(struct nau8825 *nau8825)
 {
 	struct regmap *regmap = nau8825->regmap;
@@ -1851,6 +1861,8 @@ static int nau8825_high_imped_detection(struct nau8825 *nau8825)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int nau8825_jack_insert(struct nau8825 *nau8825)
 {
 	struct regmap *regmap = nau8825->regmap;
@@ -1912,6 +1924,7 @@ static int nau8825_jack_insert(struct nau8825 *nau8825)
 		snd_soc_dapm_sync(dapm);
 		break;
 	case 3:
+<<<<<<< HEAD
 		/* Detection failure case */
 		dev_warn(nau8825->dev,
 			 "Detection failure. Try the manually mechanism for jack type checking.\n");
@@ -1929,6 +1942,14 @@ static int nau8825_jack_insert(struct nau8825 *nau8825)
 	regmap_update_bits(regmap, NAU8825_REG_CLK_DIVIDER,
 			   NAU8825_CLK_MCLK_SRC_MASK, 0xf);
 
+=======
+		/* detect error case */
+		dev_err(nau8825->dev, "detection error; disable mic function\n");
+		type = SND_JACK_HEADPHONE;
+		break;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Leaving HPOL/R grounded after jack insert by default. They will be
 	 * ungrounded as part of the widget power up sequence at the beginning
 	 * of playback to reduce pop.

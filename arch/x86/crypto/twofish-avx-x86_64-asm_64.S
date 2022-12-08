@@ -228,6 +228,10 @@
 	vpxor		x2, wkey, x2; \
 	vpxor		x3, wkey, x3;
 
+<<<<<<< HEAD
+=======
+.align 8
+>>>>>>> b7ba80a49124 (Commit)
 SYM_FUNC_START_LOCAL(__twofish_enc_blk8)
 	/* input:
 	 *	%rdi: ctx, CTX
@@ -269,6 +273,10 @@ SYM_FUNC_START_LOCAL(__twofish_enc_blk8)
 	RET;
 SYM_FUNC_END(__twofish_enc_blk8)
 
+<<<<<<< HEAD
+=======
+.align 8
+>>>>>>> b7ba80a49124 (Commit)
 SYM_FUNC_START_LOCAL(__twofish_dec_blk8)
 	/* input:
 	 *	%rdi: ctx, CTX

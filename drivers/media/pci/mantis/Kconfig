@@ -1,7 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0-only
 config MANTIS_CORE
 	tristate "Mantis/Hopper PCI bridge based devices"
+<<<<<<< HEAD
 	depends on PCI && I2C && INPUT && RC_CORE && DVB_CORE
+=======
+	depends on PCI && I2C && INPUT && RC_CORE
+>>>>>>> b7ba80a49124 (Commit)
 
 	help
 	  Support for PCI cards based on the Mantis and Hopper PCi bridge.

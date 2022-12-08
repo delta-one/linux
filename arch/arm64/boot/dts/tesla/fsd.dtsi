@@ -281,8 +281,11 @@
 
 		cpucl_l2: l2-cache0 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
 			cache-unified;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			cache-size = <0x400000>;
 			cache-line-size = <64>;
 			cache-sets = <4096>;
@@ -468,11 +471,14 @@
 			clock-names = "fin_pll";
 		};
 
+<<<<<<< HEAD
 		sysreg_cam: system-controller@12630000 {
 			compatible = "tesla,fsd-cam-sysreg", "syscon";
 			reg = <0x0 0x12630000 0x0 0x500>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		clock_mfc: clock-controller@12810000 {
 			compatible = "tesla,fsd-clock-mfc";
 			reg = <0x0 0x12810000 0x0 0x3000>;
@@ -499,11 +505,14 @@
 				"dout_cmu_peric_shared1div4_dmaclk";
 		};
 
+<<<<<<< HEAD
 		sysreg_peric: system-controller@14030000 {
 			compatible = "tesla,fsd-peric-sysreg", "syscon";
 			reg = <0x0 0x14030000 0x0 0x1000>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		clock_fsys0: clock-controller@15010000 {
 			compatible = "tesla,fsd-clock-fsys0";
 			reg = <0x0 0x15010000 0x0 0x3000>;
@@ -518,11 +527,14 @@
 				"dout_cmu_fsys0_shared0div4";
 		};
 
+<<<<<<< HEAD
 		sysreg_fsys0: system-controller@15030000 {
 			compatible = "tesla,fsd-fsys0-sysreg", "syscon";
 			reg = <0x0 0x15030000 0x0 0x1000>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		clock_fsys1: clock-controller@16810000 {
 			compatible = "tesla,fsd-clock-fsys1";
 			reg = <0x0 0x16810000 0x0 0x3000>;
@@ -535,11 +547,14 @@
 				"dout_cmu_fsys1_shared0div4";
 		};
 
+<<<<<<< HEAD
 		sysreg_fsys1: system-controller@16830000 {
 			compatible = "tesla,fsd-fsys1-sysreg", "syscon";
 			reg = <0x0 0x16830000 0x0 0x1000>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		mdma0: dma-controller@10100000 {
 			compatible = "arm,pl330", "arm,primecell";
 			reg = <0x0 0x10100000 0x0 0x1000>;
@@ -760,6 +775,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		i2s_0: i2s@140e0000 {
 			compatible = "tesla,fsd-i2s";
 			reg = <0x0 0x140e0000 0x0 0x100>;
@@ -794,6 +810,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pinctrl_pmu: pinctrl@114f0000 {
 			compatible = "tesla,fsd-pinctrl";
 			reg = <0x0 0x114f0000 0x0 0x1000>;
@@ -811,6 +829,7 @@
 			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
 		};
 
+<<<<<<< HEAD
 		m_can0: can@14088000 {
 			compatible = "bosch,m_can";
 			reg = <0x0 0x14088000 0x0 0x0200>,
@@ -879,6 +898,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		spi_0: spi@14140000 {
 			compatible = "tesla,fsd-spi";
 			reg = <0x0 0x14140000 0x0 0x100>;

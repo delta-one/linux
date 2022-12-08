@@ -522,9 +522,15 @@ static int get_vid(struct i2c_client *client, u32 *res)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int i2c_nuvoton_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int i2c_nuvoton_probe(struct i2c_client *client,
+			     const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 	struct tpm_chip *chip;
 	struct device *dev = &client->dev;
@@ -650,7 +656,11 @@ static SIMPLE_DEV_PM_OPS(i2c_nuvoton_pm_ops, tpm_pm_suspend, tpm_pm_resume);
 
 static struct i2c_driver i2c_nuvoton_driver = {
 	.id_table = i2c_nuvoton_id,
+<<<<<<< HEAD
 	.probe_new = i2c_nuvoton_probe,
+=======
+	.probe = i2c_nuvoton_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = i2c_nuvoton_remove,
 	.driver = {
 		.name = "tpm_i2c_nuvoton",

@@ -21,7 +21,10 @@ properties:
               - mediatek,mt2701-pericfg
               - mediatek,mt2712-pericfg
               - mediatek,mt6765-pericfg
+<<<<<<< HEAD
               - mediatek,mt6795-pericfg
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - mediatek,mt7622-pericfg
               - mediatek,mt7629-pericfg
               - mediatek,mt8135-pericfg

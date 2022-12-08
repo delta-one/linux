@@ -663,9 +663,14 @@ static const char * const opmode_str[] = {
 	[OPMODE_AUTOSELECT] = "autodetect and autoselect",
 };
 
+<<<<<<< HEAD
 static int msp_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int msp_probe(struct i2c_client *client, const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct msp_state *state;
 	struct v4l2_subdev *sd;
 	struct v4l2_ctrl_handler *hdl;
@@ -892,7 +897,11 @@ static struct i2c_driver msp_driver = {
 		.name	= "msp3400",
 		.pm	= &msp3400_pm_ops,
 	},
+<<<<<<< HEAD
 	.probe_new	= msp_probe,
+=======
+	.probe		= msp_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= msp_remove,
 	.id_table	= msp_id,
 };

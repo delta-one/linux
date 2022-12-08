@@ -524,7 +524,11 @@ xfs_getfsmap_rtdev_rtbitmap_query(
 	struct xfs_mount		*mp = tp->t_mountp;
 	int				error;
 
+<<<<<<< HEAD
 	xfs_ilock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
+=======
+	xfs_ilock(mp->m_rbmip, XFS_ILOCK_SHARED);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Set up query parameters to return free rtextents covering the range
@@ -551,7 +555,11 @@ xfs_getfsmap_rtdev_rtbitmap_query(
 	if (error)
 		goto err;
 err:
+<<<<<<< HEAD
 	xfs_iunlock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
+=======
+	xfs_iunlock(mp->m_rbmip, XFS_ILOCK_SHARED);
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }
 
@@ -688,11 +696,19 @@ __xfs_getfsmap_datadev(
 		info->agf_bp = NULL;
 	}
 	if (info->pag) {
+<<<<<<< HEAD
 		xfs_perag_rele(info->pag);
 		info->pag = NULL;
 	} else if (pag) {
 		/* loop termination case */
 		xfs_perag_rele(pag);
+=======
+		xfs_perag_put(info->pag);
+		info->pag = NULL;
+	} else if (pag) {
+		/* loop termination case */
+		xfs_perag_put(pag);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return error;
@@ -761,7 +777,10 @@ xfs_getfsmap_datadev_bnobt(
 {
 	struct xfs_alloc_rec_incore	akeys[2];
 
+<<<<<<< HEAD
 	memset(akeys, 0, sizeof(akeys));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	info->missing_owner = XFS_FMR_OWN_UNKNOWN;
 	return __xfs_getfsmap_datadev(tp, keys, info,
 			xfs_getfsmap_datadev_bnobt_query, &akeys[0]);

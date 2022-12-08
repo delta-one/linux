@@ -12,11 +12,15 @@
 #include <linux/of_mdio.h>
 #include <linux/of_net.h>
 
+<<<<<<< HEAD
 #include "dsa.h"
 #include "port.h"
 #include "slave.h"
 #include "switch.h"
 #include "tag_8021q.h"
+=======
+#include "dsa_priv.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * dsa_port_notify - Notify the switching fabric of changes to a port
@@ -114,6 +118,7 @@ static bool dsa_port_can_configure_learning(struct dsa_port *dp)
 	return !err;
 }
 
+<<<<<<< HEAD
 bool dsa_port_supports_hwtstamp(struct dsa_port *dp, struct ifreq *ifr)
 {
 	struct dsa_switch *ds = dp->ds;
@@ -130,6 +135,8 @@ bool dsa_port_supports_hwtstamp(struct dsa_port *dp, struct ifreq *ifr)
 	return err != -EOPNOTSUPP;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int dsa_port_set_state(struct dsa_port *dp, u8 state, bool do_fast_age)
 {
 	struct dsa_switch *ds = dp->ds;
@@ -1556,6 +1563,7 @@ static void dsa_port_phylink_validate(struct phylink_config *config,
 				      unsigned long *supported,
 				      struct phylink_link_state *state)
 {
+<<<<<<< HEAD
 	/* Skip call for drivers which don't yet set mac_capabilities,
 	 * since validating in that case would mean their PHY will advertise
 	 * nothing. In turn, skipping validation makes them advertise
@@ -1564,6 +1572,18 @@ static void dsa_port_phylink_validate(struct phylink_config *config,
 	 */
 	if (config->mac_capabilities)
 		phylink_generic_validate(config, supported, state);
+=======
+	struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
+	struct dsa_switch *ds = dp->ds;
+
+	if (!ds->ops->phylink_validate) {
+		if (config->mac_capabilities)
+			phylink_generic_validate(config, supported, state);
+		return;
+	}
+
+	ds->ops->phylink_validate(ds, dp->index, supported, state);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void dsa_port_phylink_mac_pcs_get_state(struct phylink_config *config,
@@ -1679,7 +1699,10 @@ int dsa_port_phylink_create(struct dsa_port *dp)
 {
 	struct dsa_switch *ds = dp->ds;
 	phy_interface_t mode;
+<<<<<<< HEAD
 	struct phylink *pl;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	err = of_get_phy_mode(dp->dn, &mode);
@@ -1696,6 +1719,7 @@ int dsa_port_phylink_create(struct dsa_port *dp)
 	if (ds->ops->phylink_get_caps)
 		ds->ops->phylink_get_caps(ds, dp->index, &dp->pl_config);
 
+<<<<<<< HEAD
 	pl = phylink_create(&dp->pl_config, of_fwnode_handle(dp->dn),
 			    mode, &dsa_port_phylink_mac_ops);
 	if (IS_ERR(pl)) {
@@ -1714,6 +1738,18 @@ void dsa_port_phylink_destroy(struct dsa_port *dp)
 	dp->pl = NULL;
 }
 
+=======
+	dp->pl = phylink_create(&dp->pl_config, of_fwnode_handle(dp->dn),
+				mode, &dsa_port_phylink_mac_ops);
+	if (IS_ERR(dp->pl)) {
+		pr_err("error creating PHYLINK: %ld\n", PTR_ERR(dp->pl));
+		return PTR_ERR(dp->pl);
+	}
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int dsa_shared_port_setup_phy_of(struct dsa_port *dp, bool enable)
 {
 	struct dsa_switch *ds = dp->ds;
@@ -1808,7 +1844,11 @@ static int dsa_shared_port_phylink_register(struct dsa_port *dp)
 	return 0;
 
 err_phy_connect:
+<<<<<<< HEAD
 	dsa_port_phylink_destroy(dp);
+=======
+	phylink_destroy(dp->pl);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -2010,7 +2050,12 @@ void dsa_shared_port_link_unregister_of(struct dsa_port *dp)
 		rtnl_lock();
 		phylink_disconnect_phy(dp->pl);
 		rtnl_unlock();
+<<<<<<< HEAD
 		dsa_port_phylink_destroy(dp);
+=======
+		phylink_destroy(dp->pl);
+		dp->pl = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 

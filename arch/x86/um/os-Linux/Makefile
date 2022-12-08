@@ -10,4 +10,8 @@ obj-$(CONFIG_64BIT) += prctl.o
 
 USER_OBJS := $(obj-y)
 
+<<<<<<< HEAD
 include $(srctree)/arch/um/scripts/Makefile.rules
+=======
+include arch/um/scripts/Makefile.rules
+>>>>>>> b7ba80a49124 (Commit)

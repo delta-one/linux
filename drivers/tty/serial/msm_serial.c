@@ -464,9 +464,18 @@ static void msm_complete_tx_dma(void *args)
 	}
 
 	count = dma->count - state.residue;
+<<<<<<< HEAD
 	uart_xmit_advance(port, count);
 	dma->count = 0;
 
+=======
+	port->icount.tx += count;
+	dma->count = 0;
+
+	xmit->tail += count;
+	xmit->tail &= UART_XMIT_SIZE - 1;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Restore "Tx FIFO below watermark" interrupt */
 	msm_port->imr |= MSM_UART_IMR_TXLEV;
 	msm_write(port, msm_port->imr, MSM_UART_IMR);
@@ -816,7 +825,11 @@ static void msm_handle_rx(struct uart_port *port)
 			port->icount.rx++;
 		}
 
+<<<<<<< HEAD
 		/* Mask conditions we're ignoring. */
+=======
+		/* Mask conditions we're ignorning. */
+>>>>>>> b7ba80a49124 (Commit)
 		sr &= port->read_status_mask;
 
 		if (sr & MSM_UART_SR_RX_BREAK)
@@ -863,11 +876,21 @@ static void msm_handle_tx_pio(struct uart_port *port, unsigned int tx_count)
 		else
 			num_chars = 1;
 
+<<<<<<< HEAD
 		for (i = 0; i < num_chars; i++)
 			buf[i] = xmit->buf[xmit->tail + i];
 
 		iowrite32_rep(tf, buf, 1);
 		uart_xmit_advance(port, num_chars);
+=======
+		for (i = 0; i < num_chars; i++) {
+			buf[i] = xmit->buf[xmit->tail + i];
+			port->icount.tx++;
+		}
+
+		iowrite32_rep(tf, buf, 1);
+		xmit->tail = (xmit->tail + num_chars) & (UART_XMIT_SIZE - 1);
+>>>>>>> b7ba80a49124 (Commit)
 		tf_pointer += num_chars;
 	}
 
@@ -1120,7 +1143,10 @@ msm_find_best_baud(struct uart_port *port, unsigned int baud,
 
 static int msm_set_baud_rate(struct uart_port *port, unsigned int baud,
 			     unsigned long *saved_flags)
+<<<<<<< HEAD
 	__must_hold(&port->lock)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int rxstale, watermark, mask;
 	struct msm_port *msm_port = to_msm_port(port);

@@ -590,6 +590,7 @@ out_unlock_iolock:
 int
 xfs_bmap_punch_delalloc_range(
 	struct xfs_inode	*ip,
+<<<<<<< HEAD
 	xfs_off_t		start_byte,
 	xfs_off_t		end_byte)
 {
@@ -597,6 +598,13 @@ xfs_bmap_punch_delalloc_range(
 	struct xfs_ifork	*ifp = &ip->i_df;
 	xfs_fileoff_t		start_fsb = XFS_B_TO_FSBT(mp, start_byte);
 	xfs_fileoff_t		end_fsb = XFS_B_TO_FSB(mp, end_byte);
+=======
+	xfs_fileoff_t		start_fsb,
+	xfs_fileoff_t		length)
+{
+	struct xfs_ifork	*ifp = &ip->i_df;
+	xfs_fileoff_t		end_fsb = start_fsb + length;
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfs_bmbt_irec	got, del;
 	struct xfs_iext_cursor	icur;
 	int			error = 0;
@@ -609,7 +617,11 @@ xfs_bmap_punch_delalloc_range(
 
 	while (got.br_startoff + got.br_blockcount > start_fsb) {
 		del = got;
+<<<<<<< HEAD
 		xfs_trim_extent(&del, start_fsb, end_fsb - start_fsb);
+=======
+		xfs_trim_extent(&del, start_fsb, length);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * A delete can push the cursor forward. Step back to the
@@ -1410,7 +1422,11 @@ xfs_swap_extent_rmap(
 
 		/* Unmap the old blocks in the source file. */
 		while (tirec.br_blockcount) {
+<<<<<<< HEAD
 			ASSERT(tp->t_highest_agno == NULLAGNUMBER);
+=======
+			ASSERT(tp->t_firstblock == NULLFSBLOCK);
+>>>>>>> b7ba80a49124 (Commit)
 			trace_xfs_swap_extent_rmap_remap_piece(tip, &tirec);
 
 			/* Read extent from the source file */

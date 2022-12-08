@@ -62,6 +62,10 @@
 #include <linux/rmap.h>
 #include <linux/mempolicy.h>
 #include <linux/key.h>
+<<<<<<< HEAD
+=======
+#include <linux/page_ext.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/debug_locks.h>
 #include <linux/debugobjects.h>
 #include <linux/lockdep.h>
@@ -144,8 +148,12 @@ void (*__initdata late_time_init)(void);
 /* Untouched command line saved by arch-specific code. */
 char __initdata boot_command_line[COMMAND_LINE_SIZE];
 /* Untouched saved command line (eg. for /proc) */
+<<<<<<< HEAD
 char *saved_command_line __ro_after_init;
 unsigned int saved_command_line_len __ro_after_init;
+=======
+char *saved_command_line;
+>>>>>>> b7ba80a49124 (Commit)
 /* Command line for parameter parsing */
 static char *static_command_line;
 /* Untouched extra command line */
@@ -184,7 +192,11 @@ EXPORT_SYMBOL_GPL(static_key_initialized);
 unsigned int reset_devices;
 EXPORT_SYMBOL(reset_devices);
 
+<<<<<<< HEAD
 static int __init set_reset_devices(char *str)
+=======
+static int __init set_reset_devices(char *str __always_unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	reset_devices = 1;
 	return 1;
@@ -234,13 +246,21 @@ static bool __init obsolete_checksetup(char *line)
 unsigned long loops_per_jiffy = (1<<12);
 EXPORT_SYMBOL(loops_per_jiffy);
 
+<<<<<<< HEAD
 static int __init debug_kernel(char *str)
+=======
+static int __init debug_kernel(char *str __always_unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	console_loglevel = CONSOLE_LOGLEVEL_DEBUG;
 	return 0;
 }
 
+<<<<<<< HEAD
 static int __init quiet_kernel(char *str)
+=======
+static int __init quiet_kernel(char *str __always_unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	console_loglevel = CONSOLE_LOGLEVEL_QUIET;
 	return 0;
@@ -428,7 +448,11 @@ static void __init setup_boot_config(void)
 	err = parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
 			 bootconfig_params);
 
+<<<<<<< HEAD
 	if (IS_ERR(err) || !(bootconfig_found || IS_ENABLED(CONFIG_BOOT_CONFIG_FORCE)))
+=======
+	if (IS_ERR(err) || !bootconfig_found)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	/* parse_args() stops at the next param of '--' and returns an address */
@@ -436,11 +460,15 @@ static void __init setup_boot_config(void)
 		initargs_offs = err - tmp_cmdline;
 
 	if (!data) {
+<<<<<<< HEAD
 		/* If user intended to use bootconfig, show an error level message */
 		if (bootconfig_found)
 			pr_err("'bootconfig' found on command line, but no bootconfig found\n");
 		else
 			pr_info("No bootconfig data provided, so skipping bootconfig");
+=======
+		pr_err("'bootconfig' found on command line, but no bootconfig found\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -481,7 +509,11 @@ static void __init setup_boot_config(void)
 	get_boot_config_from_initrd(NULL);
 }
 
+<<<<<<< HEAD
 static int __init warn_bootconfig(char *str)
+=======
+static int __init warn_bootconfig(char *str __always_unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pr_warn("WARNING: 'bootconfig' found on the kernel command line but CONFIG_BOOT_CONFIG is not set.\n");
 	return 0;
@@ -510,7 +542,12 @@ static void __init repair_env_string(char *param, char *val)
 
 /* Anything after -- gets handed straight to init. */
 static int __init set_init_arg(char *param, char *val,
+<<<<<<< HEAD
 			       const char *unused, void *arg)
+=======
+			       const char *unused __always_unused,
+			       void *arg __always_unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int i;
 
@@ -535,7 +572,12 @@ static int __init set_init_arg(char *param, char *val,
  * unused parameters (modprobe will find them in /proc/cmdline).
  */
 static int __init unknown_bootoption(char *param, char *val,
+<<<<<<< HEAD
 				     const char *unused, void *arg)
+=======
+				     const char *unused __always_unused,
+				     void *arg __always_unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	size_t len = strlen(param);
 
@@ -671,8 +713,11 @@ static void __init setup_command_line(char *command_line)
 			strcpy(saved_command_line + len, extra_init_args);
 		}
 	}
+<<<<<<< HEAD
 
 	saved_command_line_len = strlen(saved_command_line);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -710,7 +755,11 @@ noinline void __ref rest_init(void)
 	rcu_read_unlock();
 
 	numa_default_policy();
+<<<<<<< HEAD
 	pid = kernel_thread(kthreadd, NULL, NULL, CLONE_FS | CLONE_FILES);
+=======
+	pid = kernel_thread(kthreadd, NULL, CLONE_FS | CLONE_FILES);
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_read_lock();
 	kthreadd_task = find_task_by_pid_ns(pid, &init_pid_ns);
 	rcu_read_unlock();
@@ -737,7 +786,12 @@ noinline void __ref rest_init(void)
 
 /* Check for early params. */
 static int __init do_early_param(char *param, char *val,
+<<<<<<< HEAD
 				 const char *unused, void *arg)
+=======
+				 const char *unused __always_unused,
+				 void *arg __always_unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct obs_kernel_param *p;
 
@@ -806,6 +860,71 @@ static inline void initcall_debug_enable(void)
 }
 #endif
 
+<<<<<<< HEAD
+=======
+/* Report memory auto-initialization states for this boot. */
+static void __init report_meminit(void)
+{
+	const char *stack;
+
+	if (IS_ENABLED(CONFIG_INIT_STACK_ALL_PATTERN))
+		stack = "all(pattern)";
+	else if (IS_ENABLED(CONFIG_INIT_STACK_ALL_ZERO))
+		stack = "all(zero)";
+	else if (IS_ENABLED(CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL))
+		stack = "byref_all(zero)";
+	else if (IS_ENABLED(CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF))
+		stack = "byref(zero)";
+	else if (IS_ENABLED(CONFIG_GCC_PLUGIN_STRUCTLEAK_USER))
+		stack = "__user(zero)";
+	else
+		stack = "off";
+
+	pr_info("mem auto-init: stack:%s, heap alloc:%s, heap free:%s\n",
+		stack, want_init_on_alloc(GFP_KERNEL) ? "on" : "off",
+		want_init_on_free() ? "on" : "off");
+	if (want_init_on_free())
+		pr_info("mem auto-init: clearing system memory may take some time...\n");
+}
+
+/*
+ * Set up kernel memory allocators
+ */
+static void __init mm_init(void)
+{
+	/*
+	 * page_ext requires contiguous pages,
+	 * bigger than MAX_ORDER unless SPARSEMEM.
+	 */
+	page_ext_init_flatmem();
+	init_mem_debugging_and_hardening();
+	kfence_alloc_pool();
+	report_meminit();
+	kmsan_init_shadow();
+	stack_depot_early_init();
+	mem_init();
+	mem_init_print_info();
+	kmem_cache_init();
+	/*
+	 * page_owner must be initialized after buddy is ready, and also after
+	 * slab is ready so that stack_depot_init() works properly
+	 */
+	page_ext_init_flatmem_late();
+	kmemleak_init();
+	pgtable_init();
+	debug_objects_mem_init();
+	vmalloc_init();
+	/* Should be run after vmap initialization */
+	if (early_page_ext_enabled())
+		page_ext_init();
+	/* Should be run before the first non-init thread is created */
+	init_espfix_bsp();
+	/* Should be run after espfix64 is set up. */
+	pti_init();
+	kmsan_init_runtime();
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
 DEFINE_STATIC_KEY_MAYBE_RO(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,
 			   randomize_kstack_offset);
@@ -908,6 +1027,12 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
 	smp_prepare_boot_cpu();	/* arch-specific boot-cpu hooks */
 	boot_cpu_hotplug_init();
 
+<<<<<<< HEAD
+=======
+	build_all_zonelists(NULL);
+	page_alloc_init();
+
+>>>>>>> b7ba80a49124 (Commit)
 	pr_notice("Kernel command line: %s\n", saved_command_line);
 	/* parameters may set static keys */
 	jump_label_init();
@@ -924,19 +1049,30 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
 		parse_args("Setting extra init args", extra_init_args,
 			   NULL, 0, -1, -1, NULL, set_init_arg);
 
+<<<<<<< HEAD
 	/* Architectural and non-timekeeping rng init, before allocator init */
 	random_init_early(command_line);
 
 	/*
 	 * These use large bootmem allocations and must precede
 	 * initalization of page allocator
+=======
+	/*
+	 * These use large bootmem allocations and must precede
+	 * kmem_cache_init()
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	setup_log_buf(0);
 	vfs_caches_init_early();
 	sort_main_extable();
 	trap_init();
+<<<<<<< HEAD
 	mm_core_init();
 	poking_init();
+=======
+	mm_init();
+
+>>>>>>> b7ba80a49124 (Commit)
 	ftrace_init();
 
 	/* trace_printk can be enabled here */
@@ -987,6 +1123,7 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
 	hrtimers_init();
 	softirq_init();
 	timekeeping_init();
+<<<<<<< HEAD
 	time_init();
 
 	/* This must be after timekeeping is initialized */
@@ -994,6 +1131,19 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
 
 	/* These make use of the fully initialized rng */
 	kfence_init();
+=======
+	kfence_init();
+	time_init();
+
+	/*
+	 * For best initial stack canary entropy, prepare it after:
+	 * - setup_arch() for any UEFI RNG entropy and boot cmdline access
+	 * - timekeeping_init() for ktime entropy used in random_init()
+	 * - time_init() for making random_get_entropy() work on some platforms
+	 * - random_init() to initialize the RNG from from early entropy sources
+	 */
+	random_init(command_line);
+>>>>>>> b7ba80a49124 (Commit)
 	boot_init_stack_canary();
 
 	perf_event_init();
@@ -1075,6 +1225,10 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
 	taskstats_init_early();
 	delayacct_init();
 
+<<<<<<< HEAD
+=======
+	poking_init();
+>>>>>>> b7ba80a49124 (Commit)
 	check_bugs();
 
 	acpi_subsystem_init();
@@ -1184,7 +1338,11 @@ __setup("initcall_blacklist=", initcall_blacklist);
 static __init_or_module void
 trace_initcall_start_cb(void *data, initcall_t fn)
 {
+<<<<<<< HEAD
 	ktime_t *calltime = data;
+=======
+	ktime_t *calltime = (ktime_t *)data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	printk(KERN_DEBUG "calling  %pS @ %i\n", fn, task_pid_nr(current));
 	*calltime = ktime_get();
@@ -1193,7 +1351,11 @@ trace_initcall_start_cb(void *data, initcall_t fn)
 static __init_or_module void
 trace_initcall_finish_cb(void *data, initcall_t fn, int ret)
 {
+<<<<<<< HEAD
 	ktime_t rettime, *calltime = data;
+=======
+	ktime_t rettime, *calltime = (ktime_t *)data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rettime = ktime_get();
 	printk(KERN_DEBUG "initcall %pS returned %d after %lld usecs\n",
@@ -1295,8 +1457,15 @@ static const char *initcall_level_names[] __initdata = {
 	"late",
 };
 
+<<<<<<< HEAD
 static int __init ignore_unknown_bootoption(char *param, char *val,
 			       const char *unused, void *arg)
+=======
+static int __init ignore_unknown_bootoption(char *param __always_unused,
+					    char *val __always_unused,
+					    const char *unused __always_unused,
+					    void *arg __always_unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return 0;
 }
@@ -1319,7 +1488,11 @@ static void __init do_initcall_level(int level, char *command_line)
 static void __init do_initcalls(void)
 {
 	int level;
+<<<<<<< HEAD
 	size_t len = saved_command_line_len + 1;
+=======
+	size_t len = strlen(saved_command_line) + 1;
+>>>>>>> b7ba80a49124 (Commit)
 	char *command_line;
 
 	command_line = kzalloc(len, GFP_KERNEL);
@@ -1447,7 +1620,11 @@ void __weak free_initmem(void)
 	free_initmem_default(POISON_FREE_INITMEM);
 }
 
+<<<<<<< HEAD
 static int __ref kernel_init(void *unused)
+=======
+static int __ref kernel_init(void *unused __always_unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
@@ -1564,6 +1741,12 @@ static noinline void __init kernel_init_freeable(void)
 
 	padata_init();
 	page_alloc_init_late();
+<<<<<<< HEAD
+=======
+	/* Initialize page ext after all struct pages are initialized. */
+	if (!early_page_ext_enabled())
+		page_ext_init();
+>>>>>>> b7ba80a49124 (Commit)
 
 	do_basic_setup();
 

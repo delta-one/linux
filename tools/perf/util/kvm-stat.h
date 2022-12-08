@@ -5,6 +5,7 @@
 #ifdef HAVE_KVM_STAT_SUPPORT
 
 #include "tool.h"
+<<<<<<< HEAD
 #include "sort.h"
 #include "stat.h"
 #include "symbol.h"
@@ -12,6 +13,11 @@
 
 #define KVM_EVENT_NAME_LEN	40
 
+=======
+#include "stat.h"
+#include "record.h"
+
+>>>>>>> b7ba80a49124 (Commit)
 struct evsel;
 struct evlist;
 struct perf_session;
@@ -23,21 +29,31 @@ struct event_key {
 	struct exit_reasons_table *exit_reasons;
 };
 
+<<<<<<< HEAD
 struct kvm_info {
 	char name[KVM_EVENT_NAME_LEN];
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct kvm_event_stats {
 	u64 time;
 	struct stats stats;
 };
 
+<<<<<<< HEAD
 struct perf_kvm_stat;
 
 struct kvm_event {
 	struct list_head hash_entry;
 
 	struct perf_kvm_stat *perf_kvm;
+=======
+struct kvm_event {
+	struct list_head hash_entry;
+	struct rb_node rb;
+
+>>>>>>> b7ba80a49124 (Commit)
 	struct event_key key;
 
 	struct kvm_event_stats total;
@@ -45,10 +61,24 @@ struct kvm_event {
 	#define DEFAULT_VCPU_NUM 8
 	int max_vcpu;
 	struct kvm_event_stats *vcpu;
+<<<<<<< HEAD
 
 	struct hist_entry he;
 };
 
+=======
+};
+
+typedef int (*key_cmp_fun)(struct kvm_event*, struct kvm_event*, int);
+
+struct kvm_event_key {
+	const char *name;
+	key_cmp_fun key;
+};
+
+struct perf_kvm_stat;
+
+>>>>>>> b7ba80a49124 (Commit)
 struct child_event_ops {
 	void (*get_key)(struct evsel *evsel,
 			struct perf_sample *sample,
@@ -73,6 +103,12 @@ struct exit_reasons_table {
 	const char *reason;
 };
 
+<<<<<<< HEAD
+=======
+#define EVENTS_BITS		12
+#define EVENTS_CACHE_SIZE	(1UL << EVENTS_BITS)
+
+>>>>>>> b7ba80a49124 (Commit)
 struct perf_kvm_stat {
 	struct perf_tool    tool;
 	struct record_opts  opts;
@@ -84,13 +120,21 @@ struct perf_kvm_stat {
 	const char *sort_key;
 	int trace_vcpu;
 
+<<<<<<< HEAD
 	/* Used when process events */
 	struct addr_location al;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct exit_reasons_table *exit_reasons;
 	const char *exit_reasons_isa;
 
 	struct kvm_events_ops *events_ops;
+<<<<<<< HEAD
+=======
+	key_cmp_fun compare;
+	struct list_head kvm_events_cache[EVENTS_CACHE_SIZE];
+>>>>>>> b7ba80a49124 (Commit)
 
 	u64 total_time;
 	u64 total_count;
@@ -99,11 +143,19 @@ struct perf_kvm_stat {
 
 	struct intlist *pid_list;
 
+<<<<<<< HEAD
+=======
+	struct rb_root result;
+
+>>>>>>> b7ba80a49124 (Commit)
 	int timerfd;
 	unsigned int display_time;
 	bool live;
 	bool force;
+<<<<<<< HEAD
 	bool use_stdio;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct kvm_reg_events_ops {
@@ -142,6 +194,10 @@ extern const char *kvm_events_tp[];
 extern struct kvm_reg_events_ops kvm_reg_events_ops[];
 extern const char * const kvm_skip_events[];
 extern const char *vcpu_id_str;
+<<<<<<< HEAD
+=======
+extern const int decode_str_len;
+>>>>>>> b7ba80a49124 (Commit)
 extern const char *kvm_exit_reason;
 extern const char *kvm_entry_trace;
 extern const char *kvm_exit_trace;

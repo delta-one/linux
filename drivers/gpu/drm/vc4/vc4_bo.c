@@ -69,8 +69,13 @@ static void vc4_bo_stats_print(struct drm_printer *p, struct vc4_dev *vc4)
 
 static int vc4_bo_stats_debugfs(struct seq_file *m, void *unused)
 {
+<<<<<<< HEAD
 	struct drm_debugfs_entry *entry = m->private;
 	struct drm_device *dev = entry->dev;
+=======
+	struct drm_info_node *node = (struct drm_info_node *)m->private;
+	struct drm_device *dev = node->minor->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct vc4_dev *vc4 = to_vc4_dev(dev);
 	struct drm_printer p = drm_seq_file_printer(m);
 
@@ -179,7 +184,10 @@ static void vc4_bo_destroy(struct vc4_bo *bo)
 		bo->validated_shader = NULL;
 	}
 
+<<<<<<< HEAD
 	mutex_destroy(&bo->madv_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	drm_gem_dma_free(&bo->base);
 }
 
@@ -395,6 +403,10 @@ struct drm_gem_object *vc4_create_object(struct drm_device *dev, size_t size)
 {
 	struct vc4_dev *vc4 = to_vc4_dev(dev);
 	struct vc4_bo *bo;
+<<<<<<< HEAD
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (WARN_ON_ONCE(vc4->is_vc5))
 		return ERR_PTR(-ENODEV);
@@ -406,7 +418,13 @@ struct drm_gem_object *vc4_create_object(struct drm_device *dev, size_t size)
 	bo->madv = VC4_MADV_WILLNEED;
 	refcount_set(&bo->usecnt, 0);
 
+<<<<<<< HEAD
 	mutex_init(&bo->madv_lock);
+=======
+	ret = drmm_mutex_init(dev, &bo->madv_lock);
+	if (ret)
+		return ERR_PTR(ret);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&vc4->bo_lock);
 	bo->label = VC4_BO_TYPE_KERNEL;
@@ -734,12 +752,20 @@ static int vc4_gem_object_mmap(struct drm_gem_object *obj, struct vm_area_struct
 	struct vc4_bo *bo = to_vc4_bo(obj);
 
 	if (bo->validated_shader && (vma->vm_flags & VM_WRITE)) {
+<<<<<<< HEAD
 		DRM_DEBUG("mmapping of shader BOs for writing not allowed.\n");
+=======
+		DRM_DEBUG("mmaping of shader BOs for writing not allowed.\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
 	if (bo->madv != VC4_MADV_WILLNEED) {
+<<<<<<< HEAD
 		DRM_DEBUG("mmapping of %s BO not allowed\n",
+=======
+		DRM_DEBUG("mmaping of %s BO not allowed\n",
+>>>>>>> b7ba80a49124 (Commit)
 			  bo->madv == VC4_MADV_DONTNEED ?
 			  "purgeable" : "purged");
 		return -EINVAL;
@@ -991,11 +1017,22 @@ int vc4_bo_debugfs_init(struct drm_minor *minor)
 {
 	struct drm_device *drm = minor->dev;
 	struct vc4_dev *vc4 = to_vc4_dev(drm);
+<<<<<<< HEAD
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!vc4->v3d)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	drm_debugfs_add_file(drm, "bo_stats", vc4_bo_stats_debugfs, NULL);
+=======
+	ret = vc4_debugfs_add_file(minor, "bo_stats",
+				   vc4_bo_stats_debugfs, NULL);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

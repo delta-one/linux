@@ -9,7 +9,11 @@
 
 int ast_astdp_read_edid(struct drm_device *dev, u8 *ediddata)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	u8 i = 0, j = 0;
 
 	/*
@@ -125,7 +129,11 @@ void ast_dp_launch(struct drm_device *dev, u8 bPower)
 	u8 bDPTX = 0;
 	u8 bDPExecute = 1;
 
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	// S3 come back, need more time to wait BMC ready.
 	if (bPower)
 		WaitCount = 300;
@@ -172,7 +180,11 @@ void ast_dp_launch(struct drm_device *dev, u8 bPower)
 
 void ast_dp_power_on_off(struct drm_device *dev, bool on)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	// Read and Turn off DP PHY sleep
 	u8 bE3 = ast_get_index_reg_mask(ast, AST_IO_CRTC_PORT, 0xE3, AST_DP_VIDEO_ENABLE);
 
@@ -188,7 +200,11 @@ void ast_dp_power_on_off(struct drm_device *dev, bool on)
 
 void ast_dp_set_on_off(struct drm_device *dev, bool on)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(dev);
+=======
+	struct ast_private *ast = to_ast_private(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	u8 video_on_off = on;
 
 	// Video On/Off
@@ -208,7 +224,11 @@ void ast_dp_set_on_off(struct drm_device *dev, bool on)
 
 void ast_dp_set_mode(struct drm_crtc *crtc, struct ast_vbios_mode_info *vbios_mode)
 {
+<<<<<<< HEAD
 	struct ast_device *ast = to_ast_device(crtc->dev);
+=======
+	struct ast_private *ast = to_ast_private(crtc->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	u32 ulRefreshRateIndex;
 	u8 ModeIdx;

@@ -1259,9 +1259,15 @@ static int mlxsw_linecard_init(struct mlxsw_core *mlxsw_core,
 	linecard->linecards = linecards;
 	mutex_init(&linecard->lock);
 
+<<<<<<< HEAD
 	devlink_linecard = devl_linecard_create(priv_to_devlink(mlxsw_core),
 						slot_index, &mlxsw_linecard_ops,
 						linecard);
+=======
+	devlink_linecard = devlink_linecard_create(priv_to_devlink(mlxsw_core),
+						   slot_index, &mlxsw_linecard_ops,
+						   linecard);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(devlink_linecard))
 		return PTR_ERR(devlink_linecard);
 
@@ -1285,7 +1291,11 @@ static void mlxsw_linecard_fini(struct mlxsw_core *mlxsw_core,
 	if (linecard->active)
 		mlxsw_linecard_active_clear(linecard);
 	mlxsw_linecard_bdev_del(linecard);
+<<<<<<< HEAD
 	devl_linecard_destroy(linecard->devlink_linecard);
+=======
+	devlink_linecard_destroy(linecard->devlink_linecard);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_destroy(&linecard->lock);
 }
 

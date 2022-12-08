@@ -30,12 +30,21 @@ select:
           - marvell,armada-3700-ahci
           - marvell,armada-8k-ahci
           - marvell,berlin2q-ahci
+<<<<<<< HEAD
           - socionext,uniphier-pro4-ahci
           - socionext,uniphier-pxs2-ahci
           - socionext,uniphier-pxs3-ahci
   required:
     - compatible
 
+=======
+  required:
+    - compatible
+
+allOf:
+  - $ref: "ahci-common.yaml#"
+
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     oneOf:
@@ -45,9 +54,12 @@ properties:
               - marvell,armada-8k-ahci
               - marvell,berlin2-ahci
               - marvell,berlin2q-ahci
+<<<<<<< HEAD
               - socionext,uniphier-pro4-ahci
               - socionext,uniphier-pxs2-ahci
               - socionext,uniphier-pxs3-ahci
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - const: generic-ahci
       - enum:
           - cavium,octeon-7130-ahci
@@ -77,8 +89,12 @@ properties:
     maxItems: 1
 
   resets:
+<<<<<<< HEAD
     minItems: 1
     maxItems: 3
+=======
+    maxItems: 1
+>>>>>>> b7ba80a49124 (Commit)
 
 patternProperties:
   "^sata-port@[0-9a-f]+$":
@@ -95,6 +111,7 @@ required:
   - reg
   - interrupts
 
+<<<<<<< HEAD
 allOf:
   - $ref: ahci-common.yaml#
   - if:
@@ -132,6 +149,8 @@ allOf:
           resets:
             maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 unevaluatedProperties: false
 
 examples:

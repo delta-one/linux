@@ -13,6 +13,10 @@
 
 #include <linux/module.h>
 
+<<<<<<< HEAD
+=======
+#include <linux/aperture.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/compat.h>
 #include <linux/types.h>
 #include <linux/errno.h>
@@ -39,7 +43,10 @@
 
 #include <asm/fb.h>
 
+<<<<<<< HEAD
 #include <video/nomodeset.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <video/vga.h>
 
     /*
@@ -1453,10 +1460,13 @@ __releases(&info->lock)
 	struct fb_info * const info = file->private_data;
 
 	lock_fb_info(info);
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_FB_DEFERRED_IO)
 	if (info->fbdefio)
 		fb_deferred_io_release(info);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (info->fbops->fb_release)
 		info->fbops->fb_release(info,1);
 	module_put(info->fbops->owner);
@@ -1656,6 +1666,35 @@ static void do_unregister_framebuffer(struct fb_info *fb_info)
 	put_fb_info(fb_info);
 }
 
+<<<<<<< HEAD
+=======
+static int fb_aperture_acquire_for_platform_device(struct fb_info *fb_info)
+{
+	struct apertures_struct *ap = fb_info->apertures;
+	struct device *dev = fb_info->device;
+	struct platform_device *pdev;
+	unsigned int i;
+	int ret;
+
+	if (!ap)
+		return 0;
+
+	if (!dev_is_platform(dev))
+		return 0;
+
+	pdev = to_platform_device(dev);
+
+	for (ret = 0, i = 0; i < ap->count; ++i) {
+		ret = devm_aperture_acquire_for_platform_device(pdev, ap->ranges[i].base,
+								ap->ranges[i].size);
+		if (ret)
+			break;
+	}
+
+	return ret;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  *	register_framebuffer - registers a frame buffer device
  *	@fb_info: frame buffer info structure
@@ -1670,6 +1709,15 @@ register_framebuffer(struct fb_info *fb_info)
 {
 	int ret;
 
+<<<<<<< HEAD
+=======
+	if (fb_info->flags & FBINFO_MISC_FIRMWARE) {
+		ret = fb_aperture_acquire_for_platform_device(fb_info);
+		if (ret)
+			return ret;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&registration_lock);
 	ret = do_register_framebuffer(fb_info);
 	mutex_unlock(&registration_lock);
@@ -1749,7 +1797,11 @@ fbmem_init(void)
 		goto err_chrdev;
 	}
 
+<<<<<<< HEAD
 	fb_class = class_create("graphics");
+=======
+	fb_class = class_create(THIS_MODULE, "graphics");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(fb_class)) {
 		ret = PTR_ERR(fb_class);
 		pr_warn("Unable to create fb class; errno = %d\n", ret);
@@ -1816,6 +1868,7 @@ int fb_new_modelist(struct fb_info *info)
 	return 0;
 }
 
+<<<<<<< HEAD
 #if defined(CONFIG_VIDEO_NOMODESET)
 bool fb_modesetting_disabled(const char *drvname)
 {
@@ -1830,4 +1883,6 @@ bool fb_modesetting_disabled(const char *drvname)
 EXPORT_SYMBOL(fb_modesetting_disabled);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_LICENSE("GPL");

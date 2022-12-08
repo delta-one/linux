@@ -16,7 +16,10 @@
 #include <linux/wait.h>
 
 struct path;
+<<<<<<< HEAD
 struct file;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct vfsmount;
 
 /*
@@ -251,7 +254,11 @@ extern struct dentry * d_make_root(struct inode *);
 /* <clickety>-<click> the ramfs-type tree */
 extern void d_genocide(struct dentry *);
 
+<<<<<<< HEAD
 extern void d_tmpfile(struct file *, struct inode *);
+=======
+extern void d_tmpfile(struct dentry *, struct inode *);
+>>>>>>> b7ba80a49124 (Commit)
 
 extern struct dentry *d_find_alias(struct inode *);
 extern void d_prune_aliases(struct inode *);

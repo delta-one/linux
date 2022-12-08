@@ -120,6 +120,7 @@ int main(int argc, char *argv[])
 	DEFINE(CC_FSR, offsetof(struct cpu_context, fsr));
 	BLANK();
 
+<<<<<<< HEAD
 	/* struct cpuinfo */
 	DEFINE(CI_DCS, offsetof(struct cpuinfo, dcache_size));
 	DEFINE(CI_DCL, offsetof(struct cpuinfo, dcache_line_length));
@@ -127,5 +128,7 @@ int main(int argc, char *argv[])
 	DEFINE(CI_ICL, offsetof(struct cpuinfo, icache_line_length));
 	BLANK();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }

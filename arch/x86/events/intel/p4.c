@@ -24,7 +24,11 @@ struct p4_event_bind {
 	unsigned int escr_msr[2];		/* ESCR MSR for this event */
 	unsigned int escr_emask;		/* valid ESCR EventMask bits */
 	unsigned int shared;			/* event is shared across threads */
+<<<<<<< HEAD
 	signed char cntr[2][P4_CNTR_LIMIT];	/* counter index (offset), -1 on absence */
+=======
+	char cntr[2][P4_CNTR_LIMIT];		/* counter index (offset), -1 on absence */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct p4_pebs_bind {

@@ -65,7 +65,11 @@ additionalProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     i2c {
+=======
+    i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 
@@ -82,7 +86,11 @@ examples:
                 imx334: endpoint {
                     remote-endpoint = <&cam>;
                     data-lanes = <1 2 3 4>;
+<<<<<<< HEAD
                     link-frequencies = /bits/ 64 <891000000 445500000>;
+=======
+                    link-frequencies = /bits/ 64 <891000000>;
+>>>>>>> b7ba80a49124 (Commit)
                 };
             };
         };

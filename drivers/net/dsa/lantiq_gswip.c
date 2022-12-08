@@ -1885,7 +1885,11 @@ static const struct xway_gphy_match_data xrx300_gphy_data = {
 	.ge_firmware_name = "lantiq/xrx300_phy11g_a21.bin",
 };
 
+<<<<<<< HEAD
 static const struct of_device_id xway_gphy_match[] __maybe_unused = {
+=======
+static const struct of_device_id xway_gphy_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "lantiq,xrx200-gphy-fw", .data = NULL },
 	{ .compatible = "lantiq,xrx200a1x-gphy-fw", .data = &xrx200a1x_gphy_data },
 	{ .compatible = "lantiq,xrx200a2x-gphy-fw", .data = &xrx200a2x_gphy_data },
@@ -2229,6 +2233,11 @@ static int gswip_remove(struct platform_device *pdev)
 	for (i = 0; i < priv->num_gphy_fw; i++)
 		gswip_gphy_fw_remove(priv, &priv->gphy_fw[i]);
 
+<<<<<<< HEAD
+=======
+	platform_set_drvdata(pdev, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

@@ -7,7 +7,10 @@
 
 #include <linux/futex.h>
 #include <linux/uaccess.h>
+<<<<<<< HEAD
 #include <asm/asm-extable.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/barrier.h>
 #include <asm/errno.h>
 
@@ -19,11 +22,26 @@
 	"2:	sc.w	$t0, %2				\n"	\
 	"	beqz	$t0, 1b				\n"	\
 	"3:						\n"	\
+<<<<<<< HEAD
 	_ASM_EXTABLE_UACCESS_ERR(1b, 3b, %0)			\
 	_ASM_EXTABLE_UACCESS_ERR(2b, 3b, %0)			\
 	: "=r" (ret), "=&r" (oldval),				\
 	  "=ZC" (*uaddr)					\
 	: "0" (0), "ZC" (*uaddr), "Jr" (oparg)			\
+=======
+	"	.section .fixup,\"ax\"			\n"	\
+	"4:	li.w	%0, %6				\n"	\
+	"	b	3b				\n"	\
+	"	.previous				\n"	\
+	"	.section __ex_table,\"a\"		\n"	\
+	"	"__UA_ADDR "\t1b, 4b			\n"	\
+	"	"__UA_ADDR "\t2b, 4b			\n"	\
+	"	.previous				\n"	\
+	: "=r" (ret), "=&r" (oldval),				\
+	  "=ZC" (*uaddr)					\
+	: "0" (0), "ZC" (*uaddr), "Jr" (oparg),			\
+	  "i" (-EFAULT)						\
+>>>>>>> b7ba80a49124 (Commit)
 	: "memory", "t0");					\
 }
 
@@ -80,10 +98,24 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr, u32 oldval, u32 newv
 	"	beqz	$t0, 1b					\n"
 	"3:							\n"
 	__WEAK_LLSC_MB
+<<<<<<< HEAD
 	_ASM_EXTABLE_UACCESS_ERR(1b, 3b, %0)
 	_ASM_EXTABLE_UACCESS_ERR(2b, 3b, %0)
 	: "+r" (ret), "=&r" (val), "=ZC" (*uaddr)
 	: "ZC" (*uaddr), "Jr" (oldval), "Jr" (newval)
+=======
+	"	.section .fixup,\"ax\"				\n"
+	"4:	li.d	%0, %6					\n"
+	"	b	3b					\n"
+	"	.previous					\n"
+	"	.section __ex_table,\"a\"			\n"
+	"	"__UA_ADDR "\t1b, 4b				\n"
+	"	"__UA_ADDR "\t2b, 4b				\n"
+	"	.previous					\n"
+	: "+r" (ret), "=&r" (val), "=ZC" (*uaddr)
+	: "ZC" (*uaddr), "Jr" (oldval), "Jr" (newval),
+	  "i" (-EFAULT)
+>>>>>>> b7ba80a49124 (Commit)
 	: "memory", "t0");
 
 	*uval = val;

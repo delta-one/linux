@@ -4,8 +4,11 @@ CPU to ISA Version Mapping
 
 Mapping of some CPU versions to relevant ISA versions.
 
+<<<<<<< HEAD
 Note Power4 and Power4+ are not supported.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ========= ====================================================================
 CPU       Architecture version
 ========= ====================================================================
@@ -28,12 +31,15 @@ PPC970    - PowerPC User Instruction Set Architecture Book I v2.01
           - PowerPC Virtual Environment Architecture Book II v2.01
           - PowerPC Operating Environment Architecture Book III v2.01
           - Plus Altivec/VMX ~= 2.03
+<<<<<<< HEAD
 Power4+   - PowerPC User Instruction Set Architecture Book I v2.01
           - PowerPC Virtual Environment Architecture Book II v2.01
           - PowerPC Operating Environment Architecture Book III v2.01
 Power4    - PowerPC User Instruction Set Architecture Book I v2.00
           - PowerPC Virtual Environment Architecture Book II v2.00
           - PowerPC Operating Environment Architecture Book III v2.00
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ========= ====================================================================
 
 
@@ -56,8 +62,11 @@ Power5++   No
 Power5+    No
 Power5     No
 PPC970     Yes
+<<<<<<< HEAD
 Power4+    No
 Power4     No
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ========== ==================
 
 ========== ====
@@ -76,8 +85,11 @@ Power5++   No
 Power5+    No
 Power5     No
 PPC970     No
+<<<<<<< HEAD
 Power4+    No
 Power4     No
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ========== ====
 
 ========== ====================================
@@ -96,6 +108,9 @@ Power5++   No
 Power5+    No
 Power5     No
 PPC970     No
+<<<<<<< HEAD
 Power4+    No
 Power4     No
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ========== ====================================

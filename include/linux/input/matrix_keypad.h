@@ -3,9 +3,14 @@
 #define _MATRIX_KEYPAD_H
 
 #include <linux/types.h>
+<<<<<<< HEAD
 
 struct device;
 struct input_dev;
+=======
+#include <linux/input.h>
+#include <linux/of.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MATRIX_MAX_ROWS		32
 #define MATRIX_MAX_COLS		32

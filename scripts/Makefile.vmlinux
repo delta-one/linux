@@ -1,22 +1,29 @@
 # SPDX-License-Identifier: GPL-2.0-only
 
+<<<<<<< HEAD
 PHONY := __default
 __default: vmlinux
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 include include/config/auto.conf
 include $(srctree)/scripts/Kbuild.include
 
 # for c_flags
 include $(srctree)/scripts/Makefile.lib
 
+<<<<<<< HEAD
 targets :=
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 quiet_cmd_cc_o_c = CC      $@
       cmd_cc_o_c = $(CC) $(c_flags) -c -o $@ $<
 
 %.o: %.c FORCE
 	$(call if_changed_dep,cc_o_c)
 
+<<<<<<< HEAD
 ifdef CONFIG_MODULES
 KASAN_SANITIZE_.vmlinux.export.o := n
 targets += .vmlinux.export.o
@@ -33,6 +40,9 @@ cmd_link_vmlinux =							\
 targets += vmlinux
 vmlinux: scripts/link-vmlinux.sh vmlinux.o $(KBUILD_LDS) FORCE
 	+$(call if_changed_dep,link_vmlinux)
+=======
+targets := $(MAKECMDGOALS)
+>>>>>>> b7ba80a49124 (Commit)
 
 # Add FORCE to the prequisites of a target to force it to be always rebuilt.
 # ---------------------------------------------------------------------------

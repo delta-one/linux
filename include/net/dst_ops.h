@@ -16,7 +16,11 @@ struct dst_ops {
 	unsigned short		family;
 	unsigned int		gc_thresh;
 
+<<<<<<< HEAD
 	void			(*gc)(struct dst_ops *ops);
+=======
+	int			(*gc)(struct dst_ops *ops);
+>>>>>>> b7ba80a49124 (Commit)
 	struct dst_entry *	(*check)(struct dst_entry *, __u32 cookie);
 	unsigned int		(*default_advmss)(const struct dst_entry *);
 	unsigned int		(*mtu)(const struct dst_entry *);

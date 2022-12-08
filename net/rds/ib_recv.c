@@ -31,7 +31,10 @@
  *
  */
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/sched/clock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/pci.h>
 #include <linux/dma-mapping.h>

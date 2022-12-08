@@ -6,6 +6,7 @@
 #include "ice.h"
 
 /**
+<<<<<<< HEAD
  * ice_set_rx_bufs_act - propagate Rx buffer action to frags
  * @xdp: XDP buffer representing frame (linear and frags part)
  * @rx_ring: Rx ring struct
@@ -36,6 +37,8 @@ ice_set_rx_bufs_act(struct xdp_buff *xdp, const struct ice_rx_ring *rx_ring,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ice_test_staterr - tests bits in Rx descriptor status and error fields
  * @status_err_n: Rx descriptor status_error0 or status_error1 bits
  * @stat_err_bits: value to mask
@@ -51,6 +54,7 @@ ice_test_staterr(__le16 status_err_n, const u16 stat_err_bits)
 	return !!(status_err_n & cpu_to_le16(stat_err_bits));
 }
 
+<<<<<<< HEAD
 /**
  * ice_is_non_eop - process handling of non-EOP buffers
  * @rx_ring: Rx ring being processed
@@ -73,6 +77,8 @@ ice_is_non_eop(const struct ice_rx_ring *rx_ring,
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline __le64
 ice_build_ctob(u64 td_cmd, u64 td_offset, unsigned int size, u64 td_tag)
 {
@@ -122,6 +128,7 @@ static inline void ice_xdp_ring_update_tail(struct ice_tx_ring *xdp_ring)
 	writel_relaxed(xdp_ring->next_to_use, xdp_ring->tail);
 }
 
+<<<<<<< HEAD
 /**
  * ice_set_rs_bit - set RS bit on last produced descriptor (one behind current NTU)
  * @xdp_ring: XDP ring to produce the HW Tx descriptors on
@@ -144,6 +151,11 @@ void ice_finalize_xdp_rx(struct ice_tx_ring *xdp_ring, unsigned int xdp_res, u32
 int ice_xmit_xdp_buff(struct xdp_buff *xdp, struct ice_tx_ring *xdp_ring);
 int __ice_xmit_xdp_ring(struct xdp_buff *xdp, struct ice_tx_ring *xdp_ring,
 			bool frame);
+=======
+void ice_finalize_xdp_rx(struct ice_tx_ring *xdp_ring, unsigned int xdp_res);
+int ice_xmit_xdp_buff(struct xdp_buff *xdp, struct ice_tx_ring *xdp_ring);
+int ice_xmit_xdp_ring(void *data, u16 size, struct ice_tx_ring *xdp_ring);
+>>>>>>> b7ba80a49124 (Commit)
 void ice_release_rx_desc(struct ice_rx_ring *rx_ring, u16 val);
 void
 ice_process_skb_fields(struct ice_rx_ring *rx_ring,

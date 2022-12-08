@@ -218,8 +218,13 @@ static int init_user_queue(struct process_queue_manager *pqm,
 	return 0;
 
 cleanup:
+<<<<<<< HEAD
 	uninit_queue(*q);
 	*q = NULL;
+=======
+	if (dev->shared_resources.enable_mes)
+		uninit_queue(*q);
+>>>>>>> b7ba80a49124 (Commit)
 	return retval;
 }
 

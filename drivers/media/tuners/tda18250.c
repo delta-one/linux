@@ -741,7 +741,12 @@ static const struct dvb_tuner_ops tda18250_ops = {
 	.sleep = tda18250_sleep,
 };
 
+<<<<<<< HEAD
 static int tda18250_probe(struct i2c_client *client)
+=======
+static int tda18250_probe(struct i2c_client *client,
+		const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tda18250_config *cfg = client->dev.platform_data;
 	struct dvb_frontend *fe = cfg->fe;
@@ -877,7 +882,11 @@ static struct i2c_driver tda18250_driver = {
 	.driver = {
 		.name	= "tda18250",
 	},
+<<<<<<< HEAD
 	.probe_new	= tda18250_probe,
+=======
+	.probe		= tda18250_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= tda18250_remove,
 	.id_table	= tda18250_id_table,
 };

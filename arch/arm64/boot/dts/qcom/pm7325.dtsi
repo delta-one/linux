@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: BSD-3-Clause
+<<<<<<< HEAD
 /*
  * Copyright (c) 2021, The Linux Foundation. All rights reserved.
  */
+=======
+// Copyright (c) 2021, The Linux Foundation. All rights reserved.
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <dt-bindings/interrupt-controller/irq.h>
 #include <dt-bindings/spmi/spmi.h>
@@ -20,7 +24,11 @@
 			#thermal-sensor-cells = <0>;
 		};
 
+<<<<<<< HEAD
 		pm7325_gpios: gpio@8800 {
+=======
+		pm7325_gpios: gpios@8800 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,pm7325-gpio", "qcom,spmi-gpio";
 			reg = <0x8800>;
 			gpio-controller;

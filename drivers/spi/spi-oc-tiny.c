@@ -271,13 +271,21 @@ exit:
 	return err;
 }
 
+<<<<<<< HEAD
 static void tiny_spi_remove(struct platform_device *pdev)
+=======
+static int tiny_spi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tiny_spi *hw = platform_get_drvdata(pdev);
 	struct spi_master *master = hw->bitbang.master;
 
 	spi_bitbang_stop(&hw->bitbang);
 	spi_master_put(master);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_OF
@@ -290,7 +298,11 @@ MODULE_DEVICE_TABLE(of, tiny_spi_match);
 
 static struct platform_driver tiny_spi_driver = {
 	.probe = tiny_spi_probe,
+<<<<<<< HEAD
 	.remove_new = tiny_spi_remove,
+=======
+	.remove = tiny_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = DRV_NAME,
 		.pm = NULL,

@@ -981,7 +981,11 @@ nfs4_xattr_entry_count(struct shrinker *shrink, struct shrink_control *sc)
 
 static void nfs4_xattr_cache_init_once(void *p)
 {
+<<<<<<< HEAD
 	struct nfs4_xattr_cache *cache = p;
+=======
+	struct nfs4_xattr_cache *cache = (struct nfs4_xattr_cache *)p;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_init(&cache->listxattr_lock);
 	atomic_long_set(&cache->nent, 0);

@@ -1018,8 +1018,11 @@ xfs_buf_item_relse(
 	trace_xfs_buf_item_relse(bp, _RET_IP_);
 	ASSERT(!test_bit(XFS_LI_IN_AIL, &bip->bli_item.li_flags));
 
+<<<<<<< HEAD
 	if (atomic_read(&bip->bli_refcount))
 		return;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bp->b_log_item = NULL;
 	xfs_buf_rele(bp);
 	xfs_buf_item_free(bip);

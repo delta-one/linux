@@ -4,12 +4,17 @@
 $id: http://devicetree.org/schemas/clock/qcom,videocc.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Qualcomm Video Clock & Reset Controller
+=======
+title: Qualcomm Video Clock & Reset Controller Binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Taniya Das <tdas@codeaurora.org>
 
 description: |
+<<<<<<< HEAD
   Qualcomm video clock control module provides the clocks, resets and power
   domains on Qualcomm SoCs.
 
@@ -19,6 +24,17 @@ description: |
     include/dt-bindings/clock/qcom,videocc-sdm845.h
     include/dt-bindings/clock/qcom,videocc-sm8150.h
     include/dt-bindings/clock/qcom,videocc-sm8250.h
+=======
+  Qualcomm video clock control module which supports the clocks, resets and
+  power domains on Qualcomm SoCs.
+
+  See also:
+    dt-bindings/clock/qcom,videocc-sc7180.h
+    dt-bindings/clock/qcom,videocc-sc7280.h
+    dt-bindings/clock/qcom,videocc-sdm845.h
+    dt-bindings/clock/qcom,videocc-sm8150.h
+    dt-bindings/clock/qcom,videocc-sm8250.h
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -30,12 +46,21 @@ properties:
       - qcom,sm8250-videocc
 
   clocks:
+<<<<<<< HEAD
     minItems: 1
     maxItems: 3
 
   clock-names:
     minItems: 1
     maxItems: 3
+=======
+    items:
+      - description: Board XO source
+
+  clock-names:
+    items:
+      - const: bi_tcxo
+>>>>>>> b7ba80a49124 (Commit)
 
   '#clock-cells':
     const: 1
@@ -68,6 +93,7 @@ required:
   - '#reset-cells'
   - '#power-domain-cells'
 
+<<<<<<< HEAD
 allOf:
   - if:
       properties:
@@ -119,6 +145,8 @@ allOf:
             - const: bi_tcxo
             - const: bi_tcxo_ao
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 additionalProperties: false
 
 examples:

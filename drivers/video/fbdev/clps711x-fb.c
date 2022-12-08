@@ -238,7 +238,12 @@ static int clps711x_fb_probe(struct platform_device *pdev)
 	info->fix.mmio_start = res->start;
 	info->fix.mmio_len = resource_size(res);
 
+<<<<<<< HEAD
 	info->screen_base = devm_platform_get_and_ioremap_resource(pdev, 1, &res);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+	info->screen_base = devm_ioremap_resource(dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(info->screen_base)) {
 		ret = PTR_ERR(info->screen_base);
 		goto out_fb_release;
@@ -250,8 +255,21 @@ static int clps711x_fb_probe(struct platform_device *pdev)
 		goto out_fb_release;
 	}
 
+<<<<<<< HEAD
 	cfb->buffsize = resource_size(res);
 	info->fix.smem_start = res->start;
+=======
+	info->apertures = alloc_apertures(1);
+	if (!info->apertures) {
+		ret = -ENOMEM;
+		goto out_fb_release;
+	}
+
+	cfb->buffsize = resource_size(res);
+	info->fix.smem_start = res->start;
+	info->apertures->ranges[0].base = info->fix.smem_start;
+	info->apertures->ranges[0].size = cfb->buffsize;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cfb->clk = devm_clk_get(dev, NULL);
 	if (IS_ERR(cfb->clk)) {
@@ -336,7 +354,11 @@ static int clps711x_fb_probe(struct platform_device *pdev)
 				       &clps711x_lcd_ops);
 	if (!IS_ERR(lcd))
 		return 0;
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> b7ba80a49124 (Commit)
 	ret = PTR_ERR(lcd);
 	unregister_framebuffer(info);
 
@@ -350,7 +372,11 @@ out_fb_release:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void clps711x_fb_remove(struct platform_device *pdev)
+=======
+static int clps711x_fb_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = platform_get_drvdata(pdev);
 	struct clps711x_fb_info *cfb = info->par;
@@ -360,6 +386,11 @@ static void clps711x_fb_remove(struct platform_device *pdev)
 	unregister_framebuffer(info);
 	fb_dealloc_cmap(&info->cmap);
 	framebuffer_release(info);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id clps711x_fb_dt_ids[] = {
@@ -374,7 +405,11 @@ static struct platform_driver clps711x_fb_driver = {
 		.of_match_table	= clps711x_fb_dt_ids,
 	},
 	.probe	= clps711x_fb_probe,
+<<<<<<< HEAD
 	.remove_new = clps711x_fb_remove,
+=======
+	.remove	= clps711x_fb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(clps711x_fb_driver);
 

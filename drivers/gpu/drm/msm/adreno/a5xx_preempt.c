@@ -63,7 +63,11 @@ static struct msm_ringbuffer *get_next_ring(struct msm_gpu *gpu)
 		struct msm_ringbuffer *ring = gpu->rb[i];
 
 		spin_lock_irqsave(&ring->preempt_lock, flags);
+<<<<<<< HEAD
 		empty = (get_wptr(ring) == gpu->funcs->get_rptr(gpu, ring));
+=======
+		empty = (get_wptr(ring) == ring->memptrs->rptr);
+>>>>>>> b7ba80a49124 (Commit)
 		spin_unlock_irqrestore(&ring->preempt_lock, flags);
 
 		if (!empty)
@@ -137,6 +141,10 @@ void a5xx_preempt_trigger(struct msm_gpu *gpu)
 
 	/* Set the address of the incoming preemption record */
 	gpu_write64(gpu, REG_A5XX_CP_CONTEXT_SWITCH_RESTORE_ADDR_LO,
+<<<<<<< HEAD
+=======
+		REG_A5XX_CP_CONTEXT_SWITCH_RESTORE_ADDR_HI,
+>>>>>>> b7ba80a49124 (Commit)
 		a5xx_gpu->preempt_iova[ring->id]);
 
 	a5xx_gpu->next_ring = ring;
@@ -207,11 +215,19 @@ void a5xx_preempt_hw_init(struct msm_gpu *gpu)
 		a5xx_gpu->preempt[i]->wptr = 0;
 		a5xx_gpu->preempt[i]->rptr = 0;
 		a5xx_gpu->preempt[i]->rbase = gpu->rb[i]->iova;
+<<<<<<< HEAD
 		a5xx_gpu->preempt[i]->rptr_addr = shadowptr(a5xx_gpu, gpu->rb[i]);
 	}
 
 	/* Write a 0 to signal that we aren't switching pagetables */
 	gpu_write64(gpu, REG_A5XX_CP_CONTEXT_SWITCH_SMMU_INFO_LO, 0);
+=======
+	}
+
+	/* Write a 0 to signal that we aren't switching pagetables */
+	gpu_write64(gpu, REG_A5XX_CP_CONTEXT_SWITCH_SMMU_INFO_LO,
+		REG_A5XX_CP_CONTEXT_SWITCH_SMMU_INFO_HI, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Reset the preemption state */
 	set_preempt_state(a5xx_gpu, PREEMPT_NONE);
@@ -258,6 +274,10 @@ static int preempt_init_ring(struct a5xx_gpu *a5xx_gpu,
 	ptr->data = 0;
 	ptr->cntl = MSM_GPU_RB_CNTL_DEFAULT | AXXX_CP_RB_CNTL_NO_UPDATE;
 
+<<<<<<< HEAD
+=======
+	ptr->rptr_addr = shadowptr(a5xx_gpu, ring);
+>>>>>>> b7ba80a49124 (Commit)
 	ptr->counter = counters_iova;
 
 	return 0;

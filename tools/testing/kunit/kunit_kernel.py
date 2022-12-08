@@ -16,16 +16,26 @@ import shutil
 import signal
 import threading
 from typing import Iterator, List, Optional, Tuple
+<<<<<<< HEAD
 from types import FrameType
 
 import kunit_config
+=======
+
+import kunit_config
+from kunit_printer import stdout
+>>>>>>> b7ba80a49124 (Commit)
 import qemu_config
 
 KCONFIG_PATH = '.config'
 KUNITCONFIG_PATH = '.kunitconfig'
 OLD_KUNITCONFIG_PATH = 'last_used_kunitconfig'
 DEFAULT_KUNITCONFIG_PATH = 'tools/testing/kunit/configs/default.config'
+<<<<<<< HEAD
 ALL_TESTS_CONFIG_PATH = 'tools/testing/kunit/configs/all_tests.config'
+=======
+BROKEN_ALLCONFIG_PATH = 'tools/testing/kunit/configs/broken_on_uml.config'
+>>>>>>> b7ba80a49124 (Commit)
 UML_KCONFIG_PATH = 'tools/testing/kunit/configs/arch_uml.config'
 OUTFILE_PATH = 'test.log'
 ABS_TOOL_PATH = os.path.abspath(os.path.dirname(__file__))
@@ -57,7 +67,14 @@ class LinuxSourceTreeOperations:
 	def make_arch_config(self, base_kunitconfig: kunit_config.Kconfig) -> kunit_config.Kconfig:
 		return base_kunitconfig
 
+<<<<<<< HEAD
 	def make_olddefconfig(self, build_dir: str, make_options: Optional[List[str]]) -> None:
+=======
+	def make_allyesconfig(self, build_dir: str, make_options) -> None:
+		raise ConfigError('Only the "um" arch is supported for alltests')
+
+	def make_olddefconfig(self, build_dir: str, make_options) -> None:
+>>>>>>> b7ba80a49124 (Commit)
 		command = ['make', 'ARCH=' + self._linux_arch, 'O=' + build_dir, 'olddefconfig']
 		if self._cross_compile:
 			command += ['CROSS_COMPILE=' + self._cross_compile]
@@ -71,7 +88,11 @@ class LinuxSourceTreeOperations:
 		except subprocess.CalledProcessError as e:
 			raise ConfigError(e.output.decode())
 
+<<<<<<< HEAD
 	def make(self, jobs: int, build_dir: str, make_options: Optional[List[str]]) -> None:
+=======
+	def make(self, jobs, build_dir: str, make_options) -> None:
+>>>>>>> b7ba80a49124 (Commit)
 		command = ['make', 'ARCH=' + self._linux_arch, 'O=' + build_dir, '--jobs=' + str(jobs)]
 		if make_options:
 			command.extend(make_options)
@@ -92,7 +113,11 @@ class LinuxSourceTreeOperations:
 		if stderr:  # likely only due to build warnings
 			print(stderr.decode())
 
+<<<<<<< HEAD
 	def start(self, params: List[str], build_dir: str) -> subprocess.Popen[str]:
+=======
+	def start(self, params: List[str], build_dir: str) -> subprocess.Popen:
+>>>>>>> b7ba80a49124 (Commit)
 		raise RuntimeError('not implemented!')
 
 
@@ -112,7 +137,11 @@ class LinuxSourceTreeOperationsQemu(LinuxSourceTreeOperations):
 		kconfig.merge_in_entries(base_kunitconfig)
 		return kconfig
 
+<<<<<<< HEAD
 	def start(self, params: List[str], build_dir: str) -> subprocess.Popen[str]:
+=======
+	def start(self, params: List[str], build_dir: str) -> subprocess.Popen:
+>>>>>>> b7ba80a49124 (Commit)
 		kernel_path = os.path.join(build_dir, self._kernel_path)
 		qemu_command = ['qemu-system-' + self._qemu_arch,
 				'-nodefaults',
@@ -133,7 +162,11 @@ class LinuxSourceTreeOperationsQemu(LinuxSourceTreeOperations):
 class LinuxSourceTreeOperationsUml(LinuxSourceTreeOperations):
 	"""An abstraction over command line operations performed on a source tree."""
 
+<<<<<<< HEAD
 	def __init__(self, cross_compile: Optional[str]=None):
+=======
+	def __init__(self, cross_compile=None):
+>>>>>>> b7ba80a49124 (Commit)
 		super().__init__(linux_arch='um', cross_compile=cross_compile)
 
 	def make_arch_config(self, base_kunitconfig: kunit_config.Kconfig) -> kunit_config.Kconfig:
@@ -141,7 +174,31 @@ class LinuxSourceTreeOperationsUml(LinuxSourceTreeOperations):
 		kconfig.merge_in_entries(base_kunitconfig)
 		return kconfig
 
+<<<<<<< HEAD
 	def start(self, params: List[str], build_dir: str) -> subprocess.Popen[str]:
+=======
+	def make_allyesconfig(self, build_dir: str, make_options) -> None:
+		stdout.print_with_timestamp(
+			'Enabling all CONFIGs for UML...')
+		command = ['make', 'ARCH=um', 'O=' + build_dir, 'allyesconfig']
+		if make_options:
+			command.extend(make_options)
+		process = subprocess.Popen(
+			command,
+			stdout=subprocess.DEVNULL,
+			stderr=subprocess.STDOUT)
+		process.wait()
+		stdout.print_with_timestamp(
+			'Disabling broken configs to run KUnit tests...')
+
+		with open(get_kconfig_path(build_dir), 'a') as config:
+			with open(BROKEN_ALLCONFIG_PATH, 'r') as disable:
+				config.write(disable.read())
+		stdout.print_with_timestamp(
+			'Starting Kernel with all configs takes a few minutes...')
+
+	def start(self, params: List[str], build_dir: str) -> subprocess.Popen:
+>>>>>>> b7ba80a49124 (Commit)
 		"""Runs the Linux UML binary. Must be named 'linux'."""
 		linux_bin = os.path.join(build_dir, 'linux')
 		params.extend(['mem=1G', 'console=tty', 'kunit_shutdown=halt'])
@@ -216,7 +273,11 @@ def _get_qemu_ops(config_path: str,
 
 	if not hasattr(config, 'QEMU_ARCH'):
 		raise ValueError('qemu_config module missing "QEMU_ARCH": ' + config_path)
+<<<<<<< HEAD
 	params: qemu_config.QemuArchParams = config.QEMU_ARCH
+=======
+	params: qemu_config.QemuArchParams = config.QEMU_ARCH  # type: ignore
+>>>>>>> b7ba80a49124 (Commit)
 	if extra_qemu_args:
 		params.extra_qemu_params.extend(extra_qemu_args)
 	return params.linux_arch, LinuxSourceTreeOperationsQemu(
@@ -230,10 +291,17 @@ class LinuxSourceTree:
 	      build_dir: str,
 	      kunitconfig_paths: Optional[List[str]]=None,
 	      kconfig_add: Optional[List[str]]=None,
+<<<<<<< HEAD
 	      arch: Optional[str]=None,
 	      cross_compile: Optional[str]=None,
 	      qemu_config_path: Optional[str]=None,
 	      extra_qemu_args: Optional[List[str]]=None) -> None:
+=======
+	      arch=None,
+	      cross_compile=None,
+	      qemu_config_path=None,
+	      extra_qemu_args=None) -> None:
+>>>>>>> b7ba80a49124 (Commit)
 		signal.signal(signal.SIGINT, self.signal_handler)
 		if qemu_config_path:
 			self._arch, self._ops = _get_qemu_ops(qemu_config_path, extra_qemu_args, cross_compile)
@@ -276,7 +344,11 @@ class LinuxSourceTree:
 		logging.error(message)
 		return False
 
+<<<<<<< HEAD
 	def build_config(self, build_dir: str, make_options: Optional[List[str]]) -> bool:
+=======
+	def build_config(self, build_dir: str, make_options) -> bool:
+>>>>>>> b7ba80a49124 (Commit)
 		kconfig_path = get_kconfig_path(build_dir)
 		if build_dir and not os.path.exists(build_dir):
 			os.mkdir(build_dir)
@@ -304,7 +376,11 @@ class LinuxSourceTree:
 		old_kconfig = kunit_config.parse_file(old_path)
 		return old_kconfig != self._kconfig
 
+<<<<<<< HEAD
 	def build_reconfig(self, build_dir: str, make_options: Optional[List[str]]) -> bool:
+=======
+	def build_reconfig(self, build_dir: str, make_options) -> bool:
+>>>>>>> b7ba80a49124 (Commit)
 		"""Creates a new .config if it is not a subset of the .kunitconfig."""
 		kconfig_path = get_kconfig_path(build_dir)
 		if not os.path.exists(kconfig_path):
@@ -320,8 +396,15 @@ class LinuxSourceTree:
 		os.remove(kconfig_path)
 		return self.build_config(build_dir, make_options)
 
+<<<<<<< HEAD
 	def build_kernel(self, jobs: int, build_dir: str, make_options: Optional[List[str]]) -> bool:
 		try:
+=======
+	def build_kernel(self, alltests, jobs, build_dir: str, make_options) -> bool:
+		try:
+			if alltests:
+				self._ops.make_allyesconfig(build_dir, make_options)
+>>>>>>> b7ba80a49124 (Commit)
 			self._ops.make_olddefconfig(build_dir, make_options)
 			self._ops.make(jobs, build_dir, make_options)
 		except (ConfigError, BuildError) as e:
@@ -329,18 +412,29 @@ class LinuxSourceTree:
 			return False
 		return self.validate_config(build_dir)
 
+<<<<<<< HEAD
 	def run_kernel(self, args: Optional[List[str]]=None, build_dir: str='', filter_glob: str='', timeout: Optional[int]=None) -> Iterator[str]:
+=======
+	def run_kernel(self, args=None, build_dir='', filter_glob='', timeout=None) -> Iterator[str]:
+>>>>>>> b7ba80a49124 (Commit)
 		if not args:
 			args = []
 		if filter_glob:
 			args.append('kunit.filter_glob='+filter_glob)
+<<<<<<< HEAD
 		args.append('kunit.enable=1')
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		process = self._ops.start(args, build_dir)
 		assert process.stdout is not None  # tell mypy it's set
 
 		# Enforce the timeout in a background thread.
+<<<<<<< HEAD
 		def _wait_proc() -> None:
+=======
+		def _wait_proc():
+>>>>>>> b7ba80a49124 (Commit)
 			try:
 				process.wait(timeout=timeout)
 			except Exception as e:
@@ -366,6 +460,10 @@ class LinuxSourceTree:
 			waiter.join()
 			subprocess.call(['stty', 'sane'])
 
+<<<<<<< HEAD
 	def signal_handler(self, unused_sig: int, unused_frame: Optional[FrameType]) -> None:
+=======
+	def signal_handler(self, unused_sig, unused_frame) -> None:
+>>>>>>> b7ba80a49124 (Commit)
 		logging.error('Build interruption occurred. Cleaning console.')
 		subprocess.call(['stty', 'sane'])

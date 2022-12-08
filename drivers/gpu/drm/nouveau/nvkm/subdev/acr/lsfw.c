@@ -29,7 +29,10 @@ void
 nvkm_acr_lsfw_del(struct nvkm_acr_lsfw *lsfw)
 {
 	nvkm_blob_dtor(&lsfw->img);
+<<<<<<< HEAD
 	kfree(lsfw->sigs);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_firmware_put(lsfw->sig);
 	list_del(&lsfw->head);
 	kfree(lsfw);
@@ -178,6 +181,7 @@ nvkm_acr_lsfw_load_sig_image_desc_v1(struct nvkm_subdev *subdev,
 }
 
 int
+<<<<<<< HEAD
 nvkm_acr_lsfw_load_sig_image_desc_v2(struct nvkm_subdev *subdev,
 				     struct nvkm_falcon *falcon,
 				     enum nvkm_acr_lsf_id id,
@@ -247,6 +251,8 @@ nvkm_acr_lsfw_load_sig_image_desc_v2(struct nvkm_subdev *subdev,
 }
 
 int
+=======
+>>>>>>> b7ba80a49124 (Commit)
 nvkm_acr_lsfw_load_bl_inst_data_sig(struct nvkm_subdev *subdev,
 				    struct nvkm_falcon *falcon,
 				    enum nvkm_acr_lsf_id id,
@@ -321,6 +327,7 @@ done:
 	nvkm_firmware_put(bl);
 	return ret;
 }
+<<<<<<< HEAD
 
 int
 nvkm_acr_lsfw_load_bl_sig_net(struct nvkm_subdev *subdev,
@@ -396,3 +403,5 @@ done:
 	nvkm_firmware_put(bl);
 	return ret;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -5,7 +5,10 @@
 #include <linux/kernel.h>
 #include <linux/mm.h>
 #include <linux/smp.h>
+<<<<<<< HEAD
 #include <linux/cpu.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/prctl.h>
 #include <linux/slab.h>
 #include <linux/sched.h>
@@ -25,7 +28,10 @@
 #include <linux/cpuidle.h>
 #include <linux/acpi.h>
 #include <linux/elf-randomize.h>
+<<<<<<< HEAD
 #include <linux/static_call.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <trace/events/power.h>
 #include <linux/hw_breakpoint.h>
 #include <asm/cpu.h>
@@ -49,7 +55,10 @@
 #include <asm/frame.h>
 #include <asm/unwind.h>
 #include <asm/tdx.h>
+<<<<<<< HEAD
 #include <asm/shstk.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "process.h"
 
@@ -121,7 +130,10 @@ void exit_thread(struct task_struct *tsk)
 
 	free_vm86(t);
 
+<<<<<<< HEAD
 	shstk_free(tsk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	fpu__drop(fpu);
 }
 
@@ -143,7 +155,10 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
 	struct inactive_task_frame *frame;
 	struct fork_frame *fork_frame;
 	struct pt_regs *childregs;
+<<<<<<< HEAD
 	unsigned long new_ssp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 
 	childregs = task_pt_regs(p);
@@ -178,6 +193,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
 	frame->flags = X86_EFLAGS_FIXED;
 #endif
 
+<<<<<<< HEAD
 	/*
 	 * Allocate a new shadow stack for thread if needed. If shadow stack,
 	 * is disabled, new_ssp will remain 0, and fpu_clone() will know not to
@@ -188,6 +204,9 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
 		return PTR_ERR((void *)new_ssp);
 
 	fpu_clone(p, clone_flags, args->fn, new_ssp);
+=======
+	fpu_clone(p, clone_flags, args->fn);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Kernel thread ? */
 	if (unlikely(p->flags & PF_KTHREAD)) {
@@ -233,6 +252,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
 	if (!ret && unlikely(test_tsk_thread_flag(current, TIF_IO_BITMAP)))
 		io_bitmap_share(p);
 
+<<<<<<< HEAD
 	/*
 	 * If copy_thread() if failing, don't leak the shadow stack possibly
 	 * allocated in shstk_alloc_thread_stack() above.
@@ -240,6 +260,8 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
 	if (ret)
 		shstk_free(p);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -621,7 +643,11 @@ static __always_inline void __speculation_ctrl_update(unsigned long tifp,
 	}
 
 	if (updmsr)
+<<<<<<< HEAD
 		update_spec_ctrl_cond(msr);
+=======
+		write_spec_ctrl_current(msr, false);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static unsigned long speculation_ctrl_update_tif(struct task_struct *tsk)
@@ -715,6 +741,7 @@ void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p)
 unsigned long boot_option_idle_override = IDLE_NO_OVERRIDE;
 EXPORT_SYMBOL(boot_option_idle_override);
 
+<<<<<<< HEAD
 /*
  * We use this if we don't have any better idle routine..
  */
@@ -736,6 +763,12 @@ static bool x86_idle_set(void)
 
 #ifndef CONFIG_SMP
 static inline void __noreturn play_dead(void)
+=======
+static void (*x86_idle)(void);
+
+#ifndef CONFIG_SMP
+static inline void play_dead(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	BUG();
 }
@@ -747,7 +780,11 @@ void arch_cpu_idle_enter(void)
 	local_touch_nmi();
 }
 
+<<<<<<< HEAD
 void __noreturn arch_cpu_idle_dead(void)
+=======
+void arch_cpu_idle_dead(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	play_dead();
 }
@@ -755,18 +792,42 @@ void __noreturn arch_cpu_idle_dead(void)
 /*
  * Called from the generic idle code.
  */
+<<<<<<< HEAD
 void __cpuidle arch_cpu_idle(void)
 {
 	static_call(x86_idle)();
 }
 EXPORT_SYMBOL_GPL(arch_cpu_idle);
+=======
+void arch_cpu_idle(void)
+{
+	x86_idle();
+}
+
+/*
+ * We use this if we don't have any better idle routine..
+ */
+void __cpuidle default_idle(void)
+{
+	raw_safe_halt();
+}
+#if defined(CONFIG_APM_MODULE) || defined(CONFIG_HALTPOLL_CPUIDLE_MODULE)
+EXPORT_SYMBOL(default_idle);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_XEN
 bool xen_set_default_idle(void)
 {
+<<<<<<< HEAD
 	bool ret = x86_idle_set();
 
 	static_call_update(x86_idle, default_idle);
+=======
+	bool ret = !!x86_idle;
+
+	x86_idle = default_idle;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -828,7 +889,17 @@ static void amd_e400_idle(void)
 
 	default_idle();
 
+<<<<<<< HEAD
 	tick_broadcast_exit();
+=======
+	/*
+	 * The switch back from broadcast mode needs to be called with
+	 * interrupts disabled.
+	 */
+	raw_local_irq_disable();
+	tick_broadcast_exit();
+	raw_local_irq_enable();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -886,10 +957,19 @@ static __cpuidle void mwait_idle(void)
 		}
 
 		__monitor((void *)&current_thread_info()->flags, 0, 0);
+<<<<<<< HEAD
 		if (!need_resched()) {
 			__sti_mwait(0, 0);
 			raw_local_irq_disable();
 		}
+=======
+		if (!need_resched())
+			__sti_mwait(0, 0);
+		else
+			raw_local_irq_enable();
+	} else {
+		raw_local_irq_enable();
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	__current_clr_polling();
 }
@@ -900,11 +980,16 @@ void select_idle_routine(const struct cpuinfo_x86 *c)
 	if (boot_option_idle_override == IDLE_POLL && smp_num_siblings > 1)
 		pr_warn_once("WARNING: polling idle and HT enabled, performance may degrade\n");
 #endif
+<<<<<<< HEAD
 	if (x86_idle_set() || boot_option_idle_override == IDLE_POLL)
+=======
+	if (x86_idle || boot_option_idle_override == IDLE_POLL)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	if (boot_cpu_has_bug(X86_BUG_AMD_E400)) {
 		pr_info("using AMD E400 aware idle routine\n");
+<<<<<<< HEAD
 		static_call_update(x86_idle, amd_e400_idle);
 	} else if (prefer_mwait_c1_over_halt(c)) {
 		pr_info("using mwait in idle threads\n");
@@ -914,6 +999,17 @@ void select_idle_routine(const struct cpuinfo_x86 *c)
 		static_call_update(x86_idle, tdx_safe_halt);
 	} else
 		static_call_update(x86_idle, default_idle);
+=======
+		x86_idle = amd_e400_idle;
+	} else if (prefer_mwait_c1_over_halt(c)) {
+		pr_info("using mwait in idle threads\n");
+		x86_idle = mwait_idle;
+	} else if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
+		pr_info("using TDX aware idle routine\n");
+		x86_idle = tdx_safe_halt;
+	} else
+		x86_idle = default_idle;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void amd_e400_c1e_apic_setup(void)
@@ -966,7 +1062,11 @@ static int __init idle_setup(char *str)
 		 * To continue to load the CPU idle driver, don't touch
 		 * the boot_option_idle_override.
 		 */
+<<<<<<< HEAD
 		static_call_update(x86_idle, default_idle);
+=======
+		x86_idle = default_idle;
+>>>>>>> b7ba80a49124 (Commit)
 		boot_option_idle_override = IDLE_HALT;
 	} else if (!strcmp(str, "nomwait")) {
 		/*
@@ -985,7 +1085,11 @@ early_param("idle", idle_setup);
 unsigned long arch_align_stack(unsigned long sp)
 {
 	if (!(current->personality & ADDR_NO_RANDOMIZE) && randomize_va_space)
+<<<<<<< HEAD
 		sp -= get_random_u32_below(8192);
+=======
+		sp -= get_random_int() % 8192;
+>>>>>>> b7ba80a49124 (Commit)
 	return sp & ~0xf;
 }
 

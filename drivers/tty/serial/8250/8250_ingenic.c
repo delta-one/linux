@@ -87,7 +87,11 @@ static void __init ingenic_early_console_setup_clock(struct earlycon_device *dev
 	dev->port.uartclk = be32_to_cpup(prop);
 }
 
+<<<<<<< HEAD
 static int __init ingenic_earlycon_setup_tail(struct earlycon_device *dev,
+=======
+static int __init ingenic_early_console_setup(struct earlycon_device *dev,
+>>>>>>> b7ba80a49124 (Commit)
 					      const char *opt)
 {
 	struct uart_port *port = &dev->port;
@@ -103,6 +107,11 @@ static int __init ingenic_earlycon_setup_tail(struct earlycon_device *dev,
 		uart_parse_options(opt, &baud, &parity, &bits, &flow);
 	}
 
+<<<<<<< HEAD
+=======
+	ingenic_early_console_setup_clock(dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (dev->baud)
 		baud = dev->baud;
 	divisor = DIV_ROUND_CLOSEST(port->uartclk, 16 * baud);
@@ -127,6 +136,7 @@ static int __init ingenic_earlycon_setup_tail(struct earlycon_device *dev,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int __init ingenic_early_console_setup(struct earlycon_device *dev,
 					      const char *opt)
 {
@@ -157,6 +167,11 @@ OF_EARLYCON_DECLARE(jz4740_uart, "ingenic,jz4740-uart",
 OF_EARLYCON_DECLARE(jz4750_uart, "ingenic,jz4750-uart",
 		    jz4750_early_console_setup);
 
+=======
+OF_EARLYCON_DECLARE(jz4740_uart, "ingenic,jz4740-uart",
+		    ingenic_early_console_setup);
+
+>>>>>>> b7ba80a49124 (Commit)
 OF_EARLYCON_DECLARE(jz4770_uart, "ingenic,jz4770-uart",
 		    ingenic_early_console_setup);
 
@@ -353,7 +368,10 @@ static const struct ingenic_uart_config x1000_uart_config = {
 
 static const struct of_device_id of_match[] = {
 	{ .compatible = "ingenic,jz4740-uart", .data = &jz4740_uart_config },
+<<<<<<< HEAD
 	{ .compatible = "ingenic,jz4750-uart", .data = &jz4760_uart_config },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "ingenic,jz4760-uart", .data = &jz4760_uart_config },
 	{ .compatible = "ingenic,jz4770-uart", .data = &jz4760_uart_config },
 	{ .compatible = "ingenic,jz4775-uart", .data = &jz4760_uart_config },

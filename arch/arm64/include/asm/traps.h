@@ -13,6 +13,7 @@
 
 struct pt_regs;
 
+<<<<<<< HEAD
 #ifdef CONFIG_ARMV8_DEPRECATED
 bool try_emulate_armv8_deprecated(struct pt_regs *regs, u32 insn);
 #else
@@ -23,6 +24,19 @@ try_emulate_armv8_deprecated(struct pt_regs *regs, u32 insn)
 }
 #endif /* CONFIG_ARMV8_DEPRECATED */
 
+=======
+struct undef_hook {
+	struct list_head node;
+	u32 instr_mask;
+	u32 instr_val;
+	u64 pstate_mask;
+	u64 pstate_val;
+	int (*fn)(struct pt_regs *regs, u32 instr);
+};
+
+void register_undef_hook(struct undef_hook *hook);
+void unregister_undef_hook(struct undef_hook *hook);
+>>>>>>> b7ba80a49124 (Commit)
 void force_signal_inject(int signal, int code, unsigned long address, unsigned long err);
 void arm64_notify_segfault(unsigned long addr);
 void arm64_force_sig_fault(int signo, int code, unsigned long far, const char *str);

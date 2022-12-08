@@ -23,11 +23,25 @@
 #include <linux/atomic.h>
 #include <asm/types.h>
 #include <linux/spinlock.h>
+<<<<<<< HEAD
 #include <net/checksum.h>
 #include <linux/rcupdate.h>
 #include <linux/dma-mapping.h>
 #include <linux/netdev_features.h>
 #include <net/flow_dissector.h>
+=======
+#include <linux/net.h>
+#include <linux/textsearch.h>
+#include <net/checksum.h>
+#include <linux/rcupdate.h>
+#include <linux/hrtimer.h>
+#include <linux/dma-mapping.h>
+#include <linux/netdev_features.h>
+#include <linux/sched.h>
+#include <linux/sched/clock.h>
+#include <net/flow_dissector.h>
+#include <linux/splice.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/in6.h>
 #include <linux/if_packet.h>
 #include <linux/llist.h>
@@ -255,6 +269,7 @@
 #define SKB_DATA_ALIGN(X)	ALIGN(X, SMP_CACHE_BYTES)
 #define SKB_WITH_OVERHEAD(X)	\
 	((X) - SKB_DATA_ALIGN(sizeof(struct skb_shared_info)))
+<<<<<<< HEAD
 
 /* For X bytes available in skb->head, what is the minimal
  * allocation needed, knowing struct skb_shared_info needs
@@ -263,6 +278,8 @@
 #define SKB_HEAD_ALIGN(X) (SKB_DATA_ALIGN(X) + \
 	SKB_DATA_ALIGN(sizeof(struct skb_shared_info)))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define SKB_MAX_ORDER(X, ORDER) \
 	SKB_WITH_OVERHEAD((PAGE_SIZE << (ORDER)) - (X))
 #define SKB_MAX_HEAD(X)		(SKB_MAX_ORDER((X), 0))
@@ -282,7 +299,10 @@ struct napi_struct;
 struct bpf_prog;
 union bpf_attr;
 struct skb_ext;
+<<<<<<< HEAD
 struct ts_config;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #if IS_ENABLED(CONFIG_BRIDGE_NETFILTER)
 struct nf_bridge_info {
@@ -319,16 +339,23 @@ struct nf_bridge_info {
  * and read by ovs to recirc_id.
  */
 struct tc_skb_ext {
+<<<<<<< HEAD
 	union {
 		u64 act_miss_cookie;
 		__u32 chain;
 	};
+=======
+	__u32 chain;
+>>>>>>> b7ba80a49124 (Commit)
 	__u16 mru;
 	__u16 zone;
 	u8 post_ct:1;
 	u8 post_ct_snat:1;
 	u8 post_ct_dnat:1;
+<<<<<<< HEAD
 	u8 act_miss:1; /* Set if act_miss_cookie is used */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 #endif
 
@@ -540,6 +567,7 @@ enum {
 struct ubuf_info {
 	void (*callback)(struct sk_buff *, struct ubuf_info *,
 			 bool zerocopy_success);
+<<<<<<< HEAD
 	refcount_t refcnt;
 	u8 flags;
 };
@@ -547,6 +575,8 @@ struct ubuf_info {
 struct ubuf_info_msgzc {
 	struct ubuf_info ubuf;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	union {
 		struct {
 			unsigned long desc;
@@ -559,6 +589,11 @@ struct ubuf_info_msgzc {
 			u32 bytelen;
 		};
 	};
+<<<<<<< HEAD
+=======
+	refcount_t refcnt;
+	u8 flags;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct mmpin {
 		struct user_struct *user;
@@ -567,8 +602,11 @@ struct ubuf_info_msgzc {
 };
 
 #define skb_uarg(SKB)	((struct ubuf_info *)(skb_shinfo(SKB)->destructor_arg))
+<<<<<<< HEAD
 #define uarg_to_msgzc(ubuf_ptr)	container_of((ubuf_ptr), struct ubuf_info_msgzc, \
 					     ubuf)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int mm_account_pinned_pages(struct mmpin *mmp, size_t size);
 void mm_unaccount_pinned_pages(struct mmpin *mmp);
@@ -824,7 +862,11 @@ typedef unsigned char *sk_buff_data_t;
  *	@mark: Generic packet mark
  *	@reserved_tailroom: (aka @mark) number of bytes of free space available
  *		at the tail of an sk_buff
+<<<<<<< HEAD
  *	@vlan_all: vlan fields (proto & tci)
+=======
+ *	@vlan_present: VLAN tag is present
+>>>>>>> b7ba80a49124 (Commit)
  *	@vlan_proto: vlan encapsulation protocol
  *	@vlan_tci: vlan tag control information
  *	@inner_protocol: Protocol (encapsulation)
@@ -944,6 +986,7 @@ struct sk_buff {
 	__u8			ip_summed:2;
 	__u8			ooo_okay:1;
 
+<<<<<<< HEAD
 	/* private: */
 	__u8			__mono_tc_offset[0];
 	/* public: */
@@ -957,6 +1000,8 @@ struct sk_buff {
 	__u8			csum_level:2;
 	__u8			dst_pending_confirm:1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__u8			l4_hash:1;
 	__u8			sw_hash:1;
 	__u8			wifi_acked_valid:1;
@@ -966,12 +1011,32 @@ struct sk_buff {
 	__u8			encapsulation:1;
 	__u8			encap_hdr_csum:1;
 	__u8			csum_valid:1;
+<<<<<<< HEAD
+=======
+
+	/* private: */
+	__u8			__pkt_vlan_present_offset[0];
+	/* public: */
+	__u8			vlan_present:1;	/* See PKT_VLAN_PRESENT_BIT */
+	__u8			csum_complete_sw:1;
+	__u8			csum_level:2;
+	__u8			dst_pending_confirm:1;
+	__u8			mono_delivery_time:1;	/* See SKB_MONO_DELIVERY_TIME_MASK */
+#ifdef CONFIG_NET_CLS_ACT
+	__u8			tc_skip_classify:1;
+	__u8			tc_at_ingress:1;	/* See TC_AT_INGRESS_MASK */
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_IPV6_NDISC_NODETYPE
 	__u8			ndisc_nodetype:2;
 #endif
 
 	__u8			ipvs_property:1;
 	__u8			inner_protocol_type:1;
+<<<<<<< HEAD
+=======
+	__u8			remcsum_offload:1;
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_NET_SWITCHDEV
 	__u8			offload_fwd_mark:1;
 	__u8			offload_l3_fwd_mark:1;
@@ -1003,6 +1068,7 @@ struct sk_buff {
 	__u32			priority;
 	int			skb_iif;
 	__u32			hash;
+<<<<<<< HEAD
 	union {
 		u32		vlan_all;
 		struct {
@@ -1010,6 +1076,10 @@ struct sk_buff {
 			__u16	vlan_tci;
 		};
 	};
+=======
+	__be16			vlan_proto;
+	__u16			vlan_tci;
+>>>>>>> b7ba80a49124 (Commit)
 #if defined(CONFIG_NET_RX_BUSY_POLL) || defined(CONFIG_XPS)
 	union {
 		unsigned int	napi_id;
@@ -1068,6 +1138,7 @@ struct sk_buff {
 #endif
 #define PKT_TYPE_OFFSET		offsetof(struct sk_buff, __pkt_type_offset)
 
+<<<<<<< HEAD
 /* if you move tc_at_ingress or mono_delivery_time
  * around, you also must adapt these constants.
  */
@@ -1079,6 +1150,21 @@ struct sk_buff {
 #define TC_AT_INGRESS_MASK		(1 << 1)
 #endif
 #define SKB_BF_MONO_TC_OFFSET		offsetof(struct sk_buff, __mono_tc_offset)
+=======
+/* if you move pkt_vlan_present, tc_at_ingress, or mono_delivery_time
+ * around, you also must adapt these constants.
+ */
+#ifdef __BIG_ENDIAN_BITFIELD
+#define PKT_VLAN_PRESENT_BIT	7
+#define TC_AT_INGRESS_MASK		(1 << 0)
+#define SKB_MONO_DELIVERY_TIME_MASK	(1 << 2)
+#else
+#define PKT_VLAN_PRESENT_BIT	0
+#define TC_AT_INGRESS_MASK		(1 << 7)
+#define SKB_MONO_DELIVERY_TIME_MASK	(1 << 5)
+#endif
+#define PKT_VLAN_PRESENT_OFFSET	offsetof(struct sk_buff, __pkt_vlan_present_offset)
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef __KERNEL__
 /*
@@ -1245,7 +1331,11 @@ static inline void consume_skb(struct sk_buff *skb)
 
 void __consume_stateless_skb(struct sk_buff *skb);
 void  __kfree_skb(struct sk_buff *skb);
+<<<<<<< HEAD
 extern struct kmem_cache *skbuff_cache;
+=======
+extern struct kmem_cache *skbuff_head_cache;
+>>>>>>> b7ba80a49124 (Commit)
 
 void kfree_skb_partial(struct sk_buff *skb, bool head_stolen);
 bool skb_try_coalesce(struct sk_buff *to, struct sk_buff *from,
@@ -1260,7 +1350,10 @@ struct sk_buff *build_skb_around(struct sk_buff *skb,
 void skb_attempt_defer_free(struct sk_buff *skb);
 
 struct sk_buff *napi_build_skb(void *data, unsigned int frag_size);
+<<<<<<< HEAD
 struct sk_buff *slab_build_skb(void *data);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * alloc_skb - allocate a network buffer
@@ -1748,6 +1841,7 @@ static inline void skb_mark_not_on_list(struct sk_buff *skb)
 	skb->next = NULL;
 }
 
+<<<<<<< HEAD
 static inline void skb_poison_list(struct sk_buff *skb)
 {
 #ifdef CONFIG_DEBUG_NET
@@ -1755,6 +1849,8 @@ static inline void skb_poison_list(struct sk_buff *skb)
 #endif
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Iterate through singly-linked GSO fragments of an skb. */
 #define skb_list_walk_safe(first, skb, next_skb)                               \
 	for ((skb) = (first), (next_skb) = (skb) ? (skb)->next : NULL; (skb);  \
@@ -2633,6 +2729,7 @@ void *skb_pull_data(struct sk_buff *skb, size_t len);
 
 void *__pskb_pull_tail(struct sk_buff *skb, int delta);
 
+<<<<<<< HEAD
 static inline enum skb_drop_reason
 pskb_may_pull_reason(struct sk_buff *skb, unsigned int len)
 {
@@ -2651,15 +2748,37 @@ pskb_may_pull_reason(struct sk_buff *skb, unsigned int len)
 static inline bool pskb_may_pull(struct sk_buff *skb, unsigned int len)
 {
 	return pskb_may_pull_reason(skb, len) == SKB_NOT_DROPPED_YET;
+=======
+static inline void *__pskb_pull(struct sk_buff *skb, unsigned int len)
+{
+	if (len > skb_headlen(skb) &&
+	    !__pskb_pull_tail(skb, len - skb_headlen(skb)))
+		return NULL;
+	skb->len -= len;
+	return skb->data += len;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void *pskb_pull(struct sk_buff *skb, unsigned int len)
 {
+<<<<<<< HEAD
 	if (!pskb_may_pull(skb, len))
 		return NULL;
 
 	skb->len -= len;
 	return skb->data += len;
+=======
+	return unlikely(len > skb->len) ? NULL : __pskb_pull(skb, len);
+}
+
+static inline bool pskb_may_pull(struct sk_buff *skb, unsigned int len)
+{
+	if (likely(len <= skb_headlen(skb)))
+		return true;
+	if (unlikely(len > skb->len))
+		return false;
+	return __pskb_pull_tail(skb, len - skb_headlen(skb)) != NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void skb_condense(struct sk_buff *skb);
@@ -5069,11 +5188,26 @@ static inline u64 skb_get_kcov_handle(struct sk_buff *skb)
 #endif
 }
 
+<<<<<<< HEAD
 static inline void skb_mark_for_recycle(struct sk_buff *skb)
 {
 #ifdef CONFIG_PAGE_POOL
 	skb->pp_recycle = 1;
 #endif
+=======
+#ifdef CONFIG_PAGE_POOL
+static inline void skb_mark_for_recycle(struct sk_buff *skb)
+{
+	skb->pp_recycle = 1;
+}
+#endif
+
+static inline bool skb_pp_recycle(struct sk_buff *skb, void *data)
+{
+	if (!IS_ENABLED(CONFIG_PAGE_POOL) || !skb->pp_recycle)
+		return false;
+	return page_pool_return_skb_page(virt_to_page(data));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #endif	/* __KERNEL__ */

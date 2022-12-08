@@ -8,6 +8,7 @@ http://github.com/freedreno/envytools/
 git clone https://github.com/freedreno/envytools.git
 
 The rules-ng-ng source files this header was generated from are:
+<<<<<<< HEAD
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/msm.xml                   (    944 bytes, from 2022-07-23 20:21:46)
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/freedreno_copyright.xml   (   1572 bytes, from 2022-07-23 20:21:46)
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/mdp/mdp4.xml              (  20912 bytes, from 2022-03-08 17:40:42)
@@ -28,6 +29,28 @@ The rules-ng-ng source files this header was generated from are:
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/edp/edp.xml               (  10416 bytes, from 2022-03-08 17:40:42)
 
 Copyright (C) 2013-2022 by the following authors:
+=======
+- /home/robclark/tmp/mesa/src/freedreno/registers/msm.xml                   (    944 bytes, from 2022-03-03 01:18:13)
+- /home/robclark/tmp/mesa/src/freedreno/registers/freedreno_copyright.xml   (   1572 bytes, from 2020-12-31 19:26:32)
+- /home/robclark/tmp/mesa/src/freedreno/registers/mdp/mdp4.xml              (  20912 bytes, from 2021-01-30 18:25:22)
+- /home/robclark/tmp/mesa/src/freedreno/registers/mdp/mdp_common.xml        (   2849 bytes, from 2021-01-30 18:25:22)
+- /home/robclark/tmp/mesa/src/freedreno/registers/mdp/mdp5.xml              (  37461 bytes, from 2021-01-30 18:25:22)
+- /home/robclark/tmp/mesa/src/freedreno/registers/dsi/dsi.xml               (  17560 bytes, from 2021-09-16 22:37:02)
+- /home/robclark/tmp/mesa/src/freedreno/registers/dsi/dsi_phy_v2.xml        (   3236 bytes, from 2021-07-22 15:21:56)
+- /home/robclark/tmp/mesa/src/freedreno/registers/dsi/dsi_phy_28nm_8960.xml (   4935 bytes, from 2021-07-22 15:21:56)
+- /home/robclark/tmp/mesa/src/freedreno/registers/dsi/dsi_phy_28nm.xml      (   7004 bytes, from 2021-07-22 15:21:56)
+- /home/robclark/tmp/mesa/src/freedreno/registers/dsi/dsi_phy_20nm.xml      (   3712 bytes, from 2021-07-22 15:21:56)
+- /home/robclark/tmp/mesa/src/freedreno/registers/dsi/dsi_phy_14nm.xml      (   5381 bytes, from 2021-07-22 15:21:56)
+- /home/robclark/tmp/mesa/src/freedreno/registers/dsi/dsi_phy_10nm.xml      (   4499 bytes, from 2021-07-22 15:21:56)
+- /home/robclark/tmp/mesa/src/freedreno/registers/dsi/dsi_phy_7nm.xml       (  11007 bytes, from 2022-03-03 01:18:13)
+- /home/robclark/tmp/mesa/src/freedreno/registers/dsi/sfpb.xml              (    602 bytes, from 2021-01-30 18:25:22)
+- /home/robclark/tmp/mesa/src/freedreno/registers/dsi/mmss_cc.xml           (   1686 bytes, from 2021-01-30 18:25:22)
+- /home/robclark/tmp/mesa/src/freedreno/registers/hdmi/qfprom.xml           (    600 bytes, from 2021-01-30 18:25:22)
+- /home/robclark/tmp/mesa/src/freedreno/registers/hdmi/hdmi.xml             (  41874 bytes, from 2021-01-30 18:25:22)
+- /home/robclark/tmp/mesa/src/freedreno/registers/edp/edp.xml               (  10416 bytes, from 2021-01-30 18:25:22)
+
+Copyright (C) 2013-2021 by the following authors:
+>>>>>>> b7ba80a49124 (Commit)
 - Rob Clark <robdclark@gmail.com> (robclark)
 - Ilia Mirkin <imirkin@alum.mit.edu> (imirkin)
 
@@ -776,14 +799,18 @@ static inline uint32_t HDMI_8x60_PHY_REG1_OUTVOL_SWING_CTRL(uint32_t val)
 
 #define REG_HDMI_8x74_ANA_CFG1					0x00000004
 
+<<<<<<< HEAD
 #define REG_HDMI_8x74_ANA_CFG2					0x00000008
 
 #define REG_HDMI_8x74_ANA_CFG3					0x0000000c
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define REG_HDMI_8x74_PD_CTRL0					0x00000010
 
 #define REG_HDMI_8x74_PD_CTRL1					0x00000014
 
+<<<<<<< HEAD
 #define REG_HDMI_8x74_GLB_CFG					0x00000018
 
 #define REG_HDMI_8x74_DCC_CFG0					0x0000001c
@@ -798,6 +825,8 @@ static inline uint32_t HDMI_8x60_PHY_REG1_OUTVOL_SWING_CTRL(uint32_t val)
 
 #define REG_HDMI_8x74_TXCAL_CFG3				0x00000030
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define REG_HDMI_8x74_BIST_CFG0					0x00000034
 
 #define REG_HDMI_8x74_BIST_PATN0				0x0000003c
@@ -808,8 +837,11 @@ static inline uint32_t HDMI_8x60_PHY_REG1_OUTVOL_SWING_CTRL(uint32_t val)
 
 #define REG_HDMI_8x74_BIST_PATN3				0x00000048
 
+<<<<<<< HEAD
 #define REG_HDMI_8x74_STATUS					0x0000005c
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define REG_HDMI_28nm_PHY_PLL_REFCLK_CFG			0x00000000
 
 #define REG_HDMI_28nm_PHY_PLL_POSTDIV1_CFG			0x00000004
@@ -897,8 +929,11 @@ static inline uint32_t HDMI_8x60_PHY_REG1_OUTVOL_SWING_CTRL(uint32_t val)
 
 #define REG_HDMI_28nm_PHY_PLL_DEBUG_BUS_SEL			0x000000a0
 
+<<<<<<< HEAD
 #define REG_HDMI_28nm_PHY_PLL_STATUS				0x000000c0
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define REG_HDMI_8996_PHY_CFG					0x00000000
 
 #define REG_HDMI_8996_PHY_PD_CTL				0x00000004

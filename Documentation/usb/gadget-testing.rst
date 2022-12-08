@@ -813,7 +813,11 @@ the user must provide the following:
 	================== ====================================================
 
 Each frame description contains frame interval specification, and each
+<<<<<<< HEAD
 such specification consists of a number of lines with an interval value
+=======
+such specification consists of a number of lines with an inverval value
+>>>>>>> b7ba80a49124 (Commit)
 in each line. The rules stated above are best illustrated with an example::
 
   # mkdir functions/uvc.usb0/control/header/h

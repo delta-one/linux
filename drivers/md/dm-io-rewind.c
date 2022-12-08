@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+/* SPDX-License-Identifier: GPL-2.0 */
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright 2022 Red Hat, Inc.
  */
@@ -57,7 +61,11 @@ static void dm_bio_integrity_rewind(struct bio *bio, unsigned int bytes_done)
 {
 	struct bio_integrity_payload *bip = bio_integrity(bio);
 	struct blk_integrity *bi = blk_get_integrity(bio->bi_bdev->bd_disk);
+<<<<<<< HEAD
 	unsigned int bytes = bio_integrity_bytes(bi, bytes_done >> 9);
+=======
+	unsigned bytes = bio_integrity_bytes(bi, bytes_done >> 9);
+>>>>>>> b7ba80a49124 (Commit)
 
 	bip->bip_iter.bi_sector -= bio_integrity_intervals(bi, bytes_done >> 9);
 	dm_bvec_iter_rewind(bip->bip_vec, &bip->bip_iter, bytes);
@@ -68,6 +76,10 @@ static void dm_bio_integrity_rewind(struct bio *bio, unsigned int bytes_done)
 static inline void dm_bio_integrity_rewind(struct bio *bio,
 					   unsigned int bytes_done)
 {
+<<<<<<< HEAD
+=======
+	return;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #endif
@@ -103,6 +115,10 @@ static void dm_bio_crypt_rewind(struct bio *bio, unsigned int bytes)
 
 static inline void dm_bio_crypt_rewind(struct bio *bio, unsigned int bytes)
 {
+<<<<<<< HEAD
+=======
+	return;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #endif
@@ -129,7 +145,11 @@ static inline void dm_bio_rewind_iter(const struct bio *bio,
  * rewinding from end of bio and restoring its original position.
  * Caller is also responsibile for restoring bio's size.
  */
+<<<<<<< HEAD
 static void dm_bio_rewind(struct bio *bio, unsigned int bytes)
+=======
+static void dm_bio_rewind(struct bio *bio, unsigned bytes)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (bio_integrity(bio))
 		dm_bio_integrity_rewind(bio, bytes);

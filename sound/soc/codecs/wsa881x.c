@@ -5,7 +5,14 @@
 #include <linux/bitops.h>
 #include <linux/gpio.h>
 #include <linux/gpio/consumer.h>
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+#include <linux/interrupt.h>
+#include <linux/module.h>
+#include <linux/of.h>
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regmap.h>
 #include <linux/slab.h>
 #include <linux/pm_runtime.h>
@@ -421,7 +428,11 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
 	}
 };
 
+<<<<<<< HEAD
 static const struct sdw_port_config wsa881x_pconfig[WSA881X_MAX_SWR_PORTS] = {
+=======
+static struct sdw_port_config wsa881x_pconfig[WSA881X_MAX_SWR_PORTS] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.num = 1,
 		.ch_mask = 0x1,
@@ -676,11 +687,14 @@ struct wsa881x_priv {
 	struct sdw_stream_runtime *sruntime;
 	struct sdw_port_config port_config[WSA881X_MAX_SWR_PORTS];
 	struct gpio_desc *sd_n;
+<<<<<<< HEAD
 	/*
 	 * Logical state for SD_N GPIO: high for shutdown, low for enable.
 	 * For backwards compatibility.
 	 */
 	unsigned int sd_n_val;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int version;
 	int active_ports;
 	bool port_prepared[WSA881X_MAX_SWR_PORTS];
@@ -1103,7 +1117,11 @@ static int wsa881x_bus_config(struct sdw_slave *slave,
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct sdw_slave_ops wsa881x_slave_ops = {
+=======
+static struct sdw_slave_ops wsa881x_slave_ops = {
+>>>>>>> b7ba80a49124 (Commit)
 	.update_status = wsa881x_update_status,
 	.bus_config = wsa881x_bus_config,
 	.port_prep = wsa881x_port_prep,
@@ -1115,6 +1133,7 @@ static int wsa881x_probe(struct sdw_slave *pdev,
 	struct wsa881x_priv *wsa881x;
 	struct device *dev = &pdev->dev;
 
+<<<<<<< HEAD
 	wsa881x = devm_kzalloc(dev, sizeof(*wsa881x), GFP_KERNEL);
 	if (!wsa881x)
 		return -ENOMEM;
@@ -1148,6 +1167,22 @@ static int wsa881x_probe(struct sdw_slave *pdev,
 	dev_set_drvdata(dev, wsa881x);
 	wsa881x->slave = pdev;
 	wsa881x->dev = dev;
+=======
+	wsa881x = devm_kzalloc(&pdev->dev, sizeof(*wsa881x), GFP_KERNEL);
+	if (!wsa881x)
+		return -ENOMEM;
+
+	wsa881x->sd_n = devm_gpiod_get_optional(&pdev->dev, "powerdown",
+						GPIOD_FLAGS_BIT_NONEXCLUSIVE);
+	if (IS_ERR(wsa881x->sd_n)) {
+		dev_err(&pdev->dev, "Shutdown Control GPIO not found\n");
+		return PTR_ERR(wsa881x->sd_n);
+	}
+
+	dev_set_drvdata(&pdev->dev, wsa881x);
+	wsa881x->slave = pdev;
+	wsa881x->dev = &pdev->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	wsa881x->sconfig.ch_count = 1;
 	wsa881x->sconfig.bps = 1;
 	wsa881x->sconfig.frame_rate = 48000;
@@ -1156,11 +1191,21 @@ static int wsa881x_probe(struct sdw_slave *pdev,
 	pdev->prop.sink_ports = GENMASK(WSA881X_MAX_SWR_PORTS, 0);
 	pdev->prop.sink_dpn_prop = wsa_sink_dpn_prop;
 	pdev->prop.scp_int1_mask = SDW_SCP_INT1_BUS_CLASH | SDW_SCP_INT1_PARITY;
+<<<<<<< HEAD
 	gpiod_direction_output(wsa881x->sd_n, !wsa881x->sd_n_val);
 
 	wsa881x->regmap = devm_regmap_init_sdw(pdev, &wsa881x_regmap_config);
 	if (IS_ERR(wsa881x->regmap))
 		return dev_err_probe(dev, PTR_ERR(wsa881x->regmap), "regmap_init failed\n");
+=======
+	gpiod_direction_output(wsa881x->sd_n, 1);
+
+	wsa881x->regmap = devm_regmap_init_sdw(pdev, &wsa881x_regmap_config);
+	if (IS_ERR(wsa881x->regmap)) {
+		dev_err(&pdev->dev, "regmap_init failed\n");
+		return PTR_ERR(wsa881x->regmap);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	pm_runtime_set_autosuspend_delay(dev, 3000);
 	pm_runtime_use_autosuspend(dev);
@@ -1168,7 +1213,11 @@ static int wsa881x_probe(struct sdw_slave *pdev,
 	pm_runtime_set_active(dev);
 	pm_runtime_enable(dev);
 
+<<<<<<< HEAD
 	return devm_snd_soc_register_component(dev,
+=======
+	return devm_snd_soc_register_component(&pdev->dev,
+>>>>>>> b7ba80a49124 (Commit)
 					       &wsa881x_component_drv,
 					       wsa881x_dais,
 					       ARRAY_SIZE(wsa881x_dais));
@@ -1179,7 +1228,11 @@ static int __maybe_unused wsa881x_runtime_suspend(struct device *dev)
 	struct regmap *regmap = dev_get_regmap(dev, NULL);
 	struct wsa881x_priv *wsa881x = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	gpiod_direction_output(wsa881x->sd_n, wsa881x->sd_n_val);
+=======
+	gpiod_direction_output(wsa881x->sd_n, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	regcache_cache_only(regmap, true);
 	regcache_mark_dirty(regmap);
@@ -1194,13 +1247,21 @@ static int __maybe_unused wsa881x_runtime_resume(struct device *dev)
 	struct wsa881x_priv *wsa881x = dev_get_drvdata(dev);
 	unsigned long time;
 
+<<<<<<< HEAD
 	gpiod_direction_output(wsa881x->sd_n, !wsa881x->sd_n_val);
+=======
+	gpiod_direction_output(wsa881x->sd_n, 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	time = wait_for_completion_timeout(&slave->initialization_complete,
 					   msecs_to_jiffies(WSA881X_PROBE_TIMEOUT));
 	if (!time) {
 		dev_err(dev, "Initialization not complete, timed out\n");
+<<<<<<< HEAD
 		gpiod_direction_output(wsa881x->sd_n, wsa881x->sd_n_val);
+=======
+		gpiod_direction_output(wsa881x->sd_n, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		return -ETIMEDOUT;
 	}
 

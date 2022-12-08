@@ -558,6 +558,7 @@ static int pcf8563_probe(struct i2c_client *client)
 	pcf8563->rtc->set_start_time = true;
 
 	if (client->irq > 0) {
+<<<<<<< HEAD
 		unsigned long irqflags = IRQF_TRIGGER_LOW;
 
 		if (dev_fwnode(&client->dev))
@@ -566,14 +567,22 @@ static int pcf8563_probe(struct i2c_client *client)
 		err = devm_request_threaded_irq(&client->dev, client->irq,
 				NULL, pcf8563_irq,
 				IRQF_SHARED | IRQF_ONESHOT | irqflags,
+=======
+		err = devm_request_threaded_irq(&client->dev, client->irq,
+				NULL, pcf8563_irq,
+				IRQF_SHARED | IRQF_ONESHOT | IRQF_TRIGGER_LOW,
+>>>>>>> b7ba80a49124 (Commit)
 				pcf8563_driver.driver.name, client);
 		if (err) {
 			dev_err(&client->dev, "unable to request IRQ %d\n",
 								client->irq);
 			return err;
 		}
+<<<<<<< HEAD
 	} else {
 		clear_bit(RTC_FEATURE_ALARM, pcf8563->rtc->features);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	err = devm_rtc_register_device(pcf8563->rtc);

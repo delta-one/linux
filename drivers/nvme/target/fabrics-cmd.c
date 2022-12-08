@@ -198,12 +198,15 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static u32 nvmet_connect_result(struct nvmet_ctrl *ctrl)
 {
 	return (u32)ctrl->cntlid |
 		(nvmet_has_auth(ctrl) ? NVME_CONNECT_AUTHREQ_ATR : 0);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void nvmet_execute_admin_connect(struct nvmet_req *req)
 {
 	struct nvmf_connect_command *c = &req->cmd->connect;
@@ -275,7 +278,14 @@ static void nvmet_execute_admin_connect(struct nvmet_req *req)
 		ctrl->cntlid, ctrl->subsys->subsysnqn, ctrl->hostnqn,
 		ctrl->pi_support ? " T10-PI is enabled" : "",
 		nvmet_has_auth(ctrl) ? " with DH-HMAC-CHAP" : "");
+<<<<<<< HEAD
 	req->cqe->result.u32 = cpu_to_le32(nvmet_connect_result(ctrl));
+=======
+	req->cqe->result.u16 = cpu_to_le16(ctrl->cntlid);
+
+	if (nvmet_has_auth(ctrl))
+		nvmet_init_auth(ctrl, req);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	kfree(d);
 complete:
@@ -331,8 +341,18 @@ static void nvmet_execute_io_connect(struct nvmet_req *req)
 	if (status)
 		goto out_ctrl_put;
 
+<<<<<<< HEAD
 	pr_debug("adding queue %d to ctrl %d.\n", qid, ctrl->cntlid);
 	req->cqe->result.u32 = cpu_to_le32(nvmet_connect_result(ctrl));
+=======
+	/* pass back cntlid for successful completion */
+	req->cqe->result.u16 = cpu_to_le16(ctrl->cntlid);
+
+	pr_debug("adding queue %d to ctrl %d.\n", qid, ctrl->cntlid);
+	if (nvmet_has_auth(ctrl))
+		nvmet_init_auth(ctrl, req);
+
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	kfree(d);
 complete:

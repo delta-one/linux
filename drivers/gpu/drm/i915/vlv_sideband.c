@@ -8,9 +8,12 @@
 #include "i915_reg.h"
 #include "vlv_sideband.h"
 
+<<<<<<< HEAD
 #include "display/intel_dpio_phy.h"
 #include "display/intel_display_types.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * IOSF sideband, see VLV2_SidebandMsg_HAS.docx and
  * VLV_VLV2_PUNIT_HAS_0.8.docx

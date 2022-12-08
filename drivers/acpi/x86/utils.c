@@ -200,6 +200,7 @@ bool acpi_device_override_status(struct acpi_device *adev, unsigned long long *s
  * a hardcoded allowlist for D3 support, which was used for these platforms.
  *
  * This allows quirking on Linux in a similar fashion.
+<<<<<<< HEAD
  *
  * Cezanne systems shouldn't *normally* need this as the BIOS includes
  * StorageD3Enable.  But for two reasons we have added it.
@@ -211,11 +212,16 @@ bool acpi_device_override_status(struct acpi_device *adev, unsigned long long *s
  *    https://bugzilla.kernel.org/show_bug.cgi?id=217003
  * 2) On at least one HP system StorageD3Enable is missing on the second NVME
       disk in the system.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 static const struct x86_cpu_id storage_d3_cpu_ids[] = {
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 23, 96, NULL),	/* Renoir */
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 23, 104, NULL),	/* Lucienne */
+<<<<<<< HEAD
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 25, 80, NULL),	/* Cezanne */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 
@@ -251,7 +257,10 @@ bool force_storage_d3(void)
 #define ACPI_QUIRK_UART1_TTY_UART2_SKIP				BIT(1)
 #define ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY			BIT(2)
 #define ACPI_QUIRK_USE_ACPI_AC_AND_BATTERY			BIT(3)
+<<<<<<< HEAD
 #define ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS			BIT(4)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
 	/*
@@ -281,6 +290,7 @@ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
 	 */
 #if IS_ENABLED(CONFIG_X86_ANDROID_TABLETS)
 	{
+<<<<<<< HEAD
 		/* Acer Iconia One 7 B1-750 */
 		.matches = {
 			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
@@ -291,12 +301,15 @@ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
 					ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS),
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.matches = {
 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
 			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "ME176C"),
 		},
 		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
 					ACPI_QUIRK_UART1_TTY_UART2_SKIP |
+<<<<<<< HEAD
 					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY |
 					ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS),
 	},
@@ -310,6 +323,9 @@ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
 		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
 					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY |
 					ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS),
+=======
+					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.matches = {
@@ -317,11 +333,18 @@ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
 			DMI_MATCH(DMI_PRODUCT_NAME, "TF103C"),
 		},
 		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
+<<<<<<< HEAD
 					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY |
 					ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS),
 	},
 	{
 		/* Lenovo Yoga Tablet 2 1050F/L */
+=======
+					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
+	},
+	{
+		/* Lenovo Yoga Tablet 1050F/L */
+>>>>>>> b7ba80a49124 (Commit)
 		.matches = {
 			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corp."),
 			DMI_MATCH(DMI_PRODUCT_NAME, "VALLEYVIEW C0 PLATFORM"),
@@ -333,6 +356,7 @@ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
 					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
 	},
 	{
+<<<<<<< HEAD
 		/* Lenovo Yoga Tab 3 Pro X90F */
 		.matches = {
 			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
@@ -354,14 +378,20 @@ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
 					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Nextbook Ares 8 */
 		.matches = {
 			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
 			DMI_MATCH(DMI_PRODUCT_NAME, "M890BAP"),
 		},
 		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
+<<<<<<< HEAD
 					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY |
 					ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS),
+=======
+					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		/* Whitelabel (sold as various brands) TM800A550L */
@@ -383,7 +413,10 @@ static const struct acpi_device_id i2c_acpi_known_good_ids[] = {
 	{ "10EC5640", 0 }, /* RealTek ALC5640 audio codec */
 	{ "INT33F4", 0 },  /* X-Powers AXP288 PMIC */
 	{ "INT33FD", 0 },  /* Intel Crystal Cove PMIC */
+<<<<<<< HEAD
 	{ "INT34D3", 0 },  /* Intel Whiskey Cove PMIC */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ "NPCE69A", 0 },  /* Asus Transformer keyboard dock */
 	{}
 };
@@ -438,6 +471,7 @@ int acpi_quirk_skip_serdev_enumeration(struct device *controller_parent, bool *s
 	return 0;
 }
 EXPORT_SYMBOL_GPL(acpi_quirk_skip_serdev_enumeration);
+<<<<<<< HEAD
 
 bool acpi_quirk_skip_gpio_event_handlers(void)
 {
@@ -452,6 +486,8 @@ bool acpi_quirk_skip_gpio_event_handlers(void)
 	return (quirks & ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS);
 }
 EXPORT_SYMBOL_GPL(acpi_quirk_skip_gpio_event_handlers);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 /* Lists of PMIC ACPI HIDs with an (often better) native charger driver */

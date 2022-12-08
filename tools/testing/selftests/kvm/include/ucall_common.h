@@ -22,6 +22,7 @@ enum {
 struct ucall {
 	uint64_t cmd;
 	uint64_t args[UCALL_MAX_ARGS];
+<<<<<<< HEAD
 
 	/* Host virtual address of this struct. */
 	struct ucall *hva;
@@ -42,6 +43,14 @@ void ucall_init(struct kvm_vm *vm, vm_paddr_t mmio_gpa);
  * as UCALL_NONE on the backend.
  */
 #define GUEST_UCALL_NONE()	ucall_arch_do_ucall((vm_vaddr_t)NULL)
+=======
+};
+
+void ucall_init(struct kvm_vm *vm, void *arg);
+void ucall_uninit(struct kvm_vm *vm);
+void ucall(uint64_t cmd, int nargs, ...);
+uint64_t get_ucall(struct kvm_vcpu *vcpu, struct ucall *uc);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define GUEST_SYNC_ARGS(stage, arg1, arg2, arg3, arg4)	\
 				ucall(UCALL_SYNC, 6, "hello", stage, arg1, arg2, arg3, arg4)

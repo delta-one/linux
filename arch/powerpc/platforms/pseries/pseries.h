@@ -123,9 +123,12 @@ static inline void pseries_lpar_read_hblkrm_characteristics(void) { }
 #endif
 
 void pseries_rng_init(void);
+<<<<<<< HEAD
 #ifdef CONFIG_SPAPR_TCE_IOMMU
 struct iommu_group *pSeries_pci_device_group(struct pci_controller *hose,
 					     struct pci_dev *pdev);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _PSERIES_PSERIES_H */

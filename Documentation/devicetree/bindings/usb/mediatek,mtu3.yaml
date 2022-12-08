@@ -11,7 +11,11 @@ maintainers:
   - Chunfeng Yun <chunfeng.yun@mediatek.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: usb-drd.yaml
+=======
+  - $ref: "usb-drd.yaml"
+>>>>>>> b7ba80a49124 (Commit)
 
 description: |
   The DRD controller has a glue layer IPPC (IP Port Control), and its host is
@@ -24,11 +28,17 @@ properties:
           - mediatek,mt2712-mtu3
           - mediatek,mt8173-mtu3
           - mediatek,mt8183-mtu3
+<<<<<<< HEAD
           - mediatek,mt8186-mtu3
           - mediatek,mt8188-mtu3
           - mediatek,mt8192-mtu3
           - mediatek,mt8195-mtu3
           - mediatek,mt8365-mtu3
+=======
+          - mediatek,mt8188-mtu3
+          - mediatek,mt8192-mtu3
+          - mediatek,mt8195-mtu3
+>>>>>>> b7ba80a49124 (Commit)
       - const: mediatek,mtu3
 
   reg:
@@ -204,9 +214,15 @@ patternProperties:
       example if the host mode is enabled.
 
 dependencies:
+<<<<<<< HEAD
   connector: [ usb-role-switch ]
   port: [ usb-role-switch ]
   role-switch-default-mode: [ usb-role-switch ]
+=======
+  connector: [ 'usb-role-switch' ]
+  port: [ 'usb-role-switch' ]
+  role-switch-default-mode: [ 'usb-role-switch' ]
+>>>>>>> b7ba80a49124 (Commit)
   wakeup-source: [ 'mediatek,syscon-wakeup' ]
 
 required:

@@ -608,7 +608,11 @@ out_unlock:
 	return error;
 }
 
+<<<<<<< HEAD
 static int mqueue_create(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int mqueue_create(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 			 struct dentry *dentry, umode_t mode, bool excl)
 {
 	return mqueue_create_attr(dentry, mode, NULL);
@@ -887,7 +891,11 @@ static int prepare_open(struct dentry *dentry, int oflag, int ro,
 	if ((oflag & O_ACCMODE) == (O_RDWR | O_WRONLY))
 		return -EINVAL;
 	acc = oflag2acc[oflag & O_ACCMODE];
+<<<<<<< HEAD
 	return inode_permission(&nop_mnt_idmap, d_inode(dentry), acc);
+=======
+	return inode_permission(&init_user_ns, d_inode(dentry), acc);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int do_mq_open(const char __user *u_name, int oflag, umode_t mode,
@@ -979,7 +987,11 @@ SYSCALL_DEFINE1(mq_unlink, const char __user *, u_name)
 		err = -ENOENT;
 	} else {
 		ihold(inode);
+<<<<<<< HEAD
 		err = vfs_unlink(&nop_mnt_idmap, d_inode(dentry->d_parent),
+=======
+		err = vfs_unlink(&init_user_ns, d_inode(dentry->d_parent),
+>>>>>>> b7ba80a49124 (Commit)
 				 dentry, NULL);
 	}
 	dput(dentry);
@@ -1709,6 +1721,14 @@ void mq_clear_sbinfo(struct ipc_namespace *ns)
 	ns->mq_mnt->mnt_sb->s_fs_info = NULL;
 }
 
+<<<<<<< HEAD
+=======
+void mq_put_mnt(struct ipc_namespace *ns)
+{
+	kern_unmount(ns->mq_mnt);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __init init_mqueue_fs(void)
 {
 	int error;
@@ -1721,8 +1741,12 @@ static int __init init_mqueue_fs(void)
 
 	if (!setup_mq_sysctls(&init_ipc_ns)) {
 		pr_warn("sysctl registration failed\n");
+<<<<<<< HEAD
 		error = -ENOMEM;
 		goto out_kmem;
+=======
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	error = register_filesystem(&mqueue_fs_type);
@@ -1740,9 +1764,14 @@ static int __init init_mqueue_fs(void)
 out_filesystem:
 	unregister_filesystem(&mqueue_fs_type);
 out_sysctl:
+<<<<<<< HEAD
 	retire_mq_sysctls(&init_ipc_ns);
 out_kmem:
 	kmem_cache_destroy(mqueue_inode_cachep);
+=======
+	kmem_cache_destroy(mqueue_inode_cachep);
+	retire_mq_sysctls(&init_ipc_ns);
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }
 

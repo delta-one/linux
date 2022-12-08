@@ -79,16 +79,26 @@ static int pkcs7_digest(struct pkcs7_message *pkcs7,
 		}
 
 		if (sinfo->msgdigest_len != sig->digest_size) {
+<<<<<<< HEAD
 			pr_warn("Sig %u: Invalid digest size (%u)\n",
 				sinfo->index, sinfo->msgdigest_len);
+=======
+			pr_debug("Sig %u: Invalid digest size (%u)\n",
+				 sinfo->index, sinfo->msgdigest_len);
+>>>>>>> b7ba80a49124 (Commit)
 			ret = -EBADMSG;
 			goto error;
 		}
 
 		if (memcmp(sig->digest, sinfo->msgdigest,
 			   sinfo->msgdigest_len) != 0) {
+<<<<<<< HEAD
 			pr_warn("Sig %u: Message digest doesn't match\n",
 				sinfo->index);
+=======
+			pr_debug("Sig %u: Message digest doesn't match\n",
+				 sinfo->index);
+>>>>>>> b7ba80a49124 (Commit)
 			ret = -EKEYREJECTED;
 			goto error;
 		}
@@ -478,11 +488,18 @@ int pkcs7_supply_detached_data(struct pkcs7_message *pkcs7,
 			       const void *data, size_t datalen)
 {
 	if (pkcs7->data) {
+<<<<<<< HEAD
 		pr_warn("Data already supplied\n");
+=======
+		pr_debug("Data already supplied\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 	pkcs7->data = data;
 	pkcs7->data_len = datalen;
 	return 0;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(pkcs7_supply_detached_data);
+=======
+>>>>>>> b7ba80a49124 (Commit)

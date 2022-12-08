@@ -491,7 +491,11 @@ static void ks8995_remove(struct spi_device *spi)
 static struct spi_driver ks8995_driver = {
 	.driver = {
 		.name	    = "spi-ks8995",
+<<<<<<< HEAD
 		.of_match_table = ks8895_spi_of_match,
+=======
+		.of_match_table = of_match_ptr(ks8895_spi_of_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe	  = ks8995_probe,
 	.remove	  = ks8995_remove,

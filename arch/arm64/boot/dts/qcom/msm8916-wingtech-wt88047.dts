@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 /*
  * Copyright (C) 2020 Stephan Gerhold
  */
+=======
+// Copyright (C) 2020 Stephan Gerhold
+>>>>>>> b7ba80a49124 (Commit)
 
 /dts-v1/;
 
@@ -23,6 +27,7 @@
 		stdout-path = "serial0";
 	};
 
+<<<<<<< HEAD
 	flash-led-controller {
 		compatible = "ocs,ocp8110";
 		enable-gpios = <&msmgpio 31 GPIO_ACTIVE_HIGH>;
@@ -37,6 +42,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gpio-keys {
 		compatible = "gpio-keys";
 
@@ -288,6 +295,7 @@
 };
 
 &msmgpio {
+<<<<<<< HEAD
 	camera_flash_default: camera-flash-default-state {
 		pins = "gpio31", "gpio32";
 		function = "gpio";
@@ -297,6 +305,9 @@
 	};
 
 	gpio_keys_default: gpio-keys-default-state {
+=======
+	gpio_keys_default: gpio-keys-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio107";
 		function = "gpio";
 
@@ -304,7 +315,11 @@
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	imu_default: imu-default-state {
+=======
+	imu_default: imu-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio115";
 		function = "gpio";
 
@@ -312,6 +327,7 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	touchscreen_default: touchscreen-default-state {
 		touchscreen-pins {
 			pins = "gpio13";
@@ -321,6 +337,16 @@
 			bias-pull-up;
 		};
 		reset-pins {
+=======
+	touchscreen_default: touchscreen-default {
+		pins = "gpio13";
+		function = "gpio";
+
+		drive-strength = <2>;
+		bias-pull-up;
+
+		reset {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio12";
 			function = "gpio";
 
@@ -329,7 +355,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	usb_id_default: usb-id-default-state {
+=======
+	usb_id_default: usb-id-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio110";
 		function = "gpio";
 

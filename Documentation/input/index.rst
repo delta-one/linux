@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 ===================
 Input Documentation
 ===================
+=======
+=============================
+The Linux Input Documentation
+=============================
+>>>>>>> b7ba80a49124 (Commit)
 
 Contents:
 

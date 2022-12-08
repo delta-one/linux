@@ -233,7 +233,12 @@ static const struct iio_info adjd_s311_info = {
 	.write_raw = adjd_s311_write_raw,
 };
 
+<<<<<<< HEAD
 static int adjd_s311_probe(struct i2c_client *client)
+=======
+static int adjd_s311_probe(struct i2c_client *client,
+			   const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct adjd_s311_data *data;
 	struct iio_dev *indio_dev;
@@ -270,7 +275,11 @@ static struct i2c_driver adjd_s311_driver = {
 	.driver = {
 		.name	= ADJD_S311_DRV_NAME,
 	},
+<<<<<<< HEAD
 	.probe_new	= adjd_s311_probe,
+=======
+	.probe		= adjd_s311_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= adjd_s311_id,
 };
 module_i2c_driver(adjd_s311_driver);

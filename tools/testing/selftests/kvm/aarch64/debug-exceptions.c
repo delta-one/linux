@@ -2,7 +2,10 @@
 #include <test_util.h>
 #include <kvm_util.h>
 #include <processor.h>
+<<<<<<< HEAD
 #include <linux/bitfield.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MDSCR_KDE	(1 << 13)
 #define MDSCR_MDE	(1 << 15)
@@ -12,24 +15,34 @@
 #define DBGBCR_EXEC	(0x0 << 3)
 #define DBGBCR_EL1	(0x1 << 1)
 #define DBGBCR_E	(0x1 << 0)
+<<<<<<< HEAD
 #define DBGBCR_LBN_SHIFT	16
 #define DBGBCR_BT_SHIFT		20
 #define DBGBCR_BT_ADDR_LINK_CTX	(0x1 << DBGBCR_BT_SHIFT)
 #define DBGBCR_BT_CTX_LINK	(0x3 << DBGBCR_BT_SHIFT)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DBGWCR_LEN8	(0xff << 5)
 #define DBGWCR_RD	(0x1 << 3)
 #define DBGWCR_WR	(0x2 << 3)
 #define DBGWCR_EL1	(0x1 << 1)
 #define DBGWCR_E	(0x1 << 0)
+<<<<<<< HEAD
 #define DBGWCR_LBN_SHIFT	16
 #define DBGWCR_WT_SHIFT		20
 #define DBGWCR_WT_LINK		(0x1 << DBGWCR_WT_SHIFT)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SPSR_D		(1 << 9)
 #define SPSR_SS		(1 << 21)
 
+<<<<<<< HEAD
 extern unsigned char sw_bp, sw_bp2, hw_bp, hw_bp2, bp_svc, bp_brk, hw_wp, ss_start, hw_bp_ctx;
+=======
+extern unsigned char sw_bp, sw_bp2, hw_bp, hw_bp2, bp_svc, bp_brk, hw_wp, ss_start;
+>>>>>>> b7ba80a49124 (Commit)
 extern unsigned char iter_ss_begin, iter_ss_end;
 static volatile uint64_t sw_bp_addr, hw_bp_addr;
 static volatile uint64_t wp_addr, wp_data_addr;
@@ -37,6 +50,7 @@ static volatile uint64_t svc_addr;
 static volatile uint64_t ss_addr[4], ss_idx;
 #define  PC(v)  ((uint64_t)&(v))
 
+<<<<<<< HEAD
 #define GEN_DEBUG_WRITE_REG(reg_name)			\
 static void write_##reg_name(int num, uint64_t val)	\
 {							\
@@ -105,6 +119,10 @@ static void reset_debug_state(void)
 	uint8_t brps, wrps, i;
 	uint64_t dfr0;
 
+=======
+static void reset_debug_state(void)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	asm volatile("msr daifset, #8");
 
 	write_sysreg(0, osdlr_el1);
@@ -112,6 +130,7 @@ static void reset_debug_state(void)
 	isb();
 
 	write_sysreg(0, mdscr_el1);
+<<<<<<< HEAD
 	write_sysreg(0, contextidr_el1);
 
 	/* Reset all bcr/bvr/wcr/wvr registers */
@@ -127,6 +146,13 @@ static void reset_debug_state(void)
 		write_dbgwvr(i, 0);
 	}
 
+=======
+	/* This test only uses the first bp and wp slot. */
+	write_sysreg(0, dbgbvr0_el1);
+	write_sysreg(0, dbgbcr0_el1);
+	write_sysreg(0, dbgwcr0_el1);
+	write_sysreg(0, dbgwvr0_el1);
+>>>>>>> b7ba80a49124 (Commit)
 	isb();
 }
 
@@ -138,10 +164,23 @@ static void enable_os_lock(void)
 	GUEST_ASSERT(read_sysreg(oslsr_el1) & 2);
 }
 
+<<<<<<< HEAD
 static void enable_monitor_debug_exceptions(void)
 {
 	uint32_t mdscr;
 
+=======
+static void install_wp(uint64_t addr)
+{
+	uint32_t wcr;
+	uint32_t mdscr;
+
+	wcr = DBGWCR_LEN8 | DBGWCR_RD | DBGWCR_WR | DBGWCR_EL1 | DBGWCR_E;
+	write_sysreg(wcr, dbgwcr0_el1);
+	write_sysreg(addr, dbgwvr0_el1);
+	isb();
+
+>>>>>>> b7ba80a49124 (Commit)
 	asm volatile("msr daifclr, #8");
 
 	mdscr = read_sysreg(mdscr_el1) | MDSCR_KDE | MDSCR_MDE;
@@ -149,6 +188,7 @@ static void enable_monitor_debug_exceptions(void)
 	isb();
 }
 
+<<<<<<< HEAD
 static void install_wp(uint8_t wpn, uint64_t addr)
 {
 	uint32_t wcr;
@@ -219,6 +259,23 @@ void install_hw_bp_ctx(uint8_t addr_bp, uint8_t ctx_bp, uint64_t addr,
 	isb();
 
 	enable_monitor_debug_exceptions();
+=======
+static void install_hw_bp(uint64_t addr)
+{
+	uint32_t bcr;
+	uint32_t mdscr;
+
+	bcr = DBGBCR_LEN8 | DBGBCR_EXEC | DBGBCR_EL1 | DBGBCR_E;
+	write_sysreg(bcr, dbgbcr0_el1);
+	write_sysreg(addr, dbgbvr0_el1);
+	isb();
+
+	asm volatile("msr daifclr, #8");
+
+	mdscr = read_sysreg(mdscr_el1) | MDSCR_KDE | MDSCR_MDE;
+	write_sysreg(mdscr, mdscr_el1);
+	isb();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void install_ss(void)
@@ -234,15 +291,22 @@ static void install_ss(void)
 
 static volatile char write_data;
 
+<<<<<<< HEAD
 static void guest_code(uint8_t bpn, uint8_t wpn, uint8_t ctx_bpn)
 {
 	uint64_t ctx = 0xabcdef;	/* a random context number */
+=======
+static void guest_code(void)
+{
+	GUEST_SYNC(0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Software-breakpoint */
 	reset_debug_state();
 	asm volatile("sw_bp: brk #0");
 	GUEST_ASSERT_EQ(sw_bp_addr, PC(sw_bp));
 
+<<<<<<< HEAD
 	/* Hardware-breakpoint */
 	reset_debug_state();
 	install_hw_bp(bpn, PC(hw_bp));
@@ -252,24 +316,60 @@ static void guest_code(uint8_t bpn, uint8_t wpn, uint8_t ctx_bpn)
 	/* Hardware-breakpoint + svc */
 	reset_debug_state();
 	install_hw_bp(bpn, PC(bp_svc));
+=======
+	GUEST_SYNC(1);
+
+	/* Hardware-breakpoint */
+	reset_debug_state();
+	install_hw_bp(PC(hw_bp));
+	asm volatile("hw_bp: nop");
+	GUEST_ASSERT_EQ(hw_bp_addr, PC(hw_bp));
+
+	GUEST_SYNC(2);
+
+	/* Hardware-breakpoint + svc */
+	reset_debug_state();
+	install_hw_bp(PC(bp_svc));
+>>>>>>> b7ba80a49124 (Commit)
 	asm volatile("bp_svc: svc #0");
 	GUEST_ASSERT_EQ(hw_bp_addr, PC(bp_svc));
 	GUEST_ASSERT_EQ(svc_addr, PC(bp_svc) + 4);
 
+<<<<<<< HEAD
 	/* Hardware-breakpoint + software-breakpoint */
 	reset_debug_state();
 	install_hw_bp(bpn, PC(bp_brk));
+=======
+	GUEST_SYNC(3);
+
+	/* Hardware-breakpoint + software-breakpoint */
+	reset_debug_state();
+	install_hw_bp(PC(bp_brk));
+>>>>>>> b7ba80a49124 (Commit)
 	asm volatile("bp_brk: brk #0");
 	GUEST_ASSERT_EQ(sw_bp_addr, PC(bp_brk));
 	GUEST_ASSERT_EQ(hw_bp_addr, PC(bp_brk));
 
+<<<<<<< HEAD
 	/* Watchpoint */
 	reset_debug_state();
 	install_wp(wpn, PC(write_data));
+=======
+	GUEST_SYNC(4);
+
+	/* Watchpoint */
+	reset_debug_state();
+	install_wp(PC(write_data));
+>>>>>>> b7ba80a49124 (Commit)
 	write_data = 'x';
 	GUEST_ASSERT_EQ(write_data, 'x');
 	GUEST_ASSERT_EQ(wp_data_addr, PC(write_data));
 
+<<<<<<< HEAD
+=======
+	GUEST_SYNC(5);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Single-step */
 	reset_debug_state();
 	install_ss();
@@ -283,6 +383,11 @@ static void guest_code(uint8_t bpn, uint8_t wpn, uint8_t ctx_bpn)
 	GUEST_ASSERT_EQ(ss_addr[1], PC(ss_start) + 4);
 	GUEST_ASSERT_EQ(ss_addr[2], PC(ss_start) + 8);
 
+<<<<<<< HEAD
+=======
+	GUEST_SYNC(6);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* OS Lock does not block software-breakpoint */
 	reset_debug_state();
 	enable_os_lock();
@@ -290,24 +395,47 @@ static void guest_code(uint8_t bpn, uint8_t wpn, uint8_t ctx_bpn)
 	asm volatile("sw_bp2: brk #0");
 	GUEST_ASSERT_EQ(sw_bp_addr, PC(sw_bp2));
 
+<<<<<<< HEAD
 	/* OS Lock blocking hardware-breakpoint */
 	reset_debug_state();
 	enable_os_lock();
 	install_hw_bp(bpn, PC(hw_bp2));
+=======
+	GUEST_SYNC(7);
+
+	/* OS Lock blocking hardware-breakpoint */
+	reset_debug_state();
+	enable_os_lock();
+	install_hw_bp(PC(hw_bp2));
+>>>>>>> b7ba80a49124 (Commit)
 	hw_bp_addr = 0;
 	asm volatile("hw_bp2: nop");
 	GUEST_ASSERT_EQ(hw_bp_addr, 0);
 
+<<<<<<< HEAD
+=======
+	GUEST_SYNC(8);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* OS Lock blocking watchpoint */
 	reset_debug_state();
 	enable_os_lock();
 	write_data = '\0';
 	wp_data_addr = 0;
+<<<<<<< HEAD
 	install_wp(wpn, PC(write_data));
+=======
+	install_wp(PC(write_data));
+>>>>>>> b7ba80a49124 (Commit)
 	write_data = 'x';
 	GUEST_ASSERT_EQ(write_data, 'x');
 	GUEST_ASSERT_EQ(wp_data_addr, 0);
 
+<<<<<<< HEAD
+=======
+	GUEST_SYNC(9);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* OS Lock blocking single-step */
 	reset_debug_state();
 	enable_os_lock();
@@ -320,6 +448,7 @@ static void guest_code(uint8_t bpn, uint8_t wpn, uint8_t ctx_bpn)
 		     : : : "x0");
 	GUEST_ASSERT_EQ(ss_addr[0], 0);
 
+<<<<<<< HEAD
 	/* Linked hardware-breakpoint */
 	hw_bp_addr = 0;
 	reset_debug_state();
@@ -341,6 +470,8 @@ static void guest_code(uint8_t bpn, uint8_t wpn, uint8_t ctx_bpn)
 	GUEST_ASSERT_EQ(write_data, 'x');
 	GUEST_ASSERT_EQ(wp_data_addr, PC(write_data));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	GUEST_DONE();
 }
 
@@ -375,6 +506,14 @@ static void guest_svc_handler(struct ex_regs *regs)
 	svc_addr = regs->pc;
 }
 
+<<<<<<< HEAD
+=======
+enum single_step_op {
+	SINGLE_STEP_ENABLE = 0,
+	SINGLE_STEP_DISABLE = 1,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static void guest_code_ss(int test_cnt)
 {
 	uint64_t i;
@@ -385,6 +524,7 @@ static void guest_code_ss(int test_cnt)
 		w_bvr = i << 2;
 		w_wvr = i << 2;
 
+<<<<<<< HEAD
 		/*
 		 * Enable Single Step execution.  Note!  This _must_ be a bare
 		 * ucall as the ucall() path uses atomic operations to manage
@@ -398,6 +538,13 @@ static void guest_code_ss(int test_cnt)
 
 		/*
 		 * The userspace will verify that the pc is as expected during
+=======
+		/* Enable Single Step execution */
+		GUEST_SYNC(SINGLE_STEP_ENABLE);
+
+		/*
+		 * The userspace will veriry that the pc is as expected during
+>>>>>>> b7ba80a49124 (Commit)
 		 * single step execution between iter_ss_begin and iter_ss_end.
 		 */
 		asm volatile("iter_ss_begin:nop\n");
@@ -407,27 +554,54 @@ static void guest_code_ss(int test_cnt)
 		bvr = read_sysreg(dbgbvr0_el1);
 		wvr = read_sysreg(dbgwvr0_el1);
 
+<<<<<<< HEAD
 		/* Userspace disables Single Step when the end is nigh. */
 		asm volatile("iter_ss_end:\n");
 
+=======
+		asm volatile("iter_ss_end:\n");
+
+		/* Disable Single Step execution */
+		GUEST_SYNC(SINGLE_STEP_DISABLE);
+
+>>>>>>> b7ba80a49124 (Commit)
 		GUEST_ASSERT(bvr == w_bvr);
 		GUEST_ASSERT(wvr == w_wvr);
 	}
 	GUEST_DONE();
 }
 
+<<<<<<< HEAD
 static int debug_version(uint64_t id_aa64dfr0)
 {
 	return FIELD_GET(ARM64_FEATURE_MASK(ID_AA64DFR0_DEBUGVER), id_aa64dfr0);
 }
 
 static void test_guest_debug_exceptions(uint8_t bpn, uint8_t wpn, uint8_t ctx_bpn)
+=======
+static int debug_version(struct kvm_vcpu *vcpu)
+{
+	uint64_t id_aa64dfr0;
+
+	vcpu_get_reg(vcpu, KVM_ARM64_SYS_REG(SYS_ID_AA64DFR0_EL1), &id_aa64dfr0);
+	return id_aa64dfr0 & 0xf;
+}
+
+static void test_guest_debug_exceptions(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct kvm_vcpu *vcpu;
 	struct kvm_vm *vm;
 	struct ucall uc;
+<<<<<<< HEAD
 
 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
+=======
+	int stage;
+
+	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
+	ucall_init(vm, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	vm_init_descriptor_tables(vm);
 	vcpu_init_descriptor_tables(vcpu);
@@ -443,6 +617,7 @@ static void test_guest_debug_exceptions(uint8_t bpn, uint8_t wpn, uint8_t ctx_bp
 	vm_install_sync_handler(vm, VECTOR_SYNC_CURRENT,
 				ESR_EC_SVC64, guest_svc_handler);
 
+<<<<<<< HEAD
 	/* Specify bpn/wpn/ctx_bpn to be tested */
 	vcpu_args_set(vcpu, 3, bpn, wpn, ctx_bpn);
 	pr_debug("Use bpn#%d, wpn#%d and ctx_bpn#%d\n", bpn, wpn, ctx_bpn);
@@ -456,6 +631,25 @@ static void test_guest_debug_exceptions(uint8_t bpn, uint8_t wpn, uint8_t ctx_bp
 		goto done;
 	default:
 		TEST_FAIL("Unknown ucall %lu", uc.cmd);
+=======
+	for (stage = 0; stage < 11; stage++) {
+		vcpu_run(vcpu);
+
+		switch (get_ucall(vcpu, &uc)) {
+		case UCALL_SYNC:
+			TEST_ASSERT(uc.args[1] == stage,
+				"Stage %d: Unexpected sync ucall, got %lx",
+				stage, (ulong)uc.args[1]);
+			break;
+		case UCALL_ABORT:
+			REPORT_GUEST_ASSERT_2(uc, "values: %#lx, %#lx");
+			break;
+		case UCALL_DONE:
+			goto done;
+		default:
+			TEST_FAIL("Unknown ucall %lu", uc.cmd);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 done:
@@ -474,6 +668,10 @@ void test_single_step_from_userspace(int test_cnt)
 	struct kvm_guest_debug debug = {};
 
 	vm = vm_create_with_one_vcpu(&vcpu, guest_code_ss);
+<<<<<<< HEAD
+=======
+	ucall_init(vm, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	run = vcpu->run;
 	vcpu_args_set(vcpu, 1, test_cnt);
 
@@ -488,12 +686,27 @@ void test_single_step_from_userspace(int test_cnt)
 				break;
 			}
 
+<<<<<<< HEAD
 			TEST_ASSERT(cmd == UCALL_NONE,
 				    "Unexpected ucall cmd 0x%lx", cmd);
 
 			debug.control = KVM_GUESTDBG_ENABLE |
 					KVM_GUESTDBG_SINGLESTEP;
 			ss_enable = true;
+=======
+			TEST_ASSERT(cmd == UCALL_SYNC,
+				    "Unexpected ucall cmd 0x%lx", cmd);
+
+			if (uc.args[1] == SINGLE_STEP_ENABLE) {
+				debug.control = KVM_GUESTDBG_ENABLE |
+						KVM_GUESTDBG_SINGLESTEP;
+				ss_enable = true;
+			} else {
+				debug.control = SINGLE_STEP_DISABLE;
+				ss_enable = false;
+			}
+
+>>>>>>> b7ba80a49124 (Commit)
 			vcpu_guest_debug_set(vcpu, &debug);
 			continue;
 		}
@@ -506,6 +719,7 @@ void test_single_step_from_userspace(int test_cnt)
 			    "Unexpected pc 0x%lx (expected 0x%lx)",
 			    pc, test_pc);
 
+<<<<<<< HEAD
 		if ((pc + 4) == (uint64_t)&iter_ss_end) {
 			test_pc = 0;
 			debug.control = KVM_GUESTDBG_ENABLE;
@@ -514,6 +728,8 @@ void test_single_step_from_userspace(int test_cnt)
 			continue;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * If the current pc is between iter_ss_bgin and
 		 * iter_ss_end, the pc for the next KVM_EXIT_DEBUG should
@@ -529,6 +745,7 @@ void test_single_step_from_userspace(int test_cnt)
 	kvm_vm_free(vm);
 }
 
+<<<<<<< HEAD
 /*
  * Run debug testing using the various breakpoint#, watchpoint# and
  * context-aware breakpoint# with the given ID_AA64DFR0_EL1 configuration.
@@ -566,6 +783,8 @@ void test_guest_debug_exceptions_all(uint64_t aa64dfr0)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void help(char *name)
 {
 	puts("");
@@ -580,18 +799,28 @@ int main(int argc, char *argv[])
 	struct kvm_vm *vm;
 	int opt;
 	int ss_iteration = 10000;
+<<<<<<< HEAD
 	uint64_t aa64dfr0;
 
 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
 	vcpu_get_reg(vcpu, KVM_ARM64_SYS_REG(SYS_ID_AA64DFR0_EL1), &aa64dfr0);
 	__TEST_REQUIRE(debug_version(aa64dfr0) >= 6,
+=======
+
+	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
+	__TEST_REQUIRE(debug_version(vcpu) >= 6,
+>>>>>>> b7ba80a49124 (Commit)
 		       "Armv8 debug architecture not supported.");
 	kvm_vm_free(vm);
 
 	while ((opt = getopt(argc, argv, "i:")) != -1) {
 		switch (opt) {
 		case 'i':
+<<<<<<< HEAD
 			ss_iteration = atoi_positive("Number of iterations", optarg);
+=======
+			ss_iteration = atoi(optarg);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 'h':
 		default:
@@ -600,7 +829,11 @@ int main(int argc, char *argv[])
 		}
 	}
 
+<<<<<<< HEAD
 	test_guest_debug_exceptions_all(aa64dfr0);
+=======
+	test_guest_debug_exceptions();
+>>>>>>> b7ba80a49124 (Commit)
 	test_single_step_from_userspace(ss_iteration);
 
 	return 0;

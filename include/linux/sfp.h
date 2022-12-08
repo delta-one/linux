@@ -332,6 +332,7 @@ enum {
 
 /* SFP EEPROM registers */
 enum {
+<<<<<<< HEAD
 	SFP_PHYS_ID			= 0,
 
 	SFP_PHYS_EXT_ID			= 1,
@@ -359,6 +360,41 @@ enum {
 	SFP_CC_BASE			= 63,
 
 	SFP_OPTIONS			= 64,	/* 2 bytes, MSB, LSB */
+=======
+	SFP_PHYS_ID			= 0x00,
+	SFP_PHYS_EXT_ID			= 0x01,
+	SFP_CONNECTOR			= 0x02,
+	SFP_COMPLIANCE			= 0x03,
+	SFP_ENCODING			= 0x0b,
+	SFP_BR_NOMINAL			= 0x0c,
+	SFP_RATE_ID			= 0x0d,
+	SFP_LINK_LEN_SM_KM		= 0x0e,
+	SFP_LINK_LEN_SM_100M		= 0x0f,
+	SFP_LINK_LEN_50UM_OM2_10M	= 0x10,
+	SFP_LINK_LEN_62_5UM_OM1_10M	= 0x11,
+	SFP_LINK_LEN_COPPER_1M		= 0x12,
+	SFP_LINK_LEN_50UM_OM4_10M	= 0x12,
+	SFP_LINK_LEN_50UM_OM3_10M	= 0x13,
+	SFP_VENDOR_NAME			= 0x14,
+	SFP_VENDOR_OUI			= 0x25,
+	SFP_VENDOR_PN			= 0x28,
+	SFP_VENDOR_REV			= 0x38,
+	SFP_OPTICAL_WAVELENGTH_MSB	= 0x3c,
+	SFP_OPTICAL_WAVELENGTH_LSB	= 0x3d,
+	SFP_CABLE_SPEC			= 0x3c,
+	SFP_CC_BASE			= 0x3f,
+	SFP_OPTIONS			= 0x40,	/* 2 bytes, MSB, LSB */
+	SFP_BR_MAX			= 0x42,
+	SFP_BR_MIN			= 0x43,
+	SFP_VENDOR_SN			= 0x44,
+	SFP_DATECODE			= 0x54,
+	SFP_DIAGMON			= 0x5c,
+	SFP_ENHOPTS			= 0x5d,
+	SFP_SFF8472_COMPLIANCE		= 0x5e,
+	SFP_CC_EXT			= 0x5f,
+
+	SFP_PHYS_EXT_ID_SFP		= 0x04,
+>>>>>>> b7ba80a49124 (Commit)
 	SFP_OPTIONS_HIGH_POWER_LEVEL	= BIT(13),
 	SFP_OPTIONS_PAGING_A2		= BIT(12),
 	SFP_OPTIONS_RETIMER		= BIT(11),
@@ -372,6 +408,7 @@ enum {
 	SFP_OPTIONS_TX_FAULT		= BIT(3),
 	SFP_OPTIONS_LOS_INVERTED	= BIT(2),
 	SFP_OPTIONS_LOS_NORMAL		= BIT(1),
+<<<<<<< HEAD
 
 	SFP_BR_MAX			= 66,
 	SFP_BR_MIN			= 67,
@@ -379,13 +416,18 @@ enum {
 	SFP_DATECODE			= 84,
 
 	SFP_DIAGMON			= 92,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SFP_DIAGMON_DDM			= BIT(6),
 	SFP_DIAGMON_INT_CAL		= BIT(5),
 	SFP_DIAGMON_EXT_CAL		= BIT(4),
 	SFP_DIAGMON_RXPWR_AVG		= BIT(3),
 	SFP_DIAGMON_ADDRMODE		= BIT(2),
+<<<<<<< HEAD
 
 	SFP_ENHOPTS			= 93,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SFP_ENHOPTS_ALARMWARN		= BIT(7),
 	SFP_ENHOPTS_SOFT_TX_DISABLE	= BIT(6),
 	SFP_ENHOPTS_SOFT_TX_FAULT	= BIT(5),
@@ -393,8 +435,11 @@ enum {
 	SFP_ENHOPTS_SOFT_RATE_SELECT	= BIT(3),
 	SFP_ENHOPTS_APP_SELECT_SFF8079	= BIT(2),
 	SFP_ENHOPTS_SOFT_RATE_SFF8431	= BIT(1),
+<<<<<<< HEAD
 
 	SFP_SFF8472_COMPLIANCE		= 94,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SFP_SFF8472_COMPLIANCE_NONE	= 0x00,
 	SFP_SFF8472_COMPLIANCE_REV9_3	= 0x01,
 	SFP_SFF8472_COMPLIANCE_REV9_5	= 0x02,
@@ -404,13 +449,17 @@ enum {
 	SFP_SFF8472_COMPLIANCE_REV11_3	= 0x06,
 	SFP_SFF8472_COMPLIANCE_REV11_4	= 0x07,
 	SFP_SFF8472_COMPLIANCE_REV12_0	= 0x08,
+<<<<<<< HEAD
 
 	SFP_CC_EXT			= 95,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* SFP Diagnostics */
 enum {
 	/* Alarm and warnings stored MSB at lower address then LSB */
+<<<<<<< HEAD
 	SFP_TEMP_HIGH_ALARM		= 0,
 	SFP_TEMP_LOW_ALARM		= 2,
 	SFP_TEMP_HIGH_WARN		= 4,
@@ -463,11 +512,69 @@ enum {
 	SFP_TEC_CUR			= 108,
 
 	SFP_STATUS			= 110,
+=======
+	SFP_TEMP_HIGH_ALARM		= 0x00,
+	SFP_TEMP_LOW_ALARM		= 0x02,
+	SFP_TEMP_HIGH_WARN		= 0x04,
+	SFP_TEMP_LOW_WARN		= 0x06,
+	SFP_VOLT_HIGH_ALARM		= 0x08,
+	SFP_VOLT_LOW_ALARM		= 0x0a,
+	SFP_VOLT_HIGH_WARN		= 0x0c,
+	SFP_VOLT_LOW_WARN		= 0x0e,
+	SFP_BIAS_HIGH_ALARM		= 0x10,
+	SFP_BIAS_LOW_ALARM		= 0x12,
+	SFP_BIAS_HIGH_WARN		= 0x14,
+	SFP_BIAS_LOW_WARN		= 0x16,
+	SFP_TXPWR_HIGH_ALARM		= 0x18,
+	SFP_TXPWR_LOW_ALARM		= 0x1a,
+	SFP_TXPWR_HIGH_WARN		= 0x1c,
+	SFP_TXPWR_LOW_WARN		= 0x1e,
+	SFP_RXPWR_HIGH_ALARM		= 0x20,
+	SFP_RXPWR_LOW_ALARM		= 0x22,
+	SFP_RXPWR_HIGH_WARN		= 0x24,
+	SFP_RXPWR_LOW_WARN		= 0x26,
+	SFP_LASER_TEMP_HIGH_ALARM	= 0x28,
+	SFP_LASER_TEMP_LOW_ALARM	= 0x2a,
+	SFP_LASER_TEMP_HIGH_WARN	= 0x2c,
+	SFP_LASER_TEMP_LOW_WARN		= 0x2e,
+	SFP_TEC_CUR_HIGH_ALARM		= 0x30,
+	SFP_TEC_CUR_LOW_ALARM		= 0x32,
+	SFP_TEC_CUR_HIGH_WARN		= 0x34,
+	SFP_TEC_CUR_LOW_WARN		= 0x36,
+	SFP_CAL_RXPWR4			= 0x38,
+	SFP_CAL_RXPWR3			= 0x3c,
+	SFP_CAL_RXPWR2			= 0x40,
+	SFP_CAL_RXPWR1			= 0x44,
+	SFP_CAL_RXPWR0			= 0x48,
+	SFP_CAL_TXI_SLOPE		= 0x4c,
+	SFP_CAL_TXI_OFFSET		= 0x4e,
+	SFP_CAL_TXPWR_SLOPE		= 0x50,
+	SFP_CAL_TXPWR_OFFSET		= 0x52,
+	SFP_CAL_T_SLOPE			= 0x54,
+	SFP_CAL_T_OFFSET		= 0x56,
+	SFP_CAL_V_SLOPE			= 0x58,
+	SFP_CAL_V_OFFSET		= 0x5a,
+	SFP_CHKSUM			= 0x5f,
+
+	SFP_TEMP			= 0x60,
+	SFP_VCC				= 0x62,
+	SFP_TX_BIAS			= 0x64,
+	SFP_TX_POWER			= 0x66,
+	SFP_RX_POWER			= 0x68,
+	SFP_LASER_TEMP			= 0x6a,
+	SFP_TEC_CUR			= 0x6c,
+
+	SFP_STATUS			= 0x6e,
+>>>>>>> b7ba80a49124 (Commit)
 	SFP_STATUS_TX_DISABLE		= BIT(7),
 	SFP_STATUS_TX_DISABLE_FORCE	= BIT(6),
 	SFP_STATUS_TX_FAULT		= BIT(2),
 	SFP_STATUS_RX_LOS		= BIT(1),
+<<<<<<< HEAD
 	SFP_ALARM0			= 112,
+=======
+	SFP_ALARM0			= 0x70,
+>>>>>>> b7ba80a49124 (Commit)
 	SFP_ALARM0_TEMP_HIGH		= BIT(7),
 	SFP_ALARM0_TEMP_LOW		= BIT(6),
 	SFP_ALARM0_VCC_HIGH		= BIT(5),
@@ -477,11 +584,19 @@ enum {
 	SFP_ALARM0_TXPWR_HIGH		= BIT(1),
 	SFP_ALARM0_TXPWR_LOW		= BIT(0),
 
+<<<<<<< HEAD
 	SFP_ALARM1			= 113,
 	SFP_ALARM1_RXPWR_HIGH		= BIT(7),
 	SFP_ALARM1_RXPWR_LOW		= BIT(6),
 
 	SFP_WARN0			= 116,
+=======
+	SFP_ALARM1			= 0x71,
+	SFP_ALARM1_RXPWR_HIGH		= BIT(7),
+	SFP_ALARM1_RXPWR_LOW		= BIT(6),
+
+	SFP_WARN0			= 0x74,
+>>>>>>> b7ba80a49124 (Commit)
 	SFP_WARN0_TEMP_HIGH		= BIT(7),
 	SFP_WARN0_TEMP_LOW		= BIT(6),
 	SFP_WARN0_VCC_HIGH		= BIT(5),
@@ -491,6 +606,7 @@ enum {
 	SFP_WARN0_TXPWR_HIGH		= BIT(1),
 	SFP_WARN0_TXPWR_LOW		= BIT(0),
 
+<<<<<<< HEAD
 	SFP_WARN1			= 117,
 	SFP_WARN1_RXPWR_HIGH		= BIT(7),
 	SFP_WARN1_RXPWR_LOW		= BIT(6),
@@ -500,6 +616,15 @@ enum {
 
 	SFP_VSL				= 120,
 	SFP_PAGE			= 127,
+=======
+	SFP_WARN1			= 0x75,
+	SFP_WARN1_RXPWR_HIGH		= BIT(7),
+	SFP_WARN1_RXPWR_LOW		= BIT(6),
+
+	SFP_EXT_STATUS			= 0x76,
+	SFP_VSL				= 0x78,
+	SFP_PAGE			= 0x7f,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct fwnode_handle;
@@ -544,7 +669,11 @@ int sfp_parse_port(struct sfp_bus *bus, const struct sfp_eeprom_id *id,
 		   unsigned long *support);
 bool sfp_may_have_phy(struct sfp_bus *bus, const struct sfp_eeprom_id *id);
 void sfp_parse_support(struct sfp_bus *bus, const struct sfp_eeprom_id *id,
+<<<<<<< HEAD
 		       unsigned long *support, unsigned long *interfaces);
+=======
+		       unsigned long *support);
+>>>>>>> b7ba80a49124 (Commit)
 phy_interface_t sfp_select_interface(struct sfp_bus *bus,
 				     unsigned long *link_modes);
 
@@ -577,8 +706,12 @@ static inline bool sfp_may_have_phy(struct sfp_bus *bus,
 
 static inline void sfp_parse_support(struct sfp_bus *bus,
 				     const struct sfp_eeprom_id *id,
+<<<<<<< HEAD
 				     unsigned long *support,
 				     unsigned long *interfaces)
+=======
+				     unsigned long *support)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 

@@ -43,7 +43,25 @@ struct eventfd_ctx {
 	int id;
 };
 
+<<<<<<< HEAD
 __u64 eventfd_signal_mask(struct eventfd_ctx *ctx, __u64 n, unsigned mask)
+=======
+/**
+ * eventfd_signal - Adds @n to the eventfd counter.
+ * @ctx: [in] Pointer to the eventfd context.
+ * @n: [in] Value of the counter to be added to the eventfd internal counter.
+ *          The value cannot be negative.
+ *
+ * This function is supposed to be called by the kernel in paths that do not
+ * allow sleeping. In this function we allow the counter to reach the ULLONG_MAX
+ * value, and we signal this as overflow condition by returning a EPOLLERR
+ * to poll(2).
+ *
+ * Returns the amount by which the counter was incremented.  This will be less
+ * than @n if the counter has overflowed.
+ */
+__u64 eventfd_signal(struct eventfd_ctx *ctx, __u64 n)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long flags;
 
@@ -64,12 +82,17 @@ __u64 eventfd_signal_mask(struct eventfd_ctx *ctx, __u64 n, unsigned mask)
 		n = ULLONG_MAX - ctx->count;
 	ctx->count += n;
 	if (waitqueue_active(&ctx->wqh))
+<<<<<<< HEAD
 		wake_up_locked_poll(&ctx->wqh, EPOLLIN | mask);
+=======
+		wake_up_locked_poll(&ctx->wqh, EPOLLIN);
+>>>>>>> b7ba80a49124 (Commit)
 	current->in_eventfd = 0;
 	spin_unlock_irqrestore(&ctx->wqh.lock, flags);
 
 	return n;
 }
+<<<<<<< HEAD
 
 /**
  * eventfd_signal - Adds @n to the eventfd counter.
@@ -89,6 +112,8 @@ __u64 eventfd_signal(struct eventfd_ctx *ctx, __u64 n)
 {
 	return eventfd_signal_mask(ctx, n, 0);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL_GPL(eventfd_signal);
 
 static void eventfd_free_ctx(struct eventfd_ctx *ctx)

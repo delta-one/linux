@@ -608,9 +608,15 @@ static const struct of_device_id atlas_dt_ids[] = {
 };
 MODULE_DEVICE_TABLE(of, atlas_dt_ids);
 
+<<<<<<< HEAD
 static int atlas_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int atlas_probe(struct i2c_client *client,
+		       const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct atlas_data *data;
 	struct atlas_device *chip;
 	struct iio_trigger *trig;
@@ -767,7 +773,11 @@ static struct i2c_driver atlas_driver = {
 		.of_match_table	= atlas_dt_ids,
 		.pm	= pm_ptr(&atlas_pm_ops),
 	},
+<<<<<<< HEAD
 	.probe_new	= atlas_probe,
+=======
+	.probe		= atlas_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= atlas_remove,
 	.id_table	= atlas_id,
 };

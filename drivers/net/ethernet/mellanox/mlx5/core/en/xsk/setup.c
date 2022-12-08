@@ -5,6 +5,7 @@
 #include "en/params.h"
 #include "en/txrx.h"
 #include "en/health.h"
+<<<<<<< HEAD
 #include <net/xdp_sock_drv.h>
 
 static int mlx5e_legacy_rq_validate_xsk(struct mlx5_core_dev *mdev,
@@ -23,26 +24,50 @@ static int mlx5e_legacy_rq_validate_xsk(struct mlx5_core_dev *mdev,
  * stride size of striding RQ.
  */
 #define MLX5E_MIN_XSK_CHUNK_SIZE max(2048, XDP_UMEM_MIN_CHUNK_SIZE)
+=======
+
+/* It matches XDP_UMEM_MIN_CHUNK_SIZE, but as this constant is private and may
+ * change unexpectedly, and mlx5e has a minimum valid stride size for striding
+ * RQ, keep this check in the driver.
+ */
+#define MLX5E_MIN_XSK_CHUNK_SIZE 2048
+>>>>>>> b7ba80a49124 (Commit)
 
 bool mlx5e_validate_xsk_param(struct mlx5e_params *params,
 			      struct mlx5e_xsk_param *xsk,
 			      struct mlx5_core_dev *mdev)
 {
 	/* AF_XDP doesn't support frames larger than PAGE_SIZE. */
+<<<<<<< HEAD
 	if (xsk->chunk_size > PAGE_SIZE || xsk->chunk_size < MLX5E_MIN_XSK_CHUNK_SIZE) {
 		mlx5_core_err(mdev, "XSK chunk size %u out of bounds [%u, %lu]\n", xsk->chunk_size,
 			      MLX5E_MIN_XSK_CHUNK_SIZE, PAGE_SIZE);
 		return false;
 	}
+=======
+	if (xsk->chunk_size > PAGE_SIZE ||
+			xsk->chunk_size < MLX5E_MIN_XSK_CHUNK_SIZE)
+		return false;
+
+	/* Current MTU and XSK headroom don't allow packets to fit the frames. */
+	if (mlx5e_rx_get_min_frag_sz(params, xsk) > xsk->chunk_size)
+		return false;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* frag_sz is different for regular and XSK RQs, so ensure that linear
 	 * SKB mode is possible.
 	 */
 	switch (params->rq_wq_type) {
 	case MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ:
+<<<<<<< HEAD
 		return !mlx5e_mpwrq_validate_xsk(mdev, params, xsk);
 	default: /* MLX5_WQ_TYPE_CYCLIC */
 		return !mlx5e_legacy_rq_validate_xsk(mdev, params, xsk);
+=======
+		return mlx5e_rx_mpwqe_is_linear_skb(mdev, params, xsk);
+	default: /* MLX5_WQ_TYPE_CYCLIC */
+		return mlx5e_rx_is_linear_skb(params, xsk);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -81,7 +106,11 @@ static int mlx5e_init_xsk_rq(struct mlx5e_channel *c,
 	rq->xsk_pool     = pool;
 	rq->stats        = &c->priv->channel_stats[c->ix]->xskrq;
 	rq->ptp_cyc2time = mlx5_rq_ts_translator(mdev);
+<<<<<<< HEAD
 	rq_xdp_ix        = c->ix;
+=======
+	rq_xdp_ix        = c->ix + params->num_channels * MLX5E_RQ_GROUP_XSK;
+>>>>>>> b7ba80a49124 (Commit)
 	err = mlx5e_rq_set_handlers(rq, params, xsk);
 	if (err)
 		return err;
@@ -93,6 +122,7 @@ static int mlx5e_open_xsk_rq(struct mlx5e_channel *c, struct mlx5e_params *param
 			     struct mlx5e_rq_param *rq_params, struct xsk_buff_pool *pool,
 			     struct mlx5e_xsk_param *xsk)
 {
+<<<<<<< HEAD
 	struct mlx5e_rq *xskrq = &c->xskrq;
 	int err;
 
@@ -106,6 +136,15 @@ static int mlx5e_open_xsk_rq(struct mlx5e_channel *c, struct mlx5e_params *param
 
 	__set_bit(MLX5E_RQ_STATE_XSK, &xskrq->state);
 	return 0;
+=======
+	int err;
+
+	err = mlx5e_init_xsk_rq(c, params, pool, xsk, &c->xskrq);
+	if (err)
+		return err;
+
+	return mlx5e_open_rq(params, rq_params, xsk, cpu_to_node(c->cpu), &c->xskrq);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int mlx5e_open_xsk(struct mlx5e_priv *priv, struct mlx5e_params *params,
@@ -175,7 +214,11 @@ err_free_cparam:
 void mlx5e_close_xsk(struct mlx5e_channel *c)
 {
 	clear_bit(MLX5E_CHANNEL_STATE_XSK, c->state);
+<<<<<<< HEAD
 	synchronize_net(); /* Sync with NAPI. */
+=======
+	synchronize_net(); /* Sync with the XSK wakeup and with NAPI. */
+>>>>>>> b7ba80a49124 (Commit)
 
 	mlx5e_close_rq(&c->xskrq);
 	mlx5e_close_cq(&c->xskrq.cq);

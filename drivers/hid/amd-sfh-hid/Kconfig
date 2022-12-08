@@ -2,10 +2,17 @@
 menu "AMD SFH HID Support"
 	depends on X86_64 || COMPILE_TEST
 	depends on PCI
+<<<<<<< HEAD
 
 config AMD_SFH_HID
 	tristate "AMD Sensor Fusion Hub"
 	depends on HID
+=======
+	depends on HID
+
+config AMD_SFH_HID
+	tristate "AMD Sensor Fusion Hub"
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  If you say yes to this option, support will be included for the
 	  AMD Sensor Fusion Hub.

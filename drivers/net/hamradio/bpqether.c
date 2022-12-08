@@ -533,7 +533,11 @@ static int bpq_device_event(struct notifier_block *this,
 	if (!net_eq(dev_net(dev), &init_net))
 		return NOTIFY_DONE;
 
+<<<<<<< HEAD
 	if (!dev_is_ethdev(dev) && !bpq_get_ax25_dev(dev))
+=======
+	if (!dev_is_ethdev(dev))
+>>>>>>> b7ba80a49124 (Commit)
 		return NOTIFY_DONE;
 
 	switch (event) {

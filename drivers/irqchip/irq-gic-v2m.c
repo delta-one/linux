@@ -24,7 +24,10 @@
 #include <linux/slab.h>
 #include <linux/spinlock.h>
 #include <linux/irqchip/arm-gic.h>
+<<<<<<< HEAD
 #include <linux/irqchip/arm-gic-common.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
 * MSI_TYPER:
@@ -263,7 +266,11 @@ static struct msi_domain_info gicv2m_pmsi_domain_info = {
 	.chip	= &gicv2m_pmsi_irq_chip,
 };
 
+<<<<<<< HEAD
 static void __init gicv2m_teardown(void)
+=======
+static void gicv2m_teardown(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct v2m_data *v2m, *tmp;
 
@@ -278,7 +285,11 @@ static void __init gicv2m_teardown(void)
 	}
 }
 
+<<<<<<< HEAD
 static __init int gicv2m_allocate_domains(struct irq_domain *parent)
+=======
+static int gicv2m_allocate_domains(struct irq_domain *parent)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct irq_domain *inner_domain, *pci_domain, *plat_domain;
 	struct v2m_data *v2m;
@@ -287,14 +298,23 @@ static __init int gicv2m_allocate_domains(struct irq_domain *parent)
 	if (!v2m)
 		return 0;
 
+<<<<<<< HEAD
 	inner_domain = irq_domain_create_hierarchy(parent, 0, 0, v2m->fwnode,
 						   &gicv2m_domain_ops, v2m);
+=======
+	inner_domain = irq_domain_create_tree(v2m->fwnode,
+					      &gicv2m_domain_ops, v2m);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!inner_domain) {
 		pr_err("Failed to create GICv2m domain\n");
 		return -ENOMEM;
 	}
 
 	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_NEXUS);
+<<<<<<< HEAD
+=======
+	inner_domain->parent = parent;
+>>>>>>> b7ba80a49124 (Commit)
 	pci_domain = pci_msi_create_irq_domain(v2m->fwnode,
 					       &gicv2m_msi_domain_info,
 					       inner_domain);
@@ -404,7 +424,11 @@ err_free_v2m:
 	return ret;
 }
 
+<<<<<<< HEAD
 static __initconst struct of_device_id gicv2m_device_id[] = {
+=======
+static const struct of_device_id gicv2m_device_id[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{	.compatible	= "arm,gic-v2m-frame",	},
 	{},
 };
@@ -454,7 +478,11 @@ static int __init gicv2m_of_init(struct fwnode_handle *parent_handle,
 #ifdef CONFIG_ACPI
 static int acpi_num_msi;
 
+<<<<<<< HEAD
 static __init struct fwnode_handle *gicv2m_get_fwnode(struct device *dev)
+=======
+static struct fwnode_handle *gicv2m_get_fwnode(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct v2m_data *data;
 
@@ -469,7 +497,11 @@ static __init struct fwnode_handle *gicv2m_get_fwnode(struct device *dev)
 	return data->fwnode;
 }
 
+<<<<<<< HEAD
 static __init bool acpi_check_amazon_graviton_quirks(void)
+=======
+static bool acpi_check_amazon_graviton_quirks(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	static struct acpi_table_madt *madt;
 	acpi_status status;

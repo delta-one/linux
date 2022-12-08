@@ -8,7 +8,10 @@
 
 #include "display/intel_frontbuffer.h"
 
+<<<<<<< HEAD
 #include "i915_config.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "i915_drv.h"
 #include "i915_gem_clflush.h"
 #include "i915_sw_fence_work.h"
@@ -114,7 +117,11 @@ bool i915_gem_clflush_object(struct drm_i915_gem_object *obj,
 		clflush = clflush_work_create(obj);
 	if (clflush) {
 		i915_sw_fence_await_reservation(&clflush->base.chain,
+<<<<<<< HEAD
 						obj->base.resv, true,
+=======
+						obj->base.resv, NULL, true,
+>>>>>>> b7ba80a49124 (Commit)
 						i915_fence_timeout(i915),
 						I915_FENCE_GFP);
 		dma_resv_add_fence(obj->base.resv, &clflush->base.dma,

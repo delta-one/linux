@@ -354,11 +354,17 @@ static void btsdio_remove(struct sdio_func *func)
 
 	BT_DBG("func %p", func);
 
+<<<<<<< HEAD
 	cancel_work_sync(&data->work);
 	if (!data)
 		return;
 
 	cancel_work_sync(&data->work);
+=======
+	if (!data)
+		return;
+
+>>>>>>> b7ba80a49124 (Commit)
 	hdev = data->hdev;
 
 	sdio_set_drvdata(func, NULL);

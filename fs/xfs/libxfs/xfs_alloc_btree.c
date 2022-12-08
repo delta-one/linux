@@ -315,7 +315,11 @@ xfs_allocbt_verify(
 	level = be16_to_cpu(block->bb_level);
 	if (bp->b_ops->magic[0] == cpu_to_be32(XFS_ABTC_MAGIC))
 		btnum = XFS_BTNUM_CNTi;
+<<<<<<< HEAD
 	if (pag && xfs_perag_initialised_agf(pag)) {
+=======
+	if (pag && pag->pagf_init) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (level >= pag->pagf_levels[btnum])
 			return __this_address;
 	} else if (level >= mp->m_alloc_maxlevels)

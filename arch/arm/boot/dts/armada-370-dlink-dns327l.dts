@@ -86,19 +86,31 @@
 
 		pinctrl-names = "default";
 
+<<<<<<< HEAD
 		led-sata-r-amber {
+=======
+		sata-r-amber-pin {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "dns327l:amber:sata-r";
 			gpios = <&gpio1 20 GPIO_ACTIVE_HIGH>;
 			default-state = "keep";
 		};
 
+<<<<<<< HEAD
 		led-sata-l-amber {
+=======
+		sata-l-amber-pin {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "dns327l:amber:sata-l";
 			gpios = <&gpio1 21 GPIO_ACTIVE_HIGH>;
 			default-state = "keep";
 		};
 
+<<<<<<< HEAD
 		led-backup {
+=======
+		backup-led-pin {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "dns327l:white:usb";
 			gpios = <&gpio1 29 GPIO_ACTIVE_HIGH>;
 			default-state = "keep";

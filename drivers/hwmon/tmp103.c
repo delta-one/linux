@@ -178,7 +178,11 @@ static int tmp103_probe(struct i2c_client *client)
 	return PTR_ERR_OR_ZERO(hwmon_dev);
 }
 
+<<<<<<< HEAD
 static int tmp103_suspend(struct device *dev)
+=======
+static int __maybe_unused tmp103_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct regmap *regmap = dev_get_drvdata(dev);
 
@@ -186,7 +190,11 @@ static int tmp103_suspend(struct device *dev)
 				  TMP103_CONF_SD_MASK, 0);
 }
 
+<<<<<<< HEAD
 static int tmp103_resume(struct device *dev)
+=======
+static int __maybe_unused tmp103_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct regmap *regmap = dev_get_drvdata(dev);
 
@@ -194,7 +202,11 @@ static int tmp103_resume(struct device *dev)
 				  TMP103_CONF_SD_MASK, TMP103_CONF_SD);
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(tmp103_dev_pm_ops, tmp103_suspend, tmp103_resume);
+=======
+static SIMPLE_DEV_PM_OPS(tmp103_dev_pm_ops, tmp103_suspend, tmp103_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id tmp103_id[] = {
 	{ "tmp103", 0 },
@@ -212,7 +224,11 @@ static struct i2c_driver tmp103_driver = {
 	.driver = {
 		.name	= "tmp103",
 		.of_match_table = of_match_ptr(tmp103_of_match),
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&tmp103_dev_pm_ops),
+=======
+		.pm	= &tmp103_dev_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe_new	= tmp103_probe,
 	.id_table	= tmp103_id,

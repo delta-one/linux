@@ -23,7 +23,10 @@ obj-$(CONFIG_BPFILTER)		+= bpfilter/
 obj-$(CONFIG_PACKET)		+= packet/
 obj-$(CONFIG_NET_KEY)		+= key/
 obj-$(CONFIG_BRIDGE)		+= bridge/
+<<<<<<< HEAD
 obj-$(CONFIG_NET_DEVLINK)	+= devlink/
+=======
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_NET_DSA)		+= dsa/
 obj-$(CONFIG_ATALK)		+= appletalk/
 obj-$(CONFIG_X25)		+= x25/

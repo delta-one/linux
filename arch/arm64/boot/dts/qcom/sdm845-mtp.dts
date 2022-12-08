@@ -117,7 +117,11 @@
 };
 
 &apps_rsc {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pm8998-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8998-rpmh-regulators";
 		qcom,pmic-id = "a";
 
@@ -382,7 +386,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-1 {
+=======
+	pmi8998-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pmi8998-rpmh-regulators";
 		qcom,pmic-id = "b";
 
@@ -396,7 +404,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-2 {
+=======
+	pm8005-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8005-rpmh-regulators";
 		qcom,pmic-id = "c";
 
@@ -518,9 +530,14 @@
 };
 
 &ipa {
+<<<<<<< HEAD
 	qcom,gsi-loader = "self";
 	memory-region = <&ipa_fw_mem>;
 	status = "okay";
+=======
+	status = "okay";
+	memory-region = <&ipa_fw_mem>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &mdss {
@@ -720,6 +737,7 @@
 /* PINCTRL - additions to nodes defined in sdm845.dtsi */
 
 &qup_i2c10_default {
+<<<<<<< HEAD
 	drive-strength = <2>;
 	bias-disable;
 };
@@ -732,11 +750,33 @@
 &qup_uart9_tx {
 	drive-strength = <2>;
 	bias-disable;
+=======
+	pinconf {
+		pins = "gpio55", "gpio56";
+		drive-strength = <2>;
+		bias-disable;
+	};
+};
+
+&qup_uart9_default {
+	pinconf-tx {
+		pins = "gpio4";
+		drive-strength = <2>;
+		bias-disable;
+	};
+
+	pinconf-rx {
+		pins = "gpio5";
+		drive-strength = <2>;
+		bias-pull-up;
+	};
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &tlmm {
 	gpio-reserved-ranges = <0 4>, <81 4>;
 
+<<<<<<< HEAD
 	sdc2_clk: sdc2-clk-state {
 		pins = "sdc2_clk";
 		bias-disable;
@@ -764,5 +804,46 @@
 		pins = "gpio126";
 		function = "gpio";
 		bias-pull-up;
+=======
+	sdc2_clk: sdc2-clk {
+		pinconf {
+			pins = "sdc2_clk";
+			bias-disable;
+
+			/*
+			 * It seems that mmc_test reports errors if drive
+			 * strength is not 16 on clk, cmd, and data pins.
+			 */
+			drive-strength = <16>;
+		};
+	};
+
+	sdc2_cmd: sdc2-cmd {
+		pinconf {
+			pins = "sdc2_cmd";
+			bias-pull-up;
+			drive-strength = <16>;
+		};
+	};
+
+	sdc2_data: sdc2-data {
+		pinconf {
+			pins = "sdc2_data";
+			bias-pull-up;
+			drive-strength = <16>;
+		};
+	};
+
+	sd_card_det_n: sd-card-det-n {
+		pinmux {
+			pins = "gpio126";
+			function = "gpio";
+		};
+
+		pinconf {
+			pins = "gpio126";
+			bias-pull-up;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };

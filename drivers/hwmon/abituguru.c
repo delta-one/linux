@@ -1504,6 +1504,10 @@ LEAVE_UPDATE:
 		return NULL;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int abituguru_suspend(struct device *dev)
 {
 	struct abituguru_data *data = dev_get_drvdata(dev);
@@ -1525,12 +1529,24 @@ static int abituguru_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(abituguru_pm, abituguru_suspend, abituguru_resume);
+=======
+static SIMPLE_DEV_PM_OPS(abituguru_pm, abituguru_suspend, abituguru_resume);
+#define ABIT_UGURU_PM	(&abituguru_pm)
+#else
+#define ABIT_UGURU_PM	NULL
+#endif /* CONFIG_PM */
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_driver abituguru_driver = {
 	.driver = {
 		.name	= ABIT_UGURU_NAME,
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&abituguru_pm),
+=======
+		.pm	= ABIT_UGURU_PM,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe		= abituguru_probe,
 	.remove		= abituguru_remove,

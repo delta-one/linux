@@ -267,6 +267,7 @@ int proc_dostring(struct ctl_table *table, int write,
 			ppos);
 }
 
+<<<<<<< HEAD
 static void proc_skip_spaces(char **buf, size_t *size)
 {
 	while (*size) {
@@ -275,6 +276,15 @@ static void proc_skip_spaces(char **buf, size_t *size)
 		(*size)--;
 		(*buf)++;
 	}
+=======
+static size_t proc_skip_spaces(char **buf)
+{
+	size_t ret;
+	char *tmp = skip_spaces(*buf);
+	ret = tmp - *buf;
+	*buf = tmp;
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void proc_skip_char(char **buf, size_t *size, const char v)
@@ -343,12 +353,22 @@ static int proc_get_long(char **buf, size_t *size,
 			  unsigned long *val, bool *neg,
 			  const char *perm_tr, unsigned perm_tr_len, char *tr)
 {
+<<<<<<< HEAD
 	char *p, tmp[TMPBUFLEN];
 	ssize_t len = *size;
 
 	if (len <= 0)
 		return -EINVAL;
 
+=======
+	int len;
+	char *p, tmp[TMPBUFLEN];
+
+	if (!*size)
+		return -EINVAL;
+
+	len = *size;
+>>>>>>> b7ba80a49124 (Commit)
 	if (len > TMPBUFLEN - 1)
 		len = TMPBUFLEN - 1;
 
@@ -425,6 +445,24 @@ static void proc_put_char(void **buf, size_t *size, char c)
 	}
 }
 
+<<<<<<< HEAD
+=======
+static int do_proc_dobool_conv(bool *negp, unsigned long *lvalp,
+				int *valp,
+				int write, void *data)
+{
+	if (write) {
+		*(bool *)valp = *lvalp;
+	} else {
+		int val = *(bool *)valp;
+
+		*lvalp = (unsigned long)val;
+		*negp = false;
+	}
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int do_proc_dointvec_conv(bool *negp, unsigned long *lvalp,
 				 int *valp,
 				 int write, void *data)
@@ -506,7 +544,11 @@ static int __do_proc_dointvec(void *tbl_data, struct ctl_table *table,
 		bool neg;
 
 		if (write) {
+<<<<<<< HEAD
 			proc_skip_spaces(&p, &left);
+=======
+			left -= proc_skip_spaces(&p);
+>>>>>>> b7ba80a49124 (Commit)
 
 			if (!left)
 				break;
@@ -533,7 +575,11 @@ static int __do_proc_dointvec(void *tbl_data, struct ctl_table *table,
 	if (!write && !first && left && !err)
 		proc_put_char(&buffer, &left, '\n');
 	if (write && !err && left)
+<<<<<<< HEAD
 		proc_skip_spaces(&p, &left);
+=======
+		left -= proc_skip_spaces(&p);
+>>>>>>> b7ba80a49124 (Commit)
 	if (write && first)
 		return err ? : -EINVAL;
 	*lenp -= left;
@@ -575,7 +621,11 @@ static int do_proc_douintvec_w(unsigned int *tbl_data,
 	if (left > PAGE_SIZE - 1)
 		left = PAGE_SIZE - 1;
 
+<<<<<<< HEAD
 	proc_skip_spaces(&p, &left);
+=======
+	left -= proc_skip_spaces(&p);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!left) {
 		err = -EINVAL;
 		goto out_free;
@@ -595,7 +645,11 @@ static int do_proc_douintvec_w(unsigned int *tbl_data,
 	}
 
 	if (!err && left)
+<<<<<<< HEAD
 		proc_skip_spaces(&p, &left);
+=======
+		left -= proc_skip_spaces(&p);
+>>>>>>> b7ba80a49124 (Commit)
 
 out_free:
 	if (err)
@@ -695,17 +749,23 @@ int do_proc_douintvec(struct ctl_table *table, int write,
  * @lenp: the size of the user buffer
  * @ppos: file position
  *
+<<<<<<< HEAD
  * Reads/writes one integer value from/to the user buffer,
  * treated as an ASCII string.
  *
  * table->data must point to a bool variable and table->maxlen must
  * be sizeof(bool).
+=======
+ * Reads/writes up to table->maxlen/sizeof(unsigned int) integer
+ * values from/to the user buffer, treated as an ASCII string.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Returns 0 on success.
  */
 int proc_dobool(struct ctl_table *table, int write, void *buffer,
 		size_t *lenp, loff_t *ppos)
 {
+<<<<<<< HEAD
 	struct ctl_table tmp;
 	bool *data = table->data;
 	int res, val;
@@ -725,6 +785,10 @@ int proc_dobool(struct ctl_table *table, int write, void *buffer,
 	if (write)
 		WRITE_ONCE(*data, val);
 	return 0;
+=======
+	return do_proc_dointvec(table, write, buffer, lenp, ppos,
+				do_proc_dobool_conv, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1080,7 +1144,11 @@ static int __do_proc_doulongvec_minmax(void *data, struct ctl_table *table,
 		if (write) {
 			bool neg;
 
+<<<<<<< HEAD
 			proc_skip_spaces(&p, &left);
+=======
+			left -= proc_skip_spaces(&p);
+>>>>>>> b7ba80a49124 (Commit)
 			if (!left)
 				break;
 
@@ -1109,7 +1177,11 @@ static int __do_proc_doulongvec_minmax(void *data, struct ctl_table *table,
 	if (!write && !first && left && !err)
 		proc_put_char(&buffer, &left, '\n');
 	if (write && !err)
+<<<<<<< HEAD
 		proc_skip_spaces(&p, &left);
+=======
+		left -= proc_skip_spaces(&p);
+>>>>>>> b7ba80a49124 (Commit)
 	if (write && first)
 		return err ? : -EINVAL;
 	*lenp -= left;
@@ -1638,6 +1710,28 @@ int proc_do_static_key(struct ctl_table *table, int write,
 }
 
 static struct ctl_table kern_table[] = {
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_NUMA_BALANCING
+	{
+		.procname	= "numa_balancing",
+		.data		= NULL, /* filled in by handler */
+		.maxlen		= sizeof(unsigned int),
+		.mode		= 0644,
+		.proc_handler	= sysctl_numa_balancing,
+		.extra1		= SYSCTL_ZERO,
+		.extra2		= SYSCTL_FOUR,
+	},
+	{
+		.procname	= "numa_balancing_promote_rate_limit_MBps",
+		.data		= &sysctl_numa_balancing_promote_rate_limit,
+		.maxlen		= sizeof(unsigned int),
+		.mode		= 0644,
+		.proc_handler	= proc_dointvec_minmax,
+		.extra1		= SYSCTL_ZERO,
+	},
+#endif /* CONFIG_NUMA_BALANCING */
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.procname	= "panic",
 		.data		= &panic_timeout,
@@ -2111,7 +2205,10 @@ static struct ctl_table vm_table[] = {
 		.mode		= 0644,
 		.proc_handler	= proc_dointvec_minmax,
 		.extra1		= SYSCTL_ZERO,
+<<<<<<< HEAD
 		.extra2		= (void *)&page_cluster_max,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.procname	= "dirtytime_expire_seconds",
@@ -2141,6 +2238,41 @@ static struct ctl_table vm_table[] = {
 		.extra2		= SYSCTL_ONE,
 	},
 #endif
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_HUGETLB_PAGE
+	{
+		.procname	= "nr_hugepages",
+		.data		= NULL,
+		.maxlen		= sizeof(unsigned long),
+		.mode		= 0644,
+		.proc_handler	= hugetlb_sysctl_handler,
+	},
+#ifdef CONFIG_NUMA
+	{
+		.procname       = "nr_hugepages_mempolicy",
+		.data           = NULL,
+		.maxlen         = sizeof(unsigned long),
+		.mode           = 0644,
+		.proc_handler   = &hugetlb_mempolicy_sysctl_handler,
+	},
+#endif
+	 {
+		.procname	= "hugetlb_shm_group",
+		.data		= &sysctl_hugetlb_shm_group,
+		.maxlen		= sizeof(gid_t),
+		.mode		= 0644,
+		.proc_handler	= proc_dointvec,
+	 },
+	{
+		.procname	= "nr_overcommit_hugepages",
+		.data		= NULL,
+		.maxlen		= sizeof(unsigned long),
+		.mode		= 0644,
+		.proc_handler	= hugetlb_overcommit_handler,
+	},
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.procname	= "lowmem_reserve_ratio",
 		.data		= &sysctl_lowmem_reserve_ratio,
@@ -2351,6 +2483,29 @@ static struct ctl_table vm_table[] = {
 		.extra1		= SYSCTL_ZERO,
 	},
 #endif
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_MEMORY_FAILURE
+	{
+		.procname	= "memory_failure_early_kill",
+		.data		= &sysctl_memory_failure_early_kill,
+		.maxlen		= sizeof(sysctl_memory_failure_early_kill),
+		.mode		= 0644,
+		.proc_handler	= proc_dointvec_minmax,
+		.extra1		= SYSCTL_ZERO,
+		.extra2		= SYSCTL_ONE,
+	},
+	{
+		.procname	= "memory_failure_recovery",
+		.data		= &sysctl_memory_failure_recovery,
+		.maxlen		= sizeof(sysctl_memory_failure_recovery),
+		.mode		= 0644,
+		.proc_handler	= proc_dointvec_minmax,
+		.extra1		= SYSCTL_ZERO,
+		.extra2		= SYSCTL_ONE,
+	},
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.procname	= "user_reserve_kbytes",
 		.data		= &sysctl_user_reserve_kbytes,
@@ -2387,6 +2542,20 @@ static struct ctl_table vm_table[] = {
 		.extra2		= (void *)&mmap_rnd_compat_bits_max,
 	},
 #endif
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_USERFAULTFD
+	{
+		.procname	= "unprivileged_userfaultfd",
+		.data		= &sysctl_unprivileged_userfaultfd,
+		.maxlen		= sizeof(sysctl_unprivileged_userfaultfd),
+		.mode		= 0644,
+		.proc_handler	= proc_dointvec_minmax,
+		.extra1		= SYSCTL_ZERO,
+		.extra2		= SYSCTL_ONE,
+	},
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 

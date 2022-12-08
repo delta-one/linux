@@ -9,7 +9,10 @@
 
 #define DISABLE_BRANCH_PROFILING
 
+<<<<<<< HEAD
 #define __NO_FORTIFY
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/types.h>
 #include <linux/kernel.h>
 #include <linux/string.h>

@@ -305,7 +305,10 @@ void msm_debugfs_init(struct drm_minor *minor)
 {
 	struct drm_device *dev = minor->dev;
 	struct msm_drm_private *priv = dev->dev_private;
+<<<<<<< HEAD
 	struct dentry *gpu_devfreq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_debugfs_create_files(msm_debugfs_list,
 				 ARRAY_SIZE(msm_debugfs_list),
@@ -326,6 +329,7 @@ void msm_debugfs_init(struct drm_minor *minor)
 	debugfs_create_file("shrink", S_IRWXU, minor->debugfs_root,
 		dev, &shrink_fops);
 
+<<<<<<< HEAD
 	gpu_devfreq = debugfs_create_dir("devfreq", minor->debugfs_root);
 
 	debugfs_create_bool("idle_clamp",0600, gpu_devfreq,
@@ -337,6 +341,8 @@ void msm_debugfs_init(struct drm_minor *minor)
 	debugfs_create_u32("downdifferential",0600, gpu_devfreq,
 			   &priv->gpu_devfreq_config.downdifferential);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (priv->kms && priv->kms->funcs->debugfs_init)
 		priv->kms->funcs->debugfs_init(priv->kms, minor);
 

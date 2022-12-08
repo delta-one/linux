@@ -463,7 +463,11 @@ static void ovl_dir_version_inc(struct dentry *dentry, bool impurity)
 	 * which have been copied up and have origins), so only need to note
 	 * changes to impure entries.
 	 */
+<<<<<<< HEAD
 	if (!ovl_dir_is_real(inode) || impurity)
+=======
+	if (!ovl_dir_is_real(dentry) || impurity)
+>>>>>>> b7ba80a49124 (Commit)
 		OVL_I(inode)->version++;
 }
 
@@ -475,8 +479,15 @@ void ovl_dir_modified(struct dentry *dentry, bool impurity)
 	ovl_dir_version_inc(dentry, impurity);
 }
 
+<<<<<<< HEAD
 u64 ovl_inode_version_get(struct inode *inode)
 {
+=======
+u64 ovl_dentry_version_get(struct dentry *dentry)
+{
+	struct inode *inode = d_inode(dentry);
+
+>>>>>>> b7ba80a49124 (Commit)
 	WARN_ON(!inode_is_locked(inode));
 	return OVL_I(inode)->version;
 }
@@ -491,7 +502,11 @@ bool ovl_is_whiteout(struct dentry *dentry)
 struct file *ovl_path_open(const struct path *path, int flags)
 {
 	struct inode *inode = d_inode(path->dentry);
+<<<<<<< HEAD
 	struct mnt_idmap *real_idmap = mnt_idmap(path->mnt);
+=======
+	struct user_namespace *real_mnt_userns = mnt_user_ns(path->mnt);
+>>>>>>> b7ba80a49124 (Commit)
 	int err, acc_mode;
 
 	if (flags & ~(O_ACCMODE | O_LARGEFILE))
@@ -508,12 +523,20 @@ struct file *ovl_path_open(const struct path *path, int flags)
 		BUG();
 	}
 
+<<<<<<< HEAD
 	err = inode_permission(real_idmap, inode, acc_mode | MAY_OPEN);
+=======
+	err = inode_permission(real_mnt_userns, inode, acc_mode | MAY_OPEN);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return ERR_PTR(err);
 
 	/* O_NOATIME is an optimization, don't fail if not permitted */
+<<<<<<< HEAD
 	if (inode_owner_or_capable(real_idmap, inode))
+=======
+	if (inode_owner_or_capable(real_mnt_userns, inode))
+>>>>>>> b7ba80a49124 (Commit)
 		flags |= O_NOATIME;
 
 	return dentry_open(path, flags, current_cred());
@@ -1101,6 +1124,7 @@ void ovl_copyattr(struct inode *inode)
 {
 	struct path realpath;
 	struct inode *realinode;
+<<<<<<< HEAD
 	struct mnt_idmap *real_idmap;
 	vfsuid_t vfsuid;
 	vfsgid_t vfsgid;
@@ -1114,6 +1138,16 @@ void ovl_copyattr(struct inode *inode)
 
 	inode->i_uid = vfsuid_into_kuid(vfsuid);
 	inode->i_gid = vfsgid_into_kgid(vfsgid);
+=======
+	struct user_namespace *real_mnt_userns;
+
+	ovl_i_path_real(inode, &realpath);
+	realinode = d_inode(realpath.dentry);
+	real_mnt_userns = mnt_user_ns(realpath.mnt);
+
+	inode->i_uid = i_uid_into_mnt(real_mnt_userns, realinode);
+	inode->i_gid = i_gid_into_mnt(real_mnt_userns, realinode);
+>>>>>>> b7ba80a49124 (Commit)
 	inode->i_mode = realinode->i_mode;
 	inode->i_atime = realinode->i_atime;
 	inode->i_mtime = realinode->i_mtime;

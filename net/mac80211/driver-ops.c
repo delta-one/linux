@@ -7,8 +7,11 @@
 #include "ieee80211_i.h"
 #include "trace.h"
 #include "driver-ops.h"
+<<<<<<< HEAD
 #include "debugfs_sta.h"
 #include "debugfs_netdev.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int drv_start(struct ieee80211_local *local)
 {
@@ -393,9 +396,12 @@ int drv_ampdu_action(struct ieee80211_local *local,
 
 	might_sleep();
 
+<<<<<<< HEAD
 	if (!sdata)
 		return -EIO;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sdata = get_bss_sdata(sdata);
 	if (!check_sdata_in_driver(sdata))
 		return -EIO;
@@ -478,10 +484,13 @@ int drv_change_vif_links(struct ieee80211_local *local,
 			 u16 old_links, u16 new_links,
 			 struct ieee80211_bss_conf *old[IEEE80211_MLD_MAX_NUM_LINKS])
 {
+<<<<<<< HEAD
 	struct ieee80211_link_data *link;
 	unsigned long links_to_add;
 	unsigned long links_to_rem;
 	unsigned int link_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = -EOPNOTSUPP;
 
 	might_sleep();
@@ -492,6 +501,7 @@ int drv_change_vif_links(struct ieee80211_local *local,
 	if (old_links == new_links)
 		return 0;
 
+<<<<<<< HEAD
 	links_to_add = ~old_links & new_links;
 	links_to_rem = old_links & ~new_links;
 
@@ -501,12 +511,15 @@ int drv_change_vif_links(struct ieee80211_local *local,
 		ieee80211_link_debugfs_drv_remove(link);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	trace_drv_change_vif_links(local, sdata, old_links, new_links);
 	if (local->ops->change_vif_links)
 		ret = local->ops->change_vif_links(&local->hw, &sdata->vif,
 						   old_links, new_links, old);
 	trace_drv_return_int(local, ret);
 
+<<<<<<< HEAD
 	if (ret)
 		return ret;
 
@@ -517,6 +530,9 @@ int drv_change_vif_links(struct ieee80211_local *local,
 	}
 
 	return 0;
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int drv_change_sta_links(struct ieee80211_local *local,
@@ -524,11 +540,14 @@ int drv_change_sta_links(struct ieee80211_local *local,
 			 struct ieee80211_sta *sta,
 			 u16 old_links, u16 new_links)
 {
+<<<<<<< HEAD
 	struct sta_info *info = container_of(sta, struct sta_info, sta);
 	struct link_sta_info *link_sta;
 	unsigned long links_to_add;
 	unsigned long links_to_rem;
 	unsigned int link_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = -EOPNOTSUPP;
 
 	might_sleep();
@@ -542,6 +561,7 @@ int drv_change_sta_links(struct ieee80211_local *local,
 	if (old_links == new_links)
 		return 0;
 
+<<<<<<< HEAD
 	links_to_add = ~old_links & new_links;
 	links_to_rem = old_links & ~new_links;
 
@@ -552,12 +572,15 @@ int drv_change_sta_links(struct ieee80211_local *local,
 		ieee80211_link_sta_debugfs_drv_remove(link_sta);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	trace_drv_change_sta_links(local, sdata, sta, old_links, new_links);
 	if (local->ops->change_sta_links)
 		ret = local->ops->change_sta_links(&local->hw, &sdata->vif, sta,
 						   old_links, new_links);
 	trace_drv_return_int(local, ret);
 
+<<<<<<< HEAD
 	if (ret)
 		return ret;
 
@@ -568,4 +591,7 @@ int drv_change_sta_links(struct ieee80211_local *local,
 	}
 
 	return 0;
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }

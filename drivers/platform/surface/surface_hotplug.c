@@ -101,12 +101,26 @@ static void shps_dsm_notify_irq(struct platform_device *pdev, enum shps_irq_type
 	param.type = ACPI_TYPE_INTEGER;
 	param.integer.value = value;
 
+<<<<<<< HEAD
 	result = acpi_evaluate_dsm_typed(handle, &shps_dsm_guid, SHPS_DSM_REVISION,
 					 shps_dsm_fn_for_irq(type), &param, ACPI_TYPE_BUFFER);
+=======
+	result = acpi_evaluate_dsm(handle, &shps_dsm_guid, SHPS_DSM_REVISION,
+				   shps_dsm_fn_for_irq(type), &param);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!result) {
 		dev_err(&pdev->dev, "IRQ notification via DSM failed (irq=%d, gpio=%d)\n",
 			type, value);
 
+<<<<<<< HEAD
+=======
+	} else if (result->type != ACPI_TYPE_BUFFER) {
+		dev_err(&pdev->dev,
+			"IRQ notification via DSM failed: unexpected result type (irq=%d, gpio=%d)\n",
+			type, value);
+
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (result->buffer.length != 1 || result->buffer.pointer[0] != 0) {
 		dev_err(&pdev->dev,
 			"IRQ notification via DSM failed: unexpected result value (irq=%d, gpio=%d)\n",
@@ -115,7 +129,12 @@ static void shps_dsm_notify_irq(struct platform_device *pdev, enum shps_irq_type
 
 	mutex_unlock(&sdev->lock[type]);
 
+<<<<<<< HEAD
 	ACPI_FREE(result);
+=======
+	if (result)
+		ACPI_FREE(result);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static irqreturn_t shps_handle_irq(int irq, void *data)

@@ -344,7 +344,11 @@ def get_algorithm(name):
 
 
 def hex_dump(d):
+<<<<<<< HEAD
     d = [format(x, '02x') for x in d]
+=======
+    d = [format(ord(x), '02x') for x in d]
+>>>>>>> b7ba80a49124 (Commit)
     d = [d[i: i + 16] for i in range(0, len(d), 16)]
     d = [' '.join(x) for x in d]
     d = os.linesep.join(d)
@@ -371,10 +375,13 @@ class Client:
             fcntl.fcntl(self.tpm, fcntl.F_SETFL, flags)
             self.tpm_poll = select.poll()
 
+<<<<<<< HEAD
     def __del__(self):
         if self.tpm:
             self.tpm.close()
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     def close(self):
         self.tpm.close()
 

@@ -513,7 +513,11 @@
 
 				mux: mux-controller {
 					compatible = "mmio-mux";
+<<<<<<< HEAD
 					#mux-control-cells = <1>;
+=======
+					#mux-control-cells = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 					mux-reg-masks = <0x14 0x00000010>;
 				};
 
@@ -1264,6 +1268,10 @@
 				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
+=======
+			interrupt-names = "gpmi0", "gpmi1", "gpmi2", "gpmi3";
+>>>>>>> b7ba80a49124 (Commit)
 			#dma-cells = <1>;
 			dma-channels = <4>;
 			clocks = <&clks IMX7D_NAND_USDHC_BUS_RAWNAND_CLK>;

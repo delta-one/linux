@@ -62,12 +62,19 @@ static int vcn_v2_0_pause_dpg_mode(struct amdgpu_device *adev,
 				int inst_idx, struct dpg_pause_state *new_state);
 static int vcn_v2_0_start_sriov(struct amdgpu_device *adev);
 /**
+<<<<<<< HEAD
  * vcn_v2_0_early_init - set function pointers and load microcode
+=======
+ * vcn_v2_0_early_init - set function pointers
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @handle: amdgpu_device pointer
  *
  * Set ring and irq function pointers
+<<<<<<< HEAD
  * Load microcode from filesystem
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int vcn_v2_0_early_init(void *handle)
 {
@@ -82,7 +89,11 @@ static int vcn_v2_0_early_init(void *handle)
 	vcn_v2_0_set_enc_ring_funcs(adev);
 	vcn_v2_0_set_irq_funcs(adev);
 
+<<<<<<< HEAD
 	return amdgpu_vcn_early_init(adev);
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

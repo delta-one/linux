@@ -114,9 +114,12 @@ struct devlink_rate {
 			refcount_t refcnt;
 		};
 	};
+<<<<<<< HEAD
 
 	u32 tx_priority;
 	u32 tx_weight;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct devlink_port {
@@ -124,6 +127,7 @@ struct devlink_port {
 	struct list_head region_list;
 	struct devlink *devlink;
 	unsigned int index;
+<<<<<<< HEAD
 	spinlock_t type_lock; /* Protects type and type_eth/ib
 			       * structures consistency.
 			       */
@@ -146,6 +150,20 @@ struct devlink_port {
 	   initialized:1;
 	struct delayed_work type_warn_dw;
 	struct list_head reporter_list;
+=======
+	spinlock_t type_lock; /* Protects type and type_dev
+			       * pointer consistency.
+			       */
+	enum devlink_port_type type;
+	enum devlink_port_type desired_type;
+	void *type_dev;
+	struct devlink_port_attrs attrs;
+	u8 attrs_set:1,
+	   switch_port:1;
+	struct delayed_work type_warn_dw;
+	struct list_head reporter_list;
+	struct mutex reporters_lock; /* Protects reporter_list */
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct devlink_rate *devlink_rate;
 	struct devlink_linecard *linecard;
@@ -489,10 +507,13 @@ struct devlink_param_item {
 	const struct devlink_param *param;
 	union devlink_param_value driverinit_value;
 	bool driverinit_value_valid;
+<<<<<<< HEAD
 	union devlink_param_value driverinit_value_new; /* Not reachable
 							 * until reload.
 							 */
 	bool driverinit_value_new_valid;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum devlink_param_generic_id {
@@ -624,8 +645,11 @@ enum devlink_param_generic_id {
 #define DEVLINK_INFO_VERSION_GENERIC_FW_ROCE	"fw.roce"
 /* Firmware bundle identifier */
 #define DEVLINK_INFO_VERSION_GENERIC_FW_BUNDLE_ID	"fw.bundle_id"
+<<<<<<< HEAD
 /* Bootloader */
 #define DEVLINK_INFO_VERSION_GENERIC_FW_BOOTLOADER	"fw.bootloader"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct devlink_flash_update_params - Flash Update parameters
@@ -655,10 +679,13 @@ struct devlink_info_req;
  *            the data variable must be updated to point to the snapshot data.
  *            The function will be called while the devlink instance lock is
  *            held.
+<<<<<<< HEAD
  * @read: callback to directly read a portion of the region. On success,
  *        the data pointer will be updated with the contents of the
  *        requested portion of the region. The function will be called
  *        while the devlink instance lock is held.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @priv: Pointer to driver private data for the region operation
  */
 struct devlink_region_ops {
@@ -668,10 +695,13 @@ struct devlink_region_ops {
 			const struct devlink_region_ops *ops,
 			struct netlink_ext_ack *extack,
 			u8 **data);
+<<<<<<< HEAD
 	int (*read)(struct devlink *devlink,
 		    const struct devlink_region_ops *ops,
 		    struct netlink_ext_ack *extack,
 		    u64 offset, u32 size, u8 *data);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void *priv;
 };
 
@@ -683,10 +713,13 @@ struct devlink_region_ops {
  *            the data variable must be updated to point to the snapshot data.
  *            The function will be called while the devlink instance lock is
  *            held.
+<<<<<<< HEAD
  * @read: callback to directly read a portion of the region. On success,
  *        the data pointer will be updated with the contents of the
  *        requested portion of the region. The function will be called
  *        while the devlink instance lock is held.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @priv: Pointer to driver private data for the region operation
  */
 struct devlink_port_region_ops {
@@ -696,10 +729,13 @@ struct devlink_port_region_ops {
 			const struct devlink_port_region_ops *ops,
 			struct netlink_ext_ack *extack,
 			u8 **data);
+<<<<<<< HEAD
 	int (*read)(struct devlink_port *port,
 		    const struct devlink_port_region_ops *ops,
 		    struct netlink_ext_ack *extack,
 		    u64 offset, u32 size, u8 *data);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void *priv;
 };
 
@@ -918,8 +954,11 @@ enum devlink_trap_generic_id {
 	DEVLINK_TRAP_GENERIC_ID_ESP_PARSING,
 	DEVLINK_TRAP_GENERIC_ID_BLACKHOLE_NEXTHOP,
 	DEVLINK_TRAP_GENERIC_ID_DMAC_FILTER,
+<<<<<<< HEAD
 	DEVLINK_TRAP_GENERIC_ID_EAPOL,
 	DEVLINK_TRAP_GENERIC_ID_LOCKED_PORT,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Add new generic trap IDs above */
 	__DEVLINK_TRAP_GENERIC_ID_MAX,
@@ -956,7 +995,10 @@ enum devlink_trap_group_generic_id {
 	DEVLINK_TRAP_GROUP_GENERIC_ID_ACL_SAMPLE,
 	DEVLINK_TRAP_GROUP_GENERIC_ID_ACL_TRAP,
 	DEVLINK_TRAP_GROUP_GENERIC_ID_PARSER_ERROR_DROPS,
+<<<<<<< HEAD
 	DEVLINK_TRAP_GROUP_GENERIC_ID_EAPOL,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Add new generic trap group IDs above */
 	__DEVLINK_TRAP_GROUP_GENERIC_ID_MAX,
@@ -1148,10 +1190,13 @@ enum devlink_trap_group_generic_id {
 	"blackhole_nexthop"
 #define DEVLINK_TRAP_GENERIC_NAME_DMAC_FILTER \
 	"dmac_filter"
+<<<<<<< HEAD
 #define DEVLINK_TRAP_GENERIC_NAME_EAPOL \
 	"eapol"
 #define DEVLINK_TRAP_GENERIC_NAME_LOCKED_PORT \
 	"locked_port"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DEVLINK_TRAP_GROUP_GENERIC_NAME_L2_DROPS \
 	"l2_drops"
@@ -1205,8 +1250,11 @@ enum devlink_trap_group_generic_id {
 	"acl_trap"
 #define DEVLINK_TRAP_GROUP_GENERIC_NAME_PARSER_ERROR_DROPS \
 	"parser_error_drops"
+<<<<<<< HEAD
 #define DEVLINK_TRAP_GROUP_GENERIC_NAME_EAPOL \
 	"eapol"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DEVLINK_TRAP_GENERIC(_type, _init_action, _id, _group_id,	      \
 			     _metadata_cap)				      \
@@ -1457,6 +1505,7 @@ struct devlink_ops {
 					 const u8 *hw_addr, int hw_addr_len,
 					 struct netlink_ext_ack *extack);
 	/**
+<<<<<<< HEAD
 	 * @port_fn_roce_get: Port function's roce get function.
 	 *
 	 * Query RoCE state of a function managed by the devlink port.
@@ -1496,6 +1545,8 @@ struct devlink_ops {
 				      bool enable,
 				      struct netlink_ext_ack *extack);
 	/**
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * port_new() - Add a new port function of a specified flavor
 	 * @devlink: Devlink instance
 	 * @attrs: attributes of the new port
@@ -1574,18 +1625,24 @@ struct devlink_ops {
 				      u64 tx_share, struct netlink_ext_ack *extack);
 	int (*rate_leaf_tx_max_set)(struct devlink_rate *devlink_rate, void *priv,
 				    u64 tx_max, struct netlink_ext_ack *extack);
+<<<<<<< HEAD
 	int (*rate_leaf_tx_priority_set)(struct devlink_rate *devlink_rate, void *priv,
 					 u32 tx_priority, struct netlink_ext_ack *extack);
 	int (*rate_leaf_tx_weight_set)(struct devlink_rate *devlink_rate, void *priv,
 				       u32 tx_weight, struct netlink_ext_ack *extack);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int (*rate_node_tx_share_set)(struct devlink_rate *devlink_rate, void *priv,
 				      u64 tx_share, struct netlink_ext_ack *extack);
 	int (*rate_node_tx_max_set)(struct devlink_rate *devlink_rate, void *priv,
 				    u64 tx_max, struct netlink_ext_ack *extack);
+<<<<<<< HEAD
 	int (*rate_node_tx_priority_set)(struct devlink_rate *devlink_rate, void *priv,
 					 u32 tx_priority, struct netlink_ext_ack *extack);
 	int (*rate_node_tx_weight_set)(struct devlink_rate *devlink_rate, void *priv,
 				       u32 tx_weight, struct netlink_ext_ack *extack);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int (*rate_node_new)(struct devlink_rate *rate_node, void **priv,
 			     struct netlink_ext_ack *extack);
 	int (*rate_node_del)(struct devlink_rate *rate_node, void *priv,
@@ -1649,6 +1706,7 @@ static inline struct devlink *devlink_alloc(const struct devlink_ops *ops,
 {
 	return devlink_alloc_ns(ops, priv_size, &init_net, dev);
 }
+<<<<<<< HEAD
 
 int devl_register(struct devlink *devlink);
 void devl_unregister(struct devlink *devlink);
@@ -1658,6 +1716,12 @@ void devlink_free(struct devlink *devlink);
 void devlink_port_init(struct devlink *devlink,
 		       struct devlink_port *devlink_port);
 void devlink_port_fini(struct devlink_port *devlink_port);
+=======
+void devlink_set_features(struct devlink *devlink, u64 features);
+void devlink_register(struct devlink *devlink);
+void devlink_unregister(struct devlink *devlink);
+void devlink_free(struct devlink *devlink);
+>>>>>>> b7ba80a49124 (Commit)
 int devl_port_register(struct devlink *devlink,
 		       struct devlink_port *devlink_port,
 		       unsigned int port_index);
@@ -1666,7 +1730,12 @@ int devlink_port_register(struct devlink *devlink,
 			  unsigned int port_index);
 void devl_port_unregister(struct devlink_port *devlink_port);
 void devlink_port_unregister(struct devlink_port *devlink_port);
+<<<<<<< HEAD
 void devlink_port_type_eth_set(struct devlink_port *devlink_port);
+=======
+void devlink_port_type_eth_set(struct devlink_port *devlink_port,
+			       struct net_device *netdev);
+>>>>>>> b7ba80a49124 (Commit)
 void devlink_port_type_ib_set(struct devlink_port *devlink_port,
 			      struct ib_device *ibdev);
 void devlink_port_type_clear(struct devlink_port *devlink_port);
@@ -1679,20 +1748,30 @@ void devlink_port_attrs_pci_vf_set(struct devlink_port *devlink_port, u32 contro
 void devlink_port_attrs_pci_sf_set(struct devlink_port *devlink_port,
 				   u32 controller, u16 pf, u32 sf,
 				   bool external);
+<<<<<<< HEAD
 struct devlink_rate *
 devl_rate_node_create(struct devlink *devlink, void *priv, char *node_name,
 		      struct devlink_rate *parent);
 int
 devl_rate_leaf_create(struct devlink_port *devlink_port, void *priv,
 		      struct devlink_rate *parent);
+=======
+int devl_rate_leaf_create(struct devlink_port *port, void *priv);
+>>>>>>> b7ba80a49124 (Commit)
 void devl_rate_leaf_destroy(struct devlink_port *devlink_port);
 void devl_rate_nodes_destroy(struct devlink *devlink);
 void devlink_port_linecard_set(struct devlink_port *devlink_port,
 			       struct devlink_linecard *linecard);
 struct devlink_linecard *
+<<<<<<< HEAD
 devl_linecard_create(struct devlink *devlink, unsigned int linecard_index,
 		     const struct devlink_linecard_ops *ops, void *priv);
 void devl_linecard_destroy(struct devlink_linecard *linecard);
+=======
+devlink_linecard_create(struct devlink *devlink, unsigned int linecard_index,
+			const struct devlink_linecard_ops *ops, void *priv);
+void devlink_linecard_destroy(struct devlink_linecard *linecard);
+>>>>>>> b7ba80a49124 (Commit)
 void devlink_linecard_provision_set(struct devlink_linecard *linecard,
 				    const char *type);
 void devlink_linecard_provision_clear(struct devlink_linecard *linecard);
@@ -1771,6 +1850,7 @@ void devl_resource_occ_get_unregister(struct devlink *devlink,
 
 void devlink_resource_occ_get_unregister(struct devlink *devlink,
 					 u64 resource_id);
+<<<<<<< HEAD
 int devl_params_register(struct devlink *devlink,
 			 const struct devlink_param *params,
 			 size_t params_count);
@@ -1788,6 +1868,23 @@ int devl_param_driverinit_value_get(struct devlink *devlink, u32 param_id,
 void devl_param_driverinit_value_set(struct devlink *devlink, u32 param_id,
 				     union devlink_param_value init_val);
 void devl_param_value_changed(struct devlink *devlink, u32 param_id);
+=======
+int devlink_params_register(struct devlink *devlink,
+			    const struct devlink_param *params,
+			    size_t params_count);
+void devlink_params_unregister(struct devlink *devlink,
+			       const struct devlink_param *params,
+			       size_t params_count);
+int devlink_param_register(struct devlink *devlink,
+			   const struct devlink_param *param);
+void devlink_param_unregister(struct devlink *devlink,
+			      const struct devlink_param *param);
+int devlink_param_driverinit_value_get(struct devlink *devlink, u32 param_id,
+				       union devlink_param_value *init_val);
+int devlink_param_driverinit_value_set(struct devlink *devlink, u32 param_id,
+				       union devlink_param_value init_val);
+void devlink_param_value_changed(struct devlink *devlink, u32 param_id);
+>>>>>>> b7ba80a49124 (Commit)
 struct devlink_region *devl_region_create(struct devlink *devlink,
 					  const struct devlink_region_ops *ops,
 					  u32 region_max_snapshots,
@@ -1810,6 +1907,11 @@ int devlink_region_snapshot_create(struct devlink_region *region,
 				   u8 *data, u32 snapshot_id);
 int devlink_info_serial_number_put(struct devlink_info_req *req,
 				   const char *sn);
+<<<<<<< HEAD
+=======
+int devlink_info_driver_name_put(struct devlink_info_req *req,
+				 const char *name);
+>>>>>>> b7ba80a49124 (Commit)
 int devlink_info_board_serial_number_put(struct devlink_info_req *req,
 					 const char *bsn);
 
@@ -1870,15 +1972,22 @@ int devlink_fmsg_binary_pair_put(struct devlink_fmsg *fmsg, const char *name,
 				 const void *value, u32 value_len);
 
 struct devlink_health_reporter *
+<<<<<<< HEAD
 devl_port_health_reporter_create(struct devlink_port *port,
 				 const struct devlink_health_reporter_ops *ops,
 				 u64 graceful_period, void *priv);
+=======
+devlink_health_reporter_create(struct devlink *devlink,
+			       const struct devlink_health_reporter_ops *ops,
+			       u64 graceful_period, void *priv);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct devlink_health_reporter *
 devlink_port_health_reporter_create(struct devlink_port *port,
 				    const struct devlink_health_reporter_ops *ops,
 				    u64 graceful_period, void *priv);
 
+<<<<<<< HEAD
 struct devlink_health_reporter *
 devl_health_reporter_create(struct devlink *devlink,
 			    const struct devlink_health_reporter_ops *ops,
@@ -1895,6 +2004,14 @@ devl_health_reporter_destroy(struct devlink_health_reporter *reporter);
 void
 devlink_health_reporter_destroy(struct devlink_health_reporter *reporter);
 
+=======
+void
+devlink_health_reporter_destroy(struct devlink_health_reporter *reporter);
+
+void
+devlink_port_health_reporter_destroy(struct devlink_health_reporter *reporter);
+
+>>>>>>> b7ba80a49124 (Commit)
 void *
 devlink_health_reporter_priv(struct devlink_health_reporter *reporter);
 int devlink_health_report(struct devlink_health_reporter *reporter,
@@ -1970,9 +2087,12 @@ int devlink_compat_phys_port_name_get(struct net_device *dev,
 int devlink_compat_switch_id_get(struct net_device *dev,
 				 struct netdev_phys_item_id *ppid);
 
+<<<<<<< HEAD
 int devlink_nl_port_handle_fill(struct sk_buff *msg, struct devlink_port *devlink_port);
 size_t devlink_nl_port_handle_size(struct devlink_port *devlink_port);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 
 static inline struct devlink *devlink_try_get(struct devlink *devlink)
@@ -2009,6 +2129,7 @@ devlink_compat_switch_id_get(struct net_device *dev,
 	return -EOPNOTSUPP;
 }
 
+<<<<<<< HEAD
 static inline int
 devlink_nl_port_handle_fill(struct sk_buff *msg, struct devlink_port *devlink_port)
 {
@@ -2020,6 +2141,8 @@ static inline size_t devlink_nl_port_handle_size(struct devlink_port *devlink_po
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #endif /* _NET_DEVLINK_H_ */

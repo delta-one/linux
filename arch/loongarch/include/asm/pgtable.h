@@ -11,7 +11,10 @@
 
 #include <linux/compiler.h>
 #include <asm/addrspace.h>
+<<<<<<< HEAD
 #include <asm/page.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/pgtable-bits.h>
 
 #if CONFIG_PGTABLE_LEVELS == 2
@@ -60,7 +63,10 @@
 #include <linux/mm_types.h>
 #include <linux/mmzone.h>
 #include <asm/fixmap.h>
+<<<<<<< HEAD
 #include <asm/sparsemem.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct mm_struct;
 struct vm_area_struct;
@@ -88,10 +94,14 @@ extern unsigned long zero_page_mask;
 #define VMALLOC_START	MODULES_END
 #define VMALLOC_END	\
 	(vm_map_base +	\
+<<<<<<< HEAD
 	 min(PTRS_PER_PGD * PTRS_PER_PUD * PTRS_PER_PMD * PTRS_PER_PTE * PAGE_SIZE, (1UL << cpu_vabits)) - PMD_SIZE - VMEMMAP_SIZE)
 
 #define vmemmap		((struct page *)((VMALLOC_END + PMD_SIZE) & PMD_MASK))
 #define VMEMMAP_END	((unsigned long)vmemmap + VMEMMAP_SIZE - 1)
+=======
+	 min(PTRS_PER_PGD * PTRS_PER_PUD * PTRS_PER_PMD * PTRS_PER_PTE * PAGE_SIZE, (1UL << cpu_vabits)) - PMD_SIZE)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define pte_ERROR(e) \
 	pr_err("%s:%d: bad pte %016lx.\n", __FILE__, __LINE__, pte_val(e))
@@ -242,6 +252,7 @@ extern void set_pmd_at(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp, pm
 #define pfn_pmd(pfn, prot)	__pmd(((pfn) << _PFN_SHIFT) | pgprot_val(prot))
 
 /*
+<<<<<<< HEAD
  * Initialize a new pgd / pud / pmd table with invalid pointers.
  */
 extern void pgd_init(void *addr);
@@ -269,6 +280,22 @@ static inline pte_t mk_swap_pte(unsigned long type, unsigned long offset)
 { pte_t pte; pte_val(pte) = ((type & 0x7f) << 16) | (offset << 24); return pte; }
 
 #define __swp_type(x)		(((x).val >> 16) & 0x7f)
+=======
+ * Initialize a new pgd / pmd table with invalid pointers.
+ */
+extern void pgd_init(unsigned long page);
+extern void pud_init(unsigned long page, unsigned long pagetable);
+extern void pmd_init(unsigned long page, unsigned long pagetable);
+
+/*
+ * Non-present pages:  high 40 bits are offset, next 8 bits type,
+ * low 16 bits zero.
+ */
+static inline pte_t mk_swap_pte(unsigned long type, unsigned long offset)
+{ pte_t pte; pte_val(pte) = (type << 16) | (offset << 24); return pte; }
+
+#define __swp_type(x)		(((x).val >> 16) & 0xff)
+>>>>>>> b7ba80a49124 (Commit)
 #define __swp_offset(x)		((x).val >> 24)
 #define __swp_entry(type, offset) ((swp_entry_t) { pte_val(mk_swap_pte((type), (offset))) })
 #define __pte_to_swp_entry(pte) ((swp_entry_t) { pte_val(pte) })
@@ -276,6 +303,7 @@ static inline pte_t mk_swap_pte(unsigned long type, unsigned long offset)
 #define __pmd_to_swp_entry(pmd) ((swp_entry_t) { pmd_val(pmd) })
 #define __swp_entry_to_pmd(x)	((pmd_t) { (x).val | _PAGE_HUGE })
 
+<<<<<<< HEAD
 static inline int pte_swp_exclusive(pte_t pte)
 {
 	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
@@ -293,6 +321,8 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
 	return pte;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern void paging_init(void);
 
 #define pte_none(pte)		(!(pte_val(pte) & ~_PAGE_GLOBAL))
@@ -384,6 +414,7 @@ static inline pte_t pte_mkclean(pte_t pte)
 
 static inline pte_t pte_mkdirty(pte_t pte)
 {
+<<<<<<< HEAD
 	pte_val(pte) |= _PAGE_MODIFIED;
 	if (pte_val(pte) & _PAGE_WRITE)
 		pte_val(pte) |= _PAGE_DIRTY;
@@ -395,6 +426,15 @@ static inline pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
 	pte_val(pte) |= _PAGE_WRITE;
 	if (pte_val(pte) & _PAGE_MODIFIED)
 		pte_val(pte) |= _PAGE_DIRTY;
+=======
+	pte_val(pte) |= (_PAGE_DIRTY | _PAGE_MODIFIED);
+	return pte;
+}
+
+static inline pte_t pte_mkwrite(pte_t pte)
+{
+	pte_val(pte) |= (_PAGE_WRITE | _PAGE_DIRTY);
+>>>>>>> b7ba80a49124 (Commit)
 	return pte;
 }
 
@@ -451,15 +491,23 @@ static inline void update_mmu_cache(struct vm_area_struct *vma,
 	__update_tlb(vma, address, ptep);
 }
 
+<<<<<<< HEAD
 #define __HAVE_ARCH_UPDATE_MMU_TLB
 #define update_mmu_tlb	update_mmu_cache
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
 			unsigned long address, pmd_t *pmdp)
 {
 	__update_tlb(vma, address, (pte_t *)pmdp);
 }
 
+<<<<<<< HEAD
+=======
+#define kern_addr_valid(addr)	(1)
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline unsigned long pmd_pfn(pmd_t pmd)
 {
 	return (pmd_val(pmd) & _PFN_MASK) >> _PFN_SHIFT;
@@ -490,11 +538,17 @@ static inline int pmd_write(pmd_t pmd)
 	return !!(pmd_val(pmd) & _PAGE_WRITE);
 }
 
+<<<<<<< HEAD
 static inline pmd_t pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma)
 {
 	pmd_val(pmd) |= _PAGE_WRITE;
 	if (pmd_val(pmd) & _PAGE_MODIFIED)
 		pmd_val(pmd) |= _PAGE_DIRTY;
+=======
+static inline pmd_t pmd_mkwrite(pmd_t pmd)
+{
+	pmd_val(pmd) |= (_PAGE_WRITE | _PAGE_DIRTY);
+>>>>>>> b7ba80a49124 (Commit)
 	return pmd;
 }
 
@@ -517,6 +571,7 @@ static inline pmd_t pmd_mkclean(pmd_t pmd)
 
 static inline pmd_t pmd_mkdirty(pmd_t pmd)
 {
+<<<<<<< HEAD
 	pmd_val(pmd) |= _PAGE_MODIFIED;
 	if (pmd_val(pmd) & _PAGE_WRITE)
 		pmd_val(pmd) |= _PAGE_DIRTY;
@@ -524,6 +579,12 @@ static inline pmd_t pmd_mkdirty(pmd_t pmd)
 }
 
 #define pmd_young pmd_young
+=======
+	pmd_val(pmd) |= (_PAGE_DIRTY | _PAGE_MODIFIED);
+	return pmd;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline int pmd_young(pmd_t pmd)
 {
 	return !!(pmd_val(pmd) & _PAGE_ACCESSED);

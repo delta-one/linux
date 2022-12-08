@@ -44,6 +44,7 @@ struct fscrypt_mode fscrypt_modes[] = {
 		.security_strength = 16,
 		.ivsize = 16,
 	},
+<<<<<<< HEAD
 	[FSCRYPT_MODE_SM4_XTS] = {
 		.friendly_name = "SM4-XTS",
 		.cipher_str = "xts(sm4)",
@@ -59,6 +60,8 @@ struct fscrypt_mode fscrypt_modes[] = {
 		.security_strength = 16,
 		.ivsize = 16,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	[FSCRYPT_MODE_ADIANTUM] = {
 		.friendly_name = "Adiantum",
 		.cipher_str = "adiantum(xchacha12,aes)",
@@ -438,7 +441,10 @@ static int setup_file_encryption_key(struct fscrypt_info *ci,
 				     bool need_dirhash_key,
 				     struct fscrypt_master_key **mk_ret)
 {
+<<<<<<< HEAD
 	struct super_block *sb = ci->ci_inode->i_sb;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct fscrypt_key_specifier mk_spec;
 	struct fscrypt_master_key *mk;
 	int err;
@@ -451,6 +457,7 @@ static int setup_file_encryption_key(struct fscrypt_info *ci,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	mk = fscrypt_find_master_key(sb, &mk_spec);
 	if (unlikely(!mk)) {
 		const union fscrypt_policy *dummy_policy =
@@ -471,6 +478,10 @@ static int setup_file_encryption_key(struct fscrypt_info *ci,
 		}
 	}
 	if (unlikely(!mk)) {
+=======
+	mk = fscrypt_find_master_key(ci->ci_inode->i_sb, &mk_spec);
+	if (!mk) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (ci->ci_policy.version != FSCRYPT_POLICY_V1)
 			return -ENOKEY;
 
@@ -543,7 +554,11 @@ static void put_crypt_info(struct fscrypt_info *ci)
 		spin_lock(&mk->mk_decrypted_inodes_lock);
 		list_del(&ci->ci_master_key_link);
 		spin_unlock(&mk->mk_decrypted_inodes_lock);
+<<<<<<< HEAD
 		fscrypt_put_master_key_activeref(ci->ci_inode->i_sb, mk);
+=======
+		fscrypt_put_master_key_activeref(mk);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	memzero_explicit(ci, sizeof(*ci));
 	kmem_cache_free(fscrypt_info_cachep, ci);

@@ -3,6 +3,7 @@
  * Copyright(c) 2020 Intel Corporation.
  */
 #include <linux/workqueue.h>
+<<<<<<< HEAD
 
 #include "gem/i915_gem_context.h"
 
@@ -11,11 +12,19 @@
 
 #include "i915_drv.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_pxp.h"
 #include "intel_pxp_irq.h"
 #include "intel_pxp_session.h"
 #include "intel_pxp_tee.h"
+<<<<<<< HEAD
 #include "intel_pxp_types.h"
+=======
+#include "gem/i915_gem_context.h"
+#include "gt/intel_context.h"
+#include "i915_drv.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * DOC: PXP
@@ -45,19 +54,33 @@
  * performed via the mei_pxp component module.
  */
 
+<<<<<<< HEAD
 bool intel_pxp_is_supported(const struct intel_pxp *pxp)
 {
 	return IS_ENABLED(CONFIG_DRM_I915_PXP) && pxp;
+=======
+struct intel_gt *pxp_to_gt(const struct intel_pxp *pxp)
+{
+	return container_of(pxp, struct intel_gt, pxp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 bool intel_pxp_is_enabled(const struct intel_pxp *pxp)
 {
+<<<<<<< HEAD
 	return IS_ENABLED(CONFIG_DRM_I915_PXP) && pxp && pxp->ce;
+=======
+	return pxp->ce;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 bool intel_pxp_is_active(const struct intel_pxp *pxp)
 {
+<<<<<<< HEAD
 	return IS_ENABLED(CONFIG_DRM_I915_PXP) && pxp && pxp->arb_is_valid;
+=======
+	return pxp->arb_is_valid;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* KCR register definitions */
@@ -80,7 +103,11 @@ static void kcr_pxp_disable(struct intel_gt *gt)
 static int create_vcs_context(struct intel_pxp *pxp)
 {
 	static struct lock_class_key pxp_lock;
+<<<<<<< HEAD
 	struct intel_gt *gt = pxp->ctrl_gt;
+=======
+	struct intel_gt *gt = pxp_to_gt(pxp);
+>>>>>>> b7ba80a49124 (Commit)
 	struct intel_engine_cs *engine;
 	struct intel_context *ce;
 	int i;
@@ -109,6 +136,7 @@ static int create_vcs_context(struct intel_pxp *pxp)
 
 static void destroy_vcs_context(struct intel_pxp *pxp)
 {
+<<<<<<< HEAD
 	if (pxp->ce)
 		intel_engine_destroy_pinned_context(fetch_and_zero(&pxp->ce));
 }
@@ -118,6 +146,21 @@ static void pxp_init_full(struct intel_pxp *pxp)
 	struct intel_gt *gt = pxp->ctrl_gt;
 	int ret;
 
+=======
+	intel_engine_destroy_pinned_context(fetch_and_zero(&pxp->ce));
+}
+
+void intel_pxp_init(struct intel_pxp *pxp)
+{
+	struct intel_gt *gt = pxp_to_gt(pxp);
+	int ret;
+
+	if (!HAS_PXP(gt->i915))
+		return;
+
+	mutex_init(&pxp->tee_mutex);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * we'll use the completion to check if there is a termination pending,
 	 * so we start it as completed and we reinit it when a termination
@@ -126,7 +169,12 @@ static void pxp_init_full(struct intel_pxp *pxp)
 	init_completion(&pxp->termination);
 	complete_all(&pxp->termination);
 
+<<<<<<< HEAD
 	intel_pxp_session_management_init(pxp);
+=======
+	mutex_init(&pxp->arb_mutex);
+	INIT_WORK(&pxp->session_work, intel_pxp_session_work);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = create_vcs_context(pxp);
 	if (ret)
@@ -144,6 +192,7 @@ out_context:
 	destroy_vcs_context(pxp);
 }
 
+<<<<<<< HEAD
 static struct intel_gt *find_gt_for_required_teelink(struct drm_i915_private *i915)
 {
 	/*
@@ -235,6 +284,18 @@ void intel_pxp_fini(struct drm_i915_private *i915)
 
 	kfree(i915->pxp);
 	i915->pxp = NULL;
+=======
+void intel_pxp_fini(struct intel_pxp *pxp)
+{
+	if (!intel_pxp_is_enabled(pxp))
+		return;
+
+	pxp->arb_is_valid = false;
+
+	intel_pxp_tee_component_fini(pxp);
+
+	destroy_vcs_context(pxp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void intel_pxp_mark_termination_in_progress(struct intel_pxp *pxp)
@@ -245,7 +306,11 @@ void intel_pxp_mark_termination_in_progress(struct intel_pxp *pxp)
 
 static void pxp_queue_termination(struct intel_pxp *pxp)
 {
+<<<<<<< HEAD
 	struct intel_gt *gt = pxp->ctrl_gt;
+=======
+	struct intel_gt *gt = pxp_to_gt(pxp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * We want to get the same effect as if we received a termination
@@ -270,6 +335,7 @@ static bool pxp_component_bound(struct intel_pxp *pxp)
 	return bound;
 }
 
+<<<<<<< HEAD
 static int __pxp_global_teardown_final(struct intel_pxp *pxp)
 {
 	if (!pxp->arb_is_valid)
@@ -324,6 +390,8 @@ void intel_pxp_end(struct intel_pxp *pxp)
 	intel_runtime_pm_put(&i915->runtime_pm, wakeref);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * the arb session is restarted from the irq work when we receive the
  * termination completion interrupt
@@ -340,10 +408,24 @@ int intel_pxp_start(struct intel_pxp *pxp)
 
 	mutex_lock(&pxp->arb_mutex);
 
+<<<<<<< HEAD
 	ret = __pxp_global_teardown_restart(pxp);
 	if (ret)
 		goto unlock;
 
+=======
+	if (pxp->arb_is_valid)
+		goto unlock;
+
+	pxp_queue_termination(pxp);
+
+	if (!wait_for_completion_timeout(&pxp->termination,
+					msecs_to_jiffies(250))) {
+		ret = -ETIMEDOUT;
+		goto unlock;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* make sure the compiler doesn't optimize the double access */
 	barrier();
 
@@ -357,13 +439,21 @@ unlock:
 
 void intel_pxp_init_hw(struct intel_pxp *pxp)
 {
+<<<<<<< HEAD
 	kcr_pxp_enable(pxp->ctrl_gt);
+=======
+	kcr_pxp_enable(pxp_to_gt(pxp));
+>>>>>>> b7ba80a49124 (Commit)
 	intel_pxp_irq_enable(pxp);
 }
 
 void intel_pxp_fini_hw(struct intel_pxp *pxp)
 {
+<<<<<<< HEAD
 	kcr_pxp_disable(pxp->ctrl_gt);
+=======
+	kcr_pxp_disable(pxp_to_gt(pxp));
+>>>>>>> b7ba80a49124 (Commit)
 
 	intel_pxp_irq_disable(pxp);
 }
@@ -397,7 +487,11 @@ int intel_pxp_key_check(struct intel_pxp *pxp,
 
 void intel_pxp_invalidate(struct intel_pxp *pxp)
 {
+<<<<<<< HEAD
 	struct drm_i915_private *i915 = pxp->ctrl_gt->i915;
+=======
+	struct drm_i915_private *i915 = pxp_to_gt(pxp)->i915;
+>>>>>>> b7ba80a49124 (Commit)
 	struct i915_gem_context *ctx, *cn;
 
 	/* ban all contexts marked as protected */

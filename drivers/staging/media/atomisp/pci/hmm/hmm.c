@@ -41,9 +41,17 @@ static bool hmm_initialized;
 
 /*
  * p: private
+<<<<<<< HEAD
  * v: vmalloc
  */
 static const char hmm_bo_type_string[] = "pv";
+=======
+ * s: shared
+ * u: user
+ * i: ion
+ */
+static const char hmm_bo_type_string[] = "psui";
+>>>>>>> b7ba80a49124 (Commit)
 
 static ssize_t bo_show(struct device *dev, struct device_attribute *attr,
 		       char *buf, struct list_head *bo_list, bool active)
@@ -166,8 +174,12 @@ void hmm_cleanup(void)
 	hmm_initialized = false;
 }
 
+<<<<<<< HEAD
 static ia_css_ptr __hmm_alloc(size_t bytes, enum hmm_bo_type type,
 			      void *vmalloc_addr)
+=======
+static ia_css_ptr __hmm_alloc(size_t bytes, enum hmm_bo_type type, const void __user *userptr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int pgnr;
 	struct hmm_buffer_object *bo;
@@ -191,7 +203,11 @@ static ia_css_ptr __hmm_alloc(size_t bytes, enum hmm_bo_type type,
 	}
 
 	/* Allocate pages for memory */
+<<<<<<< HEAD
 	ret = hmm_bo_alloc_pages(bo, type, vmalloc_addr);
+=======
+	ret = hmm_bo_alloc_pages(bo, type, userptr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(atomisp_dev, "hmm_bo_alloc_pages failed.\n");
 		goto alloc_page_err;
@@ -204,8 +220,14 @@ static ia_css_ptr __hmm_alloc(size_t bytes, enum hmm_bo_type type,
 		goto bind_err;
 	}
 
+<<<<<<< HEAD
 	dev_dbg(atomisp_dev, "pages: 0x%08x (%zu bytes), type: %d, vmalloc %p\n",
 		bo->start, bytes, type, vmalloc);
+=======
+	dev_dbg(atomisp_dev,
+		"%s: pages: 0x%08x (%zu bytes), type: %d, user ptr %p\n",
+		__func__, bo->start, bytes, type, userptr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return bo->start;
 
@@ -222,9 +244,15 @@ ia_css_ptr hmm_alloc(size_t bytes)
 	return __hmm_alloc(bytes, HMM_BO_PRIVATE, NULL);
 }
 
+<<<<<<< HEAD
 ia_css_ptr hmm_create_from_vmalloc_buf(size_t bytes, void *vmalloc_addr)
 {
 	return __hmm_alloc(bytes, HMM_BO_VMALLOC, vmalloc_addr);
+=======
+ia_css_ptr hmm_create_from_userdata(size_t bytes, const void __user *userptr)
+{
+	return __hmm_alloc(bytes, HMM_BO_USER, userptr);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void hmm_free(ia_css_ptr virt)

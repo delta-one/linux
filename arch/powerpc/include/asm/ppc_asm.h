@@ -34,6 +34,7 @@
 .endm
 
 /*
+<<<<<<< HEAD
  * This expands to a sequence of register clears for regs start to end
  * inclusive, of the form:
  *
@@ -48,6 +49,8 @@
 .endm
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Macros for storing registers into and loading registers from
  * exception frames.
  */
@@ -63,6 +66,7 @@
 #define REST_NVGPRS(base)		REST_GPRS(13, 31, base)
 #endif
 
+<<<<<<< HEAD
 #define	ZEROIZE_GPRS(start, end)	ZEROIZE_REGS start, end
 #ifdef __powerpc64__
 #define	ZEROIZE_NVGPRS()		ZEROIZE_GPRS(14, 31)
@@ -93,6 +97,11 @@
 #define HANDLER_RESTORE_NVGPRS()		REST_NVGPRS(r1)
 #endif /* CONFIG_INTERRUPT_SANITIZE_REGISTERS */
 
+=======
+#define SAVE_GPR(n, base)		SAVE_GPRS(n, n, base)
+#define REST_GPR(n, base)		REST_GPRS(n, n, base)
+
+>>>>>>> b7ba80a49124 (Commit)
 #define SAVE_FPR(n, base)	stfd	n,8*TS_FPRWIDTH*(n)(base)
 #define SAVE_2FPRS(n, base)	SAVE_FPR(n, base); SAVE_FPR(n+1, base)
 #define SAVE_4FPRS(n, base)	SAVE_2FPRS(n, base); SAVE_2FPRS(n+2, base)
@@ -346,12 +355,15 @@ n:
 
 #ifdef __powerpc64__
 
+<<<<<<< HEAD
 #define __LOAD_PACA_TOC(reg)			\
 	ld	reg,PACATOC(r13)
 
 #define LOAD_PACA_TOC()				\
 	__LOAD_PACA_TOC(r2)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define LOAD_REG_IMMEDIATE(reg, expr) __LOAD_REG_IMMEDIATE reg, expr
 
 #define LOAD_REG_IMMEDIATE_SYM(reg, tmp, expr)	\
@@ -362,6 +374,7 @@ n:
 	rldimi	reg, tmp, 32, 0
 
 #define LOAD_REG_ADDR(reg,name)			\
+<<<<<<< HEAD
 	addis	reg,r2,name@toc@ha;		\
 	addi	reg,reg,name@toc@l
 
@@ -375,6 +388,9 @@ n:
 #define LOAD_REG_ADDR_ALTTOC(reg,tocreg,name)	\
 	ld	reg,name@got(tocreg)
 #endif
+=======
+	ld	reg,name@got(r2)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define LOAD_REG_ADDRBASE(reg,name)	LOAD_REG_ADDR(reg,name)
 #define ADDROFF(name)			0
@@ -401,7 +417,11 @@ n:
 #endif
 
 /* various errata or part fixups */
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_CELL) || defined(CONFIG_PPC_E500)
+=======
+#if defined(CONFIG_PPC_CELL) || defined(CONFIG_PPC_FSL_BOOK3E)
+>>>>>>> b7ba80a49124 (Commit)
 #define MFTB(dest)			\
 90:	mfspr dest, SPRN_TBRL;		\
 BEGIN_FTR_SECTION_NESTED(96);		\
@@ -768,7 +788,11 @@ END_FTR_SECTION_NESTED(CPU_FTR_CELL_TB_BUG, CPU_FTR_CELL_TB_BUG, 96)
  * kernel is built for.
  */
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_BOOK3E_64
+=======
+#ifdef CONFIG_PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 #define FIXUP_ENDIAN
 #else
 /*
@@ -808,7 +832,11 @@ END_FTR_SECTION_NESTED(CPU_FTR_CELL_TB_BUG, CPU_FTR_CELL_TB_BUG, 96)
 	.long 0x2402004c; /* hrfid				*/ \
 191:
 
+<<<<<<< HEAD
 #endif /* !CONFIG_PPC_BOOK3E_64 */
+=======
+#endif /* !CONFIG_PPC_BOOK3E */
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /*  __ASSEMBLY__ */
 
@@ -827,7 +855,11 @@ END_FTR_SECTION_NESTED(CPU_FTR_CELL_TB_BUG, CPU_FTR_CELL_TB_BUG, 96)
 	stringify_in_c(.llong (_target);)	\
 	stringify_in_c(.previous)
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_E500
+=======
+#ifdef CONFIG_PPC_FSL_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 #define BTB_FLUSH(reg)			\
 	lis reg,BUCSR_INIT@h;		\
 	ori reg,reg,BUCSR_INIT@l;	\
@@ -835,6 +867,10 @@ END_FTR_SECTION_NESTED(CPU_FTR_CELL_TB_BUG, CPU_FTR_CELL_TB_BUG, 96)
 	isync;
 #else
 #define BTB_FLUSH(reg)
+<<<<<<< HEAD
 #endif /* CONFIG_PPC_E500 */
+=======
+#endif /* CONFIG_PPC_FSL_BOOK3E */
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _ASM_POWERPC_PPC_ASM_H */

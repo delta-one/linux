@@ -22,9 +22,24 @@ static struct ctl_table cachefiles_sysctls[] = {
 	{}
 };
 
+<<<<<<< HEAD
 int __init cachefiles_register_error_injection(void)
 {
 	cachefiles_sysctl = register_sysctl("cachefiles", cachefiles_sysctls);
+=======
+static struct ctl_table cachefiles_sysctls_root[] = {
+	{
+		.procname	= "cachefiles",
+		.mode		= 0555,
+		.child		= cachefiles_sysctls,
+	},
+	{}
+};
+
+int __init cachefiles_register_error_injection(void)
+{
+	cachefiles_sysctl = register_sysctl_table(cachefiles_sysctls_root);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!cachefiles_sysctl)
 		return -ENOMEM;
 	return 0;

@@ -54,6 +54,7 @@ static void t7xx_port_ctrl_stop(struct wwan_port *port)
 static int t7xx_port_ctrl_tx(struct wwan_port *port, struct sk_buff *skb)
 {
 	struct t7xx_port *port_private = wwan_port_get_drvdata(port);
+<<<<<<< HEAD
 	const struct t7xx_port_conf *port_conf;
 	struct sk_buff *cur = skb, *cloned;
 	struct t7xx_fsm_ctl *ctl;
@@ -61,6 +62,15 @@ static int t7xx_port_ctrl_tx(struct wwan_port *port, struct sk_buff *skb)
 	int cnt = 0, ret;
 
 	if (!port_private->chan_enable)
+=======
+	size_t len, offset, chunk_len = 0, txq_mtu = CLDMA_MTU;
+	const struct t7xx_port_conf *port_conf;
+	struct t7xx_fsm_ctl *ctl;
+	enum md_state md_state;
+
+	len = skb->len;
+	if (!len || !port_private->chan_enable)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	port_conf = port_private->port_conf;
@@ -72,6 +82,7 @@ static int t7xx_port_ctrl_tx(struct wwan_port *port, struct sk_buff *skb)
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
 	while (cur) {
 		cloned = skb_clone(cur, GFP_KERNEL);
 		cloned->len = skb_headlen(cur);
@@ -87,6 +98,25 @@ static int t7xx_port_ctrl_tx(struct wwan_port *port, struct sk_buff *skb)
 			cur = skb_shinfo(skb)->frag_list;
 		else
 			cur = cur->next;
+=======
+	for (offset = 0; offset < len; offset += chunk_len) {
+		struct sk_buff *skb_ccci;
+		int ret;
+
+		chunk_len = min(len - offset, txq_mtu - sizeof(struct ccci_header));
+		skb_ccci = t7xx_port_alloc_skb(chunk_len);
+		if (!skb_ccci)
+			return -ENOMEM;
+
+		skb_put_data(skb_ccci, skb->data + offset, chunk_len);
+		ret = t7xx_port_send_skb(port_private, skb_ccci, 0, 0);
+		if (ret) {
+			dev_kfree_skb_any(skb_ccci);
+			dev_err(port_private->dev, "Write error on %s port, %d\n",
+				port_conf->name, ret);
+			return ret;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	dev_kfree_skb(skb);
@@ -107,12 +137,21 @@ static int t7xx_port_wwan_init(struct t7xx_port *port)
 
 static void t7xx_port_wwan_uninit(struct t7xx_port *port)
 {
+<<<<<<< HEAD
 	if (!port->wwan.wwan_port)
 		return;
 
 	port->rx_length_th = 0;
 	wwan_remove_port(port->wwan.wwan_port);
 	port->wwan.wwan_port = NULL;
+=======
+	if (!port->wwan_port)
+		return;
+
+	port->rx_length_th = 0;
+	wwan_remove_port(port->wwan_port);
+	port->wwan_port = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int t7xx_port_wwan_recv_skb(struct t7xx_port *port, struct sk_buff *skb)
@@ -127,7 +166,11 @@ static int t7xx_port_wwan_recv_skb(struct t7xx_port *port, struct sk_buff *skb)
 		return 0;
 	}
 
+<<<<<<< HEAD
 	wwan_port_rx(port->wwan.wwan_port, skb);
+=======
+	wwan_port_rx(port->wwan_port, skb);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -152,18 +195,28 @@ static int t7xx_port_wwan_disable_chl(struct t7xx_port *port)
 static void t7xx_port_wwan_md_state_notify(struct t7xx_port *port, unsigned int state)
 {
 	const struct t7xx_port_conf *port_conf = port->port_conf;
+<<<<<<< HEAD
 	unsigned int header_len = sizeof(struct ccci_header);
 	struct wwan_port_caps caps;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (state != MD_STATE_READY)
 		return;
 
+<<<<<<< HEAD
 	if (!port->wwan.wwan_port) {
 		caps.frag_len = CLDMA_MTU - header_len;
 		caps.headroom_len = header_len;
 		port->wwan.wwan_port = wwan_create_port(port->dev, port_conf->port_type,
 							&wwan_ops, &caps, port);
 		if (IS_ERR(port->wwan.wwan_port))
+=======
+	if (!port->wwan_port) {
+		port->wwan_port = wwan_create_port(port->dev, port_conf->port_type,
+						   &wwan_ops, port);
+		if (IS_ERR(port->wwan_port))
+>>>>>>> b7ba80a49124 (Commit)
 			dev_err(port->dev, "Unable to create WWWAN port %s", port_conf->name);
 	}
 }

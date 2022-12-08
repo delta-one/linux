@@ -365,7 +365,11 @@ static int vlan_dev_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 
 	switch (cmd) {
 	case SIOCSHWTSTAMP:
+<<<<<<< HEAD
 		if (!net_eq(dev_net(dev), dev_net(real_dev)))
+=======
+		if (!net_eq(dev_net(dev), &init_net))
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		fallthrough;
 	case SIOCGMIIPHY:
@@ -712,13 +716,21 @@ static void vlan_dev_get_stats64(struct net_device *dev,
 
 		p = per_cpu_ptr(vlan_dev_priv(dev)->vlan_pcpu_stats, i);
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&p->syncp);
+=======
+			start = u64_stats_fetch_begin_irq(&p->syncp);
+>>>>>>> b7ba80a49124 (Commit)
 			rxpackets	= u64_stats_read(&p->rx_packets);
 			rxbytes		= u64_stats_read(&p->rx_bytes);
 			rxmulticast	= u64_stats_read(&p->rx_multicast);
 			txpackets	= u64_stats_read(&p->tx_packets);
 			txbytes		= u64_stats_read(&p->tx_bytes);
+<<<<<<< HEAD
 		} while (u64_stats_fetch_retry(&p->syncp, start));
+=======
+		} while (u64_stats_fetch_retry_irq(&p->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		stats->rx_packets	+= rxpackets;
 		stats->rx_bytes		+= rxbytes;

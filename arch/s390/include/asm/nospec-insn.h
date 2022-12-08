@@ -2,7 +2,10 @@
 #ifndef _ASM_S390_NOSPEC_ASM_H
 #define _ASM_S390_NOSPEC_ASM_H
 
+<<<<<<< HEAD
 #include <linux/linkage.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/dwarf.h>
 
 #ifdef __ASSEMBLY__
@@ -17,7 +20,11 @@
 	.macro __THUNK_PROLOG_NAME name
 #ifdef CONFIG_EXPOLINE_EXTERN
 	.pushsection .text,"ax",@progbits
+<<<<<<< HEAD
 	__ALIGN
+=======
+	.align 16,0x07
+>>>>>>> b7ba80a49124 (Commit)
 #else
 	.pushsection .text.\name,"axG",@progbits,\name,comdat
 #endif

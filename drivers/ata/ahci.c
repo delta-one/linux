@@ -26,6 +26,10 @@
 #include <linux/device.h>
 #include <linux/dmi.h>
 #include <linux/gfp.h>
+<<<<<<< HEAD
+=======
+#include <linux/msi.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <scsi/scsi_host.h>
 #include <scsi/scsi_cmnd.h>
 #include <linux/libata.h>
@@ -83,7 +87,10 @@ enum board_ids {
 static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent);
 static void ahci_remove_one(struct pci_dev *dev);
 static void ahci_shutdown_one(struct pci_dev *dev);
+<<<<<<< HEAD
 static void ahci_intel_pcs_quirk(struct pci_dev *pdev, struct ahci_host_priv *hpriv);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ahci_vt8251_hardreset(struct ata_link *link, unsigned int *class,
 				 unsigned long deadline);
 static int ahci_avn_hardreset(struct ata_link *link, unsigned int *class,
@@ -677,6 +684,7 @@ static void ahci_pci_save_initial_config(struct pci_dev *pdev,
 	ahci_save_initial_config(&pdev->dev, hpriv);
 }
 
+<<<<<<< HEAD
 static int ahci_pci_reset_controller(struct ata_host *host)
 {
 	struct pci_dev *pdev = to_pci_dev(host->dev);
@@ -696,6 +704,8 @@ static int ahci_pci_reset_controller(struct ata_host *host)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void ahci_pci_init_controller(struct ata_host *host)
 {
 	struct ahci_host_priv *hpriv = host->private_data;
@@ -890,7 +900,11 @@ static int ahci_pci_device_runtime_resume(struct device *dev)
 	struct ata_host *host = pci_get_drvdata(pdev);
 	int rc;
 
+<<<<<<< HEAD
 	rc = ahci_pci_reset_controller(host);
+=======
+	rc = ahci_reset_controller(host);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 	ahci_pci_init_controller(host);
@@ -926,7 +940,11 @@ static int ahci_pci_device_resume(struct device *dev)
 		ahci_mcp89_apple_enable(pdev);
 
 	if (pdev->dev.power.power_state.event == PM_EVENT_SUSPEND) {
+<<<<<<< HEAD
 		rc = ahci_pci_reset_controller(host);
+=======
+		rc = ahci_reset_controller(host);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rc)
 			return rc;
 
@@ -1804,6 +1822,15 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 	/* save initial config */
 	ahci_pci_save_initial_config(pdev, hpriv);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * If platform firmware failed to enable ports, try to enable
+	 * them here.
+	 */
+	ahci_intel_pcs_quirk(pdev, hpriv);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* prepare host */
 	if (hpriv->cap & HOST_CAP_NCQ) {
 		pi.flags |= ATA_FLAG_NCQ;
@@ -1913,7 +1940,11 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
 	rc = ahci_pci_reset_controller(host);
+=======
+	rc = ahci_reset_controller(host);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 

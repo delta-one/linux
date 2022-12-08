@@ -290,7 +290,10 @@ static void efi_stub_entry_update(void)
 {
 	unsigned long addr = efi32_stub_entry;
 
+<<<<<<< HEAD
 #ifdef CONFIG_EFI_HANDOVER_PROTOCOL
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_X86_64
 	/* Yes, this is really how we defined it :( */
 	addr = efi64_stub_entry - 0x200;
@@ -300,7 +303,10 @@ static void efi_stub_entry_update(void)
 	if (efi32_stub_entry != addr)
 		die("32-bit and 64-bit EFI entry points do not match\n");
 #endif
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	put_unaligned_le32(addr, &buf[0x264]);
 }
 

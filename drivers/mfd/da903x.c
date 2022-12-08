@@ -488,9 +488,15 @@ failed:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int da903x_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int da903x_probe(struct i2c_client *client,
+				  const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct da903x_platform_data *pdata = dev_get_platdata(&client->dev);
 	struct da903x_chip *chip;
 	unsigned int tmp;
@@ -543,7 +549,11 @@ static struct i2c_driver da903x_driver = {
 	.driver	= {
 		.name	= "da903x",
 	},
+<<<<<<< HEAD
 	.probe_new	= da903x_probe,
+=======
+	.probe		= da903x_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= da903x_remove,
 	.id_table	= da903x_id_table,
 };
@@ -563,3 +573,7 @@ module_exit(da903x_exit);
 MODULE_DESCRIPTION("PMIC Driver for Dialog Semiconductor DA9034");
 MODULE_AUTHOR("Eric Miao <eric.miao@marvell.com>");
 MODULE_AUTHOR("Mike Rapoport <mike@compulab.co.il>");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

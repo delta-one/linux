@@ -10,6 +10,7 @@
 #include <stddef.h>
 #endif
 
+<<<<<<< HEAD
 /* ASCII for _BHRfS_M, no terminating nul */
 #define BTRFS_MAGIC 0x4D5F53665248425FULL
 
@@ -27,6 +28,8 @@
  */
 #define BTRFS_LINK_MAX 65535U
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This header contains the structure definitions and constants used
  * by file system objects that can be retrieved using
@@ -376,6 +379,7 @@ enum btrfs_csum_type {
 #define BTRFS_FT_SYMLINK	7
 #define BTRFS_FT_XATTR		8
 #define BTRFS_FT_MAX		9
+<<<<<<< HEAD
 /* Directory contains encrypted data */
 #define BTRFS_FT_ENCRYPTED	0x80
 
@@ -420,6 +424,8 @@ static inline __u8 btrfs_dir_flags_to_ftype(__u8 flags)
 #define BTRFS_INODE_RO_VERITY		(1U << 0)
 
 #define BTRFS_INODE_RO_FLAG_MASK	(BTRFS_INODE_RO_VERITY)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * The key defines the order in the tree, and so it also defines (optimal)
@@ -450,6 +456,7 @@ struct btrfs_key {
 	__u64 offset;
 } __attribute__ ((__packed__));
 
+<<<<<<< HEAD
 /*
  * Every tree block (leaf or node) starts with this header.
  */
@@ -553,6 +560,8 @@ struct btrfs_node {
 	struct btrfs_key_ptr ptrs[];
 } __attribute__ ((__packed__));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct btrfs_dev_item {
 	/* the internal btrfs device id */
 	__le64 devid;
@@ -636,6 +645,7 @@ struct btrfs_chunk {
 	/* additional stripes go here */
 } __attribute__ ((__packed__));
 
+<<<<<<< HEAD
 /*
  * The super block basically lists the main trees of the FS.
  */
@@ -699,6 +709,8 @@ struct btrfs_super_block {
 	__u8 padding[565];
 } __attribute__ ((__packed__));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define BTRFS_FREE_SPACE_EXTENT	1
 #define BTRFS_FREE_SPACE_BITMAP	2
 
@@ -753,6 +765,7 @@ struct btrfs_extent_item_v0 {
 /* use full backrefs for extent pointers in the block */
 #define BTRFS_BLOCK_FLAG_FULL_BACKREF	(1ULL << 8)
 
+<<<<<<< HEAD
 #define BTRFS_BACKREF_REV_MAX		256
 #define BTRFS_BACKREF_REV_SHIFT		56
 #define BTRFS_BACKREF_REV_MASK		(((u64)BTRFS_BACKREF_REV_MAX - 1) << \
@@ -761,6 +774,8 @@ struct btrfs_extent_item_v0 {
 #define BTRFS_OLD_BACKREF_REV		0
 #define BTRFS_MIXED_BACKREF_REV		1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * this flag is only used internally by scrub and may be changed at any time
  * it is only declared here to avoid collisions

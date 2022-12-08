@@ -14,6 +14,7 @@
 #include <linux/notifier.h>
 #include <linux/sched.h>
 #include <linux/mman.h>
+<<<<<<< HEAD
 #include <linux/memblock.h>
 #include <linux/page-isolation.h>
 #include <linux/padata.h>
@@ -31,6 +32,9 @@
 #include "shuffle.h"
 
 #include <asm/setup.h>
+=======
+#include "internal.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_DEBUG_MEMORY_INIT
 int __meminitdata mminit_loglevel;
@@ -194,10 +198,23 @@ static int __meminit mm_compute_batch_notifier(struct notifier_block *self,
 	return NOTIFY_OK;
 }
 
+<<<<<<< HEAD
 static int __init mm_compute_batch_init(void)
 {
 	mm_compute_batch(sysctl_overcommit_memory);
 	hotplug_memory_notifier(mm_compute_batch_notifier, MM_COMPUTE_BATCH_PRI);
+=======
+static struct notifier_block compute_batch_nb __meminitdata = {
+	.notifier_call = mm_compute_batch_notifier,
+	.priority = IPC_CALLBACK_PRI, /* use lowest priority */
+};
+
+static int __init mm_compute_batch_init(void)
+{
+	mm_compute_batch(sysctl_overcommit_memory);
+	register_hotmemory_notifier(&compute_batch_nb);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -214,6 +231,7 @@ static int __init mm_sysfs_init(void)
 	return 0;
 }
 postcore_initcall(mm_sysfs_init);
+<<<<<<< HEAD
 
 static unsigned long arch_zone_lowest_possible_pfn[MAX_NR_ZONES] __initdata;
 static unsigned long arch_zone_highest_possible_pfn[MAX_NR_ZONES] __initdata;
@@ -2746,3 +2764,5 @@ void __init mm_core_init(void)
 	kmsan_init_runtime();
 	mm_cache_init();
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

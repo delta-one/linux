@@ -6,15 +6,21 @@
  *          Laurent Pinchart (laurent.pinchart@ideasonboard.com)
  */
 
+<<<<<<< HEAD
 #include <asm/barrier.h>
 #include <linux/bitops.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kernel.h>
 #include <linux/list.h>
 #include <linux/module.h>
 #include <linux/slab.h>
 #include <linux/uaccess.h>
 #include <linux/usb.h>
+<<<<<<< HEAD
 #include <linux/usb/uvc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/videodev2.h>
 #include <linux/vmalloc.h>
 #include <linux/wait.h>
@@ -365,6 +371,7 @@ static const u32 uvc_control_classes[] = {
 	V4L2_CID_USER_CLASS,
 };
 
+<<<<<<< HEAD
 static const int exposure_auto_mapping[] = { 2, 1, 4, 8 };
 
 /*
@@ -404,6 +411,21 @@ uvc_mapping_get_menu_name(const struct uvc_control_mapping *mapping, u32 idx)
 
 	return v4l2_ctrl_get_menu(mapping->id)[idx];
 }
+=======
+static const struct uvc_menu_info power_line_frequency_controls[] = {
+	{ 0, "Disabled" },
+	{ 1, "50 Hz" },
+	{ 2, "60 Hz" },
+	{ 3, "Auto" },
+};
+
+static const struct uvc_menu_info exposure_auto_controls[] = {
+	{ 2, "Auto Mode" },
+	{ 1, "Manual Mode" },
+	{ 4, "Shutter Priority Mode" },
+	{ 8, "Aperture Priority Mode" },
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static s32 uvc_ctrl_get_zoom(struct uvc_control_mapping *mapping,
 	u8 query, const u8 *data)
@@ -552,9 +574,14 @@ static const struct uvc_control_mapping uvc_ctrl_mappings[] = {
 		.offset		= 0,
 		.v4l2_type	= V4L2_CTRL_TYPE_MENU,
 		.data_type	= UVC_CTRL_DATA_TYPE_BITMASK,
+<<<<<<< HEAD
 		.menu_mapping	= exposure_auto_mapping,
 		.menu_mask	= GENMASK(V4L2_EXPOSURE_APERTURE_PRIORITY,
 					  V4L2_EXPOSURE_AUTO),
+=======
+		.menu_info	= exposure_auto_controls,
+		.menu_count	= ARRAY_SIZE(exposure_auto_controls),
+>>>>>>> b7ba80a49124 (Commit)
 		.slave_ids	= { V4L2_CID_EXPOSURE_ABSOLUTE, },
 	},
 	{
@@ -750,6 +777,7 @@ static const struct uvc_control_mapping uvc_ctrl_mappings[] = {
 	},
 };
 
+<<<<<<< HEAD
 const struct uvc_control_mapping uvc_ctrl_power_line_mapping_limited = {
 	.id		= V4L2_CID_POWER_LINE_FREQUENCY,
 	.entity		= UVC_GUID_UVC_PROCESSING,
@@ -794,6 +822,34 @@ static const struct uvc_control_mapping uvc_ctrl_power_line_mapping_uvc15 = {
 static const struct uvc_control_mapping *uvc_ctrl_mappings_uvc15[] = {
 	&uvc_ctrl_power_line_mapping_uvc15,
 	NULL, /* Sentinel */
+=======
+static const struct uvc_control_mapping uvc_ctrl_mappings_uvc11[] = {
+	{
+		.id		= V4L2_CID_POWER_LINE_FREQUENCY,
+		.entity		= UVC_GUID_UVC_PROCESSING,
+		.selector	= UVC_PU_POWER_LINE_FREQUENCY_CONTROL,
+		.size		= 2,
+		.offset		= 0,
+		.v4l2_type	= V4L2_CTRL_TYPE_MENU,
+		.data_type	= UVC_CTRL_DATA_TYPE_ENUM,
+		.menu_info	= power_line_frequency_controls,
+		.menu_count	= ARRAY_SIZE(power_line_frequency_controls) - 1,
+	},
+};
+
+static const struct uvc_control_mapping uvc_ctrl_mappings_uvc15[] = {
+	{
+		.id		= V4L2_CID_POWER_LINE_FREQUENCY,
+		.entity		= UVC_GUID_UVC_PROCESSING,
+		.selector	= UVC_PU_POWER_LINE_FREQUENCY_CONTROL,
+		.size		= 2,
+		.offset		= 0,
+		.v4l2_type	= V4L2_CTRL_TYPE_MENU,
+		.data_type	= UVC_CTRL_DATA_TYPE_ENUM,
+		.menu_info	= power_line_frequency_controls,
+		.menu_count	= ARRAY_SIZE(power_line_frequency_controls),
+	},
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* ------------------------------------------------------------------------
@@ -1019,6 +1075,7 @@ static s32 __uvc_ctrl_get_value(struct uvc_control_mapping *mapping,
 	s32 value = mapping->get(mapping, UVC_GET_CUR, data);
 
 	if (mapping->v4l2_type == V4L2_CTRL_TYPE_MENU) {
+<<<<<<< HEAD
 		unsigned int i;
 
 		for (i = 0; BIT(i) <= mapping->menu_mask; ++i) {
@@ -1030,6 +1087,13 @@ static s32 __uvc_ctrl_get_value(struct uvc_control_mapping *mapping,
 			menu_value = uvc_mapping_get_menu_value(mapping, i);
 
 			if (menu_value == value) {
+=======
+		const struct uvc_menu_info *menu = mapping->menu_info;
+		unsigned int i;
+
+		for (i = 0; i < mapping->menu_count; ++i, ++menu) {
+			if (menu->value == value) {
+>>>>>>> b7ba80a49124 (Commit)
 				value = i;
 				break;
 			}
@@ -1138,6 +1202,7 @@ static int uvc_query_v4l2_class(struct uvc_video_chain *chain, u32 req_id,
 	return 0;
 }
 
+<<<<<<< HEAD
 /*
  * Check if control @v4l2_id can be accessed by the given control @ioctl
  * (VIDIOC_G_EXT_CTRLS, VIDIOC_TRY_EXT_CTRLS or VIDIOC_S_EXT_CTRLS).
@@ -1160,6 +1225,13 @@ int uvc_ctrl_is_accessible(struct uvc_video_chain *chain, u32 v4l2_id,
 	s32 val;
 	int ret;
 	int i;
+=======
+int uvc_ctrl_is_accessible(struct uvc_video_chain *chain, u32 v4l2_id,
+			   bool read)
+{
+	struct uvc_control_mapping *mapping;
+	struct uvc_control *ctrl;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (__uvc_query_v4l2_class(chain, v4l2_id, 0) >= 0)
 		return -EACCES;
@@ -1174,6 +1246,7 @@ int uvc_ctrl_is_accessible(struct uvc_video_chain *chain, u32 v4l2_id,
 	if (!(ctrl->info.flags & UVC_CTRL_FLAG_SET_CUR) && !read)
 		return -EACCES;
 
+<<<<<<< HEAD
 	if (ioctl != VIDIOC_S_EXT_CTRLS || !mapping->master_id)
 		return 0;
 
@@ -1197,6 +1270,8 @@ int uvc_ctrl_is_accessible(struct uvc_video_chain *chain, u32 v4l2_id,
 	if (ret >= 0 && val != mapping->master_manual)
 		return -EACCES;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1214,6 +1289,7 @@ static const char *uvc_map_get_name(const struct uvc_control_mapping *map)
 	return "Unknown Control";
 }
 
+<<<<<<< HEAD
 static u32 uvc_get_ctrl_bitmap(struct uvc_control *ctrl,
 			       struct uvc_control_mapping *mapping)
 {
@@ -1233,6 +1309,8 @@ static u32 uvc_get_ctrl_bitmap(struct uvc_control *ctrl,
 	return ~0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
 	struct uvc_control *ctrl,
 	struct uvc_control_mapping *mapping,
@@ -1240,6 +1318,10 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
 {
 	struct uvc_control_mapping *master_map = NULL;
 	struct uvc_control *master_ctrl = NULL;
+<<<<<<< HEAD
+=======
+	const struct uvc_menu_info *menu;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int i;
 
 	memset(v4l2_ctrl, 0, sizeof(*v4l2_ctrl));
@@ -1280,6 +1362,7 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
 
 	switch (mapping->v4l2_type) {
 	case V4L2_CTRL_TYPE_MENU:
+<<<<<<< HEAD
 		v4l2_ctrl->minimum = ffs(mapping->menu_mask) - 1;
 		v4l2_ctrl->maximum = fls(mapping->menu_mask) - 1;
 		v4l2_ctrl->step = 1;
@@ -1293,6 +1376,15 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
 			menu_value = uvc_mapping_get_menu_value(mapping, i);
 
 			if (menu_value == v4l2_ctrl->default_value) {
+=======
+		v4l2_ctrl->minimum = 0;
+		v4l2_ctrl->maximum = mapping->menu_count - 1;
+		v4l2_ctrl->step = 1;
+
+		menu = mapping->menu_info;
+		for (i = 0; i < mapping->menu_count; ++i, ++menu) {
+			if (menu->value == v4l2_ctrl->default_value) {
+>>>>>>> b7ba80a49124 (Commit)
 				v4l2_ctrl->default_value = i;
 				break;
 			}
@@ -1312,12 +1404,15 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
 		v4l2_ctrl->step = 0;
 		return 0;
 
+<<<<<<< HEAD
 	case V4L2_CTRL_TYPE_BITMASK:
 		v4l2_ctrl->minimum = 0;
 		v4l2_ctrl->maximum = uvc_get_ctrl_bitmap(ctrl, mapping);
 		v4l2_ctrl->step = 0;
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		break;
 	}
@@ -1391,11 +1486,18 @@ done:
 int uvc_query_v4l2_menu(struct uvc_video_chain *chain,
 	struct v4l2_querymenu *query_menu)
 {
+<<<<<<< HEAD
+=======
+	const struct uvc_menu_info *menu_info;
+>>>>>>> b7ba80a49124 (Commit)
 	struct uvc_control_mapping *mapping;
 	struct uvc_control *ctrl;
 	u32 index = query_menu->index;
 	u32 id = query_menu->id;
+<<<<<<< HEAD
 	const char *name;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	memset(query_menu, 0, sizeof(*query_menu));
@@ -1412,13 +1514,25 @@ int uvc_query_v4l2_menu(struct uvc_video_chain *chain,
 		goto done;
 	}
 
+<<<<<<< HEAD
 	if (!test_bit(query_menu->index, &mapping->menu_mask)) {
+=======
+	if (query_menu->index >= mapping->menu_count) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EINVAL;
 		goto done;
 	}
 
+<<<<<<< HEAD
 	if (mapping->data_type == UVC_CTRL_DATA_TYPE_BITMASK) {
 		int mask;
+=======
+	menu_info = &mapping->menu_info[query_menu->index];
+
+	if (mapping->data_type == UVC_CTRL_DATA_TYPE_BITMASK &&
+	    (ctrl->info.flags & UVC_CTRL_FLAG_GET_RES)) {
+		s32 bitmap;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!ctrl->cached) {
 			ret = uvc_ctrl_populate_cache(chain, ctrl);
@@ -1426,6 +1540,7 @@ int uvc_query_v4l2_menu(struct uvc_video_chain *chain,
 				goto done;
 		}
 
+<<<<<<< HEAD
 		mask = uvc_mapping_get_menu_value(mapping, query_menu->index);
 		if (mask < 0) {
 			ret = mask;
@@ -1433,11 +1548,17 @@ int uvc_query_v4l2_menu(struct uvc_video_chain *chain,
 		}
 
 		if (!(uvc_get_ctrl_bitmap(ctrl, mapping) & mask)) {
+=======
+		bitmap = mapping->get(mapping, UVC_GET_RES,
+				      uvc_ctrl_data(ctrl, UVC_CTRL_DATA_RES));
+		if (!(bitmap & menu_info->value)) {
+>>>>>>> b7ba80a49124 (Commit)
 			ret = -EINVAL;
 			goto done;
 		}
 	}
 
+<<<<<<< HEAD
 	name = uvc_mapping_get_menu_name(mapping, query_menu->index);
 	if (!name) {
 		ret = -EINVAL;
@@ -1445,6 +1566,9 @@ int uvc_query_v4l2_menu(struct uvc_video_chain *chain,
 	}
 
 	strscpy(query_menu->name, name, sizeof(query_menu->name));
+=======
+	strscpy(query_menu->name, menu_info->name, sizeof(query_menu->name));
+>>>>>>> b7ba80a49124 (Commit)
 
 done:
 	mutex_unlock(&chain->ctrl_mutex);
@@ -1572,10 +1696,13 @@ static void uvc_ctrl_status_event_work(struct work_struct *work)
 
 	uvc_ctrl_status_event(w->chain, w->ctrl, w->data);
 
+<<<<<<< HEAD
 	/* The barrier is needed to synchronize with uvc_status_stop(). */
 	if (smp_load_acquire(&dev->flush_status))
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Resubmit the URB. */
 	w->urb->interval = dev->int_ep->desc.bInterval;
 	ret = usb_submit_urb(w->urb, GFP_KERNEL);
@@ -1925,6 +2052,7 @@ int uvc_ctrl_set(struct uvc_fh *handle,
 		value = xctrl->value;
 		break;
 
+<<<<<<< HEAD
 	case V4L2_CTRL_TYPE_BITMASK:
 		if (!ctrl->cached) {
 			ret = uvc_ctrl_populate_cache(chain, ctrl);
@@ -1936,12 +2064,15 @@ int uvc_ctrl_set(struct uvc_fh *handle,
 		value = xctrl->value;
 		break;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case V4L2_CTRL_TYPE_BOOLEAN:
 		xctrl->value = clamp(xctrl->value, 0, 1);
 		value = xctrl->value;
 		break;
 
 	case V4L2_CTRL_TYPE_MENU:
+<<<<<<< HEAD
 		if (xctrl->value < (ffs(mapping->menu_mask) - 1) ||
 		    xctrl->value > (fls(mapping->menu_mask) - 1))
 			return -ERANGE;
@@ -1950,19 +2081,35 @@ int uvc_ctrl_set(struct uvc_fh *handle,
 			return -EINVAL;
 
 		value = uvc_mapping_get_menu_value(mapping, xctrl->value);
+=======
+		if (xctrl->value < 0 || xctrl->value >= mapping->menu_count)
+			return -ERANGE;
+		value = mapping->menu_info[xctrl->value].value;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * Valid menu indices are reported by the GET_RES request for
 		 * UVC controls that support it.
 		 */
+<<<<<<< HEAD
 		if (mapping->data_type == UVC_CTRL_DATA_TYPE_BITMASK) {
+=======
+		if (mapping->data_type == UVC_CTRL_DATA_TYPE_BITMASK &&
+		    (ctrl->info.flags & UVC_CTRL_FLAG_GET_RES)) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (!ctrl->cached) {
 				ret = uvc_ctrl_populate_cache(chain, ctrl);
 				if (ret < 0)
 					return ret;
 			}
 
+<<<<<<< HEAD
 			if (!(uvc_get_ctrl_bitmap(ctrl, mapping) & value))
+=======
+			step = mapping->get(mapping, UVC_GET_RES,
+					uvc_ctrl_data(ctrl, UVC_CTRL_DATA_RES));
+			if (!(step & value))
+>>>>>>> b7ba80a49124 (Commit)
 				return -EINVAL;
 		}
 
@@ -2365,11 +2512,16 @@ static int __uvc_ctrl_add_mapping(struct uvc_video_chain *chain,
 	unsigned int i;
 
 	/*
+<<<<<<< HEAD
 	 * Most mappings come from static kernel data, and need to be duplicated.
+=======
+	 * Most mappings come from static kernel data and need to be duplicated.
+>>>>>>> b7ba80a49124 (Commit)
 	 * Mappings that come from userspace will be unnecessarily duplicated,
 	 * this could be optimized.
 	 */
 	map = kmemdup(mapping, sizeof(*mapping), GFP_KERNEL);
+<<<<<<< HEAD
 	if (!map)
 		return -ENOMEM;
 
@@ -2382,10 +2534,23 @@ static int __uvc_ctrl_add_mapping(struct uvc_video_chain *chain,
 		map->name = kstrdup(mapping->name, GFP_KERNEL);
 		if (!map->name)
 			goto err_nomem;
+=======
+	if (map == NULL)
+		return -ENOMEM;
+
+	/* For UVCIOC_CTRL_MAP custom control */
+	if (mapping->name) {
+		map->name = kstrdup(mapping->name, GFP_KERNEL);
+		if (!map->name) {
+			kfree(map);
+			return -ENOMEM;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	INIT_LIST_HEAD(&map->ev_subs);
 
+<<<<<<< HEAD
 	if (mapping->menu_mapping && mapping->menu_mask) {
 		size = sizeof(mapping->menu_mapping[0])
 		       * fls(mapping->menu_mask);
@@ -2401,6 +2566,14 @@ static int __uvc_ctrl_add_mapping(struct uvc_video_chain *chain,
 					  GFP_KERNEL);
 		if (!map->menu_names)
 			goto err_nomem;
+=======
+	size = sizeof(*mapping->menu_info) * mapping->menu_count;
+	map->menu_info = kmemdup(mapping->menu_info, size, GFP_KERNEL);
+	if (map->menu_info == NULL) {
+		kfree(map->name);
+		kfree(map);
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (map->get == NULL)
@@ -2422,6 +2595,7 @@ static int __uvc_ctrl_add_mapping(struct uvc_video_chain *chain,
 		ctrl->info.selector);
 
 	return 0;
+<<<<<<< HEAD
 
 err_nomem:
 	kfree(map->menu_names);
@@ -2429,6 +2603,8 @@ err_nomem:
 	kfree(map->name);
 	kfree(map);
 	return -ENOMEM;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int uvc_ctrl_add_mapping(struct uvc_video_chain *chain,
@@ -2586,7 +2762,12 @@ static void uvc_ctrl_prune_entity(struct uvc_device *dev,
 static void uvc_ctrl_init_ctrl(struct uvc_video_chain *chain,
 			       struct uvc_control *ctrl)
 {
+<<<<<<< HEAD
 	const struct uvc_control_mapping **mappings;
+=======
+	const struct uvc_control_mapping *mappings;
+	unsigned int num_mappings;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int i;
 
 	/*
@@ -2653,11 +2834,24 @@ static void uvc_ctrl_init_ctrl(struct uvc_video_chain *chain,
 	}
 
 	/* Finally process version-specific mappings. */
+<<<<<<< HEAD
 	mappings = chain->dev->uvc_version < 0x0150
 		 ? uvc_ctrl_mappings_uvc11 : uvc_ctrl_mappings_uvc15;
 
 	for (i = 0; mappings[i]; ++i) {
 		const struct uvc_control_mapping *mapping = mappings[i];
+=======
+	if (chain->dev->uvc_version < 0x0150) {
+		mappings = uvc_ctrl_mappings_uvc11;
+		num_mappings = ARRAY_SIZE(uvc_ctrl_mappings_uvc11);
+	} else {
+		mappings = uvc_ctrl_mappings_uvc15;
+		num_mappings = ARRAY_SIZE(uvc_ctrl_mappings_uvc15);
+	}
+
+	for (i = 0; i < num_mappings; ++i) {
+		const struct uvc_control_mapping *mapping = &mappings[i];
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (uvc_entity_match_guid(ctrl->entity, mapping->entity) &&
 		    ctrl->info.selector == mapping->selector)
@@ -2750,8 +2944,12 @@ static void uvc_ctrl_cleanup_mappings(struct uvc_device *dev,
 
 	list_for_each_entry_safe(mapping, nm, &ctrl->info.mappings, list) {
 		list_del(&mapping->list);
+<<<<<<< HEAD
 		kfree(mapping->menu_names);
 		kfree(mapping->menu_mapping);
+=======
+		kfree(mapping->menu_info);
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(mapping->name);
 		kfree(mapping);
 	}

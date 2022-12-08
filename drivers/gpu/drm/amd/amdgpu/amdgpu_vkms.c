@@ -498,9 +498,13 @@ static int amdgpu_vkms_sw_init(void *handle)
 	adev_to_drm(adev)->mode_config.preferred_depth = 24;
 	adev_to_drm(adev)->mode_config.prefer_shadow = 1;
 
+<<<<<<< HEAD
 	adev_to_drm(adev)->mode_config.fb_modifiers_not_supported = true;
 
 	adev_to_drm(adev)->mode_config.fb_modifiers_not_supported = true;
+=======
+	adev_to_drm(adev)->mode_config.fb_base = adev->gmc.aper_base;
+>>>>>>> b7ba80a49124 (Commit)
 
 	r = amdgpu_display_modeset_create_props(adev);
 	if (r)
@@ -513,10 +517,13 @@ static int amdgpu_vkms_sw_init(void *handle)
 			return r;
 	}
 
+<<<<<<< HEAD
 	r = drm_vblank_init(adev_to_drm(adev), adev->mode_info.num_crtc);
 	if (r)
 		return r;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	drm_kms_helper_poll_init(adev_to_drm(adev));
 
 	adev->mode_info.mode_config_initialized = true;

@@ -33,7 +33,11 @@ static int logical_die_id;
 
 static int get_device_die_id(struct pci_dev *dev)
 {
+<<<<<<< HEAD
 	int node = pcibus_to_node(dev->bus);
+=======
+	int cpu, node = pcibus_to_node(dev->bus);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * If the NUMA info is not available, assume that the logical die id is
@@ -43,7 +47,23 @@ static int get_device_die_id(struct pci_dev *dev)
 	if (node < 0)
 		return logical_die_id++;
 
+<<<<<<< HEAD
 	return uncore_device_to_die(dev);
+=======
+	for_each_cpu(cpu, cpumask_of_node(node)) {
+		struct cpuinfo_x86 *c = &cpu_data(cpu);
+
+		if (c->initialized && cpu_to_node(cpu) == node)
+			return c->logical_die_id;
+	}
+
+	/*
+	 * All CPUs of a node may be offlined. For this case,
+	 * the PCI and MMIO type of uncore blocks which are
+	 * enumerated by the device will be unavailable.
+	 */
+	return -1;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define __node_2_type(cur)	\
@@ -128,6 +148,7 @@ uncore_insert_box_info(struct uncore_unit_discovery *unit,
 	unsigned int *box_offset, *ids;
 	int i;
 
+<<<<<<< HEAD
 	if (!unit->ctl || !unit->ctl_offset || !unit->ctr_offset) {
 		pr_info("Invalid address is detected for uncore type %d box %d, "
 			"Disable the uncore unit.\n",
@@ -143,6 +164,15 @@ uncore_insert_box_info(struct uncore_unit_discovery *unit,
 				unit->box_type);
 			return;
 		}
+=======
+	if (WARN_ON_ONCE(!unit->ctl || !unit->ctl_offset || !unit->ctr_offset))
+		return;
+
+	if (parsed) {
+		type = search_uncore_discovery_type(unit->box_type);
+		if (WARN_ON_ONCE(!type))
+			return;
+>>>>>>> b7ba80a49124 (Commit)
 		/* Store the first box of each die */
 		if (!type->box_ctrl_die[die])
 			type->box_ctrl_die[die] = unit->ctl;
@@ -177,12 +207,17 @@ uncore_insert_box_info(struct uncore_unit_discovery *unit,
 		ids[i] = type->ids[i];
 		box_offset[i] = type->box_offset[i];
 
+<<<<<<< HEAD
 		if (unit->box_id == ids[i]) {
 			pr_info("Duplicate uncore type %d box ID %d is detected, "
 				"Drop the duplicate uncore unit.\n",
 				unit->box_type, unit->box_id);
 			goto free_ids;
 		}
+=======
+		if (WARN_ON_ONCE(unit->box_id == ids[i]))
+			goto free_ids;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	ids[i] = unit->box_id;
 	box_offset[i] = unit->ctl - type->box_ctrl;
@@ -202,6 +237,7 @@ free_box_offset:
 
 }
 
+<<<<<<< HEAD
 static bool
 uncore_ignore_unit(struct uncore_unit_discovery *unit, int *ignore)
 {
@@ -221,6 +257,10 @@ uncore_ignore_unit(struct uncore_unit_discovery *unit, int *ignore)
 static int parse_discovery_table(struct pci_dev *dev, int die,
 				 u32 bar_offset, bool *parsed,
 				 int *ignore)
+=======
+static int parse_discovery_table(struct pci_dev *dev, int die,
+				 u32 bar_offset, bool *parsed)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct uncore_global_discovery global;
 	struct uncore_unit_discovery unit;
@@ -275,9 +315,12 @@ static int parse_discovery_table(struct pci_dev *dev, int die,
 		if (unit.access_type >= UNCORE_ACCESS_MAX)
 			continue;
 
+<<<<<<< HEAD
 		if (uncore_ignore_unit(&unit, ignore))
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		uncore_insert_box_info(&unit, die, *parsed);
 	}
 
@@ -286,7 +329,11 @@ static int parse_discovery_table(struct pci_dev *dev, int die,
 	return 0;
 }
 
+<<<<<<< HEAD
 bool intel_uncore_has_discovery_tables(int *ignore)
+=======
+bool intel_uncore_has_discovery_tables(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 device, val, entry_id, bar_offset;
 	int die, dvsec = 0, ret = true;
@@ -322,7 +369,11 @@ bool intel_uncore_has_discovery_tables(int *ignore)
 			if (die < 0)
 				continue;
 
+<<<<<<< HEAD
 			parse_discovery_table(dev, die, bar_offset, &parsed, ignore);
+=======
+			parse_discovery_table(dev, die, bar_offset, &parsed);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 

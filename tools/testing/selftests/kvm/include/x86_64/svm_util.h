@@ -9,12 +9,23 @@
 #ifndef SELFTEST_KVM_SVM_UTILS_H
 #define SELFTEST_KVM_SVM_UTILS_H
 
+<<<<<<< HEAD
 #include <asm/svm.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <stdint.h>
 #include "svm.h"
 #include "processor.h"
 
+<<<<<<< HEAD
+=======
+#define SVM_EXIT_EXCP_BASE	0x040
+#define SVM_EXIT_HLT		0x078
+#define SVM_EXIT_MSR		0x07c
+#define SVM_EXIT_VMMCALL	0x081
+
+>>>>>>> b7ba80a49124 (Commit)
 struct svm_test_data {
 	/* VMCB */
 	struct vmcb *vmcb; /* gva */
@@ -32,6 +43,7 @@ struct svm_test_data {
 	uint64_t msr_gpa;
 };
 
+<<<<<<< HEAD
 static inline void vmmcall(void)
 {
 	/*
@@ -46,6 +58,8 @@ static inline void vmmcall(void)
 			       "r10", "r11", "r12", "r13", "r14", "r15");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define stgi()			\
 	__asm__ __volatile__(	\
 		"stgi\n"	\

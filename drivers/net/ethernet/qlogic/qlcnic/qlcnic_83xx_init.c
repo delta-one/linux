@@ -2505,6 +2505,7 @@ int qlcnic_83xx_init(struct qlcnic_adapter *adapter)
 		goto disable_mbx_intr;
 
 	qlcnic_83xx_clear_function_resources(adapter);
+<<<<<<< HEAD
 
 	err = qlcnic_dcb_enable(adapter->dcb);
 	if (err) {
@@ -2512,6 +2513,9 @@ int qlcnic_83xx_init(struct qlcnic_adapter *adapter)
 		goto disable_mbx_intr;
 	}
 
+=======
+	qlcnic_dcb_enable(adapter->dcb);
+>>>>>>> b7ba80a49124 (Commit)
 	qlcnic_83xx_initialize_nic(adapter, 1);
 	qlcnic_dcb_get_info(adapter->dcb);
 

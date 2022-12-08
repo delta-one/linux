@@ -15,7 +15,10 @@
 #include <linux/time.h>
 #include <linux/random.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
 #include <linux/writeback.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <cluster/masklog.h>
 
@@ -158,7 +161,11 @@ static void ocfs2_queue_replay_slots(struct ocfs2_super *osb,
 	replay_map->rm_state = REPLAY_DONE;
 }
 
+<<<<<<< HEAD
 void ocfs2_free_replay_slots(struct ocfs2_super *osb)
+=======
+static void ocfs2_free_replay_slots(struct ocfs2_super *osb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ocfs2_replay_map *replay_map = osb->replay_map;
 
@@ -842,6 +849,7 @@ bail:
 	return status;
 }
 
+<<<<<<< HEAD
 static int ocfs2_journal_submit_inode_data_buffers(struct jbd2_inode *jinode)
 {
 	struct address_space *mapping = jinode->i_vfs_inode->i_mapping;
@@ -855,6 +863,8 @@ static int ocfs2_journal_submit_inode_data_buffers(struct jbd2_inode *jinode)
 	return filemap_fdatawrite_wbc(mapping, &wbc);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ocfs2_journal_init(struct ocfs2_super *osb, int *dirty)
 {
 	int status = -1;
@@ -924,7 +934,11 @@ int ocfs2_journal_init(struct ocfs2_super *osb, int *dirty)
 
 	journal->j_journal = j_journal;
 	journal->j_journal->j_submit_inode_data_buffers =
+<<<<<<< HEAD
 		ocfs2_journal_submit_inode_data_buffers;
+=======
+		jbd2_journal_submit_inode_data_buffers;
+>>>>>>> b7ba80a49124 (Commit)
 	journal->j_journal->j_finish_inode_data_buffers =
 		jbd2_journal_finish_inode_data_buffers;
 	journal->j_inode = inode;

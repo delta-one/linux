@@ -25,7 +25,11 @@
 #include "pid_list.h"
 
 #ifdef CONFIG_FTRACE_SYSCALLS
+<<<<<<< HEAD
 #include <asm/unistd.h>		/* For NR_syscalls	     */
+=======
+#include <asm/unistd.h>		/* For NR_SYSCALLS	     */
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/syscall.h>	/* some archs define it here */
 #endif
 
@@ -113,10 +117,13 @@ enum trace_type {
 #define MEM_FAIL(condition, fmt, ...)					\
 	DO_ONCE_LITE_IF(condition, pr_err, "ERROR: " fmt, ##__VA_ARGS__)
 
+<<<<<<< HEAD
 #define HIST_STACKTRACE_DEPTH	16
 #define HIST_STACKTRACE_SIZE	(HIST_STACKTRACE_DEPTH * sizeof(unsigned long))
 #define HIST_STACKTRACE_SKIP	5
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * syscalls are special, and need special handling, this is why
  * they are not included in trace_entries.h
@@ -312,7 +319,12 @@ struct trace_array {
 	struct array_buffer	max_buffer;
 	bool			allocated_snapshot;
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_TRACER_MAX_TRACE
+=======
+#if defined(CONFIG_TRACER_MAX_TRACE) || defined(CONFIG_HWLAT_TRACER) \
+	|| defined(CONFIG_OSNOISE_TRACER)
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long		max_latency;
 #ifdef CONFIG_FSNOTIFY
 	struct dentry		*d_max_latency;
@@ -583,7 +595,10 @@ int tracing_is_enabled(void);
 void tracing_reset_online_cpus(struct array_buffer *buf);
 void tracing_reset_current(int cpu);
 void tracing_reset_all_online_cpus(void);
+<<<<<<< HEAD
 void tracing_reset_all_online_cpus_unlocked(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int tracing_open_generic(struct inode *inode, struct file *filp);
 int tracing_open_generic_tr(struct inode *inode, struct file *filp);
 bool tracing_is_disabled(void);
@@ -618,7 +633,11 @@ void trace_buffer_unlock_commit_nostack(struct trace_buffer *buffer,
 bool trace_is_tracepoint_string(const char *str);
 const char *trace_event_format(struct trace_iterator *iter, const char *fmt);
 void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+<<<<<<< HEAD
 			 va_list ap) __printf(2, 0);
+=======
+			 va_list ap);
+>>>>>>> b7ba80a49124 (Commit)
 
 int trace_empty(struct trace_iterator *iter);
 
@@ -691,11 +710,20 @@ void update_max_tr(struct trace_array *tr, struct task_struct *tsk, int cpu,
 		   void *cond_data);
 void update_max_tr_single(struct trace_array *tr,
 			  struct task_struct *tsk, int cpu);
+<<<<<<< HEAD
 
 #ifdef CONFIG_FSNOTIFY
 #define LATENCY_FS_NOTIFY
 #endif
 #endif /* CONFIG_TRACER_MAX_TRACE */
+=======
+#endif /* CONFIG_TRACER_MAX_TRACE */
+
+#if (defined(CONFIG_TRACER_MAX_TRACE) || defined(CONFIG_HWLAT_TRACER) \
+	|| defined(CONFIG_OSNOISE_TRACER)) && defined(CONFIG_FSNOTIFY)
+#define LATENCY_FS_NOTIFY
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef LATENCY_FS_NOTIFY
 void latency_fsnotify(struct trace_array *tr);
@@ -1286,7 +1314,10 @@ struct ftrace_event_field {
 	int			offset;
 	int			size;
 	int			is_signed;
+<<<<<<< HEAD
 	int			len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct prog_entry;
@@ -1335,8 +1366,11 @@ DECLARE_PER_CPU(int, trace_buffered_event_cnt);
 void trace_buffered_event_disable(void);
 void trace_buffered_event_enable(void);
 
+<<<<<<< HEAD
 void early_enable_events(struct trace_array *tr, char *buf, bool disable_first);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void
 __trace_event_discard_commit(struct trace_buffer *buffer,
 			     struct ring_buffer_event *event)
@@ -1441,6 +1475,11 @@ event_trigger_unlock_commit(struct trace_event_file *file,
 struct filter_pred;
 struct regex;
 
+<<<<<<< HEAD
+=======
+typedef int (*filter_pred_fn_t) (struct filter_pred *pred, void *event);
+
+>>>>>>> b7ba80a49124 (Commit)
 typedef int (*regex_match_func)(char *str, struct regex *r, int len);
 
 enum regex_type {
@@ -1459,6 +1498,20 @@ struct regex {
 	regex_match_func	match;
 };
 
+<<<<<<< HEAD
+=======
+struct filter_pred {
+	filter_pred_fn_t 	fn;
+	u64 			val;
+	struct regex		regex;
+	unsigned short		*ops;
+	struct ftrace_event_field *field;
+	int 			offset;
+	int			not;
+	int 			op;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool is_string_field(struct ftrace_event_field *field)
 {
 	return field->filter_type == FILTER_DYN_STRING ||
@@ -1497,7 +1550,10 @@ extern void trace_event_enable_cmd_record(bool enable);
 extern void trace_event_enable_tgid_record(bool enable);
 
 extern int event_trace_init(void);
+<<<<<<< HEAD
 extern int init_events(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern int event_trace_add_tracer(struct dentry *parent, struct trace_array *tr);
 extern int event_trace_del_tracer(struct trace_array *tr);
 extern void __trace_early_add_events(struct trace_array *tr);
@@ -1948,6 +2004,11 @@ static inline void tracer_hardirqs_on(unsigned long a0, unsigned long a1) { }
 static inline void tracer_hardirqs_off(unsigned long a0, unsigned long a1) { }
 #endif
 
+<<<<<<< HEAD
+=======
+extern struct trace_iterator *tracepoint_print_iter;
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Reset the state of the trace_iterator so that it can read consumed data.
  * Normally, the trace_iterator is used for reading the data when it is not
@@ -1960,6 +2021,7 @@ static __always_inline void trace_iterator_reset(struct trace_iterator *iter)
 }
 
 /* Check the name is good for event/group/fields */
+<<<<<<< HEAD
 static inline bool __is_good_name(const char *name, bool hash_ok)
 {
 	if (!isalpha(*name) && *name != '_' && (!hash_ok || *name != '-'))
@@ -1967,11 +2029,20 @@ static inline bool __is_good_name(const char *name, bool hash_ok)
 	while (*++name != '\0') {
 		if (!isalpha(*name) && !isdigit(*name) && *name != '_' &&
 		    (!hash_ok || *name != '-'))
+=======
+static inline bool is_good_name(const char *name)
+{
+	if (!isalpha(*name) && *name != '_')
+		return false;
+	while (*++name != '\0') {
+		if (!isalpha(*name) && !isdigit(*name) && *name != '_')
+>>>>>>> b7ba80a49124 (Commit)
 			return false;
 	}
 	return true;
 }
 
+<<<<<<< HEAD
 /* Check the name is good for event/group/fields */
 static inline bool is_good_name(const char *name)
 {
@@ -1984,6 +2055,8 @@ static inline bool is_good_system_name(const char *name)
 	return __is_good_name(name, true);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Convert certain expected symbols into '_' when generating event names */
 static inline void sanitize_event_name(char *name)
 {

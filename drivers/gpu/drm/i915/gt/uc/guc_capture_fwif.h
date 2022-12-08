@@ -73,7 +73,11 @@ struct guc_debug_capture_list_header {
 
 struct guc_debug_capture_list {
 	struct guc_debug_capture_list_header header;
+<<<<<<< HEAD
 	struct guc_mmio_reg regs[];
+=======
+	struct guc_mmio_reg regs[0];
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 /**
@@ -125,7 +129,11 @@ struct guc_state_capture_header_t {
 
 struct guc_state_capture_t {
 	struct guc_state_capture_header_t header;
+<<<<<<< HEAD
 	struct guc_mmio_reg mmio_entries[];
+=======
+	struct guc_mmio_reg mmio_entries[0];
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 enum guc_capture_group_types {
@@ -145,7 +153,11 @@ struct guc_state_capture_group_header_t {
 /* this is the top level structure where an error-capture dump starts */
 struct guc_state_capture_group_t {
 	struct guc_state_capture_group_header_t grp_header;
+<<<<<<< HEAD
 	struct guc_state_capture_t capture_entries[];
+=======
+	struct guc_state_capture_t capture_entries[0];
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 /**

@@ -23,8 +23,13 @@
 /*
  * MegaRAID SAS Driver meta data
  */
+<<<<<<< HEAD
 #define MEGASAS_VERSION				"07.725.01.00-rc1"
 #define MEGASAS_RELDATE				"Mar 2, 2023"
+=======
+#define MEGASAS_VERSION				"07.719.03.00-rc1"
+#define MEGASAS_RELDATE				"Sep 29, 2021"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MEGASAS_MSIX_NAME_LEN			32
 
@@ -1519,8 +1524,11 @@ struct megasas_ctrl_info {
 #define MEGASAS_MAX_LD_IDS			(MEGASAS_MAX_LD_CHANNELS * \
 						MEGASAS_MAX_DEV_PER_CHANNEL)
 
+<<<<<<< HEAD
 #define MEGASAS_MAX_SUPPORTED_LD_IDS		240
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MEGASAS_MAX_SECTORS                    (2*1024)
 #define MEGASAS_MAX_SECTORS_IEEE		(2*128)
 #define MEGASAS_DBG_LVL				1
@@ -1760,8 +1768,12 @@ union megasas_sgl_frame {
 typedef union _MFI_CAPABILITIES {
 	struct {
 #if   defined(__BIG_ENDIAN_BITFIELD)
+<<<<<<< HEAD
 	u32     reserved:15;
 	u32	support_memdump:1;
+=======
+	u32     reserved:16;
+>>>>>>> b7ba80a49124 (Commit)
 	u32	support_fw_exposed_dev_list:1;
 	u32	support_nvme_passthru:1;
 	u32     support_64bit_mode:1;
@@ -1795,8 +1807,12 @@ typedef union _MFI_CAPABILITIES {
 	u32     support_64bit_mode:1;
 	u32	support_nvme_passthru:1;
 	u32	support_fw_exposed_dev_list:1;
+<<<<<<< HEAD
 	u32	support_memdump:1;
 	u32     reserved:15;
+=======
+	u32     reserved:16;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	} mfi_capabilities;
 	__le32		reg;

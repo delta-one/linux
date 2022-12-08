@@ -1535,12 +1535,22 @@ struct htt_ppdu_stats_info *ath11k_dp_htt_get_ppdu_desc(struct ath11k *ar,
 {
 	struct htt_ppdu_stats_info *ppdu_info;
 
+<<<<<<< HEAD
 	lockdep_assert_held(&ar->data_lock);
 
 	if (!list_empty(&ar->ppdu_stats_info)) {
 		list_for_each_entry(ppdu_info, &ar->ppdu_stats_info, list) {
 			if (ppdu_info->ppdu_id == ppdu_id)
 				return ppdu_info;
+=======
+	spin_lock_bh(&ar->data_lock);
+	if (!list_empty(&ar->ppdu_stats_info)) {
+		list_for_each_entry(ppdu_info, &ar->ppdu_stats_info, list) {
+			if (ppdu_info->ppdu_id == ppdu_id) {
+				spin_unlock_bh(&ar->data_lock);
+				return ppdu_info;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (ar->ppdu_stat_list_depth > HTT_PPDU_DESC_MAX_DEPTH) {
@@ -1552,13 +1562,24 @@ struct htt_ppdu_stats_info *ath11k_dp_htt_get_ppdu_desc(struct ath11k *ar,
 			kfree(ppdu_info);
 		}
 	}
+<<<<<<< HEAD
+=======
+	spin_unlock_bh(&ar->data_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ppdu_info = kzalloc(sizeof(*ppdu_info), GFP_ATOMIC);
 	if (!ppdu_info)
 		return NULL;
 
+<<<<<<< HEAD
 	list_add_tail(&ppdu_info->list, &ar->ppdu_stats_info);
 	ar->ppdu_stat_list_depth++;
+=======
+	spin_lock_bh(&ar->data_lock);
+	list_add_tail(&ppdu_info->list, &ar->ppdu_stats_info);
+	ar->ppdu_stat_list_depth++;
+	spin_unlock_bh(&ar->data_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ppdu_info;
 }
@@ -1582,17 +1603,28 @@ static int ath11k_htt_pull_ppdu_stats(struct ath11k_base *ab,
 	ar = ath11k_mac_get_ar_by_pdev_id(ab, pdev_id);
 	if (!ar) {
 		ret = -EINVAL;
+<<<<<<< HEAD
 		goto out;
+=======
+		goto exit;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (ath11k_debugfs_is_pktlog_lite_mode_enabled(ar))
 		trace_ath11k_htt_ppdu_stats(ar, skb->data, len);
 
+<<<<<<< HEAD
 	spin_lock_bh(&ar->data_lock);
 	ppdu_info = ath11k_dp_htt_get_ppdu_desc(ar, ppdu_id);
 	if (!ppdu_info) {
 		ret = -EINVAL;
 		goto out_unlock_data;
+=======
+	ppdu_info = ath11k_dp_htt_get_ppdu_desc(ar, ppdu_id);
+	if (!ppdu_info) {
+		ret = -EINVAL;
+		goto exit;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ppdu_info->ppdu_id = ppdu_id;
@@ -1601,6 +1633,7 @@ static int ath11k_htt_pull_ppdu_stats(struct ath11k_base *ab,
 				     (void *)ppdu_info);
 	if (ret) {
 		ath11k_warn(ab, "Failed to parse tlv %d\n", ret);
+<<<<<<< HEAD
 		goto out_unlock_data;
 	}
 
@@ -1608,6 +1641,12 @@ out_unlock_data:
 	spin_unlock_bh(&ar->data_lock);
 
 out:
+=======
+		goto exit;
+	}
+
+exit:
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_read_unlock();
 
 	return ret;
@@ -2499,7 +2538,11 @@ static void ath11k_dp_rx_deliver_msdu(struct ath11k *ar, struct napi_struct *nap
 
 	/* PN for multicast packets are not validate in HW,
 	 * so skip 802.3 rx path
+<<<<<<< HEAD
 	 * Also, fast_rx expects the STA to be authorized, hence
+=======
+	 * Also, fast_rx expectes the STA to be authorized, hence
+>>>>>>> b7ba80a49124 (Commit)
 	 * eapol packets are sent in slow path.
 	 */
 	if (decap == DP_RX_DECAP_TYPE_ETHERNET2_DIX && !is_eapol &&
@@ -3126,7 +3169,10 @@ int ath11k_peer_rx_frag_setup(struct ath11k *ar, const u8 *peer_mac, int vdev_id
 	if (!peer) {
 		ath11k_warn(ab, "failed to find the peer to set up fragment info\n");
 		spin_unlock_bh(&ab->base_lock);
+<<<<<<< HEAD
 		crypto_free_shash(tfm);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOENT;
 	}
 
@@ -5023,7 +5069,10 @@ static int ath11k_dp_rx_mon_deliver(struct ath11k *ar, u32 mac_id,
 		} else {
 			rxs->flag |= RX_FLAG_ALLOW_SAME_PN;
 		}
+<<<<<<< HEAD
 		rxs->flag |= RX_FLAG_ONLY_MONITOR;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ath11k_update_radiotap(ar, ppduinfo, mon_skb, rxs);
 
 		ath11k_dp_rx_deliver_msdu(ar, napi, mon_skb, rxs);
@@ -5199,8 +5248,12 @@ int ath11k_dp_rx_process_mon_status(struct ath11k_base *ab, int mac_id,
 		if (log_type != ATH11K_PKTLOG_TYPE_INVALID)
 			trace_ath11k_htt_rxdesc(ar, skb->data, log_type, rx_buf_sz);
 
+<<<<<<< HEAD
 		memset(ppdu_info, 0, sizeof(*ppdu_info));
 		ppdu_info->peer_id = HAL_INVALID_PEERID;
+=======
+		memset(ppdu_info, 0, sizeof(struct hal_rx_mon_ppdu_info));
+>>>>>>> b7ba80a49124 (Commit)
 		hal_status = ath11k_hal_rx_parse_mon_status(ab, ppdu_info, skb);
 
 		if (test_bit(ATH11K_FLAG_MONITOR_STARTED, &ar->monitor_flags) &&

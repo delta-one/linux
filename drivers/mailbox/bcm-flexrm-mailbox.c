@@ -622,6 +622,7 @@ static int flexrm_spu_dma_map(struct device *dev, struct brcm_message *msg)
 
 	rc = dma_map_sg(dev, msg->spu.src, sg_nents(msg->spu.src),
 			DMA_TO_DEVICE);
+<<<<<<< HEAD
 	if (!rc)
 		return -EIO;
 
@@ -631,6 +632,17 @@ static int flexrm_spu_dma_map(struct device *dev, struct brcm_message *msg)
 		dma_unmap_sg(dev, msg->spu.src, sg_nents(msg->spu.src),
 			     DMA_TO_DEVICE);
 		return -EIO;
+=======
+	if (rc < 0)
+		return rc;
+
+	rc = dma_map_sg(dev, msg->spu.dst, sg_nents(msg->spu.dst),
+			DMA_FROM_DEVICE);
+	if (rc < 0) {
+		dma_unmap_sg(dev, msg->spu.src, sg_nents(msg->spu.src),
+			     DMA_TO_DEVICE);
+		return rc;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;

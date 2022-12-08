@@ -22,8 +22,11 @@
 #define APMF_FUNC_AUTO_MODE					5
 #define APMF_FUNC_SET_FAN_IDX				7
 #define APMF_FUNC_STATIC_SLIDER_GRANULAR       9
+<<<<<<< HEAD
 #define APMF_FUNC_DYN_SLIDER_AC				11
 #define APMF_FUNC_DYN_SLIDER_DC				12
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Message Definitions */
 #define SET_SPL				0x03 /* SPL: Sustained Power Limit */
@@ -167,9 +170,12 @@ struct amd_pmf_dev {
 	int socket_power_history_idx;
 	bool amt_enabled;
 	struct mutex update_mutex; /* protects race between ACPI handler and metrics thread */
+<<<<<<< HEAD
 	bool cnqf_enabled;
 	bool cnqf_supported;
 	struct notifier_block pwr_src_notifier;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct apmf_sps_prop_granular {
@@ -299,6 +305,7 @@ struct apmf_auto_mode {
 	u32 fan_id_quiet;
 } __packed;
 
+<<<<<<< HEAD
 /* CnQF Layer */
 enum cnqf_trans_priority {
 	CNQF_TRANSITION_TO_TURBO, /* Any other mode to Turbo Mode */
@@ -375,6 +382,8 @@ struct apmf_dyn_slider_output {
 	struct apmf_cnqf_power_set ps[APMF_CNQF_MAX];
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Core Layer */
 int apmf_acpi_init(struct amd_pmf_dev *pmf_dev);
 void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev);
@@ -382,7 +391,10 @@ int is_apmf_func_supported(struct amd_pmf_dev *pdev, unsigned long index);
 int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32 *data);
 int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev);
 int amd_pmf_get_power_source(void);
+<<<<<<< HEAD
 int apmf_install_handler(struct amd_pmf_dev *pmf_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* SPS Layer */
 int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf);
@@ -392,11 +404,17 @@ int amd_pmf_init_sps(struct amd_pmf_dev *dev);
 void amd_pmf_deinit_sps(struct amd_pmf_dev *dev);
 int apmf_get_static_slider_granular(struct amd_pmf_dev *pdev,
 				    struct apmf_static_slider_granular_output *output);
+<<<<<<< HEAD
 bool is_pprof_balanced(struct amd_pmf_dev *pmf);
 
 
 int apmf_update_fan_idx(struct amd_pmf_dev *pdev, bool manual, u32 idx);
 int amd_pmf_set_sps_power_limits(struct amd_pmf_dev *pmf);
+=======
+
+
+int apmf_update_fan_idx(struct amd_pmf_dev *pdev, bool manual, u32 idx);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Auto Mode Layer */
 int apmf_get_auto_mode_def(struct amd_pmf_dev *pdev, struct apmf_auto_mode *data);
@@ -408,6 +426,7 @@ int apmf_get_sbios_requests(struct amd_pmf_dev *pdev, struct apmf_sbios_req *req
 void amd_pmf_update_2_cql(struct amd_pmf_dev *dev, bool is_cql_event);
 int amd_pmf_reset_amt(struct amd_pmf_dev *dev);
 void amd_pmf_handle_amt(struct amd_pmf_dev *dev);
+<<<<<<< HEAD
 
 /* CnQF Layer */
 int apmf_get_dyn_slider_def_ac(struct amd_pmf_dev *pdev, struct apmf_dyn_slider_output *data);
@@ -417,4 +436,6 @@ void amd_pmf_deinit_cnqf(struct amd_pmf_dev *dev);
 int amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_lapsed_ms);
 extern const struct attribute_group cnqf_feature_attribute_group;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* PMF_H */

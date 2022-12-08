@@ -22,7 +22,11 @@
 @  IRQs enabled.
 @
 ENTRY(do_vfp)
+<<<<<<< HEAD
 	local_bh_disable r10, r4
+=======
+	inc_preempt_count r10, r4
+>>>>>>> b7ba80a49124 (Commit)
  	ldr	r4, .LCvfp
 	ldr	r11, [r10, #TI_CPU]	@ CPU number
 	add	r10, r10, #TI_VFPSTATE	@ r10 = workspace
@@ -30,7 +34,11 @@ ENTRY(do_vfp)
 ENDPROC(do_vfp)
 
 ENTRY(vfp_null_entry)
+<<<<<<< HEAD
 	local_bh_enable_ti r10, r4
+=======
+	dec_preempt_count_ti r10, r4
+>>>>>>> b7ba80a49124 (Commit)
 	ret	lr
 ENDPROC(vfp_null_entry)
 

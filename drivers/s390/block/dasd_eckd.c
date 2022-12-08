@@ -288,7 +288,11 @@ define_extent(struct ccw1 *ccw, struct DE_eckd_data *data, unsigned int trk,
 		ccw->cmd_code = DASD_ECKD_CCW_DEFINE_EXTENT;
 		ccw->flags = 0;
 		ccw->count = 16;
+<<<<<<< HEAD
 		ccw->cda = (__u32)virt_to_phys(data);
+=======
+		ccw->cda = (__u32)__pa(data);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	memset(data, 0, sizeof(struct DE_eckd_data));
@@ -398,7 +402,11 @@ static void locate_record_ext(struct ccw1 *ccw, struct LRE_eckd_data *data,
 			ccw->count = 22;
 		else
 			ccw->count = 20;
+<<<<<<< HEAD
 		ccw->cda = (__u32)virt_to_phys(data);
+=======
+		ccw->cda = (__u32)__pa(data);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	memset(data, 0, sizeof(*data));
@@ -544,11 +552,19 @@ static int prefix_LRE(struct ccw1 *ccw, struct PFX_eckd_data *pfxdata,
 	ccw->flags = 0;
 	if (cmd == DASD_ECKD_CCW_WRITE_FULL_TRACK) {
 		ccw->count = sizeof(*pfxdata) + 2;
+<<<<<<< HEAD
 		ccw->cda = (__u32)virt_to_phys(pfxdata);
 		memset(pfxdata, 0, sizeof(*pfxdata) + 2);
 	} else {
 		ccw->count = sizeof(*pfxdata);
 		ccw->cda = (__u32)virt_to_phys(pfxdata);
+=======
+		ccw->cda = (__u32) __pa(pfxdata);
+		memset(pfxdata, 0, sizeof(*pfxdata) + 2);
+	} else {
+		ccw->count = sizeof(*pfxdata);
+		ccw->cda = (__u32) __pa(pfxdata);
+>>>>>>> b7ba80a49124 (Commit)
 		memset(pfxdata, 0, sizeof(*pfxdata));
 	}
 
@@ -615,7 +631,11 @@ locate_record(struct ccw1 *ccw, struct LO_eckd_data *data, unsigned int trk,
 	ccw->cmd_code = DASD_ECKD_CCW_LOCATE_RECORD;
 	ccw->flags = 0;
 	ccw->count = 16;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(data);
+=======
+	ccw->cda = (__u32) __pa(data);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(data, 0, sizeof(struct LO_eckd_data));
 	sector = 0;
@@ -830,7 +850,11 @@ static void dasd_eckd_fill_rcd_cqr(struct dasd_device *device,
 	ccw = cqr->cpaddr;
 	ccw->cmd_code = DASD_ECKD_CCW_RCD;
 	ccw->flags = 0;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(rcd_buffer);
+=======
+	ccw->cda = (__u32)(addr_t)rcd_buffer;
+>>>>>>> b7ba80a49124 (Commit)
 	ccw->count = DASD_ECKD_RCD_DATA_SIZE;
 	cqr->magic = DASD_ECKD_MAGIC;
 
@@ -858,7 +882,11 @@ static void read_conf_cb(struct dasd_ccw_req *cqr, void *data)
 
 	if (cqr->status !=  DASD_CQR_DONE) {
 		ccw = cqr->cpaddr;
+<<<<<<< HEAD
 		rcd_buffer = phys_to_virt(ccw->cda);
+=======
+		rcd_buffer = (__u8 *)((addr_t) ccw->cda);
+>>>>>>> b7ba80a49124 (Commit)
 		memset(rcd_buffer, 0, sizeof(*rcd_buffer));
 
 		rcd_buffer[0] = 0xE5;
@@ -1547,7 +1575,11 @@ static int dasd_eckd_read_features(struct dasd_device *device)
 	ccw->cmd_code = DASD_ECKD_CCW_PSF;
 	ccw->count = sizeof(struct dasd_psf_prssd_data);
 	ccw->flags |= CCW_FLAG_CC;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(prssdp);
+=======
+	ccw->cda = (__u32)(addr_t) prssdp;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Read Subsystem Data - feature codes */
 	features = (struct dasd_rssd_features *) (prssdp + 1);
@@ -1556,7 +1588,11 @@ static int dasd_eckd_read_features(struct dasd_device *device)
 	ccw++;
 	ccw->cmd_code = DASD_ECKD_CCW_RSSD;
 	ccw->count = sizeof(struct dasd_rssd_features);
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(features);
+=======
+	ccw->cda = (__u32)(addr_t) features;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cqr->buildclk = get_tod_clock();
 	cqr->status = DASD_CQR_FILLED;
@@ -1616,7 +1652,11 @@ static int dasd_eckd_read_vol_info(struct dasd_device *device)
 	ccw->cmd_code = DASD_ECKD_CCW_PSF;
 	ccw->count = sizeof(*prssdp);
 	ccw->flags |= CCW_FLAG_CC;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(prssdp);
+=======
+	ccw->cda = (__u32)(addr_t)prssdp;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Read Subsystem Data - Volume Storage Query */
 	vsq = (struct dasd_rssd_vsq *)(prssdp + 1);
@@ -1626,7 +1666,11 @@ static int dasd_eckd_read_vol_info(struct dasd_device *device)
 	ccw->cmd_code = DASD_ECKD_CCW_RSSD;
 	ccw->count = sizeof(*vsq);
 	ccw->flags |= CCW_FLAG_SLI;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(vsq);
+=======
+	ccw->cda = (__u32)(addr_t)vsq;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cqr->buildclk = get_tod_clock();
 	cqr->status = DASD_CQR_FILLED;
@@ -1801,7 +1845,11 @@ static int dasd_eckd_read_ext_pool_info(struct dasd_device *device)
 	ccw->cmd_code = DASD_ECKD_CCW_PSF;
 	ccw->count = sizeof(*prssdp);
 	ccw->flags |= CCW_FLAG_CC;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(prssdp);
+=======
+	ccw->cda = (__u32)(addr_t)prssdp;
+>>>>>>> b7ba80a49124 (Commit)
 
 	lcq = (struct dasd_rssd_lcq *)(prssdp + 1);
 	memset(lcq, 0, sizeof(*lcq));
@@ -1810,7 +1858,11 @@ static int dasd_eckd_read_ext_pool_info(struct dasd_device *device)
 	ccw->cmd_code = DASD_ECKD_CCW_RSSD;
 	ccw->count = sizeof(*lcq);
 	ccw->flags |= CCW_FLAG_SLI;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(lcq);
+=======
+	ccw->cda = (__u32)(addr_t)lcq;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cqr->buildclk = get_tod_clock();
 	cqr->status = DASD_CQR_FILLED;
@@ -1907,7 +1959,11 @@ static struct dasd_ccw_req *dasd_eckd_build_psf_ssc(struct dasd_device *device,
 	}
 	ccw = cqr->cpaddr;
 	ccw->cmd_code = DASD_ECKD_CCW_PSF;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(psf_ssc_data);
+=======
+	ccw->cda = (__u32)(addr_t)psf_ssc_data;
+>>>>>>> b7ba80a49124 (Commit)
 	ccw->count = 66;
 
 	cqr->startdev = device;
@@ -2262,7 +2318,11 @@ dasd_eckd_analysis_ccw(struct dasd_device *device)
 		ccw->cmd_code = DASD_ECKD_CCW_READ_COUNT;
 		ccw->flags = 0;
 		ccw->count = 8;
+<<<<<<< HEAD
 		ccw->cda = (__u32)virt_to_phys(count_data);
+=======
+		ccw->cda = (__u32)(addr_t) count_data;
+>>>>>>> b7ba80a49124 (Commit)
 		ccw++;
 		count_data++;
 	}
@@ -2276,7 +2336,11 @@ dasd_eckd_analysis_ccw(struct dasd_device *device)
 	ccw->cmd_code = DASD_ECKD_CCW_READ_COUNT;
 	ccw->flags = 0;
 	ccw->count = 8;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(count_data);
+=======
+	ccw->cda = (__u32)(addr_t) count_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cqr->block = NULL;
 	cqr->startdev = device;
@@ -2647,7 +2711,11 @@ dasd_eckd_build_check(struct dasd_device *base, struct format_data_t *fdata,
 		ccw->cmd_code = DASD_ECKD_CCW_READ_COUNT;
 		ccw->flags = CCW_FLAG_SLI;
 		ccw->count = 8;
+<<<<<<< HEAD
 		ccw->cda = (__u32)virt_to_phys(fmt_buffer);
+=======
+		ccw->cda = (__u32)(addr_t) fmt_buffer;
+>>>>>>> b7ba80a49124 (Commit)
 		ccw++;
 		fmt_buffer++;
 	}
@@ -2857,7 +2925,11 @@ dasd_eckd_build_format(struct dasd_device *base, struct dasd_device *startdev,
 			ccw->cmd_code = DASD_ECKD_CCW_WRITE_RECORD_ZERO;
 			ccw->flags = CCW_FLAG_SLI;
 			ccw->count = 8;
+<<<<<<< HEAD
 			ccw->cda = (__u32)virt_to_phys(ect);
+=======
+			ccw->cda = (__u32)(addr_t) ect;
+>>>>>>> b7ba80a49124 (Commit)
 			ccw++;
 		}
 		if ((intensity & ~0x08) & 0x04) {	/* erase track */
@@ -2872,7 +2944,11 @@ dasd_eckd_build_format(struct dasd_device *base, struct dasd_device *startdev,
 			ccw->cmd_code = DASD_ECKD_CCW_WRITE_CKD;
 			ccw->flags = CCW_FLAG_SLI;
 			ccw->count = 8;
+<<<<<<< HEAD
 			ccw->cda = (__u32)virt_to_phys(ect);
+=======
+			ccw->cda = (__u32)(addr_t) ect;
+>>>>>>> b7ba80a49124 (Commit)
 		} else {		/* write remaining records */
 			for (i = 0; i < rpt; i++) {
 				ect = (struct eckd_count *) data;
@@ -2907,7 +2983,11 @@ dasd_eckd_build_format(struct dasd_device *base, struct dasd_device *startdev,
 						DASD_ECKD_CCW_WRITE_CKD_MT;
 				ccw->flags = CCW_FLAG_SLI;
 				ccw->count = 8;
+<<<<<<< HEAD
 				ccw->cda = (__u32)virt_to_phys(ect);
+=======
+				ccw->cda = (__u32)(addr_t) ect;
+>>>>>>> b7ba80a49124 (Commit)
 				ccw++;
 			}
 		}
@@ -3821,7 +3901,11 @@ dasd_eckd_dso_ras(struct dasd_device *device, struct dasd_block *block,
 	}
 
 	ccw = cqr->cpaddr;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(cqr->data);
+=======
+	ccw->cda = (__u32)(addr_t)cqr->data;
+>>>>>>> b7ba80a49124 (Commit)
 	ccw->cmd_code = DASD_ECKD_CCW_DSO;
 	ccw->count = size;
 
@@ -4090,11 +4174,19 @@ static struct dasd_ccw_req *dasd_eckd_build_cp_cmd_single(
 			ccw->cmd_code = rcmd;
 			ccw->count = count;
 			if (idal_is_needed(dst, blksize)) {
+<<<<<<< HEAD
 				ccw->cda = (__u32)virt_to_phys(idaws);
 				ccw->flags = CCW_FLAG_IDA;
 				idaws = idal_create_words(idaws, dst, blksize);
 			} else {
 				ccw->cda = (__u32)virt_to_phys(dst);
+=======
+				ccw->cda = (__u32)(addr_t) idaws;
+				ccw->flags = CCW_FLAG_IDA;
+				idaws = idal_create_words(idaws, dst, blksize);
+			} else {
+				ccw->cda = (__u32)(addr_t) dst;
+>>>>>>> b7ba80a49124 (Commit)
 				ccw->flags = 0;
 			}
 			ccw++;
@@ -4228,7 +4320,11 @@ static struct dasd_ccw_req *dasd_eckd_build_cp_cmd_track(
 				ccw[-1].flags |= CCW_FLAG_CC;
 				ccw->cmd_code = cmd;
 				ccw->count = len_to_track_end;
+<<<<<<< HEAD
 				ccw->cda = (__u32)virt_to_phys(idaws);
+=======
+				ccw->cda = (__u32)(addr_t)idaws;
+>>>>>>> b7ba80a49124 (Commit)
 				ccw->flags = CCW_FLAG_IDA;
 				ccw++;
 				recid += count;
@@ -4244,7 +4340,11 @@ static struct dasd_ccw_req *dasd_eckd_build_cp_cmd_track(
 			 * idaw ends
 			 */
 			if (!idaw_dst) {
+<<<<<<< HEAD
 				if ((__u32)virt_to_phys(dst) & (IDA_BLOCK_SIZE - 1)) {
+=======
+				if (__pa(dst) & (IDA_BLOCK_SIZE-1)) {
+>>>>>>> b7ba80a49124 (Commit)
 					dasd_sfree_request(cqr, startdev);
 					return ERR_PTR(-ERANGE);
 				} else
@@ -4264,7 +4364,11 @@ static struct dasd_ccw_req *dasd_eckd_build_cp_cmd_track(
 			 * idal_create_words will handle cases where idaw_len
 			 * is larger then IDA_BLOCK_SIZE
 			 */
+<<<<<<< HEAD
 			if (!((__u32)virt_to_phys(idaw_dst + idaw_len) & (IDA_BLOCK_SIZE - 1)))
+=======
+			if (!(__pa(idaw_dst + idaw_len) & (IDA_BLOCK_SIZE-1)))
+>>>>>>> b7ba80a49124 (Commit)
 				end_idaw = 1;
 			/* We also need to end the idaw at track end */
 			if (!len_to_track_end) {
@@ -4722,6 +4826,10 @@ static struct dasd_ccw_req *dasd_eckd_build_cp_raw(struct dasd_device *startdev,
 	struct dasd_device *basedev;
 	struct req_iterator iter;
 	struct dasd_ccw_req *cqr;
+<<<<<<< HEAD
+=======
+	unsigned int first_offs;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int trkcount;
 	unsigned long *idaws;
 	unsigned int size;
@@ -4755,6 +4863,10 @@ static struct dasd_ccw_req *dasd_eckd_build_cp_raw(struct dasd_device *startdev,
 	last_trk = (blk_rq_pos(req) + blk_rq_sectors(req) - 1) /
 		DASD_RAW_SECTORS_PER_TRACK;
 	trkcount = last_trk - first_trk + 1;
+<<<<<<< HEAD
+=======
+	first_offs = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rq_data_dir(req) == READ)
 		cmd = DASD_ECKD_CCW_READ_TRACK;
@@ -4798,13 +4910,21 @@ static struct dasd_ccw_req *dasd_eckd_build_cp_raw(struct dasd_device *startdev,
 
 	if (use_prefix) {
 		prefix_LRE(ccw++, data, first_trk, last_trk, cmd, basedev,
+<<<<<<< HEAD
 			   startdev, 1, 0, trkcount, 0, 0);
+=======
+			   startdev, 1, first_offs + 1, trkcount, 0, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		define_extent(ccw++, data, first_trk, last_trk, cmd, basedev, 0);
 		ccw[-1].flags |= CCW_FLAG_CC;
 
 		data += sizeof(struct DE_eckd_data);
+<<<<<<< HEAD
 		locate_record_ext(ccw++, data, first_trk, 0,
+=======
+		locate_record_ext(ccw++, data, first_trk, first_offs + 1,
+>>>>>>> b7ba80a49124 (Commit)
 				  trkcount, cmd, basedev, 0, 0);
 	}
 
@@ -4817,7 +4937,11 @@ static struct dasd_ccw_req *dasd_eckd_build_cp_raw(struct dasd_device *startdev,
 		ccw->count = 57326;
 		/* 64k map to one track */
 		len_to_track_end = 65536 - start_padding_sectors * 512;
+<<<<<<< HEAD
 		ccw->cda = (__u32)virt_to_phys(idaws);
+=======
+		ccw->cda = (__u32)(addr_t)idaws;
+>>>>>>> b7ba80a49124 (Commit)
 		ccw->flags |= CCW_FLAG_IDA;
 		ccw->flags |= CCW_FLAG_SLI;
 		ccw++;
@@ -4836,7 +4960,11 @@ static struct dasd_ccw_req *dasd_eckd_build_cp_raw(struct dasd_device *startdev,
 			ccw->count = 57326;
 			/* 64k map to one track */
 			len_to_track_end = 65536;
+<<<<<<< HEAD
 			ccw->cda = (__u32)virt_to_phys(idaws);
+=======
+			ccw->cda = (__u32)(addr_t)idaws;
+>>>>>>> b7ba80a49124 (Commit)
 			ccw->flags |= CCW_FLAG_IDA;
 			ccw->flags |= CCW_FLAG_SLI;
 			ccw++;
@@ -4893,9 +5021,15 @@ dasd_eckd_free_cp(struct dasd_ccw_req *cqr, struct request *req)
 				ccw++;
 			if (dst) {
 				if (ccw->flags & CCW_FLAG_IDA)
+<<<<<<< HEAD
 					cda = *((char **)phys_to_virt(ccw->cda));
 				else
 					cda = phys_to_virt(ccw->cda);
+=======
+					cda = *((char **)((addr_t) ccw->cda));
+				else
+					cda = (char *)((addr_t) ccw->cda);
+>>>>>>> b7ba80a49124 (Commit)
 				if (dst != cda) {
 					if (rq_data_dir(req) == READ)
 						memcpy(dst, cda, bv.bv_len);
@@ -5045,7 +5179,11 @@ dasd_eckd_release(struct dasd_device *device)
 	ccw->cmd_code = DASD_ECKD_CCW_RELEASE;
 	ccw->flags |= CCW_FLAG_SLI;
 	ccw->count = 32;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(cqr->data);
+=======
+	ccw->cda = (__u32)(addr_t) cqr->data;
+>>>>>>> b7ba80a49124 (Commit)
 	cqr->startdev = device;
 	cqr->memdev = device;
 	clear_bit(DASD_CQR_FLAGS_USE_ERP, &cqr->flags);
@@ -5100,7 +5238,11 @@ dasd_eckd_reserve(struct dasd_device *device)
 	ccw->cmd_code = DASD_ECKD_CCW_RESERVE;
 	ccw->flags |= CCW_FLAG_SLI;
 	ccw->count = 32;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(cqr->data);
+=======
+	ccw->cda = (__u32)(addr_t) cqr->data;
+>>>>>>> b7ba80a49124 (Commit)
 	cqr->startdev = device;
 	cqr->memdev = device;
 	clear_bit(DASD_CQR_FLAGS_USE_ERP, &cqr->flags);
@@ -5154,7 +5296,11 @@ dasd_eckd_steal_lock(struct dasd_device *device)
 	ccw->cmd_code = DASD_ECKD_CCW_SLCK;
 	ccw->flags |= CCW_FLAG_SLI;
 	ccw->count = 32;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(cqr->data);
+=======
+	ccw->cda = (__u32)(addr_t) cqr->data;
+>>>>>>> b7ba80a49124 (Commit)
 	cqr->startdev = device;
 	cqr->memdev = device;
 	clear_bit(DASD_CQR_FLAGS_USE_ERP, &cqr->flags);
@@ -5215,7 +5361,11 @@ static int dasd_eckd_snid(struct dasd_device *device,
 	ccw->cmd_code = DASD_ECKD_CCW_SNID;
 	ccw->flags |= CCW_FLAG_SLI;
 	ccw->count = 12;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(cqr->data);
+=======
+	ccw->cda = (__u32)(addr_t) cqr->data;
+>>>>>>> b7ba80a49124 (Commit)
 	cqr->startdev = device;
 	cqr->memdev = device;
 	clear_bit(DASD_CQR_FLAGS_USE_ERP, &cqr->flags);
@@ -5282,7 +5432,11 @@ dasd_eckd_performance(struct dasd_device *device, void __user *argp)
 	ccw->cmd_code = DASD_ECKD_CCW_PSF;
 	ccw->count = sizeof(struct dasd_psf_prssd_data);
 	ccw->flags |= CCW_FLAG_CC;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(prssdp);
+=======
+	ccw->cda = (__u32)(addr_t) prssdp;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Read Subsystem Data - Performance Statistics */
 	stats = (struct dasd_rssd_perf_stats_t *) (prssdp + 1);
@@ -5291,7 +5445,11 @@ dasd_eckd_performance(struct dasd_device *device, void __user *argp)
 	ccw++;
 	ccw->cmd_code = DASD_ECKD_CCW_RSSD;
 	ccw->count = sizeof(struct dasd_rssd_perf_stats_t);
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(stats);
+=======
+	ccw->cda = (__u32)(addr_t) stats;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cqr->buildclk = get_tod_clock();
 	cqr->status = DASD_CQR_FILLED;
@@ -5435,7 +5593,11 @@ static int dasd_symm_io(struct dasd_device *device, void __user *argp)
 	ccw->cmd_code = DASD_ECKD_CCW_PSF;
 	ccw->count = usrparm.psf_data_len;
 	ccw->flags |= CCW_FLAG_CC;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(psf_data);
+=======
+	ccw->cda = (__u32)(addr_t) psf_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ccw++;
 
@@ -5443,7 +5605,11 @@ static int dasd_symm_io(struct dasd_device *device, void __user *argp)
 	ccw->cmd_code = DASD_ECKD_CCW_RSSD;
 	ccw->count = usrparm.rssd_result_len;
 	ccw->flags = CCW_FLAG_SLI ;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(rssd_result);
+=======
+	ccw->cda = (__u32)(addr_t) rssd_result;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = dasd_sleep_on(cqr);
 	if (rc)
@@ -5498,7 +5664,11 @@ dasd_eckd_ioctl(struct dasd_block *block, unsigned int cmd, void __user *argp)
  * Dump the range of CCWs into 'page' buffer
  * and return number of printed chars.
  */
+<<<<<<< HEAD
 static void
+=======
+static int
+>>>>>>> b7ba80a49124 (Commit)
 dasd_eckd_dump_ccw_range(struct ccw1 *from, struct ccw1 *to, char *page)
 {
 	int len, count;
@@ -5512,6 +5682,7 @@ dasd_eckd_dump_ccw_range(struct ccw1 *from, struct ccw1 *to, char *page)
 
 		/* get pointer to data (consider IDALs) */
 		if (from->flags & CCW_FLAG_IDA)
+<<<<<<< HEAD
 			datap = (char *)*((addr_t *)phys_to_virt(from->cda));
 		else
 			datap = phys_to_virt(from->cda);
@@ -5524,13 +5695,27 @@ dasd_eckd_dump_ccw_range(struct ccw1 *from, struct ccw1 *to, char *page)
 				len += sprintf(page + len, " ");
 			if (count % 4 == 0)
 				len += sprintf(page + len, " ");
+=======
+			datap = (char *) *((addr_t *) (addr_t) from->cda);
+		else
+			datap = (char *) ((addr_t) from->cda);
+
+		/* dump data (max 32 bytes) */
+		for (count = 0; count < from->count && count < 32; count++) {
+			if (count % 8 == 0) len += sprintf(page + len, " ");
+			if (count % 4 == 0) len += sprintf(page + len, " ");
+>>>>>>> b7ba80a49124 (Commit)
 			len += sprintf(page + len, "%02x", datap[count]);
 		}
 		len += sprintf(page + len, "\n");
 		from++;
 	}
+<<<<<<< HEAD
 	if (len > 0)
 		printk(KERN_ERR "%s", page);
+=======
+	return len;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -5585,7 +5770,11 @@ static void dasd_eckd_dump_sense_ccw(struct dasd_device *device,
 	len += sprintf(page + len, PRINTK_HEADER
 		       " device %s: Failing CCW: %p\n",
 		       dev_name(&device->cdev->dev),
+<<<<<<< HEAD
 		       phys_to_virt(irb->scsw.cmd.cpa));
+=======
+		       (void *) (addr_t) irb->scsw.cmd.cpa);
+>>>>>>> b7ba80a49124 (Commit)
 	if (irb->esw.esw0.erw.cons) {
 		for (sl = 0; sl < 4; sl++) {
 			len += sprintf(page + len, PRINTK_HEADER
@@ -5622,6 +5811,7 @@ static void dasd_eckd_dump_sense_ccw(struct dasd_device *device,
 	if (req) {
 		/* req == NULL for unsolicited interrupts */
 		/* dump the Channel Program (max 140 Bytes per line) */
+<<<<<<< HEAD
 		/* Count CCW and print first CCWs (maximum 7) */
 		first = req->cpaddr;
 		for (last = first; last->flags & (CCW_FLAG_CC | CCW_FLAG_DC); last++);
@@ -5648,6 +5838,39 @@ static void dasd_eckd_dump_sense_ccw(struct dasd_device *device,
 			printk(KERN_ERR PRINTK_HEADER "......\n");
 		}
 		dasd_eckd_dump_ccw_range(from, last, page + len);
+=======
+		/* Count CCW and print first CCWs (maximum 1024 % 140 = 7) */
+		first = req->cpaddr;
+		for (last = first; last->flags & (CCW_FLAG_CC | CCW_FLAG_DC); last++);
+		to = min(first + 6, last);
+		len = sprintf(page, PRINTK_HEADER
+			      " Related CP in req: %p\n", req);
+		dasd_eckd_dump_ccw_range(first, to, page + len);
+		printk(KERN_ERR "%s", page);
+
+		/* print failing CCW area (maximum 4) */
+		/* scsw->cda is either valid or zero  */
+		len = 0;
+		from = ++to;
+		fail = (struct ccw1 *)(addr_t)
+				irb->scsw.cmd.cpa; /* failing CCW */
+		if (from <  fail - 2) {
+			from = fail - 2;     /* there is a gap - print header */
+			len += sprintf(page, PRINTK_HEADER "......\n");
+		}
+		to = min(fail + 1, last);
+		len += dasd_eckd_dump_ccw_range(from, to, page + len);
+
+		/* print last CCWs (maximum 2) */
+		from = max(from, ++to);
+		if (from < last - 1) {
+			from = last - 1;     /* there is a gap - print header */
+			len += sprintf(page + len, PRINTK_HEADER "......\n");
+		}
+		len += dasd_eckd_dump_ccw_range(from, last, page + len);
+		if (len > 0)
+			printk(KERN_ERR "%s", page);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	free_page((unsigned long) page);
 }
@@ -5686,12 +5909,21 @@ static void dasd_eckd_dump_sense_tcw(struct dasd_device *device,
 	len += sprintf(page + len, PRINTK_HEADER
 		       " device %s: Failing TCW: %p\n",
 		       dev_name(&device->cdev->dev),
+<<<<<<< HEAD
 		       phys_to_virt(irb->scsw.tm.tcw));
+=======
+		       (void *) (addr_t) irb->scsw.tm.tcw);
+>>>>>>> b7ba80a49124 (Commit)
 
 	tsb = NULL;
 	sense = NULL;
 	if (irb->scsw.tm.tcw && (irb->scsw.tm.fcxs & 0x01))
+<<<<<<< HEAD
 		tsb = tcw_get_tsb(phys_to_virt(irb->scsw.tm.tcw));
+=======
+		tsb = tcw_get_tsb(
+			(struct tcw *)(unsigned long)irb->scsw.tm.tcw);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (tsb) {
 		len += sprintf(page + len, PRINTK_HEADER
@@ -5915,7 +6147,11 @@ retry:
 	ccw->count = sizeof(struct dasd_psf_prssd_data);
 	ccw->flags |= CCW_FLAG_CC;
 	ccw->flags |= CCW_FLAG_SLI;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(prssdp);
+=======
+	ccw->cda = (__u32)(addr_t) prssdp;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Read Subsystem Data - message buffer */
 	message_buf = (struct dasd_rssd_messages *) (prssdp + 1);
@@ -5925,7 +6161,11 @@ retry:
 	ccw->cmd_code = DASD_ECKD_CCW_RSSD;
 	ccw->count = sizeof(struct dasd_rssd_messages);
 	ccw->flags |= CCW_FLAG_SLI;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(message_buf);
+=======
+	ccw->cda = (__u32)(addr_t) message_buf;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cqr->buildclk = get_tod_clock();
 	cqr->status = DASD_CQR_FILLED;
@@ -6006,14 +6246,22 @@ static int dasd_eckd_query_host_access(struct dasd_device *device,
 	ccw->count = sizeof(struct dasd_psf_prssd_data);
 	ccw->flags |= CCW_FLAG_CC;
 	ccw->flags |= CCW_FLAG_SLI;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(prssdp);
+=======
+	ccw->cda = (__u32)(addr_t) prssdp;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Read Subsystem Data - query host access */
 	ccw++;
 	ccw->cmd_code = DASD_ECKD_CCW_RSSD;
 	ccw->count = sizeof(struct dasd_psf_query_host_access);
 	ccw->flags |= CCW_FLAG_SLI;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(host_access);
+=======
+	ccw->cda = (__u32)(addr_t) host_access;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cqr->buildclk = get_tod_clock();
 	cqr->status = DASD_CQR_FILLED;
@@ -6349,7 +6597,11 @@ dasd_eckd_psf_cuir_response(struct dasd_device *device, int response,
 	psf_cuir->ssid = device->path[pos].ssid;
 	ccw = cqr->cpaddr;
 	ccw->cmd_code = DASD_ECKD_CCW_PSF;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(psf_cuir);
+=======
+	ccw->cda = (__u32)(addr_t)psf_cuir;
+>>>>>>> b7ba80a49124 (Commit)
 	ccw->flags = CCW_FLAG_SLI;
 	ccw->count = sizeof(struct dasd_psf_cuir_response);
 
@@ -6841,7 +7093,11 @@ static void dasd_eckd_handle_hpf_error(struct dasd_device *device,
 static void dasd_eckd_setup_blk_queue(struct dasd_block *block)
 {
 	unsigned int logical_block_size = block->bp_block;
+<<<<<<< HEAD
 	struct request_queue *q = block->gdp->queue;
+=======
+	struct request_queue *q = block->request_queue;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dasd_device *device = block->base;
 	int max;
 
@@ -6954,10 +7210,15 @@ dasd_eckd_init(void)
 		return -ENOMEM;
 	dasd_vol_info_req = kmalloc(sizeof(*dasd_vol_info_req),
 				    GFP_KERNEL | GFP_DMA);
+<<<<<<< HEAD
 	if (!dasd_vol_info_req) {
 		kfree(dasd_reserve_req);
 		return -ENOMEM;
 	}
+=======
+	if (!dasd_vol_info_req)
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 	pe_handler_worker = kmalloc(sizeof(*pe_handler_worker),
 				    GFP_KERNEL | GFP_DMA);
 	if (!pe_handler_worker) {

@@ -41,7 +41,10 @@
 #include <linux/of_pci.h>
 #include <linux/memblock.h>
 #include <linux/swiotlb.h>
+<<<<<<< HEAD
 #include <linux/seq_buf.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/mmu.h>
 #include <asm/processor.h>
@@ -57,7 +60,10 @@
 #include <asm/pmc.h>
 #include <asm/xics.h>
 #include <asm/xive.h>
+<<<<<<< HEAD
 #include <asm/papr-sysparm.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/ppc-pci.h>
 #include <asm/i8259.h>
 #include <asm/udbg.h>
@@ -136,11 +142,19 @@ static void __init fwnmi_init(void)
 #endif
 	int ibm_nmi_register_token;
 
+<<<<<<< HEAD
 	ibm_nmi_register_token = rtas_function_token(RTAS_FN_IBM_NMI_REGISTER);
 	if (ibm_nmi_register_token == RTAS_UNKNOWN_SERVICE)
 		return;
 
 	ibm_nmi_interlock_token = rtas_function_token(RTAS_FN_IBM_NMI_INTERLOCK);
+=======
+	ibm_nmi_register_token = rtas_token("ibm,nmi-register");
+	if (ibm_nmi_register_token == RTAS_UNKNOWN_SERVICE)
+		return;
+
+	ibm_nmi_interlock_token = rtas_token("ibm,nmi-interlock");
+>>>>>>> b7ba80a49124 (Commit)
 	if (WARN_ON(ibm_nmi_interlock_token == RTAS_UNKNOWN_SERVICE))
 		return;
 
@@ -942,6 +956,7 @@ void pSeries_coalesce_init(void)
  */
 static void __init pSeries_cmo_feature_init(void)
 {
+<<<<<<< HEAD
 	static struct papr_sysparm_buf buf __initdata;
 	static_assert(sizeof(buf.val) >= CMO_MAXLENGTH);
 	char *ptr, *key, *value, *end;
@@ -950,13 +965,35 @@ static void __init pSeries_cmo_feature_init(void)
 	pr_debug(" -> fw_cmo_feature_init()\n");
 
 	if (papr_sysparm_get(PAPR_SYSPARM_COOP_MEM_OVERCOMMIT_ATTRS, &buf)) {
+=======
+	char *ptr, *key, *value, *end;
+	int call_status;
+	int page_order = IOMMU_PAGE_SHIFT_4K;
+
+	pr_debug(" -> fw_cmo_feature_init()\n");
+	spin_lock(&rtas_data_buf_lock);
+	memset(rtas_data_buf, 0, RTAS_DATA_BUF_SIZE);
+	call_status = rtas_call(rtas_token("ibm,get-system-parameter"), 3, 1,
+				NULL,
+				CMO_CHARACTERISTICS_TOKEN,
+				__pa(rtas_data_buf),
+				RTAS_DATA_BUF_SIZE);
+
+	if (call_status != 0) {
+		spin_unlock(&rtas_data_buf_lock);
+>>>>>>> b7ba80a49124 (Commit)
 		pr_debug("CMO not available\n");
 		pr_debug(" <- fw_cmo_feature_init()\n");
 		return;
 	}
 
+<<<<<<< HEAD
 	end = &buf.val[CMO_MAXLENGTH];
 	ptr = &buf.val[0];
+=======
+	end = rtas_data_buf + CMO_MAXLENGTH - 2;
+	ptr = rtas_data_buf + 2;	/* step over strlen value */
+>>>>>>> b7ba80a49124 (Commit)
 	key = value = ptr;
 
 	while (*ptr && (ptr <= end)) {
@@ -1002,6 +1039,7 @@ static void __init pSeries_cmo_feature_init(void)
 	} else
 		pr_debug("CMO not enabled, PrPSP=%d, SecPSP=%d\n", CMO_PrPSP,
 		         CMO_SecPSP);
+<<<<<<< HEAD
 	pr_debug(" <- fw_cmo_feature_init()\n");
 }
 
@@ -1032,6 +1070,12 @@ static void __init pseries_add_hw_description(void)
 		seq_buf_printf(&ppc_hw_desc, "hv:phyp ");
 }
 
+=======
+	spin_unlock(&rtas_data_buf_lock);
+	pr_debug(" <- fw_cmo_feature_init()\n");
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Early initialization.  Relocation is on but do not reference unbolted pages
  */
@@ -1039,8 +1083,11 @@ static void __init pseries_init(void)
 {
 	pr_debug(" -> pseries_init()\n");
 
+<<<<<<< HEAD
 	pseries_add_hw_description();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_HVC_CONSOLE
 	if (firmware_has_feature(FW_FEATURE_LPAR))
 		hvc_vio_init_early();
@@ -1071,14 +1118,22 @@ static void __init pseries_init(void)
 static void pseries_power_off(void)
 {
 	int rc;
+<<<<<<< HEAD
 	int rtas_poweroff_ups_token = rtas_function_token(RTAS_FN_IBM_POWER_OFF_UPS);
+=======
+	int rtas_poweroff_ups_token = rtas_token("ibm,power-off-ups");
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rtas_flash_term_hook)
 		rtas_flash_term_hook(SYS_POWER_OFF);
 
 	if (rtas_poweron_auto == 0 ||
 		rtas_poweroff_ups_token == RTAS_UNKNOWN_SERVICE) {
+<<<<<<< HEAD
 		rc = rtas_call(rtas_function_token(RTAS_FN_POWER_OFF), 2, 1, NULL, -1, -1);
+=======
+		rc = rtas_call(rtas_token("power-off"), 2, 1, NULL, -1, -1);
+>>>>>>> b7ba80a49124 (Commit)
 		printk(KERN_INFO "RTAS power-off returned %d\n", rc);
 	} else {
 		rc = rtas_call(rtas_poweroff_ups_token, 0, 1, NULL);
@@ -1118,9 +1173,12 @@ static int pSeries_pci_probe_mode(struct pci_bus *bus)
 
 struct pci_controller_ops pseries_pci_controller_ops = {
 	.probe_mode		= pSeries_pci_probe_mode,
+<<<<<<< HEAD
 #ifdef CONFIG_SPAPR_TCE_IOMMU
 	.device_group		= pSeries_pci_device_group,
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 define_machine(pseries) {
@@ -1138,6 +1196,10 @@ define_machine(pseries) {
 	.get_boot_time		= rtas_get_boot_time,
 	.get_rtc_time		= rtas_get_rtc_time,
 	.set_rtc_time		= rtas_set_rtc_time,
+<<<<<<< HEAD
+=======
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.progress		= rtas_progress,
 	.system_reset_exception = pSeries_system_reset_exception,
 	.machine_check_early	= pseries_machine_check_realmode,

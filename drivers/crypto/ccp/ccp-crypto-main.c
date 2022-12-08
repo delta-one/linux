@@ -78,6 +78,16 @@ struct ccp_crypto_cmd {
 	int ret;
 };
 
+<<<<<<< HEAD
+=======
+struct ccp_crypto_cpu {
+	struct work_struct work;
+	struct completion completion;
+	struct ccp_crypto_cmd *crypto_cmd;
+	int err;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool ccp_crypto_success(int err)
 {
 	if (err && (err != -EINPROGRESS) && (err != -EBUSY))
@@ -139,14 +149,22 @@ static void ccp_crypto_complete(void *data, int err)
 	struct ccp_crypto_cmd *crypto_cmd = data;
 	struct ccp_crypto_cmd *held, *next, *backlog;
 	struct crypto_async_request *req = crypto_cmd->req;
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = crypto_tfm_ctx_dma(req->tfm);
+=======
+	struct ccp_ctx *ctx = crypto_tfm_ctx(req->tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (err == -EINPROGRESS) {
 		/* Only propagate the -EINPROGRESS if necessary */
 		if (crypto_cmd->ret == -EBUSY) {
 			crypto_cmd->ret = -EINPROGRESS;
+<<<<<<< HEAD
 			crypto_request_complete(req, -EINPROGRESS);
+=======
+			req->complete(req, -EINPROGRESS);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		return;
@@ -159,18 +177,30 @@ static void ccp_crypto_complete(void *data, int err)
 	held = ccp_crypto_cmd_complete(crypto_cmd, &backlog);
 	if (backlog) {
 		backlog->ret = -EINPROGRESS;
+<<<<<<< HEAD
 		crypto_request_complete(backlog->req, -EINPROGRESS);
+=======
+		backlog->req->complete(backlog->req, -EINPROGRESS);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Transition the state from -EBUSY to -EINPROGRESS first */
 	if (crypto_cmd->ret == -EBUSY)
+<<<<<<< HEAD
 		crypto_request_complete(req, -EINPROGRESS);
+=======
+		req->complete(req, -EINPROGRESS);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Completion callbacks */
 	ret = err;
 	if (ctx->complete)
 		ret = ctx->complete(req, ret);
+<<<<<<< HEAD
 	crypto_request_complete(req, ret);
+=======
+	req->complete(req, ret);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Submit the next cmd */
 	while (held) {
@@ -183,15 +213,26 @@ static void ccp_crypto_complete(void *data, int err)
 			break;
 
 		/* Error occurred, report it and get the next entry */
+<<<<<<< HEAD
 		ctx = crypto_tfm_ctx_dma(held->req->tfm);
 		if (ctx->complete)
 			ret = ctx->complete(held->req, ret);
 		crypto_request_complete(held->req, ret);
+=======
+		ctx = crypto_tfm_ctx(held->req->tfm);
+		if (ctx->complete)
+			ret = ctx->complete(held->req, ret);
+		held->req->complete(held->req, ret);
+>>>>>>> b7ba80a49124 (Commit)
 
 		next = ccp_crypto_cmd_complete(held, &backlog);
 		if (backlog) {
 			backlog->ret = -EINPROGRESS;
+<<<<<<< HEAD
 			crypto_request_complete(backlog->req, -EINPROGRESS);
+=======
+			backlog->req->complete(backlog->req, -EINPROGRESS);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		kfree(held);
@@ -393,7 +434,11 @@ static void ccp_unregister_algs(void)
 	}
 }
 
+<<<<<<< HEAD
 static int __init ccp_crypto_init(void)
+=======
+static int ccp_crypto_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
@@ -414,7 +459,11 @@ static int __init ccp_crypto_init(void)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void __exit ccp_crypto_exit(void)
+=======
+static void ccp_crypto_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	ccp_unregister_algs();
 }

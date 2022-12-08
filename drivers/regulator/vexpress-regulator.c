@@ -88,7 +88,10 @@ static struct platform_driver vexpress_regulator_driver = {
 	.probe = vexpress_regulator_probe,
 	.driver	= {
 		.name = DRVNAME,
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = vexpress_regulator_of_match,
 	},
 };

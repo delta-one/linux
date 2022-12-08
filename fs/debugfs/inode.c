@@ -42,7 +42,11 @@ static unsigned int debugfs_allow __ro_after_init = DEFAULT_DEBUGFS_ALLOW_BITS;
  * so that we can use the file mode as part of a heuristic to determine whether
  * to lock down individual files.
  */
+<<<<<<< HEAD
 static int debugfs_setattr(struct mnt_idmap *idmap,
+=======
+static int debugfs_setattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			   struct dentry *dentry, struct iattr *ia)
 {
 	int ret;
@@ -52,7 +56,11 @@ static int debugfs_setattr(struct mnt_idmap *idmap,
 		if (ret)
 			return ret;
 	}
+<<<<<<< HEAD
 	return simple_setattr(&nop_mnt_idmap, dentry, ia);
+=======
+	return simple_setattr(&init_user_ns, dentry, ia);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct inode_operations debugfs_file_inode_operations = {
@@ -82,8 +90,11 @@ struct debugfs_mount_opts {
 	kuid_t uid;
 	kgid_t gid;
 	umode_t mode;
+<<<<<<< HEAD
 	/* Opt_* bitfield. */
 	unsigned int opts;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum {
@@ -113,7 +124,10 @@ static int debugfs_parse_options(char *data, struct debugfs_mount_opts *opts)
 	kgid_t gid;
 	char *p;
 
+<<<<<<< HEAD
 	opts->opts = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	opts->mode = DEBUGFS_DEFAULT_MODE;
 
 	while ((p = strsep(&data, ",")) != NULL) {
@@ -148,19 +162,27 @@ static int debugfs_parse_options(char *data, struct debugfs_mount_opts *opts)
 		 * but traditionally debugfs has ignored all mount options
 		 */
 		}
+<<<<<<< HEAD
 
 		opts->opts |= BIT(token);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static void _debugfs_apply_options(struct super_block *sb, bool remount)
+=======
+static int debugfs_apply_options(struct super_block *sb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct debugfs_fs_info *fsi = sb->s_fs_info;
 	struct inode *inode = d_inode(sb->s_root);
 	struct debugfs_mount_opts *opts = &fsi->mount_opts;
 
+<<<<<<< HEAD
 	/*
 	 * On remount, only reset mode/uid/gid if they were provided as mount
 	 * options.
@@ -186,6 +208,15 @@ static void debugfs_apply_options(struct super_block *sb)
 static void debugfs_apply_options_remount(struct super_block *sb)
 {
 	_debugfs_apply_options(sb, true);
+=======
+	inode->i_mode &= ~S_IALLUGO;
+	inode->i_mode |= opts->mode;
+
+	inode->i_uid = opts->uid;
+	inode->i_gid = opts->gid;
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int debugfs_remount(struct super_block *sb, int *flags, char *data)
@@ -198,7 +229,11 @@ static int debugfs_remount(struct super_block *sb, int *flags, char *data)
 	if (err)
 		goto fail;
 
+<<<<<<< HEAD
 	debugfs_apply_options_remount(sb);
+=======
+	debugfs_apply_options(sb);
+>>>>>>> b7ba80a49124 (Commit)
 
 fail:
 	return err;
@@ -802,8 +837,13 @@ EXPORT_SYMBOL_GPL(debugfs_lookup_and_remove);
  * exist for rename to succeed.
  *
  * This function will return a pointer to old_dentry (which is updated to
+<<<<<<< HEAD
  * reflect renaming) if it succeeds. If an error occurs, ERR_PTR(-ERROR)
  * will be returned.
+=======
+ * reflect renaming) if it succeeds. If an error occurs, %NULL will be
+ * returned.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * If debugfs is not enabled in the kernel, the value -%ENODEV will be
  * returned.
@@ -837,7 +877,11 @@ struct dentry *debugfs_rename(struct dentry *old_dir, struct dentry *old_dentry,
 
 	take_dentry_name_snapshot(&old_name, old_dentry);
 
+<<<<<<< HEAD
 	error = simple_rename(&nop_mnt_idmap, d_inode(old_dir), old_dentry,
+=======
+	error = simple_rename(&init_user_ns, d_inode(old_dir), old_dentry,
+>>>>>>> b7ba80a49124 (Commit)
 			      d_inode(new_dir), dentry, 0);
 	if (error) {
 		release_dentry_name_snapshot(&old_name);

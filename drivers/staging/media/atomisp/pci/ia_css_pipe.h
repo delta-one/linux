@@ -37,6 +37,10 @@ struct ia_css_preview_settings {
 
 	struct ia_css_pipe *copy_pipe;
 	struct ia_css_pipe *capture_pipe;
+<<<<<<< HEAD
+=======
+	struct ia_css_pipe *acc_pipe;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define IA_CSS_DEFAULT_PREVIEW_SETTINGS { \
@@ -155,7 +159,11 @@ struct ia_css_pipe {
 #define IA_CSS_DEFAULT_PIPE { \
 	.config			= DEFAULT_PIPE_CONFIG, \
 	.info			= DEFAULT_PIPE_INFO, \
+<<<<<<< HEAD
 	.mode			= IA_CSS_PIPE_ID_VIDEO, /* (pipe_id) */ \
+=======
+	.mode			= IA_CSS_PIPE_ID_ACC, /* (pipe_id) */ \
+>>>>>>> b7ba80a49124 (Commit)
 	.pipeline		= DEFAULT_PIPELINE, \
 	.output_info		= {IA_CSS_BINARY_DEFAULT_FRAME_INFO}, \
 	.bds_output_info	= IA_CSS_BINARY_DEFAULT_FRAME_INFO, \

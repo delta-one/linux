@@ -97,8 +97,11 @@ struct snd_ff {
 	wait_queue_head_t hwdep_wait;
 
 	struct amdtp_domain domain;
+<<<<<<< HEAD
 
 	void *msg_parser;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum snd_ff_clock_src {
@@ -112,11 +115,16 @@ enum snd_ff_clock_src {
 };
 
 struct snd_ff_protocol {
+<<<<<<< HEAD
 	size_t msg_parser_size;
 	bool (*has_msg)(struct snd_ff *ff);
 	long (*copy_msg_to_user)(struct snd_ff *ff, char __user *buf, long count);
 	void (*handle_msg)(struct snd_ff *ff, unsigned int offset, const __le32 *buf,
 			   size_t length, u32 tstamp);
+=======
+	void (*handle_midi_msg)(struct snd_ff *ff, unsigned int offset,
+				__le32 *buf, size_t length);
+>>>>>>> b7ba80a49124 (Commit)
 	int (*fill_midi_msg)(struct snd_ff *ff,
 			     struct snd_rawmidi_substream *substream,
 			     unsigned int port);

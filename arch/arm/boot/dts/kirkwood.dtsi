@@ -24,9 +24,15 @@
 	};
 
 	aliases {
+<<<<<<< HEAD
 		gpio0 = &gpio0;
 		gpio1 = &gpio1;
 		i2c0 = &i2c0;
+=======
+	       gpio0 = &gpio0;
+	       gpio1 = &gpio1;
+	       i2c0 = &i2c0;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	mbus@f1000000 {
@@ -279,6 +285,7 @@
 			clocks = <&gate_clk 8>;
 
 			xor00 {
+<<<<<<< HEAD
 				interrupts = <5>;
 				dmacap,memcpy;
 				dmacap,xor;
@@ -288,6 +295,17 @@
 				dmacap,memcpy;
 				dmacap,xor;
 				dmacap,memset;
+=======
+			      interrupts = <5>;
+			      dmacap,memcpy;
+			      dmacap,xor;
+			};
+			xor01 {
+			      interrupts = <6>;
+			      dmacap,memcpy;
+			      dmacap,xor;
+			      dmacap,memset;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 
@@ -299,6 +317,7 @@
 			clocks = <&gate_clk 16>;
 
 			xor00 {
+<<<<<<< HEAD
 				interrupts = <7>;
 				dmacap,memcpy;
 				dmacap,xor;
@@ -308,6 +327,17 @@
 				dmacap,memcpy;
 				dmacap,xor;
 				dmacap,memset;
+=======
+			      interrupts = <7>;
+			      dmacap,memcpy;
+			      dmacap,xor;
+			};
+			xor01 {
+			      interrupts = <8>;
+			      dmacap,memcpy;
+			      dmacap,xor;
+			      dmacap,memset;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 

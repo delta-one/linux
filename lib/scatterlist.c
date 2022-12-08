@@ -410,6 +410,7 @@ static struct scatterlist *get_next_sg(struct sg_append_table *table,
 	return new_sg;
 }
 
+<<<<<<< HEAD
 static bool pages_are_mergeable(struct page *a, struct page *b)
 {
 	if (page_to_pfn(a) != page_to_pfn(b) + 1)
@@ -419,6 +420,8 @@ static bool pages_are_mergeable(struct page *a, struct page *b)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * sg_alloc_append_table_from_pages - Allocate and initialize an append sg
  *                                    table from an array of pages
@@ -456,7 +459,10 @@ int sg_alloc_append_table_from_pages(struct sg_append_table *sgt_append,
 	unsigned int chunks, cur_page, seg_len, i, prv_len = 0;
 	unsigned int added_nents = 0;
 	struct scatterlist *s = sgt_append->prv;
+<<<<<<< HEAD
 	struct page *last_pg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * The algorithm below requires max_segment to be aligned to PAGE_SIZE
@@ -470,14 +476,22 @@ int sg_alloc_append_table_from_pages(struct sg_append_table *sgt_append,
 		return -EOPNOTSUPP;
 
 	if (sgt_append->prv) {
+<<<<<<< HEAD
 		unsigned long next_pfn = (page_to_phys(sg_page(sgt_append->prv)) +
 			sgt_append->prv->offset + sgt_append->prv->length) / PAGE_SIZE;
+=======
+		unsigned long paddr =
+			(page_to_pfn(sg_page(sgt_append->prv)) * PAGE_SIZE +
+			 sgt_append->prv->offset + sgt_append->prv->length) /
+			PAGE_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (WARN_ON(offset))
 			return -EINVAL;
 
 		/* Merge contiguous pages into the last SG */
 		prv_len = sgt_append->prv->length;
+<<<<<<< HEAD
 		if (page_to_pfn(pages[0]) == next_pfn) {
 			last_pg = pfn_to_page(next_pfn - 1);
 			while (n_pages && pages_are_mergeable(pages[0], last_pg)) {
@@ -491,6 +505,18 @@ int sg_alloc_append_table_from_pages(struct sg_append_table *sgt_append,
 			if (!n_pages)
 				goto out;
 		}
+=======
+		while (n_pages && page_to_pfn(pages[0]) == paddr) {
+			if (sgt_append->prv->length + PAGE_SIZE > max_segment)
+				break;
+			sgt_append->prv->length += PAGE_SIZE;
+			paddr++;
+			pages++;
+			n_pages--;
+		}
+		if (!n_pages)
+			goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* compute number of contiguous chunks */
@@ -499,7 +525,11 @@ int sg_alloc_append_table_from_pages(struct sg_append_table *sgt_append,
 	for (i = 1; i < n_pages; i++) {
 		seg_len += PAGE_SIZE;
 		if (seg_len >= max_segment ||
+<<<<<<< HEAD
 		    !pages_are_mergeable(pages[i], pages[i - 1])) {
+=======
+		    page_to_pfn(pages[i]) != page_to_pfn(pages[i - 1]) + 1) {
+>>>>>>> b7ba80a49124 (Commit)
 			chunks++;
 			seg_len = 0;
 		}
@@ -515,7 +545,12 @@ int sg_alloc_append_table_from_pages(struct sg_append_table *sgt_append,
 		for (j = cur_page + 1; j < n_pages; j++) {
 			seg_len += PAGE_SIZE;
 			if (seg_len >= max_segment ||
+<<<<<<< HEAD
 			    !pages_are_mergeable(pages[j], pages[j - 1]))
+=======
+			    page_to_pfn(pages[j]) !=
+			    page_to_pfn(pages[j - 1]) + 1)
+>>>>>>> b7ba80a49124 (Commit)
 				break;
 		}
 

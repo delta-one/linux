@@ -575,7 +575,10 @@ bool mmc_prepare_busy_cmd(struct mmc_host *host, struct mmc_command *cmd,
 	cmd->busy_timeout = timeout_ms;
 	return true;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(mmc_prepare_busy_cmd);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  *	__mmc_switch - modify EXT_CSD register

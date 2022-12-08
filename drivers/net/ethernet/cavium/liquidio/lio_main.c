@@ -92,6 +92,14 @@ static int octeon_console_debug_enabled(u32 console)
 /* time to wait for possible in-flight requests in milliseconds */
 #define WAIT_INFLIGHT_REQUEST	msecs_to_jiffies(1000)
 
+<<<<<<< HEAD
+=======
+struct lio_trusted_vf_ctx {
+	struct completion complete;
+	int status;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct oct_link_status_resp {
 	u64 rh;
 	struct oct_link_info link_info;
@@ -1512,6 +1520,7 @@ static void free_netsgbuf_with_resp(void *buf)
 }
 
 /**
+<<<<<<< HEAD
  * liquidio_ptp_adjfine - Adjust ptp frequency
  * @ptp: PTP clock info
  * @scaled_ppm: how much to adjust by, in scaled parts-per-million
@@ -1523,6 +1532,16 @@ static int liquidio_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
 	struct lio *lio = container_of(ptp, struct lio, ptp_info);
 	struct octeon_device *oct = (struct octeon_device *)lio->oct_dev;
 	s32 ppb = scaled_ppm_to_ppb(scaled_ppm);
+=======
+ * liquidio_ptp_adjfreq - Adjust ptp frequency
+ * @ptp: PTP clock info
+ * @ppb: how much to adjust by, in parts-per-billion
+ */
+static int liquidio_ptp_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
+{
+	struct lio *lio = container_of(ptp, struct lio, ptp_info);
+	struct octeon_device *oct = (struct octeon_device *)lio->oct_dev;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 comp, delta;
 	unsigned long flags;
 	bool neg_adj = false;
@@ -1646,7 +1665,11 @@ static void oct_ptp_open(struct net_device *netdev)
 	lio->ptp_info.n_ext_ts = 0;
 	lio->ptp_info.n_per_out = 0;
 	lio->ptp_info.pps = 0;
+<<<<<<< HEAD
 	lio->ptp_info.adjfine = liquidio_ptp_adjfine;
+=======
+	lio->ptp_info.adjfreq = liquidio_ptp_adjfreq;
+>>>>>>> b7ba80a49124 (Commit)
 	lio->ptp_info.adjtime = liquidio_ptp_adjtime;
 	lio->ptp_info.gettime64 = liquidio_ptp_gettime;
 	lio->ptp_info.settime64 = liquidio_ptp_settime;
@@ -1797,10 +1820,20 @@ static int liquidio_open(struct net_device *netdev)
 
 	ifstate_set(lio, LIO_IFSTATE_RUNNING);
 
+<<<<<<< HEAD
 	if (!OCTEON_CN23XX_PF(oct) || !oct->msix_on) {
 		ret = setup_tx_poll_fn(netdev);
 		if (ret)
 			goto err_poll;
+=======
+	if (OCTEON_CN23XX_PF(oct)) {
+		if (!oct->msix_on)
+			if (setup_tx_poll_fn(netdev))
+				return -1;
+	} else {
+		if (setup_tx_poll_fn(netdev))
+			return -1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	netif_tx_start_all_queues(netdev);
@@ -1813,7 +1846,11 @@ static int liquidio_open(struct net_device *netdev)
 	/* tell Octeon to start forwarding packets to host */
 	ret = send_rx_ctrl_cmd(lio, 1);
 	if (ret)
+<<<<<<< HEAD
 		goto err_rx_ctrl;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* start periodical statistics fetch */
 	INIT_DELAYED_WORK(&lio->stats_wk.work, lio_fetch_stats);
@@ -1824,6 +1861,7 @@ static int liquidio_open(struct net_device *netdev)
 	dev_info(&oct->pci_dev->dev, "%s interface is opened\n",
 		 netdev->name);
 
+<<<<<<< HEAD
 	return 0;
 
 err_rx_ctrl:
@@ -1845,6 +1883,8 @@ err_poll:
 			oct->droq[0]->ops.poll_mode = 0;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

@@ -401,4 +401,8 @@
 
 &usb {
 	status = "okay";
+<<<<<<< HEAD
+=======
+	dr_mode = "host";
+>>>>>>> b7ba80a49124 (Commit)
 };

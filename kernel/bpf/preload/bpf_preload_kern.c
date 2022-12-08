@@ -3,11 +3,15 @@
 #include <linux/init.h>
 #include <linux/module.h>
 #include "bpf_preload.h"
+<<<<<<< HEAD
 #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
 #include "iterators/iterators.lskel-little-endian.h"
 #else
 #include "iterators/iterators.lskel-big-endian.h"
 #endif
+=======
+#include "iterators/iterators.lskel.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct bpf_link *maps_link, *progs_link;
 static struct iterators_bpf *skel;

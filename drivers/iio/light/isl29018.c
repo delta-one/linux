@@ -711,9 +711,15 @@ static void isl29018_disable_regulator_action(void *_data)
 		pr_err("failed to disable isl29018's VCC regulator!\n");
 }
 
+<<<<<<< HEAD
 static int isl29018_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int isl29018_probe(struct i2c_client *client,
+			  const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct isl29018_chip *chip;
 	struct iio_dev *indio_dev;
 	int err;
@@ -865,7 +871,11 @@ static struct i2c_driver isl29018_driver = {
 			.pm = pm_sleep_ptr(&isl29018_pm_ops),
 			.of_match_table = isl29018_of_match,
 		    },
+<<<<<<< HEAD
 	.probe_new = isl29018_probe,
+=======
+	.probe	 = isl29018_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = isl29018_id,
 };
 module_i2c_driver(isl29018_driver);

@@ -1213,7 +1213,11 @@ static const unsigned int tsn1_avtp_pps_pins[] = {
 	RCAR_GP_PIN(3, 13),
 };
 static const unsigned int tsn1_avtp_pps_mux[] = {
+<<<<<<< HEAD
 	TSN1_AVTP_PPS_MARK,
+=======
+	TSN0_AVTP_PPS_MARK,
+>>>>>>> b7ba80a49124 (Commit)
 };
 static const unsigned int tsn1_avtp_capture_a_pins[] = {
 	/* TSN1_AVTP_CAPTURE_A */

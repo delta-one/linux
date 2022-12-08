@@ -36,7 +36,11 @@
 #include <linux/mlx5/device.h>
 #include <linux/mlx5/driver.h>
 
+<<<<<<< HEAD
 #define MLX5_TERMINATE_SCATTER_LIST_LKEY cpu_to_be32(0x100)
+=======
+#define MLX5_INVALID_LKEY	0x100
+>>>>>>> b7ba80a49124 (Commit)
 /* UMR (3 WQE_BB's) + SIG (3 WQE_BB's) + PSV (mem) + PSV (wire) */
 #define MLX5_SIG_WQE_SIZE	(MLX5_SEND_WQE_BB * 8)
 #define MLX5_DIF_SIZE		8
@@ -162,8 +166,11 @@ enum {
 	MLX5_SEND_WQE_MAX_WQEBBS	= 16,
 };
 
+<<<<<<< HEAD
 #define MLX5_SEND_WQE_MAX_SIZE (MLX5_SEND_WQE_MAX_WQEBBS * MLX5_SEND_WQE_BB)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum {
 	MLX5_WQE_FMR_PERM_LOCAL_READ	= 1 << 27,
 	MLX5_WQE_FMR_PERM_LOCAL_WRITE	= 1 << 28,
@@ -227,6 +234,10 @@ struct mlx5_wqe_ctrl_seg {
 #define MLX5_WQE_CTRL_OPCODE_MASK 0xff
 #define MLX5_WQE_CTRL_WQE_INDEX_MASK 0x00ffff00
 #define MLX5_WQE_CTRL_WQE_INDEX_SHIFT 8
+<<<<<<< HEAD
+=======
+#define MLX5_WQE_CTRL_TIR_TIS_INDEX_SHIFT 8
+>>>>>>> b7ba80a49124 (Commit)
 
 enum {
 	MLX5_ETH_WQE_L3_INNER_CSUM      = 1 << 4,
@@ -478,12 +489,15 @@ struct mlx5_klm {
 	__be64		va;
 };
 
+<<<<<<< HEAD
 struct mlx5_ksm {
 	__be32		reserved;
 	__be32		key;
 	__be64		va;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mlx5_stride_block_entry {
 	__be16		stride;
 	__be16		bcount;

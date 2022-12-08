@@ -23,6 +23,7 @@ static const struct regmap_config adxl355_i2c_regmap_config = {
 static int adxl355_i2c_probe(struct i2c_client *client)
 {
 	struct regmap *regmap;
+<<<<<<< HEAD
 	const struct adxl355_chip_info *chip_data;
 	const struct i2c_device_id *adxl355;
 
@@ -37,6 +38,8 @@ static int adxl355_i2c_probe(struct i2c_client *client)
 		if (!chip_data)
 			return -EINVAL;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	regmap = devm_regmap_init_i2c(client, &adxl355_i2c_regmap_config);
 	if (IS_ERR(regmap)) {
@@ -46,19 +49,31 @@ static int adxl355_i2c_probe(struct i2c_client *client)
 		return PTR_ERR(regmap);
 	}
 
+<<<<<<< HEAD
 	return adxl355_core_probe(&client->dev, regmap, chip_data);
 }
 
 static const struct i2c_device_id adxl355_i2c_id[] = {
 	{ "adxl355", (kernel_ulong_t)&adxl35x_chip_info[ADXL355] },
 	{ "adxl359", (kernel_ulong_t)&adxl35x_chip_info[ADXL359] },
+=======
+	return adxl355_core_probe(&client->dev, regmap, client->name);
+}
+
+static const struct i2c_device_id adxl355_i2c_id[] = {
+	{ "adxl355", 0 },
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(i2c, adxl355_i2c_id);
 
 static const struct of_device_id adxl355_of_match[] = {
+<<<<<<< HEAD
 	{ .compatible = "adi,adxl355", .data = &adxl35x_chip_info[ADXL355] },
 	{ .compatible = "adi,adxl359", .data = &adxl35x_chip_info[ADXL359] },
+=======
+	{ .compatible = "adi,adxl355" },
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(of, adxl355_of_match);

@@ -32,8 +32,17 @@
 			"TX SWR_DMIC6", "DMIC7_OUTPUT",
 			"TX SWR_DMIC7", "DMIC8_OUTPUT";
 
+<<<<<<< HEAD
 		#address-cells = <1>;
 		#size-cells = <0>;
+=======
+		qcom,msm-mbhc-hphl-swh = <1>;
+		qcom,msm-mbhc-gnd-swh = <1>;
+
+		#address-cells = <1>;
+		#size-cells = <0>;
+		#sound-dai-cells = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 
 		dai-link@0 {
 			link-name = "MAX98360A";
@@ -163,6 +172,13 @@
 	bias-disable;
 };
 
+<<<<<<< HEAD
+=======
+&lpass_dmic01_clk_sleep {
+	drive-strength = <2>;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &lpass_dmic01_data {
 	bias-pull-down;
 };
@@ -172,6 +188,13 @@
 	bias-disable;
 };
 
+<<<<<<< HEAD
+=======
+&lpass_dmic23_clk_sleep {
+	drive-strength = <2>;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &lpass_dmic23_data {
 	bias-pull-down;
 };
@@ -182,18 +205,39 @@
 	bias-disable;
 };
 
+<<<<<<< HEAD
+=======
+&lpass_rx_swr_clk_sleep {
+	bias-pull-down;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &lpass_rx_swr_data {
 	drive-strength = <2>;
 	slew-rate = <1>;
 	bias-bus-hold;
 };
 
+<<<<<<< HEAD
+=======
+&lpass_rx_swr_data_sleep {
+	bias-pull-down;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &lpass_tx_swr_clk {
 	drive-strength = <2>;
 	slew-rate = <1>;
 	bias-disable;
 };
 
+<<<<<<< HEAD
+=======
+&lpass_tx_swr_clk_sleep {
+	bias-pull-down;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &lpass_tx_swr_data {
 	drive-strength = <2>;
 	slew-rate = <1>;

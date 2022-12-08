@@ -2,6 +2,7 @@
 #ifndef _ASM_X86_CACHEINFO_H
 #define _ASM_X86_CACHEINFO_H
 
+<<<<<<< HEAD
 /* Kernel controls MTRR and/or PAT MSRs. */
 extern unsigned int memory_caching_control;
 #define CACHE_MTRR 0x01
@@ -18,4 +19,9 @@ void cache_bp_init(void);
 void cache_bp_restore(void);
 void cache_aps_init(void);
 
+=======
+void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c, int cpu);
+void cacheinfo_hygon_init_llc_id(struct cpuinfo_x86 *c, int cpu);
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_X86_CACHEINFO_H */

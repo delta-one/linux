@@ -169,8 +169,12 @@ static int sticon_set_def_font(int unit, struct console_font *op)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int sticon_set_font(struct vc_data *vc, struct console_font *op,
 			   unsigned int vpitch)
+=======
+static int sticon_set_font(struct vc_data *vc, struct console_font *op)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sti_struct *sti = sticon_sti;
 	int vc_cols, vc_rows, vc_old_cols, vc_old_rows;
@@ -182,7 +186,11 @@ static int sticon_set_font(struct vc_data *vc, struct console_font *op,
 	struct sti_cooked_font *cooked_font;
 	unsigned char *data = op->data, *p;
 
+<<<<<<< HEAD
 	if ((w < 6) || (h < 6) || (w > 32) || (h > 32) || (vpitch != 32)
+=======
+	if ((w < 6) || (h < 6) || (w > 32) || (h > 32)
+>>>>>>> b7ba80a49124 (Commit)
 	    || (op->charcount != 256 && op->charcount != 512))
 		return -EINVAL;
 	pitch = ALIGN(w, 8) / 8;
@@ -268,9 +276,15 @@ static int sticon_font_default(struct vc_data *vc, struct console_font *op, char
 }
 
 static int sticon_font_set(struct vc_data *vc, struct console_font *font,
+<<<<<<< HEAD
 			   unsigned int vpitch, unsigned int flags)
 {
 	return sticon_set_font(vc, font, vpitch);
+=======
+			   unsigned int flags)
+{
+	return sticon_set_font(vc, font);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void sticon_init(struct vc_data *c, int init)

@@ -757,9 +757,15 @@ static void video_i2c_release(struct video_device *vdev)
 	kfree(data);
 }
 
+<<<<<<< HEAD
 static int video_i2c_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int video_i2c_probe(struct i2c_client *client,
+			     const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct video_i2c_data *data;
 	struct v4l2_device *v4l2_dev;
 	struct vb2_queue *queue;
@@ -959,7 +965,11 @@ static struct i2c_driver video_i2c_driver = {
 		.of_match_table = video_i2c_of_match,
 		.pm	= &video_i2c_pm_ops,
 	},
+<<<<<<< HEAD
 	.probe_new	= video_i2c_probe,
+=======
+	.probe		= video_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= video_i2c_remove,
 	.id_table	= video_i2c_id_table,
 };

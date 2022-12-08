@@ -294,7 +294,11 @@ out:
  * later.
  */
 int
+<<<<<<< HEAD
 adfs_notify_change(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+adfs_notify_change(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		   struct iattr *attr)
 {
 	struct inode *inode = d_inode(dentry);
@@ -302,7 +306,11 @@ adfs_notify_change(struct mnt_idmap *idmap, struct dentry *dentry,
 	unsigned int ia_valid = attr->ia_valid;
 	int error;
 	
+<<<<<<< HEAD
 	error = setattr_prepare(&nop_mnt_idmap, dentry, attr);
+=======
+	error = setattr_prepare(&init_user_ns, dentry, attr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * we can't change the UID or GID of any file -

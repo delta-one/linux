@@ -2,6 +2,7 @@
 #ifndef __BPF_MISC_H__
 #define __BPF_MISC_H__
 
+<<<<<<< HEAD
 /* This set of attributes controls behavior of the
  * test_loader.c:test_loader__run_subtests().
  *
@@ -38,6 +39,8 @@
 #define __imm_addr(name) [name]"i"(&name)
 #define __imm_ptr(name) [name]"p"(&name)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if defined(__TARGET_ARCH_x86)
 #define SYSCALL_WRAPPER 1
 #define SYS_PREFIX "__x64_"
@@ -52,6 +55,7 @@
 #define SYS_PREFIX "__se_"
 #endif
 
+<<<<<<< HEAD
 /* How many arguments are passed to function in register */
 #if defined(__TARGET_ARCH_x86) || defined(__x86_64__)
 #define FUNC_REG_ARG_CNT 6
@@ -182,4 +186,6 @@ extern void bpf_iter_num_destroy(struct bpf_iter_num *it) __ksym;
 )
 #endif /* bpf_repeat */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

@@ -10,7 +10,11 @@ maintainers:
   - Florian Fainelli <f.fainelli@gmail.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: ethernet-controller.yaml#
+=======
+  - $ref: "ethernet-controller.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:

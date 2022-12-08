@@ -274,11 +274,20 @@ err_clk_disable:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void axi_i2s_dev_remove(struct platform_device *pdev)
+=======
+static int axi_i2s_dev_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct axi_i2s *i2s = platform_get_drvdata(pdev);
 
 	clk_disable_unprepare(i2s->clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id axi_i2s_of_match[] = {
@@ -293,7 +302,11 @@ static struct platform_driver axi_i2s_driver = {
 		.of_match_table = axi_i2s_of_match,
 	},
 	.probe = axi_i2s_probe,
+<<<<<<< HEAD
 	.remove_new = axi_i2s_dev_remove,
+=======
+	.remove = axi_i2s_dev_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(axi_i2s_driver);
 

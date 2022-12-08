@@ -112,7 +112,11 @@ static int ds1347_set_time(struct device *dev, struct rtc_time *dt)
 		return err;
 
 	century = (dt->tm_year / 100) + 19;
+<<<<<<< HEAD
 	err = regmap_write(map, DS1347_CENTURY_REG, bin2bcd(century));
+=======
+	err = regmap_write(map, DS1347_CENTURY_REG, century);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 

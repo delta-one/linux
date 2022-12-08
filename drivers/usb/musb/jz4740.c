@@ -11,7 +11,10 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/of_device.h>
+<<<<<<< HEAD
 #include <linux/phy/phy.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <linux/usb/role.h>
 #include <linux/usb/usb_phy_generic.h>
@@ -82,9 +85,12 @@ static int jz4740_musb_role_switch_set(struct usb_role_switch *sw,
 	struct jz4740_glue *glue = usb_role_switch_get_drvdata(sw);
 	struct usb_phy *phy = glue->musb->xceiv;
 
+<<<<<<< HEAD
 	if (!phy)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	switch (role) {
 	case USB_ROLE_NONE:
 		atomic_notifier_call_chain(&phy->notifier, USB_EVENT_NONE, phy);
@@ -113,6 +119,7 @@ static int jz4740_musb_init(struct musb *musb)
 
 	glue->musb = musb;
 
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_GENERIC_PHY)) {
 		musb->phy = devm_of_phy_get_by_index(dev, dev->of_node, 0);
 		if (IS_ERR(musb->phy)) {
@@ -147,13 +154,28 @@ static int jz4740_musb_init(struct musb *musb)
 			dev_err(dev, "No transceiver configured\n");
 			return PTR_ERR(musb->xceiv);
 		}
+=======
+	if (dev->of_node)
+		musb->xceiv = devm_usb_get_phy_by_phandle(dev, "phys", 0);
+	else
+		musb->xceiv = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
+	if (IS_ERR(musb->xceiv)) {
+		err = PTR_ERR(musb->xceiv);
+		if (err != -EPROBE_DEFER)
+			dev_err(dev, "No transceiver configured: %d\n", err);
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	glue->role_sw = usb_role_switch_register(dev, &role_sw_desc);
 	if (IS_ERR(glue->role_sw)) {
 		dev_err(dev, "Failed to register USB role switch\n");
+<<<<<<< HEAD
 		err = PTR_ERR(glue->role_sw);
 		goto err_phy_power_down;
+=======
+		return PTR_ERR(glue->role_sw);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -165,6 +187,7 @@ static int jz4740_musb_init(struct musb *musb)
 	musb->isr = jz4740_musb_interrupt;
 
 	return 0;
+<<<<<<< HEAD
 
 err_phy_power_down:
 	if (musb->phy)
@@ -173,6 +196,8 @@ err_phy_shutdown:
 	if (musb->phy)
 		phy_exit(musb->phy);
 	return err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int jz4740_musb_exit(struct musb *musb)
@@ -180,10 +205,13 @@ static int jz4740_musb_exit(struct musb *musb)
 	struct jz4740_glue *glue = dev_get_drvdata(musb->controller->parent);
 
 	usb_role_switch_unregister(glue->role_sw);
+<<<<<<< HEAD
 	if (musb->phy) {
 		phy_power_off(musb->phy);
 		phy_exit(musb->phy);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

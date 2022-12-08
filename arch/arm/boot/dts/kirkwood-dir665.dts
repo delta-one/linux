@@ -211,6 +211,7 @@
 			};
 
 			port@1 {
+<<<<<<< HEAD
 				reg = <1>;
 				label = "lan3";
 			};
@@ -223,6 +224,20 @@
 			port@3 {
 				reg = <3>;
 				label = "lan1";
+=======
+			       reg = <1>;
+			       label = "lan3";
+			};
+
+			port@2 {
+			       reg = <2>;
+			       label = "lan2";
+			};
+
+			port@3 {
+			       reg = <3>;
+			       label = "lan1";
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			port@4 {
@@ -268,7 +283,11 @@
 };
 
 &pciec {
+<<<<<<< HEAD
 	status = "okay";
+=======
+        status = "okay";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &pcie0 {

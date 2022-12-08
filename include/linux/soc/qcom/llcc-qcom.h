@@ -42,6 +42,7 @@
 #define LLCC_CPUHWT      36
 #define LLCC_MDMCLAD2    37
 #define LLCC_CAMEXP1     38
+<<<<<<< HEAD
 #define LLCC_CMPTHCP     39
 #define LLCC_LCPDARE     40
 #define LLCC_AENPU       45
@@ -55,6 +56,9 @@
 #define LLCC_DISP_WB	 53
 #define LLCC_DISP_1	 54
 #define LLCC_VIDVSP	 64
+=======
+#define LLCC_AENPU       45
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct llcc_slice_desc - Cache slice descriptor
@@ -120,7 +124,11 @@ struct llcc_edac_reg_offset {
 
 /**
  * struct llcc_drv_data - Data associated with the llcc driver
+<<<<<<< HEAD
  * @regmaps: regmaps associated with the llcc device
+=======
+ * @regmap: regmap associated with the llcc device
+>>>>>>> b7ba80a49124 (Commit)
  * @bcast_regmap: regmap associated with llcc broadcast offset
  * @cfg: pointer to the data structure for slice configuration
  * @edac_reg_offset: Offset of the LLCC EDAC registers
@@ -129,11 +137,19 @@ struct llcc_edac_reg_offset {
  * @max_slices: max slices as read from device tree
  * @num_banks: Number of llcc banks
  * @bitmap: Bit map to track the active slice ids
+<<<<<<< HEAD
+=======
+ * @offsets: Pointer to the bank offsets array
+>>>>>>> b7ba80a49124 (Commit)
  * @ecc_irq: interrupt for llcc cache error detection and reporting
  * @version: Indicates the LLCC version
  */
 struct llcc_drv_data {
+<<<<<<< HEAD
 	struct regmap **regmaps;
+=======
+	struct regmap *regmap;
+>>>>>>> b7ba80a49124 (Commit)
 	struct regmap *bcast_regmap;
 	const struct llcc_slice_config *cfg;
 	const struct llcc_edac_reg_offset *edac_reg_offset;
@@ -142,6 +158,10 @@ struct llcc_drv_data {
 	u32 max_slices;
 	u32 num_banks;
 	unsigned long *bitmap;
+<<<<<<< HEAD
+=======
+	u32 *offsets;
+>>>>>>> b7ba80a49124 (Commit)
 	int ecc_irq;
 	u32 version;
 };

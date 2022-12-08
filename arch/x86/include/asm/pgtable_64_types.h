@@ -19,7 +19,10 @@ typedef unsigned long	pgdval_t;
 typedef unsigned long	pgprotval_t;
 
 typedef struct { pteval_t pte; } pte_t;
+<<<<<<< HEAD
 typedef struct { pmdval_t pmd; } pmd_t;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_X86_5LEVEL
 extern unsigned int __pgtable_l5_enabled;

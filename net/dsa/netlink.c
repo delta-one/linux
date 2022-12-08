@@ -4,8 +4,12 @@
 #include <linux/netdevice.h>
 #include <net/rtnetlink.h>
 
+<<<<<<< HEAD
 #include "netlink.h"
 #include "slave.h"
+=======
+#include "dsa_priv.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct nla_policy dsa_policy[IFLA_DSA_MAX + 1] = {
 	[IFLA_DSA_MASTER]	= { .type = NLA_U32 },
@@ -60,5 +64,8 @@ struct rtnl_link_ops dsa_link_ops __read_mostly = {
 	.changelink		= dsa_changelink,
 	.get_size		= dsa_get_size,
 	.fill_info		= dsa_fill_info,
+<<<<<<< HEAD
 	.netns_refund		= true,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

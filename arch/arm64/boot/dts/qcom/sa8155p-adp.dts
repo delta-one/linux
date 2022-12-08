@@ -17,14 +17,21 @@
 
 	aliases {
 		serial0 = &uart2;
+<<<<<<< HEAD
 		serial1 = &uart9;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	chosen {
 		stdout-path = "serial0:115200n8";
 	};
 
+<<<<<<< HEAD
 	vreg_3p3: vreg-3p3-regulator {
+=======
+	vreg_3p3: vreg_3p3_regulator {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "vreg_3p3";
 		regulator-min-microvolt = <3300000>;
@@ -44,6 +51,10 @@
 
 		regulator-always-on;
 		regulator-boot-on;
+<<<<<<< HEAD
+=======
+		regulator-allow-set-load;
+>>>>>>> b7ba80a49124 (Commit)
 
 		vin-supply = <&vreg_3p3>;
 	};
@@ -73,7 +84,11 @@
 };
 
 &apps_rsc {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pmm8155au-1-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pmm8155au-rpmh-regulators";
 		qcom,pmic-id = "a";
 
@@ -137,8 +152,11 @@
 			regulator-max-microvolt = <880000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 			regulator-allow-set-load;
+<<<<<<< HEAD
 			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
 						   RPMH_REGULATOR_MODE_HPM>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		vreg_l7a_1p8: ldo7 {
@@ -154,8 +172,11 @@
 			regulator-max-microvolt = <2960000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 			regulator-allow-set-load;
+<<<<<<< HEAD
 			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
 						   RPMH_REGULATOR_MODE_HPM>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		vreg_l11a_0p8: ldo11 {
@@ -202,7 +223,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-1 {
+=======
+	pmm8155au-2-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pmm8155au-rpmh-regulators";
 		qcom,pmic-id = "c";
 
@@ -262,8 +287,11 @@
 			regulator-max-microvolt = <1200000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 			regulator-allow-set-load;
+<<<<<<< HEAD
 			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
 						   RPMH_REGULATOR_MODE_HPM>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		vreg_l7c_1p8: ldo7 {
@@ -279,8 +307,11 @@
 			regulator-max-microvolt = <1200000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 			regulator-allow-set-load;
+<<<<<<< HEAD
 			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
 						   RPMH_REGULATOR_MODE_HPM>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		vreg_l10c_3p3: ldo10 {
@@ -394,17 +425,24 @@
 	vmmc-supply = <&vreg_l17a_2p96>;  /* Card power line */
 	bus-width = <4>;
 	no-sdio;
+<<<<<<< HEAD
 	no-mmc;
+=======
+	no-emmc;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &uart2 {
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &uart9 {
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &ufs_mem_hc {
 	status = "okay";
 
@@ -489,26 +527,43 @@
 &tlmm {
 	gpio-reserved-ranges = <0 4>;
 
+<<<<<<< HEAD
 	sdc2_on: sdc2-on-state {
 		clk-pins {
+=======
+	sdc2_on: sdc2_on {
+		clk {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_clk";
 			bias-disable;		/* No pull */
 			drive-strength = <16>;	/* 16 MA */
 		};
 
+<<<<<<< HEAD
 		cmd-pins {
+=======
+		cmd {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_cmd";
 			bias-pull-up;		/* pull up */
 			drive-strength = <16>;	/* 16 MA */
 		};
 
+<<<<<<< HEAD
 		data-pins {
+=======
+		data {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_data";
 			bias-pull-up;		/* pull up */
 			drive-strength = <16>;	/* 16 MA */
 		};
 
+<<<<<<< HEAD
 		sd-cd-pins {
+=======
+		sd-cd {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio96";
 			function = "gpio";
 			bias-pull-up;		/* pull up */
@@ -516,26 +571,43 @@
 		};
 	};
 
+<<<<<<< HEAD
 	sdc2_off: sdc2-off-state {
 		clk-pins {
+=======
+	sdc2_off: sdc2_off {
+		clk {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_clk";
 			bias-disable;		/* No pull */
 			drive-strength = <2>;	/* 2 MA */
 		};
 
+<<<<<<< HEAD
 		cmd-pins {
+=======
+		cmd {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_cmd";
 			bias-pull-up;		/* pull up */
 			drive-strength = <2>;	/* 2 MA */
 		};
 
+<<<<<<< HEAD
 		data-pins {
+=======
+		data {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_data";
 			bias-pull-up;		/* pull up */
 			drive-strength = <2>;	/* 2 MA */
 		};
 
+<<<<<<< HEAD
 		sd-cd-pins {
+=======
+		sd-cd {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio96";
 			function = "gpio";
 			bias-pull-up;		/* pull up */
@@ -543,6 +615,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	usb2phy_ac_en1_default: usb2phy-ac-en1-default-state {
 		pins = "gpio113";
 		function = "usb2phy_ac";
@@ -559,46 +632,92 @@
 
 	ethernet_defaults: ethernet-defaults-state {
 		mdc-pins {
+=======
+	usb2phy_ac_en1_default: usb2phy_ac_en1_default {
+		mux {
+			pins = "gpio113";
+			function = "usb2phy_ac";
+			bias-disable;
+			drive-strength = <2>;
+		};
+	};
+
+	usb2phy_ac_en2_default: usb2phy_ac_en2_default {
+		mux {
+			pins = "gpio123";
+			function = "usb2phy_ac";
+			bias-disable;
+			drive-strength = <2>;
+		};
+	};
+
+	ethernet_defaults: ethernet-defaults {
+		mdc {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio7";
 			function = "rgmii";
 			bias-pull-up;
 		};
 
+<<<<<<< HEAD
 		mdio-pins {
+=======
+		mdio {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio59";
 			function = "rgmii";
 			bias-pull-up;
 		};
 
+<<<<<<< HEAD
 		rgmii-rx-pins {
+=======
+		rgmii-rx {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio117", "gpio118", "gpio119", "gpio120", "gpio115", "gpio116";
 			function = "rgmii";
 			bias-disable;
 			drive-strength = <2>;
 		};
 
+<<<<<<< HEAD
 		rgmii-tx-pins {
+=======
+		rgmii-tx {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio122", "gpio4", "gpio5", "gpio6", "gpio114", "gpio121";
 			function = "rgmii";
 			bias-pull-up;
 			drive-strength = <16>;
 		};
 
+<<<<<<< HEAD
 		phy-intr-pins {
+=======
+		phy-intr {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio124";
 			function = "emac_phy";
 			bias-disable;
 			drive-strength = <8>;
 		};
 
+<<<<<<< HEAD
 		pps-pins {
+=======
+		pps {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio81";
 			function = "emac_pps";
 			bias-disable;
 			drive-strength = <8>;
 		};
 
+<<<<<<< HEAD
 		phy-reset-pins {
+=======
+		phy-reset {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio79";
 			function = "gpio";
 			bias-pull-up;

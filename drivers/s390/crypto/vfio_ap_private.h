@@ -13,6 +13,10 @@
 #define _VFIO_AP_PRIVATE_H_
 
 #include <linux/types.h>
+<<<<<<< HEAD
+=======
+#include <linux/device.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mdev.h>
 #include <linux/delay.h>
 #include <linux/mutex.h>
@@ -29,6 +33,10 @@
  * struct ap_matrix_dev - Contains the data for the matrix device.
  *
  * @device:	generic device structure associated with the AP matrix device
+<<<<<<< HEAD
+=======
+ * @available_instances: number of mediated matrix devices that can be created
+>>>>>>> b7ba80a49124 (Commit)
  * @info:	the struct containing the output from the PQAP(QCI) instruction
  * @mdev_list:	the list of mediated matrix devices created
  * @mdevs_lock: mutex for locking the AP matrix device. This lock will be
@@ -45,14 +53,21 @@
  */
 struct ap_matrix_dev {
 	struct device device;
+<<<<<<< HEAD
+=======
+	atomic_t available_instances;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ap_config_info info;
 	struct list_head mdev_list;
 	struct mutex mdevs_lock; /* serializes access to each ap_matrix_mdev */
 	struct ap_driver  *vfio_ap_drv;
 	struct mutex guests_lock; /* serializes access to each KVM guest */
+<<<<<<< HEAD
 	struct mdev_parent parent;
 	struct mdev_type mdev_type;
 	struct mdev_type *mdev_types[1];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 extern struct ap_matrix_dev *matrix_dev;

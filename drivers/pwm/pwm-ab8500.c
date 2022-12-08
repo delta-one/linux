@@ -3,7 +3,10 @@
  * Copyright (C) ST-Ericsson SA 2010
  *
  * Author: Arun R Murthy <arun.murthy@stericsson.com>
+<<<<<<< HEAD
  * Datasheet: https://web.archive.org/web/20130614115108/http://www.stericsson.com/developers/CD00291561_UM1031_AB8500_user_manual-rev5_CTDS_public.pdf
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 #include <linux/err.h>
 #include <linux/platform_device.h>
@@ -21,8 +24,11 @@
 #define AB8500_PWM_OUT_CTRL2_REG	0x61
 #define AB8500_PWM_OUT_CTRL7_REG	0x66
 
+<<<<<<< HEAD
 #define AB8500_PWM_CLKRATE 9600000
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ab8500_pwm_chip {
 	struct pwm_chip chip;
 	unsigned int hwid;
@@ -38,13 +44,18 @@ static int ab8500_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 {
 	int ret;
 	u8 reg;
+<<<<<<< HEAD
 	u8 higher_val, lower_val;
 	unsigned int duty_steps, div;
+=======
+	unsigned int higher_val, lower_val;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ab8500_pwm_chip *ab8500 = ab8500_pwm_from_chip(chip);
 
 	if (state->polarity != PWM_POLARITY_NORMAL)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (state->enabled) {
 		/*
 		 * A time quantum is
@@ -92,6 +103,9 @@ static int ab8500_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 	 * when disabled.
 	 */
 	if (!state->enabled || duty_steps == 0) {
+=======
+	if (!state->enabled) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = abx500_mask_and_set_register_interruptible(chip->dev,
 					AB8500_MISC, AB8500_PWM_OUT_CTRL7_REG,
 					1 << ab8500->hwid, 0);
@@ -103,6 +117,7 @@ static int ab8500_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 	}
 
 	/*
+<<<<<<< HEAD
 	 * The lower 8 bits of duty_steps is written to ...
 	 * AB8500_PWM_OUT_CTRL1_REG[0:7]
 	 */
@@ -112,20 +127,42 @@ static int ab8500_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 	 * AB8500_PWM_OUT_CTRL2_REG[0:1]; together with FreqPWMOutx.
 	 */
 	higher_val = ((duty_steps - 1) & 0x0300) >> 8 | (32 - div) << 4;
+=======
+	 * get the first 8 bits that are be written to
+	 * AB8500_PWM_OUT_CTRL1_REG[0:7]
+	 */
+	lower_val = state->duty_cycle & 0x00FF;
+	/*
+	 * get bits [9:10] that are to be written to
+	 * AB8500_PWM_OUT_CTRL2_REG[0:1]
+	 */
+	higher_val = ((state->duty_cycle & 0x0300) >> 8);
+>>>>>>> b7ba80a49124 (Commit)
 
 	reg = AB8500_PWM_OUT_CTRL1_REG + (ab8500->hwid * 2);
 
 	ret = abx500_set_register_interruptible(chip->dev, AB8500_MISC,
+<<<<<<< HEAD
 			reg, lower_val);
+=======
+			reg, (u8)lower_val);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
 	ret = abx500_set_register_interruptible(chip->dev, AB8500_MISC,
+<<<<<<< HEAD
 			(reg + 1), higher_val);
 	if (ret < 0)
 		return ret;
 
 	/* enable */
+=======
+			(reg + 1), (u8)higher_val);
+	if (ret < 0)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = abx500_mask_and_set_register_interruptible(chip->dev,
 				AB8500_MISC, AB8500_PWM_OUT_CTRL7_REG,
 				1 << ab8500->hwid, 1 << ab8500->hwid);
@@ -136,6 +173,7 @@ static int ab8500_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 	return ret;
 }
 
+<<<<<<< HEAD
 static int ab8500_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 				struct pwm_state *state)
 {
@@ -181,6 +219,10 @@ static int ab8500_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 static const struct pwm_ops ab8500_pwm_ops = {
 	.apply = ab8500_pwm_apply,
 	.get_state = ab8500_pwm_get_state,
+=======
+static const struct pwm_ops ab8500_pwm_ops = {
+	.apply = ab8500_pwm_apply,
+>>>>>>> b7ba80a49124 (Commit)
 	.owner = THIS_MODULE,
 };
 

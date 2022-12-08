@@ -41,10 +41,13 @@ struct timing_sync_info {
 struct dc_stream_status {
 	int primary_otg_inst;
 	int stream_enc_inst;
+<<<<<<< HEAD
 
 	/**
 	 * @plane_count: Total of planes attached to a single stream
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int plane_count;
 	int audio_inst;
 	struct timing_sync_info timing_sync_info;
@@ -144,7 +147,11 @@ struct test_pattern {
 	unsigned int cust_pattern_size;
 };
 
+<<<<<<< HEAD
 #define SUBVP_DRR_MARGIN_US 600 // 600us for DRR margin (SubVP + DRR)
+=======
+#define SUBVP_DRR_MARGIN_US 500 // 500us for DRR margin (SubVP + DRR)
+>>>>>>> b7ba80a49124 (Commit)
 
 enum mall_stream_type {
 	SUBVP_NONE, // subvp not in use
@@ -160,6 +167,7 @@ struct mall_stream_config {
 	struct dc_stream_state *paired_stream;	// master / slave stream
 };
 
+<<<<<<< HEAD
 /* Temp struct used to save and restore MALL config
  * during validation.
  *
@@ -171,6 +179,8 @@ struct mall_temp_config {
 	bool is_phantom_plane[MAX_PIPES];
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct dc_stream_state {
 	// sink is deprecated, new code should not reference
 	// this pointer
@@ -190,7 +200,10 @@ struct dc_stream_state {
 	struct dc_info_packet vsp_infopacket;
 	struct dc_info_packet hfvsif_infopacket;
 	struct dc_info_packet vtem_infopacket;
+<<<<<<< HEAD
 	struct dc_info_packet adaptive_sync_infopacket;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	uint8_t dsc_packed_pps[128];
 	struct rect src; /* composition area */
 	struct rect dst; /* stream addressable area */
@@ -213,6 +226,7 @@ struct dc_stream_state {
 	bool use_vsc_sdp_for_colorimetry;
 	bool ignore_msa_timing_param;
 
+<<<<<<< HEAD
 	/**
 	 * @allow_freesync:
 	 *
@@ -225,6 +239,9 @@ struct dc_stream_state {
 	 *
 	 * It describes if VRR is in use.
 	 */
+=======
+	bool allow_freesync;
+>>>>>>> b7ba80a49124 (Commit)
 	bool vrr_active_variable;
 	bool freesync_on_desktop;
 
@@ -239,7 +256,12 @@ struct dc_stream_state {
 	/* DMCU info */
 	unsigned int abm_level;
 
+<<<<<<< HEAD
 	struct periodic_interrupt_config periodic_interrupt;
+=======
+	struct periodic_interrupt_config periodic_interrupt0;
+	struct periodic_interrupt_config periodic_interrupt1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* from core_stream struct */
 	struct dc_context *ctx;
@@ -307,14 +329,22 @@ struct dc_stream_update {
 	struct dc_info_packet *hdr_static_metadata;
 	unsigned int *abm_level;
 
+<<<<<<< HEAD
 	struct periodic_interrupt_config *periodic_interrupt;
+=======
+	struct periodic_interrupt_config *periodic_interrupt0;
+	struct periodic_interrupt_config *periodic_interrupt1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct dc_info_packet *vrr_infopacket;
 	struct dc_info_packet *vsc_infopacket;
 	struct dc_info_packet *vsp_infopacket;
 	struct dc_info_packet *hfvsif_infopacket;
 	struct dc_info_packet *vtem_infopacket;
+<<<<<<< HEAD
 	struct dc_info_packet *adaptive_sync_infopacket;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool *dpms_off;
 	bool integer_scaling_update;
 	bool *allow_freesync;
@@ -545,9 +575,16 @@ bool dc_stream_get_crtc_position(struct dc *dc,
 				 unsigned int *nom_v_pos);
 
 #if defined(CONFIG_DRM_AMD_SECURE_DISPLAY)
+<<<<<<< HEAD
 bool dc_stream_forward_crc_window(struct dc_stream_state *stream,
 		struct rect *rect,
 		bool is_stop);
+=======
+bool dc_stream_forward_dmcu_crc_window(struct dc *dc, struct dc_stream_state *stream,
+			     struct crc_params *crc_window);
+bool dc_stream_stop_dmcu_crc_win_update(struct dc *dc,
+				 struct dc_stream_state *stream);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 bool dc_stream_configure_crc(struct dc *dc,

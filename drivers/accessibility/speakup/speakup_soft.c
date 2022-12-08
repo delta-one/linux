@@ -33,6 +33,7 @@ static struct miscdevice synth_device, synthu_device;
 static int init_pos;
 static int misc_registered;
 
+<<<<<<< HEAD
 
 enum default_vars_id {
 	DIRECT_ID = 0, CAPS_START_ID, CAPS_STOP_ID,
@@ -57,6 +58,23 @@ static struct var_t vars[NB_ID] = {
 	[PUNCT_ID]  = { PUNCT, .u.n = {"\x01%db", 0, 0, 3, 0, 0, NULL } },
 	[VOICE_ID]  = { VOICE, .u.n = {"\x01%do", 0, 0, 7, 0, 0, NULL } },
 	[FREQUENCY_ID]  = { FREQUENCY, .u.n = {"\x01%df", 5, 0, 9, 0, 0, NULL } },
+=======
+static struct var_t vars[] = {
+	/* DIRECT is put first so that module_param_named can access it easily */
+	{ DIRECT, .u.n = {NULL, 0, 0, 1, 0, 0, NULL } },
+
+	{ CAPS_START, .u.s = {"\x01+3p" } },
+	{ CAPS_STOP, .u.s = {"\x01-3p" } },
+	{ PAUSE, .u.n = {"\x01P" } },
+	{ RATE, .u.n = {"\x01%ds", 2, 0, 9, 0, 0, NULL } },
+	{ PITCH, .u.n = {"\x01%dp", 5, 0, 9, 0, 0, NULL } },
+	{ INFLECTION, .u.n = {"\x01%dr", 5, 0, 9, 0, 0, NULL } },
+	{ VOL, .u.n = {"\x01%dv", 5, 0, 9, 0, 0, NULL } },
+	{ TONE, .u.n = {"\x01%dx", 1, 0, 2, 0, 0, NULL } },
+	{ PUNCT, .u.n = {"\x01%db", 0, 0, 3, 0, 0, NULL } },
+	{ VOICE, .u.n = {"\x01%do", 0, 0, 7, 0, 0, NULL } },
+	{ FREQUENCY, .u.n = {"\x01%df", 5, 0, 9, 0, 0, NULL } },
+>>>>>>> b7ba80a49124 (Commit)
 	V_LAST_VAR
 };
 
@@ -460,6 +478,7 @@ static int softsynth_adjust(struct spk_synth *synth, struct st_var_header *var)
 }
 
 module_param_named(start, synth_soft.startup, short, 0444);
+<<<<<<< HEAD
 module_param_named(direct, vars[DIRECT_ID].u.n.default_val, int, 0444);
 module_param_named(rate, vars[RATE_ID].u.n.default_val, int, 0444);
 module_param_named(pitch, vars[PITCH_ID].u.n.default_val, int, 0444);
@@ -482,6 +501,12 @@ MODULE_PARM_DESC(tone, "Sets the tone of the speech synthesizer.");
 MODULE_PARM_DESC(punct, "Sets the amount of punctuation spoken by the synthesizer.");
 MODULE_PARM_DESC(voice, "Sets the voice used by the synthesizer.");
 MODULE_PARM_DESC(frequency, "Sets the frequency of speech synthesizer.");
+=======
+module_param_named(direct, vars[0].u.n.default_val, int, 0444);
+
+MODULE_PARM_DESC(start, "Start the synthesizer once it is loaded.");
+MODULE_PARM_DESC(direct, "Set the direct variable on load.");
+>>>>>>> b7ba80a49124 (Commit)
 
 module_spk_synth(synth_soft);
 

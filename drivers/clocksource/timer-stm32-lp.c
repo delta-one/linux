@@ -218,3 +218,7 @@ module_platform_driver(stm32_clkevent_lp_driver);
 
 MODULE_ALIAS("platform:stm32-lptimer-timer");
 MODULE_DESCRIPTION("STMicroelectronics STM32 clockevent low power driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

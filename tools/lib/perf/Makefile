@@ -176,10 +176,17 @@ define do_install_mkdir
 endef
 
 define do_install
+<<<<<<< HEAD
 	if [ ! -d '$2' ]; then             \
 		$(INSTALL) -d -m 755 '$2'; \
 	fi;                                \
 	$(INSTALL) $1 $(if $3,-m $3,) '$2'
+=======
+	if [ ! -d '$(DESTDIR_SQ)$2' ]; then             \
+		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$2'; \
+	fi;                                             \
+	$(INSTALL) $1 $(if $3,-m $3,) '$(DESTDIR_SQ)$2'
+>>>>>>> b7ba80a49124 (Commit)
 endef
 
 install_lib: libs
@@ -187,6 +194,7 @@ install_lib: libs
 		$(call do_install_mkdir,$(libdir_SQ)); \
 		cp -fpR $(LIBPERF_ALL) $(DESTDIR)$(libdir_SQ)
 
+<<<<<<< HEAD
 HDRS := bpf_perf.h core.h cpumap.h threadmap.h evlist.h evsel.h event.h mmap.h
 INTERNAL_HDRS := cpumap.h evlist.h evsel.h lib.h mmap.h threadmap.h xyarray.h
 
@@ -209,6 +217,21 @@ install_headers: $(INSTALL_HDRS) $(INSTALL_INTERNAL_HDRS)
 install_pkgconfig: $(LIBPERF_PC)
 	$(call QUIET_INSTALL, $(LIBPERF_PC)) \
 		$(call do_install,$(LIBPERF_PC),$(DESTDIR_SQ)$(libdir_SQ)/pkgconfig,644)
+=======
+install_headers:
+	$(call QUIET_INSTALL, headers) \
+		$(call do_install,include/perf/core.h,$(prefix)/include/perf,644); \
+		$(call do_install,include/perf/cpumap.h,$(prefix)/include/perf,644); \
+		$(call do_install,include/perf/threadmap.h,$(prefix)/include/perf,644); \
+		$(call do_install,include/perf/evlist.h,$(prefix)/include/perf,644); \
+		$(call do_install,include/perf/evsel.h,$(prefix)/include/perf,644); \
+		$(call do_install,include/perf/event.h,$(prefix)/include/perf,644); \
+		$(call do_install,include/perf/mmap.h,$(prefix)/include/perf,644);
+
+install_pkgconfig: $(LIBPERF_PC)
+	$(call QUIET_INSTALL, $(LIBPERF_PC)) \
+		$(call do_install,$(LIBPERF_PC),$(libdir_SQ)/pkgconfig,644)
+>>>>>>> b7ba80a49124 (Commit)
 
 install_doc:
 	$(Q)$(MAKE) -C Documentation install-man install-html install-examples

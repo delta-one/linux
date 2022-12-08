@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /dts-v1/;
+<<<<<<< HEAD
 /*
  * Copyright (c) 2020 The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2020 The Linux Foundation. All rights reserved.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #include "ipq8074-hk10.dtsi"
 

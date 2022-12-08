@@ -404,7 +404,11 @@ static int mmp_pcm_mmap(struct snd_soc_component *component,
 			struct snd_pcm_substream *substream,
 			struct vm_area_struct *vma)
 {
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_DONTEXPAND | VM_DONTDUMP);
+=======
+	vma->vm_flags |= VM_DONTEXPAND | VM_DONTDUMP;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
 	return remap_pfn_range(vma, vma->vm_start,
 		substream->dma_buffer.addr >> PAGE_SHIFT,
@@ -545,7 +549,11 @@ static int asoc_mmp_sspa_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void asoc_mmp_sspa_remove(struct platform_device *pdev)
+=======
+static int asoc_mmp_sspa_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sspa_priv *sspa = platform_get_drvdata(pdev);
 
@@ -553,10 +561,18 @@ static void asoc_mmp_sspa_remove(struct platform_device *pdev)
 	pm_runtime_disable(&pdev->dev);
 
 	if (pdev->dev.of_node)
+<<<<<<< HEAD
 		return;
 
 	clk_put(sspa->audio_clk);
 	clk_put(sspa->sysclk);
+=======
+		return 0;
+
+	clk_put(sspa->audio_clk);
+	clk_put(sspa->sysclk);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_OF
@@ -574,7 +590,11 @@ static struct platform_driver asoc_mmp_sspa_driver = {
 		.of_match_table = of_match_ptr(mmp_sspa_of_match),
 	},
 	.probe = asoc_mmp_sspa_probe,
+<<<<<<< HEAD
 	.remove_new = asoc_mmp_sspa_remove,
+=======
+	.remove = asoc_mmp_sspa_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(asoc_mmp_sspa_driver);

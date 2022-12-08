@@ -424,8 +424,12 @@
  *	interface identified by %NL80211_ATTR_IFINDEX.
  * @NL80211_CMD_DEL_STATION: Remove a station identified by %NL80211_ATTR_MAC
  *	or, if no MAC address given, all stations, on the interface identified
+<<<<<<< HEAD
  *	by %NL80211_ATTR_IFINDEX. For MLD station, MLD address is used in
  *	%NL80211_ATTR_MAC. %NL80211_ATTR_MGMT_SUBTYPE and
+=======
+ *	by %NL80211_ATTR_IFINDEX. %NL80211_ATTR_MGMT_SUBTYPE and
+>>>>>>> b7ba80a49124 (Commit)
  *	%NL80211_ATTR_REASON_CODE can optionally be used to specify which type
  *	of disconnection indication should be sent to the station
  *	(Deauthentication or Disassociation frame and reason code for that
@@ -1167,6 +1171,7 @@
  *	%NL80211_ATTR_STATUS_CODE attribute in %NL80211_CMD_EXTERNAL_AUTH
  *	command interface.
  *
+<<<<<<< HEAD
  *	Host driver sends MLD address of the AP with %NL80211_ATTR_MLD_ADDR in
  *	%NL80211_CMD_EXTERNAL_AUTH event to indicate user space to enable MLO
  *	during the authentication offload in STA mode while connecting to MLD
@@ -1184,6 +1189,8 @@
  *	MLD addresses to/from link addresses based on the link chosen for the
  *	authentication.
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *	Host driver reports this status on an authentication failure to the
  *	user space through the connect result as the user space would have
  *	initiated the connection through the connect request.
@@ -1299,6 +1306,7 @@
  * @NL80211_CMD_MODIFY_LINK_STA: Modify a link of an MLD station
  * @NL80211_CMD_REMOVE_LINK_STA: Remove a link of an MLD station
  *
+<<<<<<< HEAD
  * @NL80211_CMD_SET_HW_TIMESTAMP: Enable/disable HW timestamping of Timing
  *	measurement and Fine timing measurement frames. If %NL80211_ATTR_MAC
  *	is included, enable/disable HW timestamping only for frames to/from the
@@ -1309,6 +1317,8 @@
  *	The number of peers that HW timestamping can be enabled for concurrently
  *	is indicated by %NL80211_ATTR_MAX_HW_TIMESTAMP_PEERS.
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @NL80211_CMD_MAX: highest used command number
  * @__NL80211_CMD_AFTER_LAST: internal use
  */
@@ -1560,8 +1570,11 @@ enum nl80211_commands {
 	NL80211_CMD_MODIFY_LINK_STA,
 	NL80211_CMD_REMOVE_LINK_STA,
 
+<<<<<<< HEAD
 	NL80211_CMD_SET_HW_TIMESTAMP,
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* add new commands above here */
 
 	/* used to define NL80211_CMD_MAX below */
@@ -2779,6 +2792,7 @@ enum nl80211_commands {
  *	When used with %NL80211_CMD_FRAME_TX_STATUS, indicates the ack RX
  *	timestamp. When used with %NL80211_CMD_FRAME RX notification, indicates
  *	the incoming frame RX timestamp.
+<<<<<<< HEAD
  * @NL80211_ATTR_TD_BITMAP: Transition Disable bitmap, for subsequent
  *	(re)associations.
  *
@@ -2794,6 +2808,8 @@ enum nl80211_commands {
  * @NL80211_ATTR_HW_TIMESTAMP_ENABLED: Indicates whether HW timestamping should
  *	be enabled or not (flag attribute).
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @NUM_NL80211_ATTR: total number of nl80211_attrs available
  * @NL80211_ATTR_MAX: highest attribute number currently defined
  * @__NL80211_ATTR_AFTER_LAST: internal use
@@ -3321,12 +3337,15 @@ enum nl80211_attrs {
 
 	NL80211_ATTR_TX_HW_TIMESTAMP,
 	NL80211_ATTR_RX_HW_TIMESTAMP,
+<<<<<<< HEAD
 	NL80211_ATTR_TD_BITMAP,
 
 	NL80211_ATTR_PUNCT_BITMAP,
 
 	NL80211_ATTR_MAX_HW_TIMESTAMP_PEERS,
 	NL80211_ATTR_HW_TIMESTAMP_ENABLED,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* add attributes here, update the policy in nl80211.c */
 
@@ -5917,7 +5936,10 @@ enum plink_actions {
 #define NL80211_KEK_LEN			16
 #define NL80211_KCK_EXT_LEN		24
 #define NL80211_KEK_EXT_LEN		32
+<<<<<<< HEAD
 #define NL80211_KCK_EXT_LEN_32		32
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define NL80211_REPLAY_CTR_LEN		8
 
 /**
@@ -6343,6 +6365,7 @@ enum nl80211_feature_flags {
  *	might apply, e.g. no scans in progress, no offchannel operations
  *	in progress, and no active connections.
  *
+<<<<<<< HEAD
  * @NL80211_EXT_FEATURE_PUNCT: Driver supports preamble puncturing in AP mode.
  *
  * @NL80211_EXT_FEATURE_SECURE_NAN: Device supports NAN Pairing which enables
@@ -6352,6 +6375,8 @@ enum nl80211_feature_flags {
  *	in authentication and deauthentication frames sent to unassociated peer
  *	using @NL80211_CMD_FRAME.
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @NUM_NL80211_EXT_FEATURES: number of extended features.
  * @MAX_NL80211_EXT_FEATURES: highest extended feature index.
  */
@@ -6420,9 +6445,12 @@ enum nl80211_ext_feature_index {
 	NL80211_EXT_FEATURE_FILS_CRYPTO_OFFLOAD,
 	NL80211_EXT_FEATURE_RADAR_BACKGROUND,
 	NL80211_EXT_FEATURE_POWERED_ADDR_CHANGE,
+<<<<<<< HEAD
 	NL80211_EXT_FEATURE_PUNCT,
 	NL80211_EXT_FEATURE_SECURE_NAN,
 	NL80211_EXT_FEATURE_AUTH_AND_DEAUTH_RANDOM_TA,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* add new features before the definition below */
 	NUM_NL80211_EXT_FEATURES,
@@ -6537,6 +6565,7 @@ enum nl80211_timeout_reason {
  * @NL80211_SCAN_FLAG_FREQ_KHZ: report scan results with
  *	%NL80211_ATTR_SCAN_FREQ_KHZ. This also means
  *	%NL80211_ATTR_SCAN_FREQUENCIES will not be included.
+<<<<<<< HEAD
  * @NL80211_SCAN_FLAG_COLOCATED_6GHZ: scan for collocated APs reported by
  *	2.4/5 GHz APs. When the flag is set, the scan logic will use the
  *	information from the RNR element found in beacons/probe responses
@@ -6547,6 +6576,10 @@ enum nl80211_timeout_reason {
  *	these channels would passively be scanned. Also note that when the flag
  *	is set, in addition to the colocated APs, PSC channels would also be
  *	scanned if the user space has asked for it.
+=======
+ * @NL80211_SCAN_FLAG_COLOCATED_6GHZ: scan for colocated APs reported by
+ *	2.4/5 GHz APs
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum nl80211_scan_flags {
 	NL80211_SCAN_FLAG_LOW_PRIORITY				= 1<<0,

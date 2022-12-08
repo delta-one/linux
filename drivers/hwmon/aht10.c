@@ -79,6 +79,10 @@ struct aht10_data {
 
 /**
  * aht10_init() - Initialize an AHT10 chip
+<<<<<<< HEAD
+=======
+ * @client: the i2c client associated with the AHT10
+>>>>>>> b7ba80a49124 (Commit)
  * @data: the data associated with this AHT10 chip
  * Return: 0 if succesfull, 1 if not
  */
@@ -123,7 +127,11 @@ static int aht10_polltime_expired(struct aht10_data *data)
 
 /**
  * aht10_read_values() - read and parse the raw data from the AHT10
+<<<<<<< HEAD
  * @data: the struct aht10_data to use for the lock
+=======
+ * @aht10_data: the struct aht10_data to use for the lock
+>>>>>>> b7ba80a49124 (Commit)
  * Return: 0 if succesfull, 1 if not
  */
 static int aht10_read_values(struct aht10_data *data)
@@ -288,7 +296,12 @@ static const struct hwmon_chip_info aht10_chip_info = {
 	.info = aht10_info,
 };
 
+<<<<<<< HEAD
 static int aht10_probe(struct i2c_client *client)
+=======
+static int aht10_probe(struct i2c_client *client,
+		       const struct i2c_device_id *aht10_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *device = &client->dev;
 	struct device *hwmon_dev;
@@ -334,7 +347,11 @@ static struct i2c_driver aht10_driver = {
 	.driver = {
 		.name = "aht10",
 	},
+<<<<<<< HEAD
 	.probe_new  = aht10_probe,
+=======
+	.probe      = aht10_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table   = aht10_id,
 };
 

@@ -165,6 +165,7 @@ static int lt8912_write_rxlogicres_config(struct lt8912 *lt)
 	return ret;
 };
 
+<<<<<<< HEAD
 /* enable LVDS output with some hardcoded configuration, not required for the HDMI output */
 static int lt8912_write_lvds_config(struct lt8912 *lt)
 {
@@ -191,12 +192,36 @@ static int lt8912_write_lvds_config(struct lt8912 *lt)
 		{0xa8, 0x13}, // 0x13: JEIDA, 0x33: VESA
 
 		{0x02, 0xf7}, // lvds pll reset
+=======
+static int lt8912_write_lvds_config(struct lt8912 *lt)
+{
+	const struct reg_sequence seq[] = {
+		{0x44, 0x30},
+		{0x51, 0x05},
+		{0x50, 0x24},
+		{0x51, 0x2d},
+		{0x52, 0x04},
+		{0x69, 0x0e},
+		{0x69, 0x8e},
+		{0x6a, 0x00},
+		{0x6c, 0xb8},
+		{0x6b, 0x51},
+		{0x04, 0xfb},
+		{0x04, 0xff},
+		{0x7f, 0x00},
+		{0xa8, 0x13},
+		{0x02, 0xf7},
+>>>>>>> b7ba80a49124 (Commit)
 		{0x02, 0xff},
 		{0x03, 0xcf},
 		{0x03, 0xff},
 	};
 
+<<<<<<< HEAD
 	return regmap_multi_reg_write(lt->regmap[I2C_MAIN], seq, ARRAY_SIZE(seq));
+=======
+	return regmap_multi_reg_write(lt->regmap[I2C_CEC_DSI], seq, ARRAY_SIZE(seq));
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct lt8912 *bridge_to_lt8912(struct drm_bridge *b)
@@ -276,7 +301,11 @@ static int lt8912_video_setup(struct lt8912 *lt)
 	u32 hactive, h_total, hpw, hfp, hbp;
 	u32 vactive, v_total, vpw, vfp, vbp;
 	u8 settle = 0x08;
+<<<<<<< HEAD
 	int ret, hsync_activehigh, vsync_activehigh;
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!lt)
 		return -EINVAL;
@@ -286,14 +315,20 @@ static int lt8912_video_setup(struct lt8912 *lt)
 	hpw = lt->mode.hsync_len;
 	hbp = lt->mode.hback_porch;
 	h_total = hactive + hfp + hpw + hbp;
+<<<<<<< HEAD
 	hsync_activehigh = lt->mode.flags & DISPLAY_FLAGS_HSYNC_HIGH;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	vactive = lt->mode.vactive;
 	vfp = lt->mode.vfront_porch;
 	vpw = lt->mode.vsync_len;
 	vbp = lt->mode.vback_porch;
 	v_total = vactive + vfp + vpw + vbp;
+<<<<<<< HEAD
 	vsync_activehigh = lt->mode.flags & DISPLAY_FLAGS_VSYNC_HIGH;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (vactive <= 600)
 		settle = 0x04;
@@ -327,6 +362,7 @@ static int lt8912_video_setup(struct lt8912 *lt)
 	ret |= regmap_write(lt->regmap[I2C_CEC_DSI], 0x3e, hfp & 0xff);
 	ret |= regmap_write(lt->regmap[I2C_CEC_DSI], 0x3f, hfp >> 8);
 
+<<<<<<< HEAD
 	ret |= regmap_update_bits(lt->regmap[I2C_MAIN], 0xab, BIT(0),
 				  vsync_activehigh ? BIT(0) : 0);
 	ret |= regmap_update_bits(lt->regmap[I2C_MAIN], 0xab, BIT(1),
@@ -334,6 +370,8 @@ static int lt8912_video_setup(struct lt8912 *lt)
 	ret |= regmap_update_bits(lt->regmap[I2C_MAIN], 0xb2, BIT(0),
 				  lt->connector.display_info.is_hdmi ? BIT(0) : 0);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -517,6 +555,7 @@ static int lt8912_attach_dsi(struct lt8912 *lt)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void lt8912_bridge_hpd_cb(void *data, enum drm_connector_status status)
 {
 	struct lt8912 *lt = data;
@@ -525,12 +564,15 @@ static void lt8912_bridge_hpd_cb(void *data, enum drm_connector_status status)
 		drm_helper_hpd_irq_event(lt->bridge.dev);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int lt8912_bridge_connector_init(struct drm_bridge *bridge)
 {
 	int ret;
 	struct lt8912 *lt = bridge_to_lt8912(bridge);
 	struct drm_connector *connector = &lt->connector;
 
+<<<<<<< HEAD
 	if (lt->hdmi_port->ops & DRM_BRIDGE_OP_HPD) {
 		drm_bridge_hpd_enable(lt->hdmi_port, lt8912_bridge_hpd_cb, lt);
 		connector->polled = DRM_CONNECTOR_POLL_HPD;
@@ -538,6 +580,10 @@ static int lt8912_bridge_connector_init(struct drm_bridge *bridge)
 		connector->polled = DRM_CONNECTOR_POLL_CONNECT |
 				    DRM_CONNECTOR_POLL_DISCONNECT;
 	}
+=======
+	connector->polled = DRM_CONNECTOR_POLL_CONNECT |
+			    DRM_CONNECTOR_POLL_DISCONNECT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = drm_connector_init(bridge->dev, connector,
 				 &lt8912_connector_funcs,
@@ -591,10 +637,13 @@ static void lt8912_bridge_detach(struct drm_bridge *bridge)
 
 	if (lt->is_attached) {
 		lt8912_hard_power_off(lt);
+<<<<<<< HEAD
 
 		if (lt->hdmi_port->ops & DRM_BRIDGE_OP_HPD)
 			drm_bridge_hpd_disable(lt->hdmi_port);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		drm_connector_unregister(&lt->connector);
 		drm_connector_cleanup(&lt->connector);
 	}
@@ -676,8 +725,13 @@ static int lt8912_parse_dt(struct lt8912 *lt)
 
 	lt->hdmi_port = of_drm_find_bridge(port_node);
 	if (!lt->hdmi_port) {
+<<<<<<< HEAD
 		ret = -EPROBE_DEFER;
 		dev_err_probe(lt->dev, ret, "%s: Failed to get hdmi port\n", __func__);
+=======
+		dev_err(lt->dev, "%s: Failed to get hdmi port\n", __func__);
+		ret = -ENODEV;
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_free_host_node;
 	}
 
@@ -702,7 +756,12 @@ static int lt8912_put_dt(struct lt8912 *lt)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int lt8912_probe(struct i2c_client *client)
+=======
+static int lt8912_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	static struct lt8912 *lt;
 	int ret = 0;
@@ -774,7 +833,11 @@ static struct i2c_driver lt8912_i2c_driver = {
 		.name = "lt8912",
 		.of_match_table = lt8912_dt_match,
 	},
+<<<<<<< HEAD
 	.probe_new = lt8912_probe,
+=======
+	.probe = lt8912_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = lt8912_remove,
 	.id_table = lt8912_id,
 };

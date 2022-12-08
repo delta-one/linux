@@ -26,12 +26,18 @@ void pcibios_add_bus(struct pci_bus *bus)
 
 int pcibios_root_bridge_prepare(struct pci_host_bridge *bridge)
 {
+<<<<<<< HEAD
 	struct acpi_device *adev = NULL;
 	struct device *bus_dev = &bridge->bus->dev;
 	struct pci_config_window *cfg = bridge->bus->sysdata;
 
 	if (!acpi_disabled)
 		adev = to_acpi_device(cfg->parent);
+=======
+	struct pci_config_window *cfg = bridge->bus->sysdata;
+	struct acpi_device *adev = to_acpi_device(cfg->parent);
+	struct device *bus_dev = &bridge->bus->dev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ACPI_COMPANION_SET(&bridge->dev, adev);
 	set_dev_node(bus_dev, pa_to_nid(cfg->res.start));
@@ -86,6 +92,7 @@ static int acpi_prepare_root_resources(struct acpi_pci_root_info *ci)
 }
 
 /*
+<<<<<<< HEAD
  * Create a PCI config space window
  *  - reserve mem region
  *  - alloc struct pci_config_window with space for all mappings
@@ -149,6 +156,8 @@ err_exit:
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Lookup the bus range for the domain in MCFG, and set up config space
  * mapping.
  */
@@ -172,6 +181,7 @@ pci_acpi_setup_ecam_mapping(struct acpi_pci_root *root)
 
 	bus_shift = ecam_ops->bus_shift ? : 20;
 
+<<<<<<< HEAD
 	if (bus_shift == 20)
 		cfg = pci_ecam_create(dev, &cfgres, bus_res, ecam_ops);
 	else {
@@ -182,6 +192,13 @@ pci_acpi_setup_ecam_mapping(struct acpi_pci_root *root)
 		cfg = arch_pci_ecam_create(dev, &cfgres, bus_res, ecam_ops);
 	}
 
+=======
+	cfgres.start = root->mcfg_addr + (bus_res->start << bus_shift);
+	cfgres.end = cfgres.start + (resource_size(bus_res) << bus_shift) - 1;
+	cfgres.flags = IORESOURCE_MEM;
+
+	cfg = pci_ecam_create(dev, &cfgres, bus_res, ecam_ops);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(cfg)) {
 		dev_err(dev, "%04x:%pR error %ld mapping ECAM\n", seg, bus_res, PTR_ERR(cfg));
 		return NULL;

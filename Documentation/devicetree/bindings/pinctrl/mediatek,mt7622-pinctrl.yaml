@@ -4,12 +4,20 @@
 $id: http://devicetree.org/schemas/pinctrl/mediatek,mt7622-pinctrl.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: MediaTek MT7622 Pin Controller
+=======
+title: Mediatek MT7622 Pin Controller
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Sean Wang <sean.wang@kernel.org>
 
+<<<<<<< HEAD
 description:
+=======
+description: |+
+>>>>>>> b7ba80a49124 (Commit)
   The MediaTek's MT7622 Pin controller is used to control SoC pins.
 
 properties:
@@ -29,10 +37,17 @@ properties:
 
   "#gpio-cells":
     const: 2
+<<<<<<< HEAD
     description:
       Number of cells in GPIO specifier. Since the generic GPIO binding is used,
       the amount of cells must be specified as 2. See the below mentioned gpio
       binding representation for description of particular cells.
+=======
+    description: |
+      Number of cells in GPIO specifier. Since the generic GPIO
+      binding is used, the amount of cells must be specified as 2. See the below
+      mentioned gpio binding representation for description of particular cells.
+>>>>>>> b7ba80a49124 (Commit)
 
   interrupt-controller: true
 
@@ -43,7 +58,11 @@ properties:
     const: 2
 
 allOf:
+<<<<<<< HEAD
   - $ref: pinctrl.yaml#
+=======
+  - $ref: "pinctrl.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible
@@ -61,6 +80,7 @@ then:
     - "#interrupt-cells"
 
 patternProperties:
+<<<<<<< HEAD
   '-pins(-[a-z]+)?$':
     type: object
     additionalProperties: false
@@ -74,12 +94,31 @@ patternProperties:
         properties:
           function:
             description:
+=======
+  '-[0-9]+$':
+    type: object
+    additionalProperties: false
+    patternProperties:
+      'mux':
+        type: object
+        additionalProperties: false
+        description: |
+          pinmux configuration nodes.
+        $ref: "/schemas/pinctrl/pinmux-node.yaml"
+        properties:
+          function:
+            description: |
+>>>>>>> b7ba80a49124 (Commit)
               A string containing the name of the function to mux to the group.
             enum: [emmc, eth, i2c, i2s, ir, led, flash, pcie, pmic, pwm, sd,
                    spi, tdm, uart, watchdog, wifi]
 
           groups:
+<<<<<<< HEAD
             description:
+=======
+            description: |
+>>>>>>> b7ba80a49124 (Commit)
               An array of strings. Each string contains the name of a group.
 
           drive-strength:
@@ -244,6 +283,7 @@ patternProperties:
                 groups:
                   enum: [wf0_2g, wf0_5g]
 
+<<<<<<< HEAD
       '^conf(-|$)':
         type: object
         additionalProperties: false
@@ -254,11 +294,27 @@ patternProperties:
         properties:
           groups:
             description:
+=======
+      'conf':
+        type: object
+        additionalProperties: false
+        description: |
+          pinconf configuration nodes.
+        $ref: "/schemas/pinctrl/pincfg-node.yaml"
+
+        properties:
+          groups:
+            description: |
+>>>>>>> b7ba80a49124 (Commit)
               An array of strings. Each string contains the name of a group.
               Valid values are the same as the pinmux node.
 
           pins:
+<<<<<<< HEAD
             description:
+=======
+            description: |
+>>>>>>> b7ba80a49124 (Commit)
               An array of strings. Each string contains the name of a pin.
             enum: [GPIO_A, I2S1_IN, I2S1_OUT, I2S_BCLK, I2S_WS, I2S_MCLK, TXD0,
                    RXD0, SPI_WP, SPI_HOLD, SPI_CLK, SPI_MOSI, SPI_MISO, SPI_CS,
@@ -315,14 +371,22 @@ patternProperties:
             enum: [0, 1]
 
           mediatek,tdsel:
+<<<<<<< HEAD
             description:
+=======
+            description: |
+>>>>>>> b7ba80a49124 (Commit)
               An integer describing the steps for output level shifter duty
               cycle when asserted (high pulse width adjustment). Valid arguments
               are from 0 to 15.
             $ref: /schemas/types.yaml#/definitions/uint32
 
           mediatek,rdsel:
+<<<<<<< HEAD
             description:
+=======
+            description: |
+>>>>>>> b7ba80a49124 (Commit)
               An integer describing the steps for input level shifter duty cycle
               when asserted (high pulse width adjustment). Valid arguments are
               from 0 to 63.
@@ -348,7 +412,11 @@ examples:
           gpio-controller;
           #gpio-cells = <2>;
 
+<<<<<<< HEAD
           pinctrl_eth_default: eth-pins {
+=======
+          pinctrl_eth_default: eth-0 {
+>>>>>>> b7ba80a49124 (Commit)
             mux-mdio {
               groups = "mdc_mdio";
               function = "eth";

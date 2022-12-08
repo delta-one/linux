@@ -990,7 +990,10 @@ static int tse_shutdown(struct net_device *dev)
 	int ret;
 
 	phylink_stop(priv->phylink);
+<<<<<<< HEAD
 	phylink_disconnect_phy(priv->phylink);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	netif_stop_queue(dev);
 	napi_disable(&priv->napi);
 
@@ -1096,6 +1099,10 @@ static struct phylink_pcs *alt_tse_select_pcs(struct phylink_config *config,
 }
 
 static const struct phylink_mac_ops alt_tse_phylink_ops = {
+<<<<<<< HEAD
+=======
+	.validate = phylink_generic_validate,
+>>>>>>> b7ba80a49124 (Commit)
 	.mac_an_restart = alt_tse_mac_an_restart,
 	.mac_config = alt_tse_mac_config,
 	.mac_link_down = alt_tse_mac_link_down,
@@ -1365,7 +1372,11 @@ static int altera_tse_probe(struct platform_device *pdev)
 	ndev->features |= NETIF_F_HW_VLAN_CTAG_RX;
 
 	/* setup NAPI interface */
+<<<<<<< HEAD
 	netif_napi_add(ndev, &priv->napi, tse_poll);
+=======
+	netif_napi_add(ndev, &priv->napi, tse_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_init(&priv->mac_cfg_lock);
 	spin_lock_init(&priv->tx_lock);

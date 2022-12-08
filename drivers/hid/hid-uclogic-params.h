@@ -18,10 +18,13 @@
 
 #include <linux/usb.h>
 #include <linux/hid.h>
+<<<<<<< HEAD
 #include <linux/list.h>
 
 #define UCLOGIC_MOUSE_FRAME_QUIRK	BIT(0)
 #define UCLOGIC_BATTERY_QUIRK		BIT(1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Types of pen in-range reporting */
 enum uclogic_params_pen_inrange {
@@ -178,6 +181,7 @@ struct uclogic_params_frame {
 };
 
 /*
+<<<<<<< HEAD
  * List of works to be performed when a certain raw event is received.
  */
 struct uclogic_raw_event_hook {
@@ -189,6 +193,8 @@ struct uclogic_raw_event_hook {
 };
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Tablet interface report parameters.
  *
  * Must use declarative (descriptive) language, not imperative, to simplify
@@ -228,6 +234,7 @@ struct uclogic_params {
 	 * parts. Only valid, if "invalid" is false.
 	 */
 	struct uclogic_params_frame frame_list[3];
+<<<<<<< HEAD
 	/*
 	 * List of event hooks.
 	 */
@@ -253,6 +260,8 @@ struct uclogic_drvdata {
 	u8 re_state;
 	/* Device quirks */
 	unsigned long quirks;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Initialize a tablet interface and discover its parameters */

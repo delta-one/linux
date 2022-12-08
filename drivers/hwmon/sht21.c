@@ -114,7 +114,11 @@ out:
 }
 
 /**
+<<<<<<< HEAD
  * sht21_temperature_show() - show temperature measurement value in sysfs
+=======
+ * sht21_show_temperature() - show temperature measurement value in sysfs
+>>>>>>> b7ba80a49124 (Commit)
  * @dev: device
  * @attr: device attribute
  * @buf: sysfs buffer (PAGE_SIZE) where measurement values are written to
@@ -136,7 +140,11 @@ static ssize_t sht21_temperature_show(struct device *dev,
 }
 
 /**
+<<<<<<< HEAD
  * sht21_humidity_show() - show humidity measurement value in sysfs
+=======
+ * sht21_show_humidity() - show humidity measurement value in sysfs
+>>>>>>> b7ba80a49124 (Commit)
  * @dev: device
  * @attr: device attribute
  * @buf: sysfs buffer (PAGE_SIZE) where measurement values are written to

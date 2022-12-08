@@ -16,7 +16,10 @@
 #define INTR_CLEAR                      0x018
 #define INTR2_EN                        0x008
 #define INTR2_STATUS                    0x00c
+<<<<<<< HEAD
 #define SSPP_SPARE                      0x028
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define INTR2_CLEAR                     0x02c
 #define HIST_INTR_EN                    0x01c
 #define HIST_INTR_STATUS                0x020
@@ -29,6 +32,7 @@
 #define DSPP_IGC_COLOR0_RAM_LUTN        0x300
 #define DSPP_IGC_COLOR1_RAM_LUTN        0x304
 #define DSPP_IGC_COLOR2_RAM_LUTN        0x308
+<<<<<<< HEAD
 #define DANGER_STATUS                   0x360
 #define SAFE_STATUS                     0x364
 #define HW_EVENTS_CTL                   0x37C
@@ -38,6 +42,9 @@
 #define MDP_WD_TIMER_1_CTL              0x390
 #define MDP_WD_TIMER_1_CTL2             0x394
 #define MDP_WD_TIMER_1_LOAD_VALUE       0x398
+=======
+#define HW_EVENTS_CTL                   0x37C
+>>>>>>> b7ba80a49124 (Commit)
 #define CLK_CTRL3                       0x3A8
 #define CLK_STATUS3                     0x3AC
 #define CLK_CTRL4                       0x3B0
@@ -52,6 +59,7 @@
 #define HDMI_DP_CORE_SELECT             0x408
 #define MDP_OUT_CTL_0                   0x410
 #define MDP_VSYNC_SEL                   0x414
+<<<<<<< HEAD
 #define MDP_WD_TIMER_2_CTL              0x420
 #define MDP_WD_TIMER_2_CTL2             0x424
 #define MDP_WD_TIMER_2_LOAD_VALUE       0x428
@@ -66,4 +74,8 @@
 #define MDP_PERIPH_TOP0			MDP_WD_TIMER_0_CTL
 #define MDP_PERIPH_TOP0_END		CLK_CTRL3
 
+=======
+#define DCE_SEL                         0x450
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /*_DPU_HWIO_H */

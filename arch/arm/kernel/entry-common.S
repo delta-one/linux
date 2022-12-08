@@ -16,6 +16,18 @@
 
 	.equ	NR_syscalls, __NR_syscalls
 
+<<<<<<< HEAD
+=======
+	.macro  arch_ret_to_user, tmp
+#ifdef CONFIG_ARCH_IOP32X
+	mrc	p15, 0, \tmp, c15, c1, 0
+	tst	\tmp, #(1 << 6)
+	bicne	\tmp, \tmp, #(1 << 6)
+	mcrne	p15, 0, \tmp, c15, c1, 0	@ Disable cp6 access
+#endif
+	.endm
+
+>>>>>>> b7ba80a49124 (Commit)
 #include "entry-header.S"
 
 saved_psr	.req	r8
@@ -46,6 +58,13 @@ __ret_fast_syscall:
 	movs	r1, r1, lsl #16
 	bne	fast_work_pending
 
+<<<<<<< HEAD
+=======
+
+	/* perform architecture specific actions before user return */
+	arch_ret_to_user r1
+
+>>>>>>> b7ba80a49124 (Commit)
 	restore_user_regs fast = 1, offset = S_OFF
  UNWIND(.fnend		)
 ENDPROC(ret_fast_syscall)
@@ -116,6 +135,11 @@ ENTRY(ret_to_user_from_irq)
 no_work_pending:
 	asm_trace_hardirqs_on save = 0
 
+<<<<<<< HEAD
+=======
+	/* perform architecture specific actions before user return */
+	arch_ret_to_user r1
+>>>>>>> b7ba80a49124 (Commit)
 	ct_user_enter save = 0
 
 	restore_user_regs fast = 0, offset = 0

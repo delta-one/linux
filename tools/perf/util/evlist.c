@@ -24,14 +24,20 @@
 #include "../perf.h"
 #include "asm/bug.h"
 #include "bpf-event.h"
+<<<<<<< HEAD
 #include "util/event.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "util/string2.h"
 #include "util/perf_api_probe.h"
 #include "util/evsel_fprintf.h"
 #include "util/evlist-hybrid.h"
 #include "util/pmu.h"
+<<<<<<< HEAD
 #include "util/sample.h"
 #include "util/bpf-filter.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <signal.h>
 #include <unistd.h>
 #include <sched.h>
@@ -231,7 +237,11 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static void evlist__set_leader(struct evlist *evlist)
+=======
+void evlist__set_leader(struct evlist *evlist)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	perf_evlist__set_leader(&evlist->core);
 }
@@ -271,6 +281,31 @@ int evlist__add_dummy(struct evlist *evlist)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void evlist__add_on_all_cpus(struct evlist *evlist, struct evsel *evsel)
+{
+	evsel->core.system_wide = true;
+
+	/*
+	 * All CPUs.
+	 *
+	 * Note perf_event_open() does not accept CPUs that are not online, so
+	 * in fact this CPU list will include only all online CPUs.
+	 */
+	perf_cpu_map__put(evsel->core.own_cpus);
+	evsel->core.own_cpus = perf_cpu_map__new(NULL);
+	perf_cpu_map__put(evsel->core.cpus);
+	evsel->core.cpus = perf_cpu_map__get(evsel->core.own_cpus);
+
+	/* No threads */
+	perf_thread_map__put(evsel->core.threads);
+	evsel->core.threads = perf_thread_map__new_dummy();
+
+	evlist__add(evlist, evsel);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide)
 {
 	struct evsel *evsel = evlist__dummy_event(evlist);
@@ -283,6 +318,7 @@ struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide)
 	evsel->core.attr.exclude_hv = 1;
 	evsel->core.attr.freq = 0;
 	evsel->core.attr.sample_period = 1;
+<<<<<<< HEAD
 	evsel->core.system_wide = system_wide;
 	evsel->no_aux_samples = true;
 	evsel->name = strdup("dummy:u");
@@ -310,6 +346,19 @@ struct evsel *evlist__add_sched_switch(struct evlist *evlist, bool system_wide)
 }
 #endif
 
+=======
+	evsel->no_aux_samples = true;
+	evsel->name = strdup("dummy:u");
+
+	if (system_wide)
+		evlist__add_on_all_cpus(evlist, evsel);
+	else
+		evlist__add(evlist, evsel);
+
+	return evsel;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int evlist__add_attrs(struct evlist *evlist, struct perf_event_attr *attrs, size_t nr_attrs)
 {
 	struct evsel *evsel, *n;
@@ -379,7 +428,10 @@ struct evsel *evlist__find_tracepoint_by_name(struct evlist *evlist, const char 
 	return NULL;
 }
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int evlist__add_newtp(struct evlist *evlist, const char *sys, const char *name, void *handler)
 {
 	struct evsel *evsel = evsel__newtp(sys, name);
@@ -391,7 +443,10 @@ int evlist__add_newtp(struct evlist *evlist, const char *sys, const char *name, 
 	evlist__add(evlist, evsel);
 	return 0;
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct evlist_cpu_iterator evlist__cpu_begin(struct evlist *evlist, struct affinity *affinity)
 {
@@ -1087,10 +1142,17 @@ int evlist__apply_filters(struct evlist *evlist, struct evsel **err_evsel)
 	int err = 0;
 
 	evlist__for_each_entry(evlist, evsel) {
+<<<<<<< HEAD
+=======
+		if (evsel->filter == NULL)
+			continue;
+
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * filters only work for tracepoint event, which doesn't have cpu limit.
 		 * So evlist and evsel should always be same.
 		 */
+<<<<<<< HEAD
 		if (evsel->filter) {
 			err = perf_evsel__apply_filter(&evsel->core, evsel->filter);
 			if (err) {
@@ -1108,6 +1170,12 @@ int evlist__apply_filters(struct evlist *evlist, struct evsel **err_evsel)
 				*err_evsel = evsel;
 				break;
 			}
+=======
+		err = perf_evsel__apply_filter(&evsel->core, evsel->filter);
+		if (err) {
+			*err_evsel = evsel;
+			break;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -1788,7 +1856,11 @@ bool evlist__exclude_kernel(struct evlist *evlist)
  */
 void evlist__force_leader(struct evlist *evlist)
 {
+<<<<<<< HEAD
 	if (evlist__nr_groups(evlist) == 0) {
+=======
+	if (!evlist->core.nr_groups) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct evsel *leader = evlist__first(evlist);
 
 		evlist__set_leader(evlist);
@@ -2273,8 +2345,13 @@ int evlist__parse_event_enable_time(struct evlist *evlist, struct record_opts *o
 	if (unset)
 		return 0;
 
+<<<<<<< HEAD
 	opts->target.initial_delay = str_to_delay(str);
 	if (opts->target.initial_delay)
+=======
+	opts->initial_delay = str_to_delay(str);
+	if (opts->initial_delay)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	ret = parse_event_enable_times(str, NULL);
@@ -2317,7 +2394,11 @@ int evlist__parse_event_enable_time(struct evlist *evlist, struct record_opts *o
 
 	eet->evlist = evlist;
 	evlist->eet = eet;
+<<<<<<< HEAD
 	opts->target.initial_delay = eet->times[0].start;
+=======
+	opts->initial_delay = eet->times[0].start;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 

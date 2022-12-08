@@ -1469,7 +1469,11 @@ lpfc_nvmet_cleanup_io_context(struct lpfc_hba *phba)
 	if (!infop)
 		return;
 
+<<<<<<< HEAD
 	/* Cycle the entire CPU context list for every MRQ */
+=======
+	/* Cycle the the entire CPU context list for every MRQ */
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < phba->cfg_nvmet_mrq; i++) {
 		for_each_present_cpu(j) {
 			infop = lpfc_get_ctx_list(phba, j, i);

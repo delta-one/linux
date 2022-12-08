@@ -2,7 +2,10 @@
 /* Copyright (C) 2020 MediaTek Inc. */
 
 #include <linux/etherdevice.h>
+<<<<<<< HEAD
 #include <linux/firmware.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "mt7921.h"
 #include "mac.h"
 #include "mcu.h"
@@ -26,6 +29,7 @@ static const struct ieee80211_iface_combination if_comb[] = {
 		.max_interfaces = MT7921_MAX_INTERFACES,
 		.num_different_channels = 1,
 		.beacon_int_infra_match = true,
+<<<<<<< HEAD
 	},
 };
 
@@ -47,6 +51,8 @@ static const struct ieee80211_iface_combination if_comb_chanctx[] = {
 		.max_interfaces = 2,
 		.num_different_channels = 2,
 		.beacon_int_infra_match = false,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 };
 
@@ -59,7 +65,10 @@ mt7921_regd_notifier(struct wiphy *wiphy,
 
 	memcpy(dev->mt76.alpha2, request->alpha2, sizeof(dev->mt76.alpha2));
 	dev->mt76.region = request->dfs_region;
+<<<<<<< HEAD
 	dev->country_ie_env = request->country_ie_env;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	mt7921_mutex_acquire(dev);
 	mt7921_mcu_set_clc(dev, request->alpha2, request->country_ie_env);
@@ -88,6 +97,7 @@ mt7921_init_wiphy(struct ieee80211_hw *hw)
 	hw->sta_data_size = sizeof(struct mt7921_sta);
 	hw->vif_data_size = sizeof(struct mt7921_vif);
 
+<<<<<<< HEAD
 	if (dev->fw_features & MT7921_FW_CAP_CNM) {
 		wiphy->flags |= WIPHY_FLAG_HAS_REMAIN_ON_CHANNEL;
 		wiphy->iface_combinations = if_comb_chanctx;
@@ -97,11 +107,18 @@ mt7921_init_wiphy(struct ieee80211_hw *hw)
 		wiphy->iface_combinations = if_comb;
 		wiphy->n_iface_combinations = ARRAY_SIZE(if_comb);
 	}
+=======
+	wiphy->iface_combinations = if_comb;
+>>>>>>> b7ba80a49124 (Commit)
 	wiphy->flags &= ~(WIPHY_FLAG_IBSS_RSN | WIPHY_FLAG_4ADDR_AP |
 			  WIPHY_FLAG_4ADDR_STATION);
 	wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION) |
 				 BIT(NL80211_IFTYPE_AP);
+<<<<<<< HEAD
 	wiphy->max_remain_on_channel_duration = 5000;
+=======
+	wiphy->n_iface_combinations = ARRAY_SIZE(if_comb);
+>>>>>>> b7ba80a49124 (Commit)
 	wiphy->max_scan_ie_len = MT76_CONNAC_SCAN_IE_LEN;
 	wiphy->max_scan_ssids = 4;
 	wiphy->max_sched_scan_plan_interval =
@@ -120,7 +137,10 @@ mt7921_init_wiphy(struct ieee80211_hw *hw)
 	wiphy_ext_feature_set(wiphy, NL80211_EXT_FEATURE_BEACON_RATE_HT);
 	wiphy_ext_feature_set(wiphy, NL80211_EXT_FEATURE_BEACON_RATE_VHT);
 	wiphy_ext_feature_set(wiphy, NL80211_EXT_FEATURE_BEACON_RATE_HE);
+<<<<<<< HEAD
 	wiphy_ext_feature_set(wiphy, NL80211_EXT_FEATURE_ACK_SIGNAL_SUPPORT);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ieee80211_hw_set(hw, SINGLE_SCAN_ON_ALL_BANDS);
 	ieee80211_hw_set(hw, HAS_RATE_CONTROL);
@@ -143,8 +163,11 @@ mt7921_init_wiphy(struct ieee80211_hw *hw)
 static void
 mt7921_mac_init_band(struct mt7921_dev *dev, u8 band)
 {
+<<<<<<< HEAD
 	u32 mask, set;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mt76_rmw_field(dev, MT_TMAC_CTCR0(band),
 		       MT_TMAC_CTCR0_INS_DDLMT_REFTIME, 0x3f);
 	mt76_set(dev, MT_TMAC_CTCR0(band),
@@ -161,6 +184,7 @@ mt7921_mac_init_band(struct mt7921_dev *dev, u8 band)
 	mt76_rmw_field(dev, MT_DMA_DCR0(band), MT_DMA_DCR0_MAX_RX_LEN, 1536);
 	/* disable rx rate report by default due to hw issues */
 	mt76_clear(dev, MT_DMA_DCR0(band), MT_DMA_DCR0_RXD_G5_EN);
+<<<<<<< HEAD
 
 	/* filter out non-resp frames and get instantaneous signal reporting */
 	mask = MT_WTBLOFF_TOP_RSCR_RCPI_MODE | MT_WTBLOFF_TOP_RSCR_RCPI_PARAM;
@@ -222,6 +246,10 @@ out:
 }
 EXPORT_SYMBOL_GPL(mt7921_check_offload_capability);
 
+=======
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int mt7921_mac_init(struct mt7921_dev *dev)
 {
 	int i;
@@ -238,6 +266,11 @@ int mt7921_mac_init(struct mt7921_dev *dev)
 	for (i = 0; i < 2; i++)
 		mt7921_mac_init_band(dev, i);
 
+<<<<<<< HEAD
+=======
+	dev->mt76.rxfilter = mt76_rr(dev, MT_WF_RFCR(0));
+
+>>>>>>> b7ba80a49124 (Commit)
 	return mt76_connac_mcu_set_rts_thresh(&dev->mt76, 0x92b, 0);
 }
 EXPORT_SYMBOL_GPL(mt7921_mac_init);
@@ -369,10 +402,13 @@ int mt7921_register_device(struct mt7921_dev *dev)
 	INIT_WORK(&dev->reset_work, mt7921_mac_reset_work);
 	INIT_WORK(&dev->init_work, mt7921_init_work);
 
+<<<<<<< HEAD
 	INIT_WORK(&dev->phy.roc_work, mt7921_roc_work);
 	timer_setup(&dev->phy.roc_timer, mt7921_roc_timer, 0);
 	init_waitqueue_head(&dev->phy.roc_wait);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev->pm.idle_timeout = MT7921_PM_TIMEOUT;
 	dev->pm.stats.last_wake_event = jiffies;
 	dev->pm.stats.last_doze_event = jiffies;

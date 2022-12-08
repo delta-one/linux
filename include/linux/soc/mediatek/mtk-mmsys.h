@@ -6,6 +6,7 @@
 #ifndef __MTK_MMSYS_H
 #define __MTK_MMSYS_H
 
+<<<<<<< HEAD
 #include <linux/mailbox_controller.h>
 #include <linux/mailbox/mtk-cmdq-mailbox.h>
 #include <linux/soc/mediatek/mtk-cmdq.h>
@@ -20,6 +21,11 @@ enum mtk_dpi_out_format_con {
 	MTK_DPI_RGB565_DDR_CON
 };
 
+=======
+enum mtk_ddp_comp_id;
+struct device;
+
+>>>>>>> b7ba80a49124 (Commit)
 enum mtk_ddp_comp_id {
 	DDP_COMPONENT_AAL0,
 	DDP_COMPONENT_AAL1,
@@ -40,6 +46,7 @@ enum mtk_ddp_comp_id {
 	DDP_COMPONENT_DSI1,
 	DDP_COMPONENT_DSI2,
 	DDP_COMPONENT_DSI3,
+<<<<<<< HEAD
 	DDP_COMPONENT_ETHDR_MIXER,
 	DDP_COMPONENT_GAMMA,
 	DDP_COMPONENT_MDP_RDMA0,
@@ -50,6 +57,9 @@ enum mtk_ddp_comp_id {
 	DDP_COMPONENT_MDP_RDMA5,
 	DDP_COMPONENT_MDP_RDMA6,
 	DDP_COMPONENT_MDP_RDMA7,
+=======
+	DDP_COMPONENT_GAMMA,
+>>>>>>> b7ba80a49124 (Commit)
 	DDP_COMPONENT_MERGE0,
 	DDP_COMPONENT_MERGE1,
 	DDP_COMPONENT_MERGE2,
@@ -87,6 +97,7 @@ void mtk_mmsys_ddp_disconnect(struct device *dev,
 
 void mtk_mmsys_ddp_dpi_fmt_config(struct device *dev, u32 val);
 
+<<<<<<< HEAD
 void mtk_mmsys_merge_async_config(struct device *dev, int idx, int width,
 				  int height, struct cmdq_pkt *cmdq_pkt);
 
@@ -105,4 +116,6 @@ void mtk_mmsys_vpp_rsz_merge_config(struct device *dev, u32 id, bool enable,
 void mtk_mmsys_vpp_rsz_dcm_config(struct device *dev, bool enable,
 				  struct cmdq_pkt *cmdq_pkt);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __MTK_MMSYS_H */

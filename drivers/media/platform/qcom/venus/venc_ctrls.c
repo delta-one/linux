@@ -8,7 +8,10 @@
 
 #include "core.h"
 #include "venc.h"
+<<<<<<< HEAD
 #include "helpers.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define BITRATE_MIN		32000
 #define BITRATE_MAX		160000000
@@ -337,6 +340,11 @@ static int venc_op_s_ctrl(struct v4l2_ctrl *ctrl)
 		 * if we disable 8x8 transform for HP.
 		 */
 
+<<<<<<< HEAD
+=======
+		if (ctrl->val == 0)
+			return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 		ctr->h264_8x8_transform = ctrl->val;
 		break;
@@ -347,6 +355,7 @@ static int venc_op_s_ctrl(struct v4l2_ctrl *ctrl)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int venc_op_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
 {
 	struct venus_inst *inst = ctrl_to_inst(ctrl);
@@ -370,11 +379,16 @@ static int venc_op_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
 static const struct v4l2_ctrl_ops venc_ctrl_ops = {
 	.s_ctrl = venc_op_s_ctrl,
 	.g_volatile_ctrl = venc_op_g_volatile_ctrl,
+=======
+static const struct v4l2_ctrl_ops venc_ctrl_ops = {
+	.s_ctrl = venc_op_s_ctrl,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int venc_ctrl_init(struct venus_inst *inst)
 {
 	int ret;
+<<<<<<< HEAD
 	struct v4l2_ctrl_hdr10_mastering_display p_hdr10_mastering = {
 		{ 34000, 13250, 7500 },
 		{ 16000, 34500, 3000 }, 15635, 16450, 10000000, 500,
@@ -382,6 +396,10 @@ int venc_ctrl_init(struct venus_inst *inst)
 	struct v4l2_ctrl_hdr10_cll_info p_hdr10_cll = { 1000, 400 };
 
 	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 59);
+=======
+
+	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 58);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -462,9 +480,12 @@ int venc_ctrl_init(struct venus_inst *inst)
 		0, V4L2_MPEG_VIDEO_VP8_PROFILE_0);
 
 	v4l2_ctrl_new_std(&inst->ctrl_handler, &venc_ctrl_ops,
+<<<<<<< HEAD
 			  V4L2_CID_MIN_BUFFERS_FOR_OUTPUT, 4, 11, 1, 4);
 
 	v4l2_ctrl_new_std(&inst->ctrl_handler, &venc_ctrl_ops,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		V4L2_CID_MPEG_VIDEO_BITRATE, BITRATE_MIN, BITRATE_MAX,
 		BITRATE_STEP, BITRATE_DEFAULT);
 
@@ -607,11 +628,19 @@ int venc_ctrl_init(struct venus_inst *inst)
 
 	v4l2_ctrl_new_std_compound(&inst->ctrl_handler, &venc_ctrl_ops,
 				   V4L2_CID_COLORIMETRY_HDR10_CLL_INFO,
+<<<<<<< HEAD
 				   v4l2_ctrl_ptr_create(&p_hdr10_cll));
 
 	v4l2_ctrl_new_std_compound(&inst->ctrl_handler, &venc_ctrl_ops,
 				   V4L2_CID_COLORIMETRY_HDR10_MASTERING_DISPLAY,
 				   v4l2_ctrl_ptr_create((void *)&p_hdr10_mastering));
+=======
+				   v4l2_ctrl_ptr_create(NULL));
+
+	v4l2_ctrl_new_std_compound(&inst->ctrl_handler, &venc_ctrl_ops,
+				   V4L2_CID_COLORIMETRY_HDR10_MASTERING_DISPLAY,
+				   v4l2_ctrl_ptr_create(NULL));
+>>>>>>> b7ba80a49124 (Commit)
 
 	v4l2_ctrl_new_std_menu(&inst->ctrl_handler, &venc_ctrl_ops,
 			       V4L2_CID_MPEG_VIDEO_INTRA_REFRESH_PERIOD_TYPE,

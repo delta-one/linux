@@ -7,7 +7,10 @@
 #include <linux/uaccess.h>
 #include <linux/compat.h>
 #include <asm/unistd.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static bool nsec_valid(long nsec)
 {
@@ -63,7 +66,11 @@ int vfs_utimes(const struct path *path, struct timespec64 *times)
 	}
 retry_deleg:
 	inode_lock(inode);
+<<<<<<< HEAD
 	error = notify_change(mnt_idmap(path->mnt), path->dentry, &newattrs,
+=======
+	error = notify_change(mnt_user_ns(path->mnt), path->dentry, &newattrs,
+>>>>>>> b7ba80a49124 (Commit)
 			      &delegated_inode);
 	inode_unlock(inode);
 	if (delegated_inode) {

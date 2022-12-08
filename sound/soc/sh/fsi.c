@@ -1855,7 +1855,11 @@ static void fsi_of_parse(char *name,
 
 	for (i = 0; i < ARRAY_SIZE(of_parse_property); i++) {
 		sprintf(prop, "%s,%s", name, of_parse_property[i].name);
+<<<<<<< HEAD
 		if (of_property_present(np, prop))
+=======
+		if (of_get_property(np, prop, NULL))
+>>>>>>> b7ba80a49124 (Commit)
 			flags |= of_parse_property[i].val;
 	}
 	info->flags = flags;
@@ -2030,7 +2034,11 @@ exit_fsia:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void fsi_remove(struct platform_device *pdev)
+=======
+static int fsi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fsi_master *master;
 
@@ -2040,6 +2048,11 @@ static void fsi_remove(struct platform_device *pdev)
 
 	fsi_stream_remove(&master->fsia);
 	fsi_stream_remove(&master->fsib);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __fsi_suspend(struct fsi_priv *fsi,
@@ -2106,7 +2119,11 @@ static struct platform_driver fsi_driver = {
 		.of_match_table = fsi_of_match,
 	},
 	.probe		= fsi_probe,
+<<<<<<< HEAD
 	.remove_new	= fsi_remove,
+=======
+	.remove		= fsi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= fsi_id_table,
 };
 

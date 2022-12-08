@@ -73,7 +73,10 @@ int mlx5e_port_query_buffer(struct mlx5e_priv *priv,
 			  port_buffer->buffer[i].lossy);
 	}
 
+<<<<<<< HEAD
 	port_buffer->headroom_size = total_used;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	port_buffer->port_buffer_size =
 		MLX5_GET(pbmc_reg, out, port_buffer_size) * port_buff_cell_sz;
 	port_buffer->spare_buffer_size =
@@ -87,6 +90,7 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 struct mlx5e_buffer_pool {
 	u32 infi_size;
 	u32 size;
@@ -271,20 +275,28 @@ static int port_update_shared_buffer(struct mlx5_core_dev *mdev,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int port_set_buffer(struct mlx5e_priv *priv,
 			   struct mlx5e_port_buffer *port_buffer)
 {
 	u16 port_buff_cell_sz = priv->dcbx.port_buff_cell_sz;
 	struct mlx5_core_dev *mdev = priv->mdev;
 	int sz = MLX5_ST_SZ_BYTES(pbmc_reg);
+<<<<<<< HEAD
 	u32 new_headroom_size = 0;
 	u32 current_headroom_size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void *in;
 	int err;
 	int i;
 
+<<<<<<< HEAD
 	current_headroom_size = port_buffer->headroom_size;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	in = kzalloc(sz, GFP_KERNEL);
 	if (!in)
 		return -ENOMEM;
@@ -299,7 +311,10 @@ static int port_set_buffer(struct mlx5e_priv *priv,
 		u64 xoff = port_buffer->buffer[i].xoff;
 		u64 xon = port_buffer->buffer[i].xon;
 
+<<<<<<< HEAD
 		new_headroom_size += size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		do_div(size, port_buff_cell_sz);
 		do_div(xoff, port_buff_cell_sz);
 		do_div(xon, port_buff_cell_sz);
@@ -309,6 +324,7 @@ static int port_set_buffer(struct mlx5e_priv *priv,
 		MLX5_SET(bufferx_reg, buffer, xon_threshold, xon);
 	}
 
+<<<<<<< HEAD
 	new_headroom_size /= port_buff_cell_sz;
 	current_headroom_size /= port_buff_cell_sz;
 	err = port_update_shared_buffer(priv->mdev, current_headroom_size,
@@ -320,6 +336,8 @@ static int port_set_buffer(struct mlx5e_priv *priv,
 	if (err)
 		goto out;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = mlx5e_port_set_pbmc(mdev, in);
 out:
 	kfree(in);
@@ -375,7 +393,10 @@ static int update_xoff_threshold(struct mlx5e_port_buffer *port_buffer,
 
 /**
  *	update_buffer_lossy	- Update buffer configuration based on pfc
+<<<<<<< HEAD
  *	@mdev: port function core device
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *	@max_mtu: netdev's max_mtu
  *	@pfc_en: <input> current pfc configuration
  *	@buffer: <input> current prio to buffer mapping
@@ -394,8 +415,12 @@ static int update_xoff_threshold(struct mlx5e_port_buffer *port_buffer,
  *	@return: 0 if no error,
  *	sets change to true if buffer configuration was modified.
  */
+<<<<<<< HEAD
 static int update_buffer_lossy(struct mlx5_core_dev *mdev,
 			       unsigned int max_mtu,
+=======
+static int update_buffer_lossy(unsigned int max_mtu,
+>>>>>>> b7ba80a49124 (Commit)
 			       u8 pfc_en, u8 *buffer, u32 xoff, u16 port_buff_cell_sz,
 			       struct mlx5e_port_buffer *port_buffer,
 			       bool *change)
@@ -432,10 +457,13 @@ static int update_buffer_lossy(struct mlx5_core_dev *mdev,
 	}
 
 	if (changed) {
+<<<<<<< HEAD
 		err = port_update_pool_cfg(mdev, port_buffer);
 		if (err)
 			return err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		err = update_xoff_threshold(port_buffer, xoff, max_mtu, port_buff_cell_sz);
 		if (err)
 			return err;
@@ -500,30 +528,45 @@ int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
 	}
 
 	if (change & MLX5E_PORT_BUFFER_PFC) {
+<<<<<<< HEAD
 		mlx5e_dbg(HW, priv, "%s: requested PFC per priority bitmask: 0x%x\n",
 			  __func__, pfc->pfc_en);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		err = mlx5e_port_query_priority2buffer(priv->mdev, buffer);
 		if (err)
 			return err;
 
+<<<<<<< HEAD
 		err = update_buffer_lossy(priv->mdev, max_mtu, pfc->pfc_en, buffer, xoff,
 					  port_buff_cell_sz, &port_buffer,
 					  &update_buffer);
+=======
+		err = update_buffer_lossy(max_mtu, pfc->pfc_en, buffer, xoff, port_buff_cell_sz,
+					  &port_buffer, &update_buffer);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			return err;
 	}
 
 	if (change & MLX5E_PORT_BUFFER_PRIO2BUFFER) {
 		update_prio2buffer = true;
+<<<<<<< HEAD
 		for (i = 0; i < MLX5E_MAX_BUFFER; i++)
 			mlx5e_dbg(HW, priv, "%s: requested to map prio[%d] to buffer %d\n",
 				  __func__, i, prio2buffer[i]);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		err = fill_pfc_en(priv->mdev, &curr_pfc_en);
 		if (err)
 			return err;
 
+<<<<<<< HEAD
 		err = update_buffer_lossy(priv->mdev, max_mtu, curr_pfc_en, prio2buffer, xoff,
+=======
+		err = update_buffer_lossy(max_mtu, curr_pfc_en, prio2buffer, xoff,
+>>>>>>> b7ba80a49124 (Commit)
 					  port_buff_cell_sz, &port_buffer, &update_buffer);
 		if (err)
 			return err;

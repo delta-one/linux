@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _idle_page_tracking:
+
+>>>>>>> b7ba80a49124 (Commit)
 ==================
 Idle Page Tracking
 ==================
@@ -63,13 +68,23 @@ workload one should:
     are not reclaimable, he or she can filter them out using
     ``/proc/kpageflags``.
 
+<<<<<<< HEAD
 The page-types tool in the tools/mm directory can be used to assist in this.
+=======
+The page-types tool in the tools/vm directory can be used to assist in this.
+>>>>>>> b7ba80a49124 (Commit)
 If the tool is run initially with the appropriate option, it will mark all the
 queried pages as idle.  Subsequent runs of the tool can then show which pages have
 their idle flag cleared in the interim.
 
+<<<<<<< HEAD
 See Documentation/admin-guide/mm/pagemap.rst for more information about
 ``/proc/pid/pagemap``, ``/proc/kpageflags``, and ``/proc/kpagecgroup``.
+=======
+See :ref:`Documentation/admin-guide/mm/pagemap.rst <pagemap>` for more
+information about ``/proc/pid/pagemap``, ``/proc/kpageflags``, and
+``/proc/kpagecgroup``.
+>>>>>>> b7ba80a49124 (Commit)
 
 .. _impl_details:
 

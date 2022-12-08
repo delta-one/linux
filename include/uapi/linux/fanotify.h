@@ -188,6 +188,7 @@ struct fanotify_event_info_error {
 	__u32 error_count;
 };
 
+<<<<<<< HEAD
 /*
  * User space may need to record additional information about its decision.
  * The extra information type records what kind of information is included.
@@ -202,11 +203,14 @@ struct fanotify_event_info_error {
 #define FAN_RESPONSE_INFO_NONE		0
 #define FAN_RESPONSE_INFO_AUDIT_RULE	1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct fanotify_response {
 	__s32 fd;
 	__u32 response;
 };
 
+<<<<<<< HEAD
 struct fanotify_response_info_header {
 	__u8 type;
 	__u8 pad;
@@ -225,6 +229,12 @@ struct fanotify_response_info_audit_rule {
 #define FAN_DENY	0x02
 #define FAN_AUDIT	0x10	/* Bitmask to create audit record for result */
 #define FAN_INFO	0x20	/* Bitmask to indicate additional information */
+=======
+/* Legit userspace responses to a _PERM event */
+#define FAN_ALLOW	0x01
+#define FAN_DENY	0x02
+#define FAN_AUDIT	0x10	/* Bit mask to create audit record for result */
+>>>>>>> b7ba80a49124 (Commit)
 
 /* No fd set in event */
 #define FAN_NOFD	-1

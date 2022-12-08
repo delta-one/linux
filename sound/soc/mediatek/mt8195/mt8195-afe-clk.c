@@ -117,7 +117,11 @@ static struct mt8195_afe_tuner_cfg mt8195_afe_tuner_cfgs[MT8195_AUD_PLL_NUM] = {
 		.upper_bound_reg = AFE_APLL_TUNER_CFG,
 		.upper_bound_shift = 8,
 		.upper_bound_maskbit = 0xff,
+<<<<<<< HEAD
 		.upper_bound_default = 0x3,
+=======
+		.upper_bound_default = 0x2,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	[MT8195_AUD_PLL2] = {
 		.id = MT8195_AUD_PLL2,
@@ -135,7 +139,11 @@ static struct mt8195_afe_tuner_cfg mt8195_afe_tuner_cfgs[MT8195_AUD_PLL_NUM] = {
 		.upper_bound_reg = AFE_APLL_TUNER_CFG1,
 		.upper_bound_shift = 8,
 		.upper_bound_maskbit = 0xff,
+<<<<<<< HEAD
 		.upper_bound_default = 0x3,
+=======
+		.upper_bound_default = 0x2,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	[MT8195_AUD_PLL3] = {
 		.id = MT8195_AUD_PLL3,

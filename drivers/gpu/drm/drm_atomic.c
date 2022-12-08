@@ -880,7 +880,11 @@ EXPORT_SYMBOL(drm_atomic_get_private_obj_state);
  * or NULL if the private_obj is not part of the global atomic state.
  */
 struct drm_private_state *
+<<<<<<< HEAD
 drm_atomic_get_old_private_obj_state(const struct drm_atomic_state *state,
+=======
+drm_atomic_get_old_private_obj_state(struct drm_atomic_state *state,
+>>>>>>> b7ba80a49124 (Commit)
 				     struct drm_private_obj *obj)
 {
 	int i;
@@ -902,7 +906,11 @@ EXPORT_SYMBOL(drm_atomic_get_old_private_obj_state);
  * or NULL if the private_obj is not part of the global atomic state.
  */
 struct drm_private_state *
+<<<<<<< HEAD
 drm_atomic_get_new_private_obj_state(const struct drm_atomic_state *state,
+=======
+drm_atomic_get_new_private_obj_state(struct drm_atomic_state *state,
+>>>>>>> b7ba80a49124 (Commit)
 				     struct drm_private_obj *obj)
 {
 	int i;
@@ -934,7 +942,11 @@ EXPORT_SYMBOL(drm_atomic_get_new_private_obj_state);
  * not connected.
  */
 struct drm_connector *
+<<<<<<< HEAD
 drm_atomic_get_old_connector_for_encoder(const struct drm_atomic_state *state,
+=======
+drm_atomic_get_old_connector_for_encoder(struct drm_atomic_state *state,
+>>>>>>> b7ba80a49124 (Commit)
 					 struct drm_encoder *encoder)
 {
 	struct drm_connector_state *conn_state;
@@ -968,7 +980,11 @@ EXPORT_SYMBOL(drm_atomic_get_old_connector_for_encoder);
  * not connected.
  */
 struct drm_connector *
+<<<<<<< HEAD
 drm_atomic_get_new_connector_for_encoder(const struct drm_atomic_state *state,
+=======
+drm_atomic_get_new_connector_for_encoder(struct drm_atomic_state *state,
+>>>>>>> b7ba80a49124 (Commit)
 					 struct drm_encoder *encoder)
 {
 	struct drm_connector_state *conn_state;
@@ -985,6 +1001,7 @@ drm_atomic_get_new_connector_for_encoder(const struct drm_atomic_state *state,
 EXPORT_SYMBOL(drm_atomic_get_new_connector_for_encoder);
 
 /**
+<<<<<<< HEAD
  * drm_atomic_get_old_crtc_for_encoder - Get old crtc for an encoder
  * @state: Atomic state
  * @encoder: The encoder to fetch the crtc state for
@@ -1045,6 +1062,8 @@ drm_atomic_get_new_crtc_for_encoder(struct drm_atomic_state *state,
 EXPORT_SYMBOL(drm_atomic_get_new_crtc_for_encoder);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * drm_atomic_get_connector_state - get connector state
  * @state: global atomic state object
  * @connector: connector to get state object for
@@ -1130,7 +1149,10 @@ static void drm_atomic_connector_print_state(struct drm_printer *p,
 	drm_printf(p, "connector[%u]: %s\n", connector->base.id, connector->name);
 	drm_printf(p, "\tcrtc=%s\n", state->crtc ? state->crtc->name : "(null)");
 	drm_printf(p, "\tself_refresh_aware=%d\n", state->self_refresh_aware);
+<<<<<<< HEAD
 	drm_printf(p, "\tmax_requested_bpc=%d\n", state->max_requested_bpc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (connector->connector_type == DRM_MODE_CONNECTOR_WRITEBACK)
 		if (state->writeback_job && state->writeback_job->fb)
@@ -1178,7 +1200,11 @@ EXPORT_SYMBOL(drm_atomic_get_bridge_state);
  * the bridge is not part of the global atomic state.
  */
 struct drm_bridge_state *
+<<<<<<< HEAD
 drm_atomic_get_old_bridge_state(const struct drm_atomic_state *state,
+=======
+drm_atomic_get_old_bridge_state(struct drm_atomic_state *state,
+>>>>>>> b7ba80a49124 (Commit)
 				struct drm_bridge *bridge)
 {
 	struct drm_private_state *obj_state;
@@ -1200,7 +1226,11 @@ EXPORT_SYMBOL(drm_atomic_get_old_bridge_state);
  * the bridge is not part of the global atomic state.
  */
 struct drm_bridge_state *
+<<<<<<< HEAD
 drm_atomic_get_new_bridge_state(const struct drm_atomic_state *state,
+=======
+drm_atomic_get_new_bridge_state(struct drm_atomic_state *state,
+>>>>>>> b7ba80a49124 (Commit)
 				struct drm_bridge *bridge)
 {
 	struct drm_private_state *obj_state;
@@ -1817,8 +1847,13 @@ EXPORT_SYMBOL(drm_state_dump);
 #ifdef CONFIG_DEBUG_FS
 static int drm_state_info(struct seq_file *m, void *data)
 {
+<<<<<<< HEAD
 	struct drm_debugfs_entry *entry = m->private;
 	struct drm_device *dev = entry->dev;
+=======
+	struct drm_info_node *node = (struct drm_info_node *) m->private;
+	struct drm_device *dev = node->minor->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_printer p = drm_seq_file_printer(m);
 
 	__drm_state_dump(dev, &p, true);
@@ -1827,13 +1862,23 @@ static int drm_state_info(struct seq_file *m, void *data)
 }
 
 /* any use in debugfs files to dump individual planes/crtc/etc? */
+<<<<<<< HEAD
 static const struct drm_debugfs_info drm_atomic_debugfs_list[] = {
+=======
+static const struct drm_info_list drm_atomic_debugfs_list[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{"state", drm_state_info, 0},
 };
 
 void drm_atomic_debugfs_init(struct drm_minor *minor)
 {
+<<<<<<< HEAD
 	drm_debugfs_add_files(minor->dev, drm_atomic_debugfs_list,
 			      ARRAY_SIZE(drm_atomic_debugfs_list));
+=======
+	drm_debugfs_create_files(drm_atomic_debugfs_list,
+				 ARRAY_SIZE(drm_atomic_debugfs_list),
+				 minor->debugfs_root, minor);
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif

@@ -60,13 +60,17 @@ mt76_tx_status_unlock(struct mt76_dev *dev, struct sk_buff_head *list)
 			.skb = skb,
 			.info = IEEE80211_SKB_CB(skb),
 		};
+<<<<<<< HEAD
 		struct ieee80211_rate_status rs = {};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		struct mt76_tx_cb *cb = mt76_tx_skb_cb(skb);
 		struct mt76_wcid *wcid;
 
 		wcid = rcu_dereference(dev->wcid[cb->wcid]);
 		if (wcid) {
 			status.sta = wcid_to_sta(wcid);
+<<<<<<< HEAD
 			if (status.sta && (wcid->rate.flags || wcid->rate.legacy)) {
 				rs.rate_idx = wcid->rate;
 				status.rates = &rs;
@@ -74,6 +78,10 @@ mt76_tx_status_unlock(struct mt76_dev *dev, struct sk_buff_head *list)
 			} else {
 				status.n_rates = 0;
 			}
+=======
+			status.rates = NULL;
+			status.n_rates = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		hw = mt76_tx_status_get_hw(dev, skb);
@@ -756,6 +764,7 @@ int mt76_token_consume(struct mt76_dev *dev, struct mt76_txwi_cache **ptxwi)
 }
 EXPORT_SYMBOL_GPL(mt76_token_consume);
 
+<<<<<<< HEAD
 int mt76_rx_token_consume(struct mt76_dev *dev, void *ptr,
 			  struct mt76_txwi_cache *t, dma_addr_t phys)
 {
@@ -774,6 +783,8 @@ int mt76_rx_token_consume(struct mt76_dev *dev, void *ptr,
 }
 EXPORT_SYMBOL_GPL(mt76_rx_token_consume);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mt76_txwi_cache *
 mt76_token_release(struct mt76_dev *dev, int token, bool *wake)
 {
@@ -802,6 +813,7 @@ mt76_token_release(struct mt76_dev *dev, int token, bool *wake)
 	return txwi;
 }
 EXPORT_SYMBOL_GPL(mt76_token_release);
+<<<<<<< HEAD
 
 struct mt76_txwi_cache *
 mt76_rx_token_release(struct mt76_dev *dev, int token)
@@ -815,3 +827,5 @@ mt76_rx_token_release(struct mt76_dev *dev, int token)
 	return t;
 }
 EXPORT_SYMBOL_GPL(mt76_rx_token_release);
+=======
+>>>>>>> b7ba80a49124 (Commit)

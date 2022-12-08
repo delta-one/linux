@@ -88,19 +88,31 @@ TRACE_EVENT(hw_ptr_error,
 		__field( unsigned int, device )
 		__field( unsigned int, number )
 		__field( unsigned int, stream )
+<<<<<<< HEAD
 		__string( reason, why )
+=======
+		__field( const char *, reason )
+>>>>>>> b7ba80a49124 (Commit)
 	),
 	TP_fast_assign(
 		__entry->card = (substream)->pcm->card->number;
 		__entry->device = (substream)->pcm->device;
 		__entry->number = (substream)->number;
 		__entry->stream = (substream)->stream;
+<<<<<<< HEAD
 		__assign_str(reason, why);
+=======
+		__entry->reason = (why);
+>>>>>>> b7ba80a49124 (Commit)
 	),
 	TP_printk("pcmC%dD%d%s/sub%d: ERROR: %s",
 		  __entry->card, __entry->device,
 		  __entry->stream == SNDRV_PCM_STREAM_PLAYBACK ? "p" : "c",
+<<<<<<< HEAD
 		  __entry->number, __get_str(reason))
+=======
+		  __entry->number, __entry->reason)
+>>>>>>> b7ba80a49124 (Commit)
 );
 
 TRACE_EVENT(applptr,

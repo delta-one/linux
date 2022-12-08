@@ -337,7 +337,11 @@ static int adp5520_bl_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void adp5520_bl_remove(struct platform_device *pdev)
+=======
+static int adp5520_bl_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct backlight_device *bl = platform_get_drvdata(pdev);
 	struct adp5520_bl *data = bl_get_data(bl);
@@ -347,6 +351,11 @@ static void adp5520_bl_remove(struct platform_device *pdev)
 	if (data->pdata->en_ambl_sens)
 		sysfs_remove_group(&bl->dev.kobj,
 				&adp5520_bl_attr_group);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -375,7 +384,11 @@ static struct platform_driver adp5520_bl_driver = {
 		.pm	= &adp5520_bl_pm_ops,
 	},
 	.probe		= adp5520_bl_probe,
+<<<<<<< HEAD
 	.remove_new	= adp5520_bl_remove,
+=======
+	.remove		= adp5520_bl_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(adp5520_bl_driver);

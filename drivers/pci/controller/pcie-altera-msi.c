@@ -9,11 +9,18 @@
 
 #include <linux/interrupt.h>
 #include <linux/irqchip/chained_irq.h>
+<<<<<<< HEAD
 #include <linux/irqdomain.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/msi.h>
 #include <linux/of_address.h>
+<<<<<<< HEAD
+=======
+#include <linux/of_irq.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/of_pci.h>
 #include <linux/pci.h>
 #include <linux/platform_device.h>

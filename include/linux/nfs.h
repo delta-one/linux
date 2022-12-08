@@ -10,7 +10,10 @@
 
 #include <linux/sunrpc/msg_prot.h>
 #include <linux/string.h>
+<<<<<<< HEAD
 #include <linux/crc32.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <uapi/linux/nfs.h>
 
 /*
@@ -45,6 +48,7 @@ enum nfs3_stable_how {
 	/* used by direct.c to mark verf as invalid */
 	NFS_INVALID_STABLE_HOW = -1
 };
+<<<<<<< HEAD
 
 #ifdef CONFIG_CRC32
 /**
@@ -64,4 +68,6 @@ static inline u32 nfs_fhandle_hash(const struct nfs_fh *fh)
 	return 0;
 }
 #endif /* CONFIG_CRC32 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _LINUX_NFS_H */

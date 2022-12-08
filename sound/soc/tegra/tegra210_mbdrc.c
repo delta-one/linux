@@ -54,7 +54,11 @@ static const struct tegra210_mbdrc_config mbdrc_init_config = {
 	.mode			= 0, /* Bypass */
 	.rms_off		= 48,
 	.peak_rms_mode		= 1, /* PEAK */
+<<<<<<< HEAD
 	.filter_structure	= 0, /* All-pass tree */
+=======
+	.fliter_structure	= 0, /* All-pass tree */
+>>>>>>> b7ba80a49124 (Commit)
 	.shift_ctrl		= 30,
 	.frame_size		= 32,
 	.channel_mask		= 0x3,
@@ -819,7 +823,11 @@ int tegra210_mbdrc_component_init(struct snd_soc_component *cmpnt)
 
 	regmap_update_bits(ope->mbdrc_regmap, TEGRA210_MBDRC_CFG,
 		TEGRA210_MBDRC_CFG_FILTER_STRUCTURE_MASK,
+<<<<<<< HEAD
 		conf->filter_structure <<
+=======
+		conf->fliter_structure <<
+>>>>>>> b7ba80a49124 (Commit)
 		TEGRA210_MBDRC_CFG_FILTER_STRUCTURE_SHIFT);
 
 	regmap_update_bits(ope->mbdrc_regmap, TEGRA210_MBDRC_CFG,

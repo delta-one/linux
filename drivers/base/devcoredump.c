@@ -25,6 +25,7 @@ struct devcd_entry {
 	struct device devcd_dev;
 	void *data;
 	size_t datalen;
+<<<<<<< HEAD
 	/*
 	 * Here, mutex is required to serialize the calls to del_wk work between
 	 * user/kernel space which happens when devcd is added with device_add()
@@ -66,6 +67,8 @@ struct devcd_entry {
 	 */
 	struct mutex mutex;
 	bool delete_work;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct module *owner;
 	ssize_t (*read)(char *buffer, loff_t offset, size_t count,
 			void *data, size_t datalen);
@@ -125,12 +128,16 @@ static ssize_t devcd_data_write(struct file *filp, struct kobject *kobj,
 	struct device *dev = kobj_to_dev(kobj);
 	struct devcd_entry *devcd = dev_to_devcd(dev);
 
+<<<<<<< HEAD
 	mutex_lock(&devcd->mutex);
 	if (!devcd->delete_work) {
 		devcd->delete_work = true;
 		mod_delayed_work(system_wq, &devcd->del_wk, 0);
 	}
 	mutex_unlock(&devcd->mutex);
+=======
+	mod_delayed_work(system_wq, &devcd->del_wk, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return count;
 }
@@ -158,12 +165,16 @@ static int devcd_free(struct device *dev, void *data)
 {
 	struct devcd_entry *devcd = dev_to_devcd(dev);
 
+<<<<<<< HEAD
 	mutex_lock(&devcd->mutex);
 	if (!devcd->delete_work)
 		devcd->delete_work = true;
 
 	flush_delayed_work(&devcd->del_wk);
 	mutex_unlock(&devcd->mutex);
+=======
+	flush_delayed_work(&devcd->del_wk);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -173,6 +184,7 @@ static ssize_t disabled_show(struct class *class, struct class_attribute *attr,
 	return sysfs_emit(buf, "%d\n", devcd_disabled);
 }
 
+<<<<<<< HEAD
 /*
  *
  *	disabled_store()                                	worker()
@@ -197,6 +209,8 @@ static ssize_t disabled_show(struct class *class, struct class_attribute *attr,
  * so, above situation would not occur.
  */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t disabled_store(struct class *class, struct class_attribute *attr,
 			      const char *buf, size_t count)
 {
@@ -226,6 +240,10 @@ ATTRIBUTE_GROUPS(devcd_class);
 
 static struct class devcd_class = {
 	.name		= "devcoredump",
+<<<<<<< HEAD
+=======
+	.owner		= THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.dev_release	= devcd_dev_release,
 	.dev_groups	= devcd_dev_groups,
 	.class_groups	= devcd_class_groups,
@@ -352,16 +370,23 @@ void dev_coredumpm(struct device *dev, struct module *owner,
 	devcd->read = read;
 	devcd->free = free;
 	devcd->failing_dev = get_device(dev);
+<<<<<<< HEAD
 	devcd->delete_work = false;
 
 	mutex_init(&devcd->mutex);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	device_initialize(&devcd->devcd_dev);
 
 	dev_set_name(&devcd->devcd_dev, "devcd%d",
 		     atomic_inc_return(&devcd_count));
 	devcd->devcd_dev.class = &devcd_class;
 
+<<<<<<< HEAD
 	mutex_lock(&devcd->mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (device_add(&devcd->devcd_dev))
 		goto put_device;
 
@@ -378,11 +403,18 @@ void dev_coredumpm(struct device *dev, struct module *owner,
 
 	INIT_DELAYED_WORK(&devcd->del_wk, devcd_del);
 	schedule_delayed_work(&devcd->del_wk, DEVCD_TIMEOUT);
+<<<<<<< HEAD
 	mutex_unlock(&devcd->mutex);
 	return;
  put_device:
 	put_device(&devcd->devcd_dev);
 	mutex_unlock(&devcd->mutex);
+=======
+
+	return;
+ put_device:
+	put_device(&devcd->devcd_dev);
+>>>>>>> b7ba80a49124 (Commit)
  put_module:
 	module_put(owner);
  free:

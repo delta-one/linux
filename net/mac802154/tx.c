@@ -22,10 +22,17 @@
 #include "ieee802154_i.h"
 #include "driver-ops.h"
 
+<<<<<<< HEAD
 void ieee802154_xmit_sync_worker(struct work_struct *work)
 {
 	struct ieee802154_local *local =
 		container_of(work, struct ieee802154_local, sync_tx_work);
+=======
+void ieee802154_xmit_worker(struct work_struct *work)
+{
+	struct ieee802154_local *local =
+		container_of(work, struct ieee802154_local, tx_work);
+>>>>>>> b7ba80a49124 (Commit)
 	struct sk_buff *skb = local->tx_skb;
 	struct net_device *dev = skb->dev;
 	int res;
@@ -43,9 +50,13 @@ void ieee802154_xmit_sync_worker(struct work_struct *work)
 
 err_tx:
 	/* Restart the netif queue on each sub_if_data object. */
+<<<<<<< HEAD
 	ieee802154_release_queue(local);
 	if (atomic_dec_and_test(&local->phy->ongoing_txs))
 		wake_up(&local->phy->sync_txq);
+=======
+	ieee802154_wake_queue(&local->hw);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree_skb(skb);
 	netdev_dbg(dev, "transmission failed\n");
 }
@@ -67,7 +78,11 @@ ieee802154_tx(struct ieee802154_local *local, struct sk_buff *skb)
 				consume_skb(skb);
 				skb = nskb;
 			} else {
+<<<<<<< HEAD
 				goto err_free_skb;
+=======
+				goto err_tx;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 
@@ -76,6 +91,7 @@ ieee802154_tx(struct ieee802154_local *local, struct sk_buff *skb)
 	}
 
 	/* Stop the netif queue on each sub_if_data object. */
+<<<<<<< HEAD
 	ieee802154_hold_queue(local);
 	atomic_inc(&local->phy->ongoing_txs);
 
@@ -83,31 +99,52 @@ ieee802154_tx(struct ieee802154_local *local, struct sk_buff *skb)
 	 * cases they only provide a sync callback which we will use as a
 	 * fallback.
 	 */
+=======
+	ieee802154_stop_queue(&local->hw);
+
+	/* async is priority, otherwise sync is fallback */
+>>>>>>> b7ba80a49124 (Commit)
 	if (local->ops->xmit_async) {
 		unsigned int len = skb->len;
 
 		ret = drv_xmit_async(local, skb);
+<<<<<<< HEAD
 		if (ret)
 			goto err_wake_netif_queue;
+=======
+		if (ret) {
+			ieee802154_wake_queue(&local->hw);
+			goto err_tx;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		dev->stats.tx_packets++;
 		dev->stats.tx_bytes += len;
 	} else {
 		local->tx_skb = skb;
+<<<<<<< HEAD
 		queue_work(local->workqueue, &local->sync_tx_work);
+=======
+		queue_work(local->workqueue, &local->tx_work);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return NETDEV_TX_OK;
 
+<<<<<<< HEAD
 err_wake_netif_queue:
 	ieee802154_release_queue(local);
 	if (atomic_dec_and_test(&local->phy->ongoing_txs))
 		wake_up(&local->phy->sync_txq);
 err_free_skb:
+=======
+err_tx:
+>>>>>>> b7ba80a49124 (Commit)
 	kfree_skb(skb);
 	return NETDEV_TX_OK;
 }
 
+<<<<<<< HEAD
 static int ieee802154_sync_queue(struct ieee802154_local *local)
 {
 	int ret;
@@ -220,6 +257,8 @@ ieee802154_hot_tx(struct ieee802154_local *local, struct sk_buff *skb)
 	return ieee802154_tx(local, skb);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 netdev_tx_t
 ieee802154_monitor_start_xmit(struct sk_buff *skb, struct net_device *dev)
 {
@@ -227,7 +266,11 @@ ieee802154_monitor_start_xmit(struct sk_buff *skb, struct net_device *dev)
 
 	skb->skb_iif = dev->ifindex;
 
+<<<<<<< HEAD
 	return ieee802154_hot_tx(sdata->local, skb);
+=======
+	return ieee802154_tx(sdata->local, skb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 netdev_tx_t
@@ -249,5 +292,9 @@ ieee802154_subif_start_xmit(struct sk_buff *skb, struct net_device *dev)
 
 	skb->skb_iif = dev->ifindex;
 
+<<<<<<< HEAD
 	return ieee802154_hot_tx(sdata->local, skb);
+=======
+	return ieee802154_tx(sdata->local, skb);
+>>>>>>> b7ba80a49124 (Commit)
 }

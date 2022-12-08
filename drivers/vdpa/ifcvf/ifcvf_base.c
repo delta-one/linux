@@ -10,6 +10,14 @@
 
 #include "ifcvf_base.h"
 
+<<<<<<< HEAD
+=======
+struct ifcvf_adapter *vf_to_adapter(struct ifcvf_hw *hw)
+{
+	return container_of(hw, struct ifcvf_adapter, vf);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 u16 ifcvf_set_vq_vector(struct ifcvf_hw *hw, u16 qid, int vector)
 {
 	struct virtio_pci_common_cfg __iomem *cfg = hw->common_cfg;
@@ -32,6 +40,11 @@ u16 ifcvf_set_config_vector(struct ifcvf_hw *hw, int vector)
 static void __iomem *get_cap_addr(struct ifcvf_hw *hw,
 				  struct virtio_pci_cap *cap)
 {
+<<<<<<< HEAD
+=======
+	struct ifcvf_adapter *ifcvf;
+	struct pci_dev *pdev;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 length, offset;
 	u8 bar;
 
@@ -39,14 +52,27 @@ static void __iomem *get_cap_addr(struct ifcvf_hw *hw,
 	offset = le32_to_cpu(cap->offset);
 	bar = cap->bar;
 
+<<<<<<< HEAD
 	if (bar >= IFCVF_PCI_MAX_RESOURCE) {
 		IFCVF_DBG(hw->pdev,
+=======
+	ifcvf= vf_to_adapter(hw);
+	pdev = ifcvf->pdev;
+
+	if (bar >= IFCVF_PCI_MAX_RESOURCE) {
+		IFCVF_DBG(pdev,
+>>>>>>> b7ba80a49124 (Commit)
 			  "Invalid bar number %u to get capabilities\n", bar);
 		return NULL;
 	}
 
+<<<<<<< HEAD
 	if (offset + length > pci_resource_len(hw->pdev, bar)) {
 		IFCVF_DBG(hw->pdev,
+=======
+	if (offset + length > pci_resource_len(pdev, bar)) {
+		IFCVF_DBG(pdev,
+>>>>>>> b7ba80a49124 (Commit)
 			  "offset(%u) + len(%u) overflows bar%u's capability\n",
 			  offset, length, bar);
 		return NULL;
@@ -82,7 +108,10 @@ int ifcvf_init_hw(struct ifcvf_hw *hw, struct pci_dev *pdev)
 		IFCVF_ERR(pdev, "Failed to read PCI capability list\n");
 		return -EIO;
 	}
+<<<<<<< HEAD
 	hw->pdev = pdev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (pos) {
 		ret = ifcvf_read_config_range(pdev, (u32 *)&cap,
@@ -206,13 +235,24 @@ u64 ifcvf_get_hw_features(struct ifcvf_hw *hw)
 
 u64 ifcvf_get_features(struct ifcvf_hw *hw)
 {
+<<<<<<< HEAD
 	return hw->dev_features;
+=======
+	return hw->hw_features;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int ifcvf_verify_min_features(struct ifcvf_hw *hw, u64 features)
 {
+<<<<<<< HEAD
 	if (!(features & BIT_ULL(VIRTIO_F_ACCESS_PLATFORM)) && features) {
 		IFCVF_ERR(hw->pdev, "VIRTIO_F_ACCESS_PLATFORM is not negotiated\n");
+=======
+	struct ifcvf_adapter *ifcvf = vf_to_adapter(hw);
+
+	if (!(features & BIT_ULL(VIRTIO_F_ACCESS_PLATFORM)) && features) {
+		IFCVF_ERR(ifcvf->pdev, "VIRTIO_F_ACCESS_PLATFORM is not negotiated\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -221,11 +261,19 @@ int ifcvf_verify_min_features(struct ifcvf_hw *hw, u64 features)
 
 u32 ifcvf_get_config_size(struct ifcvf_hw *hw)
 {
+<<<<<<< HEAD
+=======
+	struct ifcvf_adapter *adapter;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 net_config_size = sizeof(struct virtio_net_config);
 	u32 blk_config_size = sizeof(struct virtio_blk_config);
 	u32 cap_size = hw->cap_dev_config_size;
 	u32 config_size;
 
+<<<<<<< HEAD
+=======
+	adapter = vf_to_adapter(hw);
+>>>>>>> b7ba80a49124 (Commit)
 	/* If the onboard device config space size is greater than
 	 * the size of struct virtio_net/blk_config, only the spec
 	 * implementing contents size is returned, this is very
@@ -240,7 +288,11 @@ u32 ifcvf_get_config_size(struct ifcvf_hw *hw)
 		break;
 	default:
 		config_size = 0;
+<<<<<<< HEAD
 		IFCVF_ERR(hw->pdev, "VIRTIO ID %u not supported\n", hw->dev_type);
+=======
+		IFCVF_ERR(adapter->pdev, "VIRTIO ID %u not supported\n", hw->dev_type);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return config_size;
@@ -288,11 +340,21 @@ static void ifcvf_set_features(struct ifcvf_hw *hw, u64 features)
 
 static int ifcvf_config_features(struct ifcvf_hw *hw)
 {
+<<<<<<< HEAD
+=======
+	struct ifcvf_adapter *ifcvf;
+
+	ifcvf = vf_to_adapter(hw);
+>>>>>>> b7ba80a49124 (Commit)
 	ifcvf_set_features(hw, hw->req_features);
 	ifcvf_add_status(hw, VIRTIO_CONFIG_S_FEATURES_OK);
 
 	if (!(ifcvf_get_status(hw) & VIRTIO_CONFIG_S_FEATURES_OK)) {
+<<<<<<< HEAD
 		IFCVF_ERR(hw->pdev, "Failed to set FEATURES_OK status\n");
+=======
+		IFCVF_ERR(ifcvf->pdev, "Failed to set FEATURES_OK status\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EIO;
 	}
 
@@ -307,7 +369,11 @@ u16 ifcvf_get_vq_state(struct ifcvf_hw *hw, u16 qid)
 	u32 q_pair_id;
 
 	ifcvf_lm = (struct ifcvf_lm_cfg __iomem *)hw->lm_cfg;
+<<<<<<< HEAD
 	q_pair_id = qid / 2;
+=======
+	q_pair_id = qid / hw->nr_vring;
+>>>>>>> b7ba80a49124 (Commit)
 	avail_idx_addr = &ifcvf_lm->vring_lm_cfg[q_pair_id].idx_addr[qid % 2];
 	last_avail_idx = vp_ioread16(avail_idx_addr);
 
@@ -321,7 +387,11 @@ int ifcvf_set_vq_state(struct ifcvf_hw *hw, u16 qid, u16 num)
 	u32 q_pair_id;
 
 	ifcvf_lm = (struct ifcvf_lm_cfg __iomem *)hw->lm_cfg;
+<<<<<<< HEAD
 	q_pair_id = qid / 2;
+=======
+	q_pair_id = qid / hw->nr_vring;
+>>>>>>> b7ba80a49124 (Commit)
 	avail_idx_addr = &ifcvf_lm->vring_lm_cfg[q_pair_id].idx_addr[qid % 2];
 	hw->vring[qid].last_avail_idx = num;
 	vp_iowrite16(num, avail_idx_addr);

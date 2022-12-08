@@ -176,10 +176,13 @@ enum sof_ipc4_pipeline_state {
 #define SOF_IPC4_GLB_PIPE_EXT_LP_MASK		BIT(0)
 #define SOF_IPC4_GLB_PIPE_EXT_LP(x)		((x) << SOF_IPC4_GLB_PIPE_EXT_LP_SHIFT)
 
+<<<<<<< HEAD
 #define SOF_IPC4_GLB_PIPE_EXT_CORE_ID_SHIFT	20
 #define SOF_IPC4_GLB_PIPE_EXT_CORE_ID_MASK	GENMASK(23, 20)
 #define SOF_IPC4_GLB_PIPE_EXT_CORE_ID(x)	((x) << SOF_IPC4_GLB_PIPE_EXT_CORE_ID_SHIFT)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* pipeline set state ipc msg */
 #define SOF_IPC4_GLB_PIPE_STATE_ID_SHIFT		16
 #define SOF_IPC4_GLB_PIPE_STATE_ID_MASK		GENMASK(23, 16)
@@ -189,6 +192,7 @@ enum sof_ipc4_pipeline_state {
 #define SOF_IPC4_GLB_PIPE_STATE_MASK		GENMASK(15, 0)
 #define SOF_IPC4_GLB_PIPE_STATE(x)		((x) << SOF_IPC4_GLB_PIPE_STATE_SHIFT)
 
+<<<<<<< HEAD
 /* pipeline set state IPC msg extension */
 #define SOF_IPC4_GLB_PIPE_STATE_EXT_MULTI	BIT(0)
 
@@ -225,6 +229,8 @@ enum sof_ipc4_pipeline_state {
 						     SOF_IPC4_GLB_EXT_CHAIN_DMA_FIFO_SIZE_SHIFT) & \
 						    SOF_IPC4_GLB_EXT_CHAIN_DMA_FIFO_SIZE_MASK)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum sof_ipc4_channel_config {
 	/* one channel only. */
 	SOF_IPC4_CHANNEL_CONFIG_MONO,

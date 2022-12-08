@@ -22,6 +22,7 @@
 
 static bool next_heartbeat(struct intel_engine_cs *engine)
 {
+<<<<<<< HEAD
 	struct i915_request *rq;
 	long delay;
 
@@ -53,6 +54,11 @@ static bool next_heartbeat(struct intel_engine_cs *engine)
 			delay = longer;
 	}
 
+=======
+	long delay;
+
+	delay = READ_ONCE(engine->props.heartbeat_interval_ms);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!delay)
 		return false;
 
@@ -229,7 +235,11 @@ unlock:
 	mutex_unlock(&ce->timeline->mutex);
 out:
 	if (!engine->i915->params.enable_hangcheck || !next_heartbeat(engine))
+<<<<<<< HEAD
 		i915_request_put(__xchg(&engine->heartbeat.systole, 0));
+=======
+		i915_request_put(fetch_and_zero(&engine->heartbeat.systole));
+>>>>>>> b7ba80a49124 (Commit)
 	intel_engine_pm_put(engine);
 }
 
@@ -244,7 +254,11 @@ void intel_engine_unpark_heartbeat(struct intel_engine_cs *engine)
 void intel_engine_park_heartbeat(struct intel_engine_cs *engine)
 {
 	if (cancel_delayed_work(&engine->heartbeat.work))
+<<<<<<< HEAD
 		i915_request_put(__xchg(&engine->heartbeat.systole, 0));
+=======
+		i915_request_put(fetch_and_zero(&engine->heartbeat.systole));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void intel_gt_unpark_heartbeats(struct intel_gt *gt)
@@ -316,6 +330,7 @@ int intel_engine_set_heartbeat(struct intel_engine_cs *engine,
 	if (!delay && !intel_engine_has_preempt_reset(engine))
 		return -ENODEV;
 
+<<<<<<< HEAD
 	/* FIXME: Remove together with equally marked hack in next_heartbeat. */
 	if (delay != engine->defaults.heartbeat_interval_ms &&
 	    delay < 2 * engine->props.preempt_timeout_ms) {
@@ -327,6 +342,8 @@ int intel_engine_set_heartbeat(struct intel_engine_cs *engine,
 				   engine->name);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	intel_engine_pm_get(engine);
 
 	err = mutex_lock_interruptible(&ce->timeline->mutex);

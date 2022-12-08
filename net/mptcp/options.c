@@ -26,7 +26,10 @@ static void mptcp_parse_option(const struct sk_buff *skb,
 {
 	u8 subtype = *ptr >> 4;
 	int expected_opsize;
+<<<<<<< HEAD
 	u16 subopt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8 version;
 	u8 flags;
 	u8 i;
@@ -39,6 +42,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
 				expected_opsize = TCPOLEN_MPTCP_MPC_ACK_DATA;
 			else
 				expected_opsize = TCPOLEN_MPTCP_MPC_ACK;
+<<<<<<< HEAD
 			subopt = OPTION_MPTCP_MPC_ACK;
 		} else {
 			if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_ACK) {
@@ -48,6 +52,13 @@ static void mptcp_parse_option(const struct sk_buff *skb,
 				expected_opsize = TCPOLEN_MPTCP_MPC_SYN;
 				subopt = OPTION_MPTCP_MPC_SYN;
 			}
+=======
+		} else {
+			if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_ACK)
+				expected_opsize = TCPOLEN_MPTCP_MPC_SYNACK;
+			else
+				expected_opsize = TCPOLEN_MPTCP_MPC_SYN;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		/* Cfr RFC 8684 Section 3.3.0:
@@ -90,7 +101,11 @@ static void mptcp_parse_option(const struct sk_buff *skb,
 
 		mp_opt->deny_join_id0 = !!(flags & MPTCP_CAP_DENY_JOIN_ID0);
 
+<<<<<<< HEAD
 		mp_opt->suboptions |= subopt;
+=======
+		mp_opt->suboptions |= OPTIONS_MPTCP_MPC;
+>>>>>>> b7ba80a49124 (Commit)
 		if (opsize >= TCPOLEN_MPTCP_MPC_SYNACK) {
 			mp_opt->sndr_key = get_unaligned_be64(ptr);
 			ptr += 8;
@@ -939,7 +954,11 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
 		    subflow->mp_join && (mp_opt->suboptions & OPTIONS_MPTCP_MPJ) &&
 		    !subflow->request_join)
 			tcp_send_ack(ssk);
+<<<<<<< HEAD
 		goto check_notify;
+=======
+		goto fully_established;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* we must process OoO packets before the first subflow is fully
@@ -950,6 +969,7 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
 	if (TCP_SKB_CB(skb)->seq != subflow->ssn_offset + 1) {
 		if (subflow->mp_join)
 			goto reset;
+<<<<<<< HEAD
 		if (subflow->is_mptfo && mp_opt->suboptions & OPTION_MPTCP_MPC_ACK)
 			goto set_fully_established;
 		return subflow->mp_capable;
@@ -958,12 +978,23 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
 	if (subflow->remote_key_valid &&
 	    (((mp_opt->suboptions & OPTION_MPTCP_DSS) && mp_opt->use_ack) ||
 	     ((mp_opt->suboptions & OPTION_MPTCP_ADD_ADDR) && !mp_opt->echo))) {
+=======
+		return subflow->mp_capable;
+	}
+
+	if (((mp_opt->suboptions & OPTION_MPTCP_DSS) && mp_opt->use_ack) ||
+	    ((mp_opt->suboptions & OPTION_MPTCP_ADD_ADDR) && !mp_opt->echo)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* subflows are fully established as soon as we get any
 		 * additional ack, including ADD_ADDR.
 		 */
 		subflow->fully_established = 1;
 		WRITE_ONCE(msk->fully_established, true);
+<<<<<<< HEAD
 		goto check_notify;
+=======
+		goto fully_established;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* If the first established packet does not contain MP_CAPABLE + data
@@ -982,12 +1013,19 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
 	if (mp_opt->deny_join_id0)
 		WRITE_ONCE(msk->pm.remote_deny_join_id0, true);
 
+<<<<<<< HEAD
 set_fully_established:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(!READ_ONCE(msk->pm.server_side)))
 		pr_warn_once("bogus mpc option on established client sk");
 	mptcp_subflow_fully_established(subflow, mp_opt);
 
+<<<<<<< HEAD
 check_notify:
+=======
+fully_established:
+>>>>>>> b7ba80a49124 (Commit)
 	/* if the subflow is not already linked into the conn_list, we can't
 	 * notify the PM: this subflow is still on the listener queue
 	 * and the PM possibly acquiring the subflow lock could race with
@@ -1594,7 +1632,12 @@ mp_rst:
 				      TCPOLEN_MPTCP_PRIO,
 				      opts->backup, TCPOPT_NOP);
 
+<<<<<<< HEAD
 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_MPPRIOTX);
+=======
+		MPTCP_INC_STATS(sock_net((const struct sock *)tp),
+				MPTCP_MIB_MPPRIOTX);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 mp_capable_done:

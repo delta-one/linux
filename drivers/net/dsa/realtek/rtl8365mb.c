@@ -98,7 +98,10 @@
 #include <linux/of_irq.h>
 #include <linux/regmap.h>
 #include <linux/if_bridge.h>
+<<<<<<< HEAD
 #include <linux/if_vlan.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "realtek.h"
 
@@ -268,7 +271,10 @@
 /* Maximum packet length register */
 #define RTL8365MB_CFG0_MAX_LEN_REG	0x088C
 #define   RTL8365MB_CFG0_MAX_LEN_MASK	0x3FFF
+<<<<<<< HEAD
 #define RTL8365MB_CFG0_MAX_LEN_MAX	0x3FFF
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Port learning limit registers */
 #define RTL8365MB_LUT_PORT_LEARN_LIMIT_BASE		0x0A20
@@ -1137,6 +1143,7 @@ static void rtl8365mb_phylink_mac_link_up(struct dsa_switch *ds, int port,
 	}
 }
 
+<<<<<<< HEAD
 static int rtl8365mb_port_change_mtu(struct dsa_switch *ds, int port,
 				     int new_mtu)
 {
@@ -1166,6 +1173,8 @@ static int rtl8365mb_port_max_mtu(struct dsa_switch *ds, int port)
 	return RTL8365MB_CFG0_MAX_LEN_MAX - VLAN_ETH_HLEN - ETH_FCS_LEN;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void rtl8365mb_port_stp_state_set(struct dsa_switch *ds, int port,
 					 u8 state)
 {
@@ -2011,7 +2020,14 @@ static int rtl8365mb_setup(struct dsa_switch *ds)
 		p->index = i;
 	}
 
+<<<<<<< HEAD
 	ret = rtl8365mb_port_change_mtu(ds, cpu->trap_port, ETH_DATA_LEN);
+=======
+	/* Set maximum packet length to 1536 bytes */
+	ret = regmap_update_bits(priv->map, RTL8365MB_CFG0_MAX_LEN_REG,
+				 RTL8365MB_CFG0_MAX_LEN_MASK,
+				 FIELD_PREP(RTL8365MB_CFG0_MAX_LEN_MASK, 1536));
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto out_teardown_irq;
 
@@ -2131,8 +2147,11 @@ static const struct dsa_switch_ops rtl8365mb_switch_ops_smi = {
 	.get_eth_mac_stats = rtl8365mb_get_mac_stats,
 	.get_eth_ctrl_stats = rtl8365mb_get_ctrl_stats,
 	.get_stats64 = rtl8365mb_get_stats64,
+<<<<<<< HEAD
 	.port_change_mtu = rtl8365mb_port_change_mtu,
 	.port_max_mtu = rtl8365mb_port_max_mtu,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct dsa_switch_ops rtl8365mb_switch_ops_mdio = {
@@ -2154,8 +2173,11 @@ static const struct dsa_switch_ops rtl8365mb_switch_ops_mdio = {
 	.get_eth_mac_stats = rtl8365mb_get_mac_stats,
 	.get_eth_ctrl_stats = rtl8365mb_get_ctrl_stats,
 	.get_stats64 = rtl8365mb_get_stats64,
+<<<<<<< HEAD
 	.port_change_mtu = rtl8365mb_port_change_mtu,
 	.port_max_mtu = rtl8365mb_port_max_mtu,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct realtek_ops rtl8365mb_ops = {

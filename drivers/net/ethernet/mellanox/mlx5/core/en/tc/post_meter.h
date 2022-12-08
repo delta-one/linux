@@ -14,6 +14,7 @@
 
 struct mlx5e_post_meter_priv;
 
+<<<<<<< HEAD
 enum mlx5e_post_meter_type {
 	MLX5E_POST_METER_RATE = 0,
 	MLX5E_POST_METER_MTU
@@ -30,10 +31,16 @@ mlx5e_post_meter_get_mtu_true_ft(struct mlx5e_post_meter_priv *post_meter);
 struct mlx5_flow_table *
 mlx5e_post_meter_get_mtu_false_ft(struct mlx5e_post_meter_priv *post_meter);
 
+=======
+struct mlx5_flow_table *
+mlx5e_post_meter_get_ft(struct mlx5e_post_meter_priv *post_meter);
+
+>>>>>>> b7ba80a49124 (Commit)
 struct mlx5e_post_meter_priv *
 mlx5e_post_meter_init(struct mlx5e_priv *priv,
 		      enum mlx5_flow_namespace_type ns_type,
 		      struct mlx5e_post_act *post_act,
+<<<<<<< HEAD
 		      enum mlx5e_post_meter_type type,
 		      struct mlx5_fc *act_counter,
 		      struct mlx5_fc *drop_counter,
@@ -58,5 +65,11 @@ mlx5e_post_meter_get_mtu_false_ft(struct mlx5e_post_meter_priv *post_meter)
 }
 
 #endif
+=======
+		      struct mlx5_fc *green_counter,
+		      struct mlx5_fc *red_counter);
+void
+mlx5e_post_meter_cleanup(struct mlx5e_post_meter_priv *post_meter);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __MLX5_EN_POST_METER_H__ */

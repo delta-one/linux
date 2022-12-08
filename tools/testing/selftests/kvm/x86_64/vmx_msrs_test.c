@@ -67,6 +67,7 @@ static void vmx_save_restore_msrs_test(struct kvm_vcpu *vcpu)
 	vmx_fixed1_msr_test(vcpu, MSR_IA32_VMX_VMFUNC, -1ull);
 }
 
+<<<<<<< HEAD
 static void __ia32_feature_control_msr_test(struct kvm_vcpu *vcpu,
 					    uint64_t msr_bit,
 					    struct kvm_x86_cpu_feature feature)
@@ -113,6 +114,8 @@ static void ia32_feature_control_msr_test(struct kvm_vcpu *vcpu)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int main(void)
 {
 	struct kvm_vcpu *vcpu;
@@ -125,7 +128,10 @@ int main(void)
 	vm = vm_create_with_one_vcpu(&vcpu, NULL);
 
 	vmx_save_restore_msrs_test(vcpu);
+<<<<<<< HEAD
 	ia32_feature_control_msr_test(vcpu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	kvm_vm_free(vm);
 }

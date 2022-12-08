@@ -59,6 +59,7 @@ static int nvdimm_map_flush(struct device *dev, struct nvdimm *nvdimm, int dimm,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int nd_region_invalidate_memregion(struct nd_region *nd_region)
 {
 	int i, incoherent = 0;
@@ -104,6 +105,11 @@ out:
 int nd_region_activate(struct nd_region *nd_region)
 {
 	int i, j, rc, num_flush = 0;
+=======
+int nd_region_activate(struct nd_region *nd_region)
+{
+	int i, j, num_flush = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nd_region_data *ndrd;
 	struct device *dev = &nd_region->dev;
 	size_t flush_data_size = sizeof(void *);
@@ -127,10 +133,13 @@ int nd_region_activate(struct nd_region *nd_region)
 	}
 	nvdimm_bus_unlock(&nd_region->dev);
 
+<<<<<<< HEAD
 	rc = nd_region_invalidate_memregion(nd_region);
 	if (rc)
 		return rc;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ndrd = devm_kzalloc(dev, sizeof(*ndrd) + flush_data_size, GFP_KERNEL);
 	if (!ndrd)
 		return -ENOMEM;
@@ -555,13 +564,23 @@ static ssize_t align_store(struct device *dev,
 {
 	struct nd_region *nd_region = to_nd_region(dev);
 	unsigned long val, dpa;
+<<<<<<< HEAD
 	u32 mappings, remainder;
+=======
+	u32 remainder;
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	rc = kstrtoul(buf, 0, &val);
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
+=======
+	if (!nd_region->ndr_mappings)
+		return -ENXIO;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Ensure space-align is evenly divisible by the region
 	 * interleave-width because the kernel typically has no facility
@@ -569,8 +588,12 @@ static ssize_t align_store(struct device *dev,
 	 * contribute to the tail capacity in system-physical-address
 	 * space for the namespace.
 	 */
+<<<<<<< HEAD
 	mappings = max_t(u32, 1, nd_region->ndr_mappings);
 	dpa = div_u64_rem(val, mappings, &remainder);
+=======
+	dpa = div_u64_rem(val, nd_region->ndr_mappings, &remainder);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!is_power_of_2(dpa) || dpa < PAGE_SIZE
 			|| val > region_size(nd_region) || remainder)
 		return -EINVAL;
@@ -839,12 +862,20 @@ static const struct device_type nd_volatile_device_type = {
 	.groups = nd_region_attribute_groups,
 };
 
+<<<<<<< HEAD
 bool is_nd_pmem(const struct device *dev)
+=======
+bool is_nd_pmem(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return dev ? dev->type == &nd_pmem_device_type : false;
 }
 
+<<<<<<< HEAD
 bool is_nd_volatile(const struct device *dev)
+=======
+bool is_nd_volatile(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return dev ? dev->type == &nd_volatile_device_type : false;
 }
@@ -1140,7 +1171,11 @@ int nvdimm_flush(struct nd_region *nd_region, struct bio *bio)
 	return rc;
 }
 /**
+<<<<<<< HEAD
  * generic_nvdimm_flush() - flush any posted write queues between the cpu and pmem media
+=======
+ * nvdimm_flush - flush any posted write queues between the cpu and pmem media
+>>>>>>> b7ba80a49124 (Commit)
  * @nd_region: interleaved pmem region
  */
 int generic_nvdimm_flush(struct nd_region *nd_region)
@@ -1268,5 +1303,8 @@ int nd_region_conflict(struct nd_region *nd_region, resource_size_t start,
 
 	return device_for_each_child(&nvdimm_bus->dev, &ctx, region_conflict);
 }
+<<<<<<< HEAD
 
 MODULE_IMPORT_NS(DEVMEM);
+=======
+>>>>>>> b7ba80a49124 (Commit)

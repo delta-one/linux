@@ -8,7 +8,11 @@
 # Uses the following environment variables:
 # SUBARCH, SRCARCH, srctree
 
+<<<<<<< HEAD
 if [[ "$KBUILD_VERBOSE" =~ 1 ]]; then
+=======
+if [ "$KBUILD_VERBOSE" = "1" ]; then
+>>>>>>> b7ba80a49124 (Commit)
 	set -x
 fi
 
@@ -17,6 +21,7 @@ ignore="$(echo "$RCS_FIND_IGNORE" | sed 's|\\||g' )"
 # tags and cscope files should also ignore MODVERSION *.mod.c files
 ignore="$ignore ( -name *.mod.c ) -prune -o"
 
+<<<<<<< HEAD
 # ignore arbitrary directories
 if [ -n "${IGNORE_DIRS}" ]; then
 	for i in ${IGNORE_DIRS}; do
@@ -24,6 +29,8 @@ if [ -n "${IGNORE_DIRS}" ]; then
 	done
 fi
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # Use make KBUILD_ABS_SRCTREE=1 {tags|cscope}
 # to force full paths for a non-O= build
 if [ "${srctree}" = "." -o -z "${srctree}" ]; then
@@ -98,7 +105,11 @@ all_compiled_sources()
 	{
 		echo include/generated/autoconf.h
 		find $ignore -name "*.cmd" -exec \
+<<<<<<< HEAD
 			sed -n -E 's/^source_.* (.*)/\1/p; s/^  (\S.*) \\/\1/p' {} \+ |
+=======
+			grep -Poh '(?(?=^source_.* \K).*|(?=^  \K\S).*(?= \\))' {} \+ |
+>>>>>>> b7ba80a49124 (Commit)
 		awk '!a[$0]++'
 	} | xargs realpath -esq $([ -z "$KBUILD_ABS_SRCTREE" ] && echo --relative-to=.) |
 	sort -u
@@ -271,12 +282,19 @@ exuberant()
 	--$CTAGS_EXTRA=+fq --c-kinds=+px --fields=+iaS --langmap=c:+.h \
 	"${regex[@]}"
 
+<<<<<<< HEAD
 	KCONFIG_ARGS=()
 	if ! $1 --list-languages | grep -iq kconfig; then
 		setup_regex exuberant kconfig
 		KCONFIG_ARGS=(--langdef=kconfig --language-force=kconfig "${regex[@]}")
 	fi
 	all_kconfigs | xargs $1 -a "${KCONFIG_ARGS[@]}"
+=======
+	setup_regex exuberant kconfig
+	all_kconfigs | xargs $1 -a                              \
+	--langdef=kconfig --language-force=kconfig "${regex[@]}"
+
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 emacs()

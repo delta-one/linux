@@ -6,6 +6,11 @@
 #ifndef __ASM_ALTERNATIVE_H
 #define __ASM_ALTERNATIVE_H
 
+<<<<<<< HEAD
+=======
+#define ERRATA_STRING_LENGTH_MAX 32
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/alternative-macros.h>
 
 #ifndef __ASSEMBLY__
@@ -13,27 +18,37 @@
 #ifdef CONFIG_RISCV_ALTERNATIVE
 
 #include <linux/init.h>
+<<<<<<< HEAD
 #include <linux/kernel.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/types.h>
 #include <linux/stddef.h>
 #include <asm/hwcap.h>
 
+<<<<<<< HEAD
 #define PATCH_ID_CPUFEATURE_ID(p)		lower_16_bits(p)
 #define PATCH_ID_CPUFEATURE_VALUE(p)		upper_16_bits(p)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RISCV_ALTERNATIVES_BOOT		0 /* alternatives applied during regular boot */
 #define RISCV_ALTERNATIVES_MODULE	1 /* alternatives applied during module-init */
 #define RISCV_ALTERNATIVES_EARLY_BOOT	2 /* alternatives applied before mmu start */
 
+<<<<<<< HEAD
 /* add the relative offset to the address of the offset to get the absolute address */
 #define __ALT_PTR(a, f)			((void *)&(a)->f + (a)->f)
 #define ALT_OLD_PTR(a)			__ALT_PTR(a, old_offset)
 #define ALT_ALT_PTR(a)			__ALT_PTR(a, alt_offset)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void __init apply_boot_alternatives(void);
 void __init apply_early_boot_alternatives(void);
 void apply_module_alternatives(void *start, size_t length);
 
+<<<<<<< HEAD
 void riscv_alternative_fix_offsets(void *alt_ptr, unsigned int len,
 				   int patch_offset);
 
@@ -43,6 +58,19 @@ struct alt_entry {
 	u16 vendor_id;		/* CPU vendor ID */
 	u16 alt_len;		/* The replacement size */
 	u32 patch_id;		/* The patch ID (erratum ID or cpufeature ID) */
+=======
+struct alt_entry {
+	void *old_ptr;		 /* address of original instruciton or data  */
+	void *alt_ptr;		 /* address of replacement instruction or data */
+	unsigned long vendor_id; /* cpu vendor id */
+	unsigned long alt_len;   /* The replacement size */
+	unsigned int errata_id;  /* The errata id */
+} __packed;
+
+struct errata_checkfunc_id {
+	unsigned long vendor_id;
+	bool (*func)(struct alt_entry *alt);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void sifive_errata_patch_func(struct alt_entry *begin, struct alt_entry *end,

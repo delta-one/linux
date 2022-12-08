@@ -67,7 +67,10 @@ static void esw_acl_egress_lgcy_groups_destroy(struct mlx5_vport *vport)
 int esw_acl_egress_lgcy_setup(struct mlx5_eswitch *esw,
 			      struct mlx5_vport *vport)
 {
+<<<<<<< HEAD
 	bool vst_mode_steering = esw_vst_mode_is_steering(esw);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct mlx5_flow_destination drop_ctr_dst = {};
 	struct mlx5_flow_destination *dst = NULL;
 	struct mlx5_fc *drop_counter = NULL;
@@ -78,7 +81,10 @@ int esw_acl_egress_lgcy_setup(struct mlx5_eswitch *esw,
 	 */
 	int table_size = 2;
 	int dest_num = 0;
+<<<<<<< HEAD
 	int actions_flag;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err = 0;
 
 	if (vport->egress.legacy.drop_counter) {
@@ -121,11 +127,16 @@ int esw_acl_egress_lgcy_setup(struct mlx5_eswitch *esw,
 		  vport->vport, vport->info.vlan, vport->info.qos);
 
 	/* Allowed vlan rule */
+<<<<<<< HEAD
 	actions_flag = MLX5_FLOW_CONTEXT_ACTION_ALLOW;
 	if (vst_mode_steering)
 		actions_flag |= MLX5_FLOW_CONTEXT_ACTION_VLAN_POP;
 	err = esw_egress_acl_vlan_create(esw, vport, NULL, vport->info.vlan,
 					 actions_flag);
+=======
+	err = esw_egress_acl_vlan_create(esw, vport, NULL, vport->info.vlan,
+					 MLX5_FLOW_CONTEXT_ACTION_ALLOW);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out;
 

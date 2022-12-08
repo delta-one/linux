@@ -22,7 +22,10 @@
 #define I2S_BT_INSTANCE		0
 #define I2S_SP_INSTANCE		1
 #define PDM_DMIC_INSTANCE	2
+<<<<<<< HEAD
 #define I2S_SP_VIRTUAL_INSTANCE	3
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct snd_soc_dai_driver renoir_sof_dai[] = {
 	[I2S_BT_INSTANCE] = {
@@ -87,6 +90,7 @@ static struct snd_soc_dai_driver renoir_sof_dai[] = {
 			.rate_max = 48000,
 		},
 	},
+<<<<<<< HEAD
 
 	[I2S_SP_VIRTUAL_INSTANCE] = {
 		.id = I2S_SP_VIRTUAL_INSTANCE,
@@ -102,6 +106,8 @@ static struct snd_soc_dai_driver renoir_sof_dai[] = {
 		},
 		.probe = &acp_dai_probe,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Renoir ops */

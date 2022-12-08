@@ -13,8 +13,15 @@ mlx5_esw_indir_table_destroy(struct mlx5_esw_indir_table *indir);
 
 struct mlx5_flow_table *mlx5_esw_indir_table_get(struct mlx5_eswitch *esw,
 						 struct mlx5_flow_attr *attr,
+<<<<<<< HEAD
 						 u16 vport, bool decap);
 void mlx5_esw_indir_table_put(struct mlx5_eswitch *esw,
+=======
+						 struct mlx5_flow_spec *spec,
+						 u16 vport, bool decap);
+void mlx5_esw_indir_table_put(struct mlx5_eswitch *esw,
+			      struct mlx5_flow_attr *attr,
+>>>>>>> b7ba80a49124 (Commit)
 			      u16 vport, bool decap);
 
 bool
@@ -42,6 +49,10 @@ mlx5_esw_indir_table_destroy(struct mlx5_esw_indir_table *indir)
 static inline struct mlx5_flow_table *
 mlx5_esw_indir_table_get(struct mlx5_eswitch *esw,
 			 struct mlx5_flow_attr *attr,
+<<<<<<< HEAD
+=======
+			 struct mlx5_flow_spec *spec,
+>>>>>>> b7ba80a49124 (Commit)
 			 u16 vport, bool decap)
 {
 	return ERR_PTR(-EOPNOTSUPP);
@@ -49,6 +60,10 @@ mlx5_esw_indir_table_get(struct mlx5_eswitch *esw,
 
 static inline void
 mlx5_esw_indir_table_put(struct mlx5_eswitch *esw,
+<<<<<<< HEAD
+=======
+			 struct mlx5_flow_attr *attr,
+>>>>>>> b7ba80a49124 (Commit)
 			 u16 vport, bool decap)
 {
 }

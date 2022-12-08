@@ -46,10 +46,13 @@ properties:
   interrupts:
     maxItems: 1
 
+<<<<<<< HEAD
   reset-gpios:
     maxItems: 1
     description: GPIO connected to active low reset
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg

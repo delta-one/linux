@@ -59,7 +59,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	pwm10: pwm-10 {
+=======
+	pwm10: dmtimer-pwm {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "ti,omap-dmtimer-pwm";
 		pinctrl-names = "default";
 		pinctrl-0 = <&pwm_pins>;

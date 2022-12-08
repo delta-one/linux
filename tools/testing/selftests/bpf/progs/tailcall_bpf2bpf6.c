@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
+<<<<<<< HEAD
 #include "bpf_misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define __unused __attribute__((unused))
 
@@ -37,8 +40,11 @@ int entry(struct __sk_buff *skb)
 	/* Have data on stack which size is not a multiple of 8 */
 	volatile char arr[1] = {};
 
+<<<<<<< HEAD
 	__sink(arr[0]);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return subprog_tail(skb);
 }
 

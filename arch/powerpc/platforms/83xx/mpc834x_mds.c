@@ -79,14 +79,32 @@ static void __init mpc834x_mds_setup_arch(void)
 
 machine_device_initcall(mpc834x_mds, mpc83xx_declare_of_platform_devices);
 
+<<<<<<< HEAD
 define_machine(mpc834x_mds) {
 	.name			= "MPC834x MDS",
 	.compatible		= "MPC834xMDS",
+=======
+/*
+ * Called very early, MMU is off, device-tree isn't unflattened
+ */
+static int __init mpc834x_mds_probe(void)
+{
+	return of_machine_is_compatible("MPC834xMDS");
+}
+
+define_machine(mpc834x_mds) {
+	.name			= "MPC834x MDS",
+	.probe			= mpc834x_mds_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.setup_arch		= mpc834x_mds_setup_arch,
 	.discover_phbs  	= mpc83xx_setup_pci,
 	.init_IRQ		= mpc83xx_ipic_init_IRQ,
 	.get_irq		= ipic_get_irq,
 	.restart		= mpc83xx_restart,
 	.time_init		= mpc83xx_time_init,
+<<<<<<< HEAD
+=======
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.progress		= udbg_progress,
 };

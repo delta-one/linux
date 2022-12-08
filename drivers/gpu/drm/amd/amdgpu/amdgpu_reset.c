@@ -24,7 +24,10 @@
 #include "amdgpu_reset.h"
 #include "aldebaran.h"
 #include "sienna_cichlid.h"
+<<<<<<< HEAD
 #include "smu_v13_0_10.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int amdgpu_reset_add_handler(struct amdgpu_reset_control *reset_ctl,
 			     struct amdgpu_reset_handler *handler)
@@ -38,6 +41,11 @@ int amdgpu_reset_init(struct amdgpu_device *adev)
 {
 	int ret = 0;
 
+<<<<<<< HEAD
+=======
+	adev->amdgpu_reset_level_mask = 0x1;
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (adev->ip_versions[MP1_HWIP][0]) {
 	case IP_VERSION(13, 0, 2):
 		ret = aldebaran_reset_init(adev);
@@ -45,9 +53,12 @@ int amdgpu_reset_init(struct amdgpu_device *adev)
 	case IP_VERSION(11, 0, 7):
 		ret = sienna_cichlid_reset_init(adev);
 		break;
+<<<<<<< HEAD
 	case IP_VERSION(13, 0, 10):
 		ret = smu_v13_0_10_reset_init(adev);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		break;
 	}
@@ -66,9 +77,12 @@ int amdgpu_reset_fini(struct amdgpu_device *adev)
 	case IP_VERSION(11, 0, 7):
 		ret = sienna_cichlid_reset_fini(adev);
 		break;
+<<<<<<< HEAD
 	case IP_VERSION(13, 0, 10):
 		ret = smu_v13_0_10_reset_fini(adev);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		break;
 	}
@@ -81,6 +95,15 @@ int amdgpu_reset_prepare_hwcontext(struct amdgpu_device *adev,
 {
 	struct amdgpu_reset_handler *reset_handler = NULL;
 
+<<<<<<< HEAD
+=======
+	if (!(adev->amdgpu_reset_level_mask & AMDGPU_RESET_LEVEL_MODE2))
+		return -ENOSYS;
+
+	if (test_bit(AMDGPU_SKIP_MODE2_RESET, &reset_context->flags))
+		return -ENOSYS;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (adev->reset_cntl && adev->reset_cntl->get_reset_handler)
 		reset_handler = adev->reset_cntl->get_reset_handler(
 			adev->reset_cntl, reset_context);
@@ -97,6 +120,15 @@ int amdgpu_reset_perform_reset(struct amdgpu_device *adev,
 	int ret;
 	struct amdgpu_reset_handler *reset_handler = NULL;
 
+<<<<<<< HEAD
+=======
+	if (!(adev->amdgpu_reset_level_mask & AMDGPU_RESET_LEVEL_MODE2))
+		return -ENOSYS;
+
+	if (test_bit(AMDGPU_SKIP_MODE2_RESET, &reset_context->flags))
+		return -ENOSYS;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (adev->reset_cntl)
 		reset_handler = adev->reset_cntl->get_reset_handler(
 			adev->reset_cntl, reset_context);

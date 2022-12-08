@@ -3401,9 +3401,15 @@ static void adv76xx_reset(struct adv76xx_state *state)
 	}
 }
 
+<<<<<<< HEAD
 static int adv76xx_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int adv76xx_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	static const struct v4l2_dv_timings cea640x480 =
 		V4L2_DV_BT_CEA_640X480P59_94;
 	struct adv76xx_state *state;
@@ -3686,7 +3692,11 @@ static struct i2c_driver adv76xx_driver = {
 		.name = "adv7604",
 		.of_match_table = of_match_ptr(adv76xx_of_id),
 	},
+<<<<<<< HEAD
 	.probe_new = adv76xx_probe,
+=======
+	.probe = adv76xx_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = adv76xx_remove,
 	.id_table = adv76xx_i2c_id,
 };

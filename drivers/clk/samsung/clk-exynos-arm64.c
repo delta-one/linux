@@ -10,9 +10,12 @@
  */
 #include <linux/clk.h>
 #include <linux/of_address.h>
+<<<<<<< HEAD
 #include <linux/of_device.h>
 #include <linux/pm_runtime.h>
 #include <linux/slab.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "clk-exynos-arm64.h"
 
@@ -24,6 +27,7 @@
 #define GATE_OFF_START		0x2000
 #define GATE_OFF_END		0x2fff
 
+<<<<<<< HEAD
 struct exynos_arm64_cmu_data {
 	struct samsung_clk_reg_dump *clk_save;
 	unsigned int nr_clk_save;
@@ -37,6 +41,8 @@ struct exynos_arm64_cmu_data {
 	struct samsung_clk_provider *ctx;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * exynos_arm64_init_clocks - Set clocks initial configuration
  * @np:			CMU device tree node with "reg" property (CMU addr)
@@ -73,6 +79,7 @@ static void __init exynos_arm64_init_clocks(struct device_node *np,
 }
 
 /**
+<<<<<<< HEAD
  * exynos_arm64_enable_bus_clk - Enable parent clock of specified CMU
  *
  * @dev:	Device object; may be NULL if this function is not being
@@ -150,6 +157,8 @@ static int __init exynos_arm64_cmu_prepare_pm(struct device *dev,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * exynos_arm64_register_cmu - Register specified Exynos CMU domain
  * @dev:	Device object; may be NULL if this function is not being
  *		called from platform driver probe function
@@ -165,6 +174,7 @@ static int __init exynos_arm64_cmu_prepare_pm(struct device *dev,
 void __init exynos_arm64_register_cmu(struct device *dev,
 		struct device_node *np, const struct samsung_cmu_info *cmu)
 {
+<<<<<<< HEAD
 	int err;
 
 	/*
@@ -175,10 +185,29 @@ void __init exynos_arm64_register_cmu(struct device *dev,
 	if (err)
 		pr_err("%s: could not enable bus clock %s; err = %d\n",
 		       __func__, cmu->clk_name, err);
+=======
+	/* Keep CMU parent clock running (needed for CMU registers access) */
+	if (cmu->clk_name) {
+		struct clk *parent_clk;
+
+		if (dev)
+			parent_clk = clk_get(dev, cmu->clk_name);
+		else
+			parent_clk = of_clk_get_by_name(np, cmu->clk_name);
+
+		if (IS_ERR(parent_clk)) {
+			pr_err("%s: could not find bus clock %s; err = %ld\n",
+			       __func__, cmu->clk_name, PTR_ERR(parent_clk));
+		} else {
+			clk_prepare_enable(parent_clk);
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	exynos_arm64_init_clocks(np, cmu->clk_regs, cmu->nr_clk_regs);
 	samsung_cmu_register_one(np, cmu);
 }
+<<<<<<< HEAD
 
 /**
  * exynos_arm64_register_cmu_pm - Register Exynos CMU domain with PM support
@@ -289,3 +318,5 @@ int exynos_arm64_cmu_resume(struct device *dev)
 
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

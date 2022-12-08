@@ -734,6 +734,7 @@ void osnoise_put_tracing_thresh(struct osnoise_context *context)
 	context->orig_tracing_thresh = OSNOISE_OPTION_INIT_VAL;
 }
 
+<<<<<<< HEAD
 static int osnoise_options_get_option(char *option)
 {
 	char *options = tracefs_instance_file_read(NULL, "osnoise/options", NULL);
@@ -841,6 +842,8 @@ static void osnoise_put_irq_disable(struct osnoise_context *context)
 	context->orig_opt_irq_disable = OSNOISE_OPTION_INIT_VAL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * enable_osnoise - enable osnoise tracer in the trace_instance
  */
@@ -905,9 +908,12 @@ struct osnoise_context *osnoise_context_alloc(void)
 	context->orig_tracing_thresh	= OSNOISE_OPTION_INIT_VAL;
 	context->tracing_thresh		= OSNOISE_OPTION_INIT_VAL;
 
+<<<<<<< HEAD
 	context->orig_opt_irq_disable	= OSNOISE_OPTION_INIT_VAL;
 	context->opt_irq_disable	= OSNOISE_OPTION_INIT_VAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	osnoise_get_context(context);
 
 	return context;
@@ -934,7 +940,10 @@ void osnoise_put_context(struct osnoise_context *context)
 	osnoise_put_timerlat_period_us(context);
 	osnoise_put_print_stack(context);
 	osnoise_put_tracing_thresh(context);
+<<<<<<< HEAD
 	osnoise_put_irq_disable(context);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	free(context);
 }
@@ -1014,7 +1023,11 @@ out_err:
 	return NULL;
 }
 
+<<<<<<< HEAD
 static void osnoise_usage(int err)
+=======
+static void osnoise_usage(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 
@@ -1034,7 +1047,11 @@ static void osnoise_usage(int err)
 
 	for (i = 0; msg[i]; i++)
 		fprintf(stderr, "%s\n", msg[i]);
+<<<<<<< HEAD
 	exit(err);
+=======
+	exit(1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int osnoise_main(int argc, char *argv[])
@@ -1052,7 +1069,12 @@ int osnoise_main(int argc, char *argv[])
 	}
 
 	if ((strcmp(argv[1], "-h") == 0) || (strcmp(argv[1], "--help") == 0)) {
+<<<<<<< HEAD
 		osnoise_usage(0);
+=======
+		osnoise_usage();
+		exit(0);
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (strncmp(argv[1], "-", 1) == 0) {
 		/* the user skipped the tool, call the default one */
 		osnoise_top_main(argc, argv);
@@ -1066,6 +1088,7 @@ int osnoise_main(int argc, char *argv[])
 	}
 
 usage:
+<<<<<<< HEAD
 	osnoise_usage(1);
 	exit(1);
 }
@@ -1075,3 +1098,8 @@ int hwnoise_main(int argc, char *argv[])
 	osnoise_top_main(argc, argv);
 	exit(0);
 }
+=======
+	osnoise_usage();
+	exit(1);
+}
+>>>>>>> b7ba80a49124 (Commit)

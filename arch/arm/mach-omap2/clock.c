@@ -36,6 +36,11 @@
 #include "cm-regbits-34xx.h"
 #include "common.h"
 
+<<<<<<< HEAD
+=======
+u16 cpu_mask;
+
+>>>>>>> b7ba80a49124 (Commit)
 /* DPLL valid Fint frequency band limits - from 34xx TRM Section 4.7.6.2 */
 #define OMAP3430_DPLL_FINT_BAND1_MIN	750000
 #define OMAP3430_DPLL_FINT_BAND1_MAX	2100000

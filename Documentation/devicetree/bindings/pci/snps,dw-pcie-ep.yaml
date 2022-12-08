@@ -13,6 +13,7 @@ maintainers:
 description: |
   Synopsys DesignWare PCIe host controller endpoint
 
+<<<<<<< HEAD
 # Please create a separate DT-schema for your DWC PCIe Endpoint controller
 # and make sure it's assigned with the vendor-specific compatible string.
 select:
@@ -165,11 +166,71 @@ required:
   - compatible
   - reg
   - reg-names
+=======
+allOf:
+  - $ref: /schemas/pci/pci-ep.yaml#
+
+properties:
+  compatible:
+    anyOf:
+      - {}
+      - const: snps,dw-pcie-ep
+
+  reg:
+    description: |
+      It should contain Data Bus Interface (dbi) and config registers for all
+      versions.
+      For designware core version >= 4.80, it may contain ATU address space.
+    minItems: 2
+    maxItems: 4
+
+  reg-names:
+    minItems: 2
+    maxItems: 4
+    items:
+      enum: [dbi, dbi2, config, atu, addr_space, link, atu_dma, appl]
+
+  reset-gpio:
+    description: GPIO pin number of PERST# signal
+    maxItems: 1
+    deprecated: true
+
+  reset-gpios:
+    description: GPIO controlled connection to PERST# signal
+    maxItems: 1
+
+  snps,enable-cdm-check:
+    type: boolean
+    description: |
+      This is a boolean property and if present enables
+      automatic checking of CDM (Configuration Dependent Module) registers
+      for data corruption. CDM registers include standard PCIe configuration
+      space registers, Port Logic registers, DMA and iATU (internal Address
+      Translation Unit) registers.
+
+  num-ib-windows:
+    $ref: /schemas/types.yaml#/definitions/uint32
+    maximum: 256
+    description: number of inbound address translation windows
+    deprecated: true
+
+  num-ob-windows:
+    $ref: /schemas/types.yaml#/definitions/uint32
+    maximum: 256
+    description: number of outbound address translation windows
+    deprecated: true
+
+required:
+  - reg
+  - reg-names
+  - compatible
+>>>>>>> b7ba80a49124 (Commit)
 
 additionalProperties: true
 
 examples:
   - |
+<<<<<<< HEAD
     pcie-ep@dfd00000 {
       compatible = "snps,dw-pcie-ep";
       reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
@@ -191,4 +252,16 @@ examples:
 
       max-link-speed = <3>;
       max-functions = /bits/ 8 <4>;
+=======
+    bus {
+      #address-cells = <1>;
+      #size-cells = <1>;
+      pcie-ep@dfd00000 {
+        compatible = "snps,dw-pcie-ep";
+        reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
+              <0xdfc01000 0x0001000>, /* IP registers 2 */
+              <0xd0000000 0x2000000>; /* Configuration space */
+        reg-names = "dbi", "dbi2", "addr_space";
+      };
+>>>>>>> b7ba80a49124 (Commit)
     };

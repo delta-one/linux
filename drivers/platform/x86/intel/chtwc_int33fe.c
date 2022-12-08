@@ -405,7 +405,11 @@ out_remove_nodes:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void cht_int33fe_typec_remove(struct platform_device *pdev)
+=======
+static int cht_int33fe_typec_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cht_int33fe_data *data = platform_get_drvdata(pdev);
 
@@ -414,6 +418,11 @@ static void cht_int33fe_typec_remove(struct platform_device *pdev)
 	i2c_unregister_device(data->battery_fg);
 
 	cht_int33fe_remove_nodes(data);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id cht_int33fe_acpi_ids[] = {
@@ -427,7 +436,11 @@ static struct platform_driver cht_int33fe_typec_driver = {
 		.acpi_match_table = ACPI_PTR(cht_int33fe_acpi_ids),
 	},
 	.probe = cht_int33fe_typec_probe,
+<<<<<<< HEAD
 	.remove_new = cht_int33fe_typec_remove,
+=======
+	.remove = cht_int33fe_typec_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(cht_int33fe_typec_driver);

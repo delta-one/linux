@@ -80,8 +80,11 @@ properties:
     type: boolean
     description: The Mic Jack represents state of the headset microphone pin
 
+<<<<<<< HEAD
   nvidia,coupled-mic-hp-det:
     type: boolean
     description: The Mic detect GPIO is viable only if HP detect GPIO is active
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 additionalProperties: true

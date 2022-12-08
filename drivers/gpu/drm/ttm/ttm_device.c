@@ -29,10 +29,17 @@
 
 #include <linux/mm.h>
 
+<<<<<<< HEAD
 #include <drm/ttm/ttm_bo.h>
 #include <drm/ttm/ttm_device.h>
 #include <drm/ttm/ttm_tt.h>
 #include <drm/ttm/ttm_placement.h>
+=======
+#include <drm/ttm/ttm_device.h>
+#include <drm/ttm/ttm_tt.h>
+#include <drm/ttm/ttm_placement.h>
+#include <drm/ttm/ttm_bo_api.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "ttm_module.h"
 
@@ -137,6 +144,10 @@ int ttm_global_swapout(struct ttm_operation_ctx *ctx, gfp_t gfp_flags)
 	mutex_unlock(&ttm_global_mutex);
 	return ret;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL(ttm_global_swapout);
+>>>>>>> b7ba80a49124 (Commit)
 
 int ttm_device_swapout(struct ttm_device *bdev, struct ttm_operation_ctx *ctx,
 		       gfp_t gfp_flags)
@@ -157,7 +168,11 @@ int ttm_device_swapout(struct ttm_device *bdev, struct ttm_operation_ctx *ctx,
 			struct ttm_buffer_object *bo = res->bo;
 			uint32_t num_pages;
 
+<<<<<<< HEAD
 			if (!bo || bo->resource != res)
+=======
+			if (!bo)
+>>>>>>> b7ba80a49124 (Commit)
 				continue;
 
 			num_pages = PFN_UP(bo->base.size);
@@ -174,6 +189,19 @@ int ttm_device_swapout(struct ttm_device *bdev, struct ttm_operation_ctx *ctx,
 }
 EXPORT_SYMBOL(ttm_device_swapout);
 
+<<<<<<< HEAD
+=======
+static void ttm_device_delayed_workqueue(struct work_struct *work)
+{
+	struct ttm_device *bdev =
+		container_of(work, struct ttm_device, wq.work);
+
+	if (!ttm_bo_delayed_delete(bdev, false))
+		schedule_delayed_work(&bdev->wq,
+				      ((HZ / 100) < 1) ? 1 : HZ / 100);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * ttm_device_init
  *
@@ -204,19 +232,28 @@ int ttm_device_init(struct ttm_device *bdev, struct ttm_device_funcs *funcs,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	bdev->wq = alloc_workqueue("ttm", WQ_MEM_RECLAIM | WQ_HIGHPRI, 16);
 	if (!bdev->wq) {
 		ttm_global_release();
 		return -ENOMEM;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bdev->funcs = funcs;
 
 	ttm_sys_man_init(bdev);
 	ttm_pool_init(&bdev->pool, dev, use_dma_alloc, use_dma32);
 
 	bdev->vma_manager = vma_manager;
+<<<<<<< HEAD
 	spin_lock_init(&bdev->lru_lock);
+=======
+	INIT_DELAYED_WORK(&bdev->wq, ttm_device_delayed_workqueue);
+	spin_lock_init(&bdev->lru_lock);
+	INIT_LIST_HEAD(&bdev->ddestroy);
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_LIST_HEAD(&bdev->pinned);
 	bdev->dev_mapping = mapping;
 	mutex_lock(&ttm_global_mutex);
@@ -240,8 +277,15 @@ void ttm_device_fini(struct ttm_device *bdev)
 	list_del(&bdev->device_list);
 	mutex_unlock(&ttm_global_mutex);
 
+<<<<<<< HEAD
 	drain_workqueue(bdev->wq);
 	destroy_workqueue(bdev->wq);
+=======
+	cancel_delayed_work_sync(&bdev->wq);
+
+	if (ttm_bo_delayed_delete(bdev, true))
+		pr_debug("Delayed destroy list was clean\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock(&bdev->lru_lock);
 	for (i = 0; i < TTM_MAX_BO_PRIORITY; ++i)

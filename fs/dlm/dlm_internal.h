@@ -99,13 +99,21 @@ do { \
 }
 
 
+<<<<<<< HEAD
 #define DLM_RTF_SHRINK_BIT	0
+=======
+#define DLM_RTF_SHRINK		0x00000001
+>>>>>>> b7ba80a49124 (Commit)
 
 struct dlm_rsbtable {
 	struct rb_root		keep;
 	struct rb_root		toss;
 	spinlock_t		lock;
+<<<<<<< HEAD
 	unsigned long		flags;
+=======
+	uint32_t		flags;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 
@@ -145,6 +153,12 @@ struct dlm_args {
 	void			(*bastfn) (void *astparam, int mode);
 	int			mode;
 	struct dlm_lksb		*lksb;
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_DLM_DEPRECATED_API
+	unsigned long		timeout;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 
@@ -194,6 +208,7 @@ struct dlm_args {
 #define DLM_LKSTS_GRANTED	2
 #define DLM_LKSTS_CONVERT	3
 
+<<<<<<< HEAD
 /* lkb_iflags */
 
 #define DLM_IFL_MSTCPY_BIT	16
@@ -218,13 +233,51 @@ struct dlm_args {
 #define DLM_CB_BAST		0x00000002
 
 struct dlm_callback {
+=======
+/* lkb_flags */
+
+#define DLM_IFL_MSTCPY		0x00010000
+#define DLM_IFL_RESEND		0x00020000
+#define DLM_IFL_DEAD		0x00040000
+#define DLM_IFL_OVERLAP_UNLOCK  0x00080000
+#define DLM_IFL_OVERLAP_CANCEL  0x00100000
+#define DLM_IFL_ENDOFLIFE	0x00200000
+#ifdef CONFIG_DLM_DEPRECATED_API
+#define DLM_IFL_WATCH_TIMEWARN	0x00400000
+#define DLM_IFL_TIMEOUT_CANCEL	0x00800000
+#endif
+#define DLM_IFL_DEADLOCK_CANCEL	0x01000000
+#define DLM_IFL_STUB_MS		0x02000000 /* magic number for m_flags */
+/* least significant 2 bytes are message changed, they are full transmitted
+ * but at receive side only the 2 bytes LSB will be set.
+ *
+ * Even wireshark dlm dissector does only evaluate the lower bytes and note
+ * that they may not be used on transceiver side, we assume the higher bytes
+ * are for internal use or reserved so long they are not parsed on receiver
+ * side.
+ */
+#define DLM_IFL_USER		0x00000001
+#define DLM_IFL_ORPHAN		0x00000002
+
+#define DLM_CALLBACKS_SIZE	6
+
+#define DLM_CB_CAST		0x00000001
+#define DLM_CB_BAST		0x00000002
+#define DLM_CB_SKIP		0x00000004
+
+struct dlm_callback {
+	uint64_t		seq;
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t		flags;		/* DLM_CBF_ */
 	int			sb_status;	/* copy to lksb status */
 	uint8_t			sb_flags;	/* copy to lksb flags */
 	int8_t			mode; /* rq mode of bast, gr mode of cast */
+<<<<<<< HEAD
 
 	struct list_head	list;
 	struct kref		ref;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct dlm_lkb {
@@ -235,9 +288,14 @@ struct dlm_lkb {
 	uint32_t		lkb_id;		/* our lock ID */
 	uint32_t		lkb_remid;	/* lock ID on remote partner */
 	uint32_t		lkb_exflags;	/* external flags from caller */
+<<<<<<< HEAD
 	unsigned long		lkb_sbflags;	/* lksb flags */
 	unsigned long		lkb_dflags;	/* distributed flags */
 	unsigned long		lkb_iflags;	/* internal flags */
+=======
+	uint32_t		lkb_sbflags;	/* lksb flags */
+	uint32_t		lkb_flags;	/* internal flags */
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t		lkb_lvbseq;	/* lvb sequence number */
 
 	int8_t			lkb_status;     /* granted, waiting, convert */
@@ -255,6 +313,7 @@ struct dlm_lkb {
 	struct list_head	lkb_ownqueue;	/* list of locks for a process */
 	ktime_t			lkb_timestamp;
 
+<<<<<<< HEAD
 	spinlock_t		lkb_cb_lock;
 	struct work_struct	lkb_cb_work;
 	struct list_head	lkb_cb_list; /* for ls_cb_delay or proc->asts */
@@ -262,6 +321,19 @@ struct dlm_lkb {
 	struct dlm_callback	*lkb_last_cast;
 	struct dlm_callback	*lkb_last_cb;
 	int			lkb_last_bast_mode;
+=======
+#ifdef CONFIG_DLM_DEPRECATED_API
+	struct list_head	lkb_time_list;
+	unsigned long		lkb_timeout_cs;
+#endif
+
+	struct mutex		lkb_cb_mutex;
+	struct work_struct	lkb_cb_work;
+	struct list_head	lkb_cb_list; /* for ls_cb_delay or proc->asts */
+	struct dlm_callback	lkb_callbacks[DLM_CALLBACKS_SIZE];
+	struct dlm_callback	lkb_last_cast;
+	struct dlm_callback	lkb_last_bast;
+>>>>>>> b7ba80a49124 (Commit)
 	ktime_t			lkb_last_cast_time;	/* for debugging */
 	ktime_t			lkb_last_bast_time;	/* for debugging */
 
@@ -570,11 +642,27 @@ struct dlm_ls {
 	struct mutex		ls_orphans_mutex;
 	struct list_head	ls_orphans;
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_DLM_DEPRECATED_API
+	struct mutex		ls_timeout_mutex;
+	struct list_head	ls_timeout;
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 	spinlock_t		ls_new_rsb_spin;
 	int			ls_new_rsb_count;
 	struct list_head	ls_new_rsb;	/* new rsb structs */
 
+<<<<<<< HEAD
 	char			*ls_remove_names[DLM_REMOVE_NAMES_MAX];
+=======
+	spinlock_t		ls_remove_spin;
+	wait_queue_head_t	ls_remove_wait;
+	char			ls_remove_name[DLM_RESNAME_MAXLEN+1];
+	char			*ls_remove_names[DLM_REMOVE_NAMES_MAX];
+	int			ls_remove_len;
+>>>>>>> b7ba80a49124 (Commit)
 	int			ls_remove_lens[DLM_REMOVE_NAMES_MAX];
 
 	struct list_head	ls_nodes;	/* current nodes in ls */
@@ -589,9 +677,15 @@ struct dlm_ls {
 	int			ls_slots_size;
 	struct dlm_slot		*ls_slots;
 
+<<<<<<< HEAD
 	struct dlm_rsb		ls_local_rsb;	/* for returning errors */
 	struct dlm_lkb		ls_local_lkb;	/* for returning errors */
 	struct dlm_message	ls_local_ms;	/* for faking a reply */
+=======
+	struct dlm_rsb		ls_stub_rsb;	/* for returning errors */
+	struct dlm_lkb		ls_stub_lkb;	/* for returning errors */
+	struct dlm_message	ls_stub_ms;	/* for faking a reply */
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct dentry		*ls_debug_rsb_dentry; /* debugfs */
 	struct dentry		*ls_debug_waiters_dentry; /* debugfs */
@@ -610,7 +704,11 @@ struct dlm_ls {
 
 	/* recovery related */
 
+<<<<<<< HEAD
 	spinlock_t		ls_cb_lock;
+=======
+	struct mutex		ls_cb_mutex;
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head	ls_cb_delay; /* save for queue_work later */
 	struct timer_list	ls_timer;
 	struct task_struct	*ls_recoverd_task;
@@ -649,7 +747,11 @@ struct dlm_ls {
 	void			*ls_ops_arg;
 
 	int			ls_namelen;
+<<<<<<< HEAD
 	char			ls_name[DLM_LOCKSPACE_LEN + 1];
+=======
+	char			ls_name[1];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -683,6 +785,12 @@ struct dlm_ls {
 #define LSFL_RCOM_READY		5
 #define LSFL_RCOM_WAIT		6
 #define LSFL_UEVENT_WAIT	7
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_DLM_DEPRECATED_API
+#define LSFL_TIMEWARN		8
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #define LSFL_CB_DELAY		9
 #define LSFL_NODIR		10
 
@@ -735,6 +843,7 @@ static inline int dlm_no_directory(struct dlm_ls *ls)
 	return test_bit(LSFL_NODIR, &ls->ls_flags);
 }
 
+<<<<<<< HEAD
 /* takes a snapshot from dlm atomic flags */
 static inline uint32_t dlm_flags_val(const unsigned long *addr,
 				     uint32_t min, uint32_t max)
@@ -805,6 +914,17 @@ static inline void dlm_set_sbflags_val(struct dlm_lkb *lkb, uint32_t val)
 			  __DLM_SBF_MAX_BIT);
 }
 
+=======
+#ifdef CONFIG_DLM_DEPRECATED_API
+int dlm_netlink_init(void);
+void dlm_netlink_exit(void);
+void dlm_timeout_warn(struct dlm_lkb *lkb);
+#else
+static inline int dlm_netlink_init(void) { return 0; }
+static inline void dlm_netlink_exit(void) { };
+static inline void dlm_timeout_warn(struct dlm_lkb *lkb) { };
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 int dlm_plock_init(void);
 void dlm_plock_exit(void);
 

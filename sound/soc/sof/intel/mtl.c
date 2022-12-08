@@ -90,6 +90,7 @@ static bool mtl_dsp_check_sdw_irq(struct snd_sof_dev *sdev)
 
 static int mtl_ipc_send_msg(struct snd_sof_dev *sdev, struct snd_sof_ipc_msg *msg)
 {
+<<<<<<< HEAD
 	struct sof_intel_hda_dev *hdev = sdev->pdata->hw_pdata;
 	struct sof_ipc4_msg *msg_data = msg->msg_data;
 
@@ -100,6 +101,10 @@ static int mtl_ipc_send_msg(struct snd_sof_dev *sdev, struct snd_sof_ipc_msg *ms
 
 	hdev->delayed_ipc_tx_msg = NULL;
 
+=======
+	struct sof_ipc4_msg *msg_data = msg->msg_data;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* send the message via mailbox */
 	if (msg_data->data_size)
 		sof_mailbox_write(sdev, sdev->host_box.offset, msg_data->data_ptr,
@@ -110,8 +115,11 @@ static int mtl_ipc_send_msg(struct snd_sof_dev *sdev, struct snd_sof_ipc_msg *ms
 	snd_sof_dsp_write(sdev, HDA_DSP_BAR, MTL_DSP_REG_HFIPCXIDR,
 			  msg_data->primary | MTL_DSP_REG_HFIPCXIDR_BUSY);
 
+<<<<<<< HEAD
 	hda_dsp_ipc4_schedule_d0i3_work(hdev, msg);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -136,6 +144,7 @@ static void mtl_disable_ipc_interrupts(struct snd_sof_dev *sdev)
 				MTL_DSP_REG_HFIPCXCTL_BUSY | MTL_DSP_REG_HFIPCXCTL_DONE, 0);
 }
 
+<<<<<<< HEAD
 static void mtl_enable_sdw_irq(struct snd_sof_dev *sdev, bool enable)
 {
 	u32 hipcie;
@@ -168,11 +177,20 @@ static int mtl_enable_interrupts(struct snd_sof_dev *sdev, bool enable)
 	u32 hipcie;
 	u32 mask;
 	u32 val;
+=======
+static int mtl_enable_interrupts(struct snd_sof_dev *sdev)
+{
+	u32 hfintipptr;
+	u32 irqinten;
+	u32 host_ipc;
+	u32 hipcie;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	/* read Interrupt IP Pointer */
 	hfintipptr = snd_sof_dsp_read(sdev, HDA_DSP_BAR, MTL_HFINTIPPTR) & MTL_HFINTIPPTR_PTR_MASK;
 
+<<<<<<< HEAD
 	/* Enable/Disable Host IPC and SOUNDWIRE */
 	mask = MTL_IRQ_INTEN_L_HOST_IPC_MASK | MTL_IRQ_INTEN_L_SOUNDWIRE_MASK;
 	if (enable)
@@ -211,6 +229,110 @@ static int mtl_enable_interrupts(struct snd_sof_dev *sdev, bool enable)
 		return ret;
 	}
 
+=======
+	/* Enable Host IPC and SOUNDWIRE */
+	snd_sof_dsp_update_bits(sdev, HDA_DSP_BAR, hfintipptr,
+				MTL_IRQ_INTEN_L_HOST_IPC_MASK | MTL_IRQ_INTEN_L_SOUNDWIRE_MASK,
+				MTL_IRQ_INTEN_L_HOST_IPC_MASK | MTL_IRQ_INTEN_L_SOUNDWIRE_MASK);
+
+	/* check if operation was successful */
+	host_ipc = MTL_IRQ_INTEN_L_HOST_IPC_MASK | MTL_IRQ_INTEN_L_SOUNDWIRE_MASK;
+	irqinten = snd_sof_dsp_read(sdev, HDA_DSP_BAR, hfintipptr);
+	ret = snd_sof_dsp_read_poll_timeout(sdev, HDA_DSP_BAR, hfintipptr, irqinten,
+					    (irqinten & host_ipc) == host_ipc,
+					    HDA_DSP_REG_POLL_INTERVAL_US, HDA_DSP_RESET_TIMEOUT_US);
+	if (ret < 0) {
+		dev_err(sdev->dev, "failed to enable Host IPC and/or SOUNDWIRE\n");
+		return ret;
+	}
+
+	/* Set Host IPC interrupt enable */
+	snd_sof_dsp_update_bits(sdev, HDA_DSP_BAR, MTL_DSP_REG_HfHIPCIE,
+				MTL_DSP_REG_HfHIPCIE_IE_MASK, MTL_DSP_REG_HfHIPCIE_IE_MASK);
+
+	/* check if operation was successful */
+	host_ipc = MTL_DSP_REG_HfHIPCIE_IE_MASK;
+	hipcie = snd_sof_dsp_read(sdev, HDA_DSP_BAR, MTL_DSP_REG_HfHIPCIE);
+	ret = snd_sof_dsp_read_poll_timeout(sdev, HDA_DSP_BAR, MTL_DSP_REG_HfHIPCIE, hipcie,
+					    (hipcie & host_ipc) == host_ipc,
+					    HDA_DSP_REG_POLL_INTERVAL_US, HDA_DSP_RESET_TIMEOUT_US);
+	if (ret < 0) {
+		dev_err(sdev->dev, "failed to set Host IPC interrupt enable\n");
+		return ret;
+	}
+
+	snd_sof_dsp_update_bits(sdev, HDA_DSP_BAR, MTL_DSP_REG_HfSNDWIE,
+				MTL_DSP_REG_HfSNDWIE_IE_MASK, MTL_DSP_REG_HfSNDWIE_IE_MASK);
+	host_ipc = MTL_DSP_REG_HfSNDWIE_IE_MASK;
+	hipcie = snd_sof_dsp_read(sdev, HDA_DSP_BAR, MTL_DSP_REG_HfSNDWIE);
+	ret = snd_sof_dsp_read_poll_timeout(sdev, HDA_DSP_BAR, MTL_DSP_REG_HfSNDWIE, hipcie,
+					    (hipcie & host_ipc) == host_ipc,
+					    HDA_DSP_REG_POLL_INTERVAL_US, HDA_DSP_RESET_TIMEOUT_US);
+	if (ret < 0)
+		dev_err(sdev->dev, "failed to set SoundWire IPC interrupt enable\n");
+
+	return ret;
+}
+
+static int mtl_disable_interrupts(struct snd_sof_dev *sdev)
+{
+	u32 hfintipptr;
+	u32 irqinten;
+	u32 host_ipc;
+	u32 hipcie;
+	int ret1;
+	int ret;
+
+	/* read Interrupt IP Pointer */
+	hfintipptr = snd_sof_dsp_read(sdev, HDA_DSP_BAR, MTL_HFINTIPPTR) & MTL_HFINTIPPTR_PTR_MASK;
+
+	/* Disable Host IPC and SOUNDWIRE */
+	snd_sof_dsp_update_bits(sdev, HDA_DSP_BAR, hfintipptr,
+				MTL_IRQ_INTEN_L_HOST_IPC_MASK | MTL_IRQ_INTEN_L_SOUNDWIRE_MASK, 0);
+
+	/* check if operation was successful */
+	host_ipc = MTL_IRQ_INTEN_L_HOST_IPC_MASK | MTL_IRQ_INTEN_L_SOUNDWIRE_MASK;
+	irqinten = snd_sof_dsp_read(sdev, HDA_DSP_BAR, hfintipptr);
+	ret = snd_sof_dsp_read_poll_timeout(sdev, HDA_DSP_BAR, hfintipptr, irqinten,
+					    (irqinten & host_ipc) == 0,
+					    HDA_DSP_REG_POLL_INTERVAL_US, HDA_DSP_RESET_TIMEOUT_US);
+	/* Continue to disable other interrupts when error happens */
+	if (ret < 0)
+		dev_err(sdev->dev, "failed to disable Host IPC and SoundWire\n");
+
+	/* Set Host IPC interrupt disable */
+	snd_sof_dsp_update_bits(sdev, HDA_DSP_BAR, MTL_DSP_REG_HfHIPCIE,
+				MTL_DSP_REG_HfHIPCIE_IE_MASK, 0);
+
+	/* check if operation was successful */
+	host_ipc = MTL_DSP_REG_HfHIPCIE_IE_MASK;
+	hipcie = snd_sof_dsp_read(sdev, HDA_DSP_BAR, MTL_DSP_REG_HfHIPCIE);
+	ret1 = snd_sof_dsp_read_poll_timeout(sdev, HDA_DSP_BAR, MTL_DSP_REG_HfHIPCIE, hipcie,
+					     (hipcie & host_ipc) == 0,
+					     HDA_DSP_REG_POLL_INTERVAL_US,
+					     HDA_DSP_RESET_TIMEOUT_US);
+	if (ret1 < 0) {
+		dev_err(sdev->dev, "failed to set Host IPC interrupt disable\n");
+		if (!ret)
+			ret = ret1;
+	}
+
+	/* Set SoundWire IPC interrupt disable */
+	snd_sof_dsp_update_bits(sdev, HDA_DSP_BAR, MTL_DSP_REG_HfSNDWIE,
+				MTL_DSP_REG_HfSNDWIE_IE_MASK, 0);
+	host_ipc = MTL_DSP_REG_HfSNDWIE_IE_MASK;
+	hipcie = snd_sof_dsp_read(sdev, HDA_DSP_BAR, MTL_DSP_REG_HfSNDWIE);
+	ret1 = snd_sof_dsp_read_poll_timeout(sdev, HDA_DSP_BAR, MTL_DSP_REG_HfSNDWIE, hipcie,
+					     (hipcie & host_ipc) == 0,
+					     HDA_DSP_REG_POLL_INTERVAL_US,
+					     HDA_DSP_RESET_TIMEOUT_US);
+	if (ret1 < 0) {
+		dev_err(sdev->dev, "failed to set SoundWire IPC interrupt disable\n");
+		if (!ret)
+			ret = ret1;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -232,6 +354,10 @@ static int mtl_dsp_pre_fw_run(struct snd_sof_dev *sdev)
 
 	/* poll with timeout to check if operation successful */
 	cpa = MTL_HFDSSCS_CPA_MASK;
+<<<<<<< HEAD
+=======
+	dsphfdsscs = snd_sof_dsp_read(sdev, HDA_DSP_BAR, MTL_HFDSSCS);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = snd_sof_dsp_read_poll_timeout(sdev, HDA_DSP_BAR, MTL_HFDSSCS, dsphfdsscs,
 					    (dsphfdsscs & cpa) == cpa, HDA_DSP_REG_POLL_INTERVAL_US,
 					    HDA_DSP_RESET_TIMEOUT_US);
@@ -248,6 +374,10 @@ static int mtl_dsp_pre_fw_run(struct snd_sof_dev *sdev)
 
 	/* poll with timeout to check if operation successful */
 	pgs = MTL_HFPWRSTS_DSPHPXPGS_MASK;
+<<<<<<< HEAD
+=======
+	dsphfpwrsts = snd_sof_dsp_read(sdev, HDA_DSP_BAR, MTL_HFPWRSTS);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = snd_sof_dsp_read_poll_timeout(sdev, HDA_DSP_BAR, MTL_HFPWRSTS, dsphfpwrsts,
 					    (dsphfpwrsts & pgs) == pgs,
 					    HDA_DSP_REG_POLL_INTERVAL_US,
@@ -256,7 +386,11 @@ static int mtl_dsp_pre_fw_run(struct snd_sof_dev *sdev)
 		dev_err(sdev->dev, "failed to power up gated DSP domain\n");
 
 	/* make sure SoundWire is not power-gated */
+<<<<<<< HEAD
 	snd_sof_dsp_update_bits(sdev, HDA_DSP_BAR, MTL_HFPWRCTL,
+=======
+	snd_sof_dsp_update_bits(sdev, HDA_DSP_HDA_BAR, MTL_HFPWRCTL,
+>>>>>>> b7ba80a49124 (Commit)
 				MTL_HfPWRCTL_WPIOXPG(1), MTL_HfPWRCTL_WPIOXPG(1));
 	return ret;
 }
@@ -363,7 +497,11 @@ static int mtl_dsp_core_power_down(struct snd_sof_dev *sdev, int core)
 	snd_sof_dsp_update_bits(sdev, HDA_DSP_BAR, MTL_DSP2CXCTL_PRIMARY_CORE,
 				MTL_DSP2CXCTL_PRIMARY_CORE_SPA_MASK, 0);
 
+<<<<<<< HEAD
 	/* Wait for unstable CPA read (0 then 1 then 0) just after setting SPA bit */
+=======
+	/* Wait for unstable CPA read (1 then 0 then 1) just after setting SPA bit */
+>>>>>>> b7ba80a49124 (Commit)
 	usleep_range(1000, 1010);
 
 	ret = snd_sof_dsp_read_poll_timeout(sdev, HDA_DSP_BAR, MTL_DSP2CXCTL_PRIMARY_CORE, dspcxctl,
@@ -376,6 +514,7 @@ static int mtl_dsp_core_power_down(struct snd_sof_dev *sdev, int core)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int mtl_power_down_dsp(struct snd_sof_dev *sdev)
 {
 	u32 dsphfdsscs, cpa;
@@ -403,6 +542,8 @@ static int mtl_power_down_dsp(struct snd_sof_dev *sdev)
 					     HDA_DSP_RESET_TIMEOUT_US);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mtl_dsp_cl_init(struct snd_sof_dev *sdev, int stream_tag, bool imr_boot)
 {
 	struct sof_intel_hda_dev *hda = sdev->pdata->hw_pdata;
@@ -443,7 +584,11 @@ static int mtl_dsp_cl_init(struct snd_sof_dev *sdev, int stream_tag, bool imr_bo
 				       chip->ipc_ack_mask);
 
 	/* step 4: enable interrupts */
+<<<<<<< HEAD
 	ret = mtl_enable_interrupts(sdev, true);
+=======
+	ret = mtl_enable_interrupts(sdev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0) {
 		if (hda->boot_iteration == HDA_FW_BOOT_ATTEMPTS)
 			dev_err(sdev->dev, "%s: failed to enable interrupts\n", __func__);
@@ -470,13 +615,19 @@ static irqreturn_t mtl_ipc_irq_thread(int irq, void *context)
 {
 	struct sof_ipc4_msg notification_data = {{ 0 }};
 	struct snd_sof_dev *sdev = context;
+<<<<<<< HEAD
 	bool ack_received = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool ipc_irq = false;
 	u32 hipcida;
 	u32 hipctdr;
 
 	hipcida = snd_sof_dsp_read(sdev, HDA_DSP_BAR, MTL_DSP_REG_HFIPCXIDA);
+<<<<<<< HEAD
 	hipctdr = snd_sof_dsp_read(sdev, HDA_DSP_BAR, MTL_DSP_REG_HFIPCXTDR);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* reply message from DSP */
 	if (hipcida & MTL_DSP_REG_HFIPCXIDA_DONE) {
@@ -487,9 +638,15 @@ static irqreturn_t mtl_ipc_irq_thread(int irq, void *context)
 		mtl_ipc_dsp_done(sdev);
 
 		ipc_irq = true;
+<<<<<<< HEAD
 		ack_received = true;
 	}
 
+=======
+	}
+
+	hipctdr = snd_sof_dsp_read(sdev, HDA_DSP_BAR, MTL_DSP_REG_HFIPCXTDR);
+>>>>>>> b7ba80a49124 (Commit)
 	if (hipctdr & MTL_DSP_REG_HFIPCXTDR_BUSY) {
 		/* Message from DSP (reply or notification) */
 		u32 extension = snd_sof_dsp_read(sdev, HDA_DSP_BAR, MTL_DSP_REG_HFIPCXTDDY);
@@ -510,7 +667,10 @@ static irqreturn_t mtl_ipc_irq_thread(int irq, void *context)
 				spin_lock_irq(&sdev->ipc_lock);
 
 				snd_sof_ipc_get_reply(sdev);
+<<<<<<< HEAD
 				mtl_ipc_host_done(sdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				snd_sof_ipc_reply(sdev, data->primary);
 
 				spin_unlock_irq(&sdev->ipc_lock);
@@ -527,10 +687,17 @@ static irqreturn_t mtl_ipc_irq_thread(int irq, void *context)
 			sdev->ipc->msg.rx_data = &notification_data;
 			snd_sof_ipc_msgs_rx(sdev);
 			sdev->ipc->msg.rx_data = NULL;
+<<<<<<< HEAD
 
 			mtl_ipc_host_done(sdev);
 		}
 
+=======
+		}
+
+		mtl_ipc_host_done(sdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 		ipc_irq = true;
 	}
 
@@ -539,6 +706,7 @@ static irqreturn_t mtl_ipc_irq_thread(int irq, void *context)
 		dev_dbg_ratelimited(sdev->dev, "nothing to do in IPC IRQ thread\n");
 	}
 
+<<<<<<< HEAD
 	if (ack_received) {
 		struct sof_intel_hda_dev *hdev = sdev->pdata->hw_pdata;
 
@@ -546,6 +714,8 @@ static irqreturn_t mtl_ipc_irq_thread(int irq, void *context)
 			mtl_ipc_send_msg(sdev, hdev->delayed_ipc_tx_msg);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return IRQ_HANDLED;
 }
 
@@ -559,6 +729,7 @@ static int mtl_dsp_ipc_get_window_offset(struct snd_sof_dev *sdev, u32 id)
 	return MTL_SRAM_WINDOW_OFFSET(id);
 }
 
+<<<<<<< HEAD
 static void mtl_ipc_dump(struct snd_sof_dev *sdev)
 {
 	u32 hipcidr, hipcidd, hipcida, hipctdr, hipctdd, hipctda, hipcctl;
@@ -593,6 +764,168 @@ static u64 mtl_dsp_get_stream_hda_link_position(struct snd_sof_dev *sdev,
 	llp_l = snd_sof_dsp_read(sdev, HDA_DSP_HDA_BAR, MTL_PPLCLLPL(hstream->index));
 	llp_u = snd_sof_dsp_read(sdev, HDA_DSP_HDA_BAR, MTL_PPLCLLPU(hstream->index));
 	return ((u64)llp_u << 32) | llp_l;
+=======
+static int mtl_suspend(struct snd_sof_dev *sdev, bool runtime_suspend)
+{
+	struct sof_intel_hda_dev *hda = sdev->pdata->hw_pdata;
+	const struct sof_intel_dsp_desc *chip = hda->desc;
+#if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
+	struct hdac_bus *bus = sof_to_bus(sdev);
+#endif
+	u32 dsphfdsscs;
+	u32 cpa;
+	int ret;
+	int i;
+
+	mtl_disable_ipc_interrupts(sdev);
+	ret = mtl_disable_interrupts(sdev);
+	if (ret)
+		return ret;
+
+#if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
+	hda_codec_jack_wake_enable(sdev, runtime_suspend);
+	/* power down all hda link */
+	snd_hdac_ext_bus_link_power_down_all(bus);
+#endif
+	snd_sof_dsp_update_bits(sdev, HDA_DSP_BAR, MTL_HFPWRCTL,
+				MTL_HFPWRCTL_WPDSPHPXPG, 0);
+
+	/* Set the DSP subsystem power down */
+	snd_sof_dsp_update_bits(sdev, HDA_DSP_BAR, MTL_HFDSSCS,
+				MTL_HFDSSCS_SPA_MASK, 0);
+
+	/* Wait for unstable CPA read (1 then 0 then 1) just after setting SPA bit */
+	usleep_range(1000, 1010);
+
+	/* poll with timeout to check if operation successful */
+	cpa = MTL_HFDSSCS_CPA_MASK;
+	dsphfdsscs = snd_sof_dsp_read(sdev, HDA_DSP_BAR, MTL_HFDSSCS);
+	ret = snd_sof_dsp_read_poll_timeout(sdev, HDA_DSP_BAR, MTL_HFDSSCS, dsphfdsscs,
+					    (dsphfdsscs & cpa) == 0, HDA_DSP_REG_POLL_INTERVAL_US,
+					HDA_DSP_RESET_TIMEOUT_US);
+	if (ret < 0)
+		dev_err(sdev->dev, "failed to disable DSP subsystem\n");
+
+	/* reset ref counts for all cores */
+	for (i = 0; i < chip->cores_num; i++)
+		sdev->dsp_core_ref_count[i] = 0;
+
+	/* TODO: need to reset controller? */
+
+	/* display codec can be powered off after link reset */
+	hda_codec_i915_display_power(sdev, false);
+
+	return 0;
+}
+
+static int mtl_dsp_suspend(struct snd_sof_dev *sdev, u32 target_state)
+{
+	const struct sof_dsp_power_state target_dsp_state = {
+		.state = target_state,
+		.substate = target_state == SOF_DSP_PM_D0 ?
+				SOF_HDA_DSP_PM_D0I3 : 0,
+	};
+	int ret;
+
+	ret = mtl_suspend(sdev, false);
+	if (ret < 0)
+		return ret;
+
+	return snd_sof_dsp_set_power_state(sdev, &target_dsp_state);
+}
+
+static int mtl_dsp_runtime_suspend(struct snd_sof_dev *sdev)
+{
+	const struct sof_dsp_power_state target_state = {
+		.state = SOF_DSP_PM_D3,
+	};
+	int ret;
+
+	ret = mtl_suspend(sdev, true);
+	if (ret < 0)
+		return ret;
+
+	return snd_sof_dsp_set_power_state(sdev, &target_state);
+}
+
+static int mtl_resume(struct snd_sof_dev *sdev, bool runtime_resume)
+{
+#if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
+	struct hdac_bus *bus = sof_to_bus(sdev);
+	struct hdac_ext_link *hlink = NULL;
+#endif
+
+	/* display codec must be powered before link reset */
+	hda_codec_i915_display_power(sdev, true);
+
+#if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
+	/* check jack status */
+	if (runtime_resume) {
+		hda_codec_jack_wake_enable(sdev, false);
+		if (sdev->system_suspend_target == SOF_SUSPEND_NONE)
+			hda_codec_jack_check(sdev);
+	}
+
+	/* turn off the links that were off before suspend */
+	list_for_each_entry(hlink, &bus->hlink_list, list) {
+		if (!hlink->ref_count)
+			snd_hdac_ext_bus_link_power_down(hlink);
+	}
+
+	/* check dma status and clean up CORB/RIRB buffers */
+	if (!bus->cmd_dma_state)
+		snd_hdac_bus_stop_cmd_io(bus);
+#endif
+
+	return 0;
+}
+
+static int mtl_dsp_resume(struct snd_sof_dev *sdev)
+{
+	const struct sof_dsp_power_state target_state = {
+		.state = SOF_DSP_PM_D0,
+		.substate = SOF_HDA_DSP_PM_D0I0,
+	};
+	int ret;
+
+	ret = mtl_resume(sdev, false);
+	if (ret < 0)
+		return ret;
+
+	return snd_sof_dsp_set_power_state(sdev, &target_state);
+}
+
+static int mtl_dsp_runtime_resume(struct snd_sof_dev *sdev)
+{
+	const struct sof_dsp_power_state target_state = {
+		.state = SOF_DSP_PM_D0,
+	};
+	int ret;
+
+	ret = mtl_resume(sdev, true);
+	if (ret < 0)
+		return ret;
+
+	return snd_sof_dsp_set_power_state(sdev, &target_state);
+}
+
+static void mtl_ipc_dump(struct snd_sof_dev *sdev)
+{
+	u32 hipcctl;
+	u32 hipcida;
+	u32 hipctdr;
+
+	/* read IPC status */
+	hipcida = snd_sof_dsp_read(sdev, HDA_DSP_BAR, MTL_DSP_REG_HFIPCXIDA);
+	hipcctl = snd_sof_dsp_read(sdev, HDA_DSP_BAR, MTL_DSP_REG_HFIPCXCTL);
+	hipctdr = snd_sof_dsp_read(sdev, HDA_DSP_BAR, MTL_DSP_REG_HFIPCXTDR);
+
+	/* dump the IPC regs */
+	/* TODO: parse the raw msg */
+	dev_err(sdev->dev,
+		"error: host status 0x%8.8x dsp status 0x%8.8x mask 0x%8.8x\n",
+		hipcida, hipctdr, hipcctl);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Meteorlake ops */
@@ -633,7 +966,15 @@ int sof_mtl_ops_init(struct snd_sof_dev *sdev)
 	/* dsp core get/put */
 	/* TODO: add core_get and core_put */
 
+<<<<<<< HEAD
 	sof_mtl_ops.get_stream_position = mtl_dsp_get_stream_hda_link_position;
+=======
+	/* PM */
+	sof_mtl_ops.suspend = mtl_dsp_suspend;
+	sof_mtl_ops.resume = mtl_dsp_resume;
+	sof_mtl_ops.runtime_suspend = mtl_dsp_runtime_suspend;
+	sof_mtl_ops.runtime_resume = mtl_dsp_runtime_resume;
+>>>>>>> b7ba80a49124 (Commit)
 
 	sdev->private = devm_kzalloc(sdev->dev, sizeof(struct sof_ipc4_fw_data), GFP_KERNEL);
 	if (!sdev->private)
@@ -644,9 +985,12 @@ int sof_mtl_ops_init(struct snd_sof_dev *sdev)
 
 	ipc4_data->mtrace_type = SOF_IPC4_MTRACE_INTEL_CAVS_2;
 
+<<<<<<< HEAD
 	/* External library loading support */
 	ipc4_data->load_library = hda_dsp_ipc4_load_library;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* set DAI ops */
 	hda_set_dai_drv_ops(sdev, &sof_mtl_ops);
 
@@ -669,6 +1013,7 @@ const struct sof_intel_dsp_desc mtl_chip_info = {
 	.ssp_base_offset = CNL_SSP_BASE_OFFSET,
 	.sdw_shim_base = SDW_SHIM_BASE_ACE,
 	.sdw_alh_base = SDW_ALH_BASE_ACE,
+<<<<<<< HEAD
 	.d0i3_offset = MTL_HDA_VS_D0I3C,
 	.read_sdw_lcount =  hda_sdw_check_lcount_common,
 	.enable_sdw_irq = mtl_enable_sdw_irq,
@@ -677,6 +1022,11 @@ const struct sof_intel_dsp_desc mtl_chip_info = {
 	.cl_init = mtl_dsp_cl_init,
 	.power_down_dsp = mtl_power_down_dsp,
 	.disable_interrupts = mtl_dsp_disable_interrupts,
+=======
+	.check_sdw_irq = mtl_dsp_check_sdw_irq,
+	.check_ipc_irq = mtl_dsp_check_ipc_irq,
+	.cl_init = mtl_dsp_cl_init,
+>>>>>>> b7ba80a49124 (Commit)
 	.hw_ip_version = SOF_INTEL_ACE_1_0,
 };
 EXPORT_SYMBOL_NS(mtl_chip_info, SND_SOC_SOF_INTEL_HDA_COMMON);

@@ -17,7 +17,11 @@
 #include <linux/platform_device.h>
 #include <linux/cpuidle.h>
 #include <linux/cpu_pm.h>
+<<<<<<< HEAD
 #include <linux/firmware/qcom/qcom_scm.h>
+=======
+#include <linux/qcom_scm.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <soc/qcom/spm.h>
 
 #include <asm/proc-fns.h>
@@ -58,8 +62,13 @@ static int qcom_cpu_spc(struct spm_driver_data *drv)
 	return ret;
 }
 
+<<<<<<< HEAD
 static __cpuidle int spm_enter_idle_state(struct cpuidle_device *dev,
 					  struct cpuidle_driver *drv, int idx)
+=======
+static int spm_enter_idle_state(struct cpuidle_device *dev,
+				struct cpuidle_driver *drv, int idx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cpuidle_qcom_spm_data *data = container_of(drv, struct cpuidle_qcom_spm_data,
 							  cpuidle_driver);

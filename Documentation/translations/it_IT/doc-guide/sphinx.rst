@@ -151,8 +151,12 @@ Ovviamente, per generare la documentazione, Sphinx (``sphinx-build``)
 dev'essere installato. Se disponibile, il tema *Read the Docs* per Sphinx
 verrà utilizzato per ottenere una documentazione HTML più gradevole.
 Per la documentazione in formato PDF, invece, avrete bisogno di ``XeLaTeX`
+<<<<<<< HEAD
 e di ``convert(1)`` disponibile in ImageMagick
 (https://www.imagemagick.org). \ [#ink]_
+=======
+e di ``convert(1)`` disponibile in ImageMagick (https://www.imagemagick.org).
+>>>>>>> b7ba80a49124 (Commit)
 Tipicamente, tutti questi pacchetti sono disponibili e pacchettizzati nelle
 distribuzioni Linux.
 
@@ -163,6 +167,7 @@ la generazione potete usare il seguente comando ``make SPHINXOPTS=-v htmldocs``.
 Potete anche personalizzare l'ouptut html passando un livello aggiuntivo
 DOCS_CSS usando la rispettiva variabile d'ambiente ``DOCS_CSS``.
 
+<<<<<<< HEAD
 La variable make ``SPHINXDIRS`` è utile quando si vuole generare solo una parte
 della documentazione. Per esempio, si possono generare solo di documenti in
 ``Documentation/doc-guide`` eseguendo ``make SPHINXDIRS=doc-guide htmldocs``. La
@@ -177,6 +182,11 @@ Potete eliminare la documentazione generata tramite il comando
           nel documento PDF, specialmente per quando si usando rilasci del
           kernel uguali o superiori a 5.18
 
+=======
+Potete eliminare la documentazione generata tramite il comando
+``make cleandocs``.
+
+>>>>>>> b7ba80a49124 (Commit)
 Scrivere la documentazione
 ==========================
 

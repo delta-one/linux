@@ -68,12 +68,15 @@ def generate_crates(srctree, objtree, sysroot_src):
     crates[-1]["proc_macro_dylib_path"] = "rust/libmacros.so"
 
     append_crate(
+<<<<<<< HEAD
         "build_error",
         srctree / "rust" / "build_error.rs",
         ["core", "compiler_builtins"],
     )
 
     append_crate(
+=======
+>>>>>>> b7ba80a49124 (Commit)
         "bindings",
         srctree / "rust"/ "bindings" / "lib.rs",
         ["core"],
@@ -84,7 +87,11 @@ def generate_crates(srctree, objtree, sysroot_src):
     append_crate(
         "kernel",
         srctree / "rust" / "kernel" / "lib.rs",
+<<<<<<< HEAD
         ["core", "alloc", "macros", "build_error", "bindings"],
+=======
+        ["core", "alloc", "macros", "bindings"],
+>>>>>>> b7ba80a49124 (Commit)
         cfg=cfg,
     )
     crates[-1]["source"] = {

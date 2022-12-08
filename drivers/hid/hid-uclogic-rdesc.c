@@ -859,12 +859,15 @@ const __u8 uclogic_rdesc_v2_frame_dial_arr[] = {
 const size_t uclogic_rdesc_v2_frame_dial_size =
 			sizeof(uclogic_rdesc_v2_frame_dial_arr);
 
+<<<<<<< HEAD
 const __u8 uclogic_ugee_v2_probe_arr[] = {
 	0x02, 0xb0, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 const size_t uclogic_ugee_v2_probe_size = sizeof(uclogic_ugee_v2_probe_arr);
 const int uclogic_ugee_v2_probe_endpoint = 0x03;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Fixed report descriptor template for UGEE v2 pen reports */
 const __u8 uclogic_rdesc_ugee_v2_pen_template_arr[] = {
 	0x05, 0x0d,         /*  Usage Page (Digitizers),                */
@@ -1041,6 +1044,7 @@ const __u8 uclogic_rdesc_ugee_v2_frame_mouse_template_arr[] = {
 const size_t uclogic_rdesc_ugee_v2_frame_mouse_template_size =
 			sizeof(uclogic_rdesc_ugee_v2_frame_mouse_template_arr);
 
+<<<<<<< HEAD
 /* Fixed report descriptor template for UGEE v2 battery reports */
 const __u8 uclogic_rdesc_ugee_v2_battery_template_arr[] = {
 	0x05, 0x01,         /*  Usage Page (Desktop),                   */
@@ -1075,6 +1079,8 @@ const __u8 uclogic_rdesc_ugee_v2_battery_template_arr[] = {
 const size_t uclogic_rdesc_ugee_v2_battery_template_size =
 			sizeof(uclogic_rdesc_ugee_v2_battery_template_arr);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Fixed report descriptor for Ugee EX07 frame */
 const __u8 uclogic_rdesc_ugee_ex07_frame_arr[] = {
 	0x05, 0x01,             /*  Usage Page (Desktop),                   */
@@ -1233,7 +1239,11 @@ __u8 *uclogic_rdesc_template_apply(const __u8 *template_ptr,
 			   p[sizeof(btn_head)] < param_num) {
 			v = param_list[p[sizeof(btn_head)]];
 			put_unaligned((__u8)0x2A, p); /* Usage Maximum */
+<<<<<<< HEAD
 			put_unaligned((__force u16)cpu_to_le16(v), (s16 *)(p + 1));
+=======
+			put_unaligned_le16((__force u16)cpu_to_le16(v), p + 1);
+>>>>>>> b7ba80a49124 (Commit)
 			p += sizeof(btn_head) + 1;
 		} else {
 			p++;

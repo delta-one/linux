@@ -108,12 +108,17 @@
 #define F_MMU_INT_ID_SUB_COMM_ID(a)		(((a) >> 7) & 0x3)
 #define F_MMU_INT_ID_COMM_ID_EXT(a)		(((a) >> 10) & 0x7)
 #define F_MMU_INT_ID_SUB_COMM_ID_EXT(a)		(((a) >> 7) & 0x7)
+<<<<<<< HEAD
 /* Macro for 5 bits length port ID field (default) */
 #define F_MMU_INT_ID_LARB_ID(a)			(((a) >> 7) & 0x7)
 #define F_MMU_INT_ID_PORT_ID(a)			(((a) >> 2) & 0x1f)
 /* Macro for 6 bits length port ID field */
 #define F_MMU_INT_ID_LARB_ID_WID_6(a)		(((a) >> 8) & 0x7)
 #define F_MMU_INT_ID_PORT_ID_WID_6(a)		(((a) >> 2) & 0x3f)
+=======
+#define F_MMU_INT_ID_LARB_ID(a)			(((a) >> 7) & 0x7)
+#define F_MMU_INT_ID_PORT_ID(a)			(((a) >> 2) & 0x1f)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MTK_PROTECT_PA_ALIGN			256
 #define MTK_IOMMU_BANK_SZ			0x1000
@@ -142,8 +147,11 @@
 #define PM_CLK_AO			BIT(15)
 #define IFA_IOMMU_PCIE_SUPPORT		BIT(16)
 #define PGTABLE_PA_35_EN		BIT(17)
+<<<<<<< HEAD
 #define TF_PORT_TO_ADDR_MT8173		BIT(18)
 #define INT_ID_PORT_WIDTH_6		BIT(19)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MTK_IOMMU_HAS_FLAG_MASK(pdata, _x, mask)	\
 				((((pdata)->flags) & (mask)) == (_x))
@@ -163,14 +171,20 @@
 enum mtk_iommu_plat {
 	M4U_MT2712,
 	M4U_MT6779,
+<<<<<<< HEAD
 	M4U_MT6795,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	M4U_MT8167,
 	M4U_MT8173,
 	M4U_MT8183,
 	M4U_MT8186,
 	M4U_MT8192,
 	M4U_MT8195,
+<<<<<<< HEAD
 	M4U_MT8365,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mtk_iommu_iova_region {
@@ -229,7 +243,14 @@ struct mtk_iommu_data {
 	struct device			*smicomm_dev;
 
 	struct mtk_iommu_bank_data	*bank;
+<<<<<<< HEAD
 	struct regmap			*pericfg;
+=======
+
+	struct dma_iommu_mapping	*mapping; /* For mtk_iommu_v1.c */
+	struct regmap			*pericfg;
+
+>>>>>>> b7ba80a49124 (Commit)
 	struct mutex			mutex; /* Protect m4u_group/m4u_dom above */
 
 	/*
@@ -444,6 +465,7 @@ static irqreturn_t mtk_iommu_isr(int irq, void *dev_id)
 	fault_pa |= (u64)pa34_32 << 32;
 
 	if (MTK_IOMMU_IS_TYPE(plat_data, MTK_IOMMU_TYPE_MM)) {
+<<<<<<< HEAD
 		if (MTK_IOMMU_HAS_FLAG(plat_data, HAS_SUB_COMM_2BITS)) {
 			fault_larb = F_MMU_INT_ID_COMM_ID(regval);
 			sub_comm = F_MMU_INT_ID_SUB_COMM_ID(regval);
@@ -457,12 +479,26 @@ static irqreturn_t mtk_iommu_isr(int irq, void *dev_id)
 			fault_larb = F_MMU_INT_ID_LARB_ID_WID_6(regval);
 		} else {
 			fault_port = F_MMU_INT_ID_PORT_ID(regval);
+=======
+		fault_port = F_MMU_INT_ID_PORT_ID(regval);
+		if (MTK_IOMMU_HAS_FLAG(plat_data, HAS_SUB_COMM_2BITS)) {
+			fault_larb = F_MMU_INT_ID_COMM_ID(regval);
+			sub_comm = F_MMU_INT_ID_SUB_COMM_ID(regval);
+		} else if (MTK_IOMMU_HAS_FLAG(plat_data, HAS_SUB_COMM_3BITS)) {
+			fault_larb = F_MMU_INT_ID_COMM_ID_EXT(regval);
+			sub_comm = F_MMU_INT_ID_SUB_COMM_ID_EXT(regval);
+		} else {
+>>>>>>> b7ba80a49124 (Commit)
 			fault_larb = F_MMU_INT_ID_LARB_ID(regval);
 		}
 		fault_larb = data->plat_data->larbid_remap[fault_larb][sub_comm];
 	}
 
+<<<<<<< HEAD
 	if (!dom || report_iommu_fault(&dom->domain, bank->parent_dev, fault_iova,
+=======
+	if (report_iommu_fault(&dom->domain, bank->parent_dev, fault_iova,
+>>>>>>> b7ba80a49124 (Commit)
 			       write ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ)) {
 		dev_err_ratelimited(
 			bank->parent_dev,
@@ -617,7 +653,11 @@ static int mtk_iommu_domain_finalise(struct mtk_iommu_domain *dom,
 	dom->iop = alloc_io_pgtable_ops(ARM_V7S, &dom->cfg, data);
 	if (!dom->iop) {
 		dev_err(data->dev, "Failed to alloc io pgtable\n");
+<<<<<<< HEAD
 		return -ENOMEM;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Update our support page sizes bitmap */
@@ -676,7 +716,11 @@ static int mtk_iommu_attach_device(struct iommu_domain *domain,
 		ret = mtk_iommu_domain_finalise(dom, frstdata, region_id);
 		if (ret) {
 			mutex_unlock(&dom->mutex);
+<<<<<<< HEAD
 			return ret;
+=======
+			return -ENODEV;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		dom->bank = &data->bank[bankid];
 	}
@@ -710,9 +754,22 @@ err_unlock:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int mtk_iommu_map(struct iommu_domain *domain, unsigned long iova,
 			 phys_addr_t paddr, size_t pgsize, size_t pgcount,
 			 int prot, gfp_t gfp, size_t *mapped)
+=======
+static void mtk_iommu_detach_device(struct iommu_domain *domain,
+				    struct device *dev)
+{
+	struct mtk_iommu_data *data = dev_iommu_priv_get(dev);
+
+	mtk_iommu_config(data, dev, false, 0);
+}
+
+static int mtk_iommu_map(struct iommu_domain *domain, unsigned long iova,
+			 phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mtk_iommu_domain *dom = to_mtk_domain(domain);
 
@@ -721,17 +778,30 @@ static int mtk_iommu_map(struct iommu_domain *domain, unsigned long iova,
 		paddr |= BIT_ULL(32);
 
 	/* Synchronize with the tlb_lock */
+<<<<<<< HEAD
 	return dom->iop->map_pages(dom->iop, iova, paddr, pgsize, pgcount, prot, gfp, mapped);
 }
 
 static size_t mtk_iommu_unmap(struct iommu_domain *domain,
 			      unsigned long iova, size_t pgsize, size_t pgcount,
+=======
+	return dom->iop->map(dom->iop, iova, paddr, size, prot, gfp);
+}
+
+static size_t mtk_iommu_unmap(struct iommu_domain *domain,
+			      unsigned long iova, size_t size,
+>>>>>>> b7ba80a49124 (Commit)
 			      struct iommu_iotlb_gather *gather)
 {
 	struct mtk_iommu_domain *dom = to_mtk_domain(domain);
 
+<<<<<<< HEAD
 	iommu_iotlb_gather_add_range(gather, iova, pgsize * pgcount);
 	return dom->iop->unmap_pages(dom->iop, iova, pgsize, pgcount, gather);
+=======
+	iommu_iotlb_gather_add_range(gather, iova, size);
+	return dom->iop->unmap(dom->iop, iova, size, gather);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mtk_iommu_flush_iotlb_all(struct iommu_domain *domain)
@@ -918,8 +988,12 @@ static void mtk_iommu_get_resv_regions(struct device *dev,
 			continue;
 
 		region = iommu_alloc_resv_region(resv->iova_base, resv->size,
+<<<<<<< HEAD
 						 prot, IOMMU_RESV_RESERVED,
 						 GFP_KERNEL);
+=======
+						 prot, IOMMU_RESV_RESERVED);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!region)
 			return;
 
@@ -938,8 +1012,14 @@ static const struct iommu_ops mtk_iommu_ops = {
 	.owner		= THIS_MODULE,
 	.default_domain_ops = &(const struct iommu_domain_ops) {
 		.attach_dev	= mtk_iommu_attach_device,
+<<<<<<< HEAD
 		.map_pages	= mtk_iommu_map,
 		.unmap_pages	= mtk_iommu_unmap,
+=======
+		.detach_dev	= mtk_iommu_detach_device,
+		.map		= mtk_iommu_map,
+		.unmap		= mtk_iommu_unmap,
+>>>>>>> b7ba80a49124 (Commit)
 		.flush_iotlb_all = mtk_iommu_flush_iotlb_all,
 		.iotlb_sync	= mtk_iommu_iotlb_sync,
 		.iotlb_sync_map	= mtk_iommu_sync_map,
@@ -958,7 +1038,11 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data, unsigned int ban
 	 * Global control settings are in bank0. May re-init these global registers
 	 * since no sure if there is bank0 consumers.
 	 */
+<<<<<<< HEAD
 	if (MTK_IOMMU_HAS_FLAG(data->plat_data, TF_PORT_TO_ADDR_MT8173)) {
+=======
+	if (data->plat_data->m4u_plat == M4U_MT8173) {
+>>>>>>> b7ba80a49124 (Commit)
 		regval = F_MMU_PREFETCH_RT_REPLACE_MOD |
 			 F_MMU_TF_PROT_TO_PROGRAM_ADDR_MT8173;
 	} else {
@@ -1043,14 +1127,20 @@ static const struct component_master_ops mtk_iommu_com_ops = {
 static int mtk_iommu_mm_dts_parse(struct device *dev, struct component_match **match,
 				  struct mtk_iommu_data *data)
 {
+<<<<<<< HEAD
 	struct device_node *larbnode, *frst_avail_smicomm_node = NULL;
 	struct platform_device *plarbdev, *pcommdev;
+=======
+	struct device_node *larbnode, *smicomm_node, *smi_subcomm_node;
+	struct platform_device *plarbdev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct device_link *link;
 	int i, larb_nr, ret;
 
 	larb_nr = of_count_phandle_with_args(dev->of_node, "mediatek,larbs", NULL);
 	if (larb_nr < 0)
 		return larb_nr;
+<<<<<<< HEAD
 	if (larb_nr == 0 || larb_nr > MTK_LARB_NR_MAX)
 		return -EINVAL;
 
@@ -1063,6 +1153,15 @@ static int mtk_iommu_mm_dts_parse(struct device *dev, struct component_match **m
 			ret = -EINVAL;
 			goto err_larbdev_put;
 		}
+=======
+
+	for (i = 0; i < larb_nr; i++) {
+		u32 id;
+
+		larbnode = of_parse_phandle(dev->of_node, "mediatek,larbs", i);
+		if (!larbnode)
+			return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!of_device_is_available(larbnode)) {
 			of_node_put(larbnode);
@@ -1072,6 +1171,7 @@ static int mtk_iommu_mm_dts_parse(struct device *dev, struct component_match **m
 		ret = of_property_read_u32(larbnode, "mediatek,larb-id", &id);
 		if (ret)/* The id is consecutive if there is no this property */
 			id = i;
+<<<<<<< HEAD
 		if (id >= MTK_LARB_NR_MAX) {
 			of_node_put(larbnode);
 			ret = -EINVAL;
@@ -1144,11 +1244,51 @@ static int mtk_iommu_mm_dts_parse(struct device *dev, struct component_match **m
 	link = device_link_add(data->smicomm_dev, dev,
 			       DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME);
 	platform_device_put(pcommdev);
+=======
+
+		plarbdev = of_find_device_by_node(larbnode);
+		if (!plarbdev) {
+			of_node_put(larbnode);
+			return -ENODEV;
+		}
+		if (!plarbdev->dev.driver) {
+			of_node_put(larbnode);
+			return -EPROBE_DEFER;
+		}
+		data->larb_imu[id].dev = &plarbdev->dev;
+
+		component_match_add_release(dev, match, component_release_of,
+					    component_compare_of, larbnode);
+	}
+
+	/* Get smi-(sub)-common dev from the last larb. */
+	smi_subcomm_node = of_parse_phandle(larbnode, "mediatek,smi", 0);
+	if (!smi_subcomm_node)
+		return -EINVAL;
+
+	/*
+	 * It may have two level smi-common. the node is smi-sub-common if it
+	 * has a new mediatek,smi property. otherwise it is smi-commmon.
+	 */
+	smicomm_node = of_parse_phandle(smi_subcomm_node, "mediatek,smi", 0);
+	if (smicomm_node)
+		of_node_put(smi_subcomm_node);
+	else
+		smicomm_node = smi_subcomm_node;
+
+	plarbdev = of_find_device_by_node(smicomm_node);
+	of_node_put(smicomm_node);
+	data->smicomm_dev = &plarbdev->dev;
+
+	link = device_link_add(data->smicomm_dev, dev,
+			       DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!link) {
 		dev_err(dev, "Unable to link %s.\n", dev_name(data->smicomm_dev));
 		return -EINVAL;
 	}
 	return 0;
+<<<<<<< HEAD
 
 err_larbdev_put:
 	for (i = MTK_LARB_NR_MAX - 1; i >= 0; i--) {
@@ -1157,6 +1297,8 @@ err_larbdev_put:
 		put_device(data->larb_imu[i].dev);
 	}
 	return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mtk_iommu_probe(struct platform_device *pdev)
@@ -1221,8 +1363,11 @@ static int mtk_iommu_probe(struct platform_device *pdev)
 
 	banks_num = data->plat_data->banks_num;
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+<<<<<<< HEAD
 	if (!res)
 		return -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (resource_size(res) < banks_num * MTK_IOMMU_BANK_SZ) {
 		dev_err(dev, "banknr %d. res %pR is not enough.\n", banks_num, res);
 		return -EINVAL;
@@ -1258,6 +1403,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
 			return PTR_ERR(data->bclk);
 	}
 
+<<<<<<< HEAD
 	if (MTK_IOMMU_HAS_FLAG(data->plat_data, PGTABLE_PA_35_EN)) {
 		ret = dma_set_mask(dev, DMA_BIT_MASK(35));
 		if (!ret) {
@@ -1266,6 +1412,8 @@ static int mtk_iommu_probe(struct platform_device *pdev)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_enable(dev);
 
 	if (MTK_IOMMU_IS_TYPE(data->plat_data, MTK_IOMMU_TYPE_MM)) {
@@ -1452,6 +1600,7 @@ static const struct mtk_iommu_plat_data mt6779_data = {
 	.larbid_remap  = {{0}, {1}, {2}, {3}, {5}, {7, 8}, {10}, {9}},
 };
 
+<<<<<<< HEAD
 static const struct mtk_iommu_plat_data mt6795_data = {
 	.m4u_plat     = M4U_MT6795,
 	.flags	      = HAS_4GB_MODE | HAS_BCLK | RESET_AXI |
@@ -1465,6 +1614,8 @@ static const struct mtk_iommu_plat_data mt6795_data = {
 	.larbid_remap = {{0}, {1}, {2}, {3}, {4}}, /* Linear mapping. */
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct mtk_iommu_plat_data mt8167_data = {
 	.m4u_plat     = M4U_MT8167,
 	.flags        = RESET_AXI | HAS_LEGACY_IVRP_PADDR | MTK_IOMMU_TYPE_MM,
@@ -1479,8 +1630,12 @@ static const struct mtk_iommu_plat_data mt8167_data = {
 static const struct mtk_iommu_plat_data mt8173_data = {
 	.m4u_plat     = M4U_MT8173,
 	.flags	      = HAS_4GB_MODE | HAS_BCLK | RESET_AXI |
+<<<<<<< HEAD
 			HAS_LEGACY_IVRP_PADDR | MTK_IOMMU_TYPE_MM |
 			TF_PORT_TO_ADDR_MT8173,
+=======
+			HAS_LEGACY_IVRP_PADDR | MTK_IOMMU_TYPE_MM,
+>>>>>>> b7ba80a49124 (Commit)
 	.inv_sel_reg  = REG_MMU_INV_SEL_GEN1,
 	.banks_num    = 1,
 	.banks_enable = {true},
@@ -1574,6 +1729,7 @@ static const struct mtk_iommu_plat_data mt8195_data_vpp = {
 			   {4, MTK_INVALID_LARBID, MTK_INVALID_LARBID, MTK_INVALID_LARBID, 6}},
 };
 
+<<<<<<< HEAD
 static const struct mtk_iommu_plat_data mt8365_data = {
 	.m4u_plat	= M4U_MT8365,
 	.flags		= RESET_AXI | INT_ID_PORT_WIDTH_6,
@@ -1589,6 +1745,11 @@ static const struct of_device_id mtk_iommu_of_ids[] = {
 	{ .compatible = "mediatek,mt2712-m4u", .data = &mt2712_data},
 	{ .compatible = "mediatek,mt6779-m4u", .data = &mt6779_data},
 	{ .compatible = "mediatek,mt6795-m4u", .data = &mt6795_data},
+=======
+static const struct of_device_id mtk_iommu_of_ids[] = {
+	{ .compatible = "mediatek,mt2712-m4u", .data = &mt2712_data},
+	{ .compatible = "mediatek,mt6779-m4u", .data = &mt6779_data},
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "mediatek,mt8167-m4u", .data = &mt8167_data},
 	{ .compatible = "mediatek,mt8173-m4u", .data = &mt8173_data},
 	{ .compatible = "mediatek,mt8183-m4u", .data = &mt8183_data},
@@ -1597,7 +1758,10 @@ static const struct of_device_id mtk_iommu_of_ids[] = {
 	{ .compatible = "mediatek,mt8195-iommu-infra", .data = &mt8195_data_infra},
 	{ .compatible = "mediatek,mt8195-iommu-vdo",   .data = &mt8195_data_vdo},
 	{ .compatible = "mediatek,mt8195-iommu-vpp",   .data = &mt8195_data_vpp},
+<<<<<<< HEAD
 	{ .compatible = "mediatek,mt8365-m4u", .data = &mt8365_data},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 

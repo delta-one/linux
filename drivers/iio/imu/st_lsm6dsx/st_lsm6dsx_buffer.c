@@ -15,7 +15,11 @@
  * value of the decimation factor and ODR set for each FIFO data set.
  *
  * LSM6DSO/LSM6DSOX/ASM330LHH/ASM330LHHX/LSM6DSR/LSM6DSRX/ISM330DHCX/
+<<<<<<< HEAD
  * LSM6DST/LSM6DSOP/LSM6DSTX/LSM6DSV/ASM330LHB:
+=======
+ * LSM6DST/LSM6DSOP/LSM6DSTX:
+>>>>>>> b7ba80a49124 (Commit)
  * The FIFO buffer can be configured to store data from gyroscope and
  * accelerometer. Each sample is queued with a tag (1B) indicating data
  * source (gyroscope, accelerometer, hw timer).
@@ -457,6 +461,7 @@ int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw)
 			}
 
 			if (gyro_sip > 0 && !(sip % gyro_sensor->decimator)) {
+<<<<<<< HEAD
 				/*
 				 * We need to discards gyro samples during
 				 * filters settling time
@@ -482,6 +487,19 @@ int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw)
 						hw->iio_devs[ST_LSM6DSX_ID_ACC],
 						&hw->scan[ST_LSM6DSX_ID_ACC],
 						acc_sensor->ts_ref + ts);
+=======
+				iio_push_to_buffers_with_timestamp(
+					hw->iio_devs[ST_LSM6DSX_ID_GYRO],
+					&hw->scan[ST_LSM6DSX_ID_GYRO],
+					gyro_sensor->ts_ref + ts);
+				gyro_sip--;
+			}
+			if (acc_sip > 0 && !(sip % acc_sensor->decimator)) {
+				iio_push_to_buffers_with_timestamp(
+					hw->iio_devs[ST_LSM6DSX_ID_ACC],
+					&hw->scan[ST_LSM6DSX_ID_ACC],
+					acc_sensor->ts_ref + ts);
+>>>>>>> b7ba80a49124 (Commit)
 				acc_sip--;
 			}
 			if (ext_sip > 0 && !(sip % ext_sensor->decimator)) {
@@ -668,6 +686,7 @@ int st_lsm6dsx_flush_fifo(struct st_lsm6dsx_hw *hw)
 	return err;
 }
 
+<<<<<<< HEAD
 static void
 st_lsm6dsx_update_samples_to_discard(struct st_lsm6dsx_sensor *sensor)
 {
@@ -692,6 +711,8 @@ st_lsm6dsx_update_samples_to_discard(struct st_lsm6dsx_sensor *sensor)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int st_lsm6dsx_update_fifo(struct st_lsm6dsx_sensor *sensor, bool enable)
 {
 	struct st_lsm6dsx_hw *hw = sensor->hw;
@@ -711,12 +732,26 @@ int st_lsm6dsx_update_fifo(struct st_lsm6dsx_sensor *sensor, bool enable)
 			goto out;
 	}
 
+<<<<<<< HEAD
 	if (enable)
 		st_lsm6dsx_update_samples_to_discard(sensor);
 
 	err = st_lsm6dsx_device_set_enable(sensor, enable);
 	if (err < 0)
 		goto out;
+=======
+	if (sensor->id == ST_LSM6DSX_ID_EXT0 ||
+	    sensor->id == ST_LSM6DSX_ID_EXT1 ||
+	    sensor->id == ST_LSM6DSX_ID_EXT2) {
+		err = st_lsm6dsx_shub_set_enable(sensor, enable);
+		if (err < 0)
+			goto out;
+	} else {
+		err = st_lsm6dsx_sensor_set_enable(sensor, enable);
+		if (err < 0)
+			goto out;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = st_lsm6dsx_set_fifo_odr(sensor, enable);
 	if (err < 0)

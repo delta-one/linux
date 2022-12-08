@@ -42,11 +42,14 @@ enum vop_data_format {
 	VOP_FMT_YUV444SP,
 };
 
+<<<<<<< HEAD
 struct vop_rect {
 	int width;
 	int height;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct vop_reg {
 	uint32_t mask;
 	uint16_t offset;
@@ -230,7 +233,10 @@ struct vop_data {
 	const struct vop_win_data *win;
 	unsigned int win_size;
 	unsigned int lut_size;
+<<<<<<< HEAD
 	struct vop_rect max_output;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define VOP_FEATURE_OUTPUT_RGB10	BIT(0)
 #define VOP_FEATURE_INTERNAL_RGB	BIT(1)

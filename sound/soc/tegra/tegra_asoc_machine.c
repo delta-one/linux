@@ -51,6 +51,7 @@ static struct snd_soc_jack_gpio tegra_machine_headset_jack_gpio = {
 };
 
 /* Mic Jack */
+<<<<<<< HEAD
 static int coupled_mic_hp_check(void *data)
 {
 	struct tegra_machine *machine = (struct tegra_machine *)data;
@@ -62,6 +63,8 @@ static int coupled_mic_hp_check(void *data)
 
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct snd_soc_jack tegra_machine_mic_jack;
 
@@ -86,11 +89,19 @@ static int tegra_machine_event(struct snd_soc_dapm_widget *w,
 		gpiod_set_value_cansleep(machine->gpiod_spkr_en,
 					 SND_SOC_DAPM_EVENT_ON(event));
 
+<<<<<<< HEAD
 	if (!strcmp(w->name, "Mic Jack") || !strcmp(w->name, "Headset Mic"))
 		gpiod_set_value_cansleep(machine->gpiod_ext_mic_en,
 					 SND_SOC_DAPM_EVENT_ON(event));
 
 	if (!strcmp(w->name, "Int Mic") || !strcmp(w->name, "Internal Mic 2"))
+=======
+	if (!strcmp(w->name, "Mic Jack"))
+		gpiod_set_value_cansleep(machine->gpiod_ext_mic_en,
+					 SND_SOC_DAPM_EVENT_ON(event));
+
+	if (!strcmp(w->name, "Int Mic"))
+>>>>>>> b7ba80a49124 (Commit)
 		gpiod_set_value_cansleep(machine->gpiod_int_mic_en,
 					 SND_SOC_DAPM_EVENT_ON(event));
 
@@ -108,12 +119,20 @@ static const struct snd_soc_dapm_widget tegra_machine_dapm_widgets[] = {
 	SND_SOC_DAPM_HP("Headphones", NULL),
 	SND_SOC_DAPM_SPK("Speakers", tegra_machine_event),
 	SND_SOC_DAPM_SPK("Int Spk", tegra_machine_event),
+<<<<<<< HEAD
 	SND_SOC_DAPM_SPK("Earpiece", NULL),
 	SND_SOC_DAPM_MIC("Int Mic", tegra_machine_event),
 	SND_SOC_DAPM_MIC("Mic Jack", tegra_machine_event),
 	SND_SOC_DAPM_MIC("Internal Mic 1", NULL),
 	SND_SOC_DAPM_MIC("Internal Mic 2", tegra_machine_event),
 	SND_SOC_DAPM_MIC("Headset Mic", tegra_machine_event),
+=======
+	SND_SOC_DAPM_MIC("Int Mic", tegra_machine_event),
+	SND_SOC_DAPM_MIC("Mic Jack", tegra_machine_event),
+	SND_SOC_DAPM_MIC("Internal Mic 1", NULL),
+	SND_SOC_DAPM_MIC("Internal Mic 2", NULL),
+	SND_SOC_DAPM_MIC("Headset Mic", NULL),
+>>>>>>> b7ba80a49124 (Commit)
 	SND_SOC_DAPM_MIC("Digital Mic", NULL),
 	SND_SOC_DAPM_MIC("Mic", NULL),
 	SND_SOC_DAPM_LINE("Line In Jack", NULL),
@@ -124,7 +143,10 @@ static const struct snd_soc_dapm_widget tegra_machine_dapm_widgets[] = {
 static const struct snd_kcontrol_new tegra_machine_controls[] = {
 	SOC_DAPM_PIN_SWITCH("Speakers"),
 	SOC_DAPM_PIN_SWITCH("Int Spk"),
+<<<<<<< HEAD
 	SOC_DAPM_PIN_SWITCH("Earpiece"),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SOC_DAPM_PIN_SWITCH("Int Mic"),
 	SOC_DAPM_PIN_SWITCH("Headset Mic"),
 	SOC_DAPM_PIN_SWITCH("Internal Mic 1"),
@@ -196,6 +218,7 @@ int tegra_asoc_machine_init(struct snd_soc_pcm_runtime *rtd)
 			return err;
 		}
 
+<<<<<<< HEAD
 		tegra_machine_mic_jack_gpio.data = machine;
 		tegra_machine_mic_jack_gpio.desc = machine->gpiod_mic_det;
 
@@ -205,6 +228,10 @@ int tegra_asoc_machine_init(struct snd_soc_pcm_runtime *rtd)
 			tegra_machine_mic_jack_gpio.jack_status_check = coupled_mic_hp_check;
 		}
 
+=======
+		tegra_machine_mic_jack_gpio.desc = machine->gpiod_mic_det;
+
+>>>>>>> b7ba80a49124 (Commit)
 		err = snd_soc_jack_add_gpios(&tegra_machine_mic_jack, 1,
 					     &tegra_machine_mic_jack_gpio);
 		if (err)
@@ -258,6 +285,7 @@ static unsigned int tegra_machine_mclk_rate_12mhz(unsigned int srate)
 	return mclk;
 }
 
+<<<<<<< HEAD
 static unsigned int tegra_machine_mclk_rate_6mhz(unsigned int srate)
 {
 	unsigned int mclk;
@@ -284,6 +312,8 @@ static unsigned int tegra_machine_mclk_rate_6mhz(unsigned int srate)
 	return mclk;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int tegra_machine_hw_params(struct snd_pcm_substream *substream,
 				   struct snd_pcm_hw_params *params)
 {
@@ -548,7 +578,11 @@ int tegra_asoc_machine_probe(struct platform_device *pdev)
 	 * If clock parents are not set in DT, configure here to use clk_out_1
 	 * as mclk and extern1 as parent for Tegra30 and higher.
 	 */
+<<<<<<< HEAD
 	if (!of_property_present(dev->of_node, "assigned-clock-parents") &&
+=======
+	if (!of_find_property(dev->of_node, "assigned-clock-parents", NULL) &&
+>>>>>>> b7ba80a49124 (Commit)
 	    !of_machine_is_compatible("nvidia,tegra20")) {
 		struct clk *clk_out_1, *clk_extern1;
 
@@ -720,6 +754,7 @@ static const struct tegra_asoc_data tegra_max98090_data = {
 	.add_hp_jack = true,
 };
 
+<<<<<<< HEAD
 /* MAX98088 machine */
 
 SND_SOC_DAILINK_DEFS(max98088_hifi,
@@ -754,6 +789,8 @@ static const struct tegra_asoc_data tegra_max98088_data = {
 	.add_hp_jack = true,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* SGTL5000 machine */
 
 SND_SOC_DAILINK_DEFS(sgtl5000_hifi,
@@ -945,6 +982,7 @@ static const struct tegra_asoc_data tegra_rt5632_data = {
 	.add_headset_jack = true,
 };
 
+<<<<<<< HEAD
 /* RT5631 machine */
 
 SND_SOC_DAILINK_DEFS(rt5631_hifi,
@@ -984,13 +1022,21 @@ static const struct of_device_id tegra_machine_of_match[] = {
 	{ .compatible = "nvidia,tegra-audio-max98090", .data = &tegra_max98090_data },
 	{ .compatible = "nvidia,tegra-audio-max98088", .data = &tegra_max98088_data },
 	{ .compatible = "nvidia,tegra-audio-max98089", .data = &tegra_max98088_data },
+=======
+static const struct of_device_id tegra_machine_of_match[] = {
+	{ .compatible = "nvidia,tegra-audio-trimslice", .data = &tegra_trimslice_data },
+	{ .compatible = "nvidia,tegra-audio-max98090", .data = &tegra_max98090_data },
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "nvidia,tegra-audio-sgtl5000", .data = &tegra_sgtl5000_data },
 	{ .compatible = "nvidia,tegra-audio-wm9712", .data = &tegra_wm9712_data },
 	{ .compatible = "nvidia,tegra-audio-wm8753", .data = &tegra_wm8753_data },
 	{ .compatible = "nvidia,tegra-audio-rt5677", .data = &tegra_rt5677_data },
 	{ .compatible = "nvidia,tegra-audio-rt5640", .data = &tegra_rt5640_data },
 	{ .compatible = "nvidia,tegra-audio-alc5632", .data = &tegra_rt5632_data },
+<<<<<<< HEAD
 	{ .compatible = "nvidia,tegra-audio-rt5631", .data = &tegra_rt5631_data },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 MODULE_DEVICE_TABLE(of, tegra_machine_of_match);

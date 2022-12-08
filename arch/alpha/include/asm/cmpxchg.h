@@ -6,15 +6,24 @@
  * Atomic exchange routines.
  */
 
+<<<<<<< HEAD
 #define ____xchg(type, args...)		__arch_xchg ## type ## _local(args)
+=======
+#define ____xchg(type, args...)		__xchg ## type ## _local(args)
+>>>>>>> b7ba80a49124 (Commit)
 #define ____cmpxchg(type, args...)	__cmpxchg ## type ## _local(args)
 #include <asm/xchg.h>
 
 #define xchg_local(ptr, x)						\
 ({									\
 	__typeof__(*(ptr)) _x_ = (x);					\
+<<<<<<< HEAD
 	(__typeof__(*(ptr))) __arch_xchg_local((ptr), (unsigned long)_x_,\
 					       sizeof(*(ptr)));		\
+=======
+	(__typeof__(*(ptr))) __xchg_local((ptr), (unsigned long)_x_,	\
+				       sizeof(*(ptr)));			\
+>>>>>>> b7ba80a49124 (Commit)
 })
 
 #define arch_cmpxchg_local(ptr, o, n)					\
@@ -34,7 +43,11 @@
 
 #undef ____xchg
 #undef ____cmpxchg
+<<<<<<< HEAD
 #define ____xchg(type, args...)		__arch_xchg ##type(args)
+=======
+#define ____xchg(type, args...)		__xchg ##type(args)
+>>>>>>> b7ba80a49124 (Commit)
 #define ____cmpxchg(type, args...)	__cmpxchg ##type(args)
 #include <asm/xchg.h>
 
@@ -48,7 +61,11 @@
 	__typeof__(*(ptr)) _x_ = (x);					\
 	smp_mb();							\
 	__ret = (__typeof__(*(ptr)))					\
+<<<<<<< HEAD
 		__arch_xchg((ptr), (unsigned long)_x_, sizeof(*(ptr)));	\
+=======
+		__xchg((ptr), (unsigned long)_x_, sizeof(*(ptr)));	\
+>>>>>>> b7ba80a49124 (Commit)
 	smp_mb();							\
 	__ret;								\
 })

@@ -2,6 +2,7 @@
 #ifndef __LINUX_GPIO_DRIVER_H
 #define __LINUX_GPIO_DRIVER_H
 
+<<<<<<< HEAD
 #include <linux/bits.h>
 #include <linux/irqchip/chained_irq.h>
 #include <linux/irqdomain.h>
@@ -35,6 +36,34 @@ enum gpiod_flags;
 union gpio_irq_fwspec {
 	struct irq_fwspec	fwspec;
 #ifdef CONFIG_GENERIC_MSI_IRQ
+=======
+#include <linux/device.h>
+#include <linux/irq.h>
+#include <linux/irqchip/chained_irq.h>
+#include <linux/irqdomain.h>
+#include <linux/lockdep.h>
+#include <linux/pinctrl/pinctrl.h>
+#include <linux/pinctrl/pinconf-generic.h>
+#include <linux/property.h>
+#include <linux/types.h>
+
+#include <asm/msi.h>
+
+struct gpio_desc;
+struct of_phandle_args;
+struct device_node;
+struct seq_file;
+struct gpio_device;
+struct module;
+enum gpiod_flags;
+enum gpio_lookup_flags;
+
+struct gpio_chip;
+
+union gpio_irq_fwspec {
+	struct irq_fwspec	fwspec;
+#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
+>>>>>>> b7ba80a49124 (Commit)
 	msi_alloc_info_t	msiinfo;
 #endif
 };
@@ -343,7 +372,11 @@ struct gpio_irq_chip {
  * @set_multiple: assigns output values for multiple signals defined by "mask"
  * @set_config: optional hook for all kinds of settings. Uses the same
  *	packed config format as generic pinconf.
+<<<<<<< HEAD
  * @to_irq: optional hook supporting non-static gpiod_to_irq() mappings;
+=======
+ * @to_irq: optional hook supporting non-static gpio_to_irq() mappings;
+>>>>>>> b7ba80a49124 (Commit)
  *	implementation may not sleep
  * @dbg_show: optional routine to show contents in debugfs; default code
  *	will be used when this is omitted, but custom code can show extra
@@ -511,6 +544,16 @@ struct gpio_chip {
 	 */
 
 	/**
+<<<<<<< HEAD
+=======
+	 * @of_node:
+	 *
+	 * Pointer to a device tree node representing this GPIO controller.
+	 */
+	struct device_node *of_node;
+
+	/**
+>>>>>>> b7ba80a49124 (Commit)
 	 * @of_gpio_n_cells:
 	 *
 	 * Number of cells used to form the GPIO specifier.
@@ -525,6 +568,21 @@ struct gpio_chip {
 	 */
 	int (*of_xlate)(struct gpio_chip *gc,
 			const struct of_phandle_args *gpiospec, u32 *flags);
+<<<<<<< HEAD
+=======
+
+	/**
+	 * @of_gpio_ranges_fallback:
+	 *
+	 * Optional hook for the case that no gpio-ranges property is defined
+	 * within the device tree node "np" (usually DT before introduction
+	 * of gpio-ranges). So this callback is helpful to provide the
+	 * necessary backward compatibility for the pin ranges.
+	 */
+	int (*of_gpio_ranges_fallback)(struct gpio_chip *gc,
+				       struct device_node *np);
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_OF_GPIO */
 };
 
@@ -687,10 +745,13 @@ bool gpiochip_irqchip_irq_valid(const struct gpio_chip *gc,
 int gpiochip_irqchip_add_domain(struct gpio_chip *gc,
 				struct irq_domain *domain);
 #else
+<<<<<<< HEAD
 
 #include <asm/bug.h>
 #include <asm/errno.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int gpiochip_irqchip_add_domain(struct gpio_chip *gc,
 					      struct irq_domain *domain)
 {
@@ -768,10 +829,13 @@ struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
 
 #else /* CONFIG_GPIOLIB */
 
+<<<<<<< HEAD
 #include <linux/err.h>
 
 #include <asm/bug.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
 {
 	/* GPIO can never have been requested */

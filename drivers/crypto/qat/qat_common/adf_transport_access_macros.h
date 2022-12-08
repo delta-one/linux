@@ -37,7 +37,11 @@
 #define ADF_SIZE_TO_RING_SIZE_IN_BYTES(SIZE) ((1 << (SIZE - 1)) << 7)
 #define ADF_RING_SIZE_IN_BYTES_TO_SIZE(SIZE) ((1 << (SIZE - 1)) >> 7)
 
+<<<<<<< HEAD
 /* Minimum ring buffer size for memory allocation */
+=======
+/* Minimum ring bufer size for memory allocation */
+>>>>>>> b7ba80a49124 (Commit)
 #define ADF_RING_SIZE_BYTES_MIN(SIZE) \
 	((SIZE < ADF_SIZE_TO_RING_SIZE_IN_BYTES(ADF_RING_SIZE_4K)) ? \
 		ADF_SIZE_TO_RING_SIZE_IN_BYTES(ADF_RING_SIZE_4K) : SIZE)

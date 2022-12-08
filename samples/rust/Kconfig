@@ -20,6 +20,7 @@ config SAMPLE_RUST_MINIMAL
 
 	  If unsure, say N.
 
+<<<<<<< HEAD
 config SAMPLE_RUST_PRINT
 	tristate "Printing macros"
 	help
@@ -30,6 +31,8 @@ config SAMPLE_RUST_PRINT
 
 	  If unsure, say N.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SAMPLE_RUST_HOSTPROGS
 	bool "Host programs"
 	help

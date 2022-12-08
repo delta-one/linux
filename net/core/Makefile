@@ -12,8 +12,12 @@ obj-$(CONFIG_SYSCTL) += sysctl_net_core.o
 obj-y		     += dev.o dev_addr_lists.o dst.o netevent.o \
 			neighbour.o rtnetlink.o utils.o link_watch.o filter.o \
 			sock_diag.o dev_ioctl.o tso.o sock_reuseport.o \
+<<<<<<< HEAD
 			fib_notifier.o xdp.o flow_offload.o gro.o \
 			netdev-genl.o netdev-genl-gen.o
+=======
+			fib_notifier.o xdp.o flow_offload.o gro.o
+>>>>>>> b7ba80a49124 (Commit)
 
 obj-$(CONFIG_NETDEV_ADDR_LIST_TEST) += dev_addr_lists_test.o
 
@@ -34,6 +38,10 @@ obj-$(CONFIG_LWTUNNEL) += lwtunnel.o
 obj-$(CONFIG_LWTUNNEL_BPF) += lwt_bpf.o
 obj-$(CONFIG_DST_CACHE) += dst_cache.o
 obj-$(CONFIG_HWBM) += hwbm.o
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_NET_DEVLINK) += devlink.o
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_GRO_CELLS) += gro_cells.o
 obj-$(CONFIG_FAILOVER) += failover.o
 obj-$(CONFIG_NET_SOCK_MSG) += skmsg.o

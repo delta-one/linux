@@ -67,7 +67,11 @@ unsigned long voltdm_get_voltage(struct voltagedomain *voltdm)
  * This API should be called by the kernel to do the voltage scaling
  * for a particular voltage domain during DVFS.
  */
+<<<<<<< HEAD
 static int voltdm_scale(struct voltagedomain *voltdm,
+=======
+int voltdm_scale(struct voltagedomain *voltdm,
+>>>>>>> b7ba80a49124 (Commit)
 		 unsigned long target_volt)
 {
 	int ret, i;

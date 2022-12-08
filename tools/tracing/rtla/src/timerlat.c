@@ -14,7 +14,11 @@
 
 #include "timerlat.h"
 
+<<<<<<< HEAD
 static void timerlat_usage(int err)
+=======
+static void timerlat_usage(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 
@@ -34,7 +38,11 @@ static void timerlat_usage(int err)
 
 	for (i = 0; msg[i]; i++)
 		fprintf(stderr, "%s\n", msg[i]);
+<<<<<<< HEAD
 	exit(err);
+=======
+	exit(1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int timerlat_main(int argc, char *argv[])
@@ -52,7 +60,12 @@ int timerlat_main(int argc, char *argv[])
 	}
 
 	if ((strcmp(argv[1], "-h") == 0) || (strcmp(argv[1], "--help") == 0)) {
+<<<<<<< HEAD
 		timerlat_usage(0);
+=======
+		timerlat_usage();
+		exit(0);
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (strncmp(argv[1], "-", 1) == 0) {
 		/* the user skipped the tool, call the default one */
 		timerlat_top_main(argc, argv);
@@ -66,6 +79,10 @@ int timerlat_main(int argc, char *argv[])
 	}
 
 usage:
+<<<<<<< HEAD
 	timerlat_usage(1);
+=======
+	timerlat_usage();
+>>>>>>> b7ba80a49124 (Commit)
 	exit(1);
 }

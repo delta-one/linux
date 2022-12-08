@@ -8,9 +8,12 @@
 #include <linux/bitfield.h>
 #include <linux/bpf.h>
 #include <linux/filter.h>
+<<<<<<< HEAD
 #include <linux/memory.h>
 #include <linux/stop_machine.h>
 #include <asm/patch.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "bpf_jit.h"
 
 #define RV_REG_TCC RV_REG_A6
@@ -139,6 +142,7 @@ static bool in_auipc_jalr_range(s64 val)
 		val < ((1L << 31) - (1L << 11));
 }
 
+<<<<<<< HEAD
 /* Emit fixed-length instructions for address */
 static int emit_addr(u8 rd, u64 addr, bool extra_pass, struct rv_jit_context *ctx)
 {
@@ -158,6 +162,8 @@ static int emit_addr(u8 rd, u64 addr, bool extra_pass, struct rv_jit_context *ct
 }
 
 /* Emit variable-length instructions for 32-bit and 64-bit imm */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void emit_imm(u8 rd, s64 val, struct rv_jit_context *ctx)
 {
 	/* Note that the immediate from the add is sign-extended,
@@ -241,7 +247,11 @@ static void __build_epilogue(bool is_tail_call, struct rv_jit_context *ctx)
 	if (!is_tail_call)
 		emit_mv(RV_REG_A0, RV_REG_A5, ctx);
 	emit_jalr(RV_REG_ZERO, is_tail_call ? RV_REG_T3 : RV_REG_RA,
+<<<<<<< HEAD
 		  is_tail_call ? 20 : 0, /* skip reserved nops and TCC init */
+=======
+		  is_tail_call ? 4 : 0, /* skip TCC init */
+>>>>>>> b7ba80a49124 (Commit)
 		  ctx);
 }
 
@@ -431,12 +441,20 @@ static void emit_sext_32_rd(u8 *rd, struct rv_jit_context *ctx)
 	*rd = RV_REG_T2;
 }
 
+<<<<<<< HEAD
 static int emit_jump_and_link(u8 rd, s64 rvoff, bool fixed_addr,
+=======
+static int emit_jump_and_link(u8 rd, s64 rvoff, bool force_jalr,
+>>>>>>> b7ba80a49124 (Commit)
 			      struct rv_jit_context *ctx)
 {
 	s64 upper, lower;
 
+<<<<<<< HEAD
 	if (rvoff && fixed_addr && is_21b_int(rvoff)) {
+=======
+	if (rvoff && is_21b_int(rvoff) && !force_jalr) {
+>>>>>>> b7ba80a49124 (Commit)
 		emit(rv_jal(rd, rvoff >> 1), ctx);
 		return 0;
 	} else if (in_auipc_jalr_range(rvoff)) {
@@ -457,17 +475,35 @@ static bool is_signed_bpf_cond(u8 cond)
 		cond == BPF_JSGE || cond == BPF_JSLE;
 }
 
+<<<<<<< HEAD
 static int emit_call(u64 addr, bool fixed_addr, struct rv_jit_context *ctx)
 {
 	s64 off = 0;
 	u64 ip;
+=======
+static int emit_call(bool fixed, u64 addr, struct rv_jit_context *ctx)
+{
+	s64 off = 0;
+	u64 ip;
+	u8 rd;
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (addr && ctx->insns) {
 		ip = (u64)(long)(ctx->insns + ctx->ninsns);
 		off = addr - ip;
 	}
 
+<<<<<<< HEAD
 	return emit_jump_and_link(RV_REG_RA, off, fixed_addr, ctx);
+=======
+	ret = emit_jump_and_link(RV_REG_RA, off, !fixed, ctx);
+	if (ret)
+		return ret;
+	rd = bpf_to_rv_reg(BPF_REG_0, ctx);
+	emit_mv(rd, RV_REG_A0, ctx);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void emit_atomic(u8 rd, u8 rs, s16 off, s32 imm, bool is64,
@@ -618,6 +654,7 @@ static int add_exception_handler(const struct bpf_insn *insn,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int gen_call_or_nops(void *target, void *ip, u32 *insns)
 {
 	s64 rvoff;
@@ -1013,6 +1050,8 @@ int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *image,
 	return ninsns_rvoff(ret);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int bpf_jit_emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
 		      bool extra_pass)
 {
@@ -1304,7 +1343,11 @@ out_be:
 	/* JUMP off */
 	case BPF_JMP | BPF_JA:
 		rvoff = rv_offset(i, off, ctx);
+<<<<<<< HEAD
 		ret = emit_jump_and_link(RV_REG_ZERO, rvoff, true, ctx);
+=======
+		ret = emit_jump_and_link(RV_REG_ZERO, rvoff, false, ctx);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			return ret;
 		break;
@@ -1423,6 +1466,7 @@ out_be:
 	/* function call */
 	case BPF_JMP | BPF_CALL:
 	{
+<<<<<<< HEAD
 		bool fixed_addr;
 		u64 addr;
 
@@ -1437,6 +1481,19 @@ out_be:
 			return ret;
 
 		emit_mv(bpf_to_rv_reg(BPF_REG_0, ctx), RV_REG_A0, ctx);
+=======
+		bool fixed;
+		u64 addr;
+
+		mark_call(ctx);
+		ret = bpf_jit_get_func_addr(ctx->prog, insn, extra_pass, &addr,
+					    &fixed);
+		if (ret < 0)
+			return ret;
+		ret = emit_call(fixed, addr, ctx);
+		if (ret)
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 	/* tail call */
@@ -1451,7 +1508,11 @@ out_be:
 			break;
 
 		rvoff = epilogue_offset(ctx);
+<<<<<<< HEAD
 		ret = emit_jump_and_link(RV_REG_ZERO, rvoff, true, ctx);
+=======
+		ret = emit_jump_and_link(RV_REG_ZERO, rvoff, false, ctx);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			return ret;
 		break;
@@ -1463,6 +1524,7 @@ out_be:
 		u64 imm64;
 
 		imm64 = (u64)insn1.imm << 32 | (u32)imm;
+<<<<<<< HEAD
 		if (bpf_pseudo_func(insn)) {
 			/* fixed-length insns for extra jit pass */
 			ret = emit_addr(rd, imm64, extra_pass, ctx);
@@ -1472,6 +1534,9 @@ out_be:
 			emit_imm(rd, imm64, ctx);
 		}
 
+=======
+		emit_imm(rd, imm64, ctx);
+>>>>>>> b7ba80a49124 (Commit)
 		return 1;
 	}
 
@@ -1664,7 +1729,11 @@ out_be:
 
 void bpf_jit_build_prologue(struct rv_jit_context *ctx)
 {
+<<<<<<< HEAD
 	int i, stack_adjust = 0, store_offset, bpf_stack_adjust;
+=======
+	int stack_adjust = 0, store_offset, bpf_stack_adjust;
+>>>>>>> b7ba80a49124 (Commit)
 
 	bpf_stack_adjust = round_up(ctx->prog->aux->stack_depth, 16);
 	if (bpf_stack_adjust)
@@ -1691,10 +1760,13 @@ void bpf_jit_build_prologue(struct rv_jit_context *ctx)
 
 	store_offset = stack_adjust - 8;
 
+<<<<<<< HEAD
 	/* reserve 4 nop insns */
 	for (i = 0; i < 4; i++)
 		emit(rv_nop(), ctx);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* First instruction is always setting the tail-call-counter
 	 * (TCC) register. This instruction is skipped for tail calls.
 	 * Force using a 4-byte (non-compressed) instruction.
@@ -1752,8 +1824,11 @@ void bpf_jit_build_epilogue(struct rv_jit_context *ctx)
 {
 	__build_epilogue(false, ctx);
 }
+<<<<<<< HEAD
 
 bool bpf_jit_supports_kfunc_call(void)
 {
 	return true;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

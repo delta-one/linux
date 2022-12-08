@@ -42,7 +42,10 @@
 #include "coresight-etm4x-cfg.h"
 #include "coresight-self-hosted-trace.h"
 #include "coresight-syscfg.h"
+<<<<<<< HEAD
 #include "coresight-trace-id.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int boot_enable;
 module_param(boot_enable, int, 0444);
@@ -67,6 +70,7 @@ static enum cpuhp_state hp_online;
 
 struct etm4_init_arg {
 	unsigned int		pid;
+<<<<<<< HEAD
 	struct device		*dev;
 	struct csdev_access	*csa;
 };
@@ -74,6 +78,12 @@ struct etm4_init_arg {
 static DEFINE_PER_CPU(struct etm4_init_arg *, delayed_probe);
 static int etm4_probe_cpu(unsigned int cpu);
 
+=======
+	struct etmv4_drvdata	*drvdata;
+	struct csdev_access	*csa;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Check if TRCSSPCICRn(i) is implemented for a given instance.
  *
@@ -231,6 +241,7 @@ static int etm4_cpu_id(struct coresight_device *csdev)
 	return drvdata->cpu;
 }
 
+<<<<<<< HEAD
 int etm4_read_alloc_trace_id(struct etmv4_drvdata *drvdata)
 {
 	int trace_id;
@@ -253,6 +264,13 @@ int etm4_read_alloc_trace_id(struct etmv4_drvdata *drvdata)
 void etm4_release_trace_id(struct etmv4_drvdata *drvdata)
 {
 	coresight_trace_id_put_cpu_id(drvdata->cpu);
+=======
+static int etm4_trace_id(struct coresight_device *csdev)
+{
+	struct etmv4_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+
+	return drvdata->trcid;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct etm4_enable_arg {
@@ -445,10 +463,15 @@ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
 		etm4x_relaxed_write32(csa, config->vipcssctlr, TRCVIPCSSCTLR);
 	for (i = 0; i < drvdata->nrseqstate - 1; i++)
 		etm4x_relaxed_write32(csa, config->seq_ctrl[i], TRCSEQEVRn(i));
+<<<<<<< HEAD
 	if (drvdata->nrseqstate) {
 		etm4x_relaxed_write32(csa, config->seq_rst, TRCSEQRSTEVR);
 		etm4x_relaxed_write32(csa, config->seq_state, TRCSEQSTR);
 	}
+=======
+	etm4x_relaxed_write32(csa, config->seq_rst, TRCSEQRSTEVR);
+	etm4x_relaxed_write32(csa, config->seq_state, TRCSEQSTR);
+>>>>>>> b7ba80a49124 (Commit)
 	etm4x_relaxed_write32(csa, config->ext_inp, TRCEXTINSELR);
 	for (i = 0; i < drvdata->nr_cntr; i++) {
 		etm4x_relaxed_write32(csa, config->cntrldvr[i], TRCCNTRLDVRn(i));
@@ -472,7 +495,11 @@ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
 		if (etm4x_sspcicrn_present(drvdata, i))
 			etm4x_relaxed_write32(csa, config->ss_pe_cmp[i], TRCSSPCICRn(i));
 	}
+<<<<<<< HEAD
 	for (i = 0; i < drvdata->nr_addr_cmp * 2; i++) {
+=======
+	for (i = 0; i < drvdata->nr_addr_cmp; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		etm4x_relaxed_write64(csa, config->addr_val[i], TRCACVRn(i));
 		etm4x_relaxed_write64(csa, config->addr_acc[i], TRCACATRn(i));
 	}
@@ -740,7 +767,11 @@ out:
 static int etm4_enable_perf(struct coresight_device *csdev,
 			    struct perf_event *event)
 {
+<<<<<<< HEAD
 	int ret = 0, trace_id;
+=======
+	int ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct etmv4_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
 
 	if (WARN_ON_ONCE(drvdata->cpu != smp_processor_id())) {
@@ -752,6 +783,7 @@ static int etm4_enable_perf(struct coresight_device *csdev,
 	ret = etm4_parse_event_config(csdev, event);
 	if (ret)
 		goto out;
+<<<<<<< HEAD
 
 	/*
 	 * perf allocates cpu ids as part of _setup_aux() - device needs to use
@@ -770,6 +802,8 @@ static int etm4_enable_perf(struct coresight_device *csdev,
 	}
 	drvdata->trcid = (u8)trace_id;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* And enable it */
 	ret = etm4_enable_hw(drvdata);
 
@@ -794,11 +828,14 @@ static int etm4_enable_sysfs(struct coresight_device *csdev)
 
 	spin_lock(&drvdata->spinlock);
 
+<<<<<<< HEAD
 	/* sysfs needs to read and allocate a trace ID */
 	ret = etm4_read_alloc_trace_id(drvdata);
 	if (ret < 0)
 		goto unlock_sysfs_enable;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Executing etm4_enable_hw on the cpu whose ETM is being enabled
 	 * ensures that register writes occur when cpu is powered.
@@ -810,11 +847,14 @@ static int etm4_enable_sysfs(struct coresight_device *csdev)
 		ret = arg.rc;
 	if (!ret)
 		drvdata->sticky_enable = true;
+<<<<<<< HEAD
 
 	if (ret)
 		etm4_release_trace_id(drvdata);
 
 unlock_sysfs_enable:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock(&drvdata->spinlock);
 
 	if (!ret)
@@ -946,11 +986,14 @@ static int etm4_disable_perf(struct coresight_device *csdev,
 	/* TRCVICTLR::SSSTATUS, bit[9] */
 	filters->ssstatus = (control & BIT(9));
 
+<<<<<<< HEAD
 	/*
 	 * perf will release trace ids when _free_aux() is
 	 * called at the end of the session.
 	 */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -976,6 +1019,7 @@ static void etm4_disable_sysfs(struct coresight_device *csdev)
 	spin_unlock(&drvdata->spinlock);
 	cpus_read_unlock();
 
+<<<<<<< HEAD
 	/*
 	 * we only release trace IDs when resetting sysfs.
 	 * This permits sysfs users to read the trace ID after the trace
@@ -983,6 +1027,8 @@ static void etm4_disable_sysfs(struct coresight_device *csdev)
 	 * prior trace id allocation method
 	 */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev_dbg(&csdev->dev, "ETM tracing disabled\n");
 }
 
@@ -1016,6 +1062,10 @@ static void etm4_disable(struct coresight_device *csdev,
 
 static const struct coresight_ops_source etm4_source_ops = {
 	.cpu_id		= etm4_cpu_id,
+<<<<<<< HEAD
+=======
+	.trace_id	= etm4_trace_id,
+>>>>>>> b7ba80a49124 (Commit)
 	.enable		= etm4_enable,
 	.disable	= etm4_disable,
 };
@@ -1070,6 +1120,7 @@ static bool etm4_init_iomem_access(struct etmv4_drvdata *drvdata,
 				   struct csdev_access *csa)
 {
 	u32 devarch = readl_relaxed(drvdata->base + TRCDEVARCH);
+<<<<<<< HEAD
 
 	/*
 	 * All ETMs must implement TRCDEVARCH to indicate that
@@ -1085,6 +1136,27 @@ static bool etm4_init_iomem_access(struct etmv4_drvdata *drvdata,
 	}
 
 	drvdata->arch = etm_devarch_to_arch(devarch);
+=======
+	u32 idr1 = readl_relaxed(drvdata->base + TRCIDR1);
+
+	/*
+	 * All ETMs must implement TRCDEVARCH to indicate that
+	 * the component is an ETMv4. To support any broken
+	 * implementations we fall back to TRCIDR1 check, which
+	 * is not really reliable.
+	 */
+	if ((devarch & ETM_DEVARCH_ID_MASK) == ETM_DEVARCH_ETMv4x_ARCH) {
+		drvdata->arch = etm_devarch_to_arch(devarch);
+	} else {
+		pr_warn("CPU%d: ETM4x incompatible TRCDEVARCH: %x, falling back to TRCIDR1\n",
+			smp_processor_id(), devarch);
+
+		if (ETM_TRCIDR1_ARCH_MAJOR(idr1) != ETM_TRCIDR1_ARCH_ETMv4)
+			return false;
+		drvdata->arch = etm_trcidr_to_arch(idr1);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	*csa = CSDEV_ACCESS_IOMEM(drvdata->base);
 	return true;
 }
@@ -1143,7 +1215,11 @@ static void etm4_init_arch_data(void *info)
 	struct csdev_access *csa;
 	int i;
 
+<<<<<<< HEAD
 	drvdata = dev_get_drvdata(init_arg->dev);
+=======
+	drvdata = init_arg->drvdata;
+>>>>>>> b7ba80a49124 (Commit)
 	csa = init_arg->csa;
 
 	/*
@@ -1536,7 +1612,11 @@ static int etm4_set_event_filters(struct etmv4_drvdata *drvdata,
 			/*
 			 * If filters::ssstatus == 1, trace acquisition was
 			 * started but the process was yanked away before the
+<<<<<<< HEAD
 			 * stop address was hit.  As such the start/stop
+=======
+			 * the stop address was hit.  As such the start/stop
+>>>>>>> b7ba80a49124 (Commit)
 			 * logic needs to be re-started so that tracing can
 			 * resume where it left.
 			 *
@@ -1586,7 +1666,11 @@ void etm4_config_trace_mode(struct etmv4_config *config)
 static int etm4_online_cpu(unsigned int cpu)
 {
 	if (!etmdrvdata[cpu])
+<<<<<<< HEAD
 		return etm4_probe_cpu(cpu);
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (etmdrvdata[cpu]->boot_enable && !etmdrvdata[cpu]->sticky_enable)
 		coresight_enable(etmdrvdata[cpu]->csdev);
@@ -1620,6 +1704,14 @@ static int etm4_dying_cpu(unsigned int cpu)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void etm4_init_trace_id(struct etmv4_drvdata *drvdata)
+{
+	drvdata->trcid = coresight_get_trace_id(drvdata->cpu);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __etm4_cpu_save(struct etmv4_drvdata *drvdata)
 {
 	int i, ret = 0;
@@ -1684,10 +1776,15 @@ static int __etm4_cpu_save(struct etmv4_drvdata *drvdata)
 	for (i = 0; i < drvdata->nrseqstate - 1; i++)
 		state->trcseqevr[i] = etm4x_read32(csa, TRCSEQEVRn(i));
 
+<<<<<<< HEAD
 	if (drvdata->nrseqstate) {
 		state->trcseqrstevr = etm4x_read32(csa, TRCSEQRSTEVR);
 		state->trcseqstr = etm4x_read32(csa, TRCSEQSTR);
 	}
+=======
+	state->trcseqrstevr = etm4x_read32(csa, TRCSEQRSTEVR);
+	state->trcseqstr = etm4x_read32(csa, TRCSEQSTR);
+>>>>>>> b7ba80a49124 (Commit)
 	state->trcextinselr = etm4x_read32(csa, TRCEXTINSELR);
 
 	for (i = 0; i < drvdata->nr_cntr; i++) {
@@ -1815,10 +1912,15 @@ static void __etm4_cpu_restore(struct etmv4_drvdata *drvdata)
 	for (i = 0; i < drvdata->nrseqstate - 1; i++)
 		etm4x_relaxed_write32(csa, state->trcseqevr[i], TRCSEQEVRn(i));
 
+<<<<<<< HEAD
 	if (drvdata->nrseqstate) {
 		etm4x_relaxed_write32(csa, state->trcseqrstevr, TRCSEQRSTEVR);
 		etm4x_relaxed_write32(csa, state->trcseqstr, TRCSEQSTR);
 	}
+=======
+	etm4x_relaxed_write32(csa, state->trcseqrstevr, TRCSEQRSTEVR);
+	etm4x_relaxed_write32(csa, state->trcseqstr, TRCSEQSTR);
+>>>>>>> b7ba80a49124 (Commit)
 	etm4x_relaxed_write32(csa, state->trcextinselr, TRCEXTINSELR);
 
 	for (i = 0; i < drvdata->nr_cntr; i++) {
@@ -1961,6 +2063,7 @@ static void etm4_pm_clear(void)
 	}
 }
 
+<<<<<<< HEAD
 static int etm4_add_coresight_dev(struct etm4_init_arg *init_arg)
 {
 	int ret;
@@ -1975,6 +2078,50 @@ static int etm4_add_coresight_dev(struct etm4_init_arg *init_arg)
 		return -EINVAL;
 
 	desc.access = *init_arg->csa;
+=======
+static int etm4_probe(struct device *dev, void __iomem *base, u32 etm_pid)
+{
+	int ret;
+	struct coresight_platform_data *pdata = NULL;
+	struct etmv4_drvdata *drvdata;
+	struct coresight_desc desc = { 0 };
+	struct etm4_init_arg init_arg = { 0 };
+	u8 major, minor;
+	char *type_name;
+
+	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+	if (!drvdata)
+		return -ENOMEM;
+
+	dev_set_drvdata(dev, drvdata);
+
+	if (pm_save_enable == PARAM_PM_SAVE_FIRMWARE)
+		pm_save_enable = coresight_loses_context_with_cpu(dev) ?
+			       PARAM_PM_SAVE_SELF_HOSTED : PARAM_PM_SAVE_NEVER;
+
+	if (pm_save_enable != PARAM_PM_SAVE_NEVER) {
+		drvdata->save_state = devm_kmalloc(dev,
+				sizeof(struct etmv4_save_state), GFP_KERNEL);
+		if (!drvdata->save_state)
+			return -ENOMEM;
+	}
+
+	drvdata->base = base;
+
+	spin_lock_init(&drvdata->spinlock);
+
+	drvdata->cpu = coresight_get_cpu(dev);
+	if (drvdata->cpu < 0)
+		return drvdata->cpu;
+
+	init_arg.drvdata = drvdata;
+	init_arg.csa = &desc.access;
+	init_arg.pid = etm_pid;
+
+	if (smp_call_function_single(drvdata->cpu,
+				etm4_init_arch_data,  &init_arg, 1))
+		dev_err(dev, "ETM arch init failed\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!drvdata->arch)
 		return -EINVAL;
@@ -2000,6 +2147,10 @@ static int etm4_add_coresight_dev(struct etm4_init_arg *init_arg)
 	if (!desc.name)
 		return -ENOMEM;
 
+<<<<<<< HEAD
+=======
+	etm4_init_trace_id(drvdata);
+>>>>>>> b7ba80a49124 (Commit)
 	etm4_set_default(&drvdata->config);
 
 	pdata = coresight_get_platform_data(dev);
@@ -2044,6 +2195,7 @@ static int etm4_add_coresight_dev(struct etm4_init_arg *init_arg)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int etm4_probe(struct device *dev, void __iomem *base, u32 etm_pid)
 {
 	struct etmv4_drvdata *drvdata;
@@ -2106,6 +2258,8 @@ static int etm4_probe(struct device *dev, void __iomem *base, u32 etm_pid)
 	return etm4_add_coresight_dev(&init_arg);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int etm4_probe_amba(struct amba_device *adev, const struct amba_id *id)
 {
 	void __iomem *base;
@@ -2144,6 +2298,7 @@ static int etm4_probe_platform_dev(struct platform_device *pdev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int etm4_probe_cpu(unsigned int cpu)
 {
 	int ret;
@@ -2173,6 +2328,8 @@ static int etm4_probe_cpu(unsigned int cpu)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct amba_cs_uci_id uci_id_etm4[] = {
 	{
 		/*  ETMv4 UCI data */
@@ -2187,20 +2344,30 @@ static void clear_etmdrvdata(void *info)
 	int cpu = *(int *)info;
 
 	etmdrvdata[cpu] = NULL;
+<<<<<<< HEAD
 	per_cpu(delayed_probe, cpu) = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __exit etm4_remove_dev(struct etmv4_drvdata *drvdata)
 {
+<<<<<<< HEAD
 	bool had_delayed_probe;
+=======
+	etm_perf_symlink(drvdata->csdev, false);
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Taking hotplug lock here to avoid racing between etm4_remove_dev()
 	 * and CPU hotplug call backs.
 	 */
 	cpus_read_lock();
+<<<<<<< HEAD
 
 	had_delayed_probe = per_cpu(delayed_probe, drvdata->cpu);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * The readers for etmdrvdata[] are CPU hotplug call backs
 	 * and PM notification call backs. Change etmdrvdata[i] on
@@ -2208,6 +2375,7 @@ static int __exit etm4_remove_dev(struct etmv4_drvdata *drvdata)
 	 * inside one call back function.
 	 */
 	if (smp_call_function_single(drvdata->cpu, clear_etmdrvdata, &drvdata->cpu, 1))
+<<<<<<< HEAD
 		clear_etmdrvdata(&drvdata->cpu);
 
 	cpus_read_unlock();
@@ -2217,6 +2385,14 @@ static int __exit etm4_remove_dev(struct etmv4_drvdata *drvdata)
 		cscfg_unregister_csdev(drvdata->csdev);
 		coresight_unregister(drvdata->csdev);
 	}
+=======
+		etmdrvdata[drvdata->cpu] = NULL;
+
+	cpus_read_unlock();
+
+	cscfg_unregister_csdev(drvdata->csdev);
+	coresight_unregister(drvdata->csdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

@@ -660,7 +660,11 @@ static void hdm_request_netinfo(struct most_interface *iface, int channel,
 
 /**
  * link_stat_timer_handler - schedule work obtaining mac address and link status
+<<<<<<< HEAD
  * @t: pointer to timer_list which holds a pointer to the USB device instance
+=======
+ * @data: pointer to USB device instance
+>>>>>>> b7ba80a49124 (Commit)
  *
  * The handler runs in interrupt context. That's why we need to defer the
  * tasks to a work queue.
@@ -763,14 +767,22 @@ static void wq_clear_halt(struct work_struct *wq_obj)
 	mutex_unlock(&mdev->io_mutex);
 }
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * hdm_usb_fops - file operation table for USB driver
  */
 static const struct file_operations hdm_usb_fops = {
 	.owner = THIS_MODULE,
 };
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * usb_device_id - ID table for HCD device probing
  */
 static const struct usb_device_id usbid[] = {

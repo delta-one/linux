@@ -420,6 +420,7 @@ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
 	}
 }
 
+<<<<<<< HEAD
 /* if sk is ipv4 or ipv6_only allows only same-family local and remote addresses,
  * otherwise allow any matching local/remote pair
  */
@@ -445,6 +446,8 @@ bool mptcp_pm_addr_families_match(const struct sock *sk,
 #endif
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void mptcp_pm_data_reset(struct mptcp_sock *msk)
 {
 	u8 pm_type = mptcp_get_pm_type(sock_net((struct sock *)msk));

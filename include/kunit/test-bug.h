@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
+<<<<<<< HEAD
  * KUnit API providing hooks for non-test code to interact with tests.
+=======
+ * KUnit API allowing dynamic analysis tools to interact with KUnit tests
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Copyright (C) 2020, Google LLC.
  * Author: Uriel Guajardo <urielguajardo@google.com>
@@ -9,6 +13,7 @@
 #ifndef _KUNIT_TEST_BUG_H
 #define _KUNIT_TEST_BUG_H
 
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_KUNIT)
 
 #include <linux/jump_label.h> /* For static branch */
@@ -63,6 +68,22 @@ static inline struct kunit *kunit_get_current_test(void)
 static inline struct kunit *kunit_get_current_test(void) { return NULL; }
 
 #define kunit_fail_current_test(fmt, ...) do {} while (0)
+=======
+#define kunit_fail_current_test(fmt, ...) \
+	__kunit_fail_current_test(__FILE__, __LINE__, fmt, ##__VA_ARGS__)
+
+#if IS_BUILTIN(CONFIG_KUNIT)
+
+extern __printf(3, 4) void __kunit_fail_current_test(const char *file, int line,
+						    const char *fmt, ...);
+
+#else
+
+static inline __printf(3, 4) void __kunit_fail_current_test(const char *file, int line,
+							    const char *fmt, ...)
+{
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif
 

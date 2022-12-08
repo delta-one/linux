@@ -12,7 +12,10 @@
 #include <asm/ldt.h>
 #include <asm/processor.h>
 #include <asm/proto.h>
+<<<<<<< HEAD
 #include <asm/gsseg.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "tls.h"
 

@@ -512,10 +512,17 @@ static void wpf_configure_partition(struct vsp1_entity *entity,
 	}
 
 	/*
+<<<<<<< HEAD
 	 * On Gen3+ hardware the SPUVS bit has no effect on 3-planar
 	 * formats. Swap the U and V planes manually in that case.
 	 */
 	if (vsp1->info->gen >= 3 && format->num_planes == 3 &&
+=======
+	 * On Gen3 hardware the SPUVS bit has no effect on 3-planar
+	 * formats. Swap the U and V planes manually in that case.
+	 */
+	if (vsp1->info->gen == 3 && format->num_planes == 3 &&
+>>>>>>> b7ba80a49124 (Commit)
 	    fmtinfo->swap_uv)
 		swap(mem.addr[1], mem.addr[2]);
 

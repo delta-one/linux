@@ -22,7 +22,10 @@ int nr_active;
 int nr_connect;
 int nr_binddev;
 int nr_socket_post_create;
+<<<<<<< HEAD
 int nr_fin_wait1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct sockopt_test {
 	int opt;
@@ -387,6 +390,7 @@ int skops_sockopt(struct bpf_sock_ops *skops)
 		nr_passive += !(bpf_test_sockopt(skops, sk) ||
 				test_tcp_maxseg(skops, sk) ||
 				test_tcp_saved_syn(skops, sk));
+<<<<<<< HEAD
 		bpf_sock_ops_cb_flags_set(skops,
 					  skops->bpf_sock_ops_cb_flags |
 					  BPF_SOCK_OPS_STATE_CB_FLAG);
@@ -394,6 +398,8 @@ int skops_sockopt(struct bpf_sock_ops *skops)
 	case BPF_SOCK_OPS_STATE_CB:
 		if (skops->args[1] == BPF_TCP_CLOSE_WAIT)
 			nr_fin_wait1 += !bpf_test_sockopt(skops, sk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 

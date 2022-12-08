@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: (BSD-3-Clause OR GPL-2.0-only)
 /* Copyright(c) 2014 - 2020 Intel Corporation */
+<<<<<<< HEAD
 
 #include <crypto/algapi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/mutex.h>
 #include <linux/slab.h>
@@ -10,6 +13,10 @@
 #include <linux/pci.h>
 #include <linux/cdev.h>
 #include <linux/uaccess.h>
+<<<<<<< HEAD
+=======
+#include <linux/crypto.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "adf_accel_devices.h"
 #include "adf_common_drv.h"
@@ -17,9 +24,12 @@
 #include "adf_cfg_common.h"
 #include "adf_cfg_user.h"
 
+<<<<<<< HEAD
 #define ADF_CFG_MAX_SECTION 512
 #define ADF_CFG_MAX_KEY_VAL 256
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DEVICE_NAME "qat_adf_ctl"
 
 static DEFINE_MUTEX(adf_ctl_lock);
@@ -57,7 +67,11 @@ static int adf_chr_drv_create(void)
 		return -EFAULT;
 	}
 
+<<<<<<< HEAD
 	adf_ctl_drv.drv_class = class_create(DEVICE_NAME);
+=======
+	adf_ctl_drv.drv_class = class_create(THIS_MODULE, DEVICE_NAME);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(adf_ctl_drv.drv_class)) {
 		pr_err("QAT: class_create failed for adf_ctl\n");
 		goto err_chrdev_unreg;
@@ -141,11 +155,18 @@ static int adf_copy_key_value_data(struct adf_accel_dev *accel_dev,
 	struct adf_user_cfg_key_val key_val;
 	struct adf_user_cfg_key_val *params_head;
 	struct adf_user_cfg_section section, *section_head;
+<<<<<<< HEAD
 	int i, j;
 
 	section_head = ctl_data->config_section;
 
 	for (i = 0; section_head && i < ADF_CFG_MAX_SECTION; i++) {
+=======
+
+	section_head = ctl_data->config_section;
+
+	while (section_head) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (copy_from_user(&section, (void __user *)section_head,
 				   sizeof(*section_head))) {
 			dev_err(&GET_DEV(accel_dev),
@@ -161,7 +182,11 @@ static int adf_copy_key_value_data(struct adf_accel_dev *accel_dev,
 
 		params_head = section.params;
 
+<<<<<<< HEAD
 		for (j = 0; params_head && j < ADF_CFG_MAX_KEY_VAL; j++) {
+=======
+		while (params_head) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (copy_from_user(&key_val, (void __user *)params_head,
 					   sizeof(key_val))) {
 				dev_err(&GET_DEV(accel_dev),
@@ -244,7 +269,12 @@ static void adf_ctl_stop_devices(u32 id)
 			if (!accel_dev->is_vf)
 				continue;
 
+<<<<<<< HEAD
 			adf_dev_down(accel_dev, false);
+=======
+			adf_dev_stop(accel_dev);
+			adf_dev_shutdown(accel_dev);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -253,7 +283,12 @@ static void adf_ctl_stop_devices(u32 id)
 			if (!adf_dev_started(accel_dev))
 				continue;
 
+<<<<<<< HEAD
 			adf_dev_down(accel_dev, false);
+=======
+			adf_dev_stop(accel_dev);
+			adf_dev_shutdown(accel_dev);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }
@@ -307,6 +342,7 @@ static int adf_ctl_ioctl_dev_start(struct file *fp, unsigned int cmd,
 	if (!accel_dev)
 		goto out;
 
+<<<<<<< HEAD
 	dev_info(&GET_DEV(accel_dev),
 		 "Starting acceleration device qat_dev%d.\n",
 		 ctl_data->device_id);
@@ -317,6 +353,25 @@ static int adf_ctl_ioctl_dev_start(struct file *fp, unsigned int cmd,
 		dev_err(&GET_DEV(accel_dev), "Failed to start qat_dev%d\n",
 			ctl_data->device_id);
 		adf_dev_down(accel_dev, false);
+=======
+	if (!adf_dev_started(accel_dev)) {
+		dev_info(&GET_DEV(accel_dev),
+			 "Starting acceleration device qat_dev%d.\n",
+			 ctl_data->device_id);
+		ret = adf_dev_init(accel_dev);
+		if (!ret)
+			ret = adf_dev_start(accel_dev);
+	} else {
+		dev_info(&GET_DEV(accel_dev),
+			 "Acceleration device qat_dev%d already started.\n",
+			 ctl_data->device_id);
+	}
+	if (ret) {
+		dev_err(&GET_DEV(accel_dev), "Failed to start qat_dev%d\n",
+			ctl_data->device_id);
+		adf_dev_stop(accel_dev);
+		adf_dev_shutdown(accel_dev);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 out:
 	kfree(ctl_data);
@@ -430,6 +485,7 @@ static int __init adf_register_ctl_device_driver(void)
 	if (qat_crypto_register())
 		goto err_crypto_register;
 
+<<<<<<< HEAD
 	if (qat_compression_register())
 		goto err_compression_register;
 
@@ -437,6 +493,10 @@ static int __init adf_register_ctl_device_driver(void)
 
 err_compression_register:
 	qat_crypto_unregister();
+=======
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 err_crypto_register:
 	adf_exit_vf_wq();
 err_vf_wq:
@@ -460,7 +520,10 @@ static void __exit adf_unregister_ctl_device_driver(void)
 	adf_exit_vf_wq();
 	adf_exit_pf_wq();
 	qat_crypto_unregister();
+<<<<<<< HEAD
 	qat_compression_unregister();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	adf_clean_vf_map(false);
 	mutex_destroy(&adf_ctl_lock);
 }

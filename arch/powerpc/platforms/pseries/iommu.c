@@ -74,11 +74,14 @@ static struct iommu_table_group *iommu_pseries_alloc_group(int node)
 	if (!table_group)
 		return NULL;
 
+<<<<<<< HEAD
 #ifdef CONFIG_IOMMU_API
 	table_group->ops = &spapr_tce_table_group_ops;
 	table_group->pgsizes = SZ_4K;
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	table_group->tables[0] = iommu_pseries_alloc_table(node);
 	if (table_group->tables[0])
 		return table_group;
@@ -253,7 +256,11 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
 		 * Set up the page with TCE data, looping through and setting
 		 * the values.
 		 */
+<<<<<<< HEAD
 		limit = min_t(long, npages, 4096 / TCE_ENTRY_SIZE);
+=======
+		limit = min_t(long, npages, 4096/TCE_ENTRY_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 
 		for (l = 0; l < limit; l++) {
 			tcep[l] = cpu_to_be64(proto_tce | rpn << tceshift);
@@ -1729,6 +1736,7 @@ static int __init tce_iommu_bus_notifier_init(void)
 	return 0;
 }
 machine_subsys_initcall_sync(pseries, tce_iommu_bus_notifier_init);
+<<<<<<< HEAD
 
 #ifdef CONFIG_SPAPR_TCE_IOMMU
 struct iommu_group *pSeries_pci_device_group(struct pci_controller *hose,
@@ -1753,3 +1761,5 @@ struct iommu_group *pSeries_pci_device_group(struct pci_controller *hose,
 	return iommu_group_ref_get(grp);
 }
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)

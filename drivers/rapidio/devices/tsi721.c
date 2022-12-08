@@ -2924,6 +2924,10 @@ err_unmap_bars:
 		iounmap(priv->odb_base);
 err_free_res:
 	pci_release_regions(pdev);
+<<<<<<< HEAD
+=======
+	pci_clear_master(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 err_disable_pdev:
 	pci_disable_device(pdev);
 err_clean:
@@ -2940,8 +2944,12 @@ static void tsi721_remove(struct pci_dev *pdev)
 
 	tsi721_disable_ints(priv);
 	tsi721_free_irq(priv);
+<<<<<<< HEAD
 	flush_work(&priv->idb_work);
 	flush_work(&priv->pw_work);
+=======
+	flush_scheduled_work();
+>>>>>>> b7ba80a49124 (Commit)
 	rio_unregister_mport(&priv->mport);
 
 	tsi721_unregister_dma(priv);
@@ -2961,6 +2969,10 @@ static void tsi721_remove(struct pci_dev *pdev)
 		pci_disable_msi(priv->pdev);
 #endif
 	pci_release_regions(pdev);
+<<<<<<< HEAD
+=======
+	pci_clear_master(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_disable_device(pdev);
 	pci_set_drvdata(pdev, NULL);
 	kfree(priv);
@@ -2975,6 +2987,10 @@ static void tsi721_shutdown(struct pci_dev *pdev)
 
 	tsi721_disable_ints(priv);
 	tsi721_dma_stop_all(priv);
+<<<<<<< HEAD
+=======
+	pci_clear_master(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_disable_device(pdev);
 }
 

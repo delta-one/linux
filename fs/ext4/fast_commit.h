@@ -58,7 +58,11 @@ struct ext4_fc_dentry_info {
 	__u8 fc_dname[];
 };
 
+<<<<<<< HEAD
 /* Value structure for EXT4_FC_TAG_INODE. */
+=======
+/* Value structure for EXT4_FC_TAG_INODE and EXT4_FC_TAG_INODE_PARTIAL. */
+>>>>>>> b7ba80a49124 (Commit)
 struct ext4_fc_inode {
 	__le32 fc_ino;
 	__u8 fc_raw_inode[];
@@ -70,9 +74,12 @@ struct ext4_fc_tail {
 	__le32 fc_crc;
 };
 
+<<<<<<< HEAD
 /* Tag base length */
 #define EXT4_FC_TAG_BASE_LEN (sizeof(struct ext4_fc_tl))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Fast commit status codes
  */
@@ -96,7 +103,10 @@ enum {
 	EXT4_FC_REASON_RENAME_DIR,
 	EXT4_FC_REASON_FALLOC_RANGE,
 	EXT4_FC_REASON_INODE_JOURNAL_DATA,
+<<<<<<< HEAD
 	EXT4_FC_REASON_ENCRYPTED_FILENAME,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	EXT4_FC_REASON_MAX
 };
 

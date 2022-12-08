@@ -1249,7 +1249,11 @@ static void scsiback_release_translation_entry(struct vscsibk_info *info)
 	spin_unlock_irqrestore(&info->v2p_lock, flags);
 }
 
+<<<<<<< HEAD
 static void scsiback_remove(struct xenbus_device *dev)
+=======
+static int scsiback_remove(struct xenbus_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vscsibk_info *info = dev_get_drvdata(&dev->dev);
 
@@ -1261,6 +1265,11 @@ static void scsiback_remove(struct xenbus_device *dev)
 	gnttab_page_cache_shrink(&info->free_pages, 0);
 
 	dev_set_drvdata(&dev->dev, NULL);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int scsiback_probe(struct xenbus_device *dev,
@@ -1406,6 +1415,14 @@ static void scsiback_drop_tport(struct se_wwn *wwn)
 	kfree(tport);
 }
 
+<<<<<<< HEAD
+=======
+static u32 scsiback_tpg_get_inst_index(struct se_portal_group *se_tpg)
+{
+	return 1;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int scsiback_check_stop_free(struct se_cmd *se_cmd)
 {
 	return transport_generic_free_cmd(se_cmd, 0);
@@ -1416,6 +1433,14 @@ static void scsiback_release_cmd(struct se_cmd *se_cmd)
 	target_free_tag(se_cmd->se_sess, se_cmd);
 }
 
+<<<<<<< HEAD
+=======
+static u32 scsiback_sess_get_index(struct se_session *se_sess)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int scsiback_write_pending(struct se_cmd *se_cmd)
 {
 	/* Go ahead and process the write immediately */
@@ -1424,6 +1449,18 @@ static int scsiback_write_pending(struct se_cmd *se_cmd)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void scsiback_set_default_node_attrs(struct se_node_acl *nacl)
+{
+}
+
+static int scsiback_get_cmd_state(struct se_cmd *se_cmd)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int scsiback_queue_data_in(struct se_cmd *se_cmd)
 {
 	struct vscsibk_pend *pending_req = container_of(se_cmd,
@@ -1803,6 +1840,14 @@ static int scsiback_check_true(struct se_portal_group *se_tpg)
 	return 1;
 }
 
+<<<<<<< HEAD
+=======
+static int scsiback_check_false(struct se_portal_group *se_tpg)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct target_core_fabric_ops scsiback_ops = {
 	.module				= THIS_MODULE,
 	.fabric_name			= "xen-pvscsi",
@@ -1810,10 +1855,23 @@ static const struct target_core_fabric_ops scsiback_ops = {
 	.tpg_get_tag			= scsiback_get_tag,
 	.tpg_check_demo_mode		= scsiback_check_true,
 	.tpg_check_demo_mode_cache	= scsiback_check_true,
+<<<<<<< HEAD
 	.check_stop_free		= scsiback_check_stop_free,
 	.release_cmd			= scsiback_release_cmd,
 	.sess_get_initiator_sid		= NULL,
 	.write_pending			= scsiback_write_pending,
+=======
+	.tpg_check_demo_mode_write_protect = scsiback_check_false,
+	.tpg_check_prod_mode_write_protect = scsiback_check_false,
+	.tpg_get_inst_index		= scsiback_tpg_get_inst_index,
+	.check_stop_free		= scsiback_check_stop_free,
+	.release_cmd			= scsiback_release_cmd,
+	.sess_get_index			= scsiback_sess_get_index,
+	.sess_get_initiator_sid		= NULL,
+	.write_pending			= scsiback_write_pending,
+	.set_default_node_attributes	= scsiback_set_default_node_attrs,
+	.get_cmd_state			= scsiback_get_cmd_state,
+>>>>>>> b7ba80a49124 (Commit)
 	.queue_data_in			= scsiback_queue_data_in,
 	.queue_status			= scsiback_queue_status,
 	.queue_tm_rsp			= scsiback_queue_tm_rsp,

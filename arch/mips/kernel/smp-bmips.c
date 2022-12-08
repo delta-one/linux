@@ -54,8 +54,11 @@ static void bmips_set_reset_vec(int cpu, u32 val);
 
 #ifdef CONFIG_SMP
 
+<<<<<<< HEAD
 #include <asm/smp.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* initial $sp, $gp - used by arch/mips/kernel/bmips_vec.S */
 unsigned long bmips_smp_boot_sp;
 unsigned long bmips_smp_boot_gp;
@@ -415,8 +418,11 @@ void __ref play_dead(void)
 	"	wait\n"
 	"	j	bmips_secondary_reentry\n"
 	: : : "memory");
+<<<<<<< HEAD
 
 	BUG();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #endif /* CONFIG_HOTPLUG_CPU */

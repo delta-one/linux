@@ -36,7 +36,11 @@ problems and bugs in particular.
 
    reporting-issues
    reporting-regressions
+<<<<<<< HEAD
    quickly-build-trimmed-linux
+=======
+   security-bugs
+>>>>>>> b7ba80a49124 (Commit)
    bug-hunting
    bug-bisect
    tainted-kernels
@@ -56,6 +60,7 @@ ABI will be found here.
 
    sysfs-rules
 
+<<<<<<< HEAD
 This is the beginning of a section with information of interest to
 application developers and system integrators doing analysis of the
 Linux kernel for safety critical applications. Documents supporting
@@ -67,6 +72,8 @@ subsystems expectations will be found here.
 
    workload-tracing
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 The rest of this manual consists of various unordered guides on how to
 configure specific aspects of kernel behavior to your liking.
 
@@ -127,7 +134,10 @@ configure specific aspects of kernel behavior to your liking.
    svga
    syscall-user-dispatch
    sysrq
+<<<<<<< HEAD
    thermal/index
+=======
+>>>>>>> b7ba80a49124 (Commit)
    thunderbolt
    ufs
    unicode

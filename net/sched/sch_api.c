@@ -31,7 +31,10 @@
 #include <net/netlink.h>
 #include <net/pkt_sched.h>
 #include <net/pkt_cls.h>
+<<<<<<< HEAD
 #include <net/tc_wrapper.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <trace/events/qdisc.h>
 
@@ -639,6 +642,7 @@ void qdisc_watchdog_schedule_range_ns(struct qdisc_watchdog *wd, u64 expires,
 		return;
 
 	if (hrtimer_is_queued(&wd->timer)) {
+<<<<<<< HEAD
 		u64 softexpires;
 
 		softexpires = ktime_to_ns(hrtimer_get_softexpires(&wd->timer));
@@ -649,6 +653,16 @@ void qdisc_watchdog_schedule_range_ns(struct qdisc_watchdog *wd, u64 expires,
 			return;
 	}
 
+=======
+		/* If timer is already set in [expires, expires + delta_ns],
+		 * do not reprogram it.
+		 */
+		if (wd->last_expires - expires <= delta_ns)
+			return;
+	}
+
+	wd->last_expires = expires;
+>>>>>>> b7ba80a49124 (Commit)
 	hrtimer_start_range_ns(&wd->timer,
 			       ns_to_ktime(expires),
 			       delta_ns,
@@ -871,6 +885,7 @@ void qdisc_offload_graft_helper(struct net_device *dev, struct Qdisc *sch,
 }
 EXPORT_SYMBOL(qdisc_offload_graft_helper);
 
+<<<<<<< HEAD
 void qdisc_offload_query_caps(struct net_device *dev,
 			      enum tc_setup_type type,
 			      void *caps, size_t caps_len)
@@ -888,6 +903,8 @@ void qdisc_offload_query_caps(struct net_device *dev,
 }
 EXPORT_SYMBOL(qdisc_offload_query_caps);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void qdisc_offload_graft_root(struct net_device *dev,
 				     struct Qdisc *new, struct Qdisc *old,
 				     struct netlink_ext_ack *extack)
@@ -904,8 +921,12 @@ static void qdisc_offload_graft_root(struct net_device *dev,
 }
 
 static int tc_fill_qdisc(struct sk_buff *skb, struct Qdisc *q, u32 clid,
+<<<<<<< HEAD
 			 u32 portid, u32 seq, u16 flags, int event,
 			 struct netlink_ext_ack *extack)
+=======
+			 u32 portid, u32 seq, u16 flags, int event)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct gnet_stats_basic_sync __percpu *cpu_bstats = NULL;
 	struct gnet_stats_queue __percpu *cpu_qstats = NULL;
@@ -973,12 +994,16 @@ static int tc_fill_qdisc(struct sk_buff *skb, struct Qdisc *q, u32 clid,
 	if (gnet_stats_finish_copy(&d) < 0)
 		goto nla_put_failure;
 
+<<<<<<< HEAD
 	if (extack && extack->_msg &&
 	    nla_put_string(skb, TCA_EXT_WARN_MSG, extack->_msg))
 		goto out_nlmsg_trim;
 
 	nlh->nlmsg_len = skb_tail_pointer(skb) - b;
 
+=======
+	nlh->nlmsg_len = skb_tail_pointer(skb) - b;
+>>>>>>> b7ba80a49124 (Commit)
 	return skb->len;
 
 out_nlmsg_trim:
@@ -999,8 +1024,12 @@ static bool tc_qdisc_dump_ignore(struct Qdisc *q, bool dump_invisible)
 
 static int qdisc_notify(struct net *net, struct sk_buff *oskb,
 			struct nlmsghdr *n, u32 clid,
+<<<<<<< HEAD
 			struct Qdisc *old, struct Qdisc *new,
 			struct netlink_ext_ack *extack)
+=======
+			struct Qdisc *old, struct Qdisc *new)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sk_buff *skb;
 	u32 portid = oskb ? NETLINK_CB(oskb).portid : 0;
@@ -1011,12 +1040,20 @@ static int qdisc_notify(struct net *net, struct sk_buff *oskb,
 
 	if (old && !tc_qdisc_dump_ignore(old, false)) {
 		if (tc_fill_qdisc(skb, old, clid, portid, n->nlmsg_seq,
+<<<<<<< HEAD
 				  0, RTM_DELQDISC, extack) < 0)
+=======
+				  0, RTM_DELQDISC) < 0)
+>>>>>>> b7ba80a49124 (Commit)
 			goto err_out;
 	}
 	if (new && !tc_qdisc_dump_ignore(new, false)) {
 		if (tc_fill_qdisc(skb, new, clid, portid, n->nlmsg_seq,
+<<<<<<< HEAD
 				  old ? NLM_F_REPLACE : 0, RTM_NEWQDISC, extack) < 0)
+=======
+				  old ? NLM_F_REPLACE : 0, RTM_NEWQDISC) < 0)
+>>>>>>> b7ba80a49124 (Commit)
 			goto err_out;
 	}
 
@@ -1031,11 +1068,18 @@ err_out:
 
 static void notify_and_destroy(struct net *net, struct sk_buff *skb,
 			       struct nlmsghdr *n, u32 clid,
+<<<<<<< HEAD
 			       struct Qdisc *old, struct Qdisc *new,
 			       struct netlink_ext_ack *extack)
 {
 	if (new || old)
 		qdisc_notify(net, skb, n, clid, old, new, extack);
+=======
+			       struct Qdisc *old, struct Qdisc *new)
+{
+	if (new || old)
+		qdisc_notify(net, skb, n, clid, old, new);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (old)
 		qdisc_put(old);
@@ -1110,17 +1154,29 @@ static int qdisc_graft(struct net_device *dev, struct Qdisc *parent,
 
 skip:
 		if (!ingress) {
+<<<<<<< HEAD
 			old = rtnl_dereference(dev->qdisc);
+=======
+			notify_and_destroy(net, skb, n, classid,
+					   rtnl_dereference(dev->qdisc), new);
+>>>>>>> b7ba80a49124 (Commit)
 			if (new && !new->ops->attach)
 				qdisc_refcount_inc(new);
 			rcu_assign_pointer(dev->qdisc, new ? : &noop_qdisc);
 
+<<<<<<< HEAD
 			notify_and_destroy(net, skb, n, classid, old, new, extack);
 
 			if (new && new->ops->attach)
 				new->ops->attach(new);
 		} else {
 			notify_and_destroy(net, skb, n, classid, old, new, extack);
+=======
+			if (new && new->ops->attach)
+				new->ops->attach(new);
+		} else {
+			notify_and_destroy(net, skb, n, classid, old, new);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (dev->flags & IFF_UP)
@@ -1143,6 +1199,7 @@ skip:
 			return -ENOENT;
 		}
 
+<<<<<<< HEAD
 		if (new && new->ops == &noqueue_qdisc_ops) {
 			NL_SET_ERR_MSG(extack, "Cannot assign noqueue to a class");
 			return -EINVAL;
@@ -1152,6 +1209,12 @@ skip:
 		if (err)
 			return err;
 		notify_and_destroy(net, skb, n, classid, old, new, extack);
+=======
+		err = cops->graft(parent, cl, new, &old, extack);
+		if (err)
+			return err;
+		notify_and_destroy(net, skb, n, classid, old, new);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return 0;
 }
@@ -1284,10 +1347,20 @@ static struct Qdisc *qdisc_create(struct net_device *dev,
 	if (err)
 		goto err_out3;
 
+<<<<<<< HEAD
+=======
+	if (ops->init) {
+		err = ops->init(sch, tca[TCA_OPTIONS], extack);
+		if (err != 0)
+			goto err_out5;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (tca[TCA_STAB]) {
 		stab = qdisc_get_stab(tca[TCA_STAB], extack);
 		if (IS_ERR(stab)) {
 			err = PTR_ERR(stab);
+<<<<<<< HEAD
 			goto err_out3;
 		}
 		rcu_assign_pointer(sch->stab, stab);
@@ -1299,6 +1372,12 @@ static struct Qdisc *qdisc_create(struct net_device *dev,
 			goto err_out4;
 	}
 
+=======
+			goto err_out4;
+		}
+		rcu_assign_pointer(sch->stab, stab);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (tca[TCA_RATE]) {
 		err = -EOPNOTSUPP;
 		if (sch->flags & TCQ_F_MQROOT) {
@@ -1323,6 +1402,7 @@ static struct Qdisc *qdisc_create(struct net_device *dev,
 
 	return sch;
 
+<<<<<<< HEAD
 err_out4:
 	/* Even if ops->init() failed, we call ops->destroy()
 	 * like qdisc_create_dflt().
@@ -1330,6 +1410,12 @@ err_out4:
 	if (ops->destroy)
 		ops->destroy(sch);
 	qdisc_put_stab(rtnl_dereference(sch->stab));
+=======
+err_out5:
+	/* ops->init() failed, we call ->destroy() like qdisc_create_dflt() */
+	if (ops->destroy)
+		ops->destroy(sch);
+>>>>>>> b7ba80a49124 (Commit)
 err_out3:
 	netdev_put(dev, &sch->dev_tracker);
 	qdisc_free(sch);
@@ -1338,6 +1424,19 @@ err_out2:
 err_out:
 	*errp = err;
 	return NULL;
+<<<<<<< HEAD
+=======
+
+err_out4:
+	/*
+	 * Any broken qdiscs that would require a ops->reset() here?
+	 * The qdisc was never in action so it shouldn't be necessary.
+	 */
+	qdisc_put_stab(rtnl_dereference(sch->stab));
+	if (ops->destroy)
+		ops->destroy(sch);
+	goto err_out3;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int qdisc_change(struct Qdisc *sch, struct nlattr **tca,
@@ -1513,7 +1612,11 @@ static int tc_get_qdisc(struct sk_buff *skb, struct nlmsghdr *n,
 		if (err != 0)
 			return err;
 	} else {
+<<<<<<< HEAD
 		qdisc_notify(net, skb, n, clid, NULL, q, NULL);
+=======
+		qdisc_notify(net, skb, n, clid, NULL, q);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return 0;
 }
@@ -1652,7 +1755,11 @@ replay:
 	}
 	err = qdisc_change(q, tca, extack);
 	if (err == 0)
+<<<<<<< HEAD
 		qdisc_notify(net, skb, n, clid, NULL, q, extack);
+=======
+		qdisc_notify(net, skb, n, clid, NULL, q);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 
 create_n_graft:
@@ -1719,7 +1826,11 @@ static int tc_dump_qdisc_root(struct Qdisc *root, struct sk_buff *skb,
 		if (!tc_qdisc_dump_ignore(q, dump_invisible) &&
 		    tc_fill_qdisc(skb, q, q->parent, NETLINK_CB(cb->skb).portid,
 				  cb->nlh->nlmsg_seq, NLM_F_MULTI,
+<<<<<<< HEAD
 				  RTM_NEWQDISC, NULL) <= 0)
+=======
+				  RTM_NEWQDISC) <= 0)
+>>>>>>> b7ba80a49124 (Commit)
 			goto done;
 		q_idx++;
 	}
@@ -1741,7 +1852,11 @@ static int tc_dump_qdisc_root(struct Qdisc *root, struct sk_buff *skb,
 		if (!tc_qdisc_dump_ignore(q, dump_invisible) &&
 		    tc_fill_qdisc(skb, q, q->parent, NETLINK_CB(cb->skb).portid,
 				  cb->nlh->nlmsg_seq, NLM_F_MULTI,
+<<<<<<< HEAD
 				  RTM_NEWQDISC, NULL) <= 0)
+=======
+				  RTM_NEWQDISC) <= 0)
+>>>>>>> b7ba80a49124 (Commit)
 			goto done;
 		q_idx++;
 	}
@@ -1814,8 +1929,13 @@ done:
  ************************************************/
 
 static int tc_fill_tclass(struct sk_buff *skb, struct Qdisc *q,
+<<<<<<< HEAD
 			  unsigned long cl, u32 portid, u32 seq, u16 flags,
 			  int event, struct netlink_ext_ack *extack)
+=======
+			  unsigned long cl,
+			  u32 portid, u32 seq, u16 flags, int event)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tcmsg *tcm;
 	struct nlmsghdr  *nlh;
@@ -1850,12 +1970,16 @@ static int tc_fill_tclass(struct sk_buff *skb, struct Qdisc *q,
 	if (gnet_stats_finish_copy(&d) < 0)
 		goto nla_put_failure;
 
+<<<<<<< HEAD
 	if (extack && extack->_msg &&
 	    nla_put_string(skb, TCA_EXT_WARN_MSG, extack->_msg))
 		goto out_nlmsg_trim;
 
 	nlh->nlmsg_len = skb_tail_pointer(skb) - b;
 
+=======
+	nlh->nlmsg_len = skb_tail_pointer(skb) - b;
+>>>>>>> b7ba80a49124 (Commit)
 	return skb->len;
 
 out_nlmsg_trim:
@@ -1866,7 +1990,11 @@ nla_put_failure:
 
 static int tclass_notify(struct net *net, struct sk_buff *oskb,
 			 struct nlmsghdr *n, struct Qdisc *q,
+<<<<<<< HEAD
 			 unsigned long cl, int event, struct netlink_ext_ack *extack)
+=======
+			 unsigned long cl, int event)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sk_buff *skb;
 	u32 portid = oskb ? NETLINK_CB(oskb).portid : 0;
@@ -1875,7 +2003,11 @@ static int tclass_notify(struct net *net, struct sk_buff *oskb,
 	if (!skb)
 		return -ENOBUFS;
 
+<<<<<<< HEAD
 	if (tc_fill_tclass(skb, q, cl, portid, n->nlmsg_seq, 0, event, extack) < 0) {
+=======
+	if (tc_fill_tclass(skb, q, cl, portid, n->nlmsg_seq, 0, event) < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		kfree_skb(skb);
 		return -EINVAL;
 	}
@@ -1902,7 +2034,11 @@ static int tclass_del_notify(struct net *net,
 		return -ENOBUFS;
 
 	if (tc_fill_tclass(skb, q, cl, portid, n->nlmsg_seq, 0,
+<<<<<<< HEAD
 			   RTM_DELTCLASS, extack) < 0) {
+=======
+			   RTM_DELTCLASS) < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		kfree_skb(skb);
 		return -EINVAL;
 	}
@@ -1931,7 +2067,11 @@ static int tcf_node_bind(struct tcf_proto *tp, void *n, struct tcf_walker *arg)
 {
 	struct tcf_bind_args *a = (void *)arg;
 
+<<<<<<< HEAD
 	if (n && tp->ops->bind_class) {
+=======
+	if (tp->ops->bind_class) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct Qdisc *q = tcf_block_q(tp->chain->block);
 
 		sch_tree_lock(q);
@@ -2109,7 +2249,11 @@ static int tc_ctl_tclass(struct sk_buff *skb, struct nlmsghdr *n,
 			tc_bind_tclass(q, portid, clid, 0);
 			goto out;
 		case RTM_GETTCLASS:
+<<<<<<< HEAD
 			err = tclass_notify(net, skb, n, q, cl, RTM_NEWTCLASS, extack);
+=======
+			err = tclass_notify(net, skb, n, q, cl, RTM_NEWTCLASS);
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 		default:
 			err = -EINVAL;
@@ -2127,7 +2271,11 @@ static int tc_ctl_tclass(struct sk_buff *skb, struct nlmsghdr *n,
 	if (cops->change)
 		err = cops->change(q, clid, portid, tca, &new_cl, extack);
 	if (err == 0) {
+<<<<<<< HEAD
 		tclass_notify(net, skb, n, q, new_cl, RTM_NEWTCLASS, extack);
+=======
+		tclass_notify(net, skb, n, q, new_cl, RTM_NEWTCLASS);
+>>>>>>> b7ba80a49124 (Commit)
 		/* We just create a new class, need to do reverse binding. */
 		if (cl != new_cl)
 			tc_bind_tclass(q, portid, clid, new_cl);
@@ -2149,7 +2297,11 @@ static int qdisc_class_dump(struct Qdisc *q, unsigned long cl,
 
 	return tc_fill_tclass(a->skb, q, cl, NETLINK_CB(a->cb->skb).portid,
 			      a->cb->nlh->nlmsg_seq, NLM_F_MULTI,
+<<<<<<< HEAD
 			      RTM_NEWTCLASS, NULL);
+=======
+			      RTM_NEWTCLASS);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int tc_dump_tclass_qdisc(struct Qdisc *q, struct sk_buff *skb,
@@ -2288,8 +2440,11 @@ static struct pernet_operations psched_net_ops = {
 	.exit = psched_net_exit,
 };
 
+<<<<<<< HEAD
 DEFINE_STATIC_KEY_FALSE(tc_skip_wrapper);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __init pktsched_init(void)
 {
 	int err;
@@ -2317,8 +2472,11 @@ static int __init pktsched_init(void)
 	rtnl_register(PF_UNSPEC, RTM_GETTCLASS, tc_ctl_tclass, tc_dump_tclass,
 		      0);
 
+<<<<<<< HEAD
 	tc_wrapper_init();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

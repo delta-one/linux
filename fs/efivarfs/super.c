@@ -116,9 +116,12 @@ static int efivarfs_callback(efi_char16_t *name16, efi_guid_t vendor,
 	int err = -ENOMEM;
 	bool is_removable = false;
 
+<<<<<<< HEAD
 	if (guid_equal(&vendor, &LINUX_EFI_RANDOM_SEED_TABLE_GUID))
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
 	if (!entry)
 		return err;
@@ -194,9 +197,12 @@ static int efivarfs_fill_super(struct super_block *sb, struct fs_context *fc)
 	struct dentry *root;
 	int err;
 
+<<<<<<< HEAD
 	if (!efivar_is_available())
 		return -EOPNOTSUPP;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sb->s_maxbytes          = MAX_LFS_FILESIZE;
 	sb->s_blocksize         = PAGE_SIZE;
 	sb->s_blocksize_bits    = PAGE_SHIFT;
@@ -246,9 +252,12 @@ static void efivarfs_kill_sb(struct super_block *sb)
 {
 	kill_litter_super(sb);
 
+<<<<<<< HEAD
 	if (!efivar_is_available())
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Remove all entries and destroy */
 	efivar_entry_iter(efivarfs_destroy, &efivarfs_list, NULL);
 }
@@ -262,6 +271,12 @@ static struct file_system_type efivarfs_type = {
 
 static __init int efivarfs_init(void)
 {
+<<<<<<< HEAD
+=======
+	if (!efivars_kobject())
+		return -ENODEV;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return register_filesystem(&efivarfs_type);
 }
 

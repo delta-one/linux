@@ -11,6 +11,7 @@
 #include "page_reporting.h"
 #include "internal.h"
 
+<<<<<<< HEAD
 /* Initialize to an unsupported value */
 unsigned int page_reporting_order = -1;
 
@@ -47,6 +48,12 @@ MODULE_PARM_DESC(page_reporting_order, "Set page reporting order");
  */
 EXPORT_SYMBOL_GPL(page_reporting_order);
 
+=======
+unsigned int page_reporting_order = MAX_ORDER;
+module_param(page_reporting_order, uint, 0644);
+MODULE_PARM_DESC(page_reporting_order, "Set page reporting order");
+
+>>>>>>> b7ba80a49124 (Commit)
 #define PAGE_REPORTING_DELAY	(2 * HZ)
 static struct page_reporting_dev_info __rcu *pr_dev_info __read_mostly;
 
@@ -276,7 +283,11 @@ page_reporting_process_zone(struct page_reporting_dev_info *prdev,
 		return err;
 
 	/* Process each free list starting from lowest order/mt */
+<<<<<<< HEAD
 	for (order = page_reporting_order; order <= MAX_ORDER; order++) {
+=======
+	for (order = page_reporting_order; order < MAX_ORDER; order++) {
+>>>>>>> b7ba80a49124 (Commit)
 		for (mt = 0; mt < MIGRATE_TYPES; mt++) {
 			/* We do not pull pages from the isolate free list */
 			if (is_migrate_isolate(mt))
@@ -356,13 +367,18 @@ int page_reporting_register(struct page_reporting_dev_info *prdev)
 	mutex_lock(&page_reporting_mutex);
 
 	/* nothing to do if already in use */
+<<<<<<< HEAD
 	if (rcu_dereference_protected(pr_dev_info,
 				lockdep_is_held(&page_reporting_mutex))) {
+=======
+	if (rcu_access_pointer(pr_dev_info)) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EBUSY;
 		goto err_out;
 	}
 
 	/*
+<<<<<<< HEAD
 	 * If the page_reporting_order value is not set, we check if
 	 * an order is provided from the driver that is performing the
 	 * registration. If that is not provided either, we default to
@@ -375,6 +391,12 @@ int page_reporting_register(struct page_reporting_dev_info *prdev)
 		else
 			page_reporting_order = pageblock_order;
 	}
+=======
+	 * Update the page reporting order if it's specified by driver.
+	 * Otherwise, it falls back to @pageblock_order.
+	 */
+	page_reporting_order = prdev->order ? : pageblock_order;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* initialize state and work structures */
 	atomic_set(&prdev->state, PAGE_REPORTING_IDLE);
@@ -402,8 +424,12 @@ void page_reporting_unregister(struct page_reporting_dev_info *prdev)
 {
 	mutex_lock(&page_reporting_mutex);
 
+<<<<<<< HEAD
 	if (prdev == rcu_dereference_protected(pr_dev_info,
 				lockdep_is_held(&page_reporting_mutex))) {
+=======
+	if (rcu_access_pointer(pr_dev_info) == prdev) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Disable page reporting notification */
 		RCU_INIT_POINTER(pr_dev_info, NULL);
 		synchronize_rcu();

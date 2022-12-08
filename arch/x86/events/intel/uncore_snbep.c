@@ -445,7 +445,10 @@
 #define ICX_UPI_PCI_PMON_CTR0			0x320
 #define ICX_UPI_PCI_PMON_BOX_CTL		0x318
 #define ICX_UPI_CTL_UMASK_EXT			0xffffff
+<<<<<<< HEAD
 #define ICX_UBOX_DID				0x3450
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* ICX M3UPI*/
 #define ICX_M3UPI_PCI_PMON_CTL0			0xd8
@@ -458,7 +461,10 @@
 
 /* SPR */
 #define SPR_RAW_EVENT_MASK_EXT			0xffffff
+<<<<<<< HEAD
 #define SPR_UBOX_DID				0x3250
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* SPR CHA */
 #define SPR_CHA_PMON_CTL_TID_EN			(1 << 16)
@@ -1374,6 +1380,7 @@ static struct pci_driver snbep_uncore_pci_driver = {
 
 #define NODE_ID_MASK	0x7
 
+<<<<<<< HEAD
 /* Each three bits from 0 to 23 of GIDNIDMAP register correspond Node ID. */
 #define GIDNIDMAP(config, id)	(((config) >> (3 * (id))) & 0x7)
 
@@ -1396,6 +1403,8 @@ err:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * build pci bus to socket mapping
  */
@@ -1421,8 +1430,18 @@ static int snbep_pci2phy_map_init(int devid, int nodeid_loc, int idmap_loc, bool
 		 * the topology.
 		 */
 		if (nr_node_ids <= 8) {
+<<<<<<< HEAD
 			err = upi_nodeid_groupid(ubox_dev, nodeid_loc, idmap_loc,
 						 &nodeid, &config);
+=======
+			/* get the Node ID of the local register */
+			err = pci_read_config_dword(ubox_dev, nodeid_loc, &config);
+			if (err)
+				break;
+			nodeid = config & NODE_ID_MASK;
+			/* get the Node ID mapping */
+			err = pci_read_config_dword(ubox_dev, idmap_loc, &config);
+>>>>>>> b7ba80a49124 (Commit)
 			if (err)
 				break;
 
@@ -1440,7 +1459,11 @@ static int snbep_pci2phy_map_init(int devid, int nodeid_loc, int idmap_loc, bool
 			 * to a particular node.
 			 */
 			for (i = 0; i < 8; i++) {
+<<<<<<< HEAD
 				if (nodeid == GIDNIDMAP(config, i)) {
+=======
+				if (nodeid == ((config >> (3 * i)) & 0x7)) {
+>>>>>>> b7ba80a49124 (Commit)
 					if (topology_max_die_per_package() > 1)
 						die_id = i;
 					else
@@ -1453,6 +1476,12 @@ static int snbep_pci2phy_map_init(int devid, int nodeid_loc, int idmap_loc, bool
 			}
 			raw_spin_unlock(&pci2phy_map_lock);
 		} else {
+<<<<<<< HEAD
+=======
+			int node = pcibus_to_node(ubox_dev->bus);
+			int cpu;
+
+>>>>>>> b7ba80a49124 (Commit)
 			segment = pci_domain_nr(ubox_dev->bus);
 			raw_spin_lock(&pci2phy_map_lock);
 			map = __find_pci2phy_map(segment);
@@ -1462,8 +1491,20 @@ static int snbep_pci2phy_map_init(int devid, int nodeid_loc, int idmap_loc, bool
 				break;
 			}
 
+<<<<<<< HEAD
 			map->pbus_to_dieid[bus] = die_id = uncore_device_to_die(ubox_dev);
 
+=======
+			die_id = -1;
+			for_each_cpu(cpu, cpumask_of_pcibus(ubox_dev->bus)) {
+				struct cpuinfo_x86 *c = &cpu_data(cpu);
+
+				if (c->initialized && cpu_to_node(cpu) == node) {
+					map->pbus_to_dieid[bus] = die_id = c->logical_die_id;
+					break;
+				}
+			}
+>>>>>>> b7ba80a49124 (Commit)
 			raw_spin_unlock(&pci2phy_map_lock);
 
 			if (WARN_ON_ONCE(die_id == -1)) {
@@ -2900,7 +2941,10 @@ static bool hswep_has_limit_sbox(unsigned int device)
 		return false;
 
 	pci_read_config_dword(dev, HSWEP_PCU_CAPID4_OFFET, &capid4);
+<<<<<<< HEAD
 	pci_dev_put(dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!hswep_get_chop(capid4))
 		return true;
 
@@ -3709,6 +3753,7 @@ static struct intel_uncore_ops skx_uncore_iio_ops = {
 	.read_counter		= uncore_msr_read_counter,
 };
 
+<<<<<<< HEAD
 static struct intel_uncore_topology *pmu_topology(struct intel_uncore_pmu *pmu, int die)
 {
 	int idx;
@@ -3719,6 +3764,12 @@ static struct intel_uncore_topology *pmu_topology(struct intel_uncore_pmu *pmu, 
 	}
 
 	return NULL;
+=======
+static inline u8 skx_iio_stack(struct intel_uncore_pmu *pmu, int die)
+{
+	return pmu->type->topology[die].configuration >>
+	       (pmu->pmu_idx * BUS_NUM_STRIDE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static umode_t
@@ -3726,9 +3777,14 @@ pmu_iio_mapping_visible(struct kobject *kobj, struct attribute *attr,
 			 int die, int zero_bus_pmu)
 {
 	struct intel_uncore_pmu *pmu = dev_to_uncore_pmu(kobj_to_dev(kobj));
+<<<<<<< HEAD
 	struct intel_uncore_topology *pmut = pmu_topology(pmu, die);
 
 	return (pmut && !pmut->iio->pci_bus_no && pmu->pmu_idx != zero_bus_pmu) ? 0 : attr->mode;
+=======
+
+	return (!skx_iio_stack(pmu, die) && pmu->pmu_idx != zero_bus_pmu) ? 0 : attr->mode;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static umode_t
@@ -3744,10 +3800,16 @@ static ssize_t skx_iio_mapping_show(struct device *dev,
 	struct intel_uncore_pmu *pmu = dev_to_uncore_pmu(dev);
 	struct dev_ext_attribute *ea = to_dev_ext_attribute(attr);
 	long die = (long)ea->var;
+<<<<<<< HEAD
 	struct intel_uncore_topology *pmut = pmu_topology(pmu, die);
 
 	return sprintf(buf, "%04x:%02x\n", pmut ? pmut->iio->segment : 0,
 					   pmut ? pmut->iio->pci_bus_no : 0);
+=======
+
+	return sprintf(buf, "%04x:%02x\n", pmu->type->topology[die].segment,
+					   skx_iio_stack(pmu, die));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int skx_msr_cpu_bus_read(int cpu, u64 *topology)
@@ -3782,6 +3844,7 @@ static int die_to_cpu(int die)
 	return res;
 }
 
+<<<<<<< HEAD
 enum {
 	IIO_TOPOLOGY_TYPE,
 	UPI_TOPOLOGY_TYPE,
@@ -3855,6 +3918,20 @@ static int skx_pmu_get_topology(struct intel_uncore_type *type,
 
 	for (die = 0; die < uncore_max_dies(); die++) {
 		ret = skx_msr_cpu_bus_read(die_to_cpu(die), &cpu_bus_msr);
+=======
+static int skx_iio_get_topology(struct intel_uncore_type *type)
+{
+	int die, ret = -EPERM;
+
+	type->topology = kcalloc(uncore_max_dies(), sizeof(*type->topology),
+				 GFP_KERNEL);
+	if (!type->topology)
+		return -ENOMEM;
+
+	for (die = 0; die < uncore_max_dies(); die++) {
+		ret = skx_msr_cpu_bus_read(die_to_cpu(die),
+					   &type->topology[die].configuration);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			break;
 
@@ -3862,14 +3939,24 @@ static int skx_pmu_get_topology(struct intel_uncore_type *type,
 		if (ret < 0)
 			break;
 
+<<<<<<< HEAD
 		ret = topology_cb(type, ret, die, cpu_bus_msr);
 		if (ret)
 			break;
+=======
+		type->topology[die].segment = ret;
+	}
+
+	if (ret < 0) {
+		kfree(type->topology);
+		type->topology = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;
 }
 
+<<<<<<< HEAD
 static int skx_iio_topology_cb(struct intel_uncore_type *type, int segment,
 				int die, u64 cpu_bus_msr)
 {
@@ -3891,6 +3978,8 @@ static int skx_iio_get_topology(struct intel_uncore_type *type)
 	return skx_pmu_get_topology(type, skx_iio_topology_cb);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct attribute_group skx_iio_mapping_group = {
 	.is_visible	= skx_iio_mapping_visible,
 };
@@ -3900,6 +3989,7 @@ static const struct attribute_group *skx_iio_attr_update[] = {
 	NULL,
 };
 
+<<<<<<< HEAD
 static void pmu_clear_mapping_attr(const struct attribute_group **groups,
 				   struct attribute_group *ag)
 {
@@ -3919,6 +4009,10 @@ static void
 pmu_set_mapping(struct intel_uncore_type *type, struct attribute_group *ag,
 		ssize_t (*show)(struct device*, struct device_attribute*, char*),
 		int topology_type)
+=======
+static int
+pmu_iio_set_mapping(struct intel_uncore_type *type, struct attribute_group *ag)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	char buf[64];
 	int ret;
@@ -3926,6 +4020,7 @@ pmu_set_mapping(struct intel_uncore_type *type, struct attribute_group *ag,
 	struct attribute **attrs = NULL;
 	struct dev_ext_attribute *eas = NULL;
 
+<<<<<<< HEAD
 	ret = pmu_alloc_topology(type, topology_type);
 	if (ret < 0)
 		goto clear_attr_update;
@@ -3933,6 +4028,13 @@ pmu_set_mapping(struct intel_uncore_type *type, struct attribute_group *ag,
 	ret = type->get_topology(type);
 	if (ret < 0)
 		goto clear_topology;
+=======
+	ret = type->get_topology(type);
+	if (ret < 0)
+		goto clear_attr_update;
+
+	ret = -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* One more for NULL. */
 	attrs = kcalloc((uncore_max_dies() + 1), sizeof(*attrs), GFP_KERNEL);
@@ -3944,20 +4046,32 @@ pmu_set_mapping(struct intel_uncore_type *type, struct attribute_group *ag,
 		goto clear_attrs;
 
 	for (die = 0; die < uncore_max_dies(); die++) {
+<<<<<<< HEAD
 		snprintf(buf, sizeof(buf), "die%ld", die);
+=======
+		sprintf(buf, "die%ld", die);
+>>>>>>> b7ba80a49124 (Commit)
 		sysfs_attr_init(&eas[die].attr.attr);
 		eas[die].attr.attr.name = kstrdup(buf, GFP_KERNEL);
 		if (!eas[die].attr.attr.name)
 			goto err;
 		eas[die].attr.attr.mode = 0444;
+<<<<<<< HEAD
 		eas[die].attr.show = show;
+=======
+		eas[die].attr.show = skx_iio_mapping_show;
+>>>>>>> b7ba80a49124 (Commit)
 		eas[die].attr.store = NULL;
 		eas[die].var = (void *)die;
 		attrs[die] = &eas[die].attr.attr;
 	}
 	ag->attrs = attrs;
 
+<<<<<<< HEAD
 	return;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 err:
 	for (; die >= 0; die--)
 		kfree(eas[die].attr.attr.name);
@@ -3965,6 +4079,7 @@ err:
 clear_attrs:
 	kfree(attrs);
 clear_topology:
+<<<<<<< HEAD
 	pmu_free_topology(type);
 clear_attr_update:
 	pmu_clear_mapping_attr(type->attr_update, ag);
@@ -3972,6 +4087,16 @@ clear_attr_update:
 
 static void
 pmu_cleanup_mapping(struct intel_uncore_type *type, struct attribute_group *ag)
+=======
+	kfree(type->topology);
+clear_attr_update:
+	type->attr_update = NULL;
+	return ret;
+}
+
+static void
+pmu_iio_cleanup_mapping(struct intel_uncore_type *type, struct attribute_group *ag)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct attribute **attr = ag->attrs;
 
@@ -3983,6 +4108,7 @@ pmu_cleanup_mapping(struct intel_uncore_type *type, struct attribute_group *ag)
 	kfree(attr_to_ext_attr(*ag->attrs));
 	kfree(ag->attrs);
 	ag->attrs = NULL;
+<<<<<<< HEAD
 	pmu_free_topology(type);
 }
 
@@ -3995,11 +4121,23 @@ pmu_iio_set_mapping(struct intel_uncore_type *type, struct attribute_group *ag)
 static void skx_iio_set_mapping(struct intel_uncore_type *type)
 {
 	pmu_iio_set_mapping(type, &skx_iio_mapping_group);
+=======
+	kfree(type->topology);
+}
+
+static int skx_iio_set_mapping(struct intel_uncore_type *type)
+{
+	return pmu_iio_set_mapping(type, &skx_iio_mapping_group);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void skx_iio_cleanup_mapping(struct intel_uncore_type *type)
 {
+<<<<<<< HEAD
 	pmu_cleanup_mapping(type, &skx_iio_mapping_group);
+=======
+	pmu_iio_cleanup_mapping(type, &skx_iio_mapping_group);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct intel_uncore_type skx_uncore_iio = {
@@ -4260,6 +4398,7 @@ static struct intel_uncore_ops skx_upi_uncore_pci_ops = {
 	.read_counter	= snbep_uncore_pci_read_counter,
 };
 
+<<<<<<< HEAD
 static umode_t
 skx_upi_mapping_visible(struct kobject *kobj, struct attribute *attr, int die)
 {
@@ -4386,6 +4525,8 @@ static void skx_upi_cleanup_mapping(struct intel_uncore_type *type)
 	pmu_cleanup_mapping(type, &skx_upi_mapping_group);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct intel_uncore_type skx_uncore_upi = {
 	.name		= "upi",
 	.num_counters   = 4,
@@ -4398,10 +4539,13 @@ static struct intel_uncore_type skx_uncore_upi = {
 	.box_ctl	= SKX_UPI_PCI_PMON_BOX_CTL,
 	.ops		= &skx_upi_uncore_pci_ops,
 	.format_group	= &skx_upi_uncore_format_group,
+<<<<<<< HEAD
 	.attr_update	= skx_upi_attr_update,
 	.get_topology	= skx_upi_get_topology,
 	.set_mapping	= skx_upi_set_mapping,
 	.cleanup_mapping = skx_upi_cleanup_mapping,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void skx_m2m_uncore_pci_init_box(struct intel_uncore_box *box)
@@ -4712,6 +4856,14 @@ static int sad_cfg_iio_topology(struct intel_uncore_type *type, u8 *sad_pmon_map
 	int die, stack_id, ret = -EPERM;
 	struct pci_dev *dev = NULL;
 
+<<<<<<< HEAD
+=======
+	type->topology = kcalloc(uncore_max_dies(), sizeof(*type->topology),
+				 GFP_KERNEL);
+	if (!type->topology)
+		return -ENOMEM;
+
+>>>>>>> b7ba80a49124 (Commit)
 	while ((dev = pci_get_device(PCI_VENDOR_ID_INTEL, SNR_ICX_MESH2IIO_MMAP_DID, dev))) {
 		ret = pci_read_config_dword(dev, SNR_ICX_SAD_CONTROL_CFG, &sad_cfg);
 		if (ret) {
@@ -4729,12 +4881,23 @@ static int sad_cfg_iio_topology(struct intel_uncore_type *type, u8 *sad_pmon_map
 		/* Convert stack id from SAD_CONTROL to PMON notation. */
 		stack_id = sad_pmon_mapping[stack_id];
 
+<<<<<<< HEAD
 		type->topology[die][stack_id].iio->segment = pci_domain_nr(dev->bus);
 		type->topology[die][stack_id].pmu_idx = stack_id;
 		type->topology[die][stack_id].iio->pci_bus_no = dev->bus->number;
 	}
 
 	pci_dev_put(dev);
+=======
+		((u8 *)&(type->topology[die].configuration))[stack_id] = dev->bus->number;
+		type->topology[die].segment = pci_domain_nr(dev->bus);
+	}
+
+	if (ret) {
+		kfree(type->topology);
+		type->topology = NULL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -4763,14 +4926,24 @@ static int snr_iio_get_topology(struct intel_uncore_type *type)
 	return sad_cfg_iio_topology(type, snr_sad_pmon_mapping);
 }
 
+<<<<<<< HEAD
 static void snr_iio_set_mapping(struct intel_uncore_type *type)
 {
 	pmu_iio_set_mapping(type, &snr_iio_mapping_group);
+=======
+static int snr_iio_set_mapping(struct intel_uncore_type *type)
+{
+	return pmu_iio_set_mapping(type, &snr_iio_mapping_group);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void snr_iio_cleanup_mapping(struct intel_uncore_type *type)
 {
+<<<<<<< HEAD
 	pmu_cleanup_mapping(type, &snr_iio_mapping_group);
+=======
+	pmu_iio_cleanup_mapping(type, &snr_iio_mapping_group);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct event_constraint snr_uncore_iio_constraints[] = {
@@ -5101,8 +5274,11 @@ static int snr_uncore_mmio_map(struct intel_uncore_box *box,
 
 	addr += box_ctl;
 
+<<<<<<< HEAD
 	pci_dev_put(pdev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	box->io_addr = ioremap(addr, type->mmio_map_size);
 	if (!box->io_addr) {
 		pr_warn("perf uncore: Failed to ioremap for %s.\n", type->name);
@@ -5383,6 +5559,7 @@ static int icx_iio_get_topology(struct intel_uncore_type *type)
 	return sad_cfg_iio_topology(type, icx_sad_pmon_mapping);
 }
 
+<<<<<<< HEAD
 static void icx_iio_set_mapping(struct intel_uncore_type *type)
 {
 	/* Detect ICX-D system. This case is not supported */
@@ -5391,11 +5568,20 @@ static void icx_iio_set_mapping(struct intel_uncore_type *type)
 		return;
 	}
 	pmu_iio_set_mapping(type, &icx_iio_mapping_group);
+=======
+static int icx_iio_set_mapping(struct intel_uncore_type *type)
+{
+	return pmu_iio_set_mapping(type, &icx_iio_mapping_group);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void icx_iio_cleanup_mapping(struct intel_uncore_type *type)
 {
+<<<<<<< HEAD
 	pmu_cleanup_mapping(type, &icx_iio_mapping_group);
+=======
+	pmu_iio_cleanup_mapping(type, &icx_iio_mapping_group);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct intel_uncore_type icx_uncore_iio = {
@@ -5588,6 +5774,7 @@ static const struct attribute_group icx_upi_uncore_format_group = {
 	.attrs = icx_upi_uncore_formats_attr,
 };
 
+<<<<<<< HEAD
 #define ICX_UPI_REGS_ADDR_DEVICE_LINK0	0x02
 #define ICX_UPI_REGS_ADDR_FUNCTION	0x01
 
@@ -5658,6 +5845,8 @@ static void icx_upi_cleanup_mapping(struct intel_uncore_type *type)
 	pmu_cleanup_mapping(type, &icx_upi_mapping_group);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct intel_uncore_type icx_uncore_upi = {
 	.name		= "upi",
 	.num_counters   = 4,
@@ -5670,10 +5859,13 @@ static struct intel_uncore_type icx_uncore_upi = {
 	.box_ctl	= ICX_UPI_PCI_PMON_BOX_CTL,
 	.ops		= &skx_upi_uncore_pci_ops,
 	.format_group	= &icx_upi_uncore_format_group,
+<<<<<<< HEAD
 	.attr_update	= icx_upi_attr_update,
 	.get_topology	= icx_upi_get_topology,
 	.set_mapping	= icx_upi_set_mapping,
 	.cleanup_mapping = icx_upi_cleanup_mapping,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct event_constraint icx_uncore_m3upi_constraints[] = {
@@ -6105,6 +6297,7 @@ static struct intel_uncore_type spr_uncore_m2m = {
 	.name			= "m2m",
 };
 
+<<<<<<< HEAD
 static struct attribute_group spr_upi_mapping_group = {
 	.is_visible	= skx_upi_mapping_visible,
 };
@@ -6132,6 +6325,19 @@ static int spr_upi_get_topology(struct intel_uncore_type *type)
 	return discover_upi_topology(type, SPR_UBOX_DID, SPR_UPI_REGS_ADDR_DEVICE_LINK0);
 }
 
+=======
+static struct intel_uncore_type spr_uncore_upi = {
+	SPR_UNCORE_PCI_COMMON_FORMAT(),
+	.name			= "upi",
+};
+
+static struct intel_uncore_type spr_uncore_m3upi = {
+	SPR_UNCORE_PCI_COMMON_FORMAT(),
+	.name			= "m3upi",
+	.constraints		= icx_uncore_m3upi_constraints,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct intel_uncore_type spr_uncore_mdf = {
 	SPR_UNCORE_COMMON_FORMAT(),
 	.name			= "mdf",
@@ -6140,6 +6346,7 @@ static struct intel_uncore_type spr_uncore_mdf = {
 #define UNCORE_SPR_NUM_UNCORE_TYPES		12
 #define UNCORE_SPR_IIO				1
 #define UNCORE_SPR_IMC				6
+<<<<<<< HEAD
 #define UNCORE_SPR_UPI				8
 #define UNCORE_SPR_M3UPI			9
 
@@ -6147,6 +6354,9 @@ static struct intel_uncore_type spr_uncore_mdf = {
  * The uncore units, which are supported by the discovery table,
  * are defined here.
  */
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct intel_uncore_type *spr_uncores[UNCORE_SPR_NUM_UNCORE_TYPES] = {
 	&spr_uncore_chabox,
 	&spr_uncore_iio,
@@ -6156,12 +6366,18 @@ static struct intel_uncore_type *spr_uncores[UNCORE_SPR_NUM_UNCORE_TYPES] = {
 	NULL,
 	&spr_uncore_imc,
 	&spr_uncore_m2m,
+<<<<<<< HEAD
 	NULL,
 	NULL,
+=======
+	&spr_uncore_upi,
+	&spr_uncore_m3upi,
+>>>>>>> b7ba80a49124 (Commit)
 	NULL,
 	&spr_uncore_mdf,
 };
 
+<<<<<<< HEAD
 /*
  * The uncore units, which are not supported by the discovery table,
  * are implemented from here.
@@ -6206,6 +6422,8 @@ static struct intel_uncore_type spr_uncore_m3upi = {
 	.constraints		= icx_uncore_m3upi_constraints,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum perf_uncore_spr_iio_freerunning_type_id {
 	SPR_IIO_MSR_IOCLK,
 	SPR_IIO_MSR_BW_IN,
@@ -6336,7 +6554,10 @@ static struct intel_uncore_type spr_uncore_imc_free_running = {
 
 #define UNCORE_SPR_MSR_EXTRA_UNCORES		1
 #define UNCORE_SPR_MMIO_EXTRA_UNCORES		1
+<<<<<<< HEAD
 #define UNCORE_SPR_PCI_EXTRA_UNCORES		2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct intel_uncore_type *spr_msr_uncores[UNCORE_SPR_MSR_EXTRA_UNCORES] = {
 	&spr_uncore_iio_free_running,
@@ -6346,6 +6567,7 @@ static struct intel_uncore_type *spr_mmio_uncores[UNCORE_SPR_MMIO_EXTRA_UNCORES]
 	&spr_uncore_imc_free_running,
 };
 
+<<<<<<< HEAD
 static struct intel_uncore_type *spr_pci_uncores[UNCORE_SPR_PCI_EXTRA_UNCORES] = {
 	&spr_uncore_upi,
 	&spr_uncore_m3upi
@@ -6357,6 +6579,8 @@ int spr_uncore_units_ignore[] = {
 	UNCORE_IGNORE_END
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void uncore_type_customized_copy(struct intel_uncore_type *to_type,
 					struct intel_uncore_type *from_type)
 {
@@ -6389,12 +6613,15 @@ static void uncore_type_customized_copy(struct intel_uncore_type *to_type,
 		to_type->format_group = from_type->format_group;
 	if (from_type->attr_update)
 		to_type->attr_update = from_type->attr_update;
+<<<<<<< HEAD
 	if (from_type->set_mapping)
 		to_type->set_mapping = from_type->set_mapping;
 	if (from_type->get_topology)
 		to_type->get_topology = from_type->get_topology;
 	if (from_type->cleanup_mapping)
 		to_type->cleanup_mapping = from_type->cleanup_mapping;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct intel_uncore_type **
@@ -6457,6 +6684,7 @@ void spr_uncore_cpu_init(void)
 	spr_uncore_iio_free_running.num_boxes = uncore_type_max_boxes(uncore_msr_uncores, UNCORE_SPR_IIO);
 }
 
+<<<<<<< HEAD
 #define SPR_UNCORE_UPI_PCIID		0x3241
 #define SPR_UNCORE_UPI0_DEVFN		0x9
 #define SPR_UNCORE_M3UPI_PCIID		0x3246
@@ -6520,6 +6748,11 @@ int spr_uncore_pci_init(void)
 	uncore_pci_uncores = uncore_get_uncores(UNCORE_ACCESS_PCI,
 						UNCORE_SPR_PCI_EXTRA_UNCORES,
 						spr_pci_uncores);
+=======
+int spr_uncore_pci_init(void)
+{
+	uncore_pci_uncores = uncore_get_uncores(UNCORE_ACCESS_PCI, 0, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

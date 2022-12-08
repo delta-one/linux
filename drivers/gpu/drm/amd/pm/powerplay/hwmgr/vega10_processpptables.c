@@ -23,6 +23,10 @@
 #include <linux/module.h>
 #include <linux/pci.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/fb.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "vega10_processpptables.h"
 #include "ppatomfwctrl.h"

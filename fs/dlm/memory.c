@@ -14,14 +14,20 @@
 #include "lowcomms.h"
 #include "config.h"
 #include "memory.h"
+<<<<<<< HEAD
 #include "ast.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct kmem_cache *writequeue_cache;
 static struct kmem_cache *mhandle_cache;
 static struct kmem_cache *msg_cache;
 static struct kmem_cache *lkb_cache;
 static struct kmem_cache *rsb_cache;
+<<<<<<< HEAD
 static struct kmem_cache *cb_cache;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 
 int __init dlm_memory_init(void)
@@ -48,6 +54,7 @@ int __init dlm_memory_init(void)
 	if (!rsb_cache)
 		goto rsb;
 
+<<<<<<< HEAD
 	cb_cache = kmem_cache_create("dlm_cb", sizeof(struct dlm_callback),
 				     __alignof__(struct dlm_callback), 0,
 				     NULL);
@@ -58,6 +65,10 @@ int __init dlm_memory_init(void)
 
 cb:
 	kmem_cache_destroy(rsb_cache);
+=======
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 rsb:
 	kmem_cache_destroy(msg_cache);
 msg:
@@ -77,7 +88,10 @@ void dlm_memory_exit(void)
 	kmem_cache_destroy(msg_cache);
 	kmem_cache_destroy(lkb_cache);
 	kmem_cache_destroy(rsb_cache);
+<<<<<<< HEAD
 	kmem_cache_destroy(cb_cache);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 char *dlm_allocate_lvb(struct dlm_ls *ls)
@@ -118,7 +132,11 @@ struct dlm_lkb *dlm_allocate_lkb(struct dlm_ls *ls)
 
 void dlm_free_lkb(struct dlm_lkb *lkb)
 {
+<<<<<<< HEAD
 	if (test_bit(DLM_DFL_USER_BIT, &lkb->lkb_dflags)) {
+=======
+	if (lkb->lkb_flags & DLM_IFL_USER) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct dlm_user_args *ua;
 		ua = lkb->lkb_ua;
 		if (ua) {
@@ -126,6 +144,7 @@ void dlm_free_lkb(struct dlm_lkb *lkb)
 			kfree(ua);
 		}
 	}
+<<<<<<< HEAD
 
 	/* drop references if they are set */
 	dlm_callback_set_last_ptr(&lkb->lkb_last_cast, NULL);
@@ -137,6 +156,14 @@ void dlm_free_lkb(struct dlm_lkb *lkb)
 struct dlm_mhandle *dlm_allocate_mhandle(gfp_t allocation)
 {
 	return kmem_cache_alloc(mhandle_cache, allocation);
+=======
+	kmem_cache_free(lkb_cache, lkb);
+}
+
+struct dlm_mhandle *dlm_allocate_mhandle(void)
+{
+	return kmem_cache_alloc(mhandle_cache, GFP_NOFS);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void dlm_free_mhandle(struct dlm_mhandle *mhandle)
@@ -163,6 +190,7 @@ void dlm_free_msg(struct dlm_msg *msg)
 {
 	kmem_cache_free(msg_cache, msg);
 }
+<<<<<<< HEAD
 
 struct dlm_callback *dlm_allocate_cb(void)
 {
@@ -173,3 +201,5 @@ void dlm_free_cb(struct dlm_callback *cb)
 {
 	kmem_cache_free(cb_cache, cb);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

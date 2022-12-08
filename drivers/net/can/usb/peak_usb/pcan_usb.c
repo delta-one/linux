@@ -9,11 +9,18 @@
  * Many thanks to Klaus Hitschler <klaus.hitschler@gmx.de>
  */
 #include <asm/unaligned.h>
+<<<<<<< HEAD
 
 #include <linux/ethtool.h>
 #include <linux/module.h>
 #include <linux/netdevice.h>
 #include <linux/usb.h>
+=======
+#include <linux/netdevice.h>
+#include <linux/usb.h>
+#include <linux/module.h>
+#include <linux/ethtool.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/can.h>
 #include <linux/can/dev.h>
@@ -382,23 +389,37 @@ static int pcan_usb_get_serial(struct peak_usb_device *dev, u32 *serial_number)
 }
 
 /*
+<<<<<<< HEAD
  * read can channel id from device
  */
 static int pcan_usb_get_can_channel_id(struct peak_usb_device *dev, u32 *can_ch_id)
+=======
+ * read device id from device
+ */
+static int pcan_usb_get_device_id(struct peak_usb_device *dev, u32 *device_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u8 args[PCAN_USB_CMD_ARGS_LEN];
 	int err;
 
 	err = pcan_usb_wait_rsp(dev, PCAN_USB_CMD_DEVID, PCAN_USB_GET, args);
 	if (err)
+<<<<<<< HEAD
 		netdev_err(dev->netdev, "getting can channel id failure: %d\n", err);
 
 	else
 		*can_ch_id = args[0];
+=======
+		netdev_err(dev->netdev, "getting device id failure: %d\n", err);
+
+	else
+		*device_id = args[0];
+>>>>>>> b7ba80a49124 (Commit)
 
 	return err;
 }
 
+<<<<<<< HEAD
 /* set a new CAN channel id in the flash memory of the device */
 static int pcan_usb_set_can_channel_id(struct peak_usb_device *dev, u32 can_ch_id)
 {
@@ -418,6 +439,8 @@ static int pcan_usb_set_can_channel_id(struct peak_usb_device *dev, u32 can_ch_i
 	return pcan_usb_send_cmd(dev, PCAN_USB_CMD_DEVID, PCAN_USB_SET, args);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * update current time ref with received timestamp
  */
@@ -983,6 +1006,7 @@ static int pcan_usb_set_phys_id(struct net_device *netdev,
 	return err;
 }
 
+<<<<<<< HEAD
 /* This device only handles 8-bit CAN channel id. */
 static int pcan_usb_get_eeprom_len(struct net_device *netdev)
 {
@@ -995,6 +1019,11 @@ static const struct ethtool_ops pcan_usb_ethtool_ops = {
 	.get_eeprom_len	= pcan_usb_get_eeprom_len,
 	.get_eeprom = peak_usb_get_eeprom,
 	.set_eeprom = peak_usb_set_eeprom,
+=======
+static const struct ethtool_ops pcan_usb_ethtool_ops = {
+	.set_phys_id = pcan_usb_set_phys_id,
+	.get_ts_info = pcan_get_ts_info,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -1046,8 +1075,12 @@ const struct peak_usb_adapter pcan_usb = {
 	.dev_init = pcan_usb_init,
 	.dev_set_bus = pcan_usb_write_mode,
 	.dev_set_bittiming = pcan_usb_set_bittiming,
+<<<<<<< HEAD
 	.dev_get_can_channel_id = pcan_usb_get_can_channel_id,
 	.dev_set_can_channel_id = pcan_usb_set_can_channel_id,
+=======
+	.dev_get_device_id = pcan_usb_get_device_id,
+>>>>>>> b7ba80a49124 (Commit)
 	.dev_decode_buf = pcan_usb_decode_buf,
 	.dev_encode_msg = pcan_usb_encode_msg,
 	.dev_start = pcan_usb_start,

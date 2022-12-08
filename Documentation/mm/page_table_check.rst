@@ -1,5 +1,10 @@
 .. SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
+=======
+.. _page_table_check:
+
+>>>>>>> b7ba80a49124 (Commit)
 ================
 Page Table Check
 ================

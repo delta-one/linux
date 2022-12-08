@@ -13,7 +13,10 @@
 #include "uvc_configfs.h"
 
 #include <linux/sort.h>
+<<<<<<< HEAD
 #include <linux/usb/video.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* -----------------------------------------------------------------------------
  * Global Utility Structures and Macros
@@ -47,6 +50,7 @@ static int uvcg_config_compare_u32(const void *l, const void *r)
 	return li < ri ? -1 : li == ri ? 0 : 1;
 }
 
+<<<<<<< HEAD
 static inline int __uvcg_count_item_entries(char *buf, void *priv, unsigned int size)
 {
 	++*((int *)priv);
@@ -112,6 +116,8 @@ out_free_buf:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct uvcg_config_group_type {
 	struct config_item_type type;
 	const char *name;
@@ -549,10 +555,15 @@ UVC_ATTR_RO(uvcg_default_output_, cname, aname)
 UVCG_DEFAULT_OUTPUT_ATTR(b_terminal_id, bTerminalID, 8);
 UVCG_DEFAULT_OUTPUT_ATTR(w_terminal_type, wTerminalType, 16);
 UVCG_DEFAULT_OUTPUT_ATTR(b_assoc_terminal, bAssocTerminal, 8);
+<<<<<<< HEAD
+=======
+UVCG_DEFAULT_OUTPUT_ATTR(b_source_id, bSourceID, 8);
+>>>>>>> b7ba80a49124 (Commit)
 UVCG_DEFAULT_OUTPUT_ATTR(i_terminal, iTerminal, 8);
 
 #undef UVCG_DEFAULT_OUTPUT_ATTR
 
+<<<<<<< HEAD
 static ssize_t uvcg_default_output_b_source_id_show(struct config_item *item,
 						    char *page)
 {
@@ -611,6 +622,8 @@ static ssize_t uvcg_default_output_b_source_id_store(struct config_item *item,
 }
 UVC_ATTR(uvcg_default_output_, b_source_id, bSourceID);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct configfs_attribute *uvcg_default_output_attrs[] = {
 	&uvcg_default_output_attr_b_terminal_id,
 	&uvcg_default_output_attr_w_terminal_type,
@@ -663,6 +676,7 @@ static const struct uvcg_config_group_type uvcg_terminal_grp_type = {
 };
 
 /* -----------------------------------------------------------------------------
+<<<<<<< HEAD
  * control/extensions
  */
 
@@ -1194,6 +1208,8 @@ static const struct uvcg_config_group_type uvcg_extensions_grp_type = {
 };
 
 /* -----------------------------------------------------------------------------
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * control/class/{fs|ss}
  */
 
@@ -1370,6 +1386,7 @@ static ssize_t uvcg_default_control_b_interface_number_show(
 
 UVC_ATTR_RO(uvcg_default_control_, b_interface_number, bInterfaceNumber);
 
+<<<<<<< HEAD
 static ssize_t uvcg_default_control_enable_interrupt_ep_show(
 	struct config_item *item, char *page)
 {
@@ -1425,6 +1442,10 @@ UVC_ATTR(uvcg_default_control_, enable_interrupt_ep, enable_interrupt_ep);
 static struct configfs_attribute *uvcg_default_control_attrs[] = {
 	&uvcg_default_control_attr_b_interface_number,
 	&uvcg_default_control_attr_enable_interrupt_ep,
+=======
+static struct configfs_attribute *uvcg_default_control_attrs[] = {
+	&uvcg_default_control_attr_b_interface_number,
+>>>>>>> b7ba80a49124 (Commit)
 	NULL,
 };
 
@@ -1440,7 +1461,10 @@ static const struct uvcg_config_group_type uvcg_control_grp_type = {
 		&uvcg_processing_grp_type,
 		&uvcg_terminal_grp_type,
 		&uvcg_control_class_grp_type,
+<<<<<<< HEAD
 		&uvcg_extensions_grp_type,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		NULL,
 	},
 };
@@ -1455,6 +1479,7 @@ static const char * const uvcg_format_names[] = {
 	"mjpeg",
 };
 
+<<<<<<< HEAD
 static struct uvcg_color_matching *
 uvcg_format_get_default_color_match(struct config_item *streaming)
 {
@@ -1549,6 +1574,8 @@ static struct configfs_item_operations uvcg_format_item_operations = {
 	.drop_link	= uvcg_format_drop_link,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t uvcg_format_bma_controls_show(struct uvcg_format *f, char *page)
 {
 	struct f_uvc_opts *opts;
@@ -1933,6 +1960,60 @@ static ssize_t uvcg_frame_dw_frame_interval_show(struct config_item *item,
 	return result;
 }
 
+<<<<<<< HEAD
+=======
+static inline int __uvcg_count_frm_intrv(char *buf, void *priv)
+{
+	++*((int *)priv);
+	return 0;
+}
+
+static inline int __uvcg_fill_frm_intrv(char *buf, void *priv)
+{
+	u32 num, **interv;
+	int ret;
+
+	ret = kstrtou32(buf, 0, &num);
+	if (ret)
+		return ret;
+
+	interv = priv;
+	**interv = num;
+	++*interv;
+
+	return 0;
+}
+
+static int __uvcg_iter_frm_intrv(const char *page, size_t len,
+				 int (*fun)(char *, void *), void *priv)
+{
+	/* sign, base 2 representation, newline, terminator */
+	char buf[1 + sizeof(u32) * 8 + 1 + 1];
+	const char *pg = page;
+	int i, ret;
+
+	if (!fun)
+		return -EINVAL;
+
+	while (pg - page < len) {
+		i = 0;
+		while (i < sizeof(buf) && (pg - page < len) &&
+				*pg != '\0' && *pg != '\n')
+			buf[i++] = *pg++;
+		if (i == sizeof(buf))
+			return -EINVAL;
+		while ((pg - page < len) && (*pg == '\0' || *pg == '\n'))
+			++pg;
+		buf[i] = '\0';
+		ret = fun(buf, priv);
+		if (ret)
+			return ret;
+	}
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t uvcg_frame_dw_frame_interval_store(struct config_item *item,
 						  const char *page, size_t len)
 {
@@ -1956,7 +2037,11 @@ static ssize_t uvcg_frame_dw_frame_interval_store(struct config_item *item,
 		goto end;
 	}
 
+<<<<<<< HEAD
 	ret = __uvcg_iter_item_entries(page, len, __uvcg_count_item_entries, &n, sizeof(u32));
+=======
+	ret = __uvcg_iter_frm_intrv(page, len, __uvcg_count_frm_intrv, &n);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto end;
 
@@ -1966,7 +2051,11 @@ static ssize_t uvcg_frame_dw_frame_interval_store(struct config_item *item,
 		goto end;
 	}
 
+<<<<<<< HEAD
 	ret = __uvcg_iter_item_entries(page, len, __uvcg_fill_item_entries, &tmp, sizeof(u32));
+=======
+	ret = __uvcg_iter_frm_intrv(page, len, __uvcg_fill_frm_intrv, &tmp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		kfree(frm_intrv);
 		goto end;
@@ -2263,7 +2352,11 @@ UVCG_UNCOMPRESSED_ATTR(b_bits_per_pixel, bBitsPerPixel, 8);
 UVCG_UNCOMPRESSED_ATTR(b_default_frame_index, bDefaultFrameIndex, 8);
 UVCG_UNCOMPRESSED_ATTR_RO(b_aspect_ratio_x, bAspectRatioX, 8);
 UVCG_UNCOMPRESSED_ATTR_RO(b_aspect_ratio_y, bAspectRatioY, 8);
+<<<<<<< HEAD
 UVCG_UNCOMPRESSED_ATTR_RO(bm_interlace_flags, bmInterlaceFlags, 8);
+=======
+UVCG_UNCOMPRESSED_ATTR_RO(bm_interface_flags, bmInterfaceFlags, 8);
+>>>>>>> b7ba80a49124 (Commit)
 
 #undef UVCG_UNCOMPRESSED_ATTR
 #undef UVCG_UNCOMPRESSED_ATTR_RO
@@ -2292,13 +2385,21 @@ static struct configfs_attribute *uvcg_uncompressed_attrs[] = {
 	&uvcg_uncompressed_attr_b_default_frame_index,
 	&uvcg_uncompressed_attr_b_aspect_ratio_x,
 	&uvcg_uncompressed_attr_b_aspect_ratio_y,
+<<<<<<< HEAD
 	&uvcg_uncompressed_attr_bm_interlace_flags,
+=======
+	&uvcg_uncompressed_attr_bm_interface_flags,
+>>>>>>> b7ba80a49124 (Commit)
 	&uvcg_uncompressed_attr_bma_controls,
 	NULL,
 };
 
 static const struct config_item_type uvcg_uncompressed_type = {
+<<<<<<< HEAD
 	.ct_item_ops	= &uvcg_format_item_operations,
+=======
+	.ct_item_ops	= &uvcg_config_item_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	.ct_group_ops	= &uvcg_uncompressed_group_ops,
 	.ct_attrs	= uvcg_uncompressed_attrs,
 	.ct_owner	= THIS_MODULE,
@@ -2311,6 +2412,7 @@ static struct config_group *uvcg_uncompressed_make(struct config_group *group,
 		'Y',  'U',  'Y',  '2', 0x00, 0x00, 0x10, 0x00,
 		 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71
 	};
+<<<<<<< HEAD
 	struct uvcg_color_matching *color_match;
 	struct config_item *streaming;
 	struct uvcg_uncompressed *h;
@@ -2320,6 +2422,10 @@ static struct config_group *uvcg_uncompressed_make(struct config_group *group,
 	if (!color_match)
 		return ERR_PTR(-EINVAL);
 
+=======
+	struct uvcg_uncompressed *h;
+
+>>>>>>> b7ba80a49124 (Commit)
 	h = kzalloc(sizeof(*h), GFP_KERNEL);
 	if (!h)
 		return ERR_PTR(-ENOMEM);
@@ -2332,13 +2438,20 @@ static struct config_group *uvcg_uncompressed_make(struct config_group *group,
 	h->desc.bDefaultFrameIndex	= 1;
 	h->desc.bAspectRatioX		= 0;
 	h->desc.bAspectRatioY		= 0;
+<<<<<<< HEAD
 	h->desc.bmInterlaceFlags	= 0;
+=======
+	h->desc.bmInterfaceFlags	= 0;
+>>>>>>> b7ba80a49124 (Commit)
 	h->desc.bCopyProtect		= 0;
 
 	INIT_LIST_HEAD(&h->fmt.frames);
 	h->fmt.type = UVCG_UNCOMPRESSED;
+<<<<<<< HEAD
 	h->fmt.color_matching = color_match;
 	color_match->refcnt++;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	config_group_init_type_name(&h->fmt.group, name,
 				    &uvcg_uncompressed_type);
 
@@ -2460,7 +2573,11 @@ UVCG_MJPEG_ATTR(b_default_frame_index, bDefaultFrameIndex, 8);
 UVCG_MJPEG_ATTR_RO(bm_flags, bmFlags, 8);
 UVCG_MJPEG_ATTR_RO(b_aspect_ratio_x, bAspectRatioX, 8);
 UVCG_MJPEG_ATTR_RO(b_aspect_ratio_y, bAspectRatioY, 8);
+<<<<<<< HEAD
 UVCG_MJPEG_ATTR_RO(bm_interlace_flags, bmInterlaceFlags, 8);
+=======
+UVCG_MJPEG_ATTR_RO(bm_interface_flags, bmInterfaceFlags, 8);
+>>>>>>> b7ba80a49124 (Commit)
 
 #undef UVCG_MJPEG_ATTR
 #undef UVCG_MJPEG_ATTR_RO
@@ -2488,13 +2605,21 @@ static struct configfs_attribute *uvcg_mjpeg_attrs[] = {
 	&uvcg_mjpeg_attr_bm_flags,
 	&uvcg_mjpeg_attr_b_aspect_ratio_x,
 	&uvcg_mjpeg_attr_b_aspect_ratio_y,
+<<<<<<< HEAD
 	&uvcg_mjpeg_attr_bm_interlace_flags,
+=======
+	&uvcg_mjpeg_attr_bm_interface_flags,
+>>>>>>> b7ba80a49124 (Commit)
 	&uvcg_mjpeg_attr_bma_controls,
 	NULL,
 };
 
 static const struct config_item_type uvcg_mjpeg_type = {
+<<<<<<< HEAD
 	.ct_item_ops	= &uvcg_format_item_operations,
+=======
+	.ct_item_ops	= &uvcg_config_item_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	.ct_group_ops	= &uvcg_mjpeg_group_ops,
 	.ct_attrs	= uvcg_mjpeg_attrs,
 	.ct_owner	= THIS_MODULE,
@@ -2503,6 +2628,7 @@ static const struct config_item_type uvcg_mjpeg_type = {
 static struct config_group *uvcg_mjpeg_make(struct config_group *group,
 						   const char *name)
 {
+<<<<<<< HEAD
 	struct uvcg_color_matching *color_match;
 	struct config_item *streaming;
 	struct uvcg_mjpeg *h;
@@ -2512,6 +2638,10 @@ static struct config_group *uvcg_mjpeg_make(struct config_group *group,
 	if (!color_match)
 		return ERR_PTR(-EINVAL);
 
+=======
+	struct uvcg_mjpeg *h;
+
+>>>>>>> b7ba80a49124 (Commit)
 	h = kzalloc(sizeof(*h), GFP_KERNEL);
 	if (!h)
 		return ERR_PTR(-ENOMEM);
@@ -2522,13 +2652,20 @@ static struct config_group *uvcg_mjpeg_make(struct config_group *group,
 	h->desc.bDefaultFrameIndex	= 1;
 	h->desc.bAspectRatioX		= 0;
 	h->desc.bAspectRatioY		= 0;
+<<<<<<< HEAD
 	h->desc.bmInterlaceFlags	= 0;
+=======
+	h->desc.bmInterfaceFlags	= 0;
+>>>>>>> b7ba80a49124 (Commit)
 	h->desc.bCopyProtect		= 0;
 
 	INIT_LIST_HEAD(&h->fmt.frames);
 	h->fmt.type = UVCG_MJPEG;
+<<<<<<< HEAD
 	h->fmt.color_matching = color_match;
 	color_match->refcnt++;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	config_group_init_type_name(&h->fmt.group, name,
 				    &uvcg_mjpeg_type);
 
@@ -2552,6 +2689,7 @@ static const struct uvcg_config_group_type uvcg_mjpeg_grp_type = {
  * streaming/color_matching/default
  */
 
+<<<<<<< HEAD
 #define UVCG_COLOR_MATCHING_ATTR(cname, aname, bits)			\
 static ssize_t uvcg_color_matching_##cname##_show(			\
 	struct config_item *item, char *page)				\
@@ -2562,22 +2700,41 @@ static ssize_t uvcg_color_matching_##cname##_show(			\
 	struct f_uvc_opts *opts;					\
 	struct config_item *opts_item;					\
 	struct mutex *su_mutex = &group->cg_subsys->su_mutex;		\
+=======
+#define UVCG_DEFAULT_COLOR_MATCHING_ATTR(cname, aname, bits)		\
+static ssize_t uvcg_default_color_matching_##cname##_show(		\
+	struct config_item *item, char *page)				\
+{									\
+	struct config_group *group = to_config_group(item);		\
+	struct f_uvc_opts *opts;					\
+	struct config_item *opts_item;					\
+	struct mutex *su_mutex = &group->cg_subsys->su_mutex;		\
+	struct uvc_color_matching_descriptor *cd;			\
+>>>>>>> b7ba80a49124 (Commit)
 	int result;							\
 									\
 	mutex_lock(su_mutex); /* for navigating configfs hierarchy */	\
 									\
 	opts_item = group->cg_item.ci_parent->ci_parent->ci_parent;	\
 	opts = to_f_uvc_opts(opts_item);				\
+<<<<<<< HEAD
 									\
 	mutex_lock(&opts->lock);					\
 	result = sprintf(page, "%u\n",					\
 			 le##bits##_to_cpu(color_match->desc.aname));	\
+=======
+	cd = &opts->uvc_color_matching;					\
+									\
+	mutex_lock(&opts->lock);					\
+	result = sprintf(page, "%u\n", le##bits##_to_cpu(cd->aname));	\
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&opts->lock);					\
 									\
 	mutex_unlock(su_mutex);						\
 	return result;							\
 }									\
 									\
+<<<<<<< HEAD
 static ssize_t uvcg_color_matching_##cname##_store(			\
 	struct config_item *item, const char *page, size_t len)		\
 {									\
@@ -2646,12 +2803,38 @@ static const struct config_item_type uvcg_color_matching_type = {
 	.ct_item_ops	= &uvcg_color_matching_item_ops,
 	.ct_attrs	= uvcg_color_matching_attrs,
 	.ct_owner	= THIS_MODULE,
+=======
+UVC_ATTR_RO(uvcg_default_color_matching_, cname, aname)
+
+UVCG_DEFAULT_COLOR_MATCHING_ATTR(b_color_primaries, bColorPrimaries, 8);
+UVCG_DEFAULT_COLOR_MATCHING_ATTR(b_transfer_characteristics,
+				 bTransferCharacteristics, 8);
+UVCG_DEFAULT_COLOR_MATCHING_ATTR(b_matrix_coefficients, bMatrixCoefficients, 8);
+
+#undef UVCG_DEFAULT_COLOR_MATCHING_ATTR
+
+static struct configfs_attribute *uvcg_default_color_matching_attrs[] = {
+	&uvcg_default_color_matching_attr_b_color_primaries,
+	&uvcg_default_color_matching_attr_b_transfer_characteristics,
+	&uvcg_default_color_matching_attr_b_matrix_coefficients,
+	NULL,
+};
+
+static const struct uvcg_config_group_type uvcg_default_color_matching_type = {
+	.type = {
+		.ct_item_ops	= &uvcg_config_item_ops,
+		.ct_attrs	= uvcg_default_color_matching_attrs,
+		.ct_owner	= THIS_MODULE,
+	},
+	.name = "default",
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* -----------------------------------------------------------------------------
  * streaming/color_matching
  */
 
+<<<<<<< HEAD
 static struct config_group *uvcg_color_matching_make(struct config_group *group,
 						     const char *name)
 {
@@ -2705,6 +2888,18 @@ static const struct uvcg_config_group_type uvcg_color_matching_grp_type = {
 	},
 	.name = "color_matching",
 	.create_children = uvcg_color_matching_create_children,
+=======
+static const struct uvcg_config_group_type uvcg_color_matching_grp_type = {
+	.type = {
+		.ct_item_ops	= &uvcg_config_item_ops,
+		.ct_owner	= THIS_MODULE,
+	},
+	.name = "color_matching",
+	.children = (const struct uvcg_config_group_type*[]) {
+		&uvcg_default_color_matching_type,
+		NULL,
+	},
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* -----------------------------------------------------------------------------
@@ -2738,8 +2933,12 @@ static inline struct uvc_descriptor_header
 enum uvcg_strm_type {
 	UVCG_HEADER = 0,
 	UVCG_FORMAT,
+<<<<<<< HEAD
 	UVCG_FRAME,
 	UVCG_COLOR_MATCHING,
+=======
+	UVCG_FRAME
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -2789,11 +2988,14 @@ static int __uvcg_iter_strm_cls(struct uvcg_streaming_header *h,
 			if (ret)
 				return ret;
 		}
+<<<<<<< HEAD
 
 		ret = fun(f->fmt->color_matching, priv2, priv3, 0,
 			  UVCG_COLOR_MATCHING);
 		if (ret)
 			return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;
@@ -2849,12 +3051,15 @@ static int __uvcg_cnt_strm(void *priv1, void *priv2, void *priv3, int n,
 		*size += frm->frame.b_frame_interval_type * sz;
 	}
 	break;
+<<<<<<< HEAD
 	case UVCG_COLOR_MATCHING: {
 		struct uvcg_color_matching *color_match = priv1;
 
 		*size += sizeof(color_match->desc);
 	}
 	break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	++*count;
@@ -2940,6 +3145,7 @@ static int __uvcg_fill_strm(void *priv1, void *priv2, void *priv3, int n,
 				frm->frame.b_frame_interval_type);
 	}
 	break;
+<<<<<<< HEAD
 	case UVCG_COLOR_MATCHING: {
 		struct uvcg_color_matching *color_match = priv1;
 
@@ -2947,6 +3153,8 @@ static int __uvcg_fill_strm(void *priv1, void *priv2, void *priv3, int n,
 		*dest += sizeof(color_match->desc);
 	}
 	break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -2986,7 +3194,11 @@ static int uvcg_streaming_class_allow_link(struct config_item *src,
 	if (ret)
 		goto unlock;
 
+<<<<<<< HEAD
 	count += 1; /* NULL */
+=======
+	count += 2; /* color_matching, NULL */
+>>>>>>> b7ba80a49124 (Commit)
 	*class_array = kcalloc(count, sizeof(void *), GFP_KERNEL);
 	if (!*class_array) {
 		ret = -ENOMEM;
@@ -3013,6 +3225,10 @@ static int uvcg_streaming_class_allow_link(struct config_item *src,
 		kfree(data_save);
 		goto unlock;
 	}
+<<<<<<< HEAD
+=======
+	*cl_arr = (struct uvc_descriptor_header *)&opts->uvc_color_matching;
+>>>>>>> b7ba80a49124 (Commit)
 
 	++target_hdr->linked;
 	ret = 0;
@@ -3174,6 +3390,7 @@ static void uvc_func_item_release(struct config_item *item)
 	usb_put_function_instance(&opts->func_inst);
 }
 
+<<<<<<< HEAD
 static int uvc_func_allow_link(struct config_item *src, struct config_item *tgt)
 {
 	struct mutex *su_mutex = &src->ci_group->cg_subsys->su_mutex;
@@ -3236,6 +3453,10 @@ static struct configfs_item_operations uvc_func_item_ops = {
 	.release	= uvc_func_item_release,
 	.allow_link	= uvc_func_allow_link,
 	.drop_link	= uvc_func_drop_link,
+=======
+static struct configfs_item_operations uvc_func_item_ops = {
+	.release	= uvc_func_item_release,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define UVCG_OPTS_ATTR(cname, aname, limit)				\

@@ -40,6 +40,7 @@ static inline size_t chunk_size(const struct gen_pool_chunk *chunk)
 	return chunk->end_addr - chunk->start_addr + 1;
 }
 
+<<<<<<< HEAD
 static inline int
 set_bits_ll(unsigned long *addr, unsigned long mask_to_set)
 {
@@ -50,10 +51,24 @@ set_bits_ll(unsigned long *addr, unsigned long mask_to_set)
 			return -EBUSY;
 		cpu_relax();
 	} while (!try_cmpxchg(addr, &val, val | mask_to_set));
+=======
+static int set_bits_ll(unsigned long *addr, unsigned long mask_to_set)
+{
+	unsigned long val, nval;
+
+	nval = *addr;
+	do {
+		val = nval;
+		if (val & mask_to_set)
+			return -EBUSY;
+		cpu_relax();
+	} while ((nval = cmpxchg(addr, val, val | mask_to_set)) != val);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static inline int
 clear_bits_ll(unsigned long *addr, unsigned long mask_to_clear)
 {
@@ -64,6 +79,19 @@ clear_bits_ll(unsigned long *addr, unsigned long mask_to_clear)
 			return -EBUSY;
 		cpu_relax();
 	} while (!try_cmpxchg(addr, &val, val & ~mask_to_clear));
+=======
+static int clear_bits_ll(unsigned long *addr, unsigned long mask_to_clear)
+{
+	unsigned long val, nval;
+
+	nval = *addr;
+	do {
+		val = nval;
+		if ((val & mask_to_clear) != mask_to_clear)
+			return -EBUSY;
+		cpu_relax();
+	} while ((nval = cmpxchg(addr, val, val & ~mask_to_clear)) != val);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

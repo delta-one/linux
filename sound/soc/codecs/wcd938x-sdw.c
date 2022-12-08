@@ -191,7 +191,11 @@ static int wcd9380_interrupt_callback(struct sdw_slave *slave,
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static const struct sdw_slave_ops wcd9380_slave_ops = {
+=======
+static struct sdw_slave_ops wcd9380_slave_ops = {
+>>>>>>> b7ba80a49124 (Commit)
 	.update_status = wcd9380_update_status,
 	.interrupt_callback = wcd9380_interrupt_callback,
 	.bus_config = wcd9380_bus_config,

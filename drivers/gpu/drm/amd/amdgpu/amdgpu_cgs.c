@@ -411,10 +411,24 @@ static int amdgpu_cgs_get_firmware_info(struct cgs_device *cgs_device,
 				return -EINVAL;
 			}
 
+<<<<<<< HEAD
 			err = amdgpu_ucode_request(adev, &adev->pm.fw, fw_name);
 			if (err) {
 				DRM_ERROR("Failed to load firmware \"%s\"", fw_name);
 				amdgpu_ucode_release(&adev->pm.fw);
+=======
+			err = request_firmware(&adev->pm.fw, fw_name, adev->dev);
+			if (err) {
+				DRM_ERROR("Failed to request firmware\n");
+				return err;
+			}
+
+			err = amdgpu_ucode_validate(adev->pm.fw);
+			if (err) {
+				DRM_ERROR("Failed to load firmware \"%s\"", fw_name);
+				release_firmware(adev->pm.fw);
+				adev->pm.fw = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 				return err;
 			}
 

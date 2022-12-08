@@ -42,7 +42,11 @@ padata_shells associated with it, each allowing a separate series of jobs.
 Modifying cpumasks
 ------------------
 
+<<<<<<< HEAD
 The CPUs used to run jobs can be changed in two ways, programmatically with
+=======
+The CPUs used to run jobs can be changed in two ways, programatically with
+>>>>>>> b7ba80a49124 (Commit)
 padata_set_cpumask() or via sysfs.  The former is defined::
 
     int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,

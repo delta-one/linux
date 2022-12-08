@@ -75,7 +75,11 @@ const struct file_operations bfs_dir_operations = {
 	.llseek		= generic_file_llseek,
 };
 
+<<<<<<< HEAD
 static int bfs_create(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int bfs_create(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *dentry, umode_t mode, bool excl)
 {
 	int err;
@@ -96,7 +100,11 @@ static int bfs_create(struct mnt_idmap *idmap, struct inode *dir,
 	}
 	set_bit(ino, info->si_imap);
 	info->si_freei--;
+<<<<<<< HEAD
 	inode_init_owner(&nop_mnt_idmap, inode, dir, mode);
+=======
+	inode_init_owner(&init_user_ns, inode, dir, mode);
+>>>>>>> b7ba80a49124 (Commit)
 	inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
 	inode->i_blocks = 0;
 	inode->i_op = &bfs_file_inops;
@@ -199,7 +207,11 @@ out_brelse:
 	return error;
 }
 
+<<<<<<< HEAD
 static int bfs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
+=======
+static int bfs_rename(struct user_namespace *mnt_userns, struct inode *old_dir,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *old_dentry, struct inode *new_dir,
 		      struct dentry *new_dentry, unsigned int flags)
 {

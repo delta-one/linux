@@ -334,7 +334,11 @@ int gfs2_meta_wait(struct gfs2_sbd *sdp, struct buffer_head *bh)
 
 void gfs2_remove_from_journal(struct buffer_head *bh, int meta)
 {
+<<<<<<< HEAD
 	struct address_space *mapping = bh->b_folio->mapping;
+=======
+	struct address_space *mapping = bh->b_page->mapping;
+>>>>>>> b7ba80a49124 (Commit)
 	struct gfs2_sbd *sdp = gfs2_mapping2sbd(mapping);
 	struct gfs2_bufdata *bd = bh->b_private;
 	struct gfs2_trans *tr = current->journal_info;
@@ -442,12 +446,15 @@ void gfs2_journal_wipe(struct gfs2_inode *ip, u64 bstart, u32 blen)
 	struct buffer_head *bh;
 	int ty;
 
+<<<<<<< HEAD
 	if (!ip->i_gl) {
 		/* This can only happen during incomplete inode creation. */
 		BUG_ON(!test_bit(GIF_ALLOC_FAILED, &ip->i_flags));
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gfs2_ail1_wipe(sdp, bstart, blen);
 	while (blen) {
 		ty = REMOVE_META;

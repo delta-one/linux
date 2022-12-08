@@ -128,6 +128,7 @@ static void hellcreek_select_prio(struct hellcreek *hellcreek, int prio)
 	hellcreek_write(hellcreek, val, HR_PSEL);
 }
 
+<<<<<<< HEAD
 static void hellcreek_select_port_prio(struct hellcreek *hellcreek, int port,
 				       int prio)
 {
@@ -138,6 +139,8 @@ static void hellcreek_select_port_prio(struct hellcreek *hellcreek, int port,
 	hellcreek_write(hellcreek, val, HR_PSEL);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void hellcreek_select_counter(struct hellcreek *hellcreek, int counter)
 {
 	u16 val = counter << HR_CSEL_SHIFT;
@@ -1176,6 +1179,14 @@ static int hellcreek_devlink_info_get(struct dsa_switch *ds,
 				      struct netlink_ext_ack *extack)
 {
 	struct hellcreek *hellcreek = ds->priv;
+<<<<<<< HEAD
+=======
+	int ret;
+
+	ret = devlink_info_driver_name_put(req, "hellcreek");
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return devlink_info_version_fixed_put(req,
 					      DEVLINK_INFO_VERSION_GENERIC_ASIC_ID,
@@ -1542,6 +1553,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void hellcreek_setup_maxsdu(struct hellcreek *hellcreek, int port,
 				   const struct tc_taprio_qopt_offload *schedule)
 {
@@ -1581,6 +1593,8 @@ static void hellcreek_reset_maxsdu(struct hellcreek *hellcreek, int port)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void hellcreek_setup_gcl(struct hellcreek *hellcreek, int port,
 				const struct tc_taprio_qopt_offload *schedule)
 {
@@ -1764,10 +1778,14 @@ static int hellcreek_port_set_schedule(struct dsa_switch *ds, int port,
 	}
 	hellcreek_port->current_schedule = taprio_offload_get(taprio);
 
+<<<<<<< HEAD
 	/* Configure max sdu */
 	hellcreek_setup_maxsdu(hellcreek, port, hellcreek_port->current_schedule);
 
 	/* Select tdg */
+=======
+	/* Then select port */
+>>>>>>> b7ba80a49124 (Commit)
 	hellcreek_select_tgd(hellcreek, port);
 
 	/* Enable gating and keep defaults */
@@ -1819,10 +1837,14 @@ static int hellcreek_port_del_schedule(struct dsa_switch *ds, int port)
 		hellcreek_port->current_schedule = NULL;
 	}
 
+<<<<<<< HEAD
 	/* Reset max sdu */
 	hellcreek_reset_maxsdu(hellcreek, port);
 
 	/* Select tgd */
+=======
+	/* Then select port */
+>>>>>>> b7ba80a49124 (Commit)
 	hellcreek_select_tgd(hellcreek, port);
 
 	/* Disable gating and return to regular switching flow */
@@ -1859,6 +1881,7 @@ static bool hellcreek_validate_schedule(struct hellcreek *hellcreek,
 	return true;
 }
 
+<<<<<<< HEAD
 static int hellcreek_tc_query_caps(struct tc_query_caps_base *base)
 {
 	switch (base->type) {
@@ -1896,6 +1919,24 @@ static int hellcreek_port_setup_tc(struct dsa_switch *ds, int port,
 	default:
 		return -EOPNOTSUPP;
 	}
+=======
+static int hellcreek_port_setup_tc(struct dsa_switch *ds, int port,
+				   enum tc_setup_type type, void *type_data)
+{
+	struct tc_taprio_qopt_offload *taprio = type_data;
+	struct hellcreek *hellcreek = ds->priv;
+
+	if (type != TC_SETUP_QDISC_TAPRIO)
+		return -EOPNOTSUPP;
+
+	if (!hellcreek_validate_schedule(hellcreek, taprio))
+		return -EOPNOTSUPP;
+
+	if (taprio->enable)
+		return hellcreek_port_set_schedule(ds, port, taprio);
+
+	return hellcreek_port_del_schedule(ds, port);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct dsa_switch_ops hellcreek_ds_ops = {
@@ -2067,6 +2108,10 @@ static int hellcreek_remove(struct platform_device *pdev)
 	hellcreek_hwtstamp_free(hellcreek);
 	hellcreek_ptp_free(hellcreek);
 	dsa_unregister_switch(hellcreek->ds);
+<<<<<<< HEAD
+=======
+	platform_set_drvdata(pdev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

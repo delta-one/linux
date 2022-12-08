@@ -76,6 +76,7 @@ runlitmushist.sh
 README
 
 	This file
+<<<<<<< HEAD
 
 Testing a change to LKMM might go as follows:
 
@@ -108,3 +109,5 @@ test fails completely on the original version of LKMM and passes on the
 new version.  In this case, checklitmushist.sh will report a mismatch
 and checkghlitmus.sh will report success.  This happens when the change
 to LKMM introduces a new primitive for which litmus tests already existed.
+=======
+>>>>>>> b7ba80a49124 (Commit)

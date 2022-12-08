@@ -84,7 +84,11 @@ static struct host1x_bo_mapping *tegra_bo_pin(struct device *dev, struct host1x_
 			goto free;
 		}
 
+<<<<<<< HEAD
 		map->sgt = dma_buf_map_attachment_unlocked(map->attach, direction);
+=======
+		map->sgt = dma_buf_map_attachment(map->attach, direction);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(map->sgt)) {
 			dma_buf_detach(buf, map->attach);
 			err = PTR_ERR(map->sgt);
@@ -160,8 +164,12 @@ free:
 static void tegra_bo_unpin(struct host1x_bo_mapping *map)
 {
 	if (map->attach) {
+<<<<<<< HEAD
 		dma_buf_unmap_attachment_unlocked(map->attach, map->sgt,
 						  map->direction);
+=======
+		dma_buf_unmap_attachment(map->attach, map->sgt, map->direction);
+>>>>>>> b7ba80a49124 (Commit)
 		dma_buf_detach(map->attach->dmabuf, map->attach);
 	} else {
 		dma_unmap_sgtable(map->dev, map->sgt, map->direction, 0);
@@ -182,7 +190,11 @@ static void *tegra_bo_mmap(struct host1x_bo *bo)
 	if (obj->vaddr) {
 		return obj->vaddr;
 	} else if (obj->gem.import_attach) {
+<<<<<<< HEAD
 		ret = dma_buf_vmap_unlocked(obj->gem.import_attach->dmabuf, &map);
+=======
+		ret = dma_buf_vmap(obj->gem.import_attach->dmabuf, &map);
+>>>>>>> b7ba80a49124 (Commit)
 		return ret ? NULL : map.vaddr;
 	} else {
 		return vmap(obj->pages, obj->num_pages, VM_MAP,
@@ -198,7 +210,11 @@ static void tegra_bo_munmap(struct host1x_bo *bo, void *addr)
 	if (obj->vaddr)
 		return;
 	else if (obj->gem.import_attach)
+<<<<<<< HEAD
 		dma_buf_vunmap_unlocked(obj->gem.import_attach->dmabuf, &map);
+=======
+		dma_buf_vunmap(obj->gem.import_attach->dmabuf, &map);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		vunmap(addr);
 }
@@ -462,7 +478,11 @@ static struct tegra_bo *tegra_bo_import(struct drm_device *drm,
 
 	get_dma_buf(buf);
 
+<<<<<<< HEAD
 	bo->sgt = dma_buf_map_attachment_unlocked(attach, DMA_TO_DEVICE);
+=======
+	bo->sgt = dma_buf_map_attachment(attach, DMA_TO_DEVICE);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(bo->sgt)) {
 		err = PTR_ERR(bo->sgt);
 		goto detach;
@@ -480,7 +500,11 @@ static struct tegra_bo *tegra_bo_import(struct drm_device *drm,
 
 detach:
 	if (!IS_ERR_OR_NULL(bo->sgt))
+<<<<<<< HEAD
 		dma_buf_unmap_attachment_unlocked(attach, bo->sgt, DMA_TO_DEVICE);
+=======
+		dma_buf_unmap_attachment(attach, bo->sgt, DMA_TO_DEVICE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dma_buf_detach(buf, attach);
 	dma_buf_put(buf);
@@ -509,8 +533,13 @@ void tegra_bo_free_object(struct drm_gem_object *gem)
 		tegra_bo_iommu_unmap(tegra, bo);
 
 	if (gem->import_attach) {
+<<<<<<< HEAD
 		dma_buf_unmap_attachment_unlocked(gem->import_attach, bo->sgt,
 						  DMA_TO_DEVICE);
+=======
+		dma_buf_unmap_attachment(gem->import_attach, bo->sgt,
+					 DMA_TO_DEVICE);
+>>>>>>> b7ba80a49124 (Commit)
 		drm_prime_gem_destroy(gem, NULL);
 	} else {
 		tegra_bo_free(gem->dev, bo);
@@ -574,7 +603,11 @@ int __tegra_gem_mmap(struct drm_gem_object *gem, struct vm_area_struct *vma)
 		 * and set the vm_pgoff (used as a fake buffer offset by DRM)
 		 * to 0 as we want to map the whole buffer.
 		 */
+<<<<<<< HEAD
 		vm_flags_clear(vma, VM_PFNMAP);
+=======
+		vma->vm_flags &= ~VM_PFNMAP;
+>>>>>>> b7ba80a49124 (Commit)
 		vma->vm_pgoff = 0;
 
 		err = dma_mmap_wc(gem->dev->dev, vma, bo->vaddr, bo->iova,
@@ -588,7 +621,12 @@ int __tegra_gem_mmap(struct drm_gem_object *gem, struct vm_area_struct *vma)
 	} else {
 		pgprot_t prot = vm_get_page_prot(vma->vm_flags);
 
+<<<<<<< HEAD
 		vm_flags_mod(vma, VM_MIXEDMAP, VM_PFNMAP);
+=======
+		vma->vm_flags |= VM_MIXEDMAP;
+		vma->vm_flags &= ~VM_PFNMAP;
+>>>>>>> b7ba80a49124 (Commit)
 
 		vma->vm_page_prot = pgprot_writecombine(prot);
 	}
@@ -693,8 +731,11 @@ static int tegra_gem_prime_mmap(struct dma_buf *buf, struct vm_area_struct *vma)
 	struct drm_gem_object *gem = buf->priv;
 	int err;
 
+<<<<<<< HEAD
 	dma_resv_assert_held(buf->resv);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = drm_gem_mmap_obj(gem, gem->size, vma);
 	if (err < 0)
 		return err;

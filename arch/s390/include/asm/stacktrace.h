@@ -46,7 +46,10 @@ struct stack_frame {
 			unsigned long sie_savearea;
 			unsigned long sie_reason;
 			unsigned long sie_flags;
+<<<<<<< HEAD
 			unsigned long sie_control_block_phys;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 	unsigned long gprs[10];

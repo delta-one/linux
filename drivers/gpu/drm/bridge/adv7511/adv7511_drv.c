@@ -697,7 +697,11 @@ adv7511_detect(struct adv7511 *adv7511, struct drm_connector *connector)
 }
 
 static enum drm_mode_status adv7511_mode_valid(struct adv7511 *adv7511,
+<<<<<<< HEAD
 			      const struct drm_display_mode *mode)
+=======
+			      struct drm_display_mode *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (mode->clock > 165000)
 		return MODE_CLOCK_HIGH;
@@ -791,6 +795,12 @@ static void adv7511_mode_set(struct adv7511 *adv7511,
 	regmap_update_bits(adv7511->regmap, 0x17,
 		0x60, (vsync_polarity << 6) | (hsync_polarity << 5));
 
+<<<<<<< HEAD
+=======
+	if (adv7511->type == ADV7533 || adv7511->type == ADV7535)
+		adv7533_mode_set(adv7511, adj_mode);
+
+>>>>>>> b7ba80a49124 (Commit)
 	drm_mode_copy(&adv7511->curr_mode, adj_mode);
 
 	/*
@@ -910,6 +920,7 @@ static void adv7511_bridge_mode_set(struct drm_bridge *bridge,
 	adv7511_mode_set(adv, mode, adj_mode);
 }
 
+<<<<<<< HEAD
 static enum drm_mode_status adv7511_bridge_mode_valid(struct drm_bridge *bridge,
 						      const struct drm_display_info *info,
 		const struct drm_display_mode *mode)
@@ -922,6 +933,8 @@ static enum drm_mode_status adv7511_bridge_mode_valid(struct drm_bridge *bridge,
 		return adv7511_mode_valid(adv, mode);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int adv7511_bridge_attach(struct drm_bridge *bridge,
 				 enum drm_bridge_attach_flags flags)
 {
@@ -969,7 +982,10 @@ static const struct drm_bridge_funcs adv7511_bridge_funcs = {
 	.enable = adv7511_bridge_enable,
 	.disable = adv7511_bridge_disable,
 	.mode_set = adv7511_bridge_mode_set,
+<<<<<<< HEAD
 	.mode_valid = adv7511_bridge_mode_valid,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.attach = adv7511_bridge_attach,
 	.detect = adv7511_bridge_detect,
 	.get_edid = adv7511_bridge_get_edid,
@@ -1185,9 +1201,14 @@ static int adv7511_parse_dt(struct device_node *np,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int adv7511_probe(struct i2c_client *i2c)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(i2c);
+=======
+static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct adv7511_link_config link_config;
 	struct adv7511 *adv7511;
 	struct device *dev = &i2c->dev;
@@ -1220,8 +1241,15 @@ static int adv7511_probe(struct i2c_client *i2c)
 		return ret;
 
 	ret = adv7511_init_regulators(adv7511);
+<<<<<<< HEAD
 	if (ret)
 		return dev_err_probe(dev, ret, "failed to init regulators\n");
+=======
+	if (ret) {
+		dev_err(dev, "failed to init regulators\n");
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * The power down GPIO is optional. If present, toggle it from active to
@@ -1393,7 +1421,11 @@ static struct i2c_driver adv7511_driver = {
 		.of_match_table = adv7511_of_ids,
 	},
 	.id_table = adv7511_i2c_ids,
+<<<<<<< HEAD
 	.probe_new = adv7511_probe,
+=======
+	.probe = adv7511_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = adv7511_remove,
 };
 

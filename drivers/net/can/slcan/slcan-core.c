@@ -594,7 +594,11 @@ static netdev_tx_t slcan_netdev_xmit(struct sk_buff *skb,
 {
 	struct slcan *sl = netdev_priv(dev);
 
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(dev, skb))
+=======
+	if (can_dropped_invalid_skb(dev, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	spin_lock(&sl->lock);
@@ -864,6 +868,7 @@ static void slcan_close(struct tty_struct *tty)
 {
 	struct slcan *sl = (struct slcan *)tty->disc_data;
 
+<<<<<<< HEAD
 	unregister_candev(sl->dev);
 
 	/*
@@ -871,6 +876,13 @@ static void slcan_close(struct tty_struct *tty)
 	 * sure this is not running before freeing it up.
 	 */
 	flush_work(&sl->tx_work);
+=======
+	/* unregister_netdev() calls .ndo_stop() so we don't have to.
+	 * Our .ndo_stop() also flushes the TTY write wakeup handler,
+	 * so we can safely set sl->tty = NULL after this.
+	 */
+	unregister_candev(sl->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Mark channel as dead */
 	spin_lock_bh(&sl->lock);

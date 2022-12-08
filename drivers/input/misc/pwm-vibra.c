@@ -222,7 +222,11 @@ static int pwm_vibrator_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int pwm_vibrator_suspend(struct device *dev)
+=======
+static int __maybe_unused pwm_vibrator_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pwm_vibrator *vibrator = dev_get_drvdata(dev);
 
@@ -233,7 +237,11 @@ static int pwm_vibrator_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int pwm_vibrator_resume(struct device *dev)
+=======
+static int __maybe_unused pwm_vibrator_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pwm_vibrator *vibrator = dev_get_drvdata(dev);
 
@@ -243,8 +251,13 @@ static int pwm_vibrator_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(pwm_vibrator_pm_ops,
 				pwm_vibrator_suspend, pwm_vibrator_resume);
+=======
+static SIMPLE_DEV_PM_OPS(pwm_vibrator_pm_ops,
+			 pwm_vibrator_suspend, pwm_vibrator_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_OF
 static const struct of_device_id pwm_vibra_dt_match_table[] = {
@@ -258,7 +271,11 @@ static struct platform_driver pwm_vibrator_driver = {
 	.probe	= pwm_vibrator_probe,
 	.driver	= {
 		.name	= "pwm-vibrator",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&pwm_vibrator_pm_ops),
+=======
+		.pm	= &pwm_vibrator_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = of_match_ptr(pwm_vibra_dt_match_table),
 	},
 };

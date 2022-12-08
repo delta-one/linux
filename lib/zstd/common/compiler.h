@@ -11,8 +11,11 @@
 #ifndef ZSTD_COMPILER_H
 #define ZSTD_COMPILER_H
 
+<<<<<<< HEAD
 #include "portability_macros.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*-*******************************************************
 *  Compiler specifics
 *********************************************************/
@@ -36,7 +39,11 @@
 
 /*
   On MSVC qsort requires that functions passed into it use the __cdecl calling conversion(CC).
+<<<<<<< HEAD
   This explicitly marks such functions as __cdecl so that the code will still compile
+=======
+  This explictly marks such functions as __cdecl so that the code will still compile
+>>>>>>> b7ba80a49124 (Commit)
   if a CC other than __cdecl has been made the default.
 */
 #define WIN_CDECL
@@ -72,6 +79,7 @@
 
 
 /* target attribute */
+<<<<<<< HEAD
 #define TARGET_ATTRIBUTE(target) __attribute__((__target__(target)))
 
 /* Target attribute for BMI2 dynamic dispatch.
@@ -79,6 +87,27 @@
  * We test for bmi1 & bmi2. lzcnt is included in bmi1.
  */
 #define BMI2_TARGET_ATTRIBUTE TARGET_ATTRIBUTE("lzcnt,bmi,bmi2")
+=======
+#ifndef __has_attribute
+  #define __has_attribute(x) 0  /* Compatibility with non-clang compilers. */
+#endif
+#define TARGET_ATTRIBUTE(target) __attribute__((__target__(target)))
+
+/* Enable runtime BMI2 dispatch based on the CPU.
+ * Enabled for clang & gcc >=4.8 on x86 when BMI2 isn't enabled by default.
+ */
+#ifndef DYNAMIC_BMI2
+  #if ((defined(__clang__) && __has_attribute(__target__)) \
+      || (defined(__GNUC__) \
+          && (__GNUC__ >= 5 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)))) \
+      && (defined(__x86_64__) || defined(_M_X86)) \
+      && !defined(__BMI2__)
+  #  define DYNAMIC_BMI2 1
+  #else
+  #  define DYNAMIC_BMI2 0
+  #endif
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 /* prefetch
  * can be disabled, by declaring NO_PREFETCH build macro */
@@ -105,9 +134,14 @@
 }
 
 /* vectorization
+<<<<<<< HEAD
  * older GCC (pre gcc-4.3 picked as the cutoff) uses a different syntax,
  * and some compilers, like Intel ICC and MCST LCC, do not support it at all. */
 #if !defined(__INTEL_COMPILER) && !defined(__clang__) && defined(__GNUC__) && !defined(__LCC__)
+=======
+ * older GCC (pre gcc-4.3 picked as the cutoff) uses a different syntax */
+#if !defined(__INTEL_COMPILER) && !defined(__clang__) && defined(__GNUC__)
+>>>>>>> b7ba80a49124 (Commit)
 #  if (__GNUC__ == 4 && __GNUC_MINOR__ > 3) || (__GNUC__ >= 5)
 #    define DONT_VECTORIZE __attribute__((optimize("no-tree-vectorize")))
 #  else
@@ -125,18 +159,33 @@
 #define LIKELY(x) (__builtin_expect((x), 1))
 #define UNLIKELY(x) (__builtin_expect((x), 0))
 
+<<<<<<< HEAD
 #if __has_builtin(__builtin_unreachable) || (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5)))
 #  define ZSTD_UNREACHABLE { assert(0), __builtin_unreachable(); }
 #else
 #  define ZSTD_UNREACHABLE { assert(0); }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* disable warnings */
 
 /*Like DYNAMIC_BMI2 but for compile time determination of BMI2 support*/
 
 
+<<<<<<< HEAD
 /* compile time determination of SIMD support */
+=======
+/* compat. with non-clang compilers */
+#ifndef __has_builtin
+#  define __has_builtin(x) 0
+#endif
+
+/* compat. with non-clang compilers */
+#ifndef __has_feature
+#  define __has_feature(x) 0
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 /* C-language Attributes are added in C23. */
 #if defined(__STDC_VERSION__) && (__STDC_VERSION__ > 201710L) && defined(__has_c_attribute)
@@ -157,6 +206,7 @@
  */
 #define ZSTD_FALLTHROUGH fallthrough
 
+<<<<<<< HEAD
 /*-**************************************************************
 *  Alignment check
 *****************************************************************/
@@ -179,6 +229,12 @@
 *  Sanitizer
 *****************************************************************/
 
+=======
+/* detects whether we are being compiled under msan */
+
+
+/* detects whether we are being compiled under asan */
+>>>>>>> b7ba80a49124 (Commit)
 
 
 #endif /* ZSTD_COMPILER_H */

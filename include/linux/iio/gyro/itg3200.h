@@ -102,8 +102,11 @@ struct itg3200 {
 	struct i2c_client	*i2c;
 	struct iio_trigger	*trig;
 	struct iio_mount_matrix orientation;
+<<<<<<< HEAD
 	/* lock to protect against multiple access to the device */
 	struct mutex		lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum ITG3200_SCAN_INDEX {

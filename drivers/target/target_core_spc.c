@@ -227,7 +227,11 @@ spc_emulate_evpd_83(struct se_cmd *cmd, unsigned char *buf)
 	struct t10_alua_tg_pt_gp *tg_pt_gp;
 	unsigned char *prod = &dev->t10_wwn.model[0];
 	u32 prod_len;
+<<<<<<< HEAD
 	u32 off = 0;
+=======
+	u32 unit_serial_len, off = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	u16 len = 0, id_len;
 
 	off = 4;
@@ -272,9 +276,19 @@ check_t10_vend_desc:
 	prod_len += strlen(prod);
 	prod_len++; /* For : */
 
+<<<<<<< HEAD
 	if (dev->dev_flags & DF_EMULATED_VPD_UNIT_SERIAL)
 		id_len += sprintf(&buf[off+12], "%s:%s", prod,
 				&dev->t10_wwn.unit_serial[0]);
+=======
+	if (dev->dev_flags & DF_EMULATED_VPD_UNIT_SERIAL) {
+		unit_serial_len = strlen(&dev->t10_wwn.unit_serial[0]);
+		unit_serial_len++; /* For NULL Terminator */
+
+		id_len += sprintf(&buf[off+12], "%s:%s", prod,
+				&dev->t10_wwn.unit_serial[0]);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	buf[off] = 0x2; /* ASCII */
 	buf[off+1] = 0x1; /* T10 Vendor ID */
 	buf[off+2] = 0x0;
@@ -317,7 +331,11 @@ check_t10_vend_desc:
 		/* Skip over Obsolete field in RTPI payload
 		 * in Table 472 */
 		off += 2;
+<<<<<<< HEAD
 		put_unaligned_be16(lun->lun_tpg->tpg_rtpi, &buf[off]);
+=======
+		put_unaligned_be16(lun->lun_rtpi, &buf[off]);
+>>>>>>> b7ba80a49124 (Commit)
 		off += 2;
 		len += 8; /* Header size + Designation descriptor */
 		/*
@@ -515,7 +533,10 @@ spc_emulate_evpd_b0(struct se_cmd *cmd, unsigned char *buf)
 	struct se_device *dev = cmd->se_dev;
 	u32 mtl = 0;
 	int have_tp = 0, opt, min;
+<<<<<<< HEAD
 	u32 io_max_blocks;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Following spc3r22 section 6.5.3 Block Limits VPD page, when
@@ -554,10 +575,14 @@ spc_emulate_evpd_b0(struct se_cmd *cmd, unsigned char *buf)
 		mtl = (cmd->se_tfo->max_data_sg_nents * PAGE_SIZE) /
 		       dev->dev_attrib.block_size;
 	}
+<<<<<<< HEAD
 	io_max_blocks = mult_frac(dev->dev_attrib.hw_max_sectors,
 			dev->dev_attrib.hw_block_size,
 			dev->dev_attrib.block_size);
 	put_unaligned_be32(min_not_zero(mtl, io_max_blocks), &buf[8]);
+=======
+	put_unaligned_be32(min_not_zero(mtl, dev->dev_attrib.hw_max_sectors), &buf[8]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Set OPTIMAL TRANSFER LENGTH
@@ -1314,6 +1339,7 @@ spc_emulate_testunitready(struct se_cmd *cmd)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void set_dpofua_usage_bits(u8 *usage_bits, struct se_device *dev)
 {
 	if (!target_check_fua(dev))
@@ -2230,6 +2256,8 @@ out:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 sense_reason_t
 spc_parse_cdb(struct se_cmd *cmd, unsigned int *size)
 {
@@ -2355,10 +2383,13 @@ spc_parse_cdb(struct se_cmd *cmd, unsigned int *size)
 				cmd->execute_cmd =
 					target_emulate_report_target_port_groups;
 			}
+<<<<<<< HEAD
 			if ((cdb[1] & 0x1f) ==
 			    MI_REPORT_SUPPORTED_OPERATION_CODES)
 				cmd->execute_cmd =
 					spc_emulate_report_supp_op_codes;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			*size = get_unaligned_be32(&cdb[6]);
 		} else {
 			/*

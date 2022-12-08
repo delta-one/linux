@@ -57,7 +57,11 @@ opal_return:
 	.long 0xa64b7b7d /* mthsrr1 r11				*/
 	.long 0x2402004c /* hrfid				*/
 #endif
+<<<<<<< HEAD
 	LOAD_PACA_TOC()
+=======
+	ld	r2,PACATOC(r13)
+>>>>>>> b7ba80a49124 (Commit)
 	ld	r0,PPC_LR_STKOFF(r1)
 	mtlr	r0
 	blr

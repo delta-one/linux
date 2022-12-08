@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 What:		/sys/bus/.../drivers/intel-m10-bmc/.../bmc_version
+=======
+What:		/sys/bus/spi/devices/.../bmc_version
+>>>>>>> b7ba80a49124 (Commit)
 Date:		June 2020
 KernelVersion:	5.10
 Contact:	Xu Yilun <yilun.xu@intel.com>
@@ -6,7 +10,11 @@ Description:	Read only. Returns the hardware build version of Intel
 		MAX10 BMC chip.
 		Format: "0x%x".
 
+<<<<<<< HEAD
 What:		/sys/bus/.../drivers/intel-m10-bmc/.../bmcfw_version
+=======
+What:		/sys/bus/spi/devices/.../bmcfw_version
+>>>>>>> b7ba80a49124 (Commit)
 Date:		June 2020
 KernelVersion:	5.10
 Contact:	Xu Yilun <yilun.xu@intel.com>
@@ -14,7 +22,11 @@ Description:	Read only. Returns the firmware version of Intel MAX10
 		BMC chip.
 		Format: "0x%x".
 
+<<<<<<< HEAD
 What:		/sys/bus/.../drivers/intel-m10-bmc/.../mac_address
+=======
+What:		/sys/bus/spi/devices/.../mac_address
+>>>>>>> b7ba80a49124 (Commit)
 Date:		January 2021
 KernelVersion:  5.12
 Contact:	Russ Weight <russell.h.weight@intel.com>
@@ -25,7 +37,11 @@ Description:	Read only. Returns the first MAC address in a block
 		space.
 		Format: "%02x:%02x:%02x:%02x:%02x:%02x".
 
+<<<<<<< HEAD
 What:		/sys/bus/.../drivers/intel-m10-bmc/.../mac_count
+=======
+What:		/sys/bus/spi/devices/.../mac_count
+>>>>>>> b7ba80a49124 (Commit)
 Date:		January 2021
 KernelVersion:  5.12
 Contact:	Russ Weight <russell.h.weight@intel.com>

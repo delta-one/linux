@@ -157,6 +157,10 @@
 				     <0 13 IRQ_TYPE_LEVEL_HIGH>,
 				     <0 13 IRQ_TYPE_LEVEL_HIGH>,
 				     <0 13 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
+=======
+			interrupt-names = "gpmi0", "gpmi1", "gpmi2", "gpmi3";
+>>>>>>> b7ba80a49124 (Commit)
 			#dma-cells = <1>;
 			dma-channels = <4>;
 			clocks = <&clks IMX6QDL_CLK_APBH_DMA>;
@@ -1049,11 +1053,17 @@
 				clocks = <&clks IMX6QDL_CLK_ENET>,
 					 <&clks IMX6QDL_CLK_ENET>,
 					 <&clks IMX6QDL_CLK_ENET_REF>,
+<<<<<<< HEAD
 					 <&clks IMX6QDL_CLK_ENET_REF_SEL>;
 				clock-names = "ipg", "ahb", "ptp", "enet_clk_ref";
 				fsl,stop-mode = <&gpr 0x34 27>;
 				nvmem-cells = <&fec_mac_addr>;
 				nvmem-cell-names = "mac-address";
+=======
+					 <&clks IMX6QDL_CLK_ENET_REF>;
+				clock-names = "ipg", "ahb", "ptp", "enet_out";
+				fsl,stop-mode = <&gpr 0x34 27>;
+>>>>>>> b7ba80a49124 (Commit)
 				status = "disabled";
 			};
 
@@ -1187,10 +1197,13 @@
 				tempmon_temp_grade: temp-grade@20 {
 					reg = <0x20 4>;
 				};
+<<<<<<< HEAD
 
 				fec_mac_addr: mac-addr@88 {
 					reg = <0x88 6>;
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			tzasc@21d0000 { /* TZASC1 */

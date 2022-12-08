@@ -319,11 +319,20 @@ err_free_compat:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void wm97xx_ac97_remove(struct ac97_codec_device *adev)
+=======
+static int wm97xx_ac97_remove(struct ac97_codec_device *adev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct wm97xx_priv *wm97xx = ac97_get_drvdata(adev);
 
 	snd_ac97_compat_release(wm97xx->ac97);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct ac97_id wm97xx_ac97_ids[] = {

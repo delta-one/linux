@@ -73,8 +73,12 @@ enum {
 	VHOST_NET_FEATURES = VHOST_FEATURES |
 			 (1ULL << VHOST_NET_F_VIRTIO_NET_HDR) |
 			 (1ULL << VIRTIO_NET_F_MRG_RXBUF) |
+<<<<<<< HEAD
 			 (1ULL << VIRTIO_F_ACCESS_PLATFORM) |
 			 (1ULL << VIRTIO_F_RING_RESET)
+=======
+			 (1ULL << VIRTIO_F_ACCESS_PLATFORM)
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum {
@@ -119,7 +123,11 @@ struct vhost_net_virtqueue {
 	/* Number of XDP frames batched */
 	int batched_xdp;
 	/* an array of userspace buffers info */
+<<<<<<< HEAD
 	struct ubuf_info_msgzc *ubuf_info;
+=======
+	struct ubuf_info *ubuf_info;
+>>>>>>> b7ba80a49124 (Commit)
 	/* Reference counting for outstanding ubufs.
 	 * Protected by vq mutex. Writers must also take device mutex. */
 	struct vhost_net_ubuf_ref *ubufs;
@@ -383,9 +391,14 @@ static void vhost_zerocopy_signal_used(struct vhost_net *net,
 }
 
 static void vhost_zerocopy_callback(struct sk_buff *skb,
+<<<<<<< HEAD
 				    struct ubuf_info *ubuf_base, bool success)
 {
 	struct ubuf_info_msgzc *ubuf = uarg_to_msgzc(ubuf_base);
+=======
+				    struct ubuf_info *ubuf, bool success)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct vhost_net_ubuf_ref *ubufs = ubuf->ctx;
 	struct vhost_virtqueue *vq = ubufs->vq;
 	int cnt;
@@ -612,7 +625,11 @@ static size_t init_iov_iter(struct vhost_virtqueue *vq, struct iov_iter *iter,
 	/* Skip header. TODO: support TSO. */
 	size_t len = iov_length(vq->iov, out);
 
+<<<<<<< HEAD
 	iov_iter_init(iter, ITER_SOURCE, vq->iov, out, len);
+=======
+	iov_iter_init(iter, WRITE, vq->iov, out, len);
+>>>>>>> b7ba80a49124 (Commit)
 	iov_iter_advance(iter, hdr_size);
 
 	return iov_iter_count(iter);
@@ -873,7 +890,11 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
 	size_t len, total_len = 0;
 	int err;
 	struct vhost_net_ubuf_ref *ubufs;
+<<<<<<< HEAD
 	struct ubuf_info_msgzc *ubuf;
+=======
+	struct ubuf_info *ubuf;
+>>>>>>> b7ba80a49124 (Commit)
 	bool zcopy_used;
 	int sent_pkts = 0;
 
@@ -909,6 +930,7 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
 			ubuf = nvq->ubuf_info + nvq->upend_idx;
 			vq->heads[nvq->upend_idx].id = cpu_to_vhost32(vq, head);
 			vq->heads[nvq->upend_idx].len = VHOST_DMA_IN_PROGRESS;
+<<<<<<< HEAD
 			ubuf->ctx = nvq->ubufs;
 			ubuf->desc = nvq->upend_idx;
 			ubuf->ubuf.callback = vhost_zerocopy_callback;
@@ -917,6 +939,16 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
 			msg.msg_control = &ctl;
 			ctl.type = TUN_MSG_UBUF;
 			ctl.ptr = &ubuf->ubuf;
+=======
+			ubuf->callback = vhost_zerocopy_callback;
+			ubuf->ctx = nvq->ubufs;
+			ubuf->desc = nvq->upend_idx;
+			ubuf->flags = SKBFL_ZEROCOPY_FRAG;
+			refcount_set(&ubuf->refcnt, 1);
+			msg.msg_control = &ctl;
+			ctl.type = TUN_MSG_UBUF;
+			ctl.ptr = ubuf;
+>>>>>>> b7ba80a49124 (Commit)
 			msg.msg_controllen = sizeof(ctl);
 			ubufs = nvq->ubufs;
 			atomic_inc(&ubufs->refcount);
@@ -1185,14 +1217,22 @@ static void handle_rx(struct vhost_net *net)
 			msg.msg_control = vhost_net_buf_consume(&nvq->rxq);
 		/* On overrun, truncate and discard */
 		if (unlikely(headcount > UIO_MAXIOV)) {
+<<<<<<< HEAD
 			iov_iter_init(&msg.msg_iter, ITER_DEST, vq->iov, 1, 1);
+=======
+			iov_iter_init(&msg.msg_iter, READ, vq->iov, 1, 1);
+>>>>>>> b7ba80a49124 (Commit)
 			err = sock->ops->recvmsg(sock, &msg,
 						 1, MSG_DONTWAIT | MSG_TRUNC);
 			pr_debug("Discarded rx packet: len %zd\n", sock_len);
 			continue;
 		}
 		/* We don't need to be notified again. */
+<<<<<<< HEAD
 		iov_iter_init(&msg.msg_iter, ITER_DEST, vq->iov, in, vhost_len);
+=======
+		iov_iter_init(&msg.msg_iter, READ, vq->iov, in, vhost_len);
+>>>>>>> b7ba80a49124 (Commit)
 		fixup = msg.msg_iter;
 		if (unlikely((vhost_hlen))) {
 			/* We will supply the header ourselves
@@ -1512,9 +1552,12 @@ static long vhost_net_set_backend(struct vhost_net *n, unsigned index, int fd)
 	nvq = &n->vqs[index];
 	mutex_lock(&vq->mutex);
 
+<<<<<<< HEAD
 	if (fd == -1)
 		vhost_clear_msg(&n->dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Verify that ring has been setup correctly. */
 	if (!vhost_vq_access_ok(vq)) {
 		r = -EFAULT;
@@ -1646,7 +1689,11 @@ static int vhost_net_set_features(struct vhost_net *n, u64 features)
 		goto out_unlock;
 
 	if ((features & (1ULL << VIRTIO_F_ACCESS_PLATFORM))) {
+<<<<<<< HEAD
 		if (vhost_init_device_iotlb(&n->dev))
+=======
+		if (vhost_init_device_iotlb(&n->dev, true))
+>>>>>>> b7ba80a49124 (Commit)
 			goto out_unlock;
 	}
 
@@ -1786,7 +1833,11 @@ static struct miscdevice vhost_net_misc = {
 	.fops = &vhost_net_fops,
 };
 
+<<<<<<< HEAD
 static int __init vhost_net_init(void)
+=======
+static int vhost_net_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (experimental_zcopytx)
 		vhost_net_enable_zcopy(VHOST_NET_VQ_TX);
@@ -1794,7 +1845,11 @@ static int __init vhost_net_init(void)
 }
 module_init(vhost_net_init);
 
+<<<<<<< HEAD
 static void __exit vhost_net_exit(void)
+=======
+static void vhost_net_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	misc_deregister(&vhost_net_misc);
 }

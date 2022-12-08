@@ -213,7 +213,15 @@ point rather than some random spot.  If your upstream-bound branch has
 emptied entirely into the mainline during the merge window, you can pull it
 forward with a command like::
 
+<<<<<<< HEAD
   git merge --ff-only v5.2-rc1
+=======
+  git merge v5.2-rc1^0
+
+The "^0" will cause Git to do a fast-forward merge (which should be
+possible in this situation), thus avoiding the addition of a spurious merge
+commit.
+>>>>>>> b7ba80a49124 (Commit)
 
 The guidelines laid out above are just that: guidelines.  There will always
 be situations that call out for a different solution, and these guidelines

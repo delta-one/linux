@@ -24,7 +24,11 @@ int amdtp_ff_set_parameters(struct amdtp_stream *s, unsigned int rate,
 	p->pcm_channels = pcm_channels;
 	data_channels = pcm_channels;
 
+<<<<<<< HEAD
 	return amdtp_stream_set_parameters(s, rate, data_channels, 1);
+=======
+	return amdtp_stream_set_parameters(s, rate, data_channels);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void write_pcm_s32(struct amdtp_stream *s, struct snd_pcm_substream *pcm,
@@ -112,13 +116,25 @@ int amdtp_ff_add_pcm_hw_constraints(struct amdtp_stream *s,
 	return amdtp_stream_add_pcm_hw_constraints(s, runtime);
 }
 
+<<<<<<< HEAD
 static void process_it_ctx_payloads(struct amdtp_stream *s, const struct pkt_desc *desc,
 				    unsigned int count, struct snd_pcm_substream *pcm)
+=======
+static unsigned int process_it_ctx_payloads(struct amdtp_stream *s,
+					   const struct pkt_desc *descs,
+					   unsigned int packets,
+					   struct snd_pcm_substream *pcm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int pcm_frames = 0;
 	int i;
 
+<<<<<<< HEAD
 	for (i = 0; i < count; ++i) {
+=======
+	for (i = 0; i < packets; ++i) {
+		const struct pkt_desc *desc = descs + i;
+>>>>>>> b7ba80a49124 (Commit)
 		__le32 *buf = (__le32 *)desc->ctx_payload;
 		unsigned int data_blocks = desc->data_blocks;
 
@@ -128,6 +144,7 @@ static void process_it_ctx_payloads(struct amdtp_stream *s, const struct pkt_des
 		} else {
 			write_pcm_silence(s, buf, data_blocks);
 		}
+<<<<<<< HEAD
 
 		desc = amdtp_stream_next_packet_desc(s, desc);
 	}
@@ -135,11 +152,27 @@ static void process_it_ctx_payloads(struct amdtp_stream *s, const struct pkt_des
 
 static void process_ir_ctx_payloads(struct amdtp_stream *s, const struct pkt_desc *desc,
 				    unsigned int count, struct snd_pcm_substream *pcm)
+=======
+	}
+
+	return pcm_frames;
+}
+
+static unsigned int process_ir_ctx_payloads(struct amdtp_stream *s,
+					    const struct pkt_desc *descs,
+					    unsigned int packets,
+					    struct snd_pcm_substream *pcm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int pcm_frames = 0;
 	int i;
 
+<<<<<<< HEAD
 	for (i = 0; i < count; ++i) {
+=======
+	for (i = 0; i < packets; ++i) {
+		const struct pkt_desc *desc = descs + i;
+>>>>>>> b7ba80a49124 (Commit)
 		__le32 *buf = (__le32 *)desc->ctx_payload;
 		unsigned int data_blocks = desc->data_blocks;
 
@@ -147,9 +180,15 @@ static void process_ir_ctx_payloads(struct amdtp_stream *s, const struct pkt_des
 			read_pcm_s32(s, pcm, buf, data_blocks, pcm_frames);
 			pcm_frames += data_blocks;
 		}
+<<<<<<< HEAD
 
 		desc = amdtp_stream_next_packet_desc(s, desc);
 	}
+=======
+	}
+
+	return pcm_frames;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int amdtp_ff_init(struct amdtp_stream *s, struct fw_unit *unit,

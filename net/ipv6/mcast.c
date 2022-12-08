@@ -627,12 +627,21 @@ int ip6_mc_msfget(struct sock *sk, struct group_filter *gsf,
 	return 0;
 }
 
+<<<<<<< HEAD
 bool inet6_mc_check(const struct sock *sk, const struct in6_addr *mc_addr,
 		    const struct in6_addr *src_addr)
 {
 	const struct ipv6_pinfo *np = inet6_sk(sk);
 	const struct ipv6_mc_socklist *mc;
 	const struct ip6_sf_socklist *psl;
+=======
+bool inet6_mc_check(struct sock *sk, const struct in6_addr *mc_addr,
+		    const struct in6_addr *src_addr)
+{
+	struct ipv6_pinfo *np = inet6_sk(sk);
+	struct ipv6_mc_socklist *mc;
+	struct ip6_sf_socklist *psl;
+>>>>>>> b7ba80a49124 (Commit)
 	bool rv = true;
 
 	rcu_read_lock();
@@ -1050,7 +1059,11 @@ bool ipv6_chk_mcast_addr(struct net_device *dev, const struct in6_addr *group,
 /* called with mc_lock */
 static void mld_gq_start_work(struct inet6_dev *idev)
 {
+<<<<<<< HEAD
 	unsigned long tv = get_random_u32_below(idev->mc_maxdelay);
+=======
+	unsigned long tv = prandom_u32() % idev->mc_maxdelay;
+>>>>>>> b7ba80a49124 (Commit)
 
 	idev->mc_gq_running = 1;
 	if (!mod_delayed_work(mld_wq, &idev->mc_gq_work, tv + 2))
@@ -1068,7 +1081,11 @@ static void mld_gq_stop_work(struct inet6_dev *idev)
 /* called with mc_lock */
 static void mld_ifc_start_work(struct inet6_dev *idev, unsigned long delay)
 {
+<<<<<<< HEAD
 	unsigned long tv = get_random_u32_below(delay);
+=======
+	unsigned long tv = prandom_u32() % delay;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!mod_delayed_work(mld_wq, &idev->mc_ifc_work, tv + 2))
 		in6_dev_hold(idev);
@@ -1085,7 +1102,11 @@ static void mld_ifc_stop_work(struct inet6_dev *idev)
 /* called with mc_lock */
 static void mld_dad_start_work(struct inet6_dev *idev, unsigned long delay)
 {
+<<<<<<< HEAD
 	unsigned long tv = get_random_u32_below(delay);
+=======
+	unsigned long tv = prandom_u32() % delay;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!mod_delayed_work(mld_wq, &idev->mc_dad_work, tv + 2))
 		in6_dev_hold(idev);
@@ -1130,7 +1151,11 @@ static void igmp6_group_queried(struct ifmcaddr6 *ma, unsigned long resptime)
 	}
 
 	if (delay >= resptime)
+<<<<<<< HEAD
 		delay = get_random_u32_below(resptime);
+=======
+		delay = prandom_u32() % resptime;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!mod_delayed_work(mld_wq, &ma->mca_work, delay))
 		refcount_inc(&ma->mca_refcnt);
@@ -2574,7 +2599,11 @@ static void igmp6_join_group(struct ifmcaddr6 *ma)
 
 	igmp6_send(&ma->mca_addr, ma->idev->dev, ICMPV6_MGM_REPORT);
 
+<<<<<<< HEAD
 	delay = get_random_u32_below(unsolicited_report_interval(ma->idev));
+=======
+	delay = prandom_u32() % unsolicited_report_interval(ma->idev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (cancel_delayed_work(&ma->mca_work)) {
 		refcount_dec(&ma->mca_refcnt);

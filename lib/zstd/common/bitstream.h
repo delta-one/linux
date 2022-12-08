@@ -313,6 +313,7 @@ MEM_STATIC FORCE_INLINE_ATTR size_t BIT_getMiddleBits(size_t bitContainer, U32 c
     U32 const regMask = sizeof(bitContainer)*8 - 1;
     /* if start > regMask, bitstream is corrupted, and result is undefined */
     assert(nbBits < BIT_MASK_SIZE);
+<<<<<<< HEAD
     /* x86 transform & ((1 << nbBits) - 1) to bzhi instruction, it is better
      * than accessing memory. When bmi2 instruction is not present, we consider
      * such cpus old (pre-Haswell, 2013) and their performance is not of that
@@ -323,6 +324,9 @@ MEM_STATIC FORCE_INLINE_ATTR size_t BIT_getMiddleBits(size_t bitContainer, U32 c
 #else
     return (bitContainer >> (start & regMask)) & BIT_mask[nbBits];
 #endif
+=======
+    return (bitContainer >> (start & regMask)) & BIT_mask[nbBits];
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 MEM_STATIC FORCE_INLINE_ATTR size_t BIT_getLowerBits(size_t bitContainer, U32 const nbBits)

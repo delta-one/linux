@@ -108,7 +108,11 @@ static int uacce_bind_queue(struct uacce_device *uacce, struct uacce_queue *q)
 	if (!(uacce->flags & UACCE_DEV_SVA))
 		return 0;
 
+<<<<<<< HEAD
 	handle = iommu_sva_bind_device(uacce->parent, current->mm);
+=======
+	handle = iommu_sva_bind_device(uacce->parent, current->mm, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(handle))
 		return PTR_ERR(handle);
 
@@ -229,7 +233,11 @@ static int uacce_fops_mmap(struct file *filep, struct vm_area_struct *vma)
 	if (!qfr)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_WIPEONFORK);
+=======
+	vma->vm_flags |= VM_DONTCOPY | VM_DONTEXPAND | VM_WIPEONFORK;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_ops = &uacce_vm_ops;
 	vma->vm_private_data = q;
 	qfr->type = type;
@@ -363,6 +371,7 @@ static ssize_t region_dus_size_show(struct device *dev,
 		       uacce->qf_pg_num[UACCE_QFRT_DUS] << PAGE_SHIFT);
 }
 
+<<<<<<< HEAD
 static ssize_t isolate_show(struct device *dev,
 			    struct device_attribute *attr, char *buf)
 {
@@ -401,14 +410,19 @@ static ssize_t isolate_strategy_store(struct device *dev, struct device_attribut
 	return count;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static DEVICE_ATTR_RO(api);
 static DEVICE_ATTR_RO(flags);
 static DEVICE_ATTR_RO(available_instances);
 static DEVICE_ATTR_RO(algorithms);
 static DEVICE_ATTR_RO(region_mmio_size);
 static DEVICE_ATTR_RO(region_dus_size);
+<<<<<<< HEAD
 static DEVICE_ATTR_RO(isolate);
 static DEVICE_ATTR_RW(isolate_strategy);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct attribute *uacce_dev_attrs[] = {
 	&dev_attr_api.attr,
@@ -417,8 +431,11 @@ static struct attribute *uacce_dev_attrs[] = {
 	&dev_attr_algorithms.attr,
 	&dev_attr_region_mmio_size.attr,
 	&dev_attr_region_dus_size.attr,
+<<<<<<< HEAD
 	&dev_attr_isolate.attr,
 	&dev_attr_isolate_strategy.attr,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	NULL,
 };
 
@@ -434,6 +451,7 @@ static umode_t uacce_dev_is_visible(struct kobject *kobj,
 	    (!uacce->qf_pg_num[UACCE_QFRT_DUS])))
 		return 0;
 
+<<<<<<< HEAD
 	if (attr == &dev_attr_isolate_strategy.attr &&
 	    (!uacce->ops->isolate_err_threshold_read &&
 	     !uacce->ops->isolate_err_threshold_write))
@@ -442,6 +460,8 @@ static umode_t uacce_dev_is_visible(struct kobject *kobj,
 	if (attr == &dev_attr_isolate.attr && !uacce->ops->get_isolate_state)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return attr->mode;
 }
 
@@ -620,7 +640,11 @@ static int __init uacce_init(void)
 {
 	int ret;
 
+<<<<<<< HEAD
 	uacce_class = class_create(UACCE_NAME);
+=======
+	uacce_class = class_create(THIS_MODULE, UACCE_NAME);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(uacce_class))
 		return PTR_ERR(uacce_class);
 

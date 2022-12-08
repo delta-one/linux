@@ -3292,14 +3292,21 @@ static bool ixgbe_need_crosstalk_fix(struct ixgbe_hw *hw)
 s32 ixgbe_check_mac_link_generic(struct ixgbe_hw *hw, ixgbe_link_speed *speed,
 				 bool *link_up, bool link_up_wait_to_complete)
 {
+<<<<<<< HEAD
 	bool crosstalk_fix_active = ixgbe_need_crosstalk_fix(hw);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 links_reg, links_orig;
 	u32 i;
 
 	/* If Crosstalk fix enabled do the sanity check of making sure
 	 * the SFP+ cage is full.
 	 */
+<<<<<<< HEAD
 	if (crosstalk_fix_active) {
+=======
+	if (ixgbe_need_crosstalk_fix(hw)) {
+>>>>>>> b7ba80a49124 (Commit)
 		u32 sfp_cage_full;
 
 		switch (hw->mac.type) {
@@ -3347,6 +3354,7 @@ s32 ixgbe_check_mac_link_generic(struct ixgbe_hw *hw, ixgbe_link_speed *speed,
 			links_reg = IXGBE_READ_REG(hw, IXGBE_LINKS);
 		}
 	} else {
+<<<<<<< HEAD
 		if (links_reg & IXGBE_LINKS_UP) {
 			if (crosstalk_fix_active) {
 				/* Check the link state again after a delay
@@ -3365,6 +3373,12 @@ s32 ixgbe_check_mac_link_generic(struct ixgbe_hw *hw, ixgbe_link_speed *speed,
 		} else {
 			*link_up = false;
 		}
+=======
+		if (links_reg & IXGBE_LINKS_UP)
+			*link_up = true;
+		else
+			*link_up = false;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	switch (links_reg & IXGBE_LINKS_SPEED_82599) {

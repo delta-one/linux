@@ -26,7 +26,10 @@
 
 #include <linux/types.h>
 
+<<<<<<< HEAD
 struct drm_atomic_state;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct drm_crtc;
 struct drm_framebuffer;
 struct drm_modeset_acquire_ctx;

@@ -2,8 +2,12 @@
 /*
  * Accelerated GHASH implementation with NEON/ARMv8 vmull.p8/64 instructions.
  *
+<<<<<<< HEAD
  * Copyright (C) 2015 - 2017 Linaro Ltd.
  * Copyright (C) 2023 Google LLC. <ardb@google.com>
+=======
+ * Copyright (C) 2015 - 2017 Linaro Ltd. <ard.biesheuvel@linaro.org>
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/linkage.h>
@@ -45,7 +49,11 @@
 	t2q		.req	q7
 	t3q		.req	q8
 	t4q		.req	q9
+<<<<<<< HEAD
 	XH2		.req	q9
+=======
+	T2		.req	q9
+>>>>>>> b7ba80a49124 (Commit)
 
 	s1l		.req	d20
 	s1h		.req	d21
@@ -81,7 +89,11 @@
 
 	XL2		.req	q5
 	XM2		.req	q6
+<<<<<<< HEAD
 	T2		.req	q7
+=======
+	XH2		.req	q7
+>>>>>>> b7ba80a49124 (Commit)
 	T3		.req	q8
 
 	XL2_L		.req	d10
@@ -193,10 +205,16 @@
 	vshr.u64	XL, XL, #1
 	.endm
 
+<<<<<<< HEAD
 	.macro		ghash_update, pn, enc, aggregate=1, head=1
 	vld1.64		{XL}, [r1]
 
 	.if		\head
+=======
+	.macro		ghash_update, pn
+	vld1.64		{XL}, [r1]
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* do the head block first, if supplied */
 	ldr		ip, [sp]
 	teq		ip, #0
@@ -204,14 +222,20 @@
 	vld1.64		{T1}, [ip]
 	teq		r0, #0
 	b		3f
+<<<<<<< HEAD
 	.endif
 
 0:	.ifc		\pn, p64
 	.if		\aggregate
+=======
+
+0:	.ifc		\pn, p64
+>>>>>>> b7ba80a49124 (Commit)
 	tst		r0, #3			// skip until #blocks is a
 	bne		2f			// round multiple of 4
 
 	vld1.8		{XL2-XM2}, [r2]!
+<<<<<<< HEAD
 1:	vld1.8		{T2-T3}, [r2]!
 
 	.ifnb		\enc
@@ -230,6 +254,9 @@
 	vshl.u64	MASK, MASK, #57
 	.endif
 
+=======
+1:	vld1.8		{T3-T2}, [r2]!
+>>>>>>> b7ba80a49124 (Commit)
 	vrev64.8	XL2, XL2
 	vrev64.8	XM2, XM2
 
@@ -239,8 +266,13 @@
 	veor		XL2_H, XL2_H, XL_L
 	veor		XL, XL, T1
 
+<<<<<<< HEAD
 	vrev64.8	T1, T3
 	vrev64.8	T3, T2
+=======
+	vrev64.8	T3, T3
+	vrev64.8	T1, T2
+>>>>>>> b7ba80a49124 (Commit)
 
 	vmull.p64	XH, HH4_H, XL_H			// a1 * b1
 	veor		XL2_H, XL2_H, XL_H
@@ -288,6 +320,7 @@
 
 	b		1b
 	.endif
+<<<<<<< HEAD
 	.endif
 
 2:	vld1.8		{T1}, [r2]!
@@ -304,6 +337,16 @@
 3:	/* multiply XL by SHASH in GF(2^128) */
 	vrev64.8	T1, T1
 
+=======
+
+2:	vld1.64		{T1}, [r2]!
+	subs		r0, r0, #1
+
+3:	/* multiply XL by SHASH in GF(2^128) */
+#ifndef CONFIG_CPU_BIG_ENDIAN
+	vrev64.8	T1, T1
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	vext.8		IN1, T1, T1, #8
 	veor		T1_L, T1_L, XL_H
 	veor		XL, XL, IN1
@@ -322,6 +365,12 @@
 	veor		XL, XL, T1
 
 	bne		0b
+<<<<<<< HEAD
+=======
+
+	vst1.64		{XL}, [r1]
+	bx		lr
+>>>>>>> b7ba80a49124 (Commit)
 	.endm
 
 	/*
@@ -342,9 +391,12 @@ ENTRY(pmull_ghash_update_p64)
 	vshl.u64	MASK, MASK, #57
 
 	ghash_update	p64
+<<<<<<< HEAD
 	vst1.64		{XL}, [r1]
 
 	bx		lr
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ENDPROC(pmull_ghash_update_p64)
 
 ENTRY(pmull_ghash_update_p8)
@@ -365,6 +417,7 @@ ENTRY(pmull_ghash_update_p8)
 	vmov.i64	k48, #0xffffffffffff
 
 	ghash_update	p8
+<<<<<<< HEAD
 	vst1.64		{XL}, [r1]
 
 	bx		lr
@@ -693,3 +746,6 @@ ENDPROC(pmull_gcm_dec_final)
 	.byte		0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
 	.byte		0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
 	.byte		0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
+=======
+ENDPROC(pmull_ghash_update_p8)
+>>>>>>> b7ba80a49124 (Commit)

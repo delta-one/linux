@@ -27,6 +27,7 @@ struct scsi_transport_template;
 #define MODE_INITIATOR 0x01
 #define MODE_TARGET 0x02
 
+<<<<<<< HEAD
 /**
  * enum scsi_timeout_action - How to handle a command that timed out.
  * @SCSI_EH_DONE: The command has already been completed.
@@ -39,6 +40,8 @@ enum scsi_timeout_action {
 	SCSI_EH_NOT_HANDLED,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct scsi_host_template {
 	/*
 	 * Put fields referenced in IO submission path together in
@@ -343,7 +346,11 @@ struct scsi_host_template {
 	 *
 	 * Status: OPTIONAL
 	 */
+<<<<<<< HEAD
 	enum scsi_timeout_action (*eh_timed_out)(struct scsi_cmnd *);
+=======
+	enum blk_eh_timer_return (*eh_timed_out)(struct scsi_cmnd *);
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Optional routine that allows the transport to decide if a cmd
 	 * is retryable. Return true if the transport is in a state the
@@ -370,6 +377,15 @@ struct scsi_host_template {
 	const char *proc_name;
 
 	/*
+<<<<<<< HEAD
+=======
+	 * Used to store the procfs directory if a driver implements the
+	 * show_info method.
+	 */
+	struct proc_dir_entry *proc_dir;
+
+	/*
+>>>>>>> b7ba80a49124 (Commit)
 	 * This determines if we will use a non-interrupt driven
 	 * or an interrupt driven scheme.  It is set to the maximum number
 	 * of simultaneous commands a single hw queue in HBA will accept.
@@ -429,6 +445,15 @@ struct scsi_host_template {
 	 */
 	short cmd_per_lun;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * present contains counter indicating how many boards of this
+	 * type were found when we did the scan.
+	 */
+	unsigned char present;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* If use block layer to manage tags, this is tag allocation policy */
 	int tag_alloc_policy;
 
@@ -751,12 +776,15 @@ extern struct Scsi_Host *scsi_host_alloc(struct scsi_host_template *, int);
 extern int __must_check scsi_add_host_with_dma(struct Scsi_Host *,
 					       struct device *,
 					       struct device *);
+<<<<<<< HEAD
 #if defined(CONFIG_SCSI_PROC_FS)
 struct proc_dir_entry *
 scsi_template_proc_dir(const struct scsi_host_template *sht);
 #else
 #define scsi_template_proc_dir(sht) NULL
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern void scsi_scan_host(struct Scsi_Host *);
 extern void scsi_rescan_device(struct device *);
 extern void scsi_remove_host(struct Scsi_Host *);

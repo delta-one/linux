@@ -143,12 +143,20 @@ static int ebook_switch_add(struct acpi_device *device)
 	return error;
 }
 
+<<<<<<< HEAD
 static void ebook_switch_remove(struct acpi_device *device)
+=======
+static int ebook_switch_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ebook_switch *button = acpi_driver_data(device);
 
 	input_unregister_device(button->input);
 	kfree(button);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct acpi_driver xo15_ebook_driver = {

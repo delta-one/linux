@@ -120,12 +120,20 @@ int iio_trigger_set_immutable(struct iio_dev *indio_dev, struct iio_trigger *tri
 		return -EINVAL;
 
 	iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+<<<<<<< HEAD
 	mutex_lock(&iio_dev_opaque->mlock);
+=======
+	mutex_lock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 	WARN_ON(iio_dev_opaque->trig_readonly);
 
 	indio_dev->trig = iio_trigger_get(trig);
 	iio_dev_opaque->trig_readonly = true;
+<<<<<<< HEAD
 	mutex_unlock(&iio_dev_opaque->mlock);
+=======
+	mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -192,12 +200,15 @@ static void iio_trigger_notify_done_atomic(struct iio_trigger *trig)
 		schedule_work(&trig->reenable_work);
 }
 
+<<<<<<< HEAD
 /**
  * iio_trigger_poll() - Call the IRQ trigger handler of the consumers
  * @trig: trigger which occurred
  *
  * This function should only be called from a hard IRQ context.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void iio_trigger_poll(struct iio_trigger *trig)
 {
 	int i;
@@ -222,6 +233,7 @@ irqreturn_t iio_trigger_generic_data_rdy_poll(int irq, void *private)
 }
 EXPORT_SYMBOL(iio_trigger_generic_data_rdy_poll);
 
+<<<<<<< HEAD
 /**
  * iio_trigger_poll_nested() - Call the threaded trigger handler of the
  * consumers
@@ -230,6 +242,9 @@ EXPORT_SYMBOL(iio_trigger_generic_data_rdy_poll);
  * This function should only be called from a kernel thread context.
  */
 void iio_trigger_poll_nested(struct iio_trigger *trig)
+=======
+void iio_trigger_poll_chained(struct iio_trigger *trig)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 
@@ -244,7 +259,11 @@ void iio_trigger_poll_nested(struct iio_trigger *trig)
 		}
 	}
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(iio_trigger_poll_nested);
+=======
+EXPORT_SYMBOL(iio_trigger_poll_chained);
+>>>>>>> b7ba80a49124 (Commit)
 
 void iio_trigger_notify_done(struct iio_trigger *trig)
 {
@@ -451,6 +470,7 @@ static ssize_t current_trigger_store(struct device *dev,
 	struct iio_trigger *trig;
 	int ret;
 
+<<<<<<< HEAD
 	mutex_lock(&iio_dev_opaque->mlock);
 	if (iio_dev_opaque->currentmode == INDIO_BUFFER_TRIGGERED) {
 		mutex_unlock(&iio_dev_opaque->mlock);
@@ -461,6 +481,18 @@ static ssize_t current_trigger_store(struct device *dev,
 		return -EPERM;
 	}
 	mutex_unlock(&iio_dev_opaque->mlock);
+=======
+	mutex_lock(&indio_dev->mlock);
+	if (iio_dev_opaque->currentmode == INDIO_BUFFER_TRIGGERED) {
+		mutex_unlock(&indio_dev->mlock);
+		return -EBUSY;
+	}
+	if (iio_dev_opaque->trig_readonly) {
+		mutex_unlock(&indio_dev->mlock);
+		return -EPERM;
+	}
+	mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	trig = iio_trigger_acquire_by_name(buf);
 	if (oldtrig == trig) {

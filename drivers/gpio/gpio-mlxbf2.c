@@ -17,7 +17,10 @@
 #include <linux/platform_device.h>
 #include <linux/pm.h>
 #include <linux/resource.h>
+<<<<<<< HEAD
 #include <linux/seq_file.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/spinlock.h>
 #include <linux/types.h>
 
@@ -66,10 +69,17 @@ struct mlxbf2_gpio_context_save_regs {
 /* BlueField-2 gpio block context structure. */
 struct mlxbf2_gpio_context {
 	struct gpio_chip gc;
+<<<<<<< HEAD
 
 	/* YU GPIO blocks address */
 	void __iomem *gpio_io;
 	struct device *dev;
+=======
+	struct irq_chip irq_chip;
+
+	/* YU GPIO blocks address */
+	void __iomem *gpio_io;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct mlxbf2_gpio_context_save_regs *csave_regs;
 };
@@ -238,7 +248,10 @@ static void mlxbf2_gpio_irq_enable(struct irq_data *irqd)
 	unsigned long flags;
 	u32 val;
 
+<<<<<<< HEAD
 	gpiochip_enable_irq(gc, irqd_to_hwirq(irqd));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	raw_spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
 	val = readl(gs->gpio_io + YU_GPIO_CAUSE_OR_CLRCAUSE);
 	val |= BIT(offset);
@@ -263,7 +276,10 @@ static void mlxbf2_gpio_irq_disable(struct irq_data *irqd)
 	val &= ~BIT(offset);
 	writel(val, gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
 	raw_spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
+<<<<<<< HEAD
 	gpiochip_disable_irq(gc, irqd_to_hwirq(irqd));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static irqreturn_t mlxbf2_gpio_irq_handler(int irq, void *ptr)
@@ -325,6 +341,7 @@ mlxbf2_gpio_irq_set_type(struct irq_data *irqd, unsigned int type)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void mlxbf2_gpio_irq_print_chip(struct irq_data *irqd,
 				       struct seq_file *p)
 {
@@ -343,6 +360,8 @@ static const struct irq_chip mlxbf2_gpio_irq_chip = {
 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* BlueField-2 GPIO driver initialization routine. */
 static int
 mlxbf2_gpio_probe(struct platform_device *pdev)
@@ -361,8 +380,11 @@ mlxbf2_gpio_probe(struct platform_device *pdev)
 	if (!gs)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	gs->dev = dev;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* YU GPIO block address */
 	gs->gpio_io = devm_platform_ioremap_resource(pdev, 0);
 	if (IS_ERR(gs->gpio_io))
@@ -399,8 +421,18 @@ mlxbf2_gpio_probe(struct platform_device *pdev)
 
 	irq = platform_get_irq(pdev, 0);
 	if (irq >= 0) {
+<<<<<<< HEAD
 		girq = &gs->gc.irq;
 		gpio_irq_chip_set_chip(girq, &mlxbf2_gpio_irq_chip);
+=======
+		gs->irq_chip.name = name;
+		gs->irq_chip.irq_set_type = mlxbf2_gpio_irq_set_type;
+		gs->irq_chip.irq_enable = mlxbf2_gpio_irq_enable;
+		gs->irq_chip.irq_disable = mlxbf2_gpio_irq_disable;
+
+		girq = &gs->gc.irq;
+		girq->chip = &gs->irq_chip;
+>>>>>>> b7ba80a49124 (Commit)
 		girq->handler = handle_simple_irq;
 		girq->default_type = IRQ_TYPE_NONE;
 		/* This will let us handle the parent IRQ in the driver */

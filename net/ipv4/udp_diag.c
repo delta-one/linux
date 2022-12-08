@@ -147,13 +147,21 @@ done:
 static void udp_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
 			  const struct inet_diag_req_v2 *r)
 {
+<<<<<<< HEAD
 	udp_dump(sock_net(cb->skb->sk)->ipv4.udp_table, skb, cb, r);
+=======
+	udp_dump(&udp_table, skb, cb, r);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int udp_diag_dump_one(struct netlink_callback *cb,
 			     const struct inet_diag_req_v2 *req)
 {
+<<<<<<< HEAD
 	return udp_dump_one(sock_net(cb->skb->sk)->ipv4.udp_table, cb, req);
+=======
+	return udp_dump_one(&udp_table, cb, req);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void udp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
@@ -225,7 +233,11 @@ static int __udp_diag_destroy(struct sk_buff *in_skb,
 static int udp_diag_destroy(struct sk_buff *in_skb,
 			    const struct inet_diag_req_v2 *req)
 {
+<<<<<<< HEAD
 	return __udp_diag_destroy(in_skb, req, sock_net(in_skb->sk)->ipv4.udp_table);
+=======
+	return __udp_diag_destroy(in_skb, req, &udp_table);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int udplite_diag_destroy(struct sk_buff *in_skb,

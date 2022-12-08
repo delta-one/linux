@@ -39,7 +39,11 @@ int rcu_exp_jiffies_till_stall_check(void)
 	// CONFIG_RCU_EXP_CPU_STALL_TIMEOUT, so check the allowed range.
 	// The minimum clamped value is "2UL", because at least one full
 	// tick has to be guaranteed.
+<<<<<<< HEAD
 	till_stall_check = clamp(msecs_to_jiffies(cpu_stall_timeout), 2UL, 300UL * HZ);
+=======
+	till_stall_check = clamp(msecs_to_jiffies(cpu_stall_timeout), 2UL, 21UL * HZ);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (cpu_stall_timeout && jiffies_to_msecs(till_stall_check) != cpu_stall_timeout)
 		WRITE_ONCE(rcu_exp_cpu_stall_timeout, jiffies_to_msecs(till_stall_check));
@@ -428,6 +432,7 @@ static bool rcu_is_rcuc_kthread_starving(struct rcu_data *rdp, unsigned long *jp
 	return j > 2 * HZ;
 }
 
+<<<<<<< HEAD
 static void print_cpu_stat_info(int cpu)
 {
 	struct rcu_snap_record rsr, *rsrp;
@@ -457,6 +462,8 @@ static void print_cpu_stat_info(int cpu)
 		jiffies_to_msecs(jiffies - rsrp->jiffies));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Print out diagnostic information for the specified stalled CPU.
  *
@@ -513,8 +520,11 @@ static void print_cpu_stall_info(int cpu)
 	       data_race(rcu_state.n_force_qs) - rcu_state.n_force_qs_gpstart,
 	       rcuc_starved ? buf : "",
 	       falsepositive ? " (false positive?)" : "");
+<<<<<<< HEAD
 
 	print_cpu_stat_info(cpu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Complain about starvation of grace-period kthread.  */
@@ -619,7 +629,11 @@ static void print_other_cpu_stall(unsigned long gp_seq, unsigned long gps)
 
 	for_each_possible_cpu(cpu)
 		totqlen += rcu_get_n_cbs_cpu(cpu);
+<<<<<<< HEAD
 	pr_err("\t(detected by %d, t=%ld jiffies, g=%ld, q=%lu ncpus=%d)\n",
+=======
+	pr_cont("\t(detected by %d, t=%ld jiffies, g=%ld, q=%lu ncpus=%d)\n",
+>>>>>>> b7ba80a49124 (Commit)
 	       smp_processor_id(), (long)(jiffies - gps),
 	       (long)rcu_seq_current(&rcu_state.gp_seq), totqlen, rcu_state.n_online_cpus);
 	if (ndetected) {
@@ -680,7 +694,11 @@ static void print_cpu_stall(unsigned long gps)
 	raw_spin_unlock_irqrestore_rcu_node(rdp->mynode, flags);
 	for_each_possible_cpu(cpu)
 		totqlen += rcu_get_n_cbs_cpu(cpu);
+<<<<<<< HEAD
 	pr_err("\t(t=%lu jiffies g=%ld q=%lu ncpus=%d)\n",
+=======
+	pr_cont("\t(t=%lu jiffies g=%ld q=%lu ncpus=%d)\n",
+>>>>>>> b7ba80a49124 (Commit)
 		jiffies - gps,
 		(long)rcu_seq_current(&rcu_state.gp_seq), totqlen, rcu_state.n_online_cpus);
 

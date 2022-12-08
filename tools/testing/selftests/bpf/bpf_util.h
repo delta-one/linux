@@ -20,6 +20,7 @@ static inline unsigned int bpf_num_possible_cpus(void)
 	return possible_cpus;
 }
 
+<<<<<<< HEAD
 /* Copy up to sz - 1 bytes from zero-terminated src string and ensure that dst
  * is zero-terminated string no matter what (unless sz == 0, in which case
  * it's a no-op). It's conceptually close to FreeBSD's strlcpy(), but differs
@@ -39,6 +40,8 @@ static inline void bpf_strlcpy(char *dst, const char *src, size_t sz)
 	dst[i] = '\0';
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define __bpf_percpu_val_align	__attribute__((__aligned__(8)))
 
 #define BPF_DECLARE_PERCPU(type, name)				\

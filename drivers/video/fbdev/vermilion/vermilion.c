@@ -197,7 +197,11 @@ static int vmlfb_alloc_vram(struct vml_info *vinfo,
 		va = &vinfo->vram[i];
 		order = 0;
 
+<<<<<<< HEAD
 		while (requested > (PAGE_SIZE << order) && order <= MAX_ORDER)
+=======
+		while (requested > (PAGE_SIZE << order) && order < MAX_ORDER)
+>>>>>>> b7ba80a49124 (Commit)
 			order++;
 
 		err = vmlfb_alloc_vram_area(va, order, 0);
@@ -278,10 +282,15 @@ static int vmlfb_get_gpu(struct vml_par *par)
 
 	mutex_unlock(&vml_mutex);
 
+<<<<<<< HEAD
 	if (pci_enable_device(par->gpu) < 0) {
 		pci_dev_put(par->gpu);
 		return -ENODEV;
 	}
+=======
+	if (pci_enable_device(par->gpu) < 0)
+		return -ENODEV;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1059,12 +1068,16 @@ static int __init vmlfb_init(void)
 
 #ifndef MODULE
 	char *option = NULL;
+<<<<<<< HEAD
 #endif
 
 	if (fb_modesetting_disabled("vmlfb"))
 		return -ENODEV;
 
 #ifndef MODULE
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (fb_get_options(MODULE_NAME, &option))
 		return -ENODEV;
 #endif

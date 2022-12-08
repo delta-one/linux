@@ -82,6 +82,7 @@
 #define GUC_KLV_SELF_CFG_G2H_CTB_SIZE_LEN		1u
 
 /*
+<<<<<<< HEAD
  * Global scheduling policy update keys.
  */
 enum {
@@ -92,6 +93,11 @@ enum {
  * Per context scheduling policy update keys.
  */
 enum {
+=======
+ * Per context scheduling policy update keys.
+ */
+enum  {
+>>>>>>> b7ba80a49124 (Commit)
 	GUC_CONTEXT_POLICIES_KLV_ID_EXECUTION_QUANTUM			= 0x2001,
 	GUC_CONTEXT_POLICIES_KLV_ID_PREEMPTION_TIMEOUT			= 0x2002,
 	GUC_CONTEXT_POLICIES_KLV_ID_SCHEDULING_PRIORITY			= 0x2003,

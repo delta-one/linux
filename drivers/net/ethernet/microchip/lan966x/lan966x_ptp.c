@@ -3,8 +3,11 @@
 #include <linux/ptp_classify.h>
 
 #include "lan966x_main.h"
+<<<<<<< HEAD
 #include "vcap_api.h"
 #include "vcap_api_client.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define LAN966X_MAX_PTP_ID	512
 
@@ -20,6 +23,7 @@
 
 #define TOD_ACC_PIN		0x7
 
+<<<<<<< HEAD
 /* This represents the base rule ID for the PTP rules that are added in the
  * VCAP to trap frames to CPU. This number needs to be bigger than the maximum
  * number of entries that can exist in the VCAP.
@@ -31,6 +35,8 @@
 #define LAN966X_VCAP_IPV6_EV_PTP_TRAP	(LAN966X_VCAP_PTP_RULE_ID + 3)
 #define LAN966X_VCAP_IPV6_GEN_PTP_TRAP	(LAN966X_VCAP_PTP_RULE_ID + 4)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum {
 	PTP_PIN_ACTION_IDLE = 0,
 	PTP_PIN_ACTION_LOAD,
@@ -48,6 +54,7 @@ static u64 lan966x_ptp_get_nominal_value(void)
 	return 0x304d4873ecade305;
 }
 
+<<<<<<< HEAD
 static int lan966x_ptp_add_trap(struct lan966x_port *port,
 				int (*add_ptp_key)(struct vcap_rule *vrule,
 						   struct lan966x_port*),
@@ -261,17 +268,30 @@ int lan966x_ptp_setup_traps(struct lan966x_port *port, struct ifreq *ifr)
 		return lan966x_ptp_add_traps(port);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int lan966x_ptp_hwtstamp_set(struct lan966x_port *port, struct ifreq *ifr)
 {
 	struct lan966x *lan966x = port->lan966x;
 	struct hwtstamp_config cfg;
 	struct lan966x_phc *phc;
 
+<<<<<<< HEAD
+=======
+	/* For now don't allow to run ptp on ports that are part of a bridge,
+	 * because in case of transparent clock the HW will still forward the
+	 * frames, so there would be duplicate frames
+	 */
+	if (lan966x->bridge_mask & BIT(port->chip_port))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (copy_from_user(&cfg, ifr->ifr_data, sizeof(cfg)))
 		return -EFAULT;
 
 	switch (cfg.tx_type) {
 	case HWTSTAMP_TX_ON:
+<<<<<<< HEAD
 		port->ptp_tx_cmd = IFH_REW_OP_TWO_STEP_PTP;
 		break;
 	case HWTSTAMP_TX_ONESTEP_SYNC:
@@ -279,6 +299,15 @@ int lan966x_ptp_hwtstamp_set(struct lan966x_port *port, struct ifreq *ifr)
 		break;
 	case HWTSTAMP_TX_OFF:
 		port->ptp_tx_cmd = IFH_REW_OP_NOOP;
+=======
+		port->ptp_cmd = IFH_REW_OP_TWO_STEP_PTP;
+		break;
+	case HWTSTAMP_TX_ONESTEP_SYNC:
+		port->ptp_cmd = IFH_REW_OP_ONE_STEP_PTP;
+		break;
+	case HWTSTAMP_TX_OFF:
+		port->ptp_cmd = IFH_REW_OP_NOOP;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		return -ERANGE;
@@ -286,7 +315,10 @@ int lan966x_ptp_hwtstamp_set(struct lan966x_port *port, struct ifreq *ifr)
 
 	switch (cfg.rx_filter) {
 	case HWTSTAMP_FILTER_NONE:
+<<<<<<< HEAD
 		port->ptp_rx_cmd = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case HWTSTAMP_FILTER_ALL:
 	case HWTSTAMP_FILTER_PTP_V1_L4_EVENT:
@@ -302,7 +334,10 @@ int lan966x_ptp_hwtstamp_set(struct lan966x_port *port, struct ifreq *ifr)
 	case HWTSTAMP_FILTER_PTP_V2_SYNC:
 	case HWTSTAMP_FILTER_PTP_V2_DELAY_REQ:
 	case HWTSTAMP_FILTER_NTP_ALL:
+<<<<<<< HEAD
 		port->ptp_rx_cmd = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		cfg.rx_filter = HWTSTAMP_FILTER_ALL;
 		break;
 	default:
@@ -334,7 +369,11 @@ static int lan966x_ptp_classify(struct lan966x_port *port, struct sk_buff *skb)
 	u8 msgtype;
 	int type;
 
+<<<<<<< HEAD
 	if (port->ptp_tx_cmd == IFH_REW_OP_NOOP)
+=======
+	if (port->ptp_cmd == IFH_REW_OP_NOOP)
+>>>>>>> b7ba80a49124 (Commit)
 		return IFH_REW_OP_NOOP;
 
 	type = ptp_classify_raw(skb);
@@ -345,7 +384,11 @@ static int lan966x_ptp_classify(struct lan966x_port *port, struct sk_buff *skb)
 	if (!header)
 		return IFH_REW_OP_NOOP;
 
+<<<<<<< HEAD
 	if (port->ptp_tx_cmd == IFH_REW_OP_TWO_STEP_PTP)
+=======
+	if (port->ptp_cmd == IFH_REW_OP_TWO_STEP_PTP)
+>>>>>>> b7ba80a49124 (Commit)
 		return IFH_REW_OP_TWO_STEP_PTP;
 
 	/* If it is sync and run 1 step then set the correct operation,
@@ -525,9 +568,15 @@ irqreturn_t lan966x_ptp_irq_handler(int irq, void *args)
 		if (WARN_ON(!skb_match))
 			continue;
 
+<<<<<<< HEAD
 		spin_lock_irqsave(&lan966x->ptp_ts_id_lock, flags);
 		lan966x->ptp_skbs--;
 		spin_unlock_irqrestore(&lan966x->ptp_ts_id_lock, flags);
+=======
+		spin_lock(&lan966x->ptp_ts_id_lock);
+		lan966x->ptp_skbs--;
+		spin_unlock(&lan966x->ptp_ts_id_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Get the h/w timestamp */
 		lan966x_get_hwtimestamp(lan966x, &ts, delay);
@@ -685,7 +734,12 @@ static int lan966x_ptp_settime64(struct ptp_clock_info *ptp,
 	return 0;
 }
 
+<<<<<<< HEAD
 int lan966x_ptp_gettime64(struct ptp_clock_info *ptp, struct timespec64 *ts)
+=======
+static int lan966x_ptp_gettime64(struct ptp_clock_info *ptp,
+				 struct timespec64 *ts)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lan966x_phc *phc = container_of(ptp, struct lan966x_phc, info);
 	struct lan966x *lan966x = phc->lan966x;
@@ -1011,6 +1065,12 @@ static int lan966x_ptp_phc_init(struct lan966x *lan966x,
 	phc->index = index;
 	phc->lan966x = lan966x;
 
+<<<<<<< HEAD
+=======
+	/* PTP Rx stamping is always enabled.  */
+	phc->hwtstamp_config.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1071,9 +1131,12 @@ void lan966x_ptp_deinit(struct lan966x *lan966x)
 	struct lan966x_port *port;
 	int i;
 
+<<<<<<< HEAD
 	if (!lan966x->ptp)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < lan966x->num_phys_ports; i++) {
 		port = lan966x->ports[i];
 		if (!port)
@@ -1087,15 +1150,23 @@ void lan966x_ptp_deinit(struct lan966x *lan966x)
 }
 
 void lan966x_ptp_rxtstamp(struct lan966x *lan966x, struct sk_buff *skb,
+<<<<<<< HEAD
 			  u64 src_port, u64 timestamp)
+=======
+			  u64 timestamp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct skb_shared_hwtstamps *shhwtstamps;
 	struct lan966x_phc *phc;
 	struct timespec64 ts;
 	u64 full_ts_in_ns;
 
+<<<<<<< HEAD
 	if (!lan966x->ptp ||
 	    !lan966x->ports[src_port]->ptp_rx_cmd)
+=======
+	if (!lan966x->ptp)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	phc = &lan966x->phc[LAN966X_PHC_PORT];
@@ -1111,9 +1182,12 @@ void lan966x_ptp_rxtstamp(struct lan966x *lan966x, struct sk_buff *skb,
 	shhwtstamps = skb_hwtstamps(skb);
 	shhwtstamps->hwtstamp = full_ts_in_ns;
 }
+<<<<<<< HEAD
 
 u32 lan966x_ptp_get_period_ps(void)
 {
 	/* This represents the system clock period in picoseconds */
 	return 15125;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

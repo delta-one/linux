@@ -12,10 +12,13 @@
 #include "pm.h"
 #include "pm_data-offsets.h"
 
+<<<<<<< HEAD
 #ifdef CONFIG_CPU_V7
 .arch armv7-a
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define	SRAMC_SELF_FRESH_ACTIVE		0x01
 #define	SRAMC_SELF_FRESH_EXIT		0x00
 
@@ -173,6 +176,7 @@ sr_ena_2:
 	cmp	tmp1, #UDDRC_STAT_SELFREF_TYPE_SW
 	bne	sr_ena_2
 
+<<<<<<< HEAD
 	/* Disable DX DLLs for non-backup modes. */
 	cmp	r7, #AT91_PM_BACKUP
 	beq	sr_ena_3
@@ -182,6 +186,12 @@ sr_ena_2:
 	bic	tmp1, tmp1, DDR3PHY_ACDLLCR_DLLSRST
 	str	tmp1, [r3, DDR3PHY_ACDLLCR]
 
+=======
+	/* Put DDR PHY's DLL in bypass mode for non-backup modes. */
+	cmp	r7, #AT91_PM_BACKUP
+	beq	sr_ena_3
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Disable DX DLLs. */
 	ldr	tmp1, [r3, #DDR3PHY_DX0DLLCR]
 	orr	tmp1, tmp1, #DDR3PHY_DXDLLCR_DLLDIS

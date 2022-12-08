@@ -50,7 +50,10 @@ struct phy_gmii_sel_soc_data {
 	const struct reg_field (*regfields)[PHY_GMII_SEL_LAST];
 	bool use_of_data;
 	u64 extra_modes;
+<<<<<<< HEAD
 	u32 num_qsgmii_main_ports;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct phy_gmii_sel_priv {
@@ -214,6 +217,7 @@ struct phy_gmii_sel_soc_data phy_gmii_sel_cpsw5g_soc_j7200 = {
 	.use_of_data = true,
 	.regfields = phy_gmii_sel_fields_am654,
 	.extra_modes = BIT(PHY_INTERFACE_MODE_QSGMII),
+<<<<<<< HEAD
 	.num_ports = 4,
 	.num_qsgmii_main_ports = 1,
 };
@@ -225,6 +229,8 @@ struct phy_gmii_sel_soc_data phy_gmii_sel_cpsw9g_soc_j721e = {
 	.extra_modes = BIT(PHY_INTERFACE_MODE_QSGMII),
 	.num_ports = 8,
 	.num_qsgmii_main_ports = 2,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct of_device_id phy_gmii_sel_id_table[] = {
@@ -252,10 +258,13 @@ static const struct of_device_id phy_gmii_sel_id_table[] = {
 		.compatible	= "ti,j7200-cpsw5g-phy-gmii-sel",
 		.data		= &phy_gmii_sel_cpsw5g_soc_j7200,
 	},
+<<<<<<< HEAD
 	{
 		.compatible	= "ti,j721e-cpsw9g-phy-gmii-sel",
 		.data		= &phy_gmii_sel_cpsw9g_soc_j721e,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 MODULE_DEVICE_TABLE(of, phy_gmii_sel_id_table);
@@ -394,13 +403,19 @@ static int phy_gmii_sel_init_ports(struct phy_gmii_sel_priv *priv)
 static int phy_gmii_sel_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
+<<<<<<< HEAD
 	const struct phy_gmii_sel_soc_data *soc_data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct device_node *node = dev->of_node;
 	const struct of_device_id *of_id;
 	struct phy_gmii_sel_priv *priv;
 	u32 main_ports = 1;
 	int ret;
+<<<<<<< HEAD
 	u32 i;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	of_id = of_match_node(phy_gmii_sel_id_table, pdev->dev.of_node);
 	if (!of_id)
@@ -412,6 +427,7 @@ static int phy_gmii_sel_probe(struct platform_device *pdev)
 
 	priv->dev = &pdev->dev;
 	priv->soc_data = of_id->data;
+<<<<<<< HEAD
 	soc_data = priv->soc_data;
 	priv->num_ports = priv->soc_data->num_ports;
 	priv->qsgmii_main_ports = 0;
@@ -432,6 +448,18 @@ static int phy_gmii_sel_probe(struct platform_device *pdev)
 		}
 		priv->qsgmii_main_ports |= PHY_GMII_PORT(main_ports);
 	}
+=======
+	priv->num_ports = priv->soc_data->num_ports;
+	of_property_read_u32(node, "ti,qsgmii-main-ports", &main_ports);
+	/*
+	 * Ensure that main_ports is within bounds. If the property
+	 * ti,qsgmii-main-ports is not mentioned, or the value mentioned
+	 * is out of bounds, default to 1.
+	 */
+	if (main_ports < 1 || main_ports > 4)
+		main_ports = 1;
+	priv->qsgmii_main_ports = PHY_GMII_PORT(main_ports);
+>>>>>>> b7ba80a49124 (Commit)
 
 	priv->regmap = syscon_node_to_regmap(node->parent);
 	if (IS_ERR(priv->regmap)) {

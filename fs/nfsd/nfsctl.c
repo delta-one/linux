@@ -14,6 +14,10 @@
 #include <linux/lockd/lockd.h>
 #include <linux/sunrpc/addr.h>
 #include <linux/sunrpc/gss_api.h>
+<<<<<<< HEAD
+=======
+#include <linux/sunrpc/gss_krb5_enctypes.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sunrpc/rpc_pipe_fs.h>
 #include <linux/module.h>
 #include <linux/fsnotify.h>
@@ -46,6 +50,10 @@ enum {
 	NFSD_MaxBlkSize,
 	NFSD_MaxConnections,
 	NFSD_Filecache,
+<<<<<<< HEAD
+=======
+	NFSD_SupportedEnctypes,
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * The below MUST come last.  Otherwise we leave a hole in nfsd_files[]
 	 * with !CONFIG_NFSD_V4 and simple_fill_super() goes oops
@@ -185,6 +193,19 @@ static int export_features_show(struct seq_file *m, void *v)
 
 DEFINE_SHOW_ATTRIBUTE(export_features);
 
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_SUNRPC_GSS) || defined(CONFIG_SUNRPC_GSS_MODULE)
+static int supported_enctypes_show(struct seq_file *m, void *v)
+{
+	seq_printf(m, KRB5_SUPPORTED_ENCTYPES);
+	return 0;
+}
+
+DEFINE_SHOW_ATTRIBUTE(supported_enctypes);
+#endif /* CONFIG_SUNRPC_GSS or CONFIG_SUNRPC_GSS_MODULE */
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct file_operations pool_stats_operations = {
 	.open		= nfsd_pool_stats_open,
 	.read		= seq_read,
@@ -569,9 +590,13 @@ static ssize_t __write_versions(struct file *file, char *buf, size_t size)
 
 			cmd = sign == '-' ? NFSD_CLEAR : NFSD_SET;
 			switch(num) {
+<<<<<<< HEAD
 #ifdef CONFIG_NFSD_V2
 			case 2:
 #endif
+=======
+			case 2:
+>>>>>>> b7ba80a49124 (Commit)
 			case 3:
 				nfsd_vers(nn, num, cmd);
 				break;
@@ -591,9 +616,13 @@ static ssize_t __write_versions(struct file *file, char *buf, size_t size)
 				}
 				break;
 			default:
+<<<<<<< HEAD
 				/* Ignore requests to disable non-existent versions */
 				if (cmd == NFSD_SET)
 					return -EINVAL;
+=======
+				return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			vers += len + 1;
 		} while ((len = qword_get(&mesg, vers, size)) > 0);
@@ -1138,9 +1167,12 @@ static struct inode *nfsd_get_inode(struct super_block *sb, umode_t mode)
 		inode->i_op = &simple_dir_inode_operations;
 		inc_nlink(inode);
 		break;
+<<<<<<< HEAD
 	case S_IFLNK:
 		inode->i_op = &simple_symlink_inode_operations;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		break;
 	}
@@ -1186,6 +1218,7 @@ out_err:
 	goto out;
 }
 
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_SUNRPC_GSS)
 static int __nfsd_symlink(struct inode *dir, struct dentry *dentry,
 			  umode_t mode, const char *content)
@@ -1234,6 +1267,8 @@ static inline void nfsd_symlink(struct dentry *parent, const char *name,
 
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void clear_ncl(struct inode *inode)
 {
 	struct nfsdfs_client *ncl = inode->i_private;
@@ -1394,6 +1429,13 @@ static int nfsd_fill_super(struct super_block *sb, struct fs_context *fc)
 		[NFSD_MaxBlkSize] = {"max_block_size", &transaction_ops, S_IWUSR|S_IRUGO},
 		[NFSD_MaxConnections] = {"max_connections", &transaction_ops, S_IWUSR|S_IRUGO},
 		[NFSD_Filecache] = {"filecache", &nfsd_file_cache_stats_fops, S_IRUGO},
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_SUNRPC_GSS) || defined(CONFIG_SUNRPC_GSS_MODULE)
+		[NFSD_SupportedEnctypes] = {"supported_krb5_enctypes",
+					&supported_enctypes_fops, S_IRUGO},
+#endif /* CONFIG_SUNRPC_GSS or CONFIG_SUNRPC_GSS_MODULE */
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_NFSD_V4
 		[NFSD_Leasetime] = {"nfsv4leasetime", &transaction_ops, S_IWUSR|S_IRUSR},
 		[NFSD_Gracetime] = {"nfsv4gracetime", &transaction_ops, S_IWUSR|S_IRUSR},
@@ -1406,8 +1448,11 @@ static int nfsd_fill_super(struct super_block *sb, struct fs_context *fc)
 	ret = simple_fill_super(sb, 0x6e667364, nfsd_files);
 	if (ret)
 		return ret;
+<<<<<<< HEAD
 	nfsd_symlink(sb->s_root, "supported_krb5_enctypes",
 		     "/proc/net/rpc/gss_krb5_enctypes");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dentry = nfsd_mkdir(sb->s_root, NULL, "clients");
 	if (IS_ERR(dentry))
 		return PTR_ERR(dentry);
@@ -1494,12 +1539,26 @@ static __net_init int nfsd_init_net(struct net *net)
 		goto out_idmap_error;
 	nn->nfsd_versions = NULL;
 	nn->nfsd4_minorversions = NULL;
+<<<<<<< HEAD
 	nfsd4_init_leases_net(nn);
+=======
+	retval = nfsd4_init_leases_net(nn);
+	if (retval)
+		goto out_drc_error;
+	retval = nfsd_reply_cache_init(nn);
+	if (retval)
+		goto out_drc_error;
+>>>>>>> b7ba80a49124 (Commit)
 	get_random_bytes(&nn->siphash_key, sizeof(nn->siphash_key));
 	seqlock_init(&nn->writeverf_lock);
 
 	return 0;
 
+<<<<<<< HEAD
+=======
+out_drc_error:
+	nfsd_idmap_shutdown(net);
+>>>>>>> b7ba80a49124 (Commit)
 out_idmap_error:
 	nfsd_export_shutdown(net);
 out_export_error:
@@ -1508,9 +1567,19 @@ out_export_error:
 
 static __net_exit void nfsd_exit_net(struct net *net)
 {
+<<<<<<< HEAD
 	nfsd_idmap_shutdown(net);
 	nfsd_export_shutdown(net);
 	nfsd_netns_free_versions(net_generic(net, nfsd_net_id));
+=======
+	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+
+	nfsd_reply_cache_shutdown(nn);
+	nfsd_idmap_shutdown(net);
+	nfsd_export_shutdown(net);
+	nfsd_netns_free_versions(net_generic(net, nfsd_net_id));
+	nfsd4_leases_net_shutdown(nn);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct pernet_operations nfsd_net_ops = {

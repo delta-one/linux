@@ -88,8 +88,13 @@ int subsys_virtual_register(struct bus_type *subsys,
 struct device_type {
 	const char *name;
 	const struct attribute_group **groups;
+<<<<<<< HEAD
 	int (*uevent)(const struct device *dev, struct kobj_uevent_env *env);
 	char *(*devnode)(const struct device *dev, umode_t *mode,
+=======
+	int (*uevent)(struct device *dev, struct kobj_uevent_env *env);
+	char *(*devnode)(struct device *dev, umode_t *mode,
+>>>>>>> b7ba80a49124 (Commit)
 			 kuid_t *uid, kgid_t *gid);
 	void (*release)(struct device *dev);
 
@@ -197,9 +202,15 @@ void devres_remove_group(struct device *dev, void *id);
 int devres_release_group(struct device *dev, void *id);
 
 /* managed devm_k.alloc/kfree for device drivers */
+<<<<<<< HEAD
 void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp) __alloc_size(2);
 void *devm_krealloc(struct device *dev, void *ptr, size_t size,
 		    gfp_t gfp) __must_check __realloc_size(3);
+=======
+void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp) __malloc;
+void *devm_krealloc(struct device *dev, void *ptr, size_t size,
+		    gfp_t gfp) __must_check;
+>>>>>>> b7ba80a49124 (Commit)
 __printf(3, 0) char *devm_kvasprintf(struct device *dev, gfp_t gfp,
 				     const char *fmt, va_list ap) __malloc;
 __printf(3, 4) char *devm_kasprintf(struct device *dev, gfp_t gfp,
@@ -226,8 +237,12 @@ static inline void *devm_kcalloc(struct device *dev,
 void devm_kfree(struct device *dev, const void *p);
 char *devm_kstrdup(struct device *dev, const char *s, gfp_t gfp) __malloc;
 const char *devm_kstrdup_const(struct device *dev, const char *s, gfp_t gfp);
+<<<<<<< HEAD
 void *devm_kmemdup(struct device *dev, const void *src, size_t len, gfp_t gfp)
 	__realloc_size(3);
+=======
+void *devm_kmemdup(struct device *dev, const void *src, size_t len, gfp_t gfp);
+>>>>>>> b7ba80a49124 (Commit)
 
 unsigned long devm_get_free_pages(struct device *dev,
 				  gfp_t gfp_mask, unsigned int order);
@@ -243,6 +258,7 @@ void __iomem *devm_of_iomap(struct device *dev,
 			    resource_size_t *size);
 
 /* allows to add/remove a custom action to devres stack */
+<<<<<<< HEAD
 void devm_remove_action(struct device *dev, void (*action)(void *), void *data);
 void devm_release_action(struct device *dev, void (*action)(void *), void *data);
 
@@ -256,13 +272,28 @@ static inline int __devm_add_action_or_reset(struct device *dev, void (*action)(
 	int ret;
 
 	ret = __devm_add_action(dev, action, data, name);
+=======
+int devm_add_action(struct device *dev, void (*action)(void *), void *data);
+void devm_remove_action(struct device *dev, void (*action)(void *), void *data);
+void devm_release_action(struct device *dev, void (*action)(void *), void *data);
+
+static inline int devm_add_action_or_reset(struct device *dev,
+					   void (*action)(void *), void *data)
+{
+	int ret;
+
+	ret = devm_add_action(dev, action, data);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		action(data);
 
 	return ret;
 }
+<<<<<<< HEAD
 #define devm_add_action_or_reset(release, action, data) \
 	__devm_add_action_or_reset(release, action, data, #action)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * devm_alloc_percpu - Resource-managed alloc_percpu
@@ -333,7 +364,10 @@ enum device_link_state {
 #define DL_FLAG_MANAGED			BIT(6)
 #define DL_FLAG_SYNC_STATE_ONLY		BIT(7)
 #define DL_FLAG_INFERRED		BIT(8)
+<<<<<<< HEAD
 #define DL_FLAG_CYCLE			BIT(9)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * enum dl_dev_state - Device driver presence tracking information.
@@ -385,8 +419,15 @@ struct dev_links_info {
  * @data:	Pointer to MSI device data
  */
 struct dev_msi_info {
+<<<<<<< HEAD
 #ifdef CONFIG_GENERIC_MSI_IRQ
 	struct irq_domain	*domain;
+=======
+#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
+	struct irq_domain	*domain;
+#endif
+#ifdef CONFIG_GENERIC_MSI_IRQ
+>>>>>>> b7ba80a49124 (Commit)
 	struct msi_device_data	*data;
 #endif
 };
@@ -631,7 +672,11 @@ struct device {
 	spinlock_t		devres_lock;
 	struct list_head	devres_head;
 
+<<<<<<< HEAD
 	const struct class	*class;
+=======
+	struct class		*class;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct attribute_group **groups;	/* optional groups */
 
 	void	(*release)(struct device *dev);
@@ -685,7 +730,14 @@ struct device_link {
 	bool supplier_preactivated; /* Owned by consumer probe. */
 };
 
+<<<<<<< HEAD
 #define kobj_to_dev(__kobj)	container_of_const(__kobj, struct device, kobj)
+=======
+static inline struct device *kobj_to_dev(struct kobject *kobj)
+{
+	return container_of(kobj, struct device, kobj);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * device_iommu_mapped - Returns true when the device DMA is translated
@@ -744,7 +796,11 @@ static inline void set_dev_node(struct device *dev, int node)
 
 static inline struct irq_domain *dev_get_msi_domain(const struct device *dev)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_GENERIC_MSI_IRQ
+=======
+#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
+>>>>>>> b7ba80a49124 (Commit)
 	return dev->msi.domain;
 #else
 	return NULL;
@@ -753,7 +809,11 @@ static inline struct irq_domain *dev_get_msi_domain(const struct device *dev)
 
 static inline void dev_set_msi_domain(struct device *dev, struct irq_domain *d)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_GENERIC_MSI_IRQ
+=======
+#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
+>>>>>>> b7ba80a49124 (Commit)
 	dev->msi.domain = d;
 #endif
 }
@@ -913,6 +973,11 @@ int device_rename(struct device *dev, const char *new_name);
 int device_move(struct device *dev, struct device *new_parent,
 		enum dpm_order dpm_order);
 int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid);
+<<<<<<< HEAD
+=======
+const char *device_get_devnode(struct device *dev, umode_t *mode, kuid_t *uid,
+			       kgid_t *gid, const char **tmp);
+>>>>>>> b7ba80a49124 (Commit)
 int device_is_dependent(struct device *dev, void *target);
 
 static inline bool device_supports_offline(struct device *dev)
@@ -1015,6 +1080,7 @@ bool device_is_bound(struct device *dev);
  * Easy functions for dynamically creating devices on the fly
  */
 __printf(5, 6) struct device *
+<<<<<<< HEAD
 device_create(const struct class *cls, struct device *parent, dev_t devt,
 	      void *drvdata, const char *fmt, ...);
 __printf(6, 7) struct device *
@@ -1022,6 +1088,15 @@ device_create_with_groups(const struct class *cls, struct device *parent, dev_t 
 			  void *drvdata, const struct attribute_group **groups,
 			  const char *fmt, ...);
 void device_destroy(const struct class *cls, dev_t devt);
+=======
+device_create(struct class *cls, struct device *parent, dev_t devt,
+	      void *drvdata, const char *fmt, ...);
+__printf(6, 7) struct device *
+device_create_with_groups(struct class *cls, struct device *parent, dev_t devt,
+			  void *drvdata, const struct attribute_group **groups,
+			  const char *fmt, ...);
+void device_destroy(struct class *cls, dev_t devt);
+>>>>>>> b7ba80a49124 (Commit)
 
 int __must_check device_add_groups(struct device *dev,
 				   const struct attribute_group **groups);
@@ -1046,8 +1121,17 @@ static inline void device_remove_group(struct device *dev,
 
 int __must_check devm_device_add_groups(struct device *dev,
 					const struct attribute_group **groups);
+<<<<<<< HEAD
 int __must_check devm_device_add_group(struct device *dev,
 				       const struct attribute_group *grp);
+=======
+void devm_device_remove_groups(struct device *dev,
+			       const struct attribute_group **groups);
+int __must_check devm_device_add_group(struct device *dev,
+				       const struct attribute_group *grp);
+void devm_device_remove_group(struct device *dev,
+			      const struct attribute_group *grp);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Platform "fixup" functions - allow the platform to have their say
@@ -1097,4 +1181,13 @@ int dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
 #define MODULE_ALIAS_CHARDEV_MAJOR(major) \
 	MODULE_ALIAS("char-major-" __stringify(major) "-*")
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_SYSFS_DEPRECATED
+extern long sysfs_deprecated;
+#else
+#define sysfs_deprecated 0
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _DEVICE_H_ */

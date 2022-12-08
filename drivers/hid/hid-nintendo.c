@@ -433,9 +433,13 @@ struct joycon_ctlr {
 	u8 usb_ack_match;
 	u8 subcmd_ack_match;
 	bool received_input_report;
+<<<<<<< HEAD
 	unsigned int last_input_report_msecs;
 	unsigned int last_subcmd_sent_msecs;
 	unsigned int consecutive_valid_report_deltas;
+=======
+	unsigned int last_subcmd_sent_msecs;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* factory calibration data */
 	struct joycon_stick_cal left_stick_cal_x;
@@ -545,6 +549,7 @@ static void joycon_wait_for_input_report(struct joycon_ctlr *ctlr)
  * Sending subcommands and/or rumble data at too high a rate can cause bluetooth
  * controller disconnections.
  */
+<<<<<<< HEAD
 #define JC_INPUT_REPORT_MIN_DELTA	8
 #define JC_INPUT_REPORT_MAX_DELTA	17
 #define JC_SUBCMD_TX_OFFSET_MS		4
@@ -593,6 +598,21 @@ static void joycon_enforce_subcmd_rate(struct joycon_ctlr *ctlr)
 	 * the rate of disconnections.
 	 */
 	msleep(JC_SUBCMD_TX_OFFSET_MS);
+=======
+static void joycon_enforce_subcmd_rate(struct joycon_ctlr *ctlr)
+{
+	static const unsigned int max_subcmd_rate_ms = 25;
+	unsigned int current_ms = jiffies_to_msecs(jiffies);
+	unsigned int delta_ms = current_ms - ctlr->last_subcmd_sent_msecs;
+
+	while (delta_ms < max_subcmd_rate_ms &&
+	       ctlr->ctlr_state == JOYCON_CTLR_STATE_READ) {
+		joycon_wait_for_input_report(ctlr);
+		current_ms = jiffies_to_msecs(jiffies);
+		delta_ms = current_ms - ctlr->last_subcmd_sent_msecs;
+	}
+	ctlr->last_subcmd_sent_msecs = current_ms;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int joycon_hid_send_sync(struct joycon_ctlr *ctlr, u8 *data, size_t len,
@@ -1260,7 +1280,10 @@ static void joycon_parse_report(struct joycon_ctlr *ctlr,
 	u8 tmp;
 	u32 btns;
 	unsigned long msecs = jiffies_to_msecs(jiffies);
+<<<<<<< HEAD
 	unsigned long report_delta_ms = msecs - ctlr->last_input_report_msecs;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irqsave(&ctlr->lock, flags);
 	if (IS_ENABLED(CONFIG_NINTENDO_FF) && rep->vibrator_report &&
@@ -1402,6 +1425,7 @@ static void joycon_parse_report(struct joycon_ctlr *ctlr,
 
 	input_sync(dev);
 
+<<<<<<< HEAD
 	spin_lock_irqsave(&ctlr->lock, flags);
 	ctlr->last_input_report_msecs = msecs;
 	/*
@@ -1427,6 +1451,8 @@ static void joycon_parse_report(struct joycon_ctlr *ctlr,
 
 	spin_unlock_irqrestore(&ctlr->lock, flags);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Immediately after receiving a report is the most reliable time to
 	 * send a subcommand to the controller. Wake any subcommand senders
@@ -1590,7 +1616,10 @@ static int joycon_set_rumble(struct joycon_ctlr *ctlr, u16 amp_r, u16 amp_l,
 	u16 freq_l_low;
 	u16 freq_l_high;
 	unsigned long flags;
+<<<<<<< HEAD
 	int next_rq_head;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irqsave(&ctlr->lock, flags);
 	freq_r_low = ctlr->rumble_rl_freq;
@@ -1611,6 +1640,7 @@ static int joycon_set_rumble(struct joycon_ctlr *ctlr, u16 amp_r, u16 amp_l,
 	joycon_encode_rumble(data, freq_l_low, freq_l_high, amp);
 
 	spin_lock_irqsave(&ctlr->lock, flags);
+<<<<<<< HEAD
 
 	next_rq_head = ctlr->rumble_queue_head + 1;
 	if (next_rq_head >= JC_RUMBLE_QUEUE_SIZE)
@@ -1626,6 +1656,10 @@ static int joycon_set_rumble(struct joycon_ctlr *ctlr, u16 amp_r, u16 amp_l,
 	}
 
 	ctlr->rumble_queue_head = next_rq_head;
+=======
+	if (++ctlr->rumble_queue_head >= JC_RUMBLE_QUEUE_SIZE)
+		ctlr->rumble_queue_head = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(ctlr->rumble_data[ctlr->rumble_queue_head], data,
 	       JC_RUMBLE_DATA_SIZE);
 
@@ -2205,7 +2239,11 @@ static int nintendo_hid_probe(struct hid_device *hdev,
 
 	ctlr->hdev = hdev;
 	ctlr->ctlr_state = JOYCON_CTLR_STATE_INIT;
+<<<<<<< HEAD
 	ctlr->rumble_queue_head = 0;
+=======
+	ctlr->rumble_queue_head = JC_RUMBLE_QUEUE_SIZE - 1;
+>>>>>>> b7ba80a49124 (Commit)
 	ctlr->rumble_queue_tail = 0;
 	hid_set_drvdata(hdev, ctlr);
 	mutex_init(&ctlr->output_mutex);

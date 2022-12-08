@@ -26,6 +26,10 @@
 #include "dc_bios_types.h"
 #include "dcn31_hpo_dp_link_encoder.h"
 #include "reg_helper.h"
+<<<<<<< HEAD
+=======
+#include "dc_link.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "stream_encoder.h"
 
 #define DC_LOGGER \
@@ -241,10 +245,14 @@ void dcn31_hpo_dp_link_enc_set_link_test_pattern(
 		REG_UPDATE(DP_DPHY_SYM32_CONTROL,
 				MODE, DP2_TEST_PATTERN);
 		break;
+<<<<<<< HEAD
 	case DP_TEST_PATTERN_SQUARE:
 	case DP_TEST_PATTERN_SQUARE_PRESHOOT_DISABLED:
 	case DP_TEST_PATTERN_SQUARE_DEEMPHASIS_DISABLED:
 	case DP_TEST_PATTERN_SQUARE_PRESHOOT_DEEMPHASIS_DISABLED:
+=======
+	case DP_TEST_PATTERN_SQUARE_PULSE:
+>>>>>>> b7ba80a49124 (Commit)
 		REG_SET(DP_DPHY_SYM32_TP_SQ_PULSE, 0,
 				TP_SQ_PULSE_WIDTH, tp_params->custom_pattern[0]);
 

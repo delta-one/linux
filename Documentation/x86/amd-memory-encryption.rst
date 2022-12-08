@@ -95,6 +95,7 @@ by supplying mem_encrypt=on on the kernel command line.  However, if BIOS does
 not enable SME, then Linux will not be able to activate memory encryption, even
 if configured to do so by default or the mem_encrypt=on command line parameter
 is specified.
+<<<<<<< HEAD
 
 Secure Nested Paging (SNP)
 ==========================
@@ -131,3 +132,5 @@ SNP feature support.
 More details in AMD64 APM[1] Vol 2: 15.34.10 SEV_STATUS MSR
 
 [1] https://www.amd.com/system/files/TechDocs/40332.pdf
+=======
+>>>>>>> b7ba80a49124 (Commit)

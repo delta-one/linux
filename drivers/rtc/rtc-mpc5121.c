@@ -372,7 +372,11 @@ out_dispose:
 	return err;
 }
 
+<<<<<<< HEAD
 static void mpc5121_rtc_remove(struct platform_device *op)
+=======
+static int mpc5121_rtc_remove(struct platform_device *op)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mpc5121_rtc_data *rtc = platform_get_drvdata(op);
 	struct mpc5121_rtc_regs __iomem *regs = rtc->regs;
@@ -383,6 +387,11 @@ static void mpc5121_rtc_remove(struct platform_device *op)
 
 	irq_dispose_mapping(rtc->irq);
 	irq_dispose_mapping(rtc->irq_periodic);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_OF
@@ -400,7 +409,11 @@ static struct platform_driver mpc5121_rtc_driver = {
 		.of_match_table = of_match_ptr(mpc5121_rtc_match),
 	},
 	.probe = mpc5121_rtc_probe,
+<<<<<<< HEAD
 	.remove_new = mpc5121_rtc_remove,
+=======
+	.remove = mpc5121_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(mpc5121_rtc_driver);

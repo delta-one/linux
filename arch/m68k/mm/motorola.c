@@ -437,7 +437,11 @@ void __init paging_init(void)
 	}
 
 	min_addr = m68k_memory[0].addr;
+<<<<<<< HEAD
 	max_addr = min_addr + m68k_memory[0].size - 1;
+=======
+	max_addr = min_addr + m68k_memory[0].size;
+>>>>>>> b7ba80a49124 (Commit)
 	memblock_add_node(m68k_memory[0].addr, m68k_memory[0].size, 0,
 			  MEMBLOCK_NONE);
 	for (i = 1; i < m68k_num_memory;) {
@@ -452,21 +456,36 @@ void __init paging_init(void)
 		}
 		memblock_add_node(m68k_memory[i].addr, m68k_memory[i].size, i,
 				  MEMBLOCK_NONE);
+<<<<<<< HEAD
 		addr = m68k_memory[i].addr + m68k_memory[i].size - 1;
+=======
+		addr = m68k_memory[i].addr + m68k_memory[i].size;
+>>>>>>> b7ba80a49124 (Commit)
 		if (addr > max_addr)
 			max_addr = addr;
 		i++;
 	}
 	m68k_memoffset = min_addr - PAGE_OFFSET;
+<<<<<<< HEAD
 	m68k_virt_to_node_shift = fls(max_addr - min_addr) - 6;
+=======
+	m68k_virt_to_node_shift = fls(max_addr - min_addr - 1) - 6;
+>>>>>>> b7ba80a49124 (Commit)
 
 	module_fixup(NULL, __start_fixup, __stop_fixup);
 	flush_icache();
 
+<<<<<<< HEAD
 	high_memory = phys_to_virt(max_addr) + 1;
 
 	min_low_pfn = availmem >> PAGE_SHIFT;
 	max_pfn = max_low_pfn = (max_addr >> PAGE_SHIFT) + 1;
+=======
+	high_memory = phys_to_virt(max_addr);
+
+	min_low_pfn = availmem >> PAGE_SHIFT;
+	max_pfn = max_low_pfn = max_addr >> PAGE_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Reserve kernel text/data/bss and the memory allocated in head.S */
 	memblock_reserve(m68k_memory[0].addr, availmem - m68k_memory[0].addr);

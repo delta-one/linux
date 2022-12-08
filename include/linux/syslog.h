@@ -8,8 +8,11 @@
 #ifndef _LINUX_SYSLOG_H
 #define _LINUX_SYSLOG_H
 
+<<<<<<< HEAD
 #include <linux/wait.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Close the log.  Currently a NOP. */
 #define SYSLOG_ACTION_CLOSE          0
 /* Open the log. Currently a NOP. */
@@ -37,6 +40,9 @@
 #define SYSLOG_FROM_PROC             1
 
 int do_syslog(int type, char __user *buf, int count, int source);
+<<<<<<< HEAD
 extern wait_queue_head_t log_wait;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _LINUX_SYSLOG_H */

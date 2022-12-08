@@ -41,11 +41,17 @@
 
 #include "i915_drv.h"
 #include "i915_reg.h"
+<<<<<<< HEAD
 #include "intel_de.h"
 #include "intel_display_types.h"
 #include "intel_dsi.h"
 #include "intel_dsi_vbt.h"
 #include "intel_gmbus_regs.h"
+=======
+#include "intel_display_types.h"
+#include "intel_dsi.h"
+#include "intel_dsi_vbt.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "vlv_dsi.h"
 #include "vlv_dsi_regs.h"
 #include "vlv_sideband.h"
@@ -139,9 +145,15 @@ static enum port intel_dsi_seq_port_to_port(struct intel_dsi *intel_dsi,
 		return ffs(intel_dsi->ports) - 1;
 
 	if (seq_port) {
+<<<<<<< HEAD
 		if (intel_dsi->ports & BIT(PORT_B))
 			return PORT_B;
 		else if (intel_dsi->ports & BIT(PORT_C))
+=======
+		if (intel_dsi->ports & PORT_B)
+			return PORT_B;
+		else if (intel_dsi->ports & PORT_C)
+>>>>>>> b7ba80a49124 (Commit)
 			return PORT_C;
 	}
 
@@ -379,6 +391,7 @@ static void icl_exec_gpio(struct intel_connector *connector,
 	drm_dbg_kms(&dev_priv->drm, "Skipping ICL GPIO element execution\n");
 }
 
+<<<<<<< HEAD
 enum {
 	MIPI_RESET_1 = 0,
 	MIPI_AVDD_EN_1,
@@ -458,6 +471,8 @@ static void icl_native_gpio_set_value(struct drm_i915_private *dev_priv,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const u8 *mipi_exec_gpio(struct intel_dsi *intel_dsi, const u8 *data)
 {
 	struct drm_device *dev = intel_dsi->base.base.dev;
@@ -465,7 +480,12 @@ static const u8 *mipi_exec_gpio(struct intel_dsi *intel_dsi, const u8 *data)
 	struct intel_connector *connector = intel_dsi->attached_connector;
 	u8 gpio_source, gpio_index = 0, gpio_number;
 	bool value;
+<<<<<<< HEAD
 	bool native = DISPLAY_VER(dev_priv) >= 11;
+=======
+
+	drm_dbg_kms(&dev_priv->drm, "\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (connector->panel.vbt.dsi.seq_version >= 3)
 		gpio_index = *data++;
@@ -478,6 +498,7 @@ static const u8 *mipi_exec_gpio(struct intel_dsi *intel_dsi, const u8 *data)
 	else
 		gpio_source = 0;
 
+<<<<<<< HEAD
 	if (connector->panel.vbt.dsi.seq_version >= 4 && *data & BIT(1))
 		native = false;
 
@@ -490,6 +511,12 @@ static const u8 *mipi_exec_gpio(struct intel_dsi *intel_dsi, const u8 *data)
 	if (native)
 		icl_native_gpio_set_value(dev_priv, gpio_number, value);
 	else if (DISPLAY_VER(dev_priv) >= 11)
+=======
+	/* pull up/down */
+	value = *data++ & 1;
+
+	if (DISPLAY_VER(dev_priv) >= 11)
+>>>>>>> b7ba80a49124 (Commit)
 		icl_exec_gpio(connector, gpio_source, gpio_index, value);
 	else if (IS_VALLEYVIEW(dev_priv))
 		vlv_exec_gpio(connector, gpio_source, gpio_number, value);

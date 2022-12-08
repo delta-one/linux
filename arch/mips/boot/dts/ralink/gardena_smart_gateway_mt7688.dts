@@ -47,67 +47,111 @@
 		 * (see below). So we can't include it in this LED node.
 		 */
 
+<<<<<<< HEAD
 		led-power-blue {
+=======
+		power_blue {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "smartgw:power:blue";
 			gpios = <&gpio 18 GPIO_ACTIVE_HIGH>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-power-green {
+=======
+		power_green {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "smartgw:power:green";
 			gpios = <&gpio 19 GPIO_ACTIVE_HIGH>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-power-red {
+=======
+		power_red {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "smartgw:power:red";
 			gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-radio-blue {
+=======
+		radio_blue {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "smartgw:radio:blue";
 			gpios = <&gpio 23 GPIO_ACTIVE_HIGH>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-radio-green {
+=======
+		radio_green {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "smartgw:radio:green";
 			gpios = <&gpio 24 GPIO_ACTIVE_HIGH>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-radio-red {
+=======
+		radio_red {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "smartgw:radio:red";
 			gpios = <&gpio 25 GPIO_ACTIVE_HIGH>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-internet-blue {
+=======
+		internet_blue {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "smartgw:internet:blue";
 			gpios = <&gpio 26 GPIO_ACTIVE_HIGH>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-internet-green {
+=======
+		internet_green {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "smartgw:internet:green";
 			gpios = <&gpio 27 GPIO_ACTIVE_HIGH>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-internet-red {
+=======
+		internet_red {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "smartgw:internet:red";
 			gpios = <&gpio 28 GPIO_ACTIVE_HIGH>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-ethernet-link {
+=======
+		ethernet_link {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "smartgw:eth:link";
 			gpios = <&gpio 3 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "netdev";
 		};
 
+<<<<<<< HEAD
 		led-ethernet-activity {
+=======
+		ethernet_activity {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "smartgw:eth:act";
 			gpios = <&gpio 43 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "netdev";

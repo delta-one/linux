@@ -22,6 +22,7 @@
 		reg = <0x80000000 0x20000000>;
 	};
 
+<<<<<<< HEAD
 	clk50m_phy: phy-clock {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
@@ -29,6 +30,8 @@
 		clock-output-names = "enet_ref_pad";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	usdhc2_wifi_pwrseq: usdhc2_wifi_pwrseq {
 		compatible = "mmc-pwrseq-simple";
 		pinctrl-names = "default";
@@ -56,6 +59,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &clks {
 	clocks = <&clk50m_phy>;
 	clock-names = "enet_ref_pad";
@@ -63,10 +67,18 @@
 	assigned-clock-parents = <&clk50m_phy>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &fec {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_enet>;
 	phy-mode = "rmii";
+<<<<<<< HEAD
+=======
+	clocks = <&clks IMX6QDL_CLK_ENET>,
+		 <&clks IMX6QDL_CLK_ENET>;
+	clock-names = "ipg", "ahb";
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 
 	fixed-link {

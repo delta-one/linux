@@ -91,8 +91,11 @@ const char * const amdgpu_pp_profile_name[] = {
 	"COMPUTE",
 	"CUSTOM",
 	"WINDOW_3D",
+<<<<<<< HEAD
 	"CAPPED",
 	"UNCAPPED",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -1688,6 +1691,7 @@ static ssize_t amdgpu_set_thermal_throttling_logging(struct device *dev,
 }
 
 /**
+<<<<<<< HEAD
  * DOC: apu_thermal_cap
  *
  * The amdgpu driver provides a sysfs API for retrieving/updating thermal
@@ -1764,6 +1768,8 @@ static ssize_t amdgpu_set_apu_thermal_cap(struct device *dev,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * DOC: gpu_metrics
  *
  * The amdgpu driver provides a sysfs API for retrieving current gpu
@@ -2015,7 +2021,10 @@ static struct amdgpu_device_attr amdgpu_device_attrs[] = {
 	AMDGPU_DEVICE_ATTR_RW(pp_features,				ATTR_FLAG_BASIC|ATTR_FLAG_ONEVF),
 	AMDGPU_DEVICE_ATTR_RO(unique_id,				ATTR_FLAG_BASIC|ATTR_FLAG_ONEVF),
 	AMDGPU_DEVICE_ATTR_RW(thermal_throttling_logging,		ATTR_FLAG_BASIC|ATTR_FLAG_ONEVF),
+<<<<<<< HEAD
 	AMDGPU_DEVICE_ATTR_RW(apu_thermal_cap,				ATTR_FLAG_BASIC|ATTR_FLAG_ONEVF),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	AMDGPU_DEVICE_ATTR_RO(gpu_metrics,				ATTR_FLAG_BASIC|ATTR_FLAG_ONEVF),
 	AMDGPU_DEVICE_ATTR_RO(smartshift_apu_power,			ATTR_FLAG_BASIC,
 			      .attr_update = ss_power_attr_update),
@@ -2070,8 +2079,11 @@ static int default_attr_update(struct amdgpu_device *adev, struct amdgpu_device_
 		case IP_VERSION(9, 4, 2):
 		case IP_VERSION(10, 3, 0):
 		case IP_VERSION(11, 0, 0):
+<<<<<<< HEAD
 		case IP_VERSION(11, 0, 1):
 		case IP_VERSION(11, 0, 2):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			*states = ATTR_STATE_SUPPORTED;
 			break;
 		default:
@@ -2088,16 +2100,24 @@ static int default_attr_update(struct amdgpu_device *adev, struct amdgpu_device_
 		      gc_ver == IP_VERSION(10, 3, 0) ||
 		      gc_ver == IP_VERSION(10, 1, 2) ||
 		      gc_ver == IP_VERSION(11, 0, 0) ||
+<<<<<<< HEAD
 		      gc_ver == IP_VERSION(11, 0, 2) ||
 		      gc_ver == IP_VERSION(11, 0, 3)))
+=======
+		      gc_ver == IP_VERSION(11, 0, 2)))
+>>>>>>> b7ba80a49124 (Commit)
 			*states = ATTR_STATE_UNSUPPORTED;
 	} else if (DEVICE_ATTR_IS(pp_dpm_dclk)) {
 		if (!(gc_ver == IP_VERSION(10, 3, 1) ||
 		      gc_ver == IP_VERSION(10, 3, 0) ||
 		      gc_ver == IP_VERSION(10, 1, 2) ||
 		      gc_ver == IP_VERSION(11, 0, 0) ||
+<<<<<<< HEAD
 		      gc_ver == IP_VERSION(11, 0, 2) ||
 		      gc_ver == IP_VERSION(11, 0, 3)))
+=======
+		      gc_ver == IP_VERSION(11, 0, 2)))
+>>>>>>> b7ba80a49124 (Commit)
 			*states = ATTR_STATE_UNSUPPORTED;
 	} else if (DEVICE_ATTR_IS(pp_power_profile_mode)) {
 		if (amdgpu_dpm_get_power_profile_mode(adev, NULL) == -EOPNOTSUPP)
@@ -3142,7 +3162,11 @@ static ssize_t amdgpu_hwmon_show_mclk_label(struct device *dev,
  *
  * hwmon interfaces for GPU power:
  *
+<<<<<<< HEAD
  * - power1_average: average power used by the SoC in microWatts.  On APUs this includes the CPU.
+=======
+ * - power1_average: average power used by the GPU in microWatts
+>>>>>>> b7ba80a49124 (Commit)
  *
  * - power1_cap_min: minimum cap supported in microWatts
  *
@@ -3445,11 +3469,19 @@ int amdgpu_pm_sysfs_init(struct amdgpu_device *adev)
 	if (adev->pm.sysfs_initialized)
 		return 0;
 
+<<<<<<< HEAD
 	INIT_LIST_HEAD(&adev->pm.pm_attr_list);
 
 	if (adev->pm.dpm_enabled == 0)
 		return 0;
 
+=======
+	if (adev->pm.dpm_enabled == 0)
+		return 0;
+
+	INIT_LIST_HEAD(&adev->pm.pm_attr_list);
+
+>>>>>>> b7ba80a49124 (Commit)
 	adev->pm.int_hwmon_dev = hwmon_device_register_with_groups(adev->dev,
 								   DRIVER_NAME, adev,
 								   hwmon_groups);

@@ -20,7 +20,11 @@ $(obj)/vmlinux.bin: vmlinux FORCE
 $(obj)/vmlinux.gz: $(obj)/vmlinux.bin FORCE
 	$(call if_changed,gzip)
 
+<<<<<<< HEAD
 $(obj)/vmImage: $(obj)/vmlinux.gz FORCE
+=======
+$(obj)/vmImage: $(obj)/vmlinux.gz
+>>>>>>> b7ba80a49124 (Commit)
 	$(call if_changed,uimage)
 	@$(kecho) 'Kernel: $@ is ready'
 

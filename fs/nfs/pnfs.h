@@ -169,8 +169,11 @@ struct pnfs_layoutdriver_type {
 	void (*cleanup_layoutcommit) (struct nfs4_layoutcommit_data *data);
 	int (*prepare_layoutcommit) (struct nfs4_layoutcommit_args *args);
 	int (*prepare_layoutstats) (struct nfs42_layoutstat_args *args);
+<<<<<<< HEAD
 
 	void (*cancel_io)(struct pnfs_layout_segment *lseg);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct pnfs_commit_ops {
@@ -193,7 +196,11 @@ struct pnfs_commit_ops {
 	void (*recover_commit_reqs) (struct list_head *list,
 				     struct nfs_commit_info *cinfo);
 	struct nfs_page * (*search_commit_reqs)(struct nfs_commit_info *cinfo,
+<<<<<<< HEAD
 						struct folio *folio);
+=======
+						struct page *page);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct pnfs_layout_hdr {
@@ -395,7 +402,11 @@ void pnfs_generic_rw_release(void *data);
 void pnfs_generic_recover_commit_reqs(struct list_head *dst,
 				      struct nfs_commit_info *cinfo);
 struct nfs_page *pnfs_generic_search_commit_reqs(struct nfs_commit_info *cinfo,
+<<<<<<< HEAD
 						 struct folio *folio);
+=======
+						 struct page *page);
+>>>>>>> b7ba80a49124 (Commit)
 int pnfs_generic_commit_pagelist(struct inode *inode,
 				 struct list_head *mds_pages,
 				 int how,
@@ -557,13 +568,21 @@ pnfs_recover_commit_reqs(struct list_head *head, struct nfs_commit_info *cinfo)
 
 static inline struct nfs_page *
 pnfs_search_commit_reqs(struct inode *inode, struct nfs_commit_info *cinfo,
+<<<<<<< HEAD
 			struct folio *folio)
+=======
+			struct page *page)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pnfs_ds_commit_info *fl_cinfo = cinfo->ds;
 
 	if (!fl_cinfo->ops || !fl_cinfo->ops->search_commit_reqs)
 		return NULL;
+<<<<<<< HEAD
 	return fl_cinfo->ops->search_commit_reqs(cinfo, folio);
+=======
+	return fl_cinfo->ops->search_commit_reqs(cinfo, page);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Should the pNFS client commit and return the layout upon a setattr */
@@ -687,6 +706,7 @@ pnfs_lseg_request_intersecting(struct pnfs_layout_segment *lseg, struct nfs_page
 				req_offset(req), req_last);
 }
 
+<<<<<<< HEAD
 static inline void pnfs_lseg_cancel_io(struct nfs_server *server,
 				       struct pnfs_layout_segment *lseg)
 {
@@ -694,6 +714,8 @@ static inline void pnfs_lseg_cancel_io(struct nfs_server *server,
 		server->pnfs_curr_ld->cancel_io(lseg);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern unsigned int layoutstats_timer;
 
 #ifdef NFS_DEBUG
@@ -864,7 +886,11 @@ pnfs_recover_commit_reqs(struct list_head *head, struct nfs_commit_info *cinfo)
 
 static inline struct nfs_page *
 pnfs_search_commit_reqs(struct inode *inode, struct nfs_commit_info *cinfo,
+<<<<<<< HEAD
 			struct folio *folio)
+=======
+			struct page *page)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return NULL;
 }

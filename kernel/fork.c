@@ -75,6 +75,10 @@
 #include <linux/freezer.h>
 #include <linux/delayacct.h>
 #include <linux/taskstats_kern.h>
+<<<<<<< HEAD
+=======
+#include <linux/random.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/tty.h>
 #include <linux/fs_struct.h>
 #include <linux/magic.h>
@@ -96,7 +100,10 @@
 #include <linux/scs.h>
 #include <linux/io_uring.h>
 #include <linux/bpf.h>
+<<<<<<< HEAD
 #include <linux/stackprotector.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/pgalloc.h>
 #include <linux/uaccess.h>
@@ -203,7 +210,11 @@ static bool try_release_thread_stack_to_cache(struct vm_struct *vm)
 	unsigned int i;
 
 	for (i = 0; i < NR_CACHED_STACKS; i++) {
+<<<<<<< HEAD
 		if (this_cpu_cmpxchg_local(cached_stacks[i], NULL, vm) != NULL)
+=======
+		if (this_cpu_cmpxchg(cached_stacks[i], NULL, vm) != NULL)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		return true;
 	}
@@ -451,6 +462,7 @@ static struct kmem_cache *vm_area_cachep;
 /* SLAB cache for mm_struct structures (tsk->mm) */
 static struct kmem_cache *mm_cachep;
 
+<<<<<<< HEAD
 #ifdef CONFIG_PER_VMA_LOCK
 
 /* SLAB cache for vm_area_struct.lock */
@@ -480,11 +492,14 @@ static inline void vma_lock_free(struct vm_area_struct *vma) {}
 
 #endif /* CONFIG_PER_VMA_LOCK */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct vm_area_struct *vm_area_alloc(struct mm_struct *mm)
 {
 	struct vm_area_struct *vma;
 
 	vma = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);
+<<<<<<< HEAD
 	if (!vma)
 		return NULL;
 
@@ -494,6 +509,10 @@ struct vm_area_struct *vm_area_alloc(struct mm_struct *mm)
 		return NULL;
 	}
 
+=======
+	if (vma)
+		vma_init(vma, mm);
+>>>>>>> b7ba80a49124 (Commit)
 	return vma;
 }
 
@@ -501,6 +520,7 @@ struct vm_area_struct *vm_area_dup(struct vm_area_struct *orig)
 {
 	struct vm_area_struct *new = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);
 
+<<<<<<< HEAD
 	if (!new)
 		return NULL;
 
@@ -549,6 +569,26 @@ void vm_area_free(struct vm_area_struct *vma)
 #else
 	__vm_area_free(vma);
 #endif
+=======
+	if (new) {
+		ASSERT_EXCLUSIVE_WRITER(orig->vm_flags);
+		ASSERT_EXCLUSIVE_WRITER(orig->vm_file);
+		/*
+		 * orig->shared.rb may be modified concurrently, but the clone
+		 * will be reinitialized.
+		 */
+		*new = data_race(*orig);
+		INIT_LIST_HEAD(&new->anon_vma_chain);
+		dup_anon_vma_name(orig, new);
+	}
+	return new;
+}
+
+void vm_area_free(struct vm_area_struct *vma)
+{
+	free_anon_vma_name(vma);
+	kmem_cache_free(vm_area_cachep, vma);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void account_kernel_stack(struct task_struct *tsk, int account)
@@ -651,8 +691,13 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
 	int retval;
 	unsigned long charge = 0;
 	LIST_HEAD(uf);
+<<<<<<< HEAD
 	VMA_ITERATOR(old_vmi, oldmm, 0);
 	VMA_ITERATOR(vmi, mm, 0);
+=======
+	MA_STATE(old_mas, &oldmm->mm_mt, 0, 0);
+	MA_STATE(mas, &mm->mm_mt, 0, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	uprobe_start_dup_mmap();
 	if (mmap_write_lock_killable(oldmm)) {
@@ -679,12 +724,20 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
 		goto out;
 	khugepaged_fork(mm, oldmm);
 
+<<<<<<< HEAD
 	retval = vma_iter_bulk_alloc(&vmi, oldmm->map_count);
 	if (retval)
 		goto out;
 
 	mt_clear_in_rcu(vmi.mas.tree);
 	for_each_vma(old_vmi, mpnt) {
+=======
+	retval = mas_expected_entries(&mas, oldmm->map_count);
+	if (retval)
+		goto out;
+
+	mas_for_each(&old_mas, mpnt, ULONG_MAX) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct file *file;
 
 		if (mpnt->vm_flags & VM_DONTCOPY) {
@@ -726,7 +779,11 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
 			tmp->anon_vma = NULL;
 		} else if (anon_vma_fork(tmp, mpnt))
 			goto fail_nomem_anon_vma_fork;
+<<<<<<< HEAD
 		vm_flags_clear(tmp, VM_LOCKED_MASK);
+=======
+		tmp->vm_flags &= ~(VM_LOCKED | VM_LOCKONFAULT);
+>>>>>>> b7ba80a49124 (Commit)
 		file = tmp->vm_file;
 		if (file) {
 			struct address_space *mapping = file->f_mapping;
@@ -750,8 +807,16 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
 			hugetlb_dup_vma_private(tmp);
 
 		/* Link the vma into the MT */
+<<<<<<< HEAD
 		if (vma_iter_bulk_store(&vmi, tmp))
 			goto fail_nomem_vmi_store;
+=======
+		mas.index = tmp->vm_start;
+		mas.last = tmp->vm_end - 1;
+		mas_store(&mas, tmp);
+		if (mas_is_err(&mas))
+			goto fail_nomem_mas_store;
+>>>>>>> b7ba80a49124 (Commit)
 
 		mm->map_count++;
 		if (!(tmp->vm_flags & VM_WIPEONFORK))
@@ -766,9 +831,13 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
 	/* a new mm has just been created */
 	retval = arch_dup_mmap(oldmm, mm);
 loop_out:
+<<<<<<< HEAD
 	vma_iter_free(&vmi);
 	if (!retval)
 		mt_set_in_rcu(vmi.mas.tree);
+=======
+	mas_destroy(&mas);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	mmap_write_unlock(mm);
 	flush_tlb_mm(oldmm);
@@ -778,7 +847,11 @@ fail_uprobe_end:
 	uprobe_end_dup_mmap();
 	return retval;
 
+<<<<<<< HEAD
 fail_nomem_vmi_store:
+=======
+fail_nomem_mas_store:
+>>>>>>> b7ba80a49124 (Commit)
 	unlink_anon_vmas(tmp);
 fail_nomem_anon_vma_fork:
 	mpol_put(vma_policy(tmp));
@@ -822,7 +895,11 @@ static void check_mm(struct mm_struct *mm)
 			 "Please make sure 'struct resident_page_types[]' is updated as well");
 
 	for (i = 0; i < NR_MM_COUNTERS; i++) {
+<<<<<<< HEAD
 		long x = percpu_counter_sum(&mm->rss_stat[i]);
+=======
+		long x = atomic_long_read(&mm->rss_stat.count[i]);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (unlikely(x))
 			pr_alert("BUG: Bad rss-counter state mm:%p type:%s val:%ld\n",
@@ -841,6 +918,7 @@ static void check_mm(struct mm_struct *mm)
 #define allocate_mm()	(kmem_cache_alloc(mm_cachep, GFP_KERNEL))
 #define free_mm(mm)	(kmem_cache_free(mm_cachep, (mm)))
 
+<<<<<<< HEAD
 static void do_check_lazy_tlb(void *arg)
 {
 	struct mm_struct *mm = arg;
@@ -902,6 +980,8 @@ static void cleanup_lazy_tlbs(struct mm_struct *mm)
 		on_each_cpu(do_check_lazy_tlb, (void *)mm, 1);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Called when the last reference to the mm
  * is dropped: either by a lazy thread or by
@@ -909,6 +989,7 @@ static void cleanup_lazy_tlbs(struct mm_struct *mm)
  */
 void __mmdrop(struct mm_struct *mm)
 {
+<<<<<<< HEAD
 	int i;
 
 	BUG_ON(mm == &init_mm);
@@ -917,6 +998,10 @@ void __mmdrop(struct mm_struct *mm)
 	/* Ensure no CPUs are using this as their lazy tlb mm */
 	cleanup_lazy_tlbs(mm);
 
+=======
+	BUG_ON(mm == &init_mm);
+	WARN_ON_ONCE(mm == current->mm);
+>>>>>>> b7ba80a49124 (Commit)
 	WARN_ON_ONCE(mm == current->active_mm);
 	mm_free_pgd(mm);
 	destroy_context(mm);
@@ -924,9 +1009,12 @@ void __mmdrop(struct mm_struct *mm)
 	check_mm(mm);
 	put_user_ns(mm->user_ns);
 	mm_pasid_drop(mm);
+<<<<<<< HEAD
 
 	for (i = 0; i < NR_MM_COUNTERS; i++)
 		percpu_counter_destroy(&mm->rss_stat[i]);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	free_mm(mm);
 }
 EXPORT_SYMBOL_GPL(__mmdrop);
@@ -1170,7 +1258,11 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
 #endif
 
 #ifdef CONFIG_BLK_CGROUP
+<<<<<<< HEAD
 	tsk->throttle_disk = NULL;
+=======
+	tsk->throttle_queue = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	tsk->use_memdelay = 0;
 #endif
 
@@ -1186,10 +1278,13 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
 	tsk->reported_split_lock = 0;
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_SCHED_MM_CID
 	tsk->mm_cid = -1;
 	tsk->mm_cid_active = 0;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return tsk;
 
 free_stack:
@@ -1250,8 +1345,11 @@ static void mm_init_uprobes_state(struct mm_struct *mm)
 static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
 	struct user_namespace *user_ns)
 {
+<<<<<<< HEAD
 	int i;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mt_init_flags(&mm->mm_mt, MM_MT_FLAGS);
 	mt_set_external_lock(&mm->mm_mt, &mm->mmap_lock);
 	atomic_set(&mm->mm_users, 1);
@@ -1259,9 +1357,12 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
 	seqcount_init(&mm->write_protect_seq);
 	mmap_init_lock(mm);
 	INIT_LIST_HEAD(&mm->mmlist);
+<<<<<<< HEAD
 #ifdef CONFIG_PER_VMA_LOCK
 	mm->mm_lock_seq = 0;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mm_pgtables_bytes_init(mm);
 	mm->map_count = 0;
 	mm->locked_vm = 0;
@@ -1296,6 +1397,7 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
 	if (init_new_context(p, mm))
 		goto fail_nocontext;
 
+<<<<<<< HEAD
 	for (i = 0; i < NR_MM_COUNTERS; i++)
 		if (percpu_counter_init(&mm->rss_stat[i], 0, GFP_KERNEL_ACCOUNT))
 			goto fail_pcpu;
@@ -1308,6 +1410,12 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
 fail_pcpu:
 	while (i > 0)
 		percpu_counter_destroy(&mm->rss_stat[--i]);
+=======
+	mm->user_ns = get_user_ns(user_ns);
+	lru_gen_init_mm(mm);
+	return mm;
+
+>>>>>>> b7ba80a49124 (Commit)
 fail_nocontext:
 	mm_free_pgd(mm);
 fail_nopgd:
@@ -1735,7 +1843,10 @@ static int copy_mm(unsigned long clone_flags, struct task_struct *tsk)
 
 	tsk->mm = mm;
 	tsk->active_mm = mm;
+<<<<<<< HEAD
 	sched_mm_cid_fork(tsk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1759,8 +1870,12 @@ static int copy_fs(unsigned long clone_flags, struct task_struct *tsk)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int copy_files(unsigned long clone_flags, struct task_struct *tsk,
 		      int no_files)
+=======
+static int copy_files(unsigned long clone_flags, struct task_struct *tsk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct files_struct *oldf, *newf;
 	int error = 0;
@@ -1772,11 +1887,14 @@ static int copy_files(unsigned long clone_flags, struct task_struct *tsk,
 	if (!oldf)
 		goto out;
 
+<<<<<<< HEAD
 	if (no_files) {
 		tsk->files = NULL;
 		goto out;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (clone_flags & CLONE_FILES) {
 		atomic_inc(&oldf->count);
 		goto out;
@@ -2148,7 +2266,11 @@ static void rv_task_fork(struct task_struct *p)
  * parts of the process environment (as per the clone
  * flags). The actual kick-off is left to the caller.
  */
+<<<<<<< HEAD
 __latent_entropy struct task_struct *copy_process(
+=======
+static __latent_entropy struct task_struct *copy_process(
+>>>>>>> b7ba80a49124 (Commit)
 					struct pid *pid,
 					int trace,
 					int node,
@@ -2206,6 +2328,18 @@ __latent_entropy struct task_struct *copy_process(
 			return ERR_PTR(-EINVAL);
 	}
 
+<<<<<<< HEAD
+=======
+	/*
+	 * If the new process will be in a different time namespace
+	 * do not allow it to share VM or a thread group with the forking task.
+	 */
+	if (clone_flags & (CLONE_THREAD | CLONE_VM)) {
+		if (nsp->time_ns != nsp->time_ns_for_children)
+			return ERR_PTR(-EINVAL);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (clone_flags & CLONE_PIDFD) {
 		/*
 		 * - CLONE_DETACHED is blocked so that we can potentially
@@ -2241,8 +2375,11 @@ __latent_entropy struct task_struct *copy_process(
 	p->flags &= ~PF_KTHREAD;
 	if (args->kthread)
 		p->flags |= PF_KTHREAD;
+<<<<<<< HEAD
 	if (args->user_worker)
 		p->flags |= PF_USER_WORKER;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (args->io_thread) {
 		/*
 		 * Mark us an IO worker, and block any signal that isn't
@@ -2252,9 +2389,12 @@ __latent_entropy struct task_struct *copy_process(
 		siginitsetinv(&p->blocked, sigmask(SIGKILL)|sigmask(SIGSTOP));
 	}
 
+<<<<<<< HEAD
 	if (args->name)
 		strscpy_pad(p->comm, args->name, sizeof(p->comm));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	p->set_child_tid = (clone_flags & CLONE_CHILD_SETTID) ? args->child_tid : NULL;
 	/*
 	 * Clear TID on mm_release()?
@@ -2397,7 +2537,11 @@ __latent_entropy struct task_struct *copy_process(
 	retval = copy_semundo(clone_flags, p);
 	if (retval)
 		goto bad_fork_cleanup_security;
+<<<<<<< HEAD
 	retval = copy_files(clone_flags, p, args->no_files);
+=======
+	retval = copy_files(clone_flags, p);
+>>>>>>> b7ba80a49124 (Commit)
 	if (retval)
 		goto bad_fork_cleanup_semundo;
 	retval = copy_fs(clone_flags, p);
@@ -2422,9 +2566,12 @@ __latent_entropy struct task_struct *copy_process(
 	if (retval)
 		goto bad_fork_cleanup_io;
 
+<<<<<<< HEAD
 	if (args->ignore_signals)
 		ignore_signals(p);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	stackleak_task_init(p);
 
 	if (pid != &init_struct_pid) {
@@ -2756,6 +2903,14 @@ struct task_struct * __init fork_idle(int cpu)
 	return task;
 }
 
+<<<<<<< HEAD
+=======
+struct mm_struct *copy_init_mm(void)
+{
+	return dup_mm(NULL, &init_mm);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This is like kernel_clone(), but shaved down and tailored to just
  * creating io_uring workers. It returns a created task, or an error pointer.
@@ -2773,7 +2928,10 @@ struct task_struct *create_io_thread(int (*fn)(void *), void *arg, int node)
 		.fn		= fn,
 		.fn_arg		= arg,
 		.io_thread	= 1,
+<<<<<<< HEAD
 		.user_worker	= 1,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	return copy_process(NULL, 0, node, &args);
@@ -2877,8 +3035,12 @@ pid_t kernel_clone(struct kernel_clone_args *args)
 /*
  * Create a kernel thread.
  */
+<<<<<<< HEAD
 pid_t kernel_thread(int (*fn)(void *), void *arg, const char *name,
 		    unsigned long flags)
+=======
+pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct kernel_clone_args args = {
 		.flags		= ((lower_32_bits(flags) | CLONE_VM |
@@ -2886,7 +3048,10 @@ pid_t kernel_thread(int (*fn)(void *), void *arg, const char *name,
 		.exit_signal	= (lower_32_bits(flags) & CSIGNAL),
 		.fn		= fn,
 		.fn_arg		= arg,
+<<<<<<< HEAD
 		.name		= name,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.kthread	= 1,
 	};
 
@@ -3085,7 +3250,11 @@ static bool clone3_args_valid(struct kernel_clone_args *kargs)
 	 * - make the CLONE_DETACHED bit reusable for clone3
 	 * - make the CSIGNAL bits reusable for clone3
 	 */
+<<<<<<< HEAD
 	if (kargs->flags & (CLONE_DETACHED | (CSIGNAL & (~CLONE_NEWTIME))))
+=======
+	if (kargs->flags & (CLONE_DETACHED | CSIGNAL))
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	if ((kargs->flags & (CLONE_SIGHAND | CLONE_CLEAR_SIGHAND)) ==
@@ -3177,6 +3346,7 @@ static void sighand_ctor(void *data)
 	init_waitqueue_head(&sighand->signalfd_wqh);
 }
 
+<<<<<<< HEAD
 void __init mm_cache_init(void)
 {
 	unsigned int mm_size;
@@ -3198,6 +3368,12 @@ void __init mm_cache_init(void)
 
 void __init proc_caches_init(void)
 {
+=======
+void __init proc_caches_init(void)
+{
+	unsigned int mm_size;
+
+>>>>>>> b7ba80a49124 (Commit)
 	sighand_cachep = kmem_cache_create("sighand_cache",
 			sizeof(struct sighand_struct), 0,
 			SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_TYPESAFE_BY_RCU|
@@ -3215,10 +3391,27 @@ void __init proc_caches_init(void)
 			SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT,
 			NULL);
 
+<<<<<<< HEAD
 	vm_area_cachep = KMEM_CACHE(vm_area_struct, SLAB_PANIC|SLAB_ACCOUNT);
 #ifdef CONFIG_PER_VMA_LOCK
 	vma_lock_cachep = KMEM_CACHE(vma_lock, SLAB_PANIC|SLAB_ACCOUNT);
 #endif
+=======
+	/*
+	 * The mm_cpumask is located at the end of mm_struct, and is
+	 * dynamically sized based on the maximum CPU number this system
+	 * can have, taking hotplug into account (nr_cpu_ids).
+	 */
+	mm_size = sizeof(struct mm_struct) + cpumask_size();
+
+	mm_cachep = kmem_cache_create_usercopy("mm_struct",
+			mm_size, ARCH_MIN_MMSTRUCT_ALIGN,
+			SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT,
+			offsetof(struct mm_struct, saved_auxv),
+			sizeof_field(struct mm_struct, saved_auxv),
+			NULL);
+	vm_area_cachep = KMEM_CACHE(vm_area_struct, SLAB_PANIC|SLAB_ACCOUNT);
+>>>>>>> b7ba80a49124 (Commit)
 	mmap_init();
 	nsproxy_cache_init();
 }

@@ -124,8 +124,15 @@ static int armada_38x_quirks(struct platform_device *pdev,
 	struct resource *res;
 
 	host->quirks &= ~SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN;
+<<<<<<< HEAD
 
 	sdhci_read_caps(host);
+=======
+	host->quirks |= SDHCI_QUIRK_MISSING_CAPS;
+
+	host->caps = sdhci_readl(host, SDHCI_CAPABILITIES);
+	host->caps1 = sdhci_readl(host, SDHCI_CAPABILITIES_1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
 					   "conf-sdio3");

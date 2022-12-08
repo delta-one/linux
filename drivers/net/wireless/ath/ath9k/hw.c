@@ -266,7 +266,11 @@ static bool ath9k_hw_read_revisions(struct ath_hw *ah)
 	case AR9300_DEVID_AR9330:
 		ah->hw_version.macVersion = AR_SREV_VERSION_9330;
 		if (!ah->get_mac_revision) {
+<<<<<<< HEAD
 			val = REG_READ(ah, AR_SREV(ah));
+=======
+			val = REG_READ(ah, AR_SREV);
+>>>>>>> b7ba80a49124 (Commit)
 			ah->hw_version.macRev = MS(val, AR_SREV_REVISION2);
 		}
 		return true;
@@ -284,7 +288,11 @@ static bool ath9k_hw_read_revisions(struct ath_hw *ah)
 		return true;
 	}
 
+<<<<<<< HEAD
 	srev = REG_READ(ah, AR_SREV(ah));
+=======
+	srev = REG_READ(ah, AR_SREV);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (srev == -1) {
 		ath_err(ath9k_hw_common(ah),
@@ -292,7 +300,11 @@ static bool ath9k_hw_read_revisions(struct ath_hw *ah)
 		return false;
 	}
 
+<<<<<<< HEAD
 	val = srev & AR_SREV_ID(ah);
+=======
+	val = srev & AR_SREV_ID;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (val == 0xFF) {
 		val = srev;
@@ -601,12 +613,20 @@ static int __ath9k_hw_init(struct ath_hw *ah)
 	}
 
 	/*
+<<<<<<< HEAD
 	 * Read back AR_WA(ah) into a permanent copy and set bits 14 and 17.
+=======
+	 * Read back AR_WA into a permanent copy and set bits 14 and 17.
+>>>>>>> b7ba80a49124 (Commit)
 	 * We need to do this to avoid RMW of this register. We cannot
 	 * read the reg when chip is asleep.
 	 */
 	if (AR_SREV_9300_20_OR_LATER(ah)) {
+<<<<<<< HEAD
 		ah->WARegVal = REG_READ(ah, AR_WA(ah));
+=======
+		ah->WARegVal = REG_READ(ah, AR_WA);
+>>>>>>> b7ba80a49124 (Commit)
 		ah->WARegVal |= (AR_WA_D3_L1_DISABLE |
 				 AR_WA_ASPM_TIMER_BASED_DISABLE);
 	}
@@ -618,7 +638,11 @@ static int __ath9k_hw_init(struct ath_hw *ah)
 
 	if (AR_SREV_9565(ah)) {
 		ah->WARegVal |= AR_WA_BIT22;
+<<<<<<< HEAD
 		REG_WRITE(ah, AR_WA(ah), ah->WARegVal);
+=======
+		REG_WRITE(ah, AR_WA, ah->WARegVal);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ath9k_hw_init_defaults(ah);
@@ -814,7 +838,11 @@ static void ath9k_hw_init_pll(struct ath_hw *ah,
 		REG_RMW_FIELD(ah, AR_CH0_DDR_DPLL3,
 			      AR_CH0_DPLL3_PHASE_SHIFT, 0x1);
 
+<<<<<<< HEAD
 		REG_WRITE(ah, AR_RTC_PLL_CONTROL(ah),
+=======
+		REG_WRITE(ah, AR_RTC_PLL_CONTROL,
+>>>>>>> b7ba80a49124 (Commit)
 			  pll | AR_RTC_9300_PLL_BYPASS);
 		udelay(1000);
 
@@ -832,7 +860,11 @@ static void ath9k_hw_init_pll(struct ath_hw *ah,
 		   AR_SREV_9561(ah)) {
 		u32 regval, pll2_divint, pll2_divfrac, refdiv;
 
+<<<<<<< HEAD
 		REG_WRITE(ah, AR_RTC_PLL_CONTROL(ah),
+=======
+		REG_WRITE(ah, AR_RTC_PLL_CONTROL,
+>>>>>>> b7ba80a49124 (Commit)
 			  pll | AR_RTC_9300_SOC_PLL_BYPASS);
 		udelay(1000);
 
@@ -911,7 +943,11 @@ static void ath9k_hw_init_pll(struct ath_hw *ah,
 
 	if (AR_SREV_9565(ah))
 		pll |= 0x40000;
+<<<<<<< HEAD
 	REG_WRITE(ah, AR_RTC_PLL_CONTROL(ah), pll);
+=======
+	REG_WRITE(ah, AR_RTC_PLL_CONTROL, pll);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (AR_SREV_9485(ah) || AR_SREV_9340(ah) || AR_SREV_9330(ah) ||
 	    AR_SREV_9550(ah))
@@ -925,7 +961,11 @@ static void ath9k_hw_init_pll(struct ath_hw *ah,
 
 	udelay(RTC_PLL_SETTLE_DELAY);
 
+<<<<<<< HEAD
 	REG_WRITE(ah, AR_RTC_SLEEP_CLK(ah), AR_RTC_FORCE_DERIVED_CLK);
+=======
+	REG_WRITE(ah, AR_RTC_SLEEP_CLK, AR_RTC_FORCE_DERIVED_CLK);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ath9k_hw_init_interrupt_masks(struct ath_hw *ah,
@@ -977,7 +1017,11 @@ static void ath9k_hw_init_interrupt_masks(struct ath_hw *ah,
 	REG_WRITE(ah, AR_IMR_S2, ah->imrs2_reg);
 
 	if (ah->msi_enabled) {
+<<<<<<< HEAD
 		ah->msi_reg = REG_READ(ah, AR_PCIE_MSI(ah));
+=======
+		ah->msi_reg = REG_READ(ah, AR_PCIE_MSI);
+>>>>>>> b7ba80a49124 (Commit)
 		ah->msi_reg |= AR_PCIE_MSI_HW_DBI_WR_EN;
 		ah->msi_reg &= AR_PCIE_MSI_HW_INT_PENDING_ADDR_MSI_64;
 		REG_WRITE(ah, AR_INTCFG, msi_cfg);
@@ -987,18 +1031,31 @@ static void ath9k_hw_init_interrupt_masks(struct ath_hw *ah,
 	}
 
 	if (!AR_SREV_9100(ah)) {
+<<<<<<< HEAD
 		REG_WRITE(ah, AR_INTR_SYNC_CAUSE(ah), 0xFFFFFFFF);
 		REG_WRITE(ah, AR_INTR_SYNC_ENABLE(ah), sync_default);
 		REG_WRITE(ah, AR_INTR_SYNC_MASK(ah), 0);
+=======
+		REG_WRITE(ah, AR_INTR_SYNC_CAUSE, 0xFFFFFFFF);
+		REG_WRITE(ah, AR_INTR_SYNC_ENABLE, sync_default);
+		REG_WRITE(ah, AR_INTR_SYNC_MASK, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	REGWRITE_BUFFER_FLUSH(ah);
 
 	if (AR_SREV_9300_20_OR_LATER(ah)) {
+<<<<<<< HEAD
 		REG_WRITE(ah, AR_INTR_PRIO_ASYNC_ENABLE(ah), 0);
 		REG_WRITE(ah, AR_INTR_PRIO_ASYNC_MASK(ah), 0);
 		REG_WRITE(ah, AR_INTR_PRIO_SYNC_ENABLE(ah), 0);
 		REG_WRITE(ah, AR_INTR_PRIO_SYNC_MASK(ah), 0);
+=======
+		REG_WRITE(ah, AR_INTR_PRIO_ASYNC_ENABLE, 0);
+		REG_WRITE(ah, AR_INTR_PRIO_ASYNC_MASK, 0);
+		REG_WRITE(ah, AR_INTR_PRIO_SYNC_ENABLE, 0);
+		REG_WRITE(ah, AR_INTR_PRIO_SYNC_MASK, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -1341,7 +1398,11 @@ static bool ath9k_hw_ar9330_reset_war(struct ath_hw *ah, int type)
 			return false;
 		}
 
+<<<<<<< HEAD
 		REG_WRITE(ah, AR_RTC_RESET(ah), 1);
+=======
+		REG_WRITE(ah, AR_RTC_RESET, 1);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return true;
@@ -1353,26 +1414,44 @@ static bool ath9k_hw_set_reset(struct ath_hw *ah, int type)
 	u32 tmpReg;
 
 	if (AR_SREV_9100(ah)) {
+<<<<<<< HEAD
 		REG_RMW_FIELD(ah, AR_RTC_DERIVED_CLK(ah),
 			      AR_RTC_DERIVED_CLK_PERIOD, 1);
 		(void)REG_READ(ah, AR_RTC_DERIVED_CLK(ah));
+=======
+		REG_RMW_FIELD(ah, AR_RTC_DERIVED_CLK,
+			      AR_RTC_DERIVED_CLK_PERIOD, 1);
+		(void)REG_READ(ah, AR_RTC_DERIVED_CLK);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ENABLE_REGWRITE_BUFFER(ah);
 
 	if (AR_SREV_9300_20_OR_LATER(ah)) {
+<<<<<<< HEAD
 		REG_WRITE(ah, AR_WA(ah), ah->WARegVal);
 		udelay(10);
 	}
 
 	REG_WRITE(ah, AR_RTC_FORCE_WAKE(ah), AR_RTC_FORCE_WAKE_EN |
+=======
+		REG_WRITE(ah, AR_WA, ah->WARegVal);
+		udelay(10);
+	}
+
+	REG_WRITE(ah, AR_RTC_FORCE_WAKE, AR_RTC_FORCE_WAKE_EN |
+>>>>>>> b7ba80a49124 (Commit)
 		  AR_RTC_FORCE_WAKE_ON_INT);
 
 	if (AR_SREV_9100(ah)) {
 		rst_flags = AR_RTC_RC_MAC_WARM | AR_RTC_RC_MAC_COLD |
 			AR_RTC_RC_COLD_RESET | AR_RTC_RC_WARM_RESET;
 	} else {
+<<<<<<< HEAD
 		tmpReg = REG_READ(ah, AR_INTR_SYNC_CAUSE(ah));
+=======
+		tmpReg = REG_READ(ah, AR_INTR_SYNC_CAUSE);
+>>>>>>> b7ba80a49124 (Commit)
 		if (AR_SREV_9340(ah))
 			tmpReg &= AR9340_INTR_SYNC_LOCAL_TIMEOUT;
 		else
@@ -1381,7 +1460,11 @@ static bool ath9k_hw_set_reset(struct ath_hw *ah, int type)
 
 		if (tmpReg) {
 			u32 val;
+<<<<<<< HEAD
 			REG_WRITE(ah, AR_INTR_SYNC_ENABLE(ah), 0);
+=======
+			REG_WRITE(ah, AR_INTR_SYNC_ENABLE, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 			val = AR_RC_HOSTIF;
 			if (!AR_SREV_9300_20_OR_LATER(ah))
@@ -1414,7 +1497,11 @@ static bool ath9k_hw_set_reset(struct ath_hw *ah, int type)
 		REG_CLR_BIT(ah, AR_CFG, AR_CFG_HALT_REQ);
 	}
 
+<<<<<<< HEAD
 	REG_WRITE(ah, AR_RTC_RC(ah), rst_flags);
+=======
+	REG_WRITE(ah, AR_RTC_RC, rst_flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	REGWRITE_BUFFER_FLUSH(ah);
 
@@ -1425,8 +1512,13 @@ static bool ath9k_hw_set_reset(struct ath_hw *ah, int type)
 	else
 		udelay(100);
 
+<<<<<<< HEAD
 	REG_WRITE(ah, AR_RTC_RC(ah), 0);
 	if (!ath9k_hw_wait(ah, AR_RTC_RC(ah), AR_RTC_RC_M, 0, AH_WAIT_TIMEOUT)) {
+=======
+	REG_WRITE(ah, AR_RTC_RC, 0);
+	if (!ath9k_hw_wait(ah, AR_RTC_RC, AR_RTC_RC_M, 0, AH_WAIT_TIMEOUT)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ath_dbg(ath9k_hw_common(ah), RESET, "RTC stuck in MAC reset\n");
 		return false;
 	}
@@ -1445,17 +1537,29 @@ static bool ath9k_hw_set_reset_power_on(struct ath_hw *ah)
 	ENABLE_REGWRITE_BUFFER(ah);
 
 	if (AR_SREV_9300_20_OR_LATER(ah)) {
+<<<<<<< HEAD
 		REG_WRITE(ah, AR_WA(ah), ah->WARegVal);
 		udelay(10);
 	}
 
 	REG_WRITE(ah, AR_RTC_FORCE_WAKE(ah), AR_RTC_FORCE_WAKE_EN |
+=======
+		REG_WRITE(ah, AR_WA, ah->WARegVal);
+		udelay(10);
+	}
+
+	REG_WRITE(ah, AR_RTC_FORCE_WAKE, AR_RTC_FORCE_WAKE_EN |
+>>>>>>> b7ba80a49124 (Commit)
 		  AR_RTC_FORCE_WAKE_ON_INT);
 
 	if (!AR_SREV_9100(ah) && !AR_SREV_9300_20_OR_LATER(ah))
 		REG_WRITE(ah, AR_RC, AR_RC_AHB);
 
+<<<<<<< HEAD
 	REG_WRITE(ah, AR_RTC_RESET(ah), 0);
+=======
+	REG_WRITE(ah, AR_RTC_RESET, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	REGWRITE_BUFFER_FLUSH(ah);
 
@@ -1464,11 +1568,19 @@ static bool ath9k_hw_set_reset_power_on(struct ath_hw *ah)
 	if (!AR_SREV_9100(ah) && !AR_SREV_9300_20_OR_LATER(ah))
 		REG_WRITE(ah, AR_RC, 0);
 
+<<<<<<< HEAD
 	REG_WRITE(ah, AR_RTC_RESET(ah), 1);
 
 	if (!ath9k_hw_wait(ah,
 			   AR_RTC_STATUS(ah),
 			   AR_RTC_STATUS_M(ah),
+=======
+	REG_WRITE(ah, AR_RTC_RESET, 1);
+
+	if (!ath9k_hw_wait(ah,
+			   AR_RTC_STATUS,
+			   AR_RTC_STATUS_M,
+>>>>>>> b7ba80a49124 (Commit)
 			   AR_RTC_STATUS_ON,
 			   AH_WAIT_TIMEOUT)) {
 		ath_dbg(ath9k_hw_common(ah), RESET, "RTC not waking up\n");
@@ -1483,11 +1595,19 @@ static bool ath9k_hw_set_reset_reg(struct ath_hw *ah, u32 type)
 	bool ret = false;
 
 	if (AR_SREV_9300_20_OR_LATER(ah)) {
+<<<<<<< HEAD
 		REG_WRITE(ah, AR_WA(ah), ah->WARegVal);
 		udelay(10);
 	}
 
 	REG_WRITE(ah, AR_RTC_FORCE_WAKE(ah),
+=======
+		REG_WRITE(ah, AR_WA, ah->WARegVal);
+		udelay(10);
+	}
+
+	REG_WRITE(ah, AR_RTC_FORCE_WAKE,
+>>>>>>> b7ba80a49124 (Commit)
 		  AR_RTC_FORCE_WAKE_EN | AR_RTC_FORCE_WAKE_ON_INT);
 
 	if (!ah->reset_power_on)
@@ -1521,7 +1641,11 @@ static bool ath9k_hw_chip_reset(struct ath_hw *ah,
 		else
 			reset_type = ATH9K_RESET_COLD;
 	} else if (ah->chip_fullsleep || REG_READ(ah, AR_Q_TXE) ||
+<<<<<<< HEAD
 		   (REG_READ(ah, AR_CR) & AR_CR_RXE(ah)))
+=======
+		   (REG_READ(ah, AR_CR) & AR_CR_RXE))
+>>>>>>> b7ba80a49124 (Commit)
 		reset_type = ATH9K_RESET_COLD;
 
 	if (!ath9k_hw_set_reset_reg(ah, reset_type))
@@ -1955,7 +2079,11 @@ int ath9k_hw_reset(struct ath_hw *ah, struct ath9k_channel *chan,
 	ath9k_hw_settsf64(ah, tsf + tsf_offset);
 
 	if (AR_SREV_9280_20_OR_LATER(ah))
+<<<<<<< HEAD
 		REG_SET_BIT(ah, AR_GPIO_INPUT_EN_VAL(ah), AR_GPIO_JTAG_DISABLE);
+=======
+		REG_SET_BIT(ah, AR_GPIO_INPUT_EN_VAL, AR_GPIO_JTAG_DISABLE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!AR_SREV_9300_20_OR_LATER(ah))
 		ar9002_hw_enable_async_fifo(ah);
@@ -2017,7 +2145,11 @@ int ath9k_hw_reset(struct ath_hw *ah, struct ath9k_channel *chan,
 	ath9k_hw_set_dma(ah);
 
 	if (!ath9k_hw_mci_is_enabled(ah))
+<<<<<<< HEAD
 		REG_WRITE(ah, AR_OBS(ah), 8);
+=======
+		REG_WRITE(ah, AR_OBS, 8);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ENABLE_REG_RMW_BUFFER(ah);
 	if (ah->config.rx_intr_mitigation) {
@@ -2111,7 +2243,11 @@ static void ath9k_set_power_sleep(struct ath_hw *ah)
 	 * Clear the RTC force wake bit to allow the
 	 * mac to go to sleep.
 	 */
+<<<<<<< HEAD
 	REG_CLR_BIT(ah, AR_RTC_FORCE_WAKE(ah), AR_RTC_FORCE_WAKE_EN);
+=======
+	REG_CLR_BIT(ah, AR_RTC_FORCE_WAKE, AR_RTC_FORCE_WAKE_EN);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ath9k_hw_mci_is_enabled(ah))
 		udelay(100);
@@ -2121,6 +2257,7 @@ static void ath9k_set_power_sleep(struct ath_hw *ah)
 
 	/* Shutdown chip. Active low */
 	if (!AR_SREV_5416(ah) && !AR_SREV_9271(ah)) {
+<<<<<<< HEAD
 		REG_CLR_BIT(ah, AR_RTC_RESET(ah), AR_RTC_RESET_EN);
 		udelay(2);
 	}
@@ -2128,6 +2265,15 @@ static void ath9k_set_power_sleep(struct ath_hw *ah)
 	/* Clear Bit 14 of AR_WA(ah) after putting chip into Full Sleep mode. */
 	if (AR_SREV_9300_20_OR_LATER(ah))
 		REG_WRITE(ah, AR_WA(ah), ah->WARegVal & ~AR_WA_D3_L1_DISABLE);
+=======
+		REG_CLR_BIT(ah, AR_RTC_RESET, AR_RTC_RESET_EN);
+		udelay(2);
+	}
+
+	/* Clear Bit 14 of AR_WA after putting chip into Full Sleep mode. */
+	if (AR_SREV_9300_20_OR_LATER(ah))
+		REG_WRITE(ah, AR_WA, ah->WARegVal & ~AR_WA_D3_L1_DISABLE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -2143,7 +2289,11 @@ static void ath9k_set_power_network_sleep(struct ath_hw *ah)
 
 	if (!(pCap->hw_caps & ATH9K_HW_CAP_AUTOSLEEP)) {
 		/* Set WakeOnInterrupt bit; clear ForceWake bit */
+<<<<<<< HEAD
 		REG_WRITE(ah, AR_RTC_FORCE_WAKE(ah),
+=======
+		REG_WRITE(ah, AR_RTC_FORCE_WAKE,
+>>>>>>> b7ba80a49124 (Commit)
 			  AR_RTC_FORCE_WAKE_ON_INT);
 	} else {
 
@@ -2163,15 +2313,25 @@ static void ath9k_set_power_network_sleep(struct ath_hw *ah)
 		 * Clear the RTC force wake bit to allow the
 		 * mac to go to sleep.
 		 */
+<<<<<<< HEAD
 		REG_CLR_BIT(ah, AR_RTC_FORCE_WAKE(ah), AR_RTC_FORCE_WAKE_EN);
+=======
+		REG_CLR_BIT(ah, AR_RTC_FORCE_WAKE, AR_RTC_FORCE_WAKE_EN);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (ath9k_hw_mci_is_enabled(ah))
 			udelay(30);
 	}
 
+<<<<<<< HEAD
 	/* Clear Bit 14 of AR_WA(ah) after putting chip into Net Sleep mode. */
 	if (AR_SREV_9300_20_OR_LATER(ah))
 		REG_WRITE(ah, AR_WA(ah), ah->WARegVal & ~AR_WA_D3_L1_DISABLE);
+=======
+	/* Clear Bit 14 of AR_WA after putting chip into Net Sleep mode. */
+	if (AR_SREV_9300_20_OR_LATER(ah))
+		REG_WRITE(ah, AR_WA, ah->WARegVal & ~AR_WA_D3_L1_DISABLE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool ath9k_hw_set_power_awake(struct ath_hw *ah)
@@ -2179,6 +2339,7 @@ static bool ath9k_hw_set_power_awake(struct ath_hw *ah)
 	u32 val;
 	int i;
 
+<<<<<<< HEAD
 	/* Set Bits 14 and 17 of AR_WA(ah) before powering on the chip. */
 	if (AR_SREV_9300_20_OR_LATER(ah)) {
 		REG_WRITE(ah, AR_WA(ah), ah->WARegVal);
@@ -2187,6 +2348,16 @@ static bool ath9k_hw_set_power_awake(struct ath_hw *ah)
 
 	if ((REG_READ(ah, AR_RTC_STATUS(ah)) &
 	     AR_RTC_STATUS_M(ah)) == AR_RTC_STATUS_SHUTDOWN) {
+=======
+	/* Set Bits 14 and 17 of AR_WA before powering on the chip. */
+	if (AR_SREV_9300_20_OR_LATER(ah)) {
+		REG_WRITE(ah, AR_WA, ah->WARegVal);
+		udelay(10);
+	}
+
+	if ((REG_READ(ah, AR_RTC_STATUS) &
+	     AR_RTC_STATUS_M) == AR_RTC_STATUS_SHUTDOWN) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!ath9k_hw_set_reset_reg(ah, ATH9K_RESET_POWER_ON)) {
 			return false;
 		}
@@ -2194,10 +2365,17 @@ static bool ath9k_hw_set_power_awake(struct ath_hw *ah)
 			ath9k_hw_init_pll(ah, NULL);
 	}
 	if (AR_SREV_9100(ah))
+<<<<<<< HEAD
 		REG_SET_BIT(ah, AR_RTC_RESET(ah),
 			    AR_RTC_RESET_EN);
 
 	REG_SET_BIT(ah, AR_RTC_FORCE_WAKE(ah),
+=======
+		REG_SET_BIT(ah, AR_RTC_RESET,
+			    AR_RTC_RESET_EN);
+
+	REG_SET_BIT(ah, AR_RTC_FORCE_WAKE,
+>>>>>>> b7ba80a49124 (Commit)
 		    AR_RTC_FORCE_WAKE_EN);
 	if (AR_SREV_9100(ah))
 		mdelay(10);
@@ -2205,11 +2383,19 @@ static bool ath9k_hw_set_power_awake(struct ath_hw *ah)
 		udelay(50);
 
 	for (i = POWER_UP_TIME / 50; i > 0; i--) {
+<<<<<<< HEAD
 		val = REG_READ(ah, AR_RTC_STATUS(ah)) & AR_RTC_STATUS_M(ah);
 		if (val == AR_RTC_STATUS_ON)
 			break;
 		udelay(50);
 		REG_SET_BIT(ah, AR_RTC_FORCE_WAKE(ah),
+=======
+		val = REG_READ(ah, AR_RTC_STATUS) & AR_RTC_STATUS_M;
+		if (val == AR_RTC_STATUS_ON)
+			break;
+		udelay(50);
+		REG_SET_BIT(ah, AR_RTC_FORCE_WAKE,
+>>>>>>> b7ba80a49124 (Commit)
 			    AR_RTC_FORCE_WAKE_EN);
 	}
 	if (i == 0) {
@@ -2701,16 +2887,28 @@ static void ath9k_hw_gpio_cfg_output_mux(struct ath_hw *ah, u32 gpio, u32 type)
 	u32 gpio_shift, tmp;
 
 	if (gpio > 11)
+<<<<<<< HEAD
 		addr = AR_GPIO_OUTPUT_MUX3(ah);
 	else if (gpio > 5)
 		addr = AR_GPIO_OUTPUT_MUX2(ah);
 	else
 		addr = AR_GPIO_OUTPUT_MUX1(ah);
+=======
+		addr = AR_GPIO_OUTPUT_MUX3;
+	else if (gpio > 5)
+		addr = AR_GPIO_OUTPUT_MUX2;
+	else
+		addr = AR_GPIO_OUTPUT_MUX1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	gpio_shift = (gpio % 6) * 5;
 
 	if (AR_SREV_9280_20_OR_LATER(ah) ||
+<<<<<<< HEAD
 	    (addr != AR_GPIO_OUTPUT_MUX1(ah))) {
+=======
+	    (addr != AR_GPIO_OUTPUT_MUX1)) {
+>>>>>>> b7ba80a49124 (Commit)
 		REG_RMW(ah, addr, (type << gpio_shift),
 			(0x1f << gpio_shift));
 	} else {
@@ -2754,13 +2952,21 @@ static void ath9k_hw_gpio_cfg_wmac(struct ath_hw *ah, u32 gpio, bool out,
 			AR7010_GPIO_OE_MASK << gpio_shift);
 	} else if (AR_SREV_SOC(ah)) {
 		gpio_set = out ? 1 : 0;
+<<<<<<< HEAD
 		REG_RMW(ah, AR_GPIO_OE_OUT(ah), gpio_set << gpio_shift,
+=======
+		REG_RMW(ah, AR_GPIO_OE_OUT, gpio_set << gpio_shift,
+>>>>>>> b7ba80a49124 (Commit)
 			gpio_set << gpio_shift);
 	} else {
 		gpio_shift = gpio << 1;
 		gpio_set = out ?
 			AR_GPIO_OE_OUT_DRV_ALL : AR_GPIO_OE_OUT_DRV_NO;
+<<<<<<< HEAD
 		REG_RMW(ah, AR_GPIO_OE_OUT(ah), gpio_set << gpio_shift,
+=======
+		REG_RMW(ah, AR_GPIO_OE_OUT, gpio_set << gpio_shift,
+>>>>>>> b7ba80a49124 (Commit)
 			AR_GPIO_OE_OUT_DRV << gpio_shift);
 
 		if (out)
@@ -2813,7 +3019,11 @@ u32 ath9k_hw_gpio_get(struct ath_hw *ah, u32 gpio)
 	u32 val = 0xffffffff;
 
 #define MS_REG_READ(x, y) \
+<<<<<<< HEAD
 	(MS(REG_READ(ah, AR_GPIO_IN_OUT(ah)), x##_GPIO_IN_VAL) & BIT(y))
+=======
+	(MS(REG_READ(ah, AR_GPIO_IN_OUT), x##_GPIO_IN_VAL) & BIT(y))
+>>>>>>> b7ba80a49124 (Commit)
 
 	WARN_ON(gpio >= ah->caps.num_gpio_pins);
 
@@ -2829,7 +3039,11 @@ u32 ath9k_hw_gpio_get(struct ath_hw *ah, u32 gpio)
 		else if (AR_DEVID_7010(ah))
 			val = REG_READ(ah, AR7010_GPIO_IN) & BIT(gpio);
 		else if (AR_SREV_9300_20_OR_LATER(ah))
+<<<<<<< HEAD
 			val = REG_READ(ah, AR_GPIO_IN(ah)) & BIT(gpio);
+=======
+			val = REG_READ(ah, AR_GPIO_IN) & BIT(gpio);
+>>>>>>> b7ba80a49124 (Commit)
 		else
 			val = MS_REG_READ(AR, gpio);
 	} else if (BIT(gpio) & ah->caps.gpio_requested) {
@@ -2853,7 +3067,11 @@ void ath9k_hw_set_gpio(struct ath_hw *ah, u32 gpio, u32 val)
 
 	if (BIT(gpio) & ah->caps.gpio_mask) {
 		u32 out_addr = AR_DEVID_7010(ah) ?
+<<<<<<< HEAD
 			AR7010_GPIO_OUT : AR_GPIO_IN_OUT(ah);
+=======
+			AR7010_GPIO_OUT : AR_GPIO_IN_OUT;
+>>>>>>> b7ba80a49124 (Commit)
 
 		REG_RMW(ah, out_addr, val << gpio, BIT(gpio));
 	} else if (BIT(gpio) & ah->caps.gpio_requested) {

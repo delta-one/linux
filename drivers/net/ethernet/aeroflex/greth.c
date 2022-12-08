@@ -258,7 +258,10 @@ static int greth_init_rings(struct greth_private *greth)
 			if (dma_mapping_error(greth->dev, dma_addr)) {
 				if (netif_msg_ifup(greth))
 					dev_err(greth->dev, "Could not create initial DMA mapping\n");
+<<<<<<< HEAD
 				dev_kfree_skb(skb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				goto cleanup;
 			}
 			greth->rx_skbuff[i] = skb;
@@ -1508,7 +1511,11 @@ static int greth_of_probe(struct platform_device *ofdev)
 	}
 
 	/* setup NAPI */
+<<<<<<< HEAD
 	netif_napi_add(dev, &greth->napi, greth_poll);
+=======
+	netif_napi_add(dev, &greth->napi, greth_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 

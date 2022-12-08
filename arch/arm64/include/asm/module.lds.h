@@ -17,6 +17,7 @@ SECTIONS {
 	 */
 	.text.hot : { *(.text.hot) }
 #endif
+<<<<<<< HEAD
 
 #ifdef CONFIG_UNWIND_TABLES
 	/*
@@ -25,4 +26,6 @@ SECTIONS {
 	 */
 	.init.eh_frame : { *(.eh_frame) }
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

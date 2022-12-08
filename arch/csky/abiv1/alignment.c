@@ -332,9 +332,28 @@ static struct ctl_table alignment_tbl[5] = {
 	{}
 };
 
+<<<<<<< HEAD
 static int __init csky_alignment_init(void)
 {
 	register_sysctl_init("csky/csky_alignment", alignment_tbl);
+=======
+static struct ctl_table sysctl_table[2] = {
+	{
+	 .procname = "csky_alignment",
+	 .mode = 0555,
+	 .child = alignment_tbl},
+	{}
+};
+
+static struct ctl_path sysctl_path[2] = {
+	{.procname = "csky"},
+	{}
+};
+
+static int __init csky_alignment_init(void)
+{
+	register_sysctl_paths(sysctl_path, sysctl_table);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

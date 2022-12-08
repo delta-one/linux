@@ -609,6 +609,7 @@ out:
 /* AGFL */
 
 struct xchk_agfl_info {
+<<<<<<< HEAD
 	/* Number of AGFL entries that the AGF claims are in use. */
 	unsigned int		agflcount;
 
@@ -619,6 +620,11 @@ struct xchk_agfl_info {
 	xfs_agblock_t		*entries;
 
 	struct xfs_buf		*agfl_bp;
+=======
+	unsigned int		sz_entries;
+	unsigned int		nr_entries;
+	xfs_agblock_t		*entries;
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfs_scrub	*sc;
 };
 
@@ -648,10 +654,17 @@ xchk_agfl_block(
 	struct xfs_scrub	*sc = sai->sc;
 
 	if (xfs_verify_agbno(sc->sa.pag, agbno) &&
+<<<<<<< HEAD
 	    sai->nr_entries < sai->agflcount)
 		sai->entries[sai->nr_entries++] = agbno;
 	else
 		xchk_block_set_corrupt(sc, sai->agfl_bp);
+=======
+	    sai->nr_entries < sai->sz_entries)
+		sai->entries[sai->nr_entries++] = agbno;
+	else
+		xchk_block_set_corrupt(sc, sc->sa.agfl_bp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	xchk_agfl_block_xref(sc, agbno);
 
@@ -703,6 +716,7 @@ int
 xchk_agfl(
 	struct xfs_scrub	*sc)
 {
+<<<<<<< HEAD
 	struct xchk_agfl_info	sai = {
 		.sc		= sc,
 	};
@@ -723,6 +737,21 @@ xchk_agfl(
 	if (!xchk_process_error(sc, agno, XFS_AGFL_BLOCK(sc->mp), &error))
 		return error;
 	xchk_buffer_recheck(sc, sai.agfl_bp);
+=======
+	struct xchk_agfl_info	sai;
+	struct xfs_agf		*agf;
+	xfs_agnumber_t		agno = sc->sm->sm_agno;
+	unsigned int		agflcount;
+	unsigned int		i;
+	int			error;
+
+	error = xchk_ag_read_headers(sc, agno, &sc->sa);
+	if (!xchk_process_error(sc, agno, XFS_AGFL_BLOCK(sc->mp), &error))
+		goto out;
+	if (!sc->sa.agf_bp)
+		return -EFSCORRUPTED;
+	xchk_buffer_recheck(sc, sc->sa.agfl_bp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	xchk_agfl_xref(sc);
 
@@ -731,6 +760,7 @@ xchk_agfl(
 
 	/* Allocate buffer to ensure uniqueness of AGFL entries. */
 	agf = sc->sa.agf_bp->b_addr;
+<<<<<<< HEAD
 	sai.agflcount = be32_to_cpu(agf->agf_flcount);
 	if (sai.agflcount > xfs_agfl_size(sc->mp)) {
 		xchk_block_set_corrupt(sc, sc->sa.agf_bp);
@@ -738,14 +768,31 @@ xchk_agfl(
 	}
 	sai.entries = kvcalloc(sai.agflcount, sizeof(xfs_agblock_t),
 			       XCHK_GFP_FLAGS);
+=======
+	agflcount = be32_to_cpu(agf->agf_flcount);
+	if (agflcount > xfs_agfl_size(sc->mp)) {
+		xchk_block_set_corrupt(sc, sc->sa.agf_bp);
+		goto out;
+	}
+	memset(&sai, 0, sizeof(sai));
+	sai.sc = sc;
+	sai.sz_entries = agflcount;
+	sai.entries = kmem_zalloc(sizeof(xfs_agblock_t) * agflcount,
+			KM_MAYFAIL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!sai.entries) {
 		error = -ENOMEM;
 		goto out;
 	}
 
 	/* Check the blocks in the AGFL. */
+<<<<<<< HEAD
 	error = xfs_agfl_walk(sc->mp, sc->sa.agf_bp->b_addr, sai.agfl_bp,
 			xchk_agfl_block, &sai);
+=======
+	error = xfs_agfl_walk(sc->mp, sc->sa.agf_bp->b_addr,
+			sc->sa.agfl_bp, xchk_agfl_block, &sai);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error == -ECANCELED) {
 		error = 0;
 		goto out_free;
@@ -753,7 +800,11 @@ xchk_agfl(
 	if (error)
 		goto out_free;
 
+<<<<<<< HEAD
 	if (sai.agflcount != sai.nr_entries) {
+=======
+	if (agflcount != sai.nr_entries) {
+>>>>>>> b7ba80a49124 (Commit)
 		xchk_block_set_corrupt(sc, sc->sa.agf_bp);
 		goto out_free;
 	}
@@ -769,7 +820,11 @@ xchk_agfl(
 	}
 
 out_free:
+<<<<<<< HEAD
 	kvfree(sai.entries);
+=======
+	kmem_free(sai.entries);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	return error;
 }

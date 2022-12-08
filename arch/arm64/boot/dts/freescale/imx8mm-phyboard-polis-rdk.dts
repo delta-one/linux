@@ -168,12 +168,15 @@
 		"", "ECSPI1_SS0";
 };
 
+<<<<<<< HEAD
 &i2c4 {
 	clock-frequency = <400000>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_i2c4>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* PCIe */
 &pcie0 {
 	assigned-clocks = <&clk IMX8MM_CLK_PCIE1_AUX>,
@@ -181,6 +184,12 @@
 	assigned-clock-parents = <&clk IMX8MM_SYS_PLL2_50M>,
 				 <&clk IMX8MM_SYS_PLL2_250M>;
 	assigned-clock-rates = <10000000>, <250000000>;
+<<<<<<< HEAD
+=======
+	clocks = <&clk IMX8MM_CLK_PCIE1_ROOT>, <&clk IMX8MM_CLK_PCIE1_AUX>,
+		 <&clk IMX8MM_CLK_PCIE1_PHY>;
+	clock-names = "pcie", "pcie_aux", "pcie_bus";
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_pcie>;
 	reset-gpio = <&gpio4 9 GPIO_ACTIVE_LOW>;
@@ -339,6 +348,7 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_i2c4: i2c4grp {
 		fsl,pins = <
 			MX8MM_IOMUXC_I2C4_SCL_I2C4_SCL		0x400001c2
@@ -346,6 +356,8 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_leds: leds1grp {
 		fsl,pins = <
 			MX8MM_IOMUXC_GPIO1_IO01_GPIO1_IO1	0x16

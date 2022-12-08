@@ -17,18 +17,30 @@
 
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-power {
+=======
+		power {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "onrisc:red:power";
 			linux,default-trigger = "default-on";
 			gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
 			default-state = "on";
 		};
+<<<<<<< HEAD
 		led-wlan {
+=======
+		wlan {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "onrisc:blue:wlan";
 			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
 			default-state = "off";
 		};
+<<<<<<< HEAD
 		led-app {
+=======
+		app {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "onrisc:green:app";
 			gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
 			default-state = "off";

@@ -94,8 +94,11 @@ int add_to_swap_cache(struct folio *folio, swp_entry_t entry,
 	unsigned long i, nr = folio_nr_pages(folio);
 	void *old;
 
+<<<<<<< HEAD
 	xas_set_update(&xas, workingset_update_node);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
 	VM_BUG_ON_FOLIO(folio_test_swapcache(folio), folio);
 	VM_BUG_ON_FOLIO(!folio_test_swapbacked(folio), folio);
@@ -147,8 +150,11 @@ void __delete_from_swap_cache(struct folio *folio,
 	pgoff_t idx = swp_offset(entry);
 	XA_STATE(xas, &address_space->i_pages, idx);
 
+<<<<<<< HEAD
 	xas_set_update(&xas, workingset_update_node);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
 	VM_BUG_ON_FOLIO(!folio_test_swapcache(folio), folio);
 	VM_BUG_ON_FOLIO(folio_test_writeback(folio), folio);
@@ -256,8 +262,11 @@ void clear_shadow_from_swap_cache(int type, unsigned long begin,
 		struct address_space *address_space = swap_address_space(entry);
 		XA_STATE(xas, &address_space->i_pages, curr);
 
+<<<<<<< HEAD
 		xas_set_update(&xas, workingset_update_node);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		xa_lock_irq(&address_space->i_pages);
 		xas_for_each(&xas, old, end) {
 			if (!xa_is_value(old))
@@ -309,12 +318,24 @@ void free_page_and_swap_cache(struct page *page)
  * Passed an array of pages, drop them all from swapcache and then release
  * them.  They are removed from the LRU and freed if this is their last use.
  */
+<<<<<<< HEAD
 void free_pages_and_swap_cache(struct encoded_page **pages, int nr)
 {
 	lru_add_drain();
 	for (int i = 0; i < nr; i++)
 		free_swap_cache(encoded_page_ptr(pages[i]));
 	release_pages(pages, nr);
+=======
+void free_pages_and_swap_cache(struct page **pages, int nr)
+{
+	struct page **pagep = pages;
+	int i;
+
+	lru_add_drain();
+	for (i = 0; i < nr; i++)
+		free_swap_cache(pagep[i]);
+	release_pages(pagep, nr);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool swap_use_vma_readahead(void)
@@ -327,16 +348,31 @@ static inline bool swap_use_vma_readahead(void)
  * unlocked and with its refcount incremented - we rely on the kernel
  * lock getting page table operations atomic even if we drop the folio
  * lock before returning.
+<<<<<<< HEAD
  *
  * Caller must lock the swap device or hold a reference to keep it valid.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct folio *swap_cache_get_folio(swp_entry_t entry,
 		struct vm_area_struct *vma, unsigned long addr)
 {
 	struct folio *folio;
+<<<<<<< HEAD
 
 	folio = filemap_get_folio(swap_address_space(entry), swp_offset(entry));
 	if (!IS_ERR(folio)) {
+=======
+	struct swap_info_struct *si;
+
+	si = get_swap_device(entry);
+	if (!si)
+		return NULL;
+	folio = filemap_get_folio(swap_address_space(entry), swp_offset(entry));
+	put_swap_device(si);
+
+	if (folio) {
+>>>>>>> b7ba80a49124 (Commit)
 		bool vma_ra = swap_use_vma_readahead();
 		bool readahead;
 
@@ -366,14 +402,18 @@ struct folio *swap_cache_get_folio(swp_entry_t entry,
 			if (!vma || !vma_ra)
 				atomic_inc(&swapin_readahead_hits);
 		}
+<<<<<<< HEAD
 	} else {
 		folio = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return folio;
 }
 
 /**
+<<<<<<< HEAD
  * filemap_get_incore_folio - Find and get a folio from the page or swap caches.
  * @mapping: The address_space to search.
  * @index: The page cache index.
@@ -409,6 +449,42 @@ struct folio *filemap_get_incore_folio(struct address_space *mapping,
 	folio = filemap_get_folio(swap_address_space(swp), index);
 	put_swap_device(si);
 	return folio;
+=======
+ * find_get_incore_page - Find and get a page from the page or swap caches.
+ * @mapping: The address_space to search.
+ * @index: The page cache index.
+ *
+ * This differs from find_get_page() in that it will also look for the
+ * page in the swap cache.
+ *
+ * Return: The found page or %NULL.
+ */
+struct page *find_get_incore_page(struct address_space *mapping, pgoff_t index)
+{
+	swp_entry_t swp;
+	struct swap_info_struct *si;
+	struct page *page = pagecache_get_page(mapping, index,
+						FGP_ENTRY | FGP_HEAD, 0);
+
+	if (!page)
+		return page;
+	if (!xa_is_value(page))
+		return find_subpage(page, index);
+	if (!shmem_mapping(mapping))
+		return NULL;
+
+	swp = radix_to_swp_entry(page);
+	/* There might be swapin error entries in shmem mapping. */
+	if (non_swap_entry(swp))
+		return NULL;
+	/* Prevent swapoff from happening to us */
+	si = get_swap_device(swp);
+	if (!si)
+		return NULL;
+	page = find_get_page(swap_address_space(swp), swp_offset(swp));
+	put_swap_device(si);
+	return page;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
@@ -434,7 +510,11 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
 		folio = filemap_get_folio(swap_address_space(entry),
 						swp_offset(entry));
 		put_swap_device(si);
+<<<<<<< HEAD
 		if (!IS_ERR(folio))
+=======
+		if (folio)
+>>>>>>> b7ba80a49124 (Commit)
 			return folio_file_page(folio, swp_offset(entry));
 
 		/*
@@ -698,6 +778,7 @@ void exit_swap_address_space(unsigned int type)
 	swapper_spaces[type] = NULL;
 }
 
+<<<<<<< HEAD
 static void swap_ra_info(struct vm_fault *vmf,
 			 struct vma_swap_readahead *ra_info)
 {
@@ -707,6 +788,30 @@ static void swap_ra_info(struct vm_fault *vmf,
 	unsigned long start, end;
 	pte_t *pte, *orig_pte;
 	unsigned int max_win, hits, prev_win, win;
+=======
+static inline void swap_ra_clamp_pfn(struct vm_area_struct *vma,
+				     unsigned long faddr,
+				     unsigned long lpfn,
+				     unsigned long rpfn,
+				     unsigned long *start,
+				     unsigned long *end)
+{
+	*start = max3(lpfn, PFN_DOWN(vma->vm_start),
+		      PFN_DOWN(faddr & PMD_MASK));
+	*end = min3(rpfn, PFN_DOWN(vma->vm_end),
+		    PFN_DOWN((faddr & PMD_MASK) + PMD_SIZE));
+}
+
+static void swap_ra_info(struct vm_fault *vmf,
+			struct vma_swap_readahead *ra_info)
+{
+	struct vm_area_struct *vma = vmf->vma;
+	unsigned long ra_val;
+	unsigned long faddr, pfn, fpfn;
+	unsigned long start, end;
+	pte_t *pte, *orig_pte;
+	unsigned int max_win, hits, prev_win, win, left;
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef CONFIG_64BIT
 	pte_t *tpte;
 #endif
@@ -719,6 +824,11 @@ static void swap_ra_info(struct vm_fault *vmf,
 	}
 
 	faddr = vmf->address;
+<<<<<<< HEAD
+=======
+	orig_pte = pte = pte_offset_map(vmf->pmd, faddr);
+
+>>>>>>> b7ba80a49124 (Commit)
 	fpfn = PFN_DOWN(faddr);
 	ra_val = GET_SWAP_RA_VAL(vma);
 	pfn = PFN_DOWN(SWAP_RA_ADDR(ra_val));
@@ -729,6 +839,7 @@ static void swap_ra_info(struct vm_fault *vmf,
 	atomic_long_set(&vma->swap_readahead_info,
 			SWAP_RA_VAL(faddr, win, 0));
 
+<<<<<<< HEAD
 	if (win == 1)
 		return;
 
@@ -751,6 +862,24 @@ static void swap_ra_info(struct vm_fault *vmf,
 	end = min3(rpfn, PFN_DOWN(vma->vm_end),
 		   PFN_DOWN((faddr & PMD_MASK) + PMD_SIZE));
 
+=======
+	if (win == 1) {
+		pte_unmap(orig_pte);
+		return;
+	}
+
+	/* Copy the PTEs because the page table may be unmapped */
+	if (fpfn == pfn + 1)
+		swap_ra_clamp_pfn(vma, faddr, fpfn, fpfn + win, &start, &end);
+	else if (pfn == fpfn + 1)
+		swap_ra_clamp_pfn(vma, faddr, fpfn - win + 1, fpfn + 1,
+				  &start, &end);
+	else {
+		left = (win - 1) / 2;
+		swap_ra_clamp_pfn(vma, faddr, fpfn - left, fpfn + win - left,
+				  &start, &end);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	ra_info->nr_pte = end - start;
 	ra_info->offset = fpfn - start;
 	pte -= ra_info->offset;

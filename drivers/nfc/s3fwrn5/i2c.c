@@ -177,7 +177,12 @@ static int s3fwrn5_i2c_parse_dt(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int s3fwrn5_i2c_probe(struct i2c_client *client)
+=======
+static int s3fwrn5_i2c_probe(struct i2c_client *client,
+				  const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct s3fwrn5_i2c_phy *phy;
 	int ret;
@@ -208,21 +213,41 @@ static int s3fwrn5_i2c_probe(struct i2c_client *client)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
+=======
+	phy->clk = devm_clk_get_optional(&client->dev, NULL);
+	if (IS_ERR(phy->clk))
+		return dev_err_probe(&client->dev, PTR_ERR(phy->clk),
+				     "failed to get clock\n");
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * S3FWRN5 depends on a clock input ("XI" pin) to function properly.
 	 * Depending on the hardware configuration this could be an always-on
 	 * oscillator or some external clock that must be explicitly enabled.
 	 * Make sure the clock is running before starting S3FWRN5.
 	 */
+<<<<<<< HEAD
 	phy->clk = devm_clk_get_optional_enabled(&client->dev, NULL);
 	if (IS_ERR(phy->clk))
 		return dev_err_probe(&client->dev, PTR_ERR(phy->clk),
 				     "failed to get clock\n");
+=======
+	ret = clk_prepare_enable(phy->clk);
+	if (ret < 0) {
+		dev_err(&client->dev, "failed to enable clock: %d\n", ret);
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = s3fwrn5_probe(&phy->common.ndev, phy, &phy->i2c_dev->dev,
 			    &i2c_phy_ops);
 	if (ret < 0)
+<<<<<<< HEAD
 		return ret;
+=======
+		goto disable_clk;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = devm_request_threaded_irq(&client->dev, phy->i2c_dev->irq, NULL,
 		s3fwrn5_i2c_irq_thread_fn, IRQF_ONESHOT,
@@ -234,6 +259,11 @@ static int s3fwrn5_i2c_probe(struct i2c_client *client)
 
 s3fwrn5_remove:
 	s3fwrn5_remove(phy->common.ndev);
+<<<<<<< HEAD
+=======
+disable_clk:
+	clk_disable_unprepare(phy->clk);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -242,6 +272,10 @@ static void s3fwrn5_i2c_remove(struct i2c_client *client)
 	struct s3fwrn5_i2c_phy *phy = i2c_get_clientdata(client);
 
 	s3fwrn5_remove(phy->common.ndev);
+<<<<<<< HEAD
+=======
+	clk_disable_unprepare(phy->clk);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct i2c_device_id s3fwrn5_i2c_id_table[] = {
@@ -261,7 +295,11 @@ static struct i2c_driver s3fwrn5_i2c_driver = {
 		.name = S3FWRN5_I2C_DRIVER_NAME,
 		.of_match_table = of_match_ptr(of_s3fwrn5_i2c_match),
 	},
+<<<<<<< HEAD
 	.probe_new = s3fwrn5_i2c_probe,
+=======
+	.probe = s3fwrn5_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = s3fwrn5_i2c_remove,
 	.id_table = s3fwrn5_i2c_id_table,
 };

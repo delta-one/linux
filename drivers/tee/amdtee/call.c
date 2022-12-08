@@ -8,7 +8,11 @@
 #include <linux/tee_drv.h>
 #include <linux/psp-tee.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/psp.h>
+=======
+#include <linux/psp-sev.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include "amdtee_if.h"
 #include "amdtee_private.h"
 

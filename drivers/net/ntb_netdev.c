@@ -137,7 +137,11 @@ static void ntb_netdev_rx_handler(struct ntb_transport_qp *qp, void *qp_data,
 enqueue_again:
 	rc = ntb_transport_rx_enqueue(qp, skb, skb->data, ndev->mtu + ETH_HLEN);
 	if (rc) {
+<<<<<<< HEAD
 		dev_kfree_skb_any(skb);
+=======
+		dev_kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 		ndev->stats.rx_errors++;
 		ndev->stats.rx_fifo_errors++;
 	}
@@ -192,7 +196,11 @@ static void ntb_netdev_tx_handler(struct ntb_transport_qp *qp, void *qp_data,
 		ndev->stats.tx_aborted_errors++;
 	}
 
+<<<<<<< HEAD
 	dev_kfree_skb_any(skb);
+=======
+	dev_kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ntb_transport_tx_free_entry(dev->qp) >= tx_start) {
 		/* Make sure anybody stopping the queue after this sees the new
@@ -484,6 +492,7 @@ static int __init ntb_netdev_init_module(void)
 	rc = ntb_transport_register_client_dev(KBUILD_MODNAME);
 	if (rc)
 		return rc;
+<<<<<<< HEAD
 
 	rc = ntb_transport_register_client(&ntb_netdev_client);
 	if (rc) {
@@ -492,6 +501,9 @@ static int __init ntb_netdev_init_module(void)
 	}
 
 	return 0;
+=======
+	return ntb_transport_register_client(&ntb_netdev_client);
+>>>>>>> b7ba80a49124 (Commit)
 }
 module_init(ntb_netdev_init_module);
 

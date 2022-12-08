@@ -24,7 +24,11 @@ static void of_node_release(struct kobject *kobj)
 }
 #endif /* CONFIG_OF_DYNAMIC */
 
+<<<<<<< HEAD
 const struct kobj_type of_node_ktype = {
+=======
+struct kobj_type of_node_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = of_node_release,
 };
 

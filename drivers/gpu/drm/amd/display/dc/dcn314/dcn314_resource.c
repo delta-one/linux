@@ -184,9 +184,12 @@ enum dcn31_clk_src_array_id {
 	.reg_name[id] = BASE(reg ## block ## id ## _ ## temp_name ## _BASE_IDX) + \
 					reg ## block ## id ## _ ## temp_name
 
+<<<<<<< HEAD
 #define SF_DWB2(reg_name, block, id, field_name, post_fix)	\
 	.field_name = reg_name ## __ ## field_name ## post_fix
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DCCG_SRII(reg_name, block, id)\
 	.block ## _ ## reg_name[id] = BASE(reg ## block ## id ## _ ## reg_name ## _BASE_IDX) + \
 					reg ## block ## id ## _ ## reg_name
@@ -850,11 +853,20 @@ static const struct resource_caps res_cap_dcn314 = {
 	.num_ddc = 5,
 	.num_vmid = 16,
 	.num_mpc_3dlut = 2,
+<<<<<<< HEAD
 	.num_dsc = 4,
+=======
+	.num_dsc = 3,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct dc_plane_cap plane_cap = {
 	.type = DC_PLANE_TYPE_DCN_UNIVERSAL,
+<<<<<<< HEAD
+=======
+	.blends_with_above = true,
+	.blends_with_below = true,
+>>>>>>> b7ba80a49124 (Commit)
 	.per_pixel_alpha = true,
 
 	.pixel_format_support = {
@@ -872,9 +884,14 @@ static const struct dc_plane_cap plane_cap = {
 	},
 
 	// 6:1 downscaling ratio: 1000/6 = 166.666
+<<<<<<< HEAD
 	// 4:1 downscaling ratio for ARGB888 to prevent underflow during P010 playback: 1000/4 = 250
 	.max_downscale_factor = {
 			.argb8888 = 250,
+=======
+	.max_downscale_factor = {
+			.argb8888 = 167,
+>>>>>>> b7ba80a49124 (Commit)
 			.nv12 = 167,
 			.fp16 = 167
 	},
@@ -883,16 +900,23 @@ static const struct dc_plane_cap plane_cap = {
 };
 
 static const struct dc_debug_options debug_defaults_drv = {
+<<<<<<< HEAD
 	.disable_z10 = false,
 	.enable_z9_disable_interface = true,
 	.minimum_z8_residency_time = 3080,
 	.psr_skip_crtc_disable = true,
+=======
+	.disable_z10 = true, /*hw not support it*/
+>>>>>>> b7ba80a49124 (Commit)
 	.disable_dmcu = true,
 	.force_abm_enable = false,
 	.timing_trace = false,
 	.clock_trace = true,
+<<<<<<< HEAD
 	.disable_dpp_power_gate = true,
 	.disable_hubp_power_gate = true,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.disable_pplib_clock_request = false,
 	.pipe_split_policy = MPC_SPLIT_DYNAMIC,
 	.force_single_disp_pipe_split = false,
@@ -902,7 +926,11 @@ static const struct dc_debug_options debug_defaults_drv = {
 	.max_downscale_src_width = 4096,/*upto true 4k*/
 	.disable_pplib_wm_range = false,
 	.scl_reset_length10 = true,
+<<<<<<< HEAD
 	.sanity_checks = true,
+=======
+	.sanity_checks = false,
+>>>>>>> b7ba80a49124 (Commit)
 	.underflow_assert_delay_us = 0xFFFFFFFF,
 	.dwb_fi_phase = -1, // -1 = disable,
 	.dmub_command_table = true,
@@ -921,6 +949,10 @@ static const struct dc_debug_options debug_defaults_drv = {
 			.afmt = true,
 		}
 	},
+<<<<<<< HEAD
+=======
+	.optimize_edp_link_rate = true,
+>>>>>>> b7ba80a49124 (Commit)
 	.seamless_boot_odm_combine = true
 };
 
@@ -942,6 +974,7 @@ static const struct dc_debug_options debug_defaults_diags = {
 	.use_max_lb = true
 };
 
+<<<<<<< HEAD
 static const struct dc_panel_config panel_config_defaults = {
 	.psr = {
 		.disable_psr = false,
@@ -952,6 +985,8 @@ static const struct dc_panel_config panel_config_defaults = {
 	},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void dcn31_dpp_destroy(struct dpp **dpp)
 {
 	kfree(TO_DCN20_DPP(*dpp));
@@ -1691,6 +1726,7 @@ static void dcn314_update_bw_bounding_box(struct dc *dc, struct clk_bw_params *b
 	DC_FP_END();
 }
 
+<<<<<<< HEAD
 static void dcn314_get_panel_config_defaults(struct dc_panel_config *panel_config)
 {
 	*panel_config = panel_config_defaults;
@@ -1751,6 +1787,8 @@ validate_out:
 	return out;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct resource_funcs dcn314_res_pool_funcs = {
 	.destroy = dcn314_destroy_resource_pool,
 	.link_enc_create = dcn31_link_encoder_create,
@@ -1758,7 +1796,11 @@ static struct resource_funcs dcn314_res_pool_funcs = {
 	.link_encs_assign = link_enc_cfg_link_encs_assign,
 	.link_enc_unassign = link_enc_cfg_link_enc_unassign,
 	.panel_cntl_create = dcn31_panel_cntl_create,
+<<<<<<< HEAD
 	.validate_bandwidth = dcn314_validate_bandwidth,
+=======
+	.validate_bandwidth = dcn31_validate_bandwidth,
+>>>>>>> b7ba80a49124 (Commit)
 	.calculate_wm_and_dlg = dcn31_calculate_wm_and_dlg,
 	.update_soc_for_wm_a = dcn31_update_soc_for_wm_a,
 	.populate_dml_pipes = dcn314_populate_dml_pipes_from_context,
@@ -1773,7 +1815,10 @@ static struct resource_funcs dcn314_res_pool_funcs = {
 	.release_post_bldn_3dlut = dcn30_release_post_bldn_3dlut,
 	.update_bw_bounding_box = dcn314_update_bw_bounding_box,
 	.patch_unknown_plane_state = dcn20_patch_unknown_plane_state,
+<<<<<<< HEAD
 	.get_panel_config_defaults = dcn314_get_panel_config_defaults,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct clock_source *dcn30_clock_source_create(
@@ -1820,7 +1865,11 @@ static bool dcn314_resource_construct(
 	pool->base.underlay_pipe_index = NO_UNDERLAY_PIPE;
 	pool->base.pipe_count = pool->base.res_cap->num_timing_generator;
 	pool->base.mpcc_count = pool->base.res_cap->num_timing_generator;
+<<<<<<< HEAD
 	dc->caps.max_downscale_ratio = 400;
+=======
+	dc->caps.max_downscale_ratio = 600;
+>>>>>>> b7ba80a49124 (Commit)
 	dc->caps.i2c_speed_in_khz = 100;
 	dc->caps.i2c_speed_in_khz_hdcp = 100;
 	dc->caps.max_cursor_size = 256;
@@ -1831,8 +1880,11 @@ static bool dcn314_resource_construct(
 	dc->caps.max_slave_rgb_planes = 2;
 	dc->caps.post_blend_color_processing = true;
 	dc->caps.force_dp_tps4_for_cp2520 = true;
+<<<<<<< HEAD
 	if (dc->config.forceHBR2CP2520)
 		dc->caps.force_dp_tps4_for_cp2520 = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dc->caps.dp_hpo = true;
 	dc->caps.dp_hdmi21_pcon_support = true;
 	dc->caps.edp_dsc_support = true;

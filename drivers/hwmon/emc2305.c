@@ -16,6 +16,10 @@ static const unsigned short
 emc2305_normal_i2c[] = { 0x27, 0x2c, 0x2d, 0x2e, 0x2f, 0x4c, 0x4d, I2C_CLIENT_END };
 
 #define EMC2305_REG_DRIVE_FAIL_STATUS	0x27
+<<<<<<< HEAD
+=======
+#define EMC2305_REG_DEVICE		0xfd
+>>>>>>> b7ba80a49124 (Commit)
 #define EMC2305_REG_VENDOR		0xfe
 #define EMC2305_FAN_MAX			0xff
 #define EMC2305_FAN_MIN			0x00
@@ -59,11 +63,18 @@ static const struct i2c_device_id emc2305_ids[] = {
 MODULE_DEVICE_TABLE(i2c, emc2305_ids);
 
 /**
+<<<<<<< HEAD
  * struct emc2305_cdev_data - device-specific cooling device state
  * @cdev: cooling device
  * @cur_state: cooling current state
  * @last_hwmon_state: last cooling state updated by hwmon subsystem
  * @last_thermal_state: last cooling state updated by thermal subsystem
+=======
+ * @cdev: cooling device;
+ * @curr_state: cooling current state;
+ * @last_hwmon_state: last cooling state updated by hwmon subsystem;
+ * @last_thermal_state: last cooling state updated by thermal subsystem;
+>>>>>>> b7ba80a49124 (Commit)
  *
  * The 'last_hwmon_state' and 'last_thermal_state' fields are provided to support fan low limit
  * speed feature. The purpose of this feature is to provides ability to limit fan speed
@@ -87,6 +98,7 @@ struct emc2305_cdev_data {
 };
 
 /**
+<<<<<<< HEAD
  * struct emc2305_data - device-specific data
  * @client: i2c client
  * @hwmon_dev: hwmon device
@@ -95,6 +107,15 @@ struct emc2305_cdev_data {
  * @pwm_separate: separate PWM settings for every channel
  * @pwm_min: array of minimum PWM per channel
  * @cdev_data: array of cooling devices data
+=======
+ * @client: i2c client;
+ * @hwmon_dev: hwmon device;
+ * @max_state: maximum cooling state of the cooling device;
+ * @pwm_num: number of PWM channels;
+ * @pwm_separate: separate PWM settings for every channel;
+ * @pwm_min: array of minimum PWM per channel;
+ * @cdev_data: array of cooling devices data;
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct emc2305_data {
 	struct i2c_client *client;
@@ -173,12 +194,31 @@ static int emc2305_get_max_state(struct thermal_cooling_device *cdev, unsigned l
 	return 0;
 }
 
+<<<<<<< HEAD
 static int __emc2305_set_cur_state(struct emc2305_data *data, int cdev_idx, unsigned long state)
 {
 	int ret;
 	struct i2c_client *client = data->client;
 	u8 val, i;
 
+=======
+static int emc2305_set_cur_state(struct thermal_cooling_device *cdev, unsigned long state)
+{
+	int cdev_idx, ret;
+	struct emc2305_data *data = cdev->devdata;
+	struct i2c_client *client = data->client;
+	u8 val, i;
+
+	if (state > data->max_state)
+		return -EINVAL;
+
+	cdev_idx =  emc2305_get_cdev_idx(cdev);
+	if (cdev_idx < 0)
+		return cdev_idx;
+
+	/* Save thermal state. */
+	data->cdev_data[cdev_idx].last_thermal_state = state;
+>>>>>>> b7ba80a49124 (Commit)
 	state = max_t(unsigned long, state, data->cdev_data[cdev_idx].last_hwmon_state);
 
 	val = EMC2305_PWM_STATE2DUTY(state, data->max_state, EMC2305_FAN_MAX);
@@ -203,6 +243,7 @@ static int __emc2305_set_cur_state(struct emc2305_data *data, int cdev_idx, unsi
 	return 0;
 }
 
+<<<<<<< HEAD
 static int emc2305_set_cur_state(struct thermal_cooling_device *cdev, unsigned long state)
 {
 	int cdev_idx, ret;
@@ -224,6 +265,8 @@ static int emc2305_set_cur_state(struct thermal_cooling_device *cdev, unsigned l
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct thermal_cooling_device_ops emc2305_cooling_ops = {
 	.get_max_state = emc2305_get_max_state,
 	.get_cur_state = emc2305_get_cur_state,
@@ -414,7 +457,11 @@ emc2305_write(struct device *dev, enum hwmon_sensor_types type, u32 attr, int ch
 				 */
 				if (data->cdev_data[cdev_idx].last_hwmon_state >=
 				    data->cdev_data[cdev_idx].last_thermal_state)
+<<<<<<< HEAD
 					return __emc2305_set_cur_state(data, cdev_idx,
+=======
+					return emc2305_set_cur_state(data->cdev_data[cdev_idx].cdev,
+>>>>>>> b7ba80a49124 (Commit)
 							data->cdev_data[cdev_idx].last_hwmon_state);
 				return 0;
 			}
@@ -530,13 +577,21 @@ static int emc2305_identify(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int emc2305_probe(struct i2c_client *client)
+=======
+static int emc2305_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_adapter *adapter = client->adapter;
 	struct device *dev = &client->dev;
 	struct emc2305_data *data;
 	struct emc2305_platform_data *pdata;
+<<<<<<< HEAD
 	int vendor;
+=======
+	int vendor, device;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 	int i;
 
@@ -547,6 +602,13 @@ static int emc2305_probe(struct i2c_client *client)
 	if (vendor != EMC2305_VENDOR)
 		return -ENODEV;
 
+<<<<<<< HEAD
+=======
+	device = i2c_smbus_read_byte_data(client, EMC2305_REG_DEVICE);
+	if (device != EMC2305_DEVICE)
+		return -ENODEV;
+
+>>>>>>> b7ba80a49124 (Commit)
 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
 	if (!data)
 		return -ENOMEM;
@@ -615,7 +677,11 @@ static struct i2c_driver emc2305_driver = {
 	.driver = {
 		.name = "emc2305",
 	},
+<<<<<<< HEAD
 	.probe_new = emc2305_probe,
+=======
+	.probe    = emc2305_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove	  = emc2305_remove,
 	.id_table = emc2305_ids,
 	.address_list = emc2305_normal_i2c,

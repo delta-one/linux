@@ -400,7 +400,11 @@ i915_gem_shrinker_vmap(struct notifier_block *nb, unsigned long event, void *ptr
 	mutex_lock(&to_gt(i915)->ggtt->vm.mutex);
 	list_for_each_entry_safe(vma, next,
 				 &to_gt(i915)->ggtt->vm.bound_list, vm_link) {
+<<<<<<< HEAD
 		unsigned long count = i915_vma_size(vma) >> PAGE_SHIFT;
+=======
+		unsigned long count = vma->node.size >> PAGE_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 		struct drm_i915_gem_object *obj = vma->obj;
 
 		if (!vma->iomap || i915_vma_is_active(vma))

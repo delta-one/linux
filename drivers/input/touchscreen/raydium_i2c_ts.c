@@ -21,7 +21,10 @@
 #include <linux/interrupt.h>
 #include <linux/module.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/pm_wakeirq.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regulator/consumer.h>
 #include <linux/slab.h>
 #include <asm/unaligned.h>
@@ -135,6 +138,11 @@ struct raydium_data {
 	u8 pkg_size;
 
 	enum raydium_boot_mode boot_mode;
+<<<<<<< HEAD
+=======
+
+	bool wake_irq_enabled;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -210,14 +218,21 @@ static int raydium_i2c_send(struct i2c_client *client,
 
 		error = raydium_i2c_xfer(client, addr, xfer, ARRAY_SIZE(xfer));
 		if (likely(!error))
+<<<<<<< HEAD
 			goto out;
+=======
+			return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 		msleep(RM_RETRY_DELAY_MS);
 	} while (++tries < RM_MAX_RETRIES);
 
 	dev_err(&client->dev, "%s failed: %d\n", __func__, error);
+<<<<<<< HEAD
 out:
 	kfree(tx_buf);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }
 
@@ -1065,7 +1080,12 @@ static void raydium_i2c_power_off(void *_data)
 	}
 }
 
+<<<<<<< HEAD
 static int raydium_i2c_probe(struct i2c_client *client)
+=======
+static int raydium_i2c_probe(struct i2c_client *client,
+			     const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	union i2c_smbus_data dummy;
 	struct raydium_data *ts;
@@ -1197,7 +1217,11 @@ static int raydium_i2c_probe(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void raydium_enter_sleep(struct i2c_client *client)
+=======
+static void __maybe_unused raydium_enter_sleep(struct i2c_client *client)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	static const u8 sleep_cmd[] = { 0x5A, 0xff, 0x00, 0x0f };
 	int error;
@@ -1209,7 +1233,11 @@ static void raydium_enter_sleep(struct i2c_client *client)
 			"sleep command failed: %d\n", error);
 }
 
+<<<<<<< HEAD
 static int raydium_i2c_suspend(struct device *dev)
+=======
+static int __maybe_unused raydium_i2c_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct raydium_data *ts = i2c_get_clientdata(client);
@@ -1222,6 +1250,11 @@ static int raydium_i2c_suspend(struct device *dev)
 
 	if (device_may_wakeup(dev)) {
 		raydium_enter_sleep(client);
+<<<<<<< HEAD
+=======
+
+		ts->wake_irq_enabled = (enable_irq_wake(client->irq) == 0);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		raydium_i2c_power_off(ts);
 	}
@@ -1229,12 +1262,21 @@ static int raydium_i2c_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int raydium_i2c_resume(struct device *dev)
+=======
+static int __maybe_unused raydium_i2c_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct raydium_data *ts = i2c_get_clientdata(client);
 
 	if (device_may_wakeup(dev)) {
+<<<<<<< HEAD
+=======
+		if (ts->wake_irq_enabled)
+			disable_irq_wake(client->irq);
+>>>>>>> b7ba80a49124 (Commit)
 		raydium_i2c_sw_reset(client);
 	} else {
 		raydium_i2c_power_on(ts);
@@ -1246,8 +1288,13 @@ static int raydium_i2c_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(raydium_i2c_pm_ops,
 				raydium_i2c_suspend, raydium_i2c_resume);
+=======
+static SIMPLE_DEV_PM_OPS(raydium_i2c_pm_ops,
+			 raydium_i2c_suspend, raydium_i2c_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id raydium_i2c_id[] = {
 	{ "raydium_i2c", 0 },
@@ -1273,11 +1320,19 @@ MODULE_DEVICE_TABLE(of, raydium_of_match);
 #endif
 
 static struct i2c_driver raydium_i2c_driver = {
+<<<<<<< HEAD
 	.probe_new = raydium_i2c_probe,
 	.id_table = raydium_i2c_id,
 	.driver = {
 		.name = "raydium_ts",
 		.pm = pm_sleep_ptr(&raydium_i2c_pm_ops),
+=======
+	.probe = raydium_i2c_probe,
+	.id_table = raydium_i2c_id,
+	.driver = {
+		.name = "raydium_ts",
+		.pm = &raydium_i2c_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.acpi_match_table = ACPI_PTR(raydium_acpi_id),
 		.of_match_table = of_match_ptr(raydium_of_match),
 	},

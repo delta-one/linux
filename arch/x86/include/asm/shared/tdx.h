@@ -7,6 +7,12 @@
 
 #define TDX_HYPERCALL_STANDARD  0
 
+<<<<<<< HEAD
+=======
+#define TDX_HCALL_HAS_OUTPUT	BIT(0)
+#define TDX_HCALL_ISSUE_STI	BIT(1)
+
+>>>>>>> b7ba80a49124 (Commit)
 #define TDX_CPUID_LEAF_ID	0x21
 #define TDX_IDENT		"IntelTDX    "
 
@@ -19,14 +25,18 @@
  * This is a software only structure and not part of the TDX module/VMM ABI.
  */
 struct tdx_hypercall_args {
+<<<<<<< HEAD
 	u64 r8;
 	u64 r9;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 r10;
 	u64 r11;
 	u64 r12;
 	u64 r13;
 	u64 r14;
 	u64 r15;
+<<<<<<< HEAD
 	u64 rdi;
 	u64 rsi;
 	u64 rbx;
@@ -36,6 +46,12 @@ struct tdx_hypercall_args {
 /* Used to request services from the VMM */
 u64 __tdx_hypercall(struct tdx_hypercall_args *args);
 u64 __tdx_hypercall_ret(struct tdx_hypercall_args *args);
+=======
+};
+
+/* Used to request services from the VMM */
+u64 __tdx_hypercall(struct tdx_hypercall_args *args, unsigned long flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Called from __tdx_hypercall() for unrecoverable failure */
 void __tdx_hypercall_failed(void);

@@ -20,8 +20,11 @@
 # undef if
 #endif
 
+<<<<<<< HEAD
 typedef unsigned int __bitwise fmode_t;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define FMODE_READ		0x1
 #define FMODE_WRITE		0x2
 

@@ -29,7 +29,11 @@
 #include "dcn32_dio_stream_encoder.h"
 #include "reg_helper.h"
 #include "hw_shared.h"
+<<<<<<< HEAD
 #include "link.h"
+=======
+#include "inc/link_dpcd.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "dpcd_defs.h"
 
 #define DC_LOGGER \
@@ -211,8 +215,15 @@ static void enc32_stream_encoder_hdmi_set_stream_attribute(
 		HDMI_GC_SEND, 1,
 		HDMI_NULL_SEND, 1);
 
+<<<<<<< HEAD
 	/* Disable Audio Content Protection packet transmission */
 	REG_UPDATE(HDMI_VBI_PACKET_CONTROL, HDMI_ACP_SEND, 0);
+=======
+#if defined(CONFIG_DRM_AMD_DC_HDCP)
+	/* Disable Audio Content Protection packet transmission */
+	REG_UPDATE(HDMI_VBI_PACKET_CONTROL, HDMI_ACP_SEND, 0);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* following belongs to audio */
 	/* Enable Audio InfoFrame packet transmission. */
@@ -241,6 +252,7 @@ static bool is_two_pixels_per_containter(const struct dc_crtc_timing *timing)
 	return two_pix;
 }
 
+<<<<<<< HEAD
 static bool is_h_timing_divisible_by_2(const struct dc_crtc_timing *timing)
 {
 	/* math borrowed from function of same name in inc/resource
@@ -274,6 +286,8 @@ static bool is_dp_dig_pixel_rate_div_policy(struct dc *dc, const struct dc_crtc_
 		dc->debug.enable_dp_dig_pixel_rate_div_policy;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void enc32_stream_encoder_dp_unblank(
         struct dc_link *link,
 		struct stream_encoder *enc,
@@ -286,15 +300,24 @@ static void enc32_stream_encoder_dp_unblank(
 		uint32_t n_vid = 0x8000;
 		uint32_t m_vid;
 		uint32_t n_multiply = 0;
+<<<<<<< HEAD
 		uint32_t pix_per_cycle = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		uint64_t m_vid_l = n_vid;
 
 		/* YCbCr 4:2:0 : Computed VID_M will be 2X the input rate */
 		if (is_two_pixels_per_containter(&param->timing) || param->opp_cnt > 1
+<<<<<<< HEAD
 			|| is_dp_dig_pixel_rate_div_policy(dc, &param->timing)) {
 			/*this logic should be the same in get_pixel_clock_parameters() */
 			n_multiply = 1;
 			pix_per_cycle = 1;
+=======
+			|| dc->debug.enable_dp_dig_pixel_rate_div_policy) {
+			/*this logic should be the same in get_pixel_clock_parameters() */
+			n_multiply = 1;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		/* M / N = Fstream / Flink
 		 * m_vid / n_vid = pixel rate / link rate
@@ -322,10 +345,13 @@ static void enc32_stream_encoder_dp_unblank(
 		REG_UPDATE_2(DP_VID_TIMING,
 				DP_VID_M_N_GEN_EN, 1,
 				DP_VID_N_MUL, n_multiply);
+<<<<<<< HEAD
 
 		REG_UPDATE(DP_PIXEL_FORMAT,
 				DP_PIXEL_PER_CYCLE_PROCESSING_MODE,
 				pix_per_cycle);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* make sure stream is disabled before resetting steer fifo */
@@ -377,7 +403,11 @@ static void enc32_stream_encoder_dp_unblank(
 
 	REG_UPDATE(DP_VID_STREAM_CNTL, DP_VID_STREAM_ENABLE, true);
 
+<<<<<<< HEAD
 	link->dc->link_srv->dp_trace_source_sequence(link, DPCD_SOURCE_SEQ_AFTER_ENABLE_DP_VID_STREAM);
+=======
+	dp_source_sequence_trace(link, DPCD_SOURCE_SEQ_AFTER_ENABLE_DP_VID_STREAM);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Set DSC-related configuration.
@@ -392,7 +422,11 @@ static void enc32_dp_set_dsc_config(struct stream_encoder *enc,
 {
 	struct dcn10_stream_encoder *enc1 = DCN10STRENC_FROM_STRENC(enc);
 
+<<<<<<< HEAD
 	REG_UPDATE(DP_DSC_CNTL,	DP_DSC_MODE, dsc_mode == OPTC_DSC_DISABLED ? 0 : 1);
+=======
+	REG_UPDATE(DP_DSC_CNTL,	DP_DSC_MODE, dsc_mode);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* this function read dsc related register fields to be logged later in dcn10_log_hw_state
@@ -415,6 +449,27 @@ static void enc32_read_state(struct stream_encoder *enc, struct enc_state *s)
 	}
 }
 
+<<<<<<< HEAD
+=======
+static void enc32_stream_encoder_reset_fifo(struct stream_encoder *enc)
+{
+	struct dcn10_stream_encoder *enc1 = DCN10STRENC_FROM_STRENC(enc);
+	uint32_t fifo_enabled;
+
+	REG_GET(DIG_FIFO_CTRL0, DIG_FIFO_ENABLE, &fifo_enabled);
+
+	if (fifo_enabled == 0) {
+		/* reset DIG resync FIFO */
+		REG_UPDATE(DIG_FIFO_CTRL0, DIG_FIFO_RESET, 1);
+		/* TODO: fix timeout when wait for DIG_FIFO_RESET_DONE */
+		//REG_WAIT(DIG_FIFO_CTRL0, DIG_FIFO_RESET_DONE, 1, 1, 100);
+		udelay(1);
+		REG_UPDATE(DIG_FIFO_CTRL0, DIG_FIFO_RESET, 0);
+		REG_WAIT(DIG_FIFO_CTRL0, DIG_FIFO_RESET_DONE, 0, 1, 100);
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void enc32_set_dig_input_mode(struct stream_encoder *enc, unsigned int pix_per_container)
 {
 	struct dcn10_stream_encoder *enc1 = DCN10STRENC_FROM_STRENC(enc);
@@ -425,6 +480,7 @@ static void enc32_set_dig_input_mode(struct stream_encoder *enc, unsigned int pi
 	REG_UPDATE(DIG_FIFO_CTRL0, DIG_FIFO_OUTPUT_PIXEL_MODE, pix_per_container == 2 ? 0x1 : 0x0);
 }
 
+<<<<<<< HEAD
 static void enc32_reset_fifo(struct stream_encoder *enc, bool reset)
 {
 	struct dcn10_stream_encoder *enc1 = DCN10STRENC_FROM_STRENC(enc);
@@ -452,6 +508,8 @@ static void enc32_enable_fifo(struct stream_encoder *enc)
 	REG_UPDATE(DIG_FIFO_CTRL0, DIG_FIFO_ENABLE, 1);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct stream_encoder_funcs dcn32_str_enc_funcs = {
 	.dp_set_odm_combine =
 		enc32_dp_set_odm_combine,
@@ -467,12 +525,20 @@ static const struct stream_encoder_funcs dcn32_str_enc_funcs = {
 		enc3_stream_encoder_update_hdmi_info_packets,
 	.stop_hdmi_info_packets =
 		enc3_stream_encoder_stop_hdmi_info_packets,
+<<<<<<< HEAD
 	.update_dp_info_packets_sdp_line_num =
 		enc3_stream_encoder_update_dp_info_packets_sdp_line_num,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.update_dp_info_packets =
 		enc3_stream_encoder_update_dp_info_packets,
 	.stop_dp_info_packets =
 		enc1_stream_encoder_stop_dp_info_packets,
+<<<<<<< HEAD
+=======
+	.reset_fifo =
+		enc32_stream_encoder_reset_fifo,
+>>>>>>> b7ba80a49124 (Commit)
 	.dp_blank =
 		enc1_stream_encoder_dp_blank,
 	.dp_unblank =
@@ -499,7 +565,10 @@ static const struct stream_encoder_funcs dcn32_str_enc_funcs = {
 	.hdmi_reset_stream_attribute = enc1_reset_hdmi_stream_attribute,
 
 	.set_input_mode = enc32_set_dig_input_mode,
+<<<<<<< HEAD
 	.enable_fifo = enc32_enable_fifo,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void dcn32_dio_stream_encoder_construct(

@@ -16,8 +16,11 @@ struct tid_pageset {
 };
 
 struct tid_user_buf {
+<<<<<<< HEAD
 	struct mmu_interval_notifier notifier;
 	struct mutex cover_mutex;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long vaddr;
 	unsigned long length;
 	unsigned int npages;
@@ -29,7 +32,10 @@ struct tid_user_buf {
 struct tid_rb_node {
 	struct mmu_interval_notifier notifier;
 	struct hfi1_filedata *fdata;
+<<<<<<< HEAD
 	struct mutex invalidate_mutex; /* covers hw removal */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long phys;
 	struct tid_group *grp;
 	u32 rcventry;

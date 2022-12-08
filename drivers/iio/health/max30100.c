@@ -387,6 +387,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
 		 * Temperature reading can only be acquired while engine
 		 * is running
 		 */
+<<<<<<< HEAD
 		if (iio_device_claim_buffer_mode(indio_dev)) {
 			/*
 			 * Replacing -EBUSY or other error code
@@ -396,12 +397,25 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
 			 */
 			ret = -EAGAIN;
 		} else {
+=======
+		mutex_lock(&indio_dev->mlock);
+
+		if (!iio_buffer_enabled(indio_dev))
+			ret = -EAGAIN;
+		else {
+>>>>>>> b7ba80a49124 (Commit)
 			ret = max30100_get_temp(data, val);
 			if (!ret)
 				ret = IIO_VAL_INT;
 
+<<<<<<< HEAD
 			iio_device_release_buffer_mode(indio_dev);
 		}
+=======
+		}
+
+		mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case IIO_CHAN_INFO_SCALE:
 		*val = 1;  /* 0.0625 */
@@ -417,7 +431,12 @@ static const struct iio_info max30100_info = {
 	.read_raw = max30100_read_raw,
 };
 
+<<<<<<< HEAD
 static int max30100_probe(struct i2c_client *client)
+=======
+static int max30100_probe(struct i2c_client *client,
+			  const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct max30100_data *data;
 	struct iio_dev *indio_dev;
@@ -499,7 +518,11 @@ static struct i2c_driver max30100_driver = {
 		.name	= MAX30100_DRV_NAME,
 		.of_match_table	= max30100_dt_ids,
 	},
+<<<<<<< HEAD
 	.probe_new	= max30100_probe,
+=======
+	.probe		= max30100_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= max30100_remove,
 	.id_table	= max30100_id,
 };

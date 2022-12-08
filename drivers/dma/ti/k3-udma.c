@@ -5,7 +5,10 @@
  */
 
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/delay.h>
 #include <linux/dmaengine.h>
 #include <linux/dma-mapping.h>
@@ -135,7 +138,10 @@ struct udma_match_data {
 	u32 flags;
 	u32 statictr_z_mask;
 	u8 burst_size[3];
+<<<<<<< HEAD
 	struct udma_soc_data *soc_data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct udma_soc_data {
@@ -265,7 +271,10 @@ struct udma_chan_config {
 	enum udma_tp_level channel_tpl; /* Channel Throughput Level */
 
 	u32 tr_trigger_type;
+<<<<<<< HEAD
 	unsigned long tx_flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* PKDMA mapped channel */
 	int mapped_channel_id;
@@ -763,12 +772,20 @@ static void udma_decrement_byte_counters(struct udma_chan *uc, u32 val)
 	if (uc->desc->dir == DMA_DEV_TO_MEM) {
 		udma_rchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
 		udma_rchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
+<<<<<<< HEAD
 		if (uc->config.ep_type != PSIL_EP_NATIVE)
 			udma_rchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
 	} else {
 		udma_tchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
 		udma_tchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
 		if (!uc->bchan && uc->config.ep_type != PSIL_EP_NATIVE)
+=======
+		udma_rchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
+	} else {
+		udma_tchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
+		udma_tchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
+		if (!uc->bchan)
+>>>>>>> b7ba80a49124 (Commit)
 			udma_tchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
 	}
 }
@@ -1059,6 +1076,7 @@ static bool udma_is_desc_really_done(struct udma_chan *uc, struct udma_desc *d)
 {
 	u32 peer_bcnt, bcnt;
 
+<<<<<<< HEAD
 	/*
 	 * Only TX towards PDMA is affected.
 	 * If DMA_PREP_INTERRUPT is not set by consumer then skip the transfer
@@ -1067,6 +1085,11 @@ static bool udma_is_desc_really_done(struct udma_chan *uc, struct udma_desc *d)
 	 */
 	if (uc->config.ep_type == PSIL_EP_NATIVE ||
 	    uc->config.dir != DMA_MEM_TO_DEV || !(uc->config.tx_flags & DMA_PREP_INTERRUPT))
+=======
+	/* Only TX towards PDMA is affected */
+	if (uc->config.ep_type == PSIL_EP_NATIVE ||
+	    uc->config.dir != DMA_MEM_TO_DEV)
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 
 	peer_bcnt = udma_tchanrt_read(uc, UDMA_CHAN_RT_PEER_BCNT_REG);
@@ -3427,8 +3450,11 @@ udma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
 	if (!burst)
 		burst = 1;
 
+<<<<<<< HEAD
 	uc->config.tx_flags = tx_flags;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (uc->config.pkt_mode)
 		d = udma_prep_slave_sg_pkt(uc, sgl, sglen, dir, tx_flags,
 					   context);
@@ -4297,6 +4323,7 @@ static struct udma_match_data j721e_mcu_data = {
 	},
 };
 
+<<<<<<< HEAD
 static struct udma_soc_data am62a_dmss_csi_soc_data = {
 	.oes = {
 		.bcdma_rchan_data = 0xe00,
@@ -4316,6 +4343,8 @@ static struct udma_match_data am62a_bcdma_csirx_data = {
 	.soc_data = &am62a_dmss_csi_soc_data,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct udma_match_data am64_bcdma_data = {
 	.type = DMA_TYPE_BCDMA,
 	.psil_base = 0x2000, /* for tchan and rchan, not applicable to bchan */
@@ -4357,18 +4386,35 @@ static const struct of_device_id udma_of_match[] = {
 		.compatible = "ti,j721e-navss-mcu-udmap",
 		.data = &j721e_mcu_data,
 	},
+<<<<<<< HEAD
+=======
+	{ /* Sentinel */ },
+};
+
+static const struct of_device_id bcdma_of_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.compatible = "ti,am64-dmss-bcdma",
 		.data = &am64_bcdma_data,
 	},
+<<<<<<< HEAD
+=======
+	{ /* Sentinel */ },
+};
+
+static const struct of_device_id pktdma_of_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.compatible = "ti,am64-dmss-pktdma",
 		.data = &am64_pktdma_data,
 	},
+<<<<<<< HEAD
 	{
 		.compatible = "ti,am62a-dmss-bcdma-csirx",
 		.data = &am62a_bcdma_csirx_data,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ /* Sentinel */ },
 };
 
@@ -4411,7 +4457,10 @@ static const struct soc_device_attribute k3_soc_devices[] = {
 	{ .family = "AM64X", .data = &am64_soc_data },
 	{ .family = "J721S2", .data = &j721e_soc_data},
 	{ .family = "AM62X", .data = &am64_soc_data },
+<<<<<<< HEAD
 	{ .family = "AM62AX", .data = &am64_soc_data },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ /* sentinel */ }
 };
 
@@ -4800,10 +4849,14 @@ static int bcdma_setup_resources(struct udma_dev *ud)
 				irq_res.desc[i].num = rm_res->desc[i].num;
 			}
 		}
+<<<<<<< HEAD
 	} else {
 		i = 0;
 	}
 
+=======
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (ud->tchan_cnt) {
 		rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
 		if (IS_ERR(rm_res)) {
@@ -5293,6 +5346,7 @@ static int udma_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	match = of_match_node(udma_of_match, dev->of_node);
+<<<<<<< HEAD
 	if (!match) {
 		dev_err(dev, "No compatible match found\n");
 		return -ENODEV;
@@ -5308,6 +5362,25 @@ static int udma_probe(struct platform_device *pdev)
 		}
 		ud->soc_data = soc->data;
 	}
+=======
+	if (!match)
+		match = of_match_node(bcdma_of_match, dev->of_node);
+	if (!match) {
+		match = of_match_node(pktdma_of_match, dev->of_node);
+		if (!match) {
+			dev_err(dev, "No compatible match found\n");
+			return -ENODEV;
+		}
+	}
+	ud->match_data = match->data;
+
+	soc = soc_device_match(k3_soc_devices);
+	if (!soc) {
+		dev_err(dev, "No compatible SoC found\n");
+		return -ENODEV;
+	}
+	ud->soc_data = soc->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = udma_get_mmrs(pdev, ud);
 	if (ret)
@@ -5376,6 +5449,10 @@ static int udma_probe(struct platform_device *pdev)
 	dev->msi.domain = of_msi_get_domain(dev, dev->of_node,
 					    DOMAIN_BUS_TI_SCI_INTA_MSI);
 	if (!dev->msi.domain) {
+<<<<<<< HEAD
+=======
+		dev_err(dev, "Failed to get MSI domain\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EPROBE_DEFER;
 	}
 
@@ -5530,9 +5607,33 @@ static struct platform_driver udma_driver = {
 	},
 	.probe		= udma_probe,
 };
+<<<<<<< HEAD
 
 module_platform_driver(udma_driver);
 MODULE_LICENSE("GPL v2");
+=======
+builtin_platform_driver(udma_driver);
+
+static struct platform_driver bcdma_driver = {
+	.driver = {
+		.name	= "ti-bcdma",
+		.of_match_table = bcdma_of_match,
+		.suppress_bind_attrs = true,
+	},
+	.probe		= udma_probe,
+};
+builtin_platform_driver(bcdma_driver);
+
+static struct platform_driver pktdma_driver = {
+	.driver = {
+		.name	= "ti-pktdma",
+		.of_match_table = pktdma_of_match,
+		.suppress_bind_attrs = true,
+	},
+	.probe		= udma_probe,
+};
+builtin_platform_driver(pktdma_driver);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Private interfaces to UDMA */
 #include "k3-udma-private.c"

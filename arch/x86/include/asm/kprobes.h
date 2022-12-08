@@ -50,6 +50,11 @@ extern const int kretprobe_blacklist_size;
 
 void arch_remove_kprobe(struct kprobe *p);
 
+<<<<<<< HEAD
+=======
+extern void arch_kprobe_override_function(struct pt_regs *regs);
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Architecture specific copy of original instruction*/
 struct arch_specific_insn {
 	/* copy of the original instruction */

@@ -74,10 +74,13 @@
 
 /* Register offsets specific for Gen3 */
 #define VNCSI_IFMD_REG		0x20 /* Video n CSI2 Interface Mode Register */
+<<<<<<< HEAD
 #define VNUDS_CTRL_REG		0x80 /* Video n scaling control register */
 #define VNUDS_SCALE_REG		0x84 /* Video n scaling factor register */
 #define VNUDS_PASS_BWIDTH_REG	0x90 /* Video n passband register */
 #define VNUDS_CLIP_SIZE_REG	0xa4 /* Video n UDS output size clipping reg */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Register bit fields for R-Car VIN */
 /* Video n Main Control Register bits */
@@ -144,9 +147,12 @@
 #define VNCSI_IFMD_DES0		(1 << 25)
 #define VNCSI_IFMD_CSI_CHSEL(n) (((n) & 0xf) << 0)
 
+<<<<<<< HEAD
 /* Video n scaling control register (Gen3) */
 #define VNUDS_CTRL_AMD		(1 << 30)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct rvin_buffer {
 	struct vb2_v4l2_buffer vb;
 	struct list_head list;
@@ -167,6 +173,7 @@ static u32 rvin_read(struct rvin_dev *vin, u32 offset)
 }
 
 /* -----------------------------------------------------------------------------
+<<<<<<< HEAD
  * Crop and Scaling
  */
 
@@ -178,6 +185,11 @@ static bool rvin_scaler_needed(const struct rvin_dev *vin)
 		 vin->compose.height == vin->format.height);
 }
 
+=======
+ * Crop and Scaling Gen2
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 struct vin_coeff {
 	unsigned short xs_value;
 	u32 coeff_set[24];
@@ -550,7 +562,11 @@ static void rvin_set_coeff(struct rvin_dev *vin, unsigned short xs)
 	rvin_write(vin, p_set->coeff_set[23], VNC8C_REG);
 }
 
+<<<<<<< HEAD
 void rvin_scaler_gen2(struct rvin_dev *vin)
+=======
+static void rvin_crop_scale_comp_gen2(struct rvin_dev *vin)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int crop_height;
 	u32 xs, ys;
@@ -598,6 +614,7 @@ void rvin_scaler_gen2(struct rvin_dev *vin)
 		0, 0);
 }
 
+<<<<<<< HEAD
 static unsigned int rvin_uds_scale_ratio(unsigned int in, unsigned int out)
 {
 	unsigned int ratio;
@@ -661,6 +678,8 @@ void rvin_scaler_gen3(struct rvin_dev *vin)
 		vin->compose.left, vin->compose.top);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void rvin_crop_scale_comp(struct rvin_dev *vin)
 {
 	const struct rvin_video_format *fmt;
@@ -672,8 +691,14 @@ void rvin_crop_scale_comp(struct rvin_dev *vin)
 	rvin_write(vin, vin->crop.top, VNSLPRC_REG);
 	rvin_write(vin, vin->crop.top + vin->crop.height - 1, VNELPRC_REG);
 
+<<<<<<< HEAD
 	if (vin->scaler)
 		vin->scaler(vin);
+=======
+	/* TODO: Add support for the UDS scaler. */
+	if (vin->info->model != RCAR_GEN3)
+		rvin_crop_scale_comp_gen2(vin);
+>>>>>>> b7ba80a49124 (Commit)
 
 	fmt = rvin_format_from_pixel(vin, vin->format.pixelformat);
 	stride = vin->format.bytesperline / fmt->bpp;
@@ -1061,12 +1086,20 @@ static int rvin_capture_start(struct rvin_dev *vin)
 	for (slot = 0; slot < HW_BUFFER_NUM; slot++)
 		rvin_fill_hw_slot(vin, slot);
 
+<<<<<<< HEAD
+=======
+	rvin_crop_scale_comp(vin);
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = rvin_setup(vin);
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	rvin_crop_scale_comp(vin);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vin_dbg(vin, "Starting to capture\n");
 
 	/* Continuous Frame Capture Mode */
@@ -1311,6 +1344,7 @@ static int rvin_mc_validate_format(struct rvin_dev *vin, struct v4l2_subdev *sd,
 		return -EPIPE;
 	}
 
+<<<<<<< HEAD
 	if (rvin_scaler_needed(vin)) {
 		if (!vin->scaler)
 			return -EPIPE;
@@ -1321,6 +1355,11 @@ static int rvin_mc_validate_format(struct rvin_dev *vin, struct v4l2_subdev *sd,
 	}
 
 	if (fmt.format.code != vin->mbus_code)
+=======
+	if (fmt.format.width != vin->format.width ||
+	    fmt.format.height != vin->format.height ||
+	    fmt.format.code != vin->mbus_code)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EPIPE;
 
 	return 0;
@@ -1328,6 +1367,11 @@ static int rvin_mc_validate_format(struct rvin_dev *vin, struct v4l2_subdev *sd,
 
 static int rvin_set_stream(struct rvin_dev *vin, int on)
 {
+<<<<<<< HEAD
+=======
+	struct media_pipeline *pipe;
+	struct media_device *mdev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct v4l2_subdev *sd;
 	struct media_pad *pad;
 	int ret;
@@ -1347,7 +1391,11 @@ static int rvin_set_stream(struct rvin_dev *vin, int on)
 	sd = media_entity_to_v4l2_subdev(pad->entity);
 
 	if (!on) {
+<<<<<<< HEAD
 		video_device_pipeline_stop(&vin->vdev);
+=======
+		media_pipeline_stop(&vin->vdev.entity);
+>>>>>>> b7ba80a49124 (Commit)
 		return v4l2_subdev_call(sd, video, s_stream, 0);
 	}
 
@@ -1355,7 +1403,21 @@ static int rvin_set_stream(struct rvin_dev *vin, int on)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = video_device_pipeline_alloc_start(&vin->vdev);
+=======
+	/*
+	 * The graph lock needs to be taken to protect concurrent
+	 * starts of multiple VIN instances as they might share
+	 * a common subdevice down the line and then should use
+	 * the same pipe.
+	 */
+	mdev = vin->vdev.entity.graph_obj.mdev;
+	mutex_lock(&mdev->graph_mutex);
+	pipe = sd->entity.pipe ? sd->entity.pipe : &vin->vdev.pipe;
+	ret = __media_pipeline_start(&vin->vdev.entity, pipe);
+	mutex_unlock(&mdev->graph_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -1363,7 +1425,11 @@ static int rvin_set_stream(struct rvin_dev *vin, int on)
 	if (ret == -ENOIOCTLCMD)
 		ret = 0;
 	if (ret)
+<<<<<<< HEAD
 		video_device_pipeline_stop(&vin->vdev);
+=======
+		media_pipeline_stop(&vin->vdev.entity);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }

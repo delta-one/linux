@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2003 Sistina Software Limited.
  * Copyright (C) 2004-2008 Red Hat, Inc. All rights reserved.
@@ -19,8 +22,12 @@
 
 #define	DM_MSG_PREFIX	"region hash"
 
+<<<<<<< HEAD
 /*
  *------------------------------------------------------------------
+=======
+/*-----------------------------------------------------------------
+>>>>>>> b7ba80a49124 (Commit)
  * Region hash
  *
  * The mirror splits itself up into discrete regions.  Each
@@ -55,21 +62,35 @@
  *   lists in the region_hash, with the 'state', 'list' and
  *   'delayed_bios' fields of the regions.  This is used from irq
  *   context, so all other uses will have to suspend local irqs.
+<<<<<<< HEAD
  *------------------------------------------------------------------
  */
 struct dm_region_hash {
 	uint32_t region_size;
 	unsigned int region_shift;
+=======
+ *---------------------------------------------------------------*/
+struct dm_region_hash {
+	uint32_t region_size;
+	unsigned region_shift;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* holds persistent region state */
 	struct dm_dirty_log *log;
 
 	/* hash table */
 	rwlock_t hash_lock;
+<<<<<<< HEAD
 	unsigned int mask;
 	unsigned int nr_buckets;
 	unsigned int prime;
 	unsigned int shift;
+=======
+	unsigned mask;
+	unsigned nr_buckets;
+	unsigned prime;
+	unsigned shift;
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head *buckets;
 
 	/*
@@ -77,7 +98,11 @@ struct dm_region_hash {
 	 */
 	int flush_failure;
 
+<<<<<<< HEAD
 	unsigned int max_recovery; /* Max # of regions to recover in parallel */
+=======
+	unsigned max_recovery; /* Max # of regions to recover in parallel */
+>>>>>>> b7ba80a49124 (Commit)
 
 	spinlock_t region_lock;
 	atomic_t recovery_in_flight;
@@ -166,12 +191,20 @@ struct dm_region_hash *dm_region_hash_create(
 						     struct bio_list *bios),
 		void (*wakeup_workers)(void *context),
 		void (*wakeup_all_recovery_waiters)(void *context),
+<<<<<<< HEAD
 		sector_t target_begin, unsigned int max_recovery,
+=======
+		sector_t target_begin, unsigned max_recovery,
+>>>>>>> b7ba80a49124 (Commit)
 		struct dm_dirty_log *log, uint32_t region_size,
 		region_t nr_regions)
 {
 	struct dm_region_hash *rh;
+<<<<<<< HEAD
 	unsigned int nr_buckets, max_buckets;
+=======
+	unsigned nr_buckets, max_buckets;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t i;
 	int ret;
 
@@ -239,7 +272,11 @@ EXPORT_SYMBOL_GPL(dm_region_hash_create);
 
 void dm_region_hash_destroy(struct dm_region_hash *rh)
 {
+<<<<<<< HEAD
 	unsigned int h;
+=======
+	unsigned h;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_region *reg, *nreg;
 
 	BUG_ON(!list_empty(&rh->quiesced_regions));
@@ -266,9 +303,15 @@ struct dm_dirty_log *dm_rh_dirty_log(struct dm_region_hash *rh)
 }
 EXPORT_SYMBOL_GPL(dm_rh_dirty_log);
 
+<<<<<<< HEAD
 static unsigned int rh_hash(struct dm_region_hash *rh, region_t region)
 {
 	return (unsigned int) ((region * rh->prime) >> rh->shift) & rh->mask;
+=======
+static unsigned rh_hash(struct dm_region_hash *rh, region_t region)
+{
+	return (unsigned) ((region * rh->prime) >> rh->shift) & rh->mask;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct dm_region *__rh_lookup(struct dm_region_hash *rh, region_t region)

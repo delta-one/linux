@@ -28,7 +28,11 @@ macro_rules! define_panicking_intrinsics(
     ($reason: tt, { $($ident: ident, )* }) => {
         $(
             #[doc(hidden)]
+<<<<<<< HEAD
             #[export_name = concat!("__rust", stringify!($ident))]
+=======
+            #[no_mangle]
+>>>>>>> b7ba80a49124 (Commit)
             pub extern "C" fn $ident() {
                 panic!($reason);
             }
@@ -61,6 +65,9 @@ define_panicking_intrinsics!("`u128` should not be used", {
     __udivti3,
     __umodti3,
 });
+<<<<<<< HEAD
 
 // NOTE: if you are adding a new intrinsic here, you should also add it to
 // `redirect-intrinsics` in `rust/Makefile`.
+=======
+>>>>>>> b7ba80a49124 (Commit)

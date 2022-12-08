@@ -145,7 +145,11 @@ static const struct reg_default cs42l83_reg_defaults[] = {
  * This is all the same as for CS42L42 but we
  * replace the on-reset register defaults.
  */
+<<<<<<< HEAD
 static const struct regmap_config cs42l83_regmap = {
+=======
+const struct regmap_config cs42l83_regmap = {
+>>>>>>> b7ba80a49124 (Commit)
 	.reg_bits = 8,
 	.val_bits = 8,
 

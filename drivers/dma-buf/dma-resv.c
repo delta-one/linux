@@ -98,6 +98,7 @@ static void dma_resv_list_set(struct dma_resv_list *list,
 static struct dma_resv_list *dma_resv_list_alloc(unsigned int max_fences)
 {
 	struct dma_resv_list *list;
+<<<<<<< HEAD
 	size_t size;
 
 	/* Round up to the next kmalloc bucket size. */
@@ -109,6 +110,14 @@ static struct dma_resv_list *dma_resv_list_alloc(unsigned int max_fences)
 
 	/* Given the resulting bucket size, recalculated max_fences. */
 	list->max_fences = (size - offsetof(typeof(*list), table)) /
+=======
+
+	list = kmalloc(struct_size(list, table, max_fences), GFP_KERNEL);
+	if (!list)
+		return NULL;
+
+	list->max_fences = (ksize(list) - offsetof(typeof(*list), table)) /
+>>>>>>> b7ba80a49124 (Commit)
 		sizeof(*list->table);
 
 	return list;

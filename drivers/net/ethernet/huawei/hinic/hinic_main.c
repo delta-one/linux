@@ -960,6 +960,11 @@ static void hinic_refresh_nic_cfg(struct hinic_dev *nic_dev)
  * @in_size: input size
  * @buf_out: output buffer
  * @out_size: returned output size
+<<<<<<< HEAD
+=======
+ *
+ * Return 0 - Success, negative - Failure
+>>>>>>> b7ba80a49124 (Commit)
  **/
 static void link_status_event_handler(void *handle, void *buf_in, u16 in_size,
 				      void *buf_out, u16 *out_size)
@@ -1092,6 +1097,7 @@ static int set_features(struct hinic_dev *nic_dev,
 		}
 	}
 
+<<<<<<< HEAD
 	if (changed & NETIF_F_HW_VLAN_CTAG_FILTER) {
 		ret = hinic_set_vlan_fliter(nic_dev,
 					    !!(features &
@@ -1102,6 +1108,8 @@ static int set_features(struct hinic_dev *nic_dev,
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		nic_dev->netdev->features = features ^ failed_features;
 		return -EIO;
@@ -1197,8 +1205,12 @@ static int nic_dev_init(struct pci_dev *pdev)
 	else
 		netdev->netdev_ops = &hinicvf_netdev_ops;
 
+<<<<<<< HEAD
 	netdev->max_mtu = HINIC_MAX_MTU_SIZE;
 	netdev->min_mtu = HINIC_MIN_MTU_SIZE;
+=======
+	netdev->max_mtu = ETH_MAX_MTU;
+>>>>>>> b7ba80a49124 (Commit)
 
 	nic_dev = netdev_priv(netdev);
 	nic_dev->netdev = netdev;
@@ -1391,6 +1403,11 @@ err_pci_regions:
 	return err;
 }
 
+<<<<<<< HEAD
+=======
+#define HINIC_WAIT_SRIOV_CFG_TIMEOUT	15000
+
+>>>>>>> b7ba80a49124 (Commit)
 static void wait_sriov_cfg_complete(struct hinic_dev *nic_dev)
 {
 	struct hinic_sriov_info *sriov_info = &nic_dev->sriov_info;
@@ -1485,6 +1502,7 @@ static struct pci_driver hinic_driver = {
 
 static int __init hinic_module_init(void)
 {
+<<<<<<< HEAD
 	int ret;
 
 	hinic_dbg_register_debugfs(HINIC_DRV_NAME);
@@ -1494,6 +1512,10 @@ static int __init hinic_module_init(void)
 		hinic_dbg_unregister_debugfs();
 
 	return ret;
+=======
+	hinic_dbg_register_debugfs(HINIC_DRV_NAME);
+	return pci_register_driver(&hinic_driver);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __exit hinic_module_exit(void)

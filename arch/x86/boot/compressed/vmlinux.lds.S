@@ -34,7 +34,10 @@ SECTIONS
 		_text = .; 	/* Text */
 		*(.text)
 		*(.text.*)
+<<<<<<< HEAD
 		*(.noinstr.text)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		_etext = . ;
 	}
 	.rodata : {

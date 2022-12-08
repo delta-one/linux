@@ -348,8 +348,11 @@ struct ib_cm_id *ib_cm_insert_listen(struct ib_device *device,
 
 struct ib_cm_req_param {
 	struct sa_path_rec	*primary_path;
+<<<<<<< HEAD
 	struct sa_path_rec	*primary_path_inbound;
 	struct sa_path_rec	*primary_path_outbound;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct sa_path_rec	*alternate_path;
 	const struct ib_gid_attr *ppath_sgid_attr;
 	__be64			service_id;

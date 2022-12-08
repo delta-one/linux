@@ -10,8 +10,11 @@
 
 #include <linux/kernel.h>
 #include <linux/init.h>
+<<<<<<< HEAD
 #include <linux/slab.h>
 #include <linux/sys_soc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/mipsregs.h>
 #include <asm/mach-ralink/ralink_regs.h>
@@ -19,8 +22,11 @@
 
 #include "common.h"
 
+<<<<<<< HEAD
 static struct ralink_soc_info *soc_info_ptr;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void __init ralink_clk_init(void)
 {
 	unsigned long cpu_rate, wmac_rate = 40000000;
@@ -61,6 +67,7 @@ void __init ralink_of_remap(void)
 		panic("Failed to remap core resources");
 }
 
+<<<<<<< HEAD
 static unsigned int __init rt2880_get_soc_name0(void)
 {
 	return __raw_readl(RT2880_SYSC_BASE + SYSC_REG_CHIP_NAME0);
@@ -140,11 +147,40 @@ void __init prom_soc_init(struct ralink_soc_info *soc_info)
 		rt2880_get_soc_name(),
 		rt2880_get_soc_ver(),
 		rt2880_get_soc_rev());
+=======
+void __init prom_soc_init(struct ralink_soc_info *soc_info)
+{
+	void __iomem *sysc = (void __iomem *) KSEG1ADDR(RT2880_SYSC_BASE);
+	const char *name;
+	u32 n0;
+	u32 n1;
+	u32 id;
+
+	n0 = __raw_readl(sysc + SYSC_REG_CHIP_NAME0);
+	n1 = __raw_readl(sysc + SYSC_REG_CHIP_NAME1);
+	id = __raw_readl(sysc + SYSC_REG_CHIP_ID);
+
+	if (n0 == RT2880_CHIP_NAME0 && n1 == RT2880_CHIP_NAME1) {
+		soc_info->compatible = "ralink,r2880-soc";
+		name = "RT2880";
+	} else {
+		panic("rt288x: unknown SoC, n0:%08x n1:%08x", n0, n1);
+	}
+
+	snprintf(soc_info->sys_type, RAMIPS_SYS_TYPE_LEN,
+		"Ralink %s id:%u rev:%u",
+		name,
+		(id >> CHIP_ID_ID_SHIFT) & CHIP_ID_ID_MASK,
+		(id & CHIP_ID_REV_MASK));
+>>>>>>> b7ba80a49124 (Commit)
 
 	soc_info->mem_base = RT2880_SDRAM_BASE;
 	soc_info->mem_size_min = RT2880_MEM_SIZE_MIN;
 	soc_info->mem_size_max = RT2880_MEM_SIZE_MAX;
 
 	ralink_soc = RT2880_SOC;
+<<<<<<< HEAD
 	soc_info_ptr = soc_info;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

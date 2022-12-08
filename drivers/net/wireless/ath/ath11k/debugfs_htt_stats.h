@@ -630,7 +630,11 @@ struct htt_tx_hwq_tried_mpdu_cnt_hist_tlv_v {
  * completing the burst, we identify the txop used in the burst and
  * incr the corresponding bin.
  * Each bin represents 1ms & we have 10 bins in this histogram.
+<<<<<<< HEAD
  * they are defined in FW using the following macros
+=======
+ * they are deined in FW using the following macros
+>>>>>>> b7ba80a49124 (Commit)
  * #define WAL_MAX_TXOP_USED_CNT_HISTOGRAM 10
  * #define WAL_TXOP_USED_HISTOGRAM_INTERVAL 1000 ( 1 ms )
  */
@@ -1897,7 +1901,11 @@ struct htt_phy_counters_tlv {
 	u32 phytx_abort_cnt;
 	/* number of times rx abort initiated by phy */
 	u32 phyrx_abort_cnt;
+<<<<<<< HEAD
 	/* number of rx deferred count initiated by phy */
+=======
+	/* number of rx defered count initiated by phy */
+>>>>>>> b7ba80a49124 (Commit)
 	u32 phyrx_defer_abort_cnt;
 	/* number of sizing events generated at LSTF */
 	u32 rx_gain_adj_lstf_event_cnt;

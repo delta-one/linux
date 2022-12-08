@@ -1309,7 +1309,10 @@ static struct platform_driver wm8350_regulator_driver = {
 	.remove = wm8350_regulator_remove,
 	.driver		= {
 		.name	= "wm8350-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

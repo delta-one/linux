@@ -15,7 +15,10 @@
  * @WWAN_PORT_QMI: Qcom modem/MSM interface for modem control
  * @WWAN_PORT_QCDM: Qcom Modem diagnostic interface
  * @WWAN_PORT_FIREHOSE: XML based command protocol
+<<<<<<< HEAD
  * @WWAN_PORT_XMMRPC: Control protocol for Intel XMM modems
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @WWAN_PORT_MAX: Highest supported port types
  * @WWAN_PORT_UNKNOWN: Special value to indicate an unknown port type
@@ -27,7 +30,10 @@ enum wwan_port_type {
 	WWAN_PORT_QMI,
 	WWAN_PORT_QCDM,
 	WWAN_PORT_FIREHOSE,
+<<<<<<< HEAD
 	WWAN_PORT_XMMRPC,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Add new port types above this line */
 
@@ -64,6 +70,7 @@ struct wwan_port_ops {
 			    poll_table *wait);
 };
 
+<<<<<<< HEAD
 /** struct wwan_port_caps - The WWAN port capbilities
  * @frag_len: WWAN port TX fragments length
  * @headroom_len: WWAN port TX fragments reserved headroom length
@@ -73,12 +80,17 @@ struct wwan_port_caps {
 	unsigned int headroom_len;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * wwan_create_port - Add a new WWAN port
  * @parent: Device to use as parent and shared by all WWAN ports
  * @type: WWAN port type
  * @ops: WWAN port operations
+<<<<<<< HEAD
  * @caps: WWAN port capabilities
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @drvdata: Pointer to caller driver data
  *
  * Allocate and register a new WWAN port. The port will be automatically exposed
@@ -96,7 +108,10 @@ struct wwan_port_caps {
 struct wwan_port *wwan_create_port(struct device *parent,
 				   enum wwan_port_type type,
 				   const struct wwan_port_ops *ops,
+<<<<<<< HEAD
 				   struct wwan_port_caps *caps,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				   void *drvdata);
 
 /**

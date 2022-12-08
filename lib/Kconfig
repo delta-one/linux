@@ -24,7 +24,10 @@ config LINEAR_RANGES
 
 config PACKING
 	bool "Generic bitfield packing and unpacking"
+<<<<<<< HEAD
 	select BITREVERSE
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default n
 	help
 	  This option provides the packing() helper function, which permits
@@ -341,6 +344,7 @@ config LZ4HC_COMPRESS
 config LZ4_DECOMPRESS
 	tristate
 
+<<<<<<< HEAD
 config ZSTD_COMMON
 	select XXHASH
 	tristate
@@ -351,6 +355,14 @@ config ZSTD_COMPRESS
 
 config ZSTD_DECOMPRESS
 	select ZSTD_COMMON
+=======
+config ZSTD_COMPRESS
+	select XXHASH
+	tristate
+
+config ZSTD_DECOMPRESS
+	select XXHASH
+>>>>>>> b7ba80a49124 (Commit)
 	tristate
 
 source "lib/xz/Kconfig"
@@ -480,10 +492,13 @@ config INTERVAL_TREE
 
 	  for more information.
 
+<<<<<<< HEAD
 config INTERVAL_TREE_SPAN_ITER
 	bool
 	depends on INTERVAL_TREE
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config XARRAY_MULTI
 	bool
 	help
@@ -534,8 +549,13 @@ config CPUMASK_OFFSTACK
 	  stack overflow.
 
 config FORCE_NR_CPUS
+<<<<<<< HEAD
        bool "Set number of CPUs at compile time"
        depends on SMP && EXPERT && !COMPILE_TEST
+=======
+       bool "NR_CPUS is set to an actual number of CPUs"
+       depends on SMP
+>>>>>>> b7ba80a49124 (Commit)
        help
          Say Yes if you have NR_CPUS set to an actual number of possible
          CPUs in your system, not to a default value. This forces the core
@@ -677,9 +697,12 @@ config ARCH_HAS_PMEM_API
 config MEMREGION
 	bool
 
+<<<<<<< HEAD
 config ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
 	bool
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config ARCH_HAS_MEMREMAP_COMPAT_ALIGN
 	bool
 

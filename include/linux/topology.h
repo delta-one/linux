@@ -245,6 +245,7 @@ static inline const struct cpumask *cpu_cpu_mask(int cpu)
 	return cpumask_of_node(cpu_to_node(cpu));
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_NUMA
 int sched_numa_find_nth_cpu(const struct cpumask *cpus, int cpu, int node);
 extern const struct cpumask *sched_numa_hop_mask(unsigned int node, unsigned int hops);
@@ -278,5 +279,7 @@ sched_numa_hop_mask(unsigned int node, unsigned int hops)
 		     cpu_online_mask,					       \
 	     !IS_ERR_OR_NULL(mask);					       \
 	     __hops++)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _LINUX_TOPOLOGY_H */

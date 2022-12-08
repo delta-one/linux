@@ -2,9 +2,12 @@
 
 /* Stage 6 definitions for creating trace events */
 
+<<<<<<< HEAD
 /* Reuse some of the stage 3 macros */
 #include "stage3_trace_output.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #undef __entry
 #define __entry entry
 
@@ -60,6 +63,7 @@
 #define __assign_bitmask(dst, src, nr_bits)					\
 	memcpy(__get_bitmask(dst), (src), __bitmask_size_in_bytes(nr_bits))
 
+<<<<<<< HEAD
 #undef __cpumask
 #define __cpumask(item) __dynamic_array(unsigned long, item, -1)
 
@@ -70,6 +74,8 @@
 #define __assign_cpumask(dst, src)					\
 	memcpy(__get_cpumask(dst), (src), __bitmask_size_in_bytes(nr_cpumask_bits))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #undef __sockaddr
 #define __sockaddr(field, len) __dynamic_array(u8, field, len)
 
@@ -111,6 +117,7 @@
 #define __assign_rel_bitmask(dst, src, nr_bits)					\
 	memcpy(__get_rel_bitmask(dst), (src), __bitmask_size_in_bytes(nr_bits))
 
+<<<<<<< HEAD
 #undef __rel_cpumask
 #define __rel_cpumask(item) __rel_dynamic_array(unsigned long, item, -1)
 
@@ -121,6 +128,8 @@
 #define __assign_rel_cpumask(dst, src)					\
 	memcpy(__get_rel_cpumask(dst), (src), __bitmask_size_in_bytes(nr_cpumask_bits))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #undef __rel_sockaddr
 #define __rel_sockaddr(field, len) __rel_dynamic_array(u8, field, len)
 

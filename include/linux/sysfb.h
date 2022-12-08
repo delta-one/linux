@@ -70,6 +70,7 @@ static inline void sysfb_disable(void)
 #ifdef CONFIG_EFI
 
 extern struct efifb_dmi_info efifb_dmi_list[];
+<<<<<<< HEAD
 void sysfb_apply_efi_quirks(void);
 void sysfb_set_efifb_fwnode(struct platform_device *pd);
 
@@ -80,6 +81,13 @@ static inline void sysfb_apply_efi_quirks(void)
 }
 
 static inline void sysfb_set_efifb_fwnode(struct platform_device *pd)
+=======
+void sysfb_apply_efi_quirks(struct platform_device *pd);
+
+#else /* CONFIG_EFI */
+
+static inline void sysfb_apply_efi_quirks(struct platform_device *pd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 

@@ -34,11 +34,14 @@ __be16 dport = 0;
 int test_exist_lookup = -ENOENT;
 u32 test_exist_lookup_mark = 0;
 
+<<<<<<< HEAD
 enum nf_nat_manip_type___local {
 	NF_NAT_MANIP_SRC___local,
 	NF_NAT_MANIP_DST___local
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct nf_conn;
 
 struct bpf_ct_opts___local {
@@ -63,7 +66,11 @@ int bpf_ct_change_timeout(struct nf_conn *, u32) __ksym;
 int bpf_ct_set_status(struct nf_conn *, u32) __ksym;
 int bpf_ct_change_status(struct nf_conn *, u32) __ksym;
 int bpf_ct_set_nat_info(struct nf_conn *, union nf_inet_addr *,
+<<<<<<< HEAD
 			int port, enum nf_nat_manip_type___local) __ksym;
+=======
+			int port, enum nf_nat_manip_type) __ksym;
+>>>>>>> b7ba80a49124 (Commit)
 
 static __always_inline void
 nf_ct_test(struct nf_conn *(*lookup_fn)(void *, struct bpf_sock_tuple *, u32,
@@ -75,6 +82,10 @@ nf_ct_test(struct nf_conn *(*lookup_fn)(void *, struct bpf_sock_tuple *, u32,
 	struct bpf_ct_opts___local opts_def = { .l4proto = IPPROTO_TCP, .netns_id = -1 };
 	struct bpf_sock_tuple bpf_tuple;
 	struct nf_conn *ct;
+<<<<<<< HEAD
+=======
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	__builtin_memset(&bpf_tuple, 0, sizeof(bpf_tuple.ipv4));
 
@@ -161,10 +172,17 @@ nf_ct_test(struct nf_conn *(*lookup_fn)(void *, struct bpf_sock_tuple *, u32,
 
 		/* snat */
 		saddr.ip = bpf_get_prandom_u32();
+<<<<<<< HEAD
 		bpf_ct_set_nat_info(ct, &saddr, sport, NF_NAT_MANIP_SRC___local);
 		/* dnat */
 		daddr.ip = bpf_get_prandom_u32();
 		bpf_ct_set_nat_info(ct, &daddr, dport, NF_NAT_MANIP_DST___local);
+=======
+		bpf_ct_set_nat_info(ct, &saddr, sport, NF_NAT_MANIP_SRC);
+		/* dnat */
+		daddr.ip = bpf_get_prandom_u32();
+		bpf_ct_set_nat_info(ct, &daddr, dport, NF_NAT_MANIP_DST);
+>>>>>>> b7ba80a49124 (Commit)
 
 		ct_ins = bpf_ct_insert_entry(ct);
 		if (ct_ins) {

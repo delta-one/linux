@@ -99,6 +99,10 @@
 
 		regulators {
 			buck1: BUCK1 {
+<<<<<<< HEAD
+=======
+				regulator-compatible = "BUCK1";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <600000>;
 				regulator-max-microvolt = <2187500>;
 				regulator-boot-on;
@@ -107,6 +111,10 @@
 			};
 
 			buck2: BUCK2 {
+<<<<<<< HEAD
+=======
+				regulator-compatible = "BUCK2";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <600000>;
 				regulator-max-microvolt = <2187500>;
 				regulator-boot-on;
@@ -117,6 +125,10 @@
 			};
 
 			buck4: BUCK4 {
+<<<<<<< HEAD
+=======
+				regulator-compatible = "BUCK4";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <600000>;
 				regulator-max-microvolt = <3400000>;
 				regulator-boot-on;
@@ -124,6 +136,10 @@
 			};
 
 			buck5: BUCK5 {
+<<<<<<< HEAD
+=======
+				regulator-compatible = "BUCK5";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <600000>;
 				regulator-max-microvolt = <3400000>;
 				regulator-boot-on;
@@ -131,6 +147,10 @@
 			};
 
 			buck6: BUCK6 {
+<<<<<<< HEAD
+=======
+				regulator-compatible = "BUCK6";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <600000>;
 				regulator-max-microvolt = <3400000>;
 				regulator-boot-on;
@@ -138,6 +158,10 @@
 			};
 
 			ldo1: LDO1 {
+<<<<<<< HEAD
+=======
+				regulator-compatible = "LDO1";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <1600000>;
 				regulator-max-microvolt = <3300000>;
 				regulator-boot-on;
@@ -145,6 +169,10 @@
 			};
 
 			ldo2: LDO2 {
+<<<<<<< HEAD
+=======
+				regulator-compatible = "LDO2";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <800000>;
 				regulator-max-microvolt = <1150000>;
 				regulator-boot-on;
@@ -152,6 +180,10 @@
 			};
 
 			ldo3: LDO3 {
+<<<<<<< HEAD
+=======
+				regulator-compatible = "LDO3";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <800000>;
 				regulator-max-microvolt = <3300000>;
 				regulator-boot-on;
@@ -159,11 +191,19 @@
 			};
 
 			ldo4: LDO4 {
+<<<<<<< HEAD
+=======
+				regulator-compatible = "LDO4";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <800000>;
 				regulator-max-microvolt = <3300000>;
 			};
 
 			ldo5: LDO5 {
+<<<<<<< HEAD
+=======
+				regulator-compatible = "LDO5";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <3300000>;
 				regulator-boot-on;

@@ -9,7 +9,10 @@
  * Authors: Alexander Graf <agraf@suse.de>
  */
 
+<<<<<<< HEAD
 #include <linux/linkage.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/ppc_asm.h>
 #include <asm/kvm_asm.h>
 #include <asm/reg.h>
@@ -108,7 +111,11 @@ END_FTR_SECTION_IFCLR(CPU_FTR_ARCH_207S)
 /*
  * void kvmhv_save_host_pmu(void)
  */
+<<<<<<< HEAD
 SYM_FUNC_START_LOCAL(kvmhv_save_host_pmu)
+=======
+kvmhv_save_host_pmu:
+>>>>>>> b7ba80a49124 (Commit)
 BEGIN_FTR_SECTION
 	/* Work around P8 PMAE bug */
 	li	r3, -1
@@ -155,4 +162,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
 	stw	r8, HSTATE_PMC5(r13)
 	stw	r9, HSTATE_PMC6(r13)
 31:	blr
+<<<<<<< HEAD
 SYM_FUNC_END(kvmhv_save_host_pmu)
+=======
+>>>>>>> b7ba80a49124 (Commit)

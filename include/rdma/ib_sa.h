@@ -186,7 +186,10 @@ struct sa_path_rec {
 		struct sa_path_rec_opa opa;
 	};
 	enum sa_path_rec_type rec_type;
+<<<<<<< HEAD
 	u32 flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline enum ib_gid_type
@@ -414,7 +417,11 @@ int ib_sa_path_rec_get(struct ib_sa_client *client, struct ib_device *device,
 		       ib_sa_comp_mask comp_mask, unsigned long timeout_ms,
 		       gfp_t gfp_mask,
 		       void (*callback)(int status, struct sa_path_rec *resp,
+<<<<<<< HEAD
 					unsigned int num_prs, void *context),
+=======
+					void *context),
+>>>>>>> b7ba80a49124 (Commit)
 		       void *context, struct ib_sa_query **query);
 
 struct ib_sa_multicast {

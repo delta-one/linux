@@ -271,6 +271,7 @@ static bool access_error(bool is_write, bool is_exec, struct vm_area_struct *vma
 	}
 
 	/*
+<<<<<<< HEAD
 	 * VM_READ, VM_WRITE and VM_EXEC all imply read permissions, as
 	 * defined in protection_map[].  Read faults can only be caused by
 	 * a PROT_NONE mapping, or with a PROT_EXEC-only mapping on Radix.
@@ -281,6 +282,13 @@ static bool access_error(bool is_write, bool is_exec, struct vm_area_struct *vma
 	if (unlikely(radix_enabled() && ((vma->vm_flags & VM_ACCESS_FLAGS) == VM_EXEC)))
 		return true;
 
+=======
+	 * Check for a read fault.  This could be caused by a read on an
+	 * inaccessible page (i.e. PROT_NONE), or a Radix MMU execute-only page.
+	 */
+	if (unlikely(!(vma->vm_flags & VM_READ)))
+		return true;
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * We should ideally do the vma pkey access check here. But in the
 	 * fault path, handle_mm_fault() also does the same check. To avoid
@@ -376,6 +384,7 @@ static void sanity_check_fault(bool is_write, bool is_user,
 #elif defined(CONFIG_PPC_8xx)
 #define page_fault_is_bad(__err)	((__err) & DSISR_NOEXEC_OR_G)
 #elif defined(CONFIG_PPC64)
+<<<<<<< HEAD
 static int page_fault_is_bad(unsigned long err)
 {
 	unsigned long flag = DSISR_BAD_FAULT_64S;
@@ -392,6 +401,9 @@ static int page_fault_is_bad(unsigned long err)
 
 	return err & flag;
 }
+=======
+#define page_fault_is_bad(__err)	((__err) & DSISR_BAD_FAULT_64S)
+>>>>>>> b7ba80a49124 (Commit)
 #else
 #define page_fault_is_bad(__err)	((__err) & DSISR_BAD_FAULT_32S)
 #endif
@@ -474,6 +486,7 @@ static int ___do_page_fault(struct pt_regs *regs, unsigned long address,
 	if (is_exec)
 		flags |= FAULT_FLAG_INSTRUCTION;
 
+<<<<<<< HEAD
 #ifdef CONFIG_PER_VMA_LOCK
 	if (!(flags & FAULT_FLAG_USER))
 		goto lock_mmap;
@@ -508,6 +521,8 @@ static int ___do_page_fault(struct pt_regs *regs, unsigned long address,
 lock_mmap:
 #endif /* CONFIG_PER_VMA_LOCK */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* When running in the kernel we expect faults to occur only to
 	 * addresses in user space.  All other faults represent errors in the
 	 * kernel and should generate an OOPS.  Unfortunately, in the case of an
@@ -584,9 +599,12 @@ retry:
 
 	mmap_read_unlock(current->mm);
 
+<<<<<<< HEAD
 #ifdef CONFIG_PER_VMA_LOCK
 done:
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(fault & VM_FAULT_ERROR))
 		return mm_fault_error(regs, address, fault);
 

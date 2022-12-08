@@ -24,7 +24,11 @@
 #include <asm/time.h>
 #include <asm/traps.h>
 #include <asm/sibyte/sb1250.h>
+<<<<<<< HEAD
 #ifdef CONFIG_SIBYTE_BCM1x80
+=======
+#if defined(CONFIG_SIBYTE_BCM1x55) || defined(CONFIG_SIBYTE_BCM1x80)
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/sibyte/bcm1480_regs.h>
 #elif defined(CONFIG_SIBYTE_SB1250) || defined(CONFIG_SIBYTE_BCM112X)
 #include <asm/sibyte/sb1250_regs.h>
@@ -34,7 +38,11 @@
 #include <asm/sibyte/sb1250_genbus.h>
 #include <asm/sibyte/board.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_SIBYTE_BCM1x80
+=======
+#if defined(CONFIG_SIBYTE_BCM1x55) || defined(CONFIG_SIBYTE_BCM1x80)
+>>>>>>> b7ba80a49124 (Commit)
 extern void bcm1480_setup(void);
 #elif defined(CONFIG_SIBYTE_SB1250) || defined(CONFIG_SIBYTE_BCM112X)
 extern void sb1250_setup(void);
@@ -114,7 +122,11 @@ int update_persistent_clock64(struct timespec64 now)
 
 void __init plat_mem_setup(void)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_SIBYTE_BCM1x80
+=======
+#if defined(CONFIG_SIBYTE_BCM1x55) || defined(CONFIG_SIBYTE_BCM1x80)
+>>>>>>> b7ba80a49124 (Commit)
 	bcm1480_setup();
 #elif defined(CONFIG_SIBYTE_SB1250) || defined(CONFIG_SIBYTE_BCM112X)
 	sb1250_setup();
@@ -146,6 +158,15 @@ void __init plat_mem_setup(void)
 
 #ifdef LEDS_PHYS
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_SIBYTE_CARMEL
+/* XXXKW need to detect Monterey/LittleSur/etc */
+#undef LEDS_PHYS
+#define LEDS_PHYS MLEDS_PHYS
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 void setleds(char *str)
 {
 	void *reg;

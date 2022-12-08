@@ -41,6 +41,17 @@
 
 int sysctl_tipc_named_timeout __read_mostly = 2000;
 
+<<<<<<< HEAD
+=======
+struct distr_queue_item {
+	struct distr_item i;
+	u32 dtype;
+	u32 node;
+	unsigned long expires;
+	struct list_head next;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * publ_to_item - add publication info to a publication message
  * @p: publication info

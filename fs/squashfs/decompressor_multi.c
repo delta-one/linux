@@ -29,11 +29,19 @@
 #define MAX_DECOMPRESSOR	(num_online_cpus() * 2)
 
 
+<<<<<<< HEAD
 static int squashfs_max_decompressors(void)
+=======
+int squashfs_max_decompressors(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return MAX_DECOMPRESSOR;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 struct squashfs_stream {
 	void			*comp_opts;
 	struct list_head	strm_list;
@@ -58,7 +66,11 @@ static void put_decomp_stream(struct decomp_stream *decomp_strm,
 	wake_up(&stream->wait);
 }
 
+<<<<<<< HEAD
 static void *squashfs_decompressor_create(struct squashfs_sb_info *msblk,
+=======
+void *squashfs_decompressor_create(struct squashfs_sb_info *msblk,
+>>>>>>> b7ba80a49124 (Commit)
 				void *comp_opts)
 {
 	struct squashfs_stream *stream;
@@ -102,7 +114,11 @@ out:
 }
 
 
+<<<<<<< HEAD
 static void squashfs_decompressor_destroy(struct squashfs_sb_info *msblk)
+=======
+void squashfs_decompressor_destroy(struct squashfs_sb_info *msblk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct squashfs_stream *stream = msblk->stream;
 	if (stream) {
@@ -144,7 +160,11 @@ static struct decomp_stream *get_decomp_stream(struct squashfs_sb_info *msblk,
 		 * If there is no available decomp and already full,
 		 * let's wait for releasing decomp from other users.
 		 */
+<<<<<<< HEAD
 		if (stream->avail_decomp >= msblk->max_thread_num)
+=======
+		if (stream->avail_decomp >= MAX_DECOMPRESSOR)
+>>>>>>> b7ba80a49124 (Commit)
 			goto wait;
 
 		/* Let's allocate new decomp */
@@ -160,7 +180,11 @@ static struct decomp_stream *get_decomp_stream(struct squashfs_sb_info *msblk,
 		}
 
 		stream->avail_decomp++;
+<<<<<<< HEAD
 		WARN_ON(stream->avail_decomp > msblk->max_thread_num);
+=======
+		WARN_ON(stream->avail_decomp > MAX_DECOMPRESSOR);
+>>>>>>> b7ba80a49124 (Commit)
 
 		mutex_unlock(&stream->mutex);
 		break;
@@ -179,7 +203,11 @@ wait:
 }
 
 
+<<<<<<< HEAD
 static int squashfs_decompress(struct squashfs_sb_info *msblk, struct bio *bio,
+=======
+int squashfs_decompress(struct squashfs_sb_info *msblk, struct bio *bio,
+>>>>>>> b7ba80a49124 (Commit)
 			int offset, int length,
 			struct squashfs_page_actor *output)
 {
@@ -194,6 +222,7 @@ static int squashfs_decompress(struct squashfs_sb_info *msblk, struct bio *bio,
 			msblk->decompressor->name);
 	return res;
 }
+<<<<<<< HEAD
 
 const struct squashfs_decompressor_thread_ops squashfs_decompressor_multi = {
 	.create = squashfs_decompressor_create,
@@ -201,3 +230,5 @@ const struct squashfs_decompressor_thread_ops squashfs_decompressor_multi = {
 	.decompress = squashfs_decompress,
 	.max_decompressors = squashfs_max_decompressors,
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

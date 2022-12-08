@@ -31,9 +31,15 @@ properties:
     items:
       enum:
         # Board Connectors
+<<<<<<< HEAD
         - Headphones
         - Speakers
         - Mic Jack
+=======
+        - "Headphones"
+        - "Speakers"
+        - "Mic Jack"
+>>>>>>> b7ba80a49124 (Commit)
 
         # CODEC Pins
         - DMIC1

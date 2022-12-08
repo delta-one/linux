@@ -1079,6 +1079,7 @@ EXPORT_SYMBOL(ip_tunnel_parse_protocol);
 
 const struct header_ops ip_tunnel_header_ops = { .parse_protocol = ip_tunnel_parse_protocol };
 EXPORT_SYMBOL(ip_tunnel_header_ops);
+<<<<<<< HEAD
 
 /* This function returns true when ENCAP attributes are present in the nl msg */
 bool ip_tunnel_netlink_encap_parms(struct nlattr *data[],
@@ -1146,3 +1147,5 @@ void ip_tunnel_netlink_parms(struct nlattr *data[],
 		parms->iph.protocol = nla_get_u8(data[IFLA_IPTUN_PROTO]);
 }
 EXPORT_SYMBOL_GPL(ip_tunnel_netlink_parms);
+=======
+>>>>>>> b7ba80a49124 (Commit)

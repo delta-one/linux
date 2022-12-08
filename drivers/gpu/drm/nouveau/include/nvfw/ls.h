@@ -50,6 +50,7 @@ struct nvfw_ls_desc_v1 {
 
 const struct nvfw_ls_desc_v1 *
 nvfw_ls_desc_v1(struct nvkm_subdev *, const void *);
+<<<<<<< HEAD
 
 struct nvfw_ls_desc_v2 {
 	u32 descriptor_size;
@@ -101,4 +102,6 @@ struct nvfw_ls_hsbl_hdr {
 };
 
 const struct nvfw_ls_hsbl_hdr *nvfw_ls_hsbl_hdr(struct nvkm_subdev *, const void *);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

@@ -55,6 +55,13 @@
 
 #define AN30259A_NAME "an30259a"
 
+<<<<<<< HEAD
+=======
+#define STATE_OFF 0
+#define STATE_KEEP 1
+#define STATE_ON 2
+
+>>>>>>> b7ba80a49124 (Commit)
 struct an30259a;
 
 struct an30259a_led {
@@ -62,7 +69,11 @@ struct an30259a_led {
 	struct fwnode_handle *fwnode;
 	struct led_classdev cdev;
 	u32 num;
+<<<<<<< HEAD
 	enum led_default_state default_state;
+=======
+	u32 default_state;
+>>>>>>> b7ba80a49124 (Commit)
 	bool sloping;
 };
 
@@ -201,6 +212,10 @@ static int an30259a_dt_init(struct i2c_client *client,
 	struct device_node *np = dev_of_node(&client->dev), *child;
 	int count, ret;
 	int i = 0;
+<<<<<<< HEAD
+=======
+	const char *str;
+>>>>>>> b7ba80a49124 (Commit)
 	struct an30259a_led *led;
 
 	count = of_get_available_child_count(np);
@@ -223,7 +238,19 @@ static int an30259a_dt_init(struct i2c_client *client,
 		led->num = source;
 		led->chip = chip;
 		led->fwnode = of_fwnode_handle(child);
+<<<<<<< HEAD
 		led->default_state = led_init_default_state_get(led->fwnode);
+=======
+
+		if (!of_property_read_string(child, "default-state", &str)) {
+			if (!strcmp(str, "on"))
+				led->default_state = STATE_ON;
+			else if (!strcmp(str, "keep"))
+				led->default_state = STATE_KEEP;
+			else
+				led->default_state = STATE_OFF;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		i++;
 	}
@@ -248,10 +275,17 @@ static void an30259a_init_default_state(struct an30259a_led *led)
 	int led_on, err;
 
 	switch (led->default_state) {
+<<<<<<< HEAD
 	case LEDS_DEFSTATE_ON:
 		led->cdev.brightness = LED_FULL;
 		break;
 	case LEDS_DEFSTATE_KEEP:
+=======
+	case STATE_ON:
+		led->cdev.brightness = LED_FULL;
+		break;
+	case STATE_KEEP:
+>>>>>>> b7ba80a49124 (Commit)
 		err = regmap_read(chip->regmap, AN30259A_REG_LED_ON, &led_on);
 		if (err)
 			break;

@@ -1064,7 +1064,11 @@ static void lcd_da8xx_cpufreq_deregister(struct da8xx_fb_par *par)
 }
 #endif
 
+<<<<<<< HEAD
 static void fb_remove(struct platform_device *dev)
+=======
+static int fb_remove(struct platform_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = platform_get_drvdata(dev);
 	struct da8xx_fb_par *par = info->par;
@@ -1076,8 +1080,12 @@ static void fb_remove(struct platform_device *dev)
 	if (par->lcd_supply) {
 		ret = regulator_disable(par->lcd_supply);
 		if (ret)
+<<<<<<< HEAD
 			dev_warn(&dev->dev, "Failed to disable regulator (%pe)\n",
 				 ERR_PTR(ret));
+=======
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	lcd_disable_raster(DA8XX_FRAME_WAIT);
@@ -1091,6 +1099,11 @@ static void fb_remove(struct platform_device *dev)
 	pm_runtime_put_sync(&dev->dev);
 	pm_runtime_disable(&dev->dev);
 	framebuffer_release(info);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1429,7 +1442,11 @@ static int fb_probe(struct platform_device *device)
 		dev_err(&device->dev,
 			"GLCD: kmalloc for frame buffer failed\n");
 		ret = -EINVAL;
+<<<<<<< HEAD
 		goto err_disable_reg;
+=======
+		goto err_release_fb;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	da8xx_fb_info->screen_base = (char __iomem *) par->vram_virt;
@@ -1473,7 +1490,11 @@ static int fb_probe(struct platform_device *device)
 
 	ret = fb_alloc_cmap(&da8xx_fb_info->cmap, PALETTE_SIZE, 0);
 	if (ret)
+<<<<<<< HEAD
 		goto err_disable_reg;
+=======
+		goto err_release_fb;
+>>>>>>> b7ba80a49124 (Commit)
 	da8xx_fb_info->cmap.len = par->palette_sz;
 
 	/* initialize var_screeninfo */
@@ -1527,9 +1548,12 @@ err_cpu_freq:
 err_dealloc_cmap:
 	fb_dealloc_cmap(&da8xx_fb_info->cmap);
 
+<<<<<<< HEAD
 err_disable_reg:
 	if (par->lcd_supply)
 		regulator_disable(par->lcd_supply);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_release_fb:
 	framebuffer_release(da8xx_fb_info);
 
@@ -1655,7 +1679,11 @@ static SIMPLE_DEV_PM_OPS(fb_pm_ops, fb_suspend, fb_resume);
 
 static struct platform_driver da8xx_fb_driver = {
 	.probe = fb_probe,
+<<<<<<< HEAD
 	.remove_new = fb_remove,
+=======
+	.remove = fb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		   .name = DRIVER_NAME,
 		   .pm	= &fb_pm_ops,

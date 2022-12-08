@@ -37,7 +37,11 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-usb {
+=======
+		usb {
+>>>>>>> b7ba80a49124 (Commit)
 			/* label = "bcm53xx:blue:usb"; */
 			function = LED_FUNCTION_USB;
 			color = <LED_COLOR_ID_BLUE>;
@@ -48,14 +52,22 @@
 			linux,default-trigger = "usbport";
 		};
 
+<<<<<<< HEAD
 		led-power0 {
+=======
+		power0 {
+>>>>>>> b7ba80a49124 (Commit)
 			/* label = "bcm53xx:red:power"; */
 			function = LED_FUNCTION_FAULT;
 			color = <LED_COLOR_ID_RED>;
 			gpios = <&hc595 1 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-power1 {
+=======
+		power1 {
+>>>>>>> b7ba80a49124 (Commit)
 			/* label = "bcm53xx:white:power"; */
 			function = LED_FUNCTION_POWER;
 			color = <LED_COLOR_ID_WHITE>;
@@ -63,7 +75,11 @@
 			linux,default-trigger = "default-on";
 		};
 
+<<<<<<< HEAD
 		led-router0 {
+=======
+		router0 {
+>>>>>>> b7ba80a49124 (Commit)
 			/*  label = "bcm53xx:blue:router"; */
 			function = LED_FUNCTION_STATUS;
 			color = <LED_COLOR_ID_BLUE>;
@@ -71,14 +87,22 @@
 			linux,default-trigger = "default-on";
 		};
 
+<<<<<<< HEAD
 		led-router1 {
+=======
+		router1 {
+>>>>>>> b7ba80a49124 (Commit)
 			/* label = "bcm53xx:amber:router"; */
 			function = LED_FUNCTION_STATUS;
 			color = <LED_COLOR_ID_AMBER>;
 			gpios = <&hc595 4 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-wan {
+=======
+		wan {
+>>>>>>> b7ba80a49124 (Commit)
 			/* label = "bcm53xx:blue:wan"; */
 			function = LED_FUNCTION_WAN;
 			color = <LED_COLOR_ID_BLUE>;
@@ -86,14 +110,22 @@
 			linux,default-trigger = "default-on";
 		};
 
+<<<<<<< HEAD
 		led-wireless0 {
+=======
+		wireless0 {
+>>>>>>> b7ba80a49124 (Commit)
 			/* label = "bcm53xx:blue:wireless"; */
 			function = LED_FUNCTION_WLAN;
 			color = <LED_COLOR_ID_BLUE>;
 			gpios = <&hc595 6 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-wireless1 {
+=======
+		wireless1 {
+>>>>>>> b7ba80a49124 (Commit)
 			/* label = "bcm53xx:amber:wireless"; */
 			function = LED_FUNCTION_WLAN;
 			color = <LED_COLOR_ID_AMBER>;

@@ -64,7 +64,11 @@ LEAF(_restore_fp)
  */
 LEAF(_save_fp_context)
 	.set	push
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	li	v0, 0					# assume success
 	cfc1	t1, fcr31
 	EX2(s.d $f0, 0(a0))
@@ -98,7 +102,11 @@ LEAF(_save_fp_context)
  */
 LEAF(_restore_fp_context)
 	.set	push
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	li	v0, 0					# assume success
 	EX(lw t0, (a1))
 	EX2(l.d $f0, 0(a0))

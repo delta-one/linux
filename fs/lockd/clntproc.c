@@ -12,7 +12,10 @@
 #include <linux/types.h>
 #include <linux/errno.h>
 #include <linux/fs.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/nfs_fs.h>
 #include <linux/utsname.h>
 #include <linux/freezer.h>
@@ -20,8 +23,11 @@
 #include <linux/sunrpc/svc.h>
 #include <linux/lockd/lockd.h>
 
+<<<<<<< HEAD
 #include "trace.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define NLMDBG_FACILITY		NLMDBG_CLIENT
 #define NLMCLNT_GRACE_WAIT	(5*HZ)
 #define NLMCLNT_POLL_TIMEOUT	(30*HZ)
@@ -133,7 +139,11 @@ static void nlmclnt_setlockargs(struct nlm_rqst *req, struct file_lock *fl)
 	char *nodename = req->a_host->h_rpcclnt->cl_nodename;
 
 	nlmclnt_next_cookie(&argp->cookie);
+<<<<<<< HEAD
 	memcpy(&lock->fh, NFS_FH(file_inode(fl->fl_file)), sizeof(struct nfs_fh));
+=======
+	memcpy(&lock->fh, NFS_FH(locks_inode(fl->fl_file)), sizeof(struct nfs_fh));
+>>>>>>> b7ba80a49124 (Commit)
 	lock->caller  = nodename;
 	lock->oh.data = req->a_owner;
 	lock->oh.len  = snprintf(req->a_owner, sizeof(req->a_owner), "%u@%s",
@@ -453,9 +463,12 @@ nlmclnt_test(struct nlm_rqst *req, struct file_lock *fl)
 			status = nlm_stat_to_errno(req->a_res.status);
 	}
 out:
+<<<<<<< HEAD
 	trace_nlmclnt_test(&req->a_args.lock,
 			   (const struct sockaddr *)&req->a_host->h_addr,
 			   req->a_host->h_addrlen, req->a_res.status);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	nlmclnt_release_call(req);
 	return status;
 }
@@ -521,10 +534,16 @@ nlmclnt_lock(struct nlm_rqst *req, struct file_lock *fl)
 	const struct cred *cred = nfs_file_cred(fl->fl_file);
 	struct nlm_host	*host = req->a_host;
 	struct nlm_res	*resp = &req->a_res;
+<<<<<<< HEAD
 	struct nlm_wait block;
 	unsigned char fl_flags = fl->fl_flags;
 	unsigned char fl_type;
 	__be32 b_status;
+=======
+	struct nlm_wait *block = NULL;
+	unsigned char fl_flags = fl->fl_flags;
+	unsigned char fl_type;
+>>>>>>> b7ba80a49124 (Commit)
 	int status = -ENOLCK;
 
 	if (nsm_monitor(host) < 0)
@@ -537,13 +556,18 @@ nlmclnt_lock(struct nlm_rqst *req, struct file_lock *fl)
 	if (status < 0)
 		goto out;
 
+<<<<<<< HEAD
 	nlmclnt_prepare_block(&block, host, fl);
+=======
+	block = nlmclnt_prepare_block(host, fl);
+>>>>>>> b7ba80a49124 (Commit)
 again:
 	/*
 	 * Initialise resp->status to a valid non-zero value,
 	 * since 0 == nlm_lck_granted
 	 */
 	resp->status = nlm_lck_blocked;
+<<<<<<< HEAD
 
 	/*
 	 * A GRANTED callback can come at any time -- even before the reply
@@ -552,17 +576,25 @@ again:
 	 */
 	nlmclnt_queue_block(&block);
 	for (;;) {
+=======
+	for(;;) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Reboot protection */
 		fl->fl_u.nfs_fl.state = host->h_state;
 		status = nlmclnt_call(cred, req, NLMPROC_LOCK);
 		if (status < 0)
 			break;
 		/* Did a reclaimer thread notify us of a server reboot? */
+<<<<<<< HEAD
 		if (resp->status == nlm_lck_denied_grace_period)
+=======
+		if (resp->status ==  nlm_lck_denied_grace_period)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		if (resp->status != nlm_lck_blocked)
 			break;
 		/* Wait on an NLM blocking lock */
+<<<<<<< HEAD
 		status = nlmclnt_wait(&block, req, NLMCLNT_POLL_TIMEOUT);
 		if (status < 0)
 			break;
@@ -572,6 +604,14 @@ again:
 	b_status = nlmclnt_dequeue_block(&block);
 	if (resp->status == nlm_lck_blocked)
 		resp->status = b_status;
+=======
+		status = nlmclnt_block(block, req, NLMCLNT_POLL_TIMEOUT);
+		if (status < 0)
+			break;
+		if (resp->status != nlm_lck_blocked)
+			break;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* if we were interrupted while blocking, then cancel the lock request
 	 * and exit
@@ -580,7 +620,11 @@ again:
 		if (!req->a_args.block)
 			goto out_unlock;
 		if (nlmclnt_cancel(host, req->a_args.block, fl) == 0)
+<<<<<<< HEAD
 			goto out;
+=======
+			goto out_unblock;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (resp->status == nlm_granted) {
@@ -609,19 +653,31 @@ again:
 		status = -ENOLCK;
 	else
 		status = nlm_stat_to_errno(resp->status);
+<<<<<<< HEAD
 out:
 	trace_nlmclnt_lock(&req->a_args.lock,
 			   (const struct sockaddr *)&req->a_host->h_addr,
 			   req->a_host->h_addrlen, req->a_res.status);
+=======
+out_unblock:
+	nlmclnt_finish_block(block);
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	nlmclnt_release_call(req);
 	return status;
 out_unlock:
 	/* Fatal error: ensure that we remove the lock altogether */
+<<<<<<< HEAD
 	trace_nlmclnt_lock(&req->a_args.lock,
 			   (const struct sockaddr *)&req->a_host->h_addr,
 			   req->a_host->h_addrlen, req->a_res.status);
 	dprintk("lockd: lock attempt ended in fatal error.\n"
 		"       Attempting to unlock.\n");
+=======
+	dprintk("lockd: lock attempt ended in fatal error.\n"
+		"       Attempting to unlock.\n");
+	nlmclnt_finish_block(block);
+>>>>>>> b7ba80a49124 (Commit)
 	fl_type = fl->fl_type;
 	fl->fl_type = F_UNLCK;
 	down_read(&host->h_rwsem);
@@ -715,9 +771,12 @@ nlmclnt_unlock(struct nlm_rqst *req, struct file_lock *fl)
 	/* What to do now? I'm out of my depth... */
 	status = -ENOLCK;
 out:
+<<<<<<< HEAD
 	trace_nlmclnt_unlock(&req->a_args.lock,
 			     (const struct sockaddr *)&req->a_host->h_addr,
 			     req->a_host->h_addrlen, req->a_res.status);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	nlmclnt_release_call(req);
 	return status;
 }

@@ -120,9 +120,15 @@ static int sdio_bus_match(struct device *dev, struct device_driver *drv)
 }
 
 static int
+<<<<<<< HEAD
 sdio_bus_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct sdio_func *func = dev_to_sdio_func(dev);
+=======
+sdio_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct sdio_func *func = dev_to_sdio_func(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int i;
 
 	if (add_uevent_var(env,
@@ -291,6 +297,7 @@ static void sdio_release_func(struct device *dev)
 {
 	struct sdio_func *func = dev_to_sdio_func(dev);
 
+<<<<<<< HEAD
 	if (!(func->card->quirks & MMC_QUIRK_NONSTD_SDIO))
 		sdio_free_func_cis(func);
 
@@ -299,6 +306,9 @@ static void sdio_release_func(struct device *dev)
 	 * card structure, so remove the reference.
 	 */
 	put_device(&func->card->dev);
+=======
+	sdio_free_func_cis(func);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(func->info);
 	kfree(func->tmpbuf);
@@ -330,12 +340,15 @@ struct sdio_func *sdio_alloc_func(struct mmc_card *card)
 
 	device_initialize(&func->dev);
 
+<<<<<<< HEAD
 	/*
 	 * We may link to tuples in the card structure,
 	 * we need make sure we have a reference to it.
 	 */
 	get_device(&func->card->dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	func->dev.parent = &card->dev;
 	func->dev.bus = &sdio_bus_type;
 	func->dev.release = sdio_release_func;
@@ -389,9 +402,16 @@ int sdio_add_func(struct sdio_func *func)
  */
 void sdio_remove_func(struct sdio_func *func)
 {
+<<<<<<< HEAD
 	if (sdio_func_present(func))
 		device_del(&func->dev);
 
+=======
+	if (!sdio_func_present(func))
+		return;
+
+	device_del(&func->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	of_node_put(func->dev.of_node);
 	put_device(&func->dev);
 }

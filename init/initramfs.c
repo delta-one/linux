@@ -11,7 +11,10 @@
 #include <linux/syscalls.h>
 #include <linux/utime.h>
 #include <linux/file.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/memblock.h>
 #include <linux/mm.h>
 #include <linux/namei.h>
@@ -462,7 +465,11 @@ static long __init write_buffer(char *buf, unsigned long len)
 
 static long __init flush_buffer(void *bufv, unsigned long len)
 {
+<<<<<<< HEAD
 	char *buf = bufv;
+=======
+	char *buf = (char *) bufv;
+>>>>>>> b7ba80a49124 (Commit)
 	long written;
 	long origLen = len;
 	if (message)
@@ -572,7 +579,12 @@ __setup("keepinitrd", keepinitrd_setup);
 static bool __initdata initramfs_async = true;
 static int __init initramfs_async_setup(char *str)
 {
+<<<<<<< HEAD
 	return kstrtobool(str, &initramfs_async) == 0;
+=======
+	strtobool(str, &initramfs_async);
+	return 1;
+>>>>>>> b7ba80a49124 (Commit)
 }
 __setup("initramfs_async=", initramfs_async_setup);
 

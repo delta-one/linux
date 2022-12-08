@@ -28,9 +28,12 @@ s390*)
 mips*)
   ARG1=%r4
 ;;
+<<<<<<< HEAD
 loongarch*)
   ARG1=%r4
 ;;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 *)
   echo "Please implement other architecture here"
   exit_untested

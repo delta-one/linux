@@ -725,8 +725,11 @@ static struct platform_driver dmc620_pmu_driver = {
 
 static int __init dmc620_pmu_init(void)
 {
+<<<<<<< HEAD
 	int ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cpuhp_state_num = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
 				      DMC620_DRVNAME,
 				      NULL,
@@ -734,11 +737,15 @@ static int __init dmc620_pmu_init(void)
 	if (cpuhp_state_num < 0)
 		return cpuhp_state_num;
 
+<<<<<<< HEAD
 	ret = platform_driver_register(&dmc620_pmu_driver);
 	if (ret)
 		cpuhp_remove_multi_state(cpuhp_state_num);
 
 	return ret;
+=======
+	return platform_driver_register(&dmc620_pmu_driver);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __exit dmc620_pmu_exit(void)

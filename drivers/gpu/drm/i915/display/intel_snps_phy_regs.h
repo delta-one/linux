@@ -6,7 +6,11 @@
 #ifndef __INTEL_SNPS_PHY_REGS__
 #define __INTEL_SNPS_PHY_REGS__
 
+<<<<<<< HEAD
 #include "intel_display_reg_defs.h"
+=======
+#include "i915_reg_defs.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define _SNPS_PHY_A_BASE			0x168000
 #define _SNPS_PHY_B_BASE			0x169000

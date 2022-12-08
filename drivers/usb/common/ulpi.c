@@ -55,9 +55,15 @@ static int ulpi_match(struct device *dev, struct device_driver *driver)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ulpi_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct ulpi *ulpi = to_ulpi_dev(dev);
+=======
+static int ulpi_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct ulpi *ulpi = to_ulpi_dev(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	ret = of_device_uevent_modalias(dev, env);
@@ -229,11 +235,19 @@ static int ulpi_read_id(struct ulpi *ulpi)
 	request_module("ulpi:v%04xp%04x", ulpi->id.vendor, ulpi->id.product);
 	return 0;
 err:
+<<<<<<< HEAD
 	of_request_module(ulpi->dev.of_node);
 	return 0;
 }
 
 static int ulpi_regs_show(struct seq_file *seq, void *data)
+=======
+	of_device_request_module(&ulpi->dev);
+	return 0;
+}
+
+static int ulpi_regs_read(struct seq_file *seq, void *data)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ulpi *ulpi = seq->private;
 
@@ -269,9 +283,29 @@ static int ulpi_regs_show(struct seq_file *seq, void *data)
 
 	return 0;
 }
+<<<<<<< HEAD
 DEFINE_SHOW_ATTRIBUTE(ulpi_regs);
 
 static struct dentry *ulpi_root;
+=======
+
+static int ulpi_regs_open(struct inode *inode, struct file *f)
+{
+	struct ulpi *ulpi = inode->i_private;
+
+	return single_open(f, ulpi_regs_read, ulpi);
+}
+
+static const struct file_operations ulpi_regs_ops = {
+	.owner = THIS_MODULE,
+	.open = ulpi_regs_open,
+	.release = single_release,
+	.read = seq_read,
+	.llseek = seq_lseek
+};
+
+#define ULPI_ROOT debugfs_lookup(KBUILD_MODNAME, NULL)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int ulpi_register(struct device *dev, struct ulpi *ulpi)
 {
@@ -301,8 +335,13 @@ static int ulpi_register(struct device *dev, struct ulpi *ulpi)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	root = debugfs_create_dir(dev_name(dev), ulpi_root);
 	debugfs_create_file("regs", 0444, root, ulpi, &ulpi_regs_fops);
+=======
+	root = debugfs_create_dir(dev_name(dev), ULPI_ROOT);
+	debugfs_create_file("regs", 0444, root, ulpi, &ulpi_regs_ops);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_dbg(&ulpi->dev, "registered ULPI PHY: vendor %04x, product %04x\n",
 		ulpi->id.vendor, ulpi->id.product);
@@ -349,7 +388,12 @@ EXPORT_SYMBOL_GPL(ulpi_register_interface);
  */
 void ulpi_unregister_interface(struct ulpi *ulpi)
 {
+<<<<<<< HEAD
 	debugfs_lookup_and_remove(dev_name(&ulpi->dev), ulpi_root);
+=======
+	debugfs_remove_recursive(debugfs_lookup(dev_name(&ulpi->dev),
+						ULPI_ROOT));
+>>>>>>> b7ba80a49124 (Commit)
 	device_unregister(&ulpi->dev);
 }
 EXPORT_SYMBOL_GPL(ulpi_unregister_interface);
@@ -359,11 +403,20 @@ EXPORT_SYMBOL_GPL(ulpi_unregister_interface);
 static int __init ulpi_init(void)
 {
 	int ret;
+<<<<<<< HEAD
 
 	ulpi_root = debugfs_create_dir(KBUILD_MODNAME, NULL);
 	ret = bus_register(&ulpi_bus);
 	if (ret)
 		debugfs_remove(ulpi_root);
+=======
+	struct dentry *root;
+
+	root = debugfs_create_dir(KBUILD_MODNAME, NULL);
+	ret = bus_register(&ulpi_bus);
+	if (ret)
+		debugfs_remove(root);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 subsys_initcall(ulpi_init);
@@ -371,7 +424,11 @@ subsys_initcall(ulpi_init);
 static void __exit ulpi_exit(void)
 {
 	bus_unregister(&ulpi_bus);
+<<<<<<< HEAD
 	debugfs_remove(ulpi_root);
+=======
+	debugfs_remove_recursive(ULPI_ROOT);
+>>>>>>> b7ba80a49124 (Commit)
 }
 module_exit(ulpi_exit);
 

@@ -17,10 +17,13 @@
 	model = "Apple MacBook Air (M1, 2020)";
 };
 
+<<<<<<< HEAD
 &bluetooth0 {
 	brcm,board-type = "apple,shikoku";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &wifi0 {
 	brcm,board-type = "apple,shikoku";
 };

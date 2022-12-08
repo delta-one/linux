@@ -119,6 +119,7 @@ To avoid this, you can make the vDSO different for different
 kernel versions by including an arbitrary string of "salt" in it.
 This is specified by the Kconfig symbol ``CONFIG_BUILD_SALT``.
 
+<<<<<<< HEAD
 Git
 ---
 
@@ -129,6 +130,8 @@ to different compilation results. For example, after executing
 will be different, which will eventually lead to binary differences.
 See ``scripts/setlocalversion`` for details.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 .. _KBUILD_BUILD_TIMESTAMP: kbuild.html#kbuild-build-timestamp
 .. _KBUILD_BUILD_USER and KBUILD_BUILD_HOST: kbuild.html#kbuild-build-user-kbuild-build-host
 .. _KCFLAGS: kbuild.html#kcflags

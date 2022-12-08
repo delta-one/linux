@@ -2119,6 +2119,7 @@ static struct extra_reg intel_grt_extra_regs[] __read_mostly = {
 	EVENT_EXTRA_END
 };
 
+<<<<<<< HEAD
 static struct extra_reg intel_cmt_extra_regs[] __read_mostly = {
 	/* must define OFFCORE_RSP_X first, see intel_fixup_er() */
 	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x800ff3ffffffffffull, RSP_0),
@@ -2129,6 +2130,8 @@ static struct extra_reg intel_cmt_extra_regs[] __read_mostly = {
 	EVENT_EXTRA_END
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define KNL_OT_L2_HITE		BIT_ULL(19) /* Other Tile L2 Hit */
 #define KNL_OT_L2_HITF		BIT_ULL(20) /* Other Tile L2 Hit */
 #define KNL_MCDRAM_LOCAL	BIT_ULL(21)
@@ -3036,8 +3039,15 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
 
 		perf_sample_data_init(&data, 0, event->hw.last_period);
 
+<<<<<<< HEAD
 		if (has_branch_stack(event))
 			perf_sample_save_brstack(&data, event, &cpuc->lbr_stack);
+=======
+		if (has_branch_stack(event)) {
+			data.br_stack = &cpuc->lbr_stack;
+			data.sample_flags |= PERF_SAMPLE_BRANCH_STACK;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (perf_event_overflow(event, &data, regs))
 			x86_pmu_stop(event, 0);
@@ -4190,12 +4200,15 @@ static int hsw_hw_config(struct perf_event *event)
 static struct event_constraint counter0_constraint =
 			INTEL_ALL_EVENT_CONSTRAINT(0, 0x1);
 
+<<<<<<< HEAD
 static struct event_constraint counter1_constraint =
 			INTEL_ALL_EVENT_CONSTRAINT(0, 0x2);
 
 static struct event_constraint counter0_1_constraint =
 			INTEL_ALL_EVENT_CONSTRAINT(0, 0x3);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct event_constraint counter2_constraint =
 			EVENT_CONSTRAINT(0, 0x4, 0);
 
@@ -4205,12 +4218,15 @@ static struct event_constraint fixed0_constraint =
 static struct event_constraint fixed0_counter0_constraint =
 			INTEL_ALL_EVENT_CONSTRAINT(0, 0x100000001ULL);
 
+<<<<<<< HEAD
 static struct event_constraint fixed0_counter0_1_constraint =
 			INTEL_ALL_EVENT_CONSTRAINT(0, 0x100000003ULL);
 
 static struct event_constraint counters_1_7_constraint =
 			INTEL_ALL_EVENT_CONSTRAINT(0, 0xfeULL);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct event_constraint *
 hsw_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
 			  struct perf_event *event)
@@ -4342,6 +4358,7 @@ adl_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
 	return &emptyconstraint;
 }
 
+<<<<<<< HEAD
 static struct event_constraint *
 cmt_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
 			  struct perf_event *event)
@@ -4414,6 +4431,8 @@ mtl_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
 	return &emptyconstraint;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int adl_hw_config(struct perf_event *event)
 {
 	struct x86_hybrid_pmu *pmu = hybrid_pmu(event->pmu);
@@ -4586,6 +4605,7 @@ static void flip_smm_bit(void *data)
 	}
 }
 
+<<<<<<< HEAD
 static void intel_pmu_check_num_counters(int *num_counters,
 					 int *num_counters_fixed,
 					 u64 *intel_ctrl, u64 fixed_mask);
@@ -4605,6 +4625,8 @@ static void update_pmu_cap(struct x86_hybrid_pmu *pmu)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool init_hybrid_pmu(int cpu)
 {
 	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
@@ -4630,9 +4652,12 @@ static bool init_hybrid_pmu(int cpu)
 	if (!cpumask_empty(&pmu->supported_cpus))
 		goto end;
 
+<<<<<<< HEAD
 	if (this_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
 		update_pmu_cap(pmu);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!check_hw_exists(&pmu->pmu, pmu->num_counters, pmu->num_counters_fixed))
 		return false;
 
@@ -4650,6 +4675,11 @@ end:
 	cpumask_set_cpu(cpu, &pmu->supported_cpus);
 	cpuc->pmu = &pmu->pmu;
 
+<<<<<<< HEAD
+=======
+	x86_pmu_update_cpu_context(&pmu->pmu, cpu);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -4783,6 +4813,7 @@ static void intel_pmu_cpu_dead(int cpu)
 		cpumask_clear_cpu(cpu, &hybrid_pmu(cpuc->pmu)->supported_cpus);
 }
 
+<<<<<<< HEAD
 static void intel_pmu_sched_task(struct perf_event_pmu_context *pmu_ctx,
 				 bool sched_in)
 {
@@ -4794,6 +4825,19 @@ static void intel_pmu_swap_task_ctx(struct perf_event_pmu_context *prev_epc,
 				    struct perf_event_pmu_context *next_epc)
 {
 	intel_pmu_lbr_swap_task_ctx(prev_epc, next_epc);
+=======
+static void intel_pmu_sched_task(struct perf_event_context *ctx,
+				 bool sched_in)
+{
+	intel_pmu_pebs_sched_task(ctx, sched_in);
+	intel_pmu_lbr_sched_task(ctx, sched_in);
+}
+
+static void intel_pmu_swap_task_ctx(struct perf_event_context *prev,
+				    struct perf_event_context *next)
+{
+	intel_pmu_lbr_swap_task_ctx(prev, next);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int intel_pmu_check_period(struct perf_event *event, u64 value)
@@ -4817,11 +4861,20 @@ static int intel_pmu_aux_output_match(struct perf_event *event)
 	return is_intel_pt_event(event);
 }
 
+<<<<<<< HEAD
 static void intel_pmu_filter(struct pmu *pmu, int cpu, bool *ret)
 {
 	struct x86_hybrid_pmu *hpmu = hybrid_pmu(pmu);
 
 	*ret = !cpumask_test_cpu(cpu, &hpmu->supported_cpus);
+=======
+static int intel_pmu_filter_match(struct perf_event *event)
+{
+	struct x86_hybrid_pmu *pmu = hybrid_pmu(event->pmu);
+	unsigned int cpu = smp_processor_id();
+
+	return cpumask_test_cpu(cpu, &pmu->supported_cpus);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 PMU_FORMAT_ATTR(offcore_rsp, "config1:0-63");
@@ -5022,7 +5075,10 @@ static const struct x86_cpu_desc isolation_ucodes[] = {
 	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_X,		 5, 0x00000000),
 	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_X,		 6, 0x00000000),
 	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_X,		 7, 0x00000000),
+<<<<<<< HEAD
 	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_X,		11, 0x00000000),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_L,		 3, 0x0000007c),
 	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE,		 3, 0x0000007c),
 	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		 9, 0x0000004e),
@@ -5470,6 +5526,7 @@ pebs_is_visible(struct kobject *kobj, struct attribute *attr, int i)
 }
 
 static umode_t
+<<<<<<< HEAD
 mem_is_visible(struct kobject *kobj, struct attribute *attr, int i)
 {
 	if (attr == &event_attr_mem_ld_aux.attr.attr)
@@ -5479,6 +5536,8 @@ mem_is_visible(struct kobject *kobj, struct attribute *attr, int i)
 }
 
 static umode_t
+=======
+>>>>>>> b7ba80a49124 (Commit)
 lbr_is_visible(struct kobject *kobj, struct attribute *attr, int i)
 {
 	return x86_pmu.lbr_nr ? attr->mode : 0;
@@ -5505,7 +5564,11 @@ static struct attribute_group group_events_td  = {
 
 static struct attribute_group group_events_mem = {
 	.name       = "events",
+<<<<<<< HEAD
 	.is_visible = mem_is_visible,
+=======
+	.is_visible = pebs_is_visible,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct attribute_group group_events_tsx = {
@@ -5586,12 +5649,15 @@ static struct attribute *adl_hybrid_mem_attrs[] = {
 	NULL,
 };
 
+<<<<<<< HEAD
 static struct attribute *mtl_hybrid_mem_attrs[] = {
 	EVENT_PTR(mem_ld_adl),
 	EVENT_PTR(mem_st_adl),
 	NULL
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 EVENT_ATTR_STR_HYBRID(tx-start,          tx_start_adl,          "event=0xc9,umask=0x1",          hybrid_big);
 EVENT_ATTR_STR_HYBRID(tx-commit,         tx_commit_adl,         "event=0xc9,umask=0x2",          hybrid_big);
 EVENT_ATTR_STR_HYBRID(tx-abort,          tx_abort_adl,          "event=0xc9,umask=0x4",          hybrid_big);
@@ -5619,6 +5685,7 @@ FORMAT_ATTR_HYBRID(offcore_rsp, hybrid_big_small);
 FORMAT_ATTR_HYBRID(ldlat,       hybrid_big_small);
 FORMAT_ATTR_HYBRID(frontend,    hybrid_big);
 
+<<<<<<< HEAD
 #define ADL_HYBRID_RTM_FORMAT_ATTR	\
 	FORMAT_HYBRID_PTR(in_tx),	\
 	FORMAT_HYBRID_PTR(in_tx_cp)
@@ -5653,6 +5720,22 @@ static struct attribute *mtl_hybrid_extra_attr[] = {
 	ADL_HYBRID_FORMAT_ATTR,
 	FORMAT_HYBRID_PTR(snoop_rsp),
 	NULL
+=======
+static struct attribute *adl_hybrid_extra_attr_rtm[] = {
+	FORMAT_HYBRID_PTR(in_tx),
+	FORMAT_HYBRID_PTR(in_tx_cp),
+	FORMAT_HYBRID_PTR(offcore_rsp),
+	FORMAT_HYBRID_PTR(ldlat),
+	FORMAT_HYBRID_PTR(frontend),
+	NULL,
+};
+
+static struct attribute *adl_hybrid_extra_attr[] = {
+	FORMAT_HYBRID_PTR(offcore_rsp),
+	FORMAT_HYBRID_PTR(ldlat),
+	FORMAT_HYBRID_PTR(frontend),
+	NULL,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static bool is_attr_for_this_pmu(struct kobject *kobj, struct attribute *attr)
@@ -5874,12 +5957,15 @@ static void intel_pmu_check_hybrid_pmus(u64 fixed_mask)
 	}
 }
 
+<<<<<<< HEAD
 static __always_inline bool is_mtl(u8 x86_model)
 {
 	return (x86_model == INTEL_FAM6_METEORLAKE) ||
 	       (x86_model == INTEL_FAM6_METEORLAKE_L);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 __init int intel_pmu_init(void)
 {
 	struct attribute **extra_skl_attr = &empty_attrs;
@@ -6494,11 +6580,14 @@ __init int intel_pmu_init(void)
 		break;
 
 	case INTEL_FAM6_SAPPHIRERAPIDS_X:
+<<<<<<< HEAD
 	case INTEL_FAM6_EMERALDRAPIDS_X:
 		x86_pmu.flags |= PMU_FL_MEM_LOADS_AUX;
 		fallthrough;
 	case INTEL_FAM6_GRANITERAPIDS_X:
 	case INTEL_FAM6_GRANITERAPIDS_D:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pmem = true;
 		x86_pmu.late_ack = true;
 		memcpy(hw_cache_event_ids, spr_hw_cache_event_ids, sizeof(hw_cache_event_ids));
@@ -6508,13 +6597,20 @@ __init int intel_pmu_init(void)
 		x86_pmu.pebs_constraints = intel_spr_pebs_event_constraints;
 		x86_pmu.extra_regs = intel_spr_extra_regs;
 		x86_pmu.limit_period = spr_limit_period;
+<<<<<<< HEAD
 		x86_pmu.pebs_ept = 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		x86_pmu.pebs_aliases = NULL;
 		x86_pmu.pebs_prec_dist = true;
 		x86_pmu.pebs_block = true;
 		x86_pmu.flags |= PMU_FL_HAS_RSP_1;
 		x86_pmu.flags |= PMU_FL_NO_HT_SHARING;
 		x86_pmu.flags |= PMU_FL_INSTR_LATENCY;
+<<<<<<< HEAD
+=======
+		x86_pmu.flags |= PMU_FL_MEM_LOADS_AUX;
+>>>>>>> b7ba80a49124 (Commit)
 
 		x86_pmu.hw_config = hsw_hw_config;
 		x86_pmu.get_event_constraints = spr_get_event_constraints;
@@ -6540,9 +6636,12 @@ __init int intel_pmu_init(void)
 	case INTEL_FAM6_ALDERLAKE_L:
 	case INTEL_FAM6_RAPTORLAKE:
 	case INTEL_FAM6_RAPTORLAKE_P:
+<<<<<<< HEAD
 	case INTEL_FAM6_RAPTORLAKE_S:
 	case INTEL_FAM6_METEORLAKE:
 	case INTEL_FAM6_METEORLAKE_L:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Alder Lake has 2 types of CPU, core and atom.
 		 *
@@ -6562,7 +6661,13 @@ __init int intel_pmu_init(void)
 		x86_pmu.flags |= PMU_FL_HAS_RSP_1;
 		x86_pmu.flags |= PMU_FL_NO_HT_SHARING;
 		x86_pmu.flags |= PMU_FL_INSTR_LATENCY;
+<<<<<<< HEAD
 		x86_pmu.lbr_pt_coexist = true;
+=======
+		x86_pmu.flags |= PMU_FL_MEM_LOADS_AUX;
+		x86_pmu.lbr_pt_coexist = true;
+		intel_pmu_pebs_data_source_adl();
+>>>>>>> b7ba80a49124 (Commit)
 		x86_pmu.pebs_latency_data = adl_latency_data_small;
 		x86_pmu.num_topdown_events = 8;
 		static_call_update(intel_pmu_update_topdown_event,
@@ -6570,7 +6675,11 @@ __init int intel_pmu_init(void)
 		static_call_update(intel_pmu_set_topdown_event_period,
 				   &adl_set_topdown_event_period);
 
+<<<<<<< HEAD
 		x86_pmu.filter = intel_pmu_filter;
+=======
+		x86_pmu.filter_match = intel_pmu_filter_match;
+>>>>>>> b7ba80a49124 (Commit)
 		x86_pmu.get_event_constraints = adl_get_event_constraints;
 		x86_pmu.hw_config = adl_hw_config;
 		x86_pmu.limit_period = spr_limit_period;
@@ -6649,6 +6758,7 @@ __init int intel_pmu_init(void)
 		pmu->event_constraints = intel_slm_event_constraints;
 		pmu->pebs_constraints = intel_grt_pebs_event_constraints;
 		pmu->extra_regs = intel_grt_extra_regs;
+<<<<<<< HEAD
 		if (is_mtl(boot_cpu_data.x86_model)) {
 			x86_pmu.pebs_latency_data = mtl_latency_data_small;
 			extra_attr = boot_cpu_has(X86_FEATURE_RTM) ?
@@ -6665,6 +6775,10 @@ __init int intel_pmu_init(void)
 			pr_cont("Alderlake Hybrid events, ");
 			name = "alderlake_hybrid";
 		}
+=======
+		pr_cont("Alderlake Hybrid events, ");
+		name = "alderlake_hybrid";
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	default:
@@ -6779,9 +6893,12 @@ __init int intel_pmu_init(void)
 	if (is_hybrid())
 		intel_pmu_check_hybrid_pmus((u64)fixed_mask);
 
+<<<<<<< HEAD
 	if (x86_pmu.intel_cap.pebs_timing_info)
 		x86_pmu.flags |= PMU_FL_RETIRE_LATENCY;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	intel_aux_output_init();
 
 	return 0;

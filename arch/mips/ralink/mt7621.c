@@ -25,7 +25,10 @@
 #define MT7621_MEM_TEST_PATTERN         0xaa5555aa
 
 static u32 detect_magic __initdata;
+<<<<<<< HEAD
 static struct ralink_soc_info *soc_info_ptr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int pcibios_root_bridge_prepare(struct pci_host_bridge *bridge)
 {
@@ -98,6 +101,7 @@ void __init ralink_of_remap(void)
 		panic("Failed to remap core resources");
 }
 
+<<<<<<< HEAD
 static unsigned int __init mt7621_get_soc_name0(void)
 {
 	return __raw_readl(MT7621_SYSC_BASE + SYSC_REG_CHIP_NAME0);
@@ -149,12 +153,16 @@ static const char __init *mt7621_get_soc_revision(void)
 }
 
 static int __init mt7621_soc_dev_init(void)
+=======
+static void soc_dev_init(struct ralink_soc_info *soc_info, u32 rev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct soc_device *soc_dev;
 	struct soc_device_attribute *soc_dev_attr;
 
 	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
 	if (!soc_dev_attr)
+<<<<<<< HEAD
 		return -ENOMEM;
 
 	soc_dev_attr->soc_id = "mt7621";
@@ -162,10 +170,25 @@ static int __init mt7621_soc_dev_init(void)
 	soc_dev_attr->revision = mt7621_get_soc_revision();
 
 	soc_dev_attr->data = soc_info_ptr;
+=======
+		return;
+
+	soc_dev_attr->soc_id = "mt7621";
+	soc_dev_attr->family = "Ralink";
+
+	if (((rev >> CHIP_REV_VER_SHIFT) & CHIP_REV_VER_MASK) == 1 &&
+	    (rev & CHIP_REV_ECO_MASK) == 1)
+		soc_dev_attr->revision = "E2";
+	else
+		soc_dev_attr->revision = "E1";
+
+	soc_dev_attr->data = soc_info;
+>>>>>>> b7ba80a49124 (Commit)
 
 	soc_dev = soc_device_register(soc_dev_attr);
 	if (IS_ERR(soc_dev)) {
 		kfree(soc_dev_attr);
+<<<<<<< HEAD
 		return PTR_ERR(soc_dev);
 	}
 
@@ -175,6 +198,20 @@ device_initcall(mt7621_soc_dev_init);
 
 void __init prom_soc_init(struct ralink_soc_info *soc_info)
 {
+=======
+		return;
+	}
+}
+
+void __init prom_soc_init(struct ralink_soc_info *soc_info)
+{
+	void __iomem *sysc = (void __iomem *) KSEG1ADDR(MT7621_SYSC_BASE);
+	unsigned char *name = NULL;
+	u32 n0;
+	u32 n1;
+	u32 rev;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Early detection of CMP support */
 	mips_cm_probe();
 	mips_cpc_probe();
@@ -197,6 +234,7 @@ void __init prom_soc_init(struct ralink_soc_info *soc_info)
 		__sync();
 	}
 
+<<<<<<< HEAD
 	if (mt7621_soc_valid())
 		soc_info->compatible = "mediatek,mt7621-soc";
 	else
@@ -214,6 +252,29 @@ void __init prom_soc_init(struct ralink_soc_info *soc_info)
 	soc_info->mem_detect = mt7621_memory_detect;
 
 	soc_info_ptr = soc_info;
+=======
+	n0 = __raw_readl(sysc + SYSC_REG_CHIP_NAME0);
+	n1 = __raw_readl(sysc + SYSC_REG_CHIP_NAME1);
+
+	if (n0 == MT7621_CHIP_NAME0 && n1 == MT7621_CHIP_NAME1) {
+		name = "MT7621";
+		soc_info->compatible = "mediatek,mt7621-soc";
+	} else {
+		panic("mt7621: unknown SoC, n0:%08x n1:%08x\n", n0, n1);
+	}
+	ralink_soc = MT762X_SOC_MT7621AT;
+	rev = __raw_readl(sysc + SYSC_REG_CHIP_REV);
+
+	snprintf(soc_info->sys_type, RAMIPS_SYS_TYPE_LEN,
+		"MediaTek %s ver:%u eco:%u",
+		name,
+		(rev >> CHIP_REV_VER_SHIFT) & CHIP_REV_VER_MASK,
+		(rev & CHIP_REV_ECO_MASK));
+
+	soc_info->mem_detect = mt7621_memory_detect;
+
+	soc_dev_init(soc_info, rev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!register_cps_smp_ops())
 		return;

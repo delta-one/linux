@@ -133,7 +133,11 @@ static void get_ids(const u32 *directory, int *id)
 	}
 }
 
+<<<<<<< HEAD
 static void get_modalias_ids(const struct fw_unit *unit, int *id)
+=======
+static void get_modalias_ids(struct fw_unit *unit, int *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	get_ids(&fw_parent_device(unit)->config_rom[5], id);
 	get_ids(unit->directory, id);
@@ -195,7 +199,11 @@ static void fw_unit_remove(struct device *dev)
 	driver->remove(fw_unit(dev));
 }
 
+<<<<<<< HEAD
 static int get_modalias(const struct fw_unit *unit, char *buffer, size_t buffer_size)
+=======
+static int get_modalias(struct fw_unit *unit, char *buffer, size_t buffer_size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int id[] = {0, 0, 0, 0};
 
@@ -206,9 +214,15 @@ static int get_modalias(const struct fw_unit *unit, char *buffer, size_t buffer_
 			id[0], id[1], id[2], id[3]);
 }
 
+<<<<<<< HEAD
 static int fw_unit_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct fw_unit *unit = fw_unit(dev);
+=======
+static int fw_unit_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct fw_unit *unit = fw_unit(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	char modalias[64];
 
 	get_modalias(unit, modalias, sizeof(modalias));

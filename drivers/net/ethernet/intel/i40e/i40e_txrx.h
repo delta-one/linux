@@ -277,7 +277,10 @@ struct i40e_rx_buffer {
 	struct page *page;
 	__u32 page_offset;
 	__u16 pagecnt_bias;
+<<<<<<< HEAD
 	__u32 page_count;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct i40e_queue_stats {
@@ -337,6 +340,7 @@ struct i40e_ring {
 	u8 dcb_tc;			/* Traffic class of ring */
 	u8 __iomem *tail;
 
+<<<<<<< HEAD
 	/* Storing xdp_buff on ring helps in saving the state of partially built
 	 * packet when i40e_clean_rx_ring_irq() must return before it sees EOP
 	 * and to resume packet building for this ring in the next call to
@@ -348,6 +352,8 @@ struct i40e_ring {
 	 * processing EOP descriptor
 	 */
 	u16 next_to_process;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* high bit set means dynamic, use accessor routines to read/write.
 	 * hardware only supports 2us resolution for the ITR registers.
 	 * these values always store the USER setting, and must be converted
@@ -392,6 +398,17 @@ struct i40e_ring {
 
 	struct rcu_head rcu;		/* to avoid race on free */
 	u16 next_to_alloc;
+<<<<<<< HEAD
+=======
+	struct sk_buff *skb;		/* When i40e_clean_rx_ring_irq() must
+					 * return before it sees the EOP for
+					 * the current packet, we save that skb
+					 * here and resume receiving this
+					 * packet the next time
+					 * i40e_clean_rx_ring_irq() is called
+					 * for this ring.
+					 */
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct i40e_channel *ch;
 	u16 rx_offset;
@@ -473,6 +490,10 @@ int __i40e_maybe_stop_tx(struct i40e_ring *tx_ring, int size);
 bool __i40e_chk_linearize(struct sk_buff *skb);
 int i40e_xdp_xmit(struct net_device *dev, int n, struct xdp_frame **frames,
 		  u32 flags);
+<<<<<<< HEAD
+=======
+int i40e_alloc_rx_bi(struct i40e_ring *rx_ring);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * i40e_get_head - Retrieve head from head writeback

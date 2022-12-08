@@ -233,16 +233,28 @@ int nsim_dev_health_init(struct nsim_dev *nsim_dev, struct devlink *devlink)
 	int err;
 
 	health->empty_reporter =
+<<<<<<< HEAD
 		devl_health_reporter_create(devlink,
 					    &nsim_dev_empty_reporter_ops,
 					    0, health);
+=======
+		devlink_health_reporter_create(devlink,
+					       &nsim_dev_empty_reporter_ops,
+					       0, health);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(health->empty_reporter))
 		return PTR_ERR(health->empty_reporter);
 
 	health->dummy_reporter =
+<<<<<<< HEAD
 		devl_health_reporter_create(devlink,
 					    &nsim_dev_dummy_reporter_ops,
 					    0, health);
+=======
+		devlink_health_reporter_create(devlink,
+					       &nsim_dev_dummy_reporter_ops,
+					       0, health);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(health->dummy_reporter)) {
 		err = PTR_ERR(health->dummy_reporter);
 		goto err_empty_reporter_destroy;
@@ -266,9 +278,15 @@ int nsim_dev_health_init(struct nsim_dev *nsim_dev, struct devlink *devlink)
 	return 0;
 
 err_dummy_reporter_destroy:
+<<<<<<< HEAD
 	devl_health_reporter_destroy(health->dummy_reporter);
 err_empty_reporter_destroy:
 	devl_health_reporter_destroy(health->empty_reporter);
+=======
+	devlink_health_reporter_destroy(health->dummy_reporter);
+err_empty_reporter_destroy:
+	devlink_health_reporter_destroy(health->empty_reporter);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -278,6 +296,11 @@ void nsim_dev_health_exit(struct nsim_dev *nsim_dev)
 
 	debugfs_remove_recursive(health->ddir);
 	kfree(health->recovered_break_msg);
+<<<<<<< HEAD
 	devl_health_reporter_destroy(health->dummy_reporter);
 	devl_health_reporter_destroy(health->empty_reporter);
+=======
+	devlink_health_reporter_destroy(health->dummy_reporter);
+	devlink_health_reporter_destroy(health->empty_reporter);
+>>>>>>> b7ba80a49124 (Commit)
 }

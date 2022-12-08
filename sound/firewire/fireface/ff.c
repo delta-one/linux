@@ -43,8 +43,11 @@ static void ff_card_free(struct snd_card *card)
 	snd_ff_stream_destroy_duplex(ff);
 	snd_ff_transaction_unregister(ff);
 
+<<<<<<< HEAD
 	kfree(ff->msg_parser);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_destroy(&ff->mutex);
 	fw_unit_put(ff->unit);
 }
@@ -96,6 +99,7 @@ static int snd_ff_probe(struct fw_unit *unit, const struct ieee1394_device_id *e
 	if (err < 0)
 		goto error;
 
+<<<<<<< HEAD
 	if (ff->spec->protocol->msg_parser_size > 0) {
 		ff->msg_parser = kzalloc(ff->spec->protocol->msg_parser_size, GFP_KERNEL);
 		if (!ff->msg_parser) {
@@ -104,6 +108,8 @@ static int snd_ff_probe(struct fw_unit *unit, const struct ieee1394_device_id *e
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = snd_card_register(card);
 	if (err < 0)
 		goto error;

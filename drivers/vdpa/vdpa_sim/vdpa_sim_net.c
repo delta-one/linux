@@ -11,10 +11,17 @@
 #include <linux/module.h>
 #include <linux/device.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/etherdevice.h>
 #include <linux/vringh.h>
 #include <linux/vdpa.h>
 #include <net/netlink.h>
+=======
+#include <linux/sched.h>
+#include <linux/etherdevice.h>
+#include <linux/vringh.h>
+#include <linux/vdpa.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <uapi/linux/virtio_net.h>
 #include <uapi/linux/vdpa.h>
 
@@ -27,7 +34,10 @@
 
 #define VDPASIM_NET_FEATURES	(VDPASIM_FEATURES | \
 				 (1ULL << VIRTIO_NET_F_MAC) | \
+<<<<<<< HEAD
 				 (1ULL << VIRTIO_NET_F_STATUS) | \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				 (1ULL << VIRTIO_NET_F_MTU) | \
 				 (1ULL << VIRTIO_NET_F_CTRL_VQ) | \
 				 (1ULL << VIRTIO_NET_F_CTRL_MAC_ADDR))
@@ -37,6 +47,7 @@
 #define VDPASIM_NET_AS_NUM	2
 #define VDPASIM_NET_GROUP_NUM	2
 
+<<<<<<< HEAD
 struct vdpasim_dataq_stats {
 	struct u64_stats_sync syncp;
 	u64 pkts;
@@ -65,6 +76,8 @@ static struct vdpasim_net *sim_to_net(struct vdpasim *vdpasim)
 	return container_of(vdpasim, struct vdpasim_net, vdpasim);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void vdpasim_net_complete(struct vdpasim_virtqueue *vq, size_t len)
 {
 	/* Make sure data is wrote before advancing index */
@@ -91,9 +104,12 @@ static bool receive_filter(struct vdpasim *vdpasim, size_t len)
 	if (len < ETH_ALEN + hdr_len)
 		return false;
 
+<<<<<<< HEAD
 	if (is_broadcast_ether_addr(vdpasim->buffer + hdr_len) ||
 	    is_multicast_ether_addr(vdpasim->buffer + hdr_len))
 		return true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!strncmp(vdpasim->buffer + hdr_len, vio_config->mac, ETH_ALEN))
 		return true;
 
@@ -125,11 +141,17 @@ static virtio_net_ctrl_ack vdpasim_handle_ctrl_mac(struct vdpasim *vdpasim,
 static void vdpasim_handle_cvq(struct vdpasim *vdpasim)
 {
 	struct vdpasim_virtqueue *cvq = &vdpasim->vqs[2];
+<<<<<<< HEAD
 	struct vdpasim_net *net = sim_to_net(vdpasim);
 	virtio_net_ctrl_ack status = VIRTIO_NET_ERR;
 	struct virtio_net_ctrl_hdr ctrl;
 	size_t read, write;
 	u64 requests = 0, errors = 0, successes = 0;
+=======
+	virtio_net_ctrl_ack status = VIRTIO_NET_ERR;
+	struct virtio_net_ctrl_hdr ctrl;
+	size_t read, write;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	if (!(vdpasim->features & (1ULL << VIRTIO_NET_F_CTRL_VQ)))
@@ -145,6 +167,7 @@ static void vdpasim_handle_cvq(struct vdpasim *vdpasim)
 		if (err <= 0)
 			break;
 
+<<<<<<< HEAD
 		++requests;
 		read = vringh_iov_pull_iotlb(&cvq->vring, &cvq->in_iov, &ctrl,
 					     sizeof(ctrl));
@@ -152,6 +175,12 @@ static void vdpasim_handle_cvq(struct vdpasim *vdpasim)
 			++errors;
 			break;
 		}
+=======
+		read = vringh_iov_pull_iotlb(&cvq->vring, &cvq->in_iov, &ctrl,
+					     sizeof(ctrl));
+		if (read != sizeof(ctrl))
+			break;
+>>>>>>> b7ba80a49124 (Commit)
 
 		switch (ctrl.class) {
 		case VIRTIO_NET_CTRL_MAC:
@@ -161,11 +190,14 @@ static void vdpasim_handle_cvq(struct vdpasim *vdpasim)
 			break;
 		}
 
+<<<<<<< HEAD
 		if (status == VIRTIO_NET_OK)
 			++successes;
 		else
 			++errors;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Make sure data is wrote before advancing index */
 		smp_wmb();
 
@@ -183,6 +215,7 @@ static void vdpasim_handle_cvq(struct vdpasim *vdpasim)
 			cvq->cb(cvq->private);
 		local_bh_enable();
 	}
+<<<<<<< HEAD
 
 	u64_stats_update_begin(&net->cq_stats.syncp);
 	net->cq_stats.requests += requests;
@@ -202,6 +235,20 @@ static void vdpasim_net_work(struct vdpasim *vdpasim)
 	int err;
 
 	mutex_lock(&vdpasim->mutex);
+=======
+}
+
+static void vdpasim_net_work(struct work_struct *work)
+{
+	struct vdpasim *vdpasim = container_of(work, struct vdpasim, work);
+	struct vdpasim_virtqueue *txq = &vdpasim->vqs[1];
+	struct vdpasim_virtqueue *rxq = &vdpasim->vqs[0];
+	ssize_t read, write;
+	int pkts = 0;
+	int err;
+
+	spin_lock(&vdpasim->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!vdpasim->running)
 		goto out;
@@ -217,6 +264,7 @@ static void vdpasim_net_work(struct vdpasim *vdpasim)
 	while (true) {
 		err = vringh_getdesc_iotlb(&txq->vring, &txq->out_iov, NULL,
 					   &txq->head, GFP_ATOMIC);
+<<<<<<< HEAD
 		if (err <= 0) {
 			if (err)
 				++tx_errors;
@@ -224,14 +272,23 @@ static void vdpasim_net_work(struct vdpasim *vdpasim)
 		}
 
 		++tx_pkts;
+=======
+		if (err <= 0)
+			break;
+
+>>>>>>> b7ba80a49124 (Commit)
 		read = vringh_iov_pull_iotlb(&txq->vring, &txq->out_iov,
 					     vdpasim->buffer,
 					     PAGE_SIZE);
 
+<<<<<<< HEAD
 		tx_bytes += read;
 
 		if (!receive_filter(vdpasim, read)) {
 			++rx_drops;
+=======
+		if (!receive_filter(vdpasim, read)) {
+>>>>>>> b7ba80a49124 (Commit)
 			vdpasim_net_complete(txq, 0);
 			continue;
 		}
@@ -239,13 +296,17 @@ static void vdpasim_net_work(struct vdpasim *vdpasim)
 		err = vringh_getdesc_iotlb(&rxq->vring, NULL, &rxq->in_iov,
 					   &rxq->head, GFP_ATOMIC);
 		if (err <= 0) {
+<<<<<<< HEAD
 			++rx_overruns;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			vdpasim_net_complete(txq, 0);
 			break;
 		}
 
 		write = vringh_iov_push_iotlb(&rxq->vring, &rxq->in_iov,
 					      vdpasim->buffer, read);
+<<<<<<< HEAD
 		if (write <= 0) {
 			++rx_errors;
 			break;
@@ -253,17 +314,27 @@ static void vdpasim_net_work(struct vdpasim *vdpasim)
 
 		++rx_pkts;
 		rx_bytes += write;
+=======
+		if (write <= 0)
+			break;
+>>>>>>> b7ba80a49124 (Commit)
 
 		vdpasim_net_complete(txq, 0);
 		vdpasim_net_complete(rxq, write);
 
+<<<<<<< HEAD
 		if (tx_pkts > 4) {
 			vdpasim_schedule_work(vdpasim);
+=======
+		if (++pkts > 4) {
+			schedule_work(&vdpasim->work);
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 		}
 	}
 
 out:
+<<<<<<< HEAD
 	mutex_unlock(&vdpasim->mutex);
 
 	u64_stats_update_begin(&net->tx_stats.syncp);
@@ -404,6 +475,9 @@ static int vdpasim_net_get_stats(struct vdpasim *vdpasim, u16 idx,
 	}
 
 	return err;
+=======
+	spin_unlock(&vdpasim->lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void vdpasim_net_get_config(struct vdpasim *vdpasim, void *config)
@@ -440,7 +514,10 @@ static int vdpasim_net_dev_add(struct vdpa_mgmt_dev *mdev, const char *name,
 			       const struct vdpa_dev_set_config *config)
 {
 	struct vdpasim_dev_attr dev_attr = {};
+<<<<<<< HEAD
 	struct vdpasim_net *net;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct vdpasim *simdev;
 	int ret;
 
@@ -451,6 +528,7 @@ static int vdpasim_net_dev_add(struct vdpa_mgmt_dev *mdev, const char *name,
 	dev_attr.nvqs = VDPASIM_NET_VQ_NUM;
 	dev_attr.ngroups = VDPASIM_NET_GROUP_NUM;
 	dev_attr.nas = VDPASIM_NET_AS_NUM;
+<<<<<<< HEAD
 	dev_attr.alloc_size = sizeof(struct vdpasim_net);
 	dev_attr.config_size = sizeof(struct virtio_net_config);
 	dev_attr.get_config = vdpasim_net_get_config;
@@ -459,6 +537,14 @@ static int vdpasim_net_dev_add(struct vdpa_mgmt_dev *mdev, const char *name,
 	dev_attr.buffer_size = PAGE_SIZE;
 
 	simdev = vdpasim_create(&dev_attr, config);
+=======
+	dev_attr.config_size = sizeof(struct virtio_net_config);
+	dev_attr.get_config = vdpasim_net_get_config;
+	dev_attr.work_fn = vdpasim_net_work;
+	dev_attr.buffer_size = PAGE_SIZE;
+
+	simdev = vdpasim_create(&dev_attr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(simdev))
 		return PTR_ERR(simdev);
 
@@ -468,12 +554,15 @@ static int vdpasim_net_dev_add(struct vdpa_mgmt_dev *mdev, const char *name,
 	if (ret)
 		goto reg_err;
 
+<<<<<<< HEAD
 	net = sim_to_net(simdev);
 
 	u64_stats_init(&net->tx_stats.syncp);
 	u64_stats_init(&net->rx_stats.syncp);
 	u64_stats_init(&net->cq_stats.syncp);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 reg_err:
@@ -504,8 +593,12 @@ static struct vdpa_mgmt_dev mgmt_dev = {
 	.id_table = id_table,
 	.ops = &vdpasim_net_mgmtdev_ops,
 	.config_attr_mask = (1 << VDPA_ATTR_DEV_NET_CFG_MACADDR |
+<<<<<<< HEAD
 			     1 << VDPA_ATTR_DEV_NET_CFG_MTU |
 		             1 << VDPA_ATTR_DEV_FEATURES),
+=======
+			     1 << VDPA_ATTR_DEV_NET_CFG_MTU),
+>>>>>>> b7ba80a49124 (Commit)
 	.max_supported_vqs = VDPASIM_NET_VQ_NUM,
 	.supported_features = VDPASIM_NET_FEATURES,
 };
@@ -515,10 +608,15 @@ static int __init vdpasim_net_init(void)
 	int ret;
 
 	ret = device_register(&vdpasim_net_mgmtdev);
+<<<<<<< HEAD
 	if (ret) {
 		put_device(&vdpasim_net_mgmtdev);
 		return ret;
 	}
+=======
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = vdpa_mgmtdev_register(&mgmt_dev);
 	if (ret)

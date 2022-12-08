@@ -21,7 +21,10 @@ properties:
       - mediatek,mt7623-eth
       - mediatek,mt7622-eth
       - mediatek,mt7629-eth
+<<<<<<< HEAD
       - mediatek,mt7981-eth
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - mediatek,mt7986-eth
       - ralink,rt5350-eth
 
@@ -79,11 +82,14 @@ properties:
     description:
       List of phandles to wireless ethernet dispatch nodes.
 
+<<<<<<< HEAD
   mediatek,wed-pcie:
     $ref: /schemas/types.yaml#/definitions/phandle
     description:
       Phandle to the mediatek wed-pcie controller.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   dma-coherent: true
 
   mdio-bus:
@@ -97,7 +103,11 @@ properties:
     const: 0
 
 allOf:
+<<<<<<< HEAD
   - $ref: ethernet-controller.yaml#
+=======
+  - $ref: "ethernet-controller.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -129,8 +139,11 @@ allOf:
 
         mediatek,wed: false
 
+<<<<<<< HEAD
         mediatek,wed-pcie: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -168,8 +181,11 @@ allOf:
           description:
             Phandle to the mediatek pcie-mirror controller.
 
+<<<<<<< HEAD
         mediatek,wed-pcie: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -216,6 +232,7 @@ allOf:
 
         mediatek,wed: false
 
+<<<<<<< HEAD
         mediatek,wed-pcie: false
 
   - if:
@@ -254,6 +271,8 @@ allOf:
           minItems: 2
           maxItems: 2
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -290,6 +309,14 @@ allOf:
           minItems: 2
           maxItems: 2
 
+<<<<<<< HEAD
+=======
+        mediatek,wed-pcie:
+          $ref: /schemas/types.yaml#/definitions/phandle
+          description:
+            Phandle to the mediatek wed-pcie controller.
+
+>>>>>>> b7ba80a49124 (Commit)
 patternProperties:
   "^mac@[0-1]$":
     type: object

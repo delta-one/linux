@@ -21,7 +21,11 @@ static bool
 length_mt(const struct sk_buff *skb, struct xt_action_param *par)
 {
 	const struct xt_length_info *info = par->matchinfo;
+<<<<<<< HEAD
 	u32 pktlen = skb_ip_totlen(skb);
+=======
+	u_int16_t pktlen = ntohs(ip_hdr(skb)->tot_len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return (pktlen >= info->min && pktlen <= info->max) ^ info->invert;
 }
@@ -30,7 +34,12 @@ static bool
 length_mt6(const struct sk_buff *skb, struct xt_action_param *par)
 {
 	const struct xt_length_info *info = par->matchinfo;
+<<<<<<< HEAD
 	u32 pktlen = skb->len;
+=======
+	const u_int16_t pktlen = ntohs(ipv6_hdr(skb)->payload_len) +
+				 sizeof(struct ipv6hdr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return (pktlen >= info->min && pktlen <= info->max) ^ info->invert;
 }

@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/mmc/mmc-pwrseq-sd8787.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Marvell SD8787 power sequence provider
+=======
+title: Marvell SD8787 power sequence provider binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Ulf Hansson <ulf.hansson@linaro.org>
@@ -35,7 +39,11 @@ additionalProperties: false
 examples:
   - |
     #include <dt-bindings/gpio/gpio.h>
+<<<<<<< HEAD
     pwrseq {
+=======
+    wifi_pwrseq: wifi_pwrseq {
+>>>>>>> b7ba80a49124 (Commit)
       compatible = "mmc-pwrseq-sd8787";
       powerdown-gpios = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
       reset-gpios = <&twl_gpio 1 GPIO_ACTIVE_LOW>;

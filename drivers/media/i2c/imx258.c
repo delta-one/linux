@@ -9,7 +9,10 @@
 #include <linux/pm_runtime.h>
 #include <media/v4l2-ctrls.h>
 #include <media/v4l2-device.h>
+<<<<<<< HEAD
 #include <media/v4l2-fwnode.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/unaligned.h>
 
 #define IMX258_REG_VALUE_08BIT		1
@@ -1149,7 +1152,10 @@ static const struct v4l2_subdev_internal_ops imx258_internal_ops = {
 static int imx258_init_controls(struct imx258 *imx258)
 {
 	struct i2c_client *client = v4l2_get_subdevdata(&imx258->sd);
+<<<<<<< HEAD
 	struct v4l2_fwnode_device_properties props;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct v4l2_ctrl_handler *ctrl_hdlr;
 	s64 vblank_def;
 	s64 vblank_min;
@@ -1158,7 +1164,11 @@ static int imx258_init_controls(struct imx258 *imx258)
 	int ret;
 
 	ctrl_hdlr = &imx258->ctrl_handler;
+<<<<<<< HEAD
 	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 11);
+=======
+	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 8);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -1234,6 +1244,7 @@ static int imx258_init_controls(struct imx258 *imx258)
 		goto error;
 	}
 
+<<<<<<< HEAD
 	ret = v4l2_fwnode_device_parse(&client->dev, &props);
 	if (ret)
 		goto error;
@@ -1243,6 +1254,8 @@ static int imx258_init_controls(struct imx258 *imx258)
 	if (ret)
 		goto error;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	imx258->sd.ctrl_handler = ctrl_hdlr;
 
 	return 0;

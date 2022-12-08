@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/usb/realtek,rts5411.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Realtek RTS5411 USB 3.0 hub controller
+=======
+title: Binding for the Realtek RTS5411 USB 3.0 hub controller
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Matthias Kaehlcke <mka@chromium.org>
@@ -26,7 +30,11 @@ properties:
       phandle to the regulator that provides power to the hub.
 
   peer-hub:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/phandle
+=======
+    $ref: '/schemas/types.yaml#/definitions/phandle'
+>>>>>>> b7ba80a49124 (Commit)
     description:
       phandle to the peer hub on the controller.
 

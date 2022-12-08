@@ -5,7 +5,11 @@
 $id: http://devicetree.org/schemas/pwm/microchip,corepwm.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Microchip IP corePWM controller
+=======
+title: Microchip IP corePWM controller bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Conor Dooley <conor.dooley@microchip.com>
@@ -30,9 +34,13 @@ properties:
     maxItems: 1
 
   "#pwm-cells":
+<<<<<<< HEAD
     enum: [2, 3]
     description:
       The only flag supported by the controller is PWM_POLARITY_INVERTED.
+=======
+    const: 2
+>>>>>>> b7ba80a49124 (Commit)
 
   microchip,sync-update-mask:
     description: |

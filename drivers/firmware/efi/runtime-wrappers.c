@@ -62,7 +62,10 @@ struct efi_runtime_work efi_rts_work;
 									\
 	if (!efi_enabled(EFI_RUNTIME_SERVICES)) {			\
 		pr_warn_once("EFI Runtime Services are disabled!\n");	\
+<<<<<<< HEAD
 		efi_rts_work.status = EFI_DEVICE_ERROR;			\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto exit;						\
 	}								\
 									\
@@ -84,7 +87,10 @@ struct efi_runtime_work efi_rts_work;
 	else								\
 		pr_err("Failed to queue work to efi_rts_wq.\n");	\
 									\
+<<<<<<< HEAD
 	WARN_ON_ONCE(efi_rts_work.status == EFI_ABORTED);		\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 exit:									\
 	efi_rts_work.efi_rts_id = EFI_NONE;				\
 	efi_rts_work.status;						\

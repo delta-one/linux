@@ -138,7 +138,10 @@
 
 #define B53_RGMII_CTRL_IMP		0x60
 #define   RGMII_CTRL_ENABLE_GMII	BIT(7)
+<<<<<<< HEAD
 #define   RGMII_CTRL_MII_OVERRIDE	BIT(6)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define   RGMII_CTRL_TIMING_SEL		BIT(2)
 #define   RGMII_CTRL_DLL_RXC		BIT(1)
 #define   RGMII_CTRL_DLL_TXC		BIT(0)

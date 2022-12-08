@@ -135,6 +135,7 @@ extern void ftrace_record_recursion(unsigned long ip, unsigned long parent_ip);
 # define do_ftrace_record_recursion(ip, pip)	do { } while (0)
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_WANTS_NO_INSTR
 # define trace_warn_on_no_rcu(ip)					\
 	({								\
@@ -150,6 +151,8 @@ extern void ftrace_record_recursion(unsigned long ip, unsigned long parent_ip);
 # define trace_warn_on_no_rcu(ip)	false
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Preemption is promised to be disabled when return bit >= 0.
  */
@@ -159,9 +162,12 @@ static __always_inline int trace_test_and_set_recursion(unsigned long ip, unsign
 	unsigned int val = READ_ONCE(current->trace_recursion);
 	int bit;
 
+<<<<<<< HEAD
 	if (trace_warn_on_no_rcu(ip))
 		return -1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bit = trace_get_context_bit() + start;
 	if (unlikely(val & (1 << bit))) {
 		/*

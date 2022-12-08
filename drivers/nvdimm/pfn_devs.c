@@ -13,8 +13,11 @@
 #include "pfn.h"
 #include "nd.h"
 
+<<<<<<< HEAD
 static const bool page_struct_override = IS_ENABLED(CONFIG_NVDIMM_KMSAN);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void nd_pfn_release(struct device *dev)
 {
 	struct nd_region *nd_region = to_nd_region(dev->parent);
@@ -760,6 +763,15 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
 		return -ENXIO;
 	}
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Note, we use 64 here for the standard size of struct page,
+	 * debugging options may cause it to be larger in which case the
+	 * implementation will limit the pfns advertised through
+	 * ->direct_access() to those that are included in the memmap.
+	 */
+>>>>>>> b7ba80a49124 (Commit)
 	start = nsio->res.start;
 	size = resource_size(&nsio->res);
 	npfns = PHYS_PFN(size - SZ_8K);
@@ -778,13 +790,17 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
 	}
 	end_trunc = start + size - ALIGN_DOWN(start + size, align);
 	if (nd_pfn->mode == PFN_MODE_PMEM) {
+<<<<<<< HEAD
 		unsigned long page_map_size = MAX_STRUCT_PAGE_SIZE * npfns;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * The altmap should be padded out to the block size used
 		 * when populating the vmemmap. This *should* be equal to
 		 * PMD_SIZE for most architectures.
 		 *
+<<<<<<< HEAD
 		 * Also make sure size of struct page is less than
 		 * MAX_STRUCT_PAGE_SIZE. The goal here is compatibility in the
 		 * face of production kernel configurations that reduce the
@@ -805,6 +821,17 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
 			}
 		}
 		offset = ALIGN(start + SZ_8K + page_map_size, align) - start;
+=======
+		 * Also make sure size of struct page is less than 128. We
+		 * want to make sure we use large enough size here so that
+		 * we don't have a dynamic reserve space depending on
+		 * struct page size. But we also want to make sure we notice
+		 * when we end up adding new elements to struct page.
+		 */
+		BUILD_BUG_ON(sizeof(struct page) > MAX_STRUCT_PAGE_SIZE);
+		offset = ALIGN(start + SZ_8K + MAX_STRUCT_PAGE_SIZE * npfns, align)
+			- start;
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (nd_pfn->mode == PFN_MODE_RAM)
 		offset = ALIGN(start + SZ_8K, align) - start;
 	else
@@ -827,10 +854,14 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
 	pfn_sb->version_minor = cpu_to_le16(4);
 	pfn_sb->end_trunc = cpu_to_le32(end_trunc);
 	pfn_sb->align = cpu_to_le32(nd_pfn->align);
+<<<<<<< HEAD
 	if (sizeof(struct page) > MAX_STRUCT_PAGE_SIZE && page_struct_override)
 		pfn_sb->page_struct_size = cpu_to_le16(sizeof(struct page));
 	else
 		pfn_sb->page_struct_size = cpu_to_le16(MAX_STRUCT_PAGE_SIZE);
+=======
+	pfn_sb->page_struct_size = cpu_to_le16(MAX_STRUCT_PAGE_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 	pfn_sb->page_size = cpu_to_le32(PAGE_SIZE);
 	checksum = nd_sb_checksum((struct nd_gen_sb *) pfn_sb);
 	pfn_sb->checksum = cpu_to_le64(checksum);

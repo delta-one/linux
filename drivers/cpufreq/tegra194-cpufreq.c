@@ -161,7 +161,11 @@ static const struct tegra_cpufreq_soc tegra234_cpufreq_soc = {
 	.num_clusters = 3,
 };
 
+<<<<<<< HEAD
 static const struct tegra_cpufreq_soc tegra239_cpufreq_soc = {
+=======
+const struct tegra_cpufreq_soc tegra239_cpufreq_soc = {
+>>>>>>> b7ba80a49124 (Commit)
 	.ops = &tegra234_cpufreq_ops,
 	.actmon_cntr_base = 0x4000,
 	.maxcpus_per_cluster = 8,
@@ -411,8 +415,12 @@ static int tegra194_cpufreq_set_target(struct cpufreq_policy *policy,
 
 static struct cpufreq_driver tegra194_cpufreq_driver = {
 	.name = "tegra194",
+<<<<<<< HEAD
 	.flags = CPUFREQ_CONST_LOOPS | CPUFREQ_NEED_INITIAL_FREQ_CHECK |
 		 CPUFREQ_IS_COOLING_DEV,
+=======
+	.flags = CPUFREQ_CONST_LOOPS | CPUFREQ_NEED_INITIAL_FREQ_CHECK,
+>>>>>>> b7ba80a49124 (Commit)
 	.verify = cpufreq_generic_frequency_table_verify,
 	.target_index = tegra194_cpufreq_set_target,
 	.get = tegra194_get_speed,
@@ -590,7 +598,10 @@ static const struct of_device_id tegra194_cpufreq_of_match[] = {
 	{ .compatible = "nvidia,tegra239-ccplex-cluster", .data = &tegra239_cpufreq_soc },
 	{ /* sentinel */ }
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(of, tegra194_cpufreq_of_match);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_driver tegra194_ccplex_driver = {
 	.driver = {

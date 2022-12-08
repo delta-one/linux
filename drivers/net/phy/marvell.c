@@ -1467,7 +1467,11 @@ static int m88e1540_set_fld(struct phy_device *phydev, const u8 *msecs)
 	/* According to the Marvell data sheet EEE must be disabled for
 	 * Fast Link Down detection to work properly
 	 */
+<<<<<<< HEAD
 	ret = genphy_c45_ethtool_get_eee(phydev, &eee);
+=======
+	ret = phy_ethtool_get_eee(phydev, &eee);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ret && eee.eee_enabled) {
 		phydev_warn(phydev, "Fast Link Down detection requires EEE to be disabled!\n");
 		return -EBUSY;
@@ -2015,6 +2019,7 @@ static int m88e1510_loopback(struct phy_device *phydev, bool enable)
 		if (err < 0)
 			return err;
 
+<<<<<<< HEAD
 		err = phy_modify(phydev, MII_BMCR, BMCR_LOOPBACK,
 				 BMCR_LOOPBACK);
 
@@ -2025,6 +2030,16 @@ static int m88e1510_loopback(struct phy_device *phydev, bool enable)
 			msleep(1000);
 		}
 		return err;
+=======
+		/* FIXME: Based on trial and error test, it seem 1G need to have
+		 * delay between soft reset and loopback enablement.
+		 */
+		if (phydev->speed == SPEED_1000)
+			msleep(1000);
+
+		return phy_modify(phydev, MII_BMCR, BMCR_LOOPBACK,
+				  BMCR_LOOPBACK);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		err = phy_modify(phydev, MII_BMCR, BMCR_LOOPBACK, 0);
 		if (err < 0)
@@ -2847,7 +2862,10 @@ static int marvell_probe(struct phy_device *phydev)
 
 static int m88e1510_sfp_insert(void *upstream, const struct sfp_eeprom_id *id)
 {
+<<<<<<< HEAD
 	DECLARE_PHY_INTERFACE_MASK(interfaces);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct phy_device *phydev = upstream;
 	phy_interface_t interface;
 	struct device *dev;
@@ -2859,7 +2877,11 @@ static int m88e1510_sfp_insert(void *upstream, const struct sfp_eeprom_id *id)
 
 	dev = &phydev->mdio.dev;
 
+<<<<<<< HEAD
 	sfp_parse_support(phydev->sfp_bus, id, supported, interfaces);
+=======
+	sfp_parse_support(phydev->sfp_bus, id, supported);
+>>>>>>> b7ba80a49124 (Commit)
 	interface = sfp_select_interface(phydev->sfp_bus, supported);
 
 	dev_info(dev, "%s SFP module inserted\n", phy_modes(interface));

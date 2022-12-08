@@ -14,7 +14,10 @@
 
 static u32 rand1, preh_val, posth_val;
 static u32 (*target)(u32 value);
+<<<<<<< HEAD
 static u32 (*recursed_target)(u32 value);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static u32 (*target2)(u32 value);
 static struct kunit *current_test;
 
@@ -28,6 +31,7 @@ static noinline u32 kprobe_target(u32 value)
 	return (value / div_factor);
 }
 
+<<<<<<< HEAD
 static noinline u32 kprobe_recursed_target(u32 value)
 {
 	return (value / div_factor);
@@ -38,17 +42,28 @@ static int kp_pre_handler(struct kprobe *p, struct pt_regs *regs)
 	KUNIT_EXPECT_FALSE(current_test, preemptible());
 
 	preh_val = recursed_target(rand1);
+=======
+static int kp_pre_handler(struct kprobe *p, struct pt_regs *regs)
+{
+	KUNIT_EXPECT_FALSE(current_test, preemptible());
+	preh_val = (rand1 / div_factor);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static void kp_post_handler(struct kprobe *p, struct pt_regs *regs,
 		unsigned long flags)
 {
+<<<<<<< HEAD
 	u32 expval = recursed_target(rand1);
 
 	KUNIT_EXPECT_FALSE(current_test, preemptible());
 	KUNIT_EXPECT_EQ(current_test, preh_val, expval);
 
+=======
+	KUNIT_EXPECT_FALSE(current_test, preemptible());
+	KUNIT_EXPECT_EQ(current_test, preh_val, (rand1 / div_factor));
+>>>>>>> b7ba80a49124 (Commit)
 	posth_val = preh_val + div_factor;
 }
 
@@ -146,6 +161,7 @@ static void test_kprobes(struct kunit *test)
 	unregister_kprobes(kps, 2);
 }
 
+<<<<<<< HEAD
 static struct kprobe kp_missed = {
 	.symbol_name = "kprobe_recursed_target",
 	.pre_handler = kp_pre_handler,
@@ -169,6 +185,8 @@ static void test_kprobe_missed(struct kunit *test)
 	unregister_kprobe(&kp_missed);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_KRETPROBES
 static u32 krph_val;
 
@@ -369,18 +387,31 @@ static int kprobes_test_init(struct kunit *test)
 {
 	target = kprobe_target;
 	target2 = kprobe_target2;
+<<<<<<< HEAD
 	recursed_target = kprobe_recursed_target;
 	stacktrace_target = kprobe_stacktrace_target;
 	internal_target = kprobe_stacktrace_internal_target;
 	stacktrace_driver = kprobe_stacktrace_driver;
 	rand1 = get_random_u32_above(div_factor);
+=======
+	stacktrace_target = kprobe_stacktrace_target;
+	internal_target = kprobe_stacktrace_internal_target;
+	stacktrace_driver = kprobe_stacktrace_driver;
+
+	do {
+		rand1 = prandom_u32();
+	} while (rand1 <= div_factor);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static struct kunit_case kprobes_testcases[] = {
 	KUNIT_CASE(test_kprobe),
 	KUNIT_CASE(test_kprobes),
+<<<<<<< HEAD
 	KUNIT_CASE(test_kprobe_missed),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_KRETPROBES
 	KUNIT_CASE(test_kretprobe),
 	KUNIT_CASE(test_kretprobes),

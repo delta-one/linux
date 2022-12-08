@@ -782,6 +782,7 @@ err_port_bridge_vlan_learning_set:
 
 static int
 mlxsw_sp_port_attr_br_pre_flags_set(struct mlxsw_sp_port *mlxsw_sp_port,
+<<<<<<< HEAD
 				    const struct net_device *orig_dev,
 				    struct switchdev_brport_flags flags,
 				    struct netlink_ext_ack *extack)
@@ -801,6 +802,12 @@ mlxsw_sp_port_attr_br_pre_flags_set(struct mlxsw_sp_port *mlxsw_sp_port,
 		NL_SET_ERR_MSG_MOD(extack, "Locked flag cannot be set on a bridge port that has VLAN uppers");
 		return -EINVAL;
 	}
+=======
+				    struct switchdev_brport_flags flags)
+{
+	if (flags.mask & ~(BR_LEARNING | BR_FLOOD | BR_MCAST_FLOOD))
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -834,6 +841,7 @@ static int mlxsw_sp_port_attr_br_flags_set(struct mlxsw_sp_port *mlxsw_sp_port,
 			return err;
 	}
 
+<<<<<<< HEAD
 	if (flags.mask & BR_PORT_LOCKED) {
 		err = mlxsw_sp_port_security_set(mlxsw_sp_port,
 						 flags.val & BR_PORT_LOCKED);
@@ -841,6 +849,8 @@ static int mlxsw_sp_port_attr_br_flags_set(struct mlxsw_sp_port *mlxsw_sp_port,
 			return err;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (bridge_port->bridge_device->multicast_enabled)
 		goto out;
 
@@ -1208,9 +1218,13 @@ static int mlxsw_sp_port_attr_set(struct net_device *dev, const void *ctx,
 		break;
 	case SWITCHDEV_ATTR_ID_PORT_PRE_BRIDGE_FLAGS:
 		err = mlxsw_sp_port_attr_br_pre_flags_set(mlxsw_sp_port,
+<<<<<<< HEAD
 							  attr->orig_dev,
 							  attr->u.brport_flags,
 							  extack);
+=======
+							  attr->u.brport_flags);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case SWITCHDEV_ATTR_ID_PORT_BRIDGE_FLAGS:
 		err = mlxsw_sp_port_attr_br_flags_set(mlxsw_sp_port,
@@ -2807,7 +2821,10 @@ void mlxsw_sp_port_bridge_leave(struct mlxsw_sp_port *mlxsw_sp_port,
 
 	bridge_device->ops->port_leave(bridge_device, bridge_port,
 				       mlxsw_sp_port);
+<<<<<<< HEAD
 	mlxsw_sp_port_security_set(mlxsw_sp_port, false);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mlxsw_sp_bridge_port_put(mlxsw_sp->bridge, bridge_port);
 }
 
@@ -2913,14 +2930,21 @@ static void mlxsw_sp_fdb_nve_call_notifiers(struct net_device *dev,
 static void
 mlxsw_sp_fdb_call_notifiers(enum switchdev_notifier_type type,
 			    const char *mac, u16 vid,
+<<<<<<< HEAD
 			    struct net_device *dev, bool offloaded, bool locked)
+=======
+			    struct net_device *dev, bool offloaded)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct switchdev_notifier_fdb_info info = {};
 
 	info.addr = mac;
 	info.vid = vid;
 	info.offloaded = offloaded;
+<<<<<<< HEAD
 	info.locked = locked;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	call_switchdev_notifiers(type, dev, &info.info, NULL);
 }
 
@@ -2967,12 +2991,15 @@ static void mlxsw_sp_fdb_notify_mac_process(struct mlxsw_sp *mlxsw_sp,
 	vid = bridge_device->vlan_enabled ? mlxsw_sp_port_vlan->vid : 0;
 	evid = mlxsw_sp_port_vlan->vid;
 
+<<<<<<< HEAD
 	if (adding && mlxsw_sp_port->security) {
 		mlxsw_sp_fdb_call_notifiers(SWITCHDEV_FDB_ADD_TO_BRIDGE, mac,
 					    vid, bridge_port->dev, false, true);
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 do_fdb_op:
 	err = mlxsw_sp_port_fdb_uc_op(mlxsw_sp, local_port, mac, fid, evid,
 				      adding, true);
@@ -2984,8 +3011,12 @@ do_fdb_op:
 	if (!do_notification)
 		return;
 	type = adding ? SWITCHDEV_FDB_ADD_TO_BRIDGE : SWITCHDEV_FDB_DEL_TO_BRIDGE;
+<<<<<<< HEAD
 	mlxsw_sp_fdb_call_notifiers(type, mac, vid, bridge_port->dev, adding,
 				    false);
+=======
+	mlxsw_sp_fdb_call_notifiers(type, mac, vid, bridge_port->dev, adding);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return;
 
@@ -3037,12 +3068,15 @@ static void mlxsw_sp_fdb_notify_mac_lag_process(struct mlxsw_sp *mlxsw_sp,
 	vid = bridge_device->vlan_enabled ? mlxsw_sp_port_vlan->vid : 0;
 	lag_vid = mlxsw_sp_port_vlan->vid;
 
+<<<<<<< HEAD
 	if (adding && mlxsw_sp_port->security) {
 		mlxsw_sp_fdb_call_notifiers(SWITCHDEV_FDB_ADD_TO_BRIDGE, mac,
 					    vid, bridge_port->dev, false, true);
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 do_fdb_op:
 	err = mlxsw_sp_port_fdb_uc_lag_op(mlxsw_sp, lag_id, mac, fid, lag_vid,
 					  adding, true);
@@ -3054,8 +3088,12 @@ do_fdb_op:
 	if (!do_notification)
 		return;
 	type = adding ? SWITCHDEV_FDB_ADD_TO_BRIDGE : SWITCHDEV_FDB_DEL_TO_BRIDGE;
+<<<<<<< HEAD
 	mlxsw_sp_fdb_call_notifiers(type, mac, vid, bridge_port->dev, adding,
 				    false);
+=======
+	mlxsw_sp_fdb_call_notifiers(type, mac, vid, bridge_port->dev, adding);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return;
 
@@ -3162,7 +3200,11 @@ static void mlxsw_sp_fdb_notify_mac_uc_tunnel_process(struct mlxsw_sp *mlxsw_sp,
 
 	type = adding ? SWITCHDEV_FDB_ADD_TO_BRIDGE :
 			SWITCHDEV_FDB_DEL_TO_BRIDGE;
+<<<<<<< HEAD
 	mlxsw_sp_fdb_call_notifiers(type, mac, vid, nve_dev, adding, false);
+=======
+	mlxsw_sp_fdb_call_notifiers(type, mac, vid, nve_dev, adding);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mlxsw_sp_fid_put(fid);
 
@@ -3304,7 +3346,11 @@ mlxsw_sp_switchdev_bridge_vxlan_fdb_event(struct mlxsw_sp *mlxsw_sp,
 					 &vxlan_fdb_info.info, NULL);
 		mlxsw_sp_fdb_call_notifiers(SWITCHDEV_FDB_OFFLOADED,
 					    vxlan_fdb_info.eth_addr,
+<<<<<<< HEAD
 					    fdb_info->vid, dev, true, false);
+=======
+					    fdb_info->vid, dev, true);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case SWITCHDEV_FDB_DEL_TO_DEVICE:
 		err = mlxsw_sp_port_fdb_tunnel_uc_op(mlxsw_sp,
@@ -3399,7 +3445,11 @@ static void mlxsw_sp_switchdev_bridge_fdb_event_work(struct work_struct *work)
 			break;
 		mlxsw_sp_fdb_call_notifiers(SWITCHDEV_FDB_OFFLOADED,
 					    fdb_info->addr,
+<<<<<<< HEAD
 					    fdb_info->vid, dev, true, false);
+=======
+					    fdb_info->vid, dev, true);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case SWITCHDEV_FDB_DEL_TO_DEVICE:
 		fdb_info = &switchdev_work->fdb_info;
@@ -3483,8 +3533,12 @@ mlxsw_sp_switchdev_vxlan_fdb_add(struct mlxsw_sp *mlxsw_sp,
 	call_switchdev_notifiers(SWITCHDEV_VXLAN_FDB_OFFLOADED, dev,
 				 &vxlan_fdb_info->info, NULL);
 	mlxsw_sp_fdb_call_notifiers(SWITCHDEV_FDB_OFFLOADED,
+<<<<<<< HEAD
 				    vxlan_fdb_info->eth_addr, vid, dev, true,
 				    false);
+=======
+				    vxlan_fdb_info->eth_addr, vid, dev, true);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mlxsw_sp_fid_put(fid);
 
@@ -3511,8 +3565,11 @@ mlxsw_sp_switchdev_vxlan_fdb_del(struct mlxsw_sp *mlxsw_sp,
 	u16 vid;
 
 	vxlan_fdb_info = &switchdev_work->vxlan_fdb_info;
+<<<<<<< HEAD
 	if (!vxlan_fdb_info->offloaded)
 		return;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	bridge_device = mlxsw_sp_bridge_device_find(mlxsw_sp->bridge, br_dev);
 	if (!bridge_device)
@@ -3536,8 +3593,12 @@ mlxsw_sp_switchdev_vxlan_fdb_del(struct mlxsw_sp *mlxsw_sp,
 				       false, false);
 	vid = bridge_device->ops->fid_vid(bridge_device, fid);
 	mlxsw_sp_fdb_call_notifiers(SWITCHDEV_FDB_OFFLOADED,
+<<<<<<< HEAD
 				    vxlan_fdb_info->eth_addr, vid, dev, false,
 				    false);
+=======
+				    vxlan_fdb_info->eth_addr, vid, dev, false);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mlxsw_sp_fid_put(fid);
 }

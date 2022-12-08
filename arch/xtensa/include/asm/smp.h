@@ -33,7 +33,11 @@ void show_ipi_list(struct seq_file *p, int prec);
 
 void __cpu_die(unsigned int cpu);
 int __cpu_disable(void);
+<<<<<<< HEAD
 void __noreturn cpu_die(void);
+=======
+void cpu_die(void);
+>>>>>>> b7ba80a49124 (Commit)
 void cpu_restart(void);
 
 #endif /* CONFIG_HOTPLUG_CPU */

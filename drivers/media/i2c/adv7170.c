@@ -334,7 +334,12 @@ static const struct v4l2_subdev_ops adv7170_ops = {
 
 /* ----------------------------------------------------------------------- */
 
+<<<<<<< HEAD
 static int adv7170_probe(struct i2c_client *client)
+=======
+static int adv7170_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct adv7170 *encoder;
 	struct v4l2_subdev *sd;
@@ -387,7 +392,11 @@ static struct i2c_driver adv7170_driver = {
 	.driver = {
 		.name	= "adv7170",
 	},
+<<<<<<< HEAD
 	.probe_new	= adv7170_probe,
+=======
+	.probe		= adv7170_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= adv7170_remove,
 	.id_table	= adv7170_id,
 };

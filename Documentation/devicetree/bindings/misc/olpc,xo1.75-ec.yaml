@@ -5,7 +5,11 @@
 $id: http://devicetree.org/schemas/misc/olpc,xo1.75-ec.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: OLPC XO-1.75 Embedded Controller
+=======
+title: OLPC XO-1.75 Embedded Controller bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 description: |
   This binding describes the Embedded Controller acting as a SPI bus master

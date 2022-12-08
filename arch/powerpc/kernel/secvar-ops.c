@@ -8,6 +8,7 @@
 
 #include <linux/cache.h>
 #include <asm/secvar.h>
+<<<<<<< HEAD
 #include <asm/bug.h>
 
 const struct secvar_operations *secvar_ops __ro_after_init = NULL;
@@ -20,4 +21,12 @@ int set_secvar_ops(const struct secvar_operations *ops)
 	secvar_ops = ops;
 
 	return 0;
+=======
+
+const struct secvar_operations *secvar_ops __ro_after_init;
+
+void set_secvar_ops(const struct secvar_operations *ops)
+{
+	secvar_ops = ops;
+>>>>>>> b7ba80a49124 (Commit)
 }

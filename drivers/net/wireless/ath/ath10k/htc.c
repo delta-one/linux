@@ -56,6 +56,7 @@ void ath10k_htc_notify_tx_completion(struct ath10k_htc_ep *ep,
 	ath10k_dbg(ar, ATH10K_DBG_HTC, "%s: ep %d skb %pK\n", __func__,
 		   ep->eid, skb);
 
+<<<<<<< HEAD
 	/* A corner case where the copy completion is reaching to host but still
 	 * copy engine is processing it due to which host unmaps corresponding
 	 * memory and causes SMMU fault, hence as workaround adding delay
@@ -65,6 +66,8 @@ void ath10k_htc_notify_tx_completion(struct ath10k_htc_ep *ep,
 	    ep->ul_pipe_id == 3)
 		mdelay(2);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hdr = (struct ath10k_htc_hdr *)skb->data;
 	ath10k_htc_restore_tx_skb(ep->htc, skb);
 

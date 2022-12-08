@@ -7,7 +7,11 @@
 /* Generic PCI */
 #include <asm-generic/pci.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_PCI_MSI
+=======
+#ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This is a bit of an annoying hack, and it assumes we only have
  * the virt-pci (if anything). Which is true, but still.

@@ -25,7 +25,11 @@ unsigned long mte_copy_tags_to_user(void __user *to, void *from,
 				    unsigned long n);
 int mte_save_tags(struct page *page);
 void mte_save_page_tags(const void *page_addr, void *tag_storage);
+<<<<<<< HEAD
 void mte_restore_tags(swp_entry_t entry, struct page *page);
+=======
+bool mte_restore_tags(swp_entry_t entry, struct page *page);
+>>>>>>> b7ba80a49124 (Commit)
 void mte_restore_page_tags(void *page_addr, const void *tag_storage);
 void mte_invalidate_tags(int type, pgoff_t offset);
 void mte_invalidate_tags_area(int type);
@@ -36,6 +40,7 @@ void mte_free_tag_storage(char *storage);
 
 /* track which pages have valid allocation tags */
 #define PG_mte_tagged	PG_arch_2
+<<<<<<< HEAD
 /* simple lock to avoid multiple threads tagging the same page */
 #define PG_mte_lock	PG_arch_3
 
@@ -88,6 +93,8 @@ static inline bool try_page_mte_tagging(struct page *page)
 
 	return false;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void mte_zero_clear_page_tags(void *addr);
 void mte_sync_tags(pte_t old_pte, pte_t pte);
@@ -108,6 +115,7 @@ size_t mte_probe_user_range(const char __user *uaddr, size_t size);
 /* unused if !CONFIG_ARM64_MTE, silence the compiler */
 #define PG_mte_tagged	0
 
+<<<<<<< HEAD
 static inline void set_page_mte_tagged(struct page *page)
 {
 }
@@ -119,6 +127,8 @@ static inline bool try_page_mte_tagging(struct page *page)
 {
 	return false;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void mte_zero_clear_page_tags(void *addr)
 {
 }
@@ -178,6 +188,17 @@ static inline void mte_disable_tco_entry(struct task_struct *task)
 }
 
 #ifdef CONFIG_KASAN_HW_TAGS
+<<<<<<< HEAD
+=======
+/* Whether the MTE asynchronous mode is enabled. */
+DECLARE_STATIC_KEY_FALSE(mte_async_or_asymm_mode);
+
+static inline bool system_uses_mte_async_or_asymm_mode(void)
+{
+	return static_branch_unlikely(&mte_async_or_asymm_mode);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 void mte_check_tfsr_el1(void);
 
 static inline void mte_check_tfsr_entry(void)
@@ -204,6 +225,13 @@ static inline void mte_check_tfsr_exit(void)
 	mte_check_tfsr_el1();
 }
 #else
+<<<<<<< HEAD
+=======
+static inline bool system_uses_mte_async_or_asymm_mode(void)
+{
+	return false;
+}
+>>>>>>> b7ba80a49124 (Commit)
 static inline void mte_check_tfsr_el1(void)
 {
 }

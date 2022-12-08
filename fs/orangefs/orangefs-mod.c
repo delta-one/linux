@@ -141,7 +141,11 @@ static int __init orangefs_init(void)
 		gossip_err("%s: could not initialize device subsystem %d!\n",
 			   __func__,
 			   ret);
+<<<<<<< HEAD
 		goto cleanup_sysfs;
+=======
+		goto cleanup_device;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = register_filesystem(&orangefs_fs_type);
@@ -152,11 +156,19 @@ static int __init orangefs_init(void)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	orangefs_dev_cleanup();
 
 cleanup_sysfs:
 	orangefs_sysfs_exit();
 
+=======
+	orangefs_sysfs_exit();
+
+cleanup_device:
+	orangefs_dev_cleanup();
+
+>>>>>>> b7ba80a49124 (Commit)
 sysfs_init_failed:
 	orangefs_debugfs_cleanup();
 

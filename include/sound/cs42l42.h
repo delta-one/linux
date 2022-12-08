@@ -34,7 +34,10 @@
 #define CS42L42_PAGE_24		0x2400
 #define CS42L42_PAGE_25		0x2500
 #define CS42L42_PAGE_26		0x2600
+<<<<<<< HEAD
 #define CS42L42_PAGE_27		0x2700
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CS42L42_PAGE_28		0x2800
 #define CS42L42_PAGE_29		0x2900
 #define CS42L42_PAGE_2A		0x2A00
@@ -721,10 +724,13 @@
 
 #define CS42L42_SRC_SDOUT_FS		(CS42L42_PAGE_26 + 0x09)
 
+<<<<<<< HEAD
 /* Page 0x27 DMA */
 #define CS42L42_SOFT_RESET_REBOOT	(CS42L42_PAGE_27 + 0x01)
 #define CS42L42_SFT_RST_REBOOT_MASK	BIT(1)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Page 0x28 S/PDIF Registers */
 #define CS42L42_SPDIF_CTL1		(CS42L42_PAGE_28 + 0x01)
 #define CS42L42_SPDIF_CTL2		(CS42L42_PAGE_28 + 0x02)

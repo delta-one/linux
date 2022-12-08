@@ -18,7 +18,10 @@
 #include <linux/syscalls.h>
 #include <linux/pagemap.h>
 #include <linux/compat.h>
+<<<<<<< HEAD
 #include <linux/iversion.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/uaccess.h>
 #include <asm/unistd.h>
@@ -28,7 +31,11 @@
 
 /**
  * generic_fillattr - Fill in the basic attributes from the inode struct
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the inode was found from
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @inode:	Inode to use as the source
  * @stat:	Where to fill in the attributes
  *
@@ -36,6 +43,7 @@
  * found on the VFS inode structure.  This is the default if no getattr inode
  * operation is supplied.
  *
+<<<<<<< HEAD
  * If the inode has been found through an idmapped mount the idmap of
  * the vfsmount must be passed through @idmap. This function will then
  * take care to map the inode according to @idmap before filling in the
@@ -48,12 +56,28 @@ void generic_fillattr(struct mnt_idmap *idmap, struct inode *inode,
 	vfsuid_t vfsuid = i_uid_into_vfsuid(idmap, inode);
 	vfsgid_t vfsgid = i_gid_into_vfsgid(idmap, inode);
 
+=======
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then
+ * take care to map the inode according to @mnt_userns before filling in the
+ * uid and gid filds. On non-idmapped mounts or if permission checking is to be
+ * performed on the raw inode simply passs init_user_ns.
+ */
+void generic_fillattr(struct user_namespace *mnt_userns, struct inode *inode,
+		      struct kstat *stat)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	stat->dev = inode->i_sb->s_dev;
 	stat->ino = inode->i_ino;
 	stat->mode = inode->i_mode;
 	stat->nlink = inode->i_nlink;
+<<<<<<< HEAD
 	stat->uid = vfsuid_into_kuid(vfsuid);
 	stat->gid = vfsgid_into_kgid(vfsgid);
+=======
+	stat->uid = i_uid_into_mnt(mnt_userns, inode);
+	stat->gid = i_gid_into_mnt(mnt_userns, inode);
+>>>>>>> b7ba80a49124 (Commit)
 	stat->rdev = inode->i_rdev;
 	stat->size = i_size_read(inode);
 	stat->atime = inode->i_atime;
@@ -98,7 +122,11 @@ EXPORT_SYMBOL(generic_fill_statx_attr);
 int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
 		      u32 request_mask, unsigned int query_flags)
 {
+<<<<<<< HEAD
 	struct mnt_idmap *idmap;
+=======
+	struct user_namespace *mnt_userns;
+>>>>>>> b7ba80a49124 (Commit)
 	struct inode *inode = d_backing_inode(path->dentry);
 
 	memset(stat, 0, sizeof(*stat));
@@ -123,6 +151,7 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
 	stat->attributes_mask |= (STATX_ATTR_AUTOMOUNT |
 				  STATX_ATTR_DAX);
 
+<<<<<<< HEAD
 	if ((request_mask & STATX_CHANGE_COOKIE) && IS_I_VERSION(inode)) {
 		stat->result_mask |= STATX_CHANGE_COOKIE;
 		stat->change_cookie = inode_query_iversion(inode);
@@ -134,6 +163,14 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
 					    request_mask, query_flags);
 
 	generic_fillattr(idmap, inode, stat);
+=======
+	mnt_userns = mnt_user_ns(path->mnt);
+	if (inode->i_op->getattr)
+		return inode->i_op->getattr(mnt_userns, path, stat,
+					    request_mask, query_flags);
+
+	generic_fillattr(mnt_userns, inode, stat);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 EXPORT_SYMBOL(vfs_getattr_nosec);
@@ -608,11 +645,17 @@ cp_statx(const struct kstat *stat, struct statx __user *buffer)
 
 	memset(&tmp, 0, sizeof(tmp));
 
+<<<<<<< HEAD
 	/* STATX_CHANGE_COOKIE is kernel-only for now */
 	tmp.stx_mask = stat->result_mask & ~STATX_CHANGE_COOKIE;
 	tmp.stx_blksize = stat->blksize;
 	/* STATX_ATTR_CHANGE_MONOTONIC is kernel-only for now */
 	tmp.stx_attributes = stat->attributes & ~STATX_ATTR_CHANGE_MONOTONIC;
+=======
+	tmp.stx_mask = stat->result_mask;
+	tmp.stx_blksize = stat->blksize;
+	tmp.stx_attributes = stat->attributes;
+>>>>>>> b7ba80a49124 (Commit)
 	tmp.stx_nlink = stat->nlink;
 	tmp.stx_uid = from_kuid_munged(current_user_ns(), stat->uid);
 	tmp.stx_gid = from_kgid_munged(current_user_ns(), stat->gid);
@@ -651,11 +694,14 @@ int do_statx(int dfd, struct filename *filename, unsigned int flags,
 	if ((flags & AT_STATX_SYNC_TYPE) == AT_STATX_SYNC_TYPE)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/* STATX_CHANGE_COOKIE is kernel-only for now. Ignore requests
 	 * from userland.
 	 */
 	mask &= ~STATX_CHANGE_COOKIE;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	error = vfs_statx(dfd, filename, flags, &stat, mask);
 	if (error)
 		return error;

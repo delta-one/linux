@@ -510,7 +510,11 @@ static void gre_fb_xmit(struct sk_buff *skb, struct net_device *dev,
 
 err_free_skb:
 	kfree_skb(skb);
+<<<<<<< HEAD
 	DEV_STATS_INC(dev, tx_dropped);
+=======
+	dev->stats.tx_dropped++;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void erspan_fb_xmit(struct sk_buff *skb, struct net_device *dev)
@@ -552,7 +556,11 @@ static void erspan_fb_xmit(struct sk_buff *skb, struct net_device *dev)
 		truncate = true;
 	}
 
+<<<<<<< HEAD
 	nhoff = skb_network_offset(skb);
+=======
+	nhoff = skb_network_header(skb) - skb_mac_header(skb);
+>>>>>>> b7ba80a49124 (Commit)
 	if (skb->protocol == htons(ETH_P_IP) &&
 	    (ntohs(ip_hdr(skb)->tot_len) > skb->len - nhoff))
 		truncate = true;
@@ -561,7 +569,11 @@ static void erspan_fb_xmit(struct sk_buff *skb, struct net_device *dev)
 		int thoff;
 
 		if (skb_transport_header_was_set(skb))
+<<<<<<< HEAD
 			thoff = skb_transport_offset(skb);
+=======
+			thoff = skb_transport_header(skb) - skb_mac_header(skb);
+>>>>>>> b7ba80a49124 (Commit)
 		else
 			thoff = nhoff + sizeof(struct ipv6hdr);
 		if (ntohs(ipv6_hdr(skb)->payload_len) > skb->len - thoff)
@@ -592,7 +604,11 @@ static void erspan_fb_xmit(struct sk_buff *skb, struct net_device *dev)
 
 err_free_skb:
 	kfree_skb(skb);
+<<<<<<< HEAD
 	DEV_STATS_INC(dev, tx_dropped);
+=======
+	dev->stats.tx_dropped++;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int gre_fill_metadata_dst(struct net_device *dev, struct sk_buff *skb)
@@ -663,7 +679,11 @@ static netdev_tx_t ipgre_xmit(struct sk_buff *skb,
 
 free_skb:
 	kfree_skb(skb);
+<<<<<<< HEAD
 	DEV_STATS_INC(dev, tx_dropped);
+=======
+	dev->stats.tx_dropped++;
+>>>>>>> b7ba80a49124 (Commit)
 	return NETDEV_TX_OK;
 }
 
@@ -717,7 +737,11 @@ static netdev_tx_t erspan_xmit(struct sk_buff *skb,
 
 free_skb:
 	kfree_skb(skb);
+<<<<<<< HEAD
 	DEV_STATS_INC(dev, tx_dropped);
+=======
+	dev->stats.tx_dropped++;
+>>>>>>> b7ba80a49124 (Commit)
 	return NETDEV_TX_OK;
 }
 
@@ -745,7 +769,11 @@ static netdev_tx_t gre_tap_xmit(struct sk_buff *skb,
 
 free_skb:
 	kfree_skb(skb);
+<<<<<<< HEAD
 	DEV_STATS_INC(dev, tx_dropped);
+=======
+	dev->stats.tx_dropped++;
+>>>>>>> b7ba80a49124 (Commit)
 	return NETDEV_TX_OK;
 }
 
@@ -1492,6 +1520,27 @@ static int ipgre_fill_info(struct sk_buff *skb, const struct net_device *dev)
 	struct ip_tunnel_parm *p = &t->parms;
 	__be16 o_flags = p->o_flags;
 
+<<<<<<< HEAD
+=======
+	if (t->erspan_ver <= 2) {
+		if (t->erspan_ver != 0 && !t->collect_md)
+			o_flags |= TUNNEL_KEY;
+
+		if (nla_put_u8(skb, IFLA_GRE_ERSPAN_VER, t->erspan_ver))
+			goto nla_put_failure;
+
+		if (t->erspan_ver == 1) {
+			if (nla_put_u32(skb, IFLA_GRE_ERSPAN_INDEX, t->index))
+				goto nla_put_failure;
+		} else if (t->erspan_ver == 2) {
+			if (nla_put_u8(skb, IFLA_GRE_ERSPAN_DIR, t->dir))
+				goto nla_put_failure;
+			if (nla_put_u16(skb, IFLA_GRE_ERSPAN_HWID, t->hwid))
+				goto nla_put_failure;
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (nla_put_u32(skb, IFLA_GRE_LINK, p->link) ||
 	    nla_put_be16(skb, IFLA_GRE_IFLAGS,
 			 gre_tnl_flags_to_gre_flags(p->i_flags)) ||
@@ -1532,6 +1581,7 @@ nla_put_failure:
 	return -EMSGSIZE;
 }
 
+<<<<<<< HEAD
 static int erspan_fill_info(struct sk_buff *skb, const struct net_device *dev)
 {
 	struct ip_tunnel *t = netdev_priv(dev);
@@ -1560,6 +1610,8 @@ nla_put_failure:
 	return -EMSGSIZE;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void erspan_setup(struct net_device *dev)
 {
 	struct ip_tunnel *t = netdev_priv(dev);
@@ -1638,7 +1690,11 @@ static struct rtnl_link_ops erspan_link_ops __read_mostly = {
 	.changelink	= erspan_changelink,
 	.dellink	= ip_tunnel_dellink,
 	.get_size	= ipgre_get_size,
+<<<<<<< HEAD
 	.fill_info	= erspan_fill_info,
+=======
+	.fill_info	= ipgre_fill_info,
+>>>>>>> b7ba80a49124 (Commit)
 	.get_link_net	= ip_tunnel_get_link_net,
 };
 
@@ -1675,7 +1731,11 @@ struct net_device *gretap_fb_dev_create(struct net *net, const char *name,
 	if (err)
 		goto out;
 
+<<<<<<< HEAD
 	err = rtnl_configure_link(dev, NULL, 0, NULL);
+=======
+	err = rtnl_configure_link(dev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err < 0)
 		goto out;
 

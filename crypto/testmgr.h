@@ -14882,6 +14882,7 @@ static const struct cipher_testvec sm4_cfb_tv_template[] = {
 	}
 };
 
+<<<<<<< HEAD
 static const struct cipher_testvec sm4_cts_tv_template[] = {
 	/* Generated from AES-CTS test vectors */
 	{
@@ -15229,6 +15230,8 @@ static const struct cipher_testvec sm4_xts_tv_template[] = {
 	},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct aead_testvec sm4_gcm_tv_template[] = {
 	{ /* From https://datatracker.ietf.org/doc/html/rfc8998#appendix-A.1 */
 		.key	= "\x01\x23\x45\x67\x89\xAB\xCD\xEF"
@@ -15260,6 +15263,7 @@ static const struct aead_testvec sm4_gcm_tv_template[] = {
 			  "\x83\xDE\x35\x41\xE4\xC2\xB5\x81"
 			  "\x77\xE0\x65\xA9\xBF\x7B\x62\xEC",
 		.clen	= 80,
+<<<<<<< HEAD
 	}, { /* Generated from AES-GCM test vectors */
 		.key    = zeroed_string,
 		.klen	= 16,
@@ -15552,6 +15556,8 @@ static const struct aead_testvec sm4_gcm_tv_template[] = {
 			  "\xa8\xb8\x9f\xfd\x37\x36\x31\x7e"
 			  "\x34\x4f\xc1\xc0\xca\x8a\x22\xfd",
 		.clen	= 735,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 };
 
@@ -15586,6 +15592,7 @@ static const struct aead_testvec sm4_ccm_tv_template[] = {
 			  "\x16\x84\x2D\x4F\xA1\x86\xF5\x6A"
 			  "\xB3\x32\x56\x97\x1F\xA1\x10\xF4",
 		.clen	= 80,
+<<<<<<< HEAD
 	}, { /* Generated from AES-CCM test vectors */
 		.key	= "\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7"
 			  "\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf",
@@ -15862,6 +15869,8 @@ static const struct aead_testvec sm4_ccm_tv_template[] = {
 			  "\xa9\x2c\xed\x51\xd5\x06\xc8\xc6"
 			  "\x4b\x9f\x5d\x1b\x61\x31\xad\xf4",
 		.clen	= 735,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 };
 
@@ -15945,6 +15954,7 @@ static const struct hash_testvec sm4_cmac128_tv_template[] = {
 	}
 };
 
+<<<<<<< HEAD
 static const struct hash_testvec sm4_xcbc128_tv_template[] = {
 	{ /* Generated from AES-XCBC128 test vectors */
 		.key		= "\x00\x01\x02\x03\x04\x05\x06\x07"
@@ -16007,6 +16017,8 @@ static const struct hash_testvec sm4_xcbc128_tv_template[] = {
 	}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Cast6 test vectors from RFC 2612 */
 static const struct cipher_testvec cast6_tv_template[] = {
 	{

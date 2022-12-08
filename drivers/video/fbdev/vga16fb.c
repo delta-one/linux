@@ -10,7 +10,10 @@
  * archive for more details.
  */
 
+<<<<<<< HEAD
 #include <linux/aperture.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/errno.h>
@@ -1325,6 +1328,14 @@ static int vga16fb_probe(struct platform_device *dev)
 		ret = -ENOMEM;
 		goto err_fb_alloc;
 	}
+<<<<<<< HEAD
+=======
+	info->apertures = alloc_apertures(1);
+	if (!info->apertures) {
+		ret = -ENOMEM;
+		goto err_ioremap;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* XXX share VGA_FB_PHYS_BASE and I/O region with vgacon and others */
 	info->screen_base = (void __iomem *)VGA_MAP_MEM(VGA_FB_PHYS_BASE, 0);
@@ -1359,7 +1370,12 @@ static int vga16fb_probe(struct platform_device *dev)
 	info->fix = vga16fb_fix;
 	/* supports rectangles with widths of multiples of 8 */
 	info->pixmap.blit_x = 1 << 7 | 1 << 15 | 1 << 23 | 1 << 31;
+<<<<<<< HEAD
 	info->flags = FBINFO_FLAG_DEFAULT | FBINFO_HWACCEL_YPAN;
+=======
+	info->flags = FBINFO_FLAG_DEFAULT | FBINFO_MISC_FIRMWARE |
+		FBINFO_HWACCEL_YPAN;
+>>>>>>> b7ba80a49124 (Commit)
 
 	i = (info->var.bits_per_pixel == 8) ? 256 : 16;
 	ret = fb_alloc_cmap(&info->cmap, i, 0);
@@ -1377,9 +1393,15 @@ static int vga16fb_probe(struct platform_device *dev)
 
 	vga16fb_update_fix(info);
 
+<<<<<<< HEAD
 	ret = devm_aperture_acquire_for_platform_device(dev, VGA_FB_PHYS_BASE, VGA_FB_PHYS_SIZE);
 	if (ret)
 		goto err_check_var;
+=======
+	info->apertures->ranges[0].base = VGA_FB_PHYS_BASE;
+	info->apertures->ranges[0].size = VGA_FB_PHYS_SIZE;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (register_framebuffer(info) < 0) {
 		printk(KERN_ERR "vga16fb: unable to register framebuffer\n");
 		ret = -EINVAL;
@@ -1401,12 +1423,21 @@ static int vga16fb_probe(struct platform_device *dev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void vga16fb_remove(struct platform_device *dev)
+=======
+static int vga16fb_remove(struct platform_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = platform_get_drvdata(dev);
 
 	if (info)
 		unregister_framebuffer(info);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct platform_device_id vga16fb_driver_id_table[] = {
@@ -1414,11 +1445,18 @@ static const struct platform_device_id vga16fb_driver_id_table[] = {
 	{"vga-framebuffer", 0},
 	{ }
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(platform, vga16fb_driver_id_table);
 
 static struct platform_driver vga16fb_driver = {
 	.probe = vga16fb_probe,
 	.remove_new = vga16fb_remove,
+=======
+
+static struct platform_driver vga16fb_driver = {
+	.probe = vga16fb_probe,
+	.remove = vga16fb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "vga16fb",
 	},

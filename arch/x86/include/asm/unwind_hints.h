@@ -15,7 +15,11 @@
 	UNWIND_HINT type=UNWIND_HINT_TYPE_ENTRY end=1
 .endm
 
+<<<<<<< HEAD
 .macro UNWIND_HINT_REGS base=%rsp offset=0 indirect=0 extra=1 partial=0 signal=1
+=======
+.macro UNWIND_HINT_REGS base=%rsp offset=0 indirect=0 extra=1 partial=0
+>>>>>>> b7ba80a49124 (Commit)
 	.if \base == %rsp
 		.if \indirect
 			.set sp_reg, ORC_REG_SP_INDIRECT
@@ -45,11 +49,19 @@
 		.set type, UNWIND_HINT_TYPE_REGS
 	.endif
 
+<<<<<<< HEAD
 	UNWIND_HINT sp_reg=sp_reg sp_offset=sp_offset type=type signal=\signal
 .endm
 
 .macro UNWIND_HINT_IRET_REGS base=%rsp offset=0 signal=1
 	UNWIND_HINT_REGS base=\base offset=\offset partial=1 signal=\signal
+=======
+	UNWIND_HINT sp_reg=sp_reg sp_offset=sp_offset type=type
+.endm
+
+.macro UNWIND_HINT_IRET_REGS base=%rsp offset=0
+	UNWIND_HINT_REGS base=\base offset=\offset partial=1
+>>>>>>> b7ba80a49124 (Commit)
 .endm
 
 .macro UNWIND_HINT_FUNC
@@ -67,7 +79,11 @@
 #else
 
 #define UNWIND_HINT_FUNC \
+<<<<<<< HEAD
 	UNWIND_HINT(ORC_REG_SP, 8, UNWIND_HINT_TYPE_FUNC, 0, 0)
+=======
+	UNWIND_HINT(ORC_REG_SP, 8, UNWIND_HINT_TYPE_FUNC, 0)
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __ASSEMBLY__ */
 

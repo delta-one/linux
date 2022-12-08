@@ -379,7 +379,12 @@ static int tcx_probe(struct platform_device *op)
 
 	spin_lock_init(&par->lock);
 
+<<<<<<< HEAD
 	par->lowdepth = of_property_read_bool(dp, "tcx-8-bit");
+=======
+	par->lowdepth =
+		(of_find_property(dp, "tcx-8-bit", NULL) != NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	sbusfb_fill_var(&info->var, dp, 8);
 	info->var.red.length = 8;
@@ -486,7 +491,11 @@ out_err:
 	return err;
 }
 
+<<<<<<< HEAD
 static void tcx_remove(struct platform_device *op)
+=======
+static int tcx_remove(struct platform_device *op)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = dev_get_drvdata(&op->dev);
 	struct tcx_par *par = info->par;
@@ -497,6 +506,11 @@ static void tcx_remove(struct platform_device *op)
 	tcx_unmap_regs(op, info, par);
 
 	framebuffer_release(info);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id tcx_match[] = {
@@ -513,7 +527,11 @@ static struct platform_driver tcx_driver = {
 		.of_match_table = tcx_match,
 	},
 	.probe		= tcx_probe,
+<<<<<<< HEAD
 	.remove_new	= tcx_remove,
+=======
+	.remove		= tcx_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init tcx_init(void)

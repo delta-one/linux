@@ -920,13 +920,25 @@ const struct xattr_handler *jffs2_xattr_handlers[] = {
 #ifdef CONFIG_JFFS2_FS_SECURITY
 	&jffs2_security_xattr_handler,
 #endif
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_JFFS2_FS_POSIX_ACL
+	&posix_acl_access_xattr_handler,
+	&posix_acl_default_xattr_handler,
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	&jffs2_trusted_xattr_handler,
 	NULL
 };
 
+<<<<<<< HEAD
 static const char *jffs2_xattr_prefix(int xprefix, struct dentry *dentry)
 {
 	const struct xattr_handler *ret = NULL;
+=======
+static const struct xattr_handler *xprefix_to_handler(int xprefix) {
+	const struct xattr_handler *ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (xprefix) {
 	case JFFS2_XPREFIX_USER:
@@ -939,16 +951,24 @@ static const char *jffs2_xattr_prefix(int xprefix, struct dentry *dentry)
 #endif
 #ifdef CONFIG_JFFS2_FS_POSIX_ACL
 	case JFFS2_XPREFIX_ACL_ACCESS:
+<<<<<<< HEAD
 		ret = &nop_posix_acl_access;
 		break;
 	case JFFS2_XPREFIX_ACL_DEFAULT:
 		ret = &nop_posix_acl_default;
+=======
+		ret = &posix_acl_access_xattr_handler;
+		break;
+	case JFFS2_XPREFIX_ACL_DEFAULT:
+		ret = &posix_acl_default_xattr_handler;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 #endif
 	case JFFS2_XPREFIX_TRUSTED:
 		ret = &jffs2_trusted_xattr_handler;
 		break;
 	default:
+<<<<<<< HEAD
 		return NULL;
 	}
 
@@ -956,6 +976,12 @@ static const char *jffs2_xattr_prefix(int xprefix, struct dentry *dentry)
 		return NULL;
 
 	return xattr_prefix(ret);
+=======
+		ret = NULL;
+		break;
+	}
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 ssize_t jffs2_listxattr(struct dentry *dentry, char *buffer, size_t size)
@@ -966,6 +992,10 @@ ssize_t jffs2_listxattr(struct dentry *dentry, char *buffer, size_t size)
 	struct jffs2_inode_cache *ic = f->inocache;
 	struct jffs2_xattr_ref *ref, **pref;
 	struct jffs2_xattr_datum *xd;
+<<<<<<< HEAD
+=======
+	const struct xattr_handler *xhandle;
+>>>>>>> b7ba80a49124 (Commit)
 	const char *prefix;
 	ssize_t prefix_len, len, rc;
 	int retry = 0;
@@ -997,10 +1027,17 @@ ssize_t jffs2_listxattr(struct dentry *dentry, char *buffer, size_t size)
 					goto out;
 			}
 		}
+<<<<<<< HEAD
 
 		prefix = jffs2_xattr_prefix(xd->xprefix, dentry);
 		if (!prefix)
 			continue;
+=======
+		xhandle = xprefix_to_handler(xd->xprefix);
+		if (!xhandle || (xhandle->list && !xhandle->list(dentry)))
+			continue;
+		prefix = xhandle->prefix ?: xhandle->name;
+>>>>>>> b7ba80a49124 (Commit)
 		prefix_len = strlen(prefix);
 		rc = prefix_len + xd->name_len + 1;
 

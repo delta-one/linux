@@ -8,6 +8,7 @@
 
 struct bio_post_read_ctx;
 
+<<<<<<< HEAD
 enum iostat_lat_type {
 	READ_IO = 0,
 	WRITE_SYNC_IO,
@@ -18,11 +19,25 @@ enum iostat_lat_type {
 #ifdef CONFIG_F2FS_IOSTAT
 
 #define NUM_PREALLOC_IOSTAT_CTXS	128
+=======
+#ifdef CONFIG_F2FS_IOSTAT
+
+>>>>>>> b7ba80a49124 (Commit)
 #define DEFAULT_IOSTAT_PERIOD_MS	3000
 #define MIN_IOSTAT_PERIOD_MS		100
 /* maximum period of iostat tracing is 1 day */
 #define MAX_IOSTAT_PERIOD_MS		8640000
 
+<<<<<<< HEAD
+=======
+enum {
+	READ_IO,
+	WRITE_SYNC_IO,
+	WRITE_ASYNC_IO,
+	MAX_IO_TYPE,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct iostat_lat_info {
 	unsigned long sum_lat[MAX_IO_TYPE][NR_PAGE_TYPE];	/* sum of io latencies */
 	unsigned long peak_lat[MAX_IO_TYPE][NR_PAGE_TYPE];	/* peak io latency */
@@ -58,7 +73,11 @@ static inline struct bio_post_read_ctx *get_post_read_ctx(struct bio *bio)
 	return iostat_ctx->post_read_ctx;
 }
 
+<<<<<<< HEAD
 extern void iostat_update_and_unbind_ctx(struct bio *bio);
+=======
+extern void iostat_update_and_unbind_ctx(struct bio *bio, int rw);
+>>>>>>> b7ba80a49124 (Commit)
 extern void iostat_alloc_and_bind_ctx(struct f2fs_sb_info *sbi,
 		struct bio *bio, struct bio_post_read_ctx *ctx);
 extern int f2fs_init_iostat_processing(void);
@@ -68,7 +87,11 @@ extern void f2fs_destroy_iostat(struct f2fs_sb_info *sbi);
 #else
 static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi, struct inode *inode,
 		enum iostat_type type, unsigned long long io_bytes) {}
+<<<<<<< HEAD
 static inline void iostat_update_and_unbind_ctx(struct bio *bio) {}
+=======
+static inline void iostat_update_and_unbind_ctx(struct bio *bio, int rw) {}
+>>>>>>> b7ba80a49124 (Commit)
 static inline void iostat_alloc_and_bind_ctx(struct f2fs_sb_info *sbi,
 		struct bio *bio, struct bio_post_read_ctx *ctx) {}
 static inline void iostat_update_submit_ctx(struct bio *bio,

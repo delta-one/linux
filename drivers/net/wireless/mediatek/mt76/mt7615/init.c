@@ -443,6 +443,7 @@ mt7615_cap_dbdc_disable(struct mt7615_dev *dev)
 	mt76_set_stream_caps(&dev->mphy, true);
 }
 
+<<<<<<< HEAD
 u32 mt7615_reg_map(struct mt7615_dev *dev, u32 addr)
 {
 	u32 base, offset;
@@ -522,6 +523,8 @@ void mt7615_led_set_brightness(struct led_classdev *led_cdev,
 }
 EXPORT_SYMBOL_GPL(mt7615_led_set_brightness);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int mt7615_register_ext_phy(struct mt7615_dev *dev)
 {
 	struct mt7615_phy *phy = mt7615_ext_phy(dev);
@@ -576,12 +579,15 @@ int mt7615_register_ext_phy(struct mt7615_dev *dev)
 	for (i = 0; i <= MT_TXQ_PSD ; i++)
 		mphy->q_tx[i] = dev->mphy.q_tx[i];
 
+<<<<<<< HEAD
 	/* init led callbacks */
 	if (IS_ENABLED(CONFIG_MT76_LEDS)) {
 		mphy->leds.cdev.brightness_set = mt7615_led_set_brightness;
 		mphy->leds.cdev.blink_set = mt7615_led_set_blink;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = mt76_register_phy(mphy, true, mt76_rates,
 				ARRAY_SIZE(mt76_rates));
 	if (ret)

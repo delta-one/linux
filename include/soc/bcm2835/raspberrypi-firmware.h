@@ -136,6 +136,7 @@ enum rpi_firmware_property_tag {
 	RPI_FIRMWARE_GET_DMA_CHANNELS =                       0x00060001,
 };
 
+<<<<<<< HEAD
 enum rpi_firmware_clk_id {
 	RPI_FIRMWARE_EMMC_CLK_ID = 1,
 	RPI_FIRMWARE_UART_CLK_ID,
@@ -173,15 +174,20 @@ struct rpi_firmware_clk_rate_request {
 		.id = cpu_to_le32(_id),		\
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if IS_ENABLED(CONFIG_RASPBERRYPI_FIRMWARE)
 int rpi_firmware_property(struct rpi_firmware *fw,
 			  u32 tag, void *data, size_t len);
 int rpi_firmware_property_list(struct rpi_firmware *fw,
 			       void *data, size_t tag_size);
 void rpi_firmware_put(struct rpi_firmware *fw);
+<<<<<<< HEAD
 unsigned int rpi_firmware_clk_get_max_rate(struct rpi_firmware *fw,
 					   unsigned int id);
 struct device_node *rpi_firmware_find_node(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node);
 struct rpi_firmware *devm_rpi_firmware_get(struct device *dev,
 					   struct device_node *firmware_node);
@@ -199,6 +205,7 @@ static inline int rpi_firmware_property_list(struct rpi_firmware *fw,
 }
 
 static inline void rpi_firmware_put(struct rpi_firmware *fw) { }
+<<<<<<< HEAD
 
 static inline unsigned int rpi_firmware_clk_get_max_rate(struct rpi_firmware *fw,
 							 unsigned int id)
@@ -211,6 +218,8 @@ static inline struct device_node *rpi_firmware_find_node(void)
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node)
 {
 	return NULL;

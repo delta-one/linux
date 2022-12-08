@@ -22,7 +22,10 @@
 #include <linux/pci.h>
 #include <linux/platform_device.h>
 #include <linux/rtc.h>
+<<<<<<< HEAD
 #include <linux/serio.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/suspend.h>
 #include <linux/seq_file.h>
 #include <linux/uaccess.h>
@@ -43,7 +46,10 @@
 #define AMD_PMC_STB_S2IDLE_PREPARE	0xC6000001
 #define AMD_PMC_STB_S2IDLE_RESTORE	0xC6000002
 #define AMD_PMC_STB_S2IDLE_CHECK	0xC6000003
+<<<<<<< HEAD
 #define AMD_PMC_STB_DUMMY_PC		0xC6000007
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* STB S2D(Spill to DRAM) has different message port offset */
 #define STB_SPILL_TO_DRAM		0xBE
@@ -105,7 +111,10 @@
 #define DELAY_MIN_US		2000
 #define DELAY_MAX_US		3000
 #define FIFO_SIZE		4096
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum amd_pmc_def {
 	MSG_TEST = 0x01,
 	MSG_OS_HINT_PCO,
@@ -116,7 +125,10 @@ enum s2d_arg {
 	S2D_TELEMETRY_SIZE = 0x01,
 	S2D_PHYS_ADDR_LOW,
 	S2D_PHYS_ADDR_HIGH,
+<<<<<<< HEAD
 	S2D_NUM_SAMPLES,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct amd_pmc_bit_map {
@@ -157,13 +169,20 @@ struct amd_pmc_dev {
 	struct device *dev;
 	struct pci_dev *rdev;
 	struct mutex lock; /* generic mutex lock */
+<<<<<<< HEAD
 	struct dentry *dbgfs_dir;
+=======
+#if IS_ENABLED(CONFIG_DEBUG_FS)
+	struct dentry *dbgfs_dir;
+#endif /* CONFIG_DEBUG_FS */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static bool enable_stb;
 module_param(enable_stb, bool, 0644);
 MODULE_PARM_DESC(enable_stb, "Enable the STB debug mechanism");
 
+<<<<<<< HEAD
 static bool disable_workarounds;
 module_param(disable_workarounds, bool, 0644);
 MODULE_PARM_DESC(disable_workarounds, "Disable workarounds for platform bugs");
@@ -172,6 +191,14 @@ static struct amd_pmc_dev pmc;
 static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret);
 static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
 static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
+=======
+static struct amd_pmc_dev pmc;
+static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret);
+static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
+#ifdef CONFIG_SUSPEND
+static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
 {
@@ -247,6 +274,7 @@ static const struct file_operations amd_pmc_stb_debugfs_fops = {
 static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
 {
 	struct amd_pmc_dev *dev = filp->f_inode->i_private;
+<<<<<<< HEAD
 	u32 *buf, fsize, num_samples, stb_rdptr_offset = 0;
 	int ret;
 
@@ -254,11 +282,15 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
 	ret = amd_pmc_write_stb(dev, AMD_PMC_STB_DUMMY_PC);
 	if (ret)
 		dev_err(dev->dev, "error writing to STB: %d\n", ret);
+=======
+	u32 *buf;
+>>>>>>> b7ba80a49124 (Commit)
 
 	buf = kzalloc(S2D_TELEMETRY_BYTES_MAX, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	/* Spill to DRAM num_samples uses separate SMU message port */
 	dev->msg_port = 1;
 
@@ -281,6 +313,9 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
 	}
 
 	memcpy_fromio(buf, dev->stb_virt_addr + stb_rdptr_offset, fsize);
+=======
+	memcpy_fromio(buf, dev->stb_virt_addr, S2D_TELEMETRY_BYTES_MAX);
+>>>>>>> b7ba80a49124 (Commit)
 	filp->private_data = buf;
 
 	return 0;
@@ -309,6 +344,10 @@ static const struct file_operations amd_pmc_stb_debugfs_fops_v2 = {
 	.release = amd_pmc_stb_debugfs_release_v2,
 };
 
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_SUSPEND) || defined(CONFIG_DEBUG_FS)
+>>>>>>> b7ba80a49124 (Commit)
 static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev)
 {
 	if (dev->cpu_id == AMD_CPU_ID_PCO) {
@@ -383,7 +422,13 @@ static int get_metrics_table(struct amd_pmc_dev *pdev, struct smu_metrics *table
 	memcpy_fromio(table, pdev->smu_virt_addr, sizeof(struct smu_metrics));
 	return 0;
 }
+<<<<<<< HEAD
 
+=======
+#endif /* CONFIG_SUSPEND || CONFIG_DEBUG_FS */
+
+#ifdef CONFIG_SUSPEND
+>>>>>>> b7ba80a49124 (Commit)
 static void amd_pmc_validate_deepest(struct amd_pmc_dev *pdev)
 {
 	struct smu_metrics table;
@@ -397,6 +442,10 @@ static void amd_pmc_validate_deepest(struct amd_pmc_dev *pdev)
 		dev_dbg(pdev->dev, "Last suspend in deepest state for %lluus\n",
 			 table.timein_s0i3_lastcapture);
 }
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
 {
@@ -456,6 +505,10 @@ static struct attribute *pmc_attrs[] = {
 };
 ATTRIBUTE_GROUPS(pmc);
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_DEBUG_FS
+>>>>>>> b7ba80a49124 (Commit)
 static int smu_fw_info_show(struct seq_file *s, void *unused)
 {
 	struct amd_pmc_dev *dev = s->private;
@@ -570,6 +623,18 @@ static void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
 					    &amd_pmc_stb_debugfs_fops);
 	}
 }
+<<<<<<< HEAD
+=======
+#else
+static inline void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
+{
+}
+
+static inline void amd_pmc_dbgfs_unregister(struct amd_pmc_dev *dev)
+{
+}
+#endif /* CONFIG_DEBUG_FS */
+>>>>>>> b7ba80a49124 (Commit)
 
 static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
 {
@@ -586,6 +651,7 @@ static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
 	}
 
 	value = amd_pmc_reg_read(dev, response);
+<<<<<<< HEAD
 	dev_dbg(dev->dev, "AMD_%s_REGISTER_RESPONSE:%x\n", dev->msg_port ? "S2D" : "PMC", value);
 
 	value = amd_pmc_reg_read(dev, argument);
@@ -593,6 +659,15 @@ static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
 
 	value = amd_pmc_reg_read(dev, message);
 	dev_dbg(dev->dev, "AMD_%s_REGISTER_MESSAGE:%x\n", dev->msg_port ? "S2D" : "PMC", value);
+=======
+	dev_dbg(dev->dev, "AMD_PMC_REGISTER_RESPONSE:%x\n", value);
+
+	value = amd_pmc_reg_read(dev, argument);
+	dev_dbg(dev->dev, "AMD_PMC_REGISTER_ARGUMENT:%x\n", value);
+
+	value = amd_pmc_reg_read(dev, message);
+	dev_dbg(dev->dev, "AMD_PMC_REGISTER_MESSAGE:%x\n", value);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret)
@@ -669,6 +744,10 @@ out_unlock:
 	return rc;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_SUSPEND
+>>>>>>> b7ba80a49124 (Commit)
 static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
 {
 	switch (dev->cpu_id) {
@@ -683,6 +762,7 @@ static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
 	return -EINVAL;
 }
 
+<<<<<<< HEAD
 static int amd_pmc_czn_wa_irq1(struct amd_pmc_dev *pdev)
 {
 	struct device *d;
@@ -710,6 +790,8 @@ static int amd_pmc_czn_wa_irq1(struct amd_pmc_dev *pdev)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
 {
 	struct rtc_device *rtc_device;
@@ -718,6 +800,7 @@ static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
 	struct rtc_time tm;
 	int rc;
 
+<<<<<<< HEAD
 	/* we haven't yet read SMU version */
 	if (!pdev->major) {
 		rc = amd_pmc_get_smu_version(pdev);
@@ -725,6 +808,8 @@ static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
 			return rc;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (pdev->major < 64 || (pdev->major == 64 && pdev->minor < 53))
 		return 0;
 
@@ -772,8 +857,13 @@ static void amd_pmc_s2idle_prepare(void)
 	/* Reset and Start SMU logging - to monitor the s0i3 stats */
 	amd_pmc_setup_smu_logging(pdev);
 
+<<<<<<< HEAD
 	/* Activate CZN specific platform bug workarounds */
 	if (pdev->cpu_id == AMD_CPU_ID_CZN && !disable_workarounds) {
+=======
+	/* Activate CZN specific RTC functionality */
+	if (pdev->cpu_id == AMD_CPU_ID_CZN) {
+>>>>>>> b7ba80a49124 (Commit)
 		rc = amd_pmc_verify_czn_rtc(pdev, &arg);
 		if (rc) {
 			dev_err(pdev->dev, "failed to set RTC: %d\n", rc);
@@ -781,6 +871,11 @@ static void amd_pmc_s2idle_prepare(void)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	/* Dump the IdleMask before we send hint to SMU */
+	amd_pmc_idlemask_read(pdev, pdev->dev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	msg = amd_pmc_get_os_hint(pdev);
 	rc = amd_pmc_send_cmd(pdev, arg, NULL, msg, 0);
 	if (rc) {
@@ -796,6 +891,7 @@ static void amd_pmc_s2idle_prepare(void)
 static void amd_pmc_s2idle_check(void)
 {
 	struct amd_pmc_dev *pdev = &pmc;
+<<<<<<< HEAD
 	struct smu_metrics table;
 	int rc;
 
@@ -807,6 +903,10 @@ static void amd_pmc_s2idle_check(void)
 	/* Dump the IdleMask before we add to the STB */
 	amd_pmc_idlemask_read(pdev, pdev->dev, NULL);
 
+=======
+	int rc;
+
+>>>>>>> b7ba80a49124 (Commit)
 	rc = amd_pmc_write_stb(pdev, AMD_PMC_STB_S2IDLE_CHECK);
 	if (rc)
 		dev_err(pdev->dev, "error writing to STB: %d\n", rc);
@@ -826,6 +926,12 @@ static void amd_pmc_s2idle_restore(void)
 	/* Let SMU know that we are looking for stats */
 	amd_pmc_send_cmd(pdev, 0, NULL, SMU_MSG_LOG_DUMP_DATA, 0);
 
+<<<<<<< HEAD
+=======
+	/* Dump the IdleMask to see the blockers */
+	amd_pmc_idlemask_read(pdev, pdev->dev, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	rc = amd_pmc_write_stb(pdev, AMD_PMC_STB_S2IDLE_RESTORE);
 	if (rc)
 		dev_err(pdev->dev, "error writing to STB: %d\n", rc);
@@ -839,6 +945,7 @@ static struct acpi_s2idle_dev_ops amd_pmc_s2idle_dev_ops = {
 	.check = amd_pmc_s2idle_check,
 	.restore = amd_pmc_s2idle_restore,
 };
+<<<<<<< HEAD
 
 static int __maybe_unused amd_pmc_suspend_handler(struct device *dev)
 {
@@ -857,6 +964,9 @@ static int __maybe_unused amd_pmc_suspend_handler(struct device *dev)
 }
 
 static DEFINE_SIMPLE_DEV_PM_OPS(amd_pmc_pm, amd_pmc_suspend_handler, NULL);
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct pci_device_id pmc_pci_ids[] = {
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PS) },
@@ -898,6 +1008,10 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_SUSPEND
+>>>>>>> b7ba80a49124 (Commit)
 static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data)
 {
 	int err;
@@ -918,6 +1032,10 @@ static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data)
 
 	return 0;
 }
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf)
 {
@@ -1004,6 +1122,7 @@ static int amd_pmc_probe(struct platform_device *pdev)
 	if (enable_stb && (dev->cpu_id == AMD_CPU_ID_YC || dev->cpu_id == AMD_CPU_ID_CB)) {
 		err = amd_pmc_s2d_init(dev);
 		if (err)
+<<<<<<< HEAD
 			goto err_pci_dev_put;
 	}
 
@@ -1013,6 +1132,17 @@ static int amd_pmc_probe(struct platform_device *pdev)
 		if (err)
 			dev_warn(dev->dev, "failed to register LPS0 sleep handler, expect increased power consumption\n");
 	}
+=======
+			return err;
+	}
+
+	platform_set_drvdata(pdev, dev);
+#ifdef CONFIG_SUSPEND
+	err = acpi_register_lps0_dev(&amd_pmc_s2idle_dev_ops);
+	if (err)
+		dev_warn(dev->dev, "failed to register LPS0 sleep handler, expect increased power consumption\n");
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	amd_pmc_dbgfs_register(dev);
 	return 0;
@@ -1022,6 +1152,7 @@ err_pci_dev_put:
 	return err;
 }
 
+<<<<<<< HEAD
 static void amd_pmc_remove(struct platform_device *pdev)
 {
 	struct amd_pmc_dev *dev = platform_get_drvdata(pdev);
@@ -1031,6 +1162,19 @@ static void amd_pmc_remove(struct platform_device *pdev)
 	amd_pmc_dbgfs_unregister(dev);
 	pci_dev_put(dev->rdev);
 	mutex_destroy(&dev->lock);
+=======
+static int amd_pmc_remove(struct platform_device *pdev)
+{
+	struct amd_pmc_dev *dev = platform_get_drvdata(pdev);
+
+#ifdef CONFIG_SUSPEND
+	acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
+#endif
+	amd_pmc_dbgfs_unregister(dev);
+	pci_dev_put(dev->rdev);
+	mutex_destroy(&dev->lock);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id amd_pmc_acpi_ids[] = {
@@ -1038,7 +1182,10 @@ static const struct acpi_device_id amd_pmc_acpi_ids[] = {
 	{"AMDI0006", 0},
 	{"AMDI0007", 0},
 	{"AMDI0008", 0},
+<<<<<<< HEAD
 	{"AMDI0009", 0},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{"AMD0004", 0},
 	{"AMD0005", 0},
 	{ }
@@ -1050,10 +1197,16 @@ static struct platform_driver amd_pmc_driver = {
 		.name = "amd_pmc",
 		.acpi_match_table = amd_pmc_acpi_ids,
 		.dev_groups = pmc_groups,
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&amd_pmc_pm),
 	},
 	.probe = amd_pmc_probe,
 	.remove_new = amd_pmc_remove,
+=======
+	},
+	.probe = amd_pmc_probe,
+	.remove = amd_pmc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(amd_pmc_driver);
 

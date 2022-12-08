@@ -4,11 +4,17 @@
  * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
  */
 
+<<<<<<< HEAD
 #include <dirent.h>
 #include <stdbool.h>
 #include <linux/coresight-pmu.h>
 #include <linux/zalloc.h>
 #include <api/fs/fs.h>
+=======
+#include <stdbool.h>
+#include <linux/coresight-pmu.h>
+#include <linux/zalloc.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "../../../util/auxtrace.h"
 #include "../../../util/debug.h"
@@ -16,7 +22,10 @@
 #include "../../../util/pmu.h"
 #include "cs-etm.h"
 #include "arm-spe.h"
+<<<<<<< HEAD
 #include "hisi-ptt.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
 {
@@ -53,6 +62,7 @@ static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
 	return arm_spe_pmus;
 }
 
+<<<<<<< HEAD
 static struct perf_pmu **find_all_hisi_ptt_pmus(int *nr_ptts, int *err)
 {
 	struct perf_pmu **hisi_ptt_pmus = NULL;
@@ -127,12 +137,25 @@ struct auxtrace_record
 	int auxtrace_event_cnt = 0;
 	int nr_spes = 0;
 	int nr_ptts = 0;
+=======
+struct auxtrace_record
+*auxtrace_record__init(struct evlist *evlist, int *err)
+{
+	struct perf_pmu	*cs_etm_pmu;
+	struct evsel *evsel;
+	bool found_etm = false;
+	struct perf_pmu *found_spe = NULL;
+	struct perf_pmu **arm_spe_pmus = NULL;
+	int nr_spes = 0;
+	int i = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!evlist)
 		return NULL;
 
 	cs_etm_pmu = perf_pmu__find(CORESIGHT_ETM_PMU_NAME);
 	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
+<<<<<<< HEAD
 	hisi_ptt_pmus = find_all_hisi_ptt_pmus(&nr_ptts, err);
 
 	evlist__for_each_entry(evlist, evsel) {
@@ -160,6 +183,28 @@ struct auxtrace_record
 
 	if (auxtrace_event_cnt > 1) {
 		pr_err("Concurrent AUX trace operation not currently supported\n");
+=======
+
+	evlist__for_each_entry(evlist, evsel) {
+		if (cs_etm_pmu &&
+		    evsel->core.attr.type == cs_etm_pmu->type)
+			found_etm = true;
+
+		if (!nr_spes || found_spe)
+			continue;
+
+		for (i = 0; i < nr_spes; i++) {
+			if (evsel->core.attr.type == arm_spe_pmus[i]->type) {
+				found_spe = arm_spe_pmus[i];
+				break;
+			}
+		}
+	}
+	free(arm_spe_pmus);
+
+	if (found_etm && found_spe) {
+		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
+>>>>>>> b7ba80a49124 (Commit)
 		*err = -EOPNOTSUPP;
 		return NULL;
 	}
@@ -170,9 +215,12 @@ struct auxtrace_record
 #if defined(__aarch64__)
 	if (found_spe)
 		return arm_spe_recording_init(err, found_spe);
+<<<<<<< HEAD
 
 	if (found_ptt)
 		return hisi_ptt_recording_init(err, found_ptt);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	/*

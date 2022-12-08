@@ -32,6 +32,10 @@ static int init_vq(struct virtio_pmem *vpmem)
 static int virtio_pmem_probe(struct virtio_device *vdev)
 {
 	struct nd_region_desc ndr_desc = {};
+<<<<<<< HEAD
+=======
+	int nid = dev_to_node(&vdev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	struct nd_region *nd_region;
 	struct virtio_pmem *vpmem;
 	struct resource res;
@@ -78,6 +82,7 @@ static int virtio_pmem_probe(struct virtio_device *vdev)
 	dev_set_drvdata(&vdev->dev, vpmem->nvdimm_bus);
 
 	ndr_desc.res = &res;
+<<<<<<< HEAD
 
 	ndr_desc.numa_node = memory_add_physaddr_to_nid(res.start);
 	ndr_desc.target_node = phys_to_target_node(res.start);
@@ -87,6 +92,9 @@ static int virtio_pmem_probe(struct virtio_device *vdev)
 			NUMA_NO_NODE, ndr_desc.target_node);
 	}
 
+=======
+	ndr_desc.numa_node = nid;
+>>>>>>> b7ba80a49124 (Commit)
 	ndr_desc.flush = async_pmem_flush;
 	ndr_desc.provider_data = vdev;
 	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);

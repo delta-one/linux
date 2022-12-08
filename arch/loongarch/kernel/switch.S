@@ -23,6 +23,7 @@ SYM_FUNC_START(__switch_to)
 	stptr.d	ra, a0, THREAD_REG01
 	stptr.d a3, a0, THREAD_SCHED_RA
 	stptr.d a4, a0, THREAD_SCHED_CFA
+<<<<<<< HEAD
 #if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_SMP)
 	la	t7, __stack_chk_guard
 	LONG_L	t8, a1, TASK_STACK_CANARY
@@ -32,6 +33,12 @@ SYM_FUNC_START(__switch_to)
 	cpu_restore_nonscratch a1
 
 	li.w		t0, _THREAD_SIZE
+=======
+	move	tp, a2
+	cpu_restore_nonscratch a1
+
+	li.w		t0, _THREAD_SIZE - 32
+>>>>>>> b7ba80a49124 (Commit)
 	PTR_ADD		t0, t0, tp
 	set_saved_sp	t0, t1, t2
 

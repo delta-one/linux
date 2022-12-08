@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0-only */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2011 Red Hat, Inc.
  *
@@ -35,12 +38,20 @@ struct node_header {
 	__le32 max_entries;
 	__le32 value_size;
 	__le32 padding;
+<<<<<<< HEAD
 } __packed __aligned(8);
+=======
+} __attribute__((packed, aligned(8)));
+>>>>>>> b7ba80a49124 (Commit)
 
 struct btree_node {
 	struct node_header header;
 	__le64 keys[];
+<<<<<<< HEAD
 } __packed __aligned(8);
+=======
+} __attribute__((packed, aligned(8)));
+>>>>>>> b7ba80a49124 (Commit)
 
 
 /*
@@ -119,7 +130,10 @@ static inline void *value_base(struct btree_node *n)
 static inline void *value_ptr(struct btree_node *n, uint32_t index)
 {
 	uint32_t value_size = le32_to_cpu(n->header.value_size);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return value_base(n) + (value_size * index);
 }
 

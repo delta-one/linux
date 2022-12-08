@@ -58,9 +58,16 @@ int drm_atomic_helper_check_plane_state(struct drm_plane_state *plane_state,
 					int max_scale,
 					bool can_position,
 					bool can_update_disabled);
+<<<<<<< HEAD
 int drm_atomic_helper_check_planes(struct drm_device *dev,
 			       struct drm_atomic_state *state);
 int drm_atomic_helper_check_crtc_primary_plane(struct drm_crtc_state *crtc_state);
+=======
+int drm_atomic_helper_check_crtc_state(struct drm_crtc_state *crtc_state,
+				       bool can_disable_primary_plane);
+int drm_atomic_helper_check_planes(struct drm_device *dev,
+			       struct drm_atomic_state *state);
+>>>>>>> b7ba80a49124 (Commit)
 int drm_atomic_helper_check(struct drm_device *dev,
 			    struct drm_atomic_state *state);
 void drm_atomic_helper_commit_tail(struct drm_atomic_state *state);
@@ -210,6 +217,7 @@ int drm_atomic_helper_page_flip_target(
 								   plane)))
 
 /**
+<<<<<<< HEAD
  * drm_atomic_plane_enabling - check whether a plane is being enabled
  * @old_plane_state: old atomic plane state
  * @new_plane_state: new atomic plane state
@@ -236,6 +244,8 @@ static inline bool drm_atomic_plane_enabling(struct drm_plane_state *old_plane_s
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * drm_atomic_plane_disabling - check whether a plane is being disabled
  * @old_plane_state: old atomic plane state
  * @new_plane_state: new atomic plane state

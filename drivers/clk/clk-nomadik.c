@@ -138,7 +138,11 @@ out_put:
 }
 
 /**
+<<<<<<< HEAD
  * struct clk_pll - Nomadik PLL clock
+=======
+ * struct clk_pll1 - Nomadik PLL1 clock
+>>>>>>> b7ba80a49124 (Commit)
  * @hw: corresponding clock hardware entry
  * @id: PLL instance: 1 or 2
  */

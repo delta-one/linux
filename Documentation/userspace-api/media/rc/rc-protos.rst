@@ -75,7 +75,11 @@ protocol, or the manchester BPF decoder.
      - Command
 
 There is a variant of rc5 called either rc5x or extended rc5
+<<<<<<< HEAD
 where there the second stop bit is the 6th command bit, but inverted.
+=======
+where there the second stop bit is the 6th commmand bit, but inverted.
+>>>>>>> b7ba80a49124 (Commit)
 This is done so it the scancodes and encoding is compatible with existing
 schemes. This bit is stored in bit 6 of the scancode, inverted. This is
 done to keep it compatible with plain rc-5 where there are two start bits.

@@ -110,7 +110,11 @@ static void __attribute__((noreturn)) cs_usage(const char *bin)
 
 static void cs_parse_args(int argc, char *argv[])
 {
+<<<<<<< HEAD
 	int o;
+=======
+	char o;
+>>>>>>> b7ba80a49124 (Commit)
 
 	while ((o = getopt(argc, argv, "46sS:p:m:M:d:tf:F:c:C:l:L:H:")) != -1) {
 		switch (o) {

@@ -104,7 +104,10 @@ enum {
 enum dev_status {
 	HISI_SAS_DEV_INIT,
 	HISI_SAS_DEV_NORMAL,
+<<<<<<< HEAD
 	HISI_SAS_DEV_NCQ_ERR,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum {
@@ -207,7 +210,10 @@ struct hisi_sas_cq {
 	int	rd_point;
 	int	id;
 	int	irq_no;
+<<<<<<< HEAD
 	spinlock_t poll_lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct hisi_sas_dq {
@@ -485,8 +491,11 @@ struct hisi_hba {
 	struct dentry *debugfs_dump_dentry;
 	struct dentry *debugfs_bist_dentry;
 	struct dentry *debugfs_fifo_dentry;
+<<<<<<< HEAD
 
 	int iopoll_q_cnt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Generic HW DMA host memory structures */
@@ -660,13 +669,20 @@ extern void hisi_sas_slot_task_free(struct hisi_hba *hisi_hba,
 extern void hisi_sas_init_mem(struct hisi_hba *hisi_hba);
 extern void hisi_sas_rst_work_handler(struct work_struct *work);
 extern void hisi_sas_sync_rst_work_handler(struct work_struct *work);
+<<<<<<< HEAD
+=======
+extern void hisi_sas_sync_irqs(struct hisi_hba *hisi_hba);
+>>>>>>> b7ba80a49124 (Commit)
 extern void hisi_sas_phy_oob_ready(struct hisi_hba *hisi_hba, int phy_no);
 extern bool hisi_sas_notify_phy_event(struct hisi_sas_phy *phy,
 				enum hisi_sas_phy_event event);
 extern void hisi_sas_release_tasks(struct hisi_hba *hisi_hba);
 extern u8 hisi_sas_get_prog_phy_linkrate_mask(enum sas_linkrate max);
+<<<<<<< HEAD
 extern void hisi_sas_sync_cqs(struct hisi_hba *hisi_hba);
 extern void hisi_sas_sync_poll_cqs(struct hisi_hba *hisi_hba);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern void hisi_sas_controller_reset_prepare(struct hisi_hba *hisi_hba);
 extern void hisi_sas_controller_reset_done(struct hisi_hba *hisi_hba);
 #endif

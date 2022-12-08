@@ -26,6 +26,7 @@ config LEDS_QCOM_LPG
 
 	  If compiled as a module, the module will be named leds-qcom-lpg.
 
+<<<<<<< HEAD
 config LEDS_MT6370_RGB
 	tristate "LED Support for MediaTek MT6370 PMIC"
 	depends on MFD_MT6370
@@ -39,4 +40,6 @@ config LEDS_MT6370_RGB
 	  This driver can also be built as a module. If so, the module
 	  will be called "leds-mt6370-rgb".
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endif # LEDS_CLASS_MULTICOLOR

@@ -22,7 +22,11 @@ DEFINE_STATIC_KEY_FALSE(use_asid_allocator);
 
 static unsigned long asid_bits;
 static unsigned long num_asids;
+<<<<<<< HEAD
 unsigned long asid_mask;
+=======
+static unsigned long asid_mask;
+>>>>>>> b7ba80a49124 (Commit)
 
 static atomic_long_t current_version;
 
@@ -205,6 +209,7 @@ static void set_mm_noasid(struct mm_struct *mm)
 	local_flush_tlb_all();
 }
 
+<<<<<<< HEAD
 static inline void set_mm(struct mm_struct *prev,
 			  struct mm_struct *next, unsigned int cpu)
 {
@@ -223,6 +228,14 @@ static inline void set_mm(struct mm_struct *prev,
 		cpumask_clear_cpu(cpu, mm_cpumask(prev));
 		set_mm_noasid(next);
 	}
+=======
+static inline void set_mm(struct mm_struct *mm, unsigned int cpu)
+{
+	if (static_branch_unlikely(&use_asid_allocator))
+		set_mm_asid(mm, cpu);
+	else
+		set_mm_noasid(mm);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __init asids_init(void)
@@ -276,8 +289,12 @@ static int __init asids_init(void)
 }
 early_initcall(asids_init);
 #else
+<<<<<<< HEAD
 static inline void set_mm(struct mm_struct *prev,
 			  struct mm_struct *next, unsigned int cpu)
+=======
+static inline void set_mm(struct mm_struct *mm, unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* Nothing to do here when there is no MMU */
 }
@@ -330,7 +347,14 @@ void switch_mm(struct mm_struct *prev, struct mm_struct *next,
 	 */
 	cpu = smp_processor_id();
 
+<<<<<<< HEAD
 	set_mm(prev, next, cpu);
+=======
+	cpumask_clear_cpu(cpu, mm_cpumask(prev));
+	cpumask_set_cpu(cpu, mm_cpumask(next));
+
+	set_mm(next, cpu);
+>>>>>>> b7ba80a49124 (Commit)
 
 	flush_icache_deferred(next, cpu);
 }

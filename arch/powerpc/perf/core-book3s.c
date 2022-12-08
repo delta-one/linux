@@ -132,7 +132,11 @@ static unsigned long ebb_switch_in(bool ebb, struct cpu_hw_events *cpuhw)
 
 static inline void power_pmu_bhrb_enable(struct perf_event *event) {}
 static inline void power_pmu_bhrb_disable(struct perf_event *event) {}
+<<<<<<< HEAD
 static void power_pmu_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in) {}
+=======
+static void power_pmu_sched_task(struct perf_event_context *ctx, bool sched_in) {}
+>>>>>>> b7ba80a49124 (Commit)
 static inline void power_pmu_bhrb_read(struct perf_event *event, struct cpu_hw_events *cpuhw) {}
 static void pmao_restore_workaround(bool ebb) { }
 #endif /* CONFIG_PPC32 */
@@ -424,7 +428,11 @@ static void power_pmu_bhrb_enable(struct perf_event *event)
 		cpuhw->bhrb_context = event->ctx;
 	}
 	cpuhw->bhrb_users++;
+<<<<<<< HEAD
 	perf_sched_cb_inc(event->pmu);
+=======
+	perf_sched_cb_inc(event->ctx->pmu);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void power_pmu_bhrb_disable(struct perf_event *event)
@@ -436,7 +444,11 @@ static void power_pmu_bhrb_disable(struct perf_event *event)
 
 	WARN_ON_ONCE(!cpuhw->bhrb_users);
 	cpuhw->bhrb_users--;
+<<<<<<< HEAD
 	perf_sched_cb_dec(event->pmu);
+=======
+	perf_sched_cb_dec(event->ctx->pmu);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!cpuhw->disabled && !cpuhw->bhrb_users) {
 		/* BHRB cannot be turned off when other
@@ -451,7 +463,11 @@ static void power_pmu_bhrb_disable(struct perf_event *event)
 /* Called from ctxsw to prevent one process's branch entries to
  * mingle with the other process's entries during context switch.
  */
+<<<<<<< HEAD
 static void power_pmu_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in)
+=======
+static void power_pmu_sched_task(struct perf_event_context *ctx, bool sched_in)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!ppmu->bhrb_nr)
 		return;
@@ -2131,6 +2147,7 @@ static int power_pmu_event_init(struct perf_event *event)
 	if (has_branch_stack(event)) {
 		u64 bhrb_filter = -1;
 
+<<<<<<< HEAD
 		/*
 		 * Currently no PMU supports having multiple branch filters
 		 * at the same time. Branch filters are set via MMCRA IFM[32:33]
@@ -2148,6 +2165,8 @@ static int power_pmu_event_init(struct perf_event *event)
 			return -EOPNOTSUPP;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (ppmu->bhrb_filter_map)
 			bhrb_filter = ppmu->bhrb_filter_map(
 					event->attr.branch_sample_type);
@@ -2313,7 +2332,12 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
 			struct cpu_hw_events *cpuhw;
 			cpuhw = this_cpu_ptr(&cpu_hw_events);
 			power_pmu_bhrb_read(event, cpuhw);
+<<<<<<< HEAD
 			perf_sample_save_brstack(&data, event, &cpuhw->bhrb_stack);
+=======
+			data.br_stack = &cpuhw->bhrb_stack;
+			data.sample_flags |= PERF_SAMPLE_BRANCH_STACK;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (event->attr.sample_type & PERF_SAMPLE_DATA_SRC &&

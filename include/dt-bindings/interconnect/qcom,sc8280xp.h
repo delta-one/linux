@@ -48,11 +48,19 @@
 #define SLAVE_SERVICE_A2NOC		19
 
 /* clk_virt */
+<<<<<<< HEAD
 /* 0 was used by MASTER_IPA_CORE, now represented as RPMh clock */
 #define MASTER_QUP_CORE_0		1
 #define MASTER_QUP_CORE_1		2
 #define MASTER_QUP_CORE_2		3
 /* 4 was used by SLAVE_IPA_CORE, now represented as RPMh clock */
+=======
+#define MASTER_IPA_CORE			0
+#define MASTER_QUP_CORE_0		1
+#define MASTER_QUP_CORE_1		2
+#define MASTER_QUP_CORE_2		3
+#define SLAVE_IPA_CORE			4
+>>>>>>> b7ba80a49124 (Commit)
 #define SLAVE_QUP_CORE_0		5
 #define SLAVE_QUP_CORE_1		6
 #define SLAVE_QUP_CORE_2		7

@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/power/supply/lltc,lt3651-charger.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Analog Devices LT3651 Charger Power Supply
+=======
+title: Analog Devices LT3651 Charger Power Supply bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Sebastian Reichel <sre@kernel.org>

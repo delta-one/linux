@@ -23,7 +23,10 @@ properties:
       - mediatek,mt8173-dpi
       - mediatek,mt8183-dpi
       - mediatek,mt8186-dpi
+<<<<<<< HEAD
       - mediatek,mt8188-dp-intf
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - mediatek,mt8192-dpi
       - mediatek,mt8195-dp-intf
 

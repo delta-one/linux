@@ -8,7 +8,10 @@
 #define _LINUX_HWMON_SYSFS_H
 
 #include <linux/device.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct sensor_device_attribute{
 	struct device_attribute dev_attr;

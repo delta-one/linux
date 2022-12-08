@@ -149,7 +149,11 @@ module_init(udelay_test_init);
 static void __exit udelay_test_exit(void)
 {
 	mutex_lock(&udelay_test_lock);
+<<<<<<< HEAD
 	debugfs_lookup_and_remove(DEBUGFS_FILENAME, NULL);
+=======
+	debugfs_remove(debugfs_lookup(DEBUGFS_FILENAME, NULL));
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&udelay_test_lock);
 }
 

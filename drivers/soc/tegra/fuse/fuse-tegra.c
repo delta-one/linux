@@ -35,6 +35,7 @@ static const char *tegra_revision_name[TEGRA_REVISION_MAX] = {
 	[TEGRA_REVISION_A04]     = "A04",
 };
 
+<<<<<<< HEAD
 static const char *tegra_platform_name[TEGRA_PLATFORM_MAX] = {
 	[TEGRA_PLATFORM_SILICON]			= "Silicon",
 	[TEGRA_PLATFORM_QT]				= "QT",
@@ -48,6 +49,8 @@ static const char *tegra_platform_name[TEGRA_PLATFORM_MAX] = {
 	[TEGRA_PLATFORM_VSP]				= "VSP",
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id car_match[] __initconst = {
 	{ .compatible = "nvidia,tegra20-car", },
 	{ .compatible = "nvidia,tegra30-car", },
@@ -107,6 +110,115 @@ static int tegra_fuse_read(void *priv, unsigned int offset, void *value,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static const struct nvmem_cell_info tegra_fuse_cells[] = {
+	{
+		.name = "tsensor-cpu1",
+		.offset = 0x084,
+		.bytes = 4,
+		.bit_offset = 0,
+		.nbits = 32,
+	}, {
+		.name = "tsensor-cpu2",
+		.offset = 0x088,
+		.bytes = 4,
+		.bit_offset = 0,
+		.nbits = 32,
+	}, {
+		.name = "tsensor-cpu0",
+		.offset = 0x098,
+		.bytes = 4,
+		.bit_offset = 0,
+		.nbits = 32,
+	}, {
+		.name = "xusb-pad-calibration",
+		.offset = 0x0f0,
+		.bytes = 4,
+		.bit_offset = 0,
+		.nbits = 32,
+	}, {
+		.name = "tsensor-cpu3",
+		.offset = 0x12c,
+		.bytes = 4,
+		.bit_offset = 0,
+		.nbits = 32,
+	}, {
+		.name = "sata-calibration",
+		.offset = 0x124,
+		.bytes = 1,
+		.bit_offset = 0,
+		.nbits = 2,
+	}, {
+		.name = "tsensor-gpu",
+		.offset = 0x154,
+		.bytes = 4,
+		.bit_offset = 0,
+		.nbits = 32,
+	}, {
+		.name = "tsensor-mem0",
+		.offset = 0x158,
+		.bytes = 4,
+		.bit_offset = 0,
+		.nbits = 32,
+	}, {
+		.name = "tsensor-mem1",
+		.offset = 0x15c,
+		.bytes = 4,
+		.bit_offset = 0,
+		.nbits = 32,
+	}, {
+		.name = "tsensor-pllx",
+		.offset = 0x160,
+		.bytes = 4,
+		.bit_offset = 0,
+		.nbits = 32,
+	}, {
+		.name = "tsensor-common",
+		.offset = 0x180,
+		.bytes = 4,
+		.bit_offset = 0,
+		.nbits = 32,
+	}, {
+		.name = "gpu-gcplex-config-fuse",
+		.offset = 0x1c8,
+		.bytes = 4,
+		.bit_offset = 0,
+		.nbits = 32,
+	}, {
+		.name = "tsensor-realignment",
+		.offset = 0x1fc,
+		.bytes = 4,
+		.bit_offset = 0,
+		.nbits = 32,
+	}, {
+		.name = "gpu-calibration",
+		.offset = 0x204,
+		.bytes = 4,
+		.bit_offset = 0,
+		.nbits = 32,
+	}, {
+		.name = "xusb-pad-calibration-ext",
+		.offset = 0x250,
+		.bytes = 4,
+		.bit_offset = 0,
+		.nbits = 32,
+	}, {
+		.name = "gpu-pdi0",
+		.offset = 0x300,
+		.bytes = 4,
+		.bit_offset = 0,
+		.nbits = 32,
+	}, {
+		.name = "gpu-pdi1",
+		.offset = 0x304,
+		.bytes = 4,
+		.bit_offset = 0,
+		.nbits = 32,
+	},
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static void tegra_fuse_restore(void *base)
 {
 	fuse->base = (void __iomem *)base;
@@ -160,10 +272,15 @@ static int tegra_fuse_probe(struct platform_device *pdev)
 	nvmem.name = "fuse";
 	nvmem.id = -1;
 	nvmem.owner = THIS_MODULE;
+<<<<<<< HEAD
 	nvmem.cells = fuse->soc->cells;
 	nvmem.ncells = fuse->soc->num_cells;
 	nvmem.keepout = fuse->soc->keepouts;
 	nvmem.nkeepout = fuse->soc->num_keepouts;
+=======
+	nvmem.cells = tegra_fuse_cells;
+	nvmem.ncells = ARRAY_SIZE(tegra_fuse_cells);
+>>>>>>> b7ba80a49124 (Commit)
 	nvmem.type = NVMEM_TYPE_OTP;
 	nvmem.read_only = true;
 	nvmem.root_only = true;
@@ -383,6 +500,7 @@ struct device * __init tegra_soc_device_register(void)
 		return NULL;
 
 	attr->family = kasprintf(GFP_KERNEL, "Tegra");
+<<<<<<< HEAD
 	if (tegra_is_silicon())
 		attr->revision = kasprintf(GFP_KERNEL, "%s %s",
 					   tegra_platform_name[tegra_sku_info.platform],
@@ -390,6 +508,10 @@ struct device * __init tegra_soc_device_register(void)
 	else
 		attr->revision = kasprintf(GFP_KERNEL, "%s",
 					   tegra_platform_name[tegra_sku_info.platform]);
+=======
+	attr->revision = kasprintf(GFP_KERNEL, "%s",
+		tegra_revision_name[tegra_sku_info.revision]);
+>>>>>>> b7ba80a49124 (Commit)
 	attr->soc_id = kasprintf(GFP_KERNEL, "%u", tegra_get_chip_id());
 	attr->custom_attr_group = fuse->soc->soc_attr_group;
 

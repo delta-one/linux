@@ -62,6 +62,11 @@
 struct omap_dm_timer {
 };
 
+<<<<<<< HEAD
+=======
+int omap_dm_timer_get_irq(struct omap_dm_timer *timer);
+
+>>>>>>> b7ba80a49124 (Commit)
 u32 omap_dm_timer_modify_idlect_mask(u32 inputmask);
 
 /*

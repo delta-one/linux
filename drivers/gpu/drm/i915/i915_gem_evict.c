@@ -43,6 +43,7 @@ static bool dying_vma(struct i915_vma *vma)
 	return !kref_read(&vma->obj->base.refcount);
 }
 
+<<<<<<< HEAD
 static int ggtt_flush(struct i915_address_space *vm)
 {
 	struct i915_ggtt *ggtt = i915_vm_to_ggtt(vm);
@@ -62,6 +63,18 @@ static int ggtt_flush(struct i915_address_space *vm)
 			return ret;
 	}
 	return ret;
+=======
+static int ggtt_flush(struct intel_gt *gt)
+{
+	/*
+	 * Not everything in the GGTT is tracked via vma (otherwise we
+	 * could evict as required with minimal stalling) so we are forced
+	 * to idle the GPU and explicitly retire outstanding requests in
+	 * the hopes that we can then remove contexts and the like only
+	 * bound by their active reference.
+	 */
+	return intel_gt_wait_for_idle(gt, MAX_SCHEDULE_TIMEOUT);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool grab_vma(struct i915_vma *vma, struct i915_gem_ww_ctx *ww)
@@ -158,7 +171,10 @@ i915_gem_evict_something(struct i915_address_space *vm,
 	struct drm_mm_node *node;
 	enum drm_mm_insert_mode mode;
 	struct i915_vma *active;
+<<<<<<< HEAD
 	struct intel_gt *gt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	lockdep_assert_held(&vm->mutex);
@@ -184,6 +200,7 @@ i915_gem_evict_something(struct i915_address_space *vm,
 				    min_size, alignment, color,
 				    start, end, mode);
 
+<<<<<<< HEAD
 	if (i915_is_ggtt(vm)) {
 		struct i915_ggtt *ggtt = i915_vm_to_ggtt(vm);
 
@@ -192,6 +209,9 @@ i915_gem_evict_something(struct i915_address_space *vm,
 	} else {
 		intel_gt_retire_requests(vm->gt);
 	}
+=======
+	intel_gt_retire_requests(vm->gt);
+>>>>>>> b7ba80a49124 (Commit)
 
 search_again:
 	active = NULL;
@@ -263,7 +283,11 @@ search_again:
 	if (I915_SELFTEST_ONLY(igt_evict_ctl.fail_if_busy))
 		return -EBUSY;
 
+<<<<<<< HEAD
 	ret = ggtt_flush(vm);
+=======
+	ret = ggtt_flush(vm->gt);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -349,6 +373,7 @@ int i915_gem_evict_for_node(struct i915_address_space *vm,
 	 * a stray pin (preventing eviction) that can only be resolved by
 	 * retiring.
 	 */
+<<<<<<< HEAD
 	if (i915_is_ggtt(vm)) {
 		struct i915_ggtt *ggtt = i915_vm_to_ggtt(vm);
 		struct intel_gt *gt;
@@ -358,6 +383,9 @@ int i915_gem_evict_for_node(struct i915_address_space *vm,
 	} else {
 		intel_gt_retire_requests(vm->gt);
 	}
+=======
+	intel_gt_retire_requests(vm->gt);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (i915_vm_has_cache_coloring(vm)) {
 		/* Expand search to cover neighbouring guard pages (or lack!) */
@@ -441,11 +469,14 @@ int i915_gem_evict_for_node(struct i915_address_space *vm,
  * @vm: Address space to cleanse
  * @ww: An optional struct i915_gem_ww_ctx. If not NULL, i915_gem_evict_vm
  * will be able to evict vma's locked by the ww as well.
+<<<<<<< HEAD
  * @busy_bo: Optional pointer to struct drm_i915_gem_object. If not NULL, then
  * in the event i915_gem_evict_vm() is unable to trylock an object for eviction,
  * then @busy_bo will point to it. -EBUSY is also returned. The caller must drop
  * the vm->mutex, before trying again to acquire the contended lock. The caller
  * also owns a reference to the object.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This function evicts all vmas from a vm.
  *
@@ -455,8 +486,12 @@ int i915_gem_evict_for_node(struct i915_address_space *vm,
  * To clarify: This is for freeing up virtual address space, not for freeing
  * memory in e.g. the shrinker.
  */
+<<<<<<< HEAD
 int i915_gem_evict_vm(struct i915_address_space *vm, struct i915_gem_ww_ctx *ww,
 		      struct drm_i915_gem_object **busy_bo)
+=======
+int i915_gem_evict_vm(struct i915_address_space *vm, struct i915_gem_ww_ctx *ww)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret = 0;
 
@@ -469,7 +504,11 @@ int i915_gem_evict_vm(struct i915_address_space *vm, struct i915_gem_ww_ctx *ww,
 	 * switch otherwise is ineffective.
 	 */
 	if (i915_is_ggtt(vm)) {
+<<<<<<< HEAD
 		ret = ggtt_flush(vm);
+=======
+		ret = ggtt_flush(vm->gt);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			return ret;
 	}
@@ -488,13 +527,18 @@ int i915_gem_evict_vm(struct i915_address_space *vm, struct i915_gem_ww_ctx *ww,
 			 * the resv is shared among multiple objects, we still
 			 * need the object ref.
 			 */
+<<<<<<< HEAD
 			if (!i915_gem_object_get_rcu(vma->obj) ||
+=======
+			if (dying_vma(vma) ||
+>>>>>>> b7ba80a49124 (Commit)
 			    (ww && (dma_resv_locking_ctx(vma->obj->base.resv) == &ww->ctx))) {
 				__i915_vma_pin(vma);
 				list_add(&vma->evict_link, &locked_eviction_list);
 				continue;
 			}
 
+<<<<<<< HEAD
 			if (!i915_gem_object_trylock(vma->obj, ww)) {
 				if (busy_bo) {
 					*busy_bo = vma->obj; /* holds ref */
@@ -504,6 +548,10 @@ int i915_gem_evict_vm(struct i915_address_space *vm, struct i915_gem_ww_ctx *ww,
 				i915_gem_object_put(vma->obj);
 				continue;
 			}
+=======
+			if (!i915_gem_object_trylock(vma->obj, ww))
+				continue;
+>>>>>>> b7ba80a49124 (Commit)
 
 			__i915_vma_pin(vma);
 			list_add(&vma->evict_link, &eviction_list);
@@ -511,10 +559,15 @@ int i915_gem_evict_vm(struct i915_address_space *vm, struct i915_gem_ww_ctx *ww,
 		if (list_empty(&eviction_list) && list_empty(&locked_eviction_list))
 			break;
 
+<<<<<<< HEAD
+=======
+		ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		/* Unbind locked objects first, before unlocking the eviction_list */
 		list_for_each_entry_safe(vma, vn, &locked_eviction_list, evict_link) {
 			__i915_vma_unpin(vma);
 
+<<<<<<< HEAD
 			if (ret == 0) {
 				ret = __i915_vma_unbind(vma);
 				if (ret != -EINTR) /* "Get me out of here!" */
@@ -522,10 +575,17 @@ int i915_gem_evict_vm(struct i915_address_space *vm, struct i915_gem_ww_ctx *ww,
 			}
 			if (!dying_vma(vma))
 				i915_gem_object_put(vma->obj);
+=======
+			if (ret == 0)
+				ret = __i915_vma_unbind(vma);
+			if (ret != -EINTR) /* "Get me out of here!" */
+				ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		list_for_each_entry_safe(vma, vn, &eviction_list, evict_link) {
 			__i915_vma_unpin(vma);
+<<<<<<< HEAD
 			if (ret == 0) {
 				ret = __i915_vma_unbind(vma);
 				if (ret != -EINTR) /* "Get me out of here!" */
@@ -534,6 +594,14 @@ int i915_gem_evict_vm(struct i915_address_space *vm, struct i915_gem_ww_ctx *ww,
 
 			i915_gem_object_unlock(vma->obj);
 			i915_gem_object_put(vma->obj);
+=======
+			if (ret == 0)
+				ret = __i915_vma_unbind(vma);
+			if (ret != -EINTR) /* "Get me out of here!" */
+				ret = 0;
+
+			i915_gem_object_unlock(vma->obj);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	} while (ret == 0);
 

@@ -11,12 +11,51 @@
 
 #include <linux/slab.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/pcs-lynx.h>
 #include <linux/phy.h>
 #include <linux/phy_fixed.h>
 #include <linux/phy/phy.h>
 #include <linux/of_mdio.h>
 
+=======
+#include <linux/phy.h>
+#include <linux/phy_fixed.h>
+#include <linux/of_mdio.h>
+
+/* PCS registers */
+#define MDIO_SGMII_CR			0x00
+#define MDIO_SGMII_DEV_ABIL_SGMII	0x04
+#define MDIO_SGMII_LINK_TMR_L		0x12
+#define MDIO_SGMII_LINK_TMR_H		0x13
+#define MDIO_SGMII_IF_MODE		0x14
+
+/* SGMII Control defines */
+#define SGMII_CR_AN_EN			0x1000
+#define SGMII_CR_RESTART_AN		0x0200
+#define SGMII_CR_FD			0x0100
+#define SGMII_CR_SPEED_SEL1_1G		0x0040
+#define SGMII_CR_DEF_VAL		(SGMII_CR_AN_EN | SGMII_CR_FD | \
+					 SGMII_CR_SPEED_SEL1_1G)
+
+/* SGMII Device Ability for SGMII defines */
+#define MDIO_SGMII_DEV_ABIL_SGMII_MODE	0x4001
+#define MDIO_SGMII_DEV_ABIL_BASEX_MODE	0x01A0
+
+/* Link timer define */
+#define LINK_TMR_L			0xa120
+#define LINK_TMR_H			0x0007
+#define LINK_TMR_L_BASEX		0xaf08
+#define LINK_TMR_H_BASEX		0x002f
+
+/* SGMII IF Mode defines */
+#define IF_MODE_USE_SGMII_AN		0x0002
+#define IF_MODE_SGMII_EN		0x0001
+#define IF_MODE_SGMII_SPEED_100M	0x0004
+#define IF_MODE_SGMII_SPEED_1G		0x0008
+#define IF_MODE_SGMII_DUPLEX_HALF	0x0010
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Num of additional exact match MAC adr regs */
 #define MEMAC_NUM_OF_PADDRS 7
 
@@ -278,6 +317,12 @@ struct fman_mac {
 	struct memac_regs __iomem *regs;
 	/* MAC address of device */
 	u64 addr;
+<<<<<<< HEAD
+=======
+	/* Ethernet physical interface */
+	phy_interface_t phy_if;
+	u16 max_speed;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mac_device *dev_id; /* device cookie used by the exception cbs */
 	fman_mac_exception_cb *exception_cb;
 	fman_mac_exception_cb *event_cb;
@@ -290,12 +335,18 @@ struct fman_mac {
 	struct memac_cfg *memac_drv_param;
 	void *fm;
 	struct fman_rev_info fm_rev_info;
+<<<<<<< HEAD
 	struct phy *serdes;
 	struct phylink_pcs *sgmii_pcs;
 	struct phylink_pcs *qsgmii_pcs;
 	struct phylink_pcs *xfi_pcs;
 	bool allmulti_enabled;
 	bool rgmii_no_half_duplex;
+=======
+	bool basex_if;
+	struct phy_device *pcsphy;
+	bool allmulti_enabled;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void add_addr_in_paddr(struct memac_regs __iomem *regs, const u8 *adr,
@@ -353,6 +404,10 @@ static void set_exception(struct memac_regs __iomem *regs, u32 val,
 }
 
 static int init(struct memac_regs __iomem *regs, struct memac_cfg *cfg,
+<<<<<<< HEAD
+=======
+		phy_interface_t phy_if, u16 speed, bool slow_10g_if,
+>>>>>>> b7ba80a49124 (Commit)
 		u32 exceptions)
 {
 	u32 tmp;
@@ -380,6 +435,44 @@ static int init(struct memac_regs __iomem *regs, struct memac_cfg *cfg,
 	iowrite32be((u32)cfg->pause_quanta, &regs->pause_quanta[0]);
 	iowrite32be((u32)0, &regs->pause_thresh[0]);
 
+<<<<<<< HEAD
+=======
+	/* IF_MODE */
+	tmp = 0;
+	switch (phy_if) {
+	case PHY_INTERFACE_MODE_XGMII:
+		tmp |= IF_MODE_10G;
+		break;
+	case PHY_INTERFACE_MODE_MII:
+		tmp |= IF_MODE_MII;
+		break;
+	default:
+		tmp |= IF_MODE_GMII;
+		if (phy_if == PHY_INTERFACE_MODE_RGMII ||
+		    phy_if == PHY_INTERFACE_MODE_RGMII_ID ||
+		    phy_if == PHY_INTERFACE_MODE_RGMII_RXID ||
+		    phy_if == PHY_INTERFACE_MODE_RGMII_TXID)
+			tmp |= IF_MODE_RGMII | IF_MODE_RGMII_AUTO;
+	}
+	iowrite32be(tmp, &regs->if_mode);
+
+	/* TX_FIFO_SECTIONS */
+	tmp = 0;
+	if (phy_if == PHY_INTERFACE_MODE_XGMII) {
+		if (slow_10g_if) {
+			tmp |= (TX_FIFO_SECTIONS_TX_AVAIL_SLOW_10G |
+				TX_FIFO_SECTIONS_TX_EMPTY_DEFAULT_10G);
+		} else {
+			tmp |= (TX_FIFO_SECTIONS_TX_AVAIL_10G |
+				TX_FIFO_SECTIONS_TX_EMPTY_DEFAULT_10G);
+		}
+	} else {
+		tmp |= (TX_FIFO_SECTIONS_TX_AVAIL_1G |
+			TX_FIFO_SECTIONS_TX_EMPTY_DEFAULT_1G);
+	}
+	iowrite32be(tmp, &regs->tx_fifo_sections);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* clear all pending events and set-up interrupts */
 	iowrite32be(0xffffffff, &regs->ievent);
 	set_exception(regs, exceptions, true);
@@ -419,6 +512,96 @@ static u32 get_mac_addr_hash_code(u64 eth_addr)
 	return xor_val;
 }
 
+<<<<<<< HEAD
+=======
+static void setup_sgmii_internal_phy(struct fman_mac *memac,
+				     struct fixed_phy_status *fixed_link)
+{
+	u16 tmp_reg16;
+
+	if (WARN_ON(!memac->pcsphy))
+		return;
+
+	/* SGMII mode */
+	tmp_reg16 = IF_MODE_SGMII_EN;
+	if (!fixed_link)
+		/* AN enable */
+		tmp_reg16 |= IF_MODE_USE_SGMII_AN;
+	else {
+		switch (fixed_link->speed) {
+		case 10:
+			/* For 10M: IF_MODE[SPEED_10M] = 0 */
+		break;
+		case 100:
+			tmp_reg16 |= IF_MODE_SGMII_SPEED_100M;
+		break;
+		case 1000:
+		default:
+			tmp_reg16 |= IF_MODE_SGMII_SPEED_1G;
+		break;
+		}
+		if (!fixed_link->duplex)
+			tmp_reg16 |= IF_MODE_SGMII_DUPLEX_HALF;
+	}
+	phy_write(memac->pcsphy, MDIO_SGMII_IF_MODE, tmp_reg16);
+
+	/* Device ability according to SGMII specification */
+	tmp_reg16 = MDIO_SGMII_DEV_ABIL_SGMII_MODE;
+	phy_write(memac->pcsphy, MDIO_SGMII_DEV_ABIL_SGMII, tmp_reg16);
+
+	/* Adjust link timer for SGMII  -
+	 * According to Cisco SGMII specification the timer should be 1.6 ms.
+	 * The link_timer register is configured in units of the clock.
+	 * - When running as 1G SGMII, Serdes clock is 125 MHz, so
+	 * unit = 1 / (125*10^6 Hz) = 8 ns.
+	 * 1.6 ms in units of 8 ns = 1.6ms / 8ns = 2*10^5 = 0x30d40
+	 * - When running as 2.5G SGMII, Serdes clock is 312.5 MHz, so
+	 * unit = 1 / (312.5*10^6 Hz) = 3.2 ns.
+	 * 1.6 ms in units of 3.2 ns = 1.6ms / 3.2ns = 5*10^5 = 0x7a120.
+	 * Since link_timer value of 1G SGMII will be too short for 2.5 SGMII,
+	 * we always set up here a value of 2.5 SGMII.
+	 */
+	phy_write(memac->pcsphy, MDIO_SGMII_LINK_TMR_H, LINK_TMR_H);
+	phy_write(memac->pcsphy, MDIO_SGMII_LINK_TMR_L, LINK_TMR_L);
+
+	if (!fixed_link)
+		/* Restart AN */
+		tmp_reg16 = SGMII_CR_DEF_VAL | SGMII_CR_RESTART_AN;
+	else
+		/* AN disabled */
+		tmp_reg16 = SGMII_CR_DEF_VAL & ~SGMII_CR_AN_EN;
+	phy_write(memac->pcsphy, 0x0, tmp_reg16);
+}
+
+static void setup_sgmii_internal_phy_base_x(struct fman_mac *memac)
+{
+	u16 tmp_reg16;
+
+	/* AN Device capability  */
+	tmp_reg16 = MDIO_SGMII_DEV_ABIL_BASEX_MODE;
+	phy_write(memac->pcsphy, MDIO_SGMII_DEV_ABIL_SGMII, tmp_reg16);
+
+	/* Adjust link timer for SGMII  -
+	 * For Serdes 1000BaseX auto-negotiation the timer should be 10 ms.
+	 * The link_timer register is configured in units of the clock.
+	 * - When running as 1G SGMII, Serdes clock is 125 MHz, so
+	 * unit = 1 / (125*10^6 Hz) = 8 ns.
+	 * 10 ms in units of 8 ns = 10ms / 8ns = 1250000 = 0x1312d0
+	 * - When running as 2.5G SGMII, Serdes clock is 312.5 MHz, so
+	 * unit = 1 / (312.5*10^6 Hz) = 3.2 ns.
+	 * 10 ms in units of 3.2 ns = 10ms / 3.2ns = 3125000 = 0x2faf08.
+	 * Since link_timer value of 1G SGMII will be too short for 2.5 SGMII,
+	 * we always set up here a value of 2.5 SGMII.
+	 */
+	phy_write(memac->pcsphy, MDIO_SGMII_LINK_TMR_H, LINK_TMR_H_BASEX);
+	phy_write(memac->pcsphy, MDIO_SGMII_LINK_TMR_L, LINK_TMR_L_BASEX);
+
+	/* Restart AN */
+	tmp_reg16 = SGMII_CR_DEF_VAL | SGMII_CR_RESTART_AN;
+	phy_write(memac->pcsphy, 0x0, tmp_reg16);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int check_init_parameters(struct fman_mac *memac)
 {
 	if (!memac->exception_cb) {
@@ -524,6 +707,7 @@ static void free_init_resources(struct fman_mac *memac)
 	memac->unicast_addr_hash = NULL;
 }
 
+<<<<<<< HEAD
 static int memac_enable(struct fman_mac *memac)
 {
 	int ret;
@@ -549,6 +733,43 @@ static void memac_disable(struct fman_mac *memac)
 {
 	phy_power_off(memac->serdes);
 	phy_exit(memac->serdes);
+=======
+static bool is_init_done(struct memac_cfg *memac_drv_params)
+{
+	/* Checks if mEMAC driver parameters were initialized */
+	if (!memac_drv_params)
+		return true;
+
+	return false;
+}
+
+static int memac_enable(struct fman_mac *memac)
+{
+	struct memac_regs __iomem *regs = memac->regs;
+	u32 tmp;
+
+	if (!is_init_done(memac->memac_drv_param))
+		return -EINVAL;
+
+	tmp = ioread32be(&regs->command_config);
+	tmp |= CMD_CFG_RX_EN | CMD_CFG_TX_EN;
+	iowrite32be(tmp, &regs->command_config);
+
+	return 0;
+}
+
+static void memac_disable(struct fman_mac *memac)
+
+{
+	struct memac_regs __iomem *regs = memac->regs;
+	u32 tmp;
+
+	WARN_ON_ONCE(!is_init_done(memac->memac_drv_param));
+
+	tmp = ioread32be(&regs->command_config);
+	tmp &= ~(CMD_CFG_RX_EN | CMD_CFG_TX_EN);
+	iowrite32be(tmp, &regs->command_config);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int memac_set_promiscuous(struct fman_mac *memac, bool new_val)
@@ -556,6 +777,12 @@ static int memac_set_promiscuous(struct fman_mac *memac, bool new_val)
 	struct memac_regs __iomem *regs = memac->regs;
 	u32 tmp;
 
+<<<<<<< HEAD
+=======
+	if (!is_init_done(memac->memac_drv_param))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	tmp = ioread32be(&regs->command_config);
 	if (new_val)
 		tmp |= CMD_CFG_PROMIS_EN;
@@ -567,12 +794,79 @@ static int memac_set_promiscuous(struct fman_mac *memac, bool new_val)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int memac_adjust_link(struct fman_mac *memac, u16 speed)
+{
+	struct memac_regs __iomem *regs = memac->regs;
+	u32 tmp;
+
+	if (!is_init_done(memac->memac_drv_param))
+		return -EINVAL;
+
+	tmp = ioread32be(&regs->if_mode);
+
+	/* Set full duplex */
+	tmp &= ~IF_MODE_HD;
+
+	if (phy_interface_mode_is_rgmii(memac->phy_if)) {
+		/* Configure RGMII in manual mode */
+		tmp &= ~IF_MODE_RGMII_AUTO;
+		tmp &= ~IF_MODE_RGMII_SP_MASK;
+		/* Full duplex */
+		tmp |= IF_MODE_RGMII_FD;
+
+		switch (speed) {
+		case SPEED_1000:
+			tmp |= IF_MODE_RGMII_1000;
+			break;
+		case SPEED_100:
+			tmp |= IF_MODE_RGMII_100;
+			break;
+		case SPEED_10:
+			tmp |= IF_MODE_RGMII_10;
+			break;
+		default:
+			break;
+		}
+	}
+
+	iowrite32be(tmp, &regs->if_mode);
+
+	return 0;
+}
+
+static void adjust_link_memac(struct mac_device *mac_dev)
+{
+	struct phy_device *phy_dev = mac_dev->phy_dev;
+	struct fman_mac *fman_mac;
+	bool rx_pause, tx_pause;
+	int err;
+
+	fman_mac = mac_dev->fman_mac;
+	memac_adjust_link(fman_mac, phy_dev->speed);
+	mac_dev->update_speed(mac_dev, phy_dev->speed);
+
+	fman_get_pause_cfg(mac_dev, &rx_pause, &tx_pause);
+	err = fman_set_mac_active_pause(mac_dev, rx_pause, tx_pause);
+	if (err < 0)
+		dev_err(mac_dev->dev, "fman_set_mac_active_pause() = %d\n",
+			err);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int memac_set_tx_pause_frames(struct fman_mac *memac, u8 priority,
 				     u16 pause_time, u16 thresh_time)
 {
 	struct memac_regs __iomem *regs = memac->regs;
 	u32 tmp;
 
+<<<<<<< HEAD
+=======
+	if (!is_init_done(memac->memac_drv_param))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	tmp = ioread32be(&regs->tx_fifo_sections);
 
 	GET_TX_EMPTY_DEFAULT_VALUE(tmp);
@@ -607,6 +901,12 @@ static int memac_accept_rx_pause_frames(struct fman_mac *memac, bool en)
 	struct memac_regs __iomem *regs = memac->regs;
 	u32 tmp;
 
+<<<<<<< HEAD
+=======
+	if (!is_init_done(memac->memac_drv_param))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	tmp = ioread32be(&regs->command_config);
 	if (en)
 		tmp &= ~CMD_CFG_PAUSE_IGNORE;
@@ -618,6 +918,7 @@ static int memac_accept_rx_pause_frames(struct fman_mac *memac, bool en)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void memac_validate(struct phylink_config *config,
 			   unsigned long *supported,
 			   struct phylink_link_state *state)
@@ -787,6 +1088,14 @@ static const struct phylink_mac_ops memac_mac_ops = {
 static int memac_modify_mac_address(struct fman_mac *memac,
 				    const enet_addr_t *enet_addr)
 {
+=======
+static int memac_modify_mac_address(struct fman_mac *memac,
+				    const enet_addr_t *enet_addr)
+{
+	if (!is_init_done(memac->memac_drv_param))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	add_addr_in_paddr(memac->regs, (const u8 *)(*enet_addr), 0);
 
 	return 0;
@@ -800,6 +1109,12 @@ static int memac_add_hash_mac_address(struct fman_mac *memac,
 	u32 hash;
 	u64 addr;
 
+<<<<<<< HEAD
+=======
+	if (!is_init_done(memac->memac_drv_param))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	addr = ENET_ADDR_TO_UINT64(*eth_addr);
 
 	if (!(addr & GROUP_ADDRESS)) {
@@ -828,6 +1143,12 @@ static int memac_set_allmulti(struct fman_mac *memac, bool enable)
 	u32 entry;
 	struct memac_regs __iomem *regs = memac->regs;
 
+<<<<<<< HEAD
+=======
+	if (!is_init_done(memac->memac_drv_param))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (enable) {
 		for (entry = 0; entry < HASH_TABLE_SIZE; entry++)
 			iowrite32be(entry | HASH_CTRL_MCAST_EN,
@@ -857,6 +1178,12 @@ static int memac_del_hash_mac_address(struct fman_mac *memac,
 	u32 hash;
 	u64 addr;
 
+<<<<<<< HEAD
+=======
+	if (!is_init_done(memac->memac_drv_param))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	addr = ENET_ADDR_TO_UINT64(*eth_addr);
 
 	hash = get_mac_addr_hash_code(addr) & HASH_CTRL_ADDR_MASK;
@@ -884,6 +1211,12 @@ static int memac_set_exception(struct fman_mac *memac,
 {
 	u32 bit_mask = 0;
 
+<<<<<<< HEAD
+=======
+	if (!is_init_done(memac->memac_drv_param))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	bit_mask = get_exception_flag(exception);
 	if (bit_mask) {
 		if (enable)
@@ -902,16 +1235,35 @@ static int memac_set_exception(struct fman_mac *memac,
 static int memac_init(struct fman_mac *memac)
 {
 	struct memac_cfg *memac_drv_param;
+<<<<<<< HEAD
 	enet_addr_t eth_addr;
 	int err;
 	u32 reg32 = 0;
 
+=======
+	u8 i;
+	enet_addr_t eth_addr;
+	bool slow_10g_if = false;
+	struct fixed_phy_status *fixed_link = NULL;
+	int err;
+	u32 reg32 = 0;
+
+	if (is_init_done(memac->memac_drv_param))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = check_init_parameters(memac);
 	if (err)
 		return err;
 
 	memac_drv_param = memac->memac_drv_param;
 
+<<<<<<< HEAD
+=======
+	if (memac->fm_rev_info.major == 6 && memac->fm_rev_info.minor == 4)
+		slow_10g_if = true;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* First, reset the MAC if desired. */
 	if (memac_drv_param->reset_on_init) {
 		err = reset(memac->regs);
@@ -927,7 +1279,14 @@ static int memac_init(struct fman_mac *memac)
 		add_addr_in_paddr(memac->regs, (const u8 *)eth_addr, 0);
 	}
 
+<<<<<<< HEAD
 	init(memac->regs, memac->memac_drv_param, memac->exceptions);
+=======
+	fixed_link = memac_drv_param->fixed_link;
+
+	init(memac->regs, memac->memac_drv_param, memac->phy_if,
+	     memac->max_speed, slow_10g_if, memac->exceptions);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* FM_RX_FIFO_CORRUPT_ERRATA_10GMAC_A006320 errata workaround
 	 * Exists only in FMan 6.0 and 6.3.
@@ -943,6 +1302,36 @@ static int memac_init(struct fman_mac *memac)
 		iowrite32be(reg32, &memac->regs->command_config);
 	}
 
+<<<<<<< HEAD
+=======
+	if (memac->phy_if == PHY_INTERFACE_MODE_SGMII) {
+		/* Configure internal SGMII PHY */
+		if (memac->basex_if)
+			setup_sgmii_internal_phy_base_x(memac);
+		else
+			setup_sgmii_internal_phy(memac, fixed_link);
+	} else if (memac->phy_if == PHY_INTERFACE_MODE_QSGMII) {
+		/* Configure 4 internal SGMII PHYs */
+		for (i = 0; i < 4; i++) {
+			u8 qsmgii_phy_addr, phy_addr;
+			/* QSGMII PHY address occupies 3 upper bits of 5-bit
+			 * phy_address; the lower 2 bits are used to extend
+			 * register address space and access each one of 4
+			 * ports inside QSGMII.
+			 */
+			phy_addr = memac->pcsphy->mdio.addr;
+			qsmgii_phy_addr = (u8)((phy_addr << 2) | i);
+			memac->pcsphy->mdio.addr = qsmgii_phy_addr;
+			if (memac->basex_if)
+				setup_sgmii_internal_phy_base_x(memac);
+			else
+				setup_sgmii_internal_phy(memac, fixed_link);
+
+			memac->pcsphy->mdio.addr = phy_addr;
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Max Frame Length */
 	err = fman_set_mac_max_frame(memac->fm, memac->mac_id,
 				     memac_drv_param->max_frame_length);
@@ -971,6 +1360,7 @@ static int memac_init(struct fman_mac *memac)
 	fman_register_intr(memac->fm, FMAN_MOD_MAC, memac->mac_id,
 			   FMAN_INTR_TYPE_NORMAL, memac_exception, memac);
 
+<<<<<<< HEAD
 	return 0;
 }
 
@@ -986,13 +1376,27 @@ static void pcs_put(struct phylink_pcs *pcs)
 	mdio_device_free(mdiodev);
 }
 
+=======
+	kfree(memac_drv_param);
+	memac->memac_drv_param = NULL;
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int memac_free(struct fman_mac *memac)
 {
 	free_init_resources(memac);
 
+<<<<<<< HEAD
 	pcs_put(memac->sgmii_pcs);
 	pcs_put(memac->qsgmii_pcs);
 	pcs_put(memac->xfi_pcs);
+=======
+	if (memac->pcsphy)
+		put_device(&memac->pcsphy->mdio.dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(memac->memac_drv_param);
 	kfree(memac);
 
@@ -1025,6 +1429,11 @@ static struct fman_mac *memac_config(struct mac_device *mac_dev,
 	memac->addr = ENET_ADDR_TO_UINT64(mac_dev->addr);
 
 	memac->regs = mac_dev->vaddr;
+<<<<<<< HEAD
+=======
+	memac->max_speed = params->max_speed;
+	memac->phy_if = mac_dev->phy_if;
+>>>>>>> b7ba80a49124 (Commit)
 	memac->mac_id = params->mac_id;
 	memac->exceptions = (MEMAC_IMASK_TSECC_ER | MEMAC_IMASK_TECC_ER |
 			     MEMAC_IMASK_RECC_ER | MEMAC_IMASK_MGI);
@@ -1032,6 +1441,10 @@ static struct fman_mac *memac_config(struct mac_device *mac_dev,
 	memac->event_cb = params->event_cb;
 	memac->dev_id = mac_dev;
 	memac->fm = params->fm;
+<<<<<<< HEAD
+=======
+	memac->basex_if = params->basex_if;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Save FMan revision */
 	fman_get_revision(memac->fm, &memac->fm_rev_info);
@@ -1039,6 +1452,7 @@ static struct fman_mac *memac_config(struct mac_device *mac_dev,
 	return memac;
 }
 
+<<<<<<< HEAD
 static struct phylink_pcs *memac_pcs_create(struct device_node *mac_node,
 					    int index)
 {
@@ -1073,11 +1487,14 @@ static bool memac_supports(struct mac_device *mac_dev, phy_interface_t iface)
 			     iface, NULL);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int memac_initialization(struct mac_device *mac_dev,
 			 struct device_node *mac_node,
 			 struct fman_mac_params *params)
 {
 	int			 err;
+<<<<<<< HEAD
 	struct device_node      *fixed;
 	struct phylink_pcs	*pcs;
 	struct fman_mac		*memac;
@@ -1085,24 +1502,51 @@ int memac_initialization(struct mac_device *mac_dev,
 	unsigned long		*supported;
 
 	mac_dev->phylink_ops		= &memac_mac_ops;
+=======
+	struct device_node	*phy_node;
+	struct fixed_phy_status *fixed_link;
+	struct fman_mac		*memac;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mac_dev->set_promisc		= memac_set_promiscuous;
 	mac_dev->change_addr		= memac_modify_mac_address;
 	mac_dev->add_hash_mac_addr	= memac_add_hash_mac_address;
 	mac_dev->remove_hash_mac_addr	= memac_del_hash_mac_address;
+<<<<<<< HEAD
+=======
+	mac_dev->set_tx_pause		= memac_set_tx_pause_frames;
+	mac_dev->set_rx_pause		= memac_accept_rx_pause_frames;
+>>>>>>> b7ba80a49124 (Commit)
 	mac_dev->set_exception		= memac_set_exception;
 	mac_dev->set_allmulti		= memac_set_allmulti;
 	mac_dev->set_tstamp		= memac_set_tstamp;
 	mac_dev->set_multi		= fman_set_multi;
+<<<<<<< HEAD
 	mac_dev->enable			= memac_enable;
 	mac_dev->disable		= memac_disable;
 
 	mac_dev->fman_mac = memac_config(mac_dev, params);
 	if (!mac_dev->fman_mac)
 		return -EINVAL;
+=======
+	mac_dev->adjust_link            = adjust_link_memac;
+	mac_dev->enable			= memac_enable;
+	mac_dev->disable		= memac_disable;
+
+	if (params->max_speed == SPEED_10000)
+		mac_dev->phy_if = PHY_INTERFACE_MODE_XGMII;
+
+	mac_dev->fman_mac = memac_config(mac_dev, params);
+	if (!mac_dev->fman_mac) {
+		err = -EINVAL;
+		goto _return;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	memac = mac_dev->fman_mac;
 	memac->memac_drv_param->max_frame_length = fman_get_max_frm();
 	memac->memac_drv_param->reset_on_init = true;
+<<<<<<< HEAD
 
 	err = of_property_match_string(mac_node, "pcs-handle-names", "xfi");
 	if (err >= 0) {
@@ -1257,5 +1701,68 @@ int memac_initialization(struct mac_device *mac_dev,
 
 _return_fm_mac_free:
 	memac_free(mac_dev->fman_mac);
+=======
+	if (memac->phy_if == PHY_INTERFACE_MODE_SGMII ||
+	    memac->phy_if == PHY_INTERFACE_MODE_QSGMII) {
+		phy_node = of_parse_phandle(mac_node, "pcsphy-handle", 0);
+		if (!phy_node) {
+			pr_err("PCS PHY node is not available\n");
+			err = -EINVAL;
+			goto _return_fm_mac_free;
+		}
+
+		memac->pcsphy = of_phy_find_device(phy_node);
+		if (!memac->pcsphy) {
+			pr_err("of_phy_find_device (PCS PHY) failed\n");
+			err = -EINVAL;
+			goto _return_fm_mac_free;
+		}
+	}
+
+	if (!mac_dev->phy_node && of_phy_is_fixed_link(mac_node)) {
+		struct phy_device *phy;
+
+		err = of_phy_register_fixed_link(mac_node);
+		if (err)
+			goto _return_fm_mac_free;
+
+		fixed_link = kzalloc(sizeof(*fixed_link), GFP_KERNEL);
+		if (!fixed_link) {
+			err = -ENOMEM;
+			goto _return_fm_mac_free;
+		}
+
+		mac_dev->phy_node = of_node_get(mac_node);
+		phy = of_phy_find_device(mac_dev->phy_node);
+		if (!phy) {
+			err = -EINVAL;
+			of_node_put(mac_dev->phy_node);
+			goto _return_fixed_link_free;
+		}
+
+		fixed_link->link = phy->link;
+		fixed_link->speed = phy->speed;
+		fixed_link->duplex = phy->duplex;
+		fixed_link->pause = phy->pause;
+		fixed_link->asym_pause = phy->asym_pause;
+
+		put_device(&phy->mdio.dev);
+		memac->memac_drv_param->fixed_link = fixed_link;
+	}
+
+	err = memac_init(mac_dev->fman_mac);
+	if (err < 0)
+		goto _return_fixed_link_free;
+
+	dev_info(mac_dev->dev, "FMan MEMAC\n");
+
+	goto _return;
+
+_return_fixed_link_free:
+	kfree(fixed_link);
+_return_fm_mac_free:
+	memac_free(mac_dev->fman_mac);
+_return:
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }

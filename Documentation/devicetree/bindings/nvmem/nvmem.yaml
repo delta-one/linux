@@ -39,6 +39,7 @@ properties:
       when it's driven low (logical '0') to allow writing.
     maxItems: 1
 
+<<<<<<< HEAD
   nvmem-layout:
     $ref: /schemas/nvmem/layouts/nvmem-layout.yaml
     description:
@@ -46,6 +47,8 @@ properties:
       container may reference more advanced (dynamic) layout
       parsers.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 patternProperties:
   "@[0-9a-f]+(,[0-7])?$":
     type: object
@@ -74,7 +77,10 @@ examples:
       #include <dt-bindings/gpio/gpio.h>
 
       qfprom: eeprom@700000 {
+<<<<<<< HEAD
           compatible = "qcom,msm8974-qfprom", "qcom,qfprom";
+=======
+>>>>>>> b7ba80a49124 (Commit)
           #address-cells = <1>;
           #size-cells = <1>;
           reg = <0x00700000 0x100000>;

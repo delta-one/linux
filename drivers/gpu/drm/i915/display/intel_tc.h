@@ -9,7 +9,10 @@
 #include <linux/mutex.h>
 #include <linux/types.h>
 
+<<<<<<< HEAD
 struct intel_crtc_state;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct intel_digital_port;
 struct intel_encoder;
 
@@ -18,7 +21,10 @@ bool intel_tc_port_in_dp_alt_mode(struct intel_digital_port *dig_port);
 bool intel_tc_port_in_legacy_mode(struct intel_digital_port *dig_port);
 
 bool intel_tc_port_connected(struct intel_encoder *encoder);
+<<<<<<< HEAD
 bool intel_tc_port_connected_locked(struct intel_encoder *encoder);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 u32 intel_tc_port_get_lane_mask(struct intel_digital_port *dig_port);
 u32 intel_tc_port_get_pin_assignment_mask(struct intel_digital_port *dig_port);
@@ -26,9 +32,13 @@ int intel_tc_port_fia_max_lane_count(struct intel_digital_port *dig_port);
 void intel_tc_port_set_fia_lane_count(struct intel_digital_port *dig_port,
 				      int required_lanes);
 
+<<<<<<< HEAD
 void intel_tc_port_init_mode(struct intel_digital_port *dig_port);
 void intel_tc_port_sanitize_mode(struct intel_digital_port *dig_port,
 				 const struct intel_crtc_state *crtc_state);
+=======
+void intel_tc_port_sanitize(struct intel_digital_port *dig_port);
+>>>>>>> b7ba80a49124 (Commit)
 void intel_tc_port_lock(struct intel_digital_port *dig_port);
 void intel_tc_port_unlock(struct intel_digital_port *dig_port);
 void intel_tc_port_flush_work(struct intel_digital_port *dig_port);

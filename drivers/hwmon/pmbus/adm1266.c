@@ -301,7 +301,10 @@ static int adm1266_config_gpio(struct adm1266_data *data)
 	data->gc.label = name;
 	data->gc.parent = &data->client->dev;
 	data->gc.owner = THIS_MODULE;
+<<<<<<< HEAD
 	data->gc.can_sleep = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	data->gc.base = -1;
 	data->gc.names = data->gpio_names;
 	data->gc.ngpio = ARRAY_SIZE(data->gpio_names);

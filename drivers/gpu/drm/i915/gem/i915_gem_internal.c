@@ -6,6 +6,10 @@
 
 #include <linux/scatterlist.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/swiotlb.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "i915_drv.h"
 #include "i915_gem.h"
@@ -35,6 +39,7 @@ static int i915_gem_object_get_pages_internal(struct drm_i915_gem_object *obj)
 	struct drm_i915_private *i915 = to_i915(obj->base.dev);
 	struct sg_table *st;
 	struct scatterlist *sg;
+<<<<<<< HEAD
 	unsigned int npages; /* restricted by sg_alloc_table */
 	int max_order = MAX_ORDER;
 	unsigned int max_segment;
@@ -46,6 +51,26 @@ static int i915_gem_object_get_pages_internal(struct drm_i915_gem_object *obj)
 	npages = obj->base.size >> PAGE_SHIFT;
 	max_segment = i915_sg_segment_size(i915->drm.dev) >> PAGE_SHIFT;
 	max_order = min(max_order, get_order(max_segment));
+=======
+	unsigned int sg_page_sizes;
+	unsigned int npages;
+	int max_order;
+	gfp_t gfp;
+
+	max_order = MAX_ORDER;
+#ifdef CONFIG_SWIOTLB
+	if (is_swiotlb_active(obj->base.dev->dev)) {
+		unsigned int max_segment;
+
+		max_segment = swiotlb_max_segment();
+		if (max_segment) {
+			max_segment = max_t(unsigned int, max_segment,
+					    PAGE_SIZE) >> PAGE_SHIFT;
+			max_order = min(max_order, ilog2(max_segment));
+		}
+	}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	gfp = GFP_KERNEL | __GFP_HIGHMEM | __GFP_RECLAIMABLE;
 	if (IS_I965GM(i915) || IS_I965G(i915)) {
@@ -59,6 +84,10 @@ create_st:
 	if (!st)
 		return -ENOMEM;
 
+<<<<<<< HEAD
+=======
+	npages = obj->base.size / PAGE_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 	if (sg_alloc_table(st, npages, GFP_KERNEL)) {
 		kfree(st);
 		return -ENOMEM;
@@ -66,6 +95,10 @@ create_st:
 
 	sg = st->sgl;
 	st->nents = 0;
+<<<<<<< HEAD
+=======
+	sg_page_sizes = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	do {
 		int order = min(fls(npages) - 1, max_order);
@@ -84,6 +117,10 @@ create_st:
 		} while (1);
 
 		sg_set_page(sg, page, PAGE_SIZE << order, 0);
+<<<<<<< HEAD
+=======
+		sg_page_sizes |= PAGE_SIZE << order;
+>>>>>>> b7ba80a49124 (Commit)
 		st->nents++;
 
 		npages -= 1 << order;
@@ -105,7 +142,11 @@ create_st:
 		goto err;
 	}
 
+<<<<<<< HEAD
 	__i915_gem_object_set_pages(obj, st);
+=======
+	__i915_gem_object_set_pages(obj, st, sg_page_sizes);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 

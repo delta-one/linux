@@ -10,7 +10,10 @@
 #include <asm/unaligned.h>
 #include "ieee80211_i.h"
 #include "mesh.h"
+<<<<<<< HEAD
 #include "wme.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "driver-ops.h"
 
 static int mesh_allocated;
@@ -699,6 +702,7 @@ ieee80211_mesh_update_bss_params(struct ieee80211_sub_if_data *sdata,
 			__le32_to_cpu(he_oper->he_oper_params);
 }
 
+<<<<<<< HEAD
 bool ieee80211_mesh_xmit_fast(struct ieee80211_sub_if_data *sdata,
 			      struct sk_buff *skb, u32 ctrl_flags)
 {
@@ -788,6 +792,8 @@ bool ieee80211_mesh_xmit_fast(struct ieee80211_sub_if_data *sdata,
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * ieee80211_fill_mesh_addresses - fill addresses of a locally originated mesh frame
  * @hdr:	802.11 frame header
@@ -842,8 +848,15 @@ unsigned int ieee80211_new_mesh_header(struct ieee80211_sub_if_data *sdata,
 
 	meshhdr->ttl = sdata->u.mesh.mshcfg.dot11MeshTTL;
 
+<<<<<<< HEAD
 	put_unaligned_le32(atomic_inc_return(&sdata->u.mesh.mesh_seqnum),
 			   &meshhdr->seqnum);
+=======
+	/* FIXME: racy -- TX on multiple queues can be concurrent */
+	put_unaligned(cpu_to_le32(sdata->u.mesh.mesh_seqnum), &meshhdr->seqnum);
+	sdata->u.mesh.mesh_seqnum++;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (addr4or5 && !addr6) {
 		meshhdr->flags |= MESH_FLAGS_AE_A4;
 		memcpy(meshhdr->eaddr1, addr4or5, ETH_ALEN);
@@ -870,8 +883,11 @@ static void ieee80211_mesh_housekeeping(struct ieee80211_sub_if_data *sdata)
 	changed = mesh_accept_plinks_update(sdata);
 	ieee80211_mbss_info_change_notify(sdata, changed);
 
+<<<<<<< HEAD
 	mesh_fast_tx_gc(sdata);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mod_timer(&ifmsh->housekeeping_timer,
 		  round_jiffies(jiffies +
 				IEEE80211_MESH_HOUSEKEEPING_INTERVAL));

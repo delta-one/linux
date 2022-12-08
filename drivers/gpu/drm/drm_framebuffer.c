@@ -87,6 +87,7 @@ int drm_framebuffer_check_src_coords(uint32_t src_x, uint32_t src_y,
 	    src_x > fb_width - src_w ||
 	    src_h > fb_height ||
 	    src_y > fb_height - src_h) {
+<<<<<<< HEAD
 		drm_dbg_kms(fb->dev, "Invalid source coordinates "
 			    "%u.%06ux%u.%06u+%u.%06u+%u.%06u (fb %ux%u)\n",
 			    src_w >> 16, ((src_w & 0xffff) * 15625) >> 10,
@@ -94,6 +95,15 @@ int drm_framebuffer_check_src_coords(uint32_t src_x, uint32_t src_y,
 			    src_x >> 16, ((src_x & 0xffff) * 15625) >> 10,
 			    src_y >> 16, ((src_y & 0xffff) * 15625) >> 10,
 			    fb->width, fb->height);
+=======
+		DRM_DEBUG_KMS("Invalid source coordinates "
+			      "%u.%06ux%u.%06u+%u.%06u+%u.%06u (fb %ux%u)\n",
+			      src_w >> 16, ((src_w & 0xffff) * 15625) >> 10,
+			      src_h >> 16, ((src_h & 0xffff) * 15625) >> 10,
+			      src_x >> 16, ((src_x & 0xffff) * 15625) >> 10,
+			      src_y >> 16, ((src_y & 0xffff) * 15625) >> 10,
+			      fb->width, fb->height);
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOSPC;
 	}
 
@@ -125,7 +135,11 @@ int drm_mode_addfb(struct drm_device *dev, struct drm_mode_fb_cmd *or,
 
 	r.pixel_format = drm_driver_legacy_fb_format(dev, or->bpp, or->depth);
 	if (r.pixel_format == DRM_FORMAT_INVALID) {
+<<<<<<< HEAD
 		drm_dbg_kms(dev, "bad {bpp:%d, depth:%d}\n", or->bpp, or->depth);
+=======
+		DRM_DEBUG("bad {bpp:%d, depth:%d}\n", or->bpp, or->depth);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -177,18 +191,31 @@ static int framebuffer_check(struct drm_device *dev,
 
 	/* check if the format is supported at all */
 	if (!__drm_format_info(r->pixel_format)) {
+<<<<<<< HEAD
 		drm_dbg_kms(dev, "bad framebuffer format %p4cc\n",
 			    &r->pixel_format);
+=======
+		DRM_DEBUG_KMS("bad framebuffer format %p4cc\n",
+			      &r->pixel_format);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
 	if (r->width == 0) {
+<<<<<<< HEAD
 		drm_dbg_kms(dev, "bad framebuffer width %u\n", r->width);
+=======
+		DRM_DEBUG_KMS("bad framebuffer width %u\n", r->width);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
 	if (r->height == 0) {
+<<<<<<< HEAD
 		drm_dbg_kms(dev, "bad framebuffer height %u\n", r->height);
+=======
+		DRM_DEBUG_KMS("bad framebuffer height %u\n", r->height);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -202,12 +229,20 @@ static int framebuffer_check(struct drm_device *dev,
 		u64 min_pitch = drm_format_info_min_pitch(info, i, width);
 
 		if (!block_size && (r->modifier[i] == DRM_FORMAT_MOD_LINEAR)) {
+<<<<<<< HEAD
 			drm_dbg_kms(dev, "Format requires non-linear modifier for plane %d\n", i);
+=======
+			DRM_DEBUG_KMS("Format requires non-linear modifier for plane %d\n", i);
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 
 		if (!r->handles[i]) {
+<<<<<<< HEAD
 			drm_dbg_kms(dev, "no buffer object handle for plane %d\n", i);
+=======
+			DRM_DEBUG_KMS("no buffer object handle for plane %d\n", i);
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 
@@ -218,20 +253,34 @@ static int framebuffer_check(struct drm_device *dev,
 			return -ERANGE;
 
 		if (block_size && r->pitches[i] < min_pitch) {
+<<<<<<< HEAD
 			drm_dbg_kms(dev, "bad pitch %u for plane %d\n", r->pitches[i], i);
+=======
+			DRM_DEBUG_KMS("bad pitch %u for plane %d\n", r->pitches[i], i);
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 
 		if (r->modifier[i] && !(r->flags & DRM_MODE_FB_MODIFIERS)) {
+<<<<<<< HEAD
 			drm_dbg_kms(dev, "bad fb modifier %llu for plane %d\n",
 				    r->modifier[i], i);
+=======
+			DRM_DEBUG_KMS("bad fb modifier %llu for plane %d\n",
+				      r->modifier[i], i);
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 
 		if (r->flags & DRM_MODE_FB_MODIFIERS &&
 		    r->modifier[i] != r->modifier[0]) {
+<<<<<<< HEAD
 			drm_dbg_kms(dev, "bad fb modifier %llu for plane %d\n",
 				    r->modifier[i], i);
+=======
+			DRM_DEBUG_KMS("bad fb modifier %llu for plane %d\n",
+				      r->modifier[i], i);
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 
@@ -244,7 +293,11 @@ static int framebuffer_check(struct drm_device *dev,
 			if (r->pixel_format != DRM_FORMAT_NV12 ||
 					width % 128 || height % 32 ||
 					r->pitches[i] % 128) {
+<<<<<<< HEAD
 				drm_dbg_kms(dev, "bad modifier data for plane %d\n", i);
+=======
+				DRM_DEBUG_KMS("bad modifier data for plane %d\n", i);
+>>>>>>> b7ba80a49124 (Commit)
 				return -EINVAL;
 			}
 			break;
@@ -256,7 +309,11 @@ static int framebuffer_check(struct drm_device *dev,
 
 	for (i = info->num_planes; i < 4; i++) {
 		if (r->modifier[i]) {
+<<<<<<< HEAD
 			drm_dbg_kms(dev, "non-zero modifier for unused plane %d\n", i);
+=======
+			DRM_DEBUG_KMS("non-zero modifier for unused plane %d\n", i);
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 
@@ -265,17 +322,29 @@ static int framebuffer_check(struct drm_device *dev,
 			continue;
 
 		if (r->handles[i]) {
+<<<<<<< HEAD
 			drm_dbg_kms(dev, "buffer object handle for unused plane %d\n", i);
+=======
+			DRM_DEBUG_KMS("buffer object handle for unused plane %d\n", i);
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 
 		if (r->pitches[i]) {
+<<<<<<< HEAD
 			drm_dbg_kms(dev, "non-zero pitch for unused plane %d\n", i);
+=======
+			DRM_DEBUG_KMS("non-zero pitch for unused plane %d\n", i);
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 
 		if (r->offsets[i]) {
+<<<<<<< HEAD
 			drm_dbg_kms(dev, "non-zero offset for unused plane %d\n", i);
+=======
+			DRM_DEBUG_KMS("non-zero offset for unused plane %d\n", i);
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 	}
@@ -293,11 +362,16 @@ drm_internal_framebuffer_create(struct drm_device *dev,
 	int ret;
 
 	if (r->flags & ~(DRM_MODE_FB_INTERLACED | DRM_MODE_FB_MODIFIERS)) {
+<<<<<<< HEAD
 		drm_dbg_kms(dev, "bad framebuffer flags 0x%08x\n", r->flags);
+=======
+		DRM_DEBUG_KMS("bad framebuffer flags 0x%08x\n", r->flags);
+>>>>>>> b7ba80a49124 (Commit)
 		return ERR_PTR(-EINVAL);
 	}
 
 	if ((config->min_width > r->width) || (r->width > config->max_width)) {
+<<<<<<< HEAD
 		drm_dbg_kms(dev, "bad framebuffer width %d, should be >= %d && <= %d\n",
 			    r->width, config->min_width, config->max_width);
 		return ERR_PTR(-EINVAL);
@@ -305,12 +379,25 @@ drm_internal_framebuffer_create(struct drm_device *dev,
 	if ((config->min_height > r->height) || (r->height > config->max_height)) {
 		drm_dbg_kms(dev, "bad framebuffer height %d, should be >= %d && <= %d\n",
 			    r->height, config->min_height, config->max_height);
+=======
+		DRM_DEBUG_KMS("bad framebuffer width %d, should be >= %d && <= %d\n",
+			  r->width, config->min_width, config->max_width);
+		return ERR_PTR(-EINVAL);
+	}
+	if ((config->min_height > r->height) || (r->height > config->max_height)) {
+		DRM_DEBUG_KMS("bad framebuffer height %d, should be >= %d && <= %d\n",
+			  r->height, config->min_height, config->max_height);
+>>>>>>> b7ba80a49124 (Commit)
 		return ERR_PTR(-EINVAL);
 	}
 
 	if (r->flags & DRM_MODE_FB_MODIFIERS &&
 	    dev->mode_config.fb_modifiers_not_supported) {
+<<<<<<< HEAD
 		drm_dbg_kms(dev, "driver does not support fb modifiers\n");
+=======
+		DRM_DEBUG_KMS("driver does not support fb modifiers\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return ERR_PTR(-EINVAL);
 	}
 
@@ -320,7 +407,11 @@ drm_internal_framebuffer_create(struct drm_device *dev,
 
 	fb = dev->mode_config.funcs->fb_create(dev, file_priv, r);
 	if (IS_ERR(fb)) {
+<<<<<<< HEAD
 		drm_dbg_kms(dev, "could not create framebuffer\n");
+=======
+		DRM_DEBUG_KMS("could not create framebuffer\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return fb;
 	}
 
@@ -356,7 +447,11 @@ int drm_mode_addfb2(struct drm_device *dev,
 	if (IS_ERR(fb))
 		return PTR_ERR(fb);
 
+<<<<<<< HEAD
 	drm_dbg_kms(dev, "[FB:%d]\n", fb->base.id);
+=======
+	DRM_DEBUG_KMS("[FB:%d]\n", fb->base.id);
+>>>>>>> b7ba80a49124 (Commit)
 	r->fb_id = fb->base.id;
 
 	/* Transfer ownership to the filp for reaping on close */
@@ -384,7 +479,11 @@ int drm_mode_addfb2_ioctl(struct drm_device *dev,
 		 * then.  So block it to make userspace fallback to
 		 * ADDFB.
 		 */
+<<<<<<< HEAD
 		drm_dbg_kms(dev, "addfb2 broken on bigendian");
+=======
+		DRM_DEBUG_KMS("addfb2 broken on bigendian");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOPNOTSUPP;
 	}
 #endif
@@ -1203,8 +1302,13 @@ void drm_framebuffer_print_info(struct drm_printer *p, unsigned int indent,
 #ifdef CONFIG_DEBUG_FS
 static int drm_framebuffer_info(struct seq_file *m, void *data)
 {
+<<<<<<< HEAD
 	struct drm_debugfs_entry *entry = m->private;
 	struct drm_device *dev = entry->dev;
+=======
+	struct drm_info_node *node = m->private;
+	struct drm_device *dev = node->minor->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_printer p = drm_seq_file_printer(m);
 	struct drm_framebuffer *fb;
 
@@ -1218,13 +1322,23 @@ static int drm_framebuffer_info(struct seq_file *m, void *data)
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct drm_debugfs_info drm_framebuffer_debugfs_list[] = {
+=======
+static const struct drm_info_list drm_framebuffer_debugfs_list[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ "framebuffer", drm_framebuffer_info, 0 },
 };
 
 void drm_framebuffer_debugfs_init(struct drm_minor *minor)
 {
+<<<<<<< HEAD
 	drm_debugfs_add_files(minor->dev, drm_framebuffer_debugfs_list,
 			      ARRAY_SIZE(drm_framebuffer_debugfs_list));
+=======
+	drm_debugfs_create_files(drm_framebuffer_debugfs_list,
+				 ARRAY_SIZE(drm_framebuffer_debugfs_list),
+				 minor->debugfs_root, minor);
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif

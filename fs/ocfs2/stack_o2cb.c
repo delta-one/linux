@@ -273,17 +273,28 @@ static int o2cb_cluster_check(void)
 	 */
 #define	O2CB_MAP_STABILIZE_COUNT	60
 	for (i = 0; i < O2CB_MAP_STABILIZE_COUNT; ++i) {
+<<<<<<< HEAD
 		o2hb_fill_node_map(hbmap, O2NM_MAX_NODES);
+=======
+		o2hb_fill_node_map(hbmap, sizeof(hbmap));
+>>>>>>> b7ba80a49124 (Commit)
 		if (!test_bit(node_num, hbmap)) {
 			printk(KERN_ERR "o2cb: %s heartbeat has not been "
 			       "started.\n", (o2hb_global_heartbeat_active() ?
 					      "Global" : "Local"));
 			return -EINVAL;
 		}
+<<<<<<< HEAD
 		o2net_fill_node_map(netmap, O2NM_MAX_NODES);
 		/* Force set the current node to allow easy compare */
 		set_bit(node_num, netmap);
 		if (bitmap_equal(hbmap, netmap, O2NM_MAX_NODES))
+=======
+		o2net_fill_node_map(netmap, sizeof(netmap));
+		/* Force set the current node to allow easy compare */
+		set_bit(node_num, netmap);
+		if (!memcmp(hbmap, netmap, sizeof(hbmap)))
+>>>>>>> b7ba80a49124 (Commit)
 			return 0;
 		if (i < O2CB_MAP_STABILIZE_COUNT - 1)
 			msleep(1000);

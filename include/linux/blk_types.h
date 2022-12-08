@@ -318,8 +318,12 @@ struct bio {
  * bio flags
  */
 enum {
+<<<<<<< HEAD
 	BIO_PAGE_PINNED,	/* Unpin pages in bio_release_pages() */
 	BIO_PAGE_REFFED,	/* put pages in bio_release_pages() */
+=======
+	BIO_NO_PAGE_REF,	/* don't put release vec pages */
+>>>>>>> b7ba80a49124 (Commit)
 	BIO_CLONED,		/* doesn't own data */
 	BIO_BOUNCED,		/* bio is a bounce bio */
 	BIO_QUIET,		/* Make BIO Quiet */
@@ -473,6 +477,16 @@ static inline enum req_op bio_op(const struct bio *bio)
 	return bio->bi_opf & REQ_OP_MASK;
 }
 
+<<<<<<< HEAD
+=======
+/* obsolete, don't use in new code */
+static inline void bio_set_op_attrs(struct bio *bio, enum req_op op,
+				    blk_opf_t op_flags)
+{
+	bio->bi_opf = op | op_flags;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool op_is_write(blk_opf_t op)
 {
 	return !!(op & (__force blk_opf_t)1);

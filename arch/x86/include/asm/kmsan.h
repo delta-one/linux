@@ -11,6 +11,7 @@
 
 #ifndef MODULE
 
+<<<<<<< HEAD
 #include <asm/cpu_entry_area.h>
 #include <asm/processor.h>
 #include <linux/mmzone.h>
@@ -46,6 +47,11 @@ static inline void *arch_kmsan_get_meta_or_null(void *addr, bool is_origin)
 	return &per_cpu(metadata_array[off], cpu);
 }
 
+=======
+#include <asm/processor.h>
+#include <linux/mmzone.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Taken from arch/x86/mm/physaddr.h to avoid using an instrumented version.
  */

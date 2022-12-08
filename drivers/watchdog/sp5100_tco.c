@@ -65,12 +65,15 @@ static struct pci_dev *sp5100_tco_pci;
 
 /* module parameters */
 
+<<<<<<< HEAD
 #define WATCHDOG_ACTION 0
 static bool action = WATCHDOG_ACTION;
 module_param(action, bool, 0);
 MODULE_PARM_DESC(action, "Action taken when watchdog expires, 0 to reset, 1 to poweroff (default="
 		 __MODULE_STRING(WATCHDOG_ACTION) ")");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define WATCHDOG_HEARTBEAT 60	/* 60 sec default heartbeat. */
 static int heartbeat = WATCHDOG_HEARTBEAT;  /* in seconds */
 module_param(heartbeat, int, 0);
@@ -303,11 +306,16 @@ static int sp5100_tco_timer_init(struct sp5100_tco *tco)
 	if (val & SP5100_WDT_FIRED)
 		wdd->bootstatus = WDIOF_CARDRESET;
 
+<<<<<<< HEAD
 	/* Set watchdog action */
 	if (action)
 		val |= SP5100_WDT_ACTION_RESET;
 	else
 		val &= ~SP5100_WDT_ACTION_RESET;
+=======
+	/* Set watchdog action to reset the system */
+	val &= ~SP5100_WDT_ACTION_RESET;
+>>>>>>> b7ba80a49124 (Commit)
 	writel(val, SP5100_WDT_CONTROL(tco->tcobase));
 
 	/* Set a reasonable heartbeat before we stop the timer */

@@ -96,7 +96,11 @@ static int show_cpuinfo(struct seq_file *m, void *v)
 
 static void *c_start(struct seq_file *m, loff_t *pos)
 {
+<<<<<<< HEAD
 	return *pos < nr_cpu_ids ? &boot_cpu_data + *pos : NULL;
+=======
+	return *pos < nr_cpu_ids ? cpu_data + *pos : NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void *c_next(struct seq_file *m, void *v, loff_t *pos)
@@ -444,11 +448,14 @@ void apply_returns(s32 *start, s32 *end)
 {
 }
 
+<<<<<<< HEAD
 void apply_fineibt(s32 *start_retpoline, s32 *end_retpoline,
 		   s32 *start_cfi, s32 *end_cfi)
 {
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void apply_alternatives(struct alt_instr *start, struct alt_instr *end)
 {
 }

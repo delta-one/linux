@@ -41,7 +41,11 @@
 		keyup-threshold-microvolt = <1500000>;
 		poll-interval = <100>;
 
+<<<<<<< HEAD
 		button-recovery {
+=======
+		recovery {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "Recovery";
 			linux,code = <KEY_VENDOR>;
 			press-threshold-microvolt = <18000>;
@@ -735,7 +739,11 @@
 	flash@0 {
 		compatible = "jedec,spi-nor";
 		reg = <0>;
+<<<<<<< HEAD
 		spi-max-frequency = <30000000>;
+=======
+		spi-max-frequency = <10000000>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 

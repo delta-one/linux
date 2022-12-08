@@ -27,7 +27,11 @@ remove_chip() {
 			continue
 		fi
 
+<<<<<<< HEAD
 		LINES=`ls $CONFIGFS_DIR/$CHIP/$BANK/ | grep -E ^line`
+=======
+		LINES=`ls $CONFIGFS_DIR/$CHIP/$BANK/ | egrep ^line`
+>>>>>>> b7ba80a49124 (Commit)
 		if [ "$?" = 0 ]; then
 			for LINE in $LINES; do
 				if [ -e $CONFIGFS_DIR/$CHIP/$BANK/$LINE/hog ]; then

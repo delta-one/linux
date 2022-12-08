@@ -314,8 +314,13 @@ static inline int update_p4d_range(pgd_t *pgd, unsigned long addr,
 	return ret;
 }
 
+<<<<<<< HEAD
 static void fix_range_common(struct mm_struct *mm, unsigned long start_addr,
 			     unsigned long end_addr, int force)
+=======
+void fix_range_common(struct mm_struct *mm, unsigned long start_addr,
+		      unsigned long end_addr, int force)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pgd_t *pgd;
 	struct host_vm_change hvc;
@@ -597,8 +602,13 @@ void force_flush_all(void)
 	struct vm_area_struct *vma;
 	VMA_ITERATOR(vmi, mm, 0);
 
+<<<<<<< HEAD
 	mmap_read_lock(mm);
 	for_each_vma(vmi, vma)
 		fix_range(mm, vma->vm_start, vma->vm_end, 1);
 	mmap_read_unlock(mm);
+=======
+	for_each_vma(vmi, vma)
+		fix_range(mm, vma->vm_start, vma->vm_end, 1);
+>>>>>>> b7ba80a49124 (Commit)
 }

@@ -52,6 +52,7 @@ struct xfs_efi_log_item {
 	xfs_efi_log_format_t	efi_format;
 };
 
+<<<<<<< HEAD
 static inline size_t
 xfs_efi_log_item_sizeof(
 	unsigned int		nr)
@@ -60,6 +61,8 @@ xfs_efi_log_item_sizeof(
 			xfs_efi_log_format_sizeof(nr);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This is the "extent free done" log item.  It is used to log
  * the fact that some extents earlier mentioned in an efi item
@@ -72,6 +75,7 @@ struct xfs_efd_log_item {
 	xfs_efd_log_format_t	efd_format;
 };
 
+<<<<<<< HEAD
 static inline size_t
 xfs_efd_log_item_sizeof(
 	unsigned int		nr)
@@ -80,6 +84,8 @@ xfs_efd_log_item_sizeof(
 			xfs_efd_log_format_sizeof(nr);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Max number of extents in fast allocation path.
  */

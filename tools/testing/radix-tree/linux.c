@@ -129,10 +129,13 @@ void kmem_cache_free_bulk(struct kmem_cache *cachep, size_t size, void **list)
 	pthread_mutex_unlock(&cachep->lock);
 }
 
+<<<<<<< HEAD
 void kmem_cache_shrink(struct kmem_cache *cachep)
 {
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int kmem_cache_alloc_bulk(struct kmem_cache *cachep, gfp_t gfp, size_t size,
 			  void **p)
 {

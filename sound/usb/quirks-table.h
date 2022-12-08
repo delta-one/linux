@@ -76,8 +76,11 @@
 { USB_DEVICE_VENDOR_SPEC(0x041e, 0x3f0a) },
 /* E-Mu 0204 USB */
 { USB_DEVICE_VENDOR_SPEC(0x041e, 0x3f19) },
+<<<<<<< HEAD
 /* Ktmicro Usb_audio device */
 { USB_DEVICE_VENDOR_SPEC(0x31b2, 0x0011) },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Creative Technology, Ltd Live! Cam Sync HD [VF0770]
@@ -2052,10 +2055,13 @@ YAMAHA_DEVICE(0x7010, "UB99"),
 	}
 },
 {
+<<<<<<< HEAD
 	/* M-Audio Micro */
 	USB_DEVICE_VENDOR_SPEC(0x0763, 0x201a),
 },
 {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	USB_DEVICE_VENDOR_SPEC(0x0763, 0x2030),
 	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
 		/* .vendor_name = "M-Audio", */

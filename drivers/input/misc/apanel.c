@@ -120,7 +120,12 @@ static int mail_led_set(struct led_classdev *led,
 	return i2c_smbus_write_word_data(ap->client, 0x10, led_bits);
 }
 
+<<<<<<< HEAD
 static int apanel_probe(struct i2c_client *client)
+=======
+static int apanel_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct apanel *ap;
 	struct input_dev *idev;
@@ -201,7 +206,11 @@ static struct i2c_driver apanel_driver = {
 	.driver = {
 		.name = APANEL,
 	},
+<<<<<<< HEAD
 	.probe_new	= apanel_probe,
+=======
+	.probe		= apanel_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.shutdown	= apanel_shutdown,
 	.id_table	= apanel_id,
 };

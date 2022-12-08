@@ -19,10 +19,17 @@
 #include "util/data.h"
 #include "util/stat.h"
 #include "util/debug.h"
+<<<<<<< HEAD
 #include "util/symbol.h"
 #include "util/session.h"
 #include "util/build-id.h"
 #include "util/sample.h"
+=======
+#include "util/event.h"
+#include "util/symbol.h"
+#include "util/session.h"
+#include "util/build-id.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "util/synthetic-events.h"
 
 #define MMAP_DEV_MAJOR  8

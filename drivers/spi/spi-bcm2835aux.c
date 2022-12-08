@@ -448,7 +448,11 @@ static int bcm2835aux_spi_setup(struct spi_device *spi)
 	if (spi->mode & SPI_NO_CS)
 		return 0;
 
+<<<<<<< HEAD
 	if (spi_get_csgpiod(spi, 0))
+=======
+	if (spi->cs_gpiod)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	/* for dt-backwards compatibility: only support native on CS0
@@ -465,7 +469,11 @@ static int bcm2835aux_spi_setup(struct spi_device *spi)
 	dev_warn(&spi->dev,
 		 "Native CS is not supported - please configure cs-gpio in device-tree\n");
 
+<<<<<<< HEAD
 	if (spi_get_chipselect(spi, 0) == 0)
+=======
+	if (spi->chip_select == 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	dev_warn(&spi->dev, "Native CS is not working for cs > 0\n");
@@ -567,7 +575,11 @@ out_clk_disable:
 	return err;
 }
 
+<<<<<<< HEAD
 static void bcm2835aux_spi_remove(struct platform_device *pdev)
+=======
+static int bcm2835aux_spi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
@@ -580,6 +592,11 @@ static void bcm2835aux_spi_remove(struct platform_device *pdev)
 
 	/* disable the HW block by releasing the clock */
 	clk_disable_unprepare(bs->clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id bcm2835aux_spi_match[] = {
@@ -594,7 +611,11 @@ static struct platform_driver bcm2835aux_spi_driver = {
 		.of_match_table	= bcm2835aux_spi_match,
 	},
 	.probe		= bcm2835aux_spi_probe,
+<<<<<<< HEAD
 	.remove_new	= bcm2835aux_spi_remove,
+=======
+	.remove		= bcm2835aux_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(bcm2835aux_spi_driver);
 

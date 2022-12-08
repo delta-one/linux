@@ -204,6 +204,7 @@ static const struct panfrost_model gpu_models[] = {
 
 	GPU_MODEL(g57, 0x9001,
 		GPU_REV(g57, 0, 0)),
+<<<<<<< HEAD
 
 	/* MediaTek MT8192 has a Mali-G57 with a different GPU ID from the
 	 * standard. Arm's driver does not appear to handle this model.
@@ -212,6 +213,8 @@ static const struct panfrost_model gpu_models[] = {
 	 */
 	GPU_MODEL(g57, 0x9003,
 		GPU_REV(g57, 0, 0)),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void panfrost_gpu_init_features(struct panfrost_device *pfdev)

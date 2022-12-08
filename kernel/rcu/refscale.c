@@ -76,8 +76,11 @@ torture_param(int, verbose_batched, 0, "Batch verbose debugging printk()s");
 // Wait until there are multiple CPUs before starting test.
 torture_param(int, holdoff, IS_BUILTIN(CONFIG_RCU_REF_SCALE_TEST) ? 10 : 0,
 	      "Holdoff time before test start (s)");
+<<<<<<< HEAD
 // Number of typesafe_lookup structures, that is, the degree of concurrency.
 torture_param(long, lookup_instances, 0, "Number of typesafe_lookup structures.");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 // Number of loops per experiment, all readers execute operations concurrently.
 torture_param(long, loops, 10000, "Number of loops per experiment.");
 // Number of readers, with -1 defaulting to about 75% of the CPUs.
@@ -126,7 +129,11 @@ static int exp_idx;
 
 // Operations vector for selecting different types of tests.
 struct ref_scale_ops {
+<<<<<<< HEAD
 	bool (*init)(void);
+=======
+	void (*init)(void);
+>>>>>>> b7ba80a49124 (Commit)
 	void (*cleanup)(void);
 	void (*readsection)(const int nloops);
 	void (*delaysection)(const int nloops, const int udl, const int ndl);
@@ -164,9 +171,14 @@ static void ref_rcu_delay_section(const int nloops, const int udl, const int ndl
 	}
 }
 
+<<<<<<< HEAD
 static bool rcu_sync_scale_init(void)
 {
 	return true;
+=======
+static void rcu_sync_scale_init(void)
+{
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct ref_scale_ops rcu_ops = {
@@ -318,10 +330,16 @@ static struct ref_scale_ops refcnt_ops = {
 // Definitions for rwlock
 static rwlock_t test_rwlock;
 
+<<<<<<< HEAD
 static bool ref_rwlock_init(void)
 {
 	rwlock_init(&test_rwlock);
 	return true;
+=======
+static void ref_rwlock_init(void)
+{
+	rwlock_init(&test_rwlock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ref_rwlock_section(const int nloops)
@@ -355,10 +373,16 @@ static struct ref_scale_ops rwlock_ops = {
 // Definitions for rwsem
 static struct rw_semaphore test_rwsem;
 
+<<<<<<< HEAD
 static bool ref_rwsem_init(void)
 {
 	init_rwsem(&test_rwsem);
 	return true;
+=======
+static void ref_rwsem_init(void)
+{
+	init_rwsem(&test_rwsem);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ref_rwsem_section(const int nloops)
@@ -528,6 +552,7 @@ static struct ref_scale_ops clock_ops = {
 	.name		= "clock"
 };
 
+<<<<<<< HEAD
 ////////////////////////////////////////////////////////////////////////
 //
 // Methods leveraging SLAB_TYPESAFE_BY_RCU.
@@ -759,6 +784,8 @@ static struct ref_scale_ops typesafe_seqlock_ops = {
 	.name		= "typesafe_seqlock"
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void rcu_scale_one_reader(void)
 {
 	if (readdelay <= 0)
@@ -1031,7 +1058,11 @@ ref_scale_cleanup(void)
 static int
 ref_scale_shutdown(void *arg)
 {
+<<<<<<< HEAD
 	wait_event_idle(shutdown_wq, shutdown_start);
+=======
+	wait_event(shutdown_wq, shutdown_start);
+>>>>>>> b7ba80a49124 (Commit)
 
 	smp_mb(); // Wake before output.
 	ref_scale_cleanup();
@@ -1048,7 +1079,10 @@ ref_scale_init(void)
 	static struct ref_scale_ops *scale_ops[] = {
 		&rcu_ops, &srcu_ops, RCU_TRACE_OPS RCU_TASKS_OPS &refcnt_ops, &rwlock_ops,
 		&rwsem_ops, &lock_ops, &lock_irq_ops, &acqrel_ops, &clock_ops,
+<<<<<<< HEAD
 		&typesafe_ref_ops, &typesafe_lock_ops, &typesafe_seqlock_ops,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	if (!torture_init_begin(scale_type, verbose))
@@ -1070,10 +1104,14 @@ ref_scale_init(void)
 		goto unwind;
 	}
 	if (cur_ops->init)
+<<<<<<< HEAD
 		if (!cur_ops->init()) {
 			firsterr = -EUCLEAN;
 			goto unwind;
 		}
+=======
+		cur_ops->init();
+>>>>>>> b7ba80a49124 (Commit)
 
 	ref_scale_print_module_parms(cur_ops, "Start of test");
 

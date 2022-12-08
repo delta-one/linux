@@ -166,6 +166,13 @@ struct s3c2410_nand_info {
 	enum s3c_nand_clk_state		clk_state;
 
 	enum s3c_cpu_type		cpu_type;
+<<<<<<< HEAD
+=======
+
+#ifdef CONFIG_ARM_S3C24XX_CPUFREQ
+	struct notifier_block	freq_transition;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct s3c24XX_nand_devtype_data {
@@ -707,6 +714,57 @@ static void s3c2440_nand_write_buf(struct nand_chip *this, const u_char *buf,
 	}
 }
 
+<<<<<<< HEAD
+=======
+/* cpufreq driver support */
+
+#ifdef CONFIG_ARM_S3C24XX_CPUFREQ
+
+static int s3c2410_nand_cpufreq_transition(struct notifier_block *nb,
+					  unsigned long val, void *data)
+{
+	struct s3c2410_nand_info *info;
+	unsigned long newclk;
+
+	info = container_of(nb, struct s3c2410_nand_info, freq_transition);
+	newclk = clk_get_rate(info->clk);
+
+	if ((val == CPUFREQ_POSTCHANGE && newclk < info->clk_rate) ||
+	    (val == CPUFREQ_PRECHANGE && newclk > info->clk_rate)) {
+		s3c2410_nand_setrate(info);
+	}
+
+	return 0;
+}
+
+static inline int s3c2410_nand_cpufreq_register(struct s3c2410_nand_info *info)
+{
+	info->freq_transition.notifier_call = s3c2410_nand_cpufreq_transition;
+
+	return cpufreq_register_notifier(&info->freq_transition,
+					 CPUFREQ_TRANSITION_NOTIFIER);
+}
+
+static inline void
+s3c2410_nand_cpufreq_deregister(struct s3c2410_nand_info *info)
+{
+	cpufreq_unregister_notifier(&info->freq_transition,
+				    CPUFREQ_TRANSITION_NOTIFIER);
+}
+
+#else
+static inline int s3c2410_nand_cpufreq_register(struct s3c2410_nand_info *info)
+{
+	return 0;
+}
+
+static inline void
+s3c2410_nand_cpufreq_deregister(struct s3c2410_nand_info *info)
+{
+}
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 /* device management functions */
 
 static int s3c24xx_nand_remove(struct platform_device *pdev)
@@ -716,6 +774,11 @@ static int s3c24xx_nand_remove(struct platform_device *pdev)
 	if (info == NULL)
 		return 0;
 
+<<<<<<< HEAD
+=======
+	s3c2410_nand_cpufreq_deregister(info);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Release all our mtds  and their partitions, then go through
 	 * freeing the resources used
 	 */
@@ -1130,6 +1193,15 @@ static int s3c24xx_nand_probe(struct platform_device *pdev)
 	if (err != 0)
 		goto exit_error;
 
+<<<<<<< HEAD
+=======
+	err = s3c2410_nand_cpufreq_register(info);
+	if (err < 0) {
+		dev_err(&pdev->dev, "failed to init cpufreq support\n");
+		goto exit_error;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (allow_clk_suspend(info)) {
 		dev_info(&pdev->dev, "clock idle support enabled\n");
 		s3c2410_nand_clk_set_state(info, CLOCK_SUSPEND);

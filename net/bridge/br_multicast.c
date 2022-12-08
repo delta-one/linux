@@ -31,7 +31,10 @@
 #include <net/ip6_checksum.h>
 #include <net/addrconf.h>
 #endif
+<<<<<<< HEAD
 #include <trace/events/bridge.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "br_private.h"
 #include "br_private_mcast_eht.h"
@@ -235,6 +238,7 @@ out:
 	return pmctx;
 }
 
+<<<<<<< HEAD
 static struct net_bridge_mcast_port *
 br_multicast_port_vid_to_port_ctx(struct net_bridge_port *port, u16 vid)
 {
@@ -258,6 +262,8 @@ br_multicast_port_vid_to_port_ctx(struct net_bridge_port *port, u16 vid)
 	return pmctx;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* when snooping we need to check if the contexts should be used
  * in the following order:
  * - if pmctx is non-NULL (port), check if it should be used
@@ -576,8 +582,12 @@ static void br_multicast_fwd_src_remove(struct net_bridge_group_src *src,
 			continue;
 
 		if (p->rt_protocol != RTPROT_KERNEL &&
+<<<<<<< HEAD
 		    (p->flags & MDB_PG_FLAGS_PERMANENT) &&
 		    !(src->flags & BR_SGRP_F_USER_ADDED))
+=======
+		    (p->flags & MDB_PG_FLAGS_PERMANENT))
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		if (fastleave)
@@ -630,7 +640,11 @@ static void br_multicast_destroy_mdb_entry(struct net_bridge_mcast_gc *gc)
 	WARN_ON(!hlist_unhashed(&mp->mdb_node));
 	WARN_ON(mp->ports);
 
+<<<<<<< HEAD
 	timer_shutdown_sync(&mp->timer);
+=======
+	del_timer_sync(&mp->timer);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree_rcu(mp, rcu);
 }
 
@@ -671,6 +685,7 @@ static void br_multicast_destroy_group_src(struct net_bridge_mcast_gc *gc)
 	src = container_of(gc, struct net_bridge_group_src, mcast_gc);
 	WARN_ON(!hlist_unhashed(&src->node));
 
+<<<<<<< HEAD
 	timer_shutdown_sync(&src->timer);
 	kfree_rcu(src, rcu);
 }
@@ -785,6 +800,22 @@ void br_multicast_ngroups_set_max(struct net_bridge_mcast_port *pmctx, u32 max)
 u32 br_multicast_ngroups_get_max(const struct net_bridge_mcast_port *pmctx)
 {
 	return READ_ONCE(pmctx->mdb_max_entries);
+=======
+	del_timer_sync(&src->timer);
+	kfree_rcu(src, rcu);
+}
+
+void br_multicast_del_group_src(struct net_bridge_group_src *src,
+				bool fastleave)
+{
+	struct net_bridge *br = src->pg->key.port->br;
+
+	br_multicast_fwd_src_remove(src, fastleave);
+	hlist_del_init_rcu(&src->node);
+	src->pg->src_ents--;
+	hlist_add_head(&src->mcast_gc.gc_node, &br->mcast_gc_list);
+	queue_work(system_long_wq, &br->mcast_gc_work);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void br_multicast_destroy_port_group(struct net_bridge_mcast_gc *gc)
@@ -795,8 +826,13 @@ static void br_multicast_destroy_port_group(struct net_bridge_mcast_gc *gc)
 	WARN_ON(!hlist_unhashed(&pg->mglist));
 	WARN_ON(!hlist_empty(&pg->src_list));
 
+<<<<<<< HEAD
 	timer_shutdown_sync(&pg->rexmit_timer);
 	timer_shutdown_sync(&pg->timer);
+=======
+	del_timer_sync(&pg->rexmit_timer);
+	del_timer_sync(&pg->timer);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree_rcu(pg, rcu);
 }
 
@@ -821,7 +857,10 @@ void br_multicast_del_pg(struct net_bridge_mdb_entry *mp,
 	} else {
 		br_multicast_star_g_handle_mode(pg, MCAST_INCLUDE);
 	}
+<<<<<<< HEAD
 	br_multicast_port_ngroups_dec(pg->key.port, pg->key.addr.vid);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hlist_add_head(&pg->mcast_gc.gc_node, &br->mcast_gc_list);
 	queue_work(system_long_wq, &br->mcast_gc_work);
 
@@ -1285,7 +1324,10 @@ struct net_bridge_mdb_entry *br_multicast_new_group(struct net_bridge *br,
 		return mp;
 
 	if (atomic_read(&br->mdb_hash_tbl.nelems) >= br->hash_max) {
+<<<<<<< HEAD
 		trace_br_mdb_full(br->dev, group);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		br_mc_disabled_update(br->dev, false, NULL);
 		br_opt_toggle(br, BROPT_MULTICAST_ENABLED, false);
 		return ERR_PTR(-E2BIG);
@@ -1359,7 +1401,11 @@ br_multicast_find_group_src(struct net_bridge_port_group *pg, struct br_ip *ip)
 	return NULL;
 }
 
+<<<<<<< HEAD
 struct net_bridge_group_src *
+=======
+static struct net_bridge_group_src *
+>>>>>>> b7ba80a49124 (Commit)
 br_multicast_new_group_src(struct net_bridge_port_group *pg, struct br_ip *src_ip)
 {
 	struct net_bridge_group_src *grp_src;
@@ -1400,11 +1446,16 @@ br_multicast_new_group_src(struct net_bridge_port_group *pg, struct br_ip *src_i
 
 struct net_bridge_port_group *br_multicast_new_port_group(
 			struct net_bridge_port *port,
+<<<<<<< HEAD
 			const struct br_ip *group,
+=======
+			struct br_ip *group,
+>>>>>>> b7ba80a49124 (Commit)
 			struct net_bridge_port_group __rcu *next,
 			unsigned char flags,
 			const unsigned char *src,
 			u8 filter_mode,
+<<<<<<< HEAD
 			u8 rt_protocol,
 			struct netlink_ext_ack *extack)
 {
@@ -1420,6 +1471,15 @@ struct net_bridge_port_group *br_multicast_new_port_group(
 		NL_SET_ERR_MSG_MOD(extack, "Couldn't allocate new port group");
 		goto dec_out;
 	}
+=======
+			u8 rt_protocol)
+{
+	struct net_bridge_port_group *p;
+
+	p = kzalloc(sizeof(*p), GFP_ATOMIC);
+	if (unlikely(!p))
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	p->key.addr = *group;
 	p->key.port = port;
@@ -1434,8 +1494,13 @@ struct net_bridge_port_group *br_multicast_new_port_group(
 	if (!br_multicast_is_star_g(group) &&
 	    rhashtable_lookup_insert_fast(&port->br->sg_port_tbl, &p->rhnode,
 					  br_sg_port_rht_params)) {
+<<<<<<< HEAD
 		NL_SET_ERR_MSG_MOD(extack, "Couldn't insert new port group");
 		goto free_out;
+=======
+		kfree(p);
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	rcu_assign_pointer(p->next, next);
@@ -1449,6 +1514,7 @@ struct net_bridge_port_group *br_multicast_new_port_group(
 		eth_broadcast_addr(p->eth_addr);
 
 	return p;
+<<<<<<< HEAD
 
 free_out:
 	kfree(p);
@@ -1468,6 +1534,8 @@ void br_multicast_del_port_group(struct net_bridge_port_group *p)
 				       br_sg_port_rht_params);
 	kfree(p);
 	br_multicast_port_ngroups_dec(port, vid);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void br_multicast_host_join(const struct net_bridge_mcast *brmctx,
@@ -1535,7 +1603,11 @@ __br_multicast_add_group(struct net_bridge_mcast *brmctx,
 	}
 
 	p = br_multicast_new_port_group(pmctx->port, group, *pp, 0, src,
+<<<<<<< HEAD
 					filter_mode, RTPROT_KERNEL, NULL);
+=======
+					filter_mode, RTPROT_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(!p)) {
 		p = ERR_PTR(-ENOMEM);
 		goto out;
@@ -2081,6 +2153,7 @@ static void __br_multicast_enable_port_ctx(struct net_bridge_mcast_port *pmctx)
 		br_ip4_multicast_add_router(brmctx, pmctx);
 		br_ip6_multicast_add_router(brmctx, pmctx);
 	}
+<<<<<<< HEAD
 
 	if (br_multicast_port_ctx_is_vlan(pmctx)) {
 		struct net_bridge_port_group *pg;
@@ -2100,6 +2173,8 @@ static void __br_multicast_enable_port_ctx(struct net_bridge_mcast_port *pmctx)
 		}
 		WRITE_ONCE(pmctx->mdb_n_entries, n);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void br_multicast_enable_port(struct net_bridge_port *port)
@@ -2842,7 +2917,11 @@ static int br_ip4_multicast_igmp3_report(struct net_bridge_mcast *brmctx,
 		if (!pmctx || igmpv2)
 			continue;
 
+<<<<<<< HEAD
 		spin_lock(&brmctx->br->multicast_lock);
+=======
+		spin_lock_bh(&brmctx->br->multicast_lock);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!br_multicast_ctx_should_use(brmctx, pmctx))
 			goto unlock_continue;
 
@@ -2890,7 +2969,11 @@ static int br_ip4_multicast_igmp3_report(struct net_bridge_mcast *brmctx,
 		if (changed)
 			br_mdb_notify(brmctx->br->dev, mdst, pg, RTM_NEWMDB);
 unlock_continue:
+<<<<<<< HEAD
 		spin_unlock(&brmctx->br->multicast_lock);
+=======
+		spin_unlock_bh(&brmctx->br->multicast_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return err;
@@ -2980,7 +3063,11 @@ static int br_ip6_multicast_mld2_report(struct net_bridge_mcast *brmctx,
 		if (!pmctx || mldv1)
 			continue;
 
+<<<<<<< HEAD
 		spin_lock(&brmctx->br->multicast_lock);
+=======
+		spin_lock_bh(&brmctx->br->multicast_lock);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!br_multicast_ctx_should_use(brmctx, pmctx))
 			goto unlock_continue;
 
@@ -3032,7 +3119,11 @@ static int br_ip6_multicast_mld2_report(struct net_bridge_mcast *brmctx,
 		if (changed)
 			br_mdb_notify(brmctx->br->dev, mdst, pg, RTM_NEWMDB);
 unlock_continue:
+<<<<<<< HEAD
 		spin_unlock(&brmctx->br->multicast_lock);
+=======
+		spin_unlock_bh(&brmctx->br->multicast_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return err;
@@ -5072,9 +5163,15 @@ void br_multicast_get_stats(const struct net_bridge *br,
 		unsigned int start;
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&cpu_stats->syncp);
 			memcpy(&temp, &cpu_stats->mstats, sizeof(temp));
 		} while (u64_stats_fetch_retry(&cpu_stats->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&cpu_stats->syncp);
+			memcpy(&temp, &cpu_stats->mstats, sizeof(temp));
+		} while (u64_stats_fetch_retry_irq(&cpu_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		mcast_stats_add_dir(tdst.igmp_v1queries, temp.igmp_v1queries);
 		mcast_stats_add_dir(tdst.igmp_v2queries, temp.igmp_v2queries);

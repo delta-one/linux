@@ -4,7 +4,11 @@
 $id: "http://devicetree.org/schemas/arm/tegra/nvidia,tegra234-cbb.yaml#"
 $schema: "http://devicetree.org/meta-schemas/core.yaml#"
 
+<<<<<<< HEAD
 title: NVIDIA Tegra CBB 2.0
+=======
+title: NVIDIA Tegra CBB 2.0 bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Sumit Gupta <sumitg@nvidia.com>

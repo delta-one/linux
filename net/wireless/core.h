@@ -271,15 +271,23 @@ struct cfg80211_event {
 		} ij;
 		struct {
 			u8 bssid[ETH_ALEN];
+<<<<<<< HEAD
 			const u8 *td_bitmap;
 			u8 td_bitmap_len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		} pa;
 	};
 };
 
 struct cfg80211_cached_keys {
+<<<<<<< HEAD
 	struct key_params params[4];
 	u8 data[4][WLAN_KEY_LEN_WEP104];
+=======
+	struct key_params params[CFG80211_MAX_WEP_KEYS];
+	u8 data[CFG80211_MAX_WEP_KEYS][WLAN_KEY_LEN_WEP104];
+>>>>>>> b7ba80a49124 (Commit)
 	int def;
 };
 
@@ -411,8 +419,12 @@ int cfg80211_disconnect(struct cfg80211_registered_device *rdev,
 			bool wextev);
 void __cfg80211_roamed(struct wireless_dev *wdev,
 		       struct cfg80211_roam_info *info);
+<<<<<<< HEAD
 void __cfg80211_port_authorized(struct wireless_dev *wdev, const u8 *bssid,
 				const u8 *td_bitmap, u8 td_bitmap_len);
+=======
+void __cfg80211_port_authorized(struct wireless_dev *wdev, const u8 *bssid);
+>>>>>>> b7ba80a49124 (Commit)
 int cfg80211_mgd_wext_connect(struct cfg80211_registered_device *rdev,
 			      struct wireless_dev *wdev);
 void cfg80211_autodisconnect_wk(struct work_struct *work);

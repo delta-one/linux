@@ -126,8 +126,12 @@
 #define STR_DATA BIT(0)
 
 #define NFI_STA 0x060
+<<<<<<< HEAD
 #define NFI_NAND_FSM_7622 GENMASK(28, 24)
 #define NFI_NAND_FSM_7986 GENMASK(29, 23)
+=======
+#define NFI_NAND_FSM GENMASK(28, 24)
+>>>>>>> b7ba80a49124 (Commit)
 #define NFI_FSM GENMASK(19, 16)
 #define READ_EMPTY BIT(12)
 
@@ -159,7 +163,10 @@
 #define MAS_WR GENMASK(5, 3)
 #define MAS_RDDLY GENMASK(2, 0)
 #define NFI_MASTERSTA_MASK_7622 (MAS_ADDR | MAS_RD | MAS_WR | MAS_RDDLY)
+<<<<<<< HEAD
 #define NFI_MASTERSTA_MASK_7986 3
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 // SNFI registers
 #define SNF_MAC_CTL 0x500
@@ -195,8 +202,11 @@
 #define DATA_READ_MODE_X4 2
 #define DATA_READ_MODE_DUAL 5
 #define DATA_READ_MODE_QUAD 6
+<<<<<<< HEAD
 #define DATA_READ_LATCH_LAT GENMASK(9, 8)
 #define DATA_READ_LATCH_LAT_S 8
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PG_LOAD_CUSTOM_EN BIT(7)
 #define DATARD_CUSTOM_EN BIT(6)
 #define CS_DESELECT_CYC_S 0
@@ -207,9 +217,12 @@
 
 #define SNF_DLY_CTL3 0x548
 #define SFCK_SAM_DLY_S 0
+<<<<<<< HEAD
 #define SFCK_SAM_DLY GENMASK(5, 0)
 #define SFCK_SAM_DLY_TOTAL 9
 #define SFCK_SAM_DLY_RANGE 47
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SNF_STA_CTL1 0x550
 #define CUS_PG_DONE BIT(28)
@@ -227,11 +240,14 @@
 
 static const u8 mt7622_spare_sizes[] = { 16, 26, 27, 28 };
 
+<<<<<<< HEAD
 static const u8 mt7986_spare_sizes[] = {
 	16, 26, 27, 28, 32, 36, 40, 44, 48, 49, 50, 51, 52, 62, 61, 63, 64, 67,
 	74
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mtk_snand_caps {
 	u16 sector_size;
 	u16 max_sectors;
@@ -242,7 +258,10 @@ struct mtk_snand_caps {
 	bool bbm_swap;
 	bool empty_page_check;
 	u32 mastersta_mask;
+<<<<<<< HEAD
 	u32 nandfsm_mask;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	const u8 *spare_sizes;
 	u32 num_spare_size;
@@ -257,7 +276,10 @@ static const struct mtk_snand_caps mt7622_snand_caps = {
 	.bbm_swap = false,
 	.empty_page_check = false,
 	.mastersta_mask = NFI_MASTERSTA_MASK_7622,
+<<<<<<< HEAD
 	.nandfsm_mask = NFI_NAND_FSM_7622,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.spare_sizes = mt7622_spare_sizes,
 	.num_spare_size = ARRAY_SIZE(mt7622_spare_sizes)
 };
@@ -271,11 +293,15 @@ static const struct mtk_snand_caps mt7629_snand_caps = {
 	.bbm_swap = true,
 	.empty_page_check = false,
 	.mastersta_mask = NFI_MASTERSTA_MASK_7622,
+<<<<<<< HEAD
 	.nandfsm_mask = NFI_NAND_FSM_7622,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.spare_sizes = mt7622_spare_sizes,
 	.num_spare_size = ARRAY_SIZE(mt7622_spare_sizes)
 };
 
+<<<<<<< HEAD
 static const struct mtk_snand_caps mt7986_snand_caps = {
 	.sector_size = 1024,
 	.max_sectors = 8,
@@ -290,6 +316,8 @@ static const struct mtk_snand_caps mt7986_snand_caps = {
 	.num_spare_size = ARRAY_SIZE(mt7986_spare_sizes)
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mtk_snand_conf {
 	size_t page_size;
 	size_t oob_size;
@@ -302,7 +330,10 @@ struct mtk_snand {
 	struct device *dev;
 	struct clk *nfi_clk;
 	struct clk *pad_clk;
+<<<<<<< HEAD
 	struct clk *nfi_hclk;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem *nfi_base;
 	int irq;
 	struct completion op_done;
@@ -390,7 +421,11 @@ static int mtk_nfi_reset(struct mtk_snand *snf)
 	}
 
 	ret = readl_poll_timeout(snf->nfi_base + NFI_STA, val,
+<<<<<<< HEAD
 				 !(val & (NFI_FSM | snf->caps->nandfsm_mask)), 0,
+=======
+				 !(val & (NFI_FSM | NFI_NAND_FSM)), 0,
+>>>>>>> b7ba80a49124 (Commit)
 				 SNFI_POLL_INTERVAL);
 	if (ret) {
 		dev_err(snf->dev, "Failed to reset NFI\n");
@@ -1325,7 +1360,10 @@ static irqreturn_t mtk_snand_irq(int irq, void *id)
 static const struct of_device_id mtk_snand_ids[] = {
 	{ .compatible = "mediatek,mt7622-snand", .data = &mt7622_snand_caps },
 	{ .compatible = "mediatek,mt7629-snand", .data = &mt7629_snand_caps },
+<<<<<<< HEAD
 	{ .compatible = "mediatek,mt7986-snand", .data = &mt7986_snand_caps },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 
@@ -1345,6 +1383,7 @@ static int mtk_snand_enable_clk(struct mtk_snand *ms)
 		dev_err(ms->dev, "unable to enable pad clk\n");
 		goto err1;
 	}
+<<<<<<< HEAD
 	ret = clk_prepare_enable(ms->nfi_hclk);
 	if (ret) {
 		dev_err(ms->dev, "unable to enable nfi hclk\n");
@@ -1355,6 +1394,9 @@ static int mtk_snand_enable_clk(struct mtk_snand *ms)
 
 err2:
 	clk_disable_unprepare(ms->pad_clk);
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 err1:
 	clk_disable_unprepare(ms->nfi_clk);
 	return ret;
@@ -1362,7 +1404,10 @@ err1:
 
 static void mtk_snand_disable_clk(struct mtk_snand *ms)
 {
+<<<<<<< HEAD
 	clk_disable_unprepare(ms->nfi_hclk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	clk_disable_unprepare(ms->pad_clk);
 	clk_disable_unprepare(ms->nfi_clk);
 }
@@ -1373,8 +1418,11 @@ static int mtk_snand_probe(struct platform_device *pdev)
 	const struct of_device_id *dev_id;
 	struct spi_controller *ctlr;
 	struct mtk_snand *ms;
+<<<<<<< HEAD
 	unsigned long spi_freq;
 	u32 val = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	dev_id = of_match_node(mtk_snand_ids, np);
@@ -1419,6 +1467,7 @@ static int mtk_snand_probe(struct platform_device *pdev)
 		goto release_ecc;
 	}
 
+<<<<<<< HEAD
 	ms->nfi_hclk = devm_clk_get_optional(&pdev->dev, "nfi_hclk");
 	if (IS_ERR(ms->nfi_hclk)) {
 		ret = PTR_ERR(ms->nfi_hclk);
@@ -1426,6 +1475,8 @@ static int mtk_snand_probe(struct platform_device *pdev)
 		goto release_ecc;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = mtk_snand_enable_clk(ms);
 	if (ret)
 		goto release_ecc;
@@ -1453,6 +1504,7 @@ static int mtk_snand_probe(struct platform_device *pdev)
 	// switch to SNFI mode
 	nfi_write32(ms, SNF_CFG, SPI_MODE);
 
+<<<<<<< HEAD
 	ret = of_property_read_u32(np, "rx-sample-delay-ns", &val);
 	if (!ret)
 		nfi_rmw32(ms, SNF_DLY_CTL3, SFCK_SAM_DLY,
@@ -1469,6 +1521,12 @@ static int mtk_snand_probe(struct platform_device *pdev)
 	// setup an initial page format for ops matching page_cache_op template
 	// before ECC is called.
 	ret = mtk_snand_setup_pagefmt(ms, SZ_2K, SZ_64);
+=======
+	// setup an initial page format for ops matching page_cache_op template
+	// before ECC is called.
+	ret = mtk_snand_setup_pagefmt(ms, ms->caps->sector_size,
+				      ms->caps->spare_sizes[0]);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(ms->dev, "failed to set initial page format\n");
 		goto disable_clk;
@@ -1506,7 +1564,11 @@ release_ecc:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void mtk_snand_remove(struct platform_device *pdev)
+=======
+static int mtk_snand_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_controller *ctlr = platform_get_drvdata(pdev);
 	struct mtk_snand *ms = spi_controller_get_devdata(ctlr);
@@ -1515,11 +1577,19 @@ static void mtk_snand_remove(struct platform_device *pdev)
 	mtk_snand_disable_clk(ms);
 	mtk_ecc_release(ms->ecc);
 	kfree(ms->buf);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver mtk_snand_driver = {
 	.probe = mtk_snand_probe,
+<<<<<<< HEAD
 	.remove_new = mtk_snand_remove,
+=======
+	.remove = mtk_snand_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "mtk-snand",
 		.of_match_table = mtk_snand_ids,

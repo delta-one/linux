@@ -22,7 +22,10 @@
 #include <linux/idr.h>
 #include <linux/jhash.h>
 #include <linux/rculist.h>
+<<<<<<< HEAD
 #include <linux/rhashtable.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/net_namespace.h>
 #include <net/sock.h>
 #include <net/netlink.h>
@@ -41,7 +44,10 @@
 #include <net/tc_act/tc_mpls.h>
 #include <net/tc_act/tc_gate.h>
 #include <net/flow_offload.h>
+<<<<<<< HEAD
 #include <net/tc_wrapper.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 extern const struct nla_policy rtm_tca_policy[TCA_MAX + 1];
 
@@ -51,6 +57,7 @@ static LIST_HEAD(tcf_proto_base);
 /* Protects list of registered TC modules. It is pure SMP lock. */
 static DEFINE_RWLOCK(cls_mod_lock);
 
+<<<<<<< HEAD
 static struct xarray tcf_exts_miss_cookies_xa;
 struct tcf_exts_miss_cookie_node {
 	const struct tcf_chain *chain;
@@ -154,6 +161,8 @@ static u64 tcf_exts_miss_cookie_get(u32 miss_cookie_base, int act_index)
 	return mc.miss_cookie;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_NET_CLS_ACT
 DEFINE_STATIC_KEY_FALSE(tc_skb_ext_tc);
 EXPORT_SYMBOL(tc_skb_ext_tc);
@@ -592,8 +601,12 @@ static struct tcf_chain *tcf_chain_lookup_rcu(const struct tcf_block *block,
 #endif
 
 static int tc_chain_notify(struct tcf_chain *chain, struct sk_buff *oskb,
+<<<<<<< HEAD
 			   u32 seq, u16 flags, int event, bool unicast,
 			   struct netlink_ext_ack *extack);
+=======
+			   u32 seq, u16 flags, int event, bool unicast);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct tcf_chain *__tcf_chain_get(struct tcf_block *block,
 					 u32 chain_index, bool create,
@@ -626,7 +639,11 @@ static struct tcf_chain *__tcf_chain_get(struct tcf_block *block,
 	 */
 	if (is_first_reference && !by_act)
 		tc_chain_notify(chain, NULL, 0, NLM_F_CREATE | NLM_F_EXCL,
+<<<<<<< HEAD
 				RTM_NEWCHAIN, false, NULL);
+=======
+				RTM_NEWCHAIN, false);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return chain;
 
@@ -1653,8 +1670,11 @@ static inline int __tcf_classify(struct sk_buff *skb,
 				 const struct tcf_proto *orig_tp,
 				 struct tcf_result *res,
 				 bool compat_mode,
+<<<<<<< HEAD
 				 struct tcf_exts_miss_cookie_node *n,
 				 int act_index,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				 u32 *last_executed_chain)
 {
 #ifdef CONFIG_NET_CLS_ACT
@@ -1666,6 +1686,7 @@ reclassify:
 #endif
 	for (; tp; tp = rcu_dereference_bh(tp->next)) {
 		__be16 protocol = skb_protocol(skb, false);
+<<<<<<< HEAD
 		int err = 0;
 
 		if (n) {
@@ -1696,6 +1717,15 @@ reclassify:
 
 			err = tc_classify(skb, tp, res);
 		}
+=======
+		int err;
+
+		if (tp->protocol != protocol &&
+		    tp->protocol != htons(ETH_P_ALL))
+			continue;
+
+		err = tp->classify(skb, tp, res);
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_NET_CLS_ACT
 		if (unlikely(err == TC_ACT_RECLASSIFY && !compat_mode)) {
 			first_tp = orig_tp;
@@ -1711,9 +1741,12 @@ reclassify:
 			return err;
 	}
 
+<<<<<<< HEAD
 	if (unlikely(n))
 		return TC_ACT_SHOT;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return TC_ACT_UNSPEC; /* signal: continue lookup */
 #ifdef CONFIG_NET_CLS_ACT
 reset:
@@ -1738,6 +1771,7 @@ int tcf_classify(struct sk_buff *skb,
 #if !IS_ENABLED(CONFIG_NET_TC_SKB_EXT)
 	u32 last_executed_chain = 0;
 
+<<<<<<< HEAD
 	return __tcf_classify(skb, tp, tp, res, compat_mode, NULL, 0,
 			      &last_executed_chain);
 #else
@@ -1746,11 +1780,20 @@ int tcf_classify(struct sk_buff *skb,
 	const struct tcf_proto *orig_tp = tp;
 	struct tc_skb_ext *ext;
 	int act_index = 0;
+=======
+	return __tcf_classify(skb, tp, tp, res, compat_mode,
+			      &last_executed_chain);
+#else
+	u32 last_executed_chain = tp ? tp->chain->index : 0;
+	const struct tcf_proto *orig_tp = tp;
+	struct tc_skb_ext *ext;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (block) {
 		ext = skb_ext_find(skb, TC_SKB_EXT);
 
+<<<<<<< HEAD
 		if (ext && (ext->chain || ext->act_miss)) {
 			struct tcf_chain *fchain;
 			u32 chain;
@@ -1767,6 +1810,12 @@ int tcf_classify(struct sk_buff *skb,
 			}
 
 			fchain = tcf_chain_lookup_rcu(block, chain);
+=======
+		if (ext && ext->chain) {
+			struct tcf_chain *fchain;
+
+			fchain = tcf_chain_lookup_rcu(block, ext->chain);
+>>>>>>> b7ba80a49124 (Commit)
 			if (!fchain)
 				return TC_ACT_SHOT;
 
@@ -1778,7 +1827,11 @@ int tcf_classify(struct sk_buff *skb,
 		}
 	}
 
+<<<<<<< HEAD
 	ret = __tcf_classify(skb, tp, orig_tp, res, compat_mode, n, act_index,
+=======
+	ret = __tcf_classify(skb, tp, orig_tp, res, compat_mode,
+>>>>>>> b7ba80a49124 (Commit)
 			     &last_executed_chain);
 
 	if (tc_skb_ext_tc_enabled()) {
@@ -1964,8 +2017,12 @@ static int tcf_fill_node(struct net *net, struct sk_buff *skb,
 			 struct tcf_proto *tp, struct tcf_block *block,
 			 struct Qdisc *q, u32 parent, void *fh,
 			 u32 portid, u32 seq, u16 flags, int event,
+<<<<<<< HEAD
 			 bool terse_dump, bool rtnl_held,
 			 struct netlink_ext_ack *extack)
+=======
+			 bool terse_dump, bool rtnl_held)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tcmsg *tcm;
 	struct nlmsghdr  *nlh;
@@ -2005,6 +2062,7 @@ static int tcf_fill_node(struct net *net, struct sk_buff *skb,
 		    tp->ops->dump(net, tp, fh, skb, tcm, rtnl_held) < 0)
 			goto nla_put_failure;
 	}
+<<<<<<< HEAD
 
 	if (extack && extack->_msg &&
 	    nla_put_string(skb, TCA_EXT_WARN_MSG, extack->_msg))
@@ -2012,6 +2070,9 @@ static int tcf_fill_node(struct net *net, struct sk_buff *skb,
 
 	nlh->nlmsg_len = skb_tail_pointer(skb) - b;
 
+=======
+	nlh->nlmsg_len = skb_tail_pointer(skb) - b;
+>>>>>>> b7ba80a49124 (Commit)
 	return skb->len;
 
 out_nlmsg_trim:
@@ -2025,7 +2086,11 @@ static int tfilter_notify(struct net *net, struct sk_buff *oskb,
 			  struct nlmsghdr *n, struct tcf_proto *tp,
 			  struct tcf_block *block, struct Qdisc *q,
 			  u32 parent, void *fh, int event, bool unicast,
+<<<<<<< HEAD
 			  bool rtnl_held, struct netlink_ext_ack *extack)
+=======
+			  bool rtnl_held)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sk_buff *skb;
 	u32 portid = oskb ? NETLINK_CB(oskb).portid : 0;
@@ -2037,7 +2102,11 @@ static int tfilter_notify(struct net *net, struct sk_buff *oskb,
 
 	if (tcf_fill_node(net, skb, tp, block, q, parent, fh, portid,
 			  n->nlmsg_seq, n->nlmsg_flags, event,
+<<<<<<< HEAD
 			  false, rtnl_held, extack) <= 0) {
+=======
+			  false, rtnl_held) <= 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		kfree_skb(skb);
 		return -EINVAL;
 	}
@@ -2066,7 +2135,11 @@ static int tfilter_del_notify(struct net *net, struct sk_buff *oskb,
 
 	if (tcf_fill_node(net, skb, tp, block, q, parent, fh, portid,
 			  n->nlmsg_seq, n->nlmsg_flags, RTM_DELTFILTER,
+<<<<<<< HEAD
 			  false, rtnl_held, extack) <= 0) {
+=======
+			  false, rtnl_held) <= 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		NL_SET_ERR_MSG(extack, "Failed to build del event notification");
 		kfree_skb(skb);
 		return -EINVAL;
@@ -2092,15 +2165,24 @@ static int tfilter_del_notify(struct net *net, struct sk_buff *oskb,
 static void tfilter_notify_chain(struct net *net, struct sk_buff *oskb,
 				 struct tcf_block *block, struct Qdisc *q,
 				 u32 parent, struct nlmsghdr *n,
+<<<<<<< HEAD
 				 struct tcf_chain *chain, int event,
 				 struct netlink_ext_ack *extack)
+=======
+				 struct tcf_chain *chain, int event)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tcf_proto *tp;
 
 	for (tp = tcf_get_next_proto(chain, NULL);
 	     tp; tp = tcf_get_next_proto(chain, tp))
+<<<<<<< HEAD
 		tfilter_notify(net, oskb, n, tp, block, q, parent, NULL,
 			       event, false, true, extack);
+=======
+		tfilter_notify(net, oskb, n, tp, block,
+			       q, parent, NULL, event, false, true);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void tfilter_put(struct tcf_proto *tp, void *fh)
@@ -2109,11 +2191,14 @@ static void tfilter_put(struct tcf_proto *tp, void *fh)
 		tp->ops->put(tp, fh);
 }
 
+<<<<<<< HEAD
 static bool is_qdisc_ingress(__u32 classid)
 {
 	return (TC_H_MIN(classid) == TC_H_MIN(TC_H_MIN_INGRESS));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int tc_new_tfilter(struct sk_buff *skb, struct nlmsghdr *n,
 			  struct netlink_ext_ack *extack)
 {
@@ -2305,13 +2390,20 @@ replay:
 		flags |= TCA_ACT_FLAGS_REPLACE;
 	if (!rtnl_held)
 		flags |= TCA_ACT_FLAGS_NO_RTNL;
+<<<<<<< HEAD
 	if (is_qdisc_ingress(parent))
 		flags |= TCA_ACT_FLAGS_AT_INGRESS;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = tp->ops->change(net, skb, tp, cl, t->tcm_handle, tca, &fh,
 			      flags, extack);
 	if (err == 0) {
 		tfilter_notify(net, skb, n, tp, block, q, parent, fh,
+<<<<<<< HEAD
 			       RTM_NEWTFILTER, false, rtnl_held, extack);
+=======
+			       RTM_NEWTFILTER, false, rtnl_held);
+>>>>>>> b7ba80a49124 (Commit)
 		tfilter_put(tp, fh);
 		/* q pointer is NULL for shared blocks */
 		if (q)
@@ -2439,7 +2531,11 @@ static int tc_del_tfilter(struct sk_buff *skb, struct nlmsghdr *n,
 
 	if (prio == 0) {
 		tfilter_notify_chain(net, skb, block, q, parent, n,
+<<<<<<< HEAD
 				     chain, RTM_DELTFILTER, extack);
+=======
+				     chain, RTM_DELTFILTER);
+>>>>>>> b7ba80a49124 (Commit)
 		tcf_chain_flush(chain, rtnl_held);
 		err = 0;
 		goto errout;
@@ -2463,7 +2559,11 @@ static int tc_del_tfilter(struct sk_buff *skb, struct nlmsghdr *n,
 
 		tcf_proto_put(tp, rtnl_held, NULL);
 		tfilter_notify(net, skb, n, tp, block, q, parent, fh,
+<<<<<<< HEAD
 			       RTM_DELTFILTER, false, rtnl_held, extack);
+=======
+			       RTM_DELTFILTER, false, rtnl_held);
+>>>>>>> b7ba80a49124 (Commit)
 		err = 0;
 		goto errout;
 	}
@@ -2607,7 +2707,11 @@ static int tc_get_tfilter(struct sk_buff *skb, struct nlmsghdr *n,
 		err = -ENOENT;
 	} else {
 		err = tfilter_notify(net, skb, n, tp, block, q, parent,
+<<<<<<< HEAD
 				     fh, RTM_NEWTFILTER, true, rtnl_held, NULL);
+=======
+				     fh, RTM_NEWTFILTER, true, rtnl_held);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err < 0)
 			NL_SET_ERR_MSG(extack, "Failed to send filter notify message");
 	}
@@ -2645,7 +2749,11 @@ static int tcf_node_dump(struct tcf_proto *tp, void *n, struct tcf_walker *arg)
 	return tcf_fill_node(net, a->skb, tp, a->block, a->q, a->parent,
 			     n, NETLINK_CB(a->cb->skb).portid,
 			     a->cb->nlh->nlmsg_seq, NLM_F_MULTI,
+<<<<<<< HEAD
 			     RTM_NEWTFILTER, a->terse_dump, true, NULL);
+=======
+			     RTM_NEWTFILTER, a->terse_dump, true);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool tcf_chain_dump(struct tcf_chain *chain, struct Qdisc *q, u32 parent,
@@ -2679,7 +2787,11 @@ static bool tcf_chain_dump(struct tcf_chain *chain, struct Qdisc *q, u32 parent,
 			if (tcf_fill_node(net, skb, tp, block, q, parent, NULL,
 					  NETLINK_CB(cb->skb).portid,
 					  cb->nlh->nlmsg_seq, NLM_F_MULTI,
+<<<<<<< HEAD
 					  RTM_NEWTFILTER, false, true, NULL) <= 0)
+=======
+					  RTM_NEWTFILTER, false, true) <= 0)
+>>>>>>> b7ba80a49124 (Commit)
 				goto errout;
 			cb->args[1] = 1;
 		}
@@ -2822,8 +2934,12 @@ static int tc_chain_fill_node(const struct tcf_proto_ops *tmplt_ops,
 			      void *tmplt_priv, u32 chain_index,
 			      struct net *net, struct sk_buff *skb,
 			      struct tcf_block *block,
+<<<<<<< HEAD
 			      u32 portid, u32 seq, u16 flags, int event,
 			      struct netlink_ext_ack *extack)
+=======
+			      u32 portid, u32 seq, u16 flags, int event)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned char *b = skb_tail_pointer(skb);
 	const struct tcf_proto_ops *ops;
@@ -2860,12 +2976,16 @@ static int tc_chain_fill_node(const struct tcf_proto_ops *tmplt_ops,
 			goto nla_put_failure;
 	}
 
+<<<<<<< HEAD
 	if (extack && extack->_msg &&
 	    nla_put_string(skb, TCA_EXT_WARN_MSG, extack->_msg))
 		goto out_nlmsg_trim;
 
 	nlh->nlmsg_len = skb_tail_pointer(skb) - b;
 
+=======
+	nlh->nlmsg_len = skb_tail_pointer(skb) - b;
+>>>>>>> b7ba80a49124 (Commit)
 	return skb->len;
 
 out_nlmsg_trim:
@@ -2875,8 +2995,12 @@ nla_put_failure:
 }
 
 static int tc_chain_notify(struct tcf_chain *chain, struct sk_buff *oskb,
+<<<<<<< HEAD
 			   u32 seq, u16 flags, int event, bool unicast,
 			   struct netlink_ext_ack *extack)
+=======
+			   u32 seq, u16 flags, int event, bool unicast)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 portid = oskb ? NETLINK_CB(oskb).portid : 0;
 	struct tcf_block *block = chain->block;
@@ -2890,7 +3014,11 @@ static int tc_chain_notify(struct tcf_chain *chain, struct sk_buff *oskb,
 
 	if (tc_chain_fill_node(chain->tmplt_ops, chain->tmplt_priv,
 			       chain->index, net, skb, block, portid,
+<<<<<<< HEAD
 			       seq, flags, event, extack) <= 0) {
+=======
+			       seq, flags, event) <= 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		kfree_skb(skb);
 		return -EINVAL;
 	}
@@ -2918,7 +3046,11 @@ static int tc_chain_notify_delete(const struct tcf_proto_ops *tmplt_ops,
 		return -ENOBUFS;
 
 	if (tc_chain_fill_node(tmplt_ops, tmplt_priv, chain_index, net, skb,
+<<<<<<< HEAD
 			       block, portid, seq, flags, RTM_DELCHAIN, NULL) <= 0) {
+=======
+			       block, portid, seq, flags, RTM_DELCHAIN) <= 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		kfree_skb(skb);
 		return -EINVAL;
 	}
@@ -3070,11 +3202,19 @@ replay:
 		}
 
 		tc_chain_notify(chain, NULL, 0, NLM_F_CREATE | NLM_F_EXCL,
+<<<<<<< HEAD
 				RTM_NEWCHAIN, false, extack);
 		break;
 	case RTM_DELCHAIN:
 		tfilter_notify_chain(net, skb, block, q, parent, n,
 				     chain, RTM_DELTFILTER, extack);
+=======
+				RTM_NEWCHAIN, false);
+		break;
+	case RTM_DELCHAIN:
+		tfilter_notify_chain(net, skb, block, q, parent, n,
+				     chain, RTM_DELTFILTER);
+>>>>>>> b7ba80a49124 (Commit)
 		/* Flush the chain first as the user requested chain removal. */
 		tcf_chain_flush(chain, true);
 		/* In case the chain was successfully deleted, put a reference
@@ -3084,7 +3224,11 @@ replay:
 		break;
 	case RTM_GETCHAIN:
 		err = tc_chain_notify(chain, skb, n->nlmsg_seq,
+<<<<<<< HEAD
 				      n->nlmsg_flags, n->nlmsg_type, true, extack);
+=======
+				      n->nlmsg_flags, n->nlmsg_type, true);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err < 0)
 			NL_SET_ERR_MSG(extack, "Failed to send chain notify message");
 		break;
@@ -3184,7 +3328,11 @@ static int tc_dump_chain(struct sk_buff *skb, struct netlink_callback *cb)
 					 chain->index, net, skb, block,
 					 NETLINK_CB(cb->skb).portid,
 					 cb->nlh->nlmsg_seq, NLM_F_MULTI,
+<<<<<<< HEAD
 					 RTM_NEWCHAIN, NULL);
+=======
+					 RTM_NEWCHAIN);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err <= 0)
 			break;
 		index++;
@@ -3202,6 +3350,7 @@ out:
 	return skb->len;
 }
 
+<<<<<<< HEAD
 int tcf_exts_init_ex(struct tcf_exts *exts, struct net *net, int action,
 		     int police, struct tcf_proto *tp, u32 handle,
 		     bool use_action_miss)
@@ -3243,6 +3392,10 @@ void tcf_exts_destroy(struct tcf_exts *exts)
 {
 	tcf_exts_miss_cookie_base_destroy(exts);
 
+=======
+void tcf_exts_destroy(struct tcf_exts *exts)
+{
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_NET_CLS_ACT
 	if (exts->actions) {
 		tcf_action_destroy(exts->actions, TCA_ACT_UNBIND);
@@ -3675,6 +3828,7 @@ int tc_setup_cb_reoffload(struct tcf_block *block, struct tcf_proto *tp,
 }
 EXPORT_SYMBOL(tc_setup_cb_reoffload);
 
+<<<<<<< HEAD
 static int tcf_act_get_user_cookie(struct flow_action_entry *entry,
 				   const struct tc_action *act)
 {
@@ -3688,15 +3842,36 @@ static int tcf_act_get_user_cookie(struct flow_action_entry *entry,
 							       user_cookie->len,
 							       GFP_ATOMIC);
 		if (!entry->user_cookie)
+=======
+static int tcf_act_get_cookie(struct flow_action_entry *entry,
+			      const struct tc_action *act)
+{
+	struct tc_cookie *cookie;
+	int err = 0;
+
+	rcu_read_lock();
+	cookie = rcu_dereference(act->act_cookie);
+	if (cookie) {
+		entry->cookie = flow_action_cookie_create(cookie->data,
+							  cookie->len,
+							  GFP_ATOMIC);
+		if (!entry->cookie)
+>>>>>>> b7ba80a49124 (Commit)
 			err = -ENOMEM;
 	}
 	rcu_read_unlock();
 	return err;
 }
 
+<<<<<<< HEAD
 static void tcf_act_put_user_cookie(struct flow_action_entry *entry)
 {
 	flow_action_cookie_destroy(entry->user_cookie);
+=======
+static void tcf_act_put_cookie(struct flow_action_entry *entry)
+{
+	flow_action_cookie_destroy(entry->cookie);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void tc_cleanup_offload_action(struct flow_action *flow_action)
@@ -3705,7 +3880,11 @@ void tc_cleanup_offload_action(struct flow_action *flow_action)
 	int i;
 
 	flow_action_for_each(i, entry, flow_action) {
+<<<<<<< HEAD
 		tcf_act_put_user_cookie(entry);
+=======
+		tcf_act_put_cookie(entry);
+>>>>>>> b7ba80a49124 (Commit)
 		if (entry->destructor)
 			entry->destructor(entry->destructor_priv);
 	}
@@ -3732,7 +3911,10 @@ static int tc_setup_offload_act(struct tc_action *act,
 
 int tc_setup_action(struct flow_action *flow_action,
 		    struct tc_action *actions[],
+<<<<<<< HEAD
 		    u32 miss_cookie_base,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		    struct netlink_ext_ack *extack)
 {
 	int i, j, k, index, err = 0;
@@ -3751,7 +3933,11 @@ int tc_setup_action(struct flow_action *flow_action,
 
 		entry = &flow_action->entries[j];
 		spin_lock_bh(&act->tcfa_lock);
+<<<<<<< HEAD
 		err = tcf_act_get_user_cookie(entry, act);
+=======
+		err = tcf_act_get_cookie(entry, act);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			goto err_out_locked;
 
@@ -3763,9 +3949,12 @@ int tc_setup_action(struct flow_action *flow_action,
 		for (k = 0; k < index ; k++) {
 			entry[k].hw_stats = tc_act_hw_stats(act->hw_stats);
 			entry[k].hw_index = act->tcfa_index;
+<<<<<<< HEAD
 			entry[k].cookie = (unsigned long)act;
 			entry[k].miss_cookie =
 				tcf_exts_miss_cookie_get(miss_cookie_base, i);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		j += index;
@@ -3788,6 +3977,7 @@ int tc_setup_offload_action(struct flow_action *flow_action,
 			    struct netlink_ext_ack *extack)
 {
 #ifdef CONFIG_NET_CLS_ACT
+<<<<<<< HEAD
 	u32 miss_cookie_base;
 
 	if (!exts)
@@ -3797,6 +3987,12 @@ int tc_setup_offload_action(struct flow_action *flow_action,
 			   exts->miss_cookie_node->miss_cookie_base : 0;
 	return tc_setup_action(flow_action, exts->actions, miss_cookie_base,
 			       extack);
+=======
+	if (!exts)
+		return 0;
+
+	return tc_setup_action(flow_action, exts->actions, extack);
+>>>>>>> b7ba80a49124 (Commit)
 #else
 	return 0;
 #endif
@@ -3964,8 +4160,11 @@ static int __init tc_filter_init(void)
 	if (err)
 		goto err_register_pernet_subsys;
 
+<<<<<<< HEAD
 	xa_init_flags(&tcf_exts_miss_cookies_xa, XA_FLAGS_ALLOC1);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rtnl_register(PF_UNSPEC, RTM_NEWTFILTER, tc_new_tfilter, NULL,
 		      RTNL_FLAG_DOIT_UNLOCKED);
 	rtnl_register(PF_UNSPEC, RTM_DELTFILTER, tc_del_tfilter, NULL,

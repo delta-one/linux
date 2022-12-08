@@ -668,7 +668,11 @@ static bool process_mem_region(struct mem_vector *region,
 		}
 	}
 #endif
+<<<<<<< HEAD
 	return false;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_EFI

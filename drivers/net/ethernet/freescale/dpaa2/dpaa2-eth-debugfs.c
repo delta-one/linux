@@ -98,14 +98,24 @@ static int dpaa2_dbg_ch_show(struct seq_file *file, void *offset)
 	int i;
 
 	seq_printf(file, "Channel stats for %s:\n", priv->net_dev->name);
+<<<<<<< HEAD
 	seq_printf(file, "%s  %5s%16s%16s%16s%16s%16s%16s\n",
 		   "IDX", "CHID", "CPU", "Deq busy", "Frames", "CDANs",
+=======
+	seq_printf(file, "%s%16s%16s%16s%16s%16s%16s\n",
+		   "CHID", "CPU", "Deq busy", "Frames", "CDANs",
+>>>>>>> b7ba80a49124 (Commit)
 		   "Avg Frm/CDAN", "Buf count");
 
 	for (i = 0; i < priv->num_channels; i++) {
 		ch = priv->channel[i];
+<<<<<<< HEAD
 		seq_printf(file, "%3s%d%6d%16d%16llu%16llu%16llu%16llu%16d\n",
 			   "CH#", i, ch->ch_id,
+=======
+		seq_printf(file, "%4d%16d%16llu%16llu%16llu%16llu%16d\n",
+			   ch->ch_id,
+>>>>>>> b7ba80a49124 (Commit)
 			   ch->nctx.desired_cpu,
 			   ch->stats.dequeue_portal_busy,
 			   ch->stats.frames,
@@ -119,6 +129,7 @@ static int dpaa2_dbg_ch_show(struct seq_file *file, void *offset)
 
 DEFINE_SHOW_ATTRIBUTE(dpaa2_dbg_ch);
 
+<<<<<<< HEAD
 static int dpaa2_dbg_bp_show(struct seq_file *file, void *offset)
 {
 	struct dpaa2_eth_priv *priv = (struct dpaa2_eth_priv *)file->private;
@@ -164,6 +175,8 @@ static int dpaa2_dbg_bp_show(struct seq_file *file, void *offset)
 
 DEFINE_SHOW_ATTRIBUTE(dpaa2_dbg_bp);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void dpaa2_dbg_add(struct dpaa2_eth_priv *priv)
 {
 	struct fsl_mc_device *dpni_dev;
@@ -184,10 +197,13 @@ void dpaa2_dbg_add(struct dpaa2_eth_priv *priv)
 
 	/* per-fq stats file */
 	debugfs_create_file("ch_stats", 0444, dir, priv, &dpaa2_dbg_ch_fops);
+<<<<<<< HEAD
 
 	/* per buffer pool stats file */
 	debugfs_create_file("bp_stats", 0444, dir, priv, &dpaa2_dbg_bp_fops);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void dpaa2_dbg_remove(struct dpaa2_eth_priv *priv)

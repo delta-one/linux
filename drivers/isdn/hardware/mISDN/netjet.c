@@ -956,7 +956,11 @@ nj_release(struct tiger_hw *card)
 	}
 	if (card->irq > 0)
 		free_irq(card->irq, card);
+<<<<<<< HEAD
 	if (device_is_registered(&card->isac.dch.dev.dev))
+=======
+	if (card->isac.dch.dev.dev.class)
+>>>>>>> b7ba80a49124 (Commit)
 		mISDN_unregister_device(&card->isac.dch.dev);
 
 	for (i = 0; i < 2; i++) {

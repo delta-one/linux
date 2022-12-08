@@ -18,9 +18,12 @@
 #include <linux/fs.h>
 #include <linux/loop.h>
 #include <linux/time.h>
+<<<<<<< HEAD
 #include <linux/auxvec.h>
 #include <linux/fcntl.h> // for O_* and AT_*
 #include <linux/stat.h>  // for statx()
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "arch.h"
 #include "errno.h"
@@ -412,6 +415,7 @@ int getdents64(int fd, struct linux_dirent64 *dirp, int count)
 
 
 /*
+<<<<<<< HEAD
  * uid_t geteuid(void);
  */
 
@@ -433,6 +437,8 @@ uid_t geteuid(void)
 
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * pid_t getpgid(pid_t pid);
  */
 
@@ -522,6 +528,7 @@ pid_t gettid(void)
 	return sys_gettid();
 }
 
+<<<<<<< HEAD
 static unsigned long getauxval(unsigned long key);
 
 /*
@@ -542,6 +549,8 @@ long getpagesize(void)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * int gettimeofday(struct timeval *tv, struct timezone *tz);
@@ -567,6 +576,7 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
 
 
 /*
+<<<<<<< HEAD
  * uid_t getuid(void);
  */
 
@@ -588,6 +598,8 @@ uid_t getuid(void)
 
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * int ioctl(int fd, unsigned long req, void *value);
  */
 
@@ -751,7 +763,10 @@ int mknod(const char *path, mode_t mode, dev_t dev)
 #define MAP_FAILED ((void *)-1)
 #endif
 
+<<<<<<< HEAD
 #ifndef sys_mmap
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static __attribute__((unused))
 void *sys_mmap(void *addr, size_t length, int prot, int flags, int fd,
 	       off_t offset)
@@ -773,7 +788,10 @@ void *sys_mmap(void *addr, size_t length, int prot, int flags, int fd,
 	return (void *)my_syscall6(n, addr, length, prot, flags, fd, offset);
 #endif
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static __attribute__((unused))
 void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset)
@@ -1091,6 +1109,7 @@ pid_t setsid(void)
 	return ret;
 }
 
+<<<<<<< HEAD
 #if defined(__NR_statx)
 /*
  * int statx(int fd, const char *path, int flags, unsigned int mask, struct statx *buf);
@@ -1114,12 +1133,15 @@ int statx(int fd, const char *path, int flags, unsigned int mask, struct statx *
 	return ret;
 }
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * int stat(const char *path, struct stat *buf);
  * Warning: the struct stat's layout is arch-dependent.
  */
 
+<<<<<<< HEAD
 #if defined(__NR_statx) && !defined(__NR_newfstatat) && !defined(__NR_stat)
 /*
  * Maybe we can just use statx() when available for all architectures?
@@ -1151,6 +1173,8 @@ int sys_stat(const char *path, struct stat *buf)
 	return ret;
 }
 #else
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static __attribute__((unused))
 int sys_stat(const char *path, struct stat *buf)
 {
@@ -1180,7 +1204,10 @@ int sys_stat(const char *path, struct stat *buf)
 	buf->st_ctime   = stat.st_ctime;
 	return ret;
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static __attribute__((unused))
 int stat(const char *path, struct stat *buf)
@@ -1365,7 +1392,10 @@ ssize_t write(int fd, const void *buf, size_t count)
 	return ret;
 }
 
+<<<<<<< HEAD
 /* make sure to include all global symbols */
 #include "nolibc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _NOLIBC_SYS_H */

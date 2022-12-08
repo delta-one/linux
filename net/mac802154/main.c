@@ -89,17 +89,24 @@ ieee802154_alloc_hw(size_t priv_data_len, const struct ieee802154_ops *ops)
 	local->ops = ops;
 
 	INIT_LIST_HEAD(&local->interfaces);
+<<<<<<< HEAD
 	INIT_LIST_HEAD(&local->rx_beacon_list);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&local->iflist_mtx);
 
 	tasklet_setup(&local->tasklet, ieee802154_tasklet_handler);
 
 	skb_queue_head_init(&local->skb_queue);
 
+<<<<<<< HEAD
 	INIT_WORK(&local->sync_tx_work, ieee802154_xmit_sync_worker);
 	INIT_DELAYED_WORK(&local->scan_work, mac802154_scan_worker);
 	INIT_WORK(&local->rx_beacon_work, mac802154_rx_beacon_worker);
 	INIT_DELAYED_WORK(&local->beacon_work, mac802154_beacon_worker);
+=======
+	INIT_WORK(&local->tx_work, ieee802154_xmit_worker);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* init supported flags with 802.15.4 default ranges */
 	phy->supported.max_minbe = 8;
@@ -111,12 +118,17 @@ ieee802154_alloc_hw(size_t priv_data_len, const struct ieee802154_ops *ops)
 	phy->supported.lbt = NL802154_SUPPORTED_BOOL_FALSE;
 
 	/* always supported */
+<<<<<<< HEAD
 	phy->supported.iftypes = BIT(NL802154_IFTYPE_NODE) | BIT(NL802154_IFTYPE_COORD);
+=======
+	phy->supported.iftypes = BIT(NL802154_IFTYPE_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return &local->hw;
 }
 EXPORT_SYMBOL(ieee802154_alloc_hw);
 
+<<<<<<< HEAD
 void ieee802154_configure_durations(struct wpan_phy *phy,
 				    unsigned int page, unsigned int channel)
 {
@@ -131,19 +143,45 @@ void ieee802154_configure_durations(struct wpan_phy *phy,
 			/* 915 MHz BPSK	802.15.4-2003: 40 ksym/s */
 			duration = 25 * NSEC_PER_USEC;
 		else if (BIT(channel) & 0x7FFF800)
+=======
+void ieee802154_configure_durations(struct wpan_phy *phy)
+{
+	u32 duration = 0;
+
+	switch (phy->current_page) {
+	case 0:
+		if (BIT(phy->current_channel) & 0x1)
+			/* 868 MHz BPSK 802.15.4-2003: 20 ksym/s */
+			duration = 50 * NSEC_PER_USEC;
+		else if (BIT(phy->current_channel) & 0x7FE)
+			/* 915 MHz BPSK	802.15.4-2003: 40 ksym/s */
+			duration = 25 * NSEC_PER_USEC;
+		else if (BIT(phy->current_channel) & 0x7FFF800)
+>>>>>>> b7ba80a49124 (Commit)
 			/* 2400 MHz O-QPSK 802.15.4-2006: 62.5 ksym/s */
 			duration = 16 * NSEC_PER_USEC;
 		break;
 	case 2:
+<<<<<<< HEAD
 		if (BIT(channel) & 0x1)
 			/* 868 MHz O-QPSK 802.15.4-2006: 25 ksym/s */
 			duration = 40 * NSEC_PER_USEC;
 		else if (BIT(channel) & 0x7FE)
+=======
+		if (BIT(phy->current_channel) & 0x1)
+			/* 868 MHz O-QPSK 802.15.4-2006: 25 ksym/s */
+			duration = 40 * NSEC_PER_USEC;
+		else if (BIT(phy->current_channel) & 0x7FE)
+>>>>>>> b7ba80a49124 (Commit)
 			/* 915 MHz O-QPSK 802.15.4-2006: 62.5 ksym/s */
 			duration = 16 * NSEC_PER_USEC;
 		break;
 	case 3:
+<<<<<<< HEAD
 		if (BIT(channel) & 0x3FFF)
+=======
+		if (BIT(phy->current_channel) & 0x3FFF)
+>>>>>>> b7ba80a49124 (Commit)
 			/* 2.4 GHz CSS 802.15.4a-2007: 1/6 Msym/s */
 			duration = 6 * NSEC_PER_USEC;
 		break;
@@ -189,7 +227,10 @@ static void ieee802154_setup_wpan_phy_pib(struct wpan_phy *wpan_phy)
 int ieee802154_register_hw(struct ieee802154_hw *hw)
 {
 	struct ieee802154_local *local = hw_to_local(hw);
+<<<<<<< HEAD
 	char mac_wq_name[IFNAMSIZ + 10] = {};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct net_device *dev;
 	int rc = -ENOSYS;
 
@@ -200,6 +241,7 @@ int ieee802154_register_hw(struct ieee802154_hw *hw)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	snprintf(mac_wq_name, IFNAMSIZ + 10, "%s-mac-cmds", wpan_phy_name(local->phy));
 	local->mac_wq =	create_singlethread_workqueue(mac_wq_name);
 	if (!local->mac_wq) {
@@ -207,6 +249,8 @@ int ieee802154_register_hw(struct ieee802154_hw *hw)
 		goto out_wq;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hrtimer_init(&local->ifs_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 	local->ifs_timer.function = ieee802154_xmit_ifs_timer;
 
@@ -214,8 +258,12 @@ int ieee802154_register_hw(struct ieee802154_hw *hw)
 
 	ieee802154_setup_wpan_phy_pib(local->phy);
 
+<<<<<<< HEAD
 	ieee802154_configure_durations(local->phy, local->phy->current_page,
 				       local->phy->current_channel);
+=======
+	ieee802154_configure_durations(local->phy);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!(hw->flags & IEEE802154_HW_CSMA_PARAMS)) {
 		local->phy->supported.min_csma_backoffs = 4;
@@ -236,7 +284,11 @@ int ieee802154_register_hw(struct ieee802154_hw *hw)
 
 	rc = wpan_phy_register(local->phy);
 	if (rc < 0)
+<<<<<<< HEAD
 		goto out_mac_wq;
+=======
+		goto out_wq;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rtnl_lock();
 
@@ -255,8 +307,11 @@ int ieee802154_register_hw(struct ieee802154_hw *hw)
 
 out_phy:
 	wpan_phy_unregister(local->phy);
+<<<<<<< HEAD
 out_mac_wq:
 	destroy_workqueue(local->mac_wq);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 out_wq:
 	destroy_workqueue(local->workqueue);
 out:
@@ -277,7 +332,10 @@ void ieee802154_unregister_hw(struct ieee802154_hw *hw)
 
 	rtnl_unlock();
 
+<<<<<<< HEAD
 	destroy_workqueue(local->mac_wq);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	destroy_workqueue(local->workqueue);
 	wpan_phy_unregister(local->phy);
 }

@@ -43,6 +43,14 @@ static const char * const btf_kind_str[NR_BTF_KINDS] = {
 	[BTF_KIND_ENUM64]	= "ENUM64",
 };
 
+<<<<<<< HEAD
+=======
+struct btf_attach_point {
+	__u32 obj_id;
+	__u32 btf_id;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static const char *btf_int_enc_str(__u8 encoding)
 {
 	switch (encoding) {
@@ -467,8 +475,14 @@ static int dump_btf_c(const struct btf *btf,
 	int err = 0, i;
 
 	d = btf_dump__new(btf, btf_dump_printf, NULL, NULL);
+<<<<<<< HEAD
 	if (!d)
 		return -errno;
+=======
+	err = libbpf_get_error(d);
+	if (err)
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	printf("#ifndef __VMLINUX_H__\n");
 	printf("#define __VMLINUX_H__\n");
@@ -511,9 +525,17 @@ static struct btf *get_vmlinux_btf_from_sysfs(void)
 	struct btf *base;
 
 	base = btf__parse(sysfs_vmlinux, NULL);
+<<<<<<< HEAD
 	if (!base)
 		p_err("failed to parse vmlinux BTF at '%s': %d\n",
 		      sysfs_vmlinux, -errno);
+=======
+	if (libbpf_get_error(base)) {
+		p_err("failed to parse vmlinux BTF at '%s': %ld\n",
+		      sysfs_vmlinux, libbpf_get_error(base));
+		base = NULL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return base;
 }
@@ -537,7 +559,11 @@ static bool btf_is_kernel_module(__u32 btf_id)
 	len = sizeof(btf_info);
 	btf_info.name = ptr_to_u64(btf_name);
 	btf_info.name_len = sizeof(btf_name);
+<<<<<<< HEAD
 	err = bpf_btf_get_info_by_fd(btf_fd, &btf_info, &len);
+=======
+	err = bpf_obj_get_info_by_fd(btf_fd, &btf_info, &len);
+>>>>>>> b7ba80a49124 (Commit)
 	close(btf_fd);
 	if (err) {
 		p_err("can't get BTF (ID %u) object info: %s", btf_id, strerror(errno));
@@ -556,7 +582,11 @@ static int do_dump(int argc, char **argv)
 	__u32 btf_id = -1;
 	const char *src;
 	int fd = -1;
+<<<<<<< HEAD
 	int err = 0;
+=======
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!REQ_ARGS(2)) {
 		usage();
@@ -606,7 +636,11 @@ static int do_dump(int argc, char **argv)
 		if (fd < 0)
 			return -1;
 
+<<<<<<< HEAD
 		err = bpf_prog_get_info_by_fd(fd, &info, &len);
+=======
+		err = bpf_obj_get_info_by_fd(fd, &info, &len);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err) {
 			p_err("can't get prog info: %s", strerror(errno));
 			goto done;
@@ -631,10 +665,18 @@ static int do_dump(int argc, char **argv)
 			base = get_vmlinux_btf_from_sysfs();
 
 		btf = btf__parse_split(*argv, base ?: base_btf);
+<<<<<<< HEAD
 		if (!btf) {
 			err = -errno;
 			p_err("failed to load BTF from %s: %s",
 			      *argv, strerror(errno));
+=======
+		err = libbpf_get_error(btf);
+		if (err) {
+			btf = NULL;
+			p_err("failed to load BTF from %s: %s",
+			      *argv, strerror(err));
+>>>>>>> b7ba80a49124 (Commit)
 			goto done;
 		}
 		NEXT_ARG();
@@ -678,9 +720,15 @@ static int do_dump(int argc, char **argv)
 		}
 
 		btf = btf__load_from_kernel_by_id_split(btf_id, base_btf);
+<<<<<<< HEAD
 		if (!btf) {
 			err = -errno;
 			p_err("get btf by id (%u): %s", btf_id, strerror(errno));
+=======
+		err = libbpf_get_error(btf);
+		if (err) {
+			p_err("get btf by id (%u): %s", btf_id, strerror(err));
+>>>>>>> b7ba80a49124 (Commit)
 			goto done;
 		}
 	}
@@ -789,10 +837,14 @@ build_btf_type_table(struct hashmap *tab, enum bpf_obj_type type,
 		}
 
 		memset(info, 0, *len);
+<<<<<<< HEAD
 		if (type == BPF_OBJ_PROG)
 			err = bpf_prog_get_info_by_fd(fd, info, len);
 		else
 			err = bpf_map_get_info_by_fd(fd, info, len);
+=======
+		err = bpf_obj_get_info_by_fd(fd, info, len);
+>>>>>>> b7ba80a49124 (Commit)
 		close(fd);
 		if (err) {
 			p_err("can't get %s info: %s", names[type],
@@ -815,10 +867,18 @@ build_btf_type_table(struct hashmap *tab, enum bpf_obj_type type,
 		if (!btf_id)
 			continue;
 
+<<<<<<< HEAD
 		err = hashmap__append(tab, btf_id, id);
 		if (err) {
 			p_err("failed to append entry to hashmap for BTF ID %u, object ID %u: %s",
 			      btf_id, id, strerror(-err));
+=======
+		err = hashmap__append(tab, u32_as_hash_field(btf_id),
+				      u32_as_hash_field(id));
+		if (err) {
+			p_err("failed to append entry to hashmap for BTF ID %u, object ID %u: %s",
+			      btf_id, id, strerror(errno));
+>>>>>>> b7ba80a49124 (Commit)
 			goto err_free;
 		}
 	}
@@ -874,6 +934,7 @@ show_btf_plain(struct bpf_btf_info *info, int fd,
 	printf("size %uB", info->btf_size);
 
 	n = 0;
+<<<<<<< HEAD
 	hashmap__for_each_key_entry(btf_prog_table, entry, info->id) {
 		printf("%s%lu", n++ == 0 ? "  prog_ids " : ",", entry->value);
 	}
@@ -881,6 +942,19 @@ show_btf_plain(struct bpf_btf_info *info, int fd,
 	n = 0;
 	hashmap__for_each_key_entry(btf_map_table, entry, info->id) {
 		printf("%s%lu", n++ == 0 ? "  map_ids " : ",", entry->value);
+=======
+	hashmap__for_each_key_entry(btf_prog_table, entry,
+				    u32_as_hash_field(info->id)) {
+		printf("%s%u", n++ == 0 ? "  prog_ids " : ",",
+		       hash_field_as_u32(entry->value));
+	}
+
+	n = 0;
+	hashmap__for_each_key_entry(btf_map_table, entry,
+				    u32_as_hash_field(info->id)) {
+		printf("%s%u", n++ == 0 ? "  map_ids " : ",",
+		       hash_field_as_u32(entry->value));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	emit_obj_refs_plain(refs_table, info->id, "\n\tpids ");
@@ -902,15 +976,27 @@ show_btf_json(struct bpf_btf_info *info, int fd,
 
 	jsonw_name(json_wtr, "prog_ids");
 	jsonw_start_array(json_wtr);	/* prog_ids */
+<<<<<<< HEAD
 	hashmap__for_each_key_entry(btf_prog_table, entry, info->id) {
 		jsonw_uint(json_wtr, entry->value);
+=======
+	hashmap__for_each_key_entry(btf_prog_table, entry,
+				    u32_as_hash_field(info->id)) {
+		jsonw_uint(json_wtr, hash_field_as_u32(entry->value));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	jsonw_end_array(json_wtr);	/* prog_ids */
 
 	jsonw_name(json_wtr, "map_ids");
 	jsonw_start_array(json_wtr);	/* map_ids */
+<<<<<<< HEAD
 	hashmap__for_each_key_entry(btf_map_table, entry, info->id) {
 		jsonw_uint(json_wtr, entry->value);
+=======
+	hashmap__for_each_key_entry(btf_map_table, entry,
+				    u32_as_hash_field(info->id)) {
+		jsonw_uint(json_wtr, hash_field_as_u32(entry->value));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	jsonw_end_array(json_wtr);	/* map_ids */
 
@@ -934,7 +1020,11 @@ show_btf(int fd, struct hashmap *btf_prog_table,
 	int err;
 
 	memset(&info, 0, sizeof(info));
+<<<<<<< HEAD
 	err = bpf_btf_get_info_by_fd(fd, &info, &len);
+=======
+	err = bpf_obj_get_info_by_fd(fd, &info, &len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		p_err("can't get BTF object info: %s", strerror(errno));
 		return -1;
@@ -946,7 +1036,11 @@ show_btf(int fd, struct hashmap *btf_prog_table,
 		info.name = ptr_to_u64(name);
 		len = sizeof(info);
 
+<<<<<<< HEAD
 		err = bpf_btf_get_info_by_fd(fd, &info, &len);
+=======
+		err = bpf_obj_get_info_by_fd(fd, &info, &len);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err) {
 			p_err("can't get BTF object info: %s", strerror(errno));
 			return -1;

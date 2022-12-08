@@ -35,7 +35,10 @@
 #include "amdgpu_xgmi.h"
 
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
 #include <drm/ttm/ttm_tt.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * amdgpu_gmc_pdb0_alloc - allocate vram for pdb0
@@ -202,11 +205,15 @@ uint64_t amdgpu_gmc_agp_addr(struct ttm_buffer_object *bo)
 void amdgpu_gmc_vram_location(struct amdgpu_device *adev, struct amdgpu_gmc *mc,
 			      u64 base)
 {
+<<<<<<< HEAD
 	uint64_t vis_limit = (uint64_t)amdgpu_vis_vram_limit << 20;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	uint64_t limit = (uint64_t)amdgpu_vram_limit << 20;
 
 	mc->vram_start = base;
 	mc->vram_end = mc->vram_start + mc->mc_vram_size - 1;
+<<<<<<< HEAD
 	if (limit < mc->real_vram_size)
 		mc->real_vram_size = limit;
 
@@ -216,6 +223,11 @@ void amdgpu_gmc_vram_location(struct amdgpu_device *adev, struct amdgpu_gmc *mc,
 	if (mc->real_vram_size < mc->visible_vram_size)
 		mc->visible_vram_size = mc->real_vram_size;
 
+=======
+	if (limit && limit < mc->real_vram_size)
+		mc->real_vram_size = limit;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (mc->xgmi.num_physical_nodes == 0) {
 		mc->fb_start = mc->vram_start;
 		mc->fb_end = mc->vram_end;
@@ -447,6 +459,7 @@ void amdgpu_gmc_filter_faults_remove(struct amdgpu_device *adev, uint64_t addr,
 	} while (fault->timestamp < tmp);
 }
 
+<<<<<<< HEAD
 int amdgpu_gmc_ras_sw_init(struct amdgpu_device *adev)
 {
 	int r;
@@ -483,6 +496,15 @@ int amdgpu_gmc_ras_sw_init(struct amdgpu_device *adev)
 	r = amdgpu_xgmi_ras_sw_init(adev);
 	if (r)
 		return r;
+=======
+int amdgpu_gmc_ras_early_init(struct amdgpu_device *adev)
+{
+	if (!adev->gmc.xgmi.connected_to_cpu) {
+		adev->gmc.xgmi.ras = &xgmi_ras;
+		amdgpu_ras_register_ras_block(adev, &adev->gmc.xgmi.ras->ras_block);
+		adev->gmc.xgmi.ras_if = &adev->gmc.xgmi.ras->ras_block.ras_comm;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -516,12 +538,15 @@ int amdgpu_gmc_allocate_vm_inv_eng(struct amdgpu_device *adev)
 	unsigned i;
 	unsigned vmhub, inv_eng;
 
+<<<<<<< HEAD
 	if (adev->enable_mes) {
 		/* reserve engine 5 for firmware */
 		for (vmhub = 0; vmhub < AMDGPU_MAX_VMHUBS; vmhub++)
 			vm_inv_engs[vmhub] &= ~(1 << 5);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < adev->num_rings; ++i) {
 		ring = adev->rings[i];
 		vmhub = ring->funcs->vmhub;
@@ -581,13 +606,19 @@ void amdgpu_gmc_tmz_set(struct amdgpu_device *adev)
 	case IP_VERSION(10, 3, 2):
 	case IP_VERSION(10, 3, 4):
 	case IP_VERSION(10, 3, 5):
+<<<<<<< HEAD
 	case IP_VERSION(10, 3, 6):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* VANGOGH */
 	case IP_VERSION(10, 3, 1):
 	/* YELLOW_CARP*/
 	case IP_VERSION(10, 3, 3):
+<<<<<<< HEAD
 	case IP_VERSION(11, 0, 1):
 	case IP_VERSION(11, 0, 4):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Don't enable it by default yet.
 		 */
 		if (amdgpu_tmz < 1) {
@@ -618,6 +649,7 @@ void amdgpu_gmc_tmz_set(struct amdgpu_device *adev)
 void amdgpu_gmc_noretry_set(struct amdgpu_device *adev)
 {
 	struct amdgpu_gmc *gmc = &adev->gmc;
+<<<<<<< HEAD
 	uint32_t gc_ver = adev->ip_versions[GC_HWIP][0];
 	bool noretry_default = (gc_ver == IP_VERSION(9, 0, 1) ||
 				gc_ver == IP_VERSION(9, 3, 0) ||
@@ -627,6 +659,47 @@ void amdgpu_gmc_noretry_set(struct amdgpu_device *adev)
 				gc_ver >= IP_VERSION(10, 3, 0));
 
 	gmc->noretry = (amdgpu_noretry == -1) ? noretry_default : amdgpu_noretry;
+=======
+
+	switch (adev->ip_versions[GC_HWIP][0]) {
+	case IP_VERSION(9, 0, 1):
+	case IP_VERSION(9, 3, 0):
+	case IP_VERSION(9, 4, 0):
+	case IP_VERSION(9, 4, 1):
+	case IP_VERSION(9, 4, 2):
+	case IP_VERSION(10, 3, 3):
+	case IP_VERSION(10, 3, 4):
+	case IP_VERSION(10, 3, 5):
+	case IP_VERSION(10, 3, 6):
+	case IP_VERSION(10, 3, 7):
+		/*
+		 * noretry = 0 will cause kfd page fault tests fail
+		 * for some ASICs, so set default to 1 for these ASICs.
+		 */
+		if (amdgpu_noretry == -1)
+			gmc->noretry = 1;
+		else
+			gmc->noretry = amdgpu_noretry;
+		break;
+	default:
+		/* Raven currently has issues with noretry
+		 * regardless of what we decide for other
+		 * asics, we should leave raven with
+		 * noretry = 0 until we root cause the
+		 * issues.
+		 *
+		 * default this to 0 for now, but we may want
+		 * to change this in the future for certain
+		 * GPUs as it can increase performance in
+		 * certain cases.
+		 */
+		if (amdgpu_noretry == -1)
+			gmc->noretry = 0;
+		else
+			gmc->noretry = amdgpu_noretry;
+		break;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void amdgpu_gmc_set_vm_fault_masks(struct amdgpu_device *adev, int hub_type,
@@ -702,7 +775,11 @@ void amdgpu_gmc_get_vbios_allocations(struct amdgpu_device *adev)
 	}
 
 	if (amdgpu_sriov_vf(adev) ||
+<<<<<<< HEAD
 	    !amdgpu_device_has_display_hardware(adev)) {
+=======
+	    !amdgpu_device_ip_get_ip_block(adev, AMD_IP_BLOCK_TYPE_DCE)) {
+>>>>>>> b7ba80a49124 (Commit)
 		size = 0;
 	} else {
 		size = amdgpu_gmc_get_vbios_fb_size(adev);

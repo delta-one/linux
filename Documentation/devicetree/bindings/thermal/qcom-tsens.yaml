@@ -37,7 +37,10 @@ properties:
       - description: v1 of TSENS
         items:
           - enum:
+<<<<<<< HEAD
               - qcom,msm8956-tsens
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,msm8976-tsens
               - qcom,qcs404-tsens
           - const: qcom,tsens-v1
@@ -54,11 +57,15 @@ properties:
               - qcom,sc8280xp-tsens
               - qcom,sdm630-tsens
               - qcom,sdm845-tsens
+<<<<<<< HEAD
               - qcom,sm6115-tsens
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,sm6350-tsens
               - qcom,sm8150-tsens
               - qcom,sm8250-tsens
               - qcom,sm8350-tsens
+<<<<<<< HEAD
               - qcom,sm8450-tsens
               - qcom,sm8550-tsens
           - const: qcom,tsens-v2
@@ -67,6 +74,10 @@ properties:
         enum:
           - qcom,ipq8074-tsens
 
+=======
+          - const: qcom,tsens-v2
+
+>>>>>>> b7ba80a49124 (Commit)
   reg:
     items:
       - description: TM registers
@@ -74,6 +85,7 @@ properties:
 
   interrupts:
     minItems: 1
+<<<<<<< HEAD
     maxItems: 2
 
   interrupt-names:
@@ -195,6 +207,31 @@ properties:
           - const: s9_p2_backup
           - const: s10_p1_backup
           - const: s10_p2_backup
+=======
+    items:
+      - description: Combined interrupt if upper or lower threshold crossed
+      - description: Interrupt if critical threshold crossed
+
+  interrupt-names:
+    minItems: 1
+    items:
+      - const: uplow
+      - const: critical
+
+  nvmem-cells:
+    minItems: 1
+    maxItems: 2
+    description:
+      Reference to an nvmem node for the calibration data
+
+  nvmem-cell-names:
+    minItems: 1
+    items:
+      - const: calib
+      - enum:
+          - calib_backup
+          - calib_sel
+>>>>>>> b7ba80a49124 (Commit)
 
   "#qcom,sensors":
     description:
@@ -234,6 +271,7 @@ allOf:
     then:
       properties:
         interrupts:
+<<<<<<< HEAD
           items:
             - description: Combined interrupt if upper or lower threshold crossed
         interrupt-names:
@@ -270,12 +308,25 @@ allOf:
           items:
             - const: uplow
             - const: critical
+=======
+          maxItems: 1
+        interrupt-names:
+          maxItems: 1
+
+    else:
+      properties:
+        interrupts:
+          minItems: 2
+        interrupt-names:
+          minItems: 2
+>>>>>>> b7ba80a49124 (Commit)
 
   - if:
       properties:
         compatible:
           contains:
             enum:
+<<<<<<< HEAD
               - qcom,ipq8074-tsens
     then:
       properties:
@@ -292,6 +343,8 @@ allOf:
           contains:
             enum:
               - qcom,ipq8074-tsens
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,tsens-v0_1
               - qcom,tsens-v1
               - qcom,tsens-v2
@@ -325,6 +378,7 @@ examples:
 
   - |
     #include <dt-bindings/interrupt-controller/arm-gic.h>
+<<<<<<< HEAD
     // Example 1 (new calbiration data: for pre v1 IP):
     thermal-sensor@900000 {
         compatible = "qcom,msm8916-tsens", "qcom,tsens-v0_1";
@@ -355,6 +409,8 @@ examples:
 
   - |
     #include <dt-bindings/interrupt-controller/arm-gic.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
     // Example 1 (legacy: for pre v1 IP):
     tsens1: thermal-sensor@900000 {
            compatible = "qcom,msm8916-tsens", "qcom,tsens-v0_1";
@@ -404,6 +460,7 @@ examples:
            #qcom,sensors = <13>;
            #thermal-sensor-cells = <1>;
     };
+<<<<<<< HEAD
 
   - |
     #include <dt-bindings/interrupt-controller/arm-gic.h>
@@ -419,4 +476,6 @@ examples:
            #qcom,sensors = <16>;
            #thermal-sensor-cells = <1>;
     };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ...

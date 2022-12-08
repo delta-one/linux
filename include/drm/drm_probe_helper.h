@@ -35,6 +35,9 @@ int drm_connector_helper_get_modes_from_ddc(struct drm_connector *connector);
 int drm_connector_helper_get_modes_fixed(struct drm_connector *connector,
 					 const struct drm_display_mode *fixed_mode);
 int drm_connector_helper_get_modes(struct drm_connector *connector);
+<<<<<<< HEAD
 int drm_connector_helper_tv_get_modes(struct drm_connector *connector);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

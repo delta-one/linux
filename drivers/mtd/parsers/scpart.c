@@ -50,7 +50,11 @@ static int scpart_scan_partmap(struct mtd_info *master, loff_t partmap_offs,
 	int cnt = 0;
 	int res = 0;
 	int res2;
+<<<<<<< HEAD
 	uint32_t offs;
+=======
+	loff_t offs;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t retlen;
 	struct sc_part_desc *pdesc = NULL;
 	struct sc_part_desc *tmpdesc;

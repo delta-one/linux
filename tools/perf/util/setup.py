@@ -3,6 +3,7 @@ from subprocess import Popen, PIPE
 from re import sub
 
 cc = getenv("CC")
+<<<<<<< HEAD
 
 # Check if CC has options, as is the case in yocto, where it uses CC="cc --sysroot..."
 cc_tokens = cc.split()
@@ -17,6 +18,13 @@ src_feature_tests  = getenv('srctree') + '/tools/build/feature'
 
 def clang_has_option(option):
     cc_output = Popen([cc, cc_options + option, path.join(src_feature_tests, "test-hello.c") ], stderr=PIPE).stderr.readlines()
+=======
+cc_is_clang = b"clang version" in Popen([cc.split()[0], "-v"], stderr=PIPE).stderr.readline()
+src_feature_tests  = getenv('srctree') + '/tools/build/feature'
+
+def clang_has_option(option):
+    cc_output = Popen([cc, option, path.join(src_feature_tests, "test-hello.c") ], stderr=PIPE).stderr.readlines()
+>>>>>>> b7ba80a49124 (Commit)
     return [o for o in cc_output if ((b"unknown argument" in o) or (b"is not supported" in o))] == [ ]
 
 if cc_is_clang:
@@ -72,6 +80,7 @@ libperf = getenv('LIBPERF')
 ext_sources = [f.strip() for f in open('util/python-ext-sources')
 				if len(f.strip()) > 0 and f[0] != '#']
 
+<<<<<<< HEAD
 extra_libraries = []
 
 if '-DHAVE_LIBTRACEEVENT' in cflags:
@@ -84,6 +93,14 @@ ext_sources = list(map(lambda x: '%s/%s' % (src_perf, x) , ext_sources))
 
 if '-DHAVE_LIBNUMA_SUPPORT' in cflags:
     extra_libraries += [ 'numa' ]
+=======
+# use full paths with source files
+ext_sources = list(map(lambda x: '%s/%s' % (src_perf, x) , ext_sources))
+
+extra_libraries = []
+if '-DHAVE_LIBNUMA_SUPPORT' in cflags:
+    extra_libraries = [ 'numa' ]
+>>>>>>> b7ba80a49124 (Commit)
 if '-DHAVE_LIBCAP_SUPPORT' in cflags:
     extra_libraries += [ 'cap' ]
 
@@ -92,8 +109,12 @@ perf = Extension('perf',
 		  include_dirs = ['util/include'],
 		  libraries = extra_libraries,
 		  extra_compile_args = cflags,
+<<<<<<< HEAD
 		  extra_objects = [ x for x in [libtraceevent, libapikfs, libperf]
                                     if x is not None],
+=======
+		  extra_objects = [libtraceevent, libapikfs, libperf],
+>>>>>>> b7ba80a49124 (Commit)
                  )
 
 setup(name='perf',

@@ -22,6 +22,10 @@
  */
 
 #include <linux/delay.h>
+<<<<<<< HEAD
+=======
+#include <linux/fb.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/slab.h>
 
@@ -1025,6 +1029,7 @@ static int vega12_get_all_clock_ranges(struct pp_hwmgr *hwmgr)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void vega12_populate_umdpstate_clocks(struct pp_hwmgr *hwmgr)
 {
 	struct vega12_hwmgr *data = (struct vega12_hwmgr *)(hwmgr->backend);
@@ -1044,6 +1049,8 @@ static void vega12_populate_umdpstate_clocks(struct pp_hwmgr *hwmgr)
 	hwmgr->pstate_mclk_peak = mem_dpm_table->dpm_levels[mem_dpm_table->count].value;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int vega12_enable_dpm_tasks(struct pp_hwmgr *hwmgr)
 {
 	int tmp_result, result = 0;
@@ -1095,9 +1102,12 @@ static int vega12_enable_dpm_tasks(struct pp_hwmgr *hwmgr)
 	PP_ASSERT_WITH_CODE(!result,
 			"Failed to setup default DPM tables!",
 			return result);
+<<<<<<< HEAD
 
 	vega12_populate_umdpstate_clocks(hwmgr);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return result;
 }
 

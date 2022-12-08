@@ -141,6 +141,7 @@ void control_writeln(const char *str)
 	timeout_end();
 }
 
+<<<<<<< HEAD
 void control_writeulong(unsigned long value)
 {
 	char str[32];
@@ -169,6 +170,8 @@ unsigned long control_readulong(void)
 	return value;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Return the next line from the control socket (without the trailing newline).
  *
  * The program terminates if a timeout occurs.

@@ -75,6 +75,7 @@ convenient for software to locate each feature by walking through this list,
 and can be implemented in register regions of any FPGA device.
 
 
+<<<<<<< HEAD
 Device Feature Header - Version 0
 =================================
 Version 0 (DFHv0) is the original version of the Device Feature Header.
@@ -194,6 +195,8 @@ The format of Version 1 of the Device Feature Header (DFH) is shown below::
     version and ID of the parameter.
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 FIU - FME (FPGA Management Engine)
 ==================================
 The FPGA Management Engine performs reconfiguration and other infrastructure

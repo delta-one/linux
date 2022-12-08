@@ -12,6 +12,10 @@
 #include <linux/errno.h>
 #include <linux/limits.h>
 #include <linux/minmax.h>
+<<<<<<< HEAD
+=======
+#include <linux/mm.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/types.h>
 
 struct page;
@@ -34,6 +38,7 @@ struct bio_vec {
 	unsigned int	bv_offset;
 };
 
+<<<<<<< HEAD
 /**
  * bvec_set_page - initialize a bvec based off a struct page
  * @bv:		bvec to initialize
@@ -74,6 +79,8 @@ static inline void bvec_set_virt(struct bio_vec *bv, void *vaddr,
 	bvec_set_page(bv, virt_to_page(vaddr), len, offset_in_page(vaddr));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct bvec_iter {
 	sector_t		bi_sector;	/* device address in 512 byte
 						   sectors */
@@ -280,4 +287,44 @@ static inline void *bvec_virt(struct bio_vec *bvec)
 	return page_address(bvec->bv_page) + bvec->bv_offset;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_BLK_USE_PIN_USER_PAGES_FOR_DIO
+#define dio_w_pin_user_pages_fast(s, n, p, f)	pin_user_pages_fast(s, n, p, f)
+#define dio_w_pin_user_page(p)			pin_user_page(p)
+#define dio_w_iov_iter_pin_pages(i, p, m, n, s) iov_iter_pin_pages(i, p, m, n, s)
+#define dio_w_iov_iter_pin_pages_alloc(i, p, m, s) iov_iter_pin_pages_alloc(i, p, m, s)
+#define dio_w_unpin_user_page(p)		unpin_user_page(p)
+#define dio_w_unpin_user_pages(p, n)		unpin_user_pages(p, n)
+#define dio_w_unpin_user_pages_dirty_lock(p, n, d) unpin_user_pages_dirty_lock(p, n, d)
+
+#else
+#define dio_w_pin_user_pages_fast(s, n, p, f)	get_user_pages_fast(s, n, p, f)
+#define dio_w_pin_user_page(p)			get_page(p)
+#define dio_w_iov_iter_pin_pages(i, p, m, n, s) iov_iter_get_pages2(i, p, m, n, s)
+#define dio_w_iov_iter_pin_pages_alloc(i, p, m, s) iov_iter_get_pages_alloc2(i, p, m, s)
+#define dio_w_unpin_user_page(p)		put_page(p)
+
+static inline void dio_w_unpin_user_pages(struct page **pages,
+					  unsigned long npages)
+{
+	release_pages(pages, npages);
+}
+
+static inline void dio_w_unpin_user_pages_dirty_lock(struct page **pages,
+						     unsigned long npages,
+						     bool make_dirty)
+{
+	unsigned long i;
+
+	for (i = 0; i < npages; i++) {
+		if (make_dirty)
+			set_page_dirty_lock(pages[i]);
+		put_page(pages[i]);
+	}
+}
+
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __LINUX_BVEC_H */

@@ -17,7 +17,11 @@ description:
   to be the same.
 
 allOf:
+<<<<<<< HEAD
   - $ref: regulator.yaml#
+=======
+  - $ref: "regulator.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -35,10 +39,13 @@ allOf:
       required:
         - power-domains
         - required-opps
+<<<<<<< HEAD
   - not:
       required:
         - gpio
         - gpios
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -53,9 +60,12 @@ properties:
     description: gpio to use for enable control
     maxItems: 1
 
+<<<<<<< HEAD
   gpios:
     maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   clocks:
     description:
       clock to use for enable control. This binding is only available if

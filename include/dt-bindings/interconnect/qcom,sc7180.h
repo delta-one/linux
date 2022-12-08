@@ -108,6 +108,12 @@
 #define SLAVE_LLCC			11
 #define SLAVE_SERVICE_GEM_NOC			12
 
+<<<<<<< HEAD
+=======
+#define MASTER_IPA_CORE			0
+#define SLAVE_IPA_CORE			1
+
+>>>>>>> b7ba80a49124 (Commit)
 #define MASTER_LLCC			0
 #define SLAVE_EBI1			1
 

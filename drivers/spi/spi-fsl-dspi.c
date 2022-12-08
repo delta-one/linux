@@ -900,6 +900,7 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static void dspi_assert_cs(struct spi_device *spi, bool *cs)
 {
 	if (!spi_get_csgpiod(spi, 0) || *cs)
@@ -918,13 +919,18 @@ static void dspi_deassert_cs(struct spi_device *spi, bool *cs)
 	*cs = false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int dspi_transfer_one_message(struct spi_controller *ctlr,
 				     struct spi_message *message)
 {
 	struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
 	struct spi_device *spi = message->spi;
 	struct spi_transfer *transfer;
+<<<<<<< HEAD
 	bool cs = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int status = 0;
 
 	message->actual_length = 0;
@@ -933,6 +939,7 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
 		dspi->cur_transfer = transfer;
 		dspi->cur_msg = message;
 		dspi->cur_chip = spi_get_ctldata(spi);
+<<<<<<< HEAD
 
 		dspi_assert_cs(spi, &cs);
 
@@ -941,6 +948,11 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
 		if (!spi_get_csgpiod(spi, 0))
 			dspi->tx_cmd |= SPI_PUSHR_CMD_PCS(spi_get_chipselect(spi, 0));
 
+=======
+		/* Prepare command word for CMD FIFO */
+		dspi->tx_cmd = SPI_PUSHR_CMD_CTAS(0) |
+			       SPI_PUSHR_CMD_PCS(spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 		if (list_is_last(&dspi->cur_transfer->transfer_list,
 				 &dspi->cur_msg->transfers)) {
 			/* Leave PCS activated after last transfer when
@@ -988,9 +1000,12 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
 			break;
 
 		spi_transfer_delay_exec(transfer);
+<<<<<<< HEAD
 
 		if (!(dspi->tx_cmd & SPI_PUSHR_CMD_CONT))
 			dspi_deassert_cs(spi, &cs);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	message->status = status;
@@ -1008,7 +1023,10 @@ static int dspi_setup(struct spi_device *spi)
 	unsigned char pasc = 0, asc = 0;
 	struct chip_data *chip;
 	unsigned long clkrate;
+<<<<<<< HEAD
 	bool cs = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Only alloc on first setup */
 	chip = spi_get_ctldata(spi);
@@ -1058,9 +1076,12 @@ static int dspi_setup(struct spi_device *spi)
 			chip->ctar_val |= SPI_CTAR_LSBFE;
 	}
 
+<<<<<<< HEAD
 	gpiod_direction_output(spi_get_csgpiod(spi, 0), false);
 	dspi_deassert_cs(spi, &cs);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spi_set_ctldata(spi, chip);
 
 	return 0;
@@ -1068,10 +1089,17 @@ static int dspi_setup(struct spi_device *spi)
 
 static void dspi_cleanup(struct spi_device *spi)
 {
+<<<<<<< HEAD
 	struct chip_data *chip = spi_get_ctldata(spi);
 
 	dev_dbg(&spi->dev, "spi_device %u.%u cleanup\n",
 		spi->controller->bus_num, spi_get_chipselect(spi, 0));
+=======
+	struct chip_data *chip = spi_get_ctldata((struct spi_device *)spi);
+
+	dev_dbg(&spi->dev, "spi_device %u.%u cleanup\n",
+		spi->controller->bus_num, spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(chip);
 }
@@ -1279,7 +1307,10 @@ static int dspi_probe(struct platform_device *pdev)
 	ctlr->cleanup = dspi_cleanup;
 	ctlr->slave_abort = dspi_slave_abort;
 	ctlr->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LSB_FIRST;
+<<<<<<< HEAD
 	ctlr->use_gpio_descriptors = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	pdata = dev_get_platdata(&pdev->dev);
 	if (pdata) {
@@ -1326,7 +1357,12 @@ static int dspi_probe(struct platform_device *pdev)
 	else
 		ctlr->bits_per_word_mask = SPI_BPW_RANGE_MASK(4, 16);
 
+<<<<<<< HEAD
 	base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	base = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(base)) {
 		ret = PTR_ERR(base);
 		goto out_ctlr_put;
@@ -1425,7 +1461,11 @@ out_ctlr_put:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void dspi_remove(struct platform_device *pdev)
+=======
+static int dspi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fsl_dspi *dspi = platform_get_drvdata(pdev);
 
@@ -1444,6 +1484,11 @@ static void dspi_remove(struct platform_device *pdev)
 	if (dspi->irq)
 		free_irq(dspi->irq, dspi);
 	clk_disable_unprepare(dspi->clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void dspi_shutdown(struct platform_device *pdev)
@@ -1457,7 +1502,11 @@ static struct platform_driver fsl_dspi_driver = {
 	.driver.owner		= THIS_MODULE,
 	.driver.pm		= &dspi_pm,
 	.probe			= dspi_probe,
+<<<<<<< HEAD
 	.remove_new		= dspi_remove,
+=======
+	.remove			= dspi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.shutdown		= dspi_shutdown,
 };
 module_platform_driver(fsl_dspi_driver);

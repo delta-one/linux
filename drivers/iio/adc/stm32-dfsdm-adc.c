@@ -1520,7 +1520,10 @@ static const struct of_device_id stm32_dfsdm_adc_match[] = {
 	},
 	{}
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(of, stm32_dfsdm_adc_match);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int stm32_dfsdm_adc_probe(struct platform_device *pdev)
 {

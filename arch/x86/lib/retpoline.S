@@ -5,15 +5,22 @@
 #include <asm/dwarf2.h>
 #include <asm/cpufeatures.h>
 #include <asm/alternative.h>
+<<<<<<< HEAD
 #include <asm/asm-offsets.h>
 #include <asm/export.h>
 #include <asm/nospec-branch.h>
 #include <asm/unwind_hints.h>
 #include <asm/percpu.h>
+=======
+#include <asm/export.h>
+#include <asm/nospec-branch.h>
+#include <asm/unwind_hints.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/frame.h>
 
 	.section .text.__x86.indirect_thunk
 
+<<<<<<< HEAD
 
 .macro POLINE reg
 	ANNOTATE_INTRA_FUNCTION_CALL
@@ -26,6 +33,19 @@
 
 .macro RETPOLINE reg
 	POLINE \reg
+=======
+.macro RETPOLINE reg
+	ANNOTATE_INTRA_FUNCTION_CALL
+	call    .Ldo_rop_\@
+.Lspec_trap_\@:
+	UNWIND_HINT_EMPTY
+	pause
+	lfence
+	jmp .Lspec_trap_\@
+.Ldo_rop_\@:
+	mov     %\reg, (%_ASM_SP)
+	UNWIND_HINT_FUNC
+>>>>>>> b7ba80a49124 (Commit)
 	RET
 .endm
 
@@ -55,6 +75,10 @@ SYM_INNER_LABEL(__x86_indirect_thunk_\reg, SYM_L_GLOBAL)
  */
 
 #define __EXPORT_THUNK(sym)	_ASM_NOKPROBE(sym); EXPORT_SYMBOL(sym)
+<<<<<<< HEAD
+=======
+#define EXPORT_THUNK(reg)	__EXPORT_THUNK(__x86_indirect_thunk_ ## reg)
+>>>>>>> b7ba80a49124 (Commit)
 
 	.align RETPOLINE_THUNK_SIZE
 SYM_CODE_START(__x86_indirect_thunk_array)
@@ -66,6 +90,7 @@ SYM_CODE_START(__x86_indirect_thunk_array)
 	.align RETPOLINE_THUNK_SIZE
 SYM_CODE_END(__x86_indirect_thunk_array)
 
+<<<<<<< HEAD
 #define GEN(reg) __EXPORT_THUNK(__x86_indirect_thunk_ ## reg)
 #include <asm/GEN-for-each-reg.h>
 #undef GEN
@@ -125,6 +150,12 @@ SYM_CODE_END(__x86_indirect_jump_thunk_array)
 #include <asm/GEN-for-each-reg.h>
 #undef GEN
 #endif
+=======
+#define GEN(reg) EXPORT_THUNK(reg)
+#include <asm/GEN-for-each-reg.h>
+#undef GEN
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This function name is magical and is used by -mfunction-return=thunk-extern
  * for the compiler to generate JMPs to it.
@@ -197,6 +228,7 @@ __EXPORT_THUNK(zen_untrain_ret)
 EXPORT_SYMBOL(__x86_return_thunk)
 
 #endif /* CONFIG_RETHUNK */
+<<<<<<< HEAD
 
 #ifdef CONFIG_CALL_DEPTH_TRACKING
 
@@ -231,3 +263,5 @@ SYM_FUNC_START(__x86_return_skl)
 SYM_FUNC_END(__x86_return_skl)
 
 #endif /* CONFIG_CALL_DEPTH_TRACKING */
+=======
+>>>>>>> b7ba80a49124 (Commit)

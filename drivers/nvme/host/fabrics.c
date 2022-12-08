@@ -410,6 +410,7 @@ int nvmf_connect_admin_queue(struct nvme_ctrl *ctrl)
 
 	result = le32_to_cpu(res.u32);
 	ctrl->cntlid = result & 0xFFFF;
+<<<<<<< HEAD
 	if (result & (NVME_CONNECT_AUTHREQ_ATR | NVME_CONNECT_AUTHREQ_ASCR)) {
 		/* Secure concatenation is not implemented */
 		if (result & NVME_CONNECT_AUTHREQ_ASCR) {
@@ -418,6 +419,9 @@ int nvmf_connect_admin_queue(struct nvme_ctrl *ctrl)
 			ret = NVME_SC_AUTH_REQUIRED;
 			goto out_free_data;
 		}
+=======
+	if ((result >> 16) & 0x3) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Authentication required */
 		ret = nvme_auth_negotiate(ctrl, 0);
 		if (ret) {
@@ -493,6 +497,7 @@ int nvmf_connect_io_queue(struct nvme_ctrl *ctrl, u16 qid)
 				       &cmd, data);
 	}
 	result = le32_to_cpu(res.u32);
+<<<<<<< HEAD
 	if (result & (NVME_CONNECT_AUTHREQ_ATR | NVME_CONNECT_AUTHREQ_ASCR)) {
 		/* Secure concatenation is not implemented */
 		if (result & NVME_CONNECT_AUTHREQ_ASCR) {
@@ -501,6 +506,9 @@ int nvmf_connect_io_queue(struct nvme_ctrl *ctrl, u16 qid)
 			ret = NVME_SC_AUTH_REQUIRED;
 			goto out_free_data;
 		}
+=======
+	if ((result >> 16) & 2) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Authentication required */
 		ret = nvme_auth_negotiate(ctrl, qid);
 		if (ret) {
@@ -514,7 +522,10 @@ int nvmf_connect_io_queue(struct nvme_ctrl *ctrl, u16 qid)
 					 "qid %u: authentication failed\n", qid);
 		}
 	}
+<<<<<<< HEAD
 out_free_data:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(data);
 	return ret;
 }
@@ -1254,7 +1265,11 @@ static int __init nvmf_init(void)
 	if (!nvmf_default_host)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	nvmf_class = class_create("nvme-fabrics");
+=======
+	nvmf_class = class_create(THIS_MODULE, "nvme-fabrics");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(nvmf_class)) {
 		pr_err("couldn't register class nvme-fabrics\n");
 		ret = PTR_ERR(nvmf_class);

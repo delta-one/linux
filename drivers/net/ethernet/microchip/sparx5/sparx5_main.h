@@ -17,7 +17,10 @@
 #include <linux/net_tstamp.h>
 #include <linux/ptp_clock_kernel.h>
 #include <linux/hrtimer.h>
+<<<<<<< HEAD
 #include <linux/debugfs.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "sparx5_main_regs.h"
 
@@ -192,7 +195,10 @@ struct sparx5_port {
 	u16 ts_id;
 	struct sk_buff_head tx_skbs;
 	bool is_mrouter;
+<<<<<<< HEAD
 	struct list_head tc_templates; /* list of TC templates on this port */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum sparx5_core_clockfreq {
@@ -290,12 +296,17 @@ struct sparx5 {
 	struct mutex ptp_lock; /* lock for ptp interface state */
 	u16 ptp_skbs;
 	int ptp_irq;
+<<<<<<< HEAD
 	/* VCAP */
 	struct vcap_control *vcap_ctrl;
 	/* PGID allocation map */
 	u8 pgid_map[PGID_TABLE_SIZE];
 	/* Common root for debugfs */
 	struct dentry *debugfs_root;
+=======
+	/* PGID allocation map */
+	u8 pgid_map[PGID_TABLE_SIZE];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* sparx5_switchdev.c */
@@ -311,7 +322,11 @@ struct frame_info {
 void sparx5_xtr_flush(struct sparx5 *sparx5, u8 grp);
 void sparx5_ifh_parse(u32 *ifh, struct frame_info *info);
 irqreturn_t sparx5_xtr_handler(int irq, void *_priv);
+<<<<<<< HEAD
 netdev_tx_t sparx5_port_xmit_impl(struct sk_buff *skb, struct net_device *dev);
+=======
+int sparx5_port_xmit_impl(struct sk_buff *skb, struct net_device *dev);
+>>>>>>> b7ba80a49124 (Commit)
 int sparx5_manual_injection_mode(struct sparx5 *sparx5);
 void sparx5_port_inj_timer_setup(struct sparx5_port *port);
 
@@ -363,6 +378,7 @@ int sparx5_config_dsm_calendar(struct sparx5 *sparx5);
 void sparx5_get_stats64(struct net_device *ndev, struct rtnl_link_stats64 *stats);
 int sparx_stats_init(struct sparx5 *sparx5);
 
+<<<<<<< HEAD
 /* sparx5_dcb.c */
 #ifdef CONFIG_SPARX5_DCB
 int sparx5_dcb_init(struct sparx5 *sparx5);
@@ -373,6 +389,8 @@ static inline int sparx5_dcb_init(struct sparx5 *sparx5)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* sparx5_netdev.c */
 void sparx5_set_port_ifh_timestamp(void *ifh_hdr, u64 timestamp);
 void sparx5_set_port_ifh_rew_op(void *ifh_hdr, u32 rew_op);
@@ -397,11 +415,14 @@ int sparx5_ptp_txtstamp_request(struct sparx5_port *port,
 void sparx5_ptp_txtstamp_release(struct sparx5_port *port,
 				 struct sk_buff *skb);
 irqreturn_t sparx5_ptp_irq_handler(int irq, void *args);
+<<<<<<< HEAD
 int sparx5_ptp_gettime64(struct ptp_clock_info *ptp, struct timespec64 *ts);
 
 /* sparx5_vcap_impl.c */
 int sparx5_vcap_init(struct sparx5 *sparx5);
 void sparx5_vcap_destroy(struct sparx5 *sparx5);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* sparx5_pgid.c */
 enum sparx5_pgid_type {
@@ -415,6 +436,7 @@ int sparx5_pgid_alloc_glag(struct sparx5 *spx5, u16 *idx);
 int sparx5_pgid_alloc_mcast(struct sparx5 *spx5, u16 *idx);
 int sparx5_pgid_free(struct sparx5 *spx5, u16 idx);
 
+<<<<<<< HEAD
 /* sparx5_pool.c */
 struct sparx5_pool_entry {
 	u16 ref_cnt;
@@ -538,6 +560,8 @@ void sparx5_psfp_init(struct sparx5 *sparx5);
 void sparx5_new_base_time(struct sparx5 *sparx5, const u32 cycle_time,
 			  const ktime_t org_base_time, ktime_t *new_base_time);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Clock period in picoseconds */
 static inline u32 sparx5_clk_period(enum sparx5_core_clockfreq cclock)
 {
@@ -562,7 +586,10 @@ static inline bool sparx5_is_baser(phy_interface_t interface)
 extern const struct phylink_mac_ops sparx5_phylink_mac_ops;
 extern const struct phylink_pcs_ops sparx5_phylink_pcs_ops;
 extern const struct ethtool_ops sparx5_ethtool_ops;
+<<<<<<< HEAD
 extern const struct dcbnl_rtnl_ops sparx5_dcbnl_ops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Calculate raw offset */
 static inline __pure int spx5_offset(int id, int tinst, int tcnt,

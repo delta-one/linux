@@ -23,7 +23,10 @@
  *
  */
 
+<<<<<<< HEAD
 #include <linux/firmware.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "amdgpu.h"
 #include "amdgpu_gfx.h"
 #include "amdgpu_rlc.h"
@@ -156,9 +159,12 @@ static bool amdgpu_gfx_is_compute_multipipe_capable(struct amdgpu_device *adev)
 		return amdgpu_compute_multipipe == 1;
 	}
 
+<<<<<<< HEAD
 	if (adev->ip_versions[GC_HWIP][0] > IP_VERSION(9, 0, 0))
 		return true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* FIXME: spreading the queues across pipes causes perf regressions
 	 * on POLARIS11 compute workloads */
 	if (adev->asic_type == CHIP_POLARIS11)
@@ -375,11 +381,16 @@ int amdgpu_gfx_mqd_sw_init(struct amdgpu_device *adev,
 		 * KIQ MQD no matter SRIOV or Bare-metal
 		 */
 		r = amdgpu_bo_create_kernel(adev, mqd_size, PAGE_SIZE,
+<<<<<<< HEAD
 					    AMDGPU_GEM_DOMAIN_VRAM |
 					    AMDGPU_GEM_DOMAIN_GTT,
 					    &ring->mqd_obj,
 					    &ring->mqd_gpu_addr,
 					    &ring->mqd_ptr);
+=======
+					    AMDGPU_GEM_DOMAIN_VRAM, &ring->mqd_obj,
+					    &ring->mqd_gpu_addr, &ring->mqd_ptr);
+>>>>>>> b7ba80a49124 (Commit)
 		if (r) {
 			dev_warn(adev->dev, "failed to create ring mqd ob (%d)", r);
 			return r;
@@ -589,6 +600,7 @@ void amdgpu_gfx_off_ctrl(struct amdgpu_device *adev, bool enable)
 		if (adev->gfx.gfx_off_req_count == 0 &&
 		    !adev->gfx.gfx_off_state) {
 			/* If going to s2idle, no need to wait */
+<<<<<<< HEAD
 			if (adev->in_s0ix) {
 				if (!amdgpu_dpm_set_powergating_by_smu(adev,
 						AMD_IP_BLOCK_TYPE_GFX, true))
@@ -597,6 +609,12 @@ void amdgpu_gfx_off_ctrl(struct amdgpu_device *adev, bool enable)
 				schedule_delayed_work(&adev->gfx.gfx_off_delay_work,
 					      delay);
 			}
+=======
+			if (adev->in_s0ix)
+				delay = GFX_OFF_NO_DELAY;
+			schedule_delayed_work(&adev->gfx.gfx_off_delay_work,
+					      delay);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	} else {
 		if (adev->gfx.gfx_off_req_count == 0) {
@@ -699,6 +717,7 @@ late_fini:
 	return r;
 }
 
+<<<<<<< HEAD
 int amdgpu_gfx_ras_sw_init(struct amdgpu_device *adev)
 {
 	int err = 0;
@@ -743,6 +762,8 @@ int amdgpu_gfx_poison_consumption_handler(struct amdgpu_device *adev,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int amdgpu_gfx_process_ras_data_cb(struct amdgpu_device *adev,
 		void *err_data,
 		struct amdgpu_iv_entry *entry)
@@ -920,6 +941,7 @@ int amdgpu_gfx_get_num_kcq(struct amdgpu_device *adev)
 	}
 	return amdgpu_num_kcq;
 }
+<<<<<<< HEAD
 
 void amdgpu_gfx_cp_init_microcode(struct amdgpu_device *adev,
 				  uint32_t ucode_id)
@@ -1059,3 +1081,5 @@ void amdgpu_gfx_cp_init_microcode(struct amdgpu_device *adev,
 		adev->firmware.fw_size += ALIGN(fw_size, PAGE_SIZE);
 	}
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

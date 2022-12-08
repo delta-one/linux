@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/leds/regulator-led.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Regulator LEDs
+=======
+title: Device Tree Bindings for Regulator LEDs
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Linus Walleij <linus.walleij@linaro.org>

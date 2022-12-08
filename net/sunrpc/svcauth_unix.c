@@ -225,9 +225,15 @@ static int ip_map_parse(struct cache_detail *cd,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	err = get_expiry(&mesg, &expiry);
 	if (err)
 		return err;
+=======
+	expiry = get_expiry(&mesg);
+	if (expiry ==0)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* domainname, or empty for NEGATIVE */
 	len = qword_get(&mesg, buf, mlen);
@@ -497,9 +503,15 @@ static int unix_gid_parse(struct cache_detail *cd,
 	uid = make_kuid(current_user_ns(), id);
 	ug.uid = uid;
 
+<<<<<<< HEAD
 	err = get_expiry(&mesg, &expiry);
 	if (err)
 		return err;
+=======
+	expiry = get_expiry(&mesg);
+	if (expiry == 0)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rv = get_int(&mesg, &gids);
 	if (rv || gids < 0 || gids > 8192)
@@ -729,6 +741,7 @@ out:
 
 EXPORT_SYMBOL_GPL(svcauth_unix_set_client);
 
+<<<<<<< HEAD
 /**
  * svcauth_null_accept - Decode and validate incoming RPC_AUTH_NULL credential
  * @rqstp: RPC transaction
@@ -761,6 +774,25 @@ svcauth_null_accept(struct svc_rqst *rqstp)
 	if (xdr_stream_decode_opaque_auth(xdr, &flavor, &body, &len) < 0)
 		return SVC_GARBAGE;
 	if (flavor != RPC_AUTH_NULL || len != 0) {
+=======
+static int
+svcauth_null_accept(struct svc_rqst *rqstp)
+{
+	struct kvec	*argv = &rqstp->rq_arg.head[0];
+	struct kvec	*resv = &rqstp->rq_res.head[0];
+	struct svc_cred	*cred = &rqstp->rq_cred;
+
+	if (argv->iov_len < 3*4)
+		return SVC_GARBAGE;
+
+	if (svc_getu32(argv) != 0) {
+		dprintk("svc: bad null cred\n");
+		rqstp->rq_auth_stat = rpc_autherr_badcred;
+		return SVC_DENIED;
+	}
+	if (svc_getu32(argv) != htonl(RPC_AUTH_NULL) || svc_getu32(argv) != 0) {
+		dprintk("svc: bad null verf\n");
+>>>>>>> b7ba80a49124 (Commit)
 		rqstp->rq_auth_stat = rpc_autherr_badverf;
 		return SVC_DENIED;
 	}
@@ -772,11 +804,17 @@ svcauth_null_accept(struct svc_rqst *rqstp)
 	if (cred->cr_group_info == NULL)
 		return SVC_CLOSE; /* kmalloc failure - client must retry */
 
+<<<<<<< HEAD
 	if (xdr_stream_encode_opaque_auth(&rqstp->rq_res_stream,
 					  RPC_AUTH_NULL, NULL, 0) < 0)
 		return SVC_CLOSE;
 	if (!svcxdr_set_accept_stat(rqstp))
 		return SVC_CLOSE;
+=======
+	/* Put NULL verifier */
+	svc_putnl(resv, RPC_AUTH_NULL);
+	svc_putnl(resv, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rqstp->rq_cred.cr_flavor = RPC_AUTH_NULL;
 	return SVC_OK;
@@ -800,12 +838,17 @@ struct auth_ops svcauth_null = {
 	.name		= "null",
 	.owner		= THIS_MODULE,
 	.flavour	= RPC_AUTH_NULL,
+<<<<<<< HEAD
 	.accept		= svcauth_null_accept,
+=======
+	.accept 	= svcauth_null_accept,
+>>>>>>> b7ba80a49124 (Commit)
 	.release	= svcauth_null_release,
 	.set_client	= svcauth_unix_set_client,
 };
 
 
+<<<<<<< HEAD
 /**
  * svcauth_tls_accept - Decode and validate incoming RPC_AUTH_TLS credential
  * @rqstp: RPC transaction
@@ -831,14 +874,34 @@ svcauth_tls_accept(struct svc_rqst *rqstp)
 	if (xdr_stream_decode_u32(xdr, &len) < 0)
 		return SVC_GARBAGE;
 	if (len != 0) {
+=======
+static int
+svcauth_tls_accept(struct svc_rqst *rqstp)
+{
+	struct svc_cred	*cred = &rqstp->rq_cred;
+	struct kvec *argv = rqstp->rq_arg.head;
+	struct kvec *resv = rqstp->rq_res.head;
+
+	if (argv->iov_len < XDR_UNIT * 3)
+		return SVC_GARBAGE;
+
+	/* Call's cred length */
+	if (svc_getu32(argv) != xdr_zero) {
+>>>>>>> b7ba80a49124 (Commit)
 		rqstp->rq_auth_stat = rpc_autherr_badcred;
 		return SVC_DENIED;
 	}
 
+<<<<<<< HEAD
 	/* Call's verf field: */
 	if (xdr_stream_decode_opaque_auth(xdr, &flavor, &body, &len) < 0)
 		return SVC_GARBAGE;
 	if (flavor != RPC_AUTH_NULL || len != 0) {
+=======
+	/* Call's verifier flavor and its length */
+	if (svc_getu32(argv) != rpc_auth_null ||
+	    svc_getu32(argv) != xdr_zero) {
+>>>>>>> b7ba80a49124 (Commit)
 		rqstp->rq_auth_stat = rpc_autherr_badverf;
 		return SVC_DENIED;
 	}
@@ -849,11 +912,16 @@ svcauth_tls_accept(struct svc_rqst *rqstp)
 		return SVC_DENIED;
 	}
 
+<<<<<<< HEAD
 	/* Signal that mapping to nobody uid/gid is required */
+=======
+	/* Mapping to nobody uid/gid is required */
+>>>>>>> b7ba80a49124 (Commit)
 	cred->cr_uid = INVALID_UID;
 	cred->cr_gid = INVALID_GID;
 	cred->cr_group_info = groups_alloc(0);
 	if (cred->cr_group_info == NULL)
+<<<<<<< HEAD
 		return SVC_CLOSE;
 
 	if (rqstp->rq_xprt->xpt_ops->xpo_start_tls) {
@@ -870,6 +938,18 @@ svcauth_tls_accept(struct svc_rqst *rqstp)
 	}
 	if (!svcxdr_set_accept_stat(rqstp))
 		return SVC_CLOSE;
+=======
+		return SVC_CLOSE; /* kmalloc failure - client must retry */
+
+	/* Reply's verifier */
+	svc_putnl(resv, RPC_AUTH_NULL);
+	if (rqstp->rq_xprt->xpt_ops->xpo_start_tls) {
+		svc_putnl(resv, 8);
+		memcpy(resv->iov_base + resv->iov_len, "STARTTLS", 8);
+		resv->iov_len += 8;
+	} else
+		svc_putnl(resv, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rqstp->rq_cred.cr_flavor = RPC_AUTH_TLS;
 	return SVC_OK;
@@ -879,12 +959,17 @@ struct auth_ops svcauth_tls = {
 	.name		= "tls",
 	.owner		= THIS_MODULE,
 	.flavour	= RPC_AUTH_TLS,
+<<<<<<< HEAD
 	.accept		= svcauth_tls_accept,
+=======
+	.accept 	= svcauth_tls_accept,
+>>>>>>> b7ba80a49124 (Commit)
 	.release	= svcauth_null_release,
 	.set_client	= svcauth_unix_set_client,
 };
 
 
+<<<<<<< HEAD
 /**
  * svcauth_unix_accept - Decode and validate incoming RPC_AUTH_SYS credential
  * @rqstp: RPC transaction
@@ -921,6 +1006,28 @@ svcauth_unix_accept(struct svc_rqst *rqstp)
 	if (!xdr_inline_decode(xdr, len))
 		return SVC_GARBAGE;
 
+=======
+static int
+svcauth_unix_accept(struct svc_rqst *rqstp)
+{
+	struct kvec	*argv = &rqstp->rq_arg.head[0];
+	struct kvec	*resv = &rqstp->rq_res.head[0];
+	struct svc_cred	*cred = &rqstp->rq_cred;
+	struct user_namespace *userns;
+	u32		slen, i;
+	int		len   = argv->iov_len;
+
+	if ((len -= 3*4) < 0)
+		return SVC_GARBAGE;
+
+	svc_getu32(argv);			/* length */
+	svc_getu32(argv);			/* time stamp */
+	slen = XDR_QUADLEN(svc_getnl(argv));	/* machname length */
+	if (slen > 64 || (len -= (slen + 3)*4) < 0)
+		goto badcred;
+	argv->iov_base = (void*)((__be32*)argv->iov_base + slen);	/* skip machname */
+	argv->iov_len -= slen*4;
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Note: we skip uid_valid()/gid_valid() checks here for
 	 * backwards compatibility with clients that use -1 id's.
@@ -930,6 +1037,7 @@ svcauth_unix_accept(struct svc_rqst *rqstp)
 	 */
 	userns = (rqstp->rq_xprt && rqstp->rq_xprt->xpt_cred) ?
 		rqstp->rq_xprt->xpt_cred->user_ns : &init_user_ns;
+<<<<<<< HEAD
 	if (xdr_stream_decode_u32(xdr, &i) < 0)
 		return SVC_GARBAGE;
 	cred->cr_uid = make_kuid(userns, i);
@@ -957,15 +1065,37 @@ svcauth_unix_accept(struct svc_rqst *rqstp)
 	if (xdr_stream_decode_opaque_auth(xdr, &flavor, &body, &len) < 0)
 		return SVC_GARBAGE;
 	if (flavor != RPC_AUTH_NULL || len != 0) {
+=======
+	cred->cr_uid = make_kuid(userns, svc_getnl(argv)); /* uid */
+	cred->cr_gid = make_kgid(userns, svc_getnl(argv)); /* gid */
+	slen = svc_getnl(argv);			/* gids length */
+	if (slen > UNX_NGROUPS || (len -= (slen + 2)*4) < 0)
+		goto badcred;
+	cred->cr_group_info = groups_alloc(slen);
+	if (cred->cr_group_info == NULL)
+		return SVC_CLOSE;
+	for (i = 0; i < slen; i++) {
+		kgid_t kgid = make_kgid(userns, svc_getnl(argv));
+		cred->cr_group_info->gid[i] = kgid;
+	}
+	groups_sort(cred->cr_group_info);
+	if (svc_getu32(argv) != htonl(RPC_AUTH_NULL) || svc_getu32(argv) != 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		rqstp->rq_auth_stat = rpc_autherr_badverf;
 		return SVC_DENIED;
 	}
 
+<<<<<<< HEAD
 	if (xdr_stream_encode_opaque_auth(&rqstp->rq_res_stream,
 					  RPC_AUTH_NULL, NULL, 0) < 0)
 		return SVC_CLOSE;
 	if (!svcxdr_set_accept_stat(rqstp))
 		return SVC_CLOSE;
+=======
+	/* Put NULL verifier */
+	svc_putnl(resv, RPC_AUTH_NULL);
+	svc_putnl(resv, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rqstp->rq_cred.cr_flavor = RPC_AUTH_UNIX;
 	return SVC_OK;
@@ -995,7 +1125,11 @@ struct auth_ops svcauth_unix = {
 	.name		= "unix",
 	.owner		= THIS_MODULE,
 	.flavour	= RPC_AUTH_UNIX,
+<<<<<<< HEAD
 	.accept		= svcauth_unix_accept,
+=======
+	.accept 	= svcauth_unix_accept,
+>>>>>>> b7ba80a49124 (Commit)
 	.release	= svcauth_unix_release,
 	.domain_release	= svcauth_unix_domain_release,
 	.set_client	= svcauth_unix_set_client,

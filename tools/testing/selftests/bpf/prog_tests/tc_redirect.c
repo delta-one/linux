@@ -11,12 +11,19 @@
  */
 
 #include <arpa/inet.h>
+<<<<<<< HEAD
+=======
+#include <linux/if.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/if_tun.h>
 #include <linux/limits.h>
 #include <linux/sysctl.h>
 #include <linux/time_types.h>
 #include <linux/net_tstamp.h>
+<<<<<<< HEAD
 #include <net/if.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <stdbool.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -59,6 +66,13 @@
 #define IFADDR_STR_LEN 18
 #define PING_ARGS "-i 0.2 -c 3 -w 10 -q"
 
+<<<<<<< HEAD
+=======
+#define SRC_PROG_PIN_FILE "/sys/fs/bpf/test_tc_src"
+#define DST_PROG_PIN_FILE "/sys/fs/bpf/test_tc_dst"
+#define CHK_PROG_PIN_FILE "/sys/fs/bpf/test_tc_chk"
+
+>>>>>>> b7ba80a49124 (Commit)
 #define TIMEOUT_MILLIS 10000
 #define NSEC_PER_SEC 1000000000ULL
 
@@ -111,9 +125,13 @@ static void netns_setup_namespaces_nofail(const char *verb)
 }
 
 struct netns_setup_result {
+<<<<<<< HEAD
 	int ifindex_veth_src;
 	int ifindex_veth_src_fwd;
 	int ifindex_veth_dst;
+=======
+	int ifindex_veth_src_fwd;
+>>>>>>> b7ba80a49124 (Commit)
 	int ifindex_veth_dst_fwd;
 };
 
@@ -137,20 +155,61 @@ static int get_ifaddr(const char *name, char *ifaddr)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int get_ifindex(const char *name)
+{
+	char path[PATH_MAX];
+	char buf[32];
+	FILE *f;
+	int ret;
+
+	snprintf(path, PATH_MAX, "/sys/class/net/%s/ifindex", name);
+	f = fopen(path, "r");
+	if (!ASSERT_OK_PTR(f, path))
+		return -1;
+
+	ret = fread(buf, 1, sizeof(buf), f);
+	if (!ASSERT_GT(ret, 0, "fread ifindex")) {
+		fclose(f);
+		return -1;
+	}
+	fclose(f);
+	return atoi(buf);
+}
+
+#define SYS(fmt, ...)						\
+	({							\
+		char cmd[1024];					\
+		snprintf(cmd, sizeof(cmd), fmt, ##__VA_ARGS__);	\
+		if (!ASSERT_OK(system(cmd), cmd))		\
+			goto fail;				\
+	})
+
+>>>>>>> b7ba80a49124 (Commit)
 static int netns_setup_links_and_routes(struct netns_setup_result *result)
 {
 	struct nstoken *nstoken = NULL;
 	char veth_src_fwd_addr[IFADDR_STR_LEN+1] = {};
 
+<<<<<<< HEAD
 	SYS(fail, "ip link add veth_src type veth peer name veth_src_fwd");
 	SYS(fail, "ip link add veth_dst type veth peer name veth_dst_fwd");
 
 	SYS(fail, "ip link set veth_dst_fwd address " MAC_DST_FWD);
 	SYS(fail, "ip link set veth_dst address " MAC_DST);
+=======
+	SYS("ip link add veth_src type veth peer name veth_src_fwd");
+	SYS("ip link add veth_dst type veth peer name veth_dst_fwd");
+
+	SYS("ip link set veth_dst_fwd address " MAC_DST_FWD);
+	SYS("ip link set veth_dst address " MAC_DST);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (get_ifaddr("veth_src_fwd", veth_src_fwd_addr))
 		goto fail;
 
+<<<<<<< HEAD
 	result->ifindex_veth_src = if_nametoindex("veth_src");
 	if (!ASSERT_GT(result->ifindex_veth_src, 0, "ifindex_veth_src"))
 		goto fail;
@@ -171,12 +230,26 @@ static int netns_setup_links_and_routes(struct netns_setup_result *result)
 	SYS(fail, "ip link set veth_src_fwd netns " NS_FWD);
 	SYS(fail, "ip link set veth_dst_fwd netns " NS_FWD);
 	SYS(fail, "ip link set veth_dst netns " NS_DST);
+=======
+	result->ifindex_veth_src_fwd = get_ifindex("veth_src_fwd");
+	if (result->ifindex_veth_src_fwd < 0)
+		goto fail;
+	result->ifindex_veth_dst_fwd = get_ifindex("veth_dst_fwd");
+	if (result->ifindex_veth_dst_fwd < 0)
+		goto fail;
+
+	SYS("ip link set veth_src netns " NS_SRC);
+	SYS("ip link set veth_src_fwd netns " NS_FWD);
+	SYS("ip link set veth_dst_fwd netns " NS_FWD);
+	SYS("ip link set veth_dst netns " NS_DST);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/** setup in 'src' namespace */
 	nstoken = open_netns(NS_SRC);
 	if (!ASSERT_OK_PTR(nstoken, "setns src"))
 		goto fail;
 
+<<<<<<< HEAD
 	SYS(fail, "ip addr add " IP4_SRC "/32 dev veth_src");
 	SYS(fail, "ip addr add " IP6_SRC "/128 dev veth_src nodad");
 	SYS(fail, "ip link set dev veth_src up");
@@ -188,6 +261,19 @@ static int netns_setup_links_and_routes(struct netns_setup_result *result)
 	SYS(fail, "ip neigh add " IP4_DST " dev veth_src lladdr %s",
 	    veth_src_fwd_addr);
 	SYS(fail, "ip neigh add " IP6_DST " dev veth_src lladdr %s",
+=======
+	SYS("ip addr add " IP4_SRC "/32 dev veth_src");
+	SYS("ip addr add " IP6_SRC "/128 dev veth_src nodad");
+	SYS("ip link set dev veth_src up");
+
+	SYS("ip route add " IP4_DST "/32 dev veth_src scope global");
+	SYS("ip route add " IP4_NET "/16 dev veth_src scope global");
+	SYS("ip route add " IP6_DST "/128 dev veth_src scope global");
+
+	SYS("ip neigh add " IP4_DST " dev veth_src lladdr %s",
+	    veth_src_fwd_addr);
+	SYS("ip neigh add " IP6_DST " dev veth_src lladdr %s",
+>>>>>>> b7ba80a49124 (Commit)
 	    veth_src_fwd_addr);
 
 	close_netns(nstoken);
@@ -201,6 +287,7 @@ static int netns_setup_links_and_routes(struct netns_setup_result *result)
 	 * needs v4 one in order to start ARP probing. IP4_NET route is added
 	 * to the endpoints so that the ARP processing will reply.
 	 */
+<<<<<<< HEAD
 	SYS(fail, "ip addr add " IP4_SLL "/32 dev veth_src_fwd");
 	SYS(fail, "ip addr add " IP4_DLL "/32 dev veth_dst_fwd");
 	SYS(fail, "ip link set dev veth_src_fwd up");
@@ -210,6 +297,17 @@ static int netns_setup_links_and_routes(struct netns_setup_result *result)
 	SYS(fail, "ip route add " IP6_SRC "/128 dev veth_src_fwd scope global");
 	SYS(fail, "ip route add " IP4_DST "/32 dev veth_dst_fwd scope global");
 	SYS(fail, "ip route add " IP6_DST "/128 dev veth_dst_fwd scope global");
+=======
+	SYS("ip addr add " IP4_SLL "/32 dev veth_src_fwd");
+	SYS("ip addr add " IP4_DLL "/32 dev veth_dst_fwd");
+	SYS("ip link set dev veth_src_fwd up");
+	SYS("ip link set dev veth_dst_fwd up");
+
+	SYS("ip route add " IP4_SRC "/32 dev veth_src_fwd scope global");
+	SYS("ip route add " IP6_SRC "/128 dev veth_src_fwd scope global");
+	SYS("ip route add " IP4_DST "/32 dev veth_dst_fwd scope global");
+	SYS("ip route add " IP6_DST "/128 dev veth_dst_fwd scope global");
+>>>>>>> b7ba80a49124 (Commit)
 
 	close_netns(nstoken);
 
@@ -218,6 +316,7 @@ static int netns_setup_links_and_routes(struct netns_setup_result *result)
 	if (!ASSERT_OK_PTR(nstoken, "setns dst"))
 		goto fail;
 
+<<<<<<< HEAD
 	SYS(fail, "ip addr add " IP4_DST "/32 dev veth_dst");
 	SYS(fail, "ip addr add " IP6_DST "/128 dev veth_dst nodad");
 	SYS(fail, "ip link set dev veth_dst up");
@@ -228,6 +327,18 @@ static int netns_setup_links_and_routes(struct netns_setup_result *result)
 
 	SYS(fail, "ip neigh add " IP4_SRC " dev veth_dst lladdr " MAC_DST_FWD);
 	SYS(fail, "ip neigh add " IP6_SRC " dev veth_dst lladdr " MAC_DST_FWD);
+=======
+	SYS("ip addr add " IP4_DST "/32 dev veth_dst");
+	SYS("ip addr add " IP6_DST "/128 dev veth_dst nodad");
+	SYS("ip link set dev veth_dst up");
+
+	SYS("ip route add " IP4_SRC "/32 dev veth_dst scope global");
+	SYS("ip route add " IP4_NET "/16 dev veth_dst scope global");
+	SYS("ip route add " IP6_SRC "/128 dev veth_dst scope global");
+
+	SYS("ip neigh add " IP4_SRC " dev veth_dst lladdr " MAC_DST_FWD);
+	SYS("ip neigh add " IP6_SRC " dev veth_dst lladdr " MAC_DST_FWD);
+>>>>>>> b7ba80a49124 (Commit)
 
 	close_netns(nstoken);
 
@@ -238,6 +349,7 @@ fail:
 	return -1;
 }
 
+<<<<<<< HEAD
 static int qdisc_clsact_create(struct bpf_tc_hook *qdisc_hook, int ifindex)
 {
 	char err_str[128], ifname[16];
@@ -310,6 +422,21 @@ static int netns_load_bpf(const struct bpf_program *src_prog,
 	XGRESS_FILTER_ADD(&qdisc_veth_dst_fwd, BPF_TC_INGRESS, dst_prog, 0);
 	/* tc filter add dev veth_dst_fwd egress bpf da chk_prog */
 	XGRESS_FILTER_ADD(&qdisc_veth_dst_fwd, BPF_TC_EGRESS, chk_prog, 0);
+=======
+static int netns_load_bpf(void)
+{
+	SYS("tc qdisc add dev veth_src_fwd clsact");
+	SYS("tc filter add dev veth_src_fwd ingress bpf da object-pinned "
+	    SRC_PROG_PIN_FILE);
+	SYS("tc filter add dev veth_src_fwd egress bpf da object-pinned "
+	    CHK_PROG_PIN_FILE);
+
+	SYS("tc qdisc add dev veth_dst_fwd clsact");
+	SYS("tc filter add dev veth_dst_fwd ingress bpf da object-pinned "
+	    DST_PROG_PIN_FILE);
+	SYS("tc filter add dev veth_dst_fwd egress bpf da object-pinned "
+	    CHK_PROG_PIN_FILE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 fail:
@@ -367,7 +494,11 @@ done:
 
 static int test_ping(int family, const char *addr)
 {
+<<<<<<< HEAD
 	SYS(fail, "ip netns exec " NS_SRC " %s " PING_ARGS " %s > /dev/null", ping_command(family), addr);
+=======
+	SYS("ip netns exec " NS_SRC " %s " PING_ARGS " %s > /dev/null", ping_command(family), addr);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 fail:
 	return -1;
@@ -536,6 +667,7 @@ done:
 		close(client_fd);
 }
 
+<<<<<<< HEAD
 static int netns_load_dtime_bpf(struct test_tc_dtime *skel,
 				const struct netns_setup_result *setup_result)
 {
@@ -545,35 +677,68 @@ static int netns_load_dtime_bpf(struct test_tc_dtime *skel,
 	LIBBPF_OPTS(bpf_tc_hook, qdisc_veth_dst);
 	struct nstoken *nstoken;
 	int err;
+=======
+static int netns_load_dtime_bpf(struct test_tc_dtime *skel)
+{
+	struct nstoken *nstoken;
+
+#define PIN_FNAME(__file) "/sys/fs/bpf/" #__file
+#define PIN(__prog) ({							\
+		int err = bpf_program__pin(skel->progs.__prog, PIN_FNAME(__prog)); \
+		if (!ASSERT_OK(err, "pin " #__prog))		\
+			goto fail;					\
+		})
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* setup ns_src tc progs */
 	nstoken = open_netns(NS_SRC);
 	if (!ASSERT_OK_PTR(nstoken, "setns " NS_SRC))
 		return -1;
+<<<<<<< HEAD
 	/* tc qdisc add dev veth_src clsact */
 	QDISC_CLSACT_CREATE(&qdisc_veth_src, setup_result->ifindex_veth_src);
 	/* tc filter add dev veth_src ingress bpf da ingress_host */
 	XGRESS_FILTER_ADD(&qdisc_veth_src, BPF_TC_INGRESS, skel->progs.ingress_host, 0);
 	/* tc filter add dev veth_src egress bpf da egress_host */
 	XGRESS_FILTER_ADD(&qdisc_veth_src, BPF_TC_EGRESS, skel->progs.egress_host, 0);
+=======
+	PIN(egress_host);
+	PIN(ingress_host);
+	SYS("tc qdisc add dev veth_src clsact");
+	SYS("tc filter add dev veth_src ingress bpf da object-pinned "
+	    PIN_FNAME(ingress_host));
+	SYS("tc filter add dev veth_src egress bpf da object-pinned "
+	    PIN_FNAME(egress_host));
+>>>>>>> b7ba80a49124 (Commit)
 	close_netns(nstoken);
 
 	/* setup ns_dst tc progs */
 	nstoken = open_netns(NS_DST);
 	if (!ASSERT_OK_PTR(nstoken, "setns " NS_DST))
 		return -1;
+<<<<<<< HEAD
 	/* tc qdisc add dev veth_dst clsact */
 	QDISC_CLSACT_CREATE(&qdisc_veth_dst, setup_result->ifindex_veth_dst);
 	/* tc filter add dev veth_dst ingress bpf da ingress_host */
 	XGRESS_FILTER_ADD(&qdisc_veth_dst, BPF_TC_INGRESS, skel->progs.ingress_host, 0);
 	/* tc filter add dev veth_dst egress bpf da egress_host */
 	XGRESS_FILTER_ADD(&qdisc_veth_dst, BPF_TC_EGRESS, skel->progs.egress_host, 0);
+=======
+	PIN(egress_host);
+	PIN(ingress_host);
+	SYS("tc qdisc add dev veth_dst clsact");
+	SYS("tc filter add dev veth_dst ingress bpf da object-pinned "
+	    PIN_FNAME(ingress_host));
+	SYS("tc filter add dev veth_dst egress bpf da object-pinned "
+	    PIN_FNAME(egress_host));
+>>>>>>> b7ba80a49124 (Commit)
 	close_netns(nstoken);
 
 	/* setup ns_fwd tc progs */
 	nstoken = open_netns(NS_FWD);
 	if (!ASSERT_OK_PTR(nstoken, "setns " NS_FWD))
 		return -1;
+<<<<<<< HEAD
 	/* tc qdisc add dev veth_dst_fwd clsact */
 	QDISC_CLSACT_CREATE(&qdisc_veth_dst_fwd, setup_result->ifindex_veth_dst_fwd);
 	/* tc filter add dev veth_dst_fwd ingress prio 100 bpf da ingress_fwdns_prio100 */
@@ -604,11 +769,43 @@ static int netns_load_dtime_bpf(struct test_tc_dtime *skel,
 	XGRESS_FILTER_ADD(&qdisc_veth_src_fwd, BPF_TC_EGRESS,
 			  skel->progs.egress_fwdns_prio101, 101);
 	close_netns(nstoken);
+=======
+	PIN(ingress_fwdns_prio100);
+	PIN(egress_fwdns_prio100);
+	PIN(ingress_fwdns_prio101);
+	PIN(egress_fwdns_prio101);
+	SYS("tc qdisc add dev veth_dst_fwd clsact");
+	SYS("tc filter add dev veth_dst_fwd ingress prio 100 bpf da object-pinned "
+	    PIN_FNAME(ingress_fwdns_prio100));
+	SYS("tc filter add dev veth_dst_fwd ingress prio 101 bpf da object-pinned "
+	    PIN_FNAME(ingress_fwdns_prio101));
+	SYS("tc filter add dev veth_dst_fwd egress prio 100 bpf da object-pinned "
+	    PIN_FNAME(egress_fwdns_prio100));
+	SYS("tc filter add dev veth_dst_fwd egress prio 101 bpf da object-pinned "
+	    PIN_FNAME(egress_fwdns_prio101));
+	SYS("tc qdisc add dev veth_src_fwd clsact");
+	SYS("tc filter add dev veth_src_fwd ingress prio 100 bpf da object-pinned "
+	    PIN_FNAME(ingress_fwdns_prio100));
+	SYS("tc filter add dev veth_src_fwd ingress prio 101 bpf da object-pinned "
+	    PIN_FNAME(ingress_fwdns_prio101));
+	SYS("tc filter add dev veth_src_fwd egress prio 100 bpf da object-pinned "
+	    PIN_FNAME(egress_fwdns_prio100));
+	SYS("tc filter add dev veth_src_fwd egress prio 101 bpf da object-pinned "
+	    PIN_FNAME(egress_fwdns_prio101));
+	close_netns(nstoken);
+
+#undef PIN
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 fail:
 	close_netns(nstoken);
+<<<<<<< HEAD
 	return err;
+=======
+	return -1;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 enum {
@@ -784,7 +981,11 @@ static void test_tc_redirect_dtime(struct netns_setup_result *setup_result)
 	if (!ASSERT_OK(err, "test_tc_dtime__load"))
 		goto done;
 
+<<<<<<< HEAD
 	if (netns_load_dtime_bpf(skel, setup_result))
+=======
+	if (netns_load_dtime_bpf(skel))
+>>>>>>> b7ba80a49124 (Commit)
 		goto done;
 
 	nstoken = open_netns(NS_FWD);
@@ -826,6 +1027,10 @@ static void test_tc_redirect_neigh_fib(struct netns_setup_result *setup_result)
 {
 	struct nstoken *nstoken = NULL;
 	struct test_tc_neigh_fib *skel = NULL;
+<<<<<<< HEAD
+=======
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	nstoken = open_netns(NS_FWD);
 	if (!ASSERT_OK_PTR(nstoken, "setns fwd"))
@@ -838,8 +1043,24 @@ static void test_tc_redirect_neigh_fib(struct netns_setup_result *setup_result)
 	if (!ASSERT_OK(test_tc_neigh_fib__load(skel), "test_tc_neigh_fib__load"))
 		goto done;
 
+<<<<<<< HEAD
 	if (netns_load_bpf(skel->progs.tc_src, skel->progs.tc_dst,
 			   skel->progs.tc_chk, setup_result))
+=======
+	err = bpf_program__pin(skel->progs.tc_src, SRC_PROG_PIN_FILE);
+	if (!ASSERT_OK(err, "pin " SRC_PROG_PIN_FILE))
+		goto done;
+
+	err = bpf_program__pin(skel->progs.tc_chk, CHK_PROG_PIN_FILE);
+	if (!ASSERT_OK(err, "pin " CHK_PROG_PIN_FILE))
+		goto done;
+
+	err = bpf_program__pin(skel->progs.tc_dst, DST_PROG_PIN_FILE);
+	if (!ASSERT_OK(err, "pin " DST_PROG_PIN_FILE))
+		goto done;
+
+	if (netns_load_bpf())
+>>>>>>> b7ba80a49124 (Commit)
 		goto done;
 
 	/* bpf_fib_lookup() checks if forwarding is enabled */
@@ -875,8 +1096,24 @@ static void test_tc_redirect_neigh(struct netns_setup_result *setup_result)
 	if (!ASSERT_OK(err, "test_tc_neigh__load"))
 		goto done;
 
+<<<<<<< HEAD
 	if (netns_load_bpf(skel->progs.tc_src, skel->progs.tc_dst,
 			   skel->progs.tc_chk, setup_result))
+=======
+	err = bpf_program__pin(skel->progs.tc_src, SRC_PROG_PIN_FILE);
+	if (!ASSERT_OK(err, "pin " SRC_PROG_PIN_FILE))
+		goto done;
+
+	err = bpf_program__pin(skel->progs.tc_chk, CHK_PROG_PIN_FILE);
+	if (!ASSERT_OK(err, "pin " CHK_PROG_PIN_FILE))
+		goto done;
+
+	err = bpf_program__pin(skel->progs.tc_dst, DST_PROG_PIN_FILE);
+	if (!ASSERT_OK(err, "pin " DST_PROG_PIN_FILE))
+		goto done;
+
+	if (netns_load_bpf())
+>>>>>>> b7ba80a49124 (Commit)
 		goto done;
 
 	if (!ASSERT_OK(set_forwarding(false), "disable forwarding"))
@@ -911,8 +1148,24 @@ static void test_tc_redirect_peer(struct netns_setup_result *setup_result)
 	if (!ASSERT_OK(err, "test_tc_peer__load"))
 		goto done;
 
+<<<<<<< HEAD
 	if (netns_load_bpf(skel->progs.tc_src, skel->progs.tc_dst,
 			   skel->progs.tc_chk, setup_result))
+=======
+	err = bpf_program__pin(skel->progs.tc_src, SRC_PROG_PIN_FILE);
+	if (!ASSERT_OK(err, "pin " SRC_PROG_PIN_FILE))
+		goto done;
+
+	err = bpf_program__pin(skel->progs.tc_chk, CHK_PROG_PIN_FILE);
+	if (!ASSERT_OK(err, "pin " CHK_PROG_PIN_FILE))
+		goto done;
+
+	err = bpf_program__pin(skel->progs.tc_dst, DST_PROG_PIN_FILE);
+	if (!ASSERT_OK(err, "pin " DST_PROG_PIN_FILE))
+		goto done;
+
+	if (netns_load_bpf())
+>>>>>>> b7ba80a49124 (Commit)
 		goto done;
 
 	if (!ASSERT_OK(set_forwarding(false), "disable forwarding"))
@@ -945,7 +1198,11 @@ static int tun_open(char *name)
 	if (!ASSERT_OK(err, "ioctl TUNSETIFF"))
 		goto fail;
 
+<<<<<<< HEAD
 	SYS(fail, "ip link set dev %s up", name);
+=======
+	SYS("ip link set dev %s up", name);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return fd;
 fail:
@@ -995,8 +1252,11 @@ static int tun_relay_loop(int src_fd, int target_fd)
 
 static void test_tc_redirect_peer_l3(struct netns_setup_result *setup_result)
 {
+<<<<<<< HEAD
 	LIBBPF_OPTS(bpf_tc_hook, qdisc_tun_fwd);
 	LIBBPF_OPTS(bpf_tc_hook, qdisc_veth_dst_fwd);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct test_tc_peer *skel = NULL;
 	struct nstoken *nstoken = NULL;
 	int err;
@@ -1040,8 +1300,13 @@ static void test_tc_redirect_peer_l3(struct netns_setup_result *setup_result)
 	if (!ASSERT_OK_PTR(skel, "test_tc_peer__open"))
 		goto fail;
 
+<<<<<<< HEAD
 	ifindex = if_nametoindex("tun_fwd");
 	if (!ASSERT_GT(ifindex, 0, "if_indextoname tun_fwd"))
+=======
+	ifindex = get_ifindex("tun_fwd");
+	if (!ASSERT_GE(ifindex, 0, "get_ifindex tun_fwd"))
+>>>>>>> b7ba80a49124 (Commit)
 		goto fail;
 
 	skel->rodata->IFINDEX_SRC = ifindex;
@@ -1051,10 +1316,26 @@ static void test_tc_redirect_peer_l3(struct netns_setup_result *setup_result)
 	if (!ASSERT_OK(err, "test_tc_peer__load"))
 		goto fail;
 
+<<<<<<< HEAD
+=======
+	err = bpf_program__pin(skel->progs.tc_src_l3, SRC_PROG_PIN_FILE);
+	if (!ASSERT_OK(err, "pin " SRC_PROG_PIN_FILE))
+		goto fail;
+
+	err = bpf_program__pin(skel->progs.tc_dst_l3, DST_PROG_PIN_FILE);
+	if (!ASSERT_OK(err, "pin " DST_PROG_PIN_FILE))
+		goto fail;
+
+	err = bpf_program__pin(skel->progs.tc_chk, CHK_PROG_PIN_FILE);
+	if (!ASSERT_OK(err, "pin " CHK_PROG_PIN_FILE))
+		goto fail;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Load "tc_src_l3" to the tun_fwd interface to redirect packets
 	 * towards dst, and "tc_dst" to redirect packets
 	 * and "tc_chk" on veth_dst_fwd to drop non-redirected packets.
 	 */
+<<<<<<< HEAD
 	/* tc qdisc add dev tun_fwd clsact */
 	QDISC_CLSACT_CREATE(&qdisc_tun_fwd, ifindex);
 	/* tc filter add dev tun_fwd ingress bpf da tc_src_l3 */
@@ -1085,6 +1366,36 @@ static void test_tc_redirect_peer_l3(struct netns_setup_result *setup_result)
 
 	SYS(fail, "ip -netns " NS_DST " neigh add " IP4_TUN_SRC " dev veth_dst lladdr " MAC_DST_FWD);
 	SYS(fail, "ip -netns " NS_DST " neigh add " IP6_TUN_SRC " dev veth_dst lladdr " MAC_DST_FWD);
+=======
+	SYS("tc qdisc add dev tun_fwd clsact");
+	SYS("tc filter add dev tun_fwd ingress bpf da object-pinned "
+	    SRC_PROG_PIN_FILE);
+
+	SYS("tc qdisc add dev veth_dst_fwd clsact");
+	SYS("tc filter add dev veth_dst_fwd ingress bpf da object-pinned "
+	    DST_PROG_PIN_FILE);
+	SYS("tc filter add dev veth_dst_fwd egress bpf da object-pinned "
+	    CHK_PROG_PIN_FILE);
+
+	/* Setup route and neigh tables */
+	SYS("ip -netns " NS_SRC " addr add dev tun_src " IP4_TUN_SRC "/24");
+	SYS("ip -netns " NS_FWD " addr add dev tun_fwd " IP4_TUN_FWD "/24");
+
+	SYS("ip -netns " NS_SRC " addr add dev tun_src " IP6_TUN_SRC "/64 nodad");
+	SYS("ip -netns " NS_FWD " addr add dev tun_fwd " IP6_TUN_FWD "/64 nodad");
+
+	SYS("ip -netns " NS_SRC " route del " IP4_DST "/32 dev veth_src scope global");
+	SYS("ip -netns " NS_SRC " route add " IP4_DST "/32 via " IP4_TUN_FWD
+	    " dev tun_src scope global");
+	SYS("ip -netns " NS_DST " route add " IP4_TUN_SRC "/32 dev veth_dst scope global");
+	SYS("ip -netns " NS_SRC " route del " IP6_DST "/128 dev veth_src scope global");
+	SYS("ip -netns " NS_SRC " route add " IP6_DST "/128 via " IP6_TUN_FWD
+	    " dev tun_src scope global");
+	SYS("ip -netns " NS_DST " route add " IP6_TUN_SRC "/128 dev veth_dst scope global");
+
+	SYS("ip -netns " NS_DST " neigh add " IP4_TUN_SRC " dev veth_dst lladdr " MAC_DST_FWD);
+	SYS("ip -netns " NS_DST " neigh add " IP6_TUN_SRC " dev veth_dst lladdr " MAC_DST_FWD);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!ASSERT_OK(set_forwarding(false), "disable forwarding"))
 		goto fail;
@@ -1130,7 +1441,11 @@ static void *test_tc_redirect_run_tests(void *arg)
 	return NULL;
 }
 
+<<<<<<< HEAD
 void test_tc_redirect(void)
+=======
+void serial_test_tc_redirect(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pthread_t test_thread;
 	int err;

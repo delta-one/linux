@@ -64,6 +64,7 @@ struct mem_info {
 					/* (struct mem_info) */
 #define BI_COMMAND_LINE		0x0007	/* kernel command line parameters */
 					/* (string) */
+<<<<<<< HEAD
 /*
  * A random seed used to initialize the RNG. Record format:
  *
@@ -71,6 +72,8 @@ struct mem_info {
  *   - seed data    [ `length` bytes, padded to preserve 4-byte struct alignment ]
  */
 #define BI_RNG_SEED		0x0008
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 
     /*

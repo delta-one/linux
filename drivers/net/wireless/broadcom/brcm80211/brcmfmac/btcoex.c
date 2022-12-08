@@ -394,7 +394,11 @@ void brcmf_btcoex_detach(struct brcmf_cfg80211_info *cfg)
 
 	if (cfg->btcoex->timer_on) {
 		cfg->btcoex->timer_on = false;
+<<<<<<< HEAD
 		timer_shutdown_sync(&cfg->btcoex->timer);
+=======
+		del_timer_sync(&cfg->btcoex->timer);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	cancel_work_sync(&cfg->btcoex->work);

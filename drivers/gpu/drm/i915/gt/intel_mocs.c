@@ -7,7 +7,10 @@
 
 #include "intel_engine.h"
 #include "intel_gt.h"
+<<<<<<< HEAD
 #include "intel_gt_mcr.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_gt_regs.h"
 #include "intel_mocs.h"
 #include "intel_ring.h"
@@ -208,6 +211,7 @@ static const struct drm_i915_mocs_entry broxton_mocs_table[] = {
 	MOCS_ENTRY(15, \
 		   LE_3_WB | LE_TC_1_LLC | LE_LRUM(2) | LE_AOM(1), \
 		   L3_3_WB), \
+<<<<<<< HEAD
 	/* Bypass LLC - Uncached (EHL+) */ \
 	MOCS_ENTRY(16, \
 		   LE_1_UC | LE_TC_1_LLC | LE_SCF(1), \
@@ -216,6 +220,8 @@ static const struct drm_i915_mocs_entry broxton_mocs_table[] = {
 	MOCS_ENTRY(17, \
 		   LE_1_UC | LE_TC_1_LLC | LE_SCF(1), \
 		   L3_3_WB), \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Self-Snoop - L3 + LLC */ \
 	MOCS_ENTRY(18, \
 		   LE_3_WB | LE_TC_1_LLC | LE_LRUM(3) | LE_SSE(3), \
@@ -610,6 +616,7 @@ static u32 l3cc_combine(u16 low, u16 high)
 	     0; \
 	     i++)
 
+<<<<<<< HEAD
 static void init_l3cc_table(struct intel_gt *gt,
 			    const struct drm_i915_mocs_table *table)
 {
@@ -624,6 +631,16 @@ static void init_l3cc_table(struct intel_gt *gt,
 		else
 			intel_uncore_write_fw(gt->uncore, GEN9_LNCFCMOCS(i), l3cc);
 	intel_gt_mcr_unlock(gt, flags);
+=======
+static void init_l3cc_table(struct intel_uncore *uncore,
+			    const struct drm_i915_mocs_table *table)
+{
+	unsigned int i;
+	u32 l3cc;
+
+	for_each_l3cc(l3cc, table, i)
+		intel_uncore_write_fw(uncore, GEN9_LNCFCMOCS(i), l3cc);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void intel_mocs_init_engine(struct intel_engine_cs *engine)
@@ -643,7 +660,11 @@ void intel_mocs_init_engine(struct intel_engine_cs *engine)
 		init_mocs_table(engine, &table);
 
 	if (flags & HAS_RENDER_L3CC && engine->class == RENDER_CLASS)
+<<<<<<< HEAD
 		init_l3cc_table(engine->gt, &table);
+=======
+		init_l3cc_table(engine->uncore, &table);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static u32 global_mocs_offset(void)
@@ -679,7 +700,11 @@ void intel_mocs_init(struct intel_gt *gt)
 	 * memory transactions including guc transactions
 	 */
 	if (flags & HAS_RENDER_L3CC)
+<<<<<<< HEAD
 		init_l3cc_table(gt, &table);
+=======
+		init_l3cc_table(gt->uncore, &table);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #if IS_ENABLED(CONFIG_DRM_I915_SELFTEST)

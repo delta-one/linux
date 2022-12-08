@@ -44,9 +44,12 @@
 #define USB_PRODUCT_USB5534B			0x5534
 #define USB_VENDOR_CYPRESS			0x04b4
 #define USB_PRODUCT_CY7C65632			0x6570
+<<<<<<< HEAD
 #define USB_VENDOR_TEXAS_INSTRUMENTS		0x0451
 #define USB_PRODUCT_TUSB8041_USB3		0x8140
 #define USB_PRODUCT_TUSB8041_USB2		0x8142
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define HUB_QUIRK_CHECK_PORT_AUTOSUSPEND	0x01
 #define HUB_QUIRK_DISABLE_AUTOSUSPEND		0x02
 
@@ -2389,8 +2392,14 @@ static int usb_enumerate_device_otg(struct usb_device *udev)
  * usb_enumerate_device - Read device configs/intfs/otg (usbcore-internal)
  * @udev: newly addressed device (in ADDRESS state)
  *
+<<<<<<< HEAD
  * This is only called by usb_new_device() -- all comments that apply there
  * apply here wrt to environment.
+=======
+ * This is only called by usb_new_device() and usb_authorize_device()
+ * and FIXME -- all comments that apply to them apply here wrt to
+ * environment.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * If the device is WUSB and not authorized, we don't attempt to read
  * the string descriptors, as they will be errored out by the device
@@ -3083,6 +3092,7 @@ done:
 	return status;
 }
 
+<<<<<<< HEAD
 /*
  * hub_port_stop_enumerate - stop USB enumeration or ignore port events
  * @hub: target hub
@@ -3125,6 +3135,8 @@ static bool hub_port_stop_enumerate(struct usb_hub *hub, int port1, int retries)
 	return port_dev->ignore_event;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Check if a port is power on */
 int usb_port_is_power_on(struct usb_hub *hub, unsigned int portstatus)
 {
@@ -4840,11 +4852,14 @@ hub_port_init(struct usb_hub *hub, struct usb_device *udev, int port1,
 	do_new_scheme = use_new_scheme(udev, retry_counter, port_dev);
 
 	for (retries = 0; retries < GET_DESCRIPTOR_TRIES; (++retries, msleep(100))) {
+<<<<<<< HEAD
 		if (hub_port_stop_enumerate(hub, port1, retries)) {
 			retval = -ENODEV;
 			break;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (do_new_scheme) {
 			struct usb_device_descriptor *buf;
 			int r = 0;
@@ -5295,11 +5310,14 @@ static void hub_port_connect(struct usb_hub *hub, int port1, u16 portstatus,
 	status = 0;
 
 	for (i = 0; i < PORT_INIT_TRIES; i++) {
+<<<<<<< HEAD
 		if (hub_port_stop_enumerate(hub, port1, i)) {
 			status = -ENODEV;
 			break;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		usb_lock_port(port_dev);
 		mutex_lock(hcd->address0_mutex);
 		retry_locked = true;
@@ -5668,10 +5686,13 @@ static void port_event(struct usb_hub *hub, int port1)
 	if (!pm_runtime_active(&port_dev->dev))
 		return;
 
+<<<<<<< HEAD
 	/* skip port actions if ignore_event and early_stop are true */
 	if (port_dev->ignore_event && port_dev->early_stop)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (hub_handle_remote_wakeup(hub, port1, portstatus, portchange))
 		connect_change = 1;
 
@@ -5856,6 +5877,7 @@ static const struct usb_device_id hub_id_table[] = {
       .idVendor = USB_VENDOR_GENESYS_LOGIC,
       .bInterfaceClass = USB_CLASS_HUB,
       .driver_info = HUB_QUIRK_CHECK_PORT_AUTOSUSPEND},
+<<<<<<< HEAD
     { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
 			| USB_DEVICE_ID_MATCH_PRODUCT,
       .idVendor = USB_VENDOR_TEXAS_INSTRUMENTS,
@@ -5866,6 +5888,8 @@ static const struct usb_device_id hub_id_table[] = {
       .idVendor = USB_VENDOR_TEXAS_INSTRUMENTS,
       .idProduct = USB_PRODUCT_TUSB8041_USB3,
       .driver_info = HUB_QUIRK_DISABLE_AUTOSUSPEND},
+=======
+>>>>>>> b7ba80a49124 (Commit)
     { .match_flags = USB_DEVICE_ID_MATCH_DEV_CLASS,
       .bDeviceClass = USB_CLASS_HUB},
     { .match_flags = USB_DEVICE_ID_MATCH_INT_CLASS,
@@ -5995,10 +6019,13 @@ static int usb_reset_and_verify_device(struct usb_device *udev)
 	mutex_lock(hcd->address0_mutex);
 
 	for (i = 0; i < PORT_INIT_TRIES; ++i) {
+<<<<<<< HEAD
 		if (hub_port_stop_enumerate(parent_hub, port1, i)) {
 			ret = -ENODEV;
 			break;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* ep0 maxpacket size may change; let the HCD know about it.
 		 * Other endpoints will be handled by re-enumeration. */

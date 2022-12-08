@@ -70,8 +70,13 @@ static const struct clk_ops clk_pll_ops = {
 	.get_parent = clk_pll_get_parent,
 };
 
+<<<<<<< HEAD
 static void __init __socfpga_pll_init(struct device_node *node,
 				      const struct clk_ops *ops)
+=======
+static __init struct clk_hw *__socfpga_pll_init(struct device_node *node,
+	const struct clk_ops *ops)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 reg;
 	struct clk_hw *hw_clk;
@@ -80,13 +85,21 @@ static void __init __socfpga_pll_init(struct device_node *node,
 	const char *parent_name[SOCFPGA_MAX_PARENTS];
 	struct clk_init_data init;
 	struct device_node *clkmgr_np;
+<<<<<<< HEAD
 	int rc;
+=======
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	of_property_read_u32(node, "reg", &reg);
 
 	pll_clk = kzalloc(sizeof(*pll_clk), GFP_KERNEL);
 	if (WARN_ON(!pll_clk))
+<<<<<<< HEAD
 		return;
+=======
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	clkmgr_np = of_find_compatible_node(NULL, NULL, "altr,clk-mgr");
 	clk_mgr_base_addr = of_iomap(clkmgr_np, 0);
@@ -108,6 +121,7 @@ static void __init __socfpga_pll_init(struct device_node *node,
 
 	hw_clk = &pll_clk->hw.hw;
 
+<<<<<<< HEAD
 	rc = clk_hw_register(NULL, hw_clk);
 	if (rc) {
 		pr_err("Could not register clock:%s\n", clk_name);
@@ -127,6 +141,15 @@ err_of_clk_add_hw_provider:
 	clk_hw_unregister(hw_clk);
 err_clk_hw_register:
 	kfree(pll_clk);
+=======
+	err = clk_hw_register(NULL, hw_clk);
+	if (err) {
+		kfree(pll_clk);
+		return ERR_PTR(err);
+	}
+	of_clk_add_provider(node, of_clk_src_simple_get, hw_clk);
+	return hw_clk;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void __init socfpga_pll_init(struct device_node *node)

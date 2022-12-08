@@ -3,8 +3,11 @@
  * Scheduler topology setup/handling methods
  */
 
+<<<<<<< HEAD
 #include <linux/bsearch.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 DEFINE_MUTEX(sched_domains_mutex);
 
 /* Protected by sched_domains_mutex: */
@@ -209,8 +212,13 @@ sd_parent_degenerate(struct sched_domain *sd, struct sched_domain *parent)
 #if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
 DEFINE_STATIC_KEY_FALSE(sched_energy_present);
 static unsigned int sysctl_sched_energy_aware = 1;
+<<<<<<< HEAD
 static DEFINE_MUTEX(sched_energy_mutex);
 static bool sched_energy_update;
+=======
+DEFINE_MUTEX(sched_energy_mutex);
+bool sched_energy_update;
+>>>>>>> b7ba80a49124 (Commit)
 
 void rebuild_sched_domains_energy(void)
 {
@@ -580,7 +588,11 @@ out:
  */
 struct root_domain def_root_domain;
 
+<<<<<<< HEAD
 void __init init_defrootdomain(void)
+=======
+void init_defrootdomain(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	init_rootdomain(&def_root_domain);
 
@@ -2069,6 +2081,7 @@ unlock:
 	return found;
 }
 
+<<<<<<< HEAD
 struct __cmp_key {
 	const struct cpumask *cpus;
 	struct cpumask ***masks;
@@ -2162,6 +2175,8 @@ const struct cpumask *sched_numa_hop_mask(unsigned int node, unsigned int hops)
 }
 EXPORT_SYMBOL_GPL(sched_numa_hop_mask);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_NUMA */
 
 static int __sdt_alloc(const struct cpumask *cpu_map)
@@ -2546,7 +2561,11 @@ void free_sched_domains(cpumask_var_t doms[], unsigned int ndoms)
  * Set up scheduler domains and groups.  For now this just excludes isolated
  * CPUs, but could be used to exclude other special cases in the future.
  */
+<<<<<<< HEAD
 int __init sched_init_domains(const struct cpumask *cpu_map)
+=======
+int sched_init_domains(const struct cpumask *cpu_map)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 

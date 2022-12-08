@@ -95,9 +95,20 @@
 		#size-cells = <1>;
 		ranges;
 
+<<<<<<< HEAD
 		ramoops@b3e00000 {
 			compatible = "ramoops";
 			reg = <0xb3e00000 0x200000>; /* 16 * (4 * 0x8000) */
+=======
+		flash_memory: region@b8000000 {
+			no-map;
+			reg = <0xb8000000 0x04000000>; /* 64M */
+		};
+
+		ramoops@bc000000 {
+			compatible = "ramoops";
+			reg = <0xbc000000 0x200000>; /* 16 * (4 * 0x8000) */
+>>>>>>> b7ba80a49124 (Commit)
 			record-size = <0x8000>;
 			console-size = <0x8000>;
 			ftrace-size = <0x8000>;
@@ -105,6 +116,7 @@
 			max-reason = <3>; /* KMSG_DUMP_EMERG */
 		};
 
+<<<<<<< HEAD
 		/* LPC FW cycle bridge region requires natural alignment */
 		flash_memory: region@b4000000 {
 			no-map;
@@ -112,6 +124,8 @@
 		};
 
 		/* VGA region is dictated by hardware strapping */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		vga_memory: region@bf000000 {
 			no-map;
 			compatible = "shared-dma-pool";
@@ -220,7 +234,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	iio-hwmon {
+=======
+	iio-hwmon-battery {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "iio-hwmon";
 		io-channels = <&adc1 7>;
 	};
@@ -444,11 +462,14 @@
 
 			fsi_occ0: occ {
 				compatible = "ibm,p10-occ";
+<<<<<<< HEAD
 
 				occ-hwmon {
 					compatible = "ibm,p10-occ-hwmon";
 					ibm,no-poll-on-init;
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 
@@ -593,11 +614,14 @@
 
 			fsi_occ1: occ {
 				compatible = "ibm,p10-occ";
+<<<<<<< HEAD
 
 				occ-hwmon {
 					compatible = "ibm,p10-occ-hwmon";
 					ibm,no-poll-on-init;
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 
@@ -742,11 +766,14 @@
 
 			fsi_occ2: occ {
 				compatible = "ibm,p10-occ";
+<<<<<<< HEAD
 
 				occ-hwmon {
 					compatible = "ibm,p10-occ-hwmon";
 					ibm,no-poll-on-init;
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 
@@ -891,11 +918,14 @@
 
 			fsi_occ3: occ {
 				compatible = "ibm,p10-occ";
+<<<<<<< HEAD
 
 				occ-hwmon {
 					compatible = "ibm,p10-occ-hwmon";
 					ibm,no-poll-on-init;
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 
@@ -1017,6 +1047,35 @@
 		reg = <0x4a>;
 	};
 
+<<<<<<< HEAD
+=======
+	pca9551@60 {
+		compatible = "nxp,pca9551";
+		reg = <0x60>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		gpio-controller;
+		#gpio-cells = <2>;
+
+		led@0 {
+			label = "cablecard0-cxp-top";
+			reg = <0>;
+			retain-state-shutdown;
+			default-state = "keep";
+			type = <PCA955X_TYPE_LED>;
+		};
+
+		led@1 {
+			label = "cablecard0-cxp-bot";
+			reg = <1>;
+			retain-state-shutdown;
+			default-state = "keep";
+			type = <PCA955X_TYPE_LED>;
+		};
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	pca9546@70 {
 		compatible = "nxp,pca9546";
 		reg = <0x70>;
@@ -1034,6 +1093,7 @@
 				compatible = "atmel,24c64";
 				reg = <0x50>;
 			};
+<<<<<<< HEAD
 
 			pca9551@60 {
 				compatible = "nxp,pca9551";
@@ -1060,6 +1120,8 @@
 					type = <PCA955X_TYPE_LED>;
 				};
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		i2c4mux0chn1: i2c@1 {
@@ -1099,6 +1161,61 @@
 		reg = <0x49>;
 	};
 
+<<<<<<< HEAD
+=======
+	pca9551@60 {
+		compatible = "nxp,pca9551";
+		reg = <0x60>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		gpio-controller;
+		#gpio-cells = <2>;
+
+		led@0 {
+			label = "cablecard3-cxp-top";
+			reg = <0>;
+			retain-state-shutdown;
+			default-state = "keep";
+			type = <PCA955X_TYPE_LED>;
+		};
+
+		led@1 {
+			label = "cablecard3-cxp-bot";
+			reg = <1>;
+			retain-state-shutdown;
+			default-state = "keep";
+			type = <PCA955X_TYPE_LED>;
+		};
+	};
+
+	pca9551@61 {
+		compatible = "nxp,pca9551";
+		reg = <0x61>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		gpio-controller;
+		#gpio-cells = <2>;
+
+		led@0 {
+			label = "cablecard4-cxp-top";
+			reg = <0>;
+			retain-state-shutdown;
+			default-state = "keep";
+			type = <PCA955X_TYPE_LED>;
+		};
+
+		led@1 {
+			label = "cablecard4-cxp-bot";
+			reg = <1>;
+			retain-state-shutdown;
+			default-state = "keep";
+			type = <PCA955X_TYPE_LED>;
+		};
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	pca9546@70 {
 		compatible = "nxp,pca9546";
 		reg = <0x70>;
@@ -1116,6 +1233,7 @@
 				compatible = "atmel,24c64";
 				reg = <0x50>;
 			};
+<<<<<<< HEAD
 
 			pca9551@60 {
 				compatible = "nxp,pca9551";
@@ -1142,6 +1260,8 @@
 					type = <PCA955X_TYPE_LED>;
 				};
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		i2c5mux0chn1: i2c@1 {
@@ -1153,6 +1273,7 @@
 				compatible = "atmel,24c64";
 				reg = <0x51>;
 			};
+<<<<<<< HEAD
 
 			pca9551@61 {
 				compatible = "nxp,pca9551";
@@ -1179,6 +1300,8 @@
 					type = <PCA955X_TYPE_LED>;
 				};
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };
@@ -2031,6 +2154,35 @@
 		reg = <0x49>;
 	};
 
+<<<<<<< HEAD
+=======
+	pca9551@60 {
+		compatible = "nxp,pca9551";
+		reg = <0x60>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		gpio-controller;
+		#gpio-cells = <2>;
+
+		led@0 {
+			label = "cablecard10-cxp-top";
+			reg = <0>;
+			retain-state-shutdown;
+			default-state = "keep";
+			type = <PCA955X_TYPE_LED>;
+		};
+
+		led@1 {
+			label = "cablecard10-cxp-bot";
+			reg = <1>;
+			retain-state-shutdown;
+			default-state = "keep";
+			type = <PCA955X_TYPE_LED>;
+		};
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	pca9546@70 {
 		compatible = "nxp,pca9546";
 		reg = <0x70>;
@@ -2048,6 +2200,7 @@
 				compatible = "atmel,24c64";
 				reg = <0x50>;
 			};
+<<<<<<< HEAD
 
 			pca9551@60 {
 				compatible = "nxp,pca9551";
@@ -2074,6 +2227,8 @@
 					type = <PCA955X_TYPE_LED>;
 				};
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		i2c11mux0chn1: i2c@1 {
@@ -2352,10 +2507,13 @@
 	};
 };
 
+<<<<<<< HEAD
 &uart2 {
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &vuart1 {
 	status = "okay";
 };

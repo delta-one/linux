@@ -165,6 +165,7 @@ struct mlx5_ifc_ste_mask_and_match_v1_bits {
 	u8         action[0x60];
 };
 
+<<<<<<< HEAD
 struct mlx5_ifc_ste_match_ranges_v1_bits {
 	u8         entry_format[0x8];
 	u8         counter_id[0x18];
@@ -200,6 +201,8 @@ struct mlx5_ifc_ste_match_ranges_v1_bits {
 	u8         min_value_3[0x20];
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mlx5_ifc_ste_eth_l2_src_v1_bits {
 	u8         reserved_at_0[0x1];
 	u8         sx_sniffer[0x1];

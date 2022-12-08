@@ -261,7 +261,11 @@ for ((I).i = (I).j = 0;							\
 	struct label_it i;						\
 	int ret = 0;							\
 	label_for_each(i, (L), profile) {				\
+<<<<<<< HEAD
 		if (RULE_MEDIATES(&profile->rules, (C))) {		\
+=======
+		if (PROFILE_MEDIATES(profile, (C))) {			\
+>>>>>>> b7ba80a49124 (Commit)
 			ret = 1;					\
 			break;						\
 		}							\
@@ -333,7 +337,11 @@ struct aa_label *aa_label_parse(struct aa_label *base, const char *str,
 static inline const char *aa_label_strn_split(const char *str, int n)
 {
 	const char *pos;
+<<<<<<< HEAD
 	aa_state_t state;
+=======
+	unsigned int state;
+>>>>>>> b7ba80a49124 (Commit)
 
 	state = aa_dfa_matchn_until(stacksplitdfa, DFA_START, str, n, &pos);
 	if (!ACCEPT_TABLE(stacksplitdfa)[state])
@@ -345,7 +353,11 @@ static inline const char *aa_label_strn_split(const char *str, int n)
 static inline const char *aa_label_str_split(const char *str)
 {
 	const char *pos;
+<<<<<<< HEAD
 	aa_state_t state;
+=======
+	unsigned int state;
+>>>>>>> b7ba80a49124 (Commit)
 
 	state = aa_dfa_match_until(stacksplitdfa, DFA_START, str, &pos);
 	if (!ACCEPT_TABLE(stacksplitdfa)[state])
@@ -357,10 +369,16 @@ static inline const char *aa_label_str_split(const char *str)
 
 
 struct aa_perms;
+<<<<<<< HEAD
 struct aa_ruleset;
 int aa_label_match(struct aa_profile *profile, struct aa_ruleset *rules,
 		   struct aa_label *label, aa_state_t state, bool subns,
 		   u32 request, struct aa_perms *perms);
+=======
+int aa_label_match(struct aa_profile *profile, struct aa_label *label,
+		   unsigned int state, bool subns, u32 request,
+		   struct aa_perms *perms);
+>>>>>>> b7ba80a49124 (Commit)
 
 
 /**

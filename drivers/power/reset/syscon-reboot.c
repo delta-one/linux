@@ -44,7 +44,10 @@ static int syscon_reboot_probe(struct platform_device *pdev)
 	struct syscon_reboot_context *ctx;
 	struct device *dev = &pdev->dev;
 	int mask_err, value_err;
+<<<<<<< HEAD
 	int priority;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
@@ -58,9 +61,12 @@ static int syscon_reboot_probe(struct platform_device *pdev)
 			return PTR_ERR(ctx->map);
 	}
 
+<<<<<<< HEAD
 	if (of_property_read_s32(pdev->dev.of_node, "priority", &priority))
 		priority = 192;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (of_property_read_u32(pdev->dev.of_node, "offset", &ctx->offset))
 		return -EINVAL;
 
@@ -81,7 +87,11 @@ static int syscon_reboot_probe(struct platform_device *pdev)
 	}
 
 	ctx->restart_handler.notifier_call = syscon_restart_handle;
+<<<<<<< HEAD
 	ctx->restart_handler.priority = priority;
+=======
+	ctx->restart_handler.priority = 192;
+>>>>>>> b7ba80a49124 (Commit)
 	err = register_restart_handler(&ctx->restart_handler);
 	if (err)
 		dev_err(dev, "can't register restart notifier (err=%d)\n", err);

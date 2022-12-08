@@ -241,6 +241,19 @@ static void __noreturn holly_restart(char *cmd)
 	for (;;) ;
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * Called very early, device-tree isn't unflattened
+ */
+static int __init holly_probe(void)
+{
+	if (!of_machine_is_compatible("ibm,holly"))
+		return 0;
+	return 1;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int ppc750_machine_check_exception(struct pt_regs *regs)
 {
 	const struct exception_table_entry *entry;
@@ -257,13 +270,21 @@ static int ppc750_machine_check_exception(struct pt_regs *regs)
 
 define_machine(holly){
 	.name                   	= "PPC750 GX/CL TSI",
+<<<<<<< HEAD
 	.compatible			= "ibm,holly",
+=======
+	.probe                  	= holly_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.setup_arch             	= holly_setup_arch,
 	.discover_phbs			= holly_init_pci,
 	.init_IRQ               	= holly_init_IRQ,
 	.show_cpuinfo           	= holly_show_cpuinfo,
 	.get_irq                	= mpic_get_irq,
 	.restart                	= holly_restart,
+<<<<<<< HEAD
+=======
+	.calibrate_decr         	= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.machine_check_exception	= ppc750_machine_check_exception,
 	.progress               	= udbg_progress,
 };

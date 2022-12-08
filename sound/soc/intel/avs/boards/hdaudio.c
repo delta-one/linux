@@ -6,7 +6,10 @@
 //          Amadeusz Slawinski <amadeuszx.slawinski@linux.intel.com>
 //
 
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <sound/hda_codec.h>
 #include <sound/hda_i915.h>

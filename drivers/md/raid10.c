@@ -79,6 +79,7 @@ static void end_reshape(struct r10conf *conf);
 
 #include "raid1-10.c"
 
+<<<<<<< HEAD
 #define NULL_CMD
 #define cmd_before(conf, cmd) \
 	do { \
@@ -94,6 +95,8 @@ static void end_reshape(struct r10conf *conf);
 #define wait_event_barrier(conf, cond) \
 	wait_event_barrier_cmd(conf, cond, NULL_CMD)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * for resync bio, r10bio pointer can be retrieved from the per-bio
  * 'struct resync_pages'.
@@ -289,12 +292,15 @@ static void put_buf(struct r10bio *r10_bio)
 	lower_barrier(conf);
 }
 
+<<<<<<< HEAD
 static void wake_up_barrier(struct r10conf *conf)
 {
 	if (wq_has_sleeper(&conf->wait_barrier))
 		wake_up(&conf->wait_barrier);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void reschedule_retry(struct r10bio *r10_bio)
 {
 	unsigned long flags;
@@ -951,6 +957,7 @@ static void flush_pending_writes(struct r10conf *conf)
 
 static void raise_barrier(struct r10conf *conf, int force)
 {
+<<<<<<< HEAD
 	write_seqlock_irq(&conf->resync_lock);
 	BUG_ON(force && !conf->barrier);
 
@@ -965,11 +972,30 @@ static void raise_barrier(struct r10conf *conf, int force)
 				 conf->barrier < RESYNC_DEPTH);
 
 	write_sequnlock_irq(&conf->resync_lock);
+=======
+	BUG_ON(force && !conf->barrier);
+	spin_lock_irq(&conf->resync_lock);
+
+	/* Wait until no block IO is waiting (unless 'force') */
+	wait_event_lock_irq(conf->wait_barrier, force || !conf->nr_waiting,
+			    conf->resync_lock);
+
+	/* block any new IO from starting */
+	conf->barrier++;
+
+	/* Now wait for all pending IO to complete */
+	wait_event_lock_irq(conf->wait_barrier,
+			    !atomic_read(&conf->nr_pending) && conf->barrier < RESYNC_DEPTH,
+			    conf->resync_lock);
+
+	spin_unlock_irq(&conf->resync_lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void lower_barrier(struct r10conf *conf)
 {
 	unsigned long flags;
+<<<<<<< HEAD
 
 	write_seqlock_irqsave(&conf->resync_lock, flags);
 	WRITE_ONCE(conf->barrier, conf->barrier - 1);
@@ -1021,31 +1047,79 @@ static bool wait_barrier_nolock(struct r10conf *conf)
 	return false;
 }
 
+=======
+	spin_lock_irqsave(&conf->resync_lock, flags);
+	conf->barrier--;
+	spin_unlock_irqrestore(&conf->resync_lock, flags);
+	wake_up(&conf->wait_barrier);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static bool wait_barrier(struct r10conf *conf, bool nowait)
 {
 	bool ret = true;
 
+<<<<<<< HEAD
 	if (wait_barrier_nolock(conf))
 		return true;
 
 	write_seqlock_irq(&conf->resync_lock);
 	if (conf->barrier) {
+=======
+	spin_lock_irq(&conf->resync_lock);
+	if (conf->barrier) {
+		struct bio_list *bio_list = current->bio_list;
+		conf->nr_waiting++;
+		/* Wait for the barrier to drop.
+		 * However if there are already pending
+		 * requests (preventing the barrier from
+		 * rising completely), and the
+		 * pre-process bio queue isn't empty,
+		 * then don't wait, as we need to empty
+		 * that queue to get the nr_pending
+		 * count down.
+		 */
+>>>>>>> b7ba80a49124 (Commit)
 		/* Return false when nowait flag is set */
 		if (nowait) {
 			ret = false;
 		} else {
+<<<<<<< HEAD
 			conf->nr_waiting++;
 			raid10_log(conf->mddev, "wait barrier");
 			wait_event_barrier(conf, stop_waiting_barrier(conf));
 			conf->nr_waiting--;
 		}
+=======
+			raid10_log(conf->mddev, "wait barrier");
+			wait_event_lock_irq(conf->wait_barrier,
+					    !conf->barrier ||
+					    (atomic_read(&conf->nr_pending) &&
+					     bio_list &&
+					     (!bio_list_empty(&bio_list[0]) ||
+					      !bio_list_empty(&bio_list[1]))) ||
+					     /* move on if recovery thread is
+					      * blocked by us
+					      */
+					     (conf->mddev->thread->tsk == current &&
+					      test_bit(MD_RECOVERY_RUNNING,
+						       &conf->mddev->recovery) &&
+					      conf->nr_queued > 0),
+					    conf->resync_lock);
+		}
+		conf->nr_waiting--;
+>>>>>>> b7ba80a49124 (Commit)
 		if (!conf->nr_waiting)
 			wake_up(&conf->wait_barrier);
 	}
 	/* Only increment nr_pending when we wait */
 	if (ret)
 		atomic_inc(&conf->nr_pending);
+<<<<<<< HEAD
 	write_sequnlock_irq(&conf->resync_lock);
+=======
+	spin_unlock_irq(&conf->resync_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -1053,7 +1127,11 @@ static void allow_barrier(struct r10conf *conf)
 {
 	if ((atomic_dec_and_test(&conf->nr_pending)) ||
 			(conf->array_freeze_pending))
+<<<<<<< HEAD
 		wake_up_barrier(conf);
+=======
+		wake_up(&conf->wait_barrier);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void freeze_array(struct r10conf *conf, int extra)
@@ -1070,6 +1148,7 @@ static void freeze_array(struct r10conf *conf, int extra)
 	 * must match the number of pending IOs (nr_pending) before
 	 * we continue.
 	 */
+<<<<<<< HEAD
 	write_seqlock_irq(&conf->resync_lock);
 	conf->array_freeze_pending++;
 	WRITE_ONCE(conf->barrier, conf->barrier + 1);
@@ -1078,16 +1157,37 @@ static void freeze_array(struct r10conf *conf, int extra)
 			conf->nr_queued + extra, flush_pending_writes(conf));
 	conf->array_freeze_pending--;
 	write_sequnlock_irq(&conf->resync_lock);
+=======
+	spin_lock_irq(&conf->resync_lock);
+	conf->array_freeze_pending++;
+	conf->barrier++;
+	conf->nr_waiting++;
+	wait_event_lock_irq_cmd(conf->wait_barrier,
+				atomic_read(&conf->nr_pending) == conf->nr_queued+extra,
+				conf->resync_lock,
+				flush_pending_writes(conf));
+
+	conf->array_freeze_pending--;
+	spin_unlock_irq(&conf->resync_lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void unfreeze_array(struct r10conf *conf)
 {
 	/* reverse the effect of the freeze */
+<<<<<<< HEAD
 	write_seqlock_irq(&conf->resync_lock);
 	WRITE_ONCE(conf->barrier, conf->barrier - 1);
 	conf->nr_waiting--;
 	wake_up(&conf->wait_barrier);
 	write_sequnlock_irq(&conf->resync_lock);
+=======
+	spin_lock_irq(&conf->resync_lock);
+	conf->barrier--;
+	conf->nr_waiting--;
+	wake_up(&conf->wait_barrier);
+	spin_unlock_irq(&conf->resync_lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static sector_t choose_data_offset(struct r10bio *r10_bio,
@@ -1254,7 +1354,11 @@ static void raid10_read_request(struct mddev *mddev, struct bio *bio,
 	read_bio->bi_iter.bi_sector = r10_bio->devs[slot].addr +
 		choose_data_offset(r10_bio, rdev);
 	read_bio->bi_end_io = raid10_end_read_request;
+<<<<<<< HEAD
 	read_bio->bi_opf = op | do_sync;
+=======
+	bio_set_op_attrs(read_bio, op, do_sync);
+>>>>>>> b7ba80a49124 (Commit)
 	if (test_bit(FailFast, &rdev->flags) &&
 	    test_bit(R10BIO_FailFast, &r10_bio->state))
 	        read_bio->bi_opf |= MD_FAILFAST;
@@ -1301,7 +1405,11 @@ static void raid10_write_one_disk(struct mddev *mddev, struct r10bio *r10_bio,
 	mbio->bi_iter.bi_sector	= (r10_bio->devs[n_copy].addr +
 				   choose_data_offset(r10_bio, rdev));
 	mbio->bi_end_io	= raid10_end_write_request;
+<<<<<<< HEAD
 	mbio->bi_opf = op | do_sync | do_fua;
+=======
+	bio_set_op_attrs(mbio, op, do_sync | do_fua);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!replacement && test_bit(FailFast,
 				     &conf->mirrors[devnum].rdev->flags)
 			 && enough(conf, devnum))
@@ -1926,7 +2034,11 @@ static bool raid10_make_request(struct mddev *mddev, struct bio *bio)
 	__make_request(mddev, bio, sectors);
 
 	/* In case raid10d snuck in to freeze_array */
+<<<<<<< HEAD
 	wake_up_barrier(conf);
+=======
+	wake_up(&conf->wait_barrier);
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -2021,7 +2133,11 @@ static int enough(struct r10conf *conf, int ignore)
  * Otherwise, it must be degraded:
  *	- recovery is interrupted.
  *	- &mddev->degraded is bumped.
+<<<<<<< HEAD
  *
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
  * @rdev is marked as &Faulty excluding case when array is failed and
  * &mddev->fail_last_dev is off.
  */
@@ -2933,7 +3049,11 @@ static int narrow_write_error(struct r10bio *r10_bio, int i)
 		wsector = r10_bio->devs[i].addr + (sector - r10_bio->sector);
 		wbio->bi_iter.bi_sector = wsector +
 				   choose_data_offset(r10_bio, rdev);
+<<<<<<< HEAD
 		wbio->bi_opf = REQ_OP_WRITE;
+=======
+		bio_set_op_attrs(wbio, REQ_OP_WRITE, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (submit_bio_wait(wbio) < 0)
 			/* Failure! */
@@ -3542,7 +3662,11 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
 				bio->bi_next = biolist;
 				biolist = bio;
 				bio->bi_end_io = end_sync_read;
+<<<<<<< HEAD
 				bio->bi_opf = REQ_OP_READ;
+=======
+				bio_set_op_attrs(bio, REQ_OP_READ, 0);
+>>>>>>> b7ba80a49124 (Commit)
 				if (test_bit(FailFast, &rdev->flags))
 					bio->bi_opf |= MD_FAILFAST;
 				from_addr = r10_bio->devs[j].addr;
@@ -3567,7 +3691,11 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
 					bio->bi_next = biolist;
 					biolist = bio;
 					bio->bi_end_io = end_sync_write;
+<<<<<<< HEAD
 					bio->bi_opf = REQ_OP_WRITE;
+=======
+					bio_set_op_attrs(bio, REQ_OP_WRITE, 0);
+>>>>>>> b7ba80a49124 (Commit)
 					bio->bi_iter.bi_sector = to_addr
 						+ mrdev->data_offset;
 					bio_set_dev(bio, mrdev->bdev);
@@ -3588,7 +3716,11 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
 				bio->bi_next = biolist;
 				biolist = bio;
 				bio->bi_end_io = end_sync_write;
+<<<<<<< HEAD
 				bio->bi_opf = REQ_OP_WRITE;
+=======
+				bio_set_op_attrs(bio, REQ_OP_WRITE, 0);
+>>>>>>> b7ba80a49124 (Commit)
 				bio->bi_iter.bi_sector = to_addr +
 					mreplace->data_offset;
 				bio_set_dev(bio, mreplace->bdev);
@@ -3742,7 +3874,11 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
 			bio->bi_next = biolist;
 			biolist = bio;
 			bio->bi_end_io = end_sync_read;
+<<<<<<< HEAD
 			bio->bi_opf = REQ_OP_READ;
+=======
+			bio_set_op_attrs(bio, REQ_OP_READ, 0);
+>>>>>>> b7ba80a49124 (Commit)
 			if (test_bit(FailFast, &rdev->flags))
 				bio->bi_opf |= MD_FAILFAST;
 			bio->bi_iter.bi_sector = sector + rdev->data_offset;
@@ -3764,7 +3900,11 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
 			bio->bi_next = biolist;
 			biolist = bio;
 			bio->bi_end_io = end_sync_write;
+<<<<<<< HEAD
 			bio->bi_opf = REQ_OP_WRITE;
+=======
+			bio_set_op_attrs(bio, REQ_OP_WRITE, 0);
+>>>>>>> b7ba80a49124 (Commit)
 			if (test_bit(FailFast, &rdev->flags))
 				bio->bi_opf |= MD_FAILFAST;
 			bio->bi_iter.bi_sector = sector + rdev->data_offset;
@@ -4073,7 +4213,11 @@ static struct r10conf *setup_conf(struct mddev *mddev)
 	INIT_LIST_HEAD(&conf->retry_list);
 	INIT_LIST_HEAD(&conf->bio_end_io_list);
 
+<<<<<<< HEAD
 	seqlock_init(&conf->resync_lock);
+=======
+	spin_lock_init(&conf->resync_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	init_waitqueue_head(&conf->wait_barrier);
 	atomic_set(&conf->nr_pending, 0);
 
@@ -4145,6 +4289,11 @@ static int raid10_run(struct mddev *mddev)
 	conf->thread = NULL;
 
 	if (mddev->queue) {
+<<<<<<< HEAD
+=======
+		blk_queue_max_discard_sectors(mddev->queue,
+					      UINT_MAX);
+>>>>>>> b7ba80a49124 (Commit)
 		blk_queue_max_write_zeroes_sectors(mddev->queue, 0);
 		blk_queue_io_min(mddev->queue, mddev->chunk_sectors << 9);
 		raid10_set_io_opt(conf);
@@ -4390,7 +4539,11 @@ static void *raid10_takeover_raid0(struct mddev *mddev, sector_t size, int devs)
 				rdev->new_raid_disk = rdev->raid_disk * 2;
 				rdev->sectors = size;
 			}
+<<<<<<< HEAD
 		WRITE_ONCE(conf->barrier, 1);
+=======
+		conf->barrier = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return conf;
@@ -4970,7 +5123,11 @@ read_more:
 		b->bi_iter.bi_sector = r10_bio->devs[s/2].addr +
 			rdev2->new_data_offset;
 		b->bi_end_io = end_reshape_write;
+<<<<<<< HEAD
 		b->bi_opf = REQ_OP_WRITE;
+=======
+		bio_set_op_attrs(b, REQ_OP_WRITE, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		b->bi_next = blist;
 		blist = b;
 	}

@@ -737,7 +737,11 @@ static int __init bt_init(void)
 
 	err = bt_sysfs_init();
 	if (err < 0)
+<<<<<<< HEAD
 		goto cleanup_led;
+=======
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = sock_register(&bt_sock_family_ops);
 	if (err)
@@ -773,8 +777,11 @@ unregister_socket:
 	sock_unregister(PF_BLUETOOTH);
 cleanup_sysfs:
 	bt_sysfs_cleanup();
+<<<<<<< HEAD
 cleanup_led:
 	bt_leds_cleanup();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 

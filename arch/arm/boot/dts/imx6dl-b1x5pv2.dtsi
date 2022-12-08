@@ -211,17 +211,29 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_q7_gpio1 &pinctrl_q7_gpio3 &pinctrl_q7_gpio5>;
 
+<<<<<<< HEAD
 		led-alarm1 {
+=======
+		alarm1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "alarm:red";
 			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-alarm2 {
+=======
+		alarm2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "alarm:yellow";
 			gpios = <&gpio4 27 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-alarm3 {
+=======
+		alarm3 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "alarm:blue";
 			gpios = <&gpio4 15 GPIO_ACTIVE_HIGH>;
 		};

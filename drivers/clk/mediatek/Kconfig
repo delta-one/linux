@@ -11,6 +11,7 @@ config COMMON_CLK_MEDIATEK
 	help
 	  MediaTek SoCs' clock support.
 
+<<<<<<< HEAD
 config COMMON_CLK_MEDIATEK_FHCTL
 	bool "clock driver for MediaTek FHCTL hardware control"
 	select COMMON_CLK_MEDIATEK
@@ -18,6 +19,8 @@ config COMMON_CLK_MEDIATEK_FHCTL
 	  This driver supports MediaTek frequency hopping and
 	  spread spectrum clocking features.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config COMMON_CLK_MT2701
 	bool "Clock driver for MediaTek MT2701"
 	depends on (ARCH_MEDIATEK && ARM) || COMPILE_TEST
@@ -75,7 +78,11 @@ config COMMON_CLK_MT2701_G3DSYS
 	  This driver supports MediaTek MT2701 g3dsys clocks.
 
 config COMMON_CLK_MT2712
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT2712"
+=======
+	bool "Clock driver for MediaTek MT2712"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on (ARCH_MEDIATEK && ARM64) || COMPILE_TEST
 	select COMMON_CLK_MEDIATEK
 	default ARCH_MEDIATEK && ARM64
@@ -83,43 +90,71 @@ config COMMON_CLK_MT2712
 	  This driver supports MediaTek MT2712 basic clocks.
 
 config COMMON_CLK_MT2712_BDPSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT2712 bdpsys"
+=======
+	bool "Clock driver for MediaTek MT2712 bdpsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT2712
 	help
 	  This driver supports MediaTek MT2712 bdpsys clocks.
 
 config COMMON_CLK_MT2712_IMGSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT2712 imgsys"
+=======
+	bool "Clock driver for MediaTek MT2712 imgsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT2712
 	help
 	  This driver supports MediaTek MT2712 imgsys clocks.
 
 config COMMON_CLK_MT2712_JPGDECSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT2712 jpgdecsys"
+=======
+	bool "Clock driver for MediaTek MT2712 jpgdecsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT2712
 	help
 	  This driver supports MediaTek MT2712 jpgdecsys clocks.
 
 config COMMON_CLK_MT2712_MFGCFG
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT2712 mfgcfg"
+=======
+	bool "Clock driver for MediaTek MT2712 mfgcfg"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT2712
 	help
 	  This driver supports MediaTek MT2712 mfgcfg clocks.
 
 config COMMON_CLK_MT2712_MMSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT2712 mmsys"
+=======
+	bool "Clock driver for MediaTek MT2712 mmsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT2712
 	help
 	  This driver supports MediaTek MT2712 mmsys clocks.
 
 config COMMON_CLK_MT2712_VDECSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT2712 vdecsys"
+=======
+	bool "Clock driver for MediaTek MT2712 vdecsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT2712
 	help
 	  This driver supports MediaTek MT2712 vdecsys clocks.
 
 config COMMON_CLK_MT2712_VENCSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT2712 vencsys"
+=======
+	bool "Clock driver for MediaTek MT2712 vencsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT2712
 	help
 	  This driver supports MediaTek MT2712 vencsys clocks.
@@ -133,79 +168,131 @@ config COMMON_CLK_MT6765
          This driver supports MediaTek MT6765 basic clocks.
 
 config COMMON_CLK_MT6765_AUDIOSYS
+<<<<<<< HEAD
        tristate "Clock driver for MediaTek MT6765 audiosys"
+=======
+       bool "Clock driver for MediaTek MT6765 audiosys"
+>>>>>>> b7ba80a49124 (Commit)
        depends on COMMON_CLK_MT6765
        help
          This driver supports MediaTek MT6765 audiosys clocks.
 
 config COMMON_CLK_MT6765_CAMSYS
+<<<<<<< HEAD
        tristate "Clock driver for MediaTek MT6765 camsys"
+=======
+       bool "Clock driver for MediaTek MT6765 camsys"
+>>>>>>> b7ba80a49124 (Commit)
        depends on COMMON_CLK_MT6765
        help
          This driver supports MediaTek MT6765 camsys clocks.
 
 config COMMON_CLK_MT6765_GCESYS
+<<<<<<< HEAD
        tristate "Clock driver for MediaTek MT6765 gcesys"
+=======
+       bool "Clock driver for MediaTek MT6765 gcesys"
+>>>>>>> b7ba80a49124 (Commit)
        depends on COMMON_CLK_MT6765
        help
          This driver supports MediaTek MT6765 gcesys clocks.
 
 config COMMON_CLK_MT6765_MMSYS
+<<<<<<< HEAD
        tristate "Clock driver for MediaTek MT6765 mmsys"
+=======
+       bool "Clock driver for MediaTek MT6765 mmsys"
+>>>>>>> b7ba80a49124 (Commit)
        depends on COMMON_CLK_MT6765
        help
          This driver supports MediaTek MT6765 mmsys clocks.
 
 config COMMON_CLK_MT6765_IMGSYS
+<<<<<<< HEAD
        tristate "Clock driver for MediaTek MT6765 imgsys"
+=======
+       bool "Clock driver for MediaTek MT6765 imgsys"
+>>>>>>> b7ba80a49124 (Commit)
        depends on COMMON_CLK_MT6765
        help
          This driver supports MediaTek MT6765 imgsys clocks.
 
 config COMMON_CLK_MT6765_VCODECSYS
+<<<<<<< HEAD
        tristate "Clock driver for MediaTek MT6765 vcodecsys"
+=======
+       bool "Clock driver for MediaTek MT6765 vcodecsys"
+>>>>>>> b7ba80a49124 (Commit)
        depends on COMMON_CLK_MT6765
        help
          This driver supports MediaTek MT6765 vcodecsys clocks.
 
 config COMMON_CLK_MT6765_MFGSYS
+<<<<<<< HEAD
        tristate "Clock driver for MediaTek MT6765 mfgsys"
+=======
+       bool "Clock driver for MediaTek MT6765 mfgsys"
+>>>>>>> b7ba80a49124 (Commit)
        depends on COMMON_CLK_MT6765
        help
          This driver supports MediaTek MT6765 mfgsys clocks.
 
 config COMMON_CLK_MT6765_MIPI0ASYS
+<<<<<<< HEAD
        tristate "Clock driver for MediaTek MT6765 mipi0asys"
+=======
+       bool "Clock driver for MediaTek MT6765 mipi0asys"
+>>>>>>> b7ba80a49124 (Commit)
        depends on COMMON_CLK_MT6765
        help
          This driver supports MediaTek MT6765 mipi0asys clocks.
 
 config COMMON_CLK_MT6765_MIPI0BSYS
+<<<<<<< HEAD
        tristate "Clock driver for MediaTek MT6765 mipi0bsys"
+=======
+       bool "Clock driver for MediaTek MT6765 mipi0bsys"
+>>>>>>> b7ba80a49124 (Commit)
        depends on COMMON_CLK_MT6765
        help
          This driver supports MediaTek MT6765 mipi0bsys clocks.
 
 config COMMON_CLK_MT6765_MIPI1ASYS
+<<<<<<< HEAD
        tristate "Clock driver for MediaTek MT6765 mipi1asys"
+=======
+       bool "Clock driver for MediaTek MT6765 mipi1asys"
+>>>>>>> b7ba80a49124 (Commit)
        depends on COMMON_CLK_MT6765
        help
          This driver supports MediaTek MT6765 mipi1asys clocks.
 
 config COMMON_CLK_MT6765_MIPI1BSYS
+<<<<<<< HEAD
        tristate "Clock driver for MediaTek MT6765 mipi1bsys"
+=======
+       bool "Clock driver for MediaTek MT6765 mipi1bsys"
+>>>>>>> b7ba80a49124 (Commit)
        depends on COMMON_CLK_MT6765
        help
          This driver supports MediaTek MT6765 mipi1bsys clocks.
 
 config COMMON_CLK_MT6765_MIPI2ASYS
+<<<<<<< HEAD
        tristate "Clock driver for MediaTek MT6765 mipi2asys"
+=======
+       bool "Clock driver for MediaTek MT6765 mipi2asys"
+>>>>>>> b7ba80a49124 (Commit)
        depends on COMMON_CLK_MT6765
       help
          This driver supports MediaTek MT6765 mipi2asys clocks.
 
 config COMMON_CLK_MT6765_MIPI2BSYS
+<<<<<<< HEAD
        tristate "Clock driver for MediaTek MT6765 mipi2bsys"
+=======
+       bool "Clock driver for MediaTek MT6765 mipi2bsys"
+>>>>>>> b7ba80a49124 (Commit)
        depends on COMMON_CLK_MT6765
        help
          This driver supports MediaTek MT6765 mipi2bsys clocks.
@@ -266,6 +353,7 @@ config COMMON_CLK_MT6779_AUDSYS
 	help
 	  This driver supports Mediatek MT6779 audsys clocks.
 
+<<<<<<< HEAD
 config COMMON_CLK_MT6795
 	tristate "Clock driver for MediaTek MT6795"
 	depends on ARCH_MEDIATEK || COMPILE_TEST
@@ -304,6 +392,8 @@ config COMMON_CLK_MT6795_VENCSYS
 	help
 	  This driver supports MediaTek MT6795 vencsys clocks.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config COMMON_CLK_MT6797
 	bool "Clock driver for MediaTek MT6797"
 	depends on (ARCH_MEDIATEK && ARM64) || COMPILE_TEST
@@ -313,31 +403,51 @@ config COMMON_CLK_MT6797
 	  This driver supports MediaTek MT6797 basic clocks.
 
 config COMMON_CLK_MT6797_MMSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT6797 mmsys"
+=======
+	bool "Clock driver for MediaTek MT6797 mmsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT6797
 	help
 	  This driver supports MediaTek MT6797 mmsys clocks.
 
 config COMMON_CLK_MT6797_IMGSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT6797 imgsys"
+=======
+	bool "Clock driver for MediaTek MT6797 imgsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT6797
 	help
 	  This driver supports MediaTek MT6797 imgsys clocks.
 
 config COMMON_CLK_MT6797_VDECSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT6797 vdecsys"
+=======
+	bool "Clock driver for MediaTek MT6797 vdecsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT6797
 	help
 	  This driver supports MediaTek MT6797 vdecsys clocks.
 
 config COMMON_CLK_MT6797_VENCSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT6797 vencsys"
+=======
+	bool "Clock driver for MediaTek MT6797 vencsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT6797
 	help
 	  This driver supports MediaTek MT6797 vencsys clocks.
 
 config COMMON_CLK_MT7622
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT7622"
+=======
+	bool "Clock driver for MediaTek MT7622"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on ARCH_MEDIATEK || COMPILE_TEST
 	select COMMON_CLK_MEDIATEK
 	default ARCH_MEDIATEK
@@ -346,21 +456,33 @@ config COMMON_CLK_MT7622
 	  required for various periperals found on MediaTek.
 
 config COMMON_CLK_MT7622_ETHSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT7622 ETHSYS"
+=======
+	bool "Clock driver for MediaTek MT7622 ETHSYS"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT7622
 	help
 	  This driver add support for clocks for Ethernet and SGMII
 	  required on MediaTek MT7622 SoC.
 
 config COMMON_CLK_MT7622_HIFSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT7622 HIFSYS"
+=======
+	bool "Clock driver for MediaTek MT7622 HIFSYS"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT7622
 	help
 	  This driver supports MediaTek MT7622 HIFSYS clocks providing
 	  to PCI-E and USB.
 
 config COMMON_CLK_MT7622_AUDSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT7622 AUDSYS"
+=======
+	bool "Clock driver for MediaTek MT7622 AUDSYS"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT7622
 	help
 	  This driver supports MediaTek MT7622 AUDSYS clocks providing
@@ -389,6 +511,7 @@ config COMMON_CLK_MT7629_HIFSYS
 	  This driver supports MediaTek MT7629 HIFSYS clocks providing
 	  to PCI-E and USB.
 
+<<<<<<< HEAD
 config COMMON_CLK_MT7981
 	bool "Clock driver for MediaTek MT7981"
 	depends on ARCH_MEDIATEK || COMPILE_TEST
@@ -408,6 +531,10 @@ config COMMON_CLK_MT7981_ETHSYS
 
 config COMMON_CLK_MT7986
 	tristate "Clock driver for MediaTek MT7986"
+=======
+config COMMON_CLK_MT7986
+	bool "Clock driver for MediaTek MT7986"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on ARCH_MEDIATEK || COMPILE_TEST
 	select COMMON_CLK_MEDIATEK
 	default ARCH_MEDIATEK
@@ -416,7 +543,11 @@ config COMMON_CLK_MT7986
 	  required for various peripherals found on MediaTek.
 
 config COMMON_CLK_MT7986_ETHSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT7986 ETHSYS"
+=======
+	bool "Clock driver for MediaTek MT7986 ETHSYS"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT7986
 	default COMMON_CLK_MT7986
 	help
@@ -424,7 +555,11 @@ config COMMON_CLK_MT7986_ETHSYS
 	  required on MediaTek MT7986 SoC.
 
 config COMMON_CLK_MT8135
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8135"
+=======
+	bool "Clock driver for MediaTek MT8135"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on (ARCH_MEDIATEK && ARM) || COMPILE_TEST
 	select COMMON_CLK_MEDIATEK
 	default ARCH_MEDIATEK && ARM
@@ -432,7 +567,11 @@ config COMMON_CLK_MT8135
 	  This driver supports MediaTek MT8135 clocks.
 
 config COMMON_CLK_MT8167
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8167"
+=======
+	bool "Clock driver for MediaTek MT8167"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on (ARCH_MEDIATEK && ARM64) || COMPILE_TEST
 	select COMMON_CLK_MEDIATEK
 	default ARCH_MEDIATEK
@@ -440,41 +579,62 @@ config COMMON_CLK_MT8167
 	  This driver supports MediaTek MT8167 basic clocks.
 
 config COMMON_CLK_MT8167_AUDSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8167 audsys"
+=======
+	bool "Clock driver for MediaTek MT8167 audsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8167
 	default COMMON_CLK_MT8167
 	help
 	  This driver supports MediaTek MT8167 audsys clocks.
 
 config COMMON_CLK_MT8167_IMGSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8167 imgsys"
+=======
+	bool "Clock driver for MediaTek MT8167 imgsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8167
 	default COMMON_CLK_MT8167
 	help
 	  This driver supports MediaTek MT8167 imgsys clocks.
 
 config COMMON_CLK_MT8167_MFGCFG
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8167 mfgcfg"
+=======
+	bool "Clock driver for MediaTek MT8167 mfgcfg"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8167
 	default COMMON_CLK_MT8167
 	help
 	  This driver supports MediaTek MT8167 mfgcfg clocks.
 
 config COMMON_CLK_MT8167_MMSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8167 mmsys"
+=======
+	bool "Clock driver for MediaTek MT8167 mmsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8167
 	default COMMON_CLK_MT8167
 	help
 	  This driver supports MediaTek MT8167 mmsys clocks.
 
 config COMMON_CLK_MT8167_VDECSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8167 vdecsys"
+=======
+	bool "Clock driver for MediaTek MT8167 vdecsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8167
 	default COMMON_CLK_MT8167
 	help
 	  This driver supports MediaTek MT8167 vdecsys clocks.
 
 config COMMON_CLK_MT8173
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8173"
 	depends on ARM64 || COMPILE_TEST
 	select COMMON_CLK_MEDIATEK
@@ -514,6 +674,24 @@ config COMMON_CLK_MT8173_VENCSYS
 
 config COMMON_CLK_MT8183
 	tristate "Clock driver for MediaTek MT8183"
+=======
+	bool "Clock driver for MediaTek MT8173"
+	depends on ARCH_MEDIATEK || COMPILE_TEST
+	select COMMON_CLK_MEDIATEK
+	default ARCH_MEDIATEK
+	help
+	  This driver supports MediaTek MT8173 clocks.
+
+config COMMON_CLK_MT8173_MMSYS
+	bool "Clock driver for MediaTek MT8173 mmsys"
+	depends on COMMON_CLK_MT8173
+	default COMMON_CLK_MT8173
+	help
+	  This driver supports MediaTek MT8173 mmsys clocks.
+
+config COMMON_CLK_MT8183
+	bool "Clock driver for MediaTek MT8183"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on (ARCH_MEDIATEK && ARM64) || COMPILE_TEST
 	select COMMON_CLK_MEDIATEK
 	default ARCH_MEDIATEK && ARM64
@@ -521,91 +699,142 @@ config COMMON_CLK_MT8183
 	  This driver supports MediaTek MT8183 basic clocks.
 
 config COMMON_CLK_MT8183_AUDIOSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8183 audiosys"
+=======
+	bool "Clock driver for MediaTek MT8183 audiosys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8183
 	default COMMON_CLK_MT8183
 	help
 	  This driver supports MediaTek MT8183 audiosys clocks.
 
 config COMMON_CLK_MT8183_CAMSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8183 camsys"
+=======
+	bool "Clock driver for MediaTek MT8183 camsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8183
 	default COMMON_CLK_MT8183
 	help
 	  This driver supports MediaTek MT8183 camsys clocks.
 
 config COMMON_CLK_MT8183_IMGSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8183 imgsys"
+=======
+	bool "Clock driver for MediaTek MT8183 imgsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8183
 	default COMMON_CLK_MT8183
 	help
 	  This driver supports MediaTek MT8183 imgsys clocks.
 
 config COMMON_CLK_MT8183_IPU_CORE0
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8183 ipu_core0"
+=======
+	bool "Clock driver for MediaTek MT8183 ipu_core0"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8183
 	default COMMON_CLK_MT8183
 	help
 	  This driver supports MediaTek MT8183 ipu_core0 clocks.
 
 config COMMON_CLK_MT8183_IPU_CORE1
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8183 ipu_core1"
+=======
+	bool "Clock driver for MediaTek MT8183 ipu_core1"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8183
 	default COMMON_CLK_MT8183
 	help
 	  This driver supports MediaTek MT8183 ipu_core1 clocks.
 
 config COMMON_CLK_MT8183_IPU_ADL
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8183 ipu_adl"
+=======
+	bool "Clock driver for MediaTek MT8183 ipu_adl"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8183
 	default COMMON_CLK_MT8183
 	help
 	  This driver supports MediaTek MT8183 ipu_adl clocks.
 
 config COMMON_CLK_MT8183_IPU_CONN
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8183 ipu_conn"
+=======
+	bool "Clock driver for MediaTek MT8183 ipu_conn"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8183
 	default COMMON_CLK_MT8183
 	help
 	  This driver supports MediaTek MT8183 ipu_conn clocks.
 
 config COMMON_CLK_MT8183_MFGCFG
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8183 mfgcfg"
+=======
+	bool "Clock driver for MediaTek MT8183 mfgcfg"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8183
 	default COMMON_CLK_MT8183
 	help
 	  This driver supports MediaTek MT8183 mfgcfg clocks.
 
 config COMMON_CLK_MT8183_MMSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8183 mmsys"
+=======
+	bool "Clock driver for MediaTek MT8183 mmsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8183
 	default COMMON_CLK_MT8183
 	help
 	  This driver supports MediaTek MT8183 mmsys clocks.
 
 config COMMON_CLK_MT8183_VDECSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8183 vdecsys"
+=======
+	bool "Clock driver for MediaTek MT8183 vdecsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8183
 	default COMMON_CLK_MT8183
 	help
 	  This driver supports MediaTek MT8183 vdecsys clocks.
 
 config COMMON_CLK_MT8183_VENCSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8183 vencsys"
+=======
+	bool "Clock driver for MediaTek MT8183 vencsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8183
 	default COMMON_CLK_MT8183
 	help
 	  This driver supports MediaTek MT8183 vencsys clocks.
 
 config COMMON_CLK_MT8186
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8186"
 	depends on ARM64 || COMPILE_TEST
 	select COMMON_CLK_MEDIATEK
 	select COMMON_CLK_MEDIATEK_FHCTL
+=======
+	bool "Clock driver for MediaTek MT8186"
+	depends on ARM64 || COMPILE_TEST
+	select COMMON_CLK_MEDIATEK
+>>>>>>> b7ba80a49124 (Commit)
 	default ARCH_MEDIATEK
 	help
 	  This driver supports MediaTek MT8186 clocks.
 
+<<<<<<< HEAD
 config COMMON_CLK_MT8186_CAMSYS
 	tristate "Clock driver for MediaTek MT8186 camsys"
 	depends on COMMON_CLK_MT8186
@@ -688,78 +917,132 @@ config COMMON_CLK_MT8192
 	depends on ARM64 || COMPILE_TEST
 	select COMMON_CLK_MEDIATEK
 	select COMMON_CLK_MEDIATEK_FHCTL
+=======
+config COMMON_CLK_MT8192
+	bool "Clock driver for MediaTek MT8192"
+	depends on ARM64 || COMPILE_TEST
+	select COMMON_CLK_MEDIATEK
+>>>>>>> b7ba80a49124 (Commit)
 	default ARM64
 	help
 	  This driver supports MediaTek MT8192 basic clocks.
 
 config COMMON_CLK_MT8192_AUDSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8192 audsys"
+=======
+	bool "Clock driver for MediaTek MT8192 audsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8192
 	help
 	  This driver supports MediaTek MT8192 audsys clocks.
 
 config COMMON_CLK_MT8192_CAMSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8192 camsys"
+=======
+	bool "Clock driver for MediaTek MT8192 camsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8192
 	help
 	  This driver supports MediaTek MT8192 camsys and camsys_raw clocks.
 
 config COMMON_CLK_MT8192_IMGSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8192 imgsys"
+=======
+	bool "Clock driver for MediaTek MT8192 imgsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8192
 	help
 	  This driver supports MediaTek MT8192 imgsys and imgsys2 clocks.
 
 config COMMON_CLK_MT8192_IMP_IIC_WRAP
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8192 imp_iic_wrap"
+=======
+	bool "Clock driver for MediaTek MT8192 imp_iic_wrap"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8192
 	help
 	  This driver supports MediaTek MT8192 imp_iic_wrap clocks.
 
 config COMMON_CLK_MT8192_IPESYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8192 ipesys"
+=======
+	bool "Clock driver for MediaTek MT8192 ipesys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8192
 	help
 	  This driver supports MediaTek MT8192 ipesys clocks.
 
 config COMMON_CLK_MT8192_MDPSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8192 mdpsys"
+=======
+	bool "Clock driver for MediaTek MT8192 mdpsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8192
 	help
 	  This driver supports MediaTek MT8192 mdpsys clocks.
 
 config COMMON_CLK_MT8192_MFGCFG
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8192 mfgcfg"
+=======
+	bool "Clock driver for MediaTek MT8192 mfgcfg"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8192
 	help
 	  This driver supports MediaTek MT8192 mfgcfg clocks.
 
 config COMMON_CLK_MT8192_MMSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8192 mmsys"
+=======
+	bool "Clock driver for MediaTek MT8192 mmsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8192
 	help
 	  This driver supports MediaTek MT8192 mmsys clocks.
 
 config COMMON_CLK_MT8192_MSDC
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8192 msdc"
+=======
+	bool "Clock driver for MediaTek MT8192 msdc"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8192
 	help
 	  This driver supports MediaTek MT8192 msdc and msdc_top clocks.
 
 config COMMON_CLK_MT8192_SCP_ADSP
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8192 scp_adsp"
+=======
+	bool "Clock driver for MediaTek MT8192 scp_adsp"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8192
 	help
 	  This driver supports MediaTek MT8192 scp_adsp clocks.
 
 config COMMON_CLK_MT8192_VDECSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8192 vdecsys"
+=======
+	bool "Clock driver for MediaTek MT8192 vdecsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8192
 	help
 	  This driver supports MediaTek MT8192 vdecsys and vdecsys_soc clocks.
 
 config COMMON_CLK_MT8192_VENCSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8192 vencsys"
+=======
+	bool "Clock driver for MediaTek MT8192 vencsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8192
 	help
 	  This driver supports MediaTek MT8192 vencsys clocks.
@@ -768,11 +1051,15 @@ config COMMON_CLK_MT8195
         bool "Clock driver for MediaTek MT8195"
         depends on ARM64 || COMPILE_TEST
         select COMMON_CLK_MEDIATEK
+<<<<<<< HEAD
 	select COMMON_CLK_MEDIATEK_FHCTL
+=======
+>>>>>>> b7ba80a49124 (Commit)
         default ARCH_MEDIATEK
         help
           This driver supports MediaTek MT8195 clocks.
 
+<<<<<<< HEAD
 config COMMON_CLK_MT8195_APUSYS
 	tristate "Clock driver for MediaTek MT8195 apusys"
 	depends on COMMON_CLK_MT8195
@@ -925,6 +1212,10 @@ config COMMON_CLK_MT8365_VENC
 
 config COMMON_CLK_MT8516
 	tristate "Clock driver for MediaTek MT8516"
+=======
+config COMMON_CLK_MT8516
+	bool "Clock driver for MediaTek MT8516"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on ARCH_MEDIATEK || COMPILE_TEST
 	select COMMON_CLK_MEDIATEK
 	default ARCH_MEDIATEK
@@ -932,7 +1223,11 @@ config COMMON_CLK_MT8516
 	  This driver supports MediaTek MT8516 clocks.
 
 config COMMON_CLK_MT8516_AUDSYS
+<<<<<<< HEAD
 	tristate "Clock driver for MediaTek MT8516 audsys"
+=======
+	bool "Clock driver for MediaTek MT8516 audsys"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK_MT8516
 	help
 	  This driver supports MediaTek MT8516 audsys clocks.

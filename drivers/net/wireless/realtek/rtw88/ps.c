@@ -25,7 +25,11 @@ static int rtw_ips_pwr_up(struct rtw_dev *rtwdev)
 
 int rtw_enter_ips(struct rtw_dev *rtwdev)
 {
+<<<<<<< HEAD
 	if (!test_bit(RTW_FLAG_POWERON, rtwdev->flags))
+=======
+	if (test_and_set_bit(RTW_FLAG_INACTIVE_PS, rtwdev->flags))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	rtw_coex_ips_notify(rtwdev, COEX_IPS_ENTER);
@@ -50,7 +54,11 @@ int rtw_leave_ips(struct rtw_dev *rtwdev)
 {
 	int ret;
 
+<<<<<<< HEAD
 	if (test_bit(RTW_FLAG_POWERON, rtwdev->flags))
+=======
+	if (!test_and_clear_bit(RTW_FLAG_INACTIVE_PS, rtwdev->flags))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	rtw_hci_link_ps(rtwdev, false);
@@ -61,7 +69,11 @@ int rtw_leave_ips(struct rtw_dev *rtwdev)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	rtw_iterate_vifs(rtwdev, rtw_restore_port_cfg_iter, rtwdev);
+=======
+	rtw_iterate_vifs_atomic(rtwdev, rtw_restore_port_cfg_iter, rtwdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rtw_coex_ips_notify(rtwdev, COEX_IPS_LEAVE);
 

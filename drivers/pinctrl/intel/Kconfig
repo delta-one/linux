@@ -47,6 +47,7 @@ config PINCTRL_MERRIFIELD
 	  interface that allows configuring of SoC pins and using them as
 	  GPIOs.
 
+<<<<<<< HEAD
 config PINCTRL_MOOREFIELD
 	tristate "Intel Moorefield pinctrl driver"
 	depends on X86_INTEL_MID
@@ -58,6 +59,8 @@ config PINCTRL_MOOREFIELD
 	  interface that allows configuring of SoC pins and using them as
 	  GPIOs.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config PINCTRL_INTEL
 	tristate
 	select PINMUX

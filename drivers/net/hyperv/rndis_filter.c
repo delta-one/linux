@@ -20,7 +20,10 @@
 #include <linux/vmalloc.h>
 #include <linux/rtnetlink.h>
 #include <linux/ucs2_string.h>
+<<<<<<< HEAD
 #include <linux/string.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "hyperv_net.h"
 #include "netvsc_trace.h"
@@ -336,10 +339,16 @@ static void rndis_filter_receive_response(struct net_device *ndev,
 		if (resp->msg_len <=
 		    sizeof(struct rndis_message) + RNDIS_EXT_LEN) {
 			memcpy(&request->response_msg, resp, RNDIS_HEADER_SIZE + sizeof(*req_id));
+<<<<<<< HEAD
 			unsafe_memcpy((void *)&request->response_msg + RNDIS_HEADER_SIZE + sizeof(*req_id),
 			       data + RNDIS_HEADER_SIZE + sizeof(*req_id),
 			       resp->msg_len - RNDIS_HEADER_SIZE - sizeof(*req_id),
 			       "request->response_msg is followed by a padding of RNDIS_EXT_LEN inside rndis_request");
+=======
+			memcpy((void *)&request->response_msg + RNDIS_HEADER_SIZE + sizeof(*req_id),
+			       data + RNDIS_HEADER_SIZE + sizeof(*req_id),
+			       resp->msg_len - RNDIS_HEADER_SIZE - sizeof(*req_id));
+>>>>>>> b7ba80a49124 (Commit)
 			if (request->request_msg.ndis_msg_type ==
 			    RNDIS_MSG_QUERY && request->request_msg.msg.
 			    query_req.oid == RNDIS_OID_GEN_MEDIA_CONNECT_STATUS)
@@ -1577,7 +1586,11 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
 
 	for (i = 1; i < net_device->num_chn; i++)
 		netif_napi_add(net, &net_device->chan_table[i].napi,
+<<<<<<< HEAD
 			       netvsc_poll);
+=======
+			       netvsc_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return net_device;
 

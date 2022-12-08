@@ -284,6 +284,7 @@ static void test_stream_msg_peek_server(const struct test_opts *opts)
 	close(fd);
 }
 
+<<<<<<< HEAD
 #define SOCK_BUF_SIZE (2 * 1024 * 1024)
 #define MAX_MSG_SIZE (32 * 1024)
 
@@ -292,6 +293,12 @@ static void test_seqpacket_msg_bounds_client(const struct test_opts *opts)
 	unsigned long curr_hash;
 	int page_size;
 	int msg_count;
+=======
+#define MESSAGES_CNT 7
+#define MSG_EOR_IDX (MESSAGES_CNT / 2)
+static void test_seqpacket_msg_bounds_client(const struct test_opts *opts)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	int fd;
 
 	fd = vsock_seqpacket_connect(opts->peer_cid, 1234);
@@ -300,6 +307,7 @@ static void test_seqpacket_msg_bounds_client(const struct test_opts *opts)
 		exit(EXIT_FAILURE);
 	}
 
+<<<<<<< HEAD
 	/* Wait, until receiver sets buffer size. */
 	control_expectln("SRVREADY");
 
@@ -363,16 +371,28 @@ static void test_seqpacket_msg_bounds_client(const struct test_opts *opts)
 
 	control_writeln("SENDDONE");
 	control_writeulong(curr_hash);
+=======
+	/* Send several messages, one with MSG_EOR flag */
+	for (int i = 0; i < MESSAGES_CNT; i++)
+		send_byte(fd, 1, (i == MSG_EOR_IDX) ? MSG_EOR : 0);
+
+	control_writeln("SENDDONE");
+>>>>>>> b7ba80a49124 (Commit)
 	close(fd);
 }
 
 static void test_seqpacket_msg_bounds_server(const struct test_opts *opts)
 {
+<<<<<<< HEAD
 	unsigned long sock_buf_size;
 	unsigned long remote_hash;
 	unsigned long curr_hash;
 	int fd;
 	char buf[MAX_MSG_SIZE];
+=======
+	int fd;
+	char buf[16];
+>>>>>>> b7ba80a49124 (Commit)
 	struct msghdr msg = {0};
 	struct iovec iov = {0};
 
@@ -382,6 +402,7 @@ static void test_seqpacket_msg_bounds_server(const struct test_opts *opts)
 		exit(EXIT_FAILURE);
 	}
 
+<<<<<<< HEAD
 	sock_buf_size = SOCK_BUF_SIZE;
 
 	if (setsockopt(fd, AF_VSOCK, SO_VM_SOCKETS_BUFFER_MAX_SIZE,
@@ -399,12 +420,15 @@ static void test_seqpacket_msg_bounds_server(const struct test_opts *opts)
 	/* Ready to receive data. */
 	control_writeln("SRVREADY");
 	/* Wait, until peer sends whole data. */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	control_expectln("SENDDONE");
 	iov.iov_base = buf;
 	iov.iov_len = sizeof(buf);
 	msg.msg_iov = &iov;
 	msg.msg_iovlen = 1;
 
+<<<<<<< HEAD
 	curr_hash = 0;
 
 	while (1) {
@@ -433,6 +457,21 @@ static void test_seqpacket_msg_bounds_server(const struct test_opts *opts)
 		fprintf(stderr, "Message bounds broken\n");
 		exit(EXIT_FAILURE);
 	}
+=======
+	for (int i = 0; i < MESSAGES_CNT; i++) {
+		if (recvmsg(fd, &msg, 0) != 1) {
+			perror("message bound violated");
+			exit(EXIT_FAILURE);
+		}
+
+		if ((i == MSG_EOR_IDX) ^ !!(msg.msg_flags & MSG_EOR)) {
+			perror("MSG_EOR");
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	close(fd);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define MESSAGE_TRUNC_SZ 32
@@ -524,7 +563,11 @@ static void test_seqpacket_timeout_client(const struct test_opts *opts)
 	tv.tv_usec = 0;
 
 	if (setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (void *)&tv, sizeof(tv)) == -1) {
+<<<<<<< HEAD
 		perror("setsockopt(SO_RCVTIMEO)");
+=======
+		perror("setsockopt 'SO_RCVTIMEO'");
+>>>>>>> b7ba80a49124 (Commit)
 		exit(EXIT_FAILURE);
 	}
 
@@ -569,6 +612,7 @@ static void test_seqpacket_timeout_server(const struct test_opts *opts)
 	close(fd);
 }
 
+<<<<<<< HEAD
 static void test_seqpacket_bigmsg_client(const struct test_opts *opts)
 {
 	unsigned long sock_buf_size;
@@ -633,6 +677,8 @@ static void test_seqpacket_bigmsg_server(const struct test_opts *opts)
 	close(fd);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define BUF_PATTERN_1 'a'
 #define BUF_PATTERN_2 'b'
 
@@ -805,7 +851,11 @@ static void test_stream_poll_rcvlowat_client(const struct test_opts *opts)
 
 	if (setsockopt(fd, SOL_SOCKET, SO_RCVLOWAT,
 		       &lowat_val, sizeof(lowat_val))) {
+<<<<<<< HEAD
 		perror("setsockopt(SO_RCVLOWAT)");
+=======
+		perror("setsockopt");
+>>>>>>> b7ba80a49124 (Commit)
 		exit(EXIT_FAILURE);
 	}
 
@@ -860,6 +910,7 @@ static void test_stream_poll_rcvlowat_client(const struct test_opts *opts)
 	close(fd);
 }
 
+<<<<<<< HEAD
 #define INV_BUF_TEST_DATA_LEN 512
 
 static void test_inv_buf_client(const struct test_opts *opts, bool stream)
@@ -968,6 +1019,8 @@ static void test_seqpacket_inv_buf_server(const struct test_opts *opts)
 	test_inv_buf_server(opts, false);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct test_case test_cases[] = {
 	{
 		.name = "SOCK_STREAM connection reset",
@@ -1023,6 +1076,7 @@ static struct test_case test_cases[] = {
 		.run_client = test_stream_poll_rcvlowat_client,
 		.run_server = test_stream_poll_rcvlowat_server,
 	},
+<<<<<<< HEAD
 	{
 		.name = "SOCK_SEQPACKET big message",
 		.run_client = test_seqpacket_bigmsg_client,
@@ -1038,6 +1092,8 @@ static struct test_case test_cases[] = {
 		.run_client = test_seqpacket_inv_buf_client,
 		.run_server = test_seqpacket_inv_buf_server,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 
@@ -1121,7 +1177,10 @@ int main(int argc, char **argv)
 		.peer_cid = VMADDR_CID_ANY,
 	};
 
+<<<<<<< HEAD
 	srand(time(NULL));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	init_signals();
 
 	for (;;) {

@@ -147,7 +147,11 @@
 		pinctrl-0 = <&backlight_pins>;
 	};
 
+<<<<<<< HEAD
 	pwm11: pwm-11 {
+=======
+	pwm11: dmtimer-pwm {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "ti,omap-dmtimer-pwm";
 		ti,timers = <&timer11>;
 		#pwm-cells = <3>;
@@ -332,7 +336,11 @@
 			OMAP3_CORE1_IOPAD(0x2108, PIN_OUTPUT | MUX_MODE0)   /* dss_data22.dss_data22 */
 			OMAP3_CORE1_IOPAD(0x210a, PIN_OUTPUT | MUX_MODE0)   /* dss_data23.dss_data23 */
 		>;
+<<<<<<< HEAD
 	};
+=======
+       };
+>>>>>>> b7ba80a49124 (Commit)
 
 	gps_pins: pinmux_gps_pins {
 		pinctrl-single,pins = <
@@ -853,8 +861,13 @@
 };
 
 &hdqw1w {
+<<<<<<< HEAD
 	pinctrl-names = "default";
 	pinctrl-0 = <&hdq_pins>;
+=======
+        pinctrl-names = "default";
+        pinctrl-0 = <&hdq_pins>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* image signal processor within OMAP3 SoC */

@@ -11,12 +11,15 @@
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/input/gpio-keys.h>
 
+<<<<<<< HEAD
 /delete-node/ &adsp_mem;
 /delete-node/ &audio_mem;
 /delete-node/ &mpss_mem;
 /delete-node/ &peripheral_region;
 /delete-node/ &rmtfs_mem;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 / {
 	model = "Xiaomi Mi 4C";
 	compatible = "xiaomi,libra", "qcom,msm8992";
@@ -76,6 +79,7 @@
 		#size-cells = <2>;
 		ranges;
 
+<<<<<<< HEAD
 		memory_hole: hole@6400000 {
 			reg = <0 0x06400000 0 0x600000>;
 			no-map;
@@ -132,11 +136,30 @@
 		ramoops@dfc00000 {
 			compatible = "ramoops";
 			reg = <0 0xdfc00000 0 0x40000>;
+=======
+		/* This is for getting crash logs using Android downstream kernels */
+		ramoops@dfc00000 {
+			compatible = "ramoops";
+			reg = <0x0 0xdfc00000 0x0 0x40000>;
+>>>>>>> b7ba80a49124 (Commit)
 			console-size = <0x10000>;
 			record-size = <0x10000>;
 			ftrace-size = <0x10000>;
 			pmsg-size = <0x20000>;
 		};
+<<<<<<< HEAD
+=======
+
+		modem_region: modem_region@9000000 {
+			reg = <0x0 0x9000000 0x0 0x5a00000>;
+			no-map;
+		};
+
+		tzapp: modem_region@ea00000 {
+			reg = <0x0 0xea00000 0x0 0x1900000>;
+			no-map;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -178,6 +201,14 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
+=======
+&peripheral_region {
+	reg = <0x0 0x7400000 0x0 0x1c00000>;
+	no-map;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &pm8994_spmi_regulators {
 	VDD_APC0: s8 {
 		regulator-min-microvolt = <680000>;
@@ -196,7 +227,11 @@
 };
 
 &rpm_requests {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pm8994-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pm8994-regulators";
 
 		vdd_l1-supply = <&pm8994_s7>;
@@ -406,7 +441,11 @@
 		pm8994_lvs2: lvs2 {};
 	};
 
+<<<<<<< HEAD
 	pmi8994_regulators: regulators-1 {
+=======
+	pmi8994_regulators: pmi8994-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pmi8994-regulators";
 		vdd_s1-supply = <&vph_pwr>;
 		vdd_bst_byp-supply = <&vph_pwr>;

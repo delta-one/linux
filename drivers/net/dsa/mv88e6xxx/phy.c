@@ -55,6 +55,7 @@ int mv88e6xxx_phy_write(struct mv88e6xxx_chip *chip, int phy, int reg, u16 val)
 	return chip->info->ops->phy_write(chip, bus, addr, reg, val);
 }
 
+<<<<<<< HEAD
 int mv88e6xxx_phy_read_c45(struct mv88e6xxx_chip *chip, int phy, int devad,
 			   int reg, u16 *val)
 {
@@ -87,6 +88,8 @@ int mv88e6xxx_phy_write_c45(struct mv88e6xxx_chip *chip, int phy, int devad,
 	return chip->info->ops->phy_write_c45(chip, bus, addr, devad, reg, val);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mv88e6xxx_phy_page_get(struct mv88e6xxx_chip *chip, int phy, u8 page)
 {
 	return mv88e6xxx_phy_write(chip, phy, MV88E6XXX_PHY_PAGE, page);

@@ -22,7 +22,10 @@
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		clock-frequency = <50000000>;
+<<<<<<< HEAD
 		clock-output-names = "enet_ref_pad";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	i2c2-mux {
@@ -192,6 +195,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &clks {
 	clocks = <&clock_ksz8081>;
 	clock-names = "enet_ref_pad";
@@ -199,6 +203,8 @@
 	assigned-clock-parents = <&clock_ksz8081>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &ecspi1 {
 	cs-gpios = <&gpio3 19 GPIO_ACTIVE_LOW>;
 	pinctrl-names = "default";
@@ -216,6 +222,13 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_enet>;
 	phy-mode = "rmii";
+<<<<<<< HEAD
+=======
+	clocks = <&clks IMX6QDL_CLK_ENET>,
+		 <&clks IMX6QDL_CLK_ENET>,
+		 <&clock_ksz8081>;
+	clock-names = "ipg", "ahb", "ptp";
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 
 	mdio {

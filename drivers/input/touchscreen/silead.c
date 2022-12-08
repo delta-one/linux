@@ -652,9 +652,15 @@ static void silead_disable_regulator(void *arg)
 	regulator_bulk_disable(ARRAY_SIZE(data->regulators), data->regulators);
 }
 
+<<<<<<< HEAD
 static int silead_ts_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int silead_ts_probe(struct i2c_client *client,
+			   const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct silead_ts_data *data;
 	struct device *dev = &client->dev;
 	int error;
@@ -736,7 +742,11 @@ static int silead_ts_probe(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int silead_ts_suspend(struct device *dev)
+=======
+static int __maybe_unused silead_ts_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 
@@ -745,7 +755,11 @@ static int silead_ts_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int silead_ts_resume(struct device *dev)
+=======
+static int __maybe_unused silead_ts_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	bool second_try = false;
@@ -784,7 +798,11 @@ static int silead_ts_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(silead_ts_pm, silead_ts_suspend, silead_ts_resume);
+=======
+static SIMPLE_DEV_PM_OPS(silead_ts_pm, silead_ts_suspend, silead_ts_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id silead_ts_id[] = {
 	{ "gsl1680", 0 },
@@ -826,13 +844,21 @@ MODULE_DEVICE_TABLE(of, silead_ts_of_match);
 #endif
 
 static struct i2c_driver silead_ts_driver = {
+<<<<<<< HEAD
 	.probe_new = silead_ts_probe,
+=======
+	.probe = silead_ts_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = silead_ts_id,
 	.driver = {
 		.name = SILEAD_TS_NAME,
 		.acpi_match_table = ACPI_PTR(silead_ts_acpi_match),
 		.of_match_table = of_match_ptr(silead_ts_of_match),
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&silead_ts_pm),
+=======
+		.pm = &silead_ts_pm,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 module_i2c_driver(silead_ts_driver);

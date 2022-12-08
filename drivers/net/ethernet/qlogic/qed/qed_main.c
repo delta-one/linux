@@ -23,6 +23,10 @@
 #include <linux/qed/qed_if.h>
 #include <linux/qed/qed_ll2_if.h>
 #include <net/devlink.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/phylink.h>
 
 #include "qed.h"
@@ -258,6 +262,11 @@ static void qed_free_pci(struct qed_dev *cdev)
 {
 	struct pci_dev *pdev = cdev->pdev;
 
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (cdev->doorbells && cdev->db_size)
 		iounmap(cdev->doorbells);
 	if (cdev->regview)
@@ -363,6 +372,15 @@ static int qed_init_pci(struct qed_dev *cdev, struct pci_dev *pdev)
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
+=======
+	/* AER (Advanced Error reporting) configuration */
+	rc = pci_enable_pcie_error_reporting(pdev);
+	if (rc)
+		DP_VERBOSE(cdev, NETIF_MSG_DRV,
+			   "Failed to configure PCIe AER [%d]\n", rc);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err2:

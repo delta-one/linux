@@ -20,7 +20,11 @@
  *  Dependencies
  *********************************************************/
 #include "../common/mem.h"             /* BYTE, U16, U32 */
+<<<<<<< HEAD
 #include "../common/zstd_internal.h"   /* constants : MaxLL, MaxML, MaxOff, LLFSELog, etc. */
+=======
+#include "../common/zstd_internal.h"   /* ZSTD_seqSymbol */
+>>>>>>> b7ba80a49124 (Commit)
 
 
 
@@ -40,7 +44,11 @@ static UNUSED_ATTR const U32 OF_base[MaxOff+1] = {
                  0xFFFD, 0x1FFFD, 0x3FFFD, 0x7FFFD, 0xFFFFD, 0x1FFFFD, 0x3FFFFD, 0x7FFFFD,
                  0xFFFFFD, 0x1FFFFFD, 0x3FFFFFD, 0x7FFFFFD, 0xFFFFFFD, 0x1FFFFFFD, 0x3FFFFFFD, 0x7FFFFFFD };
 
+<<<<<<< HEAD
 static UNUSED_ATTR const U8 OF_bits[MaxOff+1] = {
+=======
+static UNUSED_ATTR const U32 OF_bits[MaxOff+1] = {
+>>>>>>> b7ba80a49124 (Commit)
                      0,  1,  2,  3,  4,  5,  6,  7,
                      8,  9, 10, 11, 12, 13, 14, 15,
                     16, 17, 18, 19, 20, 21, 22, 23,
@@ -106,6 +114,7 @@ typedef struct {
     size_t ddictPtrCount;
 } ZSTD_DDictHashSet;
 
+<<<<<<< HEAD
 #ifndef ZSTD_DECODER_INTERNAL_BUFFER
 #  define ZSTD_DECODER_INTERNAL_BUFFER  (1 << 16)
 #endif
@@ -122,6 +131,8 @@ typedef enum {
     ZSTD_split = 2            /* Split between litExtraBuffer and dst */
 } ZSTD_litLocation_e;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ZSTD_DCtx_s
 {
     const ZSTD_seqSymbol* LLTptr;
@@ -152,9 +163,13 @@ struct ZSTD_DCtx_s
     size_t litSize;
     size_t rleSize;
     size_t staticSize;
+<<<<<<< HEAD
 #if DYNAMIC_BMI2 != 0
     int bmi2;                     /* == 1 if the CPU supports BMI2 and 0 otherwise. CPU support is determined dynamically once per context lifetime. */
 #endif
+=======
+    int bmi2;                     /* == 1 if the CPU supports BMI2 and 0 otherwise. CPU support is determined dynamically once per context lifetime. */
+>>>>>>> b7ba80a49124 (Commit)
 
     /* dictionary */
     ZSTD_DDict* ddictLocal;
@@ -176,16 +191,26 @@ struct ZSTD_DCtx_s
     size_t outStart;
     size_t outEnd;
     size_t lhSize;
+<<<<<<< HEAD
+=======
+    void* legacyContext;
+    U32 previousLegacyVersion;
+    U32 legacyVersion;
+>>>>>>> b7ba80a49124 (Commit)
     U32 hostageByte;
     int noForwardProgress;
     ZSTD_bufferMode_e outBufferMode;
     ZSTD_outBuffer expectedOutBuffer;
 
     /* workspace */
+<<<<<<< HEAD
     BYTE* litBuffer;
     const BYTE* litBufferEnd;
     ZSTD_litLocation_e litBufferLocation;
     BYTE litExtraBuffer[ZSTD_LITBUFFEREXTRASIZE + WILDCOPY_OVERLENGTH]; /* literal buffer can be split between storage within dst and within this scratch buffer */
+=======
+    BYTE litBuffer[ZSTD_BLOCKSIZE_MAX + WILDCOPY_OVERLENGTH];
+>>>>>>> b7ba80a49124 (Commit)
     BYTE headerBuffer[ZSTD_FRAMEHEADERSIZE_MAX];
 
     size_t oversizedDuration;
@@ -198,6 +223,7 @@ struct ZSTD_DCtx_s
     /* Tracing */
 };  /* typedef'd to ZSTD_DCtx within "zstd.h" */
 
+<<<<<<< HEAD
 MEM_STATIC int ZSTD_DCtx_get_bmi2(const struct ZSTD_DCtx_s *dctx) {
 #if DYNAMIC_BMI2 != 0
 	return dctx->bmi2;
@@ -206,6 +232,8 @@ MEM_STATIC int ZSTD_DCtx_get_bmi2(const struct ZSTD_DCtx_s *dctx) {
 	return 0;
 #endif
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*-*******************************************************
  *  Shared internal functions

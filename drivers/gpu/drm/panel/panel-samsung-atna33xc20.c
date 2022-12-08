@@ -53,7 +53,11 @@ static void atana33xc20_wait(ktime_t start_ktime, unsigned int min_ms)
 	ktime_t now_ktime, min_ktime;
 
 	min_ktime = ktime_add(start_ktime, ms_to_ktime(min_ms));
+<<<<<<< HEAD
 	now_ktime = ktime_get_boottime();
+=======
+	now_ktime = ktime_get();
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ktime_before(now_ktime, min_ktime))
 		msleep(ktime_to_ms(ktime_sub(min_ktime, now_ktime)) + 1);
@@ -75,7 +79,11 @@ static int atana33xc20_suspend(struct device *dev)
 	ret = regulator_disable(p->supply);
 	if (ret)
 		return ret;
+<<<<<<< HEAD
 	p->powered_off_time = ktime_get_boottime();
+=======
+	p->powered_off_time = ktime_get();
+>>>>>>> b7ba80a49124 (Commit)
 	p->el3_was_on = false;
 
 	return 0;
@@ -93,7 +101,11 @@ static int atana33xc20_resume(struct device *dev)
 	ret = regulator_enable(p->supply);
 	if (ret)
 		return ret;
+<<<<<<< HEAD
 	p->powered_on_time = ktime_get_boottime();
+=======
+	p->powered_on_time = ktime_get();
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (p->no_hpd) {
 		msleep(HPD_MAX_MS);
@@ -142,7 +154,11 @@ static int atana33xc20_disable(struct drm_panel *panel)
 		return 0;
 
 	gpiod_set_value_cansleep(p->el_on3_gpio, 0);
+<<<<<<< HEAD
 	p->el_on3_off_time = ktime_get_boottime();
+=======
+	p->el_on3_off_time = ktime_get();
+>>>>>>> b7ba80a49124 (Commit)
 	p->enabled = false;
 
 	/*
@@ -310,7 +326,11 @@ static int atana33xc20_probe(struct dp_aux_ep_device *aux_ep)
 	ret = devm_add_action_or_reset(dev,  atana33xc20_runtime_disable, dev);
 	if (ret)
 		return ret;
+<<<<<<< HEAD
 	pm_runtime_set_autosuspend_delay(dev, 2000);
+=======
+	pm_runtime_set_autosuspend_delay(dev, 1000);
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_use_autosuspend(dev);
 	ret = devm_add_action_or_reset(dev,  atana33xc20_dont_use_autosuspend, dev);
 	if (ret)

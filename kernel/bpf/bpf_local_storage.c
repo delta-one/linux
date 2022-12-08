@@ -51,21 +51,27 @@ owner_storage(struct bpf_local_storage_map *smap, void *owner)
 	return map->ops->map_owner_storage_ptr(owner);
 }
 
+<<<<<<< HEAD
 static bool selem_linked_to_storage_lockless(const struct bpf_local_storage_elem *selem)
 {
 	return !hlist_unhashed_lockless(&selem->snode);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool selem_linked_to_storage(const struct bpf_local_storage_elem *selem)
 {
 	return !hlist_unhashed(&selem->snode);
 }
 
+<<<<<<< HEAD
 static bool selem_linked_to_map_lockless(const struct bpf_local_storage_elem *selem)
 {
 	return !hlist_unhashed_lockless(&selem->map_node);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool selem_linked_to_map(const struct bpf_local_storage_elem *selem)
 {
 	return !hlist_unhashed(&selem->map_node);
@@ -84,8 +90,12 @@ bpf_selem_alloc(struct bpf_local_storage_map *smap, void *owner,
 				gfp_flags | __GFP_NOWARN);
 	if (selem) {
 		if (value)
+<<<<<<< HEAD
 			copy_map_value(&smap->map, SDATA(selem)->data, value);
 		/* No need to call check_and_init_map_value as memory is zero init */
+=======
+			memcpy(SDATA(selem)->data, value, smap->map.value_size);
+>>>>>>> b7ba80a49124 (Commit)
 		return selem;
 	}
 
@@ -95,11 +105,16 @@ bpf_selem_alloc(struct bpf_local_storage_map *smap, void *owner,
 	return NULL;
 }
 
+<<<<<<< HEAD
 static void bpf_local_storage_free_rcu(struct rcu_head *rcu)
+=======
+void bpf_local_storage_free_rcu(struct rcu_head *rcu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_local_storage *local_storage;
 
 	local_storage = container_of(rcu, struct bpf_local_storage, rcu);
+<<<<<<< HEAD
 	kfree(local_storage);
 }
 
@@ -122,6 +137,9 @@ static void bpf_local_storage_free(struct bpf_local_storage *local_storage,
 				     bpf_local_storage_free_trace_rcu);
 	else
 		call_rcu(&local_storage->rcu, bpf_local_storage_free_rcu);
+=======
+	kfree_rcu(local_storage, rcu);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void bpf_selem_free_rcu(struct rcu_head *rcu)
@@ -129,6 +147,7 @@ static void bpf_selem_free_rcu(struct rcu_head *rcu)
 	struct bpf_local_storage_elem *selem;
 
 	selem = container_of(rcu, struct bpf_local_storage_elem, rcu);
+<<<<<<< HEAD
 	kfree(selem);
 }
 
@@ -149,15 +168,24 @@ void bpf_selem_free(struct bpf_local_storage_elem *selem,
 		call_rcu_tasks_trace(&selem->rcu, bpf_selem_free_trace_rcu);
 	else
 		call_rcu(&selem->rcu, bpf_selem_free_rcu);
+=======
+	kfree_rcu(selem, rcu);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* local_storage->lock must be held and selem->local_storage == local_storage.
  * The caller must ensure selem->smap is still valid to be
  * dereferenced for its smap->elem_size and smap->cache_idx.
  */
+<<<<<<< HEAD
 static bool bpf_selem_unlink_storage_nolock(struct bpf_local_storage *local_storage,
 					    struct bpf_local_storage_elem *selem,
 					    bool uncharge_mem, bool reuse_now)
+=======
+bool bpf_selem_unlink_storage_nolock(struct bpf_local_storage *local_storage,
+				     struct bpf_local_storage_elem *selem,
+				     bool uncharge_mem, bool use_trace_rcu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_local_storage_map *smap;
 	bool free_local_storage;
@@ -201,22 +229,38 @@ static bool bpf_selem_unlink_storage_nolock(struct bpf_local_storage *local_stor
 	    SDATA(selem))
 		RCU_INIT_POINTER(local_storage->cache[smap->cache_idx], NULL);
 
+<<<<<<< HEAD
 	bpf_selem_free(selem, smap, reuse_now);
 
 	if (rcu_access_pointer(local_storage->smap) == smap)
 		RCU_INIT_POINTER(local_storage->smap, NULL);
+=======
+	if (use_trace_rcu)
+		call_rcu_tasks_trace(&selem->rcu, bpf_selem_free_rcu);
+	else
+		kfree_rcu(selem, rcu);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return free_local_storage;
 }
 
+<<<<<<< HEAD
 static void bpf_selem_unlink_storage(struct bpf_local_storage_elem *selem,
 				     bool reuse_now)
+=======
+static void __bpf_selem_unlink_storage(struct bpf_local_storage_elem *selem,
+				       bool use_trace_rcu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_local_storage *local_storage;
 	bool free_local_storage = false;
 	unsigned long flags;
 
+<<<<<<< HEAD
 	if (unlikely(!selem_linked_to_storage_lockless(selem)))
+=======
+	if (unlikely(!selem_linked_to_storage(selem)))
+>>>>>>> b7ba80a49124 (Commit)
 		/* selem has already been unlinked from sk */
 		return;
 
@@ -225,11 +269,24 @@ static void bpf_selem_unlink_storage(struct bpf_local_storage_elem *selem,
 	raw_spin_lock_irqsave(&local_storage->lock, flags);
 	if (likely(selem_linked_to_storage(selem)))
 		free_local_storage = bpf_selem_unlink_storage_nolock(
+<<<<<<< HEAD
 			local_storage, selem, true, reuse_now);
 	raw_spin_unlock_irqrestore(&local_storage->lock, flags);
 
 	if (free_local_storage)
 		bpf_local_storage_free(local_storage, reuse_now);
+=======
+			local_storage, selem, true, use_trace_rcu);
+	raw_spin_unlock_irqrestore(&local_storage->lock, flags);
+
+	if (free_local_storage) {
+		if (use_trace_rcu)
+			call_rcu_tasks_trace(&local_storage->rcu,
+				     bpf_local_storage_free_rcu);
+		else
+			kfree_rcu(local_storage, rcu);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void bpf_selem_link_storage_nolock(struct bpf_local_storage *local_storage,
@@ -239,13 +296,21 @@ void bpf_selem_link_storage_nolock(struct bpf_local_storage *local_storage,
 	hlist_add_head_rcu(&selem->snode, &local_storage->list);
 }
 
+<<<<<<< HEAD
 static void bpf_selem_unlink_map(struct bpf_local_storage_elem *selem)
+=======
+void bpf_selem_unlink_map(struct bpf_local_storage_elem *selem)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_local_storage_map *smap;
 	struct bpf_local_storage_map_bucket *b;
 	unsigned long flags;
 
+<<<<<<< HEAD
 	if (unlikely(!selem_linked_to_map_lockless(selem)))
+=======
+	if (unlikely(!selem_linked_to_map(selem)))
+>>>>>>> b7ba80a49124 (Commit)
 		/* selem has already be unlinked from smap */
 		return;
 
@@ -269,17 +334,27 @@ void bpf_selem_link_map(struct bpf_local_storage_map *smap,
 	raw_spin_unlock_irqrestore(&b->lock, flags);
 }
 
+<<<<<<< HEAD
 void bpf_selem_unlink(struct bpf_local_storage_elem *selem, bool reuse_now)
+=======
+void bpf_selem_unlink(struct bpf_local_storage_elem *selem, bool use_trace_rcu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* Always unlink from map before unlinking from local_storage
 	 * because selem will be freed after successfully unlinked from
 	 * the local_storage.
 	 */
 	bpf_selem_unlink_map(selem);
+<<<<<<< HEAD
 	bpf_selem_unlink_storage(selem, reuse_now);
 }
 
 /* If cacheit_lockit is false, this lookup function is lockless */
+=======
+	__bpf_selem_unlink_storage(selem, use_trace_rcu);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 struct bpf_local_storage_data *
 bpf_local_storage_lookup(struct bpf_local_storage *local_storage,
 			 struct bpf_local_storage_map *smap,
@@ -356,7 +431,10 @@ int bpf_local_storage_alloc(void *owner,
 		goto uncharge;
 	}
 
+<<<<<<< HEAD
 	RCU_INIT_POINTER(storage->smap, smap);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_HLIST_HEAD(&storage->list);
 	raw_spin_lock_init(&storage->lock);
 	storage->owner = owner;
@@ -396,7 +474,11 @@ int bpf_local_storage_alloc(void *owner,
 	return 0;
 
 uncharge:
+<<<<<<< HEAD
 	bpf_local_storage_free(storage, true);
+=======
+	kfree(storage);
+>>>>>>> b7ba80a49124 (Commit)
 	mem_uncharge(smap, owner, sizeof(*storage));
 	return err;
 }
@@ -420,7 +502,11 @@ bpf_local_storage_update(void *owner, struct bpf_local_storage_map *smap,
 	if (unlikely((map_flags & ~BPF_F_LOCK) > BPF_EXIST) ||
 	    /* BPF_F_LOCK can only be used in a value with spin_lock */
 	    unlikely((map_flags & BPF_F_LOCK) &&
+<<<<<<< HEAD
 		     !btf_record_has_field(smap->map.record, BPF_SPIN_LOCK)))
+=======
+		     !map_value_has_spin_lock(&smap->map)))
+>>>>>>> b7ba80a49124 (Commit)
 		return ERR_PTR(-EINVAL);
 
 	if (gfp_flags == GFP_KERNEL && (map_flags & ~BPF_F_LOCK) != BPF_NOEXIST)
@@ -440,7 +526,11 @@ bpf_local_storage_update(void *owner, struct bpf_local_storage_map *smap,
 
 		err = bpf_local_storage_alloc(owner, smap, selem, gfp_flags);
 		if (err) {
+<<<<<<< HEAD
 			bpf_selem_free(selem, smap, true);
+=======
+			kfree(selem);
+>>>>>>> b7ba80a49124 (Commit)
 			mem_uncharge(smap, owner, smap->elem_size);
 			return ERR_PTR(err);
 		}
@@ -458,7 +548,11 @@ bpf_local_storage_update(void *owner, struct bpf_local_storage_map *smap,
 		err = check_flags(old_sdata, map_flags);
 		if (err)
 			return ERR_PTR(err);
+<<<<<<< HEAD
 		if (old_sdata && selem_linked_to_storage_lockless(SELEM(old_sdata))) {
+=======
+		if (old_sdata && selem_linked_to_storage(SELEM(old_sdata))) {
+>>>>>>> b7ba80a49124 (Commit)
 			copy_map_value_locked(&smap->map, old_sdata->data,
 					      value, false);
 			return old_sdata;
@@ -523,7 +617,11 @@ bpf_local_storage_update(void *owner, struct bpf_local_storage_map *smap,
 	if (old_sdata) {
 		bpf_selem_unlink_map(SELEM(old_sdata));
 		bpf_selem_unlink_storage_nolock(local_storage, SELEM(old_sdata),
+<<<<<<< HEAD
 						false, false);
+=======
+						false, true);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 unlock:
@@ -534,12 +632,20 @@ unlock_err:
 	raw_spin_unlock_irqrestore(&local_storage->lock, flags);
 	if (selem) {
 		mem_uncharge(smap, owner, smap->elem_size);
+<<<<<<< HEAD
 		bpf_selem_free(selem, smap, true);
+=======
+		kfree(selem);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ERR_PTR(err);
 }
 
+<<<<<<< HEAD
 static u16 bpf_local_storage_cache_idx_get(struct bpf_local_storage_cache *cache)
+=======
+u16 bpf_local_storage_cache_idx_get(struct bpf_local_storage_cache *cache)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u64 min_usage = U64_MAX;
 	u16 i, res = 0;
@@ -563,14 +669,20 @@ static u16 bpf_local_storage_cache_idx_get(struct bpf_local_storage_cache *cache
 	return res;
 }
 
+<<<<<<< HEAD
 static void bpf_local_storage_cache_idx_free(struct bpf_local_storage_cache *cache,
 					     u16 idx)
+=======
+void bpf_local_storage_cache_idx_free(struct bpf_local_storage_cache *cache,
+				      u16 idx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	spin_lock(&cache->idx_lock);
 	cache->idx_usage_counts[idx]--;
 	spin_unlock(&cache->idx_lock);
 }
 
+<<<<<<< HEAD
 int bpf_local_storage_map_alloc_check(union bpf_attr *attr)
 {
 	if (attr->map_flags & ~BPF_LOCAL_STORAGE_CREATE_FLAG_MASK ||
@@ -703,6 +815,15 @@ void bpf_local_storage_map_free(struct bpf_map *map,
 	smap = (struct bpf_local_storage_map *)map;
 	bpf_local_storage_cache_idx_free(cache, smap->cache_idx);
 
+=======
+void bpf_local_storage_map_free(struct bpf_local_storage_map *smap,
+				int __percpu *busy_counter)
+{
+	struct bpf_local_storage_elem *selem;
+	struct bpf_local_storage_map_bucket *b;
+	unsigned int i;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Note that this map might be concurrently cloned from
 	 * bpf_sk_storage_clone. Wait for any existing bpf_sk_storage_clone
 	 * RCU read section to finish before proceeding. New RCU
@@ -730,7 +851,11 @@ void bpf_local_storage_map_free(struct bpf_map *map,
 				migrate_disable();
 				this_cpu_inc(*busy_counter);
 			}
+<<<<<<< HEAD
 			bpf_selem_unlink(selem, true);
+=======
+			bpf_selem_unlink(selem, false);
+>>>>>>> b7ba80a49124 (Commit)
 			if (busy_counter) {
 				this_cpu_dec(*busy_counter);
 				migrate_enable();
@@ -757,3 +882,76 @@ void bpf_local_storage_map_free(struct bpf_map *map,
 	kvfree(smap->buckets);
 	bpf_map_area_free(smap);
 }
+<<<<<<< HEAD
+=======
+
+int bpf_local_storage_map_alloc_check(union bpf_attr *attr)
+{
+	if (attr->map_flags & ~BPF_LOCAL_STORAGE_CREATE_FLAG_MASK ||
+	    !(attr->map_flags & BPF_F_NO_PREALLOC) ||
+	    attr->max_entries ||
+	    attr->key_size != sizeof(int) || !attr->value_size ||
+	    /* Enforce BTF for userspace sk dumping */
+	    !attr->btf_key_type_id || !attr->btf_value_type_id)
+		return -EINVAL;
+
+	if (!bpf_capable())
+		return -EPERM;
+
+	if (attr->value_size > BPF_LOCAL_STORAGE_MAX_VALUE_SIZE)
+		return -E2BIG;
+
+	return 0;
+}
+
+struct bpf_local_storage_map *bpf_local_storage_map_alloc(union bpf_attr *attr)
+{
+	struct bpf_local_storage_map *smap;
+	unsigned int i;
+	u32 nbuckets;
+
+	smap = bpf_map_area_alloc(sizeof(*smap), NUMA_NO_NODE);
+	if (!smap)
+		return ERR_PTR(-ENOMEM);
+	bpf_map_init_from_attr(&smap->map, attr);
+
+	nbuckets = roundup_pow_of_two(num_possible_cpus());
+	/* Use at least 2 buckets, select_bucket() is undefined behavior with 1 bucket */
+	nbuckets = max_t(u32, 2, nbuckets);
+	smap->bucket_log = ilog2(nbuckets);
+
+	smap->buckets = kvcalloc(sizeof(*smap->buckets), nbuckets,
+				 GFP_USER | __GFP_NOWARN | __GFP_ACCOUNT);
+	if (!smap->buckets) {
+		bpf_map_area_free(smap);
+		return ERR_PTR(-ENOMEM);
+	}
+
+	for (i = 0; i < nbuckets; i++) {
+		INIT_HLIST_HEAD(&smap->buckets[i].list);
+		raw_spin_lock_init(&smap->buckets[i].lock);
+	}
+
+	smap->elem_size =
+		sizeof(struct bpf_local_storage_elem) + attr->value_size;
+
+	return smap;
+}
+
+int bpf_local_storage_map_check_btf(const struct bpf_map *map,
+				    const struct btf *btf,
+				    const struct btf_type *key_type,
+				    const struct btf_type *value_type)
+{
+	u32 int_data;
+
+	if (BTF_INFO_KIND(key_type->info) != BTF_KIND_INT)
+		return -EINVAL;
+
+	int_data = *(u32 *)(key_type + 1);
+	if (BTF_INT_BITS(int_data) != 32 || BTF_INT_OFFSET(int_data))
+		return -EINVAL;
+
+	return 0;
+}
+>>>>>>> b7ba80a49124 (Commit)

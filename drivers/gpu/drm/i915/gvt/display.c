@@ -36,9 +36,12 @@
 #include "i915_reg.h"
 #include "gvt.h"
 
+<<<<<<< HEAD
 #include "display/intel_display.h"
 #include "display/intel_dpio_phy.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int get_edp_pipe(struct intel_vgpu *vgpu)
 {
 	u32 data = vgpu_vreg(vgpu, _TRANS_DDI_FUNC_CTL_EDP);
@@ -63,7 +66,11 @@ static int edp_pipe_is_enabled(struct intel_vgpu *vgpu)
 {
 	struct drm_i915_private *dev_priv = vgpu->gvt->gt->i915;
 
+<<<<<<< HEAD
 	if (!(vgpu_vreg_t(vgpu, TRANSCONF(TRANSCODER_EDP)) & TRANSCONF_ENABLE))
+=======
+	if (!(vgpu_vreg_t(vgpu, PIPECONF(_PIPE_EDP)) & PIPECONF_ENABLE))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	if (!(vgpu_vreg(vgpu, _TRANS_DDI_FUNC_CTL_EDP) & TRANS_DDI_FUNC_ENABLE))
@@ -79,7 +86,11 @@ int pipe_is_enabled(struct intel_vgpu *vgpu, int pipe)
 			pipe < PIPE_A || pipe >= I915_MAX_PIPES))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (vgpu_vreg_t(vgpu, TRANSCONF(pipe)) & TRANSCONF_ENABLE)
+=======
+	if (vgpu_vreg_t(vgpu, PIPECONF(pipe)) & PIPECONF_ENABLE)
+>>>>>>> b7ba80a49124 (Commit)
 		return 1;
 
 	if (edp_pipe_is_enabled(vgpu) &&
@@ -187,8 +198,13 @@ static void emulate_monitor_status_change(struct intel_vgpu *vgpu)
 			  GEN8_DE_PORT_HOTPLUG(HPD_PORT_C));
 
 		for_each_pipe(dev_priv, pipe) {
+<<<<<<< HEAD
 			vgpu_vreg_t(vgpu, TRANSCONF(pipe)) &=
 				~(TRANSCONF_ENABLE | TRANSCONF_STATE_ENABLE);
+=======
+			vgpu_vreg_t(vgpu, PIPECONF(pipe)) &=
+				~(PIPECONF_ENABLE | PIPECONF_STATE_ENABLE);
+>>>>>>> b7ba80a49124 (Commit)
 			vgpu_vreg_t(vgpu, DSPCNTR(pipe)) &= ~DISP_ENABLE;
 			vgpu_vreg_t(vgpu, SPRCTL(pipe)) &= ~SPRITE_ENABLE;
 			vgpu_vreg_t(vgpu, CURCNTR(pipe)) &= ~MCURSOR_MODE_MASK;
@@ -248,8 +264,13 @@ static void emulate_monitor_status_change(struct intel_vgpu *vgpu)
 		 *   TRANSCODER_A can be enabled. PORT_x depends on the input of
 		 *   setup_virtual_dp_monitor.
 		 */
+<<<<<<< HEAD
 		vgpu_vreg_t(vgpu, TRANSCONF(TRANSCODER_A)) |= TRANSCONF_ENABLE;
 		vgpu_vreg_t(vgpu, TRANSCONF(TRANSCODER_A)) |= TRANSCONF_STATE_ENABLE;
+=======
+		vgpu_vreg_t(vgpu, PIPECONF(PIPE_A)) |= PIPECONF_ENABLE;
+		vgpu_vreg_t(vgpu, PIPECONF(PIPE_A)) |= PIPECONF_STATE_ENABLE;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * Golden M/N are calculated based on:
@@ -506,7 +527,11 @@ static void emulate_monitor_status_change(struct intel_vgpu *vgpu)
 		vgpu_vreg_t(vgpu, CURCNTR(pipe)) |= MCURSOR_MODE_DISABLE;
 	}
 
+<<<<<<< HEAD
 	vgpu_vreg_t(vgpu, TRANSCONF(TRANSCODER_A)) |= TRANSCONF_ENABLE;
+=======
+	vgpu_vreg_t(vgpu, PIPECONF(PIPE_A)) |= PIPECONF_ENABLE;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void clean_virtual_dp_monitor(struct intel_vgpu *vgpu, int port_num)
@@ -584,7 +609,11 @@ static int setup_virtual_dp_monitor(struct intel_vgpu *vgpu, int port_num,
  * @turnon: Turn ON/OFF vblank_timer
  *
  * This function is used to turn on/off or update the per-vGPU vblank_timer
+<<<<<<< HEAD
  * when TRANSCONF is enabled or disabled. vblank_timer period is also updated
+=======
+ * when PIPECONF is enabled or disabled. vblank_timer period is also updated
+>>>>>>> b7ba80a49124 (Commit)
  * if guest changed the refresh rate.
  *
  */

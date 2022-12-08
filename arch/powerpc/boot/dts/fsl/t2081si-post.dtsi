@@ -609,8 +609,13 @@
 /include/ "qoriq-bman1.dtsi"
 
 /include/ "qoriq-fman3-0.dtsi"
+<<<<<<< HEAD
 /include/ "qoriq-fman3-0-10g-2.dtsi"
 /include/ "qoriq-fman3-0-10g-3.dtsi"
+=======
+/include/ "qoriq-fman3-0-1g-0.dtsi"
+/include/ "qoriq-fman3-0-1g-1.dtsi"
+>>>>>>> b7ba80a49124 (Commit)
 /include/ "qoriq-fman3-0-1g-2.dtsi"
 /include/ "qoriq-fman3-0-1g-3.dtsi"
 /include/ "qoriq-fman3-0-1g-4.dtsi"
@@ -659,6 +664,7 @@
 		interrupts = <16 2 1 9>;
 	};
 };
+<<<<<<< HEAD
 
 &fman0_rx_0x08 {
 	/delete-property/ fsl,fman-10g-port;
@@ -675,3 +681,5 @@
 &fman0_tx_0x29 {
 	/delete-property/ fsl,fman-10g-port;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

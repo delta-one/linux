@@ -102,6 +102,7 @@ config NVDIMM_KEYS
 	depends on ENCRYPTED_KEYS
 	depends on (LIBNVDIMM=ENCRYPTED_KEYS) || LIBNVDIMM=m
 
+<<<<<<< HEAD
 config NVDIMM_KMSAN
 	bool
 	depends on KMSAN
@@ -121,6 +122,8 @@ config NVDIMM_KMSAN
 
 	  Select N if unsure.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config NVDIMM_TEST_BUILD
 	tristate "Build the unit test core"
 	depends on m
@@ -133,6 +136,7 @@ config NVDIMM_TEST_BUILD
 	  core devm_memremap_pages() implementation and other
 	  infrastructure.
 
+<<<<<<< HEAD
 config NVDIMM_SECURITY_TEST
 	bool "Enable NVDIMM security unit tests"
 	depends on NVDIMM_KEYS
@@ -145,4 +149,6 @@ config NVDIMM_SECURITY_TEST
 
 	  Select N if unsure.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endif

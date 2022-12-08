@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _page_frags:
+
+>>>>>>> b7ba80a49124 (Commit)
 ==============
 Page fragments
 ==============

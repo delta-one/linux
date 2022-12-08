@@ -1997,6 +1997,10 @@ add_sym:
 static int linker_append_elf_relos(struct bpf_linker *linker, struct src_obj *obj)
 {
 	struct src_sec *src_symtab = &obj->secs[obj->symtab_sec_idx];
+<<<<<<< HEAD
+=======
+	struct dst_sec *dst_symtab;
+>>>>>>> b7ba80a49124 (Commit)
 	int i, err;
 
 	for (i = 1; i < obj->sec_cnt; i++) {
@@ -2029,6 +2033,12 @@ static int linker_append_elf_relos(struct bpf_linker *linker, struct src_obj *ob
 			return -1;
 		}
 
+<<<<<<< HEAD
+=======
+		/* add_dst_sec() above could have invalidated linker->secs */
+		dst_symtab = &linker->secs[linker->symtab_sec_idx];
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* shdr->sh_link points to SYMTAB */
 		dst_sec->shdr->sh_link = linker->symtab_sec_idx;
 
@@ -2045,13 +2055,24 @@ static int linker_append_elf_relos(struct bpf_linker *linker, struct src_obj *ob
 		dst_rel = dst_sec->raw_data + src_sec->dst_off;
 		n = src_sec->shdr->sh_size / src_sec->shdr->sh_entsize;
 		for (j = 0; j < n; j++, src_rel++, dst_rel++) {
+<<<<<<< HEAD
 			size_t src_sym_idx, dst_sym_idx, sym_type;
 			Elf64_Sym *src_sym;
+=======
+			size_t src_sym_idx = ELF64_R_SYM(src_rel->r_info);
+			size_t sym_type = ELF64_R_TYPE(src_rel->r_info);
+			Elf64_Sym *src_sym, *dst_sym;
+			size_t dst_sym_idx;
+>>>>>>> b7ba80a49124 (Commit)
 
 			src_sym_idx = ELF64_R_SYM(src_rel->r_info);
 			src_sym = src_symtab->data->d_buf + sizeof(*src_sym) * src_sym_idx;
 
 			dst_sym_idx = obj->sym_map[src_sym_idx];
+<<<<<<< HEAD
+=======
+			dst_sym = dst_symtab->raw_data + sizeof(*dst_sym) * dst_sym_idx;
+>>>>>>> b7ba80a49124 (Commit)
 			dst_rel->r_offset += src_linked_sec->dst_off;
 			sym_type = ELF64_R_TYPE(src_rel->r_info);
 			dst_rel->r_info = ELF64_R_INFO(dst_sym_idx, sym_type);

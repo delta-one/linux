@@ -5,6 +5,7 @@
  *	Srinivas Kandagatla <srinivas.kandagatla@st.com>
  */
 
+<<<<<<< HEAD
 #include <linux/err.h>
 #include <linux/gpio/driver.h>
 #include <linux/init.h>
@@ -25,6 +26,24 @@
 #include <linux/pinctrl/pinctrl.h>
 #include <linux/pinctrl/pinmux.h>
 
+=======
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/slab.h>
+#include <linux/err.h>
+#include <linux/io.h>
+#include <linux/of.h>
+#include <linux/of_irq.h>
+#include <linux/of_gpio.h> /* of_get_named_gpio() */
+#include <linux/of_address.h>
+#include <linux/gpio/driver.h>
+#include <linux/regmap.h>
+#include <linux/mfd/syscon.h>
+#include <linux/pinctrl/pinctrl.h>
+#include <linux/pinctrl/pinmux.h>
+#include <linux/pinctrl/pinconf.h>
+#include <linux/platform_device.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include "core.h"
 
 /* PIO Block registers */
@@ -1166,6 +1185,7 @@ static void st_parse_syscfgs(struct st_pinctrl *info, int bank,
 	return;
 }
 
+<<<<<<< HEAD
 static int st_pctl_dt_calculate_pin(struct st_pinctrl *info,
 				    phandle bank, unsigned int offset)
 {
@@ -1191,6 +1211,8 @@ static int st_pctl_dt_calculate_pin(struct st_pinctrl *info,
 	return retval;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Each pin is represented in of the below forms.
  * <bank offset mux direction rt_type rt_delay rt_clk>
@@ -1204,8 +1226,11 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
 	struct device *dev = info->dev;
 	struct st_pinconf *conf;
 	struct device_node *pins;
+<<<<<<< HEAD
 	phandle bank;
 	unsigned int offset;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i = 0, npins = 0, nr_props, ret = 0;
 
 	pins = of_get_child_by_name(np, "st,pins");
@@ -1245,9 +1270,15 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
 		conf = &grp->pin_conf[i];
 
 		/* bank & offset */
+<<<<<<< HEAD
 		bank = be32_to_cpup(list++);
 		offset = be32_to_cpup(list++);
 		conf->pin = st_pctl_dt_calculate_pin(info, bank, offset);
+=======
+		be32_to_cpup(list++);
+		be32_to_cpup(list++);
+		conf->pin = of_get_named_gpio(pins, pp->name, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		conf->name = pp->name;
 		grp->pins[i] = conf->pin;
 		/* mux */
@@ -1523,7 +1554,11 @@ static int st_gpiolib_register_bank(struct st_pinctrl *info,
 	bank->gpio_chip = st_gpio_template;
 	bank->gpio_chip.base = bank_num * ST_GPIO_PINS_PER_BANK;
 	bank->gpio_chip.ngpio = ST_GPIO_PINS_PER_BANK;
+<<<<<<< HEAD
 	bank->gpio_chip.fwnode = of_fwnode_handle(np);
+=======
+	bank->gpio_chip.of_node = np;
+>>>>>>> b7ba80a49124 (Commit)
 	bank->gpio_chip.parent = dev;
 	spin_lock_init(&bank->lock);
 

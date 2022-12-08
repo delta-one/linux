@@ -159,7 +159,11 @@ int adf_sriov_configure(struct pci_dev *pdev, int numvfs)
 			return -EBUSY;
 		}
 
+<<<<<<< HEAD
 		ret = adf_dev_down(accel_dev, true);
+=======
+		ret = adf_dev_shutdown_cache_cfg(accel_dev);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			return ret;
 	}
@@ -170,10 +174,13 @@ int adf_sriov_configure(struct pci_dev *pdev, int numvfs)
 	if (adf_cfg_add_key_value_param(accel_dev, ADF_KERNEL_SEC,
 					ADF_NUM_CY, (void *)&val, ADF_DEC))
 		return -EFAULT;
+<<<<<<< HEAD
 	ret = adf_cfg_add_key_value_param(accel_dev, ADF_KERNEL_SEC, ADF_NUM_DC,
 					  &val, ADF_DEC);
 	if (ret)
 		return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	set_bit(ADF_STATUS_CONFIGURED, &accel_dev->status);
 
@@ -184,7 +191,17 @@ int adf_sriov_configure(struct pci_dev *pdev, int numvfs)
 	if (!accel_dev->pf.vf_info)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	if (adf_dev_up(accel_dev, false)) {
+=======
+	if (adf_dev_init(accel_dev)) {
+		dev_err(&GET_DEV(accel_dev), "Failed to init qat_dev%d\n",
+			accel_dev->accel_id);
+		return -EFAULT;
+	}
+
+	if (adf_dev_start(accel_dev)) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(&GET_DEV(accel_dev), "Failed to start qat_dev%d\n",
 			accel_dev->accel_id);
 		return -EFAULT;

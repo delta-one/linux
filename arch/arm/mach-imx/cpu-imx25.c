@@ -23,7 +23,10 @@ static int mx25_read_cpu_rev(void)
 
 	np = of_find_compatible_node(NULL, NULL, "fsl,imx25-iim");
 	iim_base = of_iomap(np, 0);
+<<<<<<< HEAD
 	of_node_put(np);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BUG_ON(!iim_base);
 	rev = readl(iim_base + MXC_IIMSREV);
 	iounmap(iim_base);

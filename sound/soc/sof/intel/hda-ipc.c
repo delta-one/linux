@@ -67,6 +67,7 @@ int hda_dsp_ipc_send_msg(struct snd_sof_dev *sdev, struct snd_sof_ipc_msg *msg)
 	return 0;
 }
 
+<<<<<<< HEAD
 static inline bool hda_dsp_ipc4_pm_msg(u32 primary)
 {
 	/* pm setting is only supported by module msg */
@@ -105,6 +106,12 @@ int hda_dsp_ipc4_send_msg(struct snd_sof_dev *sdev, struct snd_sof_ipc_msg *msg)
 
 	hdev->delayed_ipc_tx_msg = NULL;
 
+=======
+int hda_dsp_ipc4_send_msg(struct snd_sof_dev *sdev, struct snd_sof_ipc_msg *msg)
+{
+	struct sof_ipc4_msg *msg_data = msg->msg_data;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* send the message via mailbox */
 	if (msg_data->data_size)
 		sof_mailbox_write(sdev, sdev->host_box.offset, msg_data->data_ptr,
@@ -114,8 +121,11 @@ int hda_dsp_ipc4_send_msg(struct snd_sof_dev *sdev, struct snd_sof_ipc_msg *msg)
 	snd_sof_dsp_write(sdev, HDA_DSP_BAR, HDA_DSP_REG_HIPCI,
 			  msg_data->primary | HDA_DSP_REG_HIPCI_BUSY);
 
+<<<<<<< HEAD
 	hda_dsp_ipc4_schedule_d0i3_work(hdev, msg);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -158,13 +168,19 @@ irqreturn_t hda_dsp_ipc4_irq_thread(int irq, void *context)
 {
 	struct sof_ipc4_msg notification_data = {{ 0 }};
 	struct snd_sof_dev *sdev = context;
+<<<<<<< HEAD
 	bool ack_received = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool ipc_irq = false;
 	u32 hipcie, hipct;
 
 	hipcie = snd_sof_dsp_read(sdev, HDA_DSP_BAR, HDA_DSP_REG_HIPCIE);
+<<<<<<< HEAD
 	hipct = snd_sof_dsp_read(sdev, HDA_DSP_BAR, HDA_DSP_REG_HIPCT);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (hipcie & HDA_DSP_REG_HIPCIE_DONE) {
 		/* DSP received the message */
 		snd_sof_dsp_update_bits(sdev, HDA_DSP_BAR, HDA_DSP_REG_HIPCCTL,
@@ -172,9 +188,15 @@ irqreturn_t hda_dsp_ipc4_irq_thread(int irq, void *context)
 		hda_dsp_ipc_dsp_done(sdev);
 
 		ipc_irq = true;
+<<<<<<< HEAD
 		ack_received = true;
 	}
 
+=======
+	}
+
+	hipct = snd_sof_dsp_read(sdev, HDA_DSP_BAR, HDA_DSP_REG_HIPCT);
+>>>>>>> b7ba80a49124 (Commit)
 	if (hipct & HDA_DSP_REG_HIPCT_BUSY) {
 		/* Message from DSP (reply or notification) */
 		u32 hipcte = snd_sof_dsp_read(sdev, HDA_DSP_BAR,
@@ -197,7 +219,10 @@ irqreturn_t hda_dsp_ipc4_irq_thread(int irq, void *context)
 				spin_lock_irq(&sdev->ipc_lock);
 
 				snd_sof_ipc_get_reply(sdev);
+<<<<<<< HEAD
 				hda_dsp_ipc_host_done(sdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				snd_sof_ipc_reply(sdev, data->primary);
 
 				spin_unlock_irq(&sdev->ipc_lock);
@@ -214,11 +239,19 @@ irqreturn_t hda_dsp_ipc4_irq_thread(int irq, void *context)
 			sdev->ipc->msg.rx_data = &notification_data;
 			snd_sof_ipc_msgs_rx(sdev);
 			sdev->ipc->msg.rx_data = NULL;
+<<<<<<< HEAD
 
 			/* Let DSP know that we have finished processing the message */
 			hda_dsp_ipc_host_done(sdev);
 		}
 
+=======
+		}
+
+		/* Let DSP know that we have finished processing the message */
+		hda_dsp_ipc_host_done(sdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 		ipc_irq = true;
 	}
 
@@ -226,6 +259,7 @@ irqreturn_t hda_dsp_ipc4_irq_thread(int irq, void *context)
 		/* This interrupt is not shared so no need to return IRQ_NONE. */
 		dev_dbg_ratelimited(sdev->dev, "nothing to do in IPC IRQ thread\n");
 
+<<<<<<< HEAD
 	if (ack_received) {
 		struct sof_intel_hda_dev *hdev = sdev->pdata->hw_pdata;
 
@@ -233,6 +267,8 @@ irqreturn_t hda_dsp_ipc4_irq_thread(int irq, void *context)
 			hda_dsp_ipc4_send_msg(sdev, hdev->delayed_ipc_tx_msg);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return IRQ_HANDLED;
 }
 
@@ -389,6 +425,7 @@ int hda_dsp_ipc_get_window_offset(struct snd_sof_dev *sdev, u32 id)
 }
 
 int hda_ipc_msg_data(struct snd_sof_dev *sdev,
+<<<<<<< HEAD
 		     struct snd_sof_pcm_stream *sps,
 		     void *p, size_t sz)
 {
@@ -396,6 +433,14 @@ int hda_ipc_msg_data(struct snd_sof_dev *sdev,
 		sof_mailbox_read(sdev, sdev->dsp_box.offset, p, sz);
 	} else {
 		struct snd_pcm_substream *substream = sps->substream;
+=======
+		     struct snd_pcm_substream *substream,
+		     void *p, size_t sz)
+{
+	if (!substream || !sdev->stream_box.size) {
+		sof_mailbox_read(sdev, sdev->dsp_box.offset, p, sz);
+	} else {
+>>>>>>> b7ba80a49124 (Commit)
 		struct hdac_stream *hstream = substream->runtime->private_data;
 		struct sof_intel_hda_stream *hda_stream;
 
@@ -414,10 +459,16 @@ int hda_ipc_msg_data(struct snd_sof_dev *sdev,
 }
 
 int hda_set_stream_data_offset(struct snd_sof_dev *sdev,
+<<<<<<< HEAD
 			       struct snd_sof_pcm_stream *sps,
 			       size_t posn_offset)
 {
 	struct snd_pcm_substream *substream = sps->substream;
+=======
+			       struct snd_pcm_substream *substream,
+			       size_t posn_offset)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct hdac_stream *hstream = substream->runtime->private_data;
 	struct sof_intel_hda_stream *hda_stream;
 

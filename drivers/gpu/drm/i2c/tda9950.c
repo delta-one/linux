@@ -375,7 +375,12 @@ static void tda9950_cec_del(void *data)
 	cec_delete_adapter(priv->adap);
 }
 
+<<<<<<< HEAD
 static int tda9950_probe(struct i2c_client *client)
+=======
+static int tda9950_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tda9950_glue *glue = client->dev.platform_data;
 	struct device *dev = &client->dev;
@@ -492,7 +497,11 @@ static struct i2c_device_id tda9950_ids[] = {
 MODULE_DEVICE_TABLE(i2c, tda9950_ids);
 
 static struct i2c_driver tda9950_driver = {
+<<<<<<< HEAD
 	.probe_new = tda9950_probe,
+=======
+	.probe = tda9950_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = tda9950_remove,
 	.driver = {
 		.name = "tda9950",

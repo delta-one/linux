@@ -9,7 +9,10 @@
 
 #include <linux/module.h>
 #include <linux/fs.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/miscdevice.h>
 #include <linux/mutex.h>
 #include <linux/slab.h>

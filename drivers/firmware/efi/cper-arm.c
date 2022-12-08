@@ -12,6 +12,10 @@
 #include <linux/dmi.h>
 #include <linux/acpi.h>
 #include <linux/pci.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/printk.h>
 #include <linux/bcd.h>
 #include <acpi/ghes.h>

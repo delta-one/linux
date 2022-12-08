@@ -265,7 +265,11 @@ static inline int hp_sdc_rtc_read_ct(struct timespec64 *res) {
 	return 0;
 }
 
+<<<<<<< HEAD
 static int __maybe_unused hp_sdc_rtc_proc_show(struct seq_file *m, void *v)
+=======
+static int hp_sdc_rtc_proc_show(struct seq_file *m, void *v)
+>>>>>>> b7ba80a49124 (Commit)
 {
 #define YN(bit) ("no")
 #define NY(bit) ("yes")

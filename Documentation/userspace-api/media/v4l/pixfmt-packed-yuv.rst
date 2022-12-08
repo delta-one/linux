@@ -262,12 +262,16 @@ the second byte and Y'\ :sub:`7-0` in the third byte.
 =================
 
 These formats, commonly referred to as YUYV or YUY2, subsample the chroma
+<<<<<<< HEAD
 components horizontally by 2, storing 2 pixels in a container. The container
 is 32-bits for 8-bit formats, and 64-bits for 10+-bit formats.
 
 The packed YUYV formats with more than 8 bits per component are stored as four
 16-bit little-endian words. Each word's most significant bits contain one
 component, and the least significant bits are zero padding.
+=======
+components horizontally by 2, storing 2 pixels in 4 bytes.
+>>>>>>> b7ba80a49124 (Commit)
 
 .. raw:: latex
 
@@ -275,7 +279,11 @@ component, and the least significant bits are zero padding.
 
 .. tabularcolumns:: |p{3.4cm}|p{1.2cm}|p{0.8cm}|p{0.8cm}|p{0.8cm}|p{0.8cm}|p{0.8cm}|p{0.8cm}|p{0.8cm}|p{0.8cm}|
 
+<<<<<<< HEAD
 .. flat-table:: Packed YUV 4:2:2 Formats in 32-bit container
+=======
+.. flat-table:: Packed YUV 4:2:2 Formats
+>>>>>>> b7ba80a49124 (Commit)
     :header-rows: 1
     :stub-columns: 0
 
@@ -342,6 +350,7 @@ component, and the least significant bits are zero padding.
       - Y'\ :sub:`3`
       - Cb\ :sub:`2`
 
+<<<<<<< HEAD
 .. tabularcolumns:: |p{3.4cm}|p{1.2cm}|p{0.8cm}|p{0.8cm}|p{0.8cm}|p{0.8cm}|p{0.8cm}|p{0.8cm}|p{0.8cm}|p{0.8cm}|
 
 .. flat-table:: Packed YUV 4:2:2 Formats in 64-bit container
@@ -382,6 +391,8 @@ component, and the least significant bits are zero padding.
       - Y'\ :sub:`1` (bits 15-0)
       - Cr\ :sub:`0` (bits 15-0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 .. raw:: latex
 
     \normalsize

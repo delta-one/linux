@@ -38,7 +38,11 @@
 		pinctrl-0 = <&pinctrl_gpio_leds>;
 
 		/* LED D5 */
+<<<<<<< HEAD
 		led0: led-heartbeat {
+=======
+		led0: heartbeat {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "heartbeat";
 			gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
 			default-state = "on";

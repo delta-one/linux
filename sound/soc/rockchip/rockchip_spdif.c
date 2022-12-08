@@ -88,7 +88,10 @@ static int __maybe_unused rk_spdif_runtime_resume(struct device *dev)
 
 	ret = clk_prepare_enable(spdif->hclk);
 	if (ret) {
+<<<<<<< HEAD
 		clk_disable_unprepare(spdif->mclk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(spdif->dev, "hclk clock enable failed %d\n", ret);
 		return ret;
 	}
@@ -196,7 +199,11 @@ static int rk_spdif_dai_probe(struct snd_soc_dai *dai)
 {
 	struct rk_spdif_dev *spdif = snd_soc_dai_get_drvdata(dai);
 
+<<<<<<< HEAD
 	snd_soc_dai_dma_data_set_playback(dai, &spdif->playback_dma_data);
+=======
+	dai->playback_dma_data = &spdif->playback_dma_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -367,11 +374,20 @@ err_pm_runtime:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void rk_spdif_remove(struct platform_device *pdev)
+=======
+static int rk_spdif_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pm_runtime_disable(&pdev->dev);
 	if (!pm_runtime_status_suspended(&pdev->dev))
 		rk_spdif_runtime_suspend(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct dev_pm_ops rk_spdif_pm_ops = {
@@ -381,7 +397,11 @@ static const struct dev_pm_ops rk_spdif_pm_ops = {
 
 static struct platform_driver rk_spdif_driver = {
 	.probe = rk_spdif_probe,
+<<<<<<< HEAD
 	.remove_new = rk_spdif_remove,
+=======
+	.remove = rk_spdif_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "rockchip-spdif",
 		.of_match_table = of_match_ptr(rk_spdif_match),

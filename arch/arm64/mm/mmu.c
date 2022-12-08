@@ -24,7 +24,10 @@
 #include <linux/mm.h>
 #include <linux/vmalloc.h>
 #include <linux/set_memory.h>
+<<<<<<< HEAD
 #include <linux/kfence.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/barrier.h>
 #include <asm/cputype.h>
@@ -39,7 +42,10 @@
 #include <asm/ptdump.h>
 #include <asm/tlbflush.h>
 #include <asm/pgalloc.h>
+<<<<<<< HEAD
 #include <asm/kfence.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define NO_BLOCK_MAPPINGS	BIT(0)
 #define NO_CONT_MAPPINGS	BIT(1)
@@ -135,7 +141,11 @@ static phys_addr_t __init early_pgtable_alloc(int shift)
 	return phys;
 }
 
+<<<<<<< HEAD
 bool pgattr_change_is_safe(u64 old, u64 new)
+=======
+static bool pgattr_change_is_safe(u64 old, u64 new)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/*
 	 * The following mapping attributes may be updated in live
@@ -144,6 +154,7 @@ bool pgattr_change_is_safe(u64 old, u64 new)
 	pteval_t mask = PTE_PXN | PTE_RDONLY | PTE_WRITE | PTE_NG;
 
 	/* creating or taking down mappings is always safe */
+<<<<<<< HEAD
 	if (!pte_valid(__pte(old)) || !pte_valid(__pte(new)))
 		return true;
 
@@ -151,6 +162,11 @@ bool pgattr_change_is_safe(u64 old, u64 new)
 	if (pte_pfn(__pte(old)) != pte_pfn(__pte(new)))
 		return false;
 
+=======
+	if (old == 0 || new == 0)
+		return true;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* live contiguous mappings may not be manipulated at all */
 	if ((old | new) & PTE_CONT)
 		return false;
@@ -527,6 +543,7 @@ static int __init enable_crash_mem_map(char *arg)
 }
 early_param("crashkernel", enable_crash_mem_map);
 
+<<<<<<< HEAD
 #ifdef CONFIG_KFENCE
 
 bool __ro_after_init kfence_early_init = !!CONFIG_KFENCE_SAMPLE_INTERVAL;
@@ -581,13 +598,18 @@ static inline void arm64_kfence_map_pool(phys_addr_t kfence_pool, pgd_t *pgdp) {
 
 #endif /* CONFIG_KFENCE */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void __init map_mem(pgd_t *pgdp)
 {
 	static const u64 direct_map_end = _PAGE_END(VA_BITS_MIN);
 	phys_addr_t kernel_start = __pa_symbol(_stext);
 	phys_addr_t kernel_end = __pa_symbol(__init_begin);
 	phys_addr_t start, end;
+<<<<<<< HEAD
 	phys_addr_t early_kfence_pool;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int flags = NO_EXEC_MAPPINGS;
 	u64 i;
 
@@ -600,9 +622,13 @@ static void __init map_mem(pgd_t *pgdp)
 	 */
 	BUILD_BUG_ON(pgd_index(direct_map_end - 1) == pgd_index(direct_map_end));
 
+<<<<<<< HEAD
 	early_kfence_pool = arm64_kfence_alloc_pool();
 
 	if (can_set_direct_map())
+=======
+	if (can_set_direct_map() || IS_ENABLED(CONFIG_KFENCE))
+>>>>>>> b7ba80a49124 (Commit)
 		flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
 
 	/*
@@ -667,8 +693,11 @@ static void __init map_mem(pgd_t *pgdp)
 		}
 	}
 #endif
+<<<<<<< HEAD
 
 	arm64_kfence_map_pool(early_kfence_pool, pgdp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void mark_rodata_ro(void)
@@ -879,6 +908,56 @@ void __init paging_init(void)
 	create_idmap();
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * Check whether a kernel address is valid (derived from arch/x86/).
+ */
+int kern_addr_valid(unsigned long addr)
+{
+	pgd_t *pgdp;
+	p4d_t *p4dp;
+	pud_t *pudp, pud;
+	pmd_t *pmdp, pmd;
+	pte_t *ptep, pte;
+
+	addr = arch_kasan_reset_tag(addr);
+	if ((((long)addr) >> VA_BITS) != -1UL)
+		return 0;
+
+	pgdp = pgd_offset_k(addr);
+	if (pgd_none(READ_ONCE(*pgdp)))
+		return 0;
+
+	p4dp = p4d_offset(pgdp, addr);
+	if (p4d_none(READ_ONCE(*p4dp)))
+		return 0;
+
+	pudp = pud_offset(p4dp, addr);
+	pud = READ_ONCE(*pudp);
+	if (pud_none(pud))
+		return 0;
+
+	if (pud_sect(pud))
+		return pfn_valid(pud_pfn(pud));
+
+	pmdp = pmd_offset(pudp, addr);
+	pmd = READ_ONCE(*pmdp);
+	if (pmd_none(pmd))
+		return 0;
+
+	if (pmd_sect(pmd))
+		return pfn_valid(pmd_pfn(pmd));
+
+	ptep = pte_offset_kernel(pmdp, addr);
+	pte = READ_ONCE(*ptep);
+	if (pte_none(pte))
+		return 0;
+
+	return pfn_valid(pte_pfn(pte));
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_MEMORY_HOTPLUG
 static void free_hotplug_page_range(struct page *page, size_t size,
 				    struct vmem_altmap *altmap)
@@ -1202,6 +1281,7 @@ static void free_empty_tables(unsigned long addr, unsigned long end,
 }
 #endif
 
+<<<<<<< HEAD
 void __meminit vmemmap_set_pmd(pmd_t *pmdp, void *p, int node,
 			       unsigned long addr, unsigned long next)
 {
@@ -1224,6 +1304,55 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
 		return vmemmap_populate_basepages(start, end, node, altmap);
 	else
 		return vmemmap_populate_hugepages(start, end, node, altmap);
+=======
+int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+		struct vmem_altmap *altmap)
+{
+	unsigned long addr = start;
+	unsigned long next;
+	pgd_t *pgdp;
+	p4d_t *p4dp;
+	pud_t *pudp;
+	pmd_t *pmdp;
+
+	WARN_ON((start < VMEMMAP_START) || (end > VMEMMAP_END));
+
+	if (!ARM64_KERNEL_USES_PMD_MAPS)
+		return vmemmap_populate_basepages(start, end, node, altmap);
+
+	do {
+		next = pmd_addr_end(addr, end);
+
+		pgdp = vmemmap_pgd_populate(addr, node);
+		if (!pgdp)
+			return -ENOMEM;
+
+		p4dp = vmemmap_p4d_populate(pgdp, addr, node);
+		if (!p4dp)
+			return -ENOMEM;
+
+		pudp = vmemmap_pud_populate(p4dp, addr, node);
+		if (!pudp)
+			return -ENOMEM;
+
+		pmdp = pmd_offset(pudp, addr);
+		if (pmd_none(READ_ONCE(*pmdp))) {
+			void *p = NULL;
+
+			p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
+			if (!p) {
+				if (vmemmap_populate_basepages(addr, next, node, altmap))
+					return -ENOMEM;
+				continue;
+			}
+
+			pmd_set_huge(pmdp, __pa(p), __pgprot(PROT_SECT_NORMAL));
+		} else
+			vmemmap_verify((pte_t *)pmdp, node, addr, next);
+	} while (addr = next, addr != end);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_MEMORY_HOTPLUG
@@ -1539,7 +1668,15 @@ int arch_add_memory(int nid, u64 start, u64 size,
 
 	VM_BUG_ON(!mhp_range_allowed(start, size, true));
 
+<<<<<<< HEAD
 	if (can_set_direct_map())
+=======
+	/*
+	 * KFENCE requires linear map to be mapped at page granularity, so that
+	 * it is possible to protect/unprotect single pages in the KFENCE pool.
+	 */
+	if (can_set_direct_map() || IS_ENABLED(CONFIG_KFENCE))
+>>>>>>> b7ba80a49124 (Commit)
 		flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
 
 	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
@@ -1695,6 +1832,7 @@ static int __init prevent_bootmem_remove_init(void)
 }
 early_initcall(prevent_bootmem_remove_init);
 #endif
+<<<<<<< HEAD
 
 pte_t ptep_modify_prot_start(struct vm_area_struct *vma, unsigned long addr, pte_t *ptep)
 {
@@ -1716,3 +1854,5 @@ void ptep_modify_prot_commit(struct vm_area_struct *vma, unsigned long addr, pte
 {
 	set_pte_at(vma->vm_mm, addr, ptep, pte);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

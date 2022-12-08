@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 ===============================
 Memory Management Documentation
 ===============================
+=======
+=====================================
+Linux Memory Management Documentation
+=====================================
+>>>>>>> b7ba80a49124 (Commit)
 
 Memory Management Guide
 =======================

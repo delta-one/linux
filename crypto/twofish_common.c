@@ -25,9 +25,15 @@
  * Third Edition.
  */
 
+<<<<<<< HEAD
 #include <crypto/algapi.h>
 #include <crypto/twofish.h>
 #include <linux/bitops.h>
+=======
+#include <crypto/twofish.h>
+#include <linux/bitops.h>
+#include <linux/crypto.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/errno.h>
 #include <linux/init.h>
 #include <linux/kernel.h>

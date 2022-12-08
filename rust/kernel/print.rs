@@ -74,6 +74,7 @@ pub mod format_strings {
     // Furthermore, `static` instead of `const` is used to share the strings
     // for all the kernel.
     pub static EMERG: [u8; LENGTH] = generate(false, bindings::KERN_EMERG);
+<<<<<<< HEAD
     pub static ALERT: [u8; LENGTH] = generate(false, bindings::KERN_ALERT);
     pub static CRIT: [u8; LENGTH] = generate(false, bindings::KERN_CRIT);
     pub static ERR: [u8; LENGTH] = generate(false, bindings::KERN_ERR);
@@ -82,6 +83,9 @@ pub mod format_strings {
     pub static INFO: [u8; LENGTH] = generate(false, bindings::KERN_INFO);
     pub static DEBUG: [u8; LENGTH] = generate(false, bindings::KERN_DEBUG);
     pub static CONT: [u8; LENGTH] = generate(true, bindings::KERN_CONT);
+=======
+    pub static INFO: [u8; LENGTH] = generate(false, bindings::KERN_INFO);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /// Prints a message via the kernel's [`_printk`].
@@ -112,6 +116,7 @@ pub unsafe fn call_printk(
     }
 }
 
+<<<<<<< HEAD
 /// Prints a message via the kernel's [`_printk`] for the `CONT` level.
 ///
 /// Public but hidden since it should only be used from public macros.
@@ -132,6 +137,8 @@ pub fn call_printk_cont(args: fmt::Arguments<'_>) {
     }
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /// Performs formatting and forwards the string to [`call_printk`].
 ///
 /// Public but hidden since it should only be used from public macros.
@@ -141,6 +148,7 @@ pub fn call_printk_cont(args: fmt::Arguments<'_>) {
 #[allow(clippy::crate_in_macro_def)]
 macro_rules! print_macro (
     // The non-continuation cases (most of them, e.g. `INFO`).
+<<<<<<< HEAD
     ($format_string:path, false, $($arg:tt)+) => (
         // To remain sound, `arg`s must be expanded outside the `unsafe` block.
         // Typically one would use a `let` binding for that; however, `format_args!`
@@ -169,6 +177,22 @@ macro_rules! print_macro (
             format_args!($($arg)+),
         );
     );
+=======
+    ($format_string:path, $($arg:tt)+) => (
+        // SAFETY: This hidden macro should only be called by the documented
+        // printing macros which ensure the format string is one of the fixed
+        // ones. All `__LOG_PREFIX`s are null-terminated as they are generated
+        // by the `module!` proc macro or fixed values defined in a kernel
+        // crate.
+        unsafe {
+            $crate::print::call_printk(
+                &$format_string,
+                crate::__LOG_PREFIX,
+                format_args!($($arg)+),
+            );
+        }
+    );
+>>>>>>> b7ba80a49124 (Commit)
 );
 
 /// Stub for doctests
@@ -209,6 +233,7 @@ macro_rules! print_macro (
 #[macro_export]
 macro_rules! pr_emerg (
     ($($arg:tt)*) => (
+<<<<<<< HEAD
         $crate::print_macro!($crate::print::format_strings::EMERG, false, $($arg)*)
     )
 );
@@ -330,6 +355,9 @@ macro_rules! pr_warn (
 macro_rules! pr_notice (
     ($($arg:tt)*) => (
         $crate::print_macro!($crate::print::format_strings::NOTICE, false, $($arg)*)
+=======
+        $crate::print_macro!($crate::print::format_strings::EMERG, $($arg)*)
+>>>>>>> b7ba80a49124 (Commit)
     )
 );
 
@@ -354,6 +382,7 @@ macro_rules! pr_notice (
 #[doc(alias = "print")]
 macro_rules! pr_info (
     ($($arg:tt)*) => (
+<<<<<<< HEAD
         $crate::print_macro!($crate::print::format_strings::INFO, false, $($arg)*)
     )
 );
@@ -409,5 +438,8 @@ macro_rules! pr_debug (
 macro_rules! pr_cont (
     ($($arg:tt)*) => (
         $crate::print_macro!($crate::print::format_strings::CONT, true, $($arg)*)
+=======
+        $crate::print_macro!($crate::print::format_strings::INFO, $($arg)*)
+>>>>>>> b7ba80a49124 (Commit)
     )
 );

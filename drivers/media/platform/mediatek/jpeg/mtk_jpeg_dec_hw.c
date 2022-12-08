@@ -5,6 +5,7 @@
  *         Rick Chang <rick.chang@mediatek.com>
  */
 
+<<<<<<< HEAD
 #include <linux/clk.h>
 #include <linux/interrupt.h>
 #include <linux/irq.h>
@@ -25,6 +26,12 @@
 #include <media/v4l2-event.h>
 
 #include "mtk_jpeg_core.h"
+=======
+#include <linux/io.h>
+#include <linux/kernel.h>
+#include <media/videobuf2-core.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #include "mtk_jpeg_dec_hw.h"
 
 #define MTK_JPEG_DUNUM_MASK(val)	(((val) - 1) & 0x3)
@@ -39,6 +46,7 @@ enum mtk_jpeg_color {
 	MTK_JPEG_COLOR_400		= 0x00110000
 };
 
+<<<<<<< HEAD
 #if defined(CONFIG_OF)
 static const struct of_device_id mtk_jpegdec_hw_ids[] = {
 	{
@@ -49,6 +57,8 @@ static const struct of_device_id mtk_jpegdec_hw_ids[] = {
 MODULE_DEVICE_TABLE(of, mtk_jpegdec_hw_ids);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int mtk_jpeg_verify_align(u32 val, int align, u32 reg)
 {
 	if (val & (align - 1)) {
@@ -214,7 +224,10 @@ int mtk_jpeg_dec_fill_param(struct mtk_jpeg_dec_param *param)
 
 	return 0;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(mtk_jpeg_dec_fill_param);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 u32 mtk_jpeg_dec_get_int_status(void __iomem *base)
 {
@@ -226,7 +239,10 @@ u32 mtk_jpeg_dec_get_int_status(void __iomem *base)
 
 	return ret;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(mtk_jpeg_dec_get_int_status);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 u32 mtk_jpeg_dec_enum_result(u32 irq_result)
 {
@@ -243,13 +259,19 @@ u32 mtk_jpeg_dec_enum_result(u32 irq_result)
 
 	return MTK_JPEG_DEC_RESULT_ERROR_UNKNOWN;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(mtk_jpeg_dec_enum_result);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void mtk_jpeg_dec_start(void __iomem *base)
 {
 	writel(0, base + JPGDEC_REG_TRIG);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(mtk_jpeg_dec_start);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void mtk_jpeg_dec_soft_reset(void __iomem *base)
 {
@@ -269,7 +291,10 @@ void mtk_jpeg_dec_reset(void __iomem *base)
 	mtk_jpeg_dec_soft_reset(base);
 	mtk_jpeg_dec_hard_reset(base);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(mtk_jpeg_dec_reset);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void mtk_jpeg_dec_set_brz_factor(void __iomem *base, u8 yscale_w,
 					u8 yscale_h, u8 uvscale_w, u8 uvscale_h)
@@ -330,14 +355,21 @@ static void mtk_jpeg_dec_set_bs_write_ptr(void __iomem *base, u32 ptr)
 	writel(ptr, base + JPGDEC_REG_FILE_BRP);
 }
 
+<<<<<<< HEAD
 static void mtk_jpeg_dec_set_bs_info(void __iomem *base, u32 addr, u32 size,
 				     u32 bitstream_size)
+=======
+static void mtk_jpeg_dec_set_bs_info(void __iomem *base, u32 addr, u32 size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	mtk_jpeg_verify_align(addr, 16, JPGDEC_REG_FILE_ADDR);
 	mtk_jpeg_verify_align(size, 128, JPGDEC_REG_FILE_TOTAL_SIZE);
 	writel(addr, base + JPGDEC_REG_FILE_ADDR);
 	writel(size, base + JPGDEC_REG_FILE_TOTAL_SIZE);
+<<<<<<< HEAD
 	writel(bitstream_size, base + JPGDEC_REG_BIT_STREAM_SIZE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mtk_jpeg_dec_set_comp_id(void __iomem *base, u32 id_y, u32 id_u,
@@ -406,6 +438,7 @@ static void mtk_jpeg_dec_set_sampling_factor(void __iomem *base, u32 comp_num,
 }
 
 void mtk_jpeg_dec_set_config(void __iomem *base,
+<<<<<<< HEAD
 			     struct mtk_jpeg_dec_param *cfg,
 			     u32 bitstream_size,
 			     struct mtk_jpeg_bs *bs,
@@ -678,3 +711,39 @@ module_platform_driver(mtk_jpegdec_hw_driver);
 
 MODULE_DESCRIPTION("MediaTek JPEG decode HW driver");
 MODULE_LICENSE("GPL");
+=======
+			     struct mtk_jpeg_dec_param *config,
+			     struct mtk_jpeg_bs *bs,
+			     struct mtk_jpeg_fb *fb)
+{
+	mtk_jpeg_dec_set_brz_factor(base, 0, 0, config->uv_brz_w, 0);
+	mtk_jpeg_dec_set_dec_mode(base, 0);
+	mtk_jpeg_dec_set_comp0_du(base, config->unit_num);
+	mtk_jpeg_dec_set_total_mcu(base, config->total_mcu);
+	mtk_jpeg_dec_set_bs_info(base, bs->str_addr, bs->size);
+	mtk_jpeg_dec_set_bs_write_ptr(base, bs->end_addr);
+	mtk_jpeg_dec_set_du_membership(base, config->membership, 1,
+				       (config->comp_num == 1) ? 1 : 0);
+	mtk_jpeg_dec_set_comp_id(base, config->comp_id[0], config->comp_id[1],
+				 config->comp_id[2]);
+	mtk_jpeg_dec_set_q_table(base, config->qtbl_num[0],
+				 config->qtbl_num[1], config->qtbl_num[2]);
+	mtk_jpeg_dec_set_sampling_factor(base, config->comp_num,
+					 config->sampling_w[0],
+					 config->sampling_h[0],
+					 config->sampling_w[1],
+					 config->sampling_h[1],
+					 config->sampling_w[2],
+					 config->sampling_h[2]);
+	mtk_jpeg_dec_set_mem_stride(base, config->mem_stride[0],
+				    config->mem_stride[1]);
+	mtk_jpeg_dec_set_img_stride(base, config->img_stride[0],
+				    config->img_stride[1]);
+	mtk_jpeg_dec_set_dst_bank0(base, fb->plane_addr[0],
+				   fb->plane_addr[1], fb->plane_addr[2]);
+	mtk_jpeg_dec_set_dst_bank1(base, 0, 0, 0);
+	mtk_jpeg_dec_set_dma_group(base, config->dma_mcu, config->dma_group,
+				   config->dma_last_mcu);
+	mtk_jpeg_dec_set_pause_mcu_idx(base, config->total_mcu);
+}
+>>>>>>> b7ba80a49124 (Commit)

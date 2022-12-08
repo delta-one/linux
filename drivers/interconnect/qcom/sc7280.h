@@ -150,5 +150,10 @@
 #define SC7280_SLAVE_PCIE_1			139
 #define SC7280_SLAVE_QDSS_STM			140
 #define SC7280_SLAVE_TCU			141
+<<<<<<< HEAD
+=======
+#define SC7280_MASTER_EPSS_L3_APPS		142
+#define SC7280_SLAVE_EPSS_L3			143
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

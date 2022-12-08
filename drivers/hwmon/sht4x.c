@@ -129,7 +129,11 @@ unlock:
 
 static ssize_t sht4x_interval_write(struct sht4x_data *data, long val)
 {
+<<<<<<< HEAD
 	data->update_interval = clamp_val(val, SHT4X_MIN_POLL_INTERVAL, INT_MAX);
+=======
+	data->update_interval = clamp_val(val, SHT4X_MIN_POLL_INTERVAL, UINT_MAX);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -232,7 +236,12 @@ static const struct hwmon_chip_info sht4x_chip_info = {
 	.info = sht4x_info,
 };
 
+<<<<<<< HEAD
 static int sht4x_probe(struct i2c_client *client)
+=======
+static int sht4x_probe(struct i2c_client *client,
+		       const struct i2c_device_id *sht4x_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *device = &client->dev;
 	struct device *hwmon_dev;
@@ -291,7 +300,11 @@ static struct i2c_driver sht4x_driver = {
 		.name = "sht4x",
 		.of_match_table = sht4x_of_match,
 	},
+<<<<<<< HEAD
 	.probe_new	= sht4x_probe,
+=======
+	.probe		= sht4x_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= sht4x_id,
 };
 

@@ -55,7 +55,11 @@ static struct notifier_block hb_cpufreq_clk_nb = {
 	.notifier_call = hb_cpufreq_clk_notify,
 };
 
+<<<<<<< HEAD
 static int __init hb_cpufreq_driver_init(void)
+=======
+static int hb_cpufreq_driver_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device_info devinfo = { .name = "cpufreq-dt", };
 	struct device *cpu_dev;

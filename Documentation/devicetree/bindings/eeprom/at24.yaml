@@ -10,9 +10,12 @@ title: I2C EEPROMs compatible with Atmel's AT24
 maintainers:
   - Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
+<<<<<<< HEAD
 allOf:
   - $ref: /schemas/nvmem/nvmem.yaml
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 select:
   properties:
     compatible:
@@ -186,7 +189,11 @@ required:
   - compatible
   - reg
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

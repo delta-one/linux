@@ -687,12 +687,16 @@ out_unlock:
  */
 static void vfe_pm_domain_off(struct vfe_device *vfe)
 {
+<<<<<<< HEAD
 	struct camss *camss = vfe->camss;
 
 	if (vfe->id >= camss->vfe_num)
 		return;
 
 	device_link_del(camss->genpd_link[vfe->id]);
+=======
+	/* nop */
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -701,6 +705,7 @@ static void vfe_pm_domain_off(struct vfe_device *vfe)
  */
 static int vfe_pm_domain_on(struct vfe_device *vfe)
 {
+<<<<<<< HEAD
 	struct camss *camss = vfe->camss;
 	enum vfe_line_id id = vfe->id;
 
@@ -714,6 +719,8 @@ static int vfe_pm_domain_on(struct vfe_device *vfe)
 	if (!camss->genpd_link[id])
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

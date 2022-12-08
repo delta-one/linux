@@ -18,8 +18,12 @@
 #include <linux/platform_device.h>
 #include <linux/regmap.h>
 #include <linux/thermal.h>
+<<<<<<< HEAD
 
 #include <asm/unaligned.h>
+=======
+#include <asm-generic/unaligned.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "../thermal_hwmon.h"
 
@@ -360,7 +364,11 @@ static irqreturn_t adc_tm5_gen2_isr(int irq, void *data)
 
 static int adc_tm5_get_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	struct adc_tm5_channel *channel = thermal_zone_device_priv(tz);
+=======
+	struct adc_tm5_channel *channel = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (!channel || !channel->iio)
@@ -642,7 +650,11 @@ config_fail:
 
 static int adc_tm5_set_trips(struct thermal_zone_device *tz, int low, int high)
 {
+<<<<<<< HEAD
 	struct adc_tm5_channel *channel = thermal_zone_device_priv(tz);
+=======
+	struct adc_tm5_channel *channel = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct adc_tm5_chip *chip;
 	int ret;
 
@@ -679,7 +691,11 @@ static int adc_tm5_register_tzd(struct adc_tm5_chip *adc_tm)
 						    &adc_tm5_thermal_ops);
 		if (IS_ERR(tzd)) {
 			if (PTR_ERR(tzd) == -ENODEV) {
+<<<<<<< HEAD
 				dev_dbg(adc_tm->dev, "thermal sensor on channel %d is not used\n",
+=======
+				dev_warn(adc_tm->dev, "thermal sensor on channel %d is not used\n",
+>>>>>>> b7ba80a49124 (Commit)
 					 adc_tm->channels[i].channel);
 				continue;
 			}
@@ -689,7 +705,11 @@ static int adc_tm5_register_tzd(struct adc_tm5_chip *adc_tm)
 			return PTR_ERR(tzd);
 		}
 		adc_tm->channels[i].tzd = tzd;
+<<<<<<< HEAD
 		if (devm_thermal_add_hwmon_sysfs(adc_tm->dev, tzd))
+=======
+		if (devm_thermal_add_hwmon_sysfs(tzd))
+>>>>>>> b7ba80a49124 (Commit)
 			dev_warn(adc_tm->dev,
 				 "Failed to add hwmon sysfs attributes\n");
 	}
@@ -1031,8 +1051,15 @@ static int adc_tm5_probe(struct platform_device *pdev)
 		return irq;
 
 	ret = adc_tm5_get_dt_data(adc_tm, node);
+<<<<<<< HEAD
 	if (ret)
 		return dev_err_probe(dev, ret, "get dt data failed\n");
+=======
+	if (ret) {
+		dev_err(dev, "get dt data failed: %d\n", ret);
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = adc_tm->data->init(adc_tm);
 	if (ret) {

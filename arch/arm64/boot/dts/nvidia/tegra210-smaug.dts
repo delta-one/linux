@@ -1389,6 +1389,7 @@
 			pinctrl-names = "default";
 			pinctrl-0 = <&max77620_default>;
 
+<<<<<<< HEAD
 			fps {
 				fps0 {
 					maxim,shutdown-fps-time-period-us = <5120>;
@@ -1406,6 +1407,8 @@
 				};
 			};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			max77620_default: pinmux {
 				gpio0_1_2_7 {
 					pins = "gpio0", "gpio1", "gpio2", "gpio7";
@@ -1426,16 +1429,44 @@
 					maxim,active-fps-power-down-slot = <2>;
 				};
 
+<<<<<<< HEAD
 				gpio4 {
 					pins = "gpio4";
 					function = "32k-out1";
 				};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				gpio5_6 {
 					pins = "gpio5", "gpio6";
 					function = "gpio";
 					drive-push-pull = <1>;
 				};
+<<<<<<< HEAD
+=======
+
+				gpio4 {
+					pins = "gpio4";
+					function = "32k-out1";
+				};
+			};
+
+			fps {
+				fps0 {
+					maxim,shutdown-fps-time-period-us = <5120>;
+					maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN0>;
+				};
+
+				fps1 {
+					maxim,shutdown-fps-time-period-us = <5120>;
+					maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN1>;
+					maxim,device-state-on-disabled-event = <MAX77620_FPS_INACTIVE_STATE_SLEEP>;
+				};
+
+				fps2 {
+					maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN0>;
+				};
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			regulators {
@@ -1800,6 +1831,7 @@
 			wakeup-source;
 		};
 
+<<<<<<< HEAD
 		key-volume-down {
 			label = "Volume Down";
 			gpios = <&gpio TEGRA_GPIO(X, 7) GPIO_ACTIVE_LOW>;
@@ -1812,6 +1844,8 @@
 			linux,code = <KEY_VOLUMEUP>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		switch-lid {
 			label = "Lid";
 			gpios = <&gpio TEGRA_GPIO(B, 4) GPIO_ACTIVE_LOW>;
@@ -1827,6 +1861,21 @@
 			linux,code = <SW_TABLET_MODE>;
 			wakeup-source;
 		};
+<<<<<<< HEAD
+=======
+
+		key-volume-down {
+			label = "Volume Down";
+			gpios = <&gpio TEGRA_GPIO(X, 7) GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_VOLUMEDOWN>;
+		};
+
+		key-volume-up {
+			label = "Volume Up";
+			gpios = <&gpio TEGRA_GPIO(M, 4) GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_VOLUMEUP>;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	max98357a {

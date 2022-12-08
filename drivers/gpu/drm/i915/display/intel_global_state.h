@@ -27,7 +27,11 @@ struct intel_global_obj {
 };
 
 #define intel_for_each_global_obj(obj, dev_priv) \
+<<<<<<< HEAD
 	list_for_each_entry(obj, &(dev_priv)->display.global.obj_list, head)
+=======
+	list_for_each_entry(obj, &(dev_priv)->global_obj_list, head)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define for_each_new_global_obj_in_state(__state, obj, new_obj_state, __i) \
 	for ((__i) = 0; \

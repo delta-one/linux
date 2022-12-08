@@ -1267,7 +1267,12 @@ static int ov5695_configure_regulators(struct ov5695 *ov5695)
 				       ov5695->supplies);
 }
 
+<<<<<<< HEAD
 static int ov5695_probe(struct i2c_client *client)
+=======
+static int ov5695_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &client->dev;
 	struct ov5695 *ov5695;
@@ -1392,7 +1397,11 @@ static struct i2c_driver ov5695_i2c_driver = {
 		.pm = &ov5695_pm_ops,
 		.of_match_table = of_match_ptr(ov5695_of_match),
 	},
+<<<<<<< HEAD
 	.probe_new	= &ov5695_probe,
+=======
+	.probe		= &ov5695_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= &ov5695_remove,
 };
 

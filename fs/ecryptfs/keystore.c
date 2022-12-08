@@ -878,7 +878,11 @@ struct ecryptfs_parse_tag_70_packet_silly_stack {
  * @filename: This function kmalloc's the memory for the filename
  * @filename_size: This function sets this to the amount of memory
  *                 kmalloc'd for the filename
+<<<<<<< HEAD
  * @packet_size: This function sets this to the number of octets
+=======
+ * @packet_size: This function sets this to the the number of octets
+>>>>>>> b7ba80a49124 (Commit)
  *               in the packet parsed
  * @mount_crypt_stat: The mount-wide cryptographic context
  * @data: The memory location containing the start of the tag 70

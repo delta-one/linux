@@ -15,14 +15,31 @@
 	compatible = "radxa,rock-4c-plus", "rockchip,rk3399";
 
 	aliases {
+<<<<<<< HEAD
 		mmc0 = &sdhci;
 		mmc1 = &sdmmc;
+=======
+		mmc0 = &sdmmc;
+		mmc1 = &sdhci;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	chosen {
 		stdout-path = "serial2:1500000n8";
 	};
 
+<<<<<<< HEAD
+=======
+	sdio_pwrseq: sdio-pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		clocks = <&rk809 1>;
+		clock-names = "ext_clock";
+		pinctrl-names = "default";
+		pinctrl-0 = <&wifi_enable_h>;
+		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	clkin_gmac: external-gmac-clock {
 		compatible = "fixed-clock";
 		clock-frequency = <125000000>;
@@ -52,6 +69,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	sdio_pwrseq: sdio-pwrseq {
 		compatible = "mmc-pwrseq-simple";
 		clocks = <&rk809 1>;
@@ -79,6 +97,15 @@
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
 		vin-supply = <&vcc_3v3>;
+=======
+	vcc5v0_sys: vcc5v0-sys-regulator {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc5v0_sys";
+		regulator-always-on;
+		regulator-boot-on;
+		regulator-min-microvolt = <5000000>;
+		regulator-max-microvolt = <5000000>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	vcc5v0_host1: vcc5v0-host-regulator {
@@ -93,6 +120,7 @@
 		vin-supply = <&vcc5v0_host0_s0>;
 	};
 
+<<<<<<< HEAD
 	vcc5v0_sys: vcc5v0-sys-regulator {
 		compatible = "regulator-fixed";
 		regulator-name = "vcc5v0_sys";
@@ -102,6 +130,8 @@
 		regulator-max-microvolt = <5000000>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vcc5v0_typec: vcc5v0-typec-regulator {
 		compatible = "regulator-fixed";
 		enable-active-high;
@@ -114,6 +144,7 @@
 		vin-supply = <&vcc5v0_sys>;
 	};
 
+<<<<<<< HEAD
 	vdd_log: vdd-log-regulator {
 		compatible = "regulator-fixed";
 		regulator-name = "vdd_log";
@@ -122,6 +153,15 @@
 		regulator-min-microvolt = <950000>;
 		regulator-max-microvolt = <950000>;
 		vin-supply = <&vcc5v0_sys>;
+=======
+	vcc_lan: vcc3v3-phy-regulator {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc_lan";
+		regulator-always-on;
+		regulator-boot-on;
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -157,7 +197,11 @@
 	assigned-clocks = <&cru SCLK_RMII_SRC>;
 	assigned-clock-parents = <&clkin_gmac>;
 	clock_in_out = "input";
+<<<<<<< HEAD
 	phy-supply = <&vcc3v3_phy1>;
+=======
+	phy-supply = <&vcc_lan>;
+>>>>>>> b7ba80a49124 (Commit)
 	phy-mode = "rgmii";
 	pinctrl-names = "default";
 	pinctrl-0 = <&rgmii_pins>;
@@ -175,8 +219,11 @@
 };
 
 &hdmi {
+<<<<<<< HEAD
 	avdd-0v9-supply = <&vcc_0v9_s0>;
 	avdd-1v8-supply = <&vcc_1v8_s0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ddc-i2c-bus = <&i2c3>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&hdmi_cec>;
@@ -209,20 +256,33 @@
 		vcc2-supply = <&vcc5v0_sys>;
 		vcc3-supply = <&vcc5v0_sys>;
 		vcc4-supply = <&vcc5v0_sys>;
+<<<<<<< HEAD
 		vcc5-supply = <&vcc_buck5_s3>;
 		vcc6-supply = <&vcc_buck5_s3>;
+=======
+		vcc5-supply = <&vcc_buck5>;
+		vcc6-supply = <&vcc_buck5>;
+>>>>>>> b7ba80a49124 (Commit)
 		vcc7-supply = <&vcc5v0_sys>;
 		vcc8-supply = <&vcc3v3_sys>;
 		vcc9-supply = <&vcc5v0_sys>;
 
 		regulators {
+<<<<<<< HEAD
 			vdd_center: DCDC_REG1 {
+=======
+			vdd_log: DCDC_REG1 {
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-always-on;
 				regulator-boot-on;
 				regulator-min-microvolt = <750000>;
 				regulator-max-microvolt = <1350000>;
 				regulator-initial-mode = <0x2>;
+<<<<<<< HEAD
 				regulator-name = "vdd_center";
+=======
+				regulator-name = "vdd_log";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-state-mem {
 					regulator-off-in-suspend;
 					regulator-suspend-microvolt = <900000>;
@@ -265,59 +325,99 @@
 				};
 			};
 
+<<<<<<< HEAD
 			vcc_buck5_s3: DCDC_REG5 {
+=======
+			vcc_buck5: DCDC_REG5 {
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-always-on;
 				regulator-boot-on;
 				regulator-min-microvolt = <3300000>;
 				regulator-max-microvolt = <3300000>;
+<<<<<<< HEAD
 				regulator-name = "vcc_buck5_s3";
+=======
+				regulator-name = "vcc_buck5";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-state-mem {
 					regulator-on-in-suspend;
 					regulator-suspend-microvolt = <3300000>;
 				};
 			};
 
+<<<<<<< HEAD
 			vcc_0v9_s3: LDO_REG1 {
+=======
+			vcca_0v9: LDO_REG1 {
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-always-on;
 				regulator-boot-on;
 				regulator-min-microvolt = <900000>;
 				regulator-max-microvolt = <900000>;
+<<<<<<< HEAD
 				regulator-name = "vcc_0v9_s3";
+=======
+				regulator-name = "vcca_0v9";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-state-mem {
 					regulator-off-in-suspend;
 				};
 			};
 
+<<<<<<< HEAD
 			vcc_1v8_s3: LDO_REG2 {
+=======
+			vcc_1v8: LDO_REG2 {
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-always-on;
 				regulator-boot-on;
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <1800000>;
+<<<<<<< HEAD
 				regulator-name = "vcc_1v8_s3";
+=======
+				regulator-name = "vcc_1v8";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-state-mem {
 					regulator-on-in-suspend;
 					regulator-suspend-microvolt = <1800000>;
 				};
 			};
 
+<<<<<<< HEAD
 			vcc_0v9_s0: LDO_REG3 {
+=======
+			vcc0v9_soc: LDO_REG3 {
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-always-on;
 				regulator-boot-on;
 				regulator-min-microvolt = <900000>;
 				regulator-max-microvolt = <900000>;
+<<<<<<< HEAD
 				regulator-name = "vcc_0v9_s0";
+=======
+				regulator-name = "vcc0v9_soc";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-state-mem {
 					regulator-on-in-suspend;
 					regulator-suspend-microvolt = <900000>;
 				};
 			};
 
+<<<<<<< HEAD
 			vcc_1v8_s0: LDO_REG4 {
+=======
+			vcca_1v8: LDO_REG4 {
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-always-on;
 				regulator-boot-on;
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <1800000>;
+<<<<<<< HEAD
 				regulator-name = "vcc_1v8_s0";
+=======
+				regulator-name = "vcca_1v8";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-state-mem {
 					regulator-off-in-suspend;
 				};
@@ -334,34 +434,58 @@
 				};
 			};
 
+<<<<<<< HEAD
 			vcc_1v5_s0: LDO_REG6 {
+=======
+			vcc_1v5: LDO_REG6 {
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-always-on;
 				regulator-boot-on;
 				regulator-min-microvolt = <1500000>;
 				regulator-max-microvolt = <1500000>;
+<<<<<<< HEAD
 				regulator-name = "vcc_1v5_s0";
+=======
+				regulator-name = "vcc_1v5";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-state-mem {
 					regulator-off-in-suspend;
 				};
 			};
 
+<<<<<<< HEAD
 			vcc_3v0_s0: LDO_REG7 {
+=======
+			vcc_3v0: LDO_REG7 {
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-always-on;
 				regulator-boot-on;
 				regulator-min-microvolt = <3000000>;
 				regulator-max-microvolt = <3000000>;
+<<<<<<< HEAD
 				regulator-name = "vcc_3v0_s0";
+=======
+				regulator-name = "vcc_3v0";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-state-mem {
 					regulator-off-in-suspend;
 				};
 			};
 
+<<<<<<< HEAD
 			vcc_sdio_s0: LDO_REG8 {
+=======
+			vccio_sd: LDO_REG8 {
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-always-on;
 				regulator-boot-on;
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <3300000>;
+<<<<<<< HEAD
 				regulator-name = "vcc_sdio_s0";
+=======
+				regulator-name = "vccio_sd";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-state-mem {
 					regulator-off-in-suspend;
 				};
@@ -449,10 +573,16 @@
 };
 
 &io_domains {
+<<<<<<< HEAD
 	audio-supply = <&vcc_1v8_s0>;
 	bt656-supply = <&vcc_3v0_s0>;
 	gpio1830-supply = <&vcc_3v0_s0>;
 	sdmmc-supply = <&vcc_sdio_s0>;
+=======
+	bt656-supply = <&vcc_3v0>;
+	gpio1830-supply = <&vcc_3v0>;
+	sdmmc-supply = <&vccio_sd>;
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 
@@ -536,13 +666,21 @@
 };
 
 &pmu_io_domains {
+<<<<<<< HEAD
 	pmu1830-supply = <&vcc_3v0_s0>;
+=======
+	pmu1830-supply = <&vcc_3v0>;
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 
 &saradc {
 	status = "okay";
+<<<<<<< HEAD
 	vref-supply = <&vcc_1v8_s3>;
+=======
+	vref-supply = <&vcc_1v8>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &sdhci {
@@ -589,7 +727,11 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
 	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
+<<<<<<< HEAD
 	vqmmc-supply = <&vcc_sdio_s0>;
+=======
+	vqmmc-supply = <&vccio_sd>;
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 
@@ -601,12 +743,15 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &tsadc {
 	rockchip,hw-tshut-mode = <1>;
 	rockchip,hw-tshut-polarity = <1>;
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &u2phy0 {
 	status = "okay";
 
@@ -649,7 +794,11 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&bt_host_wake_l &bt_wake_l &bt_enable_h>;
 		vbat-supply = <&vcc3v3_sys>;
+<<<<<<< HEAD
 		vddio-supply = <&vcc_1v8_s3>;
+=======
+		vddio-supply = <&vcc_1v8>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 

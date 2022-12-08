@@ -8,7 +8,10 @@
  */
 
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/math.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <linux/pci.h>
@@ -351,6 +354,7 @@ static u32 calc_l1ss_pwron(struct pci_dev *pdev, u32 scale, u32 val)
 	return 0;
 }
 
+<<<<<<< HEAD
 /*
  * Encode an LTR_L1.2_THRESHOLD value for the L1 PM Substates Control 1
  * register.  Ports enter L1.2 when the most recent LTR value is greater
@@ -388,6 +392,31 @@ static void encode_l12_threshold(u32 threshold_us, u32 *scale, u32 *value)
 	} else {
 		*scale = 5;
 		*value = 0x3ff;		/* Max representable value */
+=======
+static void encode_l12_threshold(u32 threshold_us, u32 *scale, u32 *value)
+{
+	u32 threshold_ns = threshold_us * 1000;
+
+	/* See PCIe r3.1, sec 7.33.3 and sec 6.18 */
+	if (threshold_ns < 32) {
+		*scale = 0;
+		*value = threshold_ns;
+	} else if (threshold_ns < 1024) {
+		*scale = 1;
+		*value = threshold_ns >> 5;
+	} else if (threshold_ns < 32768) {
+		*scale = 2;
+		*value = threshold_ns >> 10;
+	} else if (threshold_ns < 1048576) {
+		*scale = 3;
+		*value = threshold_ns >> 15;
+	} else if (threshold_ns < 33554432) {
+		*scale = 4;
+		*value = threshold_ns >> 20;
+	} else {
+		*scale = 5;
+		*value = threshold_ns >> 25;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -470,6 +499,34 @@ static void pci_clear_and_set_dword(struct pci_dev *pdev, int pos,
 	pci_write_config_dword(pdev, pos, val);
 }
 
+<<<<<<< HEAD
+=======
+static void aspm_program_l1ss(struct pci_dev *dev, u32 ctl1, u32 ctl2)
+{
+	u16 l1ss = dev->l1ss;
+	u32 l1_2_enable;
+
+	/*
+	 * Per PCIe r6.0, sec 5.5.4, T_POWER_ON in PCI_L1SS_CTL2 must be
+	 * programmed prior to setting the L1.2 enable bits in PCI_L1SS_CTL1.
+	 */
+	pci_write_config_dword(dev, l1ss + PCI_L1SS_CTL2, ctl2);
+
+	/*
+	 * In addition, Common_Mode_Restore_Time and LTR_L1.2_THRESHOLD in
+	 * PCI_L1SS_CTL1 must be programmed *before* setting the L1.2
+	 * enable bits, even though they're all in PCI_L1SS_CTL1.
+	 */
+	l1_2_enable = ctl1 & PCI_L1SS_CTL1_L1_2_MASK;
+	ctl1 &= ~PCI_L1SS_CTL1_L1_2_MASK;
+
+	pci_write_config_dword(dev, l1ss + PCI_L1SS_CTL1, ctl1);
+	if (l1_2_enable)
+		pci_write_config_dword(dev, l1ss + PCI_L1SS_CTL1,
+				       ctl1 | l1_2_enable);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Calculate L1.2 PM substate timing parameters */
 static void aspm_calc_l1ss_info(struct pcie_link_state *link,
 				u32 parent_l1ss_cap, u32 child_l1ss_cap)
@@ -479,7 +536,10 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
 	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
 	u32 ctl1 = 0, ctl2 = 0;
 	u32 pctl1, pctl2, cctl1, cctl2;
+<<<<<<< HEAD
 	u32 pl1_2_enables, cl1_2_enables;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!(link->aspm_support & ASPM_STATE_L1_2_MASK))
 		return;
@@ -528,6 +588,7 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
 	    ctl2 == pctl2 && ctl2 == cctl2)
 		return;
 
+<<<<<<< HEAD
 	/* Disable L1.2 while updating.  See PCIe r5.0, sec 5.5.4, 7.8.3.3 */
 	pl1_2_enables = pctl1 & PCI_L1SS_CTL1_L1_2_MASK;
 	cl1_2_enables = cctl1 & PCI_L1SS_CTL1_L1_2_MASK;
@@ -618,6 +679,12 @@ static void aspm_l1ss_init(struct pcie_link_state *link)
 
 	if (link->aspm_support & ASPM_STATE_L1SS)
 		aspm_calc_l1ss_info(link, parent_l1ss_cap, child_l1ss_cap);
+=======
+	aspm_program_l1ss(parent,
+			  ctl1 | (pctl1 & PCI_L1SS_CTL1_L1_2_MASK), ctl2);
+	aspm_program_l1ss(child,
+			  ctl1 | (cctl1 & PCI_L1SS_CTL1_L1_2_MASK), ctl2);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
@@ -625,6 +692,11 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
 	struct pci_dev *child = link->downstream, *parent = link->pdev;
 	u32 parent_lnkcap, child_lnkcap;
 	u16 parent_lnkctl, child_lnkctl;
+<<<<<<< HEAD
+=======
+	u32 parent_l1ss_cap, child_l1ss_cap;
+	u32 parent_l1ss_ctl1 = 0, child_l1ss_ctl1 = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct pci_bus *linkbus = parent->subordinate;
 
 	if (blacklist) {
@@ -679,7 +751,56 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
 	if (parent_lnkctl & child_lnkctl & PCI_EXP_LNKCTL_ASPM_L1)
 		link->aspm_enabled |= ASPM_STATE_L1;
 
+<<<<<<< HEAD
 	aspm_l1ss_init(link);
+=======
+	/* Setup L1 substate */
+	pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CAP,
+			      &parent_l1ss_cap);
+	pci_read_config_dword(child, child->l1ss + PCI_L1SS_CAP,
+			      &child_l1ss_cap);
+
+	if (!(parent_l1ss_cap & PCI_L1SS_CAP_L1_PM_SS))
+		parent_l1ss_cap = 0;
+	if (!(child_l1ss_cap & PCI_L1SS_CAP_L1_PM_SS))
+		child_l1ss_cap = 0;
+
+	/*
+	 * If we don't have LTR for the entire path from the Root Complex
+	 * to this device, we can't use ASPM L1.2 because it relies on the
+	 * LTR_L1.2_THRESHOLD.  See PCIe r4.0, secs 5.5.4, 6.18.
+	 */
+	if (!child->ltr_path)
+		child_l1ss_cap &= ~PCI_L1SS_CAP_ASPM_L1_2;
+
+	if (parent_l1ss_cap & child_l1ss_cap & PCI_L1SS_CAP_ASPM_L1_1)
+		link->aspm_support |= ASPM_STATE_L1_1;
+	if (parent_l1ss_cap & child_l1ss_cap & PCI_L1SS_CAP_ASPM_L1_2)
+		link->aspm_support |= ASPM_STATE_L1_2;
+	if (parent_l1ss_cap & child_l1ss_cap & PCI_L1SS_CAP_PCIPM_L1_1)
+		link->aspm_support |= ASPM_STATE_L1_1_PCIPM;
+	if (parent_l1ss_cap & child_l1ss_cap & PCI_L1SS_CAP_PCIPM_L1_2)
+		link->aspm_support |= ASPM_STATE_L1_2_PCIPM;
+
+	if (parent_l1ss_cap)
+		pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
+				      &parent_l1ss_ctl1);
+	if (child_l1ss_cap)
+		pci_read_config_dword(child, child->l1ss + PCI_L1SS_CTL1,
+				      &child_l1ss_ctl1);
+
+	if (parent_l1ss_ctl1 & child_l1ss_ctl1 & PCI_L1SS_CTL1_ASPM_L1_1)
+		link->aspm_enabled |= ASPM_STATE_L1_1;
+	if (parent_l1ss_ctl1 & child_l1ss_ctl1 & PCI_L1SS_CTL1_ASPM_L1_2)
+		link->aspm_enabled |= ASPM_STATE_L1_2;
+	if (parent_l1ss_ctl1 & child_l1ss_ctl1 & PCI_L1SS_CTL1_PCIPM_L1_1)
+		link->aspm_enabled |= ASPM_STATE_L1_1_PCIPM;
+	if (parent_l1ss_ctl1 & child_l1ss_ctl1 & PCI_L1SS_CTL1_PCIPM_L1_2)
+		link->aspm_enabled |= ASPM_STATE_L1_2_PCIPM;
+
+	if (link->aspm_support & ASPM_STATE_L1SS)
+		aspm_calc_l1ss_info(link, parent_l1ss_cap, child_l1ss_cap);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Save default state */
 	link->aspm_default = link->aspm_enabled;
@@ -751,6 +872,46 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
 				PCI_L1SS_CTL1_L1SS_MASK, val);
 }
 
+<<<<<<< HEAD
+=======
+void pci_save_aspm_l1ss_state(struct pci_dev *dev)
+{
+	struct pci_cap_saved_state *save_state;
+	u16 l1ss = dev->l1ss;
+	u32 *cap;
+
+	if (!l1ss)
+		return;
+
+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
+	if (!save_state)
+		return;
+
+	cap = (u32 *)&save_state->cap.data[0];
+	pci_read_config_dword(dev, l1ss + PCI_L1SS_CTL2, cap++);
+	pci_read_config_dword(dev, l1ss + PCI_L1SS_CTL1, cap++);
+}
+
+void pci_restore_aspm_l1ss_state(struct pci_dev *dev)
+{
+	struct pci_cap_saved_state *save_state;
+	u32 *cap, ctl1, ctl2;
+	u16 l1ss = dev->l1ss;
+
+	if (!l1ss)
+		return;
+
+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
+	if (!save_state)
+		return;
+
+	cap = (u32 *)&save_state->cap.data[0];
+	ctl2 = *cap++;
+	ctl1 = *cap;
+	aspm_program_l1ss(dev, ctl1, ctl2);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
 {
 	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
@@ -1138,6 +1299,7 @@ int pci_disable_link_state(struct pci_dev *pdev, int state)
 }
 EXPORT_SYMBOL(pci_disable_link_state);
 
+<<<<<<< HEAD
 /**
  * pci_enable_link_state - Clear and set the default device link state so that
  * the link may be allowed to enter the specified states. Note that if the
@@ -1192,6 +1354,8 @@ int pci_enable_link_state(struct pci_dev *pdev, int state)
 }
 EXPORT_SYMBOL(pci_enable_link_state);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int pcie_aspm_set_policy(const char *val,
 				const struct kernel_param *kp)
 {

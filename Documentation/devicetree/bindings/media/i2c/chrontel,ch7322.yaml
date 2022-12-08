@@ -13,9 +13,12 @@ description:
   The Chrontel CH7322 is a discrete HDMI-CEC controller. It is
   programmable through I2C and drives a single CEC line.
 
+<<<<<<< HEAD
 allOf:
   - $ref: /schemas/media/cec/cec-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     const: chrontel,ch7322
@@ -43,12 +46,23 @@ properties:
       if in auto mode.
     maxItems: 1
 
+<<<<<<< HEAD
+=======
+  # see ../cec.txt
+  hdmi-phandle:
+    description: phandle to the HDMI controller
+
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg
   - interrupts
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |
@@ -57,7 +71,11 @@ examples:
     i2c {
       #address-cells = <1>;
       #size-cells = <0>;
+<<<<<<< HEAD
       cec@75 {
+=======
+      ch7322@75 {
+>>>>>>> b7ba80a49124 (Commit)
         compatible = "chrontel,ch7322";
         reg = <0x75>;
         interrupts = <47 IRQ_TYPE_EDGE_RISING>;

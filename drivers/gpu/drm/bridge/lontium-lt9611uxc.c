@@ -844,7 +844,12 @@ static const struct attribute_group *lt9611uxc_attr_groups[] = {
 	NULL,
 };
 
+<<<<<<< HEAD
 static int lt9611uxc_probe(struct i2c_client *client)
+=======
+static int lt9611uxc_probe(struct i2c_client *client,
+			   const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lt9611uxc *lt9611uxc;
 	struct device *dev = &client->dev;
@@ -1011,7 +1016,11 @@ static struct i2c_driver lt9611uxc_driver = {
 		.of_match_table = lt9611uxc_match_table,
 		.dev_groups = lt9611uxc_attr_groups,
 	},
+<<<<<<< HEAD
 	.probe_new = lt9611uxc_probe,
+=======
+	.probe = lt9611uxc_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = lt9611uxc_remove,
 	.id_table = lt9611uxc_id,
 };

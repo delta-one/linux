@@ -454,7 +454,11 @@ void hns_roce_cq_completion(struct hns_roce_dev *hr_dev, u32 cqn)
 	hr_cq = xa_load(&hr_dev->cq_table.array,
 			cqn & (hr_dev->caps.num_cqs - 1));
 	if (!hr_cq) {
+<<<<<<< HEAD
 		dev_warn(hr_dev->dev, "completion event for bogus CQ 0x%06x\n",
+=======
+		dev_warn(hr_dev->dev, "Completion event for bogus CQ 0x%06x\n",
+>>>>>>> b7ba80a49124 (Commit)
 			 cqn);
 		return;
 	}
@@ -475,14 +479,22 @@ void hns_roce_cq_event(struct hns_roce_dev *hr_dev, u32 cqn, int event_type)
 	hr_cq = xa_load(&hr_dev->cq_table.array,
 			cqn & (hr_dev->caps.num_cqs - 1));
 	if (!hr_cq) {
+<<<<<<< HEAD
 		dev_warn(dev, "async event for bogus CQ 0x%06x\n", cqn);
+=======
+		dev_warn(dev, "Async event for bogus CQ 0x%06x\n", cqn);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
 	if (event_type != HNS_ROCE_EVENT_TYPE_CQ_ID_INVALID &&
 	    event_type != HNS_ROCE_EVENT_TYPE_CQ_ACCESS_ERROR &&
 	    event_type != HNS_ROCE_EVENT_TYPE_CQ_OVERFLOW) {
+<<<<<<< HEAD
 		dev_err(dev, "unexpected event type 0x%x on CQ 0x%06x\n",
+=======
+		dev_err(dev, "Unexpected event type 0x%x on CQ 0x%06x\n",
+>>>>>>> b7ba80a49124 (Commit)
 			event_type, cqn);
 		return;
 	}

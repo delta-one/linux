@@ -206,6 +206,11 @@ static int __init footbridge_watchdog_init(void)
 	pr_info("Footbridge Watchdog Timer: 0.01, timer margin: %d sec\n",
 		soft_margin);
 
+<<<<<<< HEAD
+=======
+	if (machine_is_cats())
+		pr_warn("Warning: Watchdog reset may not work on this machine\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

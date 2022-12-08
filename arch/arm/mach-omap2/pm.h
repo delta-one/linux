@@ -29,9 +29,29 @@ static inline int omap4_idle_init(void)
 
 extern void *omap3_secure_ram_storage;
 extern void omap3_pm_off_mode_enable(int);
+<<<<<<< HEAD
 extern void omap_sram_idle(bool rcuidle);
 extern int omap_pm_clkdms_setup(struct clockdomain *clkdm, void *unused);
 
+=======
+extern void omap_sram_idle(void);
+extern int omap_pm_clkdms_setup(struct clockdomain *clkdm, void *unused);
+
+#if defined(CONFIG_PM_OPP)
+extern int omap3_opp_init(void);
+extern int omap4_opp_init(void);
+#else
+static inline int omap3_opp_init(void)
+{
+	return -EINVAL;
+}
+static inline int omap4_opp_init(void)
+{
+	return -EINVAL;
+}
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 extern int omap3_pm_get_suspend_state(struct powerdomain *pwrdm);
 extern int omap3_pm_set_suspend_state(struct powerdomain *pwrdm, int state);
 
@@ -44,6 +64,12 @@ extern void pm_dbg_update_time(struct powerdomain *pwrdm, int prev);
 #endif /* CONFIG_PM_DEBUG */
 
 /* 24xx */
+<<<<<<< HEAD
+=======
+extern void omap24xx_idle_loop_suspend(void);
+extern unsigned int omap24xx_idle_loop_suspend_sz;
+
+>>>>>>> b7ba80a49124 (Commit)
 extern void omap24xx_cpu_suspend(u32 dll_ctrl, void __iomem *sdrc_dlla_ctrl,
 					void __iomem *sdrc_power);
 extern unsigned int omap24xx_cpu_suspend_sz;
@@ -93,16 +119,29 @@ extern u16 pm44xx_errata;
 
 #ifdef CONFIG_POWER_AVS_OMAP
 extern int omap_devinit_smartreflex(void);
+<<<<<<< HEAD
+=======
+extern void omap_enable_smartreflex_on_init(void);
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline int omap_devinit_smartreflex(void)
 {
 	return -EINVAL;
 }
+<<<<<<< HEAD
+=======
+
+static inline void omap_enable_smartreflex_on_init(void) {}
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #ifdef CONFIG_TWL4030_CORE
 extern int omap3_twl_init(void);
 extern int omap4_twl_init(void);
+<<<<<<< HEAD
+=======
+extern int omap3_twl_set_sr_bit(bool enable);
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline int omap3_twl_init(void)
 {
@@ -124,9 +163,19 @@ static inline int omap4_cpcap_init(void)
 #endif
 
 #ifdef CONFIG_PM
+<<<<<<< HEAD
 extern void omap_pm_get_oscillator(u32 *tstart, u32 *tshut);
 #else
 static inline void omap_pm_get_oscillator(u32 *tstart, u32 *tshut) { *tstart = *tshut = 0; }
+=======
+extern void omap_pm_setup_oscillator(u32 tstart, u32 tshut);
+extern void omap_pm_get_oscillator(u32 *tstart, u32 *tshut);
+extern void omap_pm_setup_sr_i2c_pcb_length(u32 mm);
+#else
+static inline void omap_pm_setup_oscillator(u32 tstart, u32 tshut) { }
+static inline void omap_pm_get_oscillator(u32 *tstart, u32 *tshut) { *tstart = *tshut = 0; }
+static inline void omap_pm_setup_sr_i2c_pcb_length(u32 mm) { }
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #ifdef CONFIG_SUSPEND

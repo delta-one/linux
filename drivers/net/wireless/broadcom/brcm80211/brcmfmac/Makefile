@@ -20,7 +20,10 @@ brcmfmac-objs += \
 		common.o \
 		core.o \
 		firmware.o \
+<<<<<<< HEAD
 		fwvid.o \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		feature.o \
 		btcoex.o \
 		vendor.o \
@@ -48,6 +51,7 @@ brcmfmac-$(CONFIG_OF) += \
 		of.o
 brcmfmac-$(CONFIG_DMI) += \
 		dmi.o
+<<<<<<< HEAD
 brcmfmac-$(CONFIG_ACPI) += \
 		acpi.o
 
@@ -60,3 +64,5 @@ brcmfmac-$(CONFIG_BRCMFMAC) += wcc/core.o
 brcmfmac-$(CONFIG_BRCMFMAC) += cyw/core.o
 brcmfmac-$(CONFIG_BRCMFMAC) += bca/core.o
 endif
+=======
+>>>>>>> b7ba80a49124 (Commit)

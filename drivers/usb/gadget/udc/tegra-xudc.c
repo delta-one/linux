@@ -796,16 +796,33 @@ static int tegra_xudc_get_phy_index(struct tegra_xudc *xudc,
 	return -1;
 }
 
+<<<<<<< HEAD
 static void tegra_xudc_update_data_role(struct tegra_xudc *xudc,
 					      struct usb_phy *usbphy)
 {
 	int phy_index;
 
+=======
+static int tegra_xudc_vbus_notify(struct notifier_block *nb,
+					 unsigned long action, void *data)
+{
+	struct tegra_xudc *xudc = container_of(nb, struct tegra_xudc,
+					       vbus_nb);
+	struct usb_phy *usbphy = (struct usb_phy *)data;
+	int phy_index;
+
+	dev_dbg(xudc->dev, "%s(): event is %d\n", __func__, usbphy->last_event);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if ((xudc->device_mode && usbphy->last_event == USB_EVENT_VBUS) ||
 	    (!xudc->device_mode && usbphy->last_event != USB_EVENT_VBUS)) {
 		dev_dbg(xudc->dev, "Same role(%d) received. Ignore",
 			xudc->device_mode);
+<<<<<<< HEAD
 		return;
+=======
+		return NOTIFY_OK;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	xudc->device_mode = (usbphy->last_event == USB_EVENT_VBUS) ? true :
@@ -821,6 +838,7 @@ static void tegra_xudc_update_data_role(struct tegra_xudc *xudc,
 		xudc->curr_usbphy = usbphy;
 		schedule_work(&xudc->usb_role_sw_work);
 	}
+<<<<<<< HEAD
 }
 
 static int tegra_xudc_vbus_notify(struct notifier_block *nb,
@@ -833,6 +851,8 @@ static int tegra_xudc_vbus_notify(struct notifier_block *nb,
 	dev_dbg(xudc->dev, "%s(): event is %d\n", __func__, usbphy->last_event);
 
 	tegra_xudc_update_data_role(xudc, usbphy);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return NOTIFY_OK;
 }
@@ -3528,7 +3548,11 @@ static int tegra_xudc_phy_get(struct tegra_xudc *xudc)
 			/* Get usb-phy, if utmi phy is available */
 			xudc->usbphy[i] = devm_usb_get_phy_by_node(xudc->dev,
 						xudc->utmi_phy[i]->dev.of_node,
+<<<<<<< HEAD
 						NULL);
+=======
+						&xudc->vbus_nb);
+>>>>>>> b7ba80a49124 (Commit)
 			if (IS_ERR(xudc->usbphy[i])) {
 				err = PTR_ERR(xudc->usbphy[i]);
 				dev_err_probe(xudc->dev, err,
@@ -3667,6 +3691,7 @@ static struct tegra_xudc_soc tegra194_xudc_soc_data = {
 	.has_ipfs = false,
 };
 
+<<<<<<< HEAD
 static struct tegra_xudc_soc tegra234_xudc_soc_data = {
 	.clock_names = tegra186_xudc_clock_names,
 	.num_clks = ARRAY_SIZE(tegra186_xudc_clock_names),
@@ -3680,6 +3705,8 @@ static struct tegra_xudc_soc tegra234_xudc_soc_data = {
 	.has_ipfs = false,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id tegra_xudc_of_match[] = {
 	{
 		.compatible = "nvidia,tegra210-xudc",
@@ -3693,10 +3720,13 @@ static const struct of_device_id tegra_xudc_of_match[] = {
 		.compatible = "nvidia,tegra194-xudc",
 		.data = &tegra194_xudc_soc_data
 	},
+<<<<<<< HEAD
 	{
 		.compatible = "nvidia,tegra234-xudc",
 		.data = &tegra234_xudc_soc_data
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(of, tegra_xudc_of_match);
@@ -3880,6 +3910,7 @@ static int tegra_xudc_probe(struct platform_device *pdev)
 		goto free_eps;
 	}
 
+<<<<<<< HEAD
 	for (i = 0; i < xudc->soc->num_phys; i++) {
 		if (!xudc->usbphy[i])
 			continue;
@@ -3888,6 +3919,8 @@ static int tegra_xudc_probe(struct platform_device *pdev)
 		tegra_xudc_update_data_role(xudc, xudc->usbphy[i]);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 free_eps:

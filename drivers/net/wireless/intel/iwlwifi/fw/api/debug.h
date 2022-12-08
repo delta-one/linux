@@ -43,12 +43,15 @@ enum iwl_debug_cmds {
 	 */
 	BUFFER_ALLOCATION = 0x8,
 	/**
+<<<<<<< HEAD
 	 * @GET_TAS_STATUS:
 	 * sends command to fw to get TAS status
 	 * the response is &struct iwl_mvm_tas_status_resp
 	 */
 	GET_TAS_STATUS = 0xA,
 	/**
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * @FW_DUMP_COMPLETE_CMD:
 	 * sends command to fw once dump collection completed
 	 * &struct iwl_dbg_dump_complete_cmd
@@ -427,6 +430,7 @@ struct iwl_dbg_dump_complete_cmd {
 	__le32 tp_data;
 } __packed; /* FW_DUMP_COMPLETE_CMD_API_S_VER_1 */
 
+<<<<<<< HEAD
 #define TAS_LMAC_BAND_HB       0
 #define TAS_LMAC_BAND_LB       1
 #define TAS_LMAC_BAND_UHB      2
@@ -517,4 +521,6 @@ enum iwl_mvm_tas_statically_disabled_reason {
 	TAS_DISABLED_REASON_MAX,
 }; /*_TAS_STATICALLY_DISABLED_REASON_E*/
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __iwl_fw_api_debug_h__ */

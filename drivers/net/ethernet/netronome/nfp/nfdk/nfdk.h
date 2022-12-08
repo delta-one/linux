@@ -125,6 +125,7 @@ nfp_nfdk_ctrl_tx_one(struct nfp_net *nn, struct nfp_net_r_vector *r_vec,
 void nfp_nfdk_ctrl_poll(struct tasklet_struct *t);
 void nfp_nfdk_rx_ring_fill_freelist(struct nfp_net_dp *dp,
 				    struct nfp_net_rx_ring *rx_ring);
+<<<<<<< HEAD
 #ifndef CONFIG_NFP_NET_IPSEC
 static inline u64 nfp_nfdk_ipsec_tx(u64 flags, struct sk_buff *skb)
 {
@@ -133,4 +134,6 @@ static inline u64 nfp_nfdk_ipsec_tx(u64 flags, struct sk_buff *skb)
 #else
 u64 nfp_nfdk_ipsec_tx(u64 flags, struct sk_buff *skb);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

@@ -11,9 +11,19 @@
 #include <linux/types.h>
 #include <linux/interrupt.h>
 #include <linux/device.h>
+<<<<<<< HEAD
 #include <linux/err.h>
 #include <linux/ctype.h>
 #include <linux/processor.h>
+=======
+#include <linux/pci.h>
+#include <linux/err.h>
+#include <linux/ctype.h>
+#include <linux/processor.h>
+#include <net/smc.h>
+
+#include <asm/debug.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "ism.h"
 
@@ -30,6 +40,7 @@ static const struct pci_device_id ism_device_table[] = {
 MODULE_DEVICE_TABLE(pci, ism_device_table);
 
 static debug_info_t *ism_debug_info;
+<<<<<<< HEAD
 static const struct smcd_ops ism_ops;
 
 #define NO_CLIENT		0xff		/* must be >= MAX_CLIENTS */
@@ -108,6 +119,8 @@ out:
 	return rc;
 }
 EXPORT_SYMBOL_GPL(ism_unregister_client);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int ism_cmd(struct ism_dev *ism, void *cmd)
 {
@@ -267,14 +280,25 @@ static int ism_read_local_gid(struct ism_dev *ism)
 	if (ret)
 		goto out;
 
+<<<<<<< HEAD
 	ism->local_gid = cmd.response.gid;
+=======
+	ism->smcd->local_gid = cmd.response.gid;
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int ism_query_rgid(struct ism_dev *ism, u64 rgid, u32 vid_valid,
 			  u32 vid)
 {
+=======
+static int ism_query_rgid(struct smcd_dev *smcd, u64 rgid, u32 vid_valid,
+			  u32 vid)
+{
+	struct ism_dev *ism = smcd->priv;
+>>>>>>> b7ba80a49124 (Commit)
 	union ism_query_rgid cmd;
 
 	memset(&cmd, 0, sizeof(cmd));
@@ -288,14 +312,22 @@ static int ism_query_rgid(struct ism_dev *ism, u64 rgid, u32 vid_valid,
 	return ism_cmd(ism, &cmd);
 }
 
+<<<<<<< HEAD
 static void ism_free_dmb(struct ism_dev *ism, struct ism_dmb *dmb)
+=======
+static void ism_free_dmb(struct ism_dev *ism, struct smcd_dmb *dmb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	clear_bit(dmb->sba_idx, ism->sba_bitmap);
 	dma_free_coherent(&ism->pdev->dev, dmb->dmb_len,
 			  dmb->cpu_addr, dmb->dma_addr);
 }
 
+<<<<<<< HEAD
 static int ism_alloc_dmb(struct ism_dev *ism, struct ism_dmb *dmb)
+=======
+static int ism_alloc_dmb(struct ism_dev *ism, struct smcd_dmb *dmb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long bit;
 
@@ -316,17 +348,27 @@ static int ism_alloc_dmb(struct ism_dev *ism, struct ism_dmb *dmb)
 
 	dmb->cpu_addr = dma_alloc_coherent(&ism->pdev->dev, dmb->dmb_len,
 					   &dmb->dma_addr,
+<<<<<<< HEAD
 					   GFP_KERNEL | __GFP_NOWARN |
 					   __GFP_NOMEMALLOC | __GFP_NORETRY);
+=======
+					   GFP_KERNEL | __GFP_NOWARN | __GFP_NOMEMALLOC | __GFP_COMP | __GFP_NORETRY);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!dmb->cpu_addr)
 		clear_bit(dmb->sba_idx, ism->sba_bitmap);
 
 	return dmb->cpu_addr ? 0 : -ENOMEM;
 }
 
+<<<<<<< HEAD
 int ism_register_dmb(struct ism_dev *ism, struct ism_dmb *dmb,
 		     struct ism_client *client)
 {
+=======
+static int ism_register_dmb(struct smcd_dev *smcd, struct smcd_dmb *dmb)
+{
+	struct ism_dev *ism = smcd->priv;
+>>>>>>> b7ba80a49124 (Commit)
 	union ism_reg_dmb cmd;
 	int ret;
 
@@ -351,6 +393,7 @@ int ism_register_dmb(struct ism_dev *ism, struct ism_dmb *dmb,
 		goto out;
 	}
 	dmb->dmb_tok = cmd.response.dmb_tok;
+<<<<<<< HEAD
 	ism->sba_client_arr[dmb->sba_idx - ISM_DMB_BIT_OFFSET] = client->id;
 out:
 	return ret;
@@ -359,6 +402,15 @@ EXPORT_SYMBOL_GPL(ism_register_dmb);
 
 int ism_unregister_dmb(struct ism_dev *ism, struct ism_dmb *dmb)
 {
+=======
+out:
+	return ret;
+}
+
+static int ism_unregister_dmb(struct smcd_dev *smcd, struct smcd_dmb *dmb)
+{
+	struct ism_dev *ism = smcd->priv;
+>>>>>>> b7ba80a49124 (Commit)
 	union ism_unreg_dmb cmd;
 	int ret;
 
@@ -368,8 +420,11 @@ int ism_unregister_dmb(struct ism_dev *ism, struct ism_dmb *dmb)
 
 	cmd.request.dmb_tok = dmb->dmb_tok;
 
+<<<<<<< HEAD
 	ism->sba_client_arr[dmb->sba_idx - ISM_DMB_BIT_OFFSET] = NO_CLIENT;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ism_cmd(ism, &cmd);
 	if (ret && ret != ISM_ERROR)
 		goto out;
@@ -378,10 +433,17 @@ int ism_unregister_dmb(struct ism_dev *ism, struct ism_dmb *dmb)
 out:
 	return ret;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(ism_unregister_dmb);
 
 static int ism_add_vlan_id(struct ism_dev *ism, u64 vlan_id)
 {
+=======
+
+static int ism_add_vlan_id(struct smcd_dev *smcd, u64 vlan_id)
+{
+	struct ism_dev *ism = smcd->priv;
+>>>>>>> b7ba80a49124 (Commit)
 	union ism_set_vlan_id cmd;
 
 	memset(&cmd, 0, sizeof(cmd));
@@ -393,8 +455,14 @@ static int ism_add_vlan_id(struct ism_dev *ism, u64 vlan_id)
 	return ism_cmd(ism, &cmd);
 }
 
+<<<<<<< HEAD
 static int ism_del_vlan_id(struct ism_dev *ism, u64 vlan_id)
 {
+=======
+static int ism_del_vlan_id(struct smcd_dev *smcd, u64 vlan_id)
+{
+	struct ism_dev *ism = smcd->priv;
+>>>>>>> b7ba80a49124 (Commit)
 	union ism_set_vlan_id cmd;
 
 	memset(&cmd, 0, sizeof(cmd));
@@ -406,9 +474,26 @@ static int ism_del_vlan_id(struct ism_dev *ism, u64 vlan_id)
 	return ism_cmd(ism, &cmd);
 }
 
+<<<<<<< HEAD
 static int ism_signal_ieq(struct ism_dev *ism, u64 rgid, u32 trigger_irq,
 			  u32 event_code, u64 info)
 {
+=======
+static int ism_set_vlan_required(struct smcd_dev *smcd)
+{
+	return ism_cmd_simple(smcd->priv, ISM_SET_VLAN);
+}
+
+static int ism_reset_vlan_required(struct smcd_dev *smcd)
+{
+	return ism_cmd_simple(smcd->priv, ISM_RESET_VLAN);
+}
+
+static int ism_signal_ieq(struct smcd_dev *smcd, u64 rgid, u32 trigger_irq,
+			  u32 event_code, u64 info)
+{
+	struct ism_dev *ism = smcd->priv;
+>>>>>>> b7ba80a49124 (Commit)
 	union ism_sig_ieq cmd;
 
 	memset(&cmd, 0, sizeof(cmd));
@@ -429,9 +514,16 @@ static unsigned int max_bytes(unsigned int start, unsigned int len,
 	return min(boundary - (start & (boundary - 1)), len);
 }
 
+<<<<<<< HEAD
 int ism_move(struct ism_dev *ism, u64 dmb_tok, unsigned int idx, bool sf,
 	     unsigned int offset, void *data, unsigned int size)
 {
+=======
+static int ism_move(struct smcd_dev *smcd, u64 dmb_tok, unsigned int idx,
+		    bool sf, unsigned int offset, void *data, unsigned int size)
+{
+	struct ism_dev *ism = smcd->priv;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int bytes;
 	u64 dmb_req;
 	int ret;
@@ -452,7 +544,10 @@ int ism_move(struct ism_dev *ism, u64 dmb_tok, unsigned int idx, bool sf,
 
 	return 0;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(ism_move);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct ism_systemeid SYSTEM_EID = {
 	.seid_string = "IBM-SYSZ-ISMSEID00000000",
@@ -474,6 +569,7 @@ static void ism_create_system_eid(void)
 	memcpy(&SYSTEM_EID.type, tmp, 4);
 }
 
+<<<<<<< HEAD
 u8 *ism_get_seid(void)
 {
 	return SYSTEM_EID.seid_string;
@@ -482,6 +578,17 @@ EXPORT_SYMBOL_GPL(ism_get_seid);
 
 static u16 ism_get_chid(struct ism_dev *ism)
 {
+=======
+static u8 *ism_get_system_eid(void)
+{
+	return SYSTEM_EID.seid_string;
+}
+
+static u16 ism_get_chid(struct smcd_dev *smcd)
+{
+	struct ism_dev *ism = (struct ism_dev *)smcd->priv;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ism || !ism->pdev)
 		return 0;
 
@@ -490,8 +597,12 @@ static u16 ism_get_chid(struct ism_dev *ism)
 
 static void ism_handle_event(struct ism_dev *ism)
 {
+<<<<<<< HEAD
 	struct ism_event *entry;
 	int i;
+=======
+	struct smcd_event *entry;
+>>>>>>> b7ba80a49124 (Commit)
 
 	while ((ism->ieq_idx + 1) != READ_ONCE(ism->ieq->header.idx)) {
 		if (++(ism->ieq_idx) == ARRAY_SIZE(ism->ieq->entry))
@@ -499,18 +610,25 @@ static void ism_handle_event(struct ism_dev *ism)
 
 		entry = &ism->ieq->entry[ism->ieq_idx];
 		debug_event(ism_debug_info, 2, entry, sizeof(*entry));
+<<<<<<< HEAD
 		spin_lock(&clients_lock);
 		for (i = 0; i < max_client; ++i)
 			if (clients[i])
 				clients[i]->handle_event(ism, entry);
 		spin_unlock(&clients_lock);
+=======
+		smcd_handle_event(ism->smcd, entry);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
 static irqreturn_t ism_handle_irq(int irq, void *data)
 {
 	struct ism_dev *ism = data;
+<<<<<<< HEAD
 	struct ism_client *clt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long bit, end;
 	unsigned long *bv;
 	u16 dmbemask;
@@ -530,8 +648,12 @@ static irqreturn_t ism_handle_irq(int irq, void *data)
 		dmbemask = ism->sba->dmbe_mask[bit + ISM_DMB_BIT_OFFSET];
 		ism->sba->dmbe_mask[bit + ISM_DMB_BIT_OFFSET] = 0;
 		barrier();
+<<<<<<< HEAD
 		clt = clients[ism->sba_client_arr[bit]];
 		clt->handle_irq(ism, bit + ISM_DMB_BIT_OFFSET, dmbemask);
+=======
+		smcd_handle_irq(ism->smcd, bit + ISM_DMB_BIT_OFFSET, dmbemask);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (ism->sba->e) {
@@ -543,6 +665,7 @@ static irqreturn_t ism_handle_irq(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static u64 ism_get_local_gid(struct ism_dev *ism)
 {
 	return ism->local_gid;
@@ -557,17 +680,37 @@ static void ism_dev_add_work_func(struct work_struct *work)
 	atomic_dec(&client->tgt_ism->add_dev_cnt);
 	wake_up(&client->tgt_ism->waitq);
 }
+=======
+static const struct smcd_ops ism_ops = {
+	.query_remote_gid = ism_query_rgid,
+	.register_dmb = ism_register_dmb,
+	.unregister_dmb = ism_unregister_dmb,
+	.add_vlan_id = ism_add_vlan_id,
+	.del_vlan_id = ism_del_vlan_id,
+	.set_vlan_required = ism_set_vlan_required,
+	.reset_vlan_required = ism_reset_vlan_required,
+	.signal_event = ism_signal_ieq,
+	.move_data = ism_move,
+	.get_system_eid = ism_get_system_eid,
+	.get_chid = ism_get_chid,
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static int ism_dev_init(struct ism_dev *ism)
 {
 	struct pci_dev *pdev = ism->pdev;
+<<<<<<< HEAD
 	unsigned long flags;
 	int i, ret;
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_MSI);
 	if (ret <= 0)
 		goto out;
 
+<<<<<<< HEAD
 	ism->sba_client_arr = kzalloc(ISM_NR_DMBS, GFP_KERNEL);
 	if (!ism->sba_client_arr)
 		goto free_vectors;
@@ -577,6 +720,12 @@ static int ism_dev_init(struct ism_dev *ism)
 			  pci_name(pdev), ism);
 	if (ret)
 		goto free_client_arr;
+=======
+	ret = request_irq(pci_irq_vector(pdev, 0), ism_handle_irq, 0,
+			  pci_name(pdev), ism);
+	if (ret)
+		goto free_vectors;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = register_sba(ism);
 	if (ret)
@@ -590,6 +739,7 @@ static int ism_dev_init(struct ism_dev *ism)
 	if (ret)
 		goto unreg_ieq;
 
+<<<<<<< HEAD
 	if (!ism_add_vlan_id(ism, ISM_RESERVED_VLANID))
 		/* hardware is V2 capable */
 		ism_create_system_eid();
@@ -615,6 +765,15 @@ static int ism_dev_init(struct ism_dev *ism)
 	mutex_lock(&ism_dev_list.mutex);
 	list_add(&ism->list, &ism_dev_list.list);
 	mutex_unlock(&ism_dev_list.mutex);
+=======
+	if (!ism_add_vlan_id(ism->smcd, ISM_RESERVED_VLANID))
+		/* hardware is V2 capable */
+		ism_create_system_eid();
+
+	ret = smcd_register_dev(ism->smcd);
+	if (ret)
+		goto unreg_ieq;
+>>>>>>> b7ba80a49124 (Commit)
 
 	query_info(ism);
 	return 0;
@@ -625,8 +784,11 @@ unreg_sba:
 	unregister_sba(ism);
 free_irq:
 	free_irq(pci_irq_vector(pdev, 0), ism);
+<<<<<<< HEAD
 free_client_arr:
 	kfree(ism->sba_client_arr);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 free_vectors:
 	pci_free_irq_vectors(pdev);
 out:
@@ -645,12 +807,15 @@ static int ism_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	spin_lock_init(&ism->lock);
 	dev_set_drvdata(&pdev->dev, ism);
 	ism->pdev = pdev;
+<<<<<<< HEAD
 	ism->dev.parent = &pdev->dev;
 	device_initialize(&ism->dev);
 	dev_set_name(&ism->dev, dev_name(&pdev->dev));
 	ret = device_add(&ism->dev);
 	if (ret)
 		goto err_dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = pci_enable_device_mem(pdev);
 	if (ret)
@@ -668,6 +833,7 @@ static int ism_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	dma_set_max_seg_size(&pdev->dev, SZ_1M);
 	pci_set_master(pdev);
 
+<<<<<<< HEAD
 	ret = ism_dev_init(ism);
 	if (ret)
 		goto err_resource;
@@ -676,10 +842,30 @@ static int ism_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 
 err_resource:
 	pci_clear_master(pdev);
+=======
+	ism->smcd = smcd_alloc_dev(&pdev->dev, dev_name(&pdev->dev), &ism_ops,
+				   ISM_NR_DMBS);
+	if (!ism->smcd) {
+		ret = -ENOMEM;
+		goto err_resource;
+	}
+
+	ism->smcd->priv = ism;
+	ret = ism_dev_init(ism);
+	if (ret)
+		goto err_free;
+
+	return 0;
+
+err_free:
+	smcd_free_dev(ism->smcd);
+err_resource:
+>>>>>>> b7ba80a49124 (Commit)
 	pci_release_mem_regions(pdev);
 err_disable:
 	pci_disable_device(pdev);
 err:
+<<<<<<< HEAD
 	device_del(&ism->dev);
 err_dev:
 	dev_set_drvdata(&pdev->dev, NULL);
@@ -728,12 +914,32 @@ static void ism_dev_exit(struct ism_dev *ism)
 	kfree(ism->sba_client_arr);
 	pci_free_irq_vectors(pdev);
 	list_del_init(&ism->list);
+=======
+	kfree(ism);
+	dev_set_drvdata(&pdev->dev, NULL);
+	return ret;
+}
+
+static void ism_dev_exit(struct ism_dev *ism)
+{
+	struct pci_dev *pdev = ism->pdev;
+
+	smcd_unregister_dev(ism->smcd);
+	if (SYSTEM_EID.serial_number[0] != '0' ||
+	    SYSTEM_EID.type[0] != '0')
+		ism_del_vlan_id(ism->smcd, ISM_RESERVED_VLANID);
+	unregister_ieq(ism);
+	unregister_sba(ism);
+	free_irq(pci_irq_vector(pdev, 0), ism);
+	pci_free_irq_vectors(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ism_remove(struct pci_dev *pdev)
 {
 	struct ism_dev *ism = dev_get_drvdata(&pdev->dev);
 
+<<<<<<< HEAD
 	mutex_lock(&ism_dev_list.mutex);
 	ism_dev_exit(ism);
 	mutex_unlock(&ism_dev_list.mutex);
@@ -742,6 +948,13 @@ static void ism_remove(struct pci_dev *pdev)
 	pci_release_mem_regions(pdev);
 	pci_disable_device(pdev);
 	device_del(&ism->dev);
+=======
+	ism_dev_exit(ism);
+
+	smcd_free_dev(ism->smcd);
+	pci_release_mem_regions(pdev);
+	pci_disable_device(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	dev_set_drvdata(&pdev->dev, NULL);
 	kfree(ism);
 }
@@ -761,8 +974,11 @@ static int __init ism_init(void)
 	if (!ism_debug_info)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	memset(clients, 0, sizeof(clients));
 	max_client = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	debug_register_view(ism_debug_info, &debug_hex_ascii_view);
 	ret = pci_register_driver(&ism_driver);
 	if (ret)
@@ -773,6 +989,7 @@ static int __init ism_init(void)
 
 static void __exit ism_exit(void)
 {
+<<<<<<< HEAD
 	struct ism_dev *ism;
 
 	mutex_lock(&ism_dev_list.mutex);
@@ -781,12 +998,15 @@ static void __exit ism_exit(void)
 	}
 	mutex_unlock(&ism_dev_list.mutex);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pci_unregister_driver(&ism_driver);
 	debug_unregister(ism_debug_info);
 }
 
 module_init(ism_init);
 module_exit(ism_exit);
+<<<<<<< HEAD
 
 /*************************** SMC-D Implementation *****************************/
 
@@ -887,3 +1107,5 @@ const struct smcd_ops *ism_get_smcd_ops(void)
 }
 EXPORT_SYMBOL_GPL(ism_get_smcd_ops);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)

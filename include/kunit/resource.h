@@ -72,7 +72,11 @@ typedef void (*kunit_resource_free_t)(struct kunit_resource *);
  *		params.gfp = gfp;
  *
  *		return kunit_alloc_resource(test, kunit_kmalloc_init,
+<<<<<<< HEAD
  *			kunit_kmalloc_free, gfp, &params);
+=======
+ *			kunit_kmalloc_free, &params);
+>>>>>>> b7ba80a49124 (Commit)
  *	}
  *
  * Resources can also be named, with lookup/removal done on a name
@@ -301,6 +305,25 @@ typedef bool (*kunit_resource_match_t)(struct kunit *test,
 				       void *match_data);
 
 /**
+<<<<<<< HEAD
+=======
+ * kunit_resource_instance_match() - Match a resource with the same instance.
+ * @test: Test case to which the resource belongs.
+ * @res: The resource.
+ * @match_data: The resource pointer to match against.
+ *
+ * An instance of kunit_resource_match_t that matches a resource whose
+ * allocation matches @match_data.
+ */
+static inline bool kunit_resource_instance_match(struct kunit *test,
+						 struct kunit_resource *res,
+						 void *match_data)
+{
+	return res->data == match_data;
+}
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * kunit_resource_name_match() - Match a resource with the same name.
  * @test: Test case to which the resource belongs.
  * @res: The resource.

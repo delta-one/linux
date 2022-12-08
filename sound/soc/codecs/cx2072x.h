@@ -177,7 +177,11 @@
 #define CX2072X_PLBK_DRC_PARM_LEN	9
 #define CX2072X_CLASSD_AMP_LEN		6
 
+<<<<<<< HEAD
 /* DAI interface type */
+=======
+/* DAI interfae type */
+>>>>>>> b7ba80a49124 (Commit)
 #define CX2072X_DAI_HIFI	1
 #define CX2072X_DAI_DSP		2
 #define CX2072X_DAI_DSP_PWM	3 /* 4 ch, including mic and AEC */

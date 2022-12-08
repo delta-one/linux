@@ -284,7 +284,10 @@ struct tegra_i2c_dev {
 	struct dma_chan *tx_dma_chan;
 	struct dma_chan *rx_dma_chan;
 	unsigned int dma_buf_size;
+<<<<<<< HEAD
 	struct device *dma_dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dma_addr_t dma_phys;
 	void *dma_buf;
 
@@ -421,7 +424,11 @@ static int tegra_i2c_dma_submit(struct tegra_i2c_dev *i2c_dev, size_t len)
 static void tegra_i2c_release_dma(struct tegra_i2c_dev *i2c_dev)
 {
 	if (i2c_dev->dma_buf) {
+<<<<<<< HEAD
 		dma_free_coherent(i2c_dev->dma_dev, i2c_dev->dma_buf_size,
+=======
+		dma_free_coherent(i2c_dev->dev, i2c_dev->dma_buf_size,
+>>>>>>> b7ba80a49124 (Commit)
 				  i2c_dev->dma_buf, i2c_dev->dma_phys);
 		i2c_dev->dma_buf = NULL;
 	}
@@ -473,6 +480,7 @@ static int tegra_i2c_init_dma(struct tegra_i2c_dev *i2c_dev)
 
 	i2c_dev->tx_dma_chan = chan;
 
+<<<<<<< HEAD
 	WARN_ON(i2c_dev->tx_dma_chan->device != i2c_dev->rx_dma_chan->device);
 	i2c_dev->dma_dev = chan->device->dev;
 
@@ -480,6 +488,12 @@ static int tegra_i2c_init_dma(struct tegra_i2c_dev *i2c_dev)
 				I2C_PACKET_HEADER_SIZE;
 
 	dma_buf = dma_alloc_coherent(i2c_dev->dma_dev, i2c_dev->dma_buf_size,
+=======
+	i2c_dev->dma_buf_size = i2c_dev->hw->quirks->max_write_len +
+				I2C_PACKET_HEADER_SIZE;
+
+	dma_buf = dma_alloc_coherent(i2c_dev->dev, i2c_dev->dma_buf_size,
+>>>>>>> b7ba80a49124 (Commit)
 				     &dma_phys, GFP_KERNEL | __GFP_NOWARN);
 	if (!dma_buf) {
 		dev_err(i2c_dev->dev, "failed to allocate DMA buffer\n");
@@ -1276,7 +1290,11 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
 
 	if (i2c_dev->dma_mode) {
 		if (i2c_dev->msg_read) {
+<<<<<<< HEAD
 			dma_sync_single_for_device(i2c_dev->dma_dev,
+=======
+			dma_sync_single_for_device(i2c_dev->dev,
+>>>>>>> b7ba80a49124 (Commit)
 						   i2c_dev->dma_phys,
 						   xfer_size, DMA_FROM_DEVICE);
 
@@ -1284,7 +1302,11 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
 			if (err)
 				return err;
 		} else {
+<<<<<<< HEAD
 			dma_sync_single_for_cpu(i2c_dev->dma_dev,
+=======
+			dma_sync_single_for_cpu(i2c_dev->dev,
+>>>>>>> b7ba80a49124 (Commit)
 						i2c_dev->dma_phys,
 						xfer_size, DMA_TO_DEVICE);
 		}
@@ -1297,7 +1319,11 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
 			memcpy(i2c_dev->dma_buf + I2C_PACKET_HEADER_SIZE,
 			       msg->buf, msg->len);
 
+<<<<<<< HEAD
 			dma_sync_single_for_device(i2c_dev->dma_dev,
+=======
+			dma_sync_single_for_device(i2c_dev->dev,
+>>>>>>> b7ba80a49124 (Commit)
 						   i2c_dev->dma_phys,
 						   xfer_size, DMA_TO_DEVICE);
 
@@ -1348,7 +1374,11 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
 		}
 
 		if (i2c_dev->msg_read && i2c_dev->msg_err == I2C_ERR_NONE) {
+<<<<<<< HEAD
 			dma_sync_single_for_cpu(i2c_dev->dma_dev,
+=======
+			dma_sync_single_for_cpu(i2c_dev->dev,
+>>>>>>> b7ba80a49124 (Commit)
 						i2c_dev->dma_phys,
 						xfer_size, DMA_FROM_DEVICE);
 
@@ -1830,7 +1860,10 @@ static int tegra_i2c_probe(struct platform_device *pdev)
 	i2c_dev->adapter.class = I2C_CLASS_DEPRECATED;
 	i2c_dev->adapter.algo = &tegra_i2c_algo;
 	i2c_dev->adapter.nr = pdev->id;
+<<<<<<< HEAD
 	ACPI_COMPANION_SET(&i2c_dev->adapter.dev, ACPI_COMPANION(&pdev->dev));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (i2c_dev->hw->supports_bus_clear)
 		i2c_dev->adapter.bus_recovery_info = &tegra_i2c_recovery_info;

@@ -246,7 +246,11 @@ DEFINE_DEBUGFS_ATTRIBUTE(mmc_err_state, mmc_err_state_get, NULL, "%llu\n");
 
 static int mmc_err_stats_show(struct seq_file *file, void *data)
 {
+<<<<<<< HEAD
 	struct mmc_host *host = file->private;
+=======
+	struct mmc_host *host = (struct mmc_host *)file->private;
+>>>>>>> b7ba80a49124 (Commit)
 	const char *desc[MMC_ERR_MAX] = {
 		[MMC_ERR_CMD_TIMEOUT] = "Command Timeout Occurred",
 		[MMC_ERR_CMD_CRC] = "Command CRC Errors Occurred",

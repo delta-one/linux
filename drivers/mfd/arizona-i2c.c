@@ -20,9 +20,15 @@
 
 #include "arizona.h"
 
+<<<<<<< HEAD
 static int arizona_i2c_probe(struct i2c_client *i2c)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(i2c);
+=======
+static int arizona_i2c_probe(struct i2c_client *i2c,
+			     const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	const void *match_data;
 	struct arizona *arizona;
 	const struct regmap_config *regmap_config = NULL;
@@ -117,10 +123,17 @@ static const struct of_device_id arizona_i2c_of_match[] = {
 static struct i2c_driver arizona_i2c_driver = {
 	.driver = {
 		.name	= "arizona",
+<<<<<<< HEAD
 		.pm	= pm_ptr(&arizona_pm_ops),
 		.of_match_table	= of_match_ptr(arizona_i2c_of_match),
 	},
 	.probe_new	= arizona_i2c_probe,
+=======
+		.pm	= &arizona_pm_ops,
+		.of_match_table	= of_match_ptr(arizona_i2c_of_match),
+	},
+	.probe		= arizona_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= arizona_i2c_remove,
 	.id_table	= arizona_i2c_id,
 };

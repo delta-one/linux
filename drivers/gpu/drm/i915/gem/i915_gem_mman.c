@@ -330,7 +330,11 @@ retry:
 	if (ret)
 		goto err_rpm;
 
+<<<<<<< HEAD
 	ret = intel_gt_reset_lock_interruptible(ggtt->vm.gt, &srcu);
+=======
+	ret = intel_gt_reset_trylock(ggtt->vm.gt, &srcu);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto err_pages;
 
@@ -369,7 +373,11 @@ retry:
 		if (vma == ERR_PTR(-ENOSPC)) {
 			ret = mutex_lock_interruptible(&ggtt->vm.mutex);
 			if (!ret) {
+<<<<<<< HEAD
 				ret = i915_gem_evict_vm(&ggtt->vm, &ww, NULL);
+=======
+				ret = i915_gem_evict_vm(&ggtt->vm, &ww);
+>>>>>>> b7ba80a49124 (Commit)
 				mutex_unlock(&ggtt->vm.mutex);
 			}
 			if (ret)
@@ -395,7 +403,11 @@ retry:
 	/* Finally, remap it using the new GTT offset */
 	ret = remap_io_mapping(area,
 			       area->vm_start + (vma->gtt_view.partial.offset << PAGE_SHIFT),
+<<<<<<< HEAD
 			       (ggtt->gmadr.start + i915_ggtt_offset(vma)) >> PAGE_SHIFT,
+=======
+			       (ggtt->gmadr.start + vma->node.start) >> PAGE_SHIFT,
+>>>>>>> b7ba80a49124 (Commit)
 			       min_t(u64, vma->size, area->vm_end - area->vm_start),
 			       &ggtt->iomap);
 	if (ret)
@@ -413,7 +425,11 @@ retry:
 	vma->mmo = mmo;
 
 	if (CONFIG_DRM_I915_USERFAULT_AUTOSUSPEND)
+<<<<<<< HEAD
 		intel_wakeref_auto(&i915->runtime_pm.userfault_wakeref,
+=======
+		intel_wakeref_auto(&to_gt(i915)->userfault_wakeref,
+>>>>>>> b7ba80a49124 (Commit)
 				   msecs_to_jiffies_timeout(CONFIG_DRM_I915_USERFAULT_AUTOSUSPEND));
 
 	if (write) {
@@ -557,6 +573,7 @@ void i915_gem_object_runtime_pm_release_mmap_offset(struct drm_i915_gem_object *
 
 	drm_vma_node_unmap(&bo->base.vma_node, bdev->dev_mapping);
 
+<<<<<<< HEAD
 	/*
 	 * We have exclusive access here via runtime suspend. All other callers
 	 * must first grab the rpm wakeref.
@@ -564,6 +581,13 @@ void i915_gem_object_runtime_pm_release_mmap_offset(struct drm_i915_gem_object *
 	GEM_BUG_ON(!obj->userfault_count);
 	list_del(&obj->userfault_link);
 	obj->userfault_count = 0;
+=======
+	if (obj->userfault_count) {
+		/* rpm wakeref provide exclusive access */
+		list_del(&obj->userfault_link);
+		obj->userfault_count = 0;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void i915_gem_object_release_mmap_offset(struct drm_i915_gem_object *obj)
@@ -589,6 +613,16 @@ void i915_gem_object_release_mmap_offset(struct drm_i915_gem_object *obj)
 		spin_lock(&obj->mmo.lock);
 	}
 	spin_unlock(&obj->mmo.lock);
+<<<<<<< HEAD
+=======
+
+	if (obj->userfault_count) {
+		mutex_lock(&to_gt(to_i915(obj->base.dev))->lmem_userfault_lock);
+		list_del(&obj->userfault_link);
+		mutex_unlock(&to_gt(to_i915(obj->base.dev))->lmem_userfault_lock);
+		obj->userfault_count = 0;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct i915_mmap_offset *
@@ -697,7 +731,11 @@ insert:
 	GEM_BUG_ON(lookup_mmo(obj, mmap_type) != mmo);
 out:
 	if (file)
+<<<<<<< HEAD
 		drm_vma_node_allow_once(&mmo->vma_node, file);
+=======
+		drm_vma_node_allow(&mmo->vma_node, file);
+>>>>>>> b7ba80a49124 (Commit)
 	return mmo;
 
 err:
@@ -979,7 +1017,11 @@ int i915_gem_mmap(struct file *filp, struct vm_area_struct *vma)
 			i915_gem_object_put(obj);
 			return -EINVAL;
 		}
+<<<<<<< HEAD
 		vm_flags_clear(vma, VM_MAYWRITE);
+=======
+		vma->vm_flags &= ~VM_MAYWRITE;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	anon = mmap_singleton(to_i915(dev));
@@ -988,7 +1030,11 @@ int i915_gem_mmap(struct file *filp, struct vm_area_struct *vma)
 		return PTR_ERR(anon);
 	}
 
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP | VM_IO);
+=======
+	vma->vm_flags |= VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP | VM_IO;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * We keep the ref on mmo->obj, not vm_file, but we require

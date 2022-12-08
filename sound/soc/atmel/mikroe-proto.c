@@ -155,9 +155,17 @@ put_codec_node:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void snd_proto_remove(struct platform_device *pdev)
 {
 	snd_soc_unregister_card(&snd_proto);
+=======
+static int snd_proto_remove(struct platform_device *pdev)
+{
+	snd_soc_unregister_card(&snd_proto);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id snd_proto_of_match[] = {
@@ -172,7 +180,11 @@ static struct platform_driver snd_proto_driver = {
 		.of_match_table = snd_proto_of_match,
 	},
 	.probe	  = snd_proto_probe,
+<<<<<<< HEAD
 	.remove_new	 = snd_proto_remove,
+=======
+	.remove	 = snd_proto_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(snd_proto_driver);

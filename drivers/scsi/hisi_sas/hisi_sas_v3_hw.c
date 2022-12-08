@@ -404,11 +404,14 @@
 #define CMPLT_HDR_CMPLT_MSK		(0x3 << CMPLT_HDR_CMPLT_OFF)
 #define CMPLT_HDR_ERROR_PHASE_OFF   2
 #define CMPLT_HDR_ERROR_PHASE_MSK   (0xff << CMPLT_HDR_ERROR_PHASE_OFF)
+<<<<<<< HEAD
 /* bit[9:2] Error Phase */
 #define ERR_PHASE_RESPONSE_FRAME_REV_STAGE_OFF	\
 					8
 #define ERR_PHASE_RESPONSE_FRAME_REV_STAGE_MSK	\
 	(0x1 << ERR_PHASE_RESPONSE_FRAME_REV_STAGE_OFF)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CMPLT_HDR_RSPNS_XFRD_OFF	10
 #define CMPLT_HDR_RSPNS_XFRD_MSK	(0x1 << CMPLT_HDR_RSPNS_XFRD_OFF)
 #define CMPLT_HDR_RSPNS_GOOD_OFF	11
@@ -428,6 +431,7 @@
 #define CMPLT_HDR_DEV_ID_OFF		16
 #define CMPLT_HDR_DEV_ID_MSK		(0xffff << CMPLT_HDR_DEV_ID_OFF)
 /* dw3 */
+<<<<<<< HEAD
 #define SATA_DISK_IN_ERROR_STATUS_OFF	8
 #define SATA_DISK_IN_ERROR_STATUS_MSK	(0x1 << SATA_DISK_IN_ERROR_STATUS_OFF)
 #define CMPLT_HDR_SATA_DISK_ERR_OFF	16
@@ -439,6 +443,10 @@
 #define FIS_ATA_STATUS_ERR_MSK		(0x1 << FIS_ATA_STATUS_ERR_OFF)
 #define FIS_TYPE_SDB_OFF		31
 #define FIS_TYPE_SDB_MSK		(0x1 << FIS_TYPE_SDB_OFF)
+=======
+#define CMPLT_HDR_IO_IN_TARGET_OFF	17
+#define CMPLT_HDR_IO_IN_TARGET_MSK	(0x1 << CMPLT_HDR_IO_IN_TARGET_OFF)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* ITCT header */
 /* qw0 */
@@ -552,11 +560,14 @@ static int prot_mask;
 module_param(prot_mask, int, 0444);
 MODULE_PARM_DESC(prot_mask, " host protection capabilities mask, def=0x0 ");
 
+<<<<<<< HEAD
 /* the index of iopoll queues are bigger than interrupt queues' */
 static int experimental_iopoll_q_cnt;
 module_param(experimental_iopoll_q_cnt, int, 0444);
 MODULE_PARM_DESC(experimental_iopoll_q_cnt, "number of queues to be used as poll mode, def=0");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void debugfs_work_handler_v3_hw(struct work_struct *work);
 static void debugfs_snapshot_regs_v3_hw(struct hisi_hba *hisi_hba);
 
@@ -2167,6 +2178,7 @@ static irqreturn_t fatal_axi_int_v3_hw(int irq_no, void *p)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static bool is_ncq_err_v3_hw(struct hisi_sas_complete_v3_hdr *complete_hdr)
 {
 	u32 dw0, dw3;
@@ -2179,6 +2191,8 @@ static bool is_ncq_err_v3_hw(struct hisi_sas_complete_v3_hdr *complete_hdr)
 	       (dw3 & FIS_ATA_STATUS_ERR_MSK);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool
 slot_err_v3_hw(struct hisi_hba *hisi_hba, struct sas_task *task,
 	       struct hisi_sas_slot *slot)
@@ -2226,8 +2240,12 @@ slot_err_v3_hw(struct hisi_hba *hisi_hba, struct sas_task *task,
 		} else if (dma_rx_err_type & RX_DATA_LEN_UNDERFLOW_MSK) {
 			ts->residual = trans_tx_fail_type;
 			ts->stat = SAS_DATA_UNDERRUN;
+<<<<<<< HEAD
 		} else if ((dw3 & CMPLT_HDR_IO_IN_TARGET_MSK) ||
 			   (dw3 & SATA_DISK_IN_ERROR_STATUS_MSK)) {
+=======
+		} else if (dw3 & CMPLT_HDR_IO_IN_TARGET_MSK) {
+>>>>>>> b7ba80a49124 (Commit)
 			ts->stat = SAS_PHY_DOWN;
 			slot->abort = 1;
 		} else {
@@ -2396,6 +2414,7 @@ out:
 		task->task_done(task);
 }
 
+<<<<<<< HEAD
 static int complete_v3_hw(struct hisi_sas_cq *cq)
 {
 	struct hisi_sas_complete_v3_hdr *complete_queue;
@@ -2405,15 +2424,30 @@ static int complete_v3_hw(struct hisi_sas_cq *cq)
 	int completed;
 
 	rd_point = cq->rd_point;
+=======
+static irqreturn_t  cq_thread_v3_hw(int irq_no, void *p)
+{
+	struct hisi_sas_cq *cq = p;
+	struct hisi_hba *hisi_hba = cq->hisi_hba;
+	struct hisi_sas_slot *slot;
+	struct hisi_sas_complete_v3_hdr *complete_queue;
+	u32 rd_point = cq->rd_point, wr_point;
+	int queue = cq->id;
+
+>>>>>>> b7ba80a49124 (Commit)
 	complete_queue = hisi_hba->complete_hdr[queue];
 
 	wr_point = hisi_sas_read32(hisi_hba, COMPL_Q_0_WR_PTR +
 				   (0x14 * queue));
+<<<<<<< HEAD
 	completed = (wr_point + HISI_SAS_QUEUE_SLOTS - rd_point) % HISI_SAS_QUEUE_SLOTS;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (rd_point != wr_point) {
 		struct hisi_sas_complete_v3_hdr *complete_hdr;
 		struct device *dev = hisi_hba->dev;
+<<<<<<< HEAD
 		struct hisi_sas_slot *slot;
 		u32 dw0, dw1, dw3;
 		int iptt;
@@ -2443,6 +2477,16 @@ static int complete_v3_hw(struct hisi_sas_cq *cq)
 
 			sas_ata_device_link_abort(device, true);
 		} else if (likely(iptt < HISI_SAS_COMMAND_ENTRIES_V3_HW)) {
+=======
+		u32 dw1;
+		int iptt;
+
+		complete_hdr = &complete_queue[rd_point];
+		dw1 = le32_to_cpu(complete_hdr->dw1);
+
+		iptt = dw1 & CMPLT_HDR_IPTT_MSK;
+		if (likely(iptt < HISI_SAS_COMMAND_ENTRIES_V3_HW)) {
+>>>>>>> b7ba80a49124 (Commit)
 			slot = &hisi_hba->slot_info[iptt];
 			slot->cmplt_queue_slot = rd_point;
 			slot->cmplt_queue = queue;
@@ -2458,6 +2502,7 @@ static int complete_v3_hw(struct hisi_sas_cq *cq)
 	cq->rd_point = rd_point;
 	hisi_sas_write32(hisi_hba, COMPL_Q_0_RD_PTR + (0x14 * queue), rd_point);
 
+<<<<<<< HEAD
 	return completed;
 }
 
@@ -2480,6 +2525,8 @@ static irqreturn_t cq_thread_v3_hw(int irq_no, void *p)
 
 	complete_v3_hw(cq);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return IRQ_HANDLED;
 }
 
@@ -2503,9 +2550,14 @@ static void hisi_sas_v3_free_vectors(void *data)
 
 static int interrupt_preinit_v3_hw(struct hisi_hba *hisi_hba)
 {
+<<<<<<< HEAD
 	/* Allocate all MSI vectors to avoid re-insertion issue */
 	int max_msi = HISI_SAS_MSI_COUNT_V3_HW;
 	int vectors, min_msi;
+=======
+	int vectors;
+	int max_msi = HISI_SAS_MSI_COUNT_V3_HW, min_msi;
+>>>>>>> b7ba80a49124 (Commit)
 	struct Scsi_Host *shost = hisi_hba->shost;
 	struct pci_dev *pdev = hisi_hba->pci_dev;
 	struct irq_affinity desc = {
@@ -2522,10 +2574,18 @@ static int interrupt_preinit_v3_hw(struct hisi_hba *hisi_hba)
 		return -ENOENT;
 
 
+<<<<<<< HEAD
 	hisi_hba->cq_nvecs = vectors - BASE_VECTORS_V3_HW - hisi_hba->iopoll_q_cnt;
 	shost->nr_hw_queues = hisi_hba->cq_nvecs + hisi_hba->iopoll_q_cnt;
 
 	return devm_add_action(&pdev->dev, hisi_sas_v3_free_vectors, pdev);
+=======
+	hisi_hba->cq_nvecs = vectors - BASE_VECTORS_V3_HW;
+	shost->nr_hw_queues = hisi_hba->cq_nvecs;
+
+	devm_add_action(&pdev->dev, hisi_sas_v3_free_vectors, pdev);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int interrupt_init_v3_hw(struct hisi_hba *hisi_hba)
@@ -2656,7 +2716,10 @@ static int disable_host_v3_hw(struct hisi_hba *hisi_hba)
 	int rc;
 
 	interrupt_disable_v3_hw(hisi_hba);
+<<<<<<< HEAD
 	hisi_sas_sync_poll_cqs(hisi_hba);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hisi_sas_write32(hisi_hba, DLVRY_QUEUE_ENABLE, 0x0);
 
 	hisi_sas_stop_phys(hisi_hba);
@@ -2854,6 +2917,7 @@ static ssize_t intr_coal_count_v3_hw_store(struct device *dev,
 }
 static DEVICE_ATTR_RW(intr_coal_count_v3_hw);
 
+<<<<<<< HEAD
 static ssize_t iopoll_q_cnt_v3_hw_show(struct device *dev,
 					  struct device_attribute
 					  *attr, char *buf)
@@ -2866,6 +2930,8 @@ static ssize_t iopoll_q_cnt_v3_hw_show(struct device *dev,
 }
 static DEVICE_ATTR_RO(iopoll_q_cnt_v3_hw);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int slave_configure_v3_hw(struct scsi_device *sdev)
 {
 	struct Scsi_Host *shost = dev_to_shost(&sdev->sdev_gendev);
@@ -2895,7 +2961,10 @@ static struct attribute *host_v3_hw_attrs[] = {
 	&dev_attr_intr_conv_v3_hw.attr,
 	&dev_attr_intr_coal_ticks_v3_hw.attr,
 	&dev_attr_intr_coal_count_v3_hw.attr,
+<<<<<<< HEAD
 	&dev_attr_iopoll_q_cnt_v3_hw.attr,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	NULL
 };
 
@@ -3082,7 +3151,11 @@ static void debugfs_snapshot_prepare_v3_hw(struct hisi_hba *hisi_hba)
 
 	wait_cmds_complete_timeout_v3_hw(hisi_hba, 100, 5000);
 
+<<<<<<< HEAD
 	hisi_sas_sync_cqs(hisi_hba);
+=======
+	hisi_sas_sync_irqs(hisi_hba);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void debugfs_snapshot_restore_v3_hw(struct hisi_hba *hisi_hba)
@@ -3254,6 +3327,7 @@ static int debugfs_set_bist_v3_hw(struct hisi_hba *hisi_hba, bool enable)
 static void hisi_sas_map_queues(struct Scsi_Host *shost)
 {
 	struct hisi_hba *hisi_hba = shost_priv(shost);
+<<<<<<< HEAD
 	struct blk_mq_queue_map *qmap;
 	int i, qoff;
 
@@ -3279,6 +3353,11 @@ static void hisi_sas_map_queues(struct Scsi_Host *shost)
 					      BASE_VECTORS_V3_HW);
 		qoff += qmap->nr_queues;
 	}
+=======
+	struct blk_mq_queue_map *qmap = &shost->tag_set.map[HCTX_TYPE_DEFAULT];
+
+	blk_mq_pci_map_queues(qmap, hisi_hba->pci_dev, BASE_VECTORS_V3_HW);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct scsi_host_template sht_v3_hw = {
@@ -3310,7 +3389,10 @@ static struct scsi_host_template sht_v3_hw = {
 	.tag_alloc_policy	= BLK_TAG_ALLOC_RR,
 	.host_reset             = hisi_sas_host_reset,
 	.host_tagset		= 1,
+<<<<<<< HEAD
 	.mq_poll		= queue_complete_v3_hw,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct hisi_sas_hw hisi_sas_v3_hw = {
@@ -3370,6 +3452,7 @@ hisi_sas_shost_alloc_pci(struct pci_dev *pdev)
 	if (hisi_sas_get_fw_info(hisi_hba) < 0)
 		goto err_out;
 
+<<<<<<< HEAD
 	if (experimental_iopoll_q_cnt < 0 ||
 		experimental_iopoll_q_cnt >= hisi_hba->queue_count)
 		dev_err(dev, "iopoll queue count %d cannot exceed or equal 16, using default 0\n",
@@ -3377,6 +3460,8 @@ hisi_sas_shost_alloc_pci(struct pci_dev *pdev)
 	else
 		hisi_hba->iopoll_q_cnt = experimental_iopoll_q_cnt;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (hisi_sas_alloc(hisi_hba)) {
 		hisi_sas_free(hisi_hba);
 		goto err_out;
@@ -4932,10 +5017,13 @@ hisi_sas_v3_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	shost->max_cmd_len = 16;
 	shost->can_queue = HISI_SAS_UNRESERVED_IPTT;
 	shost->cmd_per_lun = HISI_SAS_UNRESERVED_IPTT;
+<<<<<<< HEAD
 	if (hisi_hba->iopoll_q_cnt)
 		shost->nr_maps = 3;
 	else
 		shost->nr_maps = 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	sha->sas_ha_name = DRV_NAME;
 	sha->dev = dev;

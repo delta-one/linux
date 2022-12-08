@@ -167,7 +167,10 @@
 };
 
 &emmc_phy {
+<<<<<<< HEAD
 	rockchip,enable-strobe-pulldown;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 

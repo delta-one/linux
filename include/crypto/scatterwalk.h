@@ -46,6 +46,15 @@ static inline void scatterwalk_advance(struct scatter_walk *walk,
 	walk->offset += nbytes;
 }
 
+<<<<<<< HEAD
+=======
+static inline unsigned int scatterwalk_aligned(struct scatter_walk *walk,
+					       unsigned int alignmask)
+{
+	return !(walk->offset & alignmask);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct page *scatterwalk_page(struct scatter_walk *walk)
 {
 	return sg_page(walk->sg) + (walk->offset >> PAGE_SHIFT);
@@ -53,7 +62,11 @@ static inline struct page *scatterwalk_page(struct scatter_walk *walk)
 
 static inline void scatterwalk_unmap(void *vaddr)
 {
+<<<<<<< HEAD
 	kunmap_local(vaddr);
+=======
+	kunmap_atomic(vaddr);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void scatterwalk_start(struct scatter_walk *walk,
@@ -65,7 +78,11 @@ static inline void scatterwalk_start(struct scatter_walk *walk,
 
 static inline void *scatterwalk_map(struct scatter_walk *walk)
 {
+<<<<<<< HEAD
 	return kmap_local_page(scatterwalk_page(walk)) +
+=======
+	return kmap_atomic(scatterwalk_page(walk)) +
+>>>>>>> b7ba80a49124 (Commit)
 	       offset_in_page(walk->offset);
 }
 
@@ -93,6 +110,10 @@ static inline void scatterwalk_done(struct scatter_walk *walk, int out,
 
 void scatterwalk_copychunks(void *buf, struct scatter_walk *walk,
 			    size_t nbytes, int out);
+<<<<<<< HEAD
+=======
+void *scatterwalk_map(struct scatter_walk *walk);
+>>>>>>> b7ba80a49124 (Commit)
 
 void scatterwalk_map_and_copy(void *buf, struct scatterlist *sg,
 			      unsigned int start, unsigned int nbytes, int out);

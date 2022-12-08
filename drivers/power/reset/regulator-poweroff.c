@@ -79,4 +79,8 @@ module_platform_driver(regulator_poweroff_driver);
 
 MODULE_AUTHOR("Michael Klein <michael@fossekall.de>");
 MODULE_DESCRIPTION("Regulator poweroff driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_ALIAS("platform:poweroff-regulator");

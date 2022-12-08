@@ -203,7 +203,10 @@ config USB_F_UAC2
 
 config USB_F_UVC
 	tristate
+<<<<<<< HEAD
 	select UVC_COMMON
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 config USB_F_MIDI
 	tristate

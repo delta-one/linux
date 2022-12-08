@@ -1436,10 +1436,15 @@ static acpi_status bgx_acpi_match_id(acpi_handle handle, u32 lvl,
 		return AE_OK;
 	}
 
+<<<<<<< HEAD
 	if (strncmp(string.pointer, bgx_sel, 4)) {
 		kfree(string.pointer);
 		return AE_OK;
 	}
+=======
+	if (strncmp(string.pointer, bgx_sel, 4))
+		return AE_OK;
+>>>>>>> b7ba80a49124 (Commit)
 
 	acpi_walk_namespace(ACPI_TYPE_DEVICE, handle, 1,
 			    bgx_acpi_register_phy, NULL, bgx, NULL);

@@ -255,7 +255,11 @@ struct tmc_sg_table {
 };
 
 /* Generic functions */
+<<<<<<< HEAD
 int tmc_wait_for_tmcready(struct tmc_drvdata *drvdata);
+=======
+void tmc_wait_for_tmcready(struct tmc_drvdata *drvdata);
+>>>>>>> b7ba80a49124 (Commit)
 void tmc_flush_and_stop(struct tmc_drvdata *drvdata);
 void tmc_enable_hw(struct tmc_drvdata *drvdata);
 void tmc_disable_hw(struct tmc_drvdata *drvdata);

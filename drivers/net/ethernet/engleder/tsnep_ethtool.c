@@ -8,7 +8,10 @@ static const char tsnep_stats_strings[][ETH_GSTRING_LEN] = {
 	"rx_bytes",
 	"rx_dropped",
 	"rx_multicast",
+<<<<<<< HEAD
 	"rx_alloc_failed",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	"rx_phy_errors",
 	"rx_forwarded_phy_errors",
 	"rx_invalid_frame_errors",
@@ -22,7 +25,10 @@ struct tsnep_stats {
 	u64 rx_bytes;
 	u64 rx_dropped;
 	u64 rx_multicast;
+<<<<<<< HEAD
 	u64 rx_alloc_failed;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 rx_phy_errors;
 	u64 rx_forwarded_phy_errors;
 	u64 rx_invalid_frame_errors;
@@ -38,7 +44,10 @@ static const char tsnep_rx_queue_stats_strings[][ETH_GSTRING_LEN] = {
 	"rx_%d_bytes",
 	"rx_%d_dropped",
 	"rx_%d_multicast",
+<<<<<<< HEAD
 	"rx_%d_alloc_failed",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	"rx_%d_no_descriptor_errors",
 	"rx_%d_buffer_too_small_errors",
 	"rx_%d_fifo_overflow_errors",
@@ -50,7 +59,10 @@ struct tsnep_rx_queue_stats {
 	u64 rx_bytes;
 	u64 rx_dropped;
 	u64 rx_multicast;
+<<<<<<< HEAD
 	u64 rx_alloc_failed;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 rx_no_descriptor_errors;
 	u64 rx_buffer_too_small_errors;
 	u64 rx_fifo_overflow_errors;
@@ -182,7 +194,10 @@ static void tsnep_ethtool_get_ethtool_stats(struct net_device *netdev,
 		tsnep_stats.rx_bytes += adapter->rx[i].bytes;
 		tsnep_stats.rx_dropped += adapter->rx[i].dropped;
 		tsnep_stats.rx_multicast += adapter->rx[i].multicast;
+<<<<<<< HEAD
 		tsnep_stats.rx_alloc_failed += adapter->rx[i].alloc_failed;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	reg = ioread32(adapter->addr + ECM_STAT);
 	tsnep_stats.rx_phy_errors =
@@ -205,8 +220,11 @@ static void tsnep_ethtool_get_ethtool_stats(struct net_device *netdev,
 		tsnep_rx_queue_stats.rx_bytes = adapter->rx[i].bytes;
 		tsnep_rx_queue_stats.rx_dropped = adapter->rx[i].dropped;
 		tsnep_rx_queue_stats.rx_multicast = adapter->rx[i].multicast;
+<<<<<<< HEAD
 		tsnep_rx_queue_stats.rx_alloc_failed =
 			adapter->rx[i].alloc_failed;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		reg = ioread32(adapter->addr + TSNEP_QUEUE(i) +
 			       TSNEP_RX_STATISTIC);
 		tsnep_rx_queue_stats.rx_no_descriptor_errors =
@@ -257,6 +275,7 @@ static int tsnep_ethtool_get_sset_count(struct net_device *netdev, int sset)
 	}
 }
 
+<<<<<<< HEAD
 static int tsnep_ethtool_get_rxnfc(struct net_device *netdev,
 				   struct ethtool_rxnfc *cmd, u32 *rule_locs)
 {
@@ -310,6 +329,12 @@ static int tsnep_ethtool_get_ts_info(struct net_device *netdev,
 				     struct ethtool_ts_info *info)
 {
 	struct tsnep_adapter *adapter = netdev_priv(netdev);
+=======
+static int tsnep_ethtool_get_ts_info(struct net_device *dev,
+				     struct ethtool_ts_info *info)
+{
+	struct tsnep_adapter *adapter = netdev_priv(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	info->so_timestamping = SOF_TIMESTAMPING_TX_SOFTWARE |
 				SOF_TIMESTAMPING_RX_SOFTWARE |
@@ -331,6 +356,7 @@ static int tsnep_ethtool_get_ts_info(struct net_device *netdev,
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct tsnep_queue *tsnep_get_queue_with_tx(struct tsnep_adapter *adapter,
 						   int index)
 {
@@ -462,6 +488,9 @@ static int tsnep_ethtool_set_per_queue_coalesce(struct net_device *netdev,
 
 const struct ethtool_ops tsnep_ethtool_ops = {
 	.supported_coalesce_params = ETHTOOL_COALESCE_USECS,
+=======
+const struct ethtool_ops tsnep_ethtool_ops = {
+>>>>>>> b7ba80a49124 (Commit)
 	.get_drvinfo = tsnep_ethtool_get_drvinfo,
 	.get_regs_len = tsnep_ethtool_get_regs_len,
 	.get_regs = tsnep_ethtool_get_regs,
@@ -473,6 +502,7 @@ const struct ethtool_ops tsnep_ethtool_ops = {
 	.get_strings = tsnep_ethtool_get_strings,
 	.get_ethtool_stats = tsnep_ethtool_get_ethtool_stats,
 	.get_sset_count = tsnep_ethtool_get_sset_count,
+<<<<<<< HEAD
 	.get_rxnfc = tsnep_ethtool_get_rxnfc,
 	.set_rxnfc = tsnep_ethtool_set_rxnfc,
 	.get_channels = tsnep_ethtool_get_channels,
@@ -481,6 +511,9 @@ const struct ethtool_ops tsnep_ethtool_ops = {
 	.set_coalesce = tsnep_ethtool_set_coalesce,
 	.get_per_queue_coalesce = tsnep_ethtool_get_per_queue_coalesce,
 	.set_per_queue_coalesce = tsnep_ethtool_set_per_queue_coalesce,
+=======
+	.get_ts_info = tsnep_ethtool_get_ts_info,
+>>>>>>> b7ba80a49124 (Commit)
 	.get_link_ksettings = phy_ethtool_get_link_ksettings,
 	.set_link_ksettings = phy_ethtool_set_link_ksettings,
 };

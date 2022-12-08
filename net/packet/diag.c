@@ -18,6 +18,7 @@ static int pdiag_put_info(const struct packet_sock *po, struct sk_buff *nlskb)
 	pinfo.pdi_version = po->tp_version;
 	pinfo.pdi_reserve = po->tp_reserve;
 	pinfo.pdi_copy_thresh = po->copy_thresh;
+<<<<<<< HEAD
 	pinfo.pdi_tstamp = READ_ONCE(po->tp_tstamp);
 
 	pinfo.pdi_flags = 0;
@@ -30,6 +31,20 @@ static int pdiag_put_info(const struct packet_sock *po, struct sk_buff *nlskb)
 	if (packet_sock_flag(po, PACKET_SOCK_HAS_VNET_HDR))
 		pinfo.pdi_flags |= PDI_VNETHDR;
 	if (packet_sock_flag(po, PACKET_SOCK_TP_LOSS))
+=======
+	pinfo.pdi_tstamp = po->tp_tstamp;
+
+	pinfo.pdi_flags = 0;
+	if (po->running)
+		pinfo.pdi_flags |= PDI_RUNNING;
+	if (po->auxdata)
+		pinfo.pdi_flags |= PDI_AUXDATA;
+	if (po->origdev)
+		pinfo.pdi_flags |= PDI_ORIGDEV;
+	if (po->has_vnet_hdr)
+		pinfo.pdi_flags |= PDI_VNETHDR;
+	if (po->tp_loss)
+>>>>>>> b7ba80a49124 (Commit)
 		pinfo.pdi_flags |= PDI_LOSS;
 
 	return nla_put(nlskb, PACKET_DIAG_INFO, sizeof(pinfo), &pinfo);

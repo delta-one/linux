@@ -222,7 +222,11 @@ static int imx6q_opp_check_speed_grading(struct device *dev)
 	u32 val;
 	int ret;
 
+<<<<<<< HEAD
 	if (of_property_present(dev->of_node, "nvmem-cells")) {
+=======
+	if (of_find_property(dev->of_node, "nvmem-cells", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = nvmem_cell_read_u32(dev, "speed_grade", &val);
 		if (ret)
 			return ret;
@@ -279,7 +283,11 @@ static int imx6ul_opp_check_speed_grading(struct device *dev)
 	u32 val;
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (of_property_present(dev->of_node, "nvmem-cells")) {
+=======
+	if (of_find_property(dev->of_node, "nvmem-cells", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = nvmem_cell_read_u32(dev, "speed_grade", &val);
 		if (ret)
 			return ret;
@@ -396,7 +404,13 @@ static int imx6q_cpufreq_probe(struct platform_device *pdev)
 		ret = imx6q_opp_check_speed_grading(cpu_dev);
 	}
 	if (ret) {
+<<<<<<< HEAD
 		dev_err_probe(cpu_dev, ret, "failed to read ocotp\n");
+=======
+		if (ret != -EPROBE_DEFER)
+			dev_err(cpu_dev, "failed to read ocotp: %d\n",
+				ret);
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_free_opp;
 	}
 

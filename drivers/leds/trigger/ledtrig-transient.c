@@ -180,7 +180,11 @@ static void transient_trig_deactivate(struct led_classdev *led_cdev)
 {
 	struct transient_trig_data *transient_data = led_get_trigger_data(led_cdev);
 
+<<<<<<< HEAD
 	timer_shutdown_sync(&transient_data->timer);
+=======
+	del_timer_sync(&transient_data->timer);
+>>>>>>> b7ba80a49124 (Commit)
 	led_set_brightness_nosleep(led_cdev, transient_data->restore_state);
 	kfree(transient_data);
 }

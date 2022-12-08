@@ -12,5 +12,8 @@ vlset
 za-fork
 za-ptrace
 za-test
+<<<<<<< HEAD
 zt-ptrace
 zt-test
+=======
+>>>>>>> b7ba80a49124 (Commit)

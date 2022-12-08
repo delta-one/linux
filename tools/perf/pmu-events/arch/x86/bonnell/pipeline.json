@@ -1,6 +1,10 @@
 [
     {
         "BriefDescription": "Bogus branches",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xE4",
         "EventName": "BOGUS_BR",
         "SampleAfterValue": "2000000",
@@ -8,6 +12,10 @@
     },
     {
         "BriefDescription": "Branch instructions decoded",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xE0",
         "EventName": "BR_INST_DECODED",
         "SampleAfterValue": "2000000",
@@ -15,12 +23,24 @@
     },
     {
         "BriefDescription": "Retired branch instructions.",
+<<<<<<< HEAD
         "EventCode": "0xC4",
         "EventName": "BR_INST_RETIRED.ANY",
         "SampleAfterValue": "2000000"
     },
     {
         "BriefDescription": "Retired branch instructions.",
+=======
+        "Counter": "0,1",
+        "EventCode": "0xC4",
+        "EventName": "BR_INST_RETIRED.ANY",
+        "SampleAfterValue": "2000000",
+        "UMask": "0x0"
+    },
+    {
+        "BriefDescription": "Retired branch instructions.",
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC4",
         "EventName": "BR_INST_RETIRED.ANY1",
         "SampleAfterValue": "2000000",
@@ -28,6 +48,7 @@
     },
     {
         "BriefDescription": "Retired mispredicted branch instructions (precise event).",
+<<<<<<< HEAD
         "EventCode": "0xC5",
         "EventName": "BR_INST_RETIRED.MISPRED",
         "PEBS": "1",
@@ -35,6 +56,18 @@
     },
     {
         "BriefDescription": "Retired branch instructions that were mispredicted not-taken.",
+=======
+        "Counter": "0,1",
+        "EventCode": "0xC5",
+        "EventName": "BR_INST_RETIRED.MISPRED",
+        "PEBS": "1",
+        "SampleAfterValue": "200000",
+        "UMask": "0x0"
+    },
+    {
+        "BriefDescription": "Retired branch instructions that were mispredicted not-taken.",
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC4",
         "EventName": "BR_INST_RETIRED.MISPRED_NOT_TAKEN",
         "SampleAfterValue": "200000",
@@ -42,6 +75,10 @@
     },
     {
         "BriefDescription": "Retired branch instructions that were mispredicted taken.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC4",
         "EventName": "BR_INST_RETIRED.MISPRED_TAKEN",
         "SampleAfterValue": "200000",
@@ -49,6 +86,10 @@
     },
     {
         "BriefDescription": "Retired branch instructions that were predicted not-taken.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC4",
         "EventName": "BR_INST_RETIRED.PRED_NOT_TAKEN",
         "SampleAfterValue": "2000000",
@@ -56,6 +97,10 @@
     },
     {
         "BriefDescription": "Retired branch instructions that were predicted taken.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC4",
         "EventName": "BR_INST_RETIRED.PRED_TAKEN",
         "SampleAfterValue": "2000000",
@@ -63,6 +108,10 @@
     },
     {
         "BriefDescription": "Retired taken branch instructions.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC4",
         "EventName": "BR_INST_RETIRED.TAKEN",
         "SampleAfterValue": "2000000",
@@ -70,6 +119,10 @@
     },
     {
         "BriefDescription": "All macro conditional branch instructions.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x88",
         "EventName": "BR_INST_TYPE_RETIRED.COND",
         "SampleAfterValue": "2000000",
@@ -77,6 +130,10 @@
     },
     {
         "BriefDescription": "Only taken macro conditional branch instructions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x88",
         "EventName": "BR_INST_TYPE_RETIRED.COND_TAKEN",
         "SampleAfterValue": "2000000",
@@ -84,6 +141,10 @@
     },
     {
         "BriefDescription": "All non-indirect calls",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x88",
         "EventName": "BR_INST_TYPE_RETIRED.DIR_CALL",
         "SampleAfterValue": "2000000",
@@ -91,6 +152,10 @@
     },
     {
         "BriefDescription": "All indirect branches that are not calls.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x88",
         "EventName": "BR_INST_TYPE_RETIRED.IND",
         "SampleAfterValue": "2000000",
@@ -98,6 +163,10 @@
     },
     {
         "BriefDescription": "All indirect calls, including both register and memory indirect.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x88",
         "EventName": "BR_INST_TYPE_RETIRED.IND_CALL",
         "SampleAfterValue": "2000000",
@@ -105,6 +174,10 @@
     },
     {
         "BriefDescription": "All indirect branches that have a return mnemonic",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x88",
         "EventName": "BR_INST_TYPE_RETIRED.RET",
         "SampleAfterValue": "2000000",
@@ -112,6 +185,10 @@
     },
     {
         "BriefDescription": "All macro unconditional branch instructions, excluding calls and indirects",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x88",
         "EventName": "BR_INST_TYPE_RETIRED.UNCOND",
         "SampleAfterValue": "2000000",
@@ -119,6 +196,10 @@
     },
     {
         "BriefDescription": "Mispredicted cond branch instructions retired",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x89",
         "EventName": "BR_MISSP_TYPE_RETIRED.COND",
         "SampleAfterValue": "200000",
@@ -126,6 +207,10 @@
     },
     {
         "BriefDescription": "Mispredicted and taken cond branch instructions retired",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x89",
         "EventName": "BR_MISSP_TYPE_RETIRED.COND_TAKEN",
         "SampleAfterValue": "200000",
@@ -133,6 +218,10 @@
     },
     {
         "BriefDescription": "Mispredicted ind branches that are not calls",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x89",
         "EventName": "BR_MISSP_TYPE_RETIRED.IND",
         "SampleAfterValue": "200000",
@@ -140,6 +229,10 @@
     },
     {
         "BriefDescription": "Mispredicted indirect calls, including both register and memory indirect.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x89",
         "EventName": "BR_MISSP_TYPE_RETIRED.IND_CALL",
         "SampleAfterValue": "200000",
@@ -147,6 +240,10 @@
     },
     {
         "BriefDescription": "Mispredicted return branches",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x89",
         "EventName": "BR_MISSP_TYPE_RETIRED.RETURN",
         "SampleAfterValue": "200000",
@@ -154,6 +251,10 @@
     },
     {
         "BriefDescription": "Bus cycles when core is not halted",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x3C",
         "EventName": "CPU_CLK_UNHALTED.BUS",
         "SampleAfterValue": "200000",
@@ -161,6 +262,7 @@
     },
     {
         "BriefDescription": "Core cycles when core is not halted",
+<<<<<<< HEAD
         "EventCode": "0xA",
         "EventName": "CPU_CLK_UNHALTED.CORE",
         "SampleAfterValue": "2000000"
@@ -179,6 +281,33 @@
     },
     {
         "BriefDescription": "Cycles the divider is busy.",
+=======
+        "Counter": "Fixed counter 2",
+        "EventCode": "0xA",
+        "EventName": "CPU_CLK_UNHALTED.CORE",
+        "SampleAfterValue": "2000000",
+        "UMask": "0x0"
+    },
+    {
+        "BriefDescription": "Core cycles when core is not halted",
+        "Counter": "0,1",
+        "EventCode": "0x3C",
+        "EventName": "CPU_CLK_UNHALTED.CORE_P",
+        "SampleAfterValue": "2000000",
+        "UMask": "0x0"
+    },
+    {
+        "BriefDescription": "Reference cycles when core is not halted.",
+        "Counter": "Fixed counter 3",
+        "EventCode": "0xA",
+        "EventName": "CPU_CLK_UNHALTED.REF",
+        "SampleAfterValue": "2000000",
+        "UMask": "0x0"
+    },
+    {
+        "BriefDescription": "Cycles the divider is busy.",
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x14",
         "EventName": "CYCLES_DIV_BUSY",
         "SampleAfterValue": "2000000",
@@ -186,6 +315,10 @@
     },
     {
         "BriefDescription": "Divide operations retired",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x13",
         "EventName": "DIV.AR",
         "SampleAfterValue": "2000000",
@@ -193,6 +326,10 @@
     },
     {
         "BriefDescription": "Divide operations executed.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x13",
         "EventName": "DIV.S",
         "SampleAfterValue": "2000000",
@@ -200,6 +337,7 @@
     },
     {
         "BriefDescription": "Instructions retired.",
+<<<<<<< HEAD
         "EventCode": "0xA",
         "EventName": "INST_RETIRED.ANY",
         "SampleAfterValue": "2000000"
@@ -213,6 +351,26 @@
     },
     {
         "BriefDescription": "Self-Modifying Code detected.",
+=======
+        "Counter": "Fixed counter 1",
+        "EventCode": "0xA",
+        "EventName": "INST_RETIRED.ANY",
+        "SampleAfterValue": "2000000",
+        "UMask": "0x0"
+    },
+    {
+        "BriefDescription": "Instructions retired (precise event).",
+        "Counter": "0,1",
+        "EventCode": "0xC0",
+        "EventName": "INST_RETIRED.ANY_P",
+        "PEBS": "2",
+        "SampleAfterValue": "2000000",
+        "UMask": "0x0"
+    },
+    {
+        "BriefDescription": "Self-Modifying Code detected.",
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC3",
         "EventName": "MACHINE_CLEARS.SMC",
         "SampleAfterValue": "200000",
@@ -220,6 +378,10 @@
     },
     {
         "BriefDescription": "Multiply operations retired",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x12",
         "EventName": "MUL.AR",
         "SampleAfterValue": "2000000",
@@ -227,6 +389,10 @@
     },
     {
         "BriefDescription": "Multiply operations executed.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x12",
         "EventName": "MUL.S",
         "SampleAfterValue": "2000000",
@@ -234,6 +400,10 @@
     },
     {
         "BriefDescription": "Micro-op reissues for any cause",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x3",
         "EventName": "REISSUE.ANY",
         "SampleAfterValue": "200000",
@@ -241,6 +411,10 @@
     },
     {
         "BriefDescription": "Micro-op reissues for any cause (At Retirement)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x3",
         "EventName": "REISSUE.ANY.AR",
         "SampleAfterValue": "200000",
@@ -248,6 +422,10 @@
     },
     {
         "BriefDescription": "Micro-op reissues on a store-load collision",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x3",
         "EventName": "REISSUE.OVERLAP_STORE",
         "SampleAfterValue": "200000",
@@ -255,6 +433,10 @@
     },
     {
         "BriefDescription": "Micro-op reissues on a store-load collision (At Retirement)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x3",
         "EventName": "REISSUE.OVERLAP_STORE.AR",
         "SampleAfterValue": "200000",
@@ -262,6 +444,10 @@
     },
     {
         "BriefDescription": "Cycles issue is stalled due to div busy.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xDC",
         "EventName": "RESOURCE_STALLS.DIV_BUSY",
         "SampleAfterValue": "2000000",
@@ -269,6 +455,10 @@
     },
     {
         "BriefDescription": "All store forwards",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2",
         "EventName": "STORE_FORWARDS.ANY",
         "SampleAfterValue": "200000",
@@ -276,6 +466,10 @@
     },
     {
         "BriefDescription": "Good store forwards",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2",
         "EventName": "STORE_FORWARDS.GOOD",
         "SampleAfterValue": "200000",
@@ -283,6 +477,10 @@
     },
     {
         "BriefDescription": "Micro-ops retired.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC2",
         "EventName": "UOPS_RETIRED.ANY",
         "SampleAfterValue": "2000000",
@@ -290,6 +488,10 @@
     },
     {
         "BriefDescription": "Cycles no micro-ops retired.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC2",
         "EventName": "UOPS_RETIRED.STALLED_CYCLES",
         "SampleAfterValue": "2000000",
@@ -297,6 +499,10 @@
     },
     {
         "BriefDescription": "Periods no micro-ops retired.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC2",
         "EventName": "UOPS_RETIRED.STALLS",
         "SampleAfterValue": "2000000",

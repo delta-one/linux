@@ -48,6 +48,10 @@ void perf_counts__reset(struct perf_counts *counts)
 {
 	xyarray__reset(counts->loaded);
 	xyarray__reset(counts->values);
+<<<<<<< HEAD
+=======
+	memset(&counts->aggr, 0, sizeof(struct perf_counts_values));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void evsel__reset_counts(struct evsel *evsel)

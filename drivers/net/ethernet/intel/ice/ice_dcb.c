@@ -73,9 +73,12 @@ ice_aq_cfg_lldp_mib_change(struct ice_hw *hw, bool ena_update,
 
 	if (!ena_update)
 		cmd->command |= ICE_AQ_LLDP_MIB_UPDATE_DIS;
+<<<<<<< HEAD
 	else
 		cmd->command |= FIELD_PREP(ICE_AQ_LLDP_MIB_PENDING_M,
 					   ICE_AQ_LLDP_MIB_PENDING_ENABLE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ice_aq_send_cmd(hw, &desc, NULL, 0, cd);
 }
@@ -569,7 +572,11 @@ ice_parse_cee_tlv(struct ice_lldp_org_tlv *tlv, struct ice_dcbx_cfg *dcbcfg)
  * @tlv: Organization specific TLV
  * @dcbcfg: Local store to update ETS REC data
  *
+<<<<<<< HEAD
  * Currently IEEE 802.1Qaz and CEE DCBX TLV are supported, others
+=======
+ * Currently only IEEE 802.1Qaz TLV is supported, all others
+>>>>>>> b7ba80a49124 (Commit)
  * will be returned
  */
 static void
@@ -588,7 +595,11 @@ ice_parse_org_tlv(struct ice_lldp_org_tlv *tlv, struct ice_dcbx_cfg *dcbcfg)
 		ice_parse_cee_tlv(tlv, dcbcfg);
 		break;
 	default:
+<<<<<<< HEAD
 		break; /* Other OUIs not supported */
+=======
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -967,6 +978,7 @@ int ice_get_dcb_cfg(struct ice_port_info *pi)
 }
 
 /**
+<<<<<<< HEAD
  * ice_get_dcb_cfg_from_mib_change
  * @pi: port information structure
  * @event: pointer to the admin queue receive event
@@ -1003,6 +1015,8 @@ void ice_get_dcb_cfg_from_mib_change(struct ice_port_info *pi,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ice_init_dcb
  * @hw: pointer to the HW struct
  * @enable_mib_change: enable MIB change event
@@ -1411,7 +1425,11 @@ ice_add_dscp_pfc_tlv(struct ice_lldp_org_tlv *tlv, struct ice_dcbx_cfg *dcbcfg)
 	tlv->ouisubtype = htonl(ouisubtype);
 
 	buf[0] = dcbcfg->pfc.pfccap & 0xF;
+<<<<<<< HEAD
 	buf[1] = dcbcfg->pfc.pfcena;
+=======
+	buf[1] = dcbcfg->pfc.pfcena & 0xF;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1619,7 +1637,11 @@ ice_update_port_tc_tree_cfg(struct ice_port_info *pi,
 		/* new TC */
 		status = ice_sched_query_elem(pi->hw, teid2, &elem);
 		if (!status)
+<<<<<<< HEAD
 			status = ice_sched_add_node(pi, 1, &elem, NULL);
+=======
+			status = ice_sched_add_node(pi, 1, &elem);
+>>>>>>> b7ba80a49124 (Commit)
 		if (status)
 			break;
 		/* update the TC number */

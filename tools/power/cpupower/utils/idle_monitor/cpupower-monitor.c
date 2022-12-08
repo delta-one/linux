@@ -459,10 +459,16 @@ int cmd_monitor(int argc, char **argv)
 			print_results(1, cpu);
 	}
 
+<<<<<<< HEAD
 	for (num = 0; num < avail_monitors; num++) {
 		if (monitors[num]->unregister)
 			monitors[num]->unregister();
 	}
+=======
+	for (num = 0; num < avail_monitors; num++)
+		monitors[num]->unregister();
+
+>>>>>>> b7ba80a49124 (Commit)
 	cpu_topology_release(cpu_top);
 	return 0;
 }

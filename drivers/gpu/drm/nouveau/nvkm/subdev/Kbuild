@@ -23,5 +23,8 @@ include $(src)/nvkm/subdev/privring/Kbuild
 include $(src)/nvkm/subdev/therm/Kbuild
 include $(src)/nvkm/subdev/timer/Kbuild
 include $(src)/nvkm/subdev/top/Kbuild
+<<<<<<< HEAD
 include $(src)/nvkm/subdev/vfn/Kbuild
+=======
+>>>>>>> b7ba80a49124 (Commit)
 include $(src)/nvkm/subdev/volt/Kbuild

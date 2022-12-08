@@ -245,7 +245,10 @@ static int sc2731_regulator_probe(struct platform_device *pdev)
 static struct platform_driver sc2731_regulator_driver = {
 	.driver = {
 		.name = "sc27xx-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = sc2731_regulator_probe,
 };

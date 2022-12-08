@@ -47,6 +47,7 @@ nvkm_ioctl_nop(struct nvkm_client *client,
 	return ret;
 }
 
+<<<<<<< HEAD
 #include <nvif/class.h>
 
 static int
@@ -67,6 +68,8 @@ nvkm_ioctl_sclass_(struct nvkm_object *object, int index, struct nvkm_oclass *oc
 	return -ENOSYS;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int
 nvkm_ioctl_sclass(struct nvkm_client *client,
 		  struct nvkm_object *object, void *data, u32 size)
@@ -84,7 +87,12 @@ nvkm_ioctl_sclass(struct nvkm_client *client,
 		if (size != args->v0.count * sizeof(args->v0.oclass[0]))
 			return -EINVAL;
 
+<<<<<<< HEAD
 		while (nvkm_ioctl_sclass_(object, i, &oclass) >= 0) {
+=======
+		while (object->func->sclass &&
+		       object->func->sclass(object, i, &oclass) >= 0) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (i < args->v0.count) {
 				args->v0.oclass[i].oclass = oclass.base.oclass;
 				args->v0.oclass[i].minver = oclass.base.minver;
@@ -119,7 +127,11 @@ nvkm_ioctl_new(struct nvkm_client *client,
 	} else
 		return ret;
 
+<<<<<<< HEAD
 	if (!parent->func->sclass && !parent->func->uevent) {
+=======
+	if (!parent->func->sclass) {
+>>>>>>> b7ba80a49124 (Commit)
 		nvif_ioctl(parent, "cannot have children\n");
 		return -EINVAL;
 	}
@@ -132,7 +144,11 @@ nvkm_ioctl_new(struct nvkm_client *client,
 		oclass.object = args->v0.object;
 		oclass.client = client;
 		oclass.parent = parent;
+<<<<<<< HEAD
 		ret = nvkm_ioctl_sclass_(parent, i++, &oclass);
+=======
+		ret = parent->func->sclass(parent, i++, &oclass);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			return ret;
 	} while (oclass.base.oclass != args->v0.oclass);
@@ -313,6 +329,93 @@ nvkm_ioctl_unmap(struct nvkm_client *client,
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static int
+nvkm_ioctl_ntfy_new(struct nvkm_client *client,
+		    struct nvkm_object *object, void *data, u32 size)
+{
+	union {
+		struct nvif_ioctl_ntfy_new_v0 v0;
+	} *args = data;
+	struct nvkm_event *event;
+	int ret = -ENOSYS;
+
+	nvif_ioctl(object, "ntfy new size %d\n", size);
+	if (!(ret = nvif_unpack(ret, &data, &size, args->v0, 0, 0, true))) {
+		nvif_ioctl(object, "ntfy new vers %d event %02x\n",
+			   args->v0.version, args->v0.event);
+		ret = nvkm_object_ntfy(object, args->v0.event, &event);
+		if (ret == 0) {
+			ret = nvkm_client_notify_new(object, event, data, size);
+			if (ret >= 0) {
+				args->v0.index = ret;
+				ret = 0;
+			}
+		}
+	}
+
+	return ret;
+}
+
+static int
+nvkm_ioctl_ntfy_del(struct nvkm_client *client,
+		    struct nvkm_object *object, void *data, u32 size)
+{
+	union {
+		struct nvif_ioctl_ntfy_del_v0 v0;
+	} *args = data;
+	int ret = -ENOSYS;
+
+	nvif_ioctl(object, "ntfy del size %d\n", size);
+	if (!(ret = nvif_unpack(ret, &data, &size, args->v0, 0, 0, false))) {
+		nvif_ioctl(object, "ntfy del vers %d index %d\n",
+			   args->v0.version, args->v0.index);
+		ret = nvkm_client_notify_del(client, args->v0.index);
+	}
+
+	return ret;
+}
+
+static int
+nvkm_ioctl_ntfy_get(struct nvkm_client *client,
+		    struct nvkm_object *object, void *data, u32 size)
+{
+	union {
+		struct nvif_ioctl_ntfy_get_v0 v0;
+	} *args = data;
+	int ret = -ENOSYS;
+
+	nvif_ioctl(object, "ntfy get size %d\n", size);
+	if (!(ret = nvif_unpack(ret, &data, &size, args->v0, 0, 0, false))) {
+		nvif_ioctl(object, "ntfy get vers %d index %d\n",
+			   args->v0.version, args->v0.index);
+		ret = nvkm_client_notify_get(client, args->v0.index);
+	}
+
+	return ret;
+}
+
+static int
+nvkm_ioctl_ntfy_put(struct nvkm_client *client,
+		    struct nvkm_object *object, void *data, u32 size)
+{
+	union {
+		struct nvif_ioctl_ntfy_put_v0 v0;
+	} *args = data;
+	int ret = -ENOSYS;
+
+	nvif_ioctl(object, "ntfy put size %d\n", size);
+	if (!(ret = nvif_unpack(ret, &data, &size, args->v0, 0, 0, false))) {
+		nvif_ioctl(object, "ntfy put vers %d index %d\n",
+			   args->v0.version, args->v0.index);
+		ret = nvkm_client_notify_put(client, args->v0.index);
+	}
+
+	return ret;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct {
 	int version;
 	int (*func)(struct nvkm_client *, struct nvkm_object *, void *, u32);
@@ -327,6 +430,13 @@ nvkm_ioctl_v0[] = {
 	{ 0x00, nvkm_ioctl_wr },
 	{ 0x00, nvkm_ioctl_map },
 	{ 0x00, nvkm_ioctl_unmap },
+<<<<<<< HEAD
+=======
+	{ 0x00, nvkm_ioctl_ntfy_new },
+	{ 0x00, nvkm_ioctl_ntfy_del },
+	{ 0x00, nvkm_ioctl_ntfy_get },
+	{ 0x00, nvkm_ioctl_ntfy_put },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int

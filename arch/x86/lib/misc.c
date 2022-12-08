@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 #include <asm/misc.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Count the digits of @val including a possible sign.
  *

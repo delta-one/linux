@@ -6,6 +6,7 @@
  *	Vivien Didelot <vivien.didelot@savoirfairelinux.com>
  */
 
+<<<<<<< HEAD
 #include <linux/ethtool.h>
 #include <linux/netdevice.h>
 #include <linux/netlink.h>
@@ -15,6 +16,9 @@
 #include "master.h"
 #include "port.h"
 #include "tag.h"
+=======
+#include "dsa_priv.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 static int dsa_master_get_regs_len(struct net_device *dev)
 {
@@ -212,7 +216,12 @@ static int dsa_master_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 		 * switch in the tree that is PTP capable.
 		 */
 		list_for_each_entry(dp, &dst->ports, list)
+<<<<<<< HEAD
 			if (dsa_port_supports_hwtstamp(dp, ifr))
+=======
+			if (dp->ds->ops->port_hwtstamp_get ||
+			    dp->ds->ops->port_hwtstamp_set)
+>>>>>>> b7ba80a49124 (Commit)
 				return -EBUSY;
 		break;
 	}
@@ -299,7 +308,11 @@ static ssize_t tagging_show(struct device *d, struct device_attribute *attr,
 	struct net_device *dev = to_net_dev(d);
 	struct dsa_port *cpu_dp = dev->dsa_ptr;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n",
+=======
+	return sprintf(buf, "%s\n",
+>>>>>>> b7ba80a49124 (Commit)
 		       dsa_tag_protocol_to_str(cpu_dp->tag_ops));
 }
 
@@ -307,6 +320,7 @@ static ssize_t tagging_store(struct device *d, struct device_attribute *attr,
 			     const char *buf, size_t count)
 {
 	const struct dsa_device_ops *new_tag_ops, *old_tag_ops;
+<<<<<<< HEAD
 	const char *end = strchrnul(buf, '\n'), *name;
 	struct net_device *dev = to_net_dev(d);
 	struct dsa_port *cpu_dp = dev->dsa_ptr;
@@ -325,6 +339,15 @@ static ssize_t tagging_store(struct device *d, struct device_attribute *attr,
 	new_tag_ops = dsa_tag_driver_get_by_name(name);
 	kfree(name);
 	/* Bad tagger name? */
+=======
+	struct net_device *dev = to_net_dev(d);
+	struct dsa_port *cpu_dp = dev->dsa_ptr;
+	int err;
+
+	old_tag_ops = cpu_dp->tag_ops;
+	new_tag_ops = dsa_find_tagger_by_name(buf);
+	/* Bad tagger name, or module is not loaded? */
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(new_tag_ops))
 		return PTR_ERR(new_tag_ops);
 
@@ -464,7 +487,13 @@ int dsa_master_lag_setup(struct net_device *lag_dev, struct dsa_port *cpu_dp,
 
 	err = dsa_port_lag_join(cpu_dp, lag_dev, uinfo, extack);
 	if (err) {
+<<<<<<< HEAD
 		NL_SET_ERR_MSG_WEAK_MOD(extack, "CPU port failed to join LAG");
+=======
+		if (extack && !extack->_msg)
+			NL_SET_ERR_MSG_MOD(extack,
+					   "CPU port failed to join LAG");
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_master_teardown;
 	}
 

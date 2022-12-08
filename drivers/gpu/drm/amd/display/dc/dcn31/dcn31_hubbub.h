@@ -42,10 +42,13 @@
 	SR(DCHUBBUB_COMPBUF_CTRL),\
 	SR(COMPBUF_RESERVED_SPACE),\
 	SR(DCHUBBUB_DEBUG_CTRL_0),\
+<<<<<<< HEAD
 	SR(DCHUBBUB_CLOCK_CNTL),\
 	SR(DCHUBBUB_SDPIF_CFG0),\
 	SR(DCHUBBUB_SDPIF_CFG1),\
 	SR(DCHUBBUB_MEM_PWR_MODE_CTRL),\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SR(DCHUBBUB_ARB_ALLOW_SR_ENTER_WATERMARK_Z8_A),\
 	SR(DCHUBBUB_ARB_ALLOW_SR_EXIT_WATERMARK_Z8_A),\
 	SR(DCHUBBUB_ARB_ALLOW_SR_ENTER_WATERMARK_Z8_B),\
@@ -124,17 +127,24 @@
 	HUBBUB_SF(DCN_VM_FAULT_STATUS, DCN_VM_ERROR_VMID, mask_sh), \
 	HUBBUB_SF(DCN_VM_FAULT_STATUS, DCN_VM_ERROR_TABLE_LEVEL, mask_sh), \
 	HUBBUB_SF(DCN_VM_FAULT_STATUS, DCN_VM_ERROR_PIPE, mask_sh), \
+<<<<<<< HEAD
 	HUBBUB_SF(DCN_VM_FAULT_STATUS, DCN_VM_ERROR_INTERRUPT_STATUS, mask_sh),\
 	HUBBUB_SF(DCHUBBUB_CLOCK_CNTL, DISPCLK_R_DCHUBBUB_GATE_DIS, mask_sh),\
 	HUBBUB_SF(DCHUBBUB_CLOCK_CNTL, DCFCLK_R_DCHUBBUB_GATE_DIS, mask_sh),\
 	HUBBUB_SF(DCHUBBUB_SDPIF_CFG0, SDPIF_PORT_CONTROL, mask_sh),\
 	HUBBUB_SF(DCHUBBUB_MEM_PWR_MODE_CTRL, DET_MEM_PWR_LS_MODE, mask_sh)
+=======
+	HUBBUB_SF(DCN_VM_FAULT_STATUS, DCN_VM_ERROR_INTERRUPT_STATUS, mask_sh)
+>>>>>>> b7ba80a49124 (Commit)
 
 int hubbub31_init_dchub_sys_ctx(struct hubbub *hubbub,
 		struct dcn_hubbub_phys_addr_config *pa_config);
 
+<<<<<<< HEAD
 void hubbub31_init(struct hubbub *hubbub);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void hubbub31_construct(struct dcn20_hubbub *hubbub3,
 	struct dc_context *ctx,
 	const struct dcn_hubbub_registers *hubbub_regs,

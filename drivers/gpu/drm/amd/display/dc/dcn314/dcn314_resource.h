@@ -39,10 +39,13 @@ struct dcn314_resource_pool {
 	struct resource_pool base;
 };
 
+<<<<<<< HEAD
 bool dcn314_validate_bandwidth(struct dc *dc,
 		struct dc_state *context,
 		bool fast_validate);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct resource_pool *dcn314_create_resource_pool(
 		const struct dc_init_data *init_data,
 		struct dc *dc);

@@ -32,7 +32,11 @@ intcall:
 	movw	%dx, %si
 	movw	%sp, %di
 	movw	$11, %cx
+<<<<<<< HEAD
 	rep; movsl
+=======
+	rep; movsd
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Pop full state from the stack */
 	popal
@@ -67,7 +71,11 @@ intcall:
 	jz	4f
 	movw	%sp, %si
 	movw	$11, %cx
+<<<<<<< HEAD
 	rep; movsl
+=======
+	rep; movsd
+>>>>>>> b7ba80a49124 (Commit)
 4:	addw	$44, %sp
 
 	/* Restore state and return */

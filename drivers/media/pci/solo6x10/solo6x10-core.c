@@ -420,7 +420,10 @@ static int solo_sysfs_init(struct solo_dev *solo_dev)
 		     solo_dev->nr_chans);
 
 	if (device_register(dev)) {
+<<<<<<< HEAD
 		put_device(dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		dev->parent = NULL;
 		return -ENOMEM;
 	}

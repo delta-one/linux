@@ -75,7 +75,11 @@
 };
 
 &apps_rsc {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pmx55-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pmx55-rpmh-regulators";
 		qcom,pmic-id = "e";
 
@@ -229,10 +233,13 @@
 	};
 };
 
+<<<<<<< HEAD
 &remoteproc_mpss {
 	memory-region = <&mpss_adsp_mem>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &usb {
 	status = "okay";
 };

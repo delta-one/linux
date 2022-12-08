@@ -1,7 +1,11 @@
 /*******************************************************************
  * This file is part of the Emulex Linux Device Driver for         *
  * Fibre Channel Host Bus Adapters.                                *
+<<<<<<< HEAD
  * Copyright (C) 2017-2023 Broadcom. All Rights Reserved. The term *
+=======
+ * Copyright (C) 2017-2022 Broadcom. All Rights Reserved. The term *
+>>>>>>> b7ba80a49124 (Commit)
  * “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.  *
  * Copyright (C) 2007-2015 Emulex.  All rights reserved.           *
  * EMULEX and SLI are trademarks of Emulex.                        *
@@ -2157,6 +2161,7 @@ lpfc_debugfs_lockstat_write(struct file *file, const char __user *buf,
 	char mybuf[64];
 	char *pbuf;
 	int i;
+<<<<<<< HEAD
 	size_t bsize;
 
 	memset(mybuf, 0, sizeof(mybuf));
@@ -2164,6 +2169,12 @@ lpfc_debugfs_lockstat_write(struct file *file, const char __user *buf,
 	bsize = min(nbytes, (sizeof(mybuf) - 1));
 
 	if (copy_from_user(mybuf, buf, bsize))
+=======
+
+	memset(mybuf, 0, sizeof(mybuf));
+
+	if (copy_from_user(mybuf, buf, nbytes))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EFAULT;
 	pbuf = &mybuf[0];
 
@@ -2184,7 +2195,11 @@ lpfc_debugfs_lockstat_write(struct file *file, const char __user *buf,
 			qp->lock_conflict.wq_access = 0;
 		}
 	}
+<<<<<<< HEAD
 	return bsize;
+=======
+	return nbytes;
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif
 

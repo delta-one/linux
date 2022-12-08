@@ -1715,14 +1715,22 @@ void mlx5_esw_bridge_fdb_update_used(struct net_device *dev, u16 vport_num, u16 
 	struct mlx5_esw_bridge *bridge;
 
 	port = mlx5_esw_bridge_port_lookup(vport_num, esw_owner_vhca_id, br_offloads);
+<<<<<<< HEAD
 	if (!port)
+=======
+	if (!port || port->flags & MLX5_ESW_BRIDGE_PORT_FLAG_PEER)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	bridge = port->bridge;
 	entry = mlx5_esw_bridge_fdb_lookup(bridge, fdb_info->addr, fdb_info->vid);
 	if (!entry) {
 		esw_debug(br_offloads->esw->dev,
+<<<<<<< HEAD
 			  "FDB update entry with specified key not found (MAC=%pM,vid=%u,vport=%u)\n",
+=======
+			  "FDB entry with specified key not found (MAC=%pM,vid=%u,vport=%u)\n",
+>>>>>>> b7ba80a49124 (Commit)
 			  fdb_info->addr, fdb_info->vid, vport_num);
 		return;
 	}
@@ -1775,9 +1783,15 @@ void mlx5_esw_bridge_fdb_remove(struct net_device *dev, u16 vport_num, u16 esw_o
 	bridge = port->bridge;
 	entry = mlx5_esw_bridge_fdb_lookup(bridge, fdb_info->addr, fdb_info->vid);
 	if (!entry) {
+<<<<<<< HEAD
 		esw_debug(esw->dev,
 			  "FDB remove entry with specified key not found (MAC=%pM,vid=%u,vport=%u)\n",
 			  fdb_info->addr, fdb_info->vid, vport_num);
+=======
+		esw_warn(esw->dev,
+			 "FDB entry with specified key not found (MAC=%pM,vid=%u,vport=%u)\n",
+			 fdb_info->addr, fdb_info->vid, vport_num);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 

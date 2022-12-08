@@ -532,7 +532,11 @@ static ssize_t show_fast_charge_timer(struct device *dev,
 		break;
 	}
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", val);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%u\n", val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t store_fast_charge_timer(struct device *dev,

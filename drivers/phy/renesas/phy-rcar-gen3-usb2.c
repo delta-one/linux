@@ -755,7 +755,11 @@ error:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void rcar_gen3_phy_usb2_remove(struct platform_device *pdev)
+=======
+static int rcar_gen3_phy_usb2_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rcar_gen3_chan *channel = platform_get_drvdata(pdev);
 
@@ -763,6 +767,11 @@ static void rcar_gen3_phy_usb2_remove(struct platform_device *pdev)
 		device_remove_file(&pdev->dev, &dev_attr_role);
 
 	pm_runtime_disable(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct platform_driver rcar_gen3_phy_usb2_driver = {
@@ -771,7 +780,11 @@ static struct platform_driver rcar_gen3_phy_usb2_driver = {
 		.of_match_table	= rcar_gen3_phy_usb2_match_table,
 	},
 	.probe	= rcar_gen3_phy_usb2_probe,
+<<<<<<< HEAD
 	.remove_new = rcar_gen3_phy_usb2_remove,
+=======
+	.remove = rcar_gen3_phy_usb2_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(rcar_gen3_phy_usb2_driver);
 

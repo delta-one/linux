@@ -31,7 +31,10 @@
 #include "intel_display_types.h"
 #include "intel_fbc.h"
 #include "intel_fifo_underrun.h"
+<<<<<<< HEAD
 #include "intel_pch_display.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * DOC: fifo underrun handling
@@ -510,6 +513,7 @@ void intel_check_pch_fifo_underruns(struct drm_i915_private *dev_priv)
 
 	spin_unlock_irq(&dev_priv->irq_lock);
 }
+<<<<<<< HEAD
 
 void intel_init_fifo_underrun_reporting(struct drm_i915_private *i915,
 					struct intel_crtc *crtc,
@@ -529,3 +533,5 @@ void intel_init_fifo_underrun_reporting(struct drm_i915_private *i915,
 	if (intel_has_pch_trancoder(i915, crtc->pipe))
 		crtc->pch_fifo_underrun_disabled = !enable;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

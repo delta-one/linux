@@ -216,6 +216,10 @@ parse_mirred(struct mlx5e_tc_act_parse_state *parse_state,
 	struct net_device *uplink_dev;
 	struct mlx5e_priv *out_priv;
 	struct mlx5_eswitch *esw;
+<<<<<<< HEAD
+=======
+	bool is_uplink_rep;
+>>>>>>> b7ba80a49124 (Commit)
 	int *ifindexes;
 	int if_count;
 	int err;
@@ -230,12 +234,19 @@ parse_mirred(struct mlx5e_tc_act_parse_state *parse_state,
 
 	parse_state->ifindexes[if_count] = out_dev->ifindex;
 	parse_state->if_count++;
+<<<<<<< HEAD
 
 	if (mlx5_lag_mpesw_do_mirred(priv->mdev, out_dev, extack))
 		return -EOPNOTSUPP;
 
 	if (netif_is_macvlan(out_dev))
 		out_dev = macvlan_dev_real_dev(out_dev);
+=======
+	is_uplink_rep = mlx5e_eswitch_uplink_rep(out_dev);
+	err = mlx5_lag_do_mirred(priv->mdev, out_dev);
+	if (err)
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	out_dev = get_fdb_out_dev(uplink_dev, out_dev);
 	if (!out_dev)
@@ -253,6 +264,12 @@ parse_mirred(struct mlx5e_tc_act_parse_state *parse_state,
 			return err;
 	}
 
+<<<<<<< HEAD
+=======
+	if (netif_is_macvlan(out_dev))
+		out_dev = macvlan_dev_real_dev(out_dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = verify_uplink_forwarding(priv, attr, out_dev, extack);
 	if (err)
 		return err;
@@ -273,6 +290,16 @@ parse_mirred(struct mlx5e_tc_act_parse_state *parse_state,
 	esw_attr->dests[esw_attr->out_count].rep = rpriv->rep;
 	esw_attr->dests[esw_attr->out_count].mdev = out_priv->mdev;
 
+<<<<<<< HEAD
+=======
+	/* If output device is bond master then rules are not explicit
+	 * so we don't attempt to count them.
+	 */
+	if (is_uplink_rep && MLX5_CAP_PORT_SELECTION(priv->mdev, port_select_flow_table) &&
+	    MLX5_CAP_GEN(priv->mdev, create_lag_when_not_master_up))
+		attr->lag.count = true;
+
+>>>>>>> b7ba80a49124 (Commit)
 	esw_attr->out_count++;
 
 	return 0;
@@ -325,6 +352,7 @@ tc_act_parse_mirred(struct mlx5e_tc_act_parse_state *parse_state,
 struct mlx5e_tc_act mlx5e_tc_act_mirred = {
 	.can_offload = tc_act_can_offload_mirred,
 	.parse_action = tc_act_parse_mirred,
+<<<<<<< HEAD
 	.is_terminating_action = false,
 };
 
@@ -332,4 +360,6 @@ struct mlx5e_tc_act mlx5e_tc_act_redirect = {
 	.can_offload = tc_act_can_offload_mirred,
 	.parse_action = tc_act_parse_mirred,
 	.is_terminating_action = true,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

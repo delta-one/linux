@@ -22,6 +22,7 @@
 #include <net/dcbnl.h>
 #include <linux/netpoll.h>
 
+<<<<<<< HEAD
 #include "dsa.h"
 #include "port.h"
 #include "master.h"
@@ -70,6 +71,9 @@ static bool dsa_switch_supports_mc_filtering(struct dsa_switch *ds)
 	       ds->fdb_isolation && !ds->vlan_filtering_is_global &&
 	       !ds->needs_standalone_vlan_filtering;
 }
+=======
+#include "dsa_priv.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 static void dsa_slave_standalone_event_work(struct work_struct *work)
 {
@@ -1023,12 +1027,20 @@ static void dsa_slave_get_ethtool_stats(struct net_device *dev,
 
 		s = per_cpu_ptr(dev->tstats, i);
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&s->syncp);
+=======
+			start = u64_stats_fetch_begin_irq(&s->syncp);
+>>>>>>> b7ba80a49124 (Commit)
 			tx_packets = u64_stats_read(&s->tx_packets);
 			tx_bytes = u64_stats_read(&s->tx_bytes);
 			rx_packets = u64_stats_read(&s->rx_packets);
 			rx_bytes = u64_stats_read(&s->rx_bytes);
+<<<<<<< HEAD
 		} while (u64_stats_fetch_retry(&s->syncp, start));
+=======
+		} while (u64_stats_fetch_retry_irq(&s->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 		data[0] += tx_packets;
 		data[1] += tx_bytes;
 		data[2] += rx_packets;
@@ -1117,6 +1129,7 @@ static void dsa_slave_net_selftest(struct net_device *ndev,
 	net_selftest(ndev, etest, buf);
 }
 
+<<<<<<< HEAD
 static int dsa_slave_get_mm(struct net_device *dev,
 			    struct ethtool_mm_state *state)
 {
@@ -1151,6 +1164,8 @@ static void dsa_slave_get_mm_stats(struct net_device *dev,
 		ds->ops->get_mm_stats(ds, dp->index, stats);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void dsa_slave_get_wol(struct net_device *dev, struct ethtool_wolinfo *w)
 {
 	struct dsa_port *dp = dsa_slave_to_port(dev);
@@ -1933,7 +1948,10 @@ int dsa_slave_change_mtu(struct net_device *dev, int new_mtu)
 	int new_master_mtu;
 	int old_master_mtu;
 	int mtu_limit;
+<<<<<<< HEAD
 	int overhead;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int cpu_mtu;
 	int err;
 
@@ -1962,10 +1980,16 @@ int dsa_slave_change_mtu(struct net_device *dev, int new_mtu)
 			largest_mtu = slave_mtu;
 	}
 
+<<<<<<< HEAD
 	overhead = dsa_tag_protocol_overhead(cpu_dp->tag_ops);
 	mtu_limit = min_t(int, master->max_mtu, dev->max_mtu + overhead);
 	old_master_mtu = master->mtu;
 	new_master_mtu = largest_mtu + overhead;
+=======
+	mtu_limit = min_t(int, master->max_mtu, dev->max_mtu);
+	old_master_mtu = master->mtu;
+	new_master_mtu = largest_mtu + dsa_tag_protocol_overhead(cpu_dp->tag_ops);
+>>>>>>> b7ba80a49124 (Commit)
 	if (new_master_mtu > mtu_limit)
 		return -ERANGE;
 
@@ -2000,7 +2024,12 @@ int dsa_slave_change_mtu(struct net_device *dev, int new_mtu)
 
 out_port_failed:
 	if (new_master_mtu != old_master_mtu)
+<<<<<<< HEAD
 		dsa_port_mtu_change(cpu_dp, old_master_mtu - overhead);
+=======
+		dsa_port_mtu_change(cpu_dp, old_master_mtu -
+				    dsa_tag_protocol_overhead(cpu_dp->tag_ops));
+>>>>>>> b7ba80a49124 (Commit)
 out_cpu_failed:
 	if (new_master_mtu != old_master_mtu)
 		dev_set_mtu(master, old_master_mtu);
@@ -2240,9 +2269,12 @@ static const struct ethtool_ops dsa_slave_ethtool_ops = {
 	.set_rxnfc		= dsa_slave_set_rxnfc,
 	.get_ts_info		= dsa_slave_get_ts_info,
 	.self_test		= dsa_slave_net_selftest,
+<<<<<<< HEAD
 	.get_mm			= dsa_slave_get_mm,
 	.set_mm			= dsa_slave_set_mm,
 	.get_mm_stats		= dsa_slave_get_mm_stats,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct dcbnl_rtnl_ops __maybe_unused dsa_slave_dcbnl_ops = {
@@ -2250,6 +2282,16 @@ static const struct dcbnl_rtnl_ops __maybe_unused dsa_slave_dcbnl_ops = {
 	.ieee_delapp		= dsa_slave_dcbnl_ieee_delapp,
 };
 
+<<<<<<< HEAD
+=======
+static struct devlink_port *dsa_slave_get_devlink_port(struct net_device *dev)
+{
+	struct dsa_port *dp = dsa_slave_to_port(dev);
+
+	return &dp->devlink_port;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void dsa_slave_get_stats64(struct net_device *dev,
 				  struct rtnl_link_stats64 *s)
 {
@@ -2297,6 +2339,10 @@ static const struct net_device_ops dsa_slave_netdev_ops = {
 	.ndo_get_stats64	= dsa_slave_get_stats64,
 	.ndo_vlan_rx_add_vid	= dsa_slave_vlan_rx_add_vid,
 	.ndo_vlan_rx_kill_vid	= dsa_slave_vlan_rx_kill_vid,
+<<<<<<< HEAD
+=======
+	.ndo_get_devlink_port	= dsa_slave_get_devlink_port,
+>>>>>>> b7ba80a49124 (Commit)
 	.ndo_change_mtu		= dsa_slave_change_mtu,
 	.ndo_fill_forward_path	= dsa_slave_fill_forward_path,
 };
@@ -2381,7 +2427,11 @@ static int dsa_slave_phy_setup(struct net_device *slave_dev)
 	if (ret) {
 		netdev_err(slave_dev, "failed to connect to PHY: %pe\n",
 			   ERR_PTR(ret));
+<<<<<<< HEAD
 		dsa_port_phylink_destroy(dp);
+=======
+		phylink_destroy(dp->pl);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;
@@ -2451,15 +2501,22 @@ int dsa_slave_create(struct dsa_port *port)
 {
 	struct net_device *master = dsa_port_to_master(port);
 	struct dsa_switch *ds = port->ds;
+<<<<<<< HEAD
 	struct net_device *slave_dev;
 	struct dsa_slave_priv *p;
 	const char *name;
 	int assign_type;
+=======
+	const char *name = port->name;
+	struct net_device *slave_dev;
+	struct dsa_slave_priv *p;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (!ds->num_tx_queues)
 		ds->num_tx_queues = 1;
 
+<<<<<<< HEAD
 	if (port->name) {
 		name = port->name;
 		assign_type = NET_NAME_PREDICTABLE;
@@ -2470,6 +2527,10 @@ int dsa_slave_create(struct dsa_port *port)
 
 	slave_dev = alloc_netdev_mqs(sizeof(struct dsa_slave_priv), name,
 				     assign_type, ether_setup,
+=======
+	slave_dev = alloc_netdev_mqs(sizeof(struct dsa_slave_priv), name,
+				     NET_NAME_UNKNOWN, ether_setup,
+>>>>>>> b7ba80a49124 (Commit)
 				     ds->num_tx_queues, 1);
 	if (slave_dev == NULL)
 		return -ENOMEM;
@@ -2492,7 +2553,10 @@ int dsa_slave_create(struct dsa_port *port)
 	SET_NETDEV_DEVTYPE(slave_dev, &dsa_type);
 
 	SET_NETDEV_DEV(slave_dev, port->ds->dev);
+<<<<<<< HEAD
 	SET_NETDEV_DEVLINK_PORT(slave_dev, &port->devlink_port);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	slave_dev->dev.of_node = port->dn;
 	slave_dev->vlan_features = master->vlan_features;
 
@@ -2563,7 +2627,11 @@ out_phy:
 	rtnl_lock();
 	phylink_disconnect_phy(p->dp->pl);
 	rtnl_unlock();
+<<<<<<< HEAD
 	dsa_port_phylink_destroy(p->dp);
+=======
+	phylink_destroy(p->dp->pl);
+>>>>>>> b7ba80a49124 (Commit)
 out_gcells:
 	gro_cells_destroy(&p->gcells);
 out_free:
@@ -2586,7 +2654,11 @@ void dsa_slave_destroy(struct net_device *slave_dev)
 	phylink_disconnect_phy(dp->pl);
 	rtnl_unlock();
 
+<<<<<<< HEAD
 	dsa_port_phylink_destroy(dp);
+=======
+	phylink_destroy(dp->pl);
+>>>>>>> b7ba80a49124 (Commit)
 	gro_cells_destroy(&p->gcells);
 	free_percpu(slave_dev->tstats);
 	free_netdev(slave_dev);
@@ -2693,8 +2765,14 @@ static int dsa_slave_changeupper(struct net_device *dev,
 			if (!err)
 				dsa_bridge_mtu_normalization(dp);
 			if (err == -EOPNOTSUPP) {
+<<<<<<< HEAD
 				NL_SET_ERR_MSG_WEAK_MOD(extack,
 							"Offloading not supported");
+=======
+				if (extack && !extack->_msg)
+					NL_SET_ERR_MSG_MOD(extack,
+							   "Offloading not supported");
+>>>>>>> b7ba80a49124 (Commit)
 				err = 0;
 			}
 			err = notifier_from_errno(err);
@@ -2707,8 +2785,13 @@ static int dsa_slave_changeupper(struct net_device *dev,
 			err = dsa_port_lag_join(dp, info->upper_dev,
 						info->upper_info, extack);
 			if (err == -EOPNOTSUPP) {
+<<<<<<< HEAD
 				NL_SET_ERR_MSG_WEAK_MOD(extack,
 							"Offloading not supported");
+=======
+				NL_SET_ERR_MSG_MOD(info->info.extack,
+						   "Offloading not supported");
+>>>>>>> b7ba80a49124 (Commit)
 				err = 0;
 			}
 			err = notifier_from_errno(err);
@@ -2720,8 +2803,13 @@ static int dsa_slave_changeupper(struct net_device *dev,
 		if (info->linking) {
 			err = dsa_port_hsr_join(dp, info->upper_dev);
 			if (err == -EOPNOTSUPP) {
+<<<<<<< HEAD
 				NL_SET_ERR_MSG_WEAK_MOD(extack,
 							"Offloading not supported");
+=======
+				NL_SET_ERR_MSG_MOD(info->info.extack,
+						   "Offloading not supported");
+>>>>>>> b7ba80a49124 (Commit)
 				err = 0;
 			}
 			err = notifier_from_errno(err);
@@ -3231,7 +3319,11 @@ static int dsa_slave_netdevice_event(struct notifier_block *nb,
 	case NETDEV_CHANGELOWERSTATE: {
 		struct netdev_notifier_changelowerstate_info *info = ptr;
 		struct dsa_port *dp;
+<<<<<<< HEAD
 		int err = 0;
+=======
+		int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (dsa_slave_dev_check(dev)) {
 			dp = dsa_slave_to_port(dev);

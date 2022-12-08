@@ -17,16 +17,22 @@
 #include <linux/mmc/host.h>
 #include <linux/mmc/mmc.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/mfd/altera-sysmgr.h>
 #include <linux/regmap.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "dw_mmc.h"
 #include "dw_mmc-pltfm.h"
 
+<<<<<<< HEAD
 #define SOCFPGA_DW_MMC_CLK_PHASE_STEP	45
 #define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel, reg_shift) \
 	((((smplsel) & 0x7) << reg_shift) | (((drvsel) & 0x7) << 0))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int dw_mci_pltfm_register(struct platform_device *pdev,
 			  const struct dw_mci_drv_data *drv_data)
 {
@@ -46,7 +52,12 @@ int dw_mci_pltfm_register(struct platform_device *pdev,
 	host->irq_flags = 0;
 	host->pdata = pdev->dev.platform_data;
 
+<<<<<<< HEAD
 	host->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &regs);
+=======
+	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	host->regs = devm_ioremap_resource(&pdev->dev, regs);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(host->regs))
 		return PTR_ERR(host->regs);
 
@@ -67,6 +78,7 @@ const struct dev_pm_ops dw_mci_pltfm_pmops = {
 };
 EXPORT_SYMBOL_GPL(dw_mci_pltfm_pmops);
 
+<<<<<<< HEAD
 static int dw_mci_socfpga_priv_init(struct dw_mci *host)
 {
 	struct device_node *np = host->dev->of_node;
@@ -103,6 +115,11 @@ static const struct dw_mci_drv_data socfpga_drv_data = {
 static const struct of_device_id dw_mci_pltfm_match[] = {
 	{ .compatible = "snps,dw-mshc", },
 	{ .compatible = "altr,socfpga-dw-mshc", .data = &socfpga_drv_data, },
+=======
+static const struct of_device_id dw_mci_pltfm_match[] = {
+	{ .compatible = "snps,dw-mshc", },
+	{ .compatible = "altr,socfpga-dw-mshc", },
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "img,pistachio-dw-mshc", },
 	{},
 };

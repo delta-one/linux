@@ -17,7 +17,11 @@ struct ath11k_vif;
 
 #define PSOC_HOST_MAX_NUM_SS (8)
 
+<<<<<<< HEAD
 /* defines to set Packet extension values which can be 0 us, 8 usec or 16 usec */
+=======
+/* defines to set Packet extension values whic can be 0 us, 8 usec or 16 usec */
+>>>>>>> b7ba80a49124 (Commit)
 #define MAX_HE_NSS               8
 #define MAX_HE_MODULATION        8
 #define MAX_HE_RU                4
@@ -797,7 +801,10 @@ enum wmi_tlv_event_id {
 	WMI_RMC_NEW_LEADER_EVENTID = WMI_TLV_CMD(WMI_GRP_RMC),
 	WMI_REG_CHAN_LIST_CC_EVENTID = WMI_TLV_CMD(WMI_GRP_REGULATORY),
 	WMI_11D_NEW_COUNTRY_EVENTID,
+<<<<<<< HEAD
 	WMI_REG_CHAN_LIST_CC_EXT_EVENTID,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	WMI_NDI_CAP_RSP_EVENTID = WMI_TLV_CMD(WMI_GRP_PROTOTYPE),
 	WMI_NDP_INITIATOR_RSP_EVENTID,
 	WMI_NDP_RESPONDER_RSP_EVENTID,
@@ -1074,7 +1081,10 @@ enum wmi_tlv_vdev_param {
 	WMI_VDEV_PARAM_ENABLE_BCAST_PROBE_RESPONSE,
 	WMI_VDEV_PARAM_FILS_MAX_CHANNEL_GUARD_TIME,
 	WMI_VDEV_PARAM_HE_LTF = 0x74,
+<<<<<<< HEAD
 	WMI_VDEV_PARAM_ENABLE_DISABLE_RTT_RESPONDER_ROLE = 0x7d,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	WMI_VDEV_PARAM_BA_MODE = 0x7e,
 	WMI_VDEV_PARAM_AUTORATE_MISC_CFG = 0x80,
 	WMI_VDEV_PARAM_SET_HE_SOUNDING_MODE = 0x87,
@@ -1216,7 +1226,11 @@ enum wmi_tlv_tag {
 	WMI_TAG_NS_OFFLOAD_TUPLE,
 	WMI_TAG_FTM_INTG_CMD,
 	WMI_TAG_STA_KEEPALIVE_CMD,
+<<<<<<< HEAD
 	WMI_TAG_STA_KEEPALIVE_ARP_RESPONSE,
+=======
+	WMI_TAG_STA_KEEPALVE_ARP_RESPONSE,
+>>>>>>> b7ba80a49124 (Commit)
 	WMI_TAG_P2P_SET_VENDOR_IE_DATA_CMD,
 	WMI_TAG_AP_PS_PEER_CMD,
 	WMI_TAG_PEER_RATE_RETRY_SCHED_CMD,
@@ -1866,8 +1880,11 @@ enum wmi_tlv_tag {
 	WMI_TAG_PDEV_SRG_OBSS_BSSID_ENABLE_BITMAP_CMD,
 	WMI_TAG_PDEV_NON_SRG_OBSS_COLOR_ENABLE_BITMAP_CMD,
 	WMI_TAG_PDEV_NON_SRG_OBSS_BSSID_ENABLE_BITMAP_CMD,
+<<<<<<< HEAD
 	WMI_TAG_REGULATORY_RULE_EXT_STRUCT = 0x3A9,
 	WMI_TAG_REG_CHAN_LIST_CC_EXT_EVENT,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	WMI_TAG_PDEV_SET_BIOS_SAR_TABLE_CMD = 0x3D8,
 	WMI_TAG_PDEV_SET_BIOS_GEO_TABLE_CMD,
 	WMI_TAG_MAX
@@ -2094,6 +2111,7 @@ enum wmi_tlv_service {
 	WMI_TLV_SERVICE_PER_PEER_HTT_STATS_RESET = 213,
 	WMI_TLV_SERVICE_FREQINFO_IN_METADATA = 219,
 	WMI_TLV_SERVICE_EXT2_MSG = 220,
+<<<<<<< HEAD
 	WMI_TLV_SERVICE_PEER_POWER_SAVE_DURATION_SUPPORT = 246,
 	WMI_TLV_SERVICE_SRG_SRP_SPATIAL_REUSE_SUPPORT = 249,
 	WMI_TLV_SERVICE_PASSIVE_SCAN_START_TIME_ENHANCE = 263,
@@ -2101,6 +2119,12 @@ enum wmi_tlv_service {
 	/* The second 128 bits */
 	WMI_MAX_EXT_SERVICE = 256,
 	WMI_TLV_SERVICE_REG_CC_EXT_EVENT_SUPPORT = 281,
+=======
+	WMI_TLV_SERVICE_SRG_SRP_SPATIAL_REUSE_SUPPORT = 249,
+
+	/* The second 128 bits */
+	WMI_MAX_EXT_SERVICE = 256,
+>>>>>>> b7ba80a49124 (Commit)
 	WMI_TLV_SERVICE_BIOS_SAR_SUPPORT = 326,
 
 	/* The third 128 bits */
@@ -2315,9 +2339,12 @@ struct wmi_init_cmd {
 } __packed;
 
 #define WMI_RSRC_CFG_FLAG1_BSS_CHANNEL_INFO_64 BIT(5)
+<<<<<<< HEAD
 #define WMI_RSRC_CFG_FLAG1_ACK_RSSI BIT(18)
 
 #define WMI_CFG_HOST_SERVICE_FLAG_REG_CC_EXT 4
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct wmi_resource_config {
 	u32 tlv_header;
@@ -2378,6 +2405,7 @@ struct wmi_resource_config {
 	u32 sched_params;
 	u32 twt_ap_pdev_count;
 	u32 twt_ap_sta_count;
+<<<<<<< HEAD
 	u32 max_nlo_ssids;
 	u32 num_pkt_filters;
 	u32 num_max_sta_vdevs;
@@ -2387,6 +2415,8 @@ struct wmi_resource_config {
 	u32 msdu_flow_override_config1;
 	u32 flags2;
 	u32 host_service_flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 struct wmi_service_ready_event {
@@ -2869,14 +2899,18 @@ struct rx_reorder_queue_remove_params {
 #define REG_RULE_MAX_BW				0x0000ffff
 #define REG_RULE_REG_PWR			0x00ff0000
 #define REG_RULE_ANT_GAIN			0xff000000
+<<<<<<< HEAD
 #define REG_RULE_PSD_INFO			BIT(0)
 #define REG_RULE_PSD_EIRP			0xff0000
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define WMI_VDEV_PARAM_TXBF_SU_TX_BFEE BIT(0)
 #define WMI_VDEV_PARAM_TXBF_MU_TX_BFEE BIT(1)
 #define WMI_VDEV_PARAM_TXBF_SU_TX_BFER BIT(2)
 #define WMI_VDEV_PARAM_TXBF_MU_TX_BFER BIT(3)
 
+<<<<<<< HEAD
 #define HE_PHYCAP_BYTE_0	0
 #define HE_PHYCAP_BYTE_1	1
 #define HE_PHYCAP_BYTE_2	2
@@ -2903,6 +2937,32 @@ struct rx_reorder_queue_remove_params {
 
 #define HECAP_PHY_ULOFDMA_GET(hecap_phy) \
 	FIELD_GET(HECAP_PHY_UL_MUOFDMA, hecap_phy[HE_PHYCAP_BYTE_2])
+=======
+#define HECAP_PHYDWORD_0	0
+#define HECAP_PHYDWORD_1	1
+#define HECAP_PHYDWORD_2	2
+
+#define HECAP_PHY_SU_BFER		BIT(31)
+#define HECAP_PHY_SU_BFEE		BIT(0)
+#define HECAP_PHY_MU_BFER		BIT(1)
+#define HECAP_PHY_UL_MUMIMO		BIT(22)
+#define HECAP_PHY_UL_MUOFDMA		BIT(23)
+
+#define HECAP_PHY_SUBFMR_GET(hecap_phy) \
+	FIELD_GET(HECAP_PHY_SU_BFER, hecap_phy[HECAP_PHYDWORD_0])
+
+#define HECAP_PHY_SUBFME_GET(hecap_phy) \
+	FIELD_GET(HECAP_PHY_SU_BFEE, hecap_phy[HECAP_PHYDWORD_1])
+
+#define HECAP_PHY_MUBFMR_GET(hecap_phy) \
+	FIELD_GET(HECAP_PHY_MU_BFER, hecap_phy[HECAP_PHYDWORD_1])
+
+#define HECAP_PHY_ULMUMIMO_GET(hecap_phy) \
+	FIELD_GET(HECAP_PHY_UL_MUMIMO, hecap_phy[HECAP_PHYDWORD_0])
+
+#define HECAP_PHY_ULOFDMA_GET(hecap_phy) \
+	FIELD_GET(HECAP_PHY_UL_MUOFDMA, hecap_phy[HECAP_PHYDWORD_0])
+>>>>>>> b7ba80a49124 (Commit)
 
 #define HE_MODE_SU_TX_BFEE	BIT(0)
 #define HE_MODE_SU_TX_BFER	BIT(1)
@@ -2915,11 +2975,16 @@ struct rx_reorder_queue_remove_params {
 #define HE_DL_MUOFDMA_ENABLE	1
 #define HE_UL_MUOFDMA_ENABLE	1
 #define HE_DL_MUMIMO_ENABLE	1
+<<<<<<< HEAD
 #define HE_UL_MUMIMO_ENABLE	1
 #define HE_MU_BFEE_ENABLE	1
 #define HE_SU_BFEE_ENABLE	1
 #define HE_MU_BFER_ENABLE	1
 #define HE_SU_BFER_ENABLE	1
+=======
+#define HE_MU_BFEE_ENABLE	1
+#define HE_SU_BFEE_ENABLE	1
+>>>>>>> b7ba80a49124 (Commit)
 
 #define HE_VHT_SOUNDING_MODE_ENABLE		1
 #define HE_SU_MU_SOUNDING_MODE_ENABLE		1
@@ -3247,7 +3312,10 @@ struct  wmi_start_scan_cmd {
 
 #define WMI_SCAN_DWELL_MODE_MASK 0x00E00000
 #define WMI_SCAN_DWELL_MODE_SHIFT        21
+<<<<<<< HEAD
 #define WMI_SCAN_FLAG_EXT_PASSIVE_SCAN_START_TIME_ENHANCE   0x00000800
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum {
 	WMI_SCAN_DWELL_MODE_DEFAULT      = 0,
@@ -3295,7 +3363,10 @@ struct scan_req_params {
 		};
 		u32 scan_events;
 	};
+<<<<<<< HEAD
 	u32 scan_ctrl_flags_ext;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 dwell_time_active;
 	u32 dwell_time_active_2g;
 	u32 dwell_time_passive;
@@ -4066,7 +4137,10 @@ struct wmi_he_rate_set {
 
 #define MAX_REG_RULES 10
 #define REG_ALPHA2_LEN 2
+<<<<<<< HEAD
 #define MAX_6GHZ_REG_RULES 5
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum wmi_start_event_param {
 	WMI_VDEV_START_RESP_EVENT = 0,
@@ -4097,6 +4171,19 @@ enum wmi_vdev_start_resp_status_code {
 	WMI_VDEV_START_RESPONSE_INVALID_REGDOMAIN = 4,
 };
 
+<<<<<<< HEAD
+=======
+;
+enum cc_setting_code {
+	REG_SET_CC_STATUS_PASS = 0,
+	REG_CURRENT_ALPHA2_NOT_FOUND = 1,
+	REG_INIT_ALPHA2_NOT_FOUND = 2,
+	REG_SET_CC_CHANGE_NOT_ALLOWED = 3,
+	REG_SET_CC_STATUS_NO_MEMORY = 4,
+	REG_SET_CC_STATUS_FAIL = 5,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Regaulatory Rule Flags Passed by FW */
 #define REGULATORY_CHAN_DISABLED     BIT(0)
 #define REGULATORY_CHAN_NO_IR        BIT(1)
@@ -4110,18 +4197,23 @@ enum wmi_vdev_start_resp_status_code {
 #define REGULATORY_CHAN_NO_20MHZ     BIT(11)
 #define REGULATORY_CHAN_NO_10MHZ     BIT(12)
 
+<<<<<<< HEAD
 enum wmi_reg_chan_list_cmd_type {
 	WMI_REG_CHAN_LIST_CC_ID = 0,
 	WMI_REG_CHAN_LIST_CC_EXT_ID = 1,
 };
 
 enum wmi_reg_cc_setting_code {
+=======
+enum {
+>>>>>>> b7ba80a49124 (Commit)
 	WMI_REG_SET_CC_STATUS_PASS = 0,
 	WMI_REG_CURRENT_ALPHA2_NOT_FOUND = 1,
 	WMI_REG_INIT_ALPHA2_NOT_FOUND = 2,
 	WMI_REG_SET_CC_CHANGE_NOT_ALLOWED = 3,
 	WMI_REG_SET_CC_STATUS_NO_MEMORY = 4,
 	WMI_REG_SET_CC_STATUS_FAIL = 5,
+<<<<<<< HEAD
 
 	/* add new setting code above, update in
 	 * @enum cc_setting_code as well.
@@ -4320,6 +4412,10 @@ ath11k_super_reg_6ghz_to_str(enum reg_super_domain_6ghz domain_id)
 	return "unknown domain id";
 }
 
+=======
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct cur_reg_rule {
 	u16 start_freq;
 	u16 end_freq;
@@ -4327,8 +4423,11 @@ struct cur_reg_rule {
 	u8 reg_power;
 	u8 ant_gain;
 	u16 flags;
+<<<<<<< HEAD
 	bool psd_flag;
 	s8 psd_eirp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct cur_regulatory_info {
@@ -4340,6 +4439,7 @@ struct cur_regulatory_info {
 	u8 alpha2[REG_ALPHA2_LEN + 1];
 	u32 dfs_region;
 	u32 phybitmap;
+<<<<<<< HEAD
 	u32 min_bw_2ghz;
 	u32 max_bw_2ghz;
 	u32 min_bw_5ghz;
@@ -4364,6 +4464,16 @@ struct cur_regulatory_info {
 	struct cur_reg_rule *reg_rules_6ghz_ap_ptr[WMI_REG_CURRENT_MAX_AP_TYPE];
 	struct cur_reg_rule *reg_rules_6ghz_client_ptr
 		[WMI_REG_CURRENT_MAX_AP_TYPE][WMI_REG_MAX_CLIENT_TYPE];
+=======
+	u32 min_bw_2g;
+	u32 max_bw_2g;
+	u32 min_bw_5g;
+	u32 max_bw_5g;
+	u32 num_2g_reg_rules;
+	u32 num_5g_reg_rules;
+	struct cur_reg_rule *reg_rules_2g_ptr;
+	struct cur_reg_rule *reg_rules_5g_ptr;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct wmi_reg_chan_list_cc_event {
@@ -4375,12 +4485,21 @@ struct wmi_reg_chan_list_cc_event {
 	u32 domain_code;
 	u32 dfs_region;
 	u32 phybitmap;
+<<<<<<< HEAD
 	u32 min_bw_2ghz;
 	u32 max_bw_2ghz;
 	u32 min_bw_5ghz;
 	u32 max_bw_5ghz;
 	u32 num_2ghz_reg_rules;
 	u32 num_5ghz_reg_rules;
+=======
+	u32 min_bw_2g;
+	u32 max_bw_2g;
+	u32 min_bw_5g;
+	u32 max_bw_5g;
+	u32 num_2g_reg_rules;
+	u32 num_5g_reg_rules;
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 struct wmi_regulatory_rule_struct {
@@ -4390,6 +4509,7 @@ struct wmi_regulatory_rule_struct {
 	u32  flag_info;
 };
 
+<<<<<<< HEAD
 #define WMI_REG_CLIENT_MAX 4
 
 struct wmi_reg_chan_list_cc_ext_event {
@@ -4445,6 +4565,8 @@ struct wmi_regulatory_ext_rule {
 	u32 psd_power_info;
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct wmi_vdev_delete_resp_event {
 	u32 vdev_id;
 } __packed;
@@ -4775,7 +4897,11 @@ struct wmi_pdev_radar_ev {
 } __packed;
 
 struct wmi_pdev_temperature_event {
+<<<<<<< HEAD
 	/* temperature value in Celsius degree */
+=======
+	/* temperature value in Celcius degree */
+>>>>>>> b7ba80a49124 (Commit)
 	s32 temp;
 	u32 pdev_id;
 } __packed;
@@ -4833,8 +4959,11 @@ struct wmi_mgmt_tx_compl_event {
 	u32 desc_id;
 	u32 status;
 	u32 pdev_id;
+<<<<<<< HEAD
 	u32 ppdu_id;
 	u32 ack_rssi;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 struct wmi_scan_event {
@@ -5003,7 +5132,11 @@ enum wmi_sta_ps_param_tx_wake_threshold {
  */
 enum wmi_sta_ps_param_pspoll_count {
 	WMI_STA_PS_PSPOLL_COUNT_NO_MAX = 0,
+<<<<<<< HEAD
 	/* Values greater than 0 indicate the maximum number of PS-Poll frames
+=======
+	/* Values greater than 0 indicate the maximum numer of PS-Poll frames
+>>>>>>> b7ba80a49124 (Commit)
 	 * FW will send before waking up.
 	 */
 };
@@ -5115,9 +5248,15 @@ enum wmi_rate_preamble {
 
 /**
  * enum wmi_rtscts_prot_mode - Enable/Disable RTS/CTS and CTS2Self Protection.
+<<<<<<< HEAD
  * @WMI_RTS_CTS_DISABLED: RTS/CTS protection is disabled.
  * @WMI_USE_RTS_CTS: RTS/CTS Enabled.
  * @WMI_USE_CTS2SELF: CTS to self protection Enabled.
+=======
+ * @WMI_RTS_CTS_DISABLED : RTS/CTS protection is disabled.
+ * @WMI_USE_RTS_CTS : RTS/CTS Enabled.
+ * @WMI_USE_CTS2SELF : CTS to self protection Enabled.
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum wmi_rtscts_prot_mode {
 	WMI_RTS_CTS_DISABLED = 0,
@@ -5128,6 +5267,7 @@ enum wmi_rtscts_prot_mode {
 /**
  * enum wmi_rtscts_profile - Selection of RTS CTS profile along with enabling
  *                           protection mode.
+<<<<<<< HEAD
  * @WMI_RTSCTS_FOR_NO_RATESERIES: Neither of rate-series should use RTS-CTS
  * @WMI_RTSCTS_FOR_SECOND_RATESERIES: Only second rate-series will use RTS-CTS
  * @WMI_RTSCTS_ACROSS_SW_RETRIES: Only the second rate-series will use RTS-CTS,
@@ -5135,6 +5275,15 @@ enum wmi_rtscts_prot_mode {
  *                                series will use RTS-CTS.
  * @WMI_RTSCTS_ERP: RTS/CTS used for ERP protection for every PPDU.
  * @WMI_RTSCTS_FOR_ALL_RATESERIES: Enable RTS-CTS for all rate series.
+=======
+ * @WMI_RTSCTS_FOR_NO_RATESERIES - Neither of rate-series should use RTS-CTS
+ * @WMI_RTSCTS_FOR_SECOND_RATESERIES - Only second rate-series will use RTS-CTS
+ * @WMI_RTSCTS_ACROSS_SW_RETRIES - Only the second rate-series will use RTS-CTS,
+ *                                 but if there's a sw retry, both the rate
+ *                                 series will use RTS-CTS.
+ * @WMI_RTSCTS_ERP - RTS/CTS used for ERP protection for every PPDU.
+ * @WMI_RTSCTS_FOR_ALL_RATESERIES - Enable RTS-CTS for all rate series.
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum wmi_rtscts_profile {
 	WMI_RTSCTS_FOR_NO_RATESERIES = 0,
@@ -5228,6 +5377,7 @@ struct wmi_wmm_params_all_arg {
 #define ATH11K_TWT_DEF_ADD_STA_SLOT_INTERVAL		1000
 #define ATH11K_TWT_DEF_REMOVE_STA_SLOT_INTERVAL		5000
 
+<<<<<<< HEAD
 struct wmi_twt_enable_params {
 	u32 sta_cong_timer_ms;
 	u32 mbss_support;
@@ -5247,6 +5397,8 @@ struct wmi_twt_enable_params {
 	u32 remove_sta_slot_interval;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct wmi_twt_enable_params_cmd {
 	u32 tlv_header;
 	u32 pdev_id;
@@ -5640,7 +5792,10 @@ struct target_resource_config {
 	u32 sched_params;
 	u32 twt_ap_pdev_count;
 	u32 twt_ap_sta_count;
+<<<<<<< HEAD
 	u8 is_reg_cc_ext_event_supported;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum wmi_debug_log_param {
@@ -5665,6 +5820,7 @@ struct wmi_debug_log_config_cmd_fixed_param {
 #define WMI_SERVICE_READY_TIMEOUT_HZ (5 * HZ)
 #define WMI_SEND_TIMEOUT_HZ (3 * HZ)
 
+<<<<<<< HEAD
 enum ath11k_wmi_peer_ps_state {
 	WMI_PEER_PS_STATE_OFF,
 	WMI_PEER_PS_STATE_ON,
@@ -5685,6 +5841,8 @@ struct wmi_peer_sta_ps_state_chg_event {
 	u32 peer_ps_timestamp;
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ath11k_wmi_base {
 	struct ath11k_base *ab;
 	struct ath11k_pdev_wmi wmi[MAX_RADIOS];
@@ -6374,9 +6532,13 @@ void ath11k_wmi_fw_stats_fill(struct ath11k *ar,
 			      struct ath11k_fw_stats *fw_stats, u32 stats_id,
 			      char *buf);
 int ath11k_wmi_simulate_radar(struct ath11k *ar);
+<<<<<<< HEAD
 void ath11k_wmi_fill_default_twt_params(struct wmi_twt_enable_params *twt_params);
 int ath11k_wmi_send_twt_enable_cmd(struct ath11k *ar, u32 pdev_id,
 				   struct wmi_twt_enable_params *params);
+=======
+int ath11k_wmi_send_twt_enable_cmd(struct ath11k *ar, u32 pdev_id);
+>>>>>>> b7ba80a49124 (Commit)
 int ath11k_wmi_send_twt_disable_cmd(struct ath11k *ar, u32 pdev_id);
 int ath11k_wmi_send_twt_add_dialog_cmd(struct ath11k *ar,
 				       struct wmi_twt_add_dialog_params *params);

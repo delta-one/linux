@@ -915,7 +915,10 @@ static const struct vb2_ops au0828_video_qops = {
 	.queue_setup     = queue_setup,
 	.buf_prepare     = buffer_prepare,
 	.buf_queue       = buffer_queue,
+<<<<<<< HEAD
 	.prepare_streaming = v4l_vb2q_enable_media_source,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.start_streaming = au0828_start_analog_streaming,
 	.stop_streaming  = au0828_stop_streaming,
 	.wait_prepare    = vb2_ops_wait_prepare,

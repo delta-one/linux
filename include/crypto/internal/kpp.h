@@ -50,6 +50,7 @@ static inline void *kpp_request_ctx(struct kpp_request *req)
 	return req->__ctx;
 }
 
+<<<<<<< HEAD
 static inline void *kpp_request_ctx_dma(struct kpp_request *req)
 {
 	unsigned int align = crypto_dma_align();
@@ -81,11 +82,20 @@ static inline void *kpp_tfm_ctx(struct crypto_kpp *tfm)
 static inline void *kpp_tfm_ctx_dma(struct crypto_kpp *tfm)
 {
 	return crypto_tfm_ctx_dma(&tfm->base);
+=======
+static inline void *kpp_tfm_ctx(struct crypto_kpp *tfm)
+{
+	return tfm->base.__crt_ctx;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void kpp_request_complete(struct kpp_request *req, int err)
 {
+<<<<<<< HEAD
 	crypto_request_complete(&req->base, err);
+=======
+	req->base.complete(&req->base, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline const char *kpp_alg_name(struct crypto_kpp *tfm)

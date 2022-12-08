@@ -23,7 +23,10 @@
 #define I2S_BT_INSTANCE		1
 #define I2S_SP_INSTANCE		2
 #define PDM_DMIC_INSTANCE	3
+<<<<<<< HEAD
 #define I2S_HS_VIRTUAL_INSTANCE	4
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct snd_soc_dai_driver rembrandt_sof_dai[] = {
 	[I2S_HS_INSTANCE] = {
@@ -113,6 +116,7 @@ static struct snd_soc_dai_driver rembrandt_sof_dai[] = {
 			.rate_max = 48000,
 		},
 	},
+<<<<<<< HEAD
 
 	[I2S_HS_VIRTUAL_INSTANCE] = {
 		.id = I2S_HS_VIRTUAL_INSTANCE,
@@ -128,6 +132,8 @@ static struct snd_soc_dai_driver rembrandt_sof_dai[] = {
 		},
 		.probe = &acp_dai_probe,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Rembrandt ops */

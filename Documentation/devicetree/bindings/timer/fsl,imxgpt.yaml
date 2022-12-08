@@ -31,8 +31,11 @@ properties:
           - enum:
               - fsl,imx6sl-gpt
               - fsl,imx6sx-gpt
+<<<<<<< HEAD
               - fsl,imxrt1050-gpt
               - fsl,imxrt1170-gpt
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - const: fsl,imx6dl-gpt
 
   reg:

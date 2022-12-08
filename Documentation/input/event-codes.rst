@@ -235,12 +235,15 @@ A few EV_ABS codes have special meanings:
     BTN_TOOL_<name> signals the type of tool that is currently detected by the
     hardware and is otherwise independent of ABS_DISTANCE and/or BTN_TOUCH.
 
+<<<<<<< HEAD
 * ABS_PROFILE:
 
   - Used to describe the state of a multi-value profile switch.  An event is
     emitted only when the selected profile changes, indicating the newly
     selected profile value.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 * ABS_MT_<name>:
 
   - Used to describe multitouch input events. Please see

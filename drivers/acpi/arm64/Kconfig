@@ -18,6 +18,9 @@ config ACPI_AGDI
 	  reset command.
 
 	  If set, the kernel parses AGDI table and listens for the command.
+<<<<<<< HEAD
 
 config ACPI_APMT
 	bool
+=======
+>>>>>>> b7ba80a49124 (Commit)

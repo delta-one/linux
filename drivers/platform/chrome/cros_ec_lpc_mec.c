@@ -146,3 +146,12 @@ void cros_ec_lpc_mec_init(unsigned int base, unsigned int end)
 	mec_emi_end = end;
 }
 EXPORT_SYMBOL(cros_ec_lpc_mec_init);
+<<<<<<< HEAD
+=======
+
+void cros_ec_lpc_mec_destroy(void)
+{
+	mutex_destroy(&io_mutex);
+}
+EXPORT_SYMBOL(cros_ec_lpc_mec_destroy);
+>>>>>>> b7ba80a49124 (Commit)

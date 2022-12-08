@@ -330,6 +330,7 @@ static void __init bp_init_freq_invariance(void)
 
 static void disable_freq_invariance_workfn(struct work_struct *work)
 {
+<<<<<<< HEAD
 	int cpu;
 
 	static_branch_disable(&arch_scale_freq_key);
@@ -340,6 +341,9 @@ static void disable_freq_invariance_workfn(struct work_struct *work)
 	 */
 	for_each_possible_cpu(cpu)
 		per_cpu(arch_freq_scale, cpu) = SCHED_CAPACITY_SCALE;
+=======
+	static_branch_disable(&arch_scale_freq_key);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DECLARE_WORK(disable_freq_invariance_work,

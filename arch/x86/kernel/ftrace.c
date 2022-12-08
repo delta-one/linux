@@ -24,10 +24,17 @@
 #include <linux/module.h>
 #include <linux/memory.h>
 #include <linux/vmalloc.h>
+<<<<<<< HEAD
 #include <linux/set_memory.h>
 
 #include <trace/syscall.h>
 
+=======
+
+#include <trace/syscall.h>
+
+#include <asm/set_memory.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/kprobes.h>
 #include <asm/ftrace.h>
 #include <asm/nops.h>
@@ -69,10 +76,13 @@ static const char *ftrace_nop_replace(void)
 
 static const char *ftrace_call_replace(unsigned long ip, unsigned long addr)
 {
+<<<<<<< HEAD
 	/*
 	 * No need to translate into a callthunk. The trampoline does
 	 * the depth accounting itself.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return text_gen_insn(CALL_INSN_OPCODE, (void *)ip, (void *)addr);
 }
 
@@ -221,9 +231,13 @@ void ftrace_replace_code(int enable)
 
 		ret = ftrace_verify_code(rec->ip, old);
 		if (ret) {
+<<<<<<< HEAD
 			ftrace_expected = old;
 			ftrace_bug(ret, rec);
 			ftrace_expected = NULL;
+=======
+			ftrace_bug(ret, rec);
+>>>>>>> b7ba80a49124 (Commit)
 			return;
 		}
 	}
@@ -323,7 +337,11 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
 	unsigned long size;
 	unsigned long *ptr;
 	void *trampoline;
+<<<<<<< HEAD
 	void *ip, *dest;
+=======
+	void *ip;
+>>>>>>> b7ba80a49124 (Commit)
 	/* 48 8b 15 <offset> is movq <offset>(%rip), %rdx */
 	unsigned const char op_ref[] = { 0x48, 0x8b, 0x15 };
 	unsigned const char retq[] = { RET_INSN_OPCODE, INT3_INSN_OPCODE };
@@ -365,7 +383,11 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
 
 	ip = trampoline + size;
 	if (cpu_feature_enabled(X86_FEATURE_RETHUNK))
+<<<<<<< HEAD
 		__text_gen_insn(ip, JMP32_INSN_OPCODE, ip, x86_return_thunk, JMP32_INSN_SIZE);
+=======
+		__text_gen_insn(ip, JMP32_INSN_OPCODE, ip, &__x86_return_thunk, JMP32_INSN_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		memcpy(ip, retq, sizeof(retq));
 
@@ -410,6 +432,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
 	/* put in the call to the function */
 	mutex_lock(&text_mutex);
 	call_offset -= start_offset;
+<<<<<<< HEAD
 	/*
 	 * No need to translate into a callthunk. The trampoline does
 	 * the depth accounting before the call already.
@@ -418,12 +441,26 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
 	memcpy(trampoline + call_offset,
 	       text_gen_insn(CALL_INSN_OPCODE, trampoline + call_offset, dest),
 	       CALL_INSN_SIZE);
+=======
+	memcpy(trampoline + call_offset,
+	       text_gen_insn(CALL_INSN_OPCODE,
+			     trampoline + call_offset,
+			     ftrace_ops_get_func(ops)), CALL_INSN_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&text_mutex);
 
 	/* ALLOC_TRAMP flags lets us know we created it */
 	ops->flags |= FTRACE_OPS_FL_ALLOC_TRAMP;
 
+<<<<<<< HEAD
 	set_memory_rox((unsigned long)trampoline, npages);
+=======
+	set_vm_flush_reset_perms(trampoline);
+
+	if (likely(system_state != SYSTEM_BOOTING))
+		set_memory_ro((unsigned long)trampoline, npages);
+	set_memory_x((unsigned long)trampoline, npages);
+>>>>>>> b7ba80a49124 (Commit)
 	return (unsigned long)trampoline;
 fail:
 	tramp_free(trampoline);

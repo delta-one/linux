@@ -8,6 +8,7 @@ Required properties:
 
 - reg : The I2C address of the device.
 
+<<<<<<< HEAD
 - AVDD-supply: phandle to the regulator supplying analog power through the
   AVDD pin
 
@@ -23,6 +24,8 @@ Required properties:
 - LDO1-IN-supply: phandle to the regulator supplying power to the digital core
   and charge pump through the LDO1_IN pin.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Optional properties:
 
 - interrupts : The CODEC's interrupt output.
@@ -61,7 +64,11 @@ Optional properties:
 
 - realtek,dmic-clk-driving-high : Set the high driving of the DMIC clock out.
 
+<<<<<<< HEAD
 - #sound-dai-cells: Should be set to '<1>'.
+=======
+- #sound-dai-cells: Should be set to '<0>'.
+>>>>>>> b7ba80a49124 (Commit)
 
 Pins on the device (for linking into audio routes) for RT5682:
 
@@ -90,9 +97,12 @@ rt5682 {
 
 	clocks = <&osc>;
 	clock-names = "mclk";
+<<<<<<< HEAD
 
 	AVDD-supply = <&avdd_reg>;
 	MICVDD-supply = <&micvdd_reg>;
 	DBVDD-supply = <&dbvdd_reg>;
 	LDO1-IN-supply = <&ldo1_in_reg>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

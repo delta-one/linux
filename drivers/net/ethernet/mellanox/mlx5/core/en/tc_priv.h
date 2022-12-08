@@ -30,7 +30,10 @@ enum {
 	MLX5E_TC_FLOW_FLAG_TUN_RX                = MLX5E_TC_FLOW_BASE + 9,
 	MLX5E_TC_FLOW_FLAG_FAILED                = MLX5E_TC_FLOW_BASE + 10,
 	MLX5E_TC_FLOW_FLAG_SAMPLE                = MLX5E_TC_FLOW_BASE + 11,
+<<<<<<< HEAD
 	MLX5E_TC_FLOW_FLAG_USE_ACT_STATS	 = MLX5E_TC_FLOW_BASE + 12,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlx5e_tc_flow_parse_attr {
@@ -96,6 +99,10 @@ struct mlx5e_tc_flow {
 	 */
 	struct encap_flow_item encaps[MLX5_MAX_FLOW_FWD_VPORTS];
 	struct mlx5e_tc_flow *peer_flow;
+<<<<<<< HEAD
+=======
+	struct mlx5e_mod_hdr_handle *mh; /* attached mod header instance */
+>>>>>>> b7ba80a49124 (Commit)
 	struct mlx5e_hairpin_entry *hpe; /* attached hairpin instance */
 	struct list_head hairpin; /* flows sharing the same hairpin */
 	struct list_head peer;    /* flows with peer flow */
@@ -111,7 +118,10 @@ struct mlx5e_tc_flow {
 	struct completion del_hw_done;
 	struct mlx5_flow_attr *attr;
 	struct list_head attrs;
+<<<<<<< HEAD
 	u32 chain_mapping;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlx5_flow_handle *
@@ -210,4 +220,11 @@ struct mlx5e_flow_meters *mlx5e_get_flow_meters(struct mlx5_core_dev *dev);
 void *mlx5e_get_match_headers_value(u32 flags, struct mlx5_flow_spec *spec);
 void *mlx5e_get_match_headers_criteria(u32 flags, struct mlx5_flow_spec *spec);
 
+<<<<<<< HEAD
+=======
+int mlx5e_policer_validate(const struct flow_action *action,
+			   const struct flow_action_entry *act,
+			   struct netlink_ext_ack *extack);
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __MLX5_EN_TC_PRIV_H__ */

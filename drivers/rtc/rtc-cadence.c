@@ -354,7 +354,11 @@ err_disable_pclk:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void cdns_rtc_remove(struct platform_device *pdev)
+=======
+static int cdns_rtc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cdns_rtc *crtc = platform_get_drvdata(pdev);
 
@@ -363,6 +367,11 @@ static void cdns_rtc_remove(struct platform_device *pdev)
 
 	clk_disable_unprepare(crtc->pclk);
 	clk_disable_unprepare(crtc->ref_clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -402,7 +411,11 @@ static struct platform_driver cdns_rtc_driver = {
 		.pm = &cdns_rtc_pm_ops,
 	},
 	.probe = cdns_rtc_probe,
+<<<<<<< HEAD
 	.remove_new = cdns_rtc_remove,
+=======
+	.remove = cdns_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(cdns_rtc_driver);
 

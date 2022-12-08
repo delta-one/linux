@@ -412,7 +412,11 @@ static struct mr_table *ipmr_new_table(struct net *net, u32 id)
 
 static void ipmr_free_table(struct mr_table *mrt)
 {
+<<<<<<< HEAD
 	timer_shutdown_sync(&mrt->ipmr_expire_timer);
+=======
+	del_timer_sync(&mrt->ipmr_expire_timer);
+>>>>>>> b7ba80a49124 (Commit)
 	mroute_clean_tables(mrt, MRT_FLUSH_VIFS | MRT_FLUSH_VIFS_STATIC |
 				 MRT_FLUSH_MFC | MRT_FLUSH_MFC_STATIC);
 	rhltable_destroy(&mrt->mfc_hash);
@@ -506,8 +510,13 @@ static netdev_tx_t reg_vif_xmit(struct sk_buff *skb, struct net_device *dev)
 		return err;
 	}
 
+<<<<<<< HEAD
 	DEV_STATS_ADD(dev, tx_bytes, skb->len);
 	DEV_STATS_INC(dev, tx_packets);
+=======
+	dev->stats.tx_bytes += skb->len;
+	dev->stats.tx_packets++;
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_read_lock();
 
 	/* Pairs with WRITE_ONCE() in vif_add() and vif_delete() */
@@ -1839,8 +1848,13 @@ static void ipmr_queue_xmit(struct net *net, struct mr_table *mrt,
 	if (vif->flags & VIFF_REGISTER) {
 		WRITE_ONCE(vif->pkt_out, vif->pkt_out + 1);
 		WRITE_ONCE(vif->bytes_out, vif->bytes_out + skb->len);
+<<<<<<< HEAD
 		DEV_STATS_ADD(vif_dev, tx_bytes, skb->len);
 		DEV_STATS_INC(vif_dev, tx_packets);
+=======
+		vif_dev->stats.tx_bytes += skb->len;
+		vif_dev->stats.tx_packets++;
+>>>>>>> b7ba80a49124 (Commit)
 		ipmr_cache_report(mrt, skb, vifi, IGMPMSG_WHOLEPKT);
 		goto out_free;
 	}
@@ -1898,8 +1912,13 @@ static void ipmr_queue_xmit(struct net *net, struct mr_table *mrt,
 	if (vif->flags & VIFF_TUNNEL) {
 		ip_encap(net, skb, vif->local, vif->remote);
 		/* FIXME: extra output firewall step used to be here. --RR */
+<<<<<<< HEAD
 		DEV_STATS_INC(vif_dev, tx_packets);
 		DEV_STATS_ADD(vif_dev, tx_bytes, skb->len);
+=======
+		vif_dev->stats.tx_packets++;
+		vif_dev->stats.tx_bytes += skb->len;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	IPCB(skb)->flags |= IPSKB_FORWARDED;

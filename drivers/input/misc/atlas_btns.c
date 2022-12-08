@@ -106,7 +106,11 @@ static int atlas_acpi_button_add(struct acpi_device *device)
 	return err;
 }
 
+<<<<<<< HEAD
 static void atlas_acpi_button_remove(struct acpi_device *device)
+=======
+static int atlas_acpi_button_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	acpi_status status;
 
@@ -116,6 +120,11 @@ static void atlas_acpi_button_remove(struct acpi_device *device)
 		pr_err("error removing addr spc handler\n");
 
 	input_unregister_device(input_dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id atlas_device_ids[] = {

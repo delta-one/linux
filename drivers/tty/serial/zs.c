@@ -623,7 +623,12 @@ static void zs_raw_transmit_chars(struct zs_port *zport)
 
 	/* Send char.  */
 	write_zsdata(zport, xmit->buf[xmit->tail]);
+<<<<<<< HEAD
 	uart_xmit_advance(&zport->port, 1);
+=======
+	xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+	zport->port.icount.tx++;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
 		uart_write_wakeup(&zport->port);

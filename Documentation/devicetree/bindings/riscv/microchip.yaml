@@ -7,8 +7,13 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
 title: Microchip PolarFire SoC-based boards
 
 maintainers:
+<<<<<<< HEAD
   - Conor Dooley <conor.dooley@microchip.com>
   - Daire McNamara <daire.mcnamara@microchip.com>
+=======
+  - Cyril Jean <Cyril.Jean@microchip.com>
+  - Lewis Hanly <lewis.hanly@microchip.com>
+>>>>>>> b7ba80a49124 (Commit)
 
 description:
   Microchip PolarFire SoC-based boards
@@ -21,13 +26,20 @@ properties:
       - items:
           - enum:
               - microchip,mpfs-icicle-reference-rtlv2203
+<<<<<<< HEAD
               - microchip,mpfs-icicle-reference-rtlv2210
+=======
+              - microchip,mpfs-icicle-reference-rtlv2209
+>>>>>>> b7ba80a49124 (Commit)
           - const: microchip,mpfs-icicle-kit
           - const: microchip,mpfs
 
       - items:
           - enum:
+<<<<<<< HEAD
               - aldec,tysom-m-mpfs250t-rev2
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - aries,m100pfsevp
               - microchip,mpfs-sev-kit
               - sundance,polarberry

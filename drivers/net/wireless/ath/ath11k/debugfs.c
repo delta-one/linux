@@ -14,7 +14,10 @@
 #include "dp_tx.h"
 #include "debugfs_htt_stats.h"
 #include "peer.h"
+<<<<<<< HEAD
 #include "hif.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const char *htt_bp_umac_ring[HTT_SW_UMAC_RING_IDX_MAX] = {
 	"REO2SW1_RING",
@@ -92,6 +95,7 @@ void ath11k_debugfs_add_dbring_entry(struct ath11k *ar,
 	spin_unlock_bh(&dbr_data->lock);
 }
 
+<<<<<<< HEAD
 static void ath11k_debugfs_fw_stats_reset(struct ath11k *ar)
 {
 	spin_lock_bh(&ar->data_lock);
@@ -104,10 +108,56 @@ static void ath11k_debugfs_fw_stats_reset(struct ath11k *ar)
 void ath11k_debugfs_fw_stats_process(struct ath11k *ar, struct ath11k_fw_stats *stats)
 {
 	struct ath11k_base *ab = ar->ab;
+=======
+static void ath11k_fw_stats_pdevs_free(struct list_head *head)
+{
+	struct ath11k_fw_stats_pdev *i, *tmp;
+
+	list_for_each_entry_safe(i, tmp, head, list) {
+		list_del(&i->list);
+		kfree(i);
+	}
+}
+
+static void ath11k_fw_stats_vdevs_free(struct list_head *head)
+{
+	struct ath11k_fw_stats_vdev *i, *tmp;
+
+	list_for_each_entry_safe(i, tmp, head, list) {
+		list_del(&i->list);
+		kfree(i);
+	}
+}
+
+static void ath11k_fw_stats_bcn_free(struct list_head *head)
+{
+	struct ath11k_fw_stats_bcn *i, *tmp;
+
+	list_for_each_entry_safe(i, tmp, head, list) {
+		list_del(&i->list);
+		kfree(i);
+	}
+}
+
+static void ath11k_debugfs_fw_stats_reset(struct ath11k *ar)
+{
+	spin_lock_bh(&ar->data_lock);
+	ar->debug.fw_stats_done = false;
+	ath11k_fw_stats_pdevs_free(&ar->debug.fw_stats.pdevs);
+	ath11k_fw_stats_vdevs_free(&ar->debug.fw_stats.vdevs);
+	spin_unlock_bh(&ar->data_lock);
+}
+
+void ath11k_debugfs_fw_stats_process(struct ath11k_base *ab, struct sk_buff *skb)
+{
+	struct ath11k_fw_stats stats = {};
+	struct ath11k *ar;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ath11k_pdev *pdev;
 	bool is_end;
 	static unsigned int num_vdev, num_bcn;
 	size_t total_vdevs_started = 0;
+<<<<<<< HEAD
 	int i;
 
 	/* WMI_REQUEST_PDEV_STAT request has been already processed */
@@ -121,6 +171,46 @@ void ath11k_debugfs_fw_stats_process(struct ath11k *ar, struct ath11k_fw_stats *
 		if (list_empty(&stats->vdevs)) {
 			ath11k_warn(ab, "empty vdev stats");
 			return;
+=======
+	int i, ret;
+
+	INIT_LIST_HEAD(&stats.pdevs);
+	INIT_LIST_HEAD(&stats.vdevs);
+	INIT_LIST_HEAD(&stats.bcn);
+
+	ret = ath11k_wmi_pull_fw_stats(ab, skb, &stats);
+	if (ret) {
+		ath11k_warn(ab, "failed to pull fw stats: %d\n", ret);
+		goto free;
+	}
+
+	rcu_read_lock();
+	ar = ath11k_mac_get_ar_by_pdev_id(ab, stats.pdev_id);
+	if (!ar) {
+		rcu_read_unlock();
+		ath11k_warn(ab, "failed to get ar for pdev_id %d: %d\n",
+			    stats.pdev_id, ret);
+		goto free;
+	}
+
+	spin_lock_bh(&ar->data_lock);
+
+	if (stats.stats_id == WMI_REQUEST_PDEV_STAT) {
+		list_splice_tail_init(&stats.pdevs, &ar->debug.fw_stats.pdevs);
+		ar->debug.fw_stats_done = true;
+		goto complete;
+	}
+
+	if (stats.stats_id == WMI_REQUEST_RSSI_PER_CHAIN_STAT) {
+		ar->debug.fw_stats_done = true;
+		goto complete;
+	}
+
+	if (stats.stats_id == WMI_REQUEST_VDEV_STAT) {
+		if (list_empty(&stats.vdevs)) {
+			ath11k_warn(ab, "empty vdev stats");
+			goto complete;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		/* FW sends all the active VDEV stats irrespective of PDEV,
 		 * hence limit until the count of all VDEVs started
@@ -133,6 +223,7 @@ void ath11k_debugfs_fw_stats_process(struct ath11k *ar, struct ath11k_fw_stats *
 
 		is_end = ((++num_vdev) == total_vdevs_started);
 
+<<<<<<< HEAD
 		list_splice_tail_init(&stats->vdevs,
 				      &ar->fw_stats.vdevs);
 
@@ -147,12 +238,29 @@ void ath11k_debugfs_fw_stats_process(struct ath11k *ar, struct ath11k_fw_stats *
 		if (list_empty(&stats->bcn)) {
 			ath11k_warn(ab, "empty bcn stats");
 			return;
+=======
+		list_splice_tail_init(&stats.vdevs,
+				      &ar->debug.fw_stats.vdevs);
+
+		if (is_end) {
+			ar->debug.fw_stats_done = true;
+			num_vdev = 0;
+		}
+		goto complete;
+	}
+
+	if (stats.stats_id == WMI_REQUEST_BCN_STAT) {
+		if (list_empty(&stats.bcn)) {
+			ath11k_warn(ab, "empty bcn stats");
+			goto complete;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		/* Mark end until we reached the count of all started VDEVs
 		 * within the PDEV
 		 */
 		is_end = ((++num_bcn) == ar->num_started_vdevs);
 
+<<<<<<< HEAD
 		list_splice_tail_init(&stats->bcn,
 				      &ar->fw_stats.bcn);
 
@@ -161,6 +269,25 @@ void ath11k_debugfs_fw_stats_process(struct ath11k *ar, struct ath11k_fw_stats *
 			num_bcn = 0;
 		}
 	}
+=======
+		list_splice_tail_init(&stats.bcn,
+				      &ar->debug.fw_stats.bcn);
+
+		if (is_end) {
+			ar->debug.fw_stats_done = true;
+			num_bcn = 0;
+		}
+	}
+complete:
+	complete(&ar->debug.fw_stats_complete);
+	rcu_read_unlock();
+	spin_unlock_bh(&ar->data_lock);
+
+free:
+	ath11k_fw_stats_pdevs_free(&stats.pdevs);
+	ath11k_fw_stats_vdevs_free(&stats.vdevs);
+	ath11k_fw_stats_bcn_free(&stats.bcn);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ath11k_debugfs_fw_stats_request(struct ath11k *ar,
@@ -181,7 +308,11 @@ static int ath11k_debugfs_fw_stats_request(struct ath11k *ar,
 
 	ath11k_debugfs_fw_stats_reset(ar);
 
+<<<<<<< HEAD
 	reinit_completion(&ar->fw_stats_complete);
+=======
+	reinit_completion(&ar->debug.fw_stats_complete);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = ath11k_wmi_send_stats_request_cmd(ar, req_param);
 
@@ -191,8 +322,14 @@ static int ath11k_debugfs_fw_stats_request(struct ath11k *ar,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	time_left = wait_for_completion_timeout(&ar->fw_stats_complete, 1 * HZ);
 
+=======
+	time_left =
+	wait_for_completion_timeout(&ar->debug.fw_stats_complete,
+				    1 * HZ);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!time_left)
 		return -ETIMEDOUT;
 
@@ -201,7 +338,11 @@ static int ath11k_debugfs_fw_stats_request(struct ath11k *ar,
 			break;
 
 		spin_lock_bh(&ar->data_lock);
+<<<<<<< HEAD
 		if (ar->fw_stats_done) {
+=======
+		if (ar->debug.fw_stats_done) {
+>>>>>>> b7ba80a49124 (Commit)
 			spin_unlock_bh(&ar->data_lock);
 			break;
 		}
@@ -273,7 +414,12 @@ static int ath11k_open_pdev_stats(struct inode *inode, struct file *file)
 		goto err_free;
 	}
 
+<<<<<<< HEAD
 	ath11k_wmi_fw_stats_fill(ar, &ar->fw_stats, req_param.stats_id, buf);
+=======
+	ath11k_wmi_fw_stats_fill(ar, &ar->debug.fw_stats, req_param.stats_id,
+				 buf);
+>>>>>>> b7ba80a49124 (Commit)
 
 	file->private_data = buf;
 
@@ -344,7 +490,12 @@ static int ath11k_open_vdev_stats(struct inode *inode, struct file *file)
 		goto err_free;
 	}
 
+<<<<<<< HEAD
 	ath11k_wmi_fw_stats_fill(ar, &ar->fw_stats, req_param.stats_id, buf);
+=======
+	ath11k_wmi_fw_stats_fill(ar, &ar->debug.fw_stats, req_param.stats_id,
+				 buf);
+>>>>>>> b7ba80a49124 (Commit)
 
 	file->private_data = buf;
 
@@ -421,13 +572,22 @@ static int ath11k_open_bcn_stats(struct inode *inode, struct file *file)
 		}
 	}
 
+<<<<<<< HEAD
 	ath11k_wmi_fw_stats_fill(ar, &ar->fw_stats, req_param.stats_id, buf);
+=======
+	ath11k_wmi_fw_stats_fill(ar, &ar->debug.fw_stats, req_param.stats_id,
+				 buf);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* since beacon stats request is looped for all active VDEVs, saved fw
 	 * stats is not freed for each request until done for all active VDEVs
 	 */
 	spin_lock_bh(&ar->data_lock);
+<<<<<<< HEAD
 	ath11k_fw_stats_bcn_free(&ar->fw_stats.bcn);
+=======
+	ath11k_fw_stats_bcn_free(&ar->debug.fw_stats.bcn);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_bh(&ar->data_lock);
 
 	file->private_data = buf;
@@ -914,6 +1074,7 @@ static const struct file_operations fops_fw_dbglog = {
 	.llseek = default_llseek,
 };
 
+<<<<<<< HEAD
 static int ath11k_open_sram_dump(struct inode *inode, struct file *file)
 {
 	struct ath11k_base *ab = inode->i_private;
@@ -971,21 +1132,33 @@ static const struct file_operations fops_sram_dump = {
 	.llseek = default_llseek,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ath11k_debugfs_pdev_create(struct ath11k_base *ab)
 {
 	if (test_bit(ATH11K_FLAG_REGISTERED, &ab->dev_flags))
 		return 0;
 
+<<<<<<< HEAD
+=======
+	ab->debugfs_soc = debugfs_create_dir(ab->hw_params.name, ab->debugfs_ath11k);
+	if (IS_ERR(ab->debugfs_soc))
+		return PTR_ERR(ab->debugfs_soc);
+
+>>>>>>> b7ba80a49124 (Commit)
 	debugfs_create_file("simulate_fw_crash", 0600, ab->debugfs_soc, ab,
 			    &fops_simulate_fw_crash);
 
 	debugfs_create_file("soc_dp_stats", 0600, ab->debugfs_soc, ab,
 			    &fops_soc_dp_stats);
 
+<<<<<<< HEAD
 	if (ab->hw_params.sram_dump.start != 0)
 		debugfs_create_file("sram", 0400, ab->debugfs_soc, ab,
 				    &fops_sram_dump);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -997,6 +1170,7 @@ void ath11k_debugfs_pdev_destroy(struct ath11k_base *ab)
 
 int ath11k_debugfs_soc_create(struct ath11k_base *ab)
 {
+<<<<<<< HEAD
 	struct dentry *root;
 	bool dput_needed;
 	char name[64];
@@ -1030,10 +1204,16 @@ out:
 		dput(root);
 
 	return ret;
+=======
+	ab->debugfs_ath11k = debugfs_create_dir("ath11k", NULL);
+
+	return PTR_ERR_OR_ZERO(ab->debugfs_ath11k);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void ath11k_debugfs_soc_destroy(struct ath11k_base *ab)
 {
+<<<<<<< HEAD
 	debugfs_remove_recursive(ab->debugfs_soc);
 	ab->debugfs_soc = NULL;
 
@@ -1042,6 +1222,10 @@ void ath11k_debugfs_soc_destroy(struct ath11k_base *ab)
 	 * a minor cosmetic issue to leave an empty ath11k directory to
 	 * debugfs.
 	 */
+=======
+	debugfs_remove_recursive(ab->debugfs_ath11k);
+	ab->debugfs_ath11k = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(ath11k_debugfs_soc_destroy);
 
@@ -1050,7 +1234,11 @@ void ath11k_debugfs_fw_stats_init(struct ath11k *ar)
 	struct dentry *fwstats_dir = debugfs_create_dir("fw_stats",
 							ar->debug.debugfs_pdev);
 
+<<<<<<< HEAD
 	ar->fw_stats.debugfs_fwstats = fwstats_dir;
+=======
+	ar->debug.fw_stats.debugfs_fwstats = fwstats_dir;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* all stats debugfs files created are under "fw_stats" directory
 	 * created per PDEV
@@ -1061,6 +1249,15 @@ void ath11k_debugfs_fw_stats_init(struct ath11k *ar)
 			    &fops_vdev_stats);
 	debugfs_create_file("beacon_stats", 0600, fwstats_dir, ar,
 			    &fops_bcn_stats);
+<<<<<<< HEAD
+=======
+
+	INIT_LIST_HEAD(&ar->debug.fw_stats.pdevs);
+	INIT_LIST_HEAD(&ar->debug.fw_stats.vdevs);
+	INIT_LIST_HEAD(&ar->debug.fw_stats.bcn);
+
+	init_completion(&ar->debug.fw_stats_complete);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t ath11k_write_pktlog_filter(struct file *file,
@@ -1401,6 +1598,7 @@ static const struct file_operations fops_dbr_debug = {
 	.llseek = default_llseek,
 };
 
+<<<<<<< HEAD
 static ssize_t ath11k_write_ps_timekeeper_enable(struct file *file,
 						 const char __user *user_buf,
 						 size_t count, loff_t *ppos)
@@ -1588,6 +1786,8 @@ static const struct file_operations fops_ps_state_enable = {
 	.llseek = default_llseek,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ath11k_debugfs_register(struct ath11k *ar)
 {
 	struct ath11k_base *ab = ar->ab;
@@ -1634,6 +1834,7 @@ int ath11k_debugfs_register(struct ath11k *ar)
 		debugfs_create_file("enable_dbr_debug", 0200, ar->debug.debugfs_pdev,
 				    ar, &fops_dbr_debug);
 
+<<<<<<< HEAD
 	debugfs_create_file("ps_state_enable", 0600, ar->debug.debugfs_pdev, ar,
 			    &fops_ps_state_enable);
 
@@ -1648,6 +1849,8 @@ int ath11k_debugfs_register(struct ath11k *ar)
 				    &fops_reset_ps_duration);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1676,6 +1879,7 @@ static ssize_t ath11k_write_twt_add_dialog(struct file *file,
 {
 	struct ath11k_vif *arvif = file->private_data;
 	struct wmi_twt_add_dialog_params params = { 0 };
+<<<<<<< HEAD
 	struct wmi_twt_enable_params twt_params = {0};
 	struct ath11k *ar = arvif->ar;
 	u8 buf[128] = {0};
@@ -1683,6 +1887,13 @@ static ssize_t ath11k_write_twt_add_dialog(struct file *file,
 
 	if (ar->twt_enabled == 0) {
 		ath11k_err(ar->ab, "twt support is not enabled\n");
+=======
+	u8 buf[128] = {0};
+	int ret;
+
+	if (arvif->ar->twt_enabled == 0) {
+		ath11k_err(arvif->ar->ab, "twt support is not enabled\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOPNOTSUPP;
 	}
 
@@ -1712,6 +1923,7 @@ static ssize_t ath11k_write_twt_add_dialog(struct file *file,
 	if (ret != 16)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/* In the case of station vif, TWT is entirely handled by
 	 * the firmware based on the input parameters in the TWT enable
 	 * WMI command that is sent to the target during assoc.
@@ -1728,10 +1940,13 @@ static ssize_t ath11k_write_twt_add_dialog(struct file *file,
 		ath11k_wmi_send_twt_enable_cmd(ar, ar->pdev->pdev_id, &twt_params);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	params.vdev_id = arvif->vdev_id;
 
 	ret = ath11k_wmi_send_twt_add_dialog_cmd(arvif->ar, &params);
 	if (ret)
+<<<<<<< HEAD
 		goto err_twt_add_dialog;
 
 	return count;
@@ -1744,6 +1959,11 @@ err_twt_add_dialog:
 	}
 
 	return ret;
+=======
+		return ret;
+
+	return count;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t ath11k_write_twt_del_dialog(struct file *file,
@@ -1752,6 +1972,7 @@ static ssize_t ath11k_write_twt_del_dialog(struct file *file,
 {
 	struct ath11k_vif *arvif = file->private_data;
 	struct wmi_twt_del_dialog_params params = { 0 };
+<<<<<<< HEAD
 	struct wmi_twt_enable_params twt_params = {0};
 	struct ath11k *ar = arvif->ar;
 	u8 buf[64] = {0};
@@ -1759,6 +1980,13 @@ static ssize_t ath11k_write_twt_del_dialog(struct file *file,
 
 	if (ar->twt_enabled == 0) {
 		ath11k_err(ar->ab, "twt support is not enabled\n");
+=======
+	u8 buf[64] = {0};
+	int ret;
+
+	if (arvif->ar->twt_enabled == 0) {
+		ath11k_err(arvif->ar->ab, "twt support is not enabled\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOPNOTSUPP;
 	}
 
@@ -1784,12 +2012,15 @@ static ssize_t ath11k_write_twt_del_dialog(struct file *file,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (arvif->vif->type == NL80211_IFTYPE_STATION) {
 		ath11k_wmi_send_twt_disable_cmd(ar, ar->pdev->pdev_id);
 		ath11k_wmi_fill_default_twt_params(&twt_params);
 		ath11k_wmi_send_twt_enable_cmd(ar, ar->pdev->pdev_id, &twt_params);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return count;
 }
 
@@ -1893,6 +2124,7 @@ static const struct file_operations ath11k_fops_twt_resume_dialog = {
 	.open = simple_open
 };
 
+<<<<<<< HEAD
 void ath11k_debugfs_add_interface(struct ath11k_vif *arvif)
 {
 	struct ath11k_base *ab = arvif->ar->ab;
@@ -1915,13 +2147,44 @@ void ath11k_debugfs_add_interface(struct ath11k_vif *arvif)
 
 	debugfs_create_file("resume_dialog", 0200, arvif->debugfs_twt,
 			    arvif, &ath11k_fops_twt_resume_dialog);
+=======
+int ath11k_debugfs_add_interface(struct ath11k_vif *arvif)
+{
+	if (arvif->vif->type == NL80211_IFTYPE_AP && !arvif->debugfs_twt) {
+		arvif->debugfs_twt = debugfs_create_dir("twt",
+							arvif->vif->debugfs_dir);
+		if (!arvif->debugfs_twt || IS_ERR(arvif->debugfs_twt)) {
+			ath11k_warn(arvif->ar->ab,
+				    "failed to create directory %p\n",
+				    arvif->debugfs_twt);
+			arvif->debugfs_twt = NULL;
+			return -1;
+		}
+
+		debugfs_create_file("add_dialog", 0200, arvif->debugfs_twt,
+				    arvif, &ath11k_fops_twt_add_dialog);
+
+		debugfs_create_file("del_dialog", 0200, arvif->debugfs_twt,
+				    arvif, &ath11k_fops_twt_del_dialog);
+
+		debugfs_create_file("pause_dialog", 0200, arvif->debugfs_twt,
+				    arvif, &ath11k_fops_twt_pause_dialog);
+
+		debugfs_create_file("resume_dialog", 0200, arvif->debugfs_twt,
+				    arvif, &ath11k_fops_twt_resume_dialog);
+	}
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void ath11k_debugfs_remove_interface(struct ath11k_vif *arvif)
 {
+<<<<<<< HEAD
 	if (!arvif->debugfs_twt)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	debugfs_remove_recursive(arvif->debugfs_twt);
 	arvif->debugfs_twt = NULL;
 }

@@ -581,7 +581,11 @@ static int save_image(struct swap_map_handle *handle,
 	return ret;
 }
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * Structure used for CRC32.
  */
 struct crc_data {
@@ -596,7 +600,11 @@ struct crc_data {
 	unsigned char *unc[LZO_THREADS];          /* uncompressed data */
 };
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * CRC32 update function that runs in its own thread.
  */
 static int crc32_threadfn(void *data)
@@ -623,7 +631,11 @@ static int crc32_threadfn(void *data)
 	}
 	return 0;
 }
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * Structure used for LZO data compression.
  */
 struct cmp_data {
@@ -640,7 +652,11 @@ struct cmp_data {
 	unsigned char wrk[LZO1X_1_MEM_COMPRESS];  /* compression workspace */
 };
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * Compression function that runs in its own thread.
  */
 static int lzo_compress_threadfn(void *data)
@@ -948,9 +964,15 @@ out_finish:
 	return error;
 }
 
+<<<<<<< HEAD
 /*
  *	The following functions allow us to read data using a swap map
  *	in a file-like way.
+=======
+/**
+ *	The following functions allow us to read data using a swap map
+ *	in a file-alike way
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 static void release_swap_reader(struct swap_map_handle *handle)
@@ -1107,7 +1129,11 @@ static int load_image(struct swap_map_handle *handle,
 	return ret;
 }
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * Structure used for LZO data decompression.
  */
 struct dec_data {
@@ -1123,7 +1149,11 @@ struct dec_data {
 	unsigned char cmp[LZO_CMP_SIZE];          /* compressed buffer */
 };
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * Decompression function that runs in its own thread.
  */
 static int lzo_decompress_threadfn(void *data)

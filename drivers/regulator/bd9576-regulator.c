@@ -953,6 +953,7 @@ static int bd957x_probe(struct platform_device *pdev)
 					   dev_fwnode(pdev->dev.parent),
 					   "rohm,vout1-en", GPIOD_OUT_LOW,
 					   "vout1-en");
+<<<<<<< HEAD
 
 		/* VOUT1_OPS gpio ctrl */
 		/*
@@ -975,6 +976,32 @@ static int bd957x_probe(struct platform_device *pdev)
 		else
 			return dev_err_probe(&pdev->dev, PTR_ERR(en),
 					"Failed to get VOUT1 control GPIO\n");
+=======
+		if (!IS_ERR(en)) {
+			/* VOUT1_OPS gpio ctrl */
+			/*
+			 * Regulator core prioritizes the ena_gpio over
+			 * enable/disable/is_enabled callbacks so no need to
+			 * clear them. We can still use same ops
+			 */
+			config.ena_gpiod = en;
+		} else {
+			/*
+			 * In theory it is possible someone wants to set
+			 * vout1-en LOW during OTP loading and set VOUT1 to be
+			 * controlled by GPIO - but control the GPIO from some
+			 * where else than this driver. For that to work we
+			 * should unset the is_enabled callback here.
+			 *
+			 * I believe such case where rohm,vout1-en-low is set
+			 * and vout1-en-gpios is not is likely to be a
+			 * misconfiguration. So let's just err out for now.
+			 */
+			dev_err(&pdev->dev,
+				"Failed to get VOUT1 control GPIO\n");
+			return PTR_ERR(en);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -1035,10 +1062,19 @@ static int bd957x_probe(struct platform_device *pdev)
 
 		r->rdev = devm_regulator_register(&pdev->dev, desc,
 							   &config);
+<<<<<<< HEAD
 		if (IS_ERR(r->rdev))
 			return dev_err_probe(&pdev->dev, PTR_ERR(r->rdev),
 					"failed to register %s regulator\n",
 					desc->name);
+=======
+		if (IS_ERR(r->rdev)) {
+			dev_err(&pdev->dev,
+				"failed to register %s regulator\n",
+				desc->name);
+			return PTR_ERR(r->rdev);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Clear the VOUT1 GPIO setting - rest of the regulators do not
 		 * support GPIO control
@@ -1126,7 +1162,10 @@ MODULE_DEVICE_TABLE(platform, bd957x_pmic_id);
 static struct platform_driver bd957x_regulator = {
 	.driver = {
 		.name = "bd957x-pmic",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = bd957x_probe,
 	.id_table = bd957x_pmic_id,

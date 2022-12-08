@@ -1162,9 +1162,15 @@ struct ad714x_chip *ad714x_probe(struct device *dev, u16 bus_type, int irq,
 }
 EXPORT_SYMBOL(ad714x_probe);
 
+<<<<<<< HEAD
 static int ad714x_suspend(struct device *dev)
 {
 	struct ad714x_chip *ad714x = dev_get_drvdata(dev);
+=======
+#ifdef CONFIG_PM
+int ad714x_disable(struct ad714x_chip *ad714x)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned short data;
 
 	dev_dbg(ad714x->dev, "%s enter\n", __func__);
@@ -1178,10 +1184,17 @@ static int ad714x_suspend(struct device *dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 static int ad714x_resume(struct device *dev)
 {
 	struct ad714x_chip *ad714x = dev_get_drvdata(dev);
+=======
+EXPORT_SYMBOL(ad714x_disable);
+
+int ad714x_enable(struct ad714x_chip *ad714x)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	dev_dbg(ad714x->dev, "%s enter\n", __func__);
 
 	mutex_lock(&ad714x->mutex);
@@ -1201,8 +1214,13 @@ static int ad714x_resume(struct device *dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 EXPORT_SIMPLE_DEV_PM_OPS(ad714x_pm, ad714x_suspend, ad714x_resume);
+=======
+EXPORT_SYMBOL(ad714x_enable);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_DESCRIPTION("Analog Devices AD714X Capacitance Touch Sensor Driver");
 MODULE_AUTHOR("Barry Song <21cnbao@gmail.com>");

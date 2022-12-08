@@ -26,7 +26,10 @@ properties:
     enum:
       - mediatek,mt6323-keys
       - mediatek,mt6331-keys
+<<<<<<< HEAD
       - mediatek,mt6357-keys
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - mediatek,mt6358-keys
       - mediatek,mt6397-keys
 

@@ -335,7 +335,10 @@ enum {
 	 */
 	WQ_POWER_EFFICIENT	= 1 << 7,
 
+<<<<<<< HEAD
 	__WQ_DESTROYING		= 1 << 15, /* internal: workqueue is destroying */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__WQ_DRAINING		= 1 << 16, /* internal: workqueue is draining */
 	__WQ_ORDERED		= 1 << 17, /* internal: workqueue is ordered */
 	__WQ_LEGACY		= 1 << 18, /* internal: create*_workqueue() */
@@ -472,7 +475,10 @@ extern unsigned int work_busy(struct work_struct *work);
 extern __printf(1, 2) void set_worker_desc(const char *fmt, ...);
 extern void print_worker_info(const char *log_lvl, struct task_struct *task);
 extern void show_all_workqueues(void);
+<<<<<<< HEAD
 extern void show_freezable_workqueues(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern void show_one_workqueue(struct workqueue_struct *wq);
 extern void wq_worker_comm(char *buf, size_t size, struct task_struct *task);
 
@@ -614,8 +620,11 @@ extern void __warn_flushing_systemwide_wq(void)
 ({									\
 	if (0)								\
 		__warn_flushing_systemwide_wq();			\
+<<<<<<< HEAD
 	pr_info("Please don't flush events workqueue at %s:%d\n", __FILE__, __LINE__); \
 	show_one_workqueue(system_wq);					\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__flush_workqueue(system_wq);					\
 })
 

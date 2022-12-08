@@ -7,7 +7,10 @@
 
 /dts-v1/;
 #include "r9a09g011.dtsi"
+<<<<<<< HEAD
 #include <dt-bindings/gpio/gpio.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <dt-bindings/pinctrl/rzv2m-pinctrl.h>
 
 / {
@@ -23,6 +26,7 @@
 		stdout-path = "serial0:115200n8";
 	};
 
+<<<<<<< HEAD
 	connector {
 		compatible = "usb-c-connector";
 		label = "USB-C";
@@ -48,6 +52,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memory@58000000 {
 		device_type = "memory";
 		/*
@@ -61,6 +67,7 @@
 		device_type = "memory";
 		reg = <0x1 0x80000000 0x0 0x80000000>;
 	};
+<<<<<<< HEAD
 
 	reg_1v8: regulator-1v8 {
 		compatible = "regulator-fixed";
@@ -91,6 +98,8 @@
 		gpios-states = <1>;
 		states = <3300000 0>, <1800000 1>;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &avb {
@@ -106,6 +115,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &emmc {
 	pinctrl-0 = <&emmc_pins>;
 	pinctrl-1 = <&emmc_pins>;
@@ -123,6 +133,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &extal_clk {
 	clock-frequency = <48000000>;
 };
@@ -132,6 +144,7 @@
 	pinctrl-names = "default";
 	clock-frequency = <400000>;
 	status = "okay";
+<<<<<<< HEAD
 
 	hd3ss3220@47 {
 		compatible = "ti,hd3ss3220";
@@ -156,6 +169,8 @@
 			};
 		};
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &i2c2 {
@@ -166,6 +181,7 @@
 };
 
 &pinctrl {
+<<<<<<< HEAD
 	emmc_pins: emmc {
 		data {
 			pinmux = <RZV2M_PORT_PINMUX(0, 0, 2)>, /* MMDAT0 */
@@ -186,6 +202,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	i2c0_pins: i2c0 {
 		pinmux = <RZV2M_PORT_PINMUX(5, 0, 2)>, /* SDA */
 			 <RZV2M_PORT_PINMUX(5, 1, 2)>; /* SCL */
@@ -195,6 +213,7 @@
 		pinmux = <RZV2M_PORT_PINMUX(3, 8, 2)>, /* SDA */
 			 <RZV2M_PORT_PINMUX(3, 9, 2)>; /* SCL */
 	};
+<<<<<<< HEAD
 
 	sdhi0_pins: sd0 {
 		data {
@@ -306,5 +325,10 @@
 };
 
 &wdt0 {
+=======
+};
+
+&uart0 {
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };

@@ -12,10 +12,13 @@
 #include <linux/vmalloc.h>
 #include <linux/vmstat.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_DYNAMIC_SCS
 DEFINE_STATIC_KEY_FALSE(dynamic_scs_enabled);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void __scs_account(void *s, int account)
 {
 	struct page *scs_page = vmalloc_to_page(s);
@@ -83,7 +86,11 @@ void scs_free(void *s)
 	 */
 
 	for (i = 0; i < NR_CACHED_SCS; i++)
+<<<<<<< HEAD
 		if (this_cpu_cmpxchg_local(scs_cache[i], 0, s) == NULL)
+=======
+		if (this_cpu_cmpxchg(scs_cache[i], 0, s) == NULL)
+>>>>>>> b7ba80a49124 (Commit)
 			return;
 
 	kasan_unpoison_vmalloc(s, SCS_SIZE, KASAN_VMALLOC_PROT_NORMAL);
@@ -105,20 +112,28 @@ static int scs_cleanup(unsigned int cpu)
 
 void __init scs_init(void)
 {
+<<<<<<< HEAD
 	if (!scs_is_enabled())
 		return;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cpuhp_setup_state(CPUHP_BP_PREPARE_DYN, "scs:scs_cache", NULL,
 			  scs_cleanup);
 }
 
 int scs_prepare(struct task_struct *tsk, int node)
 {
+<<<<<<< HEAD
 	void *s;
 
 	if (!scs_is_enabled())
 		return 0;
 
 	s = scs_alloc(node);
+=======
+	void *s = scs_alloc(node);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!s)
 		return -ENOMEM;
 
@@ -158,7 +173,11 @@ void scs_release(struct task_struct *tsk)
 {
 	void *s = task_scs(tsk);
 
+<<<<<<< HEAD
 	if (!scs_is_enabled() || !s)
+=======
+	if (!s)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	WARN(task_scs_end_corrupted(tsk),

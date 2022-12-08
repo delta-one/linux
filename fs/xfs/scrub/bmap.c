@@ -90,7 +90,10 @@ out:
 
 struct xchk_bmap_info {
 	struct xfs_scrub	*sc;
+<<<<<<< HEAD
 	struct xfs_iext_cursor	icur;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	xfs_fileoff_t		lastoff;
 	bool			is_rt;
 	bool			is_shared;
@@ -147,6 +150,7 @@ xchk_bmap_get_rmap(
 	return has_rmap;
 }
 
+<<<<<<< HEAD
 static inline bool
 xchk_bmap_has_prev(
 	struct xchk_bmap_info	*info,
@@ -189,6 +193,8 @@ xchk_bmap_has_next(
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Make sure that we have rmapbt records for this extent. */
 STATIC void
 xchk_bmap_xref_rmap(
@@ -257,6 +263,7 @@ xchk_bmap_xref_rmap(
 	if (rmap.rm_flags & XFS_RMAP_BMBT_BLOCK)
 		xchk_fblock_xref_set_corrupt(info->sc, info->whichfork,
 				irec->br_startoff);
+<<<<<<< HEAD
 
 	/*
 	 * If the rmap starts before this bmbt record, make sure there's a bmbt
@@ -285,6 +292,8 @@ xchk_bmap_xref_rmap(
 				irec->br_startoff);
 		return;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Cross-reference a single rtdev extent record. */
@@ -335,8 +344,11 @@ xchk_bmap_iextent_xref(
 	case XFS_COW_FORK:
 		xchk_xref_is_cow_staging(info->sc, agbno,
 				irec->br_blockcount);
+<<<<<<< HEAD
 		xchk_xref_is_not_shared(info->sc, agbno,
 				irec->br_blockcount);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -370,13 +382,21 @@ xchk_bmap_dirattr_extent(
 }
 
 /* Scrub a single extent record. */
+<<<<<<< HEAD
 STATIC void
+=======
+STATIC int
+>>>>>>> b7ba80a49124 (Commit)
 xchk_bmap_iextent(
 	struct xfs_inode	*ip,
 	struct xchk_bmap_info	*info,
 	struct xfs_bmbt_irec	*irec)
 {
 	struct xfs_mount	*mp = info->sc->mp;
+<<<<<<< HEAD
+=======
+	int			error = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Check for out-of-order extents.  This record could have come
@@ -397,6 +417,17 @@ xchk_bmap_iextent(
 		xchk_fblock_set_corrupt(info->sc, info->whichfork,
 				irec->br_startoff);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Check for delalloc extents.  We never iterate the ones in the
+	 * in-core extent scan, and we should never see these in the bmbt.
+	 */
+	if (isnullstartblock(irec->br_startblock))
+		xchk_fblock_set_corrupt(info->sc, info->whichfork,
+				irec->br_startoff);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Make sure the extent points to a valid place. */
 	if (irec->br_blockcount > XFS_MAX_BMBT_EXTLEN)
 		xchk_fblock_set_corrupt(info->sc, info->whichfork,
@@ -417,12 +448,22 @@ xchk_bmap_iextent(
 				irec->br_startoff);
 
 	if (info->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+<<<<<<< HEAD
 		return;
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (info->is_rt)
 		xchk_bmap_rt_iextent_xref(ip, info, irec);
 	else
 		xchk_bmap_iextent_xref(ip, info, irec);
+<<<<<<< HEAD
+=======
+
+	info->lastoff = irec->br_startoff + irec->br_blockcount;
+	return error;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Scrub a bmbt record. */
@@ -660,6 +701,7 @@ xchk_bmap_check_rmaps(
 
 	for_each_perag(sc->mp, agno, pag) {
 		error = xchk_bmap_check_ag_rmaps(sc, whichfork, pag);
+<<<<<<< HEAD
 		if (error ||
 		    (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)) {
 			xfs_perag_rele(pag);
@@ -695,6 +737,16 @@ xchk_bmap_iextent_delalloc(
 	if (irec->br_blockcount > XFS_MAX_BMBT_EXTLEN)
 		xchk_fblock_set_corrupt(info->sc, info->whichfork,
 				irec->br_startoff);
+=======
+		if (error)
+			break;
+		if (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+			break;
+	}
+	if (pag)
+		xfs_perag_put(pag);
+	return error;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -714,6 +766,10 @@ xchk_bmap(
 	struct xfs_inode	*ip = sc->ip;
 	struct xfs_ifork	*ifp = xfs_ifork_ptr(ip, whichfork);
 	xfs_fileoff_t		endoff;
+<<<<<<< HEAD
+=======
+	struct xfs_iext_cursor	icur;
+>>>>>>> b7ba80a49124 (Commit)
 	int			error = 0;
 
 	/* Non-existent forks can be ignored. */
@@ -748,8 +804,11 @@ xchk_bmap(
 	case XFS_DINODE_FMT_DEV:
 	case XFS_DINODE_FMT_LOCAL:
 		/* No mappings to check. */
+<<<<<<< HEAD
 		if (whichfork == XFS_COW_FORK)
 			xchk_fblock_set_corrupt(sc, whichfork, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	case XFS_DINODE_FMT_EXTENTS:
 		break;
@@ -779,22 +838,37 @@ xchk_bmap(
 	/* Scrub extent records. */
 	info.lastoff = 0;
 	ifp = xfs_ifork_ptr(ip, whichfork);
+<<<<<<< HEAD
 	for_each_xfs_iext(ifp, &info.icur, &irec) {
 		if (xchk_should_terminate(sc, &error) ||
 		    (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT))
 			goto out;
 
+=======
+	for_each_xfs_iext(ifp, &icur, &irec) {
+		if (xchk_should_terminate(sc, &error) ||
+		    (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT))
+			goto out;
+		if (isnullstartblock(irec.br_startblock))
+			continue;
+>>>>>>> b7ba80a49124 (Commit)
 		if (irec.br_startoff >= endoff) {
 			xchk_fblock_set_corrupt(sc, whichfork,
 					irec.br_startoff);
 			goto out;
 		}
+<<<<<<< HEAD
 
 		if (isnullstartblock(irec.br_startblock))
 			xchk_bmap_iextent_delalloc(ip, &info, &irec);
 		else
 			xchk_bmap_iextent(ip, &info, &irec);
 		info.lastoff = irec.br_startoff + irec.br_blockcount;
+=======
+		error = xchk_bmap_iextent(ip, &info, &irec);
+		if (error)
+			goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	error = xchk_bmap_check_rmaps(sc, whichfork);

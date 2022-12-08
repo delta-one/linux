@@ -62,6 +62,14 @@ MODULE_AUTHOR("Roland Dreier");
 MODULE_DESCRIPTION("InfiniBand SCSI RDMA Protocol initiator");
 MODULE_LICENSE("Dual BSD/GPL");
 
+<<<<<<< HEAD
+=======
+#if !defined(CONFIG_DYNAMIC_DEBUG)
+#define DEFINE_DYNAMIC_DEBUG_METADATA(name, fmt)
+#define DYNAMIC_DEBUG_BRANCH(descriptor) false
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned int srp_sg_tablesize;
 static unsigned int cmd_sg_entries;
 static unsigned int indirect_sg_entries;
@@ -694,7 +702,11 @@ static void srp_free_ch_ib(struct srp_target_port *target,
 
 static void srp_path_rec_completion(int status,
 				    struct sa_path_rec *pathrec,
+<<<<<<< HEAD
 				    unsigned int num_paths, void *ch_ptr)
+=======
+				    void *ch_ptr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct srp_rdma_ch *ch = ch_ptr;
 	struct srp_target_port *target = ch->target;
@@ -2984,7 +2996,11 @@ static ssize_t local_ib_port_show(struct device *dev,
 {
 	struct srp_target_port *target = host_to_target(class_to_shost(dev));
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", target->srp_host->port);
+=======
+	return sysfs_emit(buf, "%d\n", target->srp_host->port);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR_RO(local_ib_port);
@@ -3405,8 +3421,12 @@ static int srp_parse_options(struct net *net, const char *buf,
 			break;
 
 		case SRP_OPT_PKEY:
+<<<<<<< HEAD
 			ret = match_hex(args, &token);
 			if (ret) {
+=======
+			if (match_hex(args, &token)) {
+>>>>>>> b7ba80a49124 (Commit)
 				pr_warn("bad P_Key parameter '%s'\n", p);
 				goto out;
 			}
@@ -3466,8 +3486,12 @@ static int srp_parse_options(struct net *net, const char *buf,
 			break;
 
 		case SRP_OPT_MAX_SECT:
+<<<<<<< HEAD
 			ret = match_int(args, &token);
 			if (ret) {
+=======
+			if (match_int(args, &token)) {
+>>>>>>> b7ba80a49124 (Commit)
 				pr_warn("bad max sect parameter '%s'\n", p);
 				goto out;
 			}
@@ -3475,6 +3499,7 @@ static int srp_parse_options(struct net *net, const char *buf,
 			break;
 
 		case SRP_OPT_QUEUE_SIZE:
+<<<<<<< HEAD
 			ret = match_int(args, &token);
 			if (ret) {
 				pr_warn("match_int() failed for queue_size parameter '%s', Error %d\n",
@@ -3484,6 +3509,10 @@ static int srp_parse_options(struct net *net, const char *buf,
 			if (token < 1) {
 				pr_warn("bad queue_size parameter '%s'\n", p);
 				ret = -EINVAL;
+=======
+			if (match_int(args, &token) || token < 1) {
+				pr_warn("bad queue_size parameter '%s'\n", p);
+>>>>>>> b7ba80a49124 (Commit)
 				goto out;
 			}
 			target->scsi_host->can_queue = token;
@@ -3494,6 +3523,7 @@ static int srp_parse_options(struct net *net, const char *buf,
 			break;
 
 		case SRP_OPT_MAX_CMD_PER_LUN:
+<<<<<<< HEAD
 			ret = match_int(args, &token);
 			if (ret) {
 				pr_warn("match_int() failed for max cmd_per_lun parameter '%s', Error %d\n",
@@ -3504,12 +3534,18 @@ static int srp_parse_options(struct net *net, const char *buf,
 				pr_warn("bad max cmd_per_lun parameter '%s'\n",
 					p);
 				ret = -EINVAL;
+=======
+			if (match_int(args, &token) || token < 1) {
+				pr_warn("bad max cmd_per_lun parameter '%s'\n",
+					p);
+>>>>>>> b7ba80a49124 (Commit)
 				goto out;
 			}
 			target->scsi_host->cmd_per_lun = token;
 			break;
 
 		case SRP_OPT_TARGET_CAN_QUEUE:
+<<<<<<< HEAD
 			ret = match_int(args, &token);
 			if (ret) {
 				pr_warn("match_int() failed for max target_can_queue parameter '%s', Error %d\n",
@@ -3520,14 +3556,23 @@ static int srp_parse_options(struct net *net, const char *buf,
 				pr_warn("bad max target_can_queue parameter '%s'\n",
 					p);
 				ret = -EINVAL;
+=======
+			if (match_int(args, &token) || token < 1) {
+				pr_warn("bad max target_can_queue parameter '%s'\n",
+					p);
+>>>>>>> b7ba80a49124 (Commit)
 				goto out;
 			}
 			target->target_can_queue = token;
 			break;
 
 		case SRP_OPT_IO_CLASS:
+<<<<<<< HEAD
 			ret = match_hex(args, &token);
 			if (ret) {
+=======
+			if (match_hex(args, &token)) {
+>>>>>>> b7ba80a49124 (Commit)
 				pr_warn("bad IO class parameter '%s'\n", p);
 				goto out;
 			}
@@ -3536,7 +3581,10 @@ static int srp_parse_options(struct net *net, const char *buf,
 				pr_warn("unknown IO class parameter value %x specified (use %x or %x).\n",
 					token, SRP_REV10_IB_IO_CLASS,
 					SRP_REV16A_IB_IO_CLASS);
+<<<<<<< HEAD
 				ret = -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				goto out;
 			}
 			target->io_class = token;
@@ -3559,6 +3607,7 @@ static int srp_parse_options(struct net *net, const char *buf,
 			break;
 
 		case SRP_OPT_CMD_SG_ENTRIES:
+<<<<<<< HEAD
 			ret = match_int(args, &token);
 			if (ret) {
 				pr_warn("match_int() failed for max cmd_sg_entries parameter '%s', Error %d\n",
@@ -3569,14 +3618,23 @@ static int srp_parse_options(struct net *net, const char *buf,
 				pr_warn("bad max cmd_sg_entries parameter '%s'\n",
 					p);
 				ret = -EINVAL;
+=======
+			if (match_int(args, &token) || token < 1 || token > 255) {
+				pr_warn("bad max cmd_sg_entries parameter '%s'\n",
+					p);
+>>>>>>> b7ba80a49124 (Commit)
 				goto out;
 			}
 			target->cmd_sg_cnt = token;
 			break;
 
 		case SRP_OPT_ALLOW_EXT_SG:
+<<<<<<< HEAD
 			ret = match_int(args, &token);
 			if (ret) {
+=======
+			if (match_int(args, &token)) {
+>>>>>>> b7ba80a49124 (Commit)
 				pr_warn("bad allow_ext_sg parameter '%s'\n", p);
 				goto out;
 			}
@@ -3584,6 +3642,7 @@ static int srp_parse_options(struct net *net, const char *buf,
 			break;
 
 		case SRP_OPT_SG_TABLESIZE:
+<<<<<<< HEAD
 			ret = match_int(args, &token);
 			if (ret) {
 				pr_warn("match_int() failed for max sg_tablesize parameter '%s', Error %d\n",
@@ -3594,12 +3653,19 @@ static int srp_parse_options(struct net *net, const char *buf,
 				pr_warn("bad max sg_tablesize parameter '%s'\n",
 					p);
 				ret = -EINVAL;
+=======
+			if (match_int(args, &token) || token < 1 ||
+					token > SG_MAX_SEGMENTS) {
+				pr_warn("bad max sg_tablesize parameter '%s'\n",
+					p);
+>>>>>>> b7ba80a49124 (Commit)
 				goto out;
 			}
 			target->sg_tablesize = token;
 			break;
 
 		case SRP_OPT_COMP_VECTOR:
+<<<<<<< HEAD
 			ret = match_int(args, &token);
 			if (ret) {
 				pr_warn("match_int() failed for comp_vector parameter '%s', Error %d\n",
@@ -3609,12 +3675,17 @@ static int srp_parse_options(struct net *net, const char *buf,
 			if (token < 0) {
 				pr_warn("bad comp_vector parameter '%s'\n", p);
 				ret = -EINVAL;
+=======
+			if (match_int(args, &token) || token < 0) {
+				pr_warn("bad comp_vector parameter '%s'\n", p);
+>>>>>>> b7ba80a49124 (Commit)
 				goto out;
 			}
 			target->comp_vector = token;
 			break;
 
 		case SRP_OPT_TL_RETRY_COUNT:
+<<<<<<< HEAD
 			ret = match_int(args, &token);
 			if (ret) {
 				pr_warn("match_int() failed for tl_retry_count parameter '%s', Error %d\n",
@@ -3625,12 +3696,18 @@ static int srp_parse_options(struct net *net, const char *buf,
 				pr_warn("bad tl_retry_count parameter '%s' (must be a number between 2 and 7)\n",
 					p);
 				ret = -EINVAL;
+=======
+			if (match_int(args, &token) || token < 2 || token > 7) {
+				pr_warn("bad tl_retry_count parameter '%s' (must be a number between 2 and 7)\n",
+					p);
+>>>>>>> b7ba80a49124 (Commit)
 				goto out;
 			}
 			target->tl_retry_count = token;
 			break;
 
 		case SRP_OPT_MAX_IT_IU_SIZE:
+<<<<<<< HEAD
 			ret = match_int(args, &token);
 			if (ret) {
 				pr_warn("match_int() failed for max it_iu_size parameter '%s', Error %d\n",
@@ -3640,12 +3717,17 @@ static int srp_parse_options(struct net *net, const char *buf,
 			if (token < 0) {
 				pr_warn("bad maximum initiator to target IU size '%s'\n", p);
 				ret = -EINVAL;
+=======
+			if (match_int(args, &token) || token < 0) {
+				pr_warn("bad maximum initiator to target IU size '%s'\n", p);
+>>>>>>> b7ba80a49124 (Commit)
 				goto out;
 			}
 			target->max_it_iu_size = token;
 			break;
 
 		case SRP_OPT_CH_COUNT:
+<<<<<<< HEAD
 			ret = match_int(args, &token);
 			if (ret) {
 				pr_warn("match_int() failed for channel count parameter '%s', Error %d\n",
@@ -3655,6 +3737,10 @@ static int srp_parse_options(struct net *net, const char *buf,
 			if (token < 1) {
 				pr_warn("bad channel count %s\n", p);
 				ret = -EINVAL;
+=======
+			if (match_int(args, &token) || token < 1) {
+				pr_warn("bad channel count %s\n", p);
+>>>>>>> b7ba80a49124 (Commit)
 				goto out;
 			}
 			target->ch_count = token;
@@ -3663,7 +3749,10 @@ static int srp_parse_options(struct net *net, const char *buf,
 		default:
 			pr_warn("unknown parameter or missing value '%s' in target creation request\n",
 				p);
+<<<<<<< HEAD
 			ret = -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 		}
 	}
@@ -3950,7 +4039,11 @@ static ssize_t port_show(struct device *dev, struct device_attribute *attr,
 {
 	struct srp_host *host = container_of(dev, struct srp_host, dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", host->port);
+=======
+	return sysfs_emit(buf, "%d\n", host->port);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR_RO(port);
@@ -3962,7 +4055,11 @@ static struct attribute *srp_class_attrs[] = {
 	NULL
 };
 
+<<<<<<< HEAD
 static struct srp_host *srp_add_port(struct srp_device *device, u32 port)
+=======
+static struct srp_host *srp_add_port(struct srp_device *device, u8 port)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct srp_host *host;
 
@@ -3979,7 +4076,11 @@ static struct srp_host *srp_add_port(struct srp_device *device, u32 port)
 	device_initialize(&host->dev);
 	host->dev.class = &srp_class;
 	host->dev.parent = device->dev->dev.parent;
+<<<<<<< HEAD
 	if (dev_set_name(&host->dev, "srp-%s-%u", dev_name(&device->dev->dev),
+=======
+	if (dev_set_name(&host->dev, "srp-%s-%d", dev_name(&device->dev->dev),
+>>>>>>> b7ba80a49124 (Commit)
 			 port))
 		goto put_host;
 	if (device_add(&host->dev))
@@ -4001,7 +4102,11 @@ static void srp_rename_dev(struct ib_device *device, void *client_data)
 	list_for_each_entry_safe(host, tmp_host, &srp_dev->dev_list, list) {
 		char name[IB_DEVICE_NAME_MAX + 8];
 
+<<<<<<< HEAD
 		snprintf(name, sizeof(name), "srp-%s-%u",
+=======
+		snprintf(name, sizeof(name), "srp-%s-%d",
+>>>>>>> b7ba80a49124 (Commit)
 			 dev_name(&device->dev), host->port);
 		device_rename(&host->dev, name);
 	}
@@ -4013,7 +4118,11 @@ static int srp_add_one(struct ib_device *device)
 	struct ib_device_attr *attr = &device->attrs;
 	struct srp_host *host;
 	int mr_page_shift;
+<<<<<<< HEAD
 	u32 p;
+=======
+	unsigned int p;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 max_pages_per_mr;
 	unsigned int flags = 0;
 

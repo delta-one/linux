@@ -18,6 +18,10 @@
 #include <asm/mach/map.h>
 #include <asm/mach/arch.h>
 #include <asm/mach/time.h>
+<<<<<<< HEAD
+=======
+#include <asm/smp_plat.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/memory.h>
 
 #include "memory.h"
@@ -102,6 +106,10 @@ DT_MACHINE_START(KEYSTONE, "Keystone")
 #if defined(CONFIG_ZONE_DMA) && defined(CONFIG_ARM_LPAE)
 	.dma_zone_size	= SZ_2G,
 #endif
+<<<<<<< HEAD
+=======
+	.smp		= smp_ops(keystone_smp_ops),
+>>>>>>> b7ba80a49124 (Commit)
 	.init_machine	= keystone_init,
 	.dt_compat	= keystone_match,
 	.pv_fixup	= keystone_pv_fixup,

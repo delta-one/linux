@@ -4,7 +4,11 @@ config PINCTRL_IMX
 	depends on OF
 	select GENERIC_PINCTRL_GROUPS
 	select GENERIC_PINMUX_FUNCTIONS
+<<<<<<< HEAD
 	select PINCONF
+=======
+	select GENERIC_PINCONF
+>>>>>>> b7ba80a49124 (Commit)
 	select REGMAP
 
 config PINCTRL_IMX_SCU

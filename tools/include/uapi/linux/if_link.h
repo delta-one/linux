@@ -673,7 +673,10 @@ enum {
 	IFLA_XFRM_UNSPEC,
 	IFLA_XFRM_LINK,
 	IFLA_XFRM_IF_ID,
+<<<<<<< HEAD
 	IFLA_XFRM_COLLECT_METADATA,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__IFLA_XFRM_MAX
 };
 

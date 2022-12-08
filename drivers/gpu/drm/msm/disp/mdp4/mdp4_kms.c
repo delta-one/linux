@@ -387,7 +387,11 @@ static int mdp4_kms_init(struct drm_device *dev)
 	struct msm_drm_private *priv = dev->dev_private;
 	struct mdp4_kms *mdp4_kms;
 	struct msm_kms *kms = NULL;
+<<<<<<< HEAD
 	struct msm_mmu *mmu;
+=======
+	struct iommu_domain *iommu;
+>>>>>>> b7ba80a49124 (Commit)
 	struct msm_gem_address_space *aspace;
 	int irq, ret;
 	u32 major, minor;
@@ -499,6 +503,7 @@ static int mdp4_kms_init(struct drm_device *dev)
 	mdp4_disable(mdp4_kms);
 	mdelay(16);
 
+<<<<<<< HEAD
 	mmu = msm_iommu_new(&pdev->dev, 0);
 	if (IS_ERR(mmu)) {
 		ret = PTR_ERR(mmu);
@@ -508,6 +513,12 @@ static int mdp4_kms_init(struct drm_device *dev)
 				"contig buffers for scanout\n");
 		aspace = NULL;
 	} else {
+=======
+	iommu = iommu_domain_alloc(pdev->dev.bus);
+	if (iommu) {
+		struct msm_mmu *mmu = msm_iommu_new(&pdev->dev, iommu);
+
+>>>>>>> b7ba80a49124 (Commit)
 		aspace  = msm_gem_address_space_create(mmu,
 			"mdp4", 0x1000, 0x100000000 - 0x1000);
 
@@ -519,6 +530,13 @@ static int mdp4_kms_init(struct drm_device *dev)
 		}
 
 		kms->aspace = aspace;
+<<<<<<< HEAD
+=======
+	} else {
+		DRM_DEV_INFO(dev->dev, "no iommu, fallback to phys "
+				"contig buffers for scanout\n");
+		aspace = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = modeset_init(mdp4_kms);

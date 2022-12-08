@@ -37,10 +37,17 @@ nvc0_bo_move_copy(struct nouveau_channel *chan, struct ttm_buffer_object *bo,
 	struct nvif_push *push = chan->chan.push;
 	u64 src_offset = mem->vma[0].addr;
 	u64 dst_offset = mem->vma[1].addr;
+<<<<<<< HEAD
 	u32 page_count = PFN_UP(new_reg->size);
 	int ret;
 
 	page_count = PFN_UP(new_reg->size);
+=======
+	u32 page_count = new_reg->num_pages;
+	int ret;
+
+	page_count = new_reg->num_pages;
+>>>>>>> b7ba80a49124 (Commit)
 	while (page_count) {
 		int line_count = (page_count > 8191) ? 8191 : page_count;
 

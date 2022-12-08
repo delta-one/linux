@@ -10,15 +10,24 @@ PHONY := all
 all:
 
 src := $(subst /generated,,$(obj))
+<<<<<<< HEAD
 
 include $(srctree)/scripts/Kbuild.include
 -include $(kbuild-file)
+=======
+-include $(src)/Kbuild
+>>>>>>> b7ba80a49124 (Commit)
 
 # $(generic)/Kbuild lists mandatory-y. Exclude um since it is a special case.
 ifneq ($(SRCARCH),um)
 include $(srctree)/$(generic)/Kbuild
 endif
 
+<<<<<<< HEAD
+=======
+include $(srctree)/scripts/Kbuild.include
+
+>>>>>>> b7ba80a49124 (Commit)
 redundant := $(filter $(mandatory-y) $(generated-y), $(generic-y))
 redundant += $(foreach f, $(generic-y), $(if $(wildcard $(srctree)/$(src)/$(f)),$(f)))
 redundant := $(sort $(redundant))

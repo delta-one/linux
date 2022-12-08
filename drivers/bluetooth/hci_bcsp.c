@@ -378,7 +378,11 @@ static void bcsp_pkt_cull(struct bcsp_struct *bcsp)
 		i++;
 
 		__skb_unlink(skb, &bcsp->unack);
+<<<<<<< HEAD
 		dev_kfree_skb_irq(skb);
+=======
+		kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (skb_queue_empty(&bcsp->unack))
@@ -737,7 +741,11 @@ static int bcsp_close(struct hci_uart *hu)
 {
 	struct bcsp_struct *bcsp = hu->priv;
 
+<<<<<<< HEAD
 	timer_shutdown_sync(&bcsp->tbcsp);
+=======
+	del_timer_sync(&bcsp->tbcsp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	hu->priv = NULL;
 

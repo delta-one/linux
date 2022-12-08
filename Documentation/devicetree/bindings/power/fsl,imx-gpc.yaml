@@ -23,6 +23,7 @@ description: |
 
 properties:
   compatible:
+<<<<<<< HEAD
     oneOf:
       - enum:
           - fsl,imx6q-gpc
@@ -33,6 +34,13 @@ properties:
               - fsl,imx6sx-gpc
               - fsl,imx6ul-gpc
           - const: fsl,imx6q-gpc
+=======
+    enum:
+      - fsl,imx6q-gpc
+      - fsl,imx6qp-gpc
+      - fsl,imx6sl-gpc
+      - fsl,imx6sx-gpc
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -40,10 +48,13 @@ properties:
   interrupts:
     maxItems: 1
 
+<<<<<<< HEAD
   interrupt-controller: true
   '#interrupt-cells':
     const: 3
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   clocks:
     maxItems: 1
 

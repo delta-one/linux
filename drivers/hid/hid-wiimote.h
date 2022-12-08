@@ -88,7 +88,10 @@ enum wiimote_exttype {
 	WIIMOTE_EXT_PRO_CONTROLLER,
 	WIIMOTE_EXT_DRUMS,
 	WIIMOTE_EXT_GUITAR,
+<<<<<<< HEAD
 	WIIMOTE_EXT_TURNTABLE,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	WIIMOTE_EXT_NUM,
 };
 

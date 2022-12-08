@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Ethernet Controller Common Properties
+=======
+title: Ethernet Controller Generic Binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - David S. Miller <davem@davemloft.net>
@@ -108,17 +112,24 @@ properties:
     $ref: "#/properties/phy-connection-type"
 
   pcs-handle:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/phandle-array
     items:
       maxItems: 1
+=======
+    $ref: /schemas/types.yaml#/definitions/phandle
+>>>>>>> b7ba80a49124 (Commit)
     description:
       Specifies a reference to a node representing a PCS PHY device on a MDIO
       bus to link with an external PHY (phy-handle) if exists.
 
+<<<<<<< HEAD
   pcs-handle-names:
     description:
       The name of each PCS in pcs-handle.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   phy-handle:
     $ref: /schemas/types.yaml#/definitions/phandle
     description:
@@ -222,9 +233,12 @@ properties:
         required:
           - speed
 
+<<<<<<< HEAD
 dependencies:
   pcs-handle-names: [pcs-handle]
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 allOf:
   - if:
       properties:

@@ -48,6 +48,7 @@
  * To make this clear all the helper vtables are pulled together in this location here.
  */
 
+<<<<<<< HEAD
 struct drm_writeback_connector;
 struct drm_writeback_job;
 
@@ -56,6 +57,12 @@ enum mode_set_atomic {
 	ENTER_ATOMIC_MODE_SET,
 };
 
+=======
+enum mode_set_atomic;
+struct drm_writeback_connector;
+struct drm_writeback_job;
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct drm_crtc_helper_funcs - helper operations for CRTCs
  *
@@ -1147,6 +1154,7 @@ struct drm_connector_helper_funcs {
 	 */
 	void (*cleanup_writeback_job)(struct drm_writeback_connector *connector,
 				      struct drm_writeback_job *job);
+<<<<<<< HEAD
 
 	/**
 	 * @enable_hpd:
@@ -1169,6 +1177,8 @@ struct drm_connector_helper_funcs {
 	 * This callback is used by the drm_kms_helper_poll_disable() helpers.
 	 */
 	void (*disable_hpd)(struct drm_connector *connector);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -1210,6 +1220,7 @@ struct drm_plane_helper_funcs {
 	 * can call drm_gem_plane_helper_prepare_fb() from their @prepare_fb
 	 * hook.
 	 *
+<<<<<<< HEAD
 	 * The resources acquired in @prepare_fb persist after the end of
 	 * the atomic commit. Resources that can be release at the commit's end
 	 * should be acquired in @begin_fb_access and released in @end_fb_access.
@@ -1218,12 +1229,18 @@ struct drm_plane_helper_funcs {
 	 * shadow-plane helpers belongs into @begin_fb_access, so that atomic
 	 * helpers remove the mapping at the end of the commit.
 	 *
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * The helpers will call @cleanup_fb with matching arguments for every
 	 * successful call to this hook.
 	 *
 	 * This callback is used by the atomic modeset helpers and by the
+<<<<<<< HEAD
 	 * transitional plane helpers, but it is optional. See @begin_fb_access
 	 * for preparing per-commit resources.
+=======
+	 * transitional plane helpers, but it is optional.
+>>>>>>> b7ba80a49124 (Commit)
 	 *
 	 * RETURNS:
 	 *
@@ -1247,6 +1264,7 @@ struct drm_plane_helper_funcs {
 			   struct drm_plane_state *old_state);
 
 	/**
+<<<<<<< HEAD
 	 * @begin_fb_access:
 	 *
 	 * This hook prepares the plane for access during an atomic commit.
@@ -1277,6 +1295,8 @@ struct drm_plane_helper_funcs {
 	void (*end_fb_access)(struct drm_plane *plane, struct drm_plane_state *new_plane_state);
 
 	/**
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * @atomic_check:
 	 *
 	 * Drivers should check plane specific constraints in this hook.
@@ -1331,6 +1351,7 @@ struct drm_plane_helper_funcs {
 	 */
 	void (*atomic_update)(struct drm_plane *plane,
 			      struct drm_atomic_state *state);
+<<<<<<< HEAD
 
 	/**
 	 * @atomic_enable:
@@ -1357,6 +1378,8 @@ struct drm_plane_helper_funcs {
 	void (*atomic_enable)(struct drm_plane *plane,
 			      struct drm_atomic_state *state);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/**
 	 * @atomic_disable:
 	 *
@@ -1377,8 +1400,12 @@ struct drm_plane_helper_funcs {
 	 * the tradeoffs and variants of plane commit helpers.
 	 *
 	 * This callback is used by the atomic modeset helpers and by the
+<<<<<<< HEAD
 	 * transitional plane helpers, but it is optional. It's intended to
 	 * reverse the effects of @atomic_enable.
+=======
+	 * transitional plane helpers, but it is optional.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	void (*atomic_disable)(struct drm_plane *plane,
 			       struct drm_atomic_state *state);

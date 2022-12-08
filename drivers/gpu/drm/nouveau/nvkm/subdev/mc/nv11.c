@@ -23,6 +23,7 @@
  */
 #include "priv.h"
 
+<<<<<<< HEAD
 static const struct nvkm_intr_data
 nv11_mc_intrs[] = {
 	{ NVKM_ENGINE_DISP , 0, 0, 0x03010000, true },
@@ -30,15 +31,31 @@ nv11_mc_intrs[] = {
 	{ NVKM_ENGINE_FIFO , 0, 0, 0x00000100 },
 	{ NVKM_SUBDEV_BUS  , 0, 0, 0x10000000, true },
 	{ NVKM_SUBDEV_TIMER, 0, 0, 0x00100000, true },
+=======
+static const struct nvkm_mc_map
+nv11_mc_intr[] = {
+	{ 0x03010000, NVKM_ENGINE_DISP },
+	{ 0x00001000, NVKM_ENGINE_GR },
+	{ 0x00000100, NVKM_ENGINE_FIFO },
+	{ 0x10000000, NVKM_SUBDEV_BUS },
+	{ 0x00100000, NVKM_SUBDEV_TIMER },
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 
 static const struct nvkm_mc_func
 nv11_mc = {
 	.init = nv04_mc_init,
+<<<<<<< HEAD
 	.intr = &nv04_mc_intr,
 	.intrs = nv11_mc_intrs,
 	.device = &nv04_mc_device,
+=======
+	.intr = nv11_mc_intr,
+	.intr_unarm = nv04_mc_intr_unarm,
+	.intr_rearm = nv04_mc_intr_rearm,
+	.intr_stat = nv04_mc_intr_stat,
+>>>>>>> b7ba80a49124 (Commit)
 	.reset = nv04_mc_reset,
 };
 

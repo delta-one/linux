@@ -29,7 +29,11 @@ static int pcm179x_spi_probe(struct spi_device *spi)
 	return pcm179x_common_init(&spi->dev, regmap);
 }
 
+<<<<<<< HEAD
 static const struct of_device_id pcm179x_of_match[] __maybe_unused = {
+=======
+static const struct of_device_id pcm179x_of_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "ti,pcm1792a", },
 	{ }
 };

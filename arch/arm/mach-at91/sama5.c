@@ -26,7 +26,11 @@ static void sama5_l2c310_write_sec(unsigned long val, unsigned reg)
 static void __init sama5_secure_cache_init(void)
 {
 	sam_secure_init();
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_OUTER_CACHE) && sam_linux_is_optee_available())
+=======
+	if (sam_linux_is_optee_available())
+>>>>>>> b7ba80a49124 (Commit)
 		outer_cache.write_sec = sama5_l2c310_write_sec;
 }
 

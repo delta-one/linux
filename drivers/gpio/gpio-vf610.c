@@ -30,6 +30,10 @@ struct fsl_gpio_soc_data {
 
 struct vf610_gpio_port {
 	struct gpio_chip gc;
+<<<<<<< HEAD
+=======
+	struct irq_chip ic;
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem *base;
 	void __iomem *gpio_base;
 	const struct fsl_gpio_soc_data *sdata;
@@ -206,6 +210,7 @@ static int vf610_gpio_irq_set_type(struct irq_data *d, u32 type)
 
 static void vf610_gpio_irq_mask(struct irq_data *d)
 {
+<<<<<<< HEAD
 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
 	struct vf610_gpio_port *port = gpiochip_get_data(gc);
 	irq_hw_number_t gpio_num = irqd_to_hwirq(d);
@@ -213,10 +218,18 @@ static void vf610_gpio_irq_mask(struct irq_data *d)
 
 	vf610_gpio_writel(0, pcr_base);
 	gpiochip_disable_irq(gc, gpio_num);
+=======
+	struct vf610_gpio_port *port =
+		gpiochip_get_data(irq_data_get_irq_chip_data(d));
+	void __iomem *pcr_base = port->base + PORT_PCR(d->hwirq);
+
+	vf610_gpio_writel(0, pcr_base);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void vf610_gpio_irq_unmask(struct irq_data *d)
 {
+<<<<<<< HEAD
 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
 	struct vf610_gpio_port *port = gpiochip_get_data(gc);
 	irq_hw_number_t gpio_num = irqd_to_hwirq(d);
@@ -224,6 +237,13 @@ static void vf610_gpio_irq_unmask(struct irq_data *d)
 
 	gpiochip_enable_irq(gc, gpio_num);
 	vf610_gpio_writel(port->irqc[gpio_num] << PORT_PCR_IRQC_OFFSET,
+=======
+	struct vf610_gpio_port *port =
+		gpiochip_get_data(irq_data_get_irq_chip_data(d));
+	void __iomem *pcr_base = port->base + PORT_PCR(d->hwirq);
+
+	vf610_gpio_writel(port->irqc[d->hwirq] << PORT_PCR_IRQC_OFFSET,
+>>>>>>> b7ba80a49124 (Commit)
 			  pcr_base);
 }
 
@@ -240,6 +260,7 @@ static int vf610_gpio_irq_set_wake(struct irq_data *d, u32 enable)
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct irq_chip vf610_irqchip = {
 	.name = "gpio-vf610",
 	.irq_ack = vf610_gpio_irq_ack,
@@ -251,6 +272,8 @@ static const struct irq_chip vf610_irqchip = {
 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void vf610_gpio_disable_clk(void *data)
 {
 	clk_disable_unprepare(data);
@@ -263,6 +286,10 @@ static int vf610_gpio_probe(struct platform_device *pdev)
 	struct vf610_gpio_port *port;
 	struct gpio_chip *gc;
 	struct gpio_irq_chip *girq;
+<<<<<<< HEAD
+=======
+	struct irq_chip *ic;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 	int ret;
 
@@ -317,7 +344,11 @@ static int vf610_gpio_probe(struct platform_device *pdev)
 
 	gc = &port->gc;
 	gc->parent = dev;
+<<<<<<< HEAD
 	gc->label = dev_name(dev);
+=======
+	gc->label = "vf610-gpio";
+>>>>>>> b7ba80a49124 (Commit)
 	gc->ngpio = VF610_GPIO_PER_PORT;
 	gc->base = of_alias_get_id(np, "gpio") * VF610_GPIO_PER_PORT;
 
@@ -328,6 +359,17 @@ static int vf610_gpio_probe(struct platform_device *pdev)
 	gc->direction_output = vf610_gpio_direction_output;
 	gc->set = vf610_gpio_set;
 
+<<<<<<< HEAD
+=======
+	ic = &port->ic;
+	ic->name = "gpio-vf610";
+	ic->irq_ack = vf610_gpio_irq_ack;
+	ic->irq_mask = vf610_gpio_irq_mask;
+	ic->irq_unmask = vf610_gpio_irq_unmask;
+	ic->irq_set_type = vf610_gpio_irq_set_type;
+	ic->irq_set_wake = vf610_gpio_irq_set_wake;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Mask all GPIO interrupts */
 	for (i = 0; i < gc->ngpio; i++)
 		vf610_gpio_writel(0, port->base + PORT_PCR(i));
@@ -336,7 +378,11 @@ static int vf610_gpio_probe(struct platform_device *pdev)
 	vf610_gpio_writel(~0, port->base + PORT_ISFR);
 
 	girq = &gc->irq;
+<<<<<<< HEAD
 	gpio_irq_chip_set_chip(girq, &vf610_irqchip);
+=======
+	girq->chip = ic;
+>>>>>>> b7ba80a49124 (Commit)
 	girq->parent_handler = vf610_gpio_irq_handler;
 	girq->num_parents = 1;
 	girq->parents = devm_kcalloc(&pdev->dev, 1,

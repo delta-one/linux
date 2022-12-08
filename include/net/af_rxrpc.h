@@ -15,7 +15,10 @@ struct key;
 struct sock;
 struct socket;
 struct rxrpc_call;
+<<<<<<< HEAD
 enum rxrpc_abort_reason;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum rxrpc_interruptibility {
 	RXRPC_INTERRUPTIBLE,	/* Call is interruptible */
@@ -56,7 +59,11 @@ int rxrpc_kernel_send_data(struct socket *, struct rxrpc_call *,
 int rxrpc_kernel_recv_data(struct socket *, struct rxrpc_call *,
 			   struct iov_iter *, size_t *, bool, u32 *, u16 *);
 bool rxrpc_kernel_abort_call(struct socket *, struct rxrpc_call *,
+<<<<<<< HEAD
 			     u32, int, enum rxrpc_abort_reason);
+=======
+			     u32, int, const char *);
+>>>>>>> b7ba80a49124 (Commit)
 void rxrpc_kernel_end_call(struct socket *, struct rxrpc_call *);
 void rxrpc_kernel_get_peer(struct socket *, struct rxrpc_call *,
 			   struct sockaddr_rxrpc *);
@@ -67,10 +74,17 @@ int rxrpc_kernel_charge_accept(struct socket *, rxrpc_notify_rx_t,
 void rxrpc_kernel_set_tx_length(struct socket *, struct rxrpc_call *, s64);
 bool rxrpc_kernel_check_life(const struct socket *, const struct rxrpc_call *);
 u32 rxrpc_kernel_get_epoch(struct socket *, struct rxrpc_call *);
+<<<<<<< HEAD
+=======
+bool rxrpc_kernel_call_is_complete(struct rxrpc_call *);
+>>>>>>> b7ba80a49124 (Commit)
 void rxrpc_kernel_set_max_life(struct socket *, struct rxrpc_call *,
 			       unsigned long);
 
 int rxrpc_sock_set_min_security_level(struct sock *sk, unsigned int val);
+<<<<<<< HEAD
 int rxrpc_sock_set_security_keyring(struct sock *, struct key *);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _NET_RXRPC_H */

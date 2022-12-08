@@ -233,7 +233,10 @@ struct sdw_intel_ctx {
  * struct sdw_intel_res - Soundwire Intel global resource structure,
  * typically populated by the DSP driver
  *
+<<<<<<< HEAD
  * @hw_ops: abstraction for platform ops
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @count: link count
  * @mmio_base: mmio base of SoundWire registers
  * @irq: interrupt number
@@ -250,7 +253,10 @@ struct sdw_intel_ctx {
  * @alh_base: sdw alh base.
  */
 struct sdw_intel_res {
+<<<<<<< HEAD
 	const struct sdw_intel_hw_ops *hw_ops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int count;
 	void __iomem *mmio_base;
 	int irq;
@@ -288,10 +294,16 @@ int sdw_intel_startup(struct sdw_intel_ctx *ctx);
 
 void sdw_intel_exit(struct sdw_intel_ctx *ctx);
 
+<<<<<<< HEAD
+=======
+void sdw_intel_enable_irq(void __iomem *mmio_base, bool enable);
+
+>>>>>>> b7ba80a49124 (Commit)
 irqreturn_t sdw_intel_thread(int irq, void *dev_id);
 
 #define SDW_INTEL_QUIRK_MASK_BUS_DISABLE      BIT(1)
 
+<<<<<<< HEAD
 struct sdw_intel;
 
 /* struct intel_sdw_hw_ops - SoundWire ops for Intel platforms.
@@ -345,4 +357,6 @@ struct sdw_intel_hw_ops {
 
 extern const struct sdw_intel_hw_ops sdw_intel_cnl_hw_ops;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

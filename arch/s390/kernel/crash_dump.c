@@ -46,7 +46,11 @@ struct save_area {
 	u64 fprs[16];
 	u32 fpc;
 	u32 prefix;
+<<<<<<< HEAD
 	u32 todpreg;
+=======
+	u64 todpreg;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 timer;
 	u64 todcmp;
 	u64 vxrs_low[16];
@@ -110,7 +114,11 @@ void __init save_area_add_vxrs(struct save_area *sa, __vector128 *vxrs)
 
 	/* Copy lower halves of vector registers 0-15 */
 	for (i = 0; i < 16; i++)
+<<<<<<< HEAD
 		sa->vxrs_low[i] = vxrs[i].low;
+=======
+		memcpy(&sa->vxrs_low[i], &vxrs[i].u[2], 8);
+>>>>>>> b7ba80a49124 (Commit)
 	/* Copy vector registers 16-31 */
 	memcpy(sa->vxrs_high, vxrs + 16, 16 * sizeof(__vector128));
 }
@@ -153,7 +161,11 @@ int copy_oldmem_kernel(void *dst, unsigned long src, size_t count)
 
 	kvec.iov_base = dst;
 	kvec.iov_len = count;
+<<<<<<< HEAD
 	iov_iter_kvec(&iter, ITER_DEST, &kvec, 1, count);
+=======
+	iov_iter_kvec(&iter, WRITE, &kvec, 1, count);
+>>>>>>> b7ba80a49124 (Commit)
 	if (copy_oldmem_iter(&iter, src, count) < count)
 		return -EFAULT;
 	return 0;

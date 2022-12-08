@@ -210,6 +210,15 @@
 					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 					contribution = <4096>;
 				};
+<<<<<<< HEAD
+=======
+
+				map1 {
+					trip = <&target>;
+					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+					contribution = <4096>;
+				};
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 
@@ -217,6 +226,7 @@
 			polling-delay-passive = <100>; /* milliseconds */
 			polling-delay = <1000>; /* milliseconds */
 			thermal-sensors = <&tsadc 1>;
+<<<<<<< HEAD
 
 			trips {
 				gpu_threshold: gpu-threshold {
@@ -244,6 +254,8 @@
 					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 				};
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -474,7 +486,11 @@
 				#address-cells = <1>;
 				#size-cells = <0>;
 
+<<<<<<< HEAD
 				lvds_in: port@0 {
+=======
+				port@0 {
+>>>>>>> b7ba80a49124 (Commit)
 					reg = <0>;
 					#address-cells = <1>;
 					#size-cells = <0>;
@@ -489,10 +505,13 @@
 						remote-endpoint = <&vopl_out_lvds>;
 					};
 				};
+<<<<<<< HEAD
 
 				lvds_out: port@1 {
 					reg = <1>;
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 	};
@@ -1138,7 +1157,11 @@
 			#address-cells = <1>;
 			#size-cells = <0>;
 
+<<<<<<< HEAD
 			dsi_in: port@0 {
+=======
+			port@0 {
+>>>>>>> b7ba80a49124 (Commit)
 				reg = <0>;
 				#address-cells = <1>;
 				#size-cells = <0>;
@@ -1153,10 +1176,13 @@
 					remote-endpoint = <&vopl_out_dsi>;
 				};
 			};
+<<<<<<< HEAD
 
 			dsi_out: port@1 {
 				reg = <1>;
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 

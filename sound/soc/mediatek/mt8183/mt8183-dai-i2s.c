@@ -141,13 +141,23 @@ static int mt8183_i2s_hd_set(struct snd_kcontrol *kcontrol,
 	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(cmpnt);
 	struct mtk_afe_i2s_priv *i2s_priv;
 	struct soc_enum *e = (struct soc_enum *)kcontrol->private_value;
+<<<<<<< HEAD
 	int hd_en, change;
+=======
+	int hd_en;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ucontrol->value.enumerated.item[0] >= e->items)
 		return -EINVAL;
 
 	hd_en = ucontrol->value.integer.value[0];
 
+<<<<<<< HEAD
+=======
+	dev_info(afe->dev, "%s(), kcontrol name %s, hd_en %d\n",
+		 __func__, kcontrol->id.name, hd_en);
+
+>>>>>>> b7ba80a49124 (Commit)
 	i2s_priv = get_i2s_priv_by_name(afe, kcontrol->id.name);
 
 	if (!i2s_priv) {
@@ -155,10 +165,16 @@ static int mt8183_i2s_hd_set(struct snd_kcontrol *kcontrol,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	change = i2s_priv->low_jitter_en != hd_en;
 	i2s_priv->low_jitter_en = hd_en;
 
 	return change;
+=======
+	i2s_priv->low_jitter_en = hd_en;
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct snd_kcontrol_new mtk_dai_i2s_controls[] = {
@@ -274,6 +290,12 @@ static int mtk_apll_event(struct snd_soc_dapm_widget *w,
 	struct snd_soc_component *cmpnt = snd_soc_dapm_to_component(w->dapm);
 	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(cmpnt);
 
+<<<<<<< HEAD
+=======
+	dev_info(cmpnt->dev, "%s(), name %s, event 0x%x\n",
+		 __func__, w->name, event);
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (event) {
 	case SND_SOC_DAPM_PRE_PMU:
 		if (strcmp(w->name, APLL1_W_NAME) == 0)
@@ -302,6 +324,12 @@ static int mtk_mclk_en_event(struct snd_soc_dapm_widget *w,
 	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(cmpnt);
 	struct mtk_afe_i2s_priv *i2s_priv;
 
+<<<<<<< HEAD
+=======
+	dev_info(cmpnt->dev, "%s(), name %s, event 0x%x\n",
+		 __func__, w->name, event);
+
+>>>>>>> b7ba80a49124 (Commit)
 	i2s_priv = get_i2s_priv_by_name(afe, w->name);
 
 	if (!i2s_priv) {
@@ -707,6 +735,14 @@ static int mtk_dai_i2s_config(struct mtk_base_afe *afe,
 	unsigned int i2s_con = 0, fmt_con = I2S_FMT_I2S << I2S_FMT_SFT;
 	int ret = 0;
 
+<<<<<<< HEAD
+=======
+	dev_info(afe->dev, "%s(), id %d, rate %d, format %d\n",
+		 __func__,
+		 i2s_id,
+		 rate, format);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (i2s_priv) {
 		i2s_priv->rate = rate;
 
@@ -797,6 +833,11 @@ static int mtk_dai_i2s_set_sysclk(struct snd_soc_dai *dai,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	dev_info(afe->dev, "%s(), freq %d\n", __func__, freq);
+
+>>>>>>> b7ba80a49124 (Commit)
 	apll = mt8183_get_apll_by_rate(afe, freq);
 	apll_rate = mt8183_get_apll_rate(afe, apll);
 

@@ -25,7 +25,10 @@
  */
 
 #include <drm/drm_crtc_helper.h>
+<<<<<<< HEAD
 #include <drm/drm_modeset_helper_vtables.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_probe_helper.h>
 #include "nouveau_drv.h"
 #include "nouveau_reg.h"
@@ -654,7 +657,11 @@ static int nv17_tv_create_resources(struct drm_encoder *encoder,
 			tv_enc->tv_norm = i;
 	}
 
+<<<<<<< HEAD
 	drm_mode_create_tv_properties_legacy(dev, num_tv_norms, nv17_tv_norm_names);
+=======
+	drm_mode_create_tv_properties(dev, num_tv_norms, nv17_tv_norm_names);
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_object_attach_property(&connector->base,
 					conf->tv_select_subconnector_property,
@@ -663,7 +670,11 @@ static int nv17_tv_create_resources(struct drm_encoder *encoder,
 					conf->tv_subconnector_property,
 					tv_enc->subconnector);
 	drm_object_attach_property(&connector->base,
+<<<<<<< HEAD
 					conf->legacy_tv_mode_property,
+=======
+					conf->tv_mode_property,
+>>>>>>> b7ba80a49124 (Commit)
 					tv_enc->tv_norm);
 	drm_object_attach_property(&connector->base,
 					conf->tv_flicker_reduction_property,
@@ -723,7 +734,11 @@ static int nv17_tv_set_property(struct drm_encoder *encoder,
 		if (encoder->crtc)
 			nv17_tv_update_rescaler(encoder);
 
+<<<<<<< HEAD
 	} else if (property == conf->legacy_tv_mode_property) {
+=======
+	} else if (property == conf->tv_mode_property) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (connector->dpms != DRM_MODE_DPMS_OFF)
 			return -EINVAL;
 

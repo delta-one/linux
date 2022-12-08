@@ -353,9 +353,13 @@ int snd_sof_dbg_init(struct snd_sof_dev *sdev)
 			return err;
 	}
 
+<<<<<<< HEAD
 	return snd_sof_debugfs_buf_item(sdev, &sdev->fw_state,
 					sizeof(sdev->fw_state),
 					"fw_state", 0444);
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(snd_sof_dbg_init);
 

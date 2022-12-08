@@ -16,6 +16,7 @@
 #include <linux/module.h>
 #include <linux/platform_device.h>
 #include <linux/pm_runtime.h>
+<<<<<<< HEAD
 #include <linux/seq_file.h>
 #include <linux/slab.h>
 #include <linux/types.h>
@@ -25,6 +26,15 @@
 #include <linux/pinctrl/pinconf.h>
 #include <linux/pinctrl/pinctrl.h>
 #include <linux/pinctrl/pinmux.h>
+=======
+#include <linux/slab.h>
+#include <linux/types.h>
+
+#include <linux/pinctrl/pinctrl.h>
+#include <linux/pinctrl/pinmux.h>
+#include <linux/pinctrl/pinconf.h>
+#include <linux/pinctrl/pinconf-generic.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "pinctrl-intel.h"
 
@@ -341,18 +351,31 @@ static const char *lp_get_function_name(struct pinctrl_dev *pctldev,
 {
 	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
 
+<<<<<<< HEAD
 	return lg->soc->functions[selector].func.name;
+=======
+	return lg->soc->functions[selector].name;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int lp_get_function_groups(struct pinctrl_dev *pctldev,
 				  unsigned int selector,
 				  const char * const **groups,
+<<<<<<< HEAD
 				  unsigned int *ngroups)
 {
 	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
 
 	*groups		= lg->soc->functions[selector].func.groups;
 	*ngroups	= lg->soc->functions[selector].func.ngroups;
+=======
+				  unsigned int *num_groups)
+{
+	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
+
+	*groups		= lg->soc->functions[selector].groups;
+	*num_groups	= lg->soc->functions[selector].ngroups;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

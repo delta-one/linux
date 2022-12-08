@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (C) 2016-2022 NVIDIA Corporation
+=======
+ * Copyright (C) 2016-2020 NVIDIA Corporation
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/clk-provider.h>
@@ -310,6 +314,7 @@ static const struct clk_ops tegra_bpmp_clk_mux_rate_ops = {
 	.set_rate = tegra_bpmp_clk_set_rate,
 };
 
+<<<<<<< HEAD
 static const struct clk_ops tegra_bpmp_clk_mux_read_only_ops = {
 	.get_parent = tegra_bpmp_clk_get_parent,
 	.recalc_rate = tegra_bpmp_clk_recalc_rate,
@@ -327,6 +332,8 @@ static const struct clk_ops tegra_bpmp_clk_gate_mux_read_only_ops = {
 	.get_parent = tegra_bpmp_clk_get_parent,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int tegra_bpmp_clk_get_max_id(struct tegra_bpmp *bpmp)
 {
 	struct cmd_clk_get_max_clk_id_response response;
@@ -527,6 +534,7 @@ tegra_bpmp_clk_register(struct tegra_bpmp *bpmp,
 	memset(&init, 0, sizeof(init));
 	init.name = info->name;
 	clk->hw.init = &init;
+<<<<<<< HEAD
 	if (info->flags & BPMP_CLK_STATE_CHANGE_DENIED) {
 		if ((info->flags & BPMP_CLK_RATE_PARENT_CHANGE_DENIED) == 0) {
 			dev_WARN(bpmp->dev,
@@ -543,6 +551,10 @@ tegra_bpmp_clk_register(struct tegra_bpmp *bpmp,
 		else
 			init.ops = &tegra_bpmp_clk_gate_ops;
 	} else if (info->flags & TEGRA_BPMP_CLK_HAS_MUX) {
+=======
+
+	if (info->flags & TEGRA_BPMP_CLK_HAS_MUX) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (info->flags & TEGRA_BPMP_CLK_HAS_SET_RATE)
 			init.ops = &tegra_bpmp_clk_mux_rate_ops;
 		else

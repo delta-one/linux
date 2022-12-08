@@ -75,7 +75,11 @@ static inline void rzg2l_thermal_write(struct rzg2l_thermal_priv *priv, u32 reg,
 
 static int rzg2l_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	struct rzg2l_thermal_priv *priv = thermal_zone_device_priv(tz);
+=======
+	struct rzg2l_thermal_priv *priv = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 result = 0, dsensor, ts_code_ave;
 	int val, i;
 
@@ -216,6 +220,10 @@ static int rzg2l_thermal_probe(struct platform_device *pdev)
 	}
 
 	priv->zone = zone;
+<<<<<<< HEAD
+=======
+	priv->zone->tzp->no_hwmon = false;
+>>>>>>> b7ba80a49124 (Commit)
 	ret = thermal_add_hwmon_sysfs(priv->zone);
 	if (ret)
 		goto err;

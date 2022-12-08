@@ -33,6 +33,7 @@
  * The driver loads the tests into memory reserved BIOS local to each CPU
  * socket in a two step process using writes to MSRs to first load the
  * SHA hashes for the test. Then the tests themselves. Status MSRs provide
+<<<<<<< HEAD
  * feedback on the success/failure of these steps.
  *
  * The test files are kept in a fixed location: /lib/firmware/intel/ifs_0/
@@ -50,6 +51,15 @@
  *   # echo 2 > /sys/devices/virtual/misc/intel_ifs_0/current_batch
  *
  * The above file can also be read to know the currently loaded image.
+=======
+ * feedback on the success/failure of these steps. When a new test file
+ * is installed it can be loaded by writing to the driver reload file::
+ *
+ *   # echo 1 > /sys/devices/virtual/misc/intel_ifs_0/reload
+ *
+ * Similar to microcode, the current version of the scan tests is stored
+ * in a fixed location: /lib/firmware/intel/ifs.0/family-model-stepping.scan
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Running tests
  * -------------
@@ -201,26 +211,38 @@ union ifs_status {
  * struct ifs_data - attributes related to intel IFS driver
  * @integrity_cap_bit: MSR_INTEGRITY_CAPS bit enumerating this test
  * @loaded_version: stores the currently loaded ifs image version.
+<<<<<<< HEAD
  * @pkg_auth: array of bool storing per package auth status
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @loaded: If a valid test binary has been loaded into the memory
  * @loading_error: Error occurred on another CPU while loading image
  * @valid_chunks: number of chunks which could be validated.
  * @status: it holds simple status pass/fail/untested
  * @scan_details: opaque scan status code from h/w
+<<<<<<< HEAD
  * @cur_batch: number indicating the currently loaded test file
  * @test_num: number indicating the test type
  */
 struct ifs_data {
 	int	integrity_cap_bit;
 	bool	*pkg_auth;
+=======
+ */
+struct ifs_data {
+	int	integrity_cap_bit;
+>>>>>>> b7ba80a49124 (Commit)
 	int	loaded_version;
 	bool	loaded;
 	bool	loading_error;
 	int	valid_chunks;
 	int	status;
 	u64	scan_details;
+<<<<<<< HEAD
 	u32	cur_batch;
 	int	test_num;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ifs_work {
@@ -241,8 +263,17 @@ static inline struct ifs_data *ifs_get_data(struct device *dev)
 	return &d->data;
 }
 
+<<<<<<< HEAD
 int ifs_load_firmware(struct device *dev);
 int do_core_test(int cpu, struct device *dev);
 const struct attribute_group **ifs_get_groups(void);
 
+=======
+void ifs_load_firmware(struct device *dev);
+int do_core_test(int cpu, struct device *dev);
+const struct attribute_group **ifs_get_groups(void);
+
+extern struct semaphore ifs_sem;
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif

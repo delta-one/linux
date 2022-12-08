@@ -758,6 +758,7 @@
 				vddio-supply = <&vdd_1v8_vio>;
 				vddmipi-supply = <&vdd_1v2_mipi>;
 
+<<<<<<< HEAD
 				/*
 				 * Panasonic VVX10F004B00 or HYDIS HV101WU1-1E1
 				 * LCD SuperIPS+ Full HD panel.
@@ -776,6 +777,8 @@
 					};
 				};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				ports {
 					#address-cells = <1>;
 					#size-cells = <0>;
@@ -797,10 +800,32 @@
 						};
 					};
 				};
+<<<<<<< HEAD
+=======
+
+				/*
+				 * Panasonic VVX10F004B00 or HYDIS HV101WU1-1E1
+				 * LCD SuperIPS+ Full HD panel.
+				 */
+				panel@1 {
+					compatible = "panasonic,vvx10f004b00";
+					reg = <1>;
+
+					power-supply = <&vdd_pnl>;
+					backlight = <&backlight>;
+
+					port {
+						panel_input: endpoint {
+							remote-endpoint = <&bridge_output>;
+						};
+					};
+				};
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 	};
 
+<<<<<<< HEAD
 	opp-table-actmon {
 		/delete-node/ opp-900000000;
 	};
@@ -809,6 +834,8 @@
 		/delete-node/ opp-900000000-1350;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vdd_1v2_mipi: regulator-mipi {
 		compatible = "regulator-fixed";
 		regulator-name = "tc358768_1v2_vdd";
@@ -821,3 +848,14 @@
 		vin-supply = <&vdd_3v3_sys>;
 	};
 };
+<<<<<<< HEAD
+=======
+
+&emc_icc_dvfs_opp_table {
+	/delete-node/ opp-900000000-1350;
+};
+
+&emc_bw_dfs_opp_table {
+	/delete-node/ opp-900000000;
+};
+>>>>>>> b7ba80a49124 (Commit)

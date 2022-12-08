@@ -125,8 +125,13 @@ static int sof_pcm_hw_params(struct snd_soc_component *component,
 {
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(component);
 	struct snd_soc_pcm_runtime *rtd = asoc_substream_to_rtd(substream);
+<<<<<<< HEAD
 	const struct sof_ipc_pcm_ops *pcm_ops = sof_ipc_get_ops(sdev, pcm);
 	struct snd_sof_platform_stream_params platform_params = { 0 };
+=======
+	struct snd_sof_platform_stream_params platform_params = { 0 };
+	const struct sof_ipc_pcm_ops *pcm_ops = sdev->ipc->ops->pcm;
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_pcm_runtime *runtime = substream->runtime;
 	struct snd_sof_pcm *spcm;
 	int ret;
@@ -143,7 +148,11 @@ static int sof_pcm_hw_params(struct snd_soc_component *component,
 	 * Handle repeated calls to hw_params() without free_pcm() in
 	 * between. At least ALSA OSS emulation depends on this.
 	 */
+<<<<<<< HEAD
 	if (pcm_ops && pcm_ops->hw_free && spcm->prepared[substream->stream]) {
+=======
+	if (pcm_ops->hw_free && spcm->prepared[substream->stream]) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = pcm_ops->hw_free(component, substream);
 		if (ret < 0)
 			return ret;
@@ -177,7 +186,11 @@ static int sof_pcm_hw_params(struct snd_soc_component *component,
 			return ret;
 	}
 
+<<<<<<< HEAD
 	if (pcm_ops && pcm_ops->hw_params) {
+=======
+	if (pcm_ops->hw_params) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = pcm_ops->hw_params(component, substream, params, &platform_params);
 		if (ret < 0)
 			return ret;
@@ -196,7 +209,11 @@ static int sof_pcm_hw_free(struct snd_soc_component *component,
 {
 	struct snd_soc_pcm_runtime *rtd = asoc_substream_to_rtd(substream);
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
 	const struct sof_ipc_pcm_ops *pcm_ops = sof_ipc_get_ops(sdev, pcm);
+=======
+	const struct sof_ipc_pcm_ops *pcm_ops = sdev->ipc->ops->pcm;
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_sof_pcm *spcm;
 	int ret, err = 0;
 
@@ -212,7 +229,11 @@ static int sof_pcm_hw_free(struct snd_soc_component *component,
 		spcm->pcm.pcm_id, substream->stream);
 
 	/* free PCM in the DSP */
+<<<<<<< HEAD
 	if (pcm_ops && pcm_ops->hw_free && spcm->prepared[substream->stream]) {
+=======
+	if (pcm_ops->hw_free && spcm->prepared[substream->stream]) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = pcm_ops->hw_free(component, substream);
 		if (ret < 0)
 			err = ret;
@@ -279,9 +300,16 @@ static int sof_pcm_trigger(struct snd_soc_component *component,
 {
 	struct snd_soc_pcm_runtime *rtd = asoc_substream_to_rtd(substream);
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
 	const struct sof_ipc_pcm_ops *pcm_ops = sof_ipc_get_ops(sdev, pcm);
 	struct snd_sof_pcm *spcm;
 	bool reset_hw_params = false;
+=======
+	const struct sof_ipc_pcm_ops *pcm_ops = sdev->ipc->ops->pcm;
+	struct snd_sof_pcm *spcm;
+	bool reset_hw_params = false;
+	bool free_widget_list = false;
+>>>>>>> b7ba80a49124 (Commit)
 	bool ipc_first = false;
 	int ret = 0;
 
@@ -301,8 +329,11 @@ static int sof_pcm_trigger(struct snd_soc_component *component,
 		ipc_first = true;
 		break;
 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+<<<<<<< HEAD
 		if (pcm_ops && pcm_ops->ipc_first_on_start)
 			ipc_first = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case SNDRV_PCM_TRIGGER_START:
 		if (spcm->stream[substream->stream].suspend_ignored) {
@@ -314,9 +345,12 @@ static int sof_pcm_trigger(struct snd_soc_component *component,
 			spcm->stream[substream->stream].suspend_ignored = false;
 			return 0;
 		}
+<<<<<<< HEAD
 
 		if (pcm_ops && pcm_ops->ipc_first_on_start)
 			ipc_first = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case SNDRV_PCM_TRIGGER_SUSPEND:
 		if (sdev->system_suspend_target == SOF_SUSPEND_S0IX &&
@@ -330,17 +364,26 @@ static int sof_pcm_trigger(struct snd_soc_component *component,
 			spcm->stream[substream->stream].suspend_ignored = true;
 			return 0;
 		}
+<<<<<<< HEAD
 		fallthrough;
 	case SNDRV_PCM_TRIGGER_STOP:
 		ipc_first = true;
 		if (pcm_ops && pcm_ops->reset_hw_params_during_stop)
 			reset_hw_params = true;
+=======
+		free_widget_list = true;
+		fallthrough;
+	case SNDRV_PCM_TRIGGER_STOP:
+		ipc_first = true;
+		reset_hw_params = true;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		dev_err(component->dev, "Unhandled trigger cmd %d\n", cmd);
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if (!ipc_first)
 		snd_sof_pcm_platform_trigger(sdev, substream, cmd);
 
@@ -367,6 +410,26 @@ static int sof_pcm_trigger(struct snd_soc_component *component,
 	/* free PCM if reset_hw_params is set and the STOP IPC is successful */
 	if (!ret && reset_hw_params)
 		ret = sof_pcm_stream_free(sdev, substream, spcm, substream->stream, false);
+=======
+	/*
+	 * DMA and IPC sequence is different for start and stop. Need to send
+	 * STOP IPC before stop DMA
+	 */
+	if (!ipc_first)
+		snd_sof_pcm_platform_trigger(sdev, substream, cmd);
+
+	if (pcm_ops->trigger)
+		ret = pcm_ops->trigger(component, substream, cmd);
+
+	/* need to STOP DMA even if trigger IPC failed */
+	if (ipc_first)
+		snd_sof_pcm_platform_trigger(sdev, substream, cmd);
+
+	/* free PCM if reset_hw_params is set and the STOP IPC is successful */
+	if (!ret && reset_hw_params)
+		ret = sof_pcm_stream_free(sdev, substream, spcm, substream->stream,
+					  free_widget_list);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -581,7 +644,11 @@ int sof_pcm_dai_link_fixup(struct snd_soc_pcm_runtime *rtd, struct snd_pcm_hw_pa
 	struct snd_sof_dai *dai =
 		snd_sof_find_dai(component, (char *)rtd->dai_link->name);
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
 	const struct sof_ipc_pcm_ops *pcm_ops = sof_ipc_get_ops(sdev, pcm);
+=======
+	const struct sof_ipc_pcm_ops *pcm_ops = sdev->ipc->ops->pcm;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* no topology exists for this BE, try a common configuration */
 	if (!dai) {
@@ -602,7 +669,11 @@ int sof_pcm_dai_link_fixup(struct snd_soc_pcm_runtime *rtd, struct snd_pcm_hw_pa
 		return 0;
 	}
 
+<<<<<<< HEAD
 	if (pcm_ops && pcm_ops->dai_link_fixup)
+=======
+	if (pcm_ops->dai_link_fixup)
+>>>>>>> b7ba80a49124 (Commit)
 		return pcm_ops->dai_link_fixup(rtd, params);
 
 	return 0;
@@ -661,6 +732,7 @@ static int sof_pcm_ack(struct snd_soc_component *component,
 	return snd_sof_pcm_platform_ack(sdev, substream);
 }
 
+<<<<<<< HEAD
 static snd_pcm_sframes_t sof_pcm_delay(struct snd_soc_component *component,
 				       struct snd_pcm_substream *substream)
 {
@@ -673,6 +745,8 @@ static snd_pcm_sframes_t sof_pcm_delay(struct snd_soc_component *component,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void snd_sof_new_platform_drv(struct snd_sof_dev *sdev)
 {
 	struct snd_soc_component_driver *pd = &sdev->plat_drv;
@@ -697,7 +771,10 @@ void snd_sof_new_platform_drv(struct snd_sof_dev *sdev)
 	pd->trigger = sof_pcm_trigger;
 	pd->pointer = sof_pcm_pointer;
 	pd->ack = sof_pcm_ack;
+<<<<<<< HEAD
 	pd->delay = sof_pcm_delay;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #if IS_ENABLED(CONFIG_SND_SOC_SOF_COMPRESS)
 	pd->compress_ops = &sof_compressed_ops;

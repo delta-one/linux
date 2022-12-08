@@ -211,7 +211,11 @@ union cvmx_helper_link_info __cvmx_helper_board_link_get(int ipd_port)
 {
 	union cvmx_helper_link_info result;
 
+<<<<<<< HEAD
 	WARN_ONCE(!octeon_is_simulation(),
+=======
+	WARN(!octeon_is_simulation(),
+>>>>>>> b7ba80a49124 (Commit)
 	     "Using deprecated link status - please update your DT");
 
 	/* Unless we fix it later, all links are defaulted to down */

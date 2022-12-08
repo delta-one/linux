@@ -68,16 +68,28 @@ extern struct dentry *try_lookup_one_len(const char *, struct dentry *, int);
 extern struct dentry *lookup_one_len(const char *, struct dentry *, int);
 extern struct dentry *lookup_one_len_unlocked(const char *, struct dentry *, int);
 extern struct dentry *lookup_positive_unlocked(const char *, struct dentry *, int);
+<<<<<<< HEAD
 struct dentry *lookup_one(struct mnt_idmap *, const char *, struct dentry *, int);
 struct dentry *lookup_one_unlocked(struct mnt_idmap *idmap,
 				   const char *name, struct dentry *base,
 				   int len);
 struct dentry *lookup_one_positive_unlocked(struct mnt_idmap *idmap,
+=======
+struct dentry *lookup_one(struct user_namespace *, const char *, struct dentry *, int);
+struct dentry *lookup_one_unlocked(struct user_namespace *mnt_userns,
+				   const char *name, struct dentry *base,
+				   int len);
+struct dentry *lookup_one_positive_unlocked(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 					    const char *name,
 					    struct dentry *base, int len);
 
 extern int follow_down_one(struct path *);
+<<<<<<< HEAD
 extern int follow_down(struct path *path, unsigned int flags);
+=======
+extern int follow_down(struct path *);
+>>>>>>> b7ba80a49124 (Commit)
 extern int follow_up(struct path *);
 
 extern struct dentry *lock_rename(struct dentry *, struct dentry *);

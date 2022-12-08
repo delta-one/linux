@@ -48,8 +48,11 @@ lib/string_helpers.c
 
 该API在以下内核代码中:
 
+<<<<<<< HEAD
 include/linux/fortify-string.h
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 lib/string.c
 
 include/linux/string.h
@@ -121,12 +124,15 @@ include/linux/textsearch.h
 Linux中的CRC和数学函数
 ======================
 
+<<<<<<< HEAD
 算术溢出检查
 ------------
 
 该API在以下内核代码中:
 
 include/linux/overflow.h
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 CRC函数
 -------
@@ -174,6 +180,11 @@ include/asm-generic/div64.h
 
 include/linux/math64.h
 
+<<<<<<< HEAD
+=======
+lib/math/div64.c
+
+>>>>>>> b7ba80a49124 (Commit)
 lib/math/gcd.c
 
 UUID/GUID

@@ -530,6 +530,10 @@ static int qcom_rpm_probe(struct platform_device *pdev)
 {
 	const struct of_device_id *match;
 	struct device_node *syscon_np;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	struct qcom_rpm *rpm;
 	u32 fw_version[3];
 	int irq_wakeup;
@@ -546,7 +550,11 @@ static int qcom_rpm_probe(struct platform_device *pdev)
 	init_completion(&rpm->ack);
 
 	/* Enable message RAM clock */
+<<<<<<< HEAD
 	rpm->ramclk = devm_clk_get_enabled(&pdev->dev, "ram");
+=======
+	rpm->ramclk = devm_clk_get(&pdev->dev, "ram");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(rpm->ramclk)) {
 		ret = PTR_ERR(rpm->ramclk);
 		if (ret == -EPROBE_DEFER)
@@ -557,6 +565,10 @@ static int qcom_rpm_probe(struct platform_device *pdev)
 		 */
 		rpm->ramclk = NULL;
 	}
+<<<<<<< HEAD
+=======
+	clk_prepare_enable(rpm->ramclk); /* Accepts NULL */
+>>>>>>> b7ba80a49124 (Commit)
 
 	irq_ack = platform_get_irq_byname(pdev, "ack");
 	if (irq_ack < 0)
@@ -575,7 +587,12 @@ static int qcom_rpm_probe(struct platform_device *pdev)
 		return -ENODEV;
 	rpm->data = match->data;
 
+<<<<<<< HEAD
 	rpm->status_regs = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	rpm->status_regs = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(rpm->status_regs))
 		return PTR_ERR(rpm->status_regs);
 	rpm->ctrl_regs = rpm->status_regs + 0x400;
@@ -670,11 +687,29 @@ static int qcom_rpm_probe(struct platform_device *pdev)
 	if (ret)
 		dev_warn(&pdev->dev, "failed to mark wakeup irq as wakeup\n");
 
+<<<<<<< HEAD
 	return devm_of_platform_populate(&pdev->dev);
+=======
+	return of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+}
+
+static int qcom_rpm_remove(struct platform_device *pdev)
+{
+	struct qcom_rpm *rpm = dev_get_drvdata(&pdev->dev);
+
+	of_platform_depopulate(&pdev->dev);
+	clk_disable_unprepare(rpm->ramclk);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver qcom_rpm_driver = {
 	.probe = qcom_rpm_probe,
+<<<<<<< HEAD
+=======
+	.remove = qcom_rpm_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver  = {
 		.name  = "qcom_rpm",
 		.of_match_table = qcom_rpm_of_match,

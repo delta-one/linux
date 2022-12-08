@@ -12,7 +12,10 @@
 #include "i915_drv.h"
 #include "i915_sysfs.h"
 #include "intel_gt.h"
+<<<<<<< HEAD
 #include "intel_gt_print.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_gt_sysfs.h"
 #include "intel_gt_sysfs_pm.h"
 #include "intel_gt_types.h"
@@ -23,9 +26,17 @@ bool is_object_gt(struct kobject *kobj)
 	return !strncmp(kobj->name, "gt", 2);
 }
 
+<<<<<<< HEAD
 struct intel_gt *intel_gt_sysfs_get_drvdata(struct kobject *kobj,
 					    const char *name)
 {
+=======
+struct intel_gt *intel_gt_sysfs_get_drvdata(struct device *dev,
+					    const char *name)
+{
+	struct kobject *kobj = &dev->kobj;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * We are interested at knowing from where the interface
 	 * has been called, whether it's called from gt/ or from
@@ -37,7 +48,10 @@ struct intel_gt *intel_gt_sysfs_get_drvdata(struct kobject *kobj,
 	 * "struct drm_i915_private *" type.
 	 */
 	if (!is_object_gt(kobj)) {
+<<<<<<< HEAD
 		struct device *dev = kobj_to_dev(kobj);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		struct drm_i915_private *i915 = kdev_minor_to_i915(dev);
 
 		return to_gt(i915);
@@ -51,6 +65,7 @@ static struct kobject *gt_get_parent_obj(struct intel_gt *gt)
 	return &gt->i915->drm.primary->kdev->kobj;
 }
 
+<<<<<<< HEAD
 static ssize_t id_show(struct kobject *kobj,
 		       struct kobj_attribute *attr,
 		       char *buf)
@@ -63,6 +78,20 @@ static struct kobj_attribute attr_id = __ATTR_RO(id);
 
 static struct attribute *id_attrs[] = {
 	&attr_id.attr,
+=======
+static ssize_t id_show(struct device *dev,
+		       struct device_attribute *attr,
+		       char *buf)
+{
+	struct intel_gt *gt = intel_gt_sysfs_get_drvdata(dev, attr->attr.name);
+
+	return sysfs_emit(buf, "%u\n", gt->info.id);
+}
+static DEVICE_ATTR_RO(id);
+
+static struct attribute *id_attrs[] = {
+	&dev_attr_id.attr,
+>>>>>>> b7ba80a49124 (Commit)
 	NULL,
 };
 ATTRIBUTE_GROUPS(id);
@@ -72,7 +101,11 @@ static void kobj_gt_release(struct kobject *kobj)
 {
 }
 
+<<<<<<< HEAD
 static const struct kobj_type kobj_gt_type = {
+=======
+static struct kobj_type kobj_gt_type = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = kobj_gt_release,
 	.sysfs_ops = &kobj_sysfs_ops,
 	.default_groups = id_groups,
@@ -106,7 +139,12 @@ void intel_gt_sysfs_register(struct intel_gt *gt)
 
 exit_fail:
 	kobject_put(&gt->sysfs_gt);
+<<<<<<< HEAD
 	gt_warn(gt, "failed to initialize sysfs root\n");
+=======
+	drm_warn(&gt->i915->drm,
+		 "failed to initialize gt%d sysfs root\n", gt->info.id);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void intel_gt_sysfs_unregister(struct intel_gt *gt)

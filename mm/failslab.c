@@ -16,8 +16,11 @@ static struct {
 
 bool __should_failslab(struct kmem_cache *s, gfp_t gfpflags)
 {
+<<<<<<< HEAD
 	int flags = 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* No fault-injection for bootstrap cache */
 	if (unlikely(s == kmem_cache))
 		return false;
@@ -32,6 +35,7 @@ bool __should_failslab(struct kmem_cache *s, gfp_t gfpflags)
 	if (failslab.cache_filter && !(s->flags & SLAB_FAILSLAB))
 		return false;
 
+<<<<<<< HEAD
 	/*
 	 * In some cases, it expects to specify __GFP_NOWARN
 	 * to avoid printing any information(not just a warning),
@@ -42,6 +46,12 @@ bool __should_failslab(struct kmem_cache *s, gfp_t gfpflags)
 		flags |= FAULT_NOWARN;
 
 	return should_fail_ex(&failslab.attr, s->object_size, flags);
+=======
+	if (gfpflags & __GFP_NOWARN)
+		failslab.attr.no_warn = true;
+
+	return should_fail(&failslab.attr, s->object_size);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __init setup_failslab(char *str)

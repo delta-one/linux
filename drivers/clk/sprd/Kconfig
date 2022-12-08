@@ -21,6 +21,7 @@ config SPRD_SC9863A_CLK
 	help
 	  Support for the global clock controller on sc9863a devices.
 	  Say Y if you want to use peripheral devices on sc9863a SoC.
+<<<<<<< HEAD
 
 config SPRD_UMS512_CLK
 	tristate "Support for the Spreadtrum UMS512 clocks"
@@ -29,4 +30,6 @@ config SPRD_UMS512_CLK
 	help
 	  Support for the global clock controller on ums512 devices.
 	  Say Y if you want to use peripheral devices on ums512 SoC.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endif

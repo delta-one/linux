@@ -63,6 +63,7 @@
 ssize_t drm_dp_dual_mode_read(struct i2c_adapter *adapter,
 			      u8 offset, void *buffer, size_t size)
 {
+<<<<<<< HEAD
 	u8 zero = 0;
 	char *tmpbuf = NULL;
 	/*
@@ -72,22 +73,33 @@ ssize_t drm_dp_dual_mode_read(struct i2c_adapter *adapter,
 	 * This way, no matter whether the adaptor supports it
 	 * or not, we'll end up reading the proper data.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct i2c_msg msgs[] = {
 		{
 			.addr = DP_DUAL_MODE_SLAVE_ADDRESS,
 			.flags = 0,
 			.len = 1,
+<<<<<<< HEAD
 			.buf = &zero,
+=======
+			.buf = &offset,
+>>>>>>> b7ba80a49124 (Commit)
 		},
 		{
 			.addr = DP_DUAL_MODE_SLAVE_ADDRESS,
 			.flags = I2C_M_RD,
+<<<<<<< HEAD
 			.len = size + offset,
+=======
+			.len = size,
+>>>>>>> b7ba80a49124 (Commit)
 			.buf = buffer,
 		},
 	};
 	int ret;
 
+<<<<<<< HEAD
 	if (offset) {
 		tmpbuf = kmalloc(size + offset, GFP_KERNEL);
 		if (!tmpbuf)
@@ -102,6 +114,9 @@ ssize_t drm_dp_dual_mode_read(struct i2c_adapter *adapter,
 
 	kfree(tmpbuf);
 
+=======
+	ret = i2c_transfer(adapter, msgs, ARRAY_SIZE(msgs));
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 	if (ret != ARRAY_SIZE(msgs))
@@ -230,6 +245,21 @@ enum drm_dp_dual_mode_type drm_dp_dual_mode_detect(const struct drm_device *dev,
 	if (ret)
 		return DRM_DP_DUAL_MODE_UNKNOWN;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Sigh. Some (maybe all?) type 1 adaptors are broken and ack
+	 * the offset but ignore it, and instead they just always return
+	 * data from the start of the HDMI ID buffer. So for a broken
+	 * type 1 HDMI adaptor a single byte read will always give us
+	 * 0x44, and for a type 1 DVI adaptor it should give 0x00
+	 * (assuming it implements any registers). Fortunately neither
+	 * of those values will match the type 2 signature of the
+	 * DP_DUAL_MODE_ADAPTOR_ID register so we can proceed with
+	 * the type 2 adaptor detection safely even in the presence
+	 * of broken type 1 adaptors.
+	 */
+>>>>>>> b7ba80a49124 (Commit)
 	ret = drm_dp_dual_mode_read(adapter, DP_DUAL_MODE_ADAPTOR_ID,
 				    &adaptor_id, sizeof(adaptor_id));
 	drm_dbg_kms(dev, "DP dual mode adaptor ID: %02x (err %zd)\n", adaptor_id, ret);
@@ -243,10 +273,18 @@ enum drm_dp_dual_mode_type drm_dp_dual_mode_detect(const struct drm_device *dev,
 				return DRM_DP_DUAL_MODE_TYPE2_DVI;
 		}
 		/*
+<<<<<<< HEAD
 		 * If not a proper type 1 ID, still assume type 1, but let
 		 * the user know that we may have misdetected the type.
 		 */
 		if (!is_type1_adaptor(adaptor_id))
+=======
+		 * If neither a proper type 1 ID nor a broken type 1 adaptor
+		 * as described above, assume type 1, but let the user know
+		 * that we may have misdetected the type.
+		 */
+		if (!is_type1_adaptor(adaptor_id) && adaptor_id != hdmi_id[0])
+>>>>>>> b7ba80a49124 (Commit)
 			drm_err(dev, "Unexpected DP dual mode adaptor ID %02x\n", adaptor_id);
 
 	}
@@ -352,8 +390,15 @@ EXPORT_SYMBOL(drm_dp_dual_mode_get_tmds_output);
  * @enable: enable (as opposed to disable) the TMDS output buffers
  *
  * Set the state of the TMDS output buffers in the adaptor. For
+<<<<<<< HEAD
  * type2 this is set via the DP_DUAL_MODE_TMDS_OEN register.
  * Type1 adaptors do not support any register writes.
+=======
+ * type2 this is set via the DP_DUAL_MODE_TMDS_OEN register. As
+ * some type 1 adaptors have problems with registers (see comments
+ * in drm_dp_dual_mode_detect()) we avoid touching the register,
+ * making this function a no-op on type 1 adaptors.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Returns:
  * 0 on success, negative error code on failure

@@ -145,12 +145,21 @@ static int fjes_acpi_add(struct acpi_device *device)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void fjes_acpi_remove(struct acpi_device *device)
+=======
+static int fjes_acpi_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *plat_dev;
 
 	plat_dev = (struct platform_device *)acpi_driver_data(device);
 	platform_device_unregister(plat_dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct acpi_driver fjes_acpi_driver = {
@@ -1055,7 +1064,11 @@ static int fjes_sw_init(struct fjes_adapter *adapter)
 {
 	struct net_device *netdev = adapter->netdev;
 
+<<<<<<< HEAD
 	netif_napi_add(netdev, &adapter->napi, fjes_poll);
+=======
+	netif_napi_add(netdev, &adapter->napi, fjes_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

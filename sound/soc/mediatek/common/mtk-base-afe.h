@@ -9,6 +9,7 @@
 #ifndef _MTK_BASE_AFE_H_
 #define _MTK_BASE_AFE_H_
 
+<<<<<<< HEAD
 #include <linux/soc/mediatek/mtk_sip_svc.h>
 
 #define MTK_STREAM_NUM (SNDRV_PCM_STREAM_LAST + 1)
@@ -29,6 +30,9 @@ enum mtk_audio_smc_call_op {
 	MTK_AUDIO_SMC_OP_BTCVSD_UPDATE_CTRL_UNDERFLOW,
 	MTK_AUDIO_SMC_OP_NUM
 };
+=======
+#define MTK_STREAM_NUM (SNDRV_PCM_STREAM_LAST + 1)
+>>>>>>> b7ba80a49124 (Commit)
 
 struct mtk_base_memif_data {
 	int id;

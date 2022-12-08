@@ -53,6 +53,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	rk809-sound {
 		compatible = "simple-audio-card";
 		simple-audio-card,format = "i2s";
@@ -69,6 +70,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sdio_pwrseq: sdio-pwrseq {
 		status = "okay";
 		compatible = "mmc-pwrseq-simple";
@@ -98,6 +101,7 @@
 		vin-supply = <&usb_5v>;
 	};
 
+<<<<<<< HEAD
 	vcc3v3_pcie: vcc3v3-pcie-regulator {
 		compatible = "regulator-fixed";
 		enable-active-high;
@@ -110,6 +114,8 @@
 		vin-supply = <&vcc5v0_sys>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vcc3v3_sys: vcc3v3-sys-regulator {
 		compatible = "regulator-fixed";
 		regulator-name = "vcc3v3_sys";
@@ -150,10 +156,13 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &combphy2 {
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &cpu0 {
 	cpu-supply = <&vdd_cpu>;
 };
@@ -174,7 +183,11 @@
 	assigned-clocks = <&cru SCLK_GMAC1_RX_TX>, <&cru SCLK_GMAC1_RGMII_SPEED>, <&cru SCLK_GMAC1>;
 	assigned-clock-parents = <&cru SCLK_GMAC1_RGMII_SPEED>, <&cru SCLK_GMAC1>, <&gmac1_clkin>;
 	clock_in_out = "input";
+<<<<<<< HEAD
 	phy-mode = "rgmii";
+=======
+	phy-mode = "rgmii-id";
+>>>>>>> b7ba80a49124 (Commit)
 	phy-supply = <&vcc_3v3>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&gmac1m0_miim
@@ -216,10 +229,13 @@
 	};
 };
 
+<<<<<<< HEAD
 &hdmi_sound {
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &i2c0 {
 	status = "okay";
 
@@ -246,6 +262,7 @@
 		interrupt-parent = <&gpio0>;
 		interrupts = <RK_PA7 IRQ_TYPE_LEVEL_LOW>;
 		clock-output-names = "rk808-clkout1", "rk808-clkout2";
+<<<<<<< HEAD
 		assigned-clocks = <&cru I2S1_MCLKOUT_TX>;
 		assigned-clock-parents = <&cru CLK_I2S1_8CH_TX>;
 		clock-names = "mclk";
@@ -256,6 +273,14 @@
 		wakeup-source;
 		#clock-cells = <1>;
 		#sound-dai-cells = <0>;
+=======
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&pmic_int>;
+		rockchip,system-power-controller;
+		wakeup-source;
+		#clock-cells = <1>;
+>>>>>>> b7ba80a49124 (Commit)
 
 		vcc1-supply = <&vcc3v3_sys>;
 		vcc2-supply = <&vcc3v3_sys>;
@@ -267,10 +292,13 @@
 		vcc8-supply = <&vcc3v3_sys>;
 		vcc9-supply = <&vcc3v3_sys>;
 
+<<<<<<< HEAD
 		codec {
 			mic-in-differential;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		regulators {
 			vdd_log: DCDC_REG1 {
 				regulator-name = "vdd_log";
@@ -476,6 +504,7 @@
 
 &i2c3 {
 	pinctrl-names = "default";
+<<<<<<< HEAD
 	pinctrl-0 = <&i2c3m0_xfer>;
 	status = "okay";
 };
@@ -489,6 +518,13 @@
 			&i2s1m0_lrcktx &i2s1m0_lrckrx
 			&i2s1m0_sdi0   &i2s1m0_sdo0>;
 	rockchip,trcm-sync-tx-only;
+=======
+	pinctrl-0 = <&i2c3m1_xfer>;
+	status = "okay";
+};
+
+&i2c5 {
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 
@@ -499,6 +535,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &pcie2x1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pcie_reset_h>;
@@ -507,6 +544,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &pinctrl {
 	bt {
 		bt_enable_h: bt-enable-h {
@@ -528,6 +567,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	pcie {
 		pcie_enable_h: pcie-enable-h {
 			rockchip,pins = <0 RK_PC4 RK_FUNC_GPIO &pcfg_pull_none>;
@@ -538,6 +578,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pmic {
 		pmic_int: pmic_int {
 			rockchip,pins =

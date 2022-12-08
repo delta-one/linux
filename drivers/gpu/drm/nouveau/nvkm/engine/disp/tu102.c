@@ -88,7 +88,14 @@ tu102_sor = {
 	.state = gv100_sor_state,
 	.power = nv50_sor_power,
 	.clock = gf119_sor_clock,
+<<<<<<< HEAD
 	.hdmi = &gv100_sor_hdmi,
+=======
+	.hdmi = {
+		.ctrl = gv100_sor_hdmi_ctrl,
+		.scdc = gm200_sor_hdmi_scdc,
+	},
+>>>>>>> b7ba80a49124 (Commit)
 	.dp = &tu102_sor_dp,
 	.hda = &gv100_sor_hda,
 };

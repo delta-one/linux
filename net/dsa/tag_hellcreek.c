@@ -11,9 +11,13 @@
 #include <linux/skbuff.h>
 #include <net/dsa.h>
 
+<<<<<<< HEAD
 #include "tag.h"
 
 #define HELLCREEK_NAME		"hellcreek"
+=======
+#include "dsa_priv.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define HELLCREEK_TAG_LEN	1
 
@@ -51,8 +55,12 @@ static struct sk_buff *hellcreek_rcv(struct sk_buff *skb,
 		return NULL;
 	}
 
+<<<<<<< HEAD
 	if (pskb_trim_rcsum(skb, skb->len - HELLCREEK_TAG_LEN))
 		return NULL;
+=======
+	pskb_trim_rcsum(skb, skb->len - HELLCREEK_TAG_LEN);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dsa_default_offload_fwd_mark(skb);
 
@@ -60,7 +68,11 @@ static struct sk_buff *hellcreek_rcv(struct sk_buff *skb,
 }
 
 static const struct dsa_device_ops hellcreek_netdev_ops = {
+<<<<<<< HEAD
 	.name	  = HELLCREEK_NAME,
+=======
+	.name	  = "hellcreek",
+>>>>>>> b7ba80a49124 (Commit)
 	.proto	  = DSA_TAG_PROTO_HELLCREEK,
 	.xmit	  = hellcreek_xmit,
 	.rcv	  = hellcreek_rcv,
@@ -68,6 +80,10 @@ static const struct dsa_device_ops hellcreek_netdev_ops = {
 };
 
 MODULE_LICENSE("Dual MIT/GPL");
+<<<<<<< HEAD
 MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_HELLCREEK, HELLCREEK_NAME);
+=======
+MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_HELLCREEK);
+>>>>>>> b7ba80a49124 (Commit)
 
 module_dsa_tag_driver(hellcreek_netdev_ops);

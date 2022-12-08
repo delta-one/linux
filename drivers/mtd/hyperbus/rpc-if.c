@@ -56,7 +56,11 @@ static void rpcif_hb_prepare_read(struct rpcif *rpc, void *to,
 	op.data.nbytes = len;
 	op.data.buf.in = to;
 
+<<<<<<< HEAD
 	rpcif_prepare(rpc->dev, &op, NULL, NULL);
+=======
+	rpcif_prepare(rpc, &op, NULL, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void rpcif_hb_prepare_write(struct rpcif *rpc, unsigned long to,
@@ -70,7 +74,11 @@ static void rpcif_hb_prepare_write(struct rpcif *rpc, unsigned long to,
 	op.data.nbytes = len;
 	op.data.buf.out = from;
 
+<<<<<<< HEAD
 	rpcif_prepare(rpc->dev, &op, NULL, NULL);
+=======
+	rpcif_prepare(rpc, &op, NULL, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static u16 rpcif_hb_read16(struct hyperbus_device *hbdev, unsigned long addr)
@@ -81,7 +89,11 @@ static u16 rpcif_hb_read16(struct hyperbus_device *hbdev, unsigned long addr)
 
 	rpcif_hb_prepare_read(&hyperbus->rpc, &data, addr, 2);
 
+<<<<<<< HEAD
 	rpcif_manual_xfer(hyperbus->rpc.dev);
+=======
+	rpcif_manual_xfer(&hyperbus->rpc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return data.x[0];
 }
@@ -94,7 +106,11 @@ static void rpcif_hb_write16(struct hyperbus_device *hbdev, unsigned long addr,
 
 	rpcif_hb_prepare_write(&hyperbus->rpc, addr, &data, 2);
 
+<<<<<<< HEAD
 	rpcif_manual_xfer(hyperbus->rpc.dev);
+=======
+	rpcif_manual_xfer(&hyperbus->rpc);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void rpcif_hb_copy_from(struct hyperbus_device *hbdev, void *to,
@@ -105,7 +121,11 @@ static void rpcif_hb_copy_from(struct hyperbus_device *hbdev, void *to,
 
 	rpcif_hb_prepare_read(&hyperbus->rpc, to, from, len);
 
+<<<<<<< HEAD
 	rpcif_dirmap_read(hyperbus->rpc.dev, from, len, to);
+=======
+	rpcif_dirmap_read(&hyperbus->rpc, from, len, to);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct hyperbus_ops rpcif_hb_ops = {
@@ -130,9 +150,15 @@ static int rpcif_hb_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, hyperbus);
 
+<<<<<<< HEAD
 	pm_runtime_enable(hyperbus->rpc.dev);
 
 	error = rpcif_hw_init(hyperbus->rpc.dev, true);
+=======
+	rpcif_enable_rpm(&hyperbus->rpc);
+
+	error = rpcif_hw_init(&hyperbus->rpc, true);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		goto out_disable_rpm;
 
@@ -150,7 +176,11 @@ static int rpcif_hb_probe(struct platform_device *pdev)
 	return 0;
 
 out_disable_rpm:
+<<<<<<< HEAD
 	pm_runtime_disable(hyperbus->rpc.dev);
+=======
+	rpcif_disable_rpm(&hyperbus->rpc);
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }
 
@@ -160,7 +190,11 @@ static int rpcif_hb_remove(struct platform_device *pdev)
 
 	hyperbus_unregister_device(&hyperbus->hbdev);
 
+<<<<<<< HEAD
 	pm_runtime_disable(hyperbus->rpc.dev);
+=======
+	rpcif_disable_rpm(&hyperbus->rpc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

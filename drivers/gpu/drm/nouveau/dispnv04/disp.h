@@ -6,8 +6,11 @@
 
 #include "nouveau_display.h"
 
+<<<<<<< HEAD
 #include <nvif/event.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct nouveau_encoder;
 
 enum nv04_fp_display_regs {
@@ -86,8 +89,12 @@ struct nv04_display {
 	uint32_t saved_vga_font[4][16384];
 	uint32_t dac_users[4];
 	struct nouveau_bo *image[2];
+<<<<<<< HEAD
 	struct nvif_event flip;
 	struct nouveau_drm *drm;
+=======
+	struct nvif_notify flip;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct nv04_display *
@@ -182,5 +189,9 @@ nouveau_bios_run_init_table(struct drm_device *dev, u16 table,
 	);
 }
 
+<<<<<<< HEAD
 int nv04_flip_complete(struct nvif_event *, void *, u32);
+=======
+int nv04_flip_complete(struct nvif_notify *);
+>>>>>>> b7ba80a49124 (Commit)
 #endif

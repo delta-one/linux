@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
+<<<<<<< HEAD
  * Copyright (c) 2012-2023, Intel Corporation. All rights reserved.
+=======
+ * Copyright (c) 2012-2019, Intel Corporation. All rights reserved.
+>>>>>>> b7ba80a49124 (Commit)
  * Intel Management Engine Interface (Intel MEI) Linux driver
  */
 
@@ -13,7 +17,10 @@
 #include <linux/slab.h>
 #include <linux/mutex.h>
 #include <linux/interrupt.h>
+<<<<<<< HEAD
 #include <linux/scatterlist.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mei_cl_bus.h>
 
 #include "mei_dev.h"
@@ -35,6 +42,7 @@
 ssize_t __mei_cl_send(struct mei_cl *cl, const u8 *buf, size_t length, u8 vtag,
 		      unsigned int mode)
 {
+<<<<<<< HEAD
 	return __mei_cl_send_timeout(cl, buf, length, vtag, mode, MAX_SCHEDULE_TIMEOUT);
 }
 
@@ -55,6 +63,8 @@ ssize_t __mei_cl_send(struct mei_cl *cl, const u8 *buf, size_t length, u8 vtag,
 ssize_t __mei_cl_send_timeout(struct mei_cl *cl, const u8 *buf, size_t length, u8 vtag,
 			      unsigned int mode, unsigned long timeout)
 {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct mei_device *bus;
 	struct mei_cl_cb *cb;
 	ssize_t rets;
@@ -121,6 +131,7 @@ ssize_t __mei_cl_send_timeout(struct mei_cl *cl, const u8 *buf, size_t length, u
 	cb->internal = !!(mode & MEI_CL_IO_TX_INTERNAL);
 	cb->blocking = !!(mode & MEI_CL_IO_TX_BLOCKING);
 	memcpy(cb->buf.data, buf, length);
+<<<<<<< HEAD
 	/* hack we point data to header */
 	if (mode & MEI_CL_IO_SGL) {
 		cb->ext_hdr = (struct mei_ext_hdr *)cb->buf.data;
@@ -132,6 +143,10 @@ ssize_t __mei_cl_send_timeout(struct mei_cl *cl, const u8 *buf, size_t length, u
 
 	if (mode & MEI_CL_IO_SGL && rets == 0)
 		rets = length;
+=======
+
+	rets = mei_cl_write(cl, cb);
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	mutex_unlock(&bus->device_lock);
@@ -235,6 +250,7 @@ copy:
 		goto free;
 	}
 
+<<<<<<< HEAD
 	/* for the GSC type - copy the extended header to the buffer */
 	if (cb->ext_hdr && cb->ext_hdr->type == MEI_EXT_HDR_GSC) {
 		r_length = min_t(size_t, length, cb->ext_hdr->length * sizeof(u32));
@@ -245,6 +261,11 @@ copy:
 	}
 	rets = r_length;
 
+=======
+	r_length = min_t(size_t, length, cb->buf_idx);
+	memcpy(buf, cb->buf.data, r_length);
+	rets = r_length;
+>>>>>>> b7ba80a49124 (Commit)
 	if (vtag)
 		*vtag = cb->vtag;
 
@@ -702,15 +723,23 @@ void *mei_cldev_dma_map(struct mei_cl_device *cldev, u8 buffer_id, size_t size)
 	if (cl->state == MEI_FILE_UNINITIALIZED) {
 		ret = mei_cl_link(cl);
 		if (ret)
+<<<<<<< HEAD
 			goto notlinked;
+=======
+			goto out;
+>>>>>>> b7ba80a49124 (Commit)
 		/* update pointers */
 		cl->cldev = cldev;
 	}
 
 	ret = mei_cl_dma_alloc_and_map(cl, NULL, buffer_id, size);
+<<<<<<< HEAD
 	if (ret)
 		mei_cl_unlink(cl);
 notlinked:
+=======
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&bus->device_lock);
 	if (ret)
 		return ERR_PTR(ret);
@@ -760,7 +789,11 @@ int mei_cldev_enable(struct mei_cl_device *cldev)
 	if (cl->state == MEI_FILE_UNINITIALIZED) {
 		ret = mei_cl_link(cl);
 		if (ret)
+<<<<<<< HEAD
 			goto notlinked;
+=======
+			goto out;
+>>>>>>> b7ba80a49124 (Commit)
 		/* update pointers */
 		cl->cldev = cldev;
 	}
@@ -787,9 +820,12 @@ int mei_cldev_enable(struct mei_cl_device *cldev)
 	}
 
 out:
+<<<<<<< HEAD
 	if (ret)
 		mei_cl_unlink(cl);
 notlinked:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&bus->device_lock);
 
 	return ret;
@@ -865,6 +901,7 @@ out:
 EXPORT_SYMBOL_GPL(mei_cldev_disable);
 
 /**
+<<<<<<< HEAD
  * mei_cldev_send_gsc_command - sends a gsc command, by sending
  * a gsl mei message to gsc and receiving reply from gsc
  *
@@ -990,6 +1027,8 @@ end:
 EXPORT_SYMBOL_GPL(mei_cldev_send_gsc_command);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * mei_cl_device_find - find matching entry in the driver id table
  *
  * @cldev: me client device
@@ -1227,9 +1266,15 @@ ATTRIBUTE_GROUPS(mei_cldev);
  *
  * Return: 0 on success -ENOMEM on when add_uevent_var fails
  */
+<<<<<<< HEAD
 static int mei_cl_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct mei_cl_device *cldev = to_mei_cl_device(dev);
+=======
+static int mei_cl_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	const uuid_le *uuid = mei_me_cl_uuid(cldev->me_cl);
 	u8 version = mei_me_cl_ver(cldev->me_cl);
 
@@ -1282,6 +1327,10 @@ static void mei_cl_bus_dev_release(struct device *dev)
 	mei_cl_flush_queues(cldev->cl, NULL);
 	mei_me_cl_put(cldev->me_cl);
 	mei_dev_bus_put(cldev->bus);
+<<<<<<< HEAD
+=======
+	mei_cl_unlink(cldev->cl);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(cldev->cl);
 	kfree(cldev);
 }
@@ -1392,7 +1441,10 @@ static int mei_cl_bus_dev_add(struct mei_cl_device *cldev)
  */
 static void mei_cl_bus_dev_stop(struct mei_cl_device *cldev)
 {
+<<<<<<< HEAD
 	cldev->do_match = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (cldev->is_added)
 		device_release_driver(&cldev->dev);
 }

@@ -15,8 +15,11 @@
 
 # Res1	<msb>[:<lsb>]
 
+<<<<<<< HEAD
 # Unkn	<msb>[:<lsb>]
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # Field	<msb>[:<lsb>]	<name>
 
 # Enum	<msb>[:<lsb>]	<name>
@@ -48,6 +51,7 @@
 # feature that introduces them (eg, FEAT_LS64_ACCDATA introduces enumeration
 # item ACCDATA) though it may be more taseful to do something else.
 
+<<<<<<< HEAD
 Sysreg ID_PFR0_EL1	3	0	0	1	0
 Res0	63:32
 UnsignedEnum	31:28	RAS
@@ -808,11 +812,20 @@ UnsignedEnum	63:60	CSV3
 	0b0001	IMP
 EndEnum
 UnsignedEnum	59:56	CSV2
+=======
+Sysreg	ID_AA64PFR0_EL1	3	0	0	4	0
+Enum	63:60	CSV3
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	59:56	CSV2
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	CSV2_2
 	0b0011	CSV2_3
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	55:52	RME
 	0b0000	NI
 	0b0001	IMP
@@ -822,10 +835,22 @@ UnsignedEnum	51:48	DIT
 	0b0001	IMP
 EndEnum
 UnsignedEnum	47:44	AMU
+=======
+Enum	55:52	RME
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	51:48	DIT
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	47:44	AMU
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	V1P1
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	43:40	MPAM
 	0b0000	0
 	0b0001	1
@@ -839,40 +864,83 @@ UnsignedEnum	35:32	SVE
 	0b0001	IMP
 EndEnum
 UnsignedEnum	31:28	RAS
+=======
+Enum	43:40	MPAM
+	0b0000	0
+	0b0001	1
+EndEnum
+Enum	39:36	SEL2
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	35:32	SVE
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	31:28	RAS
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	V1P1
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	27:24	GIC
+=======
+Enum	27:24	GIC
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	V4P1
 EndEnum
+<<<<<<< HEAD
 SignedEnum	23:20	AdvSIMD
+=======
+Enum	23:20	AdvSIMD
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	IMP
 	0b0001	FP16
 	0b1111	NI
 EndEnum
+<<<<<<< HEAD
 SignedEnum	19:16	FP
+=======
+Enum	19:16	FP
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	IMP
 	0b0001	FP16
 	0b1111	NI
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	15:12	EL3
+=======
+Enum	15:12	EL3
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	AARCH32
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	11:8	EL2
+=======
+Enum	11:8	EL2
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	AARCH32
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	7:4	EL1
 	0b0001	IMP
 	0b0010	AARCH32
 EndEnum
 UnsignedEnum	3:0	EL0
+=======
+Enum	7:4	EL1
+	0b0001	IMP
+	0b0010	AARCH32
+EndEnum
+Enum	3:0	EL0
+>>>>>>> b7ba80a49124 (Commit)
 	0b0001	IMP
 	0b0010	AARCH32
 EndEnum
@@ -880,15 +948,24 @@ EndSysreg
 
 Sysreg	ID_AA64PFR1_EL1	3	0	0	4	1
 Res0	63:40
+<<<<<<< HEAD
 UnsignedEnum	39:36	NMI
 	0b0000	NI
 	0b0001	IMP
 EndEnum
 UnsignedEnum	35:32	CSV2_frac
+=======
+Enum	39:36	NMI
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	35:32	CSV2_frac
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	CSV2_1p1
 	0b0010	CSV2_1p2
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	31:28	RNDR_trap
 	0b0000	NI
 	0b0001	IMP
@@ -908,17 +985,45 @@ UnsignedEnum	15:12	RAS_frac
 	0b0001	RASv1p1
 EndEnum
 UnsignedEnum	11:8	MTE
+=======
+Enum	31:28	RNDR_trap
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	27:24	SME
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Res0	23:20
+Enum	19:16	MPAM_frac
+	0b0000	MINOR_0
+	0b0001	MINOR_1
+EndEnum
+Enum	15:12	RAS_frac
+	0b0000	NI
+	0b0001	RASv1p1
+EndEnum
+Enum	11:8	MTE
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	MTE2
 	0b0011	MTE3
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	7:4	SSBS
+=======
+Enum	7:4	SSBS
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	SSBS2
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	3:0	BT
+=======
+Enum	3:0	BT
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 EndEnum
@@ -926,57 +1031,100 @@ EndSysreg
 
 Sysreg	ID_AA64ZFR0_EL1	3	0	0	4	4
 Res0	63:60
+<<<<<<< HEAD
 UnsignedEnum	59:56	F64MM
 	0b0000	NI
 	0b0001	IMP
 EndEnum
 UnsignedEnum	55:52	F32MM
+=======
+Enum	59:56	F64MM
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	55:52	F32MM
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 EndEnum
 Res0	51:48
+<<<<<<< HEAD
 UnsignedEnum	47:44	I8MM
 	0b0000	NI
 	0b0001	IMP
 EndEnum
 UnsignedEnum	43:40	SM4
+=======
+Enum	47:44	I8MM
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	43:40	SM4
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 EndEnum
 Res0	39:36
+<<<<<<< HEAD
 UnsignedEnum	35:32	SHA3
+=======
+Enum	35:32	SHA3
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 EndEnum
 Res0	31:24
+<<<<<<< HEAD
 UnsignedEnum	23:20	BF16
+=======
+Enum	23:20	BF16
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	EBF16
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	19:16	BitPerm
+=======
+Enum	19:16	BitPerm
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 EndEnum
 Res0	15:8
+<<<<<<< HEAD
 UnsignedEnum	7:4	AES
+=======
+Enum	7:4	AES
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	PMULL128
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	3:0	SVEver
 	0b0000	IMP
 	0b0001	SVE2
 	0b0010	SVE2p1
+=======
+Enum	3:0	SVEver
+	0b0000	IMP
+	0b0001	SVE2
+>>>>>>> b7ba80a49124 (Commit)
 EndEnum
 EndSysreg
 
 Sysreg	ID_AA64SMFR0_EL1	3	0	0	4	5
+<<<<<<< HEAD
 UnsignedEnum	63	FA64
+=======
+Enum	63	FA64
+>>>>>>> b7ba80a49124 (Commit)
 	0b0	NI
 	0b1	IMP
 EndEnum
 Res0	62:60
+<<<<<<< HEAD
 UnsignedEnum	59:56	SMEver
 	0b0000	SME
 	0b0001	SME2
@@ -984,10 +1132,17 @@ UnsignedEnum	59:56	SMEver
 	0b0000	IMP
 EndEnum
 UnsignedEnum	55:52	I16I64
+=======
+Enum	59:56	SMEver
+	0b0000	IMP
+EndEnum
+Enum	55:52	I16I64
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b1111	IMP
 EndEnum
 Res0	51:49
+<<<<<<< HEAD
 UnsignedEnum	48	F64F64
 	0b0	NI
 	0b1	IMP
@@ -1022,6 +1177,27 @@ UnsignedEnum	33	BI32I32
 	0b1	IMP
 EndEnum
 UnsignedEnum	32	F32F32
+=======
+Enum	48	F64F64
+	0b0	NI
+	0b1	IMP
+EndEnum
+Res0	47:40
+Enum	39:36	I8I32
+	0b0000	NI
+	0b1111	IMP
+EndEnum
+Enum	35	F16F32
+	0b0	NI
+	0b1	IMP
+EndEnum
+Enum	34	B16F32
+	0b0	NI
+	0b1	IMP
+EndEnum
+Res0	33
+Enum	32	F32F32
+>>>>>>> b7ba80a49124 (Commit)
 	0b0	NI
 	0b1	IMP
 EndEnum
@@ -1034,7 +1210,11 @@ Enum	63:60	HPMN0
 	0b0001	DEF
 EndEnum
 Res0	59:56
+<<<<<<< HEAD
 UnsignedEnum	55:52	BRBE
+=======
+Enum	55:52	BRBE
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	BRBE_V1P1
@@ -1044,6 +1224,7 @@ Enum	51:48	MTPMU
 	0b0001	IMP
 	0b1111	NI
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	47:44	TraceBuffer
 	0b0000	NI
 	0b0001	IMP
@@ -1057,6 +1238,21 @@ UnsignedEnum	39:36	DoubleLock
 	0b1111	NI
 EndEnum
 UnsignedEnum	35:32	PMSVer
+=======
+Enum	47:44	TraceBuffer
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	43:40	TraceFilt
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	39:36	DoubleLock
+	0b0000	IMP
+	0b1111	NI
+EndEnum
+Enum	35:32	PMSVer
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	V1P1
@@ -1068,7 +1264,11 @@ Res0	27:24
 Field	23:20	WRPs
 Res0	19:16
 Field	15:12	BRPs
+<<<<<<< HEAD
 UnsignedEnum	11:8	PMUVer
+=======
+Enum	11:8	PMUVer
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0100	V3P1
@@ -1078,11 +1278,19 @@ UnsignedEnum	11:8	PMUVer
 	0b1000	V3P8
 	0b1111	IMP_DEF
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	7:4	TraceVer
 	0b0000	NI
 	0b0001	IMP
 EndEnum
 UnsignedEnum	3:0	DebugVer
+=======
+Enum	7:4	TraceVer
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	3:0	DebugVer
+>>>>>>> b7ba80a49124 (Commit)
 	0b0110	IMP
 	0b0111	VHE
 	0b1000	V8P2
@@ -1112,20 +1320,33 @@ Res0	63:0
 EndSysreg
 
 Sysreg	ID_AA64ISAR0_EL1	3	0	0	6	0
+<<<<<<< HEAD
 UnsignedEnum	63:60	RNDR
 	0b0000	NI
 	0b0001	IMP
 EndEnum
 UnsignedEnum	59:56	TLB
+=======
+Enum	63:60	RNDR
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	59:56	TLB
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	OS
 	0b0010	RANGE
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	55:52	TS
+=======
+Enum	55:52	TS
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	FLAGM
 	0b0010	FLAGM2
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	51:48	FHM
 	0b0000	NI
 	0b0001	IMP
@@ -1163,15 +1384,62 @@ UnsignedEnum	19:16	CRC32
 	0b0001	IMP
 EndEnum
 UnsignedEnum	15:12	SHA2
+=======
+Enum	51:48	FHM
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	47:44	DP
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	43:40	SM4
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	39:36	SM3
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	35:32	SHA3
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	31:28	RDM
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	27:24	TME
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	23:20	ATOMIC
+	0b0000	NI
+	0b0010	IMP
+EndEnum
+Enum	19:16	CRC32
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	15:12	SHA2
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	SHA256
 	0b0010	SHA512
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	11:8	SHA1
 	0b0000	NI
 	0b0001	IMP
 EndEnum
 UnsignedEnum	7:4	AES
+=======
+Enum	11:8	SHA1
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	7:4	AES
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	AES
 	0b0010	PMULL
@@ -1180,12 +1448,17 @@ Res0	3:0
 EndSysreg
 
 Sysreg	ID_AA64ISAR1_EL1	3	0	0	6	1
+<<<<<<< HEAD
 UnsignedEnum	63:60	LS64
+=======
+Enum	63:60	LS64
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	LS64
 	0b0010	LS64_V
 	0b0011	LS64_ACCDATA
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	59:56	XS
 	0b0000	NI
 	0b0001	IMP
@@ -1199,10 +1472,26 @@ UnsignedEnum	51:48	DGH
 	0b0001	IMP
 EndEnum
 UnsignedEnum	47:44	BF16
+=======
+Enum	59:56	XS
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	55:52	I8MM
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	51:48	DGH
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	47:44	BF16
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	EBF16
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	43:40	SPECRES
 	0b0000	NI
 	0b0001	IMP
@@ -1224,10 +1513,34 @@ UnsignedEnum	27:24	GPA
 	0b0001	IMP
 EndEnum
 UnsignedEnum	23:20	LRCPC
+=======
+Enum	43:40	SPECRES
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	39:36	SB
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	35:32	FRINTTS
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	31:28	GPI
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	27:24	GPA
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	23:20	LRCPC
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	LRCPC2
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	19:16	FCMA
 	0b0000	NI
 	0b0001	IMP
@@ -1237,6 +1550,17 @@ UnsignedEnum	15:12	JSCVT
 	0b0001	IMP
 EndEnum
 UnsignedEnum	11:8	API
+=======
+Enum	19:16	FCMA
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	15:12	JSCVT
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	11:8	API
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	PAuth
 	0b0010	EPAC
@@ -1244,7 +1568,11 @@ UnsignedEnum	11:8	API
 	0b0100	FPAC
 	0b0101	FPACCOMBINE
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	7:4	APA
+=======
+Enum	7:4	APA
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	PAuth
 	0b0010	EPAC
@@ -1252,7 +1580,11 @@ UnsignedEnum	7:4	APA
 	0b0100	FPAC
 	0b0101	FPACCOMBINE
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	3:0	DPB
+=======
+Enum	3:0	DPB
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	DPB2
@@ -1260,6 +1592,7 @@ EndEnum
 EndSysreg
 
 Sysreg	ID_AA64ISAR2_EL1	3	0	0	6	2
+<<<<<<< HEAD
 Res0	63:56
 UnsignedEnum	55:52	CSSC
 	0b0000	NI
@@ -1283,6 +1616,22 @@ UnsignedEnum	19:16	MOPS
 	0b0001	IMP
 EndEnum
 UnsignedEnum	15:12	APA3
+=======
+Res0	63:28
+Enum	27:24	PAC_frac
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	23:20	BC
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	19:16	MOPS
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	15:12	APA3
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	PAuth
 	0b0010	EPAC
@@ -1290,6 +1639,7 @@ UnsignedEnum	15:12	APA3
 	0b0100	FPAC
 	0b0101	FPACCOMBINE
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	11:8	GPA3
 	0b0000	NI
 	0b0001	IMP
@@ -1299,23 +1649,46 @@ UnsignedEnum	7:4	RPRES
 	0b0001	IMP
 EndEnum
 UnsignedEnum	3:0	WFxT
+=======
+Enum	11:8	GPA3
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	7:4	RPRES
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	3:0	WFxT
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0010	IMP
 EndEnum
 EndSysreg
 
 Sysreg	ID_AA64MMFR0_EL1	3	0	0	7	0
+<<<<<<< HEAD
 UnsignedEnum	63:60	ECV
+=======
+Enum	63:60	ECV
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	CNTPOFF
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	59:56	FGT
+=======
+Enum	59:56	FGT
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 EndEnum
 Res0	55:48
+<<<<<<< HEAD
 UnsignedEnum	47:44	EXS
+=======
+Enum	47:44	EXS
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 EndEnum
@@ -1350,6 +1723,7 @@ Enum	23:20	TGRAN16
 	0b0001	IMP
 	0b0010	52_BIT
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	19:16	BIGENDEL0
 	0b0000	NI
 	0b0001	IMP
@@ -1359,6 +1733,17 @@ UnsignedEnum	15:12	SNSMEM
 	0b0001	IMP
 EndEnum
 UnsignedEnum	11:8	BIGEND
+=======
+Enum	19:16	BIGENDEL0
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	15:12	SNSMEM
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	11:8	BIGEND
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 EndEnum
@@ -1378,6 +1763,7 @@ EndEnum
 EndSysreg
 
 Sysreg	ID_AA64MMFR1_EL1	3	0	0	7	1
+<<<<<<< HEAD
 UnsignedEnum	63:60	ECBHB
 	0b0000	NI
 	0b0001	IMP
@@ -1419,21 +1805,76 @@ UnsignedEnum	27:24	SpecSEI
 	0b0001	IMP
 EndEnum
 UnsignedEnum	23:20	PAN
+=======
+Enum	63:60	ECBHB
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	59:56	CMOW
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	55:52	TIDCP1
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	51:48	nTLBPA
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	47:44	AFP
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	43:40	HCX
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	39:36	ETS
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	35:32	TWED
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	31:28	XNX
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	27:24	SpecSEI
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	23:20	PAN
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	PAN2
 	0b0011	PAN3
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	19:16	LO
 	0b0000	NI
 	0b0001	IMP
 EndEnum
 UnsignedEnum	15:12	HPDS
+=======
+Enum	19:16	LO
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	15:12	HPDS
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	HPDS2
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	11:8	VH
+=======
+Enum	11:8	VH
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 EndEnum
@@ -1441,7 +1882,11 @@ Enum	7:4	VMIDBits
 	0b0000	8
 	0b0010	16
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	3:0	HAFDBS
+=======
+Enum	3:0	HAFDBS
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	AF
 	0b0010	DBM
@@ -1449,26 +1894,46 @@ EndEnum
 EndSysreg
 
 Sysreg	ID_AA64MMFR2_EL1	3	0	0	7	2
+<<<<<<< HEAD
 UnsignedEnum	63:60	E0PD
 	0b0000	NI
 	0b0001	IMP
 EndEnum
 UnsignedEnum	59:56	EVT
+=======
+Enum	63:60	E0PD
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	59:56	EVT
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	TTLBxS
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	55:52	BBM
+=======
+Enum	55:52	BBM
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	0
 	0b0001	1
 	0b0010	2
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	51:48	TTL
+=======
+Enum	51:48	TTL
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 EndEnum
 Res0	47:44
+<<<<<<< HEAD
 UnsignedEnum	43:40	FWB
+=======
+Enum	43:40	FWB
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 EndEnum
@@ -1476,7 +1941,11 @@ Enum	39:36	IDS
 	0b0000	0x0
 	0b0001	0x18
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	35:32	AT
+=======
+Enum	35:32	AT
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 EndEnum
@@ -1484,7 +1953,11 @@ Enum	31:28	ST
 	0b0000	39
 	0b0001	48_47
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	27:24	NV
+=======
+Enum	27:24	NV
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 	0b0010	NV2
@@ -1497,6 +1970,7 @@ Enum	19:16	VARange
 	0b0000	48
 	0b0001	52
 EndEnum
+<<<<<<< HEAD
 UnsignedEnum	15:12	IESB
 	0b0000	NI
 	0b0001	IMP
@@ -1510,6 +1984,21 @@ UnsignedEnum	7:4	UAO
 	0b0001	IMP
 EndEnum
 UnsignedEnum	3:0	CnP
+=======
+Enum	15:12	IESB
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	11:8	LSM
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	7:4	UAO
+	0b0000	NI
+	0b0001	IMP
+EndEnum
+Enum	3:0	CnP
+>>>>>>> b7ba80a49124 (Commit)
 	0b0000	NI
 	0b0001	IMP
 EndEnum
@@ -1517,7 +2006,11 @@ EndSysreg
 
 Sysreg	SCTLR_EL1	3	0	1	0	0
 Field	63	TIDCP
+<<<<<<< HEAD
 Field	62	SPINTMASK
+=======
+Field	62	SPINMASK
+>>>>>>> b7ba80a49124 (Commit)
 Field	61	NMI
 Field	60	EnTP2
 Res0	59:58
@@ -1620,8 +2113,12 @@ EndSysreg
 SysregFields	SMCR_ELx
 Res0	63:32
 Field	31	FA64
+<<<<<<< HEAD
 Field	30	EZT0
 Res0	29:9
+=======
+Res0	30:9
+>>>>>>> b7ba80a49124 (Commit)
 Raz	8:4
 Field	3:0	LEN
 EndSysregFields
@@ -1640,6 +2137,7 @@ Sysreg	FAR_EL1	3	0	6	0	0
 Field	63:0	ADDR
 EndSysreg
 
+<<<<<<< HEAD
 Sysreg	PMSCR_EL1	3	0	9	9	0
 Res0	63:8
 Field	7:6	PCT
@@ -1764,6 +2262,8 @@ Field	4	P
 Field	3:0	ALIGN
 EndSysreg
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 SysregFields	CONTEXTIDR_ELx
 Res0	63:32
 Field	31:0	PROCID
@@ -1781,6 +2281,7 @@ Sysreg	SCXTNUM_EL1	3	0	13	0	7
 Field	63:0	SoftwareContextNumber
 EndSysreg
 
+<<<<<<< HEAD
 # The bit layout for CCSIDR_EL1 depends on whether FEAT_CCIDX is implemented.
 # The following is for case when FEAT_CCIDX is not implemented.
 Sysreg	CCSIDR_EL1	3	1	0	0	0
@@ -1791,6 +2292,8 @@ Field	12:3	Associativity
 Field	2:0	LineSize
 EndSysreg
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Sysreg	CLIDR_EL1	3	1	0	0	1
 Res0	63:47
 Field	46:33	Ttypen
@@ -1807,11 +2310,14 @@ Field	5:3	Ctype2
 Field	2:0	Ctype1
 EndSysreg
 
+<<<<<<< HEAD
 Sysreg	CCSIDR2_EL1	3	1	0	0	2
 Res0	63:24
 Field	23:0	NumSets
 EndSysreg
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Sysreg	GMID_EL1	3	1	0	0	4
 Res0	63:4
 Field	3:0	BS
@@ -1933,6 +2439,7 @@ Sysreg	FAR_EL2	3	4	6	0	0
 Field	63:0	ADDR
 EndSysreg
 
+<<<<<<< HEAD
 Sysreg	PMSCR_EL2	3	4	9	9	0
 Res0	63:8
 Enum	7:6	PCT
@@ -1948,6 +2455,8 @@ Field	1	E2SPE
 Field	0	E0HSPE
 EndSysreg
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Sysreg	CONTEXTIDR_EL2	3	4	13	0	1
 Fields	CONTEXTIDR_ELx
 EndSysreg
@@ -2018,6 +2527,7 @@ Field	23:16	LD
 Res0	15:8
 Field	7:0	LR
 EndSysreg
+<<<<<<< HEAD
 
 Sysreg	ISR_EL1	3	0	12	1	0
 Res0	63:11
@@ -2033,3 +2543,5 @@ Sysreg	ICC_NMIAR1_EL1	3	0	12	9	5
 Res0	63:24
 Field	23:0	INTID
 EndSysreg
+=======
+>>>>>>> b7ba80a49124 (Commit)

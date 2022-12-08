@@ -69,7 +69,11 @@ static inline fmode_t flags_to_mode(int flags)
 struct nfs_client_initdata {
 	unsigned long init_flags;
 	const char *hostname;			/* Hostname of the server */
+<<<<<<< HEAD
 	const struct sockaddr_storage *addr;	/* Address of the server */
+=======
+	const struct sockaddr *addr;		/* Address of the server */
+>>>>>>> b7ba80a49124 (Commit)
 	const char *nodename;			/* Hostname of the client */
 	const char *ip_addr;			/* IP address of the client */
 	size_t addrlen;
@@ -180,7 +184,11 @@ static inline struct nfs_fs_context *nfs_fc2context(const struct fs_context *fc)
 
 /* mount_clnt.c */
 struct nfs_mount_request {
+<<<<<<< HEAD
 	struct sockaddr_storage	*sap;
+=======
+	struct sockaddr		*sap;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t			salen;
 	char			*hostname;
 	char			*dirpath;
@@ -223,7 +231,11 @@ extern void nfs4_server_set_init_caps(struct nfs_server *);
 extern struct nfs_server *nfs4_create_server(struct fs_context *);
 extern struct nfs_server *nfs4_create_referral_server(struct fs_context *);
 extern int nfs4_update_server(struct nfs_server *server, const char *hostname,
+<<<<<<< HEAD
 					struct sockaddr_storage *sap, size_t salen,
+=======
+					struct sockaddr *sap, size_t salen,
+>>>>>>> b7ba80a49124 (Commit)
 					struct net *net);
 extern void nfs_free_server(struct nfs_server *server);
 extern struct nfs_server *nfs_clone_server(struct nfs_server *,
@@ -235,7 +247,11 @@ extern int nfs_client_init_status(const struct nfs_client *clp);
 extern int nfs_wait_client_init_complete(const struct nfs_client *clp);
 extern void nfs_mark_client_ready(struct nfs_client *clp, int state);
 extern struct nfs_client *nfs4_set_ds_client(struct nfs_server *mds_srv,
+<<<<<<< HEAD
 					     const struct sockaddr_storage *ds_addr,
+=======
+					     const struct sockaddr *ds_addr,
+>>>>>>> b7ba80a49124 (Commit)
 					     int ds_addrlen, int ds_proto,
 					     unsigned int ds_timeo,
 					     unsigned int ds_retrans,
@@ -243,7 +259,11 @@ extern struct nfs_client *nfs4_set_ds_client(struct nfs_server *mds_srv,
 extern struct rpc_clnt *nfs4_find_or_create_ds_client(struct nfs_client *,
 						struct inode *);
 extern struct nfs_client *nfs3_set_ds_client(struct nfs_server *mds_srv,
+<<<<<<< HEAD
 			const struct sockaddr_storage *ds_addr, int ds_addrlen,
+=======
+			const struct sockaddr *ds_addr, int ds_addrlen,
+>>>>>>> b7ba80a49124 (Commit)
 			int ds_proto, unsigned int ds_timeo,
 			unsigned int ds_retrans);
 #ifdef CONFIG_PROC_FS
@@ -384,6 +404,7 @@ extern unsigned long nfs_access_cache_scan(struct shrinker *shrink,
 					   struct shrink_control *sc);
 struct dentry *nfs_lookup(struct inode *, struct dentry *, unsigned int);
 void nfs_d_prune_case_insensitive_aliases(struct inode *inode);
+<<<<<<< HEAD
 int nfs_create(struct mnt_idmap *, struct inode *, struct dentry *,
 	       umode_t, bool);
 int nfs_mkdir(struct mnt_idmap *, struct inode *, struct dentry *,
@@ -396,6 +417,20 @@ int nfs_link(struct dentry *, struct inode *, struct dentry *);
 int nfs_mknod(struct mnt_idmap *, struct inode *, struct dentry *, umode_t,
 	      dev_t);
 int nfs_rename(struct mnt_idmap *, struct inode *, struct dentry *,
+=======
+int nfs_create(struct user_namespace *, struct inode *, struct dentry *,
+	       umode_t, bool);
+int nfs_mkdir(struct user_namespace *, struct inode *, struct dentry *,
+	      umode_t);
+int nfs_rmdir(struct inode *, struct dentry *);
+int nfs_unlink(struct inode *, struct dentry *);
+int nfs_symlink(struct user_namespace *, struct inode *, struct dentry *,
+		const char *);
+int nfs_link(struct dentry *, struct inode *, struct dentry *);
+int nfs_mknod(struct user_namespace *, struct inode *, struct dentry *, umode_t,
+	      dev_t);
+int nfs_rename(struct user_namespace *, struct inode *, struct dentry *,
+>>>>>>> b7ba80a49124 (Commit)
 	       struct inode *, struct dentry *, unsigned int);
 
 #ifdef CONFIG_NFS_V4_2
@@ -435,6 +470,10 @@ extern void nfs_zap_acl_cache(struct inode *inode);
 extern void nfs_set_cache_invalid(struct inode *inode, unsigned long flags);
 extern bool nfs_check_cache_invalid(struct inode *, unsigned long);
 extern int nfs_wait_bit_killable(struct wait_bit_key *key, int mode);
+<<<<<<< HEAD
+=======
+extern int nfs_wait_atomic_killable(atomic_t *p, unsigned int mode);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* super.c */
 extern const struct super_operations nfs_sops;
@@ -502,6 +541,10 @@ extern void nfs_pageio_init_write(struct nfs_pageio_descriptor *pgio,
 			const struct nfs_pgio_completion_ops *compl_ops);
 extern void nfs_pageio_reset_write_mds(struct nfs_pageio_descriptor *pgio);
 extern void nfs_commit_free(struct nfs_commit_data *p);
+<<<<<<< HEAD
+=======
+extern void nfs_write_prepare(struct rpc_task *task, void *calldata);
+>>>>>>> b7ba80a49124 (Commit)
 extern void nfs_commit_prepare(struct rpc_task *task, void *calldata);
 extern int nfs_initiate_commit(struct rpc_clnt *clnt,
 			       struct nfs_commit_data *data,
@@ -739,10 +782,19 @@ unsigned long nfs_io_size(unsigned long iosize, enum xprt_transports proto)
 		iosize = NFS_DEF_FILE_IO_SIZE;
 	else if (iosize >= NFS_MAX_FILE_IO_SIZE)
 		iosize = NFS_MAX_FILE_IO_SIZE;
+<<<<<<< HEAD
 
 	if (proto == XPRT_TRANSPORT_UDP || iosize < PAGE_SIZE)
 		return nfs_block_bits(iosize, NULL);
 	return iosize & PAGE_MASK;
+=======
+	else
+		iosize = iosize & PAGE_MASK;
+
+	if (proto == XPRT_TRANSPORT_UDP)
+		return nfs_block_bits(iosize, NULL);
+	return iosize;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -760,18 +812,31 @@ void nfs_super_set_maxbytes(struct super_block *sb, __u64 maxfilesize)
  * Record the page as unstable (an extra writeback period) and mark its
  * inode as dirty.
  */
+<<<<<<< HEAD
 static inline void nfs_folio_mark_unstable(struct folio *folio,
 					   struct nfs_commit_info *cinfo)
 {
 	if (folio && !cinfo->dreq) {
 		struct inode *inode = folio_file_mapping(folio)->host;
 		long nr = folio_nr_pages(folio);
+=======
+static inline
+void nfs_mark_page_unstable(struct page *page, struct nfs_commit_info *cinfo)
+{
+	if (!cinfo->dreq) {
+		struct inode *inode = page_file_mapping(page)->host;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* This page is really still in write-back - just that the
 		 * writeback is happening on the server now.
 		 */
+<<<<<<< HEAD
 		node_stat_mod_folio(folio, NR_WRITEBACK, nr);
 		wb_stat_mod(&inode_to_bdi(inode)->wb, WB_WRITEBACK, nr);
+=======
+		inc_node_page_state(page, NR_WRITEBACK);
+		inc_wb_stat(&inode_to_bdi(inode)->wb, WB_WRITEBACK);
+>>>>>>> b7ba80a49124 (Commit)
 		__mark_inode_dirty(inode, I_DIRTY_DATASYNC);
 	}
 }
@@ -796,6 +861,7 @@ unsigned int nfs_page_length(struct page *page)
 }
 
 /*
+<<<<<<< HEAD
  * Determine the number of bytes of data the page contains
  */
 static inline size_t nfs_folio_length(struct folio *folio)
@@ -814,6 +880,8 @@ static inline size_t nfs_folio_length(struct folio *folio)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Convert a umode to a dirent->d_type
  */
 static inline
@@ -826,10 +894,18 @@ unsigned char nfs_umode_to_dtype(umode_t mode)
  * Determine the number of pages in an array of length 'len' and
  * with a base offset of 'base'
  */
+<<<<<<< HEAD
 static inline unsigned int nfs_page_array_len(unsigned int base, size_t len)
 {
 	return ((unsigned long)len + (unsigned long)base + PAGE_SIZE - 1) >>
 	       PAGE_SHIFT;
+=======
+static inline
+unsigned int nfs_page_array_len(unsigned int base, size_t len)
+{
+	return ((unsigned long)len + (unsigned long)base +
+		PAGE_SIZE - 1) >> PAGE_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -846,12 +922,33 @@ u64 nfs_timespec_to_change_attr(const struct timespec64 *ts)
 }
 
 #ifdef CONFIG_CRC32
+<<<<<<< HEAD
+=======
+/**
+ * nfs_fhandle_hash - calculate the crc32 hash for the filehandle
+ * @fh - pointer to filehandle
+ *
+ * returns a crc32 hash for the filehandle that is compatible with
+ * the one displayed by "wireshark".
+ */
+static inline u32 nfs_fhandle_hash(const struct nfs_fh *fh)
+{
+	return ~crc32_le(0xFFFFFFFF, &fh->data[0], fh->size);
+}
+>>>>>>> b7ba80a49124 (Commit)
 static inline u32 nfs_stateid_hash(const nfs4_stateid *stateid)
 {
 	return ~crc32_le(0xFFFFFFFF, &stateid->other[0],
 				NFS4_STATEID_OTHER_SIZE);
 }
 #else
+<<<<<<< HEAD
+=======
+static inline u32 nfs_fhandle_hash(const struct nfs_fh *fh)
+{
+	return 0;
+}
+>>>>>>> b7ba80a49124 (Commit)
 static inline u32 nfs_stateid_hash(nfs4_stateid *stateid)
 {
 	return 0;
@@ -895,13 +992,21 @@ static inline bool nfs_error_is_fatal_on_server(int err)
  * Select between a default port value and a user-specified port value.
  * If a zero value is set, then autobind will be used.
  */
+<<<<<<< HEAD
 static inline void nfs_set_port(struct sockaddr_storage *sap, int *port,
+=======
+static inline void nfs_set_port(struct sockaddr *sap, int *port,
+>>>>>>> b7ba80a49124 (Commit)
 				const unsigned short default_port)
 {
 	if (*port == NFS_UNSPEC_PORT)
 		*port = default_port;
 
+<<<<<<< HEAD
 	rpc_set_port((struct sockaddr *)sap, *port);
+=======
+	rpc_set_port(sap, *port);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct nfs_direct_req {

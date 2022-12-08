@@ -23,10 +23,23 @@ static const struct mtk_gate_regs img_cg_regs = {
 	.sta_ofs = 0x0,
 };
 
+<<<<<<< HEAD
 #define GATE_IMG(_id, _name, _parent, _shift)			\
 	GATE_MTK(_id, _name, _parent, &img_cg_regs, _shift, &mtk_clk_gate_ops_setclr)
 
 static const struct mtk_gate img_clks[] = {
+=======
+#define GATE_IMG(_id, _name, _parent, _shift) {		\
+		.id = _id,				\
+		.name = _name,				\
+		.parent_name = _parent,			\
+		.regs = &img_cg_regs,			\
+		.shift = _shift,			\
+		.ops = &mtk_clk_gate_ops_setclr,	\
+	}
+
+static const struct mtk_gate img_clks[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	GATE_IMG(CLK_IMG_LARB1_SMI, "img_larb1_smi", "smi_mm", 0),
 	GATE_IMG(CLK_IMG_CAM_SMI, "img_cam_smi", "smi_mm", 5),
 	GATE_IMG(CLK_IMG_CAM_CAM, "img_cam_cam", "smi_mm", 6),
@@ -35,6 +48,7 @@ static const struct mtk_gate img_clks[] = {
 	GATE_IMG(CLK_IMG_VENC, "img_venc", "smi_mm", 9),
 };
 
+<<<<<<< HEAD
 static const struct mtk_clk_desc img_desc = {
 	.clks = img_clks,
 	.num_clks = ARRAY_SIZE(img_clks),
@@ -56,3 +70,22 @@ static struct platform_driver clk_mt8167_imgsys_drv = {
 };
 module_platform_driver(clk_mt8167_imgsys_drv);
 MODULE_LICENSE("GPL");
+=======
+static void __init mtk_imgsys_init(struct device_node *node)
+{
+	struct clk_hw_onecell_data *clk_data;
+	int r;
+
+	clk_data = mtk_alloc_clk_data(CLK_IMG_NR_CLK);
+
+	mtk_clk_register_gates(node, img_clks, ARRAY_SIZE(img_clks), clk_data);
+
+	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+
+	if (r)
+		pr_err("%s(): could not register clock provider: %d\n",
+			__func__, r);
+
+}
+CLK_OF_DECLARE(mtk_imgsys, "mediatek,mt8167-imgsys", mtk_imgsys_init);
+>>>>>>> b7ba80a49124 (Commit)

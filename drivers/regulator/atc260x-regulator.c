@@ -530,7 +530,10 @@ static struct platform_driver atc260x_regulator_driver = {
 	.probe = atc260x_regulator_probe,
 	.driver = {
 		.name = "atc260x-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

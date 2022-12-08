@@ -2,8 +2,14 @@
 # List of files in the vdso
 
 KCOV_INSTRUMENT := n
+<<<<<<< HEAD
 
 # Include the generic Makefile to check the built vdso.
+=======
+ARCH_REL_TYPE_ABS := R_390_COPY|R_390_GLOB_DAT|R_390_JMP_SLOT|R_390_RELATIVE
+ARCH_REL_TYPE_ABS += R_390_GOT|R_390_PLT
+
+>>>>>>> b7ba80a49124 (Commit)
 include $(srctree)/lib/vdso/Makefile
 obj-vdso64 = vdso_user_wrapper.o note.o
 obj-cvdso64 = vdso64_generic.o getcpu.o
@@ -21,10 +27,17 @@ KBUILD_AFLAGS += -DBUILD_VDSO
 KBUILD_CFLAGS += -DBUILD_VDSO -DDISABLE_BRANCH_PROFILING
 
 KBUILD_AFLAGS_64 := $(filter-out -m64,$(KBUILD_AFLAGS))
+<<<<<<< HEAD
 KBUILD_AFLAGS_64 += -m64
 
 KBUILD_CFLAGS_64 := $(filter-out -m64,$(KBUILD_CFLAGS))
 KBUILD_CFLAGS_64 += -m64 -fPIC -fno-common -fno-builtin
+=======
+KBUILD_AFLAGS_64 += -m64 -s
+
+KBUILD_CFLAGS_64 := $(filter-out -m64,$(KBUILD_CFLAGS))
+KBUILD_CFLAGS_64 += -m64 -fPIC -shared -fno-common -fno-builtin
+>>>>>>> b7ba80a49124 (Commit)
 ldflags-y := -fPIC -shared -soname=linux-vdso64.so.1 \
 	     --hash-style=both --build-id=sha1 -T
 

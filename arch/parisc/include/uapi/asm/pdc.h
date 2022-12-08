@@ -363,11 +363,16 @@
 
 #if !defined(__ASSEMBLY__)
 
+<<<<<<< HEAD
 /* flags for hardware_path */
+=======
+/* flags of the device_path */
+>>>>>>> b7ba80a49124 (Commit)
 #define	PF_AUTOBOOT	0x80
 #define	PF_AUTOSEARCH	0x40
 #define	PF_TIMER	0x0F
 
+<<<<<<< HEAD
 struct hardware_path {
 	unsigned char flags;	/* see bit definitions below */
 	signed   char bc[6];	/* Bus Converter routing info to a specific */
@@ -382,6 +387,17 @@ struct pdc_module_path {	/* page 1-69 */
 
 struct pz_device {
 	struct pdc_module_path dp;	/* see above */
+=======
+struct device_path {		/* page 1-69 */
+	unsigned char flags;	/* flags see above! */
+	unsigned char bc[6];	/* bus converter routing info */
+	unsigned char mod;
+	unsigned int  layers[6];/* device-specific layer-info */
+} __attribute__((aligned(8))) ;
+
+struct pz_device {
+	struct	device_path dp;	/* see above */
+>>>>>>> b7ba80a49124 (Commit)
 	/* struct	iomod *hpa; */
 	unsigned int hpa;	/* HPA base address */
 	/* char	*spa; */
@@ -616,6 +632,24 @@ struct pdc_initiator { /* PDC_INITIATOR */
 	int mode;
 };
 
+<<<<<<< HEAD
+=======
+struct hardware_path {
+	char  flags;	/* see bit definitions below */
+	char  bc[6];	/* Bus Converter routing info to a specific */
+			/* I/O adaptor (< 0 means none, > 63 resvd) */
+	char  mod;	/* fixed field of specified module */
+};
+
+/*
+ * Device path specifications used by PDC.
+ */
+struct pdc_module_path {
+	struct hardware_path path;
+	unsigned int layers[6]; /* device-specific info (ctlr #, unit # ...) */
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Only used on some pre-PA2.0 boxes */
 struct pdc_memory_map {		/* PDC_MEMORY_MAP */
 	unsigned long hpa;	/* mod's register set address */

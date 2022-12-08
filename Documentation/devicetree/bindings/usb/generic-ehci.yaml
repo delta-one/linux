@@ -10,7 +10,11 @@ maintainers:
   - Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 allOf:
+<<<<<<< HEAD
   - $ref: usb-hcd.yaml
+=======
+  - $ref: "usb-hcd.yaml"
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -30,7 +34,10 @@ properties:
               - allwinner,sun4i-a10-ehci
               - allwinner,sun50i-a64-ehci
               - allwinner,sun50i-h6-ehci
+<<<<<<< HEAD
               - allwinner,sun50i-h616-ehci
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - allwinner,sun5i-a13-ehci
               - allwinner,sun6i-a31-ehci
               - allwinner,sun7i-a20-ehci
@@ -74,11 +81,14 @@ properties:
           - const: usb-ehci
       - enum:
           - generic-ehci
+<<<<<<< HEAD
           - marvell,armada-3700-ehci
           - marvell,orion-ehci
           - nuvoton,npcm750-ehci
           - nuvoton,npcm845-ehci
           - ti,ehci-omap
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - usb-ehci
 
   reg:

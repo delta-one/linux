@@ -398,7 +398,11 @@ EXPORT_SYMBOL(alloc_etherdev_mqs);
 
 ssize_t sysfs_format_mac(char *buf, const unsigned char *addr, int len)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%*phC\n", len, addr);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%*phC\n", len, addr);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(sysfs_format_mac);
 

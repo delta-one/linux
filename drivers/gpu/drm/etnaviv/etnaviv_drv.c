@@ -22,7 +22,10 @@
 #include "etnaviv_gem.h"
 #include "etnaviv_mmu.h"
 #include "etnaviv_perfmon.h"
+<<<<<<< HEAD
 #include "common.xml.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * DRM operations:
@@ -57,11 +60,14 @@ static int etnaviv_open(struct drm_device *dev, struct drm_file *file)
 	if (!ctx)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	ret = xa_alloc_cyclic(&priv->active_contexts, &ctx->id, ctx,
 			      xa_limit_32b, &priv->next_context_id, GFP_KERNEL);
 	if (ret < 0)
 		goto out_free;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ctx->mmu = etnaviv_iommu_context_init(priv->mmu_global,
 					      priv->cmdbuf_suballoc);
 	if (!ctx->mmu) {
@@ -105,8 +111,11 @@ static void etnaviv_postclose(struct drm_device *dev, struct drm_file *file)
 
 	etnaviv_iommu_context_put(ctx->mmu);
 
+<<<<<<< HEAD
 	xa_erase(&priv->active_contexts, ctx->id);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(ctx);
 }
 
@@ -476,6 +485,7 @@ static const struct drm_ioctl_desc etnaviv_ioctls[] = {
 	ETNA_IOCTL(PM_QUERY_SIG, pm_query_sig, DRM_RENDER_ALLOW),
 };
 
+<<<<<<< HEAD
 static void etnaviv_fop_show_fdinfo(struct seq_file *m, struct file *f)
 {
 	struct drm_file *file = f->private_data;
@@ -517,6 +527,9 @@ static const struct file_operations fops = {
 	DRM_GEM_FOPS,
 	.show_fdinfo = etnaviv_fop_show_fdinfo,
 };
+=======
+DEFINE_DRM_GEM_FOPS(fops);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct drm_driver etnaviv_drm_driver = {
 	.driver_features    = DRIVER_GEM | DRIVER_RENDER,
@@ -562,8 +575,11 @@ static int etnaviv_bind(struct device *dev)
 
 	dma_set_max_seg_size(dev, SZ_2G);
 
+<<<<<<< HEAD
 	xa_init_flags(&priv->active_contexts, XA_FLAGS_ALLOC);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&priv->gem_lock);
 	INIT_LIST_HEAD(&priv->gem_list);
 	priv->num_gpus = 0;
@@ -613,8 +629,11 @@ static void etnaviv_unbind(struct device *dev)
 
 	etnaviv_cmdbuf_suballoc_destroy(priv->cmdbuf_suballoc);
 
+<<<<<<< HEAD
 	xa_destroy(&priv->active_contexts);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	drm->dev_private = NULL;
 	kfree(priv);
 

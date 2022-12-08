@@ -17,6 +17,28 @@ extern struct workqueue_struct *xfs_alloc_wq;
 unsigned int xfs_agfl_size(struct xfs_mount *mp);
 
 /*
+<<<<<<< HEAD
+=======
+ * Freespace allocation types.  Argument to xfs_alloc_[v]extent.
+ */
+#define XFS_ALLOCTYPE_FIRST_AG	0x02	/* ... start at ag 0 */
+#define XFS_ALLOCTYPE_THIS_AG	0x08	/* anywhere in this a.g. */
+#define XFS_ALLOCTYPE_START_BNO	0x10	/* near this block else anywhere */
+#define XFS_ALLOCTYPE_NEAR_BNO	0x20	/* in this a.g. and near this block */
+#define XFS_ALLOCTYPE_THIS_BNO	0x40	/* at exactly this block */
+
+/* this should become an enum again when the tracing code is fixed */
+typedef unsigned int xfs_alloctype_t;
+
+#define XFS_ALLOC_TYPES \
+	{ XFS_ALLOCTYPE_FIRST_AG,	"FIRST_AG" }, \
+	{ XFS_ALLOCTYPE_THIS_AG,	"THIS_AG" }, \
+	{ XFS_ALLOCTYPE_START_BNO,	"START_BNO" }, \
+	{ XFS_ALLOCTYPE_NEAR_BNO,	"NEAR_BNO" }, \
+	{ XFS_ALLOCTYPE_THIS_BNO,	"THIS_BNO" }
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * Flags for xfs_alloc_fix_freelist.
  */
 #define	XFS_ALLOC_FLAG_TRYLOCK	0x00000001  /* use trylock for buffer locking */
@@ -49,6 +71,11 @@ typedef struct xfs_alloc_arg {
 	xfs_agblock_t	min_agbno;	/* set an agbno range for NEAR allocs */
 	xfs_agblock_t	max_agbno;	/* ... */
 	xfs_extlen_t	len;		/* output: actual size of extent */
+<<<<<<< HEAD
+=======
+	xfs_alloctype_t	type;		/* allocation type XFS_ALLOCTYPE_... */
+	xfs_alloctype_t	otype;		/* original allocation type */
+>>>>>>> b7ba80a49124 (Commit)
 	int		datatype;	/* mask defining data type treatment */
 	char		wasdel;		/* set if allocation was prev delayed */
 	char		wasfromfl;	/* set if allocation is from freelist */
@@ -97,6 +124,7 @@ xfs_alloc_log_agf(
 	uint32_t	fields);/* mask of fields to be logged (XFS_AGF_...) */
 
 /*
+<<<<<<< HEAD
  * Allocate an extent anywhere in the specific AG given. If there is no
  * space matching the requirements in that AG, then the allocation will fail.
  */
@@ -134,6 +162,13 @@ int xfs_alloc_vextent_start_ag(struct xfs_alloc_arg *args,
  */
 int xfs_alloc_vextent_first_ag(struct xfs_alloc_arg *args,
 		xfs_fsblock_t target);
+=======
+ * Allocate an extent (variable-size).
+ */
+int				/* error */
+xfs_alloc_vextent(
+	xfs_alloc_arg_t	*args);	/* allocation argument structure */
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Free an extent.

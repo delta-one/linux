@@ -12,6 +12,10 @@
 #include <linux/scatterlist.h>
 #include <linux/shmem_fs.h>
 
+<<<<<<< HEAD
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_gem.h>
 #include <drm/drm_prime.h>
 #include <drm/drm_probe_helper.h>
@@ -69,7 +73,12 @@ static int xen_drm_front_gem_object_mmap(struct drm_gem_object *gem_obj,
 	 * vm_pgoff (used as a fake buffer offset by DRM) to 0 as we want to map
 	 * the whole buffer.
 	 */
+<<<<<<< HEAD
 	vm_flags_mod(vma, VM_MIXEDMAP | VM_DONTEXPAND, VM_PFNMAP);
+=======
+	vma->vm_flags &= ~VM_PFNMAP;
+	vma->vm_flags |= VM_MIXEDMAP | VM_DONTEXPAND;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_pgoff = 0;
 
 	/*

@@ -182,7 +182,11 @@ config MEDIA_CONTROLLER
 #
 
 config DVB_CORE
+<<<<<<< HEAD
 	tristate "DVB Core"
+=======
+	tristate
+>>>>>>> b7ba80a49124 (Commit)
 	depends on MEDIA_DIGITAL_TV_SUPPORT
 	depends on (I2C || I2C=n)
 	default MEDIA_DIGITAL_TV_SUPPORT

@@ -39,7 +39,10 @@
 #include "node.h"
 #include "net.h"
 #include <net/genetlink.h>
+<<<<<<< HEAD
 #include <linux/string_helpers.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/tipc_config.h>
 
 /* The legacy API had an artificial message length limit called
@@ -174,6 +177,14 @@ static struct sk_buff *tipc_get_err_tlv(char *str)
 	return buf;
 }
 
+<<<<<<< HEAD
+=======
+static inline bool string_is_valid(char *s, int len)
+{
+	return memchr(s, '\0', len) ? true : false;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __tipc_nl_compat_dumpit(struct tipc_nl_compat_cmd_dump *cmd,
 				   struct tipc_nl_compat_msg *msg,
 				   struct sk_buff *arg)
@@ -441,7 +452,11 @@ static int tipc_nl_compat_bearer_enable(struct tipc_nl_compat_cmd_doit *cmd,
 		return -EINVAL;
 
 	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
+<<<<<<< HEAD
 	if (!string_is_terminated(b->name, len))
+=======
+	if (!string_is_valid(b->name, len))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (nla_put_string(skb, TIPC_NLA_BEARER_NAME, b->name))
@@ -482,7 +497,11 @@ static int tipc_nl_compat_bearer_disable(struct tipc_nl_compat_cmd_doit *cmd,
 		return -EINVAL;
 
 	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
+<<<<<<< HEAD
 	if (!string_is_terminated(name, len))
+=======
+	if (!string_is_valid(name, len))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (nla_put_string(skb, TIPC_NLA_BEARER_NAME, name))
@@ -580,7 +599,11 @@ static int tipc_nl_compat_link_stat_dump(struct tipc_nl_compat_msg *msg,
 		return -EINVAL;
 
 	len = min_t(int, len, TIPC_MAX_LINK_NAME);
+<<<<<<< HEAD
 	if (!string_is_terminated(name, len))
+=======
+	if (!string_is_valid(name, len))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (strcmp(name, nla_data(link[TIPC_NLA_LINK_NAME])) != 0)
@@ -815,7 +838,11 @@ static int tipc_nl_compat_link_set(struct tipc_nl_compat_cmd_doit *cmd,
 		return -EINVAL;
 
 	len = min_t(int, len, TIPC_MAX_LINK_NAME);
+<<<<<<< HEAD
 	if (!string_is_terminated(lc->name, len))
+=======
+	if (!string_is_valid(lc->name, len))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	media = tipc_media_find(lc->name);
@@ -852,7 +879,11 @@ static int tipc_nl_compat_link_reset_stats(struct tipc_nl_compat_cmd_doit *cmd,
 		return -EINVAL;
 
 	len = min_t(int, len, TIPC_MAX_LINK_NAME);
+<<<<<<< HEAD
 	if (!string_is_terminated(name, len))
+=======
+	if (!string_is_valid(name, len))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (nla_put_string(skb, TIPC_NLA_LINK_NAME, name))
@@ -876,7 +907,11 @@ static int tipc_nl_compat_name_table_dump_header(struct tipc_nl_compat_msg *msg)
 	};
 
 	ntq = (struct tipc_name_table_query *)TLV_DATA(msg->req);
+<<<<<<< HEAD
 	if (TLV_GET_DATA_LEN(msg->req) < (int)sizeof(struct tipc_name_table_query))
+=======
+	if (TLV_GET_DATA_LEN(msg->req) < sizeof(struct tipc_name_table_query))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	depth = ntohl(ntq->depth);

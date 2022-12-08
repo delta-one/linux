@@ -19,8 +19,11 @@
 static const struct fb_ops armada_fb_ops = {
 	.owner		= THIS_MODULE,
 	DRM_FB_HELPER_DEFAULT_OPS,
+<<<<<<< HEAD
 	.fb_read	= drm_fb_helper_cfb_read,
 	.fb_write	= drm_fb_helper_cfb_write,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.fb_fillrect	= drm_fb_helper_cfb_fillrect,
 	.fb_copyarea	= drm_fb_helper_cfb_copyarea,
 	.fb_imageblit	= drm_fb_helper_cfb_imageblit,
@@ -74,7 +77,11 @@ static int armada_fbdev_create(struct drm_fb_helper *fbh,
 	if (IS_ERR(dfb))
 		return PTR_ERR(dfb);
 
+<<<<<<< HEAD
 	info = drm_fb_helper_alloc_info(fbh);
+=======
+	info = drm_fb_helper_alloc_fbi(fbh);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(info)) {
 		ret = PTR_ERR(info);
 		goto err_fballoc;
@@ -129,7 +136,11 @@ int armada_fbdev_init(struct drm_device *dev)
 
 	priv->fbdev = fbh;
 
+<<<<<<< HEAD
 	drm_fb_helper_prepare(dev, fbh, 32, &armada_fb_helper_funcs);
+=======
+	drm_fb_helper_prepare(dev, fbh, &armada_fb_helper_funcs);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = drm_fb_helper_init(dev, fbh);
 	if (ret) {
@@ -137,7 +148,11 @@ int armada_fbdev_init(struct drm_device *dev)
 		goto err_fb_helper;
 	}
 
+<<<<<<< HEAD
 	ret = drm_fb_helper_initial_config(fbh);
+=======
+	ret = drm_fb_helper_initial_config(fbh, 32);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		DRM_ERROR("failed to set initial config\n");
 		goto err_fb_setup;
@@ -147,7 +162,10 @@ int armada_fbdev_init(struct drm_device *dev)
  err_fb_setup:
 	drm_fb_helper_fini(fbh);
  err_fb_helper:
+<<<<<<< HEAD
 	drm_fb_helper_unprepare(fbh);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	priv->fbdev = NULL;
 	return ret;
 }
@@ -158,15 +176,22 @@ void armada_fbdev_fini(struct drm_device *dev)
 	struct drm_fb_helper *fbh = priv->fbdev;
 
 	if (fbh) {
+<<<<<<< HEAD
 		drm_fb_helper_unregister_info(fbh);
+=======
+		drm_fb_helper_unregister_fbi(fbh);
+>>>>>>> b7ba80a49124 (Commit)
 
 		drm_fb_helper_fini(fbh);
 
 		if (fbh->fb)
 			fbh->fb->funcs->destroy(fbh->fb);
 
+<<<<<<< HEAD
 		drm_fb_helper_unprepare(fbh);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		priv->fbdev = NULL;
 	}
 }

@@ -46,7 +46,11 @@ config MIPS
 	select GENERIC_SCHED_CLOCK if !CAVIUM_OCTEON_SOC
 	select GENERIC_SMP_IDLE_THREAD
 	select GENERIC_TIME_VSYSCALL
+<<<<<<< HEAD
 	select GUP_GET_PXX_LOW_HIGH if CPU_MIPS32 && PHYS_ADDR_T_64BIT
+=======
+	select GUP_GET_PTE_LOW_HIGH if CPU_MIPS32 && PHYS_ADDR_T_64BIT
+>>>>>>> b7ba80a49124 (Commit)
 	select HAVE_ARCH_COMPILER_H
 	select HAVE_ARCH_JUMP_LABEL
 	select HAVE_ARCH_KGDB if MIPS_FP_SUPPORT
@@ -63,7 +67,14 @@ config MIPS
 	select HAVE_DEBUG_STACKOVERFLOW
 	select HAVE_DMA_CONTIGUOUS
 	select HAVE_DYNAMIC_FTRACE
+<<<<<<< HEAD
 	select HAVE_EBPF_JIT if !CPU_MICROMIPS
+=======
+	select HAVE_EBPF_JIT if !CPU_MICROMIPS && \
+				!CPU_DADDI_WORKAROUNDS && \
+				!CPU_R4000_WORKAROUNDS && \
+				!CPU_R4400_WORKAROUNDS
+>>>>>>> b7ba80a49124 (Commit)
 	select HAVE_EXIT_THREAD
 	select HAVE_FAST_GUP
 	select HAVE_FTRACE_MCOUNT_RECORD
@@ -442,7 +453,10 @@ config LANTIQ
 	select IRQ_MIPS_CPU
 	select CEVT_R4K
 	select CSRC_R4K
+<<<<<<< HEAD
 	select NO_EXCEPT_FILL
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select SYS_HAS_CPU_MIPS32_R1
 	select SYS_HAS_CPU_MIPS32_R2
 	select SYS_SUPPORTS_BIG_ENDIAN
@@ -487,6 +501,10 @@ config MACH_LOONGSON64
 	select BOARD_SCACHE
 	select CSRC_R4K
 	select CEVT_R4K
+<<<<<<< HEAD
+=======
+	select CPU_HAS_WB
+>>>>>>> b7ba80a49124 (Commit)
 	select FORCE_PCI
 	select ISA
 	select I8259
@@ -606,6 +624,10 @@ config RALINK
 	select DMA_NONCOHERENT
 	select IRQ_MIPS_CPU
 	select USE_OF
+<<<<<<< HEAD
+=======
+	select SYS_HAS_CPU_MIPS32_R1
+>>>>>>> b7ba80a49124 (Commit)
 	select SYS_HAS_CPU_MIPS32_R2
 	select SYS_SUPPORTS_32BIT_KERNEL
 	select SYS_SUPPORTS_LITTLE_ENDIAN
@@ -791,6 +813,27 @@ config SGI_IP32
 	help
 	  If you want this kernel to run on SGI O2 workstation, say Y here.
 
+<<<<<<< HEAD
+=======
+config SIBYTE_CRHINE
+	bool "Sibyte BCM91120C-CRhine"
+	select BOOT_ELF32
+	select SIBYTE_BCM1120
+	select SWAP_IO_SPACE
+	select SYS_HAS_CPU_SB1
+	select SYS_SUPPORTS_BIG_ENDIAN
+	select SYS_SUPPORTS_LITTLE_ENDIAN
+
+config SIBYTE_CARMEL
+	bool "Sibyte BCM91120x-Carmel"
+	select BOOT_ELF32
+	select SIBYTE_BCM1120
+	select SWAP_IO_SPACE
+	select SYS_HAS_CPU_SB1
+	select SYS_SUPPORTS_BIG_ENDIAN
+	select SYS_SUPPORTS_LITTLE_ENDIAN
+
+>>>>>>> b7ba80a49124 (Commit)
 config SIBYTE_CRHONE
 	bool "Sibyte BCM91125C-CRhone"
 	select BOOT_ELF32
@@ -804,7 +847,11 @@ config SIBYTE_CRHONE
 config SIBYTE_RHONE
 	bool "Sibyte BCM91125E-Rhone"
 	select BOOT_ELF32
+<<<<<<< HEAD
 	select SIBYTE_SB1250
+=======
+	select SIBYTE_BCM1125H
+>>>>>>> b7ba80a49124 (Commit)
 	select SWAP_IO_SPACE
 	select SYS_HAS_CPU_SB1
 	select SYS_SUPPORTS_BIG_ENDIAN
@@ -1057,6 +1104,14 @@ config FW_CFE
 config ARCH_SUPPORTS_UPROBES
 	bool
 
+<<<<<<< HEAD
+=======
+config DMA_PERDEV_COHERENT
+	bool
+	select ARCH_HAS_SETUP_DMA_OPS
+	select DMA_NONCOHERENT
+
+>>>>>>> b7ba80a49124 (Commit)
 config DMA_NONCOHERENT
 	bool
 	#
@@ -2115,10 +2170,21 @@ endchoice
 
 config ARCH_FORCE_MAX_ORDER
 	int "Maximum zone order"
+<<<<<<< HEAD
 	default "13" if MIPS_HUGE_TLB_SUPPORT && PAGE_SIZE_64KB
 	default "12" if MIPS_HUGE_TLB_SUPPORT && PAGE_SIZE_32KB
 	default "11" if MIPS_HUGE_TLB_SUPPORT && PAGE_SIZE_16KB
 	default "10"
+=======
+	range 14 64 if MIPS_HUGE_TLB_SUPPORT && PAGE_SIZE_64KB
+	default "14" if MIPS_HUGE_TLB_SUPPORT && PAGE_SIZE_64KB
+	range 13 64 if MIPS_HUGE_TLB_SUPPORT && PAGE_SIZE_32KB
+	default "13" if MIPS_HUGE_TLB_SUPPORT && PAGE_SIZE_32KB
+	range 12 64 if MIPS_HUGE_TLB_SUPPORT && PAGE_SIZE_16KB
+	default "12" if MIPS_HUGE_TLB_SUPPORT && PAGE_SIZE_16KB
+	range 0 64
+	default "11"
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  The kernel memory allocator divides physically contiguous memory
 	  blocks into "zones", where each zone is a power of two number of
@@ -2127,6 +2193,12 @@ config ARCH_FORCE_MAX_ORDER
 	  blocks of physically contiguous memory, then you may need to
 	  increase this value.
 
+<<<<<<< HEAD
+=======
+	  This config option is actually maximum order plus one. For example,
+	  a value of 11 means that the largest free memory block is 2^10 pages.
+
+>>>>>>> b7ba80a49124 (Commit)
 	  The page size is not necessarily 4KB.  Keep this in mind
 	  when choosing a value for this option.
 
@@ -3171,10 +3243,13 @@ config CC_HAS_MNO_BRANCH_LIKELY
 	def_bool y
 	depends on $(cc-option,-mno-branch-likely)
 
+<<<<<<< HEAD
 # https://github.com/llvm/llvm-project/issues/61045
 config CC_HAS_BROKEN_INLINE_COMPAT_BRANCH
 	def_bool y if CC_IS_CLANG
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 menu "Power management options"
 
 config ARCH_HIBERNATION_POSSIBLE

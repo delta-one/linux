@@ -21,7 +21,11 @@
 #include <linux/fs.h>
 #include <linux/fs_context.h>
 #include <linux/poll.h>
+<<<<<<< HEAD
 #include <linux/zstd.h>
+=======
+#include <linux/zlib.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <uapi/linux/major.h>
 #include <uapi/linux/magic.h>
 
@@ -611,6 +615,7 @@ static const struct file_operations aa_fs_ns_revision_fops = {
 static void profile_query_cb(struct aa_profile *profile, struct aa_perms *perms,
 			     const char *match_str, size_t match_len)
 {
+<<<<<<< HEAD
 	struct aa_ruleset *rules = list_first_entry(&profile->rules,
 						    typeof(*rules), list);
 	struct aa_perms tmp = { };
@@ -621,10 +626,22 @@ static void profile_query_cb(struct aa_profile *profile, struct aa_perms *perms,
 	if (rules->file.dfa && *match_str == AA_CLASS_FILE) {
 		state = aa_dfa_match_len(rules->file.dfa,
 					 rules->file.start[AA_CLASS_FILE],
+=======
+	struct aa_perms tmp = { };
+	struct aa_dfa *dfa;
+	unsigned int state = 0;
+
+	if (profile_unconfined(profile))
+		return;
+	if (profile->file.dfa && *match_str == AA_CLASS_FILE) {
+		dfa = profile->file.dfa;
+		state = aa_dfa_match_len(dfa, profile->file.start,
+>>>>>>> b7ba80a49124 (Commit)
 					 match_str + 1, match_len - 1);
 		if (state) {
 			struct path_cond cond = { };
 
+<<<<<<< HEAD
 			tmp = *(aa_lookup_fperms(&(rules->file), state, &cond));
 		}
 	} else if (rules->policy.dfa) {
@@ -635,6 +652,18 @@ static void profile_query_cb(struct aa_profile *profile, struct aa_perms *perms,
 					 match_str, match_len);
 		if (state)
 			tmp = *aa_lookup_perms(&rules->policy, state);
+=======
+			tmp = aa_compute_fperms(dfa, state, &cond);
+		}
+	} else if (profile->policy.dfa) {
+		if (!PROFILE_MEDIATES(profile, *match_str))
+			return;	/* no change to current perms */
+		dfa = profile->policy.dfa;
+		state = aa_dfa_match_len(dfa, profile->policy.start[0],
+					 match_str, match_len);
+		if (state)
+			aa_compute_perms(dfa, state, &tmp);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	aa_apply_modes_to_perms(profile, &tmp);
 	aa_perms_accum_raw(perms, &tmp);
@@ -869,10 +898,15 @@ static struct multi_transaction *multi_transaction_new(struct file *file,
 	if (!t)
 		return ERR_PTR(-ENOMEM);
 	kref_init(&t->count);
+<<<<<<< HEAD
 	if (copy_from_user(t->data, buf, size)) {
 		put_multi_transaction(t);
 		return ERR_PTR(-EFAULT);
 	}
+=======
+	if (copy_from_user(t->data, buf, size))
+		return ERR_PTR(-EFAULT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return t;
 }
@@ -1093,9 +1127,15 @@ static int seq_profile_attach_show(struct seq_file *seq, void *v)
 	struct aa_proxy *proxy = seq->private;
 	struct aa_label *label = aa_get_label_rcu(&proxy->label);
 	struct aa_profile *profile = labels_profile(label);
+<<<<<<< HEAD
 	if (profile->attach.xmatch_str)
 		seq_printf(seq, "%s\n", profile->attach.xmatch_str);
 	else if (profile->attach.xmatch.dfa)
+=======
+	if (profile->attach)
+		seq_printf(seq, "%s\n", profile->attach);
+	else if (profile->xmatch)
+>>>>>>> b7ba80a49124 (Commit)
 		seq_puts(seq, "<unknown>\n");
 	else
 		seq_printf(seq, "%s\n", profile->base.name);
@@ -1200,6 +1240,7 @@ static int seq_ns_name_show(struct seq_file *seq, void *v)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int seq_ns_compress_min_show(struct seq_file *seq, void *v)
 {
 	seq_printf(seq, "%d\n", AA_MIN_CLEVEL);
@@ -1212,12 +1253,17 @@ static int seq_ns_compress_max_show(struct seq_file *seq, void *v)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 SEQ_NS_FOPS(stacked);
 SEQ_NS_FOPS(nsstacked);
 SEQ_NS_FOPS(level);
 SEQ_NS_FOPS(name);
+<<<<<<< HEAD
 SEQ_NS_FOPS(compress_min);
 SEQ_NS_FOPS(compress_max);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 
 /* policy/raw_data/ * file ops */
@@ -1312,6 +1358,7 @@ SEQ_RAWDATA_FOPS(revision);
 SEQ_RAWDATA_FOPS(hash);
 SEQ_RAWDATA_FOPS(compressed_size);
 
+<<<<<<< HEAD
 static int decompress_zstd(char *src, size_t slen, char *dst, size_t dlen)
 {
 #ifdef CONFIG_SECURITY_APPARMOR_EXPORT_BINARY
@@ -1340,6 +1387,44 @@ static int decompress_zstd(char *src, size_t slen, char *dst, size_t dlen)
 cleanup:
 		kvfree(wksp);
 		return ret;
+=======
+static int deflate_decompress(char *src, size_t slen, char *dst, size_t dlen)
+{
+#ifdef CONFIG_SECURITY_APPARMOR_EXPORT_BINARY
+	if (aa_g_rawdata_compression_level != 0) {
+		int error = 0;
+		struct z_stream_s strm;
+
+		memset(&strm, 0, sizeof(strm));
+
+		strm.workspace = kvzalloc(zlib_inflate_workspacesize(), GFP_KERNEL);
+		if (!strm.workspace)
+			return -ENOMEM;
+
+		strm.next_in = src;
+		strm.avail_in = slen;
+
+		error = zlib_inflateInit(&strm);
+		if (error != Z_OK) {
+			error = -ENOMEM;
+			goto fail_inflate_init;
+		}
+
+		strm.next_out = dst;
+		strm.avail_out = dlen;
+
+		error = zlib_inflate(&strm, Z_FINISH);
+		if (error != Z_STREAM_END)
+			error = -EINVAL;
+		else
+			error = 0;
+
+		zlib_inflateEnd(&strm);
+fail_inflate_init:
+		kvfree(strm.workspace);
+
+		return error;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 #endif
 
@@ -1388,9 +1473,15 @@ static int rawdata_open(struct inode *inode, struct file *file)
 
 	private->loaddata = loaddata;
 
+<<<<<<< HEAD
 	error = decompress_zstd(loaddata->data, loaddata->compressed_size,
 				RAWDATA_F_DATA_BUF(private),
 				loaddata->size);
+=======
+	error = deflate_decompress(loaddata->data, loaddata->compressed_size,
+				   RAWDATA_F_DATA_BUF(private),
+				   loaddata->size);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		goto fail_decompress;
 
@@ -1793,7 +1884,11 @@ fail2:
 	return error;
 }
 
+<<<<<<< HEAD
 static int ns_mkdir_op(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int ns_mkdir_op(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct dentry *dentry, umode_t mode)
 {
 	struct aa_ns *ns, *parent;
@@ -2401,8 +2496,11 @@ static struct aa_sfs_entry aa_sfs_entry_apparmor[] = {
 	AA_SFS_FILE_FOPS(".ns_level", 0444, &seq_ns_level_fops),
 	AA_SFS_FILE_FOPS(".ns_name", 0444, &seq_ns_name_fops),
 	AA_SFS_FILE_FOPS("profiles", 0444, &aa_sfs_profiles_fops),
+<<<<<<< HEAD
 	AA_SFS_FILE_FOPS("raw_data_compression_level_min", 0444, &seq_ns_compress_min_fops),
 	AA_SFS_FILE_FOPS("raw_data_compression_level_max", 0444, &seq_ns_compress_max_fops),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	AA_SFS_DIR("features", aa_sfs_entry_features),
 	{ }
 };

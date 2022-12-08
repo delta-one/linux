@@ -16,7 +16,11 @@
 
 #include "kvm_util.h"
 #include "test_util.h"
+<<<<<<< HEAD
 #include "memstress.h"
+=======
+#include "perf_test_util.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "guest_modes.h"
 
 #ifdef __aarch64__
@@ -67,7 +71,11 @@ static bool host_quit;
 static int iteration;
 static int vcpu_last_completed_iteration[KVM_MAX_VCPUS];
 
+<<<<<<< HEAD
 static void vcpu_worker(struct memstress_vcpu_args *vcpu_args)
+=======
+static void vcpu_worker(struct perf_test_vcpu_args *vcpu_args)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct kvm_vcpu *vcpu = vcpu_args->vcpu;
 	int vcpu_idx = vcpu_args->vcpu_idx;
@@ -128,12 +136,19 @@ static void vcpu_worker(struct memstress_vcpu_args *vcpu_args)
 struct test_params {
 	unsigned long iterations;
 	uint64_t phys_offset;
+<<<<<<< HEAD
 	bool partition_vcpu_memory_access;
 	enum vm_mem_backing_src_type backing_src;
 	int slots;
 	uint32_t write_percent;
 	uint32_t random_seed;
 	bool random_access;
+=======
+	int wr_fract;
+	bool partition_vcpu_memory_access;
+	enum vm_mem_backing_src_type backing_src;
+	int slots;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void toggle_dirty_logging(struct kvm_vm *vm, int slots, bool enable)
@@ -141,7 +156,11 @@ static void toggle_dirty_logging(struct kvm_vm *vm, int slots, bool enable)
 	int i;
 
 	for (i = 0; i < slots; i++) {
+<<<<<<< HEAD
 		int slot = MEMSTRESS_MEM_SLOT_INDEX + i;
+=======
+		int slot = PERF_TEST_MEM_SLOT_INDEX + i;
+>>>>>>> b7ba80a49124 (Commit)
 		int flags = enable ? KVM_MEM_LOG_DIRTY_PAGES : 0;
 
 		vm_mem_region_set_flags(vm, slot, flags);
@@ -163,7 +182,11 @@ static void get_dirty_log(struct kvm_vm *vm, unsigned long *bitmaps[], int slots
 	int i;
 
 	for (i = 0; i < slots; i++) {
+<<<<<<< HEAD
 		int slot = MEMSTRESS_MEM_SLOT_INDEX + i;
+=======
+		int slot = PERF_TEST_MEM_SLOT_INDEX + i;
+>>>>>>> b7ba80a49124 (Commit)
 
 		kvm_vm_get_dirty_log(vm, slot, bitmaps[i]);
 	}
@@ -175,7 +198,11 @@ static void clear_dirty_log(struct kvm_vm *vm, unsigned long *bitmaps[],
 	int i;
 
 	for (i = 0; i < slots; i++) {
+<<<<<<< HEAD
 		int slot = MEMSTRESS_MEM_SLOT_INDEX + i;
+=======
+		int slot = PERF_TEST_MEM_SLOT_INDEX + i;
+>>>>>>> b7ba80a49124 (Commit)
 
 		kvm_vm_clear_dirty_log(vm, slot, bitmaps[i], 0, pages_per_slot);
 	}
@@ -223,6 +250,7 @@ static void run_test(enum vm_guest_mode mode, void *arg)
 	struct timespec clear_dirty_log_total = (struct timespec){0};
 	int i;
 
+<<<<<<< HEAD
 	vm = memstress_create_vm(mode, nr_vcpus, guest_percpu_mem_size,
 				 p->slots, p->backing_src,
 				 p->partition_vcpu_memory_access);
@@ -230,6 +258,13 @@ static void run_test(enum vm_guest_mode mode, void *arg)
 	pr_info("Random seed: %u\n", p->random_seed);
 	memstress_set_random_seed(vm, p->random_seed);
 	memstress_set_write_percent(vm, p->write_percent);
+=======
+	vm = perf_test_create_vm(mode, nr_vcpus, guest_percpu_mem_size,
+				 p->slots, p->backing_src,
+				 p->partition_vcpu_memory_access);
+
+	perf_test_set_wr_fract(vm, p->wr_fract);
+>>>>>>> b7ba80a49124 (Commit)
 
 	guest_num_pages = (nr_vcpus * guest_percpu_mem_size) >> vm->page_shift;
 	guest_num_pages = vm_adjust_num_guest_pages(mode, guest_num_pages);
@@ -252,6 +287,7 @@ static void run_test(enum vm_guest_mode mode, void *arg)
 	for (i = 0; i < nr_vcpus; i++)
 		vcpu_last_completed_iteration[i] = -1;
 
+<<<<<<< HEAD
 	/*
 	 * Use 100% writes during the population phase to ensure all
 	 * memory is actually populated and not just mapped to the zero
@@ -262,6 +298,9 @@ static void run_test(enum vm_guest_mode mode, void *arg)
 	memstress_set_write_percent(vm, 100);
 	memstress_set_random_access(vm, false);
 	memstress_start_vcpu_threads(nr_vcpus, vcpu_worker);
+=======
+	perf_test_start_vcpu_threads(nr_vcpus, vcpu_worker);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Allow the vCPUs to populate memory */
 	pr_debug("Starting iteration %d - Populating\n", iteration);
@@ -282,9 +321,12 @@ static void run_test(enum vm_guest_mode mode, void *arg)
 	pr_info("Enabling dirty logging time: %ld.%.9lds\n\n",
 		ts_diff.tv_sec, ts_diff.tv_nsec);
 
+<<<<<<< HEAD
 	memstress_set_write_percent(vm, p->write_percent);
 	memstress_set_random_access(vm, p->random_access);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	while (iteration < p->iterations) {
 		/*
 		 * Incrementing the iteration number will start the vCPUs
@@ -345,7 +387,11 @@ static void run_test(enum vm_guest_mode mode, void *arg)
 	 * wait for them to exit.
 	 */
 	host_quit = true;
+<<<<<<< HEAD
 	memstress_join_vcpu_threads(nr_vcpus);
+=======
+	perf_test_join_vcpu_threads(nr_vcpus);
+>>>>>>> b7ba80a49124 (Commit)
 
 	avg = timespec_div(get_dirty_log_total, p->iterations);
 	pr_info("Get dirty log over %lu iterations took %ld.%.9lds. (Avg %ld.%.9lds/iteration)\n",
@@ -361,17 +407,28 @@ static void run_test(enum vm_guest_mode mode, void *arg)
 
 	free_bitmaps(bitmaps, p->slots);
 	arch_cleanup_vm(vm);
+<<<<<<< HEAD
 	memstress_destroy_vm(vm);
+=======
+	perf_test_destroy_vm(vm);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void help(char *name)
 {
 	puts("");
+<<<<<<< HEAD
 	printf("usage: %s [-h] [-a] [-i iterations] [-p offset] [-g] "
 	       "[-m mode] [-n] [-b vcpu bytes] [-v vcpus] [-o] [-r random seed ] [-s mem type]"
 	       "[-x memslots] [-w percentage] [-c physical cpus to run test on]\n", name);
 	puts("");
 	printf(" -a: access memory randomly rather than in order.\n");
+=======
+	printf("usage: %s [-h] [-i iterations] [-p offset] [-g] "
+	       "[-m mode] [-n] [-b vcpu bytes] [-v vcpus] [-o] [-s mem type]"
+	       "[-x memslots]\n", name);
+	puts("");
+>>>>>>> b7ba80a49124 (Commit)
 	printf(" -i: specify iteration counts (default: %"PRIu64")\n",
 	       TEST_HOST_LOOP_N);
 	printf(" -g: Do not enable KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2. This\n"
@@ -390,6 +447,7 @@ static void help(char *name)
 	printf(" -b: specify the size of the memory region which should be\n"
 	       "     dirtied by each vCPU. e.g. 10M or 3G.\n"
 	       "     (default: 1G)\n");
+<<<<<<< HEAD
 	printf(" -v: specify the number of vCPUs to run.\n");
 	printf(" -o: Overlap guest memory accesses instead of partitioning\n"
 	       "     them into a separate region of memory for each vCPU.\n");
@@ -413,6 +471,18 @@ static void help(char *name)
 	       "     To leave the application task unpinned, drop the final entry:\n\n"
 	       "         ./dirty_log_perf_test -v 3 -c 22,23,24\n\n"
 	       "     (default: no pinning)\n");
+=======
+	printf(" -f: specify the fraction of pages which should be written to\n"
+	       "     as opposed to simply read, in the form\n"
+	       "     1/<fraction of pages to write>.\n"
+	       "     (default: 1 i.e. all pages are written to.)\n");
+	printf(" -v: specify the number of vCPUs to run.\n");
+	printf(" -o: Overlap guest memory accesses instead of partitioning\n"
+	       "     them into a separate region of memory for each vCPU.\n");
+	backing_src_help("-s");
+	printf(" -x: Split the memory region into this number of memslots.\n"
+	       "     (default: 1)\n");
+>>>>>>> b7ba80a49124 (Commit)
 	puts("");
 	exit(0);
 }
@@ -420,6 +490,7 @@ static void help(char *name)
 int main(int argc, char *argv[])
 {
 	int max_vcpus = kvm_check_cap(KVM_CAP_MAX_VCPUS);
+<<<<<<< HEAD
 	const char *pcpu_list = NULL;
 	struct test_params p = {
 		.iterations = TEST_HOST_LOOP_N,
@@ -428,6 +499,14 @@ int main(int argc, char *argv[])
 		.slots = 1,
 		.random_seed = 1,
 		.write_percent = 100,
+=======
+	struct test_params p = {
+		.iterations = TEST_HOST_LOOP_N,
+		.wr_fract = 1,
+		.partition_vcpu_memory_access = true,
+		.backing_src = DEFAULT_VM_MEM_SRC,
+		.slots = 1,
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	int opt;
 
@@ -438,6 +517,7 @@ int main(int argc, char *argv[])
 
 	guest_modes_append_default();
 
+<<<<<<< HEAD
 	while ((opt = getopt(argc, argv, "ab:c:eghi:m:nop:r:s:v:x:w:")) != -1) {
 		switch (opt) {
 		case 'a':
@@ -461,16 +541,49 @@ int main(int argc, char *argv[])
 			break;
 		case 'i':
 			p.iterations = atoi_positive("Number of iterations", optarg);
+=======
+	while ((opt = getopt(argc, argv, "eghi:p:m:nb:f:v:os:x:")) != -1) {
+		switch (opt) {
+		case 'e':
+			/* 'e' is for evil. */
+			run_vcpus_while_disabling_dirty_logging = true;
+		case 'g':
+			dirty_log_manual_caps = 0;
+			break;
+		case 'i':
+			p.iterations = atoi(optarg);
+			break;
+		case 'p':
+			p.phys_offset = strtoull(optarg, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 'm':
 			guest_modes_cmdline(optarg);
 			break;
 		case 'n':
+<<<<<<< HEAD
 			memstress_args.nested = true;
+=======
+			perf_test_args.nested = true;
+			break;
+		case 'b':
+			guest_percpu_mem_size = parse_size(optarg);
+			break;
+		case 'f':
+			p.wr_fract = atoi(optarg);
+			TEST_ASSERT(p.wr_fract >= 1,
+				    "Write fraction cannot be less than one");
+			break;
+		case 'v':
+			nr_vcpus = atoi(optarg);
+			TEST_ASSERT(nr_vcpus > 0 && nr_vcpus <= max_vcpus,
+				    "Invalid number of vcpus, must be between 1 and %d", max_vcpus);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 'o':
 			p.partition_vcpu_memory_access = false;
 			break;
+<<<<<<< HEAD
 		case 'p':
 			p.phys_offset = strtoull(optarg, NULL, 0);
 			break;
@@ -493,18 +606,30 @@ int main(int argc, char *argv[])
 		case 'x':
 			p.slots = atoi_positive("Number of slots", optarg);
 			break;
+=======
+		case 's':
+			p.backing_src = parse_backing_src_type(optarg);
+			break;
+		case 'x':
+			p.slots = atoi(optarg);
+			break;
+		case 'h':
+>>>>>>> b7ba80a49124 (Commit)
 		default:
 			help(argv[0]);
 			break;
 		}
 	}
 
+<<<<<<< HEAD
 	if (pcpu_list) {
 		kvm_parse_vcpu_pinning(pcpu_list, memstress_args.vcpu_to_pcpu,
 				       nr_vcpus);
 		memstress_args.pin_vcpus = true;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	TEST_ASSERT(p.iterations >= 2, "The test should have at least two iterations");
 
 	pr_info("Test iterations: %"PRIu64"\n",	p.iterations);

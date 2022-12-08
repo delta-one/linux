@@ -30,6 +30,7 @@ we have a dedicated glossary for Display Core at
     EOP
       End Of Pipe/Pipeline
 
+<<<<<<< HEAD
     GART
       Graphics Address Remapping Table.  This is the name we use for the GPUVM
       page table used by the GPU kernel driver.  It remaps system resources
@@ -39,12 +40,15 @@ we have a dedicated glossary for Display Core at
       scattered pages for DMA.  The MMU has since moved on to the GPU, but the
       name stuck.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     GC
       Graphics and Compute
 
     GMC
       Graphic Memory Controller
 
+<<<<<<< HEAD
     GPUVM
       GPU Virtual Memory.  This is the GPU's MMU.  The GPU supports multiple
       virtual address spaces that can be in flight at any given time.  These
@@ -59,6 +63,8 @@ we have a dedicated glossary for Display Core at
       table for use by the kernel driver or into per process GPUVM page tables
       for application usage.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     IH
       Interrupt Handler
 

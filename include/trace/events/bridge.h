@@ -122,6 +122,7 @@ TRACE_EVENT(br_fdb_update,
 		  __entry->flags)
 );
 
+<<<<<<< HEAD
 TRACE_EVENT(br_mdb_full,
 
 	TP_PROTO(const struct net_device *dev,
@@ -180,6 +181,8 @@ TRACE_EVENT(br_mdb_full,
 		  __get_str(dev), __entry->af, __entry->src, __entry->grp,
 		  __entry->grpmac, __entry->vid)
 );
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _TRACE_BRIDGE_H */
 

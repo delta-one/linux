@@ -20,11 +20,14 @@ struct scmi_sensors {
 	const struct scmi_sensor_info **info[hwmon_max];
 };
 
+<<<<<<< HEAD
 struct scmi_thermal_sensor {
 	const struct scmi_protocol_handle *ph;
 	const struct scmi_sensor_info *info;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline u64 __pow10(u8 x)
 {
 	u64 r = 1;
@@ -69,6 +72,7 @@ static int scmi_hwmon_scale(const struct scmi_sensor_info *sensor, u64 *value)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int scmi_hwmon_read_scaled_value(const struct scmi_protocol_handle *ph,
 					const struct scmi_sensor_info *sensor,
 					long *val)
@@ -77,6 +81,18 @@ static int scmi_hwmon_read_scaled_value(const struct scmi_protocol_handle *ph,
 	u64 value;
 
 	ret = sensor_ops->reading_get(ph, sensor->id, &value);
+=======
+static int scmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+			   u32 attr, int channel, long *val)
+{
+	int ret;
+	u64 value;
+	const struct scmi_sensor_info *sensor;
+	struct scmi_sensors *scmi_sensors = dev_get_drvdata(dev);
+
+	sensor = *(scmi_sensors->info[type] + channel);
+	ret = sensor_ops->reading_get(scmi_sensors->ph, sensor->id, &value);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -87,6 +103,7 @@ static int scmi_hwmon_read_scaled_value(const struct scmi_protocol_handle *ph,
 	return ret;
 }
 
+<<<<<<< HEAD
 static int scmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
 			   u32 attr, int channel, long *val)
 {
@@ -98,6 +115,8 @@ static int scmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
 	return scmi_hwmon_read_scaled_value(scmi_sensors->ph, sensor, val);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int
 scmi_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
 		       u32 attr, int channel, const char **str)
@@ -136,6 +155,7 @@ static struct hwmon_chip_info scmi_chip_info = {
 	.info = NULL,
 };
 
+<<<<<<< HEAD
 static int scmi_hwmon_thermal_get_temp(struct thermal_zone_device *tz,
 				       int *temp)
 {
@@ -155,6 +175,8 @@ static const struct thermal_zone_device_ops scmi_hwmon_thermal_ops = {
 	.get_temp = scmi_hwmon_thermal_get_temp,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int scmi_hwmon_add_chan_info(struct hwmon_channel_info *scmi_hwmon_chan,
 				    struct device *dev, int num,
 				    enum hwmon_sensor_types type, u32 config)
@@ -182,6 +204,10 @@ static enum hwmon_sensor_types scmi_types[] = {
 };
 
 static u32 hwmon_attributes[hwmon_max] = {
+<<<<<<< HEAD
+=======
+	[hwmon_chip] = HWMON_C_REGISTER_TZ,
+>>>>>>> b7ba80a49124 (Commit)
 	[hwmon_temp] = HWMON_T_INPUT | HWMON_T_LABEL,
 	[hwmon_in] = HWMON_I_INPUT | HWMON_I_LABEL,
 	[hwmon_curr] = HWMON_C_INPUT | HWMON_C_LABEL,
@@ -189,6 +215,7 @@ static u32 hwmon_attributes[hwmon_max] = {
 	[hwmon_energy] = HWMON_E_INPUT | HWMON_E_LABEL,
 };
 
+<<<<<<< HEAD
 static int scmi_thermal_sensor_register(struct device *dev,
 					const struct scmi_protocol_handle *ph,
 					const struct scmi_sensor_info *sensor)
@@ -226,6 +253,8 @@ static int scmi_thermal_sensor_register(struct device *dev,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int scmi_hwmon_probe(struct scmi_device *sdev)
 {
 	int i, idx;
@@ -233,7 +262,11 @@ static int scmi_hwmon_probe(struct scmi_device *sdev)
 	enum hwmon_sensor_types type;
 	struct scmi_sensors *scmi_sensors;
 	const struct scmi_sensor_info *sensor;
+<<<<<<< HEAD
 	int nr_count[hwmon_max] = {0}, nr_types = 0, nr_count_temp = 0;
+=======
+	int nr_count[hwmon_max] = {0}, nr_types = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct hwmon_chip_info *chip_info;
 	struct device *hwdev, *dev = &sdev->dev;
 	struct hwmon_channel_info *scmi_hwmon_chan;
@@ -277,8 +310,15 @@ static int scmi_hwmon_probe(struct scmi_device *sdev)
 		}
 	}
 
+<<<<<<< HEAD
 	if (nr_count[hwmon_temp])
 		nr_count_temp = nr_count[hwmon_temp];
+=======
+	if (nr_count[hwmon_temp]) {
+		nr_count[hwmon_chip]++;
+		nr_types++;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	scmi_hwmon_chan = devm_kcalloc(dev, nr_types, sizeof(*scmi_hwmon_chan),
 				       GFP_KERNEL);
@@ -329,6 +369,7 @@ static int scmi_hwmon_probe(struct scmi_device *sdev)
 	hwdev = devm_hwmon_device_register_with_info(dev, "scmi_sensors",
 						     scmi_sensors, chip_info,
 						     NULL);
+<<<<<<< HEAD
 	if (IS_ERR(hwdev))
 		return PTR_ERR(hwdev);
 
@@ -354,6 +395,10 @@ static int scmi_hwmon_probe(struct scmi_device *sdev)
 	}
 
 	return 0;
+=======
+
+	return PTR_ERR_OR_ZERO(hwdev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct scmi_device_id scmi_id_table[] = {

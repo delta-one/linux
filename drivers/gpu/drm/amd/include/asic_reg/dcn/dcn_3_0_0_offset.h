@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: MIT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef _dcn_3_0_0_OFFSET_HEADER
 #define _dcn_3_0_0_OFFSET_HEADER
 

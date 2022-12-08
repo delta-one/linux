@@ -16,23 +16,37 @@
 
 static void sof_reset_route_setup_status(struct snd_sof_dev *sdev, struct snd_sof_widget *widget)
 {
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
+=======
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_sof_route *sroute;
 
 	list_for_each_entry(sroute, &sdev->route_list, list)
 		if (sroute->src_widget == widget || sroute->sink_widget == widget) {
+<<<<<<< HEAD
 			if (sroute->setup && tplg_ops && tplg_ops->route_free)
+=======
+			if (sroute->setup && tplg_ops->route_free)
+>>>>>>> b7ba80a49124 (Commit)
 				tplg_ops->route_free(sdev, sroute);
 
 			sroute->setup = false;
 		}
 }
 
+<<<<<<< HEAD
 static int sof_widget_free_unlocked(struct snd_sof_dev *sdev,
 				    struct snd_sof_widget *swidget)
 {
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 	struct snd_sof_widget *pipe_widget;
+=======
+int sof_widget_free(struct snd_sof_dev *sdev, struct snd_sof_widget *swidget)
+{
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+>>>>>>> b7ba80a49124 (Commit)
 	int err = 0;
 	int ret;
 
@@ -45,6 +59,7 @@ static int sof_widget_free_unlocked(struct snd_sof_dev *sdev,
 	if (--swidget->use_count)
 		return 0;
 
+<<<<<<< HEAD
 	pipe_widget = swidget->spipe->pipe_widget;
 
 	/* reset route setup status for all routes that contain this widget */
@@ -71,6 +86,14 @@ static int sof_widget_free_unlocked(struct snd_sof_dev *sdev,
 		if (ret < 0 && !err)
 			err = ret;
 	}
+=======
+	/* reset route setup status for all routes that contain this widget */
+	sof_reset_route_setup_status(sdev, swidget);
+
+	/* continue to disable core even if IPC fails */
+	if (tplg_ops->widget_free)
+		err = tplg_ops->widget_free(sdev, swidget);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * disable widget core. continue to route setup status and complete flag
@@ -89,6 +112,7 @@ static int sof_widget_free_unlocked(struct snd_sof_dev *sdev,
 	 * skip for static pipelines
 	 */
 	if (swidget->dynamic_pipeline_widget && swidget->id != snd_soc_dapm_scheduler) {
+<<<<<<< HEAD
 		ret = sof_widget_free_unlocked(sdev, pipe_widget);
 		if (ret < 0 && !err)
 			err = ret;
@@ -98,11 +122,20 @@ static int sof_widget_free_unlocked(struct snd_sof_dev *sdev,
 	if (swidget->id == snd_soc_dapm_scheduler)
 		swidget->spipe->complete = 0;
 
+=======
+		ret = sof_widget_free(sdev, swidget->pipe_widget);
+		if (ret < 0 && !err)
+			err = ret;
+		swidget->pipe_widget->complete = 0;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!err)
 		dev_dbg(sdev->dev, "widget %s freed\n", swidget->widget->name);
 
 	return err;
 }
+<<<<<<< HEAD
 
 int sof_widget_free(struct snd_sof_dev *sdev, struct snd_sof_widget *swidget)
 {
@@ -121,6 +154,13 @@ static int sof_widget_setup_unlocked(struct snd_sof_dev *sdev,
 {
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 	bool use_count_decremented = false;
+=======
+EXPORT_SYMBOL(sof_widget_free);
+
+int sof_widget_setup(struct snd_sof_dev *sdev, struct snd_sof_widget *swidget)
+{
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	/* skip if there is no private data */
@@ -141,13 +181,23 @@ static int sof_widget_setup_unlocked(struct snd_sof_dev *sdev,
 	 * widget in the pipeline is freed. Skip setting up scheduler widget for static pipelines.
 	 */
 	if (swidget->dynamic_pipeline_widget && swidget->id != snd_soc_dapm_scheduler) {
+<<<<<<< HEAD
 		if (!swidget->spipe || !swidget->spipe->pipe_widget) {
 			dev_err(sdev->dev, "No pipeline set for %s\n", swidget->widget->name);
+=======
+		if (!swidget->pipe_widget) {
+			dev_err(sdev->dev, "No scheduler widget set for %s\n",
+				swidget->widget->name);
+>>>>>>> b7ba80a49124 (Commit)
 			ret = -EINVAL;
 			goto use_count_dec;
 		}
 
+<<<<<<< HEAD
 		ret = sof_widget_setup_unlocked(sdev, swidget->spipe->pipe_widget);
+=======
+		ret = sof_widget_setup(sdev, swidget->pipe_widget);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret < 0)
 			goto use_count_dec;
 	}
@@ -161,7 +211,11 @@ static int sof_widget_setup_unlocked(struct snd_sof_dev *sdev,
 	}
 
 	/* setup widget in the DSP */
+<<<<<<< HEAD
 	if (tplg_ops && tplg_ops->widget_setup) {
+=======
+	if (tplg_ops->widget_setup) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = tplg_ops->widget_setup(sdev, swidget);
 		if (ret < 0)
 			goto core_put;
@@ -169,6 +223,7 @@ static int sof_widget_setup_unlocked(struct snd_sof_dev *sdev,
 
 	/* send config for DAI components */
 	if (WIDGET_IS_DAI(swidget->id)) {
+<<<<<<< HEAD
 		unsigned int flags = SOF_DAI_CONFIG_FLAGS_HW_PARAMS;
 
 		/*
@@ -176,6 +231,11 @@ static int sof_widget_setup_unlocked(struct snd_sof_dev *sdev,
 		 * not use the flags argument.
 		 */
 		if (tplg_ops && tplg_ops->dai_config) {
+=======
+		unsigned int flags = SOF_DAI_CONFIG_FLAGS_NONE;
+
+		if (tplg_ops->dai_config) {
+>>>>>>> b7ba80a49124 (Commit)
 			ret = tplg_ops->dai_config(sdev, swidget, flags, NULL);
 			if (ret < 0)
 				goto widget_free;
@@ -183,7 +243,11 @@ static int sof_widget_setup_unlocked(struct snd_sof_dev *sdev,
 	}
 
 	/* restore kcontrols for widget */
+<<<<<<< HEAD
 	if (tplg_ops && tplg_ops->control && tplg_ops->control->widget_kcontrol_setup) {
+=======
+	if (tplg_ops->control->widget_kcontrol_setup) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = tplg_ops->control->widget_kcontrol_setup(sdev, swidget);
 		if (ret < 0)
 			goto widget_free;
@@ -195,12 +259,17 @@ static int sof_widget_setup_unlocked(struct snd_sof_dev *sdev,
 
 widget_free:
 	/* widget use_count and core ref_count will both be decremented by sof_widget_free() */
+<<<<<<< HEAD
 	sof_widget_free_unlocked(sdev, swidget);
 	use_count_decremented = true;
+=======
+	sof_widget_free(sdev, swidget);
+>>>>>>> b7ba80a49124 (Commit)
 core_put:
 	snd_sof_dsp_core_put(sdev, swidget->core);
 pipe_widget_free:
 	if (swidget->id != snd_soc_dapm_scheduler)
+<<<<<<< HEAD
 		sof_widget_free_unlocked(sdev, swidget->spipe->pipe_widget);
 use_count_dec:
 	if (!use_count_decremented)
@@ -217,6 +286,11 @@ int sof_widget_setup(struct snd_sof_dev *sdev, struct snd_sof_widget *swidget)
 	ret = sof_widget_setup_unlocked(sdev, swidget);
 	mutex_unlock(&swidget->setup_mutex);
 
+=======
+		sof_widget_free(sdev, swidget->pipe_widget);
+use_count_dec:
+	swidget->use_count--;
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 EXPORT_SYMBOL(sof_widget_setup);
@@ -224,11 +298,19 @@ EXPORT_SYMBOL(sof_widget_setup);
 int sof_route_setup(struct snd_sof_dev *sdev, struct snd_soc_dapm_widget *wsource,
 		    struct snd_soc_dapm_widget *wsink)
 {
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
+=======
+	const struct sof_ipc_tplg_ops *ipc_tplg_ops = sdev->ipc->ops->tplg;
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_sof_widget *src_widget = wsource->dobj.private;
 	struct snd_sof_widget *sink_widget = wsink->dobj.private;
 	struct snd_sof_route *sroute;
 	bool route_found = false;
+<<<<<<< HEAD
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* ignore routes involving virtual widgets in topology */
 	switch (src_widget->id) {
@@ -266,12 +348,18 @@ int sof_route_setup(struct snd_sof_dev *sdev, struct snd_soc_dapm_widget *wsourc
 	if (sroute->setup)
 		return 0;
 
+<<<<<<< HEAD
 	if (tplg_ops && tplg_ops->route_setup) {
 		int ret = tplg_ops->route_setup(sdev, sroute);
 
 		if (ret < 0)
 			return ret;
 	}
+=======
+	ret = ipc_tplg_ops->route_setup(sdev, sroute);
+	if (ret < 0)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	sroute->setup = true;
 	return 0;
@@ -280,11 +368,17 @@ int sof_route_setup(struct snd_sof_dev *sdev, struct snd_soc_dapm_widget *wsourc
 static int sof_setup_pipeline_connections(struct snd_sof_dev *sdev,
 					  struct snd_soc_dapm_widget_list *list, int dir)
 {
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 	struct snd_soc_dapm_widget *widget;
 	struct snd_sof_route *sroute;
 	struct snd_soc_dapm_path *p;
 	int ret = 0;
+=======
+	struct snd_soc_dapm_widget *widget;
+	struct snd_soc_dapm_path *p;
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	/*
@@ -298,31 +392,43 @@ static int sof_setup_pipeline_connections(struct snd_sof_dev *sdev,
 			if (!widget->dobj.private)
 				continue;
 
+<<<<<<< HEAD
 			snd_soc_dapm_widget_for_each_sink_path(widget, p) {
 				if (!widget_in_list(list, p->sink))
 					continue;
 
+=======
+			snd_soc_dapm_widget_for_each_sink_path(widget, p)
+>>>>>>> b7ba80a49124 (Commit)
 				if (p->sink->dobj.private) {
 					ret = sof_route_setup(sdev, widget, p->sink);
 					if (ret < 0)
 						return ret;
 				}
+<<<<<<< HEAD
 			}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	} else {
 		for_each_dapm_widgets(list, i, widget) {
 			if (!widget->dobj.private)
 				continue;
 
+<<<<<<< HEAD
 			snd_soc_dapm_widget_for_each_source_path(widget, p) {
 				if (!widget_in_list(list, p->source))
 					continue;
 
+=======
+			snd_soc_dapm_widget_for_each_source_path(widget, p)
+>>>>>>> b7ba80a49124 (Commit)
 				if (p->source->dobj.private) {
 					ret = sof_route_setup(sdev, p->source, widget);
 					if (ret < 0)
 						return ret;
 				}
+<<<<<<< HEAD
 			}
 		}
 	}
@@ -384,10 +490,16 @@ static int sof_setup_pipeline_connections(struct snd_sof_dev *sdev,
 			return ret;
 	}
 
+=======
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static void
+<<<<<<< HEAD
 sof_unprepare_widgets_in_path(struct snd_sof_dev *sdev, struct snd_soc_dapm_widget *widget,
 			      struct snd_soc_dapm_widget_list *list)
 {
@@ -402,11 +514,26 @@ sof_unprepare_widgets_in_path(struct snd_sof_dev *sdev, struct snd_soc_dapm_widg
 
 	widget_ops = tplg_ops ? tplg_ops->widget : NULL;
 	if (widget_ops && widget_ops[widget->id].ipc_unprepare)
+=======
+sof_unprepare_widgets_in_path(struct snd_sof_dev *sdev, struct snd_soc_dapm_widget *widget)
+{
+	const struct sof_ipc_tplg_ops *ipc_tplg_ops = sdev->ipc->ops->tplg;
+	const struct sof_ipc_tplg_widget_ops *widget_ops = ipc_tplg_ops->widget;
+	struct snd_sof_widget *swidget = widget->dobj.private;
+	struct snd_soc_dapm_path *p;
+
+	/* return if the widget is in use or if it is already unprepared */
+	if (!swidget->prepared || swidget->use_count > 1)
+		return;
+
+	if (widget_ops[widget->id].ipc_unprepare)
+>>>>>>> b7ba80a49124 (Commit)
 		/* unprepare the source widget */
 		widget_ops[widget->id].ipc_unprepare(swidget);
 
 	swidget->prepared = false;
 
+<<<<<<< HEAD
 sink_unprepare:
 	/* unprepare all widgets in the sink paths */
 	snd_soc_dapm_widget_for_each_sink_path(widget, p) {
@@ -415,6 +542,13 @@ sink_unprepare:
 		if (!p->walking && p->sink->dobj.private) {
 			p->walking = true;
 			sof_unprepare_widgets_in_path(sdev, p->sink, list);
+=======
+	/* unprepare all widgets in the sink paths */
+	snd_soc_dapm_widget_for_each_sink_path(widget, p) {
+		if (!p->walking && p->sink->dobj.private) {
+			p->walking = true;
+			sof_unprepare_widgets_in_path(sdev, p->sink);
+>>>>>>> b7ba80a49124 (Commit)
 			p->walking = false;
 		}
 	}
@@ -424,6 +558,7 @@ static int
 sof_prepare_widgets_in_path(struct snd_sof_dev *sdev, struct snd_soc_dapm_widget *widget,
 			    struct snd_pcm_hw_params *fe_params,
 			    struct snd_sof_platform_stream_params *platform_params,
+<<<<<<< HEAD
 			    struct snd_pcm_hw_params *pipeline_params, int dir,
 			    struct snd_soc_dapm_widget_list *list)
 {
@@ -438,6 +573,17 @@ sof_prepare_widgets_in_path(struct snd_sof_dev *sdev, struct snd_soc_dapm_widget
 		return 0;
 
 	if (!swidget || !widget_ops[widget->id].ipc_prepare || swidget->prepared)
+=======
+			    struct snd_pcm_hw_params *pipeline_params, int dir)
+{
+	const struct sof_ipc_tplg_ops *ipc_tplg_ops = sdev->ipc->ops->tplg;
+	const struct sof_ipc_tplg_widget_ops *widget_ops = ipc_tplg_ops->widget;
+	struct snd_sof_widget *swidget = widget->dobj.private;
+	struct snd_soc_dapm_path *p;
+	int ret;
+
+	if (!widget_ops[widget->id].ipc_prepare || swidget->prepared)
+>>>>>>> b7ba80a49124 (Commit)
 		goto sink_prepare;
 
 	/* prepare the source widget */
@@ -453,6 +599,7 @@ sof_prepare_widgets_in_path(struct snd_sof_dev *sdev, struct snd_soc_dapm_widget
 sink_prepare:
 	/* prepare all widgets in the sink paths */
 	snd_soc_dapm_widget_for_each_sink_path(widget, p) {
+<<<<<<< HEAD
 		if (!widget_in_list(list, p->sink))
 			continue;
 		if (!p->walking && p->sink->dobj.private) {
@@ -465,6 +612,16 @@ sink_prepare:
 				/* unprepare the source widget */
 				if (widget_ops[widget->id].ipc_unprepare &&
 				    swidget && swidget->prepared) {
+=======
+		if (!p->walking && p->sink->dobj.private) {
+			p->walking = true;
+			ret = sof_prepare_widgets_in_path(sdev, p->sink,  fe_params,
+							  platform_params, pipeline_params, dir);
+			p->walking = false;
+			if (ret < 0) {
+				/* unprepare the source widget */
+				if (widget_ops[widget->id].ipc_unprepare && swidget->prepared) {
+>>>>>>> b7ba80a49124 (Commit)
 					widget_ops[widget->id].ipc_unprepare(swidget);
 					swidget->prepared = false;
 				}
@@ -481,13 +638,19 @@ sink_prepare:
  * (DAI type for capture, AIF type for playback)
  */
 static int sof_free_widgets_in_path(struct snd_sof_dev *sdev, struct snd_soc_dapm_widget *widget,
+<<<<<<< HEAD
 				    int dir, struct snd_sof_pcm *spcm)
 {
 	struct snd_soc_dapm_widget_list *list = spcm->stream[dir].list;
+=======
+				    int dir)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_soc_dapm_path *p;
 	int err;
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (widget->dobj.private) {
 		err = sof_widget_free(sdev, widget->dobj.private);
 		if (err < 0)
@@ -503,6 +666,23 @@ static int sof_free_widgets_in_path(struct snd_sof_dev *sdev, struct snd_soc_dap
 			p->walking = true;
 
 			err = sof_free_widgets_in_path(sdev, p->sink, dir, spcm);
+=======
+	/* free all widgets even in case of error to keep use counts balanced */
+	snd_soc_dapm_widget_for_each_sink_path(widget, p) {
+		if (!p->walking && p->sink->dobj.private && widget->dobj.private) {
+			p->walking = true;
+			if (WIDGET_IS_AIF_OR_DAI(widget->id)) {
+				err = sof_widget_free(sdev, widget->dobj.private);
+				if (err < 0)
+					ret = err;
+			}
+
+			err = sof_widget_free(sdev, p->sink->dobj.private);
+			if (err < 0)
+				ret = err;
+
+			err = sof_free_widgets_in_path(sdev, p->sink, dir);
+>>>>>>> b7ba80a49124 (Commit)
 			if (err < 0)
 				ret = err;
 			p->walking = false;
@@ -518,6 +698,7 @@ static int sof_free_widgets_in_path(struct snd_sof_dev *sdev, struct snd_soc_dap
  * The error path in this function ensures that all successfully set up widgets getting freed.
  */
 static int sof_set_up_widgets_in_path(struct snd_sof_dev *sdev, struct snd_soc_dapm_widget *widget,
+<<<<<<< HEAD
 				      int dir, struct snd_sof_pcm *spcm)
 {
 	struct snd_sof_pcm_stream_pipeline_list *pipeline_list = &spcm->stream[dir].pipeline_list;
@@ -570,6 +751,39 @@ sink_setup:
 					sof_widget_free(sdev, swidget);
 				return ret;
 			}
+=======
+				      int dir)
+{
+	struct snd_soc_dapm_path *p;
+	int ret;
+
+	snd_soc_dapm_widget_for_each_sink_path(widget, p) {
+		if (!p->walking && p->sink->dobj.private && widget->dobj.private) {
+			p->walking = true;
+			if (WIDGET_IS_AIF_OR_DAI(widget->id)) {
+				ret = sof_widget_setup(sdev, widget->dobj.private);
+				if (ret < 0)
+					goto out;
+			}
+
+			ret = sof_widget_setup(sdev, p->sink->dobj.private);
+			if (ret < 0) {
+				if (WIDGET_IS_AIF_OR_DAI(widget->id))
+					sof_widget_free(sdev, widget->dobj.private);
+				goto out;
+			}
+
+			ret = sof_set_up_widgets_in_path(sdev, p->sink, dir);
+			if (ret < 0) {
+				if (WIDGET_IS_AIF_OR_DAI(widget->id))
+					sof_widget_free(sdev, widget->dobj.private);
+				sof_widget_free(sdev, p->sink->dobj.private);
+			}
+out:
+			p->walking = false;
+			if (ret < 0)
+				return ret;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -577,17 +791,25 @@ sink_setup:
 }
 
 static int
+<<<<<<< HEAD
 sof_walk_widgets_in_order(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm,
+=======
+sof_walk_widgets_in_order(struct snd_sof_dev *sdev, struct snd_soc_dapm_widget_list *list,
+>>>>>>> b7ba80a49124 (Commit)
 			  struct snd_pcm_hw_params *fe_params,
 			  struct snd_sof_platform_stream_params *platform_params, int dir,
 			  enum sof_widget_op op)
 {
+<<<<<<< HEAD
 	struct snd_soc_dapm_widget_list *list = spcm->stream[dir].list;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_soc_dapm_widget *widget;
 	char *str;
 	int ret = 0;
 	int i;
 
+<<<<<<< HEAD
 	if (!list)
 		return 0;
 
@@ -598,15 +820,32 @@ sof_walk_widgets_in_order(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm,
 
 		/* starting widget for capture is DAI type */
 		if (dir == SNDRV_PCM_STREAM_CAPTURE && widget->id != snd_soc_dapm_dai_out)
+=======
+	for_each_dapm_widgets(list, i, widget) {
+		/* starting widget for playback is AIF type */
+		if (dir == SNDRV_PCM_STREAM_PLAYBACK && !WIDGET_IS_AIF(widget->id))
+			continue;
+
+		/* starting widget for capture is DAI type */
+		if (dir == SNDRV_PCM_STREAM_CAPTURE && !WIDGET_IS_DAI(widget->id))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		switch (op) {
 		case SOF_WIDGET_SETUP:
+<<<<<<< HEAD
 			ret = sof_set_up_widgets_in_path(sdev, widget, dir, spcm);
 			str = "set up";
 			break;
 		case SOF_WIDGET_FREE:
 			ret = sof_free_widgets_in_path(sdev, widget, dir, spcm);
+=======
+			ret = sof_set_up_widgets_in_path(sdev, widget, dir);
+			str = "set up";
+			break;
+		case SOF_WIDGET_FREE:
+			ret = sof_free_widgets_in_path(sdev, widget, dir);
+>>>>>>> b7ba80a49124 (Commit)
 			str = "free";
 			break;
 		case SOF_WIDGET_PREPARE:
@@ -622,12 +861,21 @@ sof_walk_widgets_in_order(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm,
 			 */
 			memcpy(&pipeline_params, fe_params, sizeof(*fe_params));
 
+<<<<<<< HEAD
 			ret = sof_prepare_widgets_in_path(sdev, widget, fe_params, platform_params,
 							  &pipeline_params, dir, list);
 			break;
 		}
 		case SOF_WIDGET_UNPREPARE:
 			sof_unprepare_widgets_in_path(sdev, widget, list);
+=======
+			ret = sof_prepare_widgets_in_path(sdev, widget, fe_params,
+							  platform_params, &pipeline_params, dir);
+			break;
+		}
+		case SOF_WIDGET_UNPREPARE:
+			sof_unprepare_widgets_in_path(sdev, widget);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		default:
 			dev_err(sdev->dev, "Invalid widget op %d\n", op);
@@ -647,7 +895,11 @@ int sof_widget_list_setup(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm,
 			  struct snd_sof_platform_stream_params *platform_params,
 			  int dir)
 {
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
+=======
+	const struct sof_ipc_tplg_ops *ipc_tplg_ops = sdev->ipc->ops->tplg;
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_soc_dapm_widget_list *list = spcm->stream[dir].list;
 	struct snd_soc_dapm_widget *widget;
 	int i, ret;
@@ -660,17 +912,29 @@ int sof_widget_list_setup(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm,
 	 * Prepare widgets for set up. The prepare step is used to allocate memory, assign
 	 * instance ID and pick the widget configuration based on the runtime PCM params.
 	 */
+<<<<<<< HEAD
 	ret = sof_walk_widgets_in_order(sdev, spcm, fe_params, platform_params,
+=======
+	ret = sof_walk_widgets_in_order(sdev, list, fe_params, platform_params,
+>>>>>>> b7ba80a49124 (Commit)
 					dir, SOF_WIDGET_PREPARE);
 	if (ret < 0)
 		return ret;
 
 	/* Set up is used to send the IPC to the DSP to create the widget */
+<<<<<<< HEAD
 	ret = sof_walk_widgets_in_order(sdev, spcm, fe_params, platform_params,
 					dir, SOF_WIDGET_SETUP);
 	if (ret < 0) {
 		sof_walk_widgets_in_order(sdev, spcm, fe_params, platform_params,
 					  dir, SOF_WIDGET_UNPREPARE);
+=======
+	ret = sof_walk_widgets_in_order(sdev, list, fe_params, platform_params,
+					dir, SOF_WIDGET_SETUP);
+	if (ret < 0) {
+		ret = sof_walk_widgets_in_order(sdev, list, fe_params, platform_params,
+						dir, SOF_WIDGET_UNPREPARE);
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 
@@ -686,11 +950,15 @@ int sof_widget_list_setup(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm,
 	for_each_dapm_widgets(list, i, widget) {
 		struct snd_sof_widget *swidget = widget->dobj.private;
 		struct snd_sof_widget *pipe_widget;
+<<<<<<< HEAD
 		struct snd_sof_pipeline *spipe;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!swidget)
 			continue;
 
+<<<<<<< HEAD
 		spipe = swidget->spipe;
 		if (!spipe) {
 			dev_err(sdev->dev, "no pipeline found for %s\n",
@@ -700,6 +968,9 @@ int sof_widget_list_setup(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm,
 		}
 
 		pipe_widget = spipe->pipe_widget;
+=======
+		pipe_widget = swidget->pipe_widget;
+>>>>>>> b7ba80a49124 (Commit)
 		if (!pipe_widget) {
 			dev_err(sdev->dev, "error: no pipeline widget found for %s\n",
 				swidget->widget->name);
@@ -707,6 +978,7 @@ int sof_widget_list_setup(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm,
 			goto widget_free;
 		}
 
+<<<<<<< HEAD
 		if (spipe->complete)
 			continue;
 
@@ -714,6 +986,15 @@ int sof_widget_list_setup(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm,
 			spipe->complete = tplg_ops->pipeline_complete(sdev, pipe_widget);
 			if (spipe->complete < 0) {
 				ret = spipe->complete;
+=======
+		if (pipe_widget->complete)
+			continue;
+
+		if (ipc_tplg_ops->pipeline_complete) {
+			pipe_widget->complete = ipc_tplg_ops->pipeline_complete(sdev, pipe_widget);
+			if (pipe_widget->complete < 0) {
+				ret = pipe_widget->complete;
+>>>>>>> b7ba80a49124 (Commit)
 				goto widget_free;
 			}
 		}
@@ -722,16 +1003,25 @@ int sof_widget_list_setup(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm,
 	return 0;
 
 widget_free:
+<<<<<<< HEAD
 	sof_walk_widgets_in_order(sdev, spcm, fe_params, platform_params, dir,
 				  SOF_WIDGET_FREE);
 	sof_walk_widgets_in_order(sdev, spcm, NULL, NULL, dir, SOF_WIDGET_UNPREPARE);
+=======
+	sof_walk_widgets_in_order(sdev, list, fe_params, platform_params, dir,
+				  SOF_WIDGET_FREE);
+	sof_walk_widgets_in_order(sdev, list, NULL, NULL, dir, SOF_WIDGET_UNPREPARE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
 
 int sof_widget_list_free(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm, int dir)
 {
+<<<<<<< HEAD
 	struct snd_sof_pcm_stream_pipeline_list *pipeline_list = &spcm->stream[dir].pipeline_list;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_soc_dapm_widget_list *list = spcm->stream[dir].list;
 	int ret;
 
@@ -740,16 +1030,26 @@ int sof_widget_list_free(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm, int
 		return 0;
 
 	/* send IPC to free widget in the DSP */
+<<<<<<< HEAD
 	ret = sof_walk_widgets_in_order(sdev, spcm, NULL, NULL, dir, SOF_WIDGET_FREE);
 
 	/* unprepare the widget */
 	sof_walk_widgets_in_order(sdev, spcm, NULL, NULL, dir, SOF_WIDGET_UNPREPARE);
+=======
+	ret = sof_walk_widgets_in_order(sdev, list, NULL, NULL, dir, SOF_WIDGET_FREE);
+
+	/* unprepare the widget */
+	sof_walk_widgets_in_order(sdev, list, NULL, NULL, dir, SOF_WIDGET_UNPREPARE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	snd_soc_dapm_dai_free_widgets(&list);
 	spcm->stream[dir].list = NULL;
 
+<<<<<<< HEAD
 	pipeline_list->count = 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -802,11 +1102,19 @@ bool snd_sof_stream_suspend_ignored(struct snd_sof_dev *sdev)
 int sof_pcm_stream_free(struct snd_sof_dev *sdev, struct snd_pcm_substream *substream,
 			struct snd_sof_pcm *spcm, int dir, bool free_widget_list)
 {
+<<<<<<< HEAD
 	const struct sof_ipc_pcm_ops *pcm_ops = sof_ipc_get_ops(sdev, pcm);
 	int ret;
 
 	/* Send PCM_FREE IPC to reset pipeline */
 	if (pcm_ops && pcm_ops->hw_free && spcm->prepared[substream->stream]) {
+=======
+	const struct sof_ipc_pcm_ops *pcm_ops = sdev->ipc->ops->pcm;
+	int ret;
+
+	/* Send PCM_FREE IPC to reset pipeline */
+	if (pcm_ops->hw_free && spcm->prepared[substream->stream]) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = pcm_ops->hw_free(sdev->component, substream);
 		if (ret < 0)
 			return ret;
@@ -936,13 +1244,21 @@ static int sof_dai_get_clk(struct snd_soc_pcm_runtime *rtd, int clk_type)
 	struct snd_sof_dai *dai =
 		snd_sof_find_dai(component, (char *)rtd->dai_link->name);
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
+=======
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* use the tplg configured mclk if existed */
 	if (!dai)
 		return 0;
 
+<<<<<<< HEAD
 	if (tplg_ops && tplg_ops->dai_get_clk)
+=======
+	if (tplg_ops->dai_get_clk)
+>>>>>>> b7ba80a49124 (Commit)
 		return tplg_ops->dai_get_clk(sdev, dai, clk_type);
 
 	return 0;
@@ -1002,10 +1318,13 @@ int sof_machine_check(struct snd_sof_dev *sdev)
 	if (!IS_ENABLED(CONFIG_SND_SOC_SOF_FORCE_NOCODEC_MODE)) {
 		const struct snd_sof_of_mach *of_mach;
 
+<<<<<<< HEAD
 		if (IS_ENABLED(CONFIG_SND_SOC_SOF_NOCODEC_DEBUG_SUPPORT) &&
 		    sof_debug_check_flag(SOF_DBG_FORCE_NOCODEC))
 			goto nocodec;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* find machine */
 		mach = snd_sof_machine_select(sdev);
 		if (mach) {
@@ -1028,7 +1347,10 @@ int sof_machine_check(struct snd_sof_dev *sdev)
 		dev_warn(sdev->dev, "Force to use nocodec mode\n");
 	}
 
+<<<<<<< HEAD
 nocodec:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* select nocodec mode */
 	dev_warn(sdev->dev, "Using nocodec machine driver\n");
 	mach = devm_kzalloc(sdev->dev, sizeof(*mach), GFP_KERNEL);

@@ -10,7 +10,10 @@
 #include "intel_gtt.h"
 #include "intel_migrate.h"
 #include "intel_ring.h"
+<<<<<<< HEAD
 #include "gem/i915_gem_lmem.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct insert_pte_data {
 	u64 offset;
@@ -342,6 +345,7 @@ static int emit_no_arbitration(struct i915_request *rq)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int max_pte_pkt_size(struct i915_request *rq, int pkt)
 {
 	struct intel_ring *ring = rq->ring;
@@ -354,6 +358,8 @@ static int max_pte_pkt_size(struct i915_request *rq, int pkt)
 
 #define I915_EMIT_PTE_NUM_DWORDS 6
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int emit_pte(struct i915_request *rq,
 		    struct sgt_dma *it,
 		    enum i915_cache_level cache_level,
@@ -395,12 +401,21 @@ static int emit_pte(struct i915_request *rq,
 
 	offset += (u64)rq->engine->instance << 32;
 
+<<<<<<< HEAD
 	cs = intel_ring_begin(rq, I915_EMIT_PTE_NUM_DWORDS);
+=======
+	cs = intel_ring_begin(rq, 6);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(cs))
 		return PTR_ERR(cs);
 
 	/* Pack as many PTE updates as possible into a single MI command */
+<<<<<<< HEAD
 	pkt = max_pte_pkt_size(rq, dword_length);
+=======
+	pkt = min_t(int, dword_length, ring->space / sizeof(u32) + 5);
+	pkt = min_t(int, pkt, (ring->size - ring->emit) / sizeof(u32) + 5);
+>>>>>>> b7ba80a49124 (Commit)
 
 	hdr = cs;
 	*cs++ = MI_STORE_DATA_IMM | REG_BIT(21); /* as qword elements */
@@ -418,7 +433,11 @@ static int emit_pte(struct i915_request *rq,
 			intel_ring_advance(rq, cs);
 			intel_ring_update_space(ring);
 
+<<<<<<< HEAD
 			cs = intel_ring_begin(rq, I915_EMIT_PTE_NUM_DWORDS);
+=======
+			cs = intel_ring_begin(rq, 6);
+>>>>>>> b7ba80a49124 (Commit)
 			if (IS_ERR(cs))
 				return PTR_ERR(cs);
 
@@ -433,7 +452,12 @@ static int emit_pte(struct i915_request *rq,
 				}
 			}
 
+<<<<<<< HEAD
 			pkt = max_pte_pkt_size(rq, dword_rem);
+=======
+			pkt = min_t(int, dword_rem, ring->space / sizeof(u32) + 5);
+			pkt = min_t(int, pkt, (ring->size - ring->emit) / sizeof(u32) + 5);
+>>>>>>> b7ba80a49124 (Commit)
 
 			hdr = cs;
 			*cs++ = MI_STORE_DATA_IMM | REG_BIT(21);
@@ -839,6 +863,7 @@ intel_context_migrate_copy(struct intel_context *ce,
 			if (err)
 				goto out_rq;
 
+<<<<<<< HEAD
 			if (src_is_lmem) {
 				/*
 				 * If the src is already in lmem, then we must
@@ -868,6 +893,16 @@ intel_context_migrate_copy(struct intel_context *ce,
 						    len);
 			}
 
+=======
+			/*
+			 * While we can't always restore/manage the CCS state,
+			 * we still need to ensure we don't leak the CCS state
+			 * from the previous user, so make sure we overwrite it
+			 * with something.
+			 */
+			err = emit_copy_ccs(rq, dst_offset, INDIRECT_ACCESS,
+					    dst_offset, DIRECT_ACCESS, len);
+>>>>>>> b7ba80a49124 (Commit)
 			if (err)
 				goto out_rq;
 
@@ -1147,7 +1182,11 @@ void intel_migrate_fini(struct intel_migrate *m)
 {
 	struct intel_context *ce;
 
+<<<<<<< HEAD
 	ce = __xchg(&m->context, 0);
+=======
+	ce = fetch_and_zero(&m->context);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ce)
 		return;
 

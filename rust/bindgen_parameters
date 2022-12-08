@@ -6,7 +6,10 @@
 --opaque-type local_apic
 
 # Packed type cannot transitively contain a `#[repr(align)]` type.
+<<<<<<< HEAD
 --opaque-type alt_instr
+=======
+>>>>>>> b7ba80a49124 (Commit)
 --opaque-type x86_msi_data
 --opaque-type x86_msi_addr_lo
 

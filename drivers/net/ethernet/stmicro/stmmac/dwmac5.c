@@ -186,6 +186,7 @@ static void dwmac5_handle_dma_err(struct net_device *ndev,
 int dwmac5_safety_feat_config(void __iomem *ioaddr, unsigned int asp,
 			      struct stmmac_safety_feature_cfg *safety_feat_cfg)
 {
+<<<<<<< HEAD
 	struct stmmac_safety_feature_cfg all_safety_feats = {
 		.tsoee = 1,
 		.mrxpee = 1,
@@ -197,14 +198,19 @@ int dwmac5_safety_feat_config(void __iomem *ioaddr, unsigned int asp,
 		.prtyen = 1,
 		.tmouten = 1,
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 value;
 
 	if (!asp)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (!safety_feat_cfg)
 		safety_feat_cfg = &all_safety_feats;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* 1. Enable Safety Features */
 	value = readl(ioaddr + MTL_ECC_CONTROL);
 	value |= MEEAO; /* MTL ECC Error Addr Status Override */
@@ -541,9 +547,15 @@ int dwmac5_flex_pps_config(void __iomem *ioaddr, int index,
 		return 0;
 	}
 
+<<<<<<< HEAD
 	val |= TRGTMODSELx(index, 0x2);
 	val |= PPSEN0;
 	writel(val, ioaddr + MAC_PPS_CONTROL);
+=======
+	val |= PPSCMDx(index, 0x2);
+	val |= TRGTMODSELx(index, 0x2);
+	val |= PPSEN0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	writel(cfg->start.tv_sec, ioaddr + MAC_PPSx_TARGET_TIME_SEC(index));
 
@@ -568,7 +580,10 @@ int dwmac5_flex_pps_config(void __iomem *ioaddr, int index,
 	writel(period - 1, ioaddr + MAC_PPSx_WIDTH(index));
 
 	/* Finally, activate it */
+<<<<<<< HEAD
 	val |= PPSCMDx(index, 0x2);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	writel(val, ioaddr + MAC_PPS_CONTROL);
 	return 0;
 }

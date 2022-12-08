@@ -15,6 +15,7 @@ fi
 linux_mman=${linux_header_dir}/mman.h
 arch_mman=${arch_header_dir}/mman.h
 
+<<<<<<< HEAD
 # those in grep -E -vw are flags, we want just the bits
 
 printf "static const char *mmap_flags[] = {\n"
@@ -35,6 +36,28 @@ grep -E -q $regex ${linux_mman} && \
 	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
 ([ ! -f ${arch_mman} ] || grep -E -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.h>.*' ${arch_mman}) &&
 (grep -E $regex ${header_dir}/mman.h | \
+=======
+# those in egrep -vw are flags, we want just the bits
+
+printf "static const char *mmap_flags[] = {\n"
+regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
+egrep -q $regex ${arch_mman} && \
+(egrep $regex ${arch_mman} | \
+	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
+	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
+egrep -q $regex ${linux_mman} && \
+(egrep $regex ${linux_mman} | \
+	egrep -vw 'MAP_(UNINITIALIZED|TYPE|SHARED_VALIDATE)' | \
+	sed -r "s/$regex/\2 \1 \1 \1 \2/g" | \
+	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
+([ ! -f ${arch_mman} ] || egrep -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.*' ${arch_mman}) &&
+(egrep $regex ${header_dir}/mman-common.h | \
+	egrep -vw 'MAP_(UNINITIALIZED|TYPE|SHARED_VALIDATE)' | \
+	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
+	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
+([ ! -f ${arch_mman} ] || egrep -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.h>.*' ${arch_mman}) &&
+(egrep $regex ${header_dir}/mman.h | \
+>>>>>>> b7ba80a49124 (Commit)
 	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
 	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
 printf "};\n"

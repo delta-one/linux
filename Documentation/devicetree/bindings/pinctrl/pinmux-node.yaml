@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/pinctrl/pinmux-node.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Generic Pin Multiplexing Node
+=======
+title: Generic pin multiplexing node schema
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Linus Walleij <linus.walleij@linaro.org>
@@ -31,7 +35,11 @@ description: |
     };
   };
   state_1_node_a {
+<<<<<<< HEAD
     spi {
+=======
+    spi0 {
+>>>>>>> b7ba80a49124 (Commit)
       function = "spi0";
       groups = "spi0pins";
     };

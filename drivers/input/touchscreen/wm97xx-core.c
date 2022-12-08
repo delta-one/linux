@@ -763,7 +763,11 @@ static int wm97xx_mfd_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int wm97xx_suspend(struct device *dev)
+=======
+static int __maybe_unused wm97xx_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct wm97xx *wm = dev_get_drvdata(dev);
 	u16 reg;
@@ -797,7 +801,11 @@ static int wm97xx_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int wm97xx_resume(struct device *dev)
+=======
+static int __maybe_unused wm97xx_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct wm97xx *wm = dev_get_drvdata(dev);
 
@@ -833,7 +841,11 @@ static int wm97xx_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(wm97xx_pm_ops, wm97xx_suspend, wm97xx_resume);
+=======
+static SIMPLE_DEV_PM_OPS(wm97xx_pm_ops, wm97xx_suspend, wm97xx_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Machine specific operations
@@ -869,13 +881,21 @@ static struct device_driver wm97xx_driver = {
 	.owner =	THIS_MODULE,
 	.probe =	wm97xx_probe,
 	.remove =	wm97xx_remove,
+<<<<<<< HEAD
 	.pm =		pm_sleep_ptr(&wm97xx_pm_ops),
+=======
+	.pm =		&wm97xx_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct platform_driver wm97xx_mfd_driver = {
 	.driver = {
 		.name =		"wm97xx-ts",
+<<<<<<< HEAD
 		.pm =		pm_sleep_ptr(&wm97xx_pm_ops),
+=======
+		.pm =		&wm97xx_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe =	wm97xx_mfd_probe,
 	.remove =	wm97xx_mfd_remove,

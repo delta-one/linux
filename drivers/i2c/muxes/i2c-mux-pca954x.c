@@ -411,9 +411,15 @@ static int pca954x_init(struct i2c_client *client, struct pca954x *data)
 /*
  * I2C init/probing/exit functions
  */
+<<<<<<< HEAD
 static int pca954x_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int pca954x_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct i2c_adapter *adap = client->adapter;
 	struct device *dev = &client->dev;
 	struct gpio_desc *gpio;

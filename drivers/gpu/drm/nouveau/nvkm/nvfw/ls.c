@@ -106,6 +106,7 @@ nvfw_ls_desc_v1(struct nvkm_subdev *subdev, const void *data)
 
 	return hdr;
 }
+<<<<<<< HEAD
 
 const struct nvfw_ls_desc_v2 *
 nvfw_ls_desc_v2(struct nvkm_subdev *subdev, const void *data)
@@ -178,3 +179,5 @@ nvfw_ls_hsbl_hdr(struct nvkm_subdev *subdev, const void *data)
 	nvkm_debug(subdev, "\tnumSig           : 0x%x\n", hdr->num_sig);
 	return hdr;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

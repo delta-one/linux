@@ -162,7 +162,11 @@ static ssize_t device_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tb_retimer *rt = tb_to_retimer(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%#x\n", rt->device);
+=======
+	return sprintf(buf, "%#x\n", rt->device);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(device);
 
@@ -180,13 +184,18 @@ static ssize_t nvm_authenticate_show(struct device *dev,
 	else if (rt->no_nvm_upgrade)
 		ret = -EOPNOTSUPP;
 	else
+<<<<<<< HEAD
 		ret = sysfs_emit(buf, "%#x\n", rt->auth_status);
+=======
+		ret = sprintf(buf, "%#x\n", rt->auth_status);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&rt->tb->lock);
 
 	return ret;
 }
 
+<<<<<<< HEAD
 static void tb_retimer_set_inbound_sbtx(struct tb_port *port)
 {
 	int i;
@@ -203,6 +212,8 @@ static void tb_retimer_unset_inbound_sbtx(struct tb_port *port)
 		usb4_port_retimer_unset_inbound_sbtx(port, i);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t nvm_authenticate_store(struct device *dev,
 	struct device_attribute *attr, const char *buf, size_t count)
 {
@@ -229,7 +240,10 @@ static ssize_t nvm_authenticate_store(struct device *dev,
 	rt->auth_status = 0;
 
 	if (val) {
+<<<<<<< HEAD
 		tb_retimer_set_inbound_sbtx(rt->port);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (val == AUTHENTICATE_ONLY) {
 			ret = tb_retimer_nvm_authenticate(rt, true);
 		} else {
@@ -249,7 +263,10 @@ static ssize_t nvm_authenticate_store(struct device *dev,
 	}
 
 exit_unlock:
+<<<<<<< HEAD
 	tb_retimer_unset_inbound_sbtx(rt->port);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&rt->tb->lock);
 exit_rpm:
 	pm_runtime_mark_last_busy(&rt->dev);
@@ -273,7 +290,11 @@ static ssize_t nvm_version_show(struct device *dev,
 	if (!rt->nvm)
 		ret = -EAGAIN;
 	else
+<<<<<<< HEAD
 		ret = sysfs_emit(buf, "%x.%x\n", rt->nvm->major, rt->nvm->minor);
+=======
+		ret = sprintf(buf, "%x.%x\n", rt->nvm->major, rt->nvm->minor);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&rt->tb->lock);
 	return ret;
@@ -285,7 +306,11 @@ static ssize_t vendor_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tb_retimer *rt = tb_to_retimer(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%#x\n", rt->vendor);
+=======
+	return sprintf(buf, "%#x\n", rt->vendor);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(vendor);
 
@@ -445,6 +470,16 @@ int tb_retimer_scan(struct tb_port *port, bool add)
 {
 	u32 status[TB_MAX_RETIMER_INDEX + 1] = {};
 	int ret, i, last_idx = 0;
+<<<<<<< HEAD
+=======
+	struct usb4_port *usb4;
+
+	usb4 = port->usb4;
+	if (!usb4)
+		return 0;
+
+	pm_runtime_get_sync(&usb4->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Send broadcast RT to make sure retimer indices facing this
@@ -452,13 +487,22 @@ int tb_retimer_scan(struct tb_port *port, bool add)
 	 */
 	ret = usb4_port_enumerate_retimers(port);
 	if (ret)
+<<<<<<< HEAD
 		return ret;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Enable sideband channel for each retimer. We can do this
 	 * regardless whether there is device connected or not.
 	 */
+<<<<<<< HEAD
 	tb_retimer_set_inbound_sbtx(port);
+=======
+	for (i = 1; i <= TB_MAX_RETIMER_INDEX; i++)
+		usb4_port_retimer_set_inbound_sbtx(port, i);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Before doing anything else, read the authentication status.
@@ -481,6 +525,7 @@ int tb_retimer_scan(struct tb_port *port, bool add)
 			break;
 	}
 
+<<<<<<< HEAD
 	tb_retimer_unset_inbound_sbtx(port);
 
 	if (!last_idx)
@@ -488,6 +533,14 @@ int tb_retimer_scan(struct tb_port *port, bool add)
 
 	/* Add on-board retimers if they do not exist already */
 	ret = 0;
+=======
+	if (!last_idx) {
+		ret = 0;
+		goto out;
+	}
+
+	/* Add on-board retimers if they do not exist already */
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 1; i <= last_idx; i++) {
 		struct tb_retimer *rt;
 
@@ -501,6 +554,13 @@ int tb_retimer_scan(struct tb_port *port, bool add)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+out:
+	pm_runtime_mark_last_busy(&usb4->dev);
+	pm_runtime_put_autosuspend(&usb4->dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

@@ -9,12 +9,18 @@
 #define _NFSD_TRACE_H
 
 #include <linux/tracepoint.h>
+<<<<<<< HEAD
 #include <linux/sunrpc/xprt.h>
 #include <trace/misc/nfs.h>
 
 #include "export.h"
 #include "nfsfh.h"
 #include "xdr4.h"
+=======
+
+#include "export.h"
+#include "nfsfh.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define NFSD_TRACE_PROC_RES_FIELDS \
 		__field(unsigned int, netns_ino) \
@@ -257,10 +263,14 @@ TRACE_EVENT_CONDITION(nfsd_fh_verify_err,
 				  rqstp->rq_xprt->xpt_remotelen);
 		__entry->xid = be32_to_cpu(rqstp->rq_xid);
 		__entry->fh_hash = knfsd_fh_hash(&fhp->fh_handle);
+<<<<<<< HEAD
 		if (fhp->fh_dentry)
 			__entry->inode = d_inode(fhp->fh_dentry);
 		else
 			__entry->inode = NULL;
+=======
+		__entry->inode = d_inode(fhp->fh_dentry);
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->type = type;
 		__entry->access = access;
 		__entry->error = be32_to_cpu(error);
@@ -607,7 +617,10 @@ DEFINE_STATEID_EVENT(layout_recall_release);
 
 DEFINE_STATEID_EVENT(open);
 DEFINE_STATEID_EVENT(deleg_read);
+<<<<<<< HEAD
 DEFINE_STATEID_EVENT(deleg_return);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 DEFINE_STATEID_EVENT(deleg_recall);
 
 DECLARE_EVENT_CLASS(nfsd_stateseqid_class,
@@ -640,6 +653,7 @@ DEFINE_EVENT(nfsd_stateseqid_class, nfsd_##name, \
 DEFINE_STATESEQID_EVENT(preprocess);
 DEFINE_STATESEQID_EVENT(open_confirm);
 
+<<<<<<< HEAD
 TRACE_DEFINE_ENUM(NFS4_OPEN_STID);
 TRACE_DEFINE_ENUM(NFS4_LOCK_STID);
 TRACE_DEFINE_ENUM(NFS4_DELEG_STID);
@@ -695,6 +709,8 @@ DEFINE_EVENT(nfsd_stid_class, nfsd_stid_##name,			\
 
 DEFINE_STID_EVENT(revoke);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 DECLARE_EVENT_CLASS(nfsd_clientid_class,
 	TP_PROTO(const clientid_t *clid),
 	TP_ARGS(clid),
@@ -876,8 +892,12 @@ DEFINE_CLID_EVENT(confirmed_r);
 	__print_flags(val, "|",						\
 		{ 1 << NFSD_FILE_HASHED,	"HASHED" },		\
 		{ 1 << NFSD_FILE_PENDING,	"PENDING" },		\
+<<<<<<< HEAD
 		{ 1 << NFSD_FILE_REFERENCED,	"REFERENCED" },		\
 		{ 1 << NFSD_FILE_GC,		"GC" })
+=======
+		{ 1 << NFSD_FILE_REFERENCED,	"REFERENCED"})
+>>>>>>> b7ba80a49124 (Commit)
 
 DECLARE_EVENT_CLASS(nfsd_file_class,
 	TP_PROTO(struct nfsd_file *nf),
@@ -909,11 +929,18 @@ DEFINE_EVENT(nfsd_file_class, name, \
 	TP_PROTO(struct nfsd_file *nf), \
 	TP_ARGS(nf))
 
+<<<<<<< HEAD
 DEFINE_NFSD_FILE_EVENT(nfsd_file_free);
 DEFINE_NFSD_FILE_EVENT(nfsd_file_unhash);
 DEFINE_NFSD_FILE_EVENT(nfsd_file_put);
 DEFINE_NFSD_FILE_EVENT(nfsd_file_closing);
 DEFINE_NFSD_FILE_EVENT(nfsd_file_unhash_and_queue);
+=======
+DEFINE_NFSD_FILE_EVENT(nfsd_file_put_final);
+DEFINE_NFSD_FILE_EVENT(nfsd_file_unhash);
+DEFINE_NFSD_FILE_EVENT(nfsd_file_put);
+DEFINE_NFSD_FILE_EVENT(nfsd_file_unhash_and_dispose);
+>>>>>>> b7ba80a49124 (Commit)
 
 TRACE_EVENT(nfsd_file_alloc,
 	TP_PROTO(
@@ -981,6 +1008,46 @@ TRACE_EVENT(nfsd_file_acquire,
 	)
 );
 
+<<<<<<< HEAD
+=======
+TRACE_EVENT(nfsd_file_create,
+	TP_PROTO(
+		const struct svc_rqst *rqstp,
+		unsigned int may_flags,
+		const struct nfsd_file *nf
+	),
+
+	TP_ARGS(rqstp, may_flags, nf),
+
+	TP_STRUCT__entry(
+		__field(const void *, nf_inode)
+		__field(const void *, nf_file)
+		__field(unsigned long, may_flags)
+		__field(unsigned long, nf_flags)
+		__field(unsigned long, nf_may)
+		__field(unsigned int, nf_ref)
+		__field(u32, xid)
+	),
+
+	TP_fast_assign(
+		__entry->nf_inode = nf->nf_inode;
+		__entry->nf_file = nf->nf_file;
+		__entry->may_flags = may_flags;
+		__entry->nf_flags = nf->nf_flags;
+		__entry->nf_may = nf->nf_may;
+		__entry->nf_ref = refcount_read(&nf->nf_ref);
+		__entry->xid = be32_to_cpu(rqstp->rq_xid);
+	),
+
+	TP_printk("xid=0x%x inode=%p may_flags=%s ref=%u nf_flags=%s nf_may=%s nf_file=%p",
+		__entry->xid, __entry->nf_inode,
+		show_nfsd_may_flags(__entry->may_flags),
+		__entry->nf_ref, show_nf_flags(__entry->nf_flags),
+		show_nfsd_may_flags(__entry->nf_may), __entry->nf_file
+	)
+);
+
+>>>>>>> b7ba80a49124 (Commit)
 TRACE_EVENT(nfsd_file_insert_err,
 	TP_PROTO(
 		const struct svc_rqst *rqstp,
@@ -1042,8 +1109,13 @@ TRACE_EVENT(nfsd_file_cons_err,
 	)
 );
 
+<<<<<<< HEAD
 DECLARE_EVENT_CLASS(nfsd_file_open_class,
 	TP_PROTO(const struct nfsd_file *nf, __be32 status),
+=======
+TRACE_EVENT(nfsd_file_open,
+	TP_PROTO(struct nfsd_file *nf, __be32 status),
+>>>>>>> b7ba80a49124 (Commit)
 	TP_ARGS(nf, status),
 	TP_STRUCT__entry(
 		__field(void *, nf_inode)	/* cannot be dereferenced */
@@ -1067,6 +1139,7 @@ DECLARE_EVENT_CLASS(nfsd_file_open_class,
 		__entry->nf_file)
 )
 
+<<<<<<< HEAD
 #define DEFINE_NFSD_FILE_OPEN_EVENT(name)					\
 DEFINE_EVENT(nfsd_file_open_class, name,					\
 	TP_PROTO(							\
@@ -1077,6 +1150,36 @@ DEFINE_EVENT(nfsd_file_open_class, name,					\
 
 DEFINE_NFSD_FILE_OPEN_EVENT(nfsd_file_open);
 DEFINE_NFSD_FILE_OPEN_EVENT(nfsd_file_opened);
+=======
+DECLARE_EVENT_CLASS(nfsd_file_search_class,
+	TP_PROTO(
+		const struct inode *inode,
+		unsigned int count
+	),
+	TP_ARGS(inode, count),
+	TP_STRUCT__entry(
+		__field(const struct inode *, inode)
+		__field(unsigned int, count)
+	),
+	TP_fast_assign(
+		__entry->inode = inode;
+		__entry->count = count;
+	),
+	TP_printk("inode=%p count=%u",
+		__entry->inode, __entry->count)
+);
+
+#define DEFINE_NFSD_FILE_SEARCH_EVENT(name)				\
+DEFINE_EVENT(nfsd_file_search_class, name,				\
+	TP_PROTO(							\
+		const struct inode *inode,				\
+		unsigned int count					\
+	),								\
+	TP_ARGS(inode, count))
+
+DEFINE_NFSD_FILE_SEARCH_EVENT(nfsd_file_close_inode_sync);
+DEFINE_NFSD_FILE_SEARCH_EVENT(nfsd_file_close_inode);
+>>>>>>> b7ba80a49124 (Commit)
 
 TRACE_EVENT(nfsd_file_is_cached,
 	TP_PROTO(
@@ -1155,6 +1258,10 @@ DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_lru_del_disposed);
 DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_in_use);
 DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_writeback);
 DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_referenced);
+<<<<<<< HEAD
+=======
+DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_hashed);
+>>>>>>> b7ba80a49124 (Commit)
 DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_disposed);
 
 DECLARE_EVENT_CLASS(nfsd_file_lruwalk_class,
@@ -1186,6 +1293,7 @@ DEFINE_EVENT(nfsd_file_lruwalk_class, name,				\
 DEFINE_NFSD_FILE_LRUWALK_EVENT(nfsd_file_gc_removed);
 DEFINE_NFSD_FILE_LRUWALK_EVENT(nfsd_file_shrinker_removed);
 
+<<<<<<< HEAD
 TRACE_EVENT(nfsd_file_close,
 	TP_PROTO(
 		const struct inode *inode
@@ -1202,6 +1310,8 @@ TRACE_EVENT(nfsd_file_close,
 	)
 );
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "cache.h"
 
 TRACE_DEFINE_ENUM(RC_DROPIT);
@@ -1495,6 +1605,7 @@ TRACE_EVENT(nfsd_cb_offload,
 		__entry->fh_hash, __entry->count, __entry->status)
 );
 
+<<<<<<< HEAD
 TRACE_EVENT(nfsd_cb_recall_any,
 	TP_PROTO(
 		const struct nfsd4_cb_recall_any *ra
@@ -1521,6 +1632,8 @@ TRACE_EVENT(nfsd_cb_recall_any,
 	)
 );
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 DECLARE_EVENT_CLASS(nfsd_cb_done_class,
 	TP_PROTO(
 		const stateid_t *stp,
@@ -1560,6 +1673,7 @@ DEFINE_NFSD_CB_DONE_EVENT(nfsd_cb_notify_lock_done);
 DEFINE_NFSD_CB_DONE_EVENT(nfsd_cb_layout_done);
 DEFINE_NFSD_CB_DONE_EVENT(nfsd_cb_offload_done);
 
+<<<<<<< HEAD
 TRACE_EVENT(nfsd_cb_recall_any_done,
 	TP_PROTO(
 		const struct nfsd4_callback *cb,
@@ -1581,6 +1695,8 @@ TRACE_EVENT(nfsd_cb_recall_any_done,
 	)
 );
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _NFSD_TRACE_H */
 
 #undef TRACE_INCLUDE_PATH

@@ -583,4 +583,8 @@ EXPORT_SYMBOL_GPL(cci_probed);
 
 early_initcall(cci_init);
 core_initcall(cci_platform_init);
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_DESCRIPTION("ARM CCI support");

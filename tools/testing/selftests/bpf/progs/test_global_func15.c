@@ -2,7 +2,10 @@
 #include <stddef.h>
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
+<<<<<<< HEAD
 #include "bpf_misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 __noinline int foo(unsigned int *v)
 {
@@ -13,8 +16,12 @@ __noinline int foo(unsigned int *v)
 }
 
 SEC("cgroup_skb/ingress")
+<<<<<<< HEAD
 __failure __msg("At program exit the register R0 has value")
 int global_func15(struct __sk_buff *skb)
+=======
+int test_cls(struct __sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int v = 1;
 

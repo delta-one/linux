@@ -208,6 +208,7 @@ Basically there is no way to declare a new microcode update suitable
 for late-loading. This is another one of the problems that caused late
 loading to be not enabled by default.
 
+<<<<<<< HEAD
 AMD
 ---
 
@@ -218,6 +219,8 @@ a fault happens, the whole core will see it either before the microcode
 patch has been applied or after. In either case, T0 and T1 will have the
 same microcode revision and nothing intermediate.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Builtin microcode
 =================
 

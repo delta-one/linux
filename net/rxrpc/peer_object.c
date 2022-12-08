@@ -138,8 +138,15 @@ struct rxrpc_peer *rxrpc_lookup_peer_rcu(struct rxrpc_local *local,
 	unsigned long hash_key = rxrpc_peer_hash_key(local, srx);
 
 	peer = __rxrpc_lookup_peer_rcu(local, srx, hash_key);
+<<<<<<< HEAD
 	if (peer)
 		_leave(" = %p {u=%d}", peer, refcount_read(&peer->ref));
+=======
+	if (peer) {
+		_net("PEER %d {%pISp}", peer->debug_id, &peer->srx.transport);
+		_leave(" = %p {u=%d}", peer, refcount_read(&peer->ref));
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return peer;
 }
 
@@ -147,10 +154,17 @@ struct rxrpc_peer *rxrpc_lookup_peer_rcu(struct rxrpc_local *local,
  * assess the MTU size for the network interface through which this peer is
  * reached
  */
+<<<<<<< HEAD
 static void rxrpc_assess_MTU_size(struct rxrpc_local *local,
 				  struct rxrpc_peer *peer)
 {
 	struct net *net = local->net;
+=======
+static void rxrpc_assess_MTU_size(struct rxrpc_sock *rx,
+				  struct rxrpc_peer *peer)
+{
+	struct net *net = sock_net(&rx->sk);
+>>>>>>> b7ba80a49124 (Commit)
 	struct dst_entry *dst;
 	struct rtable *rt;
 	struct flowi fl;
@@ -205,9 +219,15 @@ static void rxrpc_assess_MTU_size(struct rxrpc_local *local,
 /*
  * Allocate a peer.
  */
+<<<<<<< HEAD
 struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *local, gfp_t gfp,
 				    enum rxrpc_peer_trace why)
 {
+=======
+struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *local, gfp_t gfp)
+{
+	const void *here = __builtin_return_address(0);
+>>>>>>> b7ba80a49124 (Commit)
 	struct rxrpc_peer *peer;
 
 	_enter("");
@@ -215,7 +235,11 @@ struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *local, gfp_t gfp,
 	peer = kzalloc(sizeof(struct rxrpc_peer), gfp);
 	if (peer) {
 		refcount_set(&peer->ref, 1);
+<<<<<<< HEAD
 		peer->local = rxrpc_get_local(local, rxrpc_local_get_peer);
+=======
+		peer->local = rxrpc_get_local(local);
+>>>>>>> b7ba80a49124 (Commit)
 		INIT_HLIST_HEAD(&peer->error_targets);
 		peer->service_conns = RB_ROOT;
 		seqlock_init(&peer->service_conn_lock);
@@ -225,8 +249,18 @@ struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *local, gfp_t gfp,
 
 		rxrpc_peer_init_rtt(peer);
 
+<<<<<<< HEAD
 		peer->cong_ssthresh = RXRPC_TX_MAX_WINDOW;
 		trace_rxrpc_peer(peer->debug_id, 1, why);
+=======
+		if (RXRPC_TX_SMSS > 2190)
+			peer->cong_cwnd = 2;
+		else if (RXRPC_TX_SMSS > 1095)
+			peer->cong_cwnd = 3;
+		else
+			peer->cong_cwnd = 4;
+		trace_rxrpc_peer(peer->debug_id, rxrpc_peer_new, 1, here);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	_leave(" = %p", peer);
@@ -236,11 +270,19 @@ struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *local, gfp_t gfp,
 /*
  * Initialise peer record.
  */
+<<<<<<< HEAD
 static void rxrpc_init_peer(struct rxrpc_local *local, struct rxrpc_peer *peer,
 			    unsigned long hash_key)
 {
 	peer->hash_key = hash_key;
 	rxrpc_assess_MTU_size(local, peer);
+=======
+static void rxrpc_init_peer(struct rxrpc_sock *rx, struct rxrpc_peer *peer,
+			    unsigned long hash_key)
+{
+	peer->hash_key = hash_key;
+	rxrpc_assess_MTU_size(rx, peer);
+>>>>>>> b7ba80a49124 (Commit)
 	peer->mtu = peer->if_mtu;
 	peer->rtt_last_req = ktime_get_real();
 
@@ -272,7 +314,12 @@ static void rxrpc_init_peer(struct rxrpc_local *local, struct rxrpc_peer *peer,
 /*
  * Set up a new peer.
  */
+<<<<<<< HEAD
 static struct rxrpc_peer *rxrpc_create_peer(struct rxrpc_local *local,
+=======
+static struct rxrpc_peer *rxrpc_create_peer(struct rxrpc_sock *rx,
+					    struct rxrpc_local *local,
+>>>>>>> b7ba80a49124 (Commit)
 					    struct sockaddr_rxrpc *srx,
 					    unsigned long hash_key,
 					    gfp_t gfp)
@@ -281,10 +328,17 @@ static struct rxrpc_peer *rxrpc_create_peer(struct rxrpc_local *local,
 
 	_enter("");
 
+<<<<<<< HEAD
 	peer = rxrpc_alloc_peer(local, gfp, rxrpc_peer_new_client);
 	if (peer) {
 		memcpy(&peer->srx, srx, sizeof(*srx));
 		rxrpc_init_peer(local, peer, hash_key);
+=======
+	peer = rxrpc_alloc_peer(local, gfp);
+	if (peer) {
+		memcpy(&peer->srx, srx, sizeof(*srx));
+		rxrpc_init_peer(rx, peer, hash_key);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	_leave(" = %p", peer);
@@ -293,8 +347,12 @@ static struct rxrpc_peer *rxrpc_create_peer(struct rxrpc_local *local,
 
 static void rxrpc_free_peer(struct rxrpc_peer *peer)
 {
+<<<<<<< HEAD
 	trace_rxrpc_peer(peer->debug_id, 0, rxrpc_peer_free);
 	rxrpc_put_local(peer->local, rxrpc_local_put_peer);
+=======
+	rxrpc_put_local(peer->local);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree_rcu(peer, rcu);
 }
 
@@ -303,13 +361,22 @@ static void rxrpc_free_peer(struct rxrpc_peer *peer)
  * since we've already done a search in the list from the non-reentrant context
  * (the data_ready handler) that is the only place we can add new peers.
  */
+<<<<<<< HEAD
 void rxrpc_new_incoming_peer(struct rxrpc_local *local, struct rxrpc_peer *peer)
+=======
+void rxrpc_new_incoming_peer(struct rxrpc_sock *rx, struct rxrpc_local *local,
+			     struct rxrpc_peer *peer)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rxrpc_net *rxnet = local->rxnet;
 	unsigned long hash_key;
 
 	hash_key = rxrpc_peer_hash_key(local, &peer->srx);
+<<<<<<< HEAD
 	rxrpc_init_peer(local, peer, hash_key);
+=======
+	rxrpc_init_peer(rx, peer, hash_key);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock(&rxnet->peer_hash_lock);
 	hash_add_rcu(rxnet->peer_hash, &peer->hash_link, hash_key);
@@ -320,7 +387,12 @@ void rxrpc_new_incoming_peer(struct rxrpc_local *local, struct rxrpc_peer *peer)
 /*
  * obtain a remote transport endpoint for the specified address
  */
+<<<<<<< HEAD
 struct rxrpc_peer *rxrpc_lookup_peer(struct rxrpc_local *local,
+=======
+struct rxrpc_peer *rxrpc_lookup_peer(struct rxrpc_sock *rx,
+				     struct rxrpc_local *local,
+>>>>>>> b7ba80a49124 (Commit)
 				     struct sockaddr_rxrpc *srx, gfp_t gfp)
 {
 	struct rxrpc_peer *peer, *candidate;
@@ -332,7 +404,11 @@ struct rxrpc_peer *rxrpc_lookup_peer(struct rxrpc_local *local,
 	/* search the peer list first */
 	rcu_read_lock();
 	peer = __rxrpc_lookup_peer_rcu(local, srx, hash_key);
+<<<<<<< HEAD
 	if (peer && !rxrpc_get_peer_maybe(peer, rxrpc_peer_get_lookup_client))
+=======
+	if (peer && !rxrpc_get_peer_maybe(peer))
+>>>>>>> b7ba80a49124 (Commit)
 		peer = NULL;
 	rcu_read_unlock();
 
@@ -340,17 +416,29 @@ struct rxrpc_peer *rxrpc_lookup_peer(struct rxrpc_local *local,
 		/* The peer is not yet present in hash - create a candidate
 		 * for a new record and then redo the search.
 		 */
+<<<<<<< HEAD
 		candidate = rxrpc_create_peer(local, srx, hash_key, gfp);
+=======
+		candidate = rxrpc_create_peer(rx, local, srx, hash_key, gfp);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!candidate) {
 			_leave(" = NULL [nomem]");
 			return NULL;
 		}
 
+<<<<<<< HEAD
 		spin_lock(&rxnet->peer_hash_lock);
 
 		/* Need to check that we aren't racing with someone else */
 		peer = __rxrpc_lookup_peer_rcu(local, srx, hash_key);
 		if (peer && !rxrpc_get_peer_maybe(peer, rxrpc_peer_get_lookup_client))
+=======
+		spin_lock_bh(&rxnet->peer_hash_lock);
+
+		/* Need to check that we aren't racing with someone else */
+		peer = __rxrpc_lookup_peer_rcu(local, srx, hash_key);
+		if (peer && !rxrpc_get_peer_maybe(peer))
+>>>>>>> b7ba80a49124 (Commit)
 			peer = NULL;
 		if (!peer) {
 			hash_add_rcu(rxnet->peer_hash,
@@ -359,7 +447,11 @@ struct rxrpc_peer *rxrpc_lookup_peer(struct rxrpc_local *local,
 				      &rxnet->peer_keepalive_new);
 		}
 
+<<<<<<< HEAD
 		spin_unlock(&rxnet->peer_hash_lock);
+=======
+		spin_unlock_bh(&rxnet->peer_hash_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (peer)
 			rxrpc_free_peer(candidate);
@@ -367,6 +459,11 @@ struct rxrpc_peer *rxrpc_lookup_peer(struct rxrpc_local *local,
 			peer = candidate;
 	}
 
+<<<<<<< HEAD
+=======
+	_net("PEER %d {%pISp}", peer->debug_id, &peer->srx.transport);
+
+>>>>>>> b7ba80a49124 (Commit)
 	_leave(" = %p {u=%d}", peer, refcount_read(&peer->ref));
 	return peer;
 }
@@ -374,26 +471,46 @@ struct rxrpc_peer *rxrpc_lookup_peer(struct rxrpc_local *local,
 /*
  * Get a ref on a peer record.
  */
+<<<<<<< HEAD
 struct rxrpc_peer *rxrpc_get_peer(struct rxrpc_peer *peer, enum rxrpc_peer_trace why)
 {
 	int r;
 
 	__refcount_inc(&peer->ref, &r);
 	trace_rxrpc_peer(peer->debug_id, r + 1, why);
+=======
+struct rxrpc_peer *rxrpc_get_peer(struct rxrpc_peer *peer)
+{
+	const void *here = __builtin_return_address(0);
+	int r;
+
+	__refcount_inc(&peer->ref, &r);
+	trace_rxrpc_peer(peer->debug_id, rxrpc_peer_got, r + 1, here);
+>>>>>>> b7ba80a49124 (Commit)
 	return peer;
 }
 
 /*
  * Get a ref on a peer record unless its usage has already reached 0.
  */
+<<<<<<< HEAD
 struct rxrpc_peer *rxrpc_get_peer_maybe(struct rxrpc_peer *peer,
 					enum rxrpc_peer_trace why)
 {
+=======
+struct rxrpc_peer *rxrpc_get_peer_maybe(struct rxrpc_peer *peer)
+{
+	const void *here = __builtin_return_address(0);
+>>>>>>> b7ba80a49124 (Commit)
 	int r;
 
 	if (peer) {
 		if (__refcount_inc_not_zero(&peer->ref, &r))
+<<<<<<< HEAD
 			trace_rxrpc_peer(peer->debug_id, r + 1, why);
+=======
+			trace_rxrpc_peer(peer->debug_id, rxrpc_peer_got, r + 1, here);
+>>>>>>> b7ba80a49124 (Commit)
 		else
 			peer = NULL;
 	}
@@ -409,10 +526,17 @@ static void __rxrpc_put_peer(struct rxrpc_peer *peer)
 
 	ASSERT(hlist_empty(&peer->error_targets));
 
+<<<<<<< HEAD
 	spin_lock(&rxnet->peer_hash_lock);
 	hash_del_rcu(&peer->hash_link);
 	list_del_init(&peer->keepalive_link);
 	spin_unlock(&rxnet->peer_hash_lock);
+=======
+	spin_lock_bh(&rxnet->peer_hash_lock);
+	hash_del_rcu(&peer->hash_link);
+	list_del_init(&peer->keepalive_link);
+	spin_unlock_bh(&rxnet->peer_hash_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rxrpc_free_peer(peer);
 }
@@ -420,8 +544,14 @@ static void __rxrpc_put_peer(struct rxrpc_peer *peer)
 /*
  * Drop a ref on a peer record.
  */
+<<<<<<< HEAD
 void rxrpc_put_peer(struct rxrpc_peer *peer, enum rxrpc_peer_trace why)
 {
+=======
+void rxrpc_put_peer(struct rxrpc_peer *peer)
+{
+	const void *here = __builtin_return_address(0);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int debug_id;
 	bool dead;
 	int r;
@@ -429,13 +559,40 @@ void rxrpc_put_peer(struct rxrpc_peer *peer, enum rxrpc_peer_trace why)
 	if (peer) {
 		debug_id = peer->debug_id;
 		dead = __refcount_dec_and_test(&peer->ref, &r);
+<<<<<<< HEAD
 		trace_rxrpc_peer(debug_id, r - 1, why);
+=======
+		trace_rxrpc_peer(debug_id, rxrpc_peer_put, r - 1, here);
+>>>>>>> b7ba80a49124 (Commit)
 		if (dead)
 			__rxrpc_put_peer(peer);
 	}
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * Drop a ref on a peer record where the caller already holds the
+ * peer_hash_lock.
+ */
+void rxrpc_put_peer_locked(struct rxrpc_peer *peer)
+{
+	const void *here = __builtin_return_address(0);
+	unsigned int debug_id = peer->debug_id;
+	bool dead;
+	int r;
+
+	dead = __refcount_dec_and_test(&peer->ref, &r);
+	trace_rxrpc_peer(debug_id, rxrpc_peer_put, r - 1, here);
+	if (dead) {
+		hash_del_rcu(&peer->hash_link);
+		list_del_init(&peer->keepalive_link);
+		rxrpc_free_peer(peer);
+	}
+}
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * Make sure all peer records have been discarded.
  */
 void rxrpc_destroy_all_peers(struct rxrpc_net *rxnet)

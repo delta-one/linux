@@ -951,9 +951,15 @@ qla2x00_sysfs_read_dcbx_tlv(struct file *filp, struct kobject *kobj,
 	if (!capable(CAP_SYS_ADMIN) || off != 0 || count > DCBX_TLV_DATA_SIZE)
 		return 0;
 
+<<<<<<< HEAD
 	mutex_lock(&vha->hw->optrom_mutex);
 	if (ha->dcbx_tlv)
 		goto do_read;
+=======
+	if (ha->dcbx_tlv)
+		goto do_read;
+	mutex_lock(&vha->hw->optrom_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	if (qla2x00_chip_is_down(vha)) {
 		mutex_unlock(&vha->hw->optrom_mutex);
 		return 0;
@@ -2732,7 +2738,11 @@ qla2x00_dev_loss_tmo_callbk(struct fc_rport *rport)
 	spin_lock_irqsave(host->host_lock, flags);
 	/* Confirm port has not reappeared before clearing pointers. */
 	if (rport->port_state != FC_PORTSTATE_ONLINE) {
+<<<<<<< HEAD
 		fcport->rport = NULL;
+=======
+		fcport->rport = fcport->drport = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 		*((fc_port_t **)rport->dd_data) = NULL;
 	}
 	spin_unlock_irqrestore(host->host_lock, flags);
@@ -3171,7 +3181,12 @@ qla24xx_vport_delete(struct fc_vport *fc_vport)
 
 	set_bit(VPORT_DELETE, &vha->dpc_flags);
 
+<<<<<<< HEAD
 	while (test_bit(LOOP_RESYNC_ACTIVE, &vha->dpc_flags))
+=======
+	while (test_bit(LOOP_RESYNC_ACTIVE, &vha->dpc_flags) ||
+	    test_bit(FCPORT_UPDATE_NEEDED, &vha->dpc_flags))
+>>>>>>> b7ba80a49124 (Commit)
 		msleep(1000);
 
 
@@ -3329,6 +3344,7 @@ struct fc_function_template qla2xxx_transport_vport_functions = {
 	.bsg_timeout = qla24xx_bsg_timeout,
 };
 
+<<<<<<< HEAD
 static uint
 qla2x00_get_host_supported_speeds(scsi_qla_host_t *vha, uint speeds)
 {
@@ -3352,11 +3368,17 @@ qla2x00_get_host_supported_speeds(scsi_qla_host_t *vha, uint speeds)
 	return supported_speeds;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void
 qla2x00_init_host_attr(scsi_qla_host_t *vha)
 {
 	struct qla_hw_data *ha = vha->hw;
+<<<<<<< HEAD
 	u32 speeds = 0, fdmi_speed = 0;
+=======
+	u32 speeds = FC_PORTSPEED_UNKNOWN;
+>>>>>>> b7ba80a49124 (Commit)
 
 	fc_host_dev_loss_tmo(vha->host) = ha->port_down_retry_count;
 	fc_host_node_name(vha->host) = wwn_to_u64(vha->node_name);
@@ -3366,8 +3388,12 @@ qla2x00_init_host_attr(scsi_qla_host_t *vha)
 	fc_host_max_npiv_vports(vha->host) = ha->max_npiv_vports;
 	fc_host_npiv_vports_inuse(vha->host) = ha->cur_vport_count;
 
+<<<<<<< HEAD
 	fdmi_speed = qla25xx_fdmi_port_speed_capability(ha);
 	speeds = qla2x00_get_host_supported_speeds(vha, fdmi_speed);
+=======
+	speeds = qla25xx_fdmi_port_speed_capability(ha);
+>>>>>>> b7ba80a49124 (Commit)
 
 	fc_host_supported_speeds(vha->host) = speeds;
 }

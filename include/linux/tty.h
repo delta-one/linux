@@ -122,6 +122,11 @@ struct tty_operations;
 /**
  * struct tty_struct - state associated with a tty while open
  *
+<<<<<<< HEAD
+=======
+ * @magic: magic value set early in @alloc_tty_struct to %TTY_MAGIC, for
+ *	   debugging purposes
+>>>>>>> b7ba80a49124 (Commit)
  * @kref: reference counting by tty_kref_get() and tty_kref_put(), reaching zero
  *	  frees the structure
  * @dev: class device or %NULL (e.g. ptys, serdev)
@@ -191,6 +196,10 @@ struct tty_operations;
  * &struct tty_port.
  */
 struct tty_struct {
+<<<<<<< HEAD
+=======
+	int	magic;
+>>>>>>> b7ba80a49124 (Commit)
 	struct kref kref;
 	struct device *dev;
 	struct tty_driver *driver;
@@ -227,7 +236,11 @@ struct tty_struct {
 		unsigned long unused[0];
 	} __aligned(sizeof(unsigned long)) ctrl;
 
+<<<<<<< HEAD
 	bool hw_stopped;
+=======
+	int hw_stopped;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int receive_room;
 	int flow_change;
 
@@ -257,6 +270,12 @@ struct tty_file_private {
 	struct list_head list;
 };
 
+<<<<<<< HEAD
+=======
+/* tty magic number */
+#define TTY_MAGIC		0x5401
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * DOC: TTY Struct Flags
  *
@@ -453,7 +472,11 @@ unsigned char tty_get_char_size(unsigned int cflag);
 unsigned char tty_get_frame_size(unsigned int cflag);
 
 void tty_termios_copy_hw(struct ktermios *new, const struct ktermios *old);
+<<<<<<< HEAD
 bool tty_termios_hw_change(const struct ktermios *a, const struct ktermios *b);
+=======
+int tty_termios_hw_change(const struct ktermios *a, const struct ktermios *b);
+>>>>>>> b7ba80a49124 (Commit)
 int tty_set_termios(struct tty_struct *tty, struct ktermios *kt);
 
 void tty_wakeup(struct tty_struct *tty);

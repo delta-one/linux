@@ -12,6 +12,7 @@ config 32BIT
 
 config RISCV
 	def_bool y
+<<<<<<< HEAD
 	select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
 	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
 	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
@@ -19,13 +20,25 @@ config RISCV
 	select ARCH_HAS_CURRENT_STACK_POINTER
 	select ARCH_HAS_DEBUG_VIRTUAL if MMU
 	select ARCH_HAS_DEBUG_VM_PGTABLE
+=======
+	select ARCH_CLOCKSOURCE_INIT
+	select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
+	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
+	select ARCH_HAS_BINFMT_FLAT
+	select ARCH_HAS_CURRENT_STACK_POINTER
+	select ARCH_HAS_DEBUG_VM_PGTABLE
+	select ARCH_HAS_DEBUG_VIRTUAL if MMU
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_HAS_DEBUG_WX
 	select ARCH_HAS_FORTIFY_SOURCE
 	select ARCH_HAS_GCOV_PROFILE_ALL
 	select ARCH_HAS_GIGANTIC_PAGE
 	select ARCH_HAS_KCOV
 	select ARCH_HAS_MMIOWB
+<<<<<<< HEAD
 	select ARCH_HAS_PMEM_API
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_HAS_PTE_SPECIAL
 	select ARCH_HAS_SET_DIRECT_MAP if MMU
 	select ARCH_HAS_SET_MEMORY if MMU
@@ -44,6 +57,7 @@ config RISCV
 	select ARCH_USE_QUEUED_RWLOCKS
 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
 	select ARCH_WANT_FRAME_POINTERS
+<<<<<<< HEAD
 	select ARCH_WANT_GENERAL_HUGETLB if !RISCV_ISA_SVNAPOT
 	select ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
 	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
@@ -53,6 +67,14 @@ config RISCV
 	select BUILDTIME_TABLE_SORT if MMU
 	select CLINT_TIMER if !MMU
 	select CLONE_BACKWARDS
+=======
+	select ARCH_WANT_GENERAL_HUGETLB
+	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
+	select BINFMT_FLAT_NO_DATA_START_OFFSET if !MMU
+	select BUILDTIME_TABLE_SORT if MMU
+	select CLONE_BACKWARDS
+	select CLINT_TIMER if !MMU
+>>>>>>> b7ba80a49124 (Commit)
 	select COMMON_CLK
 	select CPU_PM if CPU_IDLE
 	select EDAC_SUPPORT
@@ -73,10 +95,14 @@ config RISCV
 	select GENERIC_SMP_IDLE_THREAD
 	select GENERIC_TIME_VSYSCALL if MMU && 64BIT
 	select GENERIC_VDSO_TIME_NS if HAVE_GENERIC_VDSO
+<<<<<<< HEAD
 	select HARDIRQS_SW_RESEND
 	select HAVE_ARCH_AUDITSYSCALL
 	select HAVE_ARCH_HUGE_VMALLOC if HAVE_ARCH_HUGE_VMAP
 	select HAVE_ARCH_HUGE_VMAP if MMU && 64BIT && !XIP_KERNEL
+=======
+	select HAVE_ARCH_AUDITSYSCALL
+>>>>>>> b7ba80a49124 (Commit)
 	select HAVE_ARCH_JUMP_LABEL if !XIP_KERNEL
 	select HAVE_ARCH_JUMP_LABEL_RELATIVE if !XIP_KERNEL
 	select HAVE_ARCH_KASAN if MMU && 64BIT
@@ -87,16 +113,26 @@ config RISCV
 	select HAVE_ARCH_MMAP_RND_BITS if MMU
 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS if COMPAT
 	select HAVE_ARCH_SECCOMP_FILTER
+<<<<<<< HEAD
 	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
 	select HAVE_ARCH_TRACEHOOK
 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE if 64BIT && MMU
+=======
+	select HAVE_ARCH_TRACEHOOK
+	select HAVE_ARCH_TRANSPARENT_HUGEPAGE if 64BIT && MMU
+	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
+	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
+>>>>>>> b7ba80a49124 (Commit)
 	select HAVE_ARCH_VMAP_STACK if MMU && 64BIT
 	select HAVE_ASM_MODVERSIONS
 	select HAVE_CONTEXT_TRACKING_USER
 	select HAVE_DEBUG_KMEMLEAK
 	select HAVE_DMA_CONTIGUOUS if MMU
 	select HAVE_EBPF_JIT if MMU
+<<<<<<< HEAD
 	select HAVE_FUNCTION_ARG_ACCESS_API
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select HAVE_FUNCTION_ERROR_INJECTION
 	select HAVE_GCC_PLUGINS
 	select HAVE_GENERIC_VDSO if MMU && 64BIT
@@ -104,18 +140,29 @@ config RISCV
 	select HAVE_KPROBES if !XIP_KERNEL
 	select HAVE_KPROBES_ON_FTRACE if !XIP_KERNEL
 	select HAVE_KRETPROBES if !XIP_KERNEL
+<<<<<<< HEAD
 	select HAVE_RETHOOK if !XIP_KERNEL
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select HAVE_MOVE_PMD
 	select HAVE_MOVE_PUD
 	select HAVE_PCI
 	select HAVE_PERF_EVENTS
 	select HAVE_PERF_REGS
 	select HAVE_PERF_USER_STACK_DUMP
+<<<<<<< HEAD
 	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
 	select HAVE_REGS_AND_STACK_ACCESS_API
 	select HAVE_RSEQ
 	select HAVE_STACKPROTECTOR
 	select HAVE_SYSCALL_TRACEPOINTS
+=======
+	select HAVE_REGS_AND_STACK_ACCESS_API
+	select HAVE_FUNCTION_ARG_ACCESS_API
+	select HAVE_STACKPROTECTOR
+	select HAVE_SYSCALL_TRACEPOINTS
+	select HAVE_RSEQ
+>>>>>>> b7ba80a49124 (Commit)
 	select IRQ_DOMAIN
 	select IRQ_FORCED_THREADING
 	select MODULES_USE_ELF_RELA if MODULES
@@ -128,18 +175,24 @@ config RISCV
 	select PCI_MSI if PCI
 	select RISCV_INTC
 	select RISCV_TIMER if RISCV_SBI
+<<<<<<< HEAD
 	select SIFIVE_PLIC
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select SPARSE_IRQ
 	select SYSCTL_EXCEPTION_TRACE
 	select THREAD_INFO_IN_TASK
 	select TRACE_IRQFLAGS_SUPPORT
 	select UACCESS_MEMCPY if !MMU
 	select ZONE_DMA32 if 64BIT
+<<<<<<< HEAD
 	select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && MMU && $(cc-option,-fpatchable-function-entry=8)
 	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
 	select HAVE_FUNCTION_GRAPH_TRACER
 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && !PREEMPTION
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 config ARCH_MMAP_RND_BITS_MIN
 	default 18 if 64BIT
@@ -236,6 +289,7 @@ config LOCKDEP_SUPPORT
 config RISCV_DMA_NONCOHERENT
 	bool
 	select ARCH_HAS_DMA_PREP_COHERENT
+<<<<<<< HEAD
 	select ARCH_HAS_SETUP_DMA_OPS
 	select ARCH_HAS_SYNC_DMA_FOR_CPU
 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
@@ -246,6 +300,15 @@ config AS_HAS_INSN
 
 source "arch/riscv/Kconfig.socs"
 source "arch/riscv/Kconfig.errata"
+=======
+	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+	select ARCH_HAS_SYNC_DMA_FOR_CPU
+	select ARCH_HAS_SETUP_DMA_OPS
+	select DMA_DIRECT_REMAP
+
+source "arch/riscv/Kconfig.socs"
+source "arch/riscv/Kconfig.erratas"
+>>>>>>> b7ba80a49124 (Commit)
 
 menu "Platform type"
 
@@ -285,6 +348,14 @@ config ARCH_RV64I
 	bool "RV64I"
 	select 64BIT
 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
+<<<<<<< HEAD
+=======
+	select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && MMU && $(cc-option,-fpatchable-function-entry=8)
+	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
+	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+	select HAVE_FUNCTION_GRAPH_TRACER
+	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
+>>>>>>> b7ba80a49124 (Commit)
 	select SWIOTLB if MMU
 
 endchoice
@@ -321,6 +392,7 @@ config SMP
 	  If you don't know what to do here, say N.
 
 config NR_CPUS
+<<<<<<< HEAD
 	int "Maximum number of CPUs (2-512)"
 	depends on SMP
 	range 2 512 if !RISCV_SBI_V01
@@ -328,6 +400,12 @@ config NR_CPUS
 	range 2 64 if RISCV_SBI_V01 && 64BIT
 	default "32" if 32BIT
 	default "64" if 64BIT
+=======
+	int "Maximum number of CPUs (2-32)"
+	range 2 32
+	depends on SMP
+	default "8"
+>>>>>>> b7ba80a49124 (Commit)
 
 config HOTPLUG_CPU
 	bool "Support for hot-pluggable CPUs"
@@ -353,11 +431,19 @@ endchoice
 config NUMA
 	bool "NUMA Memory Allocation and Scheduler Support"
 	depends on SMP && MMU
+<<<<<<< HEAD
 	select ARCH_SUPPORTS_NUMA_BALANCING
 	select GENERIC_ARCH_NUMA
 	select NEED_PER_CPU_EMBED_FIRST_CHUNK
 	select OF_NUMA
 	select USE_PERCPU_NUMA_NODE_ID
+=======
+	select GENERIC_ARCH_NUMA
+	select OF_NUMA
+	select ARCH_SUPPORTS_NUMA_BALANCING
+	select USE_PERCPU_NUMA_NODE_ID
+	select NEED_PER_CPU_EMBED_FIRST_CHUNK
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Enable NUMA (Non-Uniform Memory Access) support.
 
@@ -378,9 +464,15 @@ config RISCV_ALTERNATIVE
 	depends on !XIP_KERNEL
 	help
 	  This Kconfig allows the kernel to automatically patch the
+<<<<<<< HEAD
 	  erratum or cpufeature required by the execution platform at run
 	  time. The code patching overhead is minimal, as it's only done
 	  once at boot and once on each module load.
+=======
+	  errata required by the execution platform at run time. The
+	  code patching is performed once in the boot stages. It means
+	  that the overhead from this mechanism is just taken once.
+>>>>>>> b7ba80a49124 (Commit)
 
 config RISCV_ALTERNATIVE_EARLY
 	bool
@@ -398,6 +490,7 @@ config RISCV_ISA_C
 
 	  If you don't know what to do here, say Y.
 
+<<<<<<< HEAD
 config RISCV_ISA_SVNAPOT
 	bool "SVNAPOT extension support"
 	depends on 64BIT && MMU
@@ -417,12 +510,19 @@ config RISCV_ISA_SVNAPOT
 
 	  If you don't know what to do here, say Y.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config RISCV_ISA_SVPBMT
 	bool "SVPBMT extension support"
 	depends on 64BIT && MMU
 	depends on !XIP_KERNEL
+<<<<<<< HEAD
 	default y
 	select RISCV_ALTERNATIVE
+=======
+	select RISCV_ALTERNATIVE
+	default y
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	   Adds support to dynamically detect the presence of the SVPBMT
 	   ISA-extension (Supervisor-mode: page-based memory types) and
@@ -436,6 +536,7 @@ config RISCV_ISA_SVPBMT
 
 	   If you don't know what to do here, say Y.
 
+<<<<<<< HEAD
 config TOOLCHAIN_HAS_ZBB
 	bool
 	default y
@@ -466,6 +567,20 @@ config RISCV_ISA_ZICBOM
 	default y
 	select RISCV_ALTERNATIVE
 	select RISCV_DMA_NONCOHERENT
+=======
+config CC_HAS_ZICBOM
+	bool
+	default y if 64BIT && $(cc-option,-mabi=lp64 -march=rv64ima_zicbom)
+	default y if 32BIT && $(cc-option,-mabi=ilp32 -march=rv32ima_zicbom)
+
+config RISCV_ISA_ZICBOM
+	bool "Zicbom extension support for non-coherent DMA operation"
+	depends on CC_HAS_ZICBOM
+	depends on !XIP_KERNEL && MMU
+	select RISCV_DMA_NONCOHERENT
+	select RISCV_ALTERNATIVE
+	default y
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	   Adds support to dynamically detect the presence of the ZICBOM
 	   extension (Cache Block Management Operations) and enable its
@@ -476,6 +591,7 @@ config RISCV_ISA_ZICBOM
 
 	   If you don't know what to do here, say Y.
 
+<<<<<<< HEAD
 config RISCV_ISA_ZICBOZ
 	bool "Zicboz extension support for faster zeroing of memory"
 	depends on !XIP_KERNEL && MMU
@@ -518,6 +634,8 @@ config TOOLCHAIN_NEEDS_OLD_ISA_SPEC
 	  of clang to be passed to GAS, which has the same result as passing zicsr
 	  and zifencei to -march.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config FPU
 	bool "FPU support"
 	default y
@@ -562,9 +680,15 @@ config RISCV_BOOT_SPINWAIT
 
 config KEXEC
 	bool "Kexec system call"
+<<<<<<< HEAD
 	depends on MMU
 	select HOTPLUG_CPU if SMP
 	select KEXEC_CORE
+=======
+	select KEXEC_CORE
+	select HOTPLUG_CPU if SMP
+	depends on MMU
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  kexec is a system call that implements the ability to shutdown your
 	  current kernel, and to start another kernel. It is like a reboot
@@ -575,10 +699,17 @@ config KEXEC
 
 config KEXEC_FILE
 	bool "kexec file based systmem call"
+<<<<<<< HEAD
 	depends on 64BIT && MMU
 	select HAVE_IMA_KEXEC if IMA
 	select KEXEC_CORE
 	select KEXEC_ELF
+=======
+	select KEXEC_CORE
+	select KEXEC_ELF
+	select HAVE_IMA_KEXEC if IMA
+	depends on 64BIT
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This is new version of kexec system call. This system call is
 	  file based and takes file descriptors as system call argument
@@ -667,6 +798,7 @@ config EFI_STUB
 config EFI
 	bool "UEFI runtime support"
 	depends on OF && !XIP_KERNEL
+<<<<<<< HEAD
 	depends on MMU
 	default y
 	select EFI_GENERIC_STUB
@@ -676,6 +808,17 @@ config EFI
 	select LIBFDT
 	select RISCV_ISA_C
 	select UCS2_STRING
+=======
+	select LIBFDT
+	select UCS2_STRING
+	select EFI_PARAMS_FROM_FDT
+	select EFI_STUB
+	select EFI_GENERIC_STUB
+	select EFI_RUNTIME_WRAPPERS
+	select RISCV_ISA_C
+	depends on MMU
+	default y
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This option provides support for runtime services provided
 	  by UEFI firmware (such as non-volatile variables, realtime
@@ -754,8 +897,13 @@ config PORTABLE
 	bool
 	default !NONPORTABLE
 	select EFI
+<<<<<<< HEAD
 	select MMU
 	select OF
+=======
+	select OF
+	select MMU
+>>>>>>> b7ba80a49124 (Commit)
 
 menu "Power management options"
 
@@ -767,8 +915,11 @@ menu "CPU Power Management"
 
 source "drivers/cpuidle/Kconfig"
 
+<<<<<<< HEAD
 source "drivers/cpufreq/Kconfig"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endmenu # "CPU Power Management"
 
 source "arch/riscv/kvm/Kconfig"

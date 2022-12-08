@@ -5,7 +5,10 @@
  */
 
 #include <linux/clk-provider.h>
+<<<<<<< HEAD
 #include <linux/export.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/io.h>
 #include <linux/slab.h>
 #include <linux/err.h>
@@ -154,4 +157,7 @@ struct clk_hw *imx_clk_hw_pfd(const char *name, const char *parent_name,
 
 	return hw;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(imx_clk_hw_pfd);
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -136,7 +136,10 @@ enum intel_engine_id {
 	CCS2,
 	CCS3,
 #define _CCS(n) (CCS0 + (n))
+<<<<<<< HEAD
 	GSC0,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	I915_NUM_ENGINES
 #define INVALID_ENGINE ((enum intel_engine_id)-1)
 };
@@ -167,6 +170,7 @@ struct intel_engine_execlists {
 	struct timer_list preempt;
 
 	/**
+<<<<<<< HEAD
 	 * @preempt_target: active request at the time of the preemption request
 	 *
 	 * We force a preemption to occur if the pending contexts have not
@@ -182,6 +186,8 @@ struct intel_engine_execlists {
 	const struct i915_request *preempt_target;
 
 	/**
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * @ccid: identifier for contexts submitted to this engine
 	 */
 	u32 ccid;
@@ -341,6 +347,7 @@ struct intel_engine_guc_stats {
 	u64 start_gt_clk;
 };
 
+<<<<<<< HEAD
 union intel_engine_tlb_inv_reg {
 	i915_reg_t	reg;
 	i915_mcr_reg_t	mcr_reg;
@@ -353,6 +360,8 @@ struct intel_engine_tlb_inv {
 	u32 done;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct intel_engine_cs {
 	struct drm_i915_private *i915;
 	struct intel_gt *gt;
@@ -384,8 +393,11 @@ struct intel_engine_cs {
 	u32 context_size;
 	u32 mmio_base;
 
+<<<<<<< HEAD
 	struct intel_engine_tlb_inv tlb_inv;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Some w/a require forcewake to be held (which prevents RC6) while
 	 * a particular engine is active. If so, we set fw_domain to which

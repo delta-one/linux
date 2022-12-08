@@ -377,7 +377,11 @@ config REGULATOR_FAN53555
 
 config REGULATOR_FAN53880
 	tristate "Fairchild FAN53880 Regulator"
+<<<<<<< HEAD
 	depends on I2C && OF
+=======
+	depends on I2C && (OF || COMPILE_TEST)
+>>>>>>> b7ba80a49124 (Commit)
 	select REGMAP_I2C
 	help
 	  This driver supports Fairchild (ON Semiconductor) FAN53880
@@ -655,6 +659,7 @@ config REGULATOR_MAX20086
 	  protectorvia I2C bus. The regulator has 2 or 4 outputs depending on
 	  the device model. This driver is only capable to turn on/off them.
 
+<<<<<<< HEAD
 config REGULATOR_MAX20411
 	tristate "Maxim MAX20411 High-Efficiency Single Step-Down Converter"
 	depends on I2C
@@ -663,6 +668,8 @@ config REGULATOR_MAX20411
 	  This driver controls the Maxim MAX20411 family of high-efficiency,
 	  syncrhonous step-down converters.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config REGULATOR_MAX77686
 	tristate "Maxim 77686 regulator"
 	depends on MFD_MAX77686 || COMPILE_TEST
@@ -751,7 +758,11 @@ config REGULATOR_MP8859
 
 config REGULATOR_MP886X
 	tristate "MPS MP8869 regulator driver"
+<<<<<<< HEAD
 	depends on I2C && OF
+=======
+	depends on I2C && (OF || COMPILE_TEST)
+>>>>>>> b7ba80a49124 (Commit)
 	select REGMAP_I2C
 	help
 	  This driver supports the MP8869 voltage regulator.
@@ -813,6 +824,7 @@ config REGULATOR_MT6332
 	  This driver supports the control of different power rails of device
 	  through regulator interface
 
+<<<<<<< HEAD
 config REGULATOR_MT6357
 	tristate "MediaTek MT6357 PMIC"
 	depends on MFD_MT6397
@@ -822,6 +834,8 @@ config REGULATOR_MT6357
 	  This driver supports the control of different power rails of device
 	  through regulator interface.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config REGULATOR_MT6358
 	tristate "MediaTek MT6358 PMIC"
 	depends on MFD_MT6397
@@ -1120,6 +1134,7 @@ config REGULATOR_RT5190A
 	  buck converters, 1 LDO, mute AC OFF depop function, with the general
 	  I2C control interface.
 
+<<<<<<< HEAD
 config REGULATOR_RT5739
 	tristate "Richtek RT5739 Regulator"
 	depends on I2C
@@ -1133,6 +1148,8 @@ config REGULATOR_RT5739
 	  This driver can also be built as a module. If so, the module
 	  will be called rt5739.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config REGULATOR_RT5759
 	tristate "Richtek RT5759 Regulator"
 	depends on I2C
@@ -1154,6 +1171,7 @@ config REGULATOR_RT6160
 	  The wide output range is from 2025mV to 5200mV and can be used on most
 	  common application scenario.
 
+<<<<<<< HEAD
 config REGULATOR_RT6190
 	tristate "Richtek RT6190 4-Switch BuckBoost controller"
 	depends on I2C
@@ -1165,6 +1183,8 @@ config REGULATOR_RT6190
 	  4.5V to 36V, and the output voltage can be set from 3V to 36V by
 	  external FB pin.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config REGULATOR_RT6245
 	tristate "Richtek RT6245 voltage regulator"
 	depends on I2C
@@ -1329,21 +1349,33 @@ config REGULATOR_SY7636A
 
 config REGULATOR_SY8106A
 	tristate "Silergy SY8106A regulator"
+<<<<<<< HEAD
 	depends on I2C && OF
+=======
+	depends on I2C && (OF || COMPILE_TEST)
+>>>>>>> b7ba80a49124 (Commit)
 	select REGMAP_I2C
 	help
 	  This driver supports SY8106A single output regulator.
 
 config REGULATOR_SY8824X
 	tristate "Silergy SY8824C/SY8824E regulator"
+<<<<<<< HEAD
 	depends on I2C && OF
+=======
+	depends on I2C && (OF || COMPILE_TEST)
+>>>>>>> b7ba80a49124 (Commit)
 	select REGMAP_I2C
 	help
 	  This driver supports SY8824C single output regulator.
 
 config REGULATOR_SY8827N
 	tristate "Silergy SY8827N regulator"
+<<<<<<< HEAD
 	depends on I2C && OF
+=======
+	depends on I2C && (OF || COMPILE_TEST)
+>>>>>>> b7ba80a49124 (Commit)
 	select REGMAP_I2C
 	help
 	  This driver supports SY8827N single output regulator.

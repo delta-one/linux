@@ -92,7 +92,10 @@ int ionic_dev_setup(struct ionic *ionic)
 	unsigned int num_bars = ionic->num_bars;
 	struct ionic_dev *idev = &ionic->idev;
 	struct device *dev = ionic->dev;
+<<<<<<< HEAD
 	int size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 sig;
 
 	/* BAR0: dev_cmd and interrupts */
@@ -134,6 +137,7 @@ int ionic_dev_setup(struct ionic *ionic)
 	idev->db_pages = bar->vaddr;
 	idev->phy_db_pages = bar->bus_addr;
 
+<<<<<<< HEAD
 	/* BAR2: optional controller memory mapping */
 	bar++;
 	mutex_init(&idev->cmb_inuse_lock);
@@ -164,6 +168,11 @@ void ionic_dev_teardown(struct ionic *ionic)
 	mutex_destroy(&idev->cmb_inuse_lock);
 }
 
+=======
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Devcmd Interface */
 bool ionic_is_fw_running(struct ionic_dev *idev)
 {
@@ -509,6 +518,7 @@ int ionic_dev_cmd_vf_getattr(struct ionic *ionic, int vf, u8 attr,
 	return err;
 }
 
+<<<<<<< HEAD
 void ionic_vf_start(struct ionic *ionic)
 {
 	union ionic_dev_cmd cmd = {
@@ -523,6 +533,8 @@ void ionic_vf_start(struct ionic *ionic)
 	ionic_dev_cmd_wait(ionic, DEVCMD_TIMEOUT);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* LIF commands */
 void ionic_dev_cmd_queue_identify(struct ionic_dev *idev,
 				  u16 lif_type, u8 qtype, u8 qver)
@@ -599,6 +611,7 @@ int ionic_db_page_num(struct ionic_lif *lif, int pid)
 	return (lif->hw_index * lif->dbid_count) + pid;
 }
 
+<<<<<<< HEAD
 int ionic_get_cmb(struct ionic_lif *lif, u32 *pgid, phys_addr_t *pgaddr, int order)
 {
 	struct ionic_dev *idev = &lif->ionic->idev;
@@ -626,6 +639,8 @@ void ionic_put_cmb(struct ionic_lif *lif, u32 pgid, int order)
 	mutex_unlock(&idev->cmb_inuse_lock);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ionic_cq_init(struct ionic_lif *lif, struct ionic_cq *cq,
 		  struct ionic_intr_info *intr,
 		  unsigned int num_descs, size_t desc_size)
@@ -734,6 +749,7 @@ void ionic_q_map(struct ionic_queue *q, void *base, dma_addr_t base_pa)
 		cur->desc = base + (i * q->desc_size);
 }
 
+<<<<<<< HEAD
 void ionic_q_cmb_map(struct ionic_queue *q, void __iomem *base, dma_addr_t base_pa)
 {
 	struct ionic_desc_info *cur;
@@ -746,6 +762,8 @@ void ionic_q_cmb_map(struct ionic_queue *q, void __iomem *base, dma_addr_t base_
 		cur->cmb_desc = base + (i * q->desc_size);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void ionic_q_sg_map(struct ionic_queue *q, void *base, dma_addr_t base_pa)
 {
 	struct ionic_desc_info *cur;
@@ -775,6 +793,7 @@ void ionic_q_post(struct ionic_queue *q, bool ring_doorbell, ionic_desc_cb cb,
 		q->lif->index, q->name, q->hw_type, q->hw_index,
 		q->head_idx, ring_doorbell);
 
+<<<<<<< HEAD
 	if (ring_doorbell) {
 		ionic_dbell_ring(lif->kern_dbpage, q->hw_type,
 				 q->dbval | q->head_idx);
@@ -785,6 +804,11 @@ void ionic_q_post(struct ionic_queue *q, bool ring_doorbell, ionic_desc_cb cb,
 			mod_timer(&q_to_qcq(q)->napi_qcq->napi_deadline,
 				  jiffies + IONIC_NAPI_DEADLINE);
 	}
+=======
+	if (ring_doorbell)
+		ionic_dbell_ring(lif->kern_dbpage, q->hw_type,
+				 q->dbval | q->head_idx);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool ionic_q_is_posted(struct ionic_queue *q, unsigned int pos)

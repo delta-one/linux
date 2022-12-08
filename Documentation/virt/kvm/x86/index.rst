@@ -10,6 +10,10 @@ KVM for x86 systems
    amd-memory-encryption
    cpuid
    errata
+<<<<<<< HEAD
+=======
+   halt-polling
+>>>>>>> b7ba80a49124 (Commit)
    hypercalls
    mmu
    msr

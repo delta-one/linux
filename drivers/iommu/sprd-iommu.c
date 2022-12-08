@@ -237,8 +237,15 @@ static int sprd_iommu_attach_device(struct iommu_domain *domain,
 	struct sprd_iommu_domain *dom = to_sprd_domain(domain);
 	size_t pgt_size = sprd_iommu_pgt_size(domain);
 
+<<<<<<< HEAD
 	if (dom->sdev)
 		return -EINVAL;
+=======
+	if (dom->sdev) {
+		pr_err("There's already a device attached to this domain.\n");
+		return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	dom->pgt_va = dma_alloc_coherent(sdev->dev, pgt_size, &dom->pgt_pa, GFP_KERNEL);
 	if (!dom->pgt_va)
@@ -255,12 +262,35 @@ static int sprd_iommu_attach_device(struct iommu_domain *domain,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int sprd_iommu_map(struct iommu_domain *domain, unsigned long iova,
 			  phys_addr_t paddr, size_t pgsize, size_t pgcount,
 			  int prot, gfp_t gfp, size_t *mapped)
 {
 	struct sprd_iommu_domain *dom = to_sprd_domain(domain);
 	size_t size = pgcount * SPRD_IOMMU_PAGE_SIZE;
+=======
+static void sprd_iommu_detach_device(struct iommu_domain *domain,
+					     struct device *dev)
+{
+	struct sprd_iommu_domain *dom = to_sprd_domain(domain);
+	struct sprd_iommu_device *sdev = dom->sdev;
+	size_t pgt_size = sprd_iommu_pgt_size(domain);
+
+	if (!sdev)
+		return;
+
+	dma_free_coherent(sdev->dev, pgt_size, dom->pgt_va, dom->pgt_pa);
+	sprd_iommu_hw_en(sdev, false);
+	dom->sdev = NULL;
+}
+
+static int sprd_iommu_map(struct iommu_domain *domain, unsigned long iova,
+			  phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+{
+	struct sprd_iommu_domain *dom = to_sprd_domain(domain);
+	unsigned int page_num = size >> SPRD_IOMMU_PAGE_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flags;
 	unsigned int i;
 	u32 *pgt_base_iova;
@@ -282,37 +312,63 @@ static int sprd_iommu_map(struct iommu_domain *domain, unsigned long iova,
 	pgt_base_iova = dom->pgt_va + ((iova - start) >> SPRD_IOMMU_PAGE_SHIFT);
 
 	spin_lock_irqsave(&dom->pgtlock, flags);
+<<<<<<< HEAD
 	for (i = 0; i < pgcount; i++) {
+=======
+	for (i = 0; i < page_num; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		pgt_base_iova[i] = pabase >> SPRD_IOMMU_PAGE_SHIFT;
 		pabase += SPRD_IOMMU_PAGE_SIZE;
 	}
 	spin_unlock_irqrestore(&dom->pgtlock, flags);
 
+<<<<<<< HEAD
 	*mapped = size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static size_t sprd_iommu_unmap(struct iommu_domain *domain, unsigned long iova,
+<<<<<<< HEAD
 			       size_t pgsize, size_t pgcount,
 			       struct iommu_iotlb_gather *iotlb_gather)
+=======
+			size_t size, struct iommu_iotlb_gather *iotlb_gather)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sprd_iommu_domain *dom = to_sprd_domain(domain);
 	unsigned long flags;
 	u32 *pgt_base_iova;
+<<<<<<< HEAD
 	size_t size = pgcount * SPRD_IOMMU_PAGE_SIZE;
+=======
+	unsigned int page_num = size >> SPRD_IOMMU_PAGE_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long start = domain->geometry.aperture_start;
 	unsigned long end = domain->geometry.aperture_end;
 
 	if (iova < start || (iova + size) > (end + 1))
+<<<<<<< HEAD
 		return 0;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pgt_base_iova = dom->pgt_va + ((iova - start) >> SPRD_IOMMU_PAGE_SHIFT);
 
 	spin_lock_irqsave(&dom->pgtlock, flags);
+<<<<<<< HEAD
 	memset(pgt_base_iova, 0, pgcount * sizeof(u32));
 	spin_unlock_irqrestore(&dom->pgtlock, flags);
 
 	return size;
+=======
+	memset(pgt_base_iova, 0, page_num * sizeof(u32));
+	spin_unlock_irqrestore(&dom->pgtlock, flags);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void sprd_iommu_sync_map(struct iommu_domain *domain,
@@ -395,12 +451,22 @@ static const struct iommu_ops sprd_iommu_ops = {
 	.probe_device	= sprd_iommu_probe_device,
 	.device_group	= sprd_iommu_device_group,
 	.of_xlate	= sprd_iommu_of_xlate,
+<<<<<<< HEAD
 	.pgsize_bitmap	= SPRD_IOMMU_PAGE_SIZE,
 	.owner		= THIS_MODULE,
 	.default_domain_ops = &(const struct iommu_domain_ops) {
 		.attach_dev	= sprd_iommu_attach_device,
 		.map_pages	= sprd_iommu_map,
 		.unmap_pages	= sprd_iommu_unmap,
+=======
+	.pgsize_bitmap	= ~0UL << SPRD_IOMMU_PAGE_SHIFT,
+	.owner		= THIS_MODULE,
+	.default_domain_ops = &(const struct iommu_domain_ops) {
+		.attach_dev	= sprd_iommu_attach_device,
+		.detach_dev	= sprd_iommu_detach_device,
+		.map		= sprd_iommu_map,
+		.unmap		= sprd_iommu_unmap,
+>>>>>>> b7ba80a49124 (Commit)
 		.iotlb_sync_map	= sprd_iommu_sync_map,
 		.iotlb_sync	= sprd_iommu_sync,
 		.iova_to_phys	= sprd_iommu_iova_to_phys,

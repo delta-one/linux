@@ -1338,17 +1338,24 @@ static struct pci_driver amd_ntb_pci_driver = {
 
 static int __init amd_ntb_pci_driver_init(void)
 {
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pr_info("%s %s\n", NTB_DESC, NTB_VER);
 
 	if (debugfs_initialized())
 		debugfs_dir = debugfs_create_dir(KBUILD_MODNAME, NULL);
 
+<<<<<<< HEAD
 	ret = pci_register_driver(&amd_ntb_pci_driver);
 	if (ret)
 		debugfs_remove_recursive(debugfs_dir);
 
 	return ret;
+=======
+	return pci_register_driver(&amd_ntb_pci_driver);
+>>>>>>> b7ba80a49124 (Commit)
 }
 module_init(amd_ntb_pci_driver_init);
 

@@ -28,7 +28,10 @@ config DRM_MSM
 	select SYNC_FILE
 	select PM_OPP
 	select NVMEM
+<<<<<<< HEAD
 	select PM_GENERIC_DOMAINS
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  DRM/KMS driver for MSM/snapdragon.
 
@@ -141,12 +144,21 @@ config DRM_MSM_DSI_10NM_PHY
 	  Choose this option if DSI PHY on SDM845 is used on the platform.
 
 config DRM_MSM_DSI_7NM_PHY
+<<<<<<< HEAD
 	bool "Enable DSI 7nm/5nm/4nm PHY driver in MSM DRM"
 	depends on DRM_MSM_DSI
 	default y
 	help
 	  Choose this option if DSI PHY on SM8150/SM8250/SM8350/SM8450/SM8550/SC7280
 	  is used on the platform.
+=======
+	bool "Enable DSI 7nm PHY driver in MSM DRM"
+	depends on DRM_MSM_DSI
+	default y
+	help
+	  Choose this option if DSI PHY on SM8150/SM8250/SC7280 is used on
+	  the platform.
+>>>>>>> b7ba80a49124 (Commit)
 
 config DRM_MSM_HDMI
 	bool "Enable HDMI support in MSM DRM driver"
@@ -156,7 +168,11 @@ config DRM_MSM_HDMI
 	  Compile in support for the HDMI output MSM DRM driver. It can
 	  be a primary or a secondary display on device. Note that this is used
 	  only for the direct HDMI output. If the device outputs HDMI data
+<<<<<<< HEAD
 	  through some kind of DSI-to-HDMI bridge, this option can be disabled.
+=======
+	  throught some kind of DSI-to-HDMI bridge, this option can be disabled.
+>>>>>>> b7ba80a49124 (Commit)
 
 config DRM_MSM_HDMI_HDCP
 	bool "Enable HDMI HDCP support in MSM DRM driver"

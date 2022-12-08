@@ -2,8 +2,13 @@
 /*
  * Copyright (C) Paul Mackerras 1997.
  */
+<<<<<<< HEAD
 #include <linux/string.h>
 #include <linux/stdarg.h>
+=======
+#include <stdarg.h>
+#include <stddef.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 size_t strnlen(const char * s, size_t count)
 {
@@ -42,8 +47,13 @@ static int skip_atoi(const char **s)
 
 static char * number(char * str, unsigned long long num, int base, int size, int precision, int type)
 {
+<<<<<<< HEAD
 	char c, sign, tmp[66];
 	const char *digits = "0123456789abcdefghijklmnopqrstuvwxyz";
+=======
+	char c,sign,tmp[66];
+	const char *digits="0123456789abcdefghijklmnopqrstuvwxyz";
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	if (type & LARGE)
@@ -83,14 +93,22 @@ static char * number(char * str, unsigned long long num, int base, int size, int
 		precision = i;
 	size -= precision;
 	if (!(type&(ZEROPAD+LEFT)))
+<<<<<<< HEAD
 		while (size-- > 0)
+=======
+		while(size-->0)
+>>>>>>> b7ba80a49124 (Commit)
 			*str++ = ' ';
 	if (sign)
 		*str++ = sign;
 	if (type & SPECIAL) {
 		if (base==8)
 			*str++ = '0';
+<<<<<<< HEAD
 		else if (base == 16) {
+=======
+		else if (base==16) {
+>>>>>>> b7ba80a49124 (Commit)
 			*str++ = '0';
 			*str++ = digits[33];
 		}
@@ -125,7 +143,11 @@ int vsprintf(char *buf, const char *fmt, va_list args)
 				/* 'z' changed to 'Z' --davidm 1/25/99 */
 
 
+<<<<<<< HEAD
 	for (str = buf ; *fmt ; ++fmt) {
+=======
+	for (str=buf ; *fmt ; ++fmt) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (*fmt != '%') {
 			*str++ = *fmt;
 			continue;
@@ -296,7 +318,11 @@ int sprintf(char * buf, const char *fmt, ...)
 	int i;
 
 	va_start(args, fmt);
+<<<<<<< HEAD
 	i = vsprintf(buf, fmt, args);
+=======
+	i=vsprintf(buf,fmt,args);
+>>>>>>> b7ba80a49124 (Commit)
 	va_end(args);
 	return i;
 }

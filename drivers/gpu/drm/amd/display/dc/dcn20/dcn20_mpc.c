@@ -542,7 +542,11 @@ static struct mpcc *mpc2_get_mpcc_for_dpp(struct mpc_tree *tree, int dpp_id)
 	return NULL;
 }
 
+<<<<<<< HEAD
 static const struct mpc_funcs dcn20_mpc_funcs = {
+=======
+const struct mpc_funcs dcn20_mpc_funcs = {
+>>>>>>> b7ba80a49124 (Commit)
 	.read_mpcc_state = mpc1_read_mpcc_state,
 	.insert_plane = mpc1_insert_plane,
 	.remove_mpcc = mpc1_remove_mpcc,

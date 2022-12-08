@@ -22,8 +22,11 @@
 
 #include <asm/efi.h>
 
+<<<<<<< HEAD
 unsigned long __initdata screen_info_table = EFI_INVALID_TABLE_ADDR;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __init is_memory(efi_memory_desc_t *md)
 {
 	if (md->attribute & (EFI_MEMORY_WB|EFI_MEMORY_WT|EFI_MEMORY_WC))
@@ -57,6 +60,7 @@ extern __weak const efi_config_table_type_t efi_arch_tables[];
 
 static void __init init_screen_info(void)
 {
+<<<<<<< HEAD
 	struct screen_info *si;
 
 	if (screen_info_table != EFI_INVALID_TABLE_ADDR) {
@@ -76,6 +80,11 @@ static void __init init_screen_info(void)
 		if (IS_ENABLED(CONFIG_EFI_EARLYCON))
 			efi_earlycon_reprobe();
 	}
+=======
+	if (screen_info.orig_video_isVGA == VIDEO_TYPE_EFI &&
+	    memblock_is_map_memory(screen_info.lfb_base))
+		memblock_mark_nomap(screen_info.lfb_base, screen_info.lfb_size);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __init uefi_init(u64 efi_system_table)
@@ -95,7 +104,11 @@ static int __init uefi_init(u64 efi_system_table)
 	if (IS_ENABLED(CONFIG_64BIT))
 		set_bit(EFI_64BIT, &efi.flags);
 
+<<<<<<< HEAD
 	retval = efi_systab_check_header(&systab->hdr);
+=======
+	retval = efi_systab_check_header(&systab->hdr, 2);
+>>>>>>> b7ba80a49124 (Commit)
 	if (retval)
 		goto out;
 

@@ -226,7 +226,15 @@ static void __init pxa25x_mfp_init(void)
 	int i;
 
 	/* running before pxa_gpio_probe() */
+<<<<<<< HEAD
 	pxa_last_gpio = 84;
+=======
+#ifdef CONFIG_CPU_PXA26x
+	pxa_last_gpio = 89;
+#else
+	pxa_last_gpio = 84;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i <= pxa_last_gpio; i++)
 		gpio_desc[i].valid = 1;
 

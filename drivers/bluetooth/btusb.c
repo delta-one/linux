@@ -32,7 +32,10 @@
 static bool disable_scofix;
 static bool force_scofix;
 static bool enable_autosuspend = IS_ENABLED(CONFIG_BT_HCIBTUSB_AUTOSUSPEND);
+<<<<<<< HEAD
 static bool enable_poll_sync = IS_ENABLED(CONFIG_BT_HCIBTUSB_POLL_SYNC);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool reset = true;
 
 static struct usb_driver btusb_driver;
@@ -64,7 +67,10 @@ static struct usb_driver btusb_driver;
 #define BTUSB_INTEL_BROKEN_SHUTDOWN_LED	BIT(24)
 #define BTUSB_INTEL_BROKEN_INITIAL_NCMD BIT(25)
 #define BTUSB_INTEL_NO_WBS_SUPPORT	BIT(26)
+<<<<<<< HEAD
 #define BTUSB_ACTIONS_SEMI		BIT(27)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct usb_device_id btusb_table[] = {
 	/* Generic Bluetooth USB device */
@@ -318,6 +324,7 @@ static const struct usb_device_id blacklist_table[] = {
 	{ USB_DEVICE(0x0489, 0xe0d0), .driver_info = BTUSB_QCA_WCN6855 |
 						     BTUSB_WIDEBAND_SPEECH |
 						     BTUSB_VALID_LE_STATES },
+<<<<<<< HEAD
 	{ USB_DEVICE(0x10ab, 0x9108), .driver_info = BTUSB_QCA_WCN6855 |
 						     BTUSB_WIDEBAND_SPEECH |
 						     BTUSB_VALID_LE_STATES },
@@ -402,6 +409,8 @@ static const struct usb_device_id blacklist_table[] = {
 	{ USB_DEVICE(0x04ca, 0x3a27), .driver_info = BTUSB_QCA_WCN6855 |
 						     BTUSB_WIDEBAND_SPEECH |
 						     BTUSB_VALID_LE_STATES },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* QCA WCN785x chipset */
 	{ USB_DEVICE(0x0cf3, 0xe700), .driver_info = BTUSB_QCA_WCN6855 |
@@ -493,20 +502,26 @@ static const struct usb_device_id blacklist_table[] = {
 	{ USB_VENDOR_AND_INTERFACE_INFO(0x8087, 0xe0, 0x01, 0x01),
 	  .driver_info = BTUSB_IGNORE },
 
+<<<<<<< HEAD
 	/* Realtek 8821CE Bluetooth devices */
 	{ USB_DEVICE(0x13d3, 0x3529), .driver_info = BTUSB_REALTEK |
 						     BTUSB_WIDEBAND_SPEECH },
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Realtek 8822CE Bluetooth devices */
 	{ USB_DEVICE(0x0bda, 0xb00c), .driver_info = BTUSB_REALTEK |
 						     BTUSB_WIDEBAND_SPEECH },
 	{ USB_DEVICE(0x0bda, 0xc822), .driver_info = BTUSB_REALTEK |
 						     BTUSB_WIDEBAND_SPEECH },
 
+<<<<<<< HEAD
 	/* Realtek 8822CU Bluetooth devices */
 	{ USB_DEVICE(0x13d3, 0x3549), .driver_info = BTUSB_REALTEK |
 						     BTUSB_WIDEBAND_SPEECH },
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Realtek 8852AE Bluetooth devices */
 	{ USB_DEVICE(0x0bda, 0x2852), .driver_info = BTUSB_REALTEK |
 						     BTUSB_WIDEBAND_SPEECH },
@@ -537,10 +552,13 @@ static const struct usb_device_id blacklist_table[] = {
 	{ USB_DEVICE(0x13d3, 0x3592), .driver_info = BTUSB_REALTEK |
 						     BTUSB_WIDEBAND_SPEECH },
 
+<<<<<<< HEAD
 	/* Realtek 8852BE Bluetooth devices */
 	{ USB_DEVICE(0x0cb8, 0xc559), .driver_info = BTUSB_REALTEK |
 						     BTUSB_WIDEBAND_SPEECH },
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Realtek Bluetooth devices */
 	{ USB_VENDOR_AND_INTERFACE_INFO(0x0bda, 0xe0, 0x01, 0x01),
 	  .driver_info = BTUSB_REALTEK },
@@ -558,9 +576,12 @@ static const struct usb_device_id blacklist_table[] = {
 	{ USB_DEVICE(0x043e, 0x310c), .driver_info = BTUSB_MEDIATEK |
 						     BTUSB_WIDEBAND_SPEECH |
 						     BTUSB_VALID_LE_STATES },
+<<<<<<< HEAD
 	{ USB_DEVICE(0x04ca, 0x3801), .driver_info = BTUSB_MEDIATEK |
 						     BTUSB_WIDEBAND_SPEECH |
 						     BTUSB_VALID_LE_STATES },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Additional MediaTek MT7668 Bluetooth devices */
 	{ USB_DEVICE(0x043e, 0x3109), .driver_info = BTUSB_MEDIATEK |
@@ -574,9 +595,12 @@ static const struct usb_device_id blacklist_table[] = {
 	{ USB_DEVICE(0x0489, 0xe0e0), .driver_info = BTUSB_MEDIATEK |
 						     BTUSB_WIDEBAND_SPEECH |
 						     BTUSB_VALID_LE_STATES },
+<<<<<<< HEAD
 	{ USB_DEVICE(0x0489, 0xe0f2), .driver_info = BTUSB_MEDIATEK |
 						     BTUSB_WIDEBAND_SPEECH |
 						     BTUSB_VALID_LE_STATES },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ USB_DEVICE(0x04ca, 0x3802), .driver_info = BTUSB_MEDIATEK |
 						     BTUSB_WIDEBAND_SPEECH |
 						     BTUSB_VALID_LE_STATES },
@@ -615,12 +639,15 @@ static const struct usb_device_id blacklist_table[] = {
 	{ USB_DEVICE(0x0489, 0xe0e2), .driver_info = BTUSB_MEDIATEK |
 						     BTUSB_WIDEBAND_SPEECH |
 						     BTUSB_VALID_LE_STATES },
+<<<<<<< HEAD
 	{ USB_DEVICE(0x0489, 0xe0e4), .driver_info = BTUSB_MEDIATEK |
 						     BTUSB_WIDEBAND_SPEECH |
 						     BTUSB_VALID_LE_STATES },
 	{ USB_DEVICE(0x0489, 0xe0f2), .driver_info = BTUSB_MEDIATEK |
 						     BTUSB_WIDEBAND_SPEECH |
 						     BTUSB_VALID_LE_STATES },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Additional Realtek 8723AE Bluetooth devices */
 	{ USB_DEVICE(0x0930, 0x021d), .driver_info = BTUSB_REALTEK },
@@ -653,8 +680,11 @@ static const struct usb_device_id blacklist_table[] = {
 						     BTUSB_WIDEBAND_SPEECH },
 	{ USB_DEVICE(0x7392, 0xc611), .driver_info = BTUSB_REALTEK |
 						     BTUSB_WIDEBAND_SPEECH },
+<<<<<<< HEAD
 	{ USB_DEVICE(0x2b89, 0x8761), .driver_info = BTUSB_REALTEK |
 						     BTUSB_WIDEBAND_SPEECH },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Additional Realtek 8821AE Bluetooth devices */
 	{ USB_DEVICE(0x0b05, 0x17dc), .driver_info = BTUSB_REALTEK },
@@ -691,9 +721,12 @@ static const struct usb_device_id blacklist_table[] = {
 	{ USB_DEVICE(0x0cb5, 0xc547), .driver_info = BTUSB_REALTEK |
 						     BTUSB_WIDEBAND_SPEECH },
 
+<<<<<<< HEAD
 	/* Actions Semiconductor ATS2851 based devices */
 	{ USB_DEVICE(0x10d7, 0xb012), .driver_info = BTUSB_ACTIONS_SEMI },
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Silicon Wave based devices */
 	{ USB_DEVICE(0x0c10, 0x0000), .driver_info = BTUSB_SWAVE },
 
@@ -747,7 +780,10 @@ static const struct dmi_system_id btusb_needs_reset_resume_table[] = {
 #define BTUSB_TX_WAIT_VND_EVT	13
 #define BTUSB_WAKEUP_AUTOSUSPEND	14
 #define BTUSB_USE_ALT3_FOR_WBS	15
+<<<<<<< HEAD
 #define BTUSB_ALT6_CONTINUOUS_TX	16
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct btusb_data {
 	struct hci_dev       *hdev;
@@ -812,6 +848,7 @@ struct btusb_data {
 	unsigned cmd_timeout_cnt;
 };
 
+<<<<<<< HEAD
 static void btusb_reset(struct hci_dev *hdev)
 {
 	struct btusb_data *data;
@@ -834,6 +871,8 @@ static void btusb_reset(struct hci_dev *hdev)
 	usb_queue_reset_device(data->intf);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void btusb_intel_cmd_timeout(struct hci_dev *hdev)
 {
 	struct btusb_data *data = hci_get_drvdata(hdev);
@@ -843,7 +882,11 @@ static void btusb_intel_cmd_timeout(struct hci_dev *hdev)
 		return;
 
 	if (!reset_gpio) {
+<<<<<<< HEAD
 		btusb_reset(hdev);
+=======
+		bt_dev_err(hdev, "No way to reset. Ignoring and continuing");
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -874,7 +917,11 @@ static void btusb_rtl_cmd_timeout(struct hci_dev *hdev)
 		return;
 
 	if (!reset_gpio) {
+<<<<<<< HEAD
 		btusb_reset(hdev);
+=======
+		bt_dev_err(hdev, "No gpio to reset Realtek device, ignoring");
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -899,6 +946,10 @@ static void btusb_qca_cmd_timeout(struct hci_dev *hdev)
 {
 	struct btusb_data *data = hci_get_drvdata(hdev);
 	struct gpio_desc *reset_gpio = data->reset_gpio;
+<<<<<<< HEAD
+=======
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (++data->cmd_timeout_cnt < 5)
 		return;
@@ -924,7 +975,17 @@ static void btusb_qca_cmd_timeout(struct hci_dev *hdev)
 		return;
 	}
 
+<<<<<<< HEAD
 	btusb_reset(hdev);
+=======
+	bt_dev_err(hdev, "Multiple cmd timeouts seen. Resetting usb device.");
+	/* This is not an unbalanced PM reference since the device will reset */
+	err = usb_autopm_get_interface(data->intf);
+	if (!err)
+		usb_queue_reset_device(data->intf);
+	else
+		bt_dev_err(hdev, "Failed usb_autopm_get_interface with %d", err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void btusb_free_frags(struct btusb_data *data)
@@ -933,6 +994,7 @@ static inline void btusb_free_frags(struct btusb_data *data)
 
 	spin_lock_irqsave(&data->rxlock, flags);
 
+<<<<<<< HEAD
 	dev_kfree_skb_irq(data->evt_skb);
 	data->evt_skb = NULL;
 
@@ -940,6 +1002,15 @@ static inline void btusb_free_frags(struct btusb_data *data)
 	data->acl_skb = NULL;
 
 	dev_kfree_skb_irq(data->sco_skb);
+=======
+	kfree_skb(data->evt_skb);
+	data->evt_skb = NULL;
+
+	kfree_skb(data->acl_skb);
+	data->acl_skb = NULL;
+
+	kfree_skb(data->sco_skb);
+>>>>>>> b7ba80a49124 (Commit)
 	data->sco_skb = NULL;
 
 	spin_unlock_irqrestore(&data->rxlock, flags);
@@ -1056,11 +1127,28 @@ static int btusb_recv_bulk(struct btusb_data *data, void *buffer, int count)
 		hci_skb_expect(skb) -= len;
 
 		if (skb->len == HCI_ACL_HDR_SIZE) {
+<<<<<<< HEAD
 			__le16 dlen = hci_acl_hdr(skb)->dlen;
+=======
+			__u16 handle = __le16_to_cpu(hci_acl_hdr(skb)->handle);
+			__le16 dlen = hci_acl_hdr(skb)->dlen;
+			__u8 type;
+>>>>>>> b7ba80a49124 (Commit)
 
 			/* Complete ACL header */
 			hci_skb_expect(skb) = __le16_to_cpu(dlen);
 
+<<<<<<< HEAD
+=======
+			/* Detect if ISO packet has been sent over bulk */
+			if (hci_conn_num(data->hdev, ISO_LINK)) {
+				type = hci_conn_lookup_type(data->hdev,
+							    hci_handle(handle));
+				if (type == ISO_LINK)
+					hci_skb_pkt_type(skb) = HCI_ISODATA_PKT;
+			}
+
+>>>>>>> b7ba80a49124 (Commit)
 			if (skb_tailroom(skb) < hci_skb_expect(skb)) {
 				kfree_skb(skb);
 				skb = NULL;
@@ -1083,6 +1171,7 @@ static int btusb_recv_bulk(struct btusb_data *data, void *buffer, int count)
 	return err;
 }
 
+<<<<<<< HEAD
 static bool btusb_validate_sco_handle(struct hci_dev *hdev,
 				      struct hci_sco_hdr *hdr)
 {
@@ -1111,6 +1200,8 @@ static bool btusb_validate_sco_handle(struct hci_dev *hdev,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int btusb_recv_isoc(struct btusb_data *data, void *buffer, int count)
 {
 	struct sk_buff *skb;
@@ -1143,12 +1234,18 @@ static int btusb_recv_isoc(struct btusb_data *data, void *buffer, int count)
 
 		if (skb->len == HCI_SCO_HDR_SIZE) {
 			/* Complete SCO header */
+<<<<<<< HEAD
 			struct hci_sco_hdr *hdr = hci_sco_hdr(skb);
 
 			hci_skb_expect(skb) = hdr->dlen;
 
 			if (skb_tailroom(skb) < hci_skb_expect(skb) ||
 			    !btusb_validate_sco_handle(data->hdev, hdr)) {
+=======
+			hci_skb_expect(skb) = hci_sco_hdr(skb)->dlen;
+
+			if (skb_tailroom(skb) < hci_skb_expect(skb)) {
+>>>>>>> b7ba80a49124 (Commit)
 				kfree_skb(skb);
 				skb = NULL;
 
@@ -1428,17 +1525,24 @@ static void btusb_isoc_complete(struct urb *urb)
 static inline void __fill_isoc_descriptor_msbc(struct urb *urb, int len,
 					       int mtu, struct btusb_data *data)
 {
+<<<<<<< HEAD
 	int i = 0, offset = 0;
+=======
+	int i, offset = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int interval;
 
 	BT_DBG("len %d mtu %d", len, mtu);
 
+<<<<<<< HEAD
 	/* For mSBC ALT 6 settings some chips need to transmit the data
 	 * continuously without the zero length of USB packets.
 	 */
 	if (test_bit(BTUSB_ALT6_CONTINUOUS_TX, &data->flags))
 		goto ignore_usb_alt6_packet_flow;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* For mSBC ALT 6 setting the host will send the packet at continuous
 	 * flow. As per core spec 5, vol 4, part B, table 2.1. For ALT setting
 	 * 6 the HCI PACKET INTERVAL should be 7.5ms for every usb packets.
@@ -1458,7 +1562,10 @@ static inline void __fill_isoc_descriptor_msbc(struct urb *urb, int len,
 		urb->iso_frame_desc[i].length = offset;
 	}
 
+<<<<<<< HEAD
 ignore_usb_alt6_packet_flow:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (len && i < BTUSB_MAX_ISOC_FRAMES) {
 		urb->iso_frame_desc[i].offset = offset;
 		urb->iso_frame_desc[i].length = len;
@@ -2140,11 +2247,18 @@ static void btusb_work(struct work_struct *work)
 		if (btusb_switch_alt_setting(hdev, new_alts) < 0)
 			bt_dev_err(hdev, "set USB alt:(%d) failed!", new_alts);
 	} else {
+<<<<<<< HEAD
 		usb_kill_anchored_urbs(&data->isoc_anchor);
 
 		if (test_and_clear_bit(BTUSB_ISOC_RUNNING, &data->flags))
 			__set_isoc_interface(hdev, 0);
 
+=======
+		clear_bit(BTUSB_ISOC_RUNNING, &data->flags);
+		usb_kill_anchored_urbs(&data->isoc_anchor);
+
+		__set_isoc_interface(hdev, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		if (test_and_clear_bit(BTUSB_DID_ISO_RESUME, &data->flags))
 			usb_autopm_put_interface(data->isoc ? data->isoc : data->intf);
 	}
@@ -2208,19 +2322,27 @@ static int btusb_setup_csr(struct hci_dev *hdev)
 		return err;
 	}
 
+<<<<<<< HEAD
 	rp = skb_pull_data(skb, sizeof(*rp));
 	if (!rp) {
+=======
+	if (skb->len != sizeof(struct hci_rp_read_local_version)) {
+>>>>>>> b7ba80a49124 (Commit)
 		bt_dev_err(hdev, "CSR: Local version length mismatch");
 		kfree_skb(skb);
 		return -EIO;
 	}
 
+<<<<<<< HEAD
 	bt_dev_info(hdev, "CSR: Setting up dongle with HCI ver=%u rev=%04x",
 		    rp->hci_ver, le16_to_cpu(rp->hci_rev));
 
 	bt_dev_info(hdev, "LMP ver=%u subver=%04x; manufacturer=%u",
 		    rp->lmp_ver, le16_to_cpu(rp->lmp_subver),
 		    le16_to_cpu(rp->manufacturer));
+=======
+	rp = (struct hci_rp_read_local_version *)skb->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Detect a wide host of Chinese controllers that aren't CSR.
 	 *
@@ -2250,6 +2372,7 @@ static int btusb_setup_csr(struct hci_dev *hdev)
 	 *      third-party BT 4.0 dongle reuses it.
 	 */
 	else if (le16_to_cpu(rp->lmp_subver) <= 0x034e &&
+<<<<<<< HEAD
 		 rp->hci_ver > BLUETOOTH_VER_1_1)
 		is_fake = true;
 
@@ -2267,12 +2390,35 @@ static int btusb_setup_csr(struct hci_dev *hdev)
 
 	else if (le16_to_cpu(rp->lmp_subver) <= 0x22bb &&
 		 rp->hci_ver > BLUETOOTH_VER_4_0)
+=======
+		 le16_to_cpu(rp->hci_ver) > BLUETOOTH_VER_1_1)
+		is_fake = true;
+
+	else if (le16_to_cpu(rp->lmp_subver) <= 0x0529 &&
+		 le16_to_cpu(rp->hci_ver) > BLUETOOTH_VER_1_2)
+		is_fake = true;
+
+	else if (le16_to_cpu(rp->lmp_subver) <= 0x0c5c &&
+		 le16_to_cpu(rp->hci_ver) > BLUETOOTH_VER_2_0)
+		is_fake = true;
+
+	else if (le16_to_cpu(rp->lmp_subver) <= 0x1899 &&
+		 le16_to_cpu(rp->hci_ver) > BLUETOOTH_VER_2_1)
+		is_fake = true;
+
+	else if (le16_to_cpu(rp->lmp_subver) <= 0x22bb &&
+		 le16_to_cpu(rp->hci_ver) > BLUETOOTH_VER_4_0)
+>>>>>>> b7ba80a49124 (Commit)
 		is_fake = true;
 
 	/* Other clones which beat all the above checks */
 	else if (bcdDevice == 0x0134 &&
 		 le16_to_cpu(rp->lmp_subver) == 0x0c5c &&
+<<<<<<< HEAD
 		 rp->hci_ver == BLUETOOTH_VER_2_0)
+=======
+		 le16_to_cpu(rp->hci_ver) == BLUETOOTH_VER_2_0)
+>>>>>>> b7ba80a49124 (Commit)
 		is_fake = true;
 
 	if (is_fake) {
@@ -2284,7 +2430,10 @@ static int btusb_setup_csr(struct hci_dev *hdev)
 		 * without these the controller will lock up.
 		 */
 		set_bit(HCI_QUIRK_BROKEN_STORED_LINK_KEY, &hdev->quirks);
+<<<<<<< HEAD
 		set_bit(HCI_QUIRK_BROKEN_ERR_DATA_REPORTING, &hdev->quirks);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		set_bit(HCI_QUIRK_BROKEN_FILTER_CLEAR_ALL, &hdev->quirks);
 		set_bit(HCI_QUIRK_NO_SUSPEND_NOTIFIER, &hdev->quirks);
 
@@ -2482,6 +2631,7 @@ static int btusb_send_frame_intel(struct hci_dev *hdev, struct sk_buff *skb)
 	return -EILSEQ;
 }
 
+<<<<<<< HEAD
 static int btusb_setup_realtek(struct hci_dev *hdev)
 {
 	struct btusb_data *data = hci_get_drvdata(hdev);
@@ -2495,6 +2645,8 @@ static int btusb_setup_realtek(struct hci_dev *hdev)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* UHW CR mapping */
 #define MTK_BT_MISC		0x70002510
 #define MTK_BT_SUBSYS_RST	0x70002610
@@ -3430,7 +3582,11 @@ static int btusb_setup_qca_load_rampatch(struct hci_dev *hdev,
 
 	if (ver_rom & ~0xffffU) {
 		rver_rom_high = le16_to_cpu(rver->rom_version_high);
+<<<<<<< HEAD
 		rver_rom = rver_rom_high << 16 | rver_rom_low;
+=======
+		rver_rom = le32_to_cpu(rver_rom_high << 16 | rver_rom_low);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		rver_rom = rver_rom_low;
 	}
@@ -3837,9 +3993,19 @@ static int btusb_probe(struct usb_interface *intf,
 
 	BT_DBG("intf %p id %p", intf, id);
 
+<<<<<<< HEAD
 	if ((id->driver_info & BTUSB_IFNUM_2) &&
 	    (intf->cur_altsetting->desc.bInterfaceNumber != 2))
 		return -ENODEV;
+=======
+	/* interface numbers are hardcoded in the spec */
+	if (intf->cur_altsetting->desc.bInterfaceNumber != 0) {
+		if (!(id->driver_info & BTUSB_IFNUM_2))
+			return -ENODEV;
+		if (intf->cur_altsetting->desc.bInterfaceNumber != 2)
+			return -ENODEV;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ifnum_base = intf->cur_altsetting->desc.bInterfaceNumber;
 
@@ -3931,9 +4097,12 @@ static int btusb_probe(struct usb_interface *intf,
 		/* Override the rx handlers */
 		data->recv_event = btusb_recv_event_intel;
 		data->recv_bulk = btusb_recv_bulk_intel;
+<<<<<<< HEAD
 	} else if (id->driver_info & BTUSB_REALTEK) {
 		/* Allocate extra space for Realtek device */
 		priv_size += sizeof(struct btrealtek_data);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	data->recv_acl = hci_recv_frame;
@@ -4092,7 +4261,11 @@ static int btusb_probe(struct usb_interface *intf,
 
 	if (IS_ENABLED(CONFIG_BT_HCIBTUSB_RTL) &&
 	    (id->driver_info & BTUSB_REALTEK)) {
+<<<<<<< HEAD
 		hdev->setup = btusb_setup_realtek;
+=======
+		hdev->setup = btrtl_setup_realtek;
+>>>>>>> b7ba80a49124 (Commit)
 		hdev->shutdown = btrtl_shutdown_realtek;
 		hdev->cmd_timeout = btusb_rtl_cmd_timeout;
 
@@ -4101,6 +4274,7 @@ static int btusb_probe(struct usb_interface *intf,
 		set_bit(BTUSB_USE_ALT3_FOR_WBS, &data->flags);
 	}
 
+<<<<<<< HEAD
 	if (id->driver_info & BTUSB_ACTIONS_SEMI) {
 		/* Support is advertised, but not implemented */
 		set_bit(HCI_QUIRK_BROKEN_ERR_DATA_REPORTING, &hdev->quirks);
@@ -4108,6 +4282,8 @@ static int btusb_probe(struct usb_interface *intf,
 		set_bit(HCI_QUIRK_BROKEN_EXT_SCAN, &hdev->quirks);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!reset)
 		set_bit(HCI_QUIRK_RESET_ON_CLOSE, &hdev->quirks);
 
@@ -4184,8 +4360,11 @@ static int btusb_probe(struct usb_interface *intf,
 	if (enable_autosuspend)
 		usb_enable_autosuspend(data->udev);
 
+<<<<<<< HEAD
 	data->poll_sync = enable_poll_sync;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = hci_register_dev(hdev);
 	if (err < 0)
 		goto out_free_dev;

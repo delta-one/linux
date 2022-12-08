@@ -6,6 +6,10 @@
 #include <linux/pci.h>
 #include <linux/device.h>
 #include <linux/sched/task.h>
+<<<<<<< HEAD
+=======
+#include <linux/intel-svm.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/io-64-nonatomic-lo-hi.h>
 #include <linux/cdev.h>
 #include <linux/fs.h>
@@ -99,7 +103,11 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
 	filp->private_data = ctx;
 
 	if (device_user_pasid_enabled(idxd)) {
+<<<<<<< HEAD
 		sva = iommu_sva_bind_device(dev, current->mm);
+=======
+		sva = iommu_sva_bind_device(dev, current->mm, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(sva)) {
 			rc = PTR_ERR(sva);
 			dev_err(dev, "pasid allocation failed: %d\n", rc);
@@ -201,7 +209,11 @@ static int idxd_cdev_mmap(struct file *filp, struct vm_area_struct *vma)
 	if (rc < 0)
 		return rc;
 
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_DONTCOPY);
+=======
+	vma->vm_flags |= VM_DONTCOPY;
+>>>>>>> b7ba80a49124 (Commit)
 	pfn = (base + idxd_get_wq_portal_full_offset(wq->id,
 				IDXD_PORTAL_LIMITED)) >> PAGE_SHIFT;
 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
@@ -311,6 +323,7 @@ static int idxd_user_drv_probe(struct idxd_dev *idxd_dev)
 	if (idxd->state != IDXD_DEV_ENABLED)
 		return -ENXIO;
 
+<<<<<<< HEAD
 	/*
 	 * User type WQ is enabled only when SVA is enabled for two reasons:
 	 *   - If no IOMMU or IOMMU Passthrough without SVA, userspace
@@ -329,6 +342,8 @@ static int idxd_user_drv_probe(struct idxd_dev *idxd_dev)
 		return -EOPNOTSUPP;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&wq->wq_lock);
 	wq->type = IDXD_WQT_USER;
 	rc = drv_enable_wq(wq);

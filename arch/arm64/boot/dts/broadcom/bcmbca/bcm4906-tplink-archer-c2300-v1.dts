@@ -64,6 +64,7 @@
 			function = "usb2";
 			color = <LED_COLOR_ID_BLUE>;
 			gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
+<<<<<<< HEAD
 			trigger-sources = <&ohci_port1>, <&ehci_port1>;
 			linux,default-trigger = "usbport";
 		};
@@ -74,6 +75,14 @@
 			gpios = <&gpio0 17 GPIO_ACTIVE_LOW>;
 			trigger-sources = <&ohci_port2>, <&ehci_port2>, <&xhci_port2>;
 			linux,default-trigger = "usbport";
+=======
+		};
+
+		led-usb3 {
+			function = "usbd3";
+			color = <LED_COLOR_ID_BLUE>;
+			gpios = <&gpio0 17 GPIO_ACTIVE_LOW>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		led-brightness {

@@ -158,9 +158,14 @@ static int genregs32_set(struct task_struct *target,
 				 35 * sizeof(u32), 36 * sizeof(u32));
 	if (ret || !count)
 		return ret;
+<<<<<<< HEAD
 	user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, 36 * sizeof(u32),
 				  38 * sizeof(u32));
 	return 0;
+=======
+	return user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+					 36 * sizeof(u32), 38 * sizeof(u32));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int fpregs32_get(struct task_struct *target,
@@ -204,8 +209,13 @@ static int fpregs32_set(struct task_struct *target,
 					 33 * sizeof(u32),
 					 34 * sizeof(u32));
 	if (!ret)
+<<<<<<< HEAD
 		user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
 					  34 * sizeof(u32), -1);
+=======
+		ret = user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+						34 * sizeof(u32), -1);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

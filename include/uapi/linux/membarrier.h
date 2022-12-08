@@ -137,9 +137,12 @@
  * @MEMBARRIER_CMD_SHARED:
  *                          Alias to MEMBARRIER_CMD_GLOBAL. Provided for
  *                          header backward compatibility.
+<<<<<<< HEAD
  * @MEMBARRIER_CMD_GET_REGISTRATIONS:
  *                          Returns a bitmask of previously issued
  *                          registration commands.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Command to be passed to the membarrier system call. The commands need to
  * be a single bit each, except for MEMBARRIER_CMD_QUERY which is assigned to
@@ -156,7 +159,10 @@ enum membarrier_cmd {
 	MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE	= (1 << 6),
 	MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ			= (1 << 7),
 	MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ		= (1 << 8),
+<<<<<<< HEAD
 	MEMBARRIER_CMD_GET_REGISTRATIONS			= (1 << 9),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Alias for header backward compatibility. */
 	MEMBARRIER_CMD_SHARED			= MEMBARRIER_CMD_GLOBAL,

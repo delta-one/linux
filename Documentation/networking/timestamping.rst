@@ -179,8 +179,12 @@ SOF_TIMESTAMPING_OPT_ID:
   identifier and returns that along with the timestamp. The identifier
   is derived from a per-socket u32 counter (that wraps). For datagram
   sockets, the counter increments with each sent packet. For stream
+<<<<<<< HEAD
   sockets, it increments with every byte. For stream sockets, also set
   SOF_TIMESTAMPING_OPT_ID_TCP, see the section below.
+=======
+  sockets, it increments with every byte.
+>>>>>>> b7ba80a49124 (Commit)
 
   The counter starts at zero. It is initialized the first time that
   the socket option is enabled. It is reset each time the option is
@@ -193,6 +197,7 @@ SOF_TIMESTAMPING_OPT_ID:
   among all possibly concurrently outstanding timestamp requests for
   that socket.
 
+<<<<<<< HEAD
 SOF_TIMESTAMPING_OPT_ID_TCP:
   Pass this modifier along with SOF_TIMESTAMPING_OPT_ID for new TCP
   timestamping applications. SOF_TIMESTAMPING_OPT_ID defines how the
@@ -222,6 +227,8 @@ SOF_TIMESTAMPING_OPT_ID_TCP:
   at initial socket creation, when no data is queued or sent. But
   SOF_TIMESTAMPING_OPT_ID_TCP behavior is more robust regardless of
   when the socket option is set.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 SOF_TIMESTAMPING_OPT_CMSG:
   Support recv() cmsg for all timestamped packets. Control messages

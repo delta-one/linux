@@ -52,7 +52,10 @@ struct af_alg_iv {
 #define ALG_SET_AEAD_ASSOCLEN		4
 #define ALG_SET_AEAD_AUTHSIZE		5
 #define ALG_SET_DRBG_ENTROPY		6
+<<<<<<< HEAD
 #define ALG_SET_KEY_BY_KEY_SERIAL	7
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Operations */
 #define ALG_OP_DECRYPT			0

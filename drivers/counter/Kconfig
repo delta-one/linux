@@ -29,6 +29,7 @@ config 104_QUAD_8
 	  array module parameter. The interrupt line numbers for the devices may
 	  be configured via the irq array module parameter.
 
+<<<<<<< HEAD
 config FTM_QUADDEC
 	tristate "Flex Timer Module Quadrature decoder driver"
 	depends on SOC_LS1021A || COMPILE_TEST
@@ -51,6 +52,8 @@ config INTEL_QEP
 	  To compile this driver as a module, choose M here: the module
 	  will be called intel-qep.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config INTERRUPT_CNT
 	tristate "Interrupt counter driver"
 	depends on GPIOLIB
@@ -61,6 +64,7 @@ config INTERRUPT_CNT
 	  To compile this driver as a module, choose M here: the
 	  module will be called interrupt-cnt.
 
+<<<<<<< HEAD
 config MICROCHIP_TCB_CAPTURE
 	tristate "Microchip Timer Counter Capture driver"
 	depends on SOC_AT91SAM9 || SOC_SAM_V7 || COMPILE_TEST
@@ -83,6 +87,8 @@ config STM32_LPTIMER_CNT
 	  To compile this driver as a module, choose M here: the
 	  module will be called stm32-lptimer-cnt.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config STM32_TIMER_CNT
 	tristate "STM32 Timer encoder counter driver"
 	depends on MFD_STM32_TIMERS || COMPILE_TEST
@@ -93,6 +99,7 @@ config STM32_TIMER_CNT
 	  To compile this driver as a module, choose M here: the
 	  module will be called stm32-timer-cnt.
 
+<<<<<<< HEAD
 config TI_ECAP_CAPTURE
 	tristate "TI eCAP capture driver"
 	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
@@ -107,6 +114,17 @@ config TI_ECAP_CAPTURE
 
 	  To compile this driver as a module, choose M here: the module
 	  will be called ti-ecap-capture.
+=======
+config STM32_LPTIMER_CNT
+	tristate "STM32 LP Timer encoder counter driver"
+	depends on MFD_STM32_LPTIMER || COMPILE_TEST
+	help
+	  Select this option to enable STM32 Low-Power Timer quadrature encoder
+	  and counter driver.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called stm32-lptimer-cnt.
+>>>>>>> b7ba80a49124 (Commit)
 
 config TI_EQEP
 	tristate "TI eQEP counter driver"
@@ -119,4 +137,38 @@ config TI_EQEP
 	  To compile this driver as a module, choose M here: the module will be
 	  called ti-eqep.
 
+<<<<<<< HEAD
+=======
+config FTM_QUADDEC
+	tristate "Flex Timer Module Quadrature decoder driver"
+	depends on HAS_IOMEM && OF
+	help
+	  Select this option to enable the Flex Timer Quadrature decoder
+	  driver.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called ftm-quaddec.
+
+config MICROCHIP_TCB_CAPTURE
+	tristate "Microchip Timer Counter Capture driver"
+	depends on HAS_IOMEM && OF
+	select REGMAP_MMIO
+	help
+	  Select this option to enable the Microchip Timer Counter Block
+	  capture driver.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called microchip-tcb-capture.
+
+config INTEL_QEP
+	tristate "Intel Quadrature Encoder Peripheral driver"
+	depends on PCI
+	help
+	  Select this option to enable the Intel Quadrature Encoder Peripheral
+	  driver.
+
+	  To compile this driver as a module, choose M here: the module
+	  will be called intel-qep.
+
+>>>>>>> b7ba80a49124 (Commit)
 endif # COUNTER

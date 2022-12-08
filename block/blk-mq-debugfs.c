@@ -15,8 +15,38 @@
 #include "blk-mq-tag.h"
 #include "blk-rq-qos.h"
 
+<<<<<<< HEAD
 static int queue_poll_stat_show(void *data, struct seq_file *m)
 {
+=======
+static void print_stat(struct seq_file *m, struct blk_rq_stat *stat)
+{
+	if (stat->nr_samples) {
+		seq_printf(m, "samples=%d, mean=%llu, min=%llu, max=%llu",
+			   stat->nr_samples, stat->mean, stat->min, stat->max);
+	} else {
+		seq_puts(m, "samples=0");
+	}
+}
+
+static int queue_poll_stat_show(void *data, struct seq_file *m)
+{
+	struct request_queue *q = data;
+	int bucket;
+
+	if (!q->poll_stat)
+		return 0;
+
+	for (bucket = 0; bucket < (BLK_MQ_POLL_STATS_BKTS / 2); bucket++) {
+		seq_printf(m, "read  (%d Bytes): ", 1 << (9 + bucket));
+		print_stat(m, &q->poll_stat[2 * bucket]);
+		seq_puts(m, "\n");
+
+		seq_printf(m, "write (%d Bytes): ",  1 << (9 + bucket));
+		print_stat(m, &q->poll_stat[2 * bucket + 1]);
+		seq_puts(m, "\n");
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -257,6 +287,10 @@ static const char *const rqf_name[] = {
 	RQF_NAME(STATS),
 	RQF_NAME(SPECIAL_PAYLOAD),
 	RQF_NAME(ZONE_WRITE_LOCKED),
+<<<<<<< HEAD
+=======
+	RQF_NAME(MQ_POLL_SLEPT),
+>>>>>>> b7ba80a49124 (Commit)
 	RQF_NAME(TIMED_OUT),
 	RQF_NAME(ELV),
 	RQF_NAME(RESV),
@@ -787,9 +821,15 @@ static const char *rq_qos_id_to_name(enum rq_qos_id id)
 
 void blk_mq_debugfs_unregister_rqos(struct rq_qos *rqos)
 {
+<<<<<<< HEAD
 	lockdep_assert_held(&rqos->disk->queue->debugfs_mutex);
 
 	if (!rqos->disk->queue->debugfs_dir)
+=======
+	lockdep_assert_held(&rqos->q->debugfs_mutex);
+
+	if (!rqos->q->debugfs_dir)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	debugfs_remove_recursive(rqos->debugfs_dir);
 	rqos->debugfs_dir = NULL;
@@ -797,7 +837,11 @@ void blk_mq_debugfs_unregister_rqos(struct rq_qos *rqos)
 
 void blk_mq_debugfs_register_rqos(struct rq_qos *rqos)
 {
+<<<<<<< HEAD
 	struct request_queue *q = rqos->disk->queue;
+=======
+	struct request_queue *q = rqos->q;
+>>>>>>> b7ba80a49124 (Commit)
 	const char *dir_name = rq_qos_id_to_name(rqos->id);
 
 	lockdep_assert_held(&q->debugfs_mutex);
@@ -809,7 +853,13 @@ void blk_mq_debugfs_register_rqos(struct rq_qos *rqos)
 		q->rqos_debugfs_dir = debugfs_create_dir("rqos",
 							 q->debugfs_dir);
 
+<<<<<<< HEAD
 	rqos->debugfs_dir = debugfs_create_dir(dir_name, q->rqos_debugfs_dir);
+=======
+	rqos->debugfs_dir = debugfs_create_dir(dir_name,
+					       rqos->q->rqos_debugfs_dir);
+
+>>>>>>> b7ba80a49124 (Commit)
 	debugfs_create_files(rqos->debugfs_dir, rqos, rqos->ops->debugfs_attrs);
 }
 

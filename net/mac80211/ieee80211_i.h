@@ -37,7 +37,10 @@
 extern const struct cfg80211_ops mac80211_config_ops;
 
 struct ieee80211_local;
+<<<<<<< HEAD
 struct ieee80211_mesh_fast_tx;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Maximum number of broadcast/multicast frames to buffer when some of the
  * associated stations are using power saving. */
@@ -328,6 +331,10 @@ struct mesh_stats {
 	__u32 fwded_frames;		/* Mesh total forwarded frames */
 	__u32 dropped_frames_ttl;	/* Not transmitted since mesh_ttl == 0*/
 	__u32 dropped_frames_no_route;	/* Not transmitted, no route found */
+<<<<<<< HEAD
+=======
+	__u32 dropped_frames_congestion;/* Not forwarded due to congestion */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define PREQ_Q_F_START		0x1
@@ -390,7 +397,10 @@ struct ieee80211_mgd_auth_data {
 	bool done, waiting;
 	bool peer_confirmed;
 	bool timeout_started;
+<<<<<<< HEAD
 	int link_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	u8 ap_addr[ETH_ALEN] __aligned(2);
 
@@ -413,8 +423,11 @@ struct ieee80211_mgd_assoc_data {
 		u8 *elems; /* pointing to inside ie[] below */
 
 		ieee80211_conn_flags_t conn_flags;
+<<<<<<< HEAD
 
 		u16 status;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} link[IEEE80211_MLD_MAX_NUM_LINKS];
 
 	u8 ap_addr[ETH_ALEN] __aligned(2);
@@ -657,6 +670,7 @@ struct mesh_table {
 	atomic_t entries;		/* Up to MAX_MESH_NEIGHBOURS */
 };
 
+<<<<<<< HEAD
 /**
  * struct mesh_tx_cache - mesh fast xmit header cache
  *
@@ -670,6 +684,8 @@ struct mesh_tx_cache {
 	spinlock_t walk_lock;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ieee80211_if_mesh {
 	struct timer_list housekeeping_timer;
 	struct timer_list mesh_path_timer;
@@ -710,7 +726,11 @@ struct ieee80211_if_mesh {
 	struct mesh_stats mshstats;
 	struct mesh_config mshcfg;
 	atomic_t estab_plinks;
+<<<<<<< HEAD
 	atomic_t mesh_seqnum;
+=======
+	u32 mesh_seqnum;
+>>>>>>> b7ba80a49124 (Commit)
 	bool accepting_plinks;
 	int num_gates;
 	struct beacon_data __rcu *beacon;
@@ -748,7 +768,10 @@ struct ieee80211_if_mesh {
 	struct mesh_table mpp_paths; /* Store paths for MPP&MAP */
 	int mesh_paths_generation;
 	int mpp_paths_generation;
+<<<<<<< HEAD
 	struct mesh_tx_cache tx_cache;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #ifdef CONFIG_MAC80211_MESH
@@ -852,7 +875,11 @@ enum txq_info_flags {
 	IEEE80211_TXQ_STOP,
 	IEEE80211_TXQ_AMPDU,
 	IEEE80211_TXQ_NO_AMSDU,
+<<<<<<< HEAD
 	IEEE80211_TXQ_DIRTY,
+=======
+	IEEE80211_TXQ_STOP_NETIF_TX,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -988,8 +1015,11 @@ struct ieee80211_link_data {
 	struct cfg80211_chan_def csa_chandef;
 
 	struct work_struct color_change_finalize_work;
+<<<<<<< HEAD
 	struct delayed_work color_collision_detect_work;
 	u64 color_bitmap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* context reservation -- protected with chanctx_mtx */
 	struct ieee80211_chanctx *reserved_chanctx;
@@ -1014,10 +1044,13 @@ struct ieee80211_link_data {
 	struct ieee80211_tx_queue_params tx_conf[IEEE80211_NUM_ACS];
 
 	struct ieee80211_bss_conf *conf;
+<<<<<<< HEAD
 
 #ifdef CONFIG_MAC80211_DEBUGFS
 	struct dentry *debugfs_dir;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ieee80211_sub_if_data {
@@ -1186,6 +1219,7 @@ ieee80211_vif_get_shift(struct ieee80211_vif *vif)
 }
 
 static inline int
+<<<<<<< HEAD
 ieee80211_get_mbssid_beacon_len(struct cfg80211_mbssid_elems *elems, u8 i)
 {
 	int len = 0;
@@ -1197,6 +1231,15 @@ ieee80211_get_mbssid_beacon_len(struct cfg80211_mbssid_elems *elems, u8 i)
 		return elems->elem[i].len;
 
 	/* i == elems->cnt, calculate total length of all MBSSID elements */
+=======
+ieee80211_get_mbssid_beacon_len(struct cfg80211_mbssid_elems *elems)
+{
+	int i, len = 0;
+
+	if (!elems)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < elems->cnt; i++)
 		len += elems->elem[i].len;
 
@@ -1307,9 +1350,12 @@ struct ieee80211_local {
 	struct list_head active_txqs[IEEE80211_NUM_ACS];
 	u16 schedule_round[IEEE80211_NUM_ACS];
 
+<<<<<<< HEAD
 	/* serializes ieee80211_handle_wake_tx_queue */
 	spinlock_t handle_wake_tx_queue_lock;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 airtime_flags;
 	u32 aql_txq_limit_low[IEEE80211_NUM_ACS];
 	u32 aql_txq_limit_high[IEEE80211_NUM_ACS];
@@ -1737,6 +1783,7 @@ struct ieee802_11_elems {
 	u8 tx_pwr_env_num;
 	u8 eht_cap_len;
 
+<<<<<<< HEAD
 	/* mult-link element can be de-fragmented and thus u8 is not sufficient */
 	size_t multi_link_len;
 
@@ -1758,6 +1805,10 @@ struct ieee802_11_elems {
 	size_t scratch_len;
 	u8 *scratch_pos;
 	u8 scratch[];
+=======
+	/* whether a parse error occurred while retrieving these elements */
+	bool parse_error;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct ieee80211_local *hw_to_local(
@@ -1956,13 +2007,20 @@ int ieee80211_channel_switch(struct wiphy *wiphy, struct net_device *dev,
 
 /* color change handling */
 void ieee80211_color_change_finalize_work(struct work_struct *work);
+<<<<<<< HEAD
 void ieee80211_color_collision_detection_work(struct work_struct *work);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* interface handling */
 #define MAC80211_SUPPORTED_FEATURES_TX	(NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM | \
 					 NETIF_F_HW_CSUM | NETIF_F_SG | \
+<<<<<<< HEAD
 					 NETIF_F_HIGHDMA | NETIF_F_GSO_SOFTWARE | \
 					 NETIF_F_HW_TC)
+=======
+					 NETIF_F_HIGHDMA | NETIF_F_GSO_SOFTWARE)
+>>>>>>> b7ba80a49124 (Commit)
 #define MAC80211_SUPPORTED_FEATURES_RX	(NETIF_F_RXCSUM)
 #define MAC80211_SUPPORTED_FEATURES	(MAC80211_SUPPORTED_FEATURES_TX | \
 					 MAC80211_SUPPORTED_FEATURES_RX)
@@ -2040,6 +2098,7 @@ int ieee80211_tx_control_port(struct wiphy *wiphy, struct net_device *dev,
 			      int link_id, u64 *cookie);
 int ieee80211_probe_mesh_link(struct wiphy *wiphy, struct net_device *dev,
 			      const u8 *buf, size_t len);
+<<<<<<< HEAD
 void __ieee80211_xmit_fast(struct ieee80211_sub_if_data *sdata,
 			   struct sta_info *sta,
 			   struct ieee80211_fast_tx *fast_tx,
@@ -2047,6 +2106,8 @@ void __ieee80211_xmit_fast(struct ieee80211_sub_if_data *sdata,
 			   const u8 *da, const u8 *sa);
 void ieee80211_aggr_check(struct ieee80211_sub_if_data *sdata,
 			  struct sta_info *sta, struct sk_buff *skb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* HT */
 void ieee80211_apply_htcap_overrides(struct ieee80211_sub_if_data *sdata,
@@ -2255,6 +2316,7 @@ static inline void ieee80211_tx_skb(struct ieee80211_sub_if_data *sdata,
  *	represent a non-transmitting BSS in which case the data
  *	for that non-transmitting BSS is returned
  * @link_id: the link ID to parse elements for, if a STA profile
+<<<<<<< HEAD
  *	is present in the multi-link element, or -1 to ignore;
  *	note that the code currently assumes parsing an association
  *	(or re-association) response frame if this is given
@@ -2262,6 +2324,11 @@ static inline void ieee80211_tx_skb(struct ieee80211_sub_if_data *sdata,
  *	for EHT capabilities parsing)
  * @scratch_len: if non zero, specifies the requested length of the scratch
  *      buffer; otherwise, 'len' is used.
+=======
+ *	is present in the multi-link element, or -1 to ignore
+ * @from_ap: frame is received from an AP (currently used only
+ *	for EHT capabilities parsing)
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct ieee80211_elems_parse_params {
 	const u8 *start;
@@ -2272,7 +2339,10 @@ struct ieee80211_elems_parse_params {
 	struct cfg80211_bss *bss;
 	int link_id;
 	bool from_ap;
+<<<<<<< HEAD
 	size_t scratch_len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ieee802_11_elems *
@@ -2343,6 +2413,10 @@ void ieee80211_wake_queue_by_reason(struct ieee80211_hw *hw, int queue,
 void ieee80211_stop_queue_by_reason(struct ieee80211_hw *hw, int queue,
 				    enum queue_stop_reason reason,
 				    bool refcounted);
+<<<<<<< HEAD
+=======
+void ieee80211_propagate_queue_wake(struct ieee80211_local *local, int queue);
+>>>>>>> b7ba80a49124 (Commit)
 void ieee80211_add_pending_skb(struct ieee80211_local *local,
 			       struct sk_buff *skb);
 void ieee80211_add_pending_skbs(struct ieee80211_local *local,
@@ -2514,7 +2588,11 @@ int ieee80211_link_unreserve_chanctx(struct ieee80211_link_data *link);
 int __must_check
 ieee80211_link_change_bandwidth(struct ieee80211_link_data *link,
 				const struct cfg80211_chan_def *chandef,
+<<<<<<< HEAD
 				u64 *changed);
+=======
+				u32 *changed);
+>>>>>>> b7ba80a49124 (Commit)
 void ieee80211_link_release_channel(struct ieee80211_link_data *link);
 void ieee80211_link_vlan_copy_chanctx(struct ieee80211_link_data *link);
 void ieee80211_link_copy_chanctx_to_vlans(struct ieee80211_link_data *link,

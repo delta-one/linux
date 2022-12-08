@@ -79,7 +79,10 @@
 
 		CLUSTER0_L2: l2-cache@0 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -294,7 +297,11 @@
 			clock-names = "apb_pclk";
 		};
 
+<<<<<<< HEAD
 		smmu: iommu@64000000 {
+=======
+		smmu: mmu@64000000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "arm,mmu-500";
 			reg = <0x64000000 0x40000>;
 			#global-interrupts = <2>;

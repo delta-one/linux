@@ -176,7 +176,11 @@ static int amdgpu_reserve_page_direct(struct amdgpu_device *adev, uint64_t addre
 	if (amdgpu_bad_page_threshold != 0) {
 		amdgpu_ras_add_bad_pages(adev, err_data.err_addr,
 					 err_data.err_addr_cnt);
+<<<<<<< HEAD
 		amdgpu_ras_save_bad_pages(adev, NULL);
+=======
+		amdgpu_ras_save_bad_pages(adev);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	dev_warn(adev->dev, "WARNING: THIS IS ONLY FOR TEST PURPOSES AND WILL CORRUPT RAS EEPROM\n");
@@ -706,6 +710,7 @@ static int __amdgpu_ras_feature_enable(struct amdgpu_device *adev,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int amdgpu_ras_check_feature_allowed(struct amdgpu_device *adev,
 		struct ras_common_if *head)
 {
@@ -716,13 +721,19 @@ static int amdgpu_ras_check_feature_allowed(struct amdgpu_device *adev,
 		return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* wrapper of psp_ras_enable_features */
 int amdgpu_ras_feature_enable(struct amdgpu_device *adev,
 		struct ras_common_if *head, bool enable)
 {
 	struct amdgpu_ras *con = amdgpu_ras_get_context(adev);
 	union ta_ras_cmd_input *info;
+<<<<<<< HEAD
 	int ret = 0;
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!con)
 		return -EINVAL;
@@ -746,8 +757,12 @@ int amdgpu_ras_feature_enable(struct amdgpu_device *adev,
 	}
 
 	/* Do not enable if it is not allowed. */
+<<<<<<< HEAD
 	if (enable && !amdgpu_ras_check_feature_allowed(adev, head))
 		goto out;
+=======
+	WARN_ON(enable && !amdgpu_ras_is_feature_allowed(adev, head));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Only enable ras feature operation handle on host side */
 	if (head->block == AMDGPU_RAS_BLOCK__GFX &&
@@ -765,6 +780,10 @@ int amdgpu_ras_feature_enable(struct amdgpu_device *adev,
 
 	/* setup the obj */
 	__amdgpu_ras_feature_enable(adev, head, enable);
+<<<<<<< HEAD
+=======
+	ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	if (head->block == AMDGPU_RAS_BLOCK__GFX)
 		kfree(info);
@@ -920,6 +939,12 @@ static struct amdgpu_ras_block_object *amdgpu_ras_get_ras_block(struct amdgpu_de
 	if (block >= AMDGPU_RAS_BLOCK__LAST)
 		return NULL;
 
+<<<<<<< HEAD
+=======
+	if (!amdgpu_ras_is_supported(adev, block))
+		return NULL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry_safe(node, tmp, &adev->ras_list, node) {
 		if (!node->ras_obj) {
 			dev_warn(adev->dev, "Warning: abnormal ras list node.\n");
@@ -1094,10 +1119,13 @@ int amdgpu_ras_error_inject(struct amdgpu_device *adev,
 							info->head.block,
 							info->head.sub_block_index);
 
+<<<<<<< HEAD
 	/* inject on guest isn't allowed, return success directly */
 	if (amdgpu_sriov_vf(adev))
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!obj)
 		return -EINVAL;
 
@@ -1133,6 +1161,7 @@ int amdgpu_ras_error_inject(struct amdgpu_device *adev,
 }
 
 /**
+<<<<<<< HEAD
  * amdgpu_ras_query_error_count_helper -- Get error counter for specific IP
  * @adev: pointer to AMD GPU device
  * @ce_count: pointer to an integer to be set to the count of correctible errors.
@@ -1174,13 +1203,19 @@ static int amdgpu_ras_query_error_count_helper(struct amdgpu_device *adev,
 
 /**
  * amdgpu_ras_query_error_count -- Get error counts of all IPs or specific IP
+=======
+ * amdgpu_ras_query_error_count -- Get error counts of all IPs
+>>>>>>> b7ba80a49124 (Commit)
  * @adev: pointer to AMD GPU device
  * @ce_count: pointer to an integer to be set to the count of correctible errors.
  * @ue_count: pointer to an integer to be set to the count of uncorrectible
  * errors.
+<<<<<<< HEAD
  * @query_info: pointer to ras_query_if if the query request is only for
  * specific ip block; if info is NULL, then the qurey request is for
  * all the ip blocks that support query ras error counters/status
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * If set, @ce_count or @ue_count, count and return the corresponding
  * error counts in those integer pointers. Return 0 if the device
@@ -1188,13 +1223,20 @@ static int amdgpu_ras_query_error_count_helper(struct amdgpu_device *adev,
  */
 int amdgpu_ras_query_error_count(struct amdgpu_device *adev,
 				 unsigned long *ce_count,
+<<<<<<< HEAD
 				 unsigned long *ue_count,
 				 struct ras_query_if *query_info)
+=======
+				 unsigned long *ue_count)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct amdgpu_ras *con = amdgpu_ras_get_context(adev);
 	struct ras_manager *obj;
 	unsigned long ce, ue;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!adev->ras_enabled || !con)
 		return -EOPNOTSUPP;
@@ -1206,6 +1248,7 @@ int amdgpu_ras_query_error_count(struct amdgpu_device *adev,
 
 	ce = 0;
 	ue = 0;
+<<<<<<< HEAD
 	if (!query_info) {
 		/* query all the ip blocks that support ras query interface */
 		list_for_each_entry(obj, &con->head, node) {
@@ -1222,6 +1265,27 @@ int amdgpu_ras_query_error_count(struct amdgpu_device *adev,
 
 	if (ret)
 		return ret;
+=======
+	list_for_each_entry(obj, &con->head, node) {
+		struct ras_query_if info = {
+			.head = obj->head,
+		};
+		int res;
+
+		res = amdgpu_ras_query_error_status(adev, &info);
+		if (res)
+			return res;
+
+		if (adev->ip_versions[MP0_HWIP][0] != IP_VERSION(11, 0, 2) &&
+		    adev->ip_versions[MP0_HWIP][0] != IP_VERSION(11, 0, 4)) {
+			if (amdgpu_ras_reset_error_status(adev, info.head.block))
+				dev_warn(adev->dev, "Failed to reset error counter and error status");
+		}
+
+		ce += info.ce_count;
+		ue += info.ue_count;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ce_count)
 		*ce_count = ce;
@@ -1320,7 +1384,11 @@ static ssize_t amdgpu_ras_sysfs_features_read(struct device *dev,
 	struct amdgpu_ras *con =
 		container_of(attr, struct amdgpu_ras, features_attr);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "feature mask: 0x%x\n", con->features);
+=======
+	return scnprintf(buf, PAGE_SIZE, "feature mask: 0x%x\n", con->features);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void amdgpu_ras_sysfs_remove_bad_page_node(struct amdgpu_device *adev)
@@ -1614,17 +1682,29 @@ static void amdgpu_ras_interrupt_poison_consumption_handler(struct ras_manager *
 {
 	bool poison_stat = false;
 	struct amdgpu_device *adev = obj->adev;
+<<<<<<< HEAD
 	struct amdgpu_ras_block_object *block_obj =
 		amdgpu_ras_get_ras_block(adev, obj->head.block, 0);
 
 	if (!block_obj)
+=======
+	struct ras_err_data err_data = {0, 0, 0, NULL};
+	struct amdgpu_ras_block_object *block_obj =
+		amdgpu_ras_get_ras_block(adev, obj->head.block, 0);
+
+	if (!block_obj || !block_obj->hw_ops)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	/* both query_poison_status and handle_poison_consumption are optional,
 	 * but at least one of them should be implemented if we need poison
 	 * consumption handler
 	 */
+<<<<<<< HEAD
 	if (block_obj->hw_ops && block_obj->hw_ops->query_poison_status) {
+=======
+	if (block_obj->hw_ops->query_poison_status) {
+>>>>>>> b7ba80a49124 (Commit)
 		poison_stat = block_obj->hw_ops->query_poison_status(adev);
 		if (!poison_stat) {
 			/* Not poison consumption interrupt, no need to handle it */
@@ -1636,9 +1716,15 @@ static void amdgpu_ras_interrupt_poison_consumption_handler(struct ras_manager *
 	}
 
 	if (!adev->gmc.xgmi.connected_to_cpu)
+<<<<<<< HEAD
 		amdgpu_umc_poison_handler(adev, false);
 
 	if (block_obj->hw_ops && block_obj->hw_ops->handle_poison_consumption)
+=======
+		amdgpu_umc_poison_handler(adev, &err_data, false);
+
+	if (block_obj->hw_ops->handle_poison_consumption)
+>>>>>>> b7ba80a49124 (Commit)
 		poison_stat = block_obj->hw_ops->handle_poison_consumption(adev);
 
 	/* gpu reset is fallback for failed and default cases */
@@ -1646,8 +1732,11 @@ static void amdgpu_ras_interrupt_poison_consumption_handler(struct ras_manager *
 		dev_info(adev->dev, "GPU reset for %s RAS poison consumption is issued!\n",
 				block_obj->ras_comm.name);
 		amdgpu_ras_reset_gpu(adev);
+<<<<<<< HEAD
 	} else {
 		amdgpu_gfx_poison_consumption_handler(adev, entry);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -2003,12 +2092,17 @@ static void amdgpu_ras_do_recovery(struct work_struct *work)
 
 		reset_context.method = AMD_RESET_METHOD_NONE;
 		reset_context.reset_req_dev = adev;
+<<<<<<< HEAD
 
 		/* Perform full reset in fatal error mode */
 		if (!amdgpu_ras_is_poison_mode_supported(ras->adev))
 			set_bit(AMDGPU_NEED_FULL_RESET, &reset_context.flags);
 		else
 			clear_bit(AMDGPU_NEED_FULL_RESET, &reset_context.flags);
+=======
+		clear_bit(AMDGPU_NEED_FULL_RESET, &reset_context.flags);
+		clear_bit(AMDGPU_SKIP_MODE2_RESET, &reset_context.flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 		amdgpu_device_gpu_recover(ras->adev, NULL, &reset_context);
 	}
@@ -2084,32 +2178,45 @@ out:
 /*
  * write error record array to eeprom, the function should be
  * protected by recovery_lock
+<<<<<<< HEAD
  * new_cnt: new added UE count, excluding reserved bad pages, can be NULL
  */
 int amdgpu_ras_save_bad_pages(struct amdgpu_device *adev,
 		unsigned long *new_cnt)
+=======
+ */
+int amdgpu_ras_save_bad_pages(struct amdgpu_device *adev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct amdgpu_ras *con = amdgpu_ras_get_context(adev);
 	struct ras_err_handler_data *data;
 	struct amdgpu_ras_eeprom_control *control;
 	int save_count;
 
+<<<<<<< HEAD
 	if (!con || !con->eh_data) {
 		if (new_cnt)
 			*new_cnt = 0;
 
 		return 0;
 	}
+=======
+	if (!con || !con->eh_data)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&con->recovery_lock);
 	control = &con->eeprom_control;
 	data = con->eh_data;
 	save_count = data->count - control->ras_num_recs;
 	mutex_unlock(&con->recovery_lock);
+<<<<<<< HEAD
 
 	if (new_cnt)
 		*new_cnt = save_count / adev->umc.retire_unit;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* only new entries are saved */
 	if (save_count > 0) {
 		if (amdgpu_ras_eeprom_append(control,
@@ -2196,12 +2303,20 @@ static void amdgpu_ras_validate_threshold(struct amdgpu_device *adev,
 	/*
 	 * Justification of value bad_page_cnt_threshold in ras structure
 	 *
+<<<<<<< HEAD
 	 * Generally, 0 <= amdgpu_bad_page_threshold <= max record length
 	 * in eeprom or amdgpu_bad_page_threshold == -2, introduce two
 	 * scenarios accordingly.
 	 *
 	 * Bad page retirement enablement:
 	 *    - If amdgpu_bad_page_threshold = -2,
+=======
+	 * Generally, -1 <= amdgpu_bad_page_threshold <= max record length
+	 * in eeprom, and introduce two scenarios accordingly.
+	 *
+	 * Bad page retirement enablement:
+	 *    - If amdgpu_bad_page_threshold = -1,
+>>>>>>> b7ba80a49124 (Commit)
 	 *      bad_page_cnt_threshold = typical value by formula.
 	 *
 	 *    - When the value from user is 0 < amdgpu_bad_page_threshold <
@@ -2337,6 +2452,7 @@ static int amdgpu_ras_recovery_fini(struct amdgpu_device *adev)
 
 static bool amdgpu_ras_asic_supported(struct amdgpu_device *adev)
 {
+<<<<<<< HEAD
 	if (amdgpu_sriov_vf(adev)) {
 		switch (adev->ip_versions[MP0_HWIP][0]) {
 		case IP_VERSION(13, 0, 2):
@@ -2357,6 +2473,8 @@ static bool amdgpu_ras_asic_supported(struct amdgpu_device *adev)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return adev->asic_type == CHIP_VEGA10 ||
 		adev->asic_type == CHIP_VEGA20 ||
 		adev->asic_type == CHIP_ARCTURUS ||
@@ -2400,6 +2518,14 @@ static void amdgpu_ras_check_supported(struct amdgpu_device *adev)
 	    !amdgpu_ras_asic_supported(adev))
 		return;
 
+<<<<<<< HEAD
+=======
+	/* If driver run on sriov guest side, only enable ras for aldebaran */
+	if (amdgpu_sriov_vf(adev) &&
+		adev->ip_versions[MP1_HWIP][0] != IP_VERSION(13, 0, 2))
+		return;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!adev->gmc.xgmi.connected_to_cpu) {
 		if (amdgpu_atomfirmware_mem_ecc_supported(adev)) {
 			dev_info(adev->dev, "MEM ECC is active.\n");
@@ -2411,6 +2537,7 @@ static void amdgpu_ras_check_supported(struct amdgpu_device *adev)
 
 		if (amdgpu_atomfirmware_sram_ecc_supported(adev)) {
 			dev_info(adev->dev, "SRAM ECC is active.\n");
+<<<<<<< HEAD
 			if (!amdgpu_sriov_vf(adev))
 				adev->ras_hw_enabled |= ~(1 << AMDGPU_RAS_BLOCK__UMC |
 							    1 << AMDGPU_RAS_BLOCK__DF);
@@ -2429,6 +2556,23 @@ static void amdgpu_ras_check_supported(struct amdgpu_device *adev)
 			else
 				adev->ras_hw_enabled &= ~(1 << AMDGPU_RAS_BLOCK__VCN |
 							1 << AMDGPU_RAS_BLOCK__JPEG);
+=======
+			if (!amdgpu_sriov_vf(adev)) {
+				adev->ras_hw_enabled |= ~(1 << AMDGPU_RAS_BLOCK__UMC |
+							    1 << AMDGPU_RAS_BLOCK__DF);
+
+				if (adev->ip_versions[VCN_HWIP][0] == IP_VERSION(2, 6, 0))
+					adev->ras_hw_enabled |= (1 << AMDGPU_RAS_BLOCK__VCN |
+							1 << AMDGPU_RAS_BLOCK__JPEG);
+				else
+					adev->ras_hw_enabled &= ~(1 << AMDGPU_RAS_BLOCK__VCN |
+							1 << AMDGPU_RAS_BLOCK__JPEG);
+			} else {
+				adev->ras_hw_enabled |= (1 << AMDGPU_RAS_BLOCK__PCIE_BIF |
+								1 << AMDGPU_RAS_BLOCK__SDMA |
+								1 << AMDGPU_RAS_BLOCK__GFX);
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			dev_info(adev->dev, "SRAM ECC is not presented.\n");
 		}
@@ -2464,7 +2608,11 @@ static void amdgpu_ras_counte_dw(struct work_struct *work)
 
 	/* Cache new values.
 	 */
+<<<<<<< HEAD
 	if (amdgpu_ras_query_error_count(adev, &ce_count, &ue_count, NULL) == 0) {
+=======
+	if (amdgpu_ras_query_error_count(adev, &ce_count, &ue_count) == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		atomic_set(&con->ras_ce_count, ce_count);
 		atomic_set(&con->ras_ue_count, ue_count);
 	}
@@ -2474,6 +2622,7 @@ Out:
 	pm_runtime_put_autosuspend(dev->dev);
 }
 
+<<<<<<< HEAD
 static void amdgpu_ras_query_poison_mode(struct amdgpu_device *adev)
 {
 	struct amdgpu_ras *con = amdgpu_ras_get_context(adev);
@@ -2506,10 +2655,16 @@ static void amdgpu_ras_query_poison_mode(struct amdgpu_device *adev)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int amdgpu_ras_init(struct amdgpu_device *adev)
 {
 	struct amdgpu_ras *con = amdgpu_ras_get_context(adev);
 	int r;
+<<<<<<< HEAD
+=======
+	bool df_poison, umc_poison;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (con)
 		return 0;
@@ -2555,24 +2710,39 @@ int amdgpu_ras_init(struct amdgpu_device *adev)
 	/* initialize nbio ras function ahead of any other
 	 * ras functions so hardware fatal error interrupt
 	 * can be enabled as early as possible */
+<<<<<<< HEAD
 	switch (adev->ip_versions[NBIO_HWIP][0]) {
 	case IP_VERSION(7, 4, 0):
 	case IP_VERSION(7, 4, 1):
 	case IP_VERSION(7, 4, 4):
 		if (!adev->gmc.xgmi.connected_to_cpu)
 			adev->nbio.ras = &nbio_v7_4_ras;
+=======
+	switch (adev->asic_type) {
+	case CHIP_VEGA20:
+	case CHIP_ARCTURUS:
+	case CHIP_ALDEBARAN:
+		if (!adev->gmc.xgmi.connected_to_cpu) {
+			adev->nbio.ras = &nbio_v7_4_ras;
+			amdgpu_ras_register_ras_block(adev, &adev->nbio.ras->ras_block);
+			adev->nbio.ras_if = &adev->nbio.ras->ras_block.ras_comm;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		/* nbio ras is not available */
 		break;
 	}
 
+<<<<<<< HEAD
 	/* nbio ras block needs to be enabled ahead of other ras blocks
 	 * to handle fatal error */
 	r = amdgpu_nbio_ras_sw_init(adev);
 	if (r)
 		return r;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (adev->nbio.ras &&
 	    adev->nbio.ras->init_ras_controller_interrupt) {
 		r = adev->nbio.ras->init_ras_controller_interrupt(adev);
@@ -2587,7 +2757,30 @@ int amdgpu_ras_init(struct amdgpu_device *adev)
 			goto release_con;
 	}
 
+<<<<<<< HEAD
 	amdgpu_ras_query_poison_mode(adev);
+=======
+	/* Init poison supported flag, the default value is false */
+	if (adev->gmc.xgmi.connected_to_cpu) {
+		/* enabled by default when GPU is connected to CPU */
+		con->poison_supported = true;
+	}
+	else if (adev->df.funcs &&
+	    adev->df.funcs->query_ras_poison_mode &&
+	    adev->umc.ras &&
+	    adev->umc.ras->query_ras_poison_mode) {
+		df_poison =
+			adev->df.funcs->query_ras_poison_mode(adev);
+		umc_poison =
+			adev->umc.ras->query_ras_poison_mode(adev);
+		/* Only poison is set in both DF and UMC, we can support it */
+		if (df_poison && umc_poison)
+			con->poison_supported = true;
+		else if (df_poison != umc_poison)
+			dev_warn(adev->dev, "Poison setting is inconsistent in DF/UMC(%d:%d)!\n",
+					df_poison, umc_poison);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (amdgpu_ras_fs_init(adev)) {
 		r = -EINVAL;
@@ -2648,7 +2841,10 @@ int amdgpu_ras_block_late_init(struct amdgpu_device *adev,
 {
 	struct amdgpu_ras_block_object *ras_obj = NULL;
 	struct amdgpu_ras *con = amdgpu_ras_get_context(adev);
+<<<<<<< HEAD
 	struct ras_query_if *query_info;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long ue_count, ce_count;
 	int r;
 
@@ -2690,17 +2886,24 @@ int amdgpu_ras_block_late_init(struct amdgpu_device *adev,
 
 	/* Those are the cached values at init.
 	 */
+<<<<<<< HEAD
 	query_info = kzalloc(sizeof(struct ras_query_if), GFP_KERNEL);
 	if (!query_info)
 		return -ENOMEM;
 	memcpy(&query_info->head, ras_block, sizeof(struct ras_common_if));
 
 	if (amdgpu_ras_query_error_count(adev, &ce_count, &ue_count, query_info) == 0) {
+=======
+	if (amdgpu_ras_query_error_count(adev, &ce_count, &ue_count) == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		atomic_set(&con->ras_ce_count, ce_count);
 		atomic_set(&con->ras_ue_count, ue_count);
 	}
 
+<<<<<<< HEAD
 	kfree(query_info);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 interrupt:
@@ -2943,7 +3146,15 @@ static int amdgpu_bad_page_notifier(struct notifier_block *nb,
 	struct mce *m = (struct mce *)data;
 	struct amdgpu_device *adev = NULL;
 	uint32_t gpu_id = 0;
+<<<<<<< HEAD
 	uint32_t umc_inst = 0, ch_inst = 0;
+=======
+	uint32_t umc_inst = 0;
+	uint32_t ch_inst, channel_index = 0;
+	struct ras_err_data err_data = {0, 0, 0, NULL};
+	struct eeprom_table_record err_rec;
+	uint64_t retired_page;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * If the error was generated in UMC_V2, which belongs to GPU UMCs,
@@ -2982,10 +3193,36 @@ static int amdgpu_bad_page_notifier(struct notifier_block *nb,
 	dev_info(adev->dev, "Uncorrectable error detected in UMC inst: %d, chan_idx: %d",
 			     umc_inst, ch_inst);
 
+<<<<<<< HEAD
 	if (!amdgpu_umc_page_retirement_mca(adev, m->addr, ch_inst, umc_inst))
 		return NOTIFY_OK;
 	else
 		return NOTIFY_DONE;
+=======
+	/*
+	 * Translate UMC channel address to Physical address
+	 */
+	channel_index =
+		adev->umc.channel_idx_tbl[umc_inst * adev->umc.channel_inst_num
+					  + ch_inst];
+
+	retired_page = ADDR_OF_8KB_BLOCK(m->addr) |
+			ADDR_OF_256B_BLOCK(channel_index) |
+			OFFSET_IN_256B_BLOCK(m->addr);
+
+	memset(&err_rec, 0x0, sizeof(struct eeprom_table_record));
+	err_data.err_addr = &err_rec;
+	amdgpu_umc_fill_error_record(&err_data, m->addr,
+			retired_page, channel_index, umc_inst);
+
+	if (amdgpu_bad_page_threshold != 0) {
+		amdgpu_ras_add_bad_pages(adev, err_data.err_addr,
+						err_data.err_addr_cnt);
+		amdgpu_ras_save_bad_pages(adev);
+	}
+
+	return NOTIFY_OK;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct notifier_block amdgpu_bad_page_nb = {
@@ -3037,11 +3274,15 @@ int amdgpu_ras_set_context(struct amdgpu_device *adev, struct amdgpu_ras *ras_co
 int amdgpu_ras_is_supported(struct amdgpu_device *adev,
 		unsigned int block)
 {
+<<<<<<< HEAD
 	int ret = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct amdgpu_ras *ras = amdgpu_ras_get_context(adev);
 
 	if (block >= AMDGPU_RAS_BLOCK_COUNT)
 		return 0;
+<<<<<<< HEAD
 
 	ret = ras && (adev->ras_enabled & (1 << block));
 
@@ -3057,6 +3298,9 @@ int amdgpu_ras_is_supported(struct amdgpu_device *adev,
 		ret = 1;
 
 	return ret;
+=======
+	return ras && (adev->ras_enabled & (1 << block));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int amdgpu_ras_reset_gpu(struct amdgpu_device *adev)
@@ -3077,6 +3321,12 @@ int amdgpu_ras_register_ras_block(struct amdgpu_device *adev,
 	if (!adev || !ras_block_obj)
 		return -EINVAL;
 
+<<<<<<< HEAD
+=======
+	if (!amdgpu_ras_asic_supported(adev))
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ras_node = kzalloc(sizeof(*ras_node), GFP_KERNEL);
 	if (!ras_node)
 		return -ENOMEM;

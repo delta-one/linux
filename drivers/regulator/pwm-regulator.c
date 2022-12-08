@@ -334,7 +334,11 @@ static int pwm_regulator_probe(struct platform_device *pdev)
 
 	memcpy(&drvdata->desc, &pwm_regulator_desc, sizeof(drvdata->desc));
 
+<<<<<<< HEAD
 	if (of_property_present(np, "voltage-table"))
+=======
+	if (of_find_property(np, "voltage-table", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		ret = pwm_regulator_init_table(pdev, drvdata);
 	else
 		ret = pwm_regulator_init_continuous(pdev, drvdata);
@@ -393,7 +397,10 @@ MODULE_DEVICE_TABLE(of, pwm_of_match);
 static struct platform_driver pwm_regulator_driver = {
 	.driver = {
 		.name		= "pwm-regulator",
+<<<<<<< HEAD
 		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = of_match_ptr(pwm_of_match),
 	},
 	.probe = pwm_regulator_probe,

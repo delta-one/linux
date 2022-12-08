@@ -523,6 +523,7 @@ out:
 }
 CONFIGFS_ATTR(nullb_device_, badblocks);
 
+<<<<<<< HEAD
 static ssize_t nullb_device_zone_readonly_store(struct config_item *item,
 						const char *page, size_t count)
 {
@@ -541,6 +542,8 @@ static ssize_t nullb_device_zone_offline_store(struct config_item *item,
 }
 CONFIGFS_ATTR_WO(nullb_device_, zone_offline);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct configfs_attribute *nullb_device_attrs[] = {
 	&nullb_device_attr_size,
 	&nullb_device_attr_completion_nsec,
@@ -567,8 +570,11 @@ static struct configfs_attribute *nullb_device_attrs[] = {
 	&nullb_device_attr_zone_nr_conv,
 	&nullb_device_attr_zone_max_open,
 	&nullb_device_attr_zone_max_active,
+<<<<<<< HEAD
 	&nullb_device_attr_zone_readonly,
 	&nullb_device_attr_zone_offline,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	&nullb_device_attr_virt_boundary,
 	&nullb_device_attr_no_sched,
 	&nullb_device_attr_shared_tag_bitmap,
@@ -634,7 +640,11 @@ static ssize_t memb_group_features_show(struct config_item *item, char *page)
 			"poll_queues,power,queue_mode,shared_tag_bitmap,size,"
 			"submit_queues,use_per_node_hctx,virt_boundary,zoned,"
 			"zone_capacity,zone_max_active,zone_max_open,"
+<<<<<<< HEAD
 			"zone_nr_conv,zone_offline,zone_readonly,zone_size\n");
+=======
+			"zone_nr_conv,zone_size\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 CONFIGFS_ATTR_RO(memb_group_, features);
@@ -1413,7 +1423,12 @@ static inline void nullb_complete_cmd(struct nullb_cmd *cmd)
 	case NULL_IRQ_SOFTIRQ:
 		switch (cmd->nq->dev->queue_mode) {
 		case NULL_Q_MQ:
+<<<<<<< HEAD
 			blk_mq_complete_request(cmd->rq);
+=======
+			if (likely(!blk_should_fake_timeout(cmd->rq->q)))
+				blk_mq_complete_request(cmd->rq);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case NULL_Q_BIO:
 			/*
@@ -1657,6 +1672,7 @@ static enum blk_eh_timer_return null_timeout_rq(struct request *rq)
 }
 
 static blk_status_t null_queue_rq(struct blk_mq_hw_ctx *hctx,
+<<<<<<< HEAD
 				  const struct blk_mq_queue_data *bd)
 {
 	struct request *rq = bd->rq;
@@ -1664,6 +1680,14 @@ static blk_status_t null_queue_rq(struct blk_mq_hw_ctx *hctx,
 	struct nullb_queue *nq = hctx->driver_data;
 	sector_t nr_sectors = blk_rq_sectors(rq);
 	sector_t sector = blk_rq_pos(rq);
+=======
+			 const struct blk_mq_queue_data *bd)
+{
+	struct nullb_cmd *cmd = blk_mq_rq_to_pdu(bd->rq);
+	struct nullb_queue *nq = hctx->driver_data;
+	sector_t nr_sectors = blk_rq_sectors(bd->rq);
+	sector_t sector = blk_rq_pos(bd->rq);
+>>>>>>> b7ba80a49124 (Commit)
 	const bool is_poll = hctx->type == HCTX_TYPE_POLL;
 
 	might_sleep_if(hctx->flags & BLK_MQ_F_BLOCKING);
@@ -1672,6 +1696,7 @@ static blk_status_t null_queue_rq(struct blk_mq_hw_ctx *hctx,
 		hrtimer_init(&cmd->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 		cmd->timer.function = null_cmd_timer_expired;
 	}
+<<<<<<< HEAD
 	cmd->rq = rq;
 	cmd->error = BLK_STS_OK;
 	cmd->nq = nq;
@@ -1681,6 +1706,16 @@ static blk_status_t null_queue_rq(struct blk_mq_hw_ctx *hctx,
 	blk_mq_start_request(rq);
 
 	if (should_requeue_request(rq)) {
+=======
+	cmd->rq = bd->rq;
+	cmd->error = BLK_STS_OK;
+	cmd->nq = nq;
+	cmd->fake_timeout = should_timeout_request(bd->rq);
+
+	blk_mq_start_request(bd->rq);
+
+	if (should_requeue_request(bd->rq)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Alternate between hitting the core BUSY path, and the
 		 * driver driven requeue path
@@ -1688,20 +1723,35 @@ static blk_status_t null_queue_rq(struct blk_mq_hw_ctx *hctx,
 		nq->requeue_selection++;
 		if (nq->requeue_selection & 1)
 			return BLK_STS_RESOURCE;
+<<<<<<< HEAD
 		blk_mq_requeue_request(rq, true);
 		return BLK_STS_OK;
+=======
+		else {
+			blk_mq_requeue_request(bd->rq, true);
+			return BLK_STS_OK;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (is_poll) {
 		spin_lock(&nq->poll_lock);
+<<<<<<< HEAD
 		list_add_tail(&rq->queuelist, &nq->poll_list);
+=======
+		list_add_tail(&bd->rq->queuelist, &nq->poll_list);
+>>>>>>> b7ba80a49124 (Commit)
 		spin_unlock(&nq->poll_lock);
 		return BLK_STS_OK;
 	}
 	if (cmd->fake_timeout)
 		return BLK_STS_OK;
 
+<<<<<<< HEAD
 	return null_handle_cmd(cmd, sector, nr_sectors, req_op(rq));
+=======
+	return null_handle_cmd(cmd, sector, nr_sectors, req_op(bd->rq));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void cleanup_queue(struct nullb_queue *nq)
@@ -2122,7 +2172,12 @@ static int null_add_dev(struct nullb_device *dev)
 	blk_queue_physical_block_size(nullb->q, dev->blocksize);
 	if (!dev->max_sectors)
 		dev->max_sectors = queue_max_hw_sectors(nullb->q);
+<<<<<<< HEAD
 	dev->max_sectors = min(dev->max_sectors, BLK_DEF_MAX_SECTORS);
+=======
+	dev->max_sectors = min_t(unsigned int, dev->max_sectors,
+				 BLK_DEF_MAX_SECTORS);
+>>>>>>> b7ba80a49124 (Commit)
 	blk_queue_max_hw_sectors(nullb->q, dev->max_sectors);
 
 	if (dev->virt_boundary)

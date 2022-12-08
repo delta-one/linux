@@ -412,11 +412,25 @@ static void agp_efficeon_remove(struct pci_dev *pdev)
 	agp_put_bridge(bridge);
 }
 
+<<<<<<< HEAD
 static int agp_efficeon_resume(struct device *dev)
+=======
+#ifdef CONFIG_PM
+static int agp_efficeon_suspend(struct pci_dev *dev, pm_message_t state)
+{
+	return 0;
+}
+
+static int agp_efficeon_resume(struct pci_dev *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	printk(KERN_DEBUG PFX "agp_efficeon_resume()\n");
 	return efficeon_configure();
 }
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct pci_device_id agp_efficeon_pci_table[] = {
 	{
@@ -430,8 +444,11 @@ static const struct pci_device_id agp_efficeon_pci_table[] = {
 	{ }
 };
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(agp_efficeon_pm_ops, NULL, agp_efficeon_resume);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_DEVICE_TABLE(pci, agp_efficeon_pci_table);
 
 static struct pci_driver agp_efficeon_pci_driver = {
@@ -439,7 +456,14 @@ static struct pci_driver agp_efficeon_pci_driver = {
 	.id_table	= agp_efficeon_pci_table,
 	.probe		= agp_efficeon_probe,
 	.remove		= agp_efficeon_remove,
+<<<<<<< HEAD
 	.driver.pm	= &agp_efficeon_pm_ops,
+=======
+#ifdef CONFIG_PM
+	.suspend	= agp_efficeon_suspend,
+	.resume		= agp_efficeon_resume,
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init agp_efficeon_init(void)

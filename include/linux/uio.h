@@ -11,8 +11,12 @@
 #include <uapi/linux/uio.h>
 
 struct page;
+<<<<<<< HEAD
 
 typedef unsigned int __bitwise iov_iter_extraction_t;
+=======
+struct pipe_inode_info;
+>>>>>>> b7ba80a49124 (Commit)
 
 struct kvec {
 	void *iov_base; /* and that should *never* hold a userland pointer */
@@ -24,14 +28,21 @@ enum iter_type {
 	ITER_IOVEC,
 	ITER_KVEC,
 	ITER_BVEC,
+<<<<<<< HEAD
+=======
+	ITER_PIPE,
+>>>>>>> b7ba80a49124 (Commit)
 	ITER_XARRAY,
 	ITER_DISCARD,
 	ITER_UBUF,
 };
 
+<<<<<<< HEAD
 #define ITER_SOURCE	1	// == WRITE
 #define ITER_DEST	0	// == READ
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct iov_iter_state {
 	size_t iov_offset;
 	size_t count;
@@ -53,10 +64,21 @@ struct iov_iter {
 		const struct kvec *kvec;
 		const struct bio_vec *bvec;
 		struct xarray *xarray;
+<<<<<<< HEAD
+=======
+		struct pipe_inode_info *pipe;
+>>>>>>> b7ba80a49124 (Commit)
 		void __user *ubuf;
 	};
 	union {
 		unsigned long nr_segs;
+<<<<<<< HEAD
+=======
+		struct {
+			unsigned int head;
+			unsigned int start_head;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 		loff_t xarray_start;
 	};
 };
@@ -94,6 +116,14 @@ static inline bool iov_iter_is_bvec(const struct iov_iter *i)
 	return iov_iter_type(i) == ITER_BVEC;
 }
 
+<<<<<<< HEAD
+=======
+static inline bool iov_iter_is_pipe(const struct iov_iter *i)
+{
+	return iov_iter_type(i) == ITER_PIPE;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool iov_iter_is_discard(const struct iov_iter *i)
 {
 	return iov_iter_type(i) == ITER_DISCARD;
@@ -161,8 +191,11 @@ static inline size_t copy_folio_to_iter(struct folio *folio, size_t offset,
 {
 	return copy_page_to_iter(&folio->page, offset, bytes, i);
 }
+<<<<<<< HEAD
 size_t copy_page_to_iter_nofault(struct page *page, unsigned offset,
 				 size_t bytes, struct iov_iter *i);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static __always_inline __must_check
 size_t copy_to_iter(const void *addr, size_t bytes, struct iov_iter *i)
@@ -237,6 +270,7 @@ void iov_iter_kvec(struct iov_iter *i, unsigned int direction, const struct kvec
 			unsigned long nr_segs, size_t count);
 void iov_iter_bvec(struct iov_iter *i, unsigned int direction, const struct bio_vec *bvec,
 			unsigned long nr_segs, size_t count);
+<<<<<<< HEAD
 void iov_iter_discard(struct iov_iter *i, unsigned int direction, size_t count);
 void iov_iter_xarray(struct iov_iter *i, unsigned int direction, struct xarray *xarray,
 		     loff_t start, size_t count);
@@ -250,6 +284,21 @@ ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
 		iov_iter_extraction_t extraction_flags);
 ssize_t iov_iter_get_pages_alloc2(struct iov_iter *i, struct page ***pages,
 			size_t maxsize, size_t *start);
+=======
+void iov_iter_pipe(struct iov_iter *i, unsigned int direction, struct pipe_inode_info *pipe,
+			size_t count);
+void iov_iter_discard(struct iov_iter *i, unsigned int direction, size_t count);
+void iov_iter_xarray(struct iov_iter *i, unsigned int direction, struct xarray *xarray,
+		     loff_t start, size_t count);
+ssize_t iov_iter_get_pages2(struct iov_iter *i, struct page **pages,
+			size_t maxsize, unsigned maxpages, size_t *start);
+ssize_t iov_iter_get_pages_alloc2(struct iov_iter *i, struct page ***pages,
+			size_t maxsize, size_t *start);
+ssize_t iov_iter_pin_pages(struct iov_iter *i, struct page **pages,
+			size_t maxsize, unsigned int maxpages, size_t *start);
+ssize_t iov_iter_pin_pages_alloc(struct iov_iter *i, struct page ***pages,
+			size_t maxsize, size_t *start);
+>>>>>>> b7ba80a49124 (Commit)
 int iov_iter_npages(const struct iov_iter *i, int maxpages);
 void iov_iter_restore(struct iov_iter *i, struct iov_iter_state *state);
 
@@ -336,7 +385,10 @@ ssize_t __import_iovec(int type, const struct iovec __user *uvec,
 		 struct iov_iter *i, bool compat);
 int import_single_range(int type, void __user *buf, size_t len,
 		 struct iovec *iov, struct iov_iter *i);
+<<<<<<< HEAD
 int import_ubuf(int type, void __user *buf, size_t len, struct iov_iter *i);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void iov_iter_ubuf(struct iov_iter *i, unsigned int direction,
 			void __user *buf, size_t count)
@@ -350,6 +402,7 @@ static inline void iov_iter_ubuf(struct iov_iter *i, unsigned int direction,
 		.count = count
 	};
 }
+<<<<<<< HEAD
 /* Flags for iov_iter_get/extract_pages*() */
 /* Allow P2PDMA on the extracted pages */
 #define ITER_ALLOW_P2PDMA	((__force iov_iter_extraction_t)0x01)
@@ -379,5 +432,7 @@ static inline bool iov_iter_extract_will_pin(const struct iov_iter *iter)
 {
 	return user_backed_iter(iter);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

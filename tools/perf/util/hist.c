@@ -4,7 +4,10 @@
 #include "dso.h"
 #include "build-id.h"
 #include "hist.h"
+<<<<<<< HEAD
 #include "kvm-stat.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "map.h"
 #include "map_symbol.h"
 #include "branch.h"
@@ -216,7 +219,10 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
 	hists__new_col_len(hists, HISTC_GLOBAL_INS_LAT, 13);
 	hists__new_col_len(hists, HISTC_LOCAL_P_STAGE_CYC, 13);
 	hists__new_col_len(hists, HISTC_GLOBAL_P_STAGE_CYC, 13);
+<<<<<<< HEAD
 	hists__new_col_len(hists, HISTC_ADDR, BITS_PER_LONG / 4 + 2);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (symbol_conf.nanosecs)
 		hists__new_col_len(hists, HISTC_TIME, 16);
@@ -699,7 +705,10 @@ __hists__add_entry(struct hists *hists,
 		   struct symbol *sym_parent,
 		   struct branch_info *bi,
 		   struct mem_info *mi,
+<<<<<<< HEAD
 		   struct kvm_info *ki,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		   struct block_info *block_info,
 		   struct perf_sample *sample,
 		   bool sample_self,
@@ -735,7 +744,10 @@ __hists__add_entry(struct hists *hists,
 		.hists	= hists,
 		.branch_info = bi,
 		.mem_info = mi,
+<<<<<<< HEAD
 		.kvm_info = ki,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.block_info = block_info,
 		.transaction = sample->transaction,
 		.raw_data = sample->raw_data,
@@ -759,11 +771,18 @@ struct hist_entry *hists__add_entry(struct hists *hists,
 				    struct symbol *sym_parent,
 				    struct branch_info *bi,
 				    struct mem_info *mi,
+<<<<<<< HEAD
 				    struct kvm_info *ki,
 				    struct perf_sample *sample,
 				    bool sample_self)
 {
 	return __hists__add_entry(hists, al, sym_parent, bi, mi, ki, NULL,
+=======
+				    struct perf_sample *sample,
+				    bool sample_self)
+{
+	return __hists__add_entry(hists, al, sym_parent, bi, mi, NULL,
+>>>>>>> b7ba80a49124 (Commit)
 				  sample, sample_self, NULL);
 }
 
@@ -773,11 +792,18 @@ struct hist_entry *hists__add_entry_ops(struct hists *hists,
 					struct symbol *sym_parent,
 					struct branch_info *bi,
 					struct mem_info *mi,
+<<<<<<< HEAD
 					struct kvm_info *ki,
 					struct perf_sample *sample,
 					bool sample_self)
 {
 	return __hists__add_entry(hists, al, sym_parent, bi, mi, ki, NULL,
+=======
+					struct perf_sample *sample,
+					bool sample_self)
+{
+	return __hists__add_entry(hists, al, sym_parent, bi, mi, NULL,
+>>>>>>> b7ba80a49124 (Commit)
 				  sample, sample_self, ops);
 }
 
@@ -851,7 +877,11 @@ iter_add_single_mem_entry(struct hist_entry_iter *iter, struct addr_location *al
 	 */
 	sample->period = cost;
 
+<<<<<<< HEAD
 	he = hists__add_entry(hists, al, iter->parent, NULL, mi, NULL,
+=======
+	he = hists__add_entry(hists, al, iter->parent, NULL, mi,
+>>>>>>> b7ba80a49124 (Commit)
 			      sample, true);
 	if (!he)
 		return -ENOMEM;
@@ -954,7 +984,11 @@ iter_add_next_branch_entry(struct hist_entry_iter *iter, struct addr_location *a
 	sample->period = 1;
 	sample->weight = bi->flags.cycles ? bi->flags.cycles : 1;
 
+<<<<<<< HEAD
 	he = hists__add_entry(hists, al, iter->parent, &bi[i], NULL, NULL,
+=======
+	he = hists__add_entry(hists, al, iter->parent, &bi[i], NULL,
+>>>>>>> b7ba80a49124 (Commit)
 			      sample, true);
 	if (he == NULL)
 		return -ENOMEM;
@@ -992,7 +1026,11 @@ iter_add_single_normal_entry(struct hist_entry_iter *iter, struct addr_location 
 	struct hist_entry *he;
 
 	he = hists__add_entry(evsel__hists(evsel), al, iter->parent, NULL, NULL,
+<<<<<<< HEAD
 			      NULL, sample, true);
+=======
+			      sample, true);
+>>>>>>> b7ba80a49124 (Commit)
 	if (he == NULL)
 		return -ENOMEM;
 
@@ -1052,7 +1090,11 @@ iter_add_single_cumulative_entry(struct hist_entry_iter *iter,
 	struct hist_entry *he;
 	int err = 0;
 
+<<<<<<< HEAD
 	he = hists__add_entry(hists, al, iter->parent, NULL, NULL, NULL,
+=======
+	he = hists__add_entry(hists, al, iter->parent, NULL, NULL,
+>>>>>>> b7ba80a49124 (Commit)
 			      sample, true);
 	if (he == NULL)
 		return -ENOMEM;
@@ -1153,7 +1195,11 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
 	}
 
 	he = hists__add_entry(evsel__hists(evsel), al, iter->parent, NULL, NULL,
+<<<<<<< HEAD
 			      NULL, sample, false);
+=======
+			      sample, false);
+>>>>>>> b7ba80a49124 (Commit)
 	if (he == NULL)
 		return -ENOMEM;
 
@@ -1786,8 +1832,13 @@ static void hierarchy_insert_output_entry(struct rb_root_cached *root,
 
 	/* update column width of dynamic entry */
 	perf_hpp_list__for_each_sort_list(he->hpp_list, fmt) {
+<<<<<<< HEAD
 		if (fmt->init)
 			fmt->init(fmt, he);
+=======
+		if (perf_hpp__is_dynamic_entry(fmt))
+			fmt->sort(fmt, he, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -1884,10 +1935,17 @@ static void __hists__insert_output_entry(struct rb_root_cached *entries,
 	rb_link_node(&he->rb_node, parent, p);
 	rb_insert_color_cached(&he->rb_node, entries, leftmost);
 
+<<<<<<< HEAD
 	/* update column width of dynamic entries */
 	perf_hpp_list__for_each_sort_list(&perf_hpp_list, fmt) {
 		if (fmt->init)
 			fmt->init(fmt, he);
+=======
+	perf_hpp_list__for_each_sort_list(&perf_hpp_list, fmt) {
+		if (perf_hpp__is_dynamic_entry(fmt) &&
+		    perf_hpp__defined_dynamic_entry(fmt, he->hists))
+			fmt->sort(fmt, he, NULL);  /* update column width */
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

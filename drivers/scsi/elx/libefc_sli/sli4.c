@@ -4,7 +4,11 @@
  * “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.
  */
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * All common (i.e. transport-independent) SLI-4 functions are implemented
  * in this file.
  */

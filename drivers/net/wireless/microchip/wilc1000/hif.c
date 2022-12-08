@@ -482,6 +482,7 @@ void *wilc_parse_join_bss_param(struct cfg80211_bss *bss,
 
 	rsn_ie = cfg80211_find_ie(WLAN_EID_RSN, ies->data, ies->len);
 	if (rsn_ie) {
+<<<<<<< HEAD
 		int rsn_ie_len = sizeof(struct element) + rsn_ie[1];
 		int offset = 8;
 
@@ -501,6 +502,16 @@ void *wilc_parse_join_bss_param(struct cfg80211_bss *bss,
 				}
 			}
 		}
+=======
+		int offset = 8;
+
+		param->mode_802_11i = 2;
+		param->rsn_found = true;
+		/* extract RSN capabilities */
+		offset += (rsn_ie[offset] * 4) + 2;
+		offset += (rsn_ie[offset] * 4) + 2;
+		memcpy(param->rsn_cap, &rsn_ie[offset], 2);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (param->rsn_found) {
@@ -1531,10 +1542,17 @@ int wilc_deinit(struct wilc_vif *vif)
 
 	mutex_lock(&vif->wilc->deinit_lock);
 
+<<<<<<< HEAD
 	timer_shutdown_sync(&hif_drv->scan_timer);
 	timer_shutdown_sync(&hif_drv->connect_timer);
 	del_timer_sync(&vif->periodic_rssi);
 	timer_shutdown_sync(&hif_drv->remain_on_ch_timer);
+=======
+	del_timer_sync(&hif_drv->scan_timer);
+	del_timer_sync(&hif_drv->connect_timer);
+	del_timer_sync(&vif->periodic_rssi);
+	del_timer_sync(&hif_drv->remain_on_ch_timer);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (hif_drv->usr_scan_req.scan_result) {
 		hif_drv->usr_scan_req.scan_result(SCAN_EVENT_ABORTED, NULL,

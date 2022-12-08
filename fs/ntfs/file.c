@@ -527,12 +527,20 @@ err_out:
 	goto out;
 }
 
+<<<<<<< HEAD
 static inline void ntfs_submit_bh_for_read(struct buffer_head *bh)
+=======
+static inline int ntfs_submit_bh_for_read(struct buffer_head *bh)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	lock_buffer(bh);
 	get_bh(bh);
 	bh->b_end_io = end_buffer_read_sync;
+<<<<<<< HEAD
 	submit_bh(REQ_OP_READ, bh);
+=======
+	return submit_bh(REQ_OP_READ, bh);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

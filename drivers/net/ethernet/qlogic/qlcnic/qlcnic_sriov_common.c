@@ -221,8 +221,11 @@ int qlcnic_sriov_init(struct qlcnic_adapter *adapter, int num_vfs)
 	return 0;
 
 qlcnic_destroy_async_wq:
+<<<<<<< HEAD
 	while (i--)
 		kfree(sriov->vf_info[i].vp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	destroy_workqueue(bc->bc_async_wq);
 
 qlcnic_destroy_trans_wq:

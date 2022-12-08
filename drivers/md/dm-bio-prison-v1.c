@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2012 Red Hat, Inc.
  *
@@ -78,9 +81,15 @@ static void __setup_new_cell(struct dm_cell_key *key,
 			     struct bio *holder,
 			     struct dm_bio_prison_cell *cell)
 {
+<<<<<<< HEAD
 	memcpy(&cell->key, key, sizeof(cell->key));
 	cell->holder = holder;
 	bio_list_init(&cell->bios);
+=======
+       memcpy(&cell->key, key, sizeof(cell->key));
+       cell->holder = holder;
+       bio_list_init(&cell->bios);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cmp_keys(struct dm_cell_key *lhs,
@@ -286,14 +295,23 @@ EXPORT_SYMBOL_GPL(dm_cell_promote_or_release);
 
 struct dm_deferred_entry {
 	struct dm_deferred_set *ds;
+<<<<<<< HEAD
 	unsigned int count;
+=======
+	unsigned count;
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head work_items;
 };
 
 struct dm_deferred_set {
 	spinlock_t lock;
+<<<<<<< HEAD
 	unsigned int current_entry;
 	unsigned int sweeper;
+=======
+	unsigned current_entry;
+	unsigned sweeper;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_deferred_entry entries[DEFERRED_SET_SIZE];
 };
 
@@ -339,7 +357,11 @@ struct dm_deferred_entry *dm_deferred_entry_inc(struct dm_deferred_set *ds)
 }
 EXPORT_SYMBOL_GPL(dm_deferred_entry_inc);
 
+<<<<<<< HEAD
 static unsigned int ds_next(unsigned int index)
+=======
+static unsigned ds_next(unsigned index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return (index + 1) % DEFERRED_SET_SIZE;
 }
@@ -374,7 +396,11 @@ EXPORT_SYMBOL_GPL(dm_deferred_entry_dec);
 int dm_deferred_set_add_work(struct dm_deferred_set *ds, struct list_head *work)
 {
 	int r = 1;
+<<<<<<< HEAD
 	unsigned int next_entry;
+=======
+	unsigned next_entry;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irq(&ds->lock);
 	if ((ds->sweeper == ds->current_entry) &&
@@ -433,7 +459,11 @@ static int __init dm_bio_prison_init(void)
 
 	return 0;
 
+<<<<<<< HEAD
 bad:
+=======
+      bad:
+>>>>>>> b7ba80a49124 (Commit)
 	while (i--)
 		_exits[i]();
 

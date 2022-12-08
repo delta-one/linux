@@ -255,7 +255,11 @@ long fuse_do_ioctl(struct file *file, unsigned int cmd, unsigned long arg,
 		ap.args.in_pages = true;
 
 		err = -EFAULT;
+<<<<<<< HEAD
 		iov_iter_init(&ii, ITER_SOURCE, in_iov, in_iovs, in_size);
+=======
+		iov_iter_init(&ii, WRITE, in_iov, in_iovs, in_size);
+>>>>>>> b7ba80a49124 (Commit)
 		for (i = 0; iov_iter_count(&ii) && !WARN_ON(i >= ap.num_pages); i++) {
 			c = copy_page_from_iter(ap.pages[i], 0, PAGE_SIZE, &ii);
 			if (c != PAGE_SIZE && iov_iter_count(&ii))
@@ -324,7 +328,11 @@ long fuse_do_ioctl(struct file *file, unsigned int cmd, unsigned long arg,
 		goto out;
 
 	err = -EFAULT;
+<<<<<<< HEAD
 	iov_iter_init(&ii, ITER_DEST, out_iov, out_iovs, transferred);
+=======
+	iov_iter_init(&ii, READ, out_iov, out_iovs, transferred);
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; iov_iter_count(&ii) && !WARN_ON(i >= ap.num_pages); i++) {
 		c = copy_page_to_iter(ap.pages[i], 0, PAGE_SIZE, &ii);
 		if (c != PAGE_SIZE && iov_iter_count(&ii))
@@ -419,12 +427,15 @@ static struct fuse_file *fuse_priv_ioctl_prepare(struct inode *inode)
 	struct fuse_mount *fm = get_fuse_mount(inode);
 	bool isdir = S_ISDIR(inode->i_mode);
 
+<<<<<<< HEAD
 	if (!fuse_allow_current_process(fm->fc))
 		return ERR_PTR(-EACCES);
 
 	if (fuse_is_bad(inode))
 		return ERR_PTR(-EIO);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!S_ISREG(inode->i_mode) && !isdir)
 		return ERR_PTR(-ENOTTY);
 
@@ -473,7 +484,11 @@ cleanup:
 	return err;
 }
 
+<<<<<<< HEAD
 int fuse_fileattr_set(struct mnt_idmap *idmap,
+=======
+int fuse_fileattr_set(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *dentry, struct fileattr *fa)
 {
 	struct inode *inode = d_inode(dentry);

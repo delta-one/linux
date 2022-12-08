@@ -12,7 +12,10 @@
 #include "blocklayoutxdr.h"
 #include "pnfs.h"
 #include "filecache.h"
+<<<<<<< HEAD
 #include "vfs.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define NFSDDBG_FACILITY	NFSDDBG_PNFS
 

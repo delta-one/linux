@@ -33,7 +33,10 @@
 
 #include <linux/module.h>
 #include <linux/dma-mapping.h>
+<<<<<<< HEAD
 #include <linux/debugfs.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/highmem.h>
 #include <linux/sched/mm.h>
 
@@ -42,8 +45,13 @@
 #endif
 
 #include <drm/ttm/ttm_pool.h>
+<<<<<<< HEAD
 #include <drm/ttm/ttm_tt.h>
 #include <drm/ttm/ttm_bo.h>
+=======
+#include <drm/ttm/ttm_bo_driver.h>
+#include <drm/ttm/ttm_tt.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "ttm_module.h"
 
@@ -65,11 +73,19 @@ module_param(page_pool_size, ulong, 0644);
 
 static atomic_long_t allocated_pages;
 
+<<<<<<< HEAD
 static struct ttm_pool_type global_write_combined[MAX_ORDER + 1];
 static struct ttm_pool_type global_uncached[MAX_ORDER + 1];
 
 static struct ttm_pool_type global_dma32_write_combined[MAX_ORDER + 1];
 static struct ttm_pool_type global_dma32_uncached[MAX_ORDER + 1];
+=======
+static struct ttm_pool_type global_write_combined[MAX_ORDER];
+static struct ttm_pool_type global_uncached[MAX_ORDER];
+
+static struct ttm_pool_type global_dma32_write_combined[MAX_ORDER];
+static struct ttm_pool_type global_dma32_uncached[MAX_ORDER];
+>>>>>>> b7ba80a49124 (Commit)
 
 static spinlock_t shrinker_lock;
 static struct list_head shrinker_list;
@@ -345,6 +361,7 @@ static unsigned int ttm_pool_page_order(struct ttm_pool *pool, struct page *p)
 	return p->private;
 }
 
+<<<<<<< HEAD
 /* Called when we got a page, either from a pool or newly allocated */
 static int ttm_pool_page_allocated(struct ttm_pool *pool, unsigned int order,
 				   struct page *p, dma_addr_t **dma_addr,
@@ -367,6 +384,8 @@ static int ttm_pool_page_allocated(struct ttm_pool *pool, unsigned int order,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * ttm_pool_alloc - Fill a ttm_tt object
  *
@@ -405,14 +424,22 @@ int ttm_pool_alloc(struct ttm_pool *pool, struct ttm_tt *tt,
 	else
 		gfp_flags |= GFP_HIGHUSER;
 
+<<<<<<< HEAD
 	for (order = min_t(unsigned int, MAX_ORDER, __fls(num_pages));
 	     num_pages;
 	     order = min_t(unsigned int, order, __fls(num_pages))) {
+=======
+	for (order = min_t(unsigned int, MAX_ORDER - 1, __fls(num_pages));
+	     num_pages;
+	     order = min_t(unsigned int, order, __fls(num_pages))) {
+		bool apply_caching = false;
+>>>>>>> b7ba80a49124 (Commit)
 		struct ttm_pool_type *pt;
 
 		pt = ttm_pool_select_type(pool, tt->caching, order);
 		p = pt ? ttm_pool_type_take(pt) : NULL;
 		if (p) {
+<<<<<<< HEAD
 			r = ttm_pool_apply_caching(caching, pages,
 						   tt->caching);
 			if (r)
@@ -449,6 +476,13 @@ int ttm_pool_alloc(struct ttm_pool *pool, struct ttm_tt *tt,
 				goto error_free_page;
 			if (PageHighMem(p))
 				caching = pages;
+=======
+			apply_caching = true;
+		} else {
+			p = ttm_pool_alloc_page(pool, gfp_flags, order);
+			if (p && PageHighMem(p))
+				apply_caching = true;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (!p) {
@@ -459,6 +493,27 @@ int ttm_pool_alloc(struct ttm_pool *pool, struct ttm_tt *tt,
 			r = -ENOMEM;
 			goto error_free_all;
 		}
+<<<<<<< HEAD
+=======
+
+		if (apply_caching) {
+			r = ttm_pool_apply_caching(caching, pages,
+						   tt->caching);
+			if (r)
+				goto error_free_page;
+			caching = pages + (1 << order);
+		}
+
+		if (dma_addr) {
+			r = ttm_pool_map(pool, order, p, &dma_addr);
+			if (r)
+				goto error_free_page;
+		}
+
+		num_pages -= 1 << order;
+		for (i = 1 << order; i; --i)
+			*(pages++) = p++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	r = ttm_pool_apply_caching(caching, pages, tt->caching);
@@ -542,7 +597,11 @@ void ttm_pool_init(struct ttm_pool *pool, struct device *dev,
 
 	if (use_dma_alloc) {
 		for (i = 0; i < TTM_NUM_CACHING_TYPES; ++i)
+<<<<<<< HEAD
 			for (j = 0; j <= MAX_ORDER; ++j)
+=======
+			for (j = 0; j < MAX_ORDER; ++j)
+>>>>>>> b7ba80a49124 (Commit)
 				ttm_pool_type_init(&pool->caching[i].orders[j],
 						   pool, i, j);
 	}
@@ -562,7 +621,11 @@ void ttm_pool_fini(struct ttm_pool *pool)
 
 	if (pool->use_dma_alloc) {
 		for (i = 0; i < TTM_NUM_CACHING_TYPES; ++i)
+<<<<<<< HEAD
 			for (j = 0; j <= MAX_ORDER; ++j)
+=======
+			for (j = 0; j < MAX_ORDER; ++j)
+>>>>>>> b7ba80a49124 (Commit)
 				ttm_pool_type_fini(&pool->caching[i].orders[j]);
 	}
 
@@ -616,7 +679,11 @@ static void ttm_pool_debugfs_header(struct seq_file *m)
 	unsigned int i;
 
 	seq_puts(m, "\t ");
+<<<<<<< HEAD
 	for (i = 0; i <= MAX_ORDER; ++i)
+=======
+	for (i = 0; i < MAX_ORDER; ++i)
+>>>>>>> b7ba80a49124 (Commit)
 		seq_printf(m, " ---%2u---", i);
 	seq_puts(m, "\n");
 }
@@ -627,7 +694,11 @@ static void ttm_pool_debugfs_orders(struct ttm_pool_type *pt,
 {
 	unsigned int i;
 
+<<<<<<< HEAD
 	for (i = 0; i <= MAX_ORDER; ++i)
+=======
+	for (i = 0; i < MAX_ORDER; ++i)
+>>>>>>> b7ba80a49124 (Commit)
 		seq_printf(m, " %8u", ttm_pool_type_count(&pt[i]));
 	seq_puts(m, "\n");
 }
@@ -736,7 +807,11 @@ int ttm_pool_mgr_init(unsigned long num_pages)
 	spin_lock_init(&shrinker_lock);
 	INIT_LIST_HEAD(&shrinker_list);
 
+<<<<<<< HEAD
 	for (i = 0; i <= MAX_ORDER; ++i) {
+=======
+	for (i = 0; i < MAX_ORDER; ++i) {
+>>>>>>> b7ba80a49124 (Commit)
 		ttm_pool_type_init(&global_write_combined[i], NULL,
 				   ttm_write_combined, i);
 		ttm_pool_type_init(&global_uncached[i], NULL, ttm_uncached, i);
@@ -769,7 +844,11 @@ void ttm_pool_mgr_fini(void)
 {
 	unsigned int i;
 
+<<<<<<< HEAD
 	for (i = 0; i <= MAX_ORDER; ++i) {
+=======
+	for (i = 0; i < MAX_ORDER; ++i) {
+>>>>>>> b7ba80a49124 (Commit)
 		ttm_pool_type_fini(&global_write_combined[i]);
 		ttm_pool_type_fini(&global_uncached[i]);
 

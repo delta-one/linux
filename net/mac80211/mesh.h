@@ -122,12 +122,16 @@ struct mesh_path {
 	u8 rann_snd_addr[ETH_ALEN];
 	u32 rann_metric;
 	unsigned long last_preq_to_root;
+<<<<<<< HEAD
 	unsigned long fast_tx_check;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool is_root;
 	bool is_gate;
 	u32 path_change_count;
 };
 
+<<<<<<< HEAD
 #define MESH_FAST_TX_CACHE_MAX_SIZE		512
 #define MESH_FAST_TX_CACHE_THRESHOLD_SIZE	384
 #define MESH_FAST_TX_CACHE_TIMEOUT		8000 /* msecs */
@@ -157,6 +161,8 @@ struct ieee80211_mesh_fast_tx {
 	unsigned long timestamp;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Recent multicast cache */
 /* RMC_BUCKETS must be a power of 2, maximum 256 */
 #define RMC_BUCKETS		256
@@ -328,6 +334,7 @@ void mesh_path_discard_frame(struct ieee80211_sub_if_data *sdata,
 void mesh_path_tx_root_frame(struct ieee80211_sub_if_data *sdata);
 
 bool mesh_action_is_path_sel(struct ieee80211_mgmt *mgmt);
+<<<<<<< HEAD
 struct ieee80211_mesh_fast_tx *
 mesh_fast_tx_get(struct ieee80211_sub_if_data *sdata, const u8 *addr);
 bool ieee80211_mesh_xmit_fast(struct ieee80211_sub_if_data *sdata,
@@ -342,6 +349,8 @@ void mesh_fast_tx_flush_sta(struct ieee80211_sub_if_data *sdata,
 			    struct sta_info *sta);
 void mesh_path_refresh(struct ieee80211_sub_if_data *sdata,
 		       struct mesh_path *mpath, const u8 *addr);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_MAC80211_MESH
 static inline

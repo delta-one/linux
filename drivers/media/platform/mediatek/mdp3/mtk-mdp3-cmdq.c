@@ -252,9 +252,16 @@ static int mdp_cmdq_pkt_create(struct cmdq_client *client, struct cmdq_pkt *pkt,
 	dma_addr_t dma_addr;
 
 	pkt->va_base = kzalloc(size, GFP_KERNEL);
+<<<<<<< HEAD
 	if (!pkt->va_base)
 		return -ENOMEM;
 
+=======
+	if (!pkt->va_base) {
+		kfree(pkt);
+		return -ENOMEM;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	pkt->buf_size = size;
 	pkt->cl = (void *)client;
 
@@ -367,23 +374,38 @@ int mdp_cmdq_send(struct mdp_dev *mdp, struct mdp_cmdq_param *param)
 	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
 	if (!cmd) {
 		ret = -ENOMEM;
+<<<<<<< HEAD
 		goto err_cancel_job;
 	}
 
 	ret = mdp_cmdq_pkt_create(mdp->cmdq_clt, &cmd->pkt, SZ_16K);
 	if (ret)
 		goto err_free_cmd;
+=======
+		goto err_cmdq_data;
+	}
+
+	if (mdp_cmdq_pkt_create(mdp->cmdq_clt, &cmd->pkt, SZ_16K)) {
+		ret = -ENOMEM;
+		goto err_cmdq_data;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	comps = kcalloc(param->config->num_components, sizeof(*comps),
 			GFP_KERNEL);
 	if (!comps) {
 		ret = -ENOMEM;
+<<<<<<< HEAD
 		goto err_destroy_pkt;
+=======
+		goto err_cmdq_data;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	path = kzalloc(sizeof(*path), GFP_KERNEL);
 	if (!path) {
 		ret = -ENOMEM;
+<<<<<<< HEAD
 		goto err_free_comps;
 	}
 
@@ -391,6 +413,9 @@ int mdp_cmdq_send(struct mdp_dev *mdp, struct mdp_cmdq_param *param)
 	if (ret) {
 		dev_err(dev, "Fail to enable mutex clk\n");
 		goto err_free_path;
+=======
+		goto err_cmdq_data;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	path->mdp_dev = mdp;
@@ -410,6 +435,7 @@ int mdp_cmdq_send(struct mdp_dev *mdp, struct mdp_cmdq_param *param)
 	ret = mdp_path_ctx_init(mdp, path);
 	if (ret) {
 		dev_err(dev, "mdp_path_ctx_init error\n");
+<<<<<<< HEAD
 		goto err_free_path;
 	}
 
@@ -417,6 +443,17 @@ int mdp_cmdq_send(struct mdp_dev *mdp, struct mdp_cmdq_param *param)
 	if (ret) {
 		dev_err(dev, "mdp_path_config error\n");
 		goto err_free_path;
+=======
+		goto err_cmdq_data;
+	}
+
+	mtk_mutex_prepare(mdp->mdp_mutex[MDP_PIPE_RDMA0]);
+
+	ret = mdp_path_config(mdp, cmd, path);
+	if (ret) {
+		dev_err(dev, "mdp_path_config error\n");
+		goto err_cmdq_data;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	cmdq_pkt_finalize(&cmd->pkt);
 
@@ -433,8 +470,15 @@ int mdp_cmdq_send(struct mdp_dev *mdp, struct mdp_cmdq_param *param)
 	cmd->mdp_ctx = param->mdp_ctx;
 
 	ret = mdp_comp_clocks_on(&mdp->pdev->dev, cmd->comps, cmd->num_comps);
+<<<<<<< HEAD
 	if (ret)
 		goto err_free_path;
+=======
+	if (ret) {
+		dev_err(dev, "comp %d failed to enable clock!\n", ret);
+		goto err_clock_off;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	dma_sync_single_for_device(mdp->cmdq_clt->chan->mbox->dev,
 				   cmd->pkt.pa_base, cmd->pkt.cmd_buf_size,
@@ -450,6 +494,7 @@ int mdp_cmdq_send(struct mdp_dev *mdp, struct mdp_cmdq_param *param)
 	return 0;
 
 err_clock_off:
+<<<<<<< HEAD
 	mdp_comp_clocks_off(&mdp->pdev->dev, cmd->comps,
 			    cmd->num_comps);
 err_free_path:
@@ -464,6 +509,19 @@ err_free_cmd:
 err_cancel_job:
 	atomic_dec(&mdp->job_count);
 
+=======
+	mtk_mutex_unprepare(mdp->mdp_mutex[MDP_PIPE_RDMA0]);
+	mdp_comp_clocks_off(&mdp->pdev->dev, cmd->comps,
+			    cmd->num_comps);
+err_cmdq_data:
+	kfree(path);
+	atomic_dec(&mdp->job_count);
+	wake_up(&mdp->callback_wq);
+	if (cmd->pkt.buf_size > 0)
+		mdp_cmdq_pkt_destroy(&cmd->pkt);
+	kfree(comps);
+	kfree(cmd);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 EXPORT_SYMBOL_GPL(mdp_cmdq_send);

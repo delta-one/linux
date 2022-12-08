@@ -3,7 +3,10 @@
 #include <linux/memregion.h>
 #include <linux/module.h>
 #include <linux/pfn_t.h>
+<<<<<<< HEAD
 #include <linux/dax.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "../bus.h"
 
 static bool region_idle;
@@ -11,12 +14,16 @@ module_param_named(region_idle, region_idle, bool, 0644);
 
 static int dax_hmem_probe(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	unsigned long flags = IORESOURCE_DAX_KMEM;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = &pdev->dev;
 	struct dax_region *dax_region;
 	struct memregion_info *mri;
 	struct dev_dax_data data;
 	struct dev_dax *dev_dax;
+<<<<<<< HEAD
 
 	/*
 	 * @region_idle == true indicates that an administrative agent
@@ -30,13 +37,31 @@ static int dax_hmem_probe(struct platform_device *pdev)
 	mri = dev->platform_data;
 	dax_region = alloc_dax_region(dev, pdev->id, &mri->range,
 				      mri->target_node, PMD_SIZE, flags);
+=======
+	struct resource *res;
+	struct range range;
+
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	if (!res)
+		return -ENOMEM;
+
+	mri = dev->platform_data;
+	range.start = res->start;
+	range.end = res->end;
+	dax_region = alloc_dax_region(dev, pdev->id, &range, mri->target_node,
+			PMD_SIZE, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!dax_region)
 		return -ENOMEM;
 
 	data = (struct dev_dax_data) {
 		.dax_region = dax_region,
 		.id = -1,
+<<<<<<< HEAD
 		.size = region_idle ? 0 : range_len(&mri->range),
+=======
+		.size = region_idle ? 0 : resource_size(res),
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	dev_dax = devm_create_dev_dax(&data);
 	if (IS_ERR(dev_dax))
@@ -47,13 +72,26 @@ static int dax_hmem_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct platform_driver dax_hmem_driver = {
 	.probe = dax_hmem_probe,
+=======
+static int dax_hmem_remove(struct platform_device *pdev)
+{
+	/* devm handles teardown */
+	return 0;
+}
+
+static struct platform_driver dax_hmem_driver = {
+	.probe = dax_hmem_probe,
+	.remove = dax_hmem_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "hmem",
 	},
 };
 
+<<<<<<< HEAD
 static void release_memregion(void *data)
 {
 	memregion_free((long) data);
@@ -173,5 +211,10 @@ MODULE_SOFTDEP("pre: cxl_acpi");
 
 MODULE_ALIAS("platform:hmem*");
 MODULE_ALIAS("platform:hmem_platform*");
+=======
+module_platform_driver(dax_hmem_driver);
+
+MODULE_ALIAS("platform:hmem*");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Intel Corporation");

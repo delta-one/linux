@@ -90,7 +90,11 @@ static void __init spear_clocksource_init(void)
 		200, 16, clocksource_mmio_readw_up);
 }
 
+<<<<<<< HEAD
 static inline void spear_timer_shutdown(struct clock_event_device *evt)
+=======
+static inline void timer_shutdown(struct clock_event_device *evt)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u16 val = readw(gpt_base + CR(CLKEVT));
 
@@ -101,7 +105,11 @@ static inline void spear_timer_shutdown(struct clock_event_device *evt)
 
 static int spear_shutdown(struct clock_event_device *evt)
 {
+<<<<<<< HEAD
 	spear_timer_shutdown(evt);
+=======
+	timer_shutdown(evt);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -111,7 +119,11 @@ static int spear_set_oneshot(struct clock_event_device *evt)
 	u16 val;
 
 	/* stop the timer */
+<<<<<<< HEAD
 	spear_timer_shutdown(evt);
+=======
+	timer_shutdown(evt);
+>>>>>>> b7ba80a49124 (Commit)
 
 	val = readw(gpt_base + CR(CLKEVT));
 	val |= CTRL_ONE_SHOT;
@@ -126,7 +138,11 @@ static int spear_set_periodic(struct clock_event_device *evt)
 	u16 val;
 
 	/* stop the timer */
+<<<<<<< HEAD
 	spear_timer_shutdown(evt);
+=======
+	timer_shutdown(evt);
+>>>>>>> b7ba80a49124 (Commit)
 
 	period = clk_get_rate(gpt_clk) / HZ;
 	period >>= CTRL_PRESCALER16;

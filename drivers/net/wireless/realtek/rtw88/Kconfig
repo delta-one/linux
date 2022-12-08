@@ -16,9 +16,12 @@ config RTW88_CORE
 config RTW88_PCI
 	tristate
 
+<<<<<<< HEAD
 config RTW88_USB
 	tristate
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config RTW88_8822B
 	tristate
 
@@ -42,6 +45,7 @@ config RTW88_8822BE
 
 	  802.11ac PCIe wireless network adapter
 
+<<<<<<< HEAD
 config RTW88_8822BU
 	tristate "Realtek 8822BU USB wireless network adapter"
 	depends on USB
@@ -53,6 +57,8 @@ config RTW88_8822BU
 
 	  802.11ac USB wireless network adapter
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config RTW88_8822CE
 	tristate "Realtek 8822CE PCI wireless network adapter"
 	depends on PCI
@@ -64,6 +70,7 @@ config RTW88_8822CE
 
 	  802.11ac PCIe wireless network adapter
 
+<<<<<<< HEAD
 config RTW88_8822CU
 	tristate "Realtek 8822CU USB wireless network adapter"
 	depends on USB
@@ -75,6 +82,8 @@ config RTW88_8822CU
 
 	  802.11ac USB wireless network adapter
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config RTW88_8723DE
 	tristate "Realtek 8723DE PCI wireless network adapter"
 	depends on PCI
@@ -86,6 +95,7 @@ config RTW88_8723DE
 
 	  802.11n PCIe wireless network adapter
 
+<<<<<<< HEAD
 config RTW88_8723DU
 	tristate "Realtek 8723DU USB wireless network adapter"
 	depends on USB
@@ -97,6 +107,8 @@ config RTW88_8723DU
 
 	  802.11n USB wireless network adapter
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config RTW88_8821CE
 	tristate "Realtek 8821CE PCI wireless network adapter"
 	depends on PCI
@@ -108,6 +120,7 @@ config RTW88_8821CE
 
 	  802.11ac PCIe wireless network adapter
 
+<<<<<<< HEAD
 config RTW88_8821CU
 	tristate "Realtek 8821CU USB wireless network adapter"
 	depends on USB
@@ -119,6 +132,8 @@ config RTW88_8821CU
 
 	  802.11ac USB wireless network adapter
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config RTW88_DEBUG
 	bool "Realtek rtw88 debug support"
 	depends on RTW88_CORE

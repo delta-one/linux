@@ -59,7 +59,10 @@
 
 		A35_L2: l2-cache0 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -134,12 +137,15 @@
 			clock-names = "xtal_32KHz", "xtal_24Mhz";
 		};
 
+<<<<<<< HEAD
 		scu_gpio: gpio {
 			compatible = "fsl,imx8qxp-sc-gpio";
 			gpio-controller;
 			#gpio-cells = <2>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		iomuxc: pinctrl {
 			compatible = "fsl,imx8dxl-iomuxc";
 		};
@@ -164,7 +170,11 @@
 
 		sc_pwrkey: keys {
 			compatible = "fsl,imx8qxp-sc-key", "fsl,imx-sc-key";
+<<<<<<< HEAD
 			linux,keycodes = <KEY_POWER>;
+=======
+			linux,keycode = <KEY_POWER>;
+>>>>>>> b7ba80a49124 (Commit)
 			wakeup-source;
 		};
 
@@ -188,7 +198,11 @@
 	};
 
 	thermal_zones: thermal-zones {
+<<<<<<< HEAD
 		cpu-thermal {
+=======
+		cpu-thermal0 {
+>>>>>>> b7ba80a49124 (Commit)
 			polling-delay-passive = <250>;
 			polling-delay = <2000>;
 			thermal-sensors = <&tsens IMX_SC_R_SYSTEM>;

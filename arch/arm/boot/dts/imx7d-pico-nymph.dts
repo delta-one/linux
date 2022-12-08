@@ -43,7 +43,11 @@
 };
 
 &i2c1 {
+<<<<<<< HEAD
 	clock-frequency = <100000>;
+=======
+	clock_frequency = <100000>;
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_i2c1>;
 	status = "okay";
@@ -64,7 +68,11 @@
 };
 
 &i2c2 {
+<<<<<<< HEAD
 	clock-frequency = <100000>;
+=======
+	clock_frequency = <100000>;
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_i2c2>;
 	status = "okay";

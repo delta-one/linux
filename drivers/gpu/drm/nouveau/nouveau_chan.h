@@ -2,7 +2,11 @@
 #ifndef __NOUVEAU_CHAN_H__
 #define __NOUVEAU_CHAN_H__
 #include <nvif/object.h>
+<<<<<<< HEAD
 #include <nvif/event.h>
+=======
+#include <nvif/notify.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <nvif/push.h>
 struct nvif_device;
 
@@ -16,10 +20,13 @@ struct nouveau_channel {
 	struct nouveau_drm *drm;
 	struct nouveau_vmm *vmm;
 
+<<<<<<< HEAD
 	struct nvif_mem mem_userd;
 	struct nvif_object *userd;
 
 	int runlist;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int chid;
 	u64 inst;
 	u32 token;
@@ -54,15 +61,26 @@ struct nouveau_channel {
 
 	struct nvif_object user;
 
+<<<<<<< HEAD
 	struct nvif_event kill;
+=======
+	struct nvif_notify kill;
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_t killed;
 };
 
 int nouveau_channels_init(struct nouveau_drm *);
+<<<<<<< HEAD
 void nouveau_channels_fini(struct nouveau_drm *);
 
 int  nouveau_channel_new(struct nouveau_drm *, struct nvif_device *, bool priv, u64 runm,
 			 u32 vram, u32 gart, struct nouveau_channel **);
+=======
+
+int  nouveau_channel_new(struct nouveau_drm *, struct nvif_device *,
+			 u32 arg0, u32 arg1, bool priv,
+			 struct nouveau_channel **);
+>>>>>>> b7ba80a49124 (Commit)
 void nouveau_channel_del(struct nouveau_channel **);
 int  nouveau_channel_idle(struct nouveau_channel *);
 

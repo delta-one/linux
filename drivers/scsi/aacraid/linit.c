@@ -26,6 +26,10 @@
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <linux/pci.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/mutex.h>
 #include <linux/spinlock.h>
@@ -1782,6 +1786,10 @@ static int aac_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
 
 	aac_scan_host(aac);
 
+<<<<<<< HEAD
+=======
+	pci_enable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_save_state(pdev);
 
 	return 0;
@@ -1947,6 +1955,10 @@ static pci_ers_result_t aac_pci_error_detected(struct pci_dev *pdev,
 		scsi_host_complete_all_commands(shost, DID_NO_CONNECT);
 		aac_release_resources(aac);
 
+<<<<<<< HEAD
+=======
+		pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 		aac_adapter_ioremap(aac, 0);
 
 		return PCI_ERS_RESULT_NEED_RESET;

@@ -15,8 +15,11 @@
 #include <linux/compiler.h>	/* For unreachable() */
 #include <linux/cpu.h>		/* For cpu_down() */
 #include <linux/reboot.h>
+<<<<<<< HEAD
 #include <linux/interrupt.h>
 #include <linux/irq.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * kexec_image_info - Print received image details
@@ -140,6 +143,7 @@ void machine_shutdown(void)
 #endif
 }
 
+<<<<<<< HEAD
 static void machine_kexec_mask_interrupts(void)
 {
 	unsigned int i;
@@ -169,6 +173,22 @@ static void machine_kexec_mask_interrupts(void)
 		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
 			chip->irq_disable(&desc->irq_data);
 	}
+=======
+/* Override the weak function in kernel/panic.c */
+void crash_smp_send_stop(void)
+{
+	static int cpus_stopped;
+
+	/*
+	 * This function can be called twice in panic path, but obviously
+	 * we execute this only once.
+	 */
+	if (cpus_stopped)
+		return;
+
+	smp_send_stop();
+	cpus_stopped = 1;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -186,8 +206,11 @@ machine_crash_shutdown(struct pt_regs *regs)
 	crash_smp_send_stop();
 
 	crash_save_cpu(regs, smp_processor_id());
+<<<<<<< HEAD
 	machine_kexec_mask_interrupts();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pr_info("Starting crashdump kernel...\n");
 }
 
@@ -214,11 +237,14 @@ machine_kexec(struct kimage *image)
 	void *control_code_buffer = page_address(image->control_code_page);
 	riscv_kexec_method kexec_method = NULL;
 
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 	WARN(smp_crash_stop_failed(),
 		"Some CPUs may be stale, kdump will be unreliable.\n");
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (image->type != KEXEC_TYPE_CRASH)
 		kexec_method = control_code_buffer;
 	else

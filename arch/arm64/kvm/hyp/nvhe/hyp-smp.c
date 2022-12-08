@@ -23,8 +23,11 @@ u64 cpu_logical_map(unsigned int cpu)
 	return hyp_cpu_logical_map[cpu];
 }
 
+<<<<<<< HEAD
 unsigned long __ro_after_init kvm_arm_hyp_percpu_base[NR_CPUS];
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long __hyp_per_cpu_offset(unsigned int cpu)
 {
 	unsigned long *cpu_base_array;

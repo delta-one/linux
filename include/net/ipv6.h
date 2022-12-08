@@ -436,8 +436,12 @@ static inline void fl6_sock_release(struct ip6_flowlabel *fl)
 		atomic_dec(&fl->users);
 }
 
+<<<<<<< HEAD
 enum skb_drop_reason icmpv6_notify(struct sk_buff *skb, u8 type,
 				   u8 code, __be32 info);
+=======
+void icmpv6_notify(struct sk_buff *skb, u8 type, u8 code, __be32 info);
+>>>>>>> b7ba80a49124 (Commit)
 
 void icmpv6_push_pending_frames(struct sock *sk, struct flowi6 *fl6,
 				struct icmp6hdr *thdr, int len);
@@ -501,6 +505,7 @@ static inline int ipv6_has_hopopt_jumbo(const struct sk_buff *skb)
 	return jhdr->nexthdr;
 }
 
+<<<<<<< HEAD
 /* Return 0 if HBH header is successfully removed
  * Or if HBH removal is unnecessary (packet is not big TCP)
  * Return error to indicate dropping the packet
@@ -534,6 +539,8 @@ static inline int ipv6_hopopt_jumbo_remove(struct sk_buff *skb)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool ipv6_accept_ra(struct inet6_dev *idev)
 {
 	/* If forwarding is enabled, RA are not accepted unless the special
@@ -931,7 +938,11 @@ static inline void iph_to_flow_copy_v6addrs(struct flow_keys *flow,
 	BUILD_BUG_ON(offsetof(typeof(flow->addrs), v6addrs.dst) !=
 		     offsetof(typeof(flow->addrs), v6addrs.src) +
 		     sizeof(flow->addrs.v6addrs.src));
+<<<<<<< HEAD
 	memcpy(&flow->addrs.v6addrs, &iph->addrs, sizeof(flow->addrs.v6addrs));
+=======
+	memcpy(&flow->addrs.v6addrs, &iph->saddr, sizeof(flow->addrs.v6addrs));
+>>>>>>> b7ba80a49124 (Commit)
 	flow->control.addr_type = FLOW_DISSECTOR_KEY_IPV6_ADDRS;
 }
 
@@ -1216,8 +1227,11 @@ void ipv6_icmp_error(struct sock *sk, struct sk_buff *skb, int err, __be16 port,
 void ipv6_local_error(struct sock *sk, int err, struct flowi6 *fl6, u32 info);
 void ipv6_local_rxpmtu(struct sock *sk, struct flowi6 *fl6, u32 mtu);
 
+<<<<<<< HEAD
 void inet6_cleanup_sock(struct sock *sk);
 void inet6_sock_destruct(struct sock *sk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int inet6_release(struct socket *sock);
 int inet6_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len);
 int inet6_getname(struct socket *sock, struct sockaddr *uaddr,

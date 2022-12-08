@@ -53,6 +53,7 @@ struct tee_vdata {
 	const unsigned int ring_rptr_reg;
 };
 
+<<<<<<< HEAD
 struct platform_access_vdata {
 	const unsigned int cmdresp_reg;
 	const unsigned int cmdbuff_addr_lo_reg;
@@ -66,6 +67,11 @@ struct psp_vdata {
 	const struct sev_vdata *sev;
 	const struct tee_vdata *tee;
 	const struct platform_access_vdata *platform_access;
+=======
+struct psp_vdata {
+	const struct sev_vdata *sev;
+	const struct tee_vdata *tee;
+>>>>>>> b7ba80a49124 (Commit)
 	const unsigned int feature_reg;
 	const unsigned int inten_reg;
 	const unsigned int intsts_reg;

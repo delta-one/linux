@@ -15,9 +15,15 @@
 
 #include "bmi160.h"
 
+<<<<<<< HEAD
 static int bmi160_i2c_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int bmi160_i2c_probe(struct i2c_client *client,
+			    const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct regmap *regmap;
 	const char *name;
 
@@ -60,7 +66,11 @@ static struct i2c_driver bmi160_i2c_driver = {
 		.acpi_match_table	= bmi160_acpi_match,
 		.of_match_table		= bmi160_of_match,
 	},
+<<<<<<< HEAD
 	.probe_new	= bmi160_i2c_probe,
+=======
+	.probe		= bmi160_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= bmi160_i2c_id,
 };
 module_i2c_driver(bmi160_i2c_driver);

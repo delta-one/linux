@@ -312,14 +312,21 @@ void mlx5e_ipsec_offload_handle_rx_skb(struct net_device *netdev,
 				       struct mlx5_cqe64 *cqe)
 {
 	u32 ipsec_meta_data = be32_to_cpu(cqe->ft_metadata);
+<<<<<<< HEAD
 	struct mlx5e_priv *priv = netdev_priv(netdev);
 	struct mlx5e_ipsec *ipsec = priv->ipsec;
 	struct mlx5e_ipsec_sa_entry *sa_entry;
 	struct xfrm_offload *xo;
+=======
+	struct mlx5e_priv *priv;
+	struct xfrm_offload *xo;
+	struct xfrm_state *xs;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sec_path *sp;
 	u32  sa_handle;
 
 	sa_handle = MLX5_IPSEC_METADATA_HANDLE(ipsec_meta_data);
+<<<<<<< HEAD
 	sp = secpath_set(skb);
 	if (unlikely(!sp)) {
 		atomic64_inc(&ipsec->sw_stats.ipsec_rx_drop_sp_alloc);
@@ -337,6 +344,22 @@ void mlx5e_ipsec_offload_handle_rx_skb(struct net_device *netdev,
 	rcu_read_unlock();
 
 	sp->xvec[sp->len++] = sa_entry->x;
+=======
+	priv = netdev_priv(netdev);
+	sp = secpath_set(skb);
+	if (unlikely(!sp)) {
+		atomic64_inc(&priv->ipsec->sw_stats.ipsec_rx_drop_sp_alloc);
+		return;
+	}
+
+	xs = mlx5e_ipsec_sadb_rx_lookup(priv->ipsec, sa_handle);
+	if (unlikely(!xs)) {
+		atomic64_inc(&priv->ipsec->sw_stats.ipsec_rx_drop_sadb_miss);
+		return;
+	}
+
+	sp->xvec[sp->len++] = xs;
+>>>>>>> b7ba80a49124 (Commit)
 	sp->olen++;
 
 	xo = xfrm_offload(skb);
@@ -353,6 +376,10 @@ void mlx5e_ipsec_offload_handle_rx_skb(struct net_device *netdev,
 		xo->status = CRYPTO_INVALID_PACKET_SYNTAX;
 		break;
 	default:
+<<<<<<< HEAD
 		atomic64_inc(&ipsec->sw_stats.ipsec_rx_drop_syndrome);
+=======
+		atomic64_inc(&priv->ipsec->sw_stats.ipsec_rx_drop_syndrome);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }

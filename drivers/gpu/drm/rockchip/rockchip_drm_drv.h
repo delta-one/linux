@@ -9,10 +9,17 @@
 #ifndef _ROCKCHIP_DRM_DRV_H
 #define _ROCKCHIP_DRM_DRV_H
 
+<<<<<<< HEAD
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_gem.h>
 
 #include <linux/i2c.h>
+=======
+#include <drm/drm_fb_helper.h>
+#include <drm/drm_atomic_helper.h>
+#include <drm/drm_gem.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/component.h>
 

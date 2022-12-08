@@ -23,12 +23,26 @@ static void nvmet_auth_expired_work(struct work_struct *work)
 	sq->dhchap_tid = -1;
 }
 
+<<<<<<< HEAD
 void nvmet_auth_sq_init(struct nvmet_sq *sq)
 {
 	/* Initialize in-band authentication */
 	INIT_DELAYED_WORK(&sq->auth_expired_work, nvmet_auth_expired_work);
 	sq->authenticated = false;
 	sq->dhchap_step = NVME_AUTH_DHCHAP_MESSAGE_NEGOTIATE;
+=======
+void nvmet_init_auth(struct nvmet_ctrl *ctrl, struct nvmet_req *req)
+{
+	u32 result = le32_to_cpu(req->cqe->result.u32);
+
+	/* Initialize in-band authentication */
+	INIT_DELAYED_WORK(&req->sq->auth_expired_work,
+			  nvmet_auth_expired_work);
+	req->sq->authenticated = false;
+	req->sq->dhchap_step = NVME_AUTH_DHCHAP_MESSAGE_NEGOTIATE;
+	result |= (u32)NVME_CONNECT_AUTHREQ_ATR << 16;
+	req->cqe->result.u32 = cpu_to_le32(result);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static u16 nvmet_auth_negotiate(struct nvmet_req *req, void *d)

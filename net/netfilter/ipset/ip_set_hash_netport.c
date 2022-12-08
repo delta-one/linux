@@ -154,11 +154,20 @@ static int
 hash_netport4_uadt(struct ip_set *set, struct nlattr *tb[],
 		   enum ipset_adt adt, u32 *lineno, u32 flags, bool retried)
 {
+<<<<<<< HEAD
 	struct hash_netport4 *h = set->data;
 	ipset_adtfn adtfn = set->variant->adt[adt];
 	struct hash_netport4_elem e = { .cidr = HOST_MASK - 1 };
 	struct ip_set_ext ext = IP_SET_INIT_UEXT(set);
 	u32 port, port_to, p = 0, ip = 0, ip_to = 0, i = 0;
+=======
+	const struct hash_netport4 *h = set->data;
+	ipset_adtfn adtfn = set->variant->adt[adt];
+	struct hash_netport4_elem e = { .cidr = HOST_MASK - 1 };
+	struct ip_set_ext ext = IP_SET_INIT_UEXT(set);
+	u32 port, port_to, p = 0, ip = 0, ip_to = 0, ipn;
+	u64 n = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	bool with_ports = false;
 	u8 cidr;
 	int ret;
@@ -235,6 +244,17 @@ hash_netport4_uadt(struct ip_set *set, struct nlattr *tb[],
 	} else {
 		ip_set_mask_from_to(ip, ip_to, e.cidr + 1);
 	}
+<<<<<<< HEAD
+=======
+	ipn = ip;
+	do {
+		ipn = ip_set_range_to_cidr(ipn, ip_to, &cidr);
+		n++;
+	} while (ipn++ < ip_to);
+
+	if (n*(port_to - port + 1) > IPSET_MAX_RANGE)
+		return -ERANGE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (retried) {
 		ip = ntohl(h->next.ip);
@@ -246,12 +266,17 @@ hash_netport4_uadt(struct ip_set *set, struct nlattr *tb[],
 		e.ip = htonl(ip);
 		ip = ip_set_range_to_cidr(ip, ip_to, &cidr);
 		e.cidr = cidr - 1;
+<<<<<<< HEAD
 		for (; p <= port_to; p++, i++) {
 			e.port = htons(p);
 			if (i > IPSET_MAX_RANGE) {
 				hash_netport4_data_next(&h->next, &e);
 				return -ERANGE;
 			}
+=======
+		for (; p <= port_to; p++) {
+			e.port = htons(p);
+>>>>>>> b7ba80a49124 (Commit)
 			ret = adtfn(set, &e, &ext, &ext, flags);
 			if (ret && !ip_set_eexist(ret, flags))
 				return ret;

@@ -166,7 +166,10 @@ static const struct of_device_id sdam_match_table[] = {
 	{ .compatible = "qcom,spmi-sdam" },
 	{},
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(of, sdam_match_table);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_driver sdam_driver = {
 	.driver = {
@@ -175,7 +178,22 @@ static struct platform_driver sdam_driver = {
 	},
 	.probe		= sdam_probe,
 };
+<<<<<<< HEAD
 module_platform_driver(sdam_driver);
+=======
+
+static int __init sdam_init(void)
+{
+	return platform_driver_register(&sdam_driver);
+}
+subsys_initcall(sdam_init);
+
+static void __exit sdam_exit(void)
+{
+	return platform_driver_unregister(&sdam_driver);
+}
+module_exit(sdam_exit);
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_DESCRIPTION("QCOM SPMI SDAM driver");
 MODULE_LICENSE("GPL v2");

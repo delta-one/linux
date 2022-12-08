@@ -110,7 +110,11 @@ static int pm860x_onkey_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int pm860x_onkey_suspend(struct device *dev)
+=======
+static int __maybe_unused pm860x_onkey_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *pdev = to_platform_device(dev);
 	struct pm860x_chip *chip = dev_get_drvdata(pdev->dev.parent);
@@ -119,7 +123,11 @@ static int pm860x_onkey_suspend(struct device *dev)
 		chip->wakeup_flag |= 1 << PM8607_IRQ_ONKEY;
 	return 0;
 }
+<<<<<<< HEAD
 static int pm860x_onkey_resume(struct device *dev)
+=======
+static int __maybe_unused pm860x_onkey_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *pdev = to_platform_device(dev);
 	struct pm860x_chip *chip = dev_get_drvdata(pdev->dev.parent);
@@ -129,13 +137,21 @@ static int pm860x_onkey_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(pm860x_onkey_pm_ops,
 				pm860x_onkey_suspend, pm860x_onkey_resume);
+=======
+static SIMPLE_DEV_PM_OPS(pm860x_onkey_pm_ops, pm860x_onkey_suspend, pm860x_onkey_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_driver pm860x_onkey_driver = {
 	.driver		= {
 		.name	= "88pm860x-onkey",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&pm860x_onkey_pm_ops),
+=======
+		.pm	= &pm860x_onkey_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe		= pm860x_onkey_probe,
 };

@@ -185,7 +185,11 @@ struct tun_struct {
 	struct net_device	*dev;
 	netdev_features_t	set_features;
 #define TUN_USER_FEATURES (NETIF_F_HW_CSUM|NETIF_F_TSO_ECN|NETIF_F_TSO| \
+<<<<<<< HEAD
 			  NETIF_F_TSO6 | NETIF_F_GSO_UDP_L4)
+=======
+			  NETIF_F_TSO6)
+>>>>>>> b7ba80a49124 (Commit)
 
 	int			align;
 	int			vnet_hdr_sz;
@@ -686,6 +690,10 @@ static void __tun_detach(struct tun_file *tfile, bool clean)
 		if (tun)
 			xdp_rxq_info_unreg(&tfile->xdp_rxq);
 		ptr_ring_cleanup(&tfile->tx_ring, tun_ptr_free);
+<<<<<<< HEAD
+=======
+		sock_put(&tfile->sk);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -701,9 +709,12 @@ static void tun_detach(struct tun_file *tfile, bool clean)
 	if (dev)
 		netdev_state_change(dev);
 	rtnl_unlock();
+<<<<<<< HEAD
 
 	if (clean)
 		sock_put(&tfile->sk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void tun_detach_all(struct net_device *dev)
@@ -1401,11 +1412,14 @@ static void tun_net_initialize(struct net_device *dev)
 
 		eth_hw_addr_random(dev);
 
+<<<<<<< HEAD
 		/* Currently tun does not support XDP, only tap does. */
 		dev->xdp_features = NETDEV_XDP_ACT_BASIC |
 				    NETDEV_XDP_ACT_REDIRECT |
 				    NETDEV_XDP_ACT_NDO_XMIT;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -1466,8 +1480,12 @@ static struct sk_buff *tun_napi_alloc_frags(struct tun_file *tfile,
 	int err;
 	int i;
 
+<<<<<<< HEAD
 	if (it->nr_segs > MAX_SKB_FRAGS + 1 ||
 	    len > (ETH_MAX_MTU - NET_SKB_PAD - NET_IP_ALIGN))
+=======
+	if (it->nr_segs > MAX_SKB_FRAGS + 1)
+>>>>>>> b7ba80a49124 (Commit)
 		return ERR_PTR(-EMSGSIZE);
 
 	local_bh_disable();
@@ -1753,7 +1771,11 @@ static ssize_t tun_get_user(struct tun_struct *tun, struct tun_file *tfile,
 	u32 rxhash = 0;
 	int skb_xdp = 1;
 	bool frags = tun_napi_frags_enabled(tfile);
+<<<<<<< HEAD
 	enum skb_drop_reason drop_reason = SKB_DROP_REASON_NOT_SPECIFIED;
+=======
+	enum skb_drop_reason drop_reason;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!(tun->flags & IFF_NO_PI)) {
 		if (len < sizeof(pi))
@@ -1814,9 +1836,16 @@ static ssize_t tun_get_user(struct tun_struct *tun, struct tun_file *tfile,
 		 * skb was created with generic XDP routine.
 		 */
 		skb = tun_build_skb(tun, tfile, from, &gso, len, &skb_xdp);
+<<<<<<< HEAD
 		err = PTR_ERR_OR_ZERO(skb);
 		if (err)
 			goto drop;
+=======
+		if (IS_ERR(skb)) {
+			dev_core_stats_rx_dropped_inc(tun->dev);
+			return PTR_ERR(skb);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		if (!skb)
 			return total_len;
 	} else {
@@ -1841,9 +1870,19 @@ static ssize_t tun_get_user(struct tun_struct *tun, struct tun_file *tfile,
 					    noblock);
 		}
 
+<<<<<<< HEAD
 		err = PTR_ERR_OR_ZERO(skb);
 		if (err)
 			goto drop;
+=======
+		if (IS_ERR(skb)) {
+			if (PTR_ERR(skb) != -EAGAIN)
+				dev_core_stats_rx_dropped_inc(tun->dev);
+			if (frags)
+				mutex_unlock(&tfile->napi_mutex);
+			return PTR_ERR(skb);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (zerocopy)
 			err = zerocopy_sg_from_iter(skb, from);
@@ -1853,14 +1892,36 @@ static ssize_t tun_get_user(struct tun_struct *tun, struct tun_file *tfile,
 		if (err) {
 			err = -EFAULT;
 			drop_reason = SKB_DROP_REASON_SKB_UCOPY_FAULT;
+<<<<<<< HEAD
 			goto drop;
+=======
+drop:
+			dev_core_stats_rx_dropped_inc(tun->dev);
+			kfree_skb_reason(skb, drop_reason);
+			if (frags) {
+				tfile->napi.skb = NULL;
+				mutex_unlock(&tfile->napi_mutex);
+			}
+
+			return err;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
 	if (virtio_net_hdr_to_skb(skb, &gso, tun_is_little_endian(tun))) {
 		atomic_long_inc(&tun->rx_frame_errors);
+<<<<<<< HEAD
 		err = -EINVAL;
 		goto free_skb;
+=======
+		kfree_skb(skb);
+		if (frags) {
+			tfile->napi.skb = NULL;
+			mutex_unlock(&tfile->napi_mutex);
+		}
+
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	switch (tun->flags & TUN_TYPE_MASK) {
@@ -1876,8 +1937,14 @@ static ssize_t tun_get_user(struct tun_struct *tun, struct tun_file *tfile,
 				pi.proto = htons(ETH_P_IPV6);
 				break;
 			default:
+<<<<<<< HEAD
 				err = -EINVAL;
 				goto drop;
+=======
+				dev_core_stats_rx_dropped_inc(tun->dev);
+				kfree_skb(skb);
+				return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 
@@ -1919,7 +1986,15 @@ static ssize_t tun_get_user(struct tun_struct *tun, struct tun_file *tfile,
 			if (ret != XDP_PASS) {
 				rcu_read_unlock();
 				local_bh_enable();
+<<<<<<< HEAD
 				goto unlock_frags;
+=======
+				if (frags) {
+					tfile->napi.skb = NULL;
+					mutex_unlock(&tfile->napi_mutex);
+				}
+				return total_len;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 		rcu_read_unlock();
@@ -1951,6 +2026,7 @@ static ssize_t tun_get_user(struct tun_struct *tun, struct tun_file *tfile,
 					  skb_headlen(skb));
 
 		if (unlikely(headlen > skb_headlen(skb))) {
+<<<<<<< HEAD
 			WARN_ON_ONCE(1);
 			err = -ENOMEM;
 			dev_core_stats_rx_dropped_inc(tun->dev);
@@ -1970,6 +2046,19 @@ napi_busy:
 			err = -EBUSY;
 			goto napi_busy;
 		}
+=======
+			dev_core_stats_rx_dropped_inc(tun->dev);
+			napi_free_frags(&tfile->napi);
+			rcu_read_unlock();
+			mutex_unlock(&tfile->napi_mutex);
+			WARN_ON(1);
+			return -ENOMEM;
+		}
+
+		local_bh_disable();
+		napi_gro_frags(&tfile->napi);
+		local_bh_enable();
+>>>>>>> b7ba80a49124 (Commit)
 		mutex_unlock(&tfile->napi_mutex);
 	} else if (tfile->napi_enabled) {
 		struct sk_buff_head *queue = &tfile->sk.sk_write_queue;
@@ -1999,6 +2088,7 @@ napi_busy:
 		tun_flow_update(tun, rxhash, tfile);
 
 	return total_len;
+<<<<<<< HEAD
 
 drop:
 	if (err != -EAGAIN)
@@ -2015,6 +2105,8 @@ unlock_frags:
 	}
 
 	return err ?: total_len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t tun_chr_write_iter(struct kiocb *iocb, struct iov_iter *from)
@@ -2673,7 +2765,11 @@ static ssize_t tun_flags_show(struct device *dev, struct device_attribute *attr,
 			      char *buf)
 {
 	struct tun_struct *tun = netdev_priv(to_net_dev(dev));
+<<<<<<< HEAD
 	return sysfs_emit(buf, "0x%x\n", tun_flags(tun));
+=======
+	return sprintf(buf, "0x%x\n", tun_flags(tun));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t owner_show(struct device *dev, struct device_attribute *attr,
@@ -2681,9 +2777,15 @@ static ssize_t owner_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tun_struct *tun = netdev_priv(to_net_dev(dev));
 	return uid_valid(tun->owner)?
+<<<<<<< HEAD
 		sysfs_emit(buf, "%u\n",
 			   from_kuid_munged(current_user_ns(), tun->owner)) :
 		sysfs_emit(buf, "-1\n");
+=======
+		sprintf(buf, "%u\n",
+			from_kuid_munged(current_user_ns(), tun->owner)):
+		sprintf(buf, "-1\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t group_show(struct device *dev, struct device_attribute *attr,
@@ -2691,9 +2793,15 @@ static ssize_t group_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tun_struct *tun = netdev_priv(to_net_dev(dev));
 	return gid_valid(tun->group) ?
+<<<<<<< HEAD
 		sysfs_emit(buf, "%u\n",
 			   from_kgid_munged(current_user_ns(), tun->group)) :
 		sysfs_emit(buf, "-1\n");
+=======
+		sprintf(buf, "%u\n",
+			from_kgid_munged(current_user_ns(), tun->group)):
+		sprintf(buf, "-1\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR_RO(tun_flags);
@@ -2837,10 +2945,14 @@ static int tun_set_iff(struct net *net, struct file *file, struct ifreq *ifr)
 		rcu_assign_pointer(tfile->tun, tun);
 	}
 
+<<<<<<< HEAD
 	if (ifr->ifr_flags & IFF_NO_CARRIER)
 		netif_carrier_off(tun->dev);
 	else
 		netif_carrier_on(tun->dev);
+=======
+	netif_carrier_on(tun->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Make sure persistent devices do not get stuck in
 	 * xoff state.
@@ -2883,12 +2995,15 @@ static int set_offload(struct tun_struct *tun, unsigned long arg)
 		}
 
 		arg &= ~TUN_F_UFO;
+<<<<<<< HEAD
 
 		/* TODO: for now USO4 and USO6 should work simultaneously */
 		if (arg & TUN_F_USO4 && arg & TUN_F_USO6) {
 			features |= NETIF_F_GSO_UDP_L4;
 			arg &= ~(TUN_F_USO4 | TUN_F_USO6);
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* This gives the user a way to test for new features in future by
@@ -3074,8 +3189,13 @@ static long __tun_chr_ioctl(struct file *file, unsigned int cmd,
 		 * This is needed because we never checked for invalid flags on
 		 * TUNSETIFF.
 		 */
+<<<<<<< HEAD
 		return put_user(IFF_TUN | IFF_TAP | IFF_NO_CARRIER |
 				TUN_FEATURES, (unsigned int __user*)argp);
+=======
+		return put_user(IFF_TUN | IFF_TAP | TUN_FEATURES,
+				(unsigned int __user*)argp);
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (cmd == TUNSETQUEUE) {
 		return tun_set_queue(file, &ifr);
 	} else if (cmd == SIOCGSKNS) {
@@ -3453,7 +3573,11 @@ static int tun_chr_open(struct inode *inode, struct file * file)
 	tfile->socket.file = file;
 	tfile->socket.ops = &tun_socket_ops;
 
+<<<<<<< HEAD
 	sock_init_data_uid(&tfile->socket, &tfile->sk, inode->i_uid);
+=======
+	sock_init_data(&tfile->socket, &tfile->sk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	tfile->sk.sk_write_space = tun_sock_write_space;
 	tfile->sk.sk_sndbuf = INT_MAX;
@@ -3463,8 +3587,11 @@ static int tun_chr_open(struct inode *inode, struct file * file)
 
 	sock_set_flag(&tfile->sk, SOCK_ZEROCOPY);
 
+<<<<<<< HEAD
 	/* tun groks IOCB_NOWAIT just fine, mark it as such */
 	file->f_mode |= FMODE_NOWAIT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -3531,7 +3658,11 @@ static void tun_default_link_ksettings(struct net_device *dev,
 {
 	ethtool_link_ksettings_zero_link_mode(cmd, supported);
 	ethtool_link_ksettings_zero_link_mode(cmd, advertising);
+<<<<<<< HEAD
 	cmd->base.speed		= SPEED_10000;
+=======
+	cmd->base.speed		= SPEED_10;
+>>>>>>> b7ba80a49124 (Commit)
 	cmd->base.duplex	= DUPLEX_FULL;
 	cmd->base.port		= PORT_TP;
 	cmd->base.phy_address	= 0;

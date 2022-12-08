@@ -203,7 +203,11 @@ unsigned long __head __startup_64(unsigned long physaddr,
 	load_delta = physaddr - (unsigned long)(_text - __START_KERNEL_map);
 
 	/* Is the address not 2M aligned? */
+<<<<<<< HEAD
 	if (load_delta & ~PMD_MASK)
+=======
+	if (load_delta & ~PMD_PAGE_MASK)
+>>>>>>> b7ba80a49124 (Commit)
 		for (;;);
 
 	/* Include the SME encryption mask in the fixup value */

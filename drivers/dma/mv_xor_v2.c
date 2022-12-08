@@ -714,6 +714,10 @@ static int mv_xor_v2_resume(struct platform_device *dev)
 static int mv_xor_v2_probe(struct platform_device *pdev)
 {
 	struct mv_xor_v2_device *xor_dev;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	int i, ret = 0;
 	struct dma_device *dma_dev;
 	struct mv_xor_v2_sw_desc *sw_desc;
@@ -725,11 +729,21 @@ static int mv_xor_v2_probe(struct platform_device *pdev)
 	if (!xor_dev)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	xor_dev->dma_base = devm_platform_ioremap_resource(pdev, 0);
 	if (IS_ERR(xor_dev->dma_base))
 		return PTR_ERR(xor_dev->dma_base);
 
 	xor_dev->glob_base = devm_platform_ioremap_resource(pdev, 1);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	xor_dev->dma_base = devm_ioremap_resource(&pdev->dev, res);
+	if (IS_ERR(xor_dev->dma_base))
+		return PTR_ERR(xor_dev->dma_base);
+
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+	xor_dev->glob_base = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(xor_dev->glob_base))
 		return PTR_ERR(xor_dev->glob_base);
 
@@ -890,7 +904,10 @@ static int mv_xor_v2_remove(struct platform_device *pdev)
 	tasklet_kill(&xor_dev->irq_tasklet);
 
 	clk_disable_unprepare(xor_dev->clk);
+<<<<<<< HEAD
 	clk_disable_unprepare(xor_dev->reg_clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -917,3 +934,7 @@ static struct platform_driver mv_xor_v2_driver = {
 module_platform_driver(mv_xor_v2_driver);
 
 MODULE_DESCRIPTION("DMA engine driver for Marvell's Version 2 of XOR engine");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

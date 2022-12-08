@@ -927,9 +927,15 @@ static int pcmcia_bus_match(struct device *dev, struct device_driver *drv)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int pcmcia_bus_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct pcmcia_device *p_dev;
+=======
+static int pcmcia_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct pcmcia_device *p_dev;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 	u32 hash[4] = { 0, 0, 0, 0};
 

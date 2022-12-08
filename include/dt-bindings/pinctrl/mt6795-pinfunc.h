@@ -4,8 +4,13 @@
  * Author: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
  */
 
+<<<<<<< HEAD
 #ifndef __DTS_MT6795_PINFUNC_H
 #define __DTS_MT6795_PINFUNC_H
+=======
+#ifndef __DTS_MT8173_PINFUNC_H
+#define __DTS_MT8173_PINFUNC_H
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <dt-bindings/pinctrl/mt65xx.h>
 

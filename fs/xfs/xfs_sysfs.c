@@ -69,7 +69,11 @@ static struct attribute *xfs_mp_attrs[] = {
 };
 ATTRIBUTE_GROUPS(xfs_mp);
 
+<<<<<<< HEAD
 const struct kobj_type xfs_mp_ktype = {
+=======
+struct kobj_type xfs_mp_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = xfs_sysfs_release,
 	.sysfs_ops = &xfs_sysfs_ops,
 	.default_groups = xfs_mp_groups,
@@ -266,7 +270,11 @@ static struct attribute *xfs_dbg_attrs[] = {
 };
 ATTRIBUTE_GROUPS(xfs_dbg);
 
+<<<<<<< HEAD
 const struct kobj_type xfs_dbg_ktype = {
+=======
+struct kobj_type xfs_dbg_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = xfs_sysfs_release,
 	.sysfs_ops = &xfs_sysfs_ops,
 	.default_groups = xfs_dbg_groups,
@@ -324,7 +332,11 @@ static struct attribute *xfs_stats_attrs[] = {
 };
 ATTRIBUTE_GROUPS(xfs_stats);
 
+<<<<<<< HEAD
 const struct kobj_type xfs_stats_ktype = {
+=======
+struct kobj_type xfs_stats_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = xfs_sysfs_release,
 	.sysfs_ops = &xfs_sysfs_ops,
 	.default_groups = xfs_stats_groups,
@@ -410,7 +422,11 @@ static struct attribute *xfs_log_attrs[] = {
 };
 ATTRIBUTE_GROUPS(xfs_log);
 
+<<<<<<< HEAD
 const struct kobj_type xfs_log_ktype = {
+=======
+struct kobj_type xfs_log_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = xfs_sysfs_release,
 	.sysfs_ops = &xfs_sysfs_ops,
 	.default_groups = xfs_log_groups,
@@ -564,13 +580,21 @@ static struct attribute *xfs_error_attrs[] = {
 };
 ATTRIBUTE_GROUPS(xfs_error);
 
+<<<<<<< HEAD
 static const struct kobj_type xfs_error_cfg_ktype = {
+=======
+static struct kobj_type xfs_error_cfg_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = xfs_sysfs_release,
 	.sysfs_ops = &xfs_sysfs_ops,
 	.default_groups = xfs_error_groups,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type xfs_error_ktype = {
+=======
+static struct kobj_type xfs_error_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = xfs_sysfs_release,
 	.sysfs_ops = &xfs_sysfs_ops,
 };

@@ -245,11 +245,19 @@ int template_desc_init_fields(const char *template_fmt,
 	}
 
 	if (fields && num_fields) {
+<<<<<<< HEAD
 		*fields = kmalloc_array(i, sizeof(**fields), GFP_KERNEL);
 		if (*fields == NULL)
 			return -ENOMEM;
 
 		memcpy(*fields, found_fields, i * sizeof(**fields));
+=======
+		*fields = kmalloc_array(i, sizeof(*fields), GFP_KERNEL);
+		if (*fields == NULL)
+			return -ENOMEM;
+
+		memcpy(*fields, found_fields, i * sizeof(*fields));
+>>>>>>> b7ba80a49124 (Commit)
 		*num_fields = i;
 	}
 
@@ -340,11 +348,16 @@ static struct ima_template_desc *restore_template_fmt(char *template_name)
 
 	template_desc->name = "";
 	template_desc->fmt = kstrdup(template_name, GFP_KERNEL);
+<<<<<<< HEAD
 	if (!template_desc->fmt) {
 		kfree(template_desc);
 		template_desc = NULL;
 		goto out;
 	}
+=======
+	if (!template_desc->fmt)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock(&template_list);
 	list_add_tail_rcu(&template_desc->list, &defined_templates);

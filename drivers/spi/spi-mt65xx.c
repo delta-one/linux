@@ -421,7 +421,11 @@ static int mtk_spi_hw_init(struct spi_master *master,
 
 	/* pad select */
 	if (mdata->dev_comp->need_pad_sel)
+<<<<<<< HEAD
 		writel(mdata->pad_sel[spi_get_chipselect(spi, 0)],
+=======
+		writel(mdata->pad_sel[spi->chip_select],
+>>>>>>> b7ba80a49124 (Commit)
 		       mdata->base + SPI_PAD_SEL_REG);
 
 	/* tick delay */
@@ -551,6 +555,7 @@ static void mtk_spi_enable_transfer(struct spi_master *master)
 	writel(cmd, mdata->base + SPI_CMD_REG);
 }
 
+<<<<<<< HEAD
 static int mtk_spi_get_mult_delta(struct mtk_spi *mdata, u32 xfer_len)
 {
 	u32 mult_delta = 0;
@@ -562,6 +567,16 @@ static int mtk_spi_get_mult_delta(struct mtk_spi *mdata, u32 xfer_len)
 		if (xfer_len > MTK_SPI_PACKET_SIZE)
 			mult_delta = xfer_len % MTK_SPI_PACKET_SIZE;
 	}
+=======
+static int mtk_spi_get_mult_delta(u32 xfer_len)
+{
+	u32 mult_delta;
+
+	if (xfer_len > MTK_SPI_PACKET_SIZE)
+		mult_delta = xfer_len % MTK_SPI_PACKET_SIZE;
+	else
+		mult_delta = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return mult_delta;
 }
@@ -573,22 +588,38 @@ static void mtk_spi_update_mdata_len(struct spi_master *master)
 
 	if (mdata->tx_sgl_len && mdata->rx_sgl_len) {
 		if (mdata->tx_sgl_len > mdata->rx_sgl_len) {
+<<<<<<< HEAD
 			mult_delta = mtk_spi_get_mult_delta(mdata, mdata->rx_sgl_len);
+=======
+			mult_delta = mtk_spi_get_mult_delta(mdata->rx_sgl_len);
+>>>>>>> b7ba80a49124 (Commit)
 			mdata->xfer_len = mdata->rx_sgl_len - mult_delta;
 			mdata->rx_sgl_len = mult_delta;
 			mdata->tx_sgl_len -= mdata->xfer_len;
 		} else {
+<<<<<<< HEAD
 			mult_delta = mtk_spi_get_mult_delta(mdata, mdata->tx_sgl_len);
+=======
+			mult_delta = mtk_spi_get_mult_delta(mdata->tx_sgl_len);
+>>>>>>> b7ba80a49124 (Commit)
 			mdata->xfer_len = mdata->tx_sgl_len - mult_delta;
 			mdata->tx_sgl_len = mult_delta;
 			mdata->rx_sgl_len -= mdata->xfer_len;
 		}
 	} else if (mdata->tx_sgl_len) {
+<<<<<<< HEAD
 		mult_delta = mtk_spi_get_mult_delta(mdata, mdata->tx_sgl_len);
 		mdata->xfer_len = mdata->tx_sgl_len - mult_delta;
 		mdata->tx_sgl_len = mult_delta;
 	} else if (mdata->rx_sgl_len) {
 		mult_delta = mtk_spi_get_mult_delta(mdata, mdata->rx_sgl_len);
+=======
+		mult_delta = mtk_spi_get_mult_delta(mdata->tx_sgl_len);
+		mdata->xfer_len = mdata->tx_sgl_len - mult_delta;
+		mdata->tx_sgl_len = mult_delta;
+	} else if (mdata->rx_sgl_len) {
+		mult_delta = mtk_spi_get_mult_delta(mdata->rx_sgl_len);
+>>>>>>> b7ba80a49124 (Commit)
 		mdata->xfer_len = mdata->rx_sgl_len - mult_delta;
 		mdata->rx_sgl_len = mult_delta;
 	}
@@ -735,9 +766,15 @@ static int mtk_spi_setup(struct spi_device *spi)
 	if (!spi->controller_data)
 		spi->controller_data = (void *)&mtk_default_chip_info;
 
+<<<<<<< HEAD
 	if (mdata->dev_comp->need_pad_sel && spi_get_csgpiod(spi, 0))
 		/* CS de-asserted, gpiolib will handle inversion */
 		gpiod_direction_output(spi_get_csgpiod(spi, 0), 0);
+=======
+	if (mdata->dev_comp->need_pad_sel && spi->cs_gpiod)
+		/* CS de-asserted, gpiolib will handle inversion */
+		gpiod_direction_output(spi->cs_gpiod, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1187,10 +1224,17 @@ static int mtk_spi_probe(struct platform_device *pdev)
 	if (!dev->dma_mask)
 		dev->dma_mask = &dev->coherent_dma_mask;
 
+<<<<<<< HEAD
 	if (mdata->dev_comp->ipm_design)
 		dma_set_max_seg_size(dev, SZ_16M);
 	else
 		dma_set_max_seg_size(dev, SZ_256K);
+=======
+	ret = devm_request_irq(dev, irq, mtk_spi_interrupt,
+			       IRQF_TRIGGER_NONE, dev_name(dev), master);
+	if (ret)
+		return dev_err_probe(dev, ret, "failed to register irq\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	mdata->parent_clk = devm_clk_get(dev, "parent-clk");
 	if (IS_ERR(mdata->parent_clk))
@@ -1253,11 +1297,14 @@ static int mtk_spi_probe(struct platform_device *pdev)
 		dev_notice(dev, "SPI dma_set_mask(%d) failed, ret:%d\n",
 			   addr_bits, ret);
 
+<<<<<<< HEAD
 	ret = devm_request_irq(dev, irq, mtk_spi_interrupt,
 			       IRQF_TRIGGER_NONE, dev_name(dev), master);
 	if (ret)
 		return dev_err_probe(dev, ret, "failed to register irq\n");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_enable(dev);
 
 	ret = devm_spi_register_master(dev, master);
@@ -1273,11 +1320,16 @@ static int mtk_spi_remove(struct platform_device *pdev)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct mtk_spi *mdata = spi_master_get_devdata(master);
+<<<<<<< HEAD
 	int ret;
 
 	ret = pm_runtime_resume_and_get(&pdev->dev);
 	if (ret < 0)
 		return ret;
+=======
+
+	pm_runtime_disable(&pdev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mtk_spi_reset(mdata);
 
@@ -1286,9 +1338,12 @@ static int mtk_spi_remove(struct platform_device *pdev)
 		clk_unprepare(mdata->spi_hclk);
 	}
 
+<<<<<<< HEAD
 	pm_runtime_put_noidle(&pdev->dev);
 	pm_runtime_disable(&pdev->dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

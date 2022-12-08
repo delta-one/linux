@@ -30,8 +30,13 @@
 
 static void recv_tasklet(struct tasklet_struct *t);
 
+<<<<<<< HEAD
 int r8712_init_recv_priv(struct recv_priv *precvpriv,
 			 struct _adapter *padapter)
+=======
+void r8712_init_recv_priv(struct recv_priv *precvpriv,
+			  struct _adapter *padapter)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 	struct recv_buf *precvbuf;
@@ -44,7 +49,11 @@ int r8712_init_recv_priv(struct recv_priv *precvpriv,
 	precvpriv->pallocated_recv_buf =
 		kzalloc(NR_RECVBUFF * sizeof(struct recv_buf) + 4, GFP_ATOMIC);
 	if (!precvpriv->pallocated_recv_buf)
+<<<<<<< HEAD
 		return -ENOMEM;
+=======
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 	precvpriv->precv_buf = precvpriv->pallocated_recv_buf + 4 -
 			      ((addr_t)(precvpriv->pallocated_recv_buf) & 3);
 	precvbuf = (struct recv_buf *)precvpriv->precv_buf;
@@ -75,7 +84,10 @@ int r8712_init_recv_priv(struct recv_priv *precvpriv,
 		}
 		pskb = NULL;
 	}
+<<<<<<< HEAD
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void r8712_free_recv_priv(struct recv_priv *precvpriv)

@@ -306,12 +306,24 @@ static int spitz_probe(struct platform_device *pdev)
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static int spitz_remove(struct platform_device *pdev)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver spitz_driver = {
 	.driver		= {
 		.name	= "spitz-audio",
 		.pm     = &snd_soc_pm_ops,
 	},
 	.probe		= spitz_probe,
+<<<<<<< HEAD
+=======
+	.remove		= spitz_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(spitz_driver);

@@ -19,12 +19,15 @@
 
 #include "util.h"
 
+<<<<<<< HEAD
 /*
  * The work queue is used to avoid the cost of synchronize_rcu in kern_unmount.
  */
 static void free_ipc(struct work_struct *unused);
 static DECLARE_WORK(free_ipc_work, free_ipc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct ucounts *inc_ipc_namespaces(struct user_namespace *ns)
 {
 	return inc_ucount(ns, current_euid(), UCOUNT_IPC_NAMESPACES);
@@ -43,6 +46,7 @@ static struct ipc_namespace *create_ipc_ns(struct user_namespace *user_ns,
 	int err;
 
 	err = -ENOSPC;
+<<<<<<< HEAD
  again:
 	ucounts = inc_ipc_namespaces(user_ns);
 	if (!ucounts) {
@@ -55,6 +59,11 @@ static struct ipc_namespace *create_ipc_ns(struct user_namespace *user_ns,
 			goto again;
 		goto fail;
 	}
+=======
+	ucounts = inc_ipc_namespaces(user_ns);
+	if (!ucounts)
+		goto fail;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = -ENOMEM;
 	ns = kzalloc(sizeof(struct ipc_namespace), GFP_KERNEL_ACCOUNT);
@@ -145,11 +154,18 @@ void free_ipcs(struct ipc_namespace *ns, struct ipc_ids *ids,
 
 static void free_ipc_ns(struct ipc_namespace *ns)
 {
+<<<<<<< HEAD
 	/*
 	 * Caller needs to wait for an RCU grace period to have passed
 	 * after making the mount point inaccessible to new accesses.
 	 */
 	mntput(ns->mq_mnt);
+=======
+	/* mq_put_mnt() waits for a grace period as kern_unmount()
+	 * uses synchronize_rcu().
+	 */
+	mq_put_mnt(ns);
+>>>>>>> b7ba80a49124 (Commit)
 	sem_exit_ns(ns);
 	msg_exit_ns(ns);
 	shm_exit_ns(ns);
@@ -170,16 +186,27 @@ static void free_ipc(struct work_struct *unused)
 	struct ipc_namespace *n, *t;
 
 	llist_for_each_entry_safe(n, t, node, mnt_llist)
+<<<<<<< HEAD
 		mnt_make_shortterm(n->mq_mnt);
 
 	/* Wait for any last users to have gone away. */
 	synchronize_rcu();
 
 	llist_for_each_entry_safe(n, t, node, mnt_llist)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		free_ipc_ns(n);
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * The work queue is used to avoid the cost of synchronize_rcu in kern_unmount.
+ */
+static DECLARE_WORK(free_ipc_work, free_ipc);
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * put_ipc_ns - drop a reference to an ipc namespace.
  * @ns: the namespace to put
  *

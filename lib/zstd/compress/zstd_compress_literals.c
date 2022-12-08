@@ -73,8 +73,12 @@ size_t ZSTD_compressLiterals (ZSTD_hufCTables_t const* prevHuf,
                               void* dst, size_t dstCapacity,
                         const void* src, size_t srcSize,
                               void* entropyWorkspace, size_t entropyWorkspaceSize,
+<<<<<<< HEAD
                         const int bmi2,
                         unsigned suspectUncompressible)
+=======
+                        const int bmi2)
+>>>>>>> b7ba80a49124 (Commit)
 {
     size_t const minGain = ZSTD_minGain(srcSize, strategy);
     size_t const lhSize = 3 + (srcSize >= 1 KB) + (srcSize >= 16 KB);
@@ -106,11 +110,19 @@ size_t ZSTD_compressLiterals (ZSTD_hufCTables_t const* prevHuf,
             HUF_compress1X_repeat(
                 ostart+lhSize, dstCapacity-lhSize, src, srcSize,
                 HUF_SYMBOLVALUE_MAX, HUF_TABLELOG_DEFAULT, entropyWorkspace, entropyWorkspaceSize,
+<<<<<<< HEAD
                 (HUF_CElt*)nextHuf->CTable, &repeat, preferRepeat, bmi2, suspectUncompressible) :
             HUF_compress4X_repeat(
                 ostart+lhSize, dstCapacity-lhSize, src, srcSize,
                 HUF_SYMBOLVALUE_MAX, HUF_TABLELOG_DEFAULT, entropyWorkspace, entropyWorkspaceSize,
                 (HUF_CElt*)nextHuf->CTable, &repeat, preferRepeat, bmi2, suspectUncompressible);
+=======
+                (HUF_CElt*)nextHuf->CTable, &repeat, preferRepeat, bmi2) :
+            HUF_compress4X_repeat(
+                ostart+lhSize, dstCapacity-lhSize, src, srcSize,
+                HUF_SYMBOLVALUE_MAX, HUF_TABLELOG_DEFAULT, entropyWorkspace, entropyWorkspaceSize,
+                (HUF_CElt*)nextHuf->CTable, &repeat, preferRepeat, bmi2);
+>>>>>>> b7ba80a49124 (Commit)
         if (repeat != HUF_repeat_none) {
             /* reused the existing table */
             DEBUGLOG(5, "Reusing previous huffman table");
@@ -118,7 +130,11 @@ size_t ZSTD_compressLiterals (ZSTD_hufCTables_t const* prevHuf,
         }
     }
 
+<<<<<<< HEAD
     if ((cLitSize==0) || (cLitSize >= srcSize - minGain) || ERR_isError(cLitSize)) {
+=======
+    if ((cLitSize==0) | (cLitSize >= srcSize - minGain) | ERR_isError(cLitSize)) {
+>>>>>>> b7ba80a49124 (Commit)
         ZSTD_memcpy(nextHuf, prevHuf, sizeof(*prevHuf));
         return ZSTD_noCompressLiterals(dst, dstCapacity, src, srcSize);
     }

@@ -73,8 +73,13 @@ static void sof_cache_debugfs(struct snd_sof_dev *sdev)
 static int sof_resume(struct device *dev, bool runtime_resume)
 {
 	struct snd_sof_dev *sdev = dev_get_drvdata(dev);
+<<<<<<< HEAD
 	const struct sof_ipc_pm_ops *pm_ops = sof_ipc_get_ops(sdev, pm);
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
+=======
+	const struct sof_ipc_pm_ops *pm_ops = sdev->ipc->ops->pm;
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 old_state = sdev->dsp_power_state.state;
 	int ret;
 
@@ -155,7 +160,11 @@ static int sof_resume(struct device *dev, bool runtime_resume)
 	}
 
 	/* restore pipelines */
+<<<<<<< HEAD
 	if (tplg_ops && tplg_ops->set_up_all_pipelines) {
+=======
+	if (tplg_ops->set_up_all_pipelines) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = tplg_ops->set_up_all_pipelines(sdev, false);
 		if (ret < 0) {
 			dev_err(sdev->dev, "Failed to restore pipeline after resume %d\n", ret);
@@ -179,10 +188,17 @@ static int sof_resume(struct device *dev, bool runtime_resume)
 static int sof_suspend(struct device *dev, bool runtime_suspend)
 {
 	struct snd_sof_dev *sdev = dev_get_drvdata(dev);
+<<<<<<< HEAD
 	const struct sof_ipc_pm_ops *pm_ops = sof_ipc_get_ops(sdev, pm);
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 	pm_message_t pm_state;
 	u32 target_state = snd_sof_dsp_power_target(sdev);
+=======
+	const struct sof_ipc_pm_ops *pm_ops = sdev->ipc->ops->pm;
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+	pm_message_t pm_state;
+	u32 target_state = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	/* do nothing if dsp suspend callback is not set */
@@ -192,9 +208,12 @@ static int sof_suspend(struct device *dev, bool runtime_suspend)
 	if (runtime_suspend && !sof_ops(sdev)->runtime_suspend)
 		return 0;
 
+<<<<<<< HEAD
 	if (tplg_ops && tplg_ops->tear_down_all_pipelines)
 		tplg_ops->tear_down_all_pipelines(sdev, false);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (sdev->fw_state != SOF_FW_BOOT_COMPLETE)
 		goto suspend;
 
@@ -209,6 +228,10 @@ static int sof_suspend(struct device *dev, bool runtime_suspend)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	target_state = snd_sof_dsp_power_target(sdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pm_state.event = target_state;
 
 	/* Skip to platform-specific suspend if DSP is entering D0 */
@@ -219,6 +242,12 @@ static int sof_suspend(struct device *dev, bool runtime_suspend)
 		goto suspend;
 	}
 
+<<<<<<< HEAD
+=======
+	if (tplg_ops->tear_down_all_pipelines)
+		tplg_ops->tear_down_all_pipelines(sdev, false);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* suspend DMA trace */
 	sof_fw_trace_suspend(sdev, pm_state);
 
@@ -276,7 +305,11 @@ suspend:
 
 int snd_sof_dsp_power_down_notify(struct snd_sof_dev *sdev)
 {
+<<<<<<< HEAD
 	const struct sof_ipc_pm_ops *pm_ops = sof_ipc_get_ops(sdev, pm);
+=======
+	const struct sof_ipc_pm_ops *pm_ops = sdev->ipc->ops->pm;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Notify DSP of upcoming power down */
 	if (sof_ops(sdev)->remove && pm_ops && pm_ops->ctx_save)

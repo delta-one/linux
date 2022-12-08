@@ -257,7 +257,12 @@ static void rfd77402_disable(void *client)
 	rfd77402_powerdown(client);
 }
 
+<<<<<<< HEAD
 static int rfd77402_probe(struct i2c_client *client)
+=======
+static int rfd77402_probe(struct i2c_client *client,
+			  const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rfd77402_data *data;
 	struct iio_dev *indio_dev;
@@ -318,7 +323,11 @@ static struct i2c_driver rfd77402_driver = {
 		.name   = RFD77402_DRV_NAME,
 		.pm     = pm_sleep_ptr(&rfd77402_pm_ops),
 	},
+<<<<<<< HEAD
 	.probe_new = rfd77402_probe,
+=======
+	.probe  = rfd77402_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = rfd77402_id,
 };
 

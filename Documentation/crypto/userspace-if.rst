@@ -131,9 +131,15 @@ from the kernel crypto API. If the buffer is too small for the message
 digest, the flag MSG_TRUNC is set by the kernel.
 
 In order to set a message digest key, the calling application must use
+<<<<<<< HEAD
 the setsockopt() option of ALG_SET_KEY or ALG_SET_KEY_BY_KEY_SERIAL. If the
 key is not set the HMAC operation is performed without the initial HMAC state
 change caused by the key.
+=======
+the setsockopt() option of ALG_SET_KEY. If the key is not set the HMAC
+operation is performed without the initial HMAC state change caused by
+the key.
+>>>>>>> b7ba80a49124 (Commit)
 
 Symmetric Cipher API
 --------------------
@@ -382,6 +388,7 @@ mentioned optname:
 
    -  the RNG cipher type to provide the seed
 
+<<<<<<< HEAD
 - ALG_SET_KEY_BY_KEY_SERIAL -- Setting the key via keyring key_serial_t.
    This operation behaves the same as ALG_SET_KEY. The decrypted
    data is copied from a keyring key, and uses that data as the
@@ -391,6 +398,8 @@ mentioned optname:
    permission set, otherwise -EPERM is returned. Supports key types: user,
    logon, encrypted, and trusted.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 -  ALG_SET_AEAD_AUTHSIZE -- Setting the authentication tag size for
    AEAD ciphers. For a encryption operation, the authentication tag of
    the given size will be generated. For a decryption operation, the

@@ -423,7 +423,12 @@ int drm_legacy_addmap_ioctl(struct drm_device *dev, void *data,
 	if (!(capable(CAP_SYS_ADMIN) || map->type == _DRM_AGP || map->type == _DRM_SHM))
 		return -EPERM;
 
+<<<<<<< HEAD
 	if (!drm_core_check_feature(dev, DRIVER_LEGACY))
+=======
+	if (!drm_core_check_feature(dev, DRIVER_KMS_LEGACY_CONTEXT) &&
+	    !drm_core_check_feature(dev, DRIVER_LEGACY))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOPNOTSUPP;
 
 	err = drm_addmap_core(dev, map->offset, map->size, map->type,
@@ -468,7 +473,12 @@ int drm_legacy_getmap_ioctl(struct drm_device *dev, void *data,
 	int idx;
 	int i;
 
+<<<<<<< HEAD
 	if (!drm_core_check_feature(dev, DRIVER_LEGACY))
+=======
+	if (!drm_core_check_feature(dev, DRIVER_KMS_LEGACY_CONTEXT) &&
+	    !drm_core_check_feature(dev, DRIVER_LEGACY))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOPNOTSUPP;
 
 	idx = map->offset;
@@ -568,7 +578,12 @@ EXPORT_SYMBOL(drm_legacy_rmmap_locked);
 
 void drm_legacy_rmmap(struct drm_device *dev, struct drm_local_map *map)
 {
+<<<<<<< HEAD
 	if (!drm_core_check_feature(dev, DRIVER_LEGACY))
+=======
+	if (!drm_core_check_feature(dev, DRIVER_KMS_LEGACY_CONTEXT) &&
+	    !drm_core_check_feature(dev, DRIVER_LEGACY))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	mutex_lock(&dev->struct_mutex);
@@ -625,7 +640,12 @@ int drm_legacy_rmmap_ioctl(struct drm_device *dev, void *data,
 	struct drm_map_list *r_list;
 	int ret;
 
+<<<<<<< HEAD
 	if (!drm_core_check_feature(dev, DRIVER_LEGACY))
+=======
+	if (!drm_core_check_feature(dev, DRIVER_KMS_LEGACY_CONTEXT) &&
+	    !drm_core_check_feature(dev, DRIVER_LEGACY))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOPNOTSUPP;
 
 	mutex_lock(&dev->struct_mutex);

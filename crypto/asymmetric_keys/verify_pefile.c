@@ -74,7 +74,11 @@ static int pefile_parse_binary(const void *pebuf, unsigned int pelen,
 		break;
 
 	default:
+<<<<<<< HEAD
 		pr_warn("Unknown PEOPT magic = %04hx\n", pe32->magic);
+=======
+		pr_debug("Unknown PEOPT magic = %04hx\n", pe32->magic);
+>>>>>>> b7ba80a49124 (Commit)
 		return -ELIBBAD;
 	}
 
@@ -95,7 +99,11 @@ static int pefile_parse_binary(const void *pebuf, unsigned int pelen,
 	ctx->certs_size = ddir->certs.size;
 
 	if (!ddir->certs.virtual_address || !ddir->certs.size) {
+<<<<<<< HEAD
 		pr_warn("Unsigned PE binary\n");
+=======
+		pr_debug("Unsigned PE binary\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODATA;
 	}
 
@@ -127,7 +135,11 @@ static int pefile_strip_sig_wrapper(const void *pebuf,
 	unsigned len;
 
 	if (ctx->sig_len < sizeof(wrapper)) {
+<<<<<<< HEAD
 		pr_warn("Signature wrapper too short\n");
+=======
+		pr_debug("Signature wrapper too short\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -ELIBBAD;
 	}
 
@@ -135,6 +147,7 @@ static int pefile_strip_sig_wrapper(const void *pebuf,
 	pr_debug("sig wrapper = { %x, %x, %x }\n",
 		 wrapper.length, wrapper.revision, wrapper.cert_type);
 
+<<<<<<< HEAD
 	/* sbsign rounds up the length of certificate table (in optional
 	 * header data directories) to 8 byte alignment.  However, the PE
 	 * specification states that while entries are 8-byte aligned, this is
@@ -152,6 +165,21 @@ static int pefile_strip_sig_wrapper(const void *pebuf,
 	}
 	if (wrapper.cert_type != WIN_CERT_TYPE_PKCS_SIGNED_DATA) {
 		pr_warn("Signature certificate type is not PKCS\n");
+=======
+	/* Both pesign and sbsign round up the length of certificate table
+	 * (in optional header data directories) to 8 byte alignment.
+	 */
+	if (round_up(wrapper.length, 8) != ctx->sig_len) {
+		pr_debug("Signature wrapper len wrong\n");
+		return -ELIBBAD;
+	}
+	if (wrapper.revision != WIN_CERT_REVISION_2_0) {
+		pr_debug("Signature is not revision 2.0\n");
+		return -ENOTSUPP;
+	}
+	if (wrapper.cert_type != WIN_CERT_TYPE_PKCS_SIGNED_DATA) {
+		pr_debug("Signature certificate type is not PKCS\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOTSUPP;
 	}
 
@@ -164,7 +192,11 @@ static int pefile_strip_sig_wrapper(const void *pebuf,
 	ctx->sig_offset += sizeof(wrapper);
 	ctx->sig_len -= sizeof(wrapper);
 	if (ctx->sig_len < 4) {
+<<<<<<< HEAD
 		pr_warn("Signature data missing\n");
+=======
+		pr_debug("Signature data missing\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EKEYREJECTED;
 	}
 
@@ -198,7 +230,11 @@ check_len:
 		return 0;
 	}
 not_pkcs7:
+<<<<<<< HEAD
 	pr_warn("Signature data not PKCS#7\n");
+=======
+	pr_debug("Signature data not PKCS#7\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return -ELIBBAD;
 }
 
@@ -341,8 +377,13 @@ static int pefile_digest_pe(const void *pebuf, unsigned int pelen,
 	digest_size = crypto_shash_digestsize(tfm);
 
 	if (digest_size != ctx->digest_len) {
+<<<<<<< HEAD
 		pr_warn("Digest size mismatch (%zx != %x)\n",
 			digest_size, ctx->digest_len);
+=======
+		pr_debug("Digest size mismatch (%zx != %x)\n",
+			 digest_size, ctx->digest_len);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EBADMSG;
 		goto error_no_desc;
 	}
@@ -373,7 +414,11 @@ static int pefile_digest_pe(const void *pebuf, unsigned int pelen,
 	 * PKCS#7 certificate.
 	 */
 	if (memcmp(digest, ctx->digest, ctx->digest_len) != 0) {
+<<<<<<< HEAD
 		pr_warn("Digest mismatch\n");
+=======
+		pr_debug("Digest mismatch\n");
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EKEYREJECTED;
 	} else {
 		pr_debug("The digests match!\n");

@@ -12,7 +12,10 @@
 #include <asm/special_insns.h>
 #include <asm/preempt.h>
 #include <asm/asm.h>
+<<<<<<< HEAD
 #include <asm/gsseg.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifndef CONFIG_X86_CMPXCHG64
 extern void cmpxchg8b_emu(void);

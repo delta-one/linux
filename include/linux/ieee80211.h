@@ -338,6 +338,7 @@ struct ieee80211_qos_hdr {
 	__le16 qos_ctrl;
 } __packed __aligned(2);
 
+<<<<<<< HEAD
 struct ieee80211_qos_hdr_4addr {
 	__le16 frame_control;
 	__le16 duration_id;
@@ -349,6 +350,8 @@ struct ieee80211_qos_hdr_4addr {
 	__le16 qos_ctrl;
 } __packed __aligned(2);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ieee80211_trigger {
 	__le16 frame_control;
 	__le16 duration;
@@ -1356,7 +1359,10 @@ struct ieee80211_mgmt {
 				} __packed wnm_timing_msr;
 			} u;
 		} __packed action;
+<<<<<<< HEAD
 		DECLARE_FLEX_ARRAY(u8, body); /* Generic frame body */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} u;
 } __packed __aligned(2);
 
@@ -4072,6 +4078,7 @@ struct ieee80211_he_6ghz_capa {
  * @hdr: the frame
  *
  * The qos ctrl bytes come after the frame_control, duration, seq_num
+<<<<<<< HEAD
  * and 3 or 4 addresses of length ETH_ALEN. Checks frame_control to choose
  * between struct ieee80211_qos_hdr_4addr and struct ieee80211_qos_hdr.
  */
@@ -4087,6 +4094,18 @@ static inline u8 *ieee80211_get_qos_ctl(struct ieee80211_hdr *hdr)
 		return (u8 *)&qos->addr4.qos_ctrl;
 	else
 		return (u8 *)&qos->addr3.qos_ctrl;
+=======
+ * and 3 or 4 addresses of length ETH_ALEN.
+ * 3 addr: 2 + 2 + 2 + 3*6 = 24
+ * 4 addr: 2 + 2 + 2 + 4*6 = 30
+ */
+static inline u8 *ieee80211_get_qos_ctl(struct ieee80211_hdr *hdr)
+{
+	if (ieee80211_has_a4(hdr->frame_control))
+		return (u8 *)hdr + 30;
+	else
+		return (u8 *)hdr + 24;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -4590,17 +4609,30 @@ static inline u8 ieee80211_mle_common_size(const u8 *data)
 
 	switch (u16_get_bits(control, IEEE80211_ML_CONTROL_TYPE)) {
 	case IEEE80211_ML_CONTROL_TYPE_BASIC:
+<<<<<<< HEAD
 	case IEEE80211_ML_CONTROL_TYPE_PREQ:
 	case IEEE80211_ML_CONTROL_TYPE_TDLS:
 		/*
 		 * The length is the first octet pointed by mle->variable so no
 		 * need to add anything
 		 */
+=======
+		common += sizeof(struct ieee80211_mle_basic_common_info);
+		break;
+	case IEEE80211_ML_CONTROL_TYPE_PREQ:
+		common += sizeof(struct ieee80211_mle_preq_common_info);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case IEEE80211_ML_CONTROL_TYPE_RECONF:
 		if (control & IEEE80211_MLC_RECONF_PRES_MLD_MAC_ADDR)
 			common += ETH_ALEN;
 		return common;
+<<<<<<< HEAD
+=======
+	case IEEE80211_ML_CONTROL_TYPE_TDLS:
+		common += sizeof(struct ieee80211_mle_tdls_common_info);
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	case IEEE80211_ML_CONTROL_TYPE_PRIO_ACCESS:
 		if (control & IEEE80211_MLC_PRIO_ACCESS_PRES_AP_MLD_MAC_ADDR)
 			common += ETH_ALEN;
@@ -4610,7 +4642,11 @@ static inline u8 ieee80211_mle_common_size(const u8 *data)
 		return 0;
 	}
 
+<<<<<<< HEAD
 	return sizeof(*mle) + common + mle->variable[0];
+=======
+	return common + mle->variable[0];
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -4618,7 +4654,11 @@ static inline u8 ieee80211_mle_common_size(const u8 *data)
  * @data: pointer to the element data
  * @len: length of the containing element
  */
+<<<<<<< HEAD
 static inline bool ieee80211_mle_size_ok(const u8 *data, size_t len)
+=======
+static inline bool ieee80211_mle_size_ok(const u8 *data, u8 len)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct ieee80211_multi_link_elem *mle = (const void *)data;
 	u8 fixed = sizeof(*mle);
@@ -4683,7 +4723,10 @@ static inline bool ieee80211_mle_size_ok(const u8 *data, size_t len)
 
 enum ieee80211_mle_subelems {
 	IEEE80211_MLE_SUBELEM_PER_STA_PROFILE		= 0,
+<<<<<<< HEAD
 	IEEE80211_MLE_SUBELEM_FRAGMENT		        = 254,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define IEEE80211_MLE_STA_CONTROL_LINK_ID			0x000f
@@ -4702,6 +4745,7 @@ struct ieee80211_mle_per_sta_profile {
 	u8 variable[];
 } __packed;
 
+<<<<<<< HEAD
 /**
  * ieee80211_mle_sta_prof_size_ok - validate multi-link element sta profile size
  * @data: pointer to the sub element data
@@ -4742,6 +4786,8 @@ static inline bool ieee80211_mle_sta_prof_size_ok(const u8 *data, size_t len)
 	       fixed + prof->sta_info_len <= len;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define for_each_mle_subelement(_elem, _data, _len)			\
 	if (ieee80211_mle_size_ok(_data, _len))				\
 		for_each_element(_elem,					\

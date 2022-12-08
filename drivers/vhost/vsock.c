@@ -51,7 +51,12 @@ struct vhost_vsock {
 	struct hlist_node hash;
 
 	struct vhost_work send_pkt_work;
+<<<<<<< HEAD
 	struct sk_buff_head send_pkt_queue; /* host->guest pending packets */
+=======
+	spinlock_t send_pkt_list_lock;
+	struct list_head send_pkt_list;	/* host->guest pending packets */
+>>>>>>> b7ba80a49124 (Commit)
 
 	atomic_t queued_replies;
 
@@ -107,6 +112,7 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
 	vhost_disable_notify(&vsock->dev, vq);
 
 	do {
+<<<<<<< HEAD
 		struct virtio_vsock_hdr *hdr;
 		size_t iov_len, payload_len;
 		struct iov_iter iov_iter;
@@ -119,19 +125,53 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
 		skb = virtio_vsock_skb_dequeue(&vsock->send_pkt_queue);
 
 		if (!skb) {
+=======
+		struct virtio_vsock_pkt *pkt;
+		struct iov_iter iov_iter;
+		unsigned out, in;
+		size_t nbytes;
+		size_t iov_len, payload_len;
+		int head;
+		u32 flags_to_restore = 0;
+
+		spin_lock_bh(&vsock->send_pkt_list_lock);
+		if (list_empty(&vsock->send_pkt_list)) {
+			spin_unlock_bh(&vsock->send_pkt_list_lock);
+>>>>>>> b7ba80a49124 (Commit)
 			vhost_enable_notify(&vsock->dev, vq);
 			break;
 		}
 
+<<<<<<< HEAD
 		head = vhost_get_vq_desc(vq, vq->iov, ARRAY_SIZE(vq->iov),
 					 &out, &in, NULL, NULL);
 		if (head < 0) {
 			virtio_vsock_skb_queue_head(&vsock->send_pkt_queue, skb);
+=======
+		pkt = list_first_entry(&vsock->send_pkt_list,
+				       struct virtio_vsock_pkt, list);
+		list_del_init(&pkt->list);
+		spin_unlock_bh(&vsock->send_pkt_list_lock);
+
+		head = vhost_get_vq_desc(vq, vq->iov, ARRAY_SIZE(vq->iov),
+					 &out, &in, NULL, NULL);
+		if (head < 0) {
+			spin_lock_bh(&vsock->send_pkt_list_lock);
+			list_add(&pkt->list, &vsock->send_pkt_list);
+			spin_unlock_bh(&vsock->send_pkt_list_lock);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 
 		if (head == vq->num) {
+<<<<<<< HEAD
 			virtio_vsock_skb_queue_head(&vsock->send_pkt_queue, skb);
+=======
+			spin_lock_bh(&vsock->send_pkt_list_lock);
+			list_add(&pkt->list, &vsock->send_pkt_list);
+			spin_unlock_bh(&vsock->send_pkt_list_lock);
+
+>>>>>>> b7ba80a49124 (Commit)
 			/* We cannot finish yet if more buffers snuck in while
 			 * re-enabling notify.
 			 */
@@ -143,27 +183,46 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
 		}
 
 		if (out) {
+<<<<<<< HEAD
 			kfree_skb(skb);
+=======
+			virtio_transport_free_pkt(pkt);
+>>>>>>> b7ba80a49124 (Commit)
 			vq_err(vq, "Expected 0 output buffers, got %u\n", out);
 			break;
 		}
 
 		iov_len = iov_length(&vq->iov[out], in);
+<<<<<<< HEAD
 		if (iov_len < sizeof(*hdr)) {
 			kfree_skb(skb);
+=======
+		if (iov_len < sizeof(pkt->hdr)) {
+			virtio_transport_free_pkt(pkt);
+>>>>>>> b7ba80a49124 (Commit)
 			vq_err(vq, "Buffer len [%zu] too small\n", iov_len);
 			break;
 		}
 
+<<<<<<< HEAD
 		iov_iter_init(&iov_iter, ITER_DEST, &vq->iov[out], in, iov_len);
 		payload_len = skb->len;
 		hdr = virtio_vsock_hdr(skb);
+=======
+		iov_iter_init(&iov_iter, READ, &vq->iov[out], in, iov_len);
+		payload_len = pkt->len - pkt->off;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* If the packet is greater than the space available in the
 		 * buffer, we split it using multiple buffers.
 		 */
+<<<<<<< HEAD
 		if (payload_len > iov_len - sizeof(*hdr)) {
 			payload_len = iov_len - sizeof(*hdr);
+=======
+		if (payload_len > iov_len - sizeof(pkt->hdr)) {
+			payload_len = iov_len - sizeof(pkt->hdr);
+>>>>>>> b7ba80a49124 (Commit)
 
 			/* As we are copying pieces of large packet's buffer to
 			 * small rx buffers, headers of packets in rx queue are
@@ -176,30 +235,54 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
 			 * bits set. After initialized header will be copied to
 			 * rx buffer, these required bits will be restored.
 			 */
+<<<<<<< HEAD
 			if (le32_to_cpu(hdr->flags) & VIRTIO_VSOCK_SEQ_EOM) {
 				hdr->flags &= ~cpu_to_le32(VIRTIO_VSOCK_SEQ_EOM);
 				flags_to_restore |= VIRTIO_VSOCK_SEQ_EOM;
 
 				if (le32_to_cpu(hdr->flags) & VIRTIO_VSOCK_SEQ_EOR) {
 					hdr->flags &= ~cpu_to_le32(VIRTIO_VSOCK_SEQ_EOR);
+=======
+			if (le32_to_cpu(pkt->hdr.flags) & VIRTIO_VSOCK_SEQ_EOM) {
+				pkt->hdr.flags &= ~cpu_to_le32(VIRTIO_VSOCK_SEQ_EOM);
+				flags_to_restore |= VIRTIO_VSOCK_SEQ_EOM;
+
+				if (le32_to_cpu(pkt->hdr.flags) & VIRTIO_VSOCK_SEQ_EOR) {
+					pkt->hdr.flags &= ~cpu_to_le32(VIRTIO_VSOCK_SEQ_EOR);
+>>>>>>> b7ba80a49124 (Commit)
 					flags_to_restore |= VIRTIO_VSOCK_SEQ_EOR;
 				}
 			}
 		}
 
 		/* Set the correct length in the header */
+<<<<<<< HEAD
 		hdr->len = cpu_to_le32(payload_len);
 
 		nbytes = copy_to_iter(hdr, sizeof(*hdr), &iov_iter);
 		if (nbytes != sizeof(*hdr)) {
 			kfree_skb(skb);
+=======
+		pkt->hdr.len = cpu_to_le32(payload_len);
+
+		nbytes = copy_to_iter(&pkt->hdr, sizeof(pkt->hdr), &iov_iter);
+		if (nbytes != sizeof(pkt->hdr)) {
+			virtio_transport_free_pkt(pkt);
+>>>>>>> b7ba80a49124 (Commit)
 			vq_err(vq, "Faulted on copying pkt hdr\n");
 			break;
 		}
 
+<<<<<<< HEAD
 		nbytes = copy_to_iter(skb->data, payload_len, &iov_iter);
 		if (nbytes != payload_len) {
 			kfree_skb(skb);
+=======
+		nbytes = copy_to_iter(pkt->buf + pkt->off, payload_len,
+				      &iov_iter);
+		if (nbytes != payload_len) {
+			virtio_transport_free_pkt(pkt);
+>>>>>>> b7ba80a49124 (Commit)
 			vq_err(vq, "Faulted on copying pkt buf\n");
 			break;
 		}
@@ -207,17 +290,27 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
 		/* Deliver to monitoring devices all packets that we
 		 * will transmit.
 		 */
+<<<<<<< HEAD
 		virtio_transport_deliver_tap_pkt(skb);
 
 		vhost_add_used(vq, head, sizeof(*hdr) + payload_len);
 		added = true;
 
 		skb_pull(skb, payload_len);
+=======
+		virtio_transport_deliver_tap_pkt(pkt);
+
+		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
+		added = true;
+
+		pkt->off += payload_len;
+>>>>>>> b7ba80a49124 (Commit)
 		total_len += payload_len;
 
 		/* If we didn't send all the payload we can requeue the packet
 		 * to send it with the next available buffer.
 		 */
+<<<<<<< HEAD
 		if (skb->len > 0) {
 			hdr->flags |= cpu_to_le32(flags_to_restore);
 
@@ -229,6 +322,22 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
 			virtio_vsock_skb_queue_head(&vsock->send_pkt_queue, skb);
 		} else {
 			if (virtio_vsock_skb_reply(skb)) {
+=======
+		if (pkt->off < pkt->len) {
+			pkt->hdr.flags |= cpu_to_le32(flags_to_restore);
+
+			/* We are queueing the same virtio_vsock_pkt to handle
+			 * the remaining bytes, and we want to deliver it
+			 * to monitoring devices in the next iteration.
+			 */
+			pkt->tap_delivered = false;
+
+			spin_lock_bh(&vsock->send_pkt_list_lock);
+			list_add(&pkt->list, &vsock->send_pkt_list);
+			spin_unlock_bh(&vsock->send_pkt_list_lock);
+		} else {
+			if (pkt->reply) {
+>>>>>>> b7ba80a49124 (Commit)
 				int val;
 
 				val = atomic_dec_return(&vsock->queued_replies);
@@ -240,7 +349,11 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
 					restart_tx = true;
 			}
 
+<<<<<<< HEAD
 			consume_skb(skb);
+=======
+			virtio_transport_free_pkt(pkt);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	} while(likely(!vhost_exceeds_weight(vq, ++pkts, total_len)));
 	if (added)
@@ -265,15 +378,23 @@ static void vhost_transport_send_pkt_work(struct vhost_work *work)
 }
 
 static int
+<<<<<<< HEAD
 vhost_transport_send_pkt(struct sk_buff *skb)
 {
 	struct virtio_vsock_hdr *hdr = virtio_vsock_hdr(skb);
 	struct vhost_vsock *vsock;
 	int len = skb->len;
+=======
+vhost_transport_send_pkt(struct virtio_vsock_pkt *pkt)
+{
+	struct vhost_vsock *vsock;
+	int len = pkt->len;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rcu_read_lock();
 
 	/* Find the vhost_vsock according to guest context id  */
+<<<<<<< HEAD
 	vsock = vhost_vsock_get(le64_to_cpu(hdr->dst_cid));
 	if (!vsock) {
 		rcu_read_unlock();
@@ -285,6 +406,22 @@ vhost_transport_send_pkt(struct sk_buff *skb)
 		atomic_inc(&vsock->queued_replies);
 
 	virtio_vsock_skb_queue_tail(&vsock->send_pkt_queue, skb);
+=======
+	vsock = vhost_vsock_get(le64_to_cpu(pkt->hdr.dst_cid));
+	if (!vsock) {
+		rcu_read_unlock();
+		virtio_transport_free_pkt(pkt);
+		return -ENODEV;
+	}
+
+	if (pkt->reply)
+		atomic_inc(&vsock->queued_replies);
+
+	spin_lock_bh(&vsock->send_pkt_list_lock);
+	list_add_tail(&pkt->list, &vsock->send_pkt_list);
+	spin_unlock_bh(&vsock->send_pkt_list_lock);
+
+>>>>>>> b7ba80a49124 (Commit)
 	vhost_work_queue(&vsock->dev, &vsock->send_pkt_work);
 
 	rcu_read_unlock();
@@ -295,8 +432,15 @@ static int
 vhost_transport_cancel_pkt(struct vsock_sock *vsk)
 {
 	struct vhost_vsock *vsock;
+<<<<<<< HEAD
 	int cnt = 0;
 	int ret = -ENODEV;
+=======
+	struct virtio_vsock_pkt *pkt, *n;
+	int cnt = 0;
+	int ret = -ENODEV;
+	LIST_HEAD(freeme);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rcu_read_lock();
 
@@ -305,7 +449,24 @@ vhost_transport_cancel_pkt(struct vsock_sock *vsk)
 	if (!vsock)
 		goto out;
 
+<<<<<<< HEAD
 	cnt = virtio_transport_purge_skbs(vsk, &vsock->send_pkt_queue);
+=======
+	spin_lock_bh(&vsock->send_pkt_list_lock);
+	list_for_each_entry_safe(pkt, n, &vsock->send_pkt_list, list) {
+		if (pkt->vsk != vsk)
+			continue;
+		list_move(&pkt->list, &freeme);
+	}
+	spin_unlock_bh(&vsock->send_pkt_list_lock);
+
+	list_for_each_entry_safe(pkt, n, &freeme, list) {
+		if (pkt->reply)
+			cnt++;
+		list_del(&pkt->list);
+		virtio_transport_free_pkt(pkt);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (cnt) {
 		struct vhost_virtqueue *tx_vq = &vsock->vqs[VSOCK_VQ_TX];
@@ -322,6 +483,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static struct sk_buff *
 vhost_vsock_alloc_skb(struct vhost_virtqueue *vq,
 		      unsigned int out, unsigned int in)
@@ -330,6 +492,14 @@ vhost_vsock_alloc_skb(struct vhost_virtqueue *vq,
 	struct iov_iter iov_iter;
 	struct sk_buff *skb;
 	size_t payload_len;
+=======
+static struct virtio_vsock_pkt *
+vhost_vsock_alloc_pkt(struct vhost_virtqueue *vq,
+		      unsigned int out, unsigned int in)
+{
+	struct virtio_vsock_pkt *pkt;
+	struct iov_iter iov_iter;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t nbytes;
 	size_t len;
 
@@ -338,6 +508,7 @@ vhost_vsock_alloc_skb(struct vhost_virtqueue *vq,
 		return NULL;
 	}
 
+<<<<<<< HEAD
 	len = iov_length(vq->iov, out);
 
 	/* len contains both payload and hdr */
@@ -380,6 +551,52 @@ vhost_vsock_alloc_skb(struct vhost_virtqueue *vq,
 	}
 
 	return skb;
+=======
+	pkt = kzalloc(sizeof(*pkt), GFP_KERNEL);
+	if (!pkt)
+		return NULL;
+
+	len = iov_length(vq->iov, out);
+	iov_iter_init(&iov_iter, WRITE, vq->iov, out, len);
+
+	nbytes = copy_from_iter(&pkt->hdr, sizeof(pkt->hdr), &iov_iter);
+	if (nbytes != sizeof(pkt->hdr)) {
+		vq_err(vq, "Expected %zu bytes for pkt->hdr, got %zu bytes\n",
+		       sizeof(pkt->hdr), nbytes);
+		kfree(pkt);
+		return NULL;
+	}
+
+	pkt->len = le32_to_cpu(pkt->hdr.len);
+
+	/* No payload */
+	if (!pkt->len)
+		return pkt;
+
+	/* The pkt is too big */
+	if (pkt->len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE) {
+		kfree(pkt);
+		return NULL;
+	}
+
+	pkt->buf = kmalloc(pkt->len, GFP_KERNEL);
+	if (!pkt->buf) {
+		kfree(pkt);
+		return NULL;
+	}
+
+	pkt->buf_len = pkt->len;
+
+	nbytes = copy_from_iter(pkt->buf, pkt->len, &iov_iter);
+	if (nbytes != pkt->len) {
+		vq_err(vq, "Expected %u byte payload, got %zu bytes\n",
+		       pkt->len, nbytes);
+		virtio_transport_free_pkt(pkt);
+		return NULL;
+	}
+
+	return pkt;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Is there space left for replies to rx packets? */
@@ -466,9 +683,15 @@ static void vhost_vsock_handle_tx_kick(struct vhost_work *work)
 						  poll.work);
 	struct vhost_vsock *vsock = container_of(vq->dev, struct vhost_vsock,
 						 dev);
+<<<<<<< HEAD
 	int head, pkts = 0, total_len = 0;
 	unsigned int out, in;
 	struct sk_buff *skb;
+=======
+	struct virtio_vsock_pkt *pkt;
+	int head, pkts = 0, total_len = 0;
+	unsigned int out, in;
+>>>>>>> b7ba80a49124 (Commit)
 	bool added = false;
 
 	mutex_lock(&vq->mutex);
@@ -481,8 +704,11 @@ static void vhost_vsock_handle_tx_kick(struct vhost_work *work)
 
 	vhost_disable_notify(&vsock->dev, vq);
 	do {
+<<<<<<< HEAD
 		struct virtio_vsock_hdr *hdr;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (!vhost_vsock_more_replies(vsock)) {
 			/* Stop tx until the device processes already
 			 * pending replies.  Leave tx virtqueue
@@ -504,12 +730,18 @@ static void vhost_vsock_handle_tx_kick(struct vhost_work *work)
 			break;
 		}
 
+<<<<<<< HEAD
 		skb = vhost_vsock_alloc_skb(vq, out, in);
 		if (!skb) {
+=======
+		pkt = vhost_vsock_alloc_pkt(vq, out, in);
+		if (!pkt) {
+>>>>>>> b7ba80a49124 (Commit)
 			vq_err(vq, "Faulted on pkt\n");
 			continue;
 		}
 
+<<<<<<< HEAD
 		total_len += sizeof(*hdr) + skb->len;
 
 		/* Deliver to monitoring devices all received packets */
@@ -524,6 +756,20 @@ static void vhost_vsock_handle_tx_kick(struct vhost_work *work)
 			virtio_transport_recv_pkt(&vhost_transport, skb);
 		else
 			kfree_skb(skb);
+=======
+		total_len += sizeof(pkt->hdr) + pkt->len;
+
+		/* Deliver to monitoring devices all received packets */
+		virtio_transport_deliver_tap_pkt(pkt);
+
+		/* Only accept correctly addressed packets */
+		if (le64_to_cpu(pkt->hdr.src_cid) == vsock->guest_cid &&
+		    le64_to_cpu(pkt->hdr.dst_cid) ==
+		    vhost_transport_get_local_cid())
+			virtio_transport_recv_pkt(&vhost_transport, pkt);
+		else
+			virtio_transport_free_pkt(pkt);
+>>>>>>> b7ba80a49124 (Commit)
 
 		vhost_add_used(vq, head, 0);
 		added = true;
@@ -667,7 +913,12 @@ static int vhost_vsock_dev_open(struct inode *inode, struct file *file)
 		       VHOST_VSOCK_WEIGHT, true, NULL);
 
 	file->private_data = vsock;
+<<<<<<< HEAD
 	skb_queue_head_init(&vsock->send_pkt_queue);
+=======
+	spin_lock_init(&vsock->send_pkt_list_lock);
+	INIT_LIST_HEAD(&vsock->send_pkt_list);
+>>>>>>> b7ba80a49124 (Commit)
 	vhost_work_init(&vsock->send_pkt_work, vhost_transport_send_pkt_work);
 	return 0;
 
@@ -733,7 +984,20 @@ static int vhost_vsock_dev_release(struct inode *inode, struct file *file)
 	vhost_vsock_flush(vsock);
 	vhost_dev_stop(&vsock->dev);
 
+<<<<<<< HEAD
 	virtio_vsock_skb_queue_purge(&vsock->send_pkt_queue);
+=======
+	spin_lock_bh(&vsock->send_pkt_list_lock);
+	while (!list_empty(&vsock->send_pkt_list)) {
+		struct virtio_vsock_pkt *pkt;
+
+		pkt = list_first_entry(&vsock->send_pkt_list,
+				struct virtio_vsock_pkt, list);
+		list_del_init(&pkt->list);
+		virtio_transport_free_pkt(pkt);
+	}
+	spin_unlock_bh(&vsock->send_pkt_list_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	vhost_dev_cleanup(&vsock->dev);
 	kfree(vsock->dev.vqs);
@@ -793,7 +1057,11 @@ static int vhost_vsock_set_features(struct vhost_vsock *vsock, u64 features)
 	}
 
 	if ((features & (1ULL << VIRTIO_F_ACCESS_PLATFORM))) {
+<<<<<<< HEAD
 		if (vhost_init_device_iotlb(&vsock->dev))
+=======
+		if (vhost_init_device_iotlb(&vsock->dev, true))
+>>>>>>> b7ba80a49124 (Commit)
 			goto err;
 	}
 
@@ -923,6 +1191,7 @@ static int __init vhost_vsock_init(void)
 				  VSOCK_TRANSPORT_F_H2G);
 	if (ret < 0)
 		return ret;
+<<<<<<< HEAD
 
 	ret = misc_register(&vhost_vsock_misc);
 	if (ret) {
@@ -931,6 +1200,9 @@ static int __init vhost_vsock_init(void)
 	}
 
 	return 0;
+=======
+	return misc_register(&vhost_vsock_misc);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void __exit vhost_vsock_exit(void)

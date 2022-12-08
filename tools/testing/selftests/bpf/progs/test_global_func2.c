@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /* Copyright (c) 2020 Facebook */
+<<<<<<< HEAD
 #include <stddef.h>
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
@@ -47,3 +48,7 @@ int global_func2(struct __sk_buff *skb)
 {
 	return f0(1, skb) + f1(skb) + f2(2, skb) + f3(3, skb, 4);
 }
+=======
+#define MAX_STACK (512 - 3 * 32)
+#include "test_global_func1.c"
+>>>>>>> b7ba80a49124 (Commit)

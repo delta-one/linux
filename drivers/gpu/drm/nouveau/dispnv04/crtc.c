@@ -24,7 +24,10 @@
  */
 #include <drm/drm_crtc_helper.h>
 #include <drm/drm_fourcc.h>
+<<<<<<< HEAD
 #include <drm/drm_modeset_helper_vtables.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_plane_helper.h>
 #include <drm/drm_vblank.h>
 
@@ -38,6 +41,10 @@
 #include "nouveau_crtc.h"
 #include "hw.h"
 #include "nvreg.h"
+<<<<<<< HEAD
+=======
+#include "nouveau_fbcon.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "disp.h"
 #include "nouveau_dma.h"
 
@@ -761,8 +768,12 @@ static void nv_crtc_destroy(struct drm_crtc *crtc)
 	nouveau_bo_unmap(nv_crtc->cursor.nvbo);
 	nouveau_bo_unpin(nv_crtc->cursor.nvbo);
 	nouveau_bo_ref(NULL, &nv_crtc->cursor.nvbo);
+<<<<<<< HEAD
 	nvif_event_dtor(&nv_crtc->vblank);
 	nvif_head_dtor(&nv_crtc->head);
+=======
+	nvif_notify_dtor(&nv_crtc->vblank);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(nv_crtc);
 }
 
@@ -915,6 +926,17 @@ nv04_crtc_mode_set_base_atomic(struct drm_crtc *crtc,
 			       struct drm_framebuffer *fb,
 			       int x, int y, enum mode_set_atomic state)
 {
+<<<<<<< HEAD
+=======
+	struct nouveau_drm *drm = nouveau_drm(crtc->dev);
+	struct drm_device *dev = drm->dev;
+
+	if (state == ENTER_ATOMIC_MODE_SET)
+		nouveau_fbcon_accel_save_disable(dev);
+	else
+		nouveau_fbcon_accel_restore(dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return nv04_crtc_do_mode_set_base(crtc, fb, x, y, true);
 }
 
@@ -1073,10 +1095,17 @@ nv04_finish_page_flip(struct nouveau_channel *chan,
 }
 
 int
+<<<<<<< HEAD
 nv04_flip_complete(struct nvif_event *event, void *argv, u32 argc)
 {
 	struct nv04_display *disp = container_of(event, typeof(*disp), flip);
 	struct nouveau_drm *drm = disp->drm;
+=======
+nv04_flip_complete(struct nvif_notify *notify)
+{
+	struct nouveau_cli *cli = (void *)notify->object->client;
+	struct nouveau_drm *drm = cli->drm;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nouveau_channel *chan = drm->channel;
 	struct nv04_page_flip_state state;
 
@@ -1087,7 +1116,11 @@ nv04_flip_complete(struct nvif_event *event, void *argv, u32 argc)
 				 state.bpp / 8);
 	}
 
+<<<<<<< HEAD
 	return NVIF_EVENT_KEEP;
+=======
+	return NVIF_NOTIFY_KEEP;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int
@@ -1272,6 +1305,7 @@ static const struct drm_plane_funcs nv04_primary_plane_funcs = {
 	DRM_PLANE_NON_ATOMIC_FUNCS,
 };
 
+<<<<<<< HEAD
 static int
 nv04_crtc_vblank_handler(struct nvif_event *event, void *repv, u32 repc)
 {
@@ -1279,6 +1313,15 @@ nv04_crtc_vblank_handler(struct nvif_event *event, void *repv, u32 repc)
 
 	drm_crtc_handle_vblank(&nv_crtc->base);
 	return NVIF_EVENT_KEEP;
+=======
+static int nv04_crtc_vblank_handler(struct nvif_notify *notify)
+{
+	struct nouveau_crtc *nv_crtc =
+		container_of(notify, struct nouveau_crtc, vblank);
+
+	drm_crtc_handle_vblank(&nv_crtc->base);
+	return NVIF_NOTIFY_KEEP;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int
@@ -1334,10 +1377,23 @@ nv04_crtc_create(struct drm_device *dev, int crtc_num)
 
 	nv04_cursor_init(nv_crtc);
 
+<<<<<<< HEAD
 	ret = nvif_head_ctor(&disp->disp, nv_crtc->base.name, nv_crtc->index, &nv_crtc->head);
 	if (ret)
 		return ret;
 
 	return nvif_head_vblank_event_ctor(&nv_crtc->head, "kmsVbl", nv04_crtc_vblank_handler,
 					   false, &nv_crtc->vblank);
+=======
+	ret = nvif_notify_ctor(&disp->disp.object, "kmsVbl", nv04_crtc_vblank_handler,
+			       false, NV04_DISP_NTFY_VBLANK,
+			       &(struct nvif_notify_head_req_v0) {
+				    .head = nv_crtc->index,
+			       },
+			       sizeof(struct nvif_notify_head_req_v0),
+			       sizeof(struct nvif_notify_head_rep_v0),
+			       &nv_crtc->vblank);
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }

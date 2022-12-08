@@ -2,7 +2,10 @@
 #
 # Makefile for various Intel thermal drivers.
 
+<<<<<<< HEAD
 obj-$(CONFIG_INTEL_TCC)	+= intel_tcc.o
+=======
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_INTEL_POWERCLAMP)	+= intel_powerclamp.o
 obj-$(CONFIG_X86_PKG_TEMP_THERMAL)	+= x86_pkg_temp_thermal.o
 obj-$(CONFIG_INTEL_SOC_DTS_IOSF_CORE)	+= intel_soc_dts_iosf.o

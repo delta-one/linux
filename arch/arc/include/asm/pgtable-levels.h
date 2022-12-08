@@ -161,7 +161,11 @@
 #define pmd_pfn(pmd)		((pmd_val(pmd) & PAGE_MASK) >> PAGE_SHIFT)
 #define pmd_page(pmd)		virt_to_page(pmd_page_vaddr(pmd))
 #define set_pmd(pmdp, pmd)	(*(pmdp) = pmd)
+<<<<<<< HEAD
 #define pmd_pgtable(pmd)	((pgtable_t) pmd_page(pmd))
+=======
+#define pmd_pgtable(pmd)	((pgtable_t) pmd_page_vaddr(pmd))
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * 4th level paging: pte

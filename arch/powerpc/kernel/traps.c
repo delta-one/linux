@@ -68,7 +68,10 @@
 #include <asm/stacktrace.h>
 #include <asm/nmi.h>
 #include <asm/disassemble.h>
+<<<<<<< HEAD
 #include <asm/udbg.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #if defined(CONFIG_DEBUGGER) || defined(CONFIG_KEXEC_CORE)
 int (*__debugger)(struct pt_regs *regs) __read_mostly;
@@ -601,7 +604,11 @@ static inline int check_io_access(struct pt_regs *regs)
 
 #define inst_length(reason)	(((reason) & REASON_PREFIXED) ? 8 : 4)
 
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_E500)
+=======
+#if defined(CONFIG_E500)
+>>>>>>> b7ba80a49124 (Commit)
 int machine_check_e500mc(struct pt_regs *regs)
 {
 	unsigned long mcsr = mfspr(SPRN_MCSR);
@@ -851,6 +858,7 @@ bail:
 }
 
 #ifdef CONFIG_PPC_BOOK3S_64
+<<<<<<< HEAD
 DEFINE_INTERRUPT_HANDLER_RAW(machine_check_early_boot)
 {
 	udbg_printf("Machine check (early boot)\n");
@@ -864,6 +872,8 @@ DEFINE_INTERRUPT_HANDLER_RAW(machine_check_early_boot)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 DEFINE_INTERRUPT_HANDLER_ASYNC(machine_check_exception_async)
 {
 	__machine_check_exception(regs);
@@ -2099,7 +2109,11 @@ DEFINE_INTERRUPT_HANDLER(altivec_assist_exception)
 }
 #endif /* CONFIG_ALTIVEC */
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_85xx
+=======
+#ifdef CONFIG_FSL_BOOKE
+>>>>>>> b7ba80a49124 (Commit)
 DEFINE_INTERRUPT_HANDLER(CacheLockingException)
 {
 	unsigned long error_code = regs->dsisr;
@@ -2112,7 +2126,11 @@ DEFINE_INTERRUPT_HANDLER(CacheLockingException)
 		_exception(SIGILL, regs, ILL_PRVOPC, regs->nip);
 	return;
 }
+<<<<<<< HEAD
 #endif /* CONFIG_PPC_85xx */
+=======
+#endif /* CONFIG_FSL_BOOKE */
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_SPE
 DEFINE_INTERRUPT_HANDLER(SPEFloatingPointException)

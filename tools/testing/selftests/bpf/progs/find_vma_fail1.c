@@ -2,7 +2,10 @@
 /* Copyright (c) 2021 Facebook */
 #include "vmlinux.h"
 #include <bpf/bpf_helpers.h>
+<<<<<<< HEAD
 #define vm_flags vm_start
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 char _license[] SEC("license") = "GPL";
 
@@ -14,7 +17,11 @@ static long write_vma(struct task_struct *task, struct vm_area_struct *vma,
 		      struct callback_ctx *data)
 {
 	/* writing to vma, which is illegal */
+<<<<<<< HEAD
 	vma->vm_start = 0xffffffffff600000;
+=======
+	vma->vm_flags |= 0x55;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

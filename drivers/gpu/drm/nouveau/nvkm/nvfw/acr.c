@@ -46,6 +46,7 @@ wpr_header_v1_dump(struct nvkm_subdev *subdev, const struct wpr_header_v1 *hdr)
 }
 
 static void
+<<<<<<< HEAD
 wpr_generic_header_dump(struct nvkm_subdev *subdev, const struct wpr_generic_header *hdr)
 {
 	nvkm_debug(subdev, "wprGenericHeader\n");
@@ -87,6 +88,8 @@ lsb_header_v2_dump(struct nvkm_subdev *subdev, struct lsb_header_v2 *hdr)
 }
 
 static void
+=======
+>>>>>>> b7ba80a49124 (Commit)
 lsb_header_tail_dump(struct nvkm_subdev *subdev, struct lsb_header_tail *hdr)
 {
 	nvkm_debug(subdev, "lsbHeader\n");

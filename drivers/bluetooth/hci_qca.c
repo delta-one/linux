@@ -128,13 +128,21 @@ struct qca_memdump_event_hdr {
 	__u8    evt;
 	__u8    plen;
 	__u16   opcode;
+<<<<<<< HEAD
 	__le16   seq_no;
+=======
+	__u16   seq_no;
+>>>>>>> b7ba80a49124 (Commit)
 	__u8    reserved;
 } __packed;
 
 
 struct qca_dump_size {
+<<<<<<< HEAD
 	__le32 dump_size;
+=======
+	u32 dump_size;
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 struct qca_data {
@@ -696,6 +704,7 @@ static int qca_close(struct hci_uart *hu)
 	skb_queue_purge(&qca->tx_wait_q);
 	skb_queue_purge(&qca->txq);
 	skb_queue_purge(&qca->rx_memdump_q);
+<<<<<<< HEAD
 	/*
 	 * Shut the timers down so they can't be rearmed when
 	 * destroy_workqueue() drains pending work which in turn might try
@@ -705,6 +714,11 @@ static int qca_close(struct hci_uart *hu)
 	timer_shutdown_sync(&qca->tx_idle_timer);
 	timer_shutdown_sync(&qca->wake_retrans_timer);
 	destroy_workqueue(qca->workqueue);
+=======
+	destroy_workqueue(qca->workqueue);
+	del_timer_sync(&qca->tx_idle_timer);
+	del_timer_sync(&qca->wake_retrans_timer);
+>>>>>>> b7ba80a49124 (Commit)
 	qca->hu = NULL;
 
 	kfree_skb(qca->rx_skb);
@@ -918,7 +932,11 @@ static int qca_enqueue(struct hci_uart *hu, struct sk_buff *skb)
 	default:
 		BT_ERR("Illegal tx state: %d (losing packet)",
 		       qca->tx_ibs_state);
+<<<<<<< HEAD
 		dev_kfree_skb_irq(skb);
+=======
+		kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -1588,11 +1606,18 @@ static bool qca_wakeup(struct hci_dev *hdev)
 	struct hci_uart *hu = hci_get_drvdata(hdev);
 	bool wakeup;
 
+<<<<<<< HEAD
 	/* BT SoC attached through the serial bus is handled by the serdev driver.
 	 * So we need to use the device handle of the serdev driver to get the
 	 * status of device may wakeup.
 	 */
 	wakeup = device_may_wakeup(&hu->serdev->ctrl->dev);
+=======
+	/* UART driver handles the interrupt from BT SoC.So we need to use
+	 * device handle of UART driver to get the status of device may wakeup.
+	 */
+	wakeup = device_may_wakeup(hu->serdev->ctrl->dev.parent);
+>>>>>>> b7ba80a49124 (Commit)
 	bt_dev_dbg(hu->hdev, "wakeup status : %d", wakeup);
 
 	return wakeup;
@@ -1772,8 +1797,12 @@ retry:
 		qca_debugfs_init(hdev);
 		hu->hdev->hw_error = qca_hw_error;
 		hu->hdev->cmd_timeout = qca_cmd_timeout;
+<<<<<<< HEAD
 		if (device_can_wakeup(hu->serdev->ctrl->dev.parent))
 			hu->hdev->wakeup = qca_wakeup;
+=======
+		hu->hdev->wakeup = qca_wakeup;
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (ret == -ENOENT) {
 		/* No patch/nvm-config found, run with original fw/config */
 		set_bit(QCA_ROM_FW, &qca->flags);
@@ -1827,7 +1856,11 @@ static const struct hci_uart_proto qca_proto = {
 	.dequeue	= qca_dequeue,
 };
 
+<<<<<<< HEAD
 static const struct qca_device_data qca_soc_data_wcn3990 __maybe_unused = {
+=======
+static const struct qca_device_data qca_soc_data_wcn3990 = {
+>>>>>>> b7ba80a49124 (Commit)
 	.soc_type = QCA_WCN3990,
 	.vregs = (struct qca_vreg []) {
 		{ "vddio", 15000  },
@@ -1838,7 +1871,11 @@ static const struct qca_device_data qca_soc_data_wcn3990 __maybe_unused = {
 	.num_vregs = 4,
 };
 
+<<<<<<< HEAD
 static const struct qca_device_data qca_soc_data_wcn3991 __maybe_unused = {
+=======
+static const struct qca_device_data qca_soc_data_wcn3991 = {
+>>>>>>> b7ba80a49124 (Commit)
 	.soc_type = QCA_WCN3991,
 	.vregs = (struct qca_vreg []) {
 		{ "vddio", 15000  },
@@ -1850,7 +1887,11 @@ static const struct qca_device_data qca_soc_data_wcn3991 __maybe_unused = {
 	.capabilities = QCA_CAP_WIDEBAND_SPEECH | QCA_CAP_VALID_LE_STATES,
 };
 
+<<<<<<< HEAD
 static const struct qca_device_data qca_soc_data_wcn3998 __maybe_unused = {
+=======
+static const struct qca_device_data qca_soc_data_wcn3998 = {
+>>>>>>> b7ba80a49124 (Commit)
 	.soc_type = QCA_WCN3998,
 	.vregs = (struct qca_vreg []) {
 		{ "vddio", 10000  },
@@ -1861,12 +1902,20 @@ static const struct qca_device_data qca_soc_data_wcn3998 __maybe_unused = {
 	.num_vregs = 4,
 };
 
+<<<<<<< HEAD
 static const struct qca_device_data qca_soc_data_qca6390 __maybe_unused = {
+=======
+static const struct qca_device_data qca_soc_data_qca6390 = {
+>>>>>>> b7ba80a49124 (Commit)
 	.soc_type = QCA_QCA6390,
 	.num_vregs = 0,
 };
 
+<<<<<<< HEAD
 static const struct qca_device_data qca_soc_data_wcn6750 __maybe_unused = {
+=======
+static const struct qca_device_data qca_soc_data_wcn6750 = {
+>>>>>>> b7ba80a49124 (Commit)
 	.soc_type = QCA_WCN6750,
 	.vregs = (struct qca_vreg []) {
 		{ "vddio", 5000 },
@@ -2165,17 +2214,23 @@ static void qca_serdev_shutdown(struct device *dev)
 	int timeout = msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS);
 	struct serdev_device *serdev = to_serdev_device(dev);
 	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
+<<<<<<< HEAD
 	struct hci_uart *hu = &qcadev->serdev_hu;
 	struct hci_dev *hdev = hu->hdev;
 	struct qca_data *qca = hu->priv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const u8 ibs_wake_cmd[] = { 0xFD };
 	const u8 edl_reset_soc_cmd[] = { 0x01, 0x00, 0xFC, 0x01, 0x05 };
 
 	if (qcadev->btsoc_type == QCA_QCA6390) {
+<<<<<<< HEAD
 		if (test_bit(QCA_BT_OFF, &qca->flags) ||
 		    !test_bit(HCI_RUNNING, &hdev->flags))
 			return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		serdev_device_write_flush(serdev);
 		ret = serdev_device_write_buf(serdev, ibs_wake_cmd,
 					      sizeof(ibs_wake_cmd));

@@ -38,8 +38,11 @@ properties:
         const: u-boot,env-redundant-bool
       - description: Two redundant blocks with active having higher counter
         const: u-boot,env-redundant-count
+<<<<<<< HEAD
       - description: Broadcom's variant with custom header
         const: brcm,env
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -50,11 +53,15 @@ properties:
 
   ethaddr:
     type: object
+<<<<<<< HEAD
     description: Ethernet interfaces base MAC address.
     properties:
       "#nvmem-cell-cells":
         description: The first argument is a MAC address offset.
         const: 1
+=======
+    description: Ethernet interface's MAC address
+>>>>>>> b7ba80a49124 (Commit)
 
 additionalProperties: false
 
@@ -76,6 +83,7 @@ examples:
             reg = <0x40000 0x10000>;
 
             mac: ethaddr {
+<<<<<<< HEAD
                 #nvmem-cell-cells = <1>;
             };
         };
@@ -96,6 +104,8 @@ examples:
 
                 ethaddr {
                 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
             };
         };
     };

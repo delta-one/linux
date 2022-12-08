@@ -36,9 +36,12 @@ String Conversions
 String Manipulation
 -------------------
 
+<<<<<<< HEAD
 .. kernel-doc:: include/linux/fortify-string.h
    :internal:
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 .. kernel-doc:: lib/string.c
    :export:
 
@@ -121,12 +124,15 @@ Text Searching
 CRC and Math Functions in Linux
 ===============================
 
+<<<<<<< HEAD
 Arithmetic Overflow Checking
 ----------------------------
 
 .. kernel-doc:: include/linux/overflow.h
    :internal:
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 CRC Functions
 -------------
 
@@ -174,6 +180,12 @@ Division Functions
 .. kernel-doc:: include/linux/math64.h
    :internal:
 
+<<<<<<< HEAD
+=======
+.. kernel-doc:: lib/math/div64.c
+   :functions: div_s64_rem div64_u64_rem div64_u64 div64_s64
+
+>>>>>>> b7ba80a49124 (Commit)
 .. kernel-doc:: lib/math/gcd.c
    :export:
 

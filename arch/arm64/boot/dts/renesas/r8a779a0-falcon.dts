@@ -37,12 +37,17 @@
 	};
 };
 
+<<<<<<< HEAD
 &can_clk {
 	clock-frequency = <40000000>;
 };
 
 &canfd {
 	pinctrl-0 = <&canfd0_pins>, <&canfd1_pins>, <&can_clk_pins>;
+=======
+&canfd {
+	pinctrl-0 = <&canfd0_pins>, <&canfd1_pins>;
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	status = "okay";
 
@@ -84,11 +89,14 @@
 
 	};
 
+<<<<<<< HEAD
 	can_clk_pins: can-clk {
 		groups = "can_clk";
 		function = "can_clk";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	canfd0_pins: canfd0 {
 		groups = "canfd0_data";
 		function = "canfd0";

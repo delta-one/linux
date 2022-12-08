@@ -52,7 +52,11 @@ static inline void arch_kgdb_breakpoint(void)
 /* On non-E500 family PPC32 we determine the size by picking the last
  * register we need, but on E500 we skip sections so we list what we
  * need to store, and add it up. */
+<<<<<<< HEAD
 #ifndef CONFIG_PPC_E500
+=======
+#ifndef CONFIG_E500
+>>>>>>> b7ba80a49124 (Commit)
 #define MAXREG			(PT_FPSCR+1)
 #else
 /* 32 GPRs (8 bytes), nip, msr, ccr, link, ctr, xer, acc (8 bytes), spefscr*/

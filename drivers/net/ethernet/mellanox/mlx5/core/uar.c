@@ -31,6 +31,10 @@
  */
 
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/io-mapping.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mlx5/driver.h>
 #include "mlx5_core.h"
 

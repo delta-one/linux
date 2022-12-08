@@ -34,7 +34,10 @@ struct cfi_state {
 	unsigned char type;
 	bool bp_scratch;
 	bool drap;
+<<<<<<< HEAD
 	bool signal;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool end;
 };
 

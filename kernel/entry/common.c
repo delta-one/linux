@@ -21,7 +21,11 @@ static __always_inline void __enter_from_user_mode(struct pt_regs *regs)
 	arch_enter_from_user_mode(regs);
 	lockdep_hardirqs_off(CALLER_ADDR0);
 
+<<<<<<< HEAD
 	CT_WARN_ON(__ct_state() != CONTEXT_USER);
+=======
+	CT_WARN_ON(ct_state() != CONTEXT_USER);
+>>>>>>> b7ba80a49124 (Commit)
 	user_exit_irqoff();
 
 	instrumentation_begin();
@@ -192,14 +196,21 @@ static unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
 
 static void exit_to_user_mode_prepare(struct pt_regs *regs)
 {
+<<<<<<< HEAD
 	unsigned long ti_work;
+=======
+	unsigned long ti_work = read_thread_flags();
+>>>>>>> b7ba80a49124 (Commit)
 
 	lockdep_assert_irqs_disabled();
 
 	/* Flush pending rcuog wakeup before the last need_resched() check */
 	tick_nohz_user_enter_prepare();
 
+<<<<<<< HEAD
 	ti_work = read_thread_flags();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(ti_work & EXIT_TO_USER_MODE_WORK))
 		ti_work = exit_to_user_mode_loop(regs, ti_work);
 

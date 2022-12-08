@@ -1,7 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
+<<<<<<< HEAD
 #ifndef _WINDFARM_PID_H
 #define _WINDFARM_PID_H
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Windfarm PowerMac thermal control. Generic PID helpers
  *
@@ -85,5 +88,8 @@ struct wf_cpu_pid_state {
 extern void wf_cpu_pid_init(struct wf_cpu_pid_state *st,
 			    struct wf_cpu_pid_param *param);
 extern s32 wf_cpu_pid_run(struct wf_cpu_pid_state *st, s32 power, s32 temp);
+<<<<<<< HEAD
 
 #endif /* _WINDFARM_PID_H */
+=======
+>>>>>>> b7ba80a49124 (Commit)

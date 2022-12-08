@@ -18,13 +18,21 @@
 #include <linux/capability.h>
 #include <linux/elf.h>
 #include <linux/elfcore.h>
+<<<<<<< HEAD
+=======
+#include <linux/notifier.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/vmalloc.h>
 #include <linux/highmem.h>
 #include <linux/printk.h>
 #include <linux/memblock.h>
 #include <linux/init.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/uio.h>
+=======
+#include <linux/uaccess.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/io.h>
 #include <linux/list.h>
 #include <linux/ioport.h>
@@ -307,9 +315,16 @@ static void append_kcore_note(char *notes, size_t *i, const char *name,
 	*i = ALIGN(*i + descsz, 4);
 }
 
+<<<<<<< HEAD
 static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
 {
 	loff_t *fpos = &iocb->ki_pos;
+=======
+static ssize_t
+read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
+{
+	char *buf = file->private_data;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t phdrs_offset, notes_offset, data_offset;
 	size_t page_offline_frozen = 1;
 	size_t phdrs_len, notes_len;
@@ -317,7 +332,10 @@ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
 	size_t tsz;
 	int nphdr;
 	unsigned long start;
+<<<<<<< HEAD
 	size_t buflen = iov_iter_count(iter);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	size_t orig_buflen = buflen;
 	int ret = 0;
 
@@ -356,11 +374,19 @@ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
 		};
 
 		tsz = min_t(size_t, buflen, sizeof(struct elfhdr) - *fpos);
+<<<<<<< HEAD
 		if (copy_to_iter((char *)&ehdr + *fpos, tsz, iter) != tsz) {
+=======
+		if (copy_to_user(buffer, (char *)&ehdr + *fpos, tsz)) {
+>>>>>>> b7ba80a49124 (Commit)
 			ret = -EFAULT;
 			goto out;
 		}
 
+<<<<<<< HEAD
+=======
+		buffer += tsz;
+>>>>>>> b7ba80a49124 (Commit)
 		buflen -= tsz;
 		*fpos += tsz;
 	}
@@ -397,14 +423,23 @@ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
 		}
 
 		tsz = min_t(size_t, buflen, phdrs_offset + phdrs_len - *fpos);
+<<<<<<< HEAD
 		if (copy_to_iter((char *)phdrs + *fpos - phdrs_offset, tsz,
 				 iter) != tsz) {
+=======
+		if (copy_to_user(buffer, (char *)phdrs + *fpos - phdrs_offset,
+				 tsz)) {
+>>>>>>> b7ba80a49124 (Commit)
 			kfree(phdrs);
 			ret = -EFAULT;
 			goto out;
 		}
 		kfree(phdrs);
 
+<<<<<<< HEAD
+=======
+		buffer += tsz;
+>>>>>>> b7ba80a49124 (Commit)
 		buflen -= tsz;
 		*fpos += tsz;
 	}
@@ -446,13 +481,21 @@ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
 				  min(vmcoreinfo_size, notes_len - i));
 
 		tsz = min_t(size_t, buflen, notes_offset + notes_len - *fpos);
+<<<<<<< HEAD
 		if (copy_to_iter(notes + *fpos - notes_offset, tsz, iter) != tsz) {
+=======
+		if (copy_to_user(buffer, notes + *fpos - notes_offset, tsz)) {
+>>>>>>> b7ba80a49124 (Commit)
 			kfree(notes);
 			ret = -EFAULT;
 			goto out;
 		}
 		kfree(notes);
 
+<<<<<<< HEAD
+=======
+		buffer += tsz;
+>>>>>>> b7ba80a49124 (Commit)
 		buflen -= tsz;
 		*fpos += tsz;
 	}
@@ -494,7 +537,11 @@ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
 		}
 
 		if (!m) {
+<<<<<<< HEAD
 			if (iov_iter_zero(tsz, iter) != tsz) {
+=======
+			if (clear_user(buffer, tsz)) {
+>>>>>>> b7ba80a49124 (Commit)
 				ret = -EFAULT;
 				goto out;
 			}
@@ -503,6 +550,7 @@ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
 
 		switch (m->type) {
 		case KCORE_VMALLOC:
+<<<<<<< HEAD
 		{
 			const char *src = (char *)start;
 			size_t read = 0, left = tsz;
@@ -530,6 +578,18 @@ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
 		case KCORE_USER:
 			/* User page is handled prior to normal kernel page: */
 			if (copy_to_iter((char *)start, tsz, iter) != tsz) {
+=======
+			vread(buf, (char *)start, tsz);
+			/* we have to zero-fill user buffer even if no read */
+			if (copy_to_user(buffer, buf, tsz)) {
+				ret = -EFAULT;
+				goto out;
+			}
+			break;
+		case KCORE_USER:
+			/* User page is handled prior to normal kernel page: */
+			if (copy_to_user(buffer, (char *)start, tsz)) {
+>>>>>>> b7ba80a49124 (Commit)
 				ret = -EFAULT;
 				goto out;
 			}
@@ -545,7 +605,11 @@ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
 			 */
 			if (!page || PageOffline(page) ||
 			    is_page_hwpoison(page) || !pfn_is_ram(pfn)) {
+<<<<<<< HEAD
 				if (iov_iter_zero(tsz, iter) != tsz) {
+=======
+				if (clear_user(buffer, tsz)) {
+>>>>>>> b7ba80a49124 (Commit)
 					ret = -EFAULT;
 					goto out;
 				}
@@ -554,6 +618,7 @@ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
 			fallthrough;
 		case KCORE_VMEMMAP:
 		case KCORE_TEXT:
+<<<<<<< HEAD
 			/*
 			 * We use _copy_to_iter() to bypass usermode hardening
 			 * which would otherwise prevent this operation.
@@ -561,11 +626,39 @@ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
 			if (_copy_to_iter((char *)start, tsz, iter) != tsz) {
 				ret = -EFAULT;
 				goto out;
+=======
+			if (kern_addr_valid(start)) {
+				/*
+				 * Using bounce buffer to bypass the
+				 * hardened user copy kernel text checks.
+				 */
+				if (copy_from_kernel_nofault(buf, (void *)start,
+						tsz)) {
+					if (clear_user(buffer, tsz)) {
+						ret = -EFAULT;
+						goto out;
+					}
+				} else {
+					if (copy_to_user(buffer, buf, tsz)) {
+						ret = -EFAULT;
+						goto out;
+					}
+				}
+			} else {
+				if (clear_user(buffer, tsz)) {
+					ret = -EFAULT;
+					goto out;
+				}
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			break;
 		default:
 			pr_warn_once("Unhandled KCORE type: %d\n", m->type);
+<<<<<<< HEAD
 			if (iov_iter_zero(tsz, iter) != tsz) {
+=======
+			if (clear_user(buffer, tsz)) {
+>>>>>>> b7ba80a49124 (Commit)
 				ret = -EFAULT;
 				goto out;
 			}
@@ -573,6 +666,10 @@ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
 skip:
 		buflen -= tsz;
 		*fpos += tsz;
+<<<<<<< HEAD
+=======
+		buffer += tsz;
+>>>>>>> b7ba80a49124 (Commit)
 		start += tsz;
 		tsz = (buflen > PAGE_SIZE ? PAGE_SIZE : buflen);
 	}
@@ -595,6 +692,13 @@ static int open_kcore(struct inode *inode, struct file *filp)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
+=======
+	filp->private_data = kmalloc(PAGE_SIZE, GFP_KERNEL);
+	if (!filp->private_data)
+		return -ENOMEM;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (kcore_need_update)
 		kcore_update_ram();
 	if (i_size_read(inode) != proc_root_kcore->size) {
@@ -605,9 +709,22 @@ static int open_kcore(struct inode *inode, struct file *filp)
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct proc_ops kcore_proc_ops = {
 	.proc_read_iter	= read_kcore_iter,
 	.proc_open	= open_kcore,
+=======
+static int release_kcore(struct inode *inode, struct file *file)
+{
+	kfree(file->private_data);
+	return 0;
+}
+
+static const struct proc_ops kcore_proc_ops = {
+	.proc_read	= read_kcore,
+	.proc_open	= open_kcore,
+	.proc_release	= release_kcore,
+>>>>>>> b7ba80a49124 (Commit)
 	.proc_lseek	= default_llseek,
 };
 
@@ -624,6 +741,13 @@ static int __meminit kcore_callback(struct notifier_block *self,
 	return NOTIFY_OK;
 }
 
+<<<<<<< HEAD
+=======
+static struct notifier_block kcore_callback_nb __meminitdata = {
+	.notifier_call = kcore_callback,
+	.priority = 0,
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct kcore_list kcore_vmalloc;
 
@@ -676,7 +800,11 @@ static int __init proc_kcore_init(void)
 	add_modules_range();
 	/* Store direct-map area from physical memory map */
 	kcore_update_ram();
+<<<<<<< HEAD
 	hotplug_memory_notifier(kcore_callback, DEFAULT_CALLBACK_PRI);
+=======
+	register_hotmemory_notifier(&kcore_callback_nb);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

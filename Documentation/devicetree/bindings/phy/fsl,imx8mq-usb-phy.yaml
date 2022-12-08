@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/phy/fsl,imx8mq-usb-phy.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Freescale i.MX8MQ USB3 PHY
+=======
+title: Freescale i.MX8MQ USB3 PHY binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Li Jun <jun.li@nxp.com>
@@ -28,9 +32,12 @@ properties:
     items:
       - const: phy
 
+<<<<<<< HEAD
   power-domains:
     maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   vbus-supply:
     description:
       A phandle to the regulator for USB VBUS.

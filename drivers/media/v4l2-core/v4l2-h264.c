@@ -305,8 +305,11 @@ static const char *format_ref_list_p(const struct v4l2_h264_reflist_builder *bui
 	int n = 0, i;
 
 	*out_str = kmalloc(tmp_str_size, GFP_KERNEL);
+<<<<<<< HEAD
 	if (!(*out_str))
 		return NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	n += snprintf(*out_str + n, tmp_str_size - n, "|");
 
@@ -345,8 +348,11 @@ static const char *format_ref_list_b(const struct v4l2_h264_reflist_builder *bui
 	int n = 0, i;
 
 	*out_str = kmalloc(tmp_str_size, GFP_KERNEL);
+<<<<<<< HEAD
 	if (!(*out_str))
 		return NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	n += snprintf(*out_str + n, tmp_str_size - n, "|");
 

@@ -133,13 +133,21 @@ static inline struct tid_group *tid_group_pop(struct exp_tid_set *set)
 	return grp;
 }
 
+<<<<<<< HEAD
 static inline u32 create_tid(u32 rcventry, u32 npages)
+=======
+static inline u32 rcventry2tidinfo(u32 rcventry)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 pair = rcventry & ~0x1;
 
 	return EXP_TID_SET(IDX, pair >> 1) |
+<<<<<<< HEAD
 		EXP_TID_SET(CTRL, 1 << (rcventry - pair)) |
 		EXP_TID_SET(LEN, npages);
+=======
+		EXP_TID_SET(CTRL, 1 << (rcventry - pair));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

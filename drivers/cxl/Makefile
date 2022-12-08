@@ -9,5 +9,9 @@ obj-$(CONFIG_CXL_PORT) += cxl_port.o
 cxl_mem-y := mem.o
 cxl_pci-y := pci.o
 cxl_acpi-y := acpi.o
+<<<<<<< HEAD
 cxl_pmem-y := pmem.o security.o
+=======
+cxl_pmem-y := pmem.o
+>>>>>>> b7ba80a49124 (Commit)
 cxl_port-y := port.o

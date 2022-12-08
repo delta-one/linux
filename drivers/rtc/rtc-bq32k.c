@@ -13,7 +13,10 @@
 #include <linux/i2c.h>
 #include <linux/rtc.h>
 #include <linux/init.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/errno.h>
 #include <linux/bcd.h>
 

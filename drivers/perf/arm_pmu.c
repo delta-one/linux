@@ -514,6 +514,12 @@ static int armpmu_event_init(struct perf_event *event)
 	if (has_branch_stack(event))
 		return -EOPNOTSUPP;
 
+<<<<<<< HEAD
+=======
+	if (armpmu->map_event(event) == -ENOENT)
+		return -ENOENT;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return __hw_perf_event_init(event);
 }
 
@@ -547,10 +553,24 @@ static void armpmu_disable(struct pmu *pmu)
  * microarchitecture, and aren't suitable for another. Thus, only match CPUs of
  * the same microarchitecture.
  */
+<<<<<<< HEAD
 static bool armpmu_filter(struct pmu *pmu, int cpu)
 {
 	struct arm_pmu *armpmu = to_arm_pmu(pmu);
 	return !cpumask_test_cpu(cpu, &armpmu->supported_cpus);
+=======
+static int armpmu_filter_match(struct perf_event *event)
+{
+	struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
+	unsigned int cpu = smp_processor_id();
+	int ret;
+
+	ret = cpumask_test_cpu(cpu, &armpmu->supported_cpus);
+	if (ret && armpmu->filter_match)
+		return armpmu->filter_match(event);
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t cpus_show(struct device *dev,
@@ -752,8 +772,22 @@ static void cpu_pm_pmu_setup(struct arm_pmu *armpmu, unsigned long cmd)
 		case CPU_PM_ENTER_FAILED:
 			 /*
 			  * Restore and enable the counter.
+<<<<<<< HEAD
 			  */
 			armpmu_start(event, PERF_EF_RELOAD);
+=======
+			  * armpmu_start() indirectly calls
+			  *
+			  * perf_event_update_userpage()
+			  *
+			  * that requires RCU read locking to be functional,
+			  * wrap the call within RCU_NONIDLE to make the
+			  * RCU subsystem aware this cpu is not idle from
+			  * an RCU perspective for the armpmu_start() call
+			  * duration.
+			  */
+			RCU_NONIDLE(armpmu_start(event, PERF_EF_RELOAD));
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		default:
 			break;
@@ -842,16 +876,28 @@ static void cpu_pmu_destroy(struct arm_pmu *cpu_pmu)
 					    &cpu_pmu->node);
 }
 
+<<<<<<< HEAD
 struct arm_pmu *armpmu_alloc(void)
+=======
+static struct arm_pmu *__armpmu_alloc(gfp_t flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct arm_pmu *pmu;
 	int cpu;
 
+<<<<<<< HEAD
 	pmu = kzalloc(sizeof(*pmu), GFP_KERNEL);
 	if (!pmu)
 		goto out;
 
 	pmu->hw_events = alloc_percpu_gfp(struct pmu_hw_events, GFP_KERNEL);
+=======
+	pmu = kzalloc(sizeof(*pmu), flags);
+	if (!pmu)
+		goto out;
+
+	pmu->hw_events = alloc_percpu_gfp(struct pmu_hw_events, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!pmu->hw_events) {
 		pr_info("failed to allocate per-cpu PMU data.\n");
 		goto out_free_pmu;
@@ -866,13 +912,22 @@ struct arm_pmu *armpmu_alloc(void)
 		.start		= armpmu_start,
 		.stop		= armpmu_stop,
 		.read		= armpmu_read,
+<<<<<<< HEAD
 		.filter		= armpmu_filter,
+=======
+		.filter_match	= armpmu_filter_match,
+>>>>>>> b7ba80a49124 (Commit)
 		.attr_groups	= pmu->attr_groups,
 		/*
 		 * This is a CPU PMU potentially in a heterogeneous
 		 * configuration (e.g. big.LITTLE). This is not an uncore PMU,
 		 * and we have taken ctx sharing into account (e.g. with our
+<<<<<<< HEAD
 		 * pmu::filter callback and pmu::event_init group validation).
+=======
+		 * pmu::filter_match callback and pmu::event_init group
+		 * validation).
+>>>>>>> b7ba80a49124 (Commit)
 		 */
 		.capabilities	= PERF_PMU_CAP_HETEROGENEOUS_CPUS | PERF_PMU_CAP_EXTENDED_REGS,
 	};
@@ -896,6 +951,20 @@ out:
 	return NULL;
 }
 
+<<<<<<< HEAD
+=======
+struct arm_pmu *armpmu_alloc(void)
+{
+	return __armpmu_alloc(GFP_KERNEL);
+}
+
+struct arm_pmu *armpmu_alloc_atomic(void)
+{
+	return __armpmu_alloc(GFP_ATOMIC);
+}
+
+
+>>>>>>> b7ba80a49124 (Commit)
 void armpmu_free(struct arm_pmu *pmu)
 {
 	free_percpu(pmu->hw_events);

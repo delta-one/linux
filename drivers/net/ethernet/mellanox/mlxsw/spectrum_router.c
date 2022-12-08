@@ -18,7 +18,10 @@
 #include <linux/jhash.h>
 #include <linux/net_namespace.h>
 #include <linux/mutex.h>
+<<<<<<< HEAD
 #include <linux/genalloc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/netevent.h>
 #include <net/neighbour.h>
 #include <net/arp.h>
@@ -60,7 +63,10 @@ struct mlxsw_sp_rif {
 	int mtu;
 	u16 rif_index;
 	u8 mac_profile_id;
+<<<<<<< HEAD
 	u8 rif_entries;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 vr_id;
 	const struct mlxsw_sp_rif_ops *ops;
 	struct mlxsw_sp *mlxsw_sp;
@@ -79,7 +85,10 @@ struct mlxsw_sp_rif_params {
 	};
 	u16 vid;
 	bool lag;
+<<<<<<< HEAD
 	bool double_entry;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlxsw_sp_rif_subport {
@@ -1071,7 +1080,10 @@ mlxsw_sp_ipip_ol_ipip_lb_create(struct mlxsw_sp *mlxsw_sp,
 	lb_params = (struct mlxsw_sp_rif_params_ipip_lb) {
 		.common.dev = ol_dev,
 		.common.lag = false,
+<<<<<<< HEAD
 		.common.double_entry = ipip_ops->double_rif_entry,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.lb_config = ipip_ops->ol_loopback_config(mlxsw_sp, ol_dev),
 	};
 
@@ -2951,7 +2963,11 @@ struct mlxsw_sp_nexthop_group_info {
 	   gateway:1, /* routes using the group use a gateway */
 	   is_resilient:1;
 	struct list_head list; /* member in nh_res_grp_list */
+<<<<<<< HEAD
 	struct mlxsw_sp_nexthop nexthops[];
+=======
+	struct mlxsw_sp_nexthop nexthops[0];
+>>>>>>> b7ba80a49124 (Commit)
 #define nh_rif	nexthops[0].rif
 };
 
@@ -7830,6 +7846,7 @@ mlxsw_sp_dev_rif_type(const struct mlxsw_sp *mlxsw_sp,
 	return mlxsw_sp_fid_type_rif_type(mlxsw_sp, type);
 }
 
+<<<<<<< HEAD
 static int mlxsw_sp_rif_index_alloc(struct mlxsw_sp *mlxsw_sp, u16 *p_rif_index,
 				    u8 rif_entries)
 {
@@ -7850,6 +7867,20 @@ static void mlxsw_sp_rif_index_free(struct mlxsw_sp *mlxsw_sp, u16 rif_index,
 {
 	gen_pool_free(mlxsw_sp->router->rifs_table,
 		      MLXSW_SP_ROUTER_GENALLOC_OFFSET + rif_index, rif_entries);
+=======
+static int mlxsw_sp_rif_index_alloc(struct mlxsw_sp *mlxsw_sp, u16 *p_rif_index)
+{
+	int i;
+
+	for (i = 0; i < MLXSW_CORE_RES_GET(mlxsw_sp->core, MAX_RIFS); i++) {
+		if (!mlxsw_sp->router->rifs[i]) {
+			*p_rif_index = i;
+			return 0;
+		}
+	}
+
+	return -ENOBUFS;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct mlxsw_sp_rif *mlxsw_sp_rif_alloc(size_t rif_size, u16 rif_index,
@@ -8093,7 +8124,10 @@ mlxsw_sp_rif_create(struct mlxsw_sp *mlxsw_sp,
 		    const struct mlxsw_sp_rif_params *params,
 		    struct netlink_ext_ack *extack)
 {
+<<<<<<< HEAD
 	u8 rif_entries = params->double_entry ? 2 : 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 tb_id = l3mdev_fib_table(params->dev);
 	const struct mlxsw_sp_rif_ops *ops;
 	struct mlxsw_sp_fid *fid = NULL;
@@ -8111,7 +8145,11 @@ mlxsw_sp_rif_create(struct mlxsw_sp *mlxsw_sp,
 		return ERR_CAST(vr);
 	vr->rif_count++;
 
+<<<<<<< HEAD
 	err = mlxsw_sp_rif_index_alloc(mlxsw_sp, &rif_index, rif_entries);
+=======
+	err = mlxsw_sp_rif_index_alloc(mlxsw_sp, &rif_index);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		NL_SET_ERR_MSG_MOD(extack, "Exceeded number of supported router interfaces");
 		goto err_rif_index_alloc;
@@ -8126,7 +8164,10 @@ mlxsw_sp_rif_create(struct mlxsw_sp *mlxsw_sp,
 	mlxsw_sp->router->rifs[rif_index] = rif;
 	rif->mlxsw_sp = mlxsw_sp;
 	rif->ops = ops;
+<<<<<<< HEAD
 	rif->rif_entries = rif_entries;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ops->fid_get) {
 		fid = ops->fid_get(rif, extack);
@@ -8160,7 +8201,11 @@ mlxsw_sp_rif_create(struct mlxsw_sp *mlxsw_sp,
 		mlxsw_sp_rif_counters_alloc(rif);
 	}
 
+<<<<<<< HEAD
 	atomic_add(rif_entries, &mlxsw_sp->router->rifs_count);
+=======
+	atomic_inc(&mlxsw_sp->router->rifs_count);
+>>>>>>> b7ba80a49124 (Commit)
 	return rif;
 
 err_stats_enable:
@@ -8176,7 +8221,10 @@ err_fid_get:
 	dev_put(rif->dev);
 	kfree(rif);
 err_rif_alloc:
+<<<<<<< HEAD
 	mlxsw_sp_rif_index_free(mlxsw_sp, rif_index, rif_entries);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_rif_index_alloc:
 	vr->rif_count--;
 	mlxsw_sp_vr_put(mlxsw_sp, vr);
@@ -8188,12 +8236,19 @@ static void mlxsw_sp_rif_destroy(struct mlxsw_sp_rif *rif)
 	const struct mlxsw_sp_rif_ops *ops = rif->ops;
 	struct mlxsw_sp *mlxsw_sp = rif->mlxsw_sp;
 	struct mlxsw_sp_fid *fid = rif->fid;
+<<<<<<< HEAD
 	u8 rif_entries = rif->rif_entries;
 	u16 rif_index = rif->rif_index;
 	struct mlxsw_sp_vr *vr;
 	int i;
 
 	atomic_sub(rif_entries, &mlxsw_sp->router->rifs_count);
+=======
+	struct mlxsw_sp_vr *vr;
+	int i;
+
+	atomic_dec(&mlxsw_sp->router->rifs_count);
+>>>>>>> b7ba80a49124 (Commit)
 	mlxsw_sp_router_rif_gone_sync(mlxsw_sp, rif);
 	vr = &mlxsw_sp->router->vrs[rif->vr_id];
 
@@ -8215,7 +8270,10 @@ static void mlxsw_sp_rif_destroy(struct mlxsw_sp_rif *rif)
 	mlxsw_sp->router->rifs[rif->rif_index] = NULL;
 	dev_put(rif->dev);
 	kfree(rif);
+<<<<<<< HEAD
 	mlxsw_sp_rif_index_free(mlxsw_sp, rif_index, rif_entries);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vr->rif_count--;
 	mlxsw_sp_vr_put(mlxsw_sp, vr);
 }
@@ -9789,17 +9847,25 @@ mlxsw_sp_ul_rif_create(struct mlxsw_sp *mlxsw_sp, struct mlxsw_sp_vr *vr,
 		       struct netlink_ext_ack *extack)
 {
 	struct mlxsw_sp_rif *ul_rif;
+<<<<<<< HEAD
 	u8 rif_entries = 1;
 	u16 rif_index;
 	int err;
 
 	err = mlxsw_sp_rif_index_alloc(mlxsw_sp, &rif_index, rif_entries);
+=======
+	u16 rif_index;
+	int err;
+
+	err = mlxsw_sp_rif_index_alloc(mlxsw_sp, &rif_index);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		NL_SET_ERR_MSG_MOD(extack, "Exceeded number of supported router interfaces");
 		return ERR_PTR(err);
 	}
 
 	ul_rif = mlxsw_sp_rif_alloc(sizeof(*ul_rif), rif_index, vr->id, NULL);
+<<<<<<< HEAD
 	if (!ul_rif) {
 		err = -ENOMEM;
 		goto err_rif_alloc;
@@ -9808,24 +9874,39 @@ mlxsw_sp_ul_rif_create(struct mlxsw_sp *mlxsw_sp, struct mlxsw_sp_vr *vr,
 	mlxsw_sp->router->rifs[rif_index] = ul_rif;
 	ul_rif->mlxsw_sp = mlxsw_sp;
 	ul_rif->rif_entries = rif_entries;
+=======
+	if (!ul_rif)
+		return ERR_PTR(-ENOMEM);
+
+	mlxsw_sp->router->rifs[rif_index] = ul_rif;
+	ul_rif->mlxsw_sp = mlxsw_sp;
+>>>>>>> b7ba80a49124 (Commit)
 	err = mlxsw_sp_rif_ipip_lb_ul_rif_op(ul_rif, true);
 	if (err)
 		goto ul_rif_op_err;
 
+<<<<<<< HEAD
 	atomic_add(rif_entries, &mlxsw_sp->router->rifs_count);
+=======
+	atomic_inc(&mlxsw_sp->router->rifs_count);
+>>>>>>> b7ba80a49124 (Commit)
 	return ul_rif;
 
 ul_rif_op_err:
 	mlxsw_sp->router->rifs[rif_index] = NULL;
 	kfree(ul_rif);
+<<<<<<< HEAD
 err_rif_alloc:
 	mlxsw_sp_rif_index_free(mlxsw_sp, rif_index, rif_entries);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ERR_PTR(err);
 }
 
 static void mlxsw_sp_ul_rif_destroy(struct mlxsw_sp_rif *ul_rif)
 {
 	struct mlxsw_sp *mlxsw_sp = ul_rif->mlxsw_sp;
+<<<<<<< HEAD
 	u8 rif_entries = ul_rif->rif_entries;
 	u16 rif_index = ul_rif->rif_index;
 
@@ -9834,6 +9915,13 @@ static void mlxsw_sp_ul_rif_destroy(struct mlxsw_sp_rif *ul_rif)
 	mlxsw_sp->router->rifs[ul_rif->rif_index] = NULL;
 	kfree(ul_rif);
 	mlxsw_sp_rif_index_free(mlxsw_sp, rif_index, rif_entries);
+=======
+
+	atomic_dec(&mlxsw_sp->router->rifs_count);
+	mlxsw_sp_rif_ipip_lb_ul_rif_op(ul_rif, false);
+	mlxsw_sp->router->rifs[ul_rif->rif_index] = NULL;
+	kfree(ul_rif);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct mlxsw_sp_rif *
@@ -9967,6 +10055,7 @@ static const struct mlxsw_sp_rif_ops *mlxsw_sp2_rif_ops_arr[] = {
 	[MLXSW_SP_RIF_TYPE_IPIP_LB]	= &mlxsw_sp2_rif_ipip_lb_ops,
 };
 
+<<<<<<< HEAD
 static int mlxsw_sp_rifs_table_init(struct mlxsw_sp *mlxsw_sp)
 {
 	struct gen_pool *rifs_table;
@@ -9998,12 +10087,17 @@ static void mlxsw_sp_rifs_table_fini(struct mlxsw_sp *mlxsw_sp)
 	gen_pool_destroy(mlxsw_sp->router->rifs_table);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mlxsw_sp_rifs_init(struct mlxsw_sp *mlxsw_sp)
 {
 	u64 max_rifs = MLXSW_CORE_RES_GET(mlxsw_sp->core, MAX_RIFS);
 	struct devlink *devlink = priv_to_devlink(mlxsw_sp->core);
 	struct mlxsw_core *core = mlxsw_sp->core;
+<<<<<<< HEAD
 	int err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!MLXSW_CORE_RES_VALID(core, MAX_RIF_MAC_PROFILES))
 		return -EIO;
@@ -10016,10 +10110,13 @@ static int mlxsw_sp_rifs_init(struct mlxsw_sp *mlxsw_sp)
 	if (!mlxsw_sp->router->rifs)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	err = mlxsw_sp_rifs_table_init(mlxsw_sp);
 	if (err)
 		goto err_rifs_table_init;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	idr_init(&mlxsw_sp->router->rif_mac_profiles_idr);
 	atomic_set(&mlxsw_sp->router->rif_mac_profiles_count, 0);
 	atomic_set(&mlxsw_sp->router->rifs_count, 0);
@@ -10033,10 +10130,13 @@ static int mlxsw_sp_rifs_init(struct mlxsw_sp *mlxsw_sp)
 				       mlxsw_sp);
 
 	return 0;
+<<<<<<< HEAD
 
 err_rifs_table_init:
 	kfree(mlxsw_sp->router->rifs);
 	return err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mlxsw_sp_rifs_fini(struct mlxsw_sp *mlxsw_sp)
@@ -10053,7 +10153,10 @@ static void mlxsw_sp_rifs_fini(struct mlxsw_sp *mlxsw_sp)
 					 MLXSW_SP_RESOURCE_RIF_MAC_PROFILES);
 	WARN_ON(!idr_is_empty(&mlxsw_sp->router->rif_mac_profiles_idr));
 	idr_destroy(&mlxsw_sp->router->rif_mac_profiles_idr);
+<<<<<<< HEAD
 	mlxsw_sp_rifs_table_fini(mlxsw_sp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(mlxsw_sp->router->rifs);
 }
 
@@ -10381,6 +10484,7 @@ err_reg_write:
 					      old_inc_parsing_depth);
 	return err;
 }
+<<<<<<< HEAD
 
 static void mlxsw_sp_mp_hash_fini(struct mlxsw_sp *mlxsw_sp)
 {
@@ -10389,15 +10493,20 @@ static void mlxsw_sp_mp_hash_fini(struct mlxsw_sp *mlxsw_sp)
 	mlxsw_sp_mp_hash_parsing_depth_adjust(mlxsw_sp, old_inc_parsing_depth,
 					      false);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static int mlxsw_sp_mp_hash_init(struct mlxsw_sp *mlxsw_sp)
 {
 	return 0;
 }
+<<<<<<< HEAD
 
 static void mlxsw_sp_mp_hash_fini(struct mlxsw_sp *mlxsw_sp)
 {
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 static int mlxsw_sp_dscp_init(struct mlxsw_sp *mlxsw_sp)
@@ -10627,7 +10736,10 @@ err_register_inet6addr_notifier:
 err_register_inetaddr_notifier:
 	mlxsw_core_flush_owq();
 err_dscp_init:
+<<<<<<< HEAD
 	mlxsw_sp_mp_hash_fini(mlxsw_sp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_mp_hash_init:
 	mlxsw_sp_neigh_fini(mlxsw_sp);
 err_neigh_init:
@@ -10668,7 +10780,10 @@ void mlxsw_sp_router_fini(struct mlxsw_sp *mlxsw_sp)
 	unregister_inet6addr_notifier(&mlxsw_sp->router->inet6addr_nb);
 	unregister_inetaddr_notifier(&mlxsw_sp->router->inetaddr_nb);
 	mlxsw_core_flush_owq();
+<<<<<<< HEAD
 	mlxsw_sp_mp_hash_fini(mlxsw_sp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mlxsw_sp_neigh_fini(mlxsw_sp);
 	mlxsw_sp_lb_rif_fini(mlxsw_sp);
 	mlxsw_sp_vrs_fini(mlxsw_sp);

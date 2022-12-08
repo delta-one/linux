@@ -344,7 +344,11 @@ static const struct sysfs_ops kfd_procfs_ops = {
 	.show = kfd_procfs_show,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type procfs_type = {
+=======
+static struct kobj_type procfs_type = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = kfd_procfs_kobj_release,
 	.sysfs_ops = &kfd_procfs_ops,
 };
@@ -469,7 +473,11 @@ static const struct sysfs_ops procfs_queue_ops = {
 	.show = kfd_procfs_queue_show,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type procfs_queue_type = {
+=======
+static struct kobj_type procfs_queue_type = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops = &procfs_queue_ops,
 	.default_groups = procfs_queue_groups,
 };
@@ -478,7 +486,11 @@ static const struct sysfs_ops procfs_stats_ops = {
 	.show = kfd_procfs_stats_show,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type procfs_stats_type = {
+=======
+static struct kobj_type procfs_stats_type = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops = &procfs_stats_ops,
 	.release = kfd_procfs_kobj_release,
 };
@@ -487,7 +499,11 @@ static const struct sysfs_ops sysfs_counters_ops = {
 	.show = kfd_sysfs_counters_show,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type sysfs_counters_type = {
+=======
+static struct kobj_type sysfs_counters_type = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops = &sysfs_counters_ops,
 	.release = kfd_procfs_kobj_release,
 };
@@ -689,6 +705,7 @@ void kfd_process_destroy_wq(void)
 }
 
 static void kfd_process_free_gpuvm(struct kgd_mem *mem,
+<<<<<<< HEAD
 			struct kfd_process_device *pdd, void **kptr)
 {
 	struct kfd_dev *dev = pdd->dev;
@@ -696,6 +713,15 @@ static void kfd_process_free_gpuvm(struct kgd_mem *mem,
 	if (kptr && *kptr) {
 		amdgpu_amdkfd_gpuvm_unmap_gtt_bo_from_kernel(mem);
 		*kptr = NULL;
+=======
+			struct kfd_process_device *pdd, void *kptr)
+{
+	struct kfd_dev *dev = pdd->dev;
+
+	if (kptr) {
+		amdgpu_amdkfd_gpuvm_unmap_gtt_bo_from_kernel(mem);
+		kptr = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	amdgpu_amdkfd_gpuvm_unmap_memory_from_gpu(dev->adev, mem, pdd->drm_priv);
@@ -795,7 +821,11 @@ static void kfd_process_device_destroy_ib_mem(struct kfd_process_device *pdd)
 	if (!qpd->ib_kaddr || !qpd->ib_base)
 		return;
 
+<<<<<<< HEAD
 	kfd_process_free_gpuvm(qpd->ib_mem, pdd, &qpd->ib_kaddr);
+=======
+	kfd_process_free_gpuvm(qpd->ib_mem, pdd, qpd->ib_kaddr);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct kfd_process *kfd_create_process(struct file *filep)
@@ -1050,8 +1080,13 @@ static void kfd_process_destroy_pdds(struct kfd_process *p)
 		 * for auto suspend
 		 */
 		if (pdd->runtime_inuse) {
+<<<<<<< HEAD
 			pm_runtime_mark_last_busy(adev_to_drm(pdd->dev->adev)->dev);
 			pm_runtime_put_autosuspend(adev_to_drm(pdd->dev->adev)->dev);
+=======
+			pm_runtime_mark_last_busy(pdd->dev->ddev->dev);
+			pm_runtime_put_autosuspend(pdd->dev->ddev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 			pdd->runtime_inuse = false;
 		}
 
@@ -1167,6 +1202,7 @@ static void kfd_process_free_notifier(struct mmu_notifier *mn)
 	kfd_unref_process(container_of(mn, struct kfd_process, mmu_notifier));
 }
 
+<<<<<<< HEAD
 static void kfd_process_notifier_release_internal(struct kfd_process *p)
 {
 	cancel_delayed_work_sync(&p->eviction_work);
@@ -1178,6 +1214,8 @@ static void kfd_process_notifier_release_internal(struct kfd_process *p)
 	mmu_notifier_put(&p->mmu_notifier);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void kfd_process_notifier_release(struct mmu_notifier *mn,
 					struct mm_struct *mm)
 {
@@ -1192,6 +1230,7 @@ static void kfd_process_notifier_release(struct mmu_notifier *mn,
 		return;
 
 	mutex_lock(&kfd_processes_mutex);
+<<<<<<< HEAD
 	/*
 	 * Do early return if table is empty.
 	 *
@@ -1203,11 +1242,23 @@ static void kfd_process_notifier_release(struct mmu_notifier *mn,
 		mutex_unlock(&kfd_processes_mutex);
 		return;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hash_del_rcu(&p->kfd_processes);
 	mutex_unlock(&kfd_processes_mutex);
 	synchronize_srcu(&kfd_processes_srcu);
 
+<<<<<<< HEAD
 	kfd_process_notifier_release_internal(p);
+=======
+	cancel_delayed_work_sync(&p->eviction_work);
+	cancel_delayed_work_sync(&p->restore_work);
+
+	/* Indicate to other users that MM is no longer valid */
+	p->mm = NULL;
+
+	mmu_notifier_put(&p->mmu_notifier);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct mmu_notifier_ops kfd_process_mmu_notifier_ops = {
@@ -1216,6 +1267,7 @@ static const struct mmu_notifier_ops kfd_process_mmu_notifier_ops = {
 	.free_notifier = kfd_process_free_notifier,
 };
 
+<<<<<<< HEAD
 /*
  * This code handles the case when driver is being unloaded before all
  * mm_struct are released.  We need to safely free the kfd_process and
@@ -1253,6 +1305,8 @@ void kfd_cleanup_processes(void)
 	mmu_notifier_synchronize();
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int kfd_process_init_cwsr_apu(struct kfd_process *p, struct file *filep)
 {
 	unsigned long  offset;
@@ -1330,7 +1384,11 @@ static void kfd_process_device_destroy_cwsr_dgpu(struct kfd_process_device *pdd)
 	if (!dev->cwsr_enabled || !qpd->cwsr_kaddr || !qpd->cwsr_base)
 		return;
 
+<<<<<<< HEAD
 	kfd_process_free_gpuvm(qpd->cwsr_mem, pdd, &qpd->cwsr_kaddr);
+=======
+	kfd_process_free_gpuvm(qpd->cwsr_mem, pdd, qpd->cwsr_kaddr);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void kfd_process_set_trap_handler(struct qcm_process_device *qpd,
@@ -1383,7 +1441,11 @@ bool kfd_process_xnack_mode(struct kfd_process *p, bool supported)
 		 * per-process XNACK mode selection. But let the dev->noretry
 		 * setting still influence the default XNACK mode.
 		 */
+<<<<<<< HEAD
 		if (supported && KFD_SUPPORT_XNACK_PER_PROCESS(dev))
+=======
+		if (supported && KFD_GC_VERSION(dev) == IP_VERSION(9, 4, 2))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		/* GFXv10 and later GPUs do not support shader preemption
@@ -1616,8 +1678,11 @@ err_free_pdd:
 int kfd_process_device_init_vm(struct kfd_process_device *pdd,
 			       struct file *drm_file)
 {
+<<<<<<< HEAD
 	struct amdgpu_fpriv *drv_priv;
 	struct amdgpu_vm *avm;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct kfd_process *p;
 	struct kfd_dev *dev;
 	int ret;
@@ -1628,6 +1693,7 @@ int kfd_process_device_init_vm(struct kfd_process_device *pdd,
 	if (pdd->drm_priv)
 		return -EBUSY;
 
+<<<<<<< HEAD
 	ret = amdgpu_file_to_fpriv(drm_file, &drv_priv);
 	if (ret)
 		return ret;
@@ -1639,6 +1705,14 @@ int kfd_process_device_init_vm(struct kfd_process_device *pdd,
 	ret = amdgpu_amdkfd_gpuvm_acquire_process_vm(dev->adev, avm,
 						     &p->kgd_process_info,
 						     &p->ef);
+=======
+	p = pdd->process;
+	dev = pdd->dev;
+
+	ret = amdgpu_amdkfd_gpuvm_acquire_process_vm(
+		dev->adev, drm_file, p->pasid,
+		&p->kgd_process_info, &p->ef);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		pr_err("Failed to create process VM object\n");
 		return ret;
@@ -1653,14 +1727,18 @@ int kfd_process_device_init_vm(struct kfd_process_device *pdd,
 	if (ret)
 		goto err_init_cwsr;
 
+<<<<<<< HEAD
 	ret = amdgpu_amdkfd_gpuvm_set_vm_pasid(dev->adev, avm, p->pasid);
 	if (ret)
 		goto err_set_pasid;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pdd->drm_file = drm_file;
 
 	return 0;
 
+<<<<<<< HEAD
 err_set_pasid:
 	kfd_process_device_destroy_cwsr_dgpu(pdd);
 err_init_cwsr:
@@ -1668,6 +1746,12 @@ err_init_cwsr:
 err_reserve_ib_mem:
 	pdd->drm_priv = NULL;
 	amdgpu_amdkfd_gpuvm_destroy_cb(dev->adev, avm);
+=======
+err_init_cwsr:
+err_reserve_ib_mem:
+	kfd_process_device_free_bos(pdd);
+	pdd->drm_priv = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -1700,9 +1784,15 @@ struct kfd_process_device *kfd_bind_process_to_device(struct kfd_dev *dev,
 	 * pdd is destroyed.
 	 */
 	if (!pdd->runtime_inuse) {
+<<<<<<< HEAD
 		err = pm_runtime_get_sync(adev_to_drm(dev->adev)->dev);
 		if (err < 0) {
 			pm_runtime_put_autosuspend(adev_to_drm(dev->adev)->dev);
+=======
+		err = pm_runtime_get_sync(dev->ddev->dev);
+		if (err < 0) {
+			pm_runtime_put_autosuspend(dev->ddev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 			return ERR_PTR(err);
 		}
 	}
@@ -1722,8 +1812,13 @@ struct kfd_process_device *kfd_bind_process_to_device(struct kfd_dev *dev,
 out:
 	/* balance runpm reference count and exit with error */
 	if (!pdd->runtime_inuse) {
+<<<<<<< HEAD
 		pm_runtime_mark_last_busy(adev_to_drm(dev->adev)->dev);
 		pm_runtime_put_autosuspend(adev_to_drm(dev->adev)->dev);
+=======
+		pm_runtime_mark_last_busy(dev->ddev->dev);
+		pm_runtime_put_autosuspend(dev->ddev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ERR_PTR(err);
@@ -2039,8 +2134,13 @@ int kfd_reserved_mem_mmap(struct kfd_dev *dev, struct kfd_process *process,
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_IO | VM_DONTCOPY | VM_DONTEXPAND
 		| VM_NORESERVE | VM_DONTDUMP | VM_PFNMAP);
+=======
+	vma->vm_flags |= VM_IO | VM_DONTCOPY | VM_DONTEXPAND
+		| VM_NORESERVE | VM_DONTDUMP | VM_PFNMAP;
+>>>>>>> b7ba80a49124 (Commit)
 	/* Mapping pages to user process */
 	return remap_pfn_range(vma, vma->vm_start,
 			       PFN_DOWN(__pa(qpd->cwsr_kaddr)),

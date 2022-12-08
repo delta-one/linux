@@ -253,7 +253,11 @@ MODULE_DEVICE_TABLE(of, lochnagar_of_match);
 static struct platform_driver lochnagar_sc_codec_driver = {
 	.driver = {
 		.name = "lochnagar-soundcard",
+<<<<<<< HEAD
 		.of_match_table = lochnagar_of_match,
+=======
+		.of_match_table = of_match_ptr(lochnagar_of_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 
 	.probe = lochnagar_sc_probe,

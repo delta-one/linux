@@ -387,7 +387,11 @@ error_alloc:
  *
  * This function is called when the platform device is removed.
  */
+<<<<<<< HEAD
 static void mpc8610_hpcd_remove(struct platform_device *pdev)
+=======
+static int mpc8610_hpcd_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 	struct mpc8610_hpcd_data *machine_data =
@@ -395,11 +399,20 @@ static void mpc8610_hpcd_remove(struct platform_device *pdev)
 
 	snd_soc_unregister_card(card);
 	kfree(machine_data);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver mpc8610_hpcd_driver = {
 	.probe = mpc8610_hpcd_probe,
+<<<<<<< HEAD
 	.remove_new = mpc8610_hpcd_remove,
+=======
+	.remove = mpc8610_hpcd_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		/* The name must match 'compatible' property in the device tree,
 		 * in lowercase letters.

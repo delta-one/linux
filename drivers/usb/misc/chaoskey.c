@@ -200,6 +200,10 @@ static int chaoskey_probe(struct usb_interface *interface,
 
 	dev->hwrng.name = dev->name ? dev->name : chaoskey_driver.name;
 	dev->hwrng.read = chaoskey_rng_read;
+<<<<<<< HEAD
+=======
+	dev->hwrng.quality = 1024;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev->hwrng_registered = (hwrng_register(&dev->hwrng) == 0);
 	if (!dev->hwrng_registered)

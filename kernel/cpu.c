@@ -623,7 +623,11 @@ static int finish_cpu(unsigned int cpu)
 	 */
 	if (mm != &init_mm)
 		idle->active_mm = &init_mm;
+<<<<<<< HEAD
 	mmdrop_lazy_tlb(mm);
+=======
+	mmdrop(mm);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -663,6 +667,7 @@ static bool cpuhp_next_state(bool bringup,
 	return true;
 }
 
+<<<<<<< HEAD
 static int __cpuhp_invoke_callback_range(bool bringup,
 					 unsigned int cpu,
 					 struct cpuhp_cpu_state *st,
@@ -708,6 +713,23 @@ static inline void cpuhp_invoke_callback_range_nofail(bool bringup,
 						      enum cpuhp_state target)
 {
 	__cpuhp_invoke_callback_range(bringup, cpu, st, target, true);
+=======
+static int cpuhp_invoke_callback_range(bool bringup,
+				       unsigned int cpu,
+				       struct cpuhp_cpu_state *st,
+				       enum cpuhp_state target)
+{
+	enum cpuhp_state state;
+	int err = 0;
+
+	while (cpuhp_next_state(bringup, &state, st, target)) {
+		err = cpuhp_invoke_callback(cpu, state, bringup, NULL, NULL);
+		if (err)
+			break;
+	}
+
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool can_rollback_cpu(struct cpuhp_cpu_state *st)
@@ -1029,6 +1051,10 @@ static int take_cpu_down(void *_param)
 	struct cpuhp_cpu_state *st = this_cpu_ptr(&cpuhp_state);
 	enum cpuhp_state target = max((int)st->target, CPUHP_AP_OFFLINE);
 	int err, cpu = smp_processor_id();
+<<<<<<< HEAD
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Ensure this CPU doesn't handle any more interrupts. */
 	err = __cpu_disable();
@@ -1041,10 +1067,20 @@ static int take_cpu_down(void *_param)
 	 */
 	WARN_ON(st->state != (CPUHP_TEARDOWN_CPU - 1));
 
+<<<<<<< HEAD
 	/*
 	 * Invoke the former CPU_DYING callbacks. DYING must not fail!
 	 */
 	cpuhp_invoke_callback_range_nofail(false, cpu, st, target);
+=======
+	/* Invoke the former CPU_DYING callbacks */
+	ret = cpuhp_invoke_callback_range(false, cpu, st, target);
+
+	/*
+	 * DYING must not fail!
+	 */
+	WARN_ON_ONCE(ret);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Give up timekeeping duties */
 	tick_handover_do_timer();
@@ -1322,14 +1358,26 @@ void notify_cpu_starting(unsigned int cpu)
 {
 	struct cpuhp_cpu_state *st = per_cpu_ptr(&cpuhp_state, cpu);
 	enum cpuhp_state target = min((int)st->target, CPUHP_AP_ONLINE);
+<<<<<<< HEAD
 
 	rcu_cpu_starting(cpu);	/* Enables RCU usage on this CPU. */
 	cpumask_set_cpu(cpu, &cpus_booted_once_mask);
+=======
+	int ret;
+
+	rcu_cpu_starting(cpu);	/* Enables RCU usage on this CPU. */
+	cpumask_set_cpu(cpu, &cpus_booted_once_mask);
+	ret = cpuhp_invoke_callback_range(true, cpu, st, target);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * STARTING must not fail!
 	 */
+<<<<<<< HEAD
 	cpuhp_invoke_callback_range_nofail(true, cpu, st, target);
+=======
+	WARN_ON_ONCE(ret);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -2350,10 +2398,15 @@ static ssize_t target_store(struct device *dev, struct device_attribute *attr,
 
 	if (st->state < target)
 		ret = cpu_up(dev->id, target);
+<<<<<<< HEAD
 	else if (st->state > target)
 		ret = cpu_down(dev->id, target);
 	else if (WARN_ON(st->target != target))
 		st->target = target;
+=======
+	else
+		ret = cpu_down(dev->id, target);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	unlock_device_hotplug();
 	return ret ? ret : count;
@@ -2569,6 +2622,7 @@ static const struct attribute_group cpuhp_smt_attr_group = {
 
 static int __init cpu_smt_sysfs_init(void)
 {
+<<<<<<< HEAD
 	struct device *dev_root;
 	int ret = -ENODEV;
 
@@ -2578,17 +2632,25 @@ static int __init cpu_smt_sysfs_init(void)
 		put_device(dev_root);
 	}
 	return ret;
+=======
+	return sysfs_create_group(&cpu_subsys.dev_root->kobj,
+				  &cpuhp_smt_attr_group);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __init cpuhp_sysfs_init(void)
 {
+<<<<<<< HEAD
 	struct device *dev_root;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int cpu, ret;
 
 	ret = cpu_smt_sysfs_init();
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	dev_root = bus_get_dev_root(&cpu_subsys);
 	if (dev_root) {
 		ret = sysfs_create_group(&dev_root->kobj, &cpuhp_cpu_root_attr_group);
@@ -2596,6 +2658,12 @@ static int __init cpuhp_sysfs_init(void)
 		if (ret)
 			return ret;
 	}
+=======
+	ret = sysfs_create_group(&cpu_subsys.dev_root->kobj,
+				 &cpuhp_cpu_root_attr_group);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for_each_possible_cpu(cpu) {
 		struct device *dev = get_cpu_device(cpu);
@@ -2725,7 +2793,10 @@ void __init boot_cpu_hotplug_init(void)
 	cpumask_set_cpu(smp_processor_id(), &cpus_booted_once_mask);
 #endif
 	this_cpu_write(cpuhp_state.state, CPUHP_ONLINE);
+<<<<<<< HEAD
 	this_cpu_write(cpuhp_state.target, CPUHP_ONLINE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*

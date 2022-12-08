@@ -29,7 +29,11 @@ static unsigned long get_entry_num_slots(efi_memory_desc_t *md,
 		return 0;
 
 	region_end = min(md->phys_addr + md->num_pages * EFI_PAGE_SIZE - 1,
+<<<<<<< HEAD
 			 (u64)EFI_ALLOC_LIMIT);
+=======
+			 (u64)ULONG_MAX);
+>>>>>>> b7ba80a49124 (Commit)
 	if (region_end < size)
 		return 0;
 
@@ -53,8 +57,12 @@ static unsigned long get_entry_num_slots(efi_memory_desc_t *md,
 efi_status_t efi_random_alloc(unsigned long size,
 			      unsigned long align,
 			      unsigned long *addr,
+<<<<<<< HEAD
 			      unsigned long random_seed,
 			      int memory_type)
+=======
+			      unsigned long random_seed)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long total_slots = 0, target_slot;
 	unsigned long total_mirrored_slots = 0;
@@ -101,7 +109,10 @@ efi_status_t efi_random_alloc(unsigned long size,
 	 * to calculate the randomly chosen address, and allocate it directly
 	 * using EFI_ALLOCATE_ADDRESS.
 	 */
+<<<<<<< HEAD
 	status = EFI_OUT_OF_RESOURCES;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (map_offset = 0; map_offset < map->map_size; map_offset += map->desc_size) {
 		efi_memory_desc_t *md = (void *)map->map + map_offset;
 		efi_physical_addr_t target;
@@ -120,7 +131,11 @@ efi_status_t efi_random_alloc(unsigned long size,
 		pages = size / EFI_PAGE_SIZE;
 
 		status = efi_bs_call(allocate_pages, EFI_ALLOCATE_ADDRESS,
+<<<<<<< HEAD
 				     memory_type, pages, &target);
+=======
+				     EFI_LOADER_DATA, pages, &target);
+>>>>>>> b7ba80a49124 (Commit)
 		if (status == EFI_SUCCESS)
 			*addr = target;
 		break;

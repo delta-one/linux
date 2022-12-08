@@ -82,12 +82,26 @@ int fsverity_verify_signature(const struct fsverity_info *vi,
 		return err;
 	}
 
+<<<<<<< HEAD
+=======
+	pr_debug("Valid signature for file digest %s:%*phN\n",
+		 hash_alg->name, hash_alg->digest_size, vi->file_digest);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 #ifdef CONFIG_SYSCTL
 static struct ctl_table_header *fsverity_sysctl_header;
 
+<<<<<<< HEAD
+=======
+static const struct ctl_path fsverity_sysctl_path[] = {
+	{ .procname = "fs", },
+	{ .procname = "verity", },
+	{ }
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct ctl_table fsverity_sysctl_table[] = {
 	{
 		.procname       = "require_signatures",
@@ -103,7 +117,12 @@ static struct ctl_table fsverity_sysctl_table[] = {
 
 static int __init fsverity_sysctl_init(void)
 {
+<<<<<<< HEAD
 	fsverity_sysctl_header = register_sysctl("fs/verity", fsverity_sysctl_table);
+=======
+	fsverity_sysctl_header = register_sysctl_paths(fsverity_sysctl_path,
+						       fsverity_sysctl_table);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!fsverity_sysctl_header) {
 		pr_err("sysctl registration failed!\n");
 		return -ENOMEM;

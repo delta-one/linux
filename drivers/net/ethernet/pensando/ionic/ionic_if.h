@@ -8,7 +8,11 @@
 #define IONIC_DEV_INFO_VERSION			1
 #define IONIC_IFNAMSIZ				16
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * enum ionic_cmd_opcode - Device commands
  */
 enum ionic_cmd_opcode {
@@ -54,7 +58,10 @@ enum ionic_cmd_opcode {
 	/* SR/IOV commands */
 	IONIC_CMD_VF_GETATTR			= 60,
 	IONIC_CMD_VF_SETATTR			= 61,
+<<<<<<< HEAD
 	IONIC_CMD_VF_CTRL			= 62,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* QoS commands */
 	IONIC_CMD_QOS_CLASS_IDENTIFY		= 240,
@@ -201,7 +208,10 @@ struct ionic_dev_reset_comp {
 };
 
 #define IONIC_IDENTITY_VERSION_1	1
+<<<<<<< HEAD
 #define IONIC_DEV_IDENTITY_VERSION_2	2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct ionic_dev_identify_cmd - Driver/device identify command
@@ -256,6 +266,7 @@ union ionic_drv_identity {
 };
 
 /**
+<<<<<<< HEAD
  * enum ionic_dev_capability - Device capabilities
  * @IONIC_DEV_CAP_VF_CTRL:     Device supports VF ctrl operations
  */
@@ -264,6 +275,8 @@ enum ionic_dev_capability {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * union ionic_dev_identity - device identity information
  * @version:          Version of device identify
  * @type:             Identify type (0 for now)
@@ -283,7 +296,10 @@ enum ionic_dev_capability {
  * @hwstamp_mask:     Bitmask for subtraction of hardware tick values.
  * @hwstamp_mult:     Hardware tick to nanosecond multiplier.
  * @hwstamp_shift:    Hardware tick to nanosecond divisor (power of two).
+<<<<<<< HEAD
  * @capabilities:     Device capabilities
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 union ionic_dev_identity {
 	struct {
@@ -301,7 +317,10 @@ union ionic_dev_identity {
 		__le64 hwstamp_mask;
 		__le32 hwstamp_mult;
 		__le32 hwstamp_shift;
+<<<<<<< HEAD
 		__le64 capabilities;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	__le32 words[478];
 };
@@ -2056,6 +2075,7 @@ struct ionic_vf_getattr_comp {
 	u8     color;
 };
 
+<<<<<<< HEAD
 enum ionic_vf_ctrl_opcode {
 	IONIC_VF_CTRL_START_ALL	= 0,
 	IONIC_VF_CTRL_START	= 1,
@@ -2085,6 +2105,8 @@ struct ionic_vf_ctrl_comp {
 	u8      rsvd[15];
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct ionic_qos_identify_cmd - QoS identify command
  * @opcode:  opcode
@@ -2906,7 +2928,10 @@ union ionic_dev_cmd {
 
 	struct ionic_vf_setattr_cmd vf_setattr;
 	struct ionic_vf_getattr_cmd vf_getattr;
+<<<<<<< HEAD
 	struct ionic_vf_ctrl_cmd vf_ctrl;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct ionic_lif_identify_cmd lif_identify;
 	struct ionic_lif_init_cmd lif_init;
@@ -2945,7 +2970,10 @@ union ionic_dev_cmd_comp {
 
 	struct ionic_vf_setattr_comp vf_setattr;
 	struct ionic_vf_getattr_comp vf_getattr;
+<<<<<<< HEAD
 	struct ionic_vf_ctrl_comp vf_ctrl;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct ionic_lif_identify_comp lif_identify;
 	struct ionic_lif_init_comp lif_init;
@@ -3073,10 +3101,16 @@ union ionic_adminq_comp {
 
 #define IONIC_BARS_MAX			6
 #define IONIC_PCI_BAR_DBELL		1
+<<<<<<< HEAD
 #define IONIC_PCI_BAR_CMB		2
 
 #define IONIC_BAR0_SIZE				0x8000
 #define IONIC_BAR2_SIZE				0x800000
+=======
+
+/* BAR0 */
+#define IONIC_BAR0_SIZE				0x8000
+>>>>>>> b7ba80a49124 (Commit)
 
 #define IONIC_BAR0_DEV_INFO_REGS_OFFSET		0x0000
 #define IONIC_BAR0_DEV_CMD_REGS_OFFSET		0x0800

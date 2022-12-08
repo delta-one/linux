@@ -756,6 +756,10 @@ static void test_vgic(uint32_t nr_irqs, bool level_sensitive, bool eoi_split)
 	print_args(&args);
 
 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
+<<<<<<< HEAD
+=======
+	ucall_init(vm, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	vm_init_descriptor_tables(vm);
 	vcpu_init_descriptor_tables(vcpu);
@@ -817,19 +821,37 @@ int main(int argc, char **argv)
 	int opt;
 	bool eoi_split = false;
 
+<<<<<<< HEAD
 	while ((opt = getopt(argc, argv, "hn:e:l:")) != -1) {
 		switch (opt) {
 		case 'n':
 			nr_irqs = atoi_non_negative("Number of IRQs", optarg);
+=======
+	/* Tell stdout not to buffer its content */
+	setbuf(stdout, NULL);
+
+	while ((opt = getopt(argc, argv, "hn:e:l:")) != -1) {
+		switch (opt) {
+		case 'n':
+			nr_irqs = atoi(optarg);
+>>>>>>> b7ba80a49124 (Commit)
 			if (nr_irqs > 1024 || nr_irqs % 32)
 				help(argv[0]);
 			break;
 		case 'e':
+<<<<<<< HEAD
 			eoi_split = (bool)atoi_paranoid(optarg);
 			default_args = false;
 			break;
 		case 'l':
 			level_sensitive = (bool)atoi_paranoid(optarg);
+=======
+			eoi_split = (bool)atoi(optarg);
+			default_args = false;
+			break;
+		case 'l':
+			level_sensitive = (bool)atoi(optarg);
+>>>>>>> b7ba80a49124 (Commit)
 			default_args = false;
 			break;
 		case 'h':

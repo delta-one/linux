@@ -75,6 +75,10 @@ ATTRIBUTE_GROUPS(vpe);
 
 static void vpe_device_release(struct device *cd)
 {
+<<<<<<< HEAD
+=======
+	kfree(cd);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct class vpe_class = {
@@ -156,7 +160,10 @@ out_dev:
 	device_del(&vpe_device);
 
 out_class:
+<<<<<<< HEAD
 	put_device(&vpe_device);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	class_unregister(&vpe_class);
 
 out_chrdev:
@@ -169,7 +176,11 @@ void __exit vpe_module_exit(void)
 {
 	struct vpe *v, *n;
 
+<<<<<<< HEAD
 	device_unregister(&vpe_device);
+=======
+	device_del(&vpe_device);
+>>>>>>> b7ba80a49124 (Commit)
 	class_unregister(&vpe_class);
 	unregister_chrdev(major, VPE_MODULE_NAME);
 

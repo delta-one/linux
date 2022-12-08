@@ -1,10 +1,19 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+// SPDX-License-Identifier: GPL-2.0
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2021 Microsoft Corporation
  *
  * Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
  *
+<<<<<<< HEAD
  * Enables IMA measurements for DM targets
+=======
+ * File: dm-ima.c
+ *       Enables IMA measurements for DM targets
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include "dm-core.h"

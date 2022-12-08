@@ -26,10 +26,17 @@ assumed that the PCL tool tools/perf has been installed and is in your path.
 2.1 Standard Utilities
 ----------------------
 
+<<<<<<< HEAD
 All possible events are visible from /sys/kernel/tracing/events. Simply
 calling::
 
   $ find /sys/kernel/tracing/events -type d
+=======
+All possible events are visible from /sys/kernel/debug/tracing/events. Simply
+calling::
+
+  $ find /sys/kernel/debug/tracing/events -type d
+>>>>>>> b7ba80a49124 (Commit)
 
 will give a fair indication of the number of events available.
 
@@ -59,7 +66,11 @@ See Documentation/trace/events.rst for a proper description on how events
 can be enabled system-wide. A short example of enabling all events related
 to page allocation would look something like::
 
+<<<<<<< HEAD
   $ for i in `find /sys/kernel/tracing/events -name "enable" | grep mm_`; do echo 1 > $i; done
+=======
+  $ for i in `find /sys/kernel/debug/tracing/events -name "enable" | grep mm_`; do echo 1 > $i; done
+>>>>>>> b7ba80a49124 (Commit)
 
 3.2 System-Wide Event Enabling with SystemTap
 ---------------------------------------------
@@ -189,7 +200,11 @@ time on a system-wide basis using -a and sleep.
 ============================================
 
 When events are enabled the events that are triggering can be read from
+<<<<<<< HEAD
 /sys/kernel/tracing/trace_pipe in human-readable format although binary
+=======
+/sys/kernel/debug/tracing/trace_pipe in human-readable format although binary
+>>>>>>> b7ba80a49124 (Commit)
 options exist as well. By post-processing the output, further information can
 be gathered on-line as appropriate. Examples of post-processing might include
 

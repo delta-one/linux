@@ -331,6 +331,7 @@
 	.errstr = "inside bpf_spin_lock",
 	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
 },
+<<<<<<< HEAD
 {
 	"spin_lock: regsafe compare reg->id for map value",
 	.insns = {
@@ -445,3 +446,5 @@
 	.prog_type = BPF_PROG_TYPE_CGROUP_SKB,
 	.flags = BPF_F_TEST_STATE_FREQ,
 },
+=======
+>>>>>>> b7ba80a49124 (Commit)

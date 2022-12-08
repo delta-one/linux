@@ -29,7 +29,11 @@
 
 #include "arm-smmu-v3.h"
 #include "../../dma-iommu.h"
+<<<<<<< HEAD
 #include "../../iommu-sva.h"
+=======
+#include "../../iommu-sva-lib.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 static bool disable_bypass = true;
 module_param(disable_bypass, bool, 0444);
@@ -2009,9 +2013,12 @@ static struct iommu_domain *arm_smmu_domain_alloc(unsigned type)
 {
 	struct arm_smmu_domain *smmu_domain;
 
+<<<<<<< HEAD
 	if (type == IOMMU_DOMAIN_SVA)
 		return arm_smmu_sva_domain_alloc();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (type != IOMMU_DOMAIN_UNMANAGED &&
 	    type != IOMMU_DOMAIN_DMA &&
 	    type != IOMMU_DOMAIN_DMA_FQ &&
@@ -2433,14 +2440,33 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
 			goto out_unlock;
 		}
 	} else if (smmu_domain->smmu != smmu) {
+<<<<<<< HEAD
 		ret = -EINVAL;
 		goto out_unlock;
 	} else if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1 &&
 		   master->ssid_bits != smmu_domain->s1_cfg.s1cdmax) {
+=======
+		dev_err(dev,
+			"cannot attach to SMMU %s (upstream of %s)\n",
+			dev_name(smmu_domain->smmu->dev),
+			dev_name(smmu->dev));
+		ret = -ENXIO;
+		goto out_unlock;
+	} else if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1 &&
+		   master->ssid_bits != smmu_domain->s1_cfg.s1cdmax) {
+		dev_err(dev,
+			"cannot attach to incompatible domain (%u SSID bits != %u)\n",
+			smmu_domain->s1_cfg.s1cdmax, master->ssid_bits);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EINVAL;
 		goto out_unlock;
 	} else if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1 &&
 		   smmu_domain->stall_enabled != master->stall_enabled) {
+<<<<<<< HEAD
+=======
+		dev_err(dev, "cannot attach to stall-%s domain\n",
+			smmu_domain->stall_enabled ? "enabled" : "disabled");
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EINVAL;
 		goto out_unlock;
 	}
@@ -2751,7 +2777,11 @@ static void arm_smmu_get_resv_regions(struct device *dev,
 	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
 
 	region = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH,
+<<<<<<< HEAD
 					 prot, IOMMU_RESV_SW_MSI, GFP_KERNEL);
+=======
+					 prot, IOMMU_RESV_SW_MSI);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!region)
 		return;
 
@@ -2832,6 +2862,7 @@ static int arm_smmu_def_domain_type(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void arm_smmu_remove_dev_pasid(struct device *dev, ioasid_t pasid)
 {
 	struct iommu_domain *domain;
@@ -2843,6 +2874,8 @@ static void arm_smmu_remove_dev_pasid(struct device *dev, ioasid_t pasid)
 	arm_smmu_sva_remove_dev_pasid(domain, dev, pasid);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct iommu_ops arm_smmu_ops = {
 	.capable		= arm_smmu_capable,
 	.domain_alloc		= arm_smmu_domain_alloc,
@@ -2851,9 +2884,17 @@ static struct iommu_ops arm_smmu_ops = {
 	.device_group		= arm_smmu_device_group,
 	.of_xlate		= arm_smmu_of_xlate,
 	.get_resv_regions	= arm_smmu_get_resv_regions,
+<<<<<<< HEAD
 	.remove_dev_pasid	= arm_smmu_remove_dev_pasid,
 	.dev_enable_feat	= arm_smmu_dev_enable_feature,
 	.dev_disable_feat	= arm_smmu_dev_disable_feature,
+=======
+	.dev_enable_feat	= arm_smmu_dev_enable_feature,
+	.dev_disable_feat	= arm_smmu_dev_disable_feature,
+	.sva_bind		= arm_smmu_sva_bind,
+	.sva_unbind		= arm_smmu_sva_unbind,
+	.sva_get_pasid		= arm_smmu_sva_get_pasid,
+>>>>>>> b7ba80a49124 (Commit)
 	.page_response		= arm_smmu_page_response,
 	.def_domain_type	= arm_smmu_def_domain_type,
 	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
@@ -3546,7 +3587,10 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
 	/* SID/SSID sizes */
 	smmu->ssid_bits = FIELD_GET(IDR1_SSIDSIZE, reg);
 	smmu->sid_bits = FIELD_GET(IDR1_SIDSIZE, reg);
+<<<<<<< HEAD
 	smmu->iommu.max_pasids = 1UL << smmu->ssid_bits;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * If the SMMU supports fewer bits than would fill a single L2 stream
@@ -3858,9 +3902,13 @@ static int arm_smmu_device_remove(struct platform_device *pdev)
 
 static void arm_smmu_device_shutdown(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	struct arm_smmu_device *smmu = platform_get_drvdata(pdev);
 
 	arm_smmu_device_disable(smmu);
+=======
+	arm_smmu_device_remove(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id arm_smmu_of_match[] = {

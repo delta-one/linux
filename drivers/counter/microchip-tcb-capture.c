@@ -28,6 +28,10 @@ struct mchp_tc_data {
 	int qdec_mode;
 	int num_channels;
 	int channel[2];
+<<<<<<< HEAD
+=======
+	bool trig_inverted;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const enum counter_function mchp_tc_count_functions[] = {
@@ -152,7 +156,11 @@ static int mchp_tc_count_signal_read(struct counter_device *counter,
 
 	regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], SR), &sr);
 
+<<<<<<< HEAD
 	if (signal->id == 1)
+=======
+	if (priv->trig_inverted)
+>>>>>>> b7ba80a49124 (Commit)
 		sigstatus = (sr & ATMEL_TC_MTIOB);
 	else
 		sigstatus = (sr & ATMEL_TC_MTIOA);
@@ -170,6 +178,7 @@ static int mchp_tc_count_action_read(struct counter_device *counter,
 	struct mchp_tc_data *const priv = counter_priv(counter);
 	u32 cmr;
 
+<<<<<<< HEAD
 	if (priv->qdec_mode) {
 		*action = COUNTER_SYNAPSE_ACTION_BOTH_EDGES;
 		return 0;
@@ -181,6 +190,8 @@ static int mchp_tc_count_action_read(struct counter_device *counter,
 		return 0;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], CMR), &cmr);
 
 	switch (cmr & ATMEL_TC_ETRGEDG) {
@@ -209,8 +220,13 @@ static int mchp_tc_count_action_write(struct counter_device *counter,
 	struct mchp_tc_data *const priv = counter_priv(counter);
 	u32 edge = ATMEL_TC_ETRGEDG_NONE;
 
+<<<<<<< HEAD
 	/* QDEC mode is rising edge only; only TIOA handled in non-QDEC mode */
 	if (priv->qdec_mode || synapse->signal->id != 0)
+=======
+	/* QDEC mode is rising edge only */
+	if (priv->qdec_mode)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	switch (action) {

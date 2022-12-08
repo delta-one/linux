@@ -65,6 +65,11 @@ enum {
 	GDMA_DEVICE_MANA	= 2,
 };
 
+<<<<<<< HEAD
+=======
+typedef u64 gdma_obj_handle_t;
+
+>>>>>>> b7ba80a49124 (Commit)
 struct gdma_resource {
 	/* Protect the bitmap */
 	spinlock_t lock;
@@ -198,7 +203,11 @@ struct gdma_mem_info {
 	u64 length;
 
 	/* Allocated by the PF driver */
+<<<<<<< HEAD
 	u64 dma_region_handle;
+=======
+	gdma_obj_handle_t dma_region_handle;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define REGISTER_ATB_MST_MKEY_LOWER_SIZE 8
@@ -336,12 +345,18 @@ struct gdma_queue_spec {
 	};
 };
 
+<<<<<<< HEAD
 #define MANA_IRQ_NAME_SZ 32
 
 struct gdma_irq_context {
 	void (*handler)(void *arg);
 	void *arg;
 	char name[MANA_IRQ_NAME_SZ];
+=======
+struct gdma_irq_context {
+	void (*handler)(void *arg);
+	void *arg;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct gdma_context {
@@ -370,7 +385,10 @@ struct gdma_context {
 	void __iomem		*db_page_base;
 	phys_addr_t		phys_db_page_base;
 	u32 db_page_size;
+<<<<<<< HEAD
 	int                     numa_node;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Shared memory chanenl (used to bootstrap HWC) */
 	struct shm_channel	shm_channel;
@@ -523,6 +541,7 @@ enum {
 
 #define GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT BIT(0)
 
+<<<<<<< HEAD
 /* Advertise to the NIC firmware: the NAPI work_done variable race is fixed,
  * so the driver is able to reliably support features like busy_poll.
  */
@@ -531,6 +550,9 @@ enum {
 #define GDMA_DRV_CAP_FLAGS1 \
 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX)
+=======
+#define GDMA_DRV_CAP_FLAGS1 GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT
+>>>>>>> b7ba80a49124 (Commit)
 
 #define GDMA_DRV_CAP_FLAGS2 0
 
@@ -633,7 +655,11 @@ struct gdma_create_queue_req {
 	u32 reserved1;
 	u32 pdid;
 	u32 doolbell_id;
+<<<<<<< HEAD
 	u64 gdma_region;
+=======
+	gdma_obj_handle_t gdma_region;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 reserved2;
 	u32 queue_size;
 	u32 log2_throttle_limit;
@@ -708,14 +734,22 @@ struct gdma_create_dma_region_req {
 
 struct gdma_create_dma_region_resp {
 	struct gdma_resp_hdr hdr;
+<<<<<<< HEAD
 	u64 dma_region_handle;
+=======
+	gdma_obj_handle_t dma_region_handle;
+>>>>>>> b7ba80a49124 (Commit)
 }; /* HW DATA */
 
 /* GDMA_DMA_REGION_ADD_PAGES */
 struct gdma_dma_region_add_pages_req {
 	struct gdma_req_hdr hdr;
 
+<<<<<<< HEAD
 	u64 dma_region_handle;
+=======
+	gdma_obj_handle_t dma_region_handle;
+>>>>>>> b7ba80a49124 (Commit)
 
 	u32 page_addr_list_len;
 	u32 reserved3;
@@ -727,7 +761,11 @@ struct gdma_dma_region_add_pages_req {
 struct gdma_destroy_dma_region_req {
 	struct gdma_req_hdr hdr;
 
+<<<<<<< HEAD
 	u64 dma_region_handle;
+=======
+	gdma_obj_handle_t dma_region_handle;
+>>>>>>> b7ba80a49124 (Commit)
 }; /* HW DATA */
 
 enum gdma_pd_flags {
@@ -742,14 +780,22 @@ struct gdma_create_pd_req {
 
 struct gdma_create_pd_resp {
 	struct gdma_resp_hdr hdr;
+<<<<<<< HEAD
 	u64 pd_handle;
+=======
+	gdma_obj_handle_t pd_handle;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 pd_id;
 	u32 reserved;
 };/* HW DATA */
 
 struct gdma_destroy_pd_req {
 	struct gdma_req_hdr hdr;
+<<<<<<< HEAD
 	u64 pd_handle;
+=======
+	gdma_obj_handle_t pd_handle;
+>>>>>>> b7ba80a49124 (Commit)
 };/* HW DATA */
 
 struct gdma_destory_pd_resp {
@@ -765,11 +811,19 @@ enum gdma_mr_type {
 };
 
 struct gdma_create_mr_params {
+<<<<<<< HEAD
 	u64 pd_handle;
 	enum gdma_mr_type mr_type;
 	union {
 		struct {
 			u64 dma_region_handle;
+=======
+	gdma_obj_handle_t pd_handle;
+	enum gdma_mr_type mr_type;
+	union {
+		struct {
+			gdma_obj_handle_t dma_region_handle;
+>>>>>>> b7ba80a49124 (Commit)
 			u64 virtual_address;
 			enum gdma_mr_access_flags access_flags;
 		} gva;
@@ -778,13 +832,21 @@ struct gdma_create_mr_params {
 
 struct gdma_create_mr_request {
 	struct gdma_req_hdr hdr;
+<<<<<<< HEAD
 	u64 pd_handle;
+=======
+	gdma_obj_handle_t pd_handle;
+>>>>>>> b7ba80a49124 (Commit)
 	enum gdma_mr_type mr_type;
 	u32 reserved_1;
 
 	union {
 		struct {
+<<<<<<< HEAD
 			u64 dma_region_handle;
+=======
+			gdma_obj_handle_t dma_region_handle;
+>>>>>>> b7ba80a49124 (Commit)
 			u64 virtual_address;
 			enum gdma_mr_access_flags access_flags;
 		} gva;
@@ -795,14 +857,22 @@ struct gdma_create_mr_request {
 
 struct gdma_create_mr_response {
 	struct gdma_resp_hdr hdr;
+<<<<<<< HEAD
 	u64 mr_handle;
+=======
+	gdma_obj_handle_t mr_handle;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 lkey;
 	u32 rkey;
 };/* HW DATA */
 
 struct gdma_destroy_mr_request {
 	struct gdma_req_hdr hdr;
+<<<<<<< HEAD
 	u64 mr_handle;
+=======
+	gdma_obj_handle_t mr_handle;
+>>>>>>> b7ba80a49124 (Commit)
 };/* HW DATA */
 
 struct gdma_destroy_mr_response {
@@ -836,6 +906,15 @@ void mana_gd_free_memory(struct gdma_mem_info *gmi);
 int mana_gd_send_request(struct gdma_context *gc, u32 req_len, const void *req,
 			 u32 resp_len, void *resp);
 
+<<<<<<< HEAD
 int mana_gd_destroy_dma_region(struct gdma_context *gc, u64 dma_region_handle);
+=======
+int mana_gd_allocate_doorbell_page(struct gdma_context *gc, int *doorbell_page);
+
+int mana_gd_destroy_doorbell_page(struct gdma_context *gc, int doorbell_page);
+
+int mana_gd_destroy_dma_region(struct gdma_context *gc,
+			       gdma_obj_handle_t dma_region_handle);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _GDMA_H */

@@ -16,7 +16,10 @@
 #include <linux/container_of.h>
 #include <linux/err.h>
 #include <linux/init.h>
+<<<<<<< HEAD
 #include <linux/jump_label.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kconfig.h>
 #include <linux/kref.h>
 #include <linux/list.h>
@@ -28,6 +31,7 @@
 
 #include <asm/rwonce.h>
 
+<<<<<<< HEAD
 /* Static key: true if any KUnit tests are currently running */
 DECLARE_STATIC_KEY_FALSE(kunit_running);
 
@@ -35,6 +39,12 @@ struct kunit;
 
 /* Size of log associated with test. */
 #define KUNIT_LOG_SIZE 1500
+=======
+struct kunit;
+
+/* Size of log associated with test. */
+#define KUNIT_LOG_SIZE	512
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Maximum size of parameter description string. */
 #define KUNIT_PARAM_DESC_SIZE 128
@@ -232,8 +242,11 @@ static inline void kunit_set_failure(struct kunit *test)
 	WRITE_ONCE(test->status, KUNIT_FAILURE);
 }
 
+<<<<<<< HEAD
 bool kunit_enabled(void);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void kunit_init_test(struct kunit *test, const char *name, char *log);
 
 int kunit_run_tests(struct kunit_suite *suite);
@@ -257,6 +270,10 @@ static inline int kunit_run_all_tests(void)
 #endif /* IS_BUILTIN(CONFIG_KUNIT) */
 
 #define __kunit_test_suites(unique_array, ...)				       \
+<<<<<<< HEAD
+=======
+	MODULE_INFO(test, "Y");						       \
+>>>>>>> b7ba80a49124 (Commit)
 	static struct kunit_suite *unique_array[]			       \
 	__aligned(sizeof(struct kunit_suite *))				       \
 	__used __section(".kunit_test_suites") = { __VA_ARGS__ }
@@ -303,6 +320,10 @@ static inline int kunit_run_all_tests(void)
  */
 #define kunit_test_init_section_suites(__suites...)			\
 	__kunit_test_suites(CONCATENATE(__UNIQUE_ID(array), _probe),	\
+<<<<<<< HEAD
+=======
+			    CONCATENATE(__UNIQUE_ID(suites), _probe),	\
+>>>>>>> b7ba80a49124 (Commit)
 			    ##__suites)
 
 #define kunit_test_init_section_suite(suite)	\
@@ -420,7 +441,11 @@ void __printf(2, 3) kunit_log_append(char *log, const char *fmt, ...);
 #define kunit_log(lvl, test_or_suite, fmt, ...)				\
 	do {								\
 		printk(lvl fmt, ##__VA_ARGS__);				\
+<<<<<<< HEAD
 		kunit_log_append((test_or_suite)->log,	fmt,		\
+=======
+		kunit_log_append((test_or_suite)->log,	fmt "\n",	\
+>>>>>>> b7ba80a49124 (Commit)
 				 ##__VA_ARGS__);			\
 	} while (0)
 
@@ -476,6 +501,7 @@ void kunit_do_failed_assertion(struct kunit *test,
 			       const struct kunit_loc *loc,
 			       enum kunit_assert_type type,
 			       const struct kunit_assert *assert,
+<<<<<<< HEAD
 			       assert_format_t assert_format,
 			       const char *fmt, ...);
 
@@ -489,10 +515,26 @@ void kunit_do_failed_assertion(struct kunit *test,
 				  assert_format,			       \
 				  fmt,					       \
 				  ##__VA_ARGS__);			       \
+=======
+			       const char *fmt, ...);
+
+#define KUNIT_ASSERTION(test, assert_type, pass, assert_class, INITIALIZER, fmt, ...) do { \
+	if (unlikely(!(pass))) {					       \
+		static const struct kunit_loc __loc = KUNIT_CURRENT_LOC;       \
+		struct assert_class __assertion = INITIALIZER;		       \
+		kunit_do_failed_assertion(test,				       \
+					  &__loc,			       \
+					  assert_type,			       \
+					  &__assertion.assert,		       \
+					  fmt,				       \
+					  ##__VA_ARGS__);		       \
+	}								       \
+>>>>>>> b7ba80a49124 (Commit)
 } while (0)
 
 
 #define KUNIT_FAIL_ASSERTION(test, assert_type, fmt, ...)		       \
+<<<<<<< HEAD
 	_KUNIT_FAILED(test,						       \
 		      assert_type,					       \
 		      kunit_fail_assert,				       \
@@ -500,6 +542,15 @@ void kunit_do_failed_assertion(struct kunit *test,
 		      {},						       \
 		      fmt,						       \
 		      ##__VA_ARGS__)
+=======
+	KUNIT_ASSERTION(test,						       \
+			assert_type,					       \
+			false,						       \
+			kunit_fail_assert,				       \
+			KUNIT_INIT_FAIL_ASSERT_STRUCT,			       \
+			fmt,						       \
+			##__VA_ARGS__)
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * KUNIT_FAIL() - Always causes a test to fail when evaluated.
@@ -518,6 +569,7 @@ void kunit_do_failed_assertion(struct kunit *test,
 			     fmt,					       \
 			     ##__VA_ARGS__)
 
+<<<<<<< HEAD
 /* Helper to safely pass around an initializer list to other macros. */
 #define KUNIT_INIT_ASSERT(initializers...) { initializers }
 
@@ -540,6 +592,22 @@ do {									       \
 		      fmt,						       \
 		      ##__VA_ARGS__);					       \
 } while (0)
+=======
+#define KUNIT_UNARY_ASSERTION(test,					       \
+			      assert_type,				       \
+			      condition,				       \
+			      expected_true,				       \
+			      fmt,					       \
+			      ...)					       \
+	KUNIT_ASSERTION(test,						       \
+			assert_type,					       \
+			!!(condition) == !!expected_true,		       \
+			kunit_unary_assert,				       \
+			KUNIT_INIT_UNARY_ASSERT_STRUCT(#condition,	       \
+						       expected_true),	       \
+			fmt,						       \
+			##__VA_ARGS__)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define KUNIT_TRUE_MSG_ASSERTION(test, assert_type, condition, fmt, ...)       \
 	KUNIT_UNARY_ASSERTION(test,					       \
@@ -589,6 +657,7 @@ do {									       \
 		.right_text = #right,					       \
 	};								       \
 									       \
+<<<<<<< HEAD
 	if (likely(__left op __right))					       \
 		break;							       \
 									       \
@@ -601,6 +670,18 @@ do {									       \
 					.right_value = __right),	       \
 		      fmt,						       \
 		      ##__VA_ARGS__);					       \
+=======
+	KUNIT_ASSERTION(test,						       \
+			assert_type,					       \
+			__left op __right,				       \
+			assert_class,					       \
+			KUNIT_INIT_BINARY_ASSERT_STRUCT(format_func,	       \
+							&__text,	       \
+							__left,		       \
+							__right),	       \
+			fmt,						       \
+			##__VA_ARGS__);					       \
+>>>>>>> b7ba80a49124 (Commit)
 } while (0)
 
 #define KUNIT_BINARY_INT_ASSERTION(test,				       \
@@ -649,6 +730,7 @@ do {									       \
 		.right_text = #right,					       \
 	};								       \
 									       \
+<<<<<<< HEAD
 	if (likely(strcmp(__left, __right) op 0))			       \
 		break;							       \
 									       \
@@ -696,6 +778,18 @@ do {									       \
 					.size = __size),		       \
 		      fmt,						       \
 		      ##__VA_ARGS__);					       \
+=======
+	KUNIT_ASSERTION(test,						       \
+			assert_type,					       \
+			strcmp(__left, __right) op 0,			       \
+			kunit_binary_str_assert,			       \
+			KUNIT_INIT_BINARY_ASSERT_STRUCT(kunit_binary_str_assert_format,\
+							&__text,	       \
+							__left,		       \
+							__right),	       \
+			fmt,						       \
+			##__VA_ARGS__);					       \
+>>>>>>> b7ba80a49124 (Commit)
 } while (0)
 
 #define KUNIT_PTR_NOT_ERR_OR_NULL_MSG_ASSERTION(test,			       \
@@ -706,6 +800,7 @@ do {									       \
 do {									       \
 	const typeof(ptr) __ptr = (ptr);				       \
 									       \
+<<<<<<< HEAD
 	if (!IS_ERR_OR_NULL(__ptr))					       \
 		break;							       \
 									       \
@@ -716,6 +811,16 @@ do {									       \
 		      KUNIT_INIT_ASSERT(.text = #ptr, .value = __ptr),	       \
 		      fmt,						       \
 		      ##__VA_ARGS__);					       \
+=======
+	KUNIT_ASSERTION(test,						       \
+			assert_type,					       \
+			!IS_ERR_OR_NULL(__ptr),				       \
+			kunit_ptr_not_err_assert,			       \
+			KUNIT_INIT_PTR_NOT_ERR_STRUCT(#ptr,		       \
+						      __ptr),		       \
+			fmt,						       \
+			##__VA_ARGS__);					       \
+>>>>>>> b7ba80a49124 (Commit)
 } while (0)
 
 /**
@@ -969,6 +1074,7 @@ do {									       \
 				   ##__VA_ARGS__)
 
 /**
+<<<<<<< HEAD
  * KUNIT_EXPECT_MEMEQ() - Expects that the first @size bytes of @left and @right are equal.
  * @test: The test context object.
  * @left: An arbitrary expression that evaluates to the specified size.
@@ -1023,6 +1129,8 @@ do {									       \
 			    ##__VA_ARGS__)
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * KUNIT_EXPECT_NULL() - Expects that @ptr is null.
  * @test: The test context object.
  * @ptr: an arbitrary pointer.

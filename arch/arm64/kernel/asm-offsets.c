@@ -9,7 +9,10 @@
 
 #include <linux/arm_sdei.h>
 #include <linux/sched.h>
+<<<<<<< HEAD
 #include <linux/ftrace.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kexec.h>
 #include <linux/mm.h>
 #include <linux/dma-mapping.h>
@@ -83,6 +86,7 @@ int main(void)
   DEFINE(S_STACKFRAME,		offsetof(struct pt_regs, stackframe));
   DEFINE(PT_REGS_SIZE,		sizeof(struct pt_regs));
   BLANK();
+<<<<<<< HEAD
 #ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
   DEFINE(FREGS_X0,		offsetof(struct ftrace_regs, regs[0]));
   DEFINE(FREGS_X2,		offsetof(struct ftrace_regs, regs[2]));
@@ -96,6 +100,8 @@ int main(void)
   DEFINE(FREGS_SIZE,		sizeof(struct ftrace_regs));
   BLANK();
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_COMPAT
   DEFINE(COMPAT_SIGFRAME_REGS_OFFSET,		offsetof(struct compat_sigframe, uc.uc_mcontext.arm_r0));
   DEFINE(COMPAT_RT_SIGFRAME_REGS_OFFSET,	offsetof(struct compat_rt_sigframe, sig.uc.uc_mcontext.arm_r0));
@@ -195,8 +201,11 @@ int main(void)
   DEFINE(KIMAGE_START,			offsetof(struct kimage, start));
   BLANK();
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_FUNCTION_TRACER
   DEFINE(FTRACE_OPS_FUNC,		offsetof(struct ftrace_ops, func));
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
   return 0;
 }

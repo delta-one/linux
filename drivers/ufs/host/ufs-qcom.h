@@ -16,11 +16,21 @@
 #define HBRN8_POLL_TOUT_MS      100
 #define DEFAULT_CLK_RATE_HZ     1000000
 #define BUS_VECTOR_NAME_LEN     32
+<<<<<<< HEAD
 #define MAX_SUPP_MAC		64
 
 #define UFS_HW_VER_MAJOR_MASK	GENMASK(31, 28)
 #define UFS_HW_VER_MINOR_MASK	GENMASK(27, 16)
 #define UFS_HW_VER_STEP_MASK	GENMASK(15, 0)
+=======
+
+#define UFS_HW_VER_MAJOR_SHFT	(28)
+#define UFS_HW_VER_MAJOR_MASK	(0x000F << UFS_HW_VER_MAJOR_SHFT)
+#define UFS_HW_VER_MINOR_SHFT	(16)
+#define UFS_HW_VER_MINOR_MASK	(0x0FFF << UFS_HW_VER_MINOR_SHFT)
+#define UFS_HW_VER_STEP_SHFT	(0)
+#define UFS_HW_VER_STEP_MASK	(0xFFFF << UFS_HW_VER_STEP_SHFT)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* vendor specific pre-defined parameters */
 #define SLOW 1
@@ -34,10 +44,15 @@ enum {
 	REG_UFS_TX_SYMBOL_CLK_NS_US         = 0xC4,
 	REG_UFS_LOCAL_PORT_ID_REG           = 0xC8,
 	REG_UFS_PA_ERR_CODE                 = 0xCC,
+<<<<<<< HEAD
 	/* On older UFS revisions, this register is called "RETRY_TIMER_REG" */
 	REG_UFS_PARAM0                      = 0xD0,
 	/* On older UFS revisions, this register is called "REG_UFS_PA_LINK_STARTUP_TIMER" */
 	REG_UFS_CFG0                        = 0xD8,
+=======
+	REG_UFS_RETRY_TIMER_REG             = 0xD0,
+	REG_UFS_PA_LINK_STARTUP_TIMER       = 0xD8,
+>>>>>>> b7ba80a49124 (Commit)
 	REG_UFS_CFG1                        = 0xDC,
 	REG_UFS_CFG2                        = 0xE0,
 	REG_UFS_HW_VERSION                  = 0xE4,
@@ -53,8 +68,11 @@ enum {
 	 * added in HW Version 3.0.0
 	 */
 	UFS_AH8_CFG				= 0xFC,
+<<<<<<< HEAD
 
 	REG_UFS_CFG3				= 0x271C,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* QCOM UFS host controller vendor specific debug registers */
@@ -74,6 +92,7 @@ enum {
 	UFS_UFS_DBG_RD_EDTL_RAM			= 0x1900,
 };
 
+<<<<<<< HEAD
 enum {
 	UFS_MEM_CQIS_VS		= 0x8,
 };
@@ -88,10 +107,19 @@ enum {
 #define QUNIPRO_SEL		BIT(0)
 #define UFS_PHY_SOFT_RESET	BIT(1)
 #define UTP_DBG_RAMS_EN		BIT(17)
+=======
+#define UFS_CNTLR_2_x_x_VEN_REGS_OFFSET(x)	(0x000 + x)
+#define UFS_CNTLR_3_x_x_VEN_REGS_OFFSET(x)	(0x400 + x)
+
+/* bit definitions for REG_UFS_CFG1 register */
+#define QUNIPRO_SEL		0x1
+#define UTP_DBG_RAMS_EN		0x20000
+>>>>>>> b7ba80a49124 (Commit)
 #define TEST_BUS_EN		BIT(18)
 #define TEST_BUS_SEL		GENMASK(22, 19)
 #define UFS_REG_TEST_BUS_EN	BIT(30)
 
+<<<<<<< HEAD
 #define UFS_PHY_RESET_ENABLE	1
 #define UFS_PHY_RESET_DISABLE	0
 
@@ -111,6 +139,20 @@ enum {
 
 /* bit definition for UFS_UFS_TEST_BUS_CTRL_n */
 #define TEST_BUS_SUB_SEL_MASK	GENMASK(4, 0)  /* All XXX_SEL fields are 5 bits wide */
+=======
+/* bit definitions for REG_UFS_CFG2 register */
+#define UAWM_HW_CGC_EN		(1 << 0)
+#define UARM_HW_CGC_EN		(1 << 1)
+#define TXUC_HW_CGC_EN		(1 << 2)
+#define RXUC_HW_CGC_EN		(1 << 3)
+#define DFC_HW_CGC_EN		(1 << 4)
+#define TRLUT_HW_CGC_EN		(1 << 5)
+#define TMRLUT_HW_CGC_EN	(1 << 6)
+#define OCSC_HW_CGC_EN		(1 << 7)
+
+/* bit definition for UFS_UFS_TEST_BUS_CTRL_n */
+#define TEST_BUS_SUB_SEL_MASK	0x1F  /* All XXX_SEL fields are 5 bits wide */
+>>>>>>> b7ba80a49124 (Commit)
 
 #define REG_UFS_CFG2_CGC_EN_ALL (UAWM_HW_CGC_EN | UARM_HW_CGC_EN |\
 				 TXUC_HW_CGC_EN | RXUC_HW_CGC_EN |\
@@ -118,11 +160,34 @@ enum {
 				 TMRLUT_HW_CGC_EN | OCSC_HW_CGC_EN)
 
 /* bit offset */
+<<<<<<< HEAD
 #define OFFSET_CLK_NS_REG		0xa
 
 /* bit masks */
 #define MASK_TX_SYMBOL_CLK_1US_REG	GENMASK(9, 0)
 #define MASK_CLK_NS_REG			GENMASK(23, 10)
+=======
+enum {
+	OFFSET_UFS_PHY_SOFT_RESET           = 1,
+	OFFSET_CLK_NS_REG                   = 10,
+};
+
+/* bit masks */
+enum {
+	MASK_UFS_PHY_SOFT_RESET             = 0x2,
+	MASK_TX_SYMBOL_CLK_1US_REG          = 0x3FF,
+	MASK_CLK_NS_REG                     = 0xFFFC00,
+};
+
+/* QCOM UFS debug print bit mask */
+#define UFS_QCOM_DBG_PRINT_REGS_EN	BIT(0)
+#define UFS_QCOM_DBG_PRINT_ICE_REGS_EN	BIT(1)
+#define UFS_QCOM_DBG_PRINT_TEST_BUS_EN	BIT(2)
+
+#define UFS_QCOM_DBG_PRINT_ALL	\
+	(UFS_QCOM_DBG_PRINT_REGS_EN | UFS_QCOM_DBG_PRINT_ICE_REGS_EN | \
+	 UFS_QCOM_DBG_PRINT_TEST_BUS_EN)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* QUniPro Vendor specific attributes */
 #define PA_VS_CONFIG_REG1	0x9000
@@ -137,15 +202,26 @@ ufs_qcom_get_controller_revision(struct ufs_hba *hba,
 {
 	u32 ver = ufshcd_readl(hba, REG_UFS_HW_VERSION);
 
+<<<<<<< HEAD
 	*major = FIELD_GET(UFS_HW_VER_MAJOR_MASK, ver);
 	*minor = FIELD_GET(UFS_HW_VER_MINOR_MASK, ver);
 	*step = FIELD_GET(UFS_HW_VER_STEP_MASK, ver);
+=======
+	*major = (ver & UFS_HW_VER_MAJOR_MASK) >> UFS_HW_VER_MAJOR_SHFT;
+	*minor = (ver & UFS_HW_VER_MINOR_MASK) >> UFS_HW_VER_MINOR_SHFT;
+	*step = (ver & UFS_HW_VER_STEP_MASK) >> UFS_HW_VER_STEP_SHFT;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline void ufs_qcom_assert_reset(struct ufs_hba *hba)
 {
+<<<<<<< HEAD
 	ufshcd_rmwl(hba, UFS_PHY_SOFT_RESET, FIELD_PREP(UFS_PHY_SOFT_RESET, UFS_PHY_RESET_ENABLE),
 		    REG_UFS_CFG1);
+=======
+	ufshcd_rmwl(hba, MASK_UFS_PHY_SOFT_RESET,
+			1 << OFFSET_UFS_PHY_SOFT_RESET, REG_UFS_CFG1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Make sure assertion of ufs phy reset is written to
@@ -156,8 +232,13 @@ static inline void ufs_qcom_assert_reset(struct ufs_hba *hba)
 
 static inline void ufs_qcom_deassert_reset(struct ufs_hba *hba)
 {
+<<<<<<< HEAD
 	ufshcd_rmwl(hba, UFS_PHY_SOFT_RESET, FIELD_PREP(UFS_PHY_SOFT_RESET, UFS_PHY_RESET_DISABLE),
 		    REG_UFS_CFG1);
+=======
+	ufshcd_rmwl(hba, MASK_UFS_PHY_SOFT_RESET,
+			0 << OFFSET_UFS_PHY_SOFT_RESET, REG_UFS_CFG1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Make sure de-assertion of ufs phy reset is written to
@@ -214,6 +295,11 @@ struct ufs_qcom_host {
 
 	u32 dev_ref_clk_en_mask;
 
+<<<<<<< HEAD
+=======
+	/* Bitmask for enabling debug prints */
+	u32 dbg_print_en;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ufs_qcom_testbus testbus;
 
 	/* Reset control of HCI */
@@ -221,11 +307,14 @@ struct ufs_qcom_host {
 	struct reset_controller_dev rcdev;
 
 	struct gpio_desc *device_reset;
+<<<<<<< HEAD
 
 	u32 hs_gear;
 
 	int esi_base;
 	bool esi_enabled;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline u32

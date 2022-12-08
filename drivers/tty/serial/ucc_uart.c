@@ -372,7 +372,12 @@ static int qe_uart_tx_pump(struct uart_qe_port *qe_port)
 		p = qe2cpu_addr(be32_to_cpu(bdp->buf), qe_port);
 		while (count < qe_port->tx_fifosize) {
 			*p++ = xmit->buf[xmit->tail];
+<<<<<<< HEAD
 			uart_xmit_advance(port, 1);
+=======
+			xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+			port->icount.tx++;
+>>>>>>> b7ba80a49124 (Commit)
 			count++;
 			if (xmit->head == xmit->tail)
 				break;
@@ -1179,7 +1184,11 @@ static int soft_uart_init(struct platform_device *ofdev)
 	struct qe_firmware_info *qe_fw_info;
 	int ret;
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "soft-uart")) {
+=======
+	if (of_find_property(np, "soft-uart", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_dbg(&ofdev->dev, "using Soft-UART mode\n");
 		soft_uart = 1;
 	} else {
@@ -1468,8 +1477,11 @@ static int ucc_uart_remove(struct platform_device *ofdev)
 
 	uart_remove_one_port(&ucc_uart_driver, &qe_port->port);
 
+<<<<<<< HEAD
 	of_node_put(qe_port->np);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(qe_port);
 
 	return 0;

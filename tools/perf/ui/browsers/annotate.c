@@ -19,6 +19,14 @@
 #include <sys/ttydefaults.h>
 #include <asm/bug.h>
 
+<<<<<<< HEAD
+=======
+struct disasm_line_samples {
+	double		      percent;
+	struct sym_hist_entry he;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct arch;
 
 struct annotate_browser {
@@ -800,8 +808,12 @@ static int annotate_browser__run(struct annotate_browser *browser,
 		"r             Run available scripts\n"
 		"p             Toggle percent type [local/global]\n"
 		"b             Toggle percent base [period/hits]\n"
+<<<<<<< HEAD
 		"?             Search string backwards\n"
 		"f             Toggle showing offsets to full address\n");
+=======
+		"?             Search string backwards\n");
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		case 'r':
 			script_browse(NULL, NULL);
@@ -908,9 +920,12 @@ show_sup_ins:
 			hists__scnprintf_title(hists, title, sizeof(title));
 			annotate_browser__show(&browser->b, title, help);
 			continue;
+<<<<<<< HEAD
 		case 'f':
 			annotation__toggle_full_addr(notes, ms);
 			continue;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		case K_LEFT:
 		case K_ESC:
 		case 'q':

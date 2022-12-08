@@ -22,7 +22,11 @@
 #include <linux/uaccess.h>
 #include "internal.h"
 
+<<<<<<< HEAD
 static int ramfs_nommu_setattr(struct mnt_idmap *, struct dentry *, struct iattr *);
+=======
+static int ramfs_nommu_setattr(struct user_namespace *, struct dentry *, struct iattr *);
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned long ramfs_nommu_get_unmapped_area(struct file *file,
 						   unsigned long addr,
 						   unsigned long len,
@@ -70,7 +74,11 @@ int ramfs_nommu_expand_for_mapping(struct inode *inode, size_t newsize)
 
 	/* make various checks */
 	order = get_order(newsize);
+<<<<<<< HEAD
 	if (unlikely(order > MAX_ORDER))
+=======
+	if (unlikely(order >= MAX_ORDER))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EFBIG;
 
 	ret = inode_newsize_ok(inode, newsize);
@@ -158,7 +166,11 @@ static int ramfs_nommu_resize(struct inode *inode, loff_t newsize, loff_t size)
  * handle a change of attributes
  * - we're specifically interested in a change of size
  */
+<<<<<<< HEAD
 static int ramfs_nommu_setattr(struct mnt_idmap *idmap,
+=======
+static int ramfs_nommu_setattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			       struct dentry *dentry, struct iattr *ia)
 {
 	struct inode *inode = d_inode(dentry);
@@ -166,7 +178,11 @@ static int ramfs_nommu_setattr(struct mnt_idmap *idmap,
 	int ret = 0;
 
 	/* POSIX UID/GID verification for setting inode attributes */
+<<<<<<< HEAD
 	ret = setattr_prepare(&nop_mnt_idmap, dentry, ia);
+=======
+	ret = setattr_prepare(&init_user_ns, dentry, ia);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -186,7 +202,11 @@ static int ramfs_nommu_setattr(struct mnt_idmap *idmap,
 		}
 	}
 
+<<<<<<< HEAD
 	setattr_copy(&nop_mnt_idmap, inode, ia);
+=======
+	setattr_copy(&init_user_ns, inode, ia);
+>>>>>>> b7ba80a49124 (Commit)
  out:
 	ia->ia_valid = old_ia_valid;
 	return ret;
@@ -264,7 +284,11 @@ out:
  */
 static int ramfs_nommu_mmap(struct file *file, struct vm_area_struct *vma)
 {
+<<<<<<< HEAD
 	if (!is_nommu_shared_mapping(vma->vm_flags))
+=======
+	if (!(vma->vm_flags & (VM_SHARED | VM_MAYSHARE)))
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOSYS;
 
 	file_accessed(file);

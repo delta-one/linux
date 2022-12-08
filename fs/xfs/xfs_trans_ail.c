@@ -422,7 +422,11 @@ xfsaild_push(
 	struct xfs_ail_cursor	cur;
 	struct xfs_log_item	*lip;
 	xfs_lsn_t		lsn;
+<<<<<<< HEAD
 	xfs_lsn_t		target = NULLCOMMITLSN;
+=======
+	xfs_lsn_t		target;
+>>>>>>> b7ba80a49124 (Commit)
 	long			tout;
 	int			stuck = 0;
 	int			flushing = 0;
@@ -472,8 +476,11 @@ xfsaild_push(
 
 	XFS_STATS_INC(mp, xs_push_ail);
 
+<<<<<<< HEAD
 	ASSERT(target != NULLCOMMITLSN);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	lsn = lip->li_lsn;
 	while ((XFS_LSN_CMP(lip->li_lsn, target) <= 0)) {
 		int	lock_result;
@@ -732,10 +739,18 @@ void
 xfs_ail_push_all_sync(
 	struct xfs_ail  *ailp)
 {
+<<<<<<< HEAD
 	DEFINE_WAIT(wait);
 
 	spin_lock(&ailp->ail_lock);
 	while (xfs_ail_max(ailp) != NULL) {
+=======
+	struct xfs_log_item	*lip;
+	DEFINE_WAIT(wait);
+
+	spin_lock(&ailp->ail_lock);
+	while ((lip = xfs_ail_max(ailp)) != NULL) {
+>>>>>>> b7ba80a49124 (Commit)
 		prepare_to_wait(&ailp->ail_empty, &wait, TASK_UNINTERRUPTIBLE);
 		wake_up_process(ailp->ail_task);
 		spin_unlock(&ailp->ail_lock);

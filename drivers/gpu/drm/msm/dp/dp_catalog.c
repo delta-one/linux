@@ -47,6 +47,7 @@
 #define DP_INTERRUPT_STATUS2_MASK \
 	(DP_INTERRUPT_STATUS2 << DP_INTERRUPT_STATUS_MASK_SHIFT)
 
+<<<<<<< HEAD
 #define DP_INTERRUPT_STATUS4 \
 	(PSR_UPDATE_INT | PSR_CAPTURE_INT | PSR_EXIT_INT | \
 	PSR_UPDATE_ERROR_INT | PSR_WAKE_ERROR_INT)
@@ -55,6 +56,8 @@
 	(PSR_UPDATE_MASK | PSR_CAPTURE_MASK | PSR_EXIT_MASK | \
 	PSR_UPDATE_ERROR_MASK | PSR_WAKE_ERROR_MASK)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct dp_catalog_private {
 	struct device *dev;
 	struct drm_device *drm_dev;
@@ -367,6 +370,7 @@ void dp_catalog_ctrl_lane_mapping(struct dp_catalog *dp_catalog)
 			ln_mapping);
 }
 
+<<<<<<< HEAD
 void dp_catalog_ctrl_psr_mainlink_enable(struct dp_catalog *dp_catalog,
 						bool enable)
 {
@@ -384,6 +388,8 @@ void dp_catalog_ctrl_psr_mainlink_enable(struct dp_catalog *dp_catalog,
 	dp_write_link(catalog, REG_DP_MAINLINK_CTRL, val);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void dp_catalog_ctrl_mainlink_ctrl(struct dp_catalog *dp_catalog,
 						bool enable)
 {
@@ -635,6 +641,7 @@ void dp_catalog_ctrl_hpd_config(struct dp_catalog *dp_catalog)
 	dp_write_aux(catalog, REG_DP_DP_HPD_CTRL, DP_DP_HPD_CTRL_HPD_EN);
 }
 
+<<<<<<< HEAD
 static void dp_catalog_enable_sdp(struct dp_catalog_private *catalog)
 {
 	/* trigger sdp */
@@ -676,6 +683,8 @@ void dp_catalog_ctrl_set_psr(struct dp_catalog *dp_catalog, bool enter)
 	dp_write_link(catalog, REG_PSR_CMD, cmd);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 u32 dp_catalog_link_is_connected(struct dp_catalog *dp_catalog)
 {
 	struct dp_catalog_private *catalog = container_of(dp_catalog,
@@ -711,6 +720,7 @@ u32 dp_catalog_hpd_get_intr_status(struct dp_catalog *dp_catalog)
 	return isr & (mask | ~DP_DP_HPD_INT_MASK);
 }
 
+<<<<<<< HEAD
 u32 dp_catalog_ctrl_read_psr_interrupt_status(struct dp_catalog *dp_catalog)
 {
 	struct dp_catalog_private *catalog = container_of(dp_catalog,
@@ -725,6 +735,8 @@ u32 dp_catalog_ctrl_read_psr_interrupt_status(struct dp_catalog *dp_catalog)
 	return intr;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int dp_catalog_ctrl_get_interrupt(struct dp_catalog *dp_catalog)
 {
 	struct dp_catalog_private *catalog = container_of(dp_catalog,

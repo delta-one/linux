@@ -7,7 +7,10 @@
 
 #include <linux/platform_device.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/bitfield.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/err.h>
 #include <linux/io.h>
 #include <sound/pcm_params.h>
@@ -19,10 +22,13 @@
 
 #define DRV_NAME "acp_yc_pdm_dma"
 
+<<<<<<< HEAD
 static int pdm_gain = 3;
 module_param(pdm_gain, int, 0644);
 MODULE_PARM_DESC(pdm_gain, "Gain control (0-3)");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_pcm_hardware acp6x_pdm_hardware_capture = {
 	.info = SNDRV_PCM_INFO_INTERLEAVED |
 		SNDRV_PCM_INFO_BLOCK_TRANSFER |
@@ -60,8 +66,12 @@ static void acp6x_enable_pdm_clock(void __iomem *acp_base)
 
 	acp6x_writel(pdm_clk_enable, acp_base + ACP_WOV_CLK_CTRL);
 	pdm_ctrl = acp6x_readl(acp_base + ACP_WOV_MISC_CTRL);
+<<<<<<< HEAD
 	pdm_ctrl &= ~ACP_WOV_GAIN_CONTROL;
 	pdm_ctrl |= FIELD_PREP(ACP_WOV_GAIN_CONTROL, clamp(pdm_gain, 0, 3));
+=======
+	pdm_ctrl |= ACP_WOV_MISC_CTRL_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 	acp6x_writel(pdm_ctrl, acp_base + ACP_WOV_MISC_CTRL);
 }
 
@@ -388,9 +398,16 @@ static int acp6x_pdm_audio_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void acp6x_pdm_audio_remove(struct platform_device *pdev)
 {
 	pm_runtime_disable(&pdev->dev);
+=======
+static int acp6x_pdm_audio_remove(struct platform_device *pdev)
+{
+	pm_runtime_disable(&pdev->dev);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused acp6x_pdm_resume(struct device *dev)
@@ -439,7 +456,11 @@ static const struct dev_pm_ops acp6x_pdm_pm_ops = {
 
 static struct platform_driver acp6x_pdm_dma_driver = {
 	.probe = acp6x_pdm_audio_probe,
+<<<<<<< HEAD
 	.remove_new = acp6x_pdm_audio_remove,
+=======
+	.remove = acp6x_pdm_audio_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "acp_yc_pdm_dma",
 		.pm = &acp6x_pdm_pm_ops,

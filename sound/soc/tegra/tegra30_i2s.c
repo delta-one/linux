@@ -297,8 +297,13 @@ static int tegra30_i2s_probe(struct snd_soc_dai *dai)
 {
 	struct tegra30_i2s *i2s = snd_soc_dai_get_drvdata(dai);
 
+<<<<<<< HEAD
 	snd_soc_dai_init_dma_data(dai,	&i2s->playback_dma_data,
 					&i2s->capture_dma_data);
+=======
+	dai->capture_dma_data = &i2s->capture_dma_data;
+	dai->playback_dma_data = &i2s->playback_dma_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -531,7 +536,11 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void tegra30_i2s_platform_remove(struct platform_device *pdev)
+=======
+static int tegra30_i2s_platform_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tegra30_i2s *i2s = dev_get_drvdata(&pdev->dev);
 
@@ -545,6 +554,11 @@ static void tegra30_i2s_platform_remove(struct platform_device *pdev)
 	tegra30_ahub_free_tx_fifo(i2s->playback_fifo_cif);
 
 	pm_runtime_disable(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct dev_pm_ops tegra30_i2s_pm_ops = {
@@ -561,7 +575,11 @@ static struct platform_driver tegra30_i2s_driver = {
 		.pm = &tegra30_i2s_pm_ops,
 	},
 	.probe = tegra30_i2s_platform_probe,
+<<<<<<< HEAD
 	.remove_new = tegra30_i2s_platform_remove,
+=======
+	.remove = tegra30_i2s_platform_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(tegra30_i2s_driver);
 

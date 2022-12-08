@@ -383,7 +383,11 @@ struct brcmf_cfg80211_info {
 struct brcmf_tlv {
 	u8 id;
 	u8 len;
+<<<<<<< HEAD
 	u8 data[];
+=======
+	u8 data[1];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct wiphy *cfg_to_wiphy(struct brcmf_cfg80211_info *cfg)

@@ -254,7 +254,11 @@ static void pt_issue_pending(struct dma_chan *dma_chan)
 	spin_unlock_irqrestore(&chan->vc.lock, flags);
 
 	/* If there was nothing active, start processing */
+<<<<<<< HEAD
 	if (engine_is_idle && desc)
+=======
+	if (engine_is_idle)
+>>>>>>> b7ba80a49124 (Commit)
 		pt_cmd_callback(desc, 0);
 }
 

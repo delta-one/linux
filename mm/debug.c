@@ -36,11 +36,14 @@ const struct trace_print_flags pageflag_names[] = {
 	{0, NULL}
 };
 
+<<<<<<< HEAD
 const struct trace_print_flags pagetype_names[] = {
 	__def_pagetype_names,
 	{0, NULL}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct trace_print_flags gfpflag_names[] = {
 	__def_gfpflag_names,
 	{0, NULL}
@@ -99,11 +102,18 @@ static void __dump_page(struct page *page)
 			page, page_ref_count(head), mapcount, mapping,
 			page_to_pgoff(page), page_to_pfn(page));
 	if (compound) {
+<<<<<<< HEAD
 		pr_warn("head:%p order:%u entire_mapcount:%d nr_pages_mapped:%d pincount:%d\n",
 				head, compound_order(head),
 				folio_entire_mapcount(folio),
 				folio_nr_pages_mapped(folio),
 				atomic_read(&folio->_pincount));
+=======
+		pr_warn("head:%p order:%u compound_mapcount:%d compound_pincount:%d\n",
+				head, compound_order(head),
+				folio_entire_mapcount(folio),
+				head_compound_pincount(head));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 #ifdef CONFIG_MEMCG
@@ -120,8 +130,11 @@ static void __dump_page(struct page *page)
 
 	pr_warn("%sflags: %pGp%s\n", type, &head->flags,
 		page_cma ? " CMA" : "");
+<<<<<<< HEAD
 	pr_warn("page_type: %pGt\n", &head->page_type);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	print_hex_dump(KERN_WARNING, "raw: ", DUMP_PREFIX_NONE, 32,
 			sizeof(unsigned long), page,
 			sizeof(struct page), false);
@@ -222,7 +235,10 @@ void dump_mm(const struct mm_struct *mm)
 		mm->def_flags, &mm->def_flags
 	);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(dump_mm);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static bool page_init_poisoning __read_mostly = true;
 

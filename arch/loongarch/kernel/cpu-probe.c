@@ -94,7 +94,11 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
 	c->options = LOONGARCH_CPU_CPUCFG | LOONGARCH_CPU_CSR |
 		     LOONGARCH_CPU_TLB | LOONGARCH_CPU_VINT | LOONGARCH_CPU_WATCH;
 
+<<<<<<< HEAD
 	elf_hwcap = HWCAP_LOONGARCH_CPUCFG | HWCAP_LOONGARCH_CRC32;
+=======
+	elf_hwcap |= HWCAP_LOONGARCH_CRC32;
+>>>>>>> b7ba80a49124 (Commit)
 
 	config = read_cpucfg(LOONGARCH_CPUCFG1);
 	if (config & CPUCFG1_UAL) {
@@ -187,9 +191,13 @@ static inline void cpu_probe_loongson(struct cpuinfo_loongarch *c, unsigned int 
 	uint64_t *vendor = (void *)(&cpu_full_name[VENDOR_OFFSET]);
 	uint64_t *cpuname = (void *)(&cpu_full_name[CPUNAME_OFFSET]);
 
+<<<<<<< HEAD
 	if (!__cpu_full_name[cpu])
 		__cpu_full_name[cpu] = cpu_full_name;
 
+=======
+	__cpu_full_name[cpu] = cpu_full_name;
+>>>>>>> b7ba80a49124 (Commit)
 	*vendor = iocsr_read64(LOONGARCH_IOCSR_VENDOR);
 	*cpuname = iocsr_read64(LOONGARCH_IOCSR_CPUNAME);
 

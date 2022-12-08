@@ -44,11 +44,14 @@ enum opal_lock_state {
 	OPAL_LK = 0x04, /* 0100 */
 };
 
+<<<<<<< HEAD
 enum opal_lock_flags {
 	/* IOC_OPAL_SAVE will also store the provided key for locking */
 	OPAL_SAVE_FOR_LOCK = 0x01,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct opal_key {
 	__u8 lr;
 	__u8 key_len;
@@ -81,8 +84,12 @@ struct opal_user_lr_setup {
 struct opal_lock_unlock {
 	struct opal_session_info session;
 	__u32 l_state;
+<<<<<<< HEAD
 	__u16 flags;
 	__u8 __align[2];
+=======
+	__u8 __align[4];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct opal_new_pw {
@@ -144,7 +151,10 @@ struct opal_read_write_table {
 #define OPAL_FL_LOCKED			0x00000008
 #define OPAL_FL_MBR_ENABLED		0x00000010
 #define OPAL_FL_MBR_DONE		0x00000020
+<<<<<<< HEAD
 #define OPAL_FL_SUM_SUPPORTED		0x00000040
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct opal_status {
 	__u32 flags;

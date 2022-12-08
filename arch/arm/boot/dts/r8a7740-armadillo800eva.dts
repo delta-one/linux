@@ -196,6 +196,7 @@
 
 &i2c0 {
 	status = "okay";
+<<<<<<< HEAD
 
 	wm8978: codec@1a {
 		#sound-dai-cells = <0>;
@@ -209,6 +210,8 @@
 		pagesize = <16>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	touchscreen@55 {
 		compatible = "sitronix,st1232";
 		reg = <0x55>;
@@ -218,6 +221,15 @@
 		pinctrl-names = "default";
 		gpios = <&pfc 166 GPIO_ACTIVE_LOW>;
 	};
+<<<<<<< HEAD
+=======
+
+	wm8978: codec@1a {
+		#sound-dai-cells = <0>;
+		compatible = "wlf,wm8978";
+		reg = <0x1a>;
+	};
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &i2c2 {

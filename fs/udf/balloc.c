@@ -36,13 +36,18 @@ static int read_block_bitmap(struct super_block *sb,
 			     unsigned long bitmap_nr)
 {
 	struct buffer_head *bh = NULL;
+<<<<<<< HEAD
 	int i;
 	int max_bits, off, count;
+=======
+	int retval = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct kernel_lb_addr loc;
 
 	loc.logicalBlockNum = bitmap->s_extPosition;
 	loc.partitionReferenceNum = UDF_SB(sb)->s_partition;
 
+<<<<<<< HEAD
 	bh = sb_bread(sb, udf_get_lb_pblock(sb, &loc, block));
 	bitmap->s_block_bitmap[bitmap_nr] = bh;
 	if (!bh)
@@ -71,6 +76,14 @@ static int read_block_bitmap(struct super_block *sb,
 		if (udf_test_bit(i + off, bh->b_data))
 			return -EFSCORRUPTED;
 	return 0;
+=======
+	bh = udf_tread(sb, udf_get_lb_pblock(sb, &loc, block));
+	if (!bh)
+		retval = -EIO;
+
+	bitmap->s_block_bitmap[bitmap_nr] = bh;
+	return retval;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __load_block_bitmap(struct super_block *sb,

@@ -19,10 +19,17 @@ config SUNRPC_SWAP
 config RPCSEC_GSS_KRB5
 	tristate "Secure RPC: Kerberos V mechanism"
 	depends on SUNRPC && CRYPTO
+<<<<<<< HEAD
 	default y
 	select SUNRPC_GSS
 	select CRYPTO_SKCIPHER
 	select CRYPTO_HASH
+=======
+	depends on CRYPTO_MD5 && CRYPTO_DES && CRYPTO_CBC && CRYPTO_CTS
+	depends on CRYPTO_ECB && CRYPTO_HMAC && CRYPTO_SHA1 && CRYPTO_AES
+	default y
+	select SUNRPC_GSS
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Choose Y here to enable Secure RPC using the Kerberos version 5
 	  GSS-API mechanism (RFC 1964).
@@ -34,6 +41,7 @@ config RPCSEC_GSS_KRB5
 
 	  If unsure, say Y.
 
+<<<<<<< HEAD
 config RPCSEC_GSS_KRB5_SIMPLIFIED
 	bool
 	depends on RPCSEC_GSS_KRB5
@@ -121,6 +129,23 @@ config RPCSEC_GSS_KRB5_KUNIT_TEST
 
 	  For more information on KUnit and unit tests in general, refer
 	  to the KUnit documentation in Documentation/dev-tools/kunit/.
+=======
+config SUNRPC_DISABLE_INSECURE_ENCTYPES
+	bool "Secure RPC: Disable insecure Kerberos encryption types"
+	depends on RPCSEC_GSS_KRB5
+	default n
+	help
+	  Choose Y here to disable the use of deprecated encryption types
+	  with the Kerberos version 5 GSS-API mechanism (RFC 1964). The
+	  deprecated encryption types include DES-CBC-MD5, DES-CBC-CRC,
+	  and DES-CBC-MD4. These types were deprecated by RFC 6649 because
+	  they were found to be insecure.
+
+	  N is the default because many sites have deployed KDCs and
+	  keytabs that contain only these deprecated encryption types.
+	  Choosing Y prevents the use of known-insecure encryption types
+	  but might result in compatibility problems.
+>>>>>>> b7ba80a49124 (Commit)
 
 config SUNRPC_DEBUG
 	bool "RPC: Enable dprintk debugging"

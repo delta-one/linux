@@ -235,10 +235,17 @@ static DEFINE_PER_CPU(struct threshold_bank **, threshold_banks);
  * A list of the banks enabled on each logical CPU. Controls which respective
  * descriptors to initialize later in mce_threshold_create_device().
  */
+<<<<<<< HEAD
 static DEFINE_PER_CPU(u64, bank_map);
 
 /* Map of banks that have more than MCA_MISC0 available. */
 static DEFINE_PER_CPU(u64, smca_misc_banks_map);
+=======
+static DEFINE_PER_CPU(unsigned int, bank_map);
+
+/* Map of banks that have more than MCA_MISC0 available. */
+static DEFINE_PER_CPU(u32, smca_misc_banks_map);
+>>>>>>> b7ba80a49124 (Commit)
 
 static void amd_threshold_interrupt(void);
 static void amd_deferred_error_interrupt(void);
@@ -267,7 +274,11 @@ static void smca_set_misc_banks_map(unsigned int bank, unsigned int cpu)
 		return;
 
 	if (low & MASK_BLKPTR_LO)
+<<<<<<< HEAD
 		per_cpu(smca_misc_banks_map, cpu) |= BIT_ULL(bank);
+=======
+		per_cpu(smca_misc_banks_map, cpu) |= BIT(bank);
+>>>>>>> b7ba80a49124 (Commit)
 
 }
 
@@ -306,8 +317,11 @@ static void smca_configure(unsigned int bank, unsigned int cpu)
 		if ((low & BIT(5)) && !((high >> 5) & 0x3))
 			high |= BIT(5);
 
+<<<<<<< HEAD
 		this_cpu_ptr(mce_banks_array)[bank].lsb_in_status = !!(low & BIT(8));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		wrmsr(smca_config, low, high);
 	}
 
@@ -530,7 +544,11 @@ static u32 smca_get_block_address(unsigned int bank, unsigned int block,
 	if (!block)
 		return MSR_AMD64_SMCA_MCx_MISC(bank);
 
+<<<<<<< HEAD
 	if (!(per_cpu(smca_misc_banks_map, cpu) & BIT_ULL(bank)))
+=======
+	if (!(per_cpu(smca_misc_banks_map, cpu) & BIT(bank)))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	return MSR_AMD64_SMCA_MCx_MISCy(bank, block - 1);
@@ -574,7 +592,11 @@ prepare_threshold_block(unsigned int bank, unsigned int block, u32 addr,
 	int new;
 
 	if (!block)
+<<<<<<< HEAD
 		per_cpu(bank_map, cpu) |= BIT_ULL(bank);
+=======
+		per_cpu(bank_map, cpu) |= (1 << bank);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(&b, 0, sizeof(b));
 	b.cpu			= cpu;
@@ -738,7 +760,19 @@ static void __log_error(unsigned int bank, u64 status, u64 addr, u64 misc)
 	if (m.status & MCI_STATUS_ADDRV) {
 		m.addr = addr;
 
+<<<<<<< HEAD
 		smca_extract_err_addr(&m);
+=======
+		/*
+		 * Extract [55:<lsb>] where lsb is the least significant
+		 * *valid* bit of the address bits.
+		 */
+		if (mce_flags.smca) {
+			u8 lsb = (m.addr >> 56) & 0x3f;
+
+			m.addr &= GENMASK_ULL(55, lsb);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (mce_flags.smca) {
@@ -782,6 +816,7 @@ _log_error_bank(unsigned int bank, u32 msr_stat, u32 msr_addr, u64 misc)
 	return status & MCI_STATUS_DEFERRED;
 }
 
+<<<<<<< HEAD
 static bool _log_error_deferred(unsigned int bank, u32 misc)
 {
 	if (!_log_error_bank(bank, mca_msr_reg(bank, MCA_STATUS),
@@ -800,6 +835,8 @@ static bool _log_error_deferred(unsigned int bank, u32 misc)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * We have three scenarios for checking for Deferred errors:
  *
@@ -811,9 +848,26 @@ static bool _log_error_deferred(unsigned int bank, u32 misc)
  */
 static void log_error_deferred(unsigned int bank)
 {
+<<<<<<< HEAD
 	if (_log_error_deferred(bank, 0))
 		return;
 
+=======
+	bool defrd;
+
+	defrd = _log_error_bank(bank, mca_msr_reg(bank, MCA_STATUS),
+				mca_msr_reg(bank, MCA_ADDR), 0);
+
+	if (!mce_flags.smca)
+		return;
+
+	/* Clear MCA_DESTAT if we logged the deferred error from MCA_STATUS. */
+	if (defrd) {
+		wrmsrl(MSR_AMD64_SMCA_MCx_DESTAT(bank), 0);
+		return;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Only deferred errors are logged in MCA_DE{STAT,ADDR} so just check
 	 * for a valid error.
@@ -833,7 +887,11 @@ static void amd_deferred_error_interrupt(void)
 
 static void log_error_thresholding(unsigned int bank, u64 misc)
 {
+<<<<<<< HEAD
 	_log_error_deferred(bank, misc);
+=======
+	_log_error_bank(bank, mca_msr_reg(bank, MCA_STATUS), mca_msr_reg(bank, MCA_ADDR), misc);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void log_and_reset_block(struct threshold_block *block)
@@ -878,7 +936,11 @@ static void amd_threshold_interrupt(void)
 		return;
 
 	for (bank = 0; bank < this_cpu_read(mce_num_banks); ++bank) {
+<<<<<<< HEAD
 		if (!(per_cpu(bank_map, cpu) & BIT_ULL(bank)))
+=======
+		if (!(per_cpu(bank_map, cpu) & (1 << bank)))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		first_block = bp[bank]->blocks;
@@ -1029,7 +1091,11 @@ static const struct sysfs_ops threshold_ops = {
 
 static void threshold_block_release(struct kobject *kobj);
 
+<<<<<<< HEAD
 static const struct kobj_type threshold_ktype = {
+=======
+static struct kobj_type threshold_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops		= &threshold_ops,
 	.default_groups		= default_groups,
 	.release		= threshold_block_release,
@@ -1356,7 +1422,11 @@ int mce_threshold_create_device(unsigned int cpu)
 		return -ENOMEM;
 
 	for (bank = 0; bank < numbanks; ++bank) {
+<<<<<<< HEAD
 		if (!(this_cpu_read(bank_map) & BIT_ULL(bank)))
+=======
+		if (!(this_cpu_read(bank_map) & (1 << bank)))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		err = threshold_create_bank(bp, cpu, bank);
 		if (err) {

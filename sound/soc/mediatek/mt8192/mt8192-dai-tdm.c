@@ -256,8 +256,13 @@ static int mtk_tdm_en_event(struct snd_soc_dapm_widget *w,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	dev_dbg(cmpnt->dev, "%s(), name %s, event 0x%x\n",
 		__func__, w->name, event);
+=======
+	dev_info(cmpnt->dev, "%s(), name %s, event 0x%x\n",
+		 __func__, w->name, event);
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (event) {
 	case SND_SOC_DAPM_PRE_PMU:
@@ -288,8 +293,13 @@ static int mtk_tdm_bck_en_event(struct snd_soc_dapm_widget *w,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	dev_dbg(cmpnt->dev, "%s(), name %s, event 0x%x, dai_id %d\n",
 		__func__, w->name, event, dai_id);
+=======
+	dev_info(cmpnt->dev, "%s(), name %s, event 0x%x, dai_id %d\n",
+		 __func__, w->name, event, dai_id);
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (event) {
 	case SND_SOC_DAPM_PRE_PMU:
@@ -320,8 +330,13 @@ static int mtk_tdm_mck_en_event(struct snd_soc_dapm_widget *w,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	dev_dbg(cmpnt->dev, "%s(), name %s, event 0x%x, dai_id %d\n",
 		__func__, w->name, event, dai_id);
+=======
+	dev_info(cmpnt->dev, "%s(), name %s, event 0x%x, dai_id %d\n",
+		 __func__, w->name, event, dai_id);
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (event) {
 	case SND_SOC_DAPM_PRE_PMU:
@@ -545,6 +560,7 @@ static int mtk_dai_tdm_hw_params(struct snd_pcm_substream *substream,
 	if (tdm_priv->mclk_rate % tdm_priv->bck_rate != 0)
 		dev_warn(afe->dev, "%s(), bck cannot generate", __func__);
 
+<<<<<<< HEAD
 	dev_dbg(afe->dev, "%s(), id %d, rate %d, channels %d, format %d, mclk_rate %d, bck_rate %d\n",
 		__func__,
 		tdm_id, rate, channels, format,
@@ -552,6 +568,15 @@ static int mtk_dai_tdm_hw_params(struct snd_pcm_substream *substream,
 
 	dev_dbg(afe->dev, "%s(), out_channels_per_sdata = %d\n",
 		__func__, out_channels_per_sdata);
+=======
+	dev_info(afe->dev, "%s(), id %d, rate %d, channels %d, format %d, mclk_rate %d, bck_rate %d\n",
+		 __func__,
+		 tdm_id, rate, channels, format,
+		 tdm_priv->mclk_rate, tdm_priv->bck_rate);
+
+	dev_info(afe->dev, "%s(), out_channels_per_sdata = %d\n",
+		 __func__, out_channels_per_sdata);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* set tdm */
 	if (tdm_priv->bck_invert)
@@ -644,7 +669,11 @@ static int mtk_dai_tdm_set_sysclk(struct snd_soc_dai *dai,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	dev_dbg(afe->dev, "%s(), freq %d\n", __func__, freq);
+=======
+	dev_info(afe->dev, "%s(), freq %d\n", __func__, freq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return mtk_dai_tdm_cal_mclk(afe, tdm_priv, freq);
 }
@@ -754,6 +783,11 @@ int mt8192_dai_tdm_register(struct mtk_base_afe *afe)
 	struct mtk_afe_tdm_priv *tdm_priv;
 	struct mtk_base_afe_dai *dai;
 
+<<<<<<< HEAD
+=======
+	dev_info(afe->dev, "%s()\n", __func__);
+
+>>>>>>> b7ba80a49124 (Commit)
 	dai = devm_kzalloc(afe->dev, sizeof(*dai), GFP_KERNEL);
 	if (!dai)
 		return -ENOMEM;

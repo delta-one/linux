@@ -33,11 +33,17 @@
 #include <drm/drm_sysfs.h>
 #include <drm/drm_utils.h>
 
+<<<<<<< HEAD
 #include <linux/property.h>
 #include <linux/uaccess.h>
 
 #include <video/cmdline.h>
 
+=======
+#include <linux/fb.h>
+#include <linux/uaccess.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #include "drm_crtc_internal.h"
 #include "drm_internal.h"
 
@@ -156,10 +162,16 @@ EXPORT_SYMBOL(drm_get_connector_type_name);
 static void drm_connector_get_cmdline_mode(struct drm_connector *connector)
 {
 	struct drm_cmdline_mode *mode = &connector->cmdline_mode;
+<<<<<<< HEAD
 	const char *option;
 
 	option = video_get_options(connector->name);
 	if (!option)
+=======
+	char *option = NULL;
+
+	if (fb_get_options(connector->name, &option))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	if (!drm_mode_parse_command_line_for_connector(option,
@@ -277,7 +289,10 @@ static int __drm_connector_init(struct drm_device *dev,
 	INIT_LIST_HEAD(&connector->probed_modes);
 	INIT_LIST_HEAD(&connector->modes);
 	mutex_init(&connector->mutex);
+<<<<<<< HEAD
 	mutex_init(&connector->edid_override_mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	connector->edid_blob_ptr = NULL;
 	connector->epoch_counter = 0;
 	connector->tile_blob_ptr = NULL;
@@ -439,7 +454,11 @@ int drmm_connector_init(struct drm_device *dev,
 	if (drm_WARN_ON(dev, funcs && funcs->destroy))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	ret = __drm_connector_init(dev, connector, funcs, connector_type, ddc);
+=======
+	ret = __drm_connector_init(dev, connector, funcs, connector_type, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -568,7 +587,10 @@ void drm_connector_cleanup(struct drm_connector *connector)
 	ida_free(&dev->mode_config.connector_ida, connector->index);
 
 	kfree(connector->display_info.bus_formats);
+<<<<<<< HEAD
 	kfree(connector->display_info.vics);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	drm_mode_object_unregister(dev, &connector->base);
 	kfree(connector->name);
 	connector->name = NULL;
@@ -587,9 +609,12 @@ void drm_connector_cleanup(struct drm_connector *connector)
 	mutex_destroy(&connector->mutex);
 
 	memset(connector, 0, sizeof(*connector));
+<<<<<<< HEAD
 
 	if (dev->registered)
 		drm_sysfs_hotplug_event(dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(drm_connector_cleanup);
 
@@ -988,6 +1013,7 @@ static const struct drm_prop_enum_list drm_dvi_i_subconnector_enum_list[] = {
 DRM_ENUM_NAME_FN(drm_get_dvi_i_subconnector_name,
 		 drm_dvi_i_subconnector_enum_list)
 
+<<<<<<< HEAD
 static const struct drm_prop_enum_list drm_tv_mode_enum_list[] = {
 	{ DRM_MODE_TV_MODE_NTSC, "NTSC" },
 	{ DRM_MODE_TV_MODE_NTSC_443, "NTSC-443" },
@@ -1023,6 +1049,8 @@ int drm_get_tv_mode_from_name(const char *name, size_t len)
 }
 EXPORT_SYMBOL(drm_get_tv_mode_from_name);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct drm_prop_enum_list drm_tv_select_enum_list[] = {
 	{ DRM_MODE_SUBCONNECTOR_Automatic, "Automatic" }, /* DVI-I and TV-out */
 	{ DRM_MODE_SUBCONNECTOR_Composite, "Composite" }, /* TV-out */
@@ -1449,6 +1477,7 @@ static const struct drm_prop_enum_list dp_colorspaces[] = {
  *	a firmware handled hotkey. Therefor userspace must not include the
  *	privacy-screen sw-state in an atomic commit unless it wants to change
  *	its value.
+<<<<<<< HEAD
  *
  * left margin, right margin, top margin, bottom margin:
  *	Add margins to the connector's viewport. This is typically used to
@@ -1463,6 +1492,8 @@ static const struct drm_prop_enum_list dp_colorspaces[] = {
  *
  *	Drivers can set up these properties by calling
  *	drm_mode_create_tv_margin_properties().
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 int drm_connector_create_standard_properties(struct drm_device *dev)
@@ -1605,6 +1636,7 @@ EXPORT_SYMBOL(drm_connector_attach_dp_subconnector_property);
  *	infoframe values is done through drm_hdmi_avi_infoframe_content_type().
  */
 
+<<<<<<< HEAD
 /*
  * TODO: Document the properties:
  *   - brightness
@@ -1665,6 +1697,8 @@ EXPORT_SYMBOL(drm_connector_attach_dp_subconnector_property);
  *	drm_mode_create_tv_properties().
  */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * drm_connector_attach_content_type_property - attach content-type property
  * @connector: connector to attach content type property on.
@@ -1717,7 +1751,11 @@ EXPORT_SYMBOL(drm_connector_attach_tv_margin_properties);
  * Called by a driver's HDMI connector initialization routine, this function
  * creates the TV margin properties for a given device. No need to call this
  * function for an SDTV connector, it's already called from
+<<<<<<< HEAD
  * drm_mode_create_tv_properties_legacy().
+=======
+ * drm_mode_create_tv_properties().
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Returns:
  * 0 on success or a negative error code on failure.
@@ -1752,7 +1790,11 @@ int drm_mode_create_tv_margin_properties(struct drm_device *dev)
 EXPORT_SYMBOL(drm_mode_create_tv_margin_properties);
 
 /**
+<<<<<<< HEAD
  * drm_mode_create_tv_properties_legacy - create TV specific connector properties
+=======
+ * drm_mode_create_tv_properties - create TV specific connector properties
+>>>>>>> b7ba80a49124 (Commit)
  * @dev: DRM device
  * @num_modes: number of different TV formats (modes) supported
  * @modes: array of pointers to strings containing name of each format
@@ -1762,6 +1804,7 @@ EXPORT_SYMBOL(drm_mode_create_tv_margin_properties);
  * responsible for allocating a list of format names and passing them to
  * this routine.
  *
+<<<<<<< HEAD
  * NOTE: This functions registers the deprecated "mode" connector
  * property to select the analog TV mode (ie, NTSC, PAL, etc.). New
  * drivers must use drm_mode_create_tv_properties() instead.
@@ -1772,6 +1815,14 @@ EXPORT_SYMBOL(drm_mode_create_tv_margin_properties);
 int drm_mode_create_tv_properties_legacy(struct drm_device *dev,
 					 unsigned int num_modes,
 					 const char * const modes[])
+=======
+ * Returns:
+ * 0 on success or a negative error code on failure.
+ */
+int drm_mode_create_tv_properties(struct drm_device *dev,
+				  unsigned int num_modes,
+				  const char * const modes[])
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drm_property *tv_selector;
 	struct drm_property *tv_subconnector;
@@ -1807,6 +1858,7 @@ int drm_mode_create_tv_properties_legacy(struct drm_device *dev,
 	if (drm_mode_create_tv_margin_properties(dev))
 		goto nomem;
 
+<<<<<<< HEAD
 	if (num_modes) {
 		dev->mode_config.legacy_tv_mode_property =
 			drm_property_create(dev, DRM_MODE_PROP_ENUM,
@@ -1818,6 +1870,17 @@ int drm_mode_create_tv_properties_legacy(struct drm_device *dev,
 			drm_property_add_enum(dev->mode_config.legacy_tv_mode_property,
 					      i, modes[i]);
 	}
+=======
+	dev->mode_config.tv_mode_property =
+		drm_property_create(dev, DRM_MODE_PROP_ENUM,
+				    "mode", num_modes);
+	if (!dev->mode_config.tv_mode_property)
+		goto nomem;
+
+	for (i = 0; i < num_modes; i++)
+		drm_property_add_enum(dev->mode_config.tv_mode_property,
+				      i, modes[i]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev->mode_config.tv_brightness_property =
 		drm_property_create_range(dev, 0, "brightness", 0, 100);
@@ -1853,6 +1916,7 @@ int drm_mode_create_tv_properties_legacy(struct drm_device *dev,
 nomem:
 	return -ENOMEM;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(drm_mode_create_tv_properties_legacy);
 
 /**
@@ -1894,6 +1958,8 @@ int drm_mode_create_tv_properties(struct drm_device *dev,
 
 	return drm_mode_create_tv_properties_legacy(dev, 0, NULL);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL(drm_mode_create_tv_properties);
 
 /**

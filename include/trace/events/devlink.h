@@ -88,7 +88,11 @@ TRACE_EVENT(devlink_health_report,
 		__string(bus_name, devlink_to_dev(devlink)->bus->name)
 		__string(dev_name, dev_name(devlink_to_dev(devlink)))
 		__string(driver_name, devlink_to_dev(devlink)->driver->name)
+<<<<<<< HEAD
 		__string(reporter_name, reporter_name)
+=======
+		__string(reporter_name, msg)
+>>>>>>> b7ba80a49124 (Commit)
 		__string(msg, msg)
 	),
 

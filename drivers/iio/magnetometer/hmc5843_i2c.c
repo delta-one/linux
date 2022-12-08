@@ -52,9 +52,15 @@ static const struct regmap_config hmc5843_i2c_regmap_config = {
 	.cache_type = REGCACHE_RBTREE,
 };
 
+<<<<<<< HEAD
 static int hmc5843_i2c_probe(struct i2c_client *cli)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(cli);
+=======
+static int hmc5843_i2c_probe(struct i2c_client *cli,
+			     const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct regmap *regmap = devm_regmap_init_i2c(cli,
 			&hmc5843_i2c_regmap_config);
 	if (IS_ERR(regmap))
@@ -95,7 +101,11 @@ static struct i2c_driver hmc5843_driver = {
 		.of_match_table = hmc5843_of_match,
 	},
 	.id_table	= hmc5843_id,
+<<<<<<< HEAD
 	.probe_new	= hmc5843_i2c_probe,
+=======
+	.probe		= hmc5843_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= hmc5843_i2c_remove,
 };
 module_i2c_driver(hmc5843_driver);

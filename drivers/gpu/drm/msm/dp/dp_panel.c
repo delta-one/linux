@@ -20,6 +20,7 @@ struct dp_panel_private {
 	bool aux_cfg_update_done;
 };
 
+<<<<<<< HEAD
 static void dp_panel_read_psr_cap(struct dp_panel_private *panel)
 {
 	ssize_t rlen;
@@ -41,6 +42,8 @@ static void dp_panel_read_psr_cap(struct dp_panel_private *panel)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int dp_panel_read_dpcd(struct dp_panel *dp_panel)
 {
 	int rc = 0;
@@ -96,6 +99,7 @@ static int dp_panel_read_dpcd(struct dp_panel *dp_panel)
 	link_info->rate = drm_dp_bw_code_to_link_rate(dpcd[DP_MAX_LINK_RATE]);
 	link_info->num_lanes = dpcd[DP_MAX_LANE_COUNT] & DP_MAX_LANE_COUNT_MASK;
 
+<<<<<<< HEAD
 	/* Limit data lanes from data-lanes of endpoint property of dtsi */
 	if (link_info->num_lanes > dp_panel->max_dp_lanes)
 		link_info->num_lanes = dp_panel->max_dp_lanes;
@@ -103,6 +107,14 @@ static int dp_panel_read_dpcd(struct dp_panel *dp_panel)
 	/* Limit link rate from link-frequencies of endpoint property of dtsi */
 	if (link_info->rate > dp_panel->max_dp_link_rate)
 		link_info->rate = dp_panel->max_dp_link_rate;
+=======
+	if (link_info->num_lanes > dp_panel->max_dp_lanes)
+		link_info->num_lanes = dp_panel->max_dp_lanes;
+
+	/* Limit support upto HBR2 until HBR3 support is added */
+	if (link_info->rate >= (drm_dp_bw_code_to_link_rate(DP_LINK_BW_5_4)))
+		link_info->rate = drm_dp_bw_code_to_link_rate(DP_LINK_BW_5_4);
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_dbg_dp(panel->drm_dev, "version: %d.%d\n", major, minor);
 	drm_dbg_dp(panel->drm_dev, "link_rate=%d\n", link_info->rate);
@@ -128,7 +140,10 @@ static int dp_panel_read_dpcd(struct dp_panel *dp_panel)
 		}
 	}
 
+<<<<<<< HEAD
 	dp_panel_read_psr_cap(panel);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 end:
 	return rc;
 }

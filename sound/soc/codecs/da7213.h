@@ -195,8 +195,11 @@
 #define DA7213_DAI_WORD_LENGTH_S24_LE				(0x2 << 2)
 #define DA7213_DAI_WORD_LENGTH_S32_LE				(0x3 << 2)
 #define DA7213_DAI_WORD_LENGTH_MASK				(0x3 << 2)
+<<<<<<< HEAD
 #define DA7213_DAI_MONO_MODE_EN					(0x1 << 4)
 #define DA7213_DAI_MONO_MODE_MASK				(0x1 << 4)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DA7213_DAI_EN_SHIFT					7
 
 /* DA7213_DIG_ROUTING_DAI = 0x21 */
@@ -544,7 +547,10 @@ struct da7213_priv {
 	bool alc_en;
 	bool fixed_clk_auto_pll;
 	struct da7213_platform_data *pdata;
+<<<<<<< HEAD
 	int fmt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #endif /* _DA7213_H */

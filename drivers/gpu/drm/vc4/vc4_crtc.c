@@ -50,6 +50,7 @@
 
 #define HVS_FIFO_LATENCY_PIX	6
 
+<<<<<<< HEAD
 #define CRTC_WRITE(offset, val)								\
 	do {										\
 		kunit_fail_current_test("Accessing a register in a unit test!\n");	\
@@ -61,6 +62,10 @@
 		kunit_fail_current_test("Accessing a register in a unit test!\n");	\
 		readl(vc4_crtc->regs + (offset));					\
 	})
+=======
+#define CRTC_WRITE(offset, val) writel(val, vc4_crtc->regs + (offset))
+#define CRTC_READ(offset) readl(vc4_crtc->regs + (offset))
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct debugfs_reg32 crtc_regs[] = {
 	VC4_REG32(PV_CONTROL),
@@ -335,6 +340,7 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc, struct drm_encoder *encode
 	bool is_dsi = (vc4_encoder->type == VC4_ENCODER_TYPE_DSI0 ||
 		       vc4_encoder->type == VC4_ENCODER_TYPE_DSI1);
 	bool is_dsi1 = vc4_encoder->type == VC4_ENCODER_TYPE_DSI1;
+<<<<<<< HEAD
 	bool is_vec = vc4_encoder->type == VC4_ENCODER_TYPE_VEC;
 	u32 format = is_dsi1 ? PV_CONTROL_FORMAT_DSIV_24 : PV_CONTROL_FORMAT_24;
 	u8 ppc = pv_data->pixels_per_clock;
@@ -343,6 +349,10 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc, struct drm_encoder *encode
 	u16 vert_sync = mode->crtc_vsync_end - mode->crtc_vsync_start;
 	u16 vert_fp = mode->crtc_vsync_start - mode->crtc_vdisplay;
 
+=======
+	u32 format = is_dsi1 ? PV_CONTROL_FORMAT_DSIV_24 : PV_CONTROL_FORMAT_24;
+	u8 ppc = pv_data->pixels_per_clock;
+>>>>>>> b7ba80a49124 (Commit)
 	bool debug_dump_regs = false;
 	int idx;
 
@@ -370,6 +380,7 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc, struct drm_encoder *encode
 		   VC4_SET_FIELD(mode->hdisplay * pixel_rep / ppc,
 				 PV_HORZB_HACTIVE));
 
+<<<<<<< HEAD
 	if (interlace) {
 		bool odd_field_first = false;
 		u32 field_delay = mode->htotal * pixel_rep / (2 * ppc);
@@ -399,21 +410,59 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc, struct drm_encoder *encode
 
 		/* We set up first field even mode for HDMI and VEC's PAL.
 		 * For NTSC, we need first field odd.
+=======
+	CRTC_WRITE(PV_VERTA,
+		   VC4_SET_FIELD(mode->crtc_vtotal - mode->crtc_vsync_end +
+				 interlace,
+				 PV_VERTA_VBP) |
+		   VC4_SET_FIELD(mode->crtc_vsync_end - mode->crtc_vsync_start,
+				 PV_VERTA_VSYNC));
+	CRTC_WRITE(PV_VERTB,
+		   VC4_SET_FIELD(mode->crtc_vsync_start - mode->crtc_vdisplay,
+				 PV_VERTB_VFP) |
+		   VC4_SET_FIELD(mode->crtc_vdisplay, PV_VERTB_VACTIVE));
+
+	if (interlace) {
+		CRTC_WRITE(PV_VERTA_EVEN,
+			   VC4_SET_FIELD(mode->crtc_vtotal -
+					 mode->crtc_vsync_end,
+					 PV_VERTA_VBP) |
+			   VC4_SET_FIELD(mode->crtc_vsync_end -
+					 mode->crtc_vsync_start,
+					 PV_VERTA_VSYNC));
+		CRTC_WRITE(PV_VERTB_EVEN,
+			   VC4_SET_FIELD(mode->crtc_vsync_start -
+					 mode->crtc_vdisplay,
+					 PV_VERTB_VFP) |
+			   VC4_SET_FIELD(mode->crtc_vdisplay, PV_VERTB_VACTIVE));
+
+		/* We set up first field even mode for HDMI.  VEC's
+		 * NTSC mode would want first field odd instead, once
+		 * we support it (to do so, set ODD_FIRST and put the
+		 * delay in VSYNCD_EVEN instead).
+>>>>>>> b7ba80a49124 (Commit)
 		 */
 		CRTC_WRITE(PV_V_CONTROL,
 			   PV_VCONTROL_CONTINUOUS |
 			   (is_dsi ? PV_VCONTROL_DSI : 0) |
 			   PV_VCONTROL_INTERLACE |
+<<<<<<< HEAD
 			   (odd_field_first
 				   ? PV_VCONTROL_ODD_FIRST
 				   : VC4_SET_FIELD(field_delay,
 						   PV_VCONTROL_ODD_DELAY)));
 		CRTC_WRITE(PV_VSYNCD_EVEN,
 			   (odd_field_first ? field_delay : 0));
+=======
+			   VC4_SET_FIELD(mode->htotal * pixel_rep / (2 * ppc),
+					 PV_VCONTROL_ODD_DELAY));
+		CRTC_WRITE(PV_VSYNCD_EVEN, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		CRTC_WRITE(PV_V_CONTROL,
 			   PV_VCONTROL_CONTINUOUS |
 			   (is_dsi ? PV_VCONTROL_DSI : 0));
+<<<<<<< HEAD
 		CRTC_WRITE(PV_VSYNCD_EVEN, 0);
 	}
 
@@ -424,6 +473,10 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc, struct drm_encoder *encode
 		   VC4_SET_FIELD(vert_fp, PV_VERTB_VFP) |
 		   VC4_SET_FIELD(mode->crtc_vdisplay, PV_VERTB_VACTIVE));
 
+=======
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (is_dsi)
 		CRTC_WRITE(PV_HACT_ACT, mode->hdisplay * pixel_rep);
 
@@ -512,6 +565,24 @@ static int vc4_crtc_disable(struct drm_crtc *crtc,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static struct drm_encoder *vc4_crtc_get_encoder_by_type(struct drm_crtc *crtc,
+							enum vc4_encoder_type type)
+{
+	struct drm_encoder *encoder;
+
+	drm_for_each_encoder(encoder, crtc->dev) {
+		struct vc4_encoder *vc4_encoder = to_vc4_encoder(encoder);
+
+		if (vc4_encoder->type == type)
+			return encoder;
+	}
+
+	return NULL;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int vc4_crtc_disable_at_boot(struct drm_crtc *crtc)
 {
 	struct drm_device *drm = crtc->dev;
@@ -547,7 +618,11 @@ int vc4_crtc_disable_at_boot(struct drm_crtc *crtc)
 
 	pv_data = vc4_crtc_to_vc4_pv_data(vc4_crtc);
 	encoder_type = pv_data->encoder_types[encoder_sel];
+<<<<<<< HEAD
 	encoder = vc4_find_encoder_by_type(drm, encoder_type);
+=======
+	encoder = vc4_crtc_get_encoder_by_type(crtc, encoder_type);
+>>>>>>> b7ba80a49124 (Commit)
 	if (WARN_ON(!encoder))
 		return 0;
 
@@ -701,8 +776,13 @@ void vc4_crtc_get_margins(struct drm_crtc_state *state,
 	}
 }
 
+<<<<<<< HEAD
 int vc4_crtc_atomic_check(struct drm_crtc *crtc,
 			  struct drm_atomic_state *state)
+=======
+static int vc4_crtc_atomic_check(struct drm_crtc *crtc,
+				 struct drm_atomic_state *state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drm_crtc_state *crtc_state = drm_atomic_get_new_crtc_state(state,
 									  crtc);
@@ -722,7 +802,11 @@ int vc4_crtc_atomic_check(struct drm_crtc *crtc,
 		struct vc4_encoder *vc4_encoder = to_vc4_encoder(encoder);
 
 		if (vc4_encoder->type == VC4_ENCODER_TYPE_HDMI0) {
+<<<<<<< HEAD
 			vc4_state->hvs_load = max(mode->clock * mode->hdisplay / mode->htotal + 8000,
+=======
+			vc4_state->hvs_load = max(mode->clock * mode->hdisplay / mode->htotal + 1000,
+>>>>>>> b7ba80a49124 (Commit)
 						  mode->clock * 9 / 10) * 1000;
 		} else {
 			vc4_state->hvs_load = mode->clock * 1000;
@@ -1107,9 +1191,18 @@ int vc4_crtc_late_register(struct drm_crtc *crtc)
 	struct drm_device *drm = crtc->dev;
 	struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
 	const struct vc4_crtc_data *crtc_data = vc4_crtc_to_vc4_crtc_data(vc4_crtc);
+<<<<<<< HEAD
 
 	vc4_debugfs_add_regset32(drm, crtc_data->debugfs_name,
 				 &vc4_crtc->regset);
+=======
+	int ret;
+
+	ret = vc4_debugfs_add_regset32(drm->primary, crtc_data->debugfs_name,
+				       &vc4_crtc->regset);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1139,9 +1232,14 @@ static const struct drm_crtc_helper_funcs vc4_crtc_helper_funcs = {
 	.get_scanout_position = vc4_crtc_get_scanout_position,
 };
 
+<<<<<<< HEAD
 const struct vc4_pv_data bcm2835_pv0_data = {
 	.base = {
 		.name = "pixelvalve-0",
+=======
+static const struct vc4_pv_data bcm2835_pv0_data = {
+	.base = {
+>>>>>>> b7ba80a49124 (Commit)
 		.debugfs_name = "crtc0_regs",
 		.hvs_available_channels = BIT(0),
 		.hvs_output = 0,
@@ -1154,9 +1252,14 @@ const struct vc4_pv_data bcm2835_pv0_data = {
 	},
 };
 
+<<<<<<< HEAD
 const struct vc4_pv_data bcm2835_pv1_data = {
 	.base = {
 		.name = "pixelvalve-1",
+=======
+static const struct vc4_pv_data bcm2835_pv1_data = {
+	.base = {
+>>>>>>> b7ba80a49124 (Commit)
 		.debugfs_name = "crtc1_regs",
 		.hvs_available_channels = BIT(2),
 		.hvs_output = 2,
@@ -1169,9 +1272,14 @@ const struct vc4_pv_data bcm2835_pv1_data = {
 	},
 };
 
+<<<<<<< HEAD
 const struct vc4_pv_data bcm2835_pv2_data = {
 	.base = {
 		.name = "pixelvalve-2",
+=======
+static const struct vc4_pv_data bcm2835_pv2_data = {
+	.base = {
+>>>>>>> b7ba80a49124 (Commit)
 		.debugfs_name = "crtc2_regs",
 		.hvs_available_channels = BIT(1),
 		.hvs_output = 1,
@@ -1184,9 +1292,14 @@ const struct vc4_pv_data bcm2835_pv2_data = {
 	},
 };
 
+<<<<<<< HEAD
 const struct vc4_pv_data bcm2711_pv0_data = {
 	.base = {
 		.name = "pixelvalve-0",
+=======
+static const struct vc4_pv_data bcm2711_pv0_data = {
+	.base = {
+>>>>>>> b7ba80a49124 (Commit)
 		.debugfs_name = "crtc0_regs",
 		.hvs_available_channels = BIT(0),
 		.hvs_output = 0,
@@ -1199,9 +1312,14 @@ const struct vc4_pv_data bcm2711_pv0_data = {
 	},
 };
 
+<<<<<<< HEAD
 const struct vc4_pv_data bcm2711_pv1_data = {
 	.base = {
 		.name = "pixelvalve-1",
+=======
+static const struct vc4_pv_data bcm2711_pv1_data = {
+	.base = {
+>>>>>>> b7ba80a49124 (Commit)
 		.debugfs_name = "crtc1_regs",
 		.hvs_available_channels = BIT(0) | BIT(1) | BIT(2),
 		.hvs_output = 3,
@@ -1214,9 +1332,14 @@ const struct vc4_pv_data bcm2711_pv1_data = {
 	},
 };
 
+<<<<<<< HEAD
 const struct vc4_pv_data bcm2711_pv2_data = {
 	.base = {
 		.name = "pixelvalve-2",
+=======
+static const struct vc4_pv_data bcm2711_pv2_data = {
+	.base = {
+>>>>>>> b7ba80a49124 (Commit)
 		.debugfs_name = "crtc2_regs",
 		.hvs_available_channels = BIT(0) | BIT(1) | BIT(2),
 		.hvs_output = 4,
@@ -1228,9 +1351,14 @@ const struct vc4_pv_data bcm2711_pv2_data = {
 	},
 };
 
+<<<<<<< HEAD
 const struct vc4_pv_data bcm2711_pv3_data = {
 	.base = {
 		.name = "pixelvalve-3",
+=======
+static const struct vc4_pv_data bcm2711_pv3_data = {
+	.base = {
+>>>>>>> b7ba80a49124 (Commit)
 		.debugfs_name = "crtc3_regs",
 		.hvs_available_channels = BIT(1),
 		.hvs_output = 1,
@@ -1242,9 +1370,14 @@ const struct vc4_pv_data bcm2711_pv3_data = {
 	},
 };
 
+<<<<<<< HEAD
 const struct vc4_pv_data bcm2711_pv4_data = {
 	.base = {
 		.name = "pixelvalve-4",
+=======
+static const struct vc4_pv_data bcm2711_pv4_data = {
+	.base = {
+>>>>>>> b7ba80a49124 (Commit)
 		.debugfs_name = "crtc4_regs",
 		.hvs_available_channels = BIT(0) | BIT(1) | BIT(2),
 		.hvs_output = 5,
@@ -1294,6 +1427,7 @@ static void vc4_set_crtc_possible_masks(struct drm_device *drm,
 	}
 }
 
+<<<<<<< HEAD
 /**
  * __vc4_crtc_init - Initializes a CRTC
  * @drm: DRM Device
@@ -1332,6 +1466,33 @@ int __vc4_crtc_init(struct drm_device *drm,
 	spin_lock_init(&vc4_crtc->irq_lock);
 	ret = drmm_crtc_init_with_planes(drm, crtc, primary_plane, NULL,
 					 crtc_funcs, data->name);
+=======
+int vc4_crtc_init(struct drm_device *drm, struct vc4_crtc *vc4_crtc,
+		  const struct drm_crtc_funcs *crtc_funcs,
+		  const struct drm_crtc_helper_funcs *crtc_helper_funcs)
+{
+	struct vc4_dev *vc4 = to_vc4_dev(drm);
+	struct drm_crtc *crtc = &vc4_crtc->base;
+	struct drm_plane *primary_plane;
+	unsigned int i;
+	int ret;
+
+	/* For now, we create just the primary and the legacy cursor
+	 * planes.  We should be able to stack more planes on easily,
+	 * but to do that we would need to compute the bandwidth
+	 * requirement of the plane configuration, and reject ones
+	 * that will take too much.
+	 */
+	primary_plane = vc4_plane_init(drm, DRM_PLANE_TYPE_PRIMARY, 0);
+	if (IS_ERR(primary_plane)) {
+		dev_err(drm->dev, "failed to construct primary plane\n");
+		return PTR_ERR(primary_plane);
+	}
+
+	spin_lock_init(&vc4_crtc->irq_lock);
+	ret = drmm_crtc_init_with_planes(drm, crtc, primary_plane, NULL,
+					 crtc_funcs, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -1357,6 +1518,7 @@ int __vc4_crtc_init(struct drm_device *drm,
 	return 0;
 }
 
+<<<<<<< HEAD
 int vc4_crtc_init(struct drm_device *drm, struct platform_device *pdev,
 		  struct vc4_crtc *vc4_crtc,
 		  const struct vc4_crtc_data *data,
@@ -1382,6 +1544,8 @@ int vc4_crtc_init(struct drm_device *drm, struct platform_device *pdev,
 			       crtc_funcs, crtc_helper_funcs, feeds_txp);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int vc4_crtc_bind(struct device *dev, struct device *master, void *data)
 {
 	struct platform_device *pdev = to_platform_device(dev);
@@ -1399,6 +1563,11 @@ static int vc4_crtc_bind(struct device *dev, struct device *master, void *data)
 	pv_data = of_device_get_match_data(dev);
 	if (!pv_data)
 		return -ENODEV;
+<<<<<<< HEAD
+=======
+	vc4_crtc->data = &pv_data->base;
+	vc4_crtc->pdev = pdev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	vc4_crtc->regs = vc4_ioremap_regs(pdev, 0);
 	if (IS_ERR(vc4_crtc->regs))
@@ -1408,9 +1577,14 @@ static int vc4_crtc_bind(struct device *dev, struct device *master, void *data)
 	vc4_crtc->regset.regs = crtc_regs;
 	vc4_crtc->regset.nregs = ARRAY_SIZE(crtc_regs);
 
+<<<<<<< HEAD
 	ret = vc4_crtc_init(drm, pdev, vc4_crtc, &pv_data->base,
 			    &vc4_crtc_funcs, &vc4_crtc_helper_funcs,
 			    false);
+=======
+	ret = vc4_crtc_init(drm, vc4_crtc,
+			    &vc4_crtc_funcs, &vc4_crtc_helper_funcs);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 	vc4_set_crtc_possible_masks(drm, crtc);

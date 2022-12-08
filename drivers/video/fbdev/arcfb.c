@@ -587,7 +587,11 @@ err:
 	return retval;
 }
 
+<<<<<<< HEAD
 static void arcfb_remove(struct platform_device *dev)
+=======
+static int arcfb_remove(struct platform_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = platform_get_drvdata(dev);
 
@@ -598,11 +602,19 @@ static void arcfb_remove(struct platform_device *dev)
 		vfree((void __force *)info->screen_base);
 		framebuffer_release(info);
 	}
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver arcfb_driver = {
 	.probe	= arcfb_probe,
+<<<<<<< HEAD
 	.remove_new = arcfb_remove,
+=======
+	.remove = arcfb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name	= "arcfb",
 	},

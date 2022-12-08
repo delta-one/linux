@@ -3,8 +3,11 @@
 
 #include "mte_def.h"
 
+<<<<<<< HEAD
 .arch	armv8.5-a+memtag
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ENTRY(name) \
 	.globl name ;\
 	.p2align 2;\

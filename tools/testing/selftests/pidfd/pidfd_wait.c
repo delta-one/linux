@@ -95,28 +95,41 @@ TEST(wait_states)
 		.flags = CLONE_PIDFD | CLONE_PARENT_SETTID,
 		.exit_signal = SIGCHLD,
 	};
+<<<<<<< HEAD
 	int pfd[2];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pid_t pid;
 	siginfo_t info = {
 		.si_signo = 0,
 	};
 
+<<<<<<< HEAD
 	ASSERT_EQ(pipe(pfd), 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pid = sys_clone3(&args);
 	ASSERT_GE(pid, 0);
 
 	if (pid == 0) {
+<<<<<<< HEAD
 		char buf[2];
 
 		close(pfd[1]);
 		kill(getpid(), SIGSTOP);
 		ASSERT_EQ(read(pfd[0], buf, 1), 1);
 		close(pfd[0]);
+=======
+		kill(getpid(), SIGSTOP);
+>>>>>>> b7ba80a49124 (Commit)
 		kill(getpid(), SIGSTOP);
 		exit(EXIT_SUCCESS);
 	}
 
+<<<<<<< HEAD
 	close(pfd[0]);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ASSERT_EQ(sys_waitid(P_PIDFD, pidfd, &info, WSTOPPED, NULL), 0);
 	ASSERT_EQ(info.si_signo, SIGCHLD);
 	ASSERT_EQ(info.si_code, CLD_STOPPED);
@@ -125,8 +138,11 @@ TEST(wait_states)
 	ASSERT_EQ(sys_pidfd_send_signal(pidfd, SIGCONT, NULL, 0), 0);
 
 	ASSERT_EQ(sys_waitid(P_PIDFD, pidfd, &info, WCONTINUED, NULL), 0);
+<<<<<<< HEAD
 	ASSERT_EQ(write(pfd[1], "C", 1), 1);
 	close(pfd[1]);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ASSERT_EQ(info.si_signo, SIGCHLD);
 	ASSERT_EQ(info.si_code, CLD_CONTINUED);
 	ASSERT_EQ(info.si_pid, parent_tid);
@@ -148,7 +164,11 @@ TEST(wait_states)
 
 TEST(wait_nonblock)
 {
+<<<<<<< HEAD
 	int pidfd;
+=======
+	int pidfd, status = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int flags = 0;
 	pid_t parent_tid = -1;
 	struct clone_args args = {

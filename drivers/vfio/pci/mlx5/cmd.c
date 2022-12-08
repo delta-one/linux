@@ -7,6 +7,7 @@
 
 enum { CQ_OK = 0, CQ_EMPTY = -1, CQ_POLL_ERR = -2 };
 
+<<<<<<< HEAD
 static int mlx5vf_is_migratable(struct mlx5_core_dev *mdev, u16 func_id)
 {
 	int query_sz = MLX5_ST_SZ_BYTES(query_hca_cap_out);
@@ -30,6 +31,8 @@ out:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mlx5vf_cmd_get_vhca_id(struct mlx5_core_dev *mdev, u16 function_id,
 				  u16 *vhca_id);
 static void
@@ -37,15 +40,21 @@ _mlx5vf_free_page_tracker_resources(struct mlx5vf_pci_core_device *mvdev);
 
 int mlx5vf_cmd_suspend_vhca(struct mlx5vf_pci_core_device *mvdev, u16 op_mod)
 {
+<<<<<<< HEAD
 	struct mlx5_vf_migration_file *migf = mvdev->saving_migf;
 	u32 out[MLX5_ST_SZ_DW(suspend_vhca_out)] = {};
 	u32 in[MLX5_ST_SZ_DW(suspend_vhca_in)] = {};
 	int err;
+=======
+	u32 out[MLX5_ST_SZ_DW(suspend_vhca_out)] = {};
+	u32 in[MLX5_ST_SZ_DW(suspend_vhca_in)] = {};
+>>>>>>> b7ba80a49124 (Commit)
 
 	lockdep_assert_held(&mvdev->state_mutex);
 	if (mvdev->mdev_detach)
 		return -ENOTCONN;
 
+<<<<<<< HEAD
 	/*
 	 * In case PRE_COPY is used, saving_migf is exposed while the device is
 	 * running. Make sure to run only once there is no active save command.
@@ -58,15 +67,21 @@ int mlx5vf_cmd_suspend_vhca(struct mlx5vf_pci_core_device *mvdev, u16 op_mod)
 			return err;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	MLX5_SET(suspend_vhca_in, in, opcode, MLX5_CMD_OP_SUSPEND_VHCA);
 	MLX5_SET(suspend_vhca_in, in, vhca_id, mvdev->vhca_id);
 	MLX5_SET(suspend_vhca_in, in, op_mod, op_mod);
 
+<<<<<<< HEAD
 	err = mlx5_cmd_exec_inout(mvdev->mdev, suspend_vhca, in, out);
 	if (migf)
 		complete(&migf->save_comp);
 
 	return err;
+=======
+	return mlx5_cmd_exec_inout(mvdev->mdev, suspend_vhca, in, out);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int mlx5vf_cmd_resume_vhca(struct mlx5vf_pci_core_device *mvdev, u16 op_mod)
@@ -86,17 +101,25 @@ int mlx5vf_cmd_resume_vhca(struct mlx5vf_pci_core_device *mvdev, u16 op_mod)
 }
 
 int mlx5vf_cmd_query_vhca_migration_state(struct mlx5vf_pci_core_device *mvdev,
+<<<<<<< HEAD
 					  size_t *state_size, u8 query_flags)
 {
 	u32 out[MLX5_ST_SZ_DW(query_vhca_migration_state_out)] = {};
 	u32 in[MLX5_ST_SZ_DW(query_vhca_migration_state_in)] = {};
 	bool inc = query_flags & MLX5VF_QUERY_INC;
+=======
+					  size_t *state_size)
+{
+	u32 out[MLX5_ST_SZ_DW(query_vhca_migration_state_out)] = {};
+	u32 in[MLX5_ST_SZ_DW(query_vhca_migration_state_in)] = {};
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	lockdep_assert_held(&mvdev->state_mutex);
 	if (mvdev->mdev_detach)
 		return -ENOTCONN;
 
+<<<<<<< HEAD
 	/*
 	 * In case PRE_COPY is used, saving_migf is exposed while device is
 	 * running. Make sure to run only once there is no active save command.
@@ -122,10 +145,13 @@ int mlx5vf_cmd_query_vhca_migration_state(struct mlx5vf_pci_core_device *mvdev,
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	MLX5_SET(query_vhca_migration_state_in, in, opcode,
 		 MLX5_CMD_OP_QUERY_VHCA_MIGRATION_STATE);
 	MLX5_SET(query_vhca_migration_state_in, in, vhca_id, mvdev->vhca_id);
 	MLX5_SET(query_vhca_migration_state_in, in, op_mod, 0);
+<<<<<<< HEAD
 	MLX5_SET(query_vhca_migration_state_in, in, incremental,
 		 query_flags & MLX5VF_QUERY_INC);
 
@@ -134,6 +160,11 @@ int mlx5vf_cmd_query_vhca_migration_state(struct mlx5vf_pci_core_device *mvdev,
 	if (inc)
 		complete(&mvdev->saving_migf->save_comp);
 
+=======
+
+	ret = mlx5_cmd_exec_inout(mvdev->mdev, query_vhca_migration_state, in,
+				  out);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -218,10 +249,13 @@ void mlx5vf_cmd_set_migratable(struct mlx5vf_pci_core_device *mvdev,
 	if (mvdev->vf_id < 0)
 		goto end;
 
+<<<<<<< HEAD
 	ret = mlx5vf_is_migratable(mvdev->mdev, mvdev->vf_id + 1);
 	if (ret)
 		goto end;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (mlx5vf_cmd_get_vhca_id(mvdev->mdev, mvdev->vf_id + 1,
 				   &mvdev->vhca_id))
 		goto end;
@@ -249,11 +283,14 @@ void mlx5vf_cmd_set_migratable(struct mlx5vf_pci_core_device *mvdev,
 	if (MLX5_CAP_GEN(mvdev->mdev, adv_virtualization))
 		mvdev->core_device.vdev.log_ops = log_ops;
 
+<<<<<<< HEAD
 	if (MLX5_CAP_GEN_2(mvdev->mdev, migration_multi_load) &&
 	    MLX5_CAP_GEN_2(mvdev->mdev, migration_tracking_state))
 		mvdev->core_device.vdev.migration_flags |=
 			VFIO_MIGRATION_PRE_COPY;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 end:
 	mlx5_vf_put_core_dev(mvdev->mdev);
 }
@@ -291,11 +328,19 @@ err_exec:
 }
 
 static int _create_mkey(struct mlx5_core_dev *mdev, u32 pdn,
+<<<<<<< HEAD
 			struct mlx5_vhca_data_buffer *buf,
 			struct mlx5_vhca_recv_buf *recv_buf,
 			u32 *mkey)
 {
 	size_t npages = buf ? DIV_ROUND_UP(buf->allocated_length, PAGE_SIZE) :
+=======
+			struct mlx5_vf_migration_file *migf,
+			struct mlx5_vhca_recv_buf *recv_buf,
+			u32 *mkey)
+{
+	size_t npages = migf ? DIV_ROUND_UP(migf->total_length, PAGE_SIZE) :
+>>>>>>> b7ba80a49124 (Commit)
 				recv_buf->npages;
 	int err = 0, inlen;
 	__be64 *mtt;
@@ -313,10 +358,17 @@ static int _create_mkey(struct mlx5_core_dev *mdev, u32 pdn,
 		 DIV_ROUND_UP(npages, 2));
 	mtt = (__be64 *)MLX5_ADDR_OF(create_mkey_in, in, klm_pas_mtt);
 
+<<<<<<< HEAD
 	if (buf) {
 		struct sg_dma_page_iter dma_iter;
 
 		for_each_sgtable_dma_page(&buf->table.sgt, &dma_iter, 0)
+=======
+	if (migf) {
+		struct sg_dma_page_iter dma_iter;
+
+		for_each_sgtable_dma_page(&migf->table.sgt, &dma_iter, 0)
+>>>>>>> b7ba80a49124 (Commit)
 			*mtt++ = cpu_to_be64(sg_page_iter_dma_address(&dma_iter));
 	} else {
 		int i;
@@ -336,12 +388,18 @@ static int _create_mkey(struct mlx5_core_dev *mdev, u32 pdn,
 	MLX5_SET(mkc, mkc, qpn, 0xffffff);
 	MLX5_SET(mkc, mkc, log_page_size, PAGE_SHIFT);
 	MLX5_SET(mkc, mkc, translations_octword_size, DIV_ROUND_UP(npages, 2));
+<<<<<<< HEAD
 	MLX5_SET64(mkc, mkc, len, npages * PAGE_SIZE);
+=======
+	MLX5_SET64(mkc, mkc, len,
+		   migf ? migf->total_length : (npages * PAGE_SIZE));
+>>>>>>> b7ba80a49124 (Commit)
 	err = mlx5_core_create_mkey(mdev, mkey, in, inlen);
 	kvfree(in);
 	return err;
 }
 
+<<<<<<< HEAD
 static int mlx5vf_dma_data_buffer(struct mlx5_vhca_data_buffer *buf)
 {
 	struct mlx5vf_pci_core_device *mvdev = buf->migf->mvdev;
@@ -475,12 +533,15 @@ found:
 	return buf;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void mlx5vf_mig_file_cleanup_cb(struct work_struct *_work)
 {
 	struct mlx5vf_async_data *async_data = container_of(_work,
 		struct mlx5vf_async_data, work);
 	struct mlx5_vf_migration_file *migf = container_of(async_data,
 		struct mlx5_vf_migration_file, async_data);
+<<<<<<< HEAD
 
 	mutex_lock(&migf->lock);
 	if (async_data->status) {
@@ -528,6 +589,24 @@ static int add_buf_header(struct mlx5_vhca_data_buffer *header_buf,
 	return 0;
 }
 
+=======
+	struct mlx5_core_dev *mdev = migf->mvdev->mdev;
+
+	mutex_lock(&migf->lock);
+	if (async_data->status) {
+		migf->is_err = true;
+		wake_up_interruptible(&migf->poll_wait);
+	}
+	mutex_unlock(&migf->lock);
+
+	mlx5_core_destroy_mkey(mdev, async_data->mkey);
+	dma_unmap_sgtable(mdev->device, &migf->table.sgt, DMA_FROM_DEVICE, 0);
+	mlx5_core_dealloc_pd(mdev, async_data->pdn);
+	kvfree(async_data->out);
+	fput(migf->filp);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void mlx5vf_save_callback(int status, struct mlx5_async_work *context)
 {
 	struct mlx5vf_async_data *async_data = container_of(context,
@@ -536,6 +615,7 @@ static void mlx5vf_save_callback(int status, struct mlx5_async_work *context)
 			struct mlx5_vf_migration_file, async_data);
 
 	if (!status) {
+<<<<<<< HEAD
 		size_t image_size;
 		unsigned long flags;
 		bool initial_pre_copy = migf->state != MLX5_MIGF_STATE_PRE_COPY &&
@@ -563,17 +643,29 @@ static void mlx5vf_save_callback(int status, struct mlx5_async_work *context)
 	}
 
 err:
+=======
+		WRITE_ONCE(migf->total_length,
+			   MLX5_GET(save_vhca_state_out, async_data->out,
+				    actual_image_size));
+		wake_up_interruptible(&migf->poll_wait);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * The error and the cleanup flows can't run from an
 	 * interrupt context
 	 */
+<<<<<<< HEAD
 	if (status == -EREMOTEIO)
 		status = MLX5_GET(save_vhca_state_out, async_data->out, status);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	async_data->status = status;
 	queue_work(migf->mvdev->cb_wq, &async_data->work);
 }
 
 int mlx5vf_cmd_save_vhca_state(struct mlx5vf_pci_core_device *mvdev,
+<<<<<<< HEAD
 			       struct mlx5_vf_migration_file *migf,
 			       struct mlx5_vhca_data_buffer *buf, bool inc,
 			       bool track)
@@ -582,12 +674,22 @@ int mlx5vf_cmd_save_vhca_state(struct mlx5vf_pci_core_device *mvdev,
 	u32 in[MLX5_ST_SZ_DW(save_vhca_state_in)] = {};
 	struct mlx5_vhca_data_buffer *header_buf = NULL;
 	struct mlx5vf_async_data *async_data;
+=======
+			       struct mlx5_vf_migration_file *migf)
+{
+	u32 out_size = MLX5_ST_SZ_BYTES(save_vhca_state_out);
+	u32 in[MLX5_ST_SZ_DW(save_vhca_state_in)] = {};
+	struct mlx5vf_async_data *async_data;
+	struct mlx5_core_dev *mdev;
+	u32 pdn, mkey;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	lockdep_assert_held(&mvdev->state_mutex);
 	if (mvdev->mdev_detach)
 		return -ENOTCONN;
 
+<<<<<<< HEAD
 	err = wait_for_completion_interruptible(&migf->save_comp);
 	if (err)
 		return err;
@@ -598,11 +700,27 @@ int mlx5vf_cmd_save_vhca_state(struct mlx5vf_pci_core_device *mvdev,
 		 * the final image, read device full image.
 		 */
 		inc = false;
+=======
+	mdev = mvdev->mdev;
+	err = mlx5_core_alloc_pd(mdev, &pdn);
+	if (err)
+		return err;
+
+	err = dma_map_sgtable(mdev->device, &migf->table.sgt, DMA_FROM_DEVICE,
+			      0);
+	if (err)
+		goto err_dma_map;
+
+	err = _create_mkey(mdev, pdn, migf, NULL, &mkey);
+	if (err)
+		goto err_create_mkey;
+>>>>>>> b7ba80a49124 (Commit)
 
 	MLX5_SET(save_vhca_state_in, in, opcode,
 		 MLX5_CMD_OP_SAVE_VHCA_STATE);
 	MLX5_SET(save_vhca_state_in, in, op_mod, 0);
 	MLX5_SET(save_vhca_state_in, in, vhca_id, mvdev->vhca_id);
+<<<<<<< HEAD
 	MLX5_SET(save_vhca_state_in, in, mkey, buf->mkey);
 	MLX5_SET(save_vhca_state_in, in, size, buf->allocated_length);
 	MLX5_SET(save_vhca_state_in, in, incremental, inc);
@@ -611,12 +729,19 @@ int mlx5vf_cmd_save_vhca_state(struct mlx5vf_pci_core_device *mvdev,
 	async_data = &migf->async_data;
 	async_data->buf = buf;
 	async_data->last_chunk = !track;
+=======
+	MLX5_SET(save_vhca_state_in, in, mkey, mkey);
+	MLX5_SET(save_vhca_state_in, in, size, migf->total_length);
+
+	async_data = &migf->async_data;
+>>>>>>> b7ba80a49124 (Commit)
 	async_data->out = kvzalloc(out_size, GFP_KERNEL);
 	if (!async_data->out) {
 		err = -ENOMEM;
 		goto err_out;
 	}
 
+<<<<<<< HEAD
 	if (MLX5VF_PRE_COPY_SUPP(mvdev)) {
 		if (async_data->last_chunk && migf->buf_header) {
 			header_buf = migf->buf_header;
@@ -636,6 +761,13 @@ int mlx5vf_cmd_save_vhca_state(struct mlx5vf_pci_core_device *mvdev,
 
 	async_data->header_buf = header_buf;
 	get_file(migf->filp);
+=======
+	/* no data exists till the callback comes back */
+	migf->total_length = 0;
+	get_file(migf->filp);
+	async_data->mkey = mkey;
+	async_data->pdn = pdn;
+>>>>>>> b7ba80a49124 (Commit)
 	err = mlx5_cmd_exec_cb(&migf->async_ctx, in, sizeof(in),
 			       async_data->out,
 			       out_size, mlx5vf_save_callback,
@@ -646,6 +778,7 @@ int mlx5vf_cmd_save_vhca_state(struct mlx5vf_pci_core_device *mvdev,
 	return 0;
 
 err_exec:
+<<<<<<< HEAD
 	if (header_buf)
 		mlx5vf_put_data_buffer(header_buf);
 	fput(migf->filp);
@@ -653,31 +786,73 @@ err_free:
 	kvfree(async_data->out);
 err_out:
 	complete(&migf->save_comp);
+=======
+	fput(migf->filp);
+	kvfree(async_data->out);
+err_out:
+	mlx5_core_destroy_mkey(mdev, mkey);
+err_create_mkey:
+	dma_unmap_sgtable(mdev->device, &migf->table.sgt, DMA_FROM_DEVICE, 0);
+err_dma_map:
+	mlx5_core_dealloc_pd(mdev, pdn);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
 int mlx5vf_cmd_load_vhca_state(struct mlx5vf_pci_core_device *mvdev,
+<<<<<<< HEAD
 			       struct mlx5_vf_migration_file *migf,
 			       struct mlx5_vhca_data_buffer *buf)
 {
 	u32 out[MLX5_ST_SZ_DW(load_vhca_state_out)] = {};
 	u32 in[MLX5_ST_SZ_DW(load_vhca_state_in)] = {};
+=======
+			       struct mlx5_vf_migration_file *migf)
+{
+	struct mlx5_core_dev *mdev;
+	u32 out[MLX5_ST_SZ_DW(save_vhca_state_out)] = {};
+	u32 in[MLX5_ST_SZ_DW(save_vhca_state_in)] = {};
+	u32 pdn, mkey;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	lockdep_assert_held(&mvdev->state_mutex);
 	if (mvdev->mdev_detach)
 		return -ENOTCONN;
 
+<<<<<<< HEAD
 	if (!buf->dmaed) {
 		err = mlx5vf_dma_data_buffer(buf);
 		if (err)
 			return err;
 	}
 
+=======
+	mutex_lock(&migf->lock);
+	if (!migf->total_length) {
+		err = -EINVAL;
+		goto end;
+	}
+
+	mdev = mvdev->mdev;
+	err = mlx5_core_alloc_pd(mdev, &pdn);
+	if (err)
+		goto end;
+
+	err = dma_map_sgtable(mdev->device, &migf->table.sgt, DMA_TO_DEVICE, 0);
+	if (err)
+		goto err_reg;
+
+	err = _create_mkey(mdev, pdn, migf, NULL, &mkey);
+	if (err)
+		goto err_mkey;
+
+>>>>>>> b7ba80a49124 (Commit)
 	MLX5_SET(load_vhca_state_in, in, opcode,
 		 MLX5_CMD_OP_LOAD_VHCA_STATE);
 	MLX5_SET(load_vhca_state_in, in, op_mod, 0);
 	MLX5_SET(load_vhca_state_in, in, vhca_id, mvdev->vhca_id);
+<<<<<<< HEAD
 	MLX5_SET(load_vhca_state_in, in, mkey, buf->mkey);
 	MLX5_SET(load_vhca_state_in, in, size, buf->length);
 	return mlx5_cmd_exec_inout(mvdev->mdev, load_vhca_state, in, out);
@@ -732,6 +907,23 @@ void mlx5fv_cmd_clean_migf_resources(struct mlx5_vf_migration_file *migf)
 	mlx5vf_cmd_dealloc_pd(migf);
 }
 
+=======
+	MLX5_SET(load_vhca_state_in, in, mkey, mkey);
+	MLX5_SET(load_vhca_state_in, in, size, migf->total_length);
+
+	err = mlx5_cmd_exec_inout(mdev, load_vhca_state, in, out);
+
+	mlx5_core_destroy_mkey(mdev, mkey);
+err_mkey:
+	dma_unmap_sgtable(mdev->device, &migf->table.sgt, DMA_TO_DEVICE, 0);
+err_reg:
+	mlx5_core_dealloc_pd(mdev, pdn);
+end:
+	mutex_unlock(&migf->lock);
+	return err;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void combine_ranges(struct rb_root_cached *root, u32 cur_nodes,
 			   u32 req_nodes)
 {
@@ -830,7 +1022,11 @@ static int mlx5vf_create_tracker(struct mlx5_core_dev *mdev,
 	node = interval_tree_iter_first(ranges, 0, ULONG_MAX);
 	for (i = 0; i < num_ranges; i++) {
 		void *addr_range_i_base = range_list_ptr + record_size * i;
+<<<<<<< HEAD
 		unsigned long length = node->last - node->start + 1;
+=======
+		unsigned long length = node->last - node->start;
+>>>>>>> b7ba80a49124 (Commit)
 
 		MLX5_SET64(page_track_range, addr_range_i_base, start_address,
 			   node->start);
@@ -840,7 +1036,11 @@ static int mlx5vf_create_tracker(struct mlx5_core_dev *mdev,
 	}
 
 	WARN_ON(node);
+<<<<<<< HEAD
 	log_addr_space_size = ilog2(roundup_pow_of_two(total_ranges_len));
+=======
+	log_addr_space_size = ilog2(total_ranges_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (log_addr_space_size <
 	    (MLX5_CAP_ADV_VIRTUALIZATION(mdev, pg_track_log_min_addr_space)) ||
 	    log_addr_space_size >
@@ -1072,18 +1272,31 @@ mlx5vf_create_rc_qp(struct mlx5_core_dev *mdev,
 	void *in;
 	int err;
 
+<<<<<<< HEAD
 	qp = kzalloc(sizeof(*qp), GFP_KERNEL_ACCOUNT);
 	if (!qp)
 		return ERR_PTR(-ENOMEM);
 
+=======
+	qp = kzalloc(sizeof(*qp), GFP_KERNEL);
+	if (!qp)
+		return ERR_PTR(-ENOMEM);
+
+	qp->rq.wqe_cnt = roundup_pow_of_two(max_recv_wr);
+	log_rq_stride = ilog2(MLX5_SEND_WQE_DS);
+	log_rq_sz = ilog2(qp->rq.wqe_cnt);
+>>>>>>> b7ba80a49124 (Commit)
 	err = mlx5_db_alloc_node(mdev, &qp->db, mdev->priv.numa_node);
 	if (err)
 		goto err_free;
 
 	if (max_recv_wr) {
+<<<<<<< HEAD
 		qp->rq.wqe_cnt = roundup_pow_of_two(max_recv_wr);
 		log_rq_stride = ilog2(MLX5_SEND_WQE_DS);
 		log_rq_sz = ilog2(qp->rq.wqe_cnt);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		err = mlx5_frag_buf_alloc_node(mdev,
 			wq_get_byte_sz(log_rq_sz, log_rq_stride),
 			&qp->buf, mdev->priv.numa_node);
@@ -1253,13 +1466,21 @@ static int alloc_recv_pages(struct mlx5_vhca_recv_buf *recv_buf,
 	int i;
 
 	recv_buf->page_list = kvcalloc(npages, sizeof(*recv_buf->page_list),
+<<<<<<< HEAD
 				       GFP_KERNEL_ACCOUNT);
+=======
+				       GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!recv_buf->page_list)
 		return -ENOMEM;
 
 	for (;;) {
+<<<<<<< HEAD
 		filled = alloc_pages_bulk_array(GFP_KERNEL_ACCOUNT,
 						npages - done,
+=======
+		filled = alloc_pages_bulk_array(GFP_KERNEL, npages - done,
+>>>>>>> b7ba80a49124 (Commit)
 						recv_buf->page_list + done);
 		if (!filled)
 			goto err;
@@ -1289,7 +1510,11 @@ static int register_dma_recv_pages(struct mlx5_core_dev *mdev,
 
 	recv_buf->dma_addrs = kvcalloc(recv_buf->npages,
 				       sizeof(*recv_buf->dma_addrs),
+<<<<<<< HEAD
 				       GFP_KERNEL_ACCOUNT);
+=======
+				       GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!recv_buf->dma_addrs)
 		return -ENOMEM;
 

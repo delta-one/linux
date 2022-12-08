@@ -58,6 +58,7 @@ union jump_code_union {
 	} __attribute__((packed));
 };
 
+<<<<<<< HEAD
 /* ----- START-EXPECTED-OUTPUT ----- */
 /*
  *struct nested_packed_but_aligned_struct {
@@ -133,6 +134,9 @@ struct outer_packed_struct {
 } __attribute__((packed));
 
 /* ------ END-EXPECTED-OUTPUT ------ */
+=======
+/*------ END-EXPECTED-OUTPUT ------ */
+>>>>>>> b7ba80a49124 (Commit)
 
 int f(struct {
 	struct packed_trailing_space _1;
@@ -143,10 +147,13 @@ int f(struct {
 	union union_is_never_packed _6;
 	union union_does_not_need_packing _7;
 	union jump_code_union _8;
+<<<<<<< HEAD
 	struct outer_implicitly_packed_struct _9;
 	struct usb_host_endpoint _10;
 	struct outer_nonpacked_struct _11;
 	struct outer_packed_struct _12;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } *_)
 {
 	return 0;

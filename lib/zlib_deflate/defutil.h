@@ -420,11 +420,17 @@ static inline void flush_pending(
 	z_streamp strm
 )
 {
+<<<<<<< HEAD
     unsigned len;
     deflate_state *s = (deflate_state *) strm->state;
 
     bi_flush(s);
     len = s->pending;
+=======
+    deflate_state *s = (deflate_state *) strm->state;
+    unsigned len = s->pending;
+
+>>>>>>> b7ba80a49124 (Commit)
     if (len > strm->avail_out) len = strm->avail_out;
     if (len == 0) return;
 

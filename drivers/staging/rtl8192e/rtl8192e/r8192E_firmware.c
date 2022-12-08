@@ -6,7 +6,11 @@
  */
 #include "rtl_core.h"
 #include "r8192E_hw.h"
+<<<<<<< HEAD
 #include "table.h"
+=======
+#include "r8192E_hwimg.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "r8192E_firmware.h"
 #include "r8192E_cmdpkt.h"
 #include <linux/firmware.h>
@@ -51,7 +55,11 @@ static bool _rtl92e_fw_check_ready(struct net_device *dev,
 				   u8 load_fw_status)
 {
 	struct r8192_priv *priv = rtllib_priv(dev);
+<<<<<<< HEAD
 	struct rt_firmware *pfirmware = priv->fw_info;
+=======
+	struct rt_firmware *pfirmware = priv->pFirmware;
+>>>>>>> b7ba80a49124 (Commit)
 	bool rt_status  = true;
 
 	switch (load_fw_status) {
@@ -77,6 +85,13 @@ static bool _rtl92e_fw_check_ready(struct net_device *dev,
 		rt_status = _rtl92e_wait_for_fw(dev, CPU_GEN_FIRM_RDY, 20);
 		if (rt_status)
 			pfirmware->status = FW_STATUS_5_READY;
+<<<<<<< HEAD
+=======
+		else
+			RT_TRACE(COMP_FIRMWARE,
+				 "_rtl92e_is_fw_ready fail(%d)!\n",
+				 rt_status);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		rt_status = false;
@@ -134,7 +149,11 @@ bool rtl92e_init_fw(struct net_device *dev)
 	enum opt_rst_type rst_opt = OPT_SYSTEM_RESET;
 	enum firmware_init_step starting_state = FW_INIT_STEP0_BOOT;
 
+<<<<<<< HEAD
 	struct rt_firmware *pfirmware = priv->fw_info;
+=======
+	struct rt_firmware *pfirmware = priv->pFirmware;
+>>>>>>> b7ba80a49124 (Commit)
 
 	netdev_dbg(dev, " PlatformInitFirmware()==>\n");
 
@@ -145,6 +164,12 @@ bool rtl92e_init_fw(struct net_device *dev)
 	} else if (pfirmware->status == FW_STATUS_5_READY) {
 		rst_opt = OPT_FIRMWARE_RESET;
 		starting_state = FW_INIT_STEP2_DATA;
+<<<<<<< HEAD
+=======
+	} else {
+		RT_TRACE(COMP_FIRMWARE,
+			 "PlatformInitFirmware: undefined firmware state\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (i = starting_state; i <= FW_INIT_STEP2_DATA; i++) {

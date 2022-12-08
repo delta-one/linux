@@ -876,6 +876,7 @@ gm107_grctx_generate_r419e00(struct gf100_gr *gr)
 }
 
 void
+<<<<<<< HEAD
 gm107_grctx_generate_bundle(struct gf100_gr_chan *chan, u64 addr, u32 size)
 {
 	const struct gf100_grctx_func *grctx = chan->gr->func->grctx;
@@ -903,20 +904,73 @@ gm107_grctx_generate_attrib(struct gf100_gr_chan *chan)
 	const struct gf100_grctx_func *grctx = gr->func->grctx;
 	const u32  alpha = grctx->alpha_nr;
 	const u32 attrib = grctx->attrib_nr;
+=======
+gm107_grctx_generate_bundle(struct gf100_grctx *info)
+{
+	const struct gf100_grctx_func *grctx = info->gr->func->grctx;
+	const u32 state_limit = min(grctx->bundle_min_gpm_fifo_depth,
+				    grctx->bundle_size / 0x20);
+	const u32 token_limit = grctx->bundle_token_limit;
+	const int s = 8;
+	const int b = mmio_vram(info, grctx->bundle_size, (1 << s), true);
+	mmio_refn(info, 0x408004, 0x00000000, s, b);
+	mmio_wr32(info, 0x408008, 0x80000000 | (grctx->bundle_size >> s));
+	mmio_refn(info, 0x418e24, 0x00000000, s, b);
+	mmio_wr32(info, 0x418e28, 0x80000000 | (grctx->bundle_size >> s));
+	mmio_wr32(info, 0x4064c8, (state_limit << 16) | token_limit);
+}
+
+void
+gm107_grctx_generate_pagepool(struct gf100_grctx *info)
+{
+	const struct gf100_grctx_func *grctx = info->gr->func->grctx;
+	const int s = 8;
+	const int b = mmio_vram(info, grctx->pagepool_size, (1 << s), true);
+	mmio_refn(info, 0x40800c, 0x00000000, s, b);
+	mmio_wr32(info, 0x408010, 0x80000000);
+	mmio_refn(info, 0x419004, 0x00000000, s, b);
+	mmio_wr32(info, 0x419008, 0x00000000);
+	mmio_wr32(info, 0x4064cc, 0x80000000);
+	mmio_wr32(info, 0x418e30, 0x80000000); /* guess at it being related */
+}
+
+void
+gm107_grctx_generate_attrib(struct gf100_grctx *info)
+{
+	struct gf100_gr *gr = info->gr;
+	const struct gf100_grctx_func *grctx = gr->func->grctx;
+	const u32  alpha = grctx->alpha_nr;
+	const u32 attrib = grctx->attrib_nr;
+	const u32   size = 0x20 * (grctx->attrib_nr_max + grctx->alpha_nr_max);
+	const int s = 12;
+	const int b = mmio_vram(info, size * gr->tpc_total, (1 << s), false);
+>>>>>>> b7ba80a49124 (Commit)
 	const int max_batches = 0xffff;
 	u32 bo = 0;
 	u32 ao = bo + grctx->attrib_nr_max * gr->tpc_total;
 	int gpc, ppc, n = 0;
 
+<<<<<<< HEAD
 	gf100_grctx_patch_wr32(chan, 0x405830, (attrib << 16) | alpha);
 	gf100_grctx_patch_wr32(chan, 0x4064c4, ((alpha / 4) << 16) | max_batches);
 
 	for (gpc = 0; gpc < gr->gpc_nr; gpc++) {
 		for (ppc = 0; ppc < gr->func->ppc_nr; ppc++, n++) {
+=======
+	mmio_refn(info, 0x418810, 0x80000000, s, b);
+	mmio_refn(info, 0x419848, 0x10000000, s, b);
+	mmio_refn(info, 0x419c2c, 0x10000000, s, b);
+	mmio_wr32(info, 0x405830, (attrib << 16) | alpha);
+	mmio_wr32(info, 0x4064c4, ((alpha / 4) << 16) | max_batches);
+
+	for (gpc = 0; gpc < gr->gpc_nr; gpc++) {
+		for (ppc = 0; ppc < gr->ppc_nr[gpc]; ppc++, n++) {
+>>>>>>> b7ba80a49124 (Commit)
 			const u32 as =  alpha * gr->ppc_tpc_nr[gpc][ppc];
 			const u32 bs = attrib * gr->ppc_tpc_nr[gpc][ppc];
 			const u32 u = 0x418ea0 + (n * 0x04);
 			const u32 o = PPC_UNIT(gpc, ppc, 0);
+<<<<<<< HEAD
 
 			if (!(gr->ppc_mask[gpc] & (1 << ppc)))
 				continue;
@@ -928,10 +982,22 @@ gm107_grctx_generate_attrib(struct gf100_gr_chan *chan)
 			gf100_grctx_patch_wr32(chan, o + 0xf8, ao);
 			ao += grctx->alpha_nr_max * gr->ppc_tpc_nr[gpc][ppc];
 			gf100_grctx_patch_wr32(chan, u, ((bs / 3) << 16) | bs);
+=======
+			if (!(gr->ppc_mask[gpc] & (1 << ppc)))
+				continue;
+			mmio_wr32(info, o + 0xc0, bs);
+			mmio_wr32(info, o + 0xf4, bo);
+			bo += grctx->attrib_nr_max * gr->ppc_tpc_nr[gpc][ppc];
+			mmio_wr32(info, o + 0xe4, as);
+			mmio_wr32(info, o + 0xf8, ao);
+			ao += grctx->alpha_nr_max * gr->ppc_tpc_nr[gpc][ppc];
+			mmio_wr32(info, u, ((bs / 3) << 16) | bs);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }
 
+<<<<<<< HEAD
 void
 gm107_grctx_generate_attrib_cb(struct gf100_gr_chan *chan, u64 addr, u32 size)
 {
@@ -940,6 +1006,8 @@ gm107_grctx_generate_attrib_cb(struct gf100_gr_chan *chan, u64 addr, u32 size)
 	gf100_grctx_patch_wr32(chan, 0x419c2c, 0x10000000 | addr >> 12);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void
 gm107_grctx_generate_r406500(struct gf100_gr *gr)
 {
@@ -973,8 +1041,11 @@ gm107_grctx = {
 	.bundle_token_limit = 0x2c0,
 	.pagepool = gm107_grctx_generate_pagepool,
 	.pagepool_size = 0x8000,
+<<<<<<< HEAD
 	.attrib_cb_size = gf100_grctx_generate_attrib_cb_size,
 	.attrib_cb = gm107_grctx_generate_attrib_cb,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.attrib = gm107_grctx_generate_attrib,
 	.attrib_nr_max = 0xff0,
 	.attrib_nr = 0xaa0,

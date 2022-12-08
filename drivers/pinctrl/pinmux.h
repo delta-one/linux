@@ -9,6 +9,7 @@
  *
  * Author: Linus Walleij <linus.walleij@linaro.org>
  */
+<<<<<<< HEAD
 
 #include <linux/types.h>
 
@@ -20,6 +21,8 @@ struct pinctrl_gpio_range;
 struct pinctrl_map;
 struct pinctrl_setting;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PINMUX
 
 int pinmux_check_ops(struct pinctrl_dev *pctldev);

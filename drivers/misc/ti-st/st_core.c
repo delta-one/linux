@@ -338,7 +338,11 @@ void st_int_recv(void *disc_data,
 			ptr++;
 			count--;
 			continue;
+<<<<<<< HEAD
 			/* Unknown packet? */
+=======
+			/* Unknow packet? */
+>>>>>>> b7ba80a49124 (Commit)
 		default:
 			type = *ptr;
 

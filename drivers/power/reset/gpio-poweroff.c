@@ -105,4 +105,8 @@ module_platform_driver(gpio_poweroff_driver);
 
 MODULE_AUTHOR("Jamie Lentin <jm@lentin.co.uk>");
 MODULE_DESCRIPTION("GPIO poweroff driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_ALIAS("platform:poweroff-gpio");

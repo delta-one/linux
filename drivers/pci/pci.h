@@ -15,7 +15,10 @@ extern const unsigned char pcie_link_speed[];
 extern bool pci_early_dump;
 
 bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+<<<<<<< HEAD
 bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool pcie_cap_has_rtctl(const struct pci_dev *dev);
 
 /* Functions internal to the PCI core code */
@@ -64,6 +67,7 @@ struct pci_cap_saved_state *pci_find_saved_ext_cap(struct pci_dev *dev,
 #define PCI_PM_D3HOT_WAIT       10	/* msec */
 #define PCI_PM_D3COLD_WAIT      100	/* msec */
 
+<<<<<<< HEAD
 /*
  * Following exit from Conventional Reset, devices must be ready within 1 sec
  * (PCIe r6.0 sec 6.6.1).  A D3cold to D0 transition implies a Conventional
@@ -77,6 +81,8 @@ struct pci_cap_saved_state *pci_find_saved_ext_cap(struct pci_dev *dev,
  */
 #define PCIE_RESET_READY_POLL_MS 60000	/* msec */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void pci_update_current_state(struct pci_dev *dev, pci_power_t state);
 void pci_refresh_power_state(struct pci_dev *dev);
 int pci_power_up(struct pci_dev *dev);
@@ -99,9 +105,14 @@ void pci_msi_init(struct pci_dev *dev);
 void pci_msix_init(struct pci_dev *dev);
 bool pci_bridge_d3_possible(struct pci_dev *dev);
 void pci_bridge_d3_update(struct pci_dev *dev);
+<<<<<<< HEAD
 void pci_bridge_reconfigure_ltr(struct pci_dev *dev);
 int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type,
 				      int timeout);
+=======
+void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev);
+void pci_bridge_reconfigure_ltr(struct pci_dev *dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void pci_wakeup_event(struct pci_dev *dev)
 {
@@ -324,14 +335,19 @@ struct pci_sriov {
  * @dev: PCI device to set new error_state
  * @new: the state we want dev to be in
  *
+<<<<<<< HEAD
  * If the device is experiencing perm_failure, it has to remain in that state.
  * Any other transition is allowed.
+=======
+ * Must be called with device_lock held.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Returns true if state has been changed to the requested state.
  */
 static inline bool pci_dev_set_io_state(struct pci_dev *dev,
 					pci_channel_state_t new)
 {
+<<<<<<< HEAD
 	pci_channel_state_t old;
 
 	switch (new) {
@@ -349,11 +365,52 @@ static inline bool pci_dev_set_io_state(struct pci_dev *dev,
 	default:
 		return false;
 	}
+=======
+	bool changed = false;
+
+	device_lock_assert(&dev->dev);
+	switch (new) {
+	case pci_channel_io_perm_failure:
+		switch (dev->error_state) {
+		case pci_channel_io_frozen:
+		case pci_channel_io_normal:
+		case pci_channel_io_perm_failure:
+			changed = true;
+			break;
+		}
+		break;
+	case pci_channel_io_frozen:
+		switch (dev->error_state) {
+		case pci_channel_io_frozen:
+		case pci_channel_io_normal:
+			changed = true;
+			break;
+		}
+		break;
+	case pci_channel_io_normal:
+		switch (dev->error_state) {
+		case pci_channel_io_frozen:
+		case pci_channel_io_normal:
+			changed = true;
+			break;
+		}
+		break;
+	}
+	if (changed)
+		dev->error_state = new;
+	return changed;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
 {
+<<<<<<< HEAD
 	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
+=======
+	device_lock(&dev->dev);
+	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
+	device_unlock(&dev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -563,10 +620,20 @@ bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
 void pcie_aspm_init_link_state(struct pci_dev *pdev);
 void pcie_aspm_exit_link_state(struct pci_dev *pdev);
 void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+<<<<<<< HEAD
+=======
+void pci_save_aspm_l1ss_state(struct pci_dev *dev);
+void pci_restore_aspm_l1ss_state(struct pci_dev *dev);
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
 static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
 static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+<<<<<<< HEAD
+=======
+static inline void pci_save_aspm_l1ss_state(struct pci_dev *dev) { }
+static inline void pci_restore_aspm_l1ss_state(struct pci_dev *dev) { }
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #ifdef CONFIG_PCIE_ECRC
@@ -770,6 +837,7 @@ static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
 }
 #endif
 
+<<<<<<< HEAD
 /*
  * Config Address for PCI Configuration Mechanism #1
  *
@@ -815,4 +883,6 @@ static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
 	(PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
 	 PCI_CONF1_EXT_REG(reg))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* DRIVERS_PCI_H */

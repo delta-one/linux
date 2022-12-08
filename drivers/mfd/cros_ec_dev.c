@@ -20,6 +20,10 @@
 #define DRV_NAME "cros-ec-dev"
 
 static struct class cros_class = {
+<<<<<<< HEAD
+=======
+	.owner          = THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.name           = "chromeos",
 };
 
@@ -64,6 +68,14 @@ static const struct cros_feature_to_name cros_mcu_devices[] = {
 		.desc	= "System Control Processor",
 	},
 	{
+<<<<<<< HEAD
+=======
+		.id	= EC_FEATURE_SCP_C1,
+		.name	= CROS_EC_DEV_SCP_C1_NAME,
+		.desc	= "System Control Processor 2nd Core",
+	},
+	{
+>>>>>>> b7ba80a49124 (Commit)
 		.id	= EC_FEATURE_TOUCHPAD,
 		.name	= CROS_EC_DEV_TP_NAME,
 		.desc	= "Touchpad",

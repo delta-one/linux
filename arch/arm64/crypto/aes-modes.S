@@ -52,7 +52,12 @@ SYM_FUNC_END(aes_decrypt_block5x)
 	 */
 
 AES_FUNC_START(aes_ecb_encrypt)
+<<<<<<< HEAD
 	frame_push	0
+=======
+	stp		x29, x30, [sp, #-16]!
+	mov		x29, sp
+>>>>>>> b7ba80a49124 (Commit)
 
 	enc_prepare	w3, x2, x5
 
@@ -76,13 +81,22 @@ ST5(	st1		{v4.16b}, [x0], #16		)
 	subs		w4, w4, #1
 	bne		.Lecbencloop
 .Lecbencout:
+<<<<<<< HEAD
 	frame_pop
+=======
+	ldp		x29, x30, [sp], #16
+>>>>>>> b7ba80a49124 (Commit)
 	ret
 AES_FUNC_END(aes_ecb_encrypt)
 
 
 AES_FUNC_START(aes_ecb_decrypt)
+<<<<<<< HEAD
 	frame_push	0
+=======
+	stp		x29, x30, [sp, #-16]!
+	mov		x29, sp
+>>>>>>> b7ba80a49124 (Commit)
 
 	dec_prepare	w3, x2, x5
 
@@ -106,7 +120,11 @@ ST5(	st1		{v4.16b}, [x0], #16		)
 	subs		w4, w4, #1
 	bne		.Lecbdecloop
 .Lecbdecout:
+<<<<<<< HEAD
 	frame_pop
+=======
+	ldp		x29, x30, [sp], #16
+>>>>>>> b7ba80a49124 (Commit)
 	ret
 AES_FUNC_END(aes_ecb_decrypt)
 
@@ -169,6 +187,12 @@ AES_FUNC_END(aes_cbc_encrypt)
 AES_FUNC_END(aes_essiv_cbc_encrypt)
 
 AES_FUNC_START(aes_essiv_cbc_decrypt)
+<<<<<<< HEAD
+=======
+	stp		x29, x30, [sp, #-16]!
+	mov		x29, sp
+
+>>>>>>> b7ba80a49124 (Commit)
 	ld1		{cbciv.16b}, [x5]		/* get iv */
 
 	mov		w8, #14				/* AES-256: 14 rounds */
@@ -177,9 +201,17 @@ AES_FUNC_START(aes_essiv_cbc_decrypt)
 	b		.Lessivcbcdecstart
 
 AES_FUNC_START(aes_cbc_decrypt)
+<<<<<<< HEAD
 	ld1		{cbciv.16b}, [x5]		/* get iv */
 .Lessivcbcdecstart:
 	frame_push	0
+=======
+	stp		x29, x30, [sp, #-16]!
+	mov		x29, sp
+
+	ld1		{cbciv.16b}, [x5]		/* get iv */
+.Lessivcbcdecstart:
+>>>>>>> b7ba80a49124 (Commit)
 	dec_prepare	w3, x2, x6
 
 .LcbcdecloopNx:
@@ -229,7 +261,11 @@ ST5(	st1		{v4.16b}, [x0], #16		)
 	bne		.Lcbcdecloop
 .Lcbcdecout:
 	st1		{cbciv.16b}, [x5]		/* return iv */
+<<<<<<< HEAD
 	frame_pop
+=======
+	ldp		x29, x30, [sp], #16
+>>>>>>> b7ba80a49124 (Commit)
 	ret
 AES_FUNC_END(aes_cbc_decrypt)
 AES_FUNC_END(aes_essiv_cbc_decrypt)
@@ -330,7 +366,12 @@ AES_FUNC_END(aes_cbc_cts_decrypt)
 	BLOCKS		.req x13
 	BLOCKS_W	.req w13
 
+<<<<<<< HEAD
 	frame_push	0
+=======
+	stp		x29, x30, [sp, #-16]!
+	mov		x29, sp
+>>>>>>> b7ba80a49124 (Commit)
 
 	enc_prepare	ROUNDS_W, KEY, IV_PART
 	ld1		{vctr.16b}, [IV]
@@ -473,7 +514,11 @@ ST5(	st1		{v4.16b}, [OUT], #16		)
 	.if !\xctr
 		st1		{vctr.16b}, [IV] /* return next CTR value */
 	.endif
+<<<<<<< HEAD
 	frame_pop
+=======
+	ldp		x29, x30, [sp], #16
+>>>>>>> b7ba80a49124 (Commit)
 	ret
 
 .Lctrtail\xctr:
@@ -637,7 +682,12 @@ AES_FUNC_END(aes_xctr_encrypt)
 	.endm
 
 AES_FUNC_START(aes_xts_encrypt)
+<<<<<<< HEAD
 	frame_push	0
+=======
+	stp		x29, x30, [sp, #-16]!
+	mov		x29, sp
+>>>>>>> b7ba80a49124 (Commit)
 
 	ld1		{v4.16b}, [x6]
 	xts_load_mask	v8
@@ -695,7 +745,11 @@ AES_FUNC_START(aes_xts_encrypt)
 	st1		{v0.16b}, [x0]
 .Lxtsencret:
 	st1		{v4.16b}, [x6]
+<<<<<<< HEAD
 	frame_pop
+=======
+	ldp		x29, x30, [sp], #16
+>>>>>>> b7ba80a49124 (Commit)
 	ret
 
 .LxtsencctsNx:
@@ -723,7 +777,12 @@ AES_FUNC_START(aes_xts_encrypt)
 AES_FUNC_END(aes_xts_encrypt)
 
 AES_FUNC_START(aes_xts_decrypt)
+<<<<<<< HEAD
 	frame_push	0
+=======
+	stp		x29, x30, [sp, #-16]!
+	mov		x29, sp
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* subtract 16 bytes if we are doing CTS */
 	sub		w8, w4, #0x10
@@ -784,7 +843,11 @@ AES_FUNC_START(aes_xts_decrypt)
 	b		.Lxtsdecloop
 .Lxtsdecout:
 	st1		{v4.16b}, [x6]
+<<<<<<< HEAD
 	frame_pop
+=======
+	ldp		x29, x30, [sp], #16
+>>>>>>> b7ba80a49124 (Commit)
 	ret
 
 .Lxtsdeccts:

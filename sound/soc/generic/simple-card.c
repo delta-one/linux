@@ -393,7 +393,12 @@ static int __simple_for_each_link(struct asoc_simple_priv *priv,
 			 * or has convert-xxx property
 			 */
 			if (dpcm_selectable &&
+<<<<<<< HEAD
 			    (num > 2 || asoc_simple_is_convert_required(&adata))) {
+=======
+			    (num > 2 ||
+			     adata.convert_rate || adata.convert_channels)) {
+>>>>>>> b7ba80a49124 (Commit)
 				/*
 				 * np
 				 *	 |1(CPU)|0(Codec)  li->cpu
@@ -509,6 +514,7 @@ static int simple_count_noml(struct asoc_simple_priv *priv,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * DON'T REMOVE platforms
 	 *
@@ -527,6 +533,11 @@ static int simple_count_noml(struct asoc_simple_priv *priv,
 	li->num[li->link].platforms	= 1;
 
 	li->num[li->link].codecs	= 1;
+=======
+	li->num[li->link].cpus		= 1;
+	li->num[li->link].codecs	= 1;
+	li->num[li->link].platforms	= 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	li->link += 1;
 
@@ -546,11 +557,14 @@ static int simple_count_dpcm(struct asoc_simple_priv *priv,
 	}
 
 	if (li->cpu) {
+<<<<<<< HEAD
 		/*
 		 * DON'T REMOVE platforms
 		 * see
 		 *	simple_count_noml()
 		 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		li->num[li->link].cpus		= 1;
 		li->num[li->link].platforms	= 1;
 
@@ -643,10 +657,13 @@ static int simple_soc_probe(struct snd_soc_card *card)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	ret = asoc_simple_init_aux_jacks(priv, PREFIX);
 	if (ret < 0)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

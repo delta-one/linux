@@ -1632,12 +1632,16 @@ static int __init tdfxfb_init(void)
 {
 #ifndef MODULE
 	char *option = NULL;
+<<<<<<< HEAD
 #endif
 
 	if (fb_modesetting_disabled("tdfxfb"))
 		return -ENODEV;
 
 #ifndef MODULE
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (fb_get_options("tdfxfb", &option))
 		return -ENODEV;
 

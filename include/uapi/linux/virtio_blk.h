@@ -40,8 +40,11 @@
 #define VIRTIO_BLK_F_MQ		12	/* support more than one vq */
 #define VIRTIO_BLK_F_DISCARD	13	/* DISCARD is supported */
 #define VIRTIO_BLK_F_WRITE_ZEROES	14	/* WRITE ZEROES is supported */
+<<<<<<< HEAD
 #define VIRTIO_BLK_F_SECURE_ERASE	16 /* Secure Erase is supported */
 #define VIRTIO_BLK_F_ZONED		17	/* Zoned block device */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Legacy feature bits */
 #ifndef VIRTIO_BLK_NO_LEGACY
@@ -123,6 +126,7 @@ struct virtio_blk_config {
 	__u8 write_zeroes_may_unmap;
 
 	__u8 unused1[3];
+<<<<<<< HEAD
 
 	/* the next 3 entries are guarded by VIRTIO_BLK_F_SECURE_ERASE */
 	/*
@@ -148,6 +152,8 @@ struct virtio_blk_config {
 		__u8 model;
 		__u8 unused2[3];
 	} zoned;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed));
 
 /*
@@ -182,6 +188,7 @@ struct virtio_blk_config {
 /* Write zeroes command */
 #define VIRTIO_BLK_T_WRITE_ZEROES	13
 
+<<<<<<< HEAD
 /* Secure erase command */
 #define VIRTIO_BLK_T_SECURE_ERASE	14
 
@@ -206,6 +213,8 @@ struct virtio_blk_config {
 /* Reset All zones command */
 #define VIRTIO_BLK_T_ZONE_RESET_ALL 26
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef VIRTIO_BLK_NO_LEGACY
 /* Barrier before this op. */
 #define VIRTIO_BLK_T_BARRIER	0x80000000
@@ -225,6 +234,7 @@ struct virtio_blk_outhdr {
 	__virtio64 sector;
 };
 
+<<<<<<< HEAD
 /*
  * Supported zoned device models.
  */
@@ -291,6 +301,8 @@ struct virtio_blk_zone_report {
 /* Offline */
 #define VIRTIO_BLK_ZS_OFFLINE      15
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Unmap this range (only valid for write zeroes command) */
 #define VIRTIO_BLK_WRITE_ZEROES_FLAG_UNMAP	0x00000001
 
@@ -317,6 +329,7 @@ struct virtio_scsi_inhdr {
 #define VIRTIO_BLK_S_OK		0
 #define VIRTIO_BLK_S_IOERR	1
 #define VIRTIO_BLK_S_UNSUPP	2
+<<<<<<< HEAD
 
 /* Error codes that are specific to zoned block devices */
 #define VIRTIO_BLK_S_ZONE_INVALID_CMD     3
@@ -324,4 +337,6 @@ struct virtio_scsi_inhdr {
 #define VIRTIO_BLK_S_ZONE_OPEN_RESOURCE   5
 #define VIRTIO_BLK_S_ZONE_ACTIVE_RESOURCE 6
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _LINUX_VIRTIO_BLK_H */

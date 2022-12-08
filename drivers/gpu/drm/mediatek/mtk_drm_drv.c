@@ -17,11 +17,19 @@
 #include <drm/drm_atomic.h>
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_generic.h>
 #include <drm/drm_fourcc.h>
 #include <drm/drm_gem.h>
 #include <drm/drm_gem_framebuffer_helper.h>
 #include <drm/drm_ioctl.h>
+=======
+#include <drm/drm_fb_helper.h>
+#include <drm/drm_fourcc.h>
+#include <drm/drm_gem.h>
+#include <drm/drm_gem_dma_helper.h>
+#include <drm/drm_gem_framebuffer_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_of.h>
 #include <drm/drm_probe_helper.h>
 #include <drm/drm_vblank.h>
@@ -387,12 +395,15 @@ static int mtk_drm_kms_init(struct drm_device *drm)
 		goto put_mutex_dev;
 
 	/*
+<<<<<<< HEAD
 	 * Ensure internal panels are at the top of the connector list before
 	 * crtc creation.
 	 */
 	drm_helper_move_panel_connectors_to_head(drm);
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * We currently support two fixed data streams, each optional,
 	 * and each statically assigned to a crtc:
 	 * OVL0 -> COLOR0 -> AAL -> OD -> RDMA0 -> UFOE -> DSI0 ...
@@ -520,7 +531,10 @@ static int mtk_drm_bind(struct device *dev)
 err_deinit:
 	mtk_drm_kms_deinit(drm);
 err_free:
+<<<<<<< HEAD
 	private->drm = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	drm_dev_put(drm);
 	return ret;
 }
@@ -638,10 +652,13 @@ static const struct of_device_id mtk_ddp_comp_dt_ids[] = {
 	  .data = (void *)MTK_DPI },
 	{ .compatible = "mediatek,mt8183-dpi",
 	  .data = (void *)MTK_DPI },
+<<<<<<< HEAD
 	{ .compatible = "mediatek,mt8186-dpi",
 	  .data = (void *)MTK_DPI },
 	{ .compatible = "mediatek,mt8188-dp-intf",
 	  .data = (void *)MTK_DP_INTF },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "mediatek,mt8192-dpi",
 	  .data = (void *)MTK_DPI },
 	{ .compatible = "mediatek,mt8195-dp-intf",
@@ -844,8 +861,16 @@ static int mtk_drm_sys_prepare(struct device *dev)
 {
 	struct mtk_drm_private *private = dev_get_drvdata(dev);
 	struct drm_device *drm = private->drm;
+<<<<<<< HEAD
 
 	return drm_mode_config_helper_suspend(drm);
+=======
+	int ret;
+
+	ret = drm_mode_config_helper_suspend(drm);
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mtk_drm_sys_complete(struct device *dev)

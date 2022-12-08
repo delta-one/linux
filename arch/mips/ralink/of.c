@@ -21,7 +21,10 @@
 #include <asm/bootinfo.h>
 #include <asm/addrspace.h>
 #include <asm/prom.h>
+<<<<<<< HEAD
 #include <asm/mach-ralink/ralink_regs.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "common.h"
 
@@ -64,7 +67,11 @@ void __init plat_mem_setup(void)
 	dtb = get_fdt();
 	__dt_setup_arch(dtb);
 
+<<<<<<< HEAD
 	if (early_init_dt_scan_memory())
+=======
+	if (!early_init_dt_scan_memory())
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	if (soc_info.mem_detect)
@@ -82,8 +89,12 @@ static int __init plat_of_setup(void)
 	__dt_register_buses(soc_info.compatible, "palmbus");
 
 	/* make sure that the reset controller is setup early */
+<<<<<<< HEAD
 	if (ralink_soc != MT762X_SOC_MT7621AT)
 		ralink_rst_init();
+=======
+	ralink_rst_init();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

@@ -213,4 +213,19 @@ static inline bool u64_stats_fetch_retry(const struct u64_stats_sync *syncp,
 	return __u64_stats_fetch_retry(syncp, start);
 }
 
+<<<<<<< HEAD
+=======
+/* Obsolete interfaces */
+static inline unsigned int u64_stats_fetch_begin_irq(const struct u64_stats_sync *syncp)
+{
+	return u64_stats_fetch_begin(syncp);
+}
+
+static inline bool u64_stats_fetch_retry_irq(const struct u64_stats_sync *syncp,
+					     unsigned int start)
+{
+	return u64_stats_fetch_retry(syncp, start);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _LINUX_U64_STATS_SYNC_H */

@@ -5,10 +5,24 @@ comment "S/390 character device drivers"
 config TN3270
 	def_tristate y
 	prompt "Support for locally attached 3270 terminals"
+<<<<<<< HEAD
 	depends on CCW && TTY
 	help
 	  Include support for IBM 3270 terminals.
 
+=======
+	depends on CCW
+	help
+	  Include support for IBM 3270 terminals.
+
+config TN3270_TTY
+	def_tristate y
+	prompt "Support for tty input/output on 3270 terminals"
+	depends on TN3270 && TTY
+	help
+	  Include support for using an IBM 3270 terminal as a Linux tty.
+
+>>>>>>> b7ba80a49124 (Commit)
 config TN3270_FS
 	def_tristate m
 	prompt "Support for fullscreen applications on 3270 terminals"
@@ -19,7 +33,11 @@ config TN3270_FS
 config TN3270_CONSOLE
 	def_bool y
 	prompt "Support for console on 3270 terminal"
+<<<<<<< HEAD
 	depends on TN3270=y
+=======
+	depends on TN3270=y && TN3270_TTY=y
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Include support for using an IBM 3270 terminal as a Linux system
 	  console.  Available only if 3270 support is compiled in statically.

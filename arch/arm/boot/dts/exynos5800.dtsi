@@ -148,10 +148,13 @@
 	};
 };
 
+<<<<<<< HEAD
 &dsi {
 	compatible = "samsung,exynos5422-mipi-dsi";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &mfc {
 	compatible = "samsung,mfc-v8";
 };

@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0-only
 config VIDEO_SUN6I_CSI
+<<<<<<< HEAD
 	tristate "Allwinner A31 Camera Sensor Interface (CSI) Driver"
 	depends on V4L_PLATFORM_DRIVERS && VIDEO_DEV
 	depends on ARCH_SUNXI || COMPILE_TEST
@@ -13,3 +14,16 @@ config VIDEO_SUN6I_CSI
 	   Support for the Allwinner A31 Camera Sensor Interface (CSI)
 	   controller, also found on other platforms such as the A83T, H3,
 	   V3/V3s or A64.
+=======
+	tristate "Allwinner V3s Camera Sensor Interface driver"
+	depends on V4L_PLATFORM_DRIVERS
+	depends on VIDEO_DEV && COMMON_CLK  && HAS_DMA
+	depends on ARCH_SUNXI || COMPILE_TEST
+	select MEDIA_CONTROLLER
+	select VIDEO_V4L2_SUBDEV_API
+	select VIDEOBUF2_DMA_CONTIG
+	select REGMAP_MMIO
+	select V4L2_FWNODE
+	help
+	   Support for the Allwinner Camera Sensor Interface Controller on V3s.
+>>>>>>> b7ba80a49124 (Commit)

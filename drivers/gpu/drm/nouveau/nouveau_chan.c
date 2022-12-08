@@ -25,7 +25,16 @@
 
 #include <nvif/class.h>
 #include <nvif/cl0002.h>
+<<<<<<< HEAD
 #include <nvif/if0020.h>
+=======
+#include <nvif/cl006b.h>
+#include <nvif/cl506f.h>
+#include <nvif/cl906f.h>
+#include <nvif/cla06f.h>
+#include <nvif/clc36f.h>
+#include <nvif/ioctl.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "nouveau_drv.h"
 #include "nouveau_dma.h"
@@ -41,17 +50,28 @@ int nouveau_vram_pushbuf;
 module_param_named(vram_pushbuf, nouveau_vram_pushbuf, int, 0400);
 
 static int
+<<<<<<< HEAD
 nouveau_channel_killed(struct nvif_event *event, void *repv, u32 repc)
 {
 	struct nouveau_channel *chan = container_of(event, typeof(*chan), kill);
 	struct nouveau_cli *cli = (void *)chan->user.client;
 
+=======
+nouveau_channel_killed(struct nvif_notify *ntfy)
+{
+	struct nouveau_channel *chan = container_of(ntfy, typeof(*chan), kill);
+	struct nouveau_cli *cli = (void *)chan->user.client;
+>>>>>>> b7ba80a49124 (Commit)
 	NV_PRINTK(warn, cli, "channel %d killed!\n", chan->chid);
 	atomic_set(&chan->killed, 1);
 	if (chan->fence)
 		nouveau_fence_context_kill(chan->fence, -ENODEV);
+<<<<<<< HEAD
 
 	return NVIF_EVENT_DROP;
+=======
+	return NVIF_NOTIFY_DROP;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int
@@ -93,9 +113,14 @@ nouveau_channel_del(struct nouveau_channel **pchan)
 		nvif_object_dtor(&chan->nvsw);
 		nvif_object_dtor(&chan->gart);
 		nvif_object_dtor(&chan->vram);
+<<<<<<< HEAD
 		nvif_event_dtor(&chan->kill);
 		nvif_object_dtor(&chan->user);
 		nvif_mem_dtor(&chan->mem_userd);
+=======
+		nvif_notify_dtor(&chan->kill);
+		nvif_object_dtor(&chan->user);
+>>>>>>> b7ba80a49124 (Commit)
 		nvif_object_dtor(&chan->push.ctxdma);
 		nouveau_vma_del(&chan->push.vma);
 		nouveau_bo_unmap(chan->push.buffer);
@@ -245,6 +270,7 @@ nouveau_channel_prep(struct nouveau_drm *drm, struct nvif_device *device,
 }
 
 static int
+<<<<<<< HEAD
 nouveau_channel_ctor(struct nouveau_drm *drm, struct nvif_device *device, bool priv, u64 runm,
 		     struct nouveau_channel **pchan)
 {
@@ -293,11 +319,41 @@ nouveau_channel_ctor(struct nouveau_drm *drm, struct nvif_device *device, bool p
 
 	/* allocate dma push buffer */
 	ret = nouveau_channel_prep(drm, device, size, &chan);
+=======
+nouveau_channel_ind(struct nouveau_drm *drm, struct nvif_device *device,
+		    u64 runlist, bool priv, struct nouveau_channel **pchan)
+{
+	static const u16 oclasses[] = { AMPERE_CHANNEL_GPFIFO_B,
+					TURING_CHANNEL_GPFIFO_A,
+					VOLTA_CHANNEL_GPFIFO_A,
+					PASCAL_CHANNEL_GPFIFO_A,
+					MAXWELL_CHANNEL_GPFIFO_A,
+					KEPLER_CHANNEL_GPFIFO_B,
+					KEPLER_CHANNEL_GPFIFO_A,
+					FERMI_CHANNEL_GPFIFO,
+					G82_CHANNEL_GPFIFO,
+					NV50_CHANNEL_GPFIFO,
+					0 };
+	const u16 *oclass = oclasses;
+	union {
+		struct nv50_channel_gpfifo_v0 nv50;
+		struct fermi_channel_gpfifo_v0 fermi;
+		struct kepler_channel_gpfifo_a_v0 kepler;
+		struct volta_channel_gpfifo_a_v0 volta;
+	} args;
+	struct nouveau_channel *chan;
+	u32 size;
+	int ret;
+
+	/* allocate dma push buffer */
+	ret = nouveau_channel_prep(drm, device, 0x12000, &chan);
+>>>>>>> b7ba80a49124 (Commit)
 	*pchan = chan;
 	if (ret)
 		return ret;
 
 	/* create channel object */
+<<<<<<< HEAD
 	args.chan.version = 0;
 	args.chan.namelen = sizeof(args.name);
 	args.chan.runlist = __ffs64(runm);
@@ -352,6 +408,104 @@ nouveau_channel_ctor(struct nouveau_drm *drm, struct nvif_device *device, bool p
 	chan->inst = args.chan.inst;
 	chan->token = args.chan.token;
 	return 0;
+=======
+	do {
+		if (oclass[0] >= VOLTA_CHANNEL_GPFIFO_A) {
+			args.volta.version = 0;
+			args.volta.ilength = 0x02000;
+			args.volta.ioffset = 0x10000 + chan->push.addr;
+			args.volta.runlist = runlist;
+			args.volta.vmm = nvif_handle(&chan->vmm->vmm.object);
+			args.volta.priv = priv;
+			size = sizeof(args.volta);
+		} else
+		if (oclass[0] >= KEPLER_CHANNEL_GPFIFO_A) {
+			args.kepler.version = 0;
+			args.kepler.ilength = 0x02000;
+			args.kepler.ioffset = 0x10000 + chan->push.addr;
+			args.kepler.runlist = runlist;
+			args.kepler.vmm = nvif_handle(&chan->vmm->vmm.object);
+			args.kepler.priv = priv;
+			size = sizeof(args.kepler);
+		} else
+		if (oclass[0] >= FERMI_CHANNEL_GPFIFO) {
+			args.fermi.version = 0;
+			args.fermi.ilength = 0x02000;
+			args.fermi.ioffset = 0x10000 + chan->push.addr;
+			args.fermi.vmm = nvif_handle(&chan->vmm->vmm.object);
+			size = sizeof(args.fermi);
+		} else {
+			args.nv50.version = 0;
+			args.nv50.ilength = 0x02000;
+			args.nv50.ioffset = 0x10000 + chan->push.addr;
+			args.nv50.pushbuf = nvif_handle(&chan->push.ctxdma);
+			args.nv50.vmm = nvif_handle(&chan->vmm->vmm.object);
+			size = sizeof(args.nv50);
+		}
+
+		ret = nvif_object_ctor(&device->object, "abi16ChanUser", 0,
+				       *oclass++, &args, size, &chan->user);
+		if (ret == 0) {
+			if (chan->user.oclass >= VOLTA_CHANNEL_GPFIFO_A) {
+				chan->chid = args.volta.chid;
+				chan->inst = args.volta.inst;
+				chan->token = args.volta.token;
+			} else
+			if (chan->user.oclass >= KEPLER_CHANNEL_GPFIFO_A) {
+				chan->chid = args.kepler.chid;
+				chan->inst = args.kepler.inst;
+			} else
+			if (chan->user.oclass >= FERMI_CHANNEL_GPFIFO) {
+				chan->chid = args.fermi.chid;
+			} else {
+				chan->chid = args.nv50.chid;
+			}
+			return ret;
+		}
+	} while (*oclass);
+
+	nouveau_channel_del(pchan);
+	return ret;
+}
+
+static int
+nouveau_channel_dma(struct nouveau_drm *drm, struct nvif_device *device,
+		    struct nouveau_channel **pchan)
+{
+	static const u16 oclasses[] = { NV40_CHANNEL_DMA,
+					NV17_CHANNEL_DMA,
+					NV10_CHANNEL_DMA,
+					NV03_CHANNEL_DMA,
+					0 };
+	const u16 *oclass = oclasses;
+	struct nv03_channel_dma_v0 args;
+	struct nouveau_channel *chan;
+	int ret;
+
+	/* allocate dma push buffer */
+	ret = nouveau_channel_prep(drm, device, 0x10000, &chan);
+	*pchan = chan;
+	if (ret)
+		return ret;
+
+	/* create channel object */
+	args.version = 0;
+	args.pushbuf = nvif_handle(&chan->push.ctxdma);
+	args.offset = chan->push.addr;
+
+	do {
+		ret = nvif_object_ctor(&device->object, "abi16ChanUser", 0,
+				       *oclass++, &args, sizeof(args),
+				       &chan->user);
+		if (ret == 0) {
+			chan->chid = args.chid;
+			return ret;
+		}
+	} while (ret && *oclass);
+
+	nouveau_channel_del(pchan);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int
@@ -362,6 +516,7 @@ nouveau_channel_init(struct nouveau_channel *chan, u32 vram, u32 gart)
 	struct nv_dma_v0 args = {};
 	int ret, i;
 
+<<<<<<< HEAD
 	ret = nvif_object_map(chan->userd, NULL, 0);
 	if (ret)
 		return ret;
@@ -380,6 +535,20 @@ nouveau_channel_init(struct nouveau_channel *chan, u32 vram, u32 gart)
 				      &args.base, sizeof(args), &chan->kill);
 		if (ret == 0)
 			ret = nvif_event_allow(&chan->kill);
+=======
+	ret = nvif_object_map(&chan->user, NULL, 0);
+	if (ret)
+		return ret;
+
+	if (chan->user.oclass >= FERMI_CHANNEL_GPFIFO &&
+	    chan->user.oclass < AMPERE_CHANNEL_GPFIFO_B) {
+		ret = nvif_notify_ctor(&chan->user, "abi16ChanKilled",
+				       nouveau_channel_killed,
+				       true, NV906F_V0_NTFY_KILLED,
+				       NULL, 0, 0, &chan->kill);
+		if (ret == 0)
+			ret = nvif_notify_get(&chan->kill);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret) {
 			NV_ERROR(drm, "Failed to request channel kill "
 				      "notification: %d\n", ret);
@@ -486,11 +655,17 @@ nouveau_channel_init(struct nouveau_channel *chan, u32 vram, u32 gart)
 
 int
 nouveau_channel_new(struct nouveau_drm *drm, struct nvif_device *device,
+<<<<<<< HEAD
 		    bool priv, u64 runm, u32 vram, u32 gart, struct nouveau_channel **pchan)
+=======
+		    u32 arg0, u32 arg1, bool priv,
+		    struct nouveau_channel **pchan)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nouveau_cli *cli = (void *)device->object.client;
 	int ret;
 
+<<<<<<< HEAD
 	ret = nouveau_channel_ctor(drm, device, priv, runm, pchan);
 	if (ret) {
 		NV_PRINTK(dbg, cli, "channel create, %d\n", ret);
@@ -498,6 +673,20 @@ nouveau_channel_new(struct nouveau_drm *drm, struct nvif_device *device,
 	}
 
 	ret = nouveau_channel_init(*pchan, vram, gart);
+=======
+	/* hack until fencenv50 is fixed, and agp access relaxed */
+	ret = nouveau_channel_ind(drm, device, arg0, priv, pchan);
+	if (ret) {
+		NV_PRINTK(dbg, cli, "ib channel create, %d\n", ret);
+		ret = nouveau_channel_dma(drm, device, pchan);
+		if (ret) {
+			NV_PRINTK(dbg, cli, "dma channel create, %d\n", ret);
+			return ret;
+		}
+	}
+
+	ret = nouveau_channel_init(*pchan, arg0, arg1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		NV_PRINTK(err, cli, "channel failed to initialise, %d\n", ret);
 		nouveau_channel_del(pchan);
@@ -511,12 +700,15 @@ nouveau_channel_new(struct nouveau_drm *drm, struct nvif_device *device,
 	return ret;
 }
 
+<<<<<<< HEAD
 void
 nouveau_channels_fini(struct nouveau_drm *drm)
 {
 	kfree(drm->runl);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int
 nouveau_channels_init(struct nouveau_drm *drm)
 {
@@ -524,12 +716,16 @@ nouveau_channels_init(struct nouveau_drm *drm)
 		struct nv_device_info_v1 m;
 		struct {
 			struct nv_device_info_v1_data channels;
+<<<<<<< HEAD
 			struct nv_device_info_v1_data runlists;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		} v;
 	} args = {
 		.m.version = 1,
 		.m.count = sizeof(args.v) / sizeof(args.v.channels),
 		.v.channels.mthd = NV_DEVICE_HOST_CHANNELS,
+<<<<<<< HEAD
 		.v.runlists.mthd = NV_DEVICE_HOST_RUNLISTS,
 	};
 	struct nvif_object *device = &drm->client.device.object;
@@ -572,5 +768,17 @@ nouveau_channels_init(struct nouveau_drm *drm)
 
 	}
 
+=======
+	};
+	struct nvif_object *device = &drm->client.device.object;
+	int ret;
+
+	ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, &args, sizeof(args));
+	if (ret || args.v.channels.mthd == NV_DEVICE_INFO_INVALID)
+		return -ENODEV;
+
+	drm->chan.nr = args.v.channels.data;
+	drm->chan.context_base = dma_fence_context_alloc(drm->chan.nr);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }

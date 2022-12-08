@@ -298,7 +298,11 @@ static int exynos_mipi_video_phy_probe(struct platform_device *pdev)
 	struct device *dev = &pdev->dev;
 	struct device_node *np = dev->of_node;
 	struct phy_provider *phy_provider;
+<<<<<<< HEAD
 	unsigned int i = 0;
+=======
+	unsigned int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	phy_dev = of_device_get_match_data(dev);
 	if (!phy_dev)
@@ -308,10 +312,14 @@ static int exynos_mipi_video_phy_probe(struct platform_device *pdev)
 	if (!state)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	state->regmaps[i] = syscon_node_to_regmap(dev->parent->of_node);
 	if (!IS_ERR(state->regmaps[i]))
 		i++;
 	for (; i < phy_dev->num_regmaps; i++) {
+=======
+	for (i = 0; i < phy_dev->num_regmaps; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		state->regmaps[i] = syscon_regmap_lookup_by_phandle(np,
 						phy_dev->regmap_names[i]);
 		if (IS_ERR(state->regmaps[i]))

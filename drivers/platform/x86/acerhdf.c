@@ -79,6 +79,10 @@ static unsigned int list_supported;
 static unsigned int fanstate = ACERHDF_FAN_AUTO;
 static char force_bios[16];
 static char force_product[16];
+<<<<<<< HEAD
+=======
+static unsigned int prev_interval;
+>>>>>>> b7ba80a49124 (Commit)
 static struct thermal_zone_device *thz_dev;
 static struct thermal_cooling_device *cl_dev;
 static struct platform_device *acerhdf_dev;
@@ -340,20 +344,39 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
 		pr_err("fanoff temperature (%d) is above fanon temperature (%d), clamping to %d\n",
 		       fanoff, fanon, fanon);
 		fanoff = fanon;
+<<<<<<< HEAD
 	}
+=======
+	};
+>>>>>>> b7ba80a49124 (Commit)
 
 	trips[0].temperature = fanon;
 	trips[0].hysteresis  = fanon - fanoff;
 
+<<<<<<< HEAD
 	if (kernelmode) {
+=======
+	if (kernelmode && prev_interval != interval) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (interval > ACERHDF_MAX_INTERVAL) {
 			pr_err("interval too high, set to %d\n",
 			       ACERHDF_MAX_INTERVAL);
 			interval = ACERHDF_MAX_INTERVAL;
 		}
+<<<<<<< HEAD
 
 		if (verbose)
 			pr_notice("interval changed to: %d\n", interval);
+=======
+		if (verbose)
+			pr_notice("interval changed to: %d\n", interval);
+
+		if (thermal)
+			thermal->polling_delay_jiffies =
+				round_jiffies(msecs_to_jiffies(interval * 1000));
+
+		prev_interval = interval;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -538,6 +561,14 @@ static int acerhdf_probe(struct platform_device *device)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int acerhdf_remove(struct platform_device *device)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct dev_pm_ops acerhdf_pm_ops = {
 	.suspend = acerhdf_suspend,
 	.freeze  = acerhdf_suspend,
@@ -549,6 +580,10 @@ static struct platform_driver acerhdf_driver = {
 		.pm    = &acerhdf_pm_ops,
 	},
 	.probe = acerhdf_probe,
+<<<<<<< HEAD
+=======
+	.remove = acerhdf_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* check hardware */
@@ -643,7 +678,11 @@ static int __init acerhdf_register_platform(void)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	acerhdf_dev = platform_device_alloc("acerhdf", PLATFORM_DEVID_NONE);
+=======
+	acerhdf_dev = platform_device_alloc("acerhdf", -1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!acerhdf_dev) {
 		err = -ENOMEM;
 		goto err_device_alloc;
@@ -691,6 +730,16 @@ static int __init acerhdf_register_thermal(void)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
+=======
+	if (strcmp(thz_dev->governor->name,
+				acerhdf_zone_params.governor_name)) {
+		pr_err("Didn't get thermal governor %s, perhaps not compiled into thermal subsystem.\n",
+				acerhdf_zone_params.governor_name);
+		return -EINVAL;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -788,5 +837,9 @@ static const struct kernel_param_ops interval_ops = {
 	.get = param_get_uint,
 };
 
+<<<<<<< HEAD
 module_param_cb(interval, &interval_ops, &interval, 0000);
+=======
+module_param_cb(interval, &interval_ops, &interval, 0600);
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_PARM_DESC(interval, "Polling interval of temperature check");

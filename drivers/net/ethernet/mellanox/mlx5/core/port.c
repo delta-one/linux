@@ -1054,6 +1054,7 @@ out:
 	kfree(out);
 	return err;
 }
+<<<<<<< HEAD
 
 /* speed in units of 1Mb */
 static const u32 mlx5e_link_speed[MLX5E_LINK_MODES_NUMBER] = {
@@ -1205,3 +1206,5 @@ int mlx5_port_max_linkspeed(struct mlx5_core_dev *mdev, u32 *speed)
 	*speed = max_speed;
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

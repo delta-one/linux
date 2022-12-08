@@ -46,6 +46,7 @@
 	{ DLM_SBF_VALNOTVALID,	"VALNOTVALID" },		\
 	{ DLM_SBF_ALTMODE,	"ALTMODE" })
 
+<<<<<<< HEAD
 #define show_lkb_flags(flags) __print_flags(flags, "|",		\
 	{ BIT(DLM_DFL_USER_BIT), "USER" },			\
 	{ BIT(DLM_DFL_ORPHAN_BIT), "ORPHAN" })
@@ -88,6 +89,8 @@
 	{ DLM_RCOM_LOCK_REPLY,          "LOCK_REPLY"})
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* note: we begin tracing dlm_lock_start() only if ls and lkb are found */
 TRACE_EVENT(dlm_lock_start,
 
@@ -332,6 +335,7 @@ TRACE_EVENT(dlm_unlock_end,
 
 );
 
+<<<<<<< HEAD
 DECLARE_EVENT_CLASS(dlm_rcom_template,
 
 	TP_PROTO(uint32_t dst, uint32_t h_seq, const struct dlm_rcom *rc),
@@ -585,6 +589,8 @@ TRACE_EVENT(dlm_recv_message,
 
 );
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 TRACE_EVENT(dlm_send,
 
 	TP_PROTO(int nodeid, int ret),

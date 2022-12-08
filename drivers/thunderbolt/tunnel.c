@@ -9,7 +9,10 @@
 #include <linux/delay.h>
 #include <linux/slab.h>
 #include <linux/list.h>
+<<<<<<< HEAD
 #include <linux/ktime.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "tunnel.h"
 #include "tb.h"
@@ -45,17 +48,24 @@
 /* Minimum number of credits for DMA path */
 #define TB_MIN_DMA_CREDITS		1U
 
+<<<<<<< HEAD
 static bool bw_alloc_mode = true;
 module_param(bw_alloc_mode, bool, 0444);
 MODULE_PARM_DESC(bw_alloc_mode,
 		 "enable bandwidth allocation mode if supported (default: true)");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const char * const tb_tunnel_names[] = { "PCI", "DP", "DMA", "USB3" };
 
 #define __TB_TUNNEL_PRINT(level, tunnel, fmt, arg...)                   \
 	do {                                                            \
 		struct tb_tunnel *__tunnel = (tunnel);                  \
+<<<<<<< HEAD
 		level(__tunnel->tb, "%llx:%u <-> %llx:%u (%s): " fmt,   \
+=======
+		level(__tunnel->tb, "%llx:%x <-> %llx:%x (%s): " fmt,   \
+>>>>>>> b7ba80a49124 (Commit)
 		      tb_route(__tunnel->src_port->sw),                 \
 		      __tunnel->src_port->port,                         \
 		      tb_route(__tunnel->dst_port->sw),                 \
@@ -345,10 +355,16 @@ static bool tb_dp_is_usb4(const struct tb_switch *sw)
 	return tb_switch_is_usb4(sw) || tb_switch_is_titan_ridge(sw);
 }
 
+<<<<<<< HEAD
 static int tb_dp_cm_handshake(struct tb_port *in, struct tb_port *out,
 			      int timeout_msec)
 {
 	ktime_t timeout = ktime_add_ms(ktime_get(), timeout_msec);
+=======
+static int tb_dp_cm_handshake(struct tb_port *in, struct tb_port *out)
+{
+	int timeout = 10;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 val;
 	int ret;
 
@@ -375,8 +391,13 @@ static int tb_dp_cm_handshake(struct tb_port *in, struct tb_port *out,
 			return ret;
 		if (!(val & DP_STATUS_CTRL_CMHS))
 			return 0;
+<<<<<<< HEAD
 		usleep_range(100, 150);
 	} while (ktime_before(ktime_get(), timeout));
+=======
+		usleep_range(10, 100);
+	} while (timeout--);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return -ETIMEDOUT;
 }
@@ -526,7 +547,11 @@ static int tb_dp_xchg_caps(struct tb_tunnel *tunnel)
 	 * Perform connection manager handshake between IN and OUT ports
 	 * before capabilities exchange can take place.
 	 */
+<<<<<<< HEAD
 	ret = tb_dp_cm_handshake(in, out, 1500);
+=======
+	ret = tb_dp_cm_handshake(in, out);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -604,6 +629,7 @@ static int tb_dp_xchg_caps(struct tb_tunnel *tunnel)
 			     in->cap_adap + DP_REMOTE_CAP, 1);
 }
 
+<<<<<<< HEAD
 static int tb_dp_bw_alloc_mode_enable(struct tb_tunnel *tunnel)
 {
 	int ret, estimated_bw, granularity, tmp;
@@ -731,6 +757,8 @@ static void tb_dp_deinit(struct tb_tunnel *tunnel)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int tb_dp_activate(struct tb_tunnel *tunnel, bool active)
 {
 	int ret;
@@ -768,6 +796,7 @@ static int tb_dp_activate(struct tb_tunnel *tunnel, bool active)
 	return 0;
 }
 
+<<<<<<< HEAD
 /* max_bw is rounded up to next granularity */
 static int tb_dp_nrd_bandwidth(struct tb_tunnel *tunnel, int *max_bw)
 {
@@ -997,11 +1026,14 @@ static int tb_dp_maximum_bandwidth(struct tb_tunnel *tunnel, int *max_up,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int tb_dp_consumed_bandwidth(struct tb_tunnel *tunnel, int *consumed_up,
 				    int *consumed_down)
 {
 	struct tb_port *in = tunnel->src_port;
 	const struct tb_switch *sw = in->sw;
+<<<<<<< HEAD
 	u32 rate = 0, lanes = 0;
 	int ret;
 
@@ -1037,6 +1069,46 @@ static int tb_dp_consumed_bandwidth(struct tb_tunnel *tunnel, int *consumed_up,
 		ret = tb_dp_read_cap(tunnel, DP_REMOTE_CAP, &rate, &lanes);
 		if (ret)
 			return ret;
+=======
+	u32 val, rate = 0, lanes = 0;
+	int ret;
+
+	if (tb_dp_is_usb4(sw)) {
+		int timeout = 20;
+
+		/*
+		 * Wait for DPRX done. Normally it should be already set
+		 * for active tunnel.
+		 */
+		do {
+			ret = tb_port_read(in, &val, TB_CFG_PORT,
+					   in->cap_adap + DP_COMMON_CAP, 1);
+			if (ret)
+				return ret;
+
+			if (val & DP_COMMON_CAP_DPRX_DONE) {
+				rate = tb_dp_cap_get_rate(val);
+				lanes = tb_dp_cap_get_lanes(val);
+				break;
+			}
+			msleep(250);
+		} while (timeout--);
+
+		if (!timeout)
+			return -ETIMEDOUT;
+	} else if (sw->generation >= 2) {
+		/*
+		 * Read from the copied remote cap so that we take into
+		 * account if capabilities were reduced during exchange.
+		 */
+		ret = tb_port_read(in, &val, TB_CFG_PORT,
+				   in->cap_adap + DP_REMOTE_CAP, 1);
+		if (ret)
+			return ret;
+
+		rate = tb_dp_cap_get_rate(val);
+		lanes = tb_dp_cap_get_lanes(val);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		/* No bandwidth management for legacy devices  */
 		*consumed_up = 0;
@@ -1158,12 +1230,17 @@ struct tb_tunnel *tb_tunnel_discover_dp(struct tb *tb, struct tb_port *in,
 	if (!tunnel)
 		return NULL;
 
+<<<<<<< HEAD
 	tunnel->init = tb_dp_init;
 	tunnel->deinit = tb_dp_deinit;
 	tunnel->activate = tb_dp_activate;
 	tunnel->maximum_bandwidth = tb_dp_maximum_bandwidth;
 	tunnel->allocated_bandwidth = tb_dp_allocated_bandwidth;
 	tunnel->alloc_bandwidth = tb_dp_alloc_bandwidth;
+=======
+	tunnel->init = tb_dp_xchg_caps;
+	tunnel->activate = tb_dp_activate;
+>>>>>>> b7ba80a49124 (Commit)
 	tunnel->consumed_bandwidth = tb_dp_consumed_bandwidth;
 	tunnel->src_port = in;
 
@@ -1251,12 +1328,17 @@ struct tb_tunnel *tb_tunnel_alloc_dp(struct tb *tb, struct tb_port *in,
 	if (!tunnel)
 		return NULL;
 
+<<<<<<< HEAD
 	tunnel->init = tb_dp_init;
 	tunnel->deinit = tb_dp_deinit;
 	tunnel->activate = tb_dp_activate;
 	tunnel->maximum_bandwidth = tb_dp_maximum_bandwidth;
 	tunnel->allocated_bandwidth = tb_dp_allocated_bandwidth;
 	tunnel->alloc_bandwidth = tb_dp_alloc_bandwidth;
+=======
+	tunnel->init = tb_dp_xchg_caps;
+	tunnel->activate = tb_dp_activate;
+>>>>>>> b7ba80a49124 (Commit)
 	tunnel->consumed_bandwidth = tb_dp_consumed_bandwidth;
 	tunnel->src_port = in;
 	tunnel->dst_port = out;
@@ -1643,7 +1725,11 @@ static void tb_usb3_reclaim_available_bandwidth(struct tb_tunnel *tunnel,
 		return;
 	} else if (!ret) {
 		/* Use maximum link rate if the link valid is not set */
+<<<<<<< HEAD
 		ret = tb_usb3_max_link_rate(tunnel->dst_port, tunnel->src_port);
+=======
+		ret = usb4_usb3_port_max_link_rate(tunnel->src_port);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret < 0) {
 			tb_tunnel_warn(tunnel, "failed to read maximum link rate\n");
 			return;
@@ -2082,6 +2168,7 @@ static bool tb_tunnel_is_active(const struct tb_tunnel *tunnel)
 }
 
 /**
+<<<<<<< HEAD
  * tb_tunnel_maximum_bandwidth() - Return maximum possible bandwidth
  * @tunnel: Tunnel to check
  * @max_up: Maximum upstream bandwidth in Mb/s
@@ -2148,6 +2235,8 @@ int tb_tunnel_alloc_bandwidth(struct tb_tunnel *tunnel, int *alloc_up,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * tb_tunnel_consumed_bandwidth() - Return bandwidth consumed by the tunnel
  * @tunnel: Tunnel to check
  * @consumed_up: Consumed bandwidth in Mb/s from @dst_port to @src_port.

@@ -39,6 +39,7 @@ static int perf_end(struct intel_gt *gt)
 	return igt_flush_test(gt->i915);
 }
 
+<<<<<<< HEAD
 static i915_reg_t timestamp_reg(struct intel_engine_cs *engine)
 {
 	struct drm_i915_private *i915 = engine->i915;
@@ -49,6 +50,8 @@ static i915_reg_t timestamp_reg(struct intel_engine_cs *engine)
 		return RING_TIMESTAMP(engine->mmio_base);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int write_timestamp(struct i915_request *rq, int slot)
 {
 	struct intel_timeline *tl =
@@ -65,7 +68,11 @@ static int write_timestamp(struct i915_request *rq, int slot)
 	if (GRAPHICS_VER(rq->engine->i915) >= 8)
 		cmd++;
 	*cs++ = cmd;
+<<<<<<< HEAD
 	*cs++ = i915_mmio_reg_offset(timestamp_reg(rq->engine));
+=======
+	*cs++ = i915_mmio_reg_offset(RING_TIMESTAMP(rq->engine->mmio_base));
+>>>>>>> b7ba80a49124 (Commit)
 	*cs++ = tl->hwsp_offset + slot * sizeof(u32);
 	*cs++ = 0;
 
@@ -135,7 +142,11 @@ static int perf_mi_bb_start(void *arg)
 	enum intel_engine_id id;
 	int err = 0;
 
+<<<<<<< HEAD
 	if (GRAPHICS_VER(gt->i915) < 4) /* Any CS_TIMESTAMP? */
+=======
+	if (GRAPHICS_VER(gt->i915) < 7) /* for per-engine CS_TIMESTAMP */
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	perf_begin(gt);
@@ -145,9 +156,12 @@ static int perf_mi_bb_start(void *arg)
 		u32 cycles[COUNT];
 		int i;
 
+<<<<<<< HEAD
 		if (GRAPHICS_VER(engine->i915) < 7 && engine->id != RCS0)
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		intel_engine_pm_get(engine);
 
 		batch = create_empty_batch(ce);
@@ -178,7 +192,11 @@ static int perf_mi_bb_start(void *arg)
 				goto out;
 
 			err = rq->engine->emit_bb_start(rq,
+<<<<<<< HEAD
 							i915_vma_offset(batch), 8,
+=======
+							batch->node.start, 8,
+>>>>>>> b7ba80a49124 (Commit)
 							0);
 			if (err)
 				goto out;
@@ -262,7 +280,11 @@ static int perf_mi_noop(void *arg)
 	enum intel_engine_id id;
 	int err = 0;
 
+<<<<<<< HEAD
 	if (GRAPHICS_VER(gt->i915) < 4) /* Any CS_TIMESTAMP? */
+=======
+	if (GRAPHICS_VER(gt->i915) < 7) /* for per-engine CS_TIMESTAMP */
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	perf_begin(gt);
@@ -272,9 +294,12 @@ static int perf_mi_noop(void *arg)
 		u32 cycles[COUNT];
 		int i;
 
+<<<<<<< HEAD
 		if (GRAPHICS_VER(engine->i915) < 7 && engine->id != RCS0)
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		intel_engine_pm_get(engine);
 
 		base = create_empty_batch(ce);
@@ -321,7 +346,11 @@ static int perf_mi_noop(void *arg)
 				goto out;
 
 			err = rq->engine->emit_bb_start(rq,
+<<<<<<< HEAD
 							i915_vma_offset(base), 8,
+=======
+							base->node.start, 8,
+>>>>>>> b7ba80a49124 (Commit)
 							0);
 			if (err)
 				goto out;
@@ -331,8 +360,13 @@ static int perf_mi_noop(void *arg)
 				goto out;
 
 			err = rq->engine->emit_bb_start(rq,
+<<<<<<< HEAD
 							i915_vma_offset(nop),
 							i915_vma_size(nop),
+=======
+							nop->node.start,
+							nop->node.size,
+>>>>>>> b7ba80a49124 (Commit)
 							0);
 			if (err)
 				goto out;

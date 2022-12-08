@@ -66,7 +66,11 @@ static int ptp_kvm_getcrosststamp(struct ptp_clock_info *ptp,
  * PTP clock operations
  */
 
+<<<<<<< HEAD
 static int ptp_kvm_adjfine(struct ptp_clock_info *ptp, long delta)
+=======
+static int ptp_kvm_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return -EOPNOTSUPP;
 }
@@ -115,7 +119,11 @@ static const struct ptp_clock_info ptp_kvm_caps = {
 	.n_ext_ts	= 0,
 	.n_pins		= 0,
 	.pps		= 0,
+<<<<<<< HEAD
 	.adjfine	= ptp_kvm_adjfine,
+=======
+	.adjfreq	= ptp_kvm_adjfreq,
+>>>>>>> b7ba80a49124 (Commit)
 	.adjtime	= ptp_kvm_adjtime,
 	.gettime64	= ptp_kvm_gettime,
 	.settime64	= ptp_kvm_settime,
@@ -130,7 +138,10 @@ static struct kvm_ptp_clock kvm_ptp_clock;
 static void __exit ptp_kvm_exit(void)
 {
 	ptp_clock_unregister(kvm_ptp_clock.ptp_clock);
+<<<<<<< HEAD
 	kvm_arch_ptp_exit();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __init ptp_kvm_init(void)

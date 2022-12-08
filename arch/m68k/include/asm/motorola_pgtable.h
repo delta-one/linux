@@ -41,9 +41,12 @@
 
 #define _PAGE_PROTNONE	0x004
 
+<<<<<<< HEAD
 /* We borrow bit 11 to store the exclusive marker in swap PTEs. */
 #define _PAGE_SWP_EXCLUSIVE	0x800
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef __ASSEMBLY__
 
 /* This is the cache mode to be used for pages containing page descriptors for
@@ -127,7 +130,11 @@ static inline void pud_set(pud_t *pudp, pmd_t *pmdp)
  * expects pmd_page() to exists, only to then DCE it all. Provide a dummy to
  * make the compiler happy.
  */
+<<<<<<< HEAD
 #define pmd_page(pmd)		((struct page *)NULL)
+=======
+#define pmd_page(pmd)		NULL
+>>>>>>> b7ba80a49124 (Commit)
 
 
 #define pud_none(pud)		(!pud_val(pud))
@@ -155,6 +162,10 @@ static inline int pte_young(pte_t pte)		{ return pte_val(pte) & _PAGE_ACCESSED; 
 static inline pte_t pte_wrprotect(pte_t pte)	{ pte_val(pte) |= _PAGE_RONLY; return pte; }
 static inline pte_t pte_mkclean(pte_t pte)	{ pte_val(pte) &= ~_PAGE_DIRTY; return pte; }
 static inline pte_t pte_mkold(pte_t pte)	{ pte_val(pte) &= ~_PAGE_ACCESSED; return pte; }
+<<<<<<< HEAD
+=======
+static inline pte_t pte_mkwrite(pte_t pte)	{ pte_val(pte) &= ~_PAGE_RONLY; return pte; }
+>>>>>>> b7ba80a49124 (Commit)
 static inline pte_t pte_mkdirty(pte_t pte)	{ pte_val(pte) |= _PAGE_DIRTY; return pte; }
 static inline pte_t pte_mkyoung(pte_t pte)	{ pte_val(pte) |= _PAGE_ACCESSED; return pte; }
 static inline pte_t pte_mknocache(pte_t pte)
@@ -167,15 +178,19 @@ static inline pte_t pte_mkcache(pte_t pte)
 	pte_val(pte) = (pte_val(pte) & _CACHEMASK040) | m68k_supervisor_cachemode;
 	return pte;
 }
+<<<<<<< HEAD
 static inline pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
 {
 	pte_val(pte) &= ~_PAGE_RONLY;
 	return pte;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define swapper_pg_dir kernel_pg_dir
 extern pgd_t kernel_pg_dir[128];
 
+<<<<<<< HEAD
 /*
  * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
  * are !pte_none() && !pte_present().
@@ -211,5 +226,14 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
 	return pte;
 }
 
+=======
+/* Encode and de-code a swap entry (must be !pte_none(e) && !pte_present(e)) */
+#define __swp_type(x)		(((x).val >> 4) & 0xff)
+#define __swp_offset(x)		((x).val >> 12)
+#define __swp_entry(type, offset) ((swp_entry_t) { ((type) << 4) | ((offset) << 12) })
+#define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
+#define __swp_entry_to_pte(x)	((pte_t) { (x).val })
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif	/* !__ASSEMBLY__ */
 #endif /* _MOTOROLA_PGTABLE_H */

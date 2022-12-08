@@ -637,7 +637,11 @@ out_err:
 	return err;
 }
 
+<<<<<<< HEAD
 static void leo_remove(struct platform_device *op)
+=======
+static int leo_remove(struct platform_device *op)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = dev_get_drvdata(&op->dev);
 	struct leo_par *par = info->par;
@@ -648,6 +652,11 @@ static void leo_remove(struct platform_device *op)
 	leo_unmap_regs(op, info, par);
 
 	framebuffer_release(info);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id leo_match[] = {
@@ -664,7 +673,11 @@ static struct platform_driver leo_driver = {
 		.of_match_table = leo_match,
 	},
 	.probe		= leo_probe,
+<<<<<<< HEAD
 	.remove_new	= leo_remove,
+=======
+	.remove		= leo_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init leo_init(void)

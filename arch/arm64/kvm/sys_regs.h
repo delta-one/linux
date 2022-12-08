@@ -85,9 +85,14 @@ struct sys_reg_desc {
 };
 
 #define REG_HIDDEN		(1 << 0) /* hidden from userspace and guest */
+<<<<<<< HEAD
 #define REG_HIDDEN_USER		(1 << 1) /* hidden from userspace only */
 #define REG_RAZ			(1 << 2) /* RAZ from userspace and guest */
 #define REG_USER_WI		(1 << 3) /* WI from userspace only */
+=======
+#define REG_RAZ			(1 << 1) /* RAZ from userspace and guest */
+#define REG_USER_WI		(1 << 2) /* WI from userspace only */
+>>>>>>> b7ba80a49124 (Commit)
 
 static __printf(2, 3)
 inline void print_sys_reg_msg(const struct sys_reg_params *p,
@@ -153,6 +158,7 @@ static inline bool sysreg_hidden(const struct kvm_vcpu *vcpu,
 	return sysreg_visibility(vcpu, r) & REG_HIDDEN;
 }
 
+<<<<<<< HEAD
 static inline bool sysreg_hidden_user(const struct kvm_vcpu *vcpu,
 				      const struct sys_reg_desc *r)
 {
@@ -162,6 +168,8 @@ static inline bool sysreg_hidden_user(const struct kvm_vcpu *vcpu,
 	return r->visibility(vcpu, r) & (REG_HIDDEN | REG_HIDDEN_USER);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool sysreg_visible_as_raz(const struct kvm_vcpu *vcpu,
 					 const struct sys_reg_desc *r)
 {

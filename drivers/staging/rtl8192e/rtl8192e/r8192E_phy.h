@@ -9,6 +9,31 @@
 
 #define MAX_DOZE_WAITING_TIMES_9x 64
 
+<<<<<<< HEAD
+=======
+#define AGCTAB_ArrayLength			AGCTAB_ArrayLengthPciE
+#define MACPHY_ArrayLength			MACPHY_ArrayLengthPciE
+#define RadioA_ArrayLength			RadioA_ArrayLengthPciE
+#define RadioB_ArrayLength			RadioB_ArrayLengthPciE
+#define MACPHY_Array_PGLength			MACPHY_Array_PGLengthPciE
+#define RadioC_ArrayLength			RadioC_ArrayLengthPciE
+#define RadioD_ArrayLength			RadioD_ArrayLengthPciE
+#define PHY_REGArrayLength			PHY_REGArrayLengthPciE
+#define PHY_REG_1T2RArrayLength			PHY_REG_1T2RArrayLengthPciE
+
+#define Rtl819XMACPHY_Array_PG			Rtl8192PciEMACPHY_Array_PG
+#define Rtl819XMACPHY_Array			Rtl8192PciEMACPHY_Array
+#define Rtl819XRadioA_Array			Rtl8192PciERadioA_Array
+#define Rtl819XRadioB_Array			Rtl8192PciERadioB_Array
+#define Rtl819XRadioC_Array			Rtl8192PciERadioC_Array
+#define Rtl819XRadioD_Array			Rtl8192PciERadioD_Array
+#define Rtl819XAGCTAB_Array			Rtl8192PciEAGCTAB_Array
+#define Rtl819XPHY_REGArray			Rtl8192PciEPHY_REGArray
+#define Rtl819XPHY_REG_1T2RArray		Rtl8192PciEPHY_REG_1T2RArray
+
+extern u32 rtl819XAGCTAB_Array[];
+
+>>>>>>> b7ba80a49124 (Commit)
 enum hw90_block {
 	HW90_BLOCK_MAC = 0,
 	HW90_BLOCK_PHY0 = 1,
@@ -33,6 +58,10 @@ enum rf90_radio_path {
 #define bMaskLWord                0x0000ffff
 #define bMaskDWord                0xffffffff
 
+<<<<<<< HEAD
+=======
+u8 rtl92e_is_legal_rf_path(struct net_device *dev, u32 eRFPath);
+>>>>>>> b7ba80a49124 (Commit)
 void rtl92e_set_bb_reg(struct net_device *dev, u32 dwRegAddr,
 		       u32 dwBitMask, u32 dwData);
 u32 rtl92e_get_bb_reg(struct net_device *dev, u32 dwRegAddr, u32 dwBitMask);
@@ -52,14 +81,22 @@ u8 rtl92e_config_rf_path(struct net_device *dev, enum rf90_radio_path eRFPath);
 
 u8 rtl92e_set_channel(struct net_device *dev, u8 channel);
 void rtl92e_set_bw_mode(struct net_device *dev,
+<<<<<<< HEAD
 			enum ht_channel_width bandwidth,
+=======
+			enum ht_channel_width Bandwidth,
+>>>>>>> b7ba80a49124 (Commit)
 			enum ht_extchnl_offset Offset);
 void rtl92e_init_gain(struct net_device *dev, u8 Operation);
 
 void rtl92e_set_rf_off(struct net_device *dev);
 
 bool rtl92e_set_rf_power_state(struct net_device *dev,
+<<<<<<< HEAD
 			       enum rt_rf_power_state rf_power_state);
+=======
+			       enum rt_rf_power_state eRFPowerState);
+>>>>>>> b7ba80a49124 (Commit)
 
 void rtl92e_scan_op_backup(struct net_device *dev, u8 Operation);
 

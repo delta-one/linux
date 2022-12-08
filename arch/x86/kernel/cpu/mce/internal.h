@@ -177,6 +177,7 @@ struct mce_vendor_flags {
 
 extern struct mce_vendor_flags mce_flags;
 
+<<<<<<< HEAD
 struct mce_bank {
 	/* subevents to enable */
 	u64			ctl;
@@ -195,6 +196,8 @@ struct mce_bank {
 
 DECLARE_PER_CPU_READ_MOSTLY(struct mce_bank[MAX_NR_BANKS], mce_banks_array);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum mca_msr {
 	MCA_CTL,
 	MCA_STATUS,
@@ -207,6 +210,7 @@ extern bool filter_mce(struct mce *m);
 
 #ifdef CONFIG_X86_MCE_AMD
 extern bool amd_filter_mce(struct mce *m);
+<<<<<<< HEAD
 
 /*
  * If MCA_CONFIG[McaLsbInStatusSupported] is set, extract ErrAddr in bits
@@ -235,6 +239,10 @@ static __always_inline void smca_extract_err_addr(struct mce *m)
 #else
 static inline bool amd_filter_mce(struct mce *m) { return false; }
 static inline void smca_extract_err_addr(struct mce *m) { }
+=======
+#else
+static inline bool amd_filter_mce(struct mce *m) { return false; }
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #ifdef CONFIG_X86_ANCIENT_MCE
@@ -244,11 +252,19 @@ noinstr void pentium_machine_check(struct pt_regs *regs);
 noinstr void winchip_machine_check(struct pt_regs *regs);
 static inline void enable_p5_mce(void) { mce_p5_enabled = 1; }
 #else
+<<<<<<< HEAD
 static __always_inline void intel_p5_mcheck_init(struct cpuinfo_x86 *c) {}
 static __always_inline void winchip_mcheck_init(struct cpuinfo_x86 *c) {}
 static __always_inline void enable_p5_mce(void) {}
 static __always_inline void pentium_machine_check(struct pt_regs *regs) {}
 static __always_inline void winchip_machine_check(struct pt_regs *regs) {}
+=======
+static inline void intel_p5_mcheck_init(struct cpuinfo_x86 *c) {}
+static inline void winchip_mcheck_init(struct cpuinfo_x86 *c) {}
+static inline void enable_p5_mce(void) {}
+static inline void pentium_machine_check(struct pt_regs *regs) {}
+static inline void winchip_machine_check(struct pt_regs *regs) {}
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 noinstr u64 mce_rdmsrl(u32 msr);

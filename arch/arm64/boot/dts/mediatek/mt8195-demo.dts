@@ -56,10 +56,17 @@
 		#size-cells = <2>;
 		ranges;
 
+<<<<<<< HEAD
 		/* 2 MiB reserved for ARM Trusted Firmware (BL31) */
 		bl31_secmon_reserved: secmon@54600000 {
 			no-map;
 			reg = <0 0x54600000 0x0 0x200000>;
+=======
+		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
+		bl31_secmon_reserved: secmon@54600000 {
+			no-map;
+			reg = <0 0x54600000 0x0 0x30000>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		/* 12 MiB reserved for OP-TEE (BL32)
@@ -78,6 +85,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &eth {
 	phy-mode ="rgmii-id";
 	phy-handle = <&ethernet_phy0>;
@@ -95,6 +103,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &i2c6 {
 	clock-frequency = <400000>;
 	pinctrl-0 = <&i2c6_pins>;
@@ -275,6 +285,7 @@
 };
 
 &pio {
+<<<<<<< HEAD
 	eth_default_pins: eth-default-pins {
 		pins-txd {
 			pinmux = <PINMUX_GPIO77__FUNC_GBE_TXD3>,
@@ -335,6 +346,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gpio_keys_pins: gpio-keys-pins {
 		pins {
 			pinmux = <PINMUX_GPIO106__FUNC_GPIO106>;

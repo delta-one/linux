@@ -3,12 +3,18 @@
  * Copyright (C) 2007 Oracle.  All rights reserved.
  */
 
+<<<<<<< HEAD
 #include "messages.h"
 #include "ctree.h"
 #include "disk-io.h"
 #include "transaction.h"
 #include "accessors.h"
 #include "dir-item.h"
+=======
+#include "ctree.h"
+#include "disk-io.h"
+#include "transaction.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * insert a name into a directory, doing overflow properly if there is a hash
@@ -84,7 +90,11 @@ int btrfs_insert_xattr_item(struct btrfs_trans_handle *trans,
 	leaf = path->nodes[0];
 	btrfs_cpu_key_to_disk(&disk_key, &location);
 	btrfs_set_dir_item_key(leaf, dir_item, &disk_key);
+<<<<<<< HEAD
 	btrfs_set_dir_flags(leaf, dir_item, BTRFS_FT_XATTR);
+=======
+	btrfs_set_dir_type(leaf, dir_item, BTRFS_FT_XATTR);
+>>>>>>> b7ba80a49124 (Commit)
 	btrfs_set_dir_name_len(leaf, dir_item, name_len);
 	btrfs_set_dir_transid(leaf, dir_item, trans->transid);
 	btrfs_set_dir_data_len(leaf, dir_item, data_len);
@@ -106,8 +116,13 @@ int btrfs_insert_xattr_item(struct btrfs_trans_handle *trans,
  * to use for the second index (if one is created).
  * Will return 0 or -ENOMEM
  */
+<<<<<<< HEAD
 int btrfs_insert_dir_item(struct btrfs_trans_handle *trans,
 			  const struct fscrypt_str *name, struct btrfs_inode *dir,
+=======
+int btrfs_insert_dir_item(struct btrfs_trans_handle *trans, const char *name,
+			  int name_len, struct btrfs_inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 			  struct btrfs_key *location, u8 type, u64 index)
 {
 	int ret = 0;
@@ -123,7 +138,11 @@ int btrfs_insert_dir_item(struct btrfs_trans_handle *trans,
 
 	key.objectid = btrfs_ino(dir);
 	key.type = BTRFS_DIR_ITEM_KEY;
+<<<<<<< HEAD
 	key.offset = btrfs_name_hash(name->name, name->len);
+=======
+	key.offset = btrfs_name_hash(name, name_len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	path = btrfs_alloc_path();
 	if (!path)
@@ -131,9 +150,15 @@ int btrfs_insert_dir_item(struct btrfs_trans_handle *trans,
 
 	btrfs_cpu_key_to_disk(&disk_key, location);
 
+<<<<<<< HEAD
 	data_size = sizeof(*dir_item) + name->len;
 	dir_item = insert_with_overflow(trans, root, path, &key, data_size,
 					name->name, name->len);
+=======
+	data_size = sizeof(*dir_item) + name_len;
+	dir_item = insert_with_overflow(trans, root, path, &key, data_size,
+					name, name_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(dir_item)) {
 		ret = PTR_ERR(dir_item);
 		if (ret == -EEXIST)
@@ -141,6 +166,7 @@ int btrfs_insert_dir_item(struct btrfs_trans_handle *trans,
 		goto out_free;
 	}
 
+<<<<<<< HEAD
 	if (IS_ENCRYPTED(&dir->vfs_inode))
 		type |= BTRFS_FT_ENCRYPTED;
 
@@ -153,6 +179,17 @@ int btrfs_insert_dir_item(struct btrfs_trans_handle *trans,
 	name_ptr = (unsigned long)(dir_item + 1);
 
 	write_extent_buffer(leaf, name->name, name_ptr, name->len);
+=======
+	leaf = path->nodes[0];
+	btrfs_set_dir_item_key(leaf, dir_item, &disk_key);
+	btrfs_set_dir_type(leaf, dir_item, type);
+	btrfs_set_dir_data_len(leaf, dir_item, 0);
+	btrfs_set_dir_name_len(leaf, dir_item, name_len);
+	btrfs_set_dir_transid(leaf, dir_item, trans->transid);
+	name_ptr = (unsigned long)(dir_item + 1);
+
+	write_extent_buffer(leaf, name, name_ptr, name_len);
+>>>>>>> b7ba80a49124 (Commit)
 	btrfs_mark_buffer_dirty(leaf);
 
 second_insert:
@@ -163,7 +200,11 @@ second_insert:
 	}
 	btrfs_release_path(path);
 
+<<<<<<< HEAD
 	ret2 = btrfs_insert_delayed_dir_index(trans, name->name, name->len, dir,
+=======
+	ret2 = btrfs_insert_delayed_dir_index(trans, name, name_len, dir,
+>>>>>>> b7ba80a49124 (Commit)
 					      &disk_key, type, index);
 out_free:
 	btrfs_free_path(path);
@@ -212,7 +253,11 @@ static struct btrfs_dir_item *btrfs_lookup_match_dir(
 struct btrfs_dir_item *btrfs_lookup_dir_item(struct btrfs_trans_handle *trans,
 					     struct btrfs_root *root,
 					     struct btrfs_path *path, u64 dir,
+<<<<<<< HEAD
 					     const struct fscrypt_str *name,
+=======
+					     const char *name, int name_len,
+>>>>>>> b7ba80a49124 (Commit)
 					     int mod)
 {
 	struct btrfs_key key;
@@ -220,10 +265,16 @@ struct btrfs_dir_item *btrfs_lookup_dir_item(struct btrfs_trans_handle *trans,
 
 	key.objectid = dir;
 	key.type = BTRFS_DIR_ITEM_KEY;
+<<<<<<< HEAD
 	key.offset = btrfs_name_hash(name->name, name->len);
 
 	di = btrfs_lookup_match_dir(trans, root, path, &key, name->name,
 				    name->len, mod);
+=======
+	key.offset = btrfs_name_hash(name, name_len);
+
+	di = btrfs_lookup_match_dir(trans, root, path, &key, name, name_len, mod);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(di) && PTR_ERR(di) == -ENOENT)
 		return NULL;
 
@@ -231,7 +282,11 @@ struct btrfs_dir_item *btrfs_lookup_dir_item(struct btrfs_trans_handle *trans,
 }
 
 int btrfs_check_dir_item_collision(struct btrfs_root *root, u64 dir,
+<<<<<<< HEAD
 				   const struct fscrypt_str *name)
+=======
+				   const char *name, int name_len)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 	struct btrfs_key key;
@@ -247,10 +302,16 @@ int btrfs_check_dir_item_collision(struct btrfs_root *root, u64 dir,
 
 	key.objectid = dir;
 	key.type = BTRFS_DIR_ITEM_KEY;
+<<<<<<< HEAD
 	key.offset = btrfs_name_hash(name->name, name->len);
 
 	di = btrfs_lookup_match_dir(NULL, root, path, &key, name->name,
 				    name->len, 0);
+=======
+	key.offset = btrfs_name_hash(name, name_len);
+
+	di = btrfs_lookup_match_dir(NULL, root, path, &key, name, name_len, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(di)) {
 		ret = PTR_ERR(di);
 		/* Nothing found, we're safe */
@@ -270,8 +331,16 @@ int btrfs_check_dir_item_collision(struct btrfs_root *root, u64 dir,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	/* See if there is room in the item to insert this name. */
 	data_size = sizeof(*di) + name->len;
+=======
+	/*
+	 * see if there is room in the item to insert this
+	 * name
+	 */
+	data_size = sizeof(*di) + name_len;
+>>>>>>> b7ba80a49124 (Commit)
 	leaf = path->nodes[0];
 	slot = path->slots[0];
 	if (data_size + btrfs_item_size(leaf, slot) +
@@ -308,7 +377,12 @@ struct btrfs_dir_item *
 btrfs_lookup_dir_index_item(struct btrfs_trans_handle *trans,
 			    struct btrfs_root *root,
 			    struct btrfs_path *path, u64 dir,
+<<<<<<< HEAD
 			    u64 index, const struct fscrypt_str *name, int mod)
+=======
+			    u64 index, const char *name, int name_len,
+			    int mod)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct btrfs_dir_item *di;
 	struct btrfs_key key;
@@ -317,8 +391,12 @@ btrfs_lookup_dir_index_item(struct btrfs_trans_handle *trans,
 	key.type = BTRFS_DIR_INDEX_KEY;
 	key.offset = index;
 
+<<<<<<< HEAD
 	di = btrfs_lookup_match_dir(trans, root, path, &key, name->name,
 				    name->len, mod);
+=======
+	di = btrfs_lookup_match_dir(trans, root, path, &key, name, name_len, mod);
+>>>>>>> b7ba80a49124 (Commit)
 	if (di == ERR_PTR(-ENOENT))
 		return NULL;
 
@@ -326,8 +404,14 @@ btrfs_lookup_dir_index_item(struct btrfs_trans_handle *trans,
 }
 
 struct btrfs_dir_item *
+<<<<<<< HEAD
 btrfs_search_dir_index_item(struct btrfs_root *root, struct btrfs_path *path,
 			    u64 dirid, const struct fscrypt_str *name)
+=======
+btrfs_search_dir_index_item(struct btrfs_root *root,
+			    struct btrfs_path *path, u64 dirid,
+			    const char *name, int name_len)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct btrfs_dir_item *di;
 	struct btrfs_key key;
@@ -342,7 +426,11 @@ btrfs_search_dir_index_item(struct btrfs_root *root, struct btrfs_path *path,
 			break;
 
 		di = btrfs_match_dir_item_name(root->fs_info, path,
+<<<<<<< HEAD
 					       name->name, name->len);
+=======
+					       name, name_len);
+>>>>>>> b7ba80a49124 (Commit)
 		if (di)
 			return di;
 	}

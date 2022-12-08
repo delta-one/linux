@@ -8,7 +8,10 @@
 #include <linux/virtio.h>
 #include <linux/virtio_config.h>
 #include <linux/logic_iomem.h>
+<<<<<<< HEAD
 #include <linux/of_platform.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/irqdomain.h>
 #include <linux/virtio_pcidev.h>
 #include <linux/virtio-uml.h>
@@ -40,8 +43,11 @@ struct um_pci_device {
 	unsigned long status;
 
 	int irq;
+<<<<<<< HEAD
 
 	bool platform;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct um_pci_device_reg {
@@ -51,15 +57,22 @@ struct um_pci_device_reg {
 
 static struct pci_host_bridge *bridge;
 static DEFINE_MUTEX(um_pci_mtx);
+<<<<<<< HEAD
 static struct um_pci_device *um_pci_platform_device;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct um_pci_device_reg um_pci_devices[MAX_DEVICES];
 static struct fwnode_handle *um_pci_fwnode;
 static struct irq_domain *um_pci_inner_domain;
 static struct irq_domain *um_pci_msi_domain;
 static unsigned long um_pci_msi_used[BITS_TO_LONGS(MAX_MSI_VECTORS)];
 
+<<<<<<< HEAD
 static unsigned int um_pci_max_delay_us = 40000;
 module_param_named(max_delay_us, um_pci_max_delay_us, uint, 0644);
+=======
+#define UM_VIRT_PCI_MAXDELAY 40000
+>>>>>>> b7ba80a49124 (Commit)
 
 struct um_pci_message_buffer {
 	struct virtio_pcidev_msg hdr;
@@ -102,8 +115,12 @@ static int um_pci_send_cmd(struct um_pci_device *dev,
 	}
 
 	buf = get_cpu_var(um_pci_msg_bufs);
+<<<<<<< HEAD
 	if (buf)
 		memcpy(buf, cmd, cmd_size);
+=======
+	memcpy(buf, cmd, cmd_size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (posted) {
 		u8 *ncmd = kmalloc(cmd_size + extra_size, GFP_ATOMIC);
@@ -137,11 +154,16 @@ static int um_pci_send_cmd(struct um_pci_device *dev,
 				out ? 1 : 0,
 				posted ? cmd : HANDLE_NO_FREE(cmd),
 				GFP_ATOMIC);
+<<<<<<< HEAD
 	if (ret) {
 		if (posted)
 			kfree(cmd);
 		goto out;
 	}
+=======
+	if (ret)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (posted) {
 		virtqueue_kick(dev->cmd_vq);
@@ -163,7 +185,11 @@ static int um_pci_send_cmd(struct um_pci_device *dev,
 			kfree(completed);
 
 		if (WARN_ONCE(virtqueue_is_broken(dev->cmd_vq) ||
+<<<<<<< HEAD
 			      ++delay_count > um_pci_max_delay_us,
+=======
+			      ++delay_count > UM_VIRT_PCI_MAXDELAY,
+>>>>>>> b7ba80a49124 (Commit)
 			      "um virt-pci delay: %d", delay_count)) {
 			ret = -EIO;
 			break;
@@ -191,7 +217,10 @@ static unsigned long um_pci_cfgspace_read(void *priv, unsigned int offset,
 	struct um_pci_message_buffer *buf;
 	u8 *data;
 	unsigned long ret = ULONG_MAX;
+<<<<<<< HEAD
 	size_t bytes = sizeof(buf->data);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!dev)
 		return ULONG_MAX;
@@ -199,8 +228,12 @@ static unsigned long um_pci_cfgspace_read(void *priv, unsigned int offset,
 	buf = get_cpu_var(um_pci_msg_bufs);
 	data = buf->data;
 
+<<<<<<< HEAD
 	if (buf)
 		memset(data, 0xff, bytes);
+=======
+	memset(buf->data, 0xff, sizeof(buf->data));
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (size) {
 	case 1:
@@ -215,7 +248,11 @@ static unsigned long um_pci_cfgspace_read(void *priv, unsigned int offset,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if (um_pci_send_cmd(dev, &hdr, sizeof(hdr), NULL, 0, data, bytes))
+=======
+	if (um_pci_send_cmd(dev, &hdr, sizeof(hdr), NULL, 0, data, 8))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	switch (size) {
@@ -488,9 +525,12 @@ static void um_pci_handle_irq_message(struct virtqueue *vq,
 	struct virtio_device *vdev = vq->vdev;
 	struct um_pci_device *dev = vdev->priv;
 
+<<<<<<< HEAD
 	if (!dev->irq)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* we should properly chain interrupts, but on ARCH=um we don't care */
 
 	switch (msg->op) {
@@ -544,6 +584,7 @@ static void um_pci_irq_vq_cb(struct virtqueue *vq)
 	}
 }
 
+<<<<<<< HEAD
 /* Copied from arch/x86/kernel/devicetree.c */
 struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus)
 {
@@ -563,6 +604,8 @@ struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus)
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int um_pci_init_vqs(struct um_pci_device *dev)
 {
 	struct virtqueue *vqs[2];
@@ -591,6 +634,7 @@ static int um_pci_init_vqs(struct um_pci_device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void __um_pci_virtio_platform_remove(struct virtio_device *vdev,
 					    struct um_pci_device *dev)
 {
@@ -640,6 +684,8 @@ out_free:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int um_pci_virtio_probe(struct virtio_device *vdev)
 {
 	struct um_pci_device *dev;
@@ -653,9 +699,12 @@ static int um_pci_virtio_probe(struct virtio_device *vdev)
 	dev->vdev = vdev;
 	vdev->priv = dev;
 
+<<<<<<< HEAD
 	if (of_device_is_compatible(vdev->dev.of_node, "simple-bus"))
 		return um_pci_virtio_platform_probe(vdev, dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&um_pci_mtx);
 	for (i = 0; i < MAX_DEVICES; i++) {
 		if (um_pci_devices[i].dev)
@@ -705,11 +754,17 @@ static void um_pci_virtio_remove(struct virtio_device *vdev)
 	struct um_pci_device *dev = vdev->priv;
 	int i;
 
+<<<<<<< HEAD
 	if (dev->platform) {
 		of_platform_depopulate(&vdev->dev);
 		__um_pci_virtio_platform_remove(vdev, dev);
 		return;
 	}
+=======
+        /* Stop all virtqueues */
+        virtio_reset_device(vdev);
+        vdev->config->del_vqs(vdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	device_set_wakeup_enable(&vdev->dev, false);
 
@@ -717,6 +772,7 @@ static void um_pci_virtio_remove(struct virtio_device *vdev)
 	for (i = 0; i < MAX_DEVICES; i++) {
 		if (um_pci_devices[i].dev != dev)
 			continue;
+<<<<<<< HEAD
 
 		um_pci_devices[i].dev = NULL;
 		irq_free_desc(dev->irq);
@@ -738,6 +794,14 @@ static void um_pci_virtio_remove(struct virtio_device *vdev)
 	dev->cmd_vq = NULL;
 	dev->irq_vq = NULL;
 	vdev->config->del_vqs(vdev);
+=======
+		um_pci_devices[i].dev = NULL;
+		irq_free_desc(dev->irq);
+	}
+	mutex_unlock(&um_pci_mtx);
+
+	um_pci_rescan();
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(dev);
 }
@@ -959,6 +1023,7 @@ void *pci_root_bus_fwnode(struct pci_bus *bus)
 	return um_pci_fwnode;
 }
 
+<<<<<<< HEAD
 static long um_pci_map_platform(unsigned long offset, size_t size,
 				const struct logic_iomem_ops **ops,
 				void **priv)
@@ -983,6 +1048,8 @@ static struct resource virt_platform_resource = {
 	.flags = IORESOURCE_MEM,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __init um_pci_init(void)
 {
 	int err, i;
@@ -991,8 +1058,11 @@ static int __init um_pci_init(void)
 				       &um_pci_cfgspace_ops));
 	WARN_ON(logic_iomem_add_region(&virt_iomem_resource,
 				       &um_pci_iomem_ops));
+<<<<<<< HEAD
 	WARN_ON(logic_iomem_add_region(&virt_platform_resource,
 				       &um_pci_platform_ops));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (WARN(CONFIG_UML_PCI_OVER_VIRTIO_DEVICE_ID < 0,
 		 "No virtio device ID configured for PCI - no PCI support\n"))

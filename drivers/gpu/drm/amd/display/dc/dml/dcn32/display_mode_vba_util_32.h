@@ -30,7 +30,11 @@
 #include "os_types.h"
 #include "../dc_features.h"
 #include "../display_mode_structs.h"
+<<<<<<< HEAD
 #include "../display_mode_vba.h"
+=======
+#include "dml/display_mode_vba.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 unsigned int dml32_dscceComputeDelay(
 		unsigned int bpc,
@@ -327,14 +331,21 @@ unsigned int dml32_DSCDelayRequirement(bool DSCEnabled,
 		enum output_format_class  OutputFormat,
 		enum output_encoder_class Output,
 		double PixelClock,
+<<<<<<< HEAD
 		double PixelClockBackEnd,
 		double dsc_delay_factor_wa);
+=======
+		double PixelClockBackEnd);
+>>>>>>> b7ba80a49124 (Commit)
 
 void dml32_CalculateSurfaceSizeInMall(
 		unsigned int NumberOfActiveSurfaces,
 		unsigned int MALLAllocatedForDCN,
 		enum dm_use_mall_for_static_screen_mode UseMALLForStaticScreen[],
+<<<<<<< HEAD
 		enum dm_use_mall_for_pstate_change_mode UsesMALLForPStateChange[],
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		bool DCCEnable[],
 		bool ViewportStationary[],
 		unsigned int ViewportXStartY[],
@@ -359,8 +370,11 @@ void dml32_CalculateSurfaceSizeInMall(
 		unsigned int ReadBlockWidthC[],
 		unsigned int ReadBlockHeightY[],
 		unsigned int ReadBlockHeightC[],
+<<<<<<< HEAD
 		unsigned int DCCMetaPitchY[],
 		unsigned int DCCMetaPitchC[],
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Output */
 		unsigned int    SurfaceSizeInMALL[],
@@ -746,7 +760,10 @@ bool dml32_CalculatePrefetchSchedule(
 		unsigned int SwathHeightY,
 		unsigned int SwathHeightC,
 		double TWait,
+<<<<<<< HEAD
 		double TPreReq,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Output */
 		double   *DSTXAfterScaler,
 		double   *DSTYAfterScaler,
@@ -1096,12 +1113,18 @@ void dml32_CalculatePrefetchBandwithSupport(unsigned int NumberOfActiveSurfaces,
 		double UrgentBurstFactorLumaPre[],
 		double UrgentBurstFactorChromaPre[],
 		double UrgentBurstFactorCursorPre[],
+<<<<<<< HEAD
 		double PrefetchBW[],
 		double VRatio[],
 		double MaxVRatioPre,
 
 		/* output */
 		double  *MaxPrefetchBandwidth,
+=======
+
+		/* output */
+		double  *PrefetchBandwidth,
+>>>>>>> b7ba80a49124 (Commit)
 		double  *FractionOfUrgentBandwidth,
 		bool *PrefetchBandwidthSupport);
 
@@ -1147,6 +1170,7 @@ void dml32_CalculateImmediateFlipBandwithSupport(unsigned int NumberOfActiveSurf
 		double  *FractionOfUrgentBandwidth,
 		bool *ImmediateFlipBandwidthSupport);
 
+<<<<<<< HEAD
 bool dml32_CalculateDETSwathFillLatencyHiding(unsigned int NumberOfActiveSurfaces,
 		double ReturnBW,
 		double UrgentLatency,
@@ -1166,4 +1190,6 @@ bool dml32_CalculateDETSwathFillLatencyHiding(unsigned int NumberOfActiveSurface
 		enum dm_use_mall_for_pstate_change_mode UsesMALLForPStateChange[],
 		enum unbounded_requesting_policy UseUnboundedRequesting);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

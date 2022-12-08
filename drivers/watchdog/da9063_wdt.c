@@ -174,6 +174,7 @@ static int da9063_wdt_restart(struct watchdog_device *wdd, unsigned long action,
 {
 	struct da9063 *da9063 = watchdog_get_drvdata(wdd);
 	struct i2c_client *client = to_i2c_client(da9063->dev);
+<<<<<<< HEAD
 	union i2c_smbus_data msg;
 	int ret;
 
@@ -188,6 +189,13 @@ static int da9063_wdt_restart(struct watchdog_device *wdd, unsigned long action,
 			I2C_SMBUS_WRITE, DA9063_REG_CONTROL_F,
 			I2C_SMBUS_BYTE_DATA, &msg);
 
+=======
+	int ret;
+
+	/* Don't use regmap because it is not atomic safe */
+	ret = i2c_smbus_write_byte_data(client, DA9063_REG_CONTROL_F,
+					DA9063_SHUTDOWN);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		dev_alert(da9063->dev, "Failed to shutdown (err = %d)\n",
 			  ret);

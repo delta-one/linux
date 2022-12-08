@@ -16,6 +16,10 @@
 #include <linux/in.h>
 #include <linux/ctype.h>
 #include <linux/module.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <scsi/scsi.h>
 #include <scsi/scsi_cmnd.h>
 #include <scsi/scsi_device.h>

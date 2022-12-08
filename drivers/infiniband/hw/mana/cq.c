@@ -23,7 +23,11 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
 	if (err) {
 		ibdev_dbg(ibdev,
 			  "Failed to copy from udata for create cq, %d\n", err);
+<<<<<<< HEAD
 		return err;
+=======
+		return -EFAULT;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (attr->cqe > MAX_SEND_BUFFERS_PER_QUEUE) {
@@ -41,9 +45,16 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
 		return err;
 	}
 
+<<<<<<< HEAD
 	err = mana_ib_gd_create_dma_region(mdev, cq->umem, &cq->gdma_region);
 	if (err) {
 		ibdev_dbg(ibdev,
+=======
+	err = mana_ib_gd_create_dma_region(mdev, cq->umem, &cq->gdma_region,
+					   PAGE_SIZE);
+	if (err) {
+		ibdev_err(ibdev,
+>>>>>>> b7ba80a49124 (Commit)
 			  "Failed to create dma region for create cq, %d\n",
 			  err);
 		goto err_release_umem;
@@ -53,8 +64,13 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
 		  "mana_ib_gd_create_dma_region ret %d gdma_region 0x%llx\n",
 		  err, cq->gdma_region);
 
+<<<<<<< HEAD
 	/*
 	 * The CQ ID is not known at this time. The ID is generated at create_qp
+=======
+	/* The CQ ID is not known at this time
+	 * The ID is generated at create_qp
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 
 	return 0;

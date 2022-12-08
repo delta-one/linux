@@ -7,7 +7,10 @@
 
 #include <linux/module.h>
 #include <linux/device.h>
+<<<<<<< HEAD
 #include <linux/dma-fence.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 
 #include <trace/events/host1x.h>
@@ -210,6 +213,20 @@ int host1x_syncpt_incr(struct host1x_syncpt *sp)
 }
 EXPORT_SYMBOL(host1x_syncpt_incr);
 
+<<<<<<< HEAD
+=======
+/*
+ * Updated sync point form hardware, and returns true if syncpoint is expired,
+ * false if we may need to wait
+ */
+static bool syncpt_load_min_is_expired(struct host1x_syncpt *sp, u32 thresh)
+{
+	host1x_hw_syncpt_load(sp->host, sp);
+
+	return host1x_syncpt_is_expired(sp, thresh);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * host1x_syncpt_wait() - wait for a syncpoint to reach a given value
  * @sp: host1x syncpoint
@@ -220,10 +237,17 @@ EXPORT_SYMBOL(host1x_syncpt_incr);
 int host1x_syncpt_wait(struct host1x_syncpt *sp, u32 thresh, long timeout,
 		       u32 *value)
 {
+<<<<<<< HEAD
 	struct dma_fence *fence;
 	long wait_err;
 
 	host1x_hw_syncpt_load(sp->host, sp);
+=======
+	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
+	void *ref;
+	struct host1x_waitlist *waiter;
+	int err = 0, check_count = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (value)
 		*value = host1x_syncpt_load(sp);
@@ -231,6 +255,7 @@ int host1x_syncpt_wait(struct host1x_syncpt *sp, u32 thresh, long timeout,
 	if (host1x_syncpt_is_expired(sp, thresh))
 		return 0;
 
+<<<<<<< HEAD
 	if (timeout < 0)
 		timeout = LONG_MAX;
 	else if (timeout == 0)
@@ -254,6 +279,75 @@ int host1x_syncpt_wait(struct host1x_syncpt *sp, u32 thresh, long timeout,
 		return wait_err;
 	else
 		return 0;
+=======
+	if (!timeout) {
+		err = -EAGAIN;
+		goto done;
+	}
+
+	/* allocate a waiter */
+	waiter = kzalloc(sizeof(*waiter), GFP_KERNEL);
+	if (!waiter) {
+		err = -ENOMEM;
+		goto done;
+	}
+
+	/* schedule a wakeup when the syncpoint value is reached */
+	err = host1x_intr_add_action(sp->host, sp, thresh,
+				     HOST1X_INTR_ACTION_WAKEUP_INTERRUPTIBLE,
+				     &wq, waiter, &ref);
+	if (err)
+		goto done;
+
+	err = -EAGAIN;
+	/* Caller-specified timeout may be impractically low */
+	if (timeout < 0)
+		timeout = LONG_MAX;
+
+	/* wait for the syncpoint, or timeout, or signal */
+	while (timeout) {
+		long check = min_t(long, SYNCPT_CHECK_PERIOD, timeout);
+		int remain;
+
+		remain = wait_event_interruptible_timeout(wq,
+				syncpt_load_min_is_expired(sp, thresh),
+				check);
+		if (remain > 0 || host1x_syncpt_is_expired(sp, thresh)) {
+			if (value)
+				*value = host1x_syncpt_load(sp);
+
+			err = 0;
+
+			break;
+		}
+
+		if (remain < 0) {
+			err = remain;
+			break;
+		}
+
+		timeout -= check;
+
+		if (timeout && check_count <= MAX_STUCK_CHECK_COUNT) {
+			dev_warn(sp->host->dev,
+				"%s: syncpoint id %u (%s) stuck waiting %d, timeout=%ld\n",
+				 current->comm, sp->id, sp->name,
+				 thresh, timeout);
+
+			host1x_debug_dump_syncpts(sp->host);
+
+			if (check_count == MAX_STUCK_CHECK_COUNT)
+				host1x_debug_dump(sp->host);
+
+			check_count++;
+		}
+	}
+
+	host1x_intr_put_ref(sp->host, sp->id, ref, true);
+
+done:
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(host1x_syncpt_wait);
 

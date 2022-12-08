@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/net/ethernet-phy.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Ethernet PHY Common Properties
+=======
+title: Ethernet PHY Generic Binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Andrew Lunn <andrew@lunn.ch>
@@ -83,7 +87,11 @@ properties:
       0: Disable 2.4 Vpp operating mode.
       1: Request 2.4 Vpp operating mode from link partner.
       Absence of this property will leave configuration to default values.
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/uint32
+=======
+    $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
     enum: [0, 1]
 
   broken-turn-around:
@@ -144,12 +152,15 @@ properties:
       Mark the corresponding energy efficient ethernet mode as
       broken and request the ethernet to stop advertising it.
 
+<<<<<<< HEAD
   pses:
     $ref: /schemas/types.yaml#/definitions/phandle-array
     maxItems: 1
     description:
       Specifies a reference to a node representing a Power Sourcing Equipment.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   phy-is-integrated:
     $ref: /schemas/types.yaml#/definitions/flag
     description:

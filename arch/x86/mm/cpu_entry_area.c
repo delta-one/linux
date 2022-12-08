@@ -9,14 +9,18 @@
 #include <asm/cpu_entry_area.h>
 #include <asm/fixmap.h>
 #include <asm/desc.h>
+<<<<<<< HEAD
 #include <asm/kasan.h>
 #include <asm/setup.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static DEFINE_PER_CPU_PAGE_ALIGNED(struct entry_stack_page, entry_stack_storage);
 
 #ifdef CONFIG_X86_64
 static DEFINE_PER_CPU_PAGE_ALIGNED(struct exception_stacks, exception_stacks);
 DEFINE_PER_CPU(struct cea_exception_stacks*, cea_exception_stacks);
+<<<<<<< HEAD
 
 static DEFINE_PER_CPU_READ_MOSTLY(unsigned long, _cea_offset);
 
@@ -64,12 +68,22 @@ static __always_inline unsigned int cea_offset(unsigned int cpu)
 	return cpu;
 }
 static inline void init_cea_offsets(void) { }
+=======
+#endif
+
+#ifdef CONFIG_X86_32
+DECLARE_PER_CPU_PAGE_ALIGNED(struct doublefault_stack, doublefault_stack);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 /* Is called from entry code, so must be noinstr */
 noinstr struct cpu_entry_area *get_cpu_entry_area(int cpu)
 {
+<<<<<<< HEAD
 	unsigned long va = CPU_ENTRY_AREA_PER_CPU + cea_offset(cpu) * CPU_ENTRY_AREA_SIZE;
+=======
+	unsigned long va = CPU_ENTRY_AREA_PER_CPU + cpu * CPU_ENTRY_AREA_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 	BUILD_BUG_ON(sizeof(struct cpu_entry_area) % PAGE_SIZE != 0);
 
 	return (struct cpu_entry_area *) va;
@@ -183,11 +197,16 @@ static void __init setup_cpu_entry_area(unsigned int cpu)
 	pgprot_t tss_prot = PAGE_KERNEL_RO;
 #else
 	/*
+<<<<<<< HEAD
 	 * On 32-bit systems, the GDT cannot be read-only because
+=======
+	 * On native 32-bit systems, the GDT cannot be read-only because
+>>>>>>> b7ba80a49124 (Commit)
 	 * our double fault handler uses a task gate, and entering through
 	 * a task gate needs to change an available TSS to busy.  If the
 	 * GDT is read-only, that will triple fault.  The TSS cannot be
 	 * read-only because the CPU writes to it on task switches.
+<<<<<<< HEAD
 	 */
 	pgprot_t gdt_prot = PAGE_KERNEL;
 	pgprot_t tss_prot = PAGE_KERNEL;
@@ -196,6 +215,17 @@ static void __init setup_cpu_entry_area(unsigned int cpu)
 	kasan_populate_shadow_for_vaddr(cea, CPU_ENTRY_AREA_SIZE,
 					early_cpu_to_node(cpu));
 
+=======
+	 *
+	 * On Xen PV, the GDT must be read-only because the hypervisor
+	 * requires it.
+	 */
+	pgprot_t gdt_prot = boot_cpu_has(X86_FEATURE_XENPV) ?
+		PAGE_KERNEL_RO : PAGE_KERNEL;
+	pgprot_t tss_prot = PAGE_KERNEL;
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 	cea_set_pte(&cea->gdt, get_cpu_gdt_paddr(cpu), gdt_prot);
 
 	cea_map_percpu_pages(&cea->entry_stack_page,
@@ -249,6 +279,10 @@ static __init void setup_cpu_entry_area_ptes(void)
 
 	/* The +1 is for the readonly IDT: */
 	BUILD_BUG_ON((CPU_ENTRY_AREA_PAGES+1)*PAGE_SIZE != CPU_ENTRY_AREA_MAP_SIZE);
+<<<<<<< HEAD
+=======
+	BUILD_BUG_ON(CPU_ENTRY_AREA_TOTAL_SIZE != CPU_ENTRY_AREA_MAP_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 	BUG_ON(CPU_ENTRY_AREA_BASE & ~PMD_MASK);
 
 	start = CPU_ENTRY_AREA_BASE;
@@ -264,8 +298,11 @@ void __init setup_cpu_entry_areas(void)
 {
 	unsigned int cpu;
 
+<<<<<<< HEAD
 	init_cea_offsets();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	setup_cpu_entry_area_ptes();
 
 	for_each_possible_cpu(cpu)

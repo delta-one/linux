@@ -59,7 +59,10 @@ static struct scripting_context *get_scripting_context(PyObject *args)
 	return get_args(args, "context", NULL);
 }
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static PyObject *perf_trace_context_common_pc(PyObject *obj, PyObject *args)
 {
 	struct scripting_context *c = get_scripting_context(args);
@@ -91,7 +94,10 @@ static PyObject *perf_trace_context_common_lock_depth(PyObject *obj,
 
 	return Py_BuildValue("i", common_lock_depth(c));
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static PyObject *perf_sample_insn(PyObject *obj, PyObject *args)
 {
@@ -180,14 +186,20 @@ static PyObject *perf_sample_srccode(PyObject *obj, PyObject *args)
 }
 
 static PyMethodDef ContextMethods[] = {
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ "common_pc", perf_trace_context_common_pc, METH_VARARGS,
 	  "Get the common preempt count event field value."},
 	{ "common_flags", perf_trace_context_common_flags, METH_VARARGS,
 	  "Get the common flags event field value."},
 	{ "common_lock_depth", perf_trace_context_common_lock_depth,
 	  METH_VARARGS,	"Get the common lock depth event field value."},
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ "perf_sample_insn", perf_sample_insn,
 	  METH_VARARGS,	"Get the machine code instruction."},
 	{ "perf_set_itrace_options", perf_set_itrace_options,

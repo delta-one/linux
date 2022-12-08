@@ -13,8 +13,11 @@ obj-y += extable.o
 obj-$(CONFIG_MMU) += fault.o pageattr.o
 obj-y += cacheflush.o
 obj-y += context.o
+<<<<<<< HEAD
 obj-y += pgtable.o
 obj-y += pmem.o
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 ifeq ($(CONFIG_MMU),y)
 obj-$(CONFIG_SMP) += tlbflush.o

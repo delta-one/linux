@@ -30,7 +30,10 @@
 #include "i915_gem_context.h"
 #include "i915_gem_evict.h"
 #include "i915_gem_ioctls.h"
+<<<<<<< HEAD
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "i915_trace.h"
 #include "i915_user_extensions.h"
 
@@ -54,6 +57,7 @@ enum {
 #define DBG_FORCE_RELOC 0 /* choose one of the above! */
 };
 
+<<<<<<< HEAD
 /* __EXEC_OBJECT_ flags > BIT(29) defined in i915_vma.h */
 #define __EXEC_OBJECT_HAS_PIN		BIT(29)
 #define __EXEC_OBJECT_HAS_FENCE		BIT(28)
@@ -61,6 +65,15 @@ enum {
 #define __EXEC_OBJECT_NEEDS_MAP		BIT(26)
 #define __EXEC_OBJECT_NEEDS_BIAS	BIT(25)
 #define __EXEC_OBJECT_INTERNAL_FLAGS	(~0u << 25) /* all of the above + */
+=======
+/* __EXEC_OBJECT_NO_RESERVE is BIT(31), defined in i915_vma.h */
+#define __EXEC_OBJECT_HAS_PIN		BIT(30)
+#define __EXEC_OBJECT_HAS_FENCE		BIT(29)
+#define __EXEC_OBJECT_USERPTR_INIT	BIT(28)
+#define __EXEC_OBJECT_NEEDS_MAP		BIT(27)
+#define __EXEC_OBJECT_NEEDS_BIAS	BIT(26)
+#define __EXEC_OBJECT_INTERNAL_FLAGS	(~0u << 26) /* all of the above + */
+>>>>>>> b7ba80a49124 (Commit)
 #define __EXEC_OBJECT_RESERVED (__EXEC_OBJECT_HAS_PIN | __EXEC_OBJECT_HAS_FENCE)
 
 #define __EXEC_HAS_RELOC	BIT(31)
@@ -379,6 +392,7 @@ eb_vma_misplaced(const struct drm_i915_gem_exec_object2 *entry,
 		 const struct i915_vma *vma,
 		 unsigned int flags)
 {
+<<<<<<< HEAD
 	const u64 start = i915_vma_offset(vma);
 	const u64 size = i915_vma_size(vma);
 
@@ -398,6 +412,24 @@ eb_vma_misplaced(const struct drm_i915_gem_exec_object2 *entry,
 
 	if (!(flags & EXEC_OBJECT_SUPPORTS_48B_ADDRESS) &&
 	    (start + size + 4095) >> 32)
+=======
+	if (vma->node.size < entry->pad_to_size)
+		return true;
+
+	if (entry->alignment && !IS_ALIGNED(vma->node.start, entry->alignment))
+		return true;
+
+	if (flags & EXEC_OBJECT_PINNED &&
+	    vma->node.start != entry->offset)
+		return true;
+
+	if (flags & __EXEC_OBJECT_NEEDS_BIAS &&
+	    vma->node.start < BATCH_OFFSET_BIAS)
+		return true;
+
+	if (!(flags & EXEC_OBJECT_SUPPORTS_48B_ADDRESS) &&
+	    (vma->node.start + vma->node.size + 4095) >> 32)
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 
 	if (flags & __EXEC_OBJECT_NEEDS_MAP &&
@@ -443,7 +475,11 @@ eb_pin_vma(struct i915_execbuffer *eb,
 	int err;
 
 	if (vma->node.size)
+<<<<<<< HEAD
 		pin_flags =  __i915_vma_offset(vma);
+=======
+		pin_flags = vma->node.start;
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		pin_flags = entry->offset & PIN_OFFSET_MASK;
 
@@ -666,8 +702,13 @@ static int eb_reserve_vma(struct i915_execbuffer *eb,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	if (entry->offset != i915_vma_offset(vma)) {
 		entry->offset = i915_vma_offset(vma) | UPDATE;
+=======
+	if (entry->offset != vma->node.start) {
+		entry->offset = vma->node.start | UPDATE;
+>>>>>>> b7ba80a49124 (Commit)
 		eb->args->flags |= __EXEC_HAS_RELOC;
 	}
 
@@ -733,6 +774,7 @@ static int eb_reserve(struct i915_execbuffer *eb)
 	bool unpinned;
 
 	/*
+<<<<<<< HEAD
 	 * We have one more buffers that we couldn't bind, which could be due to
 	 * various reasons. To resolve this we have 4 passes, with every next
 	 * level turning the screws tighter:
@@ -764,24 +806,48 @@ static int eb_reserve(struct i915_execbuffer *eb)
 	 * evicted. Finally we should be able bind everything.
 	 */
 	for (pass = 0; pass <= 3; pass++) {
+=======
+	 * Attempt to pin all of the buffers into the GTT.
+	 * This is done in 2 phases:
+	 *
+	 * 1. Unbind all objects that do not match the GTT constraints for
+	 *    the execbuffer (fenceable, mappable, alignment etc).
+	 * 2. Bind new objects.
+	 *
+	 * This avoid unnecessary unbinding of later objects in order to make
+	 * room for the earlier objects *unless* we need to defragment.
+	 *
+	 * Defragmenting is skipped if all objects are pinned at a fixed location.
+	 */
+	for (pass = 0; pass <= 2; pass++) {
+>>>>>>> b7ba80a49124 (Commit)
 		int pin_flags = PIN_USER | PIN_VALIDATE;
 
 		if (pass == 0)
 			pin_flags |= PIN_NONBLOCK;
 
 		if (pass >= 1)
+<<<<<<< HEAD
 			unpinned = eb_unbind(eb, pass >= 2);
+=======
+			unpinned = eb_unbind(eb, pass == 2);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (pass == 2) {
 			err = mutex_lock_interruptible(&eb->context->vm->mutex);
 			if (!err) {
+<<<<<<< HEAD
 				err = i915_gem_evict_vm(eb->context->vm, &eb->ww, NULL);
+=======
+				err = i915_gem_evict_vm(eb->context->vm, &eb->ww);
+>>>>>>> b7ba80a49124 (Commit)
 				mutex_unlock(&eb->context->vm->mutex);
 			}
 			if (err)
 				return err;
 		}
 
+<<<<<<< HEAD
 		if (pass == 3) {
 retry:
 			err = mutex_lock_interruptible(&eb->context->vm->mutex);
@@ -801,6 +867,8 @@ retry:
 				return err;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		list_for_each_entry(ev, &eb->unbound, bind_link) {
 			err = eb_reserve_vma(eb, ev, pin_flags);
 			if (err)
@@ -909,7 +977,11 @@ static struct i915_vma *eb_lookup_vma(struct i915_execbuffer *eb, u32 handle)
 		 */
 		if (i915_gem_context_uses_protected_content(eb->gem_context) &&
 		    i915_gem_object_is_protected(obj)) {
+<<<<<<< HEAD
 			err = intel_pxp_key_check(eb->i915->pxp, obj, true);
+=======
+			err = intel_pxp_key_check(&vm->gt->pxp, obj, true);
+>>>>>>> b7ba80a49124 (Commit)
 			if (err) {
 				i915_gem_object_put(obj);
 				return ERR_PTR(err);
@@ -1024,8 +1096,13 @@ static int eb_validate_vmas(struct i915_execbuffer *eb)
 			return err;
 
 		if (!err) {
+<<<<<<< HEAD
 			if (entry->offset != i915_vma_offset(vma)) {
 				entry->offset = i915_vma_offset(vma) | UPDATE;
+=======
+			if (entry->offset != vma->node.start) {
+				entry->offset = vma->node.start | UPDATE;
+>>>>>>> b7ba80a49124 (Commit)
 				eb->args->flags |= __EXEC_HAS_RELOC;
 			}
 		} else {
@@ -1106,7 +1183,11 @@ static inline u64
 relocation_target(const struct drm_i915_gem_relocation_entry *reloc,
 		  const struct i915_vma *target)
 {
+<<<<<<< HEAD
 	return gen8_canonical_addr((int)reloc->delta + i915_vma_offset(target));
+=======
+	return gen8_canonical_addr((int)reloc->delta + target->node.start);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void reloc_cache_init(struct reloc_cache *cache,
@@ -1315,7 +1396,11 @@ static void *reloc_iomap(struct i915_vma *batch,
 			if (err) /* no inactive aperture space, use cpu reloc */
 				return NULL;
 		} else {
+<<<<<<< HEAD
 			cache->node.start = i915_ggtt_offset(vma);
+=======
+			cache->node.start = vma->node.start;
+>>>>>>> b7ba80a49124 (Commit)
 			cache->node.mm = (void *)vma;
 		}
 	}
@@ -1478,7 +1563,11 @@ eb_relocate_entry(struct i915_execbuffer *eb,
 	 * more work needs to be done.
 	 */
 	if (!DBG_FORCE_RELOC &&
+<<<<<<< HEAD
 	    gen8_canonical_addr(i915_vma_offset(target->vma)) == reloc->presumed_offset)
+=======
+	    gen8_canonical_addr(target->vma->node.start) == reloc->presumed_offset)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	/* Check that the relocation address is valid... */
@@ -2142,8 +2231,12 @@ static int eb_move_to_gpu(struct i915_execbuffer *eb)
 						       eb->composite_fence ?
 						       eb->composite_fence :
 						       &eb->requests[j]->fence,
+<<<<<<< HEAD
 						       flags | __EXEC_OBJECT_NO_RESERVE |
 						       __EXEC_OBJECT_NO_REQUEST_AWAIT);
+=======
+						       flags | __EXEC_OBJECT_NO_RESERVE);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -2190,8 +2283,12 @@ err_skip:
 	return err;
 }
 
+<<<<<<< HEAD
 static int i915_gem_check_execbuffer(struct drm_i915_private *i915,
 				     struct drm_i915_gem_execbuffer2 *exec)
+=======
+static int i915_gem_check_execbuffer(struct drm_i915_gem_execbuffer2 *exec)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (exec->flags & __I915_EXEC_ILLEGAL_FLAGS)
 		return -EINVAL;
@@ -2204,7 +2301,11 @@ static int i915_gem_check_execbuffer(struct drm_i915_private *i915,
 	}
 
 	if (exec->DR4 == 0xffffffff) {
+<<<<<<< HEAD
 		drm_dbg(&i915->drm, "UXA submitting garbage DR4, fixing up\n");
+=======
+		DRM_DEBUG("UXA submitting garbage DR4, fixing up\n");
+>>>>>>> b7ba80a49124 (Commit)
 		exec->DR4 = 0;
 	}
 	if (exec->DR1 || exec->DR4)
@@ -2408,7 +2509,11 @@ static int eb_request_submit(struct i915_execbuffer *eb,
 	}
 
 	err = rq->context->engine->emit_bb_start(rq,
+<<<<<<< HEAD
 						 i915_vma_offset(batch) +
+=======
+						 batch->node.start +
+>>>>>>> b7ba80a49124 (Commit)
 						 eb->batch_start_offset,
 						 batch_len,
 						 eb->batch_flags);
@@ -2419,7 +2524,11 @@ static int eb_request_submit(struct i915_execbuffer *eb,
 		GEM_BUG_ON(intel_context_is_parallel(rq->context));
 		GEM_BUG_ON(eb->batch_start_offset);
 		err = rq->context->engine->emit_bb_start(rq,
+<<<<<<< HEAD
 							 i915_vma_offset(eb->trampoline) +
+=======
+							 eb->trampoline->node.start +
+>>>>>>> b7ba80a49124 (Commit)
 							 batch_len, 0, 0);
 		if (err)
 			return err;
@@ -2467,7 +2576,11 @@ gen8_dispatch_bsd_engine(struct drm_i915_private *dev_priv,
 	/* Check whether the file_priv has already selected one ring. */
 	if ((int)file_priv->bsd_engine < 0)
 		file_priv->bsd_engine =
+<<<<<<< HEAD
 			get_random_u32_below(num_vcs_engines(dev_priv));
+=======
+			get_random_int() % num_vcs_engines(dev_priv);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return file_priv->bsd_engine;
 }
@@ -2842,8 +2955,12 @@ add_timeline_fence_array(struct i915_execbuffer *eb,
 
 		syncobj = drm_syncobj_find(eb->file, user_fence.handle);
 		if (!syncobj) {
+<<<<<<< HEAD
 			drm_dbg(&eb->i915->drm,
 				"Invalid syncobj handle provided\n");
+=======
+			DRM_DEBUG("Invalid syncobj handle provided\n");
+>>>>>>> b7ba80a49124 (Commit)
 			return -ENOENT;
 		}
 
@@ -2851,8 +2968,12 @@ add_timeline_fence_array(struct i915_execbuffer *eb,
 
 		if (!fence && user_fence.flags &&
 		    !(user_fence.flags & I915_EXEC_FENCE_SIGNAL)) {
+<<<<<<< HEAD
 			drm_dbg(&eb->i915->drm,
 				"Syncobj handle has no fence\n");
+=======
+			DRM_DEBUG("Syncobj handle has no fence\n");
+>>>>>>> b7ba80a49124 (Commit)
 			drm_syncobj_put(syncobj);
 			return -EINVAL;
 		}
@@ -2861,9 +2982,13 @@ add_timeline_fence_array(struct i915_execbuffer *eb,
 			err = dma_fence_chain_find_seqno(&fence, point);
 
 		if (err && !(user_fence.flags & I915_EXEC_FENCE_SIGNAL)) {
+<<<<<<< HEAD
 			drm_dbg(&eb->i915->drm,
 				"Syncobj handle missing requested point %llu\n",
 				point);
+=======
+			DRM_DEBUG("Syncobj handle missing requested point %llu\n", point);
+>>>>>>> b7ba80a49124 (Commit)
 			dma_fence_put(fence);
 			drm_syncobj_put(syncobj);
 			return err;
@@ -2889,8 +3014,12 @@ add_timeline_fence_array(struct i915_execbuffer *eb,
 			 * 0) would break the timeline.
 			 */
 			if (user_fence.flags & I915_EXEC_FENCE_WAIT) {
+<<<<<<< HEAD
 				drm_dbg(&eb->i915->drm,
 					"Trying to wait & signal the same timeline point.\n");
+=======
+				DRM_DEBUG("Trying to wait & signal the same timeline point.\n");
+>>>>>>> b7ba80a49124 (Commit)
 				dma_fence_put(fence);
 				drm_syncobj_put(syncobj);
 				return -EINVAL;
@@ -2961,16 +3090,24 @@ static int add_fence_array(struct i915_execbuffer *eb)
 
 		syncobj = drm_syncobj_find(eb->file, user_fence.handle);
 		if (!syncobj) {
+<<<<<<< HEAD
 			drm_dbg(&eb->i915->drm,
 				"Invalid syncobj handle provided\n");
+=======
+			DRM_DEBUG("Invalid syncobj handle provided\n");
+>>>>>>> b7ba80a49124 (Commit)
 			return -ENOENT;
 		}
 
 		if (user_fence.flags & I915_EXEC_FENCE_WAIT) {
 			fence = drm_syncobj_fence_get(syncobj);
 			if (!fence) {
+<<<<<<< HEAD
 				drm_dbg(&eb->i915->drm,
 					"Syncobj handle has no fence\n");
+=======
+				DRM_DEBUG("Syncobj handle has no fence\n");
+>>>>>>> b7ba80a49124 (Commit)
 				drm_syncobj_put(syncobj);
 				return -EINVAL;
 			}
@@ -3004,6 +3141,14 @@ await_fence_array(struct i915_execbuffer *eb,
 	int err;
 
 	for (n = 0; n < eb->num_fences; n++) {
+<<<<<<< HEAD
+=======
+		struct drm_syncobj *syncobj;
+		unsigned int flags;
+
+		syncobj = ptr_unpack_bits(eb->fences[n].syncobj, &flags, 2);
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (!eb->fences[n].dma_fence)
 			continue;
 
@@ -3486,6 +3631,7 @@ err_request:
 				   eb.composite_fence :
 				   &eb.requests[0]->fence);
 
+<<<<<<< HEAD
 	if (unlikely(eb.gem_context->syncobj)) {
 		drm_syncobj_replace_fence(eb.gem_context->syncobj,
 					  eb.composite_fence ?
@@ -3493,6 +3639,8 @@ err_request:
 					  &eb.requests[0]->fence);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (out_fence) {
 		if (err == 0) {
 			fd_install(out_fence_fd, out_fence->file);
@@ -3504,6 +3652,16 @@ err_request:
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	if (unlikely(eb.gem_context->syncobj)) {
+		drm_syncobj_replace_fence(eb.gem_context->syncobj,
+					  eb.composite_fence ?
+					  eb.composite_fence :
+					  &eb.requests[0]->fence);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!out_fence && eb.composite_fence)
 		dma_fence_put(eb.composite_fence);
 
@@ -3565,7 +3723,11 @@ i915_gem_execbuffer2_ioctl(struct drm_device *dev, void *data,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	err = i915_gem_check_execbuffer(i915, args);
+=======
+	err = i915_gem_check_execbuffer(args);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 

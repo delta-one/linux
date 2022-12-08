@@ -236,9 +236,12 @@ void rose_transmit_clear_request(struct rose_neigh *neigh, unsigned int lci, uns
 	unsigned char *dptr;
 	int len;
 
+<<<<<<< HEAD
 	if (!neigh->dev)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	len = AX25_BPQ_HEADER_LEN + AX25_MAX_HEADER_LEN + ROSE_MIN_LEN + 3;
 
 	if ((skb = alloc_skb(len, GFP_ATOMIC)) == NULL)

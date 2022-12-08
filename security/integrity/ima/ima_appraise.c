@@ -70,7 +70,11 @@ bool is_ima_appraise_enabled(void)
  *
  * Return 1 to appraise or hash
  */
+<<<<<<< HEAD
 int ima_must_appraise(struct mnt_idmap *idmap, struct inode *inode,
+=======
+int ima_must_appraise(struct user_namespace *mnt_userns, struct inode *inode,
+>>>>>>> b7ba80a49124 (Commit)
 		      int mask, enum ima_hooks func)
 {
 	u32 secid;
@@ -79,7 +83,11 @@ int ima_must_appraise(struct mnt_idmap *idmap, struct inode *inode,
 		return 0;
 
 	security_current_getsecid_subj(&secid);
+<<<<<<< HEAD
 	return ima_match_policy(idmap, inode, current_cred(), secid,
+=======
+	return ima_match_policy(mnt_userns, inode, current_cred(), secid,
+>>>>>>> b7ba80a49124 (Commit)
 				func, mask, IMA_APPRAISE | IMA_HASH, NULL,
 				NULL, NULL, NULL);
 }
@@ -98,7 +106,11 @@ static int ima_fix_xattr(struct dentry *dentry,
 		iint->ima_hash->xattr.ng.type = IMA_XATTR_DIGEST_NG;
 		iint->ima_hash->xattr.ng.algo = algo;
 	}
+<<<<<<< HEAD
 	rc = __vfs_setxattr_noperm(&nop_mnt_idmap, dentry, XATTR_NAME_IMA,
+=======
+	rc = __vfs_setxattr_noperm(&init_user_ns, dentry, XATTR_NAME_IMA,
+>>>>>>> b7ba80a49124 (Commit)
 				   &iint->ima_hash->xattr.data[offset],
 				   (sizeof(iint->ima_hash->xattr) - offset) +
 				   iint->ima_hash->length, 0);
@@ -111,7 +123,10 @@ enum integrity_status ima_get_cache_status(struct integrity_iint_cache *iint,
 {
 	switch (func) {
 	case MMAP_CHECK:
+<<<<<<< HEAD
 	case MMAP_CHECK_REQPROT:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return iint->ima_mmap_status;
 	case BPRM_CHECK:
 		return iint->ima_bprm_status;
@@ -132,7 +147,10 @@ static void ima_set_cache_status(struct integrity_iint_cache *iint,
 {
 	switch (func) {
 	case MMAP_CHECK:
+<<<<<<< HEAD
 	case MMAP_CHECK_REQPROT:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		iint->ima_mmap_status = status;
 		break;
 	case BPRM_CHECK:
@@ -157,7 +175,10 @@ static void ima_cache_flags(struct integrity_iint_cache *iint,
 {
 	switch (func) {
 	case MMAP_CHECK:
+<<<<<<< HEAD
 	case MMAP_CHECK_REQPROT:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		iint->flags |= (IMA_MMAP_APPRAISED | IMA_APPRAISED);
 		break;
 	case BPRM_CHECK:
@@ -224,12 +245,21 @@ enum hash_algo ima_get_hash_algo(const struct evm_ima_xattr_data *xattr_value,
 }
 
 int ima_read_xattr(struct dentry *dentry,
+<<<<<<< HEAD
 		   struct evm_ima_xattr_data **xattr_value, int xattr_len)
 {
 	int ret;
 
 	ret = vfs_getxattr_alloc(&nop_mnt_idmap, dentry, XATTR_NAME_IMA,
 				 (char **)xattr_value, xattr_len, GFP_NOFS);
+=======
+		   struct evm_ima_xattr_data **xattr_value)
+{
+	ssize_t ret;
+
+	ret = vfs_getxattr_alloc(&init_user_ns, dentry, XATTR_NAME_IMA,
+				 (char **)xattr_value, 0, GFP_NOFS);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret == -EOPNOTSUPP)
 		ret = 0;
 	return ret;
@@ -459,7 +489,11 @@ int ima_check_blacklist(struct integrity_iint_cache *iint,
 
 		rc = is_binary_blacklisted(digest, digestsize);
 		if ((rc == -EPERM) && (iint->flags & IMA_MEASURE))
+<<<<<<< HEAD
 			process_buffer_measurement(&nop_mnt_idmap, NULL, digest, digestsize,
+=======
+			process_buffer_measurement(&init_user_ns, NULL, digest, digestsize,
+>>>>>>> b7ba80a49124 (Commit)
 						   "blacklisted-hash", NONE,
 						   pcr, NULL, false, NULL, 0);
 	}
@@ -625,7 +659,11 @@ void ima_update_xattr(struct integrity_iint_cache *iint, struct file *file)
 
 /**
  * ima_inode_post_setattr - reflect file metadata changes
+<<<<<<< HEAD
  * @idmap:  idmap of the mount the inode was found from
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @dentry: pointer to the affected dentry
  *
  * Changes to a dentry's metadata might result in needing to appraise.
@@ -633,7 +671,11 @@ void ima_update_xattr(struct integrity_iint_cache *iint, struct file *file)
  * This function is called from notify_change(), which expects the caller
  * to lock the inode's i_mutex.
  */
+<<<<<<< HEAD
 void ima_inode_post_setattr(struct mnt_idmap *idmap,
+=======
+void ima_inode_post_setattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			    struct dentry *dentry)
 {
 	struct inode *inode = d_backing_inode(dentry);
@@ -644,7 +686,11 @@ void ima_inode_post_setattr(struct mnt_idmap *idmap,
 	    || !(inode->i_opflags & IOP_XATTR))
 		return;
 
+<<<<<<< HEAD
 	action = ima_must_appraise(idmap, inode, MAY_ACCESS, POST_SETATTR);
+=======
+	action = ima_must_appraise(mnt_userns, inode, MAY_ACCESS, POST_SETATTR);
+>>>>>>> b7ba80a49124 (Commit)
 	iint = integrity_iint_find(inode);
 	if (iint) {
 		set_bit(IMA_CHANGE_ATTR, &iint->atomic_flags);
@@ -777,6 +823,7 @@ int ima_inode_setxattr(struct dentry *dentry, const char *xattr_name,
 	return result;
 }
 
+<<<<<<< HEAD
 int ima_inode_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
 		      const char *acl_name, struct posix_acl *kacl)
 {
@@ -786,6 +833,8 @@ int ima_inode_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ima_inode_removexattr(struct dentry *dentry, const char *xattr_name)
 {
 	int result;

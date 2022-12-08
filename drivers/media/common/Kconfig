@@ -14,9 +14,12 @@ config TTPCI_EEPROM
         tristate
         depends on I2C
 
+<<<<<<< HEAD
 config UVC_COMMON
 	tristate
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config VIDEO_CX2341X
 	tristate
 
@@ -25,7 +28,10 @@ config VIDEO_TVEEPROM
 	depends on I2C
 
 source "drivers/media/common/b2c2/Kconfig"
+<<<<<<< HEAD
 source "drivers/media/common/saa7146/Kconfig"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 source "drivers/media/common/siano/Kconfig"
 source "drivers/media/common/v4l2-tpg/Kconfig"
 source "drivers/media/common/videobuf2/Kconfig"

@@ -189,7 +189,12 @@ static const struct regmap_irq_chip gsc_irq_chip = {
 	.num_irqs = ARRAY_SIZE(gsc_irqs),
 	.num_regs = 1,
 	.status_base = GSC_IRQ_STATUS,
+<<<<<<< HEAD
 	.unmask_base = GSC_IRQ_ENABLE,
+=======
+	.mask_base = GSC_IRQ_ENABLE,
+	.mask_invert = true,
+>>>>>>> b7ba80a49124 (Commit)
 	.ack_base = GSC_IRQ_STATUS,
 	.ack_invert = true,
 };

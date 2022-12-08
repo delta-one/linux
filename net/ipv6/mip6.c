@@ -247,6 +247,7 @@ static int mip6_destopt_reject(struct xfrm_state *x, struct sk_buff *skb,
 	return err;
 }
 
+<<<<<<< HEAD
 static int mip6_destopt_init_state(struct xfrm_state *x, struct netlink_ext_ack *extack)
 {
 	if (x->id.spi) {
@@ -255,6 +256,17 @@ static int mip6_destopt_init_state(struct xfrm_state *x, struct netlink_ext_ack 
 	}
 	if (x->props.mode != XFRM_MODE_ROUTEOPTIMIZATION) {
 		NL_SET_ERR_MSG(extack, "XFRM mode must be XFRM_MODE_ROUTEOPTIMIZATION");
+=======
+static int mip6_destopt_init_state(struct xfrm_state *x)
+{
+	if (x->id.spi) {
+		pr_info("%s: spi is not 0: %u\n", __func__, x->id.spi);
+		return -EINVAL;
+	}
+	if (x->props.mode != XFRM_MODE_ROUTEOPTIMIZATION) {
+		pr_info("%s: state's mode is not %u: %u\n",
+			__func__, XFRM_MODE_ROUTEOPTIMIZATION, x->props.mode);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -332,6 +344,7 @@ static int mip6_rthdr_output(struct xfrm_state *x, struct sk_buff *skb)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mip6_rthdr_init_state(struct xfrm_state *x, struct netlink_ext_ack *extack)
 {
 	if (x->id.spi) {
@@ -340,6 +353,17 @@ static int mip6_rthdr_init_state(struct xfrm_state *x, struct netlink_ext_ack *e
 	}
 	if (x->props.mode != XFRM_MODE_ROUTEOPTIMIZATION) {
 		NL_SET_ERR_MSG(extack, "XFRM mode must be XFRM_MODE_ROUTEOPTIMIZATION");
+=======
+static int mip6_rthdr_init_state(struct xfrm_state *x)
+{
+	if (x->id.spi) {
+		pr_info("%s: spi is not 0: %u\n", __func__, x->id.spi);
+		return -EINVAL;
+	}
+	if (x->props.mode != XFRM_MODE_ROUTEOPTIMIZATION) {
+		pr_info("%s: state's mode is not %u: %u\n",
+			__func__, XFRM_MODE_ROUTEOPTIMIZATION, x->props.mode);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 

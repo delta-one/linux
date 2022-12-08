@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: MIT
+<<<<<<< HEAD
 
 config DRM_AMDGPU
 	tristate "AMD GPU"
@@ -33,6 +34,8 @@ config DRM_AMDGPU
 
 	  If M is selected, the module will be called amdgpu.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config DRM_AMDGPU_SI
 	bool "Enable amdgpu support for SI parts"
 	depends on DRM_AMDGPU

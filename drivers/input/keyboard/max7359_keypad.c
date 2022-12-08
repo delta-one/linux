@@ -155,7 +155,12 @@ static void max7359_initialize(struct i2c_client *client)
 	max7359_fall_deepsleep(client);
 }
 
+<<<<<<< HEAD
 static int max7359_probe(struct i2c_client *client)
+=======
+static int max7359_probe(struct i2c_client *client,
+					const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct matrix_keymap_data *keymap_data =
 			dev_get_platdata(&client->dev);
@@ -242,6 +247,10 @@ static int max7359_probe(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int max7359_suspend(struct device *dev)
 {
 	struct i2c_client *client = to_i2c_client(dev);
@@ -266,8 +275,14 @@ static int max7359_resume(struct device *dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 static DEFINE_SIMPLE_DEV_PM_OPS(max7359_pm, max7359_suspend, max7359_resume);
+=======
+#endif
+
+static SIMPLE_DEV_PM_OPS(max7359_pm, max7359_suspend, max7359_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id max7359_ids[] = {
 	{ "max7359", 0 },
@@ -278,9 +293,15 @@ MODULE_DEVICE_TABLE(i2c, max7359_ids);
 static struct i2c_driver max7359_i2c_driver = {
 	.driver = {
 		.name = "max7359",
+<<<<<<< HEAD
 		.pm   = pm_sleep_ptr(&max7359_pm),
 	},
 	.probe_new	= max7359_probe,
+=======
+		.pm   = &max7359_pm,
+	},
+	.probe		= max7359_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= max7359_ids,
 };
 

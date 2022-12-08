@@ -36,8 +36,11 @@
 #define VIVID_CID_RO_INTEGER		(VIVID_CID_CUSTOM_BASE + 12)
 #define VIVID_CID_U32_DYN_ARRAY		(VIVID_CID_CUSTOM_BASE + 13)
 #define VIVID_CID_U8_PIXEL_ARRAY	(VIVID_CID_CUSTOM_BASE + 14)
+<<<<<<< HEAD
 #define VIVID_CID_S32_ARRAY		(VIVID_CID_CUSTOM_BASE + 15)
 #define VIVID_CID_S64_ARRAY		(VIVID_CID_CUSTOM_BASE + 16)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define VIVID_CID_VIVID_BASE		(0x00f00000 | 0xf000)
 #define VIVID_CID_VIVID_CLASS		(0x00f00000 | 1)
@@ -243,6 +246,7 @@ static const struct v4l2_ctrl_config vivid_ctrl_u8_pixel_array = {
 	.dims = { 640 / PIXEL_ARRAY_DIV, 360 / PIXEL_ARRAY_DIV },
 };
 
+<<<<<<< HEAD
 static const struct v4l2_ctrl_config vivid_ctrl_s32_array = {
 	.ops = &vivid_user_gen_ctrl_ops,
 	.id = VIVID_CID_S32_ARRAY,
@@ -267,6 +271,8 @@ static const struct v4l2_ctrl_config vivid_ctrl_s64_array = {
 	.dims = { 5 },
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const char * const vivid_ctrl_menu_strings[] = {
 	"Menu Item 0 (Skipped)",
 	"Menu Item 1",
@@ -1682,8 +1688,11 @@ int vivid_create_controls(struct vivid_dev *dev, bool show_ccs_cap,
 	v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_u16_matrix, NULL);
 	v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_u8_4d_array, NULL);
 	dev->pixel_array = v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_u8_pixel_array, NULL);
+<<<<<<< HEAD
 	v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_s32_array, NULL);
 	v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_s64_array, NULL);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dev->has_vid_cap) {
 		/* Image Processing Controls */

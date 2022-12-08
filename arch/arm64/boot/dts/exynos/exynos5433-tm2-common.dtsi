@@ -21,8 +21,11 @@
 		gsc0 = &gsc_0;
 		gsc1 = &gsc_1;
 		gsc2 = &gsc_2;
+<<<<<<< HEAD
 		mmc0 = &mshc_0;
 		mmc2 = &mshc_2;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pinctrl0 = &pinctrl_alive;
 		pinctrl1 = &pinctrl_aud;
 		pinctrl2 = &pinctrl_cpif;
@@ -42,6 +45,11 @@
 		spi2 = &spi_2;
 		spi3 = &spi_3;
 		spi4 = &spi_4;
+<<<<<<< HEAD
+=======
+		mshc0 = &mshc_0;
+		mshc2 = &mshc_2;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	chosen {
@@ -96,6 +104,7 @@
 		max98504: amplifier@31 {
 			compatible = "maxim,max98504";
 			reg = <0x31>;
+<<<<<<< HEAD
 
 			DIOVDD-supply = <&ldo3_reg>;
 			DVDD-supply = <&ldo3_reg>;
@@ -111,6 +120,16 @@
 	};
 
 	irda_regulator: regulator-irda {
+=======
+			maxim,rx-path = <1>;
+			maxim,tx-path = <1>;
+			maxim,tx-channel-mask = <3>;
+			maxim,tx-channel-source = <2>;
+		};
+	};
+
+	irda_regulator: irda-regulator {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		enable-active-high;
 		gpio = <&gpr3 3 GPIO_ACTIVE_HIGH>;
@@ -802,7 +821,11 @@
 		reg = <0x27>;
 		interrupt-parent = <&gpa1>;
 		interrupts = <3 IRQ_TYPE_EDGE_RISING>;
+<<<<<<< HEAD
 		en-gpios = <&gpf1 4 GPIO_ACTIVE_LOW>;
+=======
+		en-gpios = <&gpf1 4 GPIO_ACTIVE_HIGH>;
+>>>>>>> b7ba80a49124 (Commit)
 		wake-gpios = <&gpj0 2 GPIO_ACTIVE_HIGH>;
 	};
 };
@@ -932,6 +955,10 @@
 			compatible = "maxim,max77843-haptic";
 			haptic-supply = <&ldo38_reg>;
 			pwms = <&pwm 0 33670 0>;
+<<<<<<< HEAD
+=======
+			pwm-names = "haptic";
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };
@@ -952,7 +979,10 @@
 
 &mshc_0 {
 	status = "okay";
+<<<<<<< HEAD
 	mmc-ddr-1_8v;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mmc-hs200-1_8v;
 	mmc-hs400-1_8v;
 	cap-mmc-highspeed;
@@ -1286,13 +1316,20 @@
 
 		gpio-controller;
 		#gpio-cells = <2>;
+<<<<<<< HEAD
 		interrupt-controller;
 		#interrupt-cells = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		wlf,micd-detect-debounce = <300>;
 		wlf,micd-bias-start-time = <0x1>;
 		wlf,micd-rate = <0x7>;
+<<<<<<< HEAD
 		wlf,micd-dbtime = <0x2>;
+=======
+		wlf,micd-dbtime = <0x1>;
+>>>>>>> b7ba80a49124 (Commit)
 		wlf,micd-force-micbias;
 		wlf,micd-configs = <0x0 1 0>;
 		wlf,hpdet-channel = <1>;
@@ -1308,8 +1345,11 @@
 		CPVDD-supply = <&ldo18_reg>;
 		DBVDD2-supply = <&ldo18_reg>;
 		DBVDD3-supply = <&ldo18_reg>;
+<<<<<<< HEAD
 		SPKVDDL-supply = <&vph_pwr_regulator>;
 		SPKVDDR-supply = <&vph_pwr_regulator>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		controller-data {
 			samsung,spi-feedback-delay = <0>;
@@ -1326,7 +1366,11 @@
 		reg = <0x0>;
 		spi-max-frequency = <5000000>;
 		power-supply = <&irda_regulator>;
+<<<<<<< HEAD
 		duty-cycle = /bits/ 8 <60>;
+=======
+		duty-cycle = <60>;
+>>>>>>> b7ba80a49124 (Commit)
 		led-active-low;
 
 		controller-data {

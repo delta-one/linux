@@ -3,6 +3,10 @@ tools/arch
 tools/scripts
 tools/build
 tools/include
+<<<<<<< HEAD
+=======
+tools/lib/traceevent
+>>>>>>> b7ba80a49124 (Commit)
 tools/lib/api
 tools/lib/bpf
 tools/lib/subcmd
@@ -12,7 +16,12 @@ tools/lib/ctype.c
 tools/lib/hweight.c
 tools/lib/rbtree.c
 tools/lib/string.c
+<<<<<<< HEAD
 tools/lib/symbol
+=======
+tools/lib/symbol/kallsyms.c
+tools/lib/symbol/kallsyms.h
+>>>>>>> b7ba80a49124 (Commit)
 tools/lib/find_bit.c
 tools/lib/bitmap.c
 tools/lib/list_sort.c

@@ -24,7 +24,10 @@ enum gve_adminq_opcodes {
 	GVE_ADMINQ_REPORT_STATS			= 0xC,
 	GVE_ADMINQ_REPORT_LINK_SPEED		= 0xD,
 	GVE_ADMINQ_GET_PTYPE_MAP		= 0xE,
+<<<<<<< HEAD
 	GVE_ADMINQ_VERIFY_DRIVER_COMPATIBILITY	= 0xF,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Admin queue status codes */
@@ -147,6 +150,7 @@ enum gve_sup_feature_mask {
 
 #define GVE_DEV_OPT_LEN_GQI_RAW_ADDRESSING 0x0
 
+<<<<<<< HEAD
 #define GVE_VERSION_STR_LEN 128
 
 enum gve_driver_capbility {
@@ -192,6 +196,8 @@ struct gve_adminq_verify_driver_compatibility {
 
 static_assert(sizeof(struct gve_adminq_verify_driver_compatibility) == 16);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct gve_adminq_configure_device_resources {
 	__be64 counter_array;
 	__be64 irq_db_addr;
@@ -391,8 +397,11 @@ union gve_adminq_command {
 			struct gve_adminq_report_stats report_stats;
 			struct gve_adminq_report_link_speed report_link_speed;
 			struct gve_adminq_get_ptype_map get_ptype_map;
+<<<<<<< HEAD
 			struct gve_adminq_verify_driver_compatibility
 						verify_driver_compatibility;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 	u8 reserved[64];
@@ -410,8 +419,13 @@ int gve_adminq_configure_device_resources(struct gve_priv *priv,
 					  dma_addr_t db_array_bus_addr,
 					  u32 num_ntfy_blks);
 int gve_adminq_deconfigure_device_resources(struct gve_priv *priv);
+<<<<<<< HEAD
 int gve_adminq_create_tx_queues(struct gve_priv *priv, u32 start_id, u32 num_queues);
 int gve_adminq_destroy_tx_queues(struct gve_priv *priv, u32 start_id, u32 num_queues);
+=======
+int gve_adminq_create_tx_queues(struct gve_priv *priv, u32 num_queues);
+int gve_adminq_destroy_tx_queues(struct gve_priv *priv, u32 queue_id);
+>>>>>>> b7ba80a49124 (Commit)
 int gve_adminq_create_rx_queues(struct gve_priv *priv, u32 num_queues);
 int gve_adminq_destroy_rx_queues(struct gve_priv *priv, u32 queue_id);
 int gve_adminq_register_page_list(struct gve_priv *priv,
@@ -420,9 +434,12 @@ int gve_adminq_unregister_page_list(struct gve_priv *priv, u32 page_list_id);
 int gve_adminq_set_mtu(struct gve_priv *priv, u64 mtu);
 int gve_adminq_report_stats(struct gve_priv *priv, u64 stats_report_len,
 			    dma_addr_t stats_report_addr, u64 interval);
+<<<<<<< HEAD
 int gve_adminq_verify_driver_compatibility(struct gve_priv *priv,
 					   u64 driver_info_len,
 					   dma_addr_t driver_info_addr);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int gve_adminq_report_link_speed(struct gve_priv *priv);
 
 struct gve_ptype_lut;

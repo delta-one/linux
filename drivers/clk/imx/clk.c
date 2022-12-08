@@ -110,6 +110,7 @@ struct clk_hw *imx_obtain_fixed_clock_hw(
 	return __clk_get_hw(clk);
 }
 
+<<<<<<< HEAD
 struct clk_hw *imx_obtain_fixed_of_clock(struct device_node *np,
 					 const char *name, unsigned long rate)
 {
@@ -125,6 +126,10 @@ struct clk_hw *imx_obtain_fixed_of_clock(struct device_node *np,
 }
 
 struct clk_hw *imx_get_clk_hw_by_name(struct device_node *np, const char *name)
+=======
+struct clk_hw * imx_obtain_fixed_clk_hw(struct device_node *np,
+					const char *name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct clk *clk;
 
@@ -134,7 +139,11 @@ struct clk_hw *imx_get_clk_hw_by_name(struct device_node *np, const char *name)
 
 	return __clk_get_hw(clk);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(imx_get_clk_hw_by_name);
+=======
+EXPORT_SYMBOL_GPL(imx_obtain_fixed_clk_hw);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * This fixups the register CCM_CSCMR1 write value.
@@ -179,10 +188,15 @@ __setup_param("earlycon", imx_keep_uart_earlycon,
 __setup_param("earlyprintk", imx_keep_uart_earlyprintk,
 	      imx_keep_uart_clocks_param, 0);
 
+<<<<<<< HEAD
 void imx_register_uart_clocks(void)
 {
 	unsigned int num __maybe_unused;
 
+=======
+void imx_register_uart_clocks(unsigned int clk_count)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	imx_enabled_uart_clocks = 0;
 
 /* i.MX boards use device trees now.  For build tests without CONFIG_OF, do nothing */
@@ -190,18 +204,27 @@ void imx_register_uart_clocks(void)
 	if (imx_keep_uart_clocks) {
 		int i;
 
+<<<<<<< HEAD
 		num = of_clk_get_parent_count(of_stdout);
 		if (!num)
+=======
+		imx_uart_clocks = kcalloc(clk_count, sizeof(struct clk *), GFP_KERNEL);
+		if (!imx_uart_clocks)
+>>>>>>> b7ba80a49124 (Commit)
 			return;
 
 		if (!of_stdout)
 			return;
 
+<<<<<<< HEAD
 		imx_uart_clocks = kcalloc(num, sizeof(struct clk *), GFP_KERNEL);
 		if (!imx_uart_clocks)
 			return;
 
 		for (i = 0; i < num; i++) {
+=======
+		for (i = 0; i < clk_count; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 			imx_uart_clocks[imx_enabled_uart_clocks] = of_clk_get(of_stdout, i);
 
 			/* Stop if there are no more of_stdout references */
@@ -225,10 +248,16 @@ static int __init imx_clk_disable_uart(void)
 			clk_disable_unprepare(imx_uart_clocks[i]);
 			clk_put(imx_uart_clocks[i]);
 		}
+<<<<<<< HEAD
 	}
 
 	kfree(imx_uart_clocks);
 
+=======
+		kfree(imx_uart_clocks);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 late_initcall_sync(imx_clk_disable_uart);

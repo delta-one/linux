@@ -2233,7 +2233,11 @@ static void fcoe_ctlr_vn_restart(struct fcoe_ctlr *fip)
 
 	if (fip->probe_tries < FIP_VN_RLIM_COUNT) {
 		fip->probe_tries++;
+<<<<<<< HEAD
 		wait = get_random_u32_below(FIP_VN_PROBE_WAIT);
+=======
+		wait = prandom_u32() % FIP_VN_PROBE_WAIT;
+>>>>>>> b7ba80a49124 (Commit)
 	} else
 		wait = FIP_VN_RLIM_INT;
 	mod_timer(&fip->timer, jiffies + msecs_to_jiffies(wait));
@@ -3125,7 +3129,11 @@ static void fcoe_ctlr_vn_timeout(struct fcoe_ctlr *fip)
 					  fcoe_all_vn2vn, 0);
 			fip->port_ka_time = jiffies +
 				 msecs_to_jiffies(FIP_VN_BEACON_INT +
+<<<<<<< HEAD
 					get_random_u32_below(FIP_VN_BEACON_FUZZ));
+=======
+					(prandom_u32() % FIP_VN_BEACON_FUZZ));
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		if (time_before(fip->port_ka_time, next_time))
 			next_time = fip->port_ka_time;

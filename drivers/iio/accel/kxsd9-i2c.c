@@ -10,7 +10,12 @@
 
 #include "kxsd9.h"
 
+<<<<<<< HEAD
 static int kxsd9_i2c_probe(struct i2c_client *i2c)
+=======
+static int kxsd9_i2c_probe(struct i2c_client *i2c,
+			   const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	static const struct regmap_config config = {
 		.reg_bits = 8,
@@ -54,7 +59,11 @@ static struct i2c_driver kxsd9_i2c_driver = {
 		.of_match_table = kxsd9_of_match,
 		.pm = pm_ptr(&kxsd9_dev_pm_ops),
 	},
+<<<<<<< HEAD
 	.probe_new	= kxsd9_i2c_probe,
+=======
+	.probe		= kxsd9_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= kxsd9_i2c_remove,
 	.id_table	= kxsd9_i2c_id,
 };

@@ -316,10 +316,17 @@ static const struct mtk_pin_field_calc mt7986_pin_pupd_range[] = {
 	PIN_FIELD_BASE(38, 38, IOCFG_LT_BASE, 0x30, 0x10, 9, 1),
 	PIN_FIELD_BASE(39, 40, IOCFG_RB_BASE, 0x60, 0x10, 18, 1),
 	PIN_FIELD_BASE(41, 41, IOCFG_RB_BASE, 0x60, 0x10, 12, 1),
+<<<<<<< HEAD
 	PIN_FIELD_BASE(42, 43, IOCFG_RB_BASE, 0x60, 0x10, 23, 1),
 	PIN_FIELD_BASE(44, 45, IOCFG_RB_BASE, 0x60, 0x10, 21, 1),
 	PIN_FIELD_BASE(46, 47, IOCFG_RB_BASE, 0x60, 0x10, 27, 1),
 	PIN_FIELD_BASE(48, 49, IOCFG_RB_BASE, 0x60, 0x10, 25, 1),
+=======
+	PIN_FIELD_BASE(42, 43, IOCFG_RB_BASE, 0x60, 0x10, 22, 1),
+	PIN_FIELD_BASE(44, 45, IOCFG_RB_BASE, 0x60, 0x10, 20, 1),
+	PIN_FIELD_BASE(46, 47, IOCFG_RB_BASE, 0x60, 0x10, 26, 1),
+	PIN_FIELD_BASE(48, 49, IOCFG_RB_BASE, 0x60, 0x10, 24, 1),
+>>>>>>> b7ba80a49124 (Commit)
 	PIN_FIELD_BASE(50, 57, IOCFG_RT_BASE, 0x40, 0x10, 2, 1),
 	PIN_FIELD_BASE(58, 58, IOCFG_RT_BASE, 0x40, 0x10, 1, 1),
 	PIN_FIELD_BASE(59, 59, IOCFG_RT_BASE, 0x40, 0x10, 0, 1),
@@ -354,10 +361,17 @@ static const struct mtk_pin_field_calc mt7986_pin_r0_range[] = {
 	PIN_FIELD_BASE(38, 38, IOCFG_LT_BASE, 0x40, 0x10, 9, 1),
 	PIN_FIELD_BASE(39, 40, IOCFG_RB_BASE, 0x70, 0x10, 18, 1),
 	PIN_FIELD_BASE(41, 41, IOCFG_RB_BASE, 0x70, 0x10, 12, 1),
+<<<<<<< HEAD
 	PIN_FIELD_BASE(42, 43, IOCFG_RB_BASE, 0x70, 0x10, 23, 1),
 	PIN_FIELD_BASE(44, 45, IOCFG_RB_BASE, 0x70, 0x10, 21, 1),
 	PIN_FIELD_BASE(46, 47, IOCFG_RB_BASE, 0x70, 0x10, 27, 1),
 	PIN_FIELD_BASE(48, 49, IOCFG_RB_BASE, 0x70, 0x10, 25, 1),
+=======
+	PIN_FIELD_BASE(42, 43, IOCFG_RB_BASE, 0x70, 0x10, 22, 1),
+	PIN_FIELD_BASE(44, 45, IOCFG_RB_BASE, 0x70, 0x10, 20, 1),
+	PIN_FIELD_BASE(46, 47, IOCFG_RB_BASE, 0x70, 0x10, 26, 1),
+	PIN_FIELD_BASE(48, 49, IOCFG_RB_BASE, 0x70, 0x10, 24, 1),
+>>>>>>> b7ba80a49124 (Commit)
 	PIN_FIELD_BASE(50, 57, IOCFG_RT_BASE, 0x50, 0x10, 2, 1),
 	PIN_FIELD_BASE(58, 58, IOCFG_RT_BASE, 0x50, 0x10, 1, 1),
 	PIN_FIELD_BASE(59, 59, IOCFG_RT_BASE, 0x50, 0x10, 0, 1),
@@ -392,10 +406,17 @@ static const struct mtk_pin_field_calc mt7986_pin_r1_range[] = {
 	PIN_FIELD_BASE(38, 38, IOCFG_LT_BASE, 0x50, 0x10, 9, 1),
 	PIN_FIELD_BASE(39, 40, IOCFG_RB_BASE, 0x80, 0x10, 18, 1),
 	PIN_FIELD_BASE(41, 41, IOCFG_RB_BASE, 0x80, 0x10, 12, 1),
+<<<<<<< HEAD
 	PIN_FIELD_BASE(42, 43, IOCFG_RB_BASE, 0x80, 0x10, 23, 1),
 	PIN_FIELD_BASE(44, 45, IOCFG_RB_BASE, 0x80, 0x10, 21, 1),
 	PIN_FIELD_BASE(46, 47, IOCFG_RB_BASE, 0x80, 0x10, 27, 1),
 	PIN_FIELD_BASE(48, 49, IOCFG_RB_BASE, 0x80, 0x10, 25, 1),
+=======
+	PIN_FIELD_BASE(42, 43, IOCFG_RB_BASE, 0x80, 0x10, 22, 1),
+	PIN_FIELD_BASE(44, 45, IOCFG_RB_BASE, 0x80, 0x10, 20, 1),
+	PIN_FIELD_BASE(46, 47, IOCFG_RB_BASE, 0x80, 0x10, 26, 1),
+	PIN_FIELD_BASE(48, 49, IOCFG_RB_BASE, 0x80, 0x10, 24, 1),
+>>>>>>> b7ba80a49124 (Commit)
 	PIN_FIELD_BASE(50, 57, IOCFG_RT_BASE, 0x60, 0x10, 2, 1),
 	PIN_FIELD_BASE(58, 58, IOCFG_RT_BASE, 0x60, 0x10, 1, 1),
 	PIN_FIELD_BASE(59, 59, IOCFG_RT_BASE, 0x60, 0x10, 0, 1),
@@ -407,6 +428,7 @@ static const struct mtk_pin_field_calc mt7986_pin_r1_range[] = {
 	PIN_FIELD_BASE(66, 68, IOCFG_LB_BASE, 0x60, 0x10, 2, 1),
 };
 
+<<<<<<< HEAD
 static const unsigned int mt7986_pull_type[] = {
 	MTK_PULL_PUPD_R1R0_TYPE,/*0*/ MTK_PULL_PUPD_R1R0_TYPE,/*1*/
 	MTK_PULL_PUPD_R1R0_TYPE,/*2*/ MTK_PULL_PUPD_R1R0_TYPE,/*3*/
@@ -461,6 +483,8 @@ static const unsigned int mt7986_pull_type[] = {
 	MTK_PULL_PU_PD_TYPE,/*100*/
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct mtk_pin_reg_calc mt7986_reg_cals[] = {
 	[PINCTRL_PIN_REG_MODE] = MTK_RANGE(mt7986_pin_mode_range),
 	[PINCTRL_PIN_REG_DIR] = MTK_RANGE(mt7986_pin_dir_range),
@@ -729,6 +753,7 @@ static int mt7986_uart1_1_funcs[] = { 4, 4, 4, 4, };
 static int mt7986_spi1_2_pins[] = { 29, 30, 31, 32, };
 static int mt7986_spi1_2_funcs[] = { 1, 1, 1, 1, };
 
+<<<<<<< HEAD
 static int mt7986_uart1_2_rx_tx_pins[] = { 29, 30, };
 static int mt7986_uart1_2_rx_tx_funcs[] = { 3, 3, };
 
@@ -740,6 +765,13 @@ static int mt7986_uart2_0_rx_tx_funcs[] = { 4, 4, };
 
 static int mt7986_uart2_0_cts_rts_pins[] = { 31, 32, };
 static int mt7986_uart2_0_cts_rts_funcs[] = { 4, 4, };
+=======
+static int mt7986_uart1_2_pins[] = { 29, 30, 31, 32, };
+static int mt7986_uart1_2_funcs[] = { 3, 3, 3, 3, };
+
+static int mt7986_uart2_0_pins[] = { 29, 30, 31, 32, };
+static int mt7986_uart2_0_funcs[] = { 4, 4, 4, 4, };
+>>>>>>> b7ba80a49124 (Commit)
 
 static int mt7986_spi0_pins[] = { 33, 34, 35, 36, };
 static int mt7986_spi0_funcs[] = { 1, 1, 1, 1, };
@@ -768,12 +800,15 @@ static int mt7986_pcie_reset_funcs[] = { 1, };
 static int mt7986_uart1_pins[] = { 42, 43, 44, 45, };
 static int mt7986_uart1_funcs[] = { 1, 1, 1, 1, };
 
+<<<<<<< HEAD
 static int mt7986_uart1_rx_tx_pins[] = { 42, 43, };
 static int mt7986_uart1_rx_tx_funcs[] = { 1, 1, };
 
 static int mt7986_uart1_cts_rts_pins[] = { 44, 45, };
 static int mt7986_uart1_cts_rts_funcs[] = { 1, 1, };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mt7986_uart2_pins[] = { 46, 47, 48, 49, };
 static int mt7986_uart2_funcs[] = { 1, 1, 1, 1, };
 
@@ -815,8 +850,11 @@ static const struct group_desc mt7986_groups[] = {
 	PINCTRL_PIN_GROUP("wifi_led", mt7986_wifi_led),
 	PINCTRL_PIN_GROUP("i2c", mt7986_i2c),
 	PINCTRL_PIN_GROUP("uart1_0", mt7986_uart1_0),
+<<<<<<< HEAD
 	PINCTRL_PIN_GROUP("uart1_rx_tx", mt7986_uart1_rx_tx),
 	PINCTRL_PIN_GROUP("uart1_cts_rts", mt7986_uart1_cts_rts),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	PINCTRL_PIN_GROUP("pcie_clk", mt7986_pcie_clk),
 	PINCTRL_PIN_GROUP("pcie_wake", mt7986_pcie_wake),
 	PINCTRL_PIN_GROUP("spi1_0", mt7986_spi1_0),
@@ -828,10 +866,15 @@ static const struct group_desc mt7986_groups[] = {
 	PINCTRL_PIN_GROUP("spi1_1", mt7986_spi1_1),
 	PINCTRL_PIN_GROUP("uart1_1", mt7986_uart1_1),
 	PINCTRL_PIN_GROUP("spi1_2", mt7986_spi1_2),
+<<<<<<< HEAD
 	PINCTRL_PIN_GROUP("uart1_2_rx_tx", mt7986_uart1_2_rx_tx),
 	PINCTRL_PIN_GROUP("uart1_2_cts_rts", mt7986_uart1_2_cts_rts),
 	PINCTRL_PIN_GROUP("uart2_0_rx_tx", mt7986_uart2_0_rx_tx),
 	PINCTRL_PIN_GROUP("uart2_0_cts_rts", mt7986_uart2_0_cts_rts),
+=======
+	PINCTRL_PIN_GROUP("uart1_2", mt7986_uart1_2),
+	PINCTRL_PIN_GROUP("uart2_0", mt7986_uart2_0),
+>>>>>>> b7ba80a49124 (Commit)
 	PINCTRL_PIN_GROUP("spi0", mt7986_spi0),
 	PINCTRL_PIN_GROUP("spi0_wp_hold", mt7986_spi0_wp_hold),
 	PINCTRL_PIN_GROUP("uart2_1", mt7986_uart2_1),
@@ -870,9 +913,13 @@ static const char *mt7986_pwm_groups[] = { "pwm0", "pwm1_0", "pwm1_1", };
 static const char *mt7986_spi_groups[] = {
 	"spi0", "spi0_wp_hold", "spi1_0", "spi1_1", "spi1_2", "spi1_3", };
 static const char *mt7986_uart_groups[] = {
+<<<<<<< HEAD
 	"uart1_0", "uart1_1", "uart1_rx_tx", "uart1_cts_rts",
 	"uart1_2_rx_tx", "uart1_2_cts_rts",
 	"uart1_3_rx_tx", "uart1_3_cts_rts", "uart2_0_rx_tx", "uart2_0_cts_rts",
+=======
+	"uart1_0", "uart1_1", "uart1_2", "uart1_3_rx_tx", "uart1_3_cts_rts",
+>>>>>>> b7ba80a49124 (Commit)
 	"uart2_0", "uart2_1", "uart0", "uart1", "uart2",
 };
 static const char *mt7986_wdt_groups[] = { "watchdog", };
@@ -898,7 +945,10 @@ static const struct mtk_eint_hw mt7986a_eint_hw = {
 	.ports = 7,
 	.ap_num = ARRAY_SIZE(mt7986a_pins),
 	.db_cnt = 16,
+<<<<<<< HEAD
 	.db_time = debounce_time_mt6765,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct mtk_eint_hw mt7986b_eint_hw = {
@@ -906,7 +956,10 @@ static const struct mtk_eint_hw mt7986b_eint_hw = {
 	.ports = 7,
 	.ap_num = ARRAY_SIZE(mt7986b_pins),
 	.db_cnt = 16,
+<<<<<<< HEAD
 	.db_time = debounce_time_mt6765,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct mtk_pin_soc mt7986a_data = {
@@ -922,7 +975,10 @@ static struct mtk_pin_soc mt7986a_data = {
 	.ies_present = false,
 	.base_names = mt7986_pinctrl_register_base_names,
 	.nbase_names = ARRAY_SIZE(mt7986_pinctrl_register_base_names),
+<<<<<<< HEAD
 	.pull_type = mt7986_pull_type,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.bias_set_combo = mtk_pinconf_bias_set_combo,
 	.bias_get_combo = mtk_pinconf_bias_get_combo,
 	.drive_set = mtk_pinconf_drive_set_rev1,
@@ -944,7 +1000,10 @@ static struct mtk_pin_soc mt7986b_data = {
 	.ies_present = false,
 	.base_names = mt7986_pinctrl_register_base_names,
 	.nbase_names = ARRAY_SIZE(mt7986_pinctrl_register_base_names),
+<<<<<<< HEAD
 	.pull_type = mt7986_pull_type,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.bias_set_combo = mtk_pinconf_bias_set_combo,
 	.bias_get_combo = mtk_pinconf_bias_get_combo,
 	.drive_set = mtk_pinconf_drive_set_rev1,

@@ -102,7 +102,10 @@ required:
   - dma-names
 
 allOf:
+<<<<<<< HEAD
   - $ref: dai-common.yaml#
+=======
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -229,7 +232,11 @@ allOf:
               - Mic
               - Speaker
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

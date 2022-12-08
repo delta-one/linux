@@ -15,13 +15,20 @@
 #define PRESTERA_MSG_MAX_SIZE 1500
 
 #define PRESTERA_SUPP_FW_MAJ_VER	4
+<<<<<<< HEAD
 #define PRESTERA_SUPP_FW_MIN_VER	1
+=======
+#define PRESTERA_SUPP_FW_MIN_VER	0
+>>>>>>> b7ba80a49124 (Commit)
 
 #define PRESTERA_PREV_FW_MAJ_VER	4
 #define PRESTERA_PREV_FW_MIN_VER	0
 
 #define PRESTERA_FW_PATH_FMT	"mrvl/prestera/mvsw_prestera_fw-v%u.%u.img"
+<<<<<<< HEAD
 #define PRESTERA_FW_ARM64_PATH_FMT "mrvl/prestera/mvsw_prestera_fw_arm64-v%u.%u.img"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define PRESTERA_FW_HDR_MAGIC		0x351D9D06
 #define PRESTERA_FW_DL_TIMEOUT_MS	50000
@@ -185,6 +192,7 @@ struct prestera_fw_regs {
 #define PRESTERA_FW_CMD_DEFAULT_WAIT_MS	30000
 #define PRESTERA_FW_READY_WAIT_MS	20000
 
+<<<<<<< HEAD
 #define PRESTERA_DEV_ID_AC3X_98DX_55	0xC804
 #define PRESTERA_DEV_ID_AC3X_98DX_65	0xC80C
 #define PRESTERA_DEV_ID_ALDRIN2		0xCC1E
@@ -194,6 +202,8 @@ struct prestera_fw_regs {
 #define PRESTERA_DEV_ID_98DX3510	0x9821
 #define PRESTERA_DEV_ID_98DX3520	0x9822
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct prestera_fw_evtq {
 	u8 __iomem *addr;
 	size_t len;
@@ -211,7 +221,10 @@ struct prestera_fw {
 	const struct firmware *bin;
 	struct workqueue_struct *wq;
 	struct prestera_device dev;
+<<<<<<< HEAD
 	struct pci_dev *pci_dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8 __iomem *ldr_regs;
 	u8 __iomem *ldr_ring_buf;
 	u32 ldr_buf_len;
@@ -700,6 +713,7 @@ static int prestera_fw_hdr_parse(struct prestera_fw *fw)
 	return prestera_fw_rev_check(fw);
 }
 
+<<<<<<< HEAD
 static const char *prestera_fw_path_fmt_get(struct prestera_fw *fw)
 {
 	switch (fw->pci_dev->device) {
@@ -714,6 +728,8 @@ static const char *prestera_fw_path_fmt_get(struct prestera_fw *fw)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int prestera_fw_get(struct prestera_fw *fw)
 {
 	int ver_maj = PRESTERA_SUPP_FW_MAJ_VER;
@@ -722,7 +738,11 @@ static int prestera_fw_get(struct prestera_fw *fw)
 	int err;
 
 pick_fw_ver:
+<<<<<<< HEAD
 	snprintf(fw_path, sizeof(fw_path), prestera_fw_path_fmt_get(fw),
+=======
+	snprintf(fw_path, sizeof(fw_path), PRESTERA_FW_PATH_FMT,
+>>>>>>> b7ba80a49124 (Commit)
 		 ver_maj, ver_min);
 
 	err = request_firmware_direct(&fw->bin, fw_path, fw->dev.dev);
@@ -799,6 +819,7 @@ out_release:
 	return err;
 }
 
+<<<<<<< HEAD
 static bool prestera_pci_pp_use_bar2(struct pci_dev *pdev)
 {
 	switch (pdev->device) {
@@ -830,15 +851,21 @@ static u32 prestera_pci_fw_bar2_offs(struct pci_dev *pdev)
 		return 0x0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int prestera_pci_probe(struct pci_dev *pdev,
 			      const struct pci_device_id *id)
 {
 	const char *driver_name = dev_driver_string(&pdev->dev);
+<<<<<<< HEAD
 	u8 __iomem *mem_addr, *pp_addr = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct prestera_fw *fw;
 	int err;
 
 	err = pcim_enable_device(pdev);
+<<<<<<< HEAD
 	if (err) {
 		dev_err(&pdev->dev, "pci_enable_device failed\n");
 		goto err_pci_enable_device;
@@ -849,6 +876,16 @@ static int prestera_pci_probe(struct pci_dev *pdev,
 		dev_err(&pdev->dev, "pci_request_regions failed\n");
 		goto err_pci_request_regions;
 	}
+=======
+	if (err)
+		return err;
+
+	err = pcim_iomap_regions(pdev, BIT(PRESTERA_PCI_BAR_FW) |
+				 BIT(PRESTERA_PCI_BAR_PP),
+				 pci_name(pdev));
+	if (err)
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(30));
 	if (err) {
@@ -856,6 +893,7 @@ static int prestera_pci_probe(struct pci_dev *pdev,
 		goto err_dma_mask;
 	}
 
+<<<<<<< HEAD
 	mem_addr = pcim_iomap(pdev, 2, 0);
 	if (!mem_addr) {
 		dev_err(&pdev->dev, "pci mem ioremap failed\n");
@@ -876,6 +914,8 @@ static int prestera_pci_probe(struct pci_dev *pdev,
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pci_set_master(pdev);
 
 	fw = devm_kzalloc(&pdev->dev, sizeof(*fw), GFP_KERNEL);
@@ -884,9 +924,14 @@ static int prestera_pci_probe(struct pci_dev *pdev,
 		goto err_pci_dev_alloc;
 	}
 
+<<<<<<< HEAD
 	fw->pci_dev = pdev;
 	fw->dev.ctl_regs = mem_addr;
 	fw->dev.pp_regs = pp_addr;
+=======
+	fw->dev.ctl_regs = pcim_iomap_table(pdev)[PRESTERA_PCI_BAR_FW];
+	fw->dev.pp_regs = pcim_iomap_table(pdev)[PRESTERA_PCI_BAR_PP];
+>>>>>>> b7ba80a49124 (Commit)
 	fw->dev.dev = &pdev->dev;
 
 	pci_set_drvdata(pdev, fw);
@@ -934,12 +979,16 @@ err_wq_alloc:
 	prestera_fw_uninit(fw);
 err_prestera_fw_init:
 err_pci_dev_alloc:
+<<<<<<< HEAD
 err_pp_ioremap:
 err_mem_ioremap:
 err_dma_mask:
 	pci_release_regions(pdev);
 err_pci_request_regions:
 err_pci_enable_device:
+=======
+err_dma_mask:
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -952,6 +1001,7 @@ static void prestera_pci_remove(struct pci_dev *pdev)
 	pci_free_irq_vectors(pdev);
 	destroy_workqueue(fw->wq);
 	prestera_fw_uninit(fw);
+<<<<<<< HEAD
 	pci_release_regions(pdev);
 }
 
@@ -964,6 +1014,14 @@ static const struct pci_device_id prestera_pci_devices[] = {
 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL, PRESTERA_DEV_ID_98DX3501) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL, PRESTERA_DEV_ID_98DX3510) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL, PRESTERA_DEV_ID_98DX3520) },
+=======
+}
+
+static const struct pci_device_id prestera_pci_devices[] = {
+	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL, 0xC804) },
+	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL, 0xC80C) },
+	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL, 0xCC1E) },
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(pci, prestera_pci_devices);

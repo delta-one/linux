@@ -9,6 +9,10 @@
 
 #define RF_PATH_NUM_8852C 2
 #define BB_PATH_NUM_8852C 2
+<<<<<<< HEAD
+=======
+#define NTX_NUM_8852C 2
+>>>>>>> b7ba80a49124 (Commit)
 
 struct rtw8852c_u_efuse {
 	u8 rsvd[0x38];

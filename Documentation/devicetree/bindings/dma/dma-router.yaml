@@ -4,13 +4,21 @@
 $id: http://devicetree.org/schemas/dma/dma-router.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: DMA Router Common Properties
+=======
+title: DMA Router Generic Binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Vinod Koul <vkoul@kernel.org>
 
 allOf:
+<<<<<<< HEAD
   - $ref: dma-common.yaml#
+=======
+  - $ref: "dma-common.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 description:
   DMA routers are transparent IP blocks used to route DMA request

@@ -229,7 +229,10 @@ enum pxa_ssp_type {
 	LPSS_SPT_SSP,
 	LPSS_BXT_SSP,
 	LPSS_CNL_SSP,
+<<<<<<< HEAD
 	SSP_MAX
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ssp_device {

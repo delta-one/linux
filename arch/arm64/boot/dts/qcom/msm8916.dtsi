@@ -442,6 +442,7 @@
 			reg = <0x0005c000 0x1000>;
 			#address-cells = <1>;
 			#size-cells = <1>;
+<<<<<<< HEAD
 
 			tsens_base1: base1@d0 {
 				reg = <0xd0 0x1>;
@@ -506,6 +507,13 @@
 			tsens_mode: mode@ef {
 				reg = <0xef 0x1>;
 				bits = <5 3>;
+=======
+			tsens_caldata: caldata@d0 {
+				reg = <0xd0 0x8>;
+			};
+			tsens_calsel: calsel@ec {
+				reg = <0xec 0x4>;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 
@@ -532,6 +540,7 @@
 			compatible = "qcom,msm8916-tsens", "qcom,tsens-v0_1";
 			reg = <0x004a9000 0x1000>, /* TM */
 			      <0x004a8000 0x1000>; /* SROT */
+<<<<<<< HEAD
 
 			// no hw_id 3
 			nvmem-cells = <&tsens_mode>,
@@ -548,6 +557,10 @@
 					   "s2_p1", "s2_p2",
 					   "s4_p1", "s4_p2",
 					   "s5_p1", "s5_p2";
+=======
+			nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
+			nvmem-cell-names = "calib", "calib_sel";
+>>>>>>> b7ba80a49124 (Commit)
 			#qcom,sensors = <5>;
 			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
 			interrupt-names = "uplow";
@@ -1036,7 +1049,11 @@
 			reg = <0x01937000 0x30000>;
 		};
 
+<<<<<<< HEAD
 		mdss: display-subsystem@1a00000 {
+=======
+		mdss: mdss@1a00000 {
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 			compatible = "qcom,mdss";
 			reg = <0x01a00000 0x1000>,
@@ -1061,8 +1078,13 @@
 			#size-cells = <1>;
 			ranges;
 
+<<<<<<< HEAD
 			mdp: display-controller@1a01000 {
 				compatible = "qcom,msm8916-mdp5", "qcom,mdp5";
+=======
+			mdp: mdp@1a01000 {
+				compatible = "qcom,mdp5";
+>>>>>>> b7ba80a49124 (Commit)
 				reg = <0x01a01000 0x89000>;
 				reg-names = "mdp_phys";
 
@@ -1094,8 +1116,12 @@
 			};
 
 			dsi0: dsi@1a98000 {
+<<<<<<< HEAD
 				compatible = "qcom,msm8916-dsi-ctrl",
 					     "qcom,mdss-dsi-ctrl";
+=======
+				compatible = "qcom,mdss-dsi-ctrl";
+>>>>>>> b7ba80a49124 (Commit)
 				reg = <0x01a98000 0x25c>;
 				reg-names = "dsi_ctrl";
 
@@ -1120,6 +1146,10 @@
 					      "pixel",
 					      "core";
 				phys = <&dsi_phy0>;
+<<<<<<< HEAD
+=======
+				phy-names = "dsi-phy";
+>>>>>>> b7ba80a49124 (Commit)
 
 				#address-cells = <1>;
 				#size-cells = <0>;
@@ -1143,7 +1173,11 @@
 				};
 			};
 
+<<<<<<< HEAD
 			dsi_phy0: phy@1a98300 {
+=======
+			dsi_phy0: dsi-phy@1a98300 {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "qcom,dsi-phy-28nm-lp";
 				reg = <0x01a98300 0xd4>,
 				      <0x01a98500 0x280>,
@@ -1241,7 +1275,11 @@
 		};
 
 		cci: cci@1b0c000 {
+<<<<<<< HEAD
 			compatible = "qcom,msm8916-cci", "qcom,msm8226-cci";
+=======
+			compatible = "qcom,msm8916-cci";
+>>>>>>> b7ba80a49124 (Commit)
 			#address-cells = <1>;
 			#size-cells = <0>;
 			reg = <0x01b0c000 0x1000>;
@@ -1337,21 +1375,33 @@
 			clock-names = "iface", "bus";
 			qcom,iommu-secure-id = <17>;
 
+<<<<<<< HEAD
 			/* VFE */
+=======
+			// vfe:
+>>>>>>> b7ba80a49124 (Commit)
 			iommu-ctx@3000 {
 				compatible = "qcom,msm-iommu-v1-sec";
 				reg = <0x3000 0x1000>;
 				interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
 			};
 
+<<<<<<< HEAD
 			/* MDP_0 */
+=======
+			// mdp_0:
+>>>>>>> b7ba80a49124 (Commit)
 			iommu-ctx@4000 {
 				compatible = "qcom,msm-iommu-v1-ns";
 				reg = <0x4000 0x1000>;
 				interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
 			};
 
+<<<<<<< HEAD
 			/* VENUS_NS */
+=======
+			// venus_ns:
+>>>>>>> b7ba80a49124 (Commit)
 			iommu-ctx@5000 {
 				compatible = "qcom,msm-iommu-v1-sec";
 				reg = <0x5000 0x1000>;
@@ -1370,14 +1420,22 @@
 			clock-names = "iface", "bus";
 			qcom,iommu-secure-id = <18>;
 
+<<<<<<< HEAD
 			/* GFX3D_USER */
+=======
+			// gfx3d_user:
+>>>>>>> b7ba80a49124 (Commit)
 			iommu-ctx@1000 {
 				compatible = "qcom,msm-iommu-v1-ns";
 				reg = <0x1000 0x1000>;
 				interrupts = <GIC_SPI 241 IRQ_TYPE_LEVEL_HIGH>;
 			};
 
+<<<<<<< HEAD
 			/* GFX3D_PRIV */
+=======
+			// gfx3d_priv:
+>>>>>>> b7ba80a49124 (Commit)
 			iommu-ctx@2000 {
 				compatible = "qcom,msm-iommu-v1-ns";
 				reg = <0x2000 0x1000>;
@@ -1418,7 +1476,11 @@
 		};
 
 		mpss: remoteproc@4080000 {
+<<<<<<< HEAD
 			compatible = "qcom,msm8916-mss-pil";
+=======
+			compatible = "qcom,msm8916-mss-pil", "qcom,q6v5-pil";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0x04080000 0x100>,
 			      <0x04020000 0x040>;
 
@@ -1511,7 +1573,11 @@
 
 		lpass: audio-controller@7708000 {
 			status = "disabled";
+<<<<<<< HEAD
 			compatible = "qcom,apq8016-lpass-cpu";
+=======
+			compatible = "qcom,lpass-cpu-apq8016";
+>>>>>>> b7ba80a49124 (Commit)
 
 			/*
 			 * Note: Unlike the name would suggest, the SEC_I2S_CLK
@@ -1595,6 +1661,10 @@
 			clock-names = "bam_clk";
 			#dma-cells = <1>;
 			qcom,ee = <0>;
+<<<<<<< HEAD
+=======
+			status = "disabled";
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		blsp1_uart1: serial@78af000 {
@@ -1632,8 +1702,11 @@
 			clocks = <&gcc GCC_BLSP1_QUP1_I2C_APPS_CLK>,
 				 <&gcc GCC_BLSP1_AHB_CLK>;
 			clock-names = "core", "iface";
+<<<<<<< HEAD
 			dmas = <&blsp_dma 4>, <&blsp_dma 5>;
 			dma-names = "tx", "rx";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default", "sleep";
 			pinctrl-0 = <&i2c1_default>;
 			pinctrl-1 = <&i2c1_sleep>;
@@ -1666,8 +1739,11 @@
 			clocks = <&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>,
 				 <&gcc GCC_BLSP1_AHB_CLK>;
 			clock-names = "core", "iface";
+<<<<<<< HEAD
 			dmas = <&blsp_dma 6>, <&blsp_dma 7>;
 			dma-names = "tx", "rx";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default", "sleep";
 			pinctrl-0 = <&i2c2_default>;
 			pinctrl-1 = <&i2c2_sleep>;
@@ -1700,8 +1776,11 @@
 			clocks = <&gcc GCC_BLSP1_QUP3_I2C_APPS_CLK>,
 				 <&gcc GCC_BLSP1_AHB_CLK>;
 			clock-names = "core", "iface";
+<<<<<<< HEAD
 			dmas = <&blsp_dma 8>, <&blsp_dma 9>;
 			dma-names = "tx", "rx";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default", "sleep";
 			pinctrl-0 = <&i2c3_default>;
 			pinctrl-1 = <&i2c3_sleep>;
@@ -1734,8 +1813,11 @@
 			clocks = <&gcc GCC_BLSP1_QUP4_I2C_APPS_CLK>,
 				 <&gcc GCC_BLSP1_AHB_CLK>;
 			clock-names = "core", "iface";
+<<<<<<< HEAD
 			dmas = <&blsp_dma 10>, <&blsp_dma 11>;
 			dma-names = "tx", "rx";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default", "sleep";
 			pinctrl-0 = <&i2c4_default>;
 			pinctrl-1 = <&i2c4_sleep>;
@@ -1768,8 +1850,11 @@
 			clocks = <&gcc GCC_BLSP1_QUP5_I2C_APPS_CLK>,
 				 <&gcc GCC_BLSP1_AHB_CLK>;
 			clock-names = "core", "iface";
+<<<<<<< HEAD
 			dmas = <&blsp_dma 12>, <&blsp_dma 13>;
 			dma-names = "tx", "rx";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default", "sleep";
 			pinctrl-0 = <&i2c5_default>;
 			pinctrl-1 = <&i2c5_sleep>;
@@ -1802,8 +1887,11 @@
 			clocks = <&gcc GCC_BLSP1_QUP6_I2C_APPS_CLK>,
 				 <&gcc GCC_BLSP1_AHB_CLK>;
 			clock-names = "core", "iface";
+<<<<<<< HEAD
 			dmas = <&blsp_dma 14>, <&blsp_dma 15>;
 			dma-names = "tx", "rx";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			pinctrl-names = "default", "sleep";
 			pinctrl-0 = <&i2c6_default>;
 			pinctrl-1 = <&i2c6_sleep>;
@@ -2083,7 +2171,11 @@
 					hysteresis = <2000>;
 					type = "passive";
 				};
+<<<<<<< HEAD
 				cpu0_1_crit: cpu-crit {
+=======
+				cpu0_1_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2113,7 +2205,11 @@
 					hysteresis = <2000>;
 					type = "passive";
 				};
+<<<<<<< HEAD
 				cpu2_3_crit: cpu-crit {
+=======
+				cpu2_3_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2143,7 +2239,11 @@
 					hysteresis = <2000>;
 					type = "passive";
 				};
+<<<<<<< HEAD
 				gpu_crit: gpu-crit {
+=======
+				gpu_crit: gpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <95000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2180,6 +2280,10 @@
 				};
 			};
 		};
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	timer {

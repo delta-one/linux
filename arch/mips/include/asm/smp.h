@@ -88,7 +88,11 @@ static inline void __cpu_die(unsigned int cpu)
 	mp_ops->cpu_die(cpu);
 }
 
+<<<<<<< HEAD
 extern void __noreturn play_dead(void);
+=======
+extern void play_dead(void);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #ifdef CONFIG_KEXEC

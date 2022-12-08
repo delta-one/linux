@@ -3754,17 +3754,30 @@ static int gcc_msm8960_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void gcc_msm8960_remove(struct platform_device *pdev)
+=======
+static int gcc_msm8960_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *tsens = platform_get_drvdata(pdev);
 
 	if (tsens)
 		platform_device_unregister(tsens);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver gcc_msm8960_driver = {
 	.probe		= gcc_msm8960_probe,
+<<<<<<< HEAD
 	.remove_new	= gcc_msm8960_remove,
+=======
+	.remove		= gcc_msm8960_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "gcc-msm8960",
 		.of_match_table = gcc_msm8960_match_table,

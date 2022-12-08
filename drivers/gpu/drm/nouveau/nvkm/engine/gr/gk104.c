@@ -418,7 +418,11 @@ gk104_gr_init_ppc_exceptions(struct gf100_gr *gr)
 	int gpc, ppc;
 
 	for (gpc = 0; gpc < gr->gpc_nr; gpc++) {
+<<<<<<< HEAD
 		for (ppc = 0; ppc < gr->func->ppc_nr; ppc++) {
+=======
+		for (ppc = 0; ppc < gr->ppc_nr[gpc]; ppc++) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (!(gr->ppc_mask[gpc] & (1 << ppc)))
 				continue;
 			nvkm_wr32(device, PPC_UNIT(gpc, ppc, 0x038), 0xc0000000);
@@ -470,13 +474,19 @@ gk104_gr = {
 	.init_ppc_exceptions = gk104_gr_init_ppc_exceptions,
 	.init_tex_hww_esr = gf100_gr_init_tex_hww_esr,
 	.init_shader_exceptions = gf100_gr_init_shader_exceptions,
+<<<<<<< HEAD
 	.init_rop_exceptions = gf100_gr_init_rop_exceptions,
 	.init_exception2 = gf100_gr_init_exception2,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.init_400054 = gf100_gr_init_400054,
 	.trap_mp = gf100_gr_trap_mp,
 	.mmio = gk104_gr_pack_mmio,
 	.fecs.ucode = &gk104_gr_fecs_ucode,
+<<<<<<< HEAD
 	.fecs.reset = gf100_gr_fecs_reset,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.gpccs.ucode = &gk104_gr_gpccs_ucode,
 	.rops = gf100_gr_rops,
 	.ppc_nr = 1,

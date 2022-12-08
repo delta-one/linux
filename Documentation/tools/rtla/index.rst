@@ -17,7 +17,10 @@ behavior on specific hardware.
    rtla-timerlat
    rtla-timerlat-hist
    rtla-timerlat-top
+<<<<<<< HEAD
    rtla-hwnoise
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 .. only::  subproject and html
 

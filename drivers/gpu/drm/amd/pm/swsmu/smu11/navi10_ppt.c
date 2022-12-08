@@ -304,8 +304,12 @@ navi10_get_allowed_feature_mask(struct smu_context *smu,
 				| FEATURE_MASK(FEATURE_GFX_SS_BIT)
 				| FEATURE_MASK(FEATURE_APCC_DFLL_BIT)
 				| FEATURE_MASK(FEATURE_FW_CTF_BIT)
+<<<<<<< HEAD
 				| FEATURE_MASK(FEATURE_OUT_OF_BAND_MONITOR_BIT)
 				| FEATURE_MASK(FEATURE_TEMP_DEPENDENT_VMIN_BIT);
+=======
+				| FEATURE_MASK(FEATURE_OUT_OF_BAND_MONITOR_BIT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (adev->pm.pp_feature & PP_SCLK_DPM_MASK)
 		*(uint64_t *)feature_mask |= FEATURE_MASK(FEATURE_DPM_GFXCLK_BIT);
@@ -495,8 +499,11 @@ static int navi10_tables_init(struct smu_context *smu)
 {
 	struct smu_table_context *smu_table = &smu->smu_table;
 	struct smu_table *tables = smu_table->tables;
+<<<<<<< HEAD
 	struct smu_table *dummy_read_1_table =
 			&smu_table->dummy_read_1_table;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	SMU_TABLE_INIT(tables, SMU_TABLE_PPTABLE, sizeof(PPTable_t),
 		       PAGE_SIZE, AMDGPU_GEM_DOMAIN_VRAM);
@@ -516,10 +523,13 @@ static int navi10_tables_init(struct smu_context *smu)
 	SMU_TABLE_INIT(tables, SMU_TABLE_DRIVER_SMU_CONFIG, sizeof(DriverSmuConfig_t),
 		       PAGE_SIZE, AMDGPU_GEM_DOMAIN_VRAM);
 
+<<<<<<< HEAD
 	dummy_read_1_table->size = 0x40000;
 	dummy_read_1_table->align = PAGE_SIZE;
 	dummy_read_1_table->domain = AMDGPU_GEM_DOMAIN_VRAM;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	smu_table->metrics_table = kzalloc(sizeof(SmuMetrics_NV1X_t),
 					   GFP_KERNEL);
 	if (!smu_table->metrics_table)

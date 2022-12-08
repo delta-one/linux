@@ -5,7 +5,10 @@
  */
 
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include "messages.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "ulist.h"
 #include "ctree.h"
 
@@ -38,9 +41,14 @@
  * loop would be similar to the above.
  */
 
+<<<<<<< HEAD
 /*
  * Freshly initialize a ulist.
  *
+=======
+/**
+ * ulist_init - freshly initialize a ulist
+>>>>>>> b7ba80a49124 (Commit)
  * @ulist:	the ulist to initialize
  *
  * Note: don't use this function to init an already used ulist, use
@@ -53,9 +61,14 @@ void ulist_init(struct ulist *ulist)
 	ulist->nnodes = 0;
 }
 
+<<<<<<< HEAD
 /*
  * Free up additionally allocated memory for the ulist.
  *
+=======
+/**
+ * ulist_release - free up additionally allocated memory for the ulist
+>>>>>>> b7ba80a49124 (Commit)
  * @ulist:	the ulist from which to free the additional memory
  *
  * This is useful in cases where the base 'struct ulist' has been statically
@@ -73,9 +86,14 @@ void ulist_release(struct ulist *ulist)
 	INIT_LIST_HEAD(&ulist->nodes);
 }
 
+<<<<<<< HEAD
 /*
  * Prepare a ulist for reuse.
  *
+=======
+/**
+ * ulist_reinit - prepare a ulist for reuse
+>>>>>>> b7ba80a49124 (Commit)
  * @ulist:	ulist to be reused
  *
  * Free up all additional memory allocated for the list elements and reinit
@@ -87,9 +105,14 @@ void ulist_reinit(struct ulist *ulist)
 	ulist_init(ulist);
 }
 
+<<<<<<< HEAD
 /*
  * Dynamically allocate a ulist.
  *
+=======
+/**
+ * ulist_alloc - dynamically allocate a ulist
+>>>>>>> b7ba80a49124 (Commit)
  * @gfp_mask:	allocation flags to for base allocation
  *
  * The allocated ulist will be returned in an initialized state.
@@ -106,9 +129,14 @@ struct ulist *ulist_alloc(gfp_t gfp_mask)
 	return ulist;
 }
 
+<<<<<<< HEAD
 /*
  * Free dynamically allocated ulist.
  *
+=======
+/**
+ * ulist_free - free dynamically allocated ulist
+>>>>>>> b7ba80a49124 (Commit)
  * @ulist:	ulist to free
  *
  * It is not necessary to call ulist_release before.
@@ -169,9 +197,14 @@ static int ulist_rbtree_insert(struct ulist *ulist, struct ulist_node *ins)
 	return 0;
 }
 
+<<<<<<< HEAD
 /*
  * Add an element to the ulist.
  *
+=======
+/**
+ * ulist_add - add an element to the ulist
+>>>>>>> b7ba80a49124 (Commit)
  * @ulist:	ulist to add the element to
  * @val:	value to add to ulist
  * @aux:	auxiliary value to store along with val
@@ -249,9 +282,14 @@ int ulist_del(struct ulist *ulist, u64 val, u64 aux)
 	return 0;
 }
 
+<<<<<<< HEAD
 /*
  * Iterate ulist.
  *
+=======
+/**
+ * ulist_next - iterate ulist
+>>>>>>> b7ba80a49124 (Commit)
  * @ulist:	ulist to iterate
  * @uiter:	iterator variable, initialized with ULIST_ITER_INIT(&iterator)
  *
@@ -266,7 +304,11 @@ int ulist_del(struct ulist *ulist, u64 val, u64 aux)
  * It is allowed to call ulist_add during an enumeration. Newly added items
  * are guaranteed to show up in the running enumeration.
  */
+<<<<<<< HEAD
 struct ulist_node *ulist_next(const struct ulist *ulist, struct ulist_iterator *uiter)
+=======
+struct ulist_node *ulist_next(struct ulist *ulist, struct ulist_iterator *uiter)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ulist_node *node;
 

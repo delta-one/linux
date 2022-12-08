@@ -16,13 +16,17 @@
 #define ARCH_GET_XCOMP_GUEST_PERM	0x1024
 #define ARCH_REQ_XCOMP_GUEST_PERM	0x1025
 
+<<<<<<< HEAD
 #define ARCH_XCOMP_TILECFG		17
 #define ARCH_XCOMP_TILEDATA		18
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ARCH_MAP_VDSO_X32		0x2001
 #define ARCH_MAP_VDSO_32		0x2002
 #define ARCH_MAP_VDSO_64		0x2003
 
+<<<<<<< HEAD
 /* Don't use 0x3001-0x3004 because of old glibcs */
 
 #define ARCH_SHSTK_ENABLE		0x5001
@@ -35,4 +39,6 @@
 #define ARCH_SHSTK_SHSTK		(1ULL <<  0)
 #define ARCH_SHSTK_WRSS			(1ULL <<  1)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_X86_PRCTL_H */

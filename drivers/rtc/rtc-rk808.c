@@ -14,6 +14,10 @@
 #include <linux/bcd.h>
 #include <linux/mfd/rk808.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
+=======
+#include <linux/i2c.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 /* RTC_CTRL_REG bitfields */
 #define BIT_RTC_CTRL_REG_STOP_RTC_M		BIT(0)
@@ -50,7 +54,11 @@ struct rk_rtc_compat_reg {
 };
 
 struct rk808_rtc {
+<<<<<<< HEAD
 	struct regmap *regmap;
+=======
+	struct rk808 *rk808;
+>>>>>>> b7ba80a49124 (Commit)
 	struct rtc_device *rtc;
 	struct rk_rtc_compat_reg *creg;
 	int irq;
@@ -96,11 +104,19 @@ static void gregorian_to_rockchip(struct rtc_time *tm)
 static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
 {
 	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
+<<<<<<< HEAD
+=======
+	struct rk808 *rk808 = rk808_rtc->rk808;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 rtc_data[NUM_TIME_REGS];
 	int ret;
 
 	/* Force an update of the shadowed registers right now */
+<<<<<<< HEAD
 	ret = regmap_update_bits(rk808_rtc->regmap, rk808_rtc->creg->ctrl_reg,
+=======
+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
+>>>>>>> b7ba80a49124 (Commit)
 				 BIT_RTC_CTRL_REG_RTC_GET_TIME,
 				 BIT_RTC_CTRL_REG_RTC_GET_TIME);
 	if (ret) {
@@ -114,7 +130,11 @@ static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
 	 * 32khz. If we clear the GET_TIME bit here, the time of i2c transfer
 	 * certainly more than 31.25us: 16 * 2.5us at 400kHz bus frequency.
 	 */
+<<<<<<< HEAD
 	ret = regmap_update_bits(rk808_rtc->regmap, rk808_rtc->creg->ctrl_reg,
+=======
+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
+>>>>>>> b7ba80a49124 (Commit)
 				 BIT_RTC_CTRL_REG_RTC_GET_TIME,
 				 0);
 	if (ret) {
@@ -122,7 +142,11 @@ static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = regmap_bulk_read(rk808_rtc->regmap, rk808_rtc->creg->seconds_reg,
+=======
+	ret = regmap_bulk_read(rk808->regmap, rk808_rtc->creg->seconds_reg,
+>>>>>>> b7ba80a49124 (Commit)
 			       rtc_data, NUM_TIME_REGS);
 	if (ret) {
 		dev_err(dev, "Failed to bulk read rtc_data: %d\n", ret);
@@ -146,6 +170,10 @@ static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
 static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
 {
 	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
+<<<<<<< HEAD
+=======
+	struct rk808 *rk808 = rk808_rtc->rk808;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 rtc_data[NUM_TIME_REGS];
 	int ret;
 
@@ -160,7 +188,11 @@ static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
 	rtc_data[6] = bin2bcd(tm->tm_wday);
 
 	/* Stop RTC while updating the RTC registers */
+<<<<<<< HEAD
 	ret = regmap_update_bits(rk808_rtc->regmap, rk808_rtc->creg->ctrl_reg,
+=======
+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
+>>>>>>> b7ba80a49124 (Commit)
 				 BIT_RTC_CTRL_REG_STOP_RTC_M,
 				 BIT_RTC_CTRL_REG_STOP_RTC_M);
 	if (ret) {
@@ -168,14 +200,22 @@ static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = regmap_bulk_write(rk808_rtc->regmap, rk808_rtc->creg->seconds_reg,
+=======
+	ret = regmap_bulk_write(rk808->regmap, rk808_rtc->creg->seconds_reg,
+>>>>>>> b7ba80a49124 (Commit)
 				rtc_data, NUM_TIME_REGS);
 	if (ret) {
 		dev_err(dev, "Failed to bull write rtc_data: %d\n", ret);
 		return ret;
 	}
 	/* Start RTC again */
+<<<<<<< HEAD
 	ret = regmap_update_bits(rk808_rtc->regmap, rk808_rtc->creg->ctrl_reg,
+=======
+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
+>>>>>>> b7ba80a49124 (Commit)
 				 BIT_RTC_CTRL_REG_STOP_RTC_M, 0);
 	if (ret) {
 		dev_err(dev, "Failed to update RTC control: %d\n", ret);
@@ -188,11 +228,19 @@ static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
 static int rk808_rtc_readalarm(struct device *dev, struct rtc_wkalrm *alrm)
 {
 	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
+<<<<<<< HEAD
+=======
+	struct rk808 *rk808 = rk808_rtc->rk808;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 alrm_data[NUM_ALARM_REGS];
 	uint32_t int_reg;
 	int ret;
 
+<<<<<<< HEAD
 	ret = regmap_bulk_read(rk808_rtc->regmap,
+=======
+	ret = regmap_bulk_read(rk808->regmap,
+>>>>>>> b7ba80a49124 (Commit)
 			       rk808_rtc->creg->alarm_seconds_reg,
 			       alrm_data, NUM_ALARM_REGS);
 	if (ret) {
@@ -208,7 +256,11 @@ static int rk808_rtc_readalarm(struct device *dev, struct rtc_wkalrm *alrm)
 	alrm->time.tm_year = (bcd2bin(alrm_data[5] & YEARS_REG_MSK)) + 100;
 	rockchip_to_gregorian(&alrm->time);
 
+<<<<<<< HEAD
 	ret = regmap_read(rk808_rtc->regmap, rk808_rtc->creg->int_reg, &int_reg);
+=======
+	ret = regmap_read(rk808->regmap, rk808_rtc->creg->int_reg, &int_reg);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(dev, "Failed to read RTC INT REG: %d\n", ret);
 		return ret;
@@ -224,9 +276,16 @@ static int rk808_rtc_readalarm(struct device *dev, struct rtc_wkalrm *alrm)
 
 static int rk808_rtc_stop_alarm(struct rk808_rtc *rk808_rtc)
 {
+<<<<<<< HEAD
 	int ret;
 
 	ret = regmap_update_bits(rk808_rtc->regmap, rk808_rtc->creg->int_reg,
+=======
+	struct rk808 *rk808 = rk808_rtc->rk808;
+	int ret;
+
+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->int_reg,
+>>>>>>> b7ba80a49124 (Commit)
 				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M, 0);
 
 	return ret;
@@ -234,9 +293,16 @@ static int rk808_rtc_stop_alarm(struct rk808_rtc *rk808_rtc)
 
 static int rk808_rtc_start_alarm(struct rk808_rtc *rk808_rtc)
 {
+<<<<<<< HEAD
 	int ret;
 
 	ret = regmap_update_bits(rk808_rtc->regmap, rk808_rtc->creg->int_reg,
+=======
+	struct rk808 *rk808 = rk808_rtc->rk808;
+	int ret;
+
+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->int_reg,
+>>>>>>> b7ba80a49124 (Commit)
 				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M,
 				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M);
 
@@ -246,6 +312,10 @@ static int rk808_rtc_start_alarm(struct rk808_rtc *rk808_rtc)
 static int rk808_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
 {
 	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
+<<<<<<< HEAD
+=======
+	struct rk808 *rk808 = rk808_rtc->rk808;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 alrm_data[NUM_ALARM_REGS];
 	int ret;
 
@@ -265,7 +335,11 @@ static int rk808_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
 	alrm_data[4] = bin2bcd(alrm->time.tm_mon + 1);
 	alrm_data[5] = bin2bcd(alrm->time.tm_year - 100);
 
+<<<<<<< HEAD
 	ret = regmap_bulk_write(rk808_rtc->regmap,
+=======
+	ret = regmap_bulk_write(rk808->regmap,
+>>>>>>> b7ba80a49124 (Commit)
 				rk808_rtc->creg->alarm_seconds_reg,
 				alrm_data, NUM_ALARM_REGS);
 	if (ret) {
@@ -306,18 +380,33 @@ static int rk808_rtc_alarm_irq_enable(struct device *dev,
 static irqreturn_t rk808_alarm_irq(int irq, void *data)
 {
 	struct rk808_rtc *rk808_rtc = data;
+<<<<<<< HEAD
 	int ret;
 
 	ret = regmap_write(rk808_rtc->regmap, rk808_rtc->creg->status_reg,
 			   RTC_STATUS_MASK);
 	if (ret) {
 		dev_err(&rk808_rtc->rtc->dev,
+=======
+	struct rk808 *rk808 = rk808_rtc->rk808;
+	struct i2c_client *client = rk808->i2c;
+	int ret;
+
+	ret = regmap_write(rk808->regmap, rk808_rtc->creg->status_reg,
+			   RTC_STATUS_MASK);
+	if (ret) {
+		dev_err(&client->dev,
+>>>>>>> b7ba80a49124 (Commit)
 			"%s:Failed to update RTC status: %d\n", __func__, ret);
 		return ret;
 	}
 
 	rtc_update_irq(rk808_rtc->rtc, 1, RTC_IRQF | RTC_AF);
+<<<<<<< HEAD
 	dev_dbg(&rk808_rtc->rtc->dev,
+=======
+	dev_dbg(&client->dev,
+>>>>>>> b7ba80a49124 (Commit)
 		 "%s:irq=%d\n", __func__, irq);
 	return IRQ_HANDLED;
 }
@@ -395,12 +484,19 @@ static int rk808_rtc_probe(struct platform_device *pdev)
 		break;
 	}
 	platform_set_drvdata(pdev, rk808_rtc);
+<<<<<<< HEAD
 	rk808_rtc->regmap = dev_get_regmap(pdev->dev.parent, NULL);
 	if (!rk808_rtc->regmap)
 		return -ENODEV;
 
 	/* start rtc running by default, and use shadowed timer. */
 	ret = regmap_update_bits(rk808_rtc->regmap, rk808_rtc->creg->ctrl_reg,
+=======
+	rk808_rtc->rk808 = rk808;
+
+	/* start rtc running by default, and use shadowed timer. */
+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
+>>>>>>> b7ba80a49124 (Commit)
 				 BIT_RTC_CTRL_REG_STOP_RTC_M |
 				 BIT_RTC_CTRL_REG_RTC_READSEL_M,
 				 BIT_RTC_CTRL_REG_RTC_READSEL_M);
@@ -410,7 +506,11 @@ static int rk808_rtc_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = regmap_write(rk808_rtc->regmap, rk808_rtc->creg->status_reg,
+=======
+	ret = regmap_write(rk808->regmap, rk808_rtc->creg->status_reg,
+>>>>>>> b7ba80a49124 (Commit)
 			   RTC_STATUS_MASK);
 	if (ret) {
 		dev_err(&pdev->dev,

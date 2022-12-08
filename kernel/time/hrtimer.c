@@ -2089,7 +2089,11 @@ long hrtimer_nanosleep(ktime_t rqtp, const enum hrtimer_mode mode,
 	u64 slack;
 
 	slack = current->timer_slack_ns;
+<<<<<<< HEAD
 	if (rt_task(current))
+=======
+	if (dl_task(current) || rt_task(current))
+>>>>>>> b7ba80a49124 (Commit)
 		slack = 0;
 
 	hrtimer_init_sleeper_on_stack(&t, clockid, mode);
@@ -2126,7 +2130,10 @@ SYSCALL_DEFINE2(nanosleep, struct __kernel_timespec __user *, rqtp,
 	if (!timespec64_valid(&tu))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	current->restart_block.fn = do_no_restart_syscall;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	current->restart_block.nanosleep.type = rmtp ? TT_NATIVE : TT_NONE;
 	current->restart_block.nanosleep.rmtp = rmtp;
 	return hrtimer_nanosleep(timespec64_to_ktime(tu), HRTIMER_MODE_REL,
@@ -2148,7 +2155,10 @@ SYSCALL_DEFINE2(nanosleep_time32, struct old_timespec32 __user *, rqtp,
 	if (!timespec64_valid(&tu))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	current->restart_block.fn = do_no_restart_syscall;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	current->restart_block.nanosleep.type = rmtp ? TT_COMPAT : TT_NONE;
 	current->restart_block.nanosleep.compat_rmtp = rmtp;
 	return hrtimer_nanosleep(timespec64_to_ktime(tu), HRTIMER_MODE_REL,
@@ -2272,7 +2282,11 @@ void __init hrtimers_init(void)
 /**
  * schedule_hrtimeout_range_clock - sleep until timeout
  * @expires:	timeout value (ktime_t)
+<<<<<<< HEAD
  * @delta:	slack in expires timeout (ktime_t) for SCHED_OTHER tasks
+=======
+ * @delta:	slack in expires timeout (ktime_t)
+>>>>>>> b7ba80a49124 (Commit)
  * @mode:	timer mode
  * @clock_id:	timer clock to be used
  */
@@ -2299,6 +2313,7 @@ schedule_hrtimeout_range_clock(ktime_t *expires, u64 delta,
 		return -EINTR;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Override any slack passed by the user if under
 	 * rt contraints.
@@ -2306,6 +2321,8 @@ schedule_hrtimeout_range_clock(ktime_t *expires, u64 delta,
 	if (rt_task(current))
 		delta = 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hrtimer_init_sleeper_on_stack(&t, clock_id, mode);
 	hrtimer_set_expires_range_ns(&t.timer, *expires, delta);
 	hrtimer_sleeper_start_expires(&t, mode);
@@ -2325,7 +2342,11 @@ EXPORT_SYMBOL_GPL(schedule_hrtimeout_range_clock);
 /**
  * schedule_hrtimeout_range - sleep until timeout
  * @expires:	timeout value (ktime_t)
+<<<<<<< HEAD
  * @delta:	slack in expires timeout (ktime_t) for SCHED_OTHER tasks
+=======
+ * @delta:	slack in expires timeout (ktime_t)
+>>>>>>> b7ba80a49124 (Commit)
  * @mode:	timer mode
  *
  * Make the current task sleep until the given expiry time has
@@ -2333,8 +2354,12 @@ EXPORT_SYMBOL_GPL(schedule_hrtimeout_range_clock);
  * the current task state has been set (see set_current_state()).
  *
  * The @delta argument gives the kernel the freedom to schedule the
+<<<<<<< HEAD
  * actual wakeup to a time that is both power and performance friendly
  * for regular (non RT/DL) tasks.
+=======
+ * actual wakeup to a time that is both power and performance friendly.
+>>>>>>> b7ba80a49124 (Commit)
  * The kernel give the normal best effort behavior for "@expires+@delta",
  * but may decide to fire the timer earlier, but no earlier than @expires.
  *

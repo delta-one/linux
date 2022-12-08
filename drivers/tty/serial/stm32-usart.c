@@ -37,7 +37,11 @@
 
 
 /* Register offsets */
+<<<<<<< HEAD
 static struct stm32_usart_info __maybe_unused stm32f4_info = {
+=======
+static struct stm32_usart_info stm32f4_info = {
+>>>>>>> b7ba80a49124 (Commit)
 	.ofs = {
 		.isr	= 0x00,
 		.rdr	= 0x04,
@@ -58,7 +62,11 @@ static struct stm32_usart_info __maybe_unused stm32f4_info = {
 	}
 };
 
+<<<<<<< HEAD
 static struct stm32_usart_info __maybe_unused stm32f7_info = {
+=======
+static struct stm32_usart_info stm32f7_info = {
+>>>>>>> b7ba80a49124 (Commit)
 	.ofs = {
 		.cr1	= 0x00,
 		.cr2	= 0x04,
@@ -80,7 +88,11 @@ static struct stm32_usart_info __maybe_unused stm32f7_info = {
 	}
 };
 
+<<<<<<< HEAD
 static struct stm32_usart_info __maybe_unused stm32h7_info = {
+=======
+static struct stm32_usart_info stm32h7_info = {
+>>>>>>> b7ba80a49124 (Commit)
 	.ofs = {
 		.cr1	= 0x00,
 		.cr2	= 0x04,
@@ -131,6 +143,7 @@ static void stm32_usart_clr_bits(struct uart_port *port, u32 reg, u32 bits)
 	writel_relaxed(val, port->membase + reg);
 }
 
+<<<<<<< HEAD
 static unsigned int stm32_usart_tx_empty(struct uart_port *port)
 {
 	struct stm32_port *stm32_port = to_stm32_port(port);
@@ -178,6 +191,8 @@ static void stm32_usart_rs485_rts_disable(struct uart_port *port)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void stm32_usart_config_reg_rs485(u32 *cr1, u32 *cr3, u32 delay_ADE,
 					 u32 delay_DDE, u32 baud)
 {
@@ -226,11 +241,15 @@ static int stm32_usart_config_rs485(struct uart_port *port, struct ktermios *ter
 
 	stm32_usart_clr_bits(port, ofs->cr1, BIT(cfg->uart_enable_bit));
 
+<<<<<<< HEAD
 	if (port->rs485_rx_during_tx_gpio)
 		gpiod_set_value_cansleep(port->rs485_rx_during_tx_gpio,
 					 !!(rs485conf->flags & SER_RS485_RX_DURING_TX));
 	else
 		rs485conf->flags |= SER_RS485_RX_DURING_TX;
+=======
+	rs485conf->flags |= SER_RS485_RX_DURING_TX;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rs485conf->flags & SER_RS485_ENABLED) {
 		cr1 = readl_relaxed(port->membase + ofs->cr1);
@@ -265,12 +284,15 @@ static int stm32_usart_config_rs485(struct uart_port *port, struct ktermios *ter
 
 	stm32_usart_set_bits(port, ofs->cr1, BIT(cfg->uart_enable_bit));
 
+<<<<<<< HEAD
 	/* Adjust RTS polarity in case it's driven in software */
 	if (stm32_usart_tx_empty(port))
 		stm32_usart_rs485_rts_disable(port);
 	else
 		stm32_usart_rs485_rts_enable(port);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -586,6 +608,45 @@ static void stm32_usart_tc_interrupt_disable(struct uart_port *port)
 	stm32_usart_clr_bits(port, ofs->cr1, USART_CR1_TCIE);
 }
 
+<<<<<<< HEAD
+=======
+static void stm32_usart_rs485_rts_enable(struct uart_port *port)
+{
+	struct stm32_port *stm32_port = to_stm32_port(port);
+	struct serial_rs485 *rs485conf = &port->rs485;
+
+	if (stm32_port->hw_flow_control ||
+	    !(rs485conf->flags & SER_RS485_ENABLED))
+		return;
+
+	if (rs485conf->flags & SER_RS485_RTS_ON_SEND) {
+		mctrl_gpio_set(stm32_port->gpios,
+			       stm32_port->port.mctrl | TIOCM_RTS);
+	} else {
+		mctrl_gpio_set(stm32_port->gpios,
+			       stm32_port->port.mctrl & ~TIOCM_RTS);
+	}
+}
+
+static void stm32_usart_rs485_rts_disable(struct uart_port *port)
+{
+	struct stm32_port *stm32_port = to_stm32_port(port);
+	struct serial_rs485 *rs485conf = &port->rs485;
+
+	if (stm32_port->hw_flow_control ||
+	    !(rs485conf->flags & SER_RS485_ENABLED))
+		return;
+
+	if (rs485conf->flags & SER_RS485_RTS_ON_SEND) {
+		mctrl_gpio_set(stm32_port->gpios,
+			       stm32_port->port.mctrl & ~TIOCM_RTS);
+	} else {
+		mctrl_gpio_set(stm32_port->gpios,
+			       stm32_port->port.mctrl | TIOCM_RTS);
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void stm32_usart_transmit_chars_pio(struct uart_port *port)
 {
 	struct stm32_port *stm32_port = to_stm32_port(port);
@@ -600,7 +661,12 @@ static void stm32_usart_transmit_chars_pio(struct uart_port *port)
 		if (!(readl_relaxed(port->membase + ofs->isr) & USART_SR_TXE))
 			break;
 		writel_relaxed(xmit->buf[xmit->tail], port->membase + ofs->tdr);
+<<<<<<< HEAD
 		uart_xmit_advance(port, 1);
+=======
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+		port->icount.tx++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* rely on TXE irq (mask or unmask) for sending remaining data */
@@ -676,8 +742,13 @@ static void stm32_usart_transmit_chars_dma(struct uart_port *port)
 
 	stm32_usart_set_bits(port, ofs->cr3, USART_CR3_DMAT);
 
+<<<<<<< HEAD
 	uart_xmit_advance(port, count);
 
+=======
+	xmit->tail = (xmit->tail + count) & (UART_XMIT_SIZE - 1);
+	port->icount.tx += count;
+>>>>>>> b7ba80a49124 (Commit)
 	return;
 
 fallback_err:
@@ -693,9 +764,14 @@ static void stm32_usart_transmit_chars(struct uart_port *port)
 	int ret;
 
 	if (!stm32_port->hw_flow_control &&
+<<<<<<< HEAD
 	    port->rs485.flags & SER_RS485_ENABLED &&
 	    (port->x_char ||
 	     !(uart_circ_empty(xmit) || uart_tx_stopped(port)))) {
+=======
+	    port->rs485.flags & SER_RS485_ENABLED) {
+		stm32_port->txdone = false;
+>>>>>>> b7ba80a49124 (Commit)
 		stm32_usart_tc_interrupt_disable(port);
 		stm32_usart_rs485_rts_enable(port);
 	}
@@ -744,6 +820,10 @@ static void stm32_usart_transmit_chars(struct uart_port *port)
 		stm32_usart_tx_interrupt_disable(port);
 		if (!stm32_port->hw_flow_control &&
 		    port->rs485.flags & SER_RS485_ENABLED) {
+<<<<<<< HEAD
+=======
+			stm32_port->txdone = true;
+>>>>>>> b7ba80a49124 (Commit)
 			stm32_usart_tc_interrupt_enable(port);
 		}
 	}
@@ -801,11 +881,33 @@ static irqreturn_t stm32_usart_interrupt(int irq, void *ptr)
 		spin_unlock(&port->lock);
 	}
 
+<<<<<<< HEAD
 	/* Receiver timeout irq for DMA RX */
 	if (stm32_usart_rx_dma_enabled(port) && !stm32_port->throttled) {
 		spin_lock(&port->lock);
 		size = stm32_usart_receive_chars(port, false);
 		uart_unlock_and_check_sysrq(port);
+=======
+	if (stm32_usart_rx_dma_enabled(port))
+		return IRQ_WAKE_THREAD;
+	else
+		return IRQ_HANDLED;
+}
+
+static irqreturn_t stm32_usart_threaded_interrupt(int irq, void *ptr)
+{
+	struct uart_port *port = ptr;
+	struct tty_port *tport = &port->state->port;
+	struct stm32_port *stm32_port = to_stm32_port(port);
+	unsigned int size;
+	unsigned long flags;
+
+	/* Receiver timeout irq for DMA RX */
+	if (!stm32_port->throttled) {
+		spin_lock_irqsave(&port->lock, flags);
+		size = stm32_usart_receive_chars(port, false);
+		uart_unlock_and_check_sysrq_irqrestore(port, flags);
+>>>>>>> b7ba80a49124 (Commit)
 		if (size)
 			tty_flip_buffer_push(tport);
 	}
@@ -813,6 +915,20 @@ static irqreturn_t stm32_usart_interrupt(int irq, void *ptr)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
+=======
+static unsigned int stm32_usart_tx_empty(struct uart_port *port)
+{
+	struct stm32_port *stm32_port = to_stm32_port(port);
+	const struct stm32_usart_offsets *ofs = &stm32_port->info->ofs;
+
+	if (readl_relaxed(port->membase + ofs->isr) & USART_SR_TC)
+		return TIOCSER_TEMT;
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void stm32_usart_set_mctrl(struct uart_port *port, unsigned int mctrl)
 {
 	struct stm32_port *stm32_port = to_stm32_port(port);
@@ -1005,8 +1121,15 @@ static int stm32_usart_startup(struct uart_port *port)
 	u32 val;
 	int ret;
 
+<<<<<<< HEAD
 	ret = request_irq(port->irq, stm32_usart_interrupt,
 			  IRQF_NO_SUSPEND, name, port);
+=======
+	ret = request_threaded_irq(port->irq, stm32_usart_interrupt,
+				   stm32_usart_threaded_interrupt,
+				   IRQF_ONESHOT | IRQF_NO_SUSPEND,
+				   name, port);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -1589,6 +1712,16 @@ static int stm32_usart_of_dma_rx_probe(struct stm32_port *stm32port,
 	struct dma_slave_config config;
 	int ret;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Using DMA and threaded handler for the console could lead to
+	 * deadlocks.
+	 */
+	if (uart_console(port))
+		return -ENODEV;
+
+>>>>>>> b7ba80a49124 (Commit)
 	stm32port->rx_buf = dma_alloc_coherent(dev, RX_BUF_L,
 					       &stm32port->rx_dma_buf,
 					       GFP_KERNEL);
@@ -1661,10 +1794,29 @@ static int stm32_usart_serial_probe(struct platform_device *pdev)
 	if (!stm32port->info)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	stm32port->rx_ch = dma_request_chan(&pdev->dev, "rx");
 	if (PTR_ERR(stm32port->rx_ch) == -EPROBE_DEFER)
 		return -EPROBE_DEFER;
 
+=======
+	ret = stm32_usart_init_port(stm32port, pdev);
+	if (ret)
+		return ret;
+
+	if (stm32port->wakeup_src) {
+		device_set_wakeup_capable(&pdev->dev, true);
+		ret = dev_pm_set_wake_irq(&pdev->dev, stm32port->port.irq);
+		if (ret)
+			goto err_deinit_port;
+	}
+
+	stm32port->rx_ch = dma_request_chan(&pdev->dev, "rx");
+	if (PTR_ERR(stm32port->rx_ch) == -EPROBE_DEFER) {
+		ret = -EPROBE_DEFER;
+		goto err_wakeirq;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	/* Fall back in interrupt mode for any non-deferral error */
 	if (IS_ERR(stm32port->rx_ch))
 		stm32port->rx_ch = NULL;
@@ -1678,6 +1830,7 @@ static int stm32_usart_serial_probe(struct platform_device *pdev)
 	if (IS_ERR(stm32port->tx_ch))
 		stm32port->tx_ch = NULL;
 
+<<<<<<< HEAD
 	ret = stm32_usart_init_port(stm32port, pdev);
 	if (ret)
 		goto err_dma_tx;
@@ -1689,6 +1842,8 @@ static int stm32_usart_serial_probe(struct platform_device *pdev)
 			goto err_deinit_port;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (stm32port->rx_ch && stm32_usart_of_dma_rx_probe(stm32port, pdev)) {
 		/* Fall back in interrupt mode */
 		dma_release_channel(stm32port->rx_ch);
@@ -1725,11 +1880,27 @@ err_port:
 	pm_runtime_set_suspended(&pdev->dev);
 	pm_runtime_put_noidle(&pdev->dev);
 
+<<<<<<< HEAD
 	if (stm32port->tx_ch)
 		stm32_usart_of_dma_tx_remove(stm32port, pdev);
 	if (stm32port->rx_ch)
 		stm32_usart_of_dma_rx_remove(stm32port, pdev);
 
+=======
+	if (stm32port->tx_ch) {
+		stm32_usart_of_dma_tx_remove(stm32port, pdev);
+		dma_release_channel(stm32port->tx_ch);
+	}
+
+	if (stm32port->rx_ch)
+		stm32_usart_of_dma_rx_remove(stm32port, pdev);
+
+err_dma_rx:
+	if (stm32port->rx_ch)
+		dma_release_channel(stm32port->rx_ch);
+
+err_wakeirq:
+>>>>>>> b7ba80a49124 (Commit)
 	if (stm32port->wakeup_src)
 		dev_pm_clear_wake_irq(&pdev->dev);
 
@@ -1739,6 +1910,7 @@ err_deinit_port:
 
 	stm32_usart_deinit_port(stm32port);
 
+<<<<<<< HEAD
 err_dma_tx:
 	if (stm32port->tx_ch)
 		dma_release_channel(stm32port->tx_ch);
@@ -1747,6 +1919,8 @@ err_dma_rx:
 	if (stm32port->rx_ch)
 		dma_release_channel(stm32port->rx_ch);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

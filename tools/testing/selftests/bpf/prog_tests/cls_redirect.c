@@ -13,7 +13,10 @@
 
 #include "progs/test_cls_redirect.h"
 #include "test_cls_redirect.skel.h"
+<<<<<<< HEAD
 #include "test_cls_redirect_dynptr.skel.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "test_cls_redirect_subprogs.skel.h"
 
 #define ENCAP_IP INADDR_LOOPBACK
@@ -447,6 +450,7 @@ cleanup:
 	close_fds((int *)conns, sizeof(conns) / sizeof(conns[0][0]));
 }
 
+<<<<<<< HEAD
 static void test_cls_redirect_dynptr(void)
 {
 	struct test_cls_redirect_dynptr *skel;
@@ -469,6 +473,8 @@ cleanup:
 	test_cls_redirect_dynptr__destroy(skel);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void test_cls_redirect_inlined(void)
 {
 	struct test_cls_redirect *skel;
@@ -519,6 +525,9 @@ void test_cls_redirect(void)
 		test_cls_redirect_inlined();
 	if (test__start_subtest("cls_redirect_subprogs"))
 		test_cls_redirect_subprogs();
+<<<<<<< HEAD
 	if (test__start_subtest("cls_redirect_dynptr"))
 		test_cls_redirect_dynptr();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

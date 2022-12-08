@@ -218,7 +218,10 @@ static void amd_gpio_dbg_show(struct seq_file *s, struct gpio_chip *gc)
 	char *orientation;
 	char debounce_value[40];
 	char *debounce_enable;
+<<<<<<< HEAD
 	char *wake_cntrlz;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (bank = 0; bank < gpio_dev->hwbank_num; bank++) {
 		unsigned int time = 0;
@@ -306,12 +309,15 @@ static void amd_gpio_dbg_show(struct seq_file *s, struct gpio_chip *gc)
 				wake_cntrl2 = " ∅";
 			seq_printf(s, "S4/S5 %s| ", wake_cntrl2);
 
+<<<<<<< HEAD
 			if (pin_reg & BIT(WAKECNTRL_Z_OFF))
 				wake_cntrlz = "⏰";
 			else
 				wake_cntrlz = " ∅";
 			seq_printf(s, "Z %s| ", wake_cntrlz);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			if (pin_reg & BIT(PULL_UP_ENABLE_OFF)) {
 				pull_up_enable = "+";
 				if (pin_reg & BIT(PULL_UP_SEL_OFF))
@@ -372,7 +378,10 @@ static void amd_gpio_dbg_show(struct seq_file *s, struct gpio_chip *gc)
 
 			} else {
 				debounce_enable = "  ∅";
+<<<<<<< HEAD
 				time = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			snprintf(debounce_value, sizeof(debounce_value), "%u", time * unit);
 			seq_printf(s, "debounce %s (🕑 %sus)| ", debounce_enable, debounce_value);
@@ -636,6 +645,7 @@ static bool do_amd_gpio_irq_handler(int irq, void *dev_id)
 		/* Each status bit covers four pins */
 		for (i = 0; i < 4; i++) {
 			regval = readl(regs + i);
+<<<<<<< HEAD
 
 			if (regval & PIN_IRQ_PENDING)
 				dev_dbg(&gpio_dev->pdev->dev,
@@ -645,6 +655,15 @@ static bool do_amd_gpio_irq_handler(int irq, void *dev_id)
 			/* caused wake on resume context for shared IRQ */
 			if (irq < 0 && (regval & BIT(WAKE_STS_OFF)))
 				return true;
+=======
+			/* caused wake on resume context for shared IRQ */
+			if (irq < 0 && (regval & BIT(WAKE_STS_OFF))) {
+				dev_dbg(&gpio_dev->pdev->dev,
+					"Waking due to GPIO %d: 0x%x",
+					irqnr + i, regval);
+				return true;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 
 			if (!(regval & PIN_IRQ_PENDING) ||
 			    !(regval & BIT(INTERRUPT_MASK_OFF)))
@@ -1213,5 +1232,9 @@ static struct platform_driver amd_gpio_driver = {
 
 module_platform_driver(amd_gpio_driver);
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("Ken Xue <Ken.Xue@amd.com>, Jeff Wu <Jeff.Wu@amd.com>");
 MODULE_DESCRIPTION("AMD GPIO pinctrl driver");

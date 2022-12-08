@@ -104,12 +104,21 @@ examples:
             #address-cells = <1>;
             #size-cells = <0>;
             channel@0 {
+<<<<<<< HEAD
                 reg = <0>;
             };
             channel@4 {
                 reg = <4>;
                 ti,gain = <3>;
                 ti,datarate = <5>;
+=======
+              reg = <0>;
+            };
+            channel@4 {
+              reg = <4>;
+              ti,gain = <3>;
+              ti,datarate = <5>;
+>>>>>>> b7ba80a49124 (Commit)
             };
         };
     };

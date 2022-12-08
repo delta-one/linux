@@ -194,6 +194,10 @@ int qxl_device_init(struct qxl_device *qdev,
 					     sizeof(struct qxl_command),
 					     QXL_COMMAND_RING_SIZE,
 					     qdev->io_base + QXL_IO_NOTIFY_CMD,
+<<<<<<< HEAD
+=======
+					     false,
+>>>>>>> b7ba80a49124 (Commit)
 					     &qdev->display_event);
 	if (!qdev->command_ring) {
 		DRM_ERROR("Unable to create command ring\n");
@@ -206,6 +210,10 @@ int qxl_device_init(struct qxl_device *qdev,
 				sizeof(struct qxl_command),
 				QXL_CURSOR_RING_SIZE,
 				qdev->io_base + QXL_IO_NOTIFY_CURSOR,
+<<<<<<< HEAD
+=======
+				false,
+>>>>>>> b7ba80a49124 (Commit)
 				&qdev->cursor_event);
 
 	if (!qdev->cursor_ring) {
@@ -217,7 +225,11 @@ int qxl_device_init(struct qxl_device *qdev,
 	qdev->release_ring = qxl_ring_create(
 				&(qdev->ram_header->release_ring_hdr),
 				sizeof(uint64_t),
+<<<<<<< HEAD
 				QXL_RELEASE_RING_SIZE, 0,
+=======
+				QXL_RELEASE_RING_SIZE, 0, true,
+>>>>>>> b7ba80a49124 (Commit)
 				NULL);
 
 	if (!qdev->release_ring) {

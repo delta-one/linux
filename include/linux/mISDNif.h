@@ -586,7 +586,11 @@ extern struct mISDNclock *mISDN_register_clock(char *, int, clockctl_func_t *,
 						void *);
 extern void	mISDN_unregister_clock(struct mISDNclock *);
 
+<<<<<<< HEAD
 static inline struct mISDNdevice *dev_to_mISDN(const struct device *dev)
+=======
+static inline struct mISDNdevice *dev_to_mISDN(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (dev)
 		return dev_get_drvdata(dev);

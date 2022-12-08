@@ -54,7 +54,11 @@ static void crypto_finalize_request(struct crypto_engine *engine,
 		}
 	}
 	lockdep_assert_in_softirq();
+<<<<<<< HEAD
 	crypto_request_complete(req, err);
+=======
+	req->complete(req, err);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kthread_queue_work(engine->kworker, &engine->pump_requests);
 }
@@ -130,7 +134,11 @@ start_request:
 		engine->cur_req = async_req;
 
 	if (backlog)
+<<<<<<< HEAD
 		crypto_request_complete(backlog, -EINPROGRESS);
+=======
+		backlog->complete(backlog, -EINPROGRESS);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (engine->busy)
 		was_busy = true;
@@ -214,7 +222,11 @@ req_err_1:
 	}
 
 req_err_2:
+<<<<<<< HEAD
 	crypto_request_complete(async_req, ret);
+=======
+	async_req->complete(async_req, ret);
+>>>>>>> b7ba80a49124 (Commit)
 
 retry:
 	/* If retry mechanism is supported, send new requests to engine */
@@ -499,7 +511,11 @@ EXPORT_SYMBOL_GPL(crypto_engine_stop);
  *                This has the form:
  *                callback(struct crypto_engine *engine)
  *                where:
+<<<<<<< HEAD
  *                engine: the crypto engine structure.
+=======
+ *                @engine: the crypto engine structure.
+>>>>>>> b7ba80a49124 (Commit)
  * @rt: whether this queue is set to run as a realtime task
  * @qlen: maximum size of the crypto-engine queue
  *

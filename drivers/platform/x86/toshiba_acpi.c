@@ -3113,7 +3113,11 @@ static struct attribute *toshiba_acpi_battery_attrs[] = {
 
 ATTRIBUTE_GROUPS(toshiba_acpi_battery);
 
+<<<<<<< HEAD
 static int toshiba_acpi_battery_add(struct power_supply *battery, struct acpi_battery_hook *hook)
+=======
+static int toshiba_acpi_battery_add(struct power_supply *battery)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (toshiba_acpi == NULL) {
 		pr_err("Init order issue\n");
@@ -3126,7 +3130,11 @@ static int toshiba_acpi_battery_add(struct power_supply *battery, struct acpi_ba
 	return 0;
 }
 
+<<<<<<< HEAD
 static int toshiba_acpi_battery_remove(struct power_supply *battery, struct acpi_battery_hook *hook)
+=======
+static int toshiba_acpi_battery_remove(struct power_supply *battery)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	device_remove_groups(&battery->dev, toshiba_acpi_battery_groups);
 	return 0;
@@ -3186,7 +3194,11 @@ static void print_supported_features(struct toshiba_acpi_dev *dev)
 	pr_cont("\n");
 }
 
+<<<<<<< HEAD
 static void toshiba_acpi_remove(struct acpi_device *acpi_dev)
+=======
+static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct toshiba_acpi_dev *dev = acpi_driver_data(acpi_dev);
 
@@ -3234,6 +3246,11 @@ static void toshiba_acpi_remove(struct acpi_device *acpi_dev)
 		toshiba_acpi = NULL;
 
 	kfree(dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const char *find_hci_method(acpi_handle handle)

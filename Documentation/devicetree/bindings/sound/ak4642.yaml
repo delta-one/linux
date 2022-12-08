@@ -9,9 +9,12 @@ title: AK4642 I2C transmitter
 maintainers:
   - Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     enum:
@@ -40,7 +43,11 @@ required:
   - compatible
   - reg
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

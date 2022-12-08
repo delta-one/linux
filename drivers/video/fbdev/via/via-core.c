@@ -725,14 +725,18 @@ static int __init via_core_init(void)
 {
 	int ret;
 
+<<<<<<< HEAD
 	if (fb_modesetting_disabled("viafb"))
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = viafb_init();
 	if (ret)
 		return ret;
 	viafb_i2c_init();
 	viafb_gpio_init();
+<<<<<<< HEAD
 	ret = pci_register_driver(&via_driver);
 	if (ret) {
 		viafb_gpio_exit();
@@ -741,6 +745,9 @@ static int __init via_core_init(void)
 	}
 
 	return 0;
+=======
+	return pci_register_driver(&via_driver);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __exit via_core_exit(void)

@@ -364,14 +364,20 @@ static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
 }
 
 static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
+<<<<<<< HEAD
 					     struct machine *machine,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 					     bool is_kernel)
 {
 	struct build_id bid;
 	struct nsinfo *nsi;
 	struct nscookie nc;
+<<<<<<< HEAD
 	struct dso *dso = NULL;
 	struct dso_id id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	if (is_kernel) {
@@ -379,6 +385,7 @@ static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	id.maj = event->maj;
 	id.min = event->min;
 	id.ino = event->ino;
@@ -391,6 +398,8 @@ static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
 		goto out;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	nsi = nsinfo__new(event->pid);
 	nsinfo__mountns_enter(nsi, &nc);
 
@@ -406,16 +415,22 @@ out:
 		event->header.misc |= PERF_RECORD_MISC_MMAP_BUILD_ID;
 		event->__reserved_1 = 0;
 		event->__reserved_2 = 0;
+<<<<<<< HEAD
 
 		if (dso && !dso->has_build_id)
 			dso__set_build_id(dso, &bid);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		if (event->filename[0] == '/') {
 			pr_debug2("Failed to read build ID for %s\n",
 				  event->filename);
 		}
 	}
+<<<<<<< HEAD
 	dso__put(dso);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int perf_event__synthesize_mmap_events(struct perf_tool *tool,
@@ -526,7 +541,11 @@ out:
 		event->mmap2.tid = pid;
 
 		if (symbol_conf.buildid_mmap2)
+<<<<<<< HEAD
 			perf_record_mmap2__read_build_id(&event->mmap2, machine, false);
+=======
+			perf_record_mmap2__read_build_id(&event->mmap2, false);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (perf_tool__process_synth_event(tool, event, machine, process) != 0) {
 			rc = -1;
@@ -709,7 +728,11 @@ int perf_event__synthesize_modules(struct perf_tool *tool, perf_event__handler_t
 			memcpy(event->mmap2.filename, pos->dso->long_name,
 			       pos->dso->long_name_len + 1);
 
+<<<<<<< HEAD
 			perf_record_mmap2__read_build_id(&event->mmap2, machine, false);
+=======
+			perf_record_mmap2__read_build_id(&event->mmap2, false);
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			size = PERF_ALIGN(pos->dso->long_name_len + 1, sizeof(u64));
 			event->mmap.header.type = PERF_RECORD_MMAP;
@@ -1145,7 +1168,11 @@ static int __perf_event__synthesize_kernel_mmap(struct perf_tool *tool,
 		event->mmap2.len   = map->end - event->mmap.start;
 		event->mmap2.pid   = machine->pid;
 
+<<<<<<< HEAD
 		perf_record_mmap2__read_build_id(&event->mmap2, machine, true);
+=======
+		perf_record_mmap2__read_build_id(&event->mmap2, true);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		size = snprintf(event->mmap.filename, sizeof(event->mmap.filename),
 				"%s%s", machine->mmap_name, kmap->ref_reloc_sym->name) + 1;
@@ -2004,7 +2031,11 @@ int perf_event__synthesize_event_update_name(struct perf_tool *tool, struct evse
 					     perf_event__handler_t process)
 {
 	struct perf_record_event_update *ev;
+<<<<<<< HEAD
 	size_t len = strlen(evsel__name(evsel));
+=======
+	size_t len = strlen(evsel->name);
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	ev = event_update_event__new(len + 1, PERF_EVENT_UPDATE__NAME, evsel->core.id[0]);
@@ -2157,7 +2188,10 @@ int perf_event__synthesize_attr(struct perf_tool *tool, struct perf_event_attr *
 	return err;
 }
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int perf_event__synthesize_tracing_data(struct perf_tool *tool, int fd, struct evlist *evlist,
 					perf_event__handler_t process)
 {
@@ -2204,7 +2238,10 @@ int perf_event__synthesize_tracing_data(struct perf_tool *tool, int fd, struct e
 
 	return aligned_size;
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int perf_event__synthesize_build_id(struct perf_tool *tool, struct dso *pos, u16 misc,
 				    perf_event__handler_t process, struct machine *machine)
@@ -2219,10 +2256,16 @@ int perf_event__synthesize_build_id(struct perf_tool *tool, struct dso *pos, u16
 
 	len = pos->long_name_len + 1;
 	len = PERF_ALIGN(len, NAME_ALIGN);
+<<<<<<< HEAD
 	ev.build_id.size = min(pos->bid.size, sizeof(pos->bid.data));
 	memcpy(&ev.build_id.build_id, pos->bid.data, ev.build_id.size);
 	ev.build_id.header.type = PERF_RECORD_HEADER_BUILD_ID;
 	ev.build_id.header.misc = misc | PERF_RECORD_MISC_BUILD_ID_SIZE;
+=======
+	memcpy(&ev.build_id.build_id, pos->bid.data, sizeof(pos->bid.data));
+	ev.build_id.header.type = PERF_RECORD_HEADER_BUILD_ID;
+	ev.build_id.header.misc = misc;
+>>>>>>> b7ba80a49124 (Commit)
 	ev.build_id.pid = machine->pid;
 	ev.build_id.header.size = sizeof(ev.build_id) + len;
 	memcpy(&ev.build_id.filename, pos->long_name, pos->long_name_len);
@@ -2357,7 +2400,10 @@ int perf_event__synthesize_for_pipe(struct perf_tool *tool,
 	}
 	ret += err;
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (have_tracepoints(&evlist->core.entries)) {
 		int fd = perf_data__fd(data);
 
@@ -2377,9 +2423,12 @@ int perf_event__synthesize_for_pipe(struct perf_tool *tool,
 		}
 		ret += err;
 	}
+<<<<<<< HEAD
 #else
 	(void)data;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }

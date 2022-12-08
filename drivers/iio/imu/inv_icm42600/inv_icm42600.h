@@ -22,7 +22,10 @@ enum inv_icm42600_chip {
 	INV_CHIP_ICM42602,
 	INV_CHIP_ICM42605,
 	INV_CHIP_ICM42622,
+<<<<<<< HEAD
 	INV_CHIP_ICM42631,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	INV_CHIP_NB,
 };
 
@@ -304,7 +307,10 @@ struct inv_icm42600_state {
 #define INV_ICM42600_WHOAMI_ICM42602			0x41
 #define INV_ICM42600_WHOAMI_ICM42605			0x42
 #define INV_ICM42600_WHOAMI_ICM42622			0x46
+<<<<<<< HEAD
 #define INV_ICM42600_WHOAMI_ICM42631			0x5C
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* User bank 1 (MSB 0x10) */
 #define INV_ICM42600_REG_SENSOR_CONFIG0			0x1003

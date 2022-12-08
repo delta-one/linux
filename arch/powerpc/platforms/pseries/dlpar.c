@@ -22,7 +22,10 @@
 #include <asm/machdep.h>
 #include <linux/uaccess.h>
 #include <asm/rtas.h>
+<<<<<<< HEAD
 #include <asm/rtas-work-area.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct workqueue_struct *pseries_hp_wq;
 
@@ -138,27 +141,57 @@ struct device_node *dlpar_configure_connector(__be32 drc_index,
 	struct property *property;
 	struct property *last_property = NULL;
 	struct cc_workarea *ccwa;
+<<<<<<< HEAD
 	struct rtas_work_area *work_area;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	char *data_buf;
 	int cc_token;
 	int rc = -1;
 
+<<<<<<< HEAD
 	cc_token = rtas_function_token(RTAS_FN_IBM_CONFIGURE_CONNECTOR);
 	if (cc_token == RTAS_UNKNOWN_SERVICE)
 		return NULL;
 
 	work_area = rtas_work_area_alloc(SZ_4K);
 	data_buf = rtas_work_area_raw_buf(work_area);
+=======
+	cc_token = rtas_token("ibm,configure-connector");
+	if (cc_token == RTAS_UNKNOWN_SERVICE)
+		return NULL;
+
+	data_buf = kzalloc(RTAS_DATA_BUF_SIZE, GFP_KERNEL);
+	if (!data_buf)
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ccwa = (struct cc_workarea *)&data_buf[0];
 	ccwa->drc_index = drc_index;
 	ccwa->zero = 0;
 
 	do {
+<<<<<<< HEAD
 		do {
 			rc = rtas_call(cc_token, 2, 1, NULL,
 				       rtas_work_area_phys(work_area), NULL);
 		} while (rtas_busy_delay(rc));
+=======
+		/* Since we release the rtas_data_buf lock between configure
+		 * connector calls we want to re-populate the rtas_data_buffer
+		 * with the contents of the previous call.
+		 */
+		spin_lock(&rtas_data_buf_lock);
+
+		memcpy(rtas_data_buf, data_buf, RTAS_DATA_BUF_SIZE);
+		rc = rtas_call(cc_token, 2, 1, NULL, rtas_data_buf, NULL);
+		memcpy(data_buf, rtas_data_buf, RTAS_DATA_BUF_SIZE);
+
+		spin_unlock(&rtas_data_buf_lock);
+
+		if (rtas_busy_delay(rc))
+			continue;
+>>>>>>> b7ba80a49124 (Commit)
 
 		switch (rc) {
 		case COMPLETE:
@@ -218,7 +251,11 @@ struct device_node *dlpar_configure_connector(__be32 drc_index,
 	} while (rc);
 
 cc_error:
+<<<<<<< HEAD
 	rtas_work_area_free(work_area);
+=======
+	kfree(data_buf);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rc) {
 		if (first_dn)

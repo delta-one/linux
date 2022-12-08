@@ -116,7 +116,11 @@ format, the Group Extension is set in the PS-field.
   ----------------------------------------
   23 ... 16       15 ... 8
   ==============  ========================
+<<<<<<< HEAD
   F0h ... FFh     GE (Group Extension)
+=======
+  F0h ... FFh     GE (Group Extenstion)
+>>>>>>> b7ba80a49124 (Commit)
   ==============  ========================
 
 On the other hand, when using PDU1 format, the PS-field contains a so-called

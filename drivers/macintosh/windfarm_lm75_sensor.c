@@ -33,8 +33,13 @@
 #endif
 
 struct wf_lm75_sensor {
+<<<<<<< HEAD
 	unsigned int		ds1775 : 1;
 	unsigned int		inited : 1;
+=======
+	int			ds1775 : 1;
+	int			inited : 1;
+>>>>>>> b7ba80a49124 (Commit)
 	struct i2c_client	*i2c;
 	struct wf_sensor	sens;
 };
@@ -87,9 +92,15 @@ static const struct wf_sensor_ops wf_lm75_ops = {
 	.owner		= THIS_MODULE,
 };
 
+<<<<<<< HEAD
 static int wf_lm75_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int wf_lm75_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+{	
+>>>>>>> b7ba80a49124 (Commit)
 	struct wf_lm75_sensor *lm;
 	int rc, ds1775;
 	const char *name, *loc;
@@ -177,7 +188,11 @@ static struct i2c_driver wf_lm75_driver = {
 		.name	= "wf_lm75",
 		.of_match_table = wf_lm75_of_id,
 	},
+<<<<<<< HEAD
 	.probe_new	= wf_lm75_probe,
+=======
+	.probe		= wf_lm75_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= wf_lm75_remove,
 	.id_table	= wf_lm75_id,
 };

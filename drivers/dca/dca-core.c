@@ -294,7 +294,13 @@ EXPORT_SYMBOL_GPL(dca3_get_tag);
  */
 u8 dca_get_tag(int cpu)
 {
+<<<<<<< HEAD
 	return dca_common_get_tag(NULL, cpu);
+=======
+	struct device *dev = NULL;
+
+	return dca_common_get_tag(dev, cpu);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(dca_get_tag);
 

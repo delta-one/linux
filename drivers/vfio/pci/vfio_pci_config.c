@@ -1244,7 +1244,11 @@ static int vfio_msi_cap_len(struct vfio_pci_core_device *vdev, u8 pos)
 	if (vdev->msi_perm)
 		return len;
 
+<<<<<<< HEAD
 	vdev->msi_perm = kmalloc(sizeof(struct perm_bits), GFP_KERNEL_ACCOUNT);
+=======
+	vdev->msi_perm = kmalloc(sizeof(struct perm_bits), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!vdev->msi_perm)
 		return -ENOMEM;
 
@@ -1731,11 +1735,19 @@ int vfio_config_init(struct vfio_pci_core_device *vdev)
 	 * no requirements on the length of a capability, so the gap between
 	 * capabilities needs byte granularity.
 	 */
+<<<<<<< HEAD
 	map = kmalloc(pdev->cfg_size, GFP_KERNEL_ACCOUNT);
 	if (!map)
 		return -ENOMEM;
 
 	vconfig = kmalloc(pdev->cfg_size, GFP_KERNEL_ACCOUNT);
+=======
+	map = kmalloc(pdev->cfg_size, GFP_KERNEL);
+	if (!map)
+		return -ENOMEM;
+
+	vconfig = kmalloc(pdev->cfg_size, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!vconfig) {
 		kfree(map);
 		return -ENOMEM;

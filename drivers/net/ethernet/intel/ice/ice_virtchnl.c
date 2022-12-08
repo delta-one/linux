@@ -462,9 +462,12 @@ static int ice_vc_get_vf_res_msg(struct ice_vf *vf, u8 *msg)
 			vfres->vf_cap_flags |= VIRTCHNL_VF_OFFLOAD_RSS_REG;
 	}
 
+<<<<<<< HEAD
 	if (vf->driver_caps & VIRTCHNL_VF_OFFLOAD_RX_FLEX_DESC)
 		vfres->vf_cap_flags |= VIRTCHNL_VF_OFFLOAD_RX_FLEX_DESC;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (vf->driver_caps & VIRTCHNL_VF_OFFLOAD_FDIR_PF)
 		vfres->vf_cap_flags |= VIRTCHNL_VF_OFFLOAD_FDIR_PF;
 
@@ -507,7 +510,11 @@ static int ice_vc_get_vf_res_msg(struct ice_vf *vf, u8 *msg)
 	vfres->vsi_res[0].vsi_type = VIRTCHNL_VSI_SRIOV;
 	vfres->vsi_res[0].num_queue_pairs = vsi->num_txq;
 	ether_addr_copy(vfres->vsi_res[0].default_mac_addr,
+<<<<<<< HEAD
 			vf->hw_lan_addr);
+=======
+			vf->hw_lan_addr.addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* match guest capabilities */
 	vf->driver_caps = vfres->vf_cap_flags;
@@ -1661,7 +1668,10 @@ static int ice_vc_cfg_qs_msg(struct ice_vf *vf, u8 *msg)
 		/* copy Rx queue info from VF into VSI */
 		if (qpi->rxq.ring_len > 0) {
 			u16 max_frame_size = ice_vc_get_max_frame_size(vf);
+<<<<<<< HEAD
 			u32 rxdid;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 			vsi->rx_rings[i]->dma = qpi->rxq.dma_ring_addr;
 			vsi->rx_rings[i]->count = qpi->rxq.ring_len;
@@ -1689,6 +1699,7 @@ static int ice_vc_cfg_qs_msg(struct ice_vf *vf, u8 *msg)
 					 vf->vf_id, i);
 				goto error_param;
 			}
+<<<<<<< HEAD
 
 			/* If Rx flex desc is supported, select RXDID for Rx
 			 * queues. Otherwise, use legacy 32byte descriptor
@@ -1707,6 +1718,8 @@ static int ice_vc_cfg_qs_msg(struct ice_vf *vf, u8 *msg)
 			ice_write_qrxflxp_cntxt(&vsi->back->hw,
 						vsi->rxq_map[q_idx],
 						rxdid, 0x03, false);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -1802,10 +1815,17 @@ ice_vfhw_mac_add(struct ice_vf *vf, struct virtchnl_ether_addr *vc_ether_addr)
 	 * was correctly specified over VIRTCHNL
 	 */
 	if ((ice_is_vc_addr_legacy(vc_ether_addr) &&
+<<<<<<< HEAD
 	     is_zero_ether_addr(vf->hw_lan_addr)) ||
 	    ice_is_vc_addr_primary(vc_ether_addr)) {
 		ether_addr_copy(vf->dev_lan_addr, mac_addr);
 		ether_addr_copy(vf->hw_lan_addr, mac_addr);
+=======
+	     is_zero_ether_addr(vf->hw_lan_addr.addr)) ||
+	    ice_is_vc_addr_primary(vc_ether_addr)) {
+		ether_addr_copy(vf->dev_lan_addr.addr, mac_addr);
+		ether_addr_copy(vf->hw_lan_addr.addr, mac_addr);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* hardware and device MACs are already set, but its possible that the
@@ -1836,7 +1856,11 @@ ice_vc_add_mac_addr(struct ice_vf *vf, struct ice_vsi *vsi,
 	int ret;
 
 	/* device MAC already added */
+<<<<<<< HEAD
 	if (ether_addr_equal(mac_addr, vf->dev_lan_addr))
+=======
+	if (ether_addr_equal(mac_addr, vf->dev_lan_addr.addr))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	if (is_unicast_ether_addr(mac_addr) && !ice_can_vf_change_mac(vf)) {
@@ -1891,8 +1915,13 @@ ice_update_legacy_cached_mac(struct ice_vf *vf,
 	    ice_is_legacy_umac_expired(&vf->legacy_last_added_umac))
 		return;
 
+<<<<<<< HEAD
 	ether_addr_copy(vf->dev_lan_addr, vf->legacy_last_added_umac.addr);
 	ether_addr_copy(vf->hw_lan_addr, vf->legacy_last_added_umac.addr);
+=======
+	ether_addr_copy(vf->dev_lan_addr.addr, vf->legacy_last_added_umac.addr);
+	ether_addr_copy(vf->hw_lan_addr.addr, vf->legacy_last_added_umac.addr);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1906,6 +1935,7 @@ ice_vfhw_mac_del(struct ice_vf *vf, struct virtchnl_ether_addr *vc_ether_addr)
 	u8 *mac_addr = vc_ether_addr->addr;
 
 	if (!is_valid_ether_addr(mac_addr) ||
+<<<<<<< HEAD
 	    !ether_addr_equal(vf->dev_lan_addr, mac_addr))
 		return;
 
@@ -1915,6 +1945,17 @@ ice_vfhw_mac_del(struct ice_vf *vf, struct virtchnl_ether_addr *vc_ether_addr)
 	 * won't work if we clear the hardware MAC here
 	 */
 	eth_zero_addr(vf->dev_lan_addr);
+=======
+	    !ether_addr_equal(vf->dev_lan_addr.addr, mac_addr))
+		return;
+
+	/* allow the device MAC to be repopulated in the add flow and don't
+	 * clear the hardware MAC (i.e. hw_lan_addr.addr) here as that is meant
+	 * to be persistent on VM reboot and across driver unload/load, which
+	 * won't work if we clear the hardware MAC here
+	 */
+	eth_zero_addr(vf->dev_lan_addr.addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ice_update_legacy_cached_mac(vf, vc_ether_addr);
 }
@@ -1934,7 +1975,11 @@ ice_vc_del_mac_addr(struct ice_vf *vf, struct ice_vsi *vsi,
 	int status;
 
 	if (!ice_can_vf_change_mac(vf) &&
+<<<<<<< HEAD
 	    ether_addr_equal(vf->dev_lan_addr, mac_addr))
+=======
+	    ether_addr_equal(vf->dev_lan_addr.addr, mac_addr))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	status = ice_fltr_remove_mac(vsi, mac_addr, ICE_FWD_TO_VSI);
@@ -2479,6 +2524,7 @@ error_param:
 }
 
 /**
+<<<<<<< HEAD
  * ice_vc_get_rss_hena - return the RSS HENA bits allowed by the hardware
  * @vf: pointer to the VF info
  */
@@ -2637,6 +2683,8 @@ err:
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ice_vf_init_vlan_stripping - enable/disable VLAN stripping on initialization
  * @vf: VF to enable/disable VLAN stripping for on initialization
  *
@@ -3670,9 +3718,12 @@ static const struct ice_virtchnl_ops ice_virtchnl_dflt_ops = {
 	.cfg_promiscuous_mode_msg = ice_vc_cfg_promiscuous_mode_msg,
 	.add_vlan_msg = ice_vc_add_vlan_msg,
 	.remove_vlan_msg = ice_vc_remove_vlan_msg,
+<<<<<<< HEAD
 	.query_rxdid = ice_vc_query_rxdid,
 	.get_rss_hena = ice_vc_get_rss_hena,
 	.set_rss_hena_msg = ice_vc_set_rss_hena,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.ena_vlan_stripping = ice_vc_ena_vlan_stripping,
 	.dis_vlan_stripping = ice_vc_dis_vlan_stripping,
 	.handle_rss_cfg_msg = ice_vc_handle_rss_cfg,
@@ -3733,7 +3784,11 @@ static int ice_vc_repr_add_mac(struct ice_vf *vf, u8 *msg)
 		int result;
 
 		if (!is_unicast_ether_addr(mac_addr) ||
+<<<<<<< HEAD
 		    ether_addr_equal(mac_addr, vf->hw_lan_addr))
+=======
+		    ether_addr_equal(mac_addr, vf->hw_lan_addr.addr))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		if (vf->pf_set_mac) {
@@ -3807,9 +3862,12 @@ static const struct ice_virtchnl_ops ice_virtchnl_repr_ops = {
 	.cfg_promiscuous_mode_msg = ice_vc_repr_cfg_promiscuous_mode,
 	.add_vlan_msg = ice_vc_add_vlan_msg,
 	.remove_vlan_msg = ice_vc_remove_vlan_msg,
+<<<<<<< HEAD
 	.query_rxdid = ice_vc_query_rxdid,
 	.get_rss_hena = ice_vc_get_rss_hena,
 	.set_rss_hena_msg = ice_vc_set_rss_hena,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.ena_vlan_stripping = ice_vc_ena_vlan_stripping,
 	.dis_vlan_stripping = ice_vc_dis_vlan_stripping,
 	.handle_rss_cfg_msg = ice_vc_handle_rss_cfg,
@@ -3834,6 +3892,7 @@ void ice_virtchnl_set_repr_ops(struct ice_vf *vf)
 }
 
 /**
+<<<<<<< HEAD
  * ice_is_malicious_vf - check if this vf might be overflowing mailbox
  * @vf: the VF to check
  * @mbxdata: data about the state of the mailbox
@@ -3879,12 +3938,21 @@ ice_is_malicious_vf(struct ice_vf *vf, struct ice_mbx_data *mbxdata)
  * @pf: pointer to the PF structure
  * @event: pointer to the AQ event
  * @mbxdata: information used to detect VF attempting mailbox overflow
+=======
+ * ice_vc_process_vf_msg - Process request from VF
+ * @pf: pointer to the PF structure
+ * @event: pointer to the AQ event
+>>>>>>> b7ba80a49124 (Commit)
  *
  * called from the common asq/arq handler to
  * process request from VF
  */
+<<<<<<< HEAD
 void ice_vc_process_vf_msg(struct ice_pf *pf, struct ice_rq_event_info *event,
 			   struct ice_mbx_data *mbxdata)
+=======
+void ice_vc_process_vf_msg(struct ice_pf *pf, struct ice_rq_event_info *event)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 v_opcode = le32_to_cpu(event->desc.cookie_high);
 	s16 vf_id = le16_to_cpu(event->desc.retval);
@@ -3906,10 +3974,13 @@ void ice_vc_process_vf_msg(struct ice_pf *pf, struct ice_rq_event_info *event,
 
 	mutex_lock(&vf->cfg_lock);
 
+<<<<<<< HEAD
 	/* Check if the VF is trying to overflow the mailbox */
 	if (ice_is_malicious_vf(vf, mbxdata))
 		goto finish;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Check if VF is disabled. */
 	if (test_bit(ICE_VF_STATE_DIS, vf->vf_states)) {
 		err = -EPERM;
@@ -3997,6 +4068,7 @@ error_handler:
 	case VIRTCHNL_OP_DEL_VLAN:
 		err = ops->remove_vlan_msg(vf, msg);
 		break;
+<<<<<<< HEAD
 	case VIRTCHNL_OP_GET_SUPPORTED_RXDIDS:
 		err = ops->query_rxdid(vf);
 		break;
@@ -4006,6 +4078,8 @@ error_handler:
 	case VIRTCHNL_OP_SET_RSS_HENA:
 		err = ops->set_rss_hena_msg(vf, msg);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case VIRTCHNL_OP_ENABLE_VLAN_STRIPPING:
 		err = ops->ena_vlan_stripping(vf);
 		break;

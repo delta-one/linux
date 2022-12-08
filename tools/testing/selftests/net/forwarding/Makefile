@@ -3,8 +3,11 @@
 TEST_PROGS = bridge_igmp.sh \
 	bridge_locked_port.sh \
 	bridge_mdb.sh \
+<<<<<<< HEAD
 	bridge_mdb_host.sh \
 	bridge_mdb_max.sh \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bridge_mdb_port_down.sh \
 	bridge_mld.sh \
 	bridge_port_isolation.sh \

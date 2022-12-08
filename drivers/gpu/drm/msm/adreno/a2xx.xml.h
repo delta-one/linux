@@ -8,6 +8,7 @@ http://github.com/freedreno/envytools/
 git clone https://github.com/freedreno/envytools.git
 
 The rules-ng-ng source files this header was generated from are:
+<<<<<<< HEAD
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/adreno.xml                     (    594 bytes, from 2023-03-10 18:32:52)
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/freedreno_copyright.xml        (   1572 bytes, from 2022-07-23 20:21:46)
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/adreno/a2xx.xml                (  91929 bytes, from 2023-02-28 23:52:27)
@@ -23,6 +24,23 @@ The rules-ng-ng source files this header was generated from are:
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/adreno/adreno_pipe_regs.xml    (   2976 bytes, from 2023-03-10 18:32:52)
 
 Copyright (C) 2013-2023 by the following authors:
+=======
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno.xml                     (    594 bytes, from 2021-01-30 18:25:22)
+- /home/robclark/tmp/mesa/src/freedreno/registers/freedreno_copyright.xml        (   1572 bytes, from 2020-12-31 19:26:32)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a2xx.xml                (  90810 bytes, from 2021-06-21 15:24:24)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/adreno_common.xml       (  14609 bytes, from 2021-11-24 23:05:10)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/adreno_pm4.xml          (  69086 bytes, from 2022-03-03 16:41:33)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a3xx.xml                (  84231 bytes, from 2021-11-24 23:05:10)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a4xx.xml                ( 113358 bytes, from 2022-01-31 23:06:21)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a5xx.xml                ( 149512 bytes, from 2022-01-31 23:06:21)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a6xx.xml                ( 184954 bytes, from 2022-03-03 16:41:33)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a6xx_gmu.xml            (  11331 bytes, from 2021-07-22 15:21:56)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/ocmem.xml               (   1773 bytes, from 2021-01-30 18:25:22)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/adreno_control_regs.xml (   6038 bytes, from 2021-07-22 15:21:56)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/adreno_pipe_regs.xml    (   2924 bytes, from 2021-07-22 15:21:56)
+
+Copyright (C) 2013-2021 by the following authors:
+>>>>>>> b7ba80a49124 (Commit)
 - Rob Clark <robdclark@gmail.com> (robclark)
 - Ilia Mirkin <imirkin@alum.mit.edu> (imirkin)
 
@@ -1060,12 +1078,15 @@ enum a2xx_mh_perfcnt_select {
 	AXI_TOTAL_READ_REQUEST_DATA_BEATS = 181,
 };
 
+<<<<<<< HEAD
 enum perf_mode_cnt {
 	PERF_STATE_RESET = 0,
 	PERF_STATE_ENABLE = 1,
 	PERF_STATE_FREEZE = 2,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum adreno_mmu_clnt_beh {
 	BEH_NEVR = 0,
 	BEH_TRAN_RNG = 1,
@@ -1313,6 +1334,7 @@ static inline uint32_t A2XX_MH_MMU_VA_RANGE_VA_BASE(uint32_t val)
 #define A2XX_RBBM_PM_OVERRIDE1_MH_TCROQ_SCLK_PM_OVERRIDE	0x80000000
 
 #define REG_A2XX_RBBM_PM_OVERRIDE2				0x0000039d
+<<<<<<< HEAD
 #define A2XX_RBBM_PM_OVERRIDE2_PA_REG_SCLK_PM_OVERRIDE		0x00000001
 #define A2XX_RBBM_PM_OVERRIDE2_PA_PA_SCLK_PM_OVERRIDE		0x00000002
 #define A2XX_RBBM_PM_OVERRIDE2_PA_AG_SCLK_PM_OVERRIDE		0x00000004
@@ -1325,6 +1347,8 @@ static inline uint32_t A2XX_MH_MMU_VA_RANGE_VA_BASE(uint32_t val)
 #define A2XX_RBBM_PM_OVERRIDE2_GC_GA_GMEM1_PM_OVERRIDE		0x00000200
 #define A2XX_RBBM_PM_OVERRIDE2_GC_GA_GMEM2_PM_OVERRIDE		0x00000400
 #define A2XX_RBBM_PM_OVERRIDE2_GC_GA_GMEM3_PM_OVERRIDE		0x00000800
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define REG_A2XX_RBBM_DEBUG_OUT					0x000003a0
 
@@ -1352,12 +1376,15 @@ static inline uint32_t A2XX_MH_MMU_VA_RANGE_VA_BASE(uint32_t val)
 #define REG_A2XX_RBBM_PERIPHID2					0x000003fa
 
 #define REG_A2XX_CP_PERFMON_CNTL				0x00000444
+<<<<<<< HEAD
 #define A2XX_CP_PERFMON_CNTL_PERF_MODE_CNT__MASK		0x00000007
 #define A2XX_CP_PERFMON_CNTL_PERF_MODE_CNT__SHIFT		0
 static inline uint32_t A2XX_CP_PERFMON_CNTL_PERF_MODE_CNT(enum perf_mode_cnt val)
 {
 	return ((val) << A2XX_CP_PERFMON_CNTL_PERF_MODE_CNT__SHIFT) & A2XX_CP_PERFMON_CNTL_PERF_MODE_CNT__MASK;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define REG_A2XX_CP_PERFCOUNTER_SELECT				0x00000445
 

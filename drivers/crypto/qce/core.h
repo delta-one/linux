@@ -35,7 +35,10 @@ struct qce_device {
 	void __iomem *base;
 	struct device *dev;
 	struct clk *core, *iface, *bus;
+<<<<<<< HEAD
 	struct icc_path *mem_path;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct qce_dma_data dma;
 	int burst_size;
 	unsigned int pipe_pair_id;

@@ -34,7 +34,11 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		shirq: interrupt-controller@b4000000 {
+=======
+		shirq: interrupt-controller@0xb4000000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "st,spear310-shirq";
 			reg = <0xb4000000 0x1000>;
 			interrupts = <28 29 30 1>;

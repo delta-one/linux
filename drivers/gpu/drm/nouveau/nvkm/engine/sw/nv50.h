@@ -5,12 +5,20 @@
 #include "priv.h"
 #include "chan.h"
 #include "nvsw.h"
+<<<<<<< HEAD
 #include <core/event.h>
+=======
+#include <core/notify.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 struct nv50_sw_chan {
 	struct nvkm_sw_chan base;
 	struct {
+<<<<<<< HEAD
 		struct nvkm_event_ntfy notify[4];
+=======
+		struct nvkm_notify notify[4];
+>>>>>>> b7ba80a49124 (Commit)
 		u32 ctxdma;
 		u64 offset;
 		u32 value;

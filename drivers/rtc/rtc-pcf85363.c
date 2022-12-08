@@ -101,10 +101,13 @@
 #define PIN_IO_INTA_OUT	2
 #define PIN_IO_INTA_HIZ	3
 
+<<<<<<< HEAD
 #define OSC_CAP_SEL	GENMASK(1, 0)
 #define OSC_CAP_6000	0x01
 #define OSC_CAP_12500	0x02
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define STOP_EN_STOP	BIT(0)
 
 #define RESET_CPR	0xa4
@@ -121,6 +124,7 @@ struct pcf85x63_config {
 	unsigned int num_nvram;
 };
 
+<<<<<<< HEAD
 static int pcf85363_load_capacitance(struct pcf85363 *pcf85363, struct device_node *node)
 {
 	u32 load = 7000;
@@ -147,6 +151,8 @@ static int pcf85363_load_capacitance(struct pcf85363 *pcf85363, struct device_no
 				  OSC_CAP_SEL, value);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int pcf85363_rtc_read_time(struct device *dev, struct rtc_time *tm)
 {
 	struct pcf85363 *pcf85363 = dev_get_drvdata(dev);
@@ -402,7 +408,11 @@ static int pcf85363_probe(struct i2c_client *client)
 			.reg_write = pcf85363_nvram_write,
 		},
 	};
+<<<<<<< HEAD
 	int ret, i, err;
+=======
+	int ret, i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (data)
 		config = data;
@@ -424,28 +434,38 @@ static int pcf85363_probe(struct i2c_client *client)
 	if (IS_ERR(pcf85363->rtc))
 		return PTR_ERR(pcf85363->rtc);
 
+<<<<<<< HEAD
 	err = pcf85363_load_capacitance(pcf85363, client->dev.of_node);
 	if (err < 0)
 		dev_warn(&client->dev, "failed to set xtal load capacitance: %d",
 			 err);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pcf85363->rtc->ops = &rtc_ops;
 	pcf85363->rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
 	pcf85363->rtc->range_max = RTC_TIMESTAMP_END_2099;
 	clear_bit(RTC_FEATURE_ALARM, pcf85363->rtc->features);
 
 	if (client->irq > 0) {
+<<<<<<< HEAD
 		unsigned long irqflags = IRQF_TRIGGER_LOW;
 
 		if (dev_fwnode(&client->dev))
 			irqflags = 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		regmap_write(pcf85363->regmap, CTRL_FLAGS, 0);
 		regmap_update_bits(pcf85363->regmap, CTRL_PIN_IO,
 				   PIN_IO_INTA_OUT, PIN_IO_INTAPM);
 		ret = devm_request_threaded_irq(&client->dev, client->irq,
 						NULL, pcf85363_rtc_handle_irq,
+<<<<<<< HEAD
 						irqflags | IRQF_ONESHOT,
+=======
+						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+>>>>>>> b7ba80a49124 (Commit)
 						"pcf85363", client);
 		if (ret)
 			dev_warn(&client->dev, "unable to request IRQ, alarms disabled\n");

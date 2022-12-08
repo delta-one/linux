@@ -29,6 +29,7 @@ properties:
   interrupts:
     maxItems: 1
 
+<<<<<<< HEAD
   memory-region:
     items:
       - description: firmware EMI region
@@ -61,6 +62,8 @@ allOf:
         memory-region: false
         mediatek,wo-ccif: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg
@@ -81,6 +84,7 @@ examples:
         interrupts = <GIC_SPI 214 IRQ_TYPE_LEVEL_LOW>;
       };
     };
+<<<<<<< HEAD
 
   - |
     #include <dt-bindings/interrupt-controller/arm-gic.h>
@@ -101,3 +105,5 @@ examples:
         mediatek,wo-ccif = <&wo_ccif0>;
       };
     };
+=======
+>>>>>>> b7ba80a49124 (Commit)

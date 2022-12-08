@@ -118,6 +118,10 @@ extern int kvmppc_xlate(struct kvm_vcpu *vcpu, ulong eaddr,
 extern int kvmppc_core_vcpu_create(struct kvm_vcpu *vcpu);
 extern void kvmppc_core_vcpu_free(struct kvm_vcpu *vcpu);
 extern int kvmppc_core_vcpu_setup(struct kvm_vcpu *vcpu);
+<<<<<<< HEAD
+=======
+extern int kvmppc_core_check_processor_compat(void);
+>>>>>>> b7ba80a49124 (Commit)
 extern int kvmppc_core_vcpu_translate(struct kvm_vcpu *vcpu,
                                       struct kvm_translation *tr);
 
@@ -156,7 +160,11 @@ extern void kvmppc_map_magic(struct kvm_vcpu *vcpu);
 
 extern int kvmppc_allocate_hpt(struct kvm_hpt_info *info, u32 order);
 extern void kvmppc_set_hpt(struct kvm *kvm, struct kvm_hpt_info *info);
+<<<<<<< HEAD
 extern int kvmppc_alloc_reset_hpt(struct kvm *kvm, int order);
+=======
+extern long kvmppc_alloc_reset_hpt(struct kvm *kvm, int order);
+>>>>>>> b7ba80a49124 (Commit)
 extern void kvmppc_free_hpt(struct kvm_hpt_info *info);
 extern void kvmppc_rmap_reset(struct kvm *kvm);
 extern void kvmppc_map_vrma(struct kvm_vcpu *vcpu,
@@ -170,7 +178,11 @@ extern int kvmppc_switch_mmu_to_hpt(struct kvm *kvm);
 extern int kvmppc_switch_mmu_to_radix(struct kvm *kvm);
 extern void kvmppc_setup_partition_table(struct kvm *kvm);
 
+<<<<<<< HEAD
 extern int kvm_vm_ioctl_create_spapr_tce(struct kvm *kvm,
+=======
+extern long kvm_vm_ioctl_create_spapr_tce(struct kvm *kvm,
+>>>>>>> b7ba80a49124 (Commit)
 				struct kvm_create_spapr_tce_64 *args);
 #define kvmppc_ioba_validate(stt, ioba, npages)                         \
 		(iommu_tce_check_ioba((stt)->page_shift, (stt)->offset, \
@@ -211,10 +223,17 @@ extern void kvmppc_bookehv_exit(void);
 extern int kvmppc_prepare_to_enter(struct kvm_vcpu *vcpu);
 
 extern int kvm_vm_ioctl_get_htab_fd(struct kvm *kvm, struct kvm_get_htab_fd *);
+<<<<<<< HEAD
 extern int kvm_vm_ioctl_resize_hpt_prepare(struct kvm *kvm,
 					   struct kvm_ppc_resize_hpt *rhpt);
 extern int kvm_vm_ioctl_resize_hpt_commit(struct kvm *kvm,
 					  struct kvm_ppc_resize_hpt *rhpt);
+=======
+extern long kvm_vm_ioctl_resize_hpt_prepare(struct kvm *kvm,
+					    struct kvm_ppc_resize_hpt *rhpt);
+extern long kvm_vm_ioctl_resize_hpt_commit(struct kvm *kvm,
+					   struct kvm_ppc_resize_hpt *rhpt);
+>>>>>>> b7ba80a49124 (Commit)
 
 int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu, struct kvm_interrupt *irq);
 
@@ -286,8 +305,13 @@ struct kvmppc_ops {
 	int (*emulate_mtspr)(struct kvm_vcpu *vcpu, int sprn, ulong spr_val);
 	int (*emulate_mfspr)(struct kvm_vcpu *vcpu, int sprn, ulong *spr_val);
 	void (*fast_vcpu_kick)(struct kvm_vcpu *vcpu);
+<<<<<<< HEAD
 	int (*arch_vm_ioctl)(struct file *filp, unsigned int ioctl,
 			     unsigned long arg);
+=======
+	long (*arch_vm_ioctl)(struct file *filp, unsigned int ioctl,
+			      unsigned long arg);
+>>>>>>> b7ba80a49124 (Commit)
 	int (*hcall_implemented)(unsigned long hcall);
 	int (*irq_bypass_add_producer)(struct irq_bypass_consumer *,
 				       struct irq_bypass_producer *);
@@ -1013,6 +1037,7 @@ static inline void kvmppc_fix_ee_before_entry(void)
 #endif
 }
 
+<<<<<<< HEAD
 static inline void kvmppc_fix_ee_after_exit(void)
 {
 #ifdef CONFIG_PPC64
@@ -1025,6 +1050,8 @@ static inline void kvmppc_fix_ee_after_exit(void)
 }
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline ulong kvmppc_get_ea_indexed(struct kvm_vcpu *vcpu, int ra, int rb)
 {
 	ulong ea;

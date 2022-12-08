@@ -174,8 +174,11 @@ static int ehl_serial_setup(struct lpss8250 *lpss, struct uart_port *port)
 	 */
 	up->dma = dma;
 
+<<<<<<< HEAD
 	lpss->dma_maxburst = 16;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	port->set_termios = dw8250_do_set_termios;
 
 	return 0;
@@ -279,6 +282,7 @@ static int lpss8250_dma_setup(struct lpss8250 *lpss, struct uart_8250_port *port
 	struct dw_dma_slave *rx_param, *tx_param;
 	struct device *dev = port->port.dev;
 
+<<<<<<< HEAD
 	if (!lpss->dma_param.dma_dev) {
 		dma = port->dma;
 		if (dma)
@@ -286,6 +290,10 @@ static int lpss8250_dma_setup(struct lpss8250 *lpss, struct uart_8250_port *port
 
 		return 0;
 	}
+=======
+	if (!lpss->dma_param.dma_dev)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rx_param = devm_kzalloc(dev, sizeof(*rx_param), GFP_KERNEL);
 	if (!rx_param)
@@ -296,18 +304,28 @@ static int lpss8250_dma_setup(struct lpss8250 *lpss, struct uart_8250_port *port
 		return -ENOMEM;
 
 	*rx_param = lpss->dma_param;
+<<<<<<< HEAD
 	*tx_param = lpss->dma_param;
+=======
+	dma->rxconf.src_maxburst = lpss->dma_maxburst;
+
+	*tx_param = lpss->dma_param;
+	dma->txconf.dst_maxburst = lpss->dma_maxburst;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dma->fn = lpss8250_dma_filter;
 	dma->rx_param = rx_param;
 	dma->tx_param = tx_param;
 
 	port->dma = dma;
+<<<<<<< HEAD
 
 out_configuration_only:
 	dma->rxconf.src_maxburst = lpss->dma_maxburst;
 	dma->txconf.dst_maxburst = lpss->dma_maxburst;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

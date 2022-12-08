@@ -106,6 +106,7 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-ch1-red {
 			label = "ch-1:red";
 			gpios = <&pioA 23 GPIO_ACTIVE_LOW>;
@@ -135,6 +136,37 @@
 			gpios = <&pioA 17 GPIO_ACTIVE_LOW>;
 		};
 		led-alarm-green {
+=======
+		ch1-red {
+			label = "ch-1:red";
+			gpios = <&pioA 23 GPIO_ACTIVE_LOW>;
+		};
+		ch1-green {
+			label = "ch-1:green";
+			gpios = <&pioA 22 GPIO_ACTIVE_LOW>;
+		};
+		ch2-red {
+			label = "ch-2:red";
+			gpios = <&pioA 21 GPIO_ACTIVE_LOW>;
+		};
+		ch2-green {
+			label = "ch-2:green";
+			gpios = <&pioA 20 GPIO_ACTIVE_LOW>;
+		};
+		data-red {
+			label = "data:red";
+			gpios = <&pioA 19 GPIO_ACTIVE_LOW>;
+		};
+		data-green {
+			label = "data:green";
+			gpios = <&pioA 18 GPIO_ACTIVE_LOW>;
+		};
+		alarm-red {
+			label = "alarm:red";
+			gpios = <&pioA 17 GPIO_ACTIVE_LOW>;
+		};
+		alarm-green {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "alarm:green";
 			gpios = <&pioA 16 GPIO_ACTIVE_LOW>;
 		};

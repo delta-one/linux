@@ -13,9 +13,15 @@ static const struct regmap_config bmg160_regmap_i2c_conf = {
 	.max_register = 0x3f
 };
 
+<<<<<<< HEAD
 static int bmg160_i2c_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int bmg160_i2c_probe(struct i2c_client *client,
+			    const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct regmap *regmap;
 	const char *name = NULL;
 
@@ -70,7 +76,11 @@ static struct i2c_driver bmg160_i2c_driver = {
 		.of_match_table = bmg160_of_match,
 		.pm	= &bmg160_pm_ops,
 	},
+<<<<<<< HEAD
 	.probe_new	= bmg160_i2c_probe,
+=======
+	.probe		= bmg160_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= bmg160_i2c_remove,
 	.id_table	= bmg160_i2c_id,
 };

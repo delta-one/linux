@@ -1109,7 +1109,11 @@ static int cpmac_probe(struct platform_device *pdev)
 	dev->netdev_ops = &cpmac_netdev_ops;
 	dev->ethtool_ops = &cpmac_ethtool_ops;
 
+<<<<<<< HEAD
 	netif_napi_add(dev, &priv->napi, cpmac_poll);
+=======
+	netif_napi_add(dev, &priv->napi, cpmac_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_init(&priv->lock);
 	spin_lock_init(&priv->rx_lock);
@@ -1169,7 +1173,11 @@ static struct platform_driver cpmac_driver = {
 	.remove = cpmac_remove,
 };
 
+<<<<<<< HEAD
 int __init cpmac_init(void)
+=======
+int cpmac_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 mask;
 	int i, res;
@@ -1239,7 +1247,11 @@ fail_alloc:
 	return res;
 }
 
+<<<<<<< HEAD
 void __exit cpmac_exit(void)
+=======
+void cpmac_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	platform_driver_unregister(&cpmac_driver);
 	mdiobus_unregister(cpmac_mii);

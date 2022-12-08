@@ -68,7 +68,11 @@ restart:
 
 	while (1) {
 		struct xfs_dquot *batch[XFS_DQ_LOOKUP_BATCH];
+<<<<<<< HEAD
 		int		error;
+=======
+		int		error = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		int		i;
 
 		mutex_lock(&qi->qi_tree_lock);
@@ -423,6 +427,7 @@ xfs_qm_dquot_isolate(
 		goto out_miss_busy;
 
 	/*
+<<<<<<< HEAD
 	 * If something else is freeing this dquot and hasn't yet removed it
 	 * from the LRU, leave it for the freeing task to complete the freeing
 	 * process rather than risk it being free from under us here.
@@ -431,6 +436,8 @@ xfs_qm_dquot_isolate(
 		goto out_miss_unlock;
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * This dquot has acquired a reference in the meantime remove it from
 	 * the freelist and try again.
 	 */
@@ -449,8 +456,15 @@ xfs_qm_dquot_isolate(
 	 * skip it so there is time for the IO to complete before we try to
 	 * reclaim it again on the next LRU pass.
 	 */
+<<<<<<< HEAD
 	if (!xfs_dqflock_nowait(dqp))
 		goto out_miss_unlock;
+=======
+	if (!xfs_dqflock_nowait(dqp)) {
+		xfs_dqunlock(dqp);
+		goto out_miss_busy;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (XFS_DQ_IS_DIRTY(dqp)) {
 		struct xfs_buf	*bp = NULL;
@@ -484,8 +498,11 @@ xfs_qm_dquot_isolate(
 	XFS_STATS_INC(dqp->q_mount, xs_qm_dqreclaims);
 	return LRU_REMOVED;
 
+<<<<<<< HEAD
 out_miss_unlock:
 	xfs_dqunlock(dqp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 out_miss_busy:
 	trace_xfs_dqreclaim_busy(dqp);
 	XFS_STATS_INC(dqp->q_mount, xs_qm_dqreclaim_misses);
@@ -787,7 +804,11 @@ xfs_qm_qino_alloc(
 
 		error = xfs_dialloc(&tp, 0, S_IFREG, &ino);
 		if (!error)
+<<<<<<< HEAD
 			error = xfs_init_new_inode(&nop_mnt_idmap, tp, NULL, ino,
+=======
+			error = xfs_init_new_inode(&init_user_ns, tp, NULL, ino,
+>>>>>>> b7ba80a49124 (Commit)
 					S_IFREG, 1, 0, 0, false, ipp);
 		if (error) {
 			xfs_trans_cancel(tp);
@@ -1321,6 +1342,7 @@ xfs_qm_quotacheck(
 
 	error = xfs_iwalk_threaded(mp, 0, 0, xfs_qm_dqusage_adjust, 0, true,
 			NULL);
+<<<<<<< HEAD
 
 	/*
 	 * On error, the inode walk may have partially populated the dquot
@@ -1329,6 +1351,17 @@ xfs_qm_quotacheck(
 	 */
 	if (error)
 		goto error_purge;
+=======
+	if (error) {
+		/*
+		 * The inode walk may have partially populated the dquot
+		 * caches.  We must purge them before disabling quota and
+		 * tearing down the quotainfo, or else the dquots will leak.
+		 */
+		xfs_qm_dqpurge_all(mp);
+		goto error_return;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * We've made all the changes that we need to make incore.  Flush them
@@ -1362,8 +1395,15 @@ xfs_qm_quotacheck(
 	 * and turn quotaoff. The dquots won't be attached to any of the inodes
 	 * at this point (because we intentionally didn't in dqget_noattach).
 	 */
+<<<<<<< HEAD
 	if (error)
 		goto error_purge;
+=======
+	if (error) {
+		xfs_qm_dqpurge_all(mp);
+		goto error_return;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * If one type of quotas is off, then it will lose its
@@ -1373,7 +1413,11 @@ xfs_qm_quotacheck(
 	mp->m_qflags &= ~XFS_ALL_QUOTA_CHKD;
 	mp->m_qflags |= flags;
 
+<<<<<<< HEAD
 error_return:
+=======
+ error_return:
+>>>>>>> b7ba80a49124 (Commit)
 	xfs_buf_delwri_cancel(&buffer_list);
 
 	if (error) {
@@ -1392,6 +1436,7 @@ error_return:
 	} else
 		xfs_notice(mp, "Quotacheck: Done.");
 	return error;
+<<<<<<< HEAD
 
 error_purge:
 	/*
@@ -1407,6 +1452,8 @@ error_purge:
 	xfs_qm_dqpurge_all(mp);
 	goto error_return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*

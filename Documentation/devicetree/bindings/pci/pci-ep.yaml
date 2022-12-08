@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/pci/pci-ep.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: PCI Endpoint Controller
+=======
+title: PCI Endpoint Controller Schema
+>>>>>>> b7ba80a49124 (Commit)
 
 description: |
   Common properties for PCI Endpoint Controller Nodes.

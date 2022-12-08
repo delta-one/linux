@@ -1412,7 +1412,11 @@ static int asoc_mcbsp_probe(struct platform_device *pdev)
 	return sdma_pcm_platform_register(&pdev->dev, "tx", "rx");
 }
 
+<<<<<<< HEAD
 static void asoc_mcbsp_remove(struct platform_device *pdev)
+=======
+static int asoc_mcbsp_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct omap_mcbsp *mcbsp = platform_get_drvdata(pdev);
 
@@ -1421,6 +1425,11 @@ static void asoc_mcbsp_remove(struct platform_device *pdev)
 
 	if (cpu_latency_qos_request_active(&mcbsp->pm_qos_req))
 		cpu_latency_qos_remove_request(&mcbsp->pm_qos_req);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver asoc_mcbsp_driver = {
@@ -1430,7 +1439,11 @@ static struct platform_driver asoc_mcbsp_driver = {
 	},
 
 	.probe = asoc_mcbsp_probe,
+<<<<<<< HEAD
 	.remove_new = asoc_mcbsp_remove,
+=======
+	.remove = asoc_mcbsp_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(asoc_mcbsp_driver);

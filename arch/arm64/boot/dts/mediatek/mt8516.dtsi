@@ -202,7 +202,11 @@
 			#clock-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		watchdog@10007000 {
+=======
+		toprgu: toprgu@10007000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "mediatek,mt8516-wdt",
 				     "mediatek,mt6589-wdt";
 			reg = <0 0x10007000 0 0x1000>;
@@ -229,6 +233,10 @@
 			compatible = "mediatek,mt8516-pinctrl";
 			reg = <0 0x1000b000 0 0x1000>;
 			mediatek,pctl-regmap = <&syscfg_pctl>;
+<<<<<<< HEAD
+=======
+			pins-are-numbered;
+>>>>>>> b7ba80a49124 (Commit)
 			gpio-controller;
 			#gpio-cells = <2>;
 			interrupt-controller;

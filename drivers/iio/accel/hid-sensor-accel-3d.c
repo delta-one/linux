@@ -280,7 +280,10 @@ static int accel_3d_capture_sample(struct hid_sensor_hub_device *hsdev,
 			hid_sensor_convert_timestamp(
 					&accel_state->common_attributes,
 					*(int64_t *)raw_data);
+<<<<<<< HEAD
 		ret = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	break;
 	default:
 		break;

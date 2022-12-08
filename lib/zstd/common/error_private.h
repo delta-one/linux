@@ -18,10 +18,15 @@
 /* ****************************************
 *  Dependencies
 ******************************************/
+<<<<<<< HEAD
 #include <linux/zstd_errors.h>  /* enum list */
 #include "compiler.h"
 #include "debug.h"
 #include "zstd_deps.h"       /* size_t */
+=======
+#include "zstd_deps.h"    /* size_t */
+#include <linux/zstd_errors.h>  /* enum list */
+>>>>>>> b7ba80a49124 (Commit)
 
 
 /* ****************************************
@@ -64,6 +69,7 @@ ERR_STATIC const char* ERR_getErrorName(size_t code)
     return ERR_getErrorString(ERR_getErrorCode(code));
 }
 
+<<<<<<< HEAD
 /*
  * Ignore: this is an internal helper.
  *
@@ -141,5 +147,7 @@ void _force_has_format_string(const char *format, ...) {
     } \
   } while(0);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* ERROR_H_MODULE */

@@ -538,6 +538,7 @@ void rvu_program_channels(struct rvu *rvu)
 	rvu_lbk_set_channels(rvu);
 	rvu_rpm_set_channels(rvu);
 }
+<<<<<<< HEAD
 
 void rvu_nix_block_cn10k_init(struct rvu *rvu, struct nix_hw *nix_hw)
 {
@@ -556,3 +557,5 @@ void rvu_nix_block_cn10k_init(struct rvu *rvu, struct nix_hw *nix_hw)
 	cfg |= BIT_ULL(1) | BIT_ULL(2);
 	rvu_write64(rvu, blkaddr, NIX_AF_CFG, cfg);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

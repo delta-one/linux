@@ -191,8 +191,14 @@
 					<&clks VF610_CLK_SAI0_DIV>,
 					<&clks 0>, <&clks 0>;
 				clock-names = "bus", "mclk1", "mclk2", "mclk3";
+<<<<<<< HEAD
 				dma-names = "rx", "tx";
 				dmas = <&edma0 0 16>, <&edma0 0 17>;
+=======
+				dma-names = "tx", "rx";
+				dmas = <&edma0 0 17>,
+					<&edma0 0 16>;
+>>>>>>> b7ba80a49124 (Commit)
 				status = "disabled";
 			};
 
@@ -204,8 +210,14 @@
 					<&clks VF610_CLK_SAI1_DIV>,
 					<&clks 0>, <&clks 0>;
 				clock-names = "bus", "mclk1", "mclk2", "mclk3";
+<<<<<<< HEAD
 				dma-names = "rx", "tx";
 				dmas = <&edma0 0 18>, <&edma0 0 19>;
+=======
+				dma-names = "tx", "rx";
+				dmas = <&edma0 0 19>,
+					<&edma0 0 18>;
+>>>>>>> b7ba80a49124 (Commit)
 				status = "disabled";
 			};
 
@@ -217,8 +229,14 @@
 					<&clks VF610_CLK_SAI2_DIV>,
 					<&clks 0>, <&clks 0>;
 				clock-names = "bus", "mclk1", "mclk2", "mclk3";
+<<<<<<< HEAD
 				dma-names = "rx", "tx";
 				dmas = <&edma0 0 20>, <&edma0 0 21>;
+=======
+				dma-names = "tx", "rx";
+				dmas = <&edma0 0 21>,
+					<&edma0 0 20>;
+>>>>>>> b7ba80a49124 (Commit)
 				status = "disabled";
 			};
 
@@ -230,8 +248,14 @@
 					<&clks VF610_CLK_SAI3_DIV>,
 					<&clks 0>, <&clks 0>;
 				clock-names = "bus", "mclk1", "mclk2", "mclk3";
+<<<<<<< HEAD
 				dma-names = "rx", "tx";
 				dmas = <&edma0 1 8>, <&edma0 1 9>;
+=======
+				dma-names = "tx", "rx";
+				dmas = <&edma0 1 9>,
+					<&edma0 1 8>;
+>>>>>>> b7ba80a49124 (Commit)
 				status = "disabled";
 			};
 

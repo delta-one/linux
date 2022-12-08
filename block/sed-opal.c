@@ -87,8 +87,13 @@ struct opal_dev {
 	u64 lowest_lba;
 
 	size_t pos;
+<<<<<<< HEAD
 	u8 *cmd;
 	u8 *resp;
+=======
+	u8 cmd[IO_BUFFER_LENGTH];
+	u8 resp[IO_BUFFER_LENGTH];
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct parsed_resp parsed;
 	size_t prev_d_len;
@@ -487,8 +492,11 @@ static int opal_discovery0_end(struct opal_dev *dev)
 			break;
 		case FC_SINGLEUSER:
 			single_user = check_sum(body->features);
+<<<<<<< HEAD
 			if (single_user)
 				dev->flags |= OPAL_FL_SUM_SUPPORTED;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case FC_GEOMETRY:
 			check_geometry(dev, body);
@@ -2177,8 +2185,11 @@ void free_opal_dev(struct opal_dev *dev)
 		return;
 
 	clean_opal_dev(dev);
+<<<<<<< HEAD
 	kfree(dev->resp);
 	kfree(dev->cmd);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(dev);
 }
 EXPORT_SYMBOL(free_opal_dev);
@@ -2191,6 +2202,7 @@ struct opal_dev *init_opal_dev(void *data, sec_send_recv *send_recv)
 	if (!dev)
 		return NULL;
 
+<<<<<<< HEAD
 	/*
 	 * Presumably DMA-able buffers must be cache-aligned. Kmalloc makes
 	 * sure the allocated buffer is DMA-safe in that regard.
@@ -2203,6 +2215,8 @@ struct opal_dev *init_opal_dev(void *data, sec_send_recv *send_recv)
 	if (!dev->resp)
 		goto err_free_cmd;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_LIST_HEAD(&dev->unlk_lst);
 	mutex_init(&dev->dev_lock);
 	dev->flags = 0;
@@ -2210,6 +2224,7 @@ struct opal_dev *init_opal_dev(void *data, sec_send_recv *send_recv)
 	dev->send_recv = send_recv;
 	if (check_opal_support(dev) != 0) {
 		pr_debug("Opal is not supported on this device\n");
+<<<<<<< HEAD
 		goto err_free_resp;
 	}
 
@@ -2225,6 +2240,13 @@ err_free_dev:
 	kfree(dev);
 
 	return NULL;
+=======
+		kfree(dev);
+		return NULL;
+	}
+
+	return dev;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(init_opal_dev);
 
@@ -2463,6 +2485,7 @@ static int __opal_set_mbr_done(struct opal_dev *dev, struct opal_key *key)
 	return execute_steps(dev, mbrdone_step, ARRAY_SIZE(mbrdone_step));
 }
 
+<<<<<<< HEAD
 static void opal_lock_check_for_saved_key(struct opal_dev *dev,
 			    struct opal_lock_unlock *lk_unlk)
 {
@@ -2501,6 +2524,8 @@ static void opal_lock_check_for_saved_key(struct opal_dev *dev,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int opal_lock_unlock(struct opal_dev *dev,
 			    struct opal_lock_unlock *lk_unlk)
 {
@@ -2510,7 +2535,10 @@ static int opal_lock_unlock(struct opal_dev *dev,
 		return -EINVAL;
 
 	mutex_lock(&dev->dev_lock);
+<<<<<<< HEAD
 	opal_lock_check_for_saved_key(dev, lk_unlk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = __opal_lock_unlock(dev, lk_unlk);
 	mutex_unlock(&dev->dev_lock);
 

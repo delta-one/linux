@@ -3,10 +3,13 @@
  * Simple CPU accounting cgroup controller
  */
 
+<<<<<<< HEAD
 #ifdef CONFIG_VIRT_CPU_ACCOUNTING_NATIVE
  #include <asm/cputime.h>
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_IRQ_TIME_ACCOUNTING
 
 /*

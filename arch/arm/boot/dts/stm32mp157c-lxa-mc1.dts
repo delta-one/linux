@@ -112,7 +112,11 @@
 	phy-handle = <&ethphy>;
 	status = "okay";
 
+<<<<<<< HEAD
 	mdio {
+=======
+	mdio0 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "snps,dwmac-mdio";
 		#address-cells = <1>;
 		#size-cells = <0>;

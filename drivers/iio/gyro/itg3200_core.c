@@ -18,7 +18,10 @@
 #include <linux/slab.h>
 #include <linux/stat.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/mutex.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/delay.h>
 
 #include <linux/iio/iio.h>
@@ -132,7 +135,10 @@ static int itg3200_write_raw(struct iio_dev *indio_dev,
 			     int val2,
 			     long mask)
 {
+<<<<<<< HEAD
 	struct itg3200 *st = iio_priv(indio_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 	u8 t;
 
@@ -141,11 +147,19 @@ static int itg3200_write_raw(struct iio_dev *indio_dev,
 		if (val == 0 || val2 != 0)
 			return -EINVAL;
 
+<<<<<<< HEAD
 		mutex_lock(&st->lock);
 
 		ret = itg3200_read_reg_8(indio_dev, ITG3200_REG_DLPF, &t);
 		if (ret) {
 			mutex_unlock(&st->lock);
+=======
+		mutex_lock(&indio_dev->mlock);
+
+		ret = itg3200_read_reg_8(indio_dev, ITG3200_REG_DLPF, &t);
+		if (ret) {
+			mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 			return ret;
 		}
 		t = ((t & ITG3200_DLPF_CFG_MASK) ? 1000u : 8000u) / val - 1;
@@ -154,7 +168,11 @@ static int itg3200_write_raw(struct iio_dev *indio_dev,
 					  ITG3200_REG_SAMPLE_RATE_DIV,
 					  t);
 
+<<<<<<< HEAD
 		mutex_unlock(&st->lock);
+=======
+		mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 
 	default:
@@ -295,7 +313,12 @@ static const struct iio_info itg3200_info = {
 
 static const unsigned long itg3200_available_scan_masks[] = { 0xffffffff, 0x0 };
 
+<<<<<<< HEAD
 static int itg3200_probe(struct i2c_client *client)
+=======
+static int itg3200_probe(struct i2c_client *client,
+		const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 	struct itg3200 *st;
@@ -337,8 +360,11 @@ static int itg3200_probe(struct i2c_client *client)
 	if (ret)
 		goto error_remove_trigger;
 
+<<<<<<< HEAD
 	mutex_init(&st->lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = iio_device_register(indio_dev);
 	if (ret)
 		goto error_remove_trigger;
@@ -405,7 +431,11 @@ static struct i2c_driver itg3200_driver = {
 		.pm	= pm_sleep_ptr(&itg3200_pm_ops),
 	},
 	.id_table	= itg3200_id,
+<<<<<<< HEAD
 	.probe_new	= itg3200_probe,
+=======
+	.probe		= itg3200_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= itg3200_remove,
 };
 

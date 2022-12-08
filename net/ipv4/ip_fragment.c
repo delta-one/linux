@@ -153,7 +153,10 @@ static void ip_expire(struct timer_list *t)
 	if (qp->q.flags & INET_FRAG_COMPLETE)
 		goto out;
 
+<<<<<<< HEAD
 	qp->q.flags |= INET_FRAG_DROP;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ipq_kill(qp);
 	__IP_INC_STATS(net, IPSTATS_MIB_REASMFAILS);
 	__IP_INC_STATS(net, IPSTATS_MIB_REASMTIMEOUT);
@@ -195,7 +198,11 @@ out:
 	spin_unlock(&qp->q.lock);
 out_rcu_unlock:
 	rcu_read_unlock();
+<<<<<<< HEAD
 	kfree_skb_reason(head, SKB_DROP_REASON_FRAG_REASM_TIMEOUT);
+=======
+	kfree_skb(head);
+>>>>>>> b7ba80a49124 (Commit)
 	ipq_put(qp);
 }
 
@@ -255,8 +262,12 @@ static int ip_frag_reinit(struct ipq *qp)
 		return -ETIMEDOUT;
 	}
 
+<<<<<<< HEAD
 	sum_truesize = inet_frag_rbtree_purge(&qp->q.rb_fragments,
 					      SKB_DROP_REASON_FRAG_TOO_FAR);
+=======
+	sum_truesize = inet_frag_rbtree_purge(&qp->q.rb_fragments);
+>>>>>>> b7ba80a49124 (Commit)
 	sub_frag_mem_limit(qp->q.fqdir, sum_truesize);
 
 	qp->q.flags = 0;
@@ -280,6 +291,7 @@ static int ip_frag_queue(struct ipq *qp, struct sk_buff *skb)
 	struct net_device *dev;
 	unsigned int fragsize;
 	int err = -ENOENT;
+<<<<<<< HEAD
 	SKB_DR(reason);
 	u8 ecn;
 
@@ -288,6 +300,12 @@ static int ip_frag_queue(struct ipq *qp, struct sk_buff *skb)
 		SKB_DR_SET(reason, DUP_FRAG);
 		goto err;
 	}
+=======
+	u8 ecn;
+
+	if (qp->q.flags & INET_FRAG_COMPLETE)
+		goto err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!(IPCB(skb)->flags & IPSKB_FRAG_COMPLETE) &&
 	    unlikely(ip_frag_too_far(qp)) &&
@@ -388,9 +406,14 @@ static int ip_frag_queue(struct ipq *qp, struct sk_buff *skb)
 
 insert_error:
 	if (err == IPFRAG_DUP) {
+<<<<<<< HEAD
 		SKB_DR_SET(reason, DUP_FRAG);
 		err = -EINVAL;
 		goto err;
+=======
+		kfree_skb(skb);
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	err = -EINVAL;
 	__IP_INC_STATS(net, IPSTATS_MIB_REASM_OVERLAPS);
@@ -398,7 +421,11 @@ discard_qp:
 	inet_frag_kill(&qp->q);
 	__IP_INC_STATS(net, IPSTATS_MIB_REASMFAILS);
 err:
+<<<<<<< HEAD
 	kfree_skb_reason(skb, reason);
+=======
+	kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 

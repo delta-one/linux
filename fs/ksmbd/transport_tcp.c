@@ -15,8 +15,11 @@
 #define IFACE_STATE_DOWN		BIT(0)
 #define IFACE_STATE_CONFIGURED		BIT(1)
 
+<<<<<<< HEAD
 static atomic_t active_num_conn;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct interface {
 	struct task_struct	*ksmbd_kthread;
 	struct socket		*ksmbd_socket;
@@ -187,10 +190,15 @@ static int ksmbd_tcp_new_connection(struct socket *client_sk)
 	struct tcp_transport *t;
 
 	t = alloc_transport(client_sk);
+<<<<<<< HEAD
 	if (!t) {
 		sock_release(client_sk);
 		return -ENOMEM;
 	}
+=======
+	if (!t)
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	csin = KSMBD_TCP_PEER_SOCKADDR(KSMBD_TRANS(t)->conn);
 	if (kernel_getpeername(client_sk, csin) < 0) {
@@ -243,6 +251,7 @@ static int ksmbd_kthread_fn(void *p)
 			continue;
 		}
 
+<<<<<<< HEAD
 		if (server_conf.max_connections &&
 		    atomic_inc_return(&active_num_conn) >= server_conf.max_connections) {
 			pr_info_ratelimited("Limit the maximum number of connections(%u)\n",
@@ -252,6 +261,8 @@ static int ksmbd_kthread_fn(void *p)
 			continue;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ksmbd_debug(CONN, "connect success: accepted new connection\n");
 		client_sk->sk->sk_rcvtimeo = KSMBD_TCP_RECV_TIMEOUT;
 		client_sk->sk->sk_sndtimeo = KSMBD_TCP_SEND_TIMEOUT;
@@ -291,18 +302,29 @@ static int ksmbd_tcp_run_kthread(struct interface *iface)
 
 /**
  * ksmbd_tcp_readv() - read data from socket in given iovec
+<<<<<<< HEAD
  * @t:			TCP transport instance
  * @iov_orig:		base IO vector
  * @nr_segs:		number of segments in base iov
  * @to_read:		number of bytes to read from socket
  * @max_retries:	maximum retry count
+=======
+ * @t:		TCP transport instance
+ * @iov_orig:	base IO vector
+ * @nr_segs:	number of segments in base iov
+ * @to_read:	number of bytes to read from socket
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Return:	on success return number of bytes read from socket,
  *		otherwise return error number
  */
 static int ksmbd_tcp_readv(struct tcp_transport *t, struct kvec *iov_orig,
+<<<<<<< HEAD
 			   unsigned int nr_segs, unsigned int to_read,
 			   int max_retries)
+=======
+			   unsigned int nr_segs, unsigned int to_read)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int length = 0;
 	int total_read;
@@ -337,6 +359,7 @@ static int ksmbd_tcp_readv(struct tcp_transport *t, struct kvec *iov_orig,
 			total_read = -EAGAIN;
 			break;
 		} else if (length == -ERESTARTSYS || length == -EAGAIN) {
+<<<<<<< HEAD
 			/*
 			 * If max_retries is negative, Allow unlimited
 			 * retries to keep connection with inactive sessions.
@@ -348,11 +371,17 @@ static int ksmbd_tcp_readv(struct tcp_transport *t, struct kvec *iov_orig,
 				max_retries--;
 			}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			usleep_range(1000, 2000);
 			length = 0;
 			continue;
 		} else if (length <= 0) {
+<<<<<<< HEAD
 			total_read = length;
+=======
+			total_read = -EAGAIN;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 	}
@@ -368,15 +397,23 @@ static int ksmbd_tcp_readv(struct tcp_transport *t, struct kvec *iov_orig,
  * Return:	on success return number of bytes read from socket,
  *		otherwise return error number
  */
+<<<<<<< HEAD
 static int ksmbd_tcp_read(struct ksmbd_transport *t, char *buf,
 			  unsigned int to_read, int max_retries)
+=======
+static int ksmbd_tcp_read(struct ksmbd_transport *t, char *buf, unsigned int to_read)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct kvec iov;
 
 	iov.iov_base = buf;
 	iov.iov_len = to_read;
 
+<<<<<<< HEAD
 	return ksmbd_tcp_readv(TCP_TRANS(t), &iov, 1, to_read, max_retries);
+=======
+	return ksmbd_tcp_readv(TCP_TRANS(t), &iov, 1, to_read);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ksmbd_tcp_writev(struct ksmbd_transport *t, struct kvec *iov,
@@ -392,8 +429,11 @@ static int ksmbd_tcp_writev(struct ksmbd_transport *t, struct kvec *iov,
 static void ksmbd_tcp_disconnect(struct ksmbd_transport *t)
 {
 	free_transport(TCP_TRANS(t));
+<<<<<<< HEAD
 	if (server_conf.max_connections)
 		atomic_dec(&active_num_conn);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void tcp_destroy_socket(struct socket *ksmbd_socket)
@@ -428,8 +468,12 @@ static int create_socket(struct interface *iface)
 
 	ret = sock_create(PF_INET6, SOCK_STREAM, IPPROTO_TCP, &ksmbd_socket);
 	if (ret) {
+<<<<<<< HEAD
 		if (ret != -EAFNOSUPPORT)
 			pr_err("Can't create socket for ipv6, fallback to ipv4: %d\n", ret);
+=======
+		pr_err("Can't create socket for ipv6, try ipv4: %d\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = sock_create(PF_INET, SOCK_STREAM, IPPROTO_TCP,
 				  &ksmbd_socket);
 		if (ret) {

@@ -1,7 +1,11 @@
 /*******************************************************************
  * This file is part of the Emulex Linux Device Driver for         *
  * Fibre Channel Host Bus Adapters.                                *
+<<<<<<< HEAD
  * Copyright (C) 2017-2023 Broadcom. All Rights Reserved. The term *
+=======
+ * Copyright (C) 2017-2022 Broadcom. All Rights Reserved. The term *
+>>>>>>> b7ba80a49124 (Commit)
  * “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.     *
  * Copyright (C) 2004-2016 Emulex.  All rights reserved.           *
  * EMULEX and SLI are trademarks of Emulex.                        *
@@ -284,6 +288,7 @@ int lpfc_vmid_get_appid(struct lpfc_vport *vport, char *uuid,
 	}
 	return rc;
 }
+<<<<<<< HEAD
 
 /*
  * lpfc_reinit_vmid - reinitializes the vmid data structure
@@ -323,3 +328,5 @@ lpfc_reinit_vmid(struct lpfc_vport *vport)
 			hash_del(&cur->hnode);
 	write_unlock(&vport->vmid_lock);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

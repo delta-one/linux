@@ -687,7 +687,11 @@ int vmci_ctx_remove_notification(u32 context_id, u32 remote_cid)
 	spin_unlock(&context->lock);
 
 	if (notifier)
+<<<<<<< HEAD
 		kvfree_rcu_mightsleep(notifier);
+=======
+		kvfree_rcu(notifier);
+>>>>>>> b7ba80a49124 (Commit)
 
 	vmci_ctx_put(context);
 

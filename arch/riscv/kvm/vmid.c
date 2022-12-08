@@ -17,10 +17,17 @@
 
 static unsigned long vmid_version = 1;
 static unsigned long vmid_next;
+<<<<<<< HEAD
 static unsigned long vmid_bits __ro_after_init;
 static DEFINE_SPINLOCK(vmid_lock);
 
 void __init kvm_riscv_gstage_vmid_detect(void)
+=======
+static unsigned long vmid_bits;
+static DEFINE_SPINLOCK(vmid_lock);
+
+void kvm_riscv_gstage_vmid_detect(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long old;
 

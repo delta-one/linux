@@ -10,11 +10,14 @@
 #include <linux/io.h>
 #include <linux/nvmem-provider.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/property.h>
 
 struct mtk_efuse_pdata {
 	bool uses_post_processing;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct mtk_efuse_priv {
 	void __iomem *base;
@@ -34,6 +37,7 @@ static int mtk_reg_read(void *context,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mtk_efuse_gpu_speedbin_pp(void *context, const char *id, int index,
 				     unsigned int offset, void *data, size_t bytes)
 {
@@ -65,6 +69,8 @@ static struct nvmem_layout mtk_efuse_layout = {
 	.fixup_cell_info = mtk_efuse_fixup_cell_info,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mtk_efuse_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
@@ -72,7 +78,10 @@ static int mtk_efuse_probe(struct platform_device *pdev)
 	struct nvmem_device *nvmem;
 	struct nvmem_config econfig = {};
 	struct mtk_efuse_priv *priv;
+<<<<<<< HEAD
 	const struct mtk_efuse_pdata *pdata;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
 	if (!priv)
@@ -82,20 +91,27 @@ static int mtk_efuse_probe(struct platform_device *pdev)
 	if (IS_ERR(priv->base))
 		return PTR_ERR(priv->base);
 
+<<<<<<< HEAD
 	pdata = device_get_match_data(dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	econfig.stride = 1;
 	econfig.word_size = 1;
 	econfig.reg_read = mtk_reg_read;
 	econfig.size = resource_size(res);
 	econfig.priv = priv;
 	econfig.dev = dev;
+<<<<<<< HEAD
 	if (pdata->uses_post_processing)
 		econfig.layout = &mtk_efuse_layout;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	nvmem = devm_nvmem_register(dev, &econfig);
 
 	return PTR_ERR_OR_ZERO(nvmem);
 }
 
+<<<<<<< HEAD
 static const struct mtk_efuse_pdata mtk_mt8186_efuse_pdata = {
 	.uses_post_processing = true,
 };
@@ -108,6 +124,11 @@ static const struct of_device_id mtk_efuse_of_match[] = {
 	{ .compatible = "mediatek,mt8173-efuse", .data = &mtk_efuse_pdata },
 	{ .compatible = "mediatek,mt8186-efuse", .data = &mtk_mt8186_efuse_pdata },
 	{ .compatible = "mediatek,efuse", .data = &mtk_efuse_pdata },
+=======
+static const struct of_device_id mtk_efuse_of_match[] = {
+	{ .compatible = "mediatek,mt8173-efuse",},
+	{ .compatible = "mediatek,efuse",},
+>>>>>>> b7ba80a49124 (Commit)
 	{/* sentinel */},
 };
 MODULE_DEVICE_TABLE(of, mtk_efuse_of_match);

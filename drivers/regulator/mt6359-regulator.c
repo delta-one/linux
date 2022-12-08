@@ -982,7 +982,10 @@ MODULE_DEVICE_TABLE(platform, mt6359_platform_ids);
 static struct platform_driver mt6359_regulator_driver = {
 	.driver = {
 		.name = "mt6359-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = mt6359_regulator_probe,
 	.id_table = mt6359_platform_ids,

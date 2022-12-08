@@ -49,9 +49,16 @@ struct rt5033_charger_data {
 };
 
 struct rt5033_charger {
+<<<<<<< HEAD
 	struct device			*dev;
 	struct rt5033_dev		*rt5033;
 	struct power_supply		psy;
+=======
+	struct device		*dev;
+	struct rt5033_dev	*rt5033;
+	struct power_supply	psy;
+
+>>>>>>> b7ba80a49124 (Commit)
 	struct rt5033_charger_data	*chg;
 };
 

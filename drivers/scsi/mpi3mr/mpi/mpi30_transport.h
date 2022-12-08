@@ -1,6 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 /*
+<<<<<<< HEAD
  *  Copyright 2016-2023 Broadcom Inc. All rights reserved.
+=======
+ *  Copyright 2016-2021 Broadcom Inc. All rights reserved.
+ *
+>>>>>>> b7ba80a49124 (Commit)
  */
 #ifndef MPI30_TRANSPORT_H
 #define MPI30_TRANSPORT_H     1
@@ -18,8 +23,13 @@ union mpi3_version_union {
 
 #define MPI3_VERSION_MAJOR                                              (3)
 #define MPI3_VERSION_MINOR                                              (0)
+<<<<<<< HEAD
 #define MPI3_VERSION_UNIT                                               (27)
 #define MPI3_VERSION_DEV                                                (0)
+=======
+#define MPI3_VERSION_UNIT                                               (23)
+#define MPI3_VERSION_DEV                                                (1)
+>>>>>>> b7ba80a49124 (Commit)
 #define MPI3_DEVHANDLE_INVALID                                          (0xffff)
 struct mpi3_sysif_oper_queue_indexes {
 	__le16         producer_index;
@@ -211,7 +221,10 @@ struct mpi3_default_reply_descriptor {
 #define MPI3_REPLY_DESCRIPT_FLAGS_TYPE_SUCCESS                     (0x1000)
 #define MPI3_REPLY_DESCRIPT_FLAGS_TYPE_TARGET_COMMAND_BUFFER       (0x2000)
 #define MPI3_REPLY_DESCRIPT_FLAGS_TYPE_STATUS                      (0x3000)
+<<<<<<< HEAD
 #define MPI3_REPLY_DESCRIPT_REQUEST_QUEUE_ID_INVALID               (0xffff)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mpi3_address_reply_descriptor {
 	__le64             reply_frame_address;
 	__le16             request_queue_ci;

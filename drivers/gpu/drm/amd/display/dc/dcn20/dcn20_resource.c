@@ -62,6 +62,10 @@
 #include "dml/display_mode_vba.h"
 #include "dcn20_dccg.h"
 #include "dcn20_vmid.h"
+<<<<<<< HEAD
+=======
+#include "dc_link_ddc.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "dce/dce_panel_cntl.h"
 
 #include "navi10_ip_offset.h"
@@ -89,7 +93,10 @@
 
 #include "amdgpu_socbb.h"
 
+<<<<<<< HEAD
 #include "link.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DC_LOGGER_INIT(logger)
 
 #ifndef mmDP0_DP_DPHY_INTERNAL_CTRL
@@ -124,6 +131,11 @@ enum dcn20_clk_src_array_id {
  * macros to expend register list macro defined in HW object header file */
 
 /* DCN */
+<<<<<<< HEAD
+=======
+/* TODO awful hack. fixup dcn20_dwb.h */
+#undef BASE_INNER
+>>>>>>> b7ba80a49124 (Commit)
 #define BASE_INNER(seg) DCN_BASE__INST0_SEG ## seg
 
 #define BASE(seg) BASE_INNER(seg)
@@ -136,6 +148,7 @@ enum dcn20_clk_src_array_id {
 	.reg_name = BASE(mm ## block ## id ## _ ## reg_name ## _BASE_IDX) + \
 					mm ## block ## id ## _ ## reg_name
 
+<<<<<<< HEAD
 #define SRI2_DWB(reg_name, block, id)\
 	.reg_name = BASE(mm ## reg_name ## _BASE_IDX) + \
 					mm ## reg_name
@@ -145,6 +158,8 @@ enum dcn20_clk_src_array_id {
 #define SF_DWB2(reg_name, block, id, field_name, post_fix)	\
 	.field_name = reg_name ## __ ## field_name ## post_fix
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define SRIR(var_name, reg_name, block, id)\
 	.var_name = BASE(mm ## block ## id ## _ ## reg_name ## _BASE_IDX) + \
 					mm ## block ## id ## _ ## reg_name
@@ -670,6 +685,11 @@ static const struct resource_caps res_cap_nv10 = {
 
 static const struct dc_plane_cap plane_cap = {
 	.type = DC_PLANE_TYPE_DCN_UNIVERSAL,
+<<<<<<< HEAD
+=======
+	.blends_with_above = true,
+	.blends_with_below = true,
+>>>>>>> b7ba80a49124 (Commit)
 	.per_pixel_alpha = true,
 
 	.pixel_format_support = {
@@ -712,7 +732,11 @@ static const struct dc_debug_options debug_defaults_drv = {
 		.timing_trace = false,
 		.clock_trace = true,
 		.disable_pplib_clock_request = true,
+<<<<<<< HEAD
 		.pipe_split_policy = MPC_SPLIT_DYNAMIC,
+=======
+		.pipe_split_policy = MPC_SPLIT_AVOID_MULT_DISP,
+>>>>>>> b7ba80a49124 (Commit)
 		.force_single_disp_pipe_split = false,
 		.disable_dcc = DCC_ENABLE,
 		.vsr_support = true,
@@ -1211,11 +1235,16 @@ static void dcn20_resource_destruct(struct dcn20_resource_pool *pool)
 	if (pool->base.pp_smu != NULL)
 		dcn20_pp_smu_destroy(&pool->base.pp_smu);
 
+<<<<<<< HEAD
 	if (pool->base.oem_device != NULL) {
 		struct dc *dc = pool->base.oem_device->ctx->dc;
 
 		dc->link_srv->destroy_ddc_service(&pool->base.oem_device);
 	}
+=======
+	if (pool->base.oem_device != NULL)
+		dal_ddc_service_destroy(&pool->base.oem_device);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct hubp *dcn20_hubp_create(
@@ -1390,9 +1419,12 @@ enum dc_status dcn20_add_dsc_to_stream_resource(struct dc *dc,
 	for (i = 0; i < dc->res_pool->pipe_count; i++) {
 		struct pipe_ctx *pipe_ctx = &dc_ctx->res_ctx.pipe_ctx[i];
 
+<<<<<<< HEAD
 		if (pipe_ctx->top_pipe)
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (pipe_ctx->stream != dc_stream)
 			continue;
 
@@ -1465,6 +1497,7 @@ enum dc_status dcn20_remove_stream_from_ctx(struct dc *dc, struct dc_state *new_
 	return result;
 }
 
+<<<<<<< HEAD
 /**
  * dcn20_split_stream_for_odm - Check if stream can be splited for ODM
  *
@@ -1481,6 +1514,8 @@ enum dc_status dcn20_remove_stream_from_ctx(struct dc *dc, struct dc_state *new_
  * Return:
  * Return true if split stream for ODM is possible, otherwise, return false.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool dcn20_split_stream_for_odm(
 		const struct dc *dc,
 		struct resource_context *res_ctx,
@@ -2226,10 +2261,21 @@ enum dc_status dcn20_patch_unknown_plane_state(struct dc_plane_state *plane_stat
 	enum surface_pixel_format surf_pix_format = plane_state->format;
 	unsigned int bpp = resource_pixel_format_to_bpp(surf_pix_format);
 
+<<<<<<< HEAD
 	plane_state->tiling_info.gfx9.swizzle = DC_SW_64KB_S;
 	if (bpp == 64)
 		plane_state->tiling_info.gfx9.swizzle = DC_SW_64KB_D;
 
+=======
+	enum swizzle_mode_values swizzle = DC_SW_LINEAR;
+
+	if (bpp == 64)
+		swizzle = DC_SW_64KB_D;
+	else
+		swizzle = DC_SW_64KB_S;
+
+	plane_state->tiling_info.gfx9.swizzle = swizzle;
+>>>>>>> b7ba80a49124 (Commit)
 	return DC_OK;
 }
 
@@ -2766,7 +2812,11 @@ static bool dcn20_resource_construct(
 		ddc_init_data.id.id = dc->ctx->dc_bios->fw_info.oem_i2c_obj_id;
 		ddc_init_data.id.enum_id = 0;
 		ddc_init_data.id.type = OBJECT_TYPE_GENERIC;
+<<<<<<< HEAD
 		pool->base.oem_device = dc->link_srv->create_ddc_service(&ddc_init_data);
+=======
+		pool->base.oem_device = dal_ddc_service_create(&ddc_init_data);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		pool->base.oem_device = NULL;
 	}

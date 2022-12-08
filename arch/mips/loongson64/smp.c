@@ -14,7 +14,10 @@
 #include <linux/cpufreq.h>
 #include <linux/kexec.h>
 #include <asm/processor.h>
+<<<<<<< HEAD
 #include <asm/smp.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/time.h>
 #include <asm/tlbflush.h>
 #include <asm/cacheflush.h>
@@ -28,6 +31,7 @@ DEFINE_PER_CPU(int, cpu_state);
 
 #define LS_IPI_IRQ (MIPS_CPU_IRQ_BASE + 6)
 
+<<<<<<< HEAD
 static void __iomem *ipi_set0_regs[16];
 static void __iomem *ipi_clear0_regs[16];
 static void __iomem *ipi_status0_regs[16];
@@ -35,6 +39,32 @@ static void __iomem *ipi_en0_regs[16];
 static void __iomem *ipi_mailbox_buf[16];
 static uint32_t core0_c0count[NR_CPUS];
 
+=======
+static void *ipi_set0_regs[16];
+static void *ipi_clear0_regs[16];
+static void *ipi_status0_regs[16];
+static void *ipi_en0_regs[16];
+static void *ipi_mailbox_buf[16];
+static uint32_t core0_c0count[NR_CPUS];
+
+/* read a 32bit value from ipi register */
+#define loongson3_ipi_read32(addr) readl(addr)
+/* read a 64bit value from ipi register */
+#define loongson3_ipi_read64(addr) readq(addr)
+/* write a 32bit value to ipi register */
+#define loongson3_ipi_write32(action, addr)	\
+	do {					\
+		writel(action, addr);		\
+		__wbflush();			\
+	} while (0)
+/* write a 64bit value to ipi register */
+#define loongson3_ipi_write64(action, addr)	\
+	do {					\
+		writeq(action, addr);		\
+		__wbflush();			\
+	} while (0)
+
+>>>>>>> b7ba80a49124 (Commit)
 static u32 (*ipi_read_clear)(int cpu);
 static void (*ipi_write_action)(int cpu, u32 action);
 static void (*ipi_write_enable)(int cpu);
@@ -120,28 +150,46 @@ static u32 legacy_ipi_read_clear(int cpu)
 	u32 action;
 
 	/* Load the ipi register to figure out what we're supposed to do */
+<<<<<<< HEAD
 	action = readl_relaxed(ipi_status0_regs[cpu_logical_map(cpu)]);
 	/* Clear the ipi register to clear the interrupt */
 	writel_relaxed(action, ipi_clear0_regs[cpu_logical_map(cpu)]);
 	nudge_writes();
+=======
+	action = loongson3_ipi_read32(ipi_status0_regs[cpu_logical_map(cpu)]);
+	/* Clear the ipi register to clear the interrupt */
+	loongson3_ipi_write32(action, ipi_clear0_regs[cpu_logical_map(cpu)]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return action;
 }
 
 static void legacy_ipi_write_action(int cpu, u32 action)
 {
+<<<<<<< HEAD
 	writel_relaxed((u32)action, ipi_set0_regs[cpu]);
 	nudge_writes();
+=======
+	loongson3_ipi_write32((u32)action, ipi_set0_regs[cpu]);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void legacy_ipi_write_enable(int cpu)
 {
+<<<<<<< HEAD
 	writel_relaxed(0xffffffff, ipi_en0_regs[cpu_logical_map(cpu)]);
+=======
+	loongson3_ipi_write32(0xffffffff, ipi_en0_regs[cpu_logical_map(cpu)]);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void legacy_ipi_clear_buf(int cpu)
 {
+<<<<<<< HEAD
 	writeq_relaxed(0, ipi_mailbox_buf[cpu_logical_map(cpu)] + 0x0);
+=======
+	loongson3_ipi_write64(0, ipi_mailbox_buf[cpu_logical_map(cpu)] + 0x0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void legacy_ipi_write_buf(int cpu, struct task_struct *idle)
@@ -157,6 +205,7 @@ static void legacy_ipi_write_buf(int cpu, struct task_struct *idle)
 	pr_debug("CPU#%d, func_pc=%lx, sp=%lx, gp=%lx\n",
 			cpu, startargs[0], startargs[1], startargs[2]);
 
+<<<<<<< HEAD
 	writeq_relaxed(startargs[3],
 			ipi_mailbox_buf[cpu_logical_map(cpu)] + 0x18);
 	writeq_relaxed(startargs[2],
@@ -166,6 +215,16 @@ static void legacy_ipi_write_buf(int cpu, struct task_struct *idle)
 	writeq_relaxed(startargs[0],
 			ipi_mailbox_buf[cpu_logical_map(cpu)] + 0x0);
 	nudge_writes();
+=======
+	loongson3_ipi_write64(startargs[3],
+			ipi_mailbox_buf[cpu_logical_map(cpu)] + 0x18);
+	loongson3_ipi_write64(startargs[2],
+			ipi_mailbox_buf[cpu_logical_map(cpu)] + 0x10);
+	loongson3_ipi_write64(startargs[1],
+			ipi_mailbox_buf[cpu_logical_map(cpu)] + 0x8);
+	loongson3_ipi_write64(startargs[0],
+			ipi_mailbox_buf[cpu_logical_map(cpu)] + 0x0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void csr_ipi_probe(void)
@@ -405,7 +464,11 @@ static irqreturn_t loongson3_ipi_interrupt(int irq, void *dev_id)
 		c0count = c0count ? c0count : 1;
 		for (i = 1; i < nr_cpu_ids; i++)
 			core0_c0count[i] = c0count;
+<<<<<<< HEAD
 		nudge_writes(); /* Let others see the result ASAP */
+=======
+		__wbflush(); /* Let others see the result ASAP */
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return IRQ_HANDLED;
@@ -809,7 +872,10 @@ out:
 	state_addr = &per_cpu(cpu_state, cpu);
 	mb();
 	play_dead_at_ckseg1(state_addr);
+<<<<<<< HEAD
 	BUG();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int loongson3_disable_clock(unsigned int cpu)

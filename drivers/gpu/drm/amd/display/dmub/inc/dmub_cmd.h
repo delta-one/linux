@@ -162,7 +162,10 @@ extern "C" {
 #define dmub_udelay(microseconds) udelay(microseconds)
 #endif
 
+<<<<<<< HEAD
 #pragma pack(push, 1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * union dmub_addr - DMUB physical/virtual 64-bit address.
  */
@@ -173,7 +176,10 @@ union dmub_addr {
 	} u; /*<< Low/high bit access */
 	uint64_t quad_part; /*<< 64 bit address */
 };
+<<<<<<< HEAD
 #pragma pack(pop)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * Dirty rect definition.
@@ -227,12 +233,15 @@ union dmub_psr_debug_flags {
 		 * Use TPS3 signal when restore main link.
 		 */
 		uint32_t force_wakeup_by_tps3 : 1;
+<<<<<<< HEAD
 
 		/**
 		 * Back to back flip, therefore cannot power down PHY
 		 */
 		uint32_t back_to_back_flip : 1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} bitfields;
 
 	/**
@@ -408,10 +417,15 @@ union dmub_fw_boot_options {
 		uint32_t diag_env: 1; /* 1 if diagnostic environment */
 		uint32_t gpint_scratch8: 1; /* 1 if GPINT is in scratch8*/
 		uint32_t usb4_cm_version: 1; /**< 1 CM support */
+<<<<<<< HEAD
 		uint32_t dpia_hpd_int_enable_supported: 1; /* 1 if dpia hpd int enable supported */
 		uint32_t usb4_dpia_bw_alloc_supported: 1; /* 1 if USB4 dpia BW allocation supported */
 		uint32_t disable_clk_ds: 1; /* 1 if disallow dispclk_ds and dppclk_ds*/
 		uint32_t reserved : 14; /**< reserved */
+=======
+
+		uint32_t reserved : 17; /**< reserved */
+>>>>>>> b7ba80a49124 (Commit)
 	} bits; /**< boot bits */
 	uint32_t all; /**< 32-bit access to bits */
 };
@@ -459,10 +473,13 @@ enum dmub_cmd_vbios_type {
 	 * Query DP alt status on a transmitter.
 	 */
 	DMUB_CMD__VBIOS_TRANSMITTER_QUERY_DP_ALT  = 26,
+<<<<<<< HEAD
 	/**
 	 * Controls domain power gating
 	 */
 	DMUB_CMD__VBIOS_DOMAIN_CONTROL = 28,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 //==============================================================================
@@ -742,6 +759,7 @@ enum dmub_cmd_type {
 	/**
 	 * Command type used for all VBIOS interface commands.
 	 */
+<<<<<<< HEAD
 
 	/**
 	 * Command type used for all SECURE_DISPLAY commands.
@@ -753,6 +771,8 @@ enum dmub_cmd_type {
 	 */
 	DMUB_CMD__DPIA_HPD_INT_ENABLE = 86,
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	DMUB_CMD__VBIOS = 128,
 };
 
@@ -776,10 +796,13 @@ enum dmub_out_cmd_type {
 	 * Command type used for SET_CONFIG Reply notification
 	 */
 	DMUB_OUT_CMD__SET_CONFIG_REPLY = 3,
+<<<<<<< HEAD
 	/**
 	 * Command type used for USB4 DPIA notification
 	 */
 	DMUB_OUT_CMD__DPIA_NOTIFICATION = 5,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* DMUB_CMD__DPIA command sub-types. */
@@ -789,11 +812,14 @@ enum dmub_cmd_dpia_type {
 	DMUB_CMD__DPIA_MST_ALLOC_SLOTS = 2,
 };
 
+<<<<<<< HEAD
 /* DMUB_OUT_CMD__DPIA_NOTIFICATION command types. */
 enum dmub_cmd_dpia_notification_type {
 	DPIA_NOTIFY__BW_ALLOCATION = 0,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #pragma pack(push, 1)
 
 /**
@@ -1044,14 +1070,21 @@ struct dmub_cmd_fw_assisted_mclk_switch_pipe_data_v2 {
 			uint16_t vtotal;
 			uint16_t htotal;
 			uint8_t vblank_pipe_index;
+<<<<<<< HEAD
 			uint8_t padding[1];
+=======
+			uint8_t padding[2];
+>>>>>>> b7ba80a49124 (Commit)
 			struct {
 				uint8_t drr_in_use;
 				uint8_t drr_window_size_ms;	// Indicates largest VMIN/VMAX adjustment per frame
 				uint16_t min_vtotal_supported;	// Min VTOTAL that supports switching in VBLANK
 				uint16_t max_vtotal_supported;	// Max VTOTAL that can support SubVP static scheduling
 				uint8_t use_ramping;		// Use ramping or not
+<<<<<<< HEAD
 				uint8_t drr_vblank_start_margin;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			} drr_info;				// DRR considered as part of SubVP + VBLANK case
 		} vblank_data;
 	} pipe_config;
@@ -1220,6 +1253,7 @@ struct dmub_rb_cmd_dig1_transmitter_control {
 };
 
 /**
+<<<<<<< HEAD
  * struct dmub_rb_cmd_domain_control_data - Data for DOMAIN power control
  */
 struct dmub_rb_cmd_domain_control_data {
@@ -1237,6 +1271,8 @@ struct dmub_rb_cmd_domain_control {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * DPIA tunnel command parameters.
  */
 struct dmub_cmd_dig_dpia_control_data {
@@ -1308,6 +1344,7 @@ struct dmub_rb_cmd_set_mst_alloc_slots {
 };
 
 /**
+<<<<<<< HEAD
  * DMUB command structure for DPIA HPD int enable control.
  */
 struct dmub_rb_cmd_dpia_hpd_int_enable {
@@ -1316,6 +1353,8 @@ struct dmub_rb_cmd_dpia_hpd_int_enable {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct dmub_rb_cmd_dpphy_init - DPPHY init.
  */
 struct dmub_rb_cmd_dpphy_init {
@@ -1590,6 +1629,7 @@ struct dmub_rb_cmd_dp_set_config_reply {
 };
 
 /**
+<<<<<<< HEAD
  * Definition of a DPIA notification header
  */
 struct dpia_notification_header {
@@ -1663,6 +1703,8 @@ struct dmub_rb_cmd_dpia_notification {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Data passed from driver to FW in a DMUB_CMD__QUERY_HPD_STATE command.
  */
 struct dmub_cmd_hpd_state_query_data {
@@ -1971,7 +2013,11 @@ struct dmub_cmd_psr_copy_settings_data {
 	uint8_t cmd_version;
 	/**
 	 * Panel Instance.
+<<<<<<< HEAD
 	 * Panel instance to identify which psr_state to use
+=======
+	 * Panel isntance to identify which psr_state to use
+>>>>>>> b7ba80a49124 (Commit)
 	 * Currently the support is only for 0 or 1
 	 */
 	uint8_t panel_inst;
@@ -1984,6 +2030,7 @@ struct dmub_cmd_psr_copy_settings_data {
 	 */
 	uint8_t use_phy_fsm;
 	/**
+<<<<<<< HEAD
 	 * frame delay for frame re-lock
 	 */
 	uint8_t relock_delay_frame_cnt;
@@ -1999,6 +2046,11 @@ struct dmub_cmd_psr_copy_settings_data {
 	 * Explicit padding to 4 byte boundary.
 	 */
 	uint16_t pad;
+=======
+	 * Explicit padding to 2 byte boundary.
+	 */
+	uint8_t pad3[2];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -2029,7 +2081,11 @@ struct dmub_cmd_psr_set_level_data {
 	uint8_t cmd_version;
 	/**
 	 * Panel Instance.
+<<<<<<< HEAD
 	 * Panel instance to identify which psr_state to use
+=======
+	 * Panel isntance to identify which psr_state to use
+>>>>>>> b7ba80a49124 (Commit)
 	 * Currently the support is only for 0 or 1
 	 */
 	uint8_t panel_inst;
@@ -2056,7 +2112,11 @@ struct dmub_rb_cmd_psr_enable_data {
 	uint8_t cmd_version;
 	/**
 	 * Panel Instance.
+<<<<<<< HEAD
 	 * Panel instance to identify which psr_state to use
+=======
+	 * Panel isntance to identify which psr_state to use
+>>>>>>> b7ba80a49124 (Commit)
 	 * Currently the support is only for 0 or 1
 	 */
 	uint8_t panel_inst;
@@ -2100,7 +2160,11 @@ struct dmub_cmd_psr_set_version_data {
 	uint8_t cmd_version;
 	/**
 	 * Panel Instance.
+<<<<<<< HEAD
 	 * Panel instance to identify which psr_state to use
+=======
+	 * Panel isntance to identify which psr_state to use
+>>>>>>> b7ba80a49124 (Commit)
 	 * Currently the support is only for 0 or 1
 	 */
 	uint8_t panel_inst;
@@ -2131,7 +2195,11 @@ struct dmub_cmd_psr_force_static_data {
 	uint8_t cmd_version;
 	/**
 	 * Panel Instance.
+<<<<<<< HEAD
 	 * Panel instance to identify which psr_state to use
+=======
+	 * Panel isntance to identify which psr_state to use
+>>>>>>> b7ba80a49124 (Commit)
 	 * Currently the support is only for 0 or 1
 	 */
 	uint8_t panel_inst;
@@ -2206,7 +2274,11 @@ struct dmub_cmd_update_dirty_rect_data {
 	uint8_t cmd_version;
 	/**
 	 * Panel Instance.
+<<<<<<< HEAD
 	 * Panel instance to identify which psr_state to use
+=======
+	 * Panel isntance to identify which psr_state to use
+>>>>>>> b7ba80a49124 (Commit)
 	 * Currently the support is only for 0 or 1
 	 */
 	uint8_t panel_inst;
@@ -2229,6 +2301,7 @@ struct dmub_rb_cmd_update_dirty_rect {
 /**
  * Data passed from driver to FW in a DMUB_CMD__UPDATE_CURSOR_INFO command.
  */
+<<<<<<< HEAD
 union dmub_reg_cursor_control_cfg {
 	struct {
 		uint32_t     cur_enable: 1;
@@ -2322,6 +2395,9 @@ struct dmub_cursor_attributes_cfg {
 };
 
 struct dmub_cmd_update_cursor_payload0 {
+=======
+struct dmub_cmd_update_cursor_info_data {
+>>>>>>> b7ba80a49124 (Commit)
 	/**
 	 * Cursor dirty rects.
 	 */
@@ -2344,6 +2420,7 @@ struct dmub_cmd_update_cursor_payload0 {
 	uint8_t cmd_version;
 	/**
 	 * Panel Instance.
+<<<<<<< HEAD
 	 * Panel instance to identify which psr_state to use
 	 * Currently the support is only for 0 or 1
 	 */
@@ -2362,6 +2439,12 @@ struct dmub_cmd_update_cursor_payload1 {
 union dmub_cmd_update_cursor_info_data {
 	struct dmub_cmd_update_cursor_payload0 payload0;
 	struct dmub_cmd_update_cursor_payload1 payload1;
+=======
+	 * Panel isntance to identify which psr_state to use
+	 * Currently the support is only for 0 or 1
+	 */
+	uint8_t panel_inst;
+>>>>>>> b7ba80a49124 (Commit)
 };
 /**
  * Definition of a DMUB_CMD__UPDATE_CURSOR_INFO command.
@@ -2374,7 +2457,11 @@ struct dmub_rb_cmd_update_cursor_info {
 	/**
 	 * Data passed from driver to FW in a DMUB_CMD__UPDATE_CURSOR_INFO command.
 	 */
+<<<<<<< HEAD
 	union dmub_cmd_update_cursor_info_data update_cursor_info_data;
+=======
+	struct dmub_cmd_update_cursor_info_data update_cursor_info_data;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -2391,7 +2478,11 @@ struct dmub_cmd_psr_set_vtotal_data {
 	uint8_t cmd_version;
 	/**
 	 * Panel Instance.
+<<<<<<< HEAD
 	 * Panel instance to identify which psr_state to use
+=======
+	 * Panel isntance to identify which psr_state to use
+>>>>>>> b7ba80a49124 (Commit)
 	 * Currently the support is only for 0 or 1
 	 */
 	uint8_t panel_inst;
@@ -2429,7 +2520,11 @@ struct dmub_cmd_psr_set_power_opt_data {
 	uint8_t cmd_version;
 	/**
 	 * Panel Instance.
+<<<<<<< HEAD
 	 * Panel instance to identify which psr_state to use
+=======
+	 * Panel isntance to identify which psr_state to use
+>>>>>>> b7ba80a49124 (Commit)
 	 * Currently the support is only for 0 or 1
 	 */
 	uint8_t panel_inst;
@@ -3071,7 +3166,15 @@ struct dmub_rb_cmd_get_visual_confirm_color {
 struct dmub_optc_state {
 	uint32_t v_total_max;
 	uint32_t v_total_min;
+<<<<<<< HEAD
 	uint32_t tg_inst;
+=======
+	uint32_t v_total_mid;
+	uint32_t v_total_mid_frame_num;
+	uint32_t tg_inst;
+	uint32_t enable_manual_trigger;
+	uint32_t clear_force_vsync;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct dmub_rb_cmd_drr_update {
@@ -3142,8 +3245,12 @@ struct dmub_rb_cmd_panel_cntl {
  */
 struct dmub_cmd_lvtma_control_data {
 	uint8_t uc_pwr_action; /**< LVTMA_ACTION */
+<<<<<<< HEAD
 	uint8_t bypass_panel_control_wait;
 	uint8_t reserved_0[2]; /**< For future use */
+=======
+	uint8_t reserved_0[3]; /**< For future use */
+>>>>>>> b7ba80a49124 (Commit)
 	uint8_t panel_inst; /**< LVTMA control instance */
 	uint8_t reserved_1[3]; /**< For future use */
 };
@@ -3275,6 +3382,7 @@ struct dmub_rb_cmd_get_usbc_cable_id {
 };
 
 /**
+<<<<<<< HEAD
  * Command type of a DMUB_CMD__SECURE_DISPLAY command
  */
 enum dmub_cmd_secure_display_type {
@@ -3302,6 +3410,8 @@ struct dmub_rb_cmd_secure_display {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * union dmub_rb_cmd - DMUB inbox command.
  */
 union dmub_rb_cmd {
@@ -3346,10 +3456,13 @@ union dmub_rb_cmd {
 	 */
 	struct dmub_rb_cmd_dig1_transmitter_control dig1_transmitter_control;
 	/**
+<<<<<<< HEAD
 	 * Definition of a DMUB_CMD__VBIOS_DOMAIN_CONTROL command.
 	 */
 	struct dmub_rb_cmd_domain_control domain_control;
 	/**
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * Definition of a DMUB_CMD__PSR_SET_VERSION command.
 	 */
 	struct dmub_rb_cmd_psr_set_version psr_set_version;
@@ -3509,6 +3622,7 @@ union dmub_rb_cmd {
 	 * Definition of a DMUB_CMD__QUERY_HPD_STATE command.
 	 */
 	struct dmub_rb_cmd_query_hpd_state query_hpd;
+<<<<<<< HEAD
 	/**
 	 * Definition of a DMUB_CMD__SECURE_DISPLAY command.
 	 */
@@ -3518,6 +3632,8 @@ union dmub_rb_cmd {
 	 * Definition of a DMUB_CMD__DPIA_HPD_INT_ENABLE command.
 	 */
 	struct dmub_rb_cmd_dpia_hpd_int_enable dpia_hpd_int_enable;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -3540,10 +3656,13 @@ union dmub_rb_out_cmd {
 	 * SET_CONFIG reply command.
 	 */
 	struct dmub_rb_cmd_dp_set_config_reply set_config_reply;
+<<<<<<< HEAD
 	/**
 	 * DPIA notification command.
 	 */
 	struct dmub_rb_cmd_dpia_notification dpia_notification;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 #pragma pack(pop)
 

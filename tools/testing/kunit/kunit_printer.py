@@ -15,7 +15,11 @@ _RESET = '\033[0;0m'
 class Printer:
 	"""Wraps a file object, providing utilities for coloring output, etc."""
 
+<<<<<<< HEAD
 	def __init__(self, output: typing.IO[str]):
+=======
+	def __init__(self, output: typing.IO):
+>>>>>>> b7ba80a49124 (Commit)
 		self._output = output
 		self._use_color = output.isatty()
 

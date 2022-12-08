@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/nvmem/st,stm32-romem.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: STMicroelectronics STM32 Factory-programmed data
+=======
+title: STMicroelectronics STM32 Factory-programmed data bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 description: |
   This represents STM32 Factory-programmed read only non-volatile area: locked
@@ -16,13 +20,20 @@ maintainers:
   - Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: nvmem.yaml#
+=======
+  - $ref: "nvmem.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
     enum:
       - st,stm32f4-otp
+<<<<<<< HEAD
       - st,stm32mp13-bsec
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - st,stm32mp15-bsec
 
   reg:

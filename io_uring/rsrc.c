@@ -170,10 +170,17 @@ static void __io_rsrc_put_work(struct io_rsrc_node *ref_node)
 		if (prsrc->tag) {
 			if (ctx->flags & IORING_SETUP_IOPOLL) {
 				mutex_lock(&ctx->uring_lock);
+<<<<<<< HEAD
 				io_post_aux_cqe(ctx, prsrc->tag, 0, 0);
 				mutex_unlock(&ctx->uring_lock);
 			} else {
 				io_post_aux_cqe(ctx, prsrc->tag, 0, 0);
+=======
+				io_post_aux_cqe(ctx, prsrc->tag, 0, 0, true);
+				mutex_unlock(&ctx->uring_lock);
+			} else {
+				io_post_aux_cqe(ctx, prsrc->tag, 0, 0, true);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 
@@ -204,6 +211,7 @@ void io_rsrc_put_work(struct work_struct *work)
 	}
 }
 
+<<<<<<< HEAD
 void io_rsrc_put_tw(struct callback_head *cb)
 {
 	struct io_ring_ctx *ctx = container_of(cb, struct io_ring_ctx,
@@ -212,6 +220,8 @@ void io_rsrc_put_tw(struct callback_head *cb)
 	io_rsrc_put_work(&ctx->rsrc_put_work.work);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void io_wait_rsrc_data(struct io_rsrc_data *data)
 {
 	if (data && !atomic_dec_and_test(&data->refs))
@@ -250,6 +260,7 @@ static __cold void io_rsrc_node_ref_zero(struct percpu_ref *ref)
 	}
 	spin_unlock_irqrestore(&ctx->rsrc_ref_lock, flags);
 
+<<<<<<< HEAD
 	if (!first_add)
 		return;
 
@@ -259,6 +270,10 @@ static __cold void io_rsrc_node_ref_zero(struct percpu_ref *ref)
 			return;
 	}
 	mod_delayed_work(system_wq, &ctx->rsrc_put_work, delay);
+=======
+	if (first_add)
+		mod_delayed_work(system_wq, &ctx->rsrc_put_work, delay);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct io_rsrc_node *io_rsrc_node_alloc(void)
@@ -324,6 +339,7 @@ __cold static int io_rsrc_ref_quiesce(struct io_rsrc_data *data,
 	/* As we may drop ->uring_lock, other task may have started quiesce */
 	if (data->quiesce)
 		return -ENXIO;
+<<<<<<< HEAD
 	ret = io_rsrc_node_switch_start(ctx);
 	if (ret)
 		return ret;
@@ -346,10 +362,25 @@ __cold static int io_rsrc_ref_quiesce(struct io_rsrc_data *data,
 			break;
 		}
 
+=======
+
+	data->quiesce = true;
+	do {
+		ret = io_rsrc_node_switch_start(ctx);
+		if (ret)
+			break;
+		io_rsrc_node_switch(ctx, data);
+
+		/* kill initial ref, already quiesced if zero */
+		if (atomic_dec_and_test(&data->refs))
+			break;
+		mutex_unlock(&ctx->uring_lock);
+>>>>>>> b7ba80a49124 (Commit)
 		flush_delayed_work(&ctx->rsrc_put_work);
 		ret = wait_for_completion_interruptible(&data->done);
 		if (!ret) {
 			mutex_lock(&ctx->uring_lock);
+<<<<<<< HEAD
 			if (atomic_read(&data->refs) <= 0)
 				break;
 			/*
@@ -359,6 +390,27 @@ __cold static int io_rsrc_ref_quiesce(struct io_rsrc_data *data,
 			mutex_unlock(&ctx->uring_lock);
 		}
 	} while (1);
+=======
+			if (atomic_read(&data->refs) > 0) {
+				/*
+				 * it has been revived by another thread while
+				 * we were unlocked
+				 */
+				mutex_unlock(&ctx->uring_lock);
+			} else {
+				break;
+			}
+		}
+
+		atomic_inc(&data->refs);
+		/* wait for all works potentially completing data->done */
+		flush_delayed_work(&ctx->rsrc_put_work);
+		reinit_completion(&data->done);
+
+		ret = io_run_task_work_sig(ctx);
+		mutex_lock(&ctx->uring_lock);
+	} while (ret >= 0);
+>>>>>>> b7ba80a49124 (Commit)
 	data->quiesce = false;
 
 	return ret;
@@ -410,7 +462,11 @@ __cold static int io_rsrc_data_alloc(struct io_ring_ctx *ctx,
 				     unsigned nr, struct io_rsrc_data **pdata)
 {
 	struct io_rsrc_data *data;
+<<<<<<< HEAD
 	int ret = 0;
+=======
+	int ret = -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned i;
 
 	data = kzalloc(sizeof(*data), GFP_KERNEL);
@@ -772,17 +828,31 @@ int io_queue_rsrc_removal(struct io_rsrc_data *data, unsigned idx,
 
 void __io_sqe_files_unregister(struct io_ring_ctx *ctx)
 {
+<<<<<<< HEAD
+=======
+#if !defined(IO_URING_SCM_ALL)
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	for (i = 0; i < ctx->nr_user_files; i++) {
 		struct file *file = io_file_from_index(&ctx->file_table, i);
 
+<<<<<<< HEAD
 		/* skip scm accounted files, they'll be freed by ->ring_sock */
 		if (!file || io_file_need_scm(file))
+=======
+		if (!file)
+			continue;
+		if (io_fixed_file_slot(&ctx->file_table, i)->file_ptr & FFS_SCM)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		io_file_bitmap_clear(&ctx->file_table, i);
 		fput(file);
 	}
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 #if defined(CONFIG_UNIX)
 	if (ctx->ring_sock) {
@@ -867,7 +937,11 @@ int __io_scm_file_account(struct io_ring_ctx *ctx, struct file *file)
 
 		UNIXCB(skb).fp = fpl;
 		skb->sk = sk;
+<<<<<<< HEAD
 		skb->destructor = io_uring_destruct_scm;
+=======
+		skb->destructor = unix_destruct_scm;
+>>>>>>> b7ba80a49124 (Commit)
 		refcount_add(skb->truesize, &sk->sk_wmem_alloc);
 	}
 
@@ -1161,6 +1235,7 @@ struct page **io_pin_pages(unsigned long ubuf, unsigned long len, int *npages)
 	pret = pin_user_pages(ubuf, nr_pages, FOLL_WRITE | FOLL_LONGTERM,
 			      pages, vmas);
 	if (pret == nr_pages) {
+<<<<<<< HEAD
 		struct file *file = vmas[0]->vm_file;
 
 		/* don't support file backed memory */
@@ -1172,6 +1247,16 @@ struct page **io_pin_pages(unsigned long ubuf, unsigned long len, int *npages)
 			if (!file)
 				continue;
 			if (!vma_is_shmem(vmas[i]) && !is_file_hugepages(file)) {
+=======
+		/* don't support file backed memory */
+		for (i = 0; i < nr_pages; i++) {
+			struct vm_area_struct *vma = vmas[i];
+
+			if (vma_is_shmem(vma))
+				continue;
+			if (vma->vm_file &&
+			    !is_file_hugepages(vma->vm_file)) {
+>>>>>>> b7ba80a49124 (Commit)
 				ret = -EOPNOTSUPP;
 				break;
 			}
@@ -1209,7 +1294,10 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, struct iovec *iov,
 	unsigned long off;
 	size_t size;
 	int ret, nr_pages, i;
+<<<<<<< HEAD
 	struct folio *folio = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	*pimu = ctx->dummy_ubuf;
 	if (!iov->iov_base)
@@ -1224,6 +1312,7 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, struct iovec *iov,
 		goto done;
 	}
 
+<<<<<<< HEAD
 	/* If it's a huge page, try to coalesce them into a single bvec entry */
 	if (nr_pages > 1) {
 		folio = page_folio(pages[0]);
@@ -1245,6 +1334,8 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, struct iovec *iov,
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	imu = kvmalloc(struct_size(imu, bvec, nr_pages), GFP_KERNEL);
 	if (!imu)
 		goto done;
@@ -1257,12 +1348,26 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, struct iovec *iov,
 
 	off = (unsigned long) iov->iov_base & ~PAGE_MASK;
 	size = iov->iov_len;
+<<<<<<< HEAD
+=======
+	for (i = 0; i < nr_pages; i++) {
+		size_t vec_len;
+
+		vec_len = min_t(size_t, size, PAGE_SIZE - off);
+		imu->bvec[i].bv_page = pages[i];
+		imu->bvec[i].bv_len = vec_len;
+		imu->bvec[i].bv_offset = off;
+		off = 0;
+		size -= vec_len;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	/* store original address for later verification */
 	imu->ubuf = (unsigned long) iov->iov_base;
 	imu->ubuf_end = imu->ubuf + iov->iov_len;
 	imu->nr_bvecs = nr_pages;
 	*pimu = imu;
 	ret = 0;
+<<<<<<< HEAD
 
 	if (folio) {
 		bvec_set_page(&imu->bvec[0], pages[0], size, off);
@@ -1276,6 +1381,8 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, struct iovec *iov,
 		off = 0;
 		size -= vec_len;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 done:
 	if (ret)
 		kvfree(imu);
@@ -1364,7 +1471,11 @@ int io_import_fixed(int ddir, struct iov_iter *iter,
 		return -EFAULT;
 
 	/*
+<<<<<<< HEAD
 	 * Might not be a start of buffer, set size appropriately
+=======
+	 * May not be a start of buffer, set size appropriately
+>>>>>>> b7ba80a49124 (Commit)
 	 * and advance us to the beginning.
 	 */
 	offset = buf_addr - imu->ubuf;
@@ -1390,6 +1501,7 @@ int io_import_fixed(int ddir, struct iov_iter *iter,
 		const struct bio_vec *bvec = imu->bvec;
 
 		if (offset <= bvec->bv_len) {
+<<<<<<< HEAD
 			/*
 			 * Note, huge pages buffers consists of one large
 			 * bvec entry and should always go this way. The other
@@ -1399,6 +1511,9 @@ int io_import_fixed(int ddir, struct iov_iter *iter,
 			iter->nr_segs = bvec->bv_len;
 			iter->count -= offset;
 			iter->iov_offset = offset;
+=======
+			iov_iter_advance(iter, offset);
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			unsigned long seg_skip;
 

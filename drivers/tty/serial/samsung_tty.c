@@ -152,6 +152,13 @@ struct s3c24xx_uart_port {
 	const struct s3c2410_uartcfg	*cfg;
 
 	struct s3c24xx_uart_dma		*dma;
+<<<<<<< HEAD
+=======
+
+#ifdef CONFIG_ARM_S3C24XX_CPUFREQ
+	struct notifier_block		freq_transition;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void s3c24xx_serial_tx_chars(struct s3c24xx_uart_port *ourport);
@@ -284,6 +291,10 @@ static void s3c24xx_serial_stop_tx(struct uart_port *port)
 {
 	struct s3c24xx_uart_port *ourport = to_ourport(port);
 	struct s3c24xx_uart_dma *dma = ourport->dma;
+<<<<<<< HEAD
+=======
+	struct circ_buf *xmit = &port->state->xmit;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dma_tx_state state;
 	int count;
 
@@ -311,7 +322,12 @@ static void s3c24xx_serial_stop_tx(struct uart_port *port)
 					DMA_TO_DEVICE);
 		async_tx_ack(dma->tx_desc);
 		count = dma->tx_bytes_requested - state.residue;
+<<<<<<< HEAD
 		uart_xmit_advance(port, count);
+=======
+		xmit->tail = (xmit->tail + count) & (UART_XMIT_SIZE - 1);
+		port->icount.tx += count;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ourport->tx_enabled = 0;
@@ -345,7 +361,12 @@ static void s3c24xx_serial_tx_dma_complete(void *args)
 
 	spin_lock_irqsave(&port->lock, flags);
 
+<<<<<<< HEAD
 	uart_xmit_advance(port, count);
+=======
+	xmit->tail = (xmit->tail + count) & (UART_XMIT_SIZE - 1);
+	port->icount.tx += count;
+>>>>>>> b7ba80a49124 (Commit)
 	ourport->tx_in_progress = 0;
 
 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
@@ -909,7 +930,12 @@ static void s3c24xx_serial_tx_chars(struct s3c24xx_uart_port *ourport)
 			break;
 
 		wr_reg(port, S3C2410_UTXH, xmit->buf[xmit->tail]);
+<<<<<<< HEAD
 		uart_xmit_advance(port, 1);
+=======
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+		port->icount.tx++;
+>>>>>>> b7ba80a49124 (Commit)
 		count--;
 	}
 
@@ -1724,7 +1750,11 @@ static void __init s3c24xx_serial_register_console(void)
 
 static void s3c24xx_serial_unregister_console(void)
 {
+<<<<<<< HEAD
 	if (console_is_registered(&s3c24xx_serial_console))
+=======
+	if (s3c24xx_serial_console.flags & CON_ENABLED)
+>>>>>>> b7ba80a49124 (Commit)
 		unregister_console(&s3c24xx_serial_console);
 }
 
@@ -1851,6 +1881,96 @@ static void s3c24xx_serial_resetport(struct uart_port *port,
 	udelay(1);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_ARM_S3C24XX_CPUFREQ
+
+static int s3c24xx_serial_cpufreq_transition(struct notifier_block *nb,
+					     unsigned long val, void *data)
+{
+	struct s3c24xx_uart_port *port;
+	struct uart_port *uport;
+
+	port = container_of(nb, struct s3c24xx_uart_port, freq_transition);
+	uport = &port->port;
+
+	/* check to see if port is enabled */
+
+	if (port->pm_level != 0)
+		return 0;
+
+	/* try and work out if the baudrate is changing, we can detect
+	 * a change in rate, but we do not have support for detecting
+	 * a disturbance in the clock-rate over the change.
+	 */
+
+	if (IS_ERR(port->baudclk))
+		goto exit;
+
+	if (port->baudclk_rate == clk_get_rate(port->baudclk))
+		goto exit;
+
+	if (val == CPUFREQ_PRECHANGE) {
+		/* we should really shut the port down whilst the
+		 * frequency change is in progress.
+		 */
+
+	} else if (val == CPUFREQ_POSTCHANGE) {
+		struct ktermios *termios;
+		struct tty_struct *tty;
+
+		if (uport->state == NULL)
+			goto exit;
+
+		tty = uport->state->port.tty;
+
+		if (tty == NULL)
+			goto exit;
+
+		termios = &tty->termios;
+
+		if (termios == NULL) {
+			dev_warn(uport->dev, "%s: no termios?\n", __func__);
+			goto exit;
+		}
+
+		s3c24xx_serial_set_termios(uport, termios, NULL);
+	}
+
+exit:
+	return 0;
+}
+
+static inline int
+s3c24xx_serial_cpufreq_register(struct s3c24xx_uart_port *port)
+{
+	port->freq_transition.notifier_call = s3c24xx_serial_cpufreq_transition;
+
+	return cpufreq_register_notifier(&port->freq_transition,
+					 CPUFREQ_TRANSITION_NOTIFIER);
+}
+
+static inline void
+s3c24xx_serial_cpufreq_deregister(struct s3c24xx_uart_port *port)
+{
+	cpufreq_unregister_notifier(&port->freq_transition,
+				    CPUFREQ_TRANSITION_NOTIFIER);
+}
+
+#else
+static inline int
+s3c24xx_serial_cpufreq_register(struct s3c24xx_uart_port *port)
+{
+	return 0;
+}
+
+static inline void
+s3c24xx_serial_cpufreq_deregister(struct s3c24xx_uart_port *port)
+{
+}
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 static int s3c24xx_serial_enable_baudclk(struct s3c24xx_uart_port *ourport)
 {
 	struct device *dev = ourport->port.dev;
@@ -2142,6 +2262,13 @@ static int s3c24xx_serial_probe(struct platform_device *pdev)
 	if (!IS_ERR(ourport->baudclk))
 		clk_disable_unprepare(ourport->baudclk);
 
+<<<<<<< HEAD
+=======
+	ret = s3c24xx_serial_cpufreq_register(ourport);
+	if (ret < 0)
+		dev_err(&pdev->dev, "failed to add cpufreq notifier\n");
+
+>>>>>>> b7ba80a49124 (Commit)
 	probe_index++;
 
 	return 0;
@@ -2152,6 +2279,10 @@ static int s3c24xx_serial_remove(struct platform_device *dev)
 	struct uart_port *port = s3c24xx_dev_to_port(&dev->dev);
 
 	if (port) {
+<<<<<<< HEAD
+=======
+		s3c24xx_serial_cpufreq_deregister(to_ourport(port));
+>>>>>>> b7ba80a49124 (Commit)
 		uart_remove_one_port(&s3c24xx_uart_drv, port);
 	}
 
@@ -2489,6 +2620,97 @@ static struct console s3c24xx_serial_console = {
 };
 #endif /* CONFIG_SERIAL_SAMSUNG_CONSOLE */
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_CPU_S3C2410
+static const struct s3c24xx_serial_drv_data s3c2410_serial_drv_data = {
+	.info = {
+		.name		= "Samsung S3C2410 UART",
+		.type		= TYPE_S3C24XX,
+		.port_type	= PORT_S3C2410,
+		.fifosize	= 16,
+		.rx_fifomask	= S3C2410_UFSTAT_RXMASK,
+		.rx_fifoshift	= S3C2410_UFSTAT_RXSHIFT,
+		.rx_fifofull	= S3C2410_UFSTAT_RXFULL,
+		.tx_fifofull	= S3C2410_UFSTAT_TXFULL,
+		.tx_fifomask	= S3C2410_UFSTAT_TXMASK,
+		.tx_fifoshift	= S3C2410_UFSTAT_TXSHIFT,
+		.def_clk_sel	= S3C2410_UCON_CLKSEL0,
+		.num_clks	= 2,
+		.clksel_mask	= S3C2410_UCON_CLKMASK,
+		.clksel_shift	= S3C2410_UCON_CLKSHIFT,
+	},
+	.def_cfg = {
+		.ucon		= S3C2410_UCON_DEFAULT,
+		.ufcon		= S3C2410_UFCON_DEFAULT,
+	},
+};
+#define S3C2410_SERIAL_DRV_DATA (&s3c2410_serial_drv_data)
+#else
+#define S3C2410_SERIAL_DRV_DATA NULL
+#endif
+
+#ifdef CONFIG_CPU_S3C2412
+static const struct s3c24xx_serial_drv_data s3c2412_serial_drv_data = {
+	.info = {
+		.name		= "Samsung S3C2412 UART",
+		.type		= TYPE_S3C24XX,
+		.port_type	= PORT_S3C2412,
+		.fifosize	= 64,
+		.has_divslot	= 1,
+		.rx_fifomask	= S3C2440_UFSTAT_RXMASK,
+		.rx_fifoshift	= S3C2440_UFSTAT_RXSHIFT,
+		.rx_fifofull	= S3C2440_UFSTAT_RXFULL,
+		.tx_fifofull	= S3C2440_UFSTAT_TXFULL,
+		.tx_fifomask	= S3C2440_UFSTAT_TXMASK,
+		.tx_fifoshift	= S3C2440_UFSTAT_TXSHIFT,
+		.def_clk_sel	= S3C2410_UCON_CLKSEL2,
+		.num_clks	= 4,
+		.clksel_mask	= S3C2412_UCON_CLKMASK,
+		.clksel_shift	= S3C2412_UCON_CLKSHIFT,
+	},
+	.def_cfg = {
+		.ucon		= S3C2410_UCON_DEFAULT,
+		.ufcon		= S3C2410_UFCON_DEFAULT,
+	},
+};
+#define S3C2412_SERIAL_DRV_DATA (&s3c2412_serial_drv_data)
+#else
+#define S3C2412_SERIAL_DRV_DATA NULL
+#endif
+
+#if defined(CONFIG_CPU_S3C2440) || defined(CONFIG_CPU_S3C2416) || \
+	defined(CONFIG_CPU_S3C2443) || defined(CONFIG_CPU_S3C2442)
+static const struct s3c24xx_serial_drv_data s3c2440_serial_drv_data = {
+	.info = {
+		.name		= "Samsung S3C2440 UART",
+		.type		= TYPE_S3C24XX,
+		.port_type	= PORT_S3C2440,
+		.fifosize	= 64,
+		.has_divslot	= 1,
+		.rx_fifomask	= S3C2440_UFSTAT_RXMASK,
+		.rx_fifoshift	= S3C2440_UFSTAT_RXSHIFT,
+		.rx_fifofull	= S3C2440_UFSTAT_RXFULL,
+		.tx_fifofull	= S3C2440_UFSTAT_TXFULL,
+		.tx_fifomask	= S3C2440_UFSTAT_TXMASK,
+		.tx_fifoshift	= S3C2440_UFSTAT_TXSHIFT,
+		.def_clk_sel	= S3C2410_UCON_CLKSEL2,
+		.num_clks	= 4,
+		.clksel_mask	= S3C2412_UCON_CLKMASK,
+		.clksel_shift	= S3C2412_UCON_CLKSHIFT,
+		.ucon_mask	= S3C2440_UCON0_DIVMASK,
+	},
+	.def_cfg = {
+		.ucon		= S3C2410_UCON_DEFAULT,
+		.ufcon		= S3C2410_UFCON_DEFAULT,
+	},
+};
+#define S3C2440_SERIAL_DRV_DATA (&s3c2440_serial_drv_data)
+#else
+#define S3C2440_SERIAL_DRV_DATA NULL
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #if defined(CONFIG_CPU_S3C6400) || defined(CONFIG_CPU_S3C6410)
 static const struct s3c24xx_serial_drv_data s3c6400_serial_drv_data = {
 	.info = {
@@ -2657,6 +2879,18 @@ static const struct s3c24xx_serial_drv_data artpec8_serial_drv_data = {
 
 static const struct platform_device_id s3c24xx_serial_driver_ids[] = {
 	{
+<<<<<<< HEAD
+=======
+		.name		= "s3c2410-uart",
+		.driver_data	= (kernel_ulong_t)S3C2410_SERIAL_DRV_DATA,
+	}, {
+		.name		= "s3c2412-uart",
+		.driver_data	= (kernel_ulong_t)S3C2412_SERIAL_DRV_DATA,
+	}, {
+		.name		= "s3c2440-uart",
+		.driver_data	= (kernel_ulong_t)S3C2440_SERIAL_DRV_DATA,
+	}, {
+>>>>>>> b7ba80a49124 (Commit)
 		.name		= "s3c6400-uart",
 		.driver_data	= (kernel_ulong_t)S3C6400_SERIAL_DRV_DATA,
 	}, {
@@ -2684,6 +2918,15 @@ MODULE_DEVICE_TABLE(platform, s3c24xx_serial_driver_ids);
 
 #ifdef CONFIG_OF
 static const struct of_device_id s3c24xx_uart_dt_match[] = {
+<<<<<<< HEAD
+=======
+	{ .compatible = "samsung,s3c2410-uart",
+		.data = S3C2410_SERIAL_DRV_DATA },
+	{ .compatible = "samsung,s3c2412-uart",
+		.data = S3C2412_SERIAL_DRV_DATA },
+	{ .compatible = "samsung,s3c2440-uart",
+		.data = S3C2440_SERIAL_DRV_DATA },
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "samsung,s3c6400-uart",
 		.data = S3C6400_SERIAL_DRV_DATA },
 	{ .compatible = "samsung,s5pv210-uart",

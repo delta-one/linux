@@ -14,7 +14,10 @@
 #include <linux/regmap.h>
 #include <linux/interrupt.h>
 #include <linux/usb/typec.h>
+<<<<<<< HEAD
 #include <linux/usb/typec_altmode.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/usb/role.h>
 
 #include "tps6598x.h"
@@ -95,7 +98,10 @@ struct tps6598x {
 	struct power_supply_desc psy_desc;
 	enum power_supply_usb_type usb_type;
 
+<<<<<<< HEAD
 	int wakeup;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 pwr_status;
 };
 
@@ -259,7 +265,10 @@ static int tps6598x_connect(struct tps6598x *tps, u32 status)
 		typec_set_orientation(tps->port, TYPEC_ORIENTATION_REVERSE);
 	else
 		typec_set_orientation(tps->port, TYPEC_ORIENTATION_NORMAL);
+<<<<<<< HEAD
 	typec_set_mode(tps->port, TYPEC_STATE_USB);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tps6598x_set_data_role(tps, TPS_STATUS_TO_TYPEC_DATAROLE(status), true);
 
 	tps->partner = typec_register_partner(tps->port, &desc);
@@ -283,7 +292,10 @@ static void tps6598x_disconnect(struct tps6598x *tps, u32 status)
 	typec_set_pwr_role(tps->port, TPS_STATUS_TO_TYPEC_PORTROLE(status));
 	typec_set_vconn_role(tps->port, TPS_STATUS_TO_TYPEC_VCONN(status));
 	typec_set_orientation(tps->port, TYPEC_ORIENTATION_NONE);
+<<<<<<< HEAD
 	typec_set_mode(tps->port, TYPEC_STATE_SAFE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tps6598x_set_data_role(tps, TPS_STATUS_TO_TYPEC_DATAROLE(status), false);
 
 	power_supply_changed(tps->psy);
@@ -478,7 +490,11 @@ static void tps6598x_handle_plug_event(struct tps6598x *tps, u32 status)
 static irqreturn_t cd321x_interrupt(int irq, void *data)
 {
 	struct tps6598x *tps = data;
+<<<<<<< HEAD
 	u64 event = 0;
+=======
+	u64 event;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 status;
 	int ret;
 
@@ -523,8 +539,13 @@ err_unlock:
 static irqreturn_t tps6598x_interrupt(int irq, void *data)
 {
 	struct tps6598x *tps = data;
+<<<<<<< HEAD
 	u64 event1 = 0;
 	u64 event2 = 0;
+=======
+	u64 event1;
+	u64 event2;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 status;
 	int ret;
 
@@ -818,19 +839,31 @@ static int tps6598x_probe(struct i2c_client *client)
 
 	ret = devm_tps6598_psy_register(tps);
 	if (ret)
+<<<<<<< HEAD
 		goto err_role_put;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	tps->port = typec_register_port(&client->dev, &typec_cap);
 	if (IS_ERR(tps->port)) {
 		ret = PTR_ERR(tps->port);
 		goto err_role_put;
 	}
+<<<<<<< HEAD
+=======
+	fwnode_handle_put(fwnode);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (status & TPS_STATUS_PLUG_PRESENT) {
 		ret = tps6598x_read16(tps, TPS_REG_POWER_STATUS, &tps->pwr_status);
 		if (ret < 0) {
 			dev_err(tps->dev, "failed to read power status: %d\n", ret);
+<<<<<<< HEAD
 			goto err_unregister_port;
+=======
+			goto err_role_put;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		ret = tps6598x_connect(tps, status);
 		if (ret)
@@ -841,6 +874,7 @@ static int tps6598x_probe(struct i2c_client *client)
 					irq_handler,
 					IRQF_SHARED | IRQF_ONESHOT,
 					dev_name(&client->dev), tps);
+<<<<<<< HEAD
 	if (ret)
 		goto err_disconnect;
 
@@ -859,6 +893,18 @@ err_disconnect:
 	tps6598x_disconnect(tps, 0);
 err_unregister_port:
 	typec_unregister_port(tps->port);
+=======
+	if (ret) {
+		tps6598x_disconnect(tps, 0);
+		typec_unregister_port(tps->port);
+		goto err_role_put;
+	}
+
+	i2c_set_clientdata(client, tps);
+
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 err_role_put:
 	usb_role_switch_put(tps->role_sw);
 err_fwnode_put:
@@ -877,6 +923,7 @@ static void tps6598x_remove(struct i2c_client *client)
 	usb_role_switch_put(tps->role_sw);
 }
 
+<<<<<<< HEAD
 static int __maybe_unused tps6598x_suspend(struct device *dev)
 {
 	struct i2c_client *client = to_i2c_client(dev);
@@ -907,6 +954,8 @@ static const struct dev_pm_ops tps6598x_pm_ops = {
 	SET_SYSTEM_SLEEP_PM_OPS(tps6598x_suspend, tps6598x_resume)
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id tps6598x_of_match[] = {
 	{ .compatible = "ti,tps6598x", },
 	{ .compatible = "apple,cd321x", },
@@ -923,7 +972,10 @@ MODULE_DEVICE_TABLE(i2c, tps6598x_id);
 static struct i2c_driver tps6598x_i2c_driver = {
 	.driver = {
 		.name = "tps6598x",
+<<<<<<< HEAD
 		.pm = &tps6598x_pm_ops,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = tps6598x_of_match,
 	},
 	.probe_new = tps6598x_probe,

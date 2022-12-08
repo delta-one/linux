@@ -54,6 +54,10 @@ static bool sdhci_wp_inverted(struct device *dev)
 #endif /* CONFIG_PPC */
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_OF
+>>>>>>> b7ba80a49124 (Commit)
 static void sdhci_get_compatibility(struct platform_device *pdev)
 {
 	struct sdhci_host *host = platform_get_drvdata(pdev);
@@ -71,6 +75,12 @@ static void sdhci_get_compatibility(struct platform_device *pdev)
 	    of_device_is_compatible(np, "fsl,mpc8536-esdhc"))
 		host->quirks |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
 }
+<<<<<<< HEAD
+=======
+#else
+void sdhci_get_compatibility(struct platform_device *pdev) {}
+#endif /* CONFIG_OF */
+>>>>>>> b7ba80a49124 (Commit)
 
 void sdhci_get_property(struct platform_device *pdev)
 {

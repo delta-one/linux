@@ -7,6 +7,10 @@
  *             Kirti Wankhede <kwankhede@nvidia.com>
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/device.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/iommu.h>
 #include <linux/mdev.h>
 
@@ -46,6 +50,10 @@ struct bus_type mdev_bus_type = {
 	.remove		= mdev_remove,
 	.match		= mdev_match,
 };
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(mdev_bus_type);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * mdev_register_driver - register a new MDEV driver
@@ -55,11 +63,18 @@ struct bus_type mdev_bus_type = {
  **/
 int mdev_register_driver(struct mdev_driver *drv)
 {
+<<<<<<< HEAD
 	if (!drv->device_api)
 		return -EINVAL;
 
 	/* initialize common driver fields */
 	drv->driver.bus = &mdev_bus_type;
+=======
+	/* initialize common driver fields */
+	drv->driver.bus = &mdev_bus_type;
+
+	/* register with core */
+>>>>>>> b7ba80a49124 (Commit)
 	return driver_register(&drv->driver);
 }
 EXPORT_SYMBOL(mdev_register_driver);

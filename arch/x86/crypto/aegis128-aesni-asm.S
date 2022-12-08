@@ -7,7 +7,10 @@
  */
 
 #include <linux/linkage.h>
+<<<<<<< HEAD
 #include <linux/cfi_types.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/frame.h>
 
 #define STATE0	%xmm0
@@ -403,7 +406,11 @@ SYM_FUNC_END(crypto_aegis128_aesni_ad)
  * void crypto_aegis128_aesni_enc(void *state, unsigned int length,
  *                                const void *src, void *dst);
  */
+<<<<<<< HEAD
 SYM_TYPED_FUNC_START(crypto_aegis128_aesni_enc)
+=======
+SYM_FUNC_START(crypto_aegis128_aesni_enc)
+>>>>>>> b7ba80a49124 (Commit)
 	FRAME_BEGIN
 
 	cmp $0x10, LEN
@@ -500,7 +507,11 @@ SYM_FUNC_END(crypto_aegis128_aesni_enc)
  * void crypto_aegis128_aesni_enc_tail(void *state, unsigned int length,
  *                                     const void *src, void *dst);
  */
+<<<<<<< HEAD
 SYM_TYPED_FUNC_START(crypto_aegis128_aesni_enc_tail)
+=======
+SYM_FUNC_START(crypto_aegis128_aesni_enc_tail)
+>>>>>>> b7ba80a49124 (Commit)
 	FRAME_BEGIN
 
 	/* load the state: */
@@ -557,7 +568,11 @@ SYM_FUNC_END(crypto_aegis128_aesni_enc_tail)
  * void crypto_aegis128_aesni_dec(void *state, unsigned int length,
  *                                const void *src, void *dst);
  */
+<<<<<<< HEAD
 SYM_TYPED_FUNC_START(crypto_aegis128_aesni_dec)
+=======
+SYM_FUNC_START(crypto_aegis128_aesni_dec)
+>>>>>>> b7ba80a49124 (Commit)
 	FRAME_BEGIN
 
 	cmp $0x10, LEN
@@ -654,7 +669,11 @@ SYM_FUNC_END(crypto_aegis128_aesni_dec)
  * void crypto_aegis128_aesni_dec_tail(void *state, unsigned int length,
  *                                     const void *src, void *dst);
  */
+<<<<<<< HEAD
 SYM_TYPED_FUNC_START(crypto_aegis128_aesni_dec_tail)
+=======
+SYM_FUNC_START(crypto_aegis128_aesni_dec_tail)
+>>>>>>> b7ba80a49124 (Commit)
 	FRAME_BEGIN
 
 	/* load the state: */

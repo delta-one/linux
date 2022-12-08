@@ -45,6 +45,7 @@ extern bool xfs_errortag_test(struct xfs_mount *mp, const char *expression,
 		const char *file, int line, unsigned int error_tag);
 #define XFS_TEST_ERROR(expr, mp, tag)		\
 	((expr) || xfs_errortag_test((mp), #expr, __FILE__, __LINE__, (tag)))
+<<<<<<< HEAD
 bool xfs_errortag_enabled(struct xfs_mount *mp, unsigned int tag);
 #define XFS_ERRORTAG_DELAY(mp, tag)		\
 	do { \
@@ -57,6 +58,8 @@ bool xfs_errortag_enabled(struct xfs_mount *mp, unsigned int tag);
 				(mp)->m_super->s_id); \
 		mdelay((mp)->m_errortag[(tag)]); \
 	} while (0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 extern int xfs_errortag_get(struct xfs_mount *mp, unsigned int error_tag);
 extern int xfs_errortag_set(struct xfs_mount *mp, unsigned int error_tag,
@@ -67,7 +70,10 @@ extern int xfs_errortag_clearall(struct xfs_mount *mp);
 #define xfs_errortag_init(mp)			(0)
 #define xfs_errortag_del(mp)
 #define XFS_TEST_ERROR(expr, mp, tag)		(expr)
+<<<<<<< HEAD
 #define XFS_ERRORTAG_DELAY(mp, tag)		((void)0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define xfs_errortag_set(mp, tag, val)		(ENOSYS)
 #define xfs_errortag_add(mp, tag)		(ENOSYS)
 #define xfs_errortag_clearall(mp)		(ENOSYS)
@@ -75,7 +81,11 @@ extern int xfs_errortag_clearall(struct xfs_mount *mp);
 
 /*
  * XFS panic tags -- allow a call to xfs_alert_tag() be turned into
+<<<<<<< HEAD
  *			a panic by setting fs.xfs.panic_mask in a sysctl.
+=======
+ *			a panic by setting xfs_panic_mask in a sysctl.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #define		XFS_NO_PTAG			0u
 #define		XFS_PTAG_IFLUSH			(1u << 0)
@@ -88,6 +98,7 @@ extern int xfs_errortag_clearall(struct xfs_mount *mp);
 #define		XFS_PTAG_FSBLOCK_ZERO		(1u << 7)
 #define		XFS_PTAG_VERIFIER_ERROR		(1u << 8)
 
+<<<<<<< HEAD
 #define		XFS_PTAG_MASK	(XFS_PTAG_IFLUSH | \
 				 XFS_PTAG_LOGRES | \
 				 XFS_PTAG_AILDELETE | \
@@ -98,6 +109,8 @@ extern int xfs_errortag_clearall(struct xfs_mount *mp);
 				 XFS_PTAG_FSBLOCK_ZERO | \
 				 XFS_PTAG_VERIFIER_ERROR)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define XFS_PTAG_STRINGS \
 	{ XFS_NO_PTAG,			"none" }, \
 	{ XFS_PTAG_IFLUSH,		"iflush" }, \

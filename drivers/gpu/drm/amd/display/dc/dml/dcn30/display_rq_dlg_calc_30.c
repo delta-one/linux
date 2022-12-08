@@ -23,6 +23,11 @@
  *
  */
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_DRM_AMD_DC_DCN
+
+>>>>>>> b7ba80a49124 (Commit)
 #include "../display_mode_lib.h"
 #include "../display_mode_vba.h"
 #include "../dml_inline_defs.h"
@@ -1790,3 +1795,7 @@ void dml30_rq_dlg_get_dlg_reg(struct display_mode_lib *mode_lib,
 	dml_print("DML_DLG: Calculation for pipe[%d] end\n", pipe_idx);
 }
 
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)

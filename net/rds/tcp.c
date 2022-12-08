@@ -166,10 +166,17 @@ void rds_tcp_reset_callbacks(struct socket *sock,
 	 */
 	atomic_set(&cp->cp_state, RDS_CONN_RESETTING);
 	wait_event(cp->cp_waitq, !test_bit(RDS_IN_XMIT, &cp->cp_flags));
+<<<<<<< HEAD
 	/* reset receive side state for rds_tcp_data_recv() for osock  */
 	cancel_delayed_work_sync(&cp->cp_send_w);
 	cancel_delayed_work_sync(&cp->cp_recv_w);
 	lock_sock(osock->sk);
+=======
+	lock_sock(osock->sk);
+	/* reset receive side state for rds_tcp_data_recv() for osock  */
+	cancel_delayed_work_sync(&cp->cp_send_w);
+	cancel_delayed_work_sync(&cp->cp_recv_w);
+>>>>>>> b7ba80a49124 (Commit)
 	if (tc->t_tinc) {
 		rds_inc_put(&tc->t_tinc->ti_inc);
 		tc->t_tinc = NULL;
@@ -503,9 +510,12 @@ bool rds_tcp_tune(struct socket *sock)
 			release_sock(sk);
 			return false;
 		}
+<<<<<<< HEAD
 		/* Update ns_tracker to current stack trace and refcounted tracker */
 		__netns_tracker_free(net, &sk->ns_tracker, false);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		sk->sk_net_refcnt = 1;
 		netns_tracker_alloc(net, &sk->ns_tracker, GFP_KERNEL);
 		sock_inuse_add(net, 1);

@@ -74,7 +74,10 @@ void drm_vma_offset_remove(struct drm_vma_offset_manager *mgr,
 			   struct drm_vma_offset_node *node);
 
 int drm_vma_node_allow(struct drm_vma_offset_node *node, struct drm_file *tag);
+<<<<<<< HEAD
 int drm_vma_node_allow_once(struct drm_vma_offset_node *node, struct drm_file *tag);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void drm_vma_node_revoke(struct drm_vma_offset_node *node,
 			 struct drm_file *tag);
 bool drm_vma_node_is_allowed(struct drm_vma_offset_node *node,

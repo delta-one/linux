@@ -55,8 +55,12 @@ static ssize_t ahci_transmit_led_message(struct ata_port *ap, u32 state,
 
 static int ahci_scr_read(struct ata_link *link, unsigned int sc_reg, u32 *val);
 static int ahci_scr_write(struct ata_link *link, unsigned int sc_reg, u32 val);
+<<<<<<< HEAD
 static void ahci_qc_fill_rtf(struct ata_queued_cmd *qc);
 static void ahci_qc_ncq_fill_rtf(struct ata_port *ap, u64 done_mask);
+=======
+static bool ahci_qc_fill_rtf(struct ata_queued_cmd *qc);
+>>>>>>> b7ba80a49124 (Commit)
 static int ahci_port_start(struct ata_port *ap);
 static void ahci_port_stop(struct ata_port *ap);
 static enum ata_completion_errors ahci_qc_prep(struct ata_queued_cmd *qc);
@@ -158,7 +162,10 @@ struct ata_port_operations ahci_ops = {
 	.qc_prep		= ahci_qc_prep,
 	.qc_issue		= ahci_qc_issue,
 	.qc_fill_rtf		= ahci_qc_fill_rtf,
+<<<<<<< HEAD
 	.qc_ncq_fill_rtf	= ahci_qc_ncq_fill_rtf,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	.freeze			= ahci_freeze,
 	.thaw			= ahci_thaw,
@@ -1849,6 +1856,7 @@ static void ahci_error_intr(struct ata_port *ap, u32 irq_stat)
 		ata_port_abort(ap);
 }
 
+<<<<<<< HEAD
 static void ahci_qc_complete(struct ata_port *ap, void __iomem *port_mmio)
 {
 	struct ata_eh_info *ehi = &ap->link.eh_info;
@@ -1890,6 +1898,20 @@ static void ahci_handle_port_interrupt(struct ata_port *ap,
 
 	/* ignore BAD_PMP while resetting */
 	if (unlikely(ap->pflags & ATA_PFLAG_RESETTING))
+=======
+static void ahci_handle_port_interrupt(struct ata_port *ap,
+				       void __iomem *port_mmio, u32 status)
+{
+	struct ata_eh_info *ehi = &ap->link.eh_info;
+	struct ahci_port_priv *pp = ap->private_data;
+	struct ahci_host_priv *hpriv = ap->host->private_data;
+	int resetting = !!(ap->pflags & ATA_PFLAG_RESETTING);
+	u32 qc_active = 0;
+	int rc;
+
+	/* ignore BAD_PMP while resetting */
+	if (unlikely(resetting))
+>>>>>>> b7ba80a49124 (Commit)
 		status &= ~PORT_IRQ_BAD_PMP;
 
 	if (sata_lpm_ignore_phy_events(&ap->link)) {
@@ -1898,12 +1920,15 @@ static void ahci_handle_port_interrupt(struct ata_port *ap,
 	}
 
 	if (unlikely(status & PORT_IRQ_ERROR)) {
+<<<<<<< HEAD
 		/*
 		 * Before getting the error notification, we may have
 		 * received SDB FISes notifying successful completions.
 		 * Handle these first and then handle the error.
 		 */
 		ahci_qc_complete(ap, port_mmio);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ahci_error_intr(ap, status);
 		return;
 	}
@@ -1940,8 +1965,37 @@ static void ahci_handle_port_interrupt(struct ata_port *ap,
 		}
 	}
 
+<<<<<<< HEAD
 	/* Handle completed commands */
 	ahci_qc_complete(ap, port_mmio);
+=======
+	/* pp->active_link is not reliable once FBS is enabled, both
+	 * PORT_SCR_ACT and PORT_CMD_ISSUE should be checked because
+	 * NCQ and non-NCQ commands may be in flight at the same time.
+	 */
+	if (pp->fbs_enabled) {
+		if (ap->qc_active) {
+			qc_active = readl(port_mmio + PORT_SCR_ACT);
+			qc_active |= readl(port_mmio + PORT_CMD_ISSUE);
+		}
+	} else {
+		/* pp->active_link is valid iff any command is in flight */
+		if (ap->qc_active && pp->active_link->sactive)
+			qc_active = readl(port_mmio + PORT_SCR_ACT);
+		else
+			qc_active = readl(port_mmio + PORT_CMD_ISSUE);
+	}
+
+
+	rc = ata_qc_complete_multiple(ap, qc_active);
+
+	/* while resetting, invalid completions are expected */
+	if (unlikely(rc < 0 && !resetting)) {
+		ehi->err_mask |= AC_ERR_HSM;
+		ehi->action |= ATA_EH_RESET;
+		ata_port_freeze(ap);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ahci_port_intr(struct ata_port *ap)
@@ -2066,11 +2120,16 @@ unsigned int ahci_qc_issue(struct ata_queued_cmd *qc)
 }
 EXPORT_SYMBOL_GPL(ahci_qc_issue);
 
+<<<<<<< HEAD
 static void ahci_qc_fill_rtf(struct ata_queued_cmd *qc)
+=======
+static bool ahci_qc_fill_rtf(struct ata_queued_cmd *qc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ahci_port_priv *pp = qc->ap->private_data;
 	u8 *rx_fis = pp->rx_fis;
 
+<<<<<<< HEAD
 	/*
 	 * rtf may already be filled (e.g. for successful NCQ commands).
 	 * If that is the case, we have nothing to do.
@@ -2078,6 +2137,8 @@ static void ahci_qc_fill_rtf(struct ata_queued_cmd *qc)
 	if (qc->flags & ATA_QCFLAG_RTF_FILLED)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (pp->fbs_enabled)
 		rx_fis += qc->dev->link->pmp * AHCI_RX_FIS_SZ;
 
@@ -2088,6 +2149,7 @@ static void ahci_qc_fill_rtf(struct ata_queued_cmd *qc)
 	 * Setup FIS.
 	 */
 	if (qc->tf.protocol == ATA_PROT_PIO && qc->dma_dir == DMA_FROM_DEVICE &&
+<<<<<<< HEAD
 	    !(qc->flags & ATA_QCFLAG_EH)) {
 		ata_tf_from_fis(rx_fis + RX_FIS_PIO_SETUP, &qc->result_tf);
 		qc->result_tf.status = (rx_fis + RX_FIS_PIO_SETUP)[15];
@@ -2182,6 +2244,15 @@ static void ahci_qc_ncq_fill_rtf(struct ata_port *ap, u64 done_mask)
 		}
 		done_mask &= ~(1ULL << tag);
 	}
+=======
+	    !(qc->flags & ATA_QCFLAG_FAILED)) {
+		ata_tf_from_fis(rx_fis + RX_FIS_PIO_SETUP, &qc->result_tf);
+		qc->result_tf.status = (rx_fis + RX_FIS_PIO_SETUP)[15];
+	} else
+		ata_tf_from_fis(rx_fis + RX_FIS_D2H_REG, &qc->result_tf);
+
+	return true;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ahci_freeze(struct ata_port *ap)
@@ -2213,7 +2284,11 @@ void ahci_error_handler(struct ata_port *ap)
 {
 	struct ahci_host_priv *hpriv = ap->host->private_data;
 
+<<<<<<< HEAD
 	if (!ata_port_is_frozen(ap)) {
+=======
+	if (!(ap->pflags & ATA_PFLAG_FROZEN)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* restart engine */
 		hpriv->stop_engine(ap);
 		hpriv->start_engine(ap);
@@ -2231,7 +2306,11 @@ static void ahci_post_internal_cmd(struct ata_queued_cmd *qc)
 	struct ata_port *ap = qc->ap;
 
 	/* make DMA engine forget about the failed command */
+<<<<<<< HEAD
 	if (qc->flags & ATA_QCFLAG_EH)
+=======
+	if (qc->flags & ATA_QCFLAG_FAILED)
+>>>>>>> b7ba80a49124 (Commit)
 		ahci_kick_engine(ap);
 }
 
@@ -2404,7 +2483,11 @@ static void ahci_pmp_attach(struct ata_port *ap)
 	 * Note that during initialization, the port is marked as
 	 * frozen since the irq handler is not yet registered.
 	 */
+<<<<<<< HEAD
 	if (!ata_port_is_frozen(ap))
+=======
+	if (!(ap->pflags & ATA_PFLAG_FROZEN))
+>>>>>>> b7ba80a49124 (Commit)
 		writel(pp->intr_mask, port_mmio + PORT_IRQ_MASK);
 }
 
@@ -2423,7 +2506,11 @@ static void ahci_pmp_detach(struct ata_port *ap)
 	pp->intr_mask &= ~PORT_IRQ_BAD_PMP;
 
 	/* see comment above in ahci_pmp_attach() */
+<<<<<<< HEAD
 	if (!ata_port_is_frozen(ap))
+=======
+	if (!(ap->pflags & ATA_PFLAG_FROZEN))
+>>>>>>> b7ba80a49124 (Commit)
 		writel(pp->intr_mask, port_mmio + PORT_IRQ_MASK);
 }
 

@@ -12,8 +12,11 @@
 #include <asm/errata_list.h>
 
 #ifdef CONFIG_MMU
+<<<<<<< HEAD
 extern unsigned long asid_mask;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void local_flush_tlb_all(void)
 {
 	__asm__ __volatile__ ("sfence.vma" : : : "memory");

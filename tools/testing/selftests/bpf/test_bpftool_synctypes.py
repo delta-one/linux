@@ -309,11 +309,19 @@ class MainHeaderFileExtractor(SourceFileExtractor):
         commands), which looks to the lists of options in other source files
         but has different start and end markers:
 
+<<<<<<< HEAD
             "OPTIONS := { {-j|--json} [{-p|--pretty}] | {-d|--debug}"
 
         Return a set containing all options, such as:
 
             {'-p', '-d', '--pretty', '--debug', '--json', '-j'}
+=======
+            "OPTIONS := { {-j|--json} [{-p|--pretty}] | {-d|--debug} | {-l|--legacy}"
+
+        Return a set containing all options, such as:
+
+            {'-p', '-d', '--legacy', '--pretty', '--debug', '--json', '-l', '-j'}
+>>>>>>> b7ba80a49124 (Commit)
         """
         start_marker = re.compile(f'"OPTIONS :=')
         pattern = re.compile('([\w-]+) ?(?:\||}[ }\]"])')
@@ -336,7 +344,11 @@ class ManSubstitutionsExtractor(SourceFileExtractor):
 
         Return a set containing all options, such as:
 
+<<<<<<< HEAD
             {'-p', '-d', '--pretty', '--debug', '--json', '-j'}
+=======
+            {'-p', '-d', '--legacy', '--pretty', '--debug', '--json', '-l', '-j'}
+>>>>>>> b7ba80a49124 (Commit)
         """
         start_marker = re.compile('\|COMMON_OPTIONS\| replace:: {')
         pattern = re.compile('\*\*([\w/-]+)\*\*')
@@ -501,6 +513,7 @@ def main():
     source_map_types = set(bpf_info.get_map_type_map().values())
     source_map_types.discard('unspec')
 
+<<<<<<< HEAD
     # BPF_MAP_TYPE_CGROUP_STORAGE_DEPRECATED and BPF_MAP_TYPE_CGROUP_STORAGE
     # share the same enum value and source_map_types picks
     # BPF_MAP_TYPE_CGROUP_STORAGE_DEPRECATED/cgroup_storage_deprecated.
@@ -509,6 +522,8 @@ def main():
     source_map_types.remove('cgroup_storage_deprecated')
     source_map_types.add('cgroup_storage')
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     help_map_types = map_info.get_map_help()
     help_map_options = map_info.get_options()
     map_info.close()

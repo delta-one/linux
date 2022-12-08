@@ -39,11 +39,16 @@
  * It returns a reference to selinux_status_page. If the status page is
  * not allocated yet, it also tries to allocate it at the first time.
  */
+<<<<<<< HEAD
 struct page *selinux_kernel_status_page(void)
+=======
+struct page *selinux_kernel_status_page(struct selinux_state *state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct selinux_kernel_status   *status;
 	struct page		       *result = NULL;
 
+<<<<<<< HEAD
 	mutex_lock(&selinux_state.status_lock);
 	if (!selinux_state.status_page) {
 		selinux_state.status_page = alloc_page(GFP_KERNEL|__GFP_ZERO);
@@ -54,6 +59,18 @@ struct page *selinux_kernel_status_page(void)
 			status->version = SELINUX_KERNEL_STATUS_VERSION;
 			status->sequence = 0;
 			status->enforcing = enforcing_enabled();
+=======
+	mutex_lock(&state->status_lock);
+	if (!state->status_page) {
+		state->status_page = alloc_page(GFP_KERNEL|__GFP_ZERO);
+
+		if (state->status_page) {
+			status = page_address(state->status_page);
+
+			status->version = SELINUX_KERNEL_STATUS_VERSION;
+			status->sequence = 0;
+			status->enforcing = enforcing_enabled(state);
+>>>>>>> b7ba80a49124 (Commit)
 			/*
 			 * NOTE: the next policyload event shall set
 			 * a positive value on the status->policyload,
@@ -62,11 +79,19 @@ struct page *selinux_kernel_status_page(void)
 			 */
 			status->policyload = 0;
 			status->deny_unknown =
+<<<<<<< HEAD
 				!security_get_allow_unknown();
 		}
 	}
 	result = selinux_state.status_page;
 	mutex_unlock(&selinux_state.status_lock);
+=======
+				!security_get_allow_unknown(state);
+		}
+	}
+	result = state->status_page;
+	mutex_unlock(&state->status_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return result;
 }
@@ -76,6 +101,7 @@ struct page *selinux_kernel_status_page(void)
  *
  * It updates status of the current enforcing/permissive mode.
  */
+<<<<<<< HEAD
 void selinux_status_update_setenforce(int enforcing)
 {
 	struct selinux_kernel_status   *status;
@@ -83,6 +109,16 @@ void selinux_status_update_setenforce(int enforcing)
 	mutex_lock(&selinux_state.status_lock);
 	if (selinux_state.status_page) {
 		status = page_address(selinux_state.status_page);
+=======
+void selinux_status_update_setenforce(struct selinux_state *state,
+				      int enforcing)
+{
+	struct selinux_kernel_status   *status;
+
+	mutex_lock(&state->status_lock);
+	if (state->status_page) {
+		status = page_address(state->status_page);
+>>>>>>> b7ba80a49124 (Commit)
 
 		status->sequence++;
 		smp_wmb();
@@ -92,7 +128,11 @@ void selinux_status_update_setenforce(int enforcing)
 		smp_wmb();
 		status->sequence++;
 	}
+<<<<<<< HEAD
 	mutex_unlock(&selinux_state.status_lock);
+=======
+	mutex_unlock(&state->status_lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -101,6 +141,7 @@ void selinux_status_update_setenforce(int enforcing)
  * It updates status of the times of policy reloaded, and current
  * setting of deny_unknown.
  */
+<<<<<<< HEAD
 void selinux_status_update_policyload(int seqno)
 {
 	struct selinux_kernel_status   *status;
@@ -108,15 +149,33 @@ void selinux_status_update_policyload(int seqno)
 	mutex_lock(&selinux_state.status_lock);
 	if (selinux_state.status_page) {
 		status = page_address(selinux_state.status_page);
+=======
+void selinux_status_update_policyload(struct selinux_state *state,
+				      int seqno)
+{
+	struct selinux_kernel_status   *status;
+
+	mutex_lock(&state->status_lock);
+	if (state->status_page) {
+		status = page_address(state->status_page);
+>>>>>>> b7ba80a49124 (Commit)
 
 		status->sequence++;
 		smp_wmb();
 
 		status->policyload = seqno;
+<<<<<<< HEAD
 		status->deny_unknown = !security_get_allow_unknown();
+=======
+		status->deny_unknown = !security_get_allow_unknown(state);
+>>>>>>> b7ba80a49124 (Commit)
 
 		smp_wmb();
 		status->sequence++;
 	}
+<<<<<<< HEAD
 	mutex_unlock(&selinux_state.status_lock);
+=======
+	mutex_unlock(&state->status_lock);
+>>>>>>> b7ba80a49124 (Commit)
 }

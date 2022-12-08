@@ -16,17 +16,30 @@
 #include <linux/err.h>
 #include <linux/list.h>
 #include <linux/interrupt.h>
+<<<<<<< HEAD
 #include <linux/irqchip/chained_irq.h>
+=======
+
+#include <linux/irqchip/chained_irq.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/of_address.h>
 #include <linux/of_irq.h>
+<<<<<<< HEAD
 #include <linux/seq_file.h>
 
 #include <linux/pinctrl/pinconf-generic.h>
 #include <linux/pinctrl/pinconf.h>
 #include <linux/pinctrl/pinctrl.h>
 #include <linux/pinctrl/pinmux.h>
+=======
+
+#include <linux/pinctrl/pinctrl.h>
+#include <linux/pinctrl/pinmux.h>
+#include <linux/pinctrl/pinconf-generic.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/platform_data/pinctrl-single.h>
 
@@ -372,8 +385,11 @@ static int pcs_set_mux(struct pinctrl_dev *pctldev, unsigned fselector,
 	if (!pcs->fmask)
 		return 0;
 	function = pinmux_generic_get_function(pctldev, fselector);
+<<<<<<< HEAD
 	if (!function)
 		return -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	func = function->data;
 	if (!func)
 		return -EINVAL;
@@ -729,7 +745,11 @@ static int pcs_allocate_pin_table(struct pcs_device *pcs)
 
 	mux_bytes = pcs->width / BITS_PER_BYTE;
 
+<<<<<<< HEAD
 	if (pcs->bits_per_mux && pcs->fmask) {
+=======
+	if (pcs->bits_per_mux) {
+>>>>>>> b7ba80a49124 (Commit)
 		pcs->bits_per_pin = fls(pcs->fmask);
 		nr_pins = (pcs->size * BITS_PER_BYTE) / pcs->bits_per_pin;
 	} else {

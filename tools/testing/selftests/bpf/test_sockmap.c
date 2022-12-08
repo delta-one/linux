@@ -138,7 +138,10 @@ struct sockmap_options {
 	bool data_test;
 	bool drop_expected;
 	bool check_recved_len;
+<<<<<<< HEAD
 	bool tx_wait_mem;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int iov_count;
 	int iov_length;
 	int rate;
@@ -579,10 +582,13 @@ static int msg_loop(int fd, int iov_count, int iov_length, int cnt,
 			sent = sendmsg(fd, &msg, flags);
 
 			if (!drop && sent < 0) {
+<<<<<<< HEAD
 				if (opt->tx_wait_mem && errno == EACCES) {
 					errno = 0;
 					goto out_errno;
 				}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				perror("sendmsg loop error");
 				goto out_errno;
 			} else if (drop && sent >= 0) {
@@ -649,6 +655,7 @@ static int msg_loop(int fd, int iov_count, int iov_length, int cnt,
 				goto out_errno;
 			}
 
+<<<<<<< HEAD
 			if (opt->tx_wait_mem) {
 				FD_ZERO(&w);
 				FD_SET(fd, &w);
@@ -658,6 +665,8 @@ static int msg_loop(int fd, int iov_count, int iov_length, int cnt,
 				goto out_errno;
 			}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			errno = 0;
 			if (peek_flag) {
 				flags |= MSG_PEEK;
@@ -766,6 +775,7 @@ static int sendmsg_test(struct sockmap_options *opt)
 			return err;
 	}
 
+<<<<<<< HEAD
 	if (opt->tx_wait_mem) {
 		struct timeval timeout;
 		int rxtx_buf_len = 1024;
@@ -782,6 +792,8 @@ static int sendmsg_test(struct sockmap_options *opt)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rxpid = fork();
 	if (rxpid == 0) {
 		if (txmsg_pop || txmsg_start_pop)
@@ -818,9 +830,12 @@ static int sendmsg_test(struct sockmap_options *opt)
 		return errno;
 	}
 
+<<<<<<< HEAD
 	if (opt->tx_wait_mem)
 		close(c2);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	txpid = fork();
 	if (txpid == 0) {
 		if (opt->sendpage)
@@ -1485,6 +1500,7 @@ static void test_txmsg_redir(int cgrp, struct sockmap_options *opt)
 	test_send(opt, cgrp);
 }
 
+<<<<<<< HEAD
 static void test_txmsg_redir_wait_sndmem(int cgrp, struct sockmap_options *opt)
 {
 	txmsg_redir = 1;
@@ -1493,6 +1509,8 @@ static void test_txmsg_redir_wait_sndmem(int cgrp, struct sockmap_options *opt)
 	opt->tx_wait_mem = false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void test_txmsg_drop(int cgrp, struct sockmap_options *opt)
 {
 	txmsg_drop = 1;
@@ -1690,13 +1708,17 @@ static void test_txmsg_apply(int cgrp, struct sockmap_options *opt)
 {
 	txmsg_pass = 1;
 	txmsg_redir = 0;
+<<<<<<< HEAD
 	txmsg_ingress = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	txmsg_apply = 1;
 	txmsg_cork = 0;
 	test_send_one(opt, cgrp);
 
 	txmsg_pass = 0;
 	txmsg_redir = 1;
+<<<<<<< HEAD
 	txmsg_ingress = 0;
 	txmsg_apply = 1;
 	txmsg_cork = 0;
@@ -1705,19 +1727,25 @@ static void test_txmsg_apply(int cgrp, struct sockmap_options *opt)
 	txmsg_pass = 0;
 	txmsg_redir = 1;
 	txmsg_ingress = 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	txmsg_apply = 1;
 	txmsg_cork = 0;
 	test_send_one(opt, cgrp);
 
 	txmsg_pass = 1;
 	txmsg_redir = 0;
+<<<<<<< HEAD
 	txmsg_ingress = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	txmsg_apply = 1024;
 	txmsg_cork = 0;
 	test_send_large(opt, cgrp);
 
 	txmsg_pass = 0;
 	txmsg_redir = 1;
+<<<<<<< HEAD
 	txmsg_ingress = 0;
 	txmsg_apply = 1024;
 	txmsg_cork = 0;
@@ -1726,6 +1754,8 @@ static void test_txmsg_apply(int cgrp, struct sockmap_options *opt)
 	txmsg_pass = 0;
 	txmsg_redir = 1;
 	txmsg_ingress = 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	txmsg_apply = 1024;
 	txmsg_cork = 0;
 	test_send_large(opt, cgrp);
@@ -1859,7 +1889,10 @@ static int populate_progs(char *bpf_file)
 struct _test test[] = {
 	{"txmsg test passthrough", test_txmsg_pass},
 	{"txmsg test redirect", test_txmsg_redir},
+<<<<<<< HEAD
 	{"txmsg test redirect wait send mem", test_txmsg_redir_wait_sndmem},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{"txmsg test drop", test_txmsg_drop},
 	{"txmsg test ingress redirect", test_txmsg_ingress_redir},
 	{"txmsg test skb", test_txmsg_skb},

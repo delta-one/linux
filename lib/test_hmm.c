@@ -100,7 +100,10 @@ struct dmirror {
 struct dmirror_chunk {
 	struct dev_pagemap	pagemap;
 	struct dmirror_device	*mdevice;
+<<<<<<< HEAD
 	bool remove;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -193,6 +196,7 @@ static int dmirror_fops_release(struct inode *inode, struct file *filp)
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct dmirror_chunk *dmirror_page_to_chunk(struct page *page)
 {
 	return container_of(page->pgmap, struct dmirror_chunk, pagemap);
@@ -202,6 +206,13 @@ static struct dmirror_device *dmirror_page_to_device(struct page *page)
 
 {
 	return dmirror_page_to_chunk(page)->mdevice;
+=======
+static struct dmirror_device *dmirror_page_to_device(struct page *page)
+
+{
+	return container_of(page->pgmap, struct dmirror_chunk,
+			    pagemap)->mdevice;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int dmirror_do_fault(struct dmirror *dmirror, struct hmm_range *range)
@@ -632,8 +643,13 @@ static struct page *dmirror_devmem_alloc_page(struct dmirror_device *mdevice)
 			goto error;
 	}
 
+<<<<<<< HEAD
 	zone_device_page_init(dpage);
 	dpage->zone_device_data = rpage;
+=======
+	dpage->zone_device_data = rpage;
+	lock_page(dpage);
+>>>>>>> b7ba80a49124 (Commit)
 	return dpage;
 
 error:
@@ -912,7 +928,11 @@ static int dmirror_migrate_to_system(struct dmirror *dmirror,
 	struct vm_area_struct *vma;
 	unsigned long src_pfns[64] = { 0 };
 	unsigned long dst_pfns[64] = { 0 };
+<<<<<<< HEAD
 	struct migrate_vma args = { 0 };
+=======
+	struct migrate_vma args;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long next;
 	int ret;
 
@@ -973,7 +993,11 @@ static int dmirror_migrate_to_device(struct dmirror *dmirror,
 	unsigned long src_pfns[64] = { 0 };
 	unsigned long dst_pfns[64] = { 0 };
 	struct dmirror_bounce bounce;
+<<<<<<< HEAD
 	struct migrate_vma args = { 0 };
+=======
+	struct migrate_vma args;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long next;
 	int ret;
 
@@ -1223,6 +1247,7 @@ static int dmirror_snapshot(struct dmirror *dmirror,
 	return ret;
 }
 
+<<<<<<< HEAD
 static void dmirror_device_evict_chunk(struct dmirror_chunk *chunk)
 {
 	unsigned long start_pfn = chunk->pagemap.range.start >> PAGE_SHIFT;
@@ -1302,6 +1327,8 @@ static void dmirror_device_remove_chunks(struct dmirror_device *mdevice)
 	mutex_unlock(&mdevice->devmem_lock);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static long dmirror_fops_unlocked_ioctl(struct file *filp,
 					unsigned int command,
 					unsigned long arg)
@@ -1356,11 +1383,14 @@ static long dmirror_fops_unlocked_ioctl(struct file *filp,
 		ret = dmirror_snapshot(dmirror, &cmd);
 		break;
 
+<<<<<<< HEAD
 	case HMM_DMIRROR_RELEASE:
 		dmirror_device_remove_chunks(dmirror->mdevice);
 		ret = 0;
 		break;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -EINVAL;
 	}
@@ -1415,6 +1445,7 @@ static void dmirror_devmem_free(struct page *page)
 
 	mdevice = dmirror_page_to_device(page);
 	spin_lock(&mdevice->lock);
+<<<<<<< HEAD
 
 	/* Return page to our allocator if not freeing the chunk */
 	if (!dmirror_page_to_chunk(page)->remove) {
@@ -1422,12 +1453,21 @@ static void dmirror_devmem_free(struct page *page)
 		page->zone_device_data = mdevice->free_pages;
 		mdevice->free_pages = page;
 	}
+=======
+	mdevice->cfree++;
+	page->zone_device_data = mdevice->free_pages;
+	mdevice->free_pages = page;
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock(&mdevice->lock);
 }
 
 static vm_fault_t dmirror_devmem_fault(struct vm_fault *vmf)
 {
+<<<<<<< HEAD
 	struct migrate_vma args = { 0 };
+=======
+	struct migrate_vma args;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long src_pfns = 0;
 	unsigned long dst_pfns = 0;
 	struct page *rpage;
@@ -1450,7 +1490,10 @@ static vm_fault_t dmirror_devmem_fault(struct vm_fault *vmf)
 	args.dst = &dst_pfns;
 	args.pgmap_owner = dmirror->mdevice;
 	args.flags = dmirror_select_device(dmirror);
+<<<<<<< HEAD
 	args.fault_page = vmf->page;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (migrate_vma_setup(&args))
 		return VM_FAULT_SIGBUS;
@@ -1501,7 +1544,26 @@ static int dmirror_device_init(struct dmirror_device *mdevice, int id)
 
 static void dmirror_device_remove(struct dmirror_device *mdevice)
 {
+<<<<<<< HEAD
 	dmirror_device_remove_chunks(mdevice);
+=======
+	unsigned int i;
+
+	if (mdevice->devmem_chunks) {
+		for (i = 0; i < mdevice->devmem_count; i++) {
+			struct dmirror_chunk *devmem =
+				mdevice->devmem_chunks[i];
+
+			memunmap_pages(&devmem->pagemap);
+			if (devmem->pagemap.type == MEMORY_DEVICE_PRIVATE)
+				release_mem_region(devmem->pagemap.range.start,
+						   range_len(&devmem->pagemap.range));
+			kfree(devmem);
+		}
+		kfree(mdevice->devmem_chunks);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	cdev_device_del(&mdevice->cdevice, &mdevice->device);
 }
 

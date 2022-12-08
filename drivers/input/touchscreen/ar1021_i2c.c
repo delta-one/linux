@@ -87,7 +87,12 @@ static void ar1021_i2c_close(struct input_dev *dev)
 	disable_irq(client->irq);
 }
 
+<<<<<<< HEAD
 static int ar1021_i2c_probe(struct i2c_client *client)
+=======
+static int ar1021_i2c_probe(struct i2c_client *client,
+			    const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ar1021_i2c *ar1021;
 	struct input_dev *input;
@@ -142,7 +147,11 @@ static int ar1021_i2c_probe(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ar1021_i2c_suspend(struct device *dev)
+=======
+static int __maybe_unused ar1021_i2c_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 
@@ -151,7 +160,11 @@ static int ar1021_i2c_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ar1021_i2c_resume(struct device *dev)
+=======
+static int __maybe_unused ar1021_i2c_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 
@@ -160,8 +173,12 @@ static int ar1021_i2c_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(ar1021_i2c_pm,
 				ar1021_i2c_suspend, ar1021_i2c_resume);
+=======
+static SIMPLE_DEV_PM_OPS(ar1021_i2c_pm, ar1021_i2c_suspend, ar1021_i2c_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id ar1021_i2c_id[] = {
 	{ "ar1021", 0 },
@@ -178,11 +195,19 @@ MODULE_DEVICE_TABLE(of, ar1021_i2c_of_match);
 static struct i2c_driver ar1021_i2c_driver = {
 	.driver	= {
 		.name	= "ar1021_i2c",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&ar1021_i2c_pm),
 		.of_match_table = ar1021_i2c_of_match,
 	},
 
 	.probe_new	= ar1021_i2c_probe,
+=======
+		.pm	= &ar1021_i2c_pm,
+		.of_match_table = ar1021_i2c_of_match,
+	},
+
+	.probe		= ar1021_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= ar1021_i2c_id,
 };
 module_i2c_driver(ar1021_i2c_driver);

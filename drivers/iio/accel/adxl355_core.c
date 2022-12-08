@@ -60,7 +60,10 @@
 #define ADXL355_DEVID_AD_VAL		0xAD
 #define ADXL355_DEVID_MST_VAL		0x1D
 #define ADXL355_PARTID_VAL		0xED
+<<<<<<< HEAD
 #define ADXL359_PARTID_VAL		0xE9
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ADXL355_RESET_CODE		0x52
 
 static const struct regmap_range adxl355_read_reg_range[] = {
@@ -84,6 +87,7 @@ const struct regmap_access_table adxl355_writeable_regs_tbl = {
 };
 EXPORT_SYMBOL_NS_GPL(adxl355_writeable_regs_tbl, IIO_ADXL355);
 
+<<<<<<< HEAD
 const struct adxl355_chip_info adxl35x_chip_info[] = {
 	[ADXL355] = {
 		.name = "adxl355",
@@ -138,6 +142,8 @@ const struct adxl355_chip_info adxl35x_chip_info[] = {
 };
 EXPORT_SYMBOL_NS_GPL(adxl35x_chip_info, IIO_ADXL355);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum adxl355_op_mode {
 	ADXL355_MEASUREMENT,
 	ADXL355_STANDBY,
@@ -217,7 +223,10 @@ static const struct adxl355_chan_info adxl355_chans[] = {
 };
 
 struct adxl355_data {
+<<<<<<< HEAD
 	const struct adxl355_chip_info *chip_info;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct regmap *regmap;
 	struct device *dev;
 	struct mutex lock; /* lock to protect op_mode */
@@ -318,8 +327,15 @@ static int adxl355_setup(struct adxl355_data *data)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (regval != ADXL355_PARTID_VAL)
 		dev_warn(data->dev, "Invalid DEV ID 0x%02x\n", regval);
+=======
+	if (regval != ADXL355_PARTID_VAL) {
+		dev_err(data->dev, "Invalid DEV ID 0x%02x\n", regval);
+		return -ENODEV;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Perform a software reset to make sure the device is in a consistent
@@ -512,6 +528,7 @@ static int adxl355_read_raw(struct iio_dev *indio_dev,
 
 	case IIO_CHAN_INFO_SCALE:
 		switch (chan->type) {
+<<<<<<< HEAD
 		case IIO_TEMP:
 			/*
 			 * Temperature scale is -110.497238.
@@ -524,13 +541,40 @@ static int adxl355_read_raw(struct iio_dev *indio_dev,
 		case IIO_ACCEL:
 			*val = data->chip_info->accel_scale.integer;
 			*val2 = data->chip_info->accel_scale.decimal;
+=======
+		/*
+		 * The datasheet defines an intercept of 1885 LSB at 25 degC
+		 * and a slope of -9.05 LSB/C. The following formula can be used
+		 * to find the temperature:
+		 * Temp = ((RAW - 1885)/(-9.05)) + 25 but this doesn't follow
+		 * the format of the IIO which is Temp = (RAW + OFFSET) * SCALE.
+		 * Hence using some rearranging we get the scale as -110.497238
+		 * and offset as -2111.25.
+		 */
+		case IIO_TEMP:
+			*val = -110;
+			*val2 = 497238;
+			return IIO_VAL_INT_PLUS_MICRO;
+		/*
+		 * At +/- 2g with 20-bit resolution, scale is given in datasheet
+		 * as 3.9ug/LSB = 0.0000039 * 9.80665 = 0.00003824593 m/s^2.
+		 */
+		case IIO_ACCEL:
+			*val = 0;
+			*val2 = 38245;
+>>>>>>> b7ba80a49124 (Commit)
 			return IIO_VAL_INT_PLUS_NANO;
 		default:
 			return -EINVAL;
 		}
 	case IIO_CHAN_INFO_OFFSET:
+<<<<<<< HEAD
 		*val = data->chip_info->temp_offset.integer;
 		*val2 = data->chip_info->temp_offset.decimal;
+=======
+		*val = -2111;
+		*val2 = 250000;
+>>>>>>> b7ba80a49124 (Commit)
 		return IIO_VAL_INT_PLUS_MICRO;
 	case IIO_CHAN_INFO_CALIBBIAS:
 		*val = sign_extend32(data->calibbias[chan->address], 15);
@@ -753,7 +797,11 @@ static int adxl355_probe_trigger(struct iio_dev *indio_dev, int irq)
 }
 
 int adxl355_core_probe(struct device *dev, struct regmap *regmap,
+<<<<<<< HEAD
 		       const struct adxl355_chip_info *chip_info)
+=======
+		       const char *name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct adxl355_data *data;
 	struct iio_dev *indio_dev;
@@ -768,10 +816,16 @@ int adxl355_core_probe(struct device *dev, struct regmap *regmap,
 	data->regmap = regmap;
 	data->dev = dev;
 	data->op_mode = ADXL355_STANDBY;
+<<<<<<< HEAD
 	data->chip_info = chip_info;
 	mutex_init(&data->lock);
 
 	indio_dev->name = chip_info->name;
+=======
+	mutex_init(&data->lock);
+
+	indio_dev->name = name;
+>>>>>>> b7ba80a49124 (Commit)
 	indio_dev->info = &adxl355_info;
 	indio_dev->modes = INDIO_DIRECT_MODE;
 	indio_dev->channels = adxl355_channels;

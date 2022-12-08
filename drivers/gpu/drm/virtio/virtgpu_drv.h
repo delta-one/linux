@@ -35,6 +35,10 @@
 #include <drm/drm_atomic.h>
 #include <drm/drm_drv.h>
 #include <drm/drm_encoder.h>
+<<<<<<< HEAD
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_fourcc.h>
 #include <drm/drm_framebuffer.h>
 #include <drm/drm_gem.h>
@@ -165,8 +169,11 @@ struct virtio_gpu_vbuffer {
 
 	struct virtio_gpu_object_array *objs;
 	struct list_head list;
+<<<<<<< HEAD
 
 	uint32_t seqno;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct virtio_gpu_output {
@@ -196,7 +203,10 @@ struct virtio_gpu_queue {
 	spinlock_t qlock;
 	wait_queue_head_t ack_queue;
 	struct work_struct dequeue_work;
+<<<<<<< HEAD
 	uint32_t seqno;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct virtio_gpu_drv_capset {

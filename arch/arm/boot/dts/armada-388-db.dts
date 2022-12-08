@@ -36,11 +36,14 @@
 			i2c@11000 {
 				status = "okay";
 				clock-frequency = <100000>;
+<<<<<<< HEAD
 				audio_codec: audio-codec@4a {
 					#sound-dai-cells = <0>;
 					compatible = "cirrus,cs42l51";
 					reg = <0x4a>;
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			i2c@11100 {
@@ -62,7 +65,11 @@
 			};
 
 			usb@58000 {
+<<<<<<< HEAD
 				status = "okay";
+=======
+				status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			ethernet@70000 {
@@ -104,12 +111,15 @@
 				no-1-8-v;
 			};
 
+<<<<<<< HEAD
 			audio-controller@e8000 {
 				pinctrl-0 = <&i2s_pins>;
 				pinctrl-names = "default";
 				status = "disabled";
 			};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			usb3@f0000 {
 				status = "okay";
 			};
@@ -139,6 +149,7 @@
 			};
 		};
 	};
+<<<<<<< HEAD
 
 	sound {
 		compatible = "simple-audio-card";
@@ -197,6 +208,8 @@
 		#sound-dai-cells = <0>;
 		compatible = "linux,spdif-dir";
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &spi0 {

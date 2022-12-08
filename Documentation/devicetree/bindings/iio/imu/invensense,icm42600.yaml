@@ -31,7 +31,10 @@ properties:
       - invensense,icm42602
       - invensense,icm42605
       - invensense,icm42622
+<<<<<<< HEAD
       - invensense,icm42631
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -65,27 +68,45 @@ examples:
   - |
     #include <dt-bindings/gpio/gpio.h>
     #include <dt-bindings/interrupt-controller/irq.h>
+<<<<<<< HEAD
     i2c {
+=======
+    i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 
         icm42605@68 {
+<<<<<<< HEAD
             compatible = "invensense,icm42605";
             reg = <0x68>;
             interrupt-parent = <&gpio2>;
             interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
             vdd-supply = <&vdd>;
             vddio-supply = <&vddio>;
+=======
+          compatible = "invensense,icm42605";
+          reg = <0x68>;
+          interrupt-parent = <&gpio2>;
+          interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
+          vdd-supply = <&vdd>;
+          vddio-supply = <&vddio>;
+>>>>>>> b7ba80a49124 (Commit)
         };
     };
   - |
     #include <dt-bindings/gpio/gpio.h>
     #include <dt-bindings/interrupt-controller/irq.h>
+<<<<<<< HEAD
     spi {
+=======
+    spi0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 
         icm42602@0 {
+<<<<<<< HEAD
             compatible = "invensense,icm42602";
             reg = <0>;
             spi-max-frequency = <24000000>;
@@ -95,5 +116,16 @@ examples:
             interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
             vdd-supply = <&vdd>;
             vddio-supply = <&vddio>;
+=======
+          compatible = "invensense,icm42602";
+          reg = <0>;
+          spi-max-frequency = <24000000>;
+          spi-cpha;
+          spi-cpol;
+          interrupt-parent = <&gpio1>;
+          interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+          vdd-supply = <&vdd>;
+          vddio-supply = <&vddio>;
+>>>>>>> b7ba80a49124 (Commit)
         };
     };

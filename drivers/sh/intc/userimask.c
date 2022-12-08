@@ -61,6 +61,7 @@ static DEVICE_ATTR(userimask, S_IRUSR | S_IWUSR,
 
 static int __init userimask_sysdev_init(void)
 {
+<<<<<<< HEAD
 	struct device *dev_root;
 	int ret = 0;
 
@@ -73,6 +74,12 @@ static int __init userimask_sysdev_init(void)
 		put_device(dev_root);
 	}
 	return ret;
+=======
+	if (unlikely(!uimask))
+		return -ENXIO;
+
+	return device_create_file(intc_subsys.dev_root, &dev_attr_userimask);
+>>>>>>> b7ba80a49124 (Commit)
 }
 late_initcall(userimask_sysdev_init);
 

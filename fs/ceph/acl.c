@@ -85,14 +85,21 @@ retry:
 	return acl;
 }
 
+<<<<<<< HEAD
 int ceph_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+int ceph_set_acl(struct user_namespace *mnt_userns, struct inode *inode,
+>>>>>>> b7ba80a49124 (Commit)
 		 struct posix_acl *acl, int type)
 {
 	int ret = 0, size = 0;
 	const char *name = NULL;
 	char *value = NULL;
 	struct iattr newattrs;
+<<<<<<< HEAD
 	struct inode *inode = d_inode(dentry);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct timespec64 old_ctime = inode->i_ctime;
 	umode_t new_mode = inode->i_mode, old_mode = inode->i_mode;
 
@@ -105,7 +112,11 @@ int ceph_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
 	case ACL_TYPE_ACCESS:
 		name = XATTR_NAME_POSIX_ACL_ACCESS;
 		if (acl) {
+<<<<<<< HEAD
 			ret = posix_acl_update_mode(&nop_mnt_idmap, inode,
+=======
+			ret = posix_acl_update_mode(&init_user_ns, inode,
+>>>>>>> b7ba80a49124 (Commit)
 						    &new_mode, &acl);
 			if (ret)
 				goto out;

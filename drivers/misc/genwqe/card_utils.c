@@ -151,9 +151,12 @@ int genwqe_read_app_id(struct genwqe_dev *cd, char *app_name, int len)
 	return i;
 }
 
+<<<<<<< HEAD
 #define CRC32_POLYNOMIAL	0x20044009
 static u32 crc32_tab[256];	/* crc32 lookup table */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * genwqe_init_crc32() - Prepare a lookup table for fast crc32 calculations
  *
@@ -162,6 +165,12 @@ static u32 crc32_tab[256];	/* crc32 lookup table */
  *
  * Genwqe's Polynomial = 0x20044009
  */
+<<<<<<< HEAD
+=======
+#define CRC32_POLYNOMIAL	0x20044009
+static u32 crc32_tab[256];	/* crc32 lookup table */
+
+>>>>>>> b7ba80a49124 (Commit)
 void genwqe_init_crc32(void)
 {
 	int i, j;
@@ -210,7 +219,11 @@ u32 genwqe_crc32(u8 *buff, size_t len, u32 init)
 void *__genwqe_alloc_consistent(struct genwqe_dev *cd, size_t size,
 			       dma_addr_t *dma_handle)
 {
+<<<<<<< HEAD
 	if (get_order(size) > MAX_ORDER)
+=======
+	if (get_order(size) >= MAX_ORDER)
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	return dma_alloc_coherent(&cd->pci_dev->dev, size, dma_handle,

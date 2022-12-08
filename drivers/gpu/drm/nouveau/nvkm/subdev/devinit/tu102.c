@@ -65,6 +65,7 @@ tu102_devinit_pll_set(struct nvkm_devinit *init, u32 type, u32 freq)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int
 tu102_devinit_wait(struct nvkm_device *device)
 {
@@ -82,16 +83,21 @@ tu102_devinit_wait(struct nvkm_device *device)
 	return -ETIMEDOUT;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int
 tu102_devinit_post(struct nvkm_devinit *base, bool post)
 {
 	struct nv50_devinit *init = nv50_devinit(base);
+<<<<<<< HEAD
 	int ret;
 
 	ret = tu102_devinit_wait(init->base.subdev.device);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gm200_devinit_preos(init, post);
 	return 0;
 }

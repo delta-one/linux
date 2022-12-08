@@ -351,6 +351,7 @@ struct hinic_vlan_cfg {
 	u8      rsvd1[5];
 };
 
+<<<<<<< HEAD
 struct hinic_vlan_filter {
 	u8	status;
 	u8	version;
@@ -361,6 +362,8 @@ struct hinic_vlan_filter {
 	u32	enable;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct hinic_rss_template_mgmt {
 	u8	status;
 	u8	version;
@@ -841,8 +844,11 @@ int hinic_get_vport_stats(struct hinic_dev *nic_dev,
 
 int hinic_set_rx_vlan_offload(struct hinic_dev *nic_dev, u8 en);
 
+<<<<<<< HEAD
 int hinic_set_vlan_fliter(struct hinic_dev *nic_dev, u32 en);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int hinic_get_mgmt_version(struct hinic_dev *nic_dev, u8 *mgmt_ver);
 
 int hinic_set_link_settings(struct hinic_hwdev *hwdev,

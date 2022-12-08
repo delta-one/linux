@@ -264,24 +264,39 @@ static int cc770_isa_probe(struct platform_device *pdev)
 	if (err) {
 		dev_err(&pdev->dev,
 			"couldn't register device (err=%d)\n", err);
+<<<<<<< HEAD
 		goto exit_free;
+=======
+		goto exit_unmap;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	dev_info(&pdev->dev, "device registered (reg_base=0x%p, irq=%d)\n",
 		 priv->reg_base, dev->irq);
 	return 0;
 
+<<<<<<< HEAD
 exit_free:
 	free_cc770dev(dev);
 exit_unmap:
 	if (mem[idx])
 		iounmap(base);
 exit_release:
+=======
+ exit_unmap:
+	if (mem[idx])
+		iounmap(base);
+ exit_release:
+>>>>>>> b7ba80a49124 (Commit)
 	if (mem[idx])
 		release_mem_region(mem[idx], iosize);
 	else
 		release_region(port[idx], iosize);
+<<<<<<< HEAD
 exit:
+=======
+ exit:
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 

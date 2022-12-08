@@ -4,6 +4,10 @@
 
 #if defined(__KERNEL__) && !defined(__ASSEMBLY__)
 enum {
+<<<<<<< HEAD
+=======
+	EI_ETYPE_NONE,		/* Dummy value for undefined case */
+>>>>>>> b7ba80a49124 (Commit)
 	EI_ETYPE_NULL,		/* Return NULL if failure */
 	EI_ETYPE_ERRNO,		/* Return -ERRNO if failure */
 	EI_ETYPE_ERRNO_NULL,	/* Return -ERRNO or NULL if failure */
@@ -19,10 +23,15 @@ struct pt_regs;
 
 #ifdef CONFIG_FUNCTION_ERROR_INJECTION
 /*
+<<<<<<< HEAD
  * Whitelist generating macro. Specify functions which can be error-injectable
  * using this macro. If you unsure what is required for the error-injectable
  * functions, please read Documentation/fault-injection/fault-injection.rst
  * 'Error Injectable Functions' section.
+=======
+ * Whitelist generating macro. Specify functions which can be
+ * error-injectable using this macro.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #define ALLOW_ERROR_INJECTION(fname, _etype)				\
 static struct error_injection_entry __used				\

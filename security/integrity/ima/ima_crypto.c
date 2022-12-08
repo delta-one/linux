@@ -38,7 +38,11 @@ static int param_set_bufsize(const char *val, const struct kernel_param *kp)
 
 	size = memparse(val, NULL);
 	order = get_order(size);
+<<<<<<< HEAD
 	if (order > MAX_ORDER)
+=======
+	if (order >= MAX_ORDER)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	ima_maxorder = order;
 	ima_bufsize = PAGE_SIZE << order;

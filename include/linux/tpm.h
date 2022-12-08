@@ -265,7 +265,10 @@ enum tpm2_startup_types {
 enum tpm2_cc_attrs {
 	TPM2_CC_ATTR_CHANDLES	= 25,
 	TPM2_CC_ATTR_RHANDLE	= 28,
+<<<<<<< HEAD
 	TPM2_CC_ATTR_VENDOR	= 29,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define TPM_VID_INTEL    0x8086

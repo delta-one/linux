@@ -4,7 +4,10 @@
 #include <asm/thread_info.h>
 
 #define PAGE_SIZE _PAGE_SIZE
+<<<<<<< HEAD
 #define RO_EXCEPTION_TABLE_ALIGN	4
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Put .bss..swapper_pg_dir as the first thing in .bss. This will
@@ -43,6 +46,10 @@ SECTIONS
 	.text : {
 		TEXT_TEXT
 		SCHED_TEXT
+<<<<<<< HEAD
+=======
+		CPUIDLE_TEXT
+>>>>>>> b7ba80a49124 (Commit)
 		LOCK_TEXT
 		KPROBES_TEXT
 		IRQENTRY_TEXT
@@ -53,6 +60,7 @@ SECTIONS
 	. = ALIGN(PECOFF_SEGMENT_ALIGN);
 	_etext = .;
 
+<<<<<<< HEAD
 	/*
 	 * struct alt_inst entries. From the header (alternative.h):
 	 * "Alternative instructions for different CPU types or capabilities"
@@ -79,6 +87,9 @@ SECTIONS
 	.got.plt : ALIGN(16) { *(.got.plt) }
 
 	.data.rel : { *(.data.rel*) }
+=======
+	EXCEPTION_TABLE(16)
+>>>>>>> b7ba80a49124 (Commit)
 
 	. = ALIGN(PECOFF_SEGMENT_ALIGN);
 	__init_begin = .;
@@ -103,6 +114,11 @@ SECTIONS
 	PERCPU_SECTION(1 << CONFIG_L1_CACHE_SHIFT)
 #endif
 
+<<<<<<< HEAD
+=======
+	.rela.dyn : ALIGN(8) { *(.rela.dyn) *(.rela*) }
+
+>>>>>>> b7ba80a49124 (Commit)
 	.init.bss : {
 		*(.init.bss)
 	}
@@ -115,12 +131,15 @@ SECTIONS
 	RO_DATA(4096)
 	RW_DATA(1 << CONFIG_L1_CACHE_SHIFT, PAGE_SIZE, THREAD_SIZE)
 
+<<<<<<< HEAD
 	.rela.dyn : ALIGN(8) {
 		__rela_dyn_begin = .;
 		 *(.rela.dyn) *(.rela*)
 		__rela_dyn_end = .;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.sdata : {
 		*(.sdata)
 	}
@@ -147,7 +166,10 @@ SECTIONS
 
 	DISCARDS
 	/DISCARD/ : {
+<<<<<<< HEAD
 		*(.dynamic .dynsym .dynstr .hash .gnu.hash)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		*(.gnu.attributes)
 		*(.options)
 		*(.eh_frame)

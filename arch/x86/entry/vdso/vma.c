@@ -44,16 +44,24 @@ unsigned int vclocks_used __read_mostly;
 unsigned int __read_mostly vdso64_enabled = 1;
 #endif
 
+<<<<<<< HEAD
 int __init init_vdso_image(const struct vdso_image *image)
 {
 	BUILD_BUG_ON(VDSO_CLOCKMODE_MAX >= 32);
+=======
+void __init init_vdso_image(const struct vdso_image *image)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	BUG_ON(image->size % PAGE_SIZE != 0);
 
 	apply_alternatives((struct alt_instr *)(image->data + image->alt),
 			   (struct alt_instr *)(image->data + image->alt +
 						image->alt_len));
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct vm_special_mapping vvar_mapping;
@@ -101,6 +109,27 @@ static int vdso_mremap(const struct vm_special_mapping *sm,
 }
 
 #ifdef CONFIG_TIME_NS
+<<<<<<< HEAD
+=======
+static struct page *find_timens_vvar_page(struct vm_area_struct *vma)
+{
+	if (likely(vma->vm_mm == current->mm))
+		return current->nsproxy->time_ns->vvar_page;
+
+	/*
+	 * VM_PFNMAP | VM_IO protect .fault() handler from being called
+	 * through interfaces like /proc/$pid/mem or
+	 * process_vm_{readv,writev}() as long as there's no .access()
+	 * in special_mapping_vmops().
+	 * For more details check_vma_flags() and __access_remote_vm()
+	 */
+
+	WARN(1, "vvar_page accessed remotely");
+
+	return NULL;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The vvar page layout depends on whether a task belongs to the root or
  * non-root time namespace. Whenever a task changes its namespace, the VVAR
@@ -116,13 +145,28 @@ int vdso_join_timens(struct task_struct *task, struct time_namespace *ns)
 
 	mmap_read_lock(mm);
 	for_each_vma(vmi, vma) {
+<<<<<<< HEAD
 		if (vma_is_special_mapping(vma, &vvar_mapping))
 			zap_vma_pages(vma);
+=======
+		unsigned long size = vma->vm_end - vma->vm_start;
+
+		if (vma_is_special_mapping(vma, &vvar_mapping))
+			zap_page_range(vma, vma->vm_start, size);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	mmap_read_unlock(mm);
 
 	return 0;
 }
+<<<<<<< HEAD
+=======
+#else
+static inline struct page *find_timens_vvar_page(struct vm_area_struct *vma)
+{
+	return NULL;
+}
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
@@ -188,10 +232,18 @@ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
 					pgprot_decrypted(vma->vm_page_prot));
 		}
 	} else if (sym_offset == image->sym_hvclock_page) {
+<<<<<<< HEAD
 		pfn = hv_get_tsc_pfn();
 
 		if (pfn && vclock_was_used(VDSO_CLOCKMODE_HVCLOCK))
 			return vmf_insert_pfn(vma, vmf->address, pfn);
+=======
+		struct ms_hyperv_tsc_page *tsc_pg = hv_get_tsc_page();
+
+		if (tsc_pg && vclock_was_used(VDSO_CLOCKMODE_HVCLOCK))
+			return vmf_insert_pfn(vma, vmf->address,
+					virt_to_phys(tsc_pg) >> PAGE_SHIFT);
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (sym_offset == image->sym_timens_page) {
 		struct page *timens_page = find_timens_vvar_page(vma);
 
@@ -304,7 +356,11 @@ static unsigned long vdso_addr(unsigned long start, unsigned len)
 	end -= len;
 
 	if (end > start) {
+<<<<<<< HEAD
 		offset = get_random_u32_below(((end - start) >> PAGE_SHIFT) + 1);
+=======
+		offset = get_random_int() % (((end - start) >> PAGE_SHIFT) + 1);
+>>>>>>> b7ba80a49124 (Commit)
 		addr = start + (offset << PAGE_SHIFT);
 	} else {
 		addr = start;
@@ -419,4 +475,21 @@ static __init int vdso_setup(char *s)
 	return 1;
 }
 __setup("vdso=", vdso_setup);
+<<<<<<< HEAD
+=======
+
+static int __init init_vdso(void)
+{
+	BUILD_BUG_ON(VDSO_CLOCKMODE_MAX >= 32);
+
+	init_vdso_image(&vdso_image_64);
+
+#ifdef CONFIG_X86_X32_ABI
+	init_vdso_image(&vdso_image_x32);
+#endif
+
+	return 0;
+}
+subsys_initcall(init_vdso);
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_X86_64 */

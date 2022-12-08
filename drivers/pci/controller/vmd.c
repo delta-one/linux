@@ -66,6 +66,7 @@ enum vmd_features {
 	 * interrupt handling.
 	 */
 	VMD_FEAT_CAN_BYPASS_MSI_REMAP		= (1 << 4),
+<<<<<<< HEAD
 
 	/*
 	 * Enable ASPM on the PCIE root ports and set the default LTR of the
@@ -83,6 +84,10 @@ enum vmd_features {
 				 VMD_FEAT_OFFSET_FIRST_VECTOR |		\
 				 VMD_FEAT_BIOS_PM_QUIRK)
 
+=======
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static DEFINE_IDA(vmd_instance_ida);
 
 /*
@@ -724,6 +729,7 @@ static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
 	vmd_bridge->native_dpc = root_bridge->native_dpc;
 }
 
+<<<<<<< HEAD
 /*
  * Enable ASPM and LTR settings on devices that aren't configured by BIOS.
  */
@@ -764,6 +770,8 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
 {
 	struct pci_sysdata *sd = &vmd->sysdata;
@@ -774,7 +782,10 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
 	resource_size_t offset[2] = {0};
 	resource_size_t membar2_offset = 0x2000;
 	struct pci_bus *child;
+<<<<<<< HEAD
 	struct pci_dev *dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	/*
@@ -915,6 +926,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
 
 	pci_scan_child_bus(vmd->bus);
 	vmd_domain_reset(vmd);
+<<<<<<< HEAD
 
 	/* When Intel VMD is enabled, the OS does not discover the Root Ports
 	 * owned by Intel VMD within the MMCFG space. pci_reset_bus() applies
@@ -938,6 +950,12 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
 
 	pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features);
 
+=======
+	list_for_each_entry(child, &vmd->bus->children, node)
+		pci_reset_bus(child->self);
+	pci_assign_unassigned_bus_resources(vmd->bus);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * VMD root buses are virtual and don't return true on pci_is_pcie()
 	 * and will fail pcie_bus_configure_settings() early. It can instead be
@@ -1055,11 +1073,14 @@ static int vmd_resume(struct device *dev)
 	struct vmd_dev *vmd = pci_get_drvdata(pdev);
 	int err, i;
 
+<<<<<<< HEAD
        if (vmd->irq_domain)
                vmd_set_msi_remapping(vmd, true);
        else
                vmd_set_msi_remapping(vmd, false);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < vmd->msix_count; i++) {
 		err = devm_request_irq(dev, vmd->irqs[i].virq,
 				       vmd_irq, IRQF_NO_THREAD,
@@ -1074,6 +1095,7 @@ static int vmd_resume(struct device *dev)
 static SIMPLE_DEV_PM_OPS(vmd_dev_pm_ops, vmd_suspend, vmd_resume);
 
 static const struct pci_device_id vmd_ids[] = {
+<<<<<<< HEAD
 	{PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_VMD_201D),
 		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP,},
 	{PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0),
@@ -1092,6 +1114,38 @@ static const struct pci_device_id vmd_ids[] = {
 		.driver_data = VMD_FEATS_CLIENT,},
 	{PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
 		.driver_data = VMD_FEATS_CLIENT,},
+=======
+	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_201D),
+		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP,},
+	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0),
+		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW |
+				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+				VMD_FEAT_CAN_BYPASS_MSI_REMAP,},
+	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x467f),
+		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+				VMD_FEAT_OFFSET_FIRST_VECTOR,},
+	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4c3d),
+		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+				VMD_FEAT_OFFSET_FIRST_VECTOR,},
+	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa77f),
+		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+				VMD_FEAT_OFFSET_FIRST_VECTOR,},
+	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x7d0b),
+		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+				VMD_FEAT_OFFSET_FIRST_VECTOR,},
+	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xad0b),
+		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+				VMD_FEAT_OFFSET_FIRST_VECTOR,},
+	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
+		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+				VMD_FEAT_OFFSET_FIRST_VECTOR,},
+>>>>>>> b7ba80a49124 (Commit)
 	{0,}
 };
 MODULE_DEVICE_TABLE(pci, vmd_ids);

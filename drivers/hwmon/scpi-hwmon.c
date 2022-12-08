@@ -64,7 +64,11 @@ static void scpi_scale_reading(u64 *value, struct sensor_data *sensor)
 
 static int scpi_read_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	struct scpi_thermal_zone *zone = thermal_zone_device_priv(tz);
+=======
+	struct scpi_thermal_zone *zone = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct scpi_sensors *scpi_sensors = zone->scpi_sensors;
 	struct scpi_ops *scpi_ops = scpi_sensors->scpi_ops;
 	struct sensor_data *sensor = &scpi_sensors->data[zone->sensor_id];

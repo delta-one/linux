@@ -20,9 +20,13 @@
 #include <linux/pci_ids.h>
 #include <linux/types.h>
 #include <linux/watchdog.h>
+<<<<<<< HEAD
 #ifdef CONFIG_HPWDT_NMI_DECODING
 #include <asm/nmi.h>
 #endif
+=======
+#include <asm/nmi.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/crash_dump.h>
 
 #define HPWDT_VERSION			"2.0.4"

@@ -47,7 +47,11 @@ void __init plat_mem_setup(void)
 		strscpy(arcs_cmdline, boot_command_line, COMMAND_LINE_SIZE);
 
 #ifdef CONFIG_EARLY_PRINTK
+<<<<<<< HEAD
 	fw_init_early_console();
+=======
+	fw_init_early_console(-1);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	pic32_config_init();
 }

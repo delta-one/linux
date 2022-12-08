@@ -39,6 +39,20 @@ struct vgem_file {
 	struct mutex fence_mutex;
 };
 
+<<<<<<< HEAD
+=======
+#define to_vgem_bo(x) container_of(x, struct drm_vgem_gem_object, base)
+struct drm_vgem_gem_object {
+	struct drm_gem_object base;
+
+	struct page **pages;
+	unsigned int pages_pin_count;
+	struct mutex pages_lock;
+
+	struct sg_table *table;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 int vgem_fence_open(struct vgem_file *file);
 int vgem_fence_attach_ioctl(struct drm_device *dev,
 			    void *data,

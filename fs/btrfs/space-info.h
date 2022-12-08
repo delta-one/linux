@@ -5,6 +5,7 @@
 
 #include "volumes.h"
 
+<<<<<<< HEAD
 /*
  * Different levels for to flush space when doing space reservations.
  *
@@ -82,6 +83,8 @@ enum btrfs_flush_state {
 	COMMIT_TRANS		= 11,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct btrfs_space_info {
 	spinlock_t lock;
 
@@ -96,6 +99,11 @@ struct btrfs_space_info {
 	u64 bytes_may_use;	/* number of bytes that may be used for
 				   delalloc/allocations */
 	u64 bytes_readonly;	/* total bytes that are read only */
+<<<<<<< HEAD
+=======
+	/* Total bytes in the space, but only accounts active block groups. */
+	u64 active_total_bytes;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 bytes_zone_unusable;	/* total bytes that are unusable until
 					   resetting the device zone */
 
@@ -234,6 +242,9 @@ int btrfs_reserve_data_bytes(struct btrfs_fs_info *fs_info, u64 bytes,
 			     enum btrfs_reserve_flush_enum flush);
 void btrfs_dump_space_info_for_trans_abort(struct btrfs_fs_info *fs_info);
 void btrfs_init_async_reclaim_work(struct btrfs_fs_info *fs_info);
+<<<<<<< HEAD
 u64 btrfs_account_ro_block_groups_free_space(struct btrfs_space_info *sinfo);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* BTRFS_SPACE_INFO_H */

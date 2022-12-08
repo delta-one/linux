@@ -129,7 +129,12 @@ static const struct v4l2_subdev_ops tlv320aic23b_ops = {
  * concerning the addresses: i2c wants 7 bit (without the r/w bit), so '>>1'
  */
 
+<<<<<<< HEAD
 static int tlv320aic23b_probe(struct i2c_client *client)
+=======
+static int tlv320aic23b_probe(struct i2c_client *client,
+			      const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tlv320aic23b_state *state;
 	struct v4l2_subdev *sd;
@@ -197,7 +202,11 @@ static struct i2c_driver tlv320aic23b_driver = {
 	.driver = {
 		.name	= "tlv320aic23b",
 	},
+<<<<<<< HEAD
 	.probe_new	= tlv320aic23b_probe,
+=======
+	.probe		= tlv320aic23b_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= tlv320aic23b_remove,
 	.id_table	= tlv320aic23b_id,
 };

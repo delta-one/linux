@@ -28,6 +28,10 @@
 #include <linux/regmap.h>
 #include <linux/thermal.h>
 
+<<<<<<< HEAD
+=======
+#include "thermal_core.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "thermal_hwmon.h"
 
 #define TSENSOR_CFG_REG1			0x4
@@ -181,7 +185,11 @@ static int amlogic_thermal_disable(struct amlogic_thermal *data)
 static int amlogic_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
 {
 	unsigned int tval;
+<<<<<<< HEAD
 	struct amlogic_thermal *pdata = thermal_zone_device_priv(tz);
+=======
+	struct amlogic_thermal *pdata = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!pdata)
 		return -EINVAL;
@@ -285,7 +293,11 @@ static int amlogic_thermal_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	if (devm_thermal_add_hwmon_sysfs(&pdev->dev, pdata->tzd))
+=======
+	if (devm_thermal_add_hwmon_sysfs(pdata->tzd))
+>>>>>>> b7ba80a49124 (Commit)
 		dev_warn(&pdev->dev, "Failed to add hwmon sysfs attributes\n");
 
 	ret = amlogic_thermal_initialize(pdata);

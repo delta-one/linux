@@ -8,7 +8,11 @@
 
 #include <linux/types.h>
 
+<<<<<<< HEAD
 #include "i915_reg_defs.h"
+=======
+#include "i915_reg.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 enum pipe;
 enum port;

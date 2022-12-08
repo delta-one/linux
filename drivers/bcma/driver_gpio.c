@@ -82,7 +82,10 @@ static void bcma_gpio_irq_unmask(struct irq_data *d)
 	int gpio = irqd_to_hwirq(d);
 	u32 val = bcma_chipco_gpio_in(cc, BIT(gpio));
 
+<<<<<<< HEAD
 	gpiochip_enable_irq(gc, gpio);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bcma_chipco_gpio_polarity(cc, BIT(gpio), val);
 	bcma_chipco_gpio_intmask(cc, BIT(gpio), BIT(gpio));
 }
@@ -94,6 +97,7 @@ static void bcma_gpio_irq_mask(struct irq_data *d)
 	int gpio = irqd_to_hwirq(d);
 
 	bcma_chipco_gpio_intmask(cc, BIT(gpio), 0);
+<<<<<<< HEAD
 	gpiochip_disable_irq(gc, gpio);
 }
 
@@ -103,6 +107,14 @@ static const struct irq_chip bcma_gpio_irq_chip = {
 	.irq_unmask	= bcma_gpio_irq_unmask,
 	.flags		= IRQCHIP_IMMUTABLE,
 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+=======
+}
+
+static struct irq_chip bcma_gpio_irq_chip = {
+	.name		= "BCMA-GPIO",
+	.irq_mask	= bcma_gpio_irq_mask,
+	.irq_unmask	= bcma_gpio_irq_unmask,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static irqreturn_t bcma_gpio_irq_handler(int irq, void *dev_id)
@@ -143,7 +155,11 @@ static int bcma_gpio_irq_init(struct bcma_drv_cc *cc)
 	bcma_chipco_gpio_intmask(cc, ~0, 0);
 	bcma_cc_set32(cc, BCMA_CC_IRQMASK, BCMA_CC_IRQ_GPIO);
 
+<<<<<<< HEAD
 	gpio_irq_chip_set_chip(girq, &bcma_gpio_irq_chip);
+=======
+	girq->chip = &bcma_gpio_irq_chip;
+>>>>>>> b7ba80a49124 (Commit)
 	/* This will let us handle the parent IRQ in the driver */
 	girq->parent_handler = NULL;
 	girq->num_parents = 0;

@@ -8,7 +8,11 @@ Landlock: unprivileged access control
 =====================================
 
 :Author: Mickaël Salaün
+<<<<<<< HEAD
 :Date: October 2022
+=======
+:Date: August 2022
+>>>>>>> b7ba80a49124 (Commit)
 
 The goal of Landlock is to enable to restrict ambient rights (e.g. global
 filesystem access) for a set of processes.  Because Landlock is a stackable
@@ -70,15 +74,22 @@ should try to protect users as much as possible whatever the kernel they are
 using.  To avoid binary enforcement (i.e. either all security features or
 none), we can leverage a dedicated Landlock command to get the current version
 of the Landlock ABI and adapt the handled accesses.  Let's check if we should
+<<<<<<< HEAD
 remove the ``LANDLOCK_ACCESS_FS_REFER`` or ``LANDLOCK_ACCESS_FS_TRUNCATE``
 access rights, which are only supported starting with the second and third
 version of the ABI.
+=======
+remove the `LANDLOCK_ACCESS_FS_REFER` or `LANDLOCK_ACCESS_FS_TRUNCATE` access
+rights, which are only supported starting with the second and third version of
+the ABI.
+>>>>>>> b7ba80a49124 (Commit)
 
 .. code-block:: c
 
     int abi;
 
     abi = landlock_create_ruleset(NULL, 0, LANDLOCK_CREATE_RULESET_VERSION);
+<<<<<<< HEAD
     if (abi < 0) {
         /* Degrades gracefully if Landlock is not handled. */
         perror("The running kernel does not enable to use Landlock");
@@ -92,6 +103,19 @@ version of the ABI.
     case 2:
         /* Removes LANDLOCK_ACCESS_FS_TRUNCATE for ABI < 3 */
         ruleset_attr.handled_access_fs &= ~LANDLOCK_ACCESS_FS_TRUNCATE;
+=======
+    switch (abi) {
+    case -1:
+            perror("The running kernel does not enable to use Landlock");
+            return 1;
+    case 1:
+            /* Removes LANDLOCK_ACCESS_FS_REFER for ABI < 2 */
+            ruleset_attr.handled_access_fs &= ~LANDLOCK_ACCESS_FS_REFER;
+            __attribute__((fallthrough));
+    case 2:
+            /* Removes LANDLOCK_ACCESS_FS_TRUNCATE for ABI < 3 */
+            ruleset_attr.handled_access_fs &= ~LANDLOCK_ACCESS_FS_TRUNCATE;
+>>>>>>> b7ba80a49124 (Commit)
     }
 
 This enables to create an inclusive ruleset that will contain our rules.
@@ -141,7 +165,11 @@ descriptor.
 It may also be required to create rules following the same logic as explained
 for the ruleset creation, by filtering access rights according to the Landlock
 ABI version.  In this example, this is not required because all of the requested
+<<<<<<< HEAD
 ``allowed_access`` rights are already available in ABI 1.
+=======
+`allowed_access` rights are already available in ABI 1.
+>>>>>>> b7ba80a49124 (Commit)
 
 We now have a ruleset with one rule allowing read access to ``/usr`` while
 denying all other handled accesses for the filesystem.  The next step is to
@@ -167,8 +195,13 @@ The current thread is now ready to sandbox itself with the ruleset.
     }
     close(ruleset_fd);
 
+<<<<<<< HEAD
 If the ``landlock_restrict_self`` system call succeeds, the current thread is
 now restricted and this policy will be enforced on all its subsequently created
+=======
+If the `landlock_restrict_self` system call succeeds, the current thread is now
+restricted and this policy will be enforced on all its subsequently created
+>>>>>>> b7ba80a49124 (Commit)
 children as well.  Once a thread is landlocked, there is no way to remove its
 security policy; only adding more restrictions is allowed.  These threads are
 now in a new Landlock domain, merge of their parent one (if any) with the new
@@ -183,13 +216,21 @@ It is recommended setting access rights to file hierarchy leaves as much as
 possible.  For instance, it is better to be able to have ``~/doc/`` as a
 read-only hierarchy and ``~/tmp/`` as a read-write hierarchy, compared to
 ``~/`` as a read-only hierarchy and ``~/tmp/`` as a read-write hierarchy.
+<<<<<<< HEAD
 Following this good practice leads to self-sufficient hierarchies that do not
+=======
+Following this good practice leads to self-sufficient hierarchies that don't
+>>>>>>> b7ba80a49124 (Commit)
 depend on their location (i.e. parent directories).  This is particularly
 relevant when we want to allow linking or renaming.  Indeed, having consistent
 access rights per directory enables to change the location of such directory
 without relying on the destination directory access rights (except those that
+<<<<<<< HEAD
 are required for this operation, see ``LANDLOCK_ACCESS_FS_REFER``
 documentation).
+=======
+are required for this operation, see `LANDLOCK_ACCESS_FS_REFER` documentation).
+>>>>>>> b7ba80a49124 (Commit)
 Having self-sufficient hierarchies also helps to tighten the required access
 rights to the minimal set of data.  This also helps avoid sinkhole directories,
 i.e.  directories where data can be linked to but not linked from.  However,
@@ -268,8 +309,13 @@ which means the tracee must be in a sub-domain of the tracer.
 Truncating files
 ----------------
 
+<<<<<<< HEAD
 The operations covered by ``LANDLOCK_ACCESS_FS_WRITE_FILE`` and
 ``LANDLOCK_ACCESS_FS_TRUNCATE`` both change the contents of a file and sometimes
+=======
+The operations covered by `LANDLOCK_ACCESS_FS_WRITE_FILE` and
+`LANDLOCK_ACCESS_FS_TRUNCATE` both change the contents of a file and sometimes
+>>>>>>> b7ba80a49124 (Commit)
 overlap in non-intuitive ways.  It is recommended to always specify both of
 these together.
 
@@ -279,6 +325,7 @@ it also requires the truncate right if an existing file under the same name is
 already present.
 
 It should also be noted that truncating files does not require the
+<<<<<<< HEAD
 ``LANDLOCK_ACCESS_FS_WRITE_FILE`` right.  Apart from the :manpage:`truncate(2)`
 system call, this can also be done through :manpage:`open(2)` with the flags
 ``O_RDONLY | O_TRUNC``.
@@ -295,6 +342,11 @@ same file, where one grants the right to truncate the file and the other does
 not.  It is also possible to pass such file descriptors between processes,
 keeping their Landlock properties, even when these processes do not have an
 enforced Landlock ruleset.
+=======
+`LANDLOCK_ACCESS_FS_WRITE_FILE` right.  Apart from the :manpage:`truncate(2)`
+system call, this can also be done through :manpage:`open(2)` with the flags
+`O_RDONLY | O_TRUNC`.
+>>>>>>> b7ba80a49124 (Commit)
 
 Compatibility
 =============
@@ -304,7 +356,11 @@ Backward and forward compatibility
 
 Landlock is designed to be compatible with past and future versions of the
 kernel.  This is achieved thanks to the system call attributes and the
+<<<<<<< HEAD
 associated bitflags, particularly the ruleset's ``handled_access_fs``.  Making
+=======
+associated bitflags, particularly the ruleset's `handled_access_fs`.  Making
+>>>>>>> b7ba80a49124 (Commit)
 handled access right explicit enables the kernel and user space to have a clear
 contract with each other.  This is required to make sure sandboxing will not
 get stricter with a system update, which could break applications.
@@ -425,8 +481,13 @@ by the Documentation/admin-guide/cgroup-v1/memory.rst.
 Previous limitations
 ====================
 
+<<<<<<< HEAD
 File renaming and linking (ABI < 2)
 -----------------------------------
+=======
+File renaming and linking (ABI 1)
+---------------------------------
+>>>>>>> b7ba80a49124 (Commit)
 
 Because Landlock targets unprivileged access controls, it needs to properly
 handle composition of rules.  Such property also implies rules nesting.
@@ -439,7 +500,11 @@ according to the potentially lost constraints.  To protect against privilege
 escalations through renaming or linking, and for the sake of simplicity,
 Landlock previously limited linking and renaming to the same directory.
 Starting with the Landlock ABI version 2, it is now possible to securely
+<<<<<<< HEAD
 control renaming and linking thanks to the new ``LANDLOCK_ACCESS_FS_REFER``
+=======
+control renaming and linking thanks to the new `LANDLOCK_ACCESS_FS_REFER`
+>>>>>>> b7ba80a49124 (Commit)
 access right.
 
 File truncation (ABI < 3)
@@ -449,7 +514,11 @@ File truncation could not be denied before the third Landlock ABI, so it is
 always allowed when using a kernel that only supports the first or second ABI.
 
 Starting with the Landlock ABI version 3, it is now possible to securely control
+<<<<<<< HEAD
 truncation thanks to the new ``LANDLOCK_ACCESS_FS_TRUNCATE`` access right.
+=======
+truncation thanks to the new `LANDLOCK_ACCESS_FS_TRUNCATE` access right.
+>>>>>>> b7ba80a49124 (Commit)
 
 .. _kernel_support:
 
@@ -457,6 +526,7 @@ Kernel support
 ==============
 
 Landlock was first introduced in Linux 5.13 but it must be configured at build
+<<<<<<< HEAD
 time with ``CONFIG_SECURITY_LANDLOCK=y``.  Landlock must also be enabled at boot
 time as the other security modules.  The list of security modules enabled by
 default is set with ``CONFIG_LSM``.  The kernel configuration should then
@@ -465,6 +535,16 @@ potentially useful security modules for the running system (see the
 ``CONFIG_LSM`` help).
 
 If the running kernel does not have ``landlock`` in ``CONFIG_LSM``, then we can
+=======
+time with `CONFIG_SECURITY_LANDLOCK=y`.  Landlock must also be enabled at boot
+time as the other security modules.  The list of security modules enabled by
+default is set with `CONFIG_LSM`.  The kernel configuration should then
+contains `CONFIG_LSM=landlock,[...]` with `[...]`  as the list of other
+potentially useful security modules for the running system (see the
+`CONFIG_LSM` help).
+
+If the running kernel doesn't have `landlock` in `CONFIG_LSM`, then we can
+>>>>>>> b7ba80a49124 (Commit)
 still enable it by adding ``lsm=landlock,[...]`` to
 Documentation/admin-guide/kernel-parameters.rst thanks to the bootloader
 configuration.

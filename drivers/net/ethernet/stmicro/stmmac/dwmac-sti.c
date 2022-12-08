@@ -371,12 +371,20 @@ err_remove_config_dt:
 static int sti_dwmac_remove(struct platform_device *pdev)
 {
 	struct sti_dwmac *dwmac = get_stmmac_bsp_priv(&pdev->dev);
+<<<<<<< HEAD
 
 	stmmac_dvr_remove(&pdev->dev);
 
 	clk_disable_unprepare(dwmac->clk);
 
 	return 0;
+=======
+	int ret = stmmac_dvr_remove(&pdev->dev);
+
+	clk_disable_unprepare(dwmac->clk);
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP

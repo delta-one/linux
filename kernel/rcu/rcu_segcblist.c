@@ -89,7 +89,11 @@ static void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
 }
 
 /* Get the length of a segment of the rcu_segcblist structure. */
+<<<<<<< HEAD
 long rcu_segcblist_get_seglen(struct rcu_segcblist *rsclp, int seg)
+=======
+static long rcu_segcblist_get_seglen(struct rcu_segcblist *rsclp, int seg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return READ_ONCE(rsclp->seglen[seg]);
 }

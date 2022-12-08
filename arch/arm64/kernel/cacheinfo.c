@@ -11,6 +11,14 @@
 #include <linux/of.h>
 
 #define MAX_CACHE_LEVEL			7	/* Max 7 level supported */
+<<<<<<< HEAD
+=======
+/* Ctypen, bits[3(n - 1) + 2 : 3(n - 1)], for n = 1 to 7 */
+#define CLIDR_CTYPE_SHIFT(level)	(3 * (level - 1))
+#define CLIDR_CTYPE_MASK(level)		(7 << CLIDR_CTYPE_SHIFT(level))
+#define CLIDR_CTYPE(clidr, level)	\
+	(((clidr) & CLIDR_CTYPE_MASK(level)) >> CLIDR_CTYPE_SHIFT(level))
+>>>>>>> b7ba80a49124 (Commit)
 
 int cache_line_size(void)
 {
@@ -41,7 +49,11 @@ static void ci_leaf_init(struct cacheinfo *this_leaf,
 int init_cache_level(unsigned int cpu)
 {
 	unsigned int ctype, level, leaves;
+<<<<<<< HEAD
 	int fw_level, ret;
+=======
+	int fw_level;
+>>>>>>> b7ba80a49124 (Commit)
 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
 
 	for (level = 1, leaves = 0; level <= MAX_CACHE_LEVEL; level++) {
@@ -54,6 +66,7 @@ int init_cache_level(unsigned int cpu)
 		leaves += (ctype == CACHE_TYPE_SEPARATE) ? 2 : 1;
 	}
 
+<<<<<<< HEAD
 	if (acpi_disabled) {
 		fw_level = of_find_last_cache_level(cpu);
 	} else {
@@ -61,6 +74,15 @@ int init_cache_level(unsigned int cpu)
 		if (ret < 0)
 			fw_level = 0;
 	}
+=======
+	if (acpi_disabled)
+		fw_level = of_find_last_cache_level(cpu);
+	else
+		fw_level = acpi_find_last_cache_level(cpu);
+
+	if (fw_level < 0)
+		return fw_level;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (level < fw_level) {
 		/*

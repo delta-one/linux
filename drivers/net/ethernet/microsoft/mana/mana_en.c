@@ -141,7 +141,11 @@ frag_err:
 	return -ENOMEM;
 }
 
+<<<<<<< HEAD
 netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+=======
+int mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	enum mana_tx_pkt_format pkt_fmt = MANA_SHORT_PKT_FMT;
 	struct mana_port_context *apc = netdev_priv(ndev);
@@ -156,7 +160,10 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
 	struct mana_txq *txq;
 	struct mana_cq *cq;
 	int err, len;
+<<<<<<< HEAD
 	u16 ihs;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unlikely(!apc->port_is_up))
 		goto tx_drop;
@@ -167,7 +174,10 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
 	txq = &apc->tx_qp[txq_idx].txq;
 	gdma_sq = txq->gdma_sq;
 	cq = &apc->tx_qp[txq_idx].tx_cq;
+<<<<<<< HEAD
 	tx_stats = &txq->stats;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	pkg.tx_oob.s_oob.vcq_num = cq->gdma_id;
 	pkg.tx_oob.s_oob.vsq_frame = txq->vsq_frame;
@@ -181,6 +191,7 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
 
 	pkg.tx_oob.s_oob.pkt_fmt = pkt_fmt;
 
+<<<<<<< HEAD
 	if (pkt_fmt == MANA_SHORT_PKT_FMT) {
 		pkg.wqe_req.inline_oob_size = sizeof(struct mana_tx_short_oob);
 		u64_stats_update_begin(&tx_stats->syncp);
@@ -192,6 +203,12 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
 		tx_stats->long_pkt_fmt++;
 		u64_stats_update_end(&tx_stats->syncp);
 	}
+=======
+	if (pkt_fmt == MANA_SHORT_PKT_FMT)
+		pkg.wqe_req.inline_oob_size = sizeof(struct mana_tx_short_oob);
+	else
+		pkg.wqe_req.inline_oob_size = sizeof(struct mana_tx_oob);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pkg.wqe_req.inline_oob_data = &pkg.tx_oob;
 	pkg.wqe_req.flags = 0;
@@ -241,6 +258,7 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
 						 &ipv6_hdr(skb)->daddr, 0,
 						 IPPROTO_TCP, 0);
 		}
+<<<<<<< HEAD
 
 		if (skb->encapsulation) {
 			ihs = skb_inner_tcp_all_headers(skb);
@@ -270,6 +288,11 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
 		tx_stats->csum_partial++;
 		u64_stats_update_end(&tx_stats->syncp);
 
+=======
+	} else if (skb->ip_summed == CHECKSUM_PARTIAL) {
+		csum_type = mana_checksum_info(skb);
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (csum_type == IPPROTO_TCP) {
 			pkg.tx_oob.s_oob.is_outer_ipv4 = ipv4;
 			pkg.tx_oob.s_oob.is_outer_ipv6 = ipv6;
@@ -289,12 +312,17 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
 		}
 	}
 
+<<<<<<< HEAD
 	if (mana_map_skb(skb, apc, &pkg)) {
 		u64_stats_update_begin(&tx_stats->syncp);
 		tx_stats->mana_map_err++;
 		u64_stats_update_end(&tx_stats->syncp);
 		goto free_sgl_ptr;
 	}
+=======
+	if (mana_map_skb(skb, apc, &pkg))
+		goto free_sgl_ptr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	skb_queue_tail(&txq->pending_skbs, skb);
 
@@ -367,10 +395,17 @@ static void mana_get_stats64(struct net_device *ndev,
 		rx_stats = &apc->rxqs[q]->stats;
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&rx_stats->syncp);
 			packets = rx_stats->packets;
 			bytes = rx_stats->bytes;
 		} while (u64_stats_fetch_retry(&rx_stats->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&rx_stats->syncp);
+			packets = rx_stats->packets;
+			bytes = rx_stats->bytes;
+		} while (u64_stats_fetch_retry_irq(&rx_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		st->rx_packets += packets;
 		st->rx_bytes += bytes;
@@ -380,10 +415,17 @@ static void mana_get_stats64(struct net_device *ndev,
 		tx_stats = &apc->tx_qp[q].txq.stats;
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&tx_stats->syncp);
 			packets = tx_stats->packets;
 			bytes = tx_stats->bytes;
 		} while (u64_stats_fetch_retry(&tx_stats->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&tx_stats->syncp);
+			packets = tx_stats->packets;
+			bytes = tx_stats->bytes;
+		} while (u64_stats_fetch_retry_irq(&tx_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		st->tx_packets += packets;
 		st->tx_bytes += bytes;
@@ -1077,8 +1119,11 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
 	if (comp_read < 1)
 		return;
 
+<<<<<<< HEAD
 	apc->eth_stats.tx_cqes = comp_read;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < comp_read; i++) {
 		struct mana_tx_comp_oob *cqe_oob;
 
@@ -1105,7 +1150,10 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
 		case CQE_TX_VLAN_TAGGING_VIOLATION:
 			WARN_ONCE(1, "TX: CQE error %d: ignored.\n",
 				  cqe_oob->cqe_hdr.cqe_type);
+<<<<<<< HEAD
 			apc->eth_stats.tx_cqe_err++;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		default:
@@ -1114,7 +1162,10 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
 			 */
 			WARN_ONCE(1, "TX: Unexpected CQE type %d: HW BUG?\n",
 				  cqe_oob->cqe_hdr.cqe_type);
+<<<<<<< HEAD
 			apc->eth_stats.tx_cqe_unknown_type++;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			return;
 		}
 
@@ -1161,8 +1212,11 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
 		WARN_ON_ONCE(1);
 
 	cq->work_done = pkt_transmitted;
+<<<<<<< HEAD
 
 	apc->eth_stats.tx_cqes -= pkt_transmitted;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mana_post_pkt_rxq(struct mana_rxq *rxq)
@@ -1297,15 +1351,21 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
 	struct gdma_context *gc = rxq->gdma_rq->gdma_dev->gdma_context;
 	struct net_device *ndev = rxq->ndev;
 	struct mana_recv_buf_oob *rxbuf_oob;
+<<<<<<< HEAD
 	struct mana_port_context *apc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = gc->dev;
 	void *new_buf, *old_buf;
 	struct page *new_page;
 	u32 curr, pktlen;
 	dma_addr_t da;
 
+<<<<<<< HEAD
 	apc = netdev_priv(ndev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	switch (oob->cqe_hdr.cqe_type) {
 	case CQE_RX_OKAY:
 		break;
@@ -1318,7 +1378,10 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
 
 	case CQE_RX_COALESCED_4:
 		netdev_err(ndev, "RX coalescing is unsupported\n");
+<<<<<<< HEAD
 		apc->eth_stats.rx_coalesced_err++;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	case CQE_RX_OBJECT_FENCE:
@@ -1328,7 +1391,10 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
 	default:
 		netdev_err(ndev, "Unknown RX CQE type = %d\n",
 			   oob->cqe_hdr.cqe_type);
+<<<<<<< HEAD
 		apc->eth_stats.rx_cqe_unknown_type++;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -1391,6 +1457,7 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
 {
 	struct gdma_comp *comp = cq->gdma_comp_buf;
 	struct mana_rxq *rxq = cq->rxq;
+<<<<<<< HEAD
 	struct mana_port_context *apc;
 	int comp_read, i;
 
@@ -1400,6 +1467,13 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
 	WARN_ON_ONCE(comp_read > CQE_POLLING_BUFFER);
 
 	apc->eth_stats.rx_cqes = comp_read;
+=======
+	int comp_read, i;
+
+	comp_read = mana_gd_poll_cq(cq->gdma_cq, comp, CQE_POLLING_BUFFER);
+	WARN_ON_ONCE(comp_read > CQE_POLLING_BUFFER);
+
+>>>>>>> b7ba80a49124 (Commit)
 	rxq->xdp_flush = false;
 
 	for (i = 0; i < comp_read; i++) {
@@ -1411,19 +1485,29 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
 			return;
 
 		mana_process_rx_cqe(rxq, cq, &comp[i]);
+<<<<<<< HEAD
 
 		apc->eth_stats.rx_cqes--;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (rxq->xdp_flush)
 		xdp_do_flush();
 }
 
+<<<<<<< HEAD
 static int mana_cq_handler(void *context, struct gdma_queue *gdma_queue)
 {
 	struct mana_cq *cq = context;
 	u8 arm_bit;
 	int w;
+=======
+static void mana_cq_handler(void *context, struct gdma_queue *gdma_queue)
+{
+	struct mana_cq *cq = context;
+	u8 arm_bit;
+>>>>>>> b7ba80a49124 (Commit)
 
 	WARN_ON_ONCE(cq->gdma_cq != gdma_queue);
 
@@ -1432,31 +1516,48 @@ static int mana_cq_handler(void *context, struct gdma_queue *gdma_queue)
 	else
 		mana_poll_tx_cq(cq);
 
+<<<<<<< HEAD
 	w = cq->work_done;
 
 	if (w < cq->budget &&
 	    napi_complete_done(&cq->napi, w)) {
+=======
+	if (cq->work_done < cq->budget &&
+	    napi_complete_done(&cq->napi, cq->work_done)) {
+>>>>>>> b7ba80a49124 (Commit)
 		arm_bit = SET_ARM_BIT;
 	} else {
 		arm_bit = 0;
 	}
 
 	mana_gd_ring_cq(gdma_queue, arm_bit);
+<<<<<<< HEAD
 
 	return w;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mana_poll(struct napi_struct *napi, int budget)
 {
 	struct mana_cq *cq = container_of(napi, struct mana_cq, napi);
+<<<<<<< HEAD
 	int w;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	cq->work_done = 0;
 	cq->budget = budget;
 
+<<<<<<< HEAD
 	w = mana_cq_handler(cq, cq->gdma_cq);
 
 	return min(w, budget);
+=======
+	mana_cq_handler(cq, cq->gdma_cq);
+
+	return min(cq->work_done, budget);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mana_schedule_napi(void *context, struct gdma_queue *gdma_queue)
@@ -2216,8 +2317,11 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
 	ndev->hw_features |= NETIF_F_RXHASH;
 	ndev->features = ndev->hw_features;
 	ndev->vlan_features = 0;
+<<<<<<< HEAD
 	ndev->xdp_features = NETDEV_XDP_ACT_BASIC | NETDEV_XDP_ACT_REDIRECT |
 			     NETDEV_XDP_ACT_NDO_XMIT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = register_netdev(ndev);
 	if (err) {
@@ -2267,10 +2371,18 @@ static int add_adev(struct gdma_dev *gd)
 		return -ENOMEM;
 
 	adev = &madev->adev;
+<<<<<<< HEAD
 	ret = mana_adev_idx_alloc();
 	if (ret < 0)
 		goto idx_fail;
 	adev->id = ret;
+=======
+	adev->id = mana_adev_idx_alloc();
+	if (adev->id < 0) {
+		ret = adev->id;
+		goto idx_fail;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	adev->name = "rdma";
 	adev->dev.parent = gd->gdma_context->dev;

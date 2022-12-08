@@ -27,7 +27,10 @@
 #define __DAL_HUBP_H__
 
 #include "mem_input.h"
+<<<<<<< HEAD
 #include "cursor_reg_cache.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define OPP_ID_INVALID 0xf
 #define MAX_TTU 0xffffff
@@ -66,10 +69,13 @@ struct hubp {
 	struct dc_cursor_attributes curs_attr;
 	struct dc_cursor_position curs_pos;
 	bool power_gated;
+<<<<<<< HEAD
 
 	struct cursor_position_cache_hubp  pos;
 	struct cursor_attribute_cache_hubp att;
 	struct cursor_rect cur_rect;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct surface_flip_registers {
@@ -146,7 +152,11 @@ struct hubp_funcs {
 
 	void (*set_blank)(struct hubp *hubp, bool blank);
 	void (*set_blank_regs)(struct hubp *hubp, bool blank);
+<<<<<<< HEAD
 #ifdef CONFIG_DRM_AMD_DC_FP
+=======
+#ifdef CONFIG_DRM_AMD_DC_DCN
+>>>>>>> b7ba80a49124 (Commit)
 	void (*phantom_hubp_post_enable)(struct hubp *hubp);
 #endif
 	void (*set_hubp_blank_en)(struct hubp *hubp, bool blank);

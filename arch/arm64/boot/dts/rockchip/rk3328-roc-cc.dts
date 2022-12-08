@@ -96,6 +96,10 @@
 			linux,default-trigger = "heartbeat";
 			gpios = <&rk805 1 GPIO_ACTIVE_LOW>;
 			default-state = "on";
+<<<<<<< HEAD
+=======
+			mode = <0x23>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		user_led: led-1 {
@@ -103,6 +107,10 @@
 			linux,default-trigger = "mmc1";
 			gpios = <&rk805 0 GPIO_ACTIVE_LOW>;
 			default-state = "off";
+<<<<<<< HEAD
+=======
+			mode = <0x05>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };

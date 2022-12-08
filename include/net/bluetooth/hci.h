@@ -228,6 +228,7 @@ enum {
 	 */
 	HCI_QUIRK_VALID_LE_STATES,
 
+<<<<<<< HEAD
 	/* When this quirk is set, then erroneous data reporting
 	 * is ignored. This is mainly due to the fact that the HCI
 	 * Read Default Erroneous Data Reporting command is advertised,
@@ -239,6 +240,8 @@ enum {
 	 */
 	HCI_QUIRK_BROKEN_ERR_DATA_REPORTING,
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * When this quirk is set, then the hci_suspend_notifier is not
 	 * registered. This is intended for devices which drop completely
@@ -274,6 +277,7 @@ enum {
 	 * during the hdev->setup vendor callback.
 	 */
 	HCI_QUIRK_BROKEN_ENHANCED_SETUP_SYNC_CONN,
+<<<<<<< HEAD
 
 	/*
 	 * When this quirk is set, the HCI_OP_LE_SET_EXT_SCAN_ENABLE command is
@@ -301,6 +305,8 @@ enum {
 	 * don't actually support features declared there.
 	 */
 	HCI_QUIRK_BROKEN_LOCAL_EXT_FEATURES_PAGE_2,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* HCI device flags */
@@ -1462,6 +1468,10 @@ struct hci_std_codecs_v2 {
 } __packed;
 
 struct hci_vnd_codec_v2 {
+<<<<<<< HEAD
+=======
+	__u8	id;
+>>>>>>> b7ba80a49124 (Commit)
 	__le16	cid;
 	__le16	vid;
 	__u8	transport;
@@ -2163,7 +2173,11 @@ struct hci_cp_le_big_create_sync {
 	__u8    mse;
 	__le16  timeout;
 	__u8    num_bis;
+<<<<<<< HEAD
 	__u8    bis[];
+=======
+	__u8    bis[0];
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 #define HCI_OP_LE_BIG_TERM_SYNC			0x206c
@@ -2181,7 +2195,11 @@ struct hci_cp_le_setup_iso_path {
 	__le16  codec_vid;
 	__u8    delay[3];
 	__u8    codec_cfg_len;
+<<<<<<< HEAD
 	__u8    codec_cfg[];
+=======
+	__u8    codec_cfg[0];
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 struct hci_rp_le_setup_iso_path {
@@ -2617,7 +2635,10 @@ struct hci_ev_le_conn_complete {
 #define LE_EXT_ADV_DIRECT_IND		0x0004
 #define LE_EXT_ADV_SCAN_RSP		0x0008
 #define LE_EXT_ADV_LEGACY_PDU		0x0010
+<<<<<<< HEAD
 #define LE_EXT_ADV_EVT_TYPE_MASK	0x007f
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define ADDR_LE_DEV_PUBLIC		0x00
 #define ADDR_LE_DEV_RANDOM		0x01

@@ -7,11 +7,14 @@
 /dts-v1/;
 
 #include <dt-bindings/gpio/gpio.h>
+<<<<<<< HEAD
 #include <dt-bindings/iio/qcom,spmi-adc7-pm8350.h>
 #include <dt-bindings/iio/qcom,spmi-adc7-pmk8350.h>
 #include <dt-bindings/iio/qcom,spmi-adc7-pmr735a.h>
 #include <dt-bindings/input/gpio-keys.h>
 #include <dt-bindings/input/input.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
 
 #include "sc8280xp.dtsi"
@@ -21,6 +24,7 @@
 	model = "Lenovo ThinkPad X13s";
 	compatible = "lenovo,thinkpad-x13s", "qcom,sc8280xp";
 
+<<<<<<< HEAD
 	aliases {
 		i2c4 = &i2c4;
 		i2c21 = &i2c21;
@@ -53,6 +57,9 @@
 	};
 
 	backlight: backlight {
+=======
+	backlight {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "pwm-backlight";
 		pwms = <&pmc8280c_lpg 3 1000000>;
 		enable-gpios = <&pmc8280_1_gpios 8 GPIO_ACTIVE_HIGH>;
@@ -62,6 +69,7 @@
 		pinctrl-0 = <&edp_bl_en>, <&edp_bl_pwm>;
 	};
 
+<<<<<<< HEAD
 	gpio-keys {
 		compatible = "gpio-keys";
 
@@ -171,6 +179,8 @@
 		regulator-boot-on;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vreg_edp_bl: regulator-edp-bl {
 		compatible = "regulator-fixed";
 
@@ -203,6 +213,7 @@
 		regulator-boot-on;
 		regulator-always-on;
 	};
+<<<<<<< HEAD
 
 	vreg_nvme: regulator-nvme {
 		compatible = "regulator-fixed";
@@ -376,12 +387,23 @@
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 			regulator-always-on;
 		};
+=======
+};
+
+&apps_rsc {
+	pmc8280-1-rpmh-regulators {
+		compatible = "qcom,pm8350-rpmh-regulators";
+		qcom,pmic-id = "b";
+
+		vdd-l3-l5-supply = <&vreg_s11b>;
+>>>>>>> b7ba80a49124 (Commit)
 
 		vreg_s11b: smps11 {
 			regulator-name = "vreg_s11b";
 			regulator-min-microvolt = <1272000>;
 			regulator-max-microvolt = <1272000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+<<<<<<< HEAD
 			regulator-always-on;
 		};
 
@@ -391,6 +413,8 @@
 			regulator-max-microvolt = <984000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 			regulator-always-on;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		vreg_l3b: ldo3 {
@@ -414,6 +438,7 @@
 			regulator-max-microvolt = <880000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 			regulator-boot-on;
+<<<<<<< HEAD
 		};
 	};
 
@@ -436,6 +461,16 @@
 			regulator-always-on;
 		};
 
+=======
+			regulator-always-on;	// FIXME: VDD_A_EDP_0_0P9
+		};
+	};
+
+	pmc8280c-rpmh-regulators {
+		compatible = "qcom,pm8350c-rpmh-regulators";
+		qcom,pmic-id = "c";
+
+>>>>>>> b7ba80a49124 (Commit)
 		vreg_l1c: ldo1 {
 			regulator-name = "vreg_l1c";
 			regulator-min-microvolt = <1800000>;
@@ -456,6 +491,7 @@
 			regulator-max-microvolt = <3072000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
+<<<<<<< HEAD
 
 		vreg_bob: bob {
 			regulator-name = "vreg_bob";
@@ -467,14 +503,22 @@
 	};
 
 	regulators-2 {
+=======
+	};
+
+	pmc8280-2-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8350-rpmh-regulators";
 		qcom,pmic-id = "d";
 
 		vdd-l1-l4-supply = <&vreg_s11b>;
+<<<<<<< HEAD
 		vdd-l2-l7-supply = <&vreg_bob>;
 		vdd-l3-l5-supply = <&vreg_s11b>;
 		vdd-l6-l9-l10-supply = <&vreg_s12b>;
 		vdd-l8-supply = <&vreg_s12b>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		vreg_l3d: ldo3 {
 			regulator-name = "vreg_l3d";
@@ -490,6 +534,7 @@
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
+<<<<<<< HEAD
 		vreg_l6d: ldo6 {
 			regulator-name = "vreg_l6d";
 			regulator-min-microvolt = <880000>;
@@ -497,6 +542,8 @@
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		vreg_l7d: ldo7 {
 			regulator-name = "vreg_l7d";
 			regulator-min-microvolt = <3072000>;
@@ -513,6 +560,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &dispcc0 {
 	status = "okay";
 };
@@ -585,6 +633,25 @@
 
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c4_default>;
+=======
+&pmc8280c_lpg {
+	status = "okay";
+};
+
+&pmk8280_pon_pwrkey {
+	status = "okay";
+};
+
+&qup0 {
+	status = "okay";
+};
+
+&qup0_i2c4 {
+	clock-frequency = <400000>;
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&qup0_i2c4_default>;
+>>>>>>> b7ba80a49124 (Commit)
 
 	status = "okay";
 
@@ -596,18 +663,37 @@
 		hid-descr-addr = <0x1>;
 		interrupts-extended = <&tlmm 175 IRQ_TYPE_LEVEL_LOW>;
 		vdd-supply = <&vreg_misc_3p3>;
+<<<<<<< HEAD
 		vddl-supply = <&vreg_s10b>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		pinctrl-names = "default";
 		pinctrl-0 = <&ts0_default>;
 	};
 };
 
+<<<<<<< HEAD
 &i2c21 {
 	clock-frequency = <400000>;
 
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c21_default>;
+=======
+&qup1 {
+	status = "okay";
+};
+
+&qup2 {
+	status = "okay";
+};
+
+&qup2_i2c5 {
+	clock-frequency = <400000>;
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&qup2_i2c5_default>;
+>>>>>>> b7ba80a49124 (Commit)
 
 	status = "okay";
 
@@ -618,7 +704,10 @@
 		hid-descr-addr = <0x1>;
 		interrupts-extended = <&tlmm 182 IRQ_TYPE_LEVEL_LOW>;
 		vdd-supply = <&vreg_misc_3p3>;
+<<<<<<< HEAD
 		vddl-supply = <&vreg_s10b>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		pinctrl-names = "default";
 		pinctrl-0 = <&tpad_default>;
@@ -635,7 +724,10 @@
 		hid-descr-addr = <0x20>;
 		interrupts-extended = <&tlmm 182 IRQ_TYPE_LEVEL_LOW>;
 		vdd-supply = <&vreg_misc_3p3>;
+<<<<<<< HEAD
 		vddl-supply = <&vreg_s10b>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		pinctrl-names = "default";
 		pinctrl-0 = <&tpad_default>;
@@ -650,7 +742,10 @@
 		hid-descr-addr = <0x1>;
 		interrupts-extended = <&tlmm 104 IRQ_TYPE_LEVEL_LOW>;
 		vdd-supply = <&vreg_misc_3p3>;
+<<<<<<< HEAD
 		vddl-supply = <&vreg_s10b>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		pinctrl-names = "default";
 		pinctrl-0 = <&kybd_default>;
@@ -659,6 +754,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &pcie2a {
 	perst-gpios = <&tlmm 143 GPIO_ACTIVE_LOW>;
 	wake-gpios = <&tlmm 145 GPIO_ACTIVE_LOW>;
@@ -914,6 +1010,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &remoteproc_adsp {
 	firmware-name = "qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn";
 
@@ -926,6 +1024,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &rxmacro {
 	status = "okay";
 };
@@ -1060,11 +1159,17 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &usb_0 {
 	status = "okay";
 };
 
 &usb_0_dwc3 {
+<<<<<<< HEAD
+=======
+	/* TODO: Define USB-C connector properly */
+>>>>>>> b7ba80a49124 (Commit)
 	dr_mode = "host";
 };
 
@@ -1083,15 +1188,22 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &usb_0_role_switch {
 	remote-endpoint = <&pmic_glink_con0_hs>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &usb_1 {
 	status = "okay";
 };
 
 &usb_1_dwc3 {
+<<<<<<< HEAD
+=======
+	/* TODO: Define USB-C connector properly */
+>>>>>>> b7ba80a49124 (Commit)
 	dr_mode = "host";
 };
 
@@ -1110,6 +1222,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &usb_1_role_switch {
 	remote-endpoint = <&pmic_glink_con1_hs>;
 };
@@ -1129,16 +1242,21 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &xo_board_clk {
 	clock-frequency = <38400000>;
 };
 
 /* PINCTRL */
 
+<<<<<<< HEAD
 &lpass_tlmm {
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &pmc8280_1_gpios {
 	edp_bl_en: edp-bl-en-state {
 		pins = "gpio8";
@@ -1156,6 +1274,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &pmc8280_2_gpios {
 	wwan_sw_en: wwan-sw-en-state {
 		pins = "gpio1";
@@ -1163,6 +1282,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &pmc8280c_gpios {
 	edp_bl_pwm: edp-bl-pwm-state {
 		pins = "gpio8";
@@ -1170,6 +1291,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &pmr735a_gpios {
 	hastings_reg_en: hastings-reg-en-state {
 		pins = "gpio1";
@@ -1210,24 +1332,40 @@
 
 	kybd_default: kybd-default-state {
 		disable-pins {
+=======
+&tlmm {
+	gpio-reserved-ranges = <70 2>, <74 6>, <83 4>, <125 2>, <128 2>, <154 7>;
+
+	kybd_default: kybd-default-state {
+		disable {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio102";
 			function = "gpio";
 			output-low;
 		};
 
+<<<<<<< HEAD
 		int-n-pins {
+=======
+		int-n {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio104";
 			function = "gpio";
 			bias-disable;
 		};
 
+<<<<<<< HEAD
 		reset-pins {
+=======
+		reset {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio105";
 			function = "gpio";
 			bias-disable;
 		};
 	};
 
+<<<<<<< HEAD
 	nvme_reg_en: nvme-reg-en-state {
 		pins = "gpio135";
 		function = "gpio";
@@ -1326,6 +1464,24 @@
 
 	tpad_default: tpad-default-state {
 		int-n-pins {
+=======
+	qup0_i2c4_default: qup0-i2c4-default-state {
+		pins = "gpio171", "gpio172";
+		function = "qup4";
+		bias-disable;
+		drive-strength = <16>;
+	};
+
+	qup2_i2c5_default: qup2-i2c5-default-state {
+		pins = "gpio81", "gpio82";
+		function = "qup21";
+		bias-disable;
+		drive-strength = <16>;
+	};
+
+	tpad_default: tpad-default-state {
+		int-n {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio182";
 			function = "gpio";
 			bias-disable;
@@ -1333,19 +1489,28 @@
 	};
 
 	ts0_default: ts0-default-state {
+<<<<<<< HEAD
 		int-n-pins {
+=======
+		int-n {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio175";
 			function = "gpio";
 			bias-disable;
 		};
 
+<<<<<<< HEAD
 		reset-n-pins {
+=======
+		reset-n {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio99";
 			function = "gpio";
 			output-high;
 			drive-strength = <16>;
 		};
 	};
+<<<<<<< HEAD
 
 	usb0_sbu_default: usb0-sbu-state {
 		oe-n-pins {
@@ -1388,4 +1553,6 @@
 			bias-disable;
 		};
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

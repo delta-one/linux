@@ -163,7 +163,10 @@ struct vhost_vdpa_iova_range {
 #define VHOST_BACKEND_F_IOTLB_ASID  0x3
 /* Device can be suspended */
 #define VHOST_BACKEND_F_SUSPEND  0x4
+<<<<<<< HEAD
 /* Device can be resumed */
 #define VHOST_BACKEND_F_RESUME  0x5
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

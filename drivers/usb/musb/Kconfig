@@ -70,6 +70,15 @@ config USB_MUSB_SUNXI
 	select GENERIC_PHY
 	select SUNXI_SRAM
 
+<<<<<<< HEAD
+=======
+config USB_MUSB_DAVINCI
+	tristate "DaVinci"
+	depends on ARCH_DAVINCI_DMx
+	depends on NOP_USB_XCEIV
+	depends on BROKEN
+
+>>>>>>> b7ba80a49124 (Commit)
 config USB_MUSB_DA8XX
 	tristate "DA8xx/OMAP-L1x"
 	depends on ARCH_DAVINCI_DA8XX
@@ -88,6 +97,14 @@ config USB_MUSB_OMAP2PLUS
 	depends on OMAP_CONTROL_PHY || !OMAP_CONTROL_PHY
 	select GENERIC_PHY
 
+<<<<<<< HEAD
+=======
+config USB_MUSB_AM35X
+	tristate "AM35x"
+	depends on ARCH_OMAP
+	depends on NOP_USB_XCEIV
+
+>>>>>>> b7ba80a49124 (Commit)
 config USB_MUSB_DSPS
 	tristate "TI DSPS platforms"
 	depends on ARCH_OMAP2PLUS || COMPILE_TEST
@@ -102,6 +119,10 @@ config USB_MUSB_JZ4740
 	depends on OF
 	depends on MIPS || COMPILE_TEST
 	depends on USB_MUSB_GADGET
+<<<<<<< HEAD
+=======
+	depends on USB=n || USB_OTG_DISABLE_EXTERNAL_HUB
+>>>>>>> b7ba80a49124 (Commit)
 	select USB_ROLE_SWITCH
 
 config USB_MUSB_MEDIATEK
@@ -113,7 +134,11 @@ config USB_MUSB_MEDIATEK
 
 config USB_MUSB_POLARFIRE_SOC
 	tristate "Microchip PolarFire SoC platforms"
+<<<<<<< HEAD
 	depends on ARCH_MICROCHIP_POLARFIRE || COMPILE_TEST
+=======
+	depends on SOC_MICROCHIP_POLARFIRE || COMPILE_TEST
+>>>>>>> b7ba80a49124 (Commit)
 	depends on NOP_USB_XCEIV
 	select USB_MUSB_DUAL_ROLE
 	help
@@ -149,6 +174,15 @@ config USB_INVENTRA_DMA
 	help
 	  Enable DMA transfers using Mentor's engine.
 
+<<<<<<< HEAD
+=======
+config USB_TI_CPPI_DMA
+	bool 'TI CPPI (Davinci)'
+	depends on USB_MUSB_DAVINCI
+	help
+	  Enable DMA transfers when TI CPPI DMA is available.
+
+>>>>>>> b7ba80a49124 (Commit)
 config USB_TI_CPPI41_DMA
 	bool 'TI CPPI 4.1'
 	depends on (ARCH_OMAP || ARCH_DAVINCI_DA8XX) && DMADEVICES

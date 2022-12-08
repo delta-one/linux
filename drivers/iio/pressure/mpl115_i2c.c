@@ -35,9 +35,15 @@ static const struct mpl115_ops mpl115_i2c_ops = {
 	.write = mpl115_i2c_write,
 };
 
+<<<<<<< HEAD
 static int mpl115_i2c_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int mpl115_i2c_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_WORD_DATA))
 		return -EOPNOTSUPP;
 
@@ -53,9 +59,14 @@ MODULE_DEVICE_TABLE(i2c, mpl115_i2c_id);
 static struct i2c_driver mpl115_i2c_driver = {
 	.driver = {
 		.name	= "mpl115",
+<<<<<<< HEAD
 		.pm = pm_ptr(&mpl115_dev_pm_ops),
 	},
 	.probe_new = mpl115_i2c_probe,
+=======
+	},
+	.probe = mpl115_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = mpl115_i2c_id,
 };
 module_i2c_driver(mpl115_i2c_driver);

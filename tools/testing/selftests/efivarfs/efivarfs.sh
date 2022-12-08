@@ -87,11 +87,14 @@ test_create_read()
 {
 	local file=$efivarfs_mount/$FUNCNAME-$test_guid
 	./create-read $file
+<<<<<<< HEAD
 	if [ $? -ne 0 ]; then
 		echo "create and read $file failed"
 		file_cleanup $file
 		exit 1
 	fi
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	file_cleanup $file
 }
 

@@ -1018,8 +1018,11 @@ static int t7xx_cldma_late_init(struct cldma_ctrl *md_ctrl)
 			dev_err(md_ctrl->dev, "control TX ring init fail\n");
 			goto err_free_tx_ring;
 		}
+<<<<<<< HEAD
 
 		md_ctrl->tx_ring[i].pkt_size = CLDMA_MTU;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (j = 0; j < CLDMA_RXQ_NUM; j++) {

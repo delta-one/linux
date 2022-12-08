@@ -586,6 +586,23 @@ struct atomisp_shading_table {
 	__u16 *data[ATOMISP_NUM_SC_COLORS];
 };
 
+<<<<<<< HEAD
+=======
+struct atomisp_makernote_info {
+	/* bits 31-16: numerator, bits 15-0: denominator */
+	unsigned int focal_length;
+	/* bits 31-16: numerator, bits 15-0: denominator*/
+	unsigned int f_number_curr;
+	/*
+	* bits 31-24: max f-number numerator
+	* bits 23-16: max f-number denominator
+	* bits 15-8: min f-number numerator
+	* bits 7-0: min f-number denominator
+	*/
+	unsigned int f_number_range;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* parameter for MACC */
 #define ATOMISP_NUM_MACC_AXES           16
 struct atomisp_macc_table {
@@ -636,6 +653,31 @@ struct atomisp_overlay {
 	unsigned int overlay_start_y;
 };
 
+<<<<<<< HEAD
+=======
+/* Sensor resolution specific data for AE calculation.*/
+struct atomisp_sensor_mode_data {
+	unsigned int coarse_integration_time_min;
+	unsigned int coarse_integration_time_max_margin;
+	unsigned int fine_integration_time_min;
+	unsigned int fine_integration_time_max_margin;
+	unsigned int fine_integration_time_def;
+	unsigned int frame_length_lines;
+	unsigned int line_length_pck;
+	unsigned int read_mode;
+	unsigned int vt_pix_clk_freq_mhz;
+	unsigned int crop_horizontal_start; /* Sensor crop start cord. (x0,y0)*/
+	unsigned int crop_vertical_start;
+	unsigned int crop_horizontal_end; /* Sensor crop end cord. (x1,y1)*/
+	unsigned int crop_vertical_end;
+	unsigned int output_width; /* input size to ISP after binning/scaling */
+	unsigned int output_height;
+	u8 binning_factor_x; /* horizontal binning factor used */
+	u8 binning_factor_y; /* vertical binning factor used */
+	u16 hts;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct atomisp_exposure {
 	unsigned int integration_time[8];
 	unsigned int shutter_speed[8];
@@ -704,6 +746,23 @@ enum atomisp_frame_status {
 	ATOMISP_FRAME_STATUS_FLASH_FAILED,
 };
 
+<<<<<<< HEAD
+=======
+/* ISP memories, isp2400 */
+enum atomisp_acc_memory {
+	ATOMISP_ACC_MEMORY_PMEM0 = 0,
+	ATOMISP_ACC_MEMORY_DMEM0,
+	/* for backward compatibility */
+	ATOMISP_ACC_MEMORY_DMEM = ATOMISP_ACC_MEMORY_DMEM0,
+	ATOMISP_ACC_MEMORY_VMEM0,
+	ATOMISP_ACC_MEMORY_VAMEM0,
+	ATOMISP_ACC_MEMORY_VAMEM1,
+	ATOMISP_ACC_MEMORY_VAMEM2,
+	ATOMISP_ACC_MEMORY_HMEM0,
+	ATOMISP_ACC_NR_MEMORY
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 enum atomisp_ext_isp_id {
 	EXT_ISP_CID_ISO = 0,
 	EXT_ISP_CID_CAPTURE_HDR,
@@ -878,6 +937,11 @@ struct atomisp_sensor_ae_bracketing_lut {
 	_IOR('v', BASE_VIDIOC_PRIVATE + 10, struct atomisp_morph_table)
 #define ATOMISP_IOC_S_ISP_GDC_TAB \
 	_IOW('v', BASE_VIDIOC_PRIVATE + 10, struct atomisp_morph_table)
+<<<<<<< HEAD
+=======
+#define ATOMISP_IOC_ISP_MAKERNOTE \
+	_IOWR('v', BASE_VIDIOC_PRIVATE + 11, struct atomisp_makernote_info)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* macc parameter control*/
 #define ATOMISP_IOC_G_ISP_MACC \
@@ -923,6 +987,13 @@ struct atomisp_sensor_ae_bracketing_lut {
 #define ATOMISP_IOC_CAMERA_BRIDGE \
 	_IOWR('v', BASE_VIDIOC_PRIVATE + 19, struct atomisp_bc_video_package)
 
+<<<<<<< HEAD
+=======
+/* Sensor resolution specific info for AE */
+#define ATOMISP_IOC_G_SENSOR_MODE_DATA \
+	_IOR('v', BASE_VIDIOC_PRIVATE + 20, struct atomisp_sensor_mode_data)
+
+>>>>>>> b7ba80a49124 (Commit)
 #define ATOMISP_IOC_S_EXPOSURE \
 	_IOW('v', BASE_VIDIOC_PRIVATE + 21, struct atomisp_exposure)
 
@@ -1051,6 +1122,13 @@ struct atomisp_sensor_ae_bracketing_lut {
  * Exposure, Flash and privacy (indicator) light controls, to be upstreamed */
 #define V4L2_CID_CAMERA_LASTP1             (V4L2_CID_CAMERA_CLASS_BASE + 1024)
 
+<<<<<<< HEAD
+=======
+#define V4L2_CID_FOCAL_ABSOLUTE            (V4L2_CID_CAMERA_LASTP1 + 0)
+#define V4L2_CID_FNUMBER_ABSOLUTE          (V4L2_CID_CAMERA_LASTP1 + 1)
+#define V4L2_CID_FNUMBER_RANGE             (V4L2_CID_CAMERA_LASTP1 + 2)
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Flash related CIDs, see also:
  * http://linuxtv.org/downloads/v4l-dvb-apis/extended-controls.html\
  * #flash-controls */
@@ -1071,6 +1149,13 @@ struct atomisp_sensor_ae_bracketing_lut {
 /* Query Focus Status */
 #define V4L2_CID_FOCUS_STATUS              (V4L2_CID_CAMERA_LASTP1 + 14)
 
+<<<<<<< HEAD
+=======
+/* Query sensor's binning factor */
+#define V4L2_CID_BIN_FACTOR_HORZ	   (V4L2_CID_CAMERA_LASTP1 + 15)
+#define V4L2_CID_BIN_FACTOR_VERT	   (V4L2_CID_CAMERA_LASTP1 + 16)
+
+>>>>>>> b7ba80a49124 (Commit)
 /* number of frames to skip at stream start */
 #define V4L2_CID_G_SKIP_FRAMES		   (V4L2_CID_CAMERA_LASTP1 + 17)
 

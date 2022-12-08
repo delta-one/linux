@@ -72,11 +72,19 @@ static int vfio_platform_acpi_call_reset(struct vfio_platform_device *vdev,
 				  const char **extra_dbg)
 {
 #ifdef CONFIG_ACPI
+<<<<<<< HEAD
+=======
+	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = vdev->device;
 	acpi_handle handle = ACPI_HANDLE(dev);
 	acpi_status acpi_ret;
 
+<<<<<<< HEAD
 	acpi_ret = acpi_evaluate_object(handle, "_RST", NULL, NULL);
+=======
+	acpi_ret = acpi_evaluate_object(handle, "_RST", NULL, &buffer);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ACPI_FAILURE(acpi_ret)) {
 		if (extra_dbg)
 			*extra_dbg = acpi_format_exception(acpi_ret);
@@ -142,7 +150,11 @@ static int vfio_platform_regions_init(struct vfio_platform_device *vdev)
 		cnt++;
 
 	vdev->regions = kcalloc(cnt, sizeof(struct vfio_platform_region),
+<<<<<<< HEAD
 				GFP_KERNEL_ACCOUNT);
+=======
+				GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!vdev->regions)
 		return -ENOMEM;
 
@@ -150,6 +162,12 @@ static int vfio_platform_regions_init(struct vfio_platform_device *vdev)
 		struct resource *res =
 			vdev->get_resource(vdev, i);
 
+<<<<<<< HEAD
+=======
+		if (!res)
+			goto err;
+
+>>>>>>> b7ba80a49124 (Commit)
 		vdev->regions[i].addr = res->start;
 		vdev->regions[i].size = resource_size(res);
 		vdev->regions[i].flags = 0;
@@ -647,6 +665,7 @@ int vfio_platform_init_common(struct vfio_platform_device *vdev)
 	mutex_init(&vdev->igate);
 
 	ret = vfio_platform_get_reset(vdev);
+<<<<<<< HEAD
 	if (ret && vdev->reset_required) {
 		dev_err(dev, "No reset function found for device %s\n",
 			vdev->name);
@@ -654,6 +673,12 @@ int vfio_platform_init_common(struct vfio_platform_device *vdev)
 	}
 
 	return 0;
+=======
+	if (ret && vdev->reset_required)
+		dev_err(dev, "No reset function found for device %s\n",
+			vdev->name);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(vfio_platform_init_common);
 

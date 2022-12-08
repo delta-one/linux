@@ -507,9 +507,15 @@ static void debug_print_object(struct debug_obj *obj, char *msg)
 			descr->debug_hint(obj->object) : NULL;
 		limit++;
 		WARN(1, KERN_ERR "ODEBUG: %s %s (active state %u) "
+<<<<<<< HEAD
 				 "object: %p object type: %s hint: %pS\n",
 			msg, obj_states[obj->state], obj->astate,
 			obj->object, descr->name, hint);
+=======
+				 "object type: %s hint: %pS\n",
+			msg, obj_states[obj->state], obj->astate,
+			descr->name, hint);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	debug_objects_warnings++;
 }

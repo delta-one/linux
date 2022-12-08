@@ -342,10 +342,19 @@ static int xlnx_rtc_probe(struct platform_device *pdev)
 	return devm_rtc_register_device(xrtcdev->rtc);
 }
 
+<<<<<<< HEAD
 static void xlnx_rtc_remove(struct platform_device *pdev)
 {
 	xlnx_rtc_alarm_irq_enable(&pdev->dev, 0);
 	device_init_wakeup(&pdev->dev, 0);
+=======
+static int xlnx_rtc_remove(struct platform_device *pdev)
+{
+	xlnx_rtc_alarm_irq_enable(&pdev->dev, 0);
+	device_init_wakeup(&pdev->dev, 0);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused xlnx_rtc_suspend(struct device *dev)
@@ -382,7 +391,11 @@ MODULE_DEVICE_TABLE(of, xlnx_rtc_of_match);
 
 static struct platform_driver xlnx_rtc_driver = {
 	.probe		= xlnx_rtc_probe,
+<<<<<<< HEAD
 	.remove_new	= xlnx_rtc_remove,
+=======
+	.remove		= xlnx_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= KBUILD_MODNAME,
 		.pm	= &xlnx_rtc_pm_ops,

@@ -8,6 +8,7 @@
 
 #include <linux/types.h>
 
+<<<<<<< HEAD
 struct intel_pxp;
 
 #ifdef CONFIG_DRM_I915_PXP
@@ -22,4 +23,10 @@ static inline void intel_pxp_terminate(struct intel_pxp *pxp, bool post_invalida
 {
 }
 #endif
+=======
+struct work_struct;
+
+void intel_pxp_session_work(struct work_struct *work);
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __INTEL_PXP_SESSION_H__ */

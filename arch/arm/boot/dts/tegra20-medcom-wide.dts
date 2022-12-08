@@ -15,6 +15,13 @@
 		stdout-path = "serial0:115200n8";
 	};
 
+<<<<<<< HEAD
+=======
+	pwm@7000a000 {
+		status = "okay";
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	host1x@50000000 {
 		dc@54200000 {
 			rgb {
@@ -24,10 +31,13 @@
 		};
 	};
 
+<<<<<<< HEAD
 	pwm@7000a000 {
 		status = "okay";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	i2c@7000c000 {
 		wm8903: wm8903@1a {
 			compatible = "wlf,wm8903";

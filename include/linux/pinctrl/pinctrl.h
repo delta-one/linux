@@ -11,6 +11,7 @@
 #ifndef __LINUX_PINCTRL_PINCTRL_H
 #define __LINUX_PINCTRL_PINCTRL_H
 
+<<<<<<< HEAD
 #include <linux/types.h>
 
 struct device;
@@ -25,6 +26,22 @@ struct pinconf_ops;
 struct pinctrl_dev;
 struct pinctrl_map;
 struct pinmux_ops;
+=======
+#include <linux/radix-tree.h>
+#include <linux/list.h>
+#include <linux/seq_file.h>
+#include <linux/pinctrl/pinctrl-state.h>
+#include <linux/pinctrl/devinfo.h>
+
+struct device;
+struct pinctrl_dev;
+struct pinctrl_map;
+struct pinmux_ops;
+struct pinconf_ops;
+struct pin_config_item;
+struct gpio_chip;
+struct device_node;
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct pingroup - provides information on pingroup
@@ -40,7 +57,11 @@ struct pingroup {
 
 /* Convenience macro to define a single named or anonymous pingroup */
 #define PINCTRL_PINGROUP(_name, _pins, _npins)	\
+<<<<<<< HEAD
 (struct pingroup) {				\
+=======
+(struct pingroup){				\
+>>>>>>> b7ba80a49124 (Commit)
 	.name = _name,				\
 	.pins = _pins,				\
 	.npins = _npins,			\
@@ -206,6 +227,7 @@ extern int pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
 				const char *pin_group, const unsigned **pins,
 				unsigned *num_pins);
 
+<<<<<<< HEAD
 /**
  * struct pinfunction - Description about a function
  * @name: Name of the function
@@ -226,6 +248,8 @@ struct pinfunction {
 		.ngroups = (_ngroups),			\
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_PINCTRL)
 extern struct pinctrl_dev *of_pinctrl_get(struct device_node *np);
 #else

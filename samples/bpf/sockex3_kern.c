@@ -17,11 +17,54 @@
 #define IP_MF		0x2000
 #define IP_OFFSET	0x1FFF
 
+<<<<<<< HEAD
+=======
+#define PROG(F) SEC("socket/"__stringify(F)) int bpf_func_##F
+
+struct {
+	__uint(type, BPF_MAP_TYPE_PROG_ARRAY);
+	__uint(key_size, sizeof(u32));
+	__uint(value_size, sizeof(u32));
+	__uint(max_entries, 8);
+} jmp_table SEC(".maps");
+
+>>>>>>> b7ba80a49124 (Commit)
 #define PARSE_VLAN 1
 #define PARSE_MPLS 2
 #define PARSE_IP 3
 #define PARSE_IPV6 4
 
+<<<<<<< HEAD
+=======
+/* Protocol dispatch routine. It tail-calls next BPF program depending
+ * on eth proto. Note, we could have used ...
+ *
+ *   bpf_tail_call(skb, &jmp_table, proto);
+ *
+ * ... but it would need large prog_array and cannot be optimised given
+ * the map key is not static.
+ */
+static inline void parse_eth_proto(struct __sk_buff *skb, u32 proto)
+{
+	switch (proto) {
+	case ETH_P_8021Q:
+	case ETH_P_8021AD:
+		bpf_tail_call(skb, &jmp_table, PARSE_VLAN);
+		break;
+	case ETH_P_MPLS_UC:
+	case ETH_P_MPLS_MC:
+		bpf_tail_call(skb, &jmp_table, PARSE_MPLS);
+		break;
+	case ETH_P_IP:
+		bpf_tail_call(skb, &jmp_table, PARSE_IP);
+		break;
+	case ETH_P_IPV6:
+		bpf_tail_call(skb, &jmp_table, PARSE_IPV6);
+		break;
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 struct vlan_hdr {
 	__be16 h_vlan_TCI;
 	__be16 h_vlan_encapsulated_proto;
@@ -37,8 +80,11 @@ struct flow_key_record {
 	__u32 ip_proto;
 };
 
+<<<<<<< HEAD
 static inline void parse_eth_proto(struct __sk_buff *skb, u32 proto);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int ip_is_fragment(struct __sk_buff *ctx, __u64 nhoff)
 {
 	return load_half(ctx, nhoff + offsetof(struct iphdr, frag_off))
@@ -154,8 +200,12 @@ static __always_inline void parse_ip_proto(struct __sk_buff *skb,
 	}
 }
 
+<<<<<<< HEAD
 SEC("socket")
 int bpf_func_ip(struct __sk_buff *skb)
+=======
+PROG(PARSE_IP)(struct __sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct globals *g = this_cpu_globals();
 	__u32 nhoff, verlen, ip_proto;
@@ -183,8 +233,12 @@ int bpf_func_ip(struct __sk_buff *skb)
 	return 0;
 }
 
+<<<<<<< HEAD
 SEC("socket")
 int bpf_func_ipv6(struct __sk_buff *skb)
+=======
+PROG(PARSE_IPV6)(struct __sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct globals *g = this_cpu_globals();
 	__u32 nhoff, ip_proto;
@@ -207,8 +261,12 @@ int bpf_func_ipv6(struct __sk_buff *skb)
 	return 0;
 }
 
+<<<<<<< HEAD
 SEC("socket")
 int bpf_func_vlan(struct __sk_buff *skb)
+=======
+PROG(PARSE_VLAN)(struct __sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	__u32 nhoff, proto;
 
@@ -224,8 +282,12 @@ int bpf_func_vlan(struct __sk_buff *skb)
 	return 0;
 }
 
+<<<<<<< HEAD
 SEC("socket")
 int bpf_func_mpls(struct __sk_buff *skb)
+=======
+PROG(PARSE_MPLS)(struct __sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	__u32 nhoff, label;
 
@@ -248,6 +310,7 @@ int bpf_func_mpls(struct __sk_buff *skb)
 	return 0;
 }
 
+<<<<<<< HEAD
 struct {
 	__uint(type, BPF_MAP_TYPE_PROG_ARRAY);
 	__uint(key_size, sizeof(u32));
@@ -291,6 +354,9 @@ static inline void parse_eth_proto(struct __sk_buff *skb, u32 proto)
 }
 
 SEC("socket")
+=======
+SEC("socket/0")
+>>>>>>> b7ba80a49124 (Commit)
 int main_prog(struct __sk_buff *skb)
 {
 	__u32 nhoff = ETH_HLEN;

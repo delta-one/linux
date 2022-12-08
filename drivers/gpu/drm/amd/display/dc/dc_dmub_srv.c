@@ -30,7 +30,10 @@
 #include "dc_hw_types.h"
 #include "core_types.h"
 #include "../basics/conversion.h"
+<<<<<<< HEAD
 #include "cursor_reg_cache.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define CTX dc_dmub_srv->ctx
 #define DC_LOGGER CTX->logger
@@ -421,6 +424,7 @@ void dc_dmub_srv_get_visual_confirm_color_cmd(struct dc *dc, struct pipe_ctx *pi
 	}
 }
 
+<<<<<<< HEAD
 /**
  * populate_subvp_cmd_drr_info - Helper to populate DRR pipe info for the DMCUB subvp command
  *
@@ -431,11 +435,32 @@ void dc_dmub_srv_get_visual_confirm_color_cmd(struct dc *dc, struct pipe_ctx *pi
  *
  * Populate the DMCUB SubVP command with DRR pipe info. All the information
  * required for calculating the SubVP + DRR microschedule is populated here.
+=======
+#ifdef CONFIG_DRM_AMD_DC_DCN
+/**
+ * ***********************************************************************************************
+ * populate_subvp_cmd_drr_info: Helper to populate DRR pipe info for the DMCUB subvp command
+ *
+ * Populate the DMCUB SubVP command with DRR pipe info. All the information required for calculating
+ * the SubVP + DRR microschedule is populated here.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * High level algorithm:
  * 1. Get timing for SubVP pipe, phantom pipe, and DRR pipe
  * 2. Calculate the min and max vtotal which supports SubVP + DRR microschedule
  * 3. Populate the drr_info with the min and max supported vtotal values
+<<<<<<< HEAD
+=======
+ *
+ * @param [in] dc: current dc state
+ * @param [in] subvp_pipe: pipe_ctx for the SubVP pipe
+ * @param [in] vblank_pipe: pipe_ctx for the DRR pipe
+ * @param [in] pipe_data: Pipe data which stores the VBLANK/DRR info
+ *
+ * @return: void
+ *
+ * ***********************************************************************************************
+>>>>>>> b7ba80a49124 (Commit)
  */
 static void populate_subvp_cmd_drr_info(struct dc *dc,
 		struct pipe_ctx *subvp_pipe,
@@ -476,13 +501,19 @@ static void populate_subvp_cmd_drr_info(struct dc *dc,
 			(((uint64_t)main_timing->pix_clk_100hz * 100)));
 	drr_active_us = div64_u64(((uint64_t)drr_timing->v_addressable * drr_timing->h_total * 1000000),
 			(((uint64_t)drr_timing->pix_clk_100hz * 100)));
+<<<<<<< HEAD
 	max_drr_vblank_us = div64_u64((subvp_active_us - prefetch_us -
 			dc->caps.subvp_fw_processing_delay_us - drr_active_us), 2) + drr_active_us;
 	max_drr_mallregion_us = subvp_active_us - prefetch_us - mall_region_us - dc->caps.subvp_fw_processing_delay_us;
+=======
+	max_drr_vblank_us = div64_u64((subvp_active_us - prefetch_us - drr_active_us), 2) + drr_active_us;
+	max_drr_mallregion_us = subvp_active_us - prefetch_us - mall_region_us;
+>>>>>>> b7ba80a49124 (Commit)
 	max_drr_supported_us = max_drr_vblank_us > max_drr_mallregion_us ? max_drr_vblank_us : max_drr_mallregion_us;
 	max_vtotal_supported = div64_u64(((uint64_t)drr_timing->pix_clk_100hz * 100 * max_drr_supported_us),
 			(((uint64_t)drr_timing->h_total * 1000000)));
 
+<<<<<<< HEAD
 	/* When calculating the max vtotal supported for SubVP + DRR cases, add
 	 * margin due to possible rounding errors (being off by 1 line in the
 	 * FW calculation can incorrectly push the P-State switch to wait 1 frame
@@ -508,6 +539,29 @@ static void populate_subvp_cmd_drr_info(struct dc *dc,
  * required to calculate the microschedule for SubVP + VBLANK case is stored in
  * the pipe_data (subvp_data and vblank_data).  Also check if the VBLANK pipe
  * is a DRR display -- if it is make a call to populate drr_info.
+=======
+	pipe_data->pipe_config.vblank_data.drr_info.min_vtotal_supported = min_vtotal_supported;
+	pipe_data->pipe_config.vblank_data.drr_info.max_vtotal_supported = max_vtotal_supported;
+}
+
+/**
+ * ***********************************************************************************************
+ * populate_subvp_cmd_vblank_pipe_info: Helper to populate VBLANK pipe info for the DMUB subvp command
+ *
+ * Populate the DMCUB SubVP command with VBLANK pipe info. All the information required to calculate
+ * the microschedule for SubVP + VBLANK case is stored in the pipe_data (subvp_data and vblank_data).
+ * Also check if the VBLANK pipe is a DRR display -- if it is make a call to populate drr_info.
+ *
+ * @param [in] dc: current dc state
+ * @param [in] context: new dc state
+ * @param [in] cmd: DMUB cmd to be populated with SubVP info
+ * @param [in] vblank_pipe: pipe_ctx for the VBLANK pipe
+ * @param [in] cmd_pipe_index: index for the pipe array in DMCUB SubVP cmd
+ *
+ * @return: void
+ *
+ * ***********************************************************************************************
+>>>>>>> b7ba80a49124 (Commit)
  */
 static void populate_subvp_cmd_vblank_pipe_info(struct dc *dc,
 		struct dc_state *context,
@@ -550,6 +604,7 @@ static void populate_subvp_cmd_vblank_pipe_info(struct dc *dc,
 }
 
 /**
+<<<<<<< HEAD
  * update_subvp_prefetch_end_to_mall_start - Helper for SubVP + SubVP case
  *
  * @dc: [in] current dc state
@@ -562,6 +617,24 @@ static void populate_subvp_cmd_vblank_pipe_info(struct dc *dc,
  * MALL REGION of both SubVP pipes must start at the same time. This function
  * lengthens the prefetch end to mall start delay of the SubVP pipe that has
  * the shorter prefetch so that both MALL REGION's will start at the same time.
+=======
+ * ***********************************************************************************************
+ * update_subvp_prefetch_end_to_mall_start: Helper for SubVP + SubVP case
+ *
+ * For SubVP + SubVP, we use a single vertical interrupt to start the microschedule for both
+ * SubVP pipes. In order for this to work correctly, the MALL REGION of both SubVP pipes must
+ * start at the same time. This function lengthens the prefetch end to mall start delay of the
+ * SubVP pipe that has the shorter prefetch so that both MALL REGION's will start at the same time.
+ *
+ * @param [in] dc: current dc state
+ * @param [in] context: new dc state
+ * @param [in] cmd: DMUB cmd to be populated with SubVP info
+ * @param [in] subvp_pipes: Array of SubVP pipes (should always be length 2)
+ *
+ * @return: void
+ *
+ * ***********************************************************************************************
+>>>>>>> b7ba80a49124 (Commit)
  */
 static void update_subvp_prefetch_end_to_mall_start(struct dc *dc,
 		struct dc_state *context,
@@ -603,6 +676,7 @@ static void update_subvp_prefetch_end_to_mall_start(struct dc *dc,
 }
 
 /**
+<<<<<<< HEAD
  * populate_subvp_cmd_pipe_info - Helper to populate the SubVP pipe info for the DMUB subvp command
  *
  * @dc: [in] current dc state
@@ -614,6 +688,24 @@ static void update_subvp_prefetch_end_to_mall_start(struct dc *dc,
  * Populate the DMCUB SubVP command with SubVP pipe info. All the information
  * required to calculate the microschedule for the SubVP pipe is stored in the
  * pipe_data of the DMCUB SubVP command.
+=======
+ * ***************************************************************************************
+ * setup_subvp_dmub_command: Helper to populate the SubVP pipe info for the DMUB subvp command
+ *
+ * Populate the DMCUB SubVP command with SubVP pipe info. All the information required to
+ * calculate the microschedule for the SubVP pipe is stored in the pipe_data of the DMCUB
+ * SubVP command.
+ *
+ * @param [in] dc: current dc state
+ * @param [in] context: new dc state
+ * @param [in] cmd: DMUB cmd to be populated with SubVP info
+ * @param [in] subvp_pipe: pipe_ctx for the SubVP pipe
+ * @param [in] cmd_pipe_index: index for the pipe array in DMCUB SubVP cmd
+ *
+ * @return: void
+ *
+ * ***************************************************************************************
+>>>>>>> b7ba80a49124 (Commit)
  */
 static void populate_subvp_cmd_pipe_info(struct dc *dc,
 		struct dc_state *context,
@@ -637,7 +729,11 @@ static void populate_subvp_cmd_pipe_info(struct dc *dc,
 	pipe_data->pipe_config.subvp_data.main_vblank_end =
 			main_timing->v_total - main_timing->v_front_porch - main_timing->v_addressable;
 	pipe_data->pipe_config.subvp_data.mall_region_lines = phantom_timing->v_addressable;
+<<<<<<< HEAD
 	pipe_data->pipe_config.subvp_data.main_pipe_index = subvp_pipe->stream_res.tg->inst;
+=======
+	pipe_data->pipe_config.subvp_data.main_pipe_index = subvp_pipe->pipe_idx;
+>>>>>>> b7ba80a49124 (Commit)
 	pipe_data->pipe_config.subvp_data.is_drr = subvp_pipe->stream->ignore_msa_timing_param;
 
 	/* Calculate the scaling factor from the src and dst height.
@@ -679,11 +775,19 @@ static void populate_subvp_cmd_pipe_info(struct dc *dc,
 		struct pipe_ctx *phantom_pipe = &context->res_ctx.pipe_ctx[j];
 
 		if (phantom_pipe->stream == subvp_pipe->stream->mall_stream_config.paired_stream) {
+<<<<<<< HEAD
 			pipe_data->pipe_config.subvp_data.phantom_pipe_index = phantom_pipe->stream_res.tg->inst;
 			if (phantom_pipe->bottom_pipe) {
 				pipe_data->pipe_config.subvp_data.phantom_split_pipe_index = phantom_pipe->bottom_pipe->plane_res.hubp->inst;
 			} else if (phantom_pipe->next_odm_pipe) {
 				pipe_data->pipe_config.subvp_data.phantom_split_pipe_index = phantom_pipe->next_odm_pipe->plane_res.hubp->inst;
+=======
+			pipe_data->pipe_config.subvp_data.phantom_pipe_index = phantom_pipe->pipe_idx;
+			if (phantom_pipe->bottom_pipe) {
+				pipe_data->pipe_config.subvp_data.phantom_split_pipe_index = phantom_pipe->bottom_pipe->pipe_idx;
+			} else if (phantom_pipe->next_odm_pipe) {
+				pipe_data->pipe_config.subvp_data.phantom_split_pipe_index = phantom_pipe->next_odm_pipe->pipe_idx;
+>>>>>>> b7ba80a49124 (Commit)
 			} else {
 				pipe_data->pipe_config.subvp_data.phantom_split_pipe_index = 0;
 			}
@@ -693,6 +797,7 @@ static void populate_subvp_cmd_pipe_info(struct dc *dc,
 }
 
 /**
+<<<<<<< HEAD
  * dc_dmub_setup_subvp_dmub_command - Populate the DMCUB SubVP command
  *
  * @dc: [in] current dc state
@@ -701,6 +806,21 @@ static void populate_subvp_cmd_pipe_info(struct dc *dc,
  *
  * This function loops through each pipe and populates the DMUB SubVP CMD info
  * based on the pipe (e.g. SubVP, VBLANK).
+=======
+ * ***************************************************************************************
+ * dc_dmub_setup_subvp_dmub_command: Populate the DMCUB SubVP command
+ *
+ * This function loops through each pipe and populates the DMUB
+ * SubVP CMD info based on the pipe (e.g. SubVP, VBLANK).
+ *
+ * @param [in] dc: current dc state
+ * @param [in] context: new dc state
+ * @param [in] cmd: DMUB cmd to be populated with SubVP info
+ *
+ * @return: void
+ *
+ * ***************************************************************************************
+>>>>>>> b7ba80a49124 (Commit)
  */
 void dc_dmub_setup_subvp_dmub_command(struct dc *dc,
 		struct dc_state *context,
@@ -749,8 +869,12 @@ void dc_dmub_setup_subvp_dmub_command(struct dc *dc,
 					!pipe->top_pipe && !pipe->prev_odm_pipe &&
 					pipe->stream->mall_stream_config.type == SUBVP_MAIN) {
 				populate_subvp_cmd_pipe_info(dc, context, &cmd, pipe, cmd_pipe_index++);
+<<<<<<< HEAD
 			} else if (pipe->plane_state && pipe->stream->mall_stream_config.type == SUBVP_NONE &&
 				    !pipe->top_pipe && !pipe->prev_odm_pipe) {
+=======
+			} else if (pipe->plane_state && pipe->stream->mall_stream_config.type == SUBVP_NONE) {
+>>>>>>> b7ba80a49124 (Commit)
 				// Don't need to check for ActiveDRAMClockChangeMargin < 0, not valid in cases where
 				// we run through DML without calculating "natural" P-state support
 				populate_subvp_cmd_vblank_pipe_info(dc, context, &cmd, pipe, cmd_pipe_index++);
@@ -767,7 +891,11 @@ void dc_dmub_setup_subvp_dmub_command(struct dc *dc,
 		// Store the original watermark value for this SubVP config so we can lower it when the
 		// MCLK switch starts
 		wm_val_refclk = context->bw_ctx.bw.dcn.watermarks.a.cstate_pstate.pstate_change_ns *
+<<<<<<< HEAD
 				(dc->res_pool->ref_clocks.dchub_ref_clock_inKhz / 1000) / 1000;
+=======
+				dc->res_pool->ref_clocks.dchub_ref_clock_inKhz / 1000 / 1000;
+>>>>>>> b7ba80a49124 (Commit)
 
 		cmd.fw_assisted_mclk_switch_v2.config_data.watermark_a_cache = wm_val_refclk < 0xFFFF ? wm_val_refclk : 0xFFFF;
 	}
@@ -775,6 +903,10 @@ void dc_dmub_setup_subvp_dmub_command(struct dc *dc,
 	dc_dmub_srv_cmd_execute(dc->ctx->dmub_srv);
 	dc_dmub_srv_wait_idle(dc->ctx->dmub_srv);
 }
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 bool dc_dmub_srv_get_diagnostic_data(struct dc_dmub_srv *dc_dmub_srv, struct dmub_diagnostic_data *diag_data)
 {
@@ -866,6 +998,7 @@ void dc_dmub_srv_log_diagnostic_data(struct dc_dmub_srv *dc_dmub_srv)
 		diag_data.is_cw0_enabled,
 		diag_data.is_cw6_enabled);
 }
+<<<<<<< HEAD
 
 static bool dc_can_pipe_disable_cursor(struct pipe_ctx *pipe_ctx)
 {
@@ -1053,3 +1186,5 @@ void dc_send_update_cursor_info_to_dmu(
 		dc_send_cmd_to_dmu(pCtx->stream->ctx->dmub_srv, &cmd);
 	}
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

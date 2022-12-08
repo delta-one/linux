@@ -799,7 +799,11 @@ int clk_set_rate_exclusive(struct clk *clk, unsigned long rate);
  *
  * Returns true if @parent is a possible parent for @clk, false otherwise.
  */
+<<<<<<< HEAD
 bool clk_has_parent(const struct clk *clk, const struct clk *parent);
+=======
+bool clk_has_parent(struct clk *clk, struct clk *parent);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * clk_set_rate_range - set a rate range for a clock source

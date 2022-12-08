@@ -123,11 +123,19 @@ static int chromeos_privacy_screen_add(struct acpi_device *adev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void chromeos_privacy_screen_remove(struct acpi_device *adev)
+=======
+static int chromeos_privacy_screen_remove(struct acpi_device *adev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drm_privacy_screen *drm_privacy_screen =	acpi_driver_data(adev);
 
 	drm_privacy_screen_unregister(drm_privacy_screen);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id chromeos_privacy_screen_device_ids[] = {

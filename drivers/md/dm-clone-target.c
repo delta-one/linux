@@ -580,7 +580,11 @@ static int hash_table_init(struct clone *clone)
 
 	sz = 1 << HASH_TABLE_BITS;
 
+<<<<<<< HEAD
 	clone->ht = kvmalloc_array(sz, sizeof(struct hash_table_bucket), GFP_KERNEL);
+=======
+	clone->ht = kvmalloc(sz * sizeof(struct hash_table_bucket), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!clone->ht)
 		return -ENOMEM;
 
@@ -1958,7 +1962,10 @@ static void clone_dtr(struct dm_target *ti)
 
 	mempool_exit(&clone->hydration_pool);
 	dm_kcopyd_client_destroy(clone->kcopyd_client);
+<<<<<<< HEAD
 	cancel_delayed_work_sync(&clone->waker);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	destroy_workqueue(clone->wq);
 	hash_table_exit(clone);
 	dm_clone_metadata_close(clone->cmd);
@@ -2036,7 +2043,11 @@ static void disable_passdown_if_not_supported(struct clone *clone)
 		reason = "max discard sectors smaller than a region";
 
 	if (reason) {
+<<<<<<< HEAD
 		DMWARN("Destination device (%pg) %s: Disabling discard passdown.",
+=======
+		DMWARN("Destination device (%pd) %s: Disabling discard passdown.",
+>>>>>>> b7ba80a49124 (Commit)
 		       dest_dev, reason);
 		clear_bit(DM_CLONE_DISCARD_PASSDOWN, &clone->flags);
 	}

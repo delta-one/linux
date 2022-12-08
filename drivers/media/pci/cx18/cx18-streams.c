@@ -29,6 +29,7 @@ static const struct v4l2_file_operations cx18_v4l2_enc_fops = {
 	.unlocked_ioctl = video_ioctl2,
 	.release = cx18_v4l2_close,
 	.poll = cx18_v4l2_enc_poll,
+<<<<<<< HEAD
 };
 
 static const struct v4l2_file_operations cx18_v4l2_enc_yuv_fops = {
@@ -39,6 +40,9 @@ static const struct v4l2_file_operations cx18_v4l2_enc_yuv_fops = {
 	.poll = vb2_fop_poll,
 	.read = vb2_fop_read,
 	.mmap = vb2_fop_mmap,
+=======
+	.mmap = cx18_v4l2_mmap,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* offset from 0 to register ts v4l2 minors on */
@@ -79,7 +83,11 @@ static struct {
 		VFL_TYPE_VBI, 0,
 		DMA_FROM_DEVICE,
 		V4L2_CAP_VBI_CAPTURE | V4L2_CAP_SLICED_VBI_CAPTURE |
+<<<<<<< HEAD
 		V4L2_CAP_READWRITE | V4L2_CAP_AUDIO | V4L2_CAP_TUNER
+=======
+		V4L2_CAP_READWRITE | V4L2_CAP_TUNER
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{	/* CX18_ENC_STREAM_TYPE_PCM */
 		"encoder PCM audio",
@@ -100,6 +108,7 @@ static struct {
 	},
 };
 
+<<<<<<< HEAD
 static int cx18_queue_setup(struct vb2_queue *vq,
 			    unsigned int *nbuffers, unsigned int *nplanes,
 			    unsigned int sizes[], struct device *alloc_devs[])
@@ -236,6 +245,158 @@ static int cx18_stream_init(struct cx18 *cx, int type)
 {
 	struct cx18_stream *s = &cx->streams[type];
 	int err = 0;
+=======
+
+static void cx18_dma_free(struct videobuf_queue *q,
+	struct cx18_stream *s, struct cx18_videobuf_buffer *buf)
+{
+	videobuf_waiton(q, &buf->vb, 0, 0);
+	videobuf_vmalloc_free(&buf->vb);
+	buf->vb.state = VIDEOBUF_NEEDS_INIT;
+}
+
+static int cx18_prepare_buffer(struct videobuf_queue *q,
+	struct cx18_stream *s,
+	struct cx18_videobuf_buffer *buf,
+	u32 pixelformat,
+	unsigned int width, unsigned int height,
+	enum v4l2_field field)
+{
+	struct cx18 *cx = s->cx;
+	int rc = 0;
+
+	/* check settings */
+	buf->bytes_used = 0;
+
+	if ((width  < 48) || (height < 32))
+		return -EINVAL;
+
+	buf->vb.size = (width * height * 2);
+	if ((buf->vb.baddr != 0) && (buf->vb.bsize < buf->vb.size))
+		return -EINVAL;
+
+	/* alloc + fill struct (if changed) */
+	if (buf->vb.width != width || buf->vb.height != height ||
+	    buf->vb.field != field || s->pixelformat != pixelformat ||
+	    buf->tvnorm != cx->std) {
+
+		buf->vb.width  = width;
+		buf->vb.height = height;
+		buf->vb.field  = field;
+		buf->tvnorm    = cx->std;
+		s->pixelformat = pixelformat;
+
+		/* HM12 YUV size is (Y=(h*720) + UV=(h*(720/2)))
+		   UYUV YUV size is (Y=(h*720) + UV=(h*(720))) */
+		if (s->pixelformat == V4L2_PIX_FMT_NV12_16L16)
+			s->vb_bytes_per_frame = height * 720 * 3 / 2;
+		else
+			s->vb_bytes_per_frame = height * 720 * 2;
+		cx18_dma_free(q, s, buf);
+	}
+
+	if ((buf->vb.baddr != 0) && (buf->vb.bsize < buf->vb.size))
+		return -EINVAL;
+
+	if (buf->vb.field == 0)
+		buf->vb.field = V4L2_FIELD_INTERLACED;
+
+	if (VIDEOBUF_NEEDS_INIT == buf->vb.state) {
+		buf->vb.width  = width;
+		buf->vb.height = height;
+		buf->vb.field  = field;
+		buf->tvnorm    = cx->std;
+		s->pixelformat = pixelformat;
+
+		/* HM12 YUV size is (Y=(h*720) + UV=(h*(720/2)))
+		   UYUV YUV size is (Y=(h*720) + UV=(h*(720))) */
+		if (s->pixelformat == V4L2_PIX_FMT_NV12_16L16)
+			s->vb_bytes_per_frame = height * 720 * 3 / 2;
+		else
+			s->vb_bytes_per_frame = height * 720 * 2;
+		rc = videobuf_iolock(q, &buf->vb, NULL);
+		if (rc != 0)
+			goto fail;
+	}
+	buf->vb.state = VIDEOBUF_PREPARED;
+	return 0;
+
+fail:
+	cx18_dma_free(q, s, buf);
+	return rc;
+
+}
+
+/* VB_MIN_BUFSIZE is lcm(1440 * 480, 1440 * 576)
+   1440 is a single line of 4:2:2 YUV at 720 luma samples wide
+*/
+#define VB_MIN_BUFFERS 32
+#define VB_MIN_BUFSIZE 4147200
+
+static int buffer_setup(struct videobuf_queue *q,
+	unsigned int *count, unsigned int *size)
+{
+	struct cx18_stream *s = q->priv_data;
+	struct cx18 *cx = s->cx;
+
+	*size = 2 * cx->cxhdl.width * cx->cxhdl.height;
+	if (*count == 0)
+		*count = VB_MIN_BUFFERS;
+
+	while (*size * *count > VB_MIN_BUFFERS * VB_MIN_BUFSIZE)
+		(*count)--;
+
+	q->field = V4L2_FIELD_INTERLACED;
+	q->last = V4L2_FIELD_INTERLACED;
+
+	return 0;
+}
+
+static int buffer_prepare(struct videobuf_queue *q,
+	struct videobuf_buffer *vb,
+	enum v4l2_field field)
+{
+	struct cx18_videobuf_buffer *buf =
+		container_of(vb, struct cx18_videobuf_buffer, vb);
+	struct cx18_stream *s = q->priv_data;
+	struct cx18 *cx = s->cx;
+
+	return cx18_prepare_buffer(q, s, buf, s->pixelformat,
+		cx->cxhdl.width, cx->cxhdl.height, field);
+}
+
+static void buffer_release(struct videobuf_queue *q,
+	struct videobuf_buffer *vb)
+{
+	struct cx18_videobuf_buffer *buf =
+		container_of(vb, struct cx18_videobuf_buffer, vb);
+	struct cx18_stream *s = q->priv_data;
+
+	cx18_dma_free(q, s, buf);
+}
+
+static void buffer_queue(struct videobuf_queue *q, struct videobuf_buffer *vb)
+{
+	struct cx18_videobuf_buffer *buf =
+		container_of(vb, struct cx18_videobuf_buffer, vb);
+	struct cx18_stream *s = q->priv_data;
+
+	buf->vb.state = VIDEOBUF_QUEUED;
+
+	list_add_tail(&buf->vb.queue, &s->vb_capture);
+}
+
+static const struct videobuf_queue_ops cx18_videobuf_qops = {
+	.buf_setup    = buffer_setup,
+	.buf_prepare  = buffer_prepare,
+	.buf_queue    = buffer_queue,
+	.buf_release  = buffer_release,
+};
+
+static void cx18_stream_init(struct cx18 *cx, int type)
+{
+	struct cx18_stream *s = &cx->streams[type];
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(s, 0, sizeof(*s));
 
@@ -270,14 +431,28 @@ static int cx18_stream_init(struct cx18 *cx, int type)
 	INIT_LIST_HEAD(&s->vb_capture);
 	timer_setup(&s->vb_timeout, cx18_vb_timeout, 0);
 	spin_lock_init(&s->vb_lock);
+<<<<<<< HEAD
 
 	if (type == CX18_ENC_STREAM_TYPE_YUV) {
 		s->vb_type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+=======
+	if (type == CX18_ENC_STREAM_TYPE_YUV) {
+		spin_lock_init(&s->vbuf_q_lock);
+
+		s->vb_type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+		videobuf_queue_vmalloc_init(&s->vbuf_q, &cx18_videobuf_qops,
+			&cx->pci_dev->dev, &s->vbuf_q_lock,
+			V4L2_BUF_TYPE_VIDEO_CAPTURE,
+			V4L2_FIELD_INTERLACED,
+			sizeof(struct cx18_videobuf_buffer),
+			s, &cx->serialize_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Assume the previous pixel default */
 		s->pixelformat = V4L2_PIX_FMT_NV12_16L16;
 		s->vb_bytes_per_frame = cx->cxhdl.height * 720 * 3 / 2;
 		s->vb_bytes_per_line = 720;
+<<<<<<< HEAD
 
 		s->vidq.io_modes = VB2_READ | VB2_MMAP | VB2_DMABUF;
 		s->vidq.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
@@ -297,6 +472,9 @@ static int cx18_stream_init(struct cx18 *cx, int type)
 		s->video_dev.queue = &s->vidq;
 	}
 	return err;
+=======
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cx18_prep_dev(struct cx18 *cx, int type)
@@ -305,7 +483,10 @@ static int cx18_prep_dev(struct cx18 *cx, int type)
 	u32 cap = cx->v4l2_cap;
 	int num_offset = cx18_stream_info[type].num_offset;
 	int num = cx->instance + cx18_first_minor + num_offset;
+<<<<<<< HEAD
 	int err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * These five fields are always initialized.
@@ -337,9 +518,13 @@ static int cx18_prep_dev(struct cx18 *cx, int type)
 		return 0;
 	}
 
+<<<<<<< HEAD
 	err = cx18_stream_init(cx, type);
 	if (err)
 		return err;
+=======
+	cx18_stream_init(cx, type);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Allocate the cx18_dvb struct only for the TS on cards with DTV */
 	if (type == CX18_ENC_STREAM_TYPE_TS) {
@@ -365,10 +550,14 @@ static int cx18_prep_dev(struct cx18 *cx, int type)
 
 	s->video_dev.num = num;
 	s->video_dev.v4l2_dev = &cx->v4l2_dev;
+<<<<<<< HEAD
 	if (type == CX18_ENC_STREAM_TYPE_YUV)
 		s->video_dev.fops = &cx18_v4l2_enc_yuv_fops;
 	else
 		s->video_dev.fops = &cx18_v4l2_enc_fops;
+=======
+	s->video_dev.fops = &cx18_v4l2_enc_fops;
+>>>>>>> b7ba80a49124 (Commit)
 	s->video_dev.release = video_device_release_empty;
 	if (cx->card->video_inputs->video_type == CX18_CARD_INPUT_VID_TUNER)
 		s->video_dev.tvnorms = cx->tuner_std;
@@ -537,12 +726,21 @@ void cx18_streams_cleanup(struct cx18 *cx, int unregister)
 		if (vdev->v4l2_dev == NULL)
 			continue;
 
+<<<<<<< HEAD
 		cx18_stream_free(&cx->streams[type]);
 
 		if (type == CX18_ENC_STREAM_TYPE_YUV)
 			vb2_video_unregister_device(vdev);
 		else
 			video_unregister_device(vdev);
+=======
+		if (type == CX18_ENC_STREAM_TYPE_YUV)
+			videobuf_mmap_free(&cx->streams[type].vbuf_q);
+
+		cx18_stream_free(&cx->streams[type]);
+
+		video_unregister_device(vdev);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

@@ -20,6 +20,7 @@ static int mvs_find_tag(struct mvs_info *mvi, struct sas_task *task, u32 *tag)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void mvs_tag_clear(struct mvs_info *mvi, u32 tag)
 {
 	void *bitmap = mvi->rsvd_tags;
@@ -48,12 +49,49 @@ static int mvs_tag_alloc(struct mvs_info *mvi, u32 *tag_out)
 	index = find_first_zero_bit(bitmap, MVS_RSVD_SLOTS);
 	tag = index;
 	if (tag >= MVS_RSVD_SLOTS)
+=======
+void mvs_tag_clear(struct mvs_info *mvi, u32 tag)
+{
+	void *bitmap = mvi->tags;
+	clear_bit(tag, bitmap);
+}
+
+void mvs_tag_free(struct mvs_info *mvi, u32 tag)
+{
+	mvs_tag_clear(mvi, tag);
+}
+
+void mvs_tag_set(struct mvs_info *mvi, unsigned int tag)
+{
+	void *bitmap = mvi->tags;
+	set_bit(tag, bitmap);
+}
+
+inline int mvs_tag_alloc(struct mvs_info *mvi, u32 *tag_out)
+{
+	unsigned int index, tag;
+	void *bitmap = mvi->tags;
+
+	index = find_first_zero_bit(bitmap, mvi->tags_num);
+	tag = index;
+	if (tag >= mvi->tags_num)
+>>>>>>> b7ba80a49124 (Commit)
 		return -SAS_QUEUE_FULL;
 	mvs_tag_set(mvi, tag);
 	*tag_out = tag;
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+void mvs_tag_init(struct mvs_info *mvi)
+{
+	int i;
+	for (i = 0; i < mvi->tags_num; ++i)
+		mvs_tag_clear(mvi, i);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct mvs_info *mvs_find_dev_mvi(struct domain_device *dev)
 {
 	unsigned long i = 0, j = 0, hi = 0;
@@ -699,7 +737,10 @@ static int mvs_task_prep(struct sas_task *task, struct mvs_info *mvi, int is_tmf
 	struct mvs_task_exec_info tei;
 	struct mvs_slot_info *slot;
 	u32 tag = 0xdeadbeef, n_elem = 0;
+<<<<<<< HEAD
 	struct request *rq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int rc = 0;
 
 	if (!dev->port) {
@@ -764,6 +805,7 @@ static int mvs_task_prep(struct sas_task *task, struct mvs_info *mvi, int is_tmf
 		n_elem = task->num_scatter;
 	}
 
+<<<<<<< HEAD
 	rq = sas_task_find_rq(task);
 	if (rq) {
 		tag = rq->tag + MVS_RSVD_SLOTS;
@@ -772,6 +814,11 @@ static int mvs_task_prep(struct sas_task *task, struct mvs_info *mvi, int is_tmf
 		if (rc)
 			goto err_out;
 	}
+=======
+	rc = mvs_tag_alloc(mvi, &tag);
+	if (rc)
+		goto err_out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	slot = &mvi->slot_info[tag];
 
@@ -866,7 +913,11 @@ int mvs_queue_command(struct sas_task *task, gfp_t gfp_flags)
 static void mvs_slot_free(struct mvs_info *mvi, u32 rx_desc)
 {
 	u32 slot_idx = rx_desc & RXQ_SLOT_MASK;
+<<<<<<< HEAD
 	mvs_tag_free(mvi, slot_idx);
+=======
+	mvs_tag_clear(mvi, slot_idx);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mvs_slot_task_free(struct mvs_info *mvi, struct sas_task *task,
@@ -1192,16 +1243,35 @@ static int mvs_dev_found_notify(struct domain_device *dev, int lock)
 	mvi_device->sas_device = dev;
 	if (parent_dev && dev_is_expander(parent_dev->dev_type)) {
 		int phy_id;
+<<<<<<< HEAD
 
 		phy_id = sas_find_attached_phy_id(&parent_dev->ex_dev, dev);
 		if (phy_id < 0) {
+=======
+		u8 phy_num = parent_dev->ex_dev.num_phys;
+		struct ex_phy *phy;
+		for (phy_id = 0; phy_id < phy_num; phy_id++) {
+			phy = &parent_dev->ex_dev.ex_phy[phy_id];
+			if (SAS_ADDR(phy->attached_sas_addr) ==
+				SAS_ADDR(dev->sas_addr)) {
+				mvi_device->attached_phy = phy_id;
+				break;
+			}
+		}
+
+		if (phy_id == phy_num) {
+>>>>>>> b7ba80a49124 (Commit)
 			mv_printk("Error: no attached dev:%016llx"
 				"at ex:%016llx.\n",
 				SAS_ADDR(dev->sas_addr),
 				SAS_ADDR(parent_dev->sas_addr));
+<<<<<<< HEAD
 			res = phy_id;
 		} else {
 			mvi_device->attached_phy = phy_id;
+=======
+			res = -1;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 

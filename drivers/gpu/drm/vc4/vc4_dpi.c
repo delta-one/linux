@@ -103,6 +103,7 @@ to_vc4_dpi(struct drm_encoder *encoder)
 	return container_of(encoder, struct vc4_dpi, encoder.base);
 }
 
+<<<<<<< HEAD
 #define DPI_READ(offset)								\
 	({										\
 		kunit_fail_current_test("Accessing a register in a unit test!\n");	\
@@ -114,6 +115,10 @@ to_vc4_dpi(struct drm_encoder *encoder)
 		kunit_fail_current_test("Accessing a register in a unit test!\n");	\
 		writel(val, dpi->regs + (offset));					\
 	} while (0)
+=======
+#define DPI_READ(offset) readl(dpi->regs + (offset))
+#define DPI_WRITE(offset, val) writel(val, dpi->regs + (offset))
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct debugfs_reg32 dpi_regs[] = {
 	VC4_REG32(DPI_C),
@@ -159,8 +164,13 @@ static void vc4_dpi_encoder_enable(struct drm_encoder *encoder)
 	}
 	drm_connector_list_iter_end(&conn_iter);
 
+<<<<<<< HEAD
 	/* Default to 18bit if no connector or format found. */
 	dpi_c |= VC4_SET_FIELD(DPI_FORMAT_18BIT_666_RGB_1, DPI_FORMAT);
+=======
+	/* Default to 24bit if no connector or format found. */
+	dpi_c |= VC4_SET_FIELD(DPI_FORMAT_24BIT_888_RGB, DPI_FORMAT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (connector) {
 		if (connector->display_info.num_bus_formats) {
@@ -179,26 +189,36 @@ static void vc4_dpi_encoder_enable(struct drm_encoder *encoder)
 				dpi_c |= VC4_SET_FIELD(DPI_ORDER_BGR,
 						       DPI_ORDER);
 				break;
+<<<<<<< HEAD
 			case MEDIA_BUS_FMT_BGR666_1X24_CPADHI:
 				dpi_c |= VC4_SET_FIELD(DPI_ORDER_BGR, DPI_ORDER);
 				fallthrough;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			case MEDIA_BUS_FMT_RGB666_1X24_CPADHI:
 				dpi_c |= VC4_SET_FIELD(DPI_FORMAT_18BIT_666_RGB_2,
 						       DPI_FORMAT);
 				break;
+<<<<<<< HEAD
 			case MEDIA_BUS_FMT_BGR666_1X18:
 				dpi_c |= VC4_SET_FIELD(DPI_ORDER_BGR, DPI_ORDER);
 				fallthrough;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			case MEDIA_BUS_FMT_RGB666_1X18:
 				dpi_c |= VC4_SET_FIELD(DPI_FORMAT_18BIT_666_RGB_1,
 						       DPI_FORMAT);
 				break;
 			case MEDIA_BUS_FMT_RGB565_1X16:
+<<<<<<< HEAD
 				dpi_c |= VC4_SET_FIELD(DPI_FORMAT_16BIT_565_RGB_1,
 						       DPI_FORMAT);
 				break;
 			case MEDIA_BUS_FMT_RGB565_1X24_CPADHI:
 				dpi_c |= VC4_SET_FIELD(DPI_FORMAT_16BIT_565_RGB_2,
+=======
+				dpi_c |= VC4_SET_FIELD(DPI_FORMAT_16BIT_565_RGB_3,
+>>>>>>> b7ba80a49124 (Commit)
 						       DPI_FORMAT);
 				break;
 			default:
@@ -267,8 +287,16 @@ static int vc4_dpi_late_register(struct drm_encoder *encoder)
 {
 	struct drm_device *drm = encoder->dev;
 	struct vc4_dpi *dpi = to_vc4_dpi(encoder);
+<<<<<<< HEAD
 
 	vc4_debugfs_add_regset32(drm, "dpi_regs", &dpi->regset);
+=======
+	int ret;
+
+	ret = vc4_debugfs_add_regset32(drm->primary, "dpi_regs", &dpi->regset);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

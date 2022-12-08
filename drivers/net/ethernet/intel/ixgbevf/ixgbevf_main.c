@@ -2044,6 +2044,7 @@ static int ixgbevf_vlan_rx_add_vid(struct net_device *netdev,
 
 	spin_unlock_bh(&adapter->mbx_lock);
 
+<<<<<<< HEAD
 	if (err) {
 		netdev_err(netdev, "VF could not set VLAN %d\n", vid);
 
@@ -2054,6 +2055,14 @@ static int ixgbevf_vlan_rx_add_vid(struct net_device *netdev,
 		if (err == IXGBE_ERR_INVALID_ARGUMENT)
 			return -EACCES;
 	}
+=======
+	/* translate error return types so error makes sense */
+	if (err == IXGBE_ERR_MBX)
+		return -EIO;
+
+	if (err == IXGBE_ERR_INVALID_ARGUMENT)
+		return -EACCES;
+>>>>>>> b7ba80a49124 (Commit)
 
 	set_bit(vid, adapter->active_vlans);
 
@@ -2074,9 +2083,12 @@ static int ixgbevf_vlan_rx_kill_vid(struct net_device *netdev,
 
 	spin_unlock_bh(&adapter->mbx_lock);
 
+<<<<<<< HEAD
 	if (err)
 		netdev_err(netdev, "Could not remove VLAN %d\n", vid);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	clear_bit(vid, adapter->active_vlans);
 
 	return err;
@@ -2740,7 +2752,11 @@ static int ixgbevf_alloc_q_vector(struct ixgbevf_adapter *adapter, int v_idx,
 		return -ENOMEM;
 
 	/* initialize NAPI */
+<<<<<<< HEAD
 	netif_napi_add(adapter->netdev, &q_vector->napi, ixgbevf_poll);
+=======
+	netif_napi_add(adapter->netdev, &q_vector->napi, ixgbevf_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* tie q_vector and adapter together */
 	adapter->q_vector[v_idx] = q_vector;
@@ -4357,10 +4373,17 @@ static void ixgbevf_get_tx_ring_stats(struct rtnl_link_stats64 *stats,
 
 	if (ring) {
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&ring->syncp);
 			bytes = ring->stats.bytes;
 			packets = ring->stats.packets;
 		} while (u64_stats_fetch_retry(&ring->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&ring->syncp);
+			bytes = ring->stats.bytes;
+			packets = ring->stats.packets;
+		} while (u64_stats_fetch_retry_irq(&ring->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 		stats->tx_bytes += bytes;
 		stats->tx_packets += packets;
 	}
@@ -4383,10 +4406,17 @@ static void ixgbevf_get_stats(struct net_device *netdev,
 	for (i = 0; i < adapter->num_rx_queues; i++) {
 		ring = adapter->rx_ring[i];
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&ring->syncp);
 			bytes = ring->stats.bytes;
 			packets = ring->stats.packets;
 		} while (u64_stats_fetch_retry(&ring->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&ring->syncp);
+			bytes = ring->stats.bytes;
+			packets = ring->stats.packets;
+		} while (u64_stats_fetch_retry_irq(&ring->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 		stats->rx_bytes += bytes;
 		stats->rx_packets += packets;
 	}
@@ -4634,7 +4664,10 @@ static int ixgbevf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 			    NETIF_F_HW_VLAN_CTAG_TX;
 
 	netdev->priv_flags |= IFF_UNICAST_FLT;
+<<<<<<< HEAD
 	netdev->xdp_features = NETDEV_XDP_ACT_BASIC;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* MTU range: 68 - 1504 or 9710 */
 	netdev->min_mtu = ETH_MIN_MTU;
@@ -4877,8 +4910,11 @@ static struct pci_driver ixgbevf_driver = {
  **/
 static int __init ixgbevf_init_module(void)
 {
+<<<<<<< HEAD
 	int err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pr_info("%s\n", ixgbevf_driver_string);
 	pr_info("%s\n", ixgbevf_copyright);
 	ixgbevf_wq = create_singlethread_workqueue(ixgbevf_driver_name);
@@ -4887,6 +4923,7 @@ static int __init ixgbevf_init_module(void)
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	err = pci_register_driver(&ixgbevf_driver);
 	if (err) {
 		destroy_workqueue(ixgbevf_wq);
@@ -4894,6 +4931,9 @@ static int __init ixgbevf_init_module(void)
 	}
 
 	return 0;
+=======
+	return pci_register_driver(&ixgbevf_driver);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 module_init(ixgbevf_init_module);

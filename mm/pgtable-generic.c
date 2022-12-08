@@ -69,7 +69,11 @@ int ptep_set_access_flags(struct vm_area_struct *vma,
 	int changed = !pte_same(*ptep, entry);
 	if (changed) {
 		set_pte_at(vma->vm_mm, address, ptep, entry);
+<<<<<<< HEAD
 		flush_tlb_fix_spurious_fault(vma, address, ptep);
+=======
+		flush_tlb_fix_spurious_fault(vma, address);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return changed;
 }

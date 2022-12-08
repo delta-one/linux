@@ -15,9 +15,12 @@
 
 #include "lan9303.h"
 
+<<<<<<< HEAD
 /* For the LAN9303 and LAN9354, only port 0 is an XMII port. */
 #define IS_PORT_XMII(port)	((port) == 0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define LAN9303_NUM_PORTS 3
 
 /* 13.2 System Control and Status Registers
@@ -53,9 +56,12 @@
 #define LAN9303_MANUAL_FC_1 0x68
 #define LAN9303_MANUAL_FC_2 0x69
 #define LAN9303_MANUAL_FC_0 0x6a
+<<<<<<< HEAD
 # define LAN9303_BP_EN BIT(6)
 # define LAN9303_RX_FC_EN BIT(2)
 # define LAN9303_TX_FC_EN BIT(1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define LAN9303_SWITCH_CSR_DATA 0x6b
 #define LAN9303_SWITCH_CSR_CMD 0x6c
 #define LAN9303_SWITCH_CSR_CMD_BUSY BIT(31)
@@ -231,6 +237,7 @@ const struct regmap_access_table lan9303_register_set = {
 };
 EXPORT_SYMBOL(lan9303_register_set);
 
+<<<<<<< HEAD
 /* Flow Control registers indexed by port number */
 static unsigned int flow_ctl_reg[] = {
 	LAN9303_MANUAL_FC_0,
@@ -238,6 +245,8 @@ static unsigned int flow_ctl_reg[] = {
 	LAN9303_MANUAL_FC_2
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int lan9303_read(struct regmap *regmap, unsigned int offset, u32 *reg)
 {
 	int ret, i;
@@ -915,7 +924,10 @@ static int lan9303_setup(struct dsa_switch *ds)
 {
 	struct lan9303 *chip = ds->priv;
 	int ret;
+<<<<<<< HEAD
 	u32 reg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Make sure that port 0 is the cpu port */
 	if (!dsa_is_cpu_port(ds, 0)) {
@@ -923,6 +935,7 @@ static int lan9303_setup(struct dsa_switch *ds)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	/* Virtual Phy: Remove Turbo 200Mbit mode */
 	ret = lan9303_read(chip->regmap, LAN9303_VIRT_SPECIAL_CTRL, &reg);
 	if (ret)
@@ -934,6 +947,8 @@ static int lan9303_setup(struct dsa_switch *ds)
 		regmap_write(chip->regmap, LAN9303_VIRT_SPECIAL_CTRL, reg);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = lan9303_setup_tagging(chip);
 	if (ret)
 		dev_err(chip->dev, "failed to setup port tagging %d\n", ret);
@@ -986,7 +1001,11 @@ static const struct lan9303_mib_desc lan9303_mib[] = {
 	{ .offset = LAN9303_MAC_TX_BRDCST_CNT_0, .name = "TxBroad", },
 	{ .offset = LAN9303_MAC_TX_PAUSE_CNT_0, .name = "TxPause", },
 	{ .offset = LAN9303_MAC_TX_MULCST_CNT_0, .name = "TxMulti", },
+<<<<<<< HEAD
 	{ .offset = LAN9303_MAC_RX_UNDSZE_CNT_0, .name = "RxShort", },
+=======
+	{ .offset = LAN9303_MAC_RX_UNDSZE_CNT_0, .name = "TxUnderRun", },
+>>>>>>> b7ba80a49124 (Commit)
 	{ .offset = LAN9303_MAC_TX_64_CNT_0, .name = "Tx64Byte", },
 	{ .offset = LAN9303_MAC_TX_127_CNT_0, .name = "Tx128Byte", },
 	{ .offset = LAN9303_MAC_TX_255_CNT_0, .name = "Tx256Byte", },
@@ -1030,11 +1049,17 @@ static void lan9303_get_ethtool_stats(struct dsa_switch *ds, int port,
 		ret = lan9303_read_switch_port(
 			chip, port, lan9303_mib[u].offset, &reg);
 
+<<<<<<< HEAD
 		if (ret) {
 			dev_warn(chip->dev, "Reading status port %d reg %u failed\n",
 				 port, lan9303_mib[u].offset);
 			reg = 0;
 		}
+=======
+		if (ret)
+			dev_warn(chip->dev, "Reading status port %d reg %u failed\n",
+				 port, lan9303_mib[u].offset);
+>>>>>>> b7ba80a49124 (Commit)
 		data[u] = reg;
 	}
 }
@@ -1074,6 +1099,45 @@ static int lan9303_phy_write(struct dsa_switch *ds, int phy, int regnum,
 	return chip->ops->phy_write(chip, phy, regnum, val);
 }
 
+<<<<<<< HEAD
+=======
+static void lan9303_adjust_link(struct dsa_switch *ds, int port,
+				struct phy_device *phydev)
+{
+	struct lan9303 *chip = ds->priv;
+	int ctl;
+
+	if (!phy_is_pseudo_fixed_link(phydev))
+		return;
+
+	ctl = lan9303_phy_read(ds, port, MII_BMCR);
+
+	ctl &= ~BMCR_ANENABLE;
+
+	if (phydev->speed == SPEED_100)
+		ctl |= BMCR_SPEED100;
+	else if (phydev->speed == SPEED_10)
+		ctl &= ~BMCR_SPEED100;
+	else
+		dev_err(ds->dev, "unsupported speed: %d\n", phydev->speed);
+
+	if (phydev->duplex == DUPLEX_FULL)
+		ctl |= BMCR_FULLDPLX;
+	else
+		ctl &= ~BMCR_FULLDPLX;
+
+	lan9303_phy_write(ds, port, MII_BMCR, ctl);
+
+	if (port == chip->phy_addr_base) {
+		/* Virtual Phy: Remove Turbo 200Mbit mode */
+		lan9303_read(chip->regmap, LAN9303_VIRT_SPECIAL_CTRL, &ctl);
+
+		ctl &= ~LAN9303_VIRT_SPECIAL_TURBO;
+		regmap_write(chip->regmap, LAN9303_VIRT_SPECIAL_CTRL, ctl);
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int lan9303_port_enable(struct dsa_switch *ds, int port,
 			       struct phy_device *phy)
 {
@@ -1270,6 +1334,7 @@ static int lan9303_port_mdb_del(struct dsa_switch *ds, int port,
 	return 0;
 }
 
+<<<<<<< HEAD
 static void lan9303_phylink_get_caps(struct dsa_switch *ds, int port,
 				     struct phylink_config *config)
 {
@@ -1360,6 +1425,28 @@ static const struct dsa_switch_ops lan9303_switch_ops = {
 	.port_fdb_dump		= lan9303_port_fdb_dump,
 	.port_mdb_add		= lan9303_port_mdb_add,
 	.port_mdb_del		= lan9303_port_mdb_del,
+=======
+static const struct dsa_switch_ops lan9303_switch_ops = {
+	.get_tag_protocol = lan9303_get_tag_protocol,
+	.setup = lan9303_setup,
+	.get_strings = lan9303_get_strings,
+	.phy_read = lan9303_phy_read,
+	.phy_write = lan9303_phy_write,
+	.adjust_link = lan9303_adjust_link,
+	.get_ethtool_stats = lan9303_get_ethtool_stats,
+	.get_sset_count = lan9303_get_sset_count,
+	.port_enable = lan9303_port_enable,
+	.port_disable = lan9303_port_disable,
+	.port_bridge_join       = lan9303_port_bridge_join,
+	.port_bridge_leave      = lan9303_port_bridge_leave,
+	.port_stp_state_set     = lan9303_port_stp_state_set,
+	.port_fast_age          = lan9303_port_fast_age,
+	.port_fdb_add           = lan9303_port_fdb_add,
+	.port_fdb_del           = lan9303_port_fdb_del,
+	.port_fdb_dump          = lan9303_port_fdb_dump,
+	.port_mdb_add           = lan9303_port_mdb_add,
+	.port_mdb_del           = lan9303_port_mdb_del,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int lan9303_register_switch(struct lan9303 *chip)

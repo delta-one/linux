@@ -60,7 +60,11 @@ int shmem_sg_alloc_table(struct drm_i915_private *i915, struct sg_table *st,
 			 struct address_space *mapping,
 			 unsigned int max_segment)
 {
+<<<<<<< HEAD
 	unsigned int page_count; /* restricted by sg_alloc_table */
+=======
+	const unsigned long page_count = size / PAGE_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long i;
 	struct scatterlist *sg;
 	struct page *page;
@@ -68,10 +72,13 @@ int shmem_sg_alloc_table(struct drm_i915_private *i915, struct sg_table *st,
 	gfp_t noreclaim;
 	int ret;
 
+<<<<<<< HEAD
 	if (overflows_type(size / PAGE_SIZE, page_count))
 		return -E2BIG;
 
 	page_count = size / PAGE_SIZE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * If there's no chance of allocating enough pages for the whole
 	 * object, bail early.
@@ -197,7 +204,12 @@ static int shmem_get_pages(struct drm_i915_gem_object *obj)
 	struct drm_i915_private *i915 = to_i915(obj->base.dev);
 	struct intel_memory_region *mem = obj->mm.region;
 	struct address_space *mapping = obj->base.filp->f_mapping;
+<<<<<<< HEAD
 	unsigned int max_segment = i915_sg_segment_size(i915->drm.dev);
+=======
+	const unsigned long page_count = obj->base.size / PAGE_SIZE;
+	unsigned int max_segment = i915_sg_segment_size();
+>>>>>>> b7ba80a49124 (Commit)
 	struct sg_table *st;
 	struct sgt_iter sgt_iter;
 	struct page *page;
@@ -238,8 +250,13 @@ rebuild_st:
 			goto rebuild_st;
 		} else {
 			dev_warn(i915->drm.dev,
+<<<<<<< HEAD
 				 "Failed to DMA remap %zu pages\n",
 				 obj->base.size >> PAGE_SHIFT);
+=======
+				 "Failed to DMA remap %lu pages\n",
+				 page_count);
+>>>>>>> b7ba80a49124 (Commit)
 			goto err_pages;
 		}
 	}
@@ -250,7 +267,11 @@ rebuild_st:
 	if (i915_gem_object_can_bypass_llc(obj))
 		obj->cache_dirty = true;
 
+<<<<<<< HEAD
 	__i915_gem_object_set_pages(obj, st);
+=======
+	__i915_gem_object_set_pages(obj, st, i915_sg_dma_sizes(st->sgl));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -372,14 +393,22 @@ __i915_gem_object_release_shmem(struct drm_i915_gem_object *obj,
 
 	__start_cpu_write(obj);
 	/*
+<<<<<<< HEAD
 	 * On non-LLC igfx platforms, force the flush-on-acquire if this is ever
+=======
+	 * On non-LLC platforms, force the flush-on-acquire if this is ever
+>>>>>>> b7ba80a49124 (Commit)
 	 * swapped-in. Our async flush path is not trust worthy enough yet(and
 	 * happens in the wrong order), and with some tricks it's conceivable
 	 * for userspace to change the cache-level to I915_CACHE_NONE after the
 	 * pages are swapped-in, and since execbuf binds the object before doing
 	 * the async flush, we have a race window.
 	 */
+<<<<<<< HEAD
 	if (!HAS_LLC(i915) && !IS_DGFX(i915))
+=======
+	if (!HAS_LLC(i915))
+>>>>>>> b7ba80a49124 (Commit)
 		obj->cache_dirty = true;
 }
 
@@ -541,6 +570,7 @@ static int __create_shmem(struct drm_i915_private *i915,
 
 	drm_gem_private_object_init(&i915->drm, obj, size);
 
+<<<<<<< HEAD
 	/* XXX: The __shmem_file_setup() function returns -EINVAL if size is
 	 * greater than MAX_LFS_FILESIZE.
 	 * To handle the same error as other code that returns -E2BIG when
@@ -555,6 +585,8 @@ static int __create_shmem(struct drm_i915_private *i915,
 	if (BITS_PER_LONG == 64 && size > MAX_LFS_FILESIZE)
 		return -E2BIG;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (i915->mm.gemfs)
 		filp = shmem_file_setup_with_mnt(i915->mm.gemfs, "i915", size,
 						 flags);
@@ -596,7 +628,11 @@ static int shmem_object_init(struct intel_memory_region *mem,
 	mapping_set_gfp_mask(mapping, mask);
 	GEM_BUG_ON(!(mapping_gfp_mask(mapping) & __GFP_RECLAIM));
 
+<<<<<<< HEAD
 	i915_gem_object_init(obj, &i915_gem_shmem_ops, &lock_class, flags);
+=======
+	i915_gem_object_init(obj, &i915_gem_shmem_ops, &lock_class, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	obj->mem_flags |= I915_BO_FLAG_STRUCT_PAGE;
 	obj->write_domain = I915_GEM_DOMAIN_CPU;
 	obj->read_domains = I915_GEM_DOMAIN_CPU;

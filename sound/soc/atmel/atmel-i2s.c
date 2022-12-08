@@ -717,11 +717,20 @@ static int atmel_i2s_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void atmel_i2s_remove(struct platform_device *pdev)
+=======
+static int atmel_i2s_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct atmel_i2s_dev *dev = platform_get_drvdata(pdev);
 
 	clk_disable_unprepare(dev->pclk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver atmel_i2s_driver = {
@@ -730,7 +739,11 @@ static struct platform_driver atmel_i2s_driver = {
 		.of_match_table	= of_match_ptr(atmel_i2s_dt_ids),
 	},
 	.probe		= atmel_i2s_probe,
+<<<<<<< HEAD
 	.remove_new	= atmel_i2s_remove,
+=======
+	.remove		= atmel_i2s_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(atmel_i2s_driver);
 

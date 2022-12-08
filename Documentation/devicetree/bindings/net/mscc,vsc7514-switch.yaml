@@ -18,6 +18,7 @@ description: |
   packets using CPU. Additionally, PTP is supported as well as FDMA for faster
   packet extraction/injection.
 
+<<<<<<< HEAD
 allOf:
   - if:
       properties:
@@ -64,6 +65,16 @@ properties:
 
   reg:
     minItems: 20
+=======
+properties:
+  $nodename:
+    pattern: "^switch@[0-9a-f]+$"
+
+  compatible:
+    const: mscc,vsc7514-switch
+
+  reg:
+>>>>>>> b7ba80a49124 (Commit)
     items:
       - description: system target
       - description: rewriter target
@@ -88,7 +99,10 @@ properties:
       - description: fdma target
 
   reg-names:
+<<<<<<< HEAD
     minItems: 20
+=======
+>>>>>>> b7ba80a49124 (Commit)
     items:
       - const: sys
       - const: rew
@@ -126,16 +140,71 @@ properties:
       - const: xtr
       - const: fdma
 
+<<<<<<< HEAD
+=======
+  ethernet-ports:
+    type: object
+
+    properties:
+      '#address-cells':
+        const: 1
+      '#size-cells':
+        const: 0
+
+    additionalProperties: false
+
+    patternProperties:
+      "^port@[0-9a-f]+$":
+        type: object
+        description: Ethernet ports handled by the switch
+
+        $ref: ethernet-controller.yaml#
+
+        unevaluatedProperties: false
+
+        properties:
+          reg:
+            description: Switch port number
+
+          phy-handle: true
+
+          phy-mode: true
+
+          fixed-link: true
+
+          mac-address: true
+
+        required:
+          - reg
+          - phy-mode
+
+        oneOf:
+          - required:
+              - phy-handle
+          - required:
+              - fixed-link
+
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg
   - reg-names
+<<<<<<< HEAD
   - ethernet-ports
 
 unevaluatedProperties: false
 
 examples:
   # VSC7514 (Switchdev)
+=======
+  - interrupts
+  - interrupt-names
+  - ethernet-ports
+
+additionalProperties: false
+
+examples:
+>>>>>>> b7ba80a49124 (Commit)
   - |
     switch@1010000 {
       compatible = "mscc,vsc7514-switch";
@@ -183,6 +252,7 @@ examples:
         };
       };
     };
+<<<<<<< HEAD
   # VSC7512 (DSA)
   - |
     ethernet-switch@1{
@@ -229,5 +299,7 @@ examples:
           };
         };
       };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 ...

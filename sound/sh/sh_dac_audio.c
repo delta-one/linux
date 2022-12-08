@@ -257,9 +257,16 @@ static int snd_sh_dac_pcm(struct snd_sh_dac *chip, int device)
 
 
 /* driver .remove  --  destructor */
+<<<<<<< HEAD
 static void snd_sh_dac_remove(struct platform_device *devptr)
 {
 	snd_card_free(platform_get_drvdata(devptr));
+=======
+static int snd_sh_dac_remove(struct platform_device *devptr)
+{
+	snd_card_free(platform_get_drvdata(devptr));
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* free -- it has been defined by create */
@@ -402,7 +409,11 @@ probe_error:
  */
 static struct platform_driver sh_dac_driver = {
 	.probe	= snd_sh_dac_probe,
+<<<<<<< HEAD
 	.remove_new = snd_sh_dac_remove,
+=======
+	.remove = snd_sh_dac_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "dac_audio",
 	},

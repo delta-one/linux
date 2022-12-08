@@ -5,7 +5,10 @@
 #define _ASM_RISCV_MODULE_H
 
 #include <asm-generic/module.h>
+<<<<<<< HEAD
 #include <linux/elf.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct module;
 unsigned long module_emit_got_entry(struct module *mod, unsigned long val);
@@ -112,6 +115,7 @@ static inline struct plt_entry *get_plt_entry(unsigned long val,
 
 #endif /* CONFIG_MODULE_SECTIONS */
 
+<<<<<<< HEAD
 static inline const Elf_Shdr *find_section(const Elf_Ehdr *hdr,
 					   const Elf_Shdr *sechdrs,
 					   const char *name)
@@ -127,4 +131,6 @@ static inline const Elf_Shdr *find_section(const Elf_Ehdr *hdr,
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_RISCV_MODULE_H */

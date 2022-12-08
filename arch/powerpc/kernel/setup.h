@@ -23,7 +23,11 @@ void check_smt_enabled(void);
 static inline void check_smt_enabled(void) { }
 #endif
 
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_BOOK3E_64) && defined(CONFIG_SMP)
+=======
+#if defined(CONFIG_PPC_BOOK3E) && defined(CONFIG_SMP)
+>>>>>>> b7ba80a49124 (Commit)
 void setup_tlb_core_data(void);
 #else
 static inline void setup_tlb_core_data(void) { }

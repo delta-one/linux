@@ -92,9 +92,15 @@ static irqreturn_t mcs_touchkey_interrupt(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static int mcs_touchkey_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int mcs_touchkey_probe(struct i2c_client *client,
+		const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	const struct mcs_platform_data *pdata;
 	struct mcs_touchkey_data *data;
 	struct input_dev *input_dev;
@@ -213,6 +219,10 @@ static void mcs_touchkey_shutdown(struct i2c_client *client)
 		data->poweron(false);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int mcs_touchkey_suspend(struct device *dev)
 {
 	struct mcs_touchkey_data *data = dev_get_drvdata(dev);
@@ -242,9 +252,16 @@ static int mcs_touchkey_resume(struct device *dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 static DEFINE_SIMPLE_DEV_PM_OPS(mcs_touchkey_pm_ops,
 				mcs_touchkey_suspend, mcs_touchkey_resume);
+=======
+#endif
+
+static SIMPLE_DEV_PM_OPS(mcs_touchkey_pm_ops,
+			 mcs_touchkey_suspend, mcs_touchkey_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id mcs_touchkey_id[] = {
 	{ "mcs5000_touchkey", MCS5000_TOUCHKEY },
@@ -256,9 +273,15 @@ MODULE_DEVICE_TABLE(i2c, mcs_touchkey_id);
 static struct i2c_driver mcs_touchkey_driver = {
 	.driver = {
 		.name	= "mcs_touchkey",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&mcs_touchkey_pm_ops),
 	},
 	.probe_new	= mcs_touchkey_probe,
+=======
+		.pm	= &mcs_touchkey_pm_ops,
+	},
+	.probe		= mcs_touchkey_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= mcs_touchkey_remove,
 	.shutdown       = mcs_touchkey_shutdown,
 	.id_table	= mcs_touchkey_id,

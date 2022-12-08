@@ -43,6 +43,7 @@ enum filter_op_ids { OPS };
 
 static const char * ops[] = { OPS };
 
+<<<<<<< HEAD
 enum filter_pred_fn {
 	FILTER_PRED_FN_NOP,
 	FILTER_PRED_FN_64,
@@ -81,6 +82,8 @@ struct filter_pred {
 	int 			op;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * pred functions are OP_LE, OP_LT, OP_GE, OP_GT, and OP_BAND
  * pred_funcs_##type below must match the order of them above.
@@ -105,7 +108,10 @@ struct filter_pred {
 	C(INVALID_FILTER,	"Meaningless filter expression"),	\
 	C(IP_FIELD_ONLY,	"Only 'ip' field is supported for function trace"), \
 	C(INVALID_VALUE,	"Invalid value (did you forget quotes)?"), \
+<<<<<<< HEAD
 	C(NO_FUNCTION,		"Function not found"),			\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	C(ERRNO,		"Error"),				\
 	C(NO_FILTER,		"No filter found")
 
@@ -131,7 +137,11 @@ static bool is_not(const char *str)
 }
 
 /**
+<<<<<<< HEAD
  * struct prog_entry - a singe entry in the filter program
+=======
+ * prog_entry - a singe entry in the filter program
+>>>>>>> b7ba80a49124 (Commit)
  * @target:	     Index to jump to on a branch (actually one minus the index)
  * @when_to_branch:  The value of the result of the predicate to do a branch
  * @pred:	     The predicate to execute.
@@ -143,16 +153,27 @@ struct prog_entry {
 };
 
 /**
+<<<<<<< HEAD
  * update_preds - assign a program entry a label target
  * @prog: The program array
  * @N: The index of the current entry in @prog
  * @invert: What to assign a program entry for its branch condition
+=======
+ * update_preds- assign a program entry a label target
+ * @prog: The program array
+ * @N: The index of the current entry in @prog
+ * @when_to_branch: What to assign a program entry for its branch condition
+>>>>>>> b7ba80a49124 (Commit)
  *
  * The program entry at @N has a target that points to the index of a program
  * entry that can have its target and when_to_branch fields updated.
  * Update the current program entry denoted by index @N target field to be
  * that of the updated entry. This will denote the entry to update if
+<<<<<<< HEAD
  * we are processing an "||" after an "&&".
+=======
+ * we are processing an "||" after an "&&"
+>>>>>>> b7ba80a49124 (Commit)
  */
 static void update_preds(struct prog_entry *prog, int N, int invert)
 {
@@ -629,6 +650,7 @@ out_free:
 	return ERR_PTR(ret);
 }
 
+<<<<<<< HEAD
 enum pred_cmp_types {
 	PRED_CMP_TYPE_NOP,
 	PRED_CMP_TYPE_LT,
@@ -671,6 +693,46 @@ static int filter_pred_##type(struct filter_pred *pred, void *event)	\
 		return 0;						\
 	}								\
 }
+=======
+#define DEFINE_COMPARISON_PRED(type)					\
+static int filter_pred_LT_##type(struct filter_pred *pred, void *event)	\
+{									\
+	type *addr = (type *)(event + pred->offset);			\
+	type val = (type)pred->val;					\
+	return *addr < val;						\
+}									\
+static int filter_pred_LE_##type(struct filter_pred *pred, void *event)	\
+{									\
+	type *addr = (type *)(event + pred->offset);			\
+	type val = (type)pred->val;					\
+	return *addr <= val;						\
+}									\
+static int filter_pred_GT_##type(struct filter_pred *pred, void *event)	\
+{									\
+	type *addr = (type *)(event + pred->offset);			\
+	type val = (type)pred->val;					\
+	return *addr > val;					\
+}									\
+static int filter_pred_GE_##type(struct filter_pred *pred, void *event)	\
+{									\
+	type *addr = (type *)(event + pred->offset);			\
+	type val = (type)pred->val;					\
+	return *addr >= val;						\
+}									\
+static int filter_pred_BAND_##type(struct filter_pred *pred, void *event) \
+{									\
+	type *addr = (type *)(event + pred->offset);			\
+	type val = (type)pred->val;					\
+	return !!(*addr & val);						\
+}									\
+static const filter_pred_fn_t pred_funcs_##type[] = {			\
+	filter_pred_LE_##type,						\
+	filter_pred_LT_##type,						\
+	filter_pred_GE_##type,						\
+	filter_pred_GT_##type,						\
+	filter_pred_BAND_##type,					\
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DEFINE_EQUALITY_PRED(size)					\
 static int filter_pred_##size(struct filter_pred *pred, void *event)	\
@@ -879,6 +941,7 @@ static int filter_pred_comm(struct filter_pred *pred, void *event)
 	return cmp ^ pred->not;
 }
 
+<<<<<<< HEAD
 /* Filter predicate for functions. */
 static int filter_pred_function(struct filter_pred *pred, void *event)
 {
@@ -888,6 +951,11 @@ static int filter_pred_function(struct filter_pred *pred, void *event)
 	int ret = *addr >= start && *addr < end;
 
 	return pred->op == OP_EQ ? ret : !ret;
+=======
+static int filter_pred_none(struct filter_pred *pred, void *event)
+{
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1035,6 +1103,7 @@ static void filter_build_regex(struct filter_pred *pred)
 	}
 }
 
+<<<<<<< HEAD
 
 #ifdef CONFIG_FTRACE_STARTUP_TEST
 static int test_pred_visited_fn(struct filter_pred *pred, void *event);
@@ -1048,6 +1117,8 @@ static int test_pred_visited_fn(struct filter_pred *pred, void *event)
 
 static int filter_pred_fn_call(struct filter_pred *pred, void *event);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* return 1 if event matches, 0 otherwise (discard) */
 int filter_match_preds(struct event_filter *filter, void *rec)
 {
@@ -1065,7 +1136,11 @@ int filter_match_preds(struct event_filter *filter, void *rec)
 
 	for (i = 0; prog[i].pred; i++) {
 		struct filter_pred *pred = prog[i].pred;
+<<<<<<< HEAD
 		int match = filter_pred_fn_call(pred, rec);
+=======
+		int match = pred->fn(pred, rec);
+>>>>>>> b7ba80a49124 (Commit)
 		if (match == prog[i].when_to_branch)
 			i = prog[i].target;
 	}
@@ -1251,10 +1326,17 @@ int filter_assign_type(const char *type)
 	return FILTER_OTHER;
 }
 
+<<<<<<< HEAD
 static enum filter_pred_fn select_comparison_fn(enum filter_op_ids op,
 						int field_size, int field_is_signed)
 {
 	enum filter_pred_fn fn = FILTER_PRED_FN_NOP;
+=======
+static filter_pred_fn_t select_comparison_fn(enum filter_op_ids op,
+					    int field_size, int field_is_signed)
+{
+	filter_pred_fn_t fn = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	int pred_func_index = -1;
 
 	switch (op) {
@@ -1263,15 +1345,23 @@ static enum filter_pred_fn select_comparison_fn(enum filter_op_ids op,
 		break;
 	default:
 		if (WARN_ON_ONCE(op < PRED_FUNC_START))
+<<<<<<< HEAD
 			return fn;
 		pred_func_index = op - PRED_FUNC_START;
 		if (WARN_ON_ONCE(pred_func_index > PRED_FUNC_MAX))
 			return fn;
+=======
+			return NULL;
+		pred_func_index = op - PRED_FUNC_START;
+		if (WARN_ON_ONCE(pred_func_index > PRED_FUNC_MAX))
+			return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	switch (field_size) {
 	case 8:
 		if (pred_func_index < 0)
+<<<<<<< HEAD
 			fn = FILTER_PRED_FN_64;
 		else if (field_is_signed)
 			fn = FILTER_PRED_FN_S64;
@@ -1301,12 +1391,44 @@ static enum filter_pred_fn select_comparison_fn(enum filter_op_ids op,
 			fn = FILTER_PRED_FN_S8;
 		else
 			fn = FILTER_PRED_FN_U8;
+=======
+			fn = filter_pred_64;
+		else if (field_is_signed)
+			fn = pred_funcs_s64[pred_func_index];
+		else
+			fn = pred_funcs_u64[pred_func_index];
+		break;
+	case 4:
+		if (pred_func_index < 0)
+			fn = filter_pred_32;
+		else if (field_is_signed)
+			fn = pred_funcs_s32[pred_func_index];
+		else
+			fn = pred_funcs_u32[pred_func_index];
+		break;
+	case 2:
+		if (pred_func_index < 0)
+			fn = filter_pred_16;
+		else if (field_is_signed)
+			fn = pred_funcs_s16[pred_func_index];
+		else
+			fn = pred_funcs_u16[pred_func_index];
+		break;
+	case 1:
+		if (pred_func_index < 0)
+			fn = filter_pred_8;
+		else if (field_is_signed)
+			fn = pred_funcs_s8[pred_func_index];
+		else
+			fn = pred_funcs_u8[pred_func_index];
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
 	return fn;
 }
 
+<<<<<<< HEAD
 
 static int filter_pred_fn_call(struct filter_pred *pred, void *event)
 {
@@ -1358,6 +1480,8 @@ static int filter_pred_fn_call(struct filter_pred *pred, void *event)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Called when a predicate is encountered by predicate_parse() */
 static int parse_pred(const char *str, void *data,
 		      int pos, struct filter_parse_error *pe,
@@ -1366,6 +1490,7 @@ static int parse_pred(const char *str, void *data,
 	struct trace_event_call *call = data;
 	struct ftrace_event_field *field;
 	struct filter_pred *pred = NULL;
+<<<<<<< HEAD
 	unsigned long offset;
 	unsigned long size;
 	unsigned long ip;
@@ -1373,6 +1498,10 @@ static int parse_pred(const char *str, void *data,
 	char *field_name;
 	char *name;
 	bool function = false;
+=======
+	char num_buf[24];	/* Big enough to hold an address */
+	char *field_name;
+>>>>>>> b7ba80a49124 (Commit)
 	bool ustring = false;
 	char q;
 	u64 val;
@@ -1414,12 +1543,15 @@ static int parse_pred(const char *str, void *data,
 		i += len;
 	}
 
+<<<<<<< HEAD
 	/* See if the field is a kernel function name */
 	if ((len = str_has_prefix(str + i, ".function"))) {
 		function = true;
 		i += len;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	while (isspace(str[i]))
 		i++;
 
@@ -1450,6 +1582,7 @@ static int parse_pred(const char *str, void *data,
 	pred->offset = field->offset;
 	pred->op = op;
 
+<<<<<<< HEAD
 	if (function) {
 		/* The field must be the same size as long */
 		if (field->size != sizeof(long)) {
@@ -1515,6 +1648,9 @@ static int parse_pred(const char *str, void *data,
 		pred->val2 = pred->val + size;
 
 	} else if (ftrace_event_is_function(call)) {
+=======
+	if (ftrace_event_is_function(call)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Perf does things different with function events.
 		 * It only allows an "ip" field, and expects a string.
@@ -1526,7 +1662,11 @@ static int parse_pred(const char *str, void *data,
 			parse_error(pe, FILT_ERR_IP_FIELD_ONLY, pos + i);
 			goto err_free;
 		}
+<<<<<<< HEAD
 		pred->fn_num = FILTER_PRED_FN_NOP;
+=======
+		pred->fn = filter_pred_none;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * Quotes are not required, but if they exist then we need
@@ -1604,6 +1744,7 @@ static int parse_pred(const char *str, void *data,
 		filter_build_regex(pred);
 
 		if (field->filter_type == FILTER_COMM) {
+<<<<<<< HEAD
 			pred->fn_num = FILTER_PRED_FN_COMM;
 
 		} else if (field->filter_type == FILTER_STATIC_STRING) {
@@ -1614,6 +1755,18 @@ static int parse_pred(const char *str, void *data,
 			pred->fn_num = FILTER_PRED_FN_STRLOC;
 		} else if (field->filter_type == FILTER_RDYN_STRING)
 			pred->fn_num = FILTER_PRED_FN_STRRELLOC;
+=======
+			pred->fn = filter_pred_comm;
+
+		} else if (field->filter_type == FILTER_STATIC_STRING) {
+			pred->fn = filter_pred_string;
+			pred->regex.field_len = field->size;
+
+		} else if (field->filter_type == FILTER_DYN_STRING) {
+			pred->fn = filter_pred_strloc;
+		} else if (field->filter_type == FILTER_RDYN_STRING)
+			pred->fn = filter_pred_strrelloc;
+>>>>>>> b7ba80a49124 (Commit)
 		else {
 
 			if (!ustring_per_cpu) {
@@ -1624,9 +1777,15 @@ static int parse_pred(const char *str, void *data,
 			}
 
 			if (ustring)
+<<<<<<< HEAD
 				pred->fn_num = FILTER_PRED_FN_PCHAR_USER;
 			else
 				pred->fn_num = FILTER_PRED_FN_PCHAR;
+=======
+				pred->fn = filter_pred_pchar_user;
+			else
+				pred->fn = filter_pred_pchar;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		/* go past the last quote */
 		i++;
@@ -1674,10 +1833,17 @@ static int parse_pred(const char *str, void *data,
 		pred->val = val;
 
 		if (field->filter_type == FILTER_CPU)
+<<<<<<< HEAD
 			pred->fn_num = FILTER_PRED_FN_CPU;
 		else {
 			pred->fn_num = select_comparison_fn(pred->op, field->size,
 							    field->is_signed);
+=======
+			pred->fn = filter_pred_cpu;
+		else {
+			pred->fn = select_comparison_fn(pred->op, field->size,
+							field->is_signed);
+>>>>>>> b7ba80a49124 (Commit)
 			if (pred->op == OP_NE)
 				pred->not = 1;
 		}
@@ -2484,7 +2650,11 @@ static void update_pred_fn(struct event_filter *filter, char *fields)
 		struct filter_pred *pred = prog[i].pred;
 		struct ftrace_event_field *field = pred->field;
 
+<<<<<<< HEAD
 		WARN_ON_ONCE(pred->fn_num == FILTER_PRED_FN_NOP);
+=======
+		WARN_ON_ONCE(!pred->fn);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!field) {
 			WARN_ONCE(1, "all leafs should have field defined %d", i);
@@ -2494,7 +2664,11 @@ static void update_pred_fn(struct event_filter *filter, char *fields)
 		if (!strchr(fields, *field->name))
 			continue;
 
+<<<<<<< HEAD
 		pred->fn_num = FILTER_PRED_TEST_VISITED;
+=======
+		pred->fn = test_pred_visited_fn;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

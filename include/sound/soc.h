@@ -1052,12 +1052,15 @@ struct snd_soc_card {
 #define for_each_card_widgets_safe(card, w, _w)	\
 	list_for_each_entry_safe(w, _w, &card->widgets, list)
 
+<<<<<<< HEAD
 
 static inline int snd_soc_card_is_instantiated(struct snd_soc_card *card)
 {
 	return card && card->instantiated;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* SoC machine DAI configuration, glues a codec and cpu DAI together */
 struct snd_soc_pcm_runtime {
 	struct device *dev;

@@ -312,10 +312,17 @@ define dmesg
 			set var $prev_flags = $info->flags
 		end
 
+<<<<<<< HEAD
 		if ($id == $end_id)
 			loop_break
 		end
 		set var $id = ($id + 1) & $id_mask
+=======
+		set var $id = ($id + 1) & $id_mask
+		if ($id == $end_id)
+			loop_break
+		end
+>>>>>>> b7ba80a49124 (Commit)
 	end
 end
 document dmesg

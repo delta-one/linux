@@ -350,6 +350,7 @@
 #define NAU8821_ADCL_CH_VOL_SFT	        0
 #define NAU8821_ADCL_CH_VOL_MASK	0xff
 
+<<<<<<< HEAD
 /* ADC_DRC_KNEE_IP12 (0x36) */
 #define NAU8821_DRC_ENA_ADC_SFT		15
 #define NAU8821_DRC_ENA_ADC_EN		(0x1 << NAU8821_DRC_ENA_ADC_SFT)
@@ -373,6 +374,8 @@
 #define NAU8821_DRC_ATK_ADC_SFT		4
 #define NAU8821_DRC_DCY_ADC_SFT		0
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* BIQ1_COF10 (0x4a) */
 #define NAU8821_BIQ1_DAC_EN_SFT	        3
 #define NAU8821_BIQ1_DAC_EN_EN          (0x1 << NAU8821_BIQ1_DAC_EN_SFT)

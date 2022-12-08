@@ -13,7 +13,10 @@
 #include <linux/bitrev.h>
 #include <linux/io.h>
 #include <linux/crc32.h>
+<<<<<<< HEAD
 #include <linux/netdevice.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Transmit Inter-Packet Gap Length Register (TX_IPG_LENGTH) */
 #define TGEC_TX_IPG_LENGTH_MASK	0x000003ff
@@ -244,6 +247,13 @@ static int init(struct tgec_regs __iomem *regs, struct tgec_cfg *cfg,
 
 static int check_init_parameters(struct fman_mac *tgec)
 {
+<<<<<<< HEAD
+=======
+	if (tgec->max_speed < SPEED_10000) {
+		pr_err("10G MAC driver only support 10G speed\n");
+		return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (!tgec->exception_cb) {
 		pr_err("uninitialized exception_cb\n");
 		return -EINVAL;
@@ -381,13 +391,48 @@ static void free_init_resources(struct fman_mac *tgec)
 	tgec->unicast_addr_hash = NULL;
 }
 
+<<<<<<< HEAD
 static int tgec_enable(struct fman_mac *tgec)
 {
+=======
+static bool is_init_done(struct tgec_cfg *cfg)
+{
+	/* Checks if tGEC driver parameters were initialized */
+	if (!cfg)
+		return true;
+
+	return false;
+}
+
+static int tgec_enable(struct fman_mac *tgec)
+{
+	struct tgec_regs __iomem *regs = tgec->regs;
+	u32 tmp;
+
+	if (!is_init_done(tgec->cfg))
+		return -EINVAL;
+
+	tmp = ioread32be(&regs->command_config);
+	tmp |= CMD_CFG_RX_EN | CMD_CFG_TX_EN;
+	iowrite32be(tmp, &regs->command_config);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static void tgec_disable(struct fman_mac *tgec)
 {
+<<<<<<< HEAD
+=======
+	struct tgec_regs __iomem *regs = tgec->regs;
+	u32 tmp;
+
+	WARN_ON_ONCE(!is_init_done(tgec->cfg));
+
+	tmp = ioread32be(&regs->command_config);
+	tmp &= ~(CMD_CFG_RX_EN | CMD_CFG_TX_EN);
+	iowrite32be(tmp, &regs->command_config);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int tgec_set_promiscuous(struct fman_mac *tgec, bool new_val)
@@ -395,6 +440,12 @@ static int tgec_set_promiscuous(struct fman_mac *tgec, bool new_val)
 	struct tgec_regs __iomem *regs = tgec->regs;
 	u32 tmp;
 
+<<<<<<< HEAD
+=======
+	if (!is_init_done(tgec->cfg))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	tmp = ioread32be(&regs->command_config);
 	if (new_val)
 		tmp |= CMD_CFG_PROMIS_EN;
@@ -411,6 +462,12 @@ static int tgec_set_tx_pause_frames(struct fman_mac *tgec,
 {
 	struct tgec_regs __iomem *regs = tgec->regs;
 
+<<<<<<< HEAD
+=======
+	if (!is_init_done(tgec->cfg))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	iowrite32be((u32)pause_time, &regs->pause_quant);
 
 	return 0;
@@ -421,6 +478,12 @@ static int tgec_accept_rx_pause_frames(struct fman_mac *tgec, bool en)
 	struct tgec_regs __iomem *regs = tgec->regs;
 	u32 tmp;
 
+<<<<<<< HEAD
+=======
+	if (!is_init_done(tgec->cfg))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	tmp = ioread32be(&regs->command_config);
 	if (!en)
 		tmp |= CMD_CFG_PAUSE_IGNORE;
@@ -431,6 +494,7 @@ static int tgec_accept_rx_pause_frames(struct fman_mac *tgec, bool en)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void tgec_mac_config(struct phylink_config *config, unsigned int mode,
 			    const struct phylink_link_state *state)
 {
@@ -477,6 +541,14 @@ static const struct phylink_mac_ops tgec_mac_ops = {
 static int tgec_modify_mac_address(struct fman_mac *tgec,
 				   const enet_addr_t *p_enet_addr)
 {
+=======
+static int tgec_modify_mac_address(struct fman_mac *tgec,
+				   const enet_addr_t *p_enet_addr)
+{
+	if (!is_init_done(tgec->cfg))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	tgec->addr = ENET_ADDR_TO_UINT64(*p_enet_addr);
 	set_mac_address(tgec->regs, (const u8 *)(*p_enet_addr));
 
@@ -491,6 +563,12 @@ static int tgec_add_hash_mac_address(struct fman_mac *tgec,
 	u32 crc = 0xFFFFFFFF, hash;
 	u64 addr;
 
+<<<<<<< HEAD
+=======
+	if (!is_init_done(tgec->cfg))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	addr = ENET_ADDR_TO_UINT64(*eth_addr);
 
 	if (!(addr & GROUP_ADDRESS)) {
@@ -523,6 +601,12 @@ static int tgec_set_allmulti(struct fman_mac *tgec, bool enable)
 	u32 entry;
 	struct tgec_regs __iomem *regs = tgec->regs;
 
+<<<<<<< HEAD
+=======
+	if (!is_init_done(tgec->cfg))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (enable) {
 		for (entry = 0; entry < TGEC_HASH_TABLE_SIZE; entry++)
 			iowrite32be(entry | TGEC_HASH_MCAST_EN,
@@ -543,6 +627,12 @@ static int tgec_set_tstamp(struct fman_mac *tgec, bool enable)
 	struct tgec_regs __iomem *regs = tgec->regs;
 	u32 tmp;
 
+<<<<<<< HEAD
+=======
+	if (!is_init_done(tgec->cfg))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	tmp = ioread32be(&regs->command_config);
 
 	if (enable)
@@ -564,6 +654,12 @@ static int tgec_del_hash_mac_address(struct fman_mac *tgec,
 	u32 crc = 0xFFFFFFFF, hash;
 	u64 addr;
 
+<<<<<<< HEAD
+=======
+	if (!is_init_done(tgec->cfg))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	addr = ((*(u64 *)eth_addr) >> 16);
 
 	/* CRC calculation */
@@ -590,12 +686,28 @@ static int tgec_del_hash_mac_address(struct fman_mac *tgec,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void tgec_adjust_link(struct mac_device *mac_dev)
+{
+	struct phy_device *phy_dev = mac_dev->phy_dev;
+
+	mac_dev->update_speed(mac_dev, phy_dev->speed);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int tgec_set_exception(struct fman_mac *tgec,
 			      enum fman_mac_exceptions exception, bool enable)
 {
 	struct tgec_regs __iomem *regs = tgec->regs;
 	u32 bit_mask = 0;
 
+<<<<<<< HEAD
+=======
+	if (!is_init_done(tgec->cfg))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	bit_mask = get_exception_flag(exception);
 	if (bit_mask) {
 		if (enable)
@@ -620,6 +732,12 @@ static int tgec_init(struct fman_mac *tgec)
 	enet_addr_t eth_addr;
 	int err;
 
+<<<<<<< HEAD
+=======
+	if (is_init_done(tgec->cfg))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (DEFAULT_RESET_ON_INIT &&
 	    (fman_reset_mac(tgec->fm, tgec->mac_id) != 0)) {
 		pr_err("Can't reset MAC!\n");
@@ -729,6 +847,10 @@ static struct fman_mac *tgec_config(struct mac_device *mac_dev,
 
 	tgec->regs = mac_dev->vaddr;
 	tgec->addr = ENET_ADDR_TO_UINT64(mac_dev->addr);
+<<<<<<< HEAD
+=======
+	tgec->max_speed = params->max_speed;
+>>>>>>> b7ba80a49124 (Commit)
 	tgec->mac_id = params->mac_id;
 	tgec->exceptions = (TGEC_IMASK_MDIO_SCAN_EVENT	|
 			    TGEC_IMASK_REM_FAULT	|
@@ -763,15 +885,27 @@ int tgec_initialization(struct mac_device *mac_dev,
 	int err;
 	struct fman_mac		*tgec;
 
+<<<<<<< HEAD
 	mac_dev->phylink_ops		= &tgec_mac_ops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mac_dev->set_promisc		= tgec_set_promiscuous;
 	mac_dev->change_addr		= tgec_modify_mac_address;
 	mac_dev->add_hash_mac_addr	= tgec_add_hash_mac_address;
 	mac_dev->remove_hash_mac_addr	= tgec_del_hash_mac_address;
+<<<<<<< HEAD
+=======
+	mac_dev->set_tx_pause		= tgec_set_tx_pause_frames;
+	mac_dev->set_rx_pause		= tgec_accept_rx_pause_frames;
+>>>>>>> b7ba80a49124 (Commit)
 	mac_dev->set_exception		= tgec_set_exception;
 	mac_dev->set_allmulti		= tgec_set_allmulti;
 	mac_dev->set_tstamp		= tgec_set_tstamp;
 	mac_dev->set_multi		= fman_set_multi;
+<<<<<<< HEAD
+=======
+	mac_dev->adjust_link            = tgec_adjust_link;
+>>>>>>> b7ba80a49124 (Commit)
 	mac_dev->enable			= tgec_enable;
 	mac_dev->disable		= tgec_disable;
 
@@ -781,6 +915,7 @@ int tgec_initialization(struct mac_device *mac_dev,
 		goto _return;
 	}
 
+<<<<<<< HEAD
 	/* The internal connection to the serdes is XGMII, but this isn't
 	 * really correct for the phy mode (which is the external connection).
 	 * However, this is how all older device trees say that they want
@@ -794,6 +929,8 @@ int tgec_initialization(struct mac_device *mac_dev,
 	mac_dev->phylink_config.mac_capabilities =
 		MAC_SYM_PAUSE | MAC_ASYM_PAUSE | MAC_10000FD;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tgec = mac_dev->fman_mac;
 	tgec->cfg->max_frame_length = fman_get_max_frm();
 	err = tgec_init(tgec);

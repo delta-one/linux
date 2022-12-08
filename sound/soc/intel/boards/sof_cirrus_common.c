@@ -155,7 +155,11 @@ static const char * const cs35l41_name_prefixes[] = { "WL", "WR", "TL", "TR" };
  */
 static int cs35l41_compute_codec_conf(void)
 {
+<<<<<<< HEAD
 	static const char * const uid_strings[] = { "0", "1", "2", "3" };
+=======
+	const char * const uid_strings[] = { "0", "1", "2", "3" };
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int uid, sz = 0;
 	struct acpi_device *adev;
 	struct device *physdev;

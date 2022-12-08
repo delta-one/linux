@@ -33,11 +33,18 @@
 #include <linux/dnotify.h>
 #include <linux/compat.h>
 #include <linux/mnt_idmapping.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
 
 #include "internal.h"
 
 int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+
+#include "internal.h"
+
+int do_truncate(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		loff_t length, unsigned int time_attrs, struct file *filp)
 {
 	int ret;
@@ -55,7 +62,11 @@ int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,
 	}
 
 	/* Remove suid, sgid, and file capabilities on truncate too */
+<<<<<<< HEAD
 	ret = dentry_needs_remove_privs(idmap, dentry);
+=======
+	ret = dentry_needs_remove_privs(dentry);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 	if (ret)
@@ -63,14 +74,22 @@ int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,
 
 	inode_lock(dentry->d_inode);
 	/* Note any delegations or leases have already been broken: */
+<<<<<<< HEAD
 	ret = notify_change(idmap, dentry, &newattrs, NULL);
+=======
+	ret = notify_change(mnt_userns, dentry, &newattrs, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	inode_unlock(dentry->d_inode);
 	return ret;
 }
 
 long vfs_truncate(const struct path *path, loff_t length)
 {
+<<<<<<< HEAD
 	struct mnt_idmap *idmap;
+=======
+	struct user_namespace *mnt_userns;
+>>>>>>> b7ba80a49124 (Commit)
 	struct inode *inode;
 	long error;
 
@@ -86,8 +105,13 @@ long vfs_truncate(const struct path *path, loff_t length)
 	if (error)
 		goto out;
 
+<<<<<<< HEAD
 	idmap = mnt_idmap(path->mnt);
 	error = inode_permission(idmap, inode, MAY_WRITE);
+=======
+	mnt_userns = mnt_user_ns(path->mnt);
+	error = inode_permission(mnt_userns, inode, MAY_WRITE);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		goto mnt_drop_write_and_out;
 
@@ -109,7 +133,11 @@ long vfs_truncate(const struct path *path, loff_t length)
 
 	error = security_path_truncate(path);
 	if (!error)
+<<<<<<< HEAD
 		error = do_truncate(idmap, path->dentry, length, 0, NULL);
+=======
+		error = do_truncate(mnt_userns, path->dentry, length, 0, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 put_write_and_out:
 	put_write_access(inode);
@@ -189,9 +217,15 @@ long do_sys_ftruncate(unsigned int fd, loff_t length, int small)
 	if (IS_APPEND(file_inode(f.file)))
 		goto out_putf;
 	sb_start_write(inode->i_sb);
+<<<<<<< HEAD
 	error = security_file_truncate(f.file);
 	if (!error)
 		error = do_truncate(file_mnt_idmap(f.file), dentry, length,
+=======
+	error = security_path_truncate(&f.file->f_path);
+	if (!error)
+		error = do_truncate(file_mnt_user_ns(f.file), dentry, length,
+>>>>>>> b7ba80a49124 (Commit)
 				    ATTR_MTIME | ATTR_CTIME, f.file);
 	sb_end_write(inode->i_sb);
 out_putf:
@@ -368,6 +402,7 @@ COMPAT_SYSCALL_DEFINE6(fallocate, int, fd, int, mode, compat_arg_u64_dual(offset
  * access() needs to use the real uid/gid, not the effective uid/gid.
  * We do this by temporarily clearing all FS-related capabilities and
  * switching the fsuid/fsgid around to the real ones.
+<<<<<<< HEAD
  *
  * Creating new credentials is expensive, so we try to skip doing it,
  * which we can if the result would match what we already got.
@@ -399,6 +434,9 @@ static bool access_need_override_creds(int flags)
 	return false;
 }
 
+=======
+ */
+>>>>>>> b7ba80a49124 (Commit)
 static const struct cred *access_override_creds(void)
 {
 	const struct cred *old_cred;
@@ -408,12 +446,15 @@ static const struct cred *access_override_creds(void)
 	if (!override_cred)
 		return NULL;
 
+<<<<<<< HEAD
 	/*
 	 * XXX access_need_override_creds performs checks in hopes of skipping
 	 * this work. Make sure it stays in sync if making any changes in this
 	 * routine.
 	 */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	override_cred->fsuid = override_cred->uid;
 	override_cred->fsgid = override_cred->gid;
 
@@ -473,7 +514,11 @@ static long do_faccessat(int dfd, const char __user *filename, int mode, int fla
 	if (flags & AT_EMPTY_PATH)
 		lookup_flags |= LOOKUP_EMPTY;
 
+<<<<<<< HEAD
 	if (access_need_override_creds(flags)) {
+=======
+	if (!(flags & AT_EACCESS)) {
+>>>>>>> b7ba80a49124 (Commit)
 		old_cred = access_override_creds();
 		if (!old_cred)
 			return -ENOMEM;
@@ -496,7 +541,11 @@ retry:
 			goto out_path_release;
 	}
 
+<<<<<<< HEAD
 	res = inode_permission(mnt_idmap(path.mnt), inode, mode | MAY_ACCESS);
+=======
+	res = inode_permission(mnt_user_ns(path.mnt), inode, mode | MAY_ACCESS);
+>>>>>>> b7ba80a49124 (Commit)
 	/* SuS v2 requires we report a read only fs too */
 	if (res || !(mode & S_IWOTH) || special_file(inode->i_mode))
 		goto out_path_release;
@@ -640,7 +689,11 @@ retry_deleg:
 		goto out_unlock;
 	newattrs.ia_mode = (mode & S_IALLUGO) | (inode->i_mode & ~S_IALLUGO);
 	newattrs.ia_valid = ATTR_MODE | ATTR_CTIME;
+<<<<<<< HEAD
 	error = notify_change(mnt_idmap(path->mnt), path->dentry,
+=======
+	error = notify_change(mnt_user_ns(path->mnt), path->dentry,
+>>>>>>> b7ba80a49124 (Commit)
 			      &newattrs, &delegated_inode);
 out_unlock:
 	inode_unlock(inode);
@@ -738,8 +791,12 @@ static inline bool setattr_vfsgid(struct iattr *attr, kgid_t kgid)
 
 int chown_common(const struct path *path, uid_t user, gid_t group)
 {
+<<<<<<< HEAD
 	struct mnt_idmap *idmap;
 	struct user_namespace *fs_userns;
+=======
+	struct user_namespace *mnt_userns, *fs_userns;
+>>>>>>> b7ba80a49124 (Commit)
 	struct inode *inode = path->dentry->d_inode;
 	struct inode *delegated_inode = NULL;
 	int error;
@@ -750,7 +807,11 @@ int chown_common(const struct path *path, uid_t user, gid_t group)
 	uid = make_kuid(current_user_ns(), user);
 	gid = make_kgid(current_user_ns(), group);
 
+<<<<<<< HEAD
 	idmap = mnt_idmap(path->mnt);
+=======
+	mnt_userns = mnt_user_ns(path->mnt);
+>>>>>>> b7ba80a49124 (Commit)
 	fs_userns = i_user_ns(inode);
 
 retry_deleg:
@@ -761,6 +822,7 @@ retry_deleg:
 		return -EINVAL;
 	if ((group != (gid_t)-1) && !setattr_vfsgid(&newattrs, gid))
 		return -EINVAL;
+<<<<<<< HEAD
 	inode_lock(inode);
 	if (!S_ISDIR(inode->i_mode))
 		newattrs.ia_valid |= ATTR_KILL_SUID | ATTR_KILL_PRIV |
@@ -772,6 +834,19 @@ retry_deleg:
 		from_vfsgid(idmap, fs_userns, newattrs.ia_vfsgid));
 	if (!error)
 		error = notify_change(idmap, path->dentry, &newattrs,
+=======
+	if (!S_ISDIR(inode->i_mode))
+		newattrs.ia_valid |=
+			ATTR_KILL_SUID | ATTR_KILL_SGID | ATTR_KILL_PRIV;
+	inode_lock(inode);
+	/* Continue to send actual fs values, not the mount values. */
+	error = security_path_chown(
+		path,
+		from_vfsuid(mnt_userns, fs_userns, newattrs.ia_vfsuid),
+		from_vfsgid(mnt_userns, fs_userns, newattrs.ia_vfsgid));
+	if (!error)
+		error = notify_change(mnt_userns, path->dentry, &newattrs,
+>>>>>>> b7ba80a49124 (Commit)
 				      &delegated_inode);
 	inode_unlock(inode);
 	if (delegated_inode) {
@@ -908,7 +983,11 @@ static int do_dentry_open(struct file *f,
 	if (error)
 		goto cleanup_all;
 
+<<<<<<< HEAD
 	error = break_lease(file_inode(f), f->f_flags);
+=======
+	error = break_lease(locks_inode(f), f->f_flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		goto cleanup_all;
 
@@ -1102,7 +1181,11 @@ struct file *dentry_create(const struct path *path, int flags, umode_t mode,
 	if (IS_ERR(f))
 		return f;
 
+<<<<<<< HEAD
 	error = vfs_create(mnt_idmap(path->mnt),
+=======
+	error = vfs_create(mnt_user_ns(path->mnt),
+>>>>>>> b7ba80a49124 (Commit)
 			   d_inode(path->dentry->d_parent),
 			   path->dentry, mode, true);
 	if (!error)
@@ -1196,6 +1279,7 @@ inline int build_open_flags(const struct open_how *how, struct open_flags *op)
 	}
 
 	/*
+<<<<<<< HEAD
 	 * Block bugs where O_DIRECTORY | O_CREAT created regular files.
 	 * Note, that blocking O_DIRECTORY | O_CREAT here also protects
 	 * O_TMPFILE below which requires O_DIRECTORY being raised.
@@ -1211,6 +1295,15 @@ inline int build_open_flags(const struct open_how *how, struct open_flags *op)
 		 * is raised alongside __O_TMPFILE.
 		 */
 		if (!(flags & O_DIRECTORY))
+=======
+	 * In order to ensure programs get explicit errors when trying to use
+	 * O_TMPFILE on old kernels, O_TMPFILE is implemented such that it
+	 * looks like (O_DIRECTORY|O_RDWR & ~O_CREAT) to old kernels. But we
+	 * have to require userspace to explicitly set it.
+	 */
+	if (flags & __O_TMPFILE) {
+		if ((flags & O_TMPFILE_MASK) != O_TMPFILE)
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		if (!(acc_mode & MAY_WRITE))
 			return -EINVAL;
@@ -1457,9 +1550,14 @@ int filp_close(struct file *filp, fl_owner_t id)
 {
 	int retval = 0;
 
+<<<<<<< HEAD
 	if (CHECK_DATA_CORRUPTION(file_count(filp) == 0,
 			"VFS: Close: file count is 0 (f_op=%ps)",
 			filp->f_op)) {
+=======
+	if (!file_count(filp)) {
+		printk(KERN_ERR "VFS: Close: file count is 0\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 

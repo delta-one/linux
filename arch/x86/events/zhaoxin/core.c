@@ -541,6 +541,7 @@ __init int zhaoxin_pmu_init(void)
 
 	switch (boot_cpu_data.x86) {
 	case 0x06:
+<<<<<<< HEAD
 		/*
 		 * Support Zhaoxin CPU from ZXC series, exclude Nano series through FMS.
 		 * Nano FMS: Family=6, Model=F, Stepping=[0-A][C-D]
@@ -548,6 +549,9 @@ __init int zhaoxin_pmu_init(void)
 		 */
 		if ((boot_cpu_data.x86_model == 0x0f && boot_cpu_data.x86_stepping >= 0x0e) ||
 			boot_cpu_data.x86_model == 0x19) {
+=======
+		if (boot_cpu_data.x86_model == 0x0f || boot_cpu_data.x86_model == 0x19) {
+>>>>>>> b7ba80a49124 (Commit)
 
 			x86_pmu.max_period = x86_pmu.cntval_mask >> 1;
 

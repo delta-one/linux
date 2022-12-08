@@ -42,13 +42,24 @@ properties:
   bluetooth:
     type: object
     additionalProperties: false
+<<<<<<< HEAD
     allOf:
       - $ref: /schemas/net/bluetooth/bluetooth-controller.yaml#
+=======
+>>>>>>> b7ba80a49124 (Commit)
     properties:
       compatible:
         const: qcom,wcnss-bt
 
+<<<<<<< HEAD
       local-bd-address: true
+=======
+      local-bd-address:
+        $ref: /schemas/types.yaml#/definitions/uint8-array
+        maxItems: 6
+        description:
+          See Documentation/devicetree/bindings/net/bluetooth.txt
+>>>>>>> b7ba80a49124 (Commit)
 
     required:
       - compatible

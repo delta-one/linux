@@ -609,7 +609,12 @@ static void init_napi(struct adapter *adap)
 		struct sge_qset *qs = &adap->sge.qs[i];
 
 		if (qs->adap)
+<<<<<<< HEAD
 			netif_napi_add(qs->netdev, &qs->napi, qs->napi.poll);
+=======
+			netif_napi_add(qs->netdev, &qs->napi, qs->napi.poll,
+				       64);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -1301,7 +1306,10 @@ static int cxgb_up(struct adapter *adap)
 		if (ret < 0) {
 			CH_ERR(adap, "failed to bind qsets, err %d\n", ret);
 			t3_intr_disable(adap);
+<<<<<<< HEAD
 			quiesce_rx(adap);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			free_irq_resources(adap);
 			err = ret;
 			goto out;

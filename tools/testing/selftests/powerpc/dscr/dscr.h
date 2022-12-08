@@ -23,7 +23,10 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
+<<<<<<< HEAD
 #include "reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "utils.h"
 
 #define THREADS		100	/* Max threads */
@@ -42,28 +45,53 @@
 /* Prilvilege state DSCR access */
 inline unsigned long get_dscr(void)
 {
+<<<<<<< HEAD
 	return mfspr(SPRN_DSCR_PRIV);
+=======
+	unsigned long ret;
+
+	asm volatile("mfspr %0,%1" : "=r" (ret) : "i" (SPRN_DSCR_PRIV));
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 inline void set_dscr(unsigned long val)
 {
+<<<<<<< HEAD
 	mtspr(SPRN_DSCR_PRIV, val);
+=======
+	asm volatile("mtspr %1,%0" : : "r" (val), "i" (SPRN_DSCR_PRIV));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Problem state DSCR access */
 inline unsigned long get_dscr_usr(void)
 {
+<<<<<<< HEAD
 	return mfspr(SPRN_DSCR);
+=======
+	unsigned long ret;
+
+	asm volatile("mfspr %0,%1" : "=r" (ret) : "i" (SPRN_DSCR));
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 inline void set_dscr_usr(unsigned long val)
 {
+<<<<<<< HEAD
 	mtspr(SPRN_DSCR, val);
+=======
+	asm volatile("mtspr %1,%0" : : "r" (val), "i" (SPRN_DSCR));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Default DSCR access */
 unsigned long get_default_dscr(void)
 {
+<<<<<<< HEAD
 	int err;
 	unsigned long val;
 
@@ -72,11 +100,34 @@ unsigned long get_default_dscr(void)
 		perror("read() failed");
 		exit(1);
 	}
+=======
+	int fd = -1, ret;
+	char buf[16];
+	unsigned long val;
+
+	if (fd == -1) {
+		fd = open(DSCR_DEFAULT, O_RDONLY);
+		if (fd == -1) {
+			perror("open() failed");
+			exit(1);
+		}
+	}
+	memset(buf, 0, sizeof(buf));
+	lseek(fd, 0, SEEK_SET);
+	ret = read(fd, buf, sizeof(buf));
+	if (ret == -1) {
+		perror("read() failed");
+		exit(1);
+	}
+	sscanf(buf, "%lx", &val);
+	close(fd);
+>>>>>>> b7ba80a49124 (Commit)
 	return val;
 }
 
 void set_default_dscr(unsigned long val)
 {
+<<<<<<< HEAD
 	int err;
 
 	err = write_ulong(DSCR_DEFAULT, val, 16);
@@ -84,6 +135,25 @@ void set_default_dscr(unsigned long val)
 		perror("write() failed");
 		exit(1);
 	}
+=======
+	int fd = -1, ret;
+	char buf[16];
+
+	if (fd == -1) {
+		fd = open(DSCR_DEFAULT, O_RDWR);
+		if (fd == -1) {
+			perror("open() failed");
+			exit(1);
+		}
+	}
+	sprintf(buf, "%lx\n", val);
+	ret = write(fd, buf, strlen(buf));
+	if (ret == -1) {
+		perror("write() failed");
+		exit(1);
+	}
+	close(fd);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 double uniform_deviate(int seed)

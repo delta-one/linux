@@ -59,7 +59,10 @@ void mod_power_calc_psr_configs(struct psr_config *psr_config,
 		const struct dc_stream_state *stream);
 bool mod_power_only_edp(const struct dc_state *context,
 		const struct dc_stream_state *stream);
+<<<<<<< HEAD
 bool psr_su_set_dsc_slice_height(struct dc *dc, struct dc_link *link,
 			      struct dc_stream_state *stream,
 			      struct psr_config *config);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* MODULES_POWER_POWER_HELPERS_H_ */

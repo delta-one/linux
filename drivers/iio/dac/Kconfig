@@ -162,10 +162,17 @@ config AD5696_I2C
 	depends on I2C
 	select AD5686
 	help
+<<<<<<< HEAD
 	  Say yes here to build support for Analog Devices AD5311R, AD5337,
 	  AD5338R, AD5671R, AD5673R, AD5675R, AD5677R, AD5691R, AD5692R, AD5693,
 	  AD5693R, AD5694, AD5694R, AD5695R, AD5696, and AD5696R Digital to
 	  Analog converters.
+=======
+	  Say yes here to build support for Analog Devices AD5311R, AD5338R,
+	  AD5671R, AD5673R, AD5675R, AD5677R, AD5691R, AD5692R, AD5693, AD5693R,
+	  AD5694, AD5694R, AD5695R, AD5696, and AD5696R Digital to Analog
+	  converters.
+>>>>>>> b7ba80a49124 (Commit)
 
 	  To compile this driver as a module, choose M here: the module will be
 	  called ad5696.
@@ -357,6 +364,7 @@ config MAX517
 	  This driver can also be built as a module.  If so, the module
 	  will be called max517.
 
+<<<<<<< HEAD
 config MAX5522
 	tristate "Maxim MAX5522 DAC driver"
 	depends on SPI_MASTER
@@ -370,6 +378,8 @@ config MAX5522
 
 	  If compiled as a module, it will be called max5522.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config MAX5821
 	tristate "Maxim MAX5821 DAC driver"
 	depends on I2C

@@ -29,6 +29,7 @@
 		rdma4 = &rdma4;
 	};
 
+<<<<<<< HEAD
 	clk13m: fixed-factor-clock-13m {
 		compatible = "fixed-factor-clock";
 		#clock-cells = <0>;
@@ -38,6 +39,8 @@
 		clock-output-names = "clk13m";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	clk26m: oscillator0 {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
@@ -62,6 +65,7 @@
 			reg = <0x000>;
 			enable-method = "psci";
 			clock-frequency = <1701000000>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_l &cpu_off_l>;
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
@@ -69,6 +73,9 @@
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+			cpu-idle-states = <&cpu_sleep_l &cluster_sleep_l>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 			capacity-dmips-mhz = <530>;
 		};
@@ -79,6 +86,7 @@
 			reg = <0x100>;
 			enable-method = "psci";
 			clock-frequency = <1701000000>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_l &cpu_off_l>;
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
@@ -86,6 +94,9 @@
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+			cpu-idle-states = <&cpu_sleep_l &cluster_sleep_l>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 			capacity-dmips-mhz = <530>;
 		};
@@ -96,6 +107,7 @@
 			reg = <0x200>;
 			enable-method = "psci";
 			clock-frequency = <1701000000>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_l &cpu_off_l>;
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
@@ -103,6 +115,9 @@
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+			cpu-idle-states = <&cpu_sleep_l &cluster_sleep_l>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 			capacity-dmips-mhz = <530>;
 		};
@@ -113,6 +128,7 @@
 			reg = <0x300>;
 			enable-method = "psci";
 			clock-frequency = <1701000000>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_l &cpu_off_l>;
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
@@ -120,6 +136,9 @@
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+			cpu-idle-states = <&cpu_sleep_l &cluster_sleep_l>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 			capacity-dmips-mhz = <530>;
 		};
@@ -130,6 +149,7 @@
 			reg = <0x400>;
 			enable-method = "psci";
 			clock-frequency = <2171000000>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_b &cpu_off_b>;
 			i-cache-size = <65536>;
 			i-cache-line-size = <64>;
@@ -137,6 +157,9 @@
 			d-cache-size = <65536>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <256>;
+=======
+			cpu-idle-states = <&cpu_sleep_b &cluster_sleep_b>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_1>;
 			capacity-dmips-mhz = <1024>;
 		};
@@ -147,6 +170,7 @@
 			reg = <0x500>;
 			enable-method = "psci";
 			clock-frequency = <2171000000>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_b &cpu_off_b>;
 			i-cache-size = <65536>;
 			i-cache-line-size = <64>;
@@ -154,6 +178,9 @@
 			d-cache-size = <65536>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <256>;
+=======
+			cpu-idle-states = <&cpu_sleep_b &cluster_sleep_b>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_1>;
 			capacity-dmips-mhz = <1024>;
 		};
@@ -164,6 +191,7 @@
 			reg = <0x600>;
 			enable-method = "psci";
 			clock-frequency = <2171000000>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_b &cpu_off_b>;
 			i-cache-size = <65536>;
 			i-cache-line-size = <64>;
@@ -171,6 +199,9 @@
 			d-cache-size = <65536>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <256>;
+=======
+			cpu-idle-states = <&cpu_sleep_b &cluster_sleep_b>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_1>;
 			capacity-dmips-mhz = <1024>;
 		};
@@ -181,6 +212,7 @@
 			reg = <0x700>;
 			enable-method = "psci";
 			clock-frequency = <2171000000>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_b &cpu_off_b>;
 			i-cache-size = <65536>;
 			i-cache-line-size = <64>;
@@ -188,6 +220,9 @@
 			d-cache-size = <65536>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <256>;
+=======
+			cpu-idle-states = <&cpu_sleep_b &cluster_sleep_b>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_1>;
 			capacity-dmips-mhz = <1024>;
 		};
@@ -206,6 +241,7 @@
 				core3 {
 					cpu = <&cpu3>;
 				};
+<<<<<<< HEAD
 				core4 {
 					cpu = <&cpu4>;
 				};
@@ -216,6 +252,21 @@
 					cpu = <&cpu6>;
 				};
 				core7 {
+=======
+			};
+
+			cluster1 {
+				core0 {
+					cpu = <&cpu4>;
+				};
+				core1 {
+					cpu = <&cpu5>;
+				};
+				core2 {
+					cpu = <&cpu6>;
+				};
+				core3 {
+>>>>>>> b7ba80a49124 (Commit)
 					cpu = <&cpu7>;
 				};
 			};
@@ -223,34 +274,47 @@
 
 		l2_0: l2-cache0 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
 			cache-size = <131072>;
 			cache-line-size = <64>;
 			cache-sets = <512>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l3_0>;
 		};
 
 		l2_1: l2-cache1 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
 			cache-size = <262144>;
 			cache-line-size = <64>;
 			cache-sets = <512>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l3_0>;
 		};
 
 		l3_0: l3-cache {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <3>;
 			cache-size = <2097152>;
 			cache-line-size = <64>;
 			cache-sets = <2048>;
 			cache-unified;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		idle-states {
 			entry-method = "psci";
+<<<<<<< HEAD
 			cpu_ret_l: cpu-retention-l {
+=======
+			cpu_sleep_l: cpu-sleep-l {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "arm,idle-state";
 				arm,psci-suspend-param = <0x00010001>;
 				local-timer-stop;
@@ -258,7 +322,11 @@
 				exit-latency-us = <140>;
 				min-residency-us = <780>;
 			};
+<<<<<<< HEAD
 			cpu_ret_b: cpu-retention-b {
+=======
+			cpu_sleep_b: cpu-sleep-b {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "arm,idle-state";
 				arm,psci-suspend-param = <0x00010001>;
 				local-timer-stop;
@@ -266,7 +334,11 @@
 				exit-latency-us = <145>;
 				min-residency-us = <720>;
 			};
+<<<<<<< HEAD
 			cpu_off_l: cpu-off-l {
+=======
+			cluster_sleep_l: cluster-sleep-l {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "arm,idle-state";
 				arm,psci-suspend-param = <0x01010002>;
 				local-timer-stop;
@@ -274,7 +346,11 @@
 				exit-latency-us = <155>;
 				min-residency-us = <860>;
 			};
+<<<<<<< HEAD
 			cpu_off_b: cpu-off-b {
+=======
+			cluster_sleep_b: cluster-sleep-b {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "arm,idle-state";
 				arm,psci-suspend-param = <0x01010002>;
 				local-timer-stop;
@@ -598,7 +674,12 @@
 				     "mediatek,mt6765-timer";
 			reg = <0 0x10017000 0 0x1000>;
 			interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH 0>;
+<<<<<<< HEAD
 			clocks = <&clk13m>;
+=======
+			clocks = <&topckgen CLK_TOP_CSW_F26M_D2>;
+			clock-names = "clk13m";
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		pwrap: pwrap@10026000 {
@@ -641,8 +722,11 @@
 			compatible = "mediatek,mt8192-scp_adsp";
 			reg = <0 0x10720000 0 0x1000>;
 			#clock-cells = <1>;
+<<<<<<< HEAD
 			/* power domain dependency not upstreamed */
 			status = "fail";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		uart0: serial@11002000 {

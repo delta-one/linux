@@ -43,9 +43,14 @@
 #define CREATE_TRACE_POINTS
 #include <trace/events/pagemap.h>
 
+<<<<<<< HEAD
 /* How many pages do we try to swap or page in/out together? As a power of 2 */
 int page_cluster;
 const int page_cluster_max = 31;
+=======
+/* How many pages do we try to swap or page in/out together? */
+int page_cluster;
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Protecting only lru_rotate.fbatch which requires disabling interrupts */
 struct lru_rotate {
@@ -158,6 +163,39 @@ void put_pages_list(struct list_head *pages)
 }
 EXPORT_SYMBOL(put_pages_list);
 
+<<<<<<< HEAD
+=======
+/*
+ * get_kernel_pages() - pin kernel pages in memory
+ * @kiov:	An array of struct kvec structures
+ * @nr_segs:	number of segments to pin
+ * @write:	pinning for read/write, currently ignored
+ * @pages:	array that receives pointers to the pages pinned.
+ *		Should be at least nr_segs long.
+ *
+ * Returns number of pages pinned. This may be fewer than the number requested.
+ * If nr_segs is 0 or negative, returns 0.  If no pages were pinned, returns 0.
+ * Each page returned must be released with a put_page() call when it is
+ * finished with.
+ */
+int get_kernel_pages(const struct kvec *kiov, int nr_segs, int write,
+		struct page **pages)
+{
+	int seg;
+
+	for (seg = 0; seg < nr_segs; seg++) {
+		if (WARN_ON(kiov[seg].iov_len != PAGE_SIZE))
+			return seg;
+
+		pages[seg] = kmap_to_page(kiov[seg].iov_base);
+		get_page(pages[seg]);
+	}
+
+	return seg;
+}
+EXPORT_SYMBOL_GPL(get_kernel_pages);
+
+>>>>>>> b7ba80a49124 (Commit)
 typedef void (*move_fn_t)(struct lruvec *lruvec, struct folio *folio);
 
 static void lru_add_fn(struct lruvec *lruvec, struct folio *folio)
@@ -171,7 +209,11 @@ static void lru_add_fn(struct lruvec *lruvec, struct folio *folio)
 	 * Is an smp_mb__after_atomic() still required here, before
 	 * folio_evictable() tests the mlocked flag, to rule out the possibility
 	 * of stranding an evictable folio on an unevictable LRU?  I think
+<<<<<<< HEAD
 	 * not, because __munlock_folio() only clears the mlocked flag
+=======
+	 * not, because __munlock_page() only clears the mlocked flag
+>>>>>>> b7ba80a49124 (Commit)
 	 * while the LRU lock is held.
 	 *
 	 * (That is not true of __page_cache_release(), and not necessarily
@@ -186,7 +228,11 @@ static void lru_add_fn(struct lruvec *lruvec, struct folio *folio)
 		folio_set_unevictable(folio);
 		/*
 		 * folio->mlock_count = !!folio_test_mlocked(folio)?
+<<<<<<< HEAD
 		 * But that leaves __mlock_folio() in doubt whether another
+=======
+		 * But that leaves __mlock_page() in doubt whether another
+>>>>>>> b7ba80a49124 (Commit)
 		 * actor has already counted the mlock or not.  Err on the
 		 * safe side, underestimate, let page reclaim fix it, rather
 		 * than leaving a page on the unevictable LRU indefinitely.
@@ -266,6 +312,7 @@ void folio_rotate_reclaimable(struct folio *folio)
 	}
 }
 
+<<<<<<< HEAD
 void lru_note_cost(struct lruvec *lruvec, bool file,
 		   unsigned int nr_io, unsigned int nr_rotated)
 {
@@ -280,6 +327,10 @@ void lru_note_cost(struct lruvec *lruvec, bool file,
 	 */
 	cost = nr_io * SWAP_CLUSTER_MAX + nr_rotated;
 
+=======
+void lru_note_cost(struct lruvec *lruvec, bool file, unsigned int nr_pages)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	do {
 		unsigned long lrusize;
 
@@ -293,9 +344,15 @@ void lru_note_cost(struct lruvec *lruvec, bool file,
 		spin_lock_irq(&lruvec->lru_lock);
 		/* Record cost event */
 		if (file)
+<<<<<<< HEAD
 			lruvec->file_cost += cost;
 		else
 			lruvec->anon_cost += cost;
+=======
+			lruvec->file_cost += nr_pages;
+		else
+			lruvec->anon_cost += nr_pages;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * Decay previous events
@@ -318,10 +375,17 @@ void lru_note_cost(struct lruvec *lruvec, bool file,
 	} while ((lruvec = parent_lruvec(lruvec)));
 }
 
+<<<<<<< HEAD
 void lru_note_cost_refault(struct folio *folio)
 {
 	lru_note_cost(folio_lruvec(folio), folio_is_file_lru(folio),
 		      folio_nr_pages(folio), 0);
+=======
+void lru_note_cost_folio(struct folio *folio)
+{
+	lru_note_cost(folio_lruvec(folio), folio_is_file_lru(folio),
+			folio_nr_pages(folio));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void folio_activate_fn(struct lruvec *lruvec, struct folio *folio)
@@ -532,7 +596,11 @@ void folio_add_lru_vma(struct folio *folio, struct vm_area_struct *vma)
 	VM_BUG_ON_FOLIO(folio_test_lru(folio), folio);
 
 	if (unlikely((vma->vm_flags & (VM_LOCKED | VM_SPECIAL)) == VM_LOCKED))
+<<<<<<< HEAD
 		mlock_new_folio(folio);
+=======
+		mlock_new_page(&folio->page);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		folio_add_lru(folio);
 }
@@ -703,6 +771,7 @@ void deactivate_file_folio(struct folio *folio)
 }
 
 /*
+<<<<<<< HEAD
  * folio_deactivate - deactivate a folio
  * @folio: folio to deactivate
  *
@@ -712,6 +781,19 @@ void deactivate_file_folio(struct folio *folio)
  */
 void folio_deactivate(struct folio *folio)
 {
+=======
+ * deactivate_page - deactivate a page
+ * @page: page to deactivate
+ *
+ * deactivate_page() moves @page to the inactive list if @page was on the active
+ * list and was not an unevictable page.  This is done to accelerate the reclaim
+ * of @page.
+ */
+void deactivate_page(struct page *page)
+{
+	struct folio *folio = page_folio(page);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (folio_test_lru(folio) && !folio_test_unevictable(folio) &&
 	    (folio_test_active(folio) || lru_gen_enabled())) {
 		struct folio_batch *fbatch;
@@ -725,6 +807,7 @@ void folio_deactivate(struct folio *folio)
 }
 
 /**
+<<<<<<< HEAD
  * folio_mark_lazyfree - make an anon folio lazyfree
  * @folio: folio to deactivate
  *
@@ -733,6 +816,18 @@ void folio_deactivate(struct folio *folio)
  */
 void folio_mark_lazyfree(struct folio *folio)
 {
+=======
+ * mark_page_lazyfree - make an anon page lazyfree
+ * @page: page to deactivate
+ *
+ * mark_page_lazyfree() moves @page to the inactive file list.
+ * This is done to accelerate the reclaim of @page.
+ */
+void mark_page_lazyfree(struct page *page)
+{
+	struct folio *folio = page_folio(page);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (folio_test_lru(folio) && folio_test_anon(folio) &&
 	    folio_test_swapbacked(folio) && !folio_test_swapcache(folio) &&
 	    !folio_test_unevictable(folio)) {
@@ -751,7 +846,11 @@ void lru_add_drain(void)
 	local_lock(&cpu_fbatches.lock);
 	lru_add_drain_cpu(smp_processor_id());
 	local_unlock(&cpu_fbatches.lock);
+<<<<<<< HEAD
 	mlock_drain_local();
+=======
+	mlock_page_drain_local();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -766,7 +865,11 @@ static void lru_add_and_bh_lrus_drain(void)
 	lru_add_drain_cpu(smp_processor_id());
 	local_unlock(&cpu_fbatches.lock);
 	invalidate_bh_lrus_cpu();
+<<<<<<< HEAD
 	mlock_drain_local();
+=======
+	mlock_page_drain_local();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void lru_add_drain_cpu_zone(struct zone *zone)
@@ -775,7 +878,11 @@ void lru_add_drain_cpu_zone(struct zone *zone)
 	lru_add_drain_cpu(smp_processor_id());
 	drain_local_pages(zone);
 	local_unlock(&cpu_fbatches.lock);
+<<<<<<< HEAD
 	mlock_drain_local();
+=======
+	mlock_page_drain_local();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_SMP
@@ -798,7 +905,11 @@ static bool cpu_needs_drain(unsigned int cpu)
 		folio_batch_count(&fbatches->lru_deactivate) ||
 		folio_batch_count(&fbatches->lru_lazyfree) ||
 		folio_batch_count(&fbatches->activate) ||
+<<<<<<< HEAD
 		need_mlock_drain(cpu) ||
+=======
+		need_mlock_page_drain(cpu) ||
+>>>>>>> b7ba80a49124 (Commit)
 		has_bh_in_lru(cpu, NULL);
 }
 
@@ -947,6 +1058,7 @@ void lru_cache_disable(void)
 
 /**
  * release_pages - batched put_page()
+<<<<<<< HEAD
  * @arg: array of pages to release
  * @nr: number of pages
  *
@@ -961,16 +1073,32 @@ void release_pages(release_pages_arg arg, int nr)
 {
 	int i;
 	struct encoded_page **encoded = arg.encoded_pages;
+=======
+ * @pages: array of pages to release
+ * @nr: number of pages
+ *
+ * Decrement the reference count on all the pages in @pages.  If it
+ * fell to zero, remove the page from the LRU and free it.
+ */
+void release_pages(struct page **pages, unsigned long npages)
+{
+	unsigned long i;
+>>>>>>> b7ba80a49124 (Commit)
 	LIST_HEAD(pages_to_free);
 	struct lruvec *lruvec = NULL;
 	unsigned long flags = 0;
 	unsigned int lock_batch;
 
+<<<<<<< HEAD
 	for (i = 0; i < nr; i++) {
 		struct folio *folio;
 
 		/* Turn any of the argument types into a folio */
 		folio = page_folio(encoded_page_ptr(encoded[i]));
+=======
+	for (i = 0; i < npages; i++) {
+		struct folio *folio = page_folio(pages[i]);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * Make sure the IRQ-safe lock-holding time does not get
@@ -1085,6 +1213,19 @@ void folio_batch_remove_exceptionals(struct folio_batch *fbatch)
 	fbatch->nr = j;
 }
 
+<<<<<<< HEAD
+=======
+unsigned pagevec_lookup_range_tag(struct pagevec *pvec,
+		struct address_space *mapping, pgoff_t *index, pgoff_t end,
+		xa_mark_t tag)
+{
+	pvec->nr = find_get_pages_range_tag(mapping, index, end, tag,
+					PAGEVEC_SIZE, pvec->pages);
+	return pagevec_count(pvec);
+}
+EXPORT_SYMBOL(pagevec_lookup_range_tag);
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Perform any setup for the swap system
  */

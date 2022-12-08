@@ -127,10 +127,19 @@ int os_mod_epoll_fd(int events, int fd, void *data)
 int os_del_epoll_fd(int fd)
 {
 	struct epoll_event event;
+<<<<<<< HEAD
 	/* This is quiet as we use this as IO ON/OFF - so it is often
 	 * invoked on a non-existent fd
 	 */
 	return epoll_ctl(epollfd, EPOLL_CTL_DEL, fd, &event);
+=======
+	int result;
+	/* This is quiet as we use this as IO ON/OFF - so it is often
+	 * invoked on a non-existent fd
+	 */
+	result = epoll_ctl(epollfd, EPOLL_CTL_DEL, fd, &event);
+	return result;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void os_set_ioignore(void)

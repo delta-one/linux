@@ -23,7 +23,10 @@
 #include <linux/memremap.h>
 #include <linux/mm.h>
 #include <linux/mutex.h>
+<<<<<<< HEAD
 #include <linux/of_iommu.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pci.h>
 #include <linux/scatterlist.h>
 #include <linux/spinlock.h>
@@ -392,8 +395,11 @@ void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
 	if (!is_of_node(dev_iommu_fwspec_get(dev)->iommu_fwnode))
 		iort_iommu_get_resv_regions(dev, list);
 
+<<<<<<< HEAD
 	if (dev->of_node)
 		of_iommu_get_resv_regions(dev, list);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(iommu_dma_get_resv_regions);
 
@@ -716,7 +722,11 @@ static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
 	if (!iova)
 		return DMA_MAPPING_ERROR;
 
+<<<<<<< HEAD
 	if (iommu_map(domain, iova, phys - iova_off, size, prot, GFP_ATOMIC)) {
+=======
+	if (iommu_map_atomic(domain, iova, phys - iova_off, size, prot)) {
+>>>>>>> b7ba80a49124 (Commit)
 		iommu_dma_free_iova(cookie, iova, size, NULL);
 		return DMA_MAPPING_ERROR;
 	}
@@ -736,7 +746,11 @@ static struct page **__iommu_dma_alloc_pages(struct device *dev,
 	struct page **pages;
 	unsigned int i = 0, nid = dev_to_node(dev);
 
+<<<<<<< HEAD
 	order_mask &= GENMASK(MAX_ORDER, 0);
+=======
+	order_mask &= (2U << MAX_ORDER) - 1;
+>>>>>>> b7ba80a49124 (Commit)
 	if (!order_mask)
 		return NULL;
 
@@ -747,6 +761,12 @@ static struct page **__iommu_dma_alloc_pages(struct device *dev,
 	/* IOMMU can map any pages, so himem can also be used here */
 	gfp |= __GFP_NOWARN | __GFP_HIGHMEM;
 
+<<<<<<< HEAD
+=======
+	/* It makes no sense to muck about with huge pages */
+	gfp &= ~__GFP_COMP;
+
+>>>>>>> b7ba80a49124 (Commit)
 	while (count) {
 		struct page *page = NULL;
 		unsigned int order_size;
@@ -756,7 +776,11 @@ static struct page **__iommu_dma_alloc_pages(struct device *dev,
 		 * than a necessity, hence using __GFP_NORETRY until
 		 * falling back to minimum-order allocations.
 		 */
+<<<<<<< HEAD
 		for (order_mask &= GENMASK(__fls(count), 0);
+=======
+		for (order_mask &= (2U << __fls(count)) - 1;
+>>>>>>> b7ba80a49124 (Commit)
 		     order_mask; order_mask &= ~order_size) {
 			unsigned int order = __fls(order_mask);
 			gfp_t alloc_flags = gfp;
@@ -825,6 +849,7 @@ static struct page **__iommu_dma_alloc_noncontiguous(struct device *dev,
 	if (!iova)
 		goto out_free_pages;
 
+<<<<<<< HEAD
 	/*
 	 * Remove the zone/policy flags from the GFP - these are applied to the
 	 * __iommu_dma_alloc_pages() but are not used for the supporting
@@ -833,6 +858,9 @@ static struct page **__iommu_dma_alloc_noncontiguous(struct device *dev,
 	gfp &= ~(__GFP_DMA | __GFP_DMA32 | __GFP_HIGHMEM | __GFP_COMP);
 
 	if (sg_alloc_table_from_pages(sgt, pages, count, 0, size, gfp))
+=======
+	if (sg_alloc_table_from_pages(sgt, pages, count, 0, size, GFP_KERNEL))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_free_iova;
 
 	if (!(ioprot & IOMMU_CACHE)) {
@@ -843,8 +871,12 @@ static struct page **__iommu_dma_alloc_noncontiguous(struct device *dev,
 			arch_dma_prep_coherent(sg_page(sg), sg->length);
 	}
 
+<<<<<<< HEAD
 	ret = iommu_map_sg(domain, iova, sgt->sgl, sgt->orig_nents, ioprot,
 			   gfp);
+=======
+	ret = iommu_map_sg_atomic(domain, iova, sgt->sgl, sgt->orig_nents, ioprot);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0 || ret < size)
 		goto out_free_sg;
 
@@ -1292,7 +1324,11 @@ static int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg,
 	 * We'll leave any physical concatenation to the IOMMU driver's
 	 * implementation - it knows better than we do.
 	 */
+<<<<<<< HEAD
 	ret = iommu_map_sg(domain, iova, sg, nents, prot, GFP_ATOMIC);
+=======
+	ret = iommu_map_sg_atomic(domain, iova, sg, nents, prot);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0 || ret < iova_len)
 		goto out_free_iova;
 
@@ -1626,7 +1662,11 @@ static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct device *dev,
 	if (!iova)
 		goto out_free_page;
 
+<<<<<<< HEAD
 	if (iommu_map(domain, iova, msi_addr, size, prot, GFP_KERNEL))
+=======
+	if (iommu_map(domain, iova, msi_addr, size, prot))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_free_iova;
 
 	INIT_LIST_HEAD(&msi_page->list);

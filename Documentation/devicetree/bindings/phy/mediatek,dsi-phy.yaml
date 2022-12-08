@@ -5,7 +5,11 @@
 $id: http://devicetree.org/schemas/phy/mediatek,dsi-phy.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: MediaTek MIPI Display Serial Interface (DSI) PHY
+=======
+title: MediaTek MIPI Display Serial Interface (DSI) PHY binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Chun-Kuang Hu <chunkuang.hu@kernel.org>

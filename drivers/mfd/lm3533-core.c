@@ -286,7 +286,11 @@ static ssize_t show_output(struct device *dev,
 
 	val = (val & mask) >> shift;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", val);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%u\n", val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t store_output(struct device *dev,
@@ -584,7 +588,12 @@ static const struct regmap_config regmap_config = {
 	.precious_reg	= lm3533_precious_register,
 };
 
+<<<<<<< HEAD
 static int lm3533_i2c_probe(struct i2c_client *i2c)
+=======
+static int lm3533_i2c_probe(struct i2c_client *i2c,
+					const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lm3533 *lm3533;
 
@@ -626,7 +635,11 @@ static struct i2c_driver lm3533_i2c_driver = {
 		   .name = "lm3533",
 	},
 	.id_table	= lm3533_i2c_ids,
+<<<<<<< HEAD
 	.probe_new	= lm3533_i2c_probe,
+=======
+	.probe		= lm3533_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= lm3533_i2c_remove,
 };
 

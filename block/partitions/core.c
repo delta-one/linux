@@ -254,9 +254,15 @@ static void part_release(struct device *dev)
 	iput(dev_to_bdev(dev)->bd_inode);
 }
 
+<<<<<<< HEAD
 static int part_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct block_device *part = dev_to_bdev(dev);
+=======
+static int part_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct block_device *part = dev_to_bdev(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	add_uevent_var(env, "PARTN=%u", part->bd_partno);
 	if (part->bd_meta_info && part->bd_meta_info->volname[0])

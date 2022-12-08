@@ -31,10 +31,17 @@ properties:
     items:
       enum:
         # Board Connectors
+<<<<<<< HEAD
         - Headset Stereophone
         - Int Spk
         - Headset Mic
         - Digital Mic
+=======
+        - "Headset Stereophone"
+        - "Int Spk"
+        - "Headset Mic"
+        - "Digital Mic"
+>>>>>>> b7ba80a49124 (Commit)
 
         # CODEC Pins
         - SPKOUT

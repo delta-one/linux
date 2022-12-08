@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2009-2011 Red Hat, Inc.
  *
@@ -66,6 +69,7 @@
 #define LIST_DIRTY	1
 #define LIST_SIZE	2
 
+<<<<<<< HEAD
 /*--------------------------------------------------------------*/
 
 /*
@@ -307,6 +311,59 @@ static struct lru_entry *lru_evict(struct lru *lru, le_predicate pred, void *con
 
 /*--------------------------------------------------------------*/
 
+=======
+/*
+ * Linking of buffers:
+ *	All buffers are linked to buffer_tree with their node field.
+ *
+ *	Clean buffers that are not being written (B_WRITING not set)
+ *	are linked to lru[LIST_CLEAN] with their lru_list field.
+ *
+ *	Dirty and clean buffers that are being written are linked to
+ *	lru[LIST_DIRTY] with their lru_list field. When the write
+ *	finishes, the buffer cannot be relinked immediately (because we
+ *	are in an interrupt context and relinking requires process
+ *	context), so some clean-not-writing buffers can be held on
+ *	dirty_lru too.  They are later added to lru in the process
+ *	context.
+ */
+struct dm_bufio_client {
+	struct mutex lock;
+	spinlock_t spinlock;
+	bool no_sleep;
+
+	struct list_head lru[LIST_SIZE];
+	unsigned long n_buffers[LIST_SIZE];
+
+	struct block_device *bdev;
+	unsigned block_size;
+	s8 sectors_per_block_bits;
+	void (*alloc_callback)(struct dm_buffer *);
+	void (*write_callback)(struct dm_buffer *);
+	struct kmem_cache *slab_buffer;
+	struct kmem_cache *slab_cache;
+	struct dm_io_client *dm_io;
+
+	struct list_head reserved_buffers;
+	unsigned need_reserved_buffers;
+
+	unsigned minimum_buffers;
+
+	struct rb_root buffer_tree;
+	wait_queue_head_t free_buffer_wait;
+
+	sector_t start;
+
+	int async_write_error;
+
+	struct list_head client_list;
+
+	struct shrinker shrinker;
+	struct work_struct shrink_work;
+	atomic_long_t need_shrink;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Buffer state bits.
  */
@@ -327,6 +384,7 @@ enum data_mode {
 };
 
 struct dm_buffer {
+<<<<<<< HEAD
 	/* protected by the locks in dm_buffer_cache */
 	struct rb_node node;
 
@@ -359,6 +417,28 @@ struct dm_buffer {
 	struct list_head write_list;
 	struct dm_bufio_client *c;
 	void (*end_io)(struct dm_buffer *b, blk_status_t bs);
+=======
+	struct rb_node node;
+	struct list_head lru_list;
+	struct list_head global_list;
+	sector_t block;
+	void *data;
+	unsigned char data_mode;		/* DATA_MODE_* */
+	unsigned char list_mode;		/* LIST_* */
+	blk_status_t read_error;
+	blk_status_t write_error;
+	unsigned accessed;
+	unsigned hold_count;
+	unsigned long state;
+	unsigned long last_accessed;
+	unsigned dirty_start;
+	unsigned dirty_end;
+	unsigned write_start;
+	unsigned write_end;
+	struct dm_bufio_client *c;
+	struct list_head write_list;
+	void (*end_io)(struct dm_buffer *, blk_status_t);
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
 #define MAX_STACK 10
 	unsigned int stack_len;
@@ -366,6 +446,7 @@ struct dm_buffer {
 #endif
 };
 
+<<<<<<< HEAD
 /*--------------------------------------------------------------*/
 
 /*
@@ -991,6 +1072,8 @@ struct dm_bufio_client {
 	struct dm_buffer_cache cache;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static DEFINE_STATIC_KEY_FALSE(no_sleep_enabled);
 
 /*----------------------------------------------------------------*/
@@ -1005,6 +1088,17 @@ static void dm_bufio_lock(struct dm_bufio_client *c)
 		mutex_lock_nested(&c->lock, dm_bufio_in_request());
 }
 
+<<<<<<< HEAD
+=======
+static int dm_bufio_trylock(struct dm_bufio_client *c)
+{
+	if (static_branch_unlikely(&no_sleep_enabled) && c->no_sleep)
+		return spin_trylock_bh(&c->spinlock);
+	else
+		return mutex_trylock(&c->lock);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void dm_bufio_unlock(struct dm_bufio_client *c)
 {
 	if (static_branch_unlikely(&no_sleep_enabled) && c->no_sleep)
@@ -1033,10 +1127,21 @@ static unsigned long dm_bufio_cache_size_latch;
 
 static DEFINE_SPINLOCK(global_spinlock);
 
+<<<<<<< HEAD
 /*
  * Buffers are freed after this timeout
  */
 static unsigned int dm_bufio_max_age = DM_BUFIO_DEFAULT_AGE_SECS;
+=======
+static LIST_HEAD(global_queue);
+
+static unsigned long global_num = 0;
+
+/*
+ * Buffers are freed after this timeout
+ */
+static unsigned dm_bufio_max_age = DM_BUFIO_DEFAULT_AGE_SECS;
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned long dm_bufio_retain_bytes = DM_BUFIO_DEFAULT_RETAIN_BYTES;
 
 static unsigned long dm_bufio_peak_allocated;
@@ -1066,6 +1171,10 @@ static struct workqueue_struct *dm_bufio_wq;
 static struct delayed_work dm_bufio_cleanup_old_work;
 static struct work_struct dm_bufio_replacement_work;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
 static void buffer_record_stack(struct dm_buffer *b)
 {
@@ -1073,6 +1182,79 @@ static void buffer_record_stack(struct dm_buffer *b)
 }
 #endif
 
+<<<<<<< HEAD
+=======
+/*----------------------------------------------------------------
+ * A red/black tree acts as an index for all the buffers.
+ *--------------------------------------------------------------*/
+static struct dm_buffer *__find(struct dm_bufio_client *c, sector_t block)
+{
+	struct rb_node *n = c->buffer_tree.rb_node;
+	struct dm_buffer *b;
+
+	while (n) {
+		b = container_of(n, struct dm_buffer, node);
+
+		if (b->block == block)
+			return b;
+
+		n = block < b->block ? n->rb_left : n->rb_right;
+	}
+
+	return NULL;
+}
+
+static struct dm_buffer *__find_next(struct dm_bufio_client *c, sector_t block)
+{
+	struct rb_node *n = c->buffer_tree.rb_node;
+	struct dm_buffer *b;
+	struct dm_buffer *best = NULL;
+
+	while (n) {
+		b = container_of(n, struct dm_buffer, node);
+
+		if (b->block == block)
+			return b;
+
+		if (block <= b->block) {
+			n = n->rb_left;
+			best = b;
+		} else {
+			n = n->rb_right;
+		}
+	}
+
+	return best;
+}
+
+static void __insert(struct dm_bufio_client *c, struct dm_buffer *b)
+{
+	struct rb_node **new = &c->buffer_tree.rb_node, *parent = NULL;
+	struct dm_buffer *found;
+
+	while (*new) {
+		found = container_of(*new, struct dm_buffer, node);
+
+		if (found->block == b->block) {
+			BUG_ON(found != b);
+			return;
+		}
+
+		parent = *new;
+		new = b->block < found->block ?
+			&found->node.rb_left : &found->node.rb_right;
+	}
+
+	rb_link_node(&b->node, parent, new);
+	rb_insert_color(&b->node, &c->buffer_tree);
+}
+
+static void __remove(struct dm_bufio_client *c, struct dm_buffer *b)
+{
+	rb_erase(&b->node, &c->buffer_tree);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*----------------------------------------------------------------*/
 
 static void adjust_total_allocated(struct dm_buffer *b, bool unlink)
@@ -1100,9 +1282,22 @@ static void adjust_total_allocated(struct dm_buffer *b, bool unlink)
 	if (dm_bufio_current_allocated > dm_bufio_peak_allocated)
 		dm_bufio_peak_allocated = dm_bufio_current_allocated;
 
+<<<<<<< HEAD
 	if (!unlink) {
 		if (dm_bufio_current_allocated > dm_bufio_cache_size)
 			queue_work(dm_bufio_wq, &dm_bufio_replacement_work);
+=======
+	b->accessed = 1;
+
+	if (!unlink) {
+		list_add(&b->global_list, &global_queue);
+		global_num++;
+		if (dm_bufio_current_allocated > dm_bufio_cache_size)
+			queue_work(dm_bufio_wq, &dm_bufio_replacement_work);
+	} else {
+		list_del(&b->global_list);
+		global_num--;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	spin_unlock(&global_spinlock);
@@ -1143,7 +1338,11 @@ static void __cache_size_refresh(void)
  * If the allocation may fail we use __get_free_pages. Memory fragmentation
  * won't have a fatal effect here, but it just causes flushes of some other
  * buffers and more I/O will be performed. Don't use __get_free_pages if it
+<<<<<<< HEAD
  * always fails (i.e. order > MAX_ORDER).
+=======
+ * always fails (i.e. order >= MAX_ORDER).
+>>>>>>> b7ba80a49124 (Commit)
  *
  * If the allocation shouldn't fail we use __vmalloc. This is only for the
  * initial reserve allocation, so there's no risk of wasting all vmalloc
@@ -1176,7 +1375,11 @@ static void *alloc_buffer_data(struct dm_bufio_client *c, gfp_t gfp_mask,
 	 * as if GFP_NOIO was specified.
 	 */
 	if (gfp_mask & __GFP_NORETRY) {
+<<<<<<< HEAD
 		unsigned int noio_flag = memalloc_noio_save();
+=======
+		unsigned noio_flag = memalloc_noio_save();
+>>>>>>> b7ba80a49124 (Commit)
 		void *ptr = __vmalloc(c->block_size, gfp_mask);
 
 		memalloc_noio_restore(noio_flag);
@@ -1218,9 +1421,14 @@ static void free_buffer_data(struct dm_bufio_client *c,
  */
 static struct dm_buffer *alloc_buffer(struct dm_bufio_client *c, gfp_t gfp_mask)
 {
+<<<<<<< HEAD
 	struct dm_buffer *b;
 
 	b = kmem_cache_alloc(c->slab_buffer, gfp_mask);
+=======
+	struct dm_buffer *b = kmem_cache_alloc(c->slab_buffer, gfp_mask);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!b)
 		return NULL;
 
@@ -1231,7 +1439,10 @@ static struct dm_buffer *alloc_buffer(struct dm_bufio_client *c, gfp_t gfp_mask)
 		kmem_cache_free(c->slab_buffer, b);
 		return NULL;
 	}
+<<<<<<< HEAD
 	adjust_total_allocated(b, false);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
 	b->stack_len = 0;
@@ -1246,13 +1457,70 @@ static void free_buffer(struct dm_buffer *b)
 {
 	struct dm_bufio_client *c = b->c;
 
+<<<<<<< HEAD
 	adjust_total_allocated(b, true);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	free_buffer_data(c, b->data, b->data_mode);
 	kmem_cache_free(c->slab_buffer, b);
 }
 
 /*
+<<<<<<< HEAD
  *--------------------------------------------------------------------------
+=======
+ * Link buffer to the buffer tree and clean or dirty queue.
+ */
+static void __link_buffer(struct dm_buffer *b, sector_t block, int dirty)
+{
+	struct dm_bufio_client *c = b->c;
+
+	c->n_buffers[dirty]++;
+	b->block = block;
+	b->list_mode = dirty;
+	list_add(&b->lru_list, &c->lru[dirty]);
+	__insert(b->c, b);
+	b->last_accessed = jiffies;
+
+	adjust_total_allocated(b, false);
+}
+
+/*
+ * Unlink buffer from the buffer tree and dirty or clean queue.
+ */
+static void __unlink_buffer(struct dm_buffer *b)
+{
+	struct dm_bufio_client *c = b->c;
+
+	BUG_ON(!c->n_buffers[b->list_mode]);
+
+	c->n_buffers[b->list_mode]--;
+	__remove(b->c, b);
+	list_del(&b->lru_list);
+
+	adjust_total_allocated(b, true);
+}
+
+/*
+ * Place the buffer to the head of dirty or clean LRU queue.
+ */
+static void __relink_lru(struct dm_buffer *b, int dirty)
+{
+	struct dm_bufio_client *c = b->c;
+
+	b->accessed = 1;
+
+	BUG_ON(!c->n_buffers[b->list_mode]);
+
+	c->n_buffers[b->list_mode]--;
+	c->n_buffers[dirty]++;
+	b->list_mode = dirty;
+	list_move(&b->lru_list, &c->lru[dirty]);
+	b->last_accessed = jiffies;
+}
+
+/*----------------------------------------------------------------
+>>>>>>> b7ba80a49124 (Commit)
  * Submit I/O on the buffer.
  *
  * Bio interface is faster but it has some problems:
@@ -1268,8 +1536,12 @@ static void free_buffer(struct dm_buffer *b)
  * rejects the bio because it is too large, use dm-io layer to do the I/O.
  * The dm-io layer splits the I/O into multiple requests, avoiding the above
  * shortcomings.
+<<<<<<< HEAD
  *--------------------------------------------------------------------------
  */
+=======
+ *--------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * dm-io completion routine. It just calls b->bio.bi_end_io, pretending
@@ -1283,7 +1555,11 @@ static void dmio_complete(unsigned long error, void *context)
 }
 
 static void use_dmio(struct dm_buffer *b, enum req_op op, sector_t sector,
+<<<<<<< HEAD
 		     unsigned int n_sectors, unsigned int offset)
+=======
+		     unsigned n_sectors, unsigned offset)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r;
 	struct dm_io_request io_req = {
@@ -1315,18 +1591,29 @@ static void bio_complete(struct bio *bio)
 {
 	struct dm_buffer *b = bio->bi_private;
 	blk_status_t status = bio->bi_status;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bio_uninit(bio);
 	kfree(bio);
 	b->end_io(b, status);
 }
 
 static void use_bio(struct dm_buffer *b, enum req_op op, sector_t sector,
+<<<<<<< HEAD
 		    unsigned int n_sectors, unsigned int offset)
 {
 	struct bio *bio;
 	char *ptr;
 	unsigned int vec_size, len;
+=======
+		    unsigned n_sectors, unsigned offset)
+{
+	struct bio *bio;
+	char *ptr;
+	unsigned vec_size, len;
+>>>>>>> b7ba80a49124 (Commit)
 
 	vec_size = b->c->block_size >> PAGE_SHIFT;
 	if (unlikely(b->c->sectors_per_block_bits < PAGE_SHIFT - SECTOR_SHIFT))
@@ -1347,8 +1634,12 @@ dmio:
 	len = n_sectors << SECTOR_SHIFT;
 
 	do {
+<<<<<<< HEAD
 		unsigned int this_step = min((unsigned int)(PAGE_SIZE - offset_in_page(ptr)), len);
 
+=======
+		unsigned this_step = min((unsigned)(PAGE_SIZE - offset_in_page(ptr)), len);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!bio_add_page(bio, virt_to_page(ptr), this_step,
 				  offset_in_page(ptr))) {
 			bio_put(bio);
@@ -1378,9 +1669,15 @@ static inline sector_t block_to_sector(struct dm_bufio_client *c, sector_t block
 static void submit_io(struct dm_buffer *b, enum req_op op,
 		      void (*end_io)(struct dm_buffer *, blk_status_t))
 {
+<<<<<<< HEAD
 	unsigned int n_sectors;
 	sector_t sector;
 	unsigned int offset, end;
+=======
+	unsigned n_sectors;
+	sector_t sector;
+	unsigned offset, end;
+>>>>>>> b7ba80a49124 (Commit)
 
 	b->end_io = end_io;
 
@@ -1410,11 +1707,17 @@ static void submit_io(struct dm_buffer *b, enum req_op op,
 		use_dmio(b, op, sector, n_sectors, offset);
 }
 
+<<<<<<< HEAD
 /*
  *--------------------------------------------------------------
  * Writing dirty buffers
  *--------------------------------------------------------------
  */
+=======
+/*----------------------------------------------------------------
+ * Writing dirty buffers
+ *--------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * The endio routine for write.
@@ -1471,7 +1774,10 @@ static void __write_dirty_buffer(struct dm_buffer *b,
 static void __flush_write_list(struct list_head *write_list)
 {
 	struct blk_plug plug;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	blk_start_plug(&plug);
 	while (!list_empty(write_list)) {
 		struct dm_buffer *b =
@@ -1490,10 +1796,16 @@ static void __flush_write_list(struct list_head *write_list)
  */
 static void __make_buffer_clean(struct dm_buffer *b)
 {
+<<<<<<< HEAD
 	BUG_ON(atomic_read(&b->hold_count));
 
 	/* smp_load_acquire() pairs with read_endio()'s smp_mb__before_atomic() */
 	if (!smp_load_acquire(&b->state))	/* fast case */
+=======
+	BUG_ON(b->hold_count);
+
+	if (!b->state)	/* fast case */
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	wait_on_bit_io(&b->state, B_READING, TASK_UNINTERRUPTIBLE);
@@ -1501,6 +1813,7 @@ static void __make_buffer_clean(struct dm_buffer *b)
 	wait_on_bit_io(&b->state, B_WRITING, TASK_UNINTERRUPTIBLE);
 }
 
+<<<<<<< HEAD
 static enum evict_result is_clean(struct dm_buffer *b, void *context)
 {
 	struct dm_bufio_client *c = context;
@@ -1521,6 +1834,8 @@ static enum evict_result is_dirty(struct dm_buffer *b, void *context)
 	return ER_EVICT;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Find some buffer that is not held by anybody, clean it, unlink it and
  * return it.
@@ -1529,20 +1844,49 @@ static struct dm_buffer *__get_unclaimed_buffer(struct dm_bufio_client *c)
 {
 	struct dm_buffer *b;
 
+<<<<<<< HEAD
 	b = cache_evict(&c->cache, LIST_CLEAN, is_clean, c);
 	if (b) {
 		/* this also waits for pending reads */
 		__make_buffer_clean(b);
 		return b;
+=======
+	list_for_each_entry_reverse(b, &c->lru[LIST_CLEAN], lru_list) {
+		BUG_ON(test_bit(B_WRITING, &b->state));
+		BUG_ON(test_bit(B_DIRTY, &b->state));
+
+		if (static_branch_unlikely(&no_sleep_enabled) && c->no_sleep &&
+		    unlikely(test_bit(B_READING, &b->state)))
+			continue;
+
+		if (!b->hold_count) {
+			__make_buffer_clean(b);
+			__unlink_buffer(b);
+			return b;
+		}
+		cond_resched();
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (static_branch_unlikely(&no_sleep_enabled) && c->no_sleep)
 		return NULL;
 
+<<<<<<< HEAD
 	b = cache_evict(&c->cache, LIST_DIRTY, is_dirty, NULL);
 	if (b) {
 		__make_buffer_clean(b);
 		return b;
+=======
+	list_for_each_entry_reverse(b, &c->lru[LIST_DIRTY], lru_list) {
+		BUG_ON(test_bit(B_READING, &b->state));
+
+		if (!b->hold_count) {
+			__make_buffer_clean(b);
+			__unlink_buffer(b);
+			return b;
+		}
+		cond_resched();
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return NULL;
@@ -1563,12 +1907,16 @@ static void __wait_for_free_buffer(struct dm_bufio_client *c)
 	set_current_state(TASK_UNINTERRUPTIBLE);
 	dm_bufio_unlock(c);
 
+<<<<<<< HEAD
 	/*
 	 * It's possible to miss a wake up event since we don't always
 	 * hold c->lock when wake_up is called.  So we have a timeout here,
 	 * just in case.
 	 */
 	io_schedule_timeout(5 * HZ);
+=======
+	io_schedule();
+>>>>>>> b7ba80a49124 (Commit)
 
 	remove_wait_queue(&c->free_buffer_wait, &wait);
 
@@ -1626,8 +1974,14 @@ static struct dm_buffer *__alloc_buffer_wait_no_callback(struct dm_bufio_client 
 		}
 
 		if (!list_empty(&c->reserved_buffers)) {
+<<<<<<< HEAD
 			b = list_to_buffer(c->reserved_buffers.next);
 			list_del(&b->lru.list);
+=======
+			b = list_entry(c->reserved_buffers.next,
+				       struct dm_buffer, lru_list);
+			list_del(&b->lru_list);
+>>>>>>> b7ba80a49124 (Commit)
 			c->need_reserved_buffers++;
 
 			return b;
@@ -1661,17 +2015,25 @@ static void __free_buffer_wake(struct dm_buffer *b)
 {
 	struct dm_bufio_client *c = b->c;
 
+<<<<<<< HEAD
 	b->block = -1;
 	if (!c->need_reserved_buffers)
 		free_buffer(b);
 	else {
 		list_add(&b->lru.list, &c->reserved_buffers);
+=======
+	if (!c->need_reserved_buffers)
+		free_buffer(b);
+	else {
+		list_add(&b->lru_list, &c->reserved_buffers);
+>>>>>>> b7ba80a49124 (Commit)
 		c->need_reserved_buffers--;
 	}
 
 	wake_up(&c->free_buffer_wait);
 }
 
+<<<<<<< HEAD
 static enum evict_result cleaned(struct dm_buffer *b, void *context)
 {
 	BUG_ON(test_bit(B_READING, &b->state));
@@ -1710,6 +2072,28 @@ static void __write_dirty_buffers_async(struct dm_bufio_client *c, int no_wait,
 
 	__move_clean_buffers(c);
 	cache_iterate(&c->cache, LIST_DIRTY, write_one, &wc);
+=======
+static void __write_dirty_buffers_async(struct dm_bufio_client *c, int no_wait,
+					struct list_head *write_list)
+{
+	struct dm_buffer *b, *tmp;
+
+	list_for_each_entry_safe_reverse(b, tmp, &c->lru[LIST_DIRTY], lru_list) {
+		BUG_ON(test_bit(B_READING, &b->state));
+
+		if (!test_bit(B_DIRTY, &b->state) &&
+		    !test_bit(B_WRITING, &b->state)) {
+			__relink_lru(b, LIST_CLEAN);
+			continue;
+		}
+
+		if (no_wait && test_bit(B_WRITING, &b->state))
+			return;
+
+		__write_dirty_buffer(b, write_list);
+		cond_resched();
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1720,6 +2104,7 @@ static void __write_dirty_buffers_async(struct dm_bufio_client *c, int no_wait,
 static void __check_watermark(struct dm_bufio_client *c,
 			      struct list_head *write_list)
 {
+<<<<<<< HEAD
 	if (cache_count(&c->cache, LIST_DIRTY) >
 		cache_count(&c->cache, LIST_CLEAN) * DM_BUFIO_WRITEBACK_RATIO)
 		__write_dirty_buffers_async(c, 1, write_list);
@@ -1746,15 +2131,37 @@ static void cache_put_and_wake(struct dm_bufio_client *c, struct dm_buffer *b)
  * This assumes you have already checked the cache to see if the buffer
  * is already present (it will recheck after dropping the lock for allocation).
  */
+=======
+	if (c->n_buffers[LIST_DIRTY] > c->n_buffers[LIST_CLEAN] * DM_BUFIO_WRITEBACK_RATIO)
+		__write_dirty_buffers_async(c, 1, write_list);
+}
+
+/*----------------------------------------------------------------
+ * Getting a buffer
+ *--------------------------------------------------------------*/
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct dm_buffer *__bufio_new(struct dm_bufio_client *c, sector_t block,
 				     enum new_flag nf, int *need_submit,
 				     struct list_head *write_list)
 {
 	struct dm_buffer *b, *new_b = NULL;
+<<<<<<< HEAD
 	*need_submit = 0;
 
 	/* This can't be called with NF_GET */
 	BUG_ON(nf == NF_GET);
+=======
+
+	*need_submit = 0;
+
+	b = __find(c, block);
+	if (b)
+		goto found_buffer;
+
+	if (nf == NF_GET)
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	new_b = __alloc_buffer_wait(c, nf);
 	if (!new_b)
@@ -1764,7 +2171,11 @@ static struct dm_buffer *__bufio_new(struct dm_bufio_client *c, sector_t block,
 	 * We've had a period where the mutex was unlocked, so need to
 	 * recheck the buffer tree.
 	 */
+<<<<<<< HEAD
 	b = cache_get(&c->cache, block);
+=======
+	b = __find(c, block);
+>>>>>>> b7ba80a49124 (Commit)
 	if (b) {
 		__free_buffer_wake(new_b);
 		goto found_buffer;
@@ -1773,6 +2184,7 @@ static struct dm_buffer *__bufio_new(struct dm_bufio_client *c, sector_t block,
 	__check_watermark(c, write_list);
 
 	b = new_b;
+<<<<<<< HEAD
 	atomic_set(&b->hold_count, 1);
 	WRITE_ONCE(b->last_accessed, jiffies);
 	b->block = block;
@@ -1793,15 +2205,34 @@ static struct dm_buffer *__bufio_new(struct dm_bufio_client *c, sector_t block,
 	 * it before it had been read.
 	 */
 	cache_insert(&c->cache, b);
+=======
+	b->hold_count = 1;
+	b->read_error = 0;
+	b->write_error = 0;
+	__link_buffer(b, block, LIST_CLEAN);
+
+	if (nf == NF_FRESH) {
+		b->state = 0;
+		return b;
+	}
+
+	b->state = 1 << B_READING;
+	*need_submit = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return b;
 
 found_buffer:
+<<<<<<< HEAD
 	if (nf == NF_PREFETCH) {
 		cache_put_and_wake(c, b);
 		return NULL;
 	}
 
+=======
+	if (nf == NF_PREFETCH)
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Note: it is essential that we don't wait for the buffer to be
 	 * read if dm_bufio_get function is used. Both dm_bufio_get and
@@ -1809,11 +2240,20 @@ found_buffer:
 	 * If the user called both dm_bufio_prefetch and dm_bufio_get on
 	 * the same buffer, it would deadlock if we waited.
 	 */
+<<<<<<< HEAD
 	if (nf == NF_GET && unlikely(test_bit_acquire(B_READING, &b->state))) {
 		cache_put_and_wake(c, b);
 		return NULL;
 	}
 
+=======
+	if (nf == NF_GET && unlikely(test_bit(B_READING, &b->state)))
+		return NULL;
+
+	b->hold_count++;
+	__relink_lru(b, test_bit(B_DIRTY, &b->state) ||
+		     test_bit(B_WRITING, &b->state));
+>>>>>>> b7ba80a49124 (Commit)
 	return b;
 }
 
@@ -1843,6 +2283,7 @@ static void read_endio(struct dm_buffer *b, blk_status_t status)
 static void *new_read(struct dm_bufio_client *c, sector_t block,
 		      enum new_flag nf, struct dm_buffer **bp)
 {
+<<<<<<< HEAD
 	int need_submit = 0;
 	struct dm_buffer *b;
 
@@ -1886,6 +2327,20 @@ static void *new_read(struct dm_bufio_client *c, sector_t block,
 	if (b && (atomic_read(&b->hold_count) == 1))
 		buffer_record_stack(b);
 #endif
+=======
+	int need_submit;
+	struct dm_buffer *b;
+
+	LIST_HEAD(write_list);
+
+	dm_bufio_lock(c);
+	b = __bufio_new(c, block, nf, &need_submit, &write_list);
+#ifdef CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
+	if (b && b->hold_count == 1)
+		buffer_record_stack(b);
+#endif
+	dm_bufio_unlock(c);
+>>>>>>> b7ba80a49124 (Commit)
 
 	__flush_write_list(&write_list);
 
@@ -1906,6 +2361,10 @@ static void *new_read(struct dm_bufio_client *c, sector_t block,
 	}
 
 	*bp = b;
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	return b->data;
 }
 
@@ -1920,6 +2379,10 @@ void *dm_bufio_read(struct dm_bufio_client *c, sector_t block,
 		    struct dm_buffer **bp)
 {
 	BUG_ON(dm_bufio_in_request());
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	return new_read(c, block, NF_READ, bp);
 }
 EXPORT_SYMBOL_GPL(dm_bufio_read);
@@ -1928,12 +2391,20 @@ void *dm_bufio_new(struct dm_bufio_client *c, sector_t block,
 		   struct dm_buffer **bp)
 {
 	BUG_ON(dm_bufio_in_request());
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	return new_read(c, block, NF_FRESH, bp);
 }
 EXPORT_SYMBOL_GPL(dm_bufio_new);
 
 void dm_bufio_prefetch(struct dm_bufio_client *c,
+<<<<<<< HEAD
 		       sector_t block, unsigned int n_blocks)
+=======
+		       sector_t block, unsigned n_blocks)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct blk_plug plug;
 
@@ -1942,10 +2413,15 @@ void dm_bufio_prefetch(struct dm_bufio_client *c,
 	BUG_ON(dm_bufio_in_request());
 
 	blk_start_plug(&plug);
+<<<<<<< HEAD
+=======
+	dm_bufio_lock(c);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (; n_blocks--; block++) {
 		int need_submit;
 		struct dm_buffer *b;
+<<<<<<< HEAD
 
 		b = cache_get(&c->cache, block);
 		if (b) {
@@ -1955,6 +2431,8 @@ void dm_bufio_prefetch(struct dm_bufio_client *c,
 		}
 
 		dm_bufio_lock(c);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		b = __bufio_new(c, block, NF_PREFETCH, &need_submit,
 				&write_list);
 		if (unlikely(!list_empty(&write_list))) {
@@ -1964,7 +2442,10 @@ void dm_bufio_prefetch(struct dm_bufio_client *c,
 			blk_start_plug(&plug);
 			dm_bufio_lock(c);
 		}
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (unlikely(b != NULL)) {
 			dm_bufio_unlock(c);
 
@@ -1978,9 +2459,16 @@ void dm_bufio_prefetch(struct dm_bufio_client *c,
 				goto flush_plug;
 			dm_bufio_lock(c);
 		}
+<<<<<<< HEAD
 		dm_bufio_unlock(c);
 	}
 
+=======
+	}
+
+	dm_bufio_unlock(c);
+
+>>>>>>> b7ba80a49124 (Commit)
 flush_plug:
 	blk_finish_plug(&plug);
 }
@@ -1990,6 +2478,7 @@ void dm_bufio_release(struct dm_buffer *b)
 {
 	struct dm_bufio_client *c = b->c;
 
+<<<<<<< HEAD
 	/*
 	 * If there were errors on the buffer, and the buffer is not
 	 * to be written, free the buffer. There is no point in caching
@@ -2012,11 +2501,40 @@ void dm_bufio_release(struct dm_buffer *b)
 	}
 
 	cache_put_and_wake(c, b);
+=======
+	dm_bufio_lock(c);
+
+	BUG_ON(!b->hold_count);
+
+	b->hold_count--;
+	if (!b->hold_count) {
+		wake_up(&c->free_buffer_wait);
+
+		/*
+		 * If there were errors on the buffer, and the buffer is not
+		 * to be written, free the buffer. There is no point in caching
+		 * invalid buffer.
+		 */
+		if ((b->read_error || b->write_error) &&
+		    !test_bit(B_READING, &b->state) &&
+		    !test_bit(B_WRITING, &b->state) &&
+		    !test_bit(B_DIRTY, &b->state)) {
+			__unlink_buffer(b);
+			__free_buffer_wake(b);
+		}
+	}
+
+	dm_bufio_unlock(c);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(dm_bufio_release);
 
 void dm_bufio_mark_partial_buffer_dirty(struct dm_buffer *b,
+<<<<<<< HEAD
 					unsigned int start, unsigned int end)
+=======
+					unsigned start, unsigned end)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dm_bufio_client *c = b->c;
 
@@ -2030,7 +2548,11 @@ void dm_bufio_mark_partial_buffer_dirty(struct dm_buffer *b,
 	if (!test_and_set_bit(B_DIRTY, &b->state)) {
 		b->dirty_start = start;
 		b->dirty_end = end;
+<<<<<<< HEAD
 		cache_mark(&c->cache, b, LIST_DIRTY);
+=======
+		__relink_lru(b, LIST_DIRTY);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		if (start < b->dirty_start)
 			b->dirty_start = start;
@@ -2068,6 +2590,7 @@ EXPORT_SYMBOL_GPL(dm_bufio_write_dirty_buffers_async);
  *
  * Finally, we flush hardware disk cache.
  */
+<<<<<<< HEAD
 static bool is_writing(struct lru_entry *e, void *context)
 {
 	struct dm_buffer *b = le_to_buffer(e);
@@ -2081,6 +2604,13 @@ int dm_bufio_write_dirty_buffers(struct dm_bufio_client *c)
 	unsigned long nr_buffers;
 	struct lru_entry *e;
 	struct lru_iter it;
+=======
+int dm_bufio_write_dirty_buffers(struct dm_bufio_client *c)
+{
+	int a, f;
+	unsigned long buffers_processed = 0;
+	struct dm_buffer *b, *tmp;
+>>>>>>> b7ba80a49124 (Commit)
 
 	LIST_HEAD(write_list);
 
@@ -2090,6 +2620,7 @@ int dm_bufio_write_dirty_buffers(struct dm_bufio_client *c)
 	__flush_write_list(&write_list);
 	dm_bufio_lock(c);
 
+<<<<<<< HEAD
 	nr_buffers = cache_count(&c->cache, LIST_DIRTY);
 	lru_iter_begin(&c->cache.lru[LIST_DIRTY], &it);
 	while ((e = lru_iter_next(&it, is_writing, c))) {
@@ -2116,6 +2647,54 @@ int dm_bufio_write_dirty_buffers(struct dm_bufio_client *c)
 
 	lru_iter_end(&it);
 
+=======
+again:
+	list_for_each_entry_safe_reverse(b, tmp, &c->lru[LIST_DIRTY], lru_list) {
+		int dropped_lock = 0;
+
+		if (buffers_processed < c->n_buffers[LIST_DIRTY])
+			buffers_processed++;
+
+		BUG_ON(test_bit(B_READING, &b->state));
+
+		if (test_bit(B_WRITING, &b->state)) {
+			if (buffers_processed < c->n_buffers[LIST_DIRTY]) {
+				dropped_lock = 1;
+				b->hold_count++;
+				dm_bufio_unlock(c);
+				wait_on_bit_io(&b->state, B_WRITING,
+					       TASK_UNINTERRUPTIBLE);
+				dm_bufio_lock(c);
+				b->hold_count--;
+			} else
+				wait_on_bit_io(&b->state, B_WRITING,
+					       TASK_UNINTERRUPTIBLE);
+		}
+
+		if (!test_bit(B_DIRTY, &b->state) &&
+		    !test_bit(B_WRITING, &b->state))
+			__relink_lru(b, LIST_CLEAN);
+
+		cond_resched();
+
+		/*
+		 * If we dropped the lock, the list is no longer consistent,
+		 * so we must restart the search.
+		 *
+		 * In the most common case, the buffer just processed is
+		 * relinked to the clean list, so we won't loop scanning the
+		 * same buffer again and again.
+		 *
+		 * This may livelock if there is another thread simultaneously
+		 * dirtying buffers, so we count the number of buffers walked
+		 * and if it exceeds the total number of buffers, it means that
+		 * someone is doing some writes simultaneously with us.  In
+		 * this case, stop, dropping the lock.
+		 */
+		if (dropped_lock)
+			goto again;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	wake_up(&c->free_buffer_wait);
 	dm_bufio_unlock(c);
 
@@ -2174,6 +2753,7 @@ int dm_bufio_issue_discard(struct dm_bufio_client *c, sector_t block, sector_t c
 }
 EXPORT_SYMBOL_GPL(dm_bufio_issue_discard);
 
+<<<<<<< HEAD
 static bool forget_buffer(struct dm_bufio_client *c, sector_t block)
 {
 	struct dm_buffer *b;
@@ -2190,6 +2770,90 @@ static bool forget_buffer(struct dm_bufio_client *c, sector_t block)
 	}
 
 	return b ? true : false;
+=======
+/*
+ * We first delete any other buffer that may be at that new location.
+ *
+ * Then, we write the buffer to the original location if it was dirty.
+ *
+ * Then, if we are the only one who is holding the buffer, relink the buffer
+ * in the buffer tree for the new location.
+ *
+ * If there was someone else holding the buffer, we write it to the new
+ * location but not relink it, because that other user needs to have the buffer
+ * at the same place.
+ */
+void dm_bufio_release_move(struct dm_buffer *b, sector_t new_block)
+{
+	struct dm_bufio_client *c = b->c;
+	struct dm_buffer *new;
+
+	BUG_ON(dm_bufio_in_request());
+
+	dm_bufio_lock(c);
+
+retry:
+	new = __find(c, new_block);
+	if (new) {
+		if (new->hold_count) {
+			__wait_for_free_buffer(c);
+			goto retry;
+		}
+
+		/*
+		 * FIXME: Is there any point waiting for a write that's going
+		 * to be overwritten in a bit?
+		 */
+		__make_buffer_clean(new);
+		__unlink_buffer(new);
+		__free_buffer_wake(new);
+	}
+
+	BUG_ON(!b->hold_count);
+	BUG_ON(test_bit(B_READING, &b->state));
+
+	__write_dirty_buffer(b, NULL);
+	if (b->hold_count == 1) {
+		wait_on_bit_io(&b->state, B_WRITING,
+			       TASK_UNINTERRUPTIBLE);
+		set_bit(B_DIRTY, &b->state);
+		b->dirty_start = 0;
+		b->dirty_end = c->block_size;
+		__unlink_buffer(b);
+		__link_buffer(b, new_block, LIST_DIRTY);
+	} else {
+		sector_t old_block;
+		wait_on_bit_lock_io(&b->state, B_WRITING,
+				    TASK_UNINTERRUPTIBLE);
+		/*
+		 * Relink buffer to "new_block" so that write_callback
+		 * sees "new_block" as a block number.
+		 * After the write, link the buffer back to old_block.
+		 * All this must be done in bufio lock, so that block number
+		 * change isn't visible to other threads.
+		 */
+		old_block = b->block;
+		__unlink_buffer(b);
+		__link_buffer(b, new_block, b->list_mode);
+		submit_io(b, REQ_OP_WRITE, write_endio);
+		wait_on_bit_io(&b->state, B_WRITING,
+			       TASK_UNINTERRUPTIBLE);
+		__unlink_buffer(b);
+		__link_buffer(b, old_block, b->list_mode);
+	}
+
+	dm_bufio_unlock(c);
+	dm_bufio_release(b);
+}
+EXPORT_SYMBOL_GPL(dm_bufio_release_move);
+
+static void forget_buffer_locked(struct dm_buffer *b)
+{
+	if (likely(!b->hold_count) && likely(!b->state)) {
+		__unlink_buffer(b);
+		__free_buffer_wake(b);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -2200,12 +2864,24 @@ static bool forget_buffer(struct dm_bufio_client *c, sector_t block)
  */
 void dm_bufio_forget(struct dm_bufio_client *c, sector_t block)
 {
+<<<<<<< HEAD
 	dm_bufio_lock(c);
 	forget_buffer(c, block);
+=======
+	struct dm_buffer *b;
+
+	dm_bufio_lock(c);
+
+	b = __find(c, block);
+	if (b)
+		forget_buffer_locked(b);
+
+>>>>>>> b7ba80a49124 (Commit)
 	dm_bufio_unlock(c);
 }
 EXPORT_SYMBOL_GPL(dm_bufio_forget);
 
+<<<<<<< HEAD
 static enum evict_result idle(struct dm_buffer *b, void *context)
 {
 	return b->state ? ER_DONT_EVICT : ER_EVICT;
@@ -2220,12 +2896,42 @@ void dm_bufio_forget_buffers(struct dm_bufio_client *c, sector_t block, sector_t
 EXPORT_SYMBOL_GPL(dm_bufio_forget_buffers);
 
 void dm_bufio_set_minimum_buffers(struct dm_bufio_client *c, unsigned int n)
+=======
+void dm_bufio_forget_buffers(struct dm_bufio_client *c, sector_t block, sector_t n_blocks)
+{
+	struct dm_buffer *b;
+	sector_t end_block = block + n_blocks;
+
+	while (block < end_block) {
+		dm_bufio_lock(c);
+
+		b = __find_next(c, block);
+		if (b) {
+			block = b->block + 1;
+			forget_buffer_locked(b);
+		}
+
+		dm_bufio_unlock(c);
+
+		if (!b)
+			break;
+	}
+
+}
+EXPORT_SYMBOL_GPL(dm_bufio_forget_buffers);
+
+void dm_bufio_set_minimum_buffers(struct dm_bufio_client *c, unsigned n)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	c->minimum_buffers = n;
 }
 EXPORT_SYMBOL_GPL(dm_bufio_set_minimum_buffers);
 
+<<<<<<< HEAD
 unsigned int dm_bufio_get_block_size(struct dm_bufio_client *c)
+=======
+unsigned dm_bufio_get_block_size(struct dm_bufio_client *c)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return c->block_size;
 }
@@ -2234,7 +2940,10 @@ EXPORT_SYMBOL_GPL(dm_bufio_get_block_size);
 sector_t dm_bufio_get_device_size(struct dm_bufio_client *c)
 {
 	sector_t s = bdev_nr_sectors(c->bdev);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (s >= c->start)
 		s -= c->start;
 	else
@@ -2277,6 +2986,7 @@ struct dm_bufio_client *dm_bufio_get_client(struct dm_buffer *b)
 }
 EXPORT_SYMBOL_GPL(dm_bufio_get_client);
 
+<<<<<<< HEAD
 static enum it_action warn_leak(struct dm_buffer *b, void *context)
 {
 	bool *warned = context;
@@ -2297,6 +3007,13 @@ static void drop_buffers(struct dm_bufio_client *c)
 {
 	int i;
 	struct dm_buffer *b;
+=======
+static void drop_buffers(struct dm_bufio_client *c)
+{
+	struct dm_buffer *b;
+	int i;
+	bool warned = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 	BUG_ON(dm_bufio_in_request());
 
@@ -2310,11 +3027,26 @@ static void drop_buffers(struct dm_bufio_client *c)
 	while ((b = __get_unclaimed_buffer(c)))
 		__free_buffer_wake(b);
 
+<<<<<<< HEAD
 	for (i = 0; i < LIST_SIZE; i++) {
 		bool warned = false;
 
 		cache_iterate(&c->cache, i, warn_leak, &warned);
 	}
+=======
+	for (i = 0; i < LIST_SIZE; i++)
+		list_for_each_entry(b, &c->lru[i], lru_list) {
+			WARN_ON(!warned);
+			warned = true;
+			DMERR("leaked buffer %llx, hold count %u, list %d",
+			      (unsigned long long)b->block, b->hold_count, i);
+#ifdef CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
+			stack_trace_print(b->stack_entries, b->stack_len, 1);
+			/* mark unclaimed to avoid BUG_ON below */
+			b->hold_count = 0;
+#endif
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
 	while ((b = __get_unclaimed_buffer(c)))
@@ -2322,26 +3054,68 @@ static void drop_buffers(struct dm_bufio_client *c)
 #endif
 
 	for (i = 0; i < LIST_SIZE; i++)
+<<<<<<< HEAD
 		BUG_ON(cache_count(&c->cache, i));
+=======
+		BUG_ON(!list_empty(&c->lru[i]));
+>>>>>>> b7ba80a49124 (Commit)
 
 	dm_bufio_unlock(c);
+}
+
+<<<<<<< HEAD
+static unsigned long get_retain_buffers(struct dm_bufio_client *c)
+{
+	unsigned long retain_bytes = READ_ONCE(dm_bufio_retain_bytes);
+
+=======
+/*
+ * We may not be able to evict this buffer if IO pending or the client
+ * is still using it.  Caller is expected to know buffer is too old.
+ *
+ * And if GFP_NOFS is used, we must not do any I/O because we hold
+ * dm_bufio_clients_lock and we would risk deadlock if the I/O gets
+ * rerouted to different bufio client.
+ */
+static bool __try_evict_buffer(struct dm_buffer *b, gfp_t gfp)
+{
+	if (!(gfp & __GFP_FS) ||
+	    (static_branch_unlikely(&no_sleep_enabled) && b->c->no_sleep)) {
+		if (test_bit(B_READING, &b->state) ||
+		    test_bit(B_WRITING, &b->state) ||
+		    test_bit(B_DIRTY, &b->state))
+			return false;
+	}
+
+	if (b->hold_count)
+		return false;
+
+	__make_buffer_clean(b);
+	__unlink_buffer(b);
+	__free_buffer_wake(b);
+
+	return true;
 }
 
 static unsigned long get_retain_buffers(struct dm_bufio_client *c)
 {
 	unsigned long retain_bytes = READ_ONCE(dm_bufio_retain_bytes);
-
+>>>>>>> b7ba80a49124 (Commit)
 	if (likely(c->sectors_per_block_bits >= 0))
 		retain_bytes >>= c->sectors_per_block_bits + SECTOR_SHIFT;
 	else
 		retain_bytes /= c->block_size;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return retain_bytes;
 }
 
 static void __scan(struct dm_bufio_client *c)
 {
 	int l;
+<<<<<<< HEAD
 	struct dm_buffer *b;
 	unsigned long freed = 0;
 	unsigned long retain_target = get_retain_buffers(c);
@@ -2366,6 +3140,24 @@ static void __scan(struct dm_bufio_client *c)
 
 			atomic_long_dec(&c->need_shrink);
 			freed++;
+=======
+	struct dm_buffer *b, *tmp;
+	unsigned long freed = 0;
+	unsigned long count = c->n_buffers[LIST_CLEAN] +
+			      c->n_buffers[LIST_DIRTY];
+	unsigned long retain_target = get_retain_buffers(c);
+
+	for (l = 0; l < LIST_SIZE; l++) {
+		list_for_each_entry_safe_reverse(b, tmp, &c->lru[l], lru_list) {
+			if (count - freed <= retain_target)
+				atomic_long_set(&c->need_shrink, 0);
+			if (!atomic_long_read(&c->need_shrink))
+				return;
+			if (__try_evict_buffer(b, GFP_KERNEL)) {
+				atomic_long_dec(&c->need_shrink);
+				freed++;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 			cond_resched();
 		}
 	}
@@ -2394,7 +3186,12 @@ static unsigned long dm_bufio_shrink_scan(struct shrinker *shrink, struct shrink
 static unsigned long dm_bufio_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
 {
 	struct dm_bufio_client *c = container_of(shrink, struct dm_bufio_client, shrinker);
+<<<<<<< HEAD
 	unsigned long count = cache_total(&c->cache);
+=======
+	unsigned long count = READ_ONCE(c->n_buffers[LIST_CLEAN]) +
+			      READ_ONCE(c->n_buffers[LIST_DIRTY]);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long retain_target = get_retain_buffers(c);
 	unsigned long queued_for_cleanup = atomic_long_read(&c->need_shrink);
 
@@ -2414,14 +3211,23 @@ static unsigned long dm_bufio_shrink_count(struct shrinker *shrink, struct shrin
 /*
  * Create the buffering interface
  */
+<<<<<<< HEAD
 struct dm_bufio_client *dm_bufio_client_create(struct block_device *bdev, unsigned int block_size,
 					       unsigned int reserved_buffers, unsigned int aux_size,
+=======
+struct dm_bufio_client *dm_bufio_client_create(struct block_device *bdev, unsigned block_size,
+					       unsigned reserved_buffers, unsigned aux_size,
+>>>>>>> b7ba80a49124 (Commit)
 					       void (*alloc_callback)(struct dm_buffer *),
 					       void (*write_callback)(struct dm_buffer *),
 					       unsigned int flags)
 {
 	int r;
 	struct dm_bufio_client *c;
+<<<<<<< HEAD
+=======
+	unsigned i;
+>>>>>>> b7ba80a49124 (Commit)
 	char slab_name[27];
 
 	if (!block_size || block_size & ((1 << SECTOR_SHIFT) - 1)) {
@@ -2435,7 +3241,11 @@ struct dm_bufio_client *dm_bufio_client_create(struct block_device *bdev, unsign
 		r = -ENOMEM;
 		goto bad_client;
 	}
+<<<<<<< HEAD
 	cache_init(&c->cache);
+=======
+	c->buffer_tree = RB_ROOT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	c->bdev = bdev;
 	c->block_size = block_size;
@@ -2452,6 +3262,14 @@ struct dm_bufio_client *dm_bufio_client_create(struct block_device *bdev, unsign
 		static_branch_inc(&no_sleep_enabled);
 	}
 
+<<<<<<< HEAD
+=======
+	for (i = 0; i < LIST_SIZE; i++) {
+		INIT_LIST_HEAD(&c->lru[i]);
+		c->n_buffers[i] = 0;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&c->lock);
 	spin_lock_init(&c->spinlock);
 	INIT_LIST_HEAD(&c->reserved_buffers);
@@ -2470,9 +3288,14 @@ struct dm_bufio_client *dm_bufio_client_create(struct block_device *bdev, unsign
 
 	if (block_size <= KMALLOC_MAX_SIZE &&
 	    (block_size < PAGE_SIZE || !is_power_of_2(block_size))) {
+<<<<<<< HEAD
 		unsigned int align = min(1U << __ffs(block_size), (unsigned int)PAGE_SIZE);
 
 		snprintf(slab_name, sizeof(slab_name), "dm_bufio_cache-%u", block_size);
+=======
+		unsigned align = min(1U << __ffs(block_size), (unsigned)PAGE_SIZE);
+		snprintf(slab_name, sizeof slab_name, "dm_bufio_cache-%u", block_size);
+>>>>>>> b7ba80a49124 (Commit)
 		c->slab_cache = kmem_cache_create(slab_name, block_size, align,
 						  SLAB_RECLAIM_ACCOUNT, NULL);
 		if (!c->slab_cache) {
@@ -2481,9 +3304,15 @@ struct dm_bufio_client *dm_bufio_client_create(struct block_device *bdev, unsign
 		}
 	}
 	if (aux_size)
+<<<<<<< HEAD
 		snprintf(slab_name, sizeof(slab_name), "dm_bufio_buffer-%u", aux_size);
 	else
 		snprintf(slab_name, sizeof(slab_name), "dm_bufio_buffer");
+=======
+		snprintf(slab_name, sizeof slab_name, "dm_bufio_buffer-%u", aux_size);
+	else
+		snprintf(slab_name, sizeof slab_name, "dm_bufio_buffer");
+>>>>>>> b7ba80a49124 (Commit)
 	c->slab_buffer = kmem_cache_create(slab_name, sizeof(struct dm_buffer) + aux_size,
 					   0, SLAB_RECLAIM_ACCOUNT, NULL);
 	if (!c->slab_buffer) {
@@ -2508,7 +3337,11 @@ struct dm_bufio_client *dm_bufio_client_create(struct block_device *bdev, unsign
 	c->shrinker.scan_objects = dm_bufio_shrink_scan;
 	c->shrinker.seeks = 1;
 	c->shrinker.batch = 0;
+<<<<<<< HEAD
 	r = register_shrinker(&c->shrinker, "dm-bufio:(%u:%u)",
+=======
+	r = register_shrinker(&c->shrinker, "md-%s:(%u:%u)", slab_name,
+>>>>>>> b7ba80a49124 (Commit)
 			      MAJOR(bdev->bd_dev), MINOR(bdev->bd_dev));
 	if (r)
 		goto bad;
@@ -2523,9 +3356,15 @@ struct dm_bufio_client *dm_bufio_client_create(struct block_device *bdev, unsign
 
 bad:
 	while (!list_empty(&c->reserved_buffers)) {
+<<<<<<< HEAD
 		struct dm_buffer *b = list_to_buffer(c->reserved_buffers.next);
 
 		list_del(&b->lru.list);
+=======
+		struct dm_buffer *b = list_entry(c->reserved_buffers.next,
+						 struct dm_buffer, lru_list);
+		list_del(&b->lru_list);
+>>>>>>> b7ba80a49124 (Commit)
 		free_buffer(b);
 	}
 	kmem_cache_destroy(c->slab_cache);
@@ -2533,8 +3372,11 @@ bad:
 	dm_io_client_destroy(c->dm_io);
 bad_dm_io:
 	mutex_destroy(&c->lock);
+<<<<<<< HEAD
 	if (c->no_sleep)
 		static_branch_dec(&no_sleep_enabled);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(c);
 bad_client:
 	return ERR_PTR(r);
@@ -2547,7 +3389,11 @@ EXPORT_SYMBOL_GPL(dm_bufio_client_create);
  */
 void dm_bufio_client_destroy(struct dm_bufio_client *c)
 {
+<<<<<<< HEAD
 	unsigned int i;
+=======
+	unsigned i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	drop_buffers(c);
 
@@ -2562,16 +3408,27 @@ void dm_bufio_client_destroy(struct dm_bufio_client *c)
 
 	mutex_unlock(&dm_bufio_clients_lock);
 
+<<<<<<< HEAD
 	BUG_ON(c->need_reserved_buffers);
 
 	while (!list_empty(&c->reserved_buffers)) {
 		struct dm_buffer *b = list_to_buffer(c->reserved_buffers.next);
 
 		list_del(&b->lru.list);
+=======
+	BUG_ON(!RB_EMPTY_ROOT(&c->buffer_tree));
+	BUG_ON(c->need_reserved_buffers);
+
+	while (!list_empty(&c->reserved_buffers)) {
+		struct dm_buffer *b = list_entry(c->reserved_buffers.next,
+						 struct dm_buffer, lru_list);
+		list_del(&b->lru_list);
+>>>>>>> b7ba80a49124 (Commit)
 		free_buffer(b);
 	}
 
 	for (i = 0; i < LIST_SIZE; i++)
+<<<<<<< HEAD
 		if (cache_count(&c->cache, i))
 			DMERR("leaked buffer count %d: %lu", i, cache_count(&c->cache, i));
 
@@ -2579,6 +3436,14 @@ void dm_bufio_client_destroy(struct dm_bufio_client *c)
 		BUG_ON(cache_count(&c->cache, i));
 
 	cache_destroy(&c->cache);
+=======
+		if (c->n_buffers[i])
+			DMERR("leaked buffer count %d: %ld", i, c->n_buffers[i]);
+
+	for (i = 0; i < LIST_SIZE; i++)
+		BUG_ON(c->n_buffers[i]);
+
+>>>>>>> b7ba80a49124 (Commit)
 	kmem_cache_destroy(c->slab_cache);
 	kmem_cache_destroy(c->slab_buffer);
 	dm_io_client_destroy(c->dm_io);
@@ -2595,11 +3460,17 @@ void dm_bufio_set_sector_offset(struct dm_bufio_client *c, sector_t start)
 }
 EXPORT_SYMBOL_GPL(dm_bufio_set_sector_offset);
 
+<<<<<<< HEAD
 /*--------------------------------------------------------------*/
 
 static unsigned int get_max_age_hz(void)
 {
 	unsigned int max_age = READ_ONCE(dm_bufio_max_age);
+=======
+static unsigned get_max_age_hz(void)
+{
+	unsigned max_age = READ_ONCE(dm_bufio_max_age);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (max_age > UINT_MAX / HZ)
 		max_age = UINT_MAX / HZ;
@@ -2609,6 +3480,7 @@ static unsigned int get_max_age_hz(void)
 
 static bool older_than(struct dm_buffer *b, unsigned long age_hz)
 {
+<<<<<<< HEAD
 	return time_after_eq(jiffies, READ_ONCE(b->last_accessed) + age_hz);
 }
 
@@ -2677,6 +3549,15 @@ static void evict_old_buffers(struct dm_bufio_client *c, unsigned long age_hz)
 {
 	struct evict_params params = {.gfp = 0, .age_hz = age_hz, .last_accessed = 0};
 	unsigned long retain = get_retain_buffers(c);
+=======
+	return time_after_eq(jiffies, b->last_accessed + age_hz);
+}
+
+static void __evict_old_buffers(struct dm_bufio_client *c, unsigned long age_hz)
+{
+	struct dm_buffer *b, *tmp;
+	unsigned long retain_target = get_retain_buffers(c);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long count;
 	LIST_HEAD(write_list);
 
@@ -2689,13 +3570,100 @@ static void evict_old_buffers(struct dm_bufio_client *c, unsigned long age_hz)
 		dm_bufio_lock(c);
 	}
 
+<<<<<<< HEAD
 	count = cache_total(&c->cache);
 	if (count > retain)
 		__evict_many(c, &params, LIST_CLEAN, count - retain);
+=======
+	count = c->n_buffers[LIST_CLEAN] + c->n_buffers[LIST_DIRTY];
+	list_for_each_entry_safe_reverse(b, tmp, &c->lru[LIST_CLEAN], lru_list) {
+		if (count <= retain_target)
+			break;
+
+		if (!older_than(b, age_hz))
+			break;
+
+		if (__try_evict_buffer(b, 0))
+			count--;
+
+		cond_resched();
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	dm_bufio_unlock(c);
 }
 
+<<<<<<< HEAD
+=======
+static void do_global_cleanup(struct work_struct *w)
+{
+	struct dm_bufio_client *locked_client = NULL;
+	struct dm_bufio_client *current_client;
+	struct dm_buffer *b;
+	unsigned spinlock_hold_count;
+	unsigned long threshold = dm_bufio_cache_size -
+		dm_bufio_cache_size / DM_BUFIO_LOW_WATERMARK_RATIO;
+	unsigned long loops = global_num * 2;
+
+	mutex_lock(&dm_bufio_clients_lock);
+
+	while (1) {
+		cond_resched();
+
+		spin_lock(&global_spinlock);
+		if (unlikely(dm_bufio_current_allocated <= threshold))
+			break;
+
+		spinlock_hold_count = 0;
+get_next:
+		if (!loops--)
+			break;
+		if (unlikely(list_empty(&global_queue)))
+			break;
+		b = list_entry(global_queue.prev, struct dm_buffer, global_list);
+
+		if (b->accessed) {
+			b->accessed = 0;
+			list_move(&b->global_list, &global_queue);
+			if (likely(++spinlock_hold_count < 16))
+				goto get_next;
+			spin_unlock(&global_spinlock);
+			continue;
+		}
+
+		current_client = b->c;
+		if (unlikely(current_client != locked_client)) {
+			if (locked_client)
+				dm_bufio_unlock(locked_client);
+
+			if (!dm_bufio_trylock(current_client)) {
+				spin_unlock(&global_spinlock);
+				dm_bufio_lock(current_client);
+				locked_client = current_client;
+				continue;
+			}
+
+			locked_client = current_client;
+		}
+
+		spin_unlock(&global_spinlock);
+
+		if (unlikely(!__try_evict_buffer(b, GFP_KERNEL))) {
+			spin_lock(&global_spinlock);
+			list_move(&b->global_list, &global_queue);
+			spin_unlock(&global_spinlock);
+		}
+	}
+
+	spin_unlock(&global_spinlock);
+
+	if (locked_client)
+		dm_bufio_unlock(locked_client);
+
+	mutex_unlock(&dm_bufio_clients_lock);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void cleanup_old_buffers(void)
 {
 	unsigned long max_age_hz = get_max_age_hz();
@@ -2706,7 +3674,11 @@ static void cleanup_old_buffers(void)
 	__cache_size_refresh();
 
 	list_for_each_entry(c, &dm_bufio_all_clients, client_list)
+<<<<<<< HEAD
 		evict_old_buffers(c, max_age_hz);
+=======
+		__evict_old_buffers(c, max_age_hz);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&dm_bufio_clients_lock);
 }
@@ -2719,6 +3691,7 @@ static void work_fn(struct work_struct *w)
 			   DM_BUFIO_WORK_TIMER_SECS * HZ);
 }
 
+<<<<<<< HEAD
 /*--------------------------------------------------------------*/
 
 /*
@@ -2825,6 +3798,11 @@ static void do_global_cleanup(struct work_struct *w)
  * Module setup
  *--------------------------------------------------------------
  */
+=======
+/*----------------------------------------------------------------
+ * Module setup
+ *--------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * This is called only once for the whole dm_bufio module.
@@ -2908,6 +3886,7 @@ static void __exit dm_bufio_exit(void)
 module_init(dm_bufio_init)
 module_exit(dm_bufio_exit)
 
+<<<<<<< HEAD
 module_param_named(max_cache_size_bytes, dm_bufio_cache_size, ulong, 0644);
 MODULE_PARM_DESC(max_cache_size_bytes, "Size of metadata cache");
 
@@ -2930,6 +3909,30 @@ module_param_named(allocated_vmalloc_bytes, dm_bufio_allocated_vmalloc, ulong, 0
 MODULE_PARM_DESC(allocated_vmalloc_bytes, "Memory allocated with vmalloc");
 
 module_param_named(current_allocated_bytes, dm_bufio_current_allocated, ulong, 0444);
+=======
+module_param_named(max_cache_size_bytes, dm_bufio_cache_size, ulong, S_IRUGO | S_IWUSR);
+MODULE_PARM_DESC(max_cache_size_bytes, "Size of metadata cache");
+
+module_param_named(max_age_seconds, dm_bufio_max_age, uint, S_IRUGO | S_IWUSR);
+MODULE_PARM_DESC(max_age_seconds, "Max age of a buffer in seconds");
+
+module_param_named(retain_bytes, dm_bufio_retain_bytes, ulong, S_IRUGO | S_IWUSR);
+MODULE_PARM_DESC(retain_bytes, "Try to keep at least this many bytes cached in memory");
+
+module_param_named(peak_allocated_bytes, dm_bufio_peak_allocated, ulong, S_IRUGO | S_IWUSR);
+MODULE_PARM_DESC(peak_allocated_bytes, "Tracks the maximum allocated memory");
+
+module_param_named(allocated_kmem_cache_bytes, dm_bufio_allocated_kmem_cache, ulong, S_IRUGO);
+MODULE_PARM_DESC(allocated_kmem_cache_bytes, "Memory allocated with kmem_cache_alloc");
+
+module_param_named(allocated_get_free_pages_bytes, dm_bufio_allocated_get_free_pages, ulong, S_IRUGO);
+MODULE_PARM_DESC(allocated_get_free_pages_bytes, "Memory allocated with get_free_pages");
+
+module_param_named(allocated_vmalloc_bytes, dm_bufio_allocated_vmalloc, ulong, S_IRUGO);
+MODULE_PARM_DESC(allocated_vmalloc_bytes, "Memory allocated with vmalloc");
+
+module_param_named(current_allocated_bytes, dm_bufio_current_allocated, ulong, S_IRUGO);
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_PARM_DESC(current_allocated_bytes, "Memory currently used by the cache");
 
 MODULE_AUTHOR("Mikulas Patocka <dm-devel@redhat.com>");

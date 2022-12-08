@@ -369,7 +369,11 @@ static int ul_tinyconn_event(struct snd_soc_dapm_widget *w,
 	unsigned int reg_shift;
 	unsigned int reg_mask_shift;
 
+<<<<<<< HEAD
 	dev_dbg(afe->dev, "%s(), event 0x%x\n", __func__, event);
+=======
+	dev_info(afe->dev, "%s(), event 0x%x\n", __func__, event);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (strstr(w->name, "UL1")) {
 		reg_shift = VUL1_USE_TINY_SFT;
@@ -2055,6 +2059,11 @@ static int mt8192_afe_runtime_suspend(struct device *dev)
 	unsigned int value;
 	int ret;
 
+<<<<<<< HEAD
+=======
+	dev_info(afe->dev, "%s()\n", __func__);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!afe->regmap || afe_priv->pm_runtime_bypass_reg_ctl)
 		goto skip_regmap;
 
@@ -2095,6 +2104,11 @@ static int mt8192_afe_runtime_resume(struct device *dev)
 	struct mt8192_afe_private *afe_priv = afe->platform_priv;
 	int ret;
 
+<<<<<<< HEAD
+=======
+	dev_info(afe->dev, "%s()\n", __func__);
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = mt8192_afe_enable_clock(afe);
 	if (ret)
 		return ret;
@@ -2349,7 +2363,11 @@ err_pm_disable:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void mt8192_afe_pcm_dev_remove(struct platform_device *pdev)
+=======
+static int mt8192_afe_pcm_dev_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mtk_base_afe *afe = platform_get_drvdata(pdev);
 
@@ -2359,6 +2377,10 @@ static void mt8192_afe_pcm_dev_remove(struct platform_device *pdev)
 
 	/* disable afe clock */
 	mt8192_afe_disable_clock(afe);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id mt8192_afe_pcm_dt_match[] = {
@@ -2379,7 +2401,11 @@ static struct platform_driver mt8192_afe_pcm_driver = {
 		   .pm = &mt8192_afe_pm_ops,
 	},
 	.probe = mt8192_afe_pcm_dev_probe,
+<<<<<<< HEAD
 	.remove_new = mt8192_afe_pcm_dev_remove,
+=======
+	.remove = mt8192_afe_pcm_dev_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(mt8192_afe_pcm_driver);

@@ -184,8 +184,13 @@
 	 7,    0,  EBX,     27, avx512er, AVX512 Exponent Reciproca instr
 	 7,    0,  EBX,     28, avx512cd, AVX512 Conflict Detection instr
 	 7,    0,  EBX,     29, sha, Intel Secure Hash Algorithm Extensions instr
+<<<<<<< HEAD
 	 7,    0,  EBX,     30, avx512bw, AVX512 Byte & Word instr
 	 7,    0,  EBX,     31, avx512vl, AVX512 Vector Length Extentions (VL)
+=======
+	 7,    0,  EBX,     26, avx512bw, AVX512 Byte & Word instr
+	 7,    0,  EBX,     28, avx512vl, AVX512 Vector Length Extentions (VL)
+>>>>>>> b7ba80a49124 (Commit)
 	 7,    0,  ECX,      0, prefetchwt1, X
 	 7,    0,  ECX,      1, avx512vbmi, AVX512 Vector Byte Manipulation Instructions
 	 7,    0,  ECX,      2, umip, User-mode Instruction Prevention
@@ -340,6 +345,7 @@
 # According to SDM
 # 40000000H - 4FFFFFFFH is invalid range
 
+<<<<<<< HEAD
 # Leaf 80000001H
 # Extended Processor Signature and Feature Bits
 
@@ -404,6 +410,21 @@
 0x80000001,    0,  EDX,     29, lm, 64b Architecture supported
 0x80000001,    0,  EDX,     30, threednowext, AMD extensions to 3DNow! instructions
 0x80000001,    0,  EDX,     31, threednow, 3DNow! instructions
+=======
+
+# Leaf 80000001H
+# Extended Processor Signature and Feature Bits
+
+0x80000001,    0,  ECX,      0, lahf_lm, LAHF/SAHF available in 64-bit mode
+0x80000001,    0,  ECX,      5, lzcnt, LZCNT
+0x80000001,    0,  ECX,      8, prefetchw, PREFETCHW
+
+0x80000001,    0,  EDX,     11, sysret, SYSCALL/SYSRET supported
+0x80000001,    0,  EDX,     20, exec_dis, Execute Disable Bit available
+0x80000001,    0,  EDX,     26, 1gb_page, 1GB page supported
+0x80000001,    0,  EDX,     27, rdtscp, RDTSCP and IA32_TSC_AUX are available
+#0x80000001,    0,  EDX,     29, 64b, 64b Architecture supported
+>>>>>>> b7ba80a49124 (Commit)
 
 # Leaf 80000002H/80000003H/80000004H
 # Processor Brand String

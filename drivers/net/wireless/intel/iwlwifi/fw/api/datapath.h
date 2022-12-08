@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
 /*
+<<<<<<< HEAD
  * Copyright (C) 2012-2014, 2018-2022 Intel Corporation
+=======
+ * Copyright (C) 2012-2014, 2018-2020 Intel Corporation
+>>>>>>> b7ba80a49124 (Commit)
  * Copyright (C) 2013-2015 Intel Mobile Communications GmbH
  * Copyright (C) 2016-2017 Intel Deutschland GmbH
  */
@@ -27,6 +31,7 @@ enum iwl_data_path_subcmd_ids {
 	TRIGGER_RX_QUEUES_NOTIF_CMD = 0x2,
 
 	/**
+<<<<<<< HEAD
 	 * @WNM_PLATFORM_PTM_REQUEST_CMD: &struct iwl_time_sync_cfg_cmd
 	 */
 	WNM_PLATFORM_PTM_REQUEST_CMD = 0x3,
@@ -38,6 +43,8 @@ enum iwl_data_path_subcmd_ids {
 	WNM_80211V_TIMING_MEASUREMENT_CONFIG_CMD = 0x4,
 
 	/**
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * @STA_HE_CTXT_CMD: &struct iwl_he_sta_context_cmd
 	 */
 	STA_HE_CTXT_CMD = 0x7,
@@ -83,18 +90,25 @@ enum iwl_data_path_subcmd_ids {
 	SCD_QUEUE_CONFIG_CMD = 0x17,
 
 	/**
+<<<<<<< HEAD
 	 * @SEC_KEY_CMD: security key command, uses &struct iwl_sec_key_cmd
 	 */
 	SEC_KEY_CMD = 0x18,
 
 	/**
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * @MONITOR_NOTIF: Datapath monitoring notification, using
 	 *	&struct iwl_datapath_monitor_notif
 	 */
 	MONITOR_NOTIF = 0xF4,
 
 	/**
+<<<<<<< HEAD
 	 * @RX_NO_DATA_NOTIF: &struct iwl_rx_no_data or &struct iwl_rx_no_data_ver_3
+=======
+	 * @RX_NO_DATA_NOTIF: &struct iwl_rx_no_data
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	RX_NO_DATA_NOTIF = 0xF5,
 
@@ -157,6 +171,7 @@ enum iwl_channel_estimation_flags {
 	IWL_CHANNEL_ESTIMATION_COUNTER	= BIT(2),
 };
 
+<<<<<<< HEAD
 enum iwl_time_sync_protocol_type {
 	IWL_TIME_SYNC_PROTOCOL_TM	= BIT(0),
 	IWL_TIME_SYNC_PROTOCOL_FTM	= BIT(1),
@@ -328,6 +343,8 @@ struct iwl_time_msmt_cfm_notify {
 	__le32 t4_max_err;
 } __packed; /* WNM_80211V_TIMING_MEASUREMENT_CONFIRM_NTFY_API_S_VER_1 */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct iwl_channel_estimation_cfg - channel estimation reporting config
  */
@@ -564,11 +581,17 @@ enum iwl_scd_queue_cfg_operation {
  * @u.add.cb_size: size code
  * @u.add.bc_dram_addr: byte-count table IOVA
  * @u.add.tfdq_dram_addr: TFD queue IOVA
+<<<<<<< HEAD
  * @u.remove.sta_mask: station mask of queue to remove
  * @u.remove.tid: TID of queue to remove
  * @u.modify.old_sta_mask: old station mask for modify
  * @u.modify.tid: TID of queue to modify
  * @u.modify.new_sta_mask: new station mask for modify
+=======
+ * @u.remove.queue: queue ID for removal
+ * @u.modify.sta_mask: new station mask for modify
+ * @u.modify.queue: queue ID to modify
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct iwl_scd_queue_cfg_cmd {
 	__le32 operation;
@@ -583,6 +606,7 @@ struct iwl_scd_queue_cfg_cmd {
 			__le64 tfdq_dram_addr;
 		} __packed add; /* TX_QUEUE_CFG_CMD_ADD_API_S_VER_1 */
 		struct {
+<<<<<<< HEAD
 			__le32 sta_mask;
 			__le32 tid;
 		} __packed remove; /* TX_QUEUE_CFG_CMD_REMOVE_API_S_VER_1 */
@@ -590,10 +614,18 @@ struct iwl_scd_queue_cfg_cmd {
 			__le32 old_sta_mask;
 			__le32 tid;
 			__le32 new_sta_mask;
+=======
+			__le32 queue;
+		} __packed remove; /* TX_QUEUE_CFG_CMD_REMOVE_API_S_VER_1 */
+		struct {
+			__le32 sta_mask;
+			__le32 queue;
+>>>>>>> b7ba80a49124 (Commit)
 		} __packed modify; /* TX_QUEUE_CFG_CMD_MODIFY_API_S_VER_1 */
 	} __packed u; /* TX_QUEUE_CFG_CMD_OPERATION_API_U_VER_1 */
 } __packed; /* TX_QUEUE_CFG_CMD_API_S_VER_3 */
 
+<<<<<<< HEAD
 /**
  * enum iwl_sec_key_flags - security key command key flags
  * @IWL_SEC_KEY_FLAG_CIPHER_MASK: cipher mask
@@ -668,4 +700,6 @@ struct iwl_sec_key_cmd {
 	} __packed u; /* SEC_KEY_OPERATION_API_U_VER_1 */
 } __packed; /* SEC_KEY_CMD_API_S_VER_1 */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __iwl_fw_api_datapath_h__ */

@@ -32,6 +32,7 @@
 &bq27441_fg {
 	monitored-battery = <&battery>;
 };
+<<<<<<< HEAD
 
 &i2c4 {
 	status = "okay";
@@ -72,3 +73,5 @@
 	qcom,micbias3-microvolt = <1800000>;
 	qcom,micbias4-microvolt = <1800000>;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

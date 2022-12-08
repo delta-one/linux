@@ -64,7 +64,11 @@ static int xensyms_next_sym(struct xensyms *xs)
 
 static void *xensyms_start(struct seq_file *m, loff_t *pos)
 {
+<<<<<<< HEAD
 	struct xensyms *xs = m->private;
+=======
+	struct xensyms *xs = (struct xensyms *)m->private;
+>>>>>>> b7ba80a49124 (Commit)
 
 	xs->op.u.symdata.symnum = *pos;
 
@@ -76,7 +80,11 @@ static void *xensyms_start(struct seq_file *m, loff_t *pos)
 
 static void *xensyms_next(struct seq_file *m, void *p, loff_t *pos)
 {
+<<<<<<< HEAD
 	struct xensyms *xs = m->private;
+=======
+	struct xensyms *xs = (struct xensyms *)m->private;
+>>>>>>> b7ba80a49124 (Commit)
 
 	xs->op.u.symdata.symnum = ++(*pos);
 
@@ -88,7 +96,11 @@ static void *xensyms_next(struct seq_file *m, void *p, loff_t *pos)
 
 static int xensyms_show(struct seq_file *m, void *p)
 {
+<<<<<<< HEAD
 	struct xensyms *xs = m->private;
+=======
+	struct xensyms *xs = (struct xensyms *)m->private;
+>>>>>>> b7ba80a49124 (Commit)
 	struct xenpf_symdata *symdata = &xs->op.u.symdata;
 
 	seq_printf(m, "%016llx %c %s\n", symdata->address,
@@ -120,7 +132,11 @@ static int xensyms_open(struct inode *inode, struct file *file)
 		return ret;
 
 	m = file->private_data;
+<<<<<<< HEAD
 	xs = m->private;
+=======
+	xs = (struct xensyms *)m->private;
+>>>>>>> b7ba80a49124 (Commit)
 
 	xs->namelen = XEN_KSYM_NAME_LEN + 1;
 	xs->name = kzalloc(xs->namelen, GFP_KERNEL);
@@ -138,7 +154,11 @@ static int xensyms_open(struct inode *inode, struct file *file)
 static int xensyms_release(struct inode *inode, struct file *file)
 {
 	struct seq_file *m = file->private_data;
+<<<<<<< HEAD
 	struct xensyms *xs = m->private;
+=======
+	struct xensyms *xs = (struct xensyms *)m->private;
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(xs->name);
 	return seq_release_private(inode, file);

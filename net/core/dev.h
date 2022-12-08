@@ -9,7 +9,10 @@ struct net_device;
 struct netdev_bpf;
 struct netdev_phys_item_id;
 struct netlink_ext_ack;
+<<<<<<< HEAD
 struct cpumask;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Random bits of netdevice that don't need to be exposed */
 #define FLOW_LIMIT_HISTORY	(1 << 7)  /* must be ^2 and !overflow buckets */
@@ -89,6 +92,7 @@ int dev_change_carrier(struct net_device *dev, bool new_carrier);
 
 void __dev_set_rx_mode(struct net_device *dev);
 
+<<<<<<< HEAD
 void __dev_notify_flags(struct net_device *dev, unsigned int old_flags,
 			unsigned int gchanges, u32 portid,
 			const struct nlmsghdr *nlh);
@@ -96,13 +100,18 @@ void __dev_notify_flags(struct net_device *dev, unsigned int old_flags,
 void unregister_netdevice_many_notify(struct list_head *head,
 				      u32 portid, const struct nlmsghdr *nlh);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void netif_set_gso_max_size(struct net_device *dev,
 					  unsigned int size)
 {
 	/* dev->gso_max_size is read locklessly from sk_setup_caps() */
 	WRITE_ONCE(dev->gso_max_size, size);
+<<<<<<< HEAD
 	if (size <= GSO_LEGACY_MAX_SIZE)
 		WRITE_ONCE(dev->gso_ipv4_max_size, size);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void netif_set_gso_max_segs(struct net_device *dev,
@@ -117,6 +126,7 @@ static inline void netif_set_gro_max_size(struct net_device *dev,
 {
 	/* This pairs with the READ_ONCE() in skb_gro_receive() */
 	WRITE_ONCE(dev->gro_max_size, size);
+<<<<<<< HEAD
 	if (size <= GRO_LEGACY_MAX_SIZE)
 		WRITE_ONCE(dev->gro_ipv4_max_size, size);
 }
@@ -136,4 +146,8 @@ static inline void netif_set_gro_ipv4_max_size(struct net_device *dev,
 }
 
 int rps_cpumask_housekeeping(struct cpumask *mask);
+=======
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif

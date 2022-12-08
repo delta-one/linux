@@ -566,7 +566,11 @@
 				interrupts = <29>;
 				clocks = <&clocks CLK_CSIS>,
 						<&clocks SCLK_CSIS>;
+<<<<<<< HEAD
 				clock-names = "csis",
+=======
+				clock-names = "clk_csis",
+>>>>>>> b7ba80a49124 (Commit)
 						"sclk_csis";
 				bus-width = <4>;
 				status = "disabled";

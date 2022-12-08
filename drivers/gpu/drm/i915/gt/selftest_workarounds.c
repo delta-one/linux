@@ -66,14 +66,22 @@ reference_lists_init(struct intel_gt *gt, struct wa_lists *lists)
 
 	memset(lists, 0, sizeof(*lists));
 
+<<<<<<< HEAD
 	wa_init_start(&lists->gt_wa_list, gt, "GT_REF", "global");
+=======
+	wa_init_start(&lists->gt_wa_list, "GT_REF", "global");
+>>>>>>> b7ba80a49124 (Commit)
 	gt_init_workarounds(gt, &lists->gt_wa_list);
 	wa_init_finish(&lists->gt_wa_list);
 
 	for_each_engine(engine, gt, id) {
 		struct i915_wa_list *wal = &lists->engine[id].wa_list;
 
+<<<<<<< HEAD
 		wa_init_start(wal, gt, "REF", engine->name);
+=======
+		wa_init_start(wal, "REF", engine->name);
+>>>>>>> b7ba80a49124 (Commit)
 		engine_init_workarounds(engine, wal);
 		wa_init_finish(wal);
 
@@ -138,7 +146,15 @@ read_nonprivs(struct intel_context *ce)
 		goto err_pin;
 	}
 
+<<<<<<< HEAD
 	err = igt_vma_move_to_active_unlocked(vma, rq, EXEC_OBJECT_WRITE);
+=======
+	i915_vma_lock(vma);
+	err = i915_request_await_object(rq, vma->obj, true);
+	if (err == 0)
+		err = i915_vma_move_to_active(vma, rq, EXEC_OBJECT_WRITE);
+	i915_vma_unlock(vma);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto err_req;
 
@@ -519,7 +535,11 @@ static int check_dirty_whitelist(struct intel_context *ce)
 	for (i = 0; i < engine->whitelist.count; i++) {
 		u32 reg = i915_mmio_reg_offset(engine->whitelist.list[i].reg);
 		struct i915_gem_ww_ctx ww;
+<<<<<<< HEAD
 		u64 addr = i915_vma_offset(scratch);
+=======
+		u64 addr = scratch->node.start;
+>>>>>>> b7ba80a49124 (Commit)
 		struct i915_request *rq;
 		u32 srm, lrm, rsvd;
 		u32 expect;
@@ -628,17 +648,34 @@ retry:
 				goto err_request;
 		}
 
+<<<<<<< HEAD
 		err = i915_vma_move_to_active(batch, rq, 0);
 		if (err)
 			goto err_request;
 
 		err = i915_vma_move_to_active(scratch, rq,
 					      EXEC_OBJECT_WRITE);
+=======
+		err = i915_request_await_object(rq, batch->obj, false);
+		if (err == 0)
+			err = i915_vma_move_to_active(batch, rq, 0);
+		if (err)
+			goto err_request;
+
+		err = i915_request_await_object(rq, scratch->obj, true);
+		if (err == 0)
+			err = i915_vma_move_to_active(scratch, rq,
+						      EXEC_OBJECT_WRITE);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			goto err_request;
 
 		err = engine->emit_bb_start(rq,
+<<<<<<< HEAD
 					    i915_vma_offset(batch), PAGE_SIZE,
+=======
+					    batch->node.start, PAGE_SIZE,
+>>>>>>> b7ba80a49124 (Commit)
 					    0);
 		if (err)
 			goto err_request;
@@ -851,7 +888,15 @@ static int read_whitelisted_registers(struct intel_context *ce,
 	if (IS_ERR(rq))
 		return PTR_ERR(rq);
 
+<<<<<<< HEAD
 	err = igt_vma_move_to_active_unlocked(results, rq, EXEC_OBJECT_WRITE);
+=======
+	i915_vma_lock(results);
+	err = i915_request_await_object(rq, results->obj, true);
+	if (err == 0)
+		err = i915_vma_move_to_active(results, rq, EXEC_OBJECT_WRITE);
+	i915_vma_unlock(results);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto err_req;
 
@@ -866,7 +911,11 @@ static int read_whitelisted_registers(struct intel_context *ce,
 	}
 
 	for (i = 0; i < engine->whitelist.count; i++) {
+<<<<<<< HEAD
 		u64 offset = i915_vma_offset(results) + sizeof(u32) * i;
+=======
+		u64 offset = results->node.start + sizeof(u32) * i;
+>>>>>>> b7ba80a49124 (Commit)
 		u32 reg = i915_mmio_reg_offset(engine->whitelist.list[i].reg);
 
 		/* Clear non priv flags */
@@ -931,12 +980,24 @@ static int scrub_whitelisted_registers(struct intel_context *ce)
 			goto err_request;
 	}
 
+<<<<<<< HEAD
 	err = igt_vma_move_to_active_unlocked(batch, rq, 0);
+=======
+	i915_vma_lock(batch);
+	err = i915_request_await_object(rq, batch->obj, false);
+	if (err == 0)
+		err = i915_vma_move_to_active(batch, rq, 0);
+	i915_vma_unlock(batch);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto err_request;
 
 	/* Perform the writes from an unprivileged "user" batch */
+<<<<<<< HEAD
 	err = engine->emit_bb_start(rq, i915_vma_offset(batch), 0, 0);
+=======
+	err = engine->emit_bb_start(rq, batch->node.start, 0, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 err_request:
 	err = request_add_sync(rq, err);
@@ -975,7 +1036,11 @@ static bool pardon_reg(struct drm_i915_private *i915, i915_reg_t reg)
 	/* Alas, we must pardon some whitelists. Mistakes already made */
 	static const struct regmask pardon[] = {
 		{ GEN9_CTX_PREEMPT_REG, 9 },
+<<<<<<< HEAD
 		{ _MMIO(0xb118), 9 }, /* GEN8_L3SQCREG4 */
+=======
+		{ GEN8_L3SQCREG4, 9 },
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	return find_reg(i915, reg, pardon, ARRAY_SIZE(pardon));

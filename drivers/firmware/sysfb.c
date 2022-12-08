@@ -81,8 +81,11 @@ static __init int sysfb_init(void)
 	if (disabled)
 		goto unlock_mutex;
 
+<<<<<<< HEAD
 	sysfb_apply_efi_quirks();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* try to create a simple-framebuffer device */
 	compatible = sysfb_parse_mode(si, &mode);
 	if (compatible) {
@@ -109,7 +112,11 @@ static __init int sysfb_init(void)
 		goto unlock_mutex;
 	}
 
+<<<<<<< HEAD
 	sysfb_set_efifb_fwnode(pd);
+=======
+	sysfb_apply_efi_quirks(pd);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = platform_device_add_data(pd, si, sizeof(*si));
 	if (ret)

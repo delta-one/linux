@@ -139,7 +139,11 @@ beiscsi_disp_param(_name)\
 beiscsi_change_param(_name, _minval, _maxval, _defval)\
 beiscsi_store_param(_name)\
 beiscsi_init_param(_name, _minval, _maxval, _defval)\
+<<<<<<< HEAD
 static DEVICE_ATTR(beiscsi_##_name, S_IRUGO | S_IWUSR,\
+=======
+DEVICE_ATTR(beiscsi_##_name, S_IRUGO | S_IWUSR,\
+>>>>>>> b7ba80a49124 (Commit)
 	      beiscsi_##_name##_disp, beiscsi_##_name##_store)
 
 /*
@@ -155,6 +159,7 @@ BEISCSI_RW_ATTR(log_enable, 0x00,
 		"\t\t\t\tConfiguration Path	: 0x20\n"
 		"\t\t\t\tiSCSI Protocol		: 0x40\n");
 
+<<<<<<< HEAD
 static DEVICE_ATTR(beiscsi_drvr_ver, S_IRUGO, beiscsi_drvr_ver_disp, NULL);
 static DEVICE_ATTR(beiscsi_adapter_family, S_IRUGO, beiscsi_adap_family_disp, NULL);
 static DEVICE_ATTR(beiscsi_fw_ver, S_IRUGO, beiscsi_fw_ver_disp, NULL);
@@ -163,6 +168,16 @@ static DEVICE_ATTR(beiscsi_active_session_count, S_IRUGO,
 		   beiscsi_active_session_disp, NULL);
 static DEVICE_ATTR(beiscsi_free_session_count, S_IRUGO,
 		   beiscsi_free_session_disp, NULL);
+=======
+DEVICE_ATTR(beiscsi_drvr_ver, S_IRUGO, beiscsi_drvr_ver_disp, NULL);
+DEVICE_ATTR(beiscsi_adapter_family, S_IRUGO, beiscsi_adap_family_disp, NULL);
+DEVICE_ATTR(beiscsi_fw_ver, S_IRUGO, beiscsi_fw_ver_disp, NULL);
+DEVICE_ATTR(beiscsi_phys_port, S_IRUGO, beiscsi_phys_port_disp, NULL);
+DEVICE_ATTR(beiscsi_active_session_count, S_IRUGO,
+	     beiscsi_active_session_disp, NULL);
+DEVICE_ATTR(beiscsi_free_session_count, S_IRUGO,
+	     beiscsi_free_session_disp, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct attribute *beiscsi_attrs[] = {
 	&dev_attr_beiscsi_log_enable.attr,
@@ -5545,6 +5560,16 @@ static int beiscsi_dev_probe(struct pci_dev *pcidev,
 		goto disable_pci;
 	}
 
+<<<<<<< HEAD
+=======
+	/* Enable EEH reporting */
+	ret = pci_enable_pcie_error_reporting(pcidev);
+	if (ret)
+		beiscsi_log(phba, KERN_WARNING, BEISCSI_LOG_INIT,
+			    "BM_%d : PCIe Error Reporting "
+			    "Enabling Failed\n");
+
+>>>>>>> b7ba80a49124 (Commit)
 	pci_save_state(pcidev);
 
 	/* Initialize Driver configuration Paramters */
@@ -5729,6 +5754,10 @@ free_hba:
 	pci_disable_msix(phba->pcidev);
 	pci_dev_put(phba->pcidev);
 	iscsi_host_free(phba->shost);
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pcidev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_set_drvdata(pcidev, NULL);
 disable_pci:
 	pci_release_regions(pcidev);
@@ -5771,6 +5800,10 @@ static void beiscsi_remove(struct pci_dev *pcidev)
 
 	pci_dev_put(phba->pcidev);
 	iscsi_host_free(phba->shost);
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pcidev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_set_drvdata(pcidev, NULL);
 	pci_release_regions(pcidev);
 	pci_disable_device(pcidev);

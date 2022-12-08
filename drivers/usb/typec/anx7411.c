@@ -1105,7 +1105,11 @@ static int anx7411_typec_switch_probe(struct anx7411_data *ctx,
 	int ret;
 	struct device_node *node;
 
+<<<<<<< HEAD
 	node = of_get_child_by_name(dev->of_node, "orientation_switch");
+=======
+	node = of_find_node_by_name(dev->of_node, "orientation_switch");
+>>>>>>> b7ba80a49124 (Commit)
 	if (!node)
 		return 0;
 
@@ -1115,7 +1119,11 @@ static int anx7411_typec_switch_probe(struct anx7411_data *ctx,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	node = of_get_child_by_name(dev->of_node, "mode_switch");
+=======
+	node = of_find_node_by_name(dev->of_node, "mode_switch");
+>>>>>>> b7ba80a49124 (Commit)
 	if (!node) {
 		dev_err(dev, "no typec mux exist");
 		ret = -ENODEV;
@@ -1440,7 +1448,12 @@ static int anx7411_psy_register(struct anx7411_data *ctx)
 	return PTR_ERR_OR_ZERO(ctx->psy);
 }
 
+<<<<<<< HEAD
 static int anx7411_i2c_probe(struct i2c_client *client)
+=======
+static int anx7411_i2c_probe(struct i2c_client *client,
+			     const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct anx7411_data *plat;
 	struct device *dev = &client->dev;
@@ -1584,7 +1597,11 @@ static struct i2c_driver anx7411_driver = {
 		.of_match_table = anx_match_table,
 		.pm = &anx7411_pm_ops,
 	},
+<<<<<<< HEAD
 	.probe_new = anx7411_i2c_probe,
+=======
+	.probe = anx7411_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = anx7411_i2c_remove,
 
 	.id_table = anx7411_id,

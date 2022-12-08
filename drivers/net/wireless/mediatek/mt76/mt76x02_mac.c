@@ -25,7 +25,11 @@ void mt76x02_mac_reset_counters(struct mt76x02_dev *dev)
 	for (i = 0; i < 16; i++)
 		mt76_rr(dev, MT_TX_STAT_FIFO);
 
+<<<<<<< HEAD
 	memset(dev->mphy.aggr_stats, 0, sizeof(dev->mphy.aggr_stats));
+=======
+	memset(dev->mt76.aggr_stats, 0, sizeof(dev->mt76.aggr_stats));
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(mt76x02_mac_reset_counters);
 
@@ -1191,8 +1195,13 @@ void mt76x02_mac_work(struct work_struct *work)
 	for (i = 0, idx = 0; i < 16; i++) {
 		u32 val = mt76_rr(dev, MT_TX_AGG_CNT(i));
 
+<<<<<<< HEAD
 		dev->mphy.aggr_stats[idx++] += val & 0xffff;
 		dev->mphy.aggr_stats[idx++] += val >> 16;
+=======
+		dev->mt76.aggr_stats[idx++] += val & 0xffff;
+		dev->mt76.aggr_stats[idx++] += val >> 16;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	mt76x02_check_mac_err(dev);

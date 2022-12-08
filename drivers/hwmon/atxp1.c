@@ -16,7 +16,10 @@
 #include <linux/hwmon.h>
 #include <linux/hwmon-vid.h>
 #include <linux/err.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mutex.h>
 #include <linux/sysfs.h>
 #include <linux/slab.h>

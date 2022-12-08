@@ -182,12 +182,19 @@ config SND_SOC_MT8186_MT6366_DA7219_MAX98357
 	  If unsure select "N".
 
 config SND_SOC_MT8186_MT6366_RT1019_RT5682S
+<<<<<<< HEAD
 	tristate "ASoC Audio driver for MT8186 with RT1019 RT5682S MAX98357A/MAX98360 codec"
 	depends on I2C && GPIOLIB
 	depends on SND_SOC_MT8186 && MTK_PMIC_WRAP
 	select SND_SOC_MAX98357A
 	select SND_SOC_MT6358
 	select SND_SOC_MAX98357A
+=======
+	tristate "ASoC Audio driver for MT8186 with RT1019 RT5682S codec"
+	depends on I2C && GPIOLIB
+	depends on SND_SOC_MT8186 && MTK_PMIC_WRAP
+	select SND_SOC_MT6358
+>>>>>>> b7ba80a49124 (Commit)
 	select SND_SOC_RT1015P
 	select SND_SOC_RT5682S
 	select SND_SOC_BT_SCO
@@ -208,6 +215,7 @@ config SND_SOC_MTK_BTCVSD
 	  Select Y if you have such device.
 	  If unsure select "N".
 
+<<<<<<< HEAD
 config SND_SOC_MT8188
 	tristate "ASoC support for MediaTek MT8188 chip"
 	depends on ARCH_MEDIATEK || COMPILE_TEST
@@ -231,6 +239,8 @@ config SND_SOC_MT8188_MT6359
 	  Select Y if you have such device.
 	  If unsure select "N".
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SND_SOC_MT8192
 	tristate "ASoC support for Mediatek MT8192 chip"
 	depends on ARCH_MEDIATEK

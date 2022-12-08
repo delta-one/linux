@@ -226,6 +226,24 @@ static inline unsigned int enic_cq_wq(struct enic *enic, unsigned int wq)
 	return enic->rq_count + wq;
 }
 
+<<<<<<< HEAD
+=======
+static inline unsigned int enic_legacy_io_intr(void)
+{
+	return 0;
+}
+
+static inline unsigned int enic_legacy_err_intr(void)
+{
+	return 1;
+}
+
+static inline unsigned int enic_legacy_notify_intr(void)
+{
+	return 2;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline unsigned int enic_msix_rq_intr(struct enic *enic,
 	unsigned int rq)
 {
@@ -243,10 +261,13 @@ static inline unsigned int enic_msix_err_intr(struct enic *enic)
 	return enic->rq_count + enic->wq_count;
 }
 
+<<<<<<< HEAD
 #define ENIC_LEGACY_IO_INTR	0
 #define ENIC_LEGACY_ERR_INTR	1
 #define ENIC_LEGACY_NOTIFY_INTR	2
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline unsigned int enic_msix_notify_intr(struct enic *enic)
 {
 	return enic->rq_count + enic->wq_count + 1;
@@ -256,7 +277,11 @@ static inline bool enic_is_err_intr(struct enic *enic, int intr)
 {
 	switch (vnic_dev_get_intr_mode(enic->vdev)) {
 	case VNIC_DEV_INTR_MODE_INTX:
+<<<<<<< HEAD
 		return intr == ENIC_LEGACY_ERR_INTR;
+=======
+		return intr == enic_legacy_err_intr();
+>>>>>>> b7ba80a49124 (Commit)
 	case VNIC_DEV_INTR_MODE_MSIX:
 		return intr == enic_msix_err_intr(enic);
 	case VNIC_DEV_INTR_MODE_MSI:
@@ -269,7 +294,11 @@ static inline bool enic_is_notify_intr(struct enic *enic, int intr)
 {
 	switch (vnic_dev_get_intr_mode(enic->vdev)) {
 	case VNIC_DEV_INTR_MODE_INTX:
+<<<<<<< HEAD
 		return intr == ENIC_LEGACY_NOTIFY_INTR;
+=======
+		return intr == enic_legacy_notify_intr();
+>>>>>>> b7ba80a49124 (Commit)
 	case VNIC_DEV_INTR_MODE_MSIX:
 		return intr == enic_msix_notify_intr(enic);
 	case VNIC_DEV_INTR_MODE_MSI:

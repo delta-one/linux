@@ -29,6 +29,7 @@ static inline int nodeid_hash(int nodeid)
 	return nodeid & (CONN_HASH_SIZE-1);
 }
 
+<<<<<<< HEAD
 /* check if dlm is running */
 bool dlm_lowcomms_is_running(void);
 
@@ -37,6 +38,14 @@ void dlm_lowcomms_shutdown(void);
 void dlm_lowcomms_shutdown_node(int nodeid, bool force);
 void dlm_lowcomms_stop(void);
 void dlm_lowcomms_init(void);
+=======
+/* switch to check if dlm is running */
+extern int dlm_allow_conn;
+
+int dlm_lowcomms_start(void);
+void dlm_lowcomms_shutdown(void);
+void dlm_lowcomms_stop(void);
+>>>>>>> b7ba80a49124 (Commit)
 void dlm_lowcomms_exit(void);
 int dlm_lowcomms_close(int nodeid);
 struct dlm_msg *dlm_lowcomms_new_msg(int nodeid, int len, gfp_t allocation,

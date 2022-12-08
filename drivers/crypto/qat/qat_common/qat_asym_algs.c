@@ -494,8 +494,11 @@ static int qat_dh_init_tfm(struct crypto_kpp *tfm)
 	if (!inst)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	kpp_set_reqsize(tfm, sizeof(struct qat_asym_request) + 64);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ctx->p_size = 0;
 	ctx->g2 = false;
 	ctx->inst = inst;
@@ -1232,8 +1235,11 @@ static int qat_rsa_init_tfm(struct crypto_akcipher *tfm)
 	if (!inst)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	akcipher_set_reqsize(tfm, sizeof(struct qat_asym_request) + 64);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ctx->key_sz = 0;
 	ctx->inst = inst;
 	return 0;
@@ -1256,6 +1262,10 @@ static struct akcipher_alg rsa = {
 	.max_size = qat_rsa_max_size,
 	.init = qat_rsa_init_tfm,
 	.exit = qat_rsa_exit_tfm,
+<<<<<<< HEAD
+=======
+	.reqsize = sizeof(struct qat_asym_request) + 64,
+>>>>>>> b7ba80a49124 (Commit)
 	.base = {
 		.cra_name = "rsa",
 		.cra_driver_name = "qat-rsa",
@@ -1272,6 +1282,10 @@ static struct kpp_alg dh = {
 	.max_size = qat_dh_max_size,
 	.init = qat_dh_init_tfm,
 	.exit = qat_dh_exit_tfm,
+<<<<<<< HEAD
+=======
+	.reqsize = sizeof(struct qat_asym_request) + 64,
+>>>>>>> b7ba80a49124 (Commit)
 	.base = {
 		.cra_name = "dh",
 		.cra_driver_name = "qat-dh",

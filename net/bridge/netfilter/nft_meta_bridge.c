@@ -8,9 +8,12 @@
 #include <net/netfilter/nf_tables.h>
 #include <net/netfilter/nft_meta.h>
 #include <linux/if_bridge.h>
+<<<<<<< HEAD
 #include <uapi/linux/netfilter_bridge.h> /* NF_BR_PRE_ROUTING */
 
 #include "../br_private.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct net_device *
 nft_meta_get_bridge(const struct net_device *dev)
@@ -105,6 +108,7 @@ static const struct nft_expr_ops nft_meta_bridge_get_ops = {
 	.reduce		= nft_meta_get_reduce,
 };
 
+<<<<<<< HEAD
 static void nft_meta_bridge_set_eval(const struct nft_expr *expr,
 				     struct nft_regs *regs,
 				     const struct nft_pktinfo *pkt)
@@ -149,6 +153,8 @@ static int nft_meta_bridge_set_init(const struct nft_ctx *ctx,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool nft_meta_bridge_set_reduce(struct nft_regs_track *track,
 				       const struct nft_expr *expr)
 {
@@ -167,6 +173,7 @@ static bool nft_meta_bridge_set_reduce(struct nft_regs_track *track,
 	return false;
 }
 
+<<<<<<< HEAD
 static int nft_meta_bridge_set_validate(const struct nft_ctx *ctx,
 					const struct nft_expr *expr,
 					const struct nft_data **data)
@@ -194,6 +201,17 @@ static const struct nft_expr_ops nft_meta_bridge_set_ops = {
 	.dump		= nft_meta_set_dump,
 	.reduce		= nft_meta_bridge_set_reduce,
 	.validate	= nft_meta_bridge_set_validate,
+=======
+static const struct nft_expr_ops nft_meta_bridge_set_ops = {
+	.type		= &nft_meta_bridge_type,
+	.size		= NFT_EXPR_SIZE(sizeof(struct nft_meta)),
+	.eval		= nft_meta_set_eval,
+	.init		= nft_meta_set_init,
+	.destroy	= nft_meta_set_destroy,
+	.dump		= nft_meta_set_dump,
+	.reduce		= nft_meta_bridge_set_reduce,
+	.validate	= nft_meta_set_validate,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct nft_expr_ops *

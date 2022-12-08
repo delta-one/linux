@@ -31,7 +31,11 @@ extern unsigned int hpage_shift;
 #define HPAGE_SHIFT hpage_shift
 #elif defined(CONFIG_PPC_8xx)
 #define HPAGE_SHIFT		19	/* 512k pages */
+<<<<<<< HEAD
 #elif defined(CONFIG_PPC_E500)
+=======
+#elif defined(CONFIG_PPC_FSL_BOOK3E)
+>>>>>>> b7ba80a49124 (Commit)
 #define HPAGE_SHIFT		22	/* 4M pages */
 #endif
 #define HPAGE_SIZE		((1UL) << HPAGE_SHIFT)
@@ -117,6 +121,18 @@ extern long long virt_phys_offset;
 
 #ifdef CONFIG_FLATMEM
 #define ARCH_PFN_OFFSET		((unsigned long)(MEMORY_START >> PAGE_SHIFT))
+<<<<<<< HEAD
+=======
+#ifndef __ASSEMBLY__
+extern unsigned long max_mapnr;
+static inline bool pfn_valid(unsigned long pfn)
+{
+	unsigned long min_pfn = ARCH_PFN_OFFSET;
+
+	return pfn >= min_pfn && pfn < max_mapnr;
+}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #define virt_to_pfn(kaddr)	(__pa(kaddr) >> PAGE_SHIFT)
@@ -299,6 +315,15 @@ extern long long virt_phys_offset;
 #include <asm/pgtable-types.h>
 #endif
 
+<<<<<<< HEAD
+=======
+
+#ifndef CONFIG_HUGETLB_PAGE
+#define is_hugepd(pdep)		(0)
+#define pgd_huge(pgd)		(0)
+#endif /* CONFIG_HUGETLB_PAGE */
+
+>>>>>>> b7ba80a49124 (Commit)
 struct page;
 extern void clear_user_page(void *page, unsigned long vaddr, struct page *pg);
 extern void copy_user_page(void *to, void *from, unsigned long vaddr,

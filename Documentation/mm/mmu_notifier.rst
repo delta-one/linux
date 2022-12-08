@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _mmu_notifier:
+
+>>>>>>> b7ba80a49124 (Commit)
 When do you need to notify inside page table lock ?
 ===================================================
 

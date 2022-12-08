@@ -1160,9 +1160,12 @@ void __init mem_topology_setup(void)
 {
 	int cpu;
 
+<<<<<<< HEAD
 	max_low_pfn = max_pfn = memblock_end_of_DRAM() >> PAGE_SHIFT;
 	min_low_pfn = MEMORY_START >> PAGE_SHIFT;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Linux/mm assumes node 0 to be online at boot. However this is not
 	 * true on PowerPC, where node 0 is similar to any other node, it
@@ -1207,6 +1210,12 @@ void __init initmem_init(void)
 {
 	int nid;
 
+<<<<<<< HEAD
+=======
+	max_low_pfn = memblock_end_of_DRAM() >> PAGE_SHIFT;
+	max_pfn = max_low_pfn;
+
+>>>>>>> b7ba80a49124 (Commit)
 	memblock_dump_all();
 
 	for_each_online_node(nid) {

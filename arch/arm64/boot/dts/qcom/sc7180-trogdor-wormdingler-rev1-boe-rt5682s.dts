@@ -19,7 +19,10 @@
 
 &alc5682 {
 	compatible = "realtek,rt5682s";
+<<<<<<< HEAD
 	/delete-property/ VBAT-supply;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	realtek,dmic1-clk-pin = <2>;
 	realtek,dmic-clk-rate-hz = <2048000>;
 };

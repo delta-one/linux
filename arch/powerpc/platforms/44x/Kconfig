@@ -230,7 +230,10 @@ config PPC4xx_GPIO
 	bool "PPC4xx GPIO support"
 	depends on 44x
 	select GPIOLIB
+<<<<<<< HEAD
 	select OF_GPIO_MM_GPIOCHIP
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Enable gpiolib support for ppc440 based boards
 

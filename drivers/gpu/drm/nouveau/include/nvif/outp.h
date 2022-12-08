@@ -2,22 +2,29 @@
 #ifndef __NVIF_OUTP_H__
 #define __NVIF_OUTP_H__
 #include <nvif/object.h>
+<<<<<<< HEAD
 #include <nvif/if0012.h>
 #include <drm/display/drm_dp.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct nvif_disp;
 
 struct nvif_outp {
 	struct nvif_object object;
+<<<<<<< HEAD
 
 	struct {
 		int id;
 		int link;
 	} or;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int nvif_outp_ctor(struct nvif_disp *, const char *name, int id, struct nvif_outp *);
 void nvif_outp_dtor(struct nvif_outp *);
 int nvif_outp_load_detect(struct nvif_outp *, u32 loadval);
+<<<<<<< HEAD
 int nvif_outp_acquire_rgb_crt(struct nvif_outp *);
 int nvif_outp_acquire_tmds(struct nvif_outp *, int head,
 			   bool hdmi, u8 max_ac_packet, u8 rekey, u8 scdc, bool hda);
@@ -31,4 +38,6 @@ int nvif_outp_dp_aux_pwr(struct nvif_outp *, bool enable);
 int nvif_outp_dp_retrain(struct nvif_outp *);
 int nvif_outp_dp_mst_vcpi(struct nvif_outp *, int head,
 			  u8 start_slot, u8 num_slots, u16 pbn, u16 aligned_pbn);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

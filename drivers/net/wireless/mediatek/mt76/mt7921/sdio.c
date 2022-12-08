@@ -17,8 +17,12 @@
 #include "mcu.h"
 
 static const struct sdio_device_id mt7921s_table[] = {
+<<<<<<< HEAD
 	{ SDIO_DEVICE(SDIO_VENDOR_ID_MEDIATEK, 0x7901),
 		.driver_data = (kernel_ulong_t)MT7921_FIRMWARE_WM },
+=======
+	{ SDIO_DEVICE(SDIO_VENDOR_ID_MEDIATEK, 0x7901) },
+>>>>>>> b7ba80a49124 (Commit)
 	{ }	/* Terminating entry */
 };
 
@@ -90,7 +94,10 @@ static int mt7921s_probe(struct sdio_func *func,
 {
 	static const struct mt76_driver_ops drv_ops = {
 		.txwi_size = MT_SDIO_TXD_SIZE,
+<<<<<<< HEAD
 		.drv_flags = MT_DRV_AMSDU_OFFLOAD,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.survey_flags = SURVEY_INFO_TIME_TX |
 				SURVEY_INFO_TIME_RX |
 				SURVEY_INFO_TIME_BSS_RX,
@@ -123,6 +130,7 @@ static int mt7921s_probe(struct sdio_func *func,
 		.fw_own = mt7921s_mcu_fw_pmctrl,
 	};
 
+<<<<<<< HEAD
 	struct ieee80211_ops *ops;
 	struct mt7921_dev *dev;
 	struct mt76_dev *mdev;
@@ -150,12 +158,25 @@ static int mt7921s_probe(struct sdio_func *func,
 	}
 
 	mdev = mt76_alloc_device(&func->dev, sizeof(*dev), ops, &drv_ops);
+=======
+	struct mt7921_dev *dev;
+	struct mt76_dev *mdev;
+	int ret;
+
+	mdev = mt76_alloc_device(&func->dev, sizeof(*dev), &mt7921_ops,
+				 &drv_ops);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!mdev)
 		return -ENOMEM;
 
 	dev = container_of(mdev, struct mt7921_dev, mt76);
+<<<<<<< HEAD
 	dev->fw_features = features;
 	dev->hif_ops = &mt7921_sdio_ops;
+=======
+	dev->hif_ops = &mt7921_sdio_ops;
+
+>>>>>>> b7ba80a49124 (Commit)
 	sdio_set_drvdata(func, dev);
 
 	ret = mt76s_init(mdev, func, &mt7921s_ops);

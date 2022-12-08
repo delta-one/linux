@@ -43,7 +43,11 @@ reduced range of reception.
 
 .. note::
 
+<<<<<<< HEAD
     Wide band receiver might be implicitly enabled if you enable
+=======
+    Wide band receiver might be implictly enabled if you enable
+>>>>>>> b7ba80a49124 (Commit)
     carrier reports. In that case it will be disabled as soon as you disable
     carrier reports. Trying to disable wide band receiver while carrier
     reports are active will do nothing.

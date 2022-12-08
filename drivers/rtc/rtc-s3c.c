@@ -385,7 +385,11 @@ static void s3c6410_rtc_disable(struct s3c_rtc *info)
 	writew(con, info->base + S3C2410_RTCCON);
 }
 
+<<<<<<< HEAD
 static void s3c_rtc_remove(struct platform_device *pdev)
+=======
+static int s3c_rtc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct s3c_rtc *info = platform_get_drvdata(pdev);
 
@@ -394,6 +398,11 @@ static void s3c_rtc_remove(struct platform_device *pdev)
 	if (info->data->needs_src_clk)
 		clk_unprepare(info->rtc_src_clk);
 	clk_unprepare(info->rtc_clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int s3c_rtc_probe(struct platform_device *pdev)
@@ -427,9 +436,20 @@ static int s3c_rtc_probe(struct platform_device *pdev)
 		return PTR_ERR(info->base);
 
 	info->rtc_clk = devm_clk_get(&pdev->dev, "rtc");
+<<<<<<< HEAD
 	if (IS_ERR(info->rtc_clk))
 		return dev_err_probe(&pdev->dev, PTR_ERR(info->rtc_clk),
 				     "failed to find rtc clock\n");
+=======
+	if (IS_ERR(info->rtc_clk)) {
+		ret = PTR_ERR(info->rtc_clk);
+		if (ret != -EPROBE_DEFER)
+			dev_err(&pdev->dev, "failed to find rtc clock\n");
+		else
+			dev_dbg(&pdev->dev, "probe deferred due to missing rtc clk\n");
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	ret = clk_prepare_enable(info->rtc_clk);
 	if (ret)
 		return ret;
@@ -598,7 +618,11 @@ MODULE_DEVICE_TABLE(of, s3c_rtc_dt_match);
 
 static struct platform_driver s3c_rtc_driver = {
 	.probe		= s3c_rtc_probe,
+<<<<<<< HEAD
 	.remove_new	= s3c_rtc_remove,
+=======
+	.remove		= s3c_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "s3c-rtc",
 		.pm	= &s3c_rtc_pm_ops,

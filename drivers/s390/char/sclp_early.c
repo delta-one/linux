@@ -57,10 +57,15 @@ static void __init sclp_early_facilities_detect(void)
 		sclp.has_diag318 = !!(sccb->byte_134 & 0x80);
 		sclp.has_iplcc = !!(sccb->byte_134 & 0x02);
 	}
+<<<<<<< HEAD
 	if (sccb->cpuoff > 137) {
 		sclp.has_sipl = !!(sccb->cbl & 0x4000);
 		sclp.has_sipl_eckd = !!(sccb->cbl & 0x2000);
 	}
+=======
+	if (sccb->cpuoff > 137)
+		sclp.has_sipl = !!(sccb->cbl & 0x4000);
+>>>>>>> b7ba80a49124 (Commit)
 	sclp.rnmax = sccb->rnmax ? sccb->rnmax : sccb->rnmax2;
 	sclp.rzm = sccb->rnsize ? sccb->rnsize : sccb->rnsize2;
 	sclp.rzm <<= 20;
@@ -163,7 +168,11 @@ static void __init sclp_early_console_detect(struct init_sccb *sccb)
 		sclp.has_linemode = 1;
 }
 
+<<<<<<< HEAD
 void __init __no_sanitize_address sclp_early_adjust_va(void)
+=======
+void __init sclp_early_adjust_va(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	sclp_early_sccb = __va((unsigned long)sclp_early_sccb);
 }

@@ -714,12 +714,20 @@ static int wcd_mbhc_initialise(struct wcd_mbhc *mbhc)
 	struct snd_soc_component *component = mbhc->component;
 	int ret;
 
+<<<<<<< HEAD
 	ret = pm_runtime_get_sync(component->dev);
 	if (ret < 0 && ret != -EACCES) {
 		dev_err_ratelimited(component->dev,
 				    "pm_runtime_get_sync failed in %s, ret %d\n",
 				    __func__, ret);
 		pm_runtime_put_noidle(component->dev);
+=======
+	ret = pm_runtime_resume_and_get(component->dev);
+	if (ret < 0 && ret != -EACCES) {
+		dev_err_ratelimited(component->dev,
+				    "pm_runtime_resume_and_get failed in %s, ret %d\n",
+				    __func__, ret);
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 
@@ -1097,12 +1105,20 @@ static void wcd_correct_swch_plug(struct work_struct *work)
 	mbhc = container_of(work, struct wcd_mbhc, correct_plug_swch);
 	component = mbhc->component;
 
+<<<<<<< HEAD
 	ret = pm_runtime_get_sync(component->dev);
 	if (ret < 0 && ret != -EACCES) {
 		dev_err_ratelimited(component->dev,
 				    "pm_runtime_get_sync failed in %s, ret %d\n",
 				    __func__, ret);
 		pm_runtime_put_noidle(component->dev);
+=======
+	ret = pm_runtime_resume_and_get(component->dev);
+	if (ret < 0 && ret != -EACCES) {
+		dev_err_ratelimited(component->dev,
+				    "pm_runtime_resume_and_get failed in %s, ret %d\n",
+				    __func__, ret);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 	micbias_mv = wcd_mbhc_get_micbias(mbhc);

@@ -450,12 +450,20 @@ plip_bh_timeout_error(struct net_device *dev, struct net_local *nl,
 	}
 	rcv->state = PLIP_PK_DONE;
 	if (rcv->skb) {
+<<<<<<< HEAD
 		dev_kfree_skb_irq(rcv->skb);
+=======
+		kfree_skb(rcv->skb);
+>>>>>>> b7ba80a49124 (Commit)
 		rcv->skb = NULL;
 	}
 	snd->state = PLIP_PK_DONE;
 	if (snd->skb) {
+<<<<<<< HEAD
 		dev_consume_skb_irq(snd->skb);
+=======
+		dev_kfree_skb(snd->skb);
+>>>>>>> b7ba80a49124 (Commit)
 		snd->skb = NULL;
 	}
 	spin_unlock_irq(&nl->lock);

@@ -1,604 +1,1140 @@
 [
     {
         "BriefDescription": "Offcore data reads satisfied by any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x6011",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads that missed the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF811",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads satisfied by the local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2011",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads satisfied by a remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4011",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code reads satisfied by any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x6044",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code reads that missed the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF844",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code reads satisfied by the local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2044",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code reads satisfied by a remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4044",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore requests satisfied by any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x60FF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore requests that missed the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF8FF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore requests satisfied by the local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20FF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore requests satisfied by a remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x40FF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore RFO requests satisfied by any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x6022",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore RFO requests that missed the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF822",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore RFO requests satisfied by the local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2022",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore RFO requests satisfied by a remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4022",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore writebacks to any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x6008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore writebacks that missed the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF808",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore writebacks to the local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore writebacks to a remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code or data read requests satisfied by any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x6077",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code or data read requests that missed the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF877",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code or data read requests satisfied by the local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2077",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore code or data read requests satisfied by a remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4077",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore request = all data, response = any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x6033",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore request = all data, response = any LLC miss",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF833",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the local DRAM.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2033",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4033",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data requests satisfied by any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x6003",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data requests that missed the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF803",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data requests satisfied by the local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2003",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data requests satisfied by a remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4003",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data reads satisfied by any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x6001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data reads that missed the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF801",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data reads satisfied by the local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand data reads satisfied by a remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand code reads satisfied by any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x6004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand code reads that missed the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF804",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand code reads satisfied by the local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand code reads satisfied by a remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand RFO requests satisfied by any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x6002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand RFO requests that missed the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF802",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand RFO requests satisfied by the local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore demand RFO requests satisfied by a remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore other requests satisfied by any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x6080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore other requests that missed the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF880",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore other requests satisfied by a remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data requests satisfied by any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x6050",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data requests that missed the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF850",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data requests satisfied by the local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2050",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data requests satisfied by a remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4050",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data reads satisfied by any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x6010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data reads that missed the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF810",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data reads satisfied by the local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch data reads satisfied by a remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch code reads satisfied by any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x6040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch code reads that missed the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF840",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch code reads satisfied by the local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch code reads satisfied by a remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch RFO requests satisfied by any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x6020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch RFO requests that missed the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF820",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch RFO requests satisfied by the local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch RFO requests satisfied by a remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch requests satisfied by any DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.ANY_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x6070",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch requests that missed the LLC",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xF870",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch requests satisfied by the local DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2070",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Offcore prefetch requests satisfied by a remote DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4070",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     }

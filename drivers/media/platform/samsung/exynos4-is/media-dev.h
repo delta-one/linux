@@ -11,6 +11,10 @@
 #include <linux/platform_device.h>
 #include <linux/mutex.h>
 #include <linux/of.h>
+<<<<<<< HEAD
+=======
+#include <linux/pinctrl/consumer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <media/media-device.h>
 #include <media/media-entity.h>
 #include <media/v4l2-device.h>

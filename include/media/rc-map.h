@@ -225,7 +225,10 @@ struct rc_map *rc_map_get(const char *name);
 #define RC_MAP_AVERTV_303                "rc-avertv-303"
 #define RC_MAP_AZUREWAVE_AD_TU700        "rc-azurewave-ad-tu700"
 #define RC_MAP_BEELINK_GS1               "rc-beelink-gs1"
+<<<<<<< HEAD
 #define RC_MAP_BEELINK_MXIII             "rc-beelink-mxiii"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RC_MAP_BEHOLD                    "rc-behold"
 #define RC_MAP_BEHOLD_COLUMBUS           "rc-behold-columbus"
 #define RC_MAP_BUDGET_CI_OLD             "rc-budget-ci-old"
@@ -242,7 +245,10 @@ struct rc_map *rc_map_get(const char *name);
 #define RC_MAP_DM1105_NEC                "rc-dm1105-nec"
 #define RC_MAP_DNTV_LIVE_DVB_T           "rc-dntv-live-dvb-t"
 #define RC_MAP_DNTV_LIVE_DVBT_PRO        "rc-dntv-live-dvbt-pro"
+<<<<<<< HEAD
 #define RC_MAP_DREAMBOX                  "rc-dreambox"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RC_MAP_DTT200U                   "rc-dtt200u"
 #define RC_MAP_DVBSKY                    "rc-dvbsky"
 #define RC_MAP_DVICO_MCE		 "rc-dvico-mce"

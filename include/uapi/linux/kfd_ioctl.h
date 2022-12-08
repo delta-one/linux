@@ -37,10 +37,16 @@
  * - 1.9 - Add available memory ioctl
  * - 1.10 - Add SMI profiler event log
  * - 1.11 - Add unified memory for ctx save/restore area
+<<<<<<< HEAD
  * - 1.12 - Add DMA buf export ioctl
  */
 #define KFD_IOCTL_MAJOR_VERSION 1
 #define KFD_IOCTL_MINOR_VERSION 12
+=======
+ */
+#define KFD_IOCTL_MAJOR_VERSION 1
+#define KFD_IOCTL_MINOR_VERSION 11
+>>>>>>> b7ba80a49124 (Commit)
 
 struct kfd_ioctl_get_version_args {
 	__u32 major_version;	/* from KFD */
@@ -464,12 +470,15 @@ struct kfd_ioctl_import_dmabuf_args {
 	__u32 dmabuf_fd;	/* to KFD */
 };
 
+<<<<<<< HEAD
 struct kfd_ioctl_export_dmabuf_args {
 	__u64 handle;		/* to KFD */
 	__u32 flags;		/* to KFD */
 	__u32 dmabuf_fd;	/* from KFD */
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * KFD SMI(System Management Interface) events
  */
@@ -884,10 +893,15 @@ struct kfd_ioctl_set_xnack_mode_args {
 #define AMDKFD_IOC_AVAILABLE_MEMORY		\
 		AMDKFD_IOWR(0x23, struct kfd_ioctl_get_available_memory_args)
 
+<<<<<<< HEAD
 #define AMDKFD_IOC_EXPORT_DMABUF		\
 		AMDKFD_IOWR(0x24, struct kfd_ioctl_export_dmabuf_args)
 
 #define AMDKFD_COMMAND_START		0x01
 #define AMDKFD_COMMAND_END		0x25
+=======
+#define AMDKFD_COMMAND_START		0x01
+#define AMDKFD_COMMAND_END		0x24
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

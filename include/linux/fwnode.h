@@ -18,7 +18,11 @@ struct fwnode_operations;
 struct device;
 
 /*
+<<<<<<< HEAD
  * fwnode flags
+=======
+ * fwnode link flags
+>>>>>>> b7ba80a49124 (Commit)
  *
  * LINKS_ADDED:	The fwnode has already be parsed to add fwnode links.
  * NOT_DEVICE:	The fwnode will never be populated as a struct device.
@@ -36,7 +40,10 @@ struct device;
 #define FWNODE_FLAG_INITIALIZED			BIT(2)
 #define FWNODE_FLAG_NEEDS_CHILD_BOUND_ON_ADD	BIT(3)
 #define FWNODE_FLAG_BEST_EFFORT			BIT(4)
+<<<<<<< HEAD
 #define FWNODE_FLAG_VISITED			BIT(5)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct fwnode_handle {
 	struct fwnode_handle *secondary;
@@ -47,6 +54,7 @@ struct fwnode_handle {
 	u8 flags;
 };
 
+<<<<<<< HEAD
 /*
  * fwnode link flags
  *
@@ -54,12 +62,17 @@ struct fwnode_handle {
  */
 #define FWLINK_FLAG_CYCLE			BIT(0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct fwnode_link {
 	struct fwnode_handle *supplier;
 	struct list_head s_hook;
 	struct fwnode_handle *consumer;
 	struct list_head c_hook;
+<<<<<<< HEAD
 	u8 flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -207,6 +220,10 @@ static inline void fwnode_dev_initialized(struct fwnode_handle *fwnode,
 		fwnode->flags &= ~FWNODE_FLAG_INITIALIZED;
 }
 
+<<<<<<< HEAD
+=======
+extern u32 fw_devlink_get_flags(void);
+>>>>>>> b7ba80a49124 (Commit)
 extern bool fw_devlink_is_strict(void);
 int fwnode_link_add(struct fwnode_handle *con, struct fwnode_handle *sup);
 void fwnode_links_purge(struct fwnode_handle *fwnode);

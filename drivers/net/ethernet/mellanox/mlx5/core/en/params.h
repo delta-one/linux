@@ -9,7 +9,10 @@
 struct mlx5e_xsk_param {
 	u16 headroom;
 	u16 chunk_size;
+<<<<<<< HEAD
 	bool unaligned;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlx5e_cq_param {
@@ -53,6 +56,7 @@ struct mlx5e_create_sq_param {
 	u8                          min_inline_mode;
 };
 
+<<<<<<< HEAD
 /* Striding RQ dynamic parameters */
 
 u8 mlx5e_mpwrq_page_shift(struct mlx5_core_dev *mdev, struct mlx5e_xsk_param *xsk);
@@ -73,6 +77,39 @@ u32 mlx5e_mpwrq_max_num_entries(struct mlx5_core_dev *mdev,
 				enum mlx5e_mpwrq_umr_mode umr_mode);
 u8 mlx5e_mpwrq_max_log_rq_pkts(struct mlx5_core_dev *mdev, u8 page_shift,
 			       enum mlx5e_mpwrq_umr_mode umr_mode);
+=======
+static inline bool mlx5e_qid_get_ch_if_in_group(struct mlx5e_params *params,
+						u16 qid,
+						enum mlx5e_rq_group group,
+						u16 *ix)
+{
+	int nch = params->num_channels;
+	int ch = qid - nch * group;
+
+	if (ch < 0 || ch >= nch)
+		return false;
+
+	*ix = ch;
+	return true;
+}
+
+static inline void mlx5e_qid_get_ch_and_group(struct mlx5e_params *params,
+					      u16 qid,
+					      u16 *ix,
+					      enum mlx5e_rq_group *group)
+{
+	u16 nch = params->num_channels;
+
+	*ix = qid % nch;
+	*group = qid / nch;
+}
+
+static inline bool mlx5e_qid_validate(const struct mlx5e_profile *profile,
+				      struct mlx5e_params *params, u64 qid)
+{
+	return qid < params->num_channels * profile->rq_groups;
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Parameter calculations */
 
@@ -82,23 +119,43 @@ void mlx5e_set_tx_cq_mode_params(struct mlx5e_params *params, u8 cq_period_mode)
 void mlx5e_set_rx_cq_mode_params(struct mlx5e_params *params, u8 cq_period_mode);
 
 bool slow_pci_heuristic(struct mlx5_core_dev *mdev);
+<<<<<<< HEAD
 int mlx5e_mpwrq_validate_regular(struct mlx5_core_dev *mdev, struct mlx5e_params *params);
 int mlx5e_mpwrq_validate_xsk(struct mlx5_core_dev *mdev, struct mlx5e_params *params,
 			     struct mlx5e_xsk_param *xsk);
+=======
+bool mlx5e_striding_rq_possible(struct mlx5_core_dev *mdev, struct mlx5e_params *params);
+>>>>>>> b7ba80a49124 (Commit)
 void mlx5e_build_rq_params(struct mlx5_core_dev *mdev, struct mlx5e_params *params);
 void mlx5e_set_rq_type(struct mlx5_core_dev *mdev, struct mlx5e_params *params);
 void mlx5e_init_rq_type_params(struct mlx5_core_dev *mdev, struct mlx5e_params *params);
 
+<<<<<<< HEAD
 u16 mlx5e_get_linear_rq_headroom(struct mlx5e_params *params,
 				 struct mlx5e_xsk_param *xsk);
 bool mlx5e_rx_is_linear_skb(struct mlx5_core_dev *mdev,
 			    struct mlx5e_params *params,
+=======
+bool mlx5e_verify_rx_mpwqe_strides(struct mlx5_core_dev *mdev,
+				   u8 log_stride_sz, u8 log_num_strides);
+u16 mlx5e_get_linear_rq_headroom(struct mlx5e_params *params,
+				 struct mlx5e_xsk_param *xsk);
+u32 mlx5e_rx_get_min_frag_sz(struct mlx5e_params *params,
+			     struct mlx5e_xsk_param *xsk);
+u8 mlx5e_mpwqe_log_pkts_per_wqe(struct mlx5e_params *params,
+				struct mlx5e_xsk_param *xsk);
+bool mlx5e_rx_is_linear_skb(struct mlx5e_params *params,
+>>>>>>> b7ba80a49124 (Commit)
 			    struct mlx5e_xsk_param *xsk);
 bool mlx5e_rx_mpwqe_is_linear_skb(struct mlx5_core_dev *mdev,
 				  struct mlx5e_params *params,
 				  struct mlx5e_xsk_param *xsk);
+<<<<<<< HEAD
 u8 mlx5e_mpwqe_get_log_rq_size(struct mlx5_core_dev *mdev,
 			       struct mlx5e_params *params,
+=======
+u8 mlx5e_mpwqe_get_log_rq_size(struct mlx5e_params *params,
+>>>>>>> b7ba80a49124 (Commit)
 			       struct mlx5e_xsk_param *xsk);
 u8 mlx5e_shampo_get_log_hd_entry_size(struct mlx5_core_dev *mdev,
 				      struct mlx5e_params *params);
@@ -154,6 +211,7 @@ int mlx5e_build_channel_param(struct mlx5_core_dev *mdev,
 u16 mlx5e_calc_sq_stop_room(struct mlx5_core_dev *mdev, struct mlx5e_params *params);
 int mlx5e_validate_params(struct mlx5_core_dev *mdev, struct mlx5e_params *params);
 
+<<<<<<< HEAD
 static inline void mlx5e_params_print_info(struct mlx5_core_dev *mdev,
 					   struct mlx5e_params *params)
 {
@@ -168,4 +226,6 @@ static inline void mlx5e_params_print_info(struct mlx5_core_dev *mdev,
 				       "enhanced" : "basic");
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __MLX5_EN_PARAMS_H__ */

@@ -58,8 +58,11 @@ static unsigned long __initdata mem_reserve = EFI_INVALID_TABLE_ADDR;
 static unsigned long __initdata rt_prop = EFI_INVALID_TABLE_ADDR;
 static unsigned long __initdata initrd = EFI_INVALID_TABLE_ADDR;
 
+<<<<<<< HEAD
 extern unsigned long screen_info_table;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mm_struct efi_mm = {
 	.mm_mt			= MTREE_INIT_EXT(mm_mt, MM_MT_FLAGS, efi_mm.mmap_lock),
 	.mm_users		= ATOMIC_INIT(2),
@@ -187,6 +190,7 @@ static const struct attribute_group efi_subsys_attr_group = {
 static struct efivars generic_efivars;
 static struct efivar_operations generic_ops;
 
+<<<<<<< HEAD
 static bool generic_ops_supported(void)
 {
 	unsigned long name_size;
@@ -208,6 +212,10 @@ static int generic_ops_register(void)
 	if (!generic_ops_supported())
 		return 0;
 
+=======
+static int generic_ops_register(void)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	generic_ops.get_variable = efi.get_variable;
 	generic_ops.get_next_variable = efi.get_next_variable;
 	generic_ops.query_variable_store = efi_query_variable_store;
@@ -216,14 +224,21 @@ static int generic_ops_register(void)
 		generic_ops.set_variable = efi.set_variable;
 		generic_ops.set_variable_nonblocking = efi.set_variable_nonblocking;
 	}
+<<<<<<< HEAD
 	return efivars_register(&generic_efivars, &generic_ops);
+=======
+	return efivars_register(&generic_efivars, &generic_ops, efi_kobj);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void generic_ops_unregister(void)
 {
+<<<<<<< HEAD
 	if (!generic_ops.get_variable)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	efivars_unregister(&generic_efivars);
 }
 
@@ -295,8 +310,11 @@ static __init int efivar_ssdt_load(void)
 			acpi_status ret = acpi_load_table(data, NULL);
 			if (ret)
 				pr_err("failed to load table: %u\n", ret);
+<<<<<<< HEAD
 			else
 				continue;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			pr_err("failed to get var data: 0x%lx\n", status);
 		}
@@ -361,6 +379,7 @@ static void __init efi_debugfs_init(void)
 static inline void efi_debugfs_init(void) {}
 #endif
 
+<<<<<<< HEAD
 static void refresh_nv_rng_seed(struct work_struct *work)
 {
 	u8 seed[EFI_RANDOM_SEED_SIZE];
@@ -379,6 +398,8 @@ static int refresh_nv_rng_seed_notification(struct notifier_block *nb, unsigned 
 }
 static struct notifier_block refresh_nv_rng_seed_nb = { .notifier_call = refresh_nv_rng_seed_notification };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * We register the efi subsystem with the firmware subsystem and the
  * efivars subsystem with the efi subsystem, if the system was booted with
@@ -416,8 +437,13 @@ static int __init efisubsys_init(void)
 	efi_kobj = kobject_create_and_add("efi", firmware_kobj);
 	if (!efi_kobj) {
 		pr_err("efi: Firmware registration failed.\n");
+<<<<<<< HEAD
 		error = -ENOMEM;
 		goto err_destroy_wq;
+=======
+		destroy_workqueue(efi_rts_wq);
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (efi_rt_services_supported(EFI_RT_SUPPORTED_GET_VARIABLE |
@@ -436,6 +462,13 @@ static int __init efisubsys_init(void)
 		goto err_unregister;
 	}
 
+<<<<<<< HEAD
+=======
+	error = efi_runtime_map_init(efi_kobj);
+	if (error)
+		goto err_remove_group;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* and the standard mountpoint for efivarfs */
 	error = sysfs_create_mount_point(efi_kobj, "efivars");
 	if (error) {
@@ -451,9 +484,12 @@ static int __init efisubsys_init(void)
 		platform_device_register_simple("efi_secret", 0, NULL, 0);
 #endif
 
+<<<<<<< HEAD
 	if (efi_rt_services_supported(EFI_RT_SUPPORTED_SET_VARIABLE))
 		execute_with_initialized_rng(&refresh_nv_rng_seed_nb);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_remove_group:
@@ -464,11 +500,15 @@ err_unregister:
 		generic_ops_unregister();
 err_put:
 	kobject_put(efi_kobj);
+<<<<<<< HEAD
 	efi_kobj = NULL;
 err_destroy_wq:
 	if (efi_rts_wq)
 		destroy_workqueue(efi_rts_wq);
 
+=======
+	destroy_workqueue(efi_rts_wq);
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }
 
@@ -503,7 +543,11 @@ void __init efi_find_mirror(void)
  * and if so, populate the supplied memory descriptor with the appropriate
  * data.
  */
+<<<<<<< HEAD
 int __efi_mem_desc_lookup(u64 phys_addr, efi_memory_desc_t *out_md)
+=======
+int efi_mem_desc_lookup(u64 phys_addr, efi_memory_desc_t *out_md)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	efi_memory_desc_t *md;
 
@@ -521,12 +565,15 @@ int __efi_mem_desc_lookup(u64 phys_addr, efi_memory_desc_t *out_md)
 		u64 size;
 		u64 end;
 
+<<<<<<< HEAD
 		/* skip bogus entries (including empty ones) */
 		if ((md->phys_addr & (EFI_PAGE_SIZE - 1)) ||
 		    (md->num_pages <= 0) ||
 		    (md->num_pages > (U64_MAX - md->phys_addr) >> EFI_PAGE_SHIFT))
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		size = md->num_pages << EFI_PAGE_SHIFT;
 		end = md->phys_addr + size;
 		if (phys_addr >= md->phys_addr && phys_addr < end) {
@@ -537,9 +584,12 @@ int __efi_mem_desc_lookup(u64 phys_addr, efi_memory_desc_t *out_md)
 	return -ENOENT;
 }
 
+<<<<<<< HEAD
 extern int efi_mem_desc_lookup(u64 phys_addr, efi_memory_desc_t *out_md)
 	__weak __alias(__efi_mem_desc_lookup);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Calculate the highest address of an efi memory descriptor.
  */
@@ -566,10 +616,13 @@ void __init __weak efi_arch_mem_reserve(phys_addr_t addr, u64 size) {}
  */
 void __init efi_mem_reserve(phys_addr_t addr, u64 size)
 {
+<<<<<<< HEAD
 	/* efi_mem_reserve() does not work under Xen */
 	if (WARN_ON_ONCE(efi_enabled(EFI_PARAVIRT)))
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!memblock_is_region_reserved(addr, size))
 		memblock_reserve(addr, size);
 
@@ -605,9 +658,12 @@ static const efi_config_table_type_t common_tables[] __initconst = {
 #ifdef CONFIG_EFI_COCO_SECRET
 	{LINUX_EFI_COCO_SECRET_AREA_GUID,	&efi.coco_secret,	"CocoSecret"	},
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_EFI_GENERIC_STUB
 	{LINUX_EFI_SCREEN_INFO_TABLE_GUID,	&screen_info_table			},
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 
@@ -618,6 +674,7 @@ static __init int match_config_table(const efi_guid_t *guid,
 	int i;
 
 	for (i = 0; efi_guidcmp(table_types[i].guid, NULL_GUID); i++) {
+<<<<<<< HEAD
 		if (efi_guidcmp(*guid, table_types[i].guid))
 			continue;
 
@@ -632,6 +689,15 @@ static __init int match_config_table(const efi_guid_t *guid,
 		if (table_types[i].name[0])
 			pr_cont("%s=0x%lx ", table_types[i].name, table);
 		return 1;
+=======
+		if (!efi_guidcmp(*guid, table_types[i].guid)) {
+			*(table_types[i].ptr) = table;
+			if (table_types[i].name[0])
+				pr_cont("%s=0x%lx ",
+					table_types[i].name, table);
+			return 1;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -679,7 +745,11 @@ int __init efi_config_parse_tables(const efi_config_table_t *config_tables,
 
 		seed = early_memremap(efi_rng_seed, sizeof(*seed));
 		if (seed != NULL) {
+<<<<<<< HEAD
 			size = min_t(u32, seed->size, SZ_1K); // sanity check
+=======
+			size = READ_ONCE(seed->size);
+>>>>>>> b7ba80a49124 (Commit)
 			early_memunmap(seed, sizeof(*seed));
 		} else {
 			pr_err("Could not map UEFI random seed!\n");
@@ -688,8 +758,13 @@ int __init efi_config_parse_tables(const efi_config_table_t *config_tables,
 			seed = early_memremap(efi_rng_seed,
 					      sizeof(*seed) + size);
 			if (seed != NULL) {
+<<<<<<< HEAD
 				add_bootloader_randomness(seed->bits, size);
 				memzero_explicit(seed->bits, size);
+=======
+				pr_notice("seeding entropy pool\n");
+				add_bootloader_randomness(seed->bits, size);
+>>>>>>> b7ba80a49124 (Commit)
 				early_memunmap(seed, sizeof(*seed) + size);
 			} else {
 				pr_err("Could not map UEFI random seed!\n");
@@ -762,13 +837,27 @@ int __init efi_config_parse_tables(const efi_config_table_t *config_tables,
 	return 0;
 }
 
+<<<<<<< HEAD
 int __init efi_systab_check_header(const efi_table_hdr_t *systab_hdr)
+=======
+int __init efi_systab_check_header(const efi_table_hdr_t *systab_hdr,
+				   int min_major_version)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (systab_hdr->signature != EFI_SYSTEM_TABLE_SIGNATURE) {
 		pr_err("System table signature incorrect!\n");
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	if ((systab_hdr->revision >> 16) < min_major_version)
+		pr_err("Warning: System table version %d.%02d, expected %d.00 or greater!\n",
+		       systab_hdr->revision >> 16,
+		       systab_hdr->revision & 0xffff,
+		       min_major_version);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -799,7 +888,10 @@ void __init efi_systab_report_header(const efi_table_hdr_t *systab_hdr,
 	char vendor[100] = "unknown";
 	const efi_char16_t *c16;
 	size_t i;
+<<<<<<< HEAD
 	u16 rev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	c16 = map_fw_vendor(fw_vendor, sizeof(vendor) * sizeof(efi_char16_t));
 	if (c16) {
@@ -810,6 +902,7 @@ void __init efi_systab_report_header(const efi_table_hdr_t *systab_hdr,
 		unmap_fw_vendor(c16, sizeof(vendor) * sizeof(efi_char16_t));
 	}
 
+<<<<<<< HEAD
 	rev = (u16)systab_hdr->revision;
 	pr_info("EFI v%u.%u", systab_hdr->revision >> 16, rev / 10);
 
@@ -818,6 +911,12 @@ void __init efi_systab_report_header(const efi_table_hdr_t *systab_hdr,
 		pr_cont(".%u", rev);
 
 	pr_cont(" by %s\n", vendor);
+=======
+	pr_info("EFI v%u.%.02u by %s\n",
+		systab_hdr->revision >> 16,
+		systab_hdr->revision & 0xffff,
+		vendor);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_ENABLED(CONFIG_X86_64) &&
 	    systab_hdr->revision > EFI_1_10_SYSTEM_TABLE_REVISION &&
@@ -1047,8 +1146,11 @@ int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
 	/* first try to find a slot in an existing linked list entry */
 	for (prsv = efi_memreserve_root->next; prsv; ) {
 		rsv = memremap(prsv, sizeof(*rsv), MEMREMAP_WB);
+<<<<<<< HEAD
 		if (!rsv)
 			return -ENOMEM;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		index = atomic_fetch_add_unless(&rsv->count, 1, rsv->size);
 		if (index < rsv->size) {
 			rsv->entry[index].base = addr;

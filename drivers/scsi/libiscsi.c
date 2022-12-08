@@ -2071,9 +2071,15 @@ static int iscsi_has_ping_timed_out(struct iscsi_conn *conn)
 		return 0;
 }
 
+<<<<<<< HEAD
 enum scsi_timeout_action iscsi_eh_cmd_timed_out(struct scsi_cmnd *sc)
 {
 	enum scsi_timeout_action rc = SCSI_EH_NOT_HANDLED;
+=======
+enum blk_eh_timer_return iscsi_eh_cmd_timed_out(struct scsi_cmnd *sc)
+{
+	enum blk_eh_timer_return rc = BLK_EH_DONE;
+>>>>>>> b7ba80a49124 (Commit)
 	struct iscsi_task *task = NULL, *running_task;
 	struct iscsi_cls_session *cls_session;
 	struct iscsi_session *session;
@@ -2093,7 +2099,11 @@ enum scsi_timeout_action iscsi_eh_cmd_timed_out(struct scsi_cmnd *sc)
 		 * Raced with completion. Blk layer has taken ownership
 		 * so let timeout code complete it now.
 		 */
+<<<<<<< HEAD
 		rc = SCSI_EH_NOT_HANDLED;
+=======
+		rc = BLK_EH_DONE;
+>>>>>>> b7ba80a49124 (Commit)
 		spin_unlock(&session->back_lock);
 		goto done;
 	}
@@ -2102,7 +2112,11 @@ enum scsi_timeout_action iscsi_eh_cmd_timed_out(struct scsi_cmnd *sc)
 		 * Racing with the completion path right now, so give it more
 		 * time so that path can complete it like normal.
 		 */
+<<<<<<< HEAD
 		rc = SCSI_EH_RESET_TIMER;
+=======
+		rc = BLK_EH_RESET_TIMER;
+>>>>>>> b7ba80a49124 (Commit)
 		task = NULL;
 		spin_unlock(&session->back_lock);
 		goto done;
@@ -2120,21 +2134,33 @@ enum scsi_timeout_action iscsi_eh_cmd_timed_out(struct scsi_cmnd *sc)
 		if (unlikely(system_state != SYSTEM_RUNNING)) {
 			sc->result = DID_NO_CONNECT << 16;
 			ISCSI_DBG_EH(session, "sc on shutdown, handled\n");
+<<<<<<< HEAD
 			rc = SCSI_EH_NOT_HANDLED;
+=======
+			rc = BLK_EH_DONE;
+>>>>>>> b7ba80a49124 (Commit)
 			goto done;
 		}
 		/*
 		 * We are probably in the middle of iscsi recovery so let
 		 * that complete and handle the error.
 		 */
+<<<<<<< HEAD
 		rc = SCSI_EH_RESET_TIMER;
+=======
+		rc = BLK_EH_RESET_TIMER;
+>>>>>>> b7ba80a49124 (Commit)
 		goto done;
 	}
 
 	conn = session->leadconn;
 	if (!conn) {
 		/* In the middle of shuting down */
+<<<<<<< HEAD
 		rc = SCSI_EH_RESET_TIMER;
+=======
+		rc = BLK_EH_RESET_TIMER;
+>>>>>>> b7ba80a49124 (Commit)
 		goto done;
 	}
 
@@ -2151,7 +2177,11 @@ enum scsi_timeout_action iscsi_eh_cmd_timed_out(struct scsi_cmnd *sc)
 			     "Last data xfer at %lu. Last timeout was at "
 			     "%lu\n.", task->last_xfer, task->last_timeout);
 		task->have_checked_conn = false;
+<<<<<<< HEAD
 		rc = SCSI_EH_RESET_TIMER;
+=======
+		rc = BLK_EH_RESET_TIMER;
+>>>>>>> b7ba80a49124 (Commit)
 		goto done;
 	}
 
@@ -2162,7 +2192,11 @@ enum scsi_timeout_action iscsi_eh_cmd_timed_out(struct scsi_cmnd *sc)
 	 * and can let the iscsi eh handle it
 	 */
 	if (iscsi_has_ping_timed_out(conn)) {
+<<<<<<< HEAD
 		rc = SCSI_EH_RESET_TIMER;
+=======
+		rc = BLK_EH_RESET_TIMER;
+>>>>>>> b7ba80a49124 (Commit)
 		goto done;
 	}
 
@@ -2200,7 +2234,11 @@ enum scsi_timeout_action iscsi_eh_cmd_timed_out(struct scsi_cmnd *sc)
 				     task->last_xfer, running_task->last_xfer,
 				     task->last_timeout);
 			spin_unlock(&session->back_lock);
+<<<<<<< HEAD
 			rc = SCSI_EH_RESET_TIMER;
+=======
+			rc = BLK_EH_RESET_TIMER;
+>>>>>>> b7ba80a49124 (Commit)
 			goto done;
 		}
 	}
@@ -2216,14 +2254,22 @@ enum scsi_timeout_action iscsi_eh_cmd_timed_out(struct scsi_cmnd *sc)
 	 */
 	if (READ_ONCE(conn->ping_task)) {
 		task->have_checked_conn = true;
+<<<<<<< HEAD
 		rc = SCSI_EH_RESET_TIMER;
+=======
+		rc = BLK_EH_RESET_TIMER;
+>>>>>>> b7ba80a49124 (Commit)
 		goto done;
 	}
 
 	/* Make sure there is a transport check done */
 	iscsi_send_nopout(conn, NULL);
 	task->have_checked_conn = true;
+<<<<<<< HEAD
 	rc = SCSI_EH_RESET_TIMER;
+=======
+	rc = BLK_EH_RESET_TIMER;
+>>>>>>> b7ba80a49124 (Commit)
 
 done:
 	spin_unlock_bh(&session->frwd_lock);
@@ -2232,7 +2278,11 @@ done:
 		task->last_timeout = jiffies;
 		iscsi_put_task(task);
 	}
+<<<<<<< HEAD
 	ISCSI_DBG_EH(session, "return %s\n", rc == SCSI_EH_RESET_TIMER ?
+=======
+	ISCSI_DBG_EH(session, "return %s\n", rc == BLK_EH_RESET_TIMER ?
+>>>>>>> b7ba80a49124 (Commit)
 		     "timer reset" : "shutdown or nh");
 	return rc;
 }
@@ -3104,6 +3154,7 @@ dec_session_count:
 }
 EXPORT_SYMBOL_GPL(iscsi_session_setup);
 
+<<<<<<< HEAD
 /*
  * issi_session_remove - Remove session from iSCSI class.
  */
@@ -3130,6 +3181,19 @@ void iscsi_session_free(struct iscsi_cls_session *cls_session)
 {
 	struct iscsi_session *session = cls_session->dd_data;
 	struct module *owner = cls_session->transport->owner;
+=======
+/**
+ * iscsi_session_teardown - destroy session, host, and cls_session
+ * @cls_session: iscsi session
+ */
+void iscsi_session_teardown(struct iscsi_cls_session *cls_session)
+{
+	struct iscsi_session *session = cls_session->dd_data;
+	struct module *owner = cls_session->transport->owner;
+	struct Scsi_Host *shost = session->host;
+
+	iscsi_remove_session(cls_session);
+>>>>>>> b7ba80a49124 (Commit)
 
 	iscsi_pool_free(&session->cmdpool);
 	kfree(session->password);
@@ -3147,6 +3211,7 @@ void iscsi_session_free(struct iscsi_cls_session *cls_session)
 	kfree(session->discovery_parent_type);
 
 	iscsi_free_session(cls_session);
+<<<<<<< HEAD
 	module_put(owner);
 }
 EXPORT_SYMBOL_GPL(iscsi_session_free);
@@ -3159,6 +3224,11 @@ void iscsi_session_teardown(struct iscsi_cls_session *cls_session)
 {
 	iscsi_session_remove(cls_session);
 	iscsi_session_free(cls_session);
+=======
+
+	iscsi_host_dec_session_cnt(shost);
+	module_put(owner);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(iscsi_session_teardown);
 

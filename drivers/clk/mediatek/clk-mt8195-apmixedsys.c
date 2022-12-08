@@ -3,11 +3,17 @@
 // Copyright (c) 2021 MediaTek Inc.
 // Author: Chun-Jie Chen <chun-jie.chen@mediatek.com>
 
+<<<<<<< HEAD
 #include "clk-fhctl.h"
 #include "clk-gate.h"
 #include "clk-mtk.h"
 #include "clk-pll.h"
 #include "clk-pllfh.h"
+=======
+#include "clk-gate.h"
+#include "clk-mtk.h"
+#include "clk-pll.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <dt-bindings/clock/mt8195-clk.h>
 #include <linux/of_device.h>
@@ -107,6 +113,7 @@ static const struct mtk_pll_data plls[] = {
 	    0, 0, 22, 0x0158, 24, 0, 0, 0, 0x0158, 0, 0x0158, 0, 9),
 };
 
+<<<<<<< HEAD
 enum fh_pll_id {
 	FH_ARMPLL_LL,
 	FH_ARMPLL_BL,
@@ -162,23 +169,32 @@ static struct mtk_pllfh_data pllfhs[] = {
 	FH(CLK_APMIXED_TVDPLL2, FH_TVDPLL1, 0x154),
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id of_match_clk_mt8195_apmixed[] = {
 	{ .compatible = "mediatek,mt8195-apmixedsys", },
 	{}
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(of, of_match_clk_mt8195_apmixed);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int clk_mt8195_apmixed_probe(struct platform_device *pdev)
 {
 	struct clk_hw_onecell_data *clk_data;
 	struct device_node *node = pdev->dev.of_node;
+<<<<<<< HEAD
 	const u8 *fhctl_node = "mediatek,mt8195-fhctl";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int r;
 
 	clk_data = mtk_alloc_clk_data(CLK_APMIXED_NR_CLK);
 	if (!clk_data)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	fhctl_parse_dt(fhctl_node, pllfhs, ARRAY_SIZE(pllfhs));
 
 	r = mtk_clk_register_pllfhs(node, plls, ARRAY_SIZE(plls),
@@ -188,6 +204,13 @@ static int clk_mt8195_apmixed_probe(struct platform_device *pdev)
 
 	r = mtk_clk_register_gates(&pdev->dev, node, apmixed_clks,
 				   ARRAY_SIZE(apmixed_clks), clk_data);
+=======
+	r = mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
+	if (r)
+		goto free_apmixed_data;
+
+	r = mtk_clk_register_gates(node, apmixed_clks, ARRAY_SIZE(apmixed_clks), clk_data);
+>>>>>>> b7ba80a49124 (Commit)
 	if (r)
 		goto unregister_plls;
 
@@ -202,8 +225,12 @@ static int clk_mt8195_apmixed_probe(struct platform_device *pdev)
 unregister_gates:
 	mtk_clk_unregister_gates(apmixed_clks, ARRAY_SIZE(apmixed_clks), clk_data);
 unregister_plls:
+<<<<<<< HEAD
 	mtk_clk_unregister_pllfhs(plls, ARRAY_SIZE(plls), pllfhs,
 				  ARRAY_SIZE(pllfhs), clk_data);
+=======
+	mtk_clk_unregister_plls(plls, ARRAY_SIZE(plls), clk_data);
+>>>>>>> b7ba80a49124 (Commit)
 free_apmixed_data:
 	mtk_free_clk_data(clk_data);
 	return r;
@@ -216,8 +243,12 @@ static int clk_mt8195_apmixed_remove(struct platform_device *pdev)
 
 	of_clk_del_provider(node);
 	mtk_clk_unregister_gates(apmixed_clks, ARRAY_SIZE(apmixed_clks), clk_data);
+<<<<<<< HEAD
 	mtk_clk_unregister_pllfhs(plls, ARRAY_SIZE(plls), pllfhs,
 				  ARRAY_SIZE(pllfhs), clk_data);
+=======
+	mtk_clk_unregister_plls(plls, ARRAY_SIZE(plls), clk_data);
+>>>>>>> b7ba80a49124 (Commit)
 	mtk_free_clk_data(clk_data);
 
 	return 0;
@@ -231,5 +262,9 @@ static struct platform_driver clk_mt8195_apmixed_drv = {
 		.of_match_table = of_match_clk_mt8195_apmixed,
 	},
 };
+<<<<<<< HEAD
 module_platform_driver(clk_mt8195_apmixed_drv);
 MODULE_LICENSE("GPL");
+=======
+builtin_platform_driver(clk_mt8195_apmixed_drv);
+>>>>>>> b7ba80a49124 (Commit)

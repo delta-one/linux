@@ -438,7 +438,11 @@ static int o2net_fill_bitmap(char *buf, int len)
 	unsigned long map[BITS_TO_LONGS(O2NM_MAX_NODES)];
 	int i = -1, out = 0;
 
+<<<<<<< HEAD
 	o2net_fill_node_map(map, O2NM_MAX_NODES);
+=======
+	o2net_fill_node_map(map, sizeof(map));
+>>>>>>> b7ba80a49124 (Commit)
 
 	while ((i = find_next_bit(map, O2NM_MAX_NODES, i + 1)) < O2NM_MAX_NODES)
 		out += scnprintf(buf + out, PAGE_SIZE - out, "%d ", i);

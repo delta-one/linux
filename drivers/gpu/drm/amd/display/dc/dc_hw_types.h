@@ -797,6 +797,7 @@ enum dc_timing_3d_format {
 	TIMING_3D_FORMAT_MAX,
 };
 
+<<<<<<< HEAD
 #define DC_DSC_QP_SET_SIZE 15
 #define DC_DSC_RC_BUF_THRESH_SIZE 14
 struct dc_dsc_rc_params_override {
@@ -820,6 +821,8 @@ struct dc_dsc_rc_params_override {
 	int32_t flatness_det_thresh;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct dc_dsc_config {
 	uint32_t num_slices_h; /* Number of DSC slices - horizontal */
 	uint32_t num_slices_v; /* Number of DSC slices - vertical */
@@ -829,12 +832,19 @@ struct dc_dsc_config {
 	uint32_t version_minor; /* DSC minor version. Full version is formed as 1.version_minor. */
 	bool ycbcr422_simple; /* Tell DSC engine to convert YCbCr 4:2:2 to 'YCbCr 4:2:2 simple'. */
 	int32_t rc_buffer_size; /* DSC RC buffer block size in bytes */
+<<<<<<< HEAD
 #if defined(CONFIG_DRM_AMD_DC_FP)
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+>>>>>>> b7ba80a49124 (Commit)
 	bool is_frl; /* indicate if DSC is applied based on HDMI FRL sink's capability */
 #endif
 	bool is_dp; /* indicate if DSC is applied based on DP's capability */
 	uint32_t mst_pbn; /* pbn of display on dsc mst hub */
+<<<<<<< HEAD
 	const struct dc_dsc_rc_params_override *rc_params_ovrd; /* DM owned memory. If not NULL, apply custom dsc rc params */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -1085,6 +1095,7 @@ struct tg_color {
 	uint16_t color_b_cb;
 };
 
+<<<<<<< HEAD
 enum symclk_state {
 	SYMCLK_OFF_TX_OFF,
 	SYMCLK_ON_TX_ON,
@@ -1099,5 +1110,7 @@ struct phy_state {
 	enum symclk_state symclk_state;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* DC_HW_TYPES_H */
 

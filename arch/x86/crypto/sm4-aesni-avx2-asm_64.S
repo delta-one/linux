@@ -14,7 +14,10 @@
  */
 
 #include <linux/linkage.h>
+<<<<<<< HEAD
 #include <linux/cfi_types.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/frame.h>
 
 #define rRIP         (%rip)
@@ -154,6 +157,12 @@
 	.long 0xdeadbeef, 0xdeadbeef, 0xdeadbeef
 
 .text
+<<<<<<< HEAD
+=======
+.align 16
+
+.align 8
+>>>>>>> b7ba80a49124 (Commit)
 SYM_FUNC_START_LOCAL(__sm4_crypt_blk16)
 	/* input:
 	 *	%rdi: round key array, CTX
@@ -279,7 +288,12 @@ SYM_FUNC_END(__sm4_crypt_blk16)
  * void sm4_aesni_avx2_ctr_enc_blk16(const u32 *rk, u8 *dst,
  *                                   const u8 *src, u8 *iv)
  */
+<<<<<<< HEAD
 SYM_TYPED_FUNC_START(sm4_aesni_avx2_ctr_enc_blk16)
+=======
+.align 8
+SYM_FUNC_START(sm4_aesni_avx2_ctr_enc_blk16)
+>>>>>>> b7ba80a49124 (Commit)
 	/* input:
 	 *	%rdi: round key array, CTX
 	 *	%rsi: dst (16 blocks)
@@ -391,7 +405,12 @@ SYM_FUNC_END(sm4_aesni_avx2_ctr_enc_blk16)
  * void sm4_aesni_avx2_cbc_dec_blk16(const u32 *rk, u8 *dst,
  *                                   const u8 *src, u8 *iv)
  */
+<<<<<<< HEAD
 SYM_TYPED_FUNC_START(sm4_aesni_avx2_cbc_dec_blk16)
+=======
+.align 8
+SYM_FUNC_START(sm4_aesni_avx2_cbc_dec_blk16)
+>>>>>>> b7ba80a49124 (Commit)
 	/* input:
 	 *	%rdi: round key array, CTX
 	 *	%rsi: dst (16 blocks)
@@ -444,7 +463,12 @@ SYM_FUNC_END(sm4_aesni_avx2_cbc_dec_blk16)
  * void sm4_aesni_avx2_cfb_dec_blk16(const u32 *rk, u8 *dst,
  *                                   const u8 *src, u8 *iv)
  */
+<<<<<<< HEAD
 SYM_TYPED_FUNC_START(sm4_aesni_avx2_cfb_dec_blk16)
+=======
+.align 8
+SYM_FUNC_START(sm4_aesni_avx2_cfb_dec_blk16)
+>>>>>>> b7ba80a49124 (Commit)
 	/* input:
 	 *	%rdi: round key array, CTX
 	 *	%rsi: dst (16 blocks)

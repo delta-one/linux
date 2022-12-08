@@ -2,10 +2,15 @@
 
 //! Crate for all kernel procedural macros.
 
+<<<<<<< HEAD
 mod concat_idents;
 mod helpers;
 mod module;
 mod vtable;
+=======
+mod helpers;
+mod module;
+>>>>>>> b7ba80a49124 (Commit)
 
 use proc_macro::TokenStream;
 
@@ -25,20 +30,35 @@ use proc_macro::TokenStream;
 ///
 /// module!{
 ///     type: MyModule,
+<<<<<<< HEAD
 ///     name: "my_kernel_module",
 ///     author: "Rust for Linux Contributors",
 ///     description: "My very own kernel module!",
 ///     license: "GPL",
+=======
+///     name: b"my_kernel_module",
+///     author: b"Rust for Linux Contributors",
+///     description: b"My very own kernel module!",
+///     license: b"GPL",
+>>>>>>> b7ba80a49124 (Commit)
 ///     params: {
 ///        my_i32: i32 {
 ///            default: 42,
 ///            permissions: 0o000,
+<<<<<<< HEAD
 ///            description: "Example of i32",
+=======
+///            description: b"Example of i32",
+>>>>>>> b7ba80a49124 (Commit)
 ///        },
 ///        writeable_i32: i32 {
 ///            default: 42,
 ///            permissions: 0o644,
+<<<<<<< HEAD
 ///            description: "Example of i32",
+=======
+///            description: b"Example of i32",
+>>>>>>> b7ba80a49124 (Commit)
 ///        },
 ///    },
 /// }
@@ -72,6 +92,7 @@ use proc_macro::TokenStream;
 pub fn module(ts: TokenStream) -> TokenStream {
     module::module(ts)
 }
+<<<<<<< HEAD
 
 /// Declares or implements a vtable trait.
 ///
@@ -166,3 +187,5 @@ pub fn vtable(attr: TokenStream, ts: TokenStream) -> TokenStream {
 pub fn concat_idents(ts: TokenStream) -> TokenStream {
     concat_idents::concat_idents(ts)
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

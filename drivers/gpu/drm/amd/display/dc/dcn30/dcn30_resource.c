@@ -60,7 +60,11 @@
 #include "dml/display_mode_vba.h"
 #include "dcn30/dcn30_dccg.h"
 #include "dcn10/dcn10_resource.h"
+<<<<<<< HEAD
 #include "link.h"
+=======
+#include "dc_link_ddc.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "dce/dce_panel_cntl.h"
 
 #include "dcn30/dcn30_dwb.h"
@@ -108,6 +112,11 @@ enum dcn30_clk_src_array_id {
  */
 
 /* DCN */
+<<<<<<< HEAD
+=======
+/* TODO awful hack. fixup dcn20_dwb.h */
+#undef BASE_INNER
+>>>>>>> b7ba80a49124 (Commit)
 #define BASE_INNER(seg) DCN_BASE__INST0_SEG ## seg
 
 #define BASE(seg) BASE_INNER(seg)
@@ -140,9 +149,12 @@ enum dcn30_clk_src_array_id {
 	.reg_name[id] = BASE(mm ## block ## id ## _ ## temp_name ## _BASE_IDX) + \
 					mm ## block ## id ## _ ## temp_name
 
+<<<<<<< HEAD
 #define SF_DWB2(reg_name, block, id, field_name, post_fix)	\
 	.field_name = reg_name ## __ ## field_name ## post_fix
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DCCG_SRII(reg_name, block, id)\
 	.block ## _ ## reg_name[id] = BASE(mm ## block ## id ## _ ## reg_name ## _BASE_IDX) + \
 					mm ## block ## id ## _ ## reg_name
@@ -680,6 +692,11 @@ static const struct resource_caps res_cap_dcn3 = {
 
 static const struct dc_plane_cap plane_cap = {
 	.type = DC_PLANE_TYPE_DCN_UNIVERSAL,
+<<<<<<< HEAD
+=======
+	.blends_with_above = true,
+	.blends_with_below = true,
+>>>>>>> b7ba80a49124 (Commit)
 	.per_pixel_alpha = true,
 
 	.pixel_format_support = {
@@ -722,8 +739,13 @@ static const struct dc_debug_options debug_defaults_drv = {
 	.underflow_assert_delay_us = 0xFFFFFFFF,
 	.dwb_fi_phase = -1, // -1 = disable,
 	.dmub_command_table = true,
+<<<<<<< HEAD
 	.use_max_lb = true,
 	.exit_idle_opt_for_cursor_updates = true
+=======
+	.disable_psr = false,
+	.use_max_lb = true
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct dc_debug_options debug_defaults_diags = {
@@ -740,10 +762,15 @@ static const struct dc_debug_options debug_defaults_diags = {
 	.scl_reset_length10 = true,
 	.dwb_fi_phase = -1, // -1 = disable
 	.dmub_command_table = true,
+<<<<<<< HEAD
+=======
+	.disable_psr = true,
+>>>>>>> b7ba80a49124 (Commit)
 	.enable_tri_buf = true,
 	.use_max_lb = true
 };
 
+<<<<<<< HEAD
 static const struct dc_panel_config panel_config_defaults = {
 	.psr = {
 		.disable_psr = false,
@@ -751,6 +778,8 @@ static const struct dc_panel_config panel_config_defaults = {
 	},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void dcn30_dpp_destroy(struct dpp **dpp)
 {
 	kfree(TO_DCN20_DPP(*dpp));
@@ -1205,11 +1234,16 @@ static void dcn30_resource_destruct(struct dcn30_resource_pool *pool)
 	if (pool->base.dccg != NULL)
 		dcn_dccg_destroy(&pool->base.dccg);
 
+<<<<<<< HEAD
 	if (pool->base.oem_device != NULL) {
 		struct dc *dc = pool->base.oem_device->ctx->dc;
 
 		dc->link_srv->destroy_ddc_service(&pool->base.oem_device);
 	}
+=======
+	if (pool->base.oem_device != NULL)
+		dal_ddc_service_destroy(&pool->base.oem_device);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct hubp *dcn30_hubp_create(
@@ -1330,7 +1364,10 @@ static struct clock_source *dcn30_clock_source_create(
 		return &clk_src->base;
 	}
 
+<<<<<<< HEAD
 	kfree(clk_src);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BREAK_TO_DEBUGGER();
 	return NULL;
 }
@@ -1478,8 +1515,13 @@ bool dcn30_acquire_post_bldn_3dlut(
 				state->bits.mpc_rmu2_mux = mpcc_id;
 			ret = true;
 			break;
+<<<<<<< HEAD
 		}
 	}
+=======
+			}
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -1649,8 +1691,12 @@ noinline bool dcn30_internal_validate_bw(
 		display_e2e_pipe_params_st *pipes,
 		int *pipe_cnt_out,
 		int *vlevel_out,
+<<<<<<< HEAD
 		bool fast_validate,
 		bool allow_self_refresh_only)
+=======
+		bool fast_validate)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	bool out = false;
 	bool repopulate_pipes = false;
@@ -1664,9 +1710,12 @@ noinline bool dcn30_internal_validate_bw(
 	if (!pipes)
 		return false;
 
+<<<<<<< HEAD
 	context->bw_ctx.dml.vba.maxMpcComb = 0;
 	context->bw_ctx.dml.vba.VoltageLevel = 0;
 	context->bw_ctx.dml.vba.DRAMClockChangeSupport[0][0] = dm_dram_clock_change_vactive;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dc->res_pool->funcs->update_soc_for_wm_a(dc, context);
 	pipe_cnt = dc->res_pool->funcs->populate_dml_pipes(dc, context, pipes, fast_validate);
 
@@ -1677,7 +1726,11 @@ noinline bool dcn30_internal_validate_bw(
 
 	dml_log_pipe_params(&context->bw_ctx.dml, pipes, pipe_cnt);
 
+<<<<<<< HEAD
 	if (!fast_validate || !allow_self_refresh_only) {
+=======
+	if (!fast_validate) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * DML favors voltage over p-state, but we're more interested in
 		 * supporting p-state over voltage. We can't support p-state in
@@ -1690,12 +1743,20 @@ noinline bool dcn30_internal_validate_bw(
 		if (vlevel < context->bw_ctx.dml.soc.num_states)
 			vlevel = dcn20_validate_apply_pipe_split_flags(dc, context, vlevel, split, merge);
 	}
+<<<<<<< HEAD
 	if (allow_self_refresh_only &&
 	    (fast_validate || vlevel == context->bw_ctx.dml.soc.num_states ||
 			vba->DRAMClockChangeSupport[vlevel][vba->maxMpcComb] == dm_dram_clock_change_unsupported)) {
 		/*
 		 * If mode is unsupported or there's still no p-state support
 		 * then fall back to favoring voltage.
+=======
+	if (fast_validate || vlevel == context->bw_ctx.dml.soc.num_states ||
+			vba->DRAMClockChangeSupport[vlevel][vba->maxMpcComb] == dm_dram_clock_change_unsupported) {
+		/*
+		 * If mode is unsupported or there's still no p-state support then
+		 * fall back to favoring voltage.
+>>>>>>> b7ba80a49124 (Commit)
 		 *
 		 * We don't actually support prefetch mode 2, so require that we
 		 * at least support prefetch mode 1.
@@ -1886,7 +1947,10 @@ noinline bool dcn30_internal_validate_bw(
 
 	if (repopulate_pipes)
 		pipe_cnt = dc->res_pool->funcs->populate_dml_pipes(dc, context, pipes, fast_validate);
+<<<<<<< HEAD
 	context->bw_ctx.dml.vba.VoltageLevel = vlevel;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	*vlevel_out = vlevel;
 	*pipe_cnt_out = pipe_cnt;
 
@@ -2066,7 +2130,11 @@ bool dcn30_validate_bandwidth(struct dc *dc,
 	BW_VAL_TRACE_COUNT();
 
 	DC_FP_START();
+<<<<<<< HEAD
 	out = dcn30_internal_validate_bw(dc, context, pipes, &pipe_cnt, &vlevel, fast_validate, true);
+=======
+	out = dcn30_internal_validate_bw(dc, context, pipes, &pipe_cnt, &vlevel, fast_validate);
+>>>>>>> b7ba80a49124 (Commit)
 	DC_FP_END();
 
 	if (pipe_cnt == 0)
@@ -2222,11 +2290,14 @@ void dcn30_update_bw_bounding_box(struct dc *dc, struct clk_bw_params *bw_params
 	}
 }
 
+<<<<<<< HEAD
 static void dcn30_get_panel_config_defaults(struct dc_panel_config *panel_config)
 {
 	*panel_config = panel_config_defaults;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct resource_funcs dcn30_res_pool_funcs = {
 	.destroy = dcn30_destroy_resource_pool,
 	.link_enc_create = dcn30_link_encoder_create,
@@ -2246,7 +2317,10 @@ static const struct resource_funcs dcn30_res_pool_funcs = {
 	.release_post_bldn_3dlut = dcn30_release_post_bldn_3dlut,
 	.update_bw_bounding_box = dcn30_update_bw_bounding_box,
 	.patch_unknown_plane_state = dcn20_patch_unknown_plane_state,
+<<<<<<< HEAD
 	.get_panel_config_defaults = dcn30_get_panel_config_defaults,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define CTX ctx
@@ -2593,7 +2667,11 @@ static bool dcn30_resource_construct(
 		ddc_init_data.id.id = dc->ctx->dc_bios->fw_info.oem_i2c_obj_id;
 		ddc_init_data.id.enum_id = 0;
 		ddc_init_data.id.type = OBJECT_TYPE_GENERIC;
+<<<<<<< HEAD
 		pool->base.oem_device = dc->link_srv->create_ddc_service(&ddc_init_data);
+=======
+		pool->base.oem_device = dal_ddc_service_create(&ddc_init_data);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		pool->base.oem_device = NULL;
 	}

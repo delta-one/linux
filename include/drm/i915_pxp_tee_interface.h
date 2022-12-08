@@ -8,7 +8,10 @@
 
 #include <linux/mutex.h>
 #include <linux/device.h>
+<<<<<<< HEAD
 struct scatterlist;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct i915_pxp_component_ops - ops for PXP services.
@@ -24,10 +27,13 @@ struct i915_pxp_component_ops {
 
 	int (*send)(struct device *dev, const void *message, size_t size);
 	int (*recv)(struct device *dev, void *buffer, size_t size);
+<<<<<<< HEAD
 	ssize_t (*gsc_command)(struct device *dev, u8 client_id, u32 fence_id,
 			       struct scatterlist *sg_in, size_t total_in_len,
 			       struct scatterlist *sg_out);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**

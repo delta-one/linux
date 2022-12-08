@@ -84,6 +84,10 @@ source "drivers/net/ethernet/huawei/Kconfig"
 source "drivers/net/ethernet/i825xx/Kconfig"
 source "drivers/net/ethernet/ibm/Kconfig"
 source "drivers/net/ethernet/intel/Kconfig"
+<<<<<<< HEAD
+=======
+source "drivers/net/ethernet/wangxun/Kconfig"
+>>>>>>> b7ba80a49124 (Commit)
 source "drivers/net/ethernet/xscale/Kconfig"
 
 config JME
@@ -188,7 +192,10 @@ source "drivers/net/ethernet/toshiba/Kconfig"
 source "drivers/net/ethernet/tundra/Kconfig"
 source "drivers/net/ethernet/vertexcom/Kconfig"
 source "drivers/net/ethernet/via/Kconfig"
+<<<<<<< HEAD
 source "drivers/net/ethernet/wangxun/Kconfig"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 source "drivers/net/ethernet/wiznet/Kconfig"
 source "drivers/net/ethernet/xilinx/Kconfig"
 source "drivers/net/ethernet/xircom/Kconfig"

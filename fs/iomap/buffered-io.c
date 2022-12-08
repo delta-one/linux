@@ -457,6 +457,7 @@ bool iomap_is_partially_uptodate(struct folio *folio, size_t from, size_t count)
 }
 EXPORT_SYMBOL_GPL(iomap_is_partially_uptodate);
 
+<<<<<<< HEAD
 /**
  * iomap_get_folio - get a folio reference for writing
  * @iter: iteration structure
@@ -477,6 +478,8 @@ struct folio *iomap_get_folio(struct iomap_iter *iter, loff_t pos)
 }
 EXPORT_SYMBOL_GPL(iomap_get_folio);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool iomap_release_folio(struct folio *folio, gfp_t gfp_flags)
 {
 	trace_iomap_release_folio(folio->mapping->host, folio_pos(folio),
@@ -595,6 +598,7 @@ static int __iomap_write_begin(const struct iomap_iter *iter, loff_t pos,
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct folio *__iomap_get_folio(struct iomap_iter *iter, loff_t pos,
 		size_t len)
 {
@@ -619,6 +623,8 @@ static void __iomap_put_folio(struct iomap_iter *iter, loff_t pos, size_t ret,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int iomap_write_begin_inline(const struct iomap_iter *iter,
 		struct folio *folio)
 {
@@ -628,6 +634,7 @@ static int iomap_write_begin_inline(const struct iomap_iter *iter,
 	return iomap_read_inline_data(iter, folio);
 }
 
+<<<<<<< HEAD
 static int iomap_write_begin(struct iomap_iter *iter, loff_t pos,
 		size_t len, struct folio **foliop)
 {
@@ -636,6 +643,20 @@ static int iomap_write_begin(struct iomap_iter *iter, loff_t pos,
 	struct folio *folio;
 	int status = 0;
 
+=======
+static int iomap_write_begin(const struct iomap_iter *iter, loff_t pos,
+		size_t len, struct folio **foliop)
+{
+	const struct iomap_page_ops *page_ops = iter->iomap.page_ops;
+	const struct iomap *srcmap = iomap_iter_srcmap(iter);
+	struct folio *folio;
+	unsigned fgp = FGP_LOCK | FGP_WRITE | FGP_CREAT | FGP_STABLE | FGP_NOFS;
+	int status = 0;
+
+	if (iter->flags & IOMAP_NOWAIT)
+		fgp |= FGP_NOWAIT;
+
+>>>>>>> b7ba80a49124 (Commit)
 	BUG_ON(pos + len > iter->iomap.offset + iter->iomap.length);
 	if (srcmap != &iter->iomap)
 		BUG_ON(pos + len > srcmap->offset + srcmap->length);
@@ -646,6 +667,7 @@ static int iomap_write_begin(struct iomap_iter *iter, loff_t pos,
 	if (!mapping_large_folio_support(iter->inode->i_mapping))
 		len = min_t(size_t, len, PAGE_SIZE - offset_in_page(pos));
 
+<<<<<<< HEAD
 	folio = __iomap_get_folio(iter, pos, len);
 	if (IS_ERR(folio))
 		return PTR_ERR(folio);
@@ -670,6 +692,20 @@ static int iomap_write_begin(struct iomap_iter *iter, loff_t pos,
 		}
 	}
 
+=======
+	if (page_ops && page_ops->page_prepare) {
+		status = page_ops->page_prepare(iter->inode, pos, len);
+		if (status)
+			return status;
+	}
+
+	folio = __filemap_get_folio(iter->inode->i_mapping, pos >> PAGE_SHIFT,
+			fgp, mapping_gfp_mask(iter->inode->i_mapping));
+	if (!folio) {
+		status = (iter->flags & IOMAP_NOWAIT) ? -EAGAIN : -ENOMEM;
+		goto out_no_page;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (pos + len > folio_pos(folio) + folio_size(folio))
 		len = folio_pos(folio) + folio_size(folio) - pos;
 
@@ -687,9 +723,19 @@ static int iomap_write_begin(struct iomap_iter *iter, loff_t pos,
 	return 0;
 
 out_unlock:
+<<<<<<< HEAD
 	__iomap_put_folio(iter, pos, 0, folio);
 	iomap_write_failed(iter->inode, pos, len);
 
+=======
+	folio_unlock(folio);
+	folio_put(folio);
+	iomap_write_failed(iter->inode, pos, len);
+
+out_no_page:
+	if (page_ops && page_ops->page_done)
+		page_ops->page_done(iter->inode, pos, 0, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	return status;
 }
 
@@ -739,6 +785,10 @@ static size_t iomap_write_end_inline(const struct iomap_iter *iter,
 static size_t iomap_write_end(struct iomap_iter *iter, loff_t pos, size_t len,
 		size_t copied, struct folio *folio)
 {
+<<<<<<< HEAD
+=======
+	const struct iomap_page_ops *page_ops = iter->iomap.page_ops;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct iomap *srcmap = iomap_iter_srcmap(iter);
 	loff_t old_size = iter->inode->i_size;
 	size_t ret;
@@ -761,10 +811,21 @@ static size_t iomap_write_end(struct iomap_iter *iter, loff_t pos, size_t len,
 		i_size_write(iter->inode, pos + ret);
 		iter->iomap.flags |= IOMAP_F_SIZE_CHANGED;
 	}
+<<<<<<< HEAD
 	__iomap_put_folio(iter, pos, ret, folio);
 
 	if (old_size < pos)
 		pagecache_isize_extended(iter->inode, old_size, pos);
+=======
+	folio_unlock(folio);
+
+	if (old_size < pos)
+		pagecache_isize_extended(iter->inode, old_size, pos);
+	if (page_ops && page_ops->page_done)
+		page_ops->page_done(iter->inode, pos, ret, &folio->page);
+	folio_put(folio);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < len)
 		iomap_write_failed(iter->inode, pos + ret, len - ret);
 	return ret;
@@ -816,8 +877,11 @@ again:
 		status = iomap_write_begin(iter, pos, bytes, &folio);
 		if (unlikely(status))
 			break;
+<<<<<<< HEAD
 		if (iter->iomap.flags & IOMAP_F_STALE)
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		page = folio_file_page(folio, pos >> PAGE_SHIFT);
 		if (mapping_writably_mapped(mapping))
@@ -877,6 +941,7 @@ iomap_file_buffered_write(struct kiocb *iocb, struct iov_iter *i,
 }
 EXPORT_SYMBOL_GPL(iomap_file_buffered_write);
 
+<<<<<<< HEAD
 /*
  * Scan the data range passed to us for dirty page cache folios. If we find a
  * dirty folio, punch out the preceeding range and update the offset from which
@@ -1102,6 +1167,8 @@ int iomap_file_buffered_write_punch_delalloc(struct inode *inode,
 }
 EXPORT_SYMBOL_GPL(iomap_file_buffered_write_punch_delalloc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static loff_t iomap_unshare_iter(struct iomap_iter *iter)
 {
 	struct iomap *iomap = &iter->iomap;
@@ -1126,8 +1193,11 @@ static loff_t iomap_unshare_iter(struct iomap_iter *iter)
 		status = iomap_write_begin(iter, pos, bytes, &folio);
 		if (unlikely(status))
 			return status;
+<<<<<<< HEAD
 		if (iter->iomap.flags & IOMAP_F_STALE)
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		status = iomap_write_end(iter, pos, bytes, bytes, folio);
 		if (WARN_ON_ONCE(status == 0))
@@ -1183,8 +1253,11 @@ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
 		status = iomap_write_begin(iter, pos, bytes, &folio);
 		if (status)
 			return status;
+<<<<<<< HEAD
 		if (iter->iomap.flags & IOMAP_F_STALE)
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		offset = offset_in_folio(folio, pos);
 		if (bytes > folio_size(folio) - offset)
@@ -1634,7 +1707,10 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
 		error = wpc->ops->map_blocks(wpc, inode, pos);
 		if (error)
 			break;
+<<<<<<< HEAD
 		trace_iomap_writepage_map(inode, &wpc->iomap);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (WARN_ON_ONCE(wpc->iomap.type == IOMAP_INLINE))
 			continue;
 		if (wpc->iomap.type == IOMAP_HOLE)
@@ -1696,7 +1772,11 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
 	if (!count)
 		folio_end_writeback(folio);
 done:
+<<<<<<< HEAD
 	mapping_set_error(inode->i_mapping, error);
+=======
+	mapping_set_error(folio->mapping, error);
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }
 
@@ -1707,9 +1787,16 @@ done:
  * For unwritten space on the page, we need to start the conversion to
  * regular allocated space.
  */
+<<<<<<< HEAD
 static int iomap_do_writepage(struct folio *folio,
 		struct writeback_control *wbc, void *data)
 {
+=======
+static int
+iomap_do_writepage(struct page *page, struct writeback_control *wbc, void *data)
+{
+	struct folio *folio = page_folio(page);
+>>>>>>> b7ba80a49124 (Commit)
 	struct iomap_writepage_ctx *wpc = data;
 	struct inode *inode = folio->mapping->host;
 	u64 end_pos, isize;

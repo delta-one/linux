@@ -613,7 +613,11 @@ static inline void process_cmdrequest(int recvlength, uint8_t *recvbuff,
 	spin_lock_irqsave(&priv->driver_lock, flags);
 	memcpy(priv->cmd_resp_buff, recvbuff + MESSAGE_HEADER_LEN,
 	       recvlength - MESSAGE_HEADER_LEN);
+<<<<<<< HEAD
 	dev_kfree_skb_irq(skb);
+=======
+	kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 	lbtf_cmd_response_rx(priv);
 	spin_unlock_irqrestore(&priv->driver_lock, flags);
 }

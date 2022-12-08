@@ -8,6 +8,7 @@
  *
  * Data sheet: ARM DDI 0190B, September 2000
  */
+<<<<<<< HEAD
 #include <linux/amba/bus.h>
 #include <linux/bitops.h>
 #include <linux/device.h>
@@ -25,6 +26,24 @@
 #include <linux/seq_file.h>
 #include <linux/slab.h>
 #include <linux/spinlock.h>
+=======
+#include <linux/spinlock.h>
+#include <linux/errno.h>
+#include <linux/init.h>
+#include <linux/io.h>
+#include <linux/ioport.h>
+#include <linux/interrupt.h>
+#include <linux/irq.h>
+#include <linux/irqchip/chained_irq.h>
+#include <linux/module.h>
+#include <linux/bitops.h>
+#include <linux/gpio/driver.h>
+#include <linux/device.h>
+#include <linux/amba/bus.h>
+#include <linux/slab.h>
+#include <linux/pinctrl/consumer.h>
+#include <linux/pm.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define GPIODIR 0x400
 #define GPIOIS  0x404

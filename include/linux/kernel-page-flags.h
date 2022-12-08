@@ -18,6 +18,9 @@
 #define KPF_UNCACHED		39
 #define KPF_SOFTDIRTY		40
 #define KPF_ARCH_2		41
+<<<<<<< HEAD
 #define KPF_ARCH_3		42
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* LINUX_KERNEL_PAGE_FLAGS_H */

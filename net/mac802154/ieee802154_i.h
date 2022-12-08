@@ -21,18 +21,24 @@
 
 #include "llsec.h"
 
+<<<<<<< HEAD
 enum ieee802154_ongoing {
 	IEEE802154_IS_SCANNING = BIT(0),
 	IEEE802154_IS_BEACONING = BIT(1),
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* mac802154 device private data */
 struct ieee802154_local {
 	struct ieee802154_hw hw;
 	const struct ieee802154_ops *ops;
 
+<<<<<<< HEAD
 	/* hardware address filter */
 	struct ieee802154_hw_addr_filt addr_filt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* ieee802154 phy */
 	struct wpan_phy *phy;
 
@@ -48,6 +54,7 @@ struct ieee802154_local {
 	struct list_head	interfaces;
 	struct mutex		iflist_mtx;
 
+<<<<<<< HEAD
 	/* Data related workqueue */
 	struct workqueue_struct	*workqueue;
 	/* MAC commands related workqueue */
@@ -74,12 +81,27 @@ struct ieee802154_local {
 	bool started;
 	bool suspended;
 	unsigned long ongoing;
+=======
+	/* This one is used for scanning and other jobs not to be interfered
+	 * with serial driver.
+	 */
+	struct workqueue_struct	*workqueue;
+
+	struct hrtimer ifs_timer;
+
+	bool started;
+	bool suspended;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct tasklet_struct tasklet;
 	struct sk_buff_head skb_queue;
 
 	struct sk_buff *tx_skb;
+<<<<<<< HEAD
 	struct work_struct sync_tx_work;
+=======
+	struct work_struct tx_work;
+>>>>>>> b7ba80a49124 (Commit)
 	/* A negative Linux error code or a null/positive MLME error status */
 	int tx_result;
 };
@@ -106,6 +128,7 @@ struct ieee802154_sub_if_data {
 	struct ieee802154_local *local;
 	struct net_device *dev;
 
+<<<<<<< HEAD
 	/* Each interface starts and works in nominal state at a given filtering
 	 * level given by iface_default_filtering, which is set once for all at
 	 * the interface creation and should not evolve over time. For some MAC
@@ -116,6 +139,8 @@ struct ieee802154_sub_if_data {
 	enum ieee802154_filtering_level iface_default_filtering;
 	enum ieee802154_filtering_level required_filtering;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long state;
 	char name[IFNAMSIZ];
 
@@ -157,6 +182,7 @@ ieee802154_sdata_running(struct ieee802154_sub_if_data *sdata)
 extern struct ieee802154_mlme_ops mac802154_mlme_wpan;
 
 void ieee802154_rx(struct ieee802154_local *local, struct sk_buff *skb);
+<<<<<<< HEAD
 void ieee802154_xmit_sync_worker(struct work_struct *work);
 int ieee802154_sync_and_hold_queue(struct ieee802154_local *local);
 int ieee802154_mlme_op_pre(struct ieee802154_local *local);
@@ -173,12 +199,16 @@ int ieee802154_mlme_tx_one(struct ieee802154_local *local,
 int ieee802154_mlme_tx_one_locked(struct ieee802154_local *local,
 				  struct ieee802154_sub_if_data *sdata,
 				  struct sk_buff *skb);
+=======
+void ieee802154_xmit_worker(struct work_struct *work);
+>>>>>>> b7ba80a49124 (Commit)
 netdev_tx_t
 ieee802154_monitor_start_xmit(struct sk_buff *skb, struct net_device *dev);
 netdev_tx_t
 ieee802154_subif_start_xmit(struct sk_buff *skb, struct net_device *dev);
 enum hrtimer_restart ieee802154_xmit_ifs_timer(struct hrtimer *timer);
 
+<<<<<<< HEAD
 /**
  * ieee802154_hold_queue - hold ieee802154 queue
  * @local: main mac object
@@ -210,6 +240,8 @@ void ieee802154_release_queue(struct ieee802154_local *local);
  */
 void ieee802154_disable_queue(struct ieee802154_local *local);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* MIB callbacks */
 void mac802154_dev_set_page_channel(struct net_device *dev, u8 page, u8 chan);
 
@@ -248,6 +280,7 @@ void mac802154_unlock_table(struct net_device *dev);
 
 int mac802154_wpan_update_llsec(struct net_device *dev);
 
+<<<<<<< HEAD
 /* PAN management handling */
 void mac802154_scan_worker(struct work_struct *work);
 int mac802154_trigger_scan_locked(struct ieee802154_sub_if_data *sdata,
@@ -275,6 +308,8 @@ static inline bool mac802154_is_beaconing(struct ieee802154_local *local)
 	return test_bit(IEEE802154_IS_BEACONING, &local->ongoing);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* interface handling */
 int ieee802154_iface_init(void);
 void ieee802154_iface_exit(void);

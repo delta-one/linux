@@ -703,7 +703,11 @@ Unfortunately, the following common SCSI BUS problems are not detected:
 - Bad quality terminators.
 
 On the other hand, either bad cabling, broken devices, not conformant
+<<<<<<< HEAD
 devices, ... may cause a SCSI signal to be wrong when the driver reads it.
+=======
+devices, ... may cause a SCSI signal to be wrong when te driver reads it.
+>>>>>>> b7ba80a49124 (Commit)
 
 15. SCSI problem troubleshooting
 ================================

@@ -11,8 +11,11 @@
 
 #include <linux/kasan-checks.h>
 
+<<<<<<< HEAD
 #include <asm/alternative-macros.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define __nops(n)	".rept	" #n "\nnop\n.endr\n"
 #define nops(n)		asm volatile(__nops(n))
 
@@ -43,11 +46,18 @@
 #ifdef CONFIG_ARM64_PSEUDO_NMI
 #define pmr_sync()						\
 	do {							\
+<<<<<<< HEAD
 		asm volatile(					\
 		ALTERNATIVE_CB("dsb sy",			\
 			       ARM64_HAS_GIC_PRIO_RELAXED_SYNC,	\
 			       alt_cb_patch_nops)		\
 		);						\
+=======
+		extern struct static_key_false gic_pmr_sync;	\
+								\
+		if (static_branch_unlikely(&gic_pmr_sync))	\
+			dsb(sy);				\
+>>>>>>> b7ba80a49124 (Commit)
 	} while(0)
 #else
 #define pmr_sync()	do {} while (0)

@@ -113,6 +113,7 @@ int static_key_count(struct static_key *key)
 }
 EXPORT_SYMBOL_GPL(static_key_count);
 
+<<<<<<< HEAD
 /*
  * static_key_fast_inc_not_disabled - adds a user for a static key
  * @key: static key that must be already enabled
@@ -147,6 +148,13 @@ EXPORT_SYMBOL_GPL(static_key_fast_inc_not_disabled);
 
 bool static_key_slow_inc_cpuslocked(struct static_key *key)
 {
+=======
+void static_key_slow_inc_cpuslocked(struct static_key *key)
+{
+	int v, v1;
+
+	STATIC_KEY_CHECK_USE(key);
+>>>>>>> b7ba80a49124 (Commit)
 	lockdep_assert_cpus_held();
 
 	/*
@@ -155,9 +163,23 @@ bool static_key_slow_inc_cpuslocked(struct static_key *key)
 	 * jump_label_update() process.  At the same time, however,
 	 * the jump_label_update() call below wants to see
 	 * static_key_enabled(&key) for jumps to be updated properly.
+<<<<<<< HEAD
 	 */
 	if (static_key_fast_inc_not_disabled(key))
 		return true;
+=======
+	 *
+	 * So give a special meaning to negative key->enabled: it sends
+	 * static_key_slow_inc() down the slow path, and it is non-zero
+	 * so it counts as "enabled" in jump_label_update().  Note that
+	 * atomic_inc_unless_negative() checks >= 0, so roll our own.
+	 */
+	for (v = atomic_read(&key->enabled); v > 0; v = v1) {
+		v1 = atomic_cmpxchg(&key->enabled, v, v + 1);
+		if (likely(v1 == v))
+			return;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	jump_label_lock();
 	if (atomic_read(&key->enabled) == 0) {
@@ -169,6 +191,7 @@ bool static_key_slow_inc_cpuslocked(struct static_key *key)
 		 */
 		atomic_set_release(&key->enabled, 1);
 	} else {
+<<<<<<< HEAD
 		if (WARN_ON_ONCE(!static_key_fast_inc_not_disabled(key))) {
 			jump_label_unlock();
 			return false;
@@ -186,6 +209,18 @@ bool static_key_slow_inc(struct static_key *key)
 	ret = static_key_slow_inc_cpuslocked(key);
 	cpus_read_unlock();
 	return ret;
+=======
+		atomic_inc(&key->enabled);
+	}
+	jump_label_unlock();
+}
+
+void static_key_slow_inc(struct static_key *key)
+{
+	cpus_read_lock();
+	static_key_slow_inc_cpuslocked(key);
+	cpus_read_unlock();
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(static_key_slow_inc);
 

@@ -406,7 +406,11 @@ static void update_affinity_collection(struct kvm *kvm, struct vgic_its *its,
 	struct its_ite *ite;
 
 	for_each_lpi_its(device, ite, its) {
+<<<<<<< HEAD
 		if (ite->collection != coll)
+=======
+		if (!ite->collection || coll != ite->collection)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		update_affinity_ite(kvm, ite);
@@ -2149,7 +2153,11 @@ static int scan_its_table(struct vgic_its *its, gpa_t base, int size, u32 esz,
 
 	memset(entry, 0, esz);
 
+<<<<<<< HEAD
 	while (true) {
+=======
+	while (len > 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		int next_offset;
 		size_t byte_offset;
 
@@ -2162,9 +2170,12 @@ static int scan_its_table(struct vgic_its *its, gpa_t base, int size, u32 esz,
 			return next_offset;
 
 		byte_offset = next_offset * esz;
+<<<<<<< HEAD
 		if (byte_offset >= len)
 			break;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		id += next_offset;
 		gpa += byte_offset;
 		len -= byte_offset;
@@ -2187,7 +2198,11 @@ static int vgic_its_save_ite(struct vgic_its *its, struct its_device *dev,
 	       ((u64)ite->irq->intid << KVM_ITS_ITE_PINTID_SHIFT) |
 		ite->collection->collection_id;
 	val = cpu_to_le64(val);
+<<<<<<< HEAD
 	return vgic_write_guest_lock(kvm, gpa, &val, ite_esz);
+=======
+	return kvm_write_guest_lock(kvm, gpa, &val, ite_esz);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -2339,7 +2354,11 @@ static int vgic_its_save_dte(struct vgic_its *its, struct its_device *dev,
 	       (itt_addr_field << KVM_ITS_DTE_ITTADDR_SHIFT) |
 		(dev->num_eventid_bits - 1));
 	val = cpu_to_le64(val);
+<<<<<<< HEAD
 	return vgic_write_guest_lock(kvm, ptr, &val, dte_esz);
+=======
+	return kvm_write_guest_lock(kvm, ptr, &val, dte_esz);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -2526,7 +2545,11 @@ static int vgic_its_save_cte(struct vgic_its *its,
 	       ((u64)collection->target_addr << KVM_ITS_CTE_RDBASE_SHIFT) |
 	       collection->collection_id);
 	val = cpu_to_le64(val);
+<<<<<<< HEAD
 	return vgic_write_guest_lock(its->dev->kvm, gpa, &val, esz);
+=======
+	return kvm_write_guest_lock(its->dev->kvm, gpa, &val, esz);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -2607,7 +2630,11 @@ static int vgic_its_save_collection_table(struct vgic_its *its)
 	 */
 	val = 0;
 	BUG_ON(cte_esz > sizeof(val));
+<<<<<<< HEAD
 	ret = vgic_write_guest_lock(its->dev->kvm, gpa, &val, cte_esz);
+=======
+	ret = kvm_write_guest_lock(its->dev->kvm, gpa, &val, cte_esz);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -2775,6 +2802,7 @@ static int vgic_its_ctrl(struct kvm *kvm, struct vgic_its *its, u64 attr)
 	return ret;
 }
 
+<<<<<<< HEAD
 /*
  * kvm_arch_allow_write_without_running_vcpu - allow writing guest memory
  * without the running VCPU when dirty ring is enabled.
@@ -2792,6 +2820,8 @@ bool kvm_arch_allow_write_without_running_vcpu(struct kvm *kvm)
 	return dist->table_write_in_progress;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int vgic_its_set_attr(struct kvm_device *dev,
 			     struct kvm_device_attr *attr)
 {

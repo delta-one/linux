@@ -10,7 +10,10 @@
 #include <uapi/linux/utsname.h>
 
 enum uts_proc {
+<<<<<<< HEAD
 	UTS_PROC_ARCH,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	UTS_PROC_OSTYPE,
 	UTS_PROC_OSRELEASE,
 	UTS_PROC_VERSION,

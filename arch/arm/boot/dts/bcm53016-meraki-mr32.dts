@@ -58,7 +58,11 @@
 	pwm-leds {
 		compatible = "pwm-leds";
 
+<<<<<<< HEAD
 		led-0 {
+=======
+		red {
+>>>>>>> b7ba80a49124 (Commit)
 			/* SYS-LED 1 - Tricolor */
 			function = LED_FUNCTION_INDICATOR;
 			color = <LED_COLOR_ID_RED>;
@@ -66,7 +70,11 @@
 			max-brightness = <255>;
 		};
 
+<<<<<<< HEAD
 		led-1 {
+=======
+		green {
+>>>>>>> b7ba80a49124 (Commit)
 			/* SYS-LED 1 - Tricolor */
 			function = LED_FUNCTION_POWER;
 			color = <LED_COLOR_ID_GREEN>;
@@ -74,7 +82,11 @@
 			max-brightness = <255>;
 		};
 
+<<<<<<< HEAD
 		led-2 {
+=======
+		blue {
+>>>>>>> b7ba80a49124 (Commit)
 			/* SYS-LED 1 - Tricolor */
 			function = LED_FUNCTION_INDICATOR;
 			color = <LED_COLOR_ID_BLUE>;

@@ -118,7 +118,11 @@ extern int srp_reconnect_rport(struct srp_rport *rport);
 extern void srp_start_tl_fail_timers(struct srp_rport *rport);
 extern void srp_remove_host(struct Scsi_Host *);
 extern void srp_stop_rport_timers(struct srp_rport *rport);
+<<<<<<< HEAD
 enum scsi_timeout_action srp_timed_out(struct scsi_cmnd *scmd);
+=======
+enum blk_eh_timer_return srp_timed_out(struct scsi_cmnd *scmd);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * srp_chkready() - evaluate the transport layer state before I/O

@@ -75,6 +75,7 @@ required:
   - dma-names
   - "#sound-dai-cells"
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
   - if:
@@ -87,6 +88,19 @@ allOf:
         - rockchip,grf
 
 unevaluatedProperties: false
+=======
+if:
+  properties:
+    compatible:
+      contains:
+        const: rockchip,rk3288-spdif
+
+then:
+  required:
+    - rockchip,grf
+
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

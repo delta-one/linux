@@ -18,9 +18,12 @@
 #define CREATE_TRACE_POINTS
 #include <trace/events/rseq.h>
 
+<<<<<<< HEAD
 /* The original rseq structure size (including padding) is 32 bytes. */
 #define ORIG_RSEQ_SIZE		32
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RSEQ_CS_NO_RESTART_FLAGS (RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT | \
 				  RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL | \
 				  RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE)
@@ -85,6 +88,7 @@
  *   F1. <failure>
  */
 
+<<<<<<< HEAD
 static int rseq_update_cpu_node_id(struct task_struct *t)
 {
 	struct rseq __user *rseq = t->rseq;
@@ -104,6 +108,17 @@ static int rseq_update_cpu_node_id(struct task_struct *t)
 	 * need to be conditionally updated only if
 	 * t->rseq_len != ORIG_RSEQ_SIZE.
 	 */
+=======
+static int rseq_update_cpu_id(struct task_struct *t)
+{
+	u32 cpu_id = raw_smp_processor_id();
+	struct rseq __user *rseq = t->rseq;
+
+	if (!user_write_access_begin(rseq, sizeof(*rseq)))
+		goto efault;
+	unsafe_put_user(cpu_id, &rseq->cpu_id_start, efault_end);
+	unsafe_put_user(cpu_id, &rseq->cpu_id, efault_end);
+>>>>>>> b7ba80a49124 (Commit)
 	user_write_access_end();
 	trace_rseq_update(t);
 	return 0;
@@ -114,10 +129,16 @@ efault:
 	return -EFAULT;
 }
 
+<<<<<<< HEAD
 static int rseq_reset_rseq_cpu_node_id(struct task_struct *t)
 {
 	u32 cpu_id_start = 0, cpu_id = RSEQ_CPU_ID_UNINITIALIZED, node_id = 0,
 	    mm_cid = 0;
+=======
+static int rseq_reset_rseq_cpu_id(struct task_struct *t)
+{
+	u32 cpu_id_start = 0, cpu_id = RSEQ_CPU_ID_UNINITIALIZED;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Reset cpu_id_start to its initial state (0).
@@ -131,6 +152,7 @@ static int rseq_reset_rseq_cpu_node_id(struct task_struct *t)
 	 */
 	if (put_user(cpu_id, &t->rseq->cpu_id))
 		return -EFAULT;
+<<<<<<< HEAD
 	/*
 	 * Reset node_id to its initial state (0).
 	 */
@@ -146,6 +168,8 @@ static int rseq_reset_rseq_cpu_node_id(struct task_struct *t)
 	 * need to be conditionally reset only if
 	 * t->rseq_len != ORIG_RSEQ_SIZE.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -200,6 +224,7 @@ static int rseq_get_rseq_cs(struct task_struct *t, struct rseq_cs *rseq_cs)
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool rseq_warn_flags(const char *str, u32 flags)
 {
 	u32 test_flags;
@@ -215,12 +240,18 @@ static bool rseq_warn_flags(const char *str, u32 flags)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int rseq_need_restart(struct task_struct *t, u32 cs_flags)
 {
 	u32 flags, event_mask;
 	int ret;
 
+<<<<<<< HEAD
 	if (rseq_warn_flags("rseq_cs", cs_flags))
+=======
+	if (WARN_ON_ONCE(cs_flags & RSEQ_CS_NO_RESTART_FLAGS) || cs_flags)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	/* Get thread flags. */
@@ -228,7 +259,11 @@ static int rseq_need_restart(struct task_struct *t, u32 cs_flags)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (rseq_warn_flags("rseq", flags))
+=======
+	if (WARN_ON_ONCE(flags & RSEQ_CS_NO_RESTART_FLAGS) || flags)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	/*
@@ -330,7 +365,11 @@ void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
 		if (unlikely(ret < 0))
 			goto error;
 	}
+<<<<<<< HEAD
 	if (unlikely(rseq_update_cpu_node_id(t)))
+=======
+	if (unlikely(rseq_update_cpu_id(t)))
+>>>>>>> b7ba80a49124 (Commit)
 		goto error;
 	return;
 
@@ -373,16 +412,27 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
 		/* Unregister rseq for current thread. */
 		if (current->rseq != rseq || !current->rseq)
 			return -EINVAL;
+<<<<<<< HEAD
 		if (rseq_len != current->rseq_len)
 			return -EINVAL;
 		if (current->rseq_sig != sig)
 			return -EPERM;
 		ret = rseq_reset_rseq_cpu_node_id(current);
+=======
+		if (rseq_len != sizeof(*rseq))
+			return -EINVAL;
+		if (current->rseq_sig != sig)
+			return -EPERM;
+		ret = rseq_reset_rseq_cpu_id(current);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			return ret;
 		current->rseq = NULL;
 		current->rseq_sig = 0;
+<<<<<<< HEAD
 		current->rseq_len = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
@@ -395,7 +445,11 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
 		 * the provided address differs from the prior
 		 * one.
 		 */
+<<<<<<< HEAD
 		if (current->rseq != rseq || rseq_len != current->rseq_len)
+=======
+		if (current->rseq != rseq || rseq_len != sizeof(*rseq))
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		if (current->rseq_sig != sig)
 			return -EPERM;
@@ -404,6 +458,7 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
 	}
 
 	/*
+<<<<<<< HEAD
 	 * If there was no rseq previously registered, ensure the provided rseq
 	 * is properly aligned, as communcated to user-space through the ELF
 	 * auxiliary vector AT_RSEQ_ALIGN. If rseq_len is the original rseq
@@ -417,11 +472,21 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
 	    (rseq_len == ORIG_RSEQ_SIZE && !IS_ALIGNED((unsigned long)rseq, ORIG_RSEQ_SIZE)) ||
 	    (rseq_len != ORIG_RSEQ_SIZE && (!IS_ALIGNED((unsigned long)rseq, __alignof__(*rseq)) ||
 					    rseq_len < offsetof(struct rseq, end))))
+=======
+	 * If there was no rseq previously registered,
+	 * ensure the provided rseq is properly aligned and valid.
+	 */
+	if (!IS_ALIGNED((unsigned long)rseq, __alignof__(*rseq)) ||
+	    rseq_len != sizeof(*rseq))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	if (!access_ok(rseq, rseq_len))
 		return -EFAULT;
 	current->rseq = rseq;
+<<<<<<< HEAD
 	current->rseq_len = rseq_len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	current->rseq_sig = sig;
 	/*
 	 * If rseq was previously inactive, and has just been

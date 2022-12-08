@@ -84,8 +84,11 @@ enum {
 	/* opcode 0x15 is reserved */
 	IB_OPCODE_SEND_LAST_WITH_INVALIDATE         = 0x16,
 	IB_OPCODE_SEND_ONLY_WITH_INVALIDATE         = 0x17,
+<<<<<<< HEAD
 	IB_OPCODE_FLUSH                             = 0x1C,
 	IB_OPCODE_ATOMIC_WRITE                      = 0x1D,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* real constants follow -- see comment about above IB_OPCODE()
 	   macro for more details */
@@ -114,8 +117,11 @@ enum {
 	IB_OPCODE(RC, FETCH_ADD),
 	IB_OPCODE(RC, SEND_LAST_WITH_INVALIDATE),
 	IB_OPCODE(RC, SEND_ONLY_WITH_INVALIDATE),
+<<<<<<< HEAD
 	IB_OPCODE(RC, FLUSH),
 	IB_OPCODE(RC, ATOMIC_WRITE),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* UC */
 	IB_OPCODE(UC, SEND_FIRST),
@@ -153,7 +159,10 @@ enum {
 	IB_OPCODE(RD, ATOMIC_ACKNOWLEDGE),
 	IB_OPCODE(RD, COMPARE_SWAP),
 	IB_OPCODE(RD, FETCH_ADD),
+<<<<<<< HEAD
 	IB_OPCODE(RD, FLUSH),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* UD */
 	IB_OPCODE(UD, SEND_ONLY),

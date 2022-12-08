@@ -520,7 +520,10 @@ static int tps6586x_regulator_probe(struct platform_device *pdev)
 static struct platform_driver tps6586x_regulator_driver = {
 	.driver	= {
 		.name	= "tps6586x-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe		= tps6586x_regulator_probe,
 };

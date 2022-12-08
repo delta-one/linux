@@ -141,8 +141,13 @@ static void *cgroup_storage_lookup_elem(struct bpf_map *_map, void *key)
 	return &READ_ONCE(storage->buf)->data[0];
 }
 
+<<<<<<< HEAD
 static long cgroup_storage_update_elem(struct bpf_map *map, void *key,
 				       void *value, u64 flags)
+=======
+static int cgroup_storage_update_elem(struct bpf_map *map, void *key,
+				      void *value, u64 flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_cgroup_storage *storage;
 	struct bpf_storage_buffer *new;
@@ -151,7 +156,11 @@ static long cgroup_storage_update_elem(struct bpf_map *map, void *key,
 		return -EINVAL;
 
 	if (unlikely((flags & BPF_F_LOCK) &&
+<<<<<<< HEAD
 		     !btf_record_has_field(map->record, BPF_SPIN_LOCK)))
+=======
+		     !map_value_has_spin_lock(map)))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	storage = cgroup_storage_lookup((struct bpf_cgroup_storage_map *)map,
@@ -333,14 +342,22 @@ static void cgroup_storage_map_free(struct bpf_map *_map)
 	struct list_head *storages = &map->list;
 	struct bpf_cgroup_storage *storage, *stmp;
 
+<<<<<<< HEAD
 	cgroup_lock();
+=======
+	mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	list_for_each_entry_safe(storage, stmp, storages, list_map) {
 		bpf_cgroup_storage_unlink(storage);
 		bpf_cgroup_storage_free(storage);
 	}
 
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	WARN_ON(!RB_EMPTY_ROOT(&map->root));
 	WARN_ON(!list_empty(&map->list));
@@ -348,7 +365,11 @@ static void cgroup_storage_map_free(struct bpf_map *_map)
 	bpf_map_area_free(map);
 }
 
+<<<<<<< HEAD
 static long cgroup_storage_delete_elem(struct bpf_map *map, void *key)
+=======
+static int cgroup_storage_delete_elem(struct bpf_map *map, void *key)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return -EINVAL;
 }
@@ -446,12 +467,15 @@ static void cgroup_storage_seq_show_elem(struct bpf_map *map, void *key,
 	rcu_read_unlock();
 }
 
+<<<<<<< HEAD
 static u64 cgroup_storage_map_usage(const struct bpf_map *map)
 {
 	/* Currently the dynamically allocated elements are not counted. */
 	return sizeof(struct bpf_cgroup_storage_map);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 BTF_ID_LIST_SINGLE(cgroup_storage_map_btf_ids, struct,
 		   bpf_cgroup_storage_map)
 const struct bpf_map_ops cgroup_storage_map_ops = {
@@ -463,7 +487,10 @@ const struct bpf_map_ops cgroup_storage_map_ops = {
 	.map_delete_elem = cgroup_storage_delete_elem,
 	.map_check_btf = cgroup_storage_check_btf,
 	.map_seq_show_elem = cgroup_storage_seq_show_elem,
+<<<<<<< HEAD
 	.map_mem_usage = cgroup_storage_map_usage,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.map_btf_id = &cgroup_storage_map_btf_ids[0],
 };
 

@@ -396,7 +396,11 @@ static bool __fpu_restore_sig(void __user *buf, void __user *buf_fx,
 
 	fpregs = &fpu->fpstate->regs;
 	if (use_xsave() && !fx_only) {
+<<<<<<< HEAD
 		if (copy_sigframe_from_user_to_xstate(tsk, buf_fx))
+=======
+		if (copy_sigframe_from_user_to_xstate(fpu->fpstate, buf_fx))
+>>>>>>> b7ba80a49124 (Commit)
 			return false;
 	} else {
 		if (__copy_from_user(&fpregs->fxsave, buf_fx,

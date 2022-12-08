@@ -100,14 +100,23 @@ static inline bool req_gap_front_merge(struct request *req, struct bio *bio)
  * is defined as 'unsigned int', meantime it has to be aligned to with the
  * logical block size, which is the minimum accepted unit by hardware.
  */
+<<<<<<< HEAD
 static unsigned int bio_allowed_max_sectors(const struct queue_limits *lim)
+=======
+static unsigned int bio_allowed_max_sectors(struct queue_limits *lim)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return round_down(UINT_MAX, lim->logical_block_size) >> SECTOR_SHIFT;
 }
 
+<<<<<<< HEAD
 static struct bio *bio_split_discard(struct bio *bio,
 				     const struct queue_limits *lim,
 				     unsigned *nsegs, struct bio_set *bs)
+=======
+static struct bio *bio_split_discard(struct bio *bio, struct queue_limits *lim,
+		unsigned *nsegs, struct bio_set *bs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int max_discard_sectors, granularity;
 	sector_t tmp;
@@ -147,8 +156,12 @@ static struct bio *bio_split_discard(struct bio *bio,
 }
 
 static struct bio *bio_split_write_zeroes(struct bio *bio,
+<<<<<<< HEAD
 					  const struct queue_limits *lim,
 					  unsigned *nsegs, struct bio_set *bs)
+=======
+		struct queue_limits *lim, unsigned *nsegs, struct bio_set *bs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	*nsegs = 0;
 	if (!lim->max_write_zeroes_sectors)
@@ -167,7 +180,11 @@ static struct bio *bio_split_write_zeroes(struct bio *bio,
  * aligned to a physical block boundary.
  */
 static inline unsigned get_max_io_size(struct bio *bio,
+<<<<<<< HEAD
 				       const struct queue_limits *lim)
+=======
+		struct queue_limits *lim)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned pbs = lim->physical_block_size >> SECTOR_SHIFT;
 	unsigned lbs = lim->logical_block_size >> SECTOR_SHIFT;
@@ -186,6 +203,7 @@ static inline unsigned get_max_io_size(struct bio *bio,
 	return max_sectors & ~(lbs - 1);
 }
 
+<<<<<<< HEAD
 /**
  * get_max_segment_size() - maximum number of bytes to add as a single segment
  * @lim: Request queue limits.
@@ -195,6 +213,9 @@ static inline unsigned get_max_io_size(struct bio *bio,
  * Returns the maximum number of bytes that can be added as a single segment.
  */
 static inline unsigned get_max_segment_size(const struct queue_limits *lim,
+=======
+static inline unsigned get_max_segment_size(struct queue_limits *lim,
+>>>>>>> b7ba80a49124 (Commit)
 		struct page *start_page, unsigned long offset)
 {
 	unsigned long mask = lim->seg_boundary_mask;
@@ -202,10 +223,18 @@ static inline unsigned get_max_segment_size(const struct queue_limits *lim,
 	offset = mask & (page_to_phys(start_page) + offset);
 
 	/*
+<<<<<<< HEAD
 	 * Prevent an overflow if mask = ULONG_MAX and offset = 0 by adding 1
 	 * after having calculated the minimum.
 	 */
 	return min(mask - offset, (unsigned long)lim->max_segment_size - 1) + 1;
+=======
+	 * overflow may be triggered in case of zero page physical address
+	 * on 32bit arch, use queue's max segment size when that happens.
+	 */
+	return min_not_zero(mask - offset + 1,
+			(unsigned long)lim->max_segment_size);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -228,9 +257,15 @@ static inline unsigned get_max_segment_size(const struct queue_limits *lim,
  * *@nsegs segments and *@sectors sectors would make that bio unacceptable for
  * the block driver.
  */
+<<<<<<< HEAD
 static bool bvec_split_segs(const struct queue_limits *lim,
 		const struct bio_vec *bv, unsigned *nsegs, unsigned *bytes,
 		unsigned max_segs, unsigned max_bytes)
+=======
+static bool bvec_split_segs(struct queue_limits *lim, const struct bio_vec *bv,
+		unsigned *nsegs, unsigned *bytes, unsigned max_segs,
+		unsigned max_bytes)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned max_len = min(max_bytes, UINT_MAX) - *bytes;
 	unsigned len = min(bv->bv_len, max_len);
@@ -276,7 +311,11 @@ static bool bvec_split_segs(const struct queue_limits *lim,
  * responsible for ensuring that @bs is only destroyed after processing of the
  * split bio has finished.
  */
+<<<<<<< HEAD
 struct bio *bio_split_rw(struct bio *bio, const struct queue_limits *lim,
+=======
+static struct bio *bio_split_rw(struct bio *bio, struct queue_limits *lim,
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned *segs, struct bio_set *bs, unsigned max_bytes)
 {
 	struct bio_vec bv, bvprv, *bvprvp = NULL;
@@ -309,6 +348,7 @@ struct bio *bio_split_rw(struct bio *bio, const struct queue_limits *lim,
 	*segs = nsegs;
 	return NULL;
 split:
+<<<<<<< HEAD
 	/*
 	 * We can't sanely support splitting for a REQ_NOWAIT bio. End it
 	 * with EAGAIN if splitting is required and return an error pointer.
@@ -319,6 +359,8 @@ split:
 		return ERR_PTR(-EAGAIN);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	*segs = nsegs;
 
 	/*
@@ -336,7 +378,10 @@ split:
 	bio_clear_polled(bio);
 	return bio_split(bio, bytes >> SECTOR_SHIFT, GFP_NOIO, bs);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(bio_split_rw);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * __bio_split_to_limits - split a bio to fit the queue limits
@@ -351,9 +396,14 @@ EXPORT_SYMBOL_GPL(bio_split_rw);
  * The split bio is allocated from @q->bio_split, which is provided by the
  * block layer.
  */
+<<<<<<< HEAD
 struct bio *__bio_split_to_limits(struct bio *bio,
 				  const struct queue_limits *lim,
 				  unsigned int *nr_segs)
+=======
+struct bio *__bio_split_to_limits(struct bio *bio, struct queue_limits *lim,
+		       unsigned int *nr_segs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bio_set *bs = &bio->bi_bdev->bd_disk->bio_split;
 	struct bio *split;
@@ -369,13 +419,20 @@ struct bio *__bio_split_to_limits(struct bio *bio,
 	default:
 		split = bio_split_rw(bio, lim, nr_segs, bs,
 				get_max_io_size(bio, lim) << SECTOR_SHIFT);
+<<<<<<< HEAD
 		if (IS_ERR(split))
 			return NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
 	if (split) {
+<<<<<<< HEAD
 		/* there isn't chance to merge the split bio */
+=======
+		/* there isn't chance to merge the splitted bio */
+>>>>>>> b7ba80a49124 (Commit)
 		split->bi_opf |= REQ_NOMERGE;
 
 		blkcg_bio_issue_init(split);
@@ -400,7 +457,11 @@ struct bio *__bio_split_to_limits(struct bio *bio,
  */
 struct bio *bio_split_to_limits(struct bio *bio)
 {
+<<<<<<< HEAD
 	const struct queue_limits *lim = &bdev_get_queue(bio->bi_bdev)->limits;
+=======
+	struct queue_limits *lim = &bdev_get_queue(bio->bi_bdev)->limits;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int nr_segs;
 
 	if (bio_may_exceed_limits(bio, lim))
@@ -587,6 +648,16 @@ int __blk_rq_map_sg(struct request_queue *q, struct request *rq,
 }
 EXPORT_SYMBOL(__blk_rq_map_sg);
 
+<<<<<<< HEAD
+=======
+static inline unsigned int blk_rq_get_max_segments(struct request *rq)
+{
+	if (req_op(rq) == REQ_OP_DISCARD)
+		return queue_max_discard_segments(rq->q);
+	return queue_max_segments(rq->q);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline unsigned int blk_rq_get_max_sectors(struct request *rq,
 						  sector_t offset)
 {
@@ -751,6 +822,7 @@ void blk_rq_set_mixed_merge(struct request *rq)
 	rq->rq_flags |= RQF_MIXED_MERGE;
 }
 
+<<<<<<< HEAD
 static inline blk_opf_t bio_failfast(const struct bio *bio)
 {
 	if (bio->bi_opf & REQ_RAHEAD)
@@ -778,6 +850,8 @@ static inline void blk_update_mixed_merge(struct request *req,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void blk_account_io_merge_request(struct request *req)
 {
 	if (blk_do_io_stat(req)) {
@@ -867,8 +941,11 @@ static struct request *attempt_merge(struct request_queue *q,
 	if (!blk_discard_mergable(req))
 		elv_merge_requests(q, req, next);
 
+<<<<<<< HEAD
 	blk_crypto_rq_put_keyslot(next);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * 'next' is going away, so update stats accordingly
 	 */
@@ -977,7 +1054,11 @@ enum bio_merge_status {
 static enum bio_merge_status bio_attempt_back_merge(struct request *req,
 		struct bio *bio, unsigned int nr_segs)
 {
+<<<<<<< HEAD
 	const blk_opf_t ff = bio_failfast(bio);
+=======
+	const blk_opf_t ff = bio->bi_opf & REQ_FAILFAST_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!ll_back_merge_fn(req, bio, nr_segs))
 		return BIO_MERGE_FAILED;
@@ -988,8 +1069,11 @@ static enum bio_merge_status bio_attempt_back_merge(struct request *req,
 	if ((req->cmd_flags & REQ_FAILFAST_MASK) != ff)
 		blk_rq_set_mixed_merge(req);
 
+<<<<<<< HEAD
 	blk_update_mixed_merge(req, bio, false);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	req->biotail->bi_next = bio;
 	req->biotail = bio;
 	req->__data_len += bio->bi_iter.bi_size;
@@ -1003,7 +1087,11 @@ static enum bio_merge_status bio_attempt_back_merge(struct request *req,
 static enum bio_merge_status bio_attempt_front_merge(struct request *req,
 		struct bio *bio, unsigned int nr_segs)
 {
+<<<<<<< HEAD
 	const blk_opf_t ff = bio_failfast(bio);
+=======
+	const blk_opf_t ff = bio->bi_opf & REQ_FAILFAST_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!ll_front_merge_fn(req, bio, nr_segs))
 		return BIO_MERGE_FAILED;
@@ -1014,8 +1102,11 @@ static enum bio_merge_status bio_attempt_front_merge(struct request *req,
 	if ((req->cmd_flags & REQ_FAILFAST_MASK) != ff)
 		blk_rq_set_mixed_merge(req);
 
+<<<<<<< HEAD
 	blk_update_mixed_merge(req, bio, true);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bio->bi_next = req->bio;
 	req->bio = bio;
 

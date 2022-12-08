@@ -242,13 +242,18 @@ group and can access them as follows::
 VFIO User API
 -------------------------------------------------------------------------------
 
+<<<<<<< HEAD
 Please see include/uapi/linux/vfio.h for complete API documentation.
+=======
+Please see include/linux/vfio.h for complete API documentation.
+>>>>>>> b7ba80a49124 (Commit)
 
 VFIO bus driver API
 -------------------------------------------------------------------------------
 
 VFIO bus drivers, such as vfio-pci make use of only a few interfaces
 into VFIO core.  When devices are bound and unbound to the driver,
+<<<<<<< HEAD
 Following interfaces are called when devices are bound to and
 unbound from the driver::
 
@@ -264,6 +269,21 @@ vfio_device::
 	vfio_alloc_device(dev_struct, member, dev, ops);
 	void vfio_put_device(struct vfio_device *device);
 
+=======
+the driver should call vfio_register_group_dev() and
+vfio_unregister_group_dev() respectively::
+
+	void vfio_init_group_dev(struct vfio_device *device,
+				struct device *dev,
+				const struct vfio_device_ops *ops);
+	void vfio_uninit_group_dev(struct vfio_device *device);
+	int vfio_register_group_dev(struct vfio_device *device);
+	void vfio_unregister_group_dev(struct vfio_device *device);
+
+The driver should embed the vfio_device in its own structure and call
+vfio_init_group_dev() to pre-configure it before going to registration
+and call vfio_uninit_group_dev() after completing the un-registration.
+>>>>>>> b7ba80a49124 (Commit)
 vfio_register_group_dev() indicates to the core to begin tracking the
 iommu_group of the specified dev and register the dev as owned by a VFIO bus
 driver. Once vfio_register_group_dev() returns it is possible for userspace to
@@ -272,6 +292,7 @@ ready before calling it. The driver provides an ops structure for callbacks
 similar to a file operations structure::
 
 	struct vfio_device_ops {
+<<<<<<< HEAD
 		char	*name;
 		int	(*init)(struct vfio_device *vdev);
 		void	(*release)(struct vfio_device *vdev);
@@ -330,6 +351,30 @@ container_of().
 	  use of the vfio page pinning interface must implement this callback in
 	  order to unpin pages within the dma_unmap range. Drivers must tolerate
 	  this callback even before calls to open_device().
+=======
+		int	(*open)(struct vfio_device *vdev);
+		void	(*release)(struct vfio_device *vdev);
+		ssize_t	(*read)(struct vfio_device *vdev, char __user *buf,
+				size_t count, loff_t *ppos);
+		ssize_t	(*write)(struct vfio_device *vdev,
+				 const char __user *buf,
+				 size_t size, loff_t *ppos);
+		long	(*ioctl)(struct vfio_device *vdev, unsigned int cmd,
+				 unsigned long arg);
+		int	(*mmap)(struct vfio_device *vdev,
+				struct vm_area_struct *vma);
+	};
+
+Each function is passed the vdev that was originally registered
+in the vfio_register_group_dev() call above.  This allows the bus driver
+to obtain its private data using container_of().  The open/release
+callbacks are issued when a new file descriptor is created for a
+device (via VFIO_GROUP_GET_DEVICE_FD).  The ioctl interface provides
+a direct pass through for VFIO_DEVICE_* ioctls.  The read/write/mmap
+interfaces implement the device region access defined by the device's
+own VFIO_DEVICE_GET_REGION_INFO ioctl.
+
+>>>>>>> b7ba80a49124 (Commit)
 
 PPC64 sPAPR implementation note
 -------------------------------

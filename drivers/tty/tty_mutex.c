@@ -14,6 +14,11 @@
 
 void tty_lock(struct tty_struct *tty)
 {
+<<<<<<< HEAD
+=======
+	if (WARN(tty->magic != TTY_MAGIC, "L Bad %p\n", tty))
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 	tty_kref_get(tty);
 	mutex_lock(&tty->legacy_mutex);
 }
@@ -23,6 +28,11 @@ int tty_lock_interruptible(struct tty_struct *tty)
 {
 	int ret;
 
+<<<<<<< HEAD
+=======
+	if (WARN(tty->magic != TTY_MAGIC, "L Bad %p\n", tty))
+		return -EIO;
+>>>>>>> b7ba80a49124 (Commit)
 	tty_kref_get(tty);
 	ret = mutex_lock_interruptible(&tty->legacy_mutex);
 	if (ret)
@@ -32,6 +42,11 @@ int tty_lock_interruptible(struct tty_struct *tty)
 
 void tty_unlock(struct tty_struct *tty)
 {
+<<<<<<< HEAD
+=======
+	if (WARN(tty->magic != TTY_MAGIC, "U Bad %p\n", tty))
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&tty->legacy_mutex);
 	tty_kref_put(tty);
 }

@@ -2552,8 +2552,11 @@ xlog_recover_process_intents(
 	for (lip = xfs_trans_ail_cursor_first(ailp, &cur, 0);
 	     lip != NULL;
 	     lip = xfs_trans_ail_cursor_next(ailp, &cur)) {
+<<<<<<< HEAD
 		const struct xfs_item_ops	*ops;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (!xlog_item_is_intent(lip))
 			break;
 
@@ -2569,6 +2572,7 @@ xlog_recover_process_intents(
 		 * deferred ops, you /must/ attach them to the capture list in
 		 * the recover routine or else those subsequent intents will be
 		 * replayed in the wrong order!
+<<<<<<< HEAD
 		 *
 		 * The recovery function can free the log item, so we must not
 		 * access lip after it returns.
@@ -2580,6 +2584,15 @@ xlog_recover_process_intents(
 		if (error) {
 			trace_xlog_intent_recovery_failed(log->l_mp, error,
 					ops->iop_recover);
+=======
+		 */
+		spin_unlock(&ailp->ail_lock);
+		error = lip->li_ops->iop_recover(lip, &capture_list);
+		spin_lock(&ailp->ail_lock);
+		if (error) {
+			trace_xlog_intent_recovery_failed(log->l_mp, error,
+					lip->li_ops->iop_recover);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 	}

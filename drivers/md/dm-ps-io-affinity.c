@@ -108,7 +108,11 @@ free_pi:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int ioa_create(struct path_selector *ps, unsigned int argc, char **argv)
+=======
+static int ioa_create(struct path_selector *ps, unsigned argc, char **argv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct selector *s;
 
@@ -138,7 +142,11 @@ free_selector:
 static void ioa_destroy(struct path_selector *ps)
 {
 	struct selector *s = ps->context;
+<<<<<<< HEAD
 	unsigned int cpu;
+=======
+	unsigned cpu;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for_each_cpu(cpu, s->path_mask)
 		ioa_free_path(s, cpu);
@@ -162,7 +170,11 @@ static int ioa_status(struct path_selector *ps, struct dm_path *path,
 		return sz;
 	}
 
+<<<<<<< HEAD
 	switch (type) {
+=======
+	switch(type) {
+>>>>>>> b7ba80a49124 (Commit)
 	case STATUSTYPE_INFO:
 		DMEMIT("%d ", atomic_read(&s->map_misses));
 		break;

@@ -13,9 +13,12 @@ struct idle_inject_device;
 
 struct idle_inject_device *idle_inject_register(struct cpumask *cpumask);
 
+<<<<<<< HEAD
 struct idle_inject_device *idle_inject_register_full(struct cpumask *cpumask,
 						     bool (*update)(void));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void idle_inject_unregister(struct idle_inject_device *ii_dev);
 
 int idle_inject_start(struct idle_inject_device *ii_dev);

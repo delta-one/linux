@@ -2,8 +2,11 @@
 
 /* This dtsi file describes parts common for Asus T30 devices with a LVDS panel. */
 
+<<<<<<< HEAD
 #include <dt-bindings/gpio/tegra-gpio.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 / {
 	host1x@50000000 {
 		lcd: dc@54200000 {

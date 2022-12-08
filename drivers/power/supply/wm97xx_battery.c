@@ -271,5 +271,9 @@ static struct platform_driver wm97xx_bat_driver = {
 
 module_platform_driver(wm97xx_bat_driver);
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("Marek Vasut <marek.vasut@gmail.com>");
 MODULE_DESCRIPTION("WM97xx battery driver");

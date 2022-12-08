@@ -29,7 +29,10 @@
 
 #include <net/netlink.h>
 #include <net/netns/generic.h>
+<<<<<<< HEAD
 #include <linux/netfilter.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/netfilter/nfnetlink.h>
 
 MODULE_LICENSE("GPL");
@@ -295,7 +298,10 @@ replay:
 			nfnl_lock(subsys_id);
 			if (nfnl_dereference_protected(subsys_id) != ss ||
 			    nfnetlink_find_client(type, ss) != nc) {
+<<<<<<< HEAD
 				nfnl_unlock(subsys_id);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				err = -EAGAIN;
 				break;
 			}
@@ -686,12 +692,20 @@ static void nfnetlink_bind_event(struct net *net, unsigned int group)
 	group_bit = (1 << group);
 
 	spin_lock(&nfnl_grp_active_lock);
+<<<<<<< HEAD
 	v = READ_ONCE(nf_ctnetlink_has_listener);
+=======
+	v = READ_ONCE(net->ct.ctnetlink_has_listener);
+>>>>>>> b7ba80a49124 (Commit)
 	if ((v & group_bit) == 0) {
 		v |= group_bit;
 
 		/* read concurrently without nfnl_grp_active_lock held. */
+<<<<<<< HEAD
 		WRITE_ONCE(nf_ctnetlink_has_listener, v);
+=======
+		WRITE_ONCE(net->ct.ctnetlink_has_listener, v);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	spin_unlock(&nfnl_grp_active_lock);
@@ -745,12 +759,20 @@ static void nfnetlink_unbind(struct net *net, int group)
 
 	spin_lock(&nfnl_grp_active_lock);
 	if (!nfnetlink_has_listeners(net, group)) {
+<<<<<<< HEAD
 		u8 v = READ_ONCE(nf_ctnetlink_has_listener);
+=======
+		u8 v = READ_ONCE(net->ct.ctnetlink_has_listener);
+>>>>>>> b7ba80a49124 (Commit)
 
 		v &= ~group_bit;
 
 		/* read concurrently without nfnl_grp_active_lock held. */
+<<<<<<< HEAD
 		WRITE_ONCE(nf_ctnetlink_has_listener, v);
+=======
+		WRITE_ONCE(net->ct.ctnetlink_has_listener, v);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	spin_unlock(&nfnl_grp_active_lock);
 #endif

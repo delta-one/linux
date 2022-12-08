@@ -11,6 +11,7 @@ are enabled by XCR0 as well, but the first use of related instruction is
 trapped by the kernel because by default the required large XSTATE buffers
 are not allocated automatically.
 
+<<<<<<< HEAD
 The purpose for dynamic features
 --------------------------------
 
@@ -27,6 +28,8 @@ like AMX. Instead of universally requiring larger stack, with the dynamic
 enabling, the kernel can enforce userspace applications to have
 properly-sized altstacks.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Using dynamically enabled XSTATE features in user space applications
 --------------------------------------------------------------------
 
@@ -80,6 +83,7 @@ the handler allocates a larger xstate buffer for the task so the large
 state can be context switched. In the unlikely cases that the allocation
 fails, the kernel sends SIGSEGV.
 
+<<<<<<< HEAD
 AMX TILE_DATA enabling example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -135,6 +139,8 @@ TILE_DATA dynamically:
 
 Note this example does not include the sigaltstack preparation.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Dynamic features in signal frames
 ---------------------------------
 
@@ -143,6 +149,7 @@ entry if the feature is in its initial configuration.  This differs from
 non-dynamic features which are always written regardless of their
 configuration.  Signal handlers can examine the XSAVE buffer's XSTATE_BV
 field to determine if a features was written.
+<<<<<<< HEAD
 
 Dynamic features for virtual machines
 -------------------------------------
@@ -172,3 +179,5 @@ are extended to control the guest permission:
 
 Note that some VMMs may have already established a set of supported state
 components. These options are not presumed to support any particular VMM.
+=======
+>>>>>>> b7ba80a49124 (Commit)

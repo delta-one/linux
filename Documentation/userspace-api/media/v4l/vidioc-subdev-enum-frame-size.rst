@@ -31,6 +31,7 @@ Arguments
 Description
 ===========
 
+<<<<<<< HEAD
 This ioctl allows applications to access the enumeration of frame sizes
 supported by a sub-device on the specified pad
 for the specified media bus format.
@@ -55,6 +56,20 @@ A successful call will return with minimum and maximum frame sizes filled in.
 Repeat with increasing ``index`` until ``EINVAL`` is received.
 ``EINVAL`` means that either no more entries are available in the enumeration,
 or that an input parameter was invalid.
+=======
+This ioctl allows applications to enumerate all frame sizes supported by
+a sub-device on the given pad for the given media bus format. Supported
+formats can be retrieved with the
+:ref:`VIDIOC_SUBDEV_ENUM_MBUS_CODE`
+ioctl.
+
+To enumerate frame sizes applications initialize the ``pad``, ``which``
+, ``code`` and ``index`` fields of the struct
+:c:type:`v4l2_subdev_mbus_code_enum` and
+call the :ref:`VIDIOC_SUBDEV_ENUM_FRAME_SIZE` ioctl with a pointer to the
+structure. Drivers fill the minimum and maximum frame sizes or return an
+EINVAL error code if one of the input parameters is invalid.
+>>>>>>> b7ba80a49124 (Commit)
 
 Sub-devices that only support discrete frame sizes (such as most
 sensors) will return one or more frame sizes with identical minimum and
@@ -84,6 +99,7 @@ information about try formats.
 
     * - __u32
       - ``index``
+<<<<<<< HEAD
       - Index of the frame size in the enumeration belonging to the given pad
 	and format. Filled in by the application.
     * - __u32
@@ -106,15 +122,41 @@ information about try formats.
     * - __u32
       - ``max_height``
       - Maximum frame height, in pixels. Filled in by the driver.
+=======
+      - Number of the format in the enumeration, set by the application.
+    * - __u32
+      - ``pad``
+      - Pad number as reported by the media controller API.
+    * - __u32
+      - ``code``
+      - The media bus format code, as defined in
+	:ref:`v4l2-mbus-format`.
+    * - __u32
+      - ``min_width``
+      - Minimum frame width, in pixels.
+    * - __u32
+      - ``max_width``
+      - Maximum frame width, in pixels.
+    * - __u32
+      - ``min_height``
+      - Minimum frame height, in pixels.
+    * - __u32
+      - ``max_height``
+      - Maximum frame height, in pixels.
+>>>>>>> b7ba80a49124 (Commit)
     * - __u32
       - ``which``
       - Frame sizes to be enumerated, from enum
 	:ref:`v4l2_subdev_format_whence <v4l2-subdev-format-whence>`.
     * - __u32
+<<<<<<< HEAD
       - ``stream``
       - Stream identifier.
     * - __u32
       - ``reserved``\ [7]
+=======
+      - ``reserved``\ [8]
+>>>>>>> b7ba80a49124 (Commit)
       - Reserved for future extensions. Applications and drivers must set
 	the array to zero.
 

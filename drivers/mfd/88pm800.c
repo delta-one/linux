@@ -398,8 +398,14 @@ static struct regmap_irq_chip pm800_irq_chip = {
 
 	.num_regs = 4,
 	.status_base = PM800_INT_STATUS1,
+<<<<<<< HEAD
 	.unmask_base = PM800_INT_ENA_1,
 	.ack_base = PM800_INT_STATUS1,
+=======
+	.mask_base = PM800_INT_ENA_1,
+	.ack_base = PM800_INT_STATUS1,
+	.mask_invert = 1,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int pm800_pages_init(struct pm80x_chip *chip)
@@ -527,7 +533,12 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int pm800_probe(struct i2c_client *client)
+=======
+static int pm800_probe(struct i2c_client *client,
+				 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret = 0;
 	struct pm80x_chip *chip;
@@ -595,9 +606,15 @@ static void pm800_remove(struct i2c_client *client)
 static struct i2c_driver pm800_driver = {
 	.driver = {
 		.name = "88PM800",
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&pm80x_pm_ops),
 		},
 	.probe_new = pm800_probe,
+=======
+		.pm = &pm80x_pm_ops,
+		},
+	.probe = pm800_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = pm800_remove,
 	.id_table = pm80x_id_table,
 };

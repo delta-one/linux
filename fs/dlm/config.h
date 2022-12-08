@@ -37,6 +37,12 @@ struct dlm_config_info {
 	int ci_log_info;
 	int ci_protocol;
 	int ci_mark;
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_DLM_DEPRECATED_API
+	int ci_timewarn_cs;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	int ci_new_rsb_count;
 	int ci_recover_callbacks;
 	char ci_cluster_name[DLM_LOCKSPACE_LEN];

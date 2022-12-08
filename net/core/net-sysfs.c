@@ -59,7 +59,11 @@ static ssize_t netdev_show(const struct device *dev,
 #define NETDEVICE_SHOW(field, format_string)				\
 static ssize_t format_##field(const struct net_device *dev, char *buf)	\
 {									\
+<<<<<<< HEAD
 	return sysfs_emit(buf, format_string, dev->field);		\
+=======
+	return sprintf(buf, format_string, dev->field);			\
+>>>>>>> b7ba80a49124 (Commit)
 }									\
 static ssize_t field##_show(struct device *dev,				\
 			    struct device_attribute *attr, char *buf)	\
@@ -118,13 +122,21 @@ static ssize_t iflink_show(struct device *dev, struct device_attribute *attr,
 {
 	struct net_device *ndev = to_net_dev(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, fmt_dec, dev_get_iflink(ndev));
+=======
+	return sprintf(buf, fmt_dec, dev_get_iflink(ndev));
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(iflink);
 
 static ssize_t format_name_assign_type(const struct net_device *dev, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, fmt_dec, dev->name_assign_type);
+=======
+	return sprintf(buf, fmt_dec, dev->name_assign_type);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t name_assign_type_show(struct device *dev,
@@ -194,7 +206,11 @@ static ssize_t carrier_show(struct device *dev,
 	struct net_device *netdev = to_net_dev(dev);
 
 	if (netif_running(netdev))
+<<<<<<< HEAD
 		return sysfs_emit(buf, fmt_dec, !!netif_carrier_ok(netdev));
+=======
+		return sprintf(buf, fmt_dec, !!netif_carrier_ok(netdev));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return -EINVAL;
 }
@@ -219,7 +235,11 @@ static ssize_t speed_show(struct device *dev,
 		struct ethtool_link_ksettings cmd;
 
 		if (!__ethtool_get_link_ksettings(netdev, &cmd))
+<<<<<<< HEAD
 			ret = sysfs_emit(buf, fmt_dec, cmd.base.speed);
+=======
+			ret = sprintf(buf, fmt_dec, cmd.base.speed);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	rtnl_unlock();
 	return ret;
@@ -258,7 +278,11 @@ static ssize_t duplex_show(struct device *dev,
 				duplex = "unknown";
 				break;
 			}
+<<<<<<< HEAD
 			ret = sysfs_emit(buf, "%s\n", duplex);
+=======
+			ret = sprintf(buf, "%s\n", duplex);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 	rtnl_unlock();
@@ -272,7 +296,11 @@ static ssize_t testing_show(struct device *dev,
 	struct net_device *netdev = to_net_dev(dev);
 
 	if (netif_running(netdev))
+<<<<<<< HEAD
 		return sysfs_emit(buf, fmt_dec, !!netif_testing(netdev));
+=======
+		return sprintf(buf, fmt_dec, !!netif_testing(netdev));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return -EINVAL;
 }
@@ -284,7 +312,11 @@ static ssize_t dormant_show(struct device *dev,
 	struct net_device *netdev = to_net_dev(dev);
 
 	if (netif_running(netdev))
+<<<<<<< HEAD
 		return sysfs_emit(buf, fmt_dec, !!netif_dormant(netdev));
+=======
+		return sprintf(buf, fmt_dec, !!netif_dormant(netdev));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return -EINVAL;
 }
@@ -315,7 +347,11 @@ static ssize_t operstate_show(struct device *dev,
 	if (operstate >= ARRAY_SIZE(operstates))
 		return -EINVAL; /* should not happen */
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", operstates[operstate]);
+=======
+	return sprintf(buf, "%s\n", operstates[operstate]);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(operstate);
 
@@ -325,9 +361,15 @@ static ssize_t carrier_changes_show(struct device *dev,
 {
 	struct net_device *netdev = to_net_dev(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, fmt_dec,
 			  atomic_read(&netdev->carrier_up_count) +
 			  atomic_read(&netdev->carrier_down_count));
+=======
+	return sprintf(buf, fmt_dec,
+		       atomic_read(&netdev->carrier_up_count) +
+		       atomic_read(&netdev->carrier_down_count));
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(carrier_changes);
 
@@ -337,7 +379,11 @@ static ssize_t carrier_up_count_show(struct device *dev,
 {
 	struct net_device *netdev = to_net_dev(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, fmt_dec, atomic_read(&netdev->carrier_up_count));
+=======
+	return sprintf(buf, fmt_dec, atomic_read(&netdev->carrier_up_count));
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(carrier_up_count);
 
@@ -347,7 +393,11 @@ static ssize_t carrier_down_count_show(struct device *dev,
 {
 	struct net_device *netdev = to_net_dev(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, fmt_dec, atomic_read(&netdev->carrier_down_count));
+=======
+	return sprintf(buf, fmt_dec, atomic_read(&netdev->carrier_down_count));
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(carrier_down_count);
 
@@ -462,7 +512,11 @@ static ssize_t ifalias_show(struct device *dev,
 
 	ret = dev_get_alias(netdev, tmp, sizeof(tmp));
 	if (ret > 0)
+<<<<<<< HEAD
 		ret = sysfs_emit(buf, "%s\n", tmp);
+=======
+		ret = sprintf(buf, "%s\n", tmp);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 static DEVICE_ATTR_RW(ifalias);
@@ -514,7 +568,11 @@ static ssize_t phys_port_id_show(struct device *dev,
 
 		ret = dev_get_phys_port_id(netdev, &ppid);
 		if (!ret)
+<<<<<<< HEAD
 			ret = sysfs_emit(buf, "%*phN\n", ppid.id_len, ppid.id);
+=======
+			ret = sprintf(buf, "%*phN\n", ppid.id_len, ppid.id);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	rtnl_unlock();
 
@@ -532,7 +590,11 @@ static ssize_t phys_port_name_show(struct device *dev,
 	 * returning early without hitting the trylock/restart below.
 	 */
 	if (!netdev->netdev_ops->ndo_get_phys_port_name &&
+<<<<<<< HEAD
 	    !netdev->devlink_port)
+=======
+	    !netdev->netdev_ops->ndo_get_devlink_port)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOPNOTSUPP;
 
 	if (!rtnl_trylock())
@@ -543,7 +605,11 @@ static ssize_t phys_port_name_show(struct device *dev,
 
 		ret = dev_get_phys_port_name(netdev, name, sizeof(name));
 		if (!ret)
+<<<<<<< HEAD
 			ret = sysfs_emit(buf, "%s\n", name);
+=======
+			ret = sprintf(buf, "%s\n", name);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	rtnl_unlock();
 
@@ -562,7 +628,11 @@ static ssize_t phys_switch_id_show(struct device *dev,
 	 * because recurse is false when calling dev_get_port_parent_id.
 	 */
 	if (!netdev->netdev_ops->ndo_get_port_parent_id &&
+<<<<<<< HEAD
 	    !netdev->devlink_port)
+=======
+	    !netdev->netdev_ops->ndo_get_devlink_port)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOPNOTSUPP;
 
 	if (!rtnl_trylock())
@@ -573,7 +643,11 @@ static ssize_t phys_switch_id_show(struct device *dev,
 
 		ret = dev_get_port_parent_id(netdev, &ppid, false);
 		if (!ret)
+<<<<<<< HEAD
 			ret = sysfs_emit(buf, "%*phN\n", ppid.id_len, ppid.id);
+=======
+			ret = sprintf(buf, "%*phN\n", ppid.id_len, ppid.id);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	rtnl_unlock();
 
@@ -591,7 +665,11 @@ static ssize_t threaded_show(struct device *dev,
 		return restart_syscall();
 
 	if (dev_isalive(netdev))
+<<<<<<< HEAD
 		ret = sysfs_emit(buf, fmt_dec, netdev->threaded);
+=======
+		ret = sprintf(buf, fmt_dec, netdev->threaded);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rtnl_unlock();
 	return ret;
@@ -673,7 +751,11 @@ static ssize_t netstat_show(const struct device *d,
 		struct rtnl_link_stats64 temp;
 		const struct rtnl_link_stats64 *stats = dev_get_stats(dev, &temp);
 
+<<<<<<< HEAD
 		ret = sysfs_emit(buf, fmt_u64, *(u64 *)(((u8 *)stats) + offset));
+=======
+		ret = sprintf(buf, fmt_u64, *(u64 *)(((u8 *)stats) + offset));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	read_unlock(&dev_base_lock);
 	return ret;
@@ -824,25 +906,67 @@ static ssize_t show_rps_map(struct netdev_rx_queue *queue, char *buf)
 		for (i = 0; i < map->len; i++)
 			cpumask_set_cpu(map->cpus[i], mask);
 
+<<<<<<< HEAD
 	len = sysfs_emit(buf, "%*pb\n", cpumask_pr_args(mask));
+=======
+	len = snprintf(buf, PAGE_SIZE, "%*pb\n", cpumask_pr_args(mask));
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_read_unlock();
 	free_cpumask_var(mask);
 
 	return len < PAGE_SIZE ? len : -EINVAL;
 }
 
+<<<<<<< HEAD
 static int netdev_rx_queue_set_rps_mask(struct netdev_rx_queue *queue,
 					cpumask_var_t mask)
 {
 	static DEFINE_MUTEX(rps_map_mutex);
 	struct rps_map *old_map, *map;
 	int cpu, i;
+=======
+static ssize_t store_rps_map(struct netdev_rx_queue *queue,
+			     const char *buf, size_t len)
+{
+	struct rps_map *old_map, *map;
+	cpumask_var_t mask;
+	int err, cpu, i;
+	static DEFINE_MUTEX(rps_map_mutex);
+
+	if (!capable(CAP_NET_ADMIN))
+		return -EPERM;
+
+	if (!alloc_cpumask_var(&mask, GFP_KERNEL))
+		return -ENOMEM;
+
+	err = bitmap_parse(buf, len, cpumask_bits(mask), nr_cpumask_bits);
+	if (err) {
+		free_cpumask_var(mask);
+		return err;
+	}
+
+	if (!cpumask_empty(mask)) {
+		cpumask_and(mask, mask, housekeeping_cpumask(HK_TYPE_DOMAIN));
+		cpumask_and(mask, mask, housekeeping_cpumask(HK_TYPE_WQ));
+		if (cpumask_empty(mask)) {
+			free_cpumask_var(mask);
+			return -EINVAL;
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	map = kzalloc(max_t(unsigned int,
 			    RPS_MAP_SIZE(cpumask_weight(mask)), L1_CACHE_BYTES),
 		      GFP_KERNEL);
+<<<<<<< HEAD
 	if (!map)
 		return -ENOMEM;
+=======
+	if (!map) {
+		free_cpumask_var(mask);
+		return -ENOMEM;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	i = 0;
 	for_each_cpu_and(cpu, mask, cpu_online_mask)
@@ -869,6 +993,7 @@ static int netdev_rx_queue_set_rps_mask(struct netdev_rx_queue *queue,
 
 	if (old_map)
 		kfree_rcu(old_map, rcu);
+<<<<<<< HEAD
 	return 0;
 }
 
@@ -908,6 +1033,11 @@ static ssize_t store_rps_map(struct netdev_rx_queue *queue,
 out:
 	free_cpumask_var(mask);
 	return err ? : len;
+=======
+
+	free_cpumask_var(mask);
+	return len;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t show_rps_dev_flow_table_cnt(struct netdev_rx_queue *queue,
@@ -922,7 +1052,11 @@ static ssize_t show_rps_dev_flow_table_cnt(struct netdev_rx_queue *queue,
 		val = (unsigned long)flow_table->mask + 1;
 	rcu_read_unlock();
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%lu\n", val);
+=======
+	return sprintf(buf, "%lu\n", val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void rps_dev_flow_table_release(struct rcu_head *rcu)
@@ -1032,7 +1166,11 @@ static void rx_queue_release(struct kobject *kobj)
 	netdev_put(queue->dev, &queue->dev_tracker);
 }
 
+<<<<<<< HEAD
 static const void *rx_queue_namespace(const struct kobject *kobj)
+=======
+static const void *rx_queue_namespace(struct kobject *kobj)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct netdev_rx_queue *queue = to_rx_queue(kobj);
 	struct device *dev = &queue->dev->dev;
@@ -1044,7 +1182,11 @@ static const void *rx_queue_namespace(const struct kobject *kobj)
 	return ns;
 }
 
+<<<<<<< HEAD
 static void rx_queue_get_ownership(const struct kobject *kobj,
+=======
+static void rx_queue_get_ownership(struct kobject *kobj,
+>>>>>>> b7ba80a49124 (Commit)
 				   kuid_t *uid, kgid_t *gid)
 {
 	const struct net *net = rx_queue_namespace(kobj);
@@ -1052,7 +1194,11 @@ static void rx_queue_get_ownership(const struct kobject *kobj,
 	net_ns_get_ownership(net, uid, gid);
 }
 
+<<<<<<< HEAD
 static const struct kobj_type rx_queue_ktype = {
+=======
+static struct kobj_type rx_queue_ktype __ro_after_init = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops = &rx_queue_sysfs_ops,
 	.release = rx_queue_release,
 	.default_groups = rx_queue_default_groups,
@@ -1060,6 +1206,7 @@ static const struct kobj_type rx_queue_ktype = {
 	.get_ownership = rx_queue_get_ownership,
 };
 
+<<<<<<< HEAD
 static int rx_queue_default_mask(struct net_device *dev,
 				 struct netdev_rx_queue *queue)
 {
@@ -1072,6 +1219,8 @@ static int rx_queue_default_mask(struct net_device *dev,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int rx_queue_add_kobject(struct net_device *dev, int index)
 {
 	struct netdev_rx_queue *queue = dev->_rx + index;
@@ -1095,10 +1244,13 @@ static int rx_queue_add_kobject(struct net_device *dev, int index)
 			goto err;
 	}
 
+<<<<<<< HEAD
 	error = rx_queue_default_mask(dev, queue);
 	if (error)
 		goto err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kobject_uevent(kobj, KOBJ_ADD);
 
 	return error;
@@ -1236,7 +1388,11 @@ static ssize_t tx_timeout_show(struct netdev_queue *queue, char *buf)
 {
 	unsigned long trans_timeout = atomic_long_read(&queue->trans_timeout);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, fmt_ulong, trans_timeout);
+=======
+	return sprintf(buf, fmt_ulong, trans_timeout);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static unsigned int get_netdev_queue_index(struct netdev_queue *queue)
@@ -1283,15 +1439,24 @@ static ssize_t traffic_class_show(struct netdev_queue *queue,
 	 * belongs to the root device it will be reported with just the
 	 * traffic class, so just "0" for TC 0 for example.
 	 */
+<<<<<<< HEAD
 	return num_tc < 0 ? sysfs_emit(buf, "%d%d\n", tc, num_tc) :
 			    sysfs_emit(buf, "%d\n", tc);
+=======
+	return num_tc < 0 ? sprintf(buf, "%d%d\n", tc, num_tc) :
+			    sprintf(buf, "%d\n", tc);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_XPS
 static ssize_t tx_maxrate_show(struct netdev_queue *queue,
 			       char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%lu\n", queue->tx_maxrate);
+=======
+	return sprintf(buf, "%lu\n", queue->tx_maxrate);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t tx_maxrate_store(struct netdev_queue *queue,
@@ -1345,7 +1510,11 @@ static struct netdev_queue_attribute queue_traffic_class __ro_after_init
  */
 static ssize_t bql_show(char *buf, unsigned int value)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", value);
+=======
+	return sprintf(buf, "%u\n", value);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t bql_set(const char *buf, const size_t count,
@@ -1374,7 +1543,11 @@ static ssize_t bql_show_hold_time(struct netdev_queue *queue,
 {
 	struct dql *dql = &queue->dql;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", jiffies_to_msecs(dql->slack_hold_time));
+=======
+	return sprintf(buf, "%u\n", jiffies_to_msecs(dql->slack_hold_time));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t bql_set_hold_time(struct netdev_queue *queue,
@@ -1402,7 +1575,11 @@ static ssize_t bql_show_inflight(struct netdev_queue *queue,
 {
 	struct dql *dql = &queue->dql;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", dql->num_queued - dql->num_completed);
+=======
+	return sprintf(buf, "%u\n", dql->num_queued - dql->num_completed);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct netdev_queue_attribute bql_inflight_attribute __ro_after_init =
@@ -1651,7 +1828,11 @@ static void netdev_queue_release(struct kobject *kobj)
 	netdev_put(queue->dev, &queue->dev_tracker);
 }
 
+<<<<<<< HEAD
 static const void *netdev_queue_namespace(const struct kobject *kobj)
+=======
+static const void *netdev_queue_namespace(struct kobject *kobj)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct netdev_queue *queue = to_netdev_queue(kobj);
 	struct device *dev = &queue->dev->dev;
@@ -1663,7 +1844,11 @@ static const void *netdev_queue_namespace(const struct kobject *kobj)
 	return ns;
 }
 
+<<<<<<< HEAD
 static void netdev_queue_get_ownership(const struct kobject *kobj,
+=======
+static void netdev_queue_get_ownership(struct kobject *kobj,
+>>>>>>> b7ba80a49124 (Commit)
 				       kuid_t *uid, kgid_t *gid)
 {
 	const struct net *net = netdev_queue_namespace(kobj);
@@ -1671,7 +1856,11 @@ static void netdev_queue_get_ownership(const struct kobject *kobj,
 	net_ns_get_ownership(net, uid, gid);
 }
 
+<<<<<<< HEAD
 static const struct kobj_type netdev_queue_ktype = {
+=======
+static struct kobj_type netdev_queue_ktype __ro_after_init = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops = &netdev_queue_sysfs_ops,
 	.release = netdev_queue_release,
 	.default_groups = netdev_queue_default_groups,
@@ -1901,9 +2090,15 @@ const struct kobj_ns_type_operations net_ns_type_operations = {
 };
 EXPORT_SYMBOL_GPL(net_ns_type_operations);
 
+<<<<<<< HEAD
 static int netdev_uevent(const struct device *d, struct kobj_uevent_env *env)
 {
 	const struct net_device *dev = to_net_dev(d);
+=======
+static int netdev_uevent(struct device *d, struct kobj_uevent_env *env)
+{
+	struct net_device *dev = to_net_dev(d);
+>>>>>>> b7ba80a49124 (Commit)
 	int retval;
 
 	/* pass interface to uevent. */
@@ -1938,16 +2133,28 @@ static void netdev_release(struct device *d)
 	netdev_freemem(dev);
 }
 
+<<<<<<< HEAD
 static const void *net_namespace(const struct device *d)
 {
 	const struct net_device *dev = to_net_dev(d);
+=======
+static const void *net_namespace(struct device *d)
+{
+	struct net_device *dev = to_net_dev(d);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return dev_net(dev);
 }
 
+<<<<<<< HEAD
 static void net_get_ownership(const struct device *d, kuid_t *uid, kgid_t *gid)
 {
 	const struct net_device *dev = to_net_dev(d);
+=======
+static void net_get_ownership(struct device *d, kuid_t *uid, kgid_t *gid)
+{
+	struct net_device *dev = to_net_dev(d);
+>>>>>>> b7ba80a49124 (Commit)
 	const struct net *net = dev_net(dev);
 
 	net_ns_get_ownership(net, uid, gid);

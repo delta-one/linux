@@ -146,7 +146,10 @@ static int dp_altmode_status_update(struct dp_altmode *dp)
 		if (dp->hpd != hpd) {
 			drm_connector_oob_hotplug_event(dp->connector_fwnode);
 			dp->hpd = hpd;
+<<<<<<< HEAD
 			sysfs_notify(&dp->alt->dev.kobj, "displayport", "hpd");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -277,11 +280,17 @@ static int dp_altmode_vdm(struct typec_altmode *alt,
 	case CMDT_RSP_ACK:
 		switch (cmd) {
 		case CMD_ENTER_MODE:
+<<<<<<< HEAD
 			typec_altmode_update_active(alt, true);
 			dp->state = DP_STATE_UPDATE;
 			break;
 		case CMD_EXIT_MODE:
 			typec_altmode_update_active(alt, false);
+=======
+			dp->state = DP_STATE_UPDATE;
+			break;
+		case CMD_EXIT_MODE:
+>>>>>>> b7ba80a49124 (Commit)
 			dp->data.status = 0;
 			dp->data.conf = 0;
 			break;
@@ -422,6 +431,7 @@ static const char * const pin_assignments[] = {
 	[DP_PIN_ASSIGN_F] = "F",
 };
 
+<<<<<<< HEAD
 /*
  * Helper function to extract a peripheral's currently supported
  * Pin Assignments from its DisplayPort alternate mode state.
@@ -434,6 +444,8 @@ static u8 get_current_pin_assignments(struct dp_altmode *dp)
 		return DP_CAP_PIN_ASSIGN_UFP_D(dp->alt->vdo);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t
 pin_assignment_store(struct device *dev, struct device_attribute *attr,
 		     const char *buf, size_t size)
@@ -460,7 +472,14 @@ pin_assignment_store(struct device *dev, struct device_attribute *attr,
 		goto out_unlock;
 	}
 
+<<<<<<< HEAD
 	assignments = get_current_pin_assignments(dp);
+=======
+	if (DP_CONF_CURRENTLY(dp->data.conf) == DP_CONF_DFP_D)
+		assignments = DP_CAP_UFP_D_PIN_ASSIGN(dp->alt->vdo);
+	else
+		assignments = DP_CAP_DFP_D_PIN_ASSIGN(dp->alt->vdo);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!(DP_CONF_GET_PIN_ASSIGN(conf) & assignments)) {
 		ret = -EINVAL;
@@ -497,7 +516,14 @@ static ssize_t pin_assignment_show(struct device *dev,
 
 	cur = get_count_order(DP_CONF_GET_PIN_ASSIGN(dp->data.conf));
 
+<<<<<<< HEAD
 	assignments = get_current_pin_assignments(dp);
+=======
+	if (DP_CONF_CURRENTLY(dp->data.conf) == DP_CONF_DFP_D)
+		assignments = DP_CAP_UFP_D_PIN_ASSIGN(dp->alt->vdo);
+	else
+		assignments = DP_CAP_DFP_D_PIN_ASSIGN(dp->alt->vdo);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; assignments; assignments >>= 1, i++) {
 		if (assignments & 1) {
@@ -517,6 +543,7 @@ static ssize_t pin_assignment_show(struct device *dev,
 }
 static DEVICE_ATTR_RW(pin_assignment);
 
+<<<<<<< HEAD
 static ssize_t hpd_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	struct dp_altmode *dp = dev_get_drvdata(dev);
@@ -529,6 +556,11 @@ static struct attribute *dp_altmode_attrs[] = {
 	&dev_attr_configuration.attr,
 	&dev_attr_pin_assignment.attr,
 	&dev_attr_hpd.attr,
+=======
+static struct attribute *dp_altmode_attrs[] = {
+	&dev_attr_configuration.attr,
+	&dev_attr_pin_assignment.attr,
+>>>>>>> b7ba80a49124 (Commit)
 	NULL
 };
 
@@ -547,10 +579,17 @@ int dp_altmode_probe(struct typec_altmode *alt)
 	/* FIXME: Port can only be DFP_U. */
 
 	/* Make sure we have compatiple pin configurations */
+<<<<<<< HEAD
 	if (!(DP_CAP_PIN_ASSIGN_DFP_D(port->vdo) &
 	      DP_CAP_PIN_ASSIGN_UFP_D(alt->vdo)) &&
 	    !(DP_CAP_PIN_ASSIGN_UFP_D(port->vdo) &
 	      DP_CAP_PIN_ASSIGN_DFP_D(alt->vdo)))
+=======
+	if (!(DP_CAP_DFP_D_PIN_ASSIGN(port->vdo) &
+	      DP_CAP_UFP_D_PIN_ASSIGN(alt->vdo)) &&
+	    !(DP_CAP_UFP_D_PIN_ASSIGN(port->vdo) &
+	      DP_CAP_DFP_D_PIN_ASSIGN(alt->vdo)))
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODEV;
 
 	ret = sysfs_create_group(&alt->dev.kobj, &dp_altmode_group);

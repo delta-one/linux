@@ -1614,7 +1614,11 @@ static void finish_req(struct iproc_reqctx_s *rctx, int err)
 	spu_chunk_cleanup(rctx);
 
 	if (areq)
+<<<<<<< HEAD
 		crypto_request_complete(areq, err);
+=======
+		areq->complete(areq, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1928,7 +1932,11 @@ static int ahash_enqueue(struct ahash_request *req)
 	/* SPU2 hardware does not compute hash of zero length data */
 	if ((rctx->is_final == 1) && (rctx->total_todo == 0) &&
 	    (iproc_priv.spu.spu_type == SPU_TYPE_SPU2)) {
+<<<<<<< HEAD
 		alg_name = crypto_ahash_alg_name(tfm);
+=======
+		alg_name = crypto_tfm_alg_name(crypto_ahash_tfm(tfm));
+>>>>>>> b7ba80a49124 (Commit)
 		flow_log("Doing %sfinal %s zero-len hash request in software\n",
 			 rctx->is_final ? "" : "non-", alg_name);
 		err = do_shash((unsigned char *)alg_name, req->result,
@@ -2029,7 +2037,11 @@ static int ahash_init(struct ahash_request *req)
 		 * supported by the hardware, we need to handle it in software
 		 * by calling synchronous hash functions.
 		 */
+<<<<<<< HEAD
 		alg_name = crypto_ahash_alg_name(tfm);
+=======
+		alg_name = crypto_tfm_alg_name(crypto_ahash_tfm(tfm));
+>>>>>>> b7ba80a49124 (Commit)
 		hash = crypto_alloc_shash(alg_name, 0, 0);
 		if (IS_ERR(hash)) {
 			ret = PTR_ERR(hash);
@@ -2570,12 +2582,33 @@ static int aead_need_fallback(struct aead_request *req)
 		return payload_len > ctx->max_payload;
 }
 
+<<<<<<< HEAD
+=======
+static void aead_complete(struct crypto_async_request *areq, int err)
+{
+	struct aead_request *req =
+	    container_of(areq, struct aead_request, base);
+	struct iproc_reqctx_s *rctx = aead_request_ctx(req);
+	struct crypto_aead *aead = crypto_aead_reqtfm(req);
+
+	flow_log("%s() err:%d\n", __func__, err);
+
+	areq->tfm = crypto_aead_tfm(aead);
+
+	areq->complete = rctx->old_complete;
+	areq->data = rctx->old_data;
+
+	areq->complete(areq, err);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int aead_do_fallback(struct aead_request *req, bool is_encrypt)
 {
 	struct crypto_aead *aead = crypto_aead_reqtfm(req);
 	struct crypto_tfm *tfm = crypto_aead_tfm(aead);
 	struct iproc_reqctx_s *rctx = aead_request_ctx(req);
 	struct iproc_ctx_s *ctx = crypto_tfm_ctx(tfm);
+<<<<<<< HEAD
 	struct aead_request *subreq;
 
 	flow_log("%s() enc:%u\n", __func__, is_encrypt);
@@ -2593,6 +2626,45 @@ static int aead_do_fallback(struct aead_request *req, bool is_encrypt)
 
 	return is_encrypt ? crypto_aead_encrypt(req) :
 			    crypto_aead_decrypt(req);
+=======
+	int err;
+	u32 req_flags;
+
+	flow_log("%s() enc:%u\n", __func__, is_encrypt);
+
+	if (ctx->fallback_cipher) {
+		/* Store the cipher tfm and then use the fallback tfm */
+		rctx->old_tfm = tfm;
+		aead_request_set_tfm(req, ctx->fallback_cipher);
+		/*
+		 * Save the callback and chain ourselves in, so we can restore
+		 * the tfm
+		 */
+		rctx->old_complete = req->base.complete;
+		rctx->old_data = req->base.data;
+		req_flags = aead_request_flags(req);
+		aead_request_set_callback(req, req_flags, aead_complete, req);
+		err = is_encrypt ? crypto_aead_encrypt(req) :
+		    crypto_aead_decrypt(req);
+
+		if (err == 0) {
+			/*
+			 * fallback was synchronous (did not return
+			 * -EINPROGRESS). So restore request state here.
+			 */
+			aead_request_set_callback(req, req_flags,
+						  rctx->old_complete, req);
+			req->base.data = rctx->old_data;
+			aead_request_set_tfm(req, aead);
+			flow_log("%s() fallback completed successfully\n\n",
+				 __func__);
+		}
+	} else {
+		err = -EINVAL;
+	}
+
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int aead_enqueue(struct aead_request *req, bool is_encrypt)
@@ -4206,7 +4278,10 @@ static int ahash_cra_init(struct crypto_tfm *tfm)
 
 static int aead_cra_init(struct crypto_aead *aead)
 {
+<<<<<<< HEAD
 	unsigned int reqsize = sizeof(struct iproc_reqctx_s);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct crypto_tfm *tfm = crypto_aead_tfm(aead);
 	struct iproc_ctx_s *ctx = crypto_tfm_ctx(tfm);
 	struct crypto_alg *alg = tfm->__crt_alg;
@@ -4218,6 +4293,10 @@ static int aead_cra_init(struct crypto_aead *aead)
 
 	flow_log("%s()\n", __func__);
 
+<<<<<<< HEAD
+=======
+	crypto_aead_set_reqsize(aead, sizeof(struct iproc_reqctx_s));
+>>>>>>> b7ba80a49124 (Commit)
 	ctx->is_esp = false;
 	ctx->salt_len = 0;
 	ctx->salt_offset = 0;
@@ -4226,6 +4305,7 @@ static int aead_cra_init(struct crypto_aead *aead)
 	get_random_bytes(ctx->iv, MAX_IV_SIZE);
 	flow_dump("  iv: ", ctx->iv, MAX_IV_SIZE);
 
+<<<<<<< HEAD
 	if (err)
 		goto out;
 
@@ -4249,6 +4329,24 @@ reqsize:
 	crypto_aead_set_reqsize(aead, reqsize);
 
 out:
+=======
+	if (!err) {
+		if (alg->cra_flags & CRYPTO_ALG_NEED_FALLBACK) {
+			flow_log("%s() creating fallback cipher\n", __func__);
+
+			ctx->fallback_cipher =
+			    crypto_alloc_aead(alg->cra_name, 0,
+					      CRYPTO_ALG_ASYNC |
+					      CRYPTO_ALG_NEED_FALLBACK);
+			if (IS_ERR(ctx->fallback_cipher)) {
+				pr_err("%s() Error: failed to allocate fallback for %s\n",
+				       __func__, alg->cra_name);
+				return PTR_ERR(ctx->fallback_cipher);
+			}
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 

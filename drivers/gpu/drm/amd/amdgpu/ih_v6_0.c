@@ -119,7 +119,11 @@ force_update_wptr_for_self_int(struct amdgpu_device *adev,
  * ih_v6_0_toggle_ring_interrupts - toggle the interrupt ring buffer
  *
  * @adev: amdgpu_device pointer
+<<<<<<< HEAD
  * @ih: amdgpu_ih_ring pointer
+=======
+ * @ih: amdgpu_ih_ring pointet
+>>>>>>> b7ba80a49124 (Commit)
  * @enable: true - enable the interrupts, false - disable the interrupts
  *
  * Toggle the interrupt ring buffer (IH_V6_0)
@@ -381,7 +385,10 @@ static void ih_v6_0_irq_disable(struct amdgpu_device *adev)
  * ih_v6_0_get_wptr - get the IH ring buffer wptr
  *
  * @adev: amdgpu_device pointer
+<<<<<<< HEAD
  * @ih: amdgpu_ih_ring pointer
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Get the IH ring buffer wptr from either the register
  * or the writeback memory buffer.  Also check for
@@ -426,7 +433,10 @@ out:
  * ih_v6_0_irq_rearm - rearm IRQ if lost
  *
  * @adev: amdgpu_device pointer
+<<<<<<< HEAD
  * @ih: amdgpu_ih_ring pointer
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  */
 static void ih_v6_0_irq_rearm(struct amdgpu_device *adev,
@@ -452,7 +462,10 @@ static void ih_v6_0_irq_rearm(struct amdgpu_device *adev,
  * ih_v6_0_set_rptr - set the IH ring buffer rptr
  *
  * @adev: amdgpu_device pointer
+<<<<<<< HEAD
  * @ih: amdgpu_ih_ring pointer
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Set the IH ring buffer rptr.
  */

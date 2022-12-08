@@ -15,6 +15,7 @@
 
 #include "ff.h"
 
+<<<<<<< HEAD
 static bool has_msg(struct snd_ff *ff)
 {
 	if (ff->spec->protocol->has_msg)
@@ -23,15 +24,25 @@ static bool has_msg(struct snd_ff *ff)
 		return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static long hwdep_read(struct snd_hwdep *hwdep, char __user *buf,  long count,
 		       loff_t *offset)
 {
 	struct snd_ff *ff = hwdep->private_data;
 	DEFINE_WAIT(wait);
+<<<<<<< HEAD
 
 	spin_lock_irq(&ff->lock);
 
 	while (!ff->dev_lock_changed && !has_msg(ff)) {
+=======
+	union snd_firewire_event event;
+
+	spin_lock_irq(&ff->lock);
+
+	while (!ff->dev_lock_changed) {
+>>>>>>> b7ba80a49124 (Commit)
 		prepare_to_wait(&ff->hwdep_wait, &wait, TASK_INTERRUPTIBLE);
 		spin_unlock_irq(&ff->lock);
 		schedule();
@@ -41,6 +52,7 @@ static long hwdep_read(struct snd_hwdep *hwdep, char __user *buf,  long count,
 		spin_lock_irq(&ff->lock);
 	}
 
+<<<<<<< HEAD
 	if (ff->dev_lock_changed && count >= sizeof(struct snd_firewire_event_lock_status)) {
 		struct snd_firewire_event_lock_status ev = {
 			.type = SNDRV_FIREWIRE_EVENT_LOCK_STATUS,
@@ -64,6 +76,19 @@ static long hwdep_read(struct snd_hwdep *hwdep, char __user *buf,  long count,
 
 		count = 0;
 	}
+=======
+	memset(&event, 0, sizeof(event));
+	event.lock_status.type = SNDRV_FIREWIRE_EVENT_LOCK_STATUS;
+	event.lock_status.status = (ff->dev_lock_count > 0);
+	ff->dev_lock_changed = false;
+
+	count = min_t(long, count, sizeof(event.lock_status));
+
+	spin_unlock_irq(&ff->lock);
+
+	if (copy_to_user(buf, &event, count))
+		return -EFAULT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return count;
 }
@@ -77,7 +102,11 @@ static __poll_t hwdep_poll(struct snd_hwdep *hwdep, struct file *file,
 	poll_wait(file, &ff->hwdep_wait, wait);
 
 	spin_lock_irq(&ff->lock);
+<<<<<<< HEAD
 	if (ff->dev_lock_changed || has_msg(ff))
+=======
+	if (ff->dev_lock_changed)
+>>>>>>> b7ba80a49124 (Commit)
 		events = EPOLLIN | EPOLLRDNORM;
 	else
 		events = 0;

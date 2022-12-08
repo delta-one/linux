@@ -5,7 +5,10 @@
  * Copyright (C) 2012 ARM Ltd.
  */
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/efi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/export.h>
 #include <linux/ftrace.h>
 #include <linux/sched.h>
@@ -13,7 +16,10 @@
 #include <linux/sched/task_stack.h>
 #include <linux/stacktrace.h>
 
+<<<<<<< HEAD
 #include <asm/efi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/irq.h>
 #include <asm/stack_pointer.h>
 #include <asm/stacktrace.h>
@@ -25,8 +31,13 @@
  *
  * The regs must be on a stack currently owned by the calling task.
  */
+<<<<<<< HEAD
 static __always_inline void unwind_init_from_regs(struct unwind_state *state,
 						  struct pt_regs *regs)
+=======
+static inline void unwind_init_from_regs(struct unwind_state *state,
+					 struct pt_regs *regs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unwind_init_common(state, current);
 
@@ -60,8 +71,13 @@ static __always_inline void unwind_init_from_caller(struct unwind_state *state)
  * duration of the unwind, or the unwind will be bogus. It is never valid to
  * call this for the current task.
  */
+<<<<<<< HEAD
 static __always_inline void unwind_init_from_task(struct unwind_state *state,
 						  struct task_struct *task)
+=======
+static inline void unwind_init_from_task(struct unwind_state *state,
+					 struct task_struct *task)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unwind_init_common(state, task);
 
@@ -188,6 +204,7 @@ void show_stack(struct task_struct *tsk, unsigned long *sp, const char *loglvl)
 			: stackinfo_get_unknown();		\
 	})
 
+<<<<<<< HEAD
 #define STACKINFO_EFI						\
 	({							\
 		((task == current) && current_in_efi())		\
@@ -196,6 +213,9 @@ void show_stack(struct task_struct *tsk, unsigned long *sp, const char *loglvl)
 	})
 
 noinline noinstr void arch_stack_walk(stack_trace_consume_fn consume_entry,
+=======
+noinline notrace void arch_stack_walk(stack_trace_consume_fn consume_entry,
+>>>>>>> b7ba80a49124 (Commit)
 			      void *cookie, struct task_struct *task,
 			      struct pt_regs *regs)
 {
@@ -209,9 +229,12 @@ noinline noinstr void arch_stack_walk(stack_trace_consume_fn consume_entry,
 		STACKINFO_SDEI(normal),
 		STACKINFO_SDEI(critical),
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_EFI
 		STACKINFO_EFI,
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	struct unwind_state state = {
 		.stacks = stacks,

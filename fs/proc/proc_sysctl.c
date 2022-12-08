@@ -798,7 +798,11 @@ out:
 	return 0;
 }
 
+<<<<<<< HEAD
 static int proc_sys_permission(struct mnt_idmap *idmap,
+=======
+static int proc_sys_permission(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			       struct inode *inode, int mask)
 {
 	/*
@@ -827,7 +831,11 @@ static int proc_sys_permission(struct mnt_idmap *idmap,
 	return error;
 }
 
+<<<<<<< HEAD
 static int proc_sys_setattr(struct mnt_idmap *idmap,
+=======
+static int proc_sys_setattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			    struct dentry *dentry, struct iattr *attr)
 {
 	struct inode *inode = d_inode(dentry);
@@ -836,6 +844,7 @@ static int proc_sys_setattr(struct mnt_idmap *idmap,
 	if (attr->ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID))
 		return -EPERM;
 
+<<<<<<< HEAD
 	error = setattr_prepare(&nop_mnt_idmap, dentry, attr);
 	if (error)
 		return error;
@@ -845,6 +854,18 @@ static int proc_sys_setattr(struct mnt_idmap *idmap,
 }
 
 static int proc_sys_getattr(struct mnt_idmap *idmap,
+=======
+	error = setattr_prepare(&init_user_ns, dentry, attr);
+	if (error)
+		return error;
+
+	setattr_copy(&init_user_ns, inode, attr);
+	mark_inode_dirty(inode);
+	return 0;
+}
+
+static int proc_sys_getattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			    const struct path *path, struct kstat *stat,
 			    u32 request_mask, unsigned int query_flags)
 {
@@ -855,7 +876,11 @@ static int proc_sys_getattr(struct mnt_idmap *idmap,
 	if (IS_ERR(head))
 		return PTR_ERR(head);
 
+<<<<<<< HEAD
 	generic_fillattr(&nop_mnt_idmap, inode, stat);
+=======
+	generic_fillattr(&init_user_ns, inode, stat);
+>>>>>>> b7ba80a49124 (Commit)
 	if (table)
 		stat->mode = (stat->mode & S_IFMT) | table->mode;
 
@@ -868,7 +893,11 @@ static const struct file_operations proc_sys_file_operations = {
 	.poll		= proc_sys_poll,
 	.read_iter	= proc_sys_read,
 	.write_iter	= proc_sys_write,
+<<<<<<< HEAD
 	.splice_read	= direct_splice_read,
+=======
+	.splice_read	= generic_file_splice_read,
+>>>>>>> b7ba80a49124 (Commit)
 	.splice_write	= iter_file_splice_write,
 	.llseek		= default_llseek,
 };
@@ -1123,11 +1152,14 @@ static int sysctl_check_table_array(const char *path, struct ctl_table *table)
 			err |= sysctl_err(path, table, "array not allowed");
 	}
 
+<<<<<<< HEAD
 	if (table->proc_handler == proc_dobool) {
 		if (table->maxlen != sizeof(bool))
 			err |= sysctl_err(path, table, "array not allowed");
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -1140,7 +1172,10 @@ static int sysctl_check_table(const char *path, struct ctl_table *table)
 			err |= sysctl_err(path, entry, "Not a file");
 
 		if ((entry->proc_handler == proc_dostring) ||
+<<<<<<< HEAD
 		    (entry->proc_handler == proc_dobool) ||
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		    (entry->proc_handler == proc_dointvec) ||
 		    (entry->proc_handler == proc_douintvec) ||
 		    (entry->proc_handler == proc_douintvec_minmax) ||
@@ -1282,6 +1317,7 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 /* Find the directory for the ctl_table. If one is not found create it. */
 static struct ctl_dir *sysctl_mkdir_p(struct ctl_dir *dir, const char *path)
 {
@@ -1311,14 +1347,20 @@ static struct ctl_dir *sysctl_mkdir_p(struct ctl_dir *dir, const char *path)
 	return dir;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * __register_sysctl_table - register a leaf sysctl table
  * @set: Sysctl tree to register on
  * @path: The path to the directory the sysctl table is in.
+<<<<<<< HEAD
  * @table: the top-level table structure without any child. This table
  * 	 should not be free'd after registration. So it should not be
  * 	 used on stack. It can either be a global or dynamically allocated
  * 	 by the caller and free'd later after sysctl unregistration.
+=======
+ * @table: the top-level table structure
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Register a sysctl table hierarchy. @table should be a filled in ctl_table
  * array. A completely 0 filled entry terminates the table.
@@ -1339,12 +1381,18 @@ static struct ctl_dir *sysctl_mkdir_p(struct ctl_dir *dir, const char *path)
  * proc_handler - the text handler routine (described below)
  *
  * extra1, extra2 - extra pointers usable by the proc handler routines
+<<<<<<< HEAD
  * XXX: we should eventually modify these to use long min / max [0]
  * [0] https://lkml.kernel.org/87zgpte9o4.fsf@email.froward.int.ebiederm.org
  *
  * Leaf nodes in the sysctl tree will be represented by a single file
  * under /proc; non-leaf nodes (where child is not NULL) are not allowed,
  * sysctl_check_table() verifies this.
+=======
+ *
+ * Leaf nodes in the sysctl tree will be represented by a single file
+ * under /proc; non-leaf nodes will be represented by directories.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * There must be a proc_handler routine for any terminal nodes.
  * Several default handlers are available to cover common cases -
@@ -1365,6 +1413,10 @@ struct ctl_table_header *__register_sysctl_table(
 {
 	struct ctl_table_root *root = set->dir.header.root;
 	struct ctl_table_header *header;
+<<<<<<< HEAD
+=======
+	const char *name, *nextname;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ctl_dir *dir;
 	struct ctl_table *entry;
 	struct ctl_node *node;
@@ -1385,6 +1437,7 @@ struct ctl_table_header *__register_sysctl_table(
 
 	spin_lock(&sysctl_lock);
 	dir = &set->dir;
+<<<<<<< HEAD
 	/* Reference moved down the directory tree get_subdir */
 	dir->header.nreg++;
 	spin_unlock(&sysctl_lock);
@@ -1392,6 +1445,30 @@ struct ctl_table_header *__register_sysctl_table(
 	dir = sysctl_mkdir_p(dir, path);
 	if (IS_ERR(dir))
 		goto fail;
+=======
+	/* Reference moved down the diretory tree get_subdir */
+	dir->header.nreg++;
+	spin_unlock(&sysctl_lock);
+
+	/* Find the directory for the ctl_table */
+	for (name = path; name; name = nextname) {
+		int namelen;
+		nextname = strchr(name, '/');
+		if (nextname) {
+			namelen = nextname - name;
+			nextname++;
+		} else {
+			namelen = strlen(name);
+		}
+		if (namelen == 0)
+			continue;
+
+		dir = get_subdir(dir, name, namelen);
+		if (IS_ERR(dir))
+			goto fail;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock(&sysctl_lock);
 	if (insert_header(dir, header))
 		goto fail_put_dir_locked;
@@ -1412,6 +1489,7 @@ fail:
 
 /**
  * register_sysctl - register a sysctl table
+<<<<<<< HEAD
  * @path: The path to the directory the sysctl table is in. If the path
  * 	doesn't exist we will create it for you.
  * @table: the table structure. The calller must ensure the life of the @table
@@ -1421,6 +1499,10 @@ fail:
  * 	to call unregister_sysctl_table() and can instead use something like
  * 	register_sysctl_init() which does not care for the result of the syctl
  * 	registration.
+=======
+ * @path: The path to the directory the sysctl table is in.
+ * @table: the table structure
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Register a sysctl table. @table should be a filled in ctl_table
  * array. A completely 0 filled entry terminates the table.
@@ -1436,11 +1518,16 @@ EXPORT_SYMBOL(register_sysctl);
 
 /**
  * __register_sysctl_init() - register sysctl table to path
+<<<<<<< HEAD
  * @path: path name for sysctl base. If that path doesn't exist we will create
  * 	it for you.
  * @table: This is the sysctl table that needs to be registered to the path.
  * 	The caller must ensure the life of the @table will be kept during the
  * 	lifetime use of the sysctl.
+=======
+ * @path: path name for sysctl base
+ * @table: This is the sysctl table that needs to be registered to the path
+>>>>>>> b7ba80a49124 (Commit)
  * @table_name: The name of sysctl table, only used for log printing when
  *              registration fails
  *
@@ -1452,7 +1539,14 @@ EXPORT_SYMBOL(register_sysctl);
  * register_sysctl() failing on init are extremely low, and so for both reasons
  * this function does not return any error as it is used by initialization code.
  *
+<<<<<<< HEAD
  * Context: if your base directory does not exist it will be created for you.
+=======
+ * Context: Can only be called after your respective sysctl base path has been
+ * registered. So for instance, most base directories are registered early on
+ * init before init levels are processed through proc_sys_init() and
+ * sysctl_init_bases().
+>>>>>>> b7ba80a49124 (Commit)
  */
 void __init __register_sysctl_init(const char *path, struct ctl_table *table,
 				 const char *table_name)
@@ -1582,7 +1676,10 @@ out:
  *
  * Register a sysctl table hierarchy. @table should be a filled in ctl_table
  * array. A completely 0 filled entry terminates the table.
+<<<<<<< HEAD
  * We are slowly deprecating this call so avoid its use.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * See __register_sysctl_table for more details.
  */
@@ -1654,7 +1751,10 @@ err_register_leaves:
  *
  * Register a sysctl table hierarchy. @table should be a filled in ctl_table
  * array. A completely 0 filled entry terminates the table.
+<<<<<<< HEAD
  * We are slowly deprecating this caller so avoid future uses of it.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * See __register_sysctl_paths for more details.
  */

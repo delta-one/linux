@@ -218,6 +218,7 @@ static bool bfq_no_longer_next_in_service(struct bfq_entity *entity)
 	return false;
 }
 
+<<<<<<< HEAD
 static void bfq_inc_active_entities(struct bfq_entity *entity)
 {
 	struct bfq_sched_data *sd = entity->sched_data;
@@ -236,6 +237,8 @@ static void bfq_dec_active_entities(struct bfq_entity *entity)
 		bfqg->active_entities--;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else /* CONFIG_BFQ_GROUP_IOSCHED */
 
 static bool bfq_update_parent_budget(struct bfq_entity *next_in_service)
@@ -248,6 +251,7 @@ static bool bfq_no_longer_next_in_service(struct bfq_entity *entity)
 	return true;
 }
 
+<<<<<<< HEAD
 static void bfq_inc_active_entities(struct bfq_entity *entity)
 {
 }
@@ -256,6 +260,8 @@ static void bfq_dec_active_entities(struct bfq_entity *entity)
 {
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_BFQ_GROUP_IOSCHED */
 
 /*
@@ -482,6 +488,14 @@ static void bfq_active_insert(struct bfq_service_tree *st,
 {
 	struct bfq_queue *bfqq = bfq_entity_to_bfqq(entity);
 	struct rb_node *node = &entity->rb_node;
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_BFQ_GROUP_IOSCHED
+	struct bfq_sched_data *sd = NULL;
+	struct bfq_group *bfqg = NULL;
+	struct bfq_data *bfqd = NULL;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	bfq_insert(&st->active, entity);
 
@@ -492,10 +506,24 @@ static void bfq_active_insert(struct bfq_service_tree *st,
 
 	bfq_update_active_tree(node);
 
+<<<<<<< HEAD
 	if (bfqq)
 		list_add(&bfqq->bfqq_list, &bfqq->bfqd->active_list[bfqq->actuator_idx]);
 
 	bfq_inc_active_entities(entity);
+=======
+#ifdef CONFIG_BFQ_GROUP_IOSCHED
+	sd = entity->sched_data;
+	bfqg = container_of(sd, struct bfq_group, sched_data);
+	bfqd = (struct bfq_data *)bfqg->bfqd;
+#endif
+	if (bfqq)
+		list_add(&bfqq->bfqq_list, &bfqq->bfqd->active_list);
+#ifdef CONFIG_BFQ_GROUP_IOSCHED
+	if (bfqg != bfqd->root_group)
+		bfqg->active_entities++;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -572,16 +600,39 @@ static void bfq_active_extract(struct bfq_service_tree *st,
 {
 	struct bfq_queue *bfqq = bfq_entity_to_bfqq(entity);
 	struct rb_node *node;
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_BFQ_GROUP_IOSCHED
+	struct bfq_sched_data *sd = NULL;
+	struct bfq_group *bfqg = NULL;
+	struct bfq_data *bfqd = NULL;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	node = bfq_find_deepest(&entity->rb_node);
 	bfq_extract(&st->active, entity);
 
 	if (node)
 		bfq_update_active_tree(node);
+<<<<<<< HEAD
 	if (bfqq)
 		list_del(&bfqq->bfqq_list);
 
 	bfq_dec_active_entities(entity);
+=======
+
+#ifdef CONFIG_BFQ_GROUP_IOSCHED
+	sd = entity->sched_data;
+	bfqg = container_of(sd, struct bfq_group, sched_data);
+	bfqd = (struct bfq_data *)bfqg->bfqd;
+#endif
+	if (bfqq)
+		list_del(&bfqq->bfqq_list);
+#ifdef CONFIG_BFQ_GROUP_IOSCHED
+	if (bfqg != bfqd->root_group)
+		bfqg->active_entities--;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -707,6 +758,25 @@ __bfq_entity_update_weight_prio(struct bfq_service_tree *old_st,
 	if (entity->prio_changed) {
 		struct bfq_queue *bfqq = bfq_entity_to_bfqq(entity);
 		unsigned int prev_weight, new_weight;
+<<<<<<< HEAD
+=======
+		struct bfq_data *bfqd = NULL;
+		struct rb_root_cached *root;
+#ifdef CONFIG_BFQ_GROUP_IOSCHED
+		struct bfq_sched_data *sd;
+		struct bfq_group *bfqg;
+#endif
+
+		if (bfqq)
+			bfqd = bfqq->bfqd;
+#ifdef CONFIG_BFQ_GROUP_IOSCHED
+		else {
+			sd = entity->my_sched_data;
+			bfqg = container_of(sd, struct bfq_group, sched_data);
+			bfqd = (struct bfq_data *)bfqg->bfqd;
+		}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Matches the smp_wmb() in bfq_group_set_weight. */
 		smp_rmb();
@@ -755,15 +825,29 @@ __bfq_entity_update_weight_prio(struct bfq_service_tree *old_st,
 		 * queue, remove the entity from its old weight counter (if
 		 * there is a counter associated with the entity).
 		 */
+<<<<<<< HEAD
 		if (prev_weight != new_weight && bfqq)
 			bfq_weights_tree_remove(bfqq);
+=======
+		if (prev_weight != new_weight && bfqq) {
+			root = &bfqd->queue_weights_tree;
+			__bfq_weights_tree_remove(bfqd, bfqq, root);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		entity->weight = new_weight;
 		/*
 		 * Add the entity, if it is not a weight-raised queue,
 		 * to the counter associated with its new weight.
 		 */
+<<<<<<< HEAD
 		if (prev_weight != new_weight && bfqq && bfqq->wr_coeff == 1)
 			bfq_weights_tree_add(bfqq);
+=======
+		if (prev_weight != new_weight && bfqq && bfqq->wr_coeff == 1) {
+			/* If we get here, root has been initialized. */
+			bfq_weights_tree_add(bfqd, bfqq, root);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		new_st->wsum += entity->weight;
 
@@ -965,6 +1049,22 @@ static void __bfq_activate_entity(struct bfq_entity *entity,
 		entity->on_st_or_in_serv = true;
 	}
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_BFQ_GROUP_IOSCHED
+	if (!bfq_entity_to_bfqq(entity)) { /* bfq_group */
+		struct bfq_group *bfqg =
+			container_of(entity, struct bfq_group, entity);
+		struct bfq_data *bfqd = bfqg->bfqd;
+
+		if (!entity->in_groups_with_pending_reqs) {
+			entity->in_groups_with_pending_reqs = true;
+			bfqd->num_groups_with_pending_reqs++;
+		}
+	}
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 	bfq_update_fin_time_enqueue(entity, st, backshifted);
 }
 
@@ -1050,12 +1150,20 @@ static void __bfq_requeue_entity(struct bfq_entity *entity)
 }
 
 static void __bfq_activate_requeue_entity(struct bfq_entity *entity,
+<<<<<<< HEAD
+=======
+					  struct bfq_sched_data *sd,
+>>>>>>> b7ba80a49124 (Commit)
 					  bool non_blocking_wait_rq)
 {
 	struct bfq_service_tree *st = bfq_entity_service_tree(entity);
 
+<<<<<<< HEAD
 	if (entity->sched_data->in_service_entity == entity ||
 	    entity->tree == &st->active)
+=======
+	if (sd->in_service_entity == entity || entity->tree == &st->active)
+>>>>>>> b7ba80a49124 (Commit)
 		 /*
 		  * in service or already queued on the active tree,
 		  * requeue or reposition
@@ -1087,10 +1195,21 @@ static void bfq_activate_requeue_entity(struct bfq_entity *entity,
 					bool non_blocking_wait_rq,
 					bool requeue, bool expiration)
 {
+<<<<<<< HEAD
 	for_each_entity(entity) {
 		__bfq_activate_requeue_entity(entity, non_blocking_wait_rq);
 		if (!bfq_update_next_in_service(entity->sched_data, entity,
 						expiration) && !requeue)
+=======
+	struct bfq_sched_data *sd;
+
+	for_each_entity(entity) {
+		sd = entity->sched_data;
+		__bfq_activate_requeue_entity(entity, sd, non_blocking_wait_rq);
+
+		if (!bfq_update_next_in_service(sd, entity, expiration) &&
+		    !requeue)
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 	}
 }
@@ -1610,6 +1729,7 @@ void bfq_requeue_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq,
 				    bfqq == bfqd->in_service_queue, expiration);
 }
 
+<<<<<<< HEAD
 void bfq_add_bfqq_in_groups_with_pending_reqs(struct bfq_queue *bfqq)
 {
 #ifdef CONFIG_BFQ_GROUP_IOSCHED
@@ -1636,6 +1756,8 @@ void bfq_del_bfqq_in_groups_with_pending_reqs(struct bfq_queue *bfqq)
 #endif
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Called when the bfqq no longer has requests pending, remove it from
  * the service tree. As a special case, it can be invoked during an
@@ -1658,6 +1780,7 @@ void bfq_del_bfqq_busy(struct bfq_queue *bfqq, bool expiration)
 
 	bfq_deactivate_bfqq(bfqd, bfqq, true, expiration);
 
+<<<<<<< HEAD
 	if (!bfqq->dispatched) {
 		bfq_del_bfqq_in_groups_with_pending_reqs(bfqq);
 		/*
@@ -1666,6 +1789,10 @@ void bfq_del_bfqq_busy(struct bfq_queue *bfqq, bool expiration)
 		 */
 		bfq_weights_tree_remove(bfqq);
 	}
+=======
+	if (!bfqq->dispatched)
+		bfq_weights_tree_remove(bfqd, bfqq);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1682,11 +1809,18 @@ void bfq_add_bfqq_busy(struct bfq_queue *bfqq)
 	bfq_mark_bfqq_busy(bfqq);
 	bfqd->busy_queues[bfqq->ioprio_class - 1]++;
 
+<<<<<<< HEAD
 	if (!bfqq->dispatched) {
 		bfq_add_bfqq_in_groups_with_pending_reqs(bfqq);
 		if (bfqq->wr_coeff == 1)
 			bfq_weights_tree_add(bfqq);
 	}
+=======
+	if (!bfqq->dispatched)
+		if (bfqq->wr_coeff == 1)
+			bfq_weights_tree_add(bfqd, bfqq,
+					     &bfqd->queue_weights_tree);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (bfqq->wr_coeff > 1)
 		bfqd->wr_busy_queues++;

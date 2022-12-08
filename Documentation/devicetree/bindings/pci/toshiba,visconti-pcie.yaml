@@ -36,7 +36,11 @@ properties:
       - const: mpu
 
   interrupts:
+<<<<<<< HEAD
     maxItems: 2
+=======
+    maxItems: 1
+>>>>>>> b7ba80a49124 (Commit)
 
   clocks:
     items:
@@ -94,9 +98,14 @@ examples:
             #interrupt-cells = <1>;
             ranges = <0x81000000 0 0x40000000 0 0x40000000 0 0x00010000>,
                      <0x82000000 0 0x50000000 0 0x50000000 0 0x20000000>;
+<<<<<<< HEAD
             interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>,
                          <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>;
             interrupt-names = "msi", "intr";
+=======
+            interrupts = <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>;
+            interrupt-names = "intr";
+>>>>>>> b7ba80a49124 (Commit)
             interrupt-map-mask = <0 0 0 7>;
             interrupt-map =
                 <0 0 0 1 &gic GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH

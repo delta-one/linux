@@ -231,11 +231,14 @@ scsi_abort_command(struct scsi_cmnd *scmd)
 	struct Scsi_Host *shost = sdev->host;
 	unsigned long flags;
 
+<<<<<<< HEAD
 	if (!shost->hostt->eh_abort_handler) {
 		/* No abort handler, fail command directly */
 		return FAILED;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (scmd->eh_eflags & SCSI_EH_ABORT_SCHEDULED) {
 		/*
 		 * Retry after abort failed, escalate to next level.
@@ -317,7 +320,11 @@ void scsi_eh_scmd_add(struct scsi_cmnd *scmd)
 	 * Ensure that all tasks observe the host state change before the
 	 * host_failed change.
 	 */
+<<<<<<< HEAD
 	call_rcu_hurry(&scmd->rcu, scsi_eh_inc_host_failed);
+=======
+	call_rcu(&scmd->rcu, scsi_eh_inc_host_failed);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -333,11 +340,16 @@ void scsi_eh_scmd_add(struct scsi_cmnd *scmd)
 enum blk_eh_timer_return scsi_timeout(struct request *req)
 {
 	struct scsi_cmnd *scmd = blk_mq_rq_to_pdu(req);
+<<<<<<< HEAD
+=======
+	enum blk_eh_timer_return rtn = BLK_EH_DONE;
+>>>>>>> b7ba80a49124 (Commit)
 	struct Scsi_Host *host = scmd->device->host;
 
 	trace_scsi_dispatch_cmd_timeout(scmd);
 	scsi_log_completion(scmd, TIMEOUT_ERROR);
 
+<<<<<<< HEAD
 	atomic_inc(&scmd->device->iotmo_cnt);
 	if (host->eh_deadline != -1 && !host->last_reset)
 		host->last_reset = jiffies;
@@ -366,6 +378,36 @@ enum blk_eh_timer_return scsi_timeout(struct request *req)
 	}
 
 	return BLK_EH_DONE;
+=======
+	if (host->eh_deadline != -1 && !host->last_reset)
+		host->last_reset = jiffies;
+
+	if (host->hostt->eh_timed_out)
+		rtn = host->hostt->eh_timed_out(scmd);
+
+	if (rtn == BLK_EH_DONE) {
+		/*
+		 * Set the command to complete first in order to prevent a real
+		 * completion from releasing the command while error handling
+		 * is using it. If the command was already completed, then the
+		 * lower level driver beat the timeout handler, and it is safe
+		 * to return without escalating error recovery.
+		 *
+		 * If timeout handling lost the race to a real completion, the
+		 * block layer may ignore that due to a fake timeout injection,
+		 * so return RESET_TIMER to allow error handling another shot
+		 * at this command.
+		 */
+		if (test_and_set_bit(SCMD_STATE_COMPLETE, &scmd->state))
+			return BLK_EH_RESET_TIMER;
+		if (scsi_abort_command(scmd) != SUCCESS) {
+			set_host_byte(scmd, DID_TIME_OUT);
+			scsi_eh_scmd_add(scmd);
+		}
+	}
+
+	return rtn;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -2013,11 +2055,17 @@ maybe_retry:
 	}
 }
 
+<<<<<<< HEAD
 static enum rq_end_io_ret eh_lock_door_done(struct request *req,
 					    blk_status_t status)
 {
 	blk_mq_free_request(req);
 	return RQ_END_IO_NONE;
+=======
+static void eh_lock_door_done(struct request *req, blk_status_t status)
+{
+	blk_mq_free_request(req);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

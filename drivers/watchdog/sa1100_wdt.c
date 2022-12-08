@@ -238,7 +238,11 @@ static int sa1100dog_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct platform_driver sa1100dog_driver = {
+=======
+struct platform_driver sa1100dog_driver = {
+>>>>>>> b7ba80a49124 (Commit)
 	.driver.name = "sa1100_wdt",
 	.probe	  = sa1100dog_probe,
 	.remove	  = sa1100dog_remove,

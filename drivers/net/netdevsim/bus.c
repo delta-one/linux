@@ -117,10 +117,13 @@ static const struct attribute_group *nsim_bus_dev_attr_groups[] = {
 
 static void nsim_bus_dev_release(struct device *dev)
 {
+<<<<<<< HEAD
 	struct nsim_bus_dev *nsim_bus_dev;
 
 	nsim_bus_dev = container_of(dev, struct nsim_bus_dev, dev);
 	kfree(nsim_bus_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct device_type nsim_bus_dev_type = {
@@ -295,8 +298,11 @@ nsim_bus_dev_new(unsigned int id, unsigned int port_count, unsigned int num_queu
 
 err_nsim_bus_dev_id_free:
 	ida_free(&nsim_bus_dev_ids, nsim_bus_dev->dev.id);
+<<<<<<< HEAD
 	put_device(&nsim_bus_dev->dev);
 	nsim_bus_dev = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_nsim_bus_dev_free:
 	kfree(nsim_bus_dev);
 	return ERR_PTR(err);
@@ -306,8 +312,14 @@ static void nsim_bus_dev_del(struct nsim_bus_dev *nsim_bus_dev)
 {
 	/* Disallow using nsim_bus_dev */
 	smp_store_release(&nsim_bus_dev->init, false);
+<<<<<<< HEAD
 	ida_free(&nsim_bus_dev_ids, nsim_bus_dev->dev.id);
 	device_unregister(&nsim_bus_dev->dev);
+=======
+	device_unregister(&nsim_bus_dev->dev);
+	ida_free(&nsim_bus_dev_ids, nsim_bus_dev->dev.id);
+	kfree(nsim_bus_dev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct device_driver nsim_driver = {

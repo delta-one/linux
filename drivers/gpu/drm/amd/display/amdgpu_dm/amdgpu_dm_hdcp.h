@@ -43,7 +43,11 @@ struct hdcp_workqueue {
 	struct delayed_work callback_dwork;
 	struct delayed_work watchdog_timer_dwork;
 	struct delayed_work property_validate_dwork;
+<<<<<<< HEAD
 	struct amdgpu_dm_connector *aconnector[AMDGPU_DM_MAX_DISPLAY_INDEX];
+=======
+	struct amdgpu_dm_connector *aconnector;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mutex mutex;
 
 	struct mod_hdcp hdcp;
@@ -51,6 +55,7 @@ struct hdcp_workqueue {
 	struct mod_hdcp_display display;
 	struct mod_hdcp_link link;
 
+<<<<<<< HEAD
 	enum mod_hdcp_encryption_status encryption_status[AMDGPU_DM_MAX_DISPLAY_INDEX];
 	/* when display is unplugged from mst hub, connctor will be
 	 * destroyed within dm_dp_mst_connector_destroy. connector
@@ -65,6 +70,9 @@ struct hdcp_workqueue {
 	/* hdcp1.x, hdcp2.x */
 	unsigned int hdcp_content_type[AMDGPU_DM_MAX_DISPLAY_INDEX];
 
+=======
+	enum mod_hdcp_encryption_status encryption_status;
+>>>>>>> b7ba80a49124 (Commit)
 	uint8_t max_link;
 
 	uint8_t *srm;

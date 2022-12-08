@@ -2471,7 +2471,10 @@ static netdev_tx_t ql3xxx_send(struct sk_buff *skb,
 					     skb_shinfo(skb)->nr_frags);
 	if (tx_cb->seg_count == -1) {
 		netdev_err(ndev, "%s: invalid segment count!\n", __func__);
+<<<<<<< HEAD
 		dev_kfree_skb_any(skb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 	}
 
@@ -3814,7 +3817,11 @@ static int ql3xxx_probe(struct pci_dev *pdev,
 	ndev->ethtool_ops = &ql3xxx_ethtool_ops;
 	ndev->watchdog_timeo = 5 * HZ;
 
+<<<<<<< HEAD
 	netif_napi_add(ndev, &qdev->napi, ql_poll);
+=======
+	netif_napi_add(ndev, &qdev->napi, ql_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ndev->irq = pdev->irq;
 

@@ -28,7 +28,22 @@
 	}
 
 #define CDF_COMMUNITY(b, s, e, g)			\
+<<<<<<< HEAD
 	INTEL_COMMUNITY_GPPS(b, s, e, g, CDF)
+=======
+	{						\
+		.barno = (b),				\
+		.padown_offset = CDF_PAD_OWN,		\
+		.padcfglock_offset = CDF_PADCFGLOCK,	\
+		.hostown_offset = CDF_HOSTSW_OWN,	\
+		.is_offset = CDF_GPI_IS,		\
+		.ie_offset = CDF_GPI_IE,		\
+		.pin_base = (s),			\
+		.npins = ((e) - (s) + 1),		\
+		.gpps = (g),				\
+		.ngpps = ARRAY_SIZE(g),			\
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Cedar Fork PCH */
 static const struct pinctrl_pin_desc cdf_pins[] = {

@@ -698,10 +698,19 @@ static int dcdbas_probe(struct platform_device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void dcdbas_remove(struct platform_device *dev)
 {
 	unregister_reboot_notifier(&dcdbas_reboot_nb);
 	sysfs_remove_group(&dev->dev.kobj, &dcdbas_attr_group);
+=======
+static int dcdbas_remove(struct platform_device *dev)
+{
+	unregister_reboot_notifier(&dcdbas_reboot_nb);
+	sysfs_remove_group(&dev->dev.kobj, &dcdbas_attr_group);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver dcdbas_driver = {
@@ -709,12 +718,20 @@ static struct platform_driver dcdbas_driver = {
 		.name	= DRIVER_NAME,
 	},
 	.probe		= dcdbas_probe,
+<<<<<<< HEAD
 	.remove_new	= dcdbas_remove,
+=======
+	.remove		= dcdbas_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct platform_device_info dcdbas_dev_info __initconst = {
 	.name		= DRIVER_NAME,
+<<<<<<< HEAD
 	.id		= PLATFORM_DEVID_NONE,
+=======
+	.id		= -1,
+>>>>>>> b7ba80a49124 (Commit)
 	.dma_mask	= DMA_BIT_MASK(32),
 };
 

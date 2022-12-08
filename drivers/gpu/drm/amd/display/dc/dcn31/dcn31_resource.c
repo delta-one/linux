@@ -119,6 +119,11 @@ enum dcn31_clk_src_array_id {
  */
 
 /* DCN */
+<<<<<<< HEAD
+=======
+/* TODO awful hack. fixup dcn20_dwb.h */
+#undef BASE_INNER
+>>>>>>> b7ba80a49124 (Commit)
 #define BASE_INNER(seg) DCN_BASE__INST0_SEG ## seg
 
 #define BASE(seg) BASE_INNER(seg)
@@ -151,9 +156,12 @@ enum dcn31_clk_src_array_id {
 	.reg_name[id] = BASE(reg ## block ## id ## _ ## temp_name ## _BASE_IDX) + \
 					reg ## block ## id ## _ ## temp_name
 
+<<<<<<< HEAD
 #define SF_DWB2(reg_name, block, id, field_name, post_fix)	\
 	.field_name = reg_name ## __ ## field_name ## post_fix
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DCCG_SRII(reg_name, block, id)\
 	.block ## _ ## reg_name[id] = BASE(reg ## block ## id ## _ ## reg_name ## _BASE_IDX) + \
 					reg ## block ## id ## _ ## reg_name
@@ -827,6 +835,11 @@ static const struct resource_caps res_cap_dcn31 = {
 
 static const struct dc_plane_cap plane_cap = {
 	.type = DC_PLANE_TYPE_DCN_UNIVERSAL,
+<<<<<<< HEAD
+=======
+	.blends_with_above = true,
+	.blends_with_below = true,
+>>>>>>> b7ba80a49124 (Commit)
 	.per_pixel_alpha = true,
 
 	.pixel_format_support = {
@@ -887,8 +900,14 @@ static const struct dc_debug_options debug_defaults_drv = {
 		}
 	},
 	.disable_z10 = true,
+<<<<<<< HEAD
 	.enable_z9_disable_interface = true, /* Allow support for the PMFW interface for disable Z9*/
 	.dml_hostvm_override = DML_HOSTVM_OVERRIDE_FALSE,
+=======
+	.optimize_edp_link_rate = true,
+	.enable_z9_disable_interface = true, /* Allow support for the PMFW interface for disable Z9*/
+	.dml_hostvm_override = DML_HOSTVM_NO_OVERRIDE,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct dc_debug_options debug_defaults_diags = {
@@ -909,6 +928,7 @@ static const struct dc_debug_options debug_defaults_diags = {
 	.use_max_lb = true
 };
 
+<<<<<<< HEAD
 static const struct dc_panel_config panel_config_defaults = {
 	.psr = {
 		.disable_psr = false,
@@ -919,6 +939,8 @@ static const struct dc_panel_config panel_config_defaults = {
 	},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void dcn31_dpp_destroy(struct dpp **dpp)
 {
 	kfree(TO_DCN20_DPP(*dpp));
@@ -1628,7 +1650,10 @@ static struct clock_source *dcn31_clock_source_create(
 		return &clk_src->base;
 	}
 
+<<<<<<< HEAD
 	kfree(clk_src);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BREAK_TO_DEBUGGER();
 	return NULL;
 }
@@ -1638,6 +1663,7 @@ static bool is_dual_plane(enum surface_pixel_format format)
 	return format >= SURFACE_PIXEL_FORMAT_VIDEO_BEGIN || format == SURFACE_PIXEL_FORMAT_GRPH_RGBE_ALPHA;
 }
 
+<<<<<<< HEAD
 int dcn31x_populate_dml_pipes_from_context(struct dc *dc,
 					  struct dc_state *context,
 					  display_e2e_pipe_params_st *pipes,
@@ -1663,6 +1689,8 @@ int dcn31x_populate_dml_pipes_from_context(struct dc *dc,
 	return pipe_cnt;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int dcn31_populate_dml_pipes_from_context(
 	struct dc *dc, struct dc_state *context,
 	display_e2e_pipe_params_st *pipes,
@@ -1674,7 +1702,11 @@ int dcn31_populate_dml_pipes_from_context(
 	bool upscaled = false;
 
 	DC_FP_START();
+<<<<<<< HEAD
 	dcn31x_populate_dml_pipes_from_context(dc, context, pipes, fast_validate);
+=======
+	dcn20_populate_dml_pipes_from_context(dc, context, pipes, fast_validate);
+>>>>>>> b7ba80a49124 (Commit)
 	DC_FP_END();
 
 	for (i = 0, pipe_cnt = 0; i < dc->res_pool->pipe_count; i++) {
@@ -1704,6 +1736,15 @@ int dcn31_populate_dml_pipes_from_context(
 		dcn31_zero_pipe_dcc_fraction(pipes, pipe_cnt);
 		DC_FP_END();
 
+<<<<<<< HEAD
+=======
+		if (dc->debug.dml_hostvm_override == DML_HOSTVM_NO_OVERRIDE)
+			pipes[pipe_cnt].pipe.src.hostvm = dc->res_pool->hubbub->riommu_active;
+		else if (dc->debug.dml_hostvm_override == DML_HOSTVM_OVERRIDE_FALSE)
+			pipes[pipe_cnt].pipe.src.hostvm = false;
+		else if (dc->debug.dml_hostvm_override == DML_HOSTVM_OVERRIDE_TRUE)
+			pipes[pipe_cnt].pipe.src.hostvm = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (pipes[pipe_cnt].dout.dsc_enable) {
 			switch (timing->display_color_depth) {
@@ -1793,7 +1834,11 @@ bool dcn31_validate_bandwidth(struct dc *dc,
 	BW_VAL_TRACE_COUNT();
 
 	DC_FP_START();
+<<<<<<< HEAD
 	out = dcn30_internal_validate_bw(dc, context, pipes, &pipe_cnt, &vlevel, fast_validate, true);
+=======
+	out = dcn30_internal_validate_bw(dc, context, pipes, &pipe_cnt, &vlevel, fast_validate);
+>>>>>>> b7ba80a49124 (Commit)
 	DC_FP_END();
 
 	// Disable fast_validate to set min dcfclk in alculate_wm_and_dlg
@@ -1831,11 +1876,14 @@ validate_out:
 	return out;
 }
 
+<<<<<<< HEAD
 static void dcn31_get_panel_config_defaults(struct dc_panel_config *panel_config)
 {
 	*panel_config = panel_config_defaults;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct dc_cap_funcs cap_funcs = {
 	.get_dcc_compression_cap = dcn20_get_dcc_compression_cap
 };
@@ -1862,7 +1910,10 @@ static struct resource_funcs dcn31_res_pool_funcs = {
 	.release_post_bldn_3dlut = dcn30_release_post_bldn_3dlut,
 	.update_bw_bounding_box = dcn31_update_bw_bounding_box,
 	.patch_unknown_plane_state = dcn20_patch_unknown_plane_state,
+<<<<<<< HEAD
 	.get_panel_config_defaults = dcn31_get_panel_config_defaults,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct clock_source *dcn30_clock_source_create(
@@ -1921,8 +1972,11 @@ static bool dcn31_resource_construct(
 	dc->caps.max_slave_rgb_planes = 2;
 	dc->caps.post_blend_color_processing = true;
 	dc->caps.force_dp_tps4_for_cp2520 = true;
+<<<<<<< HEAD
 	if (dc->config.forceHBR2CP2520)
 		dc->caps.force_dp_tps4_for_cp2520 = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dc->caps.dp_hpo = true;
 	dc->caps.dp_hdmi21_pcon_support = true;
 	dc->caps.edp_dsc_support = true;

@@ -86,7 +86,11 @@
 	status = "okay";
 
 	ethphy0: ethernet-phy@X {
+<<<<<<< HEAD
 		/* overwrite reg property in board file */
+=======
+                /* overwrite reg property in board file */
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -98,7 +102,11 @@
 };
 
 &pciec {
+<<<<<<< HEAD
 	status = "okay";
+=======
+        status = "okay";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &pcie0 {

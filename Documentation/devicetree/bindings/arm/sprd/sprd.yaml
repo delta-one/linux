@@ -5,7 +5,11 @@
 $id: http://devicetree.org/schemas/arm/sprd/sprd.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Unisoc platforms
+=======
+title: Unisoc platforms device tree bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Orson Zhai <orsonzhai@gmail.com>

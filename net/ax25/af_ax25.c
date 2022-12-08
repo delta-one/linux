@@ -723,7 +723,11 @@ static int ax25_getsockopt(struct socket *sock, int level, int optname,
 	if (maxlen < 1)
 		return -EFAULT;
 
+<<<<<<< HEAD
 	valptr = &val;
+=======
+	valptr = (void *) &val;
+>>>>>>> b7ba80a49124 (Commit)
 	length = min_t(unsigned int, maxlen, sizeof(int));
 
 	lock_sock(sk);
@@ -785,7 +789,11 @@ static int ax25_getsockopt(struct socket *sock, int level, int optname,
 			length = 1;
 		}
 
+<<<<<<< HEAD
 		valptr = devname;
+=======
+		valptr = (void *) devname;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	default:

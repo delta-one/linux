@@ -77,10 +77,15 @@ static void fuse_add_dirent_to_cache(struct file *file,
 		goto unlock;
 
 	addr = kmap_local_page(page);
+<<<<<<< HEAD
 	if (!offset) {
 		clear_page(addr);
 		SetPageUptodate(page);
 	}
+=======
+	if (!offset)
+		clear_page(addr);
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(addr + offset, dirent, reclen);
 	kunmap_local(addr);
 	fi->rdc.size = (index << PAGE_SHIFT) + offset + reclen;
@@ -518,12 +523,15 @@ retry_locked:
 
 	page = find_get_page_flags(file->f_mapping, index,
 				   FGP_ACCESSED | FGP_LOCK);
+<<<<<<< HEAD
 	/* Page gone missing, then re-added to cache, but not initialized? */
 	if (page && !PageUptodate(page)) {
 		unlock_page(page);
 		put_page(page);
 		page = NULL;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock(&fi->rdc.lock);
 	if (!page) {
 		/*
@@ -547,9 +555,15 @@ retry_locked:
 	 * Contents of the page are now protected against changing by holding
 	 * the page lock.
 	 */
+<<<<<<< HEAD
 	addr = kmap_local_page(page);
 	res = fuse_parse_cache(ff, addr, size, ctx);
 	kunmap_local(addr);
+=======
+	addr = kmap(page);
+	res = fuse_parse_cache(ff, addr, size, ctx);
+	kunmap(page);
+>>>>>>> b7ba80a49124 (Commit)
 	unlock_page(page);
 	put_page(page);
 

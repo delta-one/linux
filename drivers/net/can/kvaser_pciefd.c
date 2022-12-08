@@ -772,7 +772,11 @@ static netdev_tx_t kvaser_pciefd_start_xmit(struct sk_buff *skb,
 	int nwords;
 	u8 count;
 
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(netdev, skb))
+=======
+	if (can_dropped_invalid_skb(netdev, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	nwords = kvaser_pciefd_prepare_tx_packet(&packet, can, skb);

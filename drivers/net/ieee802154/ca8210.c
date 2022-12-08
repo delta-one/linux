@@ -51,7 +51,10 @@
 #include <linux/clk-provider.h>
 #include <linux/debugfs.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
 #include <linux/gpio/consumer.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/gpio.h>
 #include <linux/ieee802154.h>
 #include <linux/io.h>
@@ -886,7 +889,11 @@ static int ca8210_spi_transfer(
 
 	dev_dbg(&spi->dev, "%s called\n", __func__);
 
+<<<<<<< HEAD
 	cas_ctl = kzalloc(sizeof(*cas_ctl), GFP_ATOMIC);
+=======
+	cas_ctl = kmalloc(sizeof(*cas_ctl), GFP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!cas_ctl)
 		return -ENOMEM;
 
@@ -1914,8 +1921,11 @@ static int ca8210_skb_tx(
 	 * packet
 	 */
 	mac_len = ieee802154_hdr_peek_addrs(skb, &header);
+<<<<<<< HEAD
 	if (mac_len < 0)
 		return mac_len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	secspec.security_level = header.sec.level;
 	secspec.key_id_mode = header.sec.key_id_mode;
@@ -2856,7 +2866,11 @@ static int ca8210_interrupt_init(struct spi_device *spi)
 	);
 	if (ret) {
 		dev_crit(&spi->dev, "request_irq %d failed\n", pdata->irq_id);
+<<<<<<< HEAD
 		gpiod_unexport(gpio_to_desc(pdata->gpio_irq));
+=======
+		gpio_unexport(pdata->gpio_irq);
+>>>>>>> b7ba80a49124 (Commit)
 		gpio_free(pdata->gpio_irq);
 	}
 
@@ -2970,7 +2984,11 @@ static int ca8210_test_interface_init(struct ca8210_priv *priv)
 		sizeof(node_name),
 		"ca8210@%d_%d",
 		priv->spi->master->bus_num,
+<<<<<<< HEAD
 		spi_get_chipselect(priv->spi, 0)
+=======
+		priv->spi->chip_select
+>>>>>>> b7ba80a49124 (Commit)
 	);
 
 	test->ca8210_dfs_spi_int = debugfs_create_file(
@@ -3180,7 +3198,12 @@ MODULE_DEVICE_TABLE(of, ca8210_of_ids);
 static struct spi_driver ca8210_spi_driver = {
 	.driver = {
 		.name =                 DRIVER_NAME,
+<<<<<<< HEAD
 		.of_match_table =       ca8210_of_ids,
+=======
+		.owner =                THIS_MODULE,
+		.of_match_table =       of_match_ptr(ca8210_of_ids),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe  =                       ca8210_probe,
 	.remove =                       ca8210_remove

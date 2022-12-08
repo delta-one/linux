@@ -52,9 +52,12 @@ enum imx6_pcie_variants {
 	IMX8MQ,
 	IMX8MM,
 	IMX8MP,
+<<<<<<< HEAD
 	IMX8MQ_EP,
 	IMX8MM_EP,
 	IMX8MP_EP,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define IMX6_PCIE_FLAG_IMX6_PHY			BIT(0)
@@ -63,7 +66,10 @@ enum imx6_pcie_variants {
 
 struct imx6_pcie_drvdata {
 	enum imx6_pcie_variants variant;
+<<<<<<< HEAD
 	enum dw_pcie_device_mode mode;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 flags;
 	int dbi_length;
 	const char *gpr;
@@ -156,16 +162,22 @@ struct imx6_pcie {
 static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
 {
 	WARN_ON(imx6_pcie->drvdata->variant != IMX8MQ &&
+<<<<<<< HEAD
 		imx6_pcie->drvdata->variant != IMX8MQ_EP &&
 		imx6_pcie->drvdata->variant != IMX8MM &&
 		imx6_pcie->drvdata->variant != IMX8MM_EP &&
 		imx6_pcie->drvdata->variant != IMX8MP &&
 		imx6_pcie->drvdata->variant != IMX8MP_EP);
+=======
+		imx6_pcie->drvdata->variant != IMX8MM &&
+		imx6_pcie->drvdata->variant != IMX8MP);
+>>>>>>> b7ba80a49124 (Commit)
 	return imx6_pcie->controller_id == 1 ? IOMUXC_GPR16 : IOMUXC_GPR14;
 }
 
 static void imx6_pcie_configure_type(struct imx6_pcie *imx6_pcie)
 {
+<<<<<<< HEAD
 	unsigned int mask, val, mode;
 
 	if (imx6_pcie->drvdata->mode == DW_PCIE_EP_TYPE)
@@ -189,6 +201,19 @@ static void imx6_pcie_configure_type(struct imx6_pcie *imx6_pcie)
 		mask = IMX6Q_GPR12_DEVICE_TYPE;
 		val  = FIELD_PREP(IMX6Q_GPR12_DEVICE_TYPE, mode);
 		break;
+=======
+	unsigned int mask, val;
+
+	if (imx6_pcie->drvdata->variant == IMX8MQ &&
+	    imx6_pcie->controller_id == 1) {
+		mask = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE;
+		val  = FIELD_PREP(IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
+				  PCI_EXP_TYPE_ROOT_PORT);
+	} else {
+		mask = IMX6Q_GPR12_DEVICE_TYPE;
+		val  = FIELD_PREP(IMX6Q_GPR12_DEVICE_TYPE,
+				  PCI_EXP_TYPE_ROOT_PORT);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12, mask, val);
@@ -323,16 +348,23 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
 {
 	switch (imx6_pcie->drvdata->variant) {
 	case IMX8MM:
+<<<<<<< HEAD
 	case IMX8MM_EP:
 	case IMX8MP:
 	case IMX8MP_EP:
+=======
+	case IMX8MP:
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * The PHY initialization had been done in the PHY
 		 * driver, break here directly.
 		 */
 		break;
 	case IMX8MQ:
+<<<<<<< HEAD
 	case IMX8MQ_EP:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * TODO: Currently this code assumes external
 		 * oscillator is being used
@@ -583,11 +615,16 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
 	case IMX7D:
 		break;
 	case IMX8MM:
+<<<<<<< HEAD
 	case IMX8MM_EP:
 	case IMX8MQ:
 	case IMX8MQ_EP:
 	case IMX8MP:
 	case IMX8MP_EP:
+=======
+	case IMX8MQ:
+	case IMX8MP:
+>>>>>>> b7ba80a49124 (Commit)
 		ret = clk_prepare_enable(imx6_pcie->pcie_aux);
 		if (ret) {
 			dev_err(dev, "unable to enable pcie_aux clock\n");
@@ -631,11 +668,16 @@ static void imx6_pcie_disable_ref_clk(struct imx6_pcie *imx6_pcie)
 				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL);
 		break;
 	case IMX8MM:
+<<<<<<< HEAD
 	case IMX8MM_EP:
 	case IMX8MQ:
 	case IMX8MQ_EP:
 	case IMX8MP:
 	case IMX8MP_EP:
+=======
+	case IMX8MQ:
+	case IMX8MP:
+>>>>>>> b7ba80a49124 (Commit)
 		clk_disable_unprepare(imx6_pcie->pcie_aux);
 		break;
 	default:
@@ -700,6 +742,7 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
 	switch (imx6_pcie->drvdata->variant) {
 	case IMX7D:
 	case IMX8MQ:
+<<<<<<< HEAD
 	case IMX8MQ_EP:
 		reset_control_assert(imx6_pcie->pciephy_reset);
 		fallthrough;
@@ -707,6 +750,12 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
 	case IMX8MM_EP:
 	case IMX8MP:
 	case IMX8MP_EP:
+=======
+		reset_control_assert(imx6_pcie->pciephy_reset);
+		fallthrough;
+	case IMX8MM:
+	case IMX8MP:
+>>>>>>> b7ba80a49124 (Commit)
 		reset_control_assert(imx6_pcie->apps_reset);
 		break;
 	case IMX6SX:
@@ -744,7 +793,10 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
 
 	switch (imx6_pcie->drvdata->variant) {
 	case IMX8MQ:
+<<<<<<< HEAD
 	case IMX8MQ_EP:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		reset_control_deassert(imx6_pcie->pciephy_reset);
 		break;
 	case IMX7D:
@@ -783,9 +835,13 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
 		break;
 	case IMX6Q:		/* Nothing to do */
 	case IMX8MM:
+<<<<<<< HEAD
 	case IMX8MM_EP:
 	case IMX8MP:
 	case IMX8MP_EP:
+=======
+	case IMX8MP:
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -834,11 +890,16 @@ static void imx6_pcie_ltssm_enable(struct device *dev)
 		break;
 	case IMX7D:
 	case IMX8MQ:
+<<<<<<< HEAD
 	case IMX8MQ_EP:
 	case IMX8MM:
 	case IMX8MM_EP:
 	case IMX8MP:
 	case IMX8MP_EP:
+=======
+	case IMX8MM:
+	case IMX8MP:
+>>>>>>> b7ba80a49124 (Commit)
 		reset_control_deassert(imx6_pcie->apps_reset);
 		break;
 	}
@@ -857,11 +918,16 @@ static void imx6_pcie_ltssm_disable(struct device *dev)
 		break;
 	case IMX7D:
 	case IMX8MQ:
+<<<<<<< HEAD
 	case IMX8MQ_EP:
 	case IMX8MM:
 	case IMX8MM_EP:
 	case IMX8MP:
 	case IMX8MP_EP:
+=======
+	case IMX8MM:
+	case IMX8MP:
+>>>>>>> b7ba80a49124 (Commit)
 		reset_control_assert(imx6_pcie->apps_reset);
 		break;
 	}
@@ -985,13 +1051,18 @@ static int imx6_pcie_host_init(struct dw_pcie_rp *pp)
 	}
 
 	if (imx6_pcie->phy) {
+<<<<<<< HEAD
 		ret = phy_init(imx6_pcie->phy);
+=======
+		ret = phy_power_on(imx6_pcie->phy);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret) {
 			dev_err(dev, "pcie PHY power up failed\n");
 			goto err_clk_disable;
 		}
 	}
 
+<<<<<<< HEAD
 	if (imx6_pcie->phy) {
 		ret = phy_power_on(imx6_pcie->phy);
 		if (ret) {
@@ -1000,19 +1071,35 @@ static int imx6_pcie_host_init(struct dw_pcie_rp *pp)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = imx6_pcie_deassert_core_reset(imx6_pcie);
 	if (ret < 0) {
 		dev_err(dev, "pcie deassert core reset failed: %d\n", ret);
 		goto err_phy_off;
 	}
 
+<<<<<<< HEAD
+=======
+	if (imx6_pcie->phy) {
+		ret = phy_init(imx6_pcie->phy);
+		if (ret) {
+			dev_err(dev, "waiting for PHY ready timeout!\n");
+			goto err_phy_off;
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	imx6_setup_phy_mpll(imx6_pcie);
 
 	return 0;
 
 err_phy_off:
 	if (imx6_pcie->phy)
+<<<<<<< HEAD
 		phy_exit(imx6_pcie->phy);
+=======
+		phy_power_off(imx6_pcie->phy);
+>>>>>>> b7ba80a49124 (Commit)
 err_clk_disable:
 	imx6_pcie_clk_disable(imx6_pcie);
 err_reg_disable:
@@ -1043,6 +1130,7 @@ static const struct dw_pcie_host_ops imx6_pcie_host_ops = {
 
 static const struct dw_pcie_ops dw_pcie_ops = {
 	.start_link = imx6_pcie_start_link,
+<<<<<<< HEAD
 	.stop_link = imx6_pcie_stop_link,
 };
 
@@ -1141,6 +1229,10 @@ static int imx6_add_pcie_ep(struct imx6_pcie *imx6_pcie,
 	return 0;
 }
 
+=======
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static void imx6_pcie_pm_turnoff(struct imx6_pcie *imx6_pcie)
 {
 	struct device *dev = imx6_pcie->pci->dev;
@@ -1302,7 +1394,10 @@ static int imx6_pcie_probe(struct platform_device *pdev)
 					     "pcie_inbound_axi clock missing or invalid\n");
 		break;
 	case IMX8MQ:
+<<<<<<< HEAD
 	case IMX8MQ_EP:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
 		if (IS_ERR(imx6_pcie->pcie_aux))
 			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_aux),
@@ -1327,9 +1422,13 @@ static int imx6_pcie_probe(struct platform_device *pdev)
 		}
 		break;
 	case IMX8MM:
+<<<<<<< HEAD
 	case IMX8MM_EP:
 	case IMX8MP:
 	case IMX8MP_EP:
+=======
+	case IMX8MP:
+>>>>>>> b7ba80a49124 (Commit)
 		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
 		if (IS_ERR(imx6_pcie->pcie_aux))
 			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_aux),
@@ -1418,6 +1517,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (imx6_pcie->drvdata->mode == DW_PCIE_EP_TYPE) {
 		ret = imx6_add_pcie_ep(imx6_pcie, pdev);
 		if (ret < 0)
@@ -1434,6 +1534,17 @@ static int imx6_pcie_probe(struct platform_device *pdev)
 			val |= PCI_MSI_FLAGS_ENABLE;
 			dw_pcie_writew_dbi(pci, offset + PCI_MSI_FLAGS, val);
 		}
+=======
+	ret = dw_pcie_host_init(&pci->pp);
+	if (ret < 0)
+		return ret;
+
+	if (pci_msi_enabled()) {
+		u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+		val = dw_pcie_readw_dbi(pci, offset + PCI_MSI_FLAGS);
+		val |= PCI_MSI_FLAGS_ENABLE;
+		dw_pcie_writew_dbi(pci, offset + PCI_MSI_FLAGS, val);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -1489,6 +1600,7 @@ static const struct imx6_pcie_drvdata drvdata[] = {
 		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
 		.gpr = "fsl,imx8mp-iomuxc-gpr",
 	},
+<<<<<<< HEAD
 	[IMX8MQ_EP] = {
 		.variant = IMX8MQ_EP,
 		.mode = DW_PCIE_EP_TYPE,
@@ -1504,6 +1616,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
 		.mode = DW_PCIE_EP_TYPE,
 		.gpr = "fsl,imx8mp-iomuxc-gpr",
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct of_device_id imx6_pcie_of_match[] = {
@@ -1514,9 +1628,12 @@ static const struct of_device_id imx6_pcie_of_match[] = {
 	{ .compatible = "fsl,imx8mq-pcie", .data = &drvdata[IMX8MQ], },
 	{ .compatible = "fsl,imx8mm-pcie", .data = &drvdata[IMX8MM], },
 	{ .compatible = "fsl,imx8mp-pcie", .data = &drvdata[IMX8MP], },
+<<<<<<< HEAD
 	{ .compatible = "fsl,imx8mq-pcie-ep", .data = &drvdata[IMX8MQ_EP], },
 	{ .compatible = "fsl,imx8mm-pcie-ep", .data = &drvdata[IMX8MM_EP], },
 	{ .compatible = "fsl,imx8mp-pcie-ep", .data = &drvdata[IMX8MP_EP], },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 

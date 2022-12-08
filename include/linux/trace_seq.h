@@ -95,11 +95,17 @@ extern void trace_seq_bitmask(struct trace_seq *s, const unsigned long *maskp,
 extern int trace_seq_hex_dump(struct trace_seq *s, const char *prefix_str,
 			      int prefix_type, int rowsize, int groupsize,
 			      const void *buf, size_t len, bool ascii);
+<<<<<<< HEAD
 char *trace_seq_acquire(struct trace_seq *s, unsigned int len);
 
 #else /* CONFIG_TRACING */
 static inline __printf(2, 3)
 void trace_seq_printf(struct trace_seq *s, const char *fmt, ...)
+=======
+
+#else /* CONFIG_TRACING */
+static inline void trace_seq_printf(struct trace_seq *s, const char *fmt, ...)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 static inline void
@@ -140,10 +146,13 @@ static inline int trace_seq_path(struct trace_seq *s, const struct path *path)
 {
 	return 0;
 }
+<<<<<<< HEAD
 static inline char *trace_seq_acquire(struct trace_seq *s, unsigned int len)
 {
 	return NULL;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_TRACING */
 
 #endif /* _LINUX_TRACE_SEQ_H */

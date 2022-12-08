@@ -23,7 +23,10 @@
 #include <linux/interrupt.h>
 #include <linux/clk.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/input.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/input/matrix_keypad.h>
 #include <linux/slab.h>
 #include <linux/soc/cirrus/ep93xx.h>
@@ -178,7 +181,11 @@ static void ep93xx_keypad_close(struct input_dev *pdev)
 }
 
 
+<<<<<<< HEAD
 static int ep93xx_keypad_suspend(struct device *dev)
+=======
+static int __maybe_unused ep93xx_keypad_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *pdev = to_platform_device(dev);
 	struct ep93xx_keypad *keypad = platform_get_drvdata(pdev);
@@ -196,7 +203,11 @@ static int ep93xx_keypad_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ep93xx_keypad_resume(struct device *dev)
+=======
+static int __maybe_unused ep93xx_keypad_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *pdev = to_platform_device(dev);
 	struct ep93xx_keypad *keypad = platform_get_drvdata(pdev);
@@ -217,8 +228,13 @@ static int ep93xx_keypad_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(ep93xx_keypad_pm_ops,
 				ep93xx_keypad_suspend, ep93xx_keypad_resume);
+=======
+static SIMPLE_DEV_PM_OPS(ep93xx_keypad_pm_ops,
+			 ep93xx_keypad_suspend, ep93xx_keypad_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static void ep93xx_keypad_release_gpio_action(void *_pdev)
 {
@@ -318,7 +334,11 @@ static int ep93xx_keypad_remove(struct platform_device *pdev)
 static struct platform_driver ep93xx_keypad_driver = {
 	.driver		= {
 		.name	= "ep93xx-keypad",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&ep93xx_keypad_pm_ops),
+=======
+		.pm	= &ep93xx_keypad_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe		= ep93xx_keypad_probe,
 	.remove		= ep93xx_keypad_remove,

@@ -49,5 +49,8 @@ void run_tests(const struct test_case *test_cases,
 void list_tests(const struct test_case *test_cases);
 void skip_test(struct test_case *test_cases, size_t test_cases_len,
 	       const char *test_id_str);
+<<<<<<< HEAD
 unsigned long hash_djb2(const void *data, size_t len);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* UTIL_H */

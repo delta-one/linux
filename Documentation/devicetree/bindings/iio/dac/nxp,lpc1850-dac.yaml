@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/iio/dac/nxp,lpc1850-dac.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: NXP LPC1850 DAC
+=======
+title: NXP LPC1850 DAC bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Jonathan Cameron <jic23@kernel.org>

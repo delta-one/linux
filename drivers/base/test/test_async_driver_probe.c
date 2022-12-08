@@ -145,7 +145,11 @@ static int __init test_async_probe_init(void)
 	calltime = ktime_get();
 	for_each_online_cpu(cpu) {
 		nid = cpu_to_node(cpu);
+<<<<<<< HEAD
 		pdev = &async_dev[async_id];
+=======
+		pdev = &sync_dev[sync_id];
+>>>>>>> b7ba80a49124 (Commit)
 
 		*pdev = test_platform_device_register_node("test_async_driver",
 							   async_id,

@@ -410,6 +410,7 @@ the objtool maintainers.
    can remove this warning by putting the ANNOTATE_INTRA_FUNCTION_CALL
    directive right before the call.
 
+<<<<<<< HEAD
 12. file.o: warning: func(): not an indirect call target
 
    This means that objtool is running with --ibt and a function expected
@@ -418,6 +419,8 @@ the objtool maintainers.
    names and does not use module_init() / module_exit() macros to create
    them.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 If the error doesn't seem to make sense, it could be a bug in objtool.
 Feel free to ask the objtool maintainer for help.

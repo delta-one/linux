@@ -63,8 +63,11 @@ enum counter_event_type {
 	COUNTER_EVENT_INDEX,
 	/* State of counter is changed */
 	COUNTER_EVENT_CHANGE_OF_STATE,
+<<<<<<< HEAD
 	/* Count value captured */
 	COUNTER_EVENT_CAPTURE,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -155,10 +158,13 @@ enum counter_synapse_action {
 	COUNTER_SYNAPSE_ACTION_BOTH_EDGES,
 };
 
+<<<<<<< HEAD
 /* Signal polarity values */
 enum counter_signal_polarity {
 	COUNTER_SIGNAL_POLARITY_POSITIVE,
 	COUNTER_SIGNAL_POLARITY_NEGATIVE,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _UAPI_COUNTER_H_ */

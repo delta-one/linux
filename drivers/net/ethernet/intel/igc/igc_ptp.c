@@ -322,7 +322,11 @@ static int igc_ptp_feature_enable_i225(struct ptp_clock_info *ptp,
 		ts = ns_to_timespec64(ns);
 		if (rq->perout.index == 1) {
 			if (use_freq) {
+<<<<<<< HEAD
 				tsauxc_mask = IGC_TSAUXC_EN_CLK1 | IGC_TSAUXC_ST1;
+=======
+				tsauxc_mask = IGC_TSAUXC_EN_CLK1;
+>>>>>>> b7ba80a49124 (Commit)
 				tsim_mask = 0;
 			} else {
 				tsauxc_mask = IGC_TSAUXC_EN_TT1;
@@ -333,7 +337,11 @@ static int igc_ptp_feature_enable_i225(struct ptp_clock_info *ptp,
 			freqout = IGC_FREQOUT1;
 		} else {
 			if (use_freq) {
+<<<<<<< HEAD
 				tsauxc_mask = IGC_TSAUXC_EN_CLK0 | IGC_TSAUXC_ST0;
+=======
+				tsauxc_mask = IGC_TSAUXC_EN_CLK0;
+>>>>>>> b7ba80a49124 (Commit)
 				tsim_mask = 0;
 			} else {
 				tsauxc_mask = IGC_TSAUXC_EN_TT0;
@@ -347,12 +355,19 @@ static int igc_ptp_feature_enable_i225(struct ptp_clock_info *ptp,
 		tsauxc = rd32(IGC_TSAUXC);
 		tsim = rd32(IGC_TSIM);
 		if (rq->perout.index == 1) {
+<<<<<<< HEAD
 			tsauxc &= ~(IGC_TSAUXC_EN_TT1 | IGC_TSAUXC_EN_CLK1 |
 				    IGC_TSAUXC_ST1);
 			tsim &= ~IGC_TSICR_TT1;
 		} else {
 			tsauxc &= ~(IGC_TSAUXC_EN_TT0 | IGC_TSAUXC_EN_CLK0 |
 				    IGC_TSAUXC_ST0);
+=======
+			tsauxc &= ~(IGC_TSAUXC_EN_TT1 | IGC_TSAUXC_EN_CLK1);
+			tsim &= ~IGC_TSICR_TT1;
+		} else {
+			tsauxc &= ~(IGC_TSAUXC_EN_TT0 | IGC_TSAUXC_EN_CLK0);
+>>>>>>> b7ba80a49124 (Commit)
 			tsim &= ~IGC_TSICR_TT0;
 		}
 		if (on) {
@@ -417,12 +432,19 @@ static int igc_ptp_verify_pin(struct ptp_clock_info *ptp, unsigned int pin,
  *
  * We need to convert the system time value stored in the RX/TXSTMP registers
  * into a hwtstamp which can be used by the upper level timestamping functions.
+<<<<<<< HEAD
  *
  * Returns 0 on success.
  **/
 static int igc_ptp_systim_to_hwtstamp(struct igc_adapter *adapter,
 				      struct skb_shared_hwtstamps *hwtstamps,
 				      u64 systim)
+=======
+ **/
+static void igc_ptp_systim_to_hwtstamp(struct igc_adapter *adapter,
+				       struct skb_shared_hwtstamps *hwtstamps,
+				       u64 systim)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (adapter->hw.mac.type) {
 	case igc_i225:
@@ -432,9 +454,14 @@ static int igc_ptp_systim_to_hwtstamp(struct igc_adapter *adapter,
 						systim & 0xFFFFFFFF);
 		break;
 	default:
+<<<<<<< HEAD
 		return -EINVAL;
 	}
 	return 0;
+=======
+		break;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -655,8 +682,12 @@ static void igc_ptp_tx_hwtstamp(struct igc_adapter *adapter)
 
 	regval = rd32(IGC_TXSTMPL);
 	regval |= (u64)rd32(IGC_TXSTMPH) << 32;
+<<<<<<< HEAD
 	if (igc_ptp_systim_to_hwtstamp(adapter, &shhwtstamps, regval))
 		return;
+=======
+	igc_ptp_systim_to_hwtstamp(adapter, &shhwtstamps, regval);
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (adapter->link_speed) {
 	case SPEED_10:

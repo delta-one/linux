@@ -31,9 +31,15 @@ properties:
 
   ranges: true
 
+<<<<<<< HEAD
 # The subnodes represents the two ethernet ports in this device.
 # They are not independent of each other since they share resources
 # in the parent node, and are thus children.
+=======
+#The subnodes represents the two ethernet ports in this device.
+#They are not independent of each other since they share resources
+#in the parent node, and are thus children.
+>>>>>>> b7ba80a49124 (Commit)
 patternProperties:
   "^ethernet-port@[0-9]+$":
     type: object

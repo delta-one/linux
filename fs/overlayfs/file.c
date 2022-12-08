@@ -34,7 +34,11 @@ static char ovl_whatisit(struct inode *inode, struct inode *realinode)
 		return 'm';
 }
 
+<<<<<<< HEAD
 /* No atime modification nor notify on underlying */
+=======
+/* No atime modificaton nor notify on underlying */
+>>>>>>> b7ba80a49124 (Commit)
 #define OVL_OPEN_FLAGS (O_NOATIME | FMODE_NONOTIFY)
 
 static struct file *ovl_open_realfile(const struct file *file,
@@ -42,7 +46,11 @@ static struct file *ovl_open_realfile(const struct file *file,
 {
 	struct inode *realinode = d_inode(realpath->dentry);
 	struct inode *inode = file_inode(file);
+<<<<<<< HEAD
 	struct mnt_idmap *real_idmap;
+=======
+	struct user_namespace *real_mnt_userns;
+>>>>>>> b7ba80a49124 (Commit)
 	struct file *realfile;
 	const struct cred *old_cred;
 	int flags = file->f_flags | OVL_OPEN_FLAGS;
@@ -53,12 +61,21 @@ static struct file *ovl_open_realfile(const struct file *file,
 		acc_mode |= MAY_APPEND;
 
 	old_cred = ovl_override_creds(inode->i_sb);
+<<<<<<< HEAD
 	real_idmap = mnt_idmap(realpath->mnt);
 	err = inode_permission(real_idmap, realinode, MAY_OPEN | acc_mode);
 	if (err) {
 		realfile = ERR_PTR(err);
 	} else {
 		if (!inode_owner_or_capable(real_idmap, realinode))
+=======
+	real_mnt_userns = mnt_user_ns(realpath->mnt);
+	err = inode_permission(real_mnt_userns, realinode, MAY_OPEN | acc_mode);
+	if (err) {
+		realfile = ERR_PTR(err);
+	} else {
+		if (!inode_owner_or_capable(real_mnt_userns, realinode))
+>>>>>>> b7ba80a49124 (Commit)
 			flags &= ~O_NOATIME;
 
 		realfile = open_with_fake_path(&file->f_path, flags, realinode,
@@ -96,7 +113,10 @@ static int ovl_change_flags(struct file *file, unsigned int flags)
 
 	spin_lock(&file->f_lock);
 	file->f_flags = (file->f_flags & ~OVL_SETFL_MASK) | flags;
+<<<<<<< HEAD
 	file->f_iocb_flags = iocb_flags(file);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock(&file->f_lock);
 
 	return 0;
@@ -419,6 +439,7 @@ out_unlock:
 	return ret;
 }
 
+<<<<<<< HEAD
 static ssize_t ovl_splice_read(struct file *in, loff_t *ppos,
 			       struct pipe_inode_info *pipe, size_t len,
 			       unsigned int flags)
@@ -440,6 +461,8 @@ static ssize_t ovl_splice_read(struct file *in, loff_t *ppos,
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Calling iter_file_splice_write() directly from overlay's f_op may deadlock
  * due to lock order inversion between pipe->mutex in iter_file_splice_write()
@@ -539,6 +562,7 @@ static long ovl_fallocate(struct file *file, int mode, loff_t offset, loff_t len
 	const struct cred *old_cred;
 	int ret;
 
+<<<<<<< HEAD
 	inode_lock(inode);
 	/* Update mode */
 	ovl_copyattr(inode);
@@ -549,6 +573,11 @@ static long ovl_fallocate(struct file *file, int mode, loff_t offset, loff_t len
 	ret = ovl_real_fdget(file, &real);
 	if (ret)
 		goto out_unlock;
+=======
+	ret = ovl_real_fdget(file, &real);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	old_cred = ovl_override_creds(file_inode(file)->i_sb);
 	ret = vfs_fallocate(real.file, mode, offset, len);
@@ -559,9 +588,12 @@ static long ovl_fallocate(struct file *file, int mode, loff_t offset, loff_t len
 
 	fdput(real);
 
+<<<<<<< HEAD
 out_unlock:
 	inode_unlock(inode);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -599,6 +631,7 @@ static loff_t ovl_copyfile(struct file *file_in, loff_t pos_in,
 	const struct cred *old_cred;
 	loff_t ret;
 
+<<<<<<< HEAD
 	inode_lock(inode_out);
 	if (op != OVL_DEDUPE) {
 		/* Update mode */
@@ -611,11 +644,20 @@ static loff_t ovl_copyfile(struct file *file_in, loff_t pos_in,
 	ret = ovl_real_fdget(file_out, &real_out);
 	if (ret)
 		goto out_unlock;
+=======
+	ret = ovl_real_fdget(file_out, &real_out);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = ovl_real_fdget(file_in, &real_in);
 	if (ret) {
 		fdput(real_out);
+<<<<<<< HEAD
 		goto out_unlock;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	old_cred = ovl_override_creds(file_inode(file_out)->i_sb);
@@ -644,9 +686,12 @@ static loff_t ovl_copyfile(struct file *file_in, loff_t pos_in,
 	fdput(real_in);
 	fdput(real_out);
 
+<<<<<<< HEAD
 out_unlock:
 	inode_unlock(inode_out);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -716,7 +761,11 @@ const struct file_operations ovl_file_operations = {
 	.fallocate	= ovl_fallocate,
 	.fadvise	= ovl_fadvise,
 	.flush		= ovl_flush,
+<<<<<<< HEAD
 	.splice_read    = ovl_splice_read,
+=======
+	.splice_read    = generic_file_splice_read,
+>>>>>>> b7ba80a49124 (Commit)
 	.splice_write   = ovl_splice_write,
 
 	.copy_file_range	= ovl_copy_file_range,

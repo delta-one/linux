@@ -72,9 +72,15 @@ static void mtk_vcodec_dec_pw_off(struct mtk_vcodec_pm *pm)
 {
 	int ret;
 
+<<<<<<< HEAD
 	ret = pm_runtime_put(pm->dev);
 	if (ret && ret != -EAGAIN)
 		mtk_v4l2_err("pm_runtime_put fail %d", ret);
+=======
+	ret = pm_runtime_put_sync(pm->dev);
+	if (ret)
+		mtk_v4l2_err("pm_runtime_put_sync fail %d", ret);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mtk_vcodec_dec_clock_on(struct mtk_vcodec_pm *pm)

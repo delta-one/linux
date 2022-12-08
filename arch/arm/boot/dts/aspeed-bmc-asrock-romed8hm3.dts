@@ -31,7 +31,11 @@
 		};
 
 		system-fault {
+<<<<<<< HEAD
 			gpios = <&gpio ASPEED_GPIO(Z, 2) GPIO_ACTIVE_HIGH>;
+=======
+			gpios = <&gpio ASPEED_GPIO(Z, 2) GPIO_ACTIVE_LOW>;
+>>>>>>> b7ba80a49124 (Commit)
 			panic-indicator;
 		};
 	};
@@ -51,7 +55,11 @@
 		status = "okay";
 		m25p,fast-read;
 		label = "bmc";
+<<<<<<< HEAD
 		spi-max-frequency = <50000000>; /* 50 MHz */
+=======
+		spi-max-frequency = <100000000>; /* 100 MHz */
+>>>>>>> b7ba80a49124 (Commit)
 #include "openbmc-flash-layout-64.dtsi"
 	};
 };

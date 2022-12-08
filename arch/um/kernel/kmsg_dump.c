@@ -16,6 +16,7 @@ static void kmsg_dumper_stdout(struct kmsg_dumper *dumper,
 	struct console *con;
 	unsigned long flags;
 	size_t len = 0;
+<<<<<<< HEAD
 	int cookie;
 
 	/*
@@ -36,6 +37,22 @@ static void kmsg_dumper_stdout(struct kmsg_dumper *dumper,
 		}
 	}
 	console_srcu_read_unlock(cookie);
+=======
+
+	/* only dump kmsg when no console is available */
+	if (!console_trylock())
+		return;
+
+	for_each_console(con) {
+		if(strcmp(con->name, "tty") == 0 &&
+		   (con->flags & (CON_ENABLED | CON_CONSDEV)) != 0) {
+			break;
+		}
+	}
+
+	console_unlock();
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (con)
 		return;
 

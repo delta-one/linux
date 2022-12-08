@@ -445,7 +445,11 @@ static int adis16400_initial_setup(struct iio_dev *indio_dev)
 	st->adis.spi->mode = SPI_MODE_3;
 	spi_setup(st->adis.spi);
 
+<<<<<<< HEAD
 	ret = __adis_initial_startup(&st->adis);
+=======
+	ret = adis_initial_startup(&st->adis);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -466,7 +470,11 @@ static int adis16400_initial_setup(struct iio_dev *indio_dev)
 
 		dev_info(&indio_dev->dev, "%s: prod_id 0x%04x at CS%d (irq %d)\n",
 			indio_dev->name, prod_id,
+<<<<<<< HEAD
 			spi_get_chipselect(st->adis.spi, 0), st->adis.spi->irq);
+=======
+			st->adis.spi->chip_select, st->adis.spi->irq);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	/* use high spi speed if possible */
 	if (st->variant->flags & ADIS16400_HAS_SLOW_MODE) {

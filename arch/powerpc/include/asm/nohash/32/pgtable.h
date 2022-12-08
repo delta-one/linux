@@ -130,10 +130,17 @@ void unmap_kernel_page(unsigned long va);
 #include <asm/nohash/32/pte-40x.h>
 #elif defined(CONFIG_44x)
 #include <asm/nohash/32/pte-44x.h>
+<<<<<<< HEAD
 #elif defined(CONFIG_PPC_85xx) && defined(CONFIG_PTE_64BIT)
 #include <asm/nohash/pte-e500.h>
 #elif defined(CONFIG_PPC_85xx)
 #include <asm/nohash/32/pte-85xx.h>
+=======
+#elif defined(CONFIG_FSL_BOOKE) && defined(CONFIG_PTE_64BIT)
+#include <asm/nohash/pte-book3e.h>
+#elif defined(CONFIG_FSL_BOOKE)
+#include <asm/nohash/32/pte-fsl-booke.h>
+>>>>>>> b7ba80a49124 (Commit)
 #elif defined(CONFIG_PPC_8xx)
 #include <asm/nohash/32/pte-8xx.h>
 #endif
@@ -171,7 +178,11 @@ void unmap_kernel_page(unsigned long va);
 	do { pte_update(mm, addr, ptep, ~0, 0, 0); } while (0)
 
 #ifndef pte_mkwrite
+<<<<<<< HEAD
 static inline pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
+=======
+static inline pte_t pte_mkwrite(pte_t pte)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return __pte(pte_val(pte) | _PAGE_RW);
 }
@@ -256,6 +267,7 @@ static inline pte_basic_t pte_update(struct mm_struct *mm, unsigned long addr, p
 
 	num = number_of_cells_per_pte(pmd, new, huge);
 
+<<<<<<< HEAD
 	for (i = 0; i < num; i += PAGE_SIZE / SZ_4K, new += PAGE_SIZE) {
 		*entry++ = new;
 		if (IS_ENABLED(CONFIG_PPC_16K_PAGES) && num != 1) {
@@ -264,12 +276,20 @@ static inline pte_basic_t pte_update(struct mm_struct *mm, unsigned long addr, p
 			*entry++ = new;
 		}
 	}
+=======
+	for (i = 0; i < num; i++, entry++, new += SZ_4K)
+		*entry = new;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return old;
 }
 
 #ifdef CONFIG_PPC_16K_PAGES
+<<<<<<< HEAD
 #define ptep_get ptep_get
+=======
+#define __HAVE_ARCH_PTEP_GET
+>>>>>>> b7ba80a49124 (Commit)
 static inline pte_t ptep_get(pte_t *ptep)
 {
 	pte_basic_t val = READ_ONCE(ptep->pte);
@@ -360,6 +380,7 @@ static inline int pte_young(pte_t pte)
 #endif
 
 #define pmd_page(pmd)		pfn_to_page(pmd_pfn(pmd))
+<<<<<<< HEAD
 
 /*
  * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
@@ -384,6 +405,20 @@ static inline int pte_young(pte_t pte)
 /* We borrow LSB 2 to store the exclusive marker in swap PTEs. */
 #define _PAGE_SWP_EXCLUSIVE	0x000004
 
+=======
+/*
+ * Encode and decode a swap entry.
+ * Note that the bits we use in a PTE for representing a swap entry
+ * must not include the _PAGE_PRESENT bit.
+ *   -- paulus
+ */
+#define __swp_type(entry)		((entry).val & 0x1f)
+#define __swp_offset(entry)		((entry).val >> 5)
+#define __swp_entry(type, offset)	((swp_entry_t) { (type) | ((offset) << 5) })
+#define __pte_to_swp_entry(pte)		((swp_entry_t) { pte_val(pte) >> 3 })
+#define __swp_entry_to_pte(x)		((pte_t) { (x).val << 3 })
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* !__ASSEMBLY__ */
 
 #endif /* __ASM_POWERPC_NOHASH_32_PGTABLE_H */

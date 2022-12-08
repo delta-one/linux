@@ -57,8 +57,11 @@ static inline bool on_task_stack(const struct task_struct *tsk,
 	return stackinfo_on_stack(&info, sp, size);
 }
 
+<<<<<<< HEAD
 #define on_thread_stack()	(on_task_stack(current, current_stack_pointer, 1))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_VMAP_STACK
 DECLARE_PER_CPU(unsigned long [OVERFLOW_STACK_SIZE/sizeof(long)], overflow_stack);
 
@@ -106,6 +109,7 @@ static inline struct stack_info stackinfo_get_sdei_critical(void)
 #define stackinfo_get_sdei_critical()	stackinfo_get_unknown()
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_EFI
 extern u64 *efi_rt_stack_top;
 
@@ -121,4 +125,6 @@ static inline struct stack_info stackinfo_get_efi(void)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif	/* __ASM_STACKTRACE_H */

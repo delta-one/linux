@@ -73,6 +73,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	/*
 	 * For unknown reasons HDMI-DDC does not work with Exynos I2C
 	 * controllers. Lets use software I2C over GPIO pins as a workaround.
@@ -86,6 +87,8 @@
 		i2c-gpio,delay-us = <2>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	panel: panel {
 		compatible = "boe,hv070wsa-100";
 		power-supply = <&vcc_3v3_reg>;
@@ -192,6 +195,7 @@
 		vddio-supply = <&vcc_1v8_reg>;
 		vddlvds-supply = <&vcc_3v3_reg>;
 		reset-gpios = <&gpd1 6 GPIO_ACTIVE_LOW>;
+<<<<<<< HEAD
 
 		ports {
 			#address-cells = <1>;
@@ -201,6 +205,14 @@
 				bridge_out_ep: endpoint {
 					remote-endpoint = <&panel_ep>;
 				};
+=======
+		#address-cells = <1>;
+		#size-cells = <0>;
+		port@1 {
+			reg = <1>;
+			bridge_out_ep: endpoint {
+				remote-endpoint = <&panel_ep>;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 	};
@@ -540,8 +552,13 @@
 		SPKVDD1-supply = <&main_dc_reg>;
 		SPKVDD2-supply = <&main_dc_reg>;
 
+<<<<<<< HEAD
 		wlf,ldo1ena-gpios = <&gpb0 0 GPIO_ACTIVE_HIGH>;
 		wlf,ldo2ena-gpios = <&gpb0 1 GPIO_ACTIVE_HIGH>;
+=======
+		wlf,ldo1ena = <&gpb0 0 GPIO_ACTIVE_HIGH>;
+		wlf,ldo2ena = <&gpb0 1 GPIO_ACTIVE_HIGH>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -631,6 +648,27 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
+=======
+&soc {
+	/*
+	 * For unknown reasons HDMI-DDC does not work with Exynos I2C
+	 * controllers. Lets use software I2C over GPIO pins as a workaround.
+	 */
+	i2c_ddc: i2c-10 {
+		pinctrl-names = "default";
+		pinctrl-0 = <&i2c2_gpio_bus>;
+		status = "okay";
+		compatible = "i2c-gpio";
+		sda-gpios = <&gpa0 6 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+		scl-gpios = <&gpa0 7 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+		i2c-gpio,delay-us = <2>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+	};
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &usbdrd {
 	vdd10-supply = <&ldo15_reg>;
 	vdd33-supply = <&ldo12_reg>;

@@ -614,7 +614,11 @@ static int __ipmi_bmc_register(struct ipmi_smi *intf,
 static int __scan_channels(struct ipmi_smi *intf, struct ipmi_device_id *id);
 
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * The driver model view of the IPMI messaging driver.
  */
 static struct platform_driver ipmidriver = {
@@ -736,6 +740,15 @@ static void intf_free(struct kref *ref)
 	kfree(intf);
 }
 
+<<<<<<< HEAD
+=======
+struct watcher_entry {
+	int              intf_num;
+	struct ipmi_smi  *intf;
+	struct list_head link;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 int ipmi_smi_watcher_register(struct ipmi_smi_watcher *watcher)
 {
 	struct ipmi_smi *intf;
@@ -1330,7 +1343,10 @@ static void _ipmi_destroy_user(struct ipmi_user *user)
 	unsigned long    flags;
 	struct cmd_rcvr  *rcvr;
 	struct cmd_rcvr  *rcvrs = NULL;
+<<<<<<< HEAD
 	struct module    *owner;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!acquire_ipmi_user(user, &i)) {
 		/*
@@ -1393,9 +1409,14 @@ static void _ipmi_destroy_user(struct ipmi_user *user)
 		kfree(rcvr);
 	}
 
+<<<<<<< HEAD
 	owner = intf->owner;
 	kref_put(&intf->refcount, intf_free);
 	module_put(owner);
+=======
+	kref_put(&intf->refcount, intf_free);
+	module_put(intf->owner);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int ipmi_destroy_user(struct ipmi_user *user)
@@ -3706,16 +3727,24 @@ static void deliver_smi_err_response(struct ipmi_smi *intf,
 				     struct ipmi_smi_msg *msg,
 				     unsigned char err)
 {
+<<<<<<< HEAD
 	int rv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	msg->rsp[0] = msg->data[0] | 4;
 	msg->rsp[1] = msg->data[1];
 	msg->rsp[2] = err;
 	msg->rsp_size = 3;
+<<<<<<< HEAD
 
 	/* This will never requeue, but it may ask us to free the message. */
 	rv = handle_one_recv_msg(intf, msg);
 	if (rv == 0)
 		ipmi_free_smi_msg(msg);
+=======
+	/* It's an error, so it will never requeue, no need to check return. */
+	handle_one_recv_msg(intf, msg);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void cleanup_smi_msgs(struct ipmi_smi *intf)

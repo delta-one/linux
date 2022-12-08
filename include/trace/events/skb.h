@@ -42,7 +42,11 @@ TRACE_EVENT(kfree_skb,
 		__entry->reason = reason;
 	),
 
+<<<<<<< HEAD
 	TP_printk("skbaddr=%p protocol=%u location=%pS reason: %s",
+=======
+	TP_printk("skbaddr=%p protocol=%u location=%p reason: %s",
+>>>>>>> b7ba80a49124 (Commit)
 		  __entry->skbaddr, __entry->protocol, __entry->location,
 		  __print_symbolic(__entry->reason,
 				   DEFINE_DROP_REASON(FN, FNe)))
@@ -53,6 +57,7 @@ TRACE_EVENT(kfree_skb,
 
 TRACE_EVENT(consume_skb,
 
+<<<<<<< HEAD
 	TP_PROTO(struct sk_buff *skb, void *location),
 
 	TP_ARGS(skb, location),
@@ -60,14 +65,28 @@ TRACE_EVENT(consume_skb,
 	TP_STRUCT__entry(
 		__field(	void *,	skbaddr)
 		__field(	void *,	location)
+=======
+	TP_PROTO(struct sk_buff *skb),
+
+	TP_ARGS(skb),
+
+	TP_STRUCT__entry(
+		__field(	void *,	skbaddr	)
+>>>>>>> b7ba80a49124 (Commit)
 	),
 
 	TP_fast_assign(
 		__entry->skbaddr = skb;
+<<<<<<< HEAD
 		__entry->location = location;
 	),
 
 	TP_printk("skbaddr=%p location=%pS", __entry->skbaddr, __entry->location)
+=======
+	),
+
+	TP_printk("skbaddr=%p", __entry->skbaddr)
+>>>>>>> b7ba80a49124 (Commit)
 );
 
 TRACE_EVENT(skb_copy_datagram_iovec,

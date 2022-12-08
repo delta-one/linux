@@ -1,6 +1,10 @@
 # SPDX-License-Identifier: GPL-2.0-only
 menu "MediaTek pinctrl drivers"
+<<<<<<< HEAD
 	depends on ARCH_MEDIATEK || RALINK || COMPILE_TEST
+=======
+	depends on ARCH_MEDIATEK || COMPILE_TEST
+>>>>>>> b7ba80a49124 (Commit)
 
 config EINT_MTK
 	tristate "MediaTek External Interrupt Support"
@@ -17,16 +21,23 @@ config PINCTRL_MTK
 	select GENERIC_PINCONF
 	select GPIOLIB
 	select EINT_MTK
+<<<<<<< HEAD
+=======
+	select OF_GPIO
+>>>>>>> b7ba80a49124 (Commit)
 
 config PINCTRL_MTK_V2
 	tristate
 
+<<<<<<< HEAD
 config PINCTRL_MTK_MTMIPS
 	bool
 	depends on RALINK
 	select PINMUX
 	select GENERIC_PINCONF
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config PINCTRL_MTK_MOORE
 	bool
 	depends on OF
@@ -34,6 +45,10 @@ config PINCTRL_MTK_MOORE
 	select GENERIC_PINCTRL_GROUPS
 	select GENERIC_PINMUX_FUNCTIONS
 	select GPIOLIB
+<<<<<<< HEAD
+=======
+	select OF_GPIO
+>>>>>>> b7ba80a49124 (Commit)
 	select EINT_MTK
 	select PINCTRL_MTK_V2
 
@@ -44,6 +59,7 @@ config PINCTRL_MTK_PARIS
 	select GENERIC_PINCONF
 	select GPIOLIB
 	select EINT_MTK
+<<<<<<< HEAD
 	select PINCTRL_MTK_V2
 
 # For MIPS SoCs
@@ -92,34 +108,58 @@ config PINCTRL_RT3883
 # For ARMv7 SoCs
 config PINCTRL_MT2701
 	bool "MediaTek MT2701 pin control"
+=======
+	select OF_GPIO
+	select PINCTRL_MTK_V2
+
+# For ARMv7 SoCs
+config PINCTRL_MT2701
+	bool "Mediatek MT2701 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on MACH_MT7623 || MACH_MT2701 || COMPILE_TEST
 	depends on OF
 	default MACH_MT2701
 	select PINCTRL_MTK
 
 config PINCTRL_MT7623
+<<<<<<< HEAD
 	bool "MediaTek MT7623 pin control with generic binding"
+=======
+	bool "Mediatek MT7623 pin control with generic binding"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on MACH_MT7623 || COMPILE_TEST
 	depends on OF
 	default MACH_MT7623
 	select PINCTRL_MTK_MOORE
 
 config PINCTRL_MT7629
+<<<<<<< HEAD
 	bool "MediaTek MT7629 pin control"
+=======
+	bool "Mediatek MT7629 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on MACH_MT7629 || COMPILE_TEST
 	depends on OF
 	default MACH_MT7629
 	select PINCTRL_MTK_MOORE
 
 config PINCTRL_MT8135
+<<<<<<< HEAD
 	bool "MediaTek MT8135 pin control"
+=======
+	bool "Mediatek MT8135 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on MACH_MT8135 || COMPILE_TEST
 	depends on OF
 	default MACH_MT8135
 	select PINCTRL_MTK
 
 config PINCTRL_MT8127
+<<<<<<< HEAD
 	bool "MediaTek MT8127 pin control"
+=======
+	bool "Mediatek MT8127 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on MACH_MT8127 || COMPILE_TEST
 	depends on OF
 	default MACH_MT8127
@@ -134,33 +174,53 @@ config PINCTRL_MT2712
 	select PINCTRL_MTK
 
 config PINCTRL_MT6765
+<<<<<<< HEAD
 	tristate "MediaTek MT6765 pin control"
+=======
+	tristate "Mediatek MT6765 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on OF
 	depends on ARM64 || COMPILE_TEST
 	default ARM64 && ARCH_MEDIATEK
 	select PINCTRL_MTK_PARIS
 
 config PINCTRL_MT6779
+<<<<<<< HEAD
 	tristate "MediaTek MT6779 pin control"
+=======
+	tristate "Mediatek MT6779 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on OF
 	depends on ARM64 || COMPILE_TEST
 	default ARM64 && ARCH_MEDIATEK
 	select PINCTRL_MTK_PARIS
 	help
 	  Say yes here to support pin controller and gpio driver
+<<<<<<< HEAD
 	  on MediaTek MT6779 SoC.
+=======
+	  on Mediatek MT6779 SoC.
+>>>>>>> b7ba80a49124 (Commit)
 	  In MTK platform, we support virtual gpio and use it to
 	  map specific eint which doesn't have real gpio pin.
 
 config PINCTRL_MT6795
+<<<<<<< HEAD
 	bool "MediaTek MT6795 pin control"
+=======
+	bool "Mediatek MT6795 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on OF
 	depends on ARM64 || COMPILE_TEST
 	default ARM64 && ARCH_MEDIATEK
 	select PINCTRL_MTK_PARIS
 
 config PINCTRL_MT6797
+<<<<<<< HEAD
 	bool "MediaTek MT6797 pin control"
+=======
+	bool "Mediatek MT6797 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on OF
 	depends on ARM64 || COMPILE_TEST
 	default ARM64 && ARCH_MEDIATEK
@@ -173,6 +233,7 @@ config PINCTRL_MT7622
 	default ARM64 && ARCH_MEDIATEK
 	select PINCTRL_MTK_MOORE
 
+<<<<<<< HEAD
 config PINCTRL_MT7981
 	bool "MediaTek MT7981 pin control"
 	depends on OF
@@ -182,34 +243,54 @@ config PINCTRL_MT7981
 
 config PINCTRL_MT7986
 	bool "MediaTek MT7986 pin control"
+=======
+config PINCTRL_MT7986
+	bool "Mediatek MT7986 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on OF
 	depends on ARM64 || COMPILE_TEST
 	default ARM64 && ARCH_MEDIATEK
 	select PINCTRL_MTK_MOORE
 
 config PINCTRL_MT8167
+<<<<<<< HEAD
 	bool "MediaTek MT8167 pin control"
+=======
+	bool "Mediatek MT8167 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on OF
 	depends on ARM64 || COMPILE_TEST
 	default ARM64 && ARCH_MEDIATEK
 	select PINCTRL_MTK
 
 config PINCTRL_MT8173
+<<<<<<< HEAD
 	bool "MediaTek MT8173 pin control"
+=======
+	bool "Mediatek MT8173 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on OF
 	depends on ARM64 || COMPILE_TEST
 	default ARM64 && ARCH_MEDIATEK
 	select PINCTRL_MTK
 
 config PINCTRL_MT8183
+<<<<<<< HEAD
 	bool "MediaTek MT8183 pin control"
+=======
+	bool "Mediatek MT8183 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on OF
 	depends on ARM64 || COMPILE_TEST
 	default ARM64 && ARCH_MEDIATEK
 	select PINCTRL_MTK_PARIS
 
 config PINCTRL_MT8186
+<<<<<<< HEAD
 	bool "MediaTek MT8186 pin control"
+=======
+	bool "Mediatek MT8186 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on OF
 	depends on ARM64 || COMPILE_TEST
 	default ARM64 && ARCH_MEDIATEK
@@ -228,28 +309,44 @@ config PINCTRL_MT8188
 	  map specific eint which doesn't have real gpio pin.
 
 config PINCTRL_MT8192
+<<<<<<< HEAD
 	bool "MediaTek MT8192 pin control"
+=======
+	bool "Mediatek MT8192 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on OF
 	depends on ARM64 || COMPILE_TEST
 	default ARM64 && ARCH_MEDIATEK
 	select PINCTRL_MTK_PARIS
 
 config PINCTRL_MT8195
+<<<<<<< HEAD
 	bool "MediaTek MT8195 pin control"
+=======
+	bool "Mediatek MT8195 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on OF
 	depends on ARM64 || COMPILE_TEST
 	default ARM64 && ARCH_MEDIATEK
 	select PINCTRL_MTK_PARIS
 
 config PINCTRL_MT8365
+<<<<<<< HEAD
 	bool "MediaTek MT8365 pin control"
+=======
+	bool "Mediatek MT8365 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on OF
 	depends on ARM64 || COMPILE_TEST
 	default ARM64 && ARCH_MEDIATEK
 	select PINCTRL_MTK
 
 config PINCTRL_MT8516
+<<<<<<< HEAD
 	bool "MediaTek MT8516 pin control"
+=======
+	bool "Mediatek MT8516 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on OF
 	depends on ARM64 || COMPILE_TEST
 	default ARM64 && ARCH_MEDIATEK
@@ -257,7 +354,11 @@ config PINCTRL_MT8516
 
 # For PMIC
 config PINCTRL_MT6397
+<<<<<<< HEAD
 	bool "MediaTek MT6397 pin control"
+=======
+	bool "Mediatek MT6397 pin control"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on MFD_MT6397 || COMPILE_TEST
 	depends on OF
 	default MFD_MT6397

@@ -1,7 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 
 /* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (C) 2019-2022 Linaro Ltd.
+=======
+ * Copyright (C) 2019-2021 Linaro Ltd.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #ifndef _IPA_SYSFS_H_
 #define _IPA_SYSFS_H_

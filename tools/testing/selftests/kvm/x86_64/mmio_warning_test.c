@@ -93,7 +93,11 @@ int main(void)
 {
 	int warnings_before, warnings_after;
 
+<<<<<<< HEAD
 	TEST_REQUIRE(host_cpu_is_intel);
+=======
+	TEST_REQUIRE(is_intel_cpu());
+>>>>>>> b7ba80a49124 (Commit)
 
 	TEST_REQUIRE(!vm_is_unrestricted_guest(NULL));
 

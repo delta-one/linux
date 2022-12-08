@@ -236,7 +236,12 @@ static int tegra20_spdif_probe(struct snd_soc_dai *dai)
 {
 	struct tegra20_spdif *spdif = dev_get_drvdata(dai->dev);
 
+<<<<<<< HEAD
 	snd_soc_dai_init_dma_data(dai, &spdif->playback_dma_data, NULL);
+=======
+	dai->capture_dma_data = NULL;
+	dai->playback_dma_data = &spdif->playback_dma_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

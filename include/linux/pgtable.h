@@ -165,6 +165,7 @@ static inline pte_t *virt_to_kpte(unsigned long vaddr)
 	return pmd_none(*pmd) ? NULL : pte_offset_kernel(pmd, vaddr);
 }
 
+<<<<<<< HEAD
 #ifndef pmd_young
 static inline int pmd_young(pmd_t pmd)
 {
@@ -172,6 +173,8 @@ static inline int pmd_young(pmd_t pmd)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS
 extern int ptep_set_access_flags(struct vm_area_struct *vma,
 				 unsigned long address, pte_t *ptep,
@@ -267,6 +270,7 @@ static inline int pmdp_clear_flush_young(struct vm_area_struct *vma,
 #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
 #endif
 
+<<<<<<< HEAD
 #ifndef arch_has_hw_nonleaf_pmd_young
 /*
  * Return whether the accessed bit in non-leaf PMD entries is supported on the
@@ -278,6 +282,8 @@ static inline bool arch_has_hw_nonleaf_pmd_young(void)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef arch_has_hw_pte_young
 /*
  * Return whether the accessed bit is supported on the local CPU.
@@ -291,6 +297,7 @@ static inline bool arch_has_hw_pte_young(void)
 }
 #endif
 
+<<<<<<< HEAD
 #ifndef arch_check_zapped_pte
 static inline void arch_check_zapped_pte(struct vm_area_struct *vma,
 					 pte_t pte)
@@ -305,6 +312,8 @@ static inline void arch_check_zapped_pmd(struct vm_area_struct *vma,
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef __HAVE_ARCH_PTEP_GET_AND_CLEAR
 static inline pte_t ptep_get_and_clear(struct mm_struct *mm,
 				       unsigned long address,
@@ -323,13 +332,18 @@ static inline void ptep_clear(struct mm_struct *mm, unsigned long addr,
 	ptep_get_and_clear(mm, addr, ptep);
 }
 
+<<<<<<< HEAD
 #ifndef ptep_get
+=======
+#ifndef __HAVE_ARCH_PTEP_GET
+>>>>>>> b7ba80a49124 (Commit)
 static inline pte_t ptep_get(pte_t *ptep)
 {
 	return READ_ONCE(*ptep);
 }
 #endif
 
+<<<<<<< HEAD
 #ifndef pmdp_get
 static inline pmd_t pmdp_get(pmd_t *pmdp)
 {
@@ -345,6 +359,19 @@ static inline pmd_t pmdp_get(pmd_t *pmdp)
  * present to present, or present to not present -- it will not switch to a
  * completely different present page without a TLB flush inbetween; which we
  * are blocking by holding interrupts off.
+=======
+#ifdef CONFIG_GUP_GET_PTE_LOW_HIGH
+/*
+ * WARNING: only to be used in the get_user_pages_fast() implementation.
+ *
+ * With get_user_pages_fast(), we walk down the pagetables without taking any
+ * locks.  For this we would like to load the pointers atomically, but sometimes
+ * that is not possible (e.g. without expensive cmpxchg8b on x86_32 PAE).  What
+ * we do have is the guarantee that a PTE will only either go from not present
+ * to present, or present to not present or both -- it will not switch to a
+ * completely different present page without a TLB flush in between; something
+ * that we are blocking by holding interrupts off.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Setting ptes from not present to present goes:
  *
@@ -379,6 +406,7 @@ static inline pte_t ptep_get_lockless(pte_t *ptep)
 
 	return pte;
 }
+<<<<<<< HEAD
 #define ptep_get_lockless ptep_get_lockless
 
 #if CONFIG_PGTABLE_LEVELS > 2
@@ -403,10 +431,17 @@ static inline pmd_t pmdp_get_lockless(pmd_t *pmdp)
  * We require that the PTE can be read atomically.
  */
 #ifndef ptep_get_lockless
+=======
+#else /* CONFIG_GUP_GET_PTE_LOW_HIGH */
+/*
+ * We require that the PTE can be read atomically.
+ */
+>>>>>>> b7ba80a49124 (Commit)
 static inline pte_t ptep_get_lockless(pte_t *ptep)
 {
 	return ptep_get(ptep);
 }
+<<<<<<< HEAD
 #endif
 
 #ifndef pmdp_get_lockless
@@ -415,6 +450,9 @@ static inline pmd_t pmdp_get_lockless(pmd_t *pmdp)
 	return pmdp_get(pmdp);
 }
 #endif
+=======
+#endif /* CONFIG_GUP_GET_PTE_LOW_HIGH */
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_TRANSPARENT_HUGEPAGE
 #ifndef __HAVE_ARCH_PMDP_HUGE_GET_AND_CLEAR
@@ -470,7 +508,13 @@ static inline pte_t ptep_get_and_clear_full(struct mm_struct *mm,
 					    unsigned long address, pte_t *ptep,
 					    int full)
 {
+<<<<<<< HEAD
 	return ptep_get_and_clear(mm, address, ptep);
+=======
+	pte_t pte;
+	pte = ptep_get_and_clear(mm, address, ptep);
+	return pte;
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif
 
@@ -546,6 +590,33 @@ static inline pte_t pte_sw_mkyoung(pte_t pte)
 #define pte_sw_mkyoung	pte_sw_mkyoung
 #endif
 
+<<<<<<< HEAD
+=======
+#ifndef pte_savedwrite
+#define pte_savedwrite pte_write
+#endif
+
+#ifndef pte_mk_savedwrite
+#define pte_mk_savedwrite pte_mkwrite
+#endif
+
+#ifndef pte_clear_savedwrite
+#define pte_clear_savedwrite pte_wrprotect
+#endif
+
+#ifndef pmd_savedwrite
+#define pmd_savedwrite pmd_write
+#endif
+
+#ifndef pmd_mk_savedwrite
+#define pmd_mk_savedwrite pmd_mkwrite
+#endif
+
+#ifndef pmd_clear_savedwrite
+#define pmd_clear_savedwrite pmd_wrprotect
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef __HAVE_ARCH_PMDP_SET_WRPROTECT
 #ifdef CONFIG_TRANSPARENT_HUGEPAGE
 static inline void pmdp_set_wrprotect(struct mm_struct *mm,
@@ -831,7 +902,11 @@ static inline void arch_swap_restore(swp_entry_t entry, struct folio *folio)
 #endif
 
 #ifndef flush_tlb_fix_spurious_fault
+<<<<<<< HEAD
 #define flush_tlb_fix_spurious_fault(vma, address, ptep) flush_tlb_page(vma, address)
+=======
+#define flush_tlb_fix_spurious_fault(vma, address) flush_tlb_page(vma, address)
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 /*
@@ -1078,6 +1153,38 @@ static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
 #define arch_start_context_switch(prev)	do {} while (0)
 #endif
 
+<<<<<<< HEAD
+=======
+/*
+ * When replacing an anonymous page by a real (!non) swap entry, we clear
+ * PG_anon_exclusive from the page and instead remember whether the flag was
+ * set in the swp pte. During fork(), we have to mark the entry as !exclusive
+ * (possibly shared). On swapin, we use that information to restore
+ * PG_anon_exclusive, which is very helpful in cases where we might have
+ * additional (e.g., FOLL_GET) references on a page and wouldn't be able to
+ * detect exclusivity.
+ *
+ * These functions don't apply to non-swap entries (e.g., migration, hwpoison,
+ * ...).
+ */
+#ifndef __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+static inline pte_t pte_swp_mkexclusive(pte_t pte)
+{
+	return pte;
+}
+
+static inline int pte_swp_exclusive(pte_t pte)
+{
+	return false;
+}
+
+static inline pte_t pte_swp_clear_exclusive(pte_t pte)
+{
+	return pte;
+}
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_HAVE_ARCH_SOFT_DIRTY
 #ifndef CONFIG_ARCH_ENABLE_THP_MIGRATION
 static inline pmd_t pmd_swp_mksoft_dirty(pmd_t pmd)
@@ -1199,16 +1306,26 @@ static inline int track_pfn_copy(struct vm_area_struct *vma)
  * can be for the entire vma (in which case pfn, size are zero).
  */
 static inline void untrack_pfn(struct vm_area_struct *vma,
+<<<<<<< HEAD
 			       unsigned long pfn, unsigned long size,
 			       bool mm_wr_locked)
+=======
+			       unsigned long pfn, unsigned long size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 
 /*
+<<<<<<< HEAD
  * untrack_pfn_clear is called while mremapping a pfnmap for a new region
  * or fails to copy pgtable during duplicate vm area.
  */
 static inline void untrack_pfn_clear(struct vm_area_struct *vma)
+=======
+ * untrack_pfn_moved is called while mremapping a pfnmap for a new region.
+ */
+static inline void untrack_pfn_moved(struct vm_area_struct *vma)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 #else
@@ -1219,8 +1336,13 @@ extern void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot,
 			     pfn_t pfn);
 extern int track_pfn_copy(struct vm_area_struct *vma);
 extern void untrack_pfn(struct vm_area_struct *vma, unsigned long pfn,
+<<<<<<< HEAD
 			unsigned long size, bool mm_wr_locked);
 extern void untrack_pfn_clear(struct vm_area_struct *vma);
+=======
+			unsigned long size);
+extern void untrack_pfn_moved(struct vm_area_struct *vma);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #ifdef CONFIG_MMU
@@ -1331,6 +1453,21 @@ static inline int pud_trans_unstable(pud_t *pud)
 #endif
 }
 
+<<<<<<< HEAD
+=======
+#ifndef pmd_read_atomic
+static inline pmd_t pmd_read_atomic(pmd_t *pmdp)
+{
+	/*
+	 * Depend on compiler for an atomic pmd read. NOTE: this is
+	 * only going to work, if the pmdval_t isn't larger than
+	 * an unsigned long.
+	 */
+	return *pmdp;
+}
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef arch_needs_pgtable_deposit
 #define arch_needs_pgtable_deposit() (false)
 #endif
@@ -1357,13 +1494,21 @@ static inline int pud_trans_unstable(pud_t *pud)
  */
 static inline int pmd_none_or_trans_huge_or_clear_bad(pmd_t *pmd)
 {
+<<<<<<< HEAD
 	pmd_t pmdval = pmdp_get_lockless(pmd);
+=======
+	pmd_t pmdval = pmd_read_atomic(pmd);
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * The barrier will stabilize the pmdval in a register or on
 	 * the stack so that it will stop changing under the code.
 	 *
 	 * When CONFIG_TRANSPARENT_HUGEPAGE=y on x86 32bit PAE,
+<<<<<<< HEAD
 	 * pmdp_get_lockless is allowed to return a not atomic pmdval
+=======
+	 * pmd_read_atomic is allowed to return a not atomic pmdval
+>>>>>>> b7ba80a49124 (Commit)
 	 * (for example pointing to an hugepage that has never been
 	 * mapped in the pmd). The below checks will only care about
 	 * the low part of the pmd with 32bit PAE x86 anyway, with the

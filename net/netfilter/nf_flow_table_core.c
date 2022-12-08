@@ -193,11 +193,16 @@ static void flow_offload_fixup_ct(struct nf_conn *ct)
 		timeout -= tn->offload_timeout;
 	} else if (l4num == IPPROTO_UDP) {
 		struct nf_udp_net *tn = nf_udp_pernet(net);
+<<<<<<< HEAD
 		enum udp_conntrack state =
 			test_bit(IPS_SEEN_REPLY_BIT, &ct->status) ?
 			UDP_CT_REPLIED : UDP_CT_UNREPLIED;
 
 		timeout = tn->timeouts[state];
+=======
+
+		timeout = tn->timeouts[UDP_CT_REPLIED];
+>>>>>>> b7ba80a49124 (Commit)
 		timeout -= tn->offload_timeout;
 	} else {
 		return;

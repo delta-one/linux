@@ -159,6 +159,10 @@
 
 			uart0: serial@1883000 {
 				compatible = "ns16550a";
+<<<<<<< HEAD
+=======
+				device_type = "serial";
+>>>>>>> b7ba80a49124 (Commit)
 				reg = <0x1883000 0x1000>;
 				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
 				clock-frequency = <500000000>;
@@ -169,6 +173,10 @@
 
 			uart1: serial@1884000 {
 				compatible = "ns16550a";
+<<<<<<< HEAD
+=======
+				device_type = "serial";
+>>>>>>> b7ba80a49124 (Commit)
 				reg = <0x1884000 0x1000>;
 				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
 				clock-frequency = <500000000>;
@@ -179,6 +187,10 @@
 
 			uart2: serial@1885000 {
 				compatible = "ns16550a";
+<<<<<<< HEAD
+=======
+				device_type = "serial";
+>>>>>>> b7ba80a49124 (Commit)
 				reg = <0x1885000 0x1000>;
 				interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
 				clock-frequency = <500000000>;
@@ -189,6 +201,10 @@
 
 			uart3: serial@1886000 {
 				compatible = "ns16550a";
+<<<<<<< HEAD
+=======
+				device_type = "serial";
+>>>>>>> b7ba80a49124 (Commit)
 				reg = <0x1886000 0x1000>;
 				interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
 				clock-frequency = <500000000>;

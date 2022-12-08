@@ -70,7 +70,11 @@ int jfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
 	return 0;
 }
 
+<<<<<<< HEAD
 int jfs_fileattr_set(struct mnt_idmap *idmap,
+=======
+int jfs_fileattr_set(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		     struct dentry *dentry, struct fileattr *fa)
 {
 	struct inode *inode = d_inode(dentry);

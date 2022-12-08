@@ -13,7 +13,10 @@ enum dr_ste_v1_entry_format {
 	DR_STE_V1_TYPE_BWC_BYTE	= 0x0,
 	DR_STE_V1_TYPE_BWC_DW	= 0x1,
 	DR_STE_V1_TYPE_MATCH	= 0x2,
+<<<<<<< HEAD
 	DR_STE_V1_TYPE_MATCH_RANGES = 0x7,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Lookup type is built from 2B: [ Definer mode 1B ][ Definer index 1B ] */
@@ -268,6 +271,7 @@ static void dr_ste_v1_set_entry_type(u8 *hw_ste_p, u8 entry_type)
 	MLX5_SET(ste_match_bwc_v1, hw_ste_p, entry_format, entry_type);
 }
 
+<<<<<<< HEAD
 bool dr_ste_v1_is_miss_addr_set(u8 *hw_ste_p)
 {
 	u8 entry_type = MLX5_GET(ste_match_bwc_v1, hw_ste_p, entry_format);
@@ -278,6 +282,8 @@ bool dr_ste_v1_is_miss_addr_set(u8 *hw_ste_p)
 	return entry_type == DR_STE_V1_TYPE_MATCH_RANGES;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void dr_ste_v1_set_miss_addr(u8 *hw_ste_p, u64 miss_addr)
 {
 	u64 index = miss_addr >> 6;
@@ -531,6 +537,7 @@ static void dr_ste_v1_set_aso_flow_meter(u8 *d_action,
 		 init_color);
 }
 
+<<<<<<< HEAD
 static void dr_ste_v1_set_match_range_pkt_len(u8 *hw_ste_p, u32 definer_id,
 					      u32 min, u32 max)
 {
@@ -552,6 +559,8 @@ static void dr_ste_v1_set_match_range_pkt_len(u8 *hw_ste_p, u32 definer_id,
 	MLX5_SET(ste_match_ranges_v1, hw_ste_p, max_value_0, max << 16);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void dr_ste_v1_arr_init_next_match(u8 **last_ste,
 					  u32 *added_stes,
 					  u16 gvmi)
@@ -567,6 +576,7 @@ static void dr_ste_v1_arr_init_next_match(u8 **last_ste,
 	memset(action, 0, MLX5_FLD_SZ_BYTES(ste_mask_and_match_v1, action));
 }
 
+<<<<<<< HEAD
 static void dr_ste_v1_arr_init_next_match_range(u8 **last_ste,
 						u32 *added_stes,
 						u16 gvmi)
@@ -575,6 +585,8 @@ static void dr_ste_v1_arr_init_next_match_range(u8 **last_ste,
 	dr_ste_v1_set_entry_type(*last_ste, DR_STE_V1_TYPE_MATCH_RANGES);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void dr_ste_v1_set_actions_tx(struct mlx5dr_domain *dmn,
 			      u8 *action_type_set,
 			      u32 actions_caps,
@@ -710,6 +722,7 @@ void dr_ste_v1_set_actions_tx(struct mlx5dr_domain *dmn,
 		action += DR_STE_ACTION_DOUBLE_SZ;
 	}
 
+<<<<<<< HEAD
 	if (action_type_set[DR_ACTION_TYP_RANGE]) {
 		/* match ranges requires a new STE of its own type */
 		dr_ste_v1_arr_init_next_match_range(&last_ste, added_stes, attr->gvmi);
@@ -724,6 +737,8 @@ void dr_ste_v1_set_actions_tx(struct mlx5dr_domain *dmn,
 						  attr->range.max);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dr_ste_v1_set_hit_gvmi(last_ste, attr->hit_gvmi);
 	dr_ste_v1_set_hit_addr(last_ste, attr->final_icm_addr, 1);
 }
@@ -912,6 +927,7 @@ void dr_ste_v1_set_actions_rx(struct mlx5dr_domain *dmn,
 		action += DR_STE_ACTION_DOUBLE_SZ;
 	}
 
+<<<<<<< HEAD
 	if (action_type_set[DR_ACTION_TYP_RANGE]) {
 		/* match ranges requires a new STE of its own type */
 		dr_ste_v1_arr_init_next_match_range(&last_ste, added_stes, attr->gvmi);
@@ -926,6 +942,8 @@ void dr_ste_v1_set_actions_rx(struct mlx5dr_domain *dmn,
 						  attr->range.max);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dr_ste_v1_set_hit_gvmi(last_ste, attr->hit_gvmi);
 	dr_ste_v1_set_hit_addr(last_ste, attr->final_icm_addr, 1);
 }
@@ -2212,7 +2230,10 @@ static struct mlx5dr_ste_ctx ste_ctx_v1 = {
 	.ste_init			= &dr_ste_v1_init,
 	.set_next_lu_type		= &dr_ste_v1_set_next_lu_type,
 	.get_next_lu_type		= &dr_ste_v1_get_next_lu_type,
+<<<<<<< HEAD
 	.is_miss_addr_set		= &dr_ste_v1_is_miss_addr_set,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.set_miss_addr			= &dr_ste_v1_set_miss_addr,
 	.get_miss_addr			= &dr_ste_v1_get_miss_addr,
 	.set_hit_addr			= &dr_ste_v1_set_hit_addr,

@@ -162,7 +162,10 @@ static void dcs_enable_backlight(const struct intel_crtc_state *crtc_state,
 static int dcs_setup_backlight(struct intel_connector *connector,
 			       enum pipe unused)
 {
+<<<<<<< HEAD
 	struct drm_i915_private *i915 = to_i915(connector->base.dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct intel_panel *panel = &connector->panel;
 
 	if (panel->vbt.backlight.brightness_precision_bits > 8)
@@ -172,10 +175,13 @@ static int dcs_setup_backlight(struct intel_connector *connector,
 
 	panel->backlight.level = panel->backlight.max;
 
+<<<<<<< HEAD
 	drm_dbg_kms(&i915->drm,
 		    "[CONNECTOR:%d:%s] Using DCS for backlight control\n",
 		    connector->base.base.id, connector->base.name);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

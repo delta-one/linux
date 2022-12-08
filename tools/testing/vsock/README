@@ -35,6 +35,7 @@ Invoke test binaries in both directions as follows:
                        --control-port=$GUEST_IP \
                        --control-port=1234 \
                        --peer-cid=3
+<<<<<<< HEAD
 
 vsock_perf utility
 -------------------
@@ -69,3 +70,5 @@ A is calculated as "number of received bits" / "time in rx loop".
 B is time, spent in 'read()' system call(excluding 'poll()')
 C is number of 'poll()' wake ups with POLLIN bit set.
 D is B / C, e.g. average amount of time, spent in single 'read()'.
+=======
+>>>>>>> b7ba80a49124 (Commit)

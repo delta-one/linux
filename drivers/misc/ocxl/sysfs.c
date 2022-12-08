@@ -134,7 +134,11 @@ static int global_mmio_mmap(struct file *filp, struct kobject *kobj,
 		(afu->config.global_mmio_size >> PAGE_SHIFT))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_IO | VM_PFNMAP);
+=======
+	vma->vm_flags |= VM_IO | VM_PFNMAP;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
 	vma->vm_ops = &global_mmio_vmops;
 	vma->vm_private_data = afu;

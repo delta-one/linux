@@ -16,9 +16,12 @@ description: |
   applications like as TV, monitors. home entertainment, electronic music
   equipment.
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     enum:
@@ -45,7 +48,11 @@ required:
   - dvdd-supply
   - '#sound-dai-cells'
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

@@ -21,6 +21,7 @@
 
 #define KVM_HOST_S2_FLAGS (KVM_PGTABLE_S2_NOFWB | KVM_PGTABLE_S2_IDMAP)
 
+<<<<<<< HEAD
 struct host_mmu host_mmu;
 
 static struct hyp_pool host_s2_pool;
@@ -43,11 +44,27 @@ static void guest_unlock_component(struct pkvm_hyp_vm *vm)
 static void host_lock_component(void)
 {
 	hyp_spin_lock(&host_mmu.lock);
+=======
+extern unsigned long hyp_nr_cpus;
+struct host_kvm host_kvm;
+
+static struct hyp_pool host_s2_pool;
+
+const u8 pkvm_hyp_id = 1;
+
+static void host_lock_component(void)
+{
+	hyp_spin_lock(&host_kvm.lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void host_unlock_component(void)
 {
+<<<<<<< HEAD
 	hyp_spin_unlock(&host_mmu.lock);
+=======
+	hyp_spin_unlock(&host_kvm.lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void hyp_lock_component(void)
@@ -91,11 +108,14 @@ static void host_s2_put_page(void *addr)
 	hyp_put_page(&host_s2_pool, addr);
 }
 
+<<<<<<< HEAD
 static void host_s2_free_removed_table(void *addr, u32 level)
 {
 	kvm_pgtable_stage2_free_removed(&host_mmu.mm_ops, addr, level);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int prepare_s2_pool(void *pgt_pool_base)
 {
 	unsigned long nr_pages, pfn;
@@ -107,10 +127,16 @@ static int prepare_s2_pool(void *pgt_pool_base)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	host_mmu.mm_ops = (struct kvm_pgtable_mm_ops) {
 		.zalloc_pages_exact = host_s2_zalloc_pages_exact,
 		.zalloc_page = host_s2_zalloc_page,
 		.free_removed_table = host_s2_free_removed_table,
+=======
+	host_kvm.mm_ops = (struct kvm_pgtable_mm_ops) {
+		.zalloc_pages_exact = host_s2_zalloc_pages_exact,
+		.zalloc_page = host_s2_zalloc_page,
+>>>>>>> b7ba80a49124 (Commit)
 		.phys_to_virt = hyp_phys_to_virt,
 		.virt_to_phys = hyp_virt_to_phys,
 		.page_count = hyp_page_count,
@@ -129,7 +155,11 @@ static void prepare_host_vtcr(void)
 	parange = kvm_get_parange(id_aa64mmfr0_el1_sys_val);
 	phys_shift = id_aa64mmfr0_parange_to_phys_shift(parange);
 
+<<<<<<< HEAD
 	host_mmu.arch.vtcr = kvm_get_vtcr(id_aa64mmfr0_el1_sys_val,
+=======
+	host_kvm.arch.vtcr = kvm_get_vtcr(id_aa64mmfr0_el1_sys_val,
+>>>>>>> b7ba80a49124 (Commit)
 					  id_aa64mmfr1_el1_sys_val, phys_shift);
 }
 
@@ -137,30 +167,50 @@ static bool host_stage2_force_pte_cb(u64 addr, u64 end, enum kvm_pgtable_prot pr
 
 int kvm_host_prepare_stage2(void *pgt_pool_base)
 {
+<<<<<<< HEAD
 	struct kvm_s2_mmu *mmu = &host_mmu.arch.mmu;
 	int ret;
 
 	prepare_host_vtcr();
 	hyp_spin_lock_init(&host_mmu.lock);
 	mmu->arch = &host_mmu.arch;
+=======
+	struct kvm_s2_mmu *mmu = &host_kvm.arch.mmu;
+	int ret;
+
+	prepare_host_vtcr();
+	hyp_spin_lock_init(&host_kvm.lock);
+	mmu->arch = &host_kvm.arch;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = prepare_s2_pool(pgt_pool_base);
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = __kvm_pgtable_stage2_init(&host_mmu.pgt, mmu,
 					&host_mmu.mm_ops, KVM_HOST_S2_FLAGS,
+=======
+	ret = __kvm_pgtable_stage2_init(&host_kvm.pgt, mmu,
+					&host_kvm.mm_ops, KVM_HOST_S2_FLAGS,
+>>>>>>> b7ba80a49124 (Commit)
 					host_stage2_force_pte_cb);
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	mmu->pgd_phys = __hyp_pa(host_mmu.pgt.pgd);
 	mmu->pgt = &host_mmu.pgt;
+=======
+	mmu->pgd_phys = __hyp_pa(host_kvm.pgt.pgd);
+	mmu->pgt = &host_kvm.pgt;
+>>>>>>> b7ba80a49124 (Commit)
 	atomic64_set(&mmu->vmid.id, 0);
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool guest_stage2_force_pte_cb(u64 addr, u64 end,
 				      enum kvm_pgtable_prot prot)
 {
@@ -289,18 +339,31 @@ void reclaim_guest_pages(struct pkvm_hyp_vm *vm, struct kvm_hyp_memcache *mc)
 int __pkvm_prot_finalize(void)
 {
 	struct kvm_s2_mmu *mmu = &host_mmu.arch.mmu;
+=======
+int __pkvm_prot_finalize(void)
+{
+	struct kvm_s2_mmu *mmu = &host_kvm.arch.mmu;
+>>>>>>> b7ba80a49124 (Commit)
 	struct kvm_nvhe_init_params *params = this_cpu_ptr(&kvm_init_params);
 
 	if (params->hcr_el2 & HCR_VM)
 		return -EPERM;
 
 	params->vttbr = kvm_get_vttbr(mmu);
+<<<<<<< HEAD
 	params->vtcr = host_mmu.arch.vtcr;
+=======
+	params->vtcr = host_kvm.arch.vtcr;
+>>>>>>> b7ba80a49124 (Commit)
 	params->hcr_el2 |= HCR_VM;
 	kvm_flush_dcache_to_poc(params, sizeof(*params));
 
 	write_sysreg(params->hcr_el2, hcr_el2);
+<<<<<<< HEAD
 	__load_stage2(&host_mmu.arch.mmu, &host_mmu.arch);
+=======
+	__load_stage2(&host_kvm.arch.mmu, &host_kvm.arch);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Make sure to have an ISB before the TLB maintenance below but only
@@ -318,7 +381,11 @@ int __pkvm_prot_finalize(void)
 
 static int host_stage2_unmap_dev_all(void)
 {
+<<<<<<< HEAD
 	struct kvm_pgtable *pgt = &host_mmu.pgt;
+=======
+	struct kvm_pgtable *pgt = &host_kvm.pgt;
+>>>>>>> b7ba80a49124 (Commit)
 	struct memblock_region *reg;
 	u64 addr = 0;
 	int i, ret;
@@ -338,7 +405,11 @@ struct kvm_mem_range {
 	u64 end;
 };
 
+<<<<<<< HEAD
 static struct memblock_region *find_mem_range(phys_addr_t addr, struct kvm_mem_range *range)
+=======
+static bool find_mem_range(phys_addr_t addr, struct kvm_mem_range *range)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int cur, left = 0, right = hyp_memblock_nr;
 	struct memblock_region *reg;
@@ -361,17 +432,26 @@ static struct memblock_region *find_mem_range(phys_addr_t addr, struct kvm_mem_r
 		} else {
 			range->start = reg->base;
 			range->end = end;
+<<<<<<< HEAD
 			return reg;
 		}
 	}
 
 	return NULL;
+=======
+			return true;
+		}
+	}
+
+	return false;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 bool addr_is_memory(phys_addr_t phys)
 {
 	struct kvm_mem_range range;
 
+<<<<<<< HEAD
 	return !!find_mem_range(phys, &range);
 }
 
@@ -383,6 +463,9 @@ static bool addr_is_allowed_memory(phys_addr_t phys)
 	reg = find_mem_range(phys, &range);
 
 	return reg && !(reg->flags & MEMBLOCK_NOMAP);
+=======
+	return find_mem_range(phys, &range);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool is_in_mem_range(u64 addr, struct kvm_mem_range *range)
@@ -403,8 +486,13 @@ static bool range_is_memory(u64 start, u64 end)
 static inline int __host_stage2_idmap(u64 start, u64 end,
 				      enum kvm_pgtable_prot prot)
 {
+<<<<<<< HEAD
 	return kvm_pgtable_stage2_map(&host_mmu.pgt, start, end - start, start,
 				      prot, &host_s2_pool, 0);
+=======
+	return kvm_pgtable_stage2_map(&host_kvm.pgt, start, end - start, start,
+				      prot, &host_s2_pool);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -416,7 +504,11 @@ static inline int __host_stage2_idmap(u64 start, u64 end,
 #define host_stage2_try(fn, ...)					\
 	({								\
 		int __ret;						\
+<<<<<<< HEAD
 		hyp_assert_lock_held(&host_mmu.lock);			\
+=======
+		hyp_assert_lock_held(&host_kvm.lock);			\
+>>>>>>> b7ba80a49124 (Commit)
 		__ret = fn(__VA_ARGS__);				\
 		if (__ret == -ENOMEM) {					\
 			__ret = host_stage2_unmap_dev_all();		\
@@ -439,8 +531,13 @@ static int host_stage2_adjust_range(u64 addr, struct kvm_mem_range *range)
 	u32 level;
 	int ret;
 
+<<<<<<< HEAD
 	hyp_assert_lock_held(&host_mmu.lock);
 	ret = kvm_pgtable_get_leaf(&host_mmu.pgt, addr, &pte, &level);
+=======
+	hyp_assert_lock_held(&host_kvm.lock);
+	ret = kvm_pgtable_get_leaf(&host_kvm.pgt, addr, &pte, &level);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -472,7 +569,11 @@ int host_stage2_idmap_locked(phys_addr_t addr, u64 size,
 
 int host_stage2_set_owner_locked(phys_addr_t addr, u64 size, u8 owner_id)
 {
+<<<<<<< HEAD
 	return host_stage2_try(kvm_pgtable_stage2_set_owner, &host_mmu.pgt,
+=======
+	return host_stage2_try(kvm_pgtable_stage2_set_owner, &host_kvm.pgt,
+>>>>>>> b7ba80a49124 (Commit)
 			       addr, size, &host_s2_pool, owner_id);
 }
 
@@ -501,7 +602,11 @@ static bool host_stage2_force_pte_cb(u64 addr, u64 end, enum kvm_pgtable_prot pr
 static int host_stage2_idmap(u64 addr)
 {
 	struct kvm_mem_range range;
+<<<<<<< HEAD
 	bool is_memory = !!find_mem_range(addr, &range);
+=======
+	bool is_memory = find_mem_range(addr, &range);
+>>>>>>> b7ba80a49124 (Commit)
 	enum kvm_pgtable_prot prot;
 	int ret;
 
@@ -533,6 +638,15 @@ void handle_host_mem_abort(struct kvm_cpu_context *host_ctxt)
 	BUG_ON(ret && ret != -EAGAIN);
 }
 
+<<<<<<< HEAD
+=======
+/* This corresponds to locking order */
+enum pkvm_component_id {
+	PKVM_ID_HOST,
+	PKVM_ID_HYP,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct pkvm_mem_transition {
 	u64				nr_pages;
 
@@ -546,9 +660,12 @@ struct pkvm_mem_transition {
 				/* Address in the completer's address space */
 				u64	completer_addr;
 			} host;
+<<<<<<< HEAD
 			struct {
 				u64	completer_addr;
 			} hyp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	} initiator;
 
@@ -562,15 +679,19 @@ struct pkvm_mem_share {
 	const enum kvm_pgtable_prot		completer_prot;
 };
 
+<<<<<<< HEAD
 struct pkvm_mem_donation {
 	const struct pkvm_mem_transition	tx;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct check_walk_data {
 	enum pkvm_page_state	desired;
 	enum pkvm_page_state	(*get_page_state)(kvm_pte_t pte);
 };
 
+<<<<<<< HEAD
 static int __check_page_state_visitor(const struct kvm_pgtable_visit_ctx *ctx,
 				      enum kvm_pgtable_walk_flags visit)
 {
@@ -580,6 +701,20 @@ static int __check_page_state_visitor(const struct kvm_pgtable_visit_ctx *ctx,
 		return -EINVAL;
 
 	return d->get_page_state(ctx->old) == d->desired ? 0 : -EPERM;
+=======
+static int __check_page_state_visitor(u64 addr, u64 end, u32 level,
+				      kvm_pte_t *ptep,
+				      enum kvm_pgtable_walk_flags flag,
+				      void * const arg)
+{
+	struct check_walk_data *d = arg;
+	kvm_pte_t pte = *ptep;
+
+	if (kvm_pte_valid(pte) && !addr_is_memory(kvm_pte_to_phys(pte)))
+		return -EINVAL;
+
+	return d->get_page_state(pte) == d->desired ? 0 : -EPERM;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int check_page_state_range(struct kvm_pgtable *pgt, u64 addr, u64 size,
@@ -610,8 +745,13 @@ static int __host_check_page_state_range(u64 addr, u64 size,
 		.get_page_state	= host_get_page_state,
 	};
 
+<<<<<<< HEAD
 	hyp_assert_lock_held(&host_mmu.lock);
 	return check_page_state_range(&host_mmu.pgt, addr, size, &d);
+=======
+	hyp_assert_lock_held(&host_kvm.lock);
+	return check_page_state_range(&host_kvm.pgt, addr, size, &d);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __host_set_page_state_range(u64 addr, u64 size,
@@ -662,6 +802,7 @@ static int host_initiate_unshare(u64 *completer_addr,
 	return __host_set_page_state_range(addr, size, PKVM_PAGE_OWNED);
 }
 
+<<<<<<< HEAD
 static int host_initiate_donation(u64 *completer_addr,
 				  const struct pkvm_mem_transition *tx)
 {
@@ -702,12 +843,18 @@ static int host_complete_donation(u64 addr, const struct pkvm_mem_transition *tx
 	return host_stage2_set_owner_locked(addr, size, host_id);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static enum pkvm_page_state hyp_get_page_state(kvm_pte_t pte)
 {
 	if (!kvm_pte_valid(pte))
 		return PKVM_NOPAGE;
 
+<<<<<<< HEAD
 	return pkvm_getstate(kvm_pgtable_hyp_pte_prot(pte));
+=======
+	return pkvm_getstate(kvm_pgtable_stage2_pte_prot(pte));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __hyp_check_page_state_range(u64 addr, u64 size,
@@ -722,6 +869,7 @@ static int __hyp_check_page_state_range(u64 addr, u64 size,
 	return check_page_state_range(&pkvm_pgtable, addr, size, &d);
 }
 
+<<<<<<< HEAD
 static int hyp_request_donation(u64 *completer_addr,
 				const struct pkvm_mem_transition *tx)
 {
@@ -743,6 +891,8 @@ static int hyp_initiate_donation(u64 *completer_addr,
 	return (ret != size) ? -EFAULT : 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool __hyp_ack_skip_pgtable_check(const struct pkvm_mem_transition *tx)
 {
 	return !(IS_ENABLED(CONFIG_NVHE_EL2_DEBUG) ||
@@ -767,9 +917,12 @@ static int hyp_ack_unshare(u64 addr, const struct pkvm_mem_transition *tx)
 {
 	u64 size = tx->nr_pages * PAGE_SIZE;
 
+<<<<<<< HEAD
 	if (tx->initiator.id == PKVM_ID_HOST && hyp_page_count((void *)addr))
 		return -EBUSY;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (__hyp_ack_skip_pgtable_check(tx))
 		return 0;
 
@@ -777,6 +930,7 @@ static int hyp_ack_unshare(u64 addr, const struct pkvm_mem_transition *tx)
 					    PKVM_PAGE_SHARED_BORROWED);
 }
 
+<<<<<<< HEAD
 static int hyp_ack_donation(u64 addr, const struct pkvm_mem_transition *tx)
 {
 	u64 size = tx->nr_pages * PAGE_SIZE;
@@ -787,6 +941,8 @@ static int hyp_ack_donation(u64 addr, const struct pkvm_mem_transition *tx)
 	return __hyp_check_page_state_range(addr, size, PKVM_NOPAGE);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int hyp_complete_share(u64 addr, const struct pkvm_mem_transition *tx,
 			      enum kvm_pgtable_prot perms)
 {
@@ -805,6 +961,7 @@ static int hyp_complete_unshare(u64 addr, const struct pkvm_mem_transition *tx)
 	return (ret != size) ? -EFAULT : 0;
 }
 
+<<<<<<< HEAD
 static int hyp_complete_donation(u64 addr,
 				 const struct pkvm_mem_transition *tx)
 {
@@ -814,6 +971,8 @@ static int hyp_complete_donation(u64 addr,
 	return pkvm_create_mappings_locked(start, end, prot);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int check_share(struct pkvm_mem_share *share)
 {
 	const struct pkvm_mem_transition *tx = &share->tx;
@@ -966,6 +1125,7 @@ static int do_unshare(struct pkvm_mem_share *share)
 	return WARN_ON(__do_unshare(share));
 }
 
+<<<<<<< HEAD
 static int check_donation(struct pkvm_mem_donation *donation)
 {
 	const struct pkvm_mem_transition *tx = &donation->tx;
@@ -1054,6 +1214,8 @@ static int do_donate(struct pkvm_mem_donation *donation)
 	return WARN_ON(__do_donate(donation));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int __pkvm_host_share_hyp(u64 pfn)
 {
 	int ret;
@@ -1119,6 +1281,7 @@ int __pkvm_host_unshare_hyp(u64 pfn)
 
 	return ret;
 }
+<<<<<<< HEAD
 
 int __pkvm_host_donate_hyp(u64 pfn, u64 nr_pages)
 {
@@ -1228,3 +1391,5 @@ void hyp_unpin_shared_mem(void *from, void *to)
 	hyp_unlock_component();
 	host_unlock_component();
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

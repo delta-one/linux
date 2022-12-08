@@ -18,7 +18,11 @@ COMMON OPTIONS
 --------------
 -r::
 --repeat=::
+<<<<<<< HEAD
 Specify number of times to repeat the run (default 10).
+=======
+Specify amount of times to repeat the run (default 10).
+>>>>>>> b7ba80a49124 (Commit)
 
 -f::
 --format=::

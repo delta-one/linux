@@ -513,7 +513,11 @@ static int qlogicpti_load_firmware(struct qlogicpti *qpti)
 		       qpti->qpti_id);
 		err = 1;
 		goto out;
+<<<<<<< HEAD
 	}
+=======
+	}		
+>>>>>>> b7ba80a49124 (Commit)
 	sbus_writew(SBUS_CTRL_RESET, qpti->qregs + SBUS_CTRL);
 	sbus_writew((DMA_CTRL_CCLEAR | DMA_CTRL_CIRQ), qpti->qregs + CMD_DMA_CTRL);
 	sbus_writew((DMA_CTRL_CCLEAR | DMA_CTRL_CIRQ), qpti->qregs + DATA_DMA_CTRL);
@@ -563,7 +567,11 @@ static int qlogicpti_load_firmware(struct qlogicpti *qpti)
 		       qpti->qpti_id);
 		err = 1;
 		goto out;
+<<<<<<< HEAD
 	}
+=======
+	}		
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Load it up.. */
 	for (i = 0; i < risc_code_length; i++) {
@@ -1136,7 +1144,11 @@ static struct scsi_cmnd *qlogicpti_intr_handler(struct qlogicpti *qpti)
 
 	if (!(sbus_readw(qpti->qregs + SBUS_STAT) & SBUS_STAT_RINT))
 		return NULL;
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> b7ba80a49124 (Commit)
 	in_ptr = sbus_readw(qpti->qregs + MBOX5);
 	sbus_writew(HCCTRL_CRIRQ, qpti->qregs + HCCTRL);
 	if (sbus_readw(qpti->qregs + SBUS_SEMAPHORE) & SBUS_SEMAPHORE_LCK) {
@@ -1362,8 +1374,14 @@ static int qpti_sbus_probe(struct platform_device *op)
 	fcode = of_get_property(dp, "isp-fcode", NULL);
 	if (fcode && fcode[0])
 		printk("(FCode %s)", fcode);
+<<<<<<< HEAD
 	qpti->differential = of_property_read_bool(dp, "differential");
 
+=======
+	if (of_find_property(dp, "differential", NULL) != NULL)
+		qpti->differential = 1;
+			
+>>>>>>> b7ba80a49124 (Commit)
 	printk("\nqlogicpti%d: [%s Wide, using %s interface]\n",
 		qpti->qpti_id,
 		(qpti->ultra ? "Ultra" : "Fast"),

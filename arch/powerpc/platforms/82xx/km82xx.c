@@ -188,6 +188,7 @@ static int __init declare_of_platform_devices(void)
 }
 machine_device_initcall(km82xx, declare_of_platform_devices);
 
+<<<<<<< HEAD
 define_machine(km82xx)
 {
 	.name = "Keymile km82xx",
@@ -195,6 +196,24 @@ define_machine(km82xx)
 	.setup_arch = km82xx_setup_arch,
 	.init_IRQ = km82xx_pic_init,
 	.get_irq = cpm2_get_irq,
+=======
+/*
+ * Called very early, device-tree isn't unflattened
+ */
+static int __init km82xx_probe(void)
+{
+	return of_machine_is_compatible("keymile,km82xx");
+}
+
+define_machine(km82xx)
+{
+	.name = "Keymile km82xx",
+	.probe = km82xx_probe,
+	.setup_arch = km82xx_setup_arch,
+	.init_IRQ = km82xx_pic_init,
+	.get_irq = cpm2_get_irq,
+	.calibrate_decr = generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.restart = pq2_restart,
 	.progress = udbg_progress,
 };

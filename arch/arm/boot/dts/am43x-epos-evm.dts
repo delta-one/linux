@@ -919,7 +919,11 @@
 		 */
 		partition@0 {
 			label = "QSPI.U_BOOT";
+<<<<<<< HEAD
 			reg = <0x00000000 0x00080000>;
+=======
+			reg = <0x00000000 0x000080000>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 		partition@1 {
 			label = "QSPI.U_BOOT.backup";

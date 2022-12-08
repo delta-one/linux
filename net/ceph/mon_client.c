@@ -222,7 +222,11 @@ static void pick_new_mon(struct ceph_mon_client *monc)
 				max--;
 		}
 
+<<<<<<< HEAD
 		n = get_random_u32_below(max);
+=======
+		n = prandom_u32() % max;
+>>>>>>> b7ba80a49124 (Commit)
 		if (o >= 0 && n >= o)
 			n++;
 

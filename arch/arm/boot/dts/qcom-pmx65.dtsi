@@ -20,7 +20,11 @@
 			#thermal-sensor-cells = <0>;
 		};
 
+<<<<<<< HEAD
 		pmx65_gpios: gpio@8800 {
+=======
+		pmx65_gpios: pinctrl@8800 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,pmx65-gpio", "qcom,spmi-gpio";
 			reg = <0x8800>;
 			gpio-controller;

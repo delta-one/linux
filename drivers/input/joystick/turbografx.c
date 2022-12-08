@@ -10,6 +10,12 @@
  * TurboGraFX parallel port interface driver for Linux.
  */
 
+<<<<<<< HEAD
+=======
+/*
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kernel.h>
 #include <linux/parport.h>
 #include <linux/input.h>

@@ -62,7 +62,10 @@ static int	cfg_payload_len	= (1472 * 42);
 static int	cfg_port	= 8000;
 static int	cfg_runtime_ms	= -1;
 static bool	cfg_poll;
+<<<<<<< HEAD
 static int	cfg_poll_loop_timeout_ms = 2000;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool	cfg_segment;
 static bool	cfg_sendmmsg;
 static bool	cfg_tcp;
@@ -236,17 +239,27 @@ static void flush_errqueue_recv(int fd)
 	}
 }
 
+<<<<<<< HEAD
 static void flush_errqueue(int fd, const bool do_poll,
 			   unsigned long poll_timeout, const bool poll_err)
+=======
+static void flush_errqueue(int fd, const bool do_poll)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (do_poll) {
 		struct pollfd fds = {0};
 		int ret;
 
 		fds.fd = fd;
+<<<<<<< HEAD
 		ret = poll(&fds, 1, poll_timeout);
 		if (ret == 0) {
 			if ((cfg_verbose) && (poll_err))
+=======
+		ret = poll(&fds, 1, 500);
+		if (ret == 0) {
+			if (cfg_verbose)
+>>>>>>> b7ba80a49124 (Commit)
 				fprintf(stderr, "poll timeout\n");
 		} else if (ret < 0) {
 			error(1, errno, "poll");
@@ -256,6 +269,7 @@ static void flush_errqueue(int fd, const bool do_poll,
 	flush_errqueue_recv(fd);
 }
 
+<<<<<<< HEAD
 static void flush_errqueue_retry(int fd, unsigned long num_sends)
 {
 	unsigned long tnow, tstop;
@@ -270,6 +284,8 @@ static void flush_errqueue_retry(int fd, unsigned long num_sends)
 	} while ((stat_zcopies != num_sends) && (tnow < tstop));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int send_tcp(int fd, char *data)
 {
 	int ret, done = 0, count = 0;
@@ -429,8 +445,12 @@ static int send_udp_segment(int fd, char *data)
 
 static void usage(const char *filepath)
 {
+<<<<<<< HEAD
 	error(1, 0, "Usage: %s [-46acmHPtTuvz] [-C cpu] [-D dst ip] [-l secs] "
 		    "[-L secs] [-M messagenr] [-p port] [-s sendsize] [-S gsosize]",
+=======
+	error(1, 0, "Usage: %s [-46acmHPtTuvz] [-C cpu] [-D dst ip] [-l secs] [-M messagenr] [-p port] [-s sendsize] [-S gsosize]",
+>>>>>>> b7ba80a49124 (Commit)
 		    filepath);
 }
 
@@ -440,7 +460,11 @@ static void parse_opts(int argc, char **argv)
 	int max_len, hdrlen;
 	int c;
 
+<<<<<<< HEAD
 	while ((c = getopt(argc, argv, "46acC:D:Hl:L:mM:p:s:PS:tTuvz")) != -1) {
+=======
+	while ((c = getopt(argc, argv, "46acC:D:Hl:mM:p:s:PS:tTuvz")) != -1) {
+>>>>>>> b7ba80a49124 (Commit)
 		switch (c) {
 		case '4':
 			if (cfg_family != PF_UNSPEC)
@@ -469,9 +493,12 @@ static void parse_opts(int argc, char **argv)
 		case 'l':
 			cfg_runtime_ms = strtoul(optarg, NULL, 10) * 1000;
 			break;
+<<<<<<< HEAD
 		case 'L':
 			cfg_poll_loop_timeout_ms = strtoul(optarg, NULL, 10) * 1000;
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		case 'm':
 			cfg_sendmmsg = true;
 			break;
@@ -510,8 +537,11 @@ static void parse_opts(int argc, char **argv)
 		case 'z':
 			cfg_zerocopy = true;
 			break;
+<<<<<<< HEAD
 		default:
 			exit(1);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -699,7 +729,11 @@ int main(int argc, char **argv)
 			num_sends += send_udp(fd, buf[i]);
 		num_msgs++;
 		if ((cfg_zerocopy && ((num_msgs & 0xF) == 0)) || cfg_tx_tstamp)
+<<<<<<< HEAD
 			flush_errqueue(fd, cfg_poll, 500, true);
+=======
+			flush_errqueue(fd, cfg_poll);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (cfg_msg_nr && num_msgs >= cfg_msg_nr)
 			break;
@@ -718,7 +752,11 @@ int main(int argc, char **argv)
 	} while (!interrupted && (cfg_runtime_ms == -1 || tnow < tstop));
 
 	if (cfg_zerocopy || cfg_tx_tstamp)
+<<<<<<< HEAD
 		flush_errqueue_retry(fd, num_sends);
+=======
+		flush_errqueue(fd, true);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (close(fd))
 		error(1, errno, "close");

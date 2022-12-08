@@ -129,9 +129,15 @@ static void vxlan_vnifilter_stats_get(const struct vxlan_vni_node *vninode,
 
 		pstats = per_cpu_ptr(vninode->stats, i);
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&pstats->syncp);
 			memcpy(&temp, &pstats->stats, sizeof(temp));
 		} while (u64_stats_fetch_retry(&pstats->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&pstats->syncp);
+			memcpy(&temp, &pstats->stats, sizeof(temp));
+		} while (u64_stats_fetch_retry_irq(&pstats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		dest->rx_packets += temp.rx_packets;
 		dest->rx_bytes += temp.rx_bytes;

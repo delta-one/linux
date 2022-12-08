@@ -11,13 +11,18 @@
  * Licensed under the GNU General Public License, version 2.0 (GPLv2)
  */
 
+<<<<<<< HEAD
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
+=======
+#define _GNU_SOURCE
+>>>>>>> b7ba80a49124 (Commit)
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdlib.h>
+<<<<<<< HEAD
 #include <unistd.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -36,10 +41,22 @@
 #include <dis-asm.h>
 #include <tools/dis-asm-compat.h>
 #endif
+=======
+#include <assert.h>
+#include <unistd.h>
+#include <string.h>
+#include <bfd.h>
+#include <dis-asm.h>
+#include <sys/stat.h>
+#include <limits.h>
+#include <bpf/libbpf.h>
+#include <tools/dis-asm-compat.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "json_writer.h"
 #include "main.h"
 
+<<<<<<< HEAD
 static int oper_count;
 
 #ifdef HAVE_LLVM_SUPPORT
@@ -143,11 +160,15 @@ typedef struct {
 } disasm_ctx_t;
 
 static int get_exec_path(char *tpath, size_t size)
+=======
+static void get_exec_path(char *tpath, size_t size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const char *path = "/proc/self/exe";
 	ssize_t len;
 
 	len = readlink(path, tpath, size - 1);
+<<<<<<< HEAD
 	if (len <= 0)
 		return -1;
 
@@ -156,6 +177,13 @@ static int get_exec_path(char *tpath, size_t size)
 	return 0;
 }
 
+=======
+	assert(len > 0);
+	tpath[len] = 0;
+}
+
+static int oper_count;
+>>>>>>> b7ba80a49124 (Commit)
 static int printf_json(void *out, const char *fmt, va_list ap)
 {
 	char *s;
@@ -213,6 +241,7 @@ static int fprintf_json_styled(void *out,
 	return r;
 }
 
+<<<<<<< HEAD
 static int init_context(disasm_ctx_t *ctx, const char *arch,
 			const char *disassembler_options,
 			unsigned char *image, ssize_t len)
@@ -251,6 +280,39 @@ static int init_context(disasm_ctx_t *ctx, const char *arch,
 					     fprintf_json_styled);
 	else
 		init_disassemble_info_compat(info, stdout,
+=======
+void disasm_print_insn(unsigned char *image, ssize_t len, int opcodes,
+		       const char *arch, const char *disassembler_options,
+		       const struct btf *btf,
+		       const struct bpf_prog_linfo *prog_linfo,
+		       __u64 func_ksym, unsigned int func_idx,
+		       bool linum)
+{
+	const struct bpf_line_info *linfo = NULL;
+	disassembler_ftype disassemble;
+	struct disassemble_info info;
+	unsigned int nr_skip = 0;
+	int count, i, pc = 0;
+	char tpath[PATH_MAX];
+	bfd *bfdf;
+
+	if (!len)
+		return;
+
+	memset(tpath, 0, sizeof(tpath));
+	get_exec_path(tpath, sizeof(tpath));
+
+	bfdf = bfd_openr(tpath, NULL);
+	assert(bfdf);
+	assert(bfd_check_format(bfdf, bfd_object));
+
+	if (json_output)
+		init_disassemble_info_compat(&info, stdout,
+					     (fprintf_ftype) fprintf_json,
+					     fprintf_json_styled);
+	else
+		init_disassemble_info_compat(&info, stdout,
+>>>>>>> b7ba80a49124 (Commit)
 					     (fprintf_ftype) fprintf,
 					     fprintf_styled);
 
@@ -262,6 +324,7 @@ static int init_context(disasm_ctx_t *ctx, const char *arch,
 			bfdf->arch_info = inf;
 		} else {
 			p_err("No libbfd support for %s", arch);
+<<<<<<< HEAD
 			goto err_free;
 		}
 	}
@@ -333,6 +396,30 @@ int disasm_print_insn(unsigned char *image, ssize_t len, int opcodes,
 
 	if (init_context(&ctx, arch, disassembler_options, image, len))
 		return -1;
+=======
+			return;
+		}
+	}
+
+	info.arch = bfd_get_arch(bfdf);
+	info.mach = bfd_get_mach(bfdf);
+	if (disassembler_options)
+		info.disassembler_options = disassembler_options;
+	info.buffer = image;
+	info.buffer_length = len;
+
+	disassemble_init_for_target(&info);
+
+#ifdef DISASM_FOUR_ARGS_SIGNATURE
+	disassemble = disassembler(info.arch,
+				   bfd_big_endian(bfdf),
+				   info.mach,
+				   bfdf);
+#else
+	disassemble = disassembler(bfdf);
+#endif
+	assert(disassemble);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (json_output)
 		jsonw_start_array(json_wtr);
@@ -357,11 +444,18 @@ int disasm_print_insn(unsigned char *image, ssize_t len, int opcodes,
 			if (linfo)
 				btf_dump_linfo_plain(btf, linfo, "; ",
 						     linum);
+<<<<<<< HEAD
 			printf("%4x:" DISASM_SPACER, pc);
 		}
 
 		count = disassemble_insn(&ctx, image, len, pc);
 
+=======
+			printf("%4x:\t", pc);
+		}
+
+		count = disassemble(pc, &info);
+>>>>>>> b7ba80a49124 (Commit)
 		if (json_output) {
 			/* Operand array, was started in fprintf_json. Before
 			 * that, make sure we have a _null_ value if no operand
@@ -397,7 +491,16 @@ int disasm_print_insn(unsigned char *image, ssize_t len, int opcodes,
 	if (json_output)
 		jsonw_end_array(json_wtr);
 
+<<<<<<< HEAD
 	destroy_context(&ctx);
 
+=======
+	bfd_close(bfdf);
+}
+
+int disasm_init(void)
+{
+	bfd_init();
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }

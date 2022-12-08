@@ -628,7 +628,11 @@ flush_tlb_all(void)
 static void
 ipi_flush_tlb_mm(void *x)
 {
+<<<<<<< HEAD
 	struct mm_struct *mm = x;
+=======
+	struct mm_struct *mm = (struct mm_struct *) x;
+>>>>>>> b7ba80a49124 (Commit)
 	if (mm == current->active_mm && !asn_locked())
 		flush_tlb_current(mm);
 	else
@@ -670,7 +674,11 @@ struct flush_tlb_page_struct {
 static void
 ipi_flush_tlb_page(void *x)
 {
+<<<<<<< HEAD
 	struct flush_tlb_page_struct *data = x;
+=======
+	struct flush_tlb_page_struct *data = (struct flush_tlb_page_struct *)x;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mm_struct * mm = data->mm;
 
 	if (mm == current->active_mm && !asn_locked())

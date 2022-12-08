@@ -56,6 +56,7 @@ config DEBUG_SLAB
 config SLUB_DEBUG
 	default y
 	bool "Enable SLUB debugging support" if EXPERT
+<<<<<<< HEAD
 	depends on SLUB && SYSFS && !SLUB_TINY
 	select STACKDEPOT if STACKTRACE_SUPPORT
 	help
@@ -63,6 +64,15 @@ config SLUB_DEBUG
 	  result in significant savings in code size. While /sys/kernel/slab
 	  will still exist (with SYSFS enabled), it will not provide e.g. cache
 	  validation.
+=======
+	depends on SLUB && SYSFS
+	select STACKDEPOT if STACKTRACE_SUPPORT
+	help
+	  SLUB has extensive debug support features. Disabling these can
+	  result in significant savings in code size. This also disables
+	  SLUB sysfs support. /sys/slab will not exist and there will be
+	  no support for cache validation etc.
+>>>>>>> b7ba80a49124 (Commit)
 
 config SLUB_DEBUG_ON
 	bool "SLUB debugging on by default"
@@ -90,7 +100,11 @@ config PAGE_OWNER
 	  help to find bare alloc_page(s) leaks. Even if you include this
 	  feature on your build, it is disabled in default. You should pass
 	  "page_owner=on" to boot parameter in order to enable it. Eats
+<<<<<<< HEAD
 	  a fair amount of memory if enabled. See tools/mm/page_owner_sort.c
+=======
+	  a fair amount of memory if enabled. See tools/vm/page_owner_sort.c
+>>>>>>> b7ba80a49124 (Commit)
 	  for user-space helper.
 
 	  If unsure, say N.
@@ -207,6 +221,7 @@ config PTDUMP_DEBUGFS
 	  kernel.
 
 	  If in doubt, say N.
+<<<<<<< HEAD
 
 config HAVE_DEBUG_KMEMLEAK
 	bool
@@ -285,3 +300,5 @@ config PER_VMA_LOCK_STATS
 	default y
 	help
 	  Statistics for per-vma locks.
+=======
+>>>>>>> b7ba80a49124 (Commit)

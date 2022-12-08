@@ -11,14 +11,22 @@
 # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 # more details.
 
+<<<<<<< HEAD
 from __future__ import division, print_function
 
 import io
+=======
+from __future__ import print_function
+
+>>>>>>> b7ba80a49124 (Commit)
 import os
 import sys
 import struct
 import argparse
+<<<<<<< HEAD
 import contextlib
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 from libxed import LibXED
 from ctypes import create_string_buffer, addressof
@@ -41,11 +49,14 @@ glb_src			= False
 glb_source_file_name	= None
 glb_line_number		= None
 glb_dso			= None
+<<<<<<< HEAD
 glb_stash_dict		= {}
 glb_output		= None
 glb_output_pos		= 0
 glb_cpu			= -1
 glb_time		= 0
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 def get_optional_null(perf_dict, field):
 	if field in perf_dict:
@@ -77,7 +88,10 @@ def trace_begin():
 	ap.add_argument("--insn-trace", action='store_true')
 	ap.add_argument("--src-trace", action='store_true')
 	ap.add_argument("--all-switch-events", action='store_true')
+<<<<<<< HEAD
 	ap.add_argument("--interleave", type=int, nargs='?', const=4, default=0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	global glb_args
 	global glb_insn
 	global glb_src
@@ -102,13 +116,17 @@ def trace_begin():
 	perf_set_itrace_options(perf_script_context, itrace)
 
 def trace_end():
+<<<<<<< HEAD
 	if glb_args.interleave:
 		flush_stashed_output()
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	print("End")
 
 def trace_unhandled(event_name, context, event_fields_dict):
 		print(' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())]))
 
+<<<<<<< HEAD
 def stash_output():
 	global glb_stash_dict
 	global glb_output_pos
@@ -135,6 +153,8 @@ def flush_stashed_output():
 			if not items:
 				del glb_stash_dict[cpu]
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 def print_ptwrite(raw_buf):
 	data = struct.unpack_from("<IQ", raw_buf)
 	flags = data[0]
@@ -411,6 +431,7 @@ def do_process_event(param_dict):
 		print_common_start(comm, sample, name)
 		print_common_ip(param_dict, sample, symbol, dso)
 
+<<<<<<< HEAD
 def interleave_events(param_dict):
 	global glb_cpu
 	global glb_time
@@ -437,14 +458,22 @@ def process_event(param_dict):
 			interleave_events(param_dict)
 		else:
 			do_process_event(param_dict)
+=======
+def process_event(param_dict):
+	try:
+		do_process_event(param_dict)
+>>>>>>> b7ba80a49124 (Commit)
 	except broken_pipe_exception:
 		# Stop python printing broken pipe errors and traceback
 		sys.stdout = open(os.devnull, 'w')
 		sys.exit(1)
 
 def auxtrace_error(typ, code, cpu, pid, tid, ip, ts, msg, cpumode, *x):
+<<<<<<< HEAD
 	if glb_args.interleave:
 		flush_stashed_output()
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if len(x) >= 2 and x[0]:
 		machine_pid = x[0]
 		vcpu = x[1]
@@ -464,8 +493,11 @@ def auxtrace_error(typ, code, cpu, pid, tid, ip, ts, msg, cpumode, *x):
 		sys.exit(1)
 
 def context_switch(ts, cpu, pid, tid, np_pid, np_tid, machine_pid, out, out_preempt, *x):
+<<<<<<< HEAD
 	if glb_args.interleave:
 		flush_stashed_output()
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if out:
 		out_str = "Switch out "
 	else:

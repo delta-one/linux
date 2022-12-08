@@ -70,7 +70,10 @@ enum amd_sriov_ucode_engine_id {
 	AMD_SRIOV_UCODE_ID_RLC_SRLS,
 	AMD_SRIOV_UCODE_ID_MEC,
 	AMD_SRIOV_UCODE_ID_MEC2,
+<<<<<<< HEAD
 	AMD_SRIOV_UCODE_ID_IMU,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	AMD_SRIOV_UCODE_ID_SOS,
 	AMD_SRIOV_UCODE_ID_ASD,
 	AMD_SRIOV_UCODE_ID_TA_RAS,
@@ -93,8 +96,12 @@ union amd_sriov_msg_feature_flags {
 		uint32_t mm_bw_management  : 1;
 		uint32_t pp_one_vf_mode	   : 1;
 		uint32_t reg_indirect_acc  : 1;
+<<<<<<< HEAD
 		uint32_t av1_support       : 1;
 		uint32_t reserved	   : 25;
+=======
+		uint32_t reserved	   : 26;
+>>>>>>> b7ba80a49124 (Commit)
 	} flags;
 	uint32_t all;
 };

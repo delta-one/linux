@@ -14,7 +14,10 @@
 #include <linux/inet.h>
 #include <linux/llist.h>
 #include <crypto/hash.h>
+<<<<<<< HEAD
 #include <trace/events/sock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "nvmet.h"
 
@@ -165,6 +168,10 @@ static DEFINE_MUTEX(nvmet_tcp_queue_mutex);
 static struct workqueue_struct *nvmet_tcp_wq;
 static const struct nvmet_fabrics_ops nvmet_tcp_ops;
 static void nvmet_tcp_free_cmd(struct nvmet_tcp_cmd *c);
+<<<<<<< HEAD
+=======
+static void nvmet_tcp_finish_cmd(struct nvmet_tcp_cmd *cmd);
+>>>>>>> b7ba80a49124 (Commit)
 static void nvmet_tcp_free_cmd_buffers(struct nvmet_tcp_cmd *cmd);
 
 static inline u16 nvmet_tcp_cmd_tag(struct nvmet_tcp_queue *queue,
@@ -322,8 +329,14 @@ static void nvmet_tcp_build_pdu_iovec(struct nvmet_tcp_cmd *cmd)
 	while (length) {
 		u32 iov_len = min_t(u32, length, sg->length - sg_offset);
 
+<<<<<<< HEAD
 		bvec_set_page(iov, sg_page(sg), sg->length,
 				sg->offset + sg_offset);
+=======
+		iov->bv_page = sg_page(sg);
+		iov->bv_len = sg->length;
+		iov->bv_offset = sg->offset + sg_offset;
+>>>>>>> b7ba80a49124 (Commit)
 
 		length -= iov_len;
 		sg = sg_next(sg);
@@ -331,7 +344,11 @@ static void nvmet_tcp_build_pdu_iovec(struct nvmet_tcp_cmd *cmd)
 		sg_offset = 0;
 	}
 
+<<<<<<< HEAD
 	iov_iter_bvec(&cmd->recv_msg.msg_iter, ITER_DEST, cmd->iov,
+=======
+	iov_iter_bvec(&cmd->recv_msg.msg_iter, READ, cmd->iov,
+>>>>>>> b7ba80a49124 (Commit)
 		      nr_pages, cmd->pdu_len);
 }
 
@@ -919,6 +936,7 @@ static int nvmet_tcp_handle_h2c_data_pdu(struct nvmet_tcp_queue *queue)
 	struct nvme_tcp_data_pdu *data = &queue->pdu.data;
 	struct nvmet_tcp_cmd *cmd;
 
+<<<<<<< HEAD
 	if (likely(queue->nr_cmds)) {
 		if (unlikely(data->ttag >= queue->nr_cmds)) {
 			pr_err("queue %d: received out of bound ttag %u, nr_cmds %u\n",
@@ -930,6 +948,12 @@ static int nvmet_tcp_handle_h2c_data_pdu(struct nvmet_tcp_queue *queue)
 	} else {
 		cmd = &queue->connect;
 	}
+=======
+	if (likely(queue->nr_cmds))
+		cmd = &queue->cmds[data->ttag];
+	else
+		cmd = &queue->connect;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (le32_to_cpu(data->data_offset) != cmd->rbytes_done) {
 		pr_err("ttag %u unexpected data offset %u (expected %u)\n",
@@ -967,6 +991,7 @@ static int nvmet_tcp_done_recv_pdu(struct nvmet_tcp_queue *queue)
 		return nvmet_tcp_handle_icreq(queue);
 	}
 
+<<<<<<< HEAD
 	if (unlikely(hdr->type == nvme_tcp_icreq)) {
 		pr_err("queue %d: received icreq pdu in state %d\n",
 			queue->idx, queue->state);
@@ -974,6 +999,8 @@ static int nvmet_tcp_done_recv_pdu(struct nvmet_tcp_queue *queue)
 		return -EPROTO;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (hdr->type == nvme_tcp_h2c_data) {
 		ret = nvmet_tcp_handle_h2c_data_pdu(queue);
 		if (unlikely(ret))
@@ -1176,8 +1203,12 @@ static int nvmet_tcp_try_recv_ddgst(struct nvmet_tcp_queue *queue)
 			queue->idx, cmd->req.cmd->common.command_id,
 			queue->pdu.cmd.hdr.type, le32_to_cpu(cmd->recv_ddgst),
 			le32_to_cpu(cmd->exp_ddgst));
+<<<<<<< HEAD
 		nvmet_req_uninit(&cmd->req);
 		nvmet_tcp_free_cmd_buffers(cmd);
+=======
+		nvmet_tcp_finish_cmd(cmd);
+>>>>>>> b7ba80a49124 (Commit)
 		nvmet_tcp_fatal_error(queue);
 		ret = -EPROTO;
 		goto out;
@@ -1406,6 +1437,15 @@ static void nvmet_tcp_restore_socket_callbacks(struct nvmet_tcp_queue *queue)
 	write_unlock_bh(&sock->sk->sk_callback_lock);
 }
 
+<<<<<<< HEAD
+=======
+static void nvmet_tcp_finish_cmd(struct nvmet_tcp_cmd *cmd)
+{
+	nvmet_req_uninit(&cmd->req);
+	nvmet_tcp_free_cmd_buffers(cmd);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void nvmet_tcp_uninit_data_in_cmds(struct nvmet_tcp_queue *queue)
 {
 	struct nvmet_tcp_cmd *cmd = queue->cmds;
@@ -1414,10 +1454,16 @@ static void nvmet_tcp_uninit_data_in_cmds(struct nvmet_tcp_queue *queue)
 	for (i = 0; i < queue->nr_cmds; i++, cmd++) {
 		if (nvmet_tcp_need_data_in(cmd))
 			nvmet_req_uninit(&cmd->req);
+<<<<<<< HEAD
+=======
+
+		nvmet_tcp_free_cmd_buffers(cmd);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (!queue->nr_cmds && nvmet_tcp_need_data_in(&queue->connect)) {
 		/* failed in connect */
+<<<<<<< HEAD
 		nvmet_req_uninit(&queue->connect.req);
 	}
 }
@@ -1436,6 +1482,12 @@ static void nvmet_tcp_free_cmd_data_in_buffers(struct nvmet_tcp_queue *queue)
 		nvmet_tcp_free_cmd_buffers(&queue->connect);
 }
 
+=======
+		nvmet_tcp_finish_cmd(&queue->connect);
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void nvmet_tcp_release_queue_work(struct work_struct *w)
 {
 	struct page *page;
@@ -1454,7 +1506,10 @@ static void nvmet_tcp_release_queue_work(struct work_struct *w)
 	nvmet_tcp_uninit_data_in_cmds(queue);
 	nvmet_sq_destroy(&queue->nvme_sq);
 	cancel_work_sync(&queue->io_work);
+<<<<<<< HEAD
 	nvmet_tcp_free_cmd_data_in_buffers(queue);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sock_release(queue->sock);
 	nvmet_tcp_free_cmds(queue);
 	if (queue->hdr_digest || queue->data_digest)
@@ -1470,8 +1525,11 @@ static void nvmet_tcp_data_ready(struct sock *sk)
 {
 	struct nvmet_tcp_queue *queue;
 
+<<<<<<< HEAD
 	trace_sk_data_ready(sk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	read_lock_bh(&sk->sk_callback_lock);
 	queue = sk->sk_user_data;
 	if (likely(queue))
@@ -1669,8 +1727,11 @@ static void nvmet_tcp_listen_data_ready(struct sock *sk)
 {
 	struct nvmet_tcp_port *port;
 
+<<<<<<< HEAD
 	trace_sk_data_ready(sk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	read_lock_bh(&sk->sk_callback_lock);
 	port = sk->sk_user_data;
 	if (!port)

@@ -9,6 +9,7 @@
 
 #define RCR_VHT_ACK		BIT(26)
 
+<<<<<<< HEAD
 struct rtw8821cu_efuse {
 	u8 res4[4];			/* 0xd0 */
 	u8 usb_optional_function;
@@ -29,6 +30,8 @@ struct rtw8821cu_efuse {
 	u8 res12[0x4];
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct rtw8821ce_efuse {
 	u8 mac_addr[ETH_ALEN];		/* 0xd0 */
 	u8 vender_id[2];
@@ -65,11 +68,14 @@ struct rtw8821ce_efuse {
 	u8 res7;
 };
 
+<<<<<<< HEAD
 struct rtw8821cs_efuse {
 	u8 res4[0x4a];			/* 0xd0 */
 	u8 mac_addr[ETH_ALEN];		/* 0x11a */
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct rtw8821c_efuse {
 	__le16 rtl_id;
 	u8 res0[0x0e];
@@ -98,8 +104,11 @@ struct rtw8821c_efuse {
 	u8 res[3];
 	union {
 		struct rtw8821ce_efuse e;
+<<<<<<< HEAD
 		struct rtw8821cu_efuse u;
 		struct rtw8821cs_efuse s;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 

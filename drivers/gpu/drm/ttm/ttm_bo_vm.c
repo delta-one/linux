@@ -31,12 +31,26 @@
 
 #define pr_fmt(fmt) "[TTM] " fmt
 
+<<<<<<< HEAD
 #include <drm/ttm/ttm_bo.h>
 #include <drm/ttm/ttm_placement.h>
 #include <drm/ttm/ttm_tt.h>
 
 #include <drm/drm_drv.h>
 #include <drm/drm_managed.h>
+=======
+#include <drm/ttm/ttm_bo_driver.h>
+#include <drm/ttm/ttm_placement.h>
+#include <drm/drm_vma_manager.h>
+#include <drm/drm_drv.h>
+#include <drm/drm_managed.h>
+#include <linux/mm.h>
+#include <linux/pfn_t.h>
+#include <linux/rbtree.h>
+#include <linux/module.h>
+#include <linux/uaccess.h>
+#include <linux/mem_encrypt.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 static vm_fault_t ttm_bo_vm_fault_idle(struct ttm_buffer_object *bo,
 				struct vm_fault *vmf)
@@ -212,7 +226,11 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
 	page_last = vma_pages(vma) + vma->vm_pgoff -
 		drm_vma_node_start(&bo->base.vma_node);
 
+<<<<<<< HEAD
 	if (unlikely(page_offset >= PFN_UP(bo->base.size)))
+=======
+	if (unlikely(page_offset >= bo->resource->num_pages))
+>>>>>>> b7ba80a49124 (Commit)
 		return VM_FAULT_SIGBUS;
 
 	prot = ttm_io_prot(bo, bo->resource, prot);
@@ -254,7 +272,11 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
 		 * encryption bits. This is because the exact location of the
 		 * data may not be known at mmap() time and may also change
 		 * at arbitrary times while the data is mmap'ed.
+<<<<<<< HEAD
 		 * See vmf_insert_pfn_prot() for a discussion.
+=======
+		 * See vmf_insert_mixed_prot() for a discussion.
+>>>>>>> b7ba80a49124 (Commit)
 		 */
 		ret = vmf_insert_pfn_prot(vma, address, pfn, prot);
 
@@ -407,7 +429,11 @@ int ttm_bo_vm_access(struct vm_area_struct *vma, unsigned long addr,
 		 << PAGE_SHIFT);
 	int ret;
 
+<<<<<<< HEAD
 	if (len < 1 || (offset + len) > bo->base.size)
+=======
+	if (len < 1 || (offset + len) >> PAGE_SHIFT > bo->resource->num_pages)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EIO;
 
 	ret = ttm_bo_reserve(bo, true, false, NULL);
@@ -441,6 +467,7 @@ static const struct vm_operations_struct ttm_bo_vm_ops = {
 	.access = ttm_bo_vm_access,
 };
 
+<<<<<<< HEAD
 /**
  * ttm_bo_mmap_obj - mmap memory backed by a ttm buffer object.
  *
@@ -449,6 +476,8 @@ static const struct vm_operations_struct ttm_bo_vm_ops = {
  *
  * Maps a buffer object.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ttm_bo_mmap_obj(struct vm_area_struct *vma, struct ttm_buffer_object *bo)
 {
 	/* Enforce no COW since would have really strange behavior with it. */
@@ -471,7 +500,12 @@ int ttm_bo_mmap_obj(struct vm_area_struct *vma, struct ttm_buffer_object *bo)
 
 	vma->vm_private_data = bo;
 
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_PFNMAP | VM_IO | VM_DONTEXPAND | VM_DONTDUMP);
+=======
+	vma->vm_flags |= VM_PFNMAP;
+	vma->vm_flags |= VM_IO | VM_DONTEXPAND | VM_DONTDUMP;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 EXPORT_SYMBOL(ttm_bo_mmap_obj);

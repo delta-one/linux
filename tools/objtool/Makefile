@@ -2,11 +2,20 @@
 include ../scripts/Makefile.include
 include ../scripts/Makefile.arch
 
+<<<<<<< HEAD
+=======
+# always use the host compiler
+AR	 = $(HOSTAR)
+CC	 = $(HOSTCC)
+LD	 = $(HOSTLD)
+
+>>>>>>> b7ba80a49124 (Commit)
 ifeq ($(srctree),)
 srctree := $(patsubst %/,%,$(dir $(CURDIR)))
 srctree := $(patsubst %/,%,$(dir $(srctree)))
 endif
 
+<<<<<<< HEAD
 LIBSUBCMD_DIR = $(srctree)/tools/lib/subcmd/
 ifneq ($(OUTPUT),)
   LIBSUBCMD_OUTPUT = $(abspath $(OUTPUT))/libsubcmd
@@ -14,6 +23,11 @@ else
   LIBSUBCMD_OUTPUT = $(CURDIR)/libsubcmd
 endif
 LIBSUBCMD = $(LIBSUBCMD_OUTPUT)/libsubcmd.a
+=======
+SUBCMD_SRCDIR		= $(srctree)/tools/lib/subcmd/
+LIBSUBCMD_OUTPUT	= $(or $(OUTPUT),$(CURDIR)/)
+LIBSUBCMD		= $(LIBSUBCMD_OUTPUT)libsubcmd.a
+>>>>>>> b7ba80a49124 (Commit)
 
 OBJTOOL    := $(OUTPUT)objtool
 OBJTOOL_IN := $(OBJTOOL)-in.o
@@ -27,6 +41,7 @@ INCLUDES := -I$(srctree)/tools/include \
 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
 	    -I$(srctree)/tools/arch/$(SRCARCH)/include	\
 	    -I$(srctree)/tools/objtool/include \
+<<<<<<< HEAD
 	    -I$(srctree)/tools/objtool/arch/$(SRCARCH)/include \
 	    -I$(LIBSUBCMD_OUTPUT)/include
 # Note, EXTRA_WARNINGS here was determined for CC and not HOSTCC, it
@@ -50,6 +65,18 @@ ifeq ($(V),1)
 else
   Q = @
 endif
+=======
+	    -I$(srctree)/tools/objtool/arch/$(SRCARCH)/include
+WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed -Wno-nested-externs
+CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
+LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+
+# Allow old libelf to be used:
+elfshdr := $(shell echo '$(pound)include <libelf.h>' | $(CC) $(CFLAGS) -x c -E - | grep elf_getshdr)
+CFLAGS += $(if $(elfshdr),,-DLIBELF_USE_DEPRECATED)
+
+AWK = awk
+>>>>>>> b7ba80a49124 (Commit)
 
 BUILD_ORC := n
 
@@ -61,6 +88,7 @@ export BUILD_ORC
 export srctree OUTPUT CFLAGS SRCARCH AWK
 include $(srctree)/tools/build/Makefile.include
 
+<<<<<<< HEAD
 $(OBJTOOL_IN): fixdep $(LIBSUBCMD) FORCE
 	$(Q)$(CONFIG_SHELL) ./sync-check.sh
 	$(Q)$(MAKE) $(build)=objtool $(HOST_OVERRIDES) CFLAGS="$(OBJTOOL_CFLAGS)" \
@@ -88,6 +116,23 @@ clean: $(LIBSUBCMD)-clean
 	$(call QUIET_CLEAN, objtool) $(RM) $(OBJTOOL)
 	$(Q)find $(OUTPUT) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
 	$(Q)$(RM) $(OUTPUT)arch/x86/lib/inat-tables.c $(OUTPUT)fixdep
+=======
+$(OBJTOOL_IN): fixdep FORCE
+	@$(CONFIG_SHELL) ./sync-check.sh
+	@$(MAKE) $(build)=objtool
+
+$(OBJTOOL): $(LIBSUBCMD) $(OBJTOOL_IN)
+	$(QUIET_LINK)$(CC) $(OBJTOOL_IN) $(LDFLAGS) -o $@
+
+
+$(LIBSUBCMD): fixdep FORCE
+	$(Q)$(MAKE) -C $(SUBCMD_SRCDIR) OUTPUT=$(LIBSUBCMD_OUTPUT)
+
+clean:
+	$(call QUIET_CLEAN, objtool) $(RM) $(OBJTOOL)
+	$(Q)find $(OUTPUT) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+	$(Q)$(RM) $(OUTPUT)arch/x86/lib/inat-tables.c $(OUTPUT)fixdep $(LIBSUBCMD)
+>>>>>>> b7ba80a49124 (Commit)
 
 FORCE:
 

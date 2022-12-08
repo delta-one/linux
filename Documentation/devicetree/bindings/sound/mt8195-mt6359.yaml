@@ -24,6 +24,7 @@ properties:
     description: User specified audio sound card name
 
   mediatek,platform:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/phandle
     description: The phandle of MT8195 ASoC platform.
 
@@ -37,6 +38,21 @@ properties:
 
   mediatek,adsp:
     $ref: /schemas/types.yaml#/definitions/phandle
+=======
+    $ref: "/schemas/types.yaml#/definitions/phandle"
+    description: The phandle of MT8195 ASoC platform.
+
+  mediatek,dptx-codec:
+    $ref: "/schemas/types.yaml#/definitions/phandle"
+    description: The phandle of MT8195 Display Port Tx codec node.
+
+  mediatek,hdmi-codec:
+    $ref: "/schemas/types.yaml#/definitions/phandle"
+    description: The phandle of MT8195 HDMI codec node.
+
+  mediatek,adsp:
+    $ref: "/schemas/types.yaml#/definitions/phandle"
+>>>>>>> b7ba80a49124 (Commit)
     description: The phandle of MT8195 ADSP platform.
 
   mediatek,dai-link:

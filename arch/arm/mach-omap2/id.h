@@ -14,4 +14,9 @@ struct omap_die_id {
 	u32 id_3;
 };
 
+<<<<<<< HEAD
+=======
+void omap_get_die_id(struct omap_die_id *odi);
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif

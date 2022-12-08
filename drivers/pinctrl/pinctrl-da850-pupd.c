@@ -173,6 +173,14 @@ static int da850_pupd_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int da850_pupd_remove(struct platform_device *pdev)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id da850_pupd_of_match[] = {
 	{ .compatible = "ti,da850-pupd" },
 	{ }
@@ -185,6 +193,10 @@ static struct platform_driver da850_pupd_driver = {
 		.of_match_table	= da850_pupd_of_match,
 	},
 	.probe	= da850_pupd_probe,
+<<<<<<< HEAD
+=======
+	.remove	= da850_pupd_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(da850_pupd_driver);
 

@@ -10,7 +10,11 @@ maintainers:
   - Rob Herring <robh@kernel.org>
 
 allOf:
+<<<<<<< HEAD
   - $ref: mtd.yaml#
+=======
+  - $ref: "mtd.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
   - $ref: /schemas/spi/spi-peripheral-props.yaml#
 
 properties:
@@ -70,6 +74,7 @@ properties:
       be used on such systems, to denote the absence of a reliable reset
       mechanism.
 
+<<<<<<< HEAD
   reset-gpios:
     description:
       A GPIO line connected to the RESET (active low) signal of the device.
@@ -82,12 +87,30 @@ properties:
 dependencies:
   spi-cpol: [ spi-cpha ]
   spi-cpha: [ spi-cpol ]
+=======
+  partitions:
+    type: object
+
+  '#address-cells': true
+  '#size-cells': true
+
+patternProperties:
+  # Note: use 'partitions' node for new users
+  '^partition@':
+    type: object
+
+  "^otp(-[0-9]+)?$":
+    type: object
+>>>>>>> b7ba80a49124 (Commit)
 
 unevaluatedProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     #include <dt-bindings/gpio/gpio.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
     spi {
         #address-cells = <1>;
         #size-cells = <0>;
@@ -97,7 +120,10 @@ examples:
             reg = <0>;
             spi-max-frequency = <40000000>;
             m25p,fast-read;
+<<<<<<< HEAD
             reset-gpios = <&gpio 12 GPIO_ACTIVE_LOW>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
         };
     };
 ...

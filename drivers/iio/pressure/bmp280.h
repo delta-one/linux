@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #include <linux/bitops.h>
 #include <linux/device.h>
+<<<<<<< HEAD
 #include <linux/iio/iio.h>
 #include <linux/regmap.h>
 #include <linux/regulator/consumer.h>
@@ -109,6 +110,9 @@
 
 #define BMP580_TEMP_SKIPPED		0x7f7f7f
 #define BMP580_PRESS_SKIPPED		0x7f7f7f
+=======
+#include <linux/regmap.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 /* BMP380 specific registers */
 #define BMP380_REG_CMD			0x7E
@@ -288,8 +292,11 @@
 #define BMP280_REG_ID			0xD0
 
 #define BMP380_CHIP_ID			0x50
+<<<<<<< HEAD
 #define BMP580_CHIP_ID			0x50
 #define BMP580_CHIP_ID_ALT		0x51
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define BMP180_CHIP_ID			0x55
 #define BMP280_CHIP_ID			0x58
 #define BME280_CHIP_ID			0x60
@@ -300,6 +307,7 @@
 #define BMP280_PRESS_SKIPPED		0x80000
 #define BMP280_HUMIDITY_SKIPPED		0x8000
 
+<<<<<<< HEAD
 /* Core exported structs */
 
 static const char *const bmp280_supply_names[] = {
@@ -461,16 +469,25 @@ extern const struct bmp280_chip_info bme280_chip_info;
 extern const struct bmp280_chip_info bmp380_chip_info;
 extern const struct bmp280_chip_info bmp580_chip_info;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Regmap configurations */
 extern const struct regmap_config bmp180_regmap_config;
 extern const struct regmap_config bmp280_regmap_config;
 extern const struct regmap_config bmp380_regmap_config;
+<<<<<<< HEAD
 extern const struct regmap_config bmp580_regmap_config;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Probe called from different transports */
 int bmp280_common_probe(struct device *dev,
 			struct regmap *regmap,
+<<<<<<< HEAD
 			const struct bmp280_chip_info *,
+=======
+			unsigned int chip,
+>>>>>>> b7ba80a49124 (Commit)
 			const char *name,
 			int irq);
 

@@ -100,6 +100,7 @@ void pcpu_freelist_populate(struct pcpu_freelist *s, void *buf, u32 elem_size,
 			    u32 nr_elems)
 {
 	struct pcpu_freelist_head *head;
+<<<<<<< HEAD
 	unsigned int cpu, cpu_idx, i, j, n, m;
 
 	n = nr_elems / num_possible_cpus();
@@ -115,6 +116,24 @@ void pcpu_freelist_populate(struct pcpu_freelist *s, void *buf, u32 elem_size,
 			buf += elem_size;
 		}
 		cpu_idx++;
+=======
+	int i, cpu, pcpu_entries;
+
+	pcpu_entries = nr_elems / num_possible_cpus() + 1;
+	i = 0;
+
+	for_each_possible_cpu(cpu) {
+again:
+		head = per_cpu_ptr(s->freelist, cpu);
+		/* No locking required as this is not visible yet. */
+		pcpu_freelist_push_node(head, buf);
+		i++;
+		buf += elem_size;
+		if (i == nr_elems)
+			break;
+		if (i % pcpu_entries)
+			goto again;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

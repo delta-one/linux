@@ -107,6 +107,10 @@ endif # !UML
 
 endif # SOUND
 
+<<<<<<< HEAD
+=======
+# AC97_BUS is used from both sound and ucb1400
+>>>>>>> b7ba80a49124 (Commit)
 config AC97_BUS
 	tristate
 	help

@@ -2784,11 +2784,23 @@ static int bcm_enet_shared_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int bcm_enet_shared_remove(struct platform_device *pdev)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* this "shared" driver is needed because both macs share a single
  * address space
  */
 struct platform_driver bcm63xx_enet_shared_driver = {
 	.probe	= bcm_enet_shared_probe,
+<<<<<<< HEAD
+=======
+	.remove	= bcm_enet_shared_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name	= "bcm63xx_enet_shared",
 		.owner  = THIS_MODULE,

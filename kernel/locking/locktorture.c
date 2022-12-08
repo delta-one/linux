@@ -33,6 +33,7 @@
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Paul E. McKenney <paulmck@linux.ibm.com>");
 
+<<<<<<< HEAD
 torture_param(int, nwriters_stress, -1, "Number of write-locking stress-test threads");
 torture_param(int, nreaders_stress, -1, "Number of read-locking stress-test threads");
 torture_param(int, long_hold, 100, "Do occasional long hold of lock (ms), 0=disable");
@@ -51,6 +52,25 @@ torture_param(int, nested_locks, 0, "Number of nested locks (max = 8)");
 #define MAX_NESTED_LOCKS 8
 
 static char *torture_type = IS_ENABLED(CONFIG_PREEMPT_RT) ? "raw_spin_lock" : "spin_lock";
+=======
+torture_param(int, nwriters_stress, -1,
+	     "Number of write-locking stress-test threads");
+torture_param(int, nreaders_stress, -1,
+	     "Number of read-locking stress-test threads");
+torture_param(int, onoff_holdoff, 0, "Time after boot before CPU hotplugs (s)");
+torture_param(int, onoff_interval, 0,
+	     "Time between CPU hotplugs (s), 0=disable");
+torture_param(int, shuffle_interval, 3,
+	     "Number of jiffies between shuffles, 0=disable");
+torture_param(int, shutdown_secs, 0, "Shutdown time (j), <= zero to disable.");
+torture_param(int, stat_interval, 60,
+	     "Number of seconds between stats printk()s");
+torture_param(int, stutter, 5, "Number of jiffies to run/halt test, 0=disable");
+torture_param(int, verbose, 1,
+	     "Enable verbose debugging printk()s");
+
+static char *torture_type = "spin_lock";
+>>>>>>> b7ba80a49124 (Commit)
 module_param(torture_type, charp, 0444);
 MODULE_PARM_DESC(torture_type,
 		 "Type of lock to torture (spin_lock, spin_lock_irq, mutex_lock, ...)");
@@ -77,12 +97,18 @@ static void lock_torture_cleanup(void);
 struct lock_torture_ops {
 	void (*init)(void);
 	void (*exit)(void);
+<<<<<<< HEAD
 	int (*nested_lock)(int tid, u32 lockset);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int (*writelock)(int tid);
 	void (*write_delay)(struct torture_random_state *trsp);
 	void (*task_boost)(struct torture_random_state *trsp);
 	void (*writeunlock)(int tid);
+<<<<<<< HEAD
 	void (*nested_unlock)(int tid, u32 lockset);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int (*readlock)(int tid);
 	void (*read_delay)(struct torture_random_state *trsp);
 	void (*readunlock)(int tid);
@@ -115,7 +141,11 @@ static int torture_lock_busted_write_lock(int tid __maybe_unused)
 
 static void torture_lock_busted_write_delay(struct torture_random_state *trsp)
 {
+<<<<<<< HEAD
 	const unsigned long longdelay_ms = long_hold ? long_hold : ULONG_MAX;
+=======
+	const unsigned long longdelay_ms = 100;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* We want a long delay occasionally to force massive contention.  */
 	if (!(torture_random(trsp) %
@@ -130,6 +160,7 @@ static void torture_lock_busted_write_unlock(int tid __maybe_unused)
 	  /* BUGGY, do not use in real life!!! */
 }
 
+<<<<<<< HEAD
 static void __torture_rt_boost(struct torture_random_state *trsp)
 {
 	const unsigned int factor = rt_boost_factor;
@@ -168,12 +199,21 @@ static void torture_rt_boost(struct torture_random_state *trsp)
 		return;
 
 	__torture_rt_boost(trsp);
+=======
+static void torture_boost_dummy(struct torture_random_state *trsp)
+{
+	/* Only rtmutexes care about priority */
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct lock_torture_ops lock_busted_ops = {
 	.writelock	= torture_lock_busted_write_lock,
 	.write_delay	= torture_lock_busted_write_delay,
+<<<<<<< HEAD
 	.task_boost     = torture_rt_boost,
+=======
+	.task_boost     = torture_boost_dummy,
+>>>>>>> b7ba80a49124 (Commit)
 	.writeunlock	= torture_lock_busted_write_unlock,
 	.readlock       = NULL,
 	.read_delay     = NULL,
@@ -193,18 +233,30 @@ __acquires(torture_spinlock)
 static void torture_spin_lock_write_delay(struct torture_random_state *trsp)
 {
 	const unsigned long shortdelay_us = 2;
+<<<<<<< HEAD
 	const unsigned long longdelay_ms = long_hold ? long_hold : ULONG_MAX;
 	unsigned long j;
+=======
+	const unsigned long longdelay_ms = 100;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* We want a short delay mostly to emulate likely code, and
 	 * we want a long delay occasionally to force massive contention.
 	 */
+<<<<<<< HEAD
 	if (!(torture_random(trsp) % (cxt.nrealwriters_stress * 2000 * longdelay_ms))) {
 		j = jiffies;
 		mdelay(longdelay_ms);
 		pr_alert("%s: delay = %lu jiffies.\n", __func__, jiffies - j);
 	}
 	if (!(torture_random(trsp) % (cxt.nrealwriters_stress * 200 * shortdelay_us)))
+=======
+	if (!(torture_random(trsp) %
+	      (cxt.nrealwriters_stress * 2000 * longdelay_ms)))
+		mdelay(longdelay_ms);
+	if (!(torture_random(trsp) %
+	      (cxt.nrealwriters_stress * 2 * shortdelay_us)))
+>>>>>>> b7ba80a49124 (Commit)
 		udelay(shortdelay_us);
 	if (!(torture_random(trsp) % (cxt.nrealwriters_stress * 20000)))
 		torture_preempt_schedule();  /* Allow test to be preempted. */
@@ -219,7 +271,11 @@ __releases(torture_spinlock)
 static struct lock_torture_ops spin_lock_ops = {
 	.writelock	= torture_spin_lock_write_lock,
 	.write_delay	= torture_spin_lock_write_delay,
+<<<<<<< HEAD
 	.task_boost     = torture_rt_boost,
+=======
+	.task_boost     = torture_boost_dummy,
+>>>>>>> b7ba80a49124 (Commit)
 	.writeunlock	= torture_spin_lock_write_unlock,
 	.readlock       = NULL,
 	.read_delay     = NULL,
@@ -246,7 +302,11 @@ __releases(torture_spinlock)
 static struct lock_torture_ops spin_lock_irq_ops = {
 	.writelock	= torture_spin_lock_write_lock_irq,
 	.write_delay	= torture_spin_lock_write_delay,
+<<<<<<< HEAD
 	.task_boost     = torture_rt_boost,
+=======
+	.task_boost     = torture_boost_dummy,
+>>>>>>> b7ba80a49124 (Commit)
 	.writeunlock	= torture_lock_spin_write_unlock_irq,
 	.readlock       = NULL,
 	.read_delay     = NULL,
@@ -254,6 +314,7 @@ static struct lock_torture_ops spin_lock_irq_ops = {
 	.name		= "spin_lock_irq"
 };
 
+<<<<<<< HEAD
 static DEFINE_RAW_SPINLOCK(torture_raw_spinlock);
 
 static int torture_raw_spin_lock_write_lock(int tid __maybe_unused)
@@ -307,6 +368,8 @@ static struct lock_torture_ops raw_spin_lock_irq_ops = {
 	.name		= "raw_spin_lock_irq"
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static DEFINE_RWLOCK(torture_rwlock);
 
 static int torture_rwlock_write_lock(int tid __maybe_unused)
@@ -319,7 +382,11 @@ __acquires(torture_rwlock)
 static void torture_rwlock_write_delay(struct torture_random_state *trsp)
 {
 	const unsigned long shortdelay_us = 2;
+<<<<<<< HEAD
 	const unsigned long longdelay_ms = long_hold ? long_hold : ULONG_MAX;
+=======
+	const unsigned long longdelay_ms = 100;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* We want a short delay mostly to emulate likely code, and
 	 * we want a long delay occasionally to force massive contention.
@@ -368,7 +435,11 @@ __releases(torture_rwlock)
 static struct lock_torture_ops rw_lock_ops = {
 	.writelock	= torture_rwlock_write_lock,
 	.write_delay	= torture_rwlock_write_delay,
+<<<<<<< HEAD
 	.task_boost     = torture_rt_boost,
+=======
+	.task_boost     = torture_boost_dummy,
+>>>>>>> b7ba80a49124 (Commit)
 	.writeunlock	= torture_rwlock_write_unlock,
 	.readlock       = torture_rwlock_read_lock,
 	.read_delay     = torture_rwlock_read_delay,
@@ -411,7 +482,11 @@ __releases(torture_rwlock)
 static struct lock_torture_ops rw_lock_irq_ops = {
 	.writelock	= torture_rwlock_write_lock_irq,
 	.write_delay	= torture_rwlock_write_delay,
+<<<<<<< HEAD
 	.task_boost     = torture_rt_boost,
+=======
+	.task_boost     = torture_boost_dummy,
+>>>>>>> b7ba80a49124 (Commit)
 	.writeunlock	= torture_rwlock_write_unlock_irq,
 	.readlock       = torture_rwlock_read_lock_irq,
 	.read_delay     = torture_rwlock_read_delay,
@@ -420,6 +495,7 @@ static struct lock_torture_ops rw_lock_irq_ops = {
 };
 
 static DEFINE_MUTEX(torture_mutex);
+<<<<<<< HEAD
 static struct mutex torture_nested_mutexes[MAX_NESTED_LOCKS];
 static struct lock_class_key nested_mutex_keys[MAX_NESTED_LOCKS];
 
@@ -442,6 +518,8 @@ static int torture_mutex_nested_lock(int tid __maybe_unused,
 			mutex_lock(&torture_nested_mutexes[i]);
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int torture_mutex_lock(int tid __maybe_unused)
 __acquires(torture_mutex)
@@ -452,12 +530,21 @@ __acquires(torture_mutex)
 
 static void torture_mutex_delay(struct torture_random_state *trsp)
 {
+<<<<<<< HEAD
 	const unsigned long longdelay_ms = long_hold ? long_hold : ULONG_MAX;
+=======
+	const unsigned long longdelay_ms = 100;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* We want a long delay occasionally to force massive contention.  */
 	if (!(torture_random(trsp) %
 	      (cxt.nrealwriters_stress * 2000 * longdelay_ms)))
 		mdelay(longdelay_ms * 5);
+<<<<<<< HEAD
+=======
+	else
+		mdelay(longdelay_ms / 5);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!(torture_random(trsp) % (cxt.nrealwriters_stress * 20000)))
 		torture_preempt_schedule();  /* Allow test to be preempted. */
 }
@@ -468,6 +555,7 @@ __releases(torture_mutex)
 	mutex_unlock(&torture_mutex);
 }
 
+<<<<<<< HEAD
 static void torture_mutex_nested_unlock(int tid __maybe_unused,
 					u32 lockset)
 {
@@ -486,6 +574,13 @@ static struct lock_torture_ops mutex_lock_ops = {
 	.task_boost     = torture_rt_boost,
 	.writeunlock	= torture_mutex_unlock,
 	.nested_unlock	= torture_mutex_nested_unlock,
+=======
+static struct lock_torture_ops mutex_lock_ops = {
+	.writelock	= torture_mutex_lock,
+	.write_delay	= torture_mutex_delay,
+	.task_boost     = torture_boost_dummy,
+	.writeunlock	= torture_mutex_unlock,
+>>>>>>> b7ba80a49124 (Commit)
 	.readlock       = NULL,
 	.read_delay     = NULL,
 	.readunlock     = NULL,
@@ -582,7 +677,11 @@ static struct lock_torture_ops ww_mutex_lock_ops = {
 	.exit		= torture_ww_mutex_exit,
 	.writelock	= torture_ww_mutex_lock,
 	.write_delay	= torture_mutex_delay,
+<<<<<<< HEAD
 	.task_boost     = torture_rt_boost,
+=======
+	.task_boost     = torture_boost_dummy,
+>>>>>>> b7ba80a49124 (Commit)
 	.writeunlock	= torture_ww_mutex_unlock,
 	.readlock       = NULL,
 	.read_delay     = NULL,
@@ -592,6 +691,7 @@ static struct lock_torture_ops ww_mutex_lock_ops = {
 
 #ifdef CONFIG_RT_MUTEXES
 static DEFINE_RT_MUTEX(torture_rtmutex);
+<<<<<<< HEAD
 static struct rt_mutex torture_nested_rtmutexes[MAX_NESTED_LOCKS];
 static struct lock_class_key nested_rtmutex_keys[MAX_NESTED_LOCKS];
 
@@ -614,6 +714,8 @@ static int torture_rtmutex_nested_lock(int tid __maybe_unused,
 			rt_mutex_lock(&torture_nested_rtmutexes[i]);
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int torture_rtmutex_lock(int tid __maybe_unused)
 __acquires(torture_rtmutex)
@@ -622,10 +724,48 @@ __acquires(torture_rtmutex)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void torture_rtmutex_delay(struct torture_random_state *trsp)
 {
 	const unsigned long shortdelay_us = 2;
 	const unsigned long longdelay_ms = long_hold ? long_hold : ULONG_MAX;
+=======
+static void torture_rtmutex_boost(struct torture_random_state *trsp)
+{
+	const unsigned int factor = 50000; /* yes, quite arbitrary */
+
+	if (!rt_task(current)) {
+		/*
+		 * Boost priority once every ~50k operations. When the
+		 * task tries to take the lock, the rtmutex it will account
+		 * for the new priority, and do any corresponding pi-dance.
+		 */
+		if (trsp && !(torture_random(trsp) %
+			      (cxt.nrealwriters_stress * factor))) {
+			sched_set_fifo(current);
+		} else /* common case, do nothing */
+			return;
+	} else {
+		/*
+		 * The task will remain boosted for another ~500k operations,
+		 * then restored back to its original prio, and so forth.
+		 *
+		 * When @trsp is nil, we want to force-reset the task for
+		 * stopping the kthread.
+		 */
+		if (!trsp || !(torture_random(trsp) %
+			       (cxt.nrealwriters_stress * factor * 2))) {
+			sched_set_normal(current, 0);
+		} else /* common case, do nothing */
+			return;
+	}
+}
+
+static void torture_rtmutex_delay(struct torture_random_state *trsp)
+{
+	const unsigned long shortdelay_us = 2;
+	const unsigned long longdelay_ms = 100;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * We want a short delay mostly to emulate likely code, and
@@ -635,7 +775,11 @@ static void torture_rtmutex_delay(struct torture_random_state *trsp)
 	      (cxt.nrealwriters_stress * 2000 * longdelay_ms)))
 		mdelay(longdelay_ms);
 	if (!(torture_random(trsp) %
+<<<<<<< HEAD
 	      (cxt.nrealwriters_stress * 200 * shortdelay_us)))
+=======
+	      (cxt.nrealwriters_stress * 2 * shortdelay_us)))
+>>>>>>> b7ba80a49124 (Commit)
 		udelay(shortdelay_us);
 	if (!(torture_random(trsp) % (cxt.nrealwriters_stress * 20000)))
 		torture_preempt_schedule();  /* Allow test to be preempted. */
@@ -647,6 +791,7 @@ __releases(torture_rtmutex)
 	rt_mutex_unlock(&torture_rtmutex);
 }
 
+<<<<<<< HEAD
 static void torture_rt_boost_rtmutex(struct torture_random_state *trsp)
 {
 	if (!rt_boost)
@@ -673,6 +818,13 @@ static struct lock_torture_ops rtmutex_lock_ops = {
 	.task_boost     = torture_rt_boost_rtmutex,
 	.writeunlock	= torture_rtmutex_unlock,
 	.nested_unlock	= torture_rtmutex_nested_unlock,
+=======
+static struct lock_torture_ops rtmutex_lock_ops = {
+	.writelock	= torture_rtmutex_lock,
+	.write_delay	= torture_rtmutex_delay,
+	.task_boost     = torture_rtmutex_boost,
+	.writeunlock	= torture_rtmutex_unlock,
+>>>>>>> b7ba80a49124 (Commit)
 	.readlock       = NULL,
 	.read_delay     = NULL,
 	.readunlock     = NULL,
@@ -690,12 +842,21 @@ __acquires(torture_rwsem)
 
 static void torture_rwsem_write_delay(struct torture_random_state *trsp)
 {
+<<<<<<< HEAD
 	const unsigned long longdelay_ms = long_hold ? long_hold : ULONG_MAX;
+=======
+	const unsigned long longdelay_ms = 100;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* We want a long delay occasionally to force massive contention.  */
 	if (!(torture_random(trsp) %
 	      (cxt.nrealwriters_stress * 2000 * longdelay_ms)))
 		mdelay(longdelay_ms * 10);
+<<<<<<< HEAD
+=======
+	else
+		mdelay(longdelay_ms / 10);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!(torture_random(trsp) % (cxt.nrealwriters_stress * 20000)))
 		torture_preempt_schedule();  /* Allow test to be preempted. */
 }
@@ -736,7 +897,11 @@ __releases(torture_rwsem)
 static struct lock_torture_ops rwsem_lock_ops = {
 	.writelock	= torture_rwsem_down_write,
 	.write_delay	= torture_rwsem_write_delay,
+<<<<<<< HEAD
 	.task_boost     = torture_rt_boost,
+=======
+	.task_boost     = torture_boost_dummy,
+>>>>>>> b7ba80a49124 (Commit)
 	.writeunlock	= torture_rwsem_up_write,
 	.readlock       = torture_rwsem_down_read,
 	.read_delay     = torture_rwsem_read_delay,
@@ -788,7 +953,11 @@ static struct lock_torture_ops percpu_rwsem_lock_ops = {
 	.exit		= torture_percpu_rwsem_exit,
 	.writelock	= torture_percpu_rwsem_down_write,
 	.write_delay	= torture_rwsem_write_delay,
+<<<<<<< HEAD
 	.task_boost     = torture_rt_boost,
+=======
+	.task_boost     = torture_boost_dummy,
+>>>>>>> b7ba80a49124 (Commit)
 	.writeunlock	= torture_percpu_rwsem_up_write,
 	.readlock       = torture_percpu_rwsem_down_read,
 	.read_delay     = torture_rwsem_read_delay,
@@ -805,8 +974,11 @@ static int lock_torture_writer(void *arg)
 	struct lock_stress_stats *lwsp = arg;
 	int tid = lwsp - cxt.lwsa;
 	DEFINE_TORTURE_RANDOM(rand);
+<<<<<<< HEAD
 	u32 lockset_mask;
 	bool skip_main_lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	VERBOSE_TOROUT_STRING("lock_torture_writer task started");
 	set_user_nice(current, MAX_NICE);
@@ -815,6 +987,7 @@ static int lock_torture_writer(void *arg)
 		if ((torture_random(&rand) & 0xfffff) == 0)
 			schedule_timeout_uninterruptible(1);
 
+<<<<<<< HEAD
 		lockset_mask = torture_random(&rand);
 		/*
 		 * When using nested_locks, we want to occasionally
@@ -849,6 +1022,21 @@ static int lock_torture_writer(void *arg)
 		}
 		if (cxt.cur_ops->nested_unlock)
 			cxt.cur_ops->nested_unlock(tid, lockset_mask);
+=======
+		cxt.cur_ops->task_boost(&rand);
+		cxt.cur_ops->writelock(tid);
+		if (WARN_ON_ONCE(lock_is_write_held))
+			lwsp->n_lock_fail++;
+		lock_is_write_held = true;
+		if (WARN_ON_ONCE(atomic_read(&lock_is_read_held)))
+			lwsp->n_lock_fail++; /* rare, but... */
+
+		lwsp->n_lock_acquired++;
+		cxt.cur_ops->write_delay(&rand);
+		lock_is_write_held = false;
+		WRITE_ONCE(last_lock_release, jiffies);
+		cxt.cur_ops->writeunlock(tid);
+>>>>>>> b7ba80a49124 (Commit)
 
 		stutter_wait("lock_torture_writer");
 	} while (!torture_must_stop());
@@ -989,11 +1177,19 @@ lock_torture_print_module_parms(struct lock_torture_ops *cur_ops,
 				const char *tag)
 {
 	pr_alert("%s" TORTURE_FLAG
+<<<<<<< HEAD
 		 "--- %s%s: nwriters_stress=%d nreaders_stress=%d nested_locks=%d stat_interval=%d verbose=%d shuffle_interval=%d stutter=%d shutdown_secs=%d onoff_interval=%d onoff_holdoff=%d\n",
 		 torture_type, tag, cxt.debug_lock ? " [debug]": "",
 		 cxt.nrealwriters_stress, cxt.nrealreaders_stress,
 		 nested_locks, stat_interval, verbose, shuffle_interval,
 		 stutter, shutdown_secs, onoff_interval, onoff_holdoff);
+=======
+		 "--- %s%s: nwriters_stress=%d nreaders_stress=%d stat_interval=%d verbose=%d shuffle_interval=%d stutter=%d shutdown_secs=%d onoff_interval=%d onoff_holdoff=%d\n",
+		 torture_type, tag, cxt.debug_lock ? " [debug]": "",
+		 cxt.nrealwriters_stress, cxt.nrealreaders_stress, stat_interval,
+		 verbose, shuffle_interval, stutter, shutdown_secs,
+		 onoff_interval, onoff_holdoff);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void lock_torture_cleanup(void)
@@ -1063,7 +1259,10 @@ static int __init lock_torture_init(void)
 	static struct lock_torture_ops *torture_ops[] = {
 		&lock_busted_ops,
 		&spin_lock_ops, &spin_lock_irq_ops,
+<<<<<<< HEAD
 		&raw_spin_lock_ops, &raw_spin_lock_irq_ops,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		&rw_lock_ops, &rw_lock_irq_ops,
 		&mutex_lock_ops,
 		&ww_mutex_lock_ops,
@@ -1213,10 +1412,13 @@ static int __init lock_torture_init(void)
 		}
 	}
 
+<<<<<<< HEAD
 	/* cap nested_locks to MAX_NESTED_LOCKS */
 	if (nested_locks > MAX_NESTED_LOCKS)
 		nested_locks = MAX_NESTED_LOCKS;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (cxt.cur_ops->readlock) {
 		reader_tasks = kcalloc(cxt.nrealreaders_stress,
 				       sizeof(reader_tasks[0]),

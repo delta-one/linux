@@ -71,6 +71,7 @@ static ssize_t write_blk(struct qtree_mem_dqinfo *info, uint blk, char *buf)
 	return ret;
 }
 
+<<<<<<< HEAD
 static inline int do_check_range(struct super_block *sb, const char *val_name,
 				 uint val, uint min_val, uint max_val)
 {
@@ -105,6 +106,8 @@ static int check_dquot_block_header(struct qtree_mem_dqinfo *info,
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Remove empty block from list and return it */
 static int get_free_dqblk(struct qtree_mem_dqinfo *info)
 {
@@ -119,9 +122,12 @@ static int get_free_dqblk(struct qtree_mem_dqinfo *info)
 		ret = read_blk(info, blk, buf);
 		if (ret < 0)
 			goto out_buf;
+<<<<<<< HEAD
 		ret = check_dquot_block_header(info, dh);
 		if (ret)
 			goto out_buf;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		info->dqi_free_blk = le32_to_cpu(dh->dqdh_next_free);
 	}
 	else {
@@ -269,9 +275,12 @@ static uint find_free_dqentry(struct qtree_mem_dqinfo *info,
 		*err = read_blk(info, blk, buf);
 		if (*err < 0)
 			goto out_buf;
+<<<<<<< HEAD
 		*err = check_dquot_block_header(info, dh);
 		if (*err)
 			goto out_buf;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		blk = get_free_dqblk(info);
 		if ((int)blk < 0) {
@@ -353,10 +362,13 @@ static int do_insert_tree(struct qtree_mem_dqinfo *info, struct dquot *dquot,
 	}
 	ref = (__le32 *)buf;
 	newblk = le32_to_cpu(ref[get_index(info, dquot->dq_id, depth)]);
+<<<<<<< HEAD
 	ret = do_check_range(dquot->dq_sb, "block", newblk, 0,
 			     info->dqi_blocks - 1);
 	if (ret)
 		goto out_buf;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!newblk)
 		newson = 1;
 	if (depth == info->dqi_qtree_depth - 1) {
@@ -468,9 +480,12 @@ static int free_dqentry(struct qtree_mem_dqinfo *info, struct dquot *dquot,
 		goto out_buf;
 	}
 	dh = (struct qt_disk_dqdbheader *)buf;
+<<<<<<< HEAD
 	ret = check_dquot_block_header(info, dh);
 	if (ret)
 		goto out_buf;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	le16_add_cpu(&dh->dqdh_entries, -1);
 	if (!le16_to_cpu(dh->dqdh_entries)) {	/* Block got free? */
 		ret = remove_free_dqentry(info, buf, blk);
@@ -527,10 +542,19 @@ static int remove_tree(struct qtree_mem_dqinfo *info, struct dquot *dquot,
 		goto out_buf;
 	}
 	newblk = le32_to_cpu(ref[get_index(info, dquot->dq_id, depth)]);
+<<<<<<< HEAD
 	ret = do_check_range(dquot->dq_sb, "block", newblk, QT_TREEOFF,
 			     info->dqi_blocks - 1);
 	if (ret)
 		goto out_buf;
+=======
+	if (newblk < QT_TREEOFF || newblk >= info->dqi_blocks) {
+		quota_error(dquot->dq_sb, "Getting block too big (%u >= %u)",
+			    newblk, info->dqi_blocks);
+		ret = -EUCLEAN;
+		goto out_buf;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (depth == info->dqi_qtree_depth - 1) {
 		ret = free_dqentry(info, dquot, newblk);
@@ -631,10 +655,19 @@ static loff_t find_tree_dqentry(struct qtree_mem_dqinfo *info,
 	blk = le32_to_cpu(ref[get_index(info, dquot->dq_id, depth)]);
 	if (!blk)	/* No reference? */
 		goto out_buf;
+<<<<<<< HEAD
 	ret = do_check_range(dquot->dq_sb, "block", blk, QT_TREEOFF,
 			     info->dqi_blocks - 1);
 	if (ret)
 		goto out_buf;
+=======
+	if (blk < QT_TREEOFF || blk >= info->dqi_blocks) {
+		quota_error(dquot->dq_sb, "Getting block too big (%u >= %u)",
+			    blk, info->dqi_blocks);
+		ret = -EUCLEAN;
+		goto out_buf;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (depth < info->dqi_qtree_depth - 1)
 		ret = find_tree_dqentry(info, dquot, blk, depth+1);
@@ -748,6 +781,7 @@ static int find_next_id(struct qtree_mem_dqinfo *info, qid_t *id,
 		goto out_buf;
 	}
 	for (i = __get_index(info, *id, depth); i < epb; i++) {
+<<<<<<< HEAD
 		uint blk_no = le32_to_cpu(ref[i]);
 
 		if (blk_no == 0) {
@@ -758,11 +792,21 @@ static int find_next_id(struct qtree_mem_dqinfo *info, qid_t *id,
 				     info->dqi_blocks - 1);
 		if (ret)
 			goto out_buf;
+=======
+		if (ref[i] == cpu_to_le32(0)) {
+			*id += level_inc;
+			continue;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		if (depth == info->dqi_qtree_depth - 1) {
 			ret = 0;
 			goto out_buf;
 		}
+<<<<<<< HEAD
 		ret = find_next_id(info, id, blk_no, depth + 1);
+=======
+		ret = find_next_id(info, id, le32_to_cpu(ref[i]), depth + 1);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret != -ENOENT)
 			break;
 	}

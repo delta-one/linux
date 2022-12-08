@@ -1424,7 +1424,11 @@ enum {
 	RT5682_CLK_SEL_I2S2_ASRC,
 };
 
+<<<<<<< HEAD
 #define RT5682_NUM_SUPPLIES 5
+=======
+#define RT5682_NUM_SUPPLIES 3
+>>>>>>> b7ba80a49124 (Commit)
 
 struct rt5682_priv {
 	struct snd_soc_component *component;

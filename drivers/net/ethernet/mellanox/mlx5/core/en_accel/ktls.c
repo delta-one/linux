@@ -1,19 +1,33 @@
 // SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB
 // Copyright (c) 2019 Mellanox Technologies.
 
+<<<<<<< HEAD
 #include <linux/debugfs.h>
 #include "en.h"
 #include "lib/mlx5.h"
 #include "lib/crypto.h"
+=======
+#include "en.h"
+#include "lib/mlx5.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "en_accel/ktls.h"
 #include "en_accel/ktls_utils.h"
 #include "en_accel/fs_tcp.h"
 
+<<<<<<< HEAD
 struct mlx5_crypto_dek *mlx5_ktls_create_key(struct mlx5_crypto_dek_pool *dek_pool,
 					     struct tls_crypto_info *crypto_info)
 {
 	const void *key;
 	u32 sz_bytes;
+=======
+int mlx5_ktls_create_key(struct mlx5_core_dev *mdev,
+			 struct tls_crypto_info *crypto_info,
+			 u32 *p_key_id)
+{
+	u32 sz_bytes;
+	void *key;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (crypto_info->cipher_type) {
 	case TLS_CIPHER_AES_GCM_128: {
@@ -33,6 +47,7 @@ struct mlx5_crypto_dek *mlx5_ktls_create_key(struct mlx5_crypto_dek_pool *dek_po
 		break;
 	}
 	default:
+<<<<<<< HEAD
 		return ERR_PTR(-EINVAL);
 	}
 
@@ -43,6 +58,19 @@ void mlx5_ktls_destroy_key(struct mlx5_crypto_dek_pool *dek_pool,
 			   struct mlx5_crypto_dek *dek)
 {
 	mlx5_crypto_dek_destroy(dek_pool, dek);
+=======
+		return -EINVAL;
+	}
+
+	return mlx5_create_encryption_key(mdev, key, sz_bytes,
+					  MLX5_ACCEL_OBJ_TLS_KEY,
+					  p_key_id);
+}
+
+void mlx5_ktls_destroy_key(struct mlx5_core_dev *mdev, u32 key_id)
+{
+	mlx5_destroy_encryption_key(mdev, key_id);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mlx5e_ktls_add(struct net_device *netdev, struct sock *sk,
@@ -92,6 +120,7 @@ static const struct tlsdev_ops mlx5e_ktls_ops = {
 	.tls_dev_resync = mlx5e_ktls_resync,
 };
 
+<<<<<<< HEAD
 bool mlx5e_is_ktls_rx(struct mlx5_core_dev *mdev)
 {
 	u8 max_sq_wqebbs = mlx5e_get_max_sq_wqebbs(mdev);
@@ -110,6 +139,8 @@ bool mlx5e_is_ktls_rx(struct mlx5_core_dev *mdev)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void mlx5e_ktls_build_netdev(struct mlx5e_priv *priv)
 {
 	struct net_device *netdev = priv->netdev;
@@ -177,6 +208,7 @@ void mlx5e_ktls_cleanup_rx(struct mlx5e_priv *priv)
 	destroy_workqueue(priv->tls->rx_wq);
 }
 
+<<<<<<< HEAD
 static void mlx5e_tls_debugfs_init(struct mlx5e_tls *tls,
 				   struct dentry *dfs_root)
 {
@@ -189,6 +221,10 @@ static void mlx5e_tls_debugfs_init(struct mlx5e_tls *tls,
 int mlx5e_ktls_init(struct mlx5e_priv *priv)
 {
 	struct mlx5_crypto_dek_pool *dek_pool;
+=======
+int mlx5e_ktls_init(struct mlx5e_priv *priv)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct mlx5e_tls *tls;
 
 	if (!mlx5e_is_ktls_device(priv->mdev))
@@ -197,6 +233,7 @@ int mlx5e_ktls_init(struct mlx5e_priv *priv)
 	tls = kzalloc(sizeof(*tls), GFP_KERNEL);
 	if (!tls)
 		return -ENOMEM;
+<<<<<<< HEAD
 	tls->mdev = priv->mdev;
 
 	dek_pool = mlx5_crypto_dek_pool_create(priv->mdev, MLX5_ACCEL_OBJ_TLS_KEY);
@@ -209,11 +246,16 @@ int mlx5e_ktls_init(struct mlx5e_priv *priv)
 
 	mlx5e_tls_debugfs_init(tls, priv->dfs_root);
 
+=======
+
+	priv->tls = tls;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 void mlx5e_ktls_cleanup(struct mlx5e_priv *priv)
 {
+<<<<<<< HEAD
 	struct mlx5e_tls *tls = priv->tls;
 
 	if (!mlx5e_is_ktls_device(priv->mdev))
@@ -223,6 +265,8 @@ void mlx5e_ktls_cleanup(struct mlx5e_priv *priv)
 	tls->debugfs.dfs = NULL;
 
 	mlx5_crypto_dek_pool_destroy(tls->dek_pool);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(priv->tls);
 	priv->tls = NULL;
 }

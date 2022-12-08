@@ -135,6 +135,7 @@ static int imx93_pd_probe(struct platform_device *pdev)
 
 	ret = pm_genpd_init(&domain->genpd, NULL, domain->init_off);
 	if (ret)
+<<<<<<< HEAD
 		goto err_clk_unprepare;
 
 	platform_set_drvdata(pdev, domain);
@@ -153,6 +154,13 @@ err_clk_unprepare:
 		clk_bulk_disable_unprepare(domain->num_clks, domain->clks);
 
 	return ret;
+=======
+		return ret;
+
+	platform_set_drvdata(pdev, domain);
+
+	return of_genpd_add_provider_simple(np, &domain->genpd);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id imx93_pd_ids[] = {
@@ -164,6 +172,10 @@ MODULE_DEVICE_TABLE(of, imx93_pd_ids);
 static struct platform_driver imx93_power_domain_driver = {
 	.driver = {
 		.name	= "imx93_power_domain",
+<<<<<<< HEAD
+=======
+		.owner	= THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = imx93_pd_ids,
 	},
 	.probe = imx93_pd_probe,

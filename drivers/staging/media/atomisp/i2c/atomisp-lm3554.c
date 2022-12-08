@@ -921,7 +921,11 @@ static void lm3554_remove(struct i2c_client *client)
 
 	atomisp_gmin_remove_subdev(sd);
 
+<<<<<<< HEAD
 	timer_shutdown_sync(&flash->flash_off_delay);
+=======
+	del_timer_sync(&flash->flash_off_delay);
+>>>>>>> b7ba80a49124 (Commit)
 
 	lm3554_gpio_uninit(client);
 

@@ -59,6 +59,7 @@
 #include "util/dlfilter.h"
 #include "util/record.h"
 #include "util/util.h"
+<<<<<<< HEAD
 #include "util/cgroup.h"
 #include "perf.h"
 
@@ -66,6 +67,11 @@
 #ifdef HAVE_LIBTRACEEVENT
 #include <traceevent/event-parse.h>
 #endif
+=======
+#include "perf.h"
+
+#include <linux/ctype.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 static char const		*script_name;
 static char const		*generate_script_lang;
@@ -131,8 +137,11 @@ enum perf_output_field {
 	PERF_OUTPUT_BRSTACKINSNLEN  = 1ULL << 36,
 	PERF_OUTPUT_MACHINE_PID     = 1ULL << 37,
 	PERF_OUTPUT_VCPU            = 1ULL << 38,
+<<<<<<< HEAD
 	PERF_OUTPUT_CGROUP          = 1ULL << 39,
 	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct perf_script {
@@ -203,8 +212,11 @@ struct output_option {
 	{.str = "brstackinsnlen", .field = PERF_OUTPUT_BRSTACKINSNLEN},
 	{.str = "machine_pid", .field = PERF_OUTPUT_MACHINE_PID},
 	{.str = "vcpu", .field = PERF_OUTPUT_VCPU},
+<<<<<<< HEAD
 	{.str = "cgroup", .field = PERF_OUTPUT_CGROUP},
 	{.str = "retire_lat", .field = PERF_OUTPUT_RETIRE_LAT},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum {
@@ -280,7 +292,11 @@ static struct {
 			      PERF_OUTPUT_ADDR | PERF_OUTPUT_DATA_SRC |
 			      PERF_OUTPUT_WEIGHT | PERF_OUTPUT_PHYS_ADDR |
 			      PERF_OUTPUT_DATA_PAGE_SIZE | PERF_OUTPUT_CODE_PAGE_SIZE |
+<<<<<<< HEAD
 			      PERF_OUTPUT_INS_LAT | PERF_OUTPUT_RETIRE_LAT,
+=======
+			      PERF_OUTPUT_INS_LAT,
+>>>>>>> b7ba80a49124 (Commit)
 
 		.invalid_fields = PERF_OUTPUT_TRACE | PERF_OUTPUT_BPF_OUTPUT,
 	},
@@ -547,6 +563,7 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
 	    evsel__check_stype(evsel, PERF_SAMPLE_WEIGHT_STRUCT, "WEIGHT_STRUCT", PERF_OUTPUT_INS_LAT))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (PRINT_FIELD(CGROUP) &&
 	    evsel__check_stype(evsel, PERF_SAMPLE_CGROUP, "CGROUP", PERF_OUTPUT_CGROUP)) {
 		pr_err("Hint: run 'perf record --all-cgroups ...'\n");
@@ -557,6 +574,8 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
 	    evsel__check_stype(evsel, PERF_SAMPLE_WEIGHT_STRUCT, "WEIGHT_STRUCT", PERF_OUTPUT_RETIRE_LAT))
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -895,13 +914,21 @@ mispred_str(struct branch_entry *br)
 
 static int print_bstack_flags(FILE *fp, struct branch_entry *br)
 {
+<<<<<<< HEAD
 	return fprintf(fp, "/%c/%c/%c/%d/%s/%s ",
+=======
+	return fprintf(fp, "/%c/%c/%c/%d/%s ",
+>>>>>>> b7ba80a49124 (Commit)
 		       mispred_str(br),
 		       br->flags.in_tx ? 'X' : '-',
 		       br->flags.abort ? 'A' : '-',
 		       br->flags.cycles,
+<<<<<<< HEAD
 		       get_branch_type(br),
 		       br->flags.spec ? branch_spec_desc(br->flags.spec) : "-");
+=======
+		       get_branch_type(br));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int perf_sample__fprintf_brstack(struct perf_sample *sample,
@@ -1317,7 +1344,11 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
 		goto out;
 
 	/*
+<<<<<<< HEAD
 	 * Print final block up to sample
+=======
+	 * Print final block upto sample
+>>>>>>> b7ba80a49124 (Commit)
 	 *
 	 * Due to pipeline delays the LBRs might be missing a branch
 	 * or two, which can result in very large or negative blocks
@@ -2068,10 +2099,21 @@ static void perf_sample__fprint_metric(struct perf_script *script,
 	u64 val;
 
 	if (!evsel->stats)
+<<<<<<< HEAD
 		evlist__alloc_stats(&stat_config, script->session->evlist, /*alloc_raw=*/false);
 	if (evsel_script(leader)->gnum++ == 0)
 		perf_stat__reset_shadow_stats();
 	val = sample->period * evsel->scale;
+=======
+		evlist__alloc_stats(script->session->evlist, false);
+	if (evsel_script(leader)->gnum++ == 0)
+		perf_stat__reset_shadow_stats();
+	val = sample->period * evsel->scale;
+	perf_stat__update_shadow_stats(evsel,
+				       val,
+				       sample->cpu,
+				       &rt_stat);
+>>>>>>> b7ba80a49124 (Commit)
 	evsel_script(evsel)->val = val;
 	if (evsel_script(leader)->gnum == leader->core.nr_members) {
 		for_each_group_member (ev2, leader) {
@@ -2079,7 +2121,12 @@ static void perf_sample__fprint_metric(struct perf_script *script,
 						      evsel_script(ev2)->val,
 						      sample->cpu,
 						      &ctx,
+<<<<<<< HEAD
 						      NULL);
+=======
+						      NULL,
+						      &rt_stat);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		evsel_script(leader)->gnum = 0;
 	}
@@ -2168,12 +2215,20 @@ static void process_event(struct perf_script *script,
 		perf_sample__fprintf_bts(sample, evsel, thread, al, addr_al, machine, fp);
 		return;
 	}
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (PRINT_FIELD(TRACE) && sample->raw_data) {
 		event_format__fprintf(evsel->tp_format, sample->cpu,
 				      sample->raw_data, sample->raw_size, fp);
 	}
+<<<<<<< HEAD
 #endif
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (attr->type == PERF_TYPE_SYNTH && PRINT_FIELD(SYNTH))
 		perf_sample__fprintf_synth(sample, evsel, fp);
 
@@ -2189,9 +2244,12 @@ static void process_event(struct perf_script *script,
 	if (PRINT_FIELD(INS_LAT))
 		fprintf(fp, "%16" PRIu16, sample->ins_lat);
 
+<<<<<<< HEAD
 	if (PRINT_FIELD(RETIRE_LAT))
 		fprintf(fp, "%16" PRIu16, sample->retire_lat);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (PRINT_FIELD(IP)) {
 		struct callchain_cursor *cursor = NULL;
 
@@ -2234,6 +2292,7 @@ static void process_event(struct perf_script *script,
 	if (PRINT_FIELD(CODE_PAGE_SIZE))
 		fprintf(fp, " %s", get_page_size_name(sample->code_page_size, str));
 
+<<<<<<< HEAD
 	if (PRINT_FIELD(CGROUP)) {
 		const char *cgrp_name;
 		struct cgroup *cgrp = cgroup__find(machine->env,
@@ -2245,6 +2304,8 @@ static void process_event(struct perf_script *script,
 		fprintf(fp, " %s", cgrp_name);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	perf_sample__fprintf_ipc(sample, attr, fp);
 
 	fprintf(fp, "\n");
@@ -2258,7 +2319,11 @@ static void process_event(struct perf_script *script,
 	if (PRINT_FIELD(METRIC))
 		perf_sample__fprint_metric(script, thread, evsel, sample, fp);
 
+<<<<<<< HEAD
 	if (verbose > 0)
+=======
+	if (verbose)
+>>>>>>> b7ba80a49124 (Commit)
 		fflush(fp);
 }
 
@@ -2271,6 +2336,12 @@ static void __process_stat(struct evsel *counter, u64 tstamp)
 	struct perf_cpu cpu;
 	static int header_printed;
 
+<<<<<<< HEAD
+=======
+	if (counter->core.system_wide)
+		nthreads = 1;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!header_printed) {
 		printf("%3s %8s %15s %15s %15s %15s %s\n",
 		       "CPU", "THREAD", "VAL", "ENA", "RUN", "TIME", "EVENT");
@@ -2311,9 +2382,13 @@ static void process_stat_interval(u64 tstamp)
 
 static void setup_scripting(void)
 {
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 	setup_perl_scripting();
 #endif
+=======
+	setup_perl_scripting();
+>>>>>>> b7ba80a49124 (Commit)
 	setup_python_scripting();
 }
 
@@ -2789,6 +2864,11 @@ static int __cmd_script(struct perf_script *script)
 
 	signal(SIGINT, sig_handler);
 
+<<<<<<< HEAD
+=======
+	perf_stat__init_shadow_stats();
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* override event processing functions */
 	if (script->show_task_events) {
 		script->tool.comm = process_comm_event;
@@ -3660,7 +3740,11 @@ static int set_maps(struct perf_script *script)
 
 	perf_evlist__set_maps(&evlist->core, script->cpus, script->threads);
 
+<<<<<<< HEAD
 	if (evlist__alloc_stats(&stat_config, evlist, /*alloc_raw=*/true))
+=======
+	if (evlist__alloc_stats(evlist, true))
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOMEM;
 
 	script->allocated = true;
@@ -3812,9 +3896,13 @@ int cmd_script(int argc, const char **argv)
 			.fork		 = perf_event__process_fork,
 			.attr		 = process_attr,
 			.event_update   = perf_event__process_event_update,
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 			.tracing_data	 = perf_event__process_tracing_data,
 #endif
+=======
+			.tracing_data	 = perf_event__process_tracing_data,
+>>>>>>> b7ba80a49124 (Commit)
 			.feature	 = process_feature_event,
 			.build_id	 = perf_event__process_build_id,
 			.id_index	 = perf_event__process_id_index,
@@ -3876,10 +3964,16 @@ int cmd_script(int argc, const char **argv)
 		     "Valid types: hw,sw,trace,raw,synth. "
 		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,"
 		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
+<<<<<<< HEAD
 		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
 		     "brstackinsnlen,brstackoff,callindent,insn,insnlen,synth,"
 		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
 		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat",
+=======
+		     "brstacksym,flags,bpf-output,brstackinsn,brstackinsnlen,brstackoff,"
+		     "callindent,insn,insnlen,synth,phys_addr,metric,misc,ipc,tod,"
+		     "data_page_size,code_page_size,ins_lat",
+>>>>>>> b7ba80a49124 (Commit)
 		     parse_output_fields),
 	OPT_BOOLEAN('a', "all-cpus", &system_wide,
 		    "system-wide collection from all CPUs"),
@@ -4245,7 +4339,10 @@ script_found:
 	else
 		symbol_conf.use_callchain = false;
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (session->tevent.pevent &&
 	    tep_set_function_resolver(session->tevent.pevent,
 				      machine__resolve_kernel_addr,
@@ -4254,7 +4351,11 @@ script_found:
 		err = -1;
 		goto out_delete;
 	}
+<<<<<<< HEAD
 #endif
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (generate_script_lang) {
 		struct stat perf_stat;
 		int input;
@@ -4290,12 +4391,18 @@ script_found:
 			err = -ENOENT;
 			goto out_delete;
 		}
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 		err = scripting_ops->generate_script(session->tevent.pevent,
 						     "perf-script");
 #else
 		err = scripting_ops->generate_script(NULL, "perf-script");
 #endif
+=======
+
+		err = scripting_ops->generate_script(session->tevent.pevent,
+						     "perf-script");
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_delete;
 	}
 

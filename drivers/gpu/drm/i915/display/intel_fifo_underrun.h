@@ -8,12 +8,19 @@
 
 #include <linux/types.h>
 
+<<<<<<< HEAD
 struct drm_i915_private;
 struct intel_crtc;
 enum pipe;
 
 void intel_init_fifo_underrun_reporting(struct drm_i915_private *i915,
 					struct intel_crtc *crtc, bool enable);
+=======
+#include "intel_display.h"
+
+struct drm_i915_private;
+
+>>>>>>> b7ba80a49124 (Commit)
 bool intel_set_cpu_fifo_underrun_reporting(struct drm_i915_private *dev_priv,
 					   enum pipe pipe, bool enable);
 bool intel_set_pch_fifo_underrun_reporting(struct drm_i915_private *dev_priv,

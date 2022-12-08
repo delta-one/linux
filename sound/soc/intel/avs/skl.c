@@ -12,9 +12,14 @@
 #include "avs.h"
 #include "messages.h"
 
+<<<<<<< HEAD
 static int __maybe_unused
 skl_enable_logs(struct avs_dev *adev, enum avs_log_enable enable, u32 aging_period,
 		u32 fifo_full_period, unsigned long resource_mask, u32 *priorities)
+=======
+static int skl_enable_logs(struct avs_dev *adev, enum avs_log_enable enable, u32 aging_period,
+			   u32 fifo_full_period, unsigned long resource_mask, u32 *priorities)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct skl_log_state_info *info;
 	u32 size, num_cores = adev->hw_cfg.dsp_cores;
@@ -29,12 +34,20 @@ skl_enable_logs(struct avs_dev *adev, enum avs_log_enable enable, u32 aging_peri
 
 	info->core_mask = resource_mask;
 	if (enable)
+<<<<<<< HEAD
 		for_each_set_bit(i, &resource_mask, num_cores) {
+=======
+		for_each_set_bit(i, &resource_mask, GENMASK(num_cores, 0)) {
+>>>>>>> b7ba80a49124 (Commit)
 			info->logs_core[i].enable = enable;
 			info->logs_core[i].min_priority = *priorities++;
 		}
 	else
+<<<<<<< HEAD
 		for_each_set_bit(i, &resource_mask, num_cores)
+=======
+		for_each_set_bit(i, &resource_mask, GENMASK(num_cores, 0))
+>>>>>>> b7ba80a49124 (Commit)
 			info->logs_core[i].enable = enable;
 
 	ret = avs_ipc_set_enable_logs(adev, (u8 *)info, size);
@@ -56,11 +69,23 @@ int skl_log_buffer_offset(struct avs_dev *adev, u32 core)
 static int
 skl_log_buffer_status(struct avs_dev *adev, union avs_notify_msg *msg)
 {
+<<<<<<< HEAD
 	void __iomem *buf;
 	u16 size, write, offset;
 
 	if (!avs_logging_fw(adev))
 		return 0;
+=======
+	unsigned long flags;
+	void __iomem *buf;
+	u16 size, write, offset;
+
+	spin_lock_irqsave(&adev->dbg.trace_lock, flags);
+	if (!kfifo_initialized(&adev->dbg.trace_fifo)) {
+		spin_unlock_irqrestore(&adev->dbg.trace_lock, flags);
+		return 0;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	size = avs_log_buffer_size(adev) / 2;
 	write = readl(avs_sram_addr(adev, AVS_FW_REGS_WINDOW) + FW_REGS_DBG_LOG_WP(msg->log.core));
@@ -69,7 +94,13 @@ skl_log_buffer_status(struct avs_dev *adev, union avs_notify_msg *msg)
 
 	/* Address is guaranteed to exist in SRAM2. */
 	buf = avs_log_buffer_addr(adev, msg->log.core) + offset;
+<<<<<<< HEAD
 	avs_dump_fw_log_wakeup(adev, buf, size);
+=======
+	__kfifo_fromio_locked(&adev->dbg.trace_fifo, buf, size, &adev->dbg.fifo_lock);
+	wake_up(&adev->dbg.trace_waitq);
+	spin_unlock_irqrestore(&adev->dbg.trace_lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -111,10 +142,17 @@ const struct avs_dsp_ops skl_dsp_ops = {
 	.load_basefw = avs_cldma_load_basefw,
 	.load_lib = avs_cldma_load_library,
 	.transfer_mods = avs_cldma_transfer_modules,
+<<<<<<< HEAD
+=======
+	.enable_logs = skl_enable_logs,
+>>>>>>> b7ba80a49124 (Commit)
 	.log_buffer_offset = skl_log_buffer_offset,
 	.log_buffer_status = skl_log_buffer_status,
 	.coredump = skl_coredump,
 	.d0ix_toggle = skl_d0ix_toggle,
 	.set_d0ix = skl_set_d0ix,
+<<<<<<< HEAD
 	AVS_SET_ENABLE_LOGS_OP(skl)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

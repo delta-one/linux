@@ -391,6 +391,11 @@ int fpu_copy_uabi_to_guest_fpstate(struct fpu_guest *gfpu, const void *buf,
 {
 	struct fpstate *kstate = gfpu->fpstate;
 	const union fpregs_state *ustate = buf;
+<<<<<<< HEAD
+=======
+	struct pkru_state *xpkru;
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!cpu_feature_enabled(X86_FEATURE_XSAVE)) {
 		if (ustate->xsave.header.xfeatures & ~XFEATURE_MASK_FPSSE)
@@ -404,6 +409,7 @@ int fpu_copy_uabi_to_guest_fpstate(struct fpu_guest *gfpu, const void *buf,
 	if (ustate->xsave.header.xfeatures & ~xcr0)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/*
 	 * Nullify @vpkru to preserve its current value if PKRU's bit isn't set
 	 * in the header.  KVM's odd ABI is to leave PKRU untouched in this
@@ -413,6 +419,18 @@ int fpu_copy_uabi_to_guest_fpstate(struct fpu_guest *gfpu, const void *buf,
 		vpkru = NULL;
 
 	return copy_uabi_from_kernel_to_xstate(kstate, ustate, vpkru);
+=======
+	ret = copy_uabi_from_kernel_to_xstate(kstate, ustate);
+	if (ret)
+		return ret;
+
+	/* Retrieve PKRU if not in init state */
+	if (kstate->regs.xsave.header.xfeatures & XFEATURE_MASK_PKRU) {
+		xpkru = get_xsave_addr(&kstate->regs.xsave, XFEATURE_PKRU);
+		*vpkru = xpkru->pkru;
+	}
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(fpu_copy_uabi_to_guest_fpstate);
 #endif /* CONFIG_KVM */
@@ -426,7 +444,11 @@ void kernel_fpu_begin_mask(unsigned int kfpu_mask)
 
 	this_cpu_write(in_kernel_fpu, true);
 
+<<<<<<< HEAD
 	if (!(current->flags & (PF_KTHREAD | PF_IO_WORKER)) &&
+=======
+	if (!(current->flags & PF_KTHREAD) &&
+>>>>>>> b7ba80a49124 (Commit)
 	    !test_thread_flag(TIF_NEED_FPU_LOAD)) {
 		set_thread_flag(TIF_NEED_FPU_LOAD);
 		save_fpregs_to_fpstate(&current->thread.fpu);
@@ -552,6 +574,7 @@ static inline void fpu_inherit_perms(struct fpu *dst_fpu)
 	}
 }
 
+<<<<<<< HEAD
 /* A passed ssp of zero will not cause any update */
 static int update_fpu_shstk(struct task_struct *dst, unsigned long ssp)
 {
@@ -582,6 +605,10 @@ static int update_fpu_shstk(struct task_struct *dst, unsigned long ssp)
 /* Clone current's FPU state on fork */
 int fpu_clone(struct task_struct *dst, unsigned long clone_flags, bool minimal,
 	      unsigned long ssp)
+=======
+/* Clone current's FPU state on fork */
+int fpu_clone(struct task_struct *dst, unsigned long clone_flags, bool minimal)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fpu *src_fpu = &current->thread.fpu;
 	struct fpu *dst_fpu = &dst->thread.fpu;
@@ -630,9 +657,15 @@ int fpu_clone(struct task_struct *dst, unsigned long clone_flags, bool minimal,
 	if (test_thread_flag(TIF_NEED_FPU_LOAD))
 		fpregs_restore_userregs();
 	save_fpregs_to_fpstate(dst_fpu);
+<<<<<<< HEAD
 	fpregs_unlock();
 	if (!(clone_flags & CLONE_THREAD))
 		fpu_inherit_perms(dst_fpu);
+=======
+	if (!(clone_flags & CLONE_THREAD))
+		fpu_inherit_perms(dst_fpu);
+	fpregs_unlock();
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Children never inherit PASID state.
@@ -641,12 +674,15 @@ int fpu_clone(struct task_struct *dst, unsigned long clone_flags, bool minimal,
 	if (use_xsave())
 		dst_fpu->fpstate->regs.xsave.header.xfeatures &= ~XFEATURE_MASK_PASID;
 
+<<<<<<< HEAD
 	/*
 	 * Update shadow stack pointer, in case it changed during clone.
 	 */
 	if (update_fpu_shstk(dst, ssp))
 		return 1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	trace_x86_fpu_copy_src(src_fpu);
 	trace_x86_fpu_copy_dst(dst_fpu);
 
@@ -787,6 +823,7 @@ void switch_fpu_return(void)
 }
 EXPORT_SYMBOL_GPL(switch_fpu_return);
 
+<<<<<<< HEAD
 void fpregs_lock_and_load(void)
 {
 	/*
@@ -805,6 +842,8 @@ void fpregs_lock_and_load(void)
 		fpregs_restore_userregs();
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_X86_DEBUG_FPU
 /*
  * If current FPU state according to its tracking (loaded FPU context on this
@@ -905,12 +944,20 @@ int fpu__exception_code(struct fpu *fpu, int trap_nr)
  * Initialize register state that may prevent from entering low-power idle.
  * This function will be invoked from the cpuidle driver only when needed.
  */
+<<<<<<< HEAD
 noinstr void fpu_idle_fpregs(void)
+=======
+void fpu_idle_fpregs(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* Note: AMX_TILE being enabled implies XGETBV1 support */
 	if (cpu_feature_enabled(X86_FEATURE_AMX_TILE) &&
 	    (xfeatures_in_use() & XFEATURE_MASK_XTILE)) {
 		tile_release();
+<<<<<<< HEAD
 		__this_cpu_write(fpu_fpregs_owner_ctx, NULL);
+=======
+		fpregs_deactivate(&current->thread.fpu);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }

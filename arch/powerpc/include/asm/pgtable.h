@@ -20,6 +20,7 @@ struct mm_struct;
 #include <asm/nohash/pgtable.h>
 #endif /* !CONFIG_PPC_BOOK3S */
 
+<<<<<<< HEAD
 /*
  * Protection used for kernel text. We want the debuggers to be able to
  * set breakpoints anywhere, so don't write protect the kernel text
@@ -39,6 +40,8 @@ struct mm_struct;
 #define PAGE_AGP		(PAGE_KERNEL_NC)
 #define HAVE_PAGE_AGP
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef __ASSEMBLY__
 
 #ifndef MAX_PTRS_PER_PGD
@@ -81,6 +84,16 @@ void poking_init(void);
 extern unsigned long ioremap_bot;
 extern const pgprot_t protection_map[16];
 
+<<<<<<< HEAD
+=======
+/*
+ * kern_addr_valid is intended to indicate whether an address is a valid
+ * kernel address.  Most 32-bit archs define it as always true (like this)
+ * but most 64-bit archs actually perform a test.  What should we do here?
+ */
+#define kern_addr_valid(addr)	(1)
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef CONFIG_TRANSPARENT_HUGEPAGE
 #define pmd_large(pmd)		0
 #endif

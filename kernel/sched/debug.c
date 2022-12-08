@@ -280,6 +280,7 @@ static const struct file_operations sched_dynamic_fops = {
 
 __read_mostly bool sched_debug_verbose;
 
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 static struct dentry           *sd_dentry;
 
@@ -319,6 +320,8 @@ static const struct file_operations sched_verbose_fops = {
 	.llseek =       default_llseek,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct seq_operations sched_debug_sops;
 
 static int sched_debug_open(struct inode *inode, struct file *filp)
@@ -342,7 +345,11 @@ static __init int sched_init_debug(void)
 	debugfs_sched = debugfs_create_dir("sched", NULL);
 
 	debugfs_create_file("features", 0644, debugfs_sched, NULL, &sched_feat_fops);
+<<<<<<< HEAD
 	debugfs_create_file_unsafe("verbose", 0644, debugfs_sched, &sched_debug_verbose, &sched_verbose_fops);
+=======
+	debugfs_create_bool("verbose", 0644, debugfs_sched, &sched_debug_verbose);
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PREEMPT_DYNAMIC
 	debugfs_create_file("preempt", 0644, debugfs_sched, NULL, &sched_dynamic_fops);
 #endif
@@ -384,6 +391,10 @@ late_initcall(sched_init_debug);
 #ifdef CONFIG_SMP
 
 static cpumask_var_t		sd_sysctl_cpus;
+<<<<<<< HEAD
+=======
+static struct dentry		*sd_dentry;
+>>>>>>> b7ba80a49124 (Commit)
 
 static int sd_flags_show(struct seq_file *m, void *v)
 {
@@ -440,15 +451,19 @@ void update_sched_domain_debugfs(void)
 	if (!debugfs_sched)
 		return;
 
+<<<<<<< HEAD
 	if (!sched_debug_verbose)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!cpumask_available(sd_sysctl_cpus)) {
 		if (!alloc_cpumask_var(&sd_sysctl_cpus, GFP_KERNEL))
 			return;
 		cpumask_copy(sd_sysctl_cpus, cpu_possible_mask);
 	}
 
+<<<<<<< HEAD
 	if (!sd_dentry) {
 		sd_dentry = debugfs_create_dir("domains", debugfs_sched);
 
@@ -457,6 +472,11 @@ void update_sched_domain_debugfs(void)
 			cpumask_copy(sd_sysctl_cpus, cpu_online_mask);
 	}
 
+=======
+	if (!sd_dentry)
+		sd_dentry = debugfs_create_dir("domains", debugfs_sched);
+
+>>>>>>> b7ba80a49124 (Commit)
 	for_each_cpu(cpu, sd_sysctl_cpus) {
 		struct sched_domain *sd;
 		struct dentry *d_cpu;

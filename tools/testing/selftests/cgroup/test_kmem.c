@@ -19,12 +19,21 @@
 
 
 /*
+<<<<<<< HEAD
  * Memory cgroup charging is performed using percpu batches 64 pages
  * big (look at MEMCG_CHARGE_BATCH), whereas memory.stat is exact. So
  * the maximum discrepancy between charge and vmstat entries is number
  * of cpus multiplied by 64 pages.
  */
 #define MAX_VMSTAT_ERROR (4096 * 64 * get_nprocs())
+=======
+ * Memory cgroup charging is performed using percpu batches 32 pages
+ * big (look at MEMCG_CHARGE_BATCH), whereas memory.stat is exact. So
+ * the maximum discrepancy between charge and vmstat entries is number
+ * of cpus multiplied by 32 pages.
+ */
+#define MAX_VMSTAT_ERROR (4096 * 32 * get_nprocs())
+>>>>>>> b7ba80a49124 (Commit)
 
 
 static int alloc_dcache(const char *cgroup, void *arg)

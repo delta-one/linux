@@ -21,17 +21,23 @@
  *
  * Authors: Ben Skeggs
  */
+<<<<<<< HEAD
 #include "priv.h"
 #include "cgrp.h"
 #include "chan.h"
 #include "chid.h"
 #include "runl.h"
 
+=======
+#include "nv04.h"
+#include "channv04.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "regsnv04.h"
 
 #include <core/ramht.h>
 #include <subdev/instmem.h>
 
+<<<<<<< HEAD
 #include <nvif/class.h>
 
 static int
@@ -93,6 +99,32 @@ static void
 nv17_fifo_init(struct nvkm_fifo *fifo)
 {
 	struct nvkm_device *device = fifo->engine.subdev.device;
+=======
+static const struct nv04_fifo_ramfc
+nv17_fifo_ramfc[] = {
+	{ 32,  0, 0x00,  0, NV04_PFIFO_CACHE1_DMA_PUT },
+	{ 32,  0, 0x04,  0, NV04_PFIFO_CACHE1_DMA_GET },
+	{ 32,  0, 0x08,  0, NV10_PFIFO_CACHE1_REF_CNT },
+	{ 16,  0, 0x0c,  0, NV04_PFIFO_CACHE1_DMA_INSTANCE },
+	{ 16, 16, 0x0c,  0, NV04_PFIFO_CACHE1_DMA_DCOUNT },
+	{ 32,  0, 0x10,  0, NV04_PFIFO_CACHE1_DMA_STATE },
+	{ 32,  0, 0x14,  0, NV04_PFIFO_CACHE1_DMA_FETCH },
+	{ 32,  0, 0x18,  0, NV04_PFIFO_CACHE1_ENGINE },
+	{ 32,  0, 0x1c,  0, NV04_PFIFO_CACHE1_PULL1 },
+	{ 32,  0, 0x20,  0, NV10_PFIFO_CACHE1_ACQUIRE_VALUE },
+	{ 32,  0, 0x24,  0, NV10_PFIFO_CACHE1_ACQUIRE_TIMESTAMP },
+	{ 32,  0, 0x28,  0, NV10_PFIFO_CACHE1_ACQUIRE_TIMEOUT },
+	{ 32,  0, 0x2c,  0, NV10_PFIFO_CACHE1_SEMAPHORE },
+	{ 32,  0, 0x30,  0, NV10_PFIFO_CACHE1_DMA_SUBROUTINE },
+	{}
+};
+
+static void
+nv17_fifo_init(struct nvkm_fifo *base)
+{
+	struct nv04_fifo *fifo = nv04_fifo(base);
+	struct nvkm_device *device = fifo->base.engine.subdev.device;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nvkm_instmem *imem = device->imem;
 	struct nvkm_ramht *ramht = imem->ramht;
 	struct nvkm_memory *ramro = imem->ramro;
@@ -108,7 +140,11 @@ nv17_fifo_init(struct nvkm_fifo *fifo)
 	nvkm_wr32(device, NV03_PFIFO_RAMFC, nvkm_memory_addr(ramfc) >> 8 |
 					    0x00010000);
 
+<<<<<<< HEAD
 	nvkm_wr32(device, NV03_PFIFO_CACHE1_PUSH1, fifo->chid->mask);
+=======
+	nvkm_wr32(device, NV03_PFIFO_CACHE1_PUSH1, fifo->base.nr - 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	nvkm_wr32(device, NV03_PFIFO_INTR_0, 0xffffffff);
 	nvkm_wr32(device, NV03_PFIFO_INTR_EN_0, 0xffffffff);
@@ -120,6 +156,7 @@ nv17_fifo_init(struct nvkm_fifo *fifo)
 
 static const struct nvkm_fifo_func
 nv17_fifo = {
+<<<<<<< HEAD
 	.chid_nr = nv10_fifo_chid_nr,
 	.chid_ctor = nv04_fifo_chid_ctor,
 	.runl_ctor = nv04_fifo_runl_ctor,
@@ -132,11 +169,27 @@ nv17_fifo = {
 	.engn_sw = &nv04_engn,
 	.cgrp = {{                        }, &nv04_cgrp },
 	.chan = {{ 0, 0, NV17_CHANNEL_DMA }, &nv17_chan },
+=======
+	.init = nv17_fifo_init,
+	.intr = nv04_fifo_intr,
+	.engine_id = nv04_fifo_engine_id,
+	.id_engine = nv04_fifo_id_engine,
+	.pause = nv04_fifo_pause,
+	.start = nv04_fifo_start,
+	.chan = {
+		&nv17_fifo_dma_oclass,
+		NULL
+	},
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int
 nv17_fifo_new(struct nvkm_device *device, enum nvkm_subdev_type type, int inst,
 	      struct nvkm_fifo **pfifo)
 {
+<<<<<<< HEAD
 	return nvkm_fifo_new_(&nv17_fifo, device, type, inst, pfifo);
+=======
+	return nv04_fifo_new_(&nv17_fifo, device, type, inst, 32, nv17_fifo_ramfc, pfifo);
+>>>>>>> b7ba80a49124 (Commit)
 }

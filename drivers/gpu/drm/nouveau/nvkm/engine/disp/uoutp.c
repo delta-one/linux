@@ -21,13 +21,17 @@
  */
 #define nvkm_uoutp(p) container_of((p), struct nvkm_outp, object)
 #include "outp.h"
+<<<<<<< HEAD
 #include "dp.h"
 #include "head.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "ior.h"
 
 #include <nvif/if0012.h>
 
 static int
+<<<<<<< HEAD
 nvkm_uoutp_mthd_dp_mst_vcpi(struct nvkm_outp *outp, void *argv, u32 argc)
 {
 	struct nvkm_ior *ior = outp->ior;
@@ -253,6 +257,8 @@ nvkm_uoutp_mthd_acquire(struct nvkm_outp *outp, void *argv, u32 argc)
 }
 
 static int
+=======
+>>>>>>> b7ba80a49124 (Commit)
 nvkm_uoutp_mthd_load_detect(struct nvkm_outp *outp, void *argv, u32 argc)
 {
 	union nvif_outp_load_detect_args *args = argv;
@@ -276,6 +282,7 @@ nvkm_uoutp_mthd_load_detect(struct nvkm_outp *outp, void *argv, u32 argc)
 }
 
 static int
+<<<<<<< HEAD
 nvkm_uoutp_mthd_acquired(struct nvkm_outp *outp, u32 mthd, void *argv, u32 argc)
 {
 	switch (mthd) {
@@ -292,12 +299,17 @@ nvkm_uoutp_mthd_acquired(struct nvkm_outp *outp, u32 mthd, void *argv, u32 argc)
 }
 
 static int
+=======
+>>>>>>> b7ba80a49124 (Commit)
 nvkm_uoutp_mthd_noacquire(struct nvkm_outp *outp, u32 mthd, void *argv, u32 argc)
 {
 	switch (mthd) {
 	case NVIF_OUTP_V0_LOAD_DETECT: return nvkm_uoutp_mthd_load_detect(outp, argv, argc);
+<<<<<<< HEAD
 	case NVIF_OUTP_V0_ACQUIRE    : return nvkm_uoutp_mthd_acquire    (outp, argv, argc);
 	case NVIF_OUTP_V0_DP_AUX_PWR : return nvkm_uoutp_mthd_dp_aux_pwr (outp, argv, argc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		break;
 	}
@@ -318,11 +330,14 @@ nvkm_uoutp_mthd(struct nvkm_object *object, u32 mthd, void *argv, u32 argc)
 	if (ret <= 0)
 		goto done;
 
+<<<<<<< HEAD
 	if (outp->ior)
 		ret = nvkm_uoutp_mthd_acquired(outp, mthd, argv, argc);
 	else
 		ret = -EIO;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 done:
 	mutex_unlock(&disp->super.mutex);
 	return ret;

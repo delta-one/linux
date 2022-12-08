@@ -9,15 +9,24 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
+<<<<<<< HEAD
 		pmi8998_gpios: gpio@c000 {
 			compatible = "qcom,pmi8998-gpio", "qcom,spmi-gpio";
 			reg = <0xc000>;
 			gpio-controller;
 			gpio-ranges = <&pmi8998_gpios 0 0 14>;
+=======
+		pmi8998_gpio: gpios@c000 {
+			compatible = "qcom,pmi8998-gpio", "qcom,spmi-gpio";
+			reg = <0xc000>;
+			gpio-controller;
+			gpio-ranges = <&pmi8998_gpio 0 0 14>;
+>>>>>>> b7ba80a49124 (Commit)
 			#gpio-cells = <2>;
 			interrupt-controller;
 			#interrupt-cells = <2>;
 		};
+<<<<<<< HEAD
 
 		pmi8998_rradc: adc@4500 {
 			compatible = "qcom,pmi8998-rradc";
@@ -26,6 +35,8 @@
 
 			status = "disabled";
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	pmi8998_lsid1: pmic@3 {

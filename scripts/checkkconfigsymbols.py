@@ -115,7 +115,11 @@ def parse_options():
     return args
 
 
+<<<<<<< HEAD
 def print_undefined_symbols():
+=======
+def main():
+>>>>>>> b7ba80a49124 (Commit)
     """Main function of this module."""
     args = parse_options()
 
@@ -467,6 +471,7 @@ def parse_kconfig_file(kfile):
     return defined, references
 
 
+<<<<<<< HEAD
 def main():
     try:
         print_undefined_symbols()
@@ -478,5 +483,7 @@ def main():
         sys.exit(1)  # Python exits with error code 1 on EPIPE
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 if __name__ == "__main__":
     main()

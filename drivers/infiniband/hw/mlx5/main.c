@@ -442,10 +442,13 @@ static int translate_eth_ext_proto_oper(u32 eth_proto_oper, u16 *active_speed,
 		*active_width = IB_WIDTH_2X;
 		*active_speed = IB_SPEED_NDR;
 		break;
+<<<<<<< HEAD
 	case MLX5E_PROT_MASK(MLX5E_400GAUI_8):
 		*active_width = IB_WIDTH_8X;
 		*active_speed = IB_SPEED_HDR;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case MLX5E_PROT_MASK(MLX5E_400GAUI_4_400GBASE_CR4_KR4):
 		*active_width = IB_WIDTH_4X;
 		*active_speed = IB_SPEED_NDR;
@@ -1760,9 +1763,19 @@ static int set_ucontext_resp(struct ib_ucontext *uctx,
 	struct mlx5_ib_dev *dev = to_mdev(ibdev);
 	struct mlx5_ib_ucontext *context = to_mucontext(uctx);
 	struct mlx5_bfreg_info *bfregi = &context->bfregi;
+<<<<<<< HEAD
 
 	if (MLX5_CAP_GEN(dev->mdev, dump_fill_mkey)) {
 		resp->dump_fill_mkey = dev->mkeys.dump_fill_mkey;
+=======
+	int err;
+
+	if (MLX5_CAP_GEN(dev->mdev, dump_fill_mkey)) {
+		err = mlx5_cmd_dump_fill_mkey(dev->mdev,
+					      &resp->dump_fill_mkey);
+		if (err)
+			return err;
+>>>>>>> b7ba80a49124 (Commit)
 		resp->comp_mask |=
 			MLX5_IB_ALLOC_UCONTEXT_RESP_MASK_DUMP_FILL_MKEY;
 	}
@@ -2087,7 +2100,11 @@ static int mlx5_ib_mmap_clock_info_page(struct mlx5_ib_dev *dev,
 
 	if (vma->vm_flags & (VM_WRITE | VM_EXEC))
 		return -EPERM;
+<<<<<<< HEAD
 	vm_flags_clear(vma, VM_MAYWRITE);
+=======
+	vma->vm_flags &= ~VM_MAYWRITE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!dev->mdev->clock_info)
 		return -EOPNOTSUPP;
@@ -2311,7 +2328,11 @@ static int mlx5_ib_mmap(struct ib_ucontext *ibcontext, struct vm_area_struct *vm
 
 		if (vma->vm_flags & VM_WRITE)
 			return -EPERM;
+<<<<<<< HEAD
 		vm_flags_clear(vma, VM_MAYWRITE);
+=======
+		vma->vm_flags &= ~VM_MAYWRITE;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Don't expose to user-space information it shouldn't have */
 		if (PAGE_SIZE > 4096)
@@ -3012,6 +3033,7 @@ static void mlx5_eth_lag_cleanup(struct mlx5_ib_dev *dev)
 	}
 }
 
+<<<<<<< HEAD
 static void mlx5_netdev_notifier_register(struct mlx5_roce *roce,
 					  struct net_device *netdev)
 {
@@ -3069,6 +3091,28 @@ static void mlx5_mdev_netdev_untrack(struct mlx5_ib_dev *dev, u32 port_num)
 
 	mlx5_blocking_notifier_unregister(dev->mdev, &roce->mdev_nb);
 	mlx5_netdev_notifier_unregister(roce);
+=======
+static int mlx5_add_netdev_notifier(struct mlx5_ib_dev *dev, u32 port_num)
+{
+	int err;
+
+	dev->port[port_num].roce.nb.notifier_call = mlx5_netdev_event;
+	err = register_netdevice_notifier(&dev->port[port_num].roce.nb);
+	if (err) {
+		dev->port[port_num].roce.nb.notifier_call = NULL;
+		return err;
+	}
+
+	return 0;
+}
+
+static void mlx5_remove_netdev_notifier(struct mlx5_ib_dev *dev, u32 port_num)
+{
+	if (dev->port[port_num].roce.nb.notifier_call) {
+		unregister_netdevice_notifier(&dev->port[port_num].roce.nb);
+		dev->port[port_num].roce.nb.notifier_call = NULL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mlx5_enable_eth(struct mlx5_ib_dev *dev)
@@ -3175,7 +3219,11 @@ static void mlx5_ib_unbind_slave_port(struct mlx5_ib_dev *ibdev,
 	if (mpi->mdev_events.notifier_call)
 		mlx5_notifier_unregister(mpi->mdev, &mpi->mdev_events);
 	mpi->mdev_events.notifier_call = NULL;
+<<<<<<< HEAD
 	mlx5_mdev_netdev_untrack(ibdev, port_num);
+=======
+	mlx5_remove_netdev_notifier(ibdev, port_num);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock(&port->mp.mpi_lock);
 
 	comps = mpi->mdev_refcnt;
@@ -3233,7 +3281,16 @@ static bool mlx5_ib_bind_slave_port(struct mlx5_ib_dev *ibdev,
 	if (err)
 		goto unbind;
 
+<<<<<<< HEAD
 	mlx5_mdev_netdev_track(ibdev, port_num);
+=======
+	err = mlx5_add_netdev_notifier(ibdev, port_num);
+	if (err) {
+		mlx5_ib_err(ibdev, "failed adding netdev notifier for port %u\n",
+			    port_num + 1);
+		goto unbind;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	mpi->mdev_events.notifier_call = mlx5_ib_event_slave_port;
 	mlx5_notifier_register(mpi->mdev, &mpi->mdev_events);
@@ -3666,10 +3723,13 @@ static int mlx5_ib_stage_init_init(struct mlx5_ib_dev *dev)
 		dev->port[i].roce.last_port_state = IB_PORT_DOWN;
 	}
 
+<<<<<<< HEAD
 	err = mlx5r_cmd_query_special_mkeys(dev);
 	if (err)
 		return err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = mlx5_ib_init_multiport_master(dev);
 	if (err)
 		return err;
@@ -3945,7 +4005,13 @@ static int mlx5_ib_roce_init(struct mlx5_ib_dev *dev)
 		port_num = mlx5_core_native_port_num(dev->mdev) - 1;
 
 		/* Register only for native ports */
+<<<<<<< HEAD
 		mlx5_mdev_netdev_track(dev, port_num);
+=======
+		err = mlx5_add_netdev_notifier(dev, port_num);
+		if (err)
+			return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 		err = mlx5_enable_eth(dev);
 		if (err)
@@ -3954,7 +4020,11 @@ static int mlx5_ib_roce_init(struct mlx5_ib_dev *dev)
 
 	return 0;
 cleanup:
+<<<<<<< HEAD
 	mlx5_mdev_netdev_untrack(dev, port_num);
+=======
+	mlx5_remove_netdev_notifier(dev, port_num);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -3972,7 +4042,11 @@ static void mlx5_ib_roce_cleanup(struct mlx5_ib_dev *dev)
 		mlx5_disable_eth(dev);
 
 		port_num = mlx5_core_native_port_num(dev->mdev) - 1;
+<<<<<<< HEAD
 		mlx5_mdev_netdev_untrack(dev, port_num);
+=======
+		mlx5_remove_netdev_notifier(dev, port_num);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -4034,7 +4108,16 @@ static int mlx5_ib_stage_ib_reg_init(struct mlx5_ib_dev *dev)
 
 static void mlx5_ib_stage_pre_ib_reg_umr_cleanup(struct mlx5_ib_dev *dev)
 {
+<<<<<<< HEAD
 	mlx5_mkey_cache_cleanup(dev);
+=======
+	int err;
+
+	err = mlx5_mkey_cache_cleanup(dev);
+	if (err)
+		mlx5_ib_warn(dev, "mr cache cleanup failed\n");
+
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5r_umr_resource_cleanup(dev);
 }
 
@@ -4432,10 +4515,13 @@ static int __init mlx5_ib_init(void)
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	ret = mlx5_ib_qp_event_init();
 	if (ret)
 		goto qp_event_err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5_ib_odp_init();
 	ret = mlx5r_rep_init();
 	if (ret)
@@ -4453,8 +4539,11 @@ drv_err:
 mp_err:
 	mlx5r_rep_cleanup();
 rep_err:
+<<<<<<< HEAD
 	mlx5_ib_qp_event_cleanup();
 qp_event_err:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	destroy_workqueue(mlx5_ib_event_wq);
 	free_page((unsigned long)xlt_emergency_page);
 	return ret;
@@ -4466,7 +4555,10 @@ static void __exit mlx5_ib_cleanup(void)
 	auxiliary_driver_unregister(&mlx5r_mp_driver);
 	mlx5r_rep_cleanup();
 
+<<<<<<< HEAD
 	mlx5_ib_qp_event_cleanup();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	destroy_workqueue(mlx5_ib_event_wq);
 	free_page((unsigned long)xlt_emergency_page);
 }

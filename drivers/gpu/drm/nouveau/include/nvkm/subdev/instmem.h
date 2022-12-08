@@ -28,7 +28,11 @@ u32 nvkm_instmem_rd32(struct nvkm_instmem *, u32 addr);
 void nvkm_instmem_wr32(struct nvkm_instmem *, u32 addr, u32 data);
 int nvkm_instobj_new(struct nvkm_instmem *, u32 size, u32 align, bool zero,
 		     struct nvkm_memory **);
+<<<<<<< HEAD
 int nvkm_instobj_wrap(struct nvkm_device *, struct nvkm_memory *, struct nvkm_memory **);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 
 int nv04_instmem_new(struct nvkm_device *, enum nvkm_subdev_type, int, struct nvkm_instmem **);
 int nv40_instmem_new(struct nvkm_device *, enum nvkm_subdev_type, int, struct nvkm_instmem **);

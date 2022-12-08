@@ -914,7 +914,11 @@ static void ldma_dev_init(struct ldma_dev *d)
 	}
 }
 
+<<<<<<< HEAD
 static int ldma_parse_dt(struct ldma_dev *d)
+=======
+static int ldma_cfg_init(struct ldma_dev *d)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fwnode_handle *fwnode = dev_fwnode(d->dev);
 	struct ldma_port *p;
@@ -1661,6 +1665,13 @@ static int intel_ldma_probe(struct platform_device *pdev)
 		p->ldev = d;
 	}
 
+<<<<<<< HEAD
+=======
+	ret = ldma_cfg_init(d);
+	if (ret)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	dma_dev->dev = &pdev->dev;
 
 	ch_mask = (unsigned long)d->channels_mask;
@@ -1671,10 +1682,13 @@ static int intel_ldma_probe(struct platform_device *pdev)
 			ldma_dma_init_v3X(j, d);
 	}
 
+<<<<<<< HEAD
 	ret = ldma_parse_dt(d);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dma_dev->device_alloc_chan_resources = ldma_alloc_chan_resources;
 	dma_dev->device_free_chan_resources = ldma_free_chan_resources;
 	dma_dev->device_terminate_all = ldma_terminate_all;

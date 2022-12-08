@@ -126,6 +126,7 @@ static void brcmf_feat_firmware_overrides(struct brcmf_pub *drv)
 	drv->feat_flags |= feat_flags;
 }
 
+<<<<<<< HEAD
 struct brcmf_feat_wlcfeat {
 	u16 min_ver_major;
 	u16 min_ver_minor;
@@ -173,6 +174,8 @@ static void brcmf_feat_wlc_version_overrides(struct brcmf_pub *drv)
 	drv->feat_flags |= feat_flags;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * brcmf_feat_iovar_int_get() - determine feature through iovar query.
  *
@@ -190,7 +193,11 @@ static void brcmf_feat_iovar_int_get(struct brcmf_if *ifp,
 	ifp->fwil_fwerr = true;
 
 	err = brcmf_fil_iovar_int_get(ifp, name, &data);
+<<<<<<< HEAD
 	if (err != -BRCMF_FW_UNSUPPORTED) {
+=======
+	if (err == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		brcmf_dbg(INFO, "enabling feature: %s\n", brcmf_feat_names[id]);
 		ifp->drvr->feat_flags |= BIT(id);
 	} else {
@@ -328,7 +335,10 @@ void brcmf_feat_attach(struct brcmf_pub *drvr)
 	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_RSDB, "rsdb_mode");
 	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_TDLS, "tdls_enable");
 	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_MFP, "mfp");
+<<<<<<< HEAD
 	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_DUMP_OBSS, "dump_obss");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	pfn_mac.version = BRCMF_PFN_MACADDR_CFG_VER;
 	err = brcmf_fil_iovar_data_get(ifp, "pfn_macaddr", &pfn_mac,
@@ -337,7 +347,10 @@ void brcmf_feat_attach(struct brcmf_pub *drvr)
 		ifp->drvr->feat_flags |= BIT(BRCMF_FEAT_SCAN_RANDOM_MAC);
 
 	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
+<<<<<<< HEAD
 	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_SCAN_V2, "scan_ver");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (drvr->settings->feature_disable) {
 		brcmf_dbg(INFO, "Features: 0x%02x, disable: 0x%02x\n",
@@ -346,7 +359,10 @@ void brcmf_feat_attach(struct brcmf_pub *drvr)
 		ifp->drvr->feat_flags &= ~drvr->settings->feature_disable;
 	}
 
+<<<<<<< HEAD
 	brcmf_feat_wlc_version_overrides(drvr);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	brcmf_feat_firmware_overrides(drvr);
 
 	/* set chip related quirks */

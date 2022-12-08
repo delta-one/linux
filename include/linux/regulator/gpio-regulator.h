@@ -42,7 +42,10 @@ struct gpio_regulator_state {
 /**
  * struct gpio_regulator_config - config structure
  * @supply_name:	Name of the regulator supply
+<<<<<<< HEAD
  * @input_supply:	Name of the input regulator supply
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @enabled_at_boot:	Whether regulator has been enabled at
  *			boot or not. 1 = Yes, 0 = No
  *			This is used to keep the regulator at
@@ -63,7 +66,10 @@ struct gpio_regulator_state {
  */
 struct gpio_regulator_config {
 	const char *supply_name;
+<<<<<<< HEAD
 	const char *input_supply;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	unsigned enabled_at_boot:1;
 	unsigned startup_delay;

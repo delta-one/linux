@@ -39,6 +39,7 @@ any extra expressions computed by perf stat.
 --deprecated::
 Print deprecated events. By default the deprecated events are hidden.
 
+<<<<<<< HEAD
 --unit::
 Print PMU events and metrics limited to the specific PMU name.
 (e.g. --unit cpu, --unit msr, --unit cpu_core, --unit cpu_atom)
@@ -46,6 +47,11 @@ Print PMU events and metrics limited to the specific PMU name.
 -j::
 --json::
 Output in JSON format.
+=======
+--cputype::
+Print events applying cpu with this type for hybrid platform
+(e.g. --cputype core or --cputype atom)
+>>>>>>> b7ba80a49124 (Commit)
 
 [[EVENT_MODIFIERS]]
 EVENT MODIFIERS
@@ -232,7 +238,11 @@ This can be overridden by setting the kernel.perf_event_paranoid
 sysctl to -1, which allows non root to use these events.
 
 For accessing trace point events perf needs to have read access to
+<<<<<<< HEAD
 /sys/kernel/tracing, even when perf_event_paranoid is in a relaxed
+=======
+/sys/kernel/debug/tracing, even when perf_event_paranoid is in a relaxed
+>>>>>>> b7ba80a49124 (Commit)
 setting.
 
 TRACING

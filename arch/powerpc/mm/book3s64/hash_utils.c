@@ -123,8 +123,16 @@ EXPORT_SYMBOL_GPL(mmu_slb_size);
 #ifdef CONFIG_PPC_64K_PAGES
 int mmu_ci_restrictions;
 #endif
+<<<<<<< HEAD
 static u8 *linear_map_hash_slots;
 static unsigned long linear_map_hash_count;
+=======
+#ifdef CONFIG_DEBUG_PAGEALLOC
+static u8 *linear_map_hash_slots;
+static unsigned long linear_map_hash_count;
+static DEFINE_SPINLOCK(linear_map_hash_lock);
+#endif /* CONFIG_DEBUG_PAGEALLOC */
+>>>>>>> b7ba80a49124 (Commit)
 struct mmu_hash_ops mmu_hash_ops;
 EXPORT_SYMBOL(mmu_hash_ops);
 
@@ -424,9 +432,17 @@ repeat:
 			break;
 
 		cond_resched();
+<<<<<<< HEAD
 		if (debug_pagealloc_enabled_or_kfence() &&
 			(paddr >> PAGE_SHIFT) < linear_map_hash_count)
 			linear_map_hash_slots[paddr >> PAGE_SHIFT] = ret | 0x80;
+=======
+#ifdef CONFIG_DEBUG_PAGEALLOC
+		if (debug_pagealloc_enabled() &&
+			(paddr >> PAGE_SHIFT) < linear_map_hash_count)
+			linear_map_hash_slots[paddr >> PAGE_SHIFT] = ret | 0x80;
+#endif /* CONFIG_DEBUG_PAGEALLOC */
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret < 0 ? ret : 0;
 }
@@ -471,7 +487,11 @@ int htab_remove_mapping(unsigned long vstart, unsigned long vend,
 	return ret;
 }
 
+<<<<<<< HEAD
 static bool disable_1tb_segments __ro_after_init;
+=======
+static bool disable_1tb_segments = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 static int __init parse_disable_1tb_segments(char *p)
 {
@@ -480,6 +500,7 @@ static int __init parse_disable_1tb_segments(char *p)
 }
 early_param("disable_1tb_segments", parse_disable_1tb_segments);
 
+<<<<<<< HEAD
 bool stress_hpt_enabled __initdata;
 
 static int __init parse_stress_hpt(char *p)
@@ -514,6 +535,8 @@ static inline int stress_nr_groups(void)
 
 static struct stress_hpt_struct *stress_hpt_struct;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __init htab_dt_scan_seg_sizes(unsigned long node,
 					 const char *uname, int depth,
 					 void *data)
@@ -807,7 +830,11 @@ static void __init htab_init_page_sizes(void)
 	bool aligned = true;
 	init_hpte_page_sizes();
 
+<<<<<<< HEAD
 	if (!debug_pagealloc_enabled_or_kfence()) {
+=======
+	if (!debug_pagealloc_enabled()) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Pick a size for the linear mapping. Currently, we only
 		 * support 16M, 1M and 4K which is the default
@@ -1010,6 +1037,7 @@ static void __init hash_init_partition_table(phys_addr_t hash_table,
 	pr_info("Partition table %p\n", partition_tb);
 }
 
+<<<<<<< HEAD
 void hpt_clear_stress(void);
 static struct timer_list stress_hpt_timer;
 static void stress_hpt_timer_fn(struct timer_list *timer)
@@ -1027,6 +1055,8 @@ static void stress_hpt_timer_fn(struct timer_list *timer)
 	add_timer_on(&stress_hpt_timer, next_cpu);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void __init htab_initialize(void)
 {
 	unsigned long table;
@@ -1046,6 +1076,7 @@ static void __init htab_initialize(void)
 	if (stress_slb_enabled)
 		static_branch_enable(&stress_slb_key);
 
+<<<<<<< HEAD
 	if (stress_hpt_enabled) {
 		unsigned long tmp;
 		static_branch_enable(&stress_hpt_key);
@@ -1061,6 +1092,8 @@ static void __init htab_initialize(void)
 		add_timer(&stress_hpt_timer);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Calculate the required size of the htab.  We want the number of
 	 * PTEGs to equal one half the number of real pages.
@@ -1127,7 +1160,12 @@ static void __init htab_initialize(void)
 
 	prot = pgprot_val(PAGE_KERNEL);
 
+<<<<<<< HEAD
 	if (debug_pagealloc_enabled_or_kfence()) {
+=======
+#ifdef CONFIG_DEBUG_PAGEALLOC
+	if (debug_pagealloc_enabled()) {
+>>>>>>> b7ba80a49124 (Commit)
 		linear_map_hash_count = memblock_end_of_DRAM() >> PAGE_SHIFT;
 		linear_map_hash_slots = memblock_alloc_try_nid(
 				linear_map_hash_count, 1, MEMBLOCK_LOW_LIMIT,
@@ -1136,6 +1174,10 @@ static void __init htab_initialize(void)
 			panic("%s: Failed to allocate %lu bytes max_addr=%pa\n",
 			      __func__, linear_map_hash_count, &ppc64_rma_size);
 	}
+<<<<<<< HEAD
+=======
+#endif /* CONFIG_DEBUG_PAGEALLOC */
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* create bolted the linear mapping in the hash table */
 	for_each_mem_range(i, &base, &end) {
@@ -1840,7 +1882,11 @@ static void hash_preload(struct mm_struct *mm, pte_t *ptep, unsigned long ea,
  *
  * This must always be called with the pte lock held.
  */
+<<<<<<< HEAD
 void __update_mmu_cache(struct vm_area_struct *vma, unsigned long address,
+=======
+void update_mmu_cache(struct vm_area_struct *vma, unsigned long address,
+>>>>>>> b7ba80a49124 (Commit)
 		      pte_t *ptep)
 {
 	/*
@@ -1850,6 +1896,12 @@ void __update_mmu_cache(struct vm_area_struct *vma, unsigned long address,
 	unsigned long trap;
 	bool is_exec;
 
+<<<<<<< HEAD
+=======
+	if (radix_enabled())
+		return;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* We only want HPTEs for linux PTEs that have _PAGE_ACCESSED set */
 	if (!pte_young(*ptep) || address >= TASK_SIZE)
 		return;
@@ -2046,6 +2098,7 @@ repeat:
 	return slot;
 }
 
+<<<<<<< HEAD
 void hpt_clear_stress(void)
 {
 	int cpu = raw_smp_processor_id();
@@ -2112,6 +2165,9 @@ void hpt_do_stress(unsigned long ea, unsigned long hpte_group)
 #if defined(CONFIG_DEBUG_PAGEALLOC) || defined(CONFIG_KFENCE)
 static DEFINE_RAW_SPINLOCK(linear_map_hash_lock);
 
+=======
+#ifdef CONFIG_DEBUG_PAGEALLOC
+>>>>>>> b7ba80a49124 (Commit)
 static void kernel_map_linear_page(unsigned long vaddr, unsigned long lmi)
 {
 	unsigned long hash;
@@ -2126,18 +2182,28 @@ static void kernel_map_linear_page(unsigned long vaddr, unsigned long lmi)
 	if (!vsid)
 		return;
 
+<<<<<<< HEAD
 	if (linear_map_hash_slots[lmi] & 0x80)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = hpte_insert_repeating(hash, vpn, __pa(vaddr), mode,
 				    HPTE_V_BOLTED,
 				    mmu_linear_psize, mmu_kernel_ssize);
 
 	BUG_ON (ret < 0);
+<<<<<<< HEAD
 	raw_spin_lock(&linear_map_hash_lock);
 	BUG_ON(linear_map_hash_slots[lmi] & 0x80);
 	linear_map_hash_slots[lmi] = ret | 0x80;
 	raw_spin_unlock(&linear_map_hash_lock);
+=======
+	spin_lock(&linear_map_hash_lock);
+	BUG_ON(linear_map_hash_slots[lmi] & 0x80);
+	linear_map_hash_slots[lmi] = ret | 0x80;
+	spin_unlock(&linear_map_hash_lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void kernel_unmap_linear_page(unsigned long vaddr, unsigned long lmi)
@@ -2147,6 +2213,7 @@ static void kernel_unmap_linear_page(unsigned long vaddr, unsigned long lmi)
 	unsigned long vpn = hpt_vpn(vaddr, vsid, mmu_kernel_ssize);
 
 	hash = hpt_hash(vpn, PAGE_SHIFT, mmu_kernel_ssize);
+<<<<<<< HEAD
 	raw_spin_lock(&linear_map_hash_lock);
 	if (!(linear_map_hash_slots[lmi] & 0x80)) {
 		raw_spin_unlock(&linear_map_hash_lock);
@@ -2155,6 +2222,13 @@ static void kernel_unmap_linear_page(unsigned long vaddr, unsigned long lmi)
 	hidx = linear_map_hash_slots[lmi] & 0x7f;
 	linear_map_hash_slots[lmi] = 0;
 	raw_spin_unlock(&linear_map_hash_lock);
+=======
+	spin_lock(&linear_map_hash_lock);
+	BUG_ON(!(linear_map_hash_slots[lmi] & 0x80));
+	hidx = linear_map_hash_slots[lmi] & 0x7f;
+	linear_map_hash_slots[lmi] = 0;
+	spin_unlock(&linear_map_hash_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	if (hidx & _PTEIDX_SECONDARY)
 		hash = ~hash;
 	slot = (hash & htab_hash_mask) * HPTES_PER_GROUP;
@@ -2182,7 +2256,11 @@ void hash__kernel_map_pages(struct page *page, int numpages, int enable)
 	}
 	local_irq_restore(flags);
 }
+<<<<<<< HEAD
 #endif /* CONFIG_DEBUG_PAGEALLOC || CONFIG_KFENCE */
+=======
+#endif /* CONFIG_DEBUG_PAGEALLOC */
+>>>>>>> b7ba80a49124 (Commit)
 
 void hash__setup_initial_memory_limit(phys_addr_t first_memblock_base,
 				phys_addr_t first_memblock_size)

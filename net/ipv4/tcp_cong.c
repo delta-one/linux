@@ -75,8 +75,19 @@ struct tcp_congestion_ops *tcp_ca_find_key(u32 key)
 	return NULL;
 }
 
+<<<<<<< HEAD
 int tcp_validate_congestion_control(struct tcp_congestion_ops *ca)
 {
+=======
+/*
+ * Attach new congestion control algorithm to the list
+ * of available options.
+ */
+int tcp_register_congestion_control(struct tcp_congestion_ops *ca)
+{
+	int ret = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* all algorithms must implement these */
 	if (!ca->ssthresh || !ca->undo_cwnd ||
 	    !(ca->cong_avoid || ca->cong_control)) {
@@ -84,6 +95,7 @@ int tcp_validate_congestion_control(struct tcp_congestion_ops *ca)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	return 0;
 }
 
@@ -98,6 +110,8 @@ int tcp_register_congestion_control(struct tcp_congestion_ops *ca)
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ca->key = jhash(ca->name, sizeof(ca->name), strlen(ca->name));
 
 	spin_lock(&tcp_cong_list_lock);
@@ -138,6 +152,7 @@ void tcp_unregister_congestion_control(struct tcp_congestion_ops *ca)
 }
 EXPORT_SYMBOL_GPL(tcp_unregister_congestion_control);
 
+<<<<<<< HEAD
 /* Replace a registered old ca with a new one.
  *
  * The new ca must have the same name as the old one, that has been
@@ -182,6 +197,8 @@ int tcp_update_congestion_control(struct tcp_congestion_ops *ca, struct tcp_cong
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 u32 tcp_ca_get_key_by_name(struct net *net, const char *name, bool *ecn_ca)
 {
 	const struct tcp_congestion_ops *ca;
@@ -455,7 +472,11 @@ int tcp_set_congestion_control(struct sock *sk, const char *name, bool load,
  * ABC caps N to 2. Slow start exits when cwnd grows over ssthresh and
  * returns the leftover acks to adjust cwnd in congestion avoidance mode.
  */
+<<<<<<< HEAD
 __bpf_kfunc u32 tcp_slow_start(struct tcp_sock *tp, u32 acked)
+=======
+u32 tcp_slow_start(struct tcp_sock *tp, u32 acked)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 cwnd = min(tcp_snd_cwnd(tp) + acked, tp->snd_ssthresh);
 
@@ -469,7 +490,11 @@ EXPORT_SYMBOL_GPL(tcp_slow_start);
 /* In theory this is tp->snd_cwnd += 1 / tp->snd_cwnd (or alternative w),
  * for every packet that was ACKed.
  */
+<<<<<<< HEAD
 __bpf_kfunc void tcp_cong_avoid_ai(struct tcp_sock *tp, u32 w, u32 acked)
+=======
+void tcp_cong_avoid_ai(struct tcp_sock *tp, u32 w, u32 acked)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* If credits accumulated at a higher w, apply them gently now. */
 	if (tp->snd_cwnd_cnt >= w) {
@@ -495,7 +520,11 @@ EXPORT_SYMBOL_GPL(tcp_cong_avoid_ai);
 /* This is Jacobson's slow start and congestion avoidance.
  * SIGCOMM '88, p. 328.
  */
+<<<<<<< HEAD
 __bpf_kfunc void tcp_reno_cong_avoid(struct sock *sk, u32 ack, u32 acked)
+=======
+void tcp_reno_cong_avoid(struct sock *sk, u32 ack, u32 acked)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tcp_sock *tp = tcp_sk(sk);
 
@@ -514,7 +543,11 @@ __bpf_kfunc void tcp_reno_cong_avoid(struct sock *sk, u32 ack, u32 acked)
 EXPORT_SYMBOL_GPL(tcp_reno_cong_avoid);
 
 /* Slow start threshold is half the congestion window (min 2) */
+<<<<<<< HEAD
 __bpf_kfunc u32 tcp_reno_ssthresh(struct sock *sk)
+=======
+u32 tcp_reno_ssthresh(struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct tcp_sock *tp = tcp_sk(sk);
 
@@ -522,7 +555,11 @@ __bpf_kfunc u32 tcp_reno_ssthresh(struct sock *sk)
 }
 EXPORT_SYMBOL_GPL(tcp_reno_ssthresh);
 
+<<<<<<< HEAD
 __bpf_kfunc u32 tcp_reno_undo_cwnd(struct sock *sk)
+=======
+u32 tcp_reno_undo_cwnd(struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct tcp_sock *tp = tcp_sk(sk);
 

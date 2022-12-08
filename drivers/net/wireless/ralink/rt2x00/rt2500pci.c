@@ -1176,9 +1176,15 @@ static int rt2500pci_set_state(struct rt2x00_dev *rt2x00dev,
 {
 	u32 reg, reg2;
 	unsigned int i;
+<<<<<<< HEAD
 	bool put_to_sleep;
 	u8 bbp_state;
 	u8 rf_state;
+=======
+	char put_to_sleep;
+	char bbp_state;
+	char rf_state;
+>>>>>>> b7ba80a49124 (Commit)
 
 	put_to_sleep = (state != STATE_AWAKE);
 
@@ -1856,7 +1862,11 @@ static int rt2500pci_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
 {
 	struct hw_mode_spec *spec = &rt2x00dev->spec;
 	struct channel_info *info;
+<<<<<<< HEAD
 	u8 *tx_power;
+=======
+	char *tx_power;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int i;
 
 	/*
@@ -2004,7 +2014,10 @@ static int rt2500pci_tx_last_beacon(struct ieee80211_hw *hw)
 
 static const struct ieee80211_ops rt2500pci_mac80211_ops = {
 	.tx			= rt2x00mac_tx,
+<<<<<<< HEAD
 	.wake_tx_queue		= ieee80211_handle_wake_tx_queue,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.start			= rt2x00mac_start,
 	.stop			= rt2x00mac_stop,
 	.add_interface		= rt2x00mac_add_interface,

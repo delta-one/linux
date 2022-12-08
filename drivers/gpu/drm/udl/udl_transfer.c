@@ -10,7 +10,10 @@
 #include <asm/unaligned.h>
 
 #include "udl_drv.h"
+<<<<<<< HEAD
 #include "udl_proto.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MAX_CMD_PIXELS		255
 
@@ -90,8 +93,13 @@ static void udl_compress_hline16(
 		const u8 *cmd_pixel_start, *cmd_pixel_end = NULL;
 		uint16_t pixel_val16;
 
+<<<<<<< HEAD
 		*cmd++ = UDL_MSG_BULK;
 		*cmd++ = UDL_CMD_WRITERLX16;
+=======
+		*cmd++ = 0xaf;
+		*cmd++ = 0x6b;
+>>>>>>> b7ba80a49124 (Commit)
 		*cmd++ = (uint8_t) ((dev_addr >> 16) & 0xFF);
 		*cmd++ = (uint8_t) ((dev_addr >> 8) & 0xFF);
 		*cmd++ = (uint8_t) ((dev_addr) & 0xFF);
@@ -153,7 +161,11 @@ static void udl_compress_hline16(
 	if (cmd_buffer_end <= MIN_RLX_CMD_BYTES + cmd) {
 		/* Fill leftover bytes with no-ops */
 		if (cmd_buffer_end > cmd)
+<<<<<<< HEAD
 			memset(cmd, UDL_MSG_BULK, cmd_buffer_end - cmd);
+=======
+			memset(cmd, 0xAF, cmd_buffer_end - cmd);
+>>>>>>> b7ba80a49124 (Commit)
 		cmd = (uint8_t *) cmd_buffer_end;
 	}
 

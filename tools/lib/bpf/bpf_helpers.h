@@ -109,7 +109,11 @@
  * This is a variable-specific variant of more global barrier().
  */
 #ifndef barrier_var
+<<<<<<< HEAD
 #define barrier_var(var) asm volatile("" : "+r"(var))
+=======
+#define barrier_var(var) asm volatile("" : "=r"(var) : "0"(var))
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 /*
@@ -174,6 +178,7 @@ enum libbpf_tristate {
 
 #define __kconfig __attribute__((section(".kconfig")))
 #define __ksym __attribute__((section(".ksyms")))
+<<<<<<< HEAD
 #define __kptr_untrusted __attribute__((btf_type_tag("kptr_untrusted")))
 #define __kptr __attribute__((btf_type_tag("kptr")))
 
@@ -181,6 +186,10 @@ enum libbpf_tristate {
 	_Static_assert(!__builtin_constant_p(!!sym), #sym " should be marked as __weak");	\
 	!!sym;											\
 })
+=======
+#define __kptr __attribute__((btf_type_tag("kptr")))
+#define __kptr_ref __attribute__((btf_type_tag("kptr_ref")))
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifndef ___bpf_concat
 #define ___bpf_concat(a, b) a ## b

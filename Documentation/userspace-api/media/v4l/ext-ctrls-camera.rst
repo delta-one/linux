@@ -661,6 +661,7 @@ enum v4l2_scene_mode -
 .. [#f1]
    This control may be changed to a menu control in the future, if more
    options are required.
+<<<<<<< HEAD
 
 ``V4L2_CID_HDR_SENSOR_MODE (menu)``
     Change the sensor HDR mode. A HDR picture is obtained by merging two
@@ -669,3 +670,5 @@ enum v4l2_scene_mode -
 
     As modes differ for each sensor, menu items are not standardized by this
     control and are left to the programmer.
+=======
+>>>>>>> b7ba80a49124 (Commit)

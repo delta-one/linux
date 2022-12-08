@@ -15,7 +15,10 @@
 #include <linux/sys_soc.h>
 
 #include "cqhci.h"
+<<<<<<< HEAD
 #include "sdhci-cqhci.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "sdhci-pltfm.h"
 
 /* CTL_CFG Registers */
@@ -351,6 +354,11 @@ static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
 		 */
 		case MMC_TIMING_SD_HS:
 		case MMC_TIMING_MMC_HS:
+<<<<<<< HEAD
+=======
+		case MMC_TIMING_UHS_SDR12:
+		case MMC_TIMING_UHS_SDR25:
+>>>>>>> b7ba80a49124 (Commit)
 			val &= ~SDHCI_CTRL_HISPD;
 		}
 	}
@@ -367,7 +375,11 @@ static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
 					MAX_POWER_ON_TIMEOUT, false, host, val,
 					reg);
 		if (ret)
+<<<<<<< HEAD
 			dev_info(mmc_dev(host->mmc), "Power on failed\n");
+=======
+			dev_warn(mmc_dev(host->mmc), "Power on failed\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -377,7 +389,11 @@ static void sdhci_am654_reset(struct sdhci_host *host, u8 mask)
 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
 	struct sdhci_am654_data *sdhci_am654 = sdhci_pltfm_priv(pltfm_host);
 
+<<<<<<< HEAD
 	sdhci_and_cqhci_reset(host, mask);
+=======
+	sdhci_reset(host, mask);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (sdhci_am654->quirks & SDHCI_AM654_QUIRK_FORCE_CDTEST) {
 		ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
@@ -463,7 +479,11 @@ static struct sdhci_ops sdhci_am654_ops = {
 	.set_clock = sdhci_am654_set_clock,
 	.write_b = sdhci_am654_write_b,
 	.irq = sdhci_am654_cqhci_irq,
+<<<<<<< HEAD
 	.reset = sdhci_and_cqhci_reset,
+=======
+	.reset = sdhci_reset,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct sdhci_pltfm_data sdhci_am654_pdata = {
@@ -493,7 +513,11 @@ static struct sdhci_ops sdhci_j721e_8bit_ops = {
 	.set_clock = sdhci_am654_set_clock,
 	.write_b = sdhci_am654_write_b,
 	.irq = sdhci_am654_cqhci_irq,
+<<<<<<< HEAD
 	.reset = sdhci_and_cqhci_reset,
+=======
+	.reset = sdhci_reset,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct sdhci_pltfm_data sdhci_j721e_8bit_pdata = {
@@ -834,7 +858,11 @@ static int sdhci_am654_probe(struct platform_device *pdev)
 
 	ret = mmc_of_parse(host->mmc);
 	if (ret) {
+<<<<<<< HEAD
 		dev_err_probe(dev, ret, "parsing dt failed\n");
+=======
+		dev_err(dev, "parsing dt failed (%d)\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 		goto pm_runtime_put;
 	}
 

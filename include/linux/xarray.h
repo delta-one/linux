@@ -1643,8 +1643,12 @@ static inline void xas_set_order(struct xa_state *xas, unsigned long index,
  * @update: Function to call when updating a node.
  *
  * The XArray can notify a caller after it has updated an xa_node.
+<<<<<<< HEAD
  * This is advanced functionality and is only needed by the page
  * cache and swap cache.
+=======
+ * This is advanced functionality and is only needed by the page cache.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static inline void xas_set_update(struct xa_state *xas, xa_update_node_t update)
 {

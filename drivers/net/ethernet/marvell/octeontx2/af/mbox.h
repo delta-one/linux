@@ -195,9 +195,12 @@ M(CPT_STATS,            0xA05, cpt_sts, cpt_sts_req, cpt_sts_rsp)	\
 M(CPT_RXC_TIME_CFG,     0xA06, cpt_rxc_time_cfg, cpt_rxc_time_cfg_req,  \
 			       msg_rsp)                                 \
 M(CPT_CTX_CACHE_SYNC,   0xA07, cpt_ctx_cache_sync, msg_req, msg_rsp)    \
+<<<<<<< HEAD
 M(CPT_LF_RESET,         0xA08, cpt_lf_reset, cpt_lf_rst_req, msg_rsp)	\
 M(CPT_FLT_ENG_INFO,     0xA09, cpt_flt_eng_info, cpt_flt_eng_info_req,	\
 			       cpt_flt_eng_info_rsp)			\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* SDP mbox IDs (range 0x1000 - 0x11FF) */				\
 M(SET_SDP_CHAN_INFO, 0x1000, set_sdp_chan_info, sdp_chan_info_msg, msg_rsp) \
 M(GET_SDP_CHAN_INFO, 0x1001, get_sdp_chan_info, msg_req, sdp_get_chan_info_msg) \
@@ -248,9 +251,12 @@ M(NPC_MCAM_GET_STATS, 0x6012, npc_mcam_entry_stats,                     \
 M(NPC_GET_SECRET_KEY, 0x6013, npc_get_secret_key,                     \
 				   npc_get_secret_key_req,              \
 				   npc_get_secret_key_rsp)              \
+<<<<<<< HEAD
 M(NPC_GET_FIELD_STATUS, 0x6014, npc_get_field_status,                     \
 				   npc_get_field_status_req,              \
 				   npc_get_field_status_rsp)              \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* NIX mbox IDs (range 0x8000 - 0xFFFF) */				\
 M(NIX_LF_ALLOC,		0x8000, nix_lf_alloc,				\
 				 nix_lf_alloc_req, nix_lf_alloc_rsp)	\
@@ -299,6 +305,7 @@ M(NIX_BANDPROF_ALLOC,	0x801d, nix_bandprof_alloc, nix_bandprof_alloc_req, \
 M(NIX_BANDPROF_FREE,	0x801e, nix_bandprof_free, nix_bandprof_free_req,   \
 				msg_rsp)				    \
 M(NIX_BANDPROF_GET_HWINFO, 0x801f, nix_bandprof_get_hwinfo, msg_req,		\
+<<<<<<< HEAD
 				nix_bandprof_get_hwinfo_rsp)		    \
 M(NIX_READ_INLINE_IPSEC_CFG, 0x8023, nix_read_inline_ipsec_cfg,		\
 				msg_req, nix_inline_ipsec_cfg)		\
@@ -354,21 +361,32 @@ M(MCS_CUSTOM_TAG_CFG_GET, 0xa021, mcs_custom_tag_cfg_get,			\
 				  mcs_custom_tag_cfg_get_rsp)
 
 /* Messages initiated by AF (range 0xC00 - 0xEFF) */
+=======
+				nix_bandprof_get_hwinfo_rsp)
+
+/* Messages initiated by AF (range 0xC00 - 0xDFF) */
+>>>>>>> b7ba80a49124 (Commit)
 #define MBOX_UP_CGX_MESSAGES						\
 M(CGX_LINK_EVENT,	0xC00, cgx_link_event, cgx_link_info_msg, msg_rsp)
 
 #define MBOX_UP_CPT_MESSAGES						\
 M(CPT_INST_LMTST,	0xD00, cpt_inst_lmtst, cpt_inst_lmtst_req, msg_rsp)
 
+<<<<<<< HEAD
 #define MBOX_UP_MCS_MESSAGES						\
 M(MCS_INTR_NOTIFY,	0xE00, mcs_intr_notify, mcs_intr_info, msg_rsp)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum {
 #define M(_name, _id, _1, _2, _3) MBOX_MSG_ ## _name = _id,
 MBOX_MESSAGES
 MBOX_UP_CGX_MESSAGES
 MBOX_UP_CPT_MESSAGES
+<<<<<<< HEAD
 MBOX_UP_MCS_MESSAGES
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #undef M
 };
 
@@ -1201,7 +1219,11 @@ struct nix_inline_ipsec_cfg {
 	u32 cpt_credit;
 	struct {
 		u8 egrp;
+<<<<<<< HEAD
 		u16 opcode;
+=======
+		u8 opcode;
+>>>>>>> b7ba80a49124 (Commit)
 		u16 param1;
 		u16 param2;
 	} gen_cfg;
@@ -1210,8 +1232,11 @@ struct nix_inline_ipsec_cfg {
 		u8 cpt_slot;
 	} inst_qsel;
 	u8 enable;
+<<<<<<< HEAD
 	u16 bpid;
 	u32 credit_th;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Per NIX LF inline IPSec configuration */
@@ -1447,10 +1472,13 @@ struct flow_msg {
 	u8 tc;
 	__be16 sport;
 	__be16 dport;
+<<<<<<< HEAD
 	union {
 		u8 ip_flag;
 		u8 next_header;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct npc_install_flow_req {
@@ -1555,6 +1583,7 @@ struct ptp_rsp {
 	u64 clk;
 };
 
+<<<<<<< HEAD
 struct npc_get_field_status_req {
 	struct mbox_msghdr hdr;
 	u8 intf;
@@ -1566,6 +1595,8 @@ struct npc_get_field_status_rsp {
 	u8 enable;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct set_vf_perm  {
 	struct  mbox_msghdr hdr;
 	u16	vf;
@@ -1616,8 +1647,11 @@ struct cpt_lf_alloc_req_msg {
 	u16 sso_pf_func;
 	u16 eng_grpmsk;
 	int blkaddr;
+<<<<<<< HEAD
 	u8 ctx_ilen_valid : 1;
 	u8 ctx_ilen : 7;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define CPT_INLINE_INBOUND      0
@@ -1701,6 +1735,7 @@ struct cpt_inst_lmtst_req {
 	u64 rsvd;
 };
 
+<<<<<<< HEAD
 /* Mailbox message format to request for CPT LF reset */
 struct cpt_lf_rst_req {
 	struct mbox_msghdr hdr;
@@ -1723,6 +1758,8 @@ struct cpt_flt_eng_info_rsp {
 	u64 rsvd;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct sdp_node_info {
 	/* Node to which this PF belons to */
 	u8 node_id;
@@ -1760,6 +1797,7 @@ enum cgx_af_status {
 	LMAC_AF_ERR_EXACT_MATCH_TBL_LOOK_UP_FAILED = -1110,
 };
 
+<<<<<<< HEAD
 enum mcs_direction {
 	MCS_RX,
 	MCS_TX,
@@ -2171,4 +2209,6 @@ struct mcs_intr_info {
 	u64 rsvd;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* MBOX_H */

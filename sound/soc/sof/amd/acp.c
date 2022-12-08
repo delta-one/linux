@@ -255,12 +255,19 @@ int configure_and_run_sha_dma(struct acp_dev_data *adata, void *image_addr,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = snd_sof_dsp_read_poll_timeout(sdev, ACP_DSP_BAR, ACP_SHA_DSP_FW_QUALIFIER,
 					    fw_qualifier, fw_qualifier & DSP_FW_RUN_ENABLE,
 					    ACP_REG_POLL_INTERVAL, ACP_DMA_COMPLETE_TIMEOUT_US);
 	if (ret < 0) {
 		dev_err(sdev->dev, "PSP validation failed\n");
 		return ret;
+=======
+	fw_qualifier = snd_sof_dsp_read(sdev, ACP_DSP_BAR, ACP_SHA_DSP_FW_QUALIFIER);
+	if (!(fw_qualifier & DSP_FW_RUN_ENABLE)) {
+		dev_err(sdev->dev, "PSP validation failed\n");
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -318,6 +325,10 @@ static irqreturn_t acp_irq_thread(int irq, void *context)
 {
 	struct snd_sof_dev *sdev = context;
 	const struct sof_amd_acp_desc *desc = get_chip_info(sdev->pdata);
+<<<<<<< HEAD
+=======
+	unsigned int base = desc->dsp_intr_base;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int val, count = ACP_HW_SEM_RETRY_COUNT;
 
 	val = snd_sof_dsp_read(sdev, ACP_DSP_BAR, desc->ext_intr_stat);
@@ -327,6 +338,7 @@ static irqreturn_t acp_irq_thread(int irq, void *context)
 		return IRQ_HANDLED;
 	}
 
+<<<<<<< HEAD
 	while (snd_sof_dsp_read(sdev, ACP_DSP_BAR, desc->hw_semaphore_offset)) {
 		/* Wait until acquired HW Semaphore lock or timeout */
 		count--;
@@ -341,6 +353,30 @@ static irqreturn_t acp_irq_thread(int irq, void *context)
 	snd_sof_dsp_write(sdev, ACP_DSP_BAR, desc->hw_semaphore_offset, 0x0);
 
 	return IRQ_HANDLED;
+=======
+	val = snd_sof_dsp_read(sdev, ACP_DSP_BAR, base + DSP_SW_INTR_STAT_OFFSET);
+	if (val & ACP_DSP_TO_HOST_IRQ) {
+		while (snd_sof_dsp_read(sdev, ACP_DSP_BAR, desc->hw_semaphore_offset)) {
+			/* Wait until acquired HW Semaphore lock or timeout */
+			count--;
+			if (!count) {
+				dev_err(sdev->dev, "%s: Failed to acquire HW lock\n", __func__);
+				return IRQ_NONE;
+			}
+		}
+
+		sof_ops(sdev)->irq_thread(irq, sdev);
+		val |= ACP_DSP_TO_HOST_IRQ;
+		snd_sof_dsp_write(sdev, ACP_DSP_BAR, base + DSP_SW_INTR_STAT_OFFSET, val);
+
+		/* Unlock or Release HW Semaphore */
+		snd_sof_dsp_write(sdev, ACP_DSP_BAR, desc->hw_semaphore_offset, 0x0);
+
+		return IRQ_HANDLED;
+	}
+
+	return IRQ_NONE;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static irqreturn_t acp_irq_handler(int irq, void *dev_id)
@@ -351,11 +387,16 @@ static irqreturn_t acp_irq_handler(int irq, void *dev_id)
 	unsigned int val;
 
 	val = snd_sof_dsp_read(sdev, ACP_DSP_BAR, base + DSP_SW_INTR_STAT_OFFSET);
+<<<<<<< HEAD
 	if (val) {
 		val |= ACP_DSP_TO_HOST_IRQ;
 		snd_sof_dsp_write(sdev, ACP_DSP_BAR, base + DSP_SW_INTR_STAT_OFFSET, val);
 		return IRQ_WAKE_THREAD;
 	}
+=======
+	if (val)
+		return IRQ_WAKE_THREAD;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return IRQ_NONE;
 }
@@ -386,7 +427,10 @@ static int acp_power_on(struct snd_sof_dev *sdev)
 
 static int acp_reset(struct snd_sof_dev *sdev)
 {
+<<<<<<< HEAD
 	const struct sof_amd_acp_desc *desc = get_chip_info(sdev->pdata);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int val;
 	int ret;
 
@@ -407,7 +451,10 @@ static int acp_reset(struct snd_sof_dev *sdev)
 	if (ret < 0)
 		dev_err(sdev->dev, "timeout in releasing reset\n");
 
+<<<<<<< HEAD
 	snd_sof_dsp_write(sdev, ACP_DSP_BAR, desc->acp_clkmux_sel, ACP_CLOCK_ACLK);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -454,7 +501,11 @@ int amd_sof_acp_resume(struct snd_sof_dev *sdev)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	snd_sof_dsp_write(sdev, ACP_DSP_BAR, desc->acp_clkmux_sel, ACP_CLOCK_ACLK);
+=======
+	snd_sof_dsp_write(sdev, ACP_DSP_BAR, desc->acp_clkmux_sel, 0x03);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = acp_memory_init(sdev);
 

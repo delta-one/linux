@@ -1409,7 +1409,11 @@ err_pm_disable:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void wm8998_remove(struct platform_device *pdev)
+=======
+static int wm8998_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct wm8998_priv *wm8998 = platform_get_drvdata(pdev);
 	struct arizona *arizona = wm8998->core.arizona;
@@ -1419,6 +1423,11 @@ static void wm8998_remove(struct platform_device *pdev)
 	arizona_free_spk_irqs(arizona);
 
 	arizona_jack_codec_dev_remove(&wm8998->core);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver wm8998_codec_driver = {
@@ -1426,7 +1435,11 @@ static struct platform_driver wm8998_codec_driver = {
 		.name = "wm8998-codec",
 	},
 	.probe = wm8998_probe,
+<<<<<<< HEAD
 	.remove_new = wm8998_remove,
+=======
+	.remove = wm8998_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(wm8998_codec_driver);

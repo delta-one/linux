@@ -388,11 +388,19 @@ static int lantiq_ssc_setup(struct spi_device *spidev)
 {
 	struct spi_master *master = spidev->master;
 	struct lantiq_ssc_spi *spi = spi_master_get_devdata(master);
+<<<<<<< HEAD
 	unsigned int cs = spi_get_chipselect(spidev, 0);
 	u32 gpocon;
 
 	/* GPIOs are used for CS */
 	if (spi_get_csgpiod(spidev, 0))
+=======
+	unsigned int cs = spidev->chip_select;
+	u32 gpocon;
+
+	/* GPIOs are used for CS */
+	if (spidev->cs_gpiod)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	dev_dbg(spi->dev, "using internal chipselect %u\n", cs);
@@ -796,7 +804,11 @@ static void lantiq_ssc_handle_err(struct spi_master *master,
 static void lantiq_ssc_set_cs(struct spi_device *spidev, bool enable)
 {
 	struct lantiq_ssc_spi *spi = spi_master_get_devdata(spidev->master);
+<<<<<<< HEAD
 	unsigned int cs = spi_get_chipselect(spidev, 0);
+=======
+	unsigned int cs = spidev->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 fgpo;
 
 	if (!!(spidev->mode & SPI_CS_HIGH) == enable)
@@ -1017,7 +1029,11 @@ err_master_put:
 	return err;
 }
 
+<<<<<<< HEAD
 static void lantiq_ssc_remove(struct platform_device *pdev)
+=======
+static int lantiq_ssc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lantiq_ssc_spi *spi = platform_get_drvdata(pdev);
 
@@ -1030,11 +1046,20 @@ static void lantiq_ssc_remove(struct platform_device *pdev)
 	destroy_workqueue(spi->wq);
 	clk_disable_unprepare(spi->spi_clk);
 	clk_put(spi->fpi_clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver lantiq_ssc_driver = {
 	.probe = lantiq_ssc_probe,
+<<<<<<< HEAD
 	.remove_new = lantiq_ssc_remove,
+=======
+	.remove = lantiq_ssc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "spi-lantiq-ssc",
 		.of_match_table = lantiq_ssc_match,

@@ -9,7 +9,11 @@
 	},
 	.fixup_map_array_48b = { 1 },
 	.result_unpriv = REJECT,
+<<<<<<< HEAD
 	.errstr_unpriv = "access is allowed only to CAP_PERFMON and CAP_SYS_ADMIN",
+=======
+	.errstr_unpriv = "bpf_array access is allowed only to CAP_PERFMON and CAP_SYS_ADMIN",
+>>>>>>> b7ba80a49124 (Commit)
 	.result = REJECT,
 	.errstr = "R1 is bpf_array invalid negative access: off=-8",
 },
@@ -26,7 +30,11 @@
 	},
 	.fixup_map_array_48b = { 3 },
 	.result_unpriv = REJECT,
+<<<<<<< HEAD
 	.errstr_unpriv = "access is allowed only to CAP_PERFMON and CAP_SYS_ADMIN",
+=======
+	.errstr_unpriv = "bpf_array access is allowed only to CAP_PERFMON and CAP_SYS_ADMIN",
+>>>>>>> b7ba80a49124 (Commit)
 	.result = REJECT,
 	.errstr = "only read from bpf_array is supported",
 },
@@ -41,7 +49,11 @@
 	},
 	.fixup_map_array_48b = { 1 },
 	.result_unpriv = REJECT,
+<<<<<<< HEAD
 	.errstr_unpriv = "access is allowed only to CAP_PERFMON and CAP_SYS_ADMIN",
+=======
+	.errstr_unpriv = "bpf_array access is allowed only to CAP_PERFMON and CAP_SYS_ADMIN",
+>>>>>>> b7ba80a49124 (Commit)
 	.result = REJECT,
 	.errstr = "cannot access ptr member ops with moff 0 in struct bpf_map with off 1 size 4",
 	.flags = F_NEEDS_EFFICIENT_UNALIGNED_ACCESS,
@@ -57,7 +69,11 @@
 	},
 	.fixup_map_array_48b = { 1 },
 	.result_unpriv = REJECT,
+<<<<<<< HEAD
 	.errstr_unpriv = "access is allowed only to CAP_PERFMON and CAP_SYS_ADMIN",
+=======
+	.errstr_unpriv = "bpf_array access is allowed only to CAP_PERFMON and CAP_SYS_ADMIN",
+>>>>>>> b7ba80a49124 (Commit)
 	.result = ACCEPT,
 	.retval = 1,
 },

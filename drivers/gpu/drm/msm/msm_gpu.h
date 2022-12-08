@@ -13,6 +13,10 @@
 #include <linux/interconnect.h>
 #include <linux/pm_opp.h>
 #include <linux/regulator/consumer.h>
+<<<<<<< HEAD
+=======
+#include <linux/reset.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "msm_drv.h"
 #include "msm_fence.h"
@@ -77,6 +81,7 @@ struct msm_gpu_funcs {
 	struct msm_gem_address_space *(*create_private_address_space)
 		(struct msm_gpu *gpu);
 	uint32_t (*get_rptr)(struct msm_gpu *gpu, struct msm_ringbuffer *ring);
+<<<<<<< HEAD
 
 	/**
 	 * progress: Has the GPU made progress?
@@ -86,6 +91,8 @@ struct msm_gpu_funcs {
 	 * for cmdstream that is buffered in this FIFO upstream of the CP fw.
 	 */
 	bool (*progress)(struct msm_gpu *gpu, struct msm_ringbuffer *ring);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Additional state for iommu faults: */
@@ -108,6 +115,7 @@ struct msm_gpu_devfreq {
 	struct mutex lock;
 
 	/**
+<<<<<<< HEAD
 	 * idle_freq:
 	 *
 	 * Shadow frequency used while the GPU is idle.  From the PoV of
@@ -117,6 +125,13 @@ struct msm_gpu_devfreq {
 	 * it is inactive.
 	 */
 	unsigned long idle_freq;
+=======
+	 * idle_constraint:
+	 *
+	 * A PM QoS constraint to limit max freq while the GPU is idle.
+	 */
+	struct dev_pm_qos_request idle_freq;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/**
 	 * boost_constraint:
@@ -138,6 +153,11 @@ struct msm_gpu_devfreq {
 	/** idle_time: Time of last transition to idle: */
 	ktime_t idle_time;
 
+<<<<<<< HEAD
+=======
+	struct devfreq_dev_status average_status;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/**
 	 * idle_work:
 	 *
@@ -247,7 +267,10 @@ struct msm_gpu {
 #define DRM_MSM_INACTIVE_PERIOD   66 /* in ms (roughly four frames) */
 
 #define DRM_MSM_HANGCHECK_DEFAULT_PERIOD 500 /* in ms */
+<<<<<<< HEAD
 #define DRM_MSM_HANGCHECK_PROGRESS_RETRIES 3
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct timer_list hangcheck_timer;
 
 	/* Fault info for most recent iova fault: */
@@ -276,19 +299,34 @@ struct msm_gpu {
 
 	struct msm_gpu_state *crashstate;
 
+<<<<<<< HEAD
+=======
+	/* Enable clamping to idle freq when inactive: */
+	bool clamp_to_idle;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* True if the hardware supports expanded apriv (a650 and newer) */
 	bool hw_apriv;
 
 	struct thermal_cooling_device *cooling;
+<<<<<<< HEAD
+=======
+
+	/* To poll for cx gdsc collapse during gpu recovery */
+	struct reset_control *cx_collapse;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct msm_gpu *dev_to_gpu(struct device *dev)
 {
 	struct adreno_smmu_priv *adreno_smmu = dev_get_drvdata(dev);
+<<<<<<< HEAD
 
 	if (!adreno_smmu)
 		return NULL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return container_of(adreno_smmu, struct msm_gpu, adreno_smmu);
 }
 
@@ -371,6 +409,7 @@ struct msm_file_private {
 	 */
 	int sysprof;
 
+<<<<<<< HEAD
 	/**
 	 * comm: Overridden task comm, see MSM_PARAM_COMM
 	 *
@@ -383,6 +422,12 @@ struct msm_file_private {
 	 *
 	 * Accessed under msm_gpu::lock
 	 */
+=======
+	/** comm: Overridden task comm, see MSM_PARAM_COMM */
+	char *comm;
+
+	/** cmdline: Overridden task cmdline, see MSM_PARAM_CMDLINE */
+>>>>>>> b7ba80a49124 (Commit)
 	char *cmdline;
 
 	/**
@@ -553,7 +598,11 @@ static inline void gpu_rmw(struct msm_gpu *gpu, u32 reg, u32 mask, u32 or)
 	msm_rmw(gpu->mmio + (reg << 2), mask, or);
 }
 
+<<<<<<< HEAD
 static inline u64 gpu_read64(struct msm_gpu *gpu, u32 reg)
+=======
+static inline u64 gpu_read64(struct msm_gpu *gpu, u32 lo, u32 hi)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u64 val;
 
@@ -571,17 +620,30 @@ static inline u64 gpu_read64(struct msm_gpu *gpu, u32 reg)
 	 * when the lo is read, so make sure to read the lo first to trigger
 	 * that
 	 */
+<<<<<<< HEAD
 	val = (u64) msm_readl(gpu->mmio + (reg << 2));
 	val |= ((u64) msm_readl(gpu->mmio + ((reg + 1) << 2)) << 32);
+=======
+	val = (u64) msm_readl(gpu->mmio + (lo << 2));
+	val |= ((u64) msm_readl(gpu->mmio + (hi << 2)) << 32);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return val;
 }
 
+<<<<<<< HEAD
 static inline void gpu_write64(struct msm_gpu *gpu, u32 reg, u64 val)
 {
 	/* Why not a writeq here? Read the screed above */
 	msm_writel(lower_32_bits(val), gpu->mmio + (reg << 2));
 	msm_writel(upper_32_bits(val), gpu->mmio + ((reg + 1) << 2));
+=======
+static inline void gpu_write64(struct msm_gpu *gpu, u32 lo, u32 hi, u64 val)
+{
+	/* Why not a writeq here? Read the screed above */
+	msm_writel(lower_32_bits(val), gpu->mmio + (lo << 2));
+	msm_writel(upper_32_bits(val), gpu->mmio + (hi << 2));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int msm_gpu_pm_suspend(struct msm_gpu *gpu);

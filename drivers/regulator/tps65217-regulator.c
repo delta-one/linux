@@ -258,7 +258,10 @@ static int tps65217_regulator_probe(struct platform_device *pdev)
 static struct platform_driver tps65217_regulator_driver = {
 	.driver = {
 		.name = "tps65217-pmic",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = tps65217_regulator_probe,
 };

@@ -4,6 +4,7 @@
 //!
 //! C header: [`include/uapi/asm-generic/errno-base.h`](../../../include/uapi/asm-generic/errno-base.h)
 
+<<<<<<< HEAD
 use alloc::{
     alloc::{AllocError, LayoutError},
     collections::TryReserveError,
@@ -58,6 +59,14 @@ pub mod code {
     declare_err!(EPIPE, "Broken pipe.");
     declare_err!(EDOM, "Math argument out of domain of func.");
     declare_err!(ERANGE, "Math result not representable.");
+=======
+use alloc::collections::TryReserveError;
+
+/// Contains the C-compatible error codes.
+pub mod code {
+    /// Out of memory.
+    pub const ENOMEM: super::Error = super::Error(-(crate::bindings::ENOMEM as i32));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /// Generic integer kernel error.
@@ -78,6 +87,7 @@ impl Error {
     }
 }
 
+<<<<<<< HEAD
 impl From<AllocError> for Error {
     fn from(_: AllocError) -> Error {
         code::ENOMEM
@@ -96,12 +106,15 @@ impl From<Utf8Error> for Error {
     }
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 impl From<TryReserveError> for Error {
     fn from(_: TryReserveError) -> Error {
         code::ENOMEM
     }
 }
 
+<<<<<<< HEAD
 impl From<LayoutError> for Error {
     fn from(_: LayoutError) -> Error {
         code::ENOMEM
@@ -120,6 +133,8 @@ impl From<core::convert::Infallible> for Error {
     }
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /// A [`Result`] with an [`Error`] error type.
 ///
 /// To be used as the return type for functions that may fail.

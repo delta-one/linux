@@ -63,6 +63,7 @@ static void panfrost_core_dump_header(struct panfrost_dump_iterator *iter,
 {
 	struct panfrost_dump_object_header *hdr = iter->hdr;
 
+<<<<<<< HEAD
 	hdr->magic = PANFROSTDUMP_MAGIC;
 	hdr->type = type;
 	hdr->file_offset = iter->data - iter->start;
@@ -70,6 +71,15 @@ static void panfrost_core_dump_header(struct panfrost_dump_iterator *iter,
 
 	iter->hdr++;
 	iter->data += hdr->file_size;
+=======
+	hdr->magic = cpu_to_le32(PANFROSTDUMP_MAGIC);
+	hdr->type = cpu_to_le32(type);
+	hdr->file_offset = cpu_to_le32(iter->data - iter->start);
+	hdr->file_size = cpu_to_le32(data_end - iter->data);
+
+	iter->hdr++;
+	iter->data += le32_to_cpu(hdr->file_size);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -93,8 +103,13 @@ panfrost_core_dump_registers(struct panfrost_dump_iterator *iter,
 
 		reg = panfrost_dump_registers[i] + js_as_offset;
 
+<<<<<<< HEAD
 		dumpreg->reg = reg;
 		dumpreg->value = gpu_read(pfdev, reg);
+=======
+		dumpreg->reg = cpu_to_le32(reg);
+		dumpreg->value = cpu_to_le32(gpu_read(pfdev, reg));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	panfrost_core_dump_header(iter, PANFROSTDUMP_BUF_REG, dumpreg);
@@ -106,7 +121,11 @@ void panfrost_core_dump(struct panfrost_job *job)
 	struct panfrost_dump_iterator iter;
 	struct drm_gem_object *dbo;
 	unsigned int n_obj, n_bomap_pages;
+<<<<<<< HEAD
 	u64 *bomap, *bomap_start;
+=======
+	__le64 *bomap, *bomap_start;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t file_size;
 	u32 as_nr;
 	int slot;
@@ -177,11 +196,19 @@ void panfrost_core_dump(struct panfrost_job *job)
 	 * For now, we write the job identifier in the register dump header,
 	 * so that we can decode the entire dump later with pandecode
 	 */
+<<<<<<< HEAD
 	iter.hdr->reghdr.jc = job->jc;
 	iter.hdr->reghdr.major = PANFROSTDUMP_MAJOR;
 	iter.hdr->reghdr.minor = PANFROSTDUMP_MINOR;
 	iter.hdr->reghdr.gpu_id = pfdev->features.id;
 	iter.hdr->reghdr.nbos = job->bo_count;
+=======
+	iter.hdr->reghdr.jc = cpu_to_le64(job->jc);
+	iter.hdr->reghdr.major = cpu_to_le32(PANFROSTDUMP_MAJOR);
+	iter.hdr->reghdr.minor = cpu_to_le32(PANFROSTDUMP_MINOR);
+	iter.hdr->reghdr.gpu_id = cpu_to_le32(pfdev->features.id);
+	iter.hdr->reghdr.nbos = cpu_to_le64(job->bo_count);
+>>>>>>> b7ba80a49124 (Commit)
 
 	panfrost_core_dump_registers(&iter, pfdev, as_nr, slot);
 
@@ -209,7 +236,11 @@ void panfrost_core_dump(struct panfrost_job *job)
 			goto dump_header;
 		}
 
+<<<<<<< HEAD
 		ret = drm_gem_vmap_unlocked(&bo->base.base, &map);
+=======
+		ret = drm_gem_shmem_vmap(&bo->base, &map);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret) {
 			dev_err(pfdev->dev, "Panfrost Dump: couldn't map Buffer Object\n");
 			iter.hdr->bomap.valid = 0;
@@ -218,12 +249,17 @@ void panfrost_core_dump(struct panfrost_job *job)
 
 		WARN_ON(!mapping->active);
 
+<<<<<<< HEAD
 		iter.hdr->bomap.data[0] = bomap - bomap_start;
+=======
+		iter.hdr->bomap.data[0] = cpu_to_le32((bomap - bomap_start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		for_each_sgtable_page(bo->base.sgt, &page_iter, 0) {
 			struct page *page = sg_page_iter_page(&page_iter);
 
 			if (!IS_ERR(page)) {
+<<<<<<< HEAD
 				*bomap++ = page_to_phys(page);
 			} else {
 				dev_err(pfdev->dev, "Panfrost Dump: wrong page\n");
@@ -232,13 +268,29 @@ void panfrost_core_dump(struct panfrost_job *job)
 		}
 
 		iter.hdr->bomap.iova = mapping->mmnode.start << PAGE_SHIFT;
+=======
+				*bomap++ = cpu_to_le64(page_to_phys(page));
+			} else {
+				dev_err(pfdev->dev, "Panfrost Dump: wrong page\n");
+				*bomap++ = ~cpu_to_le64(0);
+			}
+		}
+
+		iter.hdr->bomap.iova = cpu_to_le64(mapping->mmnode.start << PAGE_SHIFT);
+>>>>>>> b7ba80a49124 (Commit)
 
 		vaddr = map.vaddr;
 		memcpy(iter.data, vaddr, bo->base.base.size);
 
+<<<<<<< HEAD
 		drm_gem_vunmap_unlocked(&bo->base.base, &map);
 
 		iter.hdr->bomap.valid = 1;
+=======
+		drm_gem_shmem_vunmap(&bo->base, &map);
+
+		iter.hdr->bomap.valid = cpu_to_le32(1);
+>>>>>>> b7ba80a49124 (Commit)
 
 dump_header:	panfrost_core_dump_header(&iter, PANFROSTDUMP_BUF_BO, iter.data +
 					  bo->base.base.size);

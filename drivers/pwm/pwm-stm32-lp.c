@@ -127,7 +127,11 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 
 	/* ensure CMP & ARR registers are properly written */
 	ret = regmap_read_poll_timeout(priv->regmap, STM32_LPTIM_ISR, val,
+<<<<<<< HEAD
 				       (val & STM32_LPTIM_CMPOK_ARROK) == STM32_LPTIM_CMPOK_ARROK,
+=======
+				       (val & STM32_LPTIM_CMPOK_ARROK),
+>>>>>>> b7ba80a49124 (Commit)
 				       100, 1000);
 	if (ret) {
 		dev_err(priv->chip.dev, "ARR/CMP registers write issue\n");
@@ -140,8 +144,14 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 
 	if (reenable) {
 		/* Start LP timer in continuous mode */
+<<<<<<< HEAD
 		ret = regmap_set_bits(priv->regmap, STM32_LPTIM_CR,
 				      STM32_LPTIM_CNTSTRT);
+=======
+		ret = regmap_update_bits(priv->regmap, STM32_LPTIM_CR,
+					 STM32_LPTIM_CNTSTRT,
+					 STM32_LPTIM_CNTSTRT);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret) {
 			regmap_write(priv->regmap, STM32_LPTIM_CR, 0);
 			goto err;
@@ -156,9 +166,15 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int stm32_pwm_lp_get_state(struct pwm_chip *chip,
 				  struct pwm_device *pwm,
 				  struct pwm_state *state)
+=======
+static void stm32_pwm_lp_get_state(struct pwm_chip *chip,
+				   struct pwm_device *pwm,
+				   struct pwm_state *state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct stm32_pwm_lp *priv = to_stm32_pwm_lp(chip);
 	unsigned long rate = clk_get_rate(priv->clk);
@@ -184,8 +200,11 @@ static int stm32_pwm_lp_get_state(struct pwm_chip *chip,
 	tmp = prd - val;
 	tmp = (tmp << presc) * NSEC_PER_SEC;
 	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, rate);
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct pwm_ops stm32_pwm_lp_ops = {

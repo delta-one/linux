@@ -1,4 +1,5 @@
 .. SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+<<<<<<< HEAD
 .. include:: <isonum.txt>
 
 ===========================================
@@ -7,51 +8,90 @@ Network Flow Processor (NFP) Kernel Drivers
 
 :Copyright: |copy| 2019, Netronome Systems, Inc.
 :Copyright: |copy| 2022, Corigine, Inc.
+=======
+
+=============================================
+Netronome Flow Processor (NFP) Kernel Drivers
+=============================================
+
+Copyright (c) 2019, Netronome Systems, Inc.
+>>>>>>> b7ba80a49124 (Commit)
 
 Contents
 ========
 
 - `Overview`_
 - `Acquiring Firmware`_
+<<<<<<< HEAD
 - `Devlink Info`_
 - `Configure Device`_
 - `Statistics`_
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 Overview
 ========
 
+<<<<<<< HEAD
 This driver supports Netronome and Corigine's line of Network Flow Processor
 devices, including the NFP3800, NFP4000, NFP5000, and NFP6000 models, which
 are also incorporated in the companies' family of Agilio SmartNICs. The SR-IOV
 physical and virtual functions for these devices are supported by the driver.
+=======
+This driver supports Netronome's line of Flow Processor devices,
+including the NFP4000, NFP5000, and NFP6000 models, which are also
+incorporated in the company's family of Agilio SmartNICs. The SR-IOV
+physical and virtual functions for these devices are supported by
+the driver.
+>>>>>>> b7ba80a49124 (Commit)
 
 Acquiring Firmware
 ==================
 
+<<<<<<< HEAD
 The NFP3800, NFP4000 and NFP6000 devices require application specific firmware
 to function. Application firmware can be located either on the host file system
 or in the device flash (if supported by management firmware).
 
 Firmware files on the host filesystem contain card type (`AMDA-*` string), media
 config etc. They should be placed in `/lib/firmware/netronome` directory to
+=======
+The NFP4000 and NFP6000 devices require application specific firmware
+to function.  Application firmware can be located either on the host file system
+or in the device flash (if supported by management firmware).
+
+Firmware files on the host filesystem contain card type (`AMDA-*` string), media
+config etc.  They should be placed in `/lib/firmware/netronome` directory to
+>>>>>>> b7ba80a49124 (Commit)
 load firmware from the host file system.
 
 Firmware for basic NIC operation is available in the upstream
 `linux-firmware.git` repository.
 
+<<<<<<< HEAD
 A more comprehensive list of firmware can be downloaded from the
 `Corigine Support site <https://www.corigine.com/DPUDownload.html>`_.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Firmware in NVRAM
 -----------------
 
 Recent versions of management firmware supports loading application
+<<<<<<< HEAD
 firmware from flash when the host driver gets probed. The firmware loading
+=======
+firmware from flash when the host driver gets probed.  The firmware loading
+>>>>>>> b7ba80a49124 (Commit)
 policy configuration may be used to configure this feature appropriately.
 
 Devlink or ethtool can be used to update the application firmware on the device
 flash by providing the appropriate `nic_AMDA*.nffw` file to the respective
+<<<<<<< HEAD
 command. Users need to take care to write the correct firmware image for the
+=======
+command.  Users need to take care to write the correct firmware image for the
+>>>>>>> b7ba80a49124 (Commit)
 card and media configuration to flash.
 
 Available storage space in flash depends on the card being used.
@@ -86,9 +126,15 @@ You may need to use hard instead of symbolic links on distributions
 which use old `mkinitrd` command instead of `dracut` (e.g. Ubuntu).
 
 After changing firmware files you may need to regenerate the initramfs
+<<<<<<< HEAD
 image. Initramfs contains drivers and firmware files your system may
 need to boot. Refer to the documentation of your distribution to find
 out how to update initramfs. Good indication of stale initramfs
+=======
+image.  Initramfs contains drivers and firmware files your system may
+need to boot.  Refer to the documentation of your distribution to find
+out how to update initramfs.  Good indication of stale initramfs
+>>>>>>> b7ba80a49124 (Commit)
 is system loading wrong driver or firmware on boot, but when driver is
 later reloaded manually everything works correctly.
 
@@ -96,9 +142,15 @@ Selecting firmware per device
 -----------------------------
 
 Most commonly all cards on the system use the same type of firmware.
+<<<<<<< HEAD
 If you want to load a specific firmware image for a specific card, you
 can use either the PCI bus address or serial number. The driver will
 print which files it's looking for when it recognizes a NFP device::
+=======
+If you want to load specific firmware image for a specific card, you
+can use either the PCI bus address or serial number.  Driver will print
+which files it's looking for when it recognizes a NFP device::
+>>>>>>> b7ba80a49124 (Commit)
 
     nfp: Looking for firmware file in order of priority:
     nfp:  netronome/serial-00-12-34-aa-bb-cc-10-ff.nffw: not found
@@ -113,6 +165,7 @@ Note that `serial-*` and `pci-*` files are **not** automatically included
 in initramfs, you will have to refer to documentation of appropriate tools
 to find out how to include them.
 
+<<<<<<< HEAD
 Running firmware version
 ------------------------
 
@@ -122,6 +175,8 @@ be displayed with the ethtool command::
 
   $ ethtool -i <netdev>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Firmware loading policy
 -----------------------
 
@@ -148,6 +203,7 @@ abi_drv_load_ifc
     Defines a list of PF devices allowed to load FW on the device.
     This variable is not currently user configurable.
 
+<<<<<<< HEAD
 Devlink Info
 ============
 
@@ -257,6 +313,8 @@ link is down, auto-negotiation can be enabled or disabled using::
 
   ethtool -s <netdev> autoneg <on|off>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Statistics
 ==========
 

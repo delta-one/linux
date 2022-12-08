@@ -14,6 +14,12 @@ description: |+
   This PCIe host controller is based on the Synopsys DesignWare PCIe IP
   and thus inherits all the common properties defined in snps,dw-pcie.yaml.
 
+<<<<<<< HEAD
+=======
+allOf:
+  - $ref: /schemas/pci/snps,dw-pcie.yaml#
+
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     enum:
@@ -24,9 +30,12 @@ properties:
       - fsl,imx8mq-pcie
       - fsl,imx8mm-pcie
       - fsl,imx8mp-pcie
+<<<<<<< HEAD
       - fsl,imx8mm-pcie-ep
       - fsl,imx8mq-pcie-ep
       - fsl,imx8mp-pcie-ep
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     items:
@@ -60,8 +69,13 @@ properties:
     items:
       - const: pcie
       - const: pcie_bus
+<<<<<<< HEAD
       - enum: [ pcie_phy, pcie_aux ]
       - enum: [ pcie_inbound_axi, pcie_aux ]
+=======
+      - const: pcie_phy
+      - const: pcie_inbound_axi for imx6sx-pcie, pcie_aux for imx8mq-pcie
+>>>>>>> b7ba80a49124 (Commit)
 
   num-lanes:
     const: 1
@@ -72,7 +86,10 @@ properties:
       required properties for imx7d-pcie and imx8mq-pcie.
 
   power-domains:
+<<<<<<< HEAD
     minItems: 1
+=======
+>>>>>>> b7ba80a49124 (Commit)
     items:
       - description: The phandle pointing to the DISPLAY domain for
           imx6sx-pcie, to PCIE_PHY power domain for imx7d-pcie and
@@ -81,20 +98,33 @@ properties:
           for imx6sx-pcie.
 
   power-domain-names:
+<<<<<<< HEAD
     minItems: 1
+=======
+>>>>>>> b7ba80a49124 (Commit)
     items:
       - const: pcie
       - const: pcie_phy
 
   resets:
+<<<<<<< HEAD
     minItems: 2
+=======
+>>>>>>> b7ba80a49124 (Commit)
     maxItems: 3
     description: Phandles to PCIe-related reset lines exposed by SRC
       IP block. Additional required by imx7d-pcie and imx8mq-pcie.
 
   reset-names:
+<<<<<<< HEAD
     minItems: 2
     maxItems: 3
+=======
+    items:
+      - const: pciephy
+      - const: apps
+      - const: turnoff
+>>>>>>> b7ba80a49124 (Commit)
 
   fsl,tx-deemph-gen1:
     description: Gen1 De-emphasis value (optional required).
@@ -176,6 +206,7 @@ required:
   - clocks
   - clock-names
 
+<<<<<<< HEAD
 allOf:
   - $ref: /schemas/pci/snps,dw-pcie.yaml#
   - if:
@@ -306,6 +337,8 @@ allOf:
             - const: apps
             - const: turnoff
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 unevaluatedProperties: false
 
 examples:

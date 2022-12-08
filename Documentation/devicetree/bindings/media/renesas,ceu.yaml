@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/media/renesas,ceu.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Renesas Capture Engine Unit (CEU)
+=======
+title: Renesas Capture Engine Unit (CEU) Bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Jacopo Mondi <jacopo+renesas@jmondi.org>

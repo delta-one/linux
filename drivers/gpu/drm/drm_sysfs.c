@@ -19,7 +19,10 @@
 #include <linux/kdev_t.h>
 #include <linux/slab.h>
 
+<<<<<<< HEAD
 #include <drm/drm_accel.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_connector.h>
 #include <drm/drm_device.h>
 #include <drm/drm_file.h>
@@ -91,7 +94,11 @@ static void drm_sysfs_acpi_register(void) { }
 static void drm_sysfs_acpi_unregister(void) { }
 #endif
 
+<<<<<<< HEAD
 static char *drm_devnode(const struct device *dev, umode_t *mode)
+=======
+static char *drm_devnode(struct device *dev, umode_t *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return kasprintf(GFP_KERNEL, "dri/%s", dev_name(dev));
 }
@@ -112,7 +119,11 @@ int drm_sysfs_init(void)
 {
 	int err;
 
+<<<<<<< HEAD
 	drm_class = class_create("drm");
+=======
+	drm_class = class_create(THIS_MODULE, "drm");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(drm_class))
 		return PTR_ERR(drm_class);
 
@@ -472,11 +483,20 @@ struct device *drm_sysfs_minor_alloc(struct drm_minor *minor)
 	struct device *kdev;
 	int r;
 
+<<<<<<< HEAD
+=======
+	if (minor->type == DRM_MINOR_RENDER)
+		minor_str = "renderD%d";
+	else
+		minor_str = "card%d";
+
+>>>>>>> b7ba80a49124 (Commit)
 	kdev = kzalloc(sizeof(*kdev), GFP_KERNEL);
 	if (!kdev)
 		return ERR_PTR(-ENOMEM);
 
 	device_initialize(kdev);
+<<<<<<< HEAD
 
 	if (minor->type == DRM_MINOR_ACCEL) {
 		minor_str = "accel%d";
@@ -492,6 +512,11 @@ struct device *drm_sysfs_minor_alloc(struct drm_minor *minor)
 		kdev->type = &drm_sysfs_device_minor;
 	}
 
+=======
+	kdev->devt = MKDEV(DRM_MAJOR, minor->index);
+	kdev->class = drm_class;
+	kdev->type = &drm_sysfs_device_minor;
+>>>>>>> b7ba80a49124 (Commit)
 	kdev->parent = minor->dev->dev;
 	kdev->release = drm_sysfs_release;
 	dev_set_drvdata(kdev, minor);

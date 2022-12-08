@@ -67,7 +67,11 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-0 {
+=======
+		status {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "sina31s:status:usr";
 			gpios = <&pio 7 13 GPIO_ACTIVE_HIGH>; /* PH13 */
 		};

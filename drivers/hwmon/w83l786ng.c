@@ -16,6 +16,10 @@
 #include <linux/slab.h>
 #include <linux/i2c.h>
 #include <linux/hwmon.h>
+<<<<<<< HEAD
+=======
+#include <linux/hwmon-vid.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/hwmon-sysfs.h>
 #include <linux/err.h>
 #include <linux/mutex.h>

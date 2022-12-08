@@ -1,8 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0
 # Makefile for nolibc tests
 include ../../../scripts/Makefile.include
+<<<<<<< HEAD
 # We need this for the "cc-option" macro.
 include ../../../build/Build.include
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 # we're in ".../tools/testing/selftests/nolibc"
 ifeq ($(srctree),)
@@ -15,6 +18,7 @@ ARCH = $(SUBARCH)
 endif
 
 # kernel image names by architecture
+<<<<<<< HEAD
 IMAGE_i386       = arch/x86/boot/bzImage
 IMAGE_x86_64     = arch/x86/boot/bzImage
 IMAGE_x86        = arch/x86/boot/bzImage
@@ -38,11 +42,31 @@ DEFCONFIG_riscv      = defconfig
 DEFCONFIG_s390       = defconfig
 DEFCONFIG_loongarch  = defconfig
 DEFCONFIG            = $(DEFCONFIG_$(ARCH))
+=======
+IMAGE_i386    = arch/x86/boot/bzImage
+IMAGE_x86     = arch/x86/boot/bzImage
+IMAGE_arm64   = arch/arm64/boot/Image
+IMAGE_arm     = arch/arm/boot/zImage
+IMAGE_mips    = vmlinuz
+IMAGE_riscv   = arch/riscv/boot/Image
+IMAGE         = $(IMAGE_$(ARCH))
+IMAGE_NAME    = $(notdir $(IMAGE))
+
+# default kernel configurations that appear to be usable
+DEFCONFIG_i386    = defconfig
+DEFCONFIG_x86     = defconfig
+DEFCONFIG_arm64   = defconfig
+DEFCONFIG_arm     = multi_v7_defconfig
+DEFCONFIG_mips    = malta_defconfig
+DEFCONFIG_riscv   = defconfig
+DEFCONFIG         = $(DEFCONFIG_$(ARCH))
+>>>>>>> b7ba80a49124 (Commit)
 
 # optional tests to run (default = all)
 TEST =
 
 # QEMU_ARCH: arch names used by qemu
+<<<<<<< HEAD
 QEMU_ARCH_i386       = i386
 QEMU_ARCH_x86_64     = x86_64
 QEMU_ARCH_x86        = x86_64
@@ -65,6 +89,24 @@ QEMU_ARGS_riscv      = -M virt -append "console=ttyS0 panic=-1 $(TEST:%=NOLIBC_T
 QEMU_ARGS_s390       = -M s390-ccw-virtio -m 1G -append "console=ttyS0 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
 QEMU_ARGS_loongarch  = -M virt -append "console=ttyS0,115200 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
 QEMU_ARGS            = $(QEMU_ARGS_$(ARCH))
+=======
+QEMU_ARCH_i386    = i386
+QEMU_ARCH_x86     = x86_64
+QEMU_ARCH_arm64   = aarch64
+QEMU_ARCH_arm     = arm
+QEMU_ARCH_mips    = mipsel  # works with malta_defconfig
+QEMU_ARCH_riscv   = riscv64
+QEMU_ARCH         = $(QEMU_ARCH_$(ARCH))
+
+# QEMU_ARGS : some arch-specific args to pass to qemu
+QEMU_ARGS_i386    = -M pc -append "console=ttyS0,9600 i8042.noaux panic=-1 $(TEST:%=NOLIBC_TEST=%)"
+QEMU_ARGS_x86     = -M pc -append "console=ttyS0,9600 i8042.noaux panic=-1 $(TEST:%=NOLIBC_TEST=%)"
+QEMU_ARGS_arm64   = -M virt -cpu cortex-a53 -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
+QEMU_ARGS_arm     = -M virt -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
+QEMU_ARGS_mips    = -M malta -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
+QEMU_ARGS_riscv   = -M virt -append "console=ttyS0 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
+QEMU_ARGS         = $(QEMU_ARGS_$(ARCH))
+>>>>>>> b7ba80a49124 (Commit)
 
 # OUTPUT is only set when run from the main makefile, otherwise
 # it defaults to this nolibc directory.
@@ -76,9 +118,13 @@ else
 Q=@
 endif
 
+<<<<<<< HEAD
 CFLAGS_s390 = -m64
 CFLAGS  ?= -Os -fno-ident -fno-asynchronous-unwind-tables $(CFLAGS_$(ARCH))
 CFLAGS  += $(call cc-option,-fno-stack-protector)
+=======
+CFLAGS  ?= -Os -fno-ident -fno-asynchronous-unwind-tables
+>>>>>>> b7ba80a49124 (Commit)
 LDFLAGS := -s
 
 help:
@@ -87,7 +133,10 @@ help:
 	@echo "  help         this help"
 	@echo "  sysroot      create the nolibc sysroot here (uses \$$ARCH)"
 	@echo "  nolibc-test  build the executable (uses \$$CC and \$$CROSS_COMPILE)"
+<<<<<<< HEAD
 	@echo "  run-user     runs the executable under QEMU (uses \$$ARCH, \$$TEST)"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	@echo "  initramfs    prepare the initramfs with nolibc-test"
 	@echo "  defconfig    create a fresh new default config (uses \$$ARCH)"
 	@echo "  kernel       (re)build the kernel with the initramfs (uses \$$ARCH)"
@@ -112,7 +161,10 @@ all: run
 sysroot: sysroot/$(ARCH)/include
 
 sysroot/$(ARCH)/include:
+<<<<<<< HEAD
 	$(Q)rm -rf sysroot/$(ARCH) sysroot/sysroot
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	$(QUIET_MKDIR)mkdir -p sysroot
 	$(Q)$(MAKE) -C ../../../include/nolibc ARCH=$(ARCH) OUTPUT=$(CURDIR)/sysroot/ headers_standalone
 	$(Q)mv sysroot/sysroot sysroot/$(ARCH)
@@ -121,11 +173,14 @@ nolibc-test: nolibc-test.c sysroot/$(ARCH)/include
 	$(QUIET_CC)$(CC) $(CFLAGS) $(LDFLAGS) -o $@ \
 	  -nostdlib -static -Isysroot/$(ARCH)/include $< -lgcc
 
+<<<<<<< HEAD
 # qemu user-land test
 run-user: nolibc-test
 	$(Q)qemu-$(QEMU_ARCH) ./nolibc-test > "$(CURDIR)/run.out" || :
 	$(Q)grep -w FAIL "$(CURDIR)/run.out" && echo "See all results in $(CURDIR)/run.out" || echo "$$(grep -c ^[0-9].*OK $(CURDIR)/run.out) test(s) passed."
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 initramfs: nolibc-test
 	$(QUIET_MKDIR)mkdir -p initramfs
 	$(call QUIET_INSTALL, initramfs/init)
@@ -156,5 +211,8 @@ clean:
 	$(Q)rm -rf initramfs
 	$(call QUIET_CLEAN, run.out)
 	$(Q)rm -rf run.out
+<<<<<<< HEAD
 
 .PHONY: sysroot/$(ARCH)/include
+=======
+>>>>>>> b7ba80a49124 (Commit)

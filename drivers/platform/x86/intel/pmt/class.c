@@ -9,7 +9,10 @@
  */
 
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/io-64-nonatomic-lo-hi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/mm.h>
 #include <linux/pci.h>
@@ -20,7 +23,10 @@
 #define PMT_XA_START		0
 #define PMT_XA_MAX		INT_MAX
 #define PMT_XA_LIMIT		XA_LIMIT(PMT_XA_START, PMT_XA_MAX)
+<<<<<<< HEAD
 #define GUID_SPR_PUNIT		0x9956f43f
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 bool intel_pmt_is_early_client_hw(struct device *dev)
 {
@@ -35,6 +41,7 @@ bool intel_pmt_is_early_client_hw(struct device *dev)
 }
 EXPORT_SYMBOL_GPL(intel_pmt_is_early_client_hw);
 
+<<<<<<< HEAD
 static inline int
 pmt_memcpy64_fromio(void *to, const u64 __iomem *from, size_t count)
 {
@@ -58,6 +65,8 @@ pmt_memcpy64_fromio(void *to, const u64 __iomem *from, size_t count)
 	return count;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * sysfs
  */
@@ -79,11 +88,15 @@ intel_pmt_read(struct file *filp, struct kobject *kobj,
 	if (count > entry->size - off)
 		count = entry->size - off;
 
+<<<<<<< HEAD
 	if (entry->guid == GUID_SPR_PUNIT)
 		/* PUNIT on SPR only supports aligned 64-bit read */
 		count = pmt_memcpy64_fromio(buf, entry->base + off, count);
 	else
 		memcpy_fromio(buf, entry->base + off, count);
+=======
+	memcpy_fromio(buf, entry->base + off, count);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return count;
 }
@@ -155,6 +168,10 @@ ATTRIBUTE_GROUPS(intel_pmt);
 
 static struct class intel_pmt_class = {
 	.name = "intel_pmt",
+<<<<<<< HEAD
+=======
+	.owner = THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.dev_groups = intel_pmt_groups,
 };
 

@@ -14,6 +14,10 @@
 #include <linux/err.h>
 #include <linux/slab.h>
 #include <linux/of.h>
+<<<<<<< HEAD
+=======
+#include <linux/pinctrl/machine.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/mach-types.h>
 #include <asm/mach/map.h>

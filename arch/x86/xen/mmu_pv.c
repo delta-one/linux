@@ -150,7 +150,11 @@ void make_lowmem_page_readwrite(void *vaddr)
 	if (pte == NULL)
 		return;		/* vaddr missing */
 
+<<<<<<< HEAD
 	ptev = pte_mkwrite_kernel(*pte);
+=======
+	ptev = pte_mkwrite(*pte);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (HYPERVISOR_update_va_mapping(address, ptev, 0))
 		BUG();
@@ -885,7 +889,18 @@ void xen_mm_unpin_all(void)
 	spin_unlock(&pgd_lock);
 }
 
+<<<<<<< HEAD
 static void xen_enter_mmap(struct mm_struct *mm)
+=======
+static void xen_activate_mm(struct mm_struct *prev, struct mm_struct *next)
+{
+	spin_lock(&next->page_table_lock);
+	xen_pgd_pin(next);
+	spin_unlock(&next->page_table_lock);
+}
+
+static void xen_dup_mmap(struct mm_struct *oldmm, struct mm_struct *mm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	spin_lock(&mm->page_table_lock);
 	xen_pgd_pin(mm);
@@ -2146,7 +2161,12 @@ static const typeof(pv_ops) xen_mmu_ops __initconst = {
 		.make_p4d = PV_CALLEE_SAVE(xen_make_p4d),
 #endif
 
+<<<<<<< HEAD
 		.enter_mmap = xen_enter_mmap,
+=======
+		.activate_mm = xen_activate_mm,
+		.dup_mmap = xen_dup_mmap,
+>>>>>>> b7ba80a49124 (Commit)
 		.exit_mmap = xen_exit_mmap,
 
 		.lazy_mode = {

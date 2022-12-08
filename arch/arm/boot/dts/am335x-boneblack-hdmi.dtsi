@@ -85,6 +85,7 @@
 		audio-ports = <	TDA998x_I2S	0x03>;
 
 		ports {
+<<<<<<< HEAD
 			#address-cells = <1>;
 			#size-cells = <0>;
 
@@ -92,6 +93,10 @@
 				reg = <0>;
 
 				hdmi_0: endpoint {
+=======
+			port@0 {
+				hdmi_0: endpoint@0 {
+>>>>>>> b7ba80a49124 (Commit)
 					remote-endpoint = <&lcdc_0>;
 				};
 			};

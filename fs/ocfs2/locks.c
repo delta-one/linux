@@ -8,7 +8,10 @@
  */
 
 #include <linux/fs.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/fcntl.h>
 
 #include <cluster/masklog.h>

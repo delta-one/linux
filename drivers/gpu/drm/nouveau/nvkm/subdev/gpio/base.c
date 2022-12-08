@@ -24,6 +24,10 @@
 #include "priv.h"
 
 #include <core/option.h>
+<<<<<<< HEAD
+=======
+#include <core/notify.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 static int
 nvkm_gpio_drive(struct nvkm_gpio *gpio, int idx, int line, int dir, int out)
@@ -122,8 +126,28 @@ nvkm_gpio_intr_init(struct nvkm_event *event, int type, int index)
 	gpio->func->intr_mask(gpio, type, 1 << index, 1 << index);
 }
 
+<<<<<<< HEAD
 static const struct nvkm_event_func
 nvkm_gpio_intr_func = {
+=======
+static int
+nvkm_gpio_intr_ctor(struct nvkm_object *object, void *data, u32 size,
+		    struct nvkm_notify *notify)
+{
+	struct nvkm_gpio_ntfy_req *req = data;
+	if (!WARN_ON(size != sizeof(*req))) {
+		notify->size  = sizeof(struct nvkm_gpio_ntfy_rep);
+		notify->types = req->mask;
+		notify->index = req->line;
+		return 0;
+	}
+	return -EINVAL;
+}
+
+static const struct nvkm_event_func
+nvkm_gpio_intr_func = {
+	.ctor = nvkm_gpio_intr_ctor,
+>>>>>>> b7ba80a49124 (Commit)
 	.init = nvkm_gpio_intr_init,
 	.fini = nvkm_gpio_intr_fini,
 };
@@ -137,9 +161,17 @@ nvkm_gpio_intr(struct nvkm_subdev *subdev)
 	gpio->func->intr_stat(gpio, &hi, &lo);
 
 	for (i = 0; (hi | lo) && i < gpio->func->lines; i++) {
+<<<<<<< HEAD
 		u32 mask = (NVKM_GPIO_HI * !!(hi & (1 << i))) |
 			   (NVKM_GPIO_LO * !!(lo & (1 << i)));
 		nvkm_event_ntfy(&gpio->event, i, mask);
+=======
+		struct nvkm_gpio_ntfy_rep rep = {
+			.mask = (NVKM_GPIO_HI * !!(hi & (1 << i))) |
+				(NVKM_GPIO_LO * !!(lo & (1 << i))),
+		};
+		nvkm_event_send(&gpio->event, rep.mask, i, &rep, sizeof(rep));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -233,5 +265,10 @@ nvkm_gpio_new_(const struct nvkm_gpio_func *func, struct nvkm_device *device,
 	nvkm_subdev_ctor(&nvkm_gpio, device, type, inst, &gpio->subdev);
 	gpio->func = func;
 
+<<<<<<< HEAD
 	return nvkm_event_init(&nvkm_gpio_intr_func, &gpio->subdev, 2, func->lines, &gpio->event);
+=======
+	return nvkm_event_init(&nvkm_gpio_intr_func, 2, func->lines,
+			       &gpio->event);
+>>>>>>> b7ba80a49124 (Commit)
 }

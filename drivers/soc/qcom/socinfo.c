@@ -12,14 +12,20 @@
 #include <linux/slab.h>
 #include <linux/soc/qcom/smem.h>
 #include <linux/string.h>
+<<<<<<< HEAD
 #include <linux/stringify.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sys_soc.h>
 #include <linux/types.h>
 
 #include <asm/unaligned.h>
 
+<<<<<<< HEAD
 #include <dt-bindings/arm/qcom,ids.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * SoC version type with major number in the upper 16 bits and minor
  * number in the lower 16 bits.
@@ -28,10 +34,13 @@
 #define SOCINFO_MINOR(ver) ((ver) & 0xffff)
 #define SOCINFO_VERSION(maj, min)  ((((maj) & 0xffff) << 16)|((min) & 0xffff))
 
+<<<<<<< HEAD
 /* Helper macros to create soc_id table */
 #define qcom_board_id(id) QCOM_ID_ ## id, __stringify(id)
 #define qcom_board_id_named(id, name) QCOM_ID_ ## id, (name)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define SMEM_SOCINFO_BUILD_ID_LENGTH           32
 #define SMEM_SOCINFO_CHIP_ID_LENGTH            32
 
@@ -109,6 +118,7 @@ static const char *const pmic_models[] = {
 	[32] = "PM8150B",
 	[33] = "PMK8002",
 	[36] = "PM8009",
+<<<<<<< HEAD
 	[37] = "PMI632",
 	[38] = "PM8150C",
 	[40] = "PM6150",
@@ -116,13 +126,21 @@ static const char *const pmic_models[] = {
 	[44] = "PM8008",
 	[45] = "PM6125",
 	[46] = "PM7250B",
+=======
+	[38] = "PM8150C",
+	[41] = "SMB2351",
+	[45] = "PM6125",
+>>>>>>> b7ba80a49124 (Commit)
 	[47] = "PMK8350",
 	[48] = "PM8350",
 	[49] = "PM8350C",
 	[50] = "PM8350B",
 	[51] = "PMR735A",
 	[52] = "PMR735B",
+<<<<<<< HEAD
 	[55] = "PM2250",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	[58] = "PM8450",
 	[65] = "PM8010",
 };
@@ -174,6 +192,7 @@ struct socinfo {
 	__le32 ndefective_parts_array_offset;
 	/* Version 15 */
 	__le32 nmodem_supported;
+<<<<<<< HEAD
 	/* Version 16 */
 	__le32  feature_code;
 	__le32  pcode;
@@ -181,6 +200,8 @@ struct socinfo {
 	__le32  nnum_partname_mapping;
 	/* Version 17 */
 	__le32 oem_variant;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #ifdef CONFIG_DEBUG_FS
@@ -201,9 +222,12 @@ struct socinfo_params {
 	u32 num_defective_parts;
 	u32 ndefective_parts_array_offset;
 	u32 nmodem_supported;
+<<<<<<< HEAD
 	u32 feature_code;
 	u32 pcode;
 	u32 oem_variant;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct smem_image_version {
@@ -229,6 +253,7 @@ struct soc_id {
 };
 
 static const struct soc_id soc_id[] = {
+<<<<<<< HEAD
 	{ qcom_board_id(MSM8260) },
 	{ qcom_board_id(MSM8660) },
 	{ qcom_board_id(APQ8060) },
@@ -466,6 +491,137 @@ static const struct soc_id soc_id[] = {
 	{ qcom_board_id(QRU1062) },
 	{ qcom_board_id(IPQ5332) },
 	{ qcom_board_id(IPQ5322) },
+=======
+	{ 87, "MSM8960" },
+	{ 109, "APQ8064" },
+	{ 122, "MSM8660A" },
+	{ 123, "MSM8260A" },
+	{ 124, "APQ8060A" },
+	{ 126, "MSM8974" },
+	{ 130, "MPQ8064" },
+	{ 138, "MSM8960AB" },
+	{ 139, "APQ8060AB" },
+	{ 140, "MSM8260AB" },
+	{ 141, "MSM8660AB" },
+	{ 145, "MSM8626" },
+	{ 147, "MSM8610" },
+	{ 153, "APQ8064AB" },
+	{ 158, "MSM8226" },
+	{ 159, "MSM8526" },
+	{ 161, "MSM8110" },
+	{ 162, "MSM8210" },
+	{ 163, "MSM8810" },
+	{ 164, "MSM8212" },
+	{ 165, "MSM8612" },
+	{ 166, "MSM8112" },
+	{ 168, "MSM8225Q" },
+	{ 169, "MSM8625Q" },
+	{ 170, "MSM8125Q" },
+	{ 172, "APQ8064AA" },
+	{ 178, "APQ8084" },
+	{ 184, "APQ8074" },
+	{ 185, "MSM8274" },
+	{ 186, "MSM8674" },
+	{ 194, "MSM8974PRO-AC" },
+	{ 198, "MSM8126" },
+	{ 199, "APQ8026" },
+	{ 200, "MSM8926" },
+	{ 205, "MSM8326" },
+	{ 206, "MSM8916" },
+	{ 207, "MSM8994" },
+	{ 208, "APQ8074PRO-AA" },
+	{ 209, "APQ8074PRO-AB" },
+	{ 210, "APQ8074PRO-AC" },
+	{ 211, "MSM8274PRO-AA" },
+	{ 212, "MSM8274PRO-AB" },
+	{ 213, "MSM8274PRO-AC" },
+	{ 214, "MSM8674PRO-AA" },
+	{ 215, "MSM8674PRO-AB" },
+	{ 216, "MSM8674PRO-AC" },
+	{ 217, "MSM8974PRO-AA" },
+	{ 218, "MSM8974PRO-AB" },
+	{ 219, "APQ8028" },
+	{ 220, "MSM8128" },
+	{ 221, "MSM8228" },
+	{ 222, "MSM8528" },
+	{ 223, "MSM8628" },
+	{ 224, "MSM8928" },
+	{ 225, "MSM8510" },
+	{ 226, "MSM8512" },
+	{ 233, "MSM8936" },
+	{ 239, "MSM8939" },
+	{ 240, "APQ8036" },
+	{ 241, "APQ8039" },
+	{ 246, "MSM8996" },
+	{ 247, "APQ8016" },
+	{ 248, "MSM8216" },
+	{ 249, "MSM8116" },
+	{ 250, "MSM8616" },
+	{ 251, "MSM8992" },
+	{ 253, "APQ8094" },
+	{ 290, "MDM9607" },
+	{ 291, "APQ8096" },
+	{ 292, "MSM8998" },
+	{ 293, "MSM8953" },
+	{ 296, "MDM8207" },
+	{ 297, "MDM9207" },
+	{ 298, "MDM9307" },
+	{ 299, "MDM9628" },
+	{ 304, "APQ8053" },
+	{ 305, "MSM8996SG" },
+	{ 310, "MSM8996AU" },
+	{ 311, "APQ8096AU" },
+	{ 312, "APQ8096SG" },
+	{ 317, "SDM660" },
+	{ 318, "SDM630" },
+	{ 319, "APQ8098" },
+	{ 321, "SDM845" },
+	{ 322, "MDM9206" },
+	{ 323, "IPQ8074" },
+	{ 324, "SDA660" },
+	{ 325, "SDM658" },
+	{ 326, "SDA658" },
+	{ 327, "SDA630" },
+	{ 338, "SDM450" },
+	{ 341, "SDA845" },
+	{ 342, "IPQ8072" },
+	{ 343, "IPQ8076" },
+	{ 344, "IPQ8078" },
+	{ 345, "SDM636" },
+	{ 346, "SDA636" },
+	{ 349, "SDM632" },
+	{ 350, "SDA632" },
+	{ 351, "SDA450" },
+	{ 356, "SM8250" },
+	{ 375, "IPQ8070" },
+	{ 376, "IPQ8071" },
+	{ 389, "IPQ8072A" },
+	{ 390, "IPQ8074A" },
+	{ 391, "IPQ8076A" },
+	{ 392, "IPQ8078A" },
+	{ 394, "SM6125" },
+	{ 395, "IPQ8070A" },
+	{ 396, "IPQ8071A" },
+	{ 402, "IPQ6018" },
+	{ 403, "IPQ6028" },
+	{ 421, "IPQ6000" },
+	{ 422, "IPQ6010" },
+	{ 425, "SC7180" },
+	{ 434, "SM6350" },
+	{ 439, "SM8350" },
+	{ 449, "SC8280XP" },
+	{ 453, "IPQ6005" },
+	{ 455, "QRB5165" },
+	{ 457, "SM8450" },
+	{ 459, "SM7225" },
+	{ 460, "SA8295P" },
+	{ 461, "SA8540P" },
+	{ 480, "SM8450" },
+	{ 482, "SM8450" },
+	{ 487, "SC7280" },
+	{ 495, "SC7180P" },
+	{ 507, "SM6375" },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const char *socinfo_machine(struct device *dev, unsigned int id)
@@ -620,6 +776,7 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
 			   &qcom_socinfo->info.fmt);
 
 	switch (qcom_socinfo->info.fmt) {
+<<<<<<< HEAD
 	case SOCINFO_VERSION(0, 17):
 		qcom_socinfo->info.oem_variant = __le32_to_cpu(info->oem_variant);
 		debugfs_create_u32("oem_variant", 0444, qcom_socinfo->dbg_root,
@@ -634,6 +791,8 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
 		debugfs_create_u32("pcode", 0444, qcom_socinfo->dbg_root,
 				   &qcom_socinfo->info.pcode);
 		fallthrough;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case SOCINFO_VERSION(0, 15):
 		qcom_socinfo->info.nmodem_supported = __le32_to_cpu(info->nmodem_supported);
 

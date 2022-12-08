@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _ksm:
+
+>>>>>>> b7ba80a49124 (Commit)
 =======================
 Kernel Samepage Merging
 =======================
@@ -6,7 +11,11 @@ KSM is a memory-saving de-duplication feature, enabled by CONFIG_KSM=y,
 added to the Linux kernel in 2.6.32.  See ``mm/ksm.c`` for its implementation,
 and http://lwn.net/Articles/306704/ and https://lwn.net/Articles/330589/
 
+<<<<<<< HEAD
 The userspace interface of KSM is described in Documentation/admin-guide/mm/ksm.rst
+=======
+The userspace interface of KSM is described in :ref:`Documentation/admin-guide/mm/ksm.rst <admin_guide_ksm>`
+>>>>>>> b7ba80a49124 (Commit)
 
 Design
 ======

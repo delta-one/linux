@@ -30,9 +30,12 @@
 #include <linux/bitmap.h>
 #include <linux/compiler.h>
 #include <linux/time64.h>
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 #include <traceevent/event-parse.h>
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "../build-id.h"
 #include "../counts.h"
@@ -55,7 +58,10 @@
 #include "print_binary.h"
 #include "stat.h"
 #include "mem-events.h"
+<<<<<<< HEAD
 #include "util/perf_regs.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #if PY_MAJOR_VERSION < 3
 #define _PyUnicode_FromString(arg) \
@@ -89,12 +95,16 @@ PyMODINIT_FUNC initperf_trace_context(void);
 PyMODINIT_FUNC PyInit_perf_trace_context(void);
 #endif
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define TRACE_EVENT_TYPE_MAX				\
 	((1 << (sizeof(unsigned short) * 8)) - 1)
 
 static DECLARE_BITMAP(events_defined, TRACE_EVENT_TYPE_MAX);
 
+<<<<<<< HEAD
 #define N_COMMON_FIELDS	7
 
 static char *cur_field_name;
@@ -104,6 +114,15 @@ static int zero_flag_atom;
 #define MAX_FIELDS	64
 
 extern struct scripting_context *scripting_context;
+=======
+#define MAX_FIELDS	64
+#define N_COMMON_FIELDS	7
+
+extern struct scripting_context *scripting_context;
+
+static char *cur_field_name;
+static int zero_flag_atom;
+>>>>>>> b7ba80a49124 (Commit)
 
 static PyObject *main_module, *main_dict;
 
@@ -158,6 +177,7 @@ static PyObject *get_handler(const char *handler_name)
 	return handler;
 }
 
+<<<<<<< HEAD
 static void call_object(PyObject *handler, PyObject *args, const char *die_msg)
 {
 	PyObject *retval;
@@ -178,6 +198,8 @@ static void try_call_object(const char *handler_name, PyObject *args)
 }
 
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int get_argument_count(PyObject *handler)
 {
 	int arg_count = 0;
@@ -206,6 +228,28 @@ static int get_argument_count(PyObject *handler)
 	return arg_count;
 }
 
+<<<<<<< HEAD
+=======
+static void call_object(PyObject *handler, PyObject *args, const char *die_msg)
+{
+	PyObject *retval;
+
+	retval = PyObject_CallObject(handler, args);
+	if (retval == NULL)
+		handler_call_die(die_msg);
+	Py_DECREF(retval);
+}
+
+static void try_call_object(const char *handler_name, PyObject *args)
+{
+	PyObject *handler;
+
+	handler = get_handler(handler_name);
+	if (handler)
+		call_object(handler, args, handler_name);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void define_value(enum tep_print_arg_type field_type,
 			 const char *ev_name,
 			 const char *field_name,
@@ -385,7 +429,10 @@ static PyObject *get_field_numeric_entry(struct tep_event *event,
 		obj = list;
 	return obj;
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const char *get_dsoname(struct map *map)
 {
@@ -913,7 +960,10 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
 	return dict;
 }
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void python_process_tracepoint(struct perf_sample *sample,
 				      struct evsel *evsel,
 				      struct addr_location *al,
@@ -943,7 +993,11 @@ static void python_process_tracepoint(struct perf_sample *sample,
 
 	sprintf(handler_name, "%s__%s", event->system, event->name);
 
+<<<<<<< HEAD
 	if (!__test_and_set_bit(event->id, events_defined))
+=======
+	if (!test_and_set_bit(event->id, events_defined))
+>>>>>>> b7ba80a49124 (Commit)
 		define_event_symbols(event, handler_name, event->print_fmt.args);
 
 	handler = get_handler(handler_name);
@@ -1002,7 +1056,11 @@ static void python_process_tracepoint(struct perf_sample *sample,
 				offset  = val;
 				len     = offset >> 16;
 				offset &= 0xffff;
+<<<<<<< HEAD
 				if (tep_field_is_relative(field->flags))
+=======
+				if (field->flags & TEP_FIELD_IS_RELATIVE)
+>>>>>>> b7ba80a49124 (Commit)
 					offset += field->offset + field->size;
 			}
 			if (field->flags & TEP_FIELD_IS_STRING &&
@@ -1043,6 +1101,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
 
 	Py_DECREF(t);
 }
+<<<<<<< HEAD
 #else
 static void python_process_tracepoint(struct perf_sample *sample __maybe_unused,
 				      struct evsel *evsel __maybe_unused,
@@ -1053,6 +1112,8 @@ static void python_process_tracepoint(struct perf_sample *sample __maybe_unused,
 			"perf is not linked with libtraceevent.\n");
 }
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static PyObject *tuple_new(unsigned int sz)
 {
@@ -1673,7 +1734,17 @@ static void python_process_stat(struct perf_stat_config *config,
 	struct perf_cpu_map *cpus = counter->core.cpus;
 	int cpu, thread;
 
+<<<<<<< HEAD
 	for (thread = 0; thread < perf_thread_map__nr(threads); thread++) {
+=======
+	if (config->aggr_mode == AGGR_GLOBAL) {
+		process_stat(counter, (struct perf_cpu){ .cpu = -1 }, -1, tstamp,
+			     &counter->counts->aggr);
+		return;
+	}
+
+	for (thread = 0; thread < threads->nr; thread++) {
+>>>>>>> b7ba80a49124 (Commit)
 		for (cpu = 0; cpu < perf_cpu_map__nr(cpus); cpu++) {
 			process_stat(counter, perf_cpu_map__cpu(cpus, cpu),
 				     perf_thread_map__pid(threads, thread), tstamp,
@@ -1983,7 +2054,10 @@ static int python_stop_script(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int python_generate_script(struct tep_handle *pevent, const char *outfile)
 {
 	int i, not_first, count, nr_events;
@@ -2174,6 +2248,7 @@ static int python_generate_script(struct tep_handle *pevent, const char *outfile
 
 	return 0;
 }
+<<<<<<< HEAD
 #else
 static int python_generate_script(struct tep_handle *pevent __maybe_unused,
 				  const char *outfile __maybe_unused)
@@ -2186,6 +2261,8 @@ static int python_generate_script(struct tep_handle *pevent __maybe_unused,
 	return -1;
 }
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct scripting_ops python_scripting_ops = {
 	.name			= "Python",

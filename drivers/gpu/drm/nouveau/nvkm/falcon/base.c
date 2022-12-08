@@ -22,6 +22,7 @@
 #include "priv.h"
 
 #include <subdev/mc.h>
+<<<<<<< HEAD
 #include <subdev/timer.h>
 #include <subdev/top.h>
 
@@ -192,6 +193,10 @@ nvkm_falcon_pio_wr(struct nvkm_falcon *falcon, const u8 *img, u32 img_base, u8 p
 	return 0;
 }
 
+=======
+#include <subdev/top.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 void
 nvkm_falcon_load_imem(struct nvkm_falcon *falcon, void *data, u32 start,
 		      u32 size, u16 tag, u8 port, bool secure)
@@ -218,12 +223,45 @@ nvkm_falcon_load_dmem(struct nvkm_falcon *falcon, void *data, u32 start,
 }
 
 void
+<<<<<<< HEAD
+=======
+nvkm_falcon_read_dmem(struct nvkm_falcon *falcon, u32 start, u32 size, u8 port,
+		      void *data)
+{
+	mutex_lock(&falcon->dmem_mutex);
+
+	falcon->func->read_dmem(falcon, start, size, port, data);
+
+	mutex_unlock(&falcon->dmem_mutex);
+}
+
+void
+nvkm_falcon_bind_context(struct nvkm_falcon *falcon, struct nvkm_memory *inst)
+{
+	if (!falcon->func->bind_context) {
+		nvkm_error(falcon->user,
+			   "Context binding not supported on this falcon!\n");
+		return;
+	}
+
+	falcon->func->bind_context(falcon, inst);
+}
+
+void
+nvkm_falcon_set_start_addr(struct nvkm_falcon *falcon, u32 start_addr)
+{
+	falcon->func->set_start_addr(falcon, start_addr);
+}
+
+void
+>>>>>>> b7ba80a49124 (Commit)
 nvkm_falcon_start(struct nvkm_falcon *falcon)
 {
 	falcon->func->start(falcon);
 }
 
 int
+<<<<<<< HEAD
 nvkm_falcon_reset(struct nvkm_falcon *falcon)
 {
 	int ret;
@@ -233,6 +271,58 @@ nvkm_falcon_reset(struct nvkm_falcon *falcon)
 		return ret;
 
 	return nvkm_falcon_enable(falcon);
+=======
+nvkm_falcon_enable(struct nvkm_falcon *falcon)
+{
+	struct nvkm_device *device = falcon->owner->device;
+	int ret;
+
+	nvkm_mc_enable(device, falcon->owner->type, falcon->owner->inst);
+	ret = falcon->func->enable(falcon);
+	if (ret) {
+		nvkm_mc_disable(device, falcon->owner->type, falcon->owner->inst);
+		return ret;
+	}
+
+	return 0;
+}
+
+void
+nvkm_falcon_disable(struct nvkm_falcon *falcon)
+{
+	struct nvkm_device *device = falcon->owner->device;
+
+	/* already disabled, return or wait_idle will timeout */
+	if (!nvkm_mc_enabled(device, falcon->owner->type, falcon->owner->inst))
+		return;
+
+	falcon->func->disable(falcon);
+
+	nvkm_mc_disable(device, falcon->owner->type, falcon->owner->inst);
+}
+
+int
+nvkm_falcon_reset(struct nvkm_falcon *falcon)
+{
+	if (!falcon->func->reset) {
+		nvkm_falcon_disable(falcon);
+		return nvkm_falcon_enable(falcon);
+	}
+
+	return falcon->func->reset(falcon);
+}
+
+int
+nvkm_falcon_wait_for_halt(struct nvkm_falcon *falcon, u32 ms)
+{
+	return falcon->func->wait_for_halt(falcon, ms);
+}
+
+int
+nvkm_falcon_clear_interrupt(struct nvkm_falcon *falcon, u32 mask)
+{
+	return falcon->func->clear_interrupt(falcon, mask);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int
@@ -267,7 +357,11 @@ nvkm_falcon_oneinit(struct nvkm_falcon *falcon)
 }
 
 void
+<<<<<<< HEAD
 nvkm_falcon_put(struct nvkm_falcon *falcon, struct nvkm_subdev *user)
+=======
+nvkm_falcon_put(struct nvkm_falcon *falcon, const struct nvkm_subdev *user)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (unlikely(!falcon))
 		return;
@@ -281,7 +375,11 @@ nvkm_falcon_put(struct nvkm_falcon *falcon, struct nvkm_subdev *user)
 }
 
 int
+<<<<<<< HEAD
 nvkm_falcon_get(struct nvkm_falcon *falcon, struct nvkm_subdev *user)
+=======
+nvkm_falcon_get(struct nvkm_falcon *falcon, const struct nvkm_subdev *user)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret = 0;
 
@@ -315,7 +413,10 @@ nvkm_falcon_ctor(const struct nvkm_falcon_func *func,
 	falcon->owner = subdev;
 	falcon->name = name;
 	falcon->addr = addr;
+<<<<<<< HEAD
 	falcon->addr2 = func->addr2;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&falcon->mutex);
 	mutex_init(&falcon->dmem_mutex);
 	return 0;

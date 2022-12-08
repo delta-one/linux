@@ -331,7 +331,12 @@ static void bu21029_stop_chip(struct input_dev *dev)
 	regulator_disable(bu21029->vdd);
 }
 
+<<<<<<< HEAD
 static int bu21029_probe(struct i2c_client *client)
+=======
+static int bu21029_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bu21029_ts_data *bu21029;
 	struct input_dev *in_dev;
@@ -422,7 +427,11 @@ static int bu21029_probe(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int bu21029_suspend(struct device *dev)
+=======
+static int __maybe_unused bu21029_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *i2c = to_i2c_client(dev);
 	struct bu21029_ts_data *bu21029 = i2c_get_clientdata(i2c);
@@ -437,7 +446,11 @@ static int bu21029_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int bu21029_resume(struct device *dev)
+=======
+static int __maybe_unused bu21029_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *i2c = to_i2c_client(dev);
 	struct bu21029_ts_data *bu21029 = i2c_get_clientdata(i2c);
@@ -451,7 +464,11 @@ static int bu21029_resume(struct device *dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(bu21029_pm_ops, bu21029_suspend, bu21029_resume);
+=======
+static SIMPLE_DEV_PM_OPS(bu21029_pm_ops, bu21029_suspend, bu21029_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id bu21029_ids[] = {
 	{ DRIVER_NAME, 0 },
@@ -471,10 +488,17 @@ static struct i2c_driver bu21029_driver = {
 	.driver	= {
 		.name		= DRIVER_NAME,
 		.of_match_table	= of_match_ptr(bu21029_of_ids),
+<<<<<<< HEAD
 		.pm		= pm_sleep_ptr(&bu21029_pm_ops),
 	},
 	.id_table	= bu21029_ids,
 	.probe_new	= bu21029_probe,
+=======
+		.pm		= &bu21029_pm_ops,
+	},
+	.id_table	= bu21029_ids,
+	.probe		= bu21029_probe,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_i2c_driver(bu21029_driver);
 

@@ -5,6 +5,7 @@
  * Copyright (C) 2012 NVIDIA CORPORATION. All rights reserved.
  */
 
+<<<<<<< HEAD
 #include <linux/errno.h>
 
 struct device_node;
@@ -13,6 +14,10 @@ struct of_phandle_args;
 struct pinctrl;
 struct pinctrl_dev;
 
+=======
+struct of_phandle_args;
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_OF
 
 void pinctrl_dt_free_maps(struct pinctrl *p);

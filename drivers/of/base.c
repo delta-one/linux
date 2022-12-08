@@ -561,7 +561,11 @@ EXPORT_SYMBOL(of_device_is_compatible);
  *  a NULL terminated array of strings. Returns the best match
  *  score or 0.
  */
+<<<<<<< HEAD
 int of_device_compatible_match(const struct device_node *device,
+=======
+int of_device_compatible_match(struct device_node *device,
+>>>>>>> b7ba80a49124 (Commit)
 			       const char *const *compat)
 {
 	unsigned int tmp, score = 0;
@@ -1208,6 +1212,7 @@ struct device_node *of_find_matching_node_and_match(struct device_node *from,
 EXPORT_SYMBOL(of_find_matching_node_and_match);
 
 /**
+<<<<<<< HEAD
  * of_alias_from_compatible - Lookup appropriate alias for a device node
  *			      depending on compatible
  * @node:	pointer to a device tree node
@@ -1225,6 +1230,21 @@ EXPORT_SYMBOL(of_find_matching_node_and_match);
  * Return: This routine returns 0 on success, <0 on failure.
  */
 int of_alias_from_compatible(const struct device_node *node, char *alias, int len)
+=======
+ * of_modalias_node - Lookup appropriate modalias for a device node
+ * @node:	pointer to a device tree node
+ * @modalias:	Pointer to buffer that modalias value will be copied into
+ * @len:	Length of modalias value
+ *
+ * Based on the value of the compatible property, this routine will attempt
+ * to choose an appropriate modalias value for a particular device tree node.
+ * It does this by stripping the manufacturer prefix (as delimited by a ',')
+ * from the first entry in the compatible list property.
+ *
+ * Return: This routine returns 0 on success, <0 on failure.
+ */
+int of_modalias_node(struct device_node *node, char *modalias, int len)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const char *compatible, *p;
 	int cplen;
@@ -1233,10 +1253,17 @@ int of_alias_from_compatible(const struct device_node *node, char *alias, int le
 	if (!compatible || strlen(compatible) > cplen)
 		return -ENODEV;
 	p = strchr(compatible, ',');
+<<<<<<< HEAD
 	strscpy(alias, p ? p + 1 : compatible, len);
 	return 0;
 }
 EXPORT_SYMBOL_GPL(of_alias_from_compatible);
+=======
+	strscpy(modalias, p ? p + 1 : compatible, len);
+	return 0;
+}
+EXPORT_SYMBOL_GPL(of_modalias_node);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * of_find_node_by_phandle - Find a node given a phandle
@@ -1888,7 +1915,12 @@ static void of_alias_add(struct alias_prop *ap, struct device_node *np,
 {
 	ap->np = np;
 	ap->id = id;
+<<<<<<< HEAD
 	strscpy(ap->stem, stem, stem_len + 1);
+=======
+	strncpy(ap->stem, stem, stem_len);
+	ap->stem[stem_len] = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	list_add_tail(&ap->link, &aliases_lookup);
 	pr_debug("adding DT alias:%s: stem=%s id=%i node=%pOF\n",
 		 ap->alias, ap->stem, ap->id, np);
@@ -2092,13 +2124,21 @@ int of_find_last_cache_level(unsigned int cpu)
 	struct device_node *prev = NULL, *np = of_cpu_device_node_get(cpu);
 
 	while (np) {
+<<<<<<< HEAD
 		of_node_put(prev);
 		prev = np;
+=======
+		prev = np;
+		of_node_put(np);
+>>>>>>> b7ba80a49124 (Commit)
 		np = of_find_next_cache_node(np);
 	}
 
 	of_property_read_u32(prev, "cache-level", &cache_level);
+<<<<<<< HEAD
 	of_node_put(prev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return cache_level;
 }

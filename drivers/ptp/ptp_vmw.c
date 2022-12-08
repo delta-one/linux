@@ -47,7 +47,11 @@ static int ptp_vmw_adjtime(struct ptp_clock_info *info, s64 delta)
 	return -EOPNOTSUPP;
 }
 
+<<<<<<< HEAD
 static int ptp_vmw_adjfine(struct ptp_clock_info *info, long delta)
+=======
+static int ptp_vmw_adjfreq(struct ptp_clock_info *info, s32 delta)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return -EOPNOTSUPP;
 }
@@ -79,7 +83,11 @@ static struct ptp_clock_info ptp_vmw_clock_info = {
 	.name		= "ptp_vmw",
 	.max_adj	= 0,
 	.adjtime	= ptp_vmw_adjtime,
+<<<<<<< HEAD
 	.adjfine	= ptp_vmw_adjfine,
+=======
+	.adjfreq	= ptp_vmw_adjfreq,
+>>>>>>> b7ba80a49124 (Commit)
 	.gettime64	= ptp_vmw_gettime,
 	.settime64	= ptp_vmw_settime,
 	.enable		= ptp_vmw_enable,
@@ -101,9 +109,16 @@ static int ptp_vmw_acpi_add(struct acpi_device *device)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void ptp_vmw_acpi_remove(struct acpi_device *device)
 {
 	ptp_clock_unregister(ptp_vmw_clock);
+=======
+static int ptp_vmw_acpi_remove(struct acpi_device *device)
+{
+	ptp_clock_unregister(ptp_vmw_clock);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id ptp_vmw_acpi_device_ids[] = {

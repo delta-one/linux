@@ -203,6 +203,10 @@ struct stm32_port {
 	bool hw_flow_control;
 	bool swap;		 /* swap RX & TX pins */
 	bool fifoen;
+<<<<<<< HEAD
+=======
+	bool txdone;
+>>>>>>> b7ba80a49124 (Commit)
 	int rxftcfg;		/* RX FIFO threshold CFG      */
 	int txftcfg;		/* TX FIFO threshold CFG      */
 	bool wakeup_src;

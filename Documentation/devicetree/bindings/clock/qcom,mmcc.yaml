@@ -4,14 +4,22 @@
 $id: http://devicetree.org/schemas/clock/qcom,mmcc.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Qualcomm Multimedia Clock & Reset Controller
+=======
+title: Qualcomm Multimedia Clock & Reset Controller Binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Jeffrey Hugo <quic_jhugo@quicinc.com>
   - Taniya Das <tdas@codeaurora.org>
 
 description: |
+<<<<<<< HEAD
   Qualcomm multimedia clock control module provides the clocks, resets and
+=======
+  Qualcomm multimedia clock control module which supports the clocks, resets and
+>>>>>>> b7ba80a49124 (Commit)
   power domains.
 
 properties:
@@ -32,11 +40,19 @@ properties:
 
   clocks:
     minItems: 8
+<<<<<<< HEAD
     maxItems: 13
 
   clock-names:
     minItems: 8
     maxItems: 13
+=======
+    maxItems: 10
+
+  clock-names:
+    minItems: 8
+    maxItems: 10
+>>>>>>> b7ba80a49124 (Commit)
 
   '#clock-cells':
     const: 1
@@ -104,6 +120,7 @@ allOf:
         compatible:
           contains:
             enum:
+<<<<<<< HEAD
               - qcom,mmcc-msm8974
     then:
       properties:
@@ -182,6 +199,8 @@ allOf:
         compatible:
           contains:
             enum:
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,mmcc-msm8994
               - qcom,mmcc-msm8998
               - qcom,mmcc-sdm630
@@ -269,6 +288,10 @@ allOf:
             - description: HDMI phy PLL clock
             - description: DisplayPort phy PLL link clock
             - description: DisplayPort phy PLL vco clock
+<<<<<<< HEAD
+=======
+            - description: Test clock
+>>>>>>> b7ba80a49124 (Commit)
 
         clock-names:
           items:
@@ -281,6 +304,10 @@ allOf:
             - const: hdmipll
             - const: dplink
             - const: dpvco
+<<<<<<< HEAD
+=======
+            - const: core_bi_pll_test_se
+>>>>>>> b7ba80a49124 (Commit)
 
   - if:
       properties:

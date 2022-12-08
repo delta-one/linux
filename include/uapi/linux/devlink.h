@@ -607,11 +607,14 @@ enum devlink_attr {
 
 	DEVLINK_ATTR_SELFTESTS,			/* nested */
 
+<<<<<<< HEAD
 	DEVLINK_ATTR_RATE_TX_PRIORITY,		/* u32 */
 	DEVLINK_ATTR_RATE_TX_WEIGHT,		/* u32 */
 
 	DEVLINK_ATTR_REGION_DIRECT,		/* flag */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* add new attributes above here, update the policy in devlink.c */
 
 	__DEVLINK_ATTR_MAX,
@@ -658,6 +661,7 @@ enum devlink_resource_unit {
 	DEVLINK_RESOURCE_UNIT_ENTRY,
 };
 
+<<<<<<< HEAD
 enum devlink_port_fn_attr_cap {
 	DEVLINK_PORT_FN_ATTR_CAP_ROCE_BIT,
 	DEVLINK_PORT_FN_ATTR_CAP_MIGRATABLE_BIT,
@@ -670,12 +674,17 @@ enum devlink_port_fn_attr_cap {
 #define DEVLINK_PORT_FN_CAP_MIGRATABLE \
 	_BITUL(DEVLINK_PORT_FN_ATTR_CAP_MIGRATABLE_BIT)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum devlink_port_function_attr {
 	DEVLINK_PORT_FUNCTION_ATTR_UNSPEC,
 	DEVLINK_PORT_FUNCTION_ATTR_HW_ADDR,	/* binary */
 	DEVLINK_PORT_FN_ATTR_STATE,	/* u8 */
 	DEVLINK_PORT_FN_ATTR_OPSTATE,	/* u8 */
+<<<<<<< HEAD
 	DEVLINK_PORT_FN_ATTR_CAPS,	/* bitfield32 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	__DEVLINK_PORT_FUNCTION_ATTR_MAX,
 	DEVLINK_PORT_FUNCTION_ATTR_MAX = __DEVLINK_PORT_FUNCTION_ATTR_MAX - 1

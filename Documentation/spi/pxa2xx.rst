@@ -141,15 +141,25 @@ field. Below is a sample configuration using the PXA255 NSSP.
 ::
 
   static struct pxa2xx_spi_chip cs8415a_chip_info = {
+<<<<<<< HEAD
 	.tx_threshold = 8, /* SSP hardware FIFO threshold */
 	.rx_threshold = 8, /* SSP hardware FIFO threshold */
+=======
+	.tx_threshold = 8, /* SSP hardward FIFO threshold */
+	.rx_threshold = 8, /* SSP hardward FIFO threshold */
+>>>>>>> b7ba80a49124 (Commit)
 	.dma_burst_size = 8, /* Byte wide transfers used so 8 byte bursts */
 	.timeout = 235, /* See Intel documentation */
   };
 
   static struct pxa2xx_spi_chip cs8405a_chip_info = {
+<<<<<<< HEAD
 	.tx_threshold = 8, /* SSP hardware FIFO threshold */
 	.rx_threshold = 8, /* SSP hardware FIFO threshold */
+=======
+	.tx_threshold = 8, /* SSP hardward FIFO threshold */
+	.rx_threshold = 8, /* SSP hardward FIFO threshold */
+>>>>>>> b7ba80a49124 (Commit)
 	.dma_burst_size = 8, /* Byte wide transfers used so 8 byte bursts */
 	.timeout = 235, /* See Intel documentation */
   };
@@ -157,7 +167,11 @@ field. Below is a sample configuration using the PXA255 NSSP.
   static struct spi_board_info streetracer_spi_board_info[] __initdata = {
 	{
 		.modalias = "cs8415a", /* Name of spi_driver for this device */
+<<<<<<< HEAD
 		.max_speed_hz = 3686400, /* Run SSP as fast a possible */
+=======
+		.max_speed_hz = 3686400, /* Run SSP as fast a possbile */
+>>>>>>> b7ba80a49124 (Commit)
 		.bus_num = 2, /* Framework bus number */
 		.chip_select = 0, /* Framework chip select */
 		.platform_data = NULL; /* No spi_driver specific config */
@@ -166,7 +180,11 @@ field. Below is a sample configuration using the PXA255 NSSP.
 	},
 	{
 		.modalias = "cs8405a", /* Name of spi_driver for this device */
+<<<<<<< HEAD
 		.max_speed_hz = 3686400, /* Run SSP as fast a possible */
+=======
+		.max_speed_hz = 3686400, /* Run SSP as fast a possbile */
+>>>>>>> b7ba80a49124 (Commit)
 		.bus_num = 2, /* Framework bus number */
 		.chip_select = 1, /* Framework chip select */
 		.controller_data = &cs8405a_chip_info, /* Master chip config */

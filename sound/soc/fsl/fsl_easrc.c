@@ -1979,9 +1979,17 @@ static int fsl_easrc_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void fsl_easrc_remove(struct platform_device *pdev)
 {
 	pm_runtime_disable(&pdev->dev);
+=======
+static int fsl_easrc_remove(struct platform_device *pdev)
+{
+	pm_runtime_disable(&pdev->dev);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static __maybe_unused int fsl_easrc_runtime_suspend(struct device *dev)
@@ -2091,7 +2099,11 @@ static const struct dev_pm_ops fsl_easrc_pm_ops = {
 
 static struct platform_driver fsl_easrc_driver = {
 	.probe = fsl_easrc_probe,
+<<<<<<< HEAD
 	.remove_new = fsl_easrc_remove,
+=======
+	.remove = fsl_easrc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "fsl-easrc",
 		.pm = &fsl_easrc_pm_ops,

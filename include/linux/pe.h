@@ -29,6 +29,7 @@
  * handover_offset and xloadflags fields in the bootparams structure.
  */
 #define LINUX_EFISTUB_MAJOR_VERSION		0x1
+<<<<<<< HEAD
 #define LINUX_EFISTUB_MINOR_VERSION		0x2
 
 /*
@@ -37,6 +38,9 @@
  * header machine type field.
  */
 #define LINUX_PE_MAGIC	0x818223cd
+=======
+#define LINUX_EFISTUB_MINOR_VERSION		0x0
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MZ_MAGIC	0x5a4d	/* "MZ" */
 

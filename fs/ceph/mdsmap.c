@@ -29,7 +29,11 @@ static int __mdsmap_get_random_mds(struct ceph_mdsmap *m, bool ignore_laggy)
 		return -1;
 
 	/* pick */
+<<<<<<< HEAD
 	n = get_random_u32_below(n);
+=======
+	n = prandom_u32() % n;
+>>>>>>> b7ba80a49124 (Commit)
 	for (j = 0, i = 0; i < m->possible_max_rank; i++) {
 		if (CEPH_MDS_IS_READY(i, ignore_laggy))
 			j++;

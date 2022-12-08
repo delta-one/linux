@@ -396,8 +396,12 @@ static int mtk_topckgen_init(struct platform_device *pdev)
 	mtk_clk_register_factors(top_fixed_divs, ARRAY_SIZE(top_fixed_divs),
 				 clk_data);
 
+<<<<<<< HEAD
 	mtk_clk_register_composites(&pdev->dev, top_muxes,
 				    ARRAY_SIZE(top_muxes), base,
+=======
+	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
+>>>>>>> b7ba80a49124 (Commit)
 				    &mt6797_clk_lock, clk_data);
 
 	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
@@ -421,6 +425,7 @@ static const struct mtk_gate_regs infra2_cg_regs = {
 	.sta_ofs = 0x00b0,
 };
 
+<<<<<<< HEAD
 #define GATE_ICG0(_id, _name, _parent, _shift)				\
 	GATE_MTK(_id, _name, _parent, &infra0_cg_regs, _shift, &mtk_clk_gate_ops_setclr)
 
@@ -437,6 +442,42 @@ static const struct mtk_gate_regs infra2_cg_regs = {
 #define GATE_ICG2_FLAGS(_id, _name, _parent, _shift, _flags)		\
 	GATE_MTK_FLAGS(_id, _name, _parent, &infra2_cg_regs, _shift,	\
 		       &mtk_clk_gate_ops_setclr, _flags)
+=======
+#define GATE_ICG0(_id, _name, _parent, _shift) {		\
+	.id = _id,						\
+	.name = _name,						\
+	.parent_name = _parent,					\
+	.regs = &infra0_cg_regs,				\
+	.shift = _shift,					\
+	.ops = &mtk_clk_gate_ops_setclr,			\
+}
+
+#define GATE_ICG1(_id, _name, _parent, _shift)			\
+	GATE_ICG1_FLAGS(_id, _name, _parent, _shift, 0)
+
+#define GATE_ICG1_FLAGS(_id, _name, _parent, _shift, _flags) {	\
+	.id = _id,						\
+	.name = _name,						\
+	.parent_name = _parent,					\
+	.regs = &infra1_cg_regs,				\
+	.shift = _shift,					\
+	.ops = &mtk_clk_gate_ops_setclr,			\
+	.flags = _flags,					\
+}
+
+#define GATE_ICG2(_id, _name, _parent, _shift)			\
+	GATE_ICG2_FLAGS(_id, _name, _parent, _shift, 0)
+
+#define GATE_ICG2_FLAGS(_id, _name, _parent, _shift, _flags) {	\
+	.id = _id,						\
+	.name = _name,						\
+	.parent_name = _parent,					\
+	.regs = &infra2_cg_regs,				\
+	.shift = _shift,					\
+	.ops = &mtk_clk_gate_ops_setclr,			\
+	.flags = _flags,					\
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Clock gates dramc and dramc_b are needed by the DRAM controller.
@@ -579,8 +620,13 @@ static int mtk_infrasys_init(struct platform_device *pdev)
 		}
 	}
 
+<<<<<<< HEAD
 	mtk_clk_register_gates(&pdev->dev, node, infra_clks,
 			       ARRAY_SIZE(infra_clks), infra_clk_data);
+=======
+	mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks),
+			       infra_clk_data);
+>>>>>>> b7ba80a49124 (Commit)
 	mtk_clk_register_factors(infra_fixed_divs, ARRAY_SIZE(infra_fixed_divs),
 				 infra_clk_data);
 
@@ -670,7 +716,10 @@ static const struct of_device_id of_match_clk_mt6797[] = {
 		/* sentinel */
 	}
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(of, of_match_clk_mt6797);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int clk_mt6797_probe(struct platform_device *pdev)
 {
@@ -704,4 +753,7 @@ static int __init clk_mt6797_init(void)
 }
 
 arch_initcall(clk_mt6797_init);
+<<<<<<< HEAD
 MODULE_LICENSE("GPL");
+=======
+>>>>>>> b7ba80a49124 (Commit)

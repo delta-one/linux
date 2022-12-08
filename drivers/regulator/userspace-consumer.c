@@ -14,7 +14,10 @@
 #include <linux/err.h>
 #include <linux/mutex.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/of.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <linux/regulator/consumer.h>
 #include <linux/regulator/userspace-consumer.h>
@@ -25,7 +28,10 @@ struct userspace_consumer_data {
 
 	struct mutex lock;
 	bool enabled;
+<<<<<<< HEAD
 	bool no_autoswitch;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	int num_supplies;
 	struct regulator_bulk_data *supplies;
@@ -98,6 +104,7 @@ static struct attribute *attributes[] = {
 	NULL,
 };
 
+<<<<<<< HEAD
 static umode_t attr_visible(struct kobject *kobj, struct attribute *attr, int idx)
 {
 	struct device *dev = kobj_to_dev(kobj);
@@ -113,16 +120,24 @@ static umode_t attr_visible(struct kobject *kobj, struct attribute *attr, int id
 static const struct attribute_group attr_group = {
 	.attrs	= attributes,
 	.is_visible =  attr_visible,
+=======
+static const struct attribute_group attr_group = {
+	.attrs	= attributes,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int regulator_userspace_consumer_probe(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	struct regulator_userspace_consumer_data tmpdata;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct regulator_userspace_consumer_data *pdata;
 	struct userspace_consumer_data *drvdata;
 	int ret;
 
 	pdata = dev_get_platdata(&pdev->dev);
+<<<<<<< HEAD
 	if (!pdata) {
 		if (!pdev->dev.of_node)
 			return -EINVAL;
@@ -142,6 +157,10 @@ static int regulator_userspace_consumer_probe(struct platform_device *pdev)
 		dev_err(&pdev->dev, "At least one supply required\n");
 		return -EINVAL;
 	}
+=======
+	if (!pdata)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	drvdata = devm_kzalloc(&pdev->dev,
 			       sizeof(struct userspace_consumer_data),
@@ -152,24 +171,39 @@ static int regulator_userspace_consumer_probe(struct platform_device *pdev)
 	drvdata->name = pdata->name;
 	drvdata->num_supplies = pdata->num_supplies;
 	drvdata->supplies = pdata->supplies;
+<<<<<<< HEAD
 	drvdata->no_autoswitch = pdata->no_autoswitch;
 
 	mutex_init(&drvdata->lock);
 
 	ret = devm_regulator_bulk_get_exclusive(&pdev->dev, drvdata->num_supplies,
 						drvdata->supplies);
+=======
+
+	mutex_init(&drvdata->lock);
+
+	ret = devm_regulator_bulk_get(&pdev->dev, drvdata->num_supplies,
+				      drvdata->supplies);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(&pdev->dev, "Failed to get supplies: %d\n", ret);
 		return ret;
 	}
 
+<<<<<<< HEAD
 	platform_set_drvdata(pdev, drvdata);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = sysfs_create_group(&pdev->dev.kobj, &attr_group);
 	if (ret != 0)
 		return ret;
 
+<<<<<<< HEAD
 	if (pdata->init_on && !pdata->no_autoswitch) {
+=======
+	if (pdata->init_on) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = regulator_bulk_enable(drvdata->num_supplies,
 					    drvdata->supplies);
 		if (ret) {
@@ -179,12 +213,17 @@ static int regulator_userspace_consumer_probe(struct platform_device *pdev)
 		}
 	}
 
+<<<<<<< HEAD
 	ret = regulator_is_enabled(pdata->supplies[0].consumer);
 	if (ret < 0) {
 		dev_err(&pdev->dev, "Failed to get regulator status\n");
 		goto err_enable;
 	}
 	drvdata->enabled = !!ret;
+=======
+	drvdata->enabled = pdata->init_on;
+	platform_set_drvdata(pdev, drvdata);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -200,24 +239,34 @@ static int regulator_userspace_consumer_remove(struct platform_device *pdev)
 
 	sysfs_remove_group(&pdev->dev.kobj, &attr_group);
 
+<<<<<<< HEAD
 	if (data->enabled && !data->no_autoswitch)
+=======
+	if (data->enabled)
+>>>>>>> b7ba80a49124 (Commit)
 		regulator_bulk_disable(data->num_supplies, data->supplies);
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct of_device_id regulator_userspace_consumer_of_match[] = {
 	{ .compatible = "regulator-output", },
 	{},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver regulator_userspace_consumer_driver = {
 	.probe		= regulator_userspace_consumer_probe,
 	.remove		= regulator_userspace_consumer_remove,
 	.driver		= {
 		.name		= "reg-userspace-consumer",
+<<<<<<< HEAD
 		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
 		.of_match_table	= regulator_userspace_consumer_of_match,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

@@ -92,7 +92,11 @@
 
 		button-vol-down {
 			label = "Volume down";
+<<<<<<< HEAD
 			gpios = <&pm8998_gpios 5 GPIO_ACTIVE_LOW>;
+=======
+			gpios = <&pm8998_gpio 5 GPIO_ACTIVE_LOW>;
+>>>>>>> b7ba80a49124 (Commit)
 			linux,code = <KEY_VOLUMEDOWN>;
 			debounce-interval = <15>;
 			wakeup-source;
@@ -100,7 +104,11 @@
 
 		button-vol-up {
 			label = "Volume up";
+<<<<<<< HEAD
 			gpios = <&pm8998_gpios 6 GPIO_ACTIVE_LOW>;
+=======
+			gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
+>>>>>>> b7ba80a49124 (Commit)
 			linux,code = <KEY_VOLUMEUP>;
 			debounce-interval = <15>;
 			wakeup-source;
@@ -233,7 +241,11 @@
 };
 
 &blsp1_uart3_on {
+<<<<<<< HEAD
 	rx-pins {
+=======
+	rx {
+>>>>>>> b7ba80a49124 (Commit)
 		/delete-property/ bias-disable;
 		/*
 		 * Configure a pull-up on 46 (RX). This is needed to
@@ -244,7 +256,11 @@
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	cts-pins {
+=======
+	cts {
+>>>>>>> b7ba80a49124 (Commit)
 		/delete-property/ bias-disable;
 		/*
 		 * Configure a pull-down on 47 (CTS) to match the pull
@@ -269,7 +285,11 @@
 	};
 };
 
+<<<<<<< HEAD
 &pm8998_gpios {
+=======
+&pm8998_gpio {
+>>>>>>> b7ba80a49124 (Commit)
 	vol_keys_default: vol-keys-state {
 		pins = "gpio5", "gpio6";
 		function = "normal";
@@ -279,10 +299,13 @@
 	};
 };
 
+<<<<<<< HEAD
 &pmi8998_rradc {
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &qusb2phy {
 	status = "okay";
 
@@ -292,7 +315,11 @@
 };
 
 &rpm_requests {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pm8998-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pm8998-regulators";
 
 		vdd_s1-supply = <&vph_pwr>;
@@ -481,7 +508,11 @@
 		vreg_lvs2a_1p8: lvs2 { };
 	};
 
+<<<<<<< HEAD
 	regulators-1 {
+=======
+	pmi8998-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pmi8998-regulators";
 
 		vdd_bob-supply = <&vph_pwr>;
@@ -496,7 +527,11 @@
 &tlmm {
 	gpio-reserved-ranges = <0 4>, <81 4>;
 
+<<<<<<< HEAD
 	hall_sensor_default: hall-sensor-default-state {
+=======
+	hall_sensor_default: hall-sensor-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio124";
 		function = "gpio";
 		drive-strength = <2>;
@@ -504,28 +539,44 @@
 		input-enable;
 	};
 
+<<<<<<< HEAD
 	ts_int_active: ts-int-active-state {
+=======
+	ts_int_active: ts-int-active {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio125";
 		function = "gpio";
 		drive-strength = <8>;
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	ts_reset_active: ts-reset-active-state {
+=======
+	ts_reset_active: ts-reset-active {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio89";
 		function = "gpio";
 		drive-strength = <8>;
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	nfc_int_active: nfc-int-active-state {
+=======
+	nfc_int_active: nfc-int-active {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio92";
 		function = "gpio";
 		drive-strength = <6>;
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	nfc_enable_active: nfc-enable-active-state {
+=======
+	nfc_enable_active: nfc-enable-active {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio12", "gpio116";
 		function = "gpio";
 		drive-strength = <6>;

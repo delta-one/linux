@@ -92,7 +92,11 @@ operation if the source belongs to the supported system register space.
 
 The infrastructure emulates only the following system register space::
 
+<<<<<<< HEAD
 	Op0=3, Op1=0, CRn=0, CRm=0,2,3,4,5,6,7
+=======
+	Op0=3, Op1=0, CRn=0, CRm=0,4,5,6,7
+>>>>>>> b7ba80a49124 (Commit)
 
 (See Table C5-6 'System instruction encodings for non-Debug System
 register accesses' in ARMv8 ARM DDI 0487A.h, for the list of
@@ -293,6 +297,7 @@ infrastructure:
      | WFXT                         | [3-0]   |    y    |
      +------------------------------+---------+---------+
 
+<<<<<<< HEAD
   10) MVFR0_EL1 - AArch32 Media and VFP Feature Register 0
 
      +------------------------------+---------+---------+
@@ -329,6 +334,8 @@ infrastructure:
      | AES                          | [7-4]   |    y    |
      +------------------------------+---------+---------+
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 Appendix I: Example
 -------------------

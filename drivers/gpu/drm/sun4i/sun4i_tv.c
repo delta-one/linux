@@ -141,14 +141,33 @@ struct resync_parameters {
 struct tv_mode {
 	char		*name;
 
+<<<<<<< HEAD
 	unsigned int	tv_mode;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32		mode;
 	u32		chroma_freq;
 	u16		back_porch;
 	u16		front_porch;
+<<<<<<< HEAD
 	u16		vblank_level;
 
+=======
+	u16		line_number;
+	u16		vblank_level;
+
+	u32		hdisplay;
+	u16		hfront_porch;
+	u16		hsync_len;
+	u16		hback_porch;
+
+	u32		vdisplay;
+	u16		vfront_porch;
+	u16		vsync_len;
+	u16		vback_porch;
+
+>>>>>>> b7ba80a49124 (Commit)
 	bool		yc_en;
 	bool		dac3_en;
 	bool		dac_bit25_en;
@@ -204,7 +223,11 @@ static const struct resync_parameters pal_resync_parameters = {
 
 static const struct tv_mode tv_modes[] = {
 	{
+<<<<<<< HEAD
 		.tv_mode	= DRM_MODE_TV_MODE_NTSC,
+=======
+		.name		= "NTSC",
+>>>>>>> b7ba80a49124 (Commit)
 		.mode		= SUN4I_TVE_CFG0_RES_480i,
 		.chroma_freq	= 0x21f07c1f,
 		.yc_en		= true,
@@ -213,6 +236,20 @@ static const struct tv_mode tv_modes[] = {
 
 		.back_porch	= 118,
 		.front_porch	= 32,
+<<<<<<< HEAD
+=======
+		.line_number	= 525,
+
+		.hdisplay	= 720,
+		.hfront_porch	= 18,
+		.hsync_len	= 2,
+		.hback_porch	= 118,
+
+		.vdisplay	= 480,
+		.vfront_porch	= 26,
+		.vsync_len	= 2,
+		.vback_porch	= 17,
+>>>>>>> b7ba80a49124 (Commit)
 
 		.vblank_level	= 240,
 
@@ -222,12 +259,30 @@ static const struct tv_mode tv_modes[] = {
 		.resync_params	= &ntsc_resync_parameters,
 	},
 	{
+<<<<<<< HEAD
 		.tv_mode	= DRM_MODE_TV_MODE_PAL,
+=======
+		.name		= "PAL",
+>>>>>>> b7ba80a49124 (Commit)
 		.mode		= SUN4I_TVE_CFG0_RES_576i,
 		.chroma_freq	= 0x2a098acb,
 
 		.back_porch	= 138,
 		.front_porch	= 24,
+<<<<<<< HEAD
+=======
+		.line_number	= 625,
+
+		.hdisplay	= 720,
+		.hfront_porch	= 3,
+		.hsync_len	= 2,
+		.hback_porch	= 139,
+
+		.vdisplay	= 576,
+		.vfront_porch	= 28,
+		.vsync_len	= 2,
+		.vback_porch	= 19,
+>>>>>>> b7ba80a49124 (Commit)
 
 		.vblank_level	= 252,
 
@@ -245,6 +300,7 @@ drm_encoder_to_sun4i_tv(struct drm_encoder *encoder)
 			    encoder);
 }
 
+<<<<<<< HEAD
 static const struct tv_mode *
 sun4i_tv_find_tv_by_mode(unsigned int mode)
 {
@@ -254,12 +310,68 @@ sun4i_tv_find_tv_by_mode(unsigned int mode)
 		const struct tv_mode *tv_mode = &tv_modes[i];
 
 		if (tv_mode->tv_mode == mode)
+=======
+/*
+ * FIXME: If only the drm_display_mode private field was usable, this
+ * could go away...
+ *
+ * So far, it doesn't seem to be preserved when the mode is passed by
+ * to mode_set for some reason.
+ */
+static const struct tv_mode *sun4i_tv_find_tv_by_mode(const struct drm_display_mode *mode)
+{
+	int i;
+
+	/* First try to identify the mode by name */
+	for (i = 0; i < ARRAY_SIZE(tv_modes); i++) {
+		const struct tv_mode *tv_mode = &tv_modes[i];
+
+		DRM_DEBUG_DRIVER("Comparing mode %s vs %s",
+				 mode->name, tv_mode->name);
+
+		if (!strcmp(mode->name, tv_mode->name))
+			return tv_mode;
+	}
+
+	/* Then by number of lines */
+	for (i = 0; i < ARRAY_SIZE(tv_modes); i++) {
+		const struct tv_mode *tv_mode = &tv_modes[i];
+
+		DRM_DEBUG_DRIVER("Comparing mode %s vs %s (X: %d vs %d)",
+				 mode->name, tv_mode->name,
+				 mode->vdisplay, tv_mode->vdisplay);
+
+		if (mode->vdisplay == tv_mode->vdisplay)
+>>>>>>> b7ba80a49124 (Commit)
 			return tv_mode;
 	}
 
 	return NULL;
 }
 
+<<<<<<< HEAD
+=======
+static void sun4i_tv_mode_to_drm_mode(const struct tv_mode *tv_mode,
+				      struct drm_display_mode *mode)
+{
+	DRM_DEBUG_DRIVER("Creating mode %s\n", mode->name);
+
+	mode->type = DRM_MODE_TYPE_DRIVER;
+	mode->clock = 13500;
+	mode->flags = DRM_MODE_FLAG_INTERLACE;
+
+	mode->hdisplay = tv_mode->hdisplay;
+	mode->hsync_start = mode->hdisplay + tv_mode->hfront_porch;
+	mode->hsync_end = mode->hsync_start + tv_mode->hsync_len;
+	mode->htotal = mode->hsync_end  + tv_mode->hback_porch;
+
+	mode->vdisplay = tv_mode->vdisplay;
+	mode->vsync_start = mode->vdisplay + tv_mode->vfront_porch;
+	mode->vsync_end = mode->vsync_start + tv_mode->vsync_len;
+	mode->vtotal = mode->vsync_end  + tv_mode->vback_porch;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void sun4i_tv_disable(struct drm_encoder *encoder,
 			    struct drm_atomic_state *state)
 {
@@ -283,11 +395,15 @@ static void sun4i_tv_enable(struct drm_encoder *encoder,
 	struct drm_crtc_state *crtc_state =
 		drm_atomic_get_new_crtc_state(state, encoder->crtc);
 	struct drm_display_mode *mode = &crtc_state->mode;
+<<<<<<< HEAD
 	struct drm_connector *connector = &tv->connector;
 	struct drm_connector_state *conn_state =
 		drm_atomic_get_new_connector_state(state, connector);
 	const struct tv_mode *tv_mode =
 		sun4i_tv_find_tv_by_mode(conn_state->tv.mode);
+=======
+	const struct tv_mode *tv_mode = sun4i_tv_find_tv_by_mode(mode);
+>>>>>>> b7ba80a49124 (Commit)
 
 	DRM_DEBUG_DRIVER("Enabling the TV Output\n");
 
@@ -335,7 +451,11 @@ static void sun4i_tv_enable(struct drm_encoder *encoder,
 	/* Set the lines setup */
 	regmap_write(tv->regs, SUN4I_TVE_LINE_REG,
 		     SUN4I_TVE_LINE_FIRST(22) |
+<<<<<<< HEAD
 		     SUN4I_TVE_LINE_NUMBER(mode->vtotal));
+=======
+		     SUN4I_TVE_LINE_NUMBER(tv_mode->line_number));
+>>>>>>> b7ba80a49124 (Commit)
 
 	regmap_write(tv->regs, SUN4I_TVE_LEVEL_REG,
 		     SUN4I_TVE_LEVEL_BLANK(tv_mode->video_levels->blank) |
@@ -396,6 +516,7 @@ static const struct drm_encoder_helper_funcs sun4i_tv_helper_funcs = {
 	.atomic_enable	= sun4i_tv_enable,
 };
 
+<<<<<<< HEAD
 static const struct drm_connector_helper_funcs sun4i_tv_comp_connector_helper_funcs = {
 	.atomic_check	= drm_atomic_helper_connector_tv_check,
 	.get_modes	= drm_connector_helper_tv_get_modes,
@@ -411,6 +532,39 @@ static const struct drm_connector_funcs sun4i_tv_comp_connector_funcs = {
 	.fill_modes		= drm_helper_probe_single_connector_modes,
 	.destroy		= drm_connector_cleanup,
 	.reset			= sun4i_tv_connector_reset,
+=======
+static int sun4i_tv_comp_get_modes(struct drm_connector *connector)
+{
+	int i;
+
+	for (i = 0; i < ARRAY_SIZE(tv_modes); i++) {
+		struct drm_display_mode *mode;
+		const struct tv_mode *tv_mode = &tv_modes[i];
+
+		mode = drm_mode_create(connector->dev);
+		if (!mode) {
+			DRM_ERROR("Failed to create a new display mode\n");
+			return 0;
+		}
+
+		strcpy(mode->name, tv_mode->name);
+
+		sun4i_tv_mode_to_drm_mode(tv_mode, mode);
+		drm_mode_probed_add(connector, mode);
+	}
+
+	return i;
+}
+
+static const struct drm_connector_helper_funcs sun4i_tv_comp_connector_helper_funcs = {
+	.get_modes	= sun4i_tv_comp_get_modes,
+};
+
+static const struct drm_connector_funcs sun4i_tv_comp_connector_funcs = {
+	.fill_modes		= drm_helper_probe_single_connector_modes,
+	.destroy		= drm_connector_cleanup,
+	.reset			= drm_atomic_helper_connector_reset,
+>>>>>>> b7ba80a49124 (Commit)
 	.atomic_duplicate_state	= drm_atomic_helper_connector_duplicate_state,
 	.atomic_destroy_state	= drm_atomic_helper_connector_destroy_state,
 };
@@ -502,6 +656,7 @@ static int sun4i_tv_bind(struct device *dev, struct device *master,
 
 	drm_connector_attach_encoder(&tv->connector, &tv->encoder);
 
+<<<<<<< HEAD
 	ret = drm_mode_create_tv_properties(drm,
 					    BIT(DRM_MODE_TV_MODE_NTSC) |
 					    BIT(DRM_MODE_TV_MODE_PAL));
@@ -516,6 +671,10 @@ static int sun4i_tv_bind(struct device *dev, struct device *master,
 
 err_cleanup_connector:
 	drm_connector_cleanup(&tv->connector);
+=======
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 err_cleanup_encoder:
 	drm_encoder_cleanup(&tv->encoder);
 err_disable_clk:

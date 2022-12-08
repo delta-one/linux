@@ -15,28 +15,44 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-heartbeat {
+=======
+		heartbeat {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "devkit8000::led1";
 			gpios = <&gpio6 26 GPIO_ACTIVE_HIGH>;	/* 186 -> LED1 */
 			default-state = "on";
 			linux,default-trigger = "heartbeat";
 		};
 
+<<<<<<< HEAD
 		led-mmc {
+=======
+		mmc {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "devkit8000::led2";
 			gpios = <&gpio6 3 GPIO_ACTIVE_HIGH>;	/* 163 -> LED2 */
 			default-state = "on";
 			linux,default-trigger = "none";
 		};
 
+<<<<<<< HEAD
 		led-usr {
+=======
+		usr {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "devkit8000::led3";
 			gpios = <&gpio6 4 GPIO_ACTIVE_HIGH>;	/* 164 -> LED3 */
 			default-state = "on";
 			linux,default-trigger = "usr";
 		};
 
+<<<<<<< HEAD
 		led-pmu-stat {
+=======
+		pmu_stat {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "devkit8000::pmu_stat";
 			gpios = <&twl_gpio 19 GPIO_ACTIVE_HIGH>; /* LEDB */
 		};

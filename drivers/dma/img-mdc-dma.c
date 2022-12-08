@@ -886,6 +886,10 @@ static int img_mdc_runtime_resume(struct device *dev)
 static int mdc_dma_probe(struct platform_device *pdev)
 {
 	struct mdc_dma *mdma;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int i;
 	u32 val;
 	int ret;
@@ -897,7 +901,12 @@ static int mdc_dma_probe(struct platform_device *pdev)
 
 	mdma->soc = of_device_get_match_data(&pdev->dev);
 
+<<<<<<< HEAD
 	mdma->regs = devm_platform_ioremap_resource(pdev, 0);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	mdma->regs = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(mdma->regs))
 		return PTR_ERR(mdma->regs);
 

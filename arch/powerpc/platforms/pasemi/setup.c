@@ -449,6 +449,10 @@ define_machine(pasemi) {
 	.get_irq		= mpic_get_irq,
 	.restart		= pas_restart,
 	.get_boot_time		= pas_get_boot_time,
+<<<<<<< HEAD
+=======
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.progress		= pas_progress,
 	.machine_check_exception = pas_machine_check_handler,
 };

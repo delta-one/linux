@@ -105,7 +105,11 @@ static int host1x_pushbuffer_init(struct push_buffer *pb)
 
 		pb->dma = iova_dma_addr(&host1x->iova, alloc);
 		err = iommu_map(host1x->domain, pb->dma, pb->phys, size,
+<<<<<<< HEAD
 				IOMMU_READ, GFP_KERNEL);
+=======
+				IOMMU_READ);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			goto iommu_free_iova;
 	} else {
@@ -490,6 +494,7 @@ resume:
 	host1x_hw_cdma_resume(host1x, cdma, restart_addr);
 }
 
+<<<<<<< HEAD
 static void cdma_update_work(struct work_struct *work)
 {
 	struct host1x_cdma *cdma = container_of(work, struct host1x_cdma, update_work);
@@ -499,6 +504,8 @@ static void cdma_update_work(struct work_struct *work)
 	mutex_unlock(&cdma->lock);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Create a cdma
  */
@@ -508,7 +515,10 @@ int host1x_cdma_init(struct host1x_cdma *cdma)
 
 	mutex_init(&cdma->lock);
 	init_completion(&cdma->complete);
+<<<<<<< HEAD
 	INIT_WORK(&cdma->update_work, cdma_update_work);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	INIT_LIST_HEAD(&cdma->sync_queue);
 
@@ -689,5 +699,11 @@ void host1x_cdma_end(struct host1x_cdma *cdma,
  */
 void host1x_cdma_update(struct host1x_cdma *cdma)
 {
+<<<<<<< HEAD
 	schedule_work(&cdma->update_work);
+=======
+	mutex_lock(&cdma->lock);
+	update_cdma_locked(cdma);
+	mutex_unlock(&cdma->lock);
+>>>>>>> b7ba80a49124 (Commit)
 }

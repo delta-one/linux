@@ -286,22 +286,35 @@ SYSCALL_DEFINE5(futex_waitv, struct futex_waitv __user *, waiters,
 	}
 
 	futexv = kcalloc(nr_futexes, sizeof(*futexv), GFP_KERNEL);
+<<<<<<< HEAD
 	if (!futexv) {
 		ret = -ENOMEM;
 		goto destroy_timer;
 	}
+=======
+	if (!futexv)
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = futex_parse_waitv(futexv, waiters, nr_futexes);
 	if (!ret)
 		ret = futex_wait_multiple(futexv, nr_futexes, timeout ? &to : NULL);
 
+<<<<<<< HEAD
 	kfree(futexv);
 
 destroy_timer:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (timeout) {
 		hrtimer_cancel(&to.timer);
 		destroy_hrtimer_on_stack(&to.timer);
 	}
+<<<<<<< HEAD
+=======
+
+	kfree(futexv);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

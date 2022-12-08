@@ -13,8 +13,11 @@
 
 #undef memmove
 
+<<<<<<< HEAD
 .section .noinstr.text, "ax"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Implement memmove(). This can handle overlap between src and dst.
  *
@@ -215,5 +218,9 @@ SYM_FUNC_START(__memmove)
 SYM_FUNC_END(__memmove)
 EXPORT_SYMBOL(__memmove)
 
+<<<<<<< HEAD
 SYM_FUNC_ALIAS(memmove, __memmove)
+=======
+SYM_FUNC_ALIAS_WEAK(memmove, __memmove)
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL(memmove)

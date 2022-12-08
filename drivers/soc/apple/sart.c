@@ -164,11 +164,14 @@ static int apple_sart_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void apple_sart_put_device(void *dev)
 {
 	put_device(dev);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct apple_sart *devm_apple_sart_get(struct device *dev)
 {
 	struct device_node *sart_node;
@@ -192,7 +195,11 @@ struct apple_sart *devm_apple_sart_get(struct device *dev)
 		return ERR_PTR(-EPROBE_DEFER);
 	}
 
+<<<<<<< HEAD
 	ret = devm_add_action_or_reset(dev, apple_sart_put_device,
+=======
+	ret = devm_add_action_or_reset(dev, (void (*)(void *))put_device,
+>>>>>>> b7ba80a49124 (Commit)
 				       &sart_pdev->dev);
 	if (ret)
 		return ERR_PTR(ret);

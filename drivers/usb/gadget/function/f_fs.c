@@ -279,11 +279,14 @@ static int __ffs_ep0_queue_wait(struct ffs_data *ffs, char *data, size_t len)
 	struct usb_request *req = ffs->ep0req;
 	int ret;
 
+<<<<<<< HEAD
 	if (!req) {
 		spin_unlock_irq(&ffs->ev.waitq.lock);
 		return -EINVAL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	req->zero     = len < le16_to_cpu(ffs->ev.setup.wLength);
 
 	spin_unlock_irq(&ffs->ev.waitq.lock);
@@ -830,7 +833,12 @@ static void ffs_user_copy_worker(struct work_struct *work)
 {
 	struct ffs_io_data *io_data = container_of(work, struct ffs_io_data,
 						   work);
+<<<<<<< HEAD
 	int ret = io_data->status;
+=======
+	int ret = io_data->req->status ? io_data->req->status :
+					 io_data->req->actual;
+>>>>>>> b7ba80a49124 (Commit)
 	bool kiocb_has_eventfd = io_data->kiocb->ki_flags & IOCB_EVENTFD;
 
 	if (io_data->read && ret > 0) {
@@ -844,6 +852,11 @@ static void ffs_user_copy_worker(struct work_struct *work)
 	if (io_data->ffs->ffs_eventfd && !kiocb_has_eventfd)
 		eventfd_signal(io_data->ffs->ffs_eventfd, 1);
 
+<<<<<<< HEAD
+=======
+	usb_ep_free_request(io_data->ep, io_data->req);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (io_data->read)
 		kfree(io_data->to_free);
 	ffs_free_buffer(io_data);
@@ -858,9 +871,12 @@ static void ffs_epfile_async_io_complete(struct usb_ep *_ep,
 
 	ENTER();
 
+<<<<<<< HEAD
 	io_data->status = req->status ? req->status : req->actual;
 	usb_ep_free_request(_ep, req);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_WORK(&io_data->work, ffs_user_copy_worker);
 	queue_work(ffs->io_completion_wq, &io_data->work);
 }
@@ -1897,14 +1913,20 @@ static void functionfs_unbind(struct ffs_data *ffs)
 	ENTER();
 
 	if (!WARN_ON(!ffs->gadget)) {
+<<<<<<< HEAD
 		/* dequeue before freeing ep0req */
 		usb_ep_dequeue(ffs->gadget->ep0, ffs->ep0req);
 		mutex_lock(&ffs->mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		usb_ep_free_request(ffs->gadget->ep0, ffs->ep0req);
 		ffs->ep0req = NULL;
 		ffs->gadget = NULL;
 		clear_bit(FFS_FL_BOUND, &ffs->flags);
+<<<<<<< HEAD
 		mutex_unlock(&ffs->mutex);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ffs_data_put(ffs);
 	}
 }
@@ -2292,11 +2314,16 @@ static int __ffs_do_os_desc_header(enum ffs_os_desc_type *next_type,
 	u16 bcd_version = le16_to_cpu(desc->bcdVersion);
 	u16 w_index = le16_to_cpu(desc->wIndex);
 
+<<<<<<< HEAD
 	if (bcd_version == 0x1) {
 		pr_warn("bcdVersion must be 0x0100, stored in Little Endian order. "
 			"Userspace driver should be fixed, accepting 0x0001 for compatibility.\n");
 	} else if (bcd_version != 0x100) {
 		pr_vdebug("unsupported os descriptors version: 0x%x\n",
+=======
+	if (bcd_version != 1) {
+		pr_vdebug("unsupported os descriptors version: %d",
+>>>>>>> b7ba80a49124 (Commit)
 			  bcd_version);
 		return -EINVAL;
 	}

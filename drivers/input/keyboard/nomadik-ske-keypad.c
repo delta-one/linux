@@ -388,6 +388,10 @@ static int ske_keypad_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int ske_keypad_suspend(struct device *dev)
 {
 	struct platform_device *pdev = to_platform_device(dev);
@@ -415,14 +419,25 @@ static int ske_keypad_resume(struct device *dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 static DEFINE_SIMPLE_DEV_PM_OPS(ske_keypad_dev_pm_ops,
 				ske_keypad_suspend, ske_keypad_resume);
+=======
+#endif
+
+static SIMPLE_DEV_PM_OPS(ske_keypad_dev_pm_ops,
+			 ske_keypad_suspend, ske_keypad_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_driver ske_keypad_driver = {
 	.driver = {
 		.name = "nmk-ske-keypad",
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&ske_keypad_dev_pm_ops),
+=======
+		.pm = &ske_keypad_dev_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.remove = ske_keypad_remove,
 };

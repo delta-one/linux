@@ -188,7 +188,11 @@ int nilfs_btnode_prepare_change_key(struct address_space *btnc,
 		struct page *opage = obh->b_page;
 		lock_page(opage);
 retry:
+<<<<<<< HEAD
 		/* BUG_ON(oldkey != obh->b_folio->index); */
+=======
+		/* BUG_ON(oldkey != obh->b_page->index); */
+>>>>>>> b7ba80a49124 (Commit)
 		if (unlikely(oldkey != opage->index))
 			NILFS_PAGE_BUG(opage,
 				       "invalid oldkey %lld (newkey=%lld)",

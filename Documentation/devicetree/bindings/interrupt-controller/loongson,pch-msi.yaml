@@ -46,7 +46,11 @@ required:
   - loongson,msi-base-vec
   - loongson,msi-num-vecs
 
+<<<<<<< HEAD
 additionalProperties: true # fixme
+=======
+additionalProperties: true #fixme
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

@@ -99,9 +99,12 @@ properties:
       - const: drv-2
       - const: drv-3
 
+<<<<<<< HEAD
   power-domains:
     maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   bcm-voter:
     $ref: /schemas/interconnect/qcom,bcm-voter.yaml#
 
@@ -112,9 +115,14 @@ properties:
     $ref: /schemas/power/qcom,rpmpd.yaml#
 
 patternProperties:
+<<<<<<< HEAD
   '^regulators(-[0-9])?$':
     $ref: /schemas/regulator/qcom,rpmh-regulator.yaml#
     unevaluatedProperties: false
+=======
+  '-regulators$':
+    $ref: /schemas/regulator/qcom,rpmh-regulator.yaml#
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible
@@ -155,7 +163,10 @@ examples:
                           <SLEEP_TCS   3>,
                           <WAKE_TCS    3>,
                           <CONTROL_TCS 1>;
+<<<<<<< HEAD
         power-domains = <&CLUSTER_PD>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
       };
 
   - |
@@ -202,7 +213,10 @@ examples:
                           <SLEEP_TCS   3>,
                           <WAKE_TCS    3>,
                           <CONTROL_TCS 0>;
+<<<<<<< HEAD
         power-domains = <&CLUSTER_PD>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
         clock-controller {
             compatible = "qcom,sm8350-rpmh-clk";

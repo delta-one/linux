@@ -525,7 +525,11 @@ static ssize_t charge_status_show(struct device *dev,
 		}
 	}
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", result);
+=======
+	return sprintf(buf, "%s\n", result);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(charge_status);
 
@@ -541,7 +545,11 @@ static ssize_t vbat_show(struct device *dev,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", val.intval);
+=======
+	return sprintf(buf, "%d\n", val.intval);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(vbat);
 
@@ -557,7 +565,11 @@ static ssize_t vbat_avg_show(struct device *dev,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", val.intval);
+=======
+	return sprintf(buf, "%d\n", val.intval);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(vbat_avg);
 
@@ -573,7 +585,11 @@ static ssize_t ibat_show(struct device *dev,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", val.intval);
+=======
+	return sprintf(buf, "%d\n", val.intval);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(ibat);
 
@@ -589,7 +605,11 @@ static ssize_t force_telemetry_show(struct device *dev,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", regval & BIT(2) ? 1 : 0);
+=======
+	return sprintf(buf, "%u\n", regval & BIT(2) ? 1 : 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t force_telemetry_store(struct device *dev,
@@ -628,7 +648,11 @@ static ssize_t arm_ship_mode_show(struct device *dev,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n",
+=======
+	return sprintf(buf, "%u\n",
+>>>>>>> b7ba80a49124 (Commit)
 		regval == LTC4162L_ARM_SHIP_MODE_MAGIC ? 1 : 0);
 }
 
@@ -819,7 +843,12 @@ static void ltc4162l_clear_interrupts(struct ltc4162l_info *info)
 	regmap_write(info->regmap, LTC4162L_CHARGE_STATUS_ALERTS_REG, 0);
 }
 
+<<<<<<< HEAD
 static int ltc4162l_probe(struct i2c_client *client)
+=======
+static int ltc4162l_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_adapter *adapter = client->adapter;
 	struct device *dev = &client->dev;
@@ -908,14 +937,22 @@ static const struct i2c_device_id ltc4162l_i2c_id_table[] = {
 };
 MODULE_DEVICE_TABLE(i2c, ltc4162l_i2c_id_table);
 
+<<<<<<< HEAD
 static const struct of_device_id ltc4162l_of_match[] __maybe_unused = {
+=======
+static const struct of_device_id ltc4162l_of_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "lltc,ltc4162-l", },
 	{ },
 };
 MODULE_DEVICE_TABLE(of, ltc4162l_of_match);
 
 static struct i2c_driver ltc4162l_driver = {
+<<<<<<< HEAD
 	.probe_new	= ltc4162l_probe,
+=======
+	.probe		= ltc4162l_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.alert		= ltc4162l_alert,
 	.id_table	= ltc4162l_i2c_id_table,
 	.driver = {

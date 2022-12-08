@@ -11,13 +11,22 @@
 #include <linux/module.h>
 #include <linux/device.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/kthread.h>
 #include <linux/slab.h>
+=======
+#include <linux/slab.h>
+#include <linux/sched.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/dma-map-ops.h>
 #include <linux/vringh.h>
 #include <linux/vdpa.h>
 #include <linux/vhost_iotlb.h>
+<<<<<<< HEAD
 #include <uapi/linux/vdpa.h>
+=======
+#include <linux/iova.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "vdpa_sim.h"
 
@@ -35,14 +44,18 @@ module_param(max_iotlb_entries, int, 0444);
 MODULE_PARM_DESC(max_iotlb_entries,
 		 "Maximum number of iotlb entries for each address space. 0 means unlimited. (default: 2048)");
 
+<<<<<<< HEAD
 static bool use_va = true;
 module_param(use_va, bool, 0444);
 MODULE_PARM_DESC(use_va, "Enable/disable the device's ability to use VA");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define VDPASIM_QUEUE_ALIGN PAGE_SIZE
 #define VDPASIM_QUEUE_MAX 256
 #define VDPASIM_VENDOR_ID 0
 
+<<<<<<< HEAD
 struct vdpasim_mm_work {
 	struct kthread_work work;
 	struct vdpasim *vdpasim;
@@ -73,11 +86,23 @@ static void vdpasim_worker_change_mm_sync(struct vdpasim *vdpasim,
 	kthread_flush_work(work);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct vdpasim *vdpa_to_sim(struct vdpa_device *vdpa)
 {
 	return container_of(vdpa, struct vdpasim, vdpa);
 }
 
+<<<<<<< HEAD
+=======
+static struct vdpasim *dev_to_sim(struct device *dev)
+{
+	struct vdpa_device *vdpa = dev_to_vdpa(dev);
+
+	return vdpa_to_sim(vdpa);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void vdpasim_vq_notify(struct vringh *vring)
 {
 	struct vdpasim_virtqueue *vq =
@@ -92,17 +117,24 @@ static void vdpasim_vq_notify(struct vringh *vring)
 static void vdpasim_queue_ready(struct vdpasim *vdpasim, unsigned int idx)
 {
 	struct vdpasim_virtqueue *vq = &vdpasim->vqs[idx];
+<<<<<<< HEAD
 	uint16_t last_avail_idx = vq->vring.last_avail_idx;
 	bool va_enabled = use_va && vdpasim->mm_bound;
 
 	vringh_init_iotlb(&vq->vring, vdpasim->features, vq->num, true,
 			  va_enabled,
+=======
+
+	vringh_init_iotlb(&vq->vring, vdpasim->dev_attr.supported_features,
+			  VDPASIM_QUEUE_MAX, false,
+>>>>>>> b7ba80a49124 (Commit)
 			  (struct vring_desc *)(uintptr_t)vq->desc_addr,
 			  (struct vring_avail *)
 			  (uintptr_t)vq->driver_addr,
 			  (struct vring_used *)
 			  (uintptr_t)vq->device_addr);
 
+<<<<<<< HEAD
 	vq->vring.last_avail_idx = last_avail_idx;
 
 	/*
@@ -115,6 +147,8 @@ static void vdpasim_queue_ready(struct vdpasim *vdpasim, unsigned int idx)
 	 * vdpasim_set_vq_state, it would be reset at vdpasim_queue_ready.
 	 */
 	vq->vring.last_used_idx = last_avail_idx;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vq->vring.notify = vdpasim_vq_notify;
 }
 
@@ -128,7 +162,11 @@ static void vdpasim_vq_reset(struct vdpasim *vdpasim,
 	vq->cb = NULL;
 	vq->private = NULL;
 	vringh_init_iotlb(&vq->vring, vdpasim->dev_attr.supported_features,
+<<<<<<< HEAD
 			  VDPASIM_QUEUE_MAX, false, false, NULL, NULL, NULL);
+=======
+			  VDPASIM_QUEUE_MAX, false, NULL, NULL, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	vq->vring.notify = NULL;
 }
@@ -145,12 +183,17 @@ static void vdpasim_do_reset(struct vdpasim *vdpasim)
 				 &vdpasim->iommu_lock);
 	}
 
+<<<<<<< HEAD
 	for (i = 0; i < vdpasim->dev_attr.nas; i++) {
 		vhost_iotlb_reset(&vdpasim->iommu[i]);
 		vhost_iotlb_add_range(&vdpasim->iommu[i], 0, ULONG_MAX,
 				      0, VHOST_MAP_RW);
 		vdpasim->iommu_pt[i] = true;
 	}
+=======
+	for (i = 0; i < vdpasim->dev_attr.nas; i++)
+		vhost_iotlb_reset(&vdpasim->iommu[i]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	vdpasim->running = true;
 	spin_unlock(&vdpasim->iommu_lock);
@@ -160,6 +203,7 @@ static void vdpasim_do_reset(struct vdpasim *vdpasim)
 	++vdpasim->generation;
 }
 
+<<<<<<< HEAD
 static const struct vdpa_config_ops vdpasim_config_ops;
 static const struct vdpa_config_ops vdpasim_batch_config_ops;
 
@@ -187,10 +231,146 @@ struct vdpasim *vdpasim_create(struct vdpasim_dev_attr *dev_attr,
 {
 	const struct vdpa_config_ops *ops;
 	struct vdpa_device *vdpa;
+=======
+static int dir_to_perm(enum dma_data_direction dir)
+{
+	int perm = -EFAULT;
+
+	switch (dir) {
+	case DMA_FROM_DEVICE:
+		perm = VHOST_MAP_WO;
+		break;
+	case DMA_TO_DEVICE:
+		perm = VHOST_MAP_RO;
+		break;
+	case DMA_BIDIRECTIONAL:
+		perm = VHOST_MAP_RW;
+		break;
+	default:
+		break;
+	}
+
+	return perm;
+}
+
+static dma_addr_t vdpasim_map_range(struct vdpasim *vdpasim, phys_addr_t paddr,
+				    size_t size, unsigned int perm)
+{
+	struct iova *iova;
+	dma_addr_t dma_addr;
+	int ret;
+
+	/* We set the limit_pfn to the maximum (ULONG_MAX - 1) */
+	iova = alloc_iova(&vdpasim->iova, size >> iova_shift(&vdpasim->iova),
+			  ULONG_MAX - 1, true);
+	if (!iova)
+		return DMA_MAPPING_ERROR;
+
+	dma_addr = iova_dma_addr(&vdpasim->iova, iova);
+
+	spin_lock(&vdpasim->iommu_lock);
+	ret = vhost_iotlb_add_range(&vdpasim->iommu[0], (u64)dma_addr,
+				    (u64)dma_addr + size - 1, (u64)paddr, perm);
+	spin_unlock(&vdpasim->iommu_lock);
+
+	if (ret) {
+		__free_iova(&vdpasim->iova, iova);
+		return DMA_MAPPING_ERROR;
+	}
+
+	return dma_addr;
+}
+
+static void vdpasim_unmap_range(struct vdpasim *vdpasim, dma_addr_t dma_addr,
+				size_t size)
+{
+	spin_lock(&vdpasim->iommu_lock);
+	vhost_iotlb_del_range(&vdpasim->iommu[0], (u64)dma_addr,
+			      (u64)dma_addr + size - 1);
+	spin_unlock(&vdpasim->iommu_lock);
+
+	free_iova(&vdpasim->iova, iova_pfn(&vdpasim->iova, dma_addr));
+}
+
+static dma_addr_t vdpasim_map_page(struct device *dev, struct page *page,
+				   unsigned long offset, size_t size,
+				   enum dma_data_direction dir,
+				   unsigned long attrs)
+{
+	struct vdpasim *vdpasim = dev_to_sim(dev);
+	phys_addr_t paddr = page_to_phys(page) + offset;
+	int perm = dir_to_perm(dir);
+
+	if (perm < 0)
+		return DMA_MAPPING_ERROR;
+
+	return vdpasim_map_range(vdpasim, paddr, size, perm);
+}
+
+static void vdpasim_unmap_page(struct device *dev, dma_addr_t dma_addr,
+			       size_t size, enum dma_data_direction dir,
+			       unsigned long attrs)
+{
+	struct vdpasim *vdpasim = dev_to_sim(dev);
+
+	vdpasim_unmap_range(vdpasim, dma_addr, size);
+}
+
+static void *vdpasim_alloc_coherent(struct device *dev, size_t size,
+				    dma_addr_t *dma_addr, gfp_t flag,
+				    unsigned long attrs)
+{
+	struct vdpasim *vdpasim = dev_to_sim(dev);
+	phys_addr_t paddr;
+	void *addr;
+
+	addr = kmalloc(size, flag);
+	if (!addr) {
+		*dma_addr = DMA_MAPPING_ERROR;
+		return NULL;
+	}
+
+	paddr = virt_to_phys(addr);
+
+	*dma_addr = vdpasim_map_range(vdpasim, paddr, size, VHOST_MAP_RW);
+	if (*dma_addr == DMA_MAPPING_ERROR) {
+		kfree(addr);
+		return NULL;
+	}
+
+	return addr;
+}
+
+static void vdpasim_free_coherent(struct device *dev, size_t size,
+				  void *vaddr, dma_addr_t dma_addr,
+				  unsigned long attrs)
+{
+	struct vdpasim *vdpasim = dev_to_sim(dev);
+
+	vdpasim_unmap_range(vdpasim, dma_addr, size);
+
+	kfree(vaddr);
+}
+
+static const struct dma_map_ops vdpasim_dma_ops = {
+	.map_page = vdpasim_map_page,
+	.unmap_page = vdpasim_unmap_page,
+	.alloc = vdpasim_alloc_coherent,
+	.free = vdpasim_free_coherent,
+};
+
+static const struct vdpa_config_ops vdpasim_config_ops;
+static const struct vdpa_config_ops vdpasim_batch_config_ops;
+
+struct vdpasim *vdpasim_create(struct vdpasim_dev_attr *dev_attr)
+{
+	const struct vdpa_config_ops *ops;
+>>>>>>> b7ba80a49124 (Commit)
 	struct vdpasim *vdpasim;
 	struct device *dev;
 	int i, ret = -ENOMEM;
 
+<<<<<<< HEAD
 	if (!dev_attr->alloc_size)
 		return ERR_PTR(-EINVAL);
 
@@ -202,11 +382,14 @@ struct vdpasim *vdpasim_create(struct vdpasim_dev_attr *dev_attr,
 			config->device_features;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (batch_mapping)
 		ops = &vdpasim_batch_config_ops;
 	else
 		ops = &vdpasim_config_ops;
 
+<<<<<<< HEAD
 	vdpa = __vdpa_alloc_device(NULL, ops,
 				   dev_attr->ngroups, dev_attr->nas,
 				   dev_attr->alloc_size,
@@ -232,6 +415,26 @@ struct vdpasim *vdpasim_create(struct vdpasim_dev_attr *dev_attr,
 	dev->dma_mask = &dev->coherent_dma_mask;
 	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)))
 		goto err_iommu;
+=======
+	vdpasim = vdpa_alloc_device(struct vdpasim, vdpa, NULL, ops,
+				    dev_attr->ngroups, dev_attr->nas,
+				    dev_attr->name, false);
+	if (IS_ERR(vdpasim)) {
+		ret = PTR_ERR(vdpasim);
+		goto err_alloc;
+	}
+
+	vdpasim->dev_attr = *dev_attr;
+	INIT_WORK(&vdpasim->work, dev_attr->work_fn);
+	spin_lock_init(&vdpasim->lock);
+	spin_lock_init(&vdpasim->iommu_lock);
+
+	dev = &vdpasim->vdpa.dev;
+	dev->dma_mask = &dev->coherent_dma_mask;
+	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)))
+		goto err_iommu;
+	set_dma_ops(dev, &vdpasim_dma_ops);
+>>>>>>> b7ba80a49124 (Commit)
 	vdpasim->vdpa.mdev = dev_attr->mgmt_dev;
 
 	vdpasim->config = kzalloc(dev_attr->config_size, GFP_KERNEL);
@@ -248,11 +451,14 @@ struct vdpasim *vdpasim_create(struct vdpasim_dev_attr *dev_attr,
 	if (!vdpasim->iommu)
 		goto err_iommu;
 
+<<<<<<< HEAD
 	vdpasim->iommu_pt = kmalloc_array(vdpasim->dev_attr.nas,
 					  sizeof(*vdpasim->iommu_pt), GFP_KERNEL);
 	if (!vdpasim->iommu_pt)
 		goto err_iommu;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < vdpasim->dev_attr.nas; i++)
 		vhost_iotlb_init(&vdpasim->iommu[i], max_iotlb_entries, 0);
 
@@ -264,6 +470,16 @@ struct vdpasim *vdpasim_create(struct vdpasim_dev_attr *dev_attr,
 		vringh_set_iotlb(&vdpasim->vqs[i].vring, &vdpasim->iommu[0],
 				 &vdpasim->iommu_lock);
 
+<<<<<<< HEAD
+=======
+	ret = iova_cache_get();
+	if (ret)
+		goto err_iommu;
+
+	/* For simplicity we use an IOVA allocator with byte granularity */
+	init_iova_domain(&vdpasim->iova, 1, 0);
+
+>>>>>>> b7ba80a49124 (Commit)
 	vdpasim->vdpa.dma_dev = dev;
 
 	return vdpasim;
@@ -275,12 +491,15 @@ err_alloc:
 }
 EXPORT_SYMBOL_GPL(vdpasim_create);
 
+<<<<<<< HEAD
 void vdpasim_schedule_work(struct vdpasim *vdpasim)
 {
 	kthread_queue_work(vdpasim->worker, &vdpasim->work);
 }
 EXPORT_SYMBOL_GPL(vdpasim_schedule_work);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int vdpasim_set_vq_address(struct vdpa_device *vdpa, u16 idx,
 				  u64 desc_area, u64 driver_area,
 				  u64 device_area)
@@ -308,6 +527,7 @@ static void vdpasim_kick_vq(struct vdpa_device *vdpa, u16 idx)
 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
 	struct vdpasim_virtqueue *vq = &vdpasim->vqs[idx];
 
+<<<<<<< HEAD
 	if (!vdpasim->running &&
 	    (vdpasim->status & VIRTIO_CONFIG_S_DRIVER_OK)) {
 		vdpasim->pending_kick = true;
@@ -316,6 +536,10 @@ static void vdpasim_kick_vq(struct vdpa_device *vdpa, u16 idx)
 
 	if (vq->ready)
 		vdpasim_schedule_work(vdpasim);
+=======
+	if (vq->ready)
+		schedule_work(&vdpasim->work);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void vdpasim_set_vq_cb(struct vdpa_device *vdpa, u16 idx,
@@ -334,13 +558,21 @@ static void vdpasim_set_vq_ready(struct vdpa_device *vdpa, u16 idx, bool ready)
 	struct vdpasim_virtqueue *vq = &vdpasim->vqs[idx];
 	bool old_ready;
 
+<<<<<<< HEAD
 	mutex_lock(&vdpasim->mutex);
+=======
+	spin_lock(&vdpasim->lock);
+>>>>>>> b7ba80a49124 (Commit)
 	old_ready = vq->ready;
 	vq->ready = ready;
 	if (vq->ready && !old_ready) {
 		vdpasim_queue_ready(vdpasim, idx);
 	}
+<<<<<<< HEAD
 	mutex_unlock(&vdpasim->mutex);
+=======
+	spin_unlock(&vdpasim->lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool vdpasim_get_vq_ready(struct vdpa_device *vdpa, u16 idx)
@@ -358,9 +590,15 @@ static int vdpasim_set_vq_state(struct vdpa_device *vdpa, u16 idx,
 	struct vdpasim_virtqueue *vq = &vdpasim->vqs[idx];
 	struct vringh *vrh = &vq->vring;
 
+<<<<<<< HEAD
 	mutex_lock(&vdpasim->mutex);
 	vrh->last_avail_idx = state->split.avail_index;
 	mutex_unlock(&vdpasim->mutex);
+=======
+	spin_lock(&vdpasim->lock);
+	vrh->last_avail_idx = state->split.avail_index;
+	spin_unlock(&vdpasim->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -376,6 +614,7 @@ static int vdpasim_get_vq_state(struct vdpa_device *vdpa, u16 idx,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int vdpasim_get_vq_stats(struct vdpa_device *vdpa, u16 idx,
 				struct sk_buff *msg,
 				struct netlink_ext_ack *extack)
@@ -388,6 +627,8 @@ static int vdpasim_get_vq_stats(struct vdpa_device *vdpa, u16 idx,
 	return -EOPNOTSUPP;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static u32 vdpasim_get_vq_align(struct vdpa_device *vdpa)
 {
 	return VDPASIM_QUEUE_ALIGN;
@@ -457,9 +698,15 @@ static u8 vdpasim_get_status(struct vdpa_device *vdpa)
 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
 	u8 status;
 
+<<<<<<< HEAD
 	mutex_lock(&vdpasim->mutex);
 	status = vdpasim->status;
 	mutex_unlock(&vdpasim->mutex);
+=======
+	spin_lock(&vdpasim->lock);
+	status = vdpasim->status;
+	spin_unlock(&vdpasim->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return status;
 }
@@ -468,19 +715,32 @@ static void vdpasim_set_status(struct vdpa_device *vdpa, u8 status)
 {
 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
 
+<<<<<<< HEAD
 	mutex_lock(&vdpasim->mutex);
 	vdpasim->status = status;
 	mutex_unlock(&vdpasim->mutex);
+=======
+	spin_lock(&vdpasim->lock);
+	vdpasim->status = status;
+	spin_unlock(&vdpasim->lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int vdpasim_reset(struct vdpa_device *vdpa)
 {
 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
 
+<<<<<<< HEAD
 	mutex_lock(&vdpasim->mutex);
 	vdpasim->status = 0;
 	vdpasim_do_reset(vdpasim);
 	mutex_unlock(&vdpasim->mutex);
+=======
+	spin_lock(&vdpasim->lock);
+	vdpasim->status = 0;
+	vdpasim_do_reset(vdpasim);
+	spin_unlock(&vdpasim->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -489,6 +749,7 @@ static int vdpasim_suspend(struct vdpa_device *vdpa)
 {
 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
 
+<<<<<<< HEAD
 	mutex_lock(&vdpasim->mutex);
 	vdpasim->running = false;
 	mutex_unlock(&vdpasim->mutex);
@@ -513,6 +774,11 @@ static int vdpasim_resume(struct vdpa_device *vdpa)
 	}
 
 	mutex_unlock(&vdpasim->mutex);
+=======
+	spin_lock(&vdpasim->lock);
+	vdpasim->running = false;
+	spin_unlock(&vdpasim->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -584,14 +850,22 @@ static int vdpasim_set_group_asid(struct vdpa_device *vdpa, unsigned int group,
 
 	iommu = &vdpasim->iommu[asid];
 
+<<<<<<< HEAD
 	mutex_lock(&vdpasim->mutex);
+=======
+	spin_lock(&vdpasim->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < vdpasim->dev_attr.nvqs; i++)
 		if (vdpasim_get_vq_group(vdpa, i) == group)
 			vringh_set_iotlb(&vdpasim->vqs[i].vring, iommu,
 					 &vdpasim->iommu_lock);
 
+<<<<<<< HEAD
 	mutex_unlock(&vdpasim->mutex);
+=======
+	spin_unlock(&vdpasim->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -612,7 +886,10 @@ static int vdpasim_set_map(struct vdpa_device *vdpa, unsigned int asid,
 
 	iommu = &vdpasim->iommu[asid];
 	vhost_iotlb_reset(iommu);
+<<<<<<< HEAD
 	vdpasim->iommu_pt[asid] = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (map = vhost_iotlb_itree_first(iotlb, start, last); map;
 	     map = vhost_iotlb_itree_next(map, start, last)) {
@@ -630,6 +907,7 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int vdpasim_bind_mm(struct vdpa_device *vdpa, struct mm_struct *mm)
 {
 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
@@ -654,6 +932,8 @@ static void vdpasim_unbind_mm(struct vdpa_device *vdpa)
 	vdpasim_worker_change_mm_sync(vdpasim, &mm_work);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int vdpasim_dma_map(struct vdpa_device *vdpa, unsigned int asid,
 			   u64 iova, u64 size,
 			   u64 pa, u32 perm, void *opaque)
@@ -665,10 +945,13 @@ static int vdpasim_dma_map(struct vdpa_device *vdpa, unsigned int asid,
 		return -EINVAL;
 
 	spin_lock(&vdpasim->iommu_lock);
+<<<<<<< HEAD
 	if (vdpasim->iommu_pt[asid]) {
 		vhost_iotlb_reset(&vdpasim->iommu[asid]);
 		vdpasim->iommu_pt[asid] = false;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = vhost_iotlb_add_range_ctx(&vdpasim->iommu[asid], iova,
 					iova + size - 1, pa, perm, opaque);
 	spin_unlock(&vdpasim->iommu_lock);
@@ -684,11 +967,14 @@ static int vdpasim_dma_unmap(struct vdpa_device *vdpa, unsigned int asid,
 	if (asid >= vdpasim->dev_attr.nas)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (vdpasim->iommu_pt[asid]) {
 		vhost_iotlb_reset(&vdpasim->iommu[asid]);
 		vdpasim->iommu_pt[asid] = false;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock(&vdpasim->iommu_lock);
 	vhost_iotlb_del_range(&vdpasim->iommu[asid], iova, iova + size - 1);
 	spin_unlock(&vdpasim->iommu_lock);
@@ -701,19 +987,33 @@ static void vdpasim_free(struct vdpa_device *vdpa)
 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
 	int i;
 
+<<<<<<< HEAD
 	kthread_cancel_work_sync(&vdpasim->work);
 	kthread_destroy_worker(vdpasim->worker);
+=======
+	cancel_work_sync(&vdpasim->work);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < vdpasim->dev_attr.nvqs; i++) {
 		vringh_kiov_cleanup(&vdpasim->vqs[i].out_iov);
 		vringh_kiov_cleanup(&vdpasim->vqs[i].in_iov);
 	}
 
+<<<<<<< HEAD
 	kvfree(vdpasim->buffer);
 	for (i = 0; i < vdpasim->dev_attr.nas; i++)
 		vhost_iotlb_reset(&vdpasim->iommu[i]);
 	kfree(vdpasim->iommu);
 	kfree(vdpasim->iommu_pt);
+=======
+	if (vdpa_get_dma_dev(vdpa)) {
+		put_iova_domain(&vdpasim->iova);
+		iova_cache_put();
+	}
+
+	kvfree(vdpasim->buffer);
+	vhost_iotlb_free(vdpasim->iommu);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(vdpasim->vqs);
 	kfree(vdpasim->config);
 }
@@ -726,7 +1026,10 @@ static const struct vdpa_config_ops vdpasim_config_ops = {
 	.set_vq_ready           = vdpasim_set_vq_ready,
 	.get_vq_ready           = vdpasim_get_vq_ready,
 	.set_vq_state           = vdpasim_set_vq_state,
+<<<<<<< HEAD
 	.get_vendor_vq_stats    = vdpasim_get_vq_stats,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.get_vq_state           = vdpasim_get_vq_state,
 	.get_vq_align           = vdpasim_get_vq_align,
 	.get_vq_group           = vdpasim_get_vq_group,
@@ -741,7 +1044,10 @@ static const struct vdpa_config_ops vdpasim_config_ops = {
 	.set_status             = vdpasim_set_status,
 	.reset			= vdpasim_reset,
 	.suspend		= vdpasim_suspend,
+<<<<<<< HEAD
 	.resume			= vdpasim_resume,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.get_config_size        = vdpasim_get_config_size,
 	.get_config             = vdpasim_get_config,
 	.set_config             = vdpasim_set_config,
@@ -750,8 +1056,11 @@ static const struct vdpa_config_ops vdpasim_config_ops = {
 	.set_group_asid         = vdpasim_set_group_asid,
 	.dma_map                = vdpasim_dma_map,
 	.dma_unmap              = vdpasim_dma_unmap,
+<<<<<<< HEAD
 	.bind_mm		= vdpasim_bind_mm,
 	.unbind_mm		= vdpasim_unbind_mm,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.free                   = vdpasim_free,
 };
 
@@ -763,7 +1072,10 @@ static const struct vdpa_config_ops vdpasim_batch_config_ops = {
 	.set_vq_ready           = vdpasim_set_vq_ready,
 	.get_vq_ready           = vdpasim_get_vq_ready,
 	.set_vq_state           = vdpasim_set_vq_state,
+<<<<<<< HEAD
 	.get_vendor_vq_stats    = vdpasim_get_vq_stats,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.get_vq_state           = vdpasim_get_vq_state,
 	.get_vq_align           = vdpasim_get_vq_align,
 	.get_vq_group           = vdpasim_get_vq_group,
@@ -778,7 +1090,10 @@ static const struct vdpa_config_ops vdpasim_batch_config_ops = {
 	.set_status             = vdpasim_set_status,
 	.reset			= vdpasim_reset,
 	.suspend		= vdpasim_suspend,
+<<<<<<< HEAD
 	.resume			= vdpasim_resume,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.get_config_size        = vdpasim_get_config_size,
 	.get_config             = vdpasim_get_config,
 	.set_config             = vdpasim_set_config,
@@ -786,8 +1101,11 @@ static const struct vdpa_config_ops vdpasim_batch_config_ops = {
 	.get_iova_range         = vdpasim_get_iova_range,
 	.set_group_asid         = vdpasim_set_group_asid,
 	.set_map                = vdpasim_set_map,
+<<<<<<< HEAD
 	.bind_mm		= vdpasim_bind_mm,
 	.unbind_mm		= vdpasim_unbind_mm,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.free                   = vdpasim_free,
 };
 

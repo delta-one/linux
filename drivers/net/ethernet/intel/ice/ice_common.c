@@ -182,6 +182,7 @@ bool ice_is_e810t(struct ice_hw *hw)
 {
 	switch (hw->device_id) {
 	case ICE_DEV_ID_E810C_SFP:
+<<<<<<< HEAD
 		switch (hw->subsystem_device_id) {
 		case ICE_SUBDEV_ID_E810T:
 		case ICE_SUBDEV_ID_E810T2:
@@ -199,6 +200,11 @@ bool ice_is_e810t(struct ice_hw *hw)
 		case ICE_SUBDEV_ID_E810T5:
 			return true;
 		}
+=======
+		if (hw->subsystem_device_id == ICE_SUBDEV_ID_E810T ||
+		    hw->subsystem_device_id == ICE_SUBDEV_ID_E810T2)
+			return true;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		break;
@@ -208,6 +214,7 @@ bool ice_is_e810t(struct ice_hw *hw)
 }
 
 /**
+<<<<<<< HEAD
  * ice_is_e823
  * @hw: pointer to the hardware structure
  *
@@ -233,6 +240,8 @@ bool ice_is_e823(struct ice_hw *hw)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ice_clear_pf_cfg - Clear PF configuration
  * @hw: pointer to the hardware structure
  *
@@ -1113,10 +1122,15 @@ int ice_init_hw(struct ice_hw *hw)
 	if (status)
 		goto err_unroll_cqinit;
 
+<<<<<<< HEAD
 	if (!hw->port_info)
 		hw->port_info = devm_kzalloc(ice_hw_to_dev(hw),
 					     sizeof(*hw->port_info),
 					     GFP_KERNEL);
+=======
+	hw->port_info = devm_kzalloc(ice_hw_to_dev(hw),
+				     sizeof(*hw->port_info), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!hw->port_info) {
 		status = -ENOMEM;
 		goto err_unroll_cqinit;
@@ -1132,9 +1146,12 @@ int ice_init_hw(struct ice_hw *hw)
 
 	hw->evb_veb = true;
 
+<<<<<<< HEAD
 	/* init xarray for identifying scheduling nodes uniquely */
 	xa_init_flags(&hw->port_info->sched_node_ids, XA_FLAGS_ALLOC);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Query the allocated resources for Tx scheduler */
 	status = ice_sched_query_res_alloc(hw);
 	if (status) {
@@ -1244,6 +1261,14 @@ void ice_deinit_hw(struct ice_hw *hw)
 	ice_free_hw_tbls(hw);
 	mutex_destroy(&hw->tnl_lock);
 
+<<<<<<< HEAD
+=======
+	if (hw->port_info) {
+		devm_kfree(ice_hw_to_dev(hw), hw->port_info);
+		hw->port_info = NULL;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Attempt to disable FW logging before shutting down control queues */
 	ice_cfg_fw_log(hw, false);
 	ice_destroy_all_ctrlq(hw);
@@ -2970,8 +2995,13 @@ bool ice_is_100m_speed_supported(struct ice_hw *hw)
  * Note: In the structure of [phy_type_low, phy_type_high], there should
  * be one bit set, as this function will convert one PHY type to its
  * speed.
+<<<<<<< HEAD
  * If no bit gets set, ICE_AQ_LINK_SPEED_UNKNOWN will be returned
  * If more than one bit gets set, ICE_AQ_LINK_SPEED_UNKNOWN will be returned
+=======
+ * If no bit gets set, ICE_LINK_SPEED_UNKNOWN will be returned
+ * If more than one bit gets set, ICE_LINK_SPEED_UNKNOWN will be returned
+>>>>>>> b7ba80a49124 (Commit)
  */
 static u16
 ice_get_link_speed_based_on_phy_type(u64 phy_type_low, u64 phy_type_high)
@@ -4625,7 +4655,11 @@ ice_ena_vsi_txq(struct ice_port_info *pi, u16 vsi_handle, u8 tc, u16 q_handle,
 	q_ctx->q_teid = le32_to_cpu(node.node_teid);
 
 	/* add a leaf node into scheduler tree queue layer */
+<<<<<<< HEAD
 	status = ice_sched_add_node(pi, hw->num_tx_sched_layers - 1, &node, NULL);
+=======
+	status = ice_sched_add_node(pi, hw->num_tx_sched_layers - 1, &node);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!status)
 		status = ice_sched_replay_q_bw(pi, q_ctx);
 
@@ -4860,7 +4894,11 @@ ice_ena_vsi_rdma_qset(struct ice_port_info *pi, u16 vsi_handle, u8 tc,
 	for (i = 0; i < num_qsets; i++) {
 		node.node_teid = buf->rdma_qsets[i].qset_teid;
 		ret = ice_sched_add_node(pi, hw->num_tx_sched_layers - 1,
+<<<<<<< HEAD
 					 &node, NULL);
+=======
+					 &node);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			break;
 		qset_teid[i] = le32_to_cpu(node.node_teid);
@@ -5526,6 +5564,7 @@ ice_lldp_fltr_add_remove(struct ice_hw *hw, u16 vsi_num, bool add)
 }
 
 /**
+<<<<<<< HEAD
  * ice_lldp_execute_pending_mib - execute LLDP pending MIB request
  * @hw: pointer to HW struct
  */
@@ -5539,6 +5578,8 @@ int ice_lldp_execute_pending_mib(struct ice_hw *hw)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ice_fw_supports_report_dflt_cfg
  * @hw: pointer to the hardware structure
  *
@@ -5550,6 +5591,7 @@ bool ice_fw_supports_report_dflt_cfg(struct ice_hw *hw)
 				     ICE_FW_API_REPORT_DFLT_CFG_MIN,
 				     ICE_FW_API_REPORT_DFLT_CFG_PATCH);
 }
+<<<<<<< HEAD
 
 /* each of the indexes into the following array match the speed of a return
  * value from the list of AQ returned speeds like the range:
@@ -5586,3 +5628,5 @@ u32 ice_get_link_speed(u16 index)
 
 	return ice_aq_to_link_speed[index];
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

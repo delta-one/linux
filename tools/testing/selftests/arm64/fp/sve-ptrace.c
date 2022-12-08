@@ -30,6 +30,7 @@
 #define NT_ARM_SSVE 0x40b
 #endif
 
+<<<<<<< HEAD
 /*
  * The architecture defines the maximum VQ as 16 but for extensibility
  * the kernel specifies the SVE_VQ_MAX as 512 resulting in us running
@@ -40,6 +41,8 @@
  */
 #define TEST_VQ_MAX 17
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct vec_type {
 	const char *name;
 	unsigned long hwcap_type;
@@ -65,7 +68,11 @@ static const struct vec_type vec_types[] = {
 	},
 };
 
+<<<<<<< HEAD
 #define VL_TESTS (((TEST_VQ_MAX - SVE_VQ_MIN) + 1) * 4)
+=======
+#define VL_TESTS (((SVE_VQ_MAX - SVE_VQ_MIN) + 1) * 4)
+>>>>>>> b7ba80a49124 (Commit)
 #define FLAG_TESTS 2
 #define FPSIMD_TESTS 2
 
@@ -699,7 +706,11 @@ static int do_parent(pid_t child)
 		}
 
 		/* Step through every possible VQ */
+<<<<<<< HEAD
 		for (vq = SVE_VQ_MIN; vq <= TEST_VQ_MAX; vq++) {
+=======
+		for (vq = SVE_VQ_MIN; vq <= SVE_VQ_MAX; vq++) {
+>>>>>>> b7ba80a49124 (Commit)
 			vl = sve_vl_from_vq(vq);
 
 			/* First, try to set this vector length */

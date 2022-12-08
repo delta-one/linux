@@ -109,12 +109,21 @@ static int pcm030_fabric_probe(struct platform_device *op)
 
 }
 
+<<<<<<< HEAD
 static void pcm030_fabric_remove(struct platform_device *op)
+=======
+static int pcm030_fabric_remove(struct platform_device *op)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pcm030_audio_data *pdata = platform_get_drvdata(op);
 
 	snd_soc_unregister_card(pdata->card);
 	platform_device_unregister(pdata->codec_device);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id pcm030_audio_match[] = {
@@ -125,7 +134,11 @@ MODULE_DEVICE_TABLE(of, pcm030_audio_match);
 
 static struct platform_driver pcm030_fabric_driver = {
 	.probe		= pcm030_fabric_probe,
+<<<<<<< HEAD
 	.remove_new	= pcm030_fabric_remove,
+=======
+	.remove		= pcm030_fabric_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= DRV_NAME,
 		.of_match_table    = pcm030_audio_match,

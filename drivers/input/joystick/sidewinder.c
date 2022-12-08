@@ -7,6 +7,12 @@
  * Microsoft SideWinder joystick family driver for Linux
  */
 
+<<<<<<< HEAD
+=======
+/*
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/delay.h>
 #include <linux/kernel.h>
 #include <linux/module.h>

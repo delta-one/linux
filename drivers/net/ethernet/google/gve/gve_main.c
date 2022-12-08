@@ -4,20 +4,29 @@
  * Copyright (C) 2015-2021 Google, Inc.
  */
 
+<<<<<<< HEAD
 #include <linux/bpf.h>
 #include <linux/cpumask.h>
 #include <linux/etherdevice.h>
 #include <linux/filter.h>
+=======
+#include <linux/cpumask.h>
+#include <linux/etherdevice.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/interrupt.h>
 #include <linux/module.h>
 #include <linux/pci.h>
 #include <linux/sched.h>
 #include <linux/timer.h>
 #include <linux/workqueue.h>
+<<<<<<< HEAD
 #include <linux/utsname.h>
 #include <linux/version.h>
 #include <net/sch_generic.h>
 #include <net/xdp_sock_drv.h>
+=======
+#include <net/sch_generic.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include "gve.h"
 #include "gve_dqo.h"
 #include "gve_adminq.h"
@@ -35,6 +44,7 @@
 const char gve_version_str[] = GVE_VERSION;
 static const char gve_version_prefix[] = GVE_VERSION_PREFIX;
 
+<<<<<<< HEAD
 static int gve_verify_driver_compatibility(struct gve_priv *priv)
 {
 	int err;
@@ -78,6 +88,8 @@ static int gve_verify_driver_compatibility(struct gve_priv *priv)
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static netdev_tx_t gve_start_xmit(struct sk_buff *skb, struct net_device *dev)
 {
 	struct gve_priv *priv = netdev_priv(dev);
@@ -93,24 +105,37 @@ static void gve_get_stats(struct net_device *dev, struct rtnl_link_stats64 *s)
 	struct gve_priv *priv = netdev_priv(dev);
 	unsigned int start;
 	u64 packets, bytes;
+<<<<<<< HEAD
 	int num_tx_queues;
 	int ring;
 
 	num_tx_queues = gve_num_tx_queues(priv);
+=======
+	int ring;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (priv->rx) {
 		for (ring = 0; ring < priv->rx_cfg.num_queues; ring++) {
 			do {
 				start =
+<<<<<<< HEAD
 				  u64_stats_fetch_begin(&priv->rx[ring].statss);
 				packets = priv->rx[ring].rpackets;
 				bytes = priv->rx[ring].rbytes;
 			} while (u64_stats_fetch_retry(&priv->rx[ring].statss,
+=======
+				  u64_stats_fetch_begin_irq(&priv->rx[ring].statss);
+				packets = priv->rx[ring].rpackets;
+				bytes = priv->rx[ring].rbytes;
+			} while (u64_stats_fetch_retry_irq(&priv->rx[ring].statss,
+>>>>>>> b7ba80a49124 (Commit)
 						       start));
 			s->rx_packets += packets;
 			s->rx_bytes += bytes;
 		}
 	}
 	if (priv->tx) {
+<<<<<<< HEAD
 		for (ring = 0; ring < num_tx_queues; ring++) {
 			do {
 				start =
@@ -118,6 +143,15 @@ static void gve_get_stats(struct net_device *dev, struct rtnl_link_stats64 *s)
 				packets = priv->tx[ring].pkt_done;
 				bytes = priv->tx[ring].bytes_done;
 			} while (u64_stats_fetch_retry(&priv->tx[ring].statss,
+=======
+		for (ring = 0; ring < priv->tx_cfg.num_queues; ring++) {
+			do {
+				start =
+				  u64_stats_fetch_begin_irq(&priv->tx[ring].statss);
+				packets = priv->tx[ring].pkt_done;
+				bytes = priv->tx[ring].bytes_done;
+			} while (u64_stats_fetch_retry_irq(&priv->tx[ring].statss,
+>>>>>>> b7ba80a49124 (Commit)
 						       start));
 			s->tx_packets += packets;
 			s->tx_bytes += bytes;
@@ -185,7 +219,11 @@ static int gve_alloc_stats_report(struct gve_priv *priv)
 	int tx_stats_num, rx_stats_num;
 
 	tx_stats_num = (GVE_TX_STATS_REPORT_NUM + NIC_TX_STATS_REPORT_NUM) *
+<<<<<<< HEAD
 		       gve_num_tx_queues(priv);
+=======
+		       priv->tx_cfg.num_queues;
+>>>>>>> b7ba80a49124 (Commit)
 	rx_stats_num = (GVE_RX_STATS_REPORT_NUM + NIC_RX_STATS_REPORT_NUM) *
 		       priv->rx_cfg.num_queues;
 	priv->stats_report_len = struct_size(priv->stats_report, stats,
@@ -250,6 +288,7 @@ static int gve_napi_poll(struct napi_struct *napi, int budget)
 	block = container_of(napi, struct gve_notify_block, napi);
 	priv = block->priv;
 
+<<<<<<< HEAD
 	if (block->tx) {
 		if (block->tx->q_num < priv->tx_cfg.num_queues)
 			reschedule |= gve_tx_poll(block, budget);
@@ -257,6 +296,10 @@ static int gve_napi_poll(struct napi_struct *napi, int budget)
 			reschedule |= gve_xdp_poll(block, budget);
 	}
 
+=======
+	if (block->tx)
+		reschedule |= gve_tx_poll(block, budget);
+>>>>>>> b7ba80a49124 (Commit)
 	if (block->rx) {
 		work_done = gve_rx_poll(block, budget);
 		reschedule |= work_done == budget;
@@ -337,6 +380,10 @@ static int gve_napi_poll_dqo(struct napi_struct *napi, int budget)
 static int gve_alloc_notify_blocks(struct gve_priv *priv)
 {
 	int num_vecs_requested = priv->num_ntfy_blks + 1;
+<<<<<<< HEAD
+=======
+	char *name = priv->dev->name;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int active_cpus;
 	int vecs_enabled;
 	int i, j;
@@ -380,8 +427,13 @@ static int gve_alloc_notify_blocks(struct gve_priv *priv)
 	active_cpus = min_t(int, priv->num_ntfy_blks / 2, num_online_cpus());
 
 	/* Setup Management Vector  - the last vector */
+<<<<<<< HEAD
 	snprintf(priv->mgmt_msix_name, sizeof(priv->mgmt_msix_name), "gve-mgmnt@pci:%s",
 		 pci_name(priv->pdev));
+=======
+	snprintf(priv->mgmt_msix_name, sizeof(priv->mgmt_msix_name), "%s-mgmnt",
+		 name);
+>>>>>>> b7ba80a49124 (Commit)
 	err = request_irq(priv->msix_vectors[priv->mgmt_msix_idx].vector,
 			  gve_mgmnt_intr, 0, priv->mgmt_msix_name, priv);
 	if (err) {
@@ -410,8 +462,13 @@ static int gve_alloc_notify_blocks(struct gve_priv *priv)
 		struct gve_notify_block *block = &priv->ntfy_blocks[i];
 		int msix_idx = i;
 
+<<<<<<< HEAD
 		snprintf(block->name, sizeof(block->name), "gve-ntfy-blk%d@pci:%s",
 			 i, pci_name(priv->pdev));
+=======
+		snprintf(block->name, sizeof(block->name), "%s-ntfy-block.%d",
+			 name, i);
+>>>>>>> b7ba80a49124 (Commit)
 		block->priv = priv;
 		err = request_irq(priv->msix_vectors[msix_idx].vector,
 				  gve_is_gqi(priv) ? gve_intr : gve_intr_dqo,
@@ -580,7 +637,12 @@ static void gve_add_napi(struct gve_priv *priv, int ntfy_idx,
 {
 	struct gve_notify_block *block = &priv->ntfy_blocks[ntfy_idx];
 
+<<<<<<< HEAD
 	netif_napi_add(priv->dev, &block->napi, gve_poll);
+=======
+	netif_napi_add(priv->dev, &block->napi, gve_poll,
+		       NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void gve_remove_napi(struct gve_priv *priv, int ntfy_idx)
@@ -590,6 +652,7 @@ static void gve_remove_napi(struct gve_priv *priv, int ntfy_idx)
 	netif_napi_del(&block->napi);
 }
 
+<<<<<<< HEAD
 static int gve_register_xdp_qpls(struct gve_priv *priv)
 {
 	int start_id;
@@ -620,6 +683,15 @@ static int gve_register_qpls(struct gve_priv *priv)
 
 	start_id = gve_tx_start_qpl_id(priv);
 	for (i = start_id; i < start_id + gve_num_tx_qpls(priv); i++) {
+=======
+static int gve_register_qpls(struct gve_priv *priv)
+{
+	int num_qpls = gve_num_tx_qpls(priv) + gve_num_rx_qpls(priv);
+	int err;
+	int i;
+
+	for (i = 0; i < num_qpls; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = gve_adminq_register_page_list(priv, &priv->qpls[i]);
 		if (err) {
 			netif_err(priv, drv, priv->dev,
@@ -631,6 +703,7 @@ static int gve_register_qpls(struct gve_priv *priv)
 			return err;
 		}
 	}
+<<<<<<< HEAD
 
 	start_id = gve_rx_start_qpl_id(priv);
 	for (i = start_id; i < start_id + gve_num_rx_qpls(priv); i++) {
@@ -665,17 +738,27 @@ static int gve_unregister_xdp_qpls(struct gve_priv *priv)
 			return err;
 		}
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static int gve_unregister_qpls(struct gve_priv *priv)
 {
+<<<<<<< HEAD
 	int start_id;
 	int err;
 	int i;
 
 	start_id = gve_tx_start_qpl_id(priv);
 	for (i = start_id; i < start_id + gve_num_tx_qpls(priv); i++) {
+=======
+	int num_qpls = gve_num_tx_qpls(priv) + gve_num_rx_qpls(priv);
+	int err;
+	int i;
+
+	for (i = 0; i < num_qpls; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = gve_adminq_unregister_page_list(priv, priv->qpls[i].id);
 		/* This failure will trigger a reset - no need to clean up */
 		if (err) {
@@ -685,6 +768,7 @@ static int gve_unregister_qpls(struct gve_priv *priv)
 			return err;
 		}
 	}
+<<<<<<< HEAD
 
 	start_id = gve_rx_start_qpl_id(priv);
 	for (i = start_id; i < start_id + gve_num_rx_qpls(priv); i++) {
@@ -718,11 +802,14 @@ static int gve_create_xdp_rings(struct gve_priv *priv)
 	netif_dbg(priv, drv, priv->dev, "created %d XDP tx queues\n",
 		  priv->num_xdp_queues);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static int gve_create_rings(struct gve_priv *priv)
 {
+<<<<<<< HEAD
 	int num_tx_queues = gve_num_tx_queues(priv);
 	int err;
 	int i;
@@ -731,13 +818,26 @@ static int gve_create_rings(struct gve_priv *priv)
 	if (err) {
 		netif_err(priv, drv, priv->dev, "failed to create %d tx queues\n",
 			  num_tx_queues);
+=======
+	int err;
+	int i;
+
+	err = gve_adminq_create_tx_queues(priv, priv->tx_cfg.num_queues);
+	if (err) {
+		netif_err(priv, drv, priv->dev, "failed to create %d tx queues\n",
+			  priv->tx_cfg.num_queues);
+>>>>>>> b7ba80a49124 (Commit)
 		/* This failure will trigger a reset - no need to clean
 		 * up
 		 */
 		return err;
 	}
 	netif_dbg(priv, drv, priv->dev, "created %d tx queues\n",
+<<<<<<< HEAD
 		  num_tx_queues);
+=======
+		  priv->tx_cfg.num_queues);
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = gve_adminq_create_rx_queues(priv, priv->rx_cfg.num_queues);
 	if (err) {
@@ -770,6 +870,7 @@ static int gve_create_rings(struct gve_priv *priv)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void add_napi_init_xdp_sync_stats(struct gve_priv *priv,
 					 int (*napi_poll)(struct napi_struct *napi,
 							  int budget))
@@ -787,6 +888,8 @@ static void add_napi_init_xdp_sync_stats(struct gve_priv *priv,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void add_napi_init_sync_stats(struct gve_priv *priv,
 				     int (*napi_poll)(struct napi_struct *napi,
 						      int budget))
@@ -794,7 +897,11 @@ static void add_napi_init_sync_stats(struct gve_priv *priv,
 	int i;
 
 	/* Add tx napi & init sync stats*/
+<<<<<<< HEAD
 	for (i = 0; i < gve_num_tx_queues(priv); i++) {
+=======
+	for (i = 0; i < priv->tx_cfg.num_queues; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		int ntfy_idx = gve_tx_idx_to_ntfy(priv, i);
 
 		u64_stats_init(&priv->tx[i].statss);
@@ -811,15 +918,23 @@ static void add_napi_init_sync_stats(struct gve_priv *priv,
 	}
 }
 
+<<<<<<< HEAD
 static void gve_tx_free_rings(struct gve_priv *priv, int start_id, int num_rings)
 {
 	if (gve_is_gqi(priv)) {
 		gve_tx_free_rings_gqi(priv, start_id, num_rings);
+=======
+static void gve_tx_free_rings(struct gve_priv *priv)
+{
+	if (gve_is_gqi(priv)) {
+		gve_tx_free_rings_gqi(priv);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		gve_tx_free_rings_dqo(priv);
 	}
 }
 
+<<<<<<< HEAD
 static int gve_alloc_xdp_rings(struct gve_priv *priv)
 {
 	int start_id;
@@ -837,25 +952,39 @@ static int gve_alloc_xdp_rings(struct gve_priv *priv)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int gve_alloc_rings(struct gve_priv *priv)
 {
 	int err;
 
 	/* Setup tx rings */
+<<<<<<< HEAD
 	priv->tx = kvcalloc(priv->tx_cfg.max_queues, sizeof(*priv->tx),
+=======
+	priv->tx = kvcalloc(priv->tx_cfg.num_queues, sizeof(*priv->tx),
+>>>>>>> b7ba80a49124 (Commit)
 			    GFP_KERNEL);
 	if (!priv->tx)
 		return -ENOMEM;
 
 	if (gve_is_gqi(priv))
+<<<<<<< HEAD
 		err = gve_tx_alloc_rings(priv, 0, gve_num_tx_queues(priv));
+=======
+		err = gve_tx_alloc_rings(priv);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		err = gve_tx_alloc_rings_dqo(priv);
 	if (err)
 		goto free_tx;
 
 	/* Setup rx rings */
+<<<<<<< HEAD
 	priv->rx = kvcalloc(priv->rx_cfg.max_queues, sizeof(*priv->rx),
+=======
+	priv->rx = kvcalloc(priv->rx_cfg.num_queues, sizeof(*priv->rx),
+>>>>>>> b7ba80a49124 (Commit)
 			    GFP_KERNEL);
 	if (!priv->rx) {
 		err = -ENOMEM;
@@ -880,13 +1009,18 @@ free_rx:
 	kvfree(priv->rx);
 	priv->rx = NULL;
 free_tx_queue:
+<<<<<<< HEAD
 	gve_tx_free_rings(priv, 0, gve_num_tx_queues(priv));
+=======
+	gve_tx_free_rings(priv);
+>>>>>>> b7ba80a49124 (Commit)
 free_tx:
 	kvfree(priv->tx);
 	priv->tx = NULL;
 	return err;
 }
 
+<<<<<<< HEAD
 static int gve_destroy_xdp_rings(struct gve_priv *priv)
 {
 	int start_id;
@@ -913,6 +1047,13 @@ static int gve_destroy_rings(struct gve_priv *priv)
 	int err;
 
 	err = gve_adminq_destroy_tx_queues(priv, 0, num_tx_queues);
+=======
+static int gve_destroy_rings(struct gve_priv *priv)
+{
+	int err;
+
+	err = gve_adminq_destroy_tx_queues(priv, priv->tx_cfg.num_queues);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		netif_err(priv, drv, priv->dev,
 			  "failed to destroy tx queues\n");
@@ -939,6 +1080,7 @@ static void gve_rx_free_rings(struct gve_priv *priv)
 		gve_rx_free_rings_dqo(priv);
 }
 
+<<<<<<< HEAD
 static void gve_free_xdp_rings(struct gve_priv *priv)
 {
 	int ntfy_idx, start_id;
@@ -957,15 +1099,27 @@ static void gve_free_xdp_rings(struct gve_priv *priv)
 static void gve_free_rings(struct gve_priv *priv)
 {
 	int num_tx_queues = gve_num_tx_queues(priv);
+=======
+static void gve_free_rings(struct gve_priv *priv)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	int ntfy_idx;
 	int i;
 
 	if (priv->tx) {
+<<<<<<< HEAD
 		for (i = 0; i < num_tx_queues; i++) {
 			ntfy_idx = gve_tx_idx_to_ntfy(priv, i);
 			gve_remove_napi(priv, ntfy_idx);
 		}
 		gve_tx_free_rings(priv, 0, num_tx_queues);
+=======
+		for (i = 0; i < priv->tx_cfg.num_queues; i++) {
+			ntfy_idx = gve_tx_idx_to_ntfy(priv, i);
+			gve_remove_napi(priv, ntfy_idx);
+		}
+		gve_tx_free_rings(priv);
+>>>>>>> b7ba80a49124 (Commit)
 		kvfree(priv->tx);
 		priv->tx = NULL;
 	}
@@ -1062,6 +1216,7 @@ static void gve_free_queue_page_list(struct gve_priv *priv, u32 id)
 			      qpl->page_buses[i], gve_qpl_dma_dir(priv, id));
 
 	kvfree(qpl->page_buses);
+<<<<<<< HEAD
 	qpl->page_buses = NULL;
 free_pages:
 	kvfree(qpl->pages);
@@ -1107,23 +1262,54 @@ static int gve_alloc_qpls(struct gve_priv *priv)
 
 	start_id = gve_tx_start_qpl_id(priv);
 	for (i = start_id; i < start_id + gve_num_tx_qpls(priv); i++) {
+=======
+free_pages:
+	kvfree(qpl->pages);
+	priv->num_registered_pages -= qpl->num_entries;
+}
+
+static int gve_alloc_qpls(struct gve_priv *priv)
+{
+	int num_qpls = gve_num_tx_qpls(priv) + gve_num_rx_qpls(priv);
+	int i, j;
+	int err;
+
+	if (num_qpls == 0)
+		return 0;
+
+	priv->qpls = kvcalloc(num_qpls, sizeof(*priv->qpls), GFP_KERNEL);
+	if (!priv->qpls)
+		return -ENOMEM;
+
+	for (i = 0; i < gve_num_tx_qpls(priv); i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = gve_alloc_queue_page_list(priv, i,
 						priv->tx_pages_per_qpl);
 		if (err)
 			goto free_qpls;
 	}
+<<<<<<< HEAD
 
 	start_id = gve_rx_start_qpl_id(priv);
 	for (i = start_id; i < start_id + gve_num_rx_qpls(priv); i++) {
+=======
+	for (; i < num_qpls; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = gve_alloc_queue_page_list(priv, i,
 						priv->rx_data_slot_cnt);
 		if (err)
 			goto free_qpls;
 	}
 
+<<<<<<< HEAD
 	priv->qpl_cfg.qpl_map_size = BITS_TO_LONGS(max_queues) *
 				     sizeof(unsigned long) * BITS_PER_BYTE;
 	priv->qpl_cfg.qpl_id_map = kvcalloc(BITS_TO_LONGS(max_queues),
+=======
+	priv->qpl_cfg.qpl_map_size = BITS_TO_LONGS(num_qpls) *
+				     sizeof(unsigned long) * BITS_PER_BYTE;
+	priv->qpl_cfg.qpl_id_map = kvcalloc(BITS_TO_LONGS(num_qpls),
+>>>>>>> b7ba80a49124 (Commit)
 					    sizeof(unsigned long), GFP_KERNEL);
 	if (!priv->qpl_cfg.qpl_id_map) {
 		err = -ENOMEM;
@@ -1136,6 +1322,7 @@ free_qpls:
 	for (j = 0; j <= i; j++)
 		gve_free_queue_page_list(priv, j);
 	kvfree(priv->qpls);
+<<<<<<< HEAD
 	priv->qpls = NULL;
 	return err;
 }
@@ -1166,6 +1353,25 @@ static void gve_free_qpls(struct gve_priv *priv)
 
 	kvfree(priv->qpls);
 	priv->qpls = NULL;
+=======
+	return err;
+}
+
+static void gve_free_qpls(struct gve_priv *priv)
+{
+	int num_qpls = gve_num_tx_qpls(priv) + gve_num_rx_qpls(priv);
+	int i;
+
+	if (num_qpls == 0)
+		return;
+
+	kvfree(priv->qpl_cfg.qpl_id_map);
+
+	for (i = 0; i < num_qpls; i++)
+		gve_free_queue_page_list(priv, i);
+
+	kvfree(priv->qpls);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Use this to schedule a reset when the device is capable of continuing
@@ -1183,6 +1389,7 @@ static int gve_reset_recovery(struct gve_priv *priv, bool was_up);
 static void gve_turndown(struct gve_priv *priv);
 static void gve_turnup(struct gve_priv *priv);
 
+<<<<<<< HEAD
 static int gve_reg_xdp_info(struct gve_priv *priv, struct net_device *dev)
 {
 	struct napi_struct *napi;
@@ -1276,16 +1483,21 @@ static void gve_drain_page_cache(struct gve_priv *priv)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int gve_open(struct net_device *dev)
 {
 	struct gve_priv *priv = netdev_priv(dev);
 	int err;
 
+<<<<<<< HEAD
 	if (priv->xdp_prog)
 		priv->num_xdp_queues = priv->rx_cfg.num_queues;
 	else
 		priv->num_xdp_queues = 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = gve_alloc_qpls(priv);
 	if (err)
 		return err;
@@ -1301,10 +1513,13 @@ static int gve_open(struct net_device *dev)
 	if (err)
 		goto free_rings;
 
+<<<<<<< HEAD
 	err = gve_reg_xdp_info(priv, dev);
 	if (err)
 		goto free_rings;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = gve_register_qpls(priv);
 	if (err)
 		goto reset;
@@ -1359,7 +1574,10 @@ static int gve_close(struct net_device *dev)
 	netif_carrier_off(dev);
 	if (gve_get_device_rings_ok(priv)) {
 		gve_turndown(priv);
+<<<<<<< HEAD
 		gve_drain_page_cache(priv);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		err = gve_destroy_rings(priv);
 		if (err)
 			goto err;
@@ -1370,7 +1588,10 @@ static int gve_close(struct net_device *dev)
 	}
 	del_timer_sync(&priv->stats_report_timer);
 
+<<<<<<< HEAD
 	gve_unreg_xdp_info(priv);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gve_free_rings(priv);
 	gve_free_qpls(priv);
 	priv->interface_down_cnt++;
@@ -1387,6 +1608,7 @@ err:
 	return gve_reset_recovery(priv, false);
 }
 
+<<<<<<< HEAD
 static int gve_remove_xdp_queues(struct gve_priv *priv)
 {
 	int err;
@@ -1687,6 +1909,8 @@ static int gve_xdp(struct net_device *dev, struct netdev_bpf *xdp)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int gve_adjust_queues(struct gve_priv *priv,
 		      struct gve_queue_config new_rx_config,
 		      struct gve_queue_config new_tx_config)
@@ -1736,7 +1960,11 @@ static void gve_turndown(struct gve_priv *priv)
 		return;
 
 	/* Disable napi to prevent more work from coming in */
+<<<<<<< HEAD
 	for (idx = 0; idx < gve_num_tx_queues(priv); idx++) {
+=======
+	for (idx = 0; idx < priv->tx_cfg.num_queues; idx++) {
+>>>>>>> b7ba80a49124 (Commit)
 		int ntfy_idx = gve_tx_idx_to_ntfy(priv, idx);
 		struct gve_notify_block *block = &priv->ntfy_blocks[ntfy_idx];
 
@@ -1764,7 +1992,11 @@ static void gve_turnup(struct gve_priv *priv)
 	netif_tx_start_all_queues(priv->dev);
 
 	/* Enable napi and unmask interrupts for all queues */
+<<<<<<< HEAD
 	for (idx = 0; idx < gve_num_tx_queues(priv); idx++) {
+=======
+	for (idx = 0; idx < priv->tx_cfg.num_queues; idx++) {
+>>>>>>> b7ba80a49124 (Commit)
 		int ntfy_idx = gve_tx_idx_to_ntfy(priv, idx);
 		struct gve_notify_block *block = &priv->ntfy_blocks[ntfy_idx];
 
@@ -1881,9 +2113,12 @@ static const struct net_device_ops gve_netdev_ops = {
 	.ndo_get_stats64	=	gve_get_stats,
 	.ndo_tx_timeout         =       gve_tx_timeout,
 	.ndo_set_features	=	gve_set_features,
+<<<<<<< HEAD
 	.ndo_bpf		=	gve_xdp,
 	.ndo_xdp_xmit		=	gve_xdp_xmit,
 	.ndo_xsk_wakeup		=	gve_xsk_wakeup,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void gve_handle_status(struct gve_priv *priv, u32 status)
@@ -1927,7 +2162,11 @@ void gve_handle_report_stats(struct gve_priv *priv)
 	be64_add_cpu(&priv->stats_report->written_count, 1);
 	/* tx stats */
 	if (priv->tx) {
+<<<<<<< HEAD
 		for (idx = 0; idx < gve_num_tx_queues(priv); idx++) {
+=======
+		for (idx = 0; idx < priv->tx_cfg.num_queues; idx++) {
+>>>>>>> b7ba80a49124 (Commit)
 			u32 last_completion = 0;
 			u32 tx_frames = 0;
 
@@ -1938,9 +2177,15 @@ void gve_handle_report_stats(struct gve_priv *priv)
 			}
 
 			do {
+<<<<<<< HEAD
 				start = u64_stats_fetch_begin(&priv->tx[idx].statss);
 				tx_bytes = priv->tx[idx].bytes_done;
 			} while (u64_stats_fetch_retry(&priv->tx[idx].statss, start));
+=======
+				start = u64_stats_fetch_begin_irq(&priv->tx[idx].statss);
+				tx_bytes = priv->tx[idx].bytes_done;
+			} while (u64_stats_fetch_retry_irq(&priv->tx[idx].statss, start));
+>>>>>>> b7ba80a49124 (Commit)
 			stats[stats_idx++] = (struct stats) {
 				.stat_name = cpu_to_be32(TX_WAKE_CNT),
 				.value = cpu_to_be64(priv->tx[idx].wake_queue),
@@ -1990,6 +2235,26 @@ void gve_handle_report_stats(struct gve_priv *priv)
 	}
 }
 
+<<<<<<< HEAD
+=======
+static void gve_handle_link_status(struct gve_priv *priv, bool link_status)
+{
+	if (!gve_get_napi_enabled(priv))
+		return;
+
+	if (link_status == netif_carrier_ok(priv->dev))
+		return;
+
+	if (link_status) {
+		netdev_info(priv->dev, "Device link is up.\n");
+		netif_carrier_on(priv->dev);
+	} else {
+		netdev_info(priv->dev, "Device link is down.\n");
+		netif_carrier_off(priv->dev);
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Handle NIC status register changes, reset requests and report stats */
 static void gve_service_task(struct work_struct *work)
 {
@@ -2003,6 +2268,7 @@ static void gve_service_task(struct work_struct *work)
 	gve_handle_link_status(priv, GVE_DEVICE_STATUS_LINK_STATUS_MASK & status);
 }
 
+<<<<<<< HEAD
 static void gve_set_netdev_xdp_features(struct gve_priv *priv)
 {
 	if (priv->queue_format == GVE_GQI_QPL_FORMAT) {
@@ -2015,6 +2281,8 @@ static void gve_set_netdev_xdp_features(struct gve_priv *priv)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int gve_init_priv(struct gve_priv *priv, bool skip_describe_device)
 {
 	int num_ntfy;
@@ -2028,6 +2296,7 @@ static int gve_init_priv(struct gve_priv *priv, bool skip_describe_device)
 		return err;
 	}
 
+<<<<<<< HEAD
 	err = gve_verify_driver_compatibility(priv);
 	if (err) {
 		dev_err(&priv->pdev->dev,
@@ -2035,6 +2304,8 @@ static int gve_init_priv(struct gve_priv *priv, bool skip_describe_device)
 		goto err;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (skip_describe_device)
 		goto setup_device;
 
@@ -2093,7 +2364,10 @@ static int gve_init_priv(struct gve_priv *priv, bool skip_describe_device)
 	}
 
 setup_device:
+<<<<<<< HEAD
 	gve_set_netdev_xdp_features(priv);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = gve_setup_device_resources(priv);
 	if (!err)
 		return 0;

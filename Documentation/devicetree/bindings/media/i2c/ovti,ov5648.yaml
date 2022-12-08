@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/media/i2c/ovti,ov5648.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: OmniVision OV5648 Image Sensor
+=======
+title: OmniVision OV5648 Image Sensor Device Tree Bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Paul Kocialkowski <paul.kocialkowski@bootlin.com>
@@ -81,7 +85,11 @@ examples:
     #include <dt-bindings/clock/sun8i-v3s-ccu.h>
     #include <dt-bindings/gpio/gpio.h>
 
+<<<<<<< HEAD
     i2c {
+=======
+    i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 

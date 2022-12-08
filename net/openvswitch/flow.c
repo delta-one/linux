@@ -107,8 +107,12 @@ void ovs_flow_stats_update(struct sw_flow *flow, __be16 tcp_flags,
 
 					rcu_assign_pointer(flow->stats[cpu],
 							   new_stats);
+<<<<<<< HEAD
 					cpumask_set_cpu(cpu,
 							flow->cpu_used_mask);
+=======
+					cpumask_set_cpu(cpu, &flow->cpu_used_mask);
+>>>>>>> b7ba80a49124 (Commit)
 					goto unlock;
 				}
 			}
@@ -136,8 +140,12 @@ void ovs_flow_stats_get(const struct sw_flow *flow,
 	memset(ovs_stats, 0, sizeof(*ovs_stats));
 
 	/* We open code this to make sure cpu 0 is always considered */
+<<<<<<< HEAD
 	for (cpu = 0; cpu < nr_cpu_ids;
 	     cpu = cpumask_next(cpu, flow->cpu_used_mask)) {
+=======
+	for (cpu = 0; cpu < nr_cpu_ids; cpu = cpumask_next(cpu, &flow->cpu_used_mask)) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct sw_flow_stats *stats = rcu_dereference_ovsl(flow->stats[cpu]);
 
 		if (stats) {
@@ -161,8 +169,12 @@ void ovs_flow_stats_clear(struct sw_flow *flow)
 	int cpu;
 
 	/* We open code this to make sure cpu 0 is always considered */
+<<<<<<< HEAD
 	for (cpu = 0; cpu < nr_cpu_ids;
 	     cpu = cpumask_next(cpu, flow->cpu_used_mask)) {
+=======
+	for (cpu = 0; cpu < nr_cpu_ids; cpu = cpumask_next(cpu, &flow->cpu_used_mask)) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct sw_flow_stats *stats = ovsl_dereference(flow->stats[cpu]);
 
 		if (stats) {
@@ -1041,8 +1053,12 @@ int ovs_flow_key_extract(const struct ip_tunnel_info *tun_info,
 #if IS_ENABLED(CONFIG_NET_TC_SKB_EXT)
 	if (tc_skb_ext_tc_enabled()) {
 		tc_ext = skb_ext_find(skb, TC_SKB_EXT);
+<<<<<<< HEAD
 		key->recirc_id = tc_ext && !tc_ext->act_miss ?
 				 tc_ext->chain : 0;
+=======
+		key->recirc_id = tc_ext ? tc_ext->chain : 0;
+>>>>>>> b7ba80a49124 (Commit)
 		OVS_CB(skb)->mru = tc_ext ? tc_ext->mru : 0;
 		post_ct = tc_ext ? tc_ext->post_ct : false;
 		post_ct_snat = post_ct ? tc_ext->post_ct_snat : false;

@@ -241,12 +241,20 @@ static void vimc_capture_return_all_buffers(struct vimc_capture_device *vcapture
 static int vimc_capture_start_streaming(struct vb2_queue *vq, unsigned int count)
 {
 	struct vimc_capture_device *vcapture = vb2_get_drv_priv(vq);
+<<<<<<< HEAD
+=======
+	struct media_entity *entity = &vcapture->vdev.entity;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	vcapture->sequence = 0;
 
 	/* Start the media pipeline */
+<<<<<<< HEAD
 	ret = video_device_pipeline_start(&vcapture->vdev, &vcapture->stream.pipe);
+=======
+	ret = media_pipeline_start(entity, &vcapture->stream.pipe);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		vimc_capture_return_all_buffers(vcapture, VB2_BUF_STATE_QUEUED);
 		return ret;
@@ -254,7 +262,11 @@ static int vimc_capture_start_streaming(struct vb2_queue *vq, unsigned int count
 
 	ret = vimc_streamer_s_stream(&vcapture->stream, &vcapture->ved, 1);
 	if (ret) {
+<<<<<<< HEAD
 		video_device_pipeline_stop(&vcapture->vdev);
+=======
+		media_pipeline_stop(entity);
+>>>>>>> b7ba80a49124 (Commit)
 		vimc_capture_return_all_buffers(vcapture, VB2_BUF_STATE_QUEUED);
 		return ret;
 	}
@@ -273,7 +285,11 @@ static void vimc_capture_stop_streaming(struct vb2_queue *vq)
 	vimc_streamer_s_stream(&vcapture->stream, &vcapture->ved, 0);
 
 	/* Stop the media pipeline */
+<<<<<<< HEAD
 	video_device_pipeline_stop(&vcapture->vdev);
+=======
+	media_pipeline_stop(&vcapture->vdev.entity);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Release all active buffers */
 	vimc_capture_return_all_buffers(vcapture, VB2_BUF_STATE_ERROR);

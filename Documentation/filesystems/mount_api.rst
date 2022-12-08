@@ -79,6 +79,10 @@ context.  This is represented by the fs_context structure::
 		unsigned int		sb_flags;
 		unsigned int		sb_flags_mask;
 		unsigned int		s_iflags;
+<<<<<<< HEAD
+=======
+		unsigned int		lsm_flags;
+>>>>>>> b7ba80a49124 (Commit)
 		enum fs_context_purpose	purpose:8;
 		...
 	};
@@ -561,6 +565,20 @@ or looking up of superblocks.
 
 The following helpers all wrap sget_fc():
 
+<<<<<<< HEAD
+=======
+   * ::
+
+       int vfs_get_super(struct fs_context *fc,
+		         enum vfs_get_super_keying keying,
+		         int (*fill_super)(struct super_block *sb,
+					   struct fs_context *fc))
+
+     This creates/looks up a deviceless superblock.  The keying indicates how
+     many superblocks of this type may exist and in what manner they may be
+     shared:
+
+>>>>>>> b7ba80a49124 (Commit)
 	(1) vfs_get_single_super
 
 	    Only one such superblock may exist in the system.  Any further
@@ -802,7 +820,10 @@ process the parameters it is given.
        int fs_lookup_param(struct fs_context *fc,
 			   struct fs_parameter *value,
 			   bool want_bdev,
+<<<<<<< HEAD
 			   unsigned int flags,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			   struct path *_path);
 
      This takes a parameter that carries a string or filename type and attempts

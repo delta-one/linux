@@ -25,6 +25,10 @@ struct perf_ftrace {
 	int			graph_noirqs;
 	int			graph_verbose;
 	int			graph_thresh;
+<<<<<<< HEAD
+=======
+	unsigned int		initial_delay;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct filter_entry {

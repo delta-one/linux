@@ -93,7 +93,11 @@ bus arbitration against another master in a multi-master setup.
 ------------------
 
 This file is write only and you need to write the duration of the arbitration
+<<<<<<< HEAD
 interference (in µs, maximum is 100ms). The calling process will then sleep
+=======
+intereference (in µs, maximum is 100ms). The calling process will then sleep
+>>>>>>> b7ba80a49124 (Commit)
 and wait for the next bus clock. The process is interruptible, though.
 
 Arbitration lost is achieved by waiting for SCL going down by the master under

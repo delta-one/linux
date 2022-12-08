@@ -1223,6 +1223,7 @@ ipv4_fcnal()
 	log_test $rc 0 "Delete nexthop route warning"
 	run_cmd "$IP route delete 172.16.101.1/32 nhid 12"
 	run_cmd "$IP nexthop del id 12"
+<<<<<<< HEAD
 
 	run_cmd "$IP nexthop add id 21 via 172.16.1.6 dev veth1"
 	run_cmd "$IP ro add 172.16.101.0/24 nhid 21"
@@ -1239,6 +1240,8 @@ ipv4_fcnal()
 
 	run_cmd "$IP ro del 172.16.102.0/24"
 	log_test $? 0 "Delete route when not specifying nexthop attributes"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 ipv4_grp_fcnal()

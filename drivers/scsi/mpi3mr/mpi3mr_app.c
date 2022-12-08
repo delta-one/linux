@@ -2,7 +2,11 @@
 /*
  * Driver for Broadcom MPI3 Storage Controllers
  *
+<<<<<<< HEAD
  * Copyright (C) 2017-2023 Broadcom Inc.
+=======
+ * Copyright (C) 2017-2022 Broadcom Inc.
+>>>>>>> b7ba80a49124 (Commit)
  *  (mailto: mpi3mr-linuxdrv.pdl@broadcom.com)
  *
  */
@@ -293,6 +297,10 @@ out:
 static long mpi3mr_get_all_tgt_info(struct mpi3mr_ioc *mrioc,
 	struct bsg_job *job)
 {
+<<<<<<< HEAD
+=======
+	long rval = -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	u16 num_devices = 0, i = 0, size;
 	unsigned long flags;
 	struct mpi3mr_tgt_dev *tgtdev;
@@ -303,7 +311,11 @@ static long mpi3mr_get_all_tgt_info(struct mpi3mr_ioc *mrioc,
 	if (job->request_payload.payload_len < sizeof(u32)) {
 		dprint_bsg_err(mrioc, "%s: invalid size argument\n",
 		    __func__);
+<<<<<<< HEAD
 		return -EINVAL;
+=======
+		return rval;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	spin_lock_irqsave(&mrioc->tgtdev_lock, flags);
@@ -311,7 +323,11 @@ static long mpi3mr_get_all_tgt_info(struct mpi3mr_ioc *mrioc,
 		num_devices++;
 	spin_unlock_irqrestore(&mrioc->tgtdev_lock, flags);
 
+<<<<<<< HEAD
 	if ((job->request_payload.payload_len <= sizeof(u64)) ||
+=======
+	if ((job->request_payload.payload_len == sizeof(u32)) ||
+>>>>>>> b7ba80a49124 (Commit)
 		list_empty(&mrioc->tgtdev_list)) {
 		sg_copy_from_buffer(job->request_payload.sg_list,
 				    job->request_payload.sg_cnt,
@@ -319,14 +335,23 @@ static long mpi3mr_get_all_tgt_info(struct mpi3mr_ioc *mrioc,
 		return 0;
 	}
 
+<<<<<<< HEAD
 	kern_entrylen = num_devices * sizeof(*devmap_info);
 	size = sizeof(u64) + kern_entrylen;
+=======
+	kern_entrylen = (num_devices - 1) * sizeof(*devmap_info);
+	size = sizeof(*alltgt_info) + kern_entrylen;
+>>>>>>> b7ba80a49124 (Commit)
 	alltgt_info = kzalloc(size, GFP_KERNEL);
 	if (!alltgt_info)
 		return -ENOMEM;
 
 	devmap_info = alltgt_info->dmi;
+<<<<<<< HEAD
 	memset((u8 *)devmap_info, 0xFF, kern_entrylen);
+=======
+	memset((u8 *)devmap_info, 0xFF, (kern_entrylen + sizeof(*devmap_info)));
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_irqsave(&mrioc->tgtdev_lock, flags);
 	list_for_each_entry(tgtdev, &mrioc->tgtdev_list, list) {
 		if (i < num_devices) {
@@ -343,6 +368,7 @@ static long mpi3mr_get_all_tgt_info(struct mpi3mr_ioc *mrioc,
 	num_devices = i;
 	spin_unlock_irqrestore(&mrioc->tgtdev_lock, flags);
 
+<<<<<<< HEAD
 	alltgt_info->num_devices = num_devices;
 
 	usr_entrylen = (job->request_payload.payload_len - sizeof(u64)) /
@@ -355,6 +381,27 @@ static long mpi3mr_get_all_tgt_info(struct mpi3mr_ioc *mrioc,
 			    alltgt_info, (min_entrylen + sizeof(u64)));
 	kfree(alltgt_info);
 	return 0;
+=======
+	memcpy(&alltgt_info->num_devices, &num_devices, sizeof(num_devices));
+
+	usr_entrylen = (job->request_payload.payload_len - sizeof(u32)) / sizeof(*devmap_info);
+	usr_entrylen *= sizeof(*devmap_info);
+	min_entrylen = min(usr_entrylen, kern_entrylen);
+	if (min_entrylen && (!memcpy(&alltgt_info->dmi, devmap_info, min_entrylen))) {
+		dprint_bsg_err(mrioc, "%s:%d: device map info copy failed\n",
+		    __func__, __LINE__);
+		rval = -EFAULT;
+		goto out;
+	}
+
+	sg_copy_from_buffer(job->request_payload.sg_list,
+			    job->request_payload.sg_cnt,
+			    alltgt_info, job->request_payload.payload_len);
+	rval = 0;
+out:
+	kfree(alltgt_info);
+	return rval;
+>>>>>>> b7ba80a49124 (Commit)
 }
 /**
  * mpi3mr_get_change_count - Get topology change count
@@ -886,7 +933,11 @@ static int mpi3mr_build_nvme_prp(struct mpi3mr_ioc *mrioc,
 			 * each time through the loop.
 			 */
 			*prp_entry = cpu_to_le64(dma_addr);
+<<<<<<< HEAD
 			if (*prp_entry & sgemod_mask) {
+=======
+			if (*prp1_entry & sgemod_mask) {
+>>>>>>> b7ba80a49124 (Commit)
 				dprint_bsg_err(mrioc,
 				    "%s: PRP address collides with SGE modifier\n",
 				    __func__);
@@ -895,7 +946,11 @@ static int mpi3mr_build_nvme_prp(struct mpi3mr_ioc *mrioc,
 			*prp_entry &= ~sgemod_mask;
 			*prp_entry |= sgemod_val;
 			prp_entry++;
+<<<<<<< HEAD
 			prp_entry_dma += prp_size;
+=======
+			prp_entry_dma++;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		/*
@@ -922,7 +977,10 @@ err_out:
 /**
  * mpi3mr_bsg_process_mpt_cmds - MPI Pass through BSG handler
  * @job: BSG job reference
+<<<<<<< HEAD
  * @reply_payload_rcv_len: length of payload recvd
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This function is the top level handler for MPI Pass through
  * command, this does basic validation of the input data buffers,
@@ -1472,7 +1530,10 @@ static int mpi3mr_bsg_request(struct bsg_job *job)
 
 /**
  * mpi3mr_bsg_exit - de-registration from bsg layer
+<<<<<<< HEAD
  * @mrioc: Adapter instance reference
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This will be called during driver unload and all
  * bsg resources allocated during load will be freed.
@@ -1507,7 +1568,10 @@ static void mpi3mr_bsg_node_release(struct device *dev)
 
 /**
  * mpi3mr_bsg_init -  registration with bsg layer
+<<<<<<< HEAD
  * @mrioc: Adapter instance reference
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This will be called during driver load and it will
  * register driver with bsg layer

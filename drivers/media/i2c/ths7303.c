@@ -322,7 +322,12 @@ static const struct v4l2_subdev_ops ths7303_ops = {
 	.video	= &ths7303_video_ops,
 };
 
+<<<<<<< HEAD
 static int ths7303_probe(struct i2c_client *client)
+=======
+static int ths7303_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ths7303_platform_data *pdata = client->dev.platform_data;
 	struct ths7303_state *state;
@@ -376,7 +381,11 @@ static struct i2c_driver ths7303_driver = {
 	.driver = {
 		.name	= "ths73x3",
 	},
+<<<<<<< HEAD
 	.probe_new	= ths7303_probe,
+=======
+	.probe		= ths7303_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= ths7303_remove,
 	.id_table	= ths7303_id,
 };

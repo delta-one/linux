@@ -4,12 +4,24 @@
  */
 
 #include <linux/bitops.h>
+<<<<<<< HEAD
 #include <linux/device.h>
 #include <linux/gpio/consumer.h>
+=======
+#include <linux/debugfs.h>
+#include <linux/delay.h>
+#include <linux/device.h>
+#include <linux/gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/of_gpio.h>
+<<<<<<< HEAD
+=======
+#include <linux/of_platform.h>
+#include <linux/platform_device.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pm_runtime.h>
 #include <linux/printk.h>
 #include <linux/regmap.h>
@@ -411,6 +423,10 @@
 
 #define WSA883X_NUM_REGISTERS           (WSA883X_EMEM_63 + 1)
 #define WSA883X_MAX_REGISTER            (WSA883X_NUM_REGISTERS - 1)
+<<<<<<< HEAD
+=======
+#define WSA883X_PROBE_TIMEOUT 1000
+>>>>>>> b7ba80a49124 (Commit)
 
 #define WSA883X_VERSION_1_0 0
 #define WSA883X_VERSION_1_1 1
@@ -518,7 +534,11 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA883X_MAX_SWR_PORTS] = {
 	}
 };
 
+<<<<<<< HEAD
 static const struct sdw_port_config wsa883x_pconfig[WSA883X_MAX_SWR_PORTS] = {
+=======
+static struct sdw_port_config wsa883x_pconfig[WSA883X_MAX_SWR_PORTS] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.num = 1,
 		.ch_mask = 0x1,
@@ -1069,7 +1089,11 @@ static int wsa883x_port_prep(struct sdw_slave *slave,
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct sdw_slave_ops wsa883x_slave_ops = {
+=======
+static struct sdw_slave_ops wsa883x_slave_ops = {
+>>>>>>> b7ba80a49124 (Commit)
 	.update_status = wsa883x_update_status,
 	.port_prep = wsa883x_port_prep,
 };
@@ -1355,8 +1379,13 @@ static struct snd_soc_dai_driver wsa883x_dais[] = {
 			.stream_name = "SPKR Playback",
 			.rates = WSA883X_RATES | WSA883X_FRAC_RATES,
 			.formats = WSA883X_FORMATS,
+<<<<<<< HEAD
 			.rate_min = 8000,
 			.rate_max = 352800,
+=======
+			.rate_max = 8000,
+			.rate_min = 352800,
+>>>>>>> b7ba80a49124 (Commit)
 			.channels_min = 1,
 			.channels_max = 1,
 		},
@@ -1371,11 +1400,16 @@ static int wsa883x_probe(struct sdw_slave *pdev,
 	struct device *dev = &pdev->dev;
 	int ret;
 
+<<<<<<< HEAD
 	wsa883x = devm_kzalloc(dev, sizeof(*wsa883x), GFP_KERNEL);
+=======
+	wsa883x = devm_kzalloc(&pdev->dev, sizeof(*wsa883x), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!wsa883x)
 		return -ENOMEM;
 
 	wsa883x->vdd = devm_regulator_get(dev, "vdd");
+<<<<<<< HEAD
 	if (IS_ERR(wsa883x->vdd))
 		return dev_err_probe(dev, PTR_ERR(wsa883x->vdd),
 				     "No vdd regulator found\n");
@@ -1395,12 +1429,37 @@ static int wsa883x_probe(struct sdw_slave *pdev,
 	dev_set_drvdata(dev, wsa883x);
 	wsa883x->slave = pdev;
 	wsa883x->dev = dev;
+=======
+	if (IS_ERR(wsa883x->vdd)) {
+		dev_err(dev, "No vdd regulator found\n");
+		return PTR_ERR(wsa883x->vdd);
+	}
+
+	ret = regulator_enable(wsa883x->vdd);
+	if (ret) {
+		dev_err(dev, "Failed to enable vdd regulator (%d)\n", ret);
+		return ret;
+	}
+
+	wsa883x->sd_n = devm_gpiod_get_optional(&pdev->dev, "powerdown",
+						GPIOD_FLAGS_BIT_NONEXCLUSIVE);
+	if (IS_ERR(wsa883x->sd_n)) {
+		dev_err(&pdev->dev, "Shutdown Control GPIO not found\n");
+		ret = PTR_ERR(wsa883x->sd_n);
+		goto err;
+	}
+
+	dev_set_drvdata(&pdev->dev, wsa883x);
+	wsa883x->slave = pdev;
+	wsa883x->dev = &pdev->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	wsa883x->sconfig.ch_count = 1;
 	wsa883x->sconfig.bps = 1;
 	wsa883x->sconfig.direction = SDW_DATA_DIR_RX;
 	wsa883x->sconfig.type = SDW_STREAM_PDM;
 
 	pdev->prop.sink_ports = GENMASK(WSA883X_MAX_SWR_PORTS, 0);
+<<<<<<< HEAD
 	pdev->prop.simple_clk_stop_capable = true;
 	pdev->prop.sink_dpn_prop = wsa_sink_dpn_prop;
 	pdev->prop.scp_int1_mask = SDW_SCP_INT1_BUS_CLASH | SDW_SCP_INT1_PARITY;
@@ -1411,6 +1470,16 @@ static int wsa883x_probe(struct sdw_slave *pdev,
 		gpiod_direction_output(wsa883x->sd_n, 1);
 		ret = dev_err_probe(dev, PTR_ERR(wsa883x->regmap),
 				    "regmap_init failed\n");
+=======
+	pdev->prop.sink_dpn_prop = wsa_sink_dpn_prop;
+	pdev->prop.scp_int1_mask = SDW_SCP_INT1_BUS_CLASH | SDW_SCP_INT1_PARITY;
+	gpiod_direction_output(wsa883x->sd_n, 1);
+
+	wsa883x->regmap = devm_regmap_init_sdw(pdev, &wsa883x_regmap_config);
+	if (IS_ERR(wsa883x->regmap)) {
+		dev_err(&pdev->dev, "regmap_init failed\n");
+		ret = PTR_ERR(wsa883x->regmap);
+>>>>>>> b7ba80a49124 (Commit)
 		goto err;
 	}
 	pm_runtime_set_autosuspend_delay(dev, 3000);
@@ -1419,7 +1488,11 @@ static int wsa883x_probe(struct sdw_slave *pdev,
 	pm_runtime_set_active(dev);
 	pm_runtime_enable(dev);
 
+<<<<<<< HEAD
 	ret = devm_snd_soc_register_component(dev,
+=======
+	ret = devm_snd_soc_register_component(&pdev->dev,
+>>>>>>> b7ba80a49124 (Commit)
 					      &wsa883x_component_drv,
 					       wsa883x_dais,
 					       ARRAY_SIZE(wsa883x_dais));
@@ -1434,17 +1507,54 @@ err:
 static int __maybe_unused wsa883x_runtime_suspend(struct device *dev)
 {
 	struct regmap *regmap = dev_get_regmap(dev, NULL);
+<<<<<<< HEAD
+=======
+	struct wsa883x_priv *wsa883x = dev_get_drvdata(dev);
+
+	gpiod_direction_output(wsa883x->sd_n, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	regcache_cache_only(regmap, true);
 	regcache_mark_dirty(regmap);
 
+<<<<<<< HEAD
+=======
+	regulator_disable(wsa883x->vdd);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static int __maybe_unused wsa883x_runtime_resume(struct device *dev)
 {
+<<<<<<< HEAD
 	struct regmap *regmap = dev_get_regmap(dev, NULL);
 
+=======
+	struct sdw_slave *slave = dev_to_sdw_dev(dev);
+	struct regmap *regmap = dev_get_regmap(dev, NULL);
+	struct wsa883x_priv *wsa883x = dev_get_drvdata(dev);
+	unsigned long time;
+	int ret;
+
+	ret = regulator_enable(wsa883x->vdd);
+	if (ret) {
+		dev_err(dev, "Failed to enable vdd regulator (%d)\n", ret);
+		return ret;
+	}
+
+	gpiod_direction_output(wsa883x->sd_n, 1);
+
+	time = wait_for_completion_timeout(&slave->initialization_complete,
+					   msecs_to_jiffies(WSA883X_PROBE_TIMEOUT));
+	if (!time) {
+		dev_err(dev, "Initialization not complete, timed out\n");
+		gpiod_direction_output(wsa883x->sd_n, 0);
+		regulator_disable(wsa883x->vdd);
+		return -ETIMEDOUT;
+	}
+
+	usleep_range(20000, 20010);
+>>>>>>> b7ba80a49124 (Commit)
 	regcache_cache_only(regmap, false);
 	regcache_sync(regmap);
 

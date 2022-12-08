@@ -16,18 +16,27 @@ TRACE_EVENT(rseq_update,
 
 	TP_STRUCT__entry(
 		__field(s32, cpu_id)
+<<<<<<< HEAD
 		__field(s32, node_id)
 		__field(s32, mm_cid)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	),
 
 	TP_fast_assign(
 		__entry->cpu_id = raw_smp_processor_id();
+<<<<<<< HEAD
 		__entry->node_id = cpu_to_node(__entry->cpu_id);
 		__entry->mm_cid = task_mm_cid(t);
 	),
 
 	TP_printk("cpu_id=%d node_id=%d mm_cid=%d", __entry->cpu_id,
 		  __entry->node_id, __entry->mm_cid)
+=======
+	),
+
+	TP_printk("cpu_id=%d", __entry->cpu_id)
+>>>>>>> b7ba80a49124 (Commit)
 );
 
 TRACE_EVENT(rseq_ip_fixup,

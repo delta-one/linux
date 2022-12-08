@@ -554,7 +554,11 @@ static int sh_msiof_spi_setup(struct spi_device *spi)
 		spi_controller_get_devdata(spi->controller);
 	u32 clr, set, tmp;
 
+<<<<<<< HEAD
 	if (spi_get_csgpiod(spi, 0) || spi_controller_is_slave(p->ctlr))
+=======
+	if (spi->cs_gpiod || spi_controller_is_slave(p->ctlr))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	if (p->native_cs_inited &&
@@ -587,11 +591,19 @@ static int sh_msiof_prepare_message(struct spi_controller *ctlr,
 	u32 ss, cs_high;
 
 	/* Configure pins before asserting CS */
+<<<<<<< HEAD
 	if (spi_get_csgpiod(spi, 0)) {
 		ss = ctlr->unused_native_cs;
 		cs_high = p->native_cs_high;
 	} else {
 		ss = spi_get_chipselect(spi, 0);
+=======
+	if (spi->cs_gpiod) {
+		ss = ctlr->unused_native_cs;
+		cs_high = p->native_cs_high;
+	} else {
+		ss = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 		cs_high = !!(spi->mode & SPI_CS_HIGH);
 	}
 	sh_msiof_spi_set_pin_regs(p, ss, !!(spi->mode & SPI_CPOL),
@@ -1073,7 +1085,11 @@ static const struct sh_msiof_chipdata rcar_gen3_data = {
 	.min_div_pow = 1,
 };
 
+<<<<<<< HEAD
 static const struct of_device_id sh_msiof_match[] __maybe_unused = {
+=======
+static const struct of_device_id sh_msiof_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "renesas,sh-mobile-msiof", .data = &sh_data },
 	{ .compatible = "renesas,msiof-r8a7743",   .data = &rcar_gen2_data },
 	{ .compatible = "renesas,msiof-r8a7745",   .data = &rcar_gen2_data },
@@ -1375,12 +1391,20 @@ static int sh_msiof_spi_probe(struct platform_device *pdev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void sh_msiof_spi_remove(struct platform_device *pdev)
+=======
+static int sh_msiof_spi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sh_msiof_spi_priv *p = platform_get_drvdata(pdev);
 
 	sh_msiof_release_dma(p);
 	pm_runtime_disable(&pdev->dev);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct platform_device_id spi_driver_ids[] = {
@@ -1413,7 +1437,11 @@ static SIMPLE_DEV_PM_OPS(sh_msiof_spi_pm_ops, sh_msiof_spi_suspend,
 
 static struct platform_driver sh_msiof_spi_drv = {
 	.probe		= sh_msiof_spi_probe,
+<<<<<<< HEAD
 	.remove_new	= sh_msiof_spi_remove,
+=======
+	.remove		= sh_msiof_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= spi_driver_ids,
 	.driver		= {
 		.name		= "spi_sh_msiof",

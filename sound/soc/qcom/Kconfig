@@ -68,9 +68,12 @@ config SND_SOC_APQ8016_SBC
 config SND_SOC_QCOM_COMMON
 	tristate
 
+<<<<<<< HEAD
 config SND_SOC_QCOM_SDW
 	tristate
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config SND_SOC_QDSP6_COMMON
 	tristate
 
@@ -171,7 +174,10 @@ config SND_SOC_SM8250
 	depends on COMMON_CLK
 	select SND_SOC_QDSP6
 	select SND_SOC_QCOM_COMMON
+<<<<<<< HEAD
 	select SND_SOC_QCOM_SDW
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  To add support for audio on Qualcomm Technologies Inc.
 	  SM8250 SoC-based systems.
@@ -179,11 +185,19 @@ config SND_SOC_SM8250
 
 config SND_SOC_SC8280XP
 	tristate "SoC Machine driver for SC8280XP boards"
+<<<<<<< HEAD
 	depends on QCOM_APR && SOUNDWIRE
 	depends on COMMON_CLK
 	select SND_SOC_QDSP6
 	select SND_SOC_QCOM_COMMON
 	select SND_SOC_QCOM_SDW
+=======
+	depends on QCOM_APR || COMPILE_TEST
+	depends on SOUNDWIRE
+	depends on COMMON_CLK
+	select SND_SOC_QDSP6
+	select SND_SOC_QCOM_COMMON
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  To add support for audio on Qualcomm Technologies Inc.
 	  SC8280XP SoC-based systems.
@@ -192,7 +206,10 @@ config SND_SOC_SC8280XP
 config SND_SOC_SC7180
 	tristate "SoC Machine driver for SC7180 boards"
 	depends on I2C && GPIOLIB
+<<<<<<< HEAD
 	depends on SOUNDWIRE || SOUNDWIRE=n
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select SND_SOC_QCOM_COMMON
 	select SND_SOC_LPASS_SC7180
 	select SND_SOC_MAX98357A

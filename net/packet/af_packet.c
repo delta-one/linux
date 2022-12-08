@@ -270,11 +270,16 @@ static noinline struct sk_buff *nf_hook_direct_egress(struct sk_buff *skb)
 }
 #endif
 
+<<<<<<< HEAD
 static int packet_xmit(const struct packet_sock *po, struct sk_buff *skb)
 {
 	if (!packet_sock_flag(po, PACKET_SOCK_QDISC_BYPASS))
 		return dev_queue_xmit(skb);
 
+=======
+static int packet_direct_xmit(struct sk_buff *skb)
+{
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_NETFILTER_EGRESS
 	if (nf_hook_egress_active()) {
 		skb = nf_hook_direct_egress(skb);
@@ -308,6 +313,14 @@ static void packet_cached_dev_reset(struct packet_sock *po)
 	RCU_INIT_POINTER(po->cached_dev, NULL);
 }
 
+<<<<<<< HEAD
+=======
+static bool packet_use_direct_xmit(const struct packet_sock *po)
+{
+	return po->xmit == packet_direct_xmit;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static u16 packet_pick_tx_queue(struct sk_buff *skb)
 {
 	struct net_device *dev = skb->dev;
@@ -337,14 +350,22 @@ static void __register_prot_hook(struct sock *sk)
 {
 	struct packet_sock *po = pkt_sk(sk);
 
+<<<<<<< HEAD
 	if (!packet_sock_flag(po, PACKET_SOCK_RUNNING)) {
+=======
+	if (!po->running) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (po->fanout)
 			__fanout_link(sk, po);
 		else
 			dev_add_pack(&po->prot_hook);
 
 		sock_hold(sk);
+<<<<<<< HEAD
 		packet_sock_flag_set(po, PACKET_SOCK_RUNNING, 1);
+=======
+		po->running = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -366,7 +387,11 @@ static void __unregister_prot_hook(struct sock *sk, bool sync)
 
 	lockdep_assert_held_once(&po->bind_lock);
 
+<<<<<<< HEAD
 	packet_sock_flag_set(po, PACKET_SOCK_RUNNING, 0);
+=======
+	po->running = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (po->fanout)
 		__fanout_unlink(sk, po);
@@ -386,7 +411,11 @@ static void unregister_prot_hook(struct sock *sk, bool sync)
 {
 	struct packet_sock *po = pkt_sk(sk);
 
+<<<<<<< HEAD
 	if (packet_sock_flag(po, PACKET_SOCK_RUNNING))
+=======
+	if (po->running)
+>>>>>>> b7ba80a49124 (Commit)
 		__unregister_prot_hook(sk, sync);
 }
 
@@ -471,7 +500,11 @@ static __u32 __packet_set_timestamp(struct packet_sock *po, void *frame,
 	struct timespec64 ts;
 	__u32 ts_status;
 
+<<<<<<< HEAD
 	if (!(ts_status = tpacket_get_timestamp(skb, &ts, READ_ONCE(po->tp_tstamp))))
+=======
+	if (!(ts_status = tpacket_get_timestamp(skb, &ts, po->tp_tstamp)))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	h.raw = frame;
@@ -1304,23 +1337,38 @@ static int __packet_rcv_has_room(const struct packet_sock *po,
 
 static int packet_rcv_has_room(struct packet_sock *po, struct sk_buff *skb)
 {
+<<<<<<< HEAD
 	bool pressure;
 	int ret;
+=======
+	int pressure, ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = __packet_rcv_has_room(po, skb);
 	pressure = ret != ROOM_NORMAL;
 
+<<<<<<< HEAD
 	if (packet_sock_flag(po, PACKET_SOCK_PRESSURE) != pressure)
 		packet_sock_flag_set(po, PACKET_SOCK_PRESSURE, pressure);
+=======
+	if (READ_ONCE(po->pressure) != pressure)
+		WRITE_ONCE(po->pressure, pressure);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
 
 static void packet_rcv_try_clear_pressure(struct packet_sock *po)
 {
+<<<<<<< HEAD
 	if (packet_sock_flag(po, PACKET_SOCK_PRESSURE) &&
 	    __packet_rcv_has_room(po, NULL) == ROOM_NORMAL)
 		packet_sock_flag_set(po, PACKET_SOCK_PRESSURE, false);
+=======
+	if (READ_ONCE(po->pressure) &&
+	    __packet_rcv_has_room(po, NULL) == ROOM_NORMAL)
+		WRITE_ONCE(po->pressure,  0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void packet_sock_destruct(struct sock *sk)
@@ -1334,6 +1382,11 @@ static void packet_sock_destruct(struct sock *sk)
 		pr_err("Attempt to release alive packet socket: %p\n", sk);
 		return;
 	}
+<<<<<<< HEAD
+=======
+
+	sk_refcnt_debug_dec(sk);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool fanout_flow_is_huge(struct packet_sock *po, struct sk_buff *skb)
@@ -1347,7 +1400,11 @@ static bool fanout_flow_is_huge(struct packet_sock *po, struct sk_buff *skb)
 		if (READ_ONCE(history[i]) == rxhash)
 			count++;
 
+<<<<<<< HEAD
 	victim = get_random_u32_below(ROLLOVER_HLEN);
+=======
+	victim = prandom_u32() % ROLLOVER_HLEN;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Avoid dirtying the cache line if possible */
 	if (READ_ONCE(history[victim]) != rxhash)
@@ -1383,7 +1440,11 @@ static unsigned int fanout_demux_rnd(struct packet_fanout *f,
 				     struct sk_buff *skb,
 				     unsigned int num)
 {
+<<<<<<< HEAD
 	return get_random_u32_below(num);
+=======
+	return prandom_u32_max(num);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static unsigned int fanout_demux_rollover(struct packet_fanout *f,
@@ -1407,8 +1468,12 @@ static unsigned int fanout_demux_rollover(struct packet_fanout *f,
 	i = j = min_t(int, po->rollover->sock, num - 1);
 	do {
 		po_next = pkt_sk(rcu_dereference(f->arr[i]));
+<<<<<<< HEAD
 		if (po_next != po_skip &&
 		    !packet_sock_flag(po_next, PACKET_SOCK_PRESSURE) &&
+=======
+		if (po_next != po_skip && !READ_ONCE(po_next->pressure) &&
+>>>>>>> b7ba80a49124 (Commit)
 		    packet_rcv_has_room(po_next, skb) == ROOM_NORMAL) {
 			if (i != j)
 				po->rollover->sock = i;
@@ -1775,13 +1840,20 @@ static int fanout_add(struct sock *sk, struct fanout_args *args)
 		match->prot_hook.af_packet_net = read_pnet(&match->net);
 		match->prot_hook.id_match = match_fanout_group;
 		match->max_num_members = args->max_num_members;
+<<<<<<< HEAD
 		match->prot_hook.ignore_outgoing = type_flags & PACKET_FANOUT_FLAG_IGNORE_OUTGOING;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		list_add(&match->list, &fanout_list);
 	}
 	err = -EINVAL;
 
 	spin_lock(&po->bind_lock);
+<<<<<<< HEAD
 	if (packet_sock_flag(po, PACKET_SOCK_RUNNING) &&
+=======
+	if (po->running &&
+>>>>>>> b7ba80a49124 (Commit)
 	    match->type == type &&
 	    match->prot_hook.type == po->prot_hook.type &&
 	    match->prot_hook.dev == po->prot_hook.dev) {
@@ -2183,7 +2255,11 @@ static int packet_rcv(struct sk_buff *skb, struct net_device *dev,
 	sll = &PACKET_SKB_CB(skb)->sa.ll;
 	sll->sll_hatype = dev->type;
 	sll->sll_pkttype = skb->pkt_type;
+<<<<<<< HEAD
 	if (unlikely(packet_sock_flag(po, PACKET_SOCK_ORIGDEV)))
+=======
+	if (unlikely(po->origdev))
+>>>>>>> b7ba80a49124 (Commit)
 		sll->sll_ifindex = orig_dev->ifindex;
 	else
 		sll->sll_ifindex = dev->ifindex;
@@ -2292,10 +2368,16 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
 	if (skb->ip_summed == CHECKSUM_PARTIAL)
 		status |= TP_STATUS_CSUMNOTREADY;
 	else if (skb->pkt_type != PACKET_OUTGOING &&
+<<<<<<< HEAD
 		 skb_csum_unnecessary(skb))
 		status |= TP_STATUS_CSUM_VALID;
 	if (skb_is_gso(skb) && skb_is_gso_tcp(skb))
 		status |= TP_STATUS_GSO_TCP;
+=======
+		 (skb->ip_summed == CHECKSUM_COMPLETE ||
+		  skb_csum_unnecessary(skb)))
+		status |= TP_STATUS_CSUM_VALID;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (snaplen > res)
 		snaplen = res;
@@ -2308,7 +2390,11 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
 		netoff = TPACKET_ALIGN(po->tp_hdrlen +
 				       (maclen < 16 ? 16 : maclen)) +
 				       po->tp_reserve;
+<<<<<<< HEAD
 		if (packet_sock_flag(po, PACKET_SOCK_HAS_VNET_HDR)) {
+=======
+		if (po->has_vnet_hdr) {
+>>>>>>> b7ba80a49124 (Commit)
 			netoff += sizeof(struct virtio_net_hdr);
 			do_vnet = true;
 		}
@@ -2402,8 +2488,12 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
 	 * closer to the time of capture.
 	 */
 	ts_status = tpacket_get_timestamp(skb, &ts,
+<<<<<<< HEAD
 					  READ_ONCE(po->tp_tstamp) |
 					  SOF_TIMESTAMPING_SOFTWARE);
+=======
+					  po->tp_tstamp | SOF_TIMESTAMPING_SOFTWARE);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ts_status)
 		ktime_get_real_ts64(&ts);
 
@@ -2461,7 +2551,11 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
 	sll->sll_hatype = dev->type;
 	sll->sll_protocol = skb->protocol;
 	sll->sll_pkttype = skb->pkt_type;
+<<<<<<< HEAD
 	if (unlikely(packet_sock_flag(po, PACKET_SOCK_ORIGDEV)))
+=======
+	if (unlikely(po->origdev))
+>>>>>>> b7ba80a49124 (Commit)
 		sll->sll_ifindex = orig_dev->ifindex;
 	else
 		sll->sll_ifindex = dev->ifindex;
@@ -2671,7 +2765,11 @@ static int tpacket_parse_header(struct packet_sock *po, void *frame,
 		return -EMSGSIZE;
 	}
 
+<<<<<<< HEAD
 	if (unlikely(packet_sock_flag(po, PACKET_SOCK_TX_HAS_OFF))) {
+=======
+	if (unlikely(po->tp_tx_has_off)) {
+>>>>>>> b7ba80a49124 (Commit)
 		int off_min, off_max;
 
 		off_min = po->tp_hdrlen - sizeof(struct sockaddr_ll);
@@ -2779,8 +2877,12 @@ static int tpacket_snd(struct packet_sock *po, struct msghdr *msg)
 	size_max = po->tx_ring.frame_size
 		- (po->tp_hdrlen - sizeof(struct sockaddr_ll));
 
+<<<<<<< HEAD
 	if ((size_max > dev->mtu + reserve + VLAN_HLEN) &&
 	    !packet_sock_flag(po, PACKET_SOCK_HAS_VNET_HDR))
+=======
+	if ((size_max > dev->mtu + reserve + VLAN_HLEN) && !po->has_vnet_hdr)
+>>>>>>> b7ba80a49124 (Commit)
 		size_max = dev->mtu + reserve + VLAN_HLEN;
 
 	reinit_completion(&po->skb_completion);
@@ -2809,7 +2911,11 @@ static int tpacket_snd(struct packet_sock *po, struct msghdr *msg)
 		status = TP_STATUS_SEND_REQUEST;
 		hlen = LL_RESERVED_SPACE(dev);
 		tlen = dev->needed_tailroom;
+<<<<<<< HEAD
 		if (packet_sock_flag(po, PACKET_SOCK_HAS_VNET_HDR)) {
+=======
+		if (po->has_vnet_hdr) {
+>>>>>>> b7ba80a49124 (Commit)
 			vnet_hdr = data;
 			data += sizeof(*vnet_hdr);
 			tp_len -= sizeof(*vnet_hdr);
@@ -2837,13 +2943,21 @@ static int tpacket_snd(struct packet_sock *po, struct msghdr *msg)
 					  addr, hlen, copylen, &sockc);
 		if (likely(tp_len >= 0) &&
 		    tp_len > dev->mtu + reserve &&
+<<<<<<< HEAD
 		    !packet_sock_flag(po, PACKET_SOCK_HAS_VNET_HDR) &&
+=======
+		    !po->has_vnet_hdr &&
+>>>>>>> b7ba80a49124 (Commit)
 		    !packet_extra_vlan_len_allowed(dev, skb))
 			tp_len = -EMSGSIZE;
 
 		if (unlikely(tp_len < 0)) {
 tpacket_error:
+<<<<<<< HEAD
 			if (packet_sock_flag(po, PACKET_SOCK_TP_LOSS)) {
+=======
+			if (po->tp_loss) {
+>>>>>>> b7ba80a49124 (Commit)
 				__packet_set_status(po, ph,
 						TP_STATUS_AVAILABLE);
 				packet_increment_head(&po->tx_ring);
@@ -2856,7 +2970,11 @@ tpacket_error:
 			}
 		}
 
+<<<<<<< HEAD
 		if (packet_sock_flag(po, PACKET_SOCK_HAS_VNET_HDR)) {
+=======
+		if (po->has_vnet_hdr) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (virtio_net_hdr_to_skb(skb, vnet_hdr, vio_le())) {
 				tp_len = -EINVAL;
 				goto tpacket_error;
@@ -2869,7 +2987,11 @@ tpacket_error:
 		packet_inc_pending(&po->tx_ring);
 
 		status = TP_STATUS_SEND_REQUEST;
+<<<<<<< HEAD
 		err = packet_xmit(po, skb);
+=======
+		err = po->xmit(skb);
+>>>>>>> b7ba80a49124 (Commit)
 		if (unlikely(err != 0)) {
 			if (err > 0)
 				err = net_xmit_errno(err);
@@ -2990,7 +3112,11 @@ static int packet_snd(struct socket *sock, struct msghdr *msg, size_t len)
 
 	if (sock->type == SOCK_RAW)
 		reserve = dev->hard_header_len;
+<<<<<<< HEAD
 	if (packet_sock_flag(po, PACKET_SOCK_HAS_VNET_HDR)) {
+=======
+	if (po->has_vnet_hdr) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = packet_snd_vnet_parse(msg, &len, &vnet_hdr);
 		if (err)
 			goto out_unlock;
@@ -3072,8 +3198,12 @@ static int packet_snd(struct socket *sock, struct msghdr *msg, size_t len)
 		virtio_net_hdr_set_proto(skb, &vnet_hdr);
 	}
 
+<<<<<<< HEAD
 	err = packet_xmit(po, skb);
 
+=======
+	err = po->xmit(skb);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(err != 0)) {
 		if (err > 0)
 			err = net_xmit_errno(err);
@@ -3175,6 +3305,10 @@ static int packet_release(struct socket *sock)
 
 	skb_queue_purge(&sk->sk_receive_queue);
 	packet_free_pending(po);
+<<<<<<< HEAD
+=======
+	sk_refcnt_debug_release(sk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	sock_put(sk);
 	return 0;
@@ -3220,7 +3354,11 @@ static int packet_do_bind(struct sock *sk, const char *name, int ifindex,
 
 	if (need_rehook) {
 		dev_hold(dev);
+<<<<<<< HEAD
 		if (packet_sock_flag(po, PACKET_SOCK_RUNNING)) {
+=======
+		if (po->running) {
+>>>>>>> b7ba80a49124 (Commit)
 			rcu_read_unlock();
 			/* prevents packet_notifier() from calling
 			 * register_prot_hook()
@@ -3233,7 +3371,11 @@ static int packet_do_bind(struct sock *sk, const char *name, int ifindex,
 								 dev->ifindex);
 		}
 
+<<<<<<< HEAD
 		BUG_ON(packet_sock_flag(po, PACKET_SOCK_RUNNING));
+=======
+		BUG_ON(po->running);
+>>>>>>> b7ba80a49124 (Commit)
 		WRITE_ONCE(po->num, proto);
 		po->prot_hook.type = proto;
 
@@ -3279,7 +3421,11 @@ static int packet_bind_spkt(struct socket *sock, struct sockaddr *uaddr,
 			    int addr_len)
 {
 	struct sock *sk = sock->sk;
+<<<<<<< HEAD
 	char name[sizeof(uaddr->sa_data_min) + 1];
+=======
+	char name[sizeof(uaddr->sa_data) + 1];
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 *	Check legality
@@ -3290,8 +3436,13 @@ static int packet_bind_spkt(struct socket *sock, struct sockaddr *uaddr,
 	/* uaddr->sa_data comes from the userspace, it's not guaranteed to be
 	 * zero-terminated.
 	 */
+<<<<<<< HEAD
 	memcpy(name, uaddr->sa_data, sizeof(uaddr->sa_data_min));
 	name[sizeof(uaddr->sa_data_min)] = 0;
+=======
+	memcpy(name, uaddr->sa_data, sizeof(uaddr->sa_data));
+	name[sizeof(uaddr->sa_data)] = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return packet_do_bind(sk, name, 0, pkt_sk(sk)->num);
 }
@@ -3355,6 +3506,10 @@ static int packet_create(struct net *net, struct socket *sock, int protocol,
 	init_completion(&po->skb_completion);
 	sk->sk_family = PF_PACKET;
 	po->num = proto;
+<<<<<<< HEAD
+=======
+	po->xmit = dev_queue_xmit;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = packet_alloc_pending(po);
 	if (err)
@@ -3363,6 +3518,10 @@ static int packet_create(struct net *net, struct socket *sock, int protocol,
 	packet_cached_dev_reset(po);
 
 	sk->sk_destruct = packet_sock_destruct;
+<<<<<<< HEAD
+=======
+	sk_refcnt_debug_inc(sk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 *	Attach a protocol block
@@ -3449,7 +3608,11 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
 
 	packet_rcv_try_clear_pressure(pkt_sk(sk));
 
+<<<<<<< HEAD
 	if (packet_sock_flag(pkt_sk(sk), PACKET_SOCK_HAS_VNET_HDR)) {
+=======
+	if (pkt_sk(sk)->has_vnet_hdr) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = packet_rcv_vnet(msg, skb, &len);
 		if (err)
 			goto out_free;
@@ -3513,17 +3676,27 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
 		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa, copy_len);
 	}
 
+<<<<<<< HEAD
 	if (packet_sock_flag(pkt_sk(sk), PACKET_SOCK_AUXDATA)) {
+=======
+	if (pkt_sk(sk)->auxdata) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct tpacket_auxdata aux;
 
 		aux.tp_status = TP_STATUS_USER;
 		if (skb->ip_summed == CHECKSUM_PARTIAL)
 			aux.tp_status |= TP_STATUS_CSUMNOTREADY;
 		else if (skb->pkt_type != PACKET_OUTGOING &&
+<<<<<<< HEAD
 			 skb_csum_unnecessary(skb))
 			aux.tp_status |= TP_STATUS_CSUM_VALID;
 		if (skb_is_gso(skb) && skb_is_gso_tcp(skb))
 			aux.tp_status |= TP_STATUS_GSO_TCP;
+=======
+			 (skb->ip_summed == CHECKSUM_COMPLETE ||
+			  skb_csum_unnecessary(skb)))
+			aux.tp_status |= TP_STATUS_CSUM_VALID;
+>>>>>>> b7ba80a49124 (Commit)
 
 		aux.tp_len = origlen;
 		aux.tp_snaplen = skb->len;
@@ -3562,11 +3735,19 @@ static int packet_getname_spkt(struct socket *sock, struct sockaddr *uaddr,
 		return -EOPNOTSUPP;
 
 	uaddr->sa_family = AF_PACKET;
+<<<<<<< HEAD
 	memset(uaddr->sa_data, 0, sizeof(uaddr->sa_data_min));
 	rcu_read_lock();
 	dev = dev_get_by_index_rcu(sock_net(sk), READ_ONCE(pkt_sk(sk)->ifindex));
 	if (dev)
 		strscpy(uaddr->sa_data, dev->name, sizeof(uaddr->sa_data_min));
+=======
+	memset(uaddr->sa_data, 0, sizeof(uaddr->sa_data));
+	rcu_read_lock();
+	dev = dev_get_by_index_rcu(sock_net(sk), READ_ONCE(pkt_sk(sk)->ifindex));
+	if (dev)
+		strscpy(uaddr->sa_data, dev->name, sizeof(uaddr->sa_data));
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_read_unlock();
 
 	return sizeof(*uaddr);
@@ -3884,7 +4065,11 @@ packet_setsockopt(struct socket *sock, int level, int optname, sockptr_t optval,
 		if (po->rx_ring.pg_vec || po->tx_ring.pg_vec) {
 			ret = -EBUSY;
 		} else {
+<<<<<<< HEAD
 			packet_sock_flag_set(po, PACKET_SOCK_TP_LOSS, val);
+=======
+			po->tp_loss = !!val;
+>>>>>>> b7ba80a49124 (Commit)
 			ret = 0;
 		}
 		release_sock(sk);
@@ -3899,7 +4084,13 @@ packet_setsockopt(struct socket *sock, int level, int optname, sockptr_t optval,
 		if (copy_from_sockptr(&val, optval, sizeof(val)))
 			return -EFAULT;
 
+<<<<<<< HEAD
 		packet_sock_flag_set(po, PACKET_SOCK_AUXDATA, val);
+=======
+		lock_sock(sk);
+		po->auxdata = !!val;
+		release_sock(sk);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 	case PACKET_ORIGDEV:
@@ -3911,7 +4102,13 @@ packet_setsockopt(struct socket *sock, int level, int optname, sockptr_t optval,
 		if (copy_from_sockptr(&val, optval, sizeof(val)))
 			return -EFAULT;
 
+<<<<<<< HEAD
 		packet_sock_flag_set(po, PACKET_SOCK_ORIGDEV, val);
+=======
+		lock_sock(sk);
+		po->origdev = !!val;
+		release_sock(sk);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 	case PACKET_VNET_HDR:
@@ -3929,7 +4126,11 @@ packet_setsockopt(struct socket *sock, int level, int optname, sockptr_t optval,
 		if (po->rx_ring.pg_vec || po->tx_ring.pg_vec) {
 			ret = -EBUSY;
 		} else {
+<<<<<<< HEAD
 			packet_sock_flag_set(po, PACKET_SOCK_HAS_VNET_HDR, val);
+=======
+			po->has_vnet_hdr = !!val;
+>>>>>>> b7ba80a49124 (Commit)
 			ret = 0;
 		}
 		release_sock(sk);
@@ -3944,7 +4145,11 @@ packet_setsockopt(struct socket *sock, int level, int optname, sockptr_t optval,
 		if (copy_from_sockptr(&val, optval, sizeof(val)))
 			return -EFAULT;
 
+<<<<<<< HEAD
 		WRITE_ONCE(po->tp_tstamp, val);
+=======
+		po->tp_tstamp = val;
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 	case PACKET_FANOUT:
@@ -3991,7 +4196,11 @@ packet_setsockopt(struct socket *sock, int level, int optname, sockptr_t optval,
 
 		lock_sock(sk);
 		if (!po->rx_ring.pg_vec && !po->tx_ring.pg_vec)
+<<<<<<< HEAD
 			packet_sock_flag_set(po, PACKET_SOCK_TX_HAS_OFF, val);
+=======
+			po->tp_tx_has_off = !!val;
+>>>>>>> b7ba80a49124 (Commit)
 
 		release_sock(sk);
 		return 0;
@@ -4005,7 +4214,11 @@ packet_setsockopt(struct socket *sock, int level, int optname, sockptr_t optval,
 		if (copy_from_sockptr(&val, optval, sizeof(val)))
 			return -EFAULT;
 
+<<<<<<< HEAD
 		packet_sock_flag_set(po, PACKET_SOCK_QDISC_BYPASS, val);
+=======
+		po->xmit = val ? packet_direct_xmit : dev_queue_xmit;
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 	default:
@@ -4056,6 +4269,7 @@ static int packet_getsockopt(struct socket *sock, int level, int optname,
 
 		break;
 	case PACKET_AUXDATA:
+<<<<<<< HEAD
 		val = packet_sock_flag(po, PACKET_SOCK_AUXDATA);
 		break;
 	case PACKET_ORIGDEV:
@@ -4063,6 +4277,15 @@ static int packet_getsockopt(struct socket *sock, int level, int optname,
 		break;
 	case PACKET_VNET_HDR:
 		val = packet_sock_flag(po, PACKET_SOCK_HAS_VNET_HDR);
+=======
+		val = po->auxdata;
+		break;
+	case PACKET_ORIGDEV:
+		val = po->origdev;
+		break;
+	case PACKET_VNET_HDR:
+		val = po->has_vnet_hdr;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case PACKET_VERSION:
 		val = po->tp_version;
@@ -4092,10 +4315,17 @@ static int packet_getsockopt(struct socket *sock, int level, int optname,
 		val = po->tp_reserve;
 		break;
 	case PACKET_LOSS:
+<<<<<<< HEAD
 		val = packet_sock_flag(po, PACKET_SOCK_TP_LOSS);
 		break;
 	case PACKET_TIMESTAMP:
 		val = READ_ONCE(po->tp_tstamp);
+=======
+		val = po->tp_loss;
+		break;
+	case PACKET_TIMESTAMP:
+		val = po->tp_tstamp;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case PACKET_FANOUT:
 		val = (po->fanout ?
@@ -4117,10 +4347,17 @@ static int packet_getsockopt(struct socket *sock, int level, int optname,
 		lv = sizeof(rstats);
 		break;
 	case PACKET_TX_HAS_OFF:
+<<<<<<< HEAD
 		val = packet_sock_flag(po, PACKET_SOCK_TX_HAS_OFF);
 		break;
 	case PACKET_QDISC_BYPASS:
 		val = packet_sock_flag(po, PACKET_SOCK_QDISC_BYPASS);
+=======
+		val = po->tp_tx_has_off;
+		break;
+	case PACKET_QDISC_BYPASS:
+		val = packet_use_direct_xmit(po);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		return -ENOPROTOOPT;
@@ -4155,7 +4392,11 @@ static int packet_notifier(struct notifier_block *this,
 		case NETDEV_DOWN:
 			if (dev->ifindex == po->ifindex) {
 				spin_lock(&po->bind_lock);
+<<<<<<< HEAD
 				if (packet_sock_flag(po, PACKET_SOCK_RUNNING)) {
+=======
+				if (po->running) {
+>>>>>>> b7ba80a49124 (Commit)
 					__unregister_prot_hook(sk, false);
 					sk->sk_err = ENETDOWN;
 					if (!sock_flag(sk, SOCK_DEAD))
@@ -4466,7 +4707,11 @@ static int packet_set_ring(struct sock *sk, union tpacket_req_u *req_u,
 
 	/* Detach socket from network */
 	spin_lock(&po->bind_lock);
+<<<<<<< HEAD
 	was_running = packet_sock_flag(po, PACKET_SOCK_RUNNING);
+=======
+	was_running = po->running;
+>>>>>>> b7ba80a49124 (Commit)
 	num = po->num;
 	if (was_running) {
 		WRITE_ONCE(po->num, 0);
@@ -4677,7 +4922,11 @@ static int packet_seq_show(struct seq_file *seq, void *v)
 			   s->sk_type,
 			   ntohs(READ_ONCE(po->num)),
 			   READ_ONCE(po->ifindex),
+<<<<<<< HEAD
 			   packet_sock_flag(po, PACKET_SOCK_RUNNING),
+=======
+			   po->running,
+>>>>>>> b7ba80a49124 (Commit)
 			   atomic_read(&s->sk_rmem_alloc),
 			   from_kuid_munged(seq_user_ns(seq), sock_i_uid(s)),
 			   sock_i_ino(s));

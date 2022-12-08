@@ -406,7 +406,11 @@ static int atmel_qspi_set_cfg(struct atmel_qspi *aq,
 
 static int atmel_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
 {
+<<<<<<< HEAD
 	struct atmel_qspi *aq = spi_controller_get_devdata(mem->spi->controller);
+=======
+	struct atmel_qspi *aq = spi_controller_get_devdata(mem->spi->master);
+>>>>>>> b7ba80a49124 (Commit)
 	u32 sr, offset;
 	int err;
 
@@ -476,7 +480,11 @@ static const struct spi_controller_mem_ops atmel_qspi_mem_ops = {
 
 static int atmel_qspi_setup(struct spi_device *spi)
 {
+<<<<<<< HEAD
 	struct spi_controller *ctrl = spi->controller;
+=======
+	struct spi_controller *ctrl = spi->master;
+>>>>>>> b7ba80a49124 (Commit)
 	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
 	unsigned long src_rate;
 	u32 scbr;
@@ -510,6 +518,7 @@ static int atmel_qspi_setup(struct spi_device *spi)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int atmel_qspi_set_cs_timing(struct spi_device *spi)
 {
 	struct spi_controller *ctrl = spi->controller;
@@ -543,6 +552,8 @@ static int atmel_qspi_set_cs_timing(struct spi_device *spi)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void atmel_qspi_init(struct atmel_qspi *aq)
 {
 	/* Reset the QSPI controller */
@@ -582,13 +593,20 @@ static int atmel_qspi_probe(struct platform_device *pdev)
 	struct resource *res;
 	int irq, err = 0;
 
+<<<<<<< HEAD
 	ctrl = devm_spi_alloc_host(&pdev->dev, sizeof(*aq));
+=======
+	ctrl = devm_spi_alloc_master(&pdev->dev, sizeof(*aq));
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ctrl)
 		return -ENOMEM;
 
 	ctrl->mode_bits = SPI_RX_DUAL | SPI_RX_QUAD | SPI_TX_DUAL | SPI_TX_QUAD;
 	ctrl->setup = atmel_qspi_setup;
+<<<<<<< HEAD
 	ctrl->set_cs_timing = atmel_qspi_set_cs_timing;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ctrl->bus_num = -1;
 	ctrl->mem_ops = &atmel_qspi_mem_ops;
 	ctrl->num_chipselect = 1;
@@ -700,12 +718,17 @@ disable_pclk:
 	return err;
 }
 
+<<<<<<< HEAD
 static void atmel_qspi_remove(struct platform_device *pdev)
+=======
+static int atmel_qspi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_controller *ctrl = platform_get_drvdata(pdev);
 	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
 	int ret;
 
+<<<<<<< HEAD
 	spi_unregister_controller(ctrl);
 
 	ret = pm_runtime_get_sync(&pdev->dev);
@@ -727,6 +750,21 @@ static void atmel_qspi_remove(struct platform_device *pdev)
 
 	pm_runtime_disable(&pdev->dev);
 	pm_runtime_put_noidle(&pdev->dev);
+=======
+	ret = pm_runtime_resume_and_get(&pdev->dev);
+	if (ret < 0)
+		return ret;
+
+	spi_unregister_controller(ctrl);
+	atmel_qspi_write(QSPI_CR_QSPIDIS, aq, QSPI_CR);
+
+	pm_runtime_disable(&pdev->dev);
+	pm_runtime_put_noidle(&pdev->dev);
+
+	clk_disable_unprepare(aq->qspick);
+	clk_disable_unprepare(aq->pclk);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused atmel_qspi_suspend(struct device *dev)
@@ -794,11 +832,15 @@ static int __maybe_unused atmel_qspi_runtime_resume(struct device *dev)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = clk_enable(aq->qspick);
 	if (ret)
 		clk_disable(aq->pclk);
 
 	return ret;
+=======
+	return clk_enable(aq->qspick);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct dev_pm_ops __maybe_unused atmel_qspi_pm_ops = {
@@ -835,7 +877,11 @@ static struct platform_driver atmel_qspi_driver = {
 		.pm	= pm_ptr(&atmel_qspi_pm_ops),
 	},
 	.probe		= atmel_qspi_probe,
+<<<<<<< HEAD
 	.remove_new	= atmel_qspi_remove,
+=======
+	.remove		= atmel_qspi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(atmel_qspi_driver);
 

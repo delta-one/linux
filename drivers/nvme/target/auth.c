@@ -45,11 +45,17 @@ int nvmet_auth_set_key(struct nvmet_host *host, const char *secret,
 	if (!dhchap_secret)
 		return -ENOMEM;
 	if (set_ctrl) {
+<<<<<<< HEAD
 		kfree(host->dhchap_ctrl_secret);
 		host->dhchap_ctrl_secret = strim(dhchap_secret);
 		host->dhchap_ctrl_key_hash = key_hash;
 	} else {
 		kfree(host->dhchap_secret);
+=======
+		host->dhchap_ctrl_secret = strim(dhchap_secret);
+		host->dhchap_ctrl_key_hash = key_hash;
+	} else {
+>>>>>>> b7ba80a49124 (Commit)
 		host->dhchap_secret = strim(dhchap_secret);
 		host->dhchap_key_hash = key_hash;
 	}

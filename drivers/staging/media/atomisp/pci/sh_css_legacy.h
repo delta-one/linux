@@ -32,6 +32,10 @@ enum ia_css_pipe_id {
 	IA_CSS_PIPE_ID_VIDEO,
 	IA_CSS_PIPE_ID_CAPTURE,
 	IA_CSS_PIPE_ID_YUVPP,
+<<<<<<< HEAD
+=======
+	IA_CSS_PIPE_ID_ACC,
+>>>>>>> b7ba80a49124 (Commit)
 	IA_CSS_PIPE_ID_NUM
 };
 

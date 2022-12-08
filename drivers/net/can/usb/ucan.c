@@ -245,8 +245,12 @@ struct ucan_message_in {
 		/* CAN transmission complete
 		 * (type == UCAN_IN_TX_COMPLETE)
 		 */
+<<<<<<< HEAD
 		DECLARE_FLEX_ARRAY(struct ucan_tx_complete_entry_t,
 				   can_tx_complete_msg);
+=======
+		struct ucan_tx_complete_entry_t can_tx_complete_msg[0];
+>>>>>>> b7ba80a49124 (Commit)
 	} __aligned(0x4) msg;
 } __packed __aligned(0x4);
 
@@ -277,6 +281,10 @@ struct ucan_priv {
 
 	/* linux USB device structures */
 	struct usb_device *udev;
+<<<<<<< HEAD
+=======
+	struct usb_interface *intf;
+>>>>>>> b7ba80a49124 (Commit)
 	struct net_device *netdev;
 
 	/* lock for can->echo_skb (used around
@@ -1120,7 +1128,11 @@ static netdev_tx_t ucan_start_xmit(struct sk_buff *skb,
 	struct can_frame *cf = (struct can_frame *)skb->data;
 
 	/* check skb */
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(netdev, skb))
+=======
+	if (can_dropped_invalid_skb(netdev, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	/* allocate a context and slow down tx path, if fifo state is low */
@@ -1500,6 +1512,10 @@ static int ucan_probe(struct usb_interface *intf,
 
 	/* initialize data */
 	up->udev = udev;
+<<<<<<< HEAD
+=======
+	up->intf = intf;
+>>>>>>> b7ba80a49124 (Commit)
 	up->netdev = netdev;
 	up->intf_index = iface_desc->desc.bInterfaceNumber;
 	up->in_ep_addr = in_ep_addr;
@@ -1532,8 +1548,14 @@ static int ucan_probe(struct usb_interface *intf,
 				     sizeof(union ucan_ctl_payload));
 	if (ret > 0) {
 		/* copy string while ensuring zero termination */
+<<<<<<< HEAD
 		strscpy(firmware_str, up->ctl_msg_buffer->raw,
 			sizeof(union ucan_ctl_payload) + 1);
+=======
+		strncpy(firmware_str, up->ctl_msg_buffer->raw,
+			sizeof(union ucan_ctl_payload));
+		firmware_str[sizeof(union ucan_ctl_payload)] = '\0';
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		strcpy(firmware_str, "unknown");
 	}
@@ -1579,7 +1601,11 @@ static void ucan_disconnect(struct usb_interface *intf)
 	usb_set_intfdata(intf, NULL);
 
 	if (up) {
+<<<<<<< HEAD
 		unregister_candev(up->netdev);
+=======
+		unregister_netdev(up->netdev);
+>>>>>>> b7ba80a49124 (Commit)
 		free_candev(up->netdev);
 	}
 }

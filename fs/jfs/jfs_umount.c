@@ -68,6 +68,10 @@ int jfs_umount(struct super_block *sb)
 	/*
 	 * close secondary aggregate inode allocation map
 	 */
+<<<<<<< HEAD
+=======
+	ipaimap2 = sbi->ipaimap2;
+>>>>>>> b7ba80a49124 (Commit)
 	if (ipaimap2) {
 		diUnmount(ipaimap2, 0);
 		diFreeSpecial(ipaimap2);
@@ -77,6 +81,10 @@ int jfs_umount(struct super_block *sb)
 	/*
 	 * close aggregate inode allocation map
 	 */
+<<<<<<< HEAD
+=======
+	ipaimap = sbi->ipaimap;
+>>>>>>> b7ba80a49124 (Commit)
 	diUnmount(ipaimap, 0);
 	diFreeSpecial(ipaimap);
 	sbi->ipaimap = NULL;
@@ -87,7 +95,11 @@ int jfs_umount(struct super_block *sb)
 	dbUnmount(ipbmap, 0);
 
 	diFreeSpecial(ipbmap);
+<<<<<<< HEAD
 	sbi->ipbmap = NULL;
+=======
+	sbi->ipimap = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Make sure all metadata makes it to disk before we mark

@@ -1181,7 +1181,14 @@ static void sci_dma_tx_complete(void *arg)
 
 	spin_lock_irqsave(&port->lock, flags);
 
+<<<<<<< HEAD
 	uart_xmit_advance(port, s->tx_dma_len);
+=======
+	xmit->tail += s->tx_dma_len;
+	xmit->tail &= UART_XMIT_SIZE - 1;
+
+	port->icount.tx += s->tx_dma_len;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
 		uart_write_wakeup(port);
@@ -1573,7 +1580,11 @@ static void sci_request_dma(struct uart_port *port)
 	 * Don't request a dma channel if no channel was specified
 	 * in the device tree.
 	 */
+<<<<<<< HEAD
 	if (!of_property_present(port->dev->of_node, "dmas"))
+=======
+	if (!of_find_property(port->dev->of_node, "dmas", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	chan = sci_request_dma_chan(port, DMA_MEM_TO_DEV);
@@ -3051,6 +3062,7 @@ static struct console serial_console = {
 };
 
 #ifdef CONFIG_SUPERH
+<<<<<<< HEAD
 static char early_serial_buf[32];
 
 static int early_serial_console_setup(struct console *co, char *options)
@@ -3070,10 +3082,20 @@ static struct console early_serial_console = {
 	.name           = "early_ttySC",
 	.write          = serial_console_write,
 	.setup		= early_serial_console_setup,
+=======
+static struct console early_serial_console = {
+	.name           = "early_ttySC",
+	.write          = serial_console_write,
+>>>>>>> b7ba80a49124 (Commit)
 	.flags          = CON_PRINTBUFFER,
 	.index		= -1,
 };
 
+<<<<<<< HEAD
+=======
+static char early_serial_buf[32];
+
+>>>>>>> b7ba80a49124 (Commit)
 static int sci_probe_earlyprintk(struct platform_device *pdev)
 {
 	const struct plat_sci_port *cfg = dev_get_platdata(&pdev->dev);
@@ -3085,6 +3107,11 @@ static int sci_probe_earlyprintk(struct platform_device *pdev)
 
 	sci_init_single(pdev, &sci_ports[pdev->id], pdev->id, cfg, true);
 
+<<<<<<< HEAD
+=======
+	serial_console_setup(&early_serial_console, early_serial_buf);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!strstr(early_serial_buf, "keep"))
 		early_serial_console.flags |= CON_BOOT;
 
@@ -3141,7 +3168,11 @@ static int sci_remove(struct platform_device *dev)
 #define SCI_OF_TYPE(data)		((unsigned long)(data) >> 16)
 #define SCI_OF_REGTYPE(data)		((unsigned long)(data) & 0xffff)
 
+<<<<<<< HEAD
 static const struct of_device_id of_sci_match[] __maybe_unused = {
+=======
+static const struct of_device_id of_sci_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	/* SoC-specific types */
 	{
 		.compatible = "renesas,scif-r7s72100",

@@ -79,6 +79,7 @@ gm200_sor_hdmi_scdc(struct nvkm_ior *ior, u8 scdc)
 	ior->tmds.high_speed = !!(scdc & 0x2);
 }
 
+<<<<<<< HEAD
 const struct nvkm_ior_func_hdmi
 gm200_sor_hdmi = {
 	.ctrl = gk104_sor_hdmi_ctrl,
@@ -87,6 +88,8 @@ gm200_sor_hdmi = {
 	.infoframe_vsi = gk104_sor_hdmi_infoframe_vsi,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void
 gm200_sor_route_set(struct nvkm_outp *outp, struct nvkm_ior *ior)
 {
@@ -139,7 +142,14 @@ gm200_sor = {
 	.state = gf119_sor_state,
 	.power = nv50_sor_power,
 	.clock = gf119_sor_clock,
+<<<<<<< HEAD
 	.hdmi = &gm200_sor_hdmi,
+=======
+	.hdmi = {
+		.ctrl = gk104_sor_hdmi_ctrl,
+		.scdc = gm200_sor_hdmi_scdc,
+	},
+>>>>>>> b7ba80a49124 (Commit)
 	.dp = &gm200_sor_dp,
 	.hda = &gf119_sor_hda,
 };

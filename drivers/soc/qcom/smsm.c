@@ -510,7 +510,11 @@ static int qcom_smsm_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	for_each_child_of_node(pdev->dev.of_node, local_node) {
+<<<<<<< HEAD
 		if (of_property_present(local_node, "#qcom,smem-state-cells"))
+=======
+		if (of_find_property(local_node, "#qcom,smem-state-cells", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 	}
 	if (!local_node) {

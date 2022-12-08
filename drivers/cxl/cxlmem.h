@@ -4,7 +4,10 @@
 #define __CXL_MEM_H__
 #include <uapi/linux/cxl_mem.h>
 #include <linux/cdev.h>
+<<<<<<< HEAD
 #include <linux/uuid.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "cxl.h"
 
 /* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
@@ -36,20 +39,28 @@
  * @cdev: char dev core object for ioctl operations
  * @cxlds: The device state backing this device
  * @detach_work: active memdev lost a port in its ancestry
+<<<<<<< HEAD
  * @cxl_nvb: coordinate removal of @cxl_nvd if present
  * @cxl_nvd: optional bridge to an nvdimm if the device supports pmem
  * @id: id number of this memdev instance.
  * @depth: endpoint port depth
+=======
+ * @id: id number of this memdev instance.
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct cxl_memdev {
 	struct device dev;
 	struct cdev cdev;
 	struct cxl_dev_state *cxlds;
 	struct work_struct detach_work;
+<<<<<<< HEAD
 	struct cxl_nvdimm_bridge *cxl_nvb;
 	struct cxl_nvdimm *cxl_nvd;
 	int id;
 	int depth;
+=======
+	int id;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
@@ -75,13 +86,18 @@ cxled_to_memdev(struct cxl_endpoint_decoder *cxled)
 	return to_cxl_memdev(port->uport);
 }
 
+<<<<<<< HEAD
 bool is_cxl_memdev(const struct device *dev);
+=======
+bool is_cxl_memdev(struct device *dev);
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool is_cxl_endpoint(struct cxl_port *port)
 {
 	return is_cxl_memdev(port->uport);
 }
 
 struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds);
+<<<<<<< HEAD
 int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
 			 resource_size_t base, resource_size_t len,
 			 resource_size_t skipped);
@@ -94,6 +110,8 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
 
 	return xa_load(&port->endpoints, (unsigned long)&cxlmd->dev);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct cxl_mbox_cmd - A command to be submitted to hardware.
@@ -107,7 +125,10 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
  *            outputs commands this is always expected to be deterministic. For
  *            variable sized output commands, it tells the exact number of bytes
  *            written.
+<<<<<<< HEAD
  * @min_out: (input) internal command output payload size validation
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @return_code: (output) Error code returned from hardware.
  *
  * This is the primary mechanism used to send commands to the hardware.
@@ -122,7 +143,10 @@ struct cxl_mbox_cmd {
 	void *payload_out;
 	size_t size_in;
 	size_t size_out;
+<<<<<<< HEAD
 	size_t min_out;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 return_code;
 };
 
@@ -188,6 +212,7 @@ static inline int cxl_mbox_cmd_rc2errno(struct cxl_mbox_cmd *mbox_cmd)
 #define CXL_CAPACITY_MULTIPLIER SZ_256M
 
 /**
+<<<<<<< HEAD
  * Event Interrupt Policy
  *
  * CXL rev 3.0 section 8.2.9.2.4; Table 8-52
@@ -213,6 +238,17 @@ struct cxl_event_interrupt_policy {
 struct cxl_event_state {
 	struct cxl_get_event_payload *buf;
 	struct mutex log_lock;
+=======
+ * struct cxl_endpoint_dvsec_info - Cached DVSEC info
+ * @mem_enabled: cached value of mem_enabled in the DVSEC, PCIE_DEVICE
+ * @ranges: Number of active HDM ranges this device uses.
+ * @dvsec_range: cached attributes of the ranges in the DVSEC, PCIE_DEVICE
+ */
+struct cxl_endpoint_dvsec_info {
+	bool mem_enabled;
+	int ranges;
+	struct range dvsec_range[2];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -223,10 +259,15 @@ struct cxl_event_state {
  * Currently only memory devices are represented.
  *
  * @dev: The device associated with this CXL state
+<<<<<<< HEAD
  * @cxlmd: The device representing the CXL.mem capabilities of @dev
  * @regs: Parsed register blocks
  * @cxl_dvsec: Offset to the PCIe device DVSEC
  * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
+=======
+ * @regs: Parsed register blocks
+ * @cxl_dvsec: Offset to the PCIe device DVSEC
+>>>>>>> b7ba80a49124 (Commit)
  * @payload_size: Size of space for payload
  *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
  * @lsa_size: Size of Label Storage Area
@@ -250,7 +291,10 @@ struct cxl_event_state {
  * @info: Cached DVSEC information about the device.
  * @serial: PCIe Device Serial Number
  * @doe_mbs: PCI DOE mailbox array
+<<<<<<< HEAD
  * @event: event log driver state
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @mbox_send: @dev specific transport for transmitting mailbox commands
  *
  * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
@@ -258,12 +302,18 @@ struct cxl_event_state {
  */
 struct cxl_dev_state {
 	struct device *dev;
+<<<<<<< HEAD
 	struct cxl_memdev *cxlmd;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct cxl_regs regs;
 	int cxl_dvsec;
 
+<<<<<<< HEAD
 	bool rcd;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	size_t payload_size;
 	size_t lsa_size;
 	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
@@ -289,14 +339,18 @@ struct cxl_dev_state {
 
 	struct xarray doe_mbs;
 
+<<<<<<< HEAD
 	struct cxl_event_state event;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
 };
 
 enum cxl_opcode {
 	CXL_MBOX_OP_INVALID		= 0x0000,
 	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
+<<<<<<< HEAD
 	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
 	CXL_MBOX_OP_CLEAR_EVENT_RECORD	= 0x0101,
 	CXL_MBOX_OP_GET_EVT_INT_POLICY	= 0x0102,
@@ -304,6 +358,10 @@ enum cxl_opcode {
 	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
 	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
 	CXL_MBOX_OP_SET_TIMESTAMP	= 0x0301,
+=======
+	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
+	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
+>>>>>>> b7ba80a49124 (Commit)
 	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
 	CXL_MBOX_OP_GET_LOG		= 0x0401,
 	CXL_MBOX_OP_IDENTIFY		= 0x4000,
@@ -322,12 +380,15 @@ enum cxl_opcode {
 	CXL_MBOX_OP_GET_SCAN_MEDIA_CAPS	= 0x4303,
 	CXL_MBOX_OP_SCAN_MEDIA		= 0x4304,
 	CXL_MBOX_OP_GET_SCAN_MEDIA	= 0x4305,
+<<<<<<< HEAD
 	CXL_MBOX_OP_GET_SECURITY_STATE	= 0x4500,
 	CXL_MBOX_OP_SET_PASSPHRASE	= 0x4501,
 	CXL_MBOX_OP_DISABLE_PASSPHRASE	= 0x4502,
 	CXL_MBOX_OP_UNLOCK		= 0x4503,
 	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
 	CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE	= 0x4505,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	CXL_MBOX_OP_MAX			= 0x10000
 };
 
@@ -377,6 +438,7 @@ struct cxl_mbox_identify {
 	u8 qos_telemetry_caps;
 } __packed;
 
+<<<<<<< HEAD
 /*
  * Common Event Record Format
  * CXL rev 3.0 section 8.2.9.2.1; Table 8-42
@@ -507,6 +569,8 @@ struct cxl_event_mem_module {
 	u8 reserved[0x3d];
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct cxl_mbox_get_partition_info {
 	__le64 active_volatile_cap;
 	__le64 active_persistent_cap;
@@ -532,12 +596,15 @@ struct cxl_mbox_set_partition_info {
 
 #define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
 
+<<<<<<< HEAD
 /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
 struct cxl_mbox_set_timestamp_in {
 	__le64 timestamp;
 
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct cxl_mem_command - Driver representation of a memory device command
  * @info: Command information as it exists for the UAPI
@@ -559,6 +626,7 @@ struct cxl_mem_command {
 	struct cxl_command_info info;
 	enum cxl_opcode opcode;
 	u32 flags;
+<<<<<<< HEAD
 #define CXL_CMD_FLAG_FORCE_ENABLE BIT(0)
 };
 
@@ -599,6 +667,14 @@ enum {
 
 int cxl_internal_send_cmd(struct cxl_dev_state *cxlds,
 			  struct cxl_mbox_cmd *cmd);
+=======
+#define CXL_CMD_FLAG_NONE 0
+#define CXL_CMD_FLAG_FORCE_ENABLE BIT(0)
+};
+
+int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, u16 opcode, void *in,
+		      size_t in_size, void *out, size_t out_size);
+>>>>>>> b7ba80a49124 (Commit)
 int cxl_dev_state_identify(struct cxl_dev_state *cxlds);
 int cxl_await_media_ready(struct cxl_dev_state *cxlds);
 int cxl_enumerate_cmds(struct cxl_dev_state *cxlds);
@@ -606,9 +682,12 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds);
 struct cxl_dev_state *cxl_dev_state_create(struct device *dev);
 void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
 void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
+<<<<<<< HEAD
 void cxl_mem_get_event_records(struct cxl_dev_state *cxlds, u32 status);
 int cxl_set_timestamp(struct cxl_dev_state *cxlds);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_CXL_SUSPEND
 void cxl_mem_active_inc(void);
 void cxl_mem_active_dec(void);

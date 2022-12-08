@@ -11,8 +11,12 @@
 #ifndef _MT7620_REGS_H_
 #define _MT7620_REGS_H_
 
+<<<<<<< HEAD
 #define IOMEM(x)			((void __iomem *)(KSEG1ADDR(x)))
 #define MT7620_SYSC_BASE		IOMEM(0x10000000)
+=======
+#define MT7620_SYSC_BASE		0x10000000
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SYSC_REG_CHIP_NAME0		0x00
 #define SYSC_REG_CHIP_NAME1		0x04

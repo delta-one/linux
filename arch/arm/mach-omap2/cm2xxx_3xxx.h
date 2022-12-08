@@ -93,6 +93,14 @@ static inline u32 omap2_cm_clear_mod_reg_bits(u32 bits, s16 module, s16 idx)
 	return omap2_cm_rmw_mod_reg_bits(bits, 0x0, module, idx);
 }
 
+<<<<<<< HEAD
+=======
+extern int omap2xxx_cm_apll54_enable(void);
+extern void omap2xxx_cm_apll54_disable(void);
+extern int omap2xxx_cm_apll96_enable(void);
+extern void omap2xxx_cm_apll96_disable(void);
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 /* CM register bits shared between 24XX and 3430 */

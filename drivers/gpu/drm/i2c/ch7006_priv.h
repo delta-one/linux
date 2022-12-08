@@ -27,6 +27,10 @@
 #ifndef __DRM_I2C_CH7006_PRIV_H__
 #define __DRM_I2C_CH7006_PRIV_H__
 
+<<<<<<< HEAD
+=======
+#include <drm/drm_crtc_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_encoder_slave.h>
 #include <drm/drm_probe_helper.h>
 #include <drm/i2c/ch7006.h>

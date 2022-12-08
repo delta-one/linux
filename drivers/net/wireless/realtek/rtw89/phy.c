@@ -2,7 +2,10 @@
 /* Copyright(c) 2019-2020  Realtek Corporation
  */
 
+<<<<<<< HEAD
 #include "coex.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "debug.h"
 #include "fw.h"
 #include "mac.h"
@@ -10,7 +13,11 @@
 #include "ps.h"
 #include "reg.h"
 #include "sar.h"
+<<<<<<< HEAD
 #include "util.h"
+=======
+#include "coex.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 static u16 get_max_amsdu_len(struct rtw89_dev *rtwdev,
 			     const struct rtw89_ra_report *report)
@@ -236,7 +243,10 @@ static void rtw89_phy_ra_sta_update(struct rtw89_dev *rtwdev,
 	struct rtw89_phy_rate_pattern *rate_pattern = &rtwvif->rate_pattern;
 	struct rtw89_ra_info *ra = &rtwsta->ra;
 	const struct rtw89_chan *chan = rtw89_chan_get(rtwdev, RTW89_SUB_ENTITY_0);
+<<<<<<< HEAD
 	struct ieee80211_vif *vif = rtwvif_to_vif(rtwsta->rtwvif);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const u64 *high_rate_masks = rtw89_ra_mask_ht_rates;
 	u8 rssi = ewma_rssi_read(&rtwsta->avg_rssi);
 	u64 ra_mask = 0;
@@ -294,10 +304,17 @@ static void rtw89_phy_ra_sta_update(struct rtw89_dev *rtwdev,
 	switch (chan->band_type) {
 	case RTW89_BAND_2G:
 		ra_mask |= sta->deflink.supp_rates[NL80211_BAND_2GHZ];
+<<<<<<< HEAD
 		if (sta->deflink.supp_rates[NL80211_BAND_2GHZ] & 0xf)
 			mode |= RTW89_RA_MODE_CCK;
 		if (sta->deflink.supp_rates[NL80211_BAND_2GHZ] & 0xff0)
 			mode |= RTW89_RA_MODE_OFDM;
+=======
+		if (sta->deflink.supp_rates[NL80211_BAND_2GHZ] <= 0xf)
+			mode |= RTW89_RA_MODE_CCK;
+		else
+			mode |= RTW89_RA_MODE_CCK | RTW89_RA_MODE_OFDM;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case RTW89_BAND_5G:
 		ra_mask |= (u64)sta->deflink.supp_rates[NL80211_BAND_5GHZ] << 4;
@@ -360,14 +377,21 @@ static void rtw89_phy_ra_sta_update(struct rtw89_dev *rtwdev,
 	    IEEE80211_HE_PHY_CAP3_DCM_MAX_CONST_RX_16_QAM)
 		ra->dcm_cap = 1;
 
+<<<<<<< HEAD
 	if (rate_pattern->enable && !vif->p2p) {
+=======
+	if (rate_pattern->enable) {
+>>>>>>> b7ba80a49124 (Commit)
 		ra_mask = rtw89_phy_ra_mask_cfg(rtwdev, rtwsta);
 		ra_mask &= rate_pattern->ra_mask;
 		mode = rate_pattern->ra_mode;
 	}
 
 	ra->bw_cap = bw_mode;
+<<<<<<< HEAD
 	ra->er_cap = rtwsta->er_cap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ra->mode_ctrl = mode;
 	ra->macid = rtwsta->mac_id;
 	ra->stbc_cap = stbc_en;
@@ -803,11 +827,14 @@ bool rtw89_phy_write_rf_v1(struct rtw89_dev *rtwdev, enum rtw89_rf_path rf_path,
 }
 EXPORT_SYMBOL(rtw89_phy_write_rf_v1);
 
+<<<<<<< HEAD
 static bool rtw89_chip_rf_v1(struct rtw89_dev *rtwdev)
 {
 	return rtwdev->chip->ops->write_rf == rtw89_phy_write_rf_v1;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void rtw89_phy_bb_reset(struct rtw89_dev *rtwdev,
 			       enum rtw89_phy_idx phy_idx)
 {
@@ -1043,7 +1070,10 @@ static void rtw89_phy_config_bb_gain(struct rtw89_dev *rtwdev,
 {
 	const struct rtw89_chip_info *chip = rtwdev->chip;
 	union rtw89_phy_bb_gain_arg arg = { .addr = reg->addr };
+<<<<<<< HEAD
 	struct rtw89_efuse *efuse = &rtwdev->efuse;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (arg.gain_band >= RTW89_BB_GAIN_BAND_NR)
 		return;
@@ -1069,11 +1099,14 @@ static void rtw89_phy_config_bb_gain(struct rtw89_dev *rtwdev,
 	case 3:
 		rtw89_phy_cfg_bb_gain_op1db(rtwdev, arg, reg->data);
 		break;
+<<<<<<< HEAD
 	case 4:
 		/* This cfg_type is only used by rfe_type >= 50 with eFEM */
 		if (efuse->rfe_type < 50)
 			break;
 		fallthrough;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		rtw89_warn(rtwdev,
 			   "bb gain {0x%x:0x%x} with unknown cfg type: %d\n",
@@ -1130,6 +1163,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void rtw89_phy_config_rf_reg_noio(struct rtw89_dev *rtwdev,
 					 const struct rtw89_reg2_def *reg,
 					 enum rtw89_rf_path rf_path,
@@ -1148,6 +1182,8 @@ static void rtw89_phy_config_rf_reg_noio(struct rtw89_dev *rtwdev,
 				     (struct rtw89_fw_h2c_rf_reg_info *)extra_data);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void rtw89_phy_config_rf_reg(struct rtw89_dev *rtwdev,
 				    const struct rtw89_reg2_def *reg,
 				    enum rtw89_rf_path rf_path,
@@ -1360,7 +1396,11 @@ static u32 rtw89_phy_nctl_poll(struct rtw89_dev *rtwdev)
 	return rtw89_phy_read32(rtwdev, 0x8080);
 }
 
+<<<<<<< HEAD
 void rtw89_phy_init_rf_reg(struct rtw89_dev *rtwdev, bool noio)
+=======
+void rtw89_phy_init_rf_reg(struct rtw89_dev *rtwdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	void (*config)(struct rtw89_dev *rtwdev, const struct rtw89_reg2_def *reg,
 		       enum rtw89_rf_path rf_path, void *data);
@@ -1376,11 +1416,15 @@ void rtw89_phy_init_rf_reg(struct rtw89_dev *rtwdev, bool noio)
 	for (path = RF_PATH_A; path < chip->rf_path_num; path++) {
 		rf_table = chip->rf_table[path];
 		rf_reg_info->rf_path = rf_table->rf_path;
+<<<<<<< HEAD
 		if (noio)
 			config = rtw89_phy_config_rf_reg_noio;
 		else
 			config = rf_table->config ? rf_table->config :
 				 rtw89_phy_config_rf_reg;
+=======
+		config = rf_table->config ? rf_table->config : rtw89_phy_config_rf_reg;
+>>>>>>> b7ba80a49124 (Commit)
 		rtw89_phy_init_reg(rtwdev, rf_table, config, (void *)rf_reg_info);
 		if (rtw89_phy_config_rf_reg_fw(rtwdev, rf_reg_info))
 			rtw89_warn(rtwdev, "rf path %d reg h2c config failed\n",
@@ -1397,6 +1441,7 @@ static void rtw89_phy_init_rf_nctl(struct rtw89_dev *rtwdev)
 	int ret;
 
 	/* IQK/DPK clock & reset */
+<<<<<<< HEAD
 	rtw89_phy_write32_set(rtwdev, R_IOQ_IQK_DPK, 0x3);
 	rtw89_phy_write32_set(rtwdev, R_GNT_BT_WGT_EN, 0x1);
 	rtw89_phy_write32_set(rtwdev, R_P0_PATH_RST, 0x8000000);
@@ -1406,6 +1451,15 @@ static void rtw89_phy_init_rf_nctl(struct rtw89_dev *rtwdev)
 
 	/* check 0x8080 */
 	rtw89_phy_write32(rtwdev, R_NCTL_CFG, 0x8);
+=======
+	rtw89_phy_write32_set(rtwdev, 0x0c60, 0x3);
+	rtw89_phy_write32_set(rtwdev, 0x0c6c, 0x1);
+	rtw89_phy_write32_set(rtwdev, 0x58ac, 0x8000000);
+	rtw89_phy_write32_set(rtwdev, 0x78ac, 0x8000000);
+
+	/* check 0x8080 */
+	rtw89_phy_write32(rtwdev, 0x8000, 0x8);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = read_poll_timeout(rtw89_phy_nctl_poll, val, val == 0x4, 10,
 				1000, false, rtwdev);
@@ -1456,6 +1510,7 @@ void rtw89_phy_write32_idx(struct rtw89_dev *rtwdev, u32 addr, u32 mask,
 }
 EXPORT_SYMBOL(rtw89_phy_write32_idx);
 
+<<<<<<< HEAD
 u32 rtw89_phy_read32_idx(struct rtw89_dev *rtwdev, u32 addr, u32 mask,
 			 enum rtw89_phy_idx phy_idx)
 {
@@ -1465,6 +1520,8 @@ u32 rtw89_phy_read32_idx(struct rtw89_dev *rtwdev, u32 addr, u32 mask,
 }
 EXPORT_SYMBOL(rtw89_phy_read32_idx);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void rtw89_phy_set_phy_regs(struct rtw89_dev *rtwdev, u32 addr, u32 mask,
 			    u32 val)
 {
@@ -1489,21 +1546,35 @@ void rtw89_phy_write_reg3_tbl(struct rtw89_dev *rtwdev,
 }
 EXPORT_SYMBOL(rtw89_phy_write_reg3_tbl);
 
+<<<<<<< HEAD
 static const u8 rtw89_rs_idx_max[] = {
+=======
+const u8 rtw89_rs_idx_max[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	[RTW89_RS_CCK] = RTW89_RATE_CCK_MAX,
 	[RTW89_RS_OFDM] = RTW89_RATE_OFDM_MAX,
 	[RTW89_RS_MCS] = RTW89_RATE_MCS_MAX,
 	[RTW89_RS_HEDCM] = RTW89_RATE_HEDCM_MAX,
 	[RTW89_RS_OFFSET] = RTW89_RATE_OFFSET_MAX,
 };
+<<<<<<< HEAD
 
 static const u8 rtw89_rs_nss_max[] = {
+=======
+EXPORT_SYMBOL(rtw89_rs_idx_max);
+
+const u8 rtw89_rs_nss_max[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	[RTW89_RS_CCK] = 1,
 	[RTW89_RS_OFDM] = 1,
 	[RTW89_RS_MCS] = RTW89_NSS_MAX,
 	[RTW89_RS_HEDCM] = RTW89_NSS_HEDCM_MAX,
 	[RTW89_RS_OFFSET] = 1,
 };
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL(rtw89_rs_nss_max);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const u8 _byr_of_rs[] = {
 	[RTW89_RS_CCK] = offsetof(struct rtw89_txpwr_byrate, cck),
@@ -1545,7 +1616,10 @@ EXPORT_SYMBOL(rtw89_phy_load_txpwr_byrate);
 	(txpwr_rf) >> (__c->txpwr_factor_rf - __c->txpwr_factor_mac);	\
 })
 
+<<<<<<< HEAD
 static
+=======
+>>>>>>> b7ba80a49124 (Commit)
 s8 rtw89_phy_read_txpwr_byrate(struct rtw89_dev *rtwdev, u8 band,
 			       const struct rtw89_rate_desc *rate_desc)
 {
@@ -1568,6 +1642,10 @@ s8 rtw89_phy_read_txpwr_byrate(struct rtw89_dev *rtwdev, u8 band,
 
 	return _phy_txpwr_rf_to_mac(rtwdev, byr[idx]);
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL(rtw89_phy_read_txpwr_byrate);
+>>>>>>> b7ba80a49124 (Commit)
 
 static u8 rtw89_channel_6g_to_idx(struct rtw89_dev *rtwdev, u8 channel_6g)
 {
@@ -1827,7 +1905,10 @@ static void rtw89_phy_fill_txpwr_limit_160m(struct rtw89_dev *rtwdev,
 		lmt->mcs_40m_2p5[i] = min_t(s8, val_2p5_n[i], val_2p5_p[i]);
 }
 
+<<<<<<< HEAD
 static
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void rtw89_phy_fill_txpwr_limit(struct rtw89_dev *rtwdev,
 				const struct rtw89_chan *chan,
 				struct rtw89_txpwr_limit *lmt,
@@ -1858,6 +1939,10 @@ void rtw89_phy_fill_txpwr_limit(struct rtw89_dev *rtwdev,
 		break;
 	}
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL(rtw89_phy_fill_txpwr_limit);
+>>>>>>> b7ba80a49124 (Commit)
 
 static s8 rtw89_phy_read_txpwr_limit_ru(struct rtw89_dev *rtwdev, u8 band,
 					u8 ru, u8 ntx, u8 ch)
@@ -2006,7 +2091,10 @@ rtw89_phy_fill_txpwr_limit_ru_160m(struct rtw89_dev *rtwdev,
 	}
 }
 
+<<<<<<< HEAD
 static
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void rtw89_phy_fill_txpwr_limit_ru(struct rtw89_dev *rtwdev,
 				   const struct rtw89_chan *chan,
 				   struct rtw89_txpwr_limit_ru *lmt_ru,
@@ -2037,6 +2125,7 @@ void rtw89_phy_fill_txpwr_limit_ru(struct rtw89_dev *rtwdev,
 		break;
 	}
 }
+<<<<<<< HEAD
 
 void rtw89_phy_set_txpwr_byrate(struct rtw89_dev *rtwdev,
 				const struct rtw89_chan *chan,
@@ -2195,6 +2284,9 @@ void rtw89_phy_set_txpwr_limit_ru(struct rtw89_dev *rtwdev,
 	}
 }
 EXPORT_SYMBOL(rtw89_phy_set_txpwr_limit_ru);
+=======
+EXPORT_SYMBOL(rtw89_phy_fill_txpwr_limit_ru);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct rtw89_phy_iter_ra_data {
 	struct rtw89_dev *rtwdev;
@@ -2308,10 +2400,13 @@ void rtw89_phy_c2h_handle(struct rtw89_dev *rtwdev, struct sk_buff *skb,
 		if (func < RTW89_PHY_C2H_FUNC_RA_MAX)
 			handler = rtw89_phy_c2h_ra_handler[func];
 		break;
+<<<<<<< HEAD
 	case RTW89_PHY_C2H_CLASS_DM:
 		if (func == RTW89_PHY_C2H_DM_FUNC_LOWRT_RTY)
 			return;
 		fallthrough;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		rtw89_info(rtwdev, "c2h class %d not support\n", class);
 		return;
@@ -2799,6 +2894,7 @@ void rtw89_phy_cfo_parse(struct rtw89_dev *rtwdev, s16 cfo_val,
 	cfo->packet_count++;
 }
 
+<<<<<<< HEAD
 void rtw89_phy_ul_tb_assoc(struct rtw89_dev *rtwdev, struct rtw89_vif *rtwvif)
 {
 	const struct rtw89_chip_info *chip = rtwdev->chip;
@@ -2922,6 +3018,8 @@ static void rtw89_phy_ul_tb_info_init(struct rtw89_dev *rtwdev)
 		rtw89_phy_read32_mask(rtwdev, R_BANDEDGE, B_BANDEDGE_EN);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void rtw89_phy_stat_thermal_update(struct rtw89_dev *rtwdev)
 {
 	struct rtw89_phy_stat *phystat = &rtwdev->phystat;
@@ -3468,7 +3566,11 @@ void rtw89_phy_env_monitor_track(struct rtw89_dev *rtwdev)
 
 static bool rtw89_physts_ie_page_valid(enum rtw89_phy_status_bitmap *ie_page)
 {
+<<<<<<< HEAD
 	if (*ie_page >= RTW89_PHYSTS_BITMAP_NUM ||
+=======
+	if (*ie_page > RTW89_PHYSTS_BITMAP_NUM ||
+>>>>>>> b7ba80a49124 (Commit)
 	    *ie_page == RTW89_RSVD_9)
 		return false;
 	else if (*ie_page > RTW89_RSVD_9)
@@ -4108,7 +4210,10 @@ void rtw89_phy_dm_init(struct rtw89_dev *rtwdev)
 	rtw89_physts_parsing_init(rtwdev);
 	rtw89_phy_dig_init(rtwdev);
 	rtw89_phy_cfo_init(rtwdev);
+<<<<<<< HEAD
 	rtw89_phy_ul_tb_info_init(rtwdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	rtw89_phy_init_rf_nctl(rtwdev);
 	rtw89_chip_rfk_init(rtwdev);
@@ -4120,7 +4225,10 @@ void rtw89_phy_dm_init(struct rtw89_dev *rtwdev)
 
 void rtw89_phy_set_bss_color(struct rtw89_dev *rtwdev, struct ieee80211_vif *vif)
 {
+<<<<<<< HEAD
 	const struct rtw89_chip_info *chip = rtwdev->chip;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	enum rtw89_phy_idx phy_idx = RTW89_PHY_0;
 	u8 bss_color;
 
@@ -4129,11 +4237,19 @@ void rtw89_phy_set_bss_color(struct rtw89_dev *rtwdev, struct ieee80211_vif *vif
 
 	bss_color = vif->bss_conf.he_bss_color.color;
 
+<<<<<<< HEAD
 	rtw89_phy_write32_idx(rtwdev, chip->bss_clr_map_reg, B_BSS_CLR_MAP_VLD0, 0x1,
 			      phy_idx);
 	rtw89_phy_write32_idx(rtwdev, chip->bss_clr_map_reg, B_BSS_CLR_MAP_TGT,
 			      bss_color, phy_idx);
 	rtw89_phy_write32_idx(rtwdev, chip->bss_clr_map_reg, B_BSS_CLR_MAP_STAID,
+=======
+	rtw89_phy_write32_idx(rtwdev, R_BSS_CLR_MAP, B_BSS_CLR_MAP_VLD0, 0x1,
+			      phy_idx);
+	rtw89_phy_write32_idx(rtwdev, R_BSS_CLR_MAP, B_BSS_CLR_MAP_TGT, bss_color,
+			      phy_idx);
+	rtw89_phy_write32_idx(rtwdev, R_BSS_CLR_MAP, B_BSS_CLR_MAP_STAID,
+>>>>>>> b7ba80a49124 (Commit)
 			      vif->cfg.aid, phy_idx);
 }
 
@@ -4294,6 +4410,7 @@ void rtw89_phy_tssi_ctrl_set_bandedge_cfg(struct rtw89_dev *rtwdev,
 					      data[RTW89_TSSI_SBW20]);
 }
 EXPORT_SYMBOL(rtw89_phy_tssi_ctrl_set_bandedge_cfg);
+<<<<<<< HEAD
 
 static
 const u8 rtw89_ch_base_table[16] = {1, 0xff,
@@ -4366,3 +4483,5 @@ void rtw89_decode_chan_idx(struct rtw89_dev *rtwdev, u8 chan_idx,
 	*ch = rtw89_ch_base_table[idx] + (offset << 1);
 }
 EXPORT_SYMBOL(rtw89_decode_chan_idx);
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -31,6 +31,14 @@
 
 static void snd_ymfpci_irq_wait(struct snd_ymfpci *chip);
 
+<<<<<<< HEAD
+=======
+static inline u8 snd_ymfpci_readb(struct snd_ymfpci *chip, u32 offset)
+{
+	return readb(chip->reg_area_virt + offset);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void snd_ymfpci_writeb(struct snd_ymfpci *chip, u32 offset, u8 val)
 {
 	writeb(val, chip->reg_area_virt + offset);

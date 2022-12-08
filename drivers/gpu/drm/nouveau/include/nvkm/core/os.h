@@ -34,6 +34,7 @@ nvkm_blob_dtor(struct nvkm_blob *blob)
 	blob->data = NULL;
 	blob->size = 0;
 }
+<<<<<<< HEAD
 
 #define nvkm_list_find_next(p,h,m,c) ({                                                      \
 	typeof(p) _p = NULL;                                                                 \
@@ -54,4 +55,6 @@ nvkm_blob_dtor(struct nvkm_blob *blob)
 #define nvkm_fifo_chan nvkm_chan
 #define nvkm_fifo_chan_func nvkm_chan_func
 #define nvkm_fifo_cgrp nvkm_cgrp
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

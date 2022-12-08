@@ -116,8 +116,13 @@
 		};
 	};
 
+<<<<<<< HEAD
 	jc42_1a: eeprom-temperature@1a {
 		compatible = "nxp,se97b", "jedec,jc-42.4-temp";
+=======
+	jc42_1a: eeprom-temperature-sensor@1a {
+		compatible = "nxp,se97", "jedec,jc-42.4-temp";
+>>>>>>> b7ba80a49124 (Commit)
 		reg = <0x1a>;
 	};
 

@@ -351,12 +351,15 @@ static inline void set_pte(pte_t *ptep, pte_t pte)
 
 #define PTE_BIT_FUNC(h,fn,op) \
 static inline pte_t pte_##fn(pte_t pte) { pte.pte_##h op; return pte; }
+<<<<<<< HEAD
 #define PTE_BIT_FUNC_VMA(h,fn,op) \
 static inline pte_t pte_##fn(pte_t pte, struct vm_area_struct *vma) \
 { \
 	pte.pte_##h op; \
 	return pte; \
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_X2TLB
 /*
@@ -365,11 +368,19 @@ static inline pte_t pte_##fn(pte_t pte, struct vm_area_struct *vma) \
  * kernel permissions), we attempt to couple them a bit more sanely here.
  */
 PTE_BIT_FUNC(high, wrprotect, &= ~(_PAGE_EXT_USER_WRITE | _PAGE_EXT_KERN_WRITE));
+<<<<<<< HEAD
 PTE_BIT_FUNC_VMA(high, mkwrite, |= _PAGE_EXT_USER_WRITE | _PAGE_EXT_KERN_WRITE);
 PTE_BIT_FUNC(high, mkhuge, |= _PAGE_SZHUGE);
 #else
 PTE_BIT_FUNC(low, wrprotect, &= ~_PAGE_RW);
 PTE_BIT_FUNC_VMA(low, mkwrite, |= _PAGE_RW);
+=======
+PTE_BIT_FUNC(high, mkwrite, |= _PAGE_EXT_USER_WRITE | _PAGE_EXT_KERN_WRITE);
+PTE_BIT_FUNC(high, mkhuge, |= _PAGE_SZHUGE);
+#else
+PTE_BIT_FUNC(low, wrprotect, &= ~_PAGE_RW);
+PTE_BIT_FUNC(low, mkwrite, |= _PAGE_RW);
+>>>>>>> b7ba80a49124 (Commit)
 PTE_BIT_FUNC(low, mkhuge, |= _PAGE_SZHUGE);
 #endif
 
@@ -429,21 +440,34 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
 #endif
 
 /*
+<<<<<<< HEAD
  * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
  * are !pte_none() && !pte_present().
+=======
+ * Encode and de-code a swap entry
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Constraints:
  *	_PAGE_PRESENT at bit 8
  *	_PAGE_PROTNONE at bit 9
  *
+<<<<<<< HEAD
  * For the normal case, we encode the swap type and offset into the swap PTE
  * such that bits 8 and 9 stay zero. For the 64-bit PTE case, we use the
  * upper 32 for the swap offset and swap type, following the same approach as
  * x86 PAE. This keeps the logic quite simple.
+=======
+ * For the normal case, we encode the swap type into bits 0:7 and the
+ * swap offset into bits 10:30. For the 64-bit PTE case, we keep the
+ * preserved bits in the low 32-bits and use the upper 32 as the swap
+ * offset (along with a 5-bit type), following the same approach as x86
+ * PAE. This keeps the logic quite simple.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * As is evident by the Alpha code, if we ever get a 64-bit unsigned
  * long (swp_entry_t) to match up with the 64-bit PTEs, this all becomes
  * much cleaner..
+<<<<<<< HEAD
  */
 
 #ifdef CONFIG_X2TLB
@@ -461,10 +485,21 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
 #define __swp_type(x)			((x).val & 0x1f)
 #define __swp_offset(x)			((x).val >> 5)
 #define __swp_entry(type, offset)	((swp_entry_t){ ((type) & 0x1f) | (offset) << 5})
+=======
+ *
+ * NOTE: We should set ZEROs at the position of _PAGE_PRESENT
+ *       and _PAGE_PROTNONE bits
+ */
+#ifdef CONFIG_X2TLB
+#define __swp_type(x)			((x).val & 0x1f)
+#define __swp_offset(x)			((x).val >> 5)
+#define __swp_entry(type, offset)	((swp_entry_t){ (type) | (offset) << 5})
+>>>>>>> b7ba80a49124 (Commit)
 #define __pte_to_swp_entry(pte)		((swp_entry_t){ (pte).pte_high })
 #define __swp_entry_to_pte(x)		((pte_t){ 0, (x).val })
 
 #else
+<<<<<<< HEAD
 /*
  * Format of swap PTEs:
  *
@@ -477,11 +512,17 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
 #define __swp_type(x)			((x).val & 0x1f)
 #define __swp_offset(x)			((x).val >> 10)
 #define __swp_entry(type, offset)	((swp_entry_t){((type) & 0x1f) | (offset) << 10})
+=======
+#define __swp_type(x)			((x).val & 0xff)
+#define __swp_offset(x)			((x).val >> 10)
+#define __swp_entry(type, offset)	((swp_entry_t){(type) | (offset) <<10})
+>>>>>>> b7ba80a49124 (Commit)
 
 #define __pte_to_swp_entry(pte)		((swp_entry_t) { pte_val(pte) >> 1 })
 #define __swp_entry_to_pte(x)		((pte_t) { (x).val << 1 })
 #endif
 
+<<<<<<< HEAD
 /* In both cases, we borrow bit 6 to store the exclusive marker in swap PTEs. */
 #define _PAGE_SWP_EXCLUSIVE	_PAGE_USER
 
@@ -493,5 +534,7 @@ static inline int pte_swp_exclusive(pte_t pte)
 PTE_BIT_FUNC(low, swp_mkexclusive, |= _PAGE_SWP_EXCLUSIVE);
 PTE_BIT_FUNC(low, swp_clear_exclusive, &= ~_PAGE_SWP_EXCLUSIVE);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __ASSEMBLY__ */
 #endif /* __ASM_SH_PGTABLE_32_H */

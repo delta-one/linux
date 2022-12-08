@@ -12,12 +12,20 @@ obj-$(CONFIG_SND_SOC_TI_UDMA_PCM) += snd-soc-ti-udma.o
 # CPU DAI drivers
 snd-soc-davinci-asp-objs := davinci-i2s.o
 snd-soc-davinci-mcasp-objs := davinci-mcasp.o
+<<<<<<< HEAD
+=======
+snd-soc-davinci-vcif-objs := davinci-vcif.o
+>>>>>>> b7ba80a49124 (Commit)
 snd-soc-omap-dmic-objs := omap-dmic.o
 snd-soc-omap-mcbsp-objs := omap-mcbsp.o omap-mcbsp-st.o
 snd-soc-omap-mcpdm-objs := omap-mcpdm.o
 
 obj-$(CONFIG_SND_SOC_DAVINCI_ASP) += snd-soc-davinci-asp.o
 obj-$(CONFIG_SND_SOC_DAVINCI_MCASP) += snd-soc-davinci-mcasp.o
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_SND_SOC_DAVINCI_VCIF) += snd-soc-davinci-vcif.o
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_SND_SOC_OMAP_DMIC) += snd-soc-omap-dmic.o
 obj-$(CONFIG_SND_SOC_OMAP_MCBSP) += snd-soc-omap-mcbsp.o
 obj-$(CONFIG_SND_SOC_OMAP_MCPDM) += snd-soc-omap-mcpdm.o

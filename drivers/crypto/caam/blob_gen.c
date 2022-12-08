@@ -6,7 +6,10 @@
 
 #define pr_fmt(fmt) "caam blob_gen: " fmt
 
+<<<<<<< HEAD
 #include <linux/bitfield.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/device.h>
 #include <soc/fsl/caam-blob.h>
 
@@ -62,14 +65,20 @@ static void caam_blob_job_done(struct device *dev, u32 *desc, u32 err, void *con
 int caam_process_blob(struct caam_blob_priv *priv,
 		      struct caam_blob_info *info, bool encap)
 {
+<<<<<<< HEAD
 	const struct caam_drv_private *ctrlpriv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct caam_blob_job_result testres;
 	struct device *jrdev = &priv->jrdev;
 	dma_addr_t dma_in, dma_out;
 	int op = OP_PCLID_BLOB;
 	size_t output_len;
 	u32 *desc;
+<<<<<<< HEAD
 	u32 moo;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (info->key_mod_len > CAAM_BLOB_KEYMOD_LENGTH)
@@ -83,7 +92,11 @@ int caam_process_blob(struct caam_blob_priv *priv,
 		output_len = info->input_len - CAAM_BLOB_OVERHEAD;
 	}
 
+<<<<<<< HEAD
 	desc = kzalloc(CAAM_BLOB_DESC_BYTES_MAX, GFP_KERNEL);
+=======
+	desc = kzalloc(CAAM_BLOB_DESC_BYTES_MAX, GFP_KERNEL | GFP_DMA);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!desc)
 		return -ENOMEM;
 
@@ -103,12 +116,15 @@ int caam_process_blob(struct caam_blob_priv *priv,
 		goto out_unmap_in;
 	}
 
+<<<<<<< HEAD
 	ctrlpriv = dev_get_drvdata(jrdev->parent);
 	moo = FIELD_GET(CSTA_MOO, rd_reg32(&ctrlpriv->ctrl->perfmon.status));
 	if (moo != CSTA_MOO_SECURE && moo != CSTA_MOO_TRUSTED)
 		dev_warn(jrdev,
 			 "using insecure test key, enable HAB to use unique device key!\n");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * A data blob is encrypted using a blob key (BK); a random number.
 	 * The BK is used as an AES-CCM key. The initial block (B0) and the

@@ -24,7 +24,10 @@
 #define MTK_EINT_EDGE_SENSITIVE           0
 #define MTK_EINT_LEVEL_SENSITIVE          1
 #define MTK_EINT_DBNC_SET_DBNC_BITS	  4
+<<<<<<< HEAD
 #define MTK_EINT_DBNC_MAX		  16
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MTK_EINT_DBNC_RST_BIT		  (0x1 << 1)
 #define MTK_EINT_DBNC_SET_EN		  (0x1 << 0)
 
@@ -49,6 +52,7 @@ static const struct mtk_eint_regs mtk_generic_eint_regs = {
 	.dbnc_clr  = 0x700,
 };
 
+<<<<<<< HEAD
 const unsigned int debounce_time_mt2701[] = {
 	500, 1000, 16000, 32000, 64000, 128000, 256000, 0
 };
@@ -64,6 +68,8 @@ const unsigned int debounce_time_mt6795[] = {
 };
 EXPORT_SYMBOL_GPL(debounce_time_mt6795);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void __iomem *mtk_eint_get_offset(struct mtk_eint *eint,
 					 unsigned int eint_num,
 					 unsigned int offset)
@@ -303,6 +309,7 @@ static struct irq_chip mtk_eint_irq_chip = {
 
 static unsigned int mtk_eint_hw_init(struct mtk_eint *eint)
 {
+<<<<<<< HEAD
 	void __iomem *dom_en = eint->base + eint->regs->dom_en;
 	void __iomem *mask_set = eint->base + eint->regs->mask_set;
 	unsigned int i;
@@ -312,6 +319,14 @@ static unsigned int mtk_eint_hw_init(struct mtk_eint *eint)
 		writel(0xffffffff, mask_set);
 		dom_en += 4;
 		mask_set += 4;
+=======
+	void __iomem *reg = eint->base + eint->regs->dom_en;
+	unsigned int i;
+
+	for (i = 0; i < eint->hw->ap_num; i += 32) {
+		writel(0xffffffff, reg);
+		reg += 4;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -423,11 +438,18 @@ int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_num,
 	int virq, eint_offset;
 	unsigned int set_offset, bit, clr_bit, clr_offset, rst, i, unmask,
 		     dbnc;
+<<<<<<< HEAD
 	struct irq_data *d;
 
 	if (!eint->hw->db_time)
 		return -EOPNOTSUPP;
 
+=======
+	static const unsigned int debounce_time[] = {500, 1000, 16000, 32000,
+						     64000, 128000, 256000};
+	struct irq_data *d;
+
+>>>>>>> b7ba80a49124 (Commit)
 	virq = irq_find_mapping(eint->domain, eint_num);
 	eint_offset = (eint_num % 4) * 8;
 	d = irq_get_irq_data(virq);
@@ -438,9 +460,15 @@ int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_num,
 	if (!mtk_eint_can_en_debounce(eint, eint_num))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	dbnc = eint->num_db_time;
 	for (i = 0; i < eint->num_db_time; i++) {
 		if (debounce <= eint->hw->db_time[i]) {
+=======
+	dbnc = ARRAY_SIZE(debounce_time);
+	for (i = 0; i < ARRAY_SIZE(debounce_time); i++) {
+		if (debounce <= debounce_time[i]) {
+>>>>>>> b7ba80a49124 (Commit)
 			dbnc = i;
 			break;
 		}
@@ -514,6 +542,7 @@ int mtk_eint_do_init(struct mtk_eint *eint)
 	if (!eint->domain)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	if (eint->hw->db_time) {
 		for (i = 0; i < MTK_EINT_DBNC_MAX; i++)
 			if (eint->hw->db_time[i] == 0)
@@ -521,6 +550,8 @@ int mtk_eint_do_init(struct mtk_eint *eint)
 		eint->num_db_time = i;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mtk_eint_hw_init(eint);
 	for (i = 0; i < eint->hw->ap_num; i++) {
 		int virq = irq_create_mapping(eint->domain, i);

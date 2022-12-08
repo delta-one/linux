@@ -21,6 +21,7 @@
 #include <linux/memblock.h>
 #include <asm/setup.h>
 
+<<<<<<< HEAD
 int arch_kimage_file_post_load_cleanup(struct kimage *image)
 {
 	kvfree(image->arch.fdt);
@@ -33,6 +34,8 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
 	return kexec_image_post_load_cleanup_default(image);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int riscv_kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
 				struct kexec_elf_info *elf_info, unsigned long old_pbase,
 				unsigned long new_pbase)
@@ -310,8 +313,11 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
 		pr_err("Error add DTB kbuf ret=%d\n", ret);
 		goto out_free_fdt;
 	}
+<<<<<<< HEAD
 	/* Cache the fdt buffer address for memory cleanup */
 	image->arch.fdt = fdt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pr_notice("Loaded device tree at 0x%lx\n", kbuf.mem);
 	goto out;
 

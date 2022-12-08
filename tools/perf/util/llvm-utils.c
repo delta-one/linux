@@ -463,7 +463,11 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
 	char *pipe_template = NULL;
 	const char *opts = llvm_param.opts;
 	char *command_echo = NULL, *command_out;
+<<<<<<< HEAD
 	char *libbpf_include_dir = system_path(LIBBPF_INCLUDE_DIR);
+=======
+	char *perf_include_dir = system_path(PERF_INCLUDE_DIR);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (path[0] != '-' && realpath(path, abspath) == NULL) {
 		err = errno;
@@ -495,7 +499,11 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
 
 	snprintf(linux_version_code_str, sizeof(linux_version_code_str),
 		 "0x%x", kernel_version);
+<<<<<<< HEAD
 	if (asprintf(&perf_bpf_include_opts, "-I%s/", libbpf_include_dir) < 0)
+=======
+	if (asprintf(&perf_bpf_include_opts, "-I%s/bpf", perf_include_dir) < 0)
+>>>>>>> b7ba80a49124 (Commit)
 		goto errout;
 	force_set_env("NR_CPUS", nr_cpus_avail_str);
 	force_set_env("LINUX_VERSION_CODE", linux_version_code_str);
@@ -531,6 +539,7 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
 
 	pr_debug("llvm compiling command template: %s\n", template);
 
+<<<<<<< HEAD
 	/*
 	 * Below, substitute control characters for values that can cause the
 	 * echo to misbehave, then substitute the values back.
@@ -549,10 +558,17 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
 		SWAP_CHAR('&', '\006');
 		SWAP_CHAR('\a', '"');
 	}
+=======
+	err = -ENOMEM;
+	if (asprintf(&command_echo, "echo -n \"%s\"", template) < 0)
+		goto errout;
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = read_from_pipe(command_echo, (void **) &command_out, NULL);
 	if (err)
 		goto errout;
 
+<<<<<<< HEAD
 	for (char *p = command_out; *p; p++) {
 		SWAP_CHAR('\001', '<');
 		SWAP_CHAR('\002', '>');
@@ -562,6 +578,8 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
 		SWAP_CHAR('\006', '&');
 	}
 #undef SWAP_CHAR
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pr_debug("llvm compiling command : %s\n", command_out);
 
 	err = read_from_pipe(template, &obj_buf, &obj_buf_sz);
@@ -579,7 +597,11 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
 	free(kbuild_dir);
 	free(kbuild_include_opts);
 	free(perf_bpf_include_opts);
+<<<<<<< HEAD
 	free(libbpf_include_dir);
+=======
+	free(perf_include_dir);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!p_obj_buf)
 		free(obj_buf);
@@ -595,7 +617,11 @@ errout:
 	free(kbuild_include_opts);
 	free(obj_buf);
 	free(perf_bpf_include_opts);
+<<<<<<< HEAD
 	free(libbpf_include_dir);
+=======
+	free(perf_include_dir);
+>>>>>>> b7ba80a49124 (Commit)
 	free(pipe_template);
 	if (p_obj_buf)
 		*p_obj_buf = NULL;

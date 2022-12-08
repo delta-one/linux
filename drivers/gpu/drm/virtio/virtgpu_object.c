@@ -184,7 +184,11 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
 	struct virtio_gpu_object_array *objs = NULL;
 	struct drm_gem_shmem_object *shmem_obj;
 	struct virtio_gpu_object *bo;
+<<<<<<< HEAD
 	struct virtio_gpu_mem_entry *ents = NULL;
+=======
+	struct virtio_gpu_mem_entry *ents;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int nents;
 	int ret;
 
@@ -210,7 +214,11 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
 		ret = -ENOMEM;
 		objs = virtio_gpu_array_alloc(1);
 		if (!objs)
+<<<<<<< HEAD
 			goto err_free_entry;
+=======
+			goto err_put_id;
+>>>>>>> b7ba80a49124 (Commit)
 		virtio_gpu_array_add_obj(objs, &bo->base.base);
 
 		ret = virtio_gpu_array_lock_resv(objs);
@@ -239,8 +247,11 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
 
 err_put_objs:
 	virtio_gpu_array_put_free(objs);
+<<<<<<< HEAD
 err_free_entry:
 	kvfree(ents);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_put_id:
 	virtio_gpu_resource_id_put(vgdev, bo->hw_res_handle);
 err_free_gem:

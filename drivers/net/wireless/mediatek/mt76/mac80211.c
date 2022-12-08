@@ -4,7 +4,10 @@
  */
 #include <linux/sched.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <net/page_pool.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "mt76.h"
 
 #define CHAN2G(_idx, _freq) {			\
@@ -193,6 +196,7 @@ static const struct cfg80211_sar_capa mt76_sar_capa = {
 	.freq_ranges = &mt76_sar_freq_ranges[0],
 };
 
+<<<<<<< HEAD
 static int mt76_led_init(struct mt76_phy *phy)
 {
 	struct mt76_dev *dev = phy->dev;
@@ -206,11 +210,28 @@ static int mt76_led_init(struct mt76_phy *phy)
 
 	phy->leds.cdev.name = phy->leds.name;
 	phy->leds.cdev.default_trigger =
+=======
+static int mt76_led_init(struct mt76_dev *dev)
+{
+	struct device_node *np = dev->dev->of_node;
+	struct ieee80211_hw *hw = dev->hw;
+	int led_pin;
+
+	if (!dev->led_cdev.brightness_set && !dev->led_cdev.blink_set)
+		return 0;
+
+	snprintf(dev->led_name, sizeof(dev->led_name),
+		 "mt76-%s", wiphy_name(hw->wiphy));
+
+	dev->led_cdev.name = dev->led_name;
+	dev->led_cdev.default_trigger =
+>>>>>>> b7ba80a49124 (Commit)
 		ieee80211_create_tpt_led_trigger(hw,
 					IEEE80211_TPT_LEDTRIG_FL_RADIO,
 					mt76_tpt_blink,
 					ARRAY_SIZE(mt76_tpt_blink));
 
+<<<<<<< HEAD
 	if (phy == &dev->phy) {
 		struct device_node *np = dev->dev->of_node;
 
@@ -235,6 +256,25 @@ static void mt76_led_cleanup(struct mt76_phy *phy)
 		return;
 
 	led_classdev_unregister(&phy->leds.cdev);
+=======
+	np = of_get_child_by_name(np, "led");
+	if (np) {
+		if (!of_property_read_u32(np, "led-sources", &led_pin))
+			dev->led_pin = led_pin;
+		dev->led_al = of_property_read_bool(np, "led-active-low");
+		of_node_put(np);
+	}
+
+	return led_classdev_register(dev->dev, &dev->led_cdev);
+}
+
+static void mt76_led_cleanup(struct mt76_dev *dev)
+{
+	if (!dev->led_cdev.brightness_set && !dev->led_cdev.blink_set)
+		return;
+
+	led_classdev_unregister(&dev->led_cdev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mt76_init_stream_cap(struct mt76_phy *phy,
@@ -450,12 +490,17 @@ mt76_phy_init(struct mt76_phy *phy, struct ieee80211_hw *hw)
 	ieee80211_hw_set(hw, SUPPORTS_CLONED_SKBS);
 	ieee80211_hw_set(hw, SUPPORTS_AMSDU_IN_AMPDU);
 	ieee80211_hw_set(hw, SUPPORTS_REORDERING_BUFFER);
+<<<<<<< HEAD
 
 	if (!(dev->drv->drv_flags & MT_DRV_AMSDU_OFFLOAD)) {
 		ieee80211_hw_set(hw, TX_AMSDU);
 		ieee80211_hw_set(hw, TX_FRAG_LIST);
 	}
 
+=======
+	ieee80211_hw_set(hw, TX_AMSDU);
+	ieee80211_hw_set(hw, TX_FRAG_LIST);
+>>>>>>> b7ba80a49124 (Commit)
 	ieee80211_hw_set(hw, MFP_CAPABLE);
 	ieee80211_hw_set(hw, AP_LINK_PS);
 	ieee80211_hw_set(hw, REPORTS_TX_ACK_STATUS);
@@ -524,12 +569,15 @@ int mt76_register_phy(struct mt76_phy *phy, bool vht,
 			return ret;
 	}
 
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_MT76_LEDS)) {
 		ret = mt76_led_init(phy);
 		if (ret)
 			return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	wiphy_read_of_freq_limits(phy->hw->wiphy);
 	mt76_check_sband(phy, &phy->sband_2g, NL80211_BAND_2GHZ);
 	mt76_check_sband(phy, &phy->sband_5g, NL80211_BAND_5GHZ);
@@ -539,7 +587,10 @@ int mt76_register_phy(struct mt76_phy *phy, bool vht,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	set_bit(MT76_STATE_REGISTERED, &phy->state);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	phy->dev->phys[phy->band_idx] = phy;
 
 	return 0;
@@ -550,17 +601,21 @@ void mt76_unregister_phy(struct mt76_phy *phy)
 {
 	struct mt76_dev *dev = phy->dev;
 
+<<<<<<< HEAD
 	if (!test_bit(MT76_STATE_REGISTERED, &phy->state))
 		return;
 
 	if (IS_ENABLED(CONFIG_MT76_LEDS))
 		mt76_led_cleanup(phy);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mt76_tx_status_check(dev, true);
 	ieee80211_unregister_hw(phy->hw);
 	dev->phys[phy->band_idx] = NULL;
 }
 EXPORT_SYMBOL_GPL(mt76_unregister_phy);
 
+<<<<<<< HEAD
 int mt76_create_page_pool(struct mt76_dev *dev, struct mt76_queue *q)
 {
 	struct page_pool_params pp_params = {
@@ -602,6 +657,8 @@ int mt76_create_page_pool(struct mt76_dev *dev, struct mt76_queue *q)
 }
 EXPORT_SYMBOL_GPL(mt76_create_page_pool);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mt76_dev *
 mt76_alloc_device(struct device *pdev, unsigned int size,
 		  const struct ieee80211_ops *ops,
@@ -632,7 +689,10 @@ mt76_alloc_device(struct device *pdev, unsigned int size,
 	spin_lock_init(&dev->lock);
 	spin_lock_init(&dev->cc_lock);
 	spin_lock_init(&dev->status_lock);
+<<<<<<< HEAD
 	spin_lock_init(&dev->wed_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&dev->mutex);
 	init_waitqueue_head(&dev->tx_wait);
 
@@ -655,6 +715,7 @@ mt76_alloc_device(struct device *pdev, unsigned int size,
 	spin_lock_init(&dev->token_lock);
 	idr_init(&dev->token);
 
+<<<<<<< HEAD
 	spin_lock_init(&dev->rx_token_lock);
 	idr_init(&dev->rx_token);
 
@@ -662,6 +723,11 @@ mt76_alloc_device(struct device *pdev, unsigned int size,
 
 	INIT_LIST_HEAD(&dev->txwi_cache);
 	INIT_LIST_HEAD(&dev->rxwi_cache);
+=======
+	INIT_LIST_HEAD(&dev->wcid_list);
+
+	INIT_LIST_HEAD(&dev->txwi_cache);
+>>>>>>> b7ba80a49124 (Commit)
 	dev->token_size = dev->drv->token_size;
 
 	for (i = 0; i < ARRAY_SIZE(dev->q_rx); i++)
@@ -713,7 +779,11 @@ int mt76_register_device(struct mt76_dev *dev, bool vht,
 	mt76_check_sband(&dev->phy, &phy->sband_6g, NL80211_BAND_6GHZ);
 
 	if (IS_ENABLED(CONFIG_MT76_LEDS)) {
+<<<<<<< HEAD
 		ret = mt76_led_init(phy);
+=======
+		ret = mt76_led_init(dev);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			return ret;
 	}
@@ -723,7 +793,10 @@ int mt76_register_device(struct mt76_dev *dev, bool vht,
 		return ret;
 
 	WARN_ON(mt76_worker_setup(hw, &dev->tx_worker, NULL, "tx"));
+<<<<<<< HEAD
 	set_bit(MT76_STATE_REGISTERED, &phy->state);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sched_set_fifo_low(dev->tx_worker.task);
 
 	return 0;
@@ -734,11 +807,16 @@ void mt76_unregister_device(struct mt76_dev *dev)
 {
 	struct ieee80211_hw *hw = dev->hw;
 
+<<<<<<< HEAD
 	if (!test_bit(MT76_STATE_REGISTERED, &dev->phy.state))
 		return;
 
 	if (IS_ENABLED(CONFIG_MT76_LEDS))
 		mt76_led_cleanup(&dev->phy);
+=======
+	if (IS_ENABLED(CONFIG_MT76_LEDS))
+		mt76_led_cleanup(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	mt76_tx_status_check(dev, true);
 	ieee80211_unregister_hw(hw);
 }
@@ -1020,12 +1098,23 @@ void mt76_wcid_key_setup(struct mt76_dev *dev, struct mt76_wcid *wcid,
 }
 EXPORT_SYMBOL(mt76_wcid_key_setup);
 
+<<<<<<< HEAD
 int mt76_rx_signal(u8 chain_mask, s8 *chain_signal)
 {
 	int signal = -128;
 	u8 chains;
 
 	for (chains = chain_mask; chains; chains >>= 1, chain_signal++) {
+=======
+static int
+mt76_rx_signal(struct mt76_rx_status *status)
+{
+	s8 *chain_signal = status->chain_signal;
+	int signal = -128;
+	u8 chains;
+
+	for (chains = status->chains; chains; chains >>= 1, chain_signal++) {
+>>>>>>> b7ba80a49124 (Commit)
 		int cur, diff;
 
 		cur = *chain_signal;
@@ -1047,7 +1136,10 @@ int mt76_rx_signal(u8 chain_mask, s8 *chain_signal)
 
 	return signal;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(mt76_rx_signal);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void
 mt76_rx_convert(struct mt76_dev *dev, struct sk_buff *skb,
@@ -1077,7 +1169,11 @@ mt76_rx_convert(struct mt76_dev *dev, struct sk_buff *skb,
 	status->ampdu_reference = mstat.ampdu_ref;
 	status->device_timestamp = mstat.timestamp;
 	status->mactime = mstat.timestamp;
+<<<<<<< HEAD
 	status->signal = mt76_rx_signal(mstat.chains, mstat.chain_signal);
+=======
+	status->signal = mt76_rx_signal(&mstat);
+>>>>>>> b7ba80a49124 (Commit)
 	if (status->signal <= -128)
 		status->flag |= RX_FLAG_NO_SIGNAL_VAL;
 
@@ -1361,10 +1457,14 @@ void mt76_rx_poll_complete(struct mt76_dev *dev, enum mt76_rxq_id q,
 
 	while ((skb = __skb_dequeue(&dev->rx_skb[q])) != NULL) {
 		mt76_check_sta(dev, skb);
+<<<<<<< HEAD
 		if (mtk_wed_device_active(&dev->mmio.wed))
 			__skb_queue_tail(&frames, skb);
 		else
 			mt76_rx_aggr_reorder(skb, &frames);
+=======
+		mt76_rx_aggr_reorder(skb, &frames);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	mt76_rx_complete(dev, &frames, napi);
@@ -1708,7 +1808,11 @@ u16 mt76_calculate_default_rate(struct mt76_phy *phy, int rateidx)
 EXPORT_SYMBOL_GPL(mt76_calculate_default_rate);
 
 void mt76_ethtool_worker(struct mt76_ethtool_worker_info *wi,
+<<<<<<< HEAD
 			 struct mt76_sta_stats *stats, bool eht)
+=======
+			 struct mt76_sta_stats *stats)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i, ei = wi->initial_stat_idx;
 	u64 *data = wi->data;
@@ -1724,6 +1828,7 @@ void mt76_ethtool_worker(struct mt76_ethtool_worker_info *wi,
 	data[ei++] += stats->tx_mode[MT_PHY_TYPE_HE_EXT_SU];
 	data[ei++] += stats->tx_mode[MT_PHY_TYPE_HE_TB];
 	data[ei++] += stats->tx_mode[MT_PHY_TYPE_HE_MU];
+<<<<<<< HEAD
 	if (eht) {
 		data[ei++] += stats->tx_mode[MT_PHY_TYPE_EHT_SU];
 		data[ei++] += stats->tx_mode[MT_PHY_TYPE_EHT_TRIG];
@@ -1734,12 +1839,20 @@ void mt76_ethtool_worker(struct mt76_ethtool_worker_info *wi,
 		data[ei++] += stats->tx_bw[i];
 
 	for (i = 0; i < (eht ? 14 : 12); i++)
+=======
+
+	for (i = 0; i < ARRAY_SIZE(stats->tx_bw); i++)
+		data[ei++] += stats->tx_bw[i];
+
+	for (i = 0; i < 12; i++)
+>>>>>>> b7ba80a49124 (Commit)
 		data[ei++] += stats->tx_mcs[i];
 
 	wi->worker_stat_count = ei - wi->initial_stat_idx;
 }
 EXPORT_SYMBOL_GPL(mt76_ethtool_worker);
 
+<<<<<<< HEAD
 void mt76_ethtool_page_pool_stats(struct mt76_dev *dev, u64 *data, int *index)
 {
 #ifdef CONFIG_PAGE_POOL_STATS
@@ -1755,6 +1868,8 @@ void mt76_ethtool_page_pool_stats(struct mt76_dev *dev, u64 *data, int *index)
 }
 EXPORT_SYMBOL_GPL(mt76_ethtool_page_pool_stats);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum mt76_dfs_state mt76_phy_dfs_state(struct mt76_phy *phy)
 {
 	struct ieee80211_hw *hw = phy->hw;

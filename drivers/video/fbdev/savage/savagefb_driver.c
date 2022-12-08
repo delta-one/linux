@@ -2556,9 +2556,12 @@ static int __init savagefb_init(void)
 
 	DBG("savagefb_init");
 
+<<<<<<< HEAD
 	if (fb_modesetting_disabled("savagefb"))
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (fb_get_options("savagefb", &option))
 		return -ENODEV;
 

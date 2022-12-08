@@ -139,3 +139,7 @@ module_platform_driver(gpio_restart_driver);
 
 MODULE_AUTHOR("David Riley <davidriley@chromium.org>");
 MODULE_DESCRIPTION("GPIO restart driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

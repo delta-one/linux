@@ -73,6 +73,7 @@ void percpu_counter_set(struct percpu_counter *fbc, s64 amount)
 EXPORT_SYMBOL(percpu_counter_set);
 
 /*
+<<<<<<< HEAD
  * local_irq_save() is needed to make the function irq safe:
  * - The slow path would be ok as protected by an irq-safe spinlock.
  * - this_cpu_add would be ok as it is irq-safe by definition.
@@ -83,10 +84,18 @@ EXPORT_SYMBOL(percpu_counter_set);
  * the this_cpu_add(), and the interrupt updates this_cpu(*fbc->counters),
  * then the this_cpu_add() that is executed after the interrupt has completed
  * can produce values larger than "batch" or even overflows.
+=======
+ * This function is both preempt and irq safe. The former is due to explicit
+ * preemption disable. The latter is guaranteed by the fact that the slow path
+ * is explicitly protected by an irq-safe spinlock whereas the fast patch uses
+ * this_cpu_add which is irq-safe by definition. Hence there is no need muck
+ * with irq state before calling this one
+>>>>>>> b7ba80a49124 (Commit)
  */
 void percpu_counter_add_batch(struct percpu_counter *fbc, s64 amount, s32 batch)
 {
 	s64 count;
+<<<<<<< HEAD
 	unsigned long flags;
 
 	local_irq_save(flags);
@@ -100,6 +109,21 @@ void percpu_counter_add_batch(struct percpu_counter *fbc, s64 amount, s32 batch)
 		this_cpu_add(*fbc->counters, amount);
 	}
 	local_irq_restore(flags);
+=======
+
+	preempt_disable();
+	count = __this_cpu_read(*fbc->counters) + amount;
+	if (abs(count) >= batch) {
+		unsigned long flags;
+		raw_spin_lock_irqsave(&fbc->lock, flags);
+		fbc->count += count;
+		__this_cpu_sub(*fbc->counters, count - amount);
+		raw_spin_unlock_irqrestore(&fbc->lock, flags);
+	} else {
+		this_cpu_add(*fbc->counters, amount);
+	}
+	preempt_enable();
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(percpu_counter_add_batch);
 
@@ -124,6 +148,7 @@ EXPORT_SYMBOL(percpu_counter_sync);
 
 /*
  * Add up all the per-cpu counts, return the result.  This is a more accurate
+<<<<<<< HEAD
  * but much slower version of percpu_counter_read_positive().
  *
  * We use the cpu mask of (cpu_online_mask | cpu_dying_mask) to capture sums
@@ -133,6 +158,9 @@ EXPORT_SYMBOL(percpu_counter_sync);
  * By including dying CPUs in the iteration mask, we avoid this race condition
  * so __percpu_counter_sum() just does the right thing when CPUs are being taken
  * offline.
+=======
+ * but much slower version of percpu_counter_read_positive()
+>>>>>>> b7ba80a49124 (Commit)
  */
 s64 __percpu_counter_sum(struct percpu_counter *fbc)
 {
@@ -142,7 +170,11 @@ s64 __percpu_counter_sum(struct percpu_counter *fbc)
 
 	raw_spin_lock_irqsave(&fbc->lock, flags);
 	ret = fbc->count;
+<<<<<<< HEAD
 	for_each_cpu_or(cpu, cpu_online_mask, cpu_dying_mask) {
+=======
+	for_each_online_cpu(cpu) {
+>>>>>>> b7ba80a49124 (Commit)
 		s32 *pcount = per_cpu_ptr(fbc->counters, cpu);
 		ret += *pcount;
 	}

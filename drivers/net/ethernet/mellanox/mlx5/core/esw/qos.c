@@ -22,13 +22,22 @@ struct mlx5_esw_rate_group {
 };
 
 static int esw_qos_tsar_config(struct mlx5_core_dev *dev, u32 *sched_ctx,
+<<<<<<< HEAD
 			       u32 tsar_ix, u32 max_rate, u32 bw_share)
+=======
+			       u32 parent_ix, u32 tsar_ix,
+			       u32 max_rate, u32 bw_share)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 bitmask = 0;
 
 	if (!MLX5_CAP_GEN(dev, qos) || !MLX5_CAP_QOS(dev, esw_scheduling))
 		return -EOPNOTSUPP;
 
+<<<<<<< HEAD
+=======
+	MLX5_SET(scheduling_context, sched_ctx, parent_element_id, parent_ix);
+>>>>>>> b7ba80a49124 (Commit)
 	MLX5_SET(scheduling_context, sched_ctx, max_average_bw, max_rate);
 	MLX5_SET(scheduling_context, sched_ctx, bw_share, bw_share);
 	bitmask |= MODIFY_SCHEDULING_ELEMENT_IN_MODIFY_BITMASK_MAX_AVERAGE_BW;
@@ -49,7 +58,11 @@ static int esw_qos_group_config(struct mlx5_eswitch *esw, struct mlx5_esw_rate_g
 	int err;
 
 	err = esw_qos_tsar_config(dev, sched_ctx,
+<<<<<<< HEAD
 				  group->tsar_ix,
+=======
+				  esw->qos.root_tsar_ix, group->tsar_ix,
+>>>>>>> b7ba80a49124 (Commit)
 				  max_rate, bw_share);
 	if (err)
 		NL_SET_ERR_MSG_MOD(extack, "E-Switch modify group TSAR element failed");
@@ -65,13 +78,31 @@ static int esw_qos_vport_config(struct mlx5_eswitch *esw,
 				struct netlink_ext_ack *extack)
 {
 	u32 sched_ctx[MLX5_ST_SZ_DW(scheduling_context)] = {};
+<<<<<<< HEAD
 	struct mlx5_core_dev *dev = esw->dev;
+=======
+	struct mlx5_esw_rate_group *group = vport->qos.group;
+	struct mlx5_core_dev *dev = esw->dev;
+	u32 parent_tsar_ix;
+	void *vport_elem;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	if (!vport->qos.enabled)
 		return -EIO;
 
+<<<<<<< HEAD
 	err = esw_qos_tsar_config(dev, sched_ctx, vport->qos.esw_tsar_ix,
+=======
+	parent_tsar_ix = group ? group->tsar_ix : esw->qos.root_tsar_ix;
+	MLX5_SET(scheduling_context, sched_ctx, element_type,
+		 SCHEDULING_CONTEXT_ELEMENT_TYPE_VPORT);
+	vport_elem = MLX5_ADDR_OF(scheduling_context, sched_ctx,
+				  element_attributes);
+	MLX5_SET(vport_element, vport_elem, vport_number, vport->vport);
+
+	err = esw_qos_tsar_config(dev, sched_ctx, parent_tsar_ix, vport->qos.esw_tsar_ix,
+>>>>>>> b7ba80a49124 (Commit)
 				  max_rate, bw_share);
 	if (err) {
 		esw_warn(esw->dev,
@@ -744,7 +775,11 @@ static int esw_qos_devlink_rate_to_mbps(struct mlx5_core_dev *mdev, const char *
 	u64 value;
 	int err;
 
+<<<<<<< HEAD
 	err = mlx5_port_max_linkspeed(mdev, &link_speed_max);
+=======
+	err = mlx5e_port_max_linkspeed(mdev, &link_speed_max);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		NL_SET_ERR_MSG_MOD(extack, "Failed to get link maximum speed");
 		return err;
@@ -912,6 +947,7 @@ int mlx5_esw_qos_vport_update_group(struct mlx5_eswitch *esw,
 				    struct mlx5_esw_rate_group *group,
 				    struct netlink_ext_ack *extack)
 {
+<<<<<<< HEAD
 	int err = 0;
 
 	mutex_lock(&esw->state_lock);
@@ -922,6 +958,14 @@ int mlx5_esw_qos_vport_update_group(struct mlx5_eswitch *esw,
 	if (!err)
 		err = esw_qos_vport_update_group(esw, vport, group, extack);
 unlock:
+=======
+	int err;
+
+	mutex_lock(&esw->state_lock);
+	err = esw_qos_vport_enable(esw, vport, 0, 0, extack);
+	if (!err)
+		err = esw_qos_vport_update_group(esw, vport, group, extack);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&esw->state_lock);
 	return err;
 }

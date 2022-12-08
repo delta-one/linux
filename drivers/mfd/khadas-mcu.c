@@ -84,7 +84,12 @@ static struct mfd_cell khadas_mcu_cells[] = {
 	{ .name = "khadas-mcu-user-mem", },
 };
 
+<<<<<<< HEAD
 static int khadas_mcu_probe(struct i2c_client *client)
+=======
+static int khadas_mcu_probe(struct i2c_client *client,
+		       const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &client->dev;
 	struct khadas_mcu *ddata;
@@ -112,7 +117,11 @@ static int khadas_mcu_probe(struct i2c_client *client)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (of_property_present(dev->of_node, "#cooling-cells"))
+=======
+	if (of_find_property(dev->of_node, "#cooling-cells", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
 					    khadas_mcu_fan_cells,
 					    ARRAY_SIZE(khadas_mcu_fan_cells),
@@ -134,7 +143,11 @@ static struct i2c_driver khadas_mcu_driver = {
 		.name = "khadas-mcu-core",
 		.of_match_table = of_match_ptr(khadas_mcu_of_match),
 	},
+<<<<<<< HEAD
 	.probe_new = khadas_mcu_probe,
+=======
+	.probe = khadas_mcu_probe,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_i2c_driver(khadas_mcu_driver);
 

@@ -602,7 +602,11 @@ int main(int argc, char **argv)
 		return EXIT_FAIL_XDP;
 	}
 
+<<<<<<< HEAD
 	err = bpf_prog_get_info_by_fd(prog_fd, &info, &info_len);
+=======
+	err = bpf_obj_get_info_by_fd(prog_fd, &info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		printf("can't get prog info - %s\n", strerror(errno));
 		return err;

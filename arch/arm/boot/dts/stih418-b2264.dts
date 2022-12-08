@@ -42,7 +42,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	cpu_opp_table: opp-table {
+=======
+	cpu_opp_table: opp_table {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "operating-points-v2";
 		opp-shared;
 
@@ -76,7 +80,11 @@
 	soc {
 		leds {
 			compatible = "gpio-leds";
+<<<<<<< HEAD
 			led-green {
+=======
+			green {
+>>>>>>> b7ba80a49124 (Commit)
 				gpios = <&pio1 3 GPIO_ACTIVE_HIGH>;
 				default-state = "off";
 			};

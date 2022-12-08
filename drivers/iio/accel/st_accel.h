@@ -37,7 +37,10 @@
 #define LIS2DE12_ACCEL_DEV_NAME		"lis2de12"
 #define LIS2HH12_ACCEL_DEV_NAME		"lis2hh12"
 #define LIS302DL_ACCEL_DEV_NAME		"lis302dl"
+<<<<<<< HEAD
 #define LSM303C_ACCEL_DEV_NAME		"lsm303c_accel"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define SC7A20_ACCEL_DEV_NAME		"sc7a20"
 
 

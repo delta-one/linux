@@ -4,7 +4,10 @@
 
 #include "chan.h"
 #include "debug.h"
+<<<<<<< HEAD
 #include "util.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static enum rtw89_subband rtw89_get_subband_type(enum rtw89_band band,
 						 u8 center_chan)
@@ -109,8 +112,13 @@ bool rtw89_assign_entity_chan(struct rtw89_dev *rtwdev,
 			      const struct rtw89_chan *new)
 {
 	struct rtw89_hal *hal = &rtwdev->hal;
+<<<<<<< HEAD
 	struct rtw89_chan *chan = &hal->sub[idx].chan;
 	struct rtw89_chan_rcd *rcd = &hal->sub[idx].rcd;
+=======
+	struct rtw89_chan *chan = &hal->chan[idx];
+	struct rtw89_chan_rcd *rcd = &hal->chan_rcd[idx];
+>>>>>>> b7ba80a49124 (Commit)
 	bool band_changed;
 
 	rcd->prev_primary_channel = chan->primary_channel;
@@ -128,7 +136,11 @@ static void __rtw89_config_entity_chandef(struct rtw89_dev *rtwdev,
 {
 	struct rtw89_hal *hal = &rtwdev->hal;
 
+<<<<<<< HEAD
 	hal->sub[idx].chandef = *chandef;
+=======
+	hal->chandef[idx] = *chandef;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (from_stack)
 		set_bit(idx, hal->entity_map);
@@ -196,7 +208,10 @@ int rtw89_chanctx_ops_add(struct rtw89_dev *rtwdev,
 	rtw89_config_entity_chandef(rtwdev, idx, &ctx->def);
 	rtw89_set_channel(rtwdev);
 	cfg->idx = idx;
+<<<<<<< HEAD
 	hal->sub[idx].cfg = cfg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -205,6 +220,7 @@ void rtw89_chanctx_ops_remove(struct rtw89_dev *rtwdev,
 {
 	struct rtw89_hal *hal = &rtwdev->hal;
 	struct rtw89_chanctx_cfg *cfg = (struct rtw89_chanctx_cfg *)ctx->drv_priv;
+<<<<<<< HEAD
 	struct rtw89_vif *rtwvif;
 	u8 drop, roll;
 
@@ -233,6 +249,10 @@ void rtw89_chanctx_ops_remove(struct rtw89_dev *rtwdev,
 
 out:
 	clear_bit(drop, hal->entity_map);
+=======
+
+	clear_bit(cfg->idx, hal->entity_map);
+>>>>>>> b7ba80a49124 (Commit)
 	rtw89_set_channel(rtwdev);
 }
 
@@ -253,9 +273,12 @@ int rtw89_chanctx_ops_assign_vif(struct rtw89_dev *rtwdev,
 				 struct rtw89_vif *rtwvif,
 				 struct ieee80211_chanctx_conf *ctx)
 {
+<<<<<<< HEAD
 	struct rtw89_chanctx_cfg *cfg = (struct rtw89_chanctx_cfg *)ctx->drv_priv;
 
 	rtwvif->sub_entity_idx = cfg->idx;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -263,5 +286,8 @@ void rtw89_chanctx_ops_unassign_vif(struct rtw89_dev *rtwdev,
 				    struct rtw89_vif *rtwvif,
 				    struct ieee80211_chanctx_conf *ctx)
 {
+<<<<<<< HEAD
 	rtwvif->sub_entity_idx = RTW89_SUB_ENTITY_0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

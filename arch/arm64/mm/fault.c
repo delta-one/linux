@@ -30,7 +30,10 @@
 #include <asm/bug.h>
 #include <asm/cmpxchg.h>
 #include <asm/cpufeature.h>
+<<<<<<< HEAD
 #include <asm/efi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/exception.h>
 #include <asm/daifflags.h>
 #include <asm/debug-monitors.h>
@@ -354,11 +357,14 @@ static bool is_el1_mte_sync_tag_check_fault(unsigned long esr)
 	return false;
 }
 
+<<<<<<< HEAD
 static bool is_translation_fault(unsigned long esr)
 {
 	return (esr & ESR_ELx_FSC_TYPE) == ESR_ELx_FSC_FAULT;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void __do_kernel_fault(unsigned long addr, unsigned long esr,
 			      struct pt_regs *regs)
 {
@@ -391,16 +397,23 @@ static void __do_kernel_fault(unsigned long addr, unsigned long esr,
 	} else if (addr < PAGE_SIZE) {
 		msg = "NULL pointer dereference";
 	} else {
+<<<<<<< HEAD
 		if (is_translation_fault(esr) &&
 		    kfence_handle_page_fault(addr, esr & ESR_ELx_WNR, regs))
+=======
+		if (kfence_handle_page_fault(addr, esr & ESR_ELx_WNR, regs))
+>>>>>>> b7ba80a49124 (Commit)
 			return;
 
 		msg = "paging request";
 	}
 
+<<<<<<< HEAD
 	if (efi_runtime_fixup_exception(regs, msg))
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	die_kernel_fault(msg, addr, esr, regs);
 }
 
@@ -535,9 +548,12 @@ static int __kprobes do_page_fault(unsigned long far, unsigned long esr,
 	unsigned long vm_flags;
 	unsigned int mm_flags = FAULT_FLAG_DEFAULT;
 	unsigned long addr = untagged_addr(far);
+<<<<<<< HEAD
 #ifdef CONFIG_PER_VMA_LOCK
 	struct vm_area_struct *vma;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (kprobe_page_fault(regs, esr))
 		return 0;
@@ -588,6 +604,7 @@ static int __kprobes do_page_fault(unsigned long far, unsigned long esr,
 
 	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, addr);
 
+<<<<<<< HEAD
 #ifdef CONFIG_PER_VMA_LOCK
 	if (!(mm_flags & FAULT_FLAG_USER))
 		goto lock_mmap;
@@ -618,6 +635,8 @@ static int __kprobes do_page_fault(unsigned long far, unsigned long esr,
 	}
 lock_mmap:
 #endif /* CONFIG_PER_VMA_LOCK */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * As per x86, we may deadlock here. However, since the kernel only
 	 * validly references user space from well defined areas of the code,
@@ -661,9 +680,12 @@ retry:
 	}
 	mmap_read_unlock(mm);
 
+<<<<<<< HEAD
 #ifdef CONFIG_PER_VMA_LOCK
 done:
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Handle the "normal" (no error) case first.
 	 */
@@ -961,7 +983,11 @@ NOKPROBE_SYMBOL(do_debug_exception);
 /*
  * Used during anonymous page fault handling.
  */
+<<<<<<< HEAD
 struct folio *vma_alloc_zeroed_movable_folio(struct vm_area_struct *vma,
+=======
+struct page *alloc_zeroed_user_highpage_movable(struct vm_area_struct *vma,
+>>>>>>> b7ba80a49124 (Commit)
 						unsigned long vaddr)
 {
 	gfp_t flags = GFP_HIGHUSER_MOVABLE | __GFP_ZERO;
@@ -974,13 +1000,22 @@ struct folio *vma_alloc_zeroed_movable_folio(struct vm_area_struct *vma,
 	if (vma->vm_flags & VM_MTE)
 		flags |= __GFP_ZEROTAGS;
 
+<<<<<<< HEAD
 	return vma_alloc_folio(flags, 0, vma, vaddr, false);
+=======
+	return alloc_page_vma(flags, vma, vaddr);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void tag_clear_highpage(struct page *page)
 {
+<<<<<<< HEAD
 	/* Newly allocated page, shouldn't have been tagged yet */
 	WARN_ON_ONCE(!try_page_mte_tagging(page));
 	mte_zero_clear_page_tags(page_address(page));
 	set_page_mte_tagged(page);
+=======
+	mte_zero_clear_page_tags(page_address(page));
+	set_bit(PG_mte_tagged, &page->flags);
+>>>>>>> b7ba80a49124 (Commit)
 }

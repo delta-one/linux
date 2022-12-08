@@ -1,6 +1,7 @@
 [
     {
         "BriefDescription": "Number of entries allocated. Account for Any type: e.g. Snoop,  etc.",
+<<<<<<< HEAD
         "EventCode": "0x84",
         "EventName": "UNC_ARB_COH_TRK_REQUESTS.ALL",
         "PerPkg": "1",
@@ -53,10 +54,19 @@
         "EventName": "UNC_ARB_TRK_OCCUPANCY.RD",
         "PerPkg": "1",
         "UMask": "0x2",
+=======
+        "Counter": "1",
+        "EventCode": "0x84",
+        "EventName": "UNC_ARB_COH_TRK_REQUESTS.ALL",
+        "PerPkg": "1",
+        "PublicDescription": "Number of entries allocated. Account for Any type: e.g. Snoop,  etc.",
+        "UMask": "0x01",
+>>>>>>> b7ba80a49124 (Commit)
         "Unit": "ARB"
     },
     {
         "BriefDescription": "Total number of all outgoing entries allocated. Accounts for Coherent and non-coherent traffic.",
+<<<<<<< HEAD
         "EventCode": "0x81",
         "EventName": "UNC_ARB_TRK_REQUESTS.ALL",
         "PerPkg": "1",
@@ -69,13 +79,29 @@
         "EventName": "UNC_ARB_TRK_REQUESTS.RD",
         "PerPkg": "1",
         "UMask": "0x2",
+=======
+        "Counter": "1",
+        "EventCode": "0x81",
+        "EventName": "UNC_ARB_TRK_REQUESTS.ALL",
+        "PerPkg": "1",
+        "PublicDescription": "Total number of all outgoing entries allocated. Accounts for Coherent and non-coherent traffic.",
+        "UMask": "0x01",
+>>>>>>> b7ba80a49124 (Commit)
         "Unit": "ARB"
     },
     {
         "BriefDescription": "UNC_CLOCK.SOCKET",
+<<<<<<< HEAD
         "EventCode": "0xff",
         "EventName": "UNC_CLOCK.SOCKET",
         "PerPkg": "1",
+=======
+        "Counter": "FIXED",
+        "EventCode": "0xff",
+        "EventName": "UNC_CLOCK.SOCKET",
+        "PerPkg": "1",
+        "PublicDescription": "UNC_CLOCK.SOCKET",
+>>>>>>> b7ba80a49124 (Commit)
         "Unit": "CLOCK"
     }
 ]

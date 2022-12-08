@@ -5,8 +5,11 @@
 #include "../nfpcore/nfp_nsp.h"
 #include "../nfp_app.h"
 #include "../nfp_main.h"
+<<<<<<< HEAD
 #include "../nfp_net.h"
 #include "main.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int nfp_nic_init(struct nfp_app *app)
 {
@@ -30,6 +33,7 @@ static void nfp_nic_sriov_disable(struct nfp_app *app)
 {
 }
 
+<<<<<<< HEAD
 static int nfp_nic_vnic_init(struct nfp_app *app, struct nfp_net *nn)
 {
 	return nfp_nic_dcb_init(nn);
@@ -64,11 +68,14 @@ static void nfp_nic_vnic_free(struct nfp_app *app, struct nfp_net *nn)
 	kfree(nn->app_priv);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct nfp_app_type app_nic = {
 	.id		= NFP_APP_CORE_NIC,
 	.name		= "nic",
 
 	.init		= nfp_nic_init,
+<<<<<<< HEAD
 	.vnic_alloc	= nfp_nic_vnic_alloc,
 	.vnic_free	= nfp_nic_vnic_free,
 	.sriov_enable	= nfp_nic_sriov_enable,
@@ -76,4 +83,10 @@ const struct nfp_app_type app_nic = {
 
 	.vnic_init      = nfp_nic_vnic_init,
 	.vnic_clean     = nfp_nic_vnic_clean,
+=======
+	.vnic_alloc	= nfp_app_nic_vnic_alloc,
+
+	.sriov_enable	= nfp_nic_sriov_enable,
+	.sriov_disable	= nfp_nic_sriov_disable,
+>>>>>>> b7ba80a49124 (Commit)
 };

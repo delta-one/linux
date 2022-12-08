@@ -95,7 +95,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	clk26m: oscillator-26m {
+=======
+	clk26m: oscillator@0 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		clock-frequency = <26000000>;

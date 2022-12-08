@@ -46,6 +46,12 @@ gm200_fb_init(struct nvkm_fb *base)
 	struct gf100_fb *fb = gf100_fb(base);
 	struct nvkm_device *device = fb->base.subdev.device;
 
+<<<<<<< HEAD
+=======
+	if (fb->r100c10_page)
+		nvkm_wr32(device, 0x100c10, fb->r100c10 >> 8);
+
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_wr32(device, 0x100cc8, nvkm_memory_addr(fb->base.mmu_wr) >> 8);
 	nvkm_wr32(device, 0x100ccc, nvkm_memory_addr(fb->base.mmu_rd) >> 8);
 	nvkm_mask(device, 0x100cc4, 0x00060000,
@@ -59,7 +65,10 @@ gm200_fb = {
 	.init = gm200_fb_init,
 	.init_page = gm200_fb_init_page,
 	.intr = gf100_fb_intr,
+<<<<<<< HEAD
 	.sysmem.flush_page_init = gf100_fb_sysmem_flush_page_init,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.ram_new = gm200_ram_new,
 	.default_bigpage = 0 /* per-instance. */,
 };

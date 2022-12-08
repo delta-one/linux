@@ -337,7 +337,11 @@ static int __init init_dns_resolver(void)
 	 * this is used to prevent malicious redirections from being installed
 	 * with add_key().
 	 */
+<<<<<<< HEAD
 	cred = prepare_kernel_cred(&init_task);
+=======
+	cred = prepare_kernel_cred(NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!cred)
 		return -ENOMEM;
 

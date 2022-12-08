@@ -30,10 +30,14 @@ required:
   - compatible
   - reg
 
+<<<<<<< HEAD
 allOf:
   - $ref: /schemas/spi/spi-peripheral-props.yaml#
 
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |
@@ -55,7 +59,10 @@ examples:
             compatible = "meas,ms5611";
             reg = <0>;
             vdd-supply = <&ldo_3v3_gnss>;
+<<<<<<< HEAD
             spi-max-frequency = <20000000>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
         };
     };
 ...

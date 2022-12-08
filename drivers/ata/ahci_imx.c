@@ -418,7 +418,11 @@ static int __sata_ahci_read_temperature(void *dev, int *temp)
 
 static int sata_ahci_read_temperature(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	return __sata_ahci_read_temperature(thermal_zone_device_priv(tz), temp);
+=======
+	return __sata_ahci_read_temperature(tz->devdata, temp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t sata_ahci_show_temp(struct device *dev,
@@ -1067,7 +1071,11 @@ static int imx_ahci_probe(struct platform_device *pdev)
 	imxpriv->ahci_pdev = pdev;
 	imxpriv->no_device = false;
 	imxpriv->first_time = true;
+<<<<<<< HEAD
 	imxpriv->type = (unsigned long)of_id->data;
+=======
+	imxpriv->type = (enum ahci_imx_type)of_id->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	imxpriv->sata_clk = devm_clk_get(dev, "sata");
 	if (IS_ERR(imxpriv->sata_clk)) {
@@ -1235,4 +1243,8 @@ module_platform_driver(imx_ahci_driver);
 MODULE_DESCRIPTION("Freescale i.MX AHCI SATA platform driver");
 MODULE_AUTHOR("Richard Zhu <Hong-Xing.Zhu@freescale.com>");
 MODULE_LICENSE("GPL");
+<<<<<<< HEAD
 MODULE_ALIAS("platform:" DRV_NAME);
+=======
+MODULE_ALIAS("ahci:imx");
+>>>>>>> b7ba80a49124 (Commit)

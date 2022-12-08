@@ -17,8 +17,11 @@
 /* for gfp flag names */
 #include <linux/trace_events.h>
 #include <trace/events/mmflags.h>
+<<<<<<< HEAD
 #include "trace_probe.h"
 #include "trace_probe_kernel.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "trace_synth.h"
 
@@ -173,6 +176,7 @@ static int synth_field_is_string(char *type)
 	return false;
 }
 
+<<<<<<< HEAD
 static int synth_field_is_stack(char *type)
 {
 	if (strstr(type, "long[") != NULL)
@@ -181,6 +185,8 @@ static int synth_field_is_stack(char *type)
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int synth_field_string_size(char *type)
 {
 	char buf[4], *end, *start;
@@ -256,8 +262,11 @@ static int synth_field_size(char *type)
 		size = sizeof(gfp_t);
 	else if (synth_field_is_string(type))
 		size = synth_field_string_size(type);
+<<<<<<< HEAD
 	else if (synth_field_is_stack(type))
 		size = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return size;
 }
@@ -302,8 +311,11 @@ static const char *synth_field_fmt(char *type)
 		fmt = "%x";
 	else if (synth_field_is_string(type))
 		fmt = "%.*s";
+<<<<<<< HEAD
 	else if (synth_field_is_stack(type))
 		fmt = "%s";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return fmt;
 }
@@ -383,6 +395,7 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
 						 i == se->n_fields - 1 ? "" : " ");
 				n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
 			}
+<<<<<<< HEAD
 		} else if (se->fields[i]->is_stack) {
 			u32 offset, data_offset, len;
 			unsigned long *p, *end;
@@ -400,6 +413,8 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
 				trace_seq_printf(s, "=> %pS\n", (void *)*p);
 			n_u64++;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			struct trace_print_flags __flags[] = {
 			    __def_gfpflag_names, {-1, NULL} };
@@ -440,25 +455,43 @@ static unsigned int trace_string(struct synth_trace_event *entry,
 {
 	unsigned int len = 0;
 	char *str_field;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (is_dynamic) {
 		u32 data_offset;
 
+<<<<<<< HEAD
 		data_offset = struct_size(entry, fields, event->n_u64);
 		data_offset += data_size;
 
 		len = fetch_store_strlen((unsigned long)str_val);
+=======
+		data_offset = offsetof(typeof(*entry), fields);
+		data_offset += event->n_u64 * sizeof(u64);
+		data_offset += data_size;
+
+		str_field = (char *)entry + data_offset;
+
+		len = strlen(str_val) + 1;
+		strscpy(str_field, str_val, len);
+>>>>>>> b7ba80a49124 (Commit)
 
 		data_offset |= len << 16;
 		*(u32 *)&entry->fields[*n_u64] = data_offset;
 
+<<<<<<< HEAD
 		ret = fetch_store_string((unsigned long)str_val, &entry->fields[*n_u64], entry);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		(*n_u64)++;
 	} else {
 		str_field = (char *)&entry->fields[*n_u64];
 
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
 		if ((unsigned long)str_val < TASK_SIZE)
 			ret = strncpy_from_user_nofault(str_field, str_val, STR_VAR_LEN_MAX);
@@ -469,12 +502,16 @@ static unsigned int trace_string(struct synth_trace_event *entry,
 		if (ret < 0)
 			strcpy(str_field, FAULT_STRING);
 
+=======
+		strscpy(str_field, str_val, STR_VAR_LEN_MAX);
+>>>>>>> b7ba80a49124 (Commit)
 		(*n_u64) += STR_VAR_LEN_MAX / sizeof(u64);
 	}
 
 	return len;
 }
 
+<<<<<<< HEAD
 static unsigned int trace_stack(struct synth_trace_event *entry,
 				 struct synth_event *event,
 				 long *stack,
@@ -512,6 +549,8 @@ static unsigned int trace_stack(struct synth_trace_event *entry,
 	return len;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static notrace void trace_event_raw_event_synth(void *__data,
 						u64 *var_ref_vals,
 						unsigned int *var_ref_idx)
@@ -538,12 +577,16 @@ static notrace void trace_event_raw_event_synth(void *__data,
 		val_idx = var_ref_idx[field_pos];
 		str_val = (char *)(long)var_ref_vals[val_idx];
 
+<<<<<<< HEAD
 		if (event->dynamic_fields[i]->is_stack) {
 			len = *((unsigned long *)str_val);
 			len *= sizeof(unsigned long);
 		} else {
 			len = fetch_store_strlen((unsigned long)str_val);
 		}
+=======
+		len = strlen(str_val) + 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 		fields_size += len;
 	}
@@ -569,12 +612,15 @@ static notrace void trace_event_raw_event_synth(void *__data,
 					   event->fields[i]->is_dynamic,
 					   data_size, &n_u64);
 			data_size += len; /* only dynamic string increments */
+<<<<<<< HEAD
 		} else if (event->fields[i]->is_stack) {
 			long *stack = (long *)(long)var_ref_vals[val_idx];
 
 			len = trace_stack(entry, event, stack,
 					   data_size, &n_u64);
 			data_size += len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			struct synth_field *field = event->fields[i];
 			u64 val = var_ref_vals[val_idx];
@@ -637,9 +683,12 @@ static int __set_synth_event_print_fmt(struct synth_event *event,
 		    event->fields[i]->is_dynamic)
 			pos += snprintf(buf + pos, LEN_OR_ZERO,
 				", __get_str(%s)", event->fields[i]->name);
+<<<<<<< HEAD
 		else if (event->fields[i]->is_stack)
 			pos += snprintf(buf + pos, LEN_OR_ZERO,
 				", __get_stacktrace(%s)", event->fields[i]->name);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		else
 			pos += snprintf(buf + pos, LEN_OR_ZERO,
 					", REC->%s", event->fields[i]->name);
@@ -776,8 +825,12 @@ static struct synth_field *parse_synth_field(int argc, char **argv,
 		ret = -EINVAL;
 		goto free;
 	} else if (size == 0) {
+<<<<<<< HEAD
 		if (synth_field_is_string(field->type) ||
 		    synth_field_is_stack(field->type)) {
+=======
+		if (synth_field_is_string(field->type)) {
+>>>>>>> b7ba80a49124 (Commit)
 			char *type;
 
 			len = sizeof("__data_loc ") + strlen(field->type) + 1;
@@ -808,8 +861,11 @@ static struct synth_field *parse_synth_field(int argc, char **argv,
 
 	if (synth_field_is_string(field->type))
 		field->is_string = true;
+<<<<<<< HEAD
 	else if (synth_field_is_stack(field->type))
 		field->is_stack = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	field->is_signed = synth_field_signed(field->type);
  out:
@@ -910,9 +966,16 @@ static int register_synth_event(struct synth_event *event)
 	}
 
 	ret = set_synth_event_print_fmt(call);
+<<<<<<< HEAD
 	/* unregister_trace_event() will be called inside */
 	if (ret < 0)
 		trace_remove_event_call(call);
+=======
+	if (ret < 0) {
+		trace_remove_event_call(call);
+		goto err;
+	}
+>>>>>>> b7ba80a49124 (Commit)
  out:
 	return ret;
  err:
@@ -1364,12 +1427,19 @@ static int __create_synth_event(const char *name, const char *raw_fields)
 				goto err_free_arg;
 			}
 
+<<<<<<< HEAD
+=======
+			fields[n_fields++] = field;
+>>>>>>> b7ba80a49124 (Commit)
 			if (n_fields == SYNTH_FIELDS_MAX) {
 				synth_err(SYNTH_ERR_TOO_MANY_FIELDS, 0);
 				ret = -EINVAL;
 				goto err_free_arg;
 			}
+<<<<<<< HEAD
 			fields[n_fields++] = field;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 			n_fields_this_loop++;
 		}
@@ -1507,6 +1577,10 @@ int synth_event_delete(const char *event_name)
 	mutex_unlock(&event_mutex);
 
 	if (mod) {
+<<<<<<< HEAD
+=======
+		mutex_lock(&trace_types_lock);
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * It is safest to reset the ring buffer if the module
 		 * being unloaded registered any events that were
@@ -1518,6 +1592,10 @@ int synth_event_delete(const char *event_name)
 		 * occur.
 		 */
 		tracing_reset_all_online_cpus();
+<<<<<<< HEAD
+=======
+		mutex_unlock(&trace_types_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;

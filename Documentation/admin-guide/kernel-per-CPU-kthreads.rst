@@ -25,7 +25,11 @@ References
 
 -	In order to locate kernel-generated OS jitter on CPU N:
 
+<<<<<<< HEAD
 		cd /sys/kernel/tracing
+=======
+		cd /sys/kernel/debug/tracing
+>>>>>>> b7ba80a49124 (Commit)
 		echo 1 > max_graph_depth # Increase the "1" for more detail
 		echo function_graph > current_tracer
 		# run workload

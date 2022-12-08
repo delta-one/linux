@@ -95,7 +95,11 @@ struct meson_dev {
 	struct device *dev;
 	struct meson_flow *chanlist;
 	atomic_t flow;
+<<<<<<< HEAD
 	int irqs[MAXFLOW];
+=======
+	int *irqs;
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_CRYPTO_DEV_AMLOGIC_GXL_DEBUG
 	struct dentry *dbgfs_dir;
 #endif

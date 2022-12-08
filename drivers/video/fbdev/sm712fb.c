@@ -1756,9 +1756,12 @@ static int __init sm712fb_init(void)
 {
 	char *option = NULL;
 
+<<<<<<< HEAD
 	if (fb_modesetting_disabled("sm712fb"))
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (fb_get_options("sm712fb", &option))
 		return -ENODEV;
 	if (option && *option)

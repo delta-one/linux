@@ -41,7 +41,10 @@ mod bindings_raw {
 #[allow(dead_code)]
 mod bindings_helper {
     // Import the generated bindings for types.
+<<<<<<< HEAD
     use super::bindings_raw::*;
+=======
+>>>>>>> b7ba80a49124 (Commit)
     include!(concat!(
         env!("OBJTREE"),
         "/rust/bindings/bindings_helpers_generated.rs"

@@ -226,7 +226,11 @@ unevaluatedProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     i2c {
+=======
+    i2c1 {
+>>>>>>> b7ba80a49124 (Commit)
             #address-cells = <1>;
             #size-cells = <0>;
 
@@ -239,7 +243,11 @@ examples:
 
             ssd1306_i2c: oled@3d {
                     compatible = "solomon,ssd1306";
+<<<<<<< HEAD
                     reg = <0x3d>;
+=======
+                    reg = <0x3c>;
+>>>>>>> b7ba80a49124 (Commit)
                     pwms = <&pwm 4 3000>;
                     reset-gpios = <&gpio2 7>;
                     solomon,com-lrremap;

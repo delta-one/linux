@@ -44,9 +44,15 @@
 #define VOL_SHIFT		3
 #define MA_PRESENT		(1 << 2)
 #define MA_SHIFT		0
+<<<<<<< HEAD
 #define PIN_CONFIG_TO_PULL(c)	((c) >> PULL_SHIFT & 0x1)
 #define PIN_CONFIG_TO_VOL(c)	((c) >> VOL_SHIFT & 0x1)
 #define PIN_CONFIG_TO_MA(c)	((c) >> MA_SHIFT & 0x3)
+=======
+#define CONFIG_TO_PULL(c)	((c) >> PULL_SHIFT & 0x1)
+#define CONFIG_TO_VOL(c)	((c) >> VOL_SHIFT & 0x1)
+#define CONFIG_TO_MA(c)		((c) >> MA_SHIFT & 0x3)
+>>>>>>> b7ba80a49124 (Commit)
 
 struct mxs_function {
 	const char *name;

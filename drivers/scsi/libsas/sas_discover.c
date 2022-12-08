@@ -455,8 +455,19 @@ static void sas_discover_domain(struct work_struct *work)
 		break;
 	case SAS_SATA_DEV:
 	case SAS_SATA_PM:
+<<<<<<< HEAD
 		error = sas_discover_sata(dev);
 		break;
+=======
+#ifdef CONFIG_SCSI_SAS_ATA
+		error = sas_discover_sata(dev);
+		break;
+#else
+		pr_notice("ATA device seen but CONFIG_SCSI_SAS_ATA=N so cannot attach\n");
+		fallthrough;
+#endif
+		/* Fall through - only for the #else condition above. */
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		error = -ENXIO;
 		pr_err("unhandled device %d\n", dev->dev_type);

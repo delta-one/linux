@@ -27,9 +27,12 @@
 #if defined(__aarch64__)
 const char *version = "LINUX_2.6.39";
 const char *name = "__kernel_gettimeofday";
+<<<<<<< HEAD
 #elif defined(__riscv)
 const char *version = "LINUX_4.15";
 const char *name = "__vdso_gettimeofday";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 const char *version = "LINUX_2.6";
 const char *name = "__vdso_gettimeofday";

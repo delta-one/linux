@@ -44,6 +44,7 @@ static size_t syscall_arg__scnprintf_perf_flags(char *bf, size_t size,
 }
 
 #define SCA_PERF_FLAGS syscall_arg__scnprintf_perf_flags
+<<<<<<< HEAD
 
 struct attr_fprintf_args {
 	size_t size, printed;
@@ -88,3 +89,5 @@ static size_t syscall_arg__scnprintf_perf_event_attr(char *bf, size_t size, stru
 }
 
 #define SCA_PERF_ATTR syscall_arg__scnprintf_perf_event_attr
+=======
+>>>>>>> b7ba80a49124 (Commit)

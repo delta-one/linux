@@ -277,12 +277,16 @@ enum ovs_vport_attr {
 	OVS_VPORT_ATTR_PAD,
 	OVS_VPORT_ATTR_IFINDEX,
 	OVS_VPORT_ATTR_NETNSID,
+<<<<<<< HEAD
 	OVS_VPORT_ATTR_UPCALL_STATS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__OVS_VPORT_ATTR_MAX
 };
 
 #define OVS_VPORT_ATTR_MAX (__OVS_VPORT_ATTR_MAX - 1)
 
+<<<<<<< HEAD
 /**
  * enum ovs_vport_upcall_attr - attributes for %OVS_VPORT_UPCALL* commands
  * @OVS_VPORT_UPCALL_SUCCESS: 64-bit upcall success packets.
@@ -296,6 +300,8 @@ enum ovs_vport_upcall_attr {
 
 #define OVS_VPORT_UPCALL_ATTR_MAX (__OVS_VPORT_UPCALL_ATTR_MAX - 1)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum {
 	OVS_VXLAN_EXT_UNSPEC,
 	OVS_VXLAN_EXT_GBP,	/* Flag or __u32 */

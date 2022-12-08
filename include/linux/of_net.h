@@ -14,7 +14,10 @@
 struct net_device;
 extern int of_get_phy_mode(struct device_node *np, phy_interface_t *interface);
 extern int of_get_mac_address(struct device_node *np, u8 *mac);
+<<<<<<< HEAD
 extern int of_get_mac_address_nvmem(struct device_node *np, u8 *mac);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int of_get_ethdev_address(struct device_node *np, struct net_device *dev);
 extern struct net_device *of_find_net_device_by_node(struct device_node *np);
 #else
@@ -29,11 +32,14 @@ static inline int of_get_mac_address(struct device_node *np, u8 *mac)
 	return -ENODEV;
 }
 
+<<<<<<< HEAD
 static inline int of_get_mac_address_nvmem(struct device_node *np, u8 *mac)
 {
 	return -ENODEV;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int of_get_ethdev_address(struct device_node *np, struct net_device *dev)
 {
 	return -ENODEV;

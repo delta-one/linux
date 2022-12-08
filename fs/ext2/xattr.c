@@ -101,8 +101,13 @@ static void ext2_xattr_rehash(struct ext2_xattr_header *,
 static const struct xattr_handler *ext2_xattr_handler_map[] = {
 	[EXT2_XATTR_INDEX_USER]		     = &ext2_xattr_user_handler,
 #ifdef CONFIG_EXT2_FS_POSIX_ACL
+<<<<<<< HEAD
 	[EXT2_XATTR_INDEX_POSIX_ACL_ACCESS]  = &nop_posix_acl_access,
 	[EXT2_XATTR_INDEX_POSIX_ACL_DEFAULT] = &nop_posix_acl_default,
+=======
+	[EXT2_XATTR_INDEX_POSIX_ACL_ACCESS]  = &posix_acl_access_xattr_handler,
+	[EXT2_XATTR_INDEX_POSIX_ACL_DEFAULT] = &posix_acl_default_xattr_handler,
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	[EXT2_XATTR_INDEX_TRUSTED]	     = &ext2_xattr_trusted_handler,
 #ifdef CONFIG_EXT2_FS_SECURITY
@@ -113,6 +118,13 @@ static const struct xattr_handler *ext2_xattr_handler_map[] = {
 const struct xattr_handler *ext2_xattr_handlers[] = {
 	&ext2_xattr_user_handler,
 	&ext2_xattr_trusted_handler,
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_EXT2_FS_POSIX_ACL
+	&posix_acl_access_xattr_handler,
+	&posix_acl_default_xattr_handler,
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_EXT2_FS_SECURITY
 	&ext2_xattr_security_handler,
 #endif
@@ -121,18 +133,27 @@ const struct xattr_handler *ext2_xattr_handlers[] = {
 
 #define EA_BLOCK_CACHE(inode)	(EXT2_SB(inode->i_sb)->s_ea_block_cache)
 
+<<<<<<< HEAD
 static inline const char *ext2_xattr_prefix(int name_index,
 					    struct dentry *dentry)
+=======
+static inline const struct xattr_handler *
+ext2_xattr_handler(int name_index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct xattr_handler *handler = NULL;
 
 	if (name_index > 0 && name_index < ARRAY_SIZE(ext2_xattr_handler_map))
 		handler = ext2_xattr_handler_map[name_index];
+<<<<<<< HEAD
 
 	if (!xattr_handler_can_list(handler, dentry))
 		return NULL;
 
 	return xattr_prefix(handler);
+=======
+	return handler;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool
@@ -333,10 +354,18 @@ bad_block:
 	/* list the attribute names */
 	for (entry = FIRST_ENTRY(bh); !IS_LAST_ENTRY(entry);
 	     entry = EXT2_XATTR_NEXT(entry)) {
+<<<<<<< HEAD
 		const char *prefix;
 
 		prefix = ext2_xattr_prefix(entry->e_name_index, dentry);
 		if (prefix) {
+=======
+		const struct xattr_handler *handler =
+			ext2_xattr_handler(entry->e_name_index);
+
+		if (handler && (!handler->list || handler->list(dentry))) {
+			const char *prefix = handler->prefix ?: handler->name;
+>>>>>>> b7ba80a49124 (Commit)
 			size_t prefix_len = strlen(prefix);
 			size_t size = prefix_len + entry->e_name_len + 1;
 
@@ -552,6 +581,10 @@ bad_block:
 		error = -ENOMEM;
 		if (header == NULL)
 			goto cleanup;
+<<<<<<< HEAD
+=======
+		end = (char *)header + sb->s_blocksize;
+>>>>>>> b7ba80a49124 (Commit)
 		header->h_magic = cpu_to_le32(EXT2_XATTR_MAGIC);
 		header->h_blocks = header->h_refcount = cpu_to_le32(1);
 		last = here = ENTRY(header+1);

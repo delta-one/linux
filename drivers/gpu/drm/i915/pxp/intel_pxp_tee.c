@@ -8,6 +8,7 @@
 #include <drm/i915_pxp_tee_interface.h>
 #include <drm/i915_component.h>
 
+<<<<<<< HEAD
 #include "gem/i915_gem_lmem.h"
 
 #include "i915_drv.h"
@@ -18,13 +19,31 @@
 #include "intel_pxp_session.h"
 #include "intel_pxp_tee.h"
 #include "intel_pxp_types.h"
+=======
+#include "i915_drv.h"
+#include "intel_pxp.h"
+#include "intel_pxp_session.h"
+#include "intel_pxp_tee.h"
+#include "intel_pxp_tee_interface.h"
+
+static inline struct intel_pxp *i915_dev_to_pxp(struct device *i915_kdev)
+{
+	struct drm_i915_private *i915 = kdev_to_i915(i915_kdev);
+
+	return &to_gt(i915)->pxp;
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 static int intel_pxp_tee_io_message(struct intel_pxp *pxp,
 				    void *msg_in, u32 msg_in_size,
 				    void *msg_out, u32 msg_out_max_size,
 				    u32 *msg_out_rcv_size)
 {
+<<<<<<< HEAD
 	struct drm_i915_private *i915 = pxp->ctrl_gt->i915;
+=======
+	struct drm_i915_private *i915 = pxp_to_gt(pxp)->i915;
+>>>>>>> b7ba80a49124 (Commit)
 	struct i915_pxp_component *pxp_component = pxp->pxp_component;
 	int ret = 0;
 
@@ -67,6 +86,7 @@ unlock:
 	return ret;
 }
 
+<<<<<<< HEAD
 int intel_pxp_tee_stream_message(struct intel_pxp *pxp,
 				 u8 client_id, u32 fence_id,
 				 void *msg_in, size_t msg_in_len,
@@ -108,6 +128,8 @@ unlock:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * i915_pxp_tee_component_bind - bind function to pass the function pointers to pxp_tee
  * @i915_kdev: pointer to i915 kernel device
@@ -122,6 +144,7 @@ static int i915_pxp_tee_component_bind(struct device *i915_kdev,
 				       struct device *tee_kdev, void *data)
 {
 	struct drm_i915_private *i915 = kdev_to_i915(i915_kdev);
+<<<<<<< HEAD
 	struct intel_pxp *pxp = i915->pxp;
 	struct intel_uc *uc = &pxp->ctrl_gt->uc;
 	intel_wakeref_t wakeref;
@@ -132,12 +155,17 @@ static int i915_pxp_tee_component_bind(struct device *i915_kdev,
 		if (drm_WARN_ON(&i915->drm, !pxp->dev_link))
 			return -ENODEV;
 	}
+=======
+	struct intel_pxp *pxp = i915_dev_to_pxp(i915_kdev);
+	intel_wakeref_t wakeref;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&pxp->tee_mutex);
 	pxp->pxp_component = data;
 	pxp->pxp_component->tee_dev = tee_kdev;
 	mutex_unlock(&pxp->tee_mutex);
 
+<<<<<<< HEAD
 	if (intel_uc_uses_huc(uc) && intel_huc_is_loaded_by_gsc(&uc->huc)) {
 		with_intel_runtime_pm(&i915->runtime_pm, wakeref) {
 			/* load huc via pxp */
@@ -147,39 +175,60 @@ static int i915_pxp_tee_component_bind(struct device *i915_kdev,
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* if we are suspended, the HW will be re-initialized on resume */
 	wakeref = intel_runtime_pm_get_if_in_use(&i915->runtime_pm);
 	if (!wakeref)
 		return 0;
 
 	/* the component is required to fully start the PXP HW */
+<<<<<<< HEAD
 	if (intel_pxp_is_enabled(pxp))
 		intel_pxp_init_hw(pxp);
 
 	intel_runtime_pm_put(&i915->runtime_pm, wakeref);
 
 	return ret;
+=======
+	intel_pxp_init_hw(pxp);
+
+	intel_runtime_pm_put(&i915->runtime_pm, wakeref);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void i915_pxp_tee_component_unbind(struct device *i915_kdev,
 					  struct device *tee_kdev, void *data)
 {
 	struct drm_i915_private *i915 = kdev_to_i915(i915_kdev);
+<<<<<<< HEAD
 	struct intel_pxp *pxp = i915->pxp;
 	intel_wakeref_t wakeref;
 
 	if (intel_pxp_is_enabled(pxp))
 		with_intel_runtime_pm_if_in_use(&i915->runtime_pm, wakeref)
 			intel_pxp_fini_hw(pxp);
+=======
+	struct intel_pxp *pxp = i915_dev_to_pxp(i915_kdev);
+	intel_wakeref_t wakeref;
+
+	with_intel_runtime_pm_if_in_use(&i915->runtime_pm, wakeref)
+		intel_pxp_fini_hw(pxp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&pxp->tee_mutex);
 	pxp->pxp_component = NULL;
 	mutex_unlock(&pxp->tee_mutex);
+<<<<<<< HEAD
 
 	if (pxp->dev_link) {
 		device_link_del(pxp->dev_link);
 		pxp->dev_link = NULL;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct component_ops i915_pxp_tee_component_ops = {
@@ -187,6 +236,7 @@ static const struct component_ops i915_pxp_tee_component_ops = {
 	.unbind = i915_pxp_tee_component_unbind,
 };
 
+<<<<<<< HEAD
 static int alloc_streaming_command(struct intel_pxp *pxp)
 {
 	struct drm_i915_private *i915 = pxp->ctrl_gt->i915;
@@ -259,38 +309,61 @@ int intel_pxp_tee_component_init(struct intel_pxp *pxp)
 	if (ret)
 		return ret;
 
+=======
+int intel_pxp_tee_component_init(struct intel_pxp *pxp)
+{
+	int ret;
+	struct intel_gt *gt = pxp_to_gt(pxp);
+	struct drm_i915_private *i915 = gt->i915;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = component_add_typed(i915->drm.dev, &i915_pxp_tee_component_ops,
 				  I915_COMPONENT_PXP);
 	if (ret < 0) {
 		drm_err(&i915->drm, "Failed to add PXP component (%d)\n", ret);
+<<<<<<< HEAD
 		goto out_free;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	pxp->pxp_component_added = true;
 
 	return 0;
+<<<<<<< HEAD
 
 out_free:
 	free_streaming_command(pxp);
 	return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void intel_pxp_tee_component_fini(struct intel_pxp *pxp)
 {
+<<<<<<< HEAD
 	struct drm_i915_private *i915 = pxp->ctrl_gt->i915;
+=======
+	struct drm_i915_private *i915 = pxp_to_gt(pxp)->i915;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!pxp->pxp_component_added)
 		return;
 
 	component_del(i915->drm.dev, &i915_pxp_tee_component_ops);
 	pxp->pxp_component_added = false;
+<<<<<<< HEAD
 
 	free_streaming_command(pxp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int intel_pxp_tee_cmd_create_arb_session(struct intel_pxp *pxp,
 					 int arb_session_id)
 {
+<<<<<<< HEAD
 	struct drm_i915_private *i915 = pxp->ctrl_gt->i915;
 	struct pxp42_create_arb_in msg_in = {0};
 	struct pxp42_create_arb_out msg_out = {0};
@@ -300,6 +373,17 @@ int intel_pxp_tee_cmd_create_arb_session(struct intel_pxp *pxp,
 	msg_in.header.command_id = PXP42_CMDID_INIT_SESSION;
 	msg_in.header.buffer_len = sizeof(msg_in) - sizeof(msg_in.header);
 	msg_in.protection_mode = PXP42_ARB_SESSION_MODE_HEAVY;
+=======
+	struct drm_i915_private *i915 = pxp_to_gt(pxp)->i915;
+	struct pxp_tee_create_arb_in msg_in = {0};
+	struct pxp_tee_create_arb_out msg_out = {0};
+	int ret;
+
+	msg_in.header.api_version = PXP_TEE_APIVER;
+	msg_in.header.command_id = PXP_TEE_ARB_CMDID;
+	msg_in.header.buffer_len = sizeof(msg_in) - sizeof(msg_in.header);
+	msg_in.protection_mode = PXP_TEE_ARB_PROTECTION_MODE;
+>>>>>>> b7ba80a49124 (Commit)
 	msg_in.session_id = arb_session_id;
 
 	ret = intel_pxp_tee_io_message(pxp,
@@ -309,6 +393,7 @@ int intel_pxp_tee_cmd_create_arb_session(struct intel_pxp *pxp,
 
 	if (ret)
 		drm_err(&i915->drm, "Failed to send tee msg ret=[%d]\n", ret);
+<<<<<<< HEAD
 	else if (msg_out.header.status == PXP_STATUS_ERROR_API_VERSION)
 		drm_dbg(&i915->drm, "PXP firmware version unsupported, requested: "
 			"CMD-ID-[0x%08x] on API-Ver-[0x%08x]\n",
@@ -354,3 +439,8 @@ try_again:
 		drm_warn(&i915->drm, "PXP firmware failed inv-stream-key-%d with status 0x%08x\n",
 			 session_id, msg_out.header.status);
 }
+=======
+
+	return ret;
+}
+>>>>>>> b7ba80a49124 (Commit)

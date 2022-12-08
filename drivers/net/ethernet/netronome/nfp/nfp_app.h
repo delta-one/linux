@@ -445,4 +445,9 @@ int nfp_app_nic_vnic_alloc(struct nfp_app *app, struct nfp_net *nn,
 int nfp_app_nic_vnic_init_phy_port(struct nfp_pf *pf, struct nfp_app *app,
 				   struct nfp_net *nn, unsigned int id);
 
+<<<<<<< HEAD
+=======
+struct devlink_port *nfp_devlink_get_devlink_port(struct net_device *netdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif

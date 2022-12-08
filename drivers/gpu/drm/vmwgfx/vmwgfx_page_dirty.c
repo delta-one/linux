@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0 OR MIT
 /**************************************************************************
  *
+<<<<<<< HEAD
  * Copyright 2019-2023 VMware, Inc., Palo Alto, CA., USA
+=======
+ * Copyright 2019 VMware, Inc., Palo Alto, CA., USA
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
@@ -24,7 +28,10 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  **************************************************************************/
+<<<<<<< HEAD
 #include "vmwgfx_bo.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "vmwgfx_drv.h"
 
 /*
@@ -79,11 +86,19 @@ struct vmw_bo_dirty {
  * dirty structure with the results. This function may change the
  * dirty-tracking method.
  */
+<<<<<<< HEAD
 static void vmw_bo_dirty_scan_pagetable(struct vmw_bo *vbo)
 {
 	struct vmw_bo_dirty *dirty = vbo->dirty;
 	pgoff_t offset = drm_vma_node_start(&vbo->tbo.base.vma_node);
 	struct address_space *mapping = vbo->tbo.bdev->dev_mapping;
+=======
+static void vmw_bo_dirty_scan_pagetable(struct vmw_buffer_object *vbo)
+{
+	struct vmw_bo_dirty *dirty = vbo->dirty;
+	pgoff_t offset = drm_vma_node_start(&vbo->base.base.vma_node);
+	struct address_space *mapping = vbo->base.bdev->dev_mapping;
+>>>>>>> b7ba80a49124 (Commit)
 	pgoff_t num_marked;
 
 	num_marked = clean_record_shared_mapping_range
@@ -117,16 +132,25 @@ static void vmw_bo_dirty_scan_pagetable(struct vmw_bo *vbo)
  *
  * This function may change the dirty-tracking method.
  */
+<<<<<<< HEAD
 static void vmw_bo_dirty_scan_mkwrite(struct vmw_bo *vbo)
 {
 	struct vmw_bo_dirty *dirty = vbo->dirty;
 	unsigned long offset = drm_vma_node_start(&vbo->tbo.base.vma_node);
 	struct address_space *mapping = vbo->tbo.bdev->dev_mapping;
+=======
+static void vmw_bo_dirty_scan_mkwrite(struct vmw_buffer_object *vbo)
+{
+	struct vmw_bo_dirty *dirty = vbo->dirty;
+	unsigned long offset = drm_vma_node_start(&vbo->base.base.vma_node);
+	struct address_space *mapping = vbo->base.bdev->dev_mapping;
+>>>>>>> b7ba80a49124 (Commit)
 	pgoff_t num_marked;
 
 	if (dirty->end <= dirty->start)
 		return;
 
+<<<<<<< HEAD
 	num_marked = wp_shared_mapping_range(vbo->tbo.bdev->dev_mapping,
 					     dirty->start + offset,
 					     dirty->end - dirty->start);
@@ -136,6 +160,18 @@ static void vmw_bo_dirty_scan_mkwrite(struct vmw_bo *vbo)
 		dirty->change_count++;
 	else
 		dirty->change_count = 0;
+=======
+	num_marked = wp_shared_mapping_range(vbo->base.bdev->dev_mapping,
+					dirty->start + offset,
+					dirty->end - dirty->start);
+
+	if (100UL * num_marked / dirty->bitmap_size >
+	    VMW_DIRTY_PERCENTAGE) {
+		dirty->change_count++;
+	} else {
+		dirty->change_count = 0;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dirty->change_count > VMW_DIRTY_NUM_CHANGE_TRIGGERS) {
 		pgoff_t start = 0;
@@ -160,7 +196,11 @@ static void vmw_bo_dirty_scan_mkwrite(struct vmw_bo *vbo)
  *
  * This function may change the dirty tracking method.
  */
+<<<<<<< HEAD
 void vmw_bo_dirty_scan(struct vmw_bo *vbo)
+=======
+void vmw_bo_dirty_scan(struct vmw_buffer_object *vbo)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vmw_bo_dirty *dirty = vbo->dirty;
 
@@ -181,12 +221,21 @@ void vmw_bo_dirty_scan(struct vmw_bo *vbo)
  * when calling unmap_mapping_range(). This function makes sure we pick
  * up all dirty pages.
  */
+<<<<<<< HEAD
 static void vmw_bo_dirty_pre_unmap(struct vmw_bo *vbo,
 				   pgoff_t start, pgoff_t end)
 {
 	struct vmw_bo_dirty *dirty = vbo->dirty;
 	unsigned long offset = drm_vma_node_start(&vbo->tbo.base.vma_node);
 	struct address_space *mapping = vbo->tbo.bdev->dev_mapping;
+=======
+static void vmw_bo_dirty_pre_unmap(struct vmw_buffer_object *vbo,
+				   pgoff_t start, pgoff_t end)
+{
+	struct vmw_bo_dirty *dirty = vbo->dirty;
+	unsigned long offset = drm_vma_node_start(&vbo->base.base.vma_node);
+	struct address_space *mapping = vbo->base.bdev->dev_mapping;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dirty->method != VMW_BO_DIRTY_PAGETABLE || start >= end)
 		return;
@@ -206,11 +255,19 @@ static void vmw_bo_dirty_pre_unmap(struct vmw_bo *vbo,
  *
  * This is similar to ttm_bo_unmap_virtual() except it takes a subrange.
  */
+<<<<<<< HEAD
 void vmw_bo_dirty_unmap(struct vmw_bo *vbo,
 			pgoff_t start, pgoff_t end)
 {
 	unsigned long offset = drm_vma_node_start(&vbo->tbo.base.vma_node);
 	struct address_space *mapping = vbo->tbo.bdev->dev_mapping;
+=======
+void vmw_bo_dirty_unmap(struct vmw_buffer_object *vbo,
+			pgoff_t start, pgoff_t end)
+{
+	unsigned long offset = drm_vma_node_start(&vbo->base.base.vma_node);
+	struct address_space *mapping = vbo->base.bdev->dev_mapping;
+>>>>>>> b7ba80a49124 (Commit)
 
 	vmw_bo_dirty_pre_unmap(vbo, start, end);
 	unmap_shared_mapping_range(mapping, (offset + start) << PAGE_SHIFT,
@@ -227,10 +284,17 @@ void vmw_bo_dirty_unmap(struct vmw_bo *vbo,
  *
  * Return: Zero on success, -ENOMEM on memory allocation failure.
  */
+<<<<<<< HEAD
 int vmw_bo_dirty_add(struct vmw_bo *vbo)
 {
 	struct vmw_bo_dirty *dirty = vbo->dirty;
 	pgoff_t num_pages = PFN_UP(vbo->tbo.resource->size);
+=======
+int vmw_bo_dirty_add(struct vmw_buffer_object *vbo)
+{
+	struct vmw_bo_dirty *dirty = vbo->dirty;
+	pgoff_t num_pages = vbo->base.resource->num_pages;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t size;
 	int ret;
 
@@ -253,8 +317,13 @@ int vmw_bo_dirty_add(struct vmw_bo *vbo)
 	if (num_pages < PAGE_SIZE / sizeof(pte_t)) {
 		dirty->method = VMW_BO_DIRTY_PAGETABLE;
 	} else {
+<<<<<<< HEAD
 		struct address_space *mapping = vbo->tbo.bdev->dev_mapping;
 		pgoff_t offset = drm_vma_node_start(&vbo->tbo.base.vma_node);
+=======
+		struct address_space *mapping = vbo->base.bdev->dev_mapping;
+		pgoff_t offset = drm_vma_node_start(&vbo->base.base.vma_node);
+>>>>>>> b7ba80a49124 (Commit)
 
 		dirty->method = VMW_BO_DIRTY_MKWRITE;
 
@@ -284,7 +353,11 @@ out_no_dirty:
  *
  * Return: Zero on success, -ENOMEM on memory allocation failure.
  */
+<<<<<<< HEAD
 void vmw_bo_dirty_release(struct vmw_bo *vbo)
+=======
+void vmw_bo_dirty_release(struct vmw_buffer_object *vbo)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vmw_bo_dirty *dirty = vbo->dirty;
 
@@ -306,11 +379,19 @@ void vmw_bo_dirty_release(struct vmw_bo *vbo)
  */
 void vmw_bo_dirty_transfer_to_res(struct vmw_resource *res)
 {
+<<<<<<< HEAD
 	struct vmw_bo *vbo = res->guest_memory_bo;
 	struct vmw_bo_dirty *dirty = vbo->dirty;
 	pgoff_t start, cur, end;
 	unsigned long res_start = res->guest_memory_offset;
 	unsigned long res_end = res->guest_memory_offset + res->guest_memory_size;
+=======
+	struct vmw_buffer_object *vbo = res->backup;
+	struct vmw_bo_dirty *dirty = vbo->dirty;
+	pgoff_t start, cur, end;
+	unsigned long res_start = res->backup_offset;
+	unsigned long res_end = res->backup_offset + res->backup_size;
+>>>>>>> b7ba80a49124 (Commit)
 
 	WARN_ON_ONCE(res_start & ~PAGE_MASK);
 	res_start >>= PAGE_SHIFT;
@@ -351,9 +432,15 @@ void vmw_bo_dirty_transfer_to_res(struct vmw_resource *res)
  */
 void vmw_bo_dirty_clear_res(struct vmw_resource *res)
 {
+<<<<<<< HEAD
 	unsigned long res_start = res->guest_memory_offset;
 	unsigned long res_end = res->guest_memory_offset + res->guest_memory_size;
 	struct vmw_bo *vbo = res->guest_memory_bo;
+=======
+	unsigned long res_start = res->backup_offset;
+	unsigned long res_end = res->backup_offset + res->backup_size;
+	struct vmw_buffer_object *vbo = res->backup;
+>>>>>>> b7ba80a49124 (Commit)
 	struct vmw_bo_dirty *dirty = vbo->dirty;
 
 	res_start >>= PAGE_SHIFT;
@@ -380,7 +467,12 @@ vm_fault_t vmw_bo_vm_mkwrite(struct vm_fault *vmf)
 	vm_fault_t ret;
 	unsigned long page_offset;
 	unsigned int save_flags;
+<<<<<<< HEAD
 	struct vmw_bo *vbo = to_vmw_bo(&bo->base);
+=======
+	struct vmw_buffer_object *vbo =
+		container_of(bo, typeof(*vbo), base);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * mkwrite() doesn't handle the VM_FAULT_RETRY return value correctly.
@@ -394,7 +486,11 @@ vm_fault_t vmw_bo_vm_mkwrite(struct vm_fault *vmf)
 		return ret;
 
 	page_offset = vmf->pgoff - drm_vma_node_start(&bo->base.vma_node);
+<<<<<<< HEAD
 	if (unlikely(page_offset >= PFN_UP(bo->resource->size))) {
+=======
+	if (unlikely(page_offset >= bo->resource->num_pages)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = VM_FAULT_SIGBUS;
 		goto out_unlock;
 	}
@@ -418,7 +514,12 @@ vm_fault_t vmw_bo_vm_fault(struct vm_fault *vmf)
 	struct vm_area_struct *vma = vmf->vma;
 	struct ttm_buffer_object *bo = (struct ttm_buffer_object *)
 	    vma->vm_private_data;
+<<<<<<< HEAD
 	struct vmw_bo *vbo = to_vmw_bo(&bo->base);
+=======
+	struct vmw_buffer_object *vbo =
+		container_of(bo, struct vmw_buffer_object, base);
+>>>>>>> b7ba80a49124 (Commit)
 	pgoff_t num_prefault;
 	pgprot_t prot;
 	vm_fault_t ret;
@@ -436,7 +537,11 @@ vm_fault_t vmw_bo_vm_fault(struct vm_fault *vmf)
 
 		page_offset = vmf->pgoff -
 			drm_vma_node_start(&bo->base.vma_node);
+<<<<<<< HEAD
 		if (page_offset >= PFN_UP(bo->resource->size) ||
+=======
+		if (page_offset >= bo->resource->num_pages ||
+>>>>>>> b7ba80a49124 (Commit)
 		    vmw_resources_clean(vbo, page_offset,
 					page_offset + PAGE_SIZE,
 					&allowed_prefault)) {

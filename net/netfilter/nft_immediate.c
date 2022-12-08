@@ -147,8 +147,12 @@ static void nft_immediate_destroy(const struct nft_ctx *ctx,
 	}
 }
 
+<<<<<<< HEAD
 static int nft_immediate_dump(struct sk_buff *skb,
 			      const struct nft_expr *expr, bool reset)
+=======
+static int nft_immediate_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_immediate_expr *priv = nft_expr_priv(expr);
 

@@ -596,7 +596,10 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
 	bridge->native_ltr = 1;
 	bridge->native_dpc = 1;
 	bridge->domain_nr = PCI_DOMAIN_NR_NOT_SET;
+<<<<<<< HEAD
 	bridge->native_cxl_error = 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	device_initialize(&bridge->dev);
 }
@@ -843,6 +846,10 @@ static struct irq_domain *pci_host_bridge_msi_domain(struct pci_bus *bus)
 	if (!d)
 		d = pci_host_bridge_acpi_msi_domain(bus);
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * If no IRQ domain was found via the OF tree, try looking it up
 	 * directly through the fwnode_handle.
@@ -854,6 +861,10 @@ static struct irq_domain *pci_host_bridge_msi_domain(struct pci_bus *bus)
 			d = irq_find_matching_fwnode(fwnode,
 						     DOMAIN_BUS_PCI_MSI);
 	}
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	return d;
 }
@@ -905,10 +916,13 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
 		bus->domain_nr = pci_bus_find_domain_nr(bus, parent);
 	else
 		bus->domain_nr = bridge->domain_nr;
+<<<<<<< HEAD
 	if (bus->domain_nr < 0) {
 		err = bus->domain_nr;
 		goto free;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	b = pci_find_bus(pci_domain_nr(bus), bridge->busnr);
@@ -997,7 +1011,11 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
 	resource_list_for_each_entry_safe(window, n, &resources) {
 		offset = window->offset;
 		res = window->res;
+<<<<<<< HEAD
 		if (!res->flags && !res->start && !res->end)
+=======
+		if (!res->end)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		list_move_tail(&window->node, &bridge->windows);
@@ -1033,9 +1051,12 @@ unregister:
 	device_del(&bridge->dev);
 
 free:
+<<<<<<< HEAD
 #ifdef CONFIG_PCI_DOMAINS_GENERIC
 	pci_bus_release_domain_nr(bus, parent);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(bus);
 	return err;
 }
@@ -1303,7 +1324,11 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
 
 	if ((secondary || subordinate) && !pcibios_assign_all_busses() &&
 	    !is_cardbus && !broken) {
+<<<<<<< HEAD
 		unsigned int cmax, buses;
+=======
+		unsigned int cmax;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * Bus already configured by firmware, process it in the
@@ -1328,8 +1353,12 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
 			child->bridge_ctl = bctl;
 		}
 
+<<<<<<< HEAD
 		buses = subordinate - secondary;
 		cmax = pci_scan_child_bus_extend(child, buses);
+=======
+		cmax = pci_scan_child_bus(child);
+>>>>>>> b7ba80a49124 (Commit)
 		if (cmax > subordinate)
 			pci_warn(dev, "bridge has subordinate %02x but max busn %02x\n",
 				 subordinate, cmax);
@@ -1842,8 +1871,11 @@ int pci_setup_device(struct pci_dev *dev)
 
 	pci_set_of_node(dev);
 	pci_set_acpi_fwnode(dev);
+<<<<<<< HEAD
 	if (dev->dev.fwnode && !fwnode_device_is_available(dev->dev.fwnode))
 		return -ENODEV;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	pci_dev_assign_slot(dev);
 
@@ -1899,6 +1931,12 @@ int pci_setup_device(struct pci_dev *dev)
 
 	dev->broken_intx_masking = pci_intx_mask_broken(dev);
 
+<<<<<<< HEAD
+=======
+	/* Clear errors left from system firmware */
+	pci_write_config_word(dev, PCI_STATUS, 0xffff);
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (dev->hdr_type) {		    /* header type */
 	case PCI_HEADER_TYPE_NORMAL:		    /* standard header */
 		if (class == PCI_CLASS_BRIDGE_PCI)
@@ -2312,12 +2350,15 @@ struct pci_dev *pci_alloc_dev(struct pci_bus *bus)
 	INIT_LIST_HEAD(&dev->bus_list);
 	dev->dev.type = &pci_dev_type;
 	dev->bus = pci_bus_get(bus);
+<<<<<<< HEAD
 	dev->driver_exclusive_resource = (struct resource) {
 		.name = "PCI Exclusive",
 		.start = 0,
 		.end = -1,
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PCI_MSI
 	raw_spin_lock_init(&dev->msi_lock);
 #endif
@@ -2932,8 +2973,13 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
 		 * hotplug bridges too much during the second scan below.
 		 */
 		used_buses++;
+<<<<<<< HEAD
 		if (max - cmax > 1)
 			used_buses += max - cmax - 1;
+=======
+		if (cmax - max > 1)
+			used_buses += cmax - max - 1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Scan bridges that need to be reconfigured */
@@ -2941,6 +2987,10 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
 		unsigned int buses = 0;
 
 		if (!hotplug_bridges && normal_bridges == 1) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 			/*
 			 * There is only one bridge on the bus (upstream
 			 * port) so it gets all available buses which it
@@ -2949,6 +2999,10 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
 			 */
 			buses = available_buses;
 		} else if (dev->is_hotplug_bridge) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 			/*
 			 * Distribute the extra buses between hotplug
 			 * bridges if any.
@@ -2967,7 +3021,11 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
 	/*
 	 * Make sure a hotplug bridge has at least the minimum requested
 	 * number of buses but allow it to grow up to the maximum available
+<<<<<<< HEAD
 	 * bus number if there is room.
+=======
+	 * bus number of there is room.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	if (bus->self && bus->self->is_hotplug_bridge) {
 		used_buses = max_t(unsigned int, available_buses,

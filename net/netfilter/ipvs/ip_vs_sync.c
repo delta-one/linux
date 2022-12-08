@@ -1617,7 +1617,11 @@ ip_vs_receive(struct socket *sock, char *buffer, const size_t buflen)
 	EnterFunction(7);
 
 	/* Receive a packet */
+<<<<<<< HEAD
 	iov_iter_kvec(&msg.msg_iter, ITER_DEST, &iov, 1, buflen);
+=======
+	iov_iter_kvec(&msg.msg_iter, READ, &iov, 1, buflen);
+>>>>>>> b7ba80a49124 (Commit)
 	len = sock_recvmsg(sock, &msg, MSG_DONTWAIT);
 	if (len < 0)
 		return len;

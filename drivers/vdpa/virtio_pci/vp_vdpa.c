@@ -17,7 +17,10 @@
 #include <linux/virtio_ring.h>
 #include <linux/virtio_pci.h>
 #include <linux/virtio_pci_modern.h>
+<<<<<<< HEAD
 #include <uapi/linux/vdpa.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define VP_VDPA_QUEUE_MAX 256
 #define VP_VDPA_DRIVER_NAME "vp_vdpa"
@@ -36,7 +39,10 @@ struct vp_vdpa {
 	struct virtio_pci_modern_device *mdev;
 	struct vp_vring *vring;
 	struct vdpa_callback config_cb;
+<<<<<<< HEAD
 	u64 device_features;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	char msix_name[VP_VDPA_NAME_SIZE];
 	int config_irq;
 	int queues;
@@ -68,9 +74,15 @@ static struct virtio_pci_modern_device *vp_vdpa_to_mdev(struct vp_vdpa *vp_vdpa)
 
 static u64 vp_vdpa_get_device_features(struct vdpa_device *vdpa)
 {
+<<<<<<< HEAD
 	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
 
 	return vp_vdpa->device_features;
+=======
+	struct virtio_pci_modern_device *mdev = vdpa_to_mdev(vdpa);
+
+	return vp_modern_get_features(mdev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int vp_vdpa_set_driver_features(struct vdpa_device *vdpa, u64 features)
@@ -477,7 +489,10 @@ static int vp_vdpa_dev_add(struct vdpa_mgmt_dev *v_mdev, const char *name,
 	struct pci_dev *pdev = mdev->pci_dev;
 	struct device *dev = &pdev->dev;
 	struct vp_vdpa *vp_vdpa = NULL;
+<<<<<<< HEAD
 	u64 device_features;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret, i;
 
 	vp_vdpa = vdpa_alloc_device(struct vp_vdpa, vdpa,
@@ -494,6 +509,7 @@ static int vp_vdpa_dev_add(struct vdpa_mgmt_dev *v_mdev, const char *name,
 	vp_vdpa->queues = vp_modern_get_num_queues(mdev);
 	vp_vdpa->mdev = mdev;
 
+<<<<<<< HEAD
 	device_features = vp_modern_get_features(mdev);
 	if (add_config->mask & BIT_ULL(VDPA_ATTR_DEV_FEATURES)) {
 		if (add_config->device_features & ~device_features) {
@@ -508,6 +524,8 @@ static int vp_vdpa_dev_add(struct vdpa_mgmt_dev *v_mdev, const char *name,
 	}
 	vp_vdpa->device_features = device_features;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = devm_add_action_or_reset(dev, vp_vdpa_free_irq_vectors, pdev);
 	if (ret) {
 		dev_err(&pdev->dev,
@@ -616,7 +634,10 @@ static int vp_vdpa_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	mgtdev->id_table = mdev_id;
 	mgtdev->max_supported_vqs = vp_modern_get_num_queues(mdev);
 	mgtdev->supported_features = vp_modern_get_features(mdev);
+<<<<<<< HEAD
 	mgtdev->config_attr_mask = (1 << VDPA_ATTR_DEV_FEATURES);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pci_set_master(pdev);
 	pci_set_drvdata(pdev, vp_vdpa_mgtdev);
 
@@ -645,9 +666,15 @@ static void vp_vdpa_remove(struct pci_dev *pdev)
 	struct virtio_pci_modern_device *mdev = NULL;
 
 	mdev = vp_vdpa_mgtdev->mdev;
+<<<<<<< HEAD
 	vdpa_mgmtdev_unregister(&vp_vdpa_mgtdev->mgtdev);
 	vp_modern_remove(mdev);
 	kfree(vp_vdpa_mgtdev->mgtdev.id_table);
+=======
+	vp_modern_remove(mdev);
+	vdpa_mgmtdev_unregister(&vp_vdpa_mgtdev->mgtdev);
+	kfree(&vp_vdpa_mgtdev->mgtdev.id_table);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(mdev);
 	kfree(vp_vdpa_mgtdev);
 }

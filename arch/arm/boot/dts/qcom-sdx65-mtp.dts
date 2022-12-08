@@ -65,7 +65,11 @@
 };
 
 &apps_rsc {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pmx65-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pmx65-rpmh-regulators";
 		qcom,pmic-id = "b";
 

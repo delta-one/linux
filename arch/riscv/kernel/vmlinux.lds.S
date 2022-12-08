@@ -5,7 +5,10 @@
  */
 
 #define RO_EXCEPTION_TABLE_ALIGN	4
+<<<<<<< HEAD
 #define RUNTIME_DISCARD_EXIT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_XIP_KERNEL
 #include "vmlinux-xip.lds.S"
@@ -43,6 +46,10 @@ SECTIONS
 		_stext = .;
 		TEXT_TEXT
 		SCHED_TEXT
+<<<<<<< HEAD
+=======
+		CPUIDLE_TEXT
+>>>>>>> b7ba80a49124 (Commit)
 		LOCK_TEXT
 		KPROBES_TEXT
 		ENTRY_TEXT
@@ -86,9 +93,12 @@ SECTIONS
 	/* Start of init data section */
 	__init_data_begin = .;
 	INIT_DATA_SECTION(16)
+<<<<<<< HEAD
 	.init.bss : {
 		*(.init.bss)	/* from the EFI stub */
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.exit.data :
 	{
 		EXIT_DATA
@@ -99,10 +109,13 @@ SECTIONS
 		*(.rel.dyn*)
 	}
 
+<<<<<<< HEAD
 	.rela.dyn : {
 		*(.rela*)
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__init_data_end = .;
 
 	. = ALIGN(8);
@@ -148,7 +161,10 @@ SECTIONS
 	STABS_DEBUG
 	DWARF_DEBUG
 	ELF_DETAILS
+<<<<<<< HEAD
 	.riscv.attributes 0 : { *(.riscv.attributes) }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	DISCARDS
 }

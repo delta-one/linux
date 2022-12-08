@@ -14,8 +14,11 @@
 #include <linux/pm_runtime.h>
 #include <linux/regmap.h>
 #include <linux/regulator/consumer.h>
+<<<<<<< HEAD
 #include <dt-bindings/sound/cs35l45.h>
 #include "wm_adsp.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define CS35L45_DEVID				0x00000000
 #define CS35L45_REVID				0x00000004
@@ -26,6 +29,7 @@
 #define CS35L45_BLOCK_ENABLES			0x00002018
 #define CS35L45_BLOCK_ENABLES2			0x0000201C
 #define CS35L45_ERROR_RELEASE			0x00002034
+<<<<<<< HEAD
 #define CS35L45_SYNC_GPIO1			0x00002430
 #define CS35L45_INTB_GPIO2_MCLK_REF		0x00002434
 #define CS35L45_GPIO3				0x00002438
@@ -33,6 +37,8 @@
 #define CS35L45_WAKESRC_CTL			0x00002904
 #define CS35L45_WKI2C_CTL			0x00002908
 #define CS35L45_PWRMGT_STS			0x0000290C
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CS35L45_REFCLK_INPUT			0x00002C04
 #define CS35L45_GLOBAL_SAMPLE_RATE		0x00002C0C
 #define CS35L45_BOOST_CCM_CFG			0x00003808
@@ -53,6 +59,7 @@
 #define CS35L45_ASPTX3_INPUT			0x00004C28
 #define CS35L45_ASPTX4_INPUT			0x00004C2C
 #define CS35L45_ASPTX5_INPUT			0x00004C30
+<<<<<<< HEAD
 #define CS35L45_DSP1RX1_INPUT			0x00004C40
 #define CS35L45_DSP1RX2_INPUT			0x00004C44
 #define CS35L45_DSP1RX3_INPUT			0x00004C48
@@ -152,6 +159,13 @@
 #define CS35L45_DSP1_PMEM_0			0x03800000
 #define CS35L45_DSP1_PMEM_3834			0x03803BE8
 #define CS35L45_LASTREG			0x03C6EFE8
+=======
+#define CS35L45_LDPM_CONFIG			0x00006404
+#define CS35L45_AMP_PCM_CONTROL			0x00007000
+#define CS35L45_AMP_PCM_HPF_TST			0x00007004
+#define CS35L45_IRQ1_EINT_4			0x0000E01C
+#define CS35L45_LASTREG				0x0000E01C
+>>>>>>> b7ba80a49124 (Commit)
 
 /* SFT_RESET */
 #define CS35L45_SOFT_RESET_TRIGGER		0x5A000000
@@ -173,6 +187,7 @@
 /* BLOCK_ENABLES2 */
 #define CS35L45_ASP_EN_SHIFT			27
 
+<<<<<<< HEAD
 #define CS35L45_MEM_RDY_SHIFT			1
 #define CS35L45_MEM_RDY_MASK			BIT(1)
 
@@ -187,6 +202,11 @@
 #define CS35L45_CCM_CORE_EN_SHIFT		0
 #define CS35L45_CCM_CORE_EN_MASK		BIT(0)
 
+=======
+/* ERROR_RELEASE */
+#define CS35L45_GLOBAL_ERR_RLS_MASK		BIT(11)
+
+>>>>>>> b7ba80a49124 (Commit)
 /* REFCLK_INPUT */
 #define CS35L45_PLL_FORCE_EN_SHIFT		16
 #define CS35L45_PLL_FORCE_EN_MASK		BIT(16)
@@ -279,6 +299,7 @@
 #define CS35L45_OTP_BOOT_DONE_STS_MASK		BIT(1)
 #define CS35L45_OTP_BUSY_MASK			BIT(0)
 
+<<<<<<< HEAD
 /* GPIOX_CTRL1 */
 #define CS35L45_GPIO_DIR_SHIFT			31
 #define CS35L45_GPIO_DIR_MASK			BIT(31)
@@ -329,6 +350,8 @@
 #define CS35L45_UVLO_VDDLV_ERR_SHIFT		16
 #define CS35L45_UVLO_VDDLV_ERR_MASK		BIT(16)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Mixer sources */
 #define CS35L45_PCM_SRC_MASK			0x7F
 #define CS35L45_PCM_SRC_ZERO			0x00
@@ -340,8 +363,11 @@
 #define CS35L45_PCM_SRC_CLASSH_TGT		0x21
 #define CS35L45_PCM_SRC_VDD_BATTMON		0x28
 #define CS35L45_PCM_SRC_VDD_BSTMON		0x29
+<<<<<<< HEAD
 #define CS35L45_PCM_SRC_DSP_TX1			0x32
 #define CS35L45_PCM_SRC_DSP_TX2			0x33
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CS35L45_PCM_SRC_TEMPMON			0x3A
 #define CS35L45_PCM_SRC_INTERPOLATOR		0x40
 #define CS35L45_PCM_SRC_IL_TARGET		0x48
@@ -351,6 +377,7 @@
 #define CS35L45_POST_GLOBAL_EN_US		5000
 #define CS35L45_PRE_GLOBAL_DIS_US		3000
 
+<<<<<<< HEAD
 /* WAKESRC_CTL */
 #define CS35L45_WKSRC_SYNC_GPIO1		BIT(0)
 #define CS35L45_WKSRC_INT_GPIO2			BIT(1)
@@ -396,6 +423,8 @@ enum control_bus_type {
 	CONTROL_BUS_SPI = 1,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CS35L45_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | \
 			 SNDRV_PCM_FMTBIT_S24_3LE| \
 			 SNDRV_PCM_FMTBIT_S24_LE)
@@ -405,6 +434,7 @@ enum control_bus_type {
 		       SNDRV_PCM_RATE_88200 | \
 		       SNDRV_PCM_RATE_96000)
 
+<<<<<<< HEAD
 /*
  * IRQs
  */
@@ -455,6 +485,9 @@ enum mbox3_events {
 
 struct cs35l45_private {
 	struct wm_adsp dsp; /* needs to be first member */
+=======
+struct cs35l45_private {
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev;
 	struct regmap *regmap;
 	struct gpio_desc *reset_gpio;
@@ -464,11 +497,14 @@ struct cs35l45_private {
 	bool sysclk_set;
 	u8 slot_width;
 	u8 slot_count;
+<<<<<<< HEAD
 	int irq_invert;
 	int irq;
 	unsigned int i2c_addr;
 	enum control_bus_type bus_type;
 	struct regmap_irq_chip_data *irq_data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 extern const struct dev_pm_ops cs35l45_pm_ops;

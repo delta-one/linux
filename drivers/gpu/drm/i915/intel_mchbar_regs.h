@@ -189,6 +189,7 @@
 #define  DG1_QCLK_RATIO_MASK			REG_GENMASK(9, 2)
 #define  DG1_QCLK_REFERENCE			REG_BIT(10)
 
+<<<<<<< HEAD
 /*
  * *_PACKAGE_POWER_SKU - SKU power and timing parameters.
  */
@@ -206,6 +207,8 @@
 #define   PKG_TIME_UNIT				REG_GENMASK(19, 16)
 #define PCU_PACKAGE_ENERGY_STATUS              _MMIO(MCHBAR_MIRROR_BASE_SNB + 0x593c)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define GEN6_GT_PERF_STATUS			_MMIO(MCHBAR_MIRROR_BASE_SNB + 0x5948)
 #define GEN6_RP_STATE_LIMITS			_MMIO(MCHBAR_MIRROR_BASE_SNB + 0x5994)
 #define GEN6_RP_STATE_CAP			_MMIO(MCHBAR_MIRROR_BASE_SNB + 0x5998)
@@ -215,12 +218,15 @@
 
 #define GEN10_FREQ_INFO_REC			_MMIO(MCHBAR_MIRROR_BASE_SNB + 0x5ef0)
 #define   RPE_MASK				REG_GENMASK(15, 8)
+<<<<<<< HEAD
 #define PCU_PACKAGE_RAPL_LIMIT			_MMIO(MCHBAR_MIRROR_BASE_SNB + 0x59a0)
 #define   PKG_PWR_LIM_1				REG_GENMASK(14, 0)
 #define   PKG_PWR_LIM_1_EN			REG_BIT(15)
 #define   PKG_PWR_LIM_1_TIME			REG_GENMASK(23, 17)
 #define   PKG_PWR_LIM_1_TIME_X			REG_GENMASK(23, 22)
 #define   PKG_PWR_LIM_1_TIME_Y			REG_GENMASK(21, 17)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* snb MCH registers for priority tuning */
 #define MCH_SSKPD				_MMIO(MCHBAR_MIRROR_BASE_SNB + 0x5d10)

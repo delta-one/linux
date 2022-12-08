@@ -3,6 +3,12 @@
  * Copyright(c) 2020, Intel Corporation. All rights reserved.
  */
 
+<<<<<<< HEAD
+=======
+#include "intel_pxp.h"
+#include "intel_pxp_cmd.h"
+#include "intel_pxp_session.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "gt/intel_context.h"
 #include "gt/intel_engine_pm.h"
 #include "gt/intel_gpu_commands.h"
@@ -10,11 +16,14 @@
 
 #include "i915_trace.h"
 
+<<<<<<< HEAD
 #include "intel_pxp.h"
 #include "intel_pxp_cmd.h"
 #include "intel_pxp_session.h"
 #include "intel_pxp_types.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* stall until prior PXP and MFX/HCP/HUC objects are cmopleted */
 #define MFX_WAIT_PXP (MFX_WAIT | \
 		      MFX_WAIT_DW0_PXP_SYNC_CONTROL_FLAG | \

@@ -170,6 +170,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
 				.security = 0x504,
 			},
 		},
+<<<<<<< HEAD
 	}, {
 		.id = TEGRA234_MEMORY_CLIENT_DLA0RDA,
 		.name = "dla0rda",
@@ -330,6 +331,8 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
 				.security = 0x37c,
 			},
 		},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 
@@ -347,9 +350,12 @@ const struct tegra_mc_soc tegra234_mc_soc = {
 	.ops = &tegra186_mc_ops,
 	.ch_intmask = 0x0000ff00,
 	.global_intstatus_channel_shift = 8,
+<<<<<<< HEAD
 	/*
 	 * Additionally, there are lite carveouts but those are not currently
 	 * supported.
 	 */
 	.num_carveouts = 32,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

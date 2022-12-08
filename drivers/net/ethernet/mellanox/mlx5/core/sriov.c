@@ -147,11 +147,15 @@ mlx5_device_disable_sriov(struct mlx5_core_dev *dev, int num_vfs, bool clear_vf)
 
 	mlx5_eswitch_disable_sriov(dev->priv.eswitch, clear_vf);
 
+<<<<<<< HEAD
 	/* For ECPFs, skip waiting for host VF pages until ECPF is destroyed */
 	if (mlx5_core_is_ecpf(dev))
 		return;
 
 	if (mlx5_wait_for_pages(dev, &dev->priv.page_counters[MLX5_VF]))
+=======
+	if (mlx5_wait_for_pages(dev, &dev->priv.vfs_pages))
+>>>>>>> b7ba80a49124 (Commit)
 		mlx5_core_warn(dev, "timeout reclaiming VFs pages\n");
 }
 

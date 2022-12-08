@@ -1,4 +1,9 @@
 # SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
+=======
+asflags-y				+= -march=armv7-a
+
+>>>>>>> b7ba80a49124 (Commit)
 obj-y                                   += io.o
 obj-y                                   += irq.o
 obj-y					+= pm.o

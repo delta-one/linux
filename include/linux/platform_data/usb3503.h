@@ -12,7 +12,10 @@ enum usb3503_mode {
 	USB3503_MODE_UNKNOWN,
 	USB3503_MODE_HUB,
 	USB3503_MODE_STANDBY,
+<<<<<<< HEAD
 	USB3503_MODE_BYPASS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct usb3503_platform_data {

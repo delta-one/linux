@@ -30,7 +30,10 @@
 #include <linux/types.h>
 #include <linux/gfp.h>
 #include <linux/err.h>
+<<<<<<< HEAD
 #include <linux/of.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regulator/consumer.h>
 
 #include <linux/iio/iio.h>

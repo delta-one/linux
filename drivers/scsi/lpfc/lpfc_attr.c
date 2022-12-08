@@ -1,7 +1,11 @@
 /*******************************************************************
  * This file is part of the Emulex Linux Device Driver for         *
  * Fibre Channel Host Bus Adapters.                                *
+<<<<<<< HEAD
  * Copyright (C) 2017-2023 Broadcom. All Rights Reserved. The term *
+=======
+ * Copyright (C) 2017-2022 Broadcom. All Rights Reserved. The term *
+>>>>>>> b7ba80a49124 (Commit)
  * “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.  *
  * Copyright (C) 2004-2016 Emulex.  All rights reserved.           *
  * EMULEX and SLI are trademarks of Emulex.                        *
@@ -134,7 +138,11 @@ lpfc_cmf_info_show(struct device *dev, struct device_attribute *attr,
 	scnprintf(tmp, sizeof(tmp),
 		  "Congestion Mgmt Info: E2Eattr %d Ver %d "
 		  "CMF %d cnt %d\n",
+<<<<<<< HEAD
 		  phba->sli4_hba.pc_sli4_params.mi_cap,
+=======
+		  phba->sli4_hba.pc_sli4_params.mi_ver,
+>>>>>>> b7ba80a49124 (Commit)
 		  cp ? cp->cgn_info_version : 0,
 		  phba->sli4_hba.pc_sli4_params.cmf, phba->cmf_timer_cnt);
 
@@ -1644,12 +1652,15 @@ lpfc_sli4_pdev_status_reg_wait(struct lpfc_hba *phba)
 	    !bf_get(lpfc_sliport_status_err, &portstat_reg))
 		return -EPERM;
 
+<<<<<<< HEAD
 	/* There is no point to wait if the port is in an unrecoverable
 	 * state.
 	 */
 	if (lpfc_sli4_unrecoverable_port(&portstat_reg))
 		return -EIO;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* wait for the SLI port firmware ready after firmware reset */
 	for (i = 0; i < LPFC_FW_RESET_MAXIMUM_WAIT_10MS_CNT; i++) {
 		msleep(10);
@@ -1883,6 +1894,7 @@ lpfc_set_trunking(struct lpfc_hba *phba, char *buff_out)
 	return 0;
 }
 
+<<<<<<< HEAD
 static ssize_t
 lpfc_xcvr_data_show(struct device *dev, struct device_attribute *attr,
 		    char *buf)
@@ -1986,6 +1998,8 @@ out_free_rdp:
 	return len;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * lpfc_board_mode_show - Return the state of the board
  * @dev: class device that is converted into a Scsi_host.
@@ -2547,7 +2561,11 @@ lpfc_sriov_hw_max_virtfn_show(struct device *dev,
 
 /**
  * lpfc_enable_bbcr_set: Sets an attribute value.
+<<<<<<< HEAD
  * @phba: pointer to the adapter structure.
+=======
+ * @phba: pointer the the adapter structure.
+>>>>>>> b7ba80a49124 (Commit)
  * @val: integer attribute value.
  *
  * Description:
@@ -2638,7 +2656,11 @@ lpfc_##attr##_show(struct device *dev, struct device_attribute *attr, \
  * takes a default argument, a minimum and maximum argument.
  *
  * lpfc_##attr##_init: Initializes an attribute.
+<<<<<<< HEAD
  * @phba: pointer to the adapter structure.
+=======
+ * @phba: pointer the the adapter structure.
+>>>>>>> b7ba80a49124 (Commit)
  * @val: integer attribute value.
  *
  * Validates the min and max values then sets the adapter config field
@@ -2671,7 +2693,11 @@ lpfc_##attr##_init(struct lpfc_hba *phba, uint val) \
  * into a function with the name lpfc_hba_queue_depth_set
  *
  * lpfc_##attr##_set: Sets an attribute value.
+<<<<<<< HEAD
  * @phba: pointer to the adapter structure.
+=======
+ * @phba: pointer the the adapter structure.
+>>>>>>> b7ba80a49124 (Commit)
  * @val: integer attribute value.
  *
  * Description:
@@ -2800,7 +2826,11 @@ lpfc_##attr##_show(struct device *dev, struct device_attribute *attr, \
  * lpfc_##attr##_init: validates the min and max values then sets the
  * adapter config field accordingly, or uses the default if out of range
  * and prints an error message.
+<<<<<<< HEAD
  * @phba: pointer to the adapter structure.
+=======
+ * @phba: pointer the the adapter structure.
+>>>>>>> b7ba80a49124 (Commit)
  * @val: integer attribute value.
  *
  * Returns:
@@ -2832,7 +2862,11 @@ lpfc_##attr##_init(struct lpfc_vport *vport, uint val) \
  * lpfc_##attr##_set: validates the min and max values then sets the
  * adapter config field if in the valid range. prints error message
  * and does not set the parameter if invalid.
+<<<<<<< HEAD
  * @phba: pointer to the adapter structure.
+=======
+ * @phba: pointer the the adapter structure.
+>>>>>>> b7ba80a49124 (Commit)
  * @val:	integer attribute value.
  *
  * Returns:
@@ -2919,7 +2953,10 @@ static DEVICE_ATTR_RO(lpfc_drvr_version);
 static DEVICE_ATTR_RO(lpfc_enable_fip);
 static DEVICE_ATTR(board_mode, S_IRUGO | S_IWUSR,
 		   lpfc_board_mode_show, lpfc_board_mode_store);
+<<<<<<< HEAD
 static DEVICE_ATTR_RO(lpfc_xcvr_data);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static DEVICE_ATTR(issue_reset, S_IWUSR, NULL, lpfc_issue_reset);
 static DEVICE_ATTR(max_vpi, S_IRUGO, lpfc_max_vpi_show, NULL);
 static DEVICE_ATTR(used_vpi, S_IRUGO, lpfc_used_vpi_show, NULL);
@@ -4371,6 +4408,7 @@ static DEVICE_ATTR_RW(lpfc_link_speed);
 
 /*
 # lpfc_aer_support: Support PCIe device Advanced Error Reporting (AER)
+<<<<<<< HEAD
 #       1  = aer supported and enabled (default)
 # PCIe error reporting is always enabled by the PCI core, so this always
 # shows 1.
@@ -4387,6 +4425,15 @@ lpfc_aer_support_show(struct device *dev, struct device_attribute *attr,
 {
 	return scnprintf(buf, PAGE_SIZE, "%d\n", lpfc_aer_support);
 }
+=======
+#       0  = aer disabled or not supported
+#       1  = aer supported and enabled (default)
+# Value range is [0,1]. Default value is 1.
+*/
+LPFC_ATTR(aer_support, 1, 0, 1,
+	"Enable PCIe device AER support");
+lpfc_param_show(aer_support)
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * lpfc_aer_support_store - Set the adapter for aer support
@@ -4397,6 +4444,7 @@ lpfc_aer_support_show(struct device *dev, struct device_attribute *attr,
  * @count: unused variable.
  *
  * Description:
+<<<<<<< HEAD
  * PCIe error reporting is enabled by the PCI core, so drivers don't need
  * to do anything.  Retain this interface for backwards compatibility,
  * but do nothing.
@@ -4404,20 +4452,87 @@ lpfc_aer_support_show(struct device *dev, struct device_attribute *attr,
  * Returns:
  * length of the buf on success
  * -EINVAL if val out of range
+=======
+ * If the val is 1 and currently the device's AER capability was not
+ * enabled, invoke the kernel's enable AER helper routine, trying to
+ * enable the device's AER capability. If the helper routine enabling
+ * AER returns success, update the device's cfg_aer_support flag to
+ * indicate AER is supported by the device; otherwise, if the device
+ * AER capability is already enabled to support AER, then do nothing.
+ *
+ * If the val is 0 and currently the device's AER support was enabled,
+ * invoke the kernel's disable AER helper routine. After that, update
+ * the device's cfg_aer_support flag to indicate AER is not supported
+ * by the device; otherwise, if the device AER capability is already
+ * disabled from supporting AER, then do nothing.
+ *
+ * Returns:
+ * length of the buf on success if val is in range the intended mode
+ * is supported.
+ * -EINVAL if val out of range or intended mode is not supported.
+>>>>>>> b7ba80a49124 (Commit)
  **/
 static ssize_t
 lpfc_aer_support_store(struct device *dev, struct device_attribute *attr,
 		       const char *buf, size_t count)
 {
+<<<<<<< HEAD
 	int val = 0;
+=======
+	struct Scsi_Host *shost = class_to_shost(dev);
+	struct lpfc_vport *vport = (struct lpfc_vport *)shost->hostdata;
+	struct lpfc_hba *phba = vport->phba;
+	int val = 0, rc = -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!isdigit(buf[0]))
 		return -EINVAL;
 	if (sscanf(buf, "%i", &val) != 1)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	dev_info_once(dev, "PCIe error reporting automatically enabled by the PCI core; sysfs write ignored\n");
 	return strlen(buf);
+=======
+	switch (val) {
+	case 0:
+		if (phba->hba_flag & HBA_AER_ENABLED) {
+			rc = pci_disable_pcie_error_reporting(phba->pcidev);
+			if (!rc) {
+				spin_lock_irq(&phba->hbalock);
+				phba->hba_flag &= ~HBA_AER_ENABLED;
+				spin_unlock_irq(&phba->hbalock);
+				phba->cfg_aer_support = 0;
+				rc = strlen(buf);
+			} else
+				rc = -EPERM;
+		} else {
+			phba->cfg_aer_support = 0;
+			rc = strlen(buf);
+		}
+		break;
+	case 1:
+		if (!(phba->hba_flag & HBA_AER_ENABLED)) {
+			rc = pci_enable_pcie_error_reporting(phba->pcidev);
+			if (!rc) {
+				spin_lock_irq(&phba->hbalock);
+				phba->hba_flag |= HBA_AER_ENABLED;
+				spin_unlock_irq(&phba->hbalock);
+				phba->cfg_aer_support = 1;
+				rc = strlen(buf);
+			} else
+				 rc = -EPERM;
+		} else {
+			phba->cfg_aer_support = 1;
+			rc = strlen(buf);
+		}
+		break;
+	default:
+		rc = -EINVAL;
+		break;
+	}
+	return rc;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR_RW(lpfc_aer_support);
@@ -4430,16 +4545,26 @@ static DEVICE_ATTR_RW(lpfc_aer_support);
  * @count: unused variable.
  *
  * Description:
+<<<<<<< HEAD
  * If the @buf contains 1, invokes the kernel AER helper routine
+=======
+ * If the @buf contains 1 and the device currently has the AER support
+ * enabled, then invokes the kernel AER helper routine
+>>>>>>> b7ba80a49124 (Commit)
  * pci_aer_clear_nonfatal_status() to clean up the uncorrectable
  * error status register.
  *
  * Notes:
  *
  * Returns:
+<<<<<<< HEAD
  * -EINVAL if the buf does not contain 1
  * -EPERM if the OS cannot clear AER error status, i.e., when platform
  * firmware owns the AER Capability
+=======
+ * -EINVAL if the buf does not contain the 1 or the device is not currently
+ * enabled with the AER support.
+>>>>>>> b7ba80a49124 (Commit)
  **/
 static ssize_t
 lpfc_aer_cleanup_state(struct device *dev, struct device_attribute *attr,
@@ -4457,7 +4582,12 @@ lpfc_aer_cleanup_state(struct device *dev, struct device_attribute *attr,
 	if (val != 1)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	rc = pci_aer_clear_nonfatal_status(phba->pcidev);
+=======
+	if (phba->hba_flag & HBA_AER_ENABLED)
+		rc = pci_aer_clear_nonfatal_status(phba->pcidev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rc == 0)
 		return strlen(buf);
@@ -5975,7 +6105,10 @@ static struct attribute *lpfc_hba_attrs[] = {
 	&dev_attr_lpfc_fcp_wait_abts_rsp.attr,
 	&dev_attr_nport_evt_cnt.attr,
 	&dev_attr_board_mode.attr,
+<<<<<<< HEAD
 	&dev_attr_lpfc_xcvr_data.attr,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	&dev_attr_max_vpi.attr,
 	&dev_attr_used_vpi.attr,
 	&dev_attr_max_rpi.attr,
@@ -7242,6 +7375,10 @@ lpfc_get_cfgparam(struct lpfc_hba *phba)
 
 	lpfc_sg_seg_cnt_init(phba, lpfc_sg_seg_cnt);
 	lpfc_hba_queue_depth_init(phba, lpfc_hba_queue_depth);
+<<<<<<< HEAD
+=======
+	lpfc_aer_support_init(phba, lpfc_aer_support);
+>>>>>>> b7ba80a49124 (Commit)
 	lpfc_sriov_nr_virtfn_init(phba, lpfc_sriov_nr_virtfn);
 	lpfc_request_firmware_upgrade_init(phba, lpfc_req_fw_upgrade);
 	lpfc_suppress_link_up_init(phba, lpfc_suppress_link_up);

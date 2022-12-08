@@ -56,7 +56,11 @@ patternProperties:
           Compress offload dai.
 
     dependencies:
+<<<<<<< HEAD
       is-compress-dai: [ direction ]
+=======
+      is-compress-dai: ["direction"]
+>>>>>>> b7ba80a49124 (Commit)
 
     required:
       - reg
@@ -73,6 +77,7 @@ additionalProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     dais {
         compatible = "qcom,q6asm-dais";
         iommus = <&apps_smmu 0x1821 0x0>;
@@ -92,5 +97,42 @@ examples:
             reg = <2>;
             is-compress-dai;
             direction = <1>;
+=======
+    #include <dt-bindings/soc/qcom,apr.h>
+    #include <dt-bindings/sound/qcom,q6asm.h>
+
+    apr {
+        compatible = "qcom,apr-v2";
+        qcom,domain = <APR_DOMAIN_ADSP>;
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        service@7 {
+            compatible = "qcom,q6asm";
+            reg = <APR_SVC_ASM>;
+            qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+
+            dais {
+                compatible = "qcom,q6asm-dais";
+                iommus = <&apps_smmu 0x1821 0x0>;
+                #address-cells = <1>;
+                #size-cells = <0>;
+                #sound-dai-cells = <1>;
+
+                dai@0 {
+                    reg = <0>;
+                };
+
+                dai@1 {
+                    reg = <1>;
+                };
+
+                dai@2 {
+                    reg = <2>;
+                    is-compress-dai;
+                    direction = <1>;
+                };
+            };
+>>>>>>> b7ba80a49124 (Commit)
         };
     };

@@ -190,7 +190,11 @@ struct ib_mr *hns_roce_get_dma_mr(struct ib_pd *pd, int acc)
 	int ret;
 
 	mr = kzalloc(sizeof(*mr), GFP_KERNEL);
+<<<<<<< HEAD
 	if (!mr)
+=======
+	if (mr == NULL)
+>>>>>>> b7ba80a49124 (Commit)
 		return  ERR_PTR(-ENOMEM);
 
 	mr->type = MR_TYPE_DMA;
@@ -249,6 +253,10 @@ struct ib_mr *hns_roce_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
 		goto err_alloc_pbl;
 
 	mr->ibmr.rkey = mr->ibmr.lkey = mr->key;
+<<<<<<< HEAD
+=======
+	mr->ibmr.length = length;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return &mr->ibmr;
 
@@ -392,10 +400,17 @@ struct ib_mr *hns_roce_alloc_mr(struct ib_pd *pd, enum ib_mr_type mr_type,
 
 	return &mr->ibmr;
 
+<<<<<<< HEAD
 err_pbl:
 	free_mr_pbl(hr_dev, mr);
 err_key:
 	free_mr_key(hr_dev, mr);
+=======
+err_key:
+	free_mr_key(hr_dev, mr);
+err_pbl:
+	free_mr_pbl(hr_dev, mr);
+>>>>>>> b7ba80a49124 (Commit)
 err_free:
 	kfree(mr);
 	return ERR_PTR(ret);
@@ -585,7 +600,11 @@ static int mtr_map_region(struct hns_roce_dev *hr_dev, struct hns_roce_mtr *mtr,
 	while (offset < end && npage < max_count) {
 		count = 0;
 		mtts = hns_roce_hem_list_find_mtt(hr_dev, &mtr->hem_list,
+<<<<<<< HEAD
 						  offset, &count);
+=======
+						  offset, &count, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!mtts)
 			return -ENOBUFS;
 
@@ -834,7 +853,11 @@ int hns_roce_mtr_find(struct hns_roce_dev *hr_dev, struct hns_roce_mtr *mtr,
 		mtt_count = 0;
 		mtts = hns_roce_hem_list_find_mtt(hr_dev, &mtr->hem_list,
 						  start_index + total,
+<<<<<<< HEAD
 						  &mtt_count);
+=======
+						  &mtt_count, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!mtts || !mtt_count)
 			goto done;
 

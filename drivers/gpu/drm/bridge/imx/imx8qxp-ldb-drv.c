@@ -667,7 +667,11 @@ static int imx8qxp_ldb_probe(struct platform_device *pdev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void imx8qxp_ldb_remove(struct platform_device *pdev)
+=======
+static int imx8qxp_ldb_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct imx8qxp_ldb *imx8qxp_ldb = platform_get_drvdata(pdev);
 	struct ldb *ldb = &imx8qxp_ldb->base;
@@ -675,6 +679,11 @@ static void imx8qxp_ldb_remove(struct platform_device *pdev)
 	ldb_remove_bridge_helper(ldb);
 
 	pm_runtime_disable(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused imx8qxp_ldb_runtime_suspend(struct device *dev)
@@ -706,7 +715,11 @@ MODULE_DEVICE_TABLE(of, imx8qxp_ldb_dt_ids);
 
 static struct platform_driver imx8qxp_ldb_driver = {
 	.probe	= imx8qxp_ldb_probe,
+<<<<<<< HEAD
 	.remove_new = imx8qxp_ldb_remove,
+=======
+	.remove = imx8qxp_ldb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.pm = &imx8qxp_ldb_pm_ops,
 		.name = DRIVER_NAME,

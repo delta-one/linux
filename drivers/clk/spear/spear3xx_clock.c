@@ -8,7 +8,10 @@
 
 #include <linux/clk.h>
 #include <linux/clkdev.h>
+<<<<<<< HEAD
 #include <linux/clk/spear.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/err.h>
 #include <linux/io.h>
 #include <linux/of_platform.h>

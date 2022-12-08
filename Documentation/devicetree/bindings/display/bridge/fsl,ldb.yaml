@@ -16,9 +16,13 @@ description: |
 
 properties:
   compatible:
+<<<<<<< HEAD
     enum:
       - fsl,imx8mp-ldb
       - fsl,imx93-ldb
+=======
+    const: fsl,imx8mp-ldb
+>>>>>>> b7ba80a49124 (Commit)
 
   clocks:
     maxItems: 1
@@ -59,6 +63,7 @@ required:
   - clocks
   - ports
 
+<<<<<<< HEAD
 allOf:
   - if:
       properties:
@@ -71,6 +76,8 @@ allOf:
           properties:
             port@2: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 additionalProperties: false
 
 examples:

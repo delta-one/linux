@@ -626,7 +626,12 @@ static int __vsock_bind_connectible(struct vsock_sock *vsk,
 	struct sockaddr_vm new_addr;
 
 	if (!port)
+<<<<<<< HEAD
 		port = get_random_u32_above(LAST_RESERVED_PORT);
+=======
+		port = LAST_RESERVED_PORT + 1 +
+			prandom_u32_max(U32_MAX - LAST_RESERVED_PORT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	vsock_addr_init(&new_addr, addr->svm_cid, addr->svm_port);
 
@@ -1861,9 +1866,14 @@ static int vsock_connectible_sendmsg(struct socket *sock, struct msghdr *msg,
 			written = transport->stream_enqueue(vsk,
 					msg, len - total_written);
 		}
+<<<<<<< HEAD
 
 		if (written < 0) {
 			err = written;
+=======
+		if (written < 0) {
+			err = -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 			goto out_err;
 		}
 
@@ -1905,11 +1915,16 @@ static int vsock_connectible_wait_data(struct sock *sk,
 	err = 0;
 	transport = vsk->transport;
 
+<<<<<<< HEAD
 	while (1) {
 		prepare_to_wait(sk_sleep(sk), wait, TASK_INTERRUPTIBLE);
 		data = vsock_connectible_has_data(vsk);
 		if (data != 0)
 			break;
+=======
+	while ((data = vsock_connectible_has_data(vsk)) == 0) {
+		prepare_to_wait(sk_sleep(sk), wait, TASK_INTERRUPTIBLE);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (sk->sk_err != 0 ||
 		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
@@ -2095,6 +2110,11 @@ vsock_connectible_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
 	const struct vsock_transport *transport;
 	int err;
 
+<<<<<<< HEAD
+=======
+	DEFINE_WAIT(wait);
+
+>>>>>>> b7ba80a49124 (Commit)
 	sk = sock->sk;
 	vsk = vsock_sk(sk);
 	err = 0;

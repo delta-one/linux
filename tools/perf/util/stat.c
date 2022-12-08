@@ -14,7 +14,15 @@
 #include "evlist.h"
 #include "evsel.h"
 #include "thread_map.h"
+<<<<<<< HEAD
 #include "util/hashmap.h"
+=======
+#ifdef HAVE_LIBBPF_SUPPORT
+#include <bpf/hashmap.h>
+#else
+#include "util/hashmap.h"
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/zalloc.h>
 
 void update_stats(struct stats *stats, u64 val)
@@ -77,6 +85,7 @@ double rel_stddev_stats(double stddev, double avg)
 	return pct;
 }
 
+<<<<<<< HEAD
 static void evsel__reset_aggr_stats(struct evsel *evsel)
 {
 	struct perf_stat_evsel *ps = evsel->stats;
@@ -84,10 +93,60 @@ static void evsel__reset_aggr_stats(struct evsel *evsel)
 
 	if (aggr)
 		memset(aggr, 0, sizeof(*aggr) * ps->nr_aggr);
+=======
+bool __perf_stat_evsel__is(struct evsel *evsel, enum perf_stat_evsel_id id)
+{
+	struct perf_stat_evsel *ps = evsel->stats;
+
+	return ps->id == id;
+}
+
+#define ID(id, name) [PERF_STAT_EVSEL_ID__##id] = #name
+static const char *id_str[PERF_STAT_EVSEL_ID__MAX] = {
+	ID(NONE,		x),
+	ID(CYCLES_IN_TX,	cpu/cycles-t/),
+	ID(TRANSACTION_START,	cpu/tx-start/),
+	ID(ELISION_START,	cpu/el-start/),
+	ID(CYCLES_IN_TX_CP,	cpu/cycles-ct/),
+	ID(TOPDOWN_TOTAL_SLOTS, topdown-total-slots),
+	ID(TOPDOWN_SLOTS_ISSUED, topdown-slots-issued),
+	ID(TOPDOWN_SLOTS_RETIRED, topdown-slots-retired),
+	ID(TOPDOWN_FETCH_BUBBLES, topdown-fetch-bubbles),
+	ID(TOPDOWN_RECOVERY_BUBBLES, topdown-recovery-bubbles),
+	ID(TOPDOWN_RETIRING, topdown-retiring),
+	ID(TOPDOWN_BAD_SPEC, topdown-bad-spec),
+	ID(TOPDOWN_FE_BOUND, topdown-fe-bound),
+	ID(TOPDOWN_BE_BOUND, topdown-be-bound),
+	ID(TOPDOWN_HEAVY_OPS, topdown-heavy-ops),
+	ID(TOPDOWN_BR_MISPREDICT, topdown-br-mispredict),
+	ID(TOPDOWN_FETCH_LAT, topdown-fetch-lat),
+	ID(TOPDOWN_MEM_BOUND, topdown-mem-bound),
+	ID(SMI_NUM, msr/smi/),
+	ID(APERF, msr/aperf/),
+};
+#undef ID
+
+static void perf_stat_evsel_id_init(struct evsel *evsel)
+{
+	struct perf_stat_evsel *ps = evsel->stats;
+	int i;
+
+	/* ps->id is 0 hence PERF_STAT_EVSEL_ID__NONE by default */
+
+	for (i = 0; i < PERF_STAT_EVSEL_ID__MAX; i++) {
+		if (!strcmp(evsel__name(evsel), id_str[i]) ||
+		    (strstr(evsel__name(evsel), id_str[i]) && evsel->pmu_name
+		     && strstr(evsel__name(evsel), evsel->pmu_name))) {
+			ps->id = i;
+			break;
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void evsel__reset_stat_priv(struct evsel *evsel)
 {
+<<<<<<< HEAD
 	struct perf_stat_evsel *ps = evsel->stats;
 
 	init_stats(&ps->res_stats);
@@ -136,6 +195,22 @@ static int evsel__alloc_stat_priv(struct evsel *evsel, int nr_aggr)
 		return -ENOMEM;
 	}
 
+=======
+	int i;
+	struct perf_stat_evsel *ps = evsel->stats;
+
+	for (i = 0; i < 3; i++)
+		init_stats(&ps->res_stats[i]);
+
+	perf_stat_evsel_id_init(evsel);
+}
+
+static int evsel__alloc_stat_priv(struct evsel *evsel)
+{
+	evsel->stats = zalloc(sizeof(struct perf_stat_evsel));
+	if (evsel->stats == NULL)
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 	evsel__reset_stat_priv(evsel);
 	return 0;
 }
@@ -144,10 +219,15 @@ static void evsel__free_stat_priv(struct evsel *evsel)
 {
 	struct perf_stat_evsel *ps = evsel->stats;
 
+<<<<<<< HEAD
 	if (ps) {
 		zfree(&ps->aggr);
 		zfree(&ps->group_data);
 	}
+=======
+	if (ps)
+		zfree(&ps->group_data);
+>>>>>>> b7ba80a49124 (Commit)
 	zfree(&evsel->stats);
 }
 
@@ -176,9 +256,15 @@ static void evsel__reset_prev_raw_counts(struct evsel *evsel)
 		perf_counts__reset(evsel->prev_raw_counts);
 }
 
+<<<<<<< HEAD
 static int evsel__alloc_stats(struct evsel *evsel, int nr_aggr, bool alloc_raw)
 {
 	if (evsel__alloc_stat_priv(evsel, nr_aggr) < 0 ||
+=======
+static int evsel__alloc_stats(struct evsel *evsel, bool alloc_raw)
+{
+	if (evsel__alloc_stat_priv(evsel) < 0 ||
+>>>>>>> b7ba80a49124 (Commit)
 	    evsel__alloc_counts(evsel) < 0 ||
 	    (alloc_raw && evsel__alloc_prev_raw_counts(evsel) < 0))
 		return -ENOMEM;
@@ -186,6 +272,7 @@ static int evsel__alloc_stats(struct evsel *evsel, int nr_aggr, bool alloc_raw)
 	return 0;
 }
 
+<<<<<<< HEAD
 int evlist__alloc_stats(struct perf_stat_config *config,
 			struct evlist *evlist, bool alloc_raw)
 {
@@ -197,6 +284,14 @@ int evlist__alloc_stats(struct perf_stat_config *config,
 
 	evlist__for_each_entry(evlist, evsel) {
 		if (evsel__alloc_stats(evsel, nr_aggr, alloc_raw))
+=======
+int evlist__alloc_stats(struct evlist *evlist, bool alloc_raw)
+{
+	struct evsel *evsel;
+
+	evlist__for_each_entry(evlist, evsel) {
+		if (evsel__alloc_stats(evsel, alloc_raw))
+>>>>>>> b7ba80a49124 (Commit)
 			goto out_free;
 	}
 
@@ -228,6 +323,7 @@ void evlist__reset_stats(struct evlist *evlist)
 	}
 }
 
+<<<<<<< HEAD
 void evlist__reset_aggr_stats(struct evlist *evlist)
 {
 	struct evsel *evsel;
@@ -236,6 +332,8 @@ void evlist__reset_aggr_stats(struct evlist *evlist)
 		evsel__reset_aggr_stats(evsel);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void evlist__reset_prev_raw_counts(struct evlist *evlist)
 {
 	struct evsel *evsel;
@@ -254,6 +352,11 @@ static void evsel__copy_prev_raw_counts(struct evsel *evsel)
 				*perf_counts(evsel->prev_raw_counts, idx, thread);
 		}
 	}
+<<<<<<< HEAD
+=======
+
+	evsel->counts->aggr = evsel->prev_raw_counts->aggr;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void evlist__copy_prev_raw_counts(struct evlist *evlist)
@@ -264,14 +367,43 @@ void evlist__copy_prev_raw_counts(struct evlist *evlist)
 		evsel__copy_prev_raw_counts(evsel);
 }
 
+<<<<<<< HEAD
 static size_t pkg_id_hash(long __key, void *ctx __maybe_unused)
+=======
+void evlist__save_aggr_prev_raw_counts(struct evlist *evlist)
+{
+	struct evsel *evsel;
+
+	/*
+	 * To collect the overall statistics for interval mode,
+	 * we copy the counts from evsel->prev_raw_counts to
+	 * evsel->counts. The perf_stat_process_counter creates
+	 * aggr values from per cpu values, but the per cpu values
+	 * are 0 for AGGR_GLOBAL. So we use a trick that saves the
+	 * previous aggr value to the first member of perf_counts,
+	 * then aggr calculation in process_counter_values can work
+	 * correctly.
+	 */
+	evlist__for_each_entry(evlist, evsel) {
+		*perf_counts(evsel->prev_raw_counts, 0, 0) =
+			evsel->prev_raw_counts->aggr;
+	}
+}
+
+static size_t pkg_id_hash(const void *__key, void *ctx __maybe_unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	uint64_t *key = (uint64_t *) __key;
 
 	return *key & 0xffffffff;
 }
 
+<<<<<<< HEAD
 static bool pkg_id_equal(long __key1, long __key2, void *ctx __maybe_unused)
+=======
+static bool pkg_id_equal(const void *__key1, const void *__key2,
+			 void *ctx __maybe_unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	uint64_t *key1 = (uint64_t *) __key1;
 	uint64_t *key2 = (uint64_t *) __key2;
@@ -332,15 +464,24 @@ static int check_per_pkg(struct evsel *counter, struct perf_counts_values *vals,
 		return -ENOMEM;
 
 	*key = (uint64_t)d << 32 | s;
+<<<<<<< HEAD
 	if (hashmap__find(mask, key, NULL)) {
 		*skip = true;
 		free(key);
 	} else
 		ret = hashmap__add(mask, key, 1);
+=======
+	if (hashmap__find(mask, (void *)key, NULL)) {
+		*skip = true;
+		free(key);
+	} else
+		ret = hashmap__add(mask, (void *)key, (void *)1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
 
+<<<<<<< HEAD
 static bool evsel__count_has_error(struct evsel *evsel,
 				   struct perf_counts_values *count,
 				   struct perf_stat_config *config)
@@ -360,12 +501,18 @@ static bool evsel__count_has_error(struct evsel *evsel,
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int
 process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
 		       int cpu_map_idx, int thread,
 		       struct perf_counts_values *count)
 {
+<<<<<<< HEAD
 	struct perf_stat_evsel *ps = evsel->stats;
+=======
+	struct perf_counts_values *aggr = &evsel->counts->aggr;
+>>>>>>> b7ba80a49124 (Commit)
 	static struct perf_counts_values zero;
 	bool skip = false;
 
@@ -377,6 +524,7 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
 	if (skip)
 		count = &zero;
 
+<<<<<<< HEAD
 	if (!evsel->snapshot)
 		evsel__compute_deltas(evsel, cpu_map_idx, thread, count);
 	perf_counts_values__scale(count, config->scale, NULL);
@@ -431,6 +579,40 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
 			}
 			break;
 		}
+=======
+	switch (config->aggr_mode) {
+	case AGGR_THREAD:
+	case AGGR_CORE:
+	case AGGR_DIE:
+	case AGGR_SOCKET:
+	case AGGR_NODE:
+	case AGGR_NONE:
+		if (!evsel->snapshot)
+			evsel__compute_deltas(evsel, cpu_map_idx, thread, count);
+		perf_counts_values__scale(count, config->scale, NULL);
+		if ((config->aggr_mode == AGGR_NONE) && (!evsel->percore)) {
+			perf_stat__update_shadow_stats(evsel, count->val,
+						       cpu_map_idx, &rt_stat);
+		}
+
+		if (config->aggr_mode == AGGR_THREAD) {
+			if (config->stats)
+				perf_stat__update_shadow_stats(evsel,
+					count->val, 0, &config->stats[thread]);
+			else
+				perf_stat__update_shadow_stats(evsel,
+					count->val, 0, &rt_stat);
+		}
+		break;
+	case AGGR_GLOBAL:
+		aggr->val += count->val;
+		aggr->ena += count->ena;
+		aggr->run += count->run;
+	case AGGR_UNSET:
+	case AGGR_MAX:
+	default:
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -443,6 +625,12 @@ static int process_counter_maps(struct perf_stat_config *config,
 	int ncpus = evsel__nr_cpus(counter);
 	int idx, thread;
 
+<<<<<<< HEAD
+=======
+	if (counter->core.system_wide)
+		nthreads = 1;
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (thread = 0; thread < nthreads; thread++) {
 		for (idx = 0; idx < ncpus; idx++) {
 			if (process_counter_values(config, counter, idx, thread,
@@ -457,9 +645,18 @@ static int process_counter_maps(struct perf_stat_config *config,
 int perf_stat_process_counter(struct perf_stat_config *config,
 			      struct evsel *counter)
 {
+<<<<<<< HEAD
 	struct perf_stat_evsel *ps = counter->stats;
 	u64 *count;
 	int ret;
+=======
+	struct perf_counts_values *aggr = &counter->counts->aggr;
+	struct perf_stat_evsel *ps = counter->stats;
+	u64 *count = counter->counts->aggr.values;
+	int i, ret;
+
+	aggr->val = aggr->ena = aggr->run = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (counter->per_pkg)
 		evsel__zero_per_pkg(counter);
@@ -471,18 +668,28 @@ int perf_stat_process_counter(struct perf_stat_config *config,
 	if (config->aggr_mode != AGGR_GLOBAL)
 		return 0;
 
+<<<<<<< HEAD
 	/*
 	 * GLOBAL aggregation mode only has a single aggr counts,
 	 * so we can use ps->aggr[0] as the actual output.
 	 */
 	count = ps->aggr[0].counts.values;
 	update_stats(&ps->res_stats, *count);
+=======
+	if (!counter->snapshot)
+		evsel__compute_deltas(counter, -1, -1, aggr);
+	perf_counts_values__scale(aggr, config->scale, &counter->counts->scaled);
+
+	for (i = 0; i < 3; i++)
+		update_stats(&ps->res_stats[i], count[i]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (verbose > 0) {
 		fprintf(config->output, "%s: %" PRIu64 " %" PRIu64 " %" PRIu64 "\n",
 			evsel__name(counter), count[0], count[1], count[2]);
 	}
 
+<<<<<<< HEAD
 	return 0;
 }
 
@@ -647,6 +854,15 @@ void perf_stat_process_percore(struct perf_stat_config *config, struct evlist *e
 	evlist__for_each_entry(evlist, evsel)
 		evsel__process_percore(evsel);
 }
+=======
+	/*
+	 * Save the full runtime - to allow normalization during printout:
+	 */
+	perf_stat__update_shadow_stats(counter, *count, 0, &rt_stat);
+
+	return 0;
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 int perf_event__process_stat_event(struct perf_session *session,
 				   union perf_event *event)
@@ -768,7 +984,15 @@ int create_perf_stat_counter(struct evsel *evsel,
 	if (evsel__is_group_leader(evsel)) {
 		attr->disabled = 1;
 
+<<<<<<< HEAD
 		if (target__enable_on_exec(target))
+=======
+		/*
+		 * In case of initial_delay we enable tracee
+		 * events manually.
+		 */
+		if (target__none(target) && !config->initial_delay)
+>>>>>>> b7ba80a49124 (Commit)
 			attr->enable_on_exec = 1;
 	}
 

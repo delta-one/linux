@@ -322,7 +322,10 @@ void mei_io_cb_free(struct mei_cl_cb *cb)
 
 	list_del(&cb->list);
 	kfree(cb->buf.data);
+<<<<<<< HEAD
 	kfree(cb->ext_hdr);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(cb);
 }
 
@@ -402,7 +405,10 @@ static struct mei_cl_cb *mei_io_cb_init(struct mei_cl *cl,
 	cb->buf_idx = 0;
 	cb->fop_type = type;
 	cb->vtag = 0;
+<<<<<<< HEAD
 	cb->ext_hdr = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return cb;
 }
@@ -1343,9 +1349,13 @@ static void mei_cl_reset_read_by_vtag(const struct mei_cl *cl, u8 vtag)
 	struct mei_cl_vtag *vtag_l;
 
 	list_for_each_entry(vtag_l, &cl->vtag_map, list) {
+<<<<<<< HEAD
 		/* The client on bus has one fixed vtag map */
 		if ((cl->cldev && mei_cldev_enabled(cl->cldev)) ||
 		    vtag_l->vtag == vtag) {
+=======
+		if (vtag_l->vtag == vtag) {
+>>>>>>> b7ba80a49124 (Commit)
 			vtag_l->pending_read = false;
 			break;
 		}
@@ -1744,6 +1754,7 @@ static inline u8 mei_ext_hdr_set_vtag(void *ext, u8 vtag)
 	return vtag_hdr->hdr.length;
 }
 
+<<<<<<< HEAD
 static inline bool mei_ext_hdr_is_gsc(struct mei_ext_hdr *ext)
 {
 	return ext && ext->type == MEI_EXT_HDR_GSC;
@@ -1755,6 +1766,8 @@ static inline u8 mei_ext_hdr_set_gsc(struct mei_ext_hdr *ext, struct mei_ext_hdr
 	return ext->length;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * mei_msg_hdr_init - allocate and initialize mei message header
  *
@@ -1767,17 +1780,25 @@ static struct mei_msg_hdr *mei_msg_hdr_init(const struct mei_cl_cb *cb)
 	size_t hdr_len;
 	struct mei_ext_meta_hdr *meta;
 	struct mei_msg_hdr *mei_hdr;
+<<<<<<< HEAD
 	bool is_ext, is_hbm, is_gsc, is_vtag;
 	struct mei_ext_hdr *next_ext;
+=======
+	bool is_ext, is_vtag;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!cb)
 		return ERR_PTR(-EINVAL);
 
 	/* Extended header for vtag is attached only on the first fragment */
 	is_vtag = (cb->vtag && cb->buf_idx == 0);
+<<<<<<< HEAD
 	is_hbm = cb->cl->me_cl->client_id == 0;
 	is_gsc = ((!is_hbm) && cb->cl->dev->hbm_f_gsc_supported && mei_ext_hdr_is_gsc(cb->ext_hdr));
 	is_ext = is_vtag || is_gsc;
+=======
+	is_ext = is_vtag;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Compute extended header size */
 	hdr_len = sizeof(*mei_hdr);
@@ -1789,9 +1810,12 @@ static struct mei_msg_hdr *mei_msg_hdr_init(const struct mei_cl_cb *cb)
 	if (is_vtag)
 		hdr_len += sizeof(struct mei_ext_hdr_vtag);
 
+<<<<<<< HEAD
 	if (is_gsc)
 		hdr_len += mei_ext_hdr_len(cb->ext_hdr);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 setup_hdr:
 	mei_hdr = kzalloc(hdr_len, GFP_KERNEL);
 	if (!mei_hdr)
@@ -1806,6 +1830,7 @@ setup_hdr:
 		goto out;
 
 	meta = (struct mei_ext_meta_hdr *)mei_hdr->extension;
+<<<<<<< HEAD
 	meta->size = 0;
 	next_ext = (struct mei_ext_hdr *)meta->hdrs;
 	if (is_vtag) {
@@ -1820,6 +1845,12 @@ setup_hdr:
 		next_ext = mei_ext_next(next_ext);
 	}
 
+=======
+	if (is_vtag) {
+		meta->count++;
+		meta->size += mei_ext_hdr_set_vtag(meta->hdrs, cb->vtag);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	mei_hdr->length = hdr_len - sizeof(*mei_hdr);
 	return mei_hdr;
@@ -1843,14 +1874,22 @@ int mei_cl_irq_write(struct mei_cl *cl, struct mei_cl_cb *cb,
 	struct mei_msg_hdr *mei_hdr = NULL;
 	size_t hdr_len;
 	size_t hbuf_len, dr_len;
+<<<<<<< HEAD
 	size_t buf_len = 0;
+=======
+	size_t buf_len;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t data_len;
 	int hbuf_slots;
 	u32 dr_slots;
 	u32 dma_len;
 	int rets;
 	bool first_chunk;
+<<<<<<< HEAD
 	const void *data = NULL;
+=======
+	const void *data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (WARN_ON(!cl || !cl->dev))
 		return -ENODEV;
@@ -1870,10 +1909,15 @@ int mei_cl_irq_write(struct mei_cl *cl, struct mei_cl_cb *cb,
 		return 0;
 	}
 
+<<<<<<< HEAD
 	if (buf->data) {
 		buf_len = buf->size - cb->buf_idx;
 		data = buf->data + cb->buf_idx;
 	}
+=======
+	buf_len = buf->size - cb->buf_idx;
+	data = buf->data + cb->buf_idx;
+>>>>>>> b7ba80a49124 (Commit)
 	hbuf_slots = mei_hbuf_empty_slots(dev);
 	if (hbuf_slots < 0) {
 		rets = -EOVERFLOW;
@@ -1891,6 +1935,12 @@ int mei_cl_irq_write(struct mei_cl *cl, struct mei_cl_cb *cb,
 		goto err;
 	}
 
+<<<<<<< HEAD
+=======
+	cl_dbg(dev, cl, "Extended Header %d vtag = %d\n",
+	       mei_hdr->extended, cb->vtag);
+
+>>>>>>> b7ba80a49124 (Commit)
 	hdr_len = sizeof(*mei_hdr) + mei_hdr->length;
 
 	/**
@@ -1919,7 +1969,11 @@ int mei_cl_irq_write(struct mei_cl *cl, struct mei_cl_cb *cb,
 	}
 	mei_hdr->length += data_len;
 
+<<<<<<< HEAD
 	if (mei_hdr->dma_ring && buf->data)
+=======
+	if (mei_hdr->dma_ring)
+>>>>>>> b7ba80a49124 (Commit)
 		mei_dma_ring_write(dev, buf->data + cb->buf_idx, buf_len);
 	rets = mei_write_message(dev, mei_hdr, hdr_len, data, data_len);
 
@@ -1956,6 +2010,7 @@ err:
  *
  * @cl: host client
  * @cb: write callback with filled data
+<<<<<<< HEAD
  * @timeout: send timeout in milliseconds.
  *           effective only for blocking writes: the cb->blocking is set.
  *           set timeout to the MAX_SCHEDULE_TIMEOUT to maixum allowed wait.
@@ -1963,6 +2018,12 @@ err:
  * Return: number of bytes sent on success, <0 on failure.
  */
 ssize_t mei_cl_write(struct mei_cl *cl, struct mei_cl_cb *cb, unsigned long timeout)
+=======
+ *
+ * Return: number of bytes sent on success, <0 on failure.
+ */
+ssize_t mei_cl_write(struct mei_cl *cl, struct mei_cl_cb *cb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mei_device *dev;
 	struct mei_msg_data *buf;
@@ -2016,6 +2077,12 @@ ssize_t mei_cl_write(struct mei_cl *cl, struct mei_cl_cb *cb, unsigned long time
 		goto err;
 	}
 
+<<<<<<< HEAD
+=======
+	cl_dbg(dev, cl, "Extended Header %d vtag = %d\n",
+	       mei_hdr->extended, cb->vtag);
+
+>>>>>>> b7ba80a49124 (Commit)
 	hdr_len = sizeof(*mei_hdr) + mei_hdr->length;
 
 	if (rets == 0) {
@@ -2060,7 +2127,11 @@ ssize_t mei_cl_write(struct mei_cl *cl, struct mei_cl_cb *cb, unsigned long time
 
 	mei_hdr->length += data_len;
 
+<<<<<<< HEAD
 	if (mei_hdr->dma_ring && buf->data)
+=======
+	if (mei_hdr->dma_ring)
+>>>>>>> b7ba80a49124 (Commit)
 		mei_dma_ring_write(dev, buf->data, buf_len);
 	rets = mei_write_message(dev, mei_hdr, hdr_len, data, data_len);
 
@@ -2086,6 +2157,7 @@ out:
 	if (blocking && cl->writing_state != MEI_WRITE_COMPLETE) {
 
 		mutex_unlock(&dev->device_lock);
+<<<<<<< HEAD
 		rets = wait_event_interruptible_timeout(cl->tx_wait,
 							cl->writing_state == MEI_WRITE_COMPLETE ||
 							(!mei_cl_is_connected(cl)),
@@ -2100,6 +2172,13 @@ out:
 		/* wait_event_interruptible returns -ERESTARTSYS */
 		if (rets > 0)
 			rets = 0;
+=======
+		rets = wait_event_interruptible(cl->tx_wait,
+				cl->writing_state == MEI_WRITE_COMPLETE ||
+				(!mei_cl_is_connected(cl)));
+		mutex_lock(&dev->device_lock);
+		/* wait_event_interruptible returns -ERESTARTSYS */
+>>>>>>> b7ba80a49124 (Commit)
 		if (rets) {
 			if (signal_pending(current))
 				rets = -EINTR;

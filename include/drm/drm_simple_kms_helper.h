@@ -117,9 +117,15 @@ struct drm_simple_display_pipe_funcs {
 	 * more details.
 	 *
 	 * For GEM drivers who neither have a @prepare_fb nor @cleanup_fb hook
+<<<<<<< HEAD
 	 * set, drm_gem_plane_helper_prepare_fb() is called automatically
 	 * to implement this. Other drivers which need additional plane
 	 * processing can call drm_gem_plane_helper_prepare_fb() from
+=======
+	 * set drm_gem_simple_display_pipe_prepare_fb() is called automatically
+	 * to implement this. Other drivers which need additional plane
+	 * processing can call drm_gem_simple_display_pipe_prepare_fb() from
+>>>>>>> b7ba80a49124 (Commit)
 	 * their @prepare_fb hook.
 	 */
 	int (*prepare_fb)(struct drm_simple_display_pipe *pipe,
@@ -136,6 +142,7 @@ struct drm_simple_display_pipe_funcs {
 			   struct drm_plane_state *plane_state);
 
 	/**
+<<<<<<< HEAD
 	 * @begin_fb_access:
 	 *
 	 * Optional, called by &drm_plane_helper_funcs.begin_fb_access. Please read
@@ -156,6 +163,8 @@ struct drm_simple_display_pipe_funcs {
 			      struct drm_plane_state *plane_state);
 
 	/**
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * @enable_vblank:
 	 *
 	 * Optional, called by &drm_crtc_funcs.enable_vblank. Please read

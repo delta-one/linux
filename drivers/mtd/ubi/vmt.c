@@ -464,7 +464,11 @@ int ubi_resize_volume(struct ubi_volume_desc *desc, int reserved_pebs)
 		for (i = 0; i < -pebs; i++) {
 			err = ubi_eba_unmap_leb(ubi, vol, reserved_pebs + i);
 			if (err)
+<<<<<<< HEAD
 				goto out_free;
+=======
+				goto out_acc;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		spin_lock(&ubi->volumes_lock);
 		ubi->rsvd_pebs += pebs;
@@ -512,10 +516,15 @@ out_acc:
 		ubi->avail_pebs += pebs;
 		spin_unlock(&ubi->volumes_lock);
 	}
+<<<<<<< HEAD
 	return err;
 
 out_free:
 	ubi_eba_destroy_table(new_eba_tbl);
+=======
+out_free:
+	kfree(new_eba_tbl);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -582,7 +591,10 @@ int ubi_add_volume(struct ubi_device *ubi, struct ubi_volume *vol)
 	if (err) {
 		ubi_err(ubi, "cannot add character device for volume %d, error %d",
 			vol_id, err);
+<<<<<<< HEAD
 		vol_release(&vol->dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return err;
 	}
 
@@ -593,6 +605,7 @@ int ubi_add_volume(struct ubi_device *ubi, struct ubi_volume *vol)
 	vol->dev.groups = volume_dev_groups;
 	dev_set_name(&vol->dev, "%s_%d", ubi->ubi_name, vol->vol_id);
 	err = device_register(&vol->dev);
+<<<<<<< HEAD
 	if (err) {
 		cdev_del(&vol->cdev);
 		put_device(&vol->dev);
@@ -601,6 +614,17 @@ int ubi_add_volume(struct ubi_device *ubi, struct ubi_volume *vol)
 
 	self_check_volumes(ubi);
 	return err;
+=======
+	if (err)
+		goto out_cdev;
+
+	self_check_volumes(ubi);
+	return err;
+
+out_cdev:
+	cdev_del(&vol->cdev);
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

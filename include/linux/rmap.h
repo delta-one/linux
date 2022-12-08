@@ -94,7 +94,11 @@ enum ttu_flags {
 	TTU_SPLIT_HUGE_PMD	= 0x4,	/* split huge PMD if any */
 	TTU_IGNORE_MLOCK	= 0x8,	/* ignore mlock */
 	TTU_SYNC		= 0x10,	/* avoid racy checks with PVMW_SYNC */
+<<<<<<< HEAD
 	TTU_HWPOISON		= 0x20,	/* do convert pte to hwpoison entry */
+=======
+	TTU_IGNORE_HWPOISON	= 0x20,	/* corrupted page is recoverable */
+>>>>>>> b7ba80a49124 (Commit)
 	TTU_BATCH_FLUSH		= 0x40,	/* Batch TLB flushes where possible
 					 * and caller guarantees they will
 					 * do a final flush if necessary */
@@ -194,8 +198,11 @@ void page_add_anon_rmap(struct page *, struct vm_area_struct *,
 		unsigned long address, rmap_t flags);
 void page_add_new_anon_rmap(struct page *, struct vm_area_struct *,
 		unsigned long address);
+<<<<<<< HEAD
 void folio_add_new_anon_rmap(struct folio *, struct vm_area_struct *,
 		unsigned long address);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void page_add_file_rmap(struct page *, struct vm_area_struct *,
 		bool compound);
 void page_remove_rmap(struct page *, struct vm_area_struct *,
@@ -203,11 +210,16 @@ void page_remove_rmap(struct page *, struct vm_area_struct *,
 
 void hugepage_add_anon_rmap(struct page *, struct vm_area_struct *,
 		unsigned long address, rmap_t flags);
+<<<<<<< HEAD
 void hugepage_add_new_anon_rmap(struct folio *, struct vm_area_struct *,
+=======
+void hugepage_add_new_anon_rmap(struct page *, struct vm_area_struct *,
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned long address);
 
 static inline void __page_dup_rmap(struct page *page, bool compound)
 {
+<<<<<<< HEAD
 	if (compound) {
 		struct folio *folio = (struct folio *)page;
 
@@ -216,6 +228,9 @@ static inline void __page_dup_rmap(struct page *page, bool compound)
 	} else {
 		atomic_inc(&page->_mapcount);
 	}
+=======
+	atomic_inc(compound ? compound_mapcount_ptr(page) : &page->_mapcount);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void page_dup_file_rmap(struct page *page, bool compound)

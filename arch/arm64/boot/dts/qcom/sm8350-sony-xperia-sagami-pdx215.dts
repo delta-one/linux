@@ -11,6 +11,7 @@
 	model = "Sony Xperia 1 III";
 	compatible = "sony,pdx215-generic", "qcom,sm8350";
 };
+<<<<<<< HEAD
 
 &i2c13 {
 	pmic@75 {
@@ -304,3 +305,5 @@
 			  "HST_WLAN_UART_TX",
 			  "HST_WLAN_UART_RX";
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

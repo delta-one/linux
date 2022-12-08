@@ -107,6 +107,10 @@ ATTRIBUTE_GROUPS(vibrator);
 
 static struct class vibrator_class = {
 	.name		= "vibrator",
+<<<<<<< HEAD
+=======
+	.owner		= THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.dev_groups	= vibrator_groups,
 };
 

@@ -109,6 +109,7 @@
 			compatible = "brcm,bcm7038-twd", "simple-mfd", "syscon";
 			reg = <0x10000080 0x30>;
 			ranges = <0x0 0x10000080 0x30>;
+<<<<<<< HEAD
 			#address-cells = <1>;
 			#size-cells = <1>;
 
@@ -116,6 +117,8 @@
 				compatible = "brcm,bcm6345-timer";
 				reg = <0x0 0x1c>;
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 			wdt: watchdog@1c {
 				compatible = "brcm,bcm7038-wdt";

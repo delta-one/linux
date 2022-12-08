@@ -7,7 +7,10 @@
 #define COMPILE_OFFSETS
 
 #include <linux/crypto.h>
+<<<<<<< HEAD
 #include <crypto/aria.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sched.h>
 #include <linux/stddef.h>
 #include <linux/hardirq.h>
@@ -20,6 +23,10 @@
 #include <asm/suspend.h>
 #include <asm/tlbflush.h>
 #include <asm/tdx.h>
+<<<<<<< HEAD
+=======
+#include "../kvm/vmx/vmx.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_XEN
 #include <xen/interface/xen.h>
@@ -76,18 +83,24 @@ static void __used common(void)
 	OFFSET(TDX_MODULE_r11, tdx_module_output, r11);
 
 	BLANK();
+<<<<<<< HEAD
 	OFFSET(TDX_HYPERCALL_r8,  tdx_hypercall_args, r8);
 	OFFSET(TDX_HYPERCALL_r9,  tdx_hypercall_args, r9);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	OFFSET(TDX_HYPERCALL_r10, tdx_hypercall_args, r10);
 	OFFSET(TDX_HYPERCALL_r11, tdx_hypercall_args, r11);
 	OFFSET(TDX_HYPERCALL_r12, tdx_hypercall_args, r12);
 	OFFSET(TDX_HYPERCALL_r13, tdx_hypercall_args, r13);
 	OFFSET(TDX_HYPERCALL_r14, tdx_hypercall_args, r14);
 	OFFSET(TDX_HYPERCALL_r15, tdx_hypercall_args, r15);
+<<<<<<< HEAD
 	OFFSET(TDX_HYPERCALL_rdi, tdx_hypercall_args, rdi);
 	OFFSET(TDX_HYPERCALL_rsi, tdx_hypercall_args, rsi);
 	OFFSET(TDX_HYPERCALL_rbx, tdx_hypercall_args, rbx);
 	OFFSET(TDX_HYPERCALL_rdx, tdx_hypercall_args, rdx);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	BLANK();
 	OFFSET(BP_scratch, boot_params, scratch);
@@ -114,6 +127,7 @@ static void __used common(void)
 	OFFSET(TSS_sp0, tss_struct, x86_tss.sp0);
 	OFFSET(TSS_sp1, tss_struct, x86_tss.sp1);
 	OFFSET(TSS_sp2, tss_struct, x86_tss.sp2);
+<<<<<<< HEAD
 	OFFSET(X86_top_of_stack, pcpu_hot, top_of_stack);
 	OFFSET(X86_current_task, pcpu_hot, current_task);
 #ifdef CONFIG_CALL_DEPTH_TRACKING
@@ -127,4 +141,11 @@ static void __used common(void)
 	OFFSET(ARIA_CTX_rounds, aria_ctx, rounds);
 #endif
 
+=======
+
+	if (IS_ENABLED(CONFIG_KVM_INTEL)) {
+		BLANK();
+		OFFSET(VMX_spec_ctrl, vcpu_vmx, spec_ctrl);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }

@@ -123,7 +123,10 @@
 
 		A53_L2: l2-cache0 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-unified;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			cache-level = <2>;
 			cache-size = <0x80000>;
 			cache-line-size = <64>;
@@ -380,8 +383,11 @@
 				compatible = "fsl,imx8mp-tmu";
 				reg = <0x30260000 0x10000>;
 				clocks = <&clk IMX8MP_CLK_TSENSOR_ROOT>;
+<<<<<<< HEAD
 				nvmem-cells = <&tmu_calib>;
 				nvmem-cell-names = "calib";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				#thermal-sensor-cells = <1>;
 			};
 
@@ -414,7 +420,11 @@
 				reg = <0x30330000 0x10000>;
 			};
 
+<<<<<<< HEAD
 			gpr: syscon@30340000 {
+=======
+			gpr: iomuxc-gpr@30340000 {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "fsl,imx8mp-iomuxc-gpr", "syscon";
 				reg = <0x30340000 0x10000>;
 			};
@@ -427,6 +437,7 @@
 				#address-cells = <1>;
 				#size-cells = <1>;
 
+<<<<<<< HEAD
 				/*
 				 * The register address below maps to the MX8M
 				 * Fusemap Description Table entries this way.
@@ -465,6 +476,29 @@
 				compatible = "fsl,imx8mp-anatop", "fsl,imx8mm-anatop";
 				reg = <0x30360000 0x10000>;
 				#clock-cells = <1>;
+=======
+				imx8mp_uid: unique-id@420 {
+					reg = <0x8 0x8>;
+				};
+
+				cpu_speed_grade: speed-grade@10 {
+					reg = <0x10 4>;
+				};
+
+				eth_mac1: mac-address@90 {
+					reg = <0x90 6>;
+				};
+
+				eth_mac2: mac-address@96 {
+					reg = <0x96 6>;
+				};
+			};
+
+			anatop: anatop@30360000 {
+				compatible = "fsl,imx8mp-anatop", "fsl,imx8mm-anatop",
+					     "syscon";
+				reg = <0x30360000 0x10000>;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			snvs: snvs@30370000 {
@@ -543,7 +577,10 @@
 				compatible = "fsl,imx8mp-gpc";
 				reg = <0x303a0000 0x1000>;
 				interrupt-parent = <&gic>;
+<<<<<<< HEAD
 				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				interrupt-controller;
 				#interrupt-cells = <3>;
 
@@ -610,7 +647,11 @@
 						reg = <IMX8MP_POWER_DOMAIN_MIPI_PHY2>;
 					};
 
+<<<<<<< HEAD
 					pgc_hsiomix: power-domain@17 {
+=======
+					pgc_hsiomix: power-domains@17 {
+>>>>>>> b7ba80a49124 (Commit)
 						#power-domain-cells = <0>;
 						reg = <IMX8MP_POWER_DOMAIN_HSIOMIX>;
 						clocks = <&clk IMX8MP_CLK_HSIO_AXI>,
@@ -652,6 +693,7 @@
 						reg = <IMX8MP_POWER_DOMAIN_VPU_VC8000E>;
 						clocks = <&clk IMX8MP_CLK_VPU_VC8KE_ROOT>;
 					};
+<<<<<<< HEAD
 
 					pgc_mlmix: power-domain@24 {
 						#power-domain-cells = <0>;
@@ -660,6 +702,8 @@
 							 <&clk IMX8MP_CLK_ML_AHB>,
 							 <&clk IMX8MP_CLK_NPU_ROOT>;
 					};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				};
 			};
 		};
@@ -731,6 +775,7 @@
 			#size-cells = <1>;
 			ranges;
 
+<<<<<<< HEAD
 			spba-bus@30800000 {
 				compatible = "fsl,spba-bus", "simple-bus";
 				reg = <0x30800000 0x100000>;
@@ -854,6 +899,114 @@
 					fsl,stop-mode = <&gpr 0x10 5>;
 					status = "disabled";
 				};
+=======
+			ecspi1: spi@30820000 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				compatible = "fsl,imx8mp-ecspi", "fsl,imx51-ecspi";
+				reg = <0x30820000 0x10000>;
+				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+				clocks = <&clk IMX8MP_CLK_ECSPI1_ROOT>,
+					 <&clk IMX8MP_CLK_ECSPI1_ROOT>;
+				clock-names = "ipg", "per";
+				dmas = <&sdma1 0 7 1>, <&sdma1 1 7 2>;
+				dma-names = "rx", "tx";
+				status = "disabled";
+			};
+
+			ecspi2: spi@30830000 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				compatible = "fsl,imx8mp-ecspi", "fsl,imx51-ecspi";
+				reg = <0x30830000 0x10000>;
+				interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+				clocks = <&clk IMX8MP_CLK_ECSPI2_ROOT>,
+					 <&clk IMX8MP_CLK_ECSPI2_ROOT>;
+				clock-names = "ipg", "per";
+				dmas = <&sdma1 2 7 1>, <&sdma1 3 7 2>;
+				dma-names = "rx", "tx";
+				status = "disabled";
+			};
+
+			ecspi3: spi@30840000 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				compatible = "fsl,imx8mp-ecspi", "fsl,imx51-ecspi";
+				reg = <0x30840000 0x10000>;
+				interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+				clocks = <&clk IMX8MP_CLK_ECSPI3_ROOT>,
+					 <&clk IMX8MP_CLK_ECSPI3_ROOT>;
+				clock-names = "ipg", "per";
+				dmas = <&sdma1 4 7 1>, <&sdma1 5 7 2>;
+				dma-names = "rx", "tx";
+				status = "disabled";
+			};
+
+			uart1: serial@30860000 {
+				compatible = "fsl,imx8mp-uart", "fsl,imx6q-uart";
+				reg = <0x30860000 0x10000>;
+				interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+				clocks = <&clk IMX8MP_CLK_UART1_ROOT>,
+					 <&clk IMX8MP_CLK_UART1_ROOT>;
+				clock-names = "ipg", "per";
+				dmas = <&sdma1 22 4 0>, <&sdma1 23 4 0>;
+				dma-names = "rx", "tx";
+				status = "disabled";
+			};
+
+			uart3: serial@30880000 {
+				compatible = "fsl,imx8mp-uart", "fsl,imx6q-uart";
+				reg = <0x30880000 0x10000>;
+				interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+				clocks = <&clk IMX8MP_CLK_UART3_ROOT>,
+					 <&clk IMX8MP_CLK_UART3_ROOT>;
+				clock-names = "ipg", "per";
+				dmas = <&sdma1 26 4 0>, <&sdma1 27 4 0>;
+				dma-names = "rx", "tx";
+				status = "disabled";
+			};
+
+			uart2: serial@30890000 {
+				compatible = "fsl,imx8mp-uart", "fsl,imx6q-uart";
+				reg = <0x30890000 0x10000>;
+				interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+				clocks = <&clk IMX8MP_CLK_UART2_ROOT>,
+					 <&clk IMX8MP_CLK_UART2_ROOT>;
+				clock-names = "ipg", "per";
+				dmas = <&sdma1 24 4 0>, <&sdma1 25 4 0>;
+				dma-names = "rx", "tx";
+				status = "disabled";
+			};
+
+			flexcan1: can@308c0000 {
+				compatible = "fsl,imx8mp-flexcan";
+				reg = <0x308c0000 0x10000>;
+				interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
+				clocks = <&clk IMX8MP_CLK_IPG_ROOT>,
+					 <&clk IMX8MP_CLK_CAN1_ROOT>;
+				clock-names = "ipg", "per";
+				assigned-clocks = <&clk IMX8MP_CLK_CAN1>;
+				assigned-clock-parents = <&clk IMX8MP_SYS_PLL1_40M>;
+				assigned-clock-rates = <40000000>;
+				fsl,clk-source = /bits/ 8 <0>;
+				fsl,stop-mode = <&gpr 0x10 4>;
+				status = "disabled";
+			};
+
+			flexcan2: can@308d0000 {
+				compatible = "fsl,imx8mp-flexcan";
+				reg = <0x308d0000 0x10000>;
+				interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
+				clocks = <&clk IMX8MP_CLK_IPG_ROOT>,
+					 <&clk IMX8MP_CLK_CAN2_ROOT>;
+				clock-names = "ipg", "per";
+				assigned-clocks = <&clk IMX8MP_CLK_CAN2>;
+				assigned-clock-parents = <&clk IMX8MP_SYS_PLL1_40M>;
+				assigned-clock-rates = <40000000>;
+				fsl,clk-source = /bits/ 8 <0>;
+				fsl,stop-mode = <&gpr 0x10 5>;
+				status = "disabled";
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			crypto: crypto@30900000 {
@@ -1109,11 +1262,19 @@
 			noc_opp_table: opp-table {
 				compatible = "operating-points-v2";
 
+<<<<<<< HEAD
 				opp-200000000 {
 					opp-hz = /bits/ 64 <200000000>;
 				};
 
 				opp-1000000000 {
+=======
+				opp-200M {
+					opp-hz = /bits/ 64 <200000000>;
+				};
+
+				opp-1000M {
+>>>>>>> b7ba80a49124 (Commit)
 					opp-hz = /bits/ 64 <1000000000>;
 				};
 			};
@@ -1126,6 +1287,7 @@
 			#size-cells = <1>;
 			ranges;
 
+<<<<<<< HEAD
 			lcdif2: display-controller@32e90000 {
 				compatible = "fsl,imx8mp-lcdif";
 				reg = <0x32e90000 0x238>;
@@ -1149,12 +1311,17 @@
 				};
 			};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			media_blk_ctrl: blk-ctrl@32ec0000 {
 				compatible = "fsl,imx8mp-media-blk-ctrl",
 					     "syscon";
 				reg = <0x32ec0000 0x10000>;
+<<<<<<< HEAD
 				#address-cells = <1>;
 				#size-cells = <1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				power-domains = <&pgc_mediamix>,
 						<&pgc_mipi_phy1>,
 						<&pgc_mipi_phy1>,
@@ -1199,6 +1366,7 @@
 				assigned-clock-rates = <500000000>, <200000000>;
 
 				#power-domain-cells = <1>;
+<<<<<<< HEAD
 
 				lvds_bridge: bridge@5c {
 					compatible = "fsl,imx8mp-ldb";
@@ -1237,6 +1405,8 @@
 						};
 					};
 				};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			pcie_phy: pcie-phy@32f00000 {
@@ -1267,7 +1437,10 @@
 						<&noc IMX8MP_ICM_PCIE &noc IMX8MP_ICN_HSIO>;
 				interconnect-names = "noc-pcie", "usb1", "usb2", "pcie";
 				#power-domain-cells = <1>;
+<<<<<<< HEAD
 				#clock-cells = <0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 
@@ -1275,6 +1448,7 @@
 			compatible = "fsl,imx8mp-pcie";
 			reg = <0x33800000 0x400000>, <0x1ff00000 0x80000>;
 			reg-names = "dbi", "config";
+<<<<<<< HEAD
 			clocks = <&clk IMX8MP_CLK_HSIO_ROOT>,
 				 <&clk IMX8MP_CLK_HSIO_AXI>,
 				 <&clk IMX8MP_CLK_PCIE_ROOT>;
@@ -1282,6 +1456,8 @@
 			assigned-clocks = <&clk IMX8MP_CLK_PCIE_AUX>;
 			assigned-clock-rates = <10000000>;
 			assigned-clock-parents = <&clk IMX8MP_SYS_PLL2_50M>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			#address-cells = <3>;
 			#size-cells = <2>;
 			device_type = "pci";
@@ -1309,6 +1485,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		pcie_ep: pcie-ep@33800000 {
 			compatible = "fsl,imx8mp-pcie-ep";
 			reg = <0x33800000 0x000400000>, <0x18000000 0x08000000>;
@@ -1335,6 +1512,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		gpu3d: gpu@38000000 {
 			compatible = "vivante,gc";
 			reg = <0x38000000 0x8000>;
@@ -1366,6 +1545,7 @@
 			power-domains = <&pgc_gpu2d>;
 		};
 
+<<<<<<< HEAD
 		vpu_g1: video-codec@38300000 {
 			compatible = "nxp,imx8mm-vpu-g1";
 			reg = <0x38300000 0x10000>;
@@ -1388,6 +1568,8 @@
 			power-domains = <&vpumix_blk_ctrl IMX8MP_VPUBLK_PD_G2>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		vpumix_blk_ctrl: blk-ctrl@38330000 {
 			compatible = "fsl,imx8mp-vpu-blk-ctrl", "syscon";
 			reg = <0x38330000 0x100>;
@@ -1399,9 +1581,12 @@
 				 <&clk IMX8MP_CLK_VPU_G2_ROOT>,
 				 <&clk IMX8MP_CLK_VPU_VC8KE_ROOT>;
 			clock-names = "g1", "g2", "vc8000e";
+<<<<<<< HEAD
 			assigned-clocks = <&clk IMX8MP_CLK_VPU_BUS>, <&clk IMX8MP_VPU_PLL>;
 			assigned-clock-parents = <&clk IMX8MP_VPU_PLL_OUT>;
 			assigned-clock-rates = <600000000>, <600000000>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			interconnects = <&noc IMX8MP_ICM_VPU_G1 &noc IMX8MP_ICN_VIDEO>,
 					<&noc IMX8MP_ICM_VPU_G2 &noc IMX8MP_ICN_VIDEO>,
 					<&noc IMX8MP_ICM_VPU_H1 &noc IMX8MP_ICN_VIDEO>;
@@ -1447,7 +1632,11 @@
 			reg = <0x32f10100 0x8>,
 			      <0x381f0000 0x20>;
 			clocks = <&clk IMX8MP_CLK_HSIO_ROOT>,
+<<<<<<< HEAD
 				 <&clk IMX8MP_CLK_USB_SUSP>;
+=======
+				 <&clk IMX8MP_CLK_USB_ROOT>;
+>>>>>>> b7ba80a49124 (Commit)
 			clock-names = "hsio", "suspend";
 			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
 			power-domains = <&hsio_blk_ctrl IMX8MP_HSIOBLK_PD_USB>;
@@ -1460,14 +1649,24 @@
 			usb_dwc3_0: usb@38100000 {
 				compatible = "snps,dwc3";
 				reg = <0x38100000 0x10000>;
+<<<<<<< HEAD
 				clocks = <&clk IMX8MP_CLK_USB_ROOT>,
 					 <&clk IMX8MP_CLK_USB_CORE_REF>,
 					 <&clk IMX8MP_CLK_USB_SUSP>;
+=======
+				clocks = <&clk IMX8MP_CLK_HSIO_AXI>,
+					 <&clk IMX8MP_CLK_USB_CORE_REF>,
+					 <&clk IMX8MP_CLK_USB_ROOT>;
+>>>>>>> b7ba80a49124 (Commit)
 				clock-names = "bus_early", "ref", "suspend";
 				interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
 				phys = <&usb3_phy0>, <&usb3_phy0>;
 				phy-names = "usb2-phy", "usb3-phy";
+<<<<<<< HEAD
 				snps,gfladj-refclk-lpm-sel-quirk;
+=======
+				snps,dis-u2-freeclk-exists-quirk;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 		};
@@ -1489,7 +1688,11 @@
 			reg = <0x32f10108 0x8>,
 			      <0x382f0000 0x20>;
 			clocks = <&clk IMX8MP_CLK_HSIO_ROOT>,
+<<<<<<< HEAD
 				 <&clk IMX8MP_CLK_USB_SUSP>;
+=======
+				 <&clk IMX8MP_CLK_USB_ROOT>;
+>>>>>>> b7ba80a49124 (Commit)
 			clock-names = "hsio", "suspend";
 			interrupts = <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
 			power-domains = <&hsio_blk_ctrl IMX8MP_HSIOBLK_PD_USB>;
@@ -1502,14 +1705,24 @@
 			usb_dwc3_1: usb@38200000 {
 				compatible = "snps,dwc3";
 				reg = <0x38200000 0x10000>;
+<<<<<<< HEAD
 				clocks = <&clk IMX8MP_CLK_USB_ROOT>,
 					 <&clk IMX8MP_CLK_USB_CORE_REF>,
 					 <&clk IMX8MP_CLK_USB_SUSP>;
+=======
+				clocks = <&clk IMX8MP_CLK_HSIO_AXI>,
+					 <&clk IMX8MP_CLK_USB_CORE_REF>,
+					 <&clk IMX8MP_CLK_USB_ROOT>;
+>>>>>>> b7ba80a49124 (Commit)
 				clock-names = "bus_early", "ref", "suspend";
 				interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
 				phys = <&usb3_phy1>, <&usb3_phy1>;
 				phy-names = "usb2-phy", "usb3-phy";
+<<<<<<< HEAD
 				snps,gfladj-refclk-lpm-sel-quirk;
+=======
+				snps,dis-u2-freeclk-exists-quirk;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 

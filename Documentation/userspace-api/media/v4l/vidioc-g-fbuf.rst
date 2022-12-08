@@ -49,9 +49,12 @@ of a graphics card. A non-destructive overlay blends video images into a
 VGA signal or graphics into a video signal. *Video Output Overlays* are
 always non-destructive.
 
+<<<<<<< HEAD
 Destructive overlay support has been removed: with modern GPUs and CPUs
 this is no longer needed, and it was always a very dangerous feature.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 To get the current parameters applications call the :ref:`VIDIOC_G_FBUF <VIDIOC_G_FBUF>`
 ioctl with a pointer to a struct :c:type:`v4l2_framebuffer`
 structure. The driver fills all fields of the structure or returns an
@@ -66,12 +69,25 @@ this structure, the driver prepares for the overlay and returns the
 framebuffer parameters as :ref:`VIDIOC_G_FBUF <VIDIOC_G_FBUF>` does, or it returns an error
 code.
 
+<<<<<<< HEAD
 To set the parameters for a *Video Capture Overlay*
+=======
+To set the parameters for a *non-destructive Video Overlay*,
+>>>>>>> b7ba80a49124 (Commit)
 applications must initialize the ``flags`` field, the ``fmt``
 substructure, and call :ref:`VIDIOC_S_FBUF <VIDIOC_G_FBUF>`. Again the driver prepares for
 the overlay and returns the framebuffer parameters as :ref:`VIDIOC_G_FBUF <VIDIOC_G_FBUF>`
 does, or it returns an error code.
 
+<<<<<<< HEAD
+=======
+For a *destructive Video Overlay* applications must additionally provide
+a ``base`` address. Setting up a DMA to a random memory location can
+jeopardize the system security, its stability or even damage the
+hardware, therefore only the superuser can set the parameters for a
+destructive video overlay.
+
+>>>>>>> b7ba80a49124 (Commit)
 .. tabularcolumns:: |p{3.5cm}|p{3.5cm}|p{3.5cm}|p{6.6cm}|
 
 .. c:type:: v4l2_framebuffer
@@ -97,6 +113,7 @@ does, or it returns an error code.
       - ``base``
       -
       - Physical base address of the framebuffer, that is the address of
+<<<<<<< HEAD
 	the pixel in the top left corner of the framebuffer.
 	For :ref:`VIDIOC_S_FBUF <VIDIOC_G_FBUF>` this field is no longer supported
 	and the kernel will always set this to NULL.
@@ -105,6 +122,19 @@ does, or it returns an error code.
 	find the corresponding Linux framebuffer device (see
 	:ref:`osd`). For *Video Capture Overlays* this field will always be
 	NULL.
+=======
+	the pixel in the top left corner of the framebuffer. [#f1]_
+    * -
+      -
+      -
+      - This field is irrelevant to *non-destructive Video Overlays*. For
+	*destructive Video Overlays* applications must provide a base
+	address. The driver may accept only base addresses which are a
+	multiple of two, four or eight bytes. For *Video Output Overlays*
+	the driver must return a valid base address, so applications can
+	find the corresponding Linux framebuffer device (see
+	:ref:`osd`).
+>>>>>>> b7ba80a49124 (Commit)
     * - struct
       - ``fmt``
       -
@@ -130,7 +160,12 @@ does, or it returns an error code.
     * -
       -
       -
+<<<<<<< HEAD
       - For *Video Output Overlays* the driver must return a valid
+=======
+      - For *destructive Video Overlays* applications must initialize this
+	field. For *Video Output Overlays* the driver must return a valid
+>>>>>>> b7ba80a49124 (Commit)
 	format.
     * -
       -
@@ -158,6 +193,16 @@ does, or it returns an error code.
 
 	This field is irrelevant to *non-destructive Video Overlays*.
 
+<<<<<<< HEAD
+=======
+	For *destructive Video Overlays* both applications and drivers can
+	set this field to request padding bytes at the end of each line.
+	Drivers however may ignore the requested value, returning
+	``width`` times bytes-per-pixel or a larger value required by the
+	hardware. That implies applications can just set this field to
+	zero to get a reasonable default.
+
+>>>>>>> b7ba80a49124 (Commit)
 	For *Video Output Overlays* the driver must return a valid value.
 
 	Video hardware may access padding bytes, therefore they must
@@ -176,8 +221,14 @@ does, or it returns an error code.
     * -
       - __u32
       - ``sizeimage``
+<<<<<<< HEAD
       - This field is irrelevant to *non-destructive Video Overlays*.
 	For *Video Output Overlays* the driver must return a valid
+=======
+      - This field is irrelevant to *non-destructive Video Overlays*. For
+	*destructive Video Overlays* applications must initialize this
+	field. For *Video Output Overlays* the driver must return a valid
+>>>>>>> b7ba80a49124 (Commit)
 	format.
 
 	Together with ``base`` it defines the framebuffer memory
@@ -217,11 +268,17 @@ does, or it returns an error code.
     * - ``V4L2_FBUF_CAP_LIST_CLIPPING``
       - 0x0004
       - The device supports clipping using a list of clip rectangles.
+<<<<<<< HEAD
         Note that this is no longer supported.
     * - ``V4L2_FBUF_CAP_BITMAP_CLIPPING``
       - 0x0008
       - The device supports clipping using a bit mask.
         Note that this is no longer supported.
+=======
+    * - ``V4L2_FBUF_CAP_BITMAP_CLIPPING``
+      - 0x0008
+      - The device supports clipping using a bit mask.
+>>>>>>> b7ba80a49124 (Commit)
     * - ``V4L2_FBUF_CAP_LOCAL_ALPHA``
       - 0x0010
       - The device supports clipping/blending using the alpha channel of
@@ -329,3 +386,13 @@ EPERM
 
 EINVAL
     The :ref:`VIDIOC_S_FBUF <VIDIOC_G_FBUF>` parameters are unsuitable.
+<<<<<<< HEAD
+=======
+
+.. [#f1]
+   A physical base address may not suit all platforms. GK notes in
+   theory we should pass something like PCI device + memory region +
+   offset instead. If you encounter problems please discuss on the
+   linux-media mailing list:
+   `https://linuxtv.org/lists.php <https://linuxtv.org/lists.php>`__.
+>>>>>>> b7ba80a49124 (Commit)

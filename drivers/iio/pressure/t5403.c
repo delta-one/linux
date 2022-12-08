@@ -208,9 +208,15 @@ static const struct iio_info t5403_info = {
 	.attrs = &t5403_attribute_group,
 };
 
+<<<<<<< HEAD
 static int t5403_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int t5403_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct t5403_data *data;
 	struct iio_dev *indio_dev;
 	int ret;
@@ -260,7 +266,11 @@ static struct i2c_driver t5403_driver = {
 	.driver = {
 		.name	= "t5403",
 	},
+<<<<<<< HEAD
 	.probe_new = t5403_probe,
+=======
+	.probe = t5403_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = t5403_id,
 };
 module_i2c_driver(t5403_driver);

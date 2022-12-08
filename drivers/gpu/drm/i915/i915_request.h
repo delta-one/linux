@@ -348,11 +348,14 @@ struct i915_request {
 #define	GUC_PRIO_FINI	0xfe
 	u8 guc_prio;
 
+<<<<<<< HEAD
 	/**
 	 * @hucq: wait queue entry used to wait on the HuC load to complete
 	 */
 	wait_queue_entry_t hucq;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	I915_SELFTEST_DECLARE(struct {
 		struct list_head link;
 		unsigned long delay;

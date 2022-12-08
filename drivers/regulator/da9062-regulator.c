@@ -1033,7 +1033,10 @@ static int da9062_regulator_probe(struct platform_device *pdev)
 static struct platform_driver da9062_regulator_driver = {
 	.driver = {
 		.name = "da9062-regulators",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = da9062_regulator_probe,
 };

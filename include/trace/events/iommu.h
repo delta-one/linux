@@ -76,6 +76,16 @@ DEFINE_EVENT(iommu_device_event, attach_device_to_domain,
 	TP_ARGS(dev)
 );
 
+<<<<<<< HEAD
+=======
+DEFINE_EVENT(iommu_device_event, detach_device_from_domain,
+
+	TP_PROTO(struct device *dev),
+
+	TP_ARGS(dev)
+);
+
+>>>>>>> b7ba80a49124 (Commit)
 TRACE_EVENT(map,
 
 	TP_PROTO(unsigned long iova, phys_addr_t paddr, size_t size),

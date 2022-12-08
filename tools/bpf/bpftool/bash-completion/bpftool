@@ -261,7 +261,11 @@ _bpftool()
     # Deal with options
     if [[ ${words[cword]} == -* ]]; then
         local c='--version --json --pretty --bpffs --mapcompat --debug \
+<<<<<<< HEAD
 	       --use-loader --base-btf'
+=======
+	       --use-loader --base-btf --legacy'
+>>>>>>> b7ba80a49124 (Commit)
         COMPREPLY=( $( compgen -W "$c" -- "$cur" ) )
         return 0
     fi
@@ -505,7 +509,10 @@ _bpftool()
                             _bpftool_once_attr 'type'
                             _bpftool_once_attr 'dev'
                             _bpftool_once_attr 'pinmaps'
+<<<<<<< HEAD
                             _bpftool_once_attr 'autoattach'
+=======
+>>>>>>> b7ba80a49124 (Commit)
                             return 0
                             ;;
                     esac

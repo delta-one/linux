@@ -146,6 +146,10 @@
 
 &blsp1_spi1 {
 	/* On Low speed expansion */
+<<<<<<< HEAD
+=======
+	label = "LS-SPI0";
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 
@@ -182,6 +186,10 @@
 
 &blsp2_spi6 {
 	/* On High speed expansion */
+<<<<<<< HEAD
+=======
+	label = "HS-SPI1";
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 
@@ -420,6 +428,7 @@
 		"NC", /* GPIO_148 */
 		"NC"; /* GPIO_149 */
 
+<<<<<<< HEAD
 	sdc2_cd_on: sdc2-cd-on-state {
 		pins = "gpio38";
 		function = "gpio";
@@ -460,6 +469,84 @@
 		function = "hdmi_ddc";
 		drive-strength = <2>;
 		bias-pull-down;
+=======
+	sdc2_cd_on: sdc2_cd_on {
+		mux {
+			pins = "gpio38";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio38";
+			bias-pull-up;		/* pull up */
+			drive-strength = <16>;	/* 16 MA */
+		};
+	};
+
+	sdc2_cd_off: sdc2_cd_off {
+		mux {
+			pins = "gpio38";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio38";
+			bias-pull-up;		/* pull up */
+			drive-strength = <2>;	/* 2 MA */
+		};
+	};
+
+	hdmi_hpd_active: hdmi_hpd_active {
+		mux {
+			pins = "gpio34";
+			function = "hdmi_hot";
+		};
+
+		config {
+			pins = "gpio34";
+			bias-pull-down;
+			drive-strength = <16>;
+		};
+	};
+
+	hdmi_hpd_suspend: hdmi_hpd_suspend {
+		mux {
+			pins = "gpio34";
+			function = "hdmi_hot";
+		};
+
+		config {
+			pins = "gpio34";
+			bias-pull-down;
+			drive-strength = <2>;
+		};
+	};
+
+	hdmi_ddc_active: hdmi_ddc_active {
+		mux {
+			pins = "gpio32", "gpio33";
+			function = "hdmi_ddc";
+		};
+
+		config {
+			pins = "gpio32", "gpio33";
+			drive-strength = <2>;
+			bias-pull-up;
+		};
+	};
+
+	hdmi_ddc_suspend: hdmi_ddc_suspend {
+		mux {
+			pins = "gpio32", "gpio33";
+			function = "hdmi_ddc";
+		};
+
+		config {
+			pins = "gpio32", "gpio33";
+			drive-strength = <2>;
+			bias-pull-down;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -522,7 +609,11 @@
 			pins = "gpio5";
 			function = PMIC_GPIO_FUNC_NORMAL;
 			output-low;
+<<<<<<< HEAD
 			power-source = <PM8994_GPIO_S4>; /* 1.8V */
+=======
+			power-source = <2>; // PM8994_GPIO_S4, 1.8V
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -531,7 +622,11 @@
 			pins = "gpio19";
 			function = PMIC_GPIO_FUNC_NORMAL;
 			output-low;
+<<<<<<< HEAD
 			power-source = <PM8994_GPIO_S4>; /* 1.8V */
+=======
+			power-source = <PM8994_GPIO_S4>; // 1.8V
+>>>>>>> b7ba80a49124 (Commit)
 			qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
 			bias-pull-down;
 		};
@@ -542,7 +637,11 @@
 			pins = "gpio8";
 			function = PMIC_GPIO_FUNC_NORMAL;
 			output-low;
+<<<<<<< HEAD
 			power-source = <PM8994_GPIO_S4>; /* 1.8V */
+=======
+			power-source = <PM8994_GPIO_S4>; // 1.8V
+>>>>>>> b7ba80a49124 (Commit)
 			qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
 			bias-pull-down;
 		};
@@ -552,7 +651,11 @@
 		pinconf {
 			pins = "gpio15";
 			function = "func1";
+<<<<<<< HEAD
 			power-source = <PM8994_GPIO_S4>; /* 1.8V */
+=======
+			power-source = <PM8994_GPIO_S4>; // 1.8V
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -564,7 +667,11 @@
 			drive-push-pull;
 			bias-pull-up;
 			qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
+<<<<<<< HEAD
 			power-source = <PM8994_GPIO_S4>; /* 1.8V */
+=======
+			power-source = <PM8994_GPIO_S4>; // 1.8V
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -585,7 +692,11 @@
 			input-enable;
 			bias-pull-down;
 			qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
+<<<<<<< HEAD
 			power-source = <PM8994_GPIO_S4>; /* 1.8V */
+=======
+			power-source = <PM8994_GPIO_S4>; // 1.8V
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };
@@ -641,7 +752,11 @@
 			input-enable;
 			bias-pull-down;
 			qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
+<<<<<<< HEAD
 			power-source = <PM8994_GPIO_S4>; /* 1.8V */
+=======
+			power-source = <PM8994_GPIO_S4>; // 1.8V
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };
@@ -713,7 +828,11 @@
 };
 
 &rpm_requests {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pm8994-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pm8994-regulators";
 
 		vdd_s1-supply = <&vph_pwr>;
@@ -925,7 +1044,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-1 {
+=======
+	pmi8994-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pmi8994-regulators";
 
 		vdd_s1-supply = <&vph_pwr>;
@@ -972,6 +1095,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &slim_msm {
 	status = "okay";
 
@@ -1016,6 +1140,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &sound {
 	compatible = "qcom,apq8096-sndcard";
 	model = "DB820c";
@@ -1068,7 +1194,11 @@
 
 		platform {
 			sound-dai = <&q6routing>;
+<<<<<<< HEAD
 		};
+=======
+	};
+>>>>>>> b7ba80a49124 (Commit)
 
 		codec {
 			sound-dai = <&wcd9335 AIF4_PB>;
@@ -1137,8 +1267,27 @@
 
 	vdda-phy-supply = <&vreg_l28a_0p925>;
 	vdda-pll-supply = <&vreg_l12a_1p8>;
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &venus {
 	status = "okay";
 };
+<<<<<<< HEAD
+=======
+
+&wcd9335 {
+	clock-names = "mclk", "slimbus";
+	clocks = <&div1_mclk>,
+		 <&rpmcc RPM_SMD_BB_CLK1>;
+
+	vdd-buck-supply = <&vreg_s4a_1p8>;
+	vdd-buck-sido-supply = <&vreg_s4a_1p8>;
+	vdd-tx-supply = <&vreg_s4a_1p8>;
+	vdd-rx-supply = <&vreg_s4a_1p8>;
+	vdd-io-supply = <&vreg_s4a_1p8>;
+};
+>>>>>>> b7ba80a49124 (Commit)

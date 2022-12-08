@@ -305,10 +305,17 @@ static int nxp_spifi_setup_flash(struct nxp_spifi *spifi,
 		}
 	}
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "spi-cpha"))
 		mode |= SPI_CPHA;
 
 	if (of_property_read_bool(np, "spi-cpol"))
+=======
+	if (of_find_property(np, "spi-cpha", NULL))
+		mode |= SPI_CPHA;
+
+	if (of_find_property(np, "spi-cpol", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		mode |= SPI_CPOL;
 
 	/* Setup control register defaults */

@@ -27,7 +27,11 @@ struct mgmt_mesh_tx {
 	struct sock *sk;
 	u8 handle;
 	u8 instance;
+<<<<<<< HEAD
 	u8 param[sizeof(struct mgmt_cp_mesh_send) + 31];
+=======
+	u8 param[sizeof(struct mgmt_cp_mesh_send) + 29];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mgmt_pending_cmd {

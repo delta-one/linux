@@ -8,6 +8,12 @@
  * out of the joystick port into the syslog ...
  */
 
+<<<<<<< HEAD
+=======
+/*
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/gameport.h>
 #include <linux/kernel.h>

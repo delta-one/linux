@@ -1677,7 +1677,12 @@ static struct fwnode_handle *fusb302_fwnode_get(struct device *dev)
 	return fwnode;
 }
 
+<<<<<<< HEAD
 static int fusb302_probe(struct i2c_client *client)
+=======
+static int fusb302_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fusb302_chip *chip;
 	struct i2c_adapter *adapter = client->adapter;
@@ -1742,8 +1747,14 @@ static int fusb302_probe(struct i2c_client *client)
 	chip->tcpm_port = tcpm_register_port(&client->dev, &chip->tcpc_dev);
 	if (IS_ERR(chip->tcpm_port)) {
 		fwnode_handle_put(chip->tcpc_dev.fwnode);
+<<<<<<< HEAD
 		ret = dev_err_probe(dev, PTR_ERR(chip->tcpm_port),
 				    "cannot register tcpm port\n");
+=======
+		ret = PTR_ERR(chip->tcpm_port);
+		if (ret != -EPROBE_DEFER)
+			dev_err(dev, "cannot register tcpm port, ret=%d", ret);
+>>>>>>> b7ba80a49124 (Commit)
 		goto destroy_workqueue;
 	}
 
@@ -1813,7 +1824,11 @@ static int fusb302_pm_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct of_device_id fusb302_dt_match[] __maybe_unused = {
+=======
+static const struct of_device_id fusb302_dt_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{.compatible = "fcs,fusb302"},
 	{},
 };
@@ -1836,7 +1851,11 @@ static struct i2c_driver fusb302_driver = {
 		   .pm = &fusb302_pm_ops,
 		   .of_match_table = of_match_ptr(fusb302_dt_match),
 		   },
+<<<<<<< HEAD
 	.probe_new = fusb302_probe,
+=======
+	.probe = fusb302_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = fusb302_remove,
 	.id_table = fusb302_i2c_device_id,
 };

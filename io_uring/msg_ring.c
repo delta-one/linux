@@ -13,6 +13,7 @@
 #include "filetable.h"
 #include "msg_ring.h"
 
+<<<<<<< HEAD
 
 /* All valid masks for MSG_RING */
 #define IORING_MSG_RING_MASK		(IORING_MSG_RING_CQE_SKIP | \
@@ -22,10 +23,15 @@ struct io_msg {
 	struct file			*file;
 	struct file			*src_file;
 	struct callback_head		tw;
+=======
+struct io_msg {
+	struct file			*file;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 user_data;
 	u32 len;
 	u32 cmd;
 	u32 src_fd;
+<<<<<<< HEAD
 	union {
 		u32 dst_fd;
 		u32 cqe_flags;
@@ -39,6 +45,37 @@ static void io_double_unlock_ctx(struct io_ring_ctx *octx)
 }
 
 static int io_double_lock_ctx(struct io_ring_ctx *octx,
+=======
+	u32 dst_fd;
+	u32 flags;
+};
+
+static int io_msg_ring_data(struct io_kiocb *req)
+{
+	struct io_ring_ctx *target_ctx = req->file->private_data;
+	struct io_msg *msg = io_kiocb_to_cmd(req, struct io_msg);
+
+	if (msg->src_fd || msg->dst_fd || msg->flags)
+		return -EINVAL;
+
+	if (io_post_aux_cqe(target_ctx, msg->user_data, msg->len, 0, true))
+		return 0;
+
+	return -EOVERFLOW;
+}
+
+static void io_double_unlock_ctx(struct io_ring_ctx *ctx,
+				 struct io_ring_ctx *octx,
+				 unsigned int issue_flags)
+{
+	if (issue_flags & IO_URING_F_UNLOCKED)
+		mutex_unlock(&ctx->uring_lock);
+	mutex_unlock(&octx->uring_lock);
+}
+
+static int io_double_lock_ctx(struct io_ring_ctx *ctx,
+			      struct io_ring_ctx *octx,
+>>>>>>> b7ba80a49124 (Commit)
 			      unsigned int issue_flags)
 {
 	/*
@@ -51,6 +88,7 @@ static int io_double_lock_ctx(struct io_ring_ctx *octx,
 			return -EAGAIN;
 		return 0;
 	}
+<<<<<<< HEAD
 	mutex_lock(&octx->uring_lock);
 	return 0;
 }
@@ -222,11 +260,27 @@ static void io_msg_tw_fd_complete(struct callback_head *head)
 	io_req_queue_tw_complete(req, ret);
 }
 
+=======
+
+	/* Always grab smallest value ctx first. We know ctx != octx. */
+	if (ctx < octx) {
+		mutex_lock(&ctx->uring_lock);
+		mutex_lock(&octx->uring_lock);
+	} else {
+		mutex_lock(&octx->uring_lock);
+		mutex_lock(&ctx->uring_lock);
+	}
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int io_msg_send_fd(struct io_kiocb *req, unsigned int issue_flags)
 {
 	struct io_ring_ctx *target_ctx = req->file->private_data;
 	struct io_msg *msg = io_kiocb_to_cmd(req, struct io_msg);
 	struct io_ring_ctx *ctx = req->ctx;
+<<<<<<< HEAD
 	struct file *src_file = msg->src_file;
 
 	if (msg->len)
@@ -246,6 +300,48 @@ static int io_msg_send_fd(struct io_kiocb *req, unsigned int issue_flags)
 	if (io_msg_need_remote(target_ctx))
 		return io_msg_exec_remote(req, io_msg_tw_fd_complete);
 	return io_msg_install_complete(req, issue_flags);
+=======
+	unsigned long file_ptr;
+	struct file *src_file;
+	int ret;
+
+	if (target_ctx == ctx)
+		return -EINVAL;
+
+	ret = io_double_lock_ctx(ctx, target_ctx, issue_flags);
+	if (unlikely(ret))
+		return ret;
+
+	ret = -EBADF;
+	if (unlikely(msg->src_fd >= ctx->nr_user_files))
+		goto out_unlock;
+
+	msg->src_fd = array_index_nospec(msg->src_fd, ctx->nr_user_files);
+	file_ptr = io_fixed_file_slot(&ctx->file_table, msg->src_fd)->file_ptr;
+	src_file = (struct file *) (file_ptr & FFS_MASK);
+	get_file(src_file);
+
+	ret = __io_fixed_fd_install(target_ctx, src_file, msg->dst_fd);
+	if (ret < 0) {
+		fput(src_file);
+		goto out_unlock;
+	}
+
+	if (msg->flags & IORING_MSG_RING_CQE_SKIP)
+		goto out_unlock;
+
+	/*
+	 * If this fails, the target still received the file descriptor but
+	 * wasn't notified of the fact. This means that if this request
+	 * completes with -EOVERFLOW, then the sender must ensure that a
+	 * later IORING_OP_MSG_RING delivers the message.
+	 */
+	if (!io_post_aux_cqe(target_ctx, msg->user_data, msg->len, 0, true))
+		ret = -EOVERFLOW;
+out_unlock:
+	io_double_unlock_ctx(ctx, target_ctx, issue_flags);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int io_msg_ring_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
@@ -255,14 +351,21 @@ int io_msg_ring_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
 	if (unlikely(sqe->buf_index || sqe->personality))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	msg->src_file = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	msg->user_data = READ_ONCE(sqe->off);
 	msg->len = READ_ONCE(sqe->len);
 	msg->cmd = READ_ONCE(sqe->addr);
 	msg->src_fd = READ_ONCE(sqe->addr3);
 	msg->dst_fd = READ_ONCE(sqe->file_index);
 	msg->flags = READ_ONCE(sqe->msg_ring_flags);
+<<<<<<< HEAD
 	if (msg->flags & ~IORING_MSG_RING_MASK)
+=======
+	if (msg->flags & ~IORING_MSG_RING_CQE_SKIP)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	return 0;
@@ -279,7 +382,11 @@ int io_msg_ring(struct io_kiocb *req, unsigned int issue_flags)
 
 	switch (msg->cmd) {
 	case IORING_MSG_DATA:
+<<<<<<< HEAD
 		ret = io_msg_ring_data(req, issue_flags);
+=======
+		ret = io_msg_ring_data(req);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case IORING_MSG_SEND_FD:
 		ret = io_msg_send_fd(req, issue_flags);
@@ -290,11 +397,21 @@ int io_msg_ring(struct io_kiocb *req, unsigned int issue_flags)
 	}
 
 done:
+<<<<<<< HEAD
 	if (ret < 0) {
 		if (ret == -EAGAIN || ret == IOU_ISSUE_SKIP_COMPLETE)
 			return ret;
 		req_set_fail(req);
 	}
 	io_req_set_res(req, ret, 0);
+=======
+	if (ret < 0)
+		req_set_fail(req);
+	io_req_set_res(req, ret, 0);
+	/* put file to avoid an attempt to IOPOLL the req */
+	if (!(req->flags & REQ_F_FIXED_FILE))
+		io_put_file(req->file);
+	req->file = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	return IOU_OK;
 }

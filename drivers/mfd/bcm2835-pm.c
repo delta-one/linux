@@ -28,7 +28,11 @@ static const struct mfd_cell bcm2835_power_devs[] = {
 static int bcm2835_pm_get_pdata(struct platform_device *pdev,
 				struct bcm2835_pm *pm)
 {
+<<<<<<< HEAD
 	if (of_property_present(pm->dev->of_node, "reg-names")) {
+=======
+	if (of_find_property(pm->dev->of_node, "reg-names", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct resource *res;
 
 		pm->base = devm_platform_ioremap_resource_byname(pdev, "pm");
@@ -123,3 +127,7 @@ module_platform_driver(bcm2835_pm_driver);
 
 MODULE_AUTHOR("Eric Anholt <eric@anholt.net>");
 MODULE_DESCRIPTION("Driver for Broadcom BCM2835 PM MFD");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

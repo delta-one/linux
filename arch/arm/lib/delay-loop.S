@@ -8,10 +8,13 @@
 #include <asm/assembler.h>
 #include <asm/delay.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_RPC
 		.arch	armv4
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.text
 
 .LC0:		.word	loops_per_jiffy

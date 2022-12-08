@@ -36,7 +36,11 @@ static void tx_prepare(struct mbox_client *cl, void *m)
 {
 	struct scmi_mailbox *smbox = client_to_scmi_mailbox(cl);
 
+<<<<<<< HEAD
 	shmem_tx_prepare(smbox->shmem, m, smbox->cinfo);
+=======
+	shmem_tx_prepare(smbox->shmem, m);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void rx_callback(struct mbox_client *cl, void *m)
@@ -46,6 +50,7 @@ static void rx_callback(struct mbox_client *cl, void *m)
 	scmi_rx_callback(smbox->cinfo, shmem_read_header(smbox->shmem), NULL);
 }
 
+<<<<<<< HEAD
 static bool mailbox_chan_available(struct device_node *of_node, int idx)
 {
 	return !of_parse_phandle_with_args(of_node, "mboxes",
@@ -85,6 +90,14 @@ static int mailbox_chan_validate(struct device *cdev)
 	return ret;
 }
 
+=======
+static bool mailbox_chan_available(struct device *dev, int idx)
+{
+	return !of_parse_phandle_with_args(dev->of_node, "mboxes",
+					   "#mbox-cells", idx, NULL);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int mailbox_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
 			      bool tx)
 {
@@ -97,10 +110,13 @@ static int mailbox_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
 	resource_size_t size;
 	struct resource res;
 
+<<<<<<< HEAD
 	ret = mailbox_chan_validate(cdev);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	smbox = devm_kzalloc(dev, sizeof(*smbox), GFP_KERNEL);
 	if (!smbox)
 		return -ENOMEM;
@@ -157,6 +173,11 @@ static int mailbox_chan_free(int id, void *p, void *data)
 		smbox->cinfo = NULL;
 	}
 
+<<<<<<< HEAD
+=======
+	scmi_free_channel(cinfo, data, id);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

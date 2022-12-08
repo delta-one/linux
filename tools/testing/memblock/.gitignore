@@ -1,5 +1,8 @@
 main
 memblock.c
 linux/memblock.h
+<<<<<<< HEAD
 asm/asm.h
+=======
+>>>>>>> b7ba80a49124 (Commit)
 asm/cmpxchg.h

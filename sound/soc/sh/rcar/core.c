@@ -102,7 +102,10 @@ static const struct of_device_id rsnd_of_match[] = {
 	{ .compatible = "renesas,rcar_sound-gen1", .data = (void *)RSND_GEN1 },
 	{ .compatible = "renesas,rcar_sound-gen2", .data = (void *)RSND_GEN2 },
 	{ .compatible = "renesas,rcar_sound-gen3", .data = (void *)RSND_GEN3 },
+<<<<<<< HEAD
 	{ .compatible = "renesas,rcar_sound-gen4", .data = (void *)RSND_GEN4 },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Special Handling */
 	{ .compatible = "renesas,rcar_sound-r8a77990", .data = (void *)(RSND_GEN3 | RSND_SOC_E) },
 	{},
@@ -828,6 +831,7 @@ static int rsnd_soc_set_dai_tdm_slot(struct snd_soc_dai *dai,
 		break;
 	default:
 		/* use default */
+<<<<<<< HEAD
 		/*
 		 * Indicate warning if DT has "dai-tdm-slot-width"
 		 * but the value was not expected.
@@ -835,6 +839,8 @@ static int rsnd_soc_set_dai_tdm_slot(struct snd_soc_dai *dai,
 		if (slot_width)
 			dev_warn(dev, "unsupported TDM slot width (%d), force to use default 32\n",
 				 slot_width);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		slot_width = 32;
 	}
 
@@ -877,8 +883,12 @@ static unsigned int rsnd_soc_hw_rate_list[] = {
 
 static int rsnd_soc_hw_rule(struct rsnd_dai *rdai,
 			    unsigned int *list, int list_num,
+<<<<<<< HEAD
 			    struct snd_interval *baseline, struct snd_interval *iv,
 			    struct rsnd_dai_stream *io, char *unit)
+=======
+			    struct snd_interval *baseline, struct snd_interval *iv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct snd_interval p;
 	unsigned int rate;
@@ -908,6 +918,7 @@ static int rsnd_soc_hw_rule(struct rsnd_dai *rdai,
 		}
 	}
 
+<<<<<<< HEAD
 	/* Indicate error once if it can't handle */
 	if (!rsnd_flags_has(io, RSND_HW_RULE_ERR) && (p.min > p.max)) {
 		struct rsnd_priv *priv = rsnd_rdai_to_priv(rdai);
@@ -918,6 +929,8 @@ static int rsnd_soc_hw_rule(struct rsnd_dai *rdai,
 		rsnd_flags_set(io, RSND_HW_RULE_ERR);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return snd_interval_refine(iv, &p);
 }
 
@@ -941,7 +954,11 @@ static int rsnd_soc_hw_rule_rate(struct snd_pcm_hw_params *params,
 
 	return rsnd_soc_hw_rule(rdai, rsnd_soc_hw_rate_list,
 				ARRAY_SIZE(rsnd_soc_hw_rate_list),
+<<<<<<< HEAD
 				&ic, ir, io, "ch");
+=======
+				&ic, ir);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int rsnd_soc_hw_rule_channels(struct snd_pcm_hw_params *params,
@@ -964,7 +981,11 @@ static int rsnd_soc_hw_rule_channels(struct snd_pcm_hw_params *params,
 
 	return rsnd_soc_hw_rule(rdai, rsnd_soc_hw_channels_list,
 				ARRAY_SIZE(rsnd_soc_hw_channels_list),
+<<<<<<< HEAD
 				ir, &ic, io, "Hz");
+=======
+				ir, &ic);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct snd_pcm_hardware rsnd_pcm_hardware = {
@@ -989,8 +1010,11 @@ static int rsnd_soc_dai_startup(struct snd_pcm_substream *substream,
 	unsigned int max_channels = rsnd_rdai_channels_get(rdai);
 	int i;
 
+<<<<<<< HEAD
 	rsnd_flags_del(io, RSND_HW_RULE_ERR);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rsnd_dai_stream_init(io, substream);
 
 	/*
@@ -1364,7 +1388,10 @@ static void __rsnd_dai_probe(struct rsnd_priv *priv,
 	struct snd_soc_dai_driver *drv;
 	struct rsnd_dai *rdai;
 	struct device *dev = rsnd_priv_to_dev(priv);
+<<<<<<< HEAD
 	int playback_exist = 0, capture_exist = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int io_i;
 
 	rdai		= rsnd_rdai_get(priv, dai_i);
@@ -1379,6 +1406,25 @@ static void __rsnd_dai_probe(struct rsnd_priv *priv,
 	drv->ops	= &rsnd_soc_dai_ops;
 	drv->pcm_new	= rsnd_pcm_new;
 
+<<<<<<< HEAD
+=======
+	snprintf(io_playback->name, RSND_DAI_NAME_SIZE,
+		 "DAI%d Playback", dai_i);
+	drv->playback.rates		= RSND_RATES;
+	drv->playback.formats		= RSND_FMTS;
+	drv->playback.channels_min	= 2;
+	drv->playback.channels_max	= 8;
+	drv->playback.stream_name	= io_playback->name;
+
+	snprintf(io_capture->name, RSND_DAI_NAME_SIZE,
+		 "DAI%d Capture", dai_i);
+	drv->capture.rates		= RSND_RATES;
+	drv->capture.formats		= RSND_FMTS;
+	drv->capture.channels_min	= 2;
+	drv->capture.channels_max	= 8;
+	drv->capture.stream_name	= io_capture->name;
+
+>>>>>>> b7ba80a49124 (Commit)
 	io_playback->rdai		= rdai;
 	io_capture->rdai		= rdai;
 	rsnd_rdai_channels_set(rdai, 2); /* default 2ch */
@@ -1392,6 +1438,7 @@ static void __rsnd_dai_probe(struct rsnd_priv *priv,
 		if (!playback && !capture)
 			break;
 
+<<<<<<< HEAD
 		if (io_i == 0) {
 			/* check whether playback/capture property exists */
 			if (playback)
@@ -1400,6 +1447,8 @@ static void __rsnd_dai_probe(struct rsnd_priv *priv,
 				capture_exist = 1;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		rsnd_parse_connect_ssi(rdai, playback, capture);
 		rsnd_parse_connect_ssiu(rdai, playback, capture);
 		rsnd_parse_connect_src(rdai, playback, capture);
@@ -1411,6 +1460,7 @@ static void __rsnd_dai_probe(struct rsnd_priv *priv,
 		of_node_put(capture);
 	}
 
+<<<<<<< HEAD
 	if (playback_exist) {
 		snprintf(io_playback->name, RSND_DAI_NAME_SIZE, "DAI%d Playback", dai_i);
 		drv->playback.rates		= RSND_RATES;
@@ -1428,6 +1478,8 @@ static void __rsnd_dai_probe(struct rsnd_priv *priv,
 		drv->capture.stream_name	= io_capture->name;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (rsnd_ssi_is_pin_sharing(io_capture) ||
 	    rsnd_ssi_is_pin_sharing(io_playback)) {
 		/* should have symmetric_rate if pin sharing */
@@ -1475,7 +1527,11 @@ static int rsnd_dai_probe(struct rsnd_priv *priv)
 	if (is_graph) {
 		for_each_endpoint_of_node(dai_node, dai_np) {
 			__rsnd_dai_probe(priv, dai_np, dai_i);
+<<<<<<< HEAD
 			if (rsnd_is_gen3(priv) || rsnd_is_gen4(priv)) {
+=======
+			if (rsnd_is_gen3(priv)) {
+>>>>>>> b7ba80a49124 (Commit)
 				rdai = rsnd_rdai_get(priv, dai_i);
 
 				rsnd_parse_connect_graph(priv, &rdai->playback, dai_np);
@@ -1486,7 +1542,11 @@ static int rsnd_dai_probe(struct rsnd_priv *priv)
 	} else {
 		for_each_child_of_node(dai_node, dai_np) {
 			__rsnd_dai_probe(priv, dai_np, dai_i);
+<<<<<<< HEAD
 			if (rsnd_is_gen3(priv) || rsnd_is_gen4(priv)) {
+=======
+			if (rsnd_is_gen3(priv)) {
+>>>>>>> b7ba80a49124 (Commit)
 				rdai = rsnd_rdai_get(priv, dai_i);
 
 				rsnd_parse_connect_simple(priv, &rdai->playback, dai_np);
@@ -1549,8 +1609,12 @@ static int rsnd_hw_params(struct snd_soc_component *component,
 		int stream = substream->stream;
 
 		for_each_dpcm_be(fe, stream, dpcm) {
+<<<<<<< HEAD
 			struct snd_soc_pcm_runtime *be = dpcm->be;
 			struct snd_pcm_hw_params *be_params = &be->dpcm[stream].hw_params;
+=======
+			struct snd_pcm_hw_params *be_params = &dpcm->hw_params;
+>>>>>>> b7ba80a49124 (Commit)
 
 			if (params_channels(hw_params) != params_channels(be_params))
 				io->converted_chan = params_channels(be_params);
@@ -1613,9 +1677,15 @@ static int rsnd_hw_params(struct snd_soc_component *component,
 				hw_params->cmask |= SNDRV_PCM_HW_PARAM_RATE;
 			} else if (params_rate(hw_params) * k_up < io->converted_rate) {
 				hw_param_interval(hw_params, SNDRV_PCM_HW_PARAM_RATE)->min =
+<<<<<<< HEAD
 					DIV_ROUND_UP(io->converted_rate, k_up);
 				hw_param_interval(hw_params, SNDRV_PCM_HW_PARAM_RATE)->max =
 					DIV_ROUND_UP(io->converted_rate, k_up);
+=======
+					(io->converted_rate + k_up - 1) / k_up;
+				hw_param_interval(hw_params, SNDRV_PCM_HW_PARAM_RATE)->max =
+					(io->converted_rate + k_up - 1) / k_up;
+>>>>>>> b7ba80a49124 (Commit)
 				hw_params->cmask |= SNDRV_PCM_HW_PARAM_RATE;
 			}
 
@@ -1987,7 +2057,11 @@ exit_snd_probe:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void rsnd_remove(struct platform_device *pdev)
+=======
+static int rsnd_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rsnd_priv *priv = dev_get_drvdata(&pdev->dev);
 	struct rsnd_dai *rdai;
@@ -2019,6 +2093,11 @@ static void rsnd_remove(struct platform_device *pdev)
 
 	for (i = 0; i < ARRAY_SIZE(remove_func); i++)
 		remove_func[i](priv);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused rsnd_suspend(struct device *dev)
@@ -2050,7 +2129,11 @@ static struct platform_driver rsnd_driver = {
 		.of_match_table = rsnd_of_match,
 	},
 	.probe		= rsnd_probe,
+<<<<<<< HEAD
 	.remove_new	= rsnd_remove,
+=======
+	.remove		= rsnd_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(rsnd_driver);
 

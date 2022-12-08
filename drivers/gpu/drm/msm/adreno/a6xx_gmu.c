@@ -876,8 +876,12 @@ static void a6xx_gmu_rpmh_off(struct a6xx_gmu *gmu)
 #define GBIF_CLIENT_HALT_MASK             BIT(0)
 #define GBIF_ARB_HALT_MASK                BIT(1)
 
+<<<<<<< HEAD
 static void a6xx_bus_clear_pending_transactions(struct adreno_gpu *adreno_gpu,
 		bool gx_off)
+=======
+static void a6xx_bus_clear_pending_transactions(struct adreno_gpu *adreno_gpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct msm_gpu *gpu = &adreno_gpu->base;
 
@@ -890,11 +894,17 @@ static void a6xx_bus_clear_pending_transactions(struct adreno_gpu *adreno_gpu,
 		return;
 	}
 
+<<<<<<< HEAD
 	if (gx_off) {
 		/* Halt the gx side of GBIF */
 		gpu_write(gpu, REG_A6XX_RBBM_GBIF_HALT, 1);
 		spin_until(gpu_read(gpu, REG_A6XX_RBBM_GBIF_HALT_ACK) & 1);
 	}
+=======
+	/* Halt the gx side of GBIF */
+	gpu_write(gpu, REG_A6XX_RBBM_GBIF_HALT, 1);
+	spin_until(gpu_read(gpu, REG_A6XX_RBBM_GBIF_HALT_ACK) & 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Halt new client requests on GBIF */
 	gpu_write(gpu, REG_A6XX_GBIF_HALT, GBIF_CLIENT_HALT_MASK);
@@ -932,7 +942,11 @@ static void a6xx_gmu_force_off(struct a6xx_gmu *gmu)
 	/* Halt the gmu cm3 core */
 	gmu_write(gmu, REG_A6XX_GMU_CM3_SYSRESET, 1);
 
+<<<<<<< HEAD
 	a6xx_bus_clear_pending_transactions(adreno_gpu, true);
+=======
+	a6xx_bus_clear_pending_transactions(adreno_gpu);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Reset GPU core blocks */
 	gpu_write(gpu, REG_A6XX_RBBM_SW_RESET_CMD, 1);
@@ -974,7 +988,11 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
 	int status, ret;
 
 	if (WARN(!gmu->initialized, "The GMU is not set up yet\n"))
+<<<<<<< HEAD
 		return -EINVAL;
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	gmu->hung = false;
 
@@ -1086,7 +1104,11 @@ static void a6xx_gmu_shutdown(struct a6xx_gmu *gmu)
 			return;
 		}
 
+<<<<<<< HEAD
 		a6xx_bus_clear_pending_transactions(adreno_gpu, a6xx_gpu->hung);
+=======
+		a6xx_bus_clear_pending_transactions(adreno_gpu);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* tell the GMU we want to slumber */
 		ret = a6xx_gmu_notify_slumber(gmu);
@@ -1216,6 +1238,7 @@ static int a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu, struct a6xx_gmu_bo *bo,
 
 static int a6xx_gmu_memory_probe(struct a6xx_gmu *gmu)
 {
+<<<<<<< HEAD
 	struct msm_mmu *mmu;
 
 	mmu = msm_iommu_new(gmu->dev, 0);
@@ -1227,6 +1250,21 @@ static int a6xx_gmu_memory_probe(struct a6xx_gmu *gmu)
 	gmu->aspace = msm_gem_address_space_create(mmu, "gmu", 0x0, 0x80000000);
 	if (IS_ERR(gmu->aspace))
 		return PTR_ERR(gmu->aspace);
+=======
+	struct iommu_domain *domain;
+	struct msm_mmu *mmu;
+
+	domain = iommu_domain_alloc(&platform_bus_type);
+	if (!domain)
+		return -ENODEV;
+
+	mmu = msm_iommu_new(gmu->dev, domain);
+	gmu->aspace = msm_gem_address_space_create(mmu, "gmu", 0x0, 0x80000000);
+	if (IS_ERR(gmu->aspace)) {
+		iommu_domain_free(domain);
+		return PTR_ERR(gmu->aspace);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1482,12 +1520,15 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
 
 	pm_runtime_force_suspend(gmu->dev);
 
+<<<<<<< HEAD
 	/*
 	 * Since cxpd is a virt device, the devlink with gmu-dev will be removed
 	 * automatically when we do detach
 	 */
 	dev_pm_domain_detach(gmu->cxpd, false);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!IS_ERR_OR_NULL(gmu->gxpd)) {
 		pm_runtime_disable(gmu->gxpd);
 		dev_pm_domain_detach(gmu->gxpd, false);
@@ -1510,6 +1551,7 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
 	gmu->initialized = false;
 }
 
+<<<<<<< HEAD
 static int cxpd_notifier_cb(struct notifier_block *nb,
 			unsigned long action, void *data)
 {
@@ -1521,6 +1563,8 @@ static int cxpd_notifier_cb(struct notifier_block *nb,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
 {
 	struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
@@ -1625,10 +1669,15 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
 
 	if (adreno_is_a650_family(adreno_gpu)) {
 		gmu->rscc = a6xx_gmu_get_mmio(pdev, "rscc");
+<<<<<<< HEAD
 		if (IS_ERR(gmu->rscc)) {
 			ret = -ENODEV;
 			goto err_mmio;
 		}
+=======
+		if (IS_ERR(gmu->rscc))
+			goto err_mmio;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		gmu->rscc = gmu->mmio + 0x23000;
 	}
@@ -1637,6 +1686,7 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
 	gmu->hfi_irq = a6xx_gmu_get_irq(gmu, pdev, "hfi", a6xx_hfi_irq);
 	gmu->gmu_irq = a6xx_gmu_get_irq(gmu, pdev, "gmu", a6xx_gmu_irq);
 
+<<<<<<< HEAD
 	if (gmu->hfi_irq < 0 || gmu->gmu_irq < 0) {
 		ret = -ENODEV;
 		goto err_mmio;
@@ -1657,6 +1707,10 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
 	init_completion(&gmu->pd_gate);
 	complete_all(&gmu->pd_gate);
 	gmu->pd_nb.notifier_call = cxpd_notifier_cb;
+=======
+	if (gmu->hfi_irq < 0 || gmu->gmu_irq < 0)
+		goto err_mmio;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Get a link to the GX power domain to reset the GPU in case of GMU
@@ -1674,9 +1728,12 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
 
 	return 0;
 
+<<<<<<< HEAD
 detach_cxpd:
 	dev_pm_domain_detach(gmu->cxpd, false);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_mmio:
 	iounmap(gmu->mmio);
 	if (platform_get_resource_byname(pdev, IORESOURCE_MEM, "rscc"))
@@ -1684,6 +1741,11 @@ err_mmio:
 	free_irq(gmu->gmu_irq, gmu);
 	free_irq(gmu->hfi_irq, gmu);
 
+<<<<<<< HEAD
+=======
+	ret = -ENODEV;
+
+>>>>>>> b7ba80a49124 (Commit)
 err_memory:
 	a6xx_gmu_memory_free(gmu);
 err_put_device:

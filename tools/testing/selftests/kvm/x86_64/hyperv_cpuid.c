@@ -134,6 +134,12 @@ int main(int argc, char *argv[])
 	const struct kvm_cpuid2 *hv_cpuid_entries;
 	struct kvm_vcpu *vcpu;
 
+<<<<<<< HEAD
+=======
+	/* Tell stdout not to buffer its content */
+	setbuf(stdout, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	TEST_REQUIRE(kvm_has_cap(KVM_CAP_HYPERV_CPUID));
 
 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);

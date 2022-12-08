@@ -206,9 +206,15 @@ struct funeth_rxq {
 
 #define FUN_QSTAT_READ(q, seq, stats_copy) \
 	do { \
+<<<<<<< HEAD
 		seq = u64_stats_fetch_begin(&(q)->syncp); \
 		stats_copy = (q)->stats; \
 	} while (u64_stats_fetch_retry(&(q)->syncp, (seq)))
+=======
+		seq = u64_stats_fetch_begin_irq(&(q)->syncp); \
+		stats_copy = (q)->stats; \
+	} while (u64_stats_fetch_retry_irq(&(q)->syncp, (seq)))
+>>>>>>> b7ba80a49124 (Commit)
 
 #define FUN_INT_NAME_LEN (IFNAMSIZ + 16)
 

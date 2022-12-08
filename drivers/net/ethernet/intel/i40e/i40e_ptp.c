@@ -347,12 +347,32 @@ static int i40e_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
 {
 	struct i40e_pf *pf = container_of(ptp, struct i40e_pf, ptp_caps);
 	struct i40e_hw *hw = &pf->hw;
+<<<<<<< HEAD
 	u64 adj, base_adj;
 
 	smp_mb(); /* Force any pending update before accessing. */
 	base_adj = I40E_PTP_40GB_INCVAL * READ_ONCE(pf->ptp_adj_mult);
 
 	adj = adjust_by_scaled_ppm(base_adj, scaled_ppm);
+=======
+	u64 adj, freq, diff;
+	int neg_adj = 0;
+
+	if (scaled_ppm < 0) {
+		neg_adj = 1;
+		scaled_ppm = -scaled_ppm;
+	}
+
+	smp_mb(); /* Force any pending update before accessing. */
+	freq = I40E_PTP_40GB_INCVAL * READ_ONCE(pf->ptp_adj_mult);
+	diff = mul_u64_u64_div_u64(freq, (u64)scaled_ppm,
+				   1000000ULL << 16);
+
+	if (neg_adj)
+		adj = I40E_PTP_40GB_INCVAL - diff;
+	else
+		adj = I40E_PTP_40GB_INCVAL + diff;
+>>>>>>> b7ba80a49124 (Commit)
 
 	wr32(hw, I40E_PRTTSYN_INC_L, adj & 0xFFFFFFFF);
 	wr32(hw, I40E_PRTTSYN_INC_H, adj >> 32);

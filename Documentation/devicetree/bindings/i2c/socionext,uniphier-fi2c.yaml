@@ -29,9 +29,12 @@ properties:
     minimum: 100000
     maximum: 400000
 
+<<<<<<< HEAD
   resets:
     maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg

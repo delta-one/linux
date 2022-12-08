@@ -1082,7 +1082,11 @@ struct ec_params_get_cmd_versions_v1 {
 } __ec_align2;
 
 /**
+<<<<<<< HEAD
  * struct ec_response_get_cmd_versions - Response to the get command versions.
+=======
+ * struct ec_response_get_cmd_version - Response to the get command versions.
+>>>>>>> b7ba80a49124 (Commit)
  * @version_mask: Mask of supported versions; use EC_VER_MASK() to compare with
  *                a desired version.
  */
@@ -1300,6 +1304,7 @@ enum ec_feature_code {
 	 * mux.
 	 */
 	EC_FEATURE_TYPEC_MUX_REQUIRE_AP_ACK = 43,
+<<<<<<< HEAD
 	/*
 	 * The EC supports entering and residing in S4.
 	 */
@@ -1312,6 +1317,10 @@ enum ec_feature_code {
 	 * The EC supports the AP composing VDMs for us to send.
 	 */
 	EC_FEATURE_TYPEC_AP_VDM_SEND = 46,
+=======
+	/* The MCU is a System Companion Processor (SCP) 2nd Core. */
+	EC_FEATURE_SCP_C1 = 45,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define EC_FEATURE_MASK_0(event_code) BIT(event_code % 32)
@@ -2701,7 +2710,11 @@ struct ec_response_motion_sense {
 			 * Sensor data is truncated if response_max is too small
 			 * for holding all the data.
 			 */
+<<<<<<< HEAD
 			DECLARE_FLEX_ARRAY(struct ec_response_motion_sensor_data, sensor);
+=======
+			struct ec_response_motion_sensor_data sensor[0];
+>>>>>>> b7ba80a49124 (Commit)
 		} dump;
 
 		/* Used for MOTIONSENSE_CMD_INFO. */
@@ -3481,9 +3494,12 @@ struct ec_response_get_next_event_v1 {
 #define EC_MKBP_VOL_UP		1
 #define EC_MKBP_VOL_DOWN	2
 #define EC_MKBP_RECOVERY	3
+<<<<<<< HEAD
 #define EC_MKBP_BRI_UP		4
 #define EC_MKBP_BRI_DOWN	5
 #define EC_MKBP_SCREEN_LOCK	6
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Switches */
 #define EC_MKBP_LID_OPEN	0
@@ -5483,7 +5499,11 @@ struct ec_response_rollback_info {
 /* Issue AP reset */
 #define EC_CMD_AP_RESET 0x0125
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * Get the number of peripheral charge ports
  */
 #define EC_CMD_PCHG_COUNT 0x0134
@@ -5494,7 +5514,11 @@ struct ec_response_pchg_count {
 	uint8_t port_count;
 } __ec_align1;
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * Get the status of a peripheral charge port
  */
 #define EC_CMD_PCHG 0x0135
@@ -5739,8 +5763,11 @@ enum typec_control_command {
 	TYPEC_CONTROL_COMMAND_ENTER_MODE,
 	TYPEC_CONTROL_COMMAND_TBT_UFP_REPLY,
 	TYPEC_CONTROL_COMMAND_USB_MUX_SET,
+<<<<<<< HEAD
 	TYPEC_CONTROL_COMMAND_BIST_SHARE_MODE,
 	TYPEC_CONTROL_COMMAND_SEND_VDM_REQ,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Replies the AP may specify to the TBT EnterMode command as a UFP */
@@ -5754,6 +5781,7 @@ struct typec_usb_mux_set {
 	uint8_t mux_flags;	/* USB_PD_MUX_*-encoded USB mux state to set */
 } __ec_align1;
 
+<<<<<<< HEAD
 #define VDO_MAX_SIZE 7
 
 struct typec_vdm_req {
@@ -5765,6 +5793,8 @@ struct typec_vdm_req {
 	uint8_t partner_type;
 } __ec_align1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ec_params_typec_control {
 	uint8_t port;
 	uint8_t command;	/* enum typec_control_command */
@@ -5780,8 +5810,11 @@ struct ec_params_typec_control {
 		uint8_t mode_to_enter;      /* enum typec_mode */
 		uint8_t tbt_ufp_reply;      /* enum typec_tbt_ufp_reply */
 		struct typec_usb_mux_set mux_params;
+<<<<<<< HEAD
 		/* Used for VMD_REQ */
 		struct typec_vdm_req vdm_req_params;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		uint8_t placeholder[128];
 	};
 } __ec_align1;
@@ -5863,9 +5896,12 @@ enum tcpc_cc_polarity {
 #define PD_STATUS_EVENT_DISCONNECTED		BIT(3)
 #define PD_STATUS_EVENT_MUX_0_SET_DONE		BIT(4)
 #define PD_STATUS_EVENT_MUX_1_SET_DONE		BIT(5)
+<<<<<<< HEAD
 #define PD_STATUS_EVENT_VDM_REQ_REPLY		BIT(6)
 #define PD_STATUS_EVENT_VDM_REQ_FAILED		BIT(7)
 #define PD_STATUS_EVENT_VDM_ATTENTION		BIT(8)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct ec_params_typec_status {
 	uint8_t port;
@@ -5909,6 +5945,7 @@ struct ec_response_typec_status {
 	uint32_t sink_cap_pdos[7];	/* Max 7 PDOs can be present */
 } __ec_align1;
 
+<<<<<<< HEAD
 /*
  * Gather the response to the most recent VDM REQ from the AP, as well
  * as popping the oldest VDM:Attention from the DPM queue
@@ -5940,6 +5977,8 @@ struct ec_response_typec_vdm_response {
 
 #undef VDO_MAX_SIZE
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*****************************************************************************/
 /* The command range 0x200-0x2FF is reserved for Rotor. */
 

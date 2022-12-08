@@ -206,6 +206,11 @@ int mt8192_afe_enable_clock(struct mtk_base_afe *afe)
 	struct mt8192_afe_private *afe_priv = afe->platform_priv;
 	int ret;
 
+<<<<<<< HEAD
+=======
+	dev_info(afe->dev, "%s()\n", __func__);
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = clk_prepare_enable(afe_priv->clk[CLK_INFRA_SYS_AUDIO]);
 	if (ret) {
 		dev_err(afe->dev, "%s clk_prepare_enable %s fail %d\n",
@@ -274,6 +279,11 @@ void mt8192_afe_disable_clock(struct mtk_base_afe *afe)
 {
 	struct mt8192_afe_private *afe_priv = afe->platform_priv;
 
+<<<<<<< HEAD
+=======
+	dev_info(afe->dev, "%s()\n", __func__);
+
+>>>>>>> b7ba80a49124 (Commit)
 	clk_disable_unprepare(afe_priv->clk[CLK_AFE]);
 	mt8192_set_audio_int_bus_parent(afe, CLK_CLK26M);
 	clk_disable_unprepare(afe_priv->clk[CLK_MUX_AUDIOINTBUS]);

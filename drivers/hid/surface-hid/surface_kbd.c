@@ -49,7 +49,11 @@ static int ssam_kbd_get_descriptor(struct surface_hid_device *shid, u8 entry, u8
 	rsp.length = 0;
 	rsp.pointer = buf;
 
+<<<<<<< HEAD
 	status = ssam_retry(ssam_request_do_sync_onstack, shid->ctrl, &rqst, &rsp, sizeof(entry));
+=======
+	status = ssam_retry(ssam_request_sync_onstack, shid->ctrl, &rqst, &rsp, sizeof(entry));
+>>>>>>> b7ba80a49124 (Commit)
 	if (status)
 		return status;
 
@@ -75,7 +79,11 @@ static int ssam_kbd_set_caps_led(struct surface_hid_device *shid, bool value)
 	rqst.length = sizeof(value_u8);
 	rqst.payload = &value_u8;
 
+<<<<<<< HEAD
 	return ssam_retry(ssam_request_do_sync_onstack, shid->ctrl, &rqst, NULL, sizeof(value_u8));
+=======
+	return ssam_retry(ssam_request_sync_onstack, shid->ctrl, &rqst, NULL, sizeof(value_u8));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ssam_kbd_get_feature_report(struct surface_hid_device *shid, u8 *buf, size_t len)
@@ -97,7 +105,11 @@ static int ssam_kbd_get_feature_report(struct surface_hid_device *shid, u8 *buf,
 	rsp.length = 0;
 	rsp.pointer = buf;
 
+<<<<<<< HEAD
 	status = ssam_retry(ssam_request_do_sync_onstack, shid->ctrl, &rqst, &rsp, sizeof(payload));
+=======
+	status = ssam_retry(ssam_request_sync_onstack, shid->ctrl, &rqst, &rsp, sizeof(payload));
+>>>>>>> b7ba80a49124 (Commit)
 	if (status)
 		return status;
 
@@ -250,7 +262,11 @@ static int surface_kbd_probe(struct platform_device *pdev)
 
 	shid->uid.domain = SSAM_DOMAIN_SERIALHUB;
 	shid->uid.category = SSAM_SSH_TC_KBD;
+<<<<<<< HEAD
 	shid->uid.target = SSAM_SSH_TID_KIP;
+=======
+	shid->uid.target = 2;
+>>>>>>> b7ba80a49124 (Commit)
 	shid->uid.instance = 0;
 	shid->uid.function = 0;
 

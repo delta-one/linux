@@ -66,7 +66,11 @@ struct ptp_vclock {
 	struct hlist_node vclock_hash_node;
 	struct cyclecounter cc;
 	struct timecounter tc;
+<<<<<<< HEAD
 	struct mutex lock;	/* protects tc/cc */
+=======
+	spinlock_t lock;	/* protects tc/cc */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*

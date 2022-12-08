@@ -12,7 +12,11 @@ maintainers:
   - Russell King <linux@armlinux.org.uk>
 
 allOf:
+<<<<<<< HEAD
   - $ref: mdio.yaml#
+=======
+  - $ref: "mdio.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -33,8 +37,13 @@ properties:
       - description: MDIO
       - description: MDO
 
+<<<<<<< HEAD
 # Note: Each gpio-mdio bus should have an alias correctly numbered in "aliases"
 # node.
+=======
+#Note: Each gpio-mdio bus should have an alias correctly numbered in "aliases"
+#node.
+>>>>>>> b7ba80a49124 (Commit)
 additionalProperties:
   type: object
 

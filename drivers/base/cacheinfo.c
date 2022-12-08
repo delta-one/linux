@@ -196,7 +196,11 @@ static void cache_of_set_props(struct cacheinfo *this_leaf,
 
 static int cache_setup_of_node(unsigned int cpu)
 {
+<<<<<<< HEAD
 	struct device_node *np, *prev;
+=======
+	struct device_node *np;
+>>>>>>> b7ba80a49124 (Commit)
 	struct cacheinfo *this_leaf;
 	unsigned int index = 0;
 
@@ -206,6 +210,7 @@ static int cache_setup_of_node(unsigned int cpu)
 		return -ENOENT;
 	}
 
+<<<<<<< HEAD
 	prev = np;
 
 	while (index < cache_leaves(cpu)) {
@@ -217,18 +222,32 @@ static int cache_setup_of_node(unsigned int cpu)
 			if (!np)
 				break;
 		}
+=======
+	while (index < cache_leaves(cpu)) {
+		this_leaf = per_cpu_cacheinfo_idx(cpu, index);
+		if (this_leaf->level != 1)
+			np = of_find_next_cache_node(np);
+		else
+			np = of_node_get(np);/* cpu node itself */
+		if (!np)
+			break;
+>>>>>>> b7ba80a49124 (Commit)
 		cache_of_set_props(this_leaf, np);
 		this_leaf->fw_token = np;
 		index++;
 	}
 
+<<<<<<< HEAD
 	of_node_put(np);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (index != cache_leaves(cpu)) /* not all OF nodes populated */
 		return -ENOENT;
 
 	return 0;
 }
+<<<<<<< HEAD
 
 static int of_count_cache_leaves(struct device_node *np)
 {
@@ -294,6 +313,10 @@ err_out:
 #else
 static inline int cache_setup_of_node(unsigned int cpu) { return 0; }
 int init_of_cache_level(unsigned int cpu) { return 0; }
+=======
+#else
+static inline int cache_setup_of_node(unsigned int cpu) { return 0; }
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 int __weak cache_setup_acpi(unsigned int cpu)
@@ -319,7 +342,11 @@ static int cache_shared_cpu_map_setup(unsigned int cpu)
 {
 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
 	struct cacheinfo *this_leaf, *sib_leaf;
+<<<<<<< HEAD
 	unsigned int index, sib_index;
+=======
+	unsigned int index;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 
 	if (this_cpu_ci->cpu_map_populated)
@@ -347,6 +374,7 @@ static int cache_shared_cpu_map_setup(unsigned int cpu)
 
 			if (i == cpu || !sib_cpu_ci->info_list)
 				continue;/* skip if itself or no cacheinfo */
+<<<<<<< HEAD
 			for (sib_index = 0; sib_index < cache_leaves(i); sib_index++) {
 				sib_leaf = per_cpu_cacheinfo_idx(i, sib_index);
 				if (cache_leaves_are_shared(this_leaf, sib_leaf)) {
@@ -354,6 +382,13 @@ static int cache_shared_cpu_map_setup(unsigned int cpu)
 					cpumask_set_cpu(i, &this_leaf->shared_cpu_map);
 					break;
 				}
+=======
+
+			sib_leaf = per_cpu_cacheinfo_idx(i, index);
+			if (cache_leaves_are_shared(this_leaf, sib_leaf)) {
+				cpumask_set_cpu(cpu, &sib_leaf->shared_cpu_map);
+				cpumask_set_cpu(i, &this_leaf->shared_cpu_map);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 		/* record the maximum cache line size */
@@ -367,7 +402,11 @@ static int cache_shared_cpu_map_setup(unsigned int cpu)
 static void cache_shared_cpu_map_remove(unsigned int cpu)
 {
 	struct cacheinfo *this_leaf, *sib_leaf;
+<<<<<<< HEAD
 	unsigned int sibling, index, sib_index;
+=======
+	unsigned int sibling, index;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (index = 0; index < cache_leaves(cpu); index++) {
 		this_leaf = per_cpu_cacheinfo_idx(cpu, index);
@@ -378,6 +417,7 @@ static void cache_shared_cpu_map_remove(unsigned int cpu)
 			if (sibling == cpu || !sib_cpu_ci->info_list)
 				continue;/* skip if itself or no cacheinfo */
 
+<<<<<<< HEAD
 			for (sib_index = 0; sib_index < cache_leaves(sibling); sib_index++) {
 				sib_leaf = per_cpu_cacheinfo_idx(sibling, sib_index);
 				if (cache_leaves_are_shared(this_leaf, sib_leaf)) {
@@ -387,6 +427,14 @@ static void cache_shared_cpu_map_remove(unsigned int cpu)
 				}
 			}
 		}
+=======
+			sib_leaf = per_cpu_cacheinfo_idx(sibling, index);
+			cpumask_clear_cpu(cpu, &sib_leaf->shared_cpu_map);
+			cpumask_clear_cpu(sibling, &this_leaf->shared_cpu_map);
+		}
+		if (of_have_populated_dt())
+			of_node_put(this_leaf->fw_token);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -396,6 +444,13 @@ static void free_cache_attributes(unsigned int cpu)
 		return;
 
 	cache_shared_cpu_map_remove(cpu);
+<<<<<<< HEAD
+=======
+
+	kfree(per_cpu_cacheinfo(cpu));
+	per_cpu_cacheinfo(cpu) = NULL;
+	cache_leaves(cpu) = 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int __weak init_cache_level(unsigned int cpu)
@@ -408,6 +463,7 @@ int __weak populate_cache_leaves(unsigned int cpu)
 	return -ENOENT;
 }
 
+<<<<<<< HEAD
 static inline
 int allocate_cache_info(int cpu)
 {
@@ -452,10 +508,13 @@ int fetch_cache_info(unsigned int cpu)
 	return allocate_cache_info(cpu);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int detect_cache_attributes(unsigned int cpu)
 {
 	int ret;
 
+<<<<<<< HEAD
 	/* Since early initialization/allocation of the cacheinfo is allowed
 	 * via fetch_cache_info() and this also gets called as CPU hotplug
 	 * callbacks via cacheinfo_cpu_online, the init/alloc can be skipped
@@ -464,15 +523,35 @@ int detect_cache_attributes(unsigned int cpu)
 	 */
 	if (per_cpu_cacheinfo(cpu))
 		goto populate_leaves;
+=======
+	/* Since early detection of the cacheinfo is allowed via this
+	 * function and this also gets called as CPU hotplug callbacks via
+	 * cacheinfo_cpu_online, the initialisation can be skipped and only
+	 * CPU maps can be updated as the CPU online status would be update
+	 * if called via cacheinfo_cpu_online path.
+	 */
+	if (per_cpu_cacheinfo(cpu))
+		goto update_cpu_map;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (init_cache_level(cpu) || !cache_leaves(cpu))
 		return -ENOENT;
 
+<<<<<<< HEAD
 	ret = allocate_cache_info(cpu);
 	if (ret)
 		return ret;
 
 populate_leaves:
+=======
+	per_cpu_cacheinfo(cpu) = kcalloc(cache_leaves(cpu),
+					 sizeof(struct cacheinfo), GFP_ATOMIC);
+	if (per_cpu_cacheinfo(cpu) == NULL) {
+		cache_leaves(cpu) = 0;
+		return -ENOMEM;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * populate_cache_leaves() may completely setup the cache leaves and
 	 * shared_cpu_map or it may leave it partially setup.
@@ -481,6 +560,10 @@ populate_leaves:
 	if (ret)
 		goto free_ci;
 
+<<<<<<< HEAD
+=======
+update_cpu_map:
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * For systems using DT for cache hierarchy, fw_token
 	 * and shared_cpu_map will be set up here only if they are

@@ -28,8 +28,12 @@ config KVM
 	select HAVE_KVM_IRQCHIP
 	select HAVE_KVM_PFNCACHE
 	select HAVE_KVM_IRQFD
+<<<<<<< HEAD
 	select HAVE_KVM_DIRTY_RING_TSO
 	select HAVE_KVM_DIRTY_RING_ACQ_REL
+=======
+	select HAVE_KVM_DIRTY_RING
+>>>>>>> b7ba80a49124 (Commit)
 	select IRQ_BYPASS_MANAGER
 	select HAVE_KVM_IRQ_BYPASS
 	select HAVE_KVM_IRQ_ROUTING
@@ -46,9 +50,15 @@ config KVM
 	select KVM_XFER_TO_GUEST_WORK
 	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
 	select KVM_VFIO
+<<<<<<< HEAD
 	select INTERVAL_TREE
 	select HAVE_KVM_PM_NOTIFIER if PM
 	select KVM_GENERIC_HARDWARE_ENABLING
+=======
+	select SRCU
+	select INTERVAL_TREE
+	select HAVE_KVM_PM_NOTIFIER if PM
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Support hosting fully virtualized guest machines using hardware
 	  virtualization extensions.  You will need a fairly recent
@@ -118,6 +128,7 @@ config KVM_AMD_SEV
 	  Provides support for launching Encrypted VMs (SEV) and Encrypted VMs
 	  with Encrypted State (SEV-ES) on AMD processors.
 
+<<<<<<< HEAD
 config KVM_SMM
 	bool "System Management Mode emulation"
 	default y
@@ -129,6 +140,8 @@ config KVM_SMM
 
 	  If unsure, say Y.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config KVM_XEN
 	bool "Support for Xen hypercall interface"
 	depends on KVM

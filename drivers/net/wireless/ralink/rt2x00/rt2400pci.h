@@ -939,7 +939,11 @@
 #define DEFAULT_TXPOWER	39
 
 #define __CLAMP_TX(__txpower) \
+<<<<<<< HEAD
 	clamp_t(u8, (__txpower), MIN_TXPOWER, MAX_TXPOWER)
+=======
+	clamp_t(char, (__txpower), MIN_TXPOWER, MAX_TXPOWER)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define TXPOWER_FROM_DEV(__txpower) \
 	((__CLAMP_TX(__txpower) - MAX_TXPOWER) + MIN_TXPOWER)

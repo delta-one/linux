@@ -9,15 +9,21 @@
  *
  */
 
+<<<<<<< HEAD
 #include <dt-bindings/iio/adc/at91-sama5d2_adc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <dt-bindings/interrupt-controller/irq.h>
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/clock/at91.h>
 #include <dt-bindings/dma/at91.h>
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/mfd/at91-usart.h>
+<<<<<<< HEAD
 #include <dt-bindings/nvmem/microchip,sama7g5-otpc.h>
 #include <dt-bindings/thermal/thermal.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	model = "Microchip SAMA7G5 family SoC";
@@ -37,7 +43,10 @@
 			clocks = <&pmc PMC_TYPE_CORE PMC_CPUPLL>;
 			clock-names = "cpu";
 			operating-points-v2 = <&cpu_opp_table>;
+<<<<<<< HEAD
 			#cooling-cells = <2>; /* min followed by max */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -76,6 +85,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	thermal-zones {
 		cpu_thermal: cpu-thermal {
 			polling-delay-passive = <1000>;
@@ -116,6 +126,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	clocks {
 		slow_xtal: slow_xtal {
 			compatible = "fixed-clock";
@@ -152,6 +164,7 @@
 		ranges;
 	};
 
+<<<<<<< HEAD
 	thermal_sensor: thermal-sensor {
 		compatible = "generic-adc-thermal";
 		#thermal-sensor-cells = <0>;
@@ -159,6 +172,8 @@
 		io-channel-names = "sensor-channel";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	soc {
 		compatible = "simple-bus";
 		#address-cells = <1>;
@@ -204,7 +219,11 @@
 			};
 		};
 
+<<<<<<< HEAD
 		securam: sram@e0000000 {
+=======
+		securam: securam@e0000000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "microchip,sama7g5-securam", "atmel,sama5d2-securam", "mmio-sram";
 			reg = <0xe0000000 0x4000>;
 			clocks = <&pmc PMC_TYPE_PERIPHERAL 18>;
@@ -471,9 +490,12 @@
 			atmel,min-sample-rate-hz = <200000>;
 			atmel,max-sample-rate-hz = <20000000>;
 			atmel,startup-time-ms = <4>;
+<<<<<<< HEAD
 			#io-channel-cells = <1>;
 			nvmem-cells = <&temperature_calib>;
 			nvmem-cell-names = "temperature_calib";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 		};
 
@@ -516,6 +538,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		csi2dc: csi2dc@e1404000 {
 			compatible = "microchip,sama7g5-csi2dc";
 			reg = <0xe1404000 0x500>;
@@ -567,6 +590,8 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pwm: pwm@e1604000 {
 			compatible = "microchip,sama7g5-pwm", "atmel,sama5d2-pwm";
 			reg = <0xe1604000 0x4000>;
@@ -993,6 +1018,7 @@
 			reg = <0xe3804000 0x1000>;
 		};
 
+<<<<<<< HEAD
 		otpc: efuse@e8c00000 {
 			compatible = "microchip,sama7g5-otpc", "syscon";
 			reg = <0xe8c00000 0x100>;
@@ -1004,6 +1030,8 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		gic: interrupt-controller@e8c11000 {
 			compatible = "arm,cortex-a7-gic";
 			#interrupt-cells = <3>;

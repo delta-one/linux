@@ -64,7 +64,11 @@ int gen_split_key(struct device *jrdev, u8 *key_out,
 	if (local_max > max_keylen)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	desc = kmalloc(CAAM_CMD_SZ * 6 + CAAM_PTR_SZ * 2, GFP_KERNEL);
+=======
+	desc = kmalloc(CAAM_CMD_SZ * 6 + CAAM_PTR_SZ * 2, GFP_KERNEL | GFP_DMA);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!desc) {
 		dev_err(jrdev, "unable to allocate key input memory\n");
 		return ret;

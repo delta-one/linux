@@ -15,6 +15,10 @@ arch/alpha/kernel/head.o
 arch/arc/kernel/head.o
 arch/arm/kernel/head-nommu.o
 arch/arm/kernel/head.o
+<<<<<<< HEAD
+=======
+arch/arm64/kernel/head.o
+>>>>>>> b7ba80a49124 (Commit)
 arch/csky/kernel/head.o
 arch/hexagon/kernel/head.o
 arch/ia64/kernel/head.o
@@ -32,14 +36,32 @@ arch/powerpc/kernel/head_40x.o
 arch/powerpc/kernel/head_44x.o
 arch/powerpc/kernel/head_64.o
 arch/powerpc/kernel/head_8xx.o
+<<<<<<< HEAD
 arch/powerpc/kernel/head_85xx.o
 arch/powerpc/kernel/head_book3s_32.o
+=======
+arch/powerpc/kernel/head_book3s_32.o
+arch/powerpc/kernel/head_fsl_booke.o
+>>>>>>> b7ba80a49124 (Commit)
 arch/powerpc/kernel/entry_64.o
 arch/powerpc/kernel/fpu.o
 arch/powerpc/kernel/vector.o
 arch/powerpc/kernel/prom_init.o
+<<<<<<< HEAD
+=======
+arch/riscv/kernel/head.o
+>>>>>>> b7ba80a49124 (Commit)
 arch/s390/kernel/head64.o
 arch/sh/kernel/head_32.o
 arch/sparc/kernel/head_32.o
 arch/sparc/kernel/head_64.o
+<<<<<<< HEAD
+=======
+arch/x86/kernel/head_32.o
+arch/x86/kernel/head_64.o
+arch/x86/kernel/head32.o
+arch/x86/kernel/head64.o
+arch/x86/kernel/ebda.o
+arch/x86/kernel/platform-quirks.o
+>>>>>>> b7ba80a49124 (Commit)
 arch/xtensa/kernel/head.o

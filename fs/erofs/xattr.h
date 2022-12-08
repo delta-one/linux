@@ -19,26 +19,43 @@ static inline unsigned int inlinexattr_header_size(struct inode *inode)
 		sizeof(u32) * EROFS_I(inode)->xattr_shared_count;
 }
 
+<<<<<<< HEAD
 static inline erofs_blk_t xattrblock_addr(struct super_block *sb,
 					  unsigned int xattr_id)
 {
 #ifdef CONFIG_EROFS_FS_XATTR
 	return EROFS_SB(sb)->xattr_blkaddr +
 		xattr_id * sizeof(__u32) / sb->s_blocksize;
+=======
+static inline erofs_blk_t xattrblock_addr(struct erofs_sb_info *sbi,
+					  unsigned int xattr_id)
+{
+#ifdef CONFIG_EROFS_FS_XATTR
+	return sbi->xattr_blkaddr +
+		xattr_id * sizeof(__u32) / EROFS_BLKSIZ;
+>>>>>>> b7ba80a49124 (Commit)
 #else
 	return 0;
 #endif
 }
 
+<<<<<<< HEAD
 static inline unsigned int xattrblock_offset(struct super_block *sb,
 					     unsigned int xattr_id)
 {
 	return (xattr_id * sizeof(__u32)) % sb->s_blocksize;
+=======
+static inline unsigned int xattrblock_offset(struct erofs_sb_info *sbi,
+					     unsigned int xattr_id)
+{
+	return (xattr_id * sizeof(__u32)) % EROFS_BLKSIZ;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_EROFS_FS_XATTR
 extern const struct xattr_handler erofs_xattr_user_handler;
 extern const struct xattr_handler erofs_xattr_trusted_handler;
+<<<<<<< HEAD
 extern const struct xattr_handler erofs_xattr_security_handler;
 
 static inline const char *erofs_xattr_prefix(unsigned int idx,
@@ -51,6 +68,21 @@ static inline const char *erofs_xattr_prefix(unsigned int idx,
 #ifdef CONFIG_EROFS_FS_POSIX_ACL
 		[EROFS_XATTR_INDEX_POSIX_ACL_ACCESS] = &nop_posix_acl_access,
 		[EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT] = &nop_posix_acl_default,
+=======
+#ifdef CONFIG_EROFS_FS_SECURITY
+extern const struct xattr_handler erofs_xattr_security_handler;
+#endif
+
+static inline const struct xattr_handler *erofs_xattr_handler(unsigned int idx)
+{
+	static const struct xattr_handler *xattr_handler_map[] = {
+		[EROFS_XATTR_INDEX_USER] = &erofs_xattr_user_handler,
+#ifdef CONFIG_EROFS_FS_POSIX_ACL
+		[EROFS_XATTR_INDEX_POSIX_ACL_ACCESS] =
+			&posix_acl_access_xattr_handler,
+		[EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT] =
+			&posix_acl_default_xattr_handler,
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 		[EROFS_XATTR_INDEX_TRUSTED] = &erofs_xattr_trusted_handler,
 #ifdef CONFIG_EROFS_FS_SECURITY
@@ -58,6 +90,7 @@ static inline const char *erofs_xattr_prefix(unsigned int idx,
 #endif
 	};
 
+<<<<<<< HEAD
 	if (idx && idx < ARRAY_SIZE(xattr_handler_map))
 		handler = xattr_handler_map[idx];
 
@@ -65,6 +98,10 @@ static inline const char *erofs_xattr_prefix(unsigned int idx,
 		return NULL;
 
 	return xattr_prefix(handler);
+=======
+	return idx && idx < ARRAY_SIZE(xattr_handler_map) ?
+		xattr_handler_map[idx] : NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 extern const struct xattr_handler *erofs_xattr_handlers[];

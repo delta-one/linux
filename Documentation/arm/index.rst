@@ -64,6 +64,10 @@ SoC-specific documents
    sunxi
 
    samsung/index
+<<<<<<< HEAD
+=======
+   samsung-s3c24xx/index
+>>>>>>> b7ba80a49124 (Commit)
 
    sunxi/clocks
 

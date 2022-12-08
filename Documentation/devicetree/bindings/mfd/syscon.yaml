@@ -38,7 +38,10 @@ properties:
               - allwinner,sun8i-h3-system-controller
               - allwinner,sun8i-v3s-system-controller
               - allwinner,sun50i-a64-system-controller
+<<<<<<< HEAD
               - amd,pensando-elba-syscon
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - brcm,cru-clkset
               - freecom,fsg-cs2-system-controller
               - fsl,imx93-aonmix-ns-syscfg
@@ -47,16 +50,25 @@ properties:
               - hisilicon,hi6220-sramctrl
               - hisilicon,pcie-sas-subctrl
               - hisilicon,peri-subctrl
+<<<<<<< HEAD
               - hpe,gxp-sysreg
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - intel,lgm-syscon
               - marvell,armada-3700-usb2-host-misc
               - mediatek,mt8135-pctl-a-syscfg
               - mediatek,mt8135-pctl-b-syscfg
+<<<<<<< HEAD
               - mediatek,mt8365-syscfg
               - microchip,lan966x-cpu-syscon
               - microchip,sparx5-cpu-syscon
               - mstar,msc313-pmsleep
               - nuvoton,wpcm450-shm
+=======
+              - microchip,lan966x-cpu-syscon
+              - microchip,sparx5-cpu-syscon
+              - mstar,msc313-pmsleep
+>>>>>>> b7ba80a49124 (Commit)
               - rockchip,px30-qos
               - rockchip,rk3036-qos
               - rockchip,rk3066-qos
@@ -67,7 +79,16 @@ properties:
               - rockchip,rk3568-qos
               - rockchip,rk3588-qos
               - rockchip,rv1126-qos
+<<<<<<< HEAD
               - starfive,jh7100-sysmain
+=======
+              - samsung,exynos3-sysreg
+              - samsung,exynos4-sysreg
+              - samsung,exynos5-sysreg
+              - samsung,exynos5433-sysreg
+              - samsung,exynos850-sysreg
+              - samsung,exynosautov9-sysreg
+>>>>>>> b7ba80a49124 (Commit)
 
           - const: syscon
 
@@ -85,9 +106,12 @@ properties:
       on the device.
     enum: [1, 2, 4, 8]
 
+<<<<<<< HEAD
   resets:
     maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   hwlocks:
     maxItems: 1
     description:

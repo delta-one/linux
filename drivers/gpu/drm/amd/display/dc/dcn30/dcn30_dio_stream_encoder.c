@@ -28,7 +28,10 @@
 #include "dcn30_dio_stream_encoder.h"
 #include "reg_helper.h"
 #include "hw_shared.h"
+<<<<<<< HEAD
 #include "dc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "core_types.h"
 #include <linux/delay.h>
 
@@ -405,6 +408,7 @@ static void enc3_read_state(struct stream_encoder *enc, struct enc_state *s)
 	}
 }
 
+<<<<<<< HEAD
 void enc3_stream_encoder_update_dp_info_packets_sdp_line_num(
 		struct stream_encoder *enc,
 		struct encoder_info_frame *info_frame)
@@ -421,6 +425,8 @@ void enc3_stream_encoder_update_dp_info_packets_sdp_line_num(
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void enc3_stream_encoder_update_dp_info_packets(
 	struct stream_encoder *enc,
 	const struct encoder_info_frame *info_frame)
@@ -469,6 +475,7 @@ void enc3_stream_encoder_update_dp_info_packets(
 	 * use other packetIndex (such as 5,6) for other info packet
 	 */
 
+<<<<<<< HEAD
 	if (info_frame->adaptive_sync.valid)
 		enc->vpg->funcs->update_generic_info_packet(
 				enc->vpg,
@@ -476,13 +483,18 @@ void enc3_stream_encoder_update_dp_info_packets(
 				&info_frame->adaptive_sync,
 				true);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* enable/disable transmission of packet(s).
 	 * If enabled, packet transmission begins on the next frame
 	 */
 	REG_UPDATE(DP_SEC_CNTL, DP_SEC_GSP0_ENABLE, info_frame->vsc.valid);
 	REG_UPDATE(DP_SEC_CNTL, DP_SEC_GSP2_ENABLE, info_frame->spd.valid);
 	REG_UPDATE(DP_SEC_CNTL, DP_SEC_GSP3_ENABLE, info_frame->hdrsmd.valid);
+<<<<<<< HEAD
 	REG_UPDATE(DP_SEC_CNTL, DP_SEC_GSP5_ENABLE, info_frame->adaptive_sync.valid);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* This bit is the master enable bit.
 	 * When enabling secondary stream engine,
@@ -828,8 +840,11 @@ static const struct stream_encoder_funcs dcn30_str_enc_funcs = {
 		enc3_stream_encoder_update_hdmi_info_packets,
 	.stop_hdmi_info_packets =
 		enc3_stream_encoder_stop_hdmi_info_packets,
+<<<<<<< HEAD
 	.update_dp_info_packets_sdp_line_num =
 		enc3_stream_encoder_update_dp_info_packets_sdp_line_num,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.update_dp_info_packets =
 		enc3_stream_encoder_update_dp_info_packets,
 	.stop_dp_info_packets =

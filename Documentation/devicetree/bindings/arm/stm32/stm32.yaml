@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/arm/stm32/stm32.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: STMicroelectronics STM32 Platforms
+=======
+title: STMicroelectronics STM32 Platforms Device Tree Bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Alexandre Torgue <alexandre.torgue@foss.st.com>
@@ -59,12 +63,15 @@ properties:
               - prt,prtt1s   # Protonic PRTT1S
           - const: st,stm32mp151
 
+<<<<<<< HEAD
       - description: DH STM32MP151 DHCOR SoM based Boards
         items:
           - const: dh,stm32mp151a-dhcor-testbench
           - const: dh,stm32mp151a-dhcor-som
           - const: st,stm32mp151
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: DH STM32MP153 DHCOM SoM based Boards
         items:
           - const: dh,stm32mp153c-dhcom-drc02

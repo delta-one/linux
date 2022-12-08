@@ -2,7 +2,11 @@
 /*
  * Driver for Broadcom MPI3 Storage Controllers
  *
+<<<<<<< HEAD
  * Copyright (C) 2017-2023 Broadcom Inc.
+=======
+ * Copyright (C) 2017-2022 Broadcom Inc.
+>>>>>>> b7ba80a49124 (Commit)
  *  (mailto: mpi3mr-linuxdrv.pdl@broadcom.com)
  *
  */
@@ -583,6 +587,7 @@ void mpi3mr_flush_host_io(struct mpi3mr_ioc *mrioc)
 }
 
 /**
+<<<<<<< HEAD
  * mpi3mr_flush_cmds_for_unrecovered_controller - Flush all pending cmds
  * @mrioc: Adapter instance reference
  *
@@ -616,6 +621,8 @@ void mpi3mr_flush_cmds_for_unrecovered_controller(struct mpi3mr_ioc *mrioc)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * mpi3mr_alloc_tgtdev - target device allocator
  *
  * Allocate target device instance and initialize the reference
@@ -652,7 +659,10 @@ static void mpi3mr_tgtdev_add_to_list(struct mpi3mr_ioc *mrioc,
 	mpi3mr_tgtdev_get(tgtdev);
 	INIT_LIST_HEAD(&tgtdev->list);
 	list_add_tail(&tgtdev->list, &mrioc->tgtdev_list);
+<<<<<<< HEAD
 	tgtdev->state = MPI3MR_DEV_CREATED;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irqrestore(&mrioc->tgtdev_lock, flags);
 }
 
@@ -660,25 +670,38 @@ static void mpi3mr_tgtdev_add_to_list(struct mpi3mr_ioc *mrioc,
  * mpi3mr_tgtdev_del_from_list -Delete tgtdevice from the list
  * @mrioc: Adapter instance reference
  * @tgtdev: Target device
+<<<<<<< HEAD
  * @must_delete: Must delete the target device from the list irrespective
  * of the device state.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Remove the target device from the target device list
  *
  * Return: Nothing.
  */
 static void mpi3mr_tgtdev_del_from_list(struct mpi3mr_ioc *mrioc,
+<<<<<<< HEAD
 	struct mpi3mr_tgt_dev *tgtdev, bool must_delete)
+=======
+	struct mpi3mr_tgt_dev *tgtdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long flags;
 
 	spin_lock_irqsave(&mrioc->tgtdev_lock, flags);
+<<<<<<< HEAD
 	if ((tgtdev->state == MPI3MR_DEV_REMOVE_HS_STARTED) || (must_delete == true)) {
 		if (!list_empty(&tgtdev->list)) {
 			list_del_init(&tgtdev->list);
 			tgtdev->state = MPI3MR_DEV_DELETED;
 			mpi3mr_tgtdev_put(tgtdev);
 		}
+=======
+	if (!list_empty(&tgtdev->list)) {
+		list_del_init(&tgtdev->list);
+		mpi3mr_tgtdev_put(tgtdev);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	spin_unlock_irqrestore(&mrioc->tgtdev_lock, flags);
 }
@@ -1042,7 +1065,11 @@ void mpi3mr_rfresh_tgtdevs(struct mpi3mr_ioc *mrioc)
 			    tgtdev->perst_id);
 			if (tgtdev->host_exposed)
 				mpi3mr_remove_tgtdev_from_host(mrioc, tgtdev);
+<<<<<<< HEAD
 			mpi3mr_tgtdev_del_from_list(mrioc, tgtdev, true);
+=======
+			mpi3mr_tgtdev_del_from_list(mrioc, tgtdev);
+>>>>>>> b7ba80a49124 (Commit)
 			mpi3mr_tgtdev_put(tgtdev);
 		}
 	}
@@ -1287,12 +1314,21 @@ static void mpi3mr_devstatuschg_evt_bh(struct mpi3mr_ioc *mrioc,
 		if (!tgtdev->host_exposed)
 			mpi3mr_report_tgtdev_to_host(mrioc, tgtdev->perst_id);
 	}
+<<<<<<< HEAD
 
 	if (delete)
 		mpi3mr_remove_tgtdev_from_host(mrioc, tgtdev);
 
 	if (cleanup) {
 		mpi3mr_tgtdev_del_from_list(mrioc, tgtdev, false);
+=======
+	if (tgtdev->starget && tgtdev->starget->hostdata) {
+		if (delete)
+			mpi3mr_remove_tgtdev_from_host(mrioc, tgtdev);
+	}
+	if (cleanup) {
+		mpi3mr_tgtdev_del_from_list(mrioc, tgtdev);
+>>>>>>> b7ba80a49124 (Commit)
 		mpi3mr_tgtdev_put(tgtdev);
 	}
 
@@ -1341,6 +1377,7 @@ out:
 }
 
 /**
+<<<<<<< HEAD
  * mpi3mr_free_enclosure_list - release enclosures
  * @mrioc: Adapter instance reference
  *
@@ -1360,6 +1397,8 @@ void mpi3mr_free_enclosure_list(struct mpi3mr_ioc *mrioc)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * mpi3mr_enclosure_find_by_handle - enclosure search by handle
  * @mrioc: Adapter instance reference
  * @handle: Firmware device handle of the enclosure
@@ -1610,7 +1649,11 @@ static void mpi3mr_sastopochg_evt_bh(struct mpi3mr_ioc *mrioc,
 		case MPI3_EVENT_SAS_TOPO_PHY_RC_TARG_NOT_RESPONDING:
 			if (tgtdev->host_exposed)
 				mpi3mr_remove_tgtdev_from_host(mrioc, tgtdev);
+<<<<<<< HEAD
 			mpi3mr_tgtdev_del_from_list(mrioc, tgtdev, false);
+=======
+			mpi3mr_tgtdev_del_from_list(mrioc, tgtdev);
+>>>>>>> b7ba80a49124 (Commit)
 			mpi3mr_tgtdev_put(tgtdev);
 			break;
 		case MPI3_EVENT_SAS_TOPO_PHY_RC_RESPONDING:
@@ -1768,7 +1811,11 @@ static void mpi3mr_pcietopochg_evt_bh(struct mpi3mr_ioc *mrioc,
 		case MPI3_EVENT_PCIE_TOPO_PS_NOT_RESPONDING:
 			if (tgtdev->host_exposed)
 				mpi3mr_remove_tgtdev_from_host(mrioc, tgtdev);
+<<<<<<< HEAD
 			mpi3mr_tgtdev_del_from_list(mrioc, tgtdev, false);
+=======
+			mpi3mr_tgtdev_del_from_list(mrioc, tgtdev);
+>>>>>>> b7ba80a49124 (Commit)
 			mpi3mr_tgtdev_put(tgtdev);
 			break;
 		default:
@@ -1873,6 +1920,7 @@ static void mpi3mr_fwevt_bh(struct mpi3mr_ioc *mrioc,
 	if (mrioc->stop_drv_processing)
 		goto out;
 
+<<<<<<< HEAD
 	if (mrioc->unrecoverable) {
 		dprint_event_bh(mrioc,
 		    "ignoring event(0x%02x) in bottom half handler due to unrecoverable controller\n",
@@ -1880,6 +1928,8 @@ static void mpi3mr_fwevt_bh(struct mpi3mr_ioc *mrioc,
 		goto out;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!fwevt->process_evt)
 		goto evt_ack;
 
@@ -2022,18 +2072,25 @@ static int mpi3mr_create_tgtdev(struct mpi3mr_ioc *mrioc,
 	int retval = 0;
 	struct mpi3mr_tgt_dev *tgtdev = NULL;
 	u16 perst_id = 0;
+<<<<<<< HEAD
 	unsigned long flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	perst_id = le16_to_cpu(dev_pg0->persistent_id);
 	if (perst_id == MPI3_DEVICE0_PERSISTENTID_INVALID)
 		return retval;
 
+<<<<<<< HEAD
 	spin_lock_irqsave(&mrioc->tgtdev_lock, flags);
 	tgtdev = __mpi3mr_get_tgtdev_by_perst_id(mrioc, perst_id);
 	if (tgtdev)
 		tgtdev->state = MPI3MR_DEV_CREATED;
 	spin_unlock_irqrestore(&mrioc->tgtdev_lock, flags);
 
+=======
+	tgtdev = mpi3mr_get_tgtdev_by_perst_id(mrioc, perst_id);
+>>>>>>> b7ba80a49124 (Commit)
 	if (tgtdev) {
 		mpi3mr_update_tgtdev(mrioc, tgtdev, dev_pg0, true);
 		mpi3mr_tgtdev_put(tgtdev);
@@ -2231,6 +2288,7 @@ static void mpi3mr_dev_rmhs_send_tm(struct mpi3mr_ioc *mrioc, u16 handle,
 	u8 retrycount = 5;
 	struct mpi3mr_drv_cmd *drv_cmd = cmdparam;
 	struct delayed_dev_rmhs_node *delayed_dev_rmhs = NULL;
+<<<<<<< HEAD
 	struct mpi3mr_tgt_dev *tgtdev = NULL;
 	unsigned long flags;
 
@@ -2239,6 +2297,8 @@ static void mpi3mr_dev_rmhs_send_tm(struct mpi3mr_ioc *mrioc, u16 handle,
 	if (tgtdev && (iou_rc == MPI3_CTRL_OP_REMOVE_DEVICE))
 		tgtdev->state = MPI3MR_DEV_REMOVE_HS_STARTED;
 	spin_unlock_irqrestore(&mrioc->tgtdev_lock, flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (drv_cmd)
 		goto issue_cmd;
@@ -3285,8 +3345,12 @@ void mpi3mr_process_op_reply_desc(struct mpi3mr_ioc *mrioc,
 	}
 
 	if (scmd->result != (DID_OK << 16) && (scmd->cmnd[0] != ATA_12) &&
+<<<<<<< HEAD
 	    (scmd->cmnd[0] != ATA_16) &&
 	    mrioc->logging_level & MPI3_DEBUG_SCSI_ERROR) {
+=======
+	    (scmd->cmnd[0] != ATA_16)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ioc_info(mrioc, "%s :scmd->result 0x%x\n", __func__,
 		    scmd->result);
 		scsi_print_command(scmd);
@@ -3740,7 +3804,10 @@ int mpi3mr_issue_tm(struct mpi3mr_ioc *mrioc, u8 tm_type,
 		mpi3mr_poll_pend_io_completions(mrioc);
 		mpi3mr_ioc_enable_intr(mrioc);
 		mpi3mr_poll_pend_io_completions(mrioc);
+<<<<<<< HEAD
 		mpi3mr_process_admin_reply_q(mrioc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	switch (tm_type) {
 	case MPI3_SCSITASKMGMT_TASKTYPE_TARGET_RESET:
@@ -4016,6 +4083,7 @@ static int mpi3mr_eh_target_reset(struct scsi_cmnd *scmd)
 	stgt_priv_data = sdev_priv_data->tgt_priv_data;
 	dev_handle = stgt_priv_data->dev_handle;
 	if (stgt_priv_data->dev_removed) {
+<<<<<<< HEAD
 		struct scmd_priv *cmd_priv = scsi_cmd_priv(scmd);
 		sdev_printk(KERN_INFO, scmd->device,
 		    "%s:target(handle = 0x%04x) is removed, target reset is not issued\n",
@@ -4024,6 +4092,12 @@ static int mpi3mr_eh_target_reset(struct scsi_cmnd *scmd)
 			retval = SUCCESS;
 		else
 			retval = FAILED;
+=======
+		sdev_printk(KERN_INFO, scmd->device,
+		    "%s:target(handle = 0x%04x) is removed, target reset is not issued\n",
+		    mrioc->name, dev_handle);
+		retval = FAILED;
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 	sdev_printk(KERN_INFO, scmd->device,
@@ -4088,6 +4162,7 @@ static int mpi3mr_eh_dev_reset(struct scsi_cmnd *scmd)
 	stgt_priv_data = sdev_priv_data->tgt_priv_data;
 	dev_handle = stgt_priv_data->dev_handle;
 	if (stgt_priv_data->dev_removed) {
+<<<<<<< HEAD
 		struct scmd_priv *cmd_priv = scsi_cmd_priv(scmd);
 		sdev_printk(KERN_INFO, scmd->device,
 		    "%s: device(handle = 0x%04x) is removed, device(LUN) reset is not issued\n",
@@ -4096,6 +4171,12 @@ static int mpi3mr_eh_dev_reset(struct scsi_cmnd *scmd)
 			retval = SUCCESS;
 		else
 			retval = FAILED;
+=======
+		sdev_printk(KERN_INFO, scmd->device,
+		    "%s: device(handle = 0x%04x) is removed, device(LUN) reset is not issued\n",
+		    mrioc->name, dev_handle);
+		retval = FAILED;
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 	sdev_printk(KERN_INFO, scmd->device,
@@ -4653,6 +4734,7 @@ static int mpi3mr_qcmd(struct Scsi_Host *shost,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	stgt_priv_data = sdev_priv_data->tgt_priv_data;
 	dev_handle = stgt_priv_data->dev_handle;
 
@@ -4666,11 +4748,18 @@ static int mpi3mr_qcmd(struct Scsi_Host *shost,
 		goto out;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (mrioc->reset_in_progress) {
 		retval = SCSI_MLQUEUE_HOST_BUSY;
 		goto out;
 	}
 
+<<<<<<< HEAD
+=======
+	stgt_priv_data = sdev_priv_data->tgt_priv_data;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (atomic_read(&stgt_priv_data->block_io)) {
 		if (mrioc->stop_drv_processing) {
 			scmd->result = DID_NO_CONNECT << 16;
@@ -4681,6 +4770,10 @@ static int mpi3mr_qcmd(struct Scsi_Host *shost,
 		goto out;
 	}
 
+<<<<<<< HEAD
+=======
+	dev_handle = stgt_priv_data->dev_handle;
+>>>>>>> b7ba80a49124 (Commit)
 	if (dev_handle == MPI3MR_INVALID_DEV_HANDLE) {
 		scmd->result = DID_NO_CONNECT << 16;
 		scsi_done(scmd);
@@ -4991,10 +5084,13 @@ mpi3mr_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 		mpi3mr_init_drv_cmd(&mrioc->dev_rmhs_cmds[i],
 		    MPI3MR_HOSTTAG_DEVRMCMD_MIN + i);
 
+<<<<<<< HEAD
 	for (i = 0; i < MPI3MR_NUM_EVTACKCMD; i++)
 		mpi3mr_init_drv_cmd(&mrioc->evtack_cmds[i],
 				    MPI3MR_HOSTTAG_EVTACKCMD_MIN + i);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (pdev->revision)
 		mrioc->enable_segqueue = true;
 
@@ -5116,8 +5212,11 @@ static void mpi3mr_remove(struct pci_dev *pdev)
 	struct workqueue_struct	*wq;
 	unsigned long flags;
 	struct mpi3mr_tgt_dev *tgtdev, *tgtdev_next;
+<<<<<<< HEAD
 	struct mpi3mr_hba_port *port, *hba_port_next;
 	struct mpi3mr_sas_node *sas_expander, *sas_expander_next;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!shost)
 		return;
@@ -5126,11 +5225,14 @@ static void mpi3mr_remove(struct pci_dev *pdev)
 	while (mrioc->reset_in_progress || mrioc->is_driver_loading)
 		ssleep(1);
 
+<<<<<<< HEAD
 	if (!pci_device_is_present(mrioc->pdev)) {
 		mrioc->unrecoverable = 1;
 		mpi3mr_flush_cmds_for_unrecovered_controller(mrioc);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mpi3mr_bsg_exit(mrioc);
 	mrioc->stop_drv_processing = 1;
 	mpi3mr_cleanup_fwevt_list(mrioc);
@@ -5149,7 +5251,11 @@ static void mpi3mr_remove(struct pci_dev *pdev)
 	list_for_each_entry_safe(tgtdev, tgtdev_next, &mrioc->tgtdev_list,
 	    list) {
 		mpi3mr_remove_tgtdev_from_host(mrioc, tgtdev);
+<<<<<<< HEAD
 		mpi3mr_tgtdev_del_from_list(mrioc, tgtdev, true);
+=======
+		mpi3mr_tgtdev_del_from_list(mrioc, tgtdev);
+>>>>>>> b7ba80a49124 (Commit)
 		mpi3mr_tgtdev_put(tgtdev);
 	}
 	mpi3mr_stop_watchdog(mrioc);
@@ -5157,6 +5263,7 @@ static void mpi3mr_remove(struct pci_dev *pdev)
 	mpi3mr_free_mem(mrioc);
 	mpi3mr_cleanup_resources(mrioc);
 
+<<<<<<< HEAD
 	spin_lock_irqsave(&mrioc->sas_node_lock, flags);
 	list_for_each_entry_safe_reverse(sas_expander, sas_expander_next,
 	    &mrioc->sas_expander_list, list) {
@@ -5179,6 +5286,8 @@ static void mpi3mr_remove(struct pci_dev *pdev)
 		mrioc->sas_hba.num_phys = 0;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock(&mrioc_list_lock);
 	list_del(&mrioc->list);
 	spin_unlock(&mrioc_list_lock);
@@ -5223,21 +5332,37 @@ static void mpi3mr_shutdown(struct pci_dev *pdev)
 	mpi3mr_cleanup_resources(mrioc);
 }
 
+<<<<<<< HEAD
 /**
  * mpi3mr_suspend - PCI power management suspend callback
  * @dev: Device struct
+=======
+#ifdef CONFIG_PM
+/**
+ * mpi3mr_suspend - PCI power management suspend callback
+ * @pdev: PCI device instance
+ * @state: New power state
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Change the power state to the given value and cleanup the IOC
  * by issuing MUR and shutdown notification
  *
  * Return: 0 always.
  */
+<<<<<<< HEAD
 static int __maybe_unused
 mpi3mr_suspend(struct device *dev)
 {
 	struct pci_dev *pdev = to_pci_dev(dev);
 	struct Scsi_Host *shost = pci_get_drvdata(pdev);
 	struct mpi3mr_ioc *mrioc;
+=======
+static int mpi3mr_suspend(struct pci_dev *pdev, pm_message_t state)
+{
+	struct Scsi_Host *shost = pci_get_drvdata(pdev);
+	struct mpi3mr_ioc *mrioc;
+	pci_power_t device_state;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!shost)
 		return 0;
@@ -5251,26 +5376,44 @@ mpi3mr_suspend(struct device *dev)
 	mpi3mr_stop_watchdog(mrioc);
 	mpi3mr_cleanup_ioc(mrioc);
 
+<<<<<<< HEAD
 	ioc_info(mrioc, "pdev=0x%p, slot=%s, entering operating state\n",
 	    pdev, pci_name(pdev));
 	mpi3mr_cleanup_resources(mrioc);
+=======
+	device_state = pci_choose_state(pdev, state);
+	ioc_info(mrioc, "pdev=0x%p, slot=%s, entering operating state [D%d]\n",
+	    pdev, pci_name(pdev), device_state);
+	pci_save_state(pdev);
+	mpi3mr_cleanup_resources(mrioc);
+	pci_set_power_state(pdev, device_state);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 /**
  * mpi3mr_resume - PCI power management resume callback
+<<<<<<< HEAD
  * @dev: Device struct
+=======
+ * @pdev: PCI device instance
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Restore the power state to D0 and reinitialize the controller
  * and resume I/O operations to the target devices
  *
  * Return: 0 on success, non-zero on failure
  */
+<<<<<<< HEAD
 static int __maybe_unused
 mpi3mr_resume(struct device *dev)
 {
 	struct pci_dev *pdev = to_pci_dev(dev);
+=======
+static int mpi3mr_resume(struct pci_dev *pdev)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct Scsi_Host *shost = pci_get_drvdata(pdev);
 	struct mpi3mr_ioc *mrioc;
 	pci_power_t device_state = pdev->current_state;
@@ -5283,6 +5426,12 @@ mpi3mr_resume(struct device *dev)
 
 	ioc_info(mrioc, "pdev=0x%p, slot=%s, previous operating state [D%d]\n",
 	    pdev, pci_name(pdev), device_state);
+<<<<<<< HEAD
+=======
+	pci_set_power_state(pdev, PCI_D0);
+	pci_enable_wake(pdev, PCI_D0, 0);
+	pci_restore_state(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	mrioc->pdev = pdev;
 	mrioc->cpu_count = num_online_cpus();
 	r = mpi3mr_setup_resources(mrioc);
@@ -5293,21 +5442,32 @@ mpi3mr_resume(struct device *dev)
 	}
 
 	mrioc->stop_drv_processing = 0;
+<<<<<<< HEAD
 	mpi3mr_invalidate_devhandles(mrioc);
 	mpi3mr_free_enclosure_list(mrioc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mpi3mr_memset_buffers(mrioc);
 	r = mpi3mr_reinit_ioc(mrioc, 1);
 	if (r) {
 		ioc_err(mrioc, "resuming controller failed[%d]\n", r);
 		return r;
 	}
+<<<<<<< HEAD
 	ssleep(MPI3MR_RESET_TOPOLOGY_SETTLE_TIME);
 	scsi_unblock_requests(shost);
 	mrioc->device_refresh_on = 0;
+=======
+	scsi_unblock_requests(shost);
+>>>>>>> b7ba80a49124 (Commit)
 	mpi3mr_start_watchdog(mrioc);
 
 	return 0;
 }
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct pci_device_id mpi3mr_pci_id_table[] = {
 	{
@@ -5318,15 +5478,25 @@ static const struct pci_device_id mpi3mr_pci_id_table[] = {
 };
 MODULE_DEVICE_TABLE(pci, mpi3mr_pci_id_table);
 
+<<<<<<< HEAD
 static SIMPLE_DEV_PM_OPS(mpi3mr_pm_ops, mpi3mr_suspend, mpi3mr_resume);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct pci_driver mpi3mr_pci_driver = {
 	.name = MPI3MR_DRIVER_NAME,
 	.id_table = mpi3mr_pci_id_table,
 	.probe = mpi3mr_probe,
 	.remove = mpi3mr_remove,
 	.shutdown = mpi3mr_shutdown,
+<<<<<<< HEAD
 	.driver.pm = &mpi3mr_pm_ops,
+=======
+#ifdef CONFIG_PM
+	.suspend = mpi3mr_suspend,
+	.resume = mpi3mr_resume,
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static ssize_t event_counter_show(struct device_driver *dd, char *buf)

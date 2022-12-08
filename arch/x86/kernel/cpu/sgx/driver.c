@@ -95,7 +95,11 @@ static int sgx_mmap(struct file *file, struct vm_area_struct *vma)
 		return ret;
 
 	vma->vm_ops = &sgx_vm_ops;
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP | VM_IO);
+=======
+	vma->vm_flags |= VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP | VM_IO;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_private_data = encl;
 
 	return 0;

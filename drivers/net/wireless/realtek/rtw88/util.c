@@ -105,6 +105,7 @@ void rtw_desc_to_mcsrate(u16 rate, u8 *mcs, u8 *nss)
 		*mcs = rate - DESC_RATEMCS0;
 	}
 }
+<<<<<<< HEAD
 
 struct rtw_stas_entry {
 	struct list_head list;
@@ -208,3 +209,5 @@ void rtw_iterate_vifs(struct rtw_dev *rtwdev,
 		kfree(vif_entry);
 	}
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

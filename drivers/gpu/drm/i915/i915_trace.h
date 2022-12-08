@@ -15,6 +15,10 @@
 #include "gt/intel_engine.h"
 
 #include "i915_drv.h"
+<<<<<<< HEAD
+=======
+#include "i915_irq.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /* object tracking */
 
@@ -670,6 +674,24 @@ TRACE_EVENT_CONDITION(i915_reg_rw,
 		(u32)(__entry->val >> 32))
 );
 
+<<<<<<< HEAD
+=======
+TRACE_EVENT(intel_gpu_freq_change,
+	    TP_PROTO(u32 freq),
+	    TP_ARGS(freq),
+
+	    TP_STRUCT__entry(
+			     __field(u32, freq)
+			     ),
+
+	    TP_fast_assign(
+			   __entry->freq = freq;
+			   ),
+
+	    TP_printk("new_freq=%u", __entry->freq)
+);
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * DOC: i915_ppgtt_create and i915_ppgtt_release tracepoints
  *

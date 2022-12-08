@@ -720,7 +720,11 @@ static int rename_ctl(struct snd_card *card, const char *src, const char *dst)
 {
 	struct snd_kcontrol *kctl = ctl_find(card, src);
 	if (kctl) {
+<<<<<<< HEAD
 		snd_ctl_rename(card, kctl, dst);
+=======
+		strcpy(kctl->id.name, dst);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 	return -ENOENT;

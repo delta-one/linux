@@ -70,10 +70,14 @@ static void mlx5i_build_nic_params(struct mlx5_core_dev *mdev,
 
 	params->packet_merge.type = MLX5E_PACKET_MERGE_NONE;
 	params->hard_mtu = MLX5_IB_GRH_BYTES + MLX5_IPOIB_HARD_LEN;
+<<<<<<< HEAD
 
 	/* CQE compression is not supported for IPoIB */
 	params->rx_cqe_compress_def = false;
 	MLX5E_SET_PFLAG(params, MLX5E_PFLAG_RX_CQE_COMPRESS, params->rx_cqe_compress_def);
+=======
+	params->tunneled_offload_en = false;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Called directly after IPoIB netdevice was created to initialize SW structs */
@@ -159,6 +163,7 @@ void mlx5i_get_stats(struct net_device *dev, struct rtnl_link_stats64 *stats)
 	stats->tx_dropped = sstats->tx_queue_dropped;
 }
 
+<<<<<<< HEAD
 struct net_device *mlx5i_parent_get(struct net_device *netdev)
 {
 	struct mlx5e_priv *priv = mlx5i_epriv(netdev);
@@ -197,6 +202,8 @@ void mlx5i_parent_put(struct net_device *netdev)
 	dev_put(ipriv->parent_dev);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int mlx5i_init_underlay_qp(struct mlx5e_priv *priv)
 {
 	struct mlx5_core_dev *mdev = priv->mdev;
@@ -411,8 +418,12 @@ static int mlx5i_init_rx(struct mlx5e_priv *priv)
 	int err;
 
 	priv->fs = mlx5e_fs_init(priv->profile, mdev,
+<<<<<<< HEAD
 				 !test_bit(MLX5E_STATE_DESTROYING, &priv->state),
 				 priv->dfs_root);
+=======
+				 !test_bit(MLX5E_STATE_DESTROYING, &priv->state));
+>>>>>>> b7ba80a49124 (Commit)
 	if (!priv->fs) {
 		netdev_err(priv->netdev, "FS allocation failed\n");
 		return -ENOMEM;
@@ -505,6 +516,10 @@ static const struct mlx5e_profile mlx5i_nic_profile = {
 	.update_carrier    = NULL, /* no HW update in IB link */
 	.rx_handlers       = &mlx5i_rx_handlers,
 	.max_tc		   = MLX5I_MAX_NUM_TC,
+<<<<<<< HEAD
+=======
+	.rq_groups	   = MLX5E_NUM_RQ_GROUPS(REGULAR),
+>>>>>>> b7ba80a49124 (Commit)
 	.stats_grps        = mlx5i_stats_grps,
 	.stats_grps_num    = mlx5i_stats_grps_num,
 };
@@ -603,17 +618,24 @@ static int mlx5i_open(struct net_device *netdev)
 	if (err)
 		goto err_remove_fs_underlay_qp;
 
+<<<<<<< HEAD
 	err = epriv->profile->update_rx(epriv);
 	if (err)
 		goto err_close_channels;
 
+=======
+	epriv->profile->update_rx(epriv);
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5e_activate_priv_channels(epriv);
 
 	mutex_unlock(&epriv->state_lock);
 	return 0;
 
+<<<<<<< HEAD
 err_close_channels:
 	mlx5e_close_channels(&epriv->channels);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_remove_fs_underlay_qp:
 	mlx5_fs_remove_rx_underlay_qpn(mdev, ipriv->qpn);
 err_reset_qp:

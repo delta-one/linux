@@ -1205,7 +1205,11 @@ void __flush_tlb_all(void)
 	 */
 	VM_WARN_ON_ONCE(preemptible());
 
+<<<<<<< HEAD
 	if (cpu_feature_enabled(X86_FEATURE_PGE)) {
+=======
+	if (boot_cpu_has(X86_FEATURE_PGE)) {
+>>>>>>> b7ba80a49124 (Commit)
 		__flush_tlb_global();
 	} else {
 		/*

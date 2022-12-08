@@ -1393,9 +1393,15 @@ static struct dm9000_plat_data *dm9000_parse_dt(struct device *dev)
 	if (!pdata)
 		return ERR_PTR(-ENOMEM);
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "davicom,ext-phy"))
 		pdata->flags |= DM9000_PLATF_EXT_PHY;
 	if (of_property_read_bool(np, "davicom,no-eeprom"))
+=======
+	if (of_find_property(np, "davicom,ext-phy", NULL))
+		pdata->flags |= DM9000_PLATF_EXT_PHY;
+	if (of_find_property(np, "davicom,no-eeprom", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		pdata->flags |= DM9000_PLATF_NO_EEPROM;
 
 	ret = of_get_mac_address(np, pdata->dev_addr);

@@ -113,7 +113,10 @@ static int com20020_probe(struct pcmcia_device *p_dev)
 	struct com20020_dev *info;
 	struct net_device *dev;
 	struct arcnet_local *lp;
+<<<<<<< HEAD
 	int ret = -ENOMEM;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_dbg(&p_dev->dev, "com20020_attach()\n");
 
@@ -143,6 +146,7 @@ static int com20020_probe(struct pcmcia_device *p_dev)
 	info->dev = dev;
 	p_dev->priv = info;
 
+<<<<<<< HEAD
 	ret = com20020_config(p_dev);
 	if (ret)
 		goto fail_config;
@@ -155,6 +159,14 @@ fail_alloc_dev:
 	kfree(info);
 fail_alloc_info:
 	return ret;
+=======
+	return com20020_config(p_dev);
+
+fail_alloc_dev:
+	kfree(info);
+fail_alloc_info:
+	return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 } /* com20020_attach */
 
 static void com20020_detach(struct pcmcia_device *link)

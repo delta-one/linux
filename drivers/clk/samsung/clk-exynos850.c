@@ -36,7 +36,10 @@
 #define CLK_CON_MUX_MUX_CLKCMU_CORE_MMC_EMBD	0x101c
 #define CLK_CON_MUX_MUX_CLKCMU_CORE_SSS		0x1020
 #define CLK_CON_MUX_MUX_CLKCMU_DPU		0x1034
+<<<<<<< HEAD
 #define CLK_CON_MUX_MUX_CLKCMU_G3D_SWITCH	0x1038
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CLK_CON_MUX_MUX_CLKCMU_HSI_BUS		0x103c
 #define CLK_CON_MUX_MUX_CLKCMU_HSI_MMC_CARD	0x1040
 #define CLK_CON_MUX_MUX_CLKCMU_HSI_USB20DRD	0x1044
@@ -58,7 +61,10 @@
 #define CLK_CON_DIV_CLKCMU_CORE_MMC_EMBD	0x1828
 #define CLK_CON_DIV_CLKCMU_CORE_SSS		0x182c
 #define CLK_CON_DIV_CLKCMU_DPU			0x1840
+<<<<<<< HEAD
 #define CLK_CON_DIV_CLKCMU_G3D_SWITCH		0x1844
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CLK_CON_DIV_CLKCMU_HSI_BUS		0x1848
 #define CLK_CON_DIV_CLKCMU_HSI_MMC_CARD		0x184c
 #define CLK_CON_DIV_CLKCMU_HSI_USB20DRD		0x1850
@@ -86,7 +92,10 @@
 #define CLK_CON_GAT_GATE_CLKCMU_CORE_MMC_EMBD	0x2024
 #define CLK_CON_GAT_GATE_CLKCMU_CORE_SSS	0x2028
 #define CLK_CON_GAT_GATE_CLKCMU_DPU		0x203c
+<<<<<<< HEAD
 #define CLK_CON_GAT_GATE_CLKCMU_G3D_SWITCH	0x2040
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CLK_CON_GAT_GATE_CLKCMU_HSI_BUS		0x2044
 #define CLK_CON_GAT_GATE_CLKCMU_HSI_MMC_CARD	0x2048
 #define CLK_CON_GAT_GATE_CLKCMU_HSI_USB20DRD	0x204c
@@ -119,7 +128,10 @@ static const unsigned long top_clk_regs[] __initconst = {
 	CLK_CON_MUX_MUX_CLKCMU_CORE_MMC_EMBD,
 	CLK_CON_MUX_MUX_CLKCMU_CORE_SSS,
 	CLK_CON_MUX_MUX_CLKCMU_DPU,
+<<<<<<< HEAD
 	CLK_CON_MUX_MUX_CLKCMU_G3D_SWITCH,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	CLK_CON_MUX_MUX_CLKCMU_HSI_BUS,
 	CLK_CON_MUX_MUX_CLKCMU_HSI_MMC_CARD,
 	CLK_CON_MUX_MUX_CLKCMU_HSI_USB20DRD,
@@ -141,7 +153,10 @@ static const unsigned long top_clk_regs[] __initconst = {
 	CLK_CON_DIV_CLKCMU_CORE_MMC_EMBD,
 	CLK_CON_DIV_CLKCMU_CORE_SSS,
 	CLK_CON_DIV_CLKCMU_DPU,
+<<<<<<< HEAD
 	CLK_CON_DIV_CLKCMU_G3D_SWITCH,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	CLK_CON_DIV_CLKCMU_HSI_BUS,
 	CLK_CON_DIV_CLKCMU_HSI_MMC_CARD,
 	CLK_CON_DIV_CLKCMU_HSI_USB20DRD,
@@ -169,7 +184,10 @@ static const unsigned long top_clk_regs[] __initconst = {
 	CLK_CON_GAT_GATE_CLKCMU_CORE_MMC_EMBD,
 	CLK_CON_GAT_GATE_CLKCMU_CORE_SSS,
 	CLK_CON_GAT_GATE_CLKCMU_DPU,
+<<<<<<< HEAD
 	CLK_CON_GAT_GATE_CLKCMU_G3D_SWITCH,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	CLK_CON_GAT_GATE_CLKCMU_HSI_BUS,
 	CLK_CON_GAT_GATE_CLKCMU_HSI_MMC_CARD,
 	CLK_CON_GAT_GATE_CLKCMU_HSI_USB20DRD,
@@ -222,9 +240,12 @@ PNAME(mout_core_mmc_embd_p)	= { "oscclk", "dout_shared0_div2",
 				    "oscclk", "oscclk" };
 PNAME(mout_core_sss_p)		= { "dout_shared0_div3", "dout_shared1_div3",
 				    "dout_shared0_div4", "dout_shared1_div4" };
+<<<<<<< HEAD
 /* List of parent clocks for Muxes in CMU_TOP: for CMU_G3D */
 PNAME(mout_g3d_switch_p)	= { "dout_shared0_div2", "dout_shared1_div2",
 				    "dout_shared0_div3", "dout_shared1_div3" };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* List of parent clocks for Muxes in CMU_TOP: for CMU_HSI */
 PNAME(mout_hsi_bus_p)		= { "dout_shared0_div2", "dout_shared1_div2" };
 PNAME(mout_hsi_mmc_card_p)	= { "oscclk", "dout_shared0_div2",
@@ -292,10 +313,13 @@ static const struct samsung_mux_clock top_mux_clks[] __initconst = {
 	MUX(CLK_MOUT_DPU, "mout_dpu", mout_dpu_p,
 	    CLK_CON_MUX_MUX_CLKCMU_DPU, 0, 2),
 
+<<<<<<< HEAD
 	/* G3D */
 	MUX(CLK_MOUT_G3D_SWITCH, "mout_g3d_switch", mout_g3d_switch_p,
 	    CLK_CON_MUX_MUX_CLKCMU_G3D_SWITCH, 0, 2),
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* HSI */
 	MUX(CLK_MOUT_HSI_BUS, "mout_hsi_bus", mout_hsi_bus_p,
 	    CLK_CON_MUX_MUX_CLKCMU_HSI_BUS, 0, 1),
@@ -370,10 +394,13 @@ static const struct samsung_div_clock top_div_clks[] __initconst = {
 	DIV(CLK_DOUT_DPU, "dout_dpu", "gout_dpu",
 	    CLK_CON_DIV_CLKCMU_DPU, 0, 4),
 
+<<<<<<< HEAD
 	/* G3D */
 	DIV(CLK_DOUT_G3D_SWITCH, "dout_g3d_switch", "gout_g3d_switch",
 	    CLK_CON_DIV_CLKCMU_G3D_SWITCH, 0, 3),
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* HSI */
 	DIV(CLK_DOUT_HSI_BUS, "dout_hsi_bus", "gout_hsi_bus",
 	    CLK_CON_DIV_CLKCMU_HSI_BUS, 0, 4),
@@ -434,10 +461,13 @@ static const struct samsung_gate_clock top_gate_clks[] __initconst = {
 	GATE(CLK_GOUT_DPU, "gout_dpu", "mout_dpu",
 	     CLK_CON_GAT_GATE_CLKCMU_DPU, 21, 0, 0),
 
+<<<<<<< HEAD
 	/* G3D */
 	GATE(CLK_GOUT_G3D_SWITCH, "gout_g3d_switch", "mout_g3d_switch",
 	     CLK_CON_GAT_GATE_CLKCMU_G3D_SWITCH, 21, 0, 0),
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* HSI */
 	GATE(CLK_GOUT_HSI_BUS, "gout_hsi_bus", "mout_hsi_bus",
 	     CLK_CON_GAT_GATE_CLKCMU_HSI_BUS, 21, 0, 0),
@@ -612,7 +642,11 @@ static const struct samsung_gate_clock apm_gate_clks[] __initconst = {
 	     CLK_CON_GAT_GOUT_APM_APBIF_GPIO_ALIVE_PCLK, 21, CLK_IGNORE_UNUSED,
 	     0),
 	GATE(CLK_GOUT_PMU_ALIVE_PCLK, "gout_pmu_alive_pclk", "dout_apm_bus",
+<<<<<<< HEAD
 	     CLK_CON_GAT_GOUT_APM_APBIF_PMU_ALIVE_PCLK, 21, CLK_IS_CRITICAL, 0),
+=======
+	     CLK_CON_GAT_GOUT_APM_APBIF_PMU_ALIVE_PCLK, 21, 0, 0),
+>>>>>>> b7ba80a49124 (Commit)
 	GATE(CLK_GOUT_SYSREG_APM_PCLK, "gout_sysreg_apm_pclk", "dout_apm_bus",
 	     CLK_CON_GAT_GOUT_APM_SYSREG_APM_PCLK, 21, 0, 0),
 };
@@ -674,7 +708,10 @@ static const struct samsung_cmu_info apm_cmu_info __initconst = {
 #define CLK_CON_GAT_GOUT_AUD_ABOX_BCLK_UAIF4	0x2014
 #define CLK_CON_GAT_GOUT_AUD_ABOX_BCLK_UAIF5	0x2018
 #define CLK_CON_GAT_GOUT_AUD_ABOX_BCLK_UAIF6	0x201c
+<<<<<<< HEAD
 #define CLK_CON_GAT_CLK_AUD_CMU_AUD_PCLK	0x2020
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CLK_CON_GAT_GOUT_AUD_ABOX_ACLK		0x2048
 #define CLK_CON_GAT_GOUT_AUD_ABOX_BCLK_SPDY	0x204c
 #define CLK_CON_GAT_GOUT_AUD_ABOX_CCLK_ASB	0x2050
@@ -730,7 +767,10 @@ static const unsigned long aud_clk_regs[] __initconst = {
 	CLK_CON_GAT_GOUT_AUD_ABOX_BCLK_UAIF4,
 	CLK_CON_GAT_GOUT_AUD_ABOX_BCLK_UAIF5,
 	CLK_CON_GAT_GOUT_AUD_ABOX_BCLK_UAIF6,
+<<<<<<< HEAD
 	CLK_CON_GAT_CLK_AUD_CMU_AUD_PCLK,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	CLK_CON_GAT_GOUT_AUD_ABOX_ACLK,
 	CLK_CON_GAT_GOUT_AUD_ABOX_BCLK_SPDY,
 	CLK_CON_GAT_GOUT_AUD_ABOX_CCLK_ASB,
@@ -850,9 +890,12 @@ static const struct samsung_div_clock aud_div_clks[] __initconst = {
 };
 
 static const struct samsung_gate_clock aud_gate_clks[] __initconst = {
+<<<<<<< HEAD
 	GATE(CLK_GOUT_AUD_CMU_AUD_PCLK, "gout_aud_cmu_aud_pclk",
 	     "dout_aud_busd",
 	     CLK_CON_GAT_CLK_AUD_CMU_AUD_PCLK, 21, CLK_IGNORE_UNUSED, 0),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	GATE(CLK_GOUT_AUD_CA32_CCLK, "gout_aud_ca32_cclk", "mout_aud_cpu_hch",
 	     CLK_CON_GAT_GOUT_AUD_ABOX_CCLK_CA32, 21, 0, 0),
 	GATE(CLK_GOUT_AUD_ASB_CCLK, "gout_aud_asb_cclk", "dout_aud_cpu_aclk",
@@ -1018,6 +1061,7 @@ static const struct samsung_cmu_info cmgp_cmu_info __initconst = {
 	.clk_name		= "gout_clkcmu_cmgp_bus",
 };
 
+<<<<<<< HEAD
 /* ---- CMU_G3D ------------------------------------------------------------- */
 
 /* Register Offset definitions for CMU_G3D (0x11400000) */
@@ -1114,6 +1158,8 @@ static const struct samsung_cmu_info g3d_cmu_info __initconst = {
 	.clk_name		= "dout_g3d_switch",
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* ---- CMU_HSI ------------------------------------------------------------- */
 
 /* Register Offset definitions for CMU_HSI (0x13400000) */
@@ -1121,15 +1167,21 @@ static const struct samsung_cmu_info g3d_cmu_info __initconst = {
 #define PLL_CON0_MUX_CLKCMU_HSI_MMC_CARD_USER			0x0610
 #define PLL_CON0_MUX_CLKCMU_HSI_USB20DRD_USER			0x0620
 #define CLK_CON_MUX_MUX_CLK_HSI_RTC				0x1000
+<<<<<<< HEAD
 #define CLK_CON_GAT_CLK_HSI_CMU_HSI_PCLK			0x2000
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CLK_CON_GAT_HSI_USB20DRD_TOP_I_RTC_CLK__ALV		0x2008
 #define CLK_CON_GAT_HSI_USB20DRD_TOP_I_REF_CLK_50		0x200c
 #define CLK_CON_GAT_HSI_USB20DRD_TOP_I_PHY_REFCLK_26		0x2010
 #define CLK_CON_GAT_GOUT_HSI_GPIO_HSI_PCLK			0x2018
 #define CLK_CON_GAT_GOUT_HSI_MMC_CARD_I_ACLK			0x2024
 #define CLK_CON_GAT_GOUT_HSI_MMC_CARD_SDCLKIN			0x2028
+<<<<<<< HEAD
 #define CLK_CON_GAT_GOUT_HSI_PPMU_ACLK				0x202c
 #define CLK_CON_GAT_GOUT_HSI_PPMU_PCLK				0x2030
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CLK_CON_GAT_GOUT_HSI_SYSREG_HSI_PCLK			0x2038
 #define CLK_CON_GAT_GOUT_HSI_USB20DRD_TOP_ACLK_PHYCTRL_20	0x203c
 #define CLK_CON_GAT_GOUT_HSI_USB20DRD_TOP_BUS_CLK_EARLY		0x2040
@@ -1139,15 +1191,21 @@ static const unsigned long hsi_clk_regs[] __initconst = {
 	PLL_CON0_MUX_CLKCMU_HSI_MMC_CARD_USER,
 	PLL_CON0_MUX_CLKCMU_HSI_USB20DRD_USER,
 	CLK_CON_MUX_MUX_CLK_HSI_RTC,
+<<<<<<< HEAD
 	CLK_CON_GAT_CLK_HSI_CMU_HSI_PCLK,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	CLK_CON_GAT_HSI_USB20DRD_TOP_I_RTC_CLK__ALV,
 	CLK_CON_GAT_HSI_USB20DRD_TOP_I_REF_CLK_50,
 	CLK_CON_GAT_HSI_USB20DRD_TOP_I_PHY_REFCLK_26,
 	CLK_CON_GAT_GOUT_HSI_GPIO_HSI_PCLK,
 	CLK_CON_GAT_GOUT_HSI_MMC_CARD_I_ACLK,
 	CLK_CON_GAT_GOUT_HSI_MMC_CARD_SDCLKIN,
+<<<<<<< HEAD
 	CLK_CON_GAT_GOUT_HSI_PPMU_ACLK,
 	CLK_CON_GAT_GOUT_HSI_PPMU_PCLK,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	CLK_CON_GAT_GOUT_HSI_SYSREG_HSI_PCLK,
 	CLK_CON_GAT_GOUT_HSI_USB20DRD_TOP_ACLK_PHYCTRL_20,
 	CLK_CON_GAT_GOUT_HSI_USB20DRD_TOP_BUS_CLK_EARLY,
@@ -1173,10 +1231,13 @@ static const struct samsung_mux_clock hsi_mux_clks[] __initconst = {
 };
 
 static const struct samsung_gate_clock hsi_gate_clks[] __initconst = {
+<<<<<<< HEAD
 	/* TODO: Should be enabled in corresponding driver */
 	GATE(CLK_GOUT_HSI_CMU_HSI_PCLK, "gout_hsi_cmu_hsi_pclk",
 	     "mout_hsi_bus_user",
 	     CLK_CON_GAT_CLK_HSI_CMU_HSI_PCLK, 21, CLK_IGNORE_UNUSED, 0),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	GATE(CLK_GOUT_USB_RTC_CLK, "gout_usb_rtc", "mout_hsi_rtc",
 	     CLK_CON_GAT_HSI_USB20DRD_TOP_I_RTC_CLK__ALV, 21, 0, 0),
 	GATE(CLK_GOUT_USB_REF_CLK, "gout_usb_ref", "mout_hsi_usb20drd_user",
@@ -1191,10 +1252,13 @@ static const struct samsung_gate_clock hsi_gate_clks[] __initconst = {
 	GATE(CLK_GOUT_MMC_CARD_SDCLKIN, "gout_mmc_card_sdclkin",
 	     "mout_hsi_mmc_card_user",
 	     CLK_CON_GAT_GOUT_HSI_MMC_CARD_SDCLKIN, 21, CLK_SET_RATE_PARENT, 0),
+<<<<<<< HEAD
 	GATE(CLK_GOUT_HSI_PPMU_ACLK, "gout_hsi_ppmu_aclk", "mout_hsi_bus_user",
 	     CLK_CON_GAT_GOUT_HSI_PPMU_ACLK, 21, 0, 0),
 	GATE(CLK_GOUT_HSI_PPMU_PCLK, "gout_hsi_ppmu_pclk", "mout_hsi_bus_user",
 	     CLK_CON_GAT_GOUT_HSI_PPMU_PCLK, 21, 0, 0),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	GATE(CLK_GOUT_SYSREG_HSI_PCLK, "gout_sysreg_hsi_pclk",
 	     "mout_hsi_bus_user",
 	     CLK_CON_GAT_GOUT_HSI_SYSREG_HSI_PCLK, 21, 0, 0),
@@ -1837,9 +1901,12 @@ static const struct of_device_id exynos850_cmu_of_match[] = {
 		.compatible = "samsung,exynos850-cmu-cmgp",
 		.data = &cmgp_cmu_info,
 	}, {
+<<<<<<< HEAD
 		.compatible = "samsung,exynos850-cmu-g3d",
 		.data = &g3d_cmu_info,
 	}, {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.compatible = "samsung,exynos850-cmu-hsi",
 		.data = &hsi_cmu_info,
 	}, {

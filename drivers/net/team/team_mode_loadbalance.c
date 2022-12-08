@@ -466,9 +466,15 @@ static void __lb_one_cpu_stats_add(struct lb_stats *acc_stats,
 	struct lb_stats tmp;
 
 	do {
+<<<<<<< HEAD
 		start = u64_stats_fetch_begin(syncp);
 		tmp.tx_bytes = cpu_stats->tx_bytes;
 	} while (u64_stats_fetch_retry(syncp, start));
+=======
+		start = u64_stats_fetch_begin_irq(syncp);
+		tmp.tx_bytes = cpu_stats->tx_bytes;
+	} while (u64_stats_fetch_retry_irq(syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 	acc_stats->tx_bytes += tmp.tx_bytes;
 }
 

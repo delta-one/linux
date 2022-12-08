@@ -69,6 +69,10 @@ required:
   - compatible
   - reg
   - reg-names
+<<<<<<< HEAD
+=======
+  - vdds-supply
+>>>>>>> b7ba80a49124 (Commit)
 
 unevaluatedProperties: false
 

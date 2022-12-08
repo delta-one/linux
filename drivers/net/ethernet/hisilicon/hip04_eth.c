@@ -990,7 +990,11 @@ static int hip04_mac_probe(struct platform_device *pdev)
 	ndev->watchdog_timeo = TX_TIMEOUT;
 	ndev->priv_flags |= IFF_UNICAST_FLT;
 	ndev->irq = irq;
+<<<<<<< HEAD
 	netif_napi_add(ndev, &priv->napi, hip04_rx_poll);
+=======
+	netif_napi_add(ndev, &priv->napi, hip04_rx_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	hip04_reset_dreq(priv);
 	hip04_reset_ppe(priv);

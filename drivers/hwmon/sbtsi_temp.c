@@ -199,7 +199,12 @@ static const struct hwmon_chip_info sbtsi_chip_info = {
 	.info = sbtsi_info,
 };
 
+<<<<<<< HEAD
 static int sbtsi_probe(struct i2c_client *client)
+=======
+static int sbtsi_probe(struct i2c_client *client,
+		       const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &client->dev;
 	struct device *hwmon_dev;
@@ -238,7 +243,11 @@ static struct i2c_driver sbtsi_driver = {
 		.name = "sbtsi",
 		.of_match_table = of_match_ptr(sbtsi_of_match),
 	},
+<<<<<<< HEAD
 	.probe_new = sbtsi_probe,
+=======
+	.probe = sbtsi_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = sbtsi_id,
 };
 

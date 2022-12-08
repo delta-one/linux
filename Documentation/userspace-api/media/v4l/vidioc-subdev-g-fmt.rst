@@ -102,10 +102,14 @@ should be as close as possible to the original request.
       - Definition of an image format, see :c:type:`v4l2_mbus_framefmt` for
 	details.
     * - __u32
+<<<<<<< HEAD
       - ``stream``
       - Stream identifier.
     * - __u32
       - ``reserved``\ [7]
+=======
+      - ``reserved``\ [8]
+>>>>>>> b7ba80a49124 (Commit)
       - Reserved for future extensions. Applications and drivers must set
 	the array to zero.
 

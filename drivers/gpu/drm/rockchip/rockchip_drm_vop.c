@@ -316,10 +316,20 @@ static int vop_convert_afbc_format(uint32_t format)
 	case DRM_FORMAT_RGB565:
 	case DRM_FORMAT_BGR565:
 		return AFBC_FMT_RGB565;
+<<<<<<< HEAD
 	default:
 		DRM_DEBUG_KMS("unsupported AFBC format[%08x]\n", format);
 		return -EINVAL;
 	}
+=======
+	/* either of the below should not be reachable */
+	default:
+		DRM_WARN_ONCE("unsupported AFBC format[%08x]\n", format);
+		return -EINVAL;
+	}
+
+	return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static uint16_t scl_vop_cal_scale(enum scale_mode mode, uint32_t src,
@@ -599,7 +609,11 @@ static int vop_enable(struct drm_crtc *crtc, struct drm_crtc_state *old_state)
 	struct vop *vop = to_vop(crtc);
 	int ret, i;
 
+<<<<<<< HEAD
 	ret = pm_runtime_resume_and_get(vop->dev);
+=======
+	ret = pm_runtime_get_sync(vop->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0) {
 		DRM_DEV_ERROR(vop->dev, "failed to get pm runtime: %d\n", ret);
 		return ret;
@@ -1171,6 +1185,7 @@ static void vop_crtc_disable_vblank(struct drm_crtc *crtc)
 	spin_unlock_irqrestore(&vop->irq_lock, flags);
 }
 
+<<<<<<< HEAD
 static enum drm_mode_status vop_crtc_mode_valid(struct drm_crtc *crtc,
 						const struct drm_display_mode *mode)
 {
@@ -1182,6 +1197,8 @@ static enum drm_mode_status vop_crtc_mode_valid(struct drm_crtc *crtc,
 	return MODE_OK;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
 				const struct drm_display_mode *mode,
 				struct drm_display_mode *adjusted_mode)
@@ -1593,7 +1610,10 @@ static void vop_crtc_atomic_flush(struct drm_crtc *crtc,
 }
 
 static const struct drm_crtc_helper_funcs vop_crtc_helper_funcs = {
+<<<<<<< HEAD
 	.mode_valid = vop_crtc_mode_valid,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.mode_fixup = vop_crtc_mode_fixup,
 	.atomic_check = vop_crtc_atomic_check,
 	.atomic_begin = vop_crtc_atomic_begin,
@@ -1992,7 +2012,11 @@ static int vop_initial(struct vop *vop)
 		return PTR_ERR(vop->dclk);
 	}
 
+<<<<<<< HEAD
 	ret = pm_runtime_resume_and_get(vop->dev);
+=======
+	ret = pm_runtime_get_sync(vop->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0) {
 		DRM_DEV_ERROR(vop->dev, "failed to get pm runtime: %d\n", ret);
 		return ret;
@@ -2230,7 +2254,11 @@ static int vop_bind(struct device *dev, struct device *master, void *data)
 		goto err_disable_pm_runtime;
 
 	if (vop->data->feature & VOP_FEATURE_INTERNAL_RGB) {
+<<<<<<< HEAD
 		vop->rgb = rockchip_rgb_init(dev, &vop->crtc, vop->drm_dev, 0);
+=======
+		vop->rgb = rockchip_rgb_init(dev, &vop->crtc, vop->drm_dev);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(vop->rgb)) {
 			ret = PTR_ERR(vop->rgb);
 			goto err_disable_pm_runtime;

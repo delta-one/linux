@@ -27,13 +27,18 @@
  *   - FIFO size: 4KB
  *
  * - LSM6DSO/LSM6DSOX/ASM330LHH/ASM330LHHX/LSM6DSR/ISM330DHCX/LSM6DST/LSM6DSOP/
+<<<<<<< HEAD
  *   LSM6DSTX/LSM6DSO16IS/ISM330IS:
+=======
+ *   LSM6DSTX:
+>>>>>>> b7ba80a49124 (Commit)
  *   - Accelerometer/Gyroscope supported ODR [Hz]: 12.5, 26, 52, 104, 208, 416,
  *     833
  *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
  *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
  *   - FIFO size: 3KB
  *
+<<<<<<< HEAD
  * - LSM6DSV/LSM6DSV16X:
  *   - Accelerometer/Gyroscope supported ODR [Hz]: 7.5, 15, 30, 60, 120, 240,
  *     480, 960
@@ -41,6 +46,8 @@
  *   - Gyroscope supported full-scale [dps]: +-125/+-250/+-500/+-1000/+-2000
  *   - FIFO size: 3KB
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * - LSM9DS1/LSM6DS0:
  *   - Accelerometer supported ODR [Hz]: 10, 50, 119, 238, 476, 952
  *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
@@ -60,8 +67,11 @@
 #include <linux/iio/events.h>
 #include <linux/iio/iio.h>
 #include <linux/iio/sysfs.h>
+<<<<<<< HEAD
 #include <linux/iio/triggered_buffer.h>
 #include <linux/iio/trigger_consumer.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/interrupt.h>
 #include <linux/irq.h>
 #include <linux/minmax.h>
@@ -634,6 +644,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
 				.fs_len = 4,
 			},
 		},
+<<<<<<< HEAD
 		.samples_to_discard = {
 			[ST_LSM6DSX_ID_ACC] = {
 				.val[0] = {  12500, 1 },
@@ -652,6 +663,8 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
 				.val[5] = { 416000, 36 },
 			},
 		},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.irq_config = {
 			.irq1 = {
 				.addr = 0x0d,
@@ -1032,10 +1045,13 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
 				.hw_id = ST_LSM6DSOP_ID,
 				.name = ST_LSM6DSOP_DEV_NAME,
 				.wai = 0x6c,
+<<<<<<< HEAD
 			}, {
 				.hw_id = ST_ASM330LHB_ID,
 				.name = ST_ASM330LHB_DEV_NAME,
 				.wai = 0x6b,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			},
 		},
 		.channels = {
@@ -1191,6 +1207,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
 			.wakeup_src_x_mask = BIT(2),
 		},
 	},
+<<<<<<< HEAD
 	{
 		.reset = {
 			.addr = 0x12,
@@ -1527,6 +1544,8 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
 			.dw_slv0_addr = 0x21,
 		},
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int st_lsm6dsx_set_page(struct st_lsm6dsx_hw *hw, bool enable)
@@ -2484,6 +2503,7 @@ static irqreturn_t st_lsm6dsx_handler_thread(int irq, void *private)
 	return fifo_len || event ? IRQ_HANDLED : IRQ_NONE;
 }
 
+<<<<<<< HEAD
 static irqreturn_t st_lsm6dsx_sw_trigger_handler_thread(int irq,
 							void *private)
 {
@@ -2510,6 +2530,8 @@ static irqreturn_t st_lsm6dsx_sw_trigger_handler_thread(int irq,
 	return IRQ_HANDLED;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int st_lsm6dsx_irq_setup(struct st_lsm6dsx_hw *hw)
 {
 	struct st_sensors_platform_data *pdata;
@@ -2568,6 +2590,7 @@ static int st_lsm6dsx_irq_setup(struct st_lsm6dsx_hw *hw)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int st_lsm6dsx_sw_buffer_preenable(struct iio_dev *iio_dev)
 {
 	struct st_lsm6dsx_sensor *sensor = iio_priv(iio_dev);
@@ -2618,12 +2641,43 @@ static int st_lsm6dsx_init_regulators(struct device *dev)
 					     regulators);
 	if (err)
 		return dev_err_probe(dev, err, "failed to enable regulators\n");
+=======
+static int st_lsm6dsx_init_regulators(struct device *dev)
+{
+	struct st_lsm6dsx_hw *hw = dev_get_drvdata(dev);
+	int err;
+
+	/* vdd-vddio power regulators */
+	hw->regulators[0].supply = "vdd";
+	hw->regulators[1].supply = "vddio";
+	err = devm_regulator_bulk_get(dev, ARRAY_SIZE(hw->regulators),
+				      hw->regulators);
+	if (err)
+		return dev_err_probe(dev, err, "failed to get regulators\n");
+
+	err = regulator_bulk_enable(ARRAY_SIZE(hw->regulators),
+				    hw->regulators);
+	if (err) {
+		dev_err(dev, "failed to enable regulators: %d\n", err);
+		return err;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	msleep(50);
 
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void st_lsm6dsx_chip_uninit(void *data)
+{
+	struct st_lsm6dsx_hw *hw = data;
+
+	regulator_bulk_disable(ARRAY_SIZE(hw->regulators), hw->regulators);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int st_lsm6dsx_probe(struct device *dev, int irq, int hw_id,
 		     struct regmap *regmap)
 {
@@ -2647,6 +2701,13 @@ int st_lsm6dsx_probe(struct device *dev, int irq, int hw_id,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
+=======
+	err = devm_add_action_or_reset(dev, st_lsm6dsx_chip_uninit, hw);
+	if (err)
+		return err;
+
+>>>>>>> b7ba80a49124 (Commit)
 	hw->buff = devm_kzalloc(dev, ST_LSM6DSX_BUFF_SIZE, GFP_KERNEL);
 	if (!hw->buff)
 		return -ENOMEM;
@@ -2688,6 +2749,7 @@ int st_lsm6dsx_probe(struct device *dev, int irq, int hw_id,
 			return err;
 	}
 
+<<<<<<< HEAD
 	if (!hw->irq || !hw->settings->fifo_ops.read_fifo) {
 		/*
 		 * Rely on sw triggers (e.g. hr-timers) if irq pin is not
@@ -2698,6 +2760,8 @@ int st_lsm6dsx_probe(struct device *dev, int irq, int hw_id,
 			return err;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = iio_read_mount_matrix(hw->dev, &hw->orientation);
 	if (err)
 		return err;
@@ -2740,7 +2804,16 @@ static int st_lsm6dsx_suspend(struct device *dev)
 			continue;
 		}
 
+<<<<<<< HEAD
 		err = st_lsm6dsx_device_set_enable(sensor, false);
+=======
+		if (sensor->id == ST_LSM6DSX_ID_EXT0 ||
+		    sensor->id == ST_LSM6DSX_ID_EXT1 ||
+		    sensor->id == ST_LSM6DSX_ID_EXT2)
+			err = st_lsm6dsx_shub_set_enable(sensor, false);
+		else
+			err = st_lsm6dsx_sensor_set_enable(sensor, false);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err < 0)
 			return err;
 
@@ -2771,7 +2844,16 @@ static int st_lsm6dsx_resume(struct device *dev)
 		if (!(hw->suspend_mask & BIT(sensor->id)))
 			continue;
 
+<<<<<<< HEAD
 		err = st_lsm6dsx_device_set_enable(sensor, true);
+=======
+		if (sensor->id == ST_LSM6DSX_ID_EXT0 ||
+		    sensor->id == ST_LSM6DSX_ID_EXT1 ||
+		    sensor->id == ST_LSM6DSX_ID_EXT2)
+			err = st_lsm6dsx_shub_set_enable(sensor, true);
+		else
+			err = st_lsm6dsx_sensor_set_enable(sensor, true);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err < 0)
 			return err;
 

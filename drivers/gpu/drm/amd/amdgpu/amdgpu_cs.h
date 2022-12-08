@@ -23,8 +23,11 @@
 #ifndef __AMDGPU_CS_H__
 #define __AMDGPU_CS_H__
 
+<<<<<<< HEAD
 #include <linux/ww_mutex.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "amdgpu_job.h"
 #include "amdgpu_bo_list.h"
 #include "amdgpu_ring.h"
@@ -56,7 +59,10 @@ struct amdgpu_cs_parser {
 
 	/* scheduler job objects */
 	unsigned int		gang_size;
+<<<<<<< HEAD
 	unsigned int		gang_leader_idx;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_sched_entity	*entities[AMDGPU_CS_GANG_SIZE];
 	struct amdgpu_job	*jobs[AMDGPU_CS_GANG_SIZE];
 	struct amdgpu_job	*gang_leader;
@@ -78,8 +84,11 @@ struct amdgpu_cs_parser {
 
 	unsigned			num_post_deps;
 	struct amdgpu_cs_post_dep	*post_deps;
+<<<<<<< HEAD
 
 	struct amdgpu_sync		sync;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int amdgpu_cs_find_mapping(struct amdgpu_cs_parser *parser,

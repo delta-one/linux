@@ -7,7 +7,12 @@
 
 #include <linux/kernel.h>
 #include <linux/getcpu.h>
+<<<<<<< HEAD
 #include <asm/segment.h>
+=======
+#include <linux/time.h>
+#include <asm/vgtod.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 notrace long
 __vdso_getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *unused)

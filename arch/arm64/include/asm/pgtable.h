@@ -57,7 +57,11 @@ static inline bool arch_thp_swp_supported(void)
  * fault on one CPU which has been handled concurrently by another CPU
  * does not need to perform additional invalidation.
  */
+<<<<<<< HEAD
 #define flush_tlb_fix_spurious_fault(vma, address, ptep) do { } while (0)
+=======
+#define flush_tlb_fix_spurious_fault(vma, address) do { } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * ZERO_PAGE is a global shared page that is always zero: used
@@ -77,11 +81,19 @@ extern unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)];
 static inline phys_addr_t __pte_to_phys(pte_t pte)
 {
 	return (pte_val(pte) & PTE_ADDR_LOW) |
+<<<<<<< HEAD
 		((pte_val(pte) & PTE_ADDR_HIGH) << PTE_ADDR_HIGH_SHIFT);
 }
 static inline pteval_t __phys_to_pte_val(phys_addr_t phys)
 {
 	return (phys | (phys >> PTE_ADDR_HIGH_SHIFT)) & PTE_ADDR_MASK;
+=======
+		((pte_val(pte) & PTE_ADDR_HIGH) << 36);
+}
+static inline pteval_t __phys_to_pte_val(phys_addr_t phys)
+{
+	return (phys | (phys >> 36)) & PTE_ADDR_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 }
 #else
 #define __pte_to_phys(pte)	(pte_val(pte) & PTE_ADDR_MASK)
@@ -180,18 +192,25 @@ static inline pmd_t set_pmd_bit(pmd_t pmd, pgprot_t prot)
 	return pmd;
 }
 
+<<<<<<< HEAD
 static inline pte_t pte_mkwrite_kernel(pte_t pte)
+=======
+static inline pte_t pte_mkwrite(pte_t pte)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pte = set_pte_bit(pte, __pgprot(PTE_WRITE));
 	pte = clear_pte_bit(pte, __pgprot(PTE_RDONLY));
 	return pte;
 }
 
+<<<<<<< HEAD
 static inline pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
 {
 	return pte_mkwrite_kernel(pte);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline pte_t pte_mkclean(pte_t pte)
 {
 	pte = clear_pte_bit(pte, __pgprot(PTE_DIRTY));
@@ -280,7 +299,10 @@ static inline void set_pte(pte_t *ptep, pte_t pte)
 }
 
 extern void __sync_icache_dcache(pte_t pteval);
+<<<<<<< HEAD
 bool pgattr_change_is_safe(u64 old, u64 new);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * PTE bits configuration in the presence of hardware Dirty Bit Management
@@ -298,7 +320,11 @@ bool pgattr_change_is_safe(u64 old, u64 new);
  *   PTE_DIRTY || (PTE_WRITE && !PTE_RDONLY)
  */
 
+<<<<<<< HEAD
 static inline void __check_safe_pte_update(struct mm_struct *mm, pte_t *ptep,
+=======
+static inline void __check_racy_pte_update(struct mm_struct *mm, pte_t *ptep,
+>>>>>>> b7ba80a49124 (Commit)
 					   pte_t pte)
 {
 	pte_t old_pte;
@@ -324,9 +350,12 @@ static inline void __check_safe_pte_update(struct mm_struct *mm, pte_t *ptep,
 	VM_WARN_ONCE(pte_write(old_pte) && !pte_dirty(pte),
 		     "%s: racy dirty state clearing: 0x%016llx -> 0x%016llx",
 		     __func__, pte_val(old_pte), pte_val(pte));
+<<<<<<< HEAD
 	VM_WARN_ONCE(!pgattr_change_is_safe(pte_val(old_pte), pte_val(pte)),
 		     "%s: unsafe attribute change: 0x%016llx -> 0x%016llx",
 		     __func__, pte_val(old_pte), pte_val(pte));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void __set_pte_at(struct mm_struct *mm, unsigned long addr,
@@ -355,7 +384,11 @@ static inline void __set_pte_at(struct mm_struct *mm, unsigned long addr,
 			mte_sync_tags(old_pte, pte);
 	}
 
+<<<<<<< HEAD
 	__check_safe_pte_update(mm, ptep, pte);
+=======
+	__check_racy_pte_update(mm, ptep, pte);
+>>>>>>> b7ba80a49124 (Commit)
 
 	set_pte(ptep, pte);
 }
@@ -426,6 +459,10 @@ static inline pgprot_t mk_pmd_sect_prot(pgprot_t prot)
 	return __pgprot((pgprot_val(prot) & ~PMD_TABLE_BIT) | PMD_TYPE_SECT);
 }
 
+<<<<<<< HEAD
+=======
+#define __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>>>>>>> b7ba80a49124 (Commit)
 static inline pte_t pte_swp_mkexclusive(pte_t pte)
 {
 	return set_pte_bit(pte, __pgprot(PTE_SWP_EXCLUSIVE));
@@ -492,7 +529,11 @@ static inline int pmd_trans_huge(pmd_t pmd)
 #define pmd_cont(pmd)		pte_cont(pmd_pte(pmd))
 #define pmd_wrprotect(pmd)	pte_pmd(pte_wrprotect(pmd_pte(pmd)))
 #define pmd_mkold(pmd)		pte_pmd(pte_mkold(pmd_pte(pmd)))
+<<<<<<< HEAD
 #define pmd_mkwrite(pmd, vma)	pte_pmd(pte_mkwrite(pmd_pte(pmd), (vma)))
+=======
+#define pmd_mkwrite(pmd)	pte_pmd(pte_mkwrite(pmd_pte(pmd)))
+>>>>>>> b7ba80a49124 (Commit)
 #define pmd_mkclean(pmd)	pte_pmd(pte_mkclean(pmd_pte(pmd)))
 #define pmd_mkdirty(pmd)	pte_pmd(pte_mkdirty(pmd_pte(pmd)))
 #define pmd_mkyoung(pmd)	pte_pmd(pte_mkyoung(pmd_pte(pmd)))
@@ -617,6 +658,10 @@ extern pgd_t init_pg_dir[PTRS_PER_PGD];
 extern pgd_t init_pg_end[];
 extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
 extern pgd_t idmap_pg_dir[PTRS_PER_PGD];
+<<<<<<< HEAD
+=======
+extern pgd_t idmap_pg_end[];
+>>>>>>> b7ba80a49124 (Commit)
 extern pgd_t tramp_pg_dir[PTRS_PER_PGD];
 extern pgd_t reserved_pg_dir[PTRS_PER_PGD];
 
@@ -689,7 +734,11 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
 #define pud_leaf(pud)		(pud_present(pud) && !pud_table(pud))
 #define pud_valid(pud)		pte_valid(pud_pte(pud))
 #define pud_user(pud)		pte_user(pud_pte(pud))
+<<<<<<< HEAD
 #define pud_user_exec(pud)	pte_user_exec(pud_pte(pud))
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void set_pud(pud_t *pudp, pud_t pud)
 {
@@ -738,7 +787,10 @@ static inline pmd_t *pud_pgtable(pud_t pud)
 #else
 
 #define pud_page_paddr(pud)	({ BUILD_BUG(); 0; })
+<<<<<<< HEAD
 #define pud_user_exec(pud)	pud_user(pud) /* Always 0 with folding */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Match pmd_offset folding in <asm/generic/pgtable-nopmd.h> */
 #define pmd_set_fixmap(addr)		NULL
@@ -871,12 +923,20 @@ static inline bool pte_user_accessible_page(pte_t pte)
 
 static inline bool pmd_user_accessible_page(pmd_t pmd)
 {
+<<<<<<< HEAD
 	return pmd_leaf(pmd) && !pmd_present_invalid(pmd) && (pmd_user(pmd) || pmd_user_exec(pmd));
+=======
+	return pmd_present(pmd) && (pmd_user(pmd) || pmd_user_exec(pmd));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool pud_user_accessible_page(pud_t pud)
 {
+<<<<<<< HEAD
 	return pud_leaf(pud) && (pud_user(pud) || pud_user_exec(pud));
+=======
+	return pud_present(pud) && pud_user(pud);
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif
 
@@ -1029,6 +1089,11 @@ static inline pmd_t pmdp_establish(struct vm_area_struct *vma,
  */
 #define MAX_SWAPFILES_CHECK() BUILD_BUG_ON(MAX_SWAPFILES_SHIFT > __SWP_TYPE_BITS)
 
+<<<<<<< HEAD
+=======
+extern int kern_addr_valid(unsigned long addr);
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_ARM64_MTE
 
 #define __HAVE_ARCH_PREPARE_TO_SWAP
@@ -1055,8 +1120,13 @@ static inline void arch_swap_invalidate_area(int type)
 #define __HAVE_ARCH_SWAP_RESTORE
 static inline void arch_swap_restore(swp_entry_t entry, struct folio *folio)
 {
+<<<<<<< HEAD
 	if (system_supports_mte())
 		mte_restore_tags(entry, &folio->page);
+=======
+	if (system_supports_mte() && mte_restore_tags(entry, &folio->page))
+		set_bit(PG_mte_tagged, &folio->flags);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #endif /* CONFIG_ARM64_MTE */
@@ -1102,6 +1172,7 @@ static inline bool pud_sect_supported(void)
 }
 
 
+<<<<<<< HEAD
 #define __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION
 #define ptep_modify_prot_start ptep_modify_prot_start
 extern pte_t ptep_modify_prot_start(struct vm_area_struct *vma,
@@ -1111,6 +1182,8 @@ extern pte_t ptep_modify_prot_start(struct vm_area_struct *vma,
 extern void ptep_modify_prot_commit(struct vm_area_struct *vma,
 				    unsigned long addr, pte_t *ptep,
 				    pte_t old_pte, pte_t new_pte);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* !__ASSEMBLY__ */
 
 #endif /* __ASM_PGTABLE_H */

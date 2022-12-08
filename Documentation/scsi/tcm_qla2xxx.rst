@@ -6,7 +6,11 @@ tcm_qla2xxx Driver Notes
 
 tcm_qla2xxx jam_host attribute
 ------------------------------
+<<<<<<< HEAD
 There is now a new module endpoint attribute called jam_host
+=======
+There is now a new module endpoint atribute called jam_host
+>>>>>>> b7ba80a49124 (Commit)
 attribute::
 
 	jam_host: boolean=0/1

@@ -10,9 +10,13 @@ MODULE_IMPORT_NS(EFIVAR);
 
 #define DUMP_NAME_LEN 66
 
+<<<<<<< HEAD
 static unsigned int record_size = 1024;
 module_param(record_size, uint, 0444);
 MODULE_PARM_DESC(record_size, "size of each pstore UEFI var (in bytes, min/default=1024)");
+=======
+#define EFIVARS_DATA_SIZE_MAX 1024
+>>>>>>> b7ba80a49124 (Commit)
 
 static bool efivars_pstore_disable =
 	IS_ENABLED(CONFIG_EFI_VARS_PSTORE_DEFAULT_DISABLE);
@@ -32,7 +36,11 @@ static int efi_pstore_open(struct pstore_info *psi)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	psi->data = kzalloc(record_size, GFP_KERNEL);
+=======
+	psi->data = kzalloc(EFIVARS_DATA_SIZE_MAX, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!psi->data)
 		return -ENOMEM;
 
@@ -54,7 +62,11 @@ static inline u64 generic_id(u64 timestamp, unsigned int part, int count)
 static int efi_pstore_read_func(struct pstore_record *record,
 				efi_char16_t *varname)
 {
+<<<<<<< HEAD
 	unsigned long wlen, size = record_size;
+=======
+	unsigned long wlen, size = EFIVARS_DATA_SIZE_MAX;
+>>>>>>> b7ba80a49124 (Commit)
 	char name[DUMP_NAME_LEN], data_type;
 	efi_status_t status;
 	int cnt;
@@ -135,7 +147,11 @@ static ssize_t efi_pstore_read(struct pstore_record *record)
 	efi_status_t status;
 
 	for (;;) {
+<<<<<<< HEAD
 		varname_size = 1024;
+=======
+		varname_size = EFIVARS_DATA_SIZE_MAX;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * If this is the first read() call in the pstore enumeration,
@@ -209,7 +225,11 @@ static int efi_pstore_erase(struct pstore_record *record)
 
 static struct pstore_info efi_pstore_info = {
 	.owner		= THIS_MODULE,
+<<<<<<< HEAD
 	.name		= KBUILD_MODNAME,
+=======
+	.name		= "efi",
+>>>>>>> b7ba80a49124 (Commit)
 	.flags		= PSTORE_FLAGS_DMESG,
 	.open		= efi_pstore_open,
 	.close		= efi_pstore_close,
@@ -226,6 +246,7 @@ static __init int efivars_pstore_init(void)
 	if (efivars_pstore_disable)
 		return 0;
 
+<<<<<<< HEAD
 	/*
 	 * Notice that 1024 is the minimum here to prevent issues with
 	 * decompression algorithms that were spotted during tests;
@@ -240,6 +261,13 @@ static __init int efivars_pstore_init(void)
 		return -ENOMEM;
 
 	efi_pstore_info.bufsize = record_size;
+=======
+	efi_pstore_info.buf = kmalloc(4096, GFP_KERNEL);
+	if (!efi_pstore_info.buf)
+		return -ENOMEM;
+
+	efi_pstore_info.bufsize = 1024;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (pstore_register(&efi_pstore_info)) {
 		kfree(efi_pstore_info.buf);

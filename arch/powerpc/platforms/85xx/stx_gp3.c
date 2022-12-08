@@ -83,12 +83,30 @@ static void stx_gp3_show_cpuinfo(struct seq_file *m)
 
 machine_arch_initcall(stx_gp3, mpc85xx_common_publish_devices);
 
+<<<<<<< HEAD
 define_machine(stx_gp3) {
 	.name			= "STX GP3",
 	.compatible		= "stx,gp3-8560",
+=======
+/*
+ * Called very early, device-tree isn't unflattened
+ */
+static int __init stx_gp3_probe(void)
+{
+	return of_machine_is_compatible("stx,gp3-8560");
+}
+
+define_machine(stx_gp3) {
+	.name			= "STX GP3",
+	.probe			= stx_gp3_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.setup_arch		= stx_gp3_setup_arch,
 	.init_IRQ		= stx_gp3_pic_init,
 	.show_cpuinfo		= stx_gp3_show_cpuinfo,
 	.get_irq		= mpic_get_irq,
+<<<<<<< HEAD
+=======
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.progress		= udbg_progress,
 };

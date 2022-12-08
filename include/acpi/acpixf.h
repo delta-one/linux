@@ -12,7 +12,11 @@
 
 /* Current ACPICA subsystem version in YYYYMMDD format */
 
+<<<<<<< HEAD
 #define ACPI_CA_VERSION                 0x20221020
+=======
+#define ACPI_CA_VERSION                 0x20220331
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <acpi/acconfig.h>
 #include <acpi/actypes.h>
@@ -526,7 +530,11 @@ ACPI_EXTERNAL_RETURN_STATUS(acpi_status
 					   struct acpi_buffer *ret_path_ptr))
 ACPI_EXTERNAL_RETURN_STATUS(acpi_status
 			     acpi_get_handle(acpi_handle parent,
+<<<<<<< HEAD
 					     const char *pathname,
+=======
+					     acpi_string pathname,
+>>>>>>> b7ba80a49124 (Commit)
 					     acpi_handle *ret_handle))
 ACPI_EXTERNAL_RETURN_STATUS(acpi_status
 			     acpi_attach_data(acpi_handle object,
@@ -589,6 +597,7 @@ ACPI_EXTERNAL_RETURN_STATUS(acpi_status
 			    acpi_install_initialization_handler
 			    (acpi_init_handler handler, u32 function))
 ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
+<<<<<<< HEAD
 				acpi_install_sci_handler(acpi_sci_handler
 							 address,
 							 void *context))
@@ -644,10 +653,78 @@ ACPI_EXTERNAL_RETURN_STATUS(acpi_status
 						       handler))
 ACPI_EXTERNAL_RETURN_STATUS(acpi_status
 			    acpi_install_address_space_handler(acpi_handle
+=======
+				 acpi_install_sci_handler(acpi_sci_handler
+							  address,
+							  void *context))
+ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
+				 acpi_remove_sci_handler(acpi_sci_handler
+							 address))
+ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
+				 acpi_install_global_event_handler
+				 (acpi_gbl_event_handler handler,
+				  void *context))
+ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
+				 acpi_install_fixed_event_handler(u32
+								  acpi_event,
+								  acpi_event_handler
+								  handler,
+								  void
+								  *context))
+ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
+				 acpi_remove_fixed_event_handler(u32 acpi_event,
+								 acpi_event_handler
+								 handler))
+ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
+				 acpi_install_gpe_handler(acpi_handle
+							  gpe_device,
+							  u32 gpe_number,
+							  u32 type,
+							  acpi_gpe_handler
+							  address,
+							  void *context))
+ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
+				 acpi_install_gpe_raw_handler(acpi_handle
+							      gpe_device,
+							      u32 gpe_number,
+							      u32 type,
+							      acpi_gpe_handler
+							      address,
+							      void *context))
+ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
+				 acpi_remove_gpe_handler(acpi_handle gpe_device,
+							 u32 gpe_number,
+							 acpi_gpe_handler
+							 address))
+ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+			     acpi_install_notify_handler(acpi_handle device,
+							 u32 handler_type,
+							 acpi_notify_handler
+							 handler,
+							 void *context))
+ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+			     acpi_remove_notify_handler(acpi_handle device,
+							u32 handler_type,
+							acpi_notify_handler
+							handler))
+ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+			     acpi_install_address_space_handler(acpi_handle
+								device,
+								acpi_adr_space_type
+								space_id,
+								acpi_adr_space_handler
+								handler,
+								acpi_adr_space_setup
+								setup,
+								void *context))
+ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+			     acpi_remove_address_space_handler(acpi_handle
+>>>>>>> b7ba80a49124 (Commit)
 							       device,
 							       acpi_adr_space_type
 							       space_id,
 							       acpi_adr_space_handler
+<<<<<<< HEAD
 							       handler,
 							       acpi_adr_space_setup
 							       setup,
@@ -675,6 +752,15 @@ ACPI_EXTERNAL_RETURN_STATUS(acpi_status
 ACPI_EXTERNAL_RETURN_STATUS(acpi_status
 			    acpi_install_interface_handler
 			    (acpi_interface_handler handler))
+=======
+							       handler))
+ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+			     acpi_install_exception_handler
+			     (acpi_exception_handler handler))
+ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+			     acpi_install_interface_handler
+			     (acpi_interface_handler handler))
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Global Lock interfaces

@@ -171,7 +171,10 @@ statistics are supported in the following commands:
 
   - `ETHTOOL_MSG_PAUSE_GET`
   - `ETHTOOL_MSG_FEC_GET`
+<<<<<<< HEAD
   - `ETHTOOL_MSG_MM_GET`
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 debugfs
 -------

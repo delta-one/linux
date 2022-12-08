@@ -8,7 +8,10 @@
  * Copyright (C) 2010 Thomas Langer, <thomas.langer@lantiq.com>
  */
 
+<<<<<<< HEAD
 #include <linux/bitfield.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/clk.h>
 #include <linux/console.h>
 #include <linux/device.h>
@@ -94,7 +97,13 @@
 #define ASCFSTAT_RXFFLMASK	0x003F
 #define ASCFSTAT_TXFFLMASK	0x3F00
 #define ASCFSTAT_TXFREEMASK	0x3F000000
+<<<<<<< HEAD
 
+=======
+#define ASCFSTAT_TXFREEOFF	24
+
+static void lqasc_tx_chars(struct uart_port *port);
+>>>>>>> b7ba80a49124 (Commit)
 static struct ltq_uart_port *lqasc_port[MAXPORTS];
 static struct uart_driver lqasc_reg;
 
@@ -138,6 +147,7 @@ lqasc_stop_tx(struct uart_port *port)
 	return;
 }
 
+<<<<<<< HEAD
 static bool lqasc_tx_ready(struct uart_port *port)
 {
 	u32 fstat = __raw_readl(port->membase + LTQ_ASC_FSTAT);
@@ -145,17 +155,25 @@ static bool lqasc_tx_ready(struct uart_port *port)
 	return FIELD_GET(ASCFSTAT_TXFREEMASK, fstat);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void
 lqasc_start_tx(struct uart_port *port)
 {
 	unsigned long flags;
 	struct ltq_uart_port *ltq_port = to_ltq_uart_port(port);
+<<<<<<< HEAD
 	u8 ch;
 
 	spin_lock_irqsave(&ltq_port->lock, flags);
 	uart_port_tx(port, ch,
 		lqasc_tx_ready(port),
 		writeb(ch, port->membase + LTQ_ASC_TBUF));
+=======
+
+	spin_lock_irqsave(&ltq_port->lock, flags);
+	lqasc_tx_chars(port);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irqrestore(&ltq_port->lock, flags);
 	return;
 }
@@ -228,6 +246,40 @@ lqasc_rx_chars(struct uart_port *port)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void
+lqasc_tx_chars(struct uart_port *port)
+{
+	struct circ_buf *xmit = &port->state->xmit;
+	if (uart_tx_stopped(port)) {
+		lqasc_stop_tx(port);
+		return;
+	}
+
+	while (((__raw_readl(port->membase + LTQ_ASC_FSTAT) &
+		ASCFSTAT_TXFREEMASK) >> ASCFSTAT_TXFREEOFF) != 0) {
+		if (port->x_char) {
+			writeb(port->x_char, port->membase + LTQ_ASC_TBUF);
+			port->icount.tx++;
+			port->x_char = 0;
+			continue;
+		}
+
+		if (uart_circ_empty(xmit))
+			break;
+
+		writeb(port->state->xmit.buf[port->state->xmit.tail],
+			port->membase + LTQ_ASC_TBUF);
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+		port->icount.tx++;
+	}
+
+	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+		uart_write_wakeup(port);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static irqreturn_t
 lqasc_tx_int(int irq, void *_port)
 {
@@ -578,12 +630,24 @@ static const struct uart_ops lqasc_pops = {
 static void
 lqasc_console_putchar(struct uart_port *port, unsigned char ch)
 {
+<<<<<<< HEAD
 	if (!port->membase)
 		return;
 
 	while (!lqasc_tx_ready(port))
 		;
 
+=======
+	int fifofree;
+
+	if (!port->membase)
+		return;
+
+	do {
+		fifofree = (__raw_readl(port->membase + LTQ_ASC_FSTAT)
+			& ASCFSTAT_TXFREEMASK) >> ASCFSTAT_TXFREEOFF;
+	} while (fifofree == 0);
+>>>>>>> b7ba80a49124 (Commit)
 	writeb(ch, port->membase + LTQ_ASC_TBUF);
 }
 

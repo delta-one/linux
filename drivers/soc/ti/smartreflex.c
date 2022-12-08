@@ -198,6 +198,10 @@ static void sr_stop_vddautocomp(struct omap_sr *sr)
  */
 static int sr_late_init(struct omap_sr *sr_info)
 {
+<<<<<<< HEAD
+=======
+	struct omap_sr_data *pdata = sr_info->pdev->dev.platform_data;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 
 	if (sr_class->notify && sr_class->notify_flags && sr_info->irq) {
@@ -208,6 +212,12 @@ static int sr_late_init(struct omap_sr *sr_info)
 		disable_irq(sr_info->irq);
 	}
 
+<<<<<<< HEAD
+=======
+	if (pdata && pdata->enable_on_init)
+		sr_start_vddautocomp(sr_info);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 
 error:
@@ -928,7 +938,10 @@ static int omap_sr_probe(struct platform_device *pdev)
 err_debugfs:
 	debugfs_remove_recursive(sr_info->dbg_dir);
 err_list_del:
+<<<<<<< HEAD
 	pm_runtime_disable(&pdev->dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	list_del(&sr_info->node);
 	clk_unprepare(sr_info->fck);
 

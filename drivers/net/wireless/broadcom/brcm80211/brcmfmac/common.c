@@ -101,7 +101,11 @@ void brcmf_c_set_joinpref_default(struct brcmf_if *ifp)
 
 static int brcmf_c_download(struct brcmf_if *ifp, u16 flag,
 			    struct brcmf_dload_data_le *dload_buf,
+<<<<<<< HEAD
 			    u32 len, const char *var)
+=======
+			    u32 len)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	s32 err;
 
@@ -110,19 +114,34 @@ static int brcmf_c_download(struct brcmf_if *ifp, u16 flag,
 	dload_buf->dload_type = cpu_to_le16(DL_TYPE_CLM);
 	dload_buf->len = cpu_to_le32(len);
 	dload_buf->crc = cpu_to_le32(0);
+<<<<<<< HEAD
 
 	err = brcmf_fil_iovar_data_set(ifp, var, dload_buf,
 				       struct_size(dload_buf, data, len));
+=======
+	len = sizeof(*dload_buf) + len - 1;
+
+	err = brcmf_fil_iovar_data_set(ifp, "clmload", dload_buf, len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return err;
 }
 
+<<<<<<< HEAD
 static int brcmf_c_download_blob(struct brcmf_if *ifp,
 				 const void *data, size_t size,
 				 const char *loadvar, const char *statvar)
 {
 	struct brcmf_pub *drvr = ifp->drvr;
 	struct brcmf_dload_data_le *chunk_buf;
+=======
+static int brcmf_c_process_clm_blob(struct brcmf_if *ifp)
+{
+	struct brcmf_pub *drvr = ifp->drvr;
+	struct brcmf_bus *bus = drvr->bus_if;
+	struct brcmf_dload_data_le *chunk_buf;
+	const struct firmware *clm = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 chunk_len;
 	u32 datalen;
 	u32 cumulative_len;
@@ -132,6 +151,7 @@ static int brcmf_c_download_blob(struct brcmf_if *ifp,
 
 	brcmf_dbg(TRACE, "Enter\n");
 
+<<<<<<< HEAD
 	chunk_buf = kzalloc(struct_size(chunk_buf, data, MAX_CHUNK_LEN),
 			    GFP_KERNEL);
 	if (!chunk_buf) {
@@ -140,6 +160,22 @@ static int brcmf_c_download_blob(struct brcmf_if *ifp,
 	}
 
 	datalen = size;
+=======
+	err = brcmf_bus_get_blob(bus, &clm, BRCMF_BLOB_CLM);
+	if (err || !clm) {
+		brcmf_info("no clm_blob available (err=%d), device may have limited channels available\n",
+			   err);
+		return 0;
+	}
+
+	chunk_buf = kzalloc(sizeof(*chunk_buf) + MAX_CHUNK_LEN - 1, GFP_KERNEL);
+	if (!chunk_buf) {
+		err = -ENOMEM;
+		goto done;
+	}
+
+	datalen = clm->size;
+>>>>>>> b7ba80a49124 (Commit)
 	cumulative_len = 0;
 	do {
 		if (datalen > MAX_CHUNK_LEN) {
@@ -148,10 +184,16 @@ static int brcmf_c_download_blob(struct brcmf_if *ifp,
 			chunk_len = datalen;
 			dl_flag |= DL_END;
 		}
+<<<<<<< HEAD
 		memcpy(chunk_buf->data, data + cumulative_len, chunk_len);
 
 		err = brcmf_c_download(ifp, dl_flag, chunk_buf, chunk_len,
 				       loadvar);
+=======
+		memcpy(chunk_buf->data, clm->data + cumulative_len, chunk_len);
+
+		err = brcmf_c_download(ifp, dl_flag, chunk_buf, chunk_len);
+>>>>>>> b7ba80a49124 (Commit)
 
 		dl_flag &= ~DL_BEGIN;
 
@@ -160,6 +202,7 @@ static int brcmf_c_download_blob(struct brcmf_if *ifp,
 	} while ((datalen > 0) && (err == 0));
 
 	if (err) {
+<<<<<<< HEAD
 		bphy_err(drvr, "%s (%zu byte file) failed (%d)\n",
 			 loadvar, size, err);
 		/* Retrieve status and print */
@@ -168,10 +211,21 @@ static int brcmf_c_download_blob(struct brcmf_if *ifp,
 			bphy_err(drvr, "get %s failed (%d)\n", statvar, err);
 		else
 			brcmf_dbg(INFO, "%s=%d\n", statvar, status);
+=======
+		bphy_err(drvr, "clmload (%zu byte file) failed (%d)\n",
+			 clm->size, err);
+		/* Retrieve clmload_status and print */
+		err = brcmf_fil_iovar_int_get(ifp, "clmload_status", &status);
+		if (err)
+			bphy_err(drvr, "get clmload_status failed (%d)\n", err);
+		else
+			brcmf_dbg(INFO, "clmload_status=%d\n", status);
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EIO;
 	}
 
 	kfree(chunk_buf);
+<<<<<<< HEAD
 	return err;
 }
 
@@ -218,6 +272,10 @@ static int brcmf_c_process_txcap_blob(struct brcmf_if *ifp)
 				    "txcapload", "txcapload_status");
 
 	release_firmware(fw);
+=======
+done:
+	release_firmware(clm);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -246,6 +304,7 @@ static const u8 brcmf_default_mac_address[ETH_ALEN] = {
 	0x00, 0x90, 0x4c, 0xc5, 0x12, 0x38
 };
 
+<<<<<<< HEAD
 static int brcmf_c_process_cal_blob(struct brcmf_if *ifp)
 {
 	struct brcmf_pub *drvr = ifp->drvr;
@@ -263,6 +322,8 @@ static int brcmf_c_process_cal_blob(struct brcmf_if *ifp)
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int brcmf_c_preinit_dcmds(struct brcmf_if *ifp)
 {
 	struct brcmf_pub *drvr = ifp->drvr;
@@ -346,6 +407,7 @@ int brcmf_c_preinit_dcmds(struct brcmf_if *ifp)
 		goto done;
 	}
 
+<<<<<<< HEAD
 	/* Do TxCap downloading, if needed */
 	err = brcmf_c_process_txcap_blob(ifp);
 	if (err < 0) {
@@ -360,6 +422,8 @@ int brcmf_c_preinit_dcmds(struct brcmf_if *ifp)
 		goto done;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* query for 'ver' to get version info from firmware */
 	memset(buf, 0, sizeof(buf));
 	err = brcmf_fil_iovar_data_get(ifp, "ver", buf, sizeof(buf));
@@ -368,7 +432,10 @@ int brcmf_c_preinit_dcmds(struct brcmf_if *ifp)
 			 err);
 		goto done;
 	}
+<<<<<<< HEAD
 	buf[sizeof(buf) - 1] = '\0';
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ptr = (char *)buf;
 	strsep(&ptr, "\n");
 
@@ -376,12 +443,17 @@ int brcmf_c_preinit_dcmds(struct brcmf_if *ifp)
 	brcmf_info("Firmware: %s %s\n", ri->chipname, buf);
 
 	/* locate firmware version number for ethtool */
+<<<<<<< HEAD
 	ptr = strrchr(buf, ' ');
 	if (!ptr) {
 		bphy_err(drvr, "Retrieving version number failed");
 		goto done;
 	}
 	strscpy(ifp->drvr->fwver, ptr + 1, sizeof(ifp->drvr->fwver));
+=======
+	ptr = strrchr(buf, ' ') + 1;
+	strscpy(ifp->drvr->fwver, ptr, sizeof(ifp->drvr->fwver));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Query for 'clmver' to get CLM version info from firmware */
 	memset(buf, 0, sizeof(buf));
@@ -389,17 +461,26 @@ int brcmf_c_preinit_dcmds(struct brcmf_if *ifp)
 	if (err) {
 		brcmf_dbg(TRACE, "retrieving clmver failed, %d\n", err);
 	} else {
+<<<<<<< HEAD
 		buf[sizeof(buf) - 1] = '\0';
 		clmver = (char *)buf;
+=======
+		clmver = (char *)buf;
+		/* store CLM version for adding it to revinfo debugfs file */
+		memcpy(ifp->drvr->clmver, clmver, sizeof(ifp->drvr->clmver));
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Replace all newline/linefeed characters with space
 		 * character
 		 */
 		strreplace(clmver, '\n', ' ');
 
+<<<<<<< HEAD
 		/* store CLM version for adding it to revinfo debugfs file */
 		memcpy(ifp->drvr->clmver, clmver, sizeof(ifp->drvr->clmver));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		brcmf_dbg(INFO, "CLM version = %s\n", clmver);
 	}
 
@@ -556,7 +637,10 @@ struct brcmf_mp_device *brcmf_get_module_param(struct device *dev,
 		/* No platform data for this device, try OF and DMI data */
 		brcmf_dmi_probe(settings, chip, chiprev);
 		brcmf_of_probe(dev, bus_type, settings);
+<<<<<<< HEAD
 		brcmf_acpi_probe(dev, bus_type, settings);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return settings;
 }

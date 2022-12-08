@@ -12,6 +12,7 @@
 #include <linux/proc_fs.h>
 #include "udp_impl.h"
 
+<<<<<<< HEAD
 static int udplitev6_sk_init(struct sock *sk)
 {
 	udpv6_init_sock(sk);
@@ -19,6 +20,8 @@ static int udplitev6_sk_init(struct sock *sk)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int udplitev6_rcv(struct sk_buff *skb)
 {
 	return __udp6_lib_rcv(skb, &udplite_table, IPPROTO_UDPLITE);
@@ -45,7 +48,11 @@ struct proto udplitev6_prot = {
 	.connect	   = ip6_datagram_connect,
 	.disconnect	   = udp_disconnect,
 	.ioctl		   = udp_ioctl,
+<<<<<<< HEAD
 	.init		   = udplitev6_sk_init,
+=======
+	.init		   = udplite_sk_init,
+>>>>>>> b7ba80a49124 (Commit)
 	.destroy	   = udpv6_destroy_sock,
 	.setsockopt	   = udpv6_setsockopt,
 	.getsockopt	   = udpv6_getsockopt,

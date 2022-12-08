@@ -264,6 +264,7 @@ static const struct dmi_system_id efifb_dmi_swap_width_height[] __initconst = {
 					"Lenovo ideapad D330-10IGM"),
 		},
 	},
+<<<<<<< HEAD
 	{
 		/* Lenovo IdeaPad Duet 3 10IGL5 with 1200x1920 portrait screen */
 		.matches = {
@@ -280,6 +281,8 @@ static const struct dmi_system_id efifb_dmi_swap_width_height[] __initconst = {
 			DMI_MATCH(DMI_PRODUCT_NAME, "Lenovo YB1-X91"),
 		},
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 
@@ -349,7 +352,11 @@ static const struct fwnode_operations efifb_fwnode_ops = {
 #ifdef CONFIG_EFI
 static struct fwnode_handle efifb_fwnode;
 
+<<<<<<< HEAD
 __init void sysfb_apply_efi_quirks(void)
+=======
+__init void sysfb_apply_efi_quirks(struct platform_device *pd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (screen_info.orig_video_isVGA != VIDEO_TYPE_EFI ||
 	    !(screen_info.capabilities & VIDEO_CAPABILITY_SKIP_QUIRKS))
@@ -363,10 +370,14 @@ __init void sysfb_apply_efi_quirks(void)
 		screen_info.lfb_height = temp;
 		screen_info.lfb_linelength = 4 * screen_info.lfb_width;
 	}
+<<<<<<< HEAD
 }
 
 __init void sysfb_set_efifb_fwnode(struct platform_device *pd)
 {
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (screen_info.orig_video_isVGA == VIDEO_TYPE_EFI && IS_ENABLED(CONFIG_PCI)) {
 		fwnode_init(&efifb_fwnode, &efifb_fwnode_ops);
 		pd->dev.fwnode = &efifb_fwnode;

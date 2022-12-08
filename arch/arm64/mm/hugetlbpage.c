@@ -559,6 +559,7 @@ bool __init arch_hugetlb_valid_size(unsigned long size)
 {
 	return __hugetlb_valid_size(size);
 }
+<<<<<<< HEAD
 
 pte_t huge_ptep_modify_prot_start(struct vm_area_struct *vma, unsigned long addr, pte_t *ptep)
 {
@@ -580,3 +581,5 @@ void huge_ptep_modify_prot_commit(struct vm_area_struct *vma, unsigned long addr
 {
 	set_huge_pte_at(vma->vm_mm, addr, ptep, pte);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

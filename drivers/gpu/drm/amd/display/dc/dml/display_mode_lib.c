@@ -114,7 +114,10 @@ void dml_init_instance(struct display_mode_lib *lib,
 		break;
 	case DML_PROJECT_DCN31:
 	case DML_PROJECT_DCN31_FPGA:
+<<<<<<< HEAD
 	case DML_PROJECT_DCN315:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		lib->funcs = dml31_funcs;
 		break;
 	case DML_PROJECT_DCN314:

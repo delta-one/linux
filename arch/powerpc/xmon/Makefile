@@ -5,7 +5,10 @@ GCOV_PROFILE := n
 KCOV_INSTRUMENT := n
 UBSAN_SANITIZE := n
 KASAN_SANITIZE := n
+<<<<<<< HEAD
 KCSAN_SANITIZE := n
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 # Disable ftrace for the entire directory
 ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)

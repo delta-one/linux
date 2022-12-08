@@ -20,11 +20,19 @@ struct adxl34x_bus_ops {
 	int (*write)(struct device *, unsigned char, unsigned char);
 };
 
+<<<<<<< HEAD
+=======
+void adxl34x_suspend(struct adxl34x *ac);
+void adxl34x_resume(struct adxl34x *ac);
+>>>>>>> b7ba80a49124 (Commit)
 struct adxl34x *adxl34x_probe(struct device *dev, int irq,
 			      bool fifo_delay_default,
 			      const struct adxl34x_bus_ops *bops);
 void adxl34x_remove(struct adxl34x *ac);
 
+<<<<<<< HEAD
 extern const struct dev_pm_ops adxl34x_pm;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

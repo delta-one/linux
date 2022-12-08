@@ -84,6 +84,11 @@ obj-$(CONFIG_FB_PXA)		  += pxafb.o
 obj-$(CONFIG_FB_PXA168)		  += pxa168fb.o
 obj-$(CONFIG_PXA3XX_GCU)	  += pxa3xx-gcu.o
 obj-$(CONFIG_MMP_DISP)           += mmp/
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_FB_W100)		  += w100fb.o
+obj-$(CONFIG_FB_TMIO)		  += tmiofb.o
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_FB_AU1100)		  += au1100fb.o
 obj-$(CONFIG_FB_AU1200)		  += au1200fb.o
 obj-$(CONFIG_FB_VT8500)		  += vt8500lcdfb.o
@@ -98,6 +103,10 @@ obj-$(CONFIG_FB_S1D13XXX)	  += s1d13xxxfb.o
 obj-$(CONFIG_FB_SH7760)		  += sh7760fb.o
 obj-$(CONFIG_FB_IMX)              += imxfb.o
 obj-$(CONFIG_FB_S3C)		  += s3c-fb.o
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_FB_S3C2410)	  += s3c2410fb.o
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_FB_FSL_DIU)	  += fsl-diu-fb.o
 obj-$(CONFIG_FB_COBALT)           += cobalt_lcdfb.o
 obj-$(CONFIG_FB_IBM_GXT4500)	  += gxt4500.o

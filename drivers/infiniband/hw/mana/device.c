@@ -10,7 +10,11 @@ MODULE_DESCRIPTION("Microsoft Azure Network Adapter IB driver");
 MODULE_LICENSE("GPL");
 MODULE_IMPORT_NS(NET_MANA);
 
+<<<<<<< HEAD
 static const struct ib_device_ops mana_ib_dev_ops = {
+=======
+const struct ib_device_ops mana_ib_dev_ops = {
+>>>>>>> b7ba80a49124 (Commit)
 	.owner = THIS_MODULE,
 	.driver_id = RDMA_DRIVER_MANA,
 	.uverbs_abi_ver = MANA_IB_UVERBS_ABI_VERSION,
@@ -71,8 +75,12 @@ static int mana_ib_probe(struct auxiliary_device *adev,
 	dev->gdma_dev = mdev;
 	dev->ib_dev.node_type = RDMA_NODE_IB_CA;
 
+<<<<<<< HEAD
 	/*
 	 * num_comp_vectors needs to set to the max MSIX index
+=======
+	/* num_comp_vectors needs to set to the max MSIX index
+>>>>>>> b7ba80a49124 (Commit)
 	 * when interrupts and event queues are implemented
 	 */
 	dev->ib_dev.num_comp_vectors = 1;
@@ -114,4 +122,21 @@ static struct auxiliary_driver mana_driver = {
 	.id_table = mana_id_table,
 };
 
+<<<<<<< HEAD
 module_auxiliary_driver(mana_driver);
+=======
+static int __init mana_ib_init(void)
+{
+	auxiliary_driver_register(&mana_driver);
+
+	return 0;
+}
+
+static void __exit mana_ib_cleanup(void)
+{
+	auxiliary_driver_unregister(&mana_driver);
+}
+
+module_init(mana_ib_init);
+module_exit(mana_ib_cleanup);
+>>>>>>> b7ba80a49124 (Commit)

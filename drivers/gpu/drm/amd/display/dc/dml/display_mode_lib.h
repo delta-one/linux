@@ -40,7 +40,10 @@ enum dml_project {
 	DML_PROJECT_DCN21,
 	DML_PROJECT_DCN30,
 	DML_PROJECT_DCN31,
+<<<<<<< HEAD
 	DML_PROJECT_DCN315,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	DML_PROJECT_DCN31_FPGA,
 	DML_PROJECT_DCN314,
 	DML_PROJECT_DCN32,
@@ -91,7 +94,10 @@ struct display_mode_lib {
 	struct dal_logger *logger;
 	struct dml_funcs funcs;
 	struct _vcs_dpi_display_e2e_pipe_params_st dml_pipe_state[6];
+<<<<<<< HEAD
 	bool validate_max_state;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void dml_init_instance(struct display_mode_lib *lib,

@@ -226,7 +226,12 @@ static struct sctp_association *sctp_association_init(
 	/* Create an output queue.  */
 	sctp_outq_init(asoc, &asoc->outqueue);
 
+<<<<<<< HEAD
 	sctp_ulpq_init(&asoc->ulpq, asoc);
+=======
+	if (!sctp_ulpq_init(&asoc->ulpq, asoc))
+		goto fail_init;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (sctp_stream_init(&asoc->stream, asoc->c.sinit_num_ostreams, 0, gfp))
 		goto stream_free;
@@ -276,6 +281,10 @@ static struct sctp_association *sctp_association_init(
 
 stream_free:
 	sctp_stream_free(&asoc->stream);
+<<<<<<< HEAD
+=======
+fail_init:
+>>>>>>> b7ba80a49124 (Commit)
 	sock_put(asoc->base.sk);
 	sctp_endpoint_put(asoc->ep);
 	return NULL;

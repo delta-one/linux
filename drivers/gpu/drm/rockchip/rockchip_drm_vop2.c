@@ -25,6 +25,10 @@
 #include <drm/drm_atomic_uapi.h>
 #include <drm/drm_blend.h>
 #include <drm/drm_crtc.h>
+<<<<<<< HEAD
+=======
+#include <drm/drm_crtc_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_debugfs.h>
 #include <drm/drm_flip_work.h>
 #include <drm/drm_framebuffer.h>
@@ -38,7 +42,10 @@
 #include "rockchip_drm_gem.h"
 #include "rockchip_drm_fb.h"
 #include "rockchip_drm_vop2.h"
+<<<<<<< HEAD
 #include "rockchip_rgb.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * VOP2 architecture
@@ -212,9 +219,12 @@ struct vop2 {
 	struct clk *hclk;
 	struct clk *aclk;
 
+<<<<<<< HEAD
 	/* optional internal rgb encoder */
 	struct rockchip_rgb *rgb;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* must be put at the end of the struct */
 	struct vop2_win win[];
 };
@@ -825,7 +835,11 @@ static void vop2_enable(struct vop2 *vop2)
 {
 	int ret;
 
+<<<<<<< HEAD
 	ret = pm_runtime_resume_and_get(vop2->dev);
+=======
+	ret = pm_runtime_get_sync(vop2->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0) {
 		drm_err(vop2->drm, "failed to get pm runtime: %d\n", ret);
 		return;
@@ -880,14 +894,20 @@ static void vop2_crtc_atomic_disable(struct drm_crtc *crtc,
 {
 	struct vop2_video_port *vp = to_vop2_video_port(crtc);
 	struct vop2 *vop2 = vp->vop2;
+<<<<<<< HEAD
 	struct drm_crtc_state *old_crtc_state;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	vop2_lock(vop2);
 
+<<<<<<< HEAD
 	old_crtc_state = drm_atomic_get_old_crtc_state(state, crtc);
 	drm_atomic_helper_disable_planes_on_crtc(old_crtc_state, false);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	drm_crtc_vblank_off(crtc);
 
 	/*
@@ -1003,15 +1023,23 @@ static int vop2_plane_atomic_check(struct drm_plane *plane,
 static void vop2_plane_atomic_disable(struct drm_plane *plane,
 				      struct drm_atomic_state *state)
 {
+<<<<<<< HEAD
 	struct drm_plane_state *old_pstate = NULL;
+=======
+	struct drm_plane_state *old_pstate = drm_atomic_get_old_plane_state(state, plane);
+>>>>>>> b7ba80a49124 (Commit)
 	struct vop2_win *win = to_vop2_win(plane);
 	struct vop2 *vop2 = win->vop2;
 
 	drm_dbg(vop2->drm, "%s disable\n", win->data->name);
 
+<<<<<<< HEAD
 	if (state)
 		old_pstate = drm_atomic_get_old_plane_state(state, plane);
 	if (old_pstate && !old_pstate->crtc)
+=======
+	if (!old_pstate->crtc)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	vop2_win_disable(win);
@@ -1438,8 +1466,11 @@ static void rk3568_set_intf_mux(struct vop2_video_port *vp, int id,
 		die &= ~RK3568_SYS_DSP_INFACE_EN_RGB_MUX;
 		die |= RK3568_SYS_DSP_INFACE_EN_RGB |
 			   FIELD_PREP(RK3568_SYS_DSP_INFACE_EN_RGB_MUX, vp->id);
+<<<<<<< HEAD
 		dip &= ~RK3568_DSP_IF_POL__RGB_LVDS_PIN_POL;
 		dip |= FIELD_PREP(RK3568_DSP_IF_POL__RGB_LVDS_PIN_POL, polflags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (polflags & POLFLAG_DCLK_INV)
 			regmap_write(vop2->grf, RK3568_GRF_VO_CON1, BIT(3 + 16) | BIT(3));
 		else
@@ -2251,7 +2282,11 @@ static struct vop2_video_port *find_vp_without_primary(struct vop2 *vop2)
 
 #define NR_LAYERS 6
 
+<<<<<<< HEAD
 static int vop2_create_crtcs(struct vop2 *vop2)
+=======
+static int vop2_create_crtc(struct vop2 *vop2)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct vop2_data *vop2_data = vop2->data;
 	struct drm_device *drm = vop2->drm;
@@ -2301,7 +2336,11 @@ static int vop2_create_crtcs(struct vop2 *vop2)
 	nvp = 0;
 	for (i = 0; i < vop2->registered_num_wins; i++) {
 		struct vop2_win *win = &vop2->win[i];
+<<<<<<< HEAD
 		u32 possible_crtcs = 0;
+=======
+		u32 possible_crtcs;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (vop2->data->soc_id == 3566) {
 			/*
@@ -2376,6 +2415,7 @@ static int vop2_create_crtcs(struct vop2 *vop2)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void vop2_destroy_crtcs(struct vop2 *vop2)
 {
 	struct drm_device *drm = vop2->drm;
@@ -2386,11 +2426,17 @@ static void vop2_destroy_crtcs(struct vop2 *vop2)
 
 	list_for_each_entry_safe(plane, tmpp, plane_list, head)
 		drm_plane_cleanup(plane);
+=======
+static void vop2_destroy_crtc(struct drm_crtc *crtc)
+{
+	of_node_put(crtc->port);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Destroy CRTC after vop2_plane_destroy() since vop2_disable_plane()
 	 * references the CRTC.
 	 */
+<<<<<<< HEAD
 	list_for_each_entry_safe(crtc, tmpc, crtc_list, head) {
 		of_node_put(crtc->port);
 		drm_crtc_cleanup(crtc);
@@ -2414,6 +2460,9 @@ static int vop2_find_rgb_encoder(struct vop2 *vop2)
 	}
 
 	return -ENOENT;
+=======
+	drm_crtc_cleanup(crtc);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct reg_field vop2_cluster_regs[VOP2_WIN_MAX_REG] = {
@@ -2656,7 +2705,11 @@ static int vop2_bind(struct device *dev, struct device *master, void *data)
 		return -ENODEV;
 
 	/* Allocate vop2 struct and its vop2_win array */
+<<<<<<< HEAD
 	alloc_size = struct_size(vop2, win, vop2_data->win_size);
+=======
+	alloc_size = sizeof(*vop2) + sizeof(*vop2->win) * vop2_data->win_size;
+>>>>>>> b7ba80a49124 (Commit)
 	vop2 = devm_kzalloc(dev, alloc_size, GFP_KERNEL);
 	if (!vop2)
 		return -ENOMEM;
@@ -2679,8 +2732,11 @@ static int vop2_bind(struct device *dev, struct device *master, void *data)
 	vop2->len = resource_size(res);
 
 	vop2->map = devm_regmap_init_mmio(dev, vop2->regs, &vop2_regmap_config);
+<<<<<<< HEAD
 	if (IS_ERR(vop2->map))
 		return PTR_ERR(vop2->map);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = vop2_win_init(vop2);
 	if (ret)
@@ -2719,6 +2775,7 @@ static int vop2_bind(struct device *dev, struct device *master, void *data)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = vop2_create_crtcs(vop2);
 	if (ret)
 		return ret;
@@ -2736,21 +2793,31 @@ static int vop2_bind(struct device *dev, struct device *master, void *data)
 		}
 	}
 
+=======
+	ret = vop2_create_crtc(vop2);
+	if (ret)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	rockchip_drm_dma_init_device(vop2->drm, vop2->dev);
 
 	pm_runtime_enable(&pdev->dev);
 
 	return 0;
+<<<<<<< HEAD
 
 err_crtcs:
 	vop2_destroy_crtcs(vop2);
 
 	return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void vop2_unbind(struct device *dev, struct device *master, void *data)
 {
 	struct vop2 *vop2 = dev_get_drvdata(dev);
+<<<<<<< HEAD
 
 	pm_runtime_disable(dev);
 
@@ -2758,6 +2825,21 @@ static void vop2_unbind(struct device *dev, struct device *master, void *data)
 		rockchip_rgb_fini(vop2->rgb);
 
 	vop2_destroy_crtcs(vop2);
+=======
+	struct drm_device *drm = vop2->drm;
+	struct list_head *plane_list = &drm->mode_config.plane_list;
+	struct list_head *crtc_list = &drm->mode_config.crtc_list;
+	struct drm_crtc *crtc, *tmpc;
+	struct drm_plane *plane, *tmpp;
+
+	pm_runtime_disable(dev);
+
+	list_for_each_entry_safe(plane, tmpp, plane_list, head)
+		drm_plane_cleanup(plane);
+
+	list_for_each_entry_safe(crtc, tmpc, crtc_list, head)
+		vop2_destroy_crtc(crtc);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 const struct component_ops vop2_component_ops = {

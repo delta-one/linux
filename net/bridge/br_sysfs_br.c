@@ -345,7 +345,11 @@ static int set_flush(struct net_bridge *br, unsigned long val,
 		     struct netlink_ext_ack *extack)
 {
 	struct net_bridge_fdb_flush_desc desc = {
+<<<<<<< HEAD
 		.flags_mask = BIT(BR_FDB_STATIC)
+=======
+		.flags_mask = BR_FDB_STATIC
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	br_fdb_flush(br, &desc);

@@ -67,7 +67,14 @@ static ssize_t smo8800_misc_read(struct file *file, char __user *buf,
 
 	retval = 1;
 
+<<<<<<< HEAD
 	byte_data = min_t(u32, data, 255);
+=======
+	if (data < 255)
+		byte_data = data;
+	else
+		byte_data = 255;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (put_user(byte_data, buf))
 		retval = -EFAULT;
@@ -154,13 +161,21 @@ error:
 	return err;
 }
 
+<<<<<<< HEAD
 static void smo8800_remove(struct platform_device *device)
+=======
+static int smo8800_remove(struct platform_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct smo8800_device *smo8800 = platform_get_drvdata(device);
 
 	free_irq(smo8800->irq, smo8800);
 	misc_deregister(&smo8800->miscdev);
 	dev_dbg(&device->dev, "device /dev/freefall unregistered\n");
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* NOTE: Keep this list in sync with drivers/i2c/busses/i2c-i801.c */
@@ -179,7 +194,11 @@ MODULE_DEVICE_TABLE(acpi, smo8800_ids);
 
 static struct platform_driver smo8800_driver = {
 	.probe = smo8800_probe,
+<<<<<<< HEAD
 	.remove_new = smo8800_remove,
+=======
+	.remove = smo8800_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = DRIVER_NAME,
 		.acpi_match_table = smo8800_ids,

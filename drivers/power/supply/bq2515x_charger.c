@@ -1078,9 +1078,15 @@ static const struct regmap_config bq25155_regmap_config = {
 	.volatile_reg		= bq2515x_volatile_register,
 };
 
+<<<<<<< HEAD
 static int bq2515x_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int bq2515x_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = &client->dev;
 	struct bq2515x_device *bq2515x;
 	struct power_supply_config charger_cfg = {};
@@ -1158,7 +1164,11 @@ static struct i2c_driver bq2515x_driver = {
 		.name = "bq2515x-charger",
 		.of_match_table = bq2515x_of_match,
 	},
+<<<<<<< HEAD
 	.probe_new = bq2515x_probe,
+=======
+	.probe = bq2515x_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = bq2515x_i2c_ids,
 };
 module_i2c_driver(bq2515x_driver);

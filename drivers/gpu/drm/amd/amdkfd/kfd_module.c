@@ -77,7 +77,10 @@ err_ioctl:
 
 static void kfd_exit(void)
 {
+<<<<<<< HEAD
 	kfd_cleanup_processes();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfd_debugfs_fini();
 	kfd_process_destroy_wq();
 	kfd_procfs_shutdown();

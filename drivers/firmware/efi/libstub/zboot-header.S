@@ -17,11 +17,18 @@ __efistub_efi_zboot_header:
 	.long		MZ_MAGIC
 	.ascii		"zimg"					// image type
 	.long		__efistub__gzdata_start - .Ldoshdr	// payload offset
+<<<<<<< HEAD
 	.long		__efistub__gzdata_size - 12		// payload size
 	.long		0, 0					// reserved
 	.asciz		COMP_TYPE				// compression type
 	.org		.Ldoshdr + 0x38
 	.long		LINUX_PE_MAGIC
+=======
+	.long		__efistub__gzdata_size - ZBOOT_SIZE_LEN	// payload size
+	.long		0, 0					// reserved
+	.asciz		COMP_TYPE				// compression type
+	.org		.Ldoshdr + 0x3c
+>>>>>>> b7ba80a49124 (Commit)
 	.long		.Lpehdr - .Ldoshdr			// PE header offset
 
 .Lpehdr:
@@ -63,7 +70,11 @@ __efistub_efi_zboot_header:
 	.long		.Lefi_header_end - .Ldoshdr
 	.long		0
 	.short		IMAGE_SUBSYSTEM_EFI_APPLICATION
+<<<<<<< HEAD
 	.short		IMAGE_DLL_CHARACTERISTICS_NX_COMPAT
+=======
+	.short		0
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_64BIT
 	.quad		0, 0, 0, 0
 #else

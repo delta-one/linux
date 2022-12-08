@@ -4,7 +4,10 @@
  * Author: Owen Chen <owen.chen@mediatek.com>
  */
 
+<<<<<<< HEAD
 #include <linux/clk.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/clk-provider.h>
 #include <linux/compiler_types.h>
 #include <linux/container_of.h>
@@ -129,6 +132,7 @@ static int mtk_clk_mux_set_parent_setclr_lock(struct clk_hw *hw, u8 index)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mtk_clk_mux_determine_rate(struct clk_hw *hw,
 				      struct clk_rate_request *req)
 {
@@ -141,6 +145,11 @@ const struct clk_ops mtk_mux_clr_set_upd_ops = {
 	.get_parent = mtk_clk_mux_get_parent,
 	.set_parent = mtk_clk_mux_set_parent_setclr_lock,
 	.determine_rate = mtk_clk_mux_determine_rate,
+=======
+const struct clk_ops mtk_mux_clr_set_upd_ops = {
+	.get_parent = mtk_clk_mux_get_parent,
+	.set_parent = mtk_clk_mux_set_parent_setclr_lock,
+>>>>>>> b7ba80a49124 (Commit)
 };
 EXPORT_SYMBOL_GPL(mtk_mux_clr_set_upd_ops);
 
@@ -150,6 +159,7 @@ const struct clk_ops mtk_mux_gate_clr_set_upd_ops  = {
 	.is_enabled = mtk_clk_mux_is_enabled,
 	.get_parent = mtk_clk_mux_get_parent,
 	.set_parent = mtk_clk_mux_set_parent_setclr_lock,
+<<<<<<< HEAD
 	.determine_rate = mtk_clk_mux_determine_rate,
 };
 EXPORT_SYMBOL_GPL(mtk_mux_gate_clr_set_upd_ops);
@@ -158,6 +168,14 @@ static struct clk_hw *mtk_clk_register_mux(struct device *dev,
 					   const struct mtk_mux *mux,
 					   struct regmap *regmap,
 					   spinlock_t *lock)
+=======
+};
+EXPORT_SYMBOL_GPL(mtk_mux_gate_clr_set_upd_ops);
+
+static struct clk_hw *mtk_clk_register_mux(const struct mtk_mux *mux,
+				 struct regmap *regmap,
+				 spinlock_t *lock)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mtk_clk_mux *clk_mux;
 	struct clk_init_data init = {};
@@ -178,7 +196,11 @@ static struct clk_hw *mtk_clk_register_mux(struct device *dev,
 	clk_mux->lock = lock;
 	clk_mux->hw.init = &init;
 
+<<<<<<< HEAD
 	ret = clk_hw_register(dev, &clk_mux->hw);
+=======
+	ret = clk_hw_register(NULL, &clk_mux->hw);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		kfree(clk_mux);
 		return ERR_PTR(ret);
@@ -199,8 +221,12 @@ static void mtk_clk_unregister_mux(struct clk_hw *hw)
 	kfree(mux);
 }
 
+<<<<<<< HEAD
 int mtk_clk_register_muxes(struct device *dev,
 			   const struct mtk_mux *muxes,
+=======
+int mtk_clk_register_muxes(const struct mtk_mux *muxes,
+>>>>>>> b7ba80a49124 (Commit)
 			   int num, struct device_node *node,
 			   spinlock_t *lock,
 			   struct clk_hw_onecell_data *clk_data)
@@ -224,7 +250,11 @@ int mtk_clk_register_muxes(struct device *dev,
 			continue;
 		}
 
+<<<<<<< HEAD
 		hw = mtk_clk_register_mux(dev, mux, regmap, lock);
+=======
+		hw = mtk_clk_register_mux(mux, regmap, lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (IS_ERR(hw)) {
 			pr_err("Failed to register clk %s: %pe\n", mux->name,
@@ -272,6 +302,7 @@ void mtk_clk_unregister_muxes(const struct mtk_mux *muxes, int num,
 }
 EXPORT_SYMBOL_GPL(mtk_clk_unregister_muxes);
 
+<<<<<<< HEAD
 /*
  * This clock notifier is called when the frequency of the parent
  * PLL clock is to be changed. The idea is to switch the parent to a
@@ -309,4 +340,6 @@ int devm_mtk_clk_mux_notifier_register(struct device *dev, struct clk *clk,
 }
 EXPORT_SYMBOL_GPL(devm_mtk_clk_mux_notifier_register);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_LICENSE("GPL");

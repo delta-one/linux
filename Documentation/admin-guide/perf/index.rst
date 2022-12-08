@@ -19,5 +19,8 @@ Performance monitor support
    arm_dsu_pmu
    thunderx2-pmu
    alibaba_pmu
+<<<<<<< HEAD
    nvidia-pmu
    meson-ddr-pmu
+=======
+>>>>>>> b7ba80a49124 (Commit)

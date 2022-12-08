@@ -4,6 +4,7 @@
 #
 # set -e
 
+<<<<<<< HEAD
 ALL_TESTS="
 	kci_test_polrouting
 	kci_test_route_get
@@ -29,6 +30,8 @@ ALL_TESTS="
 	kci_test_address_proto
 "
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 devdummy="test-dummy0"
 
 # Kselftest framework requirement - SKIP code is 4.
@@ -807,7 +810,11 @@ kci_test_ipsec_offload()
 	    tmpl proto esp src $srcip dst $dstip spi 9 \
 	    mode transport reqid 42
 	check_err $?
+<<<<<<< HEAD
 	ip x p add dir in src $dstip/24 dst $srcip/24 \
+=======
+	ip x p add dir out src $dstip/24 dst $srcip/24 \
+>>>>>>> b7ba80a49124 (Commit)
 	    tmpl proto esp src $dstip dst $srcip spi 9 \
 	    mode transport reqid 42
 	check_err $?
@@ -1250,6 +1257,7 @@ kci_test_bridge_parent_id()
 	echo "PASS: bridge_parent_id"
 }
 
+<<<<<<< HEAD
 address_get_proto()
 {
 	local addr=$1; shift
@@ -1345,21 +1353,72 @@ kci_test_rtnl()
 	local current_test
 	local ret=0
 
+=======
+kci_test_rtnl()
+{
+	local ret=0
+>>>>>>> b7ba80a49124 (Commit)
 	kci_add_dummy
 	if [ $ret -ne 0 ];then
 		echo "FAIL: cannot add dummy interface"
 		return 1
 	fi
 
+<<<<<<< HEAD
 	for current_test in ${TESTS:-$ALL_TESTS}; do
 		$current_test
 		check_err $?
 	done
+=======
+	kci_test_polrouting
+	check_err $?
+	kci_test_route_get
+	check_err $?
+	kci_test_addrlft
+	check_err $?
+	kci_test_promote_secondaries
+	check_err $?
+	kci_test_tc
+	check_err $?
+	kci_test_gre
+	check_err $?
+	kci_test_gretap
+	check_err $?
+	kci_test_ip6gretap
+	check_err $?
+	kci_test_erspan
+	check_err $?
+	kci_test_ip6erspan
+	check_err $?
+	kci_test_bridge
+	check_err $?
+	kci_test_addrlabel
+	check_err $?
+	kci_test_ifalias
+	check_err $?
+	kci_test_vrf
+	check_err $?
+	kci_test_encap
+	check_err $?
+	kci_test_macsec
+	check_err $?
+	kci_test_ipsec
+	check_err $?
+	kci_test_ipsec_offload
+	check_err $?
+	kci_test_fdb_get
+	check_err $?
+	kci_test_neigh_get
+	check_err $?
+	kci_test_bridge_parent_id
+	check_err $?
+>>>>>>> b7ba80a49124 (Commit)
 
 	kci_del_dummy
 	return $ret
 }
 
+<<<<<<< HEAD
 usage()
 {
 	cat <<EOF
@@ -1370,6 +1429,8 @@ usage: ${0##*/} OPTS
 EOF
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #check for needed privileges
 if [ "$(id -u)" -ne 0 ];then
 	echo "SKIP: Need root privileges"
@@ -1384,6 +1445,7 @@ for x in ip tc;do
 	fi
 done
 
+<<<<<<< HEAD
 while getopts t:h o; do
 	case $o in
 		t) TESTS=$OPTARG;;
@@ -1392,6 +1454,8 @@ while getopts t:h o; do
 	esac
 done
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 kci_test_rtnl
 
 exit $?

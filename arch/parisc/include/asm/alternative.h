@@ -22,10 +22,17 @@
 
 struct alt_instr {
 	s32 orig_offset;	/* offset to original instructions */
+<<<<<<< HEAD
 	s16 len;		/* end of original instructions */
 	u16 cond;		/* see ALT_COND_XXX */
 	u32 replacement;	/* replacement instruction or code */
 } __packed;
+=======
+	s32 len;		/* end of original instructions */
+	u32 cond;		/* see ALT_COND_XXX */
+	u32 replacement;	/* replacement instruction or code */
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 void set_kernel_text_rw(int enable_read_write);
 void apply_alternatives_all(void);
@@ -35,9 +42,14 @@ void apply_alternatives(struct alt_instr *start, struct alt_instr *end,
 /* Alternative SMP implementation. */
 #define ALTERNATIVE(cond, replacement)		"!0:"	\
 	".section .altinstructions, \"aw\"	!"	\
+<<<<<<< HEAD
 	".word (0b-4-.)				!"	\
 	".hword 1, " __stringify(cond) "	!"	\
 	".word " __stringify(replacement) "	!"	\
+=======
+	".word (0b-4-.), 1, " __stringify(cond) ","	\
+		__stringify(replacement) "	!"	\
+>>>>>>> b7ba80a49124 (Commit)
 	".previous"
 
 #else
@@ -45,17 +57,27 @@ void apply_alternatives(struct alt_instr *start, struct alt_instr *end,
 /* to replace one single instructions by a new instruction */
 #define ALTERNATIVE(from, to, cond, replacement)\
 	.section .altinstructions, "aw"	!	\
+<<<<<<< HEAD
 	.word (from - .)		!	\
 	.hword (to - from)/4, cond	!	\
 	.word replacement		!	\
+=======
+	.word (from - .), (to - from)/4	!	\
+	.word cond, replacement		!	\
+>>>>>>> b7ba80a49124 (Commit)
 	.previous
 
 /* to replace multiple instructions by new code */
 #define ALTERNATIVE_CODE(from, num_instructions, cond, new_instr_ptr)\
 	.section .altinstructions, "aw"	!	\
+<<<<<<< HEAD
 	.word (from - .)		!	\
 	.hword -num_instructions, cond	!	\
 	.word (new_instr_ptr - .)	!	\
+=======
+	.word (from - .), -num_instructions !	\
+	.word cond, (new_instr_ptr - .)	!	\
+>>>>>>> b7ba80a49124 (Commit)
 	.previous
 
 #endif  /*  __ASSEMBLY__  */

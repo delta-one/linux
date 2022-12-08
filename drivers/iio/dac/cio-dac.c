@@ -4,7 +4,11 @@
  * Copyright (C) 2016 William Breathitt Gray
  *
  * This driver supports the following Measurement Computing devices: CIO-DAC16,
+<<<<<<< HEAD
  * CIO-DAC08, and PC104-DAC06.
+=======
+ * CIO-DAC06, and PC104-DAC06.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #include <linux/bitops.h>
 #include <linux/device.h>
@@ -66,8 +70,13 @@ static int cio_dac_write_raw(struct iio_dev *indio_dev,
 	if (mask != IIO_CHAN_INFO_RAW)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/* DAC can only accept up to a 12-bit value */
 	if ((unsigned int)val > 4095)
+=======
+	/* DAC can only accept up to a 16-bit value */
+	if ((unsigned int)val > 65535)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	priv->chan_out_states[chan->channel] = val;

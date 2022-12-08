@@ -13,7 +13,11 @@
  */
 const char *phy_speed_to_str(int speed)
 {
+<<<<<<< HEAD
 	BUILD_BUG_ON_MSG(__ETHTOOL_LINK_MODE_MASK_NBITS != 102,
+=======
+	BUILD_BUG_ON_MSG(__ETHTOOL_LINK_MODE_MASK_NBITS != 93,
+>>>>>>> b7ba80a49124 (Commit)
 		"Enum ethtool_link_mode_bit_indices and phylib are out of sync. "
 		"If a speed or mode has been added please update phy_speed_to_str "
 		"and the PHY settings array.\n");
@@ -49,8 +53,11 @@ const char *phy_speed_to_str(int speed)
 		return "200Gbps";
 	case SPEED_400000:
 		return "400Gbps";
+<<<<<<< HEAD
 	case SPEED_800000:
 		return "800Gbps";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case SPEED_UNKNOWN:
 		return "Unknown";
 	default:
@@ -77,6 +84,7 @@ const char *phy_duplex_to_str(unsigned int duplex)
 EXPORT_SYMBOL_GPL(phy_duplex_to_str);
 
 /**
+<<<<<<< HEAD
  * phy_rate_matching_to_str - Return a string describing the rate matching
  *
  * @rate_matching: Type of rate matching to describe
@@ -98,6 +106,8 @@ const char *phy_rate_matching_to_str(int rate_matching)
 EXPORT_SYMBOL_GPL(phy_rate_matching_to_str);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * phy_interface_num_ports - Return the number of links that can be carried by
  *			     a given MAC-PHY physical link. Returns 0 if this is
  *			     unknown, the number of links else.
@@ -159,6 +169,7 @@ EXPORT_SYMBOL_GPL(phy_interface_num_ports);
 			       .bit = ETHTOOL_LINK_MODE_ ## b ## _BIT}
 
 static const struct phy_setting settings[] = {
+<<<<<<< HEAD
 	/* 800G */
 	PHY_SETTING( 800000, FULL, 800000baseCR8_Full		),
 	PHY_SETTING( 800000, FULL, 800000baseKR8_Full		),
@@ -166,6 +177,8 @@ static const struct phy_setting settings[] = {
 	PHY_SETTING( 800000, FULL, 800000baseDR8_2_Full		),
 	PHY_SETTING( 800000, FULL, 800000baseSR8_Full		),
 	PHY_SETTING( 800000, FULL, 800000baseVR8_Full		),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* 400G */
 	PHY_SETTING( 400000, FULL, 400000baseCR8_Full		),
 	PHY_SETTING( 400000, FULL, 400000baseKR8_Full		),
@@ -260,9 +273,12 @@ static const struct phy_setting settings[] = {
 	PHY_SETTING(     10, FULL,     10baseT_Full		),
 	PHY_SETTING(     10, HALF,     10baseT_Half		),
 	PHY_SETTING(     10, FULL,     10baseT1L_Full		),
+<<<<<<< HEAD
 	PHY_SETTING(     10, FULL,     10baseT1S_Full		),
 	PHY_SETTING(     10, HALF,     10baseT1S_Half		),
 	PHY_SETTING(     10, HALF,     10baseT1S_P2MP_Half	),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 #undef PHY_SETTING
 

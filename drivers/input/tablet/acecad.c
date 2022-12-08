@@ -9,6 +9,12 @@
  *      v3.2 - Added sysfs support
  */
 
+<<<<<<< HEAD
+=======
+/*
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kernel.h>
 #include <linux/slab.h>
 #include <linux/module.h>

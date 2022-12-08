@@ -18,6 +18,10 @@
 #include <linux/netdevice.h>
 #include <linux/module.h>
 #include <linux/poison.h>
+<<<<<<< HEAD
+=======
+#include <linux/icmpv6.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/ipv6.h>
 #include <net/compat.h>
 #include <linux/uaccess.h>
@@ -34,6 +38,10 @@
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Netfilter Core Team <coreteam@netfilter.org>");
 MODULE_DESCRIPTION("IPv6 packet filter");
+<<<<<<< HEAD
+=======
+MODULE_ALIAS("ip6t_icmp6");
+>>>>>>> b7ba80a49124 (Commit)
 
 void *ip6t_alloc_initial_table(const struct xt_table *info)
 {
@@ -1060,6 +1068,10 @@ __do_replace(struct net *net, const char *name, unsigned int valid_hooks,
 	struct xt_counters *counters;
 	struct ip6t_entry *iter;
 
+<<<<<<< HEAD
+=======
+	ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	counters = xt_counters_alloc(num_counters);
 	if (!counters) {
 		ret = -ENOMEM;
@@ -1105,7 +1117,11 @@ __do_replace(struct net *net, const char *name, unsigned int valid_hooks,
 		net_warn_ratelimited("ip6tables: counters copy to user failed while replacing table\n");
 	}
 	vfree(counters);
+<<<<<<< HEAD
 	return 0;
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
  put_module:
 	module_put(t->me);
@@ -1748,10 +1764,13 @@ int ip6t_register_table(struct net *net, const struct xt_table *table,
 
 	new_table = xt_register_table(net, table, &bootstrap, newinfo);
 	if (IS_ERR(new_table)) {
+<<<<<<< HEAD
 		struct ip6t_entry *iter;
 
 		xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
 			cleanup_entry(iter, net);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		xt_free_table_info(newinfo);
 		return PTR_ERR(new_table);
 	}
@@ -1803,6 +1822,55 @@ void ip6t_unregister_table_exit(struct net *net, const char *name)
 		__ip6t_unregister_table(net, table);
 }
 
+<<<<<<< HEAD
+=======
+/* Returns 1 if the type and code is matched by the range, 0 otherwise */
+static inline bool
+icmp6_type_code_match(u_int8_t test_type, u_int8_t min_code, u_int8_t max_code,
+		     u_int8_t type, u_int8_t code,
+		     bool invert)
+{
+	return (type == test_type && code >= min_code && code <= max_code)
+		^ invert;
+}
+
+static bool
+icmp6_match(const struct sk_buff *skb, struct xt_action_param *par)
+{
+	const struct icmp6hdr *ic;
+	struct icmp6hdr _icmph;
+	const struct ip6t_icmp *icmpinfo = par->matchinfo;
+
+	/* Must not be a fragment. */
+	if (par->fragoff != 0)
+		return false;
+
+	ic = skb_header_pointer(skb, par->thoff, sizeof(_icmph), &_icmph);
+	if (ic == NULL) {
+		/* We've been asked to examine this packet, and we
+		 * can't.  Hence, no choice but to drop.
+		 */
+		par->hotdrop = true;
+		return false;
+	}
+
+	return icmp6_type_code_match(icmpinfo->type,
+				     icmpinfo->code[0],
+				     icmpinfo->code[1],
+				     ic->icmp6_type, ic->icmp6_code,
+				     !!(icmpinfo->invflags&IP6T_ICMP_INV));
+}
+
+/* Called when user tries to insert an entry of this type. */
+static int icmp6_checkentry(const struct xt_mtchk_param *par)
+{
+	const struct ip6t_icmp *icmpinfo = par->matchinfo;
+
+	/* Must specify no unknown invflags */
+	return (icmpinfo->invflags & ~IP6T_ICMP_INV) ? -EINVAL : 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* The built-in targets: standard (NULL) and error. */
 static struct xt_target ip6t_builtin_tg[] __read_mostly = {
 	{
@@ -1834,6 +1902,21 @@ static struct nf_sockopt_ops ip6t_sockopts = {
 	.owner		= THIS_MODULE,
 };
 
+<<<<<<< HEAD
+=======
+static struct xt_match ip6t_builtin_mt[] __read_mostly = {
+	{
+		.name       = "icmp6",
+		.match      = icmp6_match,
+		.matchsize  = sizeof(struct ip6t_icmp),
+		.checkentry = icmp6_checkentry,
+		.proto      = IPPROTO_ICMPV6,
+		.family     = NFPROTO_IPV6,
+		.me	    = THIS_MODULE,
+	},
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __net_init ip6_tables_net_init(struct net *net)
 {
 	return xt_proto_init(net, NFPROTO_IPV6);
@@ -1861,14 +1944,29 @@ static int __init ip6_tables_init(void)
 	ret = xt_register_targets(ip6t_builtin_tg, ARRAY_SIZE(ip6t_builtin_tg));
 	if (ret < 0)
 		goto err2;
+<<<<<<< HEAD
+=======
+	ret = xt_register_matches(ip6t_builtin_mt, ARRAY_SIZE(ip6t_builtin_mt));
+	if (ret < 0)
+		goto err4;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Register setsockopt */
 	ret = nf_register_sockopt(&ip6t_sockopts);
 	if (ret < 0)
+<<<<<<< HEAD
 		goto err4;
 
 	return 0;
 
+=======
+		goto err5;
+
+	return 0;
+
+err5:
+	xt_unregister_matches(ip6t_builtin_mt, ARRAY_SIZE(ip6t_builtin_mt));
+>>>>>>> b7ba80a49124 (Commit)
 err4:
 	xt_unregister_targets(ip6t_builtin_tg, ARRAY_SIZE(ip6t_builtin_tg));
 err2:
@@ -1881,6 +1979,10 @@ static void __exit ip6_tables_fini(void)
 {
 	nf_unregister_sockopt(&ip6t_sockopts);
 
+<<<<<<< HEAD
+=======
+	xt_unregister_matches(ip6t_builtin_mt, ARRAY_SIZE(ip6t_builtin_mt));
+>>>>>>> b7ba80a49124 (Commit)
 	xt_unregister_targets(ip6t_builtin_tg, ARRAY_SIZE(ip6t_builtin_tg));
 	unregister_pernet_subsys(&ip6_tables_net_ops);
 }

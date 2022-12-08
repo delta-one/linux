@@ -12,6 +12,7 @@
 #include "../kselftest.h"
 #include "rseq.h"
 
+<<<<<<< HEAD
 #ifdef BUILDOPT_RSEQ_PERCPU_MM_CID
 # define RSEQ_PERCPU	RSEQ_PERCPU_MM_CID
 static
@@ -38,6 +39,8 @@ bool rseq_validate_cpu_id(void)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct percpu_lock_entry {
 	intptr_t v;
 } __attribute__((aligned(128)));
@@ -77,9 +80,15 @@ int rseq_this_cpu_lock(struct percpu_lock *lock)
 	for (;;) {
 		int ret;
 
+<<<<<<< HEAD
 		cpu = get_current_cpu_id();
 		ret = rseq_cmpeqv_storev(RSEQ_MO_RELAXED, RSEQ_PERCPU,
 					 &lock->c[cpu].v, 0, 1, cpu);
+=======
+		cpu = rseq_cpu_start();
+		ret = rseq_cmpeqv_storev(&lock->c[cpu].v,
+					 0, 1, cpu);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rseq_likely(!ret))
 			break;
 		/* Retry if comparison fails or rseq aborts. */
@@ -167,14 +176,22 @@ void this_cpu_list_push(struct percpu_list *list,
 		intptr_t *targetptr, newval, expect;
 		int ret;
 
+<<<<<<< HEAD
 		cpu = get_current_cpu_id();
+=======
+		cpu = rseq_cpu_start();
+>>>>>>> b7ba80a49124 (Commit)
 		/* Load list->c[cpu].head with single-copy atomicity. */
 		expect = (intptr_t)RSEQ_READ_ONCE(list->c[cpu].head);
 		newval = (intptr_t)node;
 		targetptr = (intptr_t *)&list->c[cpu].head;
 		node->next = (struct percpu_list_node *)expect;
+<<<<<<< HEAD
 		ret = rseq_cmpeqv_storev(RSEQ_MO_RELAXED, RSEQ_PERCPU,
 					 targetptr, expect, newval, cpu);
+=======
+		ret = rseq_cmpeqv_storev(targetptr, expect, newval, cpu);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rseq_likely(!ret))
 			break;
 		/* Retry if comparison fails or rseq aborts. */
@@ -197,13 +214,21 @@ struct percpu_list_node *this_cpu_list_pop(struct percpu_list *list,
 		long offset;
 		int ret, cpu;
 
+<<<<<<< HEAD
 		cpu = get_current_cpu_id();
+=======
+		cpu = rseq_cpu_start();
+>>>>>>> b7ba80a49124 (Commit)
 		targetptr = (intptr_t *)&list->c[cpu].head;
 		expectnot = (intptr_t)NULL;
 		offset = offsetof(struct percpu_list_node, next);
 		load = (intptr_t *)&head;
+<<<<<<< HEAD
 		ret = rseq_cmpnev_storeoffp_load(RSEQ_MO_RELAXED, RSEQ_PERCPU,
 						 targetptr, expectnot,
+=======
+		ret = rseq_cmpnev_storeoffp_load(targetptr, expectnot,
+>>>>>>> b7ba80a49124 (Commit)
 						 offset, load, cpu);
 		if (rseq_likely(!ret)) {
 			if (_cpu)
@@ -323,10 +348,13 @@ int main(int argc, char **argv)
 			errno, strerror(errno));
 		goto error;
 	}
+<<<<<<< HEAD
 	if (!rseq_validate_cpu_id()) {
 		fprintf(stderr, "Error: cpu id getter unavailable\n");
 		goto error;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	printf("spinlock\n");
 	test_percpu_spinlock();
 	printf("percpu_list\n");

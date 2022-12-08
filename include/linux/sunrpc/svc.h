@@ -21,6 +21,17 @@
 #include <linux/mm.h>
 #include <linux/pagevec.h>
 
+<<<<<<< HEAD
+=======
+/* statistics for svc_pool structures */
+struct svc_pool_stats {
+	atomic_long_t	packets;
+	unsigned long	sockets_queued;
+	atomic_long_t	threads_woken;
+	atomic_long_t	threads_timedout;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  *
  * RPC service thread pool.
@@ -37,12 +48,16 @@ struct svc_pool {
 	struct list_head	sp_sockets;	/* pending sockets */
 	unsigned int		sp_nrthreads;	/* # of threads in pool */
 	struct list_head	sp_all_threads;	/* all server threads */
+<<<<<<< HEAD
 
 	/* statistics on pool operation */
 	struct percpu_counter	sp_sockets_queued;
 	struct percpu_counter	sp_threads_woken;
 	struct percpu_counter	sp_threads_timedout;
 
+=======
+	struct svc_pool_stats	sp_stats;	/* statistics on pool operation */
+>>>>>>> b7ba80a49124 (Commit)
 #define	SP_TASK_PENDING		(0)		/* still work to do even if no
 						 * xprt is queued. */
 #define SP_CONGESTED		(1)
@@ -190,6 +205,50 @@ extern u32 svc_max_payload(const struct svc_rqst *rqstp);
 #define RPCSVC_MAXPAGES		((RPCSVC_MAXPAYLOAD+PAGE_SIZE-1)/PAGE_SIZE \
 				+ 2 + 1)
 
+<<<<<<< HEAD
+=======
+static inline u32 svc_getnl(struct kvec *iov)
+{
+	__be32 val, *vp;
+	vp = iov->iov_base;
+	val = *vp++;
+	iov->iov_base = (void*)vp;
+	iov->iov_len -= sizeof(__be32);
+	return ntohl(val);
+}
+
+static inline void svc_putnl(struct kvec *iov, u32 val)
+{
+	__be32 *vp = iov->iov_base + iov->iov_len;
+	*vp = htonl(val);
+	iov->iov_len += sizeof(__be32);
+}
+
+static inline __be32 svc_getu32(struct kvec *iov)
+{
+	__be32 val, *vp;
+	vp = iov->iov_base;
+	val = *vp++;
+	iov->iov_base = (void*)vp;
+	iov->iov_len -= sizeof(__be32);
+	return val;
+}
+
+static inline void svc_ungetu32(struct kvec *iov)
+{
+	__be32 *vp = (__be32 *)iov->iov_base;
+	iov->iov_base = (void *)(vp - 1);
+	iov->iov_len += sizeof(*vp);
+}
+
+static inline void svc_putu32(struct kvec *iov, __be32 val)
+{
+	__be32 *vp = iov->iov_base + iov->iov_len;
+	*vp = val;
+	iov->iov_len += sizeof(__be32);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The context of a single thread, including the request currently being
  * processed.
@@ -248,7 +307,10 @@ struct svc_rqst {
 
 	void *			rq_argp;	/* decoded arguments */
 	void *			rq_resp;	/* xdr'd results */
+<<<<<<< HEAD
 	__be32			*rq_accept_statp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void *			rq_auth_data;	/* flavor-specific data */
 	__be32			rq_auth_stat;	/* authentication status */
 	int			rq_auth_slack;	/* extra space xdr code
@@ -268,6 +330,10 @@ struct svc_rqst {
 	struct auth_domain *	rq_gssclient;	/* "gss/"-style peer info */
 	struct svc_cacherep *	rq_cacherep;	/* cache info */
 	struct task_struct	*rq_task;	/* service thread */
+<<<<<<< HEAD
+=======
+	spinlock_t		rq_lock;	/* per-request lock */
+>>>>>>> b7ba80a49124 (Commit)
 	struct net		*rq_bc_net;	/* pointer to backchannel's
 						 * net namespace
 						 */
@@ -309,6 +375,32 @@ static inline struct sockaddr *svc_daddr(const struct svc_rqst *rqst)
 	return (struct sockaddr *) &rqst->rq_daddr;
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * Check buffer bounds after decoding arguments
+ */
+static inline int
+xdr_argsize_check(struct svc_rqst *rqstp, __be32 *p)
+{
+	char *cp = (char *)p;
+	struct kvec *vec = &rqstp->rq_arg.head[0];
+	return cp >= (char*)vec->iov_base
+		&& cp <= (char*)vec->iov_base + vec->iov_len;
+}
+
+static inline int
+xdr_ressize_check(struct svc_rqst *rqstp, __be32 *p)
+{
+	struct kvec *vec = &rqstp->rq_res.head[0];
+	char *cp = (char*)p;
+
+	vec->iov_len = cp - (char*)vec->iov_base;
+
+	return vec->iov_len <= PAGE_SIZE;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void svc_free_res_pages(struct svc_rqst *rqstp)
 {
 	while (rqstp->rq_next_page != rqstp->rq_respages) {
@@ -335,7 +427,11 @@ struct svc_deferred_req {
 
 struct svc_process_info {
 	union {
+<<<<<<< HEAD
 		int  (*dispatch)(struct svc_rqst *rqstp);
+=======
+		int  (*dispatch)(struct svc_rqst *, __be32 *);
+>>>>>>> b7ba80a49124 (Commit)
 		struct {
 			unsigned int lovers;
 			unsigned int hivers;
@@ -374,7 +470,11 @@ struct svc_version {
 	u32			vs_vers;	/* version number */
 	u32			vs_nproc;	/* number of procedures */
 	const struct svc_procedure *vs_proc;	/* per-procedure info */
+<<<<<<< HEAD
 	unsigned long __percpu	*vs_count;	/* call counts */
+=======
+	unsigned int		*vs_count;	/* call counts */
+>>>>>>> b7ba80a49124 (Commit)
 	u32			vs_xdrsize;	/* xdrsize needed for this version */
 
 	/* Don't register with rpcbind */
@@ -387,7 +487,11 @@ struct svc_version {
 	bool			vs_need_cong_ctrl;
 
 	/* Dispatch function */
+<<<<<<< HEAD
 	int			(*vs_dispatch)(struct svc_rqst *rqstp);
+=======
+	int			(*vs_dispatch)(struct svc_rqst *, __be32 *);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -481,6 +585,12 @@ static inline void svc_reserve_auth(struct svc_rqst *rqstp, int space)
  * svcxdr_init_decode - Prepare an xdr_stream for Call decoding
  * @rqstp: controlling server RPC transaction context
  *
+<<<<<<< HEAD
+=======
+ * This function currently assumes the RPC header in rq_arg has
+ * already been decoded. Upon return, xdr->p points to the
+ * location of the upper layer header.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static inline void svcxdr_init_decode(struct svc_rqst *rqstp)
 {
@@ -488,7 +598,15 @@ static inline void svcxdr_init_decode(struct svc_rqst *rqstp)
 	struct xdr_buf *buf = &rqstp->rq_arg;
 	struct kvec *argv = buf->head;
 
+<<<<<<< HEAD
 	WARN_ON(buf->len != buf->head->iov_len + buf->page_len + buf->tail->iov_len);
+=======
+	/*
+	 * svc_getnl() and friends do not keep the xdr_buf's ::len
+	 * field up to date. Refresh that field before initializing
+	 * the argument decoding stream.
+	 */
+>>>>>>> b7ba80a49124 (Commit)
 	buf->len = buf->head->iov_len + buf->page_len + buf->tail->iov_len;
 
 	xdr_init_decode(xdr, buf, argv->iov_base, NULL);
@@ -511,6 +629,7 @@ static inline void svcxdr_init_encode(struct svc_rqst *rqstp)
 	xdr->buf = buf;
 	xdr->iov = resv;
 	xdr->p   = resv->iov_base + resv->iov_len;
+<<<<<<< HEAD
 	xdr->end = resv->iov_base + PAGE_SIZE;
 	buf->len = resv->iov_len;
 	xdr->page_ptr = buf->pages - 1;
@@ -560,4 +679,14 @@ static inline bool svcxdr_set_accept_stat(struct svc_rqst *rqstp)
 	return true;
 }
 
+=======
+	xdr->end = resv->iov_base + PAGE_SIZE - rqstp->rq_auth_slack;
+	buf->len = resv->iov_len;
+	xdr->page_ptr = buf->pages - 1;
+	buf->buflen = PAGE_SIZE * (rqstp->rq_page_end - buf->pages);
+	buf->buflen -= rqstp->rq_auth_slack;
+	xdr->rqst = NULL;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* SUNRPC_SVC_H */

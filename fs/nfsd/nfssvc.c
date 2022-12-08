@@ -91,12 +91,17 @@ unsigned long	nfsd_drc_mem_used;
 #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
 static struct svc_stat	nfsd_acl_svcstats;
 static const struct svc_version *nfsd_acl_version[] = {
+<<<<<<< HEAD
 # if defined(CONFIG_NFSD_V2_ACL)
 	[2] = &nfsd_acl_version2,
 # endif
 # if defined(CONFIG_NFSD_V3_ACL)
 	[3] = &nfsd_acl_version3,
 # endif
+=======
+	[2] = &nfsd_acl_version2,
+	[3] = &nfsd_acl_version3,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define NFSD_ACL_MINVERS            2
@@ -120,9 +125,13 @@ static struct svc_stat	nfsd_acl_svcstats = {
 #endif /* defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL) */
 
 static const struct svc_version *nfsd_version[] = {
+<<<<<<< HEAD
 #if defined(CONFIG_NFSD_V2)
 	[2] = &nfsd_version2,
 #endif
+=======
+	[2] = &nfsd_version2,
+>>>>>>> b7ba80a49124 (Commit)
 	[3] = &nfsd_version3,
 #if defined(CONFIG_NFSD_V4)
 	[4] = &nfsd_version4,
@@ -363,7 +372,11 @@ void nfsd_copy_write_verifier(__be32 verf[2], struct nfsd_net *nn)
 
 	do {
 		read_seqbegin_or_lock(&nn->writeverf_lock, &seq);
+<<<<<<< HEAD
 		memcpy(verf, nn->writeverf, sizeof(nn->writeverf));
+=======
+		memcpy(verf, nn->writeverf, sizeof(*verf));
+>>>>>>> b7ba80a49124 (Commit)
 	} while (need_seqretry(&nn->writeverf_lock, seq));
 	done_seqretry(&nn->writeverf_lock, seq);
 }
@@ -427,6 +440,7 @@ static int nfsd_startup_net(struct net *net, const struct cred *cred)
 	ret = nfsd_file_cache_start_net(net);
 	if (ret)
 		goto out_lockd;
+<<<<<<< HEAD
 
 	ret = nfsd_reply_cache_init(nn);
 	if (ret)
@@ -435,6 +449,11 @@ static int nfsd_startup_net(struct net *net, const struct cred *cred)
 	ret = nfs4_state_start_net(net);
 	if (ret)
 		goto out_reply_cache;
+=======
+	ret = nfs4_state_start_net(net);
+	if (ret)
+		goto out_filecache;
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_NFSD_V4_2_INTER_SSC
 	nfsd4_ssc_init_umount_work(nn);
@@ -442,8 +461,11 @@ static int nfsd_startup_net(struct net *net, const struct cred *cred)
 	nn->nfsd_net_up = true;
 	return 0;
 
+<<<<<<< HEAD
 out_reply_cache:
 	nfsd_reply_cache_shutdown(nn);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 out_filecache:
 	nfsd_file_cache_shutdown_net(net);
 out_lockd:
@@ -460,9 +482,14 @@ static void nfsd_shutdown_net(struct net *net)
 {
 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
 
+<<<<<<< HEAD
 	nfs4_state_shutdown_net(net);
 	nfsd_reply_cache_shutdown(nn);
 	nfsd_file_cache_shutdown_net(net);
+=======
+	nfsd_file_cache_shutdown_net(net);
+	nfs4_state_shutdown_net(net);
+>>>>>>> b7ba80a49124 (Commit)
 	if (nn->lockd_up) {
 		lockd_down(net);
 		nn->lockd_up = false;
@@ -1030,6 +1057,10 @@ out:
 /**
  * nfsd_dispatch - Process an NFS or NFSACL Request
  * @rqstp: incoming request
+<<<<<<< HEAD
+=======
+ * @statp: pointer to location of accept_stat field in RPC Reply buffer
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This RPC dispatcher integrates the NFS server's duplicate reply cache.
  *
@@ -1037,10 +1068,16 @@ out:
  *  %0: Processing complete; do not send a Reply
  *  %1: Processing complete; send Reply in rqstp->rq_res
  */
+<<<<<<< HEAD
 int nfsd_dispatch(struct svc_rqst *rqstp)
 {
 	const struct svc_procedure *proc = rqstp->rq_procinfo;
 	__be32 *statp = rqstp->rq_accept_statp;
+=======
+int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
+{
+	const struct svc_procedure *proc = rqstp->rq_procinfo;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Give the xdr decoder a chance to change this if it wants
@@ -1048,6 +1085,10 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
 	 */
 	rqstp->rq_cachetype = proc->pc_cachetype;
 
+<<<<<<< HEAD
+=======
+	svcxdr_init_decode(rqstp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!proc->pc_decode(rqstp, &rqstp->rq_arg_stream))
 		goto out_decode_err;
 
@@ -1060,8 +1101,19 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
 		goto out_dropit;
 	}
 
+<<<<<<< HEAD
 	*statp = proc->pc_func(rqstp);
 	if (test_bit(RQ_DROPME, &rqstp->rq_flags))
+=======
+	/*
+	 * Need to grab the location to store the status, as
+	 * NFSv4 does some encoding while processing
+	 */
+	svcxdr_init_encode(rqstp);
+
+	*statp = proc->pc_func(rqstp);
+	if (*statp == rpc_drop_reply || test_bit(RQ_DROPME, &rqstp->rq_flags))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_update_drop;
 
 	if (!proc->pc_encode(rqstp, &rqstp->rq_res_stream))

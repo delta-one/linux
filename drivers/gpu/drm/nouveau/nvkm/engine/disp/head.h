@@ -1,7 +1,10 @@
 /* SPDX-License-Identifier: MIT */
 #ifndef __NVKM_DISP_HEAD_H__
 #define __NVKM_DISP_HEAD_H__
+<<<<<<< HEAD
 #include <nvif/object.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "priv.h"
 
 struct nvkm_head {
@@ -27,12 +30,20 @@ struct nvkm_head {
 			u8 depth;
 		} or;
 	} arm, asy;
+<<<<<<< HEAD
 
 	struct nvkm_object object;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int nvkm_head_new_(const struct nvkm_head_func *, struct nvkm_disp *, int id);
 void nvkm_head_del(struct nvkm_head **);
+<<<<<<< HEAD
+=======
+int nvkm_head_mthd_scanoutpos(struct nvkm_object *,
+			      struct nvkm_head *, void *, u32);
+>>>>>>> b7ba80a49124 (Commit)
 struct nvkm_head *nvkm_head_find(struct nvkm_disp *, int id);
 
 struct nvkm_head_func {

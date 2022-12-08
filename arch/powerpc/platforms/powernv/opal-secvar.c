@@ -54,7 +54,12 @@ static int opal_status_to_err(int rc)
 	return err;
 }
 
+<<<<<<< HEAD
 static int opal_get_variable(const char *key, u64 ksize, u8 *data, u64 *dsize)
+=======
+static int opal_get_variable(const char *key, uint64_t ksize,
+			     u8 *data, uint64_t *dsize)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int rc;
 
@@ -70,7 +75,12 @@ static int opal_get_variable(const char *key, u64 ksize, u8 *data, u64 *dsize)
 	return opal_status_to_err(rc);
 }
 
+<<<<<<< HEAD
 static int opal_get_next_variable(const char *key, u64 *keylen, u64 keybufsize)
+=======
+static int opal_get_next_variable(const char *key, uint64_t *keylen,
+				  uint64_t keybufsize)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int rc;
 
@@ -86,7 +96,12 @@ static int opal_get_next_variable(const char *key, u64 *keylen, u64 keybufsize)
 	return opal_status_to_err(rc);
 }
 
+<<<<<<< HEAD
 static int opal_set_variable(const char *key, u64 ksize, u8 *data, u64 dsize)
+=======
+static int opal_set_variable(const char *key, uint64_t ksize, u8 *data,
+			     uint64_t dsize)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int rc;
 
@@ -98,6 +113,7 @@ static int opal_set_variable(const char *key, u64 ksize, u8 *data, u64 dsize)
 	return opal_status_to_err(rc);
 }
 
+<<<<<<< HEAD
 static ssize_t opal_secvar_format(char *buf, size_t bufsize)
 {
 	ssize_t rc = 0;
@@ -143,12 +159,17 @@ out:
 	return rc;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct secvar_operations opal_secvar_ops = {
 	.get = opal_get_variable,
 	.get_next = opal_get_next_variable,
 	.set = opal_set_variable,
+<<<<<<< HEAD
 	.format = opal_secvar_format,
 	.max_size = opal_secvar_max_size,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int opal_secvar_probe(struct platform_device *pdev)
@@ -160,7 +181,13 @@ static int opal_secvar_probe(struct platform_device *pdev)
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
 	return set_secvar_ops(&opal_secvar_ops);
+=======
+	set_secvar_ops(&opal_secvar_ops);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id opal_secvar_match[] = {

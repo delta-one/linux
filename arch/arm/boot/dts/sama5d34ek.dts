@@ -50,7 +50,11 @@
 	};
 
 	leds {
+<<<<<<< HEAD
 		led-d3 {
+=======
+		d3 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "d3";
 			gpios = <&pioE 24 GPIO_ACTIVE_HIGH>;
 		};

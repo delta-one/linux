@@ -879,6 +879,7 @@ static struct btf_raw_test raw_tests[] = {
 	.btf_load_err = true,
 	.err_str = "Invalid elem",
 },
+<<<<<<< HEAD
 {
 	.descr = "var after datasec, ptr followed by modifier",
 	.raw_types = {
@@ -907,6 +908,8 @@ static struct btf_raw_test raw_tests[] = {
 	.value_type_id = 1,
 	.max_entries = 1,
 },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Test member exceeds the size of struct.
  *
  * struct A {
@@ -3964,6 +3967,7 @@ static struct btf_raw_test raw_tests[] = {
 	.err_str = "Invalid type_id",
 },
 {
+<<<<<<< HEAD
 	.descr = "decl_tag test #16, func proto, return type",
 	.raw_types = {
 		BTF_TYPE_INT_ENC(0, BTF_INT_SIGNED, 0, 32, 4),				/* [1] */
@@ -3991,6 +3995,8 @@ static struct btf_raw_test raw_tests[] = {
 	.err_str = "Invalid arg#1",
 },
 {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.descr = "type_tag test #1",
 	.raw_types = {
 		BTF_TYPE_INT_ENC(0, BTF_INT_SIGNED, 0, 32, 4),	/* [1] */
@@ -4450,7 +4456,11 @@ static int test_big_btf_info(unsigned int test_num)
 	info->btf = ptr_to_u64(user_btf);
 	info->btf_size = raw_btf_size;
 
+<<<<<<< HEAD
 	err = bpf_btf_get_info_by_fd(btf_fd, info, &info_len);
+=======
+	err = bpf_obj_get_info_by_fd(btf_fd, info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (CHECK(!err, "!err")) {
 		err = -1;
 		goto done;
@@ -4463,7 +4473,11 @@ static int test_big_btf_info(unsigned int test_num)
 	 * to userspace.
 	 */
 	info_garbage.garbage = 0;
+<<<<<<< HEAD
 	err = bpf_btf_get_info_by_fd(btf_fd, info, &info_len);
+=======
+	err = bpf_obj_get_info_by_fd(btf_fd, info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (CHECK(err || info_len != sizeof(*info),
 		  "err:%d errno:%d info_len:%u sizeof(*info):%zu",
 		  err, errno, info_len, sizeof(*info))) {
@@ -4527,7 +4541,11 @@ static int test_btf_id(unsigned int test_num)
 
 	/* Test BPF_OBJ_GET_INFO_BY_ID on btf_id */
 	info_len = sizeof(info[0]);
+<<<<<<< HEAD
 	err = bpf_btf_get_info_by_fd(btf_fd[0], &info[0], &info_len);
+=======
+	err = bpf_obj_get_info_by_fd(btf_fd[0], &info[0], &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (CHECK(err, "errno:%d", errno)) {
 		err = -1;
 		goto done;
@@ -4540,7 +4558,11 @@ static int test_btf_id(unsigned int test_num)
 	}
 
 	ret = 0;
+<<<<<<< HEAD
 	err = bpf_btf_get_info_by_fd(btf_fd[1], &info[1], &info_len);
+=======
+	err = bpf_obj_get_info_by_fd(btf_fd[1], &info[1], &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (CHECK(err || info[0].id != info[1].id ||
 		  info[0].btf_size != info[1].btf_size ||
 		  (ret = memcmp(user_btf[0], user_btf[1], info[0].btf_size)),
@@ -4563,7 +4585,11 @@ static int test_btf_id(unsigned int test_num)
 	}
 
 	info_len = sizeof(map_info);
+<<<<<<< HEAD
 	err = bpf_map_get_info_by_fd(map_fd, &map_info, &info_len);
+=======
+	err = bpf_obj_get_info_by_fd(map_fd, &map_info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (CHECK(err || map_info.btf_id != info[0].id ||
 		  map_info.btf_key_type_id != 1 || map_info.btf_value_type_id != 2,
 		  "err:%d errno:%d info.id:%u btf_id:%u btf_key_type_id:%u btf_value_type_id:%u",
@@ -4666,7 +4692,11 @@ static void do_test_get_info(unsigned int test_num)
 	info.btf_size = user_btf_size;
 
 	ret = 0;
+<<<<<<< HEAD
 	err = bpf_btf_get_info_by_fd(btf_fd, &info, &info_len);
+=======
+	err = bpf_obj_get_info_by_fd(btf_fd, &info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (CHECK(err || !info.id || info_len != sizeof(info) ||
 		  info.btf_size != raw_btf_size ||
 		  (ret = memcmp(raw_btf, user_btf, expected_nbytes)),
@@ -4783,7 +4813,11 @@ static void do_test_file(unsigned int test_num)
 
 	/* get necessary program info */
 	info_len = sizeof(struct bpf_prog_info);
+<<<<<<< HEAD
 	err = bpf_prog_get_info_by_fd(prog_fd, &info, &info_len);
+=======
+	err = bpf_obj_get_info_by_fd(prog_fd, &info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (CHECK(err < 0, "invalid get info (1st) errno:%d", errno)) {
 		fprintf(stderr, "%s\n", btf_log_buf);
@@ -4815,7 +4849,11 @@ static void do_test_file(unsigned int test_num)
 	info.func_info_rec_size = rec_size;
 	info.func_info = ptr_to_u64(func_info);
 
+<<<<<<< HEAD
 	err = bpf_prog_get_info_by_fd(prog_fd, &info, &info_len);
+=======
+	err = bpf_obj_get_info_by_fd(prog_fd, &info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (CHECK(err < 0, "invalid get info (2nd) errno:%d", errno)) {
 		fprintf(stderr, "%s\n", btf_log_buf);
@@ -6433,7 +6471,11 @@ static int test_get_finfo(const struct prog_info_raw_test *test,
 
 	/* get necessary lens */
 	info_len = sizeof(struct bpf_prog_info);
+<<<<<<< HEAD
 	err = bpf_prog_get_info_by_fd(prog_fd, &info, &info_len);
+=======
+	err = bpf_obj_get_info_by_fd(prog_fd, &info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (CHECK(err < 0, "invalid get info (1st) errno:%d", errno)) {
 		fprintf(stderr, "%s\n", btf_log_buf);
 		return -1;
@@ -6463,7 +6505,11 @@ static int test_get_finfo(const struct prog_info_raw_test *test,
 	info.nr_func_info = nr_func_info;
 	info.func_info_rec_size = rec_size;
 	info.func_info = ptr_to_u64(func_info);
+<<<<<<< HEAD
 	err = bpf_prog_get_info_by_fd(prog_fd, &info, &info_len);
+=======
+	err = bpf_obj_get_info_by_fd(prog_fd, &info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (CHECK(err < 0, "invalid get info (2nd) errno:%d", errno)) {
 		fprintf(stderr, "%s\n", btf_log_buf);
 		err = -1;
@@ -6527,7 +6573,11 @@ static int test_get_linfo(const struct prog_info_raw_test *test,
 	nr_jited_func_lens = nr_jited_ksyms;
 
 	info_len = sizeof(struct bpf_prog_info);
+<<<<<<< HEAD
 	err = bpf_prog_get_info_by_fd(prog_fd, &info, &info_len);
+=======
+	err = bpf_obj_get_info_by_fd(prog_fd, &info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (CHECK(err < 0, "err:%d errno:%d", err, errno)) {
 		err = -1;
 		goto done;
@@ -6601,7 +6651,11 @@ static int test_get_linfo(const struct prog_info_raw_test *test,
 		info.jited_func_lens = ptr_to_u64(jited_func_lens);
 	}
 
+<<<<<<< HEAD
 	err = bpf_prog_get_info_by_fd(prog_fd, &info, &info_len);
+=======
+	err = bpf_obj_get_info_by_fd(prog_fd, &info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Only recheck the info.*line_info* fields.
@@ -7175,7 +7229,11 @@ static struct btf_dedup_test dedup_tests[] = {
 				BTF_ENUM_ENC(NAME_NTH(4), 456),
 			/* [4] fwd enum 'e2' after full enum */
 			BTF_TYPE_ENC(NAME_NTH(3), BTF_INFO_ENC(BTF_KIND_ENUM, 0, 0), 4),
+<<<<<<< HEAD
 			/* [5] fwd enum with different size, size does not matter for fwd */
+=======
+			/* [5] incompatible fwd enum with different size */
+>>>>>>> b7ba80a49124 (Commit)
 			BTF_TYPE_ENC(NAME_NTH(1), BTF_INFO_ENC(BTF_KIND_ENUM, 0, 0), 1),
 			/* [6] incompatible full enum with different value */
 			BTF_TYPE_ENC(NAME_NTH(1), BTF_INFO_ENC(BTF_KIND_ENUM, 0, 1), 4),
@@ -7192,7 +7250,13 @@ static struct btf_dedup_test dedup_tests[] = {
 			/* [2] full enum 'e2' */
 			BTF_TYPE_ENC(NAME_NTH(3), BTF_INFO_ENC(BTF_KIND_ENUM, 0, 1), 4),
 				BTF_ENUM_ENC(NAME_NTH(4), 456),
+<<<<<<< HEAD
 			/* [3] incompatible full enum with different value */
+=======
+			/* [3] incompatible fwd enum with different size */
+			BTF_TYPE_ENC(NAME_NTH(1), BTF_INFO_ENC(BTF_KIND_ENUM, 0, 0), 1),
+			/* [4] incompatible full enum with different value */
+>>>>>>> b7ba80a49124 (Commit)
 			BTF_TYPE_ENC(NAME_NTH(1), BTF_INFO_ENC(BTF_KIND_ENUM, 0, 1), 4),
 				BTF_ENUM_ENC(NAME_NTH(2), 321),
 			BTF_END_RAW,
@@ -7651,6 +7715,7 @@ static struct btf_dedup_test dedup_tests[] = {
 		BTF_STR_SEC("\0e1\0e1_val"),
 	},
 },
+<<<<<<< HEAD
 {
 	.descr = "dedup: enum of different size: no dedup",
 	.input = {
@@ -7908,6 +7973,9 @@ static struct btf_dedup_test dedup_tests[] = {
 		BTF_STR_SEC("\0foo\0x\0y\0foo_ptr"),
 	},
 },
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int btf_type_size(const struct btf_type *t)

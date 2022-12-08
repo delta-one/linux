@@ -31,10 +31,15 @@ EXPORT_SYMBOL_GPL(crypto_alg_sem);
 BLOCKING_NOTIFIER_HEAD(crypto_chain);
 EXPORT_SYMBOL_GPL(crypto_chain);
 
+<<<<<<< HEAD
 #ifndef CONFIG_CRYPTO_MANAGER_DISABLE_TESTS
 DEFINE_STATIC_KEY_FALSE(__crypto_boot_test_finished);
 EXPORT_SYMBOL_GPL(__crypto_boot_test_finished);
 #endif
+=======
+DEFINE_STATIC_KEY_FALSE(crypto_boot_test_finished);
+EXPORT_SYMBOL_GPL(crypto_boot_test_finished);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct crypto_alg *crypto_larval_wait(struct crypto_alg *alg);
 
@@ -174,6 +179,12 @@ void crypto_wait_for_test(struct crypto_larval *larval)
 
 	err = wait_for_completion_killable(&larval->completion);
 	WARN_ON(err);
+<<<<<<< HEAD
+=======
+	if (!err)
+		crypto_notify(CRYPTO_MSG_ALG_LOADED, larval);
+
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	crypto_larval_kill(&larval->alg);
 }
@@ -204,7 +215,11 @@ static struct crypto_alg *crypto_larval_wait(struct crypto_alg *alg)
 	struct crypto_larval *larval = (void *)alg;
 	long timeout;
 
+<<<<<<< HEAD
 	if (!crypto_boot_test_finished())
+=======
+	if (!static_branch_likely(&crypto_boot_test_finished))
+>>>>>>> b7ba80a49124 (Commit)
 		crypto_start_test(larval);
 
 	timeout = wait_for_completion_killable_timeout(
@@ -643,9 +658,15 @@ int crypto_has_alg(const char *name, u32 type, u32 mask)
 }
 EXPORT_SYMBOL_GPL(crypto_has_alg);
 
+<<<<<<< HEAD
 void crypto_req_done(void *data, int err)
 {
 	struct crypto_wait *wait = data;
+=======
+void crypto_req_done(struct crypto_async_request *req, int err)
+{
+	struct crypto_wait *wait = req->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (err == -EINPROGRESS)
 		return;

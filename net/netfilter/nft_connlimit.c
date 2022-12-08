@@ -185,8 +185,12 @@ static void nft_connlimit_eval(const struct nft_expr *expr,
 	nft_connlimit_do_eval(priv, regs, pkt, NULL);
 }
 
+<<<<<<< HEAD
 static int nft_connlimit_dump(struct sk_buff *skb,
 			      const struct nft_expr *expr, bool reset)
+=======
+static int nft_connlimit_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nft_connlimit *priv = nft_expr_priv(expr);
 

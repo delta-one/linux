@@ -53,6 +53,10 @@ static int __strncmp(const void *m1, const void *m2, size_t len)
 	do {								\
 		static const char _expectedval[EXPECTED_STRSIZE] =	\
 							_expected;	\
+<<<<<<< HEAD
+=======
+		static const char _ptrtype[64] = #_type;		\
+>>>>>>> b7ba80a49124 (Commit)
 		__u64 _hflags = _flags | BTF_F_COMPACT;			\
 		static _type _ptrdata = __VA_ARGS__;			\
 		static struct btf_ptr _ptr = { };			\

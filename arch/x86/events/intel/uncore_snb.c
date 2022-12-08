@@ -109,6 +109,7 @@
 #define PCI_DEVICE_ID_INTEL_RPL_23_IMC		0xA728
 #define PCI_DEVICE_ID_INTEL_RPL_24_IMC		0xA729
 #define PCI_DEVICE_ID_INTEL_RPL_25_IMC		0xA72A
+<<<<<<< HEAD
 #define PCI_DEVICE_ID_INTEL_MTL_1_IMC		0x7d00
 #define PCI_DEVICE_ID_INTEL_MTL_2_IMC		0x7d01
 #define PCI_DEVICE_ID_INTEL_MTL_3_IMC		0x7d02
@@ -122,6 +123,8 @@
 #define PCI_DEVICE_ID_INTEL_MTL_11_IMC		0x7d23
 #define PCI_DEVICE_ID_INTEL_MTL_12_IMC		0x7d24
 #define PCI_DEVICE_ID_INTEL_MTL_13_IMC		0x7d28
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 
 #define IMC_UNCORE_DEV(a)						\
@@ -218,6 +221,7 @@
 #define ADL_UNC_ARB_PERFEVTSEL0			0x2FD0
 #define ADL_UNC_ARB_MSR_OFFSET			0x8
 
+<<<<<<< HEAD
 /* MTL Cbo register */
 #define MTL_UNC_CBO_0_PER_CTR0			0x2448
 #define MTL_UNC_CBO_0_PERFEVTSEL0		0x2442
@@ -244,6 +248,8 @@
 #define MTL_UNC_HBO_CTR				0x2048
 #define MTL_UNC_HBO_CTRL			0x2042
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 DEFINE_UNCORE_FORMAT_ATTR(event, event, "config:0-7");
 DEFINE_UNCORE_FORMAT_ATTR(umask, umask, "config:8-15");
 DEFINE_UNCORE_FORMAT_ATTR(chmask, chmask, "config:8-11");
@@ -637,6 +643,7 @@ void adl_uncore_cpu_init(void)
 	uncore_msr_uncores = adl_msr_uncores;
 }
 
+<<<<<<< HEAD
 static struct intel_uncore_type mtl_uncore_cbox = {
 	.name		= "cbox",
 	.num_counters   = 2,
@@ -746,6 +753,8 @@ void mtl_uncore_cpu_init(void)
 	uncore_msr_uncores = mtl_msr_uncores;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum {
 	SNB_PCI_UNCORE_IMC,
 };
@@ -1412,6 +1421,7 @@ static const struct pci_device_id tgl_uncore_pci_ids[] = {
 	IMC_UNCORE_DEV(RPL_23),
 	IMC_UNCORE_DEV(RPL_24),
 	IMC_UNCORE_DEV(RPL_25),
+<<<<<<< HEAD
 	IMC_UNCORE_DEV(MTL_1),
 	IMC_UNCORE_DEV(MTL_2),
 	IMC_UNCORE_DEV(MTL_3),
@@ -1425,6 +1435,8 @@ static const struct pci_device_id tgl_uncore_pci_ids[] = {
 	IMC_UNCORE_DEV(MTL_11),
 	IMC_UNCORE_DEV(MTL_12),
 	IMC_UNCORE_DEV(MTL_13),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ /* end: all zeroes */ }
 };
 
@@ -1499,7 +1511,10 @@ static void __uncore_imc_init_box(struct intel_uncore_box *box,
 	/* MCHBAR is disabled */
 	if (!(mch_bar & BIT(0))) {
 		pr_warn("perf uncore: MCHBAR is disabled. Failed to map IMC free-running counters.\n");
+<<<<<<< HEAD
 		pci_dev_put(pdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 	mch_bar &= ~BIT(0);
@@ -1514,8 +1529,11 @@ static void __uncore_imc_init_box(struct intel_uncore_box *box,
 	box->io_addr = ioremap(addr, type->mmio_map_size);
 	if (!box->io_addr)
 		pr_warn("perf uncore: Failed to ioremap for %s.\n", type->name);
+<<<<<<< HEAD
 
 	pci_dev_put(pdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void tgl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)

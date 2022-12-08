@@ -80,9 +80,12 @@
 #define MTK_NOR_REG_DMA_FADR		0x71c
 #define MTK_NOR_REG_DMA_DADR		0x720
 #define MTK_NOR_REG_DMA_END_DADR	0x724
+<<<<<<< HEAD
 #define MTK_NOR_REG_CG_DIS		0x728
 #define MTK_NOR_SFC_SW_RST		BIT(2)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MTK_NOR_REG_DMA_DADR_HB		0x738
 #define MTK_NOR_REG_DMA_END_DADR_HB	0x73c
 
@@ -150,6 +153,7 @@ static inline int mtk_nor_cmd_exec(struct mtk_nor *sp, u32 cmd, ulong clk)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void mtk_nor_reset(struct mtk_nor *sp)
 {
 	mtk_nor_rmw(sp, MTK_NOR_REG_CG_DIS, 0, MTK_NOR_SFC_SW_RST);
@@ -159,6 +163,8 @@ static void mtk_nor_reset(struct mtk_nor *sp)
 	writel(MTK_NOR_ENABLE_SF_CMD, sp->base + MTK_NOR_REG_WP);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void mtk_nor_set_addr(struct mtk_nor *sp, const struct spi_mem_op *op)
 {
 	u32 addr = op->addr.val;
@@ -366,7 +372,11 @@ static int mtk_nor_dma_exec(struct mtk_nor *sp, u32 from, unsigned int length,
 			    dma_addr_t dma_addr)
 {
 	int ret = 0;
+<<<<<<< HEAD
 	u32 delay, timeout;
+=======
+	ulong delay;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 reg;
 
 	writel(from, sp->base + MTK_NOR_REG_DMA_FADR);
@@ -388,16 +398,27 @@ static int mtk_nor_dma_exec(struct mtk_nor *sp, u32 from, unsigned int length,
 	mtk_nor_rmw(sp, MTK_NOR_REG_DMA_CTL, MTK_NOR_DMA_START, 0);
 
 	delay = CLK_TO_US(sp, (length + 5) * BITS_PER_BYTE);
+<<<<<<< HEAD
 	timeout = (delay + 1) * 100;
 
 	if (sp->has_irq) {
 		if (!wait_for_completion_timeout(&sp->op_done,
 		    usecs_to_jiffies(max(timeout, 10000U))))
+=======
+
+	if (sp->has_irq) {
+		if (!wait_for_completion_timeout(&sp->op_done,
+						 (delay + 1) * 100))
+>>>>>>> b7ba80a49124 (Commit)
 			ret = -ETIMEDOUT;
 	} else {
 		ret = readl_poll_timeout(sp->base + MTK_NOR_REG_DMA_CTL, reg,
 					 !(reg & MTK_NOR_DMA_START), delay / 3,
+<<<<<<< HEAD
 					 timeout);
+=======
+					 (delay + 1) * 100);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (ret < 0)
@@ -456,11 +477,16 @@ static int mtk_nor_read_pio(struct mtk_nor *sp, const struct spi_mem_op *op)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int mtk_nor_setup_write_buffer(struct mtk_nor *sp, bool on)
+=======
+static int mtk_nor_write_buffer_enable(struct mtk_nor *sp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 	u32 val;
 
+<<<<<<< HEAD
 	if (!(sp->wbuf_en ^ on))
 		return 0;
 
@@ -478,6 +504,33 @@ static int mtk_nor_setup_write_buffer(struct mtk_nor *sp, bool on)
 	if (!ret)
 		sp->wbuf_en = on;
 
+=======
+	if (sp->wbuf_en)
+		return 0;
+
+	val = readl(sp->base + MTK_NOR_REG_CFG2);
+	writel(val | MTK_NOR_WR_BUF_EN, sp->base + MTK_NOR_REG_CFG2);
+	ret = readl_poll_timeout(sp->base + MTK_NOR_REG_CFG2, val,
+				 val & MTK_NOR_WR_BUF_EN, 0, 10000);
+	if (!ret)
+		sp->wbuf_en = true;
+	return ret;
+}
+
+static int mtk_nor_write_buffer_disable(struct mtk_nor *sp)
+{
+	int ret;
+	u32 val;
+
+	if (!sp->wbuf_en)
+		return 0;
+	val = readl(sp->base + MTK_NOR_REG_CFG2);
+	writel(val & ~MTK_NOR_WR_BUF_EN, sp->base + MTK_NOR_REG_CFG2);
+	ret = readl_poll_timeout(sp->base + MTK_NOR_REG_CFG2, val,
+				 !(val & MTK_NOR_WR_BUF_EN), 0, 10000);
+	if (!ret)
+		sp->wbuf_en = false;
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -487,7 +540,11 @@ static int mtk_nor_pp_buffered(struct mtk_nor *sp, const struct spi_mem_op *op)
 	u32 val;
 	int ret, i;
 
+<<<<<<< HEAD
 	ret = mtk_nor_setup_write_buffer(sp, true);
+=======
+	ret = mtk_nor_write_buffer_enable(sp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -506,7 +563,11 @@ static int mtk_nor_pp_unbuffered(struct mtk_nor *sp,
 	const u8 *buf = op->data.buf.out;
 	int ret;
 
+<<<<<<< HEAD
 	ret = mtk_nor_setup_write_buffer(sp, false);
+=======
+	ret = mtk_nor_write_buffer_disable(sp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 	writeb(buf[0], sp->base + MTK_NOR_REG_WDATA);
@@ -613,7 +674,11 @@ static int mtk_nor_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
 	}
 
 	if ((op->data.dir == SPI_MEM_DATA_IN) && mtk_nor_match_read(op)) {
+<<<<<<< HEAD
 		ret = mtk_nor_setup_write_buffer(sp, false);
+=======
+		ret = mtk_nor_write_buffer_disable(sp);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret < 0)
 			return ret;
 		mtk_nor_setup_bus(sp, op);
@@ -621,6 +686,7 @@ static int mtk_nor_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
 			mtk_nor_set_addr(sp, op);
 			return mtk_nor_read_pio(sp, op);
 		} else {
+<<<<<<< HEAD
 			ret = mtk_nor_read_dma(sp, op);
 			if (unlikely(ret)) {
 				/* Handle rare bus glitch */
@@ -630,6 +696,9 @@ static int mtk_nor_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
 			}
 
 			return ret;
+=======
+			return mtk_nor_read_dma(sp, op);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -934,7 +1003,11 @@ err_probe:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void mtk_nor_remove(struct platform_device *pdev)
+=======
+static int mtk_nor_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_controller *ctlr = dev_get_drvdata(&pdev->dev);
 	struct mtk_nor *sp = spi_controller_get_devdata(ctlr);
@@ -944,6 +1017,11 @@ static void mtk_nor_remove(struct platform_device *pdev)
 	pm_runtime_dont_use_autosuspend(&pdev->dev);
 
 	mtk_nor_disable_clk(sp);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused mtk_nor_runtime_suspend(struct device *dev)
@@ -997,7 +1075,11 @@ static struct platform_driver mtk_nor_driver = {
 		.pm = &mtk_nor_pm_ops,
 	},
 	.probe = mtk_nor_probe,
+<<<<<<< HEAD
 	.remove_new = mtk_nor_remove,
+=======
+	.remove = mtk_nor_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(mtk_nor_driver);

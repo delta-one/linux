@@ -29,7 +29,11 @@
 #include <nvfw/acr.h>
 #include <nvfw/flcn.h>
 
+<<<<<<< HEAD
 int
+=======
+void
+>>>>>>> b7ba80a49124 (Commit)
 gp102_acr_wpr_patch(struct nvkm_acr *acr, s64 adjust)
 {
 	struct wpr_header_v1 hdr;
@@ -54,8 +58,11 @@ gp102_acr_wpr_patch(struct nvkm_acr *acr, s64 adjust)
 
 		offset += sizeof(hdr);
 	} while (hdr.falcon_id != WPR_HEADER_V1_FALCON_ID_INVALID);
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int
@@ -189,15 +196,25 @@ MODULE_FIRMWARE("nvidia/gp107/acr/ucode_unload.bin");
 
 static const struct nvkm_acr_hsf_fwif
 gp102_acr_unload_fwif[] = {
+<<<<<<< HEAD
 	{ 0, gm200_acr_hsfw_ctor, &gm200_acr_unload_0, NVKM_ACR_HSF_PMU, 0x1d, 0x00000010 },
+=======
+	{ 0, nvkm_acr_hsfw_load, &gm200_acr_unload_0 },
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 
 int
+<<<<<<< HEAD
 gp102_acr_load_setup(struct nvkm_falcon_fw *fw)
 {
 	struct flcn_acr_desc_v1 *desc = (void *)&fw->fw.img[fw->dmem_base_img];
 	struct nvkm_acr *acr = fw->falcon->owner->device->acr;
+=======
+gp102_acr_load_load(struct nvkm_acr *acr, struct nvkm_acr_hsfw *hsfw)
+{
+	struct flcn_acr_desc_v1 *desc = (void *)&hsfw->image[hsfw->data_addr];
+>>>>>>> b7ba80a49124 (Commit)
 
 	desc->wpr_region_id = 1;
 	desc->regions.no_regions = 2;
@@ -207,6 +224,7 @@ gp102_acr_load_setup(struct nvkm_falcon_fw *fw)
 	desc->regions.region_props[0].read_mask = 0xf;
 	desc->regions.region_props[0].write_mask = 0xc;
 	desc->regions.region_props[0].client_mask = 0x2;
+<<<<<<< HEAD
 	desc->regions.region_props[0].shadow_mem_start_addr = acr->shadow_start >> 8;
 	flcn_acr_desc_v1_dump(&acr->subdev, desc);
 	return 0;
@@ -220,6 +238,21 @@ gp102_acr_load_0 = {
 	.load = gm200_flcn_fw_load,
 	.load_bld = gm200_acr_hsfw_load_bld,
 	.boot = gm200_flcn_fw_boot,
+=======
+	desc->regions.region_props[0].shadow_mem_start_addr =
+		acr->shadow_start >> 8;
+	flcn_acr_desc_v1_dump(&acr->subdev, desc);
+
+	return gm200_acr_hsfw_load(acr, hsfw,
+				  &acr->subdev.device->sec2->falcon);
+}
+
+static const struct nvkm_acr_hsf_func
+gp102_acr_load_0 = {
+	.load = gp102_acr_load_load,
+	.boot = gm200_acr_load_boot,
+	.bld = gm200_acr_hsfw_bld,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 MODULE_FIRMWARE("nvidia/gp102/acr/bl.bin");
@@ -236,7 +269,11 @@ MODULE_FIRMWARE("nvidia/gp107/acr/ucode_load.bin");
 
 static const struct nvkm_acr_hsf_fwif
 gp102_acr_load_fwif[] = {
+<<<<<<< HEAD
 	{ 0, gm200_acr_hsfw_ctor, &gp102_acr_load_0, NVKM_ACR_HSF_SEC2, 0, 0x00000010 },
+=======
+	{ 0, nvkm_acr_hsfw_load, &gp102_acr_load_0 },
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 

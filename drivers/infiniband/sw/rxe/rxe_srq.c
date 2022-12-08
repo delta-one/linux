@@ -13,13 +13,21 @@ int rxe_srq_chk_init(struct rxe_dev *rxe, struct ib_srq_init_attr *init)
 	struct ib_srq_attr *attr = &init->attr;
 
 	if (attr->max_wr > rxe->attr.max_srq_wr) {
+<<<<<<< HEAD
 		rxe_dbg(rxe, "max_wr(%d) > max_srq_wr(%d)\n",
+=======
+		pr_warn("max_wr(%d) > max_srq_wr(%d)\n",
+>>>>>>> b7ba80a49124 (Commit)
 			attr->max_wr, rxe->attr.max_srq_wr);
 		goto err1;
 	}
 
 	if (attr->max_wr <= 0) {
+<<<<<<< HEAD
 		rxe_dbg(rxe, "max_wr(%d) <= 0\n", attr->max_wr);
+=======
+		pr_warn("max_wr(%d) <= 0\n", attr->max_wr);
+>>>>>>> b7ba80a49124 (Commit)
 		goto err1;
 	}
 
@@ -27,7 +35,11 @@ int rxe_srq_chk_init(struct rxe_dev *rxe, struct ib_srq_init_attr *init)
 		attr->max_wr = RXE_MIN_SRQ_WR;
 
 	if (attr->max_sge > rxe->attr.max_srq_sge) {
+<<<<<<< HEAD
 		rxe_dbg(rxe, "max_sge(%d) > max_srq_sge(%d)\n",
+=======
+		pr_warn("max_sge(%d) > max_srq_sge(%d)\n",
+>>>>>>> b7ba80a49124 (Commit)
 			attr->max_sge, rxe->attr.max_srq_sge);
 		goto err1;
 	}
@@ -65,7 +77,11 @@ int rxe_srq_from_init(struct rxe_dev *rxe, struct rxe_srq *srq,
 	type = QUEUE_TYPE_FROM_CLIENT;
 	q = rxe_queue_init(rxe, &srq->rq.max_wr, srq_wqe_size, type);
 	if (!q) {
+<<<<<<< HEAD
 		rxe_dbg_srq(srq, "Unable to allocate queue\n");
+=======
+		pr_warn("unable to allocate queue for srq\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOMEM;
 	}
 
@@ -94,24 +110,40 @@ int rxe_srq_chk_attr(struct rxe_dev *rxe, struct rxe_srq *srq,
 		     struct ib_srq_attr *attr, enum ib_srq_attr_mask mask)
 {
 	if (srq->error) {
+<<<<<<< HEAD
 		rxe_dbg_srq(srq, "in error state\n");
+=======
+		pr_warn("srq in error state\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto err1;
 	}
 
 	if (mask & IB_SRQ_MAX_WR) {
 		if (attr->max_wr > rxe->attr.max_srq_wr) {
+<<<<<<< HEAD
 			rxe_dbg_srq(srq, "max_wr(%d) > max_srq_wr(%d)\n",
+=======
+			pr_warn("max_wr(%d) > max_srq_wr(%d)\n",
+>>>>>>> b7ba80a49124 (Commit)
 				attr->max_wr, rxe->attr.max_srq_wr);
 			goto err1;
 		}
 
 		if (attr->max_wr <= 0) {
+<<<<<<< HEAD
 			rxe_dbg_srq(srq, "max_wr(%d) <= 0\n", attr->max_wr);
+=======
+			pr_warn("max_wr(%d) <= 0\n", attr->max_wr);
+>>>>>>> b7ba80a49124 (Commit)
 			goto err1;
 		}
 
 		if (srq->limit && (attr->max_wr < srq->limit)) {
+<<<<<<< HEAD
 			rxe_dbg_srq(srq, "max_wr (%d) < srq->limit (%d)\n",
+=======
+			pr_warn("max_wr (%d) < srq->limit (%d)\n",
+>>>>>>> b7ba80a49124 (Commit)
 				attr->max_wr, srq->limit);
 			goto err1;
 		}
@@ -122,13 +154,21 @@ int rxe_srq_chk_attr(struct rxe_dev *rxe, struct rxe_srq *srq,
 
 	if (mask & IB_SRQ_LIMIT) {
 		if (attr->srq_limit > rxe->attr.max_srq_wr) {
+<<<<<<< HEAD
 			rxe_dbg_srq(srq, "srq_limit(%d) > max_srq_wr(%d)\n",
+=======
+			pr_warn("srq_limit(%d) > max_srq_wr(%d)\n",
+>>>>>>> b7ba80a49124 (Commit)
 				attr->srq_limit, rxe->attr.max_srq_wr);
 			goto err1;
 		}
 
 		if (attr->srq_limit > srq->rq.queue->buf->index_mask) {
+<<<<<<< HEAD
 			rxe_dbg_srq(srq, "srq_limit (%d) > cur limit(%d)\n",
+=======
+			pr_warn("srq_limit (%d) > cur limit(%d)\n",
+>>>>>>> b7ba80a49124 (Commit)
 				attr->srq_limit,
 				srq->rq.queue->buf->index_mask);
 			goto err1;

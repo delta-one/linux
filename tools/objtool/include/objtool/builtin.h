@@ -7,12 +7,20 @@
 
 #include <subcmd/parse-options.h>
 
+<<<<<<< HEAD
+=======
+extern const struct option check_options[];
+
+>>>>>>> b7ba80a49124 (Commit)
 struct opts {
 	/* actions: */
 	bool dump_orc;
 	bool hack_jump_label;
 	bool hack_noinstr;
+<<<<<<< HEAD
 	bool hack_skylake;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool ibt;
 	bool mcount;
 	bool noinstr;
@@ -24,15 +32,21 @@ struct opts {
 	bool stackval;
 	bool static_call;
 	bool uaccess;
+<<<<<<< HEAD
 	int prefix;
 	bool cfi;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* options: */
 	bool backtrace;
 	bool backup;
 	bool dryrun;
 	bool link;
+<<<<<<< HEAD
 	bool mnop;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool module;
 	bool no_unreachable;
 	bool sec_address;

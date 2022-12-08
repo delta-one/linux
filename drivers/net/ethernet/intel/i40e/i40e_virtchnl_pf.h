@@ -34,19 +34,30 @@ enum i40e_queue_ctrl {
 enum i40e_vf_states {
 	I40E_VF_STATE_INIT = 0,
 	I40E_VF_STATE_ACTIVE,
+<<<<<<< HEAD
 	I40E_VF_STATE_RDMAENA,
+=======
+	I40E_VF_STATE_IWARPENA,
+>>>>>>> b7ba80a49124 (Commit)
 	I40E_VF_STATE_DISABLED,
 	I40E_VF_STATE_MC_PROMISC,
 	I40E_VF_STATE_UC_PROMISC,
 	I40E_VF_STATE_PRE_ENABLE,
+<<<<<<< HEAD
 	I40E_VF_STATE_RESETTING
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* VF capabilities */
 enum i40e_vf_capabilities {
 	I40E_VIRTCHNL_VF_CAP_PRIVILEGE = 0,
 	I40E_VIRTCHNL_VF_CAP_L2,
+<<<<<<< HEAD
 	I40E_VIRTCHNL_VF_CAP_RDMA,
+=======
+	I40E_VIRTCHNL_VF_CAP_IWARP,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* In ADq, max 4 VSI's can be allocated per VF including primary VF VSI.
@@ -108,7 +119,11 @@ struct i40e_vf {
 	u16 num_cloud_filters;
 
 	/* RDMA Client */
+<<<<<<< HEAD
 	struct virtchnl_rdma_qvlist_info *qvlist_info;
+=======
+	struct virtchnl_iwarp_qvlist_info *qvlist_info;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void i40e_free_vfs(struct i40e_pf *pf);

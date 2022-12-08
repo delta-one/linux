@@ -93,7 +93,11 @@ struct sched_clock_data {
 
 static DEFINE_PER_CPU_SHARED_ALIGNED(struct sched_clock_data, sched_clock_data);
 
+<<<<<<< HEAD
 static __always_inline struct sched_clock_data *this_scd(void)
+=======
+notrace static inline struct sched_clock_data *this_scd(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return this_cpu_ptr(&sched_clock_data);
 }
@@ -244,12 +248,20 @@ late_initcall(sched_clock_init_late);
  * min, max except they take wrapping into account
  */
 
+<<<<<<< HEAD
 static __always_inline u64 wrap_min(u64 x, u64 y)
+=======
+notrace static inline u64 wrap_min(u64 x, u64 y)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return (s64)(x - y) < 0 ? x : y;
 }
 
+<<<<<<< HEAD
 static __always_inline u64 wrap_max(u64 x, u64 y)
+=======
+notrace static inline u64 wrap_max(u64 x, u64 y)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return (s64)(x - y) > 0 ? x : y;
 }
@@ -260,7 +272,11 @@ static __always_inline u64 wrap_max(u64 x, u64 y)
  *  - filter out backward motion
  *  - use the GTOD tick value to create a window to filter crazy TSC values
  */
+<<<<<<< HEAD
 static __always_inline u64 sched_clock_local(struct sched_clock_data *scd)
+=======
+notrace static u64 sched_clock_local(struct sched_clock_data *scd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u64 now, clock, old_clock, min_clock, max_clock, gtod;
 	s64 delta;
@@ -287,12 +303,17 @@ again:
 	clock = wrap_max(clock, min_clock);
 	clock = wrap_min(clock, max_clock);
 
+<<<<<<< HEAD
 	if (!arch_try_cmpxchg64(&scd->clock, &old_clock, clock))
+=======
+	if (!try_cmpxchg64(&scd->clock, &old_clock, clock))
+>>>>>>> b7ba80a49124 (Commit)
 		goto again;
 
 	return clock;
 }
 
+<<<<<<< HEAD
 noinstr u64 local_clock(void)
 {
 	u64 clock;
@@ -309,6 +330,9 @@ noinstr u64 local_clock(void)
 EXPORT_SYMBOL_GPL(local_clock);
 
 static notrace u64 sched_clock_remote(struct sched_clock_data *scd)
+=======
+notrace static u64 sched_clock_remote(struct sched_clock_data *scd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sched_clock_data *my_scd = this_scd();
 	u64 this_clock, remote_clock;

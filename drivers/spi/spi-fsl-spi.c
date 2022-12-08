@@ -333,14 +333,18 @@ static int fsl_spi_prepare_message(struct spi_controller *ctlr,
 {
 	struct mpc8xxx_spi *mpc8xxx_spi = spi_controller_get_devdata(ctlr);
 	struct spi_transfer *t;
+<<<<<<< HEAD
 	struct spi_transfer *first;
 
 	first = list_first_entry(&m->transfers, struct spi_transfer,
 				 transfer_list);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * In CPU mode, optimize large byte transfers to use larger
 	 * bits_per_word values to reduce number of interrupts taken.
+<<<<<<< HEAD
 	 *
 	 * Some glitches can appear on the SPI clock when the mode changes.
 	 * Check that there is no speed change during the transfer and set it up
@@ -353,6 +357,11 @@ static int fsl_spi_prepare_message(struct spi_controller *ctlr,
 			return -EINVAL;
 		}
 		if (!(mpc8xxx_spi->flags & SPI_CPM_MODE)) {
+=======
+	 */
+	if (!(mpc8xxx_spi->flags & SPI_CPM_MODE)) {
+		list_for_each_entry(t, &m->transfers, transfer_list) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (t->len < 256 || t->bits_per_word != 8)
 				continue;
 			if ((t->len & 3) == 0)
@@ -361,7 +370,11 @@ static int fsl_spi_prepare_message(struct spi_controller *ctlr,
 				t->bits_per_word = 16;
 		}
 	}
+<<<<<<< HEAD
 	return fsl_spi_setup_transfer(m->spi, first);
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int fsl_spi_transfer_one(struct spi_controller *controller,
@@ -503,7 +516,11 @@ static void fsl_spi_grlib_cs_control(struct spi_device *spi, bool on)
 	struct mpc8xxx_spi *mpc8xxx_spi = spi_master_get_devdata(spi->master);
 	struct fsl_spi_reg __iomem *reg_base = mpc8xxx_spi->reg_base;
 	u32 slvsel;
+<<<<<<< HEAD
 	u16 cs = spi_get_chipselect(spi, 0);
+=======
+	u16 cs = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (cs < mpc8xxx_spi->native_chipselects) {
 		slvsel = mpc8xxx_spi_read_reg(&reg_base->slvsel);
@@ -716,12 +733,20 @@ unmap_out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void of_fsl_spi_remove(struct platform_device *ofdev)
+=======
+static int of_fsl_spi_remove(struct platform_device *ofdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(ofdev);
 	struct mpc8xxx_spi *mpc8xxx_spi = spi_master_get_devdata(master);
 
 	fsl_spi_cpm_free(mpc8xxx_spi);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver of_fsl_spi_driver = {
@@ -730,7 +755,11 @@ static struct platform_driver of_fsl_spi_driver = {
 		.of_match_table = of_fsl_spi_match,
 	},
 	.probe		= of_fsl_spi_probe,
+<<<<<<< HEAD
 	.remove_new	= of_fsl_spi_remove,
+=======
+	.remove		= of_fsl_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #ifdef CONFIG_MPC832x_RDB
@@ -762,18 +791,31 @@ static int plat_mpc8xxx_spi_probe(struct platform_device *pdev)
 	return PTR_ERR_OR_ZERO(master);
 }
 
+<<<<<<< HEAD
 static void plat_mpc8xxx_spi_remove(struct platform_device *pdev)
+=======
+static int plat_mpc8xxx_spi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct mpc8xxx_spi *mpc8xxx_spi = spi_master_get_devdata(master);
 
 	fsl_spi_cpm_free(mpc8xxx_spi);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 MODULE_ALIAS("platform:mpc8xxx_spi");
 static struct platform_driver mpc8xxx_spi_driver = {
 	.probe = plat_mpc8xxx_spi_probe,
+<<<<<<< HEAD
 	.remove_new = plat_mpc8xxx_spi_remove,
+=======
+	.remove = plat_mpc8xxx_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "mpc8xxx_spi",
 	},

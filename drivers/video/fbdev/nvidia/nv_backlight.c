@@ -49,11 +49,24 @@ static int nvidia_bl_update_status(struct backlight_device *bd)
 {
 	struct nvidia_par *par = bl_get_data(bd);
 	u32 tmp_pcrt, tmp_pmc, fpcontrol;
+<<<<<<< HEAD
 	int level = backlight_get_brightness(bd);
+=======
+	int level;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!par->FlatPanel)
 		return 0;
 
+<<<<<<< HEAD
+=======
+	if (bd->props.power != FB_BLANK_UNBLANK ||
+	    bd->props.fb_blank != FB_BLANK_UNBLANK)
+		level = 0;
+	else
+		level = bd->props.brightness;
+
+>>>>>>> b7ba80a49124 (Commit)
 	tmp_pmc = NV_RD32(par->PMC, 0x10F0) & 0x0000FFFF;
 	tmp_pcrt = NV_RD32(par->PCRTC0, 0x081C) & 0xFFFFFFFC;
 	fpcontrol = NV_RD32(par->PRAMDAC, 0x0848) & 0xCFFFFFCC;

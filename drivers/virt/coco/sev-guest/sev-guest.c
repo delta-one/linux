@@ -31,9 +31,12 @@
 #define AAD_LEN		48
 #define MSG_HDR_VER	1
 
+<<<<<<< HEAD
 #define SNP_REQ_MAX_RETRY_DURATION	(60*HZ)
 #define SNP_REQ_RETRY_DELAY		(2*HZ)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct snp_guest_crypto {
 	struct crypto_aead *tfm;
 	u8 *iv, *authtag;
@@ -46,6 +49,7 @@ struct snp_guest_dev {
 
 	void *certs_data;
 	struct snp_guest_crypto *crypto;
+<<<<<<< HEAD
 	/* request and response are in unencrypted memory */
 	struct snp_guest_msg *request, *response;
 
@@ -55,6 +59,9 @@ struct snp_guest_dev {
 	 */
 	struct snp_guest_msg secret_request, secret_response;
 
+=======
+	struct snp_guest_msg *request, *response;
+>>>>>>> b7ba80a49124 (Commit)
 	struct snp_secrets_page_layout *layout;
 	struct snp_req_data input;
 	u32 *os_area_msg_seqno;
@@ -78,6 +85,7 @@ static bool is_vmpck_empty(struct snp_guest_dev *snp_dev)
 	return true;
 }
 
+<<<<<<< HEAD
 /*
  * If an error is received from the host or AMD Secure Processor (ASP) there
  * are two options. Either retry the exact same encrypted request or discontinue
@@ -99,6 +107,10 @@ static void snp_disable_vmpck(struct snp_guest_dev *snp_dev)
 {
 	dev_alert(snp_dev->dev, "Disabling vmpck_id %d to prevent IV reuse.\n",
 		  vmpck_id);
+=======
+static void snp_disable_vmpck(struct snp_guest_dev *snp_dev)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	memzero_explicit(snp_dev->vmpck, VMPCK_KEY_LEN);
 	snp_dev->vmpck = NULL;
 }
@@ -182,10 +194,19 @@ static struct snp_guest_crypto *init_crypto(struct snp_guest_dev *snp_dev, u8 *k
 	crypto->a_len = crypto_aead_authsize(crypto->tfm);
 	crypto->authtag = kmalloc(crypto->a_len, GFP_KERNEL_ACCOUNT);
 	if (!crypto->authtag)
+<<<<<<< HEAD
 		goto e_free_iv;
 
 	return crypto;
 
+=======
+		goto e_free_auth;
+
+	return crypto;
+
+e_free_auth:
+	kfree(crypto->authtag);
+>>>>>>> b7ba80a49124 (Commit)
 e_free_iv:
 	kfree(crypto->iv);
 e_free_crypto:
@@ -274,17 +295,25 @@ static int dec_payload(struct snp_guest_dev *snp_dev, struct snp_guest_msg *msg,
 static int verify_and_dec_payload(struct snp_guest_dev *snp_dev, void *payload, u32 sz)
 {
 	struct snp_guest_crypto *crypto = snp_dev->crypto;
+<<<<<<< HEAD
 	struct snp_guest_msg *resp = &snp_dev->secret_response;
 	struct snp_guest_msg *req = &snp_dev->secret_request;
+=======
+	struct snp_guest_msg *resp = snp_dev->response;
+	struct snp_guest_msg *req = snp_dev->request;
+>>>>>>> b7ba80a49124 (Commit)
 	struct snp_guest_msg_hdr *req_hdr = &req->hdr;
 	struct snp_guest_msg_hdr *resp_hdr = &resp->hdr;
 
 	dev_dbg(snp_dev->dev, "response [seqno %lld type %d version %d sz %d]\n",
 		resp_hdr->msg_seqno, resp_hdr->msg_type, resp_hdr->msg_version, resp_hdr->msg_sz);
 
+<<<<<<< HEAD
 	/* Copy response from shared memory to encrypted memory. */
 	memcpy(resp, snp_dev->response, sizeof(*resp));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Verify that the sequence counter is incremented by 1 */
 	if (unlikely(resp_hdr->msg_seqno != (req_hdr->msg_seqno + 1)))
 		return -EBADMSG;
@@ -308,7 +337,11 @@ static int verify_and_dec_payload(struct snp_guest_dev *snp_dev, void *payload, 
 static int enc_payload(struct snp_guest_dev *snp_dev, u64 seqno, int version, u8 type,
 			void *payload, size_t sz)
 {
+<<<<<<< HEAD
 	struct snp_guest_msg *req = &snp_dev->secret_request;
+=======
+	struct snp_guest_msg *req = snp_dev->request;
+>>>>>>> b7ba80a49124 (Commit)
 	struct snp_guest_msg_hdr *hdr = &req->hdr;
 
 	memset(req, 0, sizeof(*req));
@@ -332,6 +365,7 @@ static int enc_payload(struct snp_guest_dev *snp_dev, u64 seqno, int version, u8
 	return __enc_payload(snp_dev, req, payload, sz);
 }
 
+<<<<<<< HEAD
 static int __handle_guest_request(struct snp_guest_dev *snp_dev, u64 exit_code,
 				  struct snp_guest_request_ioctl *rio)
 {
@@ -423,6 +457,13 @@ static int handle_guest_request(struct snp_guest_dev *snp_dev, u64 exit_code,
 				void *req_buf, size_t req_sz, void *resp_buf,
 				u32 resp_sz)
 {
+=======
+static int handle_guest_request(struct snp_guest_dev *snp_dev, u64 exit_code, int msg_ver,
+				u8 type, void *req_buf, size_t req_sz, void *resp_buf,
+				u32 resp_sz, __u64 *fw_err)
+{
+	unsigned long err;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 seqno;
 	int rc;
 
@@ -431,15 +472,31 @@ static int handle_guest_request(struct snp_guest_dev *snp_dev, u64 exit_code,
 	if (!seqno)
 		return -EIO;
 
+<<<<<<< HEAD
 	/* Clear shared memory's response for the host to populate. */
 	memset(snp_dev->response, 0, sizeof(struct snp_guest_msg));
 
 	/* Encrypt the userspace provided payload in snp_dev->secret_request. */
 	rc = enc_payload(snp_dev, seqno, rio->msg_version, type, req_buf, req_sz);
+=======
+	memset(snp_dev->response, 0, sizeof(struct snp_guest_msg));
+
+	/* Encrypt the userspace provided payload */
+	rc = enc_payload(snp_dev, seqno, msg_ver, type, req_buf, req_sz);
+	if (rc)
+		return rc;
+
+	/* Call firmware to process the request */
+	rc = snp_issue_guest_request(exit_code, &snp_dev->input, &err);
+	if (fw_err)
+		*fw_err = err;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 
 	/*
+<<<<<<< HEAD
 	 * Write the fully encrypted request to the shared unencrypted
 	 * request page.
 	 */
@@ -463,10 +520,29 @@ static int handle_guest_request(struct snp_guest_dev *snp_dev, u64 exit_code,
 	rc = verify_and_dec_payload(snp_dev, resp_buf, resp_sz);
 	if (rc) {
 		dev_alert(snp_dev->dev, "Detected unexpected decode failure from ASP. rc: %d\n", rc);
+=======
+	 * The verify_and_dec_payload() will fail only if the hypervisor is
+	 * actively modifying the message header or corrupting the encrypted payload.
+	 * This hints that hypervisor is acting in a bad faith. Disable the VMPCK so that
+	 * the key cannot be used for any communication. The key is disabled to ensure
+	 * that AES-GCM does not use the same IV while encrypting the request payload.
+	 */
+	rc = verify_and_dec_payload(snp_dev, resp_buf, resp_sz);
+	if (rc) {
+		dev_alert(snp_dev->dev,
+			  "Detected unexpected decode failure, disabling the vmpck_id %d\n",
+			  vmpck_id);
+>>>>>>> b7ba80a49124 (Commit)
 		snp_disable_vmpck(snp_dev);
 		return rc;
 	}
 
+<<<<<<< HEAD
+=======
+	/* Increment to new message sequence after payload decryption was successful. */
+	snp_inc_msg_seqno(snp_dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -495,9 +571,15 @@ static int get_report(struct snp_guest_dev *snp_dev, struct snp_guest_request_io
 	if (!resp)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	rc = handle_guest_request(snp_dev, SVM_VMGEXIT_GUEST_REQUEST, arg,
 				  SNP_MSG_REPORT_REQ, &req, sizeof(req), resp->data,
 				  resp_len);
+=======
+	rc = handle_guest_request(snp_dev, SVM_VMGEXIT_GUEST_REQUEST, arg->msg_version,
+				  SNP_MSG_REPORT_REQ, &req, sizeof(req), resp->data,
+				  resp_len, &arg->fw_err);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		goto e_free;
 
@@ -535,8 +617,14 @@ static int get_derived_key(struct snp_guest_dev *snp_dev, struct snp_guest_reque
 	if (copy_from_user(&req, (void __user *)arg->req_data, sizeof(req)))
 		return -EFAULT;
 
+<<<<<<< HEAD
 	rc = handle_guest_request(snp_dev, SVM_VMGEXIT_GUEST_REQUEST, arg,
 				  SNP_MSG_KEY_REQ, &req, sizeof(req), buf, resp_len);
+=======
+	rc = handle_guest_request(snp_dev, SVM_VMGEXIT_GUEST_REQUEST, arg->msg_version,
+				  SNP_MSG_KEY_REQ, &req, sizeof(req), buf, resp_len,
+				  &arg->fw_err);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 
@@ -596,12 +684,21 @@ cmd:
 		return -ENOMEM;
 
 	snp_dev->input.data_npages = npages;
+<<<<<<< HEAD
 	ret = handle_guest_request(snp_dev, SVM_VMGEXIT_EXT_GUEST_REQUEST, arg,
 				   SNP_MSG_REPORT_REQ, &req.data,
 				   sizeof(req.data), resp->data, resp_len);
 
 	/* If certs length is invalid then copy the returned length */
 	if (arg->vmm_error == SNP_GUEST_VMM_ERR_INVALID_LEN) {
+=======
+	ret = handle_guest_request(snp_dev, SVM_VMGEXIT_EXT_GUEST_REQUEST, arg->msg_version,
+				   SNP_MSG_REPORT_REQ, &req.data,
+				   sizeof(req.data), resp->data, resp_len, &arg->fw_err);
+
+	/* If certs length is invalid then copy the returned length */
+	if (arg->fw_err == SNP_GUEST_REQ_INVALID_LEN) {
+>>>>>>> b7ba80a49124 (Commit)
 		req.certs_len = snp_dev->input.data_npages << PAGE_SHIFT;
 
 		if (copy_to_user((void __user *)arg->req_data, &req, sizeof(req)))
@@ -636,7 +733,11 @@ static long snp_guest_ioctl(struct file *file, unsigned int ioctl, unsigned long
 	if (copy_from_user(&input, argp, sizeof(input)))
 		return -EFAULT;
 
+<<<<<<< HEAD
 	input.exitinfo2 = 0xff;
+=======
+	input.fw_err = 0xff;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Message version must be non-zero */
 	if (!input.msg_version)
@@ -667,7 +768,11 @@ static long snp_guest_ioctl(struct file *file, unsigned int ioctl, unsigned long
 
 	mutex_unlock(&snp_cmd_mutex);
 
+<<<<<<< HEAD
 	if (input.exitinfo2 && copy_to_user(argp, &input, sizeof(input)))
+=======
+	if (input.fw_err && copy_to_user(argp, &input, sizeof(input)))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EFAULT;
 
 	return ret;
@@ -753,9 +858,12 @@ static int __init sev_guest_probe(struct platform_device *pdev)
 	void __iomem *mapping;
 	int ret;
 
+<<<<<<< HEAD
 	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!dev->platform_data)
 		return -ENODEV;
 
@@ -865,4 +973,7 @@ MODULE_AUTHOR("Brijesh Singh <brijesh.singh@amd.com>");
 MODULE_LICENSE("GPL");
 MODULE_VERSION("1.0.0");
 MODULE_DESCRIPTION("AMD SEV Guest Driver");
+<<<<<<< HEAD
 MODULE_ALIAS("platform:sev-guest");
+=======
+>>>>>>> b7ba80a49124 (Commit)

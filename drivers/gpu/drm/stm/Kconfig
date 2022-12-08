@@ -1,7 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0-only
 config DRM_STM
 	tristate "DRM Support for STMicroelectronics SoC Series"
+<<<<<<< HEAD
 	depends on DRM && ARCH_STM32
+=======
+	depends on DRM && (ARCH_STM32 || ARCH_MULTIPLATFORM)
+>>>>>>> b7ba80a49124 (Commit)
 	select DRM_KMS_HELPER
 	select DRM_GEM_DMA_HELPER
 	select DRM_PANEL_BRIDGE

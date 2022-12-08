@@ -59,6 +59,7 @@ int BPF_PROG(bpf, int cmd, union bpf_attr *attr, unsigned int size)
 	if (!data_val)
 		return 0;
 
+<<<<<<< HEAD
 	ret = bpf_probe_read_kernel(&value, sizeof(value), &attr->value);
 	if (ret)
 		return ret;
@@ -67,6 +68,12 @@ int BPF_PROG(bpf, int cmd, union bpf_attr *attr, unsigned int size)
 				 (void *)(unsigned long)value);
 	if (ret)
 		return ret;
+=======
+	bpf_probe_read(&value, sizeof(value), &attr->value);
+
+	bpf_copy_from_user(data_val, sizeof(struct data),
+			   (void *)(unsigned long)value);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (data_val->data_len > sizeof(data_val->data))
 		return -EINVAL;

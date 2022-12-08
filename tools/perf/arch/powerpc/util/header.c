@@ -40,11 +40,19 @@ get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
 	return bufp;
 }
 
+<<<<<<< HEAD
 int arch_get_runtimeparam(const struct pmu_metric *pm)
+=======
+int arch_get_runtimeparam(const struct pmu_event *pe)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int count;
 	char path[PATH_MAX] = "/devices/hv_24x7/interface/";
 
+<<<<<<< HEAD
 	strcat(path, pm->aggr_mode == PerChip ? "sockets" : "coresperchip");
+=======
+	atoi(pe->aggr_mode) == PerChip ? strcat(path, "sockets") : strcat(path, "coresperchip");
+>>>>>>> b7ba80a49124 (Commit)
 	return sysfs__read_int(path, &count) < 0 ? 1 : count;
 }

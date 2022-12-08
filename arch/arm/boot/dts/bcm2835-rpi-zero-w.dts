@@ -6,8 +6,11 @@
 /dts-v1/;
 #include "bcm2835.dtsi"
 #include "bcm2835-rpi.dtsi"
+<<<<<<< HEAD
 #include "bcm2835-rpi-common.dtsi"
 #include "bcm283x-rpi-led-deprecated.dtsi"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "bcm283x-rpi-usb-otg.dtsi"
 #include "bcm283x-rpi-wifi-bt.dtsi"
 
@@ -24,6 +27,15 @@
 		/* 8250 auxiliary UART instead of pl011 */
 		stdout-path = "serial1:115200n8";
 	};
+<<<<<<< HEAD
+=======
+
+	leds {
+		led-act {
+			gpios = <&gpio 47 GPIO_ACTIVE_LOW>;
+		};
+	};
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &bt {
@@ -106,10 +118,13 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &led_act {
 	gpios = <&gpio 47 GPIO_ACTIVE_LOW>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &sdhci {
 	pinctrl-0 = <&emmc_gpio34 &gpclk2_gpio43>;
 };

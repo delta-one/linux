@@ -6,6 +6,12 @@
  *  Copyright (c) 2006 Dmitry Torokhov <dtor@mail.ru>
  */
 
+<<<<<<< HEAD
+=======
+/*
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 /* #define DEBUG */
 
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt

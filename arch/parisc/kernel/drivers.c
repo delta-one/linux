@@ -552,7 +552,11 @@ static int parisc_generic_match(struct device *dev, struct device_driver *drv)
 	return match_device(to_parisc_driver(drv), to_parisc_device(dev));
 }
 
+<<<<<<< HEAD
 static ssize_t make_modalias(const struct device *dev, char *buf)
+=======
+static ssize_t make_modalias(struct device *dev, char *buf)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct parisc_device *padev = to_parisc_device(dev);
 	const struct parisc_device_id *id = &padev->id;
@@ -562,7 +566,11 @@ static ssize_t make_modalias(const struct device *dev, char *buf)
 		(u32)id->sversion);
 }
 
+<<<<<<< HEAD
 static int parisc_uevent(const struct device *dev, struct kobj_uevent_env *env)
+=======
+static int parisc_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct parisc_device *padev;
 	char modalias[40];
@@ -882,6 +890,7 @@ void __init walk_central_bus(void)
 			&root);
 }
 
+<<<<<<< HEAD
 static __init void print_parisc_device(struct parisc_device *dev)
 {
 	static int count __initdata;
@@ -889,6 +898,17 @@ static __init void print_parisc_device(struct parisc_device *dev)
 	pr_info("%d. %s at %pap { type:%d, hv:%#x, sv:%#x, rev:%#x }",
 		++count, dev->name, &(dev->hpa.start), dev->id.hw_type,
 		dev->id.hversion, dev->id.sversion, dev->id.hversion_rev);
+=======
+static void print_parisc_device(struct parisc_device *dev)
+{
+	char hw_path[64];
+	static int count;
+
+	print_pa_hwpath(dev, hw_path);
+	pr_info("%d. %s at %pap [%s] { %d, 0x%x, 0x%.3x, 0x%.5x }",
+		++count, dev->name, &(dev->hpa.start), hw_path, dev->id.hw_type,
+		dev->id.hversion_rev, dev->id.hversion, dev->id.sversion);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dev->num_addrs) {
 		int k;
@@ -1077,7 +1097,11 @@ static __init int qemu_print_iodc_data(struct device *lin_dev, void *data)
 
 
 
+<<<<<<< HEAD
 static __init int print_one_device(struct device * dev, void * data)
+=======
+static int print_one_device(struct device * dev, void * data)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct parisc_device * pdev = to_parisc_device(dev);
 

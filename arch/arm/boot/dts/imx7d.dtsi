@@ -165,6 +165,7 @@
 		  reg = <0x306d0000 0x10000>;
 		  status = "disabled";
 	};
+<<<<<<< HEAD
 
 	pxp: pxp@30700000 {
 		compatible = "fsl,imx7d-pxp";
@@ -174,6 +175,8 @@
 		clocks = <&clks IMX7D_PXP_CLK>;
 		clock-names = "axi";
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &aips3 {

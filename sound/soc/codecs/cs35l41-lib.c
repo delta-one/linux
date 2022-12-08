@@ -1114,6 +1114,7 @@ static const struct reg_sequence cs35l41_reset_to_safe[] = {
 	{ 0x00000040,			0x00000033 },
 };
 
+<<<<<<< HEAD
 static const struct reg_sequence cs35l41_actv_seq[] = {
 	/* SYNC_BST_CTL_RX_EN = 1; SYNC_BST_CTL_TX_EN = 1 */
 	{CS35L41_MDSYNC_EN,        0x00003000},
@@ -1130,15 +1131,20 @@ static const struct reg_sequence cs35l41_pass_seq[] = {
 	{CS35L41_BSTCVRT_VCTRL2,    0x00000002},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int cs35l41_init_boost(struct device *dev, struct regmap *regmap,
 		       struct cs35l41_hw_cfg *hw_cfg)
 {
 	int ret;
 
 	switch (hw_cfg->bst_type) {
+<<<<<<< HEAD
 	case CS35L41_SHD_BOOST_ACTV:
 		regmap_multi_reg_write(regmap, cs35l41_actv_seq, ARRAY_SIZE(cs35l41_actv_seq));
 		fallthrough;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case CS35L41_INT_BOOST:
 		ret = cs35l41_boost_config(dev, regmap, hw_cfg->bst_ind,
 					   hw_cfg->bst_cap, hw_cfg->bst_ipk);
@@ -1157,10 +1163,13 @@ int cs35l41_init_boost(struct device *dev, struct regmap *regmap,
 		ret = regmap_update_bits(regmap, CS35L41_PWR_CTRL2, CS35L41_BST_EN_MASK,
 					 CS35L41_BST_DIS_FET_OFF << CS35L41_BST_EN_SHIFT);
 		break;
+<<<<<<< HEAD
 	case CS35L41_SHD_BOOST_PASS:
 		ret = regmap_multi_reg_write(regmap, cs35l41_pass_seq,
 					     ARRAY_SIZE(cs35l41_pass_seq));
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		dev_err(dev, "Boost type %d not supported\n", hw_cfg->bst_type);
 		ret = -EINVAL;
@@ -1188,6 +1197,7 @@ bool cs35l41_safe_reset(struct regmap *regmap, enum cs35l41_boost_type b_type)
 }
 EXPORT_SYMBOL_GPL(cs35l41_safe_reset);
 
+<<<<<<< HEAD
 int cs35l41_global_enable(struct regmap *regmap, enum cs35l41_boost_type b_type, int enable,
 			  struct completion *pll_lock)
 {
@@ -1241,6 +1251,13 @@ int cs35l41_global_enable(struct regmap *regmap, enum cs35l41_boost_type b_type,
 						     ARRAY_SIZE(cs35l41_mdsync_up_seq));
 		}
 		break;
+=======
+int cs35l41_global_enable(struct regmap *regmap, enum cs35l41_boost_type b_type, int enable)
+{
+	int ret;
+
+	switch (b_type) {
+>>>>>>> b7ba80a49124 (Commit)
 	case CS35L41_INT_BOOST:
 		ret = regmap_update_bits(regmap, CS35L41_PWR_CTRL1, CS35L41_GLOBAL_EN_MASK,
 					 enable << CS35L41_GLOBAL_EN_SHIFT);

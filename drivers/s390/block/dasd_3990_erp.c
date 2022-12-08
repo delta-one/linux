@@ -220,7 +220,11 @@ dasd_3990_erp_DCTL(struct dasd_ccw_req * erp, char modifier)
 	memset(ccw, 0, sizeof(struct ccw1));
 	ccw->cmd_code = CCW_CMD_DCTL;
 	ccw->count = 4;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(DCTL_data);
+=======
+	ccw->cda = (__u32)(addr_t) DCTL_data;
+>>>>>>> b7ba80a49124 (Commit)
 	dctl_cqr->flags = erp->flags;
 	dctl_cqr->function = dasd_3990_erp_DCTL;
 	dctl_cqr->refers = erp;
@@ -1714,7 +1718,11 @@ dasd_3990_erp_action_1B_32(struct dasd_ccw_req * default_erp, char *sense)
 	ccw->cmd_code = DASD_ECKD_CCW_DEFINE_EXTENT;
 	ccw->flags = CCW_FLAG_CC;
 	ccw->count = 16;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(DE_data);
+=======
+	ccw->cda = (__u32)(addr_t) DE_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* create LO ccw */
 	ccw++;
@@ -1722,7 +1730,11 @@ dasd_3990_erp_action_1B_32(struct dasd_ccw_req * default_erp, char *sense)
 	ccw->cmd_code = DASD_ECKD_CCW_LOCATE_RECORD;
 	ccw->flags = CCW_FLAG_CC;
 	ccw->count = 16;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(LO_data);
+=======
+	ccw->cda = (__u32)(addr_t) LO_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* TIC to the failed ccw */
 	ccw++;
@@ -2419,7 +2431,11 @@ static struct dasd_ccw_req *dasd_3990_erp_add_erp(struct dasd_ccw_req *cqr)
 		tcw = erp->cpaddr;
 		tsb = (struct tsb *) &tcw[1];
 		*tcw = *((struct tcw *)cqr->cpaddr);
+<<<<<<< HEAD
 		tcw->tsb = virt_to_phys(tsb);
+=======
+		tcw->tsb = (long)tsb;
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (ccw->cmd_code == DASD_ECKD_CCW_PSF) {
 		/* PSF cannot be chained from NOOP/TIC */
 		erp->cpaddr = cqr->cpaddr;
@@ -2430,7 +2446,11 @@ static struct dasd_ccw_req *dasd_3990_erp_add_erp(struct dasd_ccw_req *cqr)
 		ccw->flags = CCW_FLAG_CC;
 		ccw++;
 		ccw->cmd_code = CCW_CMD_TIC;
+<<<<<<< HEAD
 		ccw->cda      = (__u32)virt_to_phys(cqr->cpaddr);
+=======
+		ccw->cda      = (long)(cqr->cpaddr);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	erp->flags = cqr->flags;

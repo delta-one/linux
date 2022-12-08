@@ -64,6 +64,7 @@
 		vdd-supply = <&reg_vdd_gpu>;
 	};
 
+<<<<<<< HEAD
 	gpio@6000d000 {
 		/* I210 Gigabit Ethernet Controller Reset */
 		lan-reset-n-hog {
@@ -82,6 +83,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinmux@70000868 {
 		pinctrl-names = "default";
 		pinctrl-0 = <&state_default>;
@@ -1596,18 +1599,30 @@
 			pinctrl-0 = <&as3722_default>;
 
 			as3722_default: pinmux {
+<<<<<<< HEAD
 				gpio0-1-3-4-5-6 {
 					pins = "gpio0", "gpio1", "gpio3",
 					       "gpio4", "gpio5", "gpio6";
 					bias-high-impedance;
 				};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				gpio2-7 {
 					pins = "gpio2", /* PWR_EN_+V3.3 */
 					       "gpio7"; /* +V1.6_LPO */
 					function = "gpio";
 					bias-pull-up;
 				};
+<<<<<<< HEAD
+=======
+
+				gpio0-1-3-4-5-6 {
+					pins = "gpio0", "gpio1", "gpio3",
+					       "gpio4", "gpio5", "gpio6";
+					bias-high-impedance;
+				};
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			regulators {
@@ -1953,18 +1968,30 @@
 		};
 	};
 
+<<<<<<< HEAD
 	cpus {
 		cpu@0 {
 			vdd-cpu-supply = <&reg_vdd_cpu>;
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	clk32k_in: osc3 {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		clock-frequency = <32768>;
 	};
 
+<<<<<<< HEAD
+=======
+	cpus {
+		cpu@0 {
+			vdd-cpu-supply = <&reg_vdd_cpu>;
+		};
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	reg_1v05_avdd_hdmi_pll: regulator-1v05-avdd-hdmi-pll {
 		compatible = "regulator-fixed";
 		regulator-name = "+V1.05_AVDD_HDMI_PLL";
@@ -2066,3 +2093,24 @@
 		};
 	};
 };
+<<<<<<< HEAD
+=======
+
+&gpio {
+	/* I210 Gigabit Ethernet Controller Reset */
+	lan-reset-n-hog {
+		gpio-hog;
+		gpios = <TEGRA_GPIO(S, 2) GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "LAN_RESET_N";
+	};
+
+	/* Control MXM3 pin 26 Reset Module Output Carrier Input */
+	reset-moci-ctrl-hog {
+		gpio-hog;
+		gpios = <TEGRA_GPIO(U, 4) GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "RESET_MOCI_CTRL";
+	};
+};
+>>>>>>> b7ba80a49124 (Commit)

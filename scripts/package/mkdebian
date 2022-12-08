@@ -84,16 +84,28 @@ set_debarch() {
 	fi
 }
 
+<<<<<<< HEAD
 rm -rf debian
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # Some variables and settings used throughout the script
 version=$KERNELRELEASE
 if [ -n "$KDEB_PKGVERSION" ]; then
 	packageversion=$KDEB_PKGVERSION
+<<<<<<< HEAD
 else
 	packageversion=$(${srctree}/scripts/setlocalversion --no-local ${srctree})-$($srctree/init/build-version)
 fi
 sourcename=${KDEB_SOURCENAME:-linux-upstream}
+=======
+	revision=${packageversion##*-}
+else
+	revision=$(cat .version 2>/dev/null||echo 1)
+	packageversion=$version-$revision
+fi
+sourcename=$KDEB_SOURCENAME
+>>>>>>> b7ba80a49124 (Commit)
 
 if [ "$ARCH" = "um" ] ; then
 	packagename=user-mode-linux
@@ -133,6 +145,7 @@ else
 fi
 
 mkdir -p debian/source/
+<<<<<<< HEAD
 echo "3.0 (quilt)" > debian/source/format
 
 {
@@ -159,6 +172,9 @@ fi
 if [ -f debian/patches/untracked.patch ]; then
 	echo untracked.patch >> debian/patches/series
 fi
+=======
+echo "1.0" > debian/source/format
+>>>>>>> b7ba80a49124 (Commit)
 
 echo $debarch > debian/arch
 extra_build_depends=", $(if_enabled_echo CONFIG_UNWINDER_ORC libelf-dev:native)"
@@ -200,7 +216,11 @@ Section: kernel
 Priority: optional
 Maintainer: $maintainer
 Rules-Requires-Root: no
+<<<<<<< HEAD
 Build-Depends: bc, debhelper, rsync, kmod, cpio, bison, flex $extra_build_depends
+=======
+Build-Depends: bc, rsync, kmod, cpio, bison, flex | flex:native $extra_build_depends
+>>>>>>> b7ba80a49124 (Commit)
 Homepage: https://www.kernel.org/
 
 Package: $packagename-$version
@@ -208,10 +228,13 @@ Architecture: $debarch
 Description: Linux kernel, version $version
  This package contains the Linux kernel, modules and corresponding other
  files, version: $version.
+<<<<<<< HEAD
 EOF
 
 if [ "${SRCARCH}" != um ]; then
 cat <<EOF >> debian/control
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 Package: linux-libc-dev
 Section: devel
@@ -234,7 +257,10 @@ Description: Linux kernel headers for $version on $debarch
  This is useful for people who need to build external modules
 EOF
 fi
+<<<<<<< HEAD
 fi
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 if is_enabled CONFIG_DEBUG_INFO; then
 cat <<EOF >> debian/control
@@ -252,6 +278,7 @@ cat <<EOF > debian/rules
 #!$(command -v $MAKE) -f
 
 srctree ?= .
+<<<<<<< HEAD
 KERNELRELEASE = ${KERNELRELEASE}
 
 build-indep:
@@ -260,17 +287,33 @@ build-arch:
 	KERNELRELEASE=\$(KERNELRELEASE) \
 	\$(shell \$(srctree)/scripts/package/deb-build-option) \
 	olddefconfig all
+=======
+
+build-indep:
+build-arch:
+	\$(MAKE) KERNELRELEASE=${version} ARCH=${ARCH} \
+	KBUILD_BUILD_VERSION=${revision} -f \$(srctree)/Makefile
+>>>>>>> b7ba80a49124 (Commit)
 
 build: build-arch
 
 binary-indep:
 binary-arch: build-arch
+<<<<<<< HEAD
 	\$(MAKE) -f \$(srctree)/Makefile ARCH=${ARCH} \
 	KERNELRELEASE=\$(KERNELRELEASE) intdeb-pkg
 
 clean:
 	rm -rf debian/files debian/linux-*
 	\$(MAKE) -f \$(srctree)/Makefile ARCH=${ARCH} clean
+=======
+	\$(MAKE) KERNELRELEASE=${version} ARCH=${ARCH} \
+	KBUILD_BUILD_VERSION=${revision} -f \$(srctree)/Makefile intdeb-pkg
+
+clean:
+	rm -rf debian/*tmp debian/files
+	\$(MAKE) clean
+>>>>>>> b7ba80a49124 (Commit)
 
 binary: binary-arch
 EOF

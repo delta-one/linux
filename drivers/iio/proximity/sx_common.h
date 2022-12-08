@@ -8,7 +8,10 @@
 #ifndef IIO_SX_COMMON_H
 #define IIO_SX_COMMON_H
 
+<<<<<<< HEAD
 #include <linux/acpi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/iio/iio.h>
 #include <linux/iio/types.h>
 #include <linux/regulator/consumer.h>
@@ -27,7 +30,10 @@ static_assert(SX_COMMON_MAX_NUM_CHANNELS < BITS_PER_LONG);
 struct sx_common_reg_default {
 	u8 reg;
 	u8 def;
+<<<<<<< HEAD
 	const char *property;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -103,6 +109,11 @@ struct sx_common_chip_info {
  * @client:		I2C client structure.
  * @trig:		IIO trigger object.
  * @regmap:		Register map.
+<<<<<<< HEAD
+=======
+ * @num_default_regs:	Number of default registers to set at init.
+ * @supplies:		Power supplies object.
+>>>>>>> b7ba80a49124 (Commit)
  * @chan_prox_stat:	Last reading of the proximity status for each channel.
  *			We only send an event to user space when this changes.
  * @trigger_enabled:	True when the device trigger is enabled.
@@ -120,6 +131,10 @@ struct sx_common_data {
 	struct iio_trigger *trig;
 	struct regmap *regmap;
 
+<<<<<<< HEAD
+=======
+	struct regulator_bulk_data supplies[2];
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long chan_prox_stat;
 	bool trigger_enabled;
 
@@ -150,9 +165,12 @@ int sx_common_probe(struct i2c_client *client,
 		    const struct sx_common_chip_info *chip_info,
 		    const struct regmap_config *regmap_config);
 
+<<<<<<< HEAD
 void sx_common_get_raw_register_config(struct device *dev,
 				       struct sx_common_reg_default *reg_def);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* 3 is the number of events defined by a single phase. */
 extern const struct iio_event_spec sx_common_events[3];
 

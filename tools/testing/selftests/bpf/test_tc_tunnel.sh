@@ -3,7 +3,10 @@
 #
 # In-place tunneling
 
+<<<<<<< HEAD
 BPF_FILE="test_tc_tunnel.bpf.o"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # must match the port that the bpf program filters on
 readonly port=8000
 
@@ -100,9 +103,12 @@ if [[ "$#" -eq "0" ]]; then
 	echo "ipip"
 	$0 ipv4 ipip none 100
 
+<<<<<<< HEAD
 	echo "ipip6"
 	$0 ipv4 ipip6 none 100
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	echo "ip6ip6"
 	$0 ipv6 ip6tnl none 100
 
@@ -200,7 +206,11 @@ verify_data
 # client can no longer connect
 ip netns exec "${ns1}" tc qdisc add dev veth1 clsact
 ip netns exec "${ns1}" tc filter add dev veth1 egress \
+<<<<<<< HEAD
 	bpf direct-action object-file ${BPF_FILE} \
+=======
+	bpf direct-action object-file ./test_tc_tunnel.o \
+>>>>>>> b7ba80a49124 (Commit)
 	section "encap_${tuntype}_${mac}"
 echo "test bpf encap without decap (expect failure)"
 server_listen
@@ -227,9 +237,12 @@ elif [[ "$tuntype" =~ "gre" && "$mac" == "eth" ]]; then
 elif [[ "$tuntype" =~ "vxlan" && "$mac" == "eth" ]]; then
 	ttype="vxlan"
 	targs="id 1 dstport 8472 udp6zerocsumrx"
+<<<<<<< HEAD
 elif [[ "$tuntype" == "ipip6" ]]; then
 	ttype="ip6tnl"
 	targs=""
+=======
+>>>>>>> b7ba80a49124 (Commit)
 else
 	ttype=$tuntype
 	targs=""
@@ -239,9 +252,12 @@ fi
 if [[ "${tuntype}" == "sit" ]]; then
 	link_addr1="${ns1_v4}"
 	link_addr2="${ns2_v4}"
+<<<<<<< HEAD
 elif [[ "${tuntype}" == "ipip6" ]]; then
 	link_addr1="${ns1_v6}"
 	link_addr2="${ns2_v6}"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 else
 	link_addr1="${addr1}"
 	link_addr2="${addr2}"
@@ -296,11 +312,24 @@ else
 	server_listen
 fi
 
+<<<<<<< HEAD
+=======
+# bpf_skb_net_shrink does not take tunnel flags yet, cannot update L3.
+if [[ "${tuntype}" == "sit" ]]; then
+	echo OK
+	exit 0
+fi
+
+>>>>>>> b7ba80a49124 (Commit)
 # serverside, use BPF for decap
 ip netns exec "${ns2}" ip link del dev testtun0
 ip netns exec "${ns2}" tc qdisc add dev veth2 clsact
 ip netns exec "${ns2}" tc filter add dev veth2 ingress \
+<<<<<<< HEAD
 	bpf direct-action object-file ${BPF_FILE} section decap
+=======
+	bpf direct-action object-file ./test_tc_tunnel.o section decap
+>>>>>>> b7ba80a49124 (Commit)
 echo "test bpf encap with bpf decap"
 client_connect
 verify_data

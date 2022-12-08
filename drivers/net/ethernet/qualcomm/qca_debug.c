@@ -119,7 +119,11 @@ qcaspi_info_show(struct seq_file *s, void *what)
 	seq_printf(s, "SPI mode         : %x\n",
 		   qca->spi_dev->mode);
 	seq_printf(s, "SPI chip select  : %u\n",
+<<<<<<< HEAD
 		   (unsigned int)spi_get_chipselect(qca->spi_dev, 0));
+=======
+		   (unsigned int)qca->spi_dev->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 	seq_printf(s, "SPI legacy mode  : %u\n",
 		   (unsigned int)qca->legacy_mode);
 	seq_printf(s, "SPI burst length : %u\n",

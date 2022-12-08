@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/arm/ti/k3.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Texas Instruments K3 Multicore SoC architecture
+=======
+title: Texas Instruments K3 Multicore SoC architecture device tree bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Nishanth Menon <nm@ti.com>
@@ -28,7 +32,10 @@ properties:
       - description: K3 AM625 SoC
         items:
           - enum:
+<<<<<<< HEAD
               - beagle,am625-beagleplay
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - ti,am625-sk
           - const: ti,am625
 
@@ -39,17 +46,23 @@ properties:
               - ti,am642-sk
           - const: ti,am642
 
+<<<<<<< HEAD
       - description: K3 AM642 SoC PHYTEC phyBOARD-Electra
         items:
           - const: phytec,am642-phyboard-electra-rdk
           - const: phytec,am64-phycore-som
           - const: ti,am642
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - description: K3 AM654 SoC
         items:
           - enum:
               - siemens,iot2050-advanced
+<<<<<<< HEAD
               - siemens,iot2050-advanced-m2
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - siemens,iot2050-advanced-pg2
               - siemens,iot2050-basic
               - siemens,iot2050-basic-pg2
@@ -69,7 +82,10 @@ properties:
           - const: ti,j721e
           - items:
               - enum:
+<<<<<<< HEAD
                   - beagle,j721e-beagleboneai64
+=======
+>>>>>>> b7ba80a49124 (Commit)
                   - ti,j721e-evm
                   - ti,j721e-sk
               - const: ti,j721e
@@ -77,6 +93,7 @@ properties:
       - description: K3 J721s2 SoC
         items:
           - enum:
+<<<<<<< HEAD
               - ti,am68-sk
               - ti,j721s2-evm
           - const: ti,j721s2
@@ -88,6 +105,11 @@ properties:
               - ti,j784s4-evm
           - const: ti,j784s4
 
+=======
+              - ti,j721s2-evm
+          - const: ti,j721s2
+
+>>>>>>> b7ba80a49124 (Commit)
 additionalProperties: true
 
 ...

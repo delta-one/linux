@@ -9,7 +9,10 @@
 #include <dt-bindings/power/qcom-rpmpd.h>
 #include <dt-bindings/soc/qcom,rpmh-rsc.h>
 #include <dt-bindings/clock/qcom,rpmh.h>
+<<<<<<< HEAD
 #include <dt-bindings/clock/qcom,dispcc-sm8150.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <dt-bindings/clock/qcom,gcc-sm8150.h>
 #include <dt-bindings/clock/qcom,gpucc-sm8150.h>
 #include <dt-bindings/interconnect/qcom,osm-l3.h>
@@ -48,7 +51,10 @@
 			device_type = "cpu";
 			compatible = "qcom,kryo485";
 			reg = <0x0 0x0>;
+<<<<<<< HEAD
 			clocks = <&cpufreq_hw 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <488>;
 			dynamic-power-coefficient = <232>;
@@ -62,11 +68,17 @@
 			#cooling-cells = <2>;
 			L2_0: l2-cache {
 				compatible = "cache";
+<<<<<<< HEAD
 				cache-level = <2>;
 				next-level-cache = <&L3_0>;
 				L3_0: l3-cache {
 				      compatible = "cache";
 				      cache-level = <3>;
+=======
+				next-level-cache = <&L3_0>;
+				L3_0: l3-cache {
+				      compatible = "cache";
+>>>>>>> b7ba80a49124 (Commit)
 				};
 			};
 		};
@@ -75,7 +87,10 @@
 			device_type = "cpu";
 			compatible = "qcom,kryo485";
 			reg = <0x0 0x100>;
+<<<<<<< HEAD
 			clocks = <&cpufreq_hw 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <488>;
 			dynamic-power-coefficient = <232>;
@@ -89,16 +104,25 @@
 			#cooling-cells = <2>;
 			L2_100: l2-cache {
 				compatible = "cache";
+<<<<<<< HEAD
 				cache-level = <2>;
 				next-level-cache = <&L3_0>;
 			};
+=======
+				next-level-cache = <&L3_0>;
+			};
+
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		CPU2: cpu@200 {
 			device_type = "cpu";
 			compatible = "qcom,kryo485";
 			reg = <0x0 0x200>;
+<<<<<<< HEAD
 			clocks = <&cpufreq_hw 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <488>;
 			dynamic-power-coefficient = <232>;
@@ -112,7 +136,10 @@
 			#cooling-cells = <2>;
 			L2_200: l2-cache {
 				compatible = "cache";
+<<<<<<< HEAD
 				cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
@@ -121,7 +148,10 @@
 			device_type = "cpu";
 			compatible = "qcom,kryo485";
 			reg = <0x0 0x300>;
+<<<<<<< HEAD
 			clocks = <&cpufreq_hw 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <488>;
 			dynamic-power-coefficient = <232>;
@@ -135,7 +165,10 @@
 			#cooling-cells = <2>;
 			L2_300: l2-cache {
 				compatible = "cache";
+<<<<<<< HEAD
 				cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
@@ -144,7 +177,10 @@
 			device_type = "cpu";
 			compatible = "qcom,kryo485";
 			reg = <0x0 0x400>;
+<<<<<<< HEAD
 			clocks = <&cpufreq_hw 1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <1024>;
 			dynamic-power-coefficient = <369>;
@@ -158,7 +194,10 @@
 			#cooling-cells = <2>;
 			L2_400: l2-cache {
 				compatible = "cache";
+<<<<<<< HEAD
 				cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
@@ -167,7 +206,10 @@
 			device_type = "cpu";
 			compatible = "qcom,kryo485";
 			reg = <0x0 0x500>;
+<<<<<<< HEAD
 			clocks = <&cpufreq_hw 1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <1024>;
 			dynamic-power-coefficient = <369>;
@@ -181,7 +223,10 @@
 			#cooling-cells = <2>;
 			L2_500: l2-cache {
 				compatible = "cache";
+<<<<<<< HEAD
 				cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
@@ -190,7 +235,10 @@
 			device_type = "cpu";
 			compatible = "qcom,kryo485";
 			reg = <0x0 0x600>;
+<<<<<<< HEAD
 			clocks = <&cpufreq_hw 1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <1024>;
 			dynamic-power-coefficient = <369>;
@@ -204,7 +252,10 @@
 			#cooling-cells = <2>;
 			L2_600: l2-cache {
 				compatible = "cache";
+<<<<<<< HEAD
 				cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
@@ -213,7 +264,10 @@
 			device_type = "cpu";
 			compatible = "qcom,kryo485";
 			reg = <0x0 0x700>;
+<<<<<<< HEAD
 			clocks = <&cpufreq_hw 2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			enable-method = "psci";
 			capacity-dmips-mhz = <1024>;
 			dynamic-power-coefficient = <421>;
@@ -227,7 +281,10 @@
 			#cooling-cells = <2>;
 			L2_700: l2-cache {
 				compatible = "cache";
+<<<<<<< HEAD
 				cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				next-level-cache = <&L3_0>;
 			};
 		};
@@ -617,55 +674,91 @@
 		compatible = "arm,psci-1.0";
 		method = "smc";
 
+<<<<<<< HEAD
 		CPU_PD0: power-domain-cpu0 {
+=======
+		CPU_PD0: cpu0 {
+>>>>>>> b7ba80a49124 (Commit)
 			#power-domain-cells = <0>;
 			power-domains = <&CLUSTER_PD>;
 			domain-idle-states = <&LITTLE_CPU_SLEEP_0>;
 		};
 
+<<<<<<< HEAD
 		CPU_PD1: power-domain-cpu1 {
+=======
+		CPU_PD1: cpu1 {
+>>>>>>> b7ba80a49124 (Commit)
 			#power-domain-cells = <0>;
 			power-domains = <&CLUSTER_PD>;
 			domain-idle-states = <&LITTLE_CPU_SLEEP_0>;
 		};
 
+<<<<<<< HEAD
 		CPU_PD2: power-domain-cpu2 {
+=======
+		CPU_PD2: cpu2 {
+>>>>>>> b7ba80a49124 (Commit)
 			#power-domain-cells = <0>;
 			power-domains = <&CLUSTER_PD>;
 			domain-idle-states = <&LITTLE_CPU_SLEEP_0>;
 		};
 
+<<<<<<< HEAD
 		CPU_PD3: power-domain-cpu3 {
+=======
+		CPU_PD3: cpu3 {
+>>>>>>> b7ba80a49124 (Commit)
 			#power-domain-cells = <0>;
 			power-domains = <&CLUSTER_PD>;
 			domain-idle-states = <&LITTLE_CPU_SLEEP_0>;
 		};
 
+<<<<<<< HEAD
 		CPU_PD4: power-domain-cpu4 {
+=======
+		CPU_PD4: cpu4 {
+>>>>>>> b7ba80a49124 (Commit)
 			#power-domain-cells = <0>;
 			power-domains = <&CLUSTER_PD>;
 			domain-idle-states = <&BIG_CPU_SLEEP_0>;
 		};
 
+<<<<<<< HEAD
 		CPU_PD5: power-domain-cpu5 {
+=======
+		CPU_PD5: cpu5 {
+>>>>>>> b7ba80a49124 (Commit)
 			#power-domain-cells = <0>;
 			power-domains = <&CLUSTER_PD>;
 			domain-idle-states = <&BIG_CPU_SLEEP_0>;
 		};
 
+<<<<<<< HEAD
 		CPU_PD6: power-domain-cpu6 {
+=======
+		CPU_PD6: cpu6 {
+>>>>>>> b7ba80a49124 (Commit)
 			#power-domain-cells = <0>;
 			power-domains = <&CLUSTER_PD>;
 			domain-idle-states = <&BIG_CPU_SLEEP_0>;
 		};
 
+<<<<<<< HEAD
 		CPU_PD7: power-domain-cpu7 {
+=======
+		CPU_PD7: cpu7 {
+>>>>>>> b7ba80a49124 (Commit)
 			#power-domain-cells = <0>;
 			power-domains = <&CLUSTER_PD>;
 			domain-idle-states = <&BIG_CPU_SLEEP_0>;
 		};
 
+<<<<<<< HEAD
 		CLUSTER_PD: power-domain-cpu-cluster0 {
+=======
+		CLUSTER_PD: cpu-cluster0 {
+>>>>>>> b7ba80a49124 (Commit)
 			#power-domain-cells = <0>;
 			domain-idle-states = <&CLUSTER_SLEEP_0>;
 		};
@@ -904,8 +997,13 @@
 		};
 
 		gpi_dma0: dma-controller@800000 {
+<<<<<<< HEAD
 			compatible = "qcom,sm8150-gpi-dma", "qcom,sdm845-gpi-dma";
 			reg = <0 0x00800000 0 0x60000>;
+=======
+			compatible = "qcom,sm8150-gpi-dma";
+			reg = <0 0x800000 0 0x60000>;
+>>>>>>> b7ba80a49124 (Commit)
 			interrupts = <GIC_SPI 244 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>,
@@ -943,7 +1041,11 @@
 			power-domains = <&gcc EMAC_GDSC>;
 			resets = <&gcc GCC_EMAC_BCR>;
 
+<<<<<<< HEAD
 			iommus = <&apps_smmu 0x3c0 0x0>;
+=======
+			iommus = <&apps_smmu 0x3C0 0x0>;
+>>>>>>> b7ba80a49124 (Commit)
 
 			snps,tso;
 			rx-fifo-depth = <4096>;
@@ -983,7 +1085,11 @@
 
 			spi0: spi@880000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00880000 0 0x4000>;
+=======
+				reg = <0 0x880000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
@@ -1017,7 +1123,11 @@
 
 			spi1: spi@884000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00884000 0 0x4000>;
+=======
+				reg = <0 0x884000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
@@ -1051,7 +1161,11 @@
 
 			spi2: spi@888000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00888000 0 0x4000>;
+=======
+				reg = <0 0x888000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP0_S2_CLK>;
@@ -1085,7 +1199,11 @@
 
 			spi3: spi@88c000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x0088c000 0 0x4000>;
+=======
+				reg = <0 0x88c000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
@@ -1119,7 +1237,11 @@
 
 			spi4: spi@890000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00890000 0 0x4000>;
+=======
+				reg = <0 0x890000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP0_S4_CLK>;
@@ -1153,7 +1275,11 @@
 
 			spi5: spi@894000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00894000 0 0x4000>;
+=======
+				reg = <0 0x894000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
@@ -1187,7 +1313,11 @@
 
 			spi6: spi@898000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00898000 0 0x4000>;
+=======
+				reg = <0 0x898000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP0_S6_CLK>;
@@ -1221,7 +1351,11 @@
 
 			spi7: spi@89c000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x0089c000 0 0x4000>;
+=======
+				reg = <0 0x89c000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP0_S7_CLK>;
@@ -1239,8 +1373,13 @@
 		};
 
 		gpi_dma1: dma-controller@a00000 {
+<<<<<<< HEAD
 			compatible = "qcom,sm8150-gpi-dma", "qcom,sdm845-gpi-dma";
 			reg = <0 0x00a00000 0 0x60000>;
+=======
+			compatible = "qcom,sm8150-gpi-dma";
+			reg = <0 0xa00000 0 0x60000>;
+>>>>>>> b7ba80a49124 (Commit)
 			interrupts = <GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>,
@@ -1291,7 +1430,11 @@
 
 			spi8: spi@a80000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00a80000 0 0x4000>;
+=======
+				reg = <0 0xa80000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
@@ -1325,7 +1468,11 @@
 
 			spi9: spi@a84000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00a84000 0 0x4000>;
+=======
+				reg = <0 0xa84000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>;
@@ -1341,6 +1488,7 @@
 				status = "disabled";
 			};
 
+<<<<<<< HEAD
 			uart9: serial@a84000 {
 				compatible = "qcom,geni-uart";
 				reg = <0x0 0x00a84000 0x0 0x4000>;
@@ -1355,6 +1503,8 @@
 				status = "disabled";
 			};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			i2c10: i2c@a88000 {
 				compatible = "qcom,geni-i2c";
 				reg = <0 0x00a88000 0 0x4000>;
@@ -1373,7 +1523,11 @@
 
 			spi10: spi@a88000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00a88000 0 0x4000>;
+=======
+				reg = <0 0xa88000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
@@ -1407,7 +1561,11 @@
 
 			spi11: spi@a8c000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00a8c000 0 0x4000>;
+=======
+				reg = <0 0xa8c000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP1_S3_CLK>;
@@ -1450,7 +1608,11 @@
 
 			spi12: spi@a90000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00a90000 0 0x4000>;
+=======
+				reg = <0 0xa90000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
@@ -1468,7 +1630,11 @@
 
 			i2c16: i2c@94000 {
 				compatible = "qcom,geni-i2c";
+<<<<<<< HEAD
 				reg = <0 0x00094000 0 0x4000>;
+=======
+				reg = <0 0x0094000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
 				dmas = <&gpi_dma2 0 5 QCOM_GPI_I2C>,
@@ -1484,7 +1650,11 @@
 
 			spi16: spi@a94000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00a94000 0 0x4000>;
+=======
+				reg = <0 0xa94000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
@@ -1502,8 +1672,13 @@
 		};
 
 		gpi_dma2: dma-controller@c00000 {
+<<<<<<< HEAD
 			compatible = "qcom,sm8150-gpi-dma", "qcom,sdm845-gpi-dma";
 			reg = <0 0x00c00000 0 0x60000>;
+=======
+			compatible = "qcom,sm8150-gpi-dma";
+			reg = <0 0xc00000 0 0x60000>;
+>>>>>>> b7ba80a49124 (Commit)
 			interrupts = <GIC_SPI 588 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 589 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 590 IRQ_TYPE_LEVEL_HIGH>,
@@ -1555,7 +1730,11 @@
 
 			spi17: spi@c80000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00c80000 0 0x4000>;
+=======
+				reg = <0 0xc80000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP2_S0_CLK>;
@@ -1589,7 +1768,11 @@
 
 			spi18: spi@c84000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00c84000 0 0x4000>;
+=======
+				reg = <0 0xc84000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP2_S1_CLK>;
@@ -1623,7 +1806,11 @@
 
 			spi19: spi@c88000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00c88000 0 0x4000>;
+=======
+				reg = <0 0xc88000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP2_S2_CLK>;
@@ -1657,7 +1844,11 @@
 
 			spi13: spi@c8c000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00c8c000 0 0x4000>;
+=======
+				reg = <0 0xc8c000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP2_S3_CLK>;
@@ -1691,7 +1882,11 @@
 
 			spi14: spi@c90000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00c90000 0 0x4000>;
+=======
+				reg = <0 0xc90000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP2_S4_CLK>;
@@ -1725,7 +1920,11 @@
 
 			spi15: spi@c94000 {
 				compatible = "qcom,geni-spi";
+<<<<<<< HEAD
 				reg = <0 0x00c94000 0 0x4000>;
+=======
+				reg = <0 0xc94000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 				reg-names = "se";
 				clock-names = "se";
 				clocks = <&gcc GCC_QUPV3_WRAP2_S5_CLK>;
@@ -1793,6 +1992,7 @@
 
 		system-cache-controller@9200000 {
 			compatible = "qcom,sm8150-llcc";
+<<<<<<< HEAD
 			reg = <0 0x09200000 0 0x50000>, <0 0x09280000 0 0x50000>,
 			      <0 0x09300000 0 0x50000>, <0 0x09380000 0 0x50000>,
 			      <0 0x09600000 0 0x50000>;
@@ -1807,6 +2007,13 @@
 			      <0x0 0x010ad000 0x0 0x3000>;
 		};
 
+=======
+			reg = <0 0x09200000 0 0x200000>, <0 0x09600000 0 0x50000>;
+			reg-names = "llcc_base", "llcc_broadcast_base";
+			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
+		};
+
+>>>>>>> b7ba80a49124 (Commit)
 		pcie0: pci@1c00000 {
 			compatible = "qcom,pcie-sm8150", "snps,dw-pcie";
 			reg = <0 0x01c00000 0 0x3000>,
@@ -1823,8 +2030,13 @@
 			#address-cells = <3>;
 			#size-cells = <2>;
 
+<<<<<<< HEAD
 			ranges = <0x01000000 0x0 0x00000000 0x0 0x60200000 0x0 0x100000>,
 				 <0x02000000 0x0 0x60300000 0x0 0x60300000 0x0 0x3d00000>;
+=======
+			ranges = <0x01000000 0x0 0x60200000 0 0x60200000 0x0 0x100000>,
+				 <0x02000000 0x0 0x60300000 0 0x60300000 0x0 0x3d00000>;
+>>>>>>> b7ba80a49124 (Commit)
 
 			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
 			interrupt-names = "msi";
@@ -1850,7 +2062,11 @@
 				      "slave_q2a",
 				      "tbu";
 
+<<<<<<< HEAD
 			iommus = <&apps_smmu 0x1d80 0x3f>;
+=======
+			iommus = <&apps_smmu 0x1d80 0x7f>;
+>>>>>>> b7ba80a49124 (Commit)
 			iommu-map = <0x0   &apps_smmu 0x1d80 0x1>,
 				    <0x100 &apps_smmu 0x1d81 0x1>;
 
@@ -1891,10 +2107,17 @@
 			status = "disabled";
 
 			pcie0_lane: phy@1c06200 {
+<<<<<<< HEAD
 				reg = <0 0x01c06200 0 0x170>, /* tx */
 				      <0 0x01c06400 0 0x200>, /* rx */
 				      <0 0x01c06800 0 0x1f0>, /* pcs */
 				      <0 0x01c06c00 0 0xf4>; /* "pcs_lane" same as pcs_misc? */
+=======
+				reg = <0 0x1c06200 0 0x170>, /* tx */
+				      <0 0x1c06400 0 0x200>, /* rx */
+				      <0 0x1c06800 0 0x1f0>, /* pcs */
+				      <0 0x1c06c00 0 0xf4>; /* "pcs_lane" same as pcs_misc? */
+>>>>>>> b7ba80a49124 (Commit)
 				clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
 				clock-names = "pipe0";
 
@@ -1919,7 +2142,11 @@
 			#address-cells = <3>;
 			#size-cells = <2>;
 
+<<<<<<< HEAD
 			ranges = <0x01000000 0x0 0x00000000 0x0 0x40200000 0x0 0x100000>,
+=======
+			ranges = <0x01000000 0x0 0x40200000 0x0 0x40200000 0x0 0x100000>,
+>>>>>>> b7ba80a49124 (Commit)
 				 <0x02000000 0x0 0x40300000 0x0 0x40300000 0x0 0x1fd00000>;
 
 			interrupts = <GIC_SPI 307 IRQ_TYPE_EDGE_RISING>;
@@ -1949,7 +2176,11 @@
 			assigned-clocks = <&gcc GCC_PCIE_1_AUX_CLK>;
 			assigned-clock-rates = <19200000>;
 
+<<<<<<< HEAD
 			iommus = <&apps_smmu 0x1e00 0x3f>;
+=======
+			iommus = <&apps_smmu 0x1e00 0x7f>;
+>>>>>>> b7ba80a49124 (Commit)
 			iommu-map = <0x0   &apps_smmu 0x1e00 0x1>,
 				    <0x100 &apps_smmu 0x1e01 0x1>;
 
@@ -1990,12 +2221,21 @@
 			status = "disabled";
 
 			pcie1_lane: phy@1c0e200 {
+<<<<<<< HEAD
 				reg = <0 0x01c0e200 0 0x170>, /* tx0 */
 				      <0 0x01c0e400 0 0x200>, /* rx0 */
 				      <0 0x01c0ea00 0 0x1f0>, /* pcs */
 				      <0 0x01c0e600 0 0x170>, /* tx1 */
 				      <0 0x01c0e800 0 0x200>, /* rx1 */
 				      <0 0x01c0ee00 0 0xf4>; /* "pcs_com" same as pcs_misc? */
+=======
+				reg = <0 0x1c0e200 0 0x170>, /* tx0 */
+				      <0 0x1c0e400 0 0x200>, /* rx0 */
+				      <0 0x1c0ea00 0 0x1f0>, /* pcs */
+				      <0 0x1c0e600 0 0x170>, /* tx1 */
+				      <0 0x1c0e800 0 0x200>, /* rx1 */
+				      <0 0x1c0ee00 0 0xf4>; /* "pcs_com" same as pcs_misc? */
+>>>>>>> b7ba80a49124 (Commit)
 				clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
 				clock-names = "pipe0";
 
@@ -2072,15 +2312,33 @@
 			status = "disabled";
 
 			ufs_mem_phy_lanes: phy@1d87400 {
+<<<<<<< HEAD
 				reg = <0 0x01d87400 0 0x16c>,
 				      <0 0x01d87600 0 0x200>,
 				      <0 0x01d87c00 0 0x200>,
 				      <0 0x01d87800 0 0x16c>,
 				      <0 0x01d87a00 0 0x200>;
+=======
+				reg = <0 0x01d87400 0 0x108>,
+				      <0 0x01d87600 0 0x1e0>,
+				      <0 0x01d87c00 0 0x1dc>,
+				      <0 0x01d87800 0 0x108>,
+				      <0 0x01d87a00 0 0x1e0>;
+>>>>>>> b7ba80a49124 (Commit)
 				#phy-cells = <0>;
 			};
 		};
 
+<<<<<<< HEAD
+=======
+		ipa_virt: interconnect@1e00000 {
+			compatible = "qcom,sm8150-ipa-virt";
+			reg = <0 0x01e00000 0 0x1000>;
+			#interconnect-cells = <1>;
+			qcom,bcm-voters = <&apps_bcm_voter>;
+		};
+
+>>>>>>> b7ba80a49124 (Commit)
 		tcsr_mutex: hwlock@1f40000 {
 			compatible = "qcom,tcsr-mutex";
 			reg = <0x0 0x01f40000 0x0 0x20000>;
@@ -2107,8 +2365,13 @@
 			clocks = <&rpmhcc RPMH_CXO_CLK>;
 			clock-names = "xo";
 
+<<<<<<< HEAD
 			power-domains = <&rpmhpd SM8150_LCX>,
 					<&rpmhpd SM8150_LMX>;
+=======
+			power-domains = <&rpmhpd 3>,
+					<&rpmhpd 2>;
+>>>>>>> b7ba80a49124 (Commit)
 			power-domain-names = "lcx", "lmx";
 
 			memory-region = <&slpi_mem>;
@@ -2273,8 +2536,12 @@
 		};
 
 		adreno_smmu: iommu@2ca0000 {
+<<<<<<< HEAD
 			compatible = "qcom,sm8150-smmu-500", "qcom,adreno-smmu",
 				     "qcom,smmu-500", "arm,mmu-500";
+=======
+			compatible = "qcom,sm8150-smmu-500", "arm,mmu-500";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0 0x02ca0000 0 0x10000>;
 			#iommu-cells = <2>;
 			#global-interrupts = <1>;
@@ -2310,6 +2577,7 @@
 			#interrupt-cells = <2>;
 			wakeup-parent = <&pdc>;
 
+<<<<<<< HEAD
 			qup_i2c0_default: qup-i2c0-default-state {
 				pins = "gpio0", "gpio1";
 				function = "qup0";
@@ -2318,12 +2586,29 @@
 			};
 
 			qup_spi0_default: qup-spi0-default-state {
+=======
+			qup_i2c0_default: qup-i2c0-default {
+				mux {
+					pins = "gpio0", "gpio1";
+					function = "qup0";
+				};
+
+				config {
+					pins = "gpio0", "gpio1";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi0_default: qup-spi0-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio0", "gpio1", "gpio2", "gpio3";
 				function = "qup0";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c1_default: qup-i2c1-default-state {
 				pins = "gpio114", "gpio115";
 				function = "qup1";
@@ -2332,12 +2617,29 @@
 			};
 
 			qup_spi1_default: qup-spi1-default-state {
+=======
+			qup_i2c1_default: qup-i2c1-default {
+				mux {
+					pins = "gpio114", "gpio115";
+					function = "qup1";
+				};
+
+				config {
+					pins = "gpio114", "gpio115";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi1_default: qup-spi1-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio114", "gpio115", "gpio116", "gpio117";
 				function = "qup1";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c2_default: qup-i2c2-default-state {
 				pins = "gpio126", "gpio127";
 				function = "qup2";
@@ -2346,12 +2648,29 @@
 			};
 
 			qup_spi2_default: qup-spi2-default-state {
+=======
+			qup_i2c2_default: qup-i2c2-default {
+				mux {
+					pins = "gpio126", "gpio127";
+					function = "qup2";
+				};
+
+				config {
+					pins = "gpio126", "gpio127";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi2_default: qup-spi2-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio126", "gpio127", "gpio128", "gpio129";
 				function = "qup2";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c3_default: qup-i2c3-default-state {
 				pins = "gpio144", "gpio145";
 				function = "qup3";
@@ -2360,12 +2679,29 @@
 			};
 
 			qup_spi3_default: qup-spi3-default-state {
+=======
+			qup_i2c3_default: qup-i2c3-default {
+				mux {
+					pins = "gpio144", "gpio145";
+					function = "qup3";
+				};
+
+				config {
+					pins = "gpio144", "gpio145";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi3_default: qup-spi3-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio144", "gpio145", "gpio146", "gpio147";
 				function = "qup3";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c4_default: qup-i2c4-default-state {
 				pins = "gpio51", "gpio52";
 				function = "qup4";
@@ -2374,12 +2710,29 @@
 			};
 
 			qup_spi4_default: qup-spi4-default-state {
+=======
+			qup_i2c4_default: qup-i2c4-default {
+				mux {
+					pins = "gpio51", "gpio52";
+					function = "qup4";
+				};
+
+				config {
+					pins = "gpio51", "gpio52";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi4_default: qup-spi4-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio51", "gpio52", "gpio53", "gpio54";
 				function = "qup4";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c5_default: qup-i2c5-default-state {
 				pins = "gpio121", "gpio122";
 				function = "qup5";
@@ -2388,12 +2741,29 @@
 			};
 
 			qup_spi5_default: qup-spi5-default-state {
+=======
+			qup_i2c5_default: qup-i2c5-default {
+				mux {
+					pins = "gpio121", "gpio122";
+					function = "qup5";
+				};
+
+				config {
+					pins = "gpio121", "gpio122";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi5_default: qup-spi5-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio119", "gpio120", "gpio121", "gpio122";
 				function = "qup5";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c6_default: qup-i2c6-default-state {
 				pins = "gpio6", "gpio7";
 				function = "qup6";
@@ -2402,12 +2772,29 @@
 			};
 
 			qup_spi6_default: qup-spi6_default-state {
+=======
+			qup_i2c6_default: qup-i2c6-default {
+				mux {
+					pins = "gpio6", "gpio7";
+					function = "qup6";
+				};
+
+				config {
+					pins = "gpio6", "gpio7";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi6_default: qup-spi6_default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio4", "gpio5", "gpio6", "gpio7";
 				function = "qup6";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c7_default: qup-i2c7-default-state {
 				pins = "gpio98", "gpio99";
 				function = "qup7";
@@ -2416,12 +2803,29 @@
 			};
 
 			qup_spi7_default: qup-spi7_default-state {
+=======
+			qup_i2c7_default: qup-i2c7-default {
+				mux {
+					pins = "gpio98", "gpio99";
+					function = "qup7";
+				};
+
+				config {
+					pins = "gpio98", "gpio99";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi7_default: qup-spi7_default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio98", "gpio99", "gpio100", "gpio101";
 				function = "qup7";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c8_default: qup-i2c8-default-state {
 				pins = "gpio88", "gpio89";
 				function = "qup8";
@@ -2430,12 +2834,29 @@
 			};
 
 			qup_spi8_default: qup-spi8-default-state {
+=======
+			qup_i2c8_default: qup-i2c8-default {
+				mux {
+					pins = "gpio88", "gpio89";
+					function = "qup8";
+				};
+
+				config {
+					pins = "gpio88", "gpio89";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi8_default: qup-spi8-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio88", "gpio89", "gpio90", "gpio91";
 				function = "qup8";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c9_default: qup-i2c9-default-state {
 				pins = "gpio39", "gpio40";
 				function = "qup9";
@@ -2444,12 +2865,29 @@
 			};
 
 			qup_spi9_default: qup-spi9-default-state {
+=======
+			qup_i2c9_default: qup-i2c9-default {
+				mux {
+					pins = "gpio39", "gpio40";
+					function = "qup9";
+				};
+
+				config {
+					pins = "gpio39", "gpio40";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi9_default: qup-spi9-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio39", "gpio40", "gpio41", "gpio42";
 				function = "qup9";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_uart9_default: qup-uart9-default-state {
 				pins = "gpio41", "gpio42";
 				function = "qup9";
@@ -2465,12 +2903,29 @@
 			};
 
 			qup_spi10_default: qup-spi10-default-state {
+=======
+			qup_i2c10_default: qup-i2c10-default {
+				mux {
+					pins = "gpio9", "gpio10";
+					function = "qup10";
+				};
+
+				config {
+					pins = "gpio9", "gpio10";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi10_default: qup-spi10-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio9", "gpio10", "gpio11", "gpio12";
 				function = "qup10";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c11_default: qup-i2c11-default-state {
 				pins = "gpio94", "gpio95";
 				function = "qup11";
@@ -2479,12 +2934,29 @@
 			};
 
 			qup_spi11_default: qup-spi11-default-state {
+=======
+			qup_i2c11_default: qup-i2c11-default {
+				mux {
+					pins = "gpio94", "gpio95";
+					function = "qup11";
+				};
+
+				config {
+					pins = "gpio94", "gpio95";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi11_default: qup-spi11-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio92", "gpio93", "gpio94", "gpio95";
 				function = "qup11";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c12_default: qup-i2c12-default-state {
 				pins = "gpio83", "gpio84";
 				function = "qup12";
@@ -2493,12 +2965,29 @@
 			};
 
 			qup_spi12_default: qup-spi12-default-state {
+=======
+			qup_i2c12_default: qup-i2c12-default {
+				mux {
+					pins = "gpio83", "gpio84";
+					function = "qup12";
+				};
+
+				config {
+					pins = "gpio83", "gpio84";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi12_default: qup-spi12-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio83", "gpio84", "gpio85", "gpio86";
 				function = "qup12";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c13_default: qup-i2c13-default-state {
 				pins = "gpio43", "gpio44";
 				function = "qup13";
@@ -2507,12 +2996,29 @@
 			};
 
 			qup_spi13_default: qup-spi13-default-state {
+=======
+			qup_i2c13_default: qup-i2c13-default {
+				mux {
+					pins = "gpio43", "gpio44";
+					function = "qup13";
+				};
+
+				config {
+					pins = "gpio43", "gpio44";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi13_default: qup-spi13-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio43", "gpio44", "gpio45", "gpio46";
 				function = "qup13";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c14_default: qup-i2c14-default-state {
 				pins = "gpio47", "gpio48";
 				function = "qup14";
@@ -2521,12 +3027,29 @@
 			};
 
 			qup_spi14_default: qup-spi14-default-state {
+=======
+			qup_i2c14_default: qup-i2c14-default {
+				mux {
+					pins = "gpio47", "gpio48";
+					function = "qup14";
+				};
+
+				config {
+					pins = "gpio47", "gpio48";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi14_default: qup-spi14-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio47", "gpio48", "gpio49", "gpio50";
 				function = "qup14";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c15_default: qup-i2c15-default-state {
 				pins = "gpio27", "gpio28";
 				function = "qup15";
@@ -2535,12 +3058,29 @@
 			};
 
 			qup_spi15_default: qup-spi15-default-state {
+=======
+			qup_i2c15_default: qup-i2c15-default {
+				mux {
+					pins = "gpio27", "gpio28";
+					function = "qup15";
+				};
+
+				config {
+					pins = "gpio27", "gpio28";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi15_default: qup-spi15-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio27", "gpio28", "gpio29", "gpio30";
 				function = "qup15";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c16_default: qup-i2c16-default-state {
 				pins = "gpio86", "gpio85";
 				function = "qup16";
@@ -2549,12 +3089,29 @@
 			};
 
 			qup_spi16_default: qup-spi16-default-state {
+=======
+			qup_i2c16_default: qup-i2c16-default {
+				mux {
+					pins = "gpio86", "gpio85";
+					function = "qup16";
+				};
+
+				config {
+					pins = "gpio86", "gpio85";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi16_default: qup-spi16-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio83", "gpio84", "gpio85", "gpio86";
 				function = "qup16";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c17_default: qup-i2c17-default-state {
 				pins = "gpio55", "gpio56";
 				function = "qup17";
@@ -2563,12 +3120,29 @@
 			};
 
 			qup_spi17_default: qup-spi17-default-state {
+=======
+			qup_i2c17_default: qup-i2c17-default {
+				mux {
+					pins = "gpio55", "gpio56";
+					function = "qup17";
+				};
+
+				config {
+					pins = "gpio55", "gpio56";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi17_default: qup-spi17-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio55", "gpio56", "gpio57", "gpio58";
 				function = "qup17";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c18_default: qup-i2c18-default-state {
 				pins = "gpio23", "gpio24";
 				function = "qup18";
@@ -2577,12 +3151,29 @@
 			};
 
 			qup_spi18_default: qup-spi18-default-state {
+=======
+			qup_i2c18_default: qup-i2c18-default {
+				mux {
+					pins = "gpio23", "gpio24";
+					function = "qup18";
+				};
+
+				config {
+					pins = "gpio23", "gpio24";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi18_default: qup-spi18-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio23", "gpio24", "gpio25", "gpio26";
 				function = "qup18";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			qup_i2c19_default: qup-i2c19-default-state {
 				pins = "gpio57", "gpio58";
 				function = "qup19";
@@ -2591,28 +3182,57 @@
 			};
 
 			qup_spi19_default: qup-spi19-default-state {
+=======
+			qup_i2c19_default: qup-i2c19-default {
+				mux {
+					pins = "gpio57", "gpio58";
+					function = "qup19";
+				};
+
+				config {
+					pins = "gpio57", "gpio58";
+					drive-strength = <0x02>;
+					bias-disable;
+				};
+			};
+
+			qup_spi19_default: qup-spi19-default {
+>>>>>>> b7ba80a49124 (Commit)
 				pins = "gpio55", "gpio56", "gpio57", "gpio58";
 				function = "qup19";
 				drive-strength = <6>;
 				bias-disable;
 			};
 
+<<<<<<< HEAD
 			pcie0_default_state: pcie0-default-state {
 				perst-pins {
+=======
+			pcie0_default_state: pcie0-default {
+				perst {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio35";
 					function = "gpio";
 					drive-strength = <2>;
 					bias-pull-down;
 				};
 
+<<<<<<< HEAD
 				clkreq-pins {
+=======
+				clkreq {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio36";
 					function = "pci_e0";
 					drive-strength = <2>;
 					bias-pull-up;
 				};
 
+<<<<<<< HEAD
 				wake-pins {
+=======
+				wake {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio37";
 					function = "gpio";
 					drive-strength = <2>;
@@ -2620,22 +3240,35 @@
 				};
 			};
 
+<<<<<<< HEAD
 			pcie1_default_state: pcie1-default-state {
 				perst-pins {
+=======
+			pcie1_default_state: pcie1-default {
+				perst {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio102";
 					function = "gpio";
 					drive-strength = <2>;
 					bias-pull-down;
 				};
 
+<<<<<<< HEAD
 				clkreq-pins {
+=======
+				clkreq {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio103";
 					function = "pci_e1";
 					drive-strength = <2>;
 					bias-pull-up;
 				};
 
+<<<<<<< HEAD
 				wake-pins {
+=======
+				wake {
+>>>>>>> b7ba80a49124 (Commit)
 					pins = "gpio104";
 					function = "gpio";
 					drive-strength = <2>;
@@ -2660,8 +3293,13 @@
 			clocks = <&rpmhcc RPMH_CXO_CLK>;
 			clock-names = "xo";
 
+<<<<<<< HEAD
 			power-domains = <&rpmhpd SM8150_CX>,
 					<&rpmhpd SM8150_MSS>;
+=======
+			power-domains = <&rpmhpd 7>,
+					<&rpmhpd 0>;
+>>>>>>> b7ba80a49124 (Commit)
 			power-domain-names = "cx", "mss";
 
 			memory-region = <&mpss_mem>;
@@ -3287,7 +3925,11 @@
 			clocks = <&rpmhcc RPMH_CXO_CLK>;
 			clock-names = "xo";
 
+<<<<<<< HEAD
 			power-domains = <&rpmhpd SM8150_CX>;
+=======
+			power-domains = <&rpmhpd 7>;
+>>>>>>> b7ba80a49124 (Commit)
 
 			memory-region = <&cdsp_mem>;
 
@@ -3620,6 +4262,7 @@
 			qcom,bcm-voters = <&apps_bcm_voter>;
 		};
 
+<<<<<<< HEAD
 		mdss: display-subsystem@ae00000 {
 			compatible = "qcom,sm8150-mdss";
 			reg = <0 0x0ae00000 0 0x1000>;
@@ -3905,6 +4548,8 @@
 			#power-domain-cells = <1>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pdc: interrupt-controller@b220000 {
 			compatible = "qcom,sm8150-pdc", "qcom,pdc";
 			reg = <0 0x0b220000 0 0x400>;
@@ -3915,7 +4560,11 @@
 			interrupt-controller;
 		};
 
+<<<<<<< HEAD
 		aoss_qmp: power-management@c300000 {
+=======
+		aoss_qmp: power-controller@c300000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,sm8150-aoss-qmp", "qcom,aoss-qmp";
 			reg = <0x0 0x0c300000 0x0 0x400>;
 			interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
@@ -3967,6 +4616,10 @@
 			#size-cells = <0>;
 			interrupt-controller;
 			#interrupt-cells = <4>;
+<<<<<<< HEAD
+=======
+			cell-index = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		apps_smmu: iommu@15000000 {
@@ -4072,7 +4725,11 @@
 			clocks = <&rpmhcc RPMH_CXO_CLK>;
 			clock-names = "xo";
 
+<<<<<<< HEAD
 			power-domains = <&rpmhpd SM8150_CX>;
+=======
+			power-domains = <&rpmhpd 7>;
+>>>>>>> b7ba80a49124 (Commit)
 
 			memory-region = <&adsp_mem>;
 
@@ -4148,7 +4805,11 @@
 			reg = <0x0 0x17c20000 0x0 0x1000>;
 			clock-frequency = <19200000>;
 
+<<<<<<< HEAD
 			frame@17c21000 {
+=======
+			frame@17c21000{
+>>>>>>> b7ba80a49124 (Commit)
 				frame-number = <0>;
 				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
 					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
@@ -4215,7 +4876,10 @@
 					  <SLEEP_TCS   3>,
 					  <WAKE_TCS    3>,
 					  <CONTROL_TCS 1>;
+<<<<<<< HEAD
 			power-domains = <&CLUSTER_PD>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 			rpmhcc: clock-controller {
 				compatible = "qcom,sm8150-rpmh-clk";
@@ -4284,7 +4948,11 @@
 		};
 
 		osm_l3: interconnect@18321000 {
+<<<<<<< HEAD
 			compatible = "qcom,sm8150-osm-l3", "qcom,osm-l3";
+=======
+			compatible = "qcom,sm8150-osm-l3";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0 0x18321000 0 0x1400>;
 
 			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
@@ -4294,7 +4962,11 @@
 		};
 
 		cpufreq_hw: cpufreq@18323000 {
+<<<<<<< HEAD
 			compatible = "qcom,sm8150-cpufreq-hw", "qcom,cpufreq-hw";
+=======
+			compatible = "qcom,cpufreq-hw";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0 0x18323000 0 0x1400>, <0 0x18325800 0 0x1400>,
 			      <0 0x18327800 0 0x1400>;
 			reg-names = "freq-domain0", "freq-domain1",
@@ -4304,7 +4976,10 @@
 			clock-names = "xo", "alternate";
 
 			#freq-domain-cells = <1>;
+<<<<<<< HEAD
 			#clock-cells = <1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		lmh_cluster1: lmh@18350800 {
@@ -4383,7 +5058,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu0_crit: cpu-crit {
+=======
+				cpu0_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -4427,7 +5106,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu1_crit: cpu-crit {
+=======
+				cpu1_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -4471,7 +5154,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu2_crit: cpu-crit {
+=======
+				cpu2_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -4515,7 +5202,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu3_crit: cpu-crit {
+=======
+				cpu3_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -4559,7 +5250,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu4_top_crit: cpu-crit {
+=======
+				cpu4_top_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -4603,7 +5298,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu5_top_crit: cpu-crit {
+=======
+				cpu5_top_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -4647,7 +5346,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu6_top_crit: cpu-crit {
+=======
+				cpu6_top_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -4691,7 +5394,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu7_top_crit: cpu-crit {
+=======
+				cpu7_top_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -4735,7 +5442,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu4_bottom_crit: cpu-crit {
+=======
+				cpu4_bottom_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -4779,7 +5490,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu5_bottom_crit: cpu-crit {
+=======
+				cpu5_bottom_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -4823,7 +5538,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu6_bottom_crit: cpu-crit {
+=======
+				cpu6_bottom_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -4867,7 +5586,11 @@
 					type = "passive";
 				};
 
+<<<<<<< HEAD
 				cpu7_bottom_crit: cpu-crit {
+=======
+				cpu7_bottom_crit: cpu_crit {
+>>>>>>> b7ba80a49124 (Commit)
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";

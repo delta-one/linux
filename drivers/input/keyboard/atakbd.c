@@ -21,6 +21,12 @@
  * This driver only deals with handing key events off to the input layer.
  */
 
+<<<<<<< HEAD
+=======
+/*
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/input.h>

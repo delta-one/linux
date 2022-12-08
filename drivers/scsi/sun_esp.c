@@ -146,7 +146,11 @@ static void esp_get_differential(struct esp *esp)
 	struct device_node *dp;
 
 	dp = op->dev.of_node;
+<<<<<<< HEAD
 	if (of_property_read_bool(dp, "differential"))
+=======
+	if (of_find_property(dp, "differential", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		esp->flags |= ESP_FLAG_DIFFERENTIAL;
 	else
 		esp->flags &= ~ESP_FLAG_DIFFERENTIAL;

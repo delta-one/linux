@@ -109,6 +109,7 @@ struct bpf_lwt_prog {
 #define next_csid_chk_lcnode_fn_bits(flen)		\
 	next_csid_chk_lcblock_bits(flen)
 
+<<<<<<< HEAD
 #define SEG6_F_LOCAL_FLV_OP(flvname)	BIT(SEG6_LOCAL_FLV_OP_##flvname)
 #define SEG6_F_LOCAL_FLV_PSP		SEG6_F_LOCAL_FLV_OP(PSP)
 
@@ -118,6 +119,10 @@ struct bpf_lwt_prog {
 /* Supported Flavor operations are reported in this bitmask */
 #define SEG6_LOCAL_FLV_SUPP_OPS		(SEG6_F_LOCAL_FLV_OP(NEXT_CSID) | \
 					 SEG6_LOCAL_FLV8986_SUPP_OPS)
+=======
+/* Supported Flavor operations are reported in this bitmask */
+#define SEG6_LOCAL_FLV_SUPP_OPS	(BIT(SEG6_LOCAL_FLV_OP_NEXT_CSID))
+>>>>>>> b7ba80a49124 (Commit)
 
 struct seg6_flavors_info {
 	/* Flavor operations */
@@ -371,6 +376,7 @@ static void seg6_next_csid_advance_arg(struct in6_addr *addr,
 	memset(&addr->s6_addr[16 - fnc_octects], 0x00, fnc_octects);
 }
 
+<<<<<<< HEAD
 static int input_action_end_finish(struct sk_buff *skb,
 				   struct seg6_local_lwt *slwt)
 {
@@ -379,6 +385,8 @@ static int input_action_end_finish(struct sk_buff *skb,
 	return dst_input(skb);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int input_action_end_core(struct sk_buff *skb,
 				 struct seg6_local_lwt *slwt)
 {
@@ -390,7 +398,13 @@ static int input_action_end_core(struct sk_buff *skb,
 
 	advance_nextseg(srh, &ipv6_hdr(skb)->daddr);
 
+<<<<<<< HEAD
 	return input_action_end_finish(skb, slwt);
+=======
+	seg6_lookup_nexthop(skb, NULL, 0);
+
+	return dst_input(skb);
+>>>>>>> b7ba80a49124 (Commit)
 
 drop:
 	kfree_skb(skb);
@@ -408,7 +422,13 @@ static int end_next_csid_core(struct sk_buff *skb, struct seg6_local_lwt *slwt)
 	/* update DA */
 	seg6_next_csid_advance_arg(daddr, finfo);
 
+<<<<<<< HEAD
 	return input_action_end_finish(skb, slwt);
+=======
+	seg6_lookup_nexthop(skb, NULL, 0);
+
+	return dst_input(skb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool seg6_next_csid_enabled(__u32 fops)
@@ -416,6 +436,7 @@ static bool seg6_next_csid_enabled(__u32 fops)
 	return fops & BIT(SEG6_LOCAL_FLV_OP_NEXT_CSID);
 }
 
+<<<<<<< HEAD
 /* We describe the packet state in relation to the absence/presence of the SRH
  * and the Segment Left (SL) field.
  * For our purposes, it is not necessary to record the exact value of the SL
@@ -722,10 +743,13 @@ drop:
 	return -EINVAL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* regular endpoint function */
 static int input_action_end(struct sk_buff *skb, struct seg6_local_lwt *slwt)
 {
 	const struct seg6_flavors_info *finfo = &slwt->flv_info;
+<<<<<<< HEAD
 	__u32 fops = finfo->flv_ops;
 
 	if (!fops)
@@ -741,6 +765,13 @@ static int input_action_end(struct sk_buff *skb, struct seg6_local_lwt *slwt)
 	 * Segment Left = 0, etc.
 	 */
 	return end_flv8986_core(skb, slwt);
+=======
+
+	if (seg6_next_csid_enabled(finfo->flv_ops))
+		return end_next_csid_core(skb, slwt);
+
+	return input_action_end_core(skb, slwt);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* regular endpoint, and forward to specified nexthop */
@@ -1971,13 +2002,21 @@ static int put_nla_counters(struct sk_buff *skb, struct seg6_local_lwt *slwt)
 
 		pcounters = per_cpu_ptr(slwt->pcpu_counters, i);
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&pcounters->syncp);
+=======
+			start = u64_stats_fetch_begin_irq(&pcounters->syncp);
+>>>>>>> b7ba80a49124 (Commit)
 
 			packets = u64_stats_read(&pcounters->packets);
 			bytes = u64_stats_read(&pcounters->bytes);
 			errors = u64_stats_read(&pcounters->errors);
 
+<<<<<<< HEAD
 		} while (u64_stats_fetch_retry(&pcounters->syncp, start));
+=======
+		} while (u64_stats_fetch_retry_irq(&pcounters->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		counters.packets += packets;
 		counters.bytes += bytes;
@@ -2627,6 +2666,7 @@ int __init seg6_local_init(void)
 	BUILD_BUG_ON(next_csid_chk_lcblock_bits(SEG6_LOCAL_LCBLOCK_DBITS));
 	BUILD_BUG_ON(next_csid_chk_lcnode_fn_bits(SEG6_LOCAL_LCNODE_FN_DBITS));
 
+<<<<<<< HEAD
 	/* To be memory efficient, we use 'u8' to represent the different
 	 * actions related to RFC8986 flavors. If the kernel build stops here,
 	 * it means that it is not possible to correctly encode these actions
@@ -2634,6 +2674,8 @@ int __init seg6_local_init(void)
 	 */
 	BUILD_BUG_ON(SEG6_LOCAL_FLV_ACT_MAX > (typeof(flv8986_act_tbl[0]))~0U);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return lwtunnel_encap_add_ops(&seg6_local_ops,
 				      LWTUNNEL_ENCAP_SEG6_LOCAL);
 }

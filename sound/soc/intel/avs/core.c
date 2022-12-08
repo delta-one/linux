@@ -27,6 +27,7 @@
 #include "avs.h"
 #include "cldma.h"
 
+<<<<<<< HEAD
 static u32 pgctl_mask = AZX_PGCTL_LSRMD_MASK;
 module_param(pgctl_mask, uint, 0444);
 MODULE_PARM_DESC(pgctl_mask, "PCI PGCTL policy override");
@@ -35,6 +36,8 @@ static u32 cgctl_mask = AZX_CGCTL_MISCBDCGE_MASK;
 module_param(cgctl_mask, uint, 0444);
 MODULE_PARM_DESC(cgctl_mask, "PCI CGCTL policy override");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void
 avs_hda_update_config_dword(struct hdac_bus *bus, u32 reg, u32 mask, u32 value)
 {
@@ -49,16 +52,31 @@ avs_hda_update_config_dword(struct hdac_bus *bus, u32 reg, u32 mask, u32 value)
 
 void avs_hda_power_gating_enable(struct avs_dev *adev, bool enable)
 {
+<<<<<<< HEAD
 	u32 value = enable ? 0 : pgctl_mask;
 
 	avs_hda_update_config_dword(&adev->base.core, AZX_PCIREG_PGCTL, pgctl_mask, value);
+=======
+	u32 value;
+
+	value = enable ? 0 : AZX_PGCTL_LSRMD_MASK;
+	avs_hda_update_config_dword(&adev->base.core, AZX_PCIREG_PGCTL,
+				    AZX_PGCTL_LSRMD_MASK, value);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void avs_hdac_clock_gating_enable(struct hdac_bus *bus, bool enable)
 {
+<<<<<<< HEAD
 	u32 value = enable ? cgctl_mask : 0;
 
 	avs_hda_update_config_dword(bus, AZX_PCIREG_CGCTL, cgctl_mask, value);
+=======
+	u32 value;
+
+	value = enable ? AZX_CGCTL_MISCBDCGE_MASK : 0;
+	avs_hda_update_config_dword(bus, AZX_PCIREG_CGCTL, AZX_CGCTL_MISCBDCGE_MASK, value);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void avs_hda_clock_gating_enable(struct avs_dev *adev, bool enable)
@@ -68,8 +86,14 @@ void avs_hda_clock_gating_enable(struct avs_dev *adev, bool enable)
 
 void avs_hda_l1sen_enable(struct avs_dev *adev, bool enable)
 {
+<<<<<<< HEAD
 	u32 value = enable ? AZX_VS_EM2_L1SEN : 0;
 
+=======
+	u32 value;
+
+	value = enable ? AZX_VS_EM2_L1SEN : 0;
+>>>>>>> b7ba80a49124 (Commit)
 	snd_hdac_chip_updatel(&adev->base.core, VS_EM2, AZX_VS_EM2_L1SEN, value);
 }
 
@@ -214,7 +238,10 @@ static void avs_hda_probe_work(struct work_struct *work)
 	adev->nhlt = intel_nhlt_init(adev->dev);
 	if (!adev->nhlt)
 		dev_info(bus->dev, "platform has no NHLT\n");
+<<<<<<< HEAD
 	avs_debugfs_init(adev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	avs_register_all_boards(adev);
 
@@ -445,7 +472,11 @@ static int avs_pci_probe(struct pci_dev *pci, const struct pci_device_id *id)
 	if (bus->mlcap)
 		snd_hdac_ext_bus_get_ml_capabilities(bus);
 
+<<<<<<< HEAD
 	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)))
+=======
+	if (!dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)))
+>>>>>>> b7ba80a49124 (Commit)
 		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
 	dma_set_max_seg_size(dev, UINT_MAX);
 
@@ -481,6 +512,7 @@ err_remap_bar0:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void avs_pci_shutdown(struct pci_dev *pci)
 {
 	struct hdac_bus *bus = pci_get_drvdata(pci);
@@ -504,6 +536,8 @@ static void avs_pci_shutdown(struct pci_dev *pci)
 	pci_free_irq_vectors(pci);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void avs_pci_remove(struct pci_dev *pci)
 {
 	struct hdac_device *hdev, *save;
@@ -515,7 +549,10 @@ static void avs_pci_remove(struct pci_dev *pci)
 
 	avs_unregister_all_boards(adev);
 
+<<<<<<< HEAD
 	avs_debugfs_exit(adev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (adev->nhlt)
 		intel_nhlt_free(adev->nhlt);
 
@@ -533,7 +570,11 @@ static void avs_pci_remove(struct pci_dev *pci)
 	snd_hdac_bus_free_stream_pages(bus);
 	snd_hdac_ext_stream_free_all(bus);
 	/* reverse ml_capabilities */
+<<<<<<< HEAD
 	snd_hdac_ext_link_free_all(bus);
+=======
+	snd_hdac_link_free_all(bus);
+>>>>>>> b7ba80a49124 (Commit)
 	snd_hdac_ext_bus_exit(bus);
 
 	avs_dsp_core_disable(adev, GENMASK(adev->hw_cfg.dsp_cores - 1, 0));
@@ -563,6 +604,7 @@ static void avs_pci_remove(struct pci_dev *pci)
 	pm_runtime_get_noresume(&pci->dev);
 }
 
+<<<<<<< HEAD
 static int avs_suspend_standby(struct avs_dev *adev)
 {
 	struct hdac_bus *bus = &adev->base.core;
@@ -580,13 +622,19 @@ static int avs_suspend_standby(struct avs_dev *adev)
 }
 
 static int __maybe_unused avs_suspend_common(struct avs_dev *adev, bool low_power)
+=======
+static int __maybe_unused avs_suspend_common(struct avs_dev *adev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hdac_bus *bus = &adev->base.core;
 	int ret;
 
 	flush_work(&adev->probe_work);
+<<<<<<< HEAD
 	if (low_power && adev->num_lp_paths)
 		return avs_suspend_standby(adev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	snd_hdac_ext_bus_link_power_down_all(bus);
 
@@ -624,6 +672,7 @@ static int __maybe_unused avs_suspend_common(struct avs_dev *adev, bool low_powe
 	return 0;
 }
 
+<<<<<<< HEAD
 static int avs_resume_standby(struct avs_dev *adev)
 {
 	struct hdac_bus *bus = &adev->base.core;
@@ -648,6 +697,14 @@ static int __maybe_unused avs_resume_common(struct avs_dev *adev, bool low_power
 	if (low_power && adev->num_lp_paths)
 		return avs_resume_standby(adev);
 
+=======
+static int __maybe_unused avs_resume_common(struct avs_dev *adev, bool purge)
+{
+	struct hdac_bus *bus = &adev->base.core;
+	struct hdac_ext_link *hlink;
+	int ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	snd_hdac_display_power(bus, HDA_CODEC_IDX_CONTROLLER, true);
 	avs_hdac_bus_init_chip(bus, true);
 
@@ -660,26 +717,52 @@ static int __maybe_unused avs_resume_common(struct avs_dev *adev, bool low_power
 		return ret;
 	}
 
+<<<<<<< HEAD
+=======
+	/* turn off the links that were off before suspend */
+	list_for_each_entry(hlink, &bus->hlink_list, list) {
+		if (!hlink->ref_count)
+			snd_hdac_ext_bus_link_power_down(hlink);
+	}
+
+	/* check dma status and clean up CORB/RIRB buffers */
+	if (!bus->cmd_dma_state)
+		snd_hdac_bus_stop_cmd_io(bus);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static int __maybe_unused avs_suspend(struct device *dev)
 {
+<<<<<<< HEAD
 	return avs_suspend_common(to_avs_dev(dev), true);
+=======
+	return avs_suspend_common(to_avs_dev(dev));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused avs_resume(struct device *dev)
 {
+<<<<<<< HEAD
 	return avs_resume_common(to_avs_dev(dev), true, true);
+=======
+	return avs_resume_common(to_avs_dev(dev), true);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused avs_runtime_suspend(struct device *dev)
 {
+<<<<<<< HEAD
 	return avs_suspend_common(to_avs_dev(dev), true);
+=======
+	return avs_suspend_common(to_avs_dev(dev));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused avs_runtime_resume(struct device *dev)
 {
+<<<<<<< HEAD
 	return avs_resume_common(to_avs_dev(dev), true, false);
 }
 
@@ -709,6 +792,13 @@ static const struct dev_pm_ops avs_dev_pm = {
 	.thaw = avs_thaw,
 	.poweroff = avs_poweroff,
 	.restore = avs_restore,
+=======
+	return avs_resume_common(to_avs_dev(dev), true);
+}
+
+static const struct dev_pm_ops avs_dev_pm = {
+	SET_SYSTEM_SLEEP_PM_OPS(avs_suspend, avs_resume)
+>>>>>>> b7ba80a49124 (Commit)
 	SET_RUNTIME_PM_OPS(avs_runtime_suspend, avs_runtime_resume, NULL)
 };
 
@@ -746,11 +836,15 @@ static const struct avs_spec apl_desc = {
 
 static const struct pci_device_id avs_ids[] = {
 	{ PCI_VDEVICE(INTEL, 0x9d70), (unsigned long)&skl_desc }, /* SKL */
+<<<<<<< HEAD
 	{ PCI_VDEVICE(INTEL, 0xa170), (unsigned long)&skl_desc }, /* SKL-H */
 	{ PCI_VDEVICE(INTEL, 0x9d71), (unsigned long)&skl_desc }, /* KBL */
 	{ PCI_VDEVICE(INTEL, 0xa171), (unsigned long)&skl_desc }, /* KBL-H */
 	{ PCI_VDEVICE(INTEL, 0xa2f0), (unsigned long)&skl_desc }, /* KBL-S */
 	{ PCI_VDEVICE(INTEL, 0xa3f0), (unsigned long)&skl_desc }, /* CML-V */
+=======
+	{ PCI_VDEVICE(INTEL, 0x9d71), (unsigned long)&skl_desc }, /* KBL */
+>>>>>>> b7ba80a49124 (Commit)
 	{ PCI_VDEVICE(INTEL, 0x5a98), (unsigned long)&apl_desc }, /* APL */
 	{ PCI_VDEVICE(INTEL, 0x3198), (unsigned long)&apl_desc }, /* GML */
 	{ 0 }
@@ -762,7 +856,10 @@ static struct pci_driver avs_pci_driver = {
 	.id_table = avs_ids,
 	.probe = avs_pci_probe,
 	.remove = avs_pci_remove,
+<<<<<<< HEAD
 	.shutdown = avs_pci_shutdown,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.pm = &avs_dev_pm,
 	},

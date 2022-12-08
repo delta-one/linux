@@ -97,3 +97,21 @@ int davinci_cfg_reg(const unsigned long index)
 
 	return 0;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL(davinci_cfg_reg);
+
+int davinci_cfg_reg_list(const short pins[])
+{
+	int i, error = -EINVAL;
+
+	if (pins)
+		for (i = 0; pins[i] >= 0; i++) {
+			error = davinci_cfg_reg(pins[i]);
+			if (error)
+				break;
+		}
+
+	return error;
+}
+>>>>>>> b7ba80a49124 (Commit)

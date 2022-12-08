@@ -26,9 +26,12 @@
 #include <asm/firmware.h>
 #include <asm/kexec_ranges.h>
 #include <asm/crashdump-ppc64.h>
+<<<<<<< HEAD
 #include <asm/mmzone.h>
 #include <asm/prom.h>
 #include <asm/plpks.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct umem_info {
 	u64 *buf;		/* data buffer for usable-memory property */
@@ -38,7 +41,11 @@ struct umem_info {
 
 	/* usable memory ranges to look up */
 	unsigned int nr_ranges;
+<<<<<<< HEAD
 	const struct range *ranges;
+=======
+	const struct crash_mem_range *ranges;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 const struct kexec_file_ops * const kexec_file_loaders[] = {
@@ -690,8 +697,12 @@ static int update_usable_mem_fdt(void *fdt, struct crash_mem *usable_mem)
 		ret = fdt_setprop(fdt, node, "linux,drconf-usable-memory",
 				  um_info.buf, (um_info.idx * sizeof(u64)));
 		if (ret) {
+<<<<<<< HEAD
 			pr_err("Failed to update fdt with linux,drconf-usable-memory property: %s",
 			       fdt_strerror(ret));
+=======
+			pr_err("Failed to update fdt with linux,drconf-usable-memory property");
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 		}
 	}
@@ -933,6 +944,7 @@ out:
 }
 
 /**
+<<<<<<< HEAD
  * get_cpu_node_size - Compute the size of a CPU node in the FDT.
  *                     This should be done only once and the value is stored in
  *                     a static variable.
@@ -972,6 +984,8 @@ static unsigned int cpu_node_size(void)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * kexec_extra_fdt_size_ppc64 - Return the estimated additional size needed to
  *                              setup FDT for kexec/kdump kernel.
  * @image:                      kexec image being loaded.
@@ -980,6 +994,7 @@ static unsigned int cpu_node_size(void)
  */
 unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image)
 {
+<<<<<<< HEAD
 	unsigned int cpu_nodes, extra_size = 0;
 	struct device_node *dn;
 	u64 usm_entries;
@@ -991,12 +1006,19 @@ unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image)
 
 	if (image->type != KEXEC_TYPE_CRASH)
 		return extra_size;
+=======
+	u64 usm_entries;
+
+	if (image->type != KEXEC_TYPE_CRASH)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * For kdump kernel, account for linux,usable-memory and
 	 * linux,drconf-usable-memory properties. Get an approximate on the
 	 * number of usable memory entries and use for FDT size estimation.
 	 */
+<<<<<<< HEAD
 	if (drmem_lmb_size()) {
 		usm_entries = ((memory_hotplug_max() / drmem_lmb_size()) +
 			       (2 * (resource_size(&crashk_res) / drmem_lmb_size())));
@@ -1016,6 +1038,11 @@ unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image)
 		extra_size += (cpu_nodes - boot_cpu_node_count) * cpu_node_size();
 
 	return extra_size;
+=======
+	usm_entries = ((memblock_end_of_DRAM() / drmem_lmb_size()) +
+		       (2 * (resource_size(&crashk_res) / drmem_lmb_size())));
+	return (unsigned int)(usm_entries * sizeof(u64));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1239,10 +1266,13 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
 		}
 	}
 
+<<<<<<< HEAD
 	// If we have PLPKS active, we need to provide the password to the new kernel
 	if (plpks_is_available())
 		ret = plpks_populate_fdt(fdt);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	kfree(rmem);
 	kfree(umem);

@@ -34,7 +34,10 @@
  *            IT8786E  Super I/O chip w/LPC interface
  *            IT8790E  Super I/O chip w/LPC interface
  *            IT8792E  Super I/O chip w/LPC interface
+<<<<<<< HEAD
  *            IT87952E  Super I/O chip w/LPC interface
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *            Sis950   A clone of the IT8705F
  *
  *  Copyright (C) 2001 Chris Gauthron
@@ -64,7 +67,15 @@
 
 enum chips { it87, it8712, it8716, it8718, it8720, it8721, it8728, it8732,
 	     it8771, it8772, it8781, it8782, it8783, it8786, it8790,
+<<<<<<< HEAD
 	     it8792, it8603, it8620, it8622, it8628, it87952 };
+=======
+	     it8792, it8603, it8620, it8622, it8628 };
+
+static unsigned short force_id;
+module_param(force_id, ushort, 0);
+MODULE_PARM_DESC(force_id, "Override the detected device ID");
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_device *it87_pdev[2];
 
@@ -80,6 +91,7 @@ static struct platform_device *it87_pdev[2];
 #define	DEVID	0x20	/* Register: Device ID */
 #define	DEVREV	0x22	/* Register: Device Revision */
 
+<<<<<<< HEAD
 static inline void __superio_enter(int ioreg)
 {
 	outb(0x87, ioreg);
@@ -88,6 +100,8 @@ static inline void __superio_enter(int ioreg)
 	outb(ioreg == REG_4E ? 0xaa : 0x55, ioreg);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int superio_inb(int ioreg, int reg)
 {
 	outb(reg, ioreg);
@@ -125,6 +139,7 @@ static inline int superio_enter(int ioreg)
 	if (!request_muxed_region(ioreg, 2, DRVNAME))
 		return -EBUSY;
 
+<<<<<<< HEAD
 	__superio_enter(ioreg);
 	return 0;
 }
@@ -135,6 +150,19 @@ static inline void superio_exit(int ioreg, bool noexit)
 		outb(0x02, ioreg);
 		outb(0x02, ioreg + 1);
 	}
+=======
+	outb(0x87, ioreg);
+	outb(0x01, ioreg);
+	outb(0x55, ioreg);
+	outb(ioreg == REG_4E ? 0xaa : 0x55, ioreg);
+	return 0;
+}
+
+static inline void superio_exit(int ioreg)
+{
+	outb(0x02, ioreg);
+	outb(0x02, ioreg + 1);
+>>>>>>> b7ba80a49124 (Commit)
 	release_region(ioreg, 2);
 }
 
@@ -161,7 +189,10 @@ static inline void superio_exit(int ioreg, bool noexit)
 #define IT8622E_DEVID 0x8622
 #define IT8623E_DEVID 0x8623
 #define IT8628E_DEVID 0x8628
+<<<<<<< HEAD
 #define IT87952E_DEVID 0x8695
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define IT87_ACT_REG  0x30
 #define IT87_BASE_REG 0x60
 
@@ -177,6 +208,7 @@ static inline void superio_exit(int ioreg, bool noexit)
 #define IT87_SIO_VID_REG	0xfc	/* VID value */
 #define IT87_SIO_BEEP_PIN_REG	0xf6	/* Beep pin mapping */
 
+<<<<<<< HEAD
 /* Force chip IDs to specified values. Should only be used for testing */
 static unsigned short force_id[2];
 static unsigned int force_id_cnt;
@@ -184,6 +216,8 @@ static unsigned int force_id_cnt;
 /* ACPI resource conflicts are ignored if this parameter is set to 1 */
 static bool ignore_resource_conflict;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Update battery voltage after every reading if true */
 static bool update_vbat;
 
@@ -280,7 +314,11 @@ static const u8 IT87_REG_AUTO_BASE[] = { 0x60, 0x68, 0x70, 0x78, 0xa0, 0xa8 };
 
 struct it87_devices {
 	const char *name;
+<<<<<<< HEAD
 	const char * const model;
+=======
+	const char * const suffix;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 features;
 	u8 peci_mask;
 	u8 old_peci_mask;
@@ -305,6 +343,7 @@ struct it87_devices {
 #define FEAT_PWM_FREQ2		BIT(16)	/* Separate pwm freq 2 */
 #define FEAT_SIX_TEMP		BIT(17)	/* Up to 6 temp sensors */
 #define FEAT_VIN3_5V		BIT(18)	/* VIN3 connected to +5V */
+<<<<<<< HEAD
 /*
  * Disabling configuration mode on some chips can result in system
  * hang-ups and access failures to the Super-IO chip at the
@@ -312,28 +351,46 @@ struct it87_devices {
  * chips to avoid the problem.
  */
 #define FEAT_CONF_NOEXIT	BIT(19)	/* Chip should not exit conf mode */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct it87_devices it87_devices[] = {
 	[it87] = {
 		.name = "it87",
+<<<<<<< HEAD
 		.model = "IT87F",
+=======
+		.suffix = "F",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_OLD_AUTOPWM,	/* may need to overwrite */
 	},
 	[it8712] = {
 		.name = "it8712",
+<<<<<<< HEAD
 		.model = "IT8712F",
+=======
+		.suffix = "F",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_OLD_AUTOPWM | FEAT_VID,
 						/* may need to overwrite */
 	},
 	[it8716] = {
 		.name = "it8716",
+<<<<<<< HEAD
 		.model = "IT8716F",
+=======
+		.suffix = "F",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_16BIT_FANS | FEAT_TEMP_OFFSET | FEAT_VID
 		  | FEAT_FAN16_CONFIG | FEAT_FIVE_FANS | FEAT_PWM_FREQ2,
 	},
 	[it8718] = {
 		.name = "it8718",
+<<<<<<< HEAD
 		.model = "IT8718F",
+=======
+		.suffix = "F",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_16BIT_FANS | FEAT_TEMP_OFFSET | FEAT_VID
 		  | FEAT_TEMP_OLD_PECI | FEAT_FAN16_CONFIG | FEAT_FIVE_FANS
 		  | FEAT_PWM_FREQ2,
@@ -341,7 +398,11 @@ static const struct it87_devices it87_devices[] = {
 	},
 	[it8720] = {
 		.name = "it8720",
+<<<<<<< HEAD
 		.model = "IT8720F",
+=======
+		.suffix = "F",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_16BIT_FANS | FEAT_TEMP_OFFSET | FEAT_VID
 		  | FEAT_TEMP_OLD_PECI | FEAT_FAN16_CONFIG | FEAT_FIVE_FANS
 		  | FEAT_PWM_FREQ2,
@@ -349,7 +410,11 @@ static const struct it87_devices it87_devices[] = {
 	},
 	[it8721] = {
 		.name = "it8721",
+<<<<<<< HEAD
 		.model = "IT8721F",
+=======
+		.suffix = "F",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_NEWER_AUTOPWM | FEAT_12MV_ADC | FEAT_16BIT_FANS
 		  | FEAT_TEMP_OFFSET | FEAT_TEMP_OLD_PECI | FEAT_TEMP_PECI
 		  | FEAT_FAN16_CONFIG | FEAT_FIVE_FANS | FEAT_IN7_INTERNAL
@@ -359,7 +424,11 @@ static const struct it87_devices it87_devices[] = {
 	},
 	[it8728] = {
 		.name = "it8728",
+<<<<<<< HEAD
 		.model = "IT8728F",
+=======
+		.suffix = "F",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_NEWER_AUTOPWM | FEAT_12MV_ADC | FEAT_16BIT_FANS
 		  | FEAT_TEMP_OFFSET | FEAT_TEMP_PECI | FEAT_FIVE_FANS
 		  | FEAT_IN7_INTERNAL | FEAT_PWM_FREQ2,
@@ -367,7 +436,11 @@ static const struct it87_devices it87_devices[] = {
 	},
 	[it8732] = {
 		.name = "it8732",
+<<<<<<< HEAD
 		.model = "IT8732F",
+=======
+		.suffix = "F",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_NEWER_AUTOPWM | FEAT_16BIT_FANS
 		  | FEAT_TEMP_OFFSET | FEAT_TEMP_OLD_PECI | FEAT_TEMP_PECI
 		  | FEAT_10_9MV_ADC | FEAT_IN7_INTERNAL,
@@ -376,7 +449,11 @@ static const struct it87_devices it87_devices[] = {
 	},
 	[it8771] = {
 		.name = "it8771",
+<<<<<<< HEAD
 		.model = "IT8771E",
+=======
+		.suffix = "E",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_NEWER_AUTOPWM | FEAT_12MV_ADC | FEAT_16BIT_FANS
 		  | FEAT_TEMP_OFFSET | FEAT_TEMP_PECI | FEAT_IN7_INTERNAL
 		  | FEAT_PWM_FREQ2,
@@ -388,7 +465,11 @@ static const struct it87_devices it87_devices[] = {
 	},
 	[it8772] = {
 		.name = "it8772",
+<<<<<<< HEAD
 		.model = "IT8772E",
+=======
+		.suffix = "E",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_NEWER_AUTOPWM | FEAT_12MV_ADC | FEAT_16BIT_FANS
 		  | FEAT_TEMP_OFFSET | FEAT_TEMP_PECI | FEAT_IN7_INTERNAL
 		  | FEAT_PWM_FREQ2,
@@ -400,28 +481,44 @@ static const struct it87_devices it87_devices[] = {
 	},
 	[it8781] = {
 		.name = "it8781",
+<<<<<<< HEAD
 		.model = "IT8781F",
+=======
+		.suffix = "F",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_16BIT_FANS | FEAT_TEMP_OFFSET
 		  | FEAT_TEMP_OLD_PECI | FEAT_FAN16_CONFIG | FEAT_PWM_FREQ2,
 		.old_peci_mask = 0x4,
 	},
 	[it8782] = {
 		.name = "it8782",
+<<<<<<< HEAD
 		.model = "IT8782F",
+=======
+		.suffix = "F",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_16BIT_FANS | FEAT_TEMP_OFFSET
 		  | FEAT_TEMP_OLD_PECI | FEAT_FAN16_CONFIG | FEAT_PWM_FREQ2,
 		.old_peci_mask = 0x4,
 	},
 	[it8783] = {
 		.name = "it8783",
+<<<<<<< HEAD
 		.model = "IT8783E/F",
+=======
+		.suffix = "E/F",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_16BIT_FANS | FEAT_TEMP_OFFSET
 		  | FEAT_TEMP_OLD_PECI | FEAT_FAN16_CONFIG | FEAT_PWM_FREQ2,
 		.old_peci_mask = 0x4,
 	},
 	[it8786] = {
 		.name = "it8786",
+<<<<<<< HEAD
 		.model = "IT8786E",
+=======
+		.suffix = "E",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_NEWER_AUTOPWM | FEAT_12MV_ADC | FEAT_16BIT_FANS
 		  | FEAT_TEMP_OFFSET | FEAT_TEMP_PECI | FEAT_IN7_INTERNAL
 		  | FEAT_PWM_FREQ2,
@@ -429,24 +526,42 @@ static const struct it87_devices it87_devices[] = {
 	},
 	[it8790] = {
 		.name = "it8790",
+<<<<<<< HEAD
 		.model = "IT8790E",
 		.features = FEAT_NEWER_AUTOPWM | FEAT_12MV_ADC | FEAT_16BIT_FANS
 		  | FEAT_TEMP_OFFSET | FEAT_TEMP_PECI | FEAT_IN7_INTERNAL
 		  | FEAT_PWM_FREQ2 | FEAT_CONF_NOEXIT,
+=======
+		.suffix = "E",
+		.features = FEAT_NEWER_AUTOPWM | FEAT_12MV_ADC | FEAT_16BIT_FANS
+		  | FEAT_TEMP_OFFSET | FEAT_TEMP_PECI | FEAT_IN7_INTERNAL
+		  | FEAT_PWM_FREQ2,
+>>>>>>> b7ba80a49124 (Commit)
 		.peci_mask = 0x07,
 	},
 	[it8792] = {
 		.name = "it8792",
+<<<<<<< HEAD
 		.model = "IT8792E/IT8795E",
 		.features = FEAT_NEWER_AUTOPWM | FEAT_16BIT_FANS
 		  | FEAT_TEMP_OFFSET | FEAT_TEMP_OLD_PECI | FEAT_TEMP_PECI
 		  | FEAT_10_9MV_ADC | FEAT_IN7_INTERNAL | FEAT_CONF_NOEXIT,
+=======
+		.suffix = "E",
+		.features = FEAT_NEWER_AUTOPWM | FEAT_16BIT_FANS
+		  | FEAT_TEMP_OFFSET | FEAT_TEMP_OLD_PECI | FEAT_TEMP_PECI
+		  | FEAT_10_9MV_ADC | FEAT_IN7_INTERNAL,
+>>>>>>> b7ba80a49124 (Commit)
 		.peci_mask = 0x07,
 		.old_peci_mask = 0x02,	/* Actually reports PCH */
 	},
 	[it8603] = {
 		.name = "it8603",
+<<<<<<< HEAD
 		.model = "IT8603E",
+=======
+		.suffix = "E",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_NEWER_AUTOPWM | FEAT_12MV_ADC | FEAT_16BIT_FANS
 		  | FEAT_TEMP_OFFSET | FEAT_TEMP_PECI | FEAT_IN7_INTERNAL
 		  | FEAT_AVCC3 | FEAT_PWM_FREQ2,
@@ -454,7 +569,11 @@ static const struct it87_devices it87_devices[] = {
 	},
 	[it8620] = {
 		.name = "it8620",
+<<<<<<< HEAD
 		.model = "IT8620E",
+=======
+		.suffix = "E",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_NEWER_AUTOPWM | FEAT_12MV_ADC | FEAT_16BIT_FANS
 		  | FEAT_TEMP_OFFSET | FEAT_TEMP_PECI | FEAT_SIX_FANS
 		  | FEAT_IN7_INTERNAL | FEAT_SIX_PWM | FEAT_PWM_FREQ2
@@ -463,7 +582,11 @@ static const struct it87_devices it87_devices[] = {
 	},
 	[it8622] = {
 		.name = "it8622",
+<<<<<<< HEAD
 		.model = "IT8622E",
+=======
+		.suffix = "E",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_NEWER_AUTOPWM | FEAT_12MV_ADC | FEAT_16BIT_FANS
 		  | FEAT_TEMP_OFFSET | FEAT_TEMP_PECI | FEAT_FIVE_FANS
 		  | FEAT_FIVE_PWM | FEAT_IN7_INTERNAL | FEAT_PWM_FREQ2
@@ -472,13 +595,18 @@ static const struct it87_devices it87_devices[] = {
 	},
 	[it8628] = {
 		.name = "it8628",
+<<<<<<< HEAD
 		.model = "IT8628E",
+=======
+		.suffix = "E",
+>>>>>>> b7ba80a49124 (Commit)
 		.features = FEAT_NEWER_AUTOPWM | FEAT_12MV_ADC | FEAT_16BIT_FANS
 		  | FEAT_TEMP_OFFSET | FEAT_TEMP_PECI | FEAT_SIX_FANS
 		  | FEAT_IN7_INTERNAL | FEAT_SIX_PWM | FEAT_PWM_FREQ2
 		  | FEAT_SIX_TEMP | FEAT_VIN3_5V,
 		.peci_mask = 0x07,
 	},
+<<<<<<< HEAD
 	[it87952] = {
 		.name = "it87952",
 		.model = "IT87952E",
@@ -488,6 +616,8 @@ static const struct it87_devices it87_devices[] = {
 		.peci_mask = 0x07,
 		.old_peci_mask = 0x02,	/* Actually reports PCH */
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define has_16bit_fans(data)	((data)->features & FEAT_16BIT_FANS)
@@ -514,9 +644,12 @@ static const struct it87_devices it87_devices[] = {
 #define has_pwm_freq2(data)	((data)->features & FEAT_PWM_FREQ2)
 #define has_six_temp(data)	((data)->features & FEAT_SIX_TEMP)
 #define has_vin3_5v(data)	((data)->features & FEAT_VIN3_5V)
+<<<<<<< HEAD
 #define has_conf_noexit(data)	((data)->features & FEAT_CONF_NOEXIT)
 #define has_scaling(data)	((data)->features & (FEAT_12MV_ADC | \
 						     FEAT_10_9MV_ADC))
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct it87_sio_data {
 	int sioaddr;
@@ -594,6 +727,7 @@ struct it87_data {
 	s8 auto_temp[NUM_AUTO_PWM][5];	/* [nr][0] is point1_temp_hyst */
 };
 
+<<<<<<< HEAD
 /* Board specific settings from DMI matching */
 struct it87_dmi_data {
 	u8 skip_pwm;		/* pwm channels to skip for this board  */
@@ -602,6 +736,8 @@ struct it87_dmi_data {
 /* Global for results from DMI matching, if needed */
 static struct it87_dmi_data *dmi_data;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int adc_lsb(const struct it87_data *data, int nr)
 {
 	int lsb;
@@ -2004,7 +2140,11 @@ static ssize_t show_label(struct device *dev, struct device_attribute *attr,
 
 	if (has_vin3_5v(data) && nr == 0)
 		label = labels[0];
+<<<<<<< HEAD
 	else if (has_scaling(data))
+=======
+	else if (has_12mv_adc(data) || has_10_9mv_adc(data))
+>>>>>>> b7ba80a49124 (Commit)
 		label = labels_it8721[nr];
 	else
 		label = labels[nr];
@@ -2424,17 +2564,27 @@ static const struct attribute_group it87_group_auto_pwm = {
 
 /* SuperIO detection - will change isa_address if a chip is found */
 static int __init it87_find(int sioaddr, unsigned short *address,
+<<<<<<< HEAD
 			    struct it87_sio_data *sio_data, int chip_cnt)
 {
 	int err;
 	u16 chip_type;
 	const struct it87_devices *config = NULL;
+=======
+			    struct it87_sio_data *sio_data)
+{
+	int err;
+	u16 chip_type;
+	const char *board_vendor, *board_name;
+	const struct it87_devices *config;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = superio_enter(sioaddr);
 	if (err)
 		return err;
 
 	err = -ENODEV;
+<<<<<<< HEAD
 	chip_type = superio_inw(sioaddr, DEVID);
 	/* check first for a valid chip before forcing chip id */
 	if (chip_type == 0xffff)
@@ -2446,6 +2596,9 @@ static int __init it87_find(int sioaddr, unsigned short *address,
 			chip_type = force_id[0];
 	} else if (force_id[chip_cnt])
 		chip_type = force_id[chip_cnt];
+=======
+	chip_type = force_id ? force_id : superio_inw(sioaddr, DEVID);
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (chip_type) {
 	case IT8705F_DEVID:
@@ -2510,9 +2663,12 @@ static int __init it87_find(int sioaddr, unsigned short *address,
 	case IT8628E_DEVID:
 		sio_data->type = it8628;
 		break;
+<<<<<<< HEAD
 	case IT87952E_DEVID:
 		sio_data->type = it87952;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case 0xffff:	/* No device at all */
 		goto exit;
 	default:
@@ -2520,29 +2676,48 @@ static int __init it87_find(int sioaddr, unsigned short *address,
 		goto exit;
 	}
 
+<<<<<<< HEAD
 	config = &it87_devices[sio_data->type];
 
 	superio_select(sioaddr, PME);
 	if (!(superio_inb(sioaddr, IT87_ACT_REG) & 0x01)) {
 		pr_info("Device (chip %s ioreg 0x%x) not activated, skipping\n",
 			config->model, sioaddr);
+=======
+	superio_select(sioaddr, PME);
+	if (!(superio_inb(sioaddr, IT87_ACT_REG) & 0x01)) {
+		pr_info("Device not activated, skipping\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto exit;
 	}
 
 	*address = superio_inw(sioaddr, IT87_BASE_REG) & ~(IT87_EXTENT - 1);
 	if (*address == 0) {
+<<<<<<< HEAD
 		pr_info("Base address not set (chip %s ioreg 0x%x), skipping\n",
 			config->model, sioaddr);
+=======
+		pr_info("Base address not set, skipping\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto exit;
 	}
 
 	err = 0;
 	sio_data->sioaddr = sioaddr;
 	sio_data->revision = superio_inb(sioaddr, DEVREV) & 0x0f;
+<<<<<<< HEAD
 	pr_info("Found %s chip at 0x%x, revision %d\n",
 		it87_devices[sio_data->type].model,
 		*address, sio_data->revision);
 
+=======
+	pr_info("Found IT%04x%s chip at 0x%x, revision %d\n", chip_type,
+		it87_devices[sio_data->type].suffix,
+		*address, sio_data->revision);
+
+	config = &it87_devices[sio_data->type];
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* in7 (VSB or VCCH5V) is always internal on some chips */
 	if (has_in7_internal(config))
 		sio_data->internal |= BIT(1);
@@ -2855,12 +3030,36 @@ static int __init it87_find(int sioaddr, unsigned short *address,
 	if (sio_data->beep_pin)
 		pr_info("Beeping is supported\n");
 
+<<<<<<< HEAD
 	/* Set values based on DMI matches */
 	if (dmi_data)
 		sio_data->skip_pwm |= dmi_data->skip_pwm;
 
 exit:
 	superio_exit(sioaddr, config ? has_conf_noexit(config) : false);
+=======
+	/* Disable specific features based on DMI strings */
+	board_vendor = dmi_get_system_info(DMI_BOARD_VENDOR);
+	board_name = dmi_get_system_info(DMI_BOARD_NAME);
+	if (board_vendor && board_name) {
+		if (strcmp(board_vendor, "nVIDIA") == 0 &&
+		    strcmp(board_name, "FN68PT") == 0) {
+			/*
+			 * On the Shuttle SN68PT, FAN_CTL2 is apparently not
+			 * connected to a fan, but to something else. One user
+			 * has reported instant system power-off when changing
+			 * the PWM2 duty cycle, so we disable it.
+			 * I use the board name string as the trigger in case
+			 * the same board is ever used in other systems.
+			 */
+			pr_info("Disabling pwm2 due to hardware constraints\n");
+			sio_data->skip_pwm = BIT(1);
+		}
+	}
+
+exit:
+	superio_exit(sioaddr);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -3136,7 +3335,11 @@ static int it87_probe(struct platform_device *pdev)
 			 "Detected broken BIOS defaults, disabling PWM interface\n");
 
 	/* Starting with IT8721F, we handle scaling of internal voltages */
+<<<<<<< HEAD
 	if (has_scaling(data)) {
+=======
+	if (has_12mv_adc(data)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (sio_data->internal & BIT(0))
 			data->in_scaled |= BIT(3);	/* in3 is AVCC */
 		if (sio_data->internal & BIT(1))
@@ -3217,7 +3420,11 @@ static int it87_probe(struct platform_device *pdev)
 	return PTR_ERR_OR_ZERO(hwmon_dev);
 }
 
+<<<<<<< HEAD
 static void it87_resume_sio(struct platform_device *pdev)
+=======
+static void __maybe_unused it87_resume_sio(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct it87_data *data = dev_get_drvdata(&pdev->dev);
 	int err;
@@ -3246,10 +3453,17 @@ static void it87_resume_sio(struct platform_device *pdev)
 			     reg2c);
 	}
 
+<<<<<<< HEAD
 	superio_exit(data->sioaddr, has_conf_noexit(data));
 }
 
 static int it87_resume(struct device *dev)
+=======
+	superio_exit(data->sioaddr);
+}
+
+static int __maybe_unused it87_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *pdev = to_platform_device(dev);
 	struct it87_data *data = dev_get_drvdata(dev);
@@ -3276,12 +3490,20 @@ static int it87_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(it87_dev_pm_ops, NULL, it87_resume);
+=======
+static SIMPLE_DEV_PM_OPS(it87_dev_pm_ops, NULL, it87_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_driver it87_driver = {
 	.driver = {
 		.name	= DRVNAME,
+<<<<<<< HEAD
 		.pm     = pm_sleep_ptr(&it87_dev_pm_ops),
+=======
+		.pm     = &it87_dev_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe	= it87_probe,
 };
@@ -3299,10 +3521,15 @@ static int __init it87_device_add(int index, unsigned short address,
 	int err;
 
 	err = acpi_check_resource_conflict(&res);
+<<<<<<< HEAD
 	if (err) {
 		if (!ignore_resource_conflict)
 			return err;
 	}
+=======
+	if (err)
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pdev = platform_device_alloc(DRVNAME, address);
 	if (!pdev)
@@ -3335,6 +3562,7 @@ exit_device_put:
 	return err;
 }
 
+<<<<<<< HEAD
 /* callback function for DMI */
 static int it87_dmi_cb(const struct dmi_system_id *dmi_entry)
 {
@@ -3423,6 +3651,8 @@ static const struct dmi_system_id it87_dmi_table[] __initconst = {
 };
 MODULE_DEVICE_TABLE(dmi, it87_dmi_table);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __init sm_it87_init(void)
 {
 	int sioaddr[2] = { REG_2E, REG_4E };
@@ -3435,12 +3665,19 @@ static int __init sm_it87_init(void)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	dmi_check_system(it87_dmi_table);
 
 	for (i = 0; i < ARRAY_SIZE(sioaddr); i++) {
 		memset(&sio_data, 0, sizeof(struct it87_sio_data));
 		isa_address[i] = 0;
 		err = it87_find(sioaddr[i], &isa_address[i], &sio_data, i);
+=======
+	for (i = 0; i < ARRAY_SIZE(sioaddr); i++) {
+		memset(&sio_data, 0, sizeof(struct it87_sio_data));
+		isa_address[i] = 0;
+		err = it87_find(sioaddr[i], &isa_address[i], &sio_data);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err || isa_address[i] == 0)
 			continue;
 		/*
@@ -3488,6 +3725,7 @@ static void __exit sm_it87_exit(void)
 
 MODULE_AUTHOR("Chris Gauthron, Jean Delvare <jdelvare@suse.de>");
 MODULE_DESCRIPTION("IT8705F/IT871xF/IT872xF hardware monitoring driver");
+<<<<<<< HEAD
 
 module_param_array(force_id, ushort, &force_id_cnt, 0);
 MODULE_PARM_DESC(force_id, "Override one or more detected device ID(s)");
@@ -3502,6 +3740,13 @@ module_param(fix_pwm_polarity, bool, 0);
 MODULE_PARM_DESC(fix_pwm_polarity,
 		 "Force PWM polarity to active high (DANGEROUS)");
 
+=======
+module_param(update_vbat, bool, 0);
+MODULE_PARM_DESC(update_vbat, "Update vbat if set else return powerup value");
+module_param(fix_pwm_polarity, bool, 0);
+MODULE_PARM_DESC(fix_pwm_polarity,
+		 "Force PWM polarity to active high (DANGEROUS)");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_LICENSE("GPL");
 
 module_init(sm_it87_init);

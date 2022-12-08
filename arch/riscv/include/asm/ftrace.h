@@ -42,6 +42,7 @@ struct dyn_arch_ftrace {
  * 2) jalr: setting low-12 offset to ra, jump to ra, and set ra to
  *          return address (original pc + 4)
  *
+<<<<<<< HEAD
  *<ftrace enable>:
  * 0: auipc  t0/ra, 0x?
  * 4: jalr   t0/ra, ?(t0/ra)
@@ -50,6 +51,8 @@ struct dyn_arch_ftrace {
  * 0: nop
  * 4: nop
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Dynamic ftrace generates probes to call sites, so we must deal with
  * both auipc and jalr at the same time.
  */
@@ -60,6 +63,7 @@ struct dyn_arch_ftrace {
 #define AUIPC_OFFSET_MASK	(0xfffff000)
 #define AUIPC_PAD		(0x00001000)
 #define JALR_SHIFT		20
+<<<<<<< HEAD
 #define JALR_RA			(0x000080e7)
 #define AUIPC_RA		(0x00000097)
 #define JALR_T0			(0x000282e7)
@@ -97,6 +101,27 @@ do {									\
 	call[0] = to_auipc_ra(offset);					\
 	call[1] = to_jalr_ra(offset);					\
 } while (0)
+=======
+#define JALR_BASIC		(0x000080e7)
+#define AUIPC_BASIC		(0x00000097)
+#define NOP4			(0x00000013)
+
+#define make_call(caller, callee, call)					\
+do {									\
+	call[0] = to_auipc_insn((unsigned int)((unsigned long)callee -	\
+				(unsigned long)caller));		\
+	call[1] = to_jalr_insn((unsigned int)((unsigned long)callee -	\
+			       (unsigned long)caller));			\
+} while (0)
+
+#define to_jalr_insn(offset)						\
+	(((offset & JALR_OFFSET_MASK) << JALR_SHIFT) | JALR_BASIC)
+
+#define to_auipc_insn(offset)						\
+	((offset & JALR_SIGN_MASK) ?					\
+	(((offset & AUIPC_OFFSET_MASK) + AUIPC_PAD) | AUIPC_BASIC) :	\
+	((offset & AUIPC_OFFSET_MASK) | AUIPC_BASIC))
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Let auipc+jalr be the basic *mcount unit*, so we make it 8 bytes here.
@@ -109,6 +134,10 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
 #define ftrace_init_nop ftrace_init_nop
 #endif
 
+<<<<<<< HEAD
 #endif /* CONFIG_DYNAMIC_FTRACE */
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _ASM_RISCV_FTRACE_H */

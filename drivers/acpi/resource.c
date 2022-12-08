@@ -336,9 +336,14 @@ EXPORT_SYMBOL_GPL(acpi_dev_resource_ext_address_space);
  * @triggering: Triggering type as provided by ACPI.
  * @polarity: Interrupt polarity as provided by ACPI.
  * @shareable: Whether or not the interrupt is shareable.
+<<<<<<< HEAD
  * @wake_capable: Wake capability as provided by ACPI.
  */
 unsigned long acpi_dev_irq_flags(u8 triggering, u8 polarity, u8 shareable, u8 wake_capable)
+=======
+ */
+unsigned long acpi_dev_irq_flags(u8 triggering, u8 polarity, u8 shareable)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long flags;
 
@@ -352,9 +357,12 @@ unsigned long acpi_dev_irq_flags(u8 triggering, u8 polarity, u8 shareable, u8 wa
 	if (shareable == ACPI_SHARED)
 		flags |= IORESOURCE_IRQ_SHAREABLE;
 
+<<<<<<< HEAD
 	if (wake_capable == ACPI_WAKE_CAPABLE)
 		flags |= IORESOURCE_IRQ_WAKECAPABLE;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return flags | IORESOURCE_IRQ;
 }
 EXPORT_SYMBOL_GPL(acpi_dev_irq_flags);
@@ -400,6 +408,7 @@ static const struct dmi_system_id medion_laptop[] = {
 			DMI_MATCH(DMI_BOARD_NAME, "M17T"),
 		},
 	},
+<<<<<<< HEAD
 	{
 		.ident = "MEDION S17413",
 		.matches = {
@@ -407,6 +416,8 @@ static const struct dmi_system_id medion_laptop[] = {
 			DMI_MATCH(DMI_BOARD_NAME, "M1xA"),
 		},
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 
@@ -425,6 +436,7 @@ static const struct dmi_system_id asus_laptop[] = {
 			DMI_MATCH(DMI_BOARD_NAME, "K3502ZA"),
 		},
 	},
+<<<<<<< HEAD
 	{
 		.ident = "Asus Vivobook S5402ZA",
 		.matches = {
@@ -506,6 +518,8 @@ static const struct dmi_system_id maingear_laptop[] = {
 			DMI_MATCH(DMI_PRODUCT_NAME, "MG-VCP2-17A3070T"),
 		},
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 
@@ -515,6 +529,7 @@ struct irq_override_cmp {
 	unsigned char triggering;
 	unsigned char polarity;
 	unsigned char shareable;
+<<<<<<< HEAD
 	bool override;
 };
 
@@ -525,6 +540,13 @@ static const struct irq_override_cmp override_table[] = {
 	{ lenovo_laptop, 10, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
 	{ tongfang_gm_rg, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
 	{ maingear_laptop, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
+=======
+};
+
+static const struct irq_override_cmp skip_override_table[] = {
+	{ medion_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0 },
+	{ asus_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0 },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
@@ -532,6 +554,7 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
 {
 	int i;
 
+<<<<<<< HEAD
 	for (i = 0; i < ARRAY_SIZE(override_table); i++) {
 		const struct irq_override_cmp *entry = &override_table[i];
 
@@ -543,6 +566,8 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
 			return entry->override;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_X86
 	/*
 	 * IRQ override isn't needed on modern AMD Zen systems and
@@ -553,12 +578,30 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
 		return false;
 #endif
 
+<<<<<<< HEAD
+=======
+	for (i = 0; i < ARRAY_SIZE(skip_override_table); i++) {
+		const struct irq_override_cmp *entry = &skip_override_table[i];
+
+		if (dmi_check_system(entry->system) &&
+		    entry->irq == gsi &&
+		    entry->triggering == triggering &&
+		    entry->polarity == polarity &&
+		    entry->shareable == shareable)
+			return false;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
 static void acpi_dev_get_irqresource(struct resource *res, u32 gsi,
 				     u8 triggering, u8 polarity, u8 shareable,
+<<<<<<< HEAD
 				     u8 wake_capable, bool check_override)
+=======
+				     bool check_override)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int irq, p, t;
 
@@ -584,17 +627,26 @@ static void acpi_dev_get_irqresource(struct resource *res, u32 gsi,
 		u8 pol = p ? ACPI_ACTIVE_LOW : ACPI_ACTIVE_HIGH;
 
 		if (triggering != trig || polarity != pol) {
+<<<<<<< HEAD
 			pr_warn("ACPI: IRQ %d override to %s%s, %s%s\n", gsi,
 				t ? "level" : "edge",
 				trig == triggering ? "" : "(!)",
 				p ? "low" : "high",
 				pol == polarity ? "" : "(!)");
+=======
+			pr_warn("ACPI: IRQ %d override to %s, %s\n", gsi,
+				t ? "level" : "edge", p ? "low" : "high");
+>>>>>>> b7ba80a49124 (Commit)
 			triggering = trig;
 			polarity = pol;
 		}
 	}
 
+<<<<<<< HEAD
 	res->flags = acpi_dev_irq_flags(triggering, polarity, shareable, wake_capable);
+=======
+	res->flags = acpi_dev_irq_flags(triggering, polarity, shareable);
+>>>>>>> b7ba80a49124 (Commit)
 	irq = acpi_register_gsi(NULL, gsi, triggering, polarity);
 	if (irq >= 0) {
 		res->start = irq;
@@ -642,8 +694,12 @@ bool acpi_dev_resource_interrupt(struct acpi_resource *ares, int index,
 		}
 		acpi_dev_get_irqresource(res, irq->interrupts[index],
 					 irq->triggering, irq->polarity,
+<<<<<<< HEAD
 					 irq->shareable, irq->wake_capable,
 					 true);
+=======
+					 irq->shareable, true);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case ACPI_RESOURCE_TYPE_EXTENDED_IRQ:
 		ext_irq = &ares->data.extended_irq;
@@ -654,8 +710,12 @@ bool acpi_dev_resource_interrupt(struct acpi_resource *ares, int index,
 		if (is_gsi(ext_irq))
 			acpi_dev_get_irqresource(res, ext_irq->interrupts[index],
 					 ext_irq->triggering, ext_irq->polarity,
+<<<<<<< HEAD
 					 ext_irq->shareable, ext_irq->wake_capable,
 					 false);
+=======
+					 ext_irq->shareable, false);
+>>>>>>> b7ba80a49124 (Commit)
 		else
 			irqresource_disabled(res, 0);
 		break;

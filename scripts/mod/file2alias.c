@@ -34,12 +34,16 @@ typedef Elf64_Addr	kernel_ulong_t;
 typedef uint32_t	__u32;
 typedef uint16_t	__u16;
 typedef unsigned char	__u8;
+<<<<<<< HEAD
 
 /* UUID types for backward compatibility, don't use in new code */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 typedef struct {
 	__u8 b[16];
 } guid_t;
 
+<<<<<<< HEAD
 typedef struct {
 	__u8 b[16];
 } uuid_t;
@@ -50,6 +54,16 @@ typedef struct {
 typedef struct {
 	__u8 b[16];
 } uuid_le;
+=======
+/* backwards compatibility, don't use in new code */
+typedef struct {
+	__u8 b[16];
+} uuid_le;
+typedef struct {
+	__u8 b[16];
+} uuid_t;
+#define	UUID_STRING_LEN		36
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Big exception to the "don't include kernel headers into userspace, which
  * even potentially has different endianness and word sizes, since
@@ -144,22 +158,40 @@ static void device_id_check(const char *modname, const char *device_id,
 	int i;
 
 	if (size % id_size || size < id_size) {
+<<<<<<< HEAD
 		fatal("%s: sizeof(struct %s_device_id)=%lu is not a modulo of the size of section __mod_%s__<identifier>_device_table=%lu.\n"
 		      "Fix definition of struct %s_device_id in mod_devicetable.h\n",
+=======
+		fatal("%s: sizeof(struct %s_device_id)=%lu is not a modulo "
+		      "of the size of "
+		      "section __mod_%s__<identifier>_device_table=%lu.\n"
+		      "Fix definition of struct %s_device_id "
+		      "in mod_devicetable.h\n",
+>>>>>>> b7ba80a49124 (Commit)
 		      modname, device_id, id_size, device_id, size, device_id);
 	}
 	/* Verify last one is a terminator */
 	for (i = 0; i < id_size; i++ ) {
 		if (*(uint8_t*)(symval+size-id_size+i)) {
+<<<<<<< HEAD
 			fprintf(stderr,
 				"%s: struct %s_device_id is %lu bytes.  The last of %lu is:\n",
+=======
+			fprintf(stderr,"%s: struct %s_device_id is %lu bytes.  "
+				"The last of %lu is:\n",
+>>>>>>> b7ba80a49124 (Commit)
 				modname, device_id, id_size, size / id_size);
 			for (i = 0; i < id_size; i++ )
 				fprintf(stderr,"0x%02x ",
 					*(uint8_t*)(symval+size-id_size+i) );
 			fprintf(stderr,"\n");
+<<<<<<< HEAD
 			fatal("%s: struct %s_device_id is not terminated with a NULL entry!\n",
 			      modname, device_id);
+=======
+			fatal("%s: struct %s_device_id is not terminated "
+				"with a NULL entry!\n", modname, device_id);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }
@@ -1155,7 +1187,12 @@ static int do_amba_entry(const char *filename,
 	DEF_FIELD(symval, amba_id, mask);
 
 	if ((id & mask) != id)
+<<<<<<< HEAD
 		fatal("%s: Masked-off bit(s) of AMBA device ID are non-zero: id=0x%08X, mask=0x%08X.  Please fix this driver.\n",
+=======
+		fatal("%s: Masked-off bit(s) of AMBA device ID are non-zero: "
+		      "id=0x%08X, mask=0x%08X.  Please fix this driver.\n",
+>>>>>>> b7ba80a49124 (Commit)
 		      filename, id, mask);
 
 	p += sprintf(alias, "amba:d");

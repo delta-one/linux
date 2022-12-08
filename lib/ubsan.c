@@ -14,11 +14,15 @@
 #include <linux/types.h>
 #include <linux/sched.h>
 #include <linux/uaccess.h>
+<<<<<<< HEAD
 #include <linux/ubsan.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <kunit/test-bug.h>
 
 #include "ubsan.h"
 
+<<<<<<< HEAD
 #ifdef CONFIG_UBSAN_TRAP
 /*
  * Only include matches for UBSAN checks that are actually compiled in.
@@ -84,6 +88,8 @@ const char *report_ubsan_failure(struct pt_regs *regs, u32 check_type)
 }
 
 #else
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const char * const type_check_kinds[] = {
 	"load of",
 	"store to",
@@ -220,7 +226,12 @@ static void ubsan_epilogue(void)
 
 	current->in_ubsan--;
 
+<<<<<<< HEAD
 	check_panic_on_warn("UBSAN");
+=======
+	if (panic_on_warn)
+		panic("panic_on_warn set ...\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void __ubsan_handle_divrem_overflow(void *_data, void *lhs, void *rhs)
@@ -405,10 +416,16 @@ void __ubsan_handle_load_invalid_value(void *_data, void *val)
 {
 	struct invalid_value_data *data = _data;
 	char val_str[VALUE_LENGTH];
+<<<<<<< HEAD
 	unsigned long ua_flags = user_access_save();
 
 	if (suppress_report(&data->location))
 		goto out;
+=======
+
+	if (suppress_report(&data->location))
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ubsan_prologue(&data->location, "invalid-load");
 
@@ -418,8 +435,11 @@ void __ubsan_handle_load_invalid_value(void *_data, void *val)
 		val_str, data->type->type_name);
 
 	ubsan_epilogue();
+<<<<<<< HEAD
 out:
 	user_access_restore(ua_flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(__ubsan_handle_load_invalid_value);
 
@@ -453,5 +473,8 @@ void __ubsan_handle_alignment_assumption(void *_data, unsigned long ptr,
 	ubsan_epilogue();
 }
 EXPORT_SYMBOL(__ubsan_handle_alignment_assumption);
+<<<<<<< HEAD
 
 #endif /* !CONFIG_UBSAN_TRAP */
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -13,7 +13,10 @@
 #include "gt/intel_gt_regs.h"
 #include "gem/i915_gem_lmem.h"
 
+<<<<<<< HEAD
 #include "gem/selftests/igt_gem_utils.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "selftests/igt_flush_test.h"
 #include "selftests/mock_drm.h"
 #include "selftests/i915_random.h"
@@ -108,6 +111,7 @@ struct tiled_blits {
 	u32 height;
 };
 
+<<<<<<< HEAD
 static bool fastblit_supports_x_tiling(const struct drm_i915_private *i915)
 {
 	int gen = GRAPHICS_VER(i915);
@@ -122,16 +126,42 @@ static bool fastblit_supports_x_tiling(const struct drm_i915_private *i915)
 		return false;
 
 	return HAS_DISPLAY(i915);
+=======
+static bool supports_x_tiling(const struct drm_i915_private *i915)
+{
+	int gen = GRAPHICS_VER(i915);
+
+	if (gen < 12)
+		return true;
+
+	if (!HAS_LMEM(i915) || IS_DG1(i915))
+		return false;
+
+	return true;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool fast_blit_ok(const struct blit_buffer *buf)
 {
+<<<<<<< HEAD
 	/* XY_FAST_COPY_BLT does not exist on pre-gen9 platforms */
 	if (GRAPHICS_VER(buf->vma->vm->i915) < 9)
 		return false;
 
 	/* filter out platforms with unsupported X-tile support in fastblit */
 	if (buf->tiling == CLIENT_TILING_X && !fastblit_supports_x_tiling(buf->vma->vm->i915))
+=======
+	int gen = GRAPHICS_VER(buf->vma->vm->i915);
+
+	if (gen < 9)
+		return false;
+
+	if (gen < 12)
+		return true;
+
+	/* filter out platforms with unsupported X-tile support in fastblit */
+	if (buf->tiling == CLIENT_TILING_X && !supports_x_tiling(buf->vma->vm->i915))
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	return true;
@@ -193,12 +223,21 @@ static int prepare_blit(const struct tiled_blits *t,
 		*cs++ = src_4t | dst_4t | BLT_DEPTH_32 | dst_pitch;
 		*cs++ = 0;
 		*cs++ = t->height << 16 | t->width;
+<<<<<<< HEAD
 		*cs++ = lower_32_bits(i915_vma_offset(dst->vma));
 		*cs++ = upper_32_bits(i915_vma_offset(dst->vma));
 		*cs++ = 0;
 		*cs++ = src_pitch;
 		*cs++ = lower_32_bits(i915_vma_offset(src->vma));
 		*cs++ = upper_32_bits(i915_vma_offset(src->vma));
+=======
+		*cs++ = lower_32_bits(dst->vma->node.start);
+		*cs++ = upper_32_bits(dst->vma->node.start);
+		*cs++ = 0;
+		*cs++ = src_pitch;
+		*cs++ = lower_32_bits(src->vma->node.start);
+		*cs++ = upper_32_bits(src->vma->node.start);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		if (ver >= 6) {
 			*cs++ = MI_LOAD_REGISTER_IMM(1);
@@ -239,6 +278,7 @@ static int prepare_blit(const struct tiled_blits *t,
 		*cs++ = BLT_DEPTH_32 | BLT_ROP_SRC_COPY | dst_pitch;
 		*cs++ = 0;
 		*cs++ = t->height << 16 | t->width;
+<<<<<<< HEAD
 		*cs++ = lower_32_bits(i915_vma_offset(dst->vma));
 		if (use_64b_reloc)
 			*cs++ = upper_32_bits(i915_vma_offset(dst->vma));
@@ -247,6 +287,16 @@ static int prepare_blit(const struct tiled_blits *t,
 		*cs++ = lower_32_bits(i915_vma_offset(src->vma));
 		if (use_64b_reloc)
 			*cs++ = upper_32_bits(i915_vma_offset(src->vma));
+=======
+		*cs++ = lower_32_bits(dst->vma->node.start);
+		if (use_64b_reloc)
+			*cs++ = upper_32_bits(dst->vma->node.start);
+		*cs++ = 0;
+		*cs++ = src_pitch;
+		*cs++ = lower_32_bits(src->vma->node.start);
+		if (use_64b_reloc)
+			*cs++ = upper_32_bits(src->vma->node.start);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	*cs++ = MI_BATCH_BUFFER_END;
@@ -457,11 +507,33 @@ static int verify_buffer(const struct tiled_blits *t,
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static int move_to_active(struct i915_vma *vma,
+			  struct i915_request *rq,
+			  unsigned int flags)
+{
+	int err;
+
+	i915_vma_lock(vma);
+	err = i915_request_await_object(rq, vma->obj, false);
+	if (err == 0)
+		err = i915_vma_move_to_active(vma, rq, flags);
+	i915_vma_unlock(vma);
+
+	return err;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int pin_buffer(struct i915_vma *vma, u64 addr)
 {
 	int err;
 
+<<<<<<< HEAD
 	if (drm_mm_node_allocated(&vma->node) && i915_vma_offset(vma) != addr) {
+=======
+	if (drm_mm_node_allocated(&vma->node) && vma->node.start != addr) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = i915_vma_unbind_unlocked(vma);
 		if (err)
 			return err;
@@ -471,7 +543,10 @@ static int pin_buffer(struct i915_vma *vma, u64 addr)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	GEM_BUG_ON(i915_vma_offset(vma) != addr);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -511,6 +586,7 @@ tiled_blit(struct tiled_blits *t,
 		goto err_bb;
 	}
 
+<<<<<<< HEAD
 	err = igt_vma_move_to_active_unlocked(t->batch, rq, 0);
 	if (!err)
 		err = igt_vma_move_to_active_unlocked(src->vma, rq, 0);
@@ -520,6 +596,17 @@ tiled_blit(struct tiled_blits *t,
 		err = rq->engine->emit_bb_start(rq,
 						i915_vma_offset(t->batch),
 						i915_vma_size(t->batch),
+=======
+	err = move_to_active(t->batch, rq, 0);
+	if (!err)
+		err = move_to_active(src->vma, rq, 0);
+	if (!err)
+		err = move_to_active(dst->vma, rq, 0);
+	if (!err)
+		err = rq->engine->emit_bb_start(rq,
+						t->batch->node.start,
+						t->batch->node.size,
+>>>>>>> b7ba80a49124 (Commit)
 						0);
 	i915_request_get(rq);
 	i915_request_add(rq);

@@ -83,6 +83,10 @@ config FIPS_SIGNATURE_SELFTEST
 	  for FIPS.
 	depends on KEYS
 	depends on ASYMMETRIC_KEY_TYPE
+<<<<<<< HEAD
 	depends on PKCS7_MESSAGE_PARSER=X509_CERTIFICATE_PARSER
+=======
+	depends on PKCS7_MESSAGE_PARSER
+>>>>>>> b7ba80a49124 (Commit)
 
 endif # ASYMMETRIC_KEY_TYPE

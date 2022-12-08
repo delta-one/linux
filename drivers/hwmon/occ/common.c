@@ -10,7 +10,10 @@
 #include <linux/math64.h>
 #include <linux/module.h>
 #include <linux/mutex.h>
+<<<<<<< HEAD
 #include <linux/property.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sysfs.h>
 #include <asm/unaligned.h>
 
@@ -1217,6 +1220,7 @@ int occ_setup(struct occ *occ)
 	occ->groups[0] = &occ->group;
 
 	rc = occ_setup_sysfs(occ);
+<<<<<<< HEAD
 	if (rc) {
 		dev_err(occ->bus_dev, "failed to setup sysfs: %d\n", rc);
 		return rc;
@@ -1227,6 +1231,10 @@ int occ_setup(struct occ *occ)
 		if (rc)
 			occ_shutdown_sysfs(occ);
 	}
+=======
+	if (rc)
+		dev_err(occ->bus_dev, "failed to setup sysfs: %d\n", rc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return rc;
 }

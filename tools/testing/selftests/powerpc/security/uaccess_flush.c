@@ -36,30 +36,50 @@ int uaccess_flush_test(void)
 	// The PMU event we use only works on Power7 or later
 	SKIP_IF(!have_hwcap(PPC_FEATURE_ARCH_2_06));
 
+<<<<<<< HEAD
 	if (read_debugfs_int("powerpc/rfi_flush", &rfi_flush_orig) < 0) {
+=======
+	if (read_debugfs_file("powerpc/rfi_flush", &rfi_flush_orig) < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		perror("Unable to read powerpc/rfi_flush debugfs file");
 		SKIP_IF(1);
 	}
 
+<<<<<<< HEAD
 	if (read_debugfs_int("powerpc/entry_flush", &entry_flush_orig) < 0) {
+=======
+	if (read_debugfs_file("powerpc/entry_flush", &entry_flush_orig) < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		perror("Unable to read powerpc/entry_flush debugfs file");
 		SKIP_IF(1);
 	}
 
+<<<<<<< HEAD
 	if (read_debugfs_int("powerpc/uaccess_flush", &uaccess_flush_orig) < 0) {
+=======
+	if (read_debugfs_file("powerpc/uaccess_flush", &uaccess_flush_orig) < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		perror("Unable to read powerpc/entry_flush debugfs file");
 		SKIP_IF(1);
 	}
 
 	if (rfi_flush_orig != 0) {
+<<<<<<< HEAD
 		if (write_debugfs_int("powerpc/rfi_flush", 0) < 0) {
+=======
+		if (write_debugfs_file("powerpc/rfi_flush", 0) < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 			perror("error writing to powerpc/rfi_flush debugfs file");
 			FAIL_IF(1);
 		}
 	}
 
 	if (entry_flush_orig != 0) {
+<<<<<<< HEAD
 		if (write_debugfs_int("powerpc/entry_flush", 0) < 0) {
+=======
+		if (write_debugfs_file("powerpc/entry_flush", 0) < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 			perror("error writing to powerpc/entry_flush debugfs file");
 			FAIL_IF(1);
 		}
@@ -119,7 +139,11 @@ again:
 
 	if (uaccess_flush == uaccess_flush_orig) {
 		uaccess_flush = !uaccess_flush_orig;
+<<<<<<< HEAD
 		if (write_debugfs_int("powerpc/uaccess_flush", uaccess_flush) < 0) {
+=======
+		if (write_debugfs_file("powerpc/uaccess_flush", uaccess_flush) < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 			perror("error writing to powerpc/uaccess_flush debugfs file");
 			return 1;
 		}
@@ -134,17 +158,29 @@ again:
 
 	set_dscr(0);
 
+<<<<<<< HEAD
 	if (write_debugfs_int("powerpc/rfi_flush", rfi_flush_orig) < 0) {
+=======
+	if (write_debugfs_file("powerpc/rfi_flush", rfi_flush_orig) < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		perror("unable to restore original value of powerpc/rfi_flush debugfs file");
 		return 1;
 	}
 
+<<<<<<< HEAD
 	if (write_debugfs_int("powerpc/entry_flush", entry_flush_orig) < 0) {
+=======
+	if (write_debugfs_file("powerpc/entry_flush", entry_flush_orig) < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		perror("unable to restore original value of powerpc/entry_flush debugfs file");
 		return 1;
 	}
 
+<<<<<<< HEAD
 	if (write_debugfs_int("powerpc/uaccess_flush", uaccess_flush_orig) < 0) {
+=======
+	if (write_debugfs_file("powerpc/uaccess_flush", uaccess_flush_orig) < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		perror("unable to restore original value of powerpc/uaccess_flush debugfs file");
 		return 1;
 	}

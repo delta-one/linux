@@ -206,7 +206,11 @@ static int sprd_thm_temp_to_rawdata(int temp, struct sprd_thermal_sensor *sen)
 
 static int sprd_thm_read_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	struct sprd_thermal_sensor *sen = thermal_zone_device_priv(tz);
+=======
+	struct sprd_thermal_sensor *sen = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 data;
 
 	data = readl(sen->data->base + SPRD_THM_TEMP(sen->id)) &

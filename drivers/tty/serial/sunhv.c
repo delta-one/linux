@@ -47,7 +47,12 @@ static void transmit_chars_putchar(struct uart_port *port, struct circ_buf *xmit
 		if (status != HV_EOK)
 			break;
 
+<<<<<<< HEAD
 		uart_xmit_advance(port, 1);
+=======
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+		port->icount.tx++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -62,7 +67,12 @@ static void transmit_chars_write(struct uart_port *port, struct circ_buf *xmit)
 		status = sun4v_con_write(ra, len, &sent);
 		if (status != HV_EOK)
 			break;
+<<<<<<< HEAD
 		uart_xmit_advance(port, sent);
+=======
+		xmit->tail = (xmit->tail + sent) & (UART_XMIT_SIZE - 1);
+		port->icount.tx += sent;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -87,10 +97,17 @@ static int receive_chars_getchar(struct uart_port *port)
 
 		if (c == CON_HUP) {
 			hung_up = 1;
+<<<<<<< HEAD
 			uart_handle_dcd_change(port, false);
 		} else if (hung_up) {
 			hung_up = 0;
 			uart_handle_dcd_change(port, true);
+=======
+			uart_handle_dcd_change(port, 0);
+		} else if (hung_up) {
+			hung_up = 0;
+			uart_handle_dcd_change(port, 1);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (port->state == NULL) {
@@ -133,7 +150,11 @@ static int receive_chars_read(struct uart_port *port)
 				bytes_read = 1;
 			} else if (stat == CON_HUP) {
 				hung_up = 1;
+<<<<<<< HEAD
 				uart_handle_dcd_change(port, false);
+=======
+				uart_handle_dcd_change(port, 0);
+>>>>>>> b7ba80a49124 (Commit)
 				continue;
 			} else {
 				/* HV_EWOULDBLOCK, etc.  */
@@ -143,7 +164,11 @@ static int receive_chars_read(struct uart_port *port)
 
 		if (hung_up) {
 			hung_up = 0;
+<<<<<<< HEAD
 			uart_handle_dcd_change(port, true);
+=======
+			uart_handle_dcd_change(port, 1);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (port->sysrq != 0 &&  *con_read_page) {

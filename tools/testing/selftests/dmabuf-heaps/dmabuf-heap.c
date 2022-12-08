@@ -13,9 +13,16 @@
 #include <sys/types.h>
 
 #include <linux/dma-buf.h>
+<<<<<<< HEAD
 #include <linux/dma-heap.h>
 #include <drm/drm.h>
 
+=======
+#include <drm/drm.h>
+
+#include "../../../../include/uapi/linux/dma-heap.h"
+
+>>>>>>> b7ba80a49124 (Commit)
 #define DEVPATH "/dev/dma_heap"
 
 static int check_vgem(int fd)

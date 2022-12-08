@@ -207,9 +207,12 @@
 /* Atheros AR933X SoC */
 #define PORT_AR933X	99
 
+<<<<<<< HEAD
 /* MCHP 16550A UART with 256 byte FIFOs */
 #define PORT_MCHP16550A	100
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* ARC (Synopsys) on-chip UART */
 #define PORT_ARC       101
 

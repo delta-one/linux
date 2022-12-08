@@ -369,7 +369,11 @@ err_free_mem:
 	return error;
 }
 
+<<<<<<< HEAD
 static void hv_kbd_remove(struct hv_device *hv_dev)
+=======
+static int hv_kbd_remove(struct hv_device *hv_dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hv_kbd_dev *kbd_dev = hv_get_drvdata(hv_dev);
 
@@ -378,6 +382,11 @@ static void hv_kbd_remove(struct hv_device *hv_dev)
 	kfree(kbd_dev);
 
 	hv_set_drvdata(hv_dev, NULL);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int hv_kbd_suspend(struct hv_device *hv_dev)

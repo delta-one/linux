@@ -822,7 +822,10 @@ static int qcom_labibb_regulator_probe(struct platform_device *pdev)
 			if (irq == 0)
 				irq = -EINVAL;
 
+<<<<<<< HEAD
 			of_node_put(reg_node);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			return dev_err_probe(vreg->dev, irq,
 					     "Short-circuit irq not found.\n");
 		}
@@ -894,7 +897,10 @@ static int qcom_labibb_regulator_probe(struct platform_device *pdev)
 static struct platform_driver qcom_labibb_regulator_driver = {
 	.driver	= {
 		.name = "qcom-lab-ibb-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table	= qcom_labibb_match,
 	},
 	.probe = qcom_labibb_regulator_probe,

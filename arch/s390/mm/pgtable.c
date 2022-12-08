@@ -302,6 +302,7 @@ pte_t ptep_xchg_direct(struct mm_struct *mm, unsigned long addr,
 }
 EXPORT_SYMBOL(ptep_xchg_direct);
 
+<<<<<<< HEAD
 /*
  * Caller must check that new PTE only differs in _PAGE_PROTECT HW bit, so that
  * RDP can be used instead of IPTE. See also comments at pte_allow_rdp().
@@ -327,6 +328,8 @@ void ptep_reset_dat_prot(struct mm_struct *mm, unsigned long addr, pte_t *ptep,
 }
 EXPORT_SYMBOL(ptep_reset_dat_prot);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 pte_t ptep_xchg_lazy(struct mm_struct *mm, unsigned long addr,
 		     pte_t *ptep, pte_t new)
 {

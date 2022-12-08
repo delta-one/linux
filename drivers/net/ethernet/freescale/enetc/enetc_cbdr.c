@@ -44,7 +44,10 @@ int enetc_setup_cbdr(struct device *dev, struct enetc_hw *hw, int bd_count,
 
 	return 0;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(enetc_setup_cbdr);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void enetc_teardown_cbdr(struct enetc_cbdr *cbdr)
 {
@@ -58,7 +61,10 @@ void enetc_teardown_cbdr(struct enetc_cbdr *cbdr)
 	cbdr->bd_base = NULL;
 	cbdr->dma_dev = NULL;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(enetc_teardown_cbdr);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void enetc_clean_cbdr(struct enetc_cbdr *ring)
 {
@@ -129,7 +135,10 @@ int enetc_send_cmd(struct enetc_si *si, struct enetc_cbd *cbd)
 
 	return 0;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(enetc_send_cmd);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int enetc_clear_mac_flt_entry(struct enetc_si *si, int index)
 {
@@ -143,7 +152,10 @@ int enetc_clear_mac_flt_entry(struct enetc_si *si, int index)
 
 	return enetc_send_cmd(si, &cbd);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(enetc_clear_mac_flt_entry);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int enetc_set_mac_flt_entry(struct enetc_si *si, int index,
 			    char *mac_addr, int si_map)
@@ -169,7 +181,10 @@ int enetc_set_mac_flt_entry(struct enetc_si *si, int index,
 
 	return enetc_send_cmd(si, &cbd);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(enetc_set_mac_flt_entry);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Set entry in RFS table */
 int enetc_set_fs_entry(struct enetc_si *si, struct enetc_cmd_rfse *rfse,
@@ -202,7 +217,10 @@ int enetc_set_fs_entry(struct enetc_si *si, struct enetc_cmd_rfse *rfse,
 
 	return err;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(enetc_set_fs_entry);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int enetc_cmd_rss_table(struct enetc_si *si, u32 *table, int count,
 			       bool read)
@@ -248,11 +266,17 @@ int enetc_get_rss_table(struct enetc_si *si, u32 *table, int count)
 {
 	return enetc_cmd_rss_table(si, table, count, true);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(enetc_get_rss_table);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Set RSS table */
 int enetc_set_rss_table(struct enetc_si *si, const u32 *table, int count)
 {
 	return enetc_cmd_rss_table(si, (u32 *)table, count, false);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(enetc_set_rss_table);
+=======
+>>>>>>> b7ba80a49124 (Commit)

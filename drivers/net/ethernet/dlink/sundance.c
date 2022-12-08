@@ -1414,6 +1414,10 @@ static void refill_rx (struct net_device *dev)
 {
 	struct netdev_private *np = netdev_priv(dev);
 	int entry;
+<<<<<<< HEAD
+=======
+	int cnt = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Refill the Rx ring buffers. */
 	for (;(np->cur_rx - np->dirty_rx + RX_RING_SIZE) % RX_RING_SIZE > 0;
@@ -1440,6 +1444,10 @@ static void refill_rx (struct net_device *dev)
 		np->rx_ring[entry].frag.length =
 			cpu_to_le32(np->rx_buf_sz | LastFrag);
 		np->rx_ring[entry].status = 0;
+<<<<<<< HEAD
+=======
+		cnt++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 static void netdev_error(struct net_device *dev, int intr_status)

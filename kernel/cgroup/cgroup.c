@@ -248,12 +248,15 @@ static int cgroup_addrm_files(struct cgroup_subsys_state *css,
 			      struct cgroup *cgrp, struct cftype cfts[],
 			      bool is_add);
 
+<<<<<<< HEAD
 #ifdef CONFIG_DEBUG_CGROUP_REF
 #define CGROUP_REF_FN_ATTRS	noinline
 #define CGROUP_REF_EXPORT(fn)	EXPORT_SYMBOL_GPL(fn);
 #include <linux/cgroup_refcnt.h>
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * cgroup_ssid_enabled - cgroup subsys enabled test by subsys ID
  * @ssid: subsys ID of interest
@@ -1391,16 +1394,23 @@ static void cgroup_destroy_root(struct cgroup_root *root)
 	cgroup_favor_dynmods(root, false);
 	cgroup_exit_root_id(root);
 
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	cgroup_rstat_exit(cgrp);
 	kernfs_destroy_root(root->kf_root);
 	cgroup_free_root(root);
 }
 
+<<<<<<< HEAD
 /*
  * Returned cgroup is without refcount but it's valid as long as cset pins it.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct cgroup *__cset_cgroup_from_root(struct css_set *cset,
 					    struct cgroup_root *root)
 {
@@ -1412,7 +1422,10 @@ static inline struct cgroup *__cset_cgroup_from_root(struct css_set *cset,
 		res_cgroup = cset->dfl_cgrp;
 	} else {
 		struct cgrp_cset_link *link;
+<<<<<<< HEAD
 		lockdep_assert_held(&css_set_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		list_for_each_entry(link, &cset->cgrp_links, cgrp_link) {
 			struct cgroup *c = link->cgrp;
@@ -1424,7 +1437,10 @@ static inline struct cgroup *__cset_cgroup_from_root(struct css_set *cset,
 		}
 	}
 
+<<<<<<< HEAD
 	BUG_ON(!res_cgroup);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return res_cgroup;
 }
 
@@ -1447,6 +1463,7 @@ current_cgns_cgroup_from_root(struct cgroup_root *root)
 
 	rcu_read_unlock();
 
+<<<<<<< HEAD
 	return res;
 }
 
@@ -1479,14 +1496,32 @@ static struct cgroup *current_cgns_cgroup_dfl(void)
 	}
 }
 
+=======
+	BUG_ON(!res);
+	return res;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* look up cgroup associated with given css_set on the specified hierarchy */
 static struct cgroup *cset_cgroup_from_root(struct css_set *cset,
 					    struct cgroup_root *root)
 {
+<<<<<<< HEAD
 	lockdep_assert_held(&cgroup_mutex);
 	lockdep_assert_held(&css_set_lock);
 
 	return __cset_cgroup_from_root(cset, root);
+=======
+	struct cgroup *res = NULL;
+
+	lockdep_assert_held(&cgroup_mutex);
+	lockdep_assert_held(&css_set_lock);
+
+	res = __cset_cgroup_from_root(cset, root);
+
+	BUG_ON(!res);
+	return res;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1635,7 +1670,11 @@ void cgroup_kn_unlock(struct kernfs_node *kn)
 	else
 		cgrp = kn->parent->priv;
 
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kernfs_unbreak_active_protection(kn);
 	cgroup_put(cgrp);
@@ -1680,7 +1719,11 @@ struct cgroup *cgroup_kn_lock_live(struct kernfs_node *kn, bool drain_offline)
 	if (drain_offline)
 		cgroup_lock_and_drain_offline(cgrp);
 	else
+<<<<<<< HEAD
 		cgroup_lock();
+=======
+		mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!cgroup_is_dead(cgrp))
 		return cgrp;
@@ -2177,13 +2220,21 @@ int cgroup_do_get_tree(struct fs_context *fc)
 		struct super_block *sb = fc->root->d_sb;
 		struct cgroup *cgrp;
 
+<<<<<<< HEAD
 		cgroup_lock();
+=======
+		mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 		spin_lock_irq(&css_set_lock);
 
 		cgrp = cset_cgroup_from_root(ctx->ns->root_cset, ctx->root);
 
 		spin_unlock_irq(&css_set_lock);
+<<<<<<< HEAD
 		cgroup_unlock();
+=======
+		mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 		nsdentry = kernfs_node_dentry(cgrp->kn, sb);
 		dput(fc->root);
@@ -2366,13 +2417,21 @@ int cgroup_path_ns(struct cgroup *cgrp, char *buf, size_t buflen,
 {
 	int ret;
 
+<<<<<<< HEAD
 	cgroup_lock();
+=======
+	mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_irq(&css_set_lock);
 
 	ret = cgroup_path_ns_locked(cgrp, buf, buflen, ns);
 
 	spin_unlock_irq(&css_set_lock);
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -2398,7 +2457,11 @@ int task_cgroup_path(struct task_struct *task, char *buf, size_t buflen)
 	int hierarchy_id = 1;
 	int ret;
 
+<<<<<<< HEAD
 	cgroup_lock();
+=======
+	mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_irq(&css_set_lock);
 
 	root = idr_get_next(&cgroup_hierarchy_idr, &hierarchy_id);
@@ -2408,11 +2471,19 @@ int task_cgroup_path(struct task_struct *task, char *buf, size_t buflen)
 		ret = cgroup_path_ns_locked(cgrp, buf, buflen, &init_cgroup_ns);
 	} else {
 		/* if no hierarchy exists, everyone is in "/" */
+<<<<<<< HEAD
 		ret = strscpy(buf, "/", buflen);
 	}
 
 	spin_unlock_irq(&css_set_lock);
 	cgroup_unlock();
+=======
+		ret = strlcpy(buf, "/", buflen);
+	}
+
+	spin_unlock_irq(&css_set_lock);
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 EXPORT_SYMBOL_GPL(task_cgroup_path);
@@ -2876,12 +2947,20 @@ int cgroup_migrate(struct task_struct *leader, bool threadgroup,
 	 * take an rcu_read_lock.
 	 */
 	spin_lock_irq(&css_set_lock);
+<<<<<<< HEAD
+=======
+	rcu_read_lock();
+>>>>>>> b7ba80a49124 (Commit)
 	task = leader;
 	do {
 		cgroup_migrate_add_task(task, mgctx);
 		if (!threadgroup)
 			break;
 	} while_each_thread(leader, task);
+<<<<<<< HEAD
+=======
+	rcu_read_unlock();
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irq(&css_set_lock);
 
 	return cgroup_migrate_execute(mgctx);
@@ -3121,7 +3200,11 @@ void cgroup_lock_and_drain_offline(struct cgroup *cgrp)
 	int ssid;
 
 restart:
+<<<<<<< HEAD
 	cgroup_lock();
+=======
+	mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	cgroup_for_each_live_descendant_post(dsct, d_css, cgrp) {
 		for_each_subsys(ss, ssid) {
@@ -3135,7 +3218,11 @@ restart:
 			prepare_to_wait(&dsct->offline_waitq, &wait,
 					TASK_UNINTERRUPTIBLE);
 
+<<<<<<< HEAD
 			cgroup_unlock();
+=======
+			mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 			schedule();
 			finish_wait(&dsct->offline_waitq, &wait);
 
@@ -3337,7 +3424,15 @@ static int cgroup_apply_control(struct cgroup *cgrp)
 	 * making the following cgroup_update_dfl_csses() properly update
 	 * css associations of all tasks in the subtree.
 	 */
+<<<<<<< HEAD
 	return cgroup_update_dfl_csses(cgrp);
+=======
+	ret = cgroup_update_dfl_csses(cgrp);
+	if (ret)
+		return ret;
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -4384,9 +4479,15 @@ int cgroup_rm_cftypes(struct cftype *cfts)
 	if (!(cfts[0].flags & __CFTYPE_ADDED))
 		return -ENOENT;
 
+<<<<<<< HEAD
 	cgroup_lock();
 	ret = cgroup_rm_cftypes_locked(cfts);
 	cgroup_unlock();
+=======
+	mutex_lock(&cgroup_mutex);
+	ret = cgroup_rm_cftypes_locked(cfts);
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -4418,14 +4519,22 @@ static int cgroup_add_cftypes(struct cgroup_subsys *ss, struct cftype *cfts)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	cgroup_lock();
+=======
+	mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	list_add_tail(&cfts->node, &ss->cfts);
 	ret = cgroup_apply_cftypes(cfts, true);
 	if (ret)
 		cgroup_rm_cftypes_locked(cfts);
 
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -5075,7 +5184,11 @@ static int cgroup_may_write(const struct cgroup *cgrp, struct super_block *sb)
 	if (!inode)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	ret = inode_permission(&nop_mnt_idmap, inode, MAY_WRITE);
+=======
+	ret = inode_permission(&init_user_ns, inode, MAY_WRITE);
+>>>>>>> b7ba80a49124 (Commit)
 	iput(inode);
 	return ret;
 }
@@ -5363,7 +5476,10 @@ static void css_free_rwork_fn(struct work_struct *work)
 		atomic_dec(&cgrp->root->nr_cgrps);
 		cgroup1_pidlist_destroy_all(cgrp);
 		cancel_work_sync(&cgrp->release_agent_work);
+<<<<<<< HEAD
 		bpf_cgrp_storage_free(cgrp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (cgroup_parent(cgrp)) {
 			/*
@@ -5395,7 +5511,11 @@ static void css_release_work_fn(struct work_struct *work)
 	struct cgroup_subsys *ss = css->ss;
 	struct cgroup *cgrp = css->cgroup;
 
+<<<<<<< HEAD
 	cgroup_lock();
+=======
+	mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	css->flags |= CSS_RELEASED;
 	list_del_rcu(&css->sibling);
@@ -5436,7 +5556,11 @@ static void css_release_work_fn(struct work_struct *work)
 					 NULL);
 	}
 
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	INIT_RCU_WORK(&css->destroy_rwork, css_free_rwork_fn);
 	queue_rcu_work(cgroup_destroy_wq, &css->destroy_rwork);
@@ -5784,7 +5908,11 @@ static void css_killed_work_fn(struct work_struct *work)
 	struct cgroup_subsys_state *css =
 		container_of(work, struct cgroup_subsys_state, destroy_work);
 
+<<<<<<< HEAD
 	cgroup_lock();
+=======
+	mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	do {
 		offline_css(css);
@@ -5793,7 +5921,11 @@ static void css_killed_work_fn(struct work_struct *work)
 		css = css->parent;
 	} while (css && atomic_dec_and_test(&css->online_cnt));
 
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* css kill confirmation processing requires process context, bounce */
@@ -5977,7 +6109,11 @@ static void __init cgroup_init_subsys(struct cgroup_subsys *ss, bool early)
 
 	pr_debug("Initializing cgroup subsys %s\n", ss->name);
 
+<<<<<<< HEAD
 	cgroup_lock();
+=======
+	mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	idr_init(&ss->css_idr);
 	INIT_LIST_HEAD(&ss->cfts);
@@ -6021,7 +6157,11 @@ static void __init cgroup_init_subsys(struct cgroup_subsys *ss, bool early)
 
 	BUG_ON(online_css(css));
 
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -6081,7 +6221,11 @@ int __init cgroup_init(void)
 
 	get_user_ns(init_cgroup_ns.user_ns);
 
+<<<<<<< HEAD
 	cgroup_lock();
+=======
+	mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Add init_css_set to the hash table so that dfl_root can link to
@@ -6092,7 +6236,11 @@ int __init cgroup_init(void)
 
 	BUG_ON(cgroup_setup_root(&cgrp_dfl_root, 0));
 
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for_each_subsys(ss, ssid) {
 		if (ss->early_init) {
@@ -6144,9 +6292,15 @@ int __init cgroup_init(void)
 		if (ss->bind)
 			ss->bind(init_css_set.subsys[ssid]);
 
+<<<<<<< HEAD
 		cgroup_lock();
 		css_populate_dir(init_css_set.subsys[ssid]);
 		cgroup_unlock();
+=======
+		mutex_lock(&cgroup_mutex);
+		css_populate_dir(init_css_set.subsys[ssid]);
+		mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* init_css_set.subsys[] has been updated, re-hash */
@@ -6201,6 +6355,7 @@ void cgroup_path_from_kernfs_id(u64 id, char *buf, size_t buflen)
 struct cgroup *cgroup_get_from_id(u64 id)
 {
 	struct kernfs_node *kn;
+<<<<<<< HEAD
 	struct cgroup *cgrp, *root_cgrp;
 
 	kn = kernfs_find_and_get_node_by_id(cgrp_dfl_root.kf_root, id);
@@ -6211,6 +6366,13 @@ struct cgroup *cgroup_get_from_id(u64 id)
 		kernfs_put(kn);
 		return ERR_PTR(-ENOENT);
 	}
+=======
+	struct cgroup *cgrp = NULL, *root_cgrp;
+
+	kn = kernfs_find_and_get_node_by_id(cgrp_dfl_root.kf_root, id);
+	if (!kn)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rcu_read_lock();
 
@@ -6222,6 +6384,7 @@ struct cgroup *cgroup_get_from_id(u64 id)
 	kernfs_put(kn);
 
 	if (!cgrp)
+<<<<<<< HEAD
 		return ERR_PTR(-ENOENT);
 
 	root_cgrp = current_cgns_cgroup_dfl();
@@ -6231,6 +6394,19 @@ struct cgroup *cgroup_get_from_id(u64 id)
 	}
 
 	return cgrp;
+=======
+		goto out;
+
+	spin_lock_irq(&css_set_lock);
+	root_cgrp = current_cgns_cgroup_from_root(&cgrp_dfl_root);
+	spin_unlock_irq(&css_set_lock);
+	if (!cgroup_is_descendant(cgrp, root_cgrp)) {
+		cgroup_put(cgrp);
+		cgrp = NULL;
+	}
+out:
+	return cgrp ?: ERR_PTR(-ENOENT);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(cgroup_get_from_id);
 
@@ -6251,7 +6427,11 @@ int proc_cgroup_show(struct seq_file *m, struct pid_namespace *ns,
 	if (!buf)
 		goto out;
 
+<<<<<<< HEAD
 	cgroup_lock();
+=======
+	mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_irq(&css_set_lock);
 
 	for_each_root(root) {
@@ -6306,7 +6486,11 @@ int proc_cgroup_show(struct seq_file *m, struct pid_namespace *ns,
 	retval = 0;
 out_unlock:
 	spin_unlock_irq(&css_set_lock);
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(buf);
 out:
 	return retval;
@@ -6325,6 +6509,7 @@ void cgroup_fork(struct task_struct *child)
 	INIT_LIST_HEAD(&child->cg_list);
 }
 
+<<<<<<< HEAD
 /**
  * cgroup_v1v2_get_from_file - get a cgroup pointer from a file pointer
  * @f: file corresponding to cgroup_dir
@@ -6336,11 +6521,18 @@ void cgroup_fork(struct task_struct *child)
 static struct cgroup *cgroup_v1v2_get_from_file(struct file *f)
 {
 	struct cgroup_subsys_state *css;
+=======
+static struct cgroup *cgroup_get_from_file(struct file *f)
+{
+	struct cgroup_subsys_state *css;
+	struct cgroup *cgrp;
+>>>>>>> b7ba80a49124 (Commit)
 
 	css = css_tryget_online_from_dir(f->f_path.dentry, NULL);
 	if (IS_ERR(css))
 		return ERR_CAST(css);
 
+<<<<<<< HEAD
 	return css->cgroup;
 }
 
@@ -6361,6 +6553,9 @@ static struct cgroup *cgroup_get_from_file(struct file *f)
 		return ERR_PTR(-EBADF);
 	}
 
+=======
+	cgrp = css->cgroup;
+>>>>>>> b7ba80a49124 (Commit)
 	return cgrp;
 }
 
@@ -6390,7 +6585,11 @@ static int cgroup_css_set_fork(struct kernel_clone_args *kargs)
 	struct file *f;
 
 	if (kargs->flags & CLONE_INTO_CGROUP)
+<<<<<<< HEAD
 		cgroup_lock();
+=======
+		mutex_lock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	cgroup_threadgroup_change_begin(current);
 
@@ -6465,7 +6664,11 @@ static int cgroup_css_set_fork(struct kernel_clone_args *kargs)
 
 err:
 	cgroup_threadgroup_change_end(current);
+<<<<<<< HEAD
 	cgroup_unlock();
+=======
+	mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	if (f)
 		fput(f);
 	if (dst_cgrp)
@@ -6492,7 +6695,11 @@ static void cgroup_css_set_put_fork(struct kernel_clone_args *kargs)
 		struct cgroup *cgrp = kargs->cgrp;
 		struct css_set *cset = kargs->cset;
 
+<<<<<<< HEAD
 		cgroup_unlock();
+=======
+		mutex_unlock(&cgroup_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (cset) {
 			put_css_set(cset);
@@ -6829,8 +7036,15 @@ struct cgroup *cgroup_get_from_path(const char *path)
 	struct cgroup *cgrp = ERR_PTR(-ENOENT);
 	struct cgroup *root_cgrp;
 
+<<<<<<< HEAD
 	root_cgrp = current_cgns_cgroup_dfl();
 	kn = kernfs_walk_and_get(root_cgrp->kn, path);
+=======
+	spin_lock_irq(&css_set_lock);
+	root_cgrp = current_cgns_cgroup_from_root(&cgrp_dfl_root);
+	kn = kernfs_walk_and_get(root_cgrp->kn, path);
+	spin_unlock_irq(&css_set_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!kn)
 		goto out;
 
@@ -6855,14 +7069,20 @@ out:
 EXPORT_SYMBOL_GPL(cgroup_get_from_path);
 
 /**
+<<<<<<< HEAD
  * cgroup_v1v2_get_from_fd - get a cgroup pointer from a fd
  * @fd: fd obtained by open(cgroup_dir)
+=======
+ * cgroup_get_from_fd - get a cgroup pointer from a fd
+ * @fd: fd obtained by open(cgroup2_dir)
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Find the cgroup from a fd which should be obtained
  * by opening a cgroup directory.  Returns a pointer to the
  * cgroup on success. ERR_PTR is returned if the cgroup
  * cannot be found.
  */
+<<<<<<< HEAD
 struct cgroup *cgroup_v1v2_get_from_fd(int fd)
 {
 	struct cgroup *cgrp;
@@ -6891,6 +7111,19 @@ struct cgroup *cgroup_get_from_fd(int fd)
 		cgroup_put(cgrp);
 		return ERR_PTR(-EBADF);
 	}
+=======
+struct cgroup *cgroup_get_from_fd(int fd)
+{
+	struct cgroup *cgrp;
+	struct file *f;
+
+	f = fget_raw(fd);
+	if (!f)
+		return ERR_PTR(-EBADF);
+
+	cgrp = cgroup_get_from_file(f);
+	fput(f);
+>>>>>>> b7ba80a49124 (Commit)
 	return cgrp;
 }
 EXPORT_SYMBOL_GPL(cgroup_get_from_fd);

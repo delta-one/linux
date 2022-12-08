@@ -83,7 +83,11 @@
 
 &eqos {	/* First ethernet */
 	pinctrl-names = "default";
+<<<<<<< HEAD
 	pinctrl-0 = <&pinctrl_eqos_rgmii>;
+=======
+	pinctrl-0 = <&pinctrl_eqos>;
+>>>>>>> b7ba80a49124 (Commit)
 	phy-handle = <&ethphy0g>;
 	phy-mode = "rgmii-id";
 	status = "okay";
@@ -94,14 +98,22 @@
 		#size-cells = <0>;
 
 		/* Up to one of these two PHYs may be populated. */
+<<<<<<< HEAD
 		ethphy0f: ethernet-phy@0 { /* SMSC LAN8740Ai */
+=======
+		ethphy0f: ethernet-phy@1 { /* SMSC LAN8740Ai */
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "ethernet-phy-id0007.c110",
 				     "ethernet-phy-ieee802.3-c22";
 			interrupt-parent = <&gpio3>;
 			interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
 			pinctrl-0 = <&pinctrl_ethphy0>;
 			pinctrl-names = "default";
+<<<<<<< HEAD
 			reg = <0>;
+=======
+			reg = <1>;
+>>>>>>> b7ba80a49124 (Commit)
 			reset-assert-us = <1000>;
 			reset-deassert-us = <1000>;
 			reset-gpios = <&gpio3 20 GPIO_ACTIVE_LOW>;
@@ -129,9 +141,15 @@
 
 &fec {	/* Second ethernet */
 	pinctrl-names = "default";
+<<<<<<< HEAD
 	pinctrl-0 = <&pinctrl_fec_rmii>;
 	phy-handle = <&ethphy1f>;
 	phy-mode = "rmii";
+=======
+	pinctrl-0 = <&pinctrl_fec>;
+	phy-handle = <&ethphy1f>;
+	phy-mode = "rgmii";
+>>>>>>> b7ba80a49124 (Commit)
 	fsl,magic-packet;
 	status = "okay";
 
@@ -239,6 +257,10 @@
 		pinctrl-0 = <&pinctrl_pmic>;
 		interrupt-parent = <&gpio1>;
 		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+<<<<<<< HEAD
+=======
+		sd-vsel-gpios = <&gpio1 4 GPIO_ACTIVE_HIGH>;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * i.MX 8M Plus Data Sheet for Consumer Products
@@ -247,6 +269,10 @@
 		 */
 		regulators {
 			buck1: BUCK1 {	/* VDD_SOC (dual-phase with BUCK3) */
+<<<<<<< HEAD
+=======
+				regulator-compatible = "BUCK1";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <850000>;
 				regulator-max-microvolt = <1000000>;
 				regulator-ramp-delay = <3125>;
@@ -255,6 +281,10 @@
 			};
 
 			buck2: BUCK2 {	/* VDD_ARM */
+<<<<<<< HEAD
+=======
+				regulator-compatible = "BUCK2";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <850000>;
 				regulator-max-microvolt = <1000000>;
 				regulator-ramp-delay = <3125>;
@@ -263,6 +293,10 @@
 			};
 
 			buck4: BUCK4 {	/* VDD_3V3 */
+<<<<<<< HEAD
+=======
+				regulator-compatible = "BUCK4";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <3300000>;
 				regulator-max-microvolt = <3300000>;
 				regulator-always-on;
@@ -270,6 +304,10 @@
 			};
 
 			buck5: BUCK5 {	/* VDD_1V8 */
+<<<<<<< HEAD
+=======
+				regulator-compatible = "BUCK5";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <1800000>;
 				regulator-always-on;
@@ -277,6 +315,10 @@
 			};
 
 			buck6: BUCK6 {	/* NVCC_DRAM_1V1 */
+<<<<<<< HEAD
+=======
+				regulator-compatible = "BUCK6";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <1100000>;
 				regulator-max-microvolt = <1100000>;
 				regulator-always-on;
@@ -284,6 +326,10 @@
 			};
 
 			ldo1: LDO1 {	/* NVCC_SNVS_1V8 */
+<<<<<<< HEAD
+=======
+				regulator-compatible = "LDO1";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <1800000>;
 				regulator-always-on;
@@ -291,6 +337,10 @@
 			};
 
 			ldo3: LDO3 {	/* VDDA_1V8 */
+<<<<<<< HEAD
+=======
+				regulator-compatible = "LDO3";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <1800000>;
 				regulator-always-on;
@@ -298,11 +348,19 @@
 			};
 
 			ldo4: LDO4 {	/* PMIC_LDO4 */
+<<<<<<< HEAD
+=======
+				regulator-compatible = "LDO4";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <3300000>;
 				regulator-max-microvolt = <3300000>;
 			};
 
 			ldo5: LDO5 {	/* NVCC_SD2 */
+<<<<<<< HEAD
+=======
+				regulator-compatible = "LDO5";
+>>>>>>> b7ba80a49124 (Commit)
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <3300000>;
 			};
@@ -417,6 +475,7 @@
 	pinctrl-0 = <&pinctrl_uart2>;
 	uart-has-rtscts;
 	status = "okay";
+<<<<<<< HEAD
 
 	/*
 	 * PLL1 at 80 MHz supplies UART2 root with 80 MHz clock,
@@ -436,6 +495,8 @@
 		shutdown-gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;
 		max-speed = <4000000>;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &uart3 {
@@ -547,7 +608,11 @@
 		     &pinctrl_dhcom_d &pinctrl_dhcom_e &pinctrl_dhcom_f
 		     &pinctrl_dhcom_g &pinctrl_dhcom_h &pinctrl_dhcom_i
 		     &pinctrl_dhcom_j &pinctrl_dhcom_k &pinctrl_dhcom_l
+<<<<<<< HEAD
 		     /* GPIO_M is connected to CLKOUT1 */
+=======
+		     /* GPIO_M is connected to CLKOUT2 */
+>>>>>>> b7ba80a49124 (Commit)
 		     &pinctrl_dhcom_int>;
 	pinctrl-names = "default";
 
@@ -673,7 +738,11 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_eqos_rgmii: dhcom-eqos-rgmii-grp {	/* RGMII */
+=======
+	pinctrl_eqos: dhcom-eqos-grp {	/* RGMII */
+>>>>>>> b7ba80a49124 (Commit)
 		fsl,pins = <
 			MX8MP_IOMUXC_ENET_MDC__ENET_QOS_MDC		0x3
 			MX8MP_IOMUXC_ENET_MDIO__ENET_QOS_MDIO		0x3
@@ -692,6 +761,7 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_eqos_rmii: dhcom-eqos-rmii-grp {	/* RMII */
 		fsl,pins = <
 			MX8MP_IOMUXC_ENET_MDC__ENET_QOS_MDC		0x3
@@ -708,6 +778,8 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_enet_vio: dhcom-enet-vio-grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_SD1_RESET_B__GPIO2_IO10		0x22
@@ -716,9 +788,15 @@
 
 	pinctrl_ethphy0: dhcom-ethphy0-grp {
 		fsl,pins = <
+<<<<<<< HEAD
 			/* ENET_QOS_#RST Reset */
 			MX8MP_IOMUXC_SAI5_RXC__GPIO3_IO20		0x22
 			/* ENET_QOS_#INT Interrupt */
+=======
+			/* ENET1_#RST Reset */
+			MX8MP_IOMUXC_SAI5_RXC__GPIO3_IO20		0x22
+			/* ENET1_#INT Interrupt */
+>>>>>>> b7ba80a49124 (Commit)
 			MX8MP_IOMUXC_SAI5_RXFS__GPIO3_IO19		0x22
 		>;
 	};
@@ -732,7 +810,11 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_fec_rgmii: dhcom-fec-rgmii-grp {	/* RGMII */
+=======
+	pinctrl_fec: dhcom-fec-grp {
+>>>>>>> b7ba80a49124 (Commit)
 		fsl,pins = <
 			MX8MP_IOMUXC_SAI1_MCLK__ENET1_TX_CLK		0x1f
 			MX8MP_IOMUXC_SAI1_RXD2__ENET1_MDC		0x3
@@ -753,6 +835,7 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_fec_rmii: dhcom-fec-rmii-grp {	/* RMII */
 		fsl,pins = <
 			MX8MP_IOMUXC_SAI1_RXD2__ENET1_MDC		0x3
@@ -769,6 +852,8 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_flexcan1: dhcom-flexcan1-grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_SPDIF_RX__CAN1_RX			0x154
@@ -890,6 +975,7 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_uart2_bt: dhcom-uart2-bt-grp {
 		fsl,pins = <
 			/* BT_REG_EN */
@@ -897,6 +983,8 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_uart3: dhcom-uart3-grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_ECSPI1_SCLK__UART3_DCE_RX		0x49
@@ -934,6 +1022,11 @@
 			MX8MP_IOMUXC_SD1_DATA1__USDHC1_DATA1		0x1d0
 			MX8MP_IOMUXC_SD1_DATA2__USDHC1_DATA2		0x1d0
 			MX8MP_IOMUXC_SD1_DATA3__USDHC1_DATA3		0x1d0
+<<<<<<< HEAD
+=======
+			/* BT_REG_EN */
+			MX8MP_IOMUXC_GPIO1_IO12__GPIO1_IO12		0x144
+>>>>>>> b7ba80a49124 (Commit)
 			/* WL_REG_EN */
 			MX8MP_IOMUXC_GPIO1_IO13__GPIO1_IO13		0x144
 		>;
@@ -947,6 +1040,11 @@
 			MX8MP_IOMUXC_SD1_DATA1__USDHC1_DATA1		0x1d4
 			MX8MP_IOMUXC_SD1_DATA2__USDHC1_DATA2		0x1d4
 			MX8MP_IOMUXC_SD1_DATA3__USDHC1_DATA3		0x1d4
+<<<<<<< HEAD
+=======
+			/* BT_REG_EN */
+			MX8MP_IOMUXC_GPIO1_IO12__GPIO1_IO12		0x144
+>>>>>>> b7ba80a49124 (Commit)
 			/* WL_REG_EN */
 			MX8MP_IOMUXC_GPIO1_IO13__GPIO1_IO13		0x144
 		>;
@@ -960,6 +1058,11 @@
 			MX8MP_IOMUXC_SD1_DATA1__USDHC1_DATA1		0x1d6
 			MX8MP_IOMUXC_SD1_DATA2__USDHC1_DATA2		0x1d6
 			MX8MP_IOMUXC_SD1_DATA3__USDHC1_DATA3		0x1d6
+<<<<<<< HEAD
+=======
+			/* BT_REG_EN */
+			MX8MP_IOMUXC_GPIO1_IO12__GPIO1_IO12		0x144
+>>>>>>> b7ba80a49124 (Commit)
 			/* WL_REG_EN */
 			MX8MP_IOMUXC_GPIO1_IO13__GPIO1_IO13		0x144
 		>;

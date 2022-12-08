@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0
 /*
  * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
+=======
+/* SPDX-License-Identifier: GPL-2.0 */
+/*
+ * Copyright (C) 2021 Patrick Franz <deltaone@debian.org>
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #define _GNU_SOURCE
@@ -22,6 +28,7 @@
 static PicoSAT *pico;
 
 static void unfold_cnf_clause(struct pexpr *e);
+<<<<<<< HEAD
 static void build_cnf_tseytin(struct pexpr *e, struct cfdata *data);
 
 static void build_cnf_tseytin_top_and(struct pexpr *e, struct cfdata *data);
@@ -30,6 +37,16 @@ static void build_cnf_tseytin_top_or(struct pexpr *e, struct cfdata *data);
 static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t, struct cfdata *data);
 static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t, struct cfdata *data);
 static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t, struct cfdata *data);
+=======
+static void build_cnf_tseytin(struct pexpr *e);
+
+static void build_cnf_tseytin_top_and(struct pexpr *e);
+static void build_cnf_tseytin_top_or(struct pexpr *e);
+
+static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t);
+static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t);
+static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t);
+>>>>>>> b7ba80a49124 (Commit)
 static int pexpr_satval(struct pexpr *e);
 
 /*
@@ -44,11 +61,19 @@ void init_config(const char *Kconfig_file)
 /*
  * initialize satmap
  */
+<<<<<<< HEAD
 void init_data(struct cfdata *data)
 {
 	/* create hashtable with all fexpr */
 	data->satmap = xcalloc(SATMAP_INIT_SIZE, sizeof(*data->satmap));
 	data->satmap_size = SATMAP_INIT_SIZE;
+=======
+void init_data(void)
+{
+	/* create hashtable with all fexpr */
+	satmap = xcalloc(SATMAP_INIT_SIZE, sizeof(*satmap));
+	satmap_size = SATMAP_INIT_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	printd("done.\n");
 }
@@ -56,7 +81,11 @@ void init_data(struct cfdata *data)
 /*
  * create SAT-variables for all fexpr
  */
+<<<<<<< HEAD
 void create_sat_variables(struct cfdata *data)
+=======
+void create_sat_variables(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int i;
 	struct symbol *sym;
@@ -65,7 +94,11 @@ void create_sat_variables(struct cfdata *data)
 
 	for_all_symbols(i, sym) {
 		sym->constraints = pexpr_list_init();
+<<<<<<< HEAD
 		sym_create_fexpr(sym, data);
+=======
+		sym_create_fexpr(sym);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	printd("done.\n");
@@ -74,11 +107,16 @@ void create_sat_variables(struct cfdata *data)
 /*
  * create various constants
  */
+<<<<<<< HEAD
 void create_constants(struct cfdata *data)
+=======
+void create_constants(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	printd("Creating constants...");
 
 	/* create TRUE and FALSE constants */
+<<<<<<< HEAD
 	data->constants->const_false = fexpr_create(data->sat_variable_nr++, FE_FALSE, "False");
 	// const_false = fexpr_create(sat_variable_nr++, FE_FALSE, "False");
 	fexpr_add_to_satmap(data->constants->const_false, data);
@@ -108,6 +146,36 @@ void create_constants(struct cfdata *data)
 	data->constants->symbol_no_fexpr = fexpr_create(0, FE_SYMBOL, "n");
 	data->constants->symbol_no_fexpr->sym = &symbol_no;
 	data->constants->symbol_no_fexpr->tri = no;
+=======
+	const_false = fexpr_create(sat_variable_nr++, FE_FALSE, "False");
+	fexpr_add_to_satmap(const_false);
+
+	const_true = fexpr_create(sat_variable_nr++, FE_TRUE, "True");
+	fexpr_add_to_satmap(const_true);
+
+	/* add fexpr of constants to tristate constants */
+	symbol_yes.fexpr_y = const_true;
+	symbol_yes.fexpr_m = const_false;
+
+	symbol_mod.fexpr_y = const_false;
+	symbol_mod.fexpr_m = const_true;
+
+	symbol_no.fexpr_y = const_false;
+	symbol_no.fexpr_m = const_false;
+
+	/* create symbols yes/mod/no as fexpr */
+	symbol_yes_fexpr = fexpr_create(0, FE_SYMBOL, "y");
+	symbol_yes_fexpr->sym = &symbol_yes;
+	symbol_yes_fexpr->tri = yes;
+
+	symbol_mod_fexpr = fexpr_create(0, FE_SYMBOL, "m");
+	symbol_mod_fexpr->sym = &symbol_mod;
+	symbol_mod_fexpr->tri = mod;
+
+	symbol_no_fexpr = fexpr_create(0, FE_SYMBOL, "n");
+	symbol_no_fexpr->sym = &symbol_no;
+	symbol_no_fexpr->tri = no;
+>>>>>>> b7ba80a49124 (Commit)
 
 	printd("done.\n");
 }
@@ -115,12 +183,20 @@ void create_constants(struct cfdata *data)
 /*
  * create a temporary SAT-variable
  */
+<<<<<<< HEAD
 struct fexpr *create_tmpsatvar(struct cfdata *data)
 {
 	struct fexpr *t = fexpr_create(data->sat_variable_nr++, FE_TMPSATVAR, "");
 
 	str_append(&t->name, get_tmp_var_as_char(data->tmp_variable_nr++));
 	fexpr_add_to_satmap(t, data);
+=======
+struct fexpr * create_tmpsatvar(void)
+{
+	struct fexpr *t = fexpr_create(sat_variable_nr++, FE_TMPSATVAR, "");
+	str_append(&t->name, get_tmp_var_as_char(tmp_variable_nr++));
+	fexpr_add_to_satmap(t);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return t;
 }
@@ -128,10 +204,16 @@ struct fexpr *create_tmpsatvar(struct cfdata *data)
 /*
  * return a temporary SAT variable as string
  */
+<<<<<<< HEAD
 char *get_tmp_var_as_char(int i)
 {
 	char *val = malloc(sizeof(char) * 18);
 
+=======
+char * get_tmp_var_as_char(int i)
+{
+	char *val = malloc(sizeof(char) * 18);
+>>>>>>> b7ba80a49124 (Commit)
 	snprintf(val, 18, "T_%d", i);
 	return val;
 }
@@ -139,7 +221,11 @@ char *get_tmp_var_as_char(int i)
 /*
  * return a tristate value as a char *
  */
+<<<<<<< HEAD
 char *tristate_get_char(tristate val)
+=======
+char * tristate_get_char(tristate val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (val) {
 	case yes:
@@ -289,8 +375,12 @@ void print_expr(char *tag, struct expr *e, int prevtoken)
 /*
  * check, if the symbol is a tristate-constant
  */
+<<<<<<< HEAD
 bool sym_is_tristate_constant(struct symbol *sym)
 {
+=======
+bool sym_is_tristate_constant(struct symbol *sym) {
+>>>>>>> b7ba80a49124 (Commit)
 	return sym == &symbol_yes || sym == &symbol_mod || sym == &symbol_no;
 }
 
@@ -334,7 +424,11 @@ bool sym_has_prompt(struct symbol *sym)
 /*
  * return the prompt of the symbol if there is one, NULL otherwise
  */
+<<<<<<< HEAD
 struct property *sym_get_prompt(struct symbol *sym)
+=======
+struct property * sym_get_prompt(struct symbol *sym)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct property *prop;
 
@@ -347,16 +441,26 @@ struct property *sym_get_prompt(struct symbol *sym)
 /*
  * return the condition for the property, True if there is none
  */
+<<<<<<< HEAD
 struct pexpr *prop_get_condition(struct property *prop, struct cfdata *data)
+=======
+struct pexpr * prop_get_condition(struct property *prop)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (prop == NULL)
 		return NULL;
 
 	/* if there is no condition, return True */
 	if (!prop->visible.expr)
+<<<<<<< HEAD
 		return pexf(data->constants->const_true);
 
 	return expr_calculate_pexpr_both(prop->visible.expr, data);
+=======
+		return pexf(const_true);
+
+	return expr_calculate_pexpr_both(prop->visible.expr);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -418,11 +522,18 @@ bool sym_nonbool_has_value_set(struct symbol *sym)
 /*
  * return the name of the symbol or the prompt-text, if it is a choice symbol
  */
+<<<<<<< HEAD
 char *sym_get_name(struct symbol *sym)
 {
 	if (sym_is_choice(sym)) {
 		struct property *prompt = sym_get_prompt(sym);
 
+=======
+char * sym_get_name(struct symbol *sym)
+{
+	if (sym_is_choice(sym)) {
+		struct property *prompt = sym_get_prompt(sym);
+>>>>>>> b7ba80a49124 (Commit)
 		if (prompt == NULL)
 			return "";
 
@@ -438,7 +549,10 @@ char *sym_get_name(struct symbol *sym)
 bool sym_is_sdv(struct sdv_list *list, struct symbol *sym)
 {
 	struct sdv_node *node;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sdv_list_for_each(node, list)
 		if (sym == node->elem->sym)
 			return true;
@@ -454,7 +568,10 @@ void print_sym_name(struct symbol *sym)
 	printf("Symbol: ");
 	if (sym_is_choice(sym)) {
 		struct property *prompt = sym_get_prompt(sym);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		printf("(Choice) %s", prompt->text);
 	} else  {
 		printf("%s", sym->name);
@@ -465,10 +582,16 @@ void print_sym_name(struct symbol *sym)
 /*
  * print all constraints for a symbol
  */
+<<<<<<< HEAD
 void print_sym_constraint(struct symbol *sym)
 {
 	struct pexpr_node *node;
 
+=======
+void print_sym_constraint(struct symbol* sym)
+{
+	struct pexpr_node *node;
+>>>>>>> b7ba80a49124 (Commit)
 	pexpr_list_for_each(node, sym->constraints)
 		pexpr_print("::", node->elem, -1);
 }
@@ -483,7 +606,10 @@ void print_default_map(struct defm_list *map)
 
 	defm_list_for_each(node, map) {
 		struct gstr s = str_new();
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		entry = node->elem;
 
 		str_append(&s, "\t");
@@ -501,7 +627,10 @@ bool string_is_number(char *s)
 {
 	int len = strlen(s);
 	int i = 0;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	while (i < len) {
 		if (!isdigit(s[i]))
 			return false;
@@ -518,7 +647,10 @@ bool string_is_hex(char *s)
 {
 	int len = strlen(s);
 	int i = 2;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (len >= 3 && s[0] == '0' && s[1] == 'x') {
 		while (i < len) {
 			if (!isxdigit(s[i]))
@@ -534,7 +666,11 @@ bool string_is_hex(char *s)
 /*
  * initialize PicoSAT
  */
+<<<<<<< HEAD
 PicoSAT *initialize_picosat(void)
+=======
+PicoSAT * initialize_picosat(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	PicoSAT *pico;
 
@@ -549,6 +685,7 @@ PicoSAT *initialize_picosat(void)
 /*
  * construct the CNF-clauses from the constraints
  */
+<<<<<<< HEAD
 void construct_cnf_clauses(PicoSAT *p, struct cfdata *data)
 {
 	unsigned int i;
@@ -559,6 +696,17 @@ void construct_cnf_clauses(PicoSAT *p, struct cfdata *data)
 	/* adding unit-clauses for constants */
 	sat_add_clause(2, pico, -(data->constants->const_false->satval));
 	sat_add_clause(2, pico, data->constants->const_true->satval);
+=======
+void construct_cnf_clauses(PicoSAT *p)
+{
+	unsigned int i;
+	struct symbol *sym;
+	pico = p;
+
+	/* adding unit-clauses for constants */
+	sat_add_clause(2, pico, -(const_false->satval));
+	sat_add_clause(2, pico, const_true->satval);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for_all_symbols(i, sym) {
 		struct pexpr_node *node;
@@ -571,7 +719,11 @@ void construct_cnf_clauses(PicoSAT *p, struct cfdata *data)
 				unfold_cnf_clause(node->elem);
 				picosat_add(pico, 0);
 			} else {
+<<<<<<< HEAD
 				build_cnf_tseytin(node->elem, data);
+=======
+				build_cnf_tseytin(node->elem);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 
 		}
@@ -602,6 +754,7 @@ static void unfold_cnf_clause(struct pexpr *e)
 /*
  * build CNF-clauses for a pexpr not in CNF
  */
+<<<<<<< HEAD
 static void build_cnf_tseytin(struct pexpr *e, struct cfdata *data)
 {
 	switch (e->type) {
@@ -610,6 +763,16 @@ static void build_cnf_tseytin(struct pexpr *e, struct cfdata *data)
 		break;
 	case PE_OR:
 		build_cnf_tseytin_top_or(e, data);
+=======
+static void build_cnf_tseytin(struct pexpr *e)
+{
+	switch (e->type) {
+	case PE_AND:
+		build_cnf_tseytin_top_and(e);
+		break;
+	case PE_OR:
+		build_cnf_tseytin_top_or(e);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		perror("Expression not a propositional logic formula. root.");
@@ -619,21 +782,37 @@ static void build_cnf_tseytin(struct pexpr *e, struct cfdata *data)
 /*
  * split up a pexpr of type AND as both sides must be satisfied
  */
+<<<<<<< HEAD
 static void build_cnf_tseytin_top_and(struct pexpr *e, struct cfdata *data)
+=======
+static void build_cnf_tseytin_top_and(struct pexpr *e)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (pexpr_is_cnf(e->left.pexpr))
 		unfold_cnf_clause(e->left.pexpr);
 	else
+<<<<<<< HEAD
 		build_cnf_tseytin(e->left.pexpr, data);
+=======
+		build_cnf_tseytin(e->left.pexpr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (pexpr_is_cnf(e->right.pexpr))
 		unfold_cnf_clause(e->right.pexpr);
 	else
+<<<<<<< HEAD
 		build_cnf_tseytin(e->right.pexpr, data);
 
 }
 
 static void build_cnf_tseytin_top_or(struct pexpr *e, struct cfdata *data)
+=======
+		build_cnf_tseytin(e->right.pexpr);
+
+}
+
+static void build_cnf_tseytin_top_or(struct pexpr *e)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fexpr *t1 = NULL, *t2 = NULL;
 	int a, b;
@@ -642,7 +821,11 @@ static void build_cnf_tseytin_top_or(struct pexpr *e, struct cfdata *data)
 	if (pexpr_is_symbol(e->left.pexpr)) {
 		a = pexpr_satval(e->left.pexpr);
 	} else {
+<<<<<<< HEAD
 		t1 = create_tmpsatvar(data);
+=======
+		t1 = create_tmpsatvar();
+>>>>>>> b7ba80a49124 (Commit)
 		a = t1->satval;
 	}
 
@@ -650,7 +833,11 @@ static void build_cnf_tseytin_top_or(struct pexpr *e, struct cfdata *data)
 	if (pexpr_is_symbol(e->right.pexpr)) {
 		b = pexpr_satval(e->right.pexpr);
 	} else {
+<<<<<<< HEAD
 		t2 = create_tmpsatvar(data);
+=======
+		t2 = create_tmpsatvar();
+>>>>>>> b7ba80a49124 (Commit)
 		b = t2->satval;
 	}
 
@@ -662,20 +849,29 @@ static void build_cnf_tseytin_top_or(struct pexpr *e, struct cfdata *data)
 		if (t1 == NULL)
 			perror("t1 is NULL.");
 
+<<<<<<< HEAD
 		build_cnf_tseytin_tmp(e->left.pexpr, t1, data);
+=======
+		build_cnf_tseytin_tmp(e->left.pexpr, t1);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (!pexpr_is_symbol(e->right.pexpr)) {
 		if (t2 == NULL)
 			perror("t2 is NULL.");
 
+<<<<<<< HEAD
 		build_cnf_tseytin_tmp(e->right.pexpr, t2, data);
+=======
+		build_cnf_tseytin_tmp(e->right.pexpr, t2);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
 /*
  * build the sub-expressions
  */
+<<<<<<< HEAD
 static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t, struct cfdata *data)
 {
 	switch (e->type) {
@@ -684,6 +880,16 @@ static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t, struct cfdat
 		break;
 	case PE_OR:
 		build_cnf_tseytin_or(e, t, data);
+=======
+static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t)
+{
+	switch (e->type) {
+	case PE_AND:
+		build_cnf_tseytin_and(e, t);
+		break;
+	case PE_OR:
+		build_cnf_tseytin_or(e, t);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		perror("Expression not a propositional logic formula. root.");
@@ -693,7 +899,11 @@ static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t, struct cfdat
 /*
  * build the Tseytin sub-expressions for a pexpr of type AND
  */
+<<<<<<< HEAD
 static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t, struct cfdata *data)
+=======
+static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fexpr *t1 = NULL, *t2 = NULL;
 	int a, b, c;
@@ -702,7 +912,11 @@ static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t, struct cfdat
 	if (pexpr_is_symbol(e->left.pexpr)) {
 		a = pexpr_satval(e->left.pexpr);
 	} else {
+<<<<<<< HEAD
 		t1 = create_tmpsatvar(data);
+=======
+		t1 = create_tmpsatvar();
+>>>>>>> b7ba80a49124 (Commit)
 		a = t1->satval;
 	}
 
@@ -710,7 +924,11 @@ static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t, struct cfdat
 	if (pexpr_is_symbol(e->right.pexpr)) {
 		b = pexpr_satval(e->right.pexpr);
 	} else {
+<<<<<<< HEAD
 		t2 = create_tmpsatvar(data);
+=======
+		t2 = create_tmpsatvar();
+>>>>>>> b7ba80a49124 (Commit)
 		b = t2->satval;
 	}
 
@@ -728,20 +946,32 @@ static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t, struct cfdat
 		if (t1 == NULL)
 			perror("t1 is NULL.");
 
+<<<<<<< HEAD
 		build_cnf_tseytin_tmp(e->left.pexpr, t1, data);
+=======
+		build_cnf_tseytin_tmp(e->left.pexpr, t1);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (!pexpr_is_symbol(e->right.pexpr)) {
 		if (t2 == NULL)
 			perror("t2 is NULL.");
 
+<<<<<<< HEAD
 		build_cnf_tseytin_tmp(e->right.pexpr, t2, data);
+=======
+		build_cnf_tseytin_tmp(e->right.pexpr, t2);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
 /*
  * build the Tseytin sub-expressions for a pexpr of type
  */
+<<<<<<< HEAD
 static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t, struct cfdata *data)
+=======
+static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fexpr *t1 = NULL, *t2 = NULL;
 	int a, b, c;
@@ -750,7 +980,11 @@ static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t, struct cfdata
 	if (pexpr_is_symbol(e->left.pexpr)) {
 		a = pexpr_satval(e->left.pexpr);
 	} else {
+<<<<<<< HEAD
 		t1 = create_tmpsatvar(data);
+=======
+		t1 = create_tmpsatvar();
+>>>>>>> b7ba80a49124 (Commit)
 		a = t1->satval;
 	}
 
@@ -758,7 +992,11 @@ static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t, struct cfdata
 	if (pexpr_is_symbol(e->right.pexpr)) {
 		b = pexpr_satval(e->right.pexpr);
 	} else {
+<<<<<<< HEAD
 		t2 = create_tmpsatvar(data);
+=======
+		t2 = create_tmpsatvar();
+>>>>>>> b7ba80a49124 (Commit)
 		b = t2->satval;
 	}
 
@@ -776,13 +1014,21 @@ static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t, struct cfdata
 		if (t1 == NULL)
 			perror("t1 is NULL.");
 
+<<<<<<< HEAD
 		build_cnf_tseytin_tmp(e->left.pexpr, t1, data);
+=======
+		build_cnf_tseytin_tmp(e->left.pexpr, t1);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (!pexpr_is_symbol(e->right.pexpr)) {
 		if (t2 == NULL)
 			perror("t2 is NULL.");
 
+<<<<<<< HEAD
 		build_cnf_tseytin_tmp(e->right.pexpr, t2, data);
+=======
+		build_cnf_tseytin_tmp(e->right.pexpr, t2);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -839,7 +1085,11 @@ static int pexpr_satval(struct pexpr *e)
 /*
  * start PicoSAT
  */
+<<<<<<< HEAD
 void picosat_solve(PicoSAT *pico, struct cfdata *data)
+=======
+void picosat_solve(PicoSAT *pico)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	clock_t start, end;
 	double time;
@@ -872,12 +1122,21 @@ void picosat_solve(PicoSAT *pico, struct cfdata *data)
 		*lit = abs(*i++);
 
 		while (*lit != 0) {
+<<<<<<< HEAD
 			e = &data->satmap[*lit];
+=======
+			e = &satmap[*lit];
+>>>>>>> b7ba80a49124 (Commit)
 
 			printd("(%d) %s <%d>\n", *lit, str_get(&e->name), e->assumption);
 			*lit = abs(*i++);
 		}
+<<<<<<< HEAD
 	} else {
+=======
+	}
+	else {
+>>>>>>> b7ba80a49124 (Commit)
 		printd("Unknown if satisfiable.\n");
 	}
 }
@@ -889,7 +1148,10 @@ void sym_add_assumption(PicoSAT *pico, struct symbol *sym)
 {
 	if (sym_is_boolean(sym)) {
 		int tri_val = sym_get_tristate_value(sym);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		sym_add_assumption_tri(pico, sym, tri_val);
 		return;
 	}
@@ -946,7 +1208,10 @@ void sym_add_assumption_tri(PicoSAT *pico, struct symbol *sym, tristate tri_val)
 {
 	if (sym->type == S_BOOLEAN) {
 		int a = sym->fexpr_y->satval;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		switch (tri_val) {
 		case no:
 			picosat_assume(pico, -a);
@@ -965,7 +1230,10 @@ void sym_add_assumption_tri(PicoSAT *pico, struct symbol *sym, tristate tri_val)
 	if (sym->type == S_TRISTATE) {
 		int a = sym->fexpr_y->satval;
 		int a_m = sym->fexpr_m->satval;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		switch (tri_val) {
 		case no:
 			picosat_assume(pico, -a);

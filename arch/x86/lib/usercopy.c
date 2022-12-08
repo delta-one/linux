@@ -6,7 +6,10 @@
 
 #include <linux/uaccess.h>
 #include <linux/export.h>
+<<<<<<< HEAD
 #include <linux/instrumented.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/tlbflush.h>
 
@@ -45,9 +48,13 @@ copy_from_user_nmi(void *to, const void __user *from, unsigned long n)
 	 * called from other contexts.
 	 */
 	pagefault_disable();
+<<<<<<< HEAD
 	instrument_copy_from_user_before(to, from, n);
 	ret = raw_copy_from_user(to, from, n);
 	instrument_copy_from_user_after(to, from, n, ret);
+=======
+	ret = raw_copy_from_user(to, from, n);
+>>>>>>> b7ba80a49124 (Commit)
 	pagefault_enable();
 
 	return ret;

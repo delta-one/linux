@@ -110,7 +110,11 @@ END_FTR_SECTION_IFSET(CPU_FTR_P9_TM_HV_ASSIST)
 	mtmsrd	r2, 1
 
 	/* Reload TOC pointer. */
+<<<<<<< HEAD
 	LOAD_PACA_TOC()
+=======
+	ld	r2, PACATOC(r13)
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Save all but r0-r2, r9 & r13 */
 	reg = 3

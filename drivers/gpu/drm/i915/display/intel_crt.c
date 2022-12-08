@@ -34,8 +34,11 @@
 #include <drm/drm_probe_helper.h>
 
 #include "i915_drv.h"
+<<<<<<< HEAD
 #include "i915_irq.h"
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_connector.h"
 #include "intel_crt.h"
 #include "intel_crtc.h"
@@ -260,7 +263,11 @@ static void hsw_post_disable_crt(struct intel_atomic_state *state,
 
 	ilk_pfit_disable(old_crtc_state);
 
+<<<<<<< HEAD
 	intel_ddi_disable_transcoder_clock(old_crtc_state);
+=======
+	intel_ddi_disable_pipe_clock(old_crtc_state);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pch_post_disable_crt(state, encoder, old_crtc_state, old_conn_state);
 
@@ -300,7 +307,11 @@ static void hsw_pre_enable_crt(struct intel_atomic_state *state,
 
 	hsw_fdi_link_train(encoder, crtc_state);
 
+<<<<<<< HEAD
 	intel_ddi_enable_transcoder_clock(encoder, crtc_state);
+=======
+	intel_ddi_enable_pipe_clock(encoder, crtc_state);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void hsw_enable_crt(struct intel_atomic_state *state,
@@ -678,22 +689,36 @@ static bool intel_crt_detect_ddc(struct drm_connector *connector)
 }
 
 static enum drm_connector_status
+<<<<<<< HEAD
 intel_crt_load_detect(struct intel_crt *crt, enum pipe pipe)
 {
 	struct drm_device *dev = crt->base.base.dev;
 	struct drm_i915_private *dev_priv = to_i915(dev);
 	enum transcoder cpu_transcoder = (enum transcoder)pipe;
+=======
+intel_crt_load_detect(struct intel_crt *crt, u32 pipe)
+{
+	struct drm_device *dev = crt->base.base.dev;
+	struct drm_i915_private *dev_priv = to_i915(dev);
+	struct intel_uncore *uncore = &dev_priv->uncore;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 save_bclrpat;
 	u32 save_vtotal;
 	u32 vtotal, vactive;
 	u32 vsample;
 	u32 vblank, vblank_start, vblank_end;
 	u32 dsl;
+<<<<<<< HEAD
+=======
+	i915_reg_t bclrpat_reg, vtotal_reg,
+		vblank_reg, vsync_reg, pipeconf_reg, pipe_dsl_reg;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 st00;
 	enum drm_connector_status status;
 
 	drm_dbg_kms(&dev_priv->drm, "starting load-detect on CRT\n");
 
+<<<<<<< HEAD
 	save_bclrpat = intel_de_read(dev_priv, BCLRPAT(cpu_transcoder));
 	save_vtotal = intel_de_read(dev_priv, TRANS_VTOTAL(cpu_transcoder));
 	vblank = intel_de_read(dev_priv, TRANS_VBLANK(cpu_transcoder));
@@ -717,11 +742,47 @@ intel_crt_load_detect(struct intel_crt *crt, enum pipe pipe)
 		 * border color for Color info */
 		intel_crtc_wait_for_next_vblank(intel_crtc_for_pipe(dev_priv, pipe));
 		st00 = intel_de_read8(dev_priv, _VGA_MSR_WRITE);
+=======
+	bclrpat_reg = BCLRPAT(pipe);
+	vtotal_reg = VTOTAL(pipe);
+	vblank_reg = VBLANK(pipe);
+	vsync_reg = VSYNC(pipe);
+	pipeconf_reg = PIPECONF(pipe);
+	pipe_dsl_reg = PIPEDSL(pipe);
+
+	save_bclrpat = intel_uncore_read(uncore, bclrpat_reg);
+	save_vtotal = intel_uncore_read(uncore, vtotal_reg);
+	vblank = intel_uncore_read(uncore, vblank_reg);
+
+	vtotal = ((save_vtotal >> 16) & 0xfff) + 1;
+	vactive = (save_vtotal & 0x7ff) + 1;
+
+	vblank_start = (vblank & 0xfff) + 1;
+	vblank_end = ((vblank >> 16) & 0xfff) + 1;
+
+	/* Set the border color to purple. */
+	intel_uncore_write(uncore, bclrpat_reg, 0x500050);
+
+	if (DISPLAY_VER(dev_priv) != 2) {
+		u32 pipeconf = intel_uncore_read(uncore, pipeconf_reg);
+		intel_uncore_write(uncore,
+				   pipeconf_reg,
+				   pipeconf | PIPECONF_FORCE_BORDER);
+		intel_uncore_posting_read(uncore, pipeconf_reg);
+		/* Wait for next Vblank to substitue
+		 * border color for Color info */
+		intel_crtc_wait_for_next_vblank(intel_crtc_for_pipe(dev_priv, pipe));
+		st00 = intel_uncore_read8(uncore, _VGA_MSR_WRITE);
+>>>>>>> b7ba80a49124 (Commit)
 		status = ((st00 & (1 << 4)) != 0) ?
 			connector_status_connected :
 			connector_status_disconnected;
 
+<<<<<<< HEAD
 		intel_de_write(dev_priv, TRANSCONF(cpu_transcoder), transconf);
+=======
+		intel_uncore_write(uncore, pipeconf_reg, pipeconf);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		bool restore_vblank = false;
 		int count, detect;
@@ -731,6 +792,7 @@ intel_crt_load_detect(struct intel_crt *crt, enum pipe pipe)
 		* Yes, this will flicker
 		*/
 		if (vblank_start <= vactive && vblank_end >= vtotal) {
+<<<<<<< HEAD
 			u32 vsync = intel_de_read(dev_priv, TRANS_VSYNC(cpu_transcoder));
 			u32 vsync_start = REG_FIELD_GET(VSYNC_START_MASK, vsync) + 1;
 
@@ -738,6 +800,16 @@ intel_crt_load_detect(struct intel_crt *crt, enum pipe pipe)
 			intel_de_write(dev_priv, TRANS_VBLANK(cpu_transcoder),
 				       VBLANK_START(vblank_start - 1) |
 				       VBLANK_END(vblank_end - 1));
+=======
+			u32 vsync = intel_de_read(dev_priv, vsync_reg);
+			u32 vsync_start = (vsync & 0xffff) + 1;
+
+			vblank_start = vsync_start;
+			intel_uncore_write(uncore,
+					   vblank_reg,
+					   (vblank_start - 1) |
+					   ((vblank_end - 1) << 16));
+>>>>>>> b7ba80a49124 (Commit)
 			restore_vblank = true;
 		}
 		/* sample in the vertical border, selecting the larger one */
@@ -749,9 +821,16 @@ intel_crt_load_detect(struct intel_crt *crt, enum pipe pipe)
 		/*
 		 * Wait for the border to be displayed
 		 */
+<<<<<<< HEAD
 		while (intel_de_read(dev_priv, PIPEDSL(pipe)) >= vactive)
 			;
 		while ((dsl = intel_de_read(dev_priv, PIPEDSL(pipe))) <= vsample)
+=======
+		while (intel_uncore_read(uncore, pipe_dsl_reg) >= vactive)
+			;
+		while ((dsl = intel_uncore_read(uncore, pipe_dsl_reg)) <=
+		       vsample)
+>>>>>>> b7ba80a49124 (Commit)
 			;
 		/*
 		 * Watch ST00 for an entire scanline
@@ -761,6 +840,7 @@ intel_crt_load_detect(struct intel_crt *crt, enum pipe pipe)
 		do {
 			count++;
 			/* Read the ST00 VGA status register */
+<<<<<<< HEAD
 			st00 = intel_de_read8(dev_priv, _VGA_MSR_WRITE);
 			if (st00 & (1 << 4))
 				detect++;
@@ -769,6 +849,16 @@ intel_crt_load_detect(struct intel_crt *crt, enum pipe pipe)
 		/* restore vblank if necessary */
 		if (restore_vblank)
 			intel_de_write(dev_priv, TRANS_VBLANK(cpu_transcoder), vblank);
+=======
+			st00 = intel_uncore_read8(uncore, _VGA_MSR_WRITE);
+			if (st00 & (1 << 4))
+				detect++;
+		} while ((intel_uncore_read(uncore, pipe_dsl_reg) == dsl));
+
+		/* restore vblank if necessary */
+		if (restore_vblank)
+			intel_uncore_write(uncore, vblank_reg, vblank);
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * If more than 3/4 of the scanline detected a monitor,
 		 * then it is assumed to be present. This works even on i830,
@@ -781,7 +871,11 @@ intel_crt_load_detect(struct intel_crt *crt, enum pipe pipe)
 	}
 
 	/* Restore previous settings */
+<<<<<<< HEAD
 	intel_de_write(dev_priv, BCLRPAT(cpu_transcoder), save_bclrpat);
+=======
+	intel_uncore_write(uncore, bclrpat_reg, save_bclrpat);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return status;
 }
@@ -1035,14 +1129,26 @@ void intel_crt_init(struct drm_i915_private *dev_priv)
 	intel_connector_attach_encoder(intel_connector, &crt->base);
 
 	crt->base.type = INTEL_OUTPUT_ANALOG;
+<<<<<<< HEAD
 	crt->base.cloneable = BIT(INTEL_OUTPUT_DVO) | BIT(INTEL_OUTPUT_HDMI);
+=======
+	crt->base.cloneable = (1 << INTEL_OUTPUT_DVO) | (1 << INTEL_OUTPUT_HDMI);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_I830(dev_priv))
 		crt->base.pipe_mask = BIT(PIPE_A);
 	else
 		crt->base.pipe_mask = ~0;
 
+<<<<<<< HEAD
 	if (DISPLAY_VER(dev_priv) != 2)
 		connector->interlace_allowed = true;
+=======
+	if (DISPLAY_VER(dev_priv) == 2)
+		connector->interlace_allowed = 0;
+	else
+		connector->interlace_allowed = 1;
+	connector->doublescan_allowed = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	crt->adpa_reg = adpa_reg;
 

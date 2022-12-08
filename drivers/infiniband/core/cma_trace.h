@@ -15,7 +15,11 @@
 #define _TRACE_RDMA_CMA_H
 
 #include <linux/tracepoint.h>
+<<<<<<< HEAD
 #include <trace/misc/rdma.h>
+=======
+#include <trace/events/rdma.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 
 DECLARE_EVENT_CLASS(cma_fsm_class,

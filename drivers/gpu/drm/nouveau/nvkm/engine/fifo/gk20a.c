@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+<<<<<<< HEAD
 #include "priv.h"
 
 #include <nvif/class.h>
@@ -42,11 +43,33 @@ gk20a_fifo = {
 	.engn_ce = &gk104_engn_ce,
 	.cgrp = {{                               }, &gk110_cgrp },
 	.chan = {{ 0, 0, KEPLER_CHANNEL_GPFIFO_A }, &gk110_chan },
+=======
+#include "gk104.h"
+#include "changk104.h"
+
+#include <nvif/class.h>
+
+static const struct gk104_fifo_func
+gk20a_fifo = {
+	.intr.fault = gf100_fifo_intr_fault,
+	.pbdma = &gk208_fifo_pbdma,
+	.fault.access = gk104_fifo_fault_access,
+	.fault.engine = gk104_fifo_fault_engine,
+	.fault.reason = gk104_fifo_fault_reason,
+	.fault.hubclient = gk104_fifo_fault_hubclient,
+	.fault.gpcclient = gk104_fifo_fault_gpcclient,
+	.runlist = &gk110_fifo_runlist,
+	.chan = {{0,0,KEPLER_CHANNEL_GPFIFO_A}, gk104_fifo_gpfifo_new },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int
 gk20a_fifo_new(struct nvkm_device *device, enum nvkm_subdev_type type, int inst,
 	       struct nvkm_fifo **pfifo)
 {
+<<<<<<< HEAD
 	return nvkm_fifo_new_(&gk20a_fifo, device, type, inst, pfifo);
+=======
+	return gk104_fifo_new_(&gk20a_fifo, device, type, inst, 128, pfifo);
+>>>>>>> b7ba80a49124 (Commit)
 }

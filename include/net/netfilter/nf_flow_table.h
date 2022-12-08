@@ -57,7 +57,11 @@ struct nf_flowtable_type {
 						 struct net_device *dev,
 						 enum flow_block_command cmd);
 	int				(*action)(struct net *net,
+<<<<<<< HEAD
 						  struct flow_offload *flow,
+=======
+						  const struct flow_offload *flow,
+>>>>>>> b7ba80a49124 (Commit)
 						  enum flow_offload_tuple_dir dir,
 						  struct nf_flow_rule *flow_rule);
 	void				(*free)(struct nf_flowtable *ft);
@@ -164,8 +168,11 @@ enum nf_flow_flags {
 	NF_FLOW_HW_DYING,
 	NF_FLOW_HW_DEAD,
 	NF_FLOW_HW_PENDING,
+<<<<<<< HEAD
 	NF_FLOW_HW_BIDIRECTIONAL,
 	NF_FLOW_HW_ESTABLISHED,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum flow_offload_type {
@@ -314,10 +321,17 @@ void nf_flow_table_offload_flush_cleanup(struct nf_flowtable *flowtable);
 int nf_flow_table_offload_setup(struct nf_flowtable *flowtable,
 				struct net_device *dev,
 				enum flow_block_command cmd);
+<<<<<<< HEAD
 int nf_flow_rule_route_ipv4(struct net *net, struct flow_offload *flow,
 			    enum flow_offload_tuple_dir dir,
 			    struct nf_flow_rule *flow_rule);
 int nf_flow_rule_route_ipv6(struct net *net, struct flow_offload *flow,
+=======
+int nf_flow_rule_route_ipv4(struct net *net, const struct flow_offload *flow,
+			    enum flow_offload_tuple_dir dir,
+			    struct nf_flow_rule *flow_rule);
+int nf_flow_rule_route_ipv6(struct net *net, const struct flow_offload *flow,
+>>>>>>> b7ba80a49124 (Commit)
 			    enum flow_offload_tuple_dir dir,
 			    struct nf_flow_rule *flow_rule);
 

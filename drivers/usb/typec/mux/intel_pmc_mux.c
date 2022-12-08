@@ -369,14 +369,19 @@ pmc_usb_mux_usb4(struct pmc_usb_port *port, struct typec_mux_state *state)
 	return pmc_usb_command(port, (void *)&req, sizeof(req));
 }
 
+<<<<<<< HEAD
 static int pmc_usb_mux_safe_state(struct pmc_usb_port *port,
 				  struct typec_mux_state *state)
+=======
+static int pmc_usb_mux_safe_state(struct pmc_usb_port *port)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u8 msg;
 
 	if (IOM_PORT_ACTIVITY_IS(port->iom_status, SAFE_MODE))
 		return 0;
 
+<<<<<<< HEAD
 	if ((IOM_PORT_ACTIVITY_IS(port->iom_status, DP) ||
 	     IOM_PORT_ACTIVITY_IS(port->iom_status, DP_MFD)) &&
 	     state->alt && state->alt->svid == USB_TYPEC_DP_SID)
@@ -387,6 +392,8 @@ static int pmc_usb_mux_safe_state(struct pmc_usb_port *port,
 	     state->alt && state->alt->svid == USB_TYPEC_TBT_SID)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	msg = PMC_USB_SAFE_MODE;
 	msg |= port->usb3_port << PMC_USB_MSG_USB3_PORT_SHIFT;
 
@@ -454,7 +461,11 @@ pmc_usb_mux_set(struct typec_mux_dev *mux, struct typec_mux_state *state)
 		return 0;
 
 	if (state->mode == TYPEC_STATE_SAFE)
+<<<<<<< HEAD
 		return pmc_usb_mux_safe_state(port, state);
+=======
+		return pmc_usb_mux_safe_state(port);
+>>>>>>> b7ba80a49124 (Commit)
 	if (state->mode == TYPEC_STATE_USB)
 		return pmc_usb_connect(port, port->role);
 
@@ -602,6 +613,7 @@ static int pmc_usb_probe_iom(struct pmc_usb *pmc)
 	int ret;
 
 	for (dev_id = &iom_acpi_ids[0]; dev_id->id[0]; dev_id++) {
+<<<<<<< HEAD
 		adev = acpi_dev_get_first_match_dev(dev_id->id, NULL, -1);
 		if (adev)
 			break;
@@ -617,6 +629,22 @@ static int pmc_usb_probe_iom(struct pmc_usb *pmc)
 		acpi_dev_put(adev);
 		return ret;
 	}
+=======
+		if (acpi_dev_present(dev_id->id, NULL, -1)) {
+			pmc->iom_port_status_offset = (u32)dev_id->driver_data;
+			adev = acpi_dev_get_first_match_dev(dev_id->id, NULL, -1);
+			break;
+		}
+	}
+
+	if (!adev)
+		return -ENODEV;
+
+	INIT_LIST_HEAD(&resource_list);
+	ret = acpi_dev_get_memory_resources(adev, &resource_list);
+	if (ret < 0)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rentry = list_first_entry_or_null(&resource_list, struct resource_entry, node);
 	if (rentry)

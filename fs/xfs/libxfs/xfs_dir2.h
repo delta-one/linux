@@ -61,8 +61,13 @@ extern int xfs_dir2_sf_to_block(struct xfs_da_args *args);
 /*
  * Interface routines used by userspace utilities
  */
+<<<<<<< HEAD
 extern int xfs_dir2_isblock(struct xfs_da_args *args, bool *isblock);
 extern int xfs_dir2_isleaf(struct xfs_da_args *args, bool *isleaf);
+=======
+extern int xfs_dir2_isblock(struct xfs_da_args *args, int *r);
+extern int xfs_dir2_isleaf(struct xfs_da_args *args, int *r);
+>>>>>>> b7ba80a49124 (Commit)
 extern int xfs_dir2_shrink_inode(struct xfs_da_args *args, xfs_dir2_db_t db,
 				struct xfs_buf *bp);
 

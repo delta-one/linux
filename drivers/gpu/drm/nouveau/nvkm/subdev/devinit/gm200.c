@@ -26,7 +26,10 @@
 #include <subdev/bios.h>
 #include <subdev/bios/bit.h>
 #include <subdev/bios/pmu.h>
+<<<<<<< HEAD
 #include <subdev/pmu.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <subdev/timer.h>
 
 static void
@@ -86,11 +89,15 @@ pmu_load(struct nv50_devinit *init, u8 type, bool post,
 	struct nvkm_subdev *subdev = &init->base.subdev;
 	struct nvkm_bios *bios = subdev->device->bios;
 	struct nvbios_pmuR pmu;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!nvbios_pmuRm(bios, type, &pmu))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (!post || !subdev->device->pmu)
 		return 0;
 
@@ -98,6 +105,11 @@ pmu_load(struct nv50_devinit *init, u8 type, bool post,
 	if (ret)
 		return ret;
 
+=======
+	if (!post)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	pmu_code(init, pmu.boot_addr_pmu, pmu.boot_addr, pmu.boot_size, false);
 	pmu_code(init, pmu.code_addr_pmu, pmu.code_addr, pmu.code_size, true);
 	pmu_data(init, pmu.data_addr_pmu, pmu.data_addr, pmu.data_size);

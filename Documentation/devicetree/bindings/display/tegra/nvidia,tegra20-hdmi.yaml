@@ -50,7 +50,12 @@ properties:
     items:
       - const: hdmi
 
+<<<<<<< HEAD
   operating-points-v2: true
+=======
+  operating-points-v2:
+    $ref: "/schemas/types.yaml#/definitions/phandle"
+>>>>>>> b7ba80a49124 (Commit)
 
   power-domains:
     items:

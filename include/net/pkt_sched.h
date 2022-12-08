@@ -64,6 +64,10 @@ static inline psched_time_t psched_get_time(void)
 }
 
 struct qdisc_watchdog {
+<<<<<<< HEAD
+=======
+	u64		last_expires;
+>>>>>>> b7ba80a49124 (Commit)
 	struct hrtimer	timer;
 	struct Qdisc	*qdisc;
 };
@@ -140,11 +144,14 @@ static inline struct net *qdisc_net(struct Qdisc *q)
 	return dev_net(q->dev_queue->dev);
 }
 
+<<<<<<< HEAD
 struct tc_query_caps_base {
 	enum tc_setup_type type;
 	void *caps;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct tc_cbs_qopt_offload {
 	u8 enable;
 	s32 queue;
@@ -159,6 +166,7 @@ struct tc_etf_qopt_offload {
 	s32 queue;
 };
 
+<<<<<<< HEAD
 struct tc_mqprio_caps {
 	bool validate_queue_counts:1;
 };
@@ -183,6 +191,8 @@ struct tc_taprio_caps {
 	bool broken_mqprio:1;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct tc_taprio_sched_entry {
 	u8 command; /* TC_TAPRIO_CMD_* */
 
@@ -192,12 +202,18 @@ struct tc_taprio_sched_entry {
 };
 
 struct tc_taprio_qopt_offload {
+<<<<<<< HEAD
 	struct tc_mqprio_qopt_offload mqprio;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8 enable;
 	ktime_t base_time;
 	u64 cycle_time;
 	u64 cycle_time_extension;
+<<<<<<< HEAD
 	u32 max_sdu[TC_MAX_QUEUE];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	size_t num_entries;
 	struct tc_taprio_sched_entry entries[];
@@ -252,6 +268,7 @@ static inline struct tc_skb_cb *tc_skb_cb(const struct sk_buff *skb)
 	return cb;
 }
 
+<<<<<<< HEAD
 static inline bool tc_qdisc_stats_dump(struct Qdisc *sch,
 				       unsigned long cl,
 				       struct qdisc_walker *arg)
@@ -265,4 +282,6 @@ static inline bool tc_qdisc_stats_dump(struct Qdisc *sch,
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

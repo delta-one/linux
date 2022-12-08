@@ -12,9 +12,17 @@
 
 void nvmet_bdev_set_limits(struct block_device *bdev, struct nvme_id_ns *id)
 {
+<<<<<<< HEAD
 	/* Logical blocks per physical block, 0's based. */
 	const __le16 lpp0b = to0based(bdev_physical_block_size(bdev) /
 				      bdev_logical_block_size(bdev));
+=======
+	const struct queue_limits *ql = &bdev_get_queue(bdev)->limits;
+	/* Number of logical blocks per physical block. */
+	const u32 lpp = ql->physical_block_size / ql->logical_block_size;
+	/* Logical blocks per physical block, 0's based. */
+	const __le16 lpp0b = to0based(lpp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * For NVMe 1.2 and later, bit 1 indicates that the fields NAWUN,
@@ -40,12 +48,20 @@ void nvmet_bdev_set_limits(struct block_device *bdev, struct nvme_id_ns *id)
 	/* NPWA = Namespace Preferred Write Alignment. 0's based */
 	id->npwa = id->npwg;
 	/* NPDG = Namespace Preferred Deallocate Granularity. 0's based */
+<<<<<<< HEAD
 	id->npdg = to0based(bdev_discard_granularity(bdev) /
 			    bdev_logical_block_size(bdev));
 	/* NPDG = Namespace Preferred Deallocate Alignment */
 	id->npda = id->npdg;
 	/* NOWS = Namespace Optimal Write Size */
 	id->nows = to0based(bdev_io_opt(bdev) / bdev_logical_block_size(bdev));
+=======
+	id->npdg = to0based(ql->discard_granularity / ql->logical_block_size);
+	/* NPDG = Namespace Preferred Deallocate Alignment */
+	id->npda = id->npdg;
+	/* NOWS = Namespace Optimal Write Size */
+	id->nows = to0based(ql->io_opt / ql->logical_block_size);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void nvmet_bdev_ns_disable(struct nvmet_ns *ns)

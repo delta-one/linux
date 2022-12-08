@@ -1233,6 +1233,7 @@ enum {
 #define TCA_TAPRIO_ATTR_FLAG_FULL_OFFLOAD	_BITUL(1)
 
 enum {
+<<<<<<< HEAD
 	TCA_TAPRIO_TC_ENTRY_UNSPEC,
 	TCA_TAPRIO_TC_ENTRY_INDEX,		/* u32 */
 	TCA_TAPRIO_TC_ENTRY_MAX_SDU,		/* u32 */
@@ -1243,6 +1244,8 @@ enum {
 };
 
 enum {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	TCA_TAPRIO_ATTR_UNSPEC,
 	TCA_TAPRIO_ATTR_PRIOMAP, /* struct tc_mqprio_qopt */
 	TCA_TAPRIO_ATTR_SCHED_ENTRY_LIST, /* nested of entry */
@@ -1255,7 +1258,10 @@ enum {
 	TCA_TAPRIO_ATTR_SCHED_CYCLE_TIME_EXTENSION, /* s64 */
 	TCA_TAPRIO_ATTR_FLAGS, /* u32 */
 	TCA_TAPRIO_ATTR_TXTIME_DELAY, /* u32 */
+<<<<<<< HEAD
 	TCA_TAPRIO_ATTR_TC_ENTRY, /* nest */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__TCA_TAPRIO_ATTR_MAX,
 };
 

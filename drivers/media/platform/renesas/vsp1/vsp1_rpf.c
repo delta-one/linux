@@ -109,6 +109,7 @@ static void rpf_configure_stream(struct vsp1_entity *entity,
 	vsp1_rpf_write(rpf, dlb, VI6_RPF_INFMT, infmt);
 	vsp1_rpf_write(rpf, dlb, VI6_RPF_DSWAP, fmtinfo->swap);
 
+<<<<<<< HEAD
 	if (entity->vsp1->info->gen == 4) {
 		u32 ext_infmt0;
 		u32 ext_infmt1;
@@ -161,6 +162,8 @@ static void rpf_configure_stream(struct vsp1_entity *entity,
 		vsp1_rpf_write(rpf, dlb, VI6_RPF_EXT_INFMT2, ext_infmt2);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Output location. */
 	if (pipe->brx) {
 		const struct v4l2_rect *compose;
@@ -185,18 +188,30 @@ static void rpf_configure_stream(struct vsp1_entity *entity,
 	 * a fixed alpha value set through the V4L2_CID_ALPHA_COMPONENT control
 	 * otherwise.
 	 *
+<<<<<<< HEAD
 	 * The Gen3+ RPF has extended alpha capability and can both multiply the
+=======
+	 * The Gen3 RPF has extended alpha capability and can both multiply the
+>>>>>>> b7ba80a49124 (Commit)
 	 * alpha channel by a fixed global alpha value, and multiply the pixel
 	 * components to convert the input to premultiplied alpha.
 	 *
 	 * As alpha premultiplication is available in the BRx for both Gen2 and
+<<<<<<< HEAD
 	 * Gen3+ we handle it there and use the Gen3 alpha multiplier for global
+=======
+	 * Gen3 we handle it there and use the Gen3 alpha multiplier for global
+>>>>>>> b7ba80a49124 (Commit)
 	 * alpha multiplication only. This however prevents conversion to
 	 * premultiplied alpha if no BRx is present in the pipeline. If that use
 	 * case turns out to be useful we will revisit the implementation (for
 	 * Gen3 only).
 	 *
+<<<<<<< HEAD
 	 * We enable alpha multiplication on Gen3+ using the fixed alpha value
+=======
+	 * We enable alpha multiplication on Gen3 using the fixed alpha value
+>>>>>>> b7ba80a49124 (Commit)
 	 * set through the V4L2_CID_ALPHA_COMPONENT control when the input
 	 * contains an alpha channel. On Gen2 the global alpha is ignored in
 	 * that case.
@@ -207,7 +222,11 @@ static void rpf_configure_stream(struct vsp1_entity *entity,
 		       (fmtinfo->alpha ? VI6_RPF_ALPH_SEL_ASEL_PACKED
 				       : VI6_RPF_ALPH_SEL_ASEL_FIXED));
 
+<<<<<<< HEAD
 	if (entity->vsp1->info->gen >= 3) {
+=======
+	if (entity->vsp1->info->gen == 3) {
+>>>>>>> b7ba80a49124 (Commit)
 		u32 mult;
 
 		if (fmtinfo->alpha) {
@@ -353,10 +372,17 @@ static void rpf_configure_partition(struct vsp1_entity *entity,
 	}
 
 	/*
+<<<<<<< HEAD
 	 * On Gen3+ hardware the SPUVS bit has no effect on 3-planar
 	 * formats. Swap the U and V planes manually in that case.
 	 */
 	if (vsp1->info->gen >= 3 && format->num_planes == 3 &&
+=======
+	 * On Gen3 hardware the SPUVS bit has no effect on 3-planar
+	 * formats. Swap the U and V planes manually in that case.
+	 */
+	if (vsp1->info->gen == 3 && format->num_planes == 3 &&
+>>>>>>> b7ba80a49124 (Commit)
 	    fmtinfo->swap_uv)
 		swap(mem.addr[1], mem.addr[2]);
 

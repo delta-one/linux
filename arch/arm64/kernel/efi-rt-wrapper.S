@@ -4,10 +4,16 @@
  */
 
 #include <linux/linkage.h>
+<<<<<<< HEAD
 #include <asm/assembler.h>
 
 SYM_FUNC_START(__efi_rt_asm_wrapper)
 	stp	x29, x30, [sp, #-112]!
+=======
+
+SYM_FUNC_START(__efi_rt_asm_wrapper)
+	stp	x29, x30, [sp, #-32]!
+>>>>>>> b7ba80a49124 (Commit)
 	mov	x29, sp
 
 	/*
@@ -18,6 +24,7 @@ SYM_FUNC_START(__efi_rt_asm_wrapper)
 	stp	x1, x18, [sp, #16]
 
 	/*
+<<<<<<< HEAD
 	 * Preserve all callee saved registers and preserve the stack pointer
 	 * value at the base of the EFI runtime stack so we can recover from
 	 * synchronous exceptions occurring while executing the firmware
@@ -34,6 +41,8 @@ SYM_FUNC_START(__efi_rt_asm_wrapper)
 	stp	x18, x29, [sp, #-16]!
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * We are lucky enough that no EFI runtime services take more than
 	 * 5 arguments, so all are passed in registers rather than via the
 	 * stack.
@@ -46,6 +55,7 @@ SYM_FUNC_START(__efi_rt_asm_wrapper)
 	mov	x4, x6
 	blr	x8
 
+<<<<<<< HEAD
 	mov	x16, sp
 	mov	sp, x29
 	str	xzr, [x16, #8]			// clear recorded task SP value
@@ -53,6 +63,11 @@ SYM_FUNC_START(__efi_rt_asm_wrapper)
 	ldp	x1, x2, [sp, #16]
 	cmp	x2, x18
 	ldp	x29, x30, [sp], #112
+=======
+	ldp	x1, x2, [sp, #16]
+	cmp	x2, x18
+	ldp	x29, x30, [sp], #32
+>>>>>>> b7ba80a49124 (Commit)
 	b.ne	0f
 	ret
 0:
@@ -63,6 +78,7 @@ SYM_FUNC_START(__efi_rt_asm_wrapper)
 	 * called with preemption disabled and a separate shadow stack is used
 	 * for interrupts.
 	 */
+<<<<<<< HEAD
 #ifdef CONFIG_SHADOW_CALL_STACK
 	ldr_l	x18, efi_rt_stack_top
 	ldr	x18, [x18, #-16]
@@ -85,3 +101,8 @@ SYM_CODE_START(__efi_rt_asm_recover)
 	ldp	x29, x30, [sp], #112
 	ret
 SYM_CODE_END(__efi_rt_asm_recover)
+=======
+	mov	x18, x2
+	b	efi_handle_corrupted_x18	// tail call
+SYM_FUNC_END(__efi_rt_asm_wrapper)
+>>>>>>> b7ba80a49124 (Commit)

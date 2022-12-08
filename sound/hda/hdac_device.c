@@ -204,7 +204,11 @@ EXPORT_SYMBOL_GPL(snd_hdac_device_set_chip_name);
  *
  * Returns the size of string, like snprintf(), or a negative error code.
  */
+<<<<<<< HEAD
 int snd_hdac_codec_modalias(const struct hdac_device *codec, char *buf, size_t size)
+=======
+int snd_hdac_codec_modalias(struct hdac_device *codec, char *buf, size_t size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return scnprintf(buf, size, "hdaudio:v%08Xr%08Xa%02X\n",
 			codec->vendor_id, codec->revision_id, codec->type);

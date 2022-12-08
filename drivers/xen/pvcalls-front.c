@@ -225,8 +225,11 @@ again:
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static void free_active_ring(struct sock_mapping *map);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void pvcalls_front_free_map(struct pvcalls_bedata *bedata,
 				   struct sock_mapping *map)
 {
@@ -242,7 +245,11 @@ static void pvcalls_front_free_map(struct pvcalls_bedata *bedata,
 	for (i = 0; i < (1 << PVCALLS_RING_ORDER); i++)
 		gnttab_end_foreign_access(map->active.ring->ref[i], NULL);
 	gnttab_end_foreign_access(map->active.ref, NULL);
+<<<<<<< HEAD
 	free_active_ring(map);
+=======
+	free_page((unsigned long)map->active.ring);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(map);
 }
@@ -1087,7 +1094,11 @@ static const struct xenbus_device_id pvcalls_front_ids[] = {
 	{ "" }
 };
 
+<<<<<<< HEAD
 static void pvcalls_front_remove(struct xenbus_device *dev)
+=======
+static int pvcalls_front_remove(struct xenbus_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pvcalls_bedata *bedata;
 	struct sock_mapping *map = NULL, *n;
@@ -1123,6 +1134,10 @@ static void pvcalls_front_remove(struct xenbus_device *dev)
 	kfree(bedata->ring.sring);
 	kfree(bedata);
 	xenbus_switch_state(dev, XenbusStateClosed);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int pvcalls_front_probe(struct xenbus_device *dev,

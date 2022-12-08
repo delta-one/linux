@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/display/mediatek/mediatek,cec.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Mediatek HDMI CEC Controller
+=======
+title: Mediatek HDMI CEC Controller Device Tree Bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - CK Hu <ck.hu@mediatek.com>

@@ -6,11 +6,20 @@ config SECURITY_TOMOYO
 	select SECURITYFS
 	select SECURITY_PATH
 	select SECURITY_NETWORK
+<<<<<<< HEAD
+=======
+	select SRCU
+	select BUILD_BIN2C
+>>>>>>> b7ba80a49124 (Commit)
 	default n
 	help
 	  This selects TOMOYO Linux, pathname-based access control.
 	  Required userspace tools and further information may be
+<<<<<<< HEAD
 	  found at <https://tomoyo.osdn.jp/>.
+=======
+	  found at <http://tomoyo.sourceforge.jp/>.
+>>>>>>> b7ba80a49124 (Commit)
 	  If you are unsure how to answer this question, answer N.
 
 config SECURITY_TOMOYO_MAX_ACCEPT_ENTRY

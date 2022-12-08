@@ -233,6 +233,21 @@ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
 		return ERR_PTR(-EINVAL);
 	}
 
+<<<<<<< HEAD
+=======
+	/* check the name is unique */
+	mutex_lock(&heap_list_lock);
+	list_for_each_entry(h, &heap_list, list) {
+		if (!strcmp(h->name, exp_info->name)) {
+			mutex_unlock(&heap_list_lock);
+			pr_err("dma_heap: Already registered heap named %s\n",
+			       exp_info->name);
+			return ERR_PTR(-EINVAL);
+		}
+	}
+	mutex_unlock(&heap_list_lock);
+
+>>>>>>> b7ba80a49124 (Commit)
 	heap = kzalloc(sizeof(*heap), GFP_KERNEL);
 	if (!heap)
 		return ERR_PTR(-ENOMEM);
@@ -271,6 +286,7 @@ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
 		err_ret = ERR_CAST(dev_ret);
 		goto err2;
 	}
+<<<<<<< HEAD
 
 	mutex_lock(&heap_list_lock);
 	/* check the name is unique */
@@ -285,13 +301,20 @@ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
 	}
 
 	/* Add heap to the list */
+=======
+	/* Add heap to the list */
+	mutex_lock(&heap_list_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	list_add(&heap->list, &heap_list);
 	mutex_unlock(&heap_list_lock);
 
 	return heap;
 
+<<<<<<< HEAD
 err3:
 	device_destroy(dma_heap_class, heap->heap_devt);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err2:
 	cdev_del(&heap->heap_cdev);
 err1:
@@ -301,7 +324,11 @@ err0:
 	return err_ret;
 }
 
+<<<<<<< HEAD
 static char *dma_heap_devnode(const struct device *dev, umode_t *mode)
+=======
+static char *dma_heap_devnode(struct device *dev, umode_t *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return kasprintf(GFP_KERNEL, "dma_heap/%s", dev_name(dev));
 }
@@ -314,7 +341,11 @@ static int dma_heap_init(void)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	dma_heap_class = class_create(DEVNAME);
+=======
+	dma_heap_class = class_create(THIS_MODULE, DEVNAME);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(dma_heap_class)) {
 		unregister_chrdev_region(dma_heap_devt, NUM_HEAP_MINORS);
 		return PTR_ERR(dma_heap_class);

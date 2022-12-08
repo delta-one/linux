@@ -159,7 +159,11 @@ EXPORT_SYMBOL(running_on_qemu);
 /*
  * Called from the idle thread for the CPU which has been shutdown.
  */
+<<<<<<< HEAD
 void __noreturn arch_cpu_idle_dead(void)
+=======
+void arch_cpu_idle_dead(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 #ifdef CONFIG_HOTPLUG_CPU
 	idle_task_exit();
@@ -183,6 +187,11 @@ void __noreturn arch_cpu_idle_dead(void)
 
 void __cpuidle arch_cpu_idle(void)
 {
+<<<<<<< HEAD
+=======
+	raw_local_irq_enable();
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* nop on real hardware, qemu will idle sleep. */
 	asm volatile("or %%r10,%%r10,%%r10\n":::);
 }
@@ -282,7 +291,11 @@ __get_wchan(struct task_struct *p)
 
 static inline unsigned long brk_rnd(void)
 {
+<<<<<<< HEAD
 	return (get_random_u32() & BRK_RND_MASK) << PAGE_SHIFT;
+=======
+	return (get_random_int() & BRK_RND_MASK) << PAGE_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 unsigned long arch_randomize_brk(struct mm_struct *mm)

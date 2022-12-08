@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/sound/qcom,wcd934x.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Qualcomm WCD9340/WCD9341 Audio Codec
+=======
+title: Bindings for Qualcomm WCD9340/WCD9341 Audio Codec
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
@@ -28,9 +32,13 @@ properties:
     description: GPIO spec for reset line to use
     maxItems: 1
 
+<<<<<<< HEAD
   slim-ifc-dev:
     description: IFC device interface
     $ref: /schemas/types.yaml#/definitions/phandle
+=======
+  slim-ifc-dev: true
+>>>>>>> b7ba80a49124 (Commit)
 
   clocks:
     maxItems: 1
@@ -149,6 +157,7 @@ patternProperties:
 required:
   - compatible
   - reg
+<<<<<<< HEAD
 
 allOf:
   - $ref: dai-common.yaml#
@@ -193,6 +202,23 @@ allOf:
         "#sound-dai-cells": false
         "#address-cells": false
         "#size-cells": false
+=======
+  - reset-gpios
+  - slim-ifc-dev
+  - interrupts
+  - interrupt-controller
+  - clock-frequency
+  - clock-output-names
+  - qcom,micbias1-microvolt
+  - qcom,micbias2-microvolt
+  - qcom,micbias3-microvolt
+  - qcom,micbias4-microvolt
+  - "#interrupt-cells"
+  - "#clock-cells"
+  - "#sound-dai-cells"
+  - "#address-cells"
+  - "#size-cells"
+>>>>>>> b7ba80a49124 (Commit)
 
 additionalProperties: false
 

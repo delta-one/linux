@@ -6,6 +6,7 @@ LDLIBS += $(shell pkg-config --libs alsa)
 ifeq ($(LDLIBS),)
 LDLIBS += -lasound
 endif
+<<<<<<< HEAD
 CFLAGS += -L$(OUTPUT) -Wl,-rpath=./
 
 LDLIBS+=-lpthread
@@ -25,3 +26,9 @@ $(OUTPUT)/libatest.so: conf.c alsa-local.h
 
 $(OUTPUT)/%: %.c $(TEST_GEN_PROGS_EXTENDED) alsa-local.h
 	$(CC) $(CFLAGS) $< $(LDLIBS) -latest -o $@
+=======
+
+TEST_GEN_PROGS := mixer-test
+
+include ../lib.mk
+>>>>>>> b7ba80a49124 (Commit)

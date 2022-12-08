@@ -71,12 +71,20 @@ static int kvm_set_wallclock(const struct timespec64 *now)
 	return -ENODEV;
 }
 
+<<<<<<< HEAD
 static noinstr u64 kvm_clock_read(void)
+=======
+static u64 kvm_clock_read(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u64 ret;
 
 	preempt_disable_notrace();
+<<<<<<< HEAD
 	ret = pvclock_clocksource_read_nowd(this_cpu_pvti());
+=======
+	ret = pvclock_clocksource_read(this_cpu_pvti());
+>>>>>>> b7ba80a49124 (Commit)
 	preempt_enable_notrace();
 	return ret;
 }
@@ -86,7 +94,11 @@ static u64 kvm_clock_get_cycles(struct clocksource *cs)
 	return kvm_clock_read();
 }
 
+<<<<<<< HEAD
 static noinstr u64 kvm_sched_clock_read(void)
+=======
+static u64 kvm_sched_clock_read(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return kvm_clock_read() - kvm_sched_clock_offset;
 }

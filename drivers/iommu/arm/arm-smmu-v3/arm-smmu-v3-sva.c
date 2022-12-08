@@ -10,7 +10,11 @@
 #include <linux/slab.h>
 
 #include "arm-smmu-v3.h"
+<<<<<<< HEAD
 #include "../../iommu-sva.h"
+=======
+#include "../../iommu-sva-lib.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "../../io-pgtable-arm.h"
 
 struct arm_smmu_mmu_notifier {
@@ -344,6 +348,14 @@ __arm_smmu_sva_bind(struct device *dev, struct mm_struct *mm)
 	if (!bond)
 		return ERR_PTR(-ENOMEM);
 
+<<<<<<< HEAD
+=======
+	/* Allocate a PASID for this mm if necessary */
+	ret = iommu_sva_alloc_pasid(mm, 1, (1U << master->ssid_bits) - 1);
+	if (ret)
+		goto err_free_bond;
+
+>>>>>>> b7ba80a49124 (Commit)
 	bond->mm = mm;
 	bond->sva.dev = dev;
 	refcount_set(&bond->refs, 1);
@@ -362,6 +374,45 @@ err_free_bond:
 	return ERR_PTR(ret);
 }
 
+<<<<<<< HEAD
+=======
+struct iommu_sva *
+arm_smmu_sva_bind(struct device *dev, struct mm_struct *mm, void *drvdata)
+{
+	struct iommu_sva *handle;
+	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+
+	if (smmu_domain->stage != ARM_SMMU_DOMAIN_S1)
+		return ERR_PTR(-EINVAL);
+
+	mutex_lock(&sva_lock);
+	handle = __arm_smmu_sva_bind(dev, mm);
+	mutex_unlock(&sva_lock);
+	return handle;
+}
+
+void arm_smmu_sva_unbind(struct iommu_sva *handle)
+{
+	struct arm_smmu_bond *bond = sva_to_bond(handle);
+
+	mutex_lock(&sva_lock);
+	if (refcount_dec_and_test(&bond->refs)) {
+		list_del(&bond->list);
+		arm_smmu_mmu_notifier_put(bond->smmu_mn);
+		kfree(bond);
+	}
+	mutex_unlock(&sva_lock);
+}
+
+u32 arm_smmu_sva_get_pasid(struct iommu_sva *handle)
+{
+	struct arm_smmu_bond *bond = sva_to_bond(handle);
+
+	return bond->mm->pasid;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 bool arm_smmu_sva_supported(struct arm_smmu_device *smmu)
 {
 	unsigned long reg, fld;
@@ -509,6 +560,7 @@ void arm_smmu_sva_notifier_synchronize(void)
 	 */
 	mmu_notifier_synchronize();
 }
+<<<<<<< HEAD
 
 void arm_smmu_sva_remove_dev_pasid(struct iommu_domain *domain,
 				   struct device *dev, ioasid_t id)
@@ -570,3 +622,5 @@ struct iommu_domain *arm_smmu_sva_domain_alloc(void)
 
 	return domain;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

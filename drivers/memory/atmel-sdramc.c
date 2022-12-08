@@ -47,6 +47,7 @@ static int atmel_ramc_probe(struct platform_device *pdev)
 	caps = of_device_get_match_data(&pdev->dev);
 
 	if (caps->has_ddrck) {
+<<<<<<< HEAD
 		clk = devm_clk_get_enabled(&pdev->dev, "ddrck");
 		if (IS_ERR(clk))
 			return PTR_ERR(clk);
@@ -54,10 +55,24 @@ static int atmel_ramc_probe(struct platform_device *pdev)
 
 	if (caps->has_mpddr_clk) {
 		clk = devm_clk_get_enabled(&pdev->dev, "mpddr");
+=======
+		clk = devm_clk_get(&pdev->dev, "ddrck");
+		if (IS_ERR(clk))
+			return PTR_ERR(clk);
+		clk_prepare_enable(clk);
+	}
+
+	if (caps->has_mpddr_clk) {
+		clk = devm_clk_get(&pdev->dev, "mpddr");
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(clk)) {
 			pr_err("AT91 RAMC: couldn't get mpddr clock\n");
 			return PTR_ERR(clk);
 		}
+<<<<<<< HEAD
+=======
+		clk_prepare_enable(clk);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;

@@ -4,7 +4,11 @@
  * JobR backend functionality
  *
  * Copyright 2008-2012 Freescale Semiconductor, Inc.
+<<<<<<< HEAD
  * Copyright 2019, 2023 NXP
+=======
+ * Copyright 2019 NXP
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/of_irq.h>
@@ -72,16 +76,21 @@ static void caam_jr_crypto_engine_exit(void *data)
 	crypto_engine_exit(jrpriv->engine);
 }
 
+<<<<<<< HEAD
 /*
  * Put the CAAM in quiesce, ie stop
  *
  * Must be called with itr disabled
  */
 static int caam_jr_stop_processing(struct device *dev, u32 jrcr_bits)
+=======
+static int caam_reset_hw_jr(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct caam_drv_private_jr *jrp = dev_get_drvdata(dev);
 	unsigned int timeout = 100000;
 
+<<<<<<< HEAD
 	/* Check the current status */
 	if (rd_reg32(&jrp->rregs->jrintstatus) & JRINT_ERR_HALT_INPROGRESS)
 		goto wait_quiesce_completion;
@@ -93,6 +102,16 @@ static int caam_jr_stop_processing(struct device *dev, u32 jrcr_bits)
 	wr_reg32(&jrp->rregs->jrcommand, jrcr_bits);
 
 wait_quiesce_completion:
+=======
+	/*
+	 * mask interrupts since we are going to poll
+	 * for reset completion status
+	 */
+	clrsetbits_32(&jrp->rregs->rconfig_lo, 0, JRCFG_IMSK);
+
+	/* initiate flush (required prior to reset) */
+	wr_reg32(&jrp->rregs->jrcommand, JRCR_RESET);
+>>>>>>> b7ba80a49124 (Commit)
 	while (((rd_reg32(&jrp->rregs->jrintstatus) & JRINT_ERR_HALT_MASK) ==
 		JRINT_ERR_HALT_INPROGRESS) && --timeout)
 		cpu_relax();
@@ -103,6 +122,7 @@ wait_quiesce_completion:
 		return -EIO;
 	}
 
+<<<<<<< HEAD
 	return 0;
 }
 
@@ -132,6 +152,10 @@ static int caam_reset_hw_jr(struct device *dev)
 		return err;
 
 	/* initiate reset */
+=======
+	/* initiate reset */
+	timeout = 100000;
+>>>>>>> b7ba80a49124 (Commit)
 	wr_reg32(&jrp->rregs->jrcommand, JRCR_RESET);
 	while ((rd_reg32(&jrp->rregs->jrcommand) & JRCR_RESET) && --timeout)
 		cpu_relax();

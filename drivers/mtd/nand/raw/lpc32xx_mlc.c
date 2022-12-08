@@ -25,7 +25,11 @@
 #include <linux/completion.h>
 #include <linux/interrupt.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/gpio/consumer.h>
+=======
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mtd/lpc32xx_mlc.h>
 #include <linux/io.h>
 #include <linux/mm.h>
@@ -122,6 +126,10 @@ struct lpc32xx_nand_cfg_mlc {
 	uint32_t rd_low;
 	uint32_t wr_high;
 	uint32_t wr_low;
+<<<<<<< HEAD
+=======
+	int wp_gpio;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mtd_partition *parts;
 	unsigned num_parts;
 };
@@ -176,7 +184,10 @@ struct lpc32xx_nand_host {
 	struct nand_chip	nand_chip;
 	struct lpc32xx_mlc_platform_data *pdata;
 	struct clk		*clk;
+<<<<<<< HEAD
 	struct gpio_desc	*wp_gpio;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem		*io_base;
 	int			irq;
 	struct lpc32xx_nand_cfg_mlc	*ncfg;
@@ -370,8 +381,13 @@ static int lpc32xx_waitfunc(struct nand_chip *chip)
  */
 static void lpc32xx_wp_enable(struct lpc32xx_nand_host *host)
 {
+<<<<<<< HEAD
 	if (host->wp_gpio)
 		gpiod_set_value_cansleep(host->wp_gpio, 1);
+=======
+	if (gpio_is_valid(host->ncfg->wp_gpio))
+		gpio_set_value(host->ncfg->wp_gpio, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -379,8 +395,13 @@ static void lpc32xx_wp_enable(struct lpc32xx_nand_host *host)
  */
 static void lpc32xx_wp_disable(struct lpc32xx_nand_host *host)
 {
+<<<<<<< HEAD
 	if (host->wp_gpio)
 		gpiod_set_value_cansleep(host->wp_gpio, 0);
+=======
+	if (gpio_is_valid(host->ncfg->wp_gpio))
+		gpio_set_value(host->ncfg->wp_gpio, 1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void lpc32xx_dma_complete_func(void *completion)
@@ -636,6 +657,11 @@ static struct lpc32xx_nand_cfg_mlc *lpc32xx_parse_dt(struct device *dev)
 		return NULL;
 	}
 
+<<<<<<< HEAD
+=======
+	ncfg->wp_gpio = of_get_named_gpio(np, "gpios", 0);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ncfg;
 }
 
@@ -711,6 +737,7 @@ static int lpc32xx_nand_probe(struct platform_device *pdev)
 			"Missing or bad NAND config from device tree\n");
 		return -ENOENT;
 	}
+<<<<<<< HEAD
 
 	/* Start with WP disabled, if available */
 	host->wp_gpio = gpiod_get_optional(&pdev->dev, NULL, GPIOD_OUT_LOW);
@@ -723,6 +750,16 @@ static int lpc32xx_nand_probe(struct platform_device *pdev)
 	}
 
 	gpiod_set_consumer_name(host->wp_gpio, "NAND WP");
+=======
+	if (host->ncfg->wp_gpio == -EPROBE_DEFER)
+		return -EPROBE_DEFER;
+	if (gpio_is_valid(host->ncfg->wp_gpio) &&
+			gpio_request(host->ncfg->wp_gpio, "NAND WP")) {
+		dev_err(&pdev->dev, "GPIO not available\n");
+		return -EBUSY;
+	}
+	lpc32xx_wp_disable(host);
+>>>>>>> b7ba80a49124 (Commit)
 
 	host->pdata = dev_get_platdata(&pdev->dev);
 
@@ -819,7 +856,11 @@ put_clk:
 	clk_put(host->clk);
 free_gpio:
 	lpc32xx_wp_enable(host);
+<<<<<<< HEAD
 	gpiod_put(host->wp_gpio);
+=======
+	gpio_free(host->ncfg->wp_gpio);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return res;
 }
@@ -845,11 +886,19 @@ static int lpc32xx_nand_remove(struct platform_device *pdev)
 	clk_put(host->clk);
 
 	lpc32xx_wp_enable(host);
+<<<<<<< HEAD
 	gpiod_put(host->wp_gpio);
+=======
+	gpio_free(host->ncfg->wp_gpio);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM
+>>>>>>> b7ba80a49124 (Commit)
 static int lpc32xx_nand_resume(struct platform_device *pdev)
 {
 	struct lpc32xx_nand_host *host = platform_get_drvdata(pdev);
@@ -881,6 +930,14 @@ static int lpc32xx_nand_suspend(struct platform_device *pdev, pm_message_t pm)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#else
+#define lpc32xx_nand_resume NULL
+#define lpc32xx_nand_suspend NULL
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id lpc32xx_nand_match[] = {
 	{ .compatible = "nxp,lpc3220-mlc" },
 	{ /* sentinel */ },
@@ -890,8 +947,13 @@ MODULE_DEVICE_TABLE(of, lpc32xx_nand_match);
 static struct platform_driver lpc32xx_nand_driver = {
 	.probe		= lpc32xx_nand_probe,
 	.remove		= lpc32xx_nand_remove,
+<<<<<<< HEAD
 	.resume		= pm_ptr(lpc32xx_nand_resume),
 	.suspend	= pm_ptr(lpc32xx_nand_suspend),
+=======
+	.resume		= lpc32xx_nand_resume,
+	.suspend	= lpc32xx_nand_suspend,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= DRV_NAME,
 		.of_match_table = lpc32xx_nand_match,

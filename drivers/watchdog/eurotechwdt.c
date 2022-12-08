@@ -192,7 +192,11 @@ static void eurwdt_ping(void)
  * @ppos: pointer to the position to write. No seeks allowed
  *
  * A write to a watchdog device is defined as a keepalive signal. Any
+<<<<<<< HEAD
  * write of data will do, as we don't define content meaning.
+=======
+ * write of data will do, as we we don't define content meaning.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 static ssize_t eurwdt_write(struct file *file, const char __user *buf,

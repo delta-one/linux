@@ -4,7 +4,10 @@
 
 #include <linux/compiler.h>
 #include <linux/types.h>
+<<<<<<< HEAD
 #include <linux/bitops.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Atomic operations that C can't guarantee us.  Useful for
@@ -70,6 +73,7 @@ static inline int atomic_cmpxchg(atomic_t *v, int oldval, int newval)
 	return cmpxchg(&(v)->counter, oldval, newval);
 }
 
+<<<<<<< HEAD
 static inline int test_and_set_bit(long nr, unsigned long *addr)
 {
 	unsigned long mask = BIT_MASK(nr);
@@ -92,4 +96,6 @@ static inline int test_and_clear_bit(long nr, unsigned long *addr)
 	return !!(old & mask);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __TOOLS_ASM_GENERIC_ATOMIC_H */

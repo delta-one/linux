@@ -52,6 +52,9 @@ source "drivers/virt/coco/efi_secret/Kconfig"
 
 source "drivers/virt/coco/sev-guest/Kconfig"
 
+<<<<<<< HEAD
 source "drivers/virt/coco/tdx-guest/Kconfig"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endif

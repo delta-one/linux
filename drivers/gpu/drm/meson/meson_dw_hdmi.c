@@ -140,6 +140,10 @@ struct meson_dw_hdmi {
 	struct reset_control *hdmitx_apb;
 	struct reset_control *hdmitx_ctrl;
 	struct reset_control *hdmitx_phy;
+<<<<<<< HEAD
+=======
+	struct regulator *hdmi_supply;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 irq_stat;
 	struct dw_hdmi *hdmi;
 	struct drm_bridge *bridge;
@@ -664,6 +668,14 @@ static void meson_dw_hdmi_init(struct meson_dw_hdmi *meson_dw_hdmi)
 
 }
 
+<<<<<<< HEAD
+=======
+static void meson_disable_regulator(void *data)
+{
+	regulator_disable(data);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void meson_disable_clk(void *data)
 {
 	clk_disable_unprepare(data);
@@ -717,9 +729,26 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
 	meson_dw_hdmi->data = match;
 	dw_plat_data = &meson_dw_hdmi->dw_plat_data;
 
+<<<<<<< HEAD
 	ret = devm_regulator_get_enable_optional(dev, "hdmi");
 	if (ret < 0 && ret != -ENODEV)
 		return ret;
+=======
+	meson_dw_hdmi->hdmi_supply = devm_regulator_get_optional(dev, "hdmi");
+	if (IS_ERR(meson_dw_hdmi->hdmi_supply)) {
+		if (PTR_ERR(meson_dw_hdmi->hdmi_supply) == -EPROBE_DEFER)
+			return -EPROBE_DEFER;
+		meson_dw_hdmi->hdmi_supply = NULL;
+	} else {
+		ret = regulator_enable(meson_dw_hdmi->hdmi_supply);
+		if (ret)
+			return ret;
+		ret = devm_add_action_or_reset(dev, meson_disable_regulator,
+					       meson_dw_hdmi->hdmi_supply);
+		if (ret)
+			return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	meson_dw_hdmi->hdmitx_apb = devm_reset_control_get_exclusive(dev,
 						"hdmitx_apb");

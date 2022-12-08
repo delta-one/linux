@@ -44,6 +44,7 @@ parse_tc_vlan_action(struct mlx5e_priv *priv,
 		return -EOPNOTSUPP;
 	}
 
+<<<<<<< HEAD
 	if (!mlx5_eswitch_vlan_actions_supported(priv->mdev, vlan_idx)) {
 		NL_SET_ERR_MSG_MOD(extack, "firmware vlan actions is not supported");
 		return -EOPNOTSUPP;
@@ -55,6 +56,21 @@ parse_tc_vlan_action(struct mlx5e_priv *priv,
 			*action |= MLX5_FLOW_CONTEXT_ACTION_VLAN_POP_2;
 		else
 			*action |= MLX5_FLOW_CONTEXT_ACTION_VLAN_POP;
+=======
+	switch (act->id) {
+	case FLOW_ACTION_VLAN_POP:
+		if (vlan_idx) {
+			if (!mlx5_eswitch_vlan_actions_supported(priv->mdev,
+								 MLX5_FS_VLAN_DEPTH)) {
+				NL_SET_ERR_MSG_MOD(extack, "vlan pop action is not supported");
+				return -EOPNOTSUPP;
+			}
+
+			*action |= MLX5_FLOW_CONTEXT_ACTION_VLAN_POP_2;
+		} else {
+			*action |= MLX5_FLOW_CONTEXT_ACTION_VLAN_POP;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case FLOW_ACTION_VLAN_PUSH:
 		attr->vlan_vid[vlan_idx] = act->vlan.vid;
@@ -63,10 +79,32 @@ parse_tc_vlan_action(struct mlx5e_priv *priv,
 		if (!attr->vlan_proto[vlan_idx])
 			attr->vlan_proto[vlan_idx] = htons(ETH_P_8021Q);
 
+<<<<<<< HEAD
 		if (vlan_idx)
 			*action |= MLX5_FLOW_CONTEXT_ACTION_VLAN_PUSH_2;
 		else
 			*action |= MLX5_FLOW_CONTEXT_ACTION_VLAN_PUSH;
+=======
+		if (vlan_idx) {
+			if (!mlx5_eswitch_vlan_actions_supported(priv->mdev,
+								 MLX5_FS_VLAN_DEPTH)) {
+				NL_SET_ERR_MSG_MOD(extack,
+						   "vlan push action is not supported for vlan depth > 1");
+				return -EOPNOTSUPP;
+			}
+
+			*action |= MLX5_FLOW_CONTEXT_ACTION_VLAN_PUSH_2;
+		} else {
+			if (!mlx5_eswitch_vlan_actions_supported(priv->mdev, 1) &&
+			    (act->vlan.proto != htons(ETH_P_8021Q) ||
+			     act->vlan.prio)) {
+				NL_SET_ERR_MSG_MOD(extack, "vlan push action is not supported");
+				return -EOPNOTSUPP;
+			}
+
+			*action |= MLX5_FLOW_CONTEXT_ACTION_VLAN_PUSH;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case FLOW_ACTION_VLAN_POP_ETH:
 		parse_state->eth_pop = true;

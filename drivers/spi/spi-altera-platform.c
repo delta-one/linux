@@ -39,6 +39,7 @@ static int altera_spi_probe(struct platform_device *pdev)
 	struct altera_spi_platform_data *pdata = dev_get_platdata(&pdev->dev);
 	enum altera_spi_type type = ALTERA_SPI_TYPE_UNKNOWN;
 	struct altera_spi *hw;
+<<<<<<< HEAD
 	struct spi_controller *host;
 	int err = -ENODEV;
 	u16 i;
@@ -49,6 +50,18 @@ static int altera_spi_probe(struct platform_device *pdev)
 
 	/* setup the host state. */
 	host->bus_num = -1;
+=======
+	struct spi_master *master;
+	int err = -ENODEV;
+	u16 i;
+
+	master = spi_alloc_master(&pdev->dev, sizeof(struct altera_spi));
+	if (!master)
+		return err;
+
+	/* setup the master state. */
+	master->bus_num = -1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (pdata) {
 		if (pdata->num_chipselect > ALTERA_SPI_MAX_CS) {
@@ -59,6 +72,7 @@ static int altera_spi_probe(struct platform_device *pdev)
 			goto exit;
 		}
 
+<<<<<<< HEAD
 		host->num_chipselect = pdata->num_chipselect;
 		host->mode_bits = pdata->mode_bits;
 		host->bits_per_word_mask = pdata->bits_per_word_mask;
@@ -71,6 +85,20 @@ static int altera_spi_probe(struct platform_device *pdev)
 	host->dev.of_node = pdev->dev.of_node;
 
 	hw = spi_controller_get_devdata(host);
+=======
+		master->num_chipselect = pdata->num_chipselect;
+		master->mode_bits = pdata->mode_bits;
+		master->bits_per_word_mask = pdata->bits_per_word_mask;
+	} else {
+		master->num_chipselect = 16;
+		master->mode_bits = SPI_CS_HIGH;
+		master->bits_per_word_mask = SPI_BPW_RANGE_MASK(1, 16);
+	}
+
+	master->dev.of_node = pdev->dev.of_node;
+
+	hw = spi_master_get_devdata(master);
+>>>>>>> b7ba80a49124 (Commit)
 	hw->dev = &pdev->dev;
 
 	if (platid)
@@ -107,24 +135,40 @@ static int altera_spi_probe(struct platform_device *pdev)
 		}
 	}
 
+<<<<<<< HEAD
 	altera_spi_init_host(host);
+=======
+	altera_spi_init_master(master);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* irq is optional */
 	hw->irq = platform_get_irq(pdev, 0);
 	if (hw->irq >= 0) {
 		err = devm_request_irq(&pdev->dev, hw->irq, altera_spi_irq, 0,
+<<<<<<< HEAD
 				       pdev->name, host);
+=======
+				       pdev->name, master);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			goto exit;
 	}
 
+<<<<<<< HEAD
 	err = devm_spi_register_controller(&pdev->dev, host);
+=======
+	err = devm_spi_register_master(&pdev->dev, master);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto exit;
 
 	if (pdata) {
 		for (i = 0; i < pdata->num_devices; i++) {
+<<<<<<< HEAD
 			if (!spi_new_device(host, pdata->devices + i))
+=======
+			if (!spi_new_device(master, pdata->devices + i))
+>>>>>>> b7ba80a49124 (Commit)
 				dev_warn(&pdev->dev,
 					 "unable to create SPI device: %s\n",
 					 pdata->devices[i].modalias);
@@ -135,7 +179,11 @@ static int altera_spi_probe(struct platform_device *pdev)
 
 	return 0;
 exit:
+<<<<<<< HEAD
 	spi_controller_put(host);
+=======
+	spi_master_put(master);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 

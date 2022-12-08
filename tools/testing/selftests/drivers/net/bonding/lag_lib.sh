@@ -1,8 +1,11 @@
 #!/bin/bash
 # SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
 NAMESPACES=""
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # Test that a link aggregation device (bonding, team) removes the hardware
 # addresses that it adds on its underlying devices.
 test_LAG_cleanup()
@@ -61,6 +64,7 @@ test_LAG_cleanup()
 
 	log_test "$driver cleanup mode $mode"
 }
+<<<<<<< HEAD
 
 # Build a generic 2 node net namespace with 2 connections
 # between the namespaces
@@ -165,3 +169,5 @@ test_bond_recovery()
 	log_test "$1 ($2) bond recovery"
 	lag_reset_network
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -47,6 +47,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	gpio@6000d000 {
 		/* Apalis GPIO7 MXM3 pin 15 PLX PEX 8605 PCIe Switch Reset */
 		pex-perst-n-hog {
@@ -57,6 +58,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Apalis UART1 */
 	serial@70006000 {
 		status = "okay";
@@ -246,3 +249,16 @@
 		vin-supply = <&reg_5v0>;
 	};
 };
+<<<<<<< HEAD
+=======
+
+&gpio {
+	/* Apalis GPIO7 MXM3 pin 15 PLX PEX 8605 PCIe Switch Reset */
+	pex-perst-n-hog {
+		gpio-hog;
+		gpios = <TEGRA_GPIO(S, 7) GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "PEX_PERST_N";
+	};
+};
+>>>>>>> b7ba80a49124 (Commit)

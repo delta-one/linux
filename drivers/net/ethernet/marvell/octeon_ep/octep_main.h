@@ -21,8 +21,11 @@
 #define  OCTEP_PCI_DEVICE_ID_CN93_PF 0xB200
 #define  OCTEP_PCI_DEVICE_ID_CN93_VF 0xB203
 
+<<<<<<< HEAD
 #define  OCTEP_PCI_DEVICE_ID_CNF95N_PF 0xB400    //95N PF
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define  OCTEP_MAX_QUEUES   63
 #define  OCTEP_MAX_IQ       OCTEP_MAX_QUEUES
 #define  OCTEP_MAX_OQ       OCTEP_MAX_QUEUES

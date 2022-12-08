@@ -118,6 +118,10 @@ struct psp_funcs
 	int (*bootloader_load_dbg_drv)(struct psp_context *psp);
 	int (*bootloader_load_ras_drv)(struct psp_context *psp);
 	int (*bootloader_load_sos)(struct psp_context *psp);
+<<<<<<< HEAD
+=======
+	int (*ring_init)(struct psp_context *psp, enum psp_ring_type ring_type);
+>>>>>>> b7ba80a49124 (Commit)
 	int (*ring_create)(struct psp_context *psp,
 			   enum psp_ring_type ring_type);
 	int (*ring_stop)(struct psp_context *psp,
@@ -135,12 +139,15 @@ struct psp_funcs
 	int (*vbflash_stat)(struct psp_context *psp);
 };
 
+<<<<<<< HEAD
 struct ta_funcs {
 	int (*fn_ta_initialize)(struct psp_context *psp);
 	int (*fn_ta_invoke)(struct psp_context *psp, uint32_t ta_cmd_id);
 	int (*fn_ta_terminate)(struct psp_context *psp);
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define AMDGPU_XGMI_MAX_CONNECTED_NODES		64
 struct psp_xgmi_node_info {
 	uint64_t				node_id;
@@ -314,7 +321,10 @@ struct psp_context
 	struct psp_gfx_cmd_resp		*cmd;
 
 	const struct psp_funcs		*funcs;
+<<<<<<< HEAD
 	const struct ta_funcs		*ta_funcs;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* firmware buffer */
 	struct amdgpu_bo		*fw_pri_bo;
@@ -395,6 +405,10 @@ struct amdgpu_psp_funcs {
 };
 
 
+<<<<<<< HEAD
+=======
+#define psp_ring_init(psp, type) (psp)->funcs->ring_init((psp), (type))
+>>>>>>> b7ba80a49124 (Commit)
 #define psp_ring_create(psp, type) (psp)->funcs->ring_create((psp), (type))
 #define psp_ring_stop(psp, type) (psp)->funcs->ring_stop((psp), (type))
 #define psp_ring_destroy(psp, type) ((psp)->funcs->ring_destroy((psp), (type)))
@@ -468,6 +482,12 @@ int psp_ta_load(struct psp_context *psp, struct ta_context *context);
 int psp_ta_invoke(struct psp_context *psp,
 			uint32_t ta_cmd_id,
 			struct ta_context *context);
+<<<<<<< HEAD
+=======
+int psp_ta_invoke_indirect(struct psp_context *psp,
+		  uint32_t ta_cmd_id,
+		  struct ta_context *context);
+>>>>>>> b7ba80a49124 (Commit)
 
 int psp_xgmi_initialize(struct psp_context *psp, bool set_extended_data, bool load_ta);
 int psp_xgmi_terminate(struct psp_context *psp);
@@ -481,7 +501,11 @@ int psp_xgmi_get_topology_info(struct psp_context *psp,
 int psp_xgmi_set_topology_info(struct psp_context *psp,
 			       int number_devices,
 			       struct psp_xgmi_topology_info *topology);
+<<<<<<< HEAD
 int psp_ras_initialize(struct psp_context *psp);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 int psp_ras_invoke(struct psp_context *psp, uint32_t ta_cmd_id);
 int psp_ras_enable_features(struct psp_context *psp,
 		union ta_ras_cmd_input *info, bool enable);

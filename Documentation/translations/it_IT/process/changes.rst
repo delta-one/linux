@@ -35,8 +35,12 @@ PC Card, per esempio, probabilmente non dovreste preoccuparvi di pcmciautils.
 GNU C                  5.1                gcc --version
 Clang/LLVM (optional)  11.0.0             clang --version
 GNU make               3.81               make --version
+<<<<<<< HEAD
 bash                   4.2                bash --version
 binutils               2.25               ld -v
+=======
+binutils               2.23               ld -v
+>>>>>>> b7ba80a49124 (Commit)
 flex                   2.5.35             flex --version
 bison                  2.0                bison --version
 pahole                 1.16               pahole --version
@@ -89,6 +93,7 @@ Make
 
 Per compilare il kernel vi servirà GNU make 3.81 o successivo.
 
+<<<<<<< HEAD
 Bash
 ----
 Per generare il kernel vengono usati alcuni script per bash.
@@ -98,6 +103,12 @@ Binutils
 --------
 
 Per generare il kernel è necessario avere Binutils 2.25 o superiore.
+=======
+Binutils
+--------
+
+Per generare il kernel è necessario avere Binutils 2.23 o superiore.
+>>>>>>> b7ba80a49124 (Commit)
 
 pkg-config
 ----------
@@ -376,11 +387,14 @@ Make
 
 - <ftp://ftp.gnu.org/gnu/make/>
 
+<<<<<<< HEAD
 Bash
 ----
 
 - <ftp://ftp.gnu.org/gnu/bash/>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Binutils
 --------
 

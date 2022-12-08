@@ -27,8 +27,11 @@
 #include "dcn10/dcn10_resource.h"
 
 #include "dcn10_fpu.h"
+<<<<<<< HEAD
 #include "resource.h"
 #include "amdgpu_dm/dc_fpu.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * DOC: DCN10 FPU manipulation Overview
@@ -123,6 +126,7 @@ struct _vcs_dpi_soc_bounding_box_st dcn1_0_soc = {
 	.writeback_dram_clock_change_latency_us = 23.0,
 	.return_bus_width_bytes = 64,
 };
+<<<<<<< HEAD
 
 void dcn10_resource_construct_fp(struct dc *dc)
 {
@@ -157,3 +161,5 @@ void dcn10_resource_construct_fp(struct dc *dc)
 			dc->dcn_soc->fabric_and_dram_bandwidth_vmax0p9 = 20.80f;
 	}
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

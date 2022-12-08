@@ -100,8 +100,12 @@ struct pipe_buf_operations {
 	 * hook. Returns 0 for good, or a negative error value in case of
 	 * error.  If not present all pages are considered good.
 	 */
+<<<<<<< HEAD
 	int (*confirm)(struct pipe_inode_info *, struct pipe_buffer *,
 			bool nonblock);
+=======
+	int (*confirm)(struct pipe_inode_info *, struct pipe_buffer *);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * When the contents of this pipe buffer has been completely
@@ -158,6 +162,7 @@ static inline bool pipe_full(unsigned int head, unsigned int tail,
 }
 
 /**
+<<<<<<< HEAD
  * pipe_buf - Return the pipe buffer for the specified slot in the pipe ring
  * @pipe: The pipe to access
  * @slot: The slot of interest
@@ -178,6 +183,8 @@ static inline struct pipe_buffer *pipe_head_buf(const struct pipe_inode_info *pi
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * pipe_buf_get - get a reference to a pipe_buffer
  * @pipe:	the pipe that the buffer belongs to
  * @buf:	the buffer to get a reference to
@@ -208,6 +215,7 @@ static inline void pipe_buf_release(struct pipe_inode_info *pipe,
  * pipe_buf_confirm - verify contents of the pipe buffer
  * @pipe:	the pipe that the buffer belongs to
  * @buf:	the buffer to confirm
+<<<<<<< HEAD
  * @nonblock:	whether the operation should be nonblocking
  */
 static inline int pipe_buf_confirm(struct pipe_inode_info *pipe,
@@ -216,6 +224,15 @@ static inline int pipe_buf_confirm(struct pipe_inode_info *pipe,
 	if (!buf->ops->confirm)
 		return 0;
 	return buf->ops->confirm(pipe, buf, nonblock);
+=======
+ */
+static inline int pipe_buf_confirm(struct pipe_inode_info *pipe,
+				   struct pipe_buffer *buf)
+{
+	if (!buf->ops->confirm)
+		return 0;
+	return buf->ops->confirm(pipe, buf);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

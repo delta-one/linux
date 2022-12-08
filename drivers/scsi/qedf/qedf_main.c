@@ -1921,6 +1921,7 @@ static int qedf_vport_create(struct fc_vport *vport, bool disabled)
 		fc_vport_setlink(vn_port);
 	}
 
+<<<<<<< HEAD
 	/* Set symbolic node name */
 	if (base_qedf->pdev->device == QL45xxx)
 		snprintf(fc_host_symbolic_name(vn_port->host), 256,
@@ -1942,6 +1943,8 @@ static int qedf_vport_create(struct fc_vport *vport, bool disabled)
 	/* Set maxframe size */
 	fc_host_maxframe_size(vn_port->host) = n_port->mfs;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	QEDF_INFO(&(base_qedf->dbg_ctx), QEDF_LOG_NPIV, "vn_port=%p.\n",
 		   vn_port);
 
@@ -2951,6 +2954,10 @@ static int qedf_alloc_bdq(struct qedf_ctx *qedf)
 	int i;
 	struct scsi_bd *pbl;
 	u64 *list;
+<<<<<<< HEAD
+=======
+	dma_addr_t page;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Alloc dma memory for BDQ buffers */
 	for (i = 0; i < QEDF_BDQ_SIZE; i++) {
@@ -3011,9 +3018,17 @@ static int qedf_alloc_bdq(struct qedf_ctx *qedf)
 	qedf->bdq_pbl_list_num_entries = qedf->bdq_pbl_mem_size /
 	    QEDF_PAGE_SIZE;
 	list = (u64 *)qedf->bdq_pbl_list;
+<<<<<<< HEAD
 	for (i = 0; i < qedf->bdq_pbl_list_num_entries; i++) {
 		*list = qedf->bdq_pbl_dma;
 		list++;
+=======
+	page = qedf->bdq_pbl_list_dma;
+	for (i = 0; i < qedf->bdq_pbl_list_num_entries; i++) {
+		*list = qedf->bdq_pbl_dma;
+		list++;
+		page += QEDF_PAGE_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;

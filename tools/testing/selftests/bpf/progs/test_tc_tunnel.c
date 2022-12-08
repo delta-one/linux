@@ -38,10 +38,13 @@ static const int cfg_udp_src = 20000;
 #define	VXLAN_FLAGS     0x8
 #define	VXLAN_VNI       1
 
+<<<<<<< HEAD
 #ifndef NEXTHDR_DEST
 #define NEXTHDR_DEST	60
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* MPLS label 1000 with S bit (last label) set and ttl of 255. */
 static const __u32 mpls_label = __bpf_constant_htonl(1000 << 12 |
 						     MPLS_LS_S_MASK | 0xff);
@@ -367,6 +370,7 @@ static __always_inline int __encap_ipv6(struct __sk_buff *skb, __u8 encap_proto,
 	return TC_ACT_OK;
 }
 
+<<<<<<< HEAD
 static int encap_ipv6_ipip6(struct __sk_buff *skb)
 {
 	struct iphdr iph_inner;
@@ -422,6 +426,8 @@ static int encap_ipv6_ipip6(struct __sk_buff *skb)
 	return TC_ACT_OK;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static __always_inline int encap_ipv6(struct __sk_buff *skb, __u8 encap_proto,
 				      __u16 l2_proto)
 {
@@ -520,6 +526,7 @@ int __encap_ip6tnl_none(struct __sk_buff *skb)
 		return TC_ACT_OK;
 }
 
+<<<<<<< HEAD
 SEC("encap_ipip6_none")
 int __encap_ipip6_none(struct __sk_buff *skb)
 {
@@ -529,6 +536,8 @@ int __encap_ipip6_none(struct __sk_buff *skb)
 		return TC_ACT_OK;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 SEC("encap_ip6gre_none")
 int __encap_ip6gre_none(struct __sk_buff *skb)
 {
@@ -596,14 +605,18 @@ int __encap_ip6vxlan_eth(struct __sk_buff *skb)
 
 static int decap_internal(struct __sk_buff *skb, int off, int len, char proto)
 {
+<<<<<<< HEAD
 	__u64 flags = BPF_F_ADJ_ROOM_FIXED_GSO;
 	struct ipv6_opt_hdr ip6_opt_hdr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct gre_hdr greh;
 	struct udphdr udph;
 	int olen = len;
 
 	switch (proto) {
 	case IPPROTO_IPIP:
+<<<<<<< HEAD
 		flags |= BPF_F_ADJ_ROOM_DECAP_L3_IPV4;
 		break;
 	case IPPROTO_IPV6:
@@ -623,6 +636,9 @@ static int decap_internal(struct __sk_buff *skb, int off, int len, char proto)
 		default:
 			return TC_ACT_OK;
 		}
+=======
+	case IPPROTO_IPV6:
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case IPPROTO_GRE:
 		olen += sizeof(struct gre_hdr);
@@ -657,7 +673,12 @@ static int decap_internal(struct __sk_buff *skb, int off, int len, char proto)
 		return TC_ACT_OK;
 	}
 
+<<<<<<< HEAD
 	if (bpf_skb_adjust_room(skb, -olen, BPF_ADJ_ROOM_MAC, flags))
+=======
+	if (bpf_skb_adjust_room(skb, -olen, BPF_ADJ_ROOM_MAC,
+				BPF_F_ADJ_ROOM_FIXED_GSO))
+>>>>>>> b7ba80a49124 (Commit)
 		return TC_ACT_SHOT;
 
 	return TC_ACT_OK;

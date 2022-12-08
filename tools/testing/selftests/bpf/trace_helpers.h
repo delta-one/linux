@@ -10,8 +10,11 @@ struct ksym {
 };
 
 int load_kallsyms(void);
+<<<<<<< HEAD
 int load_kallsyms_refresh(void);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ksym *ksym_search(long key);
 long ksym_get_addr(const char *name);
 

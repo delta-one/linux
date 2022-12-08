@@ -228,7 +228,11 @@ static int ina3221_read_value(struct ina3221_data *ina, unsigned int reg,
 	 * Shunt Voltage Sum register has 14-bit value with 1-bit shift
 	 * Other Shunt Voltage registers have 12 bits with 3-bit shift
 	 */
+<<<<<<< HEAD
 	if (reg == INA3221_SHUNT_SUM || reg == INA3221_CRIT_SUM)
+=======
+	if (reg == INA3221_SHUNT_SUM)
+>>>>>>> b7ba80a49124 (Commit)
 		*val = sign_extend32(regval >> 1, 14);
 	else
 		*val = sign_extend32(regval >> 3, 12);
@@ -465,7 +469,11 @@ static int ina3221_write_curr(struct device *dev, u32 attr,
 	 *     SHUNT_SUM: (1 / 40uV) << 1 = 1 / 20uV
 	 *     SHUNT[1-3]: (1 / 40uV) << 3 = 1 / 5uV
 	 */
+<<<<<<< HEAD
 	if (reg == INA3221_SHUNT_SUM || reg == INA3221_CRIT_SUM)
+=======
+	if (reg == INA3221_SHUNT_SUM)
+>>>>>>> b7ba80a49124 (Commit)
 		regval = DIV_ROUND_CLOSEST(voltage_uv, 20) & 0xfffe;
 	else
 		regval = DIV_ROUND_CLOSEST(voltage_uv, 5) & 0xfff8;
@@ -772,7 +780,11 @@ static int ina3221_probe_child_from_dt(struct device *dev,
 		return ret;
 	} else if (val > INA3221_CHANNEL3) {
 		dev_err(dev, "invalid reg %d of %pOFn\n", val, child);
+<<<<<<< HEAD
 		return -EINVAL;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	input = &ina->inputs[val];
@@ -928,7 +940,11 @@ static void ina3221_remove(struct i2c_client *client)
 	mutex_destroy(&ina->lock);
 }
 
+<<<<<<< HEAD
 static int ina3221_suspend(struct device *dev)
+=======
+static int __maybe_unused ina3221_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ina3221_data *ina = dev_get_drvdata(dev);
 	int ret;
@@ -951,7 +967,11 @@ static int ina3221_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ina3221_resume(struct device *dev)
+=======
+static int __maybe_unused ina3221_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ina3221_data *ina = dev_get_drvdata(dev);
 	int ret;
@@ -994,8 +1014,16 @@ static int ina3221_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_RUNTIME_DEV_PM_OPS(ina3221_pm, ina3221_suspend, ina3221_resume,
 				 NULL);
+=======
+static const struct dev_pm_ops ina3221_pm = {
+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+				pm_runtime_force_resume)
+	SET_RUNTIME_PM_OPS(ina3221_suspend, ina3221_resume, NULL)
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct of_device_id ina3221_of_match_table[] = {
 	{ .compatible = "ti,ina3221", },
@@ -1015,7 +1043,11 @@ static struct i2c_driver ina3221_i2c_driver = {
 	.driver = {
 		.name = INA3221_DRIVER_NAME,
 		.of_match_table = ina3221_of_match_table,
+<<<<<<< HEAD
 		.pm = pm_ptr(&ina3221_pm),
+=======
+		.pm = &ina3221_pm,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.id_table = ina3221_ids,
 };

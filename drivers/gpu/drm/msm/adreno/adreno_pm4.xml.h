@@ -8,6 +8,7 @@ http://github.com/freedreno/envytools/
 git clone https://github.com/freedreno/envytools.git
 
 The rules-ng-ng source files this header was generated from are:
+<<<<<<< HEAD
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/adreno.xml                     (    594 bytes, from 2023-03-10 18:32:52)
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/freedreno_copyright.xml        (   1572 bytes, from 2022-07-23 20:21:46)
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/adreno/a2xx.xml                (  91929 bytes, from 2023-02-28 23:52:27)
@@ -23,6 +24,23 @@ The rules-ng-ng source files this header was generated from are:
 - /home/robclark/src/mesa/mesa/src/freedreno/registers/adreno/adreno_pipe_regs.xml    (   2976 bytes, from 2023-03-10 18:32:52)
 
 Copyright (C) 2013-2023 by the following authors:
+=======
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno.xml                     (    594 bytes, from 2021-01-30 18:25:22)
+- /home/robclark/tmp/mesa/src/freedreno/registers/freedreno_copyright.xml        (   1572 bytes, from 2020-12-31 19:26:32)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a2xx.xml                (  90810 bytes, from 2021-06-21 15:24:24)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/adreno_common.xml       (  14609 bytes, from 2021-11-24 23:05:10)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/adreno_pm4.xml          (  69086 bytes, from 2022-03-03 16:41:33)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a3xx.xml                (  84231 bytes, from 2021-11-24 23:05:10)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a4xx.xml                ( 113358 bytes, from 2022-01-31 23:06:21)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a5xx.xml                ( 149512 bytes, from 2022-01-31 23:06:21)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a6xx.xml                ( 184954 bytes, from 2022-03-03 16:41:33)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/a6xx_gmu.xml            (  11331 bytes, from 2021-07-22 15:21:56)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/ocmem.xml               (   1773 bytes, from 2021-01-30 18:25:22)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/adreno_control_regs.xml (   6038 bytes, from 2021-07-22 15:21:56)
+- /home/robclark/tmp/mesa/src/freedreno/registers/adreno/adreno_pipe_regs.xml    (   2924 bytes, from 2021-07-22 15:21:56)
+
+Copyright (C) 2013-2022 by the following authors:
+>>>>>>> b7ba80a49124 (Commit)
 - Rob Clark <robdclark@gmail.com> (robclark)
 - Ilia Mirkin <imirkin@alum.mit.edu> (imirkin)
 
@@ -76,10 +94,13 @@ enum vgt_event_type {
 	VS_FETCH_DONE = 27,
 	FACENESS_FLUSH = 28,
 	WT_DONE_TS = 8,
+<<<<<<< HEAD
 	START_FRAGMENT_CTRS = 13,
 	STOP_FRAGMENT_CTRS = 14,
 	START_COMPUTE_CTRS = 15,
 	STOP_COMPUTE_CTRS = 16,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	FLUSH_SO_0 = 17,
 	FLUSH_SO_1 = 18,
 	FLUSH_SO_2 = 19,
@@ -90,7 +111,11 @@ enum vgt_event_type {
 	PC_CCU_FLUSH_DEPTH_TS = 28,
 	PC_CCU_FLUSH_COLOR_TS = 29,
 	BLIT = 30,
+<<<<<<< HEAD
 	LRZ_CLEAR = 37,
+=======
+	UNK_25 = 37,
+>>>>>>> b7ba80a49124 (Commit)
 	LRZ_FLUSH = 38,
 	BLIT_OP_FILL_2D = 39,
 	BLIT_OP_COPY_2D = 40,
@@ -99,6 +124,7 @@ enum vgt_event_type {
 	UNK_2C = 44,
 	UNK_2D = 45,
 	CACHE_INVALIDATE = 49,
+<<<<<<< HEAD
 	LABEL = 63,
 	CCU_INVALIDATE_DEPTH = 24,
 	CCU_INVALIDATE_COLOR = 25,
@@ -113,6 +139,8 @@ enum vgt_event_type {
 	CACHE_CLEAN = 49,
 	CACHE_FLUSH7 = 50,
 	CACHE_INVALIDATE7 = 51,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum pc_di_primtype {
@@ -308,9 +336,12 @@ enum adreno_pm4_type3_packets {
 	IN_INCR_UPDT_CONST = 86,
 	IN_INCR_UPDT_INSTR = 87,
 	PKT4 = 4,
+<<<<<<< HEAD
 	IN_IB_END = 10,
 	IN_GMU_INTERRUPT = 11,
 	IN_PREEMPT = 15,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	CP_SCRATCH_WRITE = 76,
 	CP_REG_TO_MEM_OFFSET_MEM = 116,
 	CP_REG_TO_MEM_OFFSET_REG = 114,
@@ -318,11 +349,15 @@ enum adreno_pm4_type3_packets {
 	CP_WAIT_TWO_REGS = 112,
 	CP_MEMCPY = 117,
 	CP_SET_BIN_DATA5_OFFSET = 46,
+<<<<<<< HEAD
 	CP_CONTEXT_SWITCH = 84,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	CP_SET_CTXSWITCH_IB = 85,
 	CP_REG_WRITE = 109,
 	CP_START_BIN = 80,
 	CP_END_BIN = 81,
+<<<<<<< HEAD
 	CP_PREEMPT_DISABLE = 108,
 	CP_WAIT_TIMESTAMP = 20,
 	CP_THREAD_CONTROL = 23,
@@ -332,6 +367,8 @@ enum adreno_pm4_type3_packets {
 	CP_UNK18 = 24,
 	CP_UNK1B = 27,
 	CP_UNK49 = 73,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum adreno_state_block {
@@ -511,6 +548,7 @@ enum reg_tracker {
 	TRACK_CNTL_REG = 1,
 	TRACK_RENDER_CNTL = 2,
 	UNK_EVENT_WRITE = 4,
+<<<<<<< HEAD
 	TRACK_LRZ = 8,
 };
 
@@ -518,6 +556,8 @@ enum cp_thread {
 	CP_SET_THREAD_BR = 1,
 	CP_SET_THREAD_BV = 2,
 	CP_SET_THREAD_BOTH = 3,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define REG_CP_LOAD_STATE_0					0x00000000
@@ -1294,10 +1334,13 @@ static inline uint32_t CP_SET_BIN_DATA5_6_BIN_PRIM_STRM_HI(uint32_t val)
 	return ((val) << CP_SET_BIN_DATA5_6_BIN_PRIM_STRM_HI__SHIFT) & CP_SET_BIN_DATA5_6_BIN_PRIM_STRM_HI__MASK;
 }
 
+<<<<<<< HEAD
 #define REG_CP_SET_BIN_DATA5_7					0x00000007
 
 #define REG_CP_SET_BIN_DATA5_9					0x00000009
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define REG_CP_SET_BIN_DATA5_OFFSET_0				0x00000000
 #define CP_SET_BIN_DATA5_OFFSET_0_VSC_SIZE__MASK		0x003f0000
 #define CP_SET_BIN_DATA5_OFFSET_0_VSC_SIZE__SHIFT		16
@@ -2244,6 +2287,7 @@ static inline uint32_t A6XX_CP_REG_TEST_0_BIT(uint32_t val)
 {
 	return ((val) << A6XX_CP_REG_TEST_0_BIT__SHIFT) & A6XX_CP_REG_TEST_0_BIT__MASK;
 }
+<<<<<<< HEAD
 #define A6XX_CP_REG_TEST_0_SKIP_WAIT_FOR_ME			0x02000000
 #define A6XX_CP_REG_TEST_0_PRED_BIT__MASK			0x7c000000
 #define A6XX_CP_REG_TEST_0_PRED_BIT__SHIFT			26
@@ -2256,6 +2300,9 @@ static inline uint32_t A6XX_CP_REG_TEST_0_PRED_BIT(uint32_t val)
 #define REG_A6XX_CP_REG_TEST_PRED_MASK				0x00000001
 
 #define REG_A6XX_CP_REG_TEST_PRED_VAL				0x00000002
+=======
+#define A6XX_CP_REG_TEST_0_WAIT_FOR_ME				0x02000000
+>>>>>>> b7ba80a49124 (Commit)
 
 #define REG_CP_COND_REG_EXEC_0					0x00000000
 #define CP_COND_REG_EXEC_0_REG0__MASK				0x0003ffff
@@ -2264,12 +2311,15 @@ static inline uint32_t CP_COND_REG_EXEC_0_REG0(uint32_t val)
 {
 	return ((val) << CP_COND_REG_EXEC_0_REG0__SHIFT) & CP_COND_REG_EXEC_0_REG0__MASK;
 }
+<<<<<<< HEAD
 #define CP_COND_REG_EXEC_0_PRED_BIT__MASK			0x007c0000
 #define CP_COND_REG_EXEC_0_PRED_BIT__SHIFT			18
 static inline uint32_t CP_COND_REG_EXEC_0_PRED_BIT(uint32_t val)
 {
 	return ((val) << CP_COND_REG_EXEC_0_PRED_BIT__SHIFT) & CP_COND_REG_EXEC_0_PRED_BIT__MASK;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CP_COND_REG_EXEC_0_BINNING				0x02000000
 #define CP_COND_REG_EXEC_0_GMEM					0x04000000
 #define CP_COND_REG_EXEC_0_SYSMEM				0x08000000
@@ -2367,17 +2417,24 @@ static inline uint32_t CP_SET_CTXSWITCH_IB_2_TYPE(enum ctxswitch_ib val)
 }
 
 #define REG_CP_REG_WRITE_0					0x00000000
+<<<<<<< HEAD
 #define CP_REG_WRITE_0_TRACKER__MASK				0x0000000f
+=======
+#define CP_REG_WRITE_0_TRACKER__MASK				0x00000007
+>>>>>>> b7ba80a49124 (Commit)
 #define CP_REG_WRITE_0_TRACKER__SHIFT				0
 static inline uint32_t CP_REG_WRITE_0_TRACKER(enum reg_tracker val)
 {
 	return ((val) << CP_REG_WRITE_0_TRACKER__SHIFT) & CP_REG_WRITE_0_TRACKER__MASK;
 }
 
+<<<<<<< HEAD
 #define REG_CP_REG_WRITE_1					0x00000001
 
 #define REG_CP_REG_WRITE_2					0x00000002
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define REG_CP_SMMU_TABLE_UPDATE_0				0x00000000
 #define CP_SMMU_TABLE_UPDATE_0_TTBR0_LO__MASK			0xffffffff
 #define CP_SMMU_TABLE_UPDATE_0_TTBR0_LO__SHIFT			0
@@ -2424,6 +2481,7 @@ static inline uint32_t CP_SMMU_TABLE_UPDATE_3_CONTEXTBANK(uint32_t val)
 
 #define REG_CP_START_BIN_BODY_DWORDS				0x00000004
 
+<<<<<<< HEAD
 #define REG_CP_WAIT_TIMESTAMP_0					0x00000000
 
 #define REG_CP_WAIT_TIMESTAMP_ADDR				0x00000001
@@ -2440,5 +2498,7 @@ static inline uint32_t CP_THREAD_CONTROL_0_THREAD(enum cp_thread val)
 #define CP_THREAD_CONTROL_0_CONCURRENT_BIN_DISABLE		0x08000000
 #define CP_THREAD_CONTROL_0_SYNC_THREADS			0x80000000
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* ADRENO_PM4_XML */

@@ -1224,7 +1224,11 @@ static struct attribute *umad_class_dev_attrs[] = {
 };
 ATTRIBUTE_GROUPS(umad_class_dev);
 
+<<<<<<< HEAD
 static char *umad_devnode(const struct device *dev, umode_t *mode)
+=======
+static char *umad_devnode(struct device *dev, umode_t *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return kasprintf(GFP_KERNEL, "infiniband/%s", dev_name(dev));
 }

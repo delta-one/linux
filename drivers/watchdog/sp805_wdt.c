@@ -88,7 +88,11 @@ static bool wdt_is_running(struct watchdog_device *wdd)
 	return (wdtcontrol & ENABLE_MASK) == ENABLE_MASK;
 }
 
+<<<<<<< HEAD
 /* This routine finds load value that will reset system in required timeout */
+=======
+/* This routine finds load value that will reset system in required timout */
+>>>>>>> b7ba80a49124 (Commit)
 static int wdt_setload(struct watchdog_device *wdd, unsigned int timeout)
 {
 	struct sp805_wdt *wdt = watchdog_get_drvdata(wdd);

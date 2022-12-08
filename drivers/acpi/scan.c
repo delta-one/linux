@@ -20,7 +20,10 @@
 #include <linux/platform_data/x86/apple.h>
 #include <linux/pgtable.h>
 #include <linux/crc32.h>
+<<<<<<< HEAD
 #include <linux/dma-direct.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "internal.h"
 
@@ -30,7 +33,11 @@ extern struct acpi_device *acpi_root;
 #define ACPI_BUS_HID			"LNXSYBUS"
 #define ACPI_BUS_DEVICE_NAME		"System Bus"
 
+<<<<<<< HEAD
 #define INVALID_ACPI_HANDLE	((acpi_handle)ZERO_PAGE(0))
+=======
+#define INVALID_ACPI_HANDLE	((acpi_handle)empty_zero_page)
+>>>>>>> b7ba80a49124 (Commit)
 
 static const char *dummy_hid = "device";
 
@@ -789,7 +796,10 @@ static bool acpi_info_matches_ids(struct acpi_device_info *info,
 static const char * const acpi_ignore_dep_ids[] = {
 	"PNP0D80", /* Windows-compatible System Power Management Controller */
 	"INT33BD", /* Intel Baytrail Mailbox Device */
+<<<<<<< HEAD
 	"LATT2021", /* Lattice FW Update Client Driver */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	NULL
 };
 
@@ -1370,12 +1380,18 @@ static void acpi_set_pnp_ids(acpi_handle handle, struct acpi_device_pnp *pnp,
 		 * Some devices don't reliably have _HIDs & _CIDs, so add
 		 * synthetic HIDs to make sure drivers can find them.
 		 */
+<<<<<<< HEAD
 		if (acpi_is_video_device(handle)) {
 			acpi_add_id(pnp, ACPI_VIDEO_HID);
 			pnp->type.backlight = 1;
 			break;
 		}
 		if (acpi_bay_match(handle))
+=======
+		if (acpi_is_video_device(handle))
+			acpi_add_id(pnp, ACPI_VIDEO_HID);
+		else if (acpi_bay_match(handle))
+>>>>>>> b7ba80a49124 (Commit)
 			acpi_add_id(pnp, ACPI_BAY_HID);
 		else if (acpi_dock_match(handle))
 			acpi_add_id(pnp, ACPI_DOCK_HID);
@@ -1468,6 +1484,7 @@ enum dev_dma_attr acpi_get_dma_attr(struct acpi_device *adev)
  * acpi_dma_get_range() - Get device DMA parameters.
  *
  * @dev: device to configure
+<<<<<<< HEAD
  * @map: pointer to DMA ranges result
  *
  * Evaluate DMA regions and return pointer to DMA regions on
@@ -1476,13 +1493,31 @@ enum dev_dma_attr acpi_get_dma_attr(struct acpi_device *adev)
  * Return 0 on success, < 0 on failure.
  */
 int acpi_dma_get_range(struct device *dev, const struct bus_dma_region **map)
+=======
+ * @dma_addr: pointer device DMA address result
+ * @offset: pointer to the DMA offset result
+ * @size: pointer to DMA range size result
+ *
+ * Evaluate DMA regions and return respectively DMA region start, offset
+ * and size in dma_addr, offset and size on parsing success; it does not
+ * update the passed in values on failure.
+ *
+ * Return 0 on success, < 0 on failure.
+ */
+int acpi_dma_get_range(struct device *dev, u64 *dma_addr, u64 *offset,
+		       u64 *size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct acpi_device *adev;
 	LIST_HEAD(list);
 	struct resource_entry *rentry;
 	int ret;
 	struct device *dma_dev = dev;
+<<<<<<< HEAD
 	struct bus_dma_region *r;
+=======
+	u64 len, dma_start = U64_MAX, dma_end = 0, dma_offset = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Walk the device tree chasing an ACPI companion with a _DMA
@@ -1507,6 +1542,7 @@ int acpi_dma_get_range(struct device *dev, const struct bus_dma_region **map)
 
 	ret = acpi_dev_get_dma_resources(adev, &list);
 	if (ret > 0) {
+<<<<<<< HEAD
 		r = kcalloc(ret + 1, sizeof(*r), GFP_KERNEL);
 		if (!r) {
 			ret = -ENOMEM;
@@ -1530,6 +1566,33 @@ int acpi_dma_get_range(struct device *dev, const struct bus_dma_region **map)
 			r->offset = rentry->offset;
 			r++;
 		}
+=======
+		list_for_each_entry(rentry, &list, node) {
+			if (dma_offset && rentry->offset != dma_offset) {
+				ret = -EINVAL;
+				dev_warn(dma_dev, "Can't handle multiple windows with different offsets\n");
+				goto out;
+			}
+			dma_offset = rentry->offset;
+
+			/* Take lower and upper limits */
+			if (rentry->res->start < dma_start)
+				dma_start = rentry->res->start;
+			if (rentry->res->end > dma_end)
+				dma_end = rentry->res->end;
+		}
+
+		if (dma_start >= dma_end) {
+			ret = -EINVAL;
+			dev_dbg(dma_dev, "Invalid DMA regions configuration\n");
+			goto out;
+		}
+
+		*dma_addr = dma_start - dma_offset;
+		len = dma_end - dma_start;
+		*size = max(len, len + 1);
+		*offset = dma_offset;
+>>>>>>> b7ba80a49124 (Commit)
 	}
  out:
 	acpi_dev_free_resource_list(&list);
@@ -1619,19 +1682,31 @@ int acpi_dma_configure_id(struct device *dev, enum dev_dma_attr attr,
 			  const u32 *input_id)
 {
 	const struct iommu_ops *iommu;
+<<<<<<< HEAD
+=======
+	u64 dma_addr = 0, size = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (attr == DEV_DMA_NOT_SUPPORTED) {
 		set_dma_ops(dev, &dma_dummy_ops);
 		return 0;
 	}
 
+<<<<<<< HEAD
 	acpi_arch_dma_setup(dev);
+=======
+	acpi_arch_dma_setup(dev, &dma_addr, &size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	iommu = acpi_iommu_configure_id(dev, input_id);
 	if (PTR_ERR(iommu) == -EPROBE_DEFER)
 		return -EPROBE_DEFER;
 
+<<<<<<< HEAD
 	arch_setup_dma_ops(dev, 0, U64_MAX,
+=======
+	arch_setup_dma_ops(dev, dma_addr, size,
+>>>>>>> b7ba80a49124 (Commit)
 				iommu, attr == DEV_DMA_COHERENT);
 
 	return 0;
@@ -2233,6 +2308,7 @@ ok:
 	return 0;
 }
 
+<<<<<<< HEAD
 static int acpi_dev_get_next_consumer_dev_cb(struct acpi_dep_data *dep, void *data)
 {
 	struct acpi_device **adev_p = data;
@@ -2249,6 +2325,11 @@ static int acpi_dev_get_next_consumer_dev_cb(struct acpi_dep_data *dep, void *da
 
 		return 0;
 	}
+=======
+static int acpi_dev_get_first_consumer_dev_cb(struct acpi_dep_data *dep, void *data)
+{
+	struct acpi_device *adev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	adev = acpi_get_acpi_dev(dep->consumer);
 	if (adev) {
@@ -2379,6 +2460,7 @@ bool acpi_dev_ready_for_enumeration(const struct acpi_device *device)
 EXPORT_SYMBOL_GPL(acpi_dev_ready_for_enumeration);
 
 /**
+<<<<<<< HEAD
  * acpi_dev_get_next_consumer_dev - Return the next adev dependent on @supplier
  * @supplier: Pointer to the dependee device
  * @start: Pointer to the current dependent device
@@ -2405,6 +2487,27 @@ struct acpi_device *acpi_dev_get_next_consumer_dev(struct acpi_device *supplier,
 	return adev;
 }
 EXPORT_SYMBOL_GPL(acpi_dev_get_next_consumer_dev);
+=======
+ * acpi_dev_get_first_consumer_dev - Return ACPI device dependent on @supplier
+ * @supplier: Pointer to the dependee device
+ *
+ * Returns the first &struct acpi_device which declares itself dependent on
+ * @supplier via the _DEP buffer, parsed from the acpi_dep_list.
+ *
+ * The caller is responsible for putting the reference to adev when it is no
+ * longer needed.
+ */
+struct acpi_device *acpi_dev_get_first_consumer_dev(struct acpi_device *supplier)
+{
+	struct acpi_device *adev = NULL;
+
+	acpi_walk_dep_device_list(supplier->handle,
+				  acpi_dev_get_first_consumer_dev_cb, &adev);
+
+	return adev;
+}
+EXPORT_SYMBOL_GPL(acpi_dev_get_first_consumer_dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * acpi_bus_scan - Add ACPI device node objects in a given namespace scope.

@@ -352,6 +352,15 @@ static inline void edma_modify_array(struct edma_cc *ecc, int offset, int i,
 	edma_modify(ecc, offset + (i << 2), and, or);
 }
 
+<<<<<<< HEAD
+=======
+static inline void edma_or_array(struct edma_cc *ecc, int offset, int i,
+				 unsigned or)
+{
+	edma_or(ecc, offset + (i << 2), or);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void edma_or_array2(struct edma_cc *ecc, int offset, int i, int j,
 				  unsigned or)
 {
@@ -364,6 +373,14 @@ static inline void edma_write_array2(struct edma_cc *ecc, int offset, int i,
 	edma_write(ecc, offset + ((i * 2 + j) << 2), val);
 }
 
+<<<<<<< HEAD
+=======
+static inline unsigned int edma_shadow0_read(struct edma_cc *ecc, int offset)
+{
+	return edma_read(ecc, EDMA_SHADOW0 + offset);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline unsigned int edma_shadow0_read_array(struct edma_cc *ecc,
 						   int offset, int i)
 {
@@ -382,12 +399,42 @@ static inline void edma_shadow0_write_array(struct edma_cc *ecc, int offset,
 	edma_write(ecc, EDMA_SHADOW0 + offset + (i << 2), val);
 }
 
+<<<<<<< HEAD
+=======
+static inline unsigned int edma_param_read(struct edma_cc *ecc, int offset,
+					   int param_no)
+{
+	return edma_read(ecc, EDMA_PARM + offset + (param_no << 5));
+}
+
+static inline void edma_param_write(struct edma_cc *ecc, int offset,
+				    int param_no, unsigned val)
+{
+	edma_write(ecc, EDMA_PARM + offset + (param_no << 5), val);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void edma_param_modify(struct edma_cc *ecc, int offset,
 				     int param_no, unsigned and, unsigned or)
 {
 	edma_modify(ecc, EDMA_PARM + offset + (param_no << 5), and, or);
 }
 
+<<<<<<< HEAD
+=======
+static inline void edma_param_and(struct edma_cc *ecc, int offset, int param_no,
+				  unsigned and)
+{
+	edma_and(ecc, EDMA_PARM + offset + (param_no << 5), and);
+}
+
+static inline void edma_param_or(struct edma_cc *ecc, int offset, int param_no,
+				 unsigned or)
+{
+	edma_or(ecc, EDMA_PARM + offset + (param_no << 5), or);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void edma_assign_priority_to_queue(struct edma_cc *ecc, int queue_no,
 					  int priority)
 {
@@ -708,6 +755,14 @@ static void edma_free_channel(struct edma_chan *echan)
 	edma_setup_interrupt(echan, false);
 }
 
+<<<<<<< HEAD
+=======
+static inline struct edma_cc *to_edma_cc(struct dma_device *d)
+{
+	return container_of(d, struct edma_cc, dma_slave);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct edma_chan *to_edma_chan(struct dma_chan *c)
 {
 	return container_of(c, struct edma_chan, vchan.chan);

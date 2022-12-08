@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 =========
 Scheduler
 =========
+=======
+===============
+Linux Scheduler
+===============
+>>>>>>> b7ba80a49124 (Commit)
 
 .. toctree::
     :maxdepth: 1
@@ -15,7 +21,10 @@ Scheduler
     sched-capacity
     sched-energy
     schedutil
+<<<<<<< HEAD
     sched-util-clamp
+=======
+>>>>>>> b7ba80a49124 (Commit)
     sched-nice-design
     sched-rt-group
     sched-stats

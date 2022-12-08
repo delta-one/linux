@@ -19,22 +19,36 @@
 #include <crypto/internal/simd.h>
 #include <asm/cpu_device_id.h>
 #include <asm/simd.h>
+<<<<<<< HEAD
 #include <asm/unaligned.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define GHASH_BLOCK_SIZE	16
 #define GHASH_DIGEST_SIZE	16
 
+<<<<<<< HEAD
 void clmul_ghash_mul(char *dst, const le128 *shash);
 
 void clmul_ghash_update(char *dst, const char *src, unsigned int srclen,
 			const le128 *shash);
+=======
+void clmul_ghash_mul(char *dst, const u128 *shash);
+
+void clmul_ghash_update(char *dst, const char *src, unsigned int srclen,
+			const u128 *shash);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct ghash_async_ctx {
 	struct cryptd_ahash *cryptd_tfm;
 };
 
 struct ghash_ctx {
+<<<<<<< HEAD
 	le128 shash;
+=======
+	u128 shash;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ghash_desc_ctx {
@@ -55,11 +69,16 @@ static int ghash_setkey(struct crypto_shash *tfm,
 			const u8 *key, unsigned int keylen)
 {
 	struct ghash_ctx *ctx = crypto_shash_ctx(tfm);
+<<<<<<< HEAD
+=======
+	be128 *x = (be128 *)key;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 a, b;
 
 	if (keylen != GHASH_BLOCK_SIZE)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/*
 	 * GHASH maps bits to polynomial coefficients backwards, which makes it
 	 * hard to implement.  But it can be shown that the GHASH multiplication
@@ -89,6 +108,18 @@ static int ghash_setkey(struct crypto_shash *tfm,
 	ctx->shash.b = cpu_to_le64((b << 1) | (a >> 63));
 	if (a >> 63)
 		ctx->shash.a ^= cpu_to_le64((u64)0xc2 << 56);
+=======
+	/* perform multiplication by 'x' in GF(2^128) */
+	a = be64_to_cpu(x->a);
+	b = be64_to_cpu(x->b);
+
+	ctx->shash.a = (b << 1) | (a >> 63);
+	ctx->shash.b = (a << 1) | (b >> 63);
+
+	if (a >> 63)
+		ctx->shash.b ^= ((u64)0xc2) << 56;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

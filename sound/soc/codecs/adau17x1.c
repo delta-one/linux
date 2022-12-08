@@ -16,6 +16,10 @@
 #include <sound/pcm_params.h>
 #include <sound/soc.h>
 #include <sound/tlv.h>
+<<<<<<< HEAD
+=======
+#include <linux/gcd.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/i2c.h>
 #include <linux/spi/spi.h>
 #include <linux/regmap.h>

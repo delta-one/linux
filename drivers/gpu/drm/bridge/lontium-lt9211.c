@@ -720,7 +720,12 @@ static int lt9211_host_attach(struct lt9211 *ctx)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int lt9211_probe(struct i2c_client *client)
+=======
+static int lt9211_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &client->dev;
 	struct lt9211 *ctx;
@@ -785,7 +790,11 @@ static const struct of_device_id lt9211_match_table[] = {
 MODULE_DEVICE_TABLE(of, lt9211_match_table);
 
 static struct i2c_driver lt9211_driver = {
+<<<<<<< HEAD
 	.probe_new = lt9211_probe,
+=======
+	.probe = lt9211_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = lt9211_remove,
 	.id_table = lt9211_id,
 	.driver = {

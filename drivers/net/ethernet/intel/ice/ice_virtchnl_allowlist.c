@@ -70,11 +70,14 @@ static const u32 rss_pf_allowlist_opcodes[] = {
 	VIRTCHNL_OP_GET_RSS_HENA_CAPS, VIRTCHNL_OP_SET_RSS_HENA,
 };
 
+<<<<<<< HEAD
 /* VIRTCHNL_VF_OFFLOAD_RX_FLEX_DESC */
 static const u32 rx_flex_desc_allowlist_opcodes[] = {
 	VIRTCHNL_OP_GET_SUPPORTED_RXDIDS,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* VIRTCHNL_VF_OFFLOAD_ADV_RSS_PF */
 static const u32 adv_rss_pf_allowlist_opcodes[] = {
 	VIRTCHNL_OP_ADD_RSS_CFG, VIRTCHNL_OP_DEL_RSS_CFG,
@@ -101,7 +104,10 @@ static const struct allowlist_opcode_info allowlist_opcodes[] = {
 	ALLOW_ITEM(VIRTCHNL_VF_OFFLOAD_REQ_QUEUES, req_queues_allowlist_opcodes),
 	ALLOW_ITEM(VIRTCHNL_VF_OFFLOAD_VLAN, vlan_allowlist_opcodes),
 	ALLOW_ITEM(VIRTCHNL_VF_OFFLOAD_RSS_PF, rss_pf_allowlist_opcodes),
+<<<<<<< HEAD
 	ALLOW_ITEM(VIRTCHNL_VF_OFFLOAD_RX_FLEX_DESC, rx_flex_desc_allowlist_opcodes),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ALLOW_ITEM(VIRTCHNL_VF_OFFLOAD_ADV_RSS_PF, adv_rss_pf_allowlist_opcodes),
 	ALLOW_ITEM(VIRTCHNL_VF_OFFLOAD_FDIR_PF, fdir_pf_allowlist_opcodes),
 	ALLOW_ITEM(VIRTCHNL_VF_OFFLOAD_VLAN_V2, vlan_v2_allowlist_opcodes),

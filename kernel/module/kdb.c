@@ -26,11 +26,18 @@ int kdb_lsmod(int argc, const char **argv)
 		if (mod->state == MODULE_STATE_UNFORMED)
 			continue;
 
+<<<<<<< HEAD
 		kdb_printf("%-20s%8u", mod->name, mod->mem[MOD_TEXT].size);
 		kdb_printf("/%8u", mod->mem[MOD_RODATA].size);
 		kdb_printf("/%8u", mod->mem[MOD_RO_AFTER_INIT].size);
 		kdb_printf("/%8u", mod->mem[MOD_DATA].size);
 
+=======
+		kdb_printf("%-20s%8u", mod->name, mod->core_layout.size);
+#ifdef CONFIG_ARCH_WANTS_MODULES_DATA_IN_VMALLOC
+		kdb_printf("/%8u", mod->data_layout.size);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 		kdb_printf("  0x%px ", (void *)mod);
 #ifdef CONFIG_MODULE_UNLOAD
 		kdb_printf("%4d ", module_refcount(mod));
@@ -41,10 +48,17 @@ int kdb_lsmod(int argc, const char **argv)
 			kdb_printf(" (Loading)");
 		else
 			kdb_printf(" (Live)");
+<<<<<<< HEAD
 		kdb_printf(" 0x%px", mod->mem[MOD_TEXT].base);
 		kdb_printf("/0x%px", mod->mem[MOD_RODATA].base);
 		kdb_printf("/0x%px", mod->mem[MOD_RO_AFTER_INIT].base);
 		kdb_printf("/0x%px", mod->mem[MOD_DATA].base);
+=======
+		kdb_printf(" 0x%px", mod->core_layout.base);
+#ifdef CONFIG_ARCH_WANTS_MODULES_DATA_IN_VMALLOC
+		kdb_printf("/0x%px", mod->data_layout.base);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_MODULE_UNLOAD
 		{

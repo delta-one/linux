@@ -144,6 +144,7 @@ enum subpixel_order {
 };
 
 /**
+<<<<<<< HEAD
  * enum drm_connector_tv_mode - Analog TV output mode
  *
  * This enum is used to indicate the TV output mode used on an analog TV
@@ -203,6 +204,8 @@ enum drm_connector_tv_mode {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct drm_scrambling: sink's scrambling support.
  */
 struct drm_scrambling {
@@ -304,6 +307,12 @@ struct drm_hdmi_info {
 	 */
 	unsigned long y420_cmdb_modes[BITS_TO_LONGS(256)];
 
+<<<<<<< HEAD
+=======
+	/** @y420_cmdb_map: bitmap of SVD index, to extraxt vcb modes */
+	u64 y420_cmdb_map;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/** @y420_dc_modes: bitmap of deep color support index */
 	u8 y420_dc_modes;
 
@@ -712,6 +721,7 @@ struct drm_display_info {
 	 * @mso_pixel_overlap: eDP MSO segment pixel overlap, 0-8 pixels.
 	 */
 	u8 mso_pixel_overlap;
+<<<<<<< HEAD
 
 	/**
 	 * @max_dsc_bpp: Maximum DSC target bitrate, if it is set to 0 the
@@ -733,6 +743,8 @@ struct drm_display_info {
 	 * @quirks: EDID based quirks. Internal to EDID parsing.
 	 */
 	u32 quirks;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int drm_display_info_set_bus_formats(struct drm_display_info *info,
@@ -769,10 +781,15 @@ struct drm_connector_tv_margins {
 
 /**
  * struct drm_tv_connector_state - TV connector related states
+<<<<<<< HEAD
  * @select_subconnector: selected subconnector
  * @subconnector: detected subconnector
  * @margins: TV margins
  * @legacy_mode: Legacy TV mode, driver specific value
+=======
+ * @subconnector: selected subconnector
+ * @margins: TV margins
+>>>>>>> b7ba80a49124 (Commit)
  * @mode: TV mode
  * @brightness: brightness in percent
  * @contrast: contrast in percent
@@ -782,10 +799,15 @@ struct drm_connector_tv_margins {
  * @hue: hue in percent
  */
 struct drm_tv_connector_state {
+<<<<<<< HEAD
 	enum drm_mode_subconnector select_subconnector;
 	enum drm_mode_subconnector subconnector;
 	struct drm_connector_tv_margins margins;
 	unsigned int legacy_mode;
+=======
+	enum drm_mode_subconnector subconnector;
+	struct drm_connector_tv_margins margins;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int mode;
 	unsigned int brightness;
 	unsigned int contrast;
@@ -1292,6 +1314,7 @@ struct drm_cmdline_mode {
 	bool bpp_specified;
 
 	/**
+<<<<<<< HEAD
 	 * @pixel_clock:
 	 *
 	 * Pixel Clock in kHz. Optional.
@@ -1299,6 +1322,8 @@ struct drm_cmdline_mode {
 	unsigned int pixel_clock;
 
 	/**
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * @xres:
 	 *
 	 * Active resolution on the X axis, in pixels.
@@ -1386,6 +1411,7 @@ struct drm_cmdline_mode {
 	 * @tv_margins: TV margins to apply to the mode.
 	 */
 	struct drm_connector_tv_margins tv_margins;
+<<<<<<< HEAD
 
 	/**
 	 * @tv_mode: TV mode standard. See DRM_MODE_TV_MODE_*.
@@ -1398,6 +1424,8 @@ struct drm_cmdline_mode {
 	 * Did the mode have a preferred TV mode?
 	 */
 	bool tv_mode_specified;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -1648,6 +1676,7 @@ struct drm_connector {
 	struct drm_cmdline_mode cmdline_mode;
 	/** @force: a DRM_FORCE_<foo> state for forced mode sets */
 	enum drm_connector_force force;
+<<<<<<< HEAD
 
 	/**
 	 * @edid_override: Override EDID set via debugfs.
@@ -1662,6 +1691,14 @@ struct drm_connector {
 	 */
 	struct mutex edid_override_mutex;
 
+=======
+	/**
+	 * @override_edid: has the EDID been overwritten through debugfs for
+	 * testing? Do not modify outside of drm_edid_override_set() and
+	 * drm_edid_override_reset().
+	 */
+	bool override_edid;
+>>>>>>> b7ba80a49124 (Commit)
 	/** @epoch_counter: used to detect any other changes in connector, besides status */
 	u64 epoch_counter;
 
@@ -1895,24 +1932,36 @@ const char *drm_get_subpixel_order_name(enum subpixel_order order);
 const char *drm_get_dpms_name(int val);
 const char *drm_get_dvi_i_subconnector_name(int val);
 const char *drm_get_dvi_i_select_name(int val);
+<<<<<<< HEAD
 const char *drm_get_tv_mode_name(int val);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const char *drm_get_tv_subconnector_name(int val);
 const char *drm_get_tv_select_name(int val);
 const char *drm_get_dp_subconnector_name(int val);
 const char *drm_get_content_protection_name(int val);
 const char *drm_get_hdcp_content_type_name(int val);
 
+<<<<<<< HEAD
 int drm_get_tv_mode_from_name(const char *name, size_t len);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int drm_mode_create_dvi_i_properties(struct drm_device *dev);
 void drm_connector_attach_dp_subconnector_property(struct drm_connector *connector);
 
 int drm_mode_create_tv_margin_properties(struct drm_device *dev);
+<<<<<<< HEAD
 int drm_mode_create_tv_properties_legacy(struct drm_device *dev,
 					 unsigned int num_modes,
 					 const char * const modes[]);
 int drm_mode_create_tv_properties(struct drm_device *dev,
 				  unsigned int supported_tv_modes);
+=======
+int drm_mode_create_tv_properties(struct drm_device *dev,
+				  unsigned int num_modes,
+				  const char * const modes[]);
+>>>>>>> b7ba80a49124 (Commit)
 void drm_connector_attach_tv_margin_properties(struct drm_connector *conn);
 int drm_mode_create_scaling_mode_property(struct drm_device *dev);
 int drm_connector_attach_content_type_property(struct drm_connector *dev);

@@ -75,7 +75,11 @@
  * pool for the 4MB. Thus the 16 Rx and Tx queues require 32 * 5 = 160
  * plus 16 for the TSO pools for a total of 176 LTB mappings per VNIC.
  */
+<<<<<<< HEAD
 #define IBMVNIC_ONE_LTB_MAX	((u32)((1 << MAX_ORDER) * PAGE_SIZE))
+=======
+#define IBMVNIC_ONE_LTB_MAX	((u32)((1 << (MAX_ORDER - 1)) * PAGE_SIZE))
+>>>>>>> b7ba80a49124 (Commit)
 #define IBMVNIC_ONE_LTB_SIZE	min((u32)(8 << 20), IBMVNIC_ONE_LTB_MAX)
 #define IBMVNIC_LTB_SET_SIZE	(38 << 20)
 
@@ -825,7 +829,10 @@ struct ibmvnic_sub_crq_queue {
 	atomic_t used;
 	char name[32];
 	u64 handle;
+<<<<<<< HEAD
 	cpumask_var_t affinity_mask;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } ____cacheline_aligned;
 
 struct ibmvnic_long_term_buff {
@@ -984,10 +991,13 @@ struct ibmvnic_adapter {
 	int reset_done_rc;
 	bool wait_for_reset;
 
+<<<<<<< HEAD
 	/* CPU hotplug instances for online & dead */
 	struct hlist_node node;
 	struct hlist_node node_dead;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* partner capabilities */
 	u64 min_tx_queues;
 	u64 min_rx_queues;

@@ -40,7 +40,10 @@ enum sdma_peripheral_type {
 	IMX_DMATYPE_ASRC_SP,	/* Shared ASRC */
 	IMX_DMATYPE_SAI,	/* SAI */
 	IMX_DMATYPE_MULTI_SAI,	/* MULTI FIFOs For Audio */
+<<<<<<< HEAD
 	IMX_DMATYPE_HDMI,       /* HDMI Audio */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum imx_dma_prio {

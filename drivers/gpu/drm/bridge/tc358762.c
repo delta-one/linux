@@ -11,7 +11,10 @@
  */
 
 #include <linux/delay.h>
+<<<<<<< HEAD
 #include <linux/mod_devicetable.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/of_graph.h>
 #include <linux/regulator/consumer.h>
@@ -20,6 +23,10 @@
 
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_crtc.h>
+<<<<<<< HEAD
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_mipi_dsi.h>
 #include <drm/drm_of.h>
 #include <drm/drm_panel.h>
@@ -229,7 +236,10 @@ static int tc358762_probe(struct mipi_dsi_device *dsi)
 	ctx->bridge.funcs = &tc358762_bridge_funcs;
 	ctx->bridge.type = DRM_MODE_CONNECTOR_DPI;
 	ctx->bridge.of_node = dev->of_node;
+<<<<<<< HEAD
 	ctx->bridge.pre_enable_prev_first = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_bridge_add(&ctx->bridge);
 

@@ -57,7 +57,11 @@
 		ethernet1 = &sdiowifi;
 	};
 
+<<<<<<< HEAD
 	cec {
+=======
+	cec-gpio {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "cec-gpio";
 		cec-gpios = <&pio 0 14 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>; /* PA14 */
 		hdmi-phandle = <&hdmi>;

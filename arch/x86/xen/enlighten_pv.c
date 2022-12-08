@@ -23,7 +23,10 @@
 #include <linux/start_kernel.h>
 #include <linux/sched.h>
 #include <linux/kprobes.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/memblock.h>
 #include <linux/export.h>
 #include <linux/mm.h>
@@ -33,7 +36,10 @@
 #include <linux/edd.h>
 #include <linux/reboot.h>
 #include <linux/virtio_anchor.h>
+<<<<<<< HEAD
 #include <linux/stackprotector.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <xen/xen.h>
 #include <xen/events.h>
@@ -66,6 +72,10 @@
 #include <asm/pgalloc.h>
 #include <asm/tlbflush.h>
 #include <asm/reboot.h>
+<<<<<<< HEAD
+=======
+#include <asm/stackprotector.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/hypervisor.h>
 #include <asm/mach_traps.h>
 #include <asm/mwait.h>
@@ -109,6 +119,7 @@ struct tls_descs {
  */
 static DEFINE_PER_CPU(struct tls_descs, shadow_tls_desc);
 
+<<<<<<< HEAD
 static __read_mostly bool xen_msr_safe = IS_ENABLED(CONFIG_XEN_PV_MSR_SAFE);
 
 static int __init parse_xen_msr_safe(char *str)
@@ -119,11 +130,17 @@ static int __init parse_xen_msr_safe(char *str)
 }
 early_param("xen_msr_safe", parse_xen_msr_safe);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void __init xen_pv_init_platform(void)
 {
 	/* PV guests can't operate virtio devices without grants. */
 	if (IS_ENABLED(CONFIG_XEN_VIRTIO))
+<<<<<<< HEAD
 		virtio_set_mem_acc_cb(xen_virtio_restricted_mem_acc);
+=======
+		virtio_set_mem_acc_cb(virtio_require_restricted_mem_acc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	populate_extra_pte(fix_to_virt(FIX_PARAVIRT_BOOTMAP));
 
@@ -276,7 +293,10 @@ static void __init xen_init_capabilities(void)
 	setup_clear_cpu_cap(X86_FEATURE_ACC);
 	setup_clear_cpu_cap(X86_FEATURE_X2APIC);
 	setup_clear_cpu_cap(X86_FEATURE_SME);
+<<<<<<< HEAD
 	setup_clear_cpu_cap(X86_FEATURE_LKGS);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Xen PV would need some work to support PCID: CR3 handling as well
@@ -640,7 +660,11 @@ static struct trap_array_entry trap_array[] = {
 	TRAP_ENTRY(exc_coprocessor_error,		false ),
 	TRAP_ENTRY(exc_alignment_check,			false ),
 	TRAP_ENTRY(exc_simd_coprocessor_error,		false ),
+<<<<<<< HEAD
 #ifdef CONFIG_X86_CET
+=======
+#ifdef CONFIG_X86_KERNEL_IBT
+>>>>>>> b7ba80a49124 (Commit)
 	TRAP_ENTRY(exc_control_protection,		false ),
 #endif
 };
@@ -777,7 +801,10 @@ static void xen_load_idt(const struct desc_ptr *desc)
 {
 	static DEFINE_SPINLOCK(lock);
 	static struct trap_info traps[257];
+<<<<<<< HEAD
 	static const struct trap_info zero = { };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned out;
 
 	trace_xen_cpu_load_idt(desc);
@@ -787,7 +814,11 @@ static void xen_load_idt(const struct desc_ptr *desc)
 	memcpy(this_cpu_ptr(&idt_desc), desc, sizeof(idt_desc));
 
 	out = xen_convert_trap_info(desc, traps, false);
+<<<<<<< HEAD
 	traps[out] = zero;
+=======
+	memset(&traps[out], 0, sizeof(traps[0]));
+>>>>>>> b7ba80a49124 (Commit)
 
 	xen_mc_flush();
 	if (HYPERVISOR_set_trap_table(traps))
@@ -929,18 +960,28 @@ static void xen_write_cr4(unsigned long cr4)
 	native_write_cr4(cr4);
 }
 
+<<<<<<< HEAD
 static u64 xen_do_read_msr(unsigned int msr, int *err)
 {
 	u64 val = 0;	/* Avoid uninitialized value for safe variant. */
+=======
+static u64 xen_read_msr_safe(unsigned int msr, int *err)
+{
+	u64 val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (pmu_msr_read(msr, &val, err))
 		return val;
 
+<<<<<<< HEAD
 	if (err)
 		val = native_read_msr_safe(msr, err);
 	else
 		val = native_read_msr(msr);
 
+=======
+	val = native_read_msr_safe(msr, err);
+>>>>>>> b7ba80a49124 (Commit)
 	switch (msr) {
 	case MSR_IA32_APICBASE:
 		val &= ~X2APIC_ENABLE;
@@ -949,6 +990,7 @@ static u64 xen_do_read_msr(unsigned int msr, int *err)
 	return val;
 }
 
+<<<<<<< HEAD
 static void set_seg(unsigned int which, unsigned int low, unsigned int high,
 		    int *err)
 {
@@ -982,6 +1024,25 @@ static void xen_do_write_msr(unsigned int msr, unsigned int low,
 
 	case MSR_GS_BASE:
 		set_seg(SEGBASE_GS_KERNEL, low, high, err);
+=======
+static int xen_write_msr_safe(unsigned int msr, unsigned low, unsigned high)
+{
+	int ret;
+	unsigned int which;
+	u64 base;
+
+	ret = 0;
+
+	switch (msr) {
+	case MSR_FS_BASE:		which = SEGBASE_FS; goto set;
+	case MSR_KERNEL_GS_BASE:	which = SEGBASE_GS_USER; goto set;
+	case MSR_GS_BASE:		which = SEGBASE_GS_KERNEL; goto set;
+
+	set:
+		base = ((u64)high << 32) | low;
+		if (HYPERVISOR_set_segment_base(which, base) != 0)
+			ret = -EIO;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case MSR_STAR:
@@ -997,6 +1058,7 @@ static void xen_do_write_msr(unsigned int msr, unsigned int low,
 		break;
 
 	default:
+<<<<<<< HEAD
 		if (!pmu_msr_write(msr, low, high, err)) {
 			if (err)
 				*err = native_write_msr_safe(msr, low, high);
@@ -1019,20 +1081,45 @@ static int xen_write_msr_safe(unsigned int msr, unsigned int low,
 	xen_do_write_msr(msr, low, high, &err);
 
 	return err;
+=======
+		if (!pmu_msr_write(msr, low, high, &ret))
+			ret = native_write_msr_safe(msr, low, high);
+	}
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static u64 xen_read_msr(unsigned int msr)
 {
+<<<<<<< HEAD
 	int err;
 
 	return xen_do_read_msr(msr, xen_msr_safe ? &err : NULL);
+=======
+	/*
+	 * This will silently swallow a #GP from RDMSR.  It may be worth
+	 * changing that.
+	 */
+	int err;
+
+	return xen_read_msr_safe(msr, &err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void xen_write_msr(unsigned int msr, unsigned low, unsigned high)
 {
+<<<<<<< HEAD
 	int err;
 
 	xen_do_write_msr(msr, low, high, xen_msr_safe ? &err : NULL);
+=======
+	/*
+	 * This will silently swallow a #GP from WRMSR.  It may be worth
+	 * changing that.
+	 */
+	xen_write_msr_safe(msr, low, high);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* This is called once we have the cpu_possible_mask */
@@ -1069,7 +1156,11 @@ static const typeof(pv_ops) xen_cpu_ops __initconst = {
 
 		.write_cr4 = xen_write_cr4,
 
+<<<<<<< HEAD
 		.wbinvd = pv_native_wbinvd,
+=======
+		.wbinvd = native_wbinvd,
+>>>>>>> b7ba80a49124 (Commit)
 
 		.read_msr = xen_read_msr,
 		.write_msr = xen_write_msr,
@@ -1211,7 +1302,11 @@ static void __init xen_setup_gdt(int cpu)
 	pv_ops.cpu.write_gdt_entry = xen_write_gdt_entry_boot;
 	pv_ops.cpu.load_gdt = xen_load_gdt_boot;
 
+<<<<<<< HEAD
 	switch_gdt_and_percpu_base(cpu);
+=======
+	switch_to_new_gdt(cpu);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pv_ops.cpu.write_gdt_entry = xen_write_gdt_entry;
 	pv_ops.cpu.load_gdt = xen_load_gdt;
@@ -1267,8 +1362,11 @@ asmlinkage __visible void __init xen_start_kernel(struct start_info *si)
 	xen_vcpu_info_reset(0);
 
 	x86_platform.get_nmi_reason = xen_get_nmi_reason;
+<<<<<<< HEAD
 	x86_platform.realmode_reserve = x86_init_noop;
 	x86_platform.realmode_init = x86_init_noop;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	x86_init.resources.memory_setup = xen_memory_setup;
 	x86_init.irqs.intr_mode_select	= x86_init_noop;
@@ -1390,8 +1488,12 @@ asmlinkage __visible void __init xen_start_kernel(struct start_info *si)
 
 		x86_platform.set_legacy_features =
 				xen_dom0_set_legacy_features;
+<<<<<<< HEAD
 		xen_init_vga(info, xen_start_info->console.dom0.info_size,
 			     &boot_params.screen_info);
+=======
+		xen_init_vga(info, xen_start_info->console.dom0.info_size);
+>>>>>>> b7ba80a49124 (Commit)
 		xen_start_info->console.domU.mfn = 0;
 		xen_start_info->console.domU.evtchn = 0;
 

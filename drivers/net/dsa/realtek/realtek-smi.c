@@ -522,6 +522,11 @@ static int realtek_smi_remove(struct platform_device *pdev)
 	if (priv->reset)
 		gpiod_set_value(priv->reset, 1);
 
+<<<<<<< HEAD
+=======
+	platform_set_drvdata(pdev, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

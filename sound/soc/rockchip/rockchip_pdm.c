@@ -373,7 +373,11 @@ static int rockchip_pdm_dai_probe(struct snd_soc_dai *dai)
 {
 	struct rk_pdm_dev *pdm = to_info(dai);
 
+<<<<<<< HEAD
 	snd_soc_dai_dma_data_set_capture(dai, &pdm->capture_dma_data);
+=======
+	dai->capture_dma_data = &pdm->capture_dma_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -431,7 +435,10 @@ static int rockchip_pdm_runtime_resume(struct device *dev)
 
 	ret = clk_prepare_enable(pdm->hclk);
 	if (ret) {
+<<<<<<< HEAD
 		clk_disable_unprepare(pdm->clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(pdm->dev, "hclock enable failed %d\n", ret);
 		return ret;
 	}
@@ -661,7 +668,11 @@ err_pm_disable:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void rockchip_pdm_remove(struct platform_device *pdev)
+=======
+static int rockchip_pdm_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rk_pdm_dev *pdm = dev_get_drvdata(&pdev->dev);
 
@@ -671,6 +682,11 @@ static void rockchip_pdm_remove(struct platform_device *pdev)
 
 	clk_disable_unprepare(pdm->clk);
 	clk_disable_unprepare(pdm->hclk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -708,7 +724,11 @@ static const struct dev_pm_ops rockchip_pdm_pm_ops = {
 
 static struct platform_driver rockchip_pdm_driver = {
 	.probe  = rockchip_pdm_probe,
+<<<<<<< HEAD
 	.remove_new = rockchip_pdm_remove,
+=======
+	.remove = rockchip_pdm_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "rockchip-pdm",
 		.of_match_table = of_match_ptr(rockchip_pdm_match),

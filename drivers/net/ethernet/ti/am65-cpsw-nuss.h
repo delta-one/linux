@@ -32,7 +32,10 @@ struct am65_cpsw_slave_data {
 	struct device_node		*phy_node;
 	phy_interface_t			phy_if;
 	struct phy			*ifphy;
+<<<<<<< HEAD
 	struct phy			*serdes_phy;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool				rx_pause;
 	bool				tx_pause;
 	u8				mac_addr[ETH_ALEN];
@@ -56,16 +59,22 @@ struct am65_cpsw_port {
 	bool				rx_ts_enabled;
 	struct am65_cpsw_qos		qos;
 	struct devlink_port		devlink_port;
+<<<<<<< HEAD
 	/* Only for suspend resume context */
 	u32				vid_context;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct am65_cpsw_host {
 	struct am65_cpsw_common		*common;
 	void __iomem			*port_base;
 	void __iomem			*stat_base;
+<<<<<<< HEAD
 	/* Only for suspend resume context */
 	u32				vid_context;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct am65_cpsw_tx_chn {
@@ -91,7 +100,10 @@ struct am65_cpsw_rx_chn {
 };
 
 #define AM65_CPSW_QUIRK_I2027_NO_TX_CSUM BIT(0)
+<<<<<<< HEAD
 #define AM64_CPSW_QUIRK_DMA_RX_TDOWN_IRQ BIT(1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct am65_cpsw_pdata {
 	u32	quirks;
@@ -151,8 +163,11 @@ struct am65_cpsw_common {
 	struct net_device *hw_bridge_dev;
 	struct notifier_block am65_cpsw_netdevice_nb;
 	unsigned char switch_id[MAX_PHYS_ITEM_ID_LEN];
+<<<<<<< HEAD
 	/* only for suspend/resume context restore */
 	u32			*ale_context;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct am65_cpsw_ndev_stats {

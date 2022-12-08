@@ -90,6 +90,7 @@
 		enable-active-high;
 		off-on-delay-us = <3480>;
 	};
+<<<<<<< HEAD
 
 	reg_vref_1v8: regulator-adc-vref {
 		compatible = "regulator-fixed";
@@ -112,6 +113,8 @@
 &adc0 {
 	vref-supply = <&reg_vref_1v8>;
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &eqos {
@@ -121,6 +124,11 @@
 	phy-handle = <&ethphy0>;
 	nvmem-cells = <&fec_mac1>;
 	nvmem-cell-names = "mac-address";
+<<<<<<< HEAD
+=======
+	snps,reset-gpios = <&pca6416_1 2 GPIO_ACTIVE_LOW>;
+	snps,reset-delays-us = <10 20 200000>;
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 
 	mdio {
@@ -133,10 +141,13 @@
 			reg = <0>;
 			eee-broken-1000t;
 			qca,disable-smarteee;
+<<<<<<< HEAD
 			qca,disable-hibernation-mode;
 			reset-gpios = <&pca6416_1 2 GPIO_ACTIVE_LOW>;
 			reset-assert-us = <20>;
 			reset-deassert-us = <200000>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			vddio-supply = <&vddio0>;
 
 			vddio0: vddio-regulator {
@@ -183,6 +194,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &flexspi0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_flexspi0>;
@@ -200,6 +212,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &i2c2 {
 	#address-cells = <1>;
 	#size-cells = <0>;
@@ -277,7 +291,11 @@
 };
 
 &thermal_zones {
+<<<<<<< HEAD
 	pmic-thermal {
+=======
+	pmic-thermal0 {
+>>>>>>> b7ba80a49124 (Commit)
 		polling-delay-passive = <250>;
 		polling-delay = <2000>;
 		thermal-sensors = <&tsens IMX_SC_R_PMIC_0>;
@@ -307,6 +325,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &usbphy1 {
 	/* USB eye diagram tests result */
 	fsl,tx-d-cal = <114>;
@@ -341,6 +360,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &usdhc1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_usdhc1>;
@@ -361,6 +382,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &lpspi3 {
 	fsl,spi-num-chipselects = <1>;
 	fsl,spi-only-use-cs1-sel;
@@ -376,6 +398,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &iomuxc {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_hog>;
@@ -420,6 +444,7 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_flexspi0: flexspi0grp {
 		fsl,pins = <
 			IMX8DXL_QSPI0A_DATA0_LSIO_QSPI0A_DATA0     0x06000021
@@ -439,6 +464,8 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_fec1: fec1grp {
 		fsl,pins = <
 			IMX8DXL_COMP_CTL_GPIO_1V8_3V3_ENET_ENETB0_PAD		0x000014a0

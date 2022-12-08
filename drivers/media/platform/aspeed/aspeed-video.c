@@ -33,7 +33,10 @@
 #include <media/v4l2-event.h>
 #include <media/v4l2-ioctl.h>
 #include <media/videobuf2-dma-contig.h>
+<<<<<<< HEAD
 #include <uapi/linux/aspeed-video.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define ASPEED_VIDEO_V4L2_MIN_BUF_REQ 3
 
@@ -60,7 +63,10 @@
 
 #define VE_MAX_SRC_BUFFER_SIZE		0x8ca000 /* 1920 * 1200, 32bpp */
 #define VE_JPEG_HEADER_SIZE		0x006000 /* 512 * 12 * 4 */
+<<<<<<< HEAD
 #define VE_BCD_BUFF_SIZE		0x9000 /* (1920/8) * (1200/8) */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define VE_PROTECTION_KEY		0x000
 #define  VE_PROTECTION_KEY_UNLOCK	0x1a038aa8
@@ -109,6 +115,7 @@
 #define VE_SCALING_FILTER2		0x020
 #define VE_SCALING_FILTER3		0x024
 
+<<<<<<< HEAD
 #define VE_BCD_CTRL			0x02C
 #define  VE_BCD_CTRL_EN_BCD		BIT(0)
 #define  VE_BCD_CTRL_EN_ABCD		BIT(1)
@@ -116,6 +123,8 @@
 #define  VE_BCD_CTRL_THR		GENMASK(23, 16)
 #define  VE_BCD_CTRL_ABCD_THR		GENMASK(31, 24)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define VE_CAP_WINDOW			0x030
 #define VE_COMP_WINDOW			0x034
 #define VE_COMP_PROC_OFFSET		0x038
@@ -124,7 +133,10 @@
 #define VE_SRC0_ADDR			0x044
 #define VE_SRC_SCANLINE_OFFSET		0x048
 #define VE_SRC1_ADDR			0x04c
+<<<<<<< HEAD
 #define VE_BCD_ADDR			0x050
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define VE_COMP_ADDR			0x054
 
 #define VE_STREAM_BUF_SIZE		0x058
@@ -145,8 +157,11 @@
 #define  VE_COMP_CTRL_HQ_DCT_CHR	GENMASK(26, 22)
 #define  VE_COMP_CTRL_HQ_DCT_LUM	GENMASK(31, 27)
 
+<<<<<<< HEAD
 #define VE_CB_ADDR			0x06C
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define AST2400_VE_COMP_SIZE_READ_BACK	0x078
 #define AST2600_VE_COMP_SIZE_READ_BACK	0x084
 
@@ -223,12 +238,15 @@ enum {
 	VIDEO_CLOCKS_ON,
 };
 
+<<<<<<< HEAD
 enum aspeed_video_format {
 	VIDEO_FMT_STANDARD = 0,
 	VIDEO_FMT_ASPEED,
 	VIDEO_FMT_MAX = VIDEO_FMT_ASPEED
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 // for VE_CTRL_CAPTURE_FMT
 enum aspeed_video_capture_format {
 	VIDEO_CAP_FMT_YUV_STUDIO_SWING = 0,
@@ -263,13 +281,19 @@ struct aspeed_video_perf {
 /*
  * struct aspeed_video - driver data
  *
+<<<<<<< HEAD
  * res_work:		holds the delayed_work for res-detection if unlock
  * buffers:		holds the list of buffer queued from user
+=======
+ * res_work:           holds the delayed_work for res-detection if unlock
+ * buffers:            holds the list of buffer queued from user
+>>>>>>> b7ba80a49124 (Commit)
  * flags:		holds the state of video
  * sequence:		holds the last number of frame completed
  * max_compressed_size:	holds max compressed stream's size
  * srcs:		holds the buffer information for srcs
  * jpeg:		holds the buffer information for jpeg header
+<<<<<<< HEAD
  * bcd:			holds the buffer information for bcd work
  * yuv420:		a flag raised if JPEG subsampling is 420
  * format:		holds the video format
@@ -277,6 +301,11 @@ struct aspeed_video_perf {
  * frame_rate:		holds the frame_rate
  * jpeg_quality:	holds jpeq's quality (0~11)
  * jpeg_hq_quality:	holds hq's quality (1~12) only if hq_mode enabled
+=======
+ * yuv420:		a flag raised if JPEG subsampling is 420
+ * frame_rate:		holds the frame_rate
+ * jpeg_quality:	holds jpeq's quality (0~11)
+>>>>>>> b7ba80a49124 (Commit)
  * frame_bottom:	end position of video data in vertical direction
  * frame_left:		start position of video data in horizontal direction
  * frame_right:		end position of video data in horizontal direction
@@ -312,6 +341,7 @@ struct aspeed_video {
 	unsigned int max_compressed_size;
 	struct aspeed_video_addr srcs[2];
 	struct aspeed_video_addr jpeg;
+<<<<<<< HEAD
 	struct aspeed_video_addr bcd;
 
 	bool yuv420;
@@ -320,6 +350,12 @@ struct aspeed_video {
 	unsigned int frame_rate;
 	unsigned int jpeg_quality;
 	unsigned int jpeg_hq_quality;
+=======
+
+	bool yuv420;
+	unsigned int frame_rate;
+	unsigned int jpeg_quality;
+>>>>>>> b7ba80a49124 (Commit)
 
 	unsigned int frame_bottom;
 	unsigned int frame_left;
@@ -484,6 +520,7 @@ static const struct v4l2_dv_timings_cap aspeed_video_timings_cap = {
 	},
 };
 
+<<<<<<< HEAD
 static const char * const format_str[] = {"Standard JPEG",
 	"Aspeed JPEG"};
 
@@ -496,6 +533,10 @@ static bool aspeed_video_alloc_buf(struct aspeed_video *video,
 static void aspeed_video_free_buf(struct aspeed_video *video,
 				  struct aspeed_video_addr *addr);
 
+=======
+static unsigned int debug;
+
+>>>>>>> b7ba80a49124 (Commit)
 static void aspeed_video_init_jpeg_table(u32 *table, bool yuv420)
 {
 	int i;
@@ -583,15 +624,22 @@ static int aspeed_video_start_frame(struct aspeed_video *video)
 	unsigned long flags;
 	struct aspeed_video_buffer *buf;
 	u32 seq_ctrl = aspeed_video_read(video, VE_SEQ_CTRL);
+<<<<<<< HEAD
 	bool bcd_buf_need = (video->format != VIDEO_FMT_STANDARD);
 
 	if (video->v4l2_input_status) {
 		v4l2_dbg(1, debug, &video->v4l2_dev, "No signal; don't start frame\n");
+=======
+
+	if (video->v4l2_input_status) {
+		v4l2_warn(&video->v4l2_dev, "No signal; don't start frame\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
 	if (!(seq_ctrl & VE_SEQ_CTRL_COMP_BUSY) ||
 	    !(seq_ctrl & VE_SEQ_CTRL_CAP_BUSY)) {
+<<<<<<< HEAD
 		v4l2_dbg(1, debug, &video->v4l2_dev, "Engine busy; don't start frame\n");
 		return -EBUSY;
 	}
@@ -610,12 +658,22 @@ static int aspeed_video_start_frame(struct aspeed_video *video)
 		aspeed_video_free_buf(video, &video->bcd);
 	}
 
+=======
+		v4l2_warn(&video->v4l2_dev, "Engine busy; don't start frame\n");
+		return -EBUSY;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_irqsave(&video->lock, flags);
 	buf = list_first_entry_or_null(&video->buffers,
 				       struct aspeed_video_buffer, link);
 	if (!buf) {
 		spin_unlock_irqrestore(&video->lock, flags);
+<<<<<<< HEAD
 		v4l2_dbg(1, debug, &video->v4l2_dev, "No buffers; don't start frame\n");
+=======
+		v4l2_warn(&video->v4l2_dev, "No buffers; don't start frame\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EPROTO;
 	}
 
@@ -708,6 +766,7 @@ static void aspeed_video_irq_res_change(struct aspeed_video *video, ulong delay)
 	schedule_delayed_work(&video->res_work, delay);
 }
 
+<<<<<<< HEAD
 static void aspeed_video_swap_src_buf(struct aspeed_video *v)
 {
 	if (v->format == VIDEO_FMT_STANDARD)
@@ -726,6 +785,8 @@ static void aspeed_video_swap_src_buf(struct aspeed_video *v)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static irqreturn_t aspeed_video_irq(int irq, void *arg)
 {
 	struct aspeed_video *video = arg;
@@ -774,7 +835,10 @@ static irqreturn_t aspeed_video_irq(int irq, void *arg)
 
 	if (sts & VE_INTERRUPT_COMP_COMPLETE) {
 		struct aspeed_video_buffer *buf;
+<<<<<<< HEAD
 		bool empty = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		u32 frame_size = aspeed_video_read(video,
 						   video->comp_size_read);
 
@@ -788,6 +852,7 @@ static irqreturn_t aspeed_video_irq(int irq, void *arg)
 		if (buf) {
 			vb2_set_plane_payload(&buf->vb.vb2_buf, 0, frame_size);
 
+<<<<<<< HEAD
 			/*
 			 * aspeed_jpeg requires continuous update.
 			 * On the contrary, standard jpeg can keep last buffer
@@ -798,13 +863,19 @@ static irqreturn_t aspeed_video_irq(int irq, void *arg)
 				empty = false;
 				v4l2_dbg(1, debug, &video->v4l2_dev, "skip to keep last frame updated\n");
 			} else {
+=======
+			if (!list_is_last(&buf->link, &video->buffers)) {
+>>>>>>> b7ba80a49124 (Commit)
 				buf->vb.vb2_buf.timestamp = ktime_get_ns();
 				buf->vb.sequence = video->sequence++;
 				buf->vb.field = V4L2_FIELD_NONE;
 				vb2_buffer_done(&buf->vb.vb2_buf,
 						VB2_BUF_STATE_DONE);
 				list_del(&buf->link);
+<<<<<<< HEAD
 				empty = list_empty(&video->buffers);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 		spin_unlock(&video->lock);
@@ -818,10 +889,14 @@ static irqreturn_t aspeed_video_irq(int irq, void *arg)
 		aspeed_video_write(video, VE_INTERRUPT_STATUS,
 				   VE_INTERRUPT_COMP_COMPLETE);
 		sts &= ~VE_INTERRUPT_COMP_COMPLETE;
+<<<<<<< HEAD
 
 		aspeed_video_swap_src_buf(video);
 
 		if (test_bit(VIDEO_STREAMING, &video->flags) && !empty)
+=======
+		if (test_bit(VIDEO_STREAMING, &video->flags) && buf)
+>>>>>>> b7ba80a49124 (Commit)
 			aspeed_video_start_frame(video);
 	}
 
@@ -1060,7 +1135,11 @@ static void aspeed_video_get_resolution(struct aspeed_video *video)
 						      res_check(video),
 						      MODE_DETECT_TIMEOUT);
 		if (!rc) {
+<<<<<<< HEAD
 			v4l2_dbg(1, debug, &video->v4l2_dev, "Timed out; first mode detect\n");
+=======
+			v4l2_warn(&video->v4l2_dev, "Timed out; first mode detect\n");
+>>>>>>> b7ba80a49124 (Commit)
 			clear_bit(VIDEO_RES_DETECT, &video->flags);
 			return;
 		}
@@ -1081,7 +1160,11 @@ static void aspeed_video_get_resolution(struct aspeed_video *video)
 						      MODE_DETECT_TIMEOUT);
 		clear_bit(VIDEO_RES_DETECT, &video->flags);
 		if (!rc) {
+<<<<<<< HEAD
 			v4l2_dbg(1, debug, &video->v4l2_dev, "Timed out; second mode detect\n");
+=======
+			v4l2_warn(&video->v4l2_dev, "Timed out; second mode detect\n");
+>>>>>>> b7ba80a49124 (Commit)
 			return;
 		}
 
@@ -1104,7 +1187,11 @@ static void aspeed_video_get_resolution(struct aspeed_video *video)
 	} while (invalid_resolution && (tries++ < INVALID_RESOLUTION_RETRIES));
 
 	if (invalid_resolution) {
+<<<<<<< HEAD
 		v4l2_dbg(1, debug, &video->v4l2_dev, "Invalid resolution detected\n");
+=======
+		v4l2_warn(&video->v4l2_dev, "Invalid resolution detected\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -1168,6 +1255,7 @@ static void aspeed_video_set_resolution(struct aspeed_video *video)
 				   FIELD_PREP(VE_TGS_FIRST, video->frame_top) |
 				   FIELD_PREP(VE_TGS_LAST,
 					      video->frame_bottom + 1));
+<<<<<<< HEAD
 		aspeed_video_update(video, VE_CTRL,
 				    VE_CTRL_INT_DE | VE_CTRL_DIRECT_FETCH,
 				    VE_CTRL_INT_DE);
@@ -1176,6 +1264,12 @@ static void aspeed_video_set_resolution(struct aspeed_video *video)
 		aspeed_video_update(video, VE_CTRL,
 				    VE_CTRL_INT_DE | VE_CTRL_DIRECT_FETCH,
 				    VE_CTRL_DIRECT_FETCH);
+=======
+		aspeed_video_update(video, VE_CTRL, 0, VE_CTRL_INT_DE);
+	} else {
+		v4l2_dbg(1, debug, &video->v4l2_dev, "Capture: Direct Mode\n");
+		aspeed_video_update(video, VE_CTRL, 0, VE_CTRL_DIRECT_FETCH);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	size *= 4;
@@ -1208,6 +1302,7 @@ err_mem:
 		aspeed_video_free_buf(video, &video->srcs[0]);
 }
 
+<<<<<<< HEAD
 static void aspeed_video_update_regs(struct aspeed_video *video)
 {
 	u8 jpeg_hq_quality = clamp((int)video->jpeg_hq_quality - 1, 0,
@@ -1234,10 +1329,21 @@ static void aspeed_video_update_regs(struct aspeed_video *video)
 		aspeed_video_update(video, VE_BCD_CTRL, 0, VE_BCD_CTRL_EN_BCD);
 	else
 		aspeed_video_update(video, VE_BCD_CTRL, VE_BCD_CTRL_EN_BCD, 0);
+=======
+static void aspeed_video_init_regs(struct aspeed_video *video)
+{
+	u32 comp_ctrl = VE_COMP_CTRL_RSVD |
+		FIELD_PREP(VE_COMP_CTRL_DCT_LUM, video->jpeg_quality) |
+		FIELD_PREP(VE_COMP_CTRL_DCT_CHR, video->jpeg_quality | 0x10);
+	u32 ctrl = VE_CTRL_AUTO_OR_CURSOR |
+		FIELD_PREP(VE_CTRL_CAPTURE_FMT, VIDEO_CAP_FMT_YUV_FULL_SWING);
+	u32 seq_ctrl = video->jpeg_mode;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (video->frame_rate)
 		ctrl |= FIELD_PREP(VE_CTRL_FRC, video->frame_rate);
 
+<<<<<<< HEAD
 	if (video->format == VIDEO_FMT_STANDARD) {
 		comp_ctrl &= ~FIELD_PREP(VE_COMP_CTRL_EN_HQ, video->hq_mode);
 		seq_ctrl |= video->jpeg_mode;
@@ -1267,6 +1373,11 @@ static void aspeed_video_init_regs(struct aspeed_video *video)
 	u32 ctrl = VE_CTRL_AUTO_OR_CURSOR |
 		FIELD_PREP(VE_CTRL_CAPTURE_FMT, VIDEO_CAP_FMT_YUV_FULL_SWING);
 
+=======
+	if (video->yuv420)
+		seq_ctrl |= VE_SEQ_CTRL_YUV420;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Unlock VE registers */
 	aspeed_video_write(video, VE_PROTECTION_KEY, VE_PROTECTION_KEY_UNLOCK);
 
@@ -1281,8 +1392,14 @@ static void aspeed_video_init_regs(struct aspeed_video *video)
 	aspeed_video_write(video, VE_JPEG_ADDR, video->jpeg.dma);
 
 	/* Set control registers */
+<<<<<<< HEAD
 	aspeed_video_write(video, VE_CTRL, ctrl);
 	aspeed_video_write(video, VE_COMP_CTRL, VE_COMP_CTRL_RSVD);
+=======
+	aspeed_video_write(video, VE_SEQ_CTRL, seq_ctrl);
+	aspeed_video_write(video, VE_CTRL, ctrl);
+	aspeed_video_write(video, VE_COMP_CTRL, comp_ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Don't downscale */
 	aspeed_video_write(video, VE_SCALING_FACTOR, 0x10001000);
@@ -1298,8 +1415,11 @@ static void aspeed_video_init_regs(struct aspeed_video *video)
 			   FIELD_PREP(VE_MODE_DT_HOR_STABLE, 6) |
 			   FIELD_PREP(VE_MODE_DT_VER_STABLE, 6) |
 			   FIELD_PREP(VE_MODE_DT_EDG_THROD, 0x65));
+<<<<<<< HEAD
 
 	aspeed_video_write(video, VE_BCD_CTRL, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void aspeed_video_start(struct aspeed_video *video)
@@ -1333,9 +1453,12 @@ static void aspeed_video_stop(struct aspeed_video *video)
 	if (video->srcs[1].size)
 		aspeed_video_free_buf(video, &video->srcs[1]);
 
+<<<<<<< HEAD
 	if (video->bcd.size)
 		aspeed_video_free_buf(video, &video->bcd);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	video->v4l2_input_status = V4L2_IN_ST_NO_SIGNAL;
 	video->flags = 0;
 }
@@ -1354,12 +1477,19 @@ static int aspeed_video_querycap(struct file *file, void *fh,
 static int aspeed_video_enum_format(struct file *file, void *fh,
 				    struct v4l2_fmtdesc *f)
 {
+<<<<<<< HEAD
 	struct aspeed_video *video = video_drvdata(file);
 
 	if (f->index)
 		return -EINVAL;
 
 	f->pixelformat = video->pix_fmt.pixelformat;
+=======
+	if (f->index)
+		return -EINVAL;
+
+	f->pixelformat = V4L2_PIX_FMT_JPEG;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1374,6 +1504,7 @@ static int aspeed_video_get_format(struct file *file, void *fh,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int aspeed_video_set_format(struct file *file, void *fh,
 				   struct v4l2_format *f)
 {
@@ -1397,6 +1528,8 @@ static int aspeed_video_set_format(struct file *file, void *fh,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int aspeed_video_enum_input(struct file *file, void *fh,
 				   struct v4l2_input *inp)
 {
@@ -1614,7 +1747,11 @@ static const struct v4l2_ioctl_ops aspeed_video_ioctl_ops = {
 
 	.vidioc_enum_fmt_vid_cap = aspeed_video_enum_format,
 	.vidioc_g_fmt_vid_cap = aspeed_video_get_format,
+<<<<<<< HEAD
 	.vidioc_s_fmt_vid_cap = aspeed_video_set_format,
+=======
+	.vidioc_s_fmt_vid_cap = aspeed_video_get_format,
+>>>>>>> b7ba80a49124 (Commit)
 	.vidioc_try_fmt_vid_cap = aspeed_video_get_format,
 
 	.vidioc_reqbufs = vb2_ioctl_reqbufs,
@@ -1646,6 +1783,30 @@ static const struct v4l2_ioctl_ops aspeed_video_ioctl_ops = {
 	.vidioc_unsubscribe_event = v4l2_event_unsubscribe,
 };
 
+<<<<<<< HEAD
+=======
+static void aspeed_video_update_jpeg_quality(struct aspeed_video *video)
+{
+	u32 comp_ctrl = FIELD_PREP(VE_COMP_CTRL_DCT_LUM, video->jpeg_quality) |
+		FIELD_PREP(VE_COMP_CTRL_DCT_CHR, video->jpeg_quality | 0x10);
+
+	aspeed_video_update(video, VE_COMP_CTRL,
+			    VE_COMP_CTRL_DCT_LUM | VE_COMP_CTRL_DCT_CHR,
+			    comp_ctrl);
+}
+
+static void aspeed_video_update_subsampling(struct aspeed_video *video)
+{
+	if (video->jpeg.virt)
+		aspeed_video_update_jpeg_table(video->jpeg.virt, video->yuv420);
+
+	if (video->yuv420)
+		aspeed_video_update(video, VE_SEQ_CTRL, 0, VE_SEQ_CTRL_YUV420);
+	else
+		aspeed_video_update(video, VE_SEQ_CTRL, VE_SEQ_CTRL_YUV420, 0);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int aspeed_video_set_ctrl(struct v4l2_ctrl *ctrl)
 {
 	struct aspeed_video *video = container_of(ctrl->handler,
@@ -1655,6 +1816,7 @@ static int aspeed_video_set_ctrl(struct v4l2_ctrl *ctrl)
 	switch (ctrl->id) {
 	case V4L2_CID_JPEG_COMPRESSION_QUALITY:
 		video->jpeg_quality = ctrl->val;
+<<<<<<< HEAD
 		if (test_bit(VIDEO_STREAMING, &video->flags))
 			aspeed_video_update_regs(video);
 		break;
@@ -1672,6 +1834,18 @@ static int aspeed_video_set_ctrl(struct v4l2_ctrl *ctrl)
 		video->jpeg_hq_quality = ctrl->val;
 		if (test_bit(VIDEO_STREAMING, &video->flags))
 			aspeed_video_update_regs(video);
+=======
+		aspeed_video_update_jpeg_quality(video);
+		break;
+	case V4L2_CID_JPEG_CHROMA_SUBSAMPLING:
+		if (ctrl->val == V4L2_JPEG_CHROMA_SUBSAMPLING_420) {
+			video->yuv420 = true;
+			aspeed_video_update_subsampling(video);
+		} else {
+			video->yuv420 = false;
+			aspeed_video_update_subsampling(video);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		return -EINVAL;
@@ -1684,6 +1858,7 @@ static const struct v4l2_ctrl_ops aspeed_video_ctrl_ops = {
 	.s_ctrl = aspeed_video_set_ctrl,
 };
 
+<<<<<<< HEAD
 static const struct v4l2_ctrl_config aspeed_ctrl_HQ_mode = {
 	.ops = &aspeed_video_ctrl_ops,
 	.id = V4L2_CID_ASPEED_HQ_MODE,
@@ -1706,6 +1881,8 @@ static const struct v4l2_ctrl_config aspeed_ctrl_HQ_jpeg_quality = {
 	.def = 1,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void aspeed_video_resolution_work(struct work_struct *work)
 {
 	struct delayed_work *dwork = to_delayed_work(work);
@@ -1720,8 +1897,11 @@ static void aspeed_video_resolution_work(struct work_struct *work)
 
 	aspeed_video_init_regs(video);
 
+<<<<<<< HEAD
 	aspeed_video_update_regs(video);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	aspeed_video_get_resolution(video);
 
 	if (video->detected_timings.width != video->active_timings.width ||
@@ -1832,8 +2012,11 @@ static int aspeed_video_start_streaming(struct vb2_queue *q,
 	video->perf.duration_max = 0;
 	video->perf.duration_min = 0xffffffff;
 
+<<<<<<< HEAD
 	aspeed_video_update_regs(video);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rc = aspeed_video_start_frame(video);
 	if (rc) {
 		aspeed_video_bufs_done(video, VB2_BUF_STATE_QUEUED);
@@ -1855,7 +2038,11 @@ static void aspeed_video_stop_streaming(struct vb2_queue *q)
 				!test_bit(VIDEO_FRAME_INPRG, &video->flags),
 				STOP_TIMEOUT);
 	if (!rc) {
+<<<<<<< HEAD
 		v4l2_dbg(1, debug, &video->v4l2_dev, "Timed out when stopping streaming\n");
+=======
+		v4l2_warn(&video->v4l2_dev, "Timed out when stopping streaming\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * Need to force stop any DMA and try and get HW into a good
@@ -1904,6 +2091,7 @@ static const struct vb2_ops aspeed_video_vb2_ops = {
 static int aspeed_video_debugfs_show(struct seq_file *s, void *data)
 {
 	struct aspeed_video *v = s->private;
+<<<<<<< HEAD
 	u32 val08;
 
 	seq_puts(s, "\n");
@@ -1927,6 +2115,11 @@ static int aspeed_video_debugfs_show(struct seq_file *s, void *data)
 			   "Without" : "With");
 	}
 
+=======
+
+	seq_puts(s, "\n");
+
+>>>>>>> b7ba80a49124 (Commit)
 	seq_printf(s, "  %-20s:\t%s\n", "Signal",
 		   v->v4l2_input_status ? "Unlock" : "Lock");
 	seq_printf(s, "  %-20s:\t%d\n", "Width", v->pix_fmt.width);
@@ -1935,6 +2128,7 @@ static int aspeed_video_debugfs_show(struct seq_file *s, void *data)
 
 	seq_puts(s, "\n");
 
+<<<<<<< HEAD
 	seq_puts(s, "Compression:\n");
 	seq_printf(s, "  %-20s:\t%s\n", "Format", format_str[v->format]);
 	seq_printf(s, "  %-20s:\t%s\n", "Subsampling",
@@ -1949,12 +2143,15 @@ static int aspeed_video_debugfs_show(struct seq_file *s, void *data)
 
 	seq_puts(s, "\n");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	seq_puts(s, "Performance:\n");
 	seq_printf(s, "  %-20s:\t%d\n", "Frame#", v->sequence);
 	seq_printf(s, "  %-20s:\n", "Frame Duration(ms)");
 	seq_printf(s, "    %-18s:\t%d\n", "Now", v->perf.duration);
 	seq_printf(s, "    %-18s:\t%d\n", "Min", v->perf.duration_min);
 	seq_printf(s, "    %-18s:\t%d\n", "Max", v->perf.duration_max);
+<<<<<<< HEAD
 	seq_printf(s, "  %-20s:\t%d\n", "FPS",
 		   (v->perf.totaltime && v->sequence) ?
 		   1000 / (v->perf.totaltime / v->sequence) : 0);
@@ -1962,6 +2159,25 @@ static int aspeed_video_debugfs_show(struct seq_file *s, void *data)
 	return 0;
 }
 DEFINE_SHOW_ATTRIBUTE(aspeed_video_debugfs);
+=======
+	seq_printf(s, "  %-20s:\t%d\n", "FPS", 1000 / (v->perf.totaltime / v->sequence));
+
+	return 0;
+}
+
+static int aspeed_video_proc_open(struct inode *inode, struct file *file)
+{
+	return single_open(file, aspeed_video_debugfs_show, inode->i_private);
+}
+
+static const struct file_operations aspeed_video_debugfs_ops = {
+	.owner   = THIS_MODULE,
+	.open    = aspeed_video_proc_open,
+	.read    = seq_read,
+	.llseek  = seq_lseek,
+	.release = single_release,
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct dentry *debugfs_entry;
 
@@ -1975,7 +2191,11 @@ static int aspeed_video_debugfs_create(struct aspeed_video *video)
 {
 	debugfs_entry = debugfs_create_file(DEVICE_NAME, 0444, NULL,
 					    video,
+<<<<<<< HEAD
 					    &aspeed_video_debugfs_fops);
+=======
+					    &aspeed_video_debugfs_ops);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!debugfs_entry)
 		aspeed_video_debugfs_remove(video);
 
@@ -1996,7 +2216,10 @@ static int aspeed_video_setup_video(struct aspeed_video *video)
 	struct v4l2_device *v4l2_dev = &video->v4l2_dev;
 	struct vb2_queue *vbq = &video->queue;
 	struct video_device *vdev = &video->vdev;
+<<<<<<< HEAD
 	struct v4l2_ctrl_handler *hdl = &video->ctrl_handler;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	video->pix_fmt.pixelformat = V4L2_PIX_FMT_JPEG;
@@ -2011,6 +2234,7 @@ static int aspeed_video_setup_video(struct aspeed_video *video)
 		return rc;
 	}
 
+<<<<<<< HEAD
 	v4l2_ctrl_handler_init(hdl, 4);
 	v4l2_ctrl_new_std(hdl, &aspeed_video_ctrl_ops,
 			  V4L2_CID_JPEG_COMPRESSION_QUALITY, 0,
@@ -2023,6 +2247,18 @@ static int aspeed_video_setup_video(struct aspeed_video *video)
 	v4l2_ctrl_new_custom(hdl, &aspeed_ctrl_HQ_jpeg_quality, NULL);
 
 	rc = hdl->error;
+=======
+	v4l2_ctrl_handler_init(&video->ctrl_handler, 2);
+	v4l2_ctrl_new_std(&video->ctrl_handler, &aspeed_video_ctrl_ops,
+			  V4L2_CID_JPEG_COMPRESSION_QUALITY, 0,
+			  ASPEED_VIDEO_JPEG_NUM_QUALITIES - 1, 1, 0);
+	v4l2_ctrl_new_std_menu(&video->ctrl_handler, &aspeed_video_ctrl_ops,
+			       V4L2_CID_JPEG_CHROMA_SUBSAMPLING,
+			       V4L2_JPEG_CHROMA_SUBSAMPLING_420, mask,
+			       V4L2_JPEG_CHROMA_SUBSAMPLING_444);
+
+	rc = video->ctrl_handler.error;
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		v4l2_ctrl_handler_free(&video->ctrl_handler);
 		v4l2_device_unregister(v4l2_dev);
@@ -2031,7 +2267,11 @@ static int aspeed_video_setup_video(struct aspeed_video *video)
 		return rc;
 	}
 
+<<<<<<< HEAD
 	v4l2_dev->ctrl_handler = hdl;
+=======
+	v4l2_dev->ctrl_handler = &video->ctrl_handler;
+>>>>>>> b7ba80a49124 (Commit)
 
 	vbq->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 	vbq->io_modes = VB2_MMAP | VB2_READ | VB2_DMABUF;
@@ -2179,7 +2419,10 @@ static int aspeed_video_probe(struct platform_device *pdev)
 	video->comp_size_read = config->comp_size_read;
 
 	video->frame_rate = 30;
+<<<<<<< HEAD
 	video->jpeg_hq_quality = 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	video->dev = &pdev->dev;
 	spin_lock_init(&video->lock);
 	mutex_init(&video->video_lock);

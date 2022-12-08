@@ -22,7 +22,10 @@
 #include <linux/spinlock.h>
 #include <linux/string.h>
 #include <linux/tracepoint.h>
+<<<<<<< HEAD
 #include <linux/vmalloc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <trace/events/printk.h>
 
 static DEFINE_PER_CPU(int, per_cpu_var);
@@ -408,6 +411,7 @@ static void test_printk(struct kunit *test)
 }
 
 /*
+<<<<<<< HEAD
  * Prevent the compiler from optimizing @var away. Without this, Clang may
  * notice that @var is uninitialized and drop memcpy() calls that use it.
  *
@@ -439,6 +443,8 @@ static void test_init_memcpy(struct kunit *test)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Test case: ensure that memcpy() correctly copies uninitialized values between
  * aligned `src` and `dst`.
  */
@@ -451,7 +457,10 @@ static void test_memcpy_aligned_to_aligned(struct kunit *test)
 	kunit_info(
 		test,
 		"memcpy()ing aligned uninit src to aligned dst (UMR report)\n");
+<<<<<<< HEAD
 	DO_NOT_OPTIMIZE(uninit_src);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy((void *)&dst, (void *)&uninit_src, sizeof(uninit_src));
 	kmsan_check_memory((void *)&dst, sizeof(dst));
 	KUNIT_EXPECT_TRUE(test, report_matches(&expect));
@@ -474,7 +483,10 @@ static void test_memcpy_aligned_to_unaligned(struct kunit *test)
 	kunit_info(
 		test,
 		"memcpy()ing aligned uninit src to unaligned dst (UMR report)\n");
+<<<<<<< HEAD
 	DO_NOT_OPTIMIZE(uninit_src);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy((void *)&dst[1], (void *)&uninit_src, sizeof(uninit_src));
 	kmsan_check_memory((void *)dst, 4);
 	KUNIT_EXPECT_TRUE(test, report_matches(&expect));
@@ -498,12 +510,16 @@ static void test_memcpy_aligned_to_unaligned2(struct kunit *test)
 	kunit_info(
 		test,
 		"memcpy()ing aligned uninit src to unaligned dst - part 2 (UMR report)\n");
+<<<<<<< HEAD
 	DO_NOT_OPTIMIZE(uninit_src);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy((void *)&dst[1], (void *)&uninit_src, sizeof(uninit_src));
 	kmsan_check_memory((void *)&dst[4], sizeof(uninit_src));
 	KUNIT_EXPECT_TRUE(test, report_matches(&expect));
 }
 
+<<<<<<< HEAD
 /* Generate test cases for memset16(), memset32(), memset64(). */
 #define DEFINE_TEST_MEMSETXX(size)                                          \
 	static void test_memset##size(struct kunit *test)                   \
@@ -525,6 +541,9 @@ DEFINE_TEST_MEMSETXX(64)
 
 static noinline void fibonacci(int *array, int size, int start)
 {
+=======
+static noinline void fibonacci(int *array, int size, int start) {
+>>>>>>> b7ba80a49124 (Commit)
 	if (start < 2 || (start == size))
 		return;
 	array[start] = array[start - 1] + array[start - 2];
@@ -533,7 +552,12 @@ static noinline void fibonacci(int *array, int size, int start)
 
 static void test_long_origin_chain(struct kunit *test)
 {
+<<<<<<< HEAD
 	EXPECTATION_UNINIT_VALUE_FN(expect, "test_long_origin_chain");
+=======
+	EXPECTATION_UNINIT_VALUE_FN(expect,
+				    "test_long_origin_chain");
+>>>>>>> b7ba80a49124 (Commit)
 	/* (KMSAN_MAX_ORIGIN_DEPTH * 2) recursive calls to fibonacci(). */
 	volatile int accum[KMSAN_MAX_ORIGIN_DEPTH * 2 + 2];
 	int last = ARRAY_SIZE(accum) - 1;
@@ -551,6 +575,7 @@ static void test_long_origin_chain(struct kunit *test)
 	KUNIT_EXPECT_TRUE(test, report_matches(&expect));
 }
 
+<<<<<<< HEAD
 /*
  * Test case: ensure that saving/restoring/printing stacks to/from stackdepot
  * does not trigger errors.
@@ -581,6 +606,8 @@ static void test_stackdepot_roundtrip(struct kunit *test)
 	KUNIT_EXPECT_TRUE(test, report_matches(&expect));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct kunit_case kmsan_test_cases[] = {
 	KUNIT_CASE(test_uninit_kmalloc),
 	KUNIT_CASE(test_init_kmalloc),
@@ -595,6 +622,7 @@ static struct kunit_case kmsan_test_cases[] = {
 	KUNIT_CASE(test_uaf),
 	KUNIT_CASE(test_percpu_propagate),
 	KUNIT_CASE(test_printk),
+<<<<<<< HEAD
 	KUNIT_CASE(test_init_memcpy),
 	KUNIT_CASE(test_memcpy_aligned_to_aligned),
 	KUNIT_CASE(test_memcpy_aligned_to_unaligned),
@@ -604,6 +632,12 @@ static struct kunit_case kmsan_test_cases[] = {
 	KUNIT_CASE(test_memset64),
 	KUNIT_CASE(test_long_origin_chain),
 	KUNIT_CASE(test_stackdepot_roundtrip),
+=======
+	KUNIT_CASE(test_memcpy_aligned_to_aligned),
+	KUNIT_CASE(test_memcpy_aligned_to_unaligned),
+	KUNIT_CASE(test_memcpy_aligned_to_unaligned2),
+	KUNIT_CASE(test_long_origin_chain),
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 

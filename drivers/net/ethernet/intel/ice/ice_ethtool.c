@@ -151,6 +151,7 @@ static const u32 ice_regs_dump_list[] = {
 	QINT_RQCTL(0),
 	PFINT_OICR_ENA,
 	QRX_ITR(0),
+<<<<<<< HEAD
 #define GLDCB_TLPM_PCI_DM			0x000A0180
 	GLDCB_TLPM_PCI_DM,
 #define GLDCB_TLPM_TC2PFC			0x000A0194
@@ -320,6 +321,8 @@ static const u32 ice_regs_dump_list[] = {
 	PRTDCB_TLPM_REG_DM(1),
 	PRTDCB_TLPM_REG_DM(2),
 	PRTDCB_TLPM_REG_DM(3),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ice_priv_flag {
@@ -656,7 +659,11 @@ static int ice_lbtest_prepare_rings(struct ice_vsi *vsi)
 	if (status)
 		goto err_setup_rx_ring;
 
+<<<<<<< HEAD
 	status = ice_vsi_cfg_lan(vsi);
+=======
+	status = ice_vsi_cfg(vsi);
+>>>>>>> b7ba80a49124 (Commit)
 	if (status)
 		goto err_setup_rx_ring;
 
@@ -664,7 +671,11 @@ static int ice_lbtest_prepare_rings(struct ice_vsi *vsi)
 	if (status)
 		goto err_start_rx_ring;
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return status;
+>>>>>>> b7ba80a49124 (Commit)
 
 err_start_rx_ring:
 	ice_vsi_free_rx_rings(vsi);
@@ -1544,9 +1555,15 @@ __ice_get_ethtool_stats(struct net_device *netdev,
 
 	ice_for_each_alloc_txq(vsi, j) {
 		tx_ring = READ_ONCE(vsi->tx_rings[j]);
+<<<<<<< HEAD
 		if (tx_ring && tx_ring->ring_stats) {
 			data[i++] = tx_ring->ring_stats->stats.pkts;
 			data[i++] = tx_ring->ring_stats->stats.bytes;
+=======
+		if (tx_ring) {
+			data[i++] = tx_ring->stats.pkts;
+			data[i++] = tx_ring->stats.bytes;
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			data[i++] = 0;
 			data[i++] = 0;
@@ -1555,9 +1572,15 @@ __ice_get_ethtool_stats(struct net_device *netdev,
 
 	ice_for_each_alloc_rxq(vsi, j) {
 		rx_ring = READ_ONCE(vsi->rx_rings[j]);
+<<<<<<< HEAD
 		if (rx_ring && rx_ring->ring_stats) {
 			data[i++] = rx_ring->ring_stats->stats.pkts;
 			data[i++] = rx_ring->ring_stats->stats.bytes;
+=======
+		if (rx_ring) {
+			data[i++] = rx_ring->stats.pkts;
+			data[i++] = rx_ring->stats.bytes;
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			data[i++] = 0;
 			data[i++] = 0;
@@ -1950,7 +1973,12 @@ ice_phy_type_to_ethtool(struct net_device *netdev,
 			   ICE_PHY_TYPE_LOW_100G_CAUI4 |
 			   ICE_PHY_TYPE_LOW_100G_AUI4_AOC_ACC |
 			   ICE_PHY_TYPE_LOW_100G_AUI4 |
+<<<<<<< HEAD
 			   ICE_PHY_TYPE_LOW_100GBASE_CR_PAM4;
+=======
+			   ICE_PHY_TYPE_LOW_100GBASE_CR_PAM4 |
+			   ICE_PHY_TYPE_LOW_100GBASE_CP2;
+>>>>>>> b7ba80a49124 (Commit)
 	phy_type_mask_hi = ICE_PHY_TYPE_HIGH_100G_CAUI2_AOC_ACC |
 			   ICE_PHY_TYPE_HIGH_100G_CAUI2 |
 			   ICE_PHY_TYPE_HIGH_100G_AUI2_AOC_ACC |
@@ -1963,6 +1991,7 @@ ice_phy_type_to_ethtool(struct net_device *netdev,
 						100000baseCR4_Full);
 	}
 
+<<<<<<< HEAD
 	if (phy_types_low & ICE_PHY_TYPE_LOW_100GBASE_CP2) {
 		ethtool_link_ksettings_add_link_mode(ks, supported,
 						     100000baseCR2_Full);
@@ -1971,12 +2000,18 @@ ice_phy_type_to_ethtool(struct net_device *netdev,
 	}
 
 	if (phy_types_low & ICE_PHY_TYPE_LOW_100GBASE_SR4) {
+=======
+	phy_type_mask_lo = ICE_PHY_TYPE_LOW_100GBASE_SR4 |
+			   ICE_PHY_TYPE_LOW_100GBASE_SR2;
+	if (phy_types_low & phy_type_mask_lo) {
+>>>>>>> b7ba80a49124 (Commit)
 		ethtool_link_ksettings_add_link_mode(ks, supported,
 						     100000baseSR4_Full);
 		ice_ethtool_advertise_link_mode(ICE_AQ_LINK_SPEED_100GB,
 						100000baseSR4_Full);
 	}
 
+<<<<<<< HEAD
 	if (phy_types_low & ICE_PHY_TYPE_LOW_100GBASE_SR2) {
 		ethtool_link_ksettings_add_link_mode(ks, supported,
 						     100000baseSR2_Full);
@@ -1984,6 +2019,8 @@ ice_phy_type_to_ethtool(struct net_device *netdev,
 						100000baseSR2_Full);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	phy_type_mask_lo = ICE_PHY_TYPE_LOW_100GBASE_LR4 |
 			   ICE_PHY_TYPE_LOW_100GBASE_DR;
 	if (phy_types_low & phy_type_mask_lo) {
@@ -1995,12 +2032,19 @@ ice_phy_type_to_ethtool(struct net_device *netdev,
 
 	phy_type_mask_lo = ICE_PHY_TYPE_LOW_100GBASE_KR4 |
 			   ICE_PHY_TYPE_LOW_100GBASE_KR_PAM4;
+<<<<<<< HEAD
 	if (phy_types_low & phy_type_mask_lo) {
+=======
+	phy_type_mask_hi = ICE_PHY_TYPE_HIGH_100GBASE_KR2_PAM4;
+	if (phy_types_low & phy_type_mask_lo ||
+	    phy_types_high & phy_type_mask_hi) {
+>>>>>>> b7ba80a49124 (Commit)
 		ethtool_link_ksettings_add_link_mode(ks, supported,
 						     100000baseKR4_Full);
 		ice_ethtool_advertise_link_mode(ICE_AQ_LINK_SPEED_100GB,
 						100000baseKR4_Full);
 	}
+<<<<<<< HEAD
 
 	if (phy_types_high & ICE_PHY_TYPE_HIGH_100GBASE_KR2_PAM4) {
 		ethtool_link_ksettings_add_link_mode(ks, supported,
@@ -2009,6 +2053,8 @@ ice_phy_type_to_ethtool(struct net_device *netdev,
 						100000baseKR2_Full);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define TEST_SET_BITS_TIMEOUT	50
@@ -2259,15 +2305,27 @@ ice_ksettings_find_adv_link_speed(const struct ethtool_link_ksettings *ks)
 						  100baseT_Full))
 		adv_link_speed |= ICE_AQ_LINK_SPEED_100MB;
 	if (ethtool_link_ksettings_test_link_mode(ks, advertising,
+<<<<<<< HEAD
 						  1000baseX_Full) ||
 	    ethtool_link_ksettings_test_link_mode(ks, advertising,
+=======
+						  1000baseX_Full))
+		adv_link_speed |= ICE_AQ_LINK_SPEED_1000MB;
+	if (ethtool_link_ksettings_test_link_mode(ks, advertising,
+>>>>>>> b7ba80a49124 (Commit)
 						  1000baseT_Full) ||
 	    ethtool_link_ksettings_test_link_mode(ks, advertising,
 						  1000baseKX_Full))
 		adv_link_speed |= ICE_AQ_LINK_SPEED_1000MB;
 	if (ethtool_link_ksettings_test_link_mode(ks, advertising,
+<<<<<<< HEAD
 						  2500baseT_Full) ||
 	    ethtool_link_ksettings_test_link_mode(ks, advertising,
+=======
+						  2500baseT_Full))
+		adv_link_speed |= ICE_AQ_LINK_SPEED_2500MB;
+	if (ethtool_link_ksettings_test_link_mode(ks, advertising,
+>>>>>>> b7ba80a49124 (Commit)
 						  2500baseX_Full))
 		adv_link_speed |= ICE_AQ_LINK_SPEED_2500MB;
 	if (ethtool_link_ksettings_test_link_mode(ks, advertising,
@@ -2276,8 +2334,14 @@ ice_ksettings_find_adv_link_speed(const struct ethtool_link_ksettings *ks)
 	if (ethtool_link_ksettings_test_link_mode(ks, advertising,
 						  10000baseT_Full) ||
 	    ethtool_link_ksettings_test_link_mode(ks, advertising,
+<<<<<<< HEAD
 						  10000baseKR_Full) ||
 	    ethtool_link_ksettings_test_link_mode(ks, advertising,
+=======
+						  10000baseKR_Full))
+		adv_link_speed |= ICE_AQ_LINK_SPEED_10GB;
+	if (ethtool_link_ksettings_test_link_mode(ks, advertising,
+>>>>>>> b7ba80a49124 (Commit)
 						  10000baseSR_Full) ||
 	    ethtool_link_ksettings_test_link_mode(ks, advertising,
 						  10000baseLR_Full))
@@ -2301,8 +2365,14 @@ ice_ksettings_find_adv_link_speed(const struct ethtool_link_ksettings *ks)
 	if (ethtool_link_ksettings_test_link_mode(ks, advertising,
 						  50000baseCR2_Full) ||
 	    ethtool_link_ksettings_test_link_mode(ks, advertising,
+<<<<<<< HEAD
 						  50000baseKR2_Full) ||
 	    ethtool_link_ksettings_test_link_mode(ks, advertising,
+=======
+						  50000baseKR2_Full))
+		adv_link_speed |= ICE_AQ_LINK_SPEED_50GB;
+	if (ethtool_link_ksettings_test_link_mode(ks, advertising,
+>>>>>>> b7ba80a49124 (Commit)
 						  50000baseSR2_Full))
 		adv_link_speed |= ICE_AQ_LINK_SPEED_50GB;
 	if (ethtool_link_ksettings_test_link_mode(ks, advertising,
@@ -2312,6 +2382,7 @@ ice_ksettings_find_adv_link_speed(const struct ethtool_link_ksettings *ks)
 	    ethtool_link_ksettings_test_link_mode(ks, advertising,
 						  100000baseLR4_ER4_Full) ||
 	    ethtool_link_ksettings_test_link_mode(ks, advertising,
+<<<<<<< HEAD
 						  100000baseKR4_Full) ||
 	    ethtool_link_ksettings_test_link_mode(ks, advertising,
 						  100000baseCR2_Full) ||
@@ -2319,6 +2390,9 @@ ice_ksettings_find_adv_link_speed(const struct ethtool_link_ksettings *ks)
 						  100000baseSR2_Full) ||
 	    ethtool_link_ksettings_test_link_mode(ks, advertising,
 						  100000baseKR2_Full))
+=======
+						  100000baseKR4_Full))
+>>>>>>> b7ba80a49124 (Commit)
 		adv_link_speed |= ICE_AQ_LINK_SPEED_100GB;
 
 	return adv_link_speed;
@@ -3046,6 +3120,11 @@ ice_set_ringparam(struct net_device *netdev, struct ethtool_ringparam *ring,
 		/* clone ring and setup updated count */
 		xdp_rings[i] = *vsi->xdp_rings[i];
 		xdp_rings[i].count = new_tx_cnt;
+<<<<<<< HEAD
+=======
+		xdp_rings[i].next_dd = ICE_RING_QUARTER(&xdp_rings[i]) - 1;
+		xdp_rings[i].next_rs = ICE_RING_QUARTER(&xdp_rings[i]) - 1;
+>>>>>>> b7ba80a49124 (Commit)
 		xdp_rings[i].desc = NULL;
 		xdp_rings[i].tx_buf = NULL;
 		err = ice_setup_tx_ring(&xdp_rings[i]);
@@ -3090,7 +3169,11 @@ process_rx:
 
 		/* allocate Rx buffers */
 		err = ice_alloc_rx_bufs(&rx_rings[i],
+<<<<<<< HEAD
 					ICE_RX_DESC_UNUSED(&rx_rings[i]));
+=======
+					ICE_DESC_UNUSED(&rx_rings[i]));
+>>>>>>> b7ba80a49124 (Commit)
 rx_unwind:
 		if (err) {
 			while (i) {
@@ -3658,9 +3741,13 @@ static int ice_set_channels(struct net_device *dev, struct ethtool_channels *ch)
 	struct ice_vsi *vsi = np->vsi;
 	struct ice_pf *pf = vsi->back;
 	int new_rx = 0, new_tx = 0;
+<<<<<<< HEAD
 	bool locked = false;
 	u32 curr_combined;
 	int ret = 0;
+=======
+	u32 curr_combined;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* do not support changing channels in Safe Mode */
 	if (ice_is_safe_mode(pf)) {
@@ -3724,6 +3811,7 @@ static int ice_set_channels(struct net_device *dev, struct ethtool_channels *ch)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if (pf->adev) {
 		mutex_lock(&pf->adev_mutex);
 		device_lock(&pf->adev->dev);
@@ -3741,16 +3829,26 @@ static int ice_set_channels(struct net_device *dev, struct ethtool_channels *ch)
 		ret = ice_vsi_set_dflt_rss_lut(vsi, new_rx);
 		goto adev_unlock;
 	}
+=======
+	ice_vsi_recfg_qs(vsi, new_rx, new_tx);
+
+	if (!netif_is_rxfh_configured(dev))
+		return ice_vsi_set_dflt_rss_lut(vsi, new_rx);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Update rss_size due to change in Rx queues */
 	vsi->rss_size = ice_get_valid_rss_size(&pf->hw, new_rx);
 
+<<<<<<< HEAD
 adev_unlock:
 	if (locked) {
 		device_unlock(&pf->adev->dev);
 		mutex_unlock(&pf->adev_mutex);
 	}
 	return ret;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -4331,8 +4429,11 @@ ice_get_module_eeprom(struct net_device *netdev,
 		 * SFP modules only ever use page 0.
 		 */
 		if (page == 0 || !(data[0x2] & 0x4)) {
+<<<<<<< HEAD
 			u32 copy_len;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			/* If i2c bus is busy due to slow page change or
 			 * link management access, call can fail. This is normal.
 			 * So we retry this a few times.
@@ -4356,8 +4457,13 @@ ice_get_module_eeprom(struct net_device *netdev,
 			}
 
 			/* Make sure we have enough room for the new block */
+<<<<<<< HEAD
 			copy_len = min_t(u32, SFF_READ_BLOCK_SIZE, ee->len - i);
 			memcpy(data + i, value, copy_len);
+=======
+			if ((i + SFF_READ_BLOCK_SIZE) < ee->len)
+				memcpy(data + i, value, SFF_READ_BLOCK_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 	return 0;

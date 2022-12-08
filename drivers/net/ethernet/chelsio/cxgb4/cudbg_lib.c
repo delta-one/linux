@@ -14,7 +14,10 @@
 #include "cudbg_entity.h"
 #include "cudbg_lib.h"
 #include "cudbg_zlib.h"
+<<<<<<< HEAD
 #include "cxgb4_tc_mqprio.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const u32 t6_tp_pio_array[][IREG_NUM_ELEM] = {
 	{0x7e40, 0x7e44, 0x020, 28}, /* t6_tp_pio_regs_20_to_3b */
@@ -3459,7 +3462,11 @@ int cudbg_collect_qdesc(struct cudbg_init *pdbg_init,
 			for (i = 0; i < utxq->ntxq; i++)
 				QDESC_GET_TXQ(&utxq->uldtxq[i].q,
 					      cudbg_uld_txq_to_qtype(j),
+<<<<<<< HEAD
 					      out_unlock_uld);
+=======
+					      out_unlock);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -3476,7 +3483,11 @@ int cudbg_collect_qdesc(struct cudbg_init *pdbg_init,
 			for (i = 0; i < urxq->nrxq; i++)
 				QDESC_GET_RXQ(&urxq->uldrxq[i].rspq,
 					      cudbg_uld_rxq_to_qtype(j),
+<<<<<<< HEAD
 					      out_unlock_uld);
+=======
+					      out_unlock);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		/* ULD FLQ */
@@ -3488,7 +3499,11 @@ int cudbg_collect_qdesc(struct cudbg_init *pdbg_init,
 			for (i = 0; i < urxq->nrxq; i++)
 				QDESC_GET_FLQ(&urxq->uldrxq[i].fl,
 					      cudbg_uld_flq_to_qtype(j),
+<<<<<<< HEAD
 					      out_unlock_uld);
+=======
+					      out_unlock);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		/* ULD CIQ */
@@ -3501,6 +3516,7 @@ int cudbg_collect_qdesc(struct cudbg_init *pdbg_init,
 			for (i = 0; i < urxq->nciq; i++)
 				QDESC_GET_RXQ(&urxq->uldrxq[base + i].rspq,
 					      cudbg_uld_ciq_to_qtype(j),
+<<<<<<< HEAD
 					      out_unlock_uld);
 		}
 	}
@@ -3510,16 +3526,27 @@ int cudbg_collect_qdesc(struct cudbg_init *pdbg_init,
 		goto out;
 
 	mutex_lock(&padap->tc_mqprio->mqprio_mutex);
+=======
+					      out_unlock);
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* ETHOFLD TXQ */
 	if (s->eohw_txq)
 		for (i = 0; i < s->eoqsets; i++)
 			QDESC_GET_TXQ(&s->eohw_txq[i].q,
+<<<<<<< HEAD
 				      CUDBG_QTYPE_ETHOFLD_TXQ, out_unlock_mqprio);
+=======
+				      CUDBG_QTYPE_ETHOFLD_TXQ, out);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* ETHOFLD RXQ and FLQ */
 	if (s->eohw_rxq) {
 		for (i = 0; i < s->eoqsets; i++)
 			QDESC_GET_RXQ(&s->eohw_rxq[i].rspq,
+<<<<<<< HEAD
 				      CUDBG_QTYPE_ETHOFLD_RXQ, out_unlock_mqprio);
 
 		for (i = 0; i < s->eoqsets; i++)
@@ -3529,6 +3556,17 @@ int cudbg_collect_qdesc(struct cudbg_init *pdbg_init,
 
 out_unlock_mqprio:
 	mutex_unlock(&padap->tc_mqprio->mqprio_mutex);
+=======
+				      CUDBG_QTYPE_ETHOFLD_RXQ, out);
+
+		for (i = 0; i < s->eoqsets; i++)
+			QDESC_GET_FLQ(&s->eohw_rxq[i].fl,
+				      CUDBG_QTYPE_ETHOFLD_FLQ, out);
+	}
+
+out_unlock:
+	mutex_unlock(&uld_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	qdesc_info->qdesc_entry_size = sizeof(*qdesc_entry);
@@ -3565,10 +3603,13 @@ out_free:
 #undef QDESC_GET
 
 	return rc;
+<<<<<<< HEAD
 
 out_unlock_uld:
 	mutex_unlock(&uld_mutex);
 	goto out;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int cudbg_collect_flash(struct cudbg_init *pdbg_init,

@@ -165,8 +165,11 @@ static int t7xx_acpi_reset(struct t7xx_pci_dev *t7xx_dev, char *fn_name)
 		return -EFAULT;
 	}
 
+<<<<<<< HEAD
 	kfree(buffer.pointer);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	return 0;
 }

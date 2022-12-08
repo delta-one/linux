@@ -23,8 +23,11 @@
 #include "leds.h"
 
 static struct class *leds_class;
+<<<<<<< HEAD
 static DEFINE_MUTEX(leds_lookup_lock);
 static LIST_HEAD(leds_lookup_list);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static ssize_t brightness_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
@@ -217,6 +220,7 @@ static int led_resume(struct device *dev)
 
 static SIMPLE_DEV_PM_OPS(leds_class_dev_pm_ops, led_suspend, led_resume);
 
+<<<<<<< HEAD
 static struct led_classdev *led_module_get(struct device *led_dev)
 {
 	struct led_classdev *led_cdev;
@@ -234,6 +238,8 @@ static struct led_classdev *led_module_get(struct device *led_dev)
 	return led_cdev;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * of_led_get() - request a LED device via the LED framework
  * @np: device node to get the LED device from
@@ -245,6 +251,10 @@ static struct led_classdev *led_module_get(struct device *led_dev)
 struct led_classdev *of_led_get(struct device_node *np, int index)
 {
 	struct device *led_dev;
+<<<<<<< HEAD
+=======
+	struct led_classdev *led_cdev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct device_node *led_node;
 
 	led_node = of_parse_phandle(np, "leds", index);
@@ -253,9 +263,22 @@ struct led_classdev *of_led_get(struct device_node *np, int index)
 
 	led_dev = class_find_device_by_of_node(leds_class, led_node);
 	of_node_put(led_node);
+<<<<<<< HEAD
 	put_device(led_dev);
 
 	return led_module_get(led_dev);
+=======
+
+	if (!led_dev)
+		return ERR_PTR(-EPROBE_DEFER);
+
+	led_cdev = dev_get_drvdata(led_dev);
+
+	if (!try_module_get(led_cdev->dev->parent->driver->owner))
+		return ERR_PTR(-ENODEV);
+
+	return led_cdev;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(of_led_get);
 
@@ -266,7 +289,10 @@ EXPORT_SYMBOL_GPL(of_led_get);
 void led_put(struct led_classdev *led_cdev)
 {
 	module_put(led_cdev->dev->parent->driver->owner);
+<<<<<<< HEAD
 	put_device(led_cdev->dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(led_put);
 
@@ -277,6 +303,7 @@ static void devm_led_release(struct device *dev, void *res)
 	led_put(*p);
 }
 
+<<<<<<< HEAD
 static struct led_classdev *__devm_led_get(struct device *dev, struct led_classdev *led)
 {
 	struct led_classdev **dr;
@@ -293,6 +320,8 @@ static struct led_classdev *__devm_led_get(struct device *dev, struct led_classd
 	return led;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * devm_of_led_get - Resource-managed request of a LED device
  * @dev:	LED consumer
@@ -308,6 +337,10 @@ struct led_classdev *__must_check devm_of_led_get(struct device *dev,
 						  int index)
 {
 	struct led_classdev *led;
+<<<<<<< HEAD
+=======
+	struct led_classdev **dr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!dev)
 		return ERR_PTR(-EINVAL);
@@ -316,6 +349,7 @@ struct led_classdev *__must_check devm_of_led_get(struct device *dev,
 	if (IS_ERR(led))
 		return led;
 
+<<<<<<< HEAD
 	return __devm_led_get(dev, led);
 }
 EXPORT_SYMBOL_GPL(devm_of_led_get);
@@ -402,6 +436,22 @@ void led_remove_lookup(struct led_lookup_data *led_lookup)
 }
 EXPORT_SYMBOL_GPL(led_remove_lookup);
 
+=======
+	dr = devres_alloc(devm_led_release, sizeof(struct led_classdev *),
+			  GFP_KERNEL);
+	if (!dr) {
+		led_put(led);
+		return ERR_PTR(-ENOMEM);
+	}
+
+	*dr = led;
+	devres_add(dev, dr);
+
+	return led;
+}
+EXPORT_SYMBOL_GPL(devm_of_led_get);
+
+>>>>>>> b7ba80a49124 (Commit)
 static int led_classdev_next_name(const char *init_name, char *name,
 				  size_t len)
 {
@@ -626,7 +676,11 @@ EXPORT_SYMBOL_GPL(devm_led_classdev_unregister);
 
 static int __init leds_init(void)
 {
+<<<<<<< HEAD
 	leds_class = class_create("leds");
+=======
+	leds_class = class_create(THIS_MODULE, "leds");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(leds_class))
 		return PTR_ERR(leds_class);
 	leds_class->pm = &leds_class_dev_pm_ops;

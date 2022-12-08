@@ -2,7 +2,10 @@
 
 #include <linux/slab.h>
 #include <trace/events/btrfs.h>
+<<<<<<< HEAD
 #include "messages.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "ctree.h"
 #include "extent-io-tree.h"
 #include "btrfs_inode.h"
@@ -58,17 +61,29 @@ static inline void __btrfs_debug_check_extent_io_range(const char *caller,
 						       struct extent_io_tree *tree,
 						       u64 start, u64 end)
 {
+<<<<<<< HEAD
 	struct btrfs_inode *inode = tree->inode;
+=======
+	struct inode *inode = tree->private_data;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 isize;
 
 	if (!inode)
 		return;
 
+<<<<<<< HEAD
 	isize = i_size_read(&inode->vfs_inode);
 	if (end >= PAGE_SIZE && (end % 2) == 0 && end != isize - 1) {
 		btrfs_debug_rl(inode->root->fs_info,
 		    "%s: ino %llu isize %llu odd range [%llu,%llu]",
 			caller, btrfs_ino(inode), isize, start, end);
+=======
+	isize = i_size_read(inode);
+	if (end >= PAGE_SIZE && (end % 2) == 0 && end != isize - 1) {
+		btrfs_debug_rl(BTRFS_I(inode)->root->fs_info,
+		    "%s: ino %llu isize %llu odd range [%llu,%llu]",
+			caller, btrfs_ino(BTRFS_I(inode)), isize, start, end);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 #else
@@ -94,12 +109,21 @@ struct tree_entry {
 };
 
 void extent_io_tree_init(struct btrfs_fs_info *fs_info,
+<<<<<<< HEAD
 			 struct extent_io_tree *tree, unsigned int owner)
+=======
+			 struct extent_io_tree *tree, unsigned int owner,
+			 void *private_data)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	tree->fs_info = fs_info;
 	tree->state = RB_ROOT;
 	spin_lock_init(&tree->lock);
+<<<<<<< HEAD
 	tree->inode = NULL;
+=======
+	tree->private_data = private_data;
+>>>>>>> b7ba80a49124 (Commit)
 	tree->owner = owner;
 	if (owner == IO_TREE_INODE_FILE_EXTENT)
 		lockdep_set_class(&tree->lock, &file_extent_tree_class);
@@ -346,8 +370,14 @@ static void merge_state(struct extent_io_tree *tree, struct extent_state *state)
 	other = prev_state(state);
 	if (other && other->end == state->start - 1 &&
 	    other->state == state->state) {
+<<<<<<< HEAD
 		if (tree->inode)
 			btrfs_merge_delalloc_extent(tree->inode, state, other);
+=======
+		if (tree->private_data)
+			btrfs_merge_delalloc_extent(tree->private_data,
+						    state, other);
+>>>>>>> b7ba80a49124 (Commit)
 		state->start = other->start;
 		rb_erase(&other->rb_node, &tree->state);
 		RB_CLEAR_NODE(&other->rb_node);
@@ -356,8 +386,14 @@ static void merge_state(struct extent_io_tree *tree, struct extent_state *state)
 	other = next_state(state);
 	if (other && other->start == state->end + 1 &&
 	    other->state == state->state) {
+<<<<<<< HEAD
 		if (tree->inode)
 			btrfs_merge_delalloc_extent(tree->inode, state, other);
+=======
+		if (tree->private_data)
+			btrfs_merge_delalloc_extent(tree->private_data, state,
+						    other);
+>>>>>>> b7ba80a49124 (Commit)
 		state->end = other->end;
 		rb_erase(&other->rb_node, &tree->state);
 		RB_CLEAR_NODE(&other->rb_node);
@@ -372,8 +408,13 @@ static void set_state_bits(struct extent_io_tree *tree,
 	u32 bits_to_set = bits & ~EXTENT_CTLBITS;
 	int ret;
 
+<<<<<<< HEAD
 	if (tree->inode)
 		btrfs_set_delalloc_extent(tree->inode, state, bits);
+=======
+	if (tree->private_data)
+		btrfs_set_delalloc_extent(tree->private_data, state, bits);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = add_extent_changeset(state, bits_to_set, changeset, 1);
 	BUG_ON(ret < 0);
@@ -395,7 +436,11 @@ static int insert_state(struct extent_io_tree *tree,
 			u32 bits, struct extent_changeset *changeset)
 {
 	struct rb_node **node;
+<<<<<<< HEAD
 	struct rb_node *parent = NULL;
+=======
+	struct rb_node *parent;
+>>>>>>> b7ba80a49124 (Commit)
 	const u64 end = state->end;
 
 	set_state_bits(tree, state, bits, changeset);
@@ -460,8 +505,13 @@ static int split_state(struct extent_io_tree *tree, struct extent_state *orig,
 	struct rb_node *parent = NULL;
 	struct rb_node **node;
 
+<<<<<<< HEAD
 	if (tree->inode)
 		btrfs_split_delalloc_extent(tree->inode, orig, split);
+=======
+	if (tree->private_data)
+		btrfs_split_delalloc_extent(tree->private_data, orig, split);
+>>>>>>> b7ba80a49124 (Commit)
 
 	prealloc->start = orig->start;
 	prealloc->end = split - 1;
@@ -508,8 +558,13 @@ static struct extent_state *clear_state_bit(struct extent_io_tree *tree,
 	u32 bits_to_clear = bits & ~EXTENT_CTLBITS;
 	int ret;
 
+<<<<<<< HEAD
 	if (tree->inode)
 		btrfs_clear_delalloc_extent(tree->inode, state, bits);
+=======
+	if (tree->private_data)
+		btrfs_clear_delalloc_extent(tree->private_data, state, bits);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = add_extent_changeset(state, bits_to_clear, changeset, 0);
 	BUG_ON(ret < 0);
@@ -570,7 +625,11 @@ int __clear_extent_bit(struct extent_io_tree *tree, u64 start, u64 end,
 	if (bits & (EXTENT_LOCKED | EXTENT_BOUNDARY))
 		clear = 1;
 again:
+<<<<<<< HEAD
 	if (!prealloc) {
+=======
+	if (!prealloc && gfpflags_allow_blocking(mask)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Don't care for allocation failure here because we might end
 		 * up not needing the pre-allocated extent state at all, which
@@ -634,8 +693,12 @@ hit_next:
 
 	if (state->start < start) {
 		prealloc = alloc_extent_state_atomic(prealloc);
+<<<<<<< HEAD
 		if (!prealloc)
 			goto search_again;
+=======
+		BUG_ON(!prealloc);
+>>>>>>> b7ba80a49124 (Commit)
 		err = split_state(tree, state, prealloc, start);
 		if (err)
 			extent_io_tree_panic(tree, err);
@@ -656,8 +719,12 @@ hit_next:
 	 */
 	if (state->start <= end && state->end > end) {
 		prealloc = alloc_extent_state_atomic(prealloc);
+<<<<<<< HEAD
 		if (!prealloc)
 			goto search_again;
+=======
+		BUG_ON(!prealloc);
+>>>>>>> b7ba80a49124 (Commit)
 		err = split_state(tree, state, prealloc, end + 1);
 		if (err)
 			extent_io_tree_panic(tree, err);
@@ -714,8 +781,12 @@ static void wait_on_state(struct extent_io_tree *tree,
  * The range [start, end] is inclusive.
  * The tree lock is taken by this function
  */
+<<<<<<< HEAD
 void wait_extent_bit(struct extent_io_tree *tree, u64 start, u64 end, u32 bits,
 		     struct extent_state **cached_state)
+=======
+void wait_extent_bit(struct extent_io_tree *tree, u64 start, u64 end, u32 bits)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct extent_state *state;
 
@@ -723,6 +794,7 @@ void wait_extent_bit(struct extent_io_tree *tree, u64 start, u64 end, u32 bits,
 
 	spin_lock(&tree->lock);
 again:
+<<<<<<< HEAD
 	/*
 	 * Maintain cached_state, as we may not remove it from the tree if there
 	 * are more bits than the bits we're waiting on set on this state.
@@ -733,6 +805,8 @@ again:
 		    state->start <= start && start < state->end)
 			goto process_node;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	while (1) {
 		/*
 		 * This search will find all the extents that end after our
@@ -763,12 +837,15 @@ process_node:
 		}
 	}
 out:
+<<<<<<< HEAD
 	/* This state is no longer useful, clear it and free it up. */
 	if (cached_state && *cached_state) {
 		state = *cached_state;
 		*cached_state = NULL;
 		free_extent_state(state);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock(&tree->lock);
 }
 
@@ -956,24 +1033,37 @@ out:
  * sleeping, so the gfp mask is used to indicate what is allowed.
  *
  * If any of the exclusive bits are set, this will fail with -EEXIST if some
+<<<<<<< HEAD
  * part of the range already has the desired bits set.  The extent_state of the
  * existing range is returned in failed_state in this case, and the start of the
  * existing range is returned in failed_start.  failed_state is used as an
  * optimization for wait_extent_bit, failed_start must be used as the source of
  * truth as failed_state may have changed since we returned.
+=======
+ * part of the range already has the desired bits set.  The start of the
+ * existing range is returned in failed_start in this case.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * [start, end] is inclusive This takes the tree lock.
  */
 static int __set_extent_bit(struct extent_io_tree *tree, u64 start, u64 end,
 			    u32 bits, u64 *failed_start,
+<<<<<<< HEAD
 			    struct extent_state **failed_state,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			    struct extent_state **cached_state,
 			    struct extent_changeset *changeset, gfp_t mask)
 {
 	struct extent_state *state;
 	struct extent_state *prealloc = NULL;
+<<<<<<< HEAD
 	struct rb_node **p = NULL;
 	struct rb_node *parent = NULL;
+=======
+	struct rb_node **p;
+	struct rb_node *parent;
+>>>>>>> b7ba80a49124 (Commit)
 	int err = 0;
 	u64 last_start;
 	u64 last_end;
@@ -985,9 +1075,15 @@ static int __set_extent_bit(struct extent_io_tree *tree, u64 start, u64 end,
 	if (exclusive_bits)
 		ASSERT(failed_start);
 	else
+<<<<<<< HEAD
 		ASSERT(failed_start == NULL && failed_state == NULL);
 again:
 	if (!prealloc) {
+=======
+		ASSERT(failed_start == NULL);
+again:
+	if (!prealloc && gfpflags_allow_blocking(mask)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Don't care for allocation failure here because we might end
 		 * up not needing the pre-allocated extent state at all, which
@@ -1012,8 +1108,12 @@ again:
 	state = tree_search_for_insert(tree, start, &p, &parent);
 	if (!state) {
 		prealloc = alloc_extent_state_atomic(prealloc);
+<<<<<<< HEAD
 		if (!prealloc)
 			goto search_again;
+=======
+		BUG_ON(!prealloc);
+>>>>>>> b7ba80a49124 (Commit)
 		prealloc->start = start;
 		prealloc->end = end;
 		insert_state_fast(tree, prealloc, p, parent, bits, changeset);
@@ -1034,7 +1134,10 @@ hit_next:
 	if (state->start == start && state->end <= end) {
 		if (state->state & exclusive_bits) {
 			*failed_start = state->start;
+<<<<<<< HEAD
 			cache_state(state, failed_state);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			err = -EEXIST;
 			goto out;
 		}
@@ -1070,7 +1173,10 @@ hit_next:
 	if (state->start < start) {
 		if (state->state & exclusive_bits) {
 			*failed_start = start;
+<<<<<<< HEAD
 			cache_state(state, failed_state);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			err = -EEXIST;
 			goto out;
 		}
@@ -1086,8 +1192,12 @@ hit_next:
 		}
 
 		prealloc = alloc_extent_state_atomic(prealloc);
+<<<<<<< HEAD
 		if (!prealloc)
 			goto search_again;
+=======
+		BUG_ON(!prealloc);
+>>>>>>> b7ba80a49124 (Commit)
 		err = split_state(tree, state, prealloc, start);
 		if (err)
 			extent_io_tree_panic(tree, err);
@@ -1124,8 +1234,12 @@ hit_next:
 			this_end = last_start - 1;
 
 		prealloc = alloc_extent_state_atomic(prealloc);
+<<<<<<< HEAD
 		if (!prealloc)
 			goto search_again;
+=======
+		BUG_ON(!prealloc);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * Avoid to free 'prealloc' if it can be merged with the later
@@ -1151,14 +1265,21 @@ hit_next:
 	if (state->start <= end && state->end > end) {
 		if (state->state & exclusive_bits) {
 			*failed_start = start;
+<<<<<<< HEAD
 			cache_state(state, failed_state);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			err = -EEXIST;
 			goto out;
 		}
 
 		prealloc = alloc_extent_state_atomic(prealloc);
+<<<<<<< HEAD
 		if (!prealloc)
 			goto search_again;
+=======
+		BUG_ON(!prealloc);
+>>>>>>> b7ba80a49124 (Commit)
 		err = split_state(tree, state, prealloc, end + 1);
 		if (err)
 			extent_io_tree_panic(tree, err);
@@ -1190,8 +1311,13 @@ out:
 int set_extent_bit(struct extent_io_tree *tree, u64 start, u64 end,
 		   u32 bits, struct extent_state **cached_state, gfp_t mask)
 {
+<<<<<<< HEAD
 	return __set_extent_bit(tree, start, end, bits, NULL, NULL,
 				cached_state, NULL, mask);
+=======
+	return __set_extent_bit(tree, start, end, bits, NULL, cached_state,
+				NULL, mask);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1218,8 +1344,13 @@ int convert_extent_bit(struct extent_io_tree *tree, u64 start, u64 end,
 {
 	struct extent_state *state;
 	struct extent_state *prealloc = NULL;
+<<<<<<< HEAD
 	struct rb_node **p = NULL;
 	struct rb_node *parent = NULL;
+=======
+	struct rb_node **p;
+	struct rb_node *parent;
+>>>>>>> b7ba80a49124 (Commit)
 	int err = 0;
 	u64 last_start;
 	u64 last_end;
@@ -1425,7 +1556,11 @@ void find_first_clear_extent_bit(struct extent_io_tree *tree, u64 start,
 				 u64 *start_ret, u64 *end_ret, u32 bits)
 {
 	struct extent_state *state;
+<<<<<<< HEAD
 	struct extent_state *prev = NULL, *next = NULL;
+=======
+	struct extent_state *prev = NULL, *next;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock(&tree->lock);
 
@@ -1515,6 +1650,7 @@ out:
 }
 
 /*
+<<<<<<< HEAD
  * Count the number of bytes in the tree that have a given bit(s) set for a
  * given range.
  *
@@ -1546,16 +1682,32 @@ u64 count_range_bits(struct extent_io_tree *tree,
 {
 	struct extent_state *state = NULL;
 	struct extent_state *cached;
+=======
+ * Count the number of bytes in the tree that have a given bit(s) set.  This
+ * can be fairly slow, except for EXTENT_DIRTY which is cached.  The total
+ * number found is returned.
+ */
+u64 count_range_bits(struct extent_io_tree *tree,
+		     u64 *start, u64 search_end, u64 max_bytes,
+		     u32 bits, int contig)
+{
+	struct extent_state *state;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 cur_start = *start;
 	u64 total_bytes = 0;
 	u64 last = 0;
 	int found = 0;
 
+<<<<<<< HEAD
 	if (WARN_ON(search_end < cur_start))
+=======
+	if (WARN_ON(search_end <= cur_start))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	spin_lock(&tree->lock);
 
+<<<<<<< HEAD
 	if (!cached_state || !*cached_state)
 		goto search;
 
@@ -1583,14 +1735,20 @@ u64 count_range_bits(struct extent_io_tree *tree,
 			state = prev;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * This search will find all the extents that end after our range
 	 * starts.
 	 */
+<<<<<<< HEAD
 search:
 	if (!state)
 		state = tree_search(tree, cur_start);
 
+=======
+	state = tree_search(tree, cur_start);
+>>>>>>> b7ba80a49124 (Commit)
 	while (state) {
 		if (state->start > search_end)
 			break;
@@ -1611,6 +1769,7 @@ search:
 		}
 		state = next_state(state);
 	}
+<<<<<<< HEAD
 
 	if (cached_state) {
 		free_extent_state(*cached_state);
@@ -1621,11 +1780,18 @@ search:
 
 	spin_unlock(&tree->lock);
 
+=======
+	spin_unlock(&tree->lock);
+>>>>>>> b7ba80a49124 (Commit)
 	return total_bytes;
 }
 
 /*
+<<<<<<< HEAD
  * Search a range in the state tree for a given mask.  If 'filled' == 1, this
+=======
+ * Searche a range in the state tree for a given mask.  If 'filled' == 1, this
+>>>>>>> b7ba80a49124 (Commit)
  * returns 1 only if every extent in the tree has the bits set.  Otherwise, 1
  * is returned if any bit in the range is found set.
  */
@@ -1687,8 +1853,13 @@ int set_record_extent_bits(struct extent_io_tree *tree, u64 start, u64 end,
 	 */
 	ASSERT(!(bits & EXTENT_LOCKED));
 
+<<<<<<< HEAD
 	return __set_extent_bit(tree, start, end, bits, NULL, NULL, NULL,
 				changeset, GFP_NOFS);
+=======
+	return __set_extent_bit(tree, start, end, bits, NULL, NULL, changeset,
+				GFP_NOFS);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int clear_record_extent_bits(struct extent_io_tree *tree, u64 start, u64 end,
@@ -1704,18 +1875,30 @@ int clear_record_extent_bits(struct extent_io_tree *tree, u64 start, u64 end,
 				  changeset);
 }
 
+<<<<<<< HEAD
 int try_lock_extent(struct extent_io_tree *tree, u64 start, u64 end,
 		    struct extent_state **cached)
+=======
+int try_lock_extent(struct extent_io_tree *tree, u64 start, u64 end)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 	u64 failed_start;
 
 	err = __set_extent_bit(tree, start, end, EXTENT_LOCKED, &failed_start,
+<<<<<<< HEAD
 			       NULL, cached, NULL, GFP_NOFS);
 	if (err == -EEXIST) {
 		if (failed_start > start)
 			clear_extent_bit(tree, start, failed_start - 1,
 					 EXTENT_LOCKED, cached);
+=======
+			       NULL, NULL, GFP_NOFS);
+	if (err == -EEXIST) {
+		if (failed_start > start)
+			clear_extent_bit(tree, start, failed_start - 1,
+					 EXTENT_LOCKED, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 	return 1;
@@ -1728,6 +1911,7 @@ int try_lock_extent(struct extent_io_tree *tree, u64 start, u64 end,
 int lock_extent(struct extent_io_tree *tree, u64 start, u64 end,
 		struct extent_state **cached_state)
 {
+<<<<<<< HEAD
 	struct extent_state *failed_state = NULL;
 	int err;
 	u64 failed_start;
@@ -1744,6 +1928,21 @@ int lock_extent(struct extent_io_tree *tree, u64 start, u64 end,
 		err = __set_extent_bit(tree, start, end, EXTENT_LOCKED,
 				       &failed_start, &failed_state,
 				       cached_state, NULL, GFP_NOFS);
+=======
+	int err;
+	u64 failed_start;
+
+	while (1) {
+		err = __set_extent_bit(tree, start, end, EXTENT_LOCKED,
+				       &failed_start, cached_state, NULL,
+				       GFP_NOFS);
+		if (err == -EEXIST) {
+			wait_extent_bit(tree, failed_start, end, EXTENT_LOCKED);
+			start = failed_start;
+		} else
+			break;
+		WARN_ON(start > end);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return err;
 }

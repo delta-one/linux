@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. hwpoison:
+
+>>>>>>> b7ba80a49124 (Commit)
 ========
 hwpoison
 ========

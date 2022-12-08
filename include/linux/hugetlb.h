@@ -2,13 +2,19 @@
 #ifndef _LINUX_HUGETLB_H
 #define _LINUX_HUGETLB_H
 
+<<<<<<< HEAD
 #include <linux/mm.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mm_types.h>
 #include <linux/mmdebug.h>
 #include <linux/fs.h>
 #include <linux/hugetlb_inline.h>
 #include <linux/cgroup.h>
+<<<<<<< HEAD
 #include <linux/page_ref.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/list.h>
 #include <linux/kref.h>
 #include <linux/pgtable.h>
@@ -20,7 +26,11 @@ struct user_struct;
 struct mmu_gather;
 struct node;
 
+<<<<<<< HEAD
 #ifndef CONFIG_ARCH_HAS_HUGEPD
+=======
+#ifndef is_hugepd
+>>>>>>> b7ba80a49124 (Commit)
 typedef struct { unsigned long pd; } hugepd_t;
 #define is_hugepd(hugepd) (0)
 #define __hugepd(x) ((hugepd_t) { (x) })
@@ -35,9 +45,28 @@ typedef struct { unsigned long pd; } hugepd_t;
 /*
  * For HugeTLB page, there are more metadata to save in the struct page. But
  * the head struct page cannot meet our needs, so we have to abuse other tail
+<<<<<<< HEAD
  * struct page to store the metadata.
  */
 #define __NR_USED_SUBPAGE 3
+=======
+ * struct page to store the metadata. In order to avoid conflicts caused by
+ * subsequent use of more tail struct pages, we gather these discrete indexes
+ * of tail struct page here.
+ */
+enum {
+	SUBPAGE_INDEX_SUBPOOL = 1,	/* reuse page->private */
+#ifdef CONFIG_CGROUP_HUGETLB
+	SUBPAGE_INDEX_CGROUP,		/* reuse page->private */
+	SUBPAGE_INDEX_CGROUP_RSVD,	/* reuse page->private */
+	__MAX_CGROUP_SUBPAGE_INDEX = SUBPAGE_INDEX_CGROUP_RSVD,
+#endif
+#ifdef CONFIG_MEMORY_FAILURE
+	SUBPAGE_INDEX_HWPOISON,
+#endif
+	__NR_USED_SUBPAGE,
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 struct hugepage_subpool {
 	spinlock_t lock;
@@ -124,6 +153,17 @@ void hugepage_put_subpool(struct hugepage_subpool *spool);
 
 void hugetlb_dup_vma_private(struct vm_area_struct *vma);
 void clear_vma_resv_huge_pages(struct vm_area_struct *vma);
+<<<<<<< HEAD
+=======
+int hugetlb_sysctl_handler(struct ctl_table *, int, void *, size_t *, loff_t *);
+int hugetlb_overcommit_handler(struct ctl_table *, int, void *, size_t *,
+		loff_t *);
+int hugetlb_treat_movable_handler(struct ctl_table *, int, void *, size_t *,
+		loff_t *);
+int hugetlb_mempolicy_sysctl_handler(struct ctl_table *, int, void *, size_t *,
+		loff_t *);
+
+>>>>>>> b7ba80a49124 (Commit)
 int move_hugetlb_page_tables(struct vm_area_struct *vma,
 			     struct vm_area_struct *new_vma,
 			     unsigned long old_addr, unsigned long new_addr,
@@ -150,24 +190,42 @@ unsigned long hugetlb_total_pages(void);
 vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
 			unsigned long address, unsigned int flags);
 #ifdef CONFIG_USERFAULTFD
+<<<<<<< HEAD
 int hugetlb_mfill_atomic_pte(pte_t *dst_pte,
 			     struct vm_area_struct *dst_vma,
 			     unsigned long dst_addr,
 			     unsigned long src_addr,
 			     uffd_flags_t flags,
 			     struct page **pagep);
+=======
+int hugetlb_mcopy_atomic_pte(struct mm_struct *dst_mm, pte_t *dst_pte,
+				struct vm_area_struct *dst_vma,
+				unsigned long dst_addr,
+				unsigned long src_addr,
+				enum mcopy_atomic_mode mode,
+				struct page **pagep,
+				bool wp_copy);
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_USERFAULTFD */
 bool hugetlb_reserve_pages(struct inode *inode, long from, long to,
 						struct vm_area_struct *vma,
 						vm_flags_t vm_flags);
 long hugetlb_unreserve_pages(struct inode *inode, long start, long end,
 						long freed);
+<<<<<<< HEAD
 bool isolate_hugetlb(struct folio *folio, struct list_head *list);
 int get_hwpoison_hugetlb_folio(struct folio *folio, bool *hugetlb, bool unpoison);
 int get_huge_page_for_hwpoison(unsigned long pfn, int flags,
 				bool *migratable_cleared);
 void folio_putback_active_hugetlb(struct folio *folio);
 void move_hugetlb_state(struct folio *old_folio, struct folio *new_folio, int reason);
+=======
+int isolate_hugetlb(struct page *page, struct list_head *list);
+int get_hwpoison_huge_page(struct page *page, bool *hugetlb, bool unpoison);
+int get_huge_page_for_hwpoison(unsigned long pfn, int flags);
+void putback_active_hugepage(struct page *page);
+void move_hugetlb_state(struct page *oldpage, struct page *newpage, int reason);
+>>>>>>> b7ba80a49124 (Commit)
 void free_huge_page(struct page *page);
 void hugetlb_fix_reserve_counts(struct inode *inode);
 extern struct mutex *hugetlb_fault_mutex_table;
@@ -185,6 +243,7 @@ extern struct list_head huge_boot_pages;
 
 pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
 			unsigned long addr, unsigned long sz);
+<<<<<<< HEAD
 /*
  * huge_pte_offset(): Walk the hugetlb pgtable until the last level PTE.
  * Returns the pte_t* if found, or NULL if the address is not mapped.
@@ -222,6 +281,8 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
  * a concurrent pmd unshare, but it makes sure the pgtable page is safe to
  * access.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 pte_t *huge_pte_offset(struct mm_struct *mm,
 		       unsigned long addr, unsigned long sz);
 unsigned long hugetlb_mask_last_page(struct hstate *h);
@@ -240,7 +301,11 @@ void hugetlb_vma_lock_release(struct kref *kref);
 
 int pmd_huge(pmd_t pmd);
 int pud_huge(pud_t pud);
+<<<<<<< HEAD
 long hugetlb_change_protection(struct vm_area_struct *vma,
+=======
+unsigned long hugetlb_change_protection(struct vm_area_struct *vma,
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned long address, unsigned long end, pgprot_t newprot,
 		unsigned long cp_flags);
 
@@ -384,12 +449,23 @@ static inline void hugetlb_free_pgd_range(struct mmu_gather *tlb,
 }
 
 #ifdef CONFIG_USERFAULTFD
+<<<<<<< HEAD
 static inline int hugetlb_mfill_atomic_pte(pte_t *dst_pte,
 					   struct vm_area_struct *dst_vma,
 					   unsigned long dst_addr,
 					   unsigned long src_addr,
 					   uffd_flags_t flags,
 					   struct page **pagep)
+=======
+static inline int hugetlb_mcopy_atomic_pte(struct mm_struct *dst_mm,
+						pte_t *dst_pte,
+						struct vm_area_struct *dst_vma,
+						unsigned long dst_addr,
+						unsigned long src_addr,
+						enum mcopy_atomic_mode mode,
+						struct page **pagep,
+						bool wp_copy)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	BUG();
 	return 0;
@@ -402,22 +478,36 @@ static inline pte_t *huge_pte_offset(struct mm_struct *mm, unsigned long addr,
 	return NULL;
 }
 
+<<<<<<< HEAD
 static inline bool isolate_hugetlb(struct folio *folio, struct list_head *list)
 {
 	return false;
 }
 
 static inline int get_hwpoison_hugetlb_folio(struct folio *folio, bool *hugetlb, bool unpoison)
+=======
+static inline int isolate_hugetlb(struct page *page, struct list_head *list)
+{
+	return -EBUSY;
+}
+
+static inline int get_hwpoison_huge_page(struct page *page, bool *hugetlb, bool unpoison)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return 0;
 }
 
+<<<<<<< HEAD
 static inline int get_huge_page_for_hwpoison(unsigned long pfn, int flags,
 					bool *migratable_cleared)
+=======
+static inline int get_huge_page_for_hwpoison(unsigned long pfn, int flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return 0;
 }
 
+<<<<<<< HEAD
 static inline void folio_putback_active_hugetlb(struct folio *folio)
 {
 }
@@ -428,6 +518,18 @@ static inline void move_hugetlb_state(struct folio *old_folio,
 }
 
 static inline long hugetlb_change_protection(
+=======
+static inline void putback_active_hugepage(struct page *page)
+{
+}
+
+static inline void move_hugetlb_state(struct page *oldpage,
+					struct page *newpage, int reason)
+{
+}
+
+static inline unsigned long hugetlb_change_protection(
+>>>>>>> b7ba80a49124 (Commit)
 			struct vm_area_struct *vma, unsigned long address,
 			unsigned long end, pgprot_t newprot,
 			unsigned long cp_flags)
@@ -606,50 +708,68 @@ enum hugetlb_page_flags {
  */
 #ifdef CONFIG_HUGETLB_PAGE
 #define TESTHPAGEFLAG(uname, flname)				\
+<<<<<<< HEAD
 static __always_inline						\
 bool folio_test_hugetlb_##flname(struct folio *folio)		\
 	{	void *private = &folio->private;		\
 		return test_bit(HPG_##flname, private);		\
 	}							\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int HPage##uname(struct page *page)		\
 	{ return test_bit(HPG_##flname, &(page->private)); }
 
 #define SETHPAGEFLAG(uname, flname)				\
+<<<<<<< HEAD
 static __always_inline						\
 void folio_set_hugetlb_##flname(struct folio *folio)		\
 	{	void *private = &folio->private;		\
 		set_bit(HPG_##flname, private);			\
 	}							\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void SetHPage##uname(struct page *page)		\
 	{ set_bit(HPG_##flname, &(page->private)); }
 
 #define CLEARHPAGEFLAG(uname, flname)				\
+<<<<<<< HEAD
 static __always_inline						\
 void folio_clear_hugetlb_##flname(struct folio *folio)		\
 	{	void *private = &folio->private;		\
 		clear_bit(HPG_##flname, private);		\
 	}							\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void ClearHPage##uname(struct page *page)		\
 	{ clear_bit(HPG_##flname, &(page->private)); }
 #else
 #define TESTHPAGEFLAG(uname, flname)				\
+<<<<<<< HEAD
 static inline bool						\
 folio_test_hugetlb_##flname(struct folio *folio)		\
 	{ return 0; }						\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int HPage##uname(struct page *page)		\
 	{ return 0; }
 
 #define SETHPAGEFLAG(uname, flname)				\
+<<<<<<< HEAD
 static inline void						\
 folio_set_hugetlb_##flname(struct folio *folio) 		\
 	{ }							\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void SetHPage##uname(struct page *page)		\
 	{ }
 
 #define CLEARHPAGEFLAG(uname, flname)				\
+<<<<<<< HEAD
 static inline void						\
 folio_clear_hugetlb_##flname(struct folio *folio)		\
 	{ }							\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void ClearHPage##uname(struct page *page)		\
 	{ }
 #endif
@@ -706,6 +826,7 @@ struct huge_bootmem_page {
 };
 
 int isolate_or_dissolve_huge_page(struct page *page, struct list_head *list);
+<<<<<<< HEAD
 struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
 				unsigned long addr, int avoid_reserve);
 struct folio *alloc_hugetlb_folio_nodemask(struct hstate *h, int preferred_nid,
@@ -716,6 +837,18 @@ int hugetlb_add_to_page_cache(struct folio *folio, struct address_space *mapping
 			pgoff_t idx);
 void restore_reserve_on_error(struct hstate *h, struct vm_area_struct *vma,
 				unsigned long address, struct folio *folio);
+=======
+struct page *alloc_huge_page(struct vm_area_struct *vma,
+				unsigned long addr, int avoid_reserve);
+struct page *alloc_huge_page_nodemask(struct hstate *h, int preferred_nid,
+				nodemask_t *nmask, gfp_t gfp_mask);
+struct page *alloc_huge_page_vma(struct hstate *h, struct vm_area_struct *vma,
+				unsigned long address);
+int hugetlb_add_to_page_cache(struct page *page, struct address_space *mapping,
+			pgoff_t idx);
+void restore_reserve_on_error(struct hstate *h, struct vm_area_struct *vma,
+				unsigned long address, struct page *page);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* arch callback */
 int __init __alloc_bootmem_huge_page(struct hstate *h, int nid);
@@ -735,6 +868,7 @@ extern unsigned int default_hstate_idx;
 
 #define default_hstate (hstates[default_hstate_idx])
 
+<<<<<<< HEAD
 static inline struct hugepage_subpool *hugetlb_folio_subpool(struct folio *folio)
 {
 	return folio->_hugetlb_subpool;
@@ -752,12 +886,24 @@ static inline void hugetlb_set_folio_subpool(struct folio *folio,
 					struct hugepage_subpool *subpool)
 {
 	folio->_hugetlb_subpool = subpool;
+=======
+/*
+ * hugetlb page subpool pointer located in hpage[1].private
+ */
+static inline struct hugepage_subpool *hugetlb_page_subpool(struct page *hpage)
+{
+	return (void *)page_private(hpage + SUBPAGE_INDEX_SUBPOOL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void hugetlb_set_page_subpool(struct page *hpage,
 					struct hugepage_subpool *subpool)
 {
+<<<<<<< HEAD
 	hugetlb_set_folio_subpool(page_folio(hpage), subpool);
+=======
+	set_page_private(hpage + SUBPAGE_INDEX_SUBPOOL, (unsigned long)subpool);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline struct hstate *hstate_file(struct file *f)
@@ -770,10 +916,14 @@ static inline struct hstate *hstate_sizelog(int page_size_log)
 	if (!page_size_log)
 		return &default_hstate;
 
+<<<<<<< HEAD
 	if (page_size_log < BITS_PER_LONG)
 		return size_to_hstate(1UL << page_size_log);
 
 	return NULL;
+=======
+	return size_to_hstate(1UL << page_size_log);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline struct hstate *hstate_vma(struct vm_area_struct *vma)
@@ -807,7 +957,11 @@ static inline unsigned huge_page_shift(struct hstate *h)
 
 static inline bool hstate_is_gigantic(struct hstate *h)
 {
+<<<<<<< HEAD
 	return huge_page_order(h) > MAX_ORDER;
+=======
+	return huge_page_order(h) >= MAX_ORDER;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline unsigned int pages_per_huge_page(const struct hstate *h)
@@ -844,6 +998,7 @@ static inline pte_t arch_make_huge_pte(pte_t entry, unsigned int shift,
 }
 #endif
 
+<<<<<<< HEAD
 static inline struct hstate *folio_hstate(struct folio *folio)
 {
 	VM_BUG_ON_FOLIO(!folio_test_hugetlb(folio), folio);
@@ -853,6 +1008,12 @@ static inline struct hstate *folio_hstate(struct folio *folio)
 static inline struct hstate *page_hstate(struct page *page)
 {
 	return folio_hstate(page_folio(page));
+=======
+static inline struct hstate *page_hstate(struct page *page)
+{
+	VM_BUG_ON_PAGE(!PageHuge(page), page);
+	return size_to_hstate(page_size(page));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline unsigned hstate_index_to_shift(unsigned index)
@@ -870,9 +1031,15 @@ extern int dissolve_free_huge_pages(unsigned long start_pfn,
 				    unsigned long end_pfn);
 
 #ifdef CONFIG_MEMORY_FAILURE
+<<<<<<< HEAD
 extern void folio_clear_hugetlb_hwpoison(struct folio *folio);
 #else
 static inline void folio_clear_hugetlb_hwpoison(struct folio *folio)
+=======
+extern void hugetlb_clear_page_hwpoison(struct page *hpage);
+#else
+static inline void hugetlb_clear_page_hwpoison(struct page *hpage)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 #endif
@@ -1009,11 +1176,14 @@ void hugetlb_unregister_node(struct node *node);
 #else	/* CONFIG_HUGETLB_PAGE */
 struct hstate {};
 
+<<<<<<< HEAD
 static inline struct hugepage_subpool *hugetlb_folio_subpool(struct folio *folio)
 {
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct hugepage_subpool *hugetlb_page_subpool(struct page *hpage)
 {
 	return NULL;
@@ -1025,21 +1195,34 @@ static inline int isolate_or_dissolve_huge_page(struct page *page,
 	return -ENOMEM;
 }
 
+<<<<<<< HEAD
 static inline struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
+=======
+static inline struct page *alloc_huge_page(struct vm_area_struct *vma,
+>>>>>>> b7ba80a49124 (Commit)
 					   unsigned long addr,
 					   int avoid_reserve)
 {
 	return NULL;
 }
 
+<<<<<<< HEAD
 static inline struct folio *
 alloc_hugetlb_folio_nodemask(struct hstate *h, int preferred_nid,
+=======
+static inline struct page *
+alloc_huge_page_nodemask(struct hstate *h, int preferred_nid,
+>>>>>>> b7ba80a49124 (Commit)
 			nodemask_t *nmask, gfp_t gfp_mask)
 {
 	return NULL;
 }
 
+<<<<<<< HEAD
 static inline struct folio *alloc_hugetlb_folio_vma(struct hstate *h,
+=======
+static inline struct page *alloc_huge_page_vma(struct hstate *h,
+>>>>>>> b7ba80a49124 (Commit)
 					       struct vm_area_struct *vma,
 					       unsigned long address)
 {
@@ -1066,11 +1249,14 @@ static inline struct hstate *hstate_vma(struct vm_area_struct *vma)
 	return NULL;
 }
 
+<<<<<<< HEAD
 static inline struct hstate *folio_hstate(struct folio *folio)
 {
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct hstate *page_hstate(struct page *page)
 {
 	return NULL;
@@ -1218,6 +1404,7 @@ static inline __init void hugetlb_cma_reserve(int order)
 }
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_WANT_HUGE_PMD_SHARE
 static inline bool hugetlb_pmd_shared(pte_t *pte)
 {
@@ -1230,6 +1417,8 @@ static inline bool hugetlb_pmd_shared(pte_t *pte)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool want_pmd_share(struct vm_area_struct *vma, unsigned long addr);
 
 #ifndef __HAVE_ARCH_FLUSH_HUGETLB_TLB_RANGE
@@ -1240,6 +1429,7 @@ bool want_pmd_share(struct vm_area_struct *vma, unsigned long addr);
 #define flush_hugetlb_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
 #endif
 
+<<<<<<< HEAD
 static inline bool __vma_shareable_lock(struct vm_area_struct *vma)
 {
 	return (vma->vm_flags & VM_MAYSHARE) && vma->vm_private_data;
@@ -1271,4 +1461,6 @@ hugetlb_walk(struct vm_area_struct *vma, unsigned long addr, unsigned long sz)
 	return huge_pte_offset(vma->vm_mm, addr, sz);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _LINUX_HUGETLB_H */

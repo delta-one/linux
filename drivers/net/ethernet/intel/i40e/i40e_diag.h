@@ -22,7 +22,12 @@ struct i40e_diag_reg_test_info {
 
 extern struct i40e_diag_reg_test_info i40e_reg_list[];
 
+<<<<<<< HEAD
 int i40e_diag_reg_test(struct i40e_hw *hw);
 int i40e_diag_eeprom_test(struct i40e_hw *hw);
+=======
+i40e_status i40e_diag_reg_test(struct i40e_hw *hw);
+i40e_status i40e_diag_eeprom_test(struct i40e_hw *hw);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _I40E_DIAG_H_ */

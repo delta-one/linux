@@ -92,9 +92,13 @@ struct net {
 
 	struct ns_common	ns;
 	struct ref_tracker_dir  refcnt_tracker;
+<<<<<<< HEAD
 	struct ref_tracker_dir  notrefcnt_tracker; /* tracker for objects not
 						    * refcounted against netns
 						    */
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head 	dev_base_head;
 	struct proc_dir_entry 	*proc_net;
 	struct proc_dir_entry 	*proc_net_stat;
@@ -322,6 +326,7 @@ static inline int check_net(const struct net *net)
 #endif
 
 
+<<<<<<< HEAD
 static inline void __netns_tracker_alloc(struct net *net,
 					 netns_tracker *tracker,
 					 bool refcounted,
@@ -347,6 +352,21 @@ static inline void __netns_tracker_free(struct net *net,
 #ifdef CONFIG_NET_NS_REFCNT_TRACKER
        ref_tracker_free(refcounted ? &net->refcnt_tracker :
 				     &net->notrefcnt_tracker, tracker);
+=======
+static inline void netns_tracker_alloc(struct net *net,
+				       netns_tracker *tracker, gfp_t gfp)
+{
+#ifdef CONFIG_NET_NS_REFCNT_TRACKER
+	ref_tracker_alloc(&net->refcnt_tracker, tracker, gfp);
+#endif
+}
+
+static inline void netns_tracker_free(struct net *net,
+				      netns_tracker *tracker)
+{
+#ifdef CONFIG_NET_NS_REFCNT_TRACKER
+       ref_tracker_free(&net->refcnt_tracker, tracker);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 }
 
@@ -360,7 +380,11 @@ static inline struct net *get_net_track(struct net *net,
 
 static inline void put_net_track(struct net *net, netns_tracker *tracker)
 {
+<<<<<<< HEAD
 	__netns_tracker_free(net, tracker, true);
+=======
+	netns_tracker_free(net, tracker);
+>>>>>>> b7ba80a49124 (Commit)
 	put_net(net);
 }
 

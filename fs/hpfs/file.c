@@ -163,6 +163,14 @@ static int hpfs_read_folio(struct file *file, struct folio *folio)
 	return mpage_read_folio(folio, hpfs_get_block);
 }
 
+<<<<<<< HEAD
+=======
+static int hpfs_writepage(struct page *page, struct writeback_control *wbc)
+{
+	return block_write_full_page(page, hpfs_get_block, wbc);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void hpfs_readahead(struct readahead_control *rac)
 {
 	mpage_readahead(rac, hpfs_get_block);
@@ -243,12 +251,20 @@ const struct address_space_operations hpfs_aops = {
 	.dirty_folio	= block_dirty_folio,
 	.invalidate_folio = block_invalidate_folio,
 	.read_folio = hpfs_read_folio,
+<<<<<<< HEAD
+=======
+	.writepage = hpfs_writepage,
+>>>>>>> b7ba80a49124 (Commit)
 	.readahead = hpfs_readahead,
 	.writepages = hpfs_writepages,
 	.write_begin = hpfs_write_begin,
 	.write_end = hpfs_write_end,
+<<<<<<< HEAD
 	.bmap = _hpfs_bmap,
 	.migrate_folio = buffer_migrate_folio,
+=======
+	.bmap = _hpfs_bmap
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 const struct file_operations hpfs_file_ops =

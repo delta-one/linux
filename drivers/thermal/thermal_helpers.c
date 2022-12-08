@@ -64,6 +64,7 @@ get_thermal_instance(struct thermal_zone_device *tz,
 }
 EXPORT_SYMBOL(get_thermal_instance);
 
+<<<<<<< HEAD
 /**
  * __thermal_zone_get_temp() - returns the temperature of a thermal zone
  * @tz: a valid pointer to a struct thermal_zone_device
@@ -78,6 +79,8 @@ EXPORT_SYMBOL(get_thermal_instance);
  *
  * Return: On success returns 0, an error code otherwise
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int __thermal_zone_get_temp(struct thermal_zone_device *tz, int *temp)
 {
 	int ret = -EINVAL;
@@ -87,11 +90,21 @@ int __thermal_zone_get_temp(struct thermal_zone_device *tz, int *temp)
 
 	lockdep_assert_held(&tz->lock);
 
+<<<<<<< HEAD
+=======
+	if (!tz || IS_ERR(tz) || !tz->ops->get_temp)
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = tz->ops->get_temp(tz, temp);
 
 	if (IS_ENABLED(CONFIG_THERMAL_EMULATION) && tz->emul_temperature) {
 		for (count = 0; count < tz->num_trips; count++) {
+<<<<<<< HEAD
 			ret = __thermal_zone_get_trip(tz, count, &trip);
+=======
+			ret = thermal_zone_get_trip(tz, count, &trip);
+>>>>>>> b7ba80a49124 (Commit)
 			if (!ret && trip.type == THERMAL_TRIP_CRITICAL) {
 				crit_temp = trip.temperature;
 				break;
@@ -107,9 +120,12 @@ int __thermal_zone_get_temp(struct thermal_zone_device *tz, int *temp)
 			*temp = tz->emul_temperature;
 	}
 
+<<<<<<< HEAD
 	if (ret)
 		dev_dbg(&tz->device, "Failed to get temperature: %d\n", ret);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -127,6 +143,7 @@ int thermal_zone_get_temp(struct thermal_zone_device *tz, int *temp)
 {
 	int ret;
 
+<<<<<<< HEAD
 	if (IS_ERR_OR_NULL(tz))
 		return -EINVAL;
 
@@ -143,12 +160,85 @@ int thermal_zone_get_temp(struct thermal_zone_device *tz, int *temp)
 		ret = -ENODEV;
 
 unlock:
+=======
+	mutex_lock(&tz->lock);
+	ret = __thermal_zone_get_temp(tz, temp);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&tz->lock);
 
 	return ret;
 }
 EXPORT_SYMBOL_GPL(thermal_zone_get_temp);
 
+<<<<<<< HEAD
+=======
+void __thermal_zone_set_trips(struct thermal_zone_device *tz)
+{
+	struct thermal_trip trip;
+	int low = -INT_MAX, high = INT_MAX;
+	int i, ret;
+
+	lockdep_assert_held(&tz->lock);
+
+	if (!tz->ops->set_trips)
+		return;
+
+	for (i = 0; i < tz->num_trips; i++) {
+		int trip_low;
+
+		ret = thermal_zone_get_trip(tz, i , &trip);
+		if (ret)
+			return;
+
+		trip_low = trip.temperature - trip.hysteresis;
+
+		if (trip_low < tz->temperature && trip_low > low)
+			low = trip_low;
+
+		if (trip.temperature > tz->temperature &&
+		    trip.temperature < high)
+			high = trip.temperature;
+	}
+
+	/* No need to change trip points */
+	if (tz->prev_low_trip == low && tz->prev_high_trip == high)
+		return;
+
+	tz->prev_low_trip = low;
+	tz->prev_high_trip = high;
+
+	dev_dbg(&tz->device,
+		"new temperature boundaries: %d < x < %d\n", low, high);
+
+	/*
+	 * Set a temperature window. When this window is left the driver
+	 * must inform the thermal core via thermal_zone_device_update.
+	 */
+	ret = tz->ops->set_trips(tz, low, high);
+	if (ret)
+		dev_err(&tz->device, "Failed to set trips: %d\n", ret);
+}
+
+/**
+ * thermal_zone_set_trips - Computes the next trip points for the driver
+ * @tz: a pointer to a thermal zone device structure
+ *
+ * The function computes the next temperature boundaries by browsing
+ * the trip points. The result is the closer low and high trip points
+ * to the current temperature. These values are passed to the backend
+ * driver to let it set its own notification mechanism (usually an
+ * interrupt).
+ *
+ * It does not return a value
+ */
+void thermal_zone_set_trips(struct thermal_zone_device *tz)
+{
+	mutex_lock(&tz->lock);
+	__thermal_zone_set_trips(tz);
+	mutex_unlock(&tz->lock);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void thermal_cdev_set_cur_state(struct thermal_cooling_device *cdev,
 				       int target)
 {

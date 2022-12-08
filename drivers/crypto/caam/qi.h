@@ -9,8 +9,11 @@
 #ifndef __QI_H__
 #define __QI_H__
 
+<<<<<<< HEAD
 #include <crypto/algapi.h>
 #include <linux/compiler_attributes.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <soc/fsl/qman.h>
 #include "compat.h"
 #include "desc.h"
@@ -60,10 +63,15 @@ enum optype {
  * @qidev: device pointer for CAAM/QI backend
  */
 struct caam_drv_ctx {
+<<<<<<< HEAD
 	struct {
 		u32 prehdr[2];
 		u32 sh_desc[MAX_SDLEN];
 	} __aligned(CRYPTO_DMA_ALIGN);
+=======
+	u32 prehdr[2];
+	u32 sh_desc[MAX_SDLEN];
+>>>>>>> b7ba80a49124 (Commit)
 	dma_addr_t context_a;
 	struct qman_fq *req_fq;
 	struct qman_fq *rsp_fq;
@@ -71,7 +79,11 @@ struct caam_drv_ctx {
 	int cpu;
 	enum optype op_type;
 	struct device *qidev;
+<<<<<<< HEAD
 };
+=======
+} ____cacheline_aligned;
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * caam_drv_req - The request structure the driver application should fill while
@@ -92,7 +104,11 @@ struct caam_drv_req {
 	struct caam_drv_ctx *drv_ctx;
 	caam_qi_cbk cbk;
 	void *app_ctx;
+<<<<<<< HEAD
 } __aligned(CRYPTO_DMA_ALIGN);
+=======
+} ____cacheline_aligned;
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * caam_drv_ctx_init - Initialise a CAAM/QI driver context

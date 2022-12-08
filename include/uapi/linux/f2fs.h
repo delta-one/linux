@@ -42,7 +42,10 @@
 						struct f2fs_comp_option)
 #define F2FS_IOC_DECOMPRESS_FILE	_IO(F2FS_IOCTL_MAGIC, 23)
 #define F2FS_IOC_COMPRESS_FILE		_IO(F2FS_IOCTL_MAGIC, 24)
+<<<<<<< HEAD
 #define F2FS_IOC_START_ATOMIC_REPLACE	_IO(F2FS_IOCTL_MAGIC, 25)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * should be same as XFS_IOC_GOINGDOWN.

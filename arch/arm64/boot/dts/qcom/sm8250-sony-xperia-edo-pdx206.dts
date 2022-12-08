@@ -26,7 +26,11 @@
 		gpios = <&pm8150_gpios 6 GPIO_ACTIVE_LOW>;
 		debounce-interval = <15>;
 		linux,can-disable;
+<<<<<<< HEAD
 		wakeup-source;
+=======
+		gpio-key,wakeup;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 

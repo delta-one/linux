@@ -352,6 +352,7 @@ config TI_K3_R5_REMOTEPROC
 	  It's safe to say N here if you're not interested in utilizing
 	  a slave processor.
 
+<<<<<<< HEAD
 config XLNX_R5_REMOTEPROC
 	tristate "Xilinx R5 remoteproc support"
 	depends on PM && ARCH_ZYNQMP
@@ -365,6 +366,8 @@ config XLNX_R5_REMOTEPROC
 
 	  It's safe to say N if not interested in using RPU r5f cores.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endif # REMOTEPROC
 
 endmenu

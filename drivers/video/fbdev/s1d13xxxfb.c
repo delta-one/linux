@@ -748,12 +748,20 @@ static void __s1d13xxxfb_remove(struct platform_device *pdev)
 			   resource_size(&pdev->resource[1]));
 }
 
+<<<<<<< HEAD
 static void s1d13xxxfb_remove(struct platform_device *pdev)
+=======
+static int s1d13xxxfb_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = platform_get_drvdata(pdev);
 
 	unregister_framebuffer(info);
 	__s1d13xxxfb_remove(pdev);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int s1d13xxxfb_probe(struct platform_device *pdev)
@@ -994,7 +1002,11 @@ static int s1d13xxxfb_resume(struct platform_device *dev)
 
 static struct platform_driver s1d13xxxfb_driver = {
 	.probe		= s1d13xxxfb_probe,
+<<<<<<< HEAD
 	.remove_new	= s1d13xxxfb_remove,
+=======
+	.remove		= s1d13xxxfb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PM
 	.suspend	= s1d13xxxfb_suspend,
 	.resume		= s1d13xxxfb_resume,

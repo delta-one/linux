@@ -127,7 +127,11 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
 
 	set_debugreg(*dr7, 7);
 	if (info->mask)
+<<<<<<< HEAD
 		amd_set_dr_addr_mask(info->mask, i);
+=======
+		set_dr_addr_mask(info->mask, i);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -166,7 +170,11 @@ void arch_uninstall_hw_breakpoint(struct perf_event *bp)
 
 	set_debugreg(dr7, 7);
 	if (info->mask)
+<<<<<<< HEAD
 		amd_set_dr_addr_mask(0, i);
+=======
+		set_dr_addr_mask(0, i);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Ensure the write to cpu_dr7 is after we've set the DR7 register.
@@ -266,7 +274,11 @@ static inline bool within_cpu_entry(unsigned long addr, unsigned long end)
 
 	/* CPU entry erea is always used for CPU entry */
 	if (within_area(addr, end, CPU_ENTRY_AREA_BASE,
+<<<<<<< HEAD
 			CPU_ENTRY_AREA_MAP_SIZE))
+=======
+			CPU_ENTRY_AREA_TOTAL_SIZE))
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 
 	/*

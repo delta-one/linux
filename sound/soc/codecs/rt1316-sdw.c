@@ -14,7 +14,10 @@
 #include <sound/core.h>
 #include <sound/pcm.h>
 #include <sound/pcm_params.h>
+<<<<<<< HEAD
 #include <sound/sdw.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <sound/soc-dapm.h>
 #include <sound/initval.h>
 #include "rt1316-sdw.h"
@@ -204,6 +207,10 @@ static int rt1316_read_prop(struct sdw_slave *slave)
 
 	prop->scp_int1_mask = SDW_SCP_INT1_BUS_CLASH | SDW_SCP_INT1_PARITY;
 	prop->quirks = SDW_SLAVE_QUIRKS_INVALID_INITIAL_PARITY;
+<<<<<<< HEAD
+=======
+	prop->is_sdca = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	prop->paging_support = true;
 
@@ -254,6 +261,7 @@ static int rt1316_read_prop(struct sdw_slave *slave)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void rt1316_apply_bq_params(struct rt1316_sdw_priv *rt1316)
 {
 	unsigned int i, reg, data;
@@ -265,6 +273,8 @@ static void rt1316_apply_bq_params(struct rt1316_sdw_priv *rt1316)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int rt1316_io_init(struct device *dev, struct sdw_slave *slave)
 {
 	struct rt1316_sdw_priv *rt1316 = dev_get_drvdata(dev);
@@ -506,7 +516,14 @@ static int rt1316_set_sdw_stream(struct snd_soc_dai *dai, void *sdw_stream,
 	stream->sdw_stream = sdw_stream;
 
 	/* Use tx_mask or rx_mask to configure stream tag and set dma_data */
+<<<<<<< HEAD
 	snd_soc_dai_dma_data_set(dai, direction, stream);
+=======
+	if (direction == SNDRV_PCM_STREAM_PLAYBACK)
+		dai->playback_dma_data = stream;
+	else
+		dai->capture_dma_data = stream;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -527,10 +544,18 @@ static int rt1316_sdw_hw_params(struct snd_pcm_substream *substream,
 	struct snd_soc_component *component = dai->component;
 	struct rt1316_sdw_priv *rt1316 =
 		snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
 	struct sdw_stream_config stream_config = {0};
 	struct sdw_port_config port_config = {0};
 	struct sdw_stream_data *stream;
 	int retval;
+=======
+	struct sdw_stream_config stream_config;
+	struct sdw_port_config port_config;
+	enum sdw_data_direction direction;
+	struct sdw_stream_data *stream;
+	int retval, port, num_channels, ch_mask;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_dbg(dai->dev, "%s %s", __func__, dai->name);
 	stream = snd_soc_dai_get_dma_data(dai, substream);
@@ -542,6 +567,7 @@ static int rt1316_sdw_hw_params(struct snd_pcm_substream *substream,
 		return -EINVAL;
 
 	/* SoundWire specific configuration */
+<<<<<<< HEAD
 	snd_sdw_params_to_config(substream, params, &stream_config, &port_config);
 
 	/* port 1 for playback */
@@ -549,6 +575,27 @@ static int rt1316_sdw_hw_params(struct snd_pcm_substream *substream,
 		port_config.num = 1;
 	else
 		port_config.num = 2;
+=======
+	/* port 1 for playback */
+	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+		direction = SDW_DATA_DIR_RX;
+		port = 1;
+	} else {
+		direction = SDW_DATA_DIR_TX;
+		port = 2;
+	}
+
+	num_channels = params_channels(params);
+	ch_mask = (1 << num_channels) - 1;
+
+	stream_config.frame_rate = params_rate(params);
+	stream_config.ch_count = num_channels;
+	stream_config.bps = snd_pcm_format_width(params_format(params));
+	stream_config.direction = direction;
+
+	port_config.ch_mask = ch_mask;
+	port_config.num = port;
+>>>>>>> b7ba80a49124 (Commit)
 
 	retval = sdw_stream_add_slave(rt1316->sdw_slave, &stream_config,
 				&port_config, 1, stream->sdw_stream);
@@ -580,11 +627,16 @@ static int rt1316_sdw_pcm_hw_free(struct snd_pcm_substream *substream,
  * slave_ops: callbacks for get_clock_stop_mode, clock_stop and
  * port_prep are not defined for now
  */
+<<<<<<< HEAD
 static const struct sdw_slave_ops rt1316_slave_ops = {
+=======
+static struct sdw_slave_ops rt1316_slave_ops = {
+>>>>>>> b7ba80a49124 (Commit)
 	.read_prop = rt1316_read_prop,
 	.update_status = rt1316_update_status,
 };
 
+<<<<<<< HEAD
 static int rt1316_sdw_parse_dt(struct rt1316_sdw_priv *rt1316, struct device *dev)
 {
 	int ret = 0;
@@ -614,13 +666,22 @@ static int rt1316_sdw_component_probe(struct snd_soc_component *component)
 	rt1316->component = component;
 	rt1316_sdw_parse_dt(rt1316, &rt1316->sdw_slave->dev);
 
+=======
+static int rt1316_sdw_component_probe(struct snd_soc_component *component)
+{
+	int ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = pm_runtime_resume(component->dev);
 	if (ret < 0 && ret != -EACCES)
 		return ret;
 
+<<<<<<< HEAD
 	/* apply BQ params */
 	rt1316_apply_bq_params(rt1316);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

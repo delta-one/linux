@@ -38,6 +38,7 @@
  * saturated values.
  */
 
+<<<<<<< HEAD
 #include <linux/debugfs.h>
 #include <linux/device.h>
 #include <linux/io.h>
@@ -47,6 +48,14 @@
 #include <linux/slab.h>
 
 #include <linux/clk-provider.h>
+=======
+#include <linux/clk-provider.h>
+#include <linux/io.h>
+#include <linux/module.h>
+#include <linux/device.h>
+#include <linux/slab.h>
+#include <linux/rational.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "clk-fractional-divider.h"
 
@@ -66,12 +75,21 @@ static inline void clk_fd_writel(struct clk_fractional_divider *fd, u32 val)
 		writel(val, fd->reg);
 }
 
+<<<<<<< HEAD
 static void clk_fd_get_div(struct clk_hw *hw, struct u32_fract *fract)
+=======
+static unsigned long clk_fd_recalc_rate(struct clk_hw *hw,
+					unsigned long parent_rate)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct clk_fractional_divider *fd = to_clk_fd(hw);
 	unsigned long flags = 0;
 	unsigned long m, n;
 	u32 val;
+<<<<<<< HEAD
+=======
+	u64 ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (fd->lock)
 		spin_lock_irqsave(fd->lock, flags);
@@ -93,6 +111,7 @@ static void clk_fd_get_div(struct clk_hw *hw, struct u32_fract *fract)
 		n++;
 	}
 
+<<<<<<< HEAD
 	fract->numerator = m;
 	fract->denominator = n;
 }
@@ -109,6 +128,13 @@ static unsigned long clk_fd_recalc_rate(struct clk_hw *hw, unsigned long parent_
 
 	ret = (u64)parent_rate * fract.numerator;
 	do_div(ret, fract.denominator);
+=======
+	if (!n || !m)
+		return parent_rate;
+
+	ret = (u64)parent_rate * m;
+	do_div(ret, n);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -195,6 +221,7 @@ static int clk_fd_set_rate(struct clk_hw *hw, unsigned long rate,
 	return 0;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_DEBUG_FS
 static int clk_fd_numerator_get(void *hw, u64 *val)
 {
@@ -227,13 +254,18 @@ static void clk_fd_debug_init(struct clk_hw *hw, struct dentry *dentry)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct clk_ops clk_fractional_divider_ops = {
 	.recalc_rate = clk_fd_recalc_rate,
 	.round_rate = clk_fd_round_rate,
 	.set_rate = clk_fd_set_rate,
+<<<<<<< HEAD
 #ifdef CONFIG_DEBUG_FS
 	.debug_init = clk_fd_debug_init,
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 EXPORT_SYMBOL_GPL(clk_fractional_divider_ops);
 

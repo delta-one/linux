@@ -96,8 +96,13 @@ static DEFINE_MUTEX(nf_conntrack_mutex);
 #define GC_SCAN_MAX_DURATION	msecs_to_jiffies(10)
 #define GC_SCAN_EXPIRED_MAX	(64000u / HZ)
 
+<<<<<<< HEAD
 #define MIN_CHAINLEN	50u
 #define MAX_CHAINLEN	(80u - MIN_CHAINLEN)
+=======
+#define MIN_CHAINLEN	8u
+#define MAX_CHAINLEN	(32u - MIN_CHAINLEN)
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct conntrack_gc_work conntrack_gc_work;
 
@@ -211,6 +216,7 @@ static u32 hash_conntrack_raw(const struct nf_conntrack_tuple *tuple,
 			      unsigned int zoneid,
 			      const struct net *net)
 {
+<<<<<<< HEAD
 	u64 a, b, c, d;
 
 	get_random_once(&nf_conntrack_hash_rnd, sizeof(nf_conntrack_hash_rnd));
@@ -229,6 +235,30 @@ static u32 hash_conntrack_raw(const struct nf_conntrack_tuple *tuple,
 	d += (u64)tuple->dst.u3.all[1] << 32 | tuple->dst.u3.all[2];
 
 	return (u32)siphash_4u64(a, b, c, d, &nf_conntrack_hash_rnd);
+=======
+	struct {
+		struct nf_conntrack_man src;
+		union nf_inet_addr dst_addr;
+		unsigned int zone;
+		u32 net_mix;
+		u16 dport;
+		u16 proto;
+	} __aligned(SIPHASH_ALIGNMENT) combined;
+
+	get_random_once(&nf_conntrack_hash_rnd, sizeof(nf_conntrack_hash_rnd));
+
+	memset(&combined, 0, sizeof(combined));
+
+	/* The direction must be ignored, so handle usable members manually. */
+	combined.src = tuple->src;
+	combined.dst_addr = tuple->dst.u3;
+	combined.zone = zoneid;
+	combined.net_mix = net_hash_mix(net);
+	combined.dport = (__force __u16)tuple->dst.u.all;
+	combined.proto = tuple->dst.protonum;
+
+	return (u32)siphash(&combined, sizeof(combined), &nf_conntrack_hash_rnd);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static u32 scale_hash(u32 hash)
@@ -514,6 +544,10 @@ EXPORT_SYMBOL_GPL(nf_ct_get_id);
 static void
 clean_from_lists(struct nf_conn *ct)
 {
+<<<<<<< HEAD
+=======
+	pr_debug("clean_from_lists(%p)\n", ct);
+>>>>>>> b7ba80a49124 (Commit)
 	hlist_nulls_del_rcu(&ct->tuplehash[IP_CT_DIR_ORIGINAL].hnnode);
 	hlist_nulls_del_rcu(&ct->tuplehash[IP_CT_DIR_REPLY].hnnode);
 
@@ -581,6 +615,10 @@ void nf_ct_destroy(struct nf_conntrack *nfct)
 {
 	struct nf_conn *ct = (struct nf_conn *)nfct;
 
+<<<<<<< HEAD
+=======
+	pr_debug("%s(%p)\n", __func__, ct);
+>>>>>>> b7ba80a49124 (Commit)
 	WARN_ON(refcount_read(&nfct->use) != 0);
 
 	if (unlikely(nf_ct_is_template(ct))) {
@@ -601,6 +639,10 @@ void nf_ct_destroy(struct nf_conntrack *nfct)
 	if (ct->master)
 		nf_ct_put(ct->master);
 
+<<<<<<< HEAD
+=======
+	pr_debug("%s: returning ct=%p to slab\n", __func__, ct);
+>>>>>>> b7ba80a49124 (Commit)
 	nf_conntrack_free(ct);
 }
 EXPORT_SYMBOL(nf_ct_destroy);
@@ -783,6 +825,11 @@ __nf_conntrack_find_get(struct net *net, const struct nf_conntrack_zone *zone,
 	struct nf_conntrack_tuple_hash *h;
 	struct nf_conn *ct;
 
+<<<<<<< HEAD
+=======
+	rcu_read_lock();
+
+>>>>>>> b7ba80a49124 (Commit)
 	h = ____nf_conntrack_find(net, zone, tuple, hash);
 	if (h) {
 		/* We have a candidate that matches the tuple we're interested
@@ -794,7 +841,11 @@ __nf_conntrack_find_get(struct net *net, const struct nf_conntrack_zone *zone,
 			smp_acquire__after_ctrl_dep();
 
 			if (likely(nf_ct_key_equal(h, tuple, zone, net)))
+<<<<<<< HEAD
 				return h;
+=======
+				goto found;
+>>>>>>> b7ba80a49124 (Commit)
 
 			/* TYPESAFE_BY_RCU recycled the candidate */
 			nf_ct_put(ct);
@@ -802,6 +853,11 @@ __nf_conntrack_find_get(struct net *net, const struct nf_conntrack_zone *zone,
 
 		h = NULL;
 	}
+<<<<<<< HEAD
+=======
+found:
+	rcu_read_unlock();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return h;
 }
@@ -813,12 +869,16 @@ nf_conntrack_find_get(struct net *net, const struct nf_conntrack_zone *zone,
 	unsigned int rid, zone_id = nf_ct_zone_id(zone, IP_CT_DIR_ORIGINAL);
 	struct nf_conntrack_tuple_hash *thash;
 
+<<<<<<< HEAD
 	rcu_read_lock();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	thash = __nf_conntrack_find_get(net, zone, tuple,
 					hash_conntrack_raw(tuple, zone_id, net));
 
 	if (thash)
+<<<<<<< HEAD
 		goto out_unlock;
 
 	rid = nf_ct_zone_id(zone, IP_CT_DIR_REPLY);
@@ -828,6 +888,14 @@ nf_conntrack_find_get(struct net *net, const struct nf_conntrack_zone *zone,
 
 out_unlock:
 	rcu_read_unlock();
+=======
+		return thash;
+
+	rid = nf_ct_zone_id(zone, IP_CT_DIR_REPLY);
+	if (rid != zone_id)
+		return __nf_conntrack_find_get(net, zone, tuple,
+					       hash_conntrack_raw(tuple, rid, net));
+>>>>>>> b7ba80a49124 (Commit)
 	return thash;
 }
 EXPORT_SYMBOL_GPL(nf_conntrack_find_get);
@@ -884,8 +952,15 @@ nf_conntrack_hash_check_insert(struct nf_conn *ct)
 
 	zone = nf_ct_zone(ct);
 
+<<<<<<< HEAD
 	if (!nf_ct_ext_valid_pre(ct->ext))
 		return -EAGAIN;
+=======
+	if (!nf_ct_ext_valid_pre(ct->ext)) {
+		NF_CT_STAT_INC(net, insert_failed);
+		return -ETIMEDOUT;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	local_bh_disable();
 	do {
@@ -898,7 +973,11 @@ nf_conntrack_hash_check_insert(struct nf_conn *ct)
 					   nf_ct_zone_id(nf_ct_zone(ct), IP_CT_DIR_REPLY));
 	} while (nf_conntrack_double_lock(net, hash, reply_hash, sequence));
 
+<<<<<<< HEAD
 	max_chainlen = MIN_CHAINLEN + get_random_u32_below(MAX_CHAINLEN);
+=======
+	max_chainlen = MIN_CHAINLEN + prandom_u32_max(MAX_CHAINLEN);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* See if there's one in the list already, including reverse */
 	hlist_nulls_for_each_entry(h, n, &nf_conntrack_hash[hash], hnnode) {
@@ -920,6 +999,7 @@ nf_conntrack_hash_check_insert(struct nf_conn *ct)
 			goto chaintoolong;
 	}
 
+<<<<<<< HEAD
 	/* If genid has changed, we can't insert anymore because ct
 	 * extensions could have stale pointers and nf_ct_iterate_destroy
 	 * might have completed its table scan already.
@@ -933,6 +1013,8 @@ nf_conntrack_hash_check_insert(struct nf_conn *ct)
 	}
 
 	ct->status |= IPS_CONFIRMED;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	smp_wmb();
 	/* The caller holds a reference to this object */
 	refcount_set(&ct->ct_general.use, 2);
@@ -941,6 +1023,15 @@ nf_conntrack_hash_check_insert(struct nf_conn *ct)
 	NF_CT_STAT_INC(net, insert);
 	local_bh_enable();
 
+<<<<<<< HEAD
+=======
+	if (!nf_ct_ext_valid_post(ct->ext)) {
+		nf_ct_kill(ct);
+		NF_CT_STAT_INC(net, drop);
+		return -ETIMEDOUT;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 chaintoolong:
 	NF_CT_STAT_INC(net, chaintoolong);
@@ -1213,6 +1304,10 @@ __nf_conntrack_confirm(struct sk_buff *skb)
 		goto dying;
 	}
 
+<<<<<<< HEAD
+=======
+	pr_debug("Confirming conntrack %p\n", ct);
+>>>>>>> b7ba80a49124 (Commit)
 	/* We have to check the DYING flag after unlink to prevent
 	 * a race against nf_ct_get_next_corpse() possibly called from
 	 * user context, else we insert an already 'dead' hash, blocking
@@ -1225,7 +1320,11 @@ __nf_conntrack_confirm(struct sk_buff *skb)
 		goto dying;
 	}
 
+<<<<<<< HEAD
 	max_chainlen = MIN_CHAINLEN + get_random_u32_below(MAX_CHAINLEN);
+=======
+	max_chainlen = MIN_CHAINLEN + prandom_u32_max(MAX_CHAINLEN);
+>>>>>>> b7ba80a49124 (Commit)
 	/* See if there's one in the list already, including reverse:
 	   NAT could have grabbed it without realizing, since we're
 	   not in the hash.  If there is, we lost race. */
@@ -1273,7 +1372,11 @@ chaintoolong:
 	 */
 	if (!nf_ct_ext_valid_post(ct->ext)) {
 		nf_ct_kill(ct);
+<<<<<<< HEAD
 		NF_CT_STAT_INC_ATOMIC(net, drop);
+=======
+		NF_CT_STAT_INC(net, drop);
+>>>>>>> b7ba80a49124 (Commit)
 		return NF_DROP;
 	}
 
@@ -1294,7 +1397,11 @@ dying:
 }
 EXPORT_SYMBOL_GPL(__nf_conntrack_confirm);
 
+<<<<<<< HEAD
 /* Returns true if a connection corresponds to the tuple (required
+=======
+/* Returns true if a connection correspondings to the tuple (required
+>>>>>>> b7ba80a49124 (Commit)
    for NAT). */
 int
 nf_conntrack_tuple_taken(const struct nf_conntrack_tuple *tuple,
@@ -1376,6 +1483,12 @@ static unsigned int early_drop_list(struct net *net,
 	hlist_nulls_for_each_entry_rcu(h, n, head, hnnode) {
 		tmp = nf_ct_tuplehash_to_ctrack(h);
 
+<<<<<<< HEAD
+=======
+		if (test_bit(IPS_OFFLOAD_BIT, &tmp->status))
+			continue;
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (nf_ct_is_expired(tmp)) {
 			nf_ct_gc_expired(tmp);
 			continue;
@@ -1445,6 +1558,7 @@ static bool gc_worker_skip_ct(const struct nf_conn *ct)
 static bool gc_worker_can_early_drop(const struct nf_conn *ct)
 {
 	const struct nf_conntrack_l4proto *l4proto;
+<<<<<<< HEAD
 	u8 protonum = nf_ct_protonum(ct);
 
 	if (test_bit(IPS_OFFLOAD_BIT, &ct->status) && protonum != IPPROTO_UDP)
@@ -1453,6 +1567,13 @@ static bool gc_worker_can_early_drop(const struct nf_conn *ct)
 		return true;
 
 	l4proto = nf_ct_l4proto_find(protonum);
+=======
+
+	if (!test_bit(IPS_ASSURED_BIT, &ct->status))
+		return true;
+
+	l4proto = nf_ct_l4proto_find(nf_ct_protonum(ct));
+>>>>>>> b7ba80a49124 (Commit)
 	if (l4proto->can_early_drop && l4proto->can_early_drop(ct))
 		return true;
 
@@ -1509,8 +1630,12 @@ static void gc_worker(struct work_struct *work)
 
 			if (test_bit(IPS_OFFLOAD_BIT, &tmp->status)) {
 				nf_ct_offload_timeout(tmp);
+<<<<<<< HEAD
 				if (!nf_conntrack_max95)
 					continue;
+=======
+				continue;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 
 			if (expired_count > GC_SCAN_EXPIRED_MAX) {
@@ -1724,8 +1849,15 @@ init_conntrack(struct net *net, struct nf_conn *tmpl,
 	struct nf_conntrack_zone tmp;
 	struct nf_conntrack_net *cnet;
 
+<<<<<<< HEAD
 	if (!nf_ct_invert_tuple(&repl_tuple, tuple))
 		return NULL;
+=======
+	if (!nf_ct_invert_tuple(&repl_tuple, tuple)) {
+		pr_debug("Can't invert tuple.\n");
+		return NULL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	zone = nf_ct_zone_tmpl(tmpl, skb, &tmp);
 	ct = __nf_conntrack_alloc(net, zone, tuple, &repl_tuple, GFP_ATOMIC,
@@ -1765,6 +1897,11 @@ init_conntrack(struct net *net, struct nf_conn *tmpl,
 		spin_lock_bh(&nf_conntrack_expect_lock);
 		exp = nf_ct_find_expectation(net, zone, tuple);
 		if (exp) {
+<<<<<<< HEAD
+=======
+			pr_debug("expectation arrives ct=%p exp=%p\n",
+				 ct, exp);
+>>>>>>> b7ba80a49124 (Commit)
 			/* Welcome, Mr. Bond.  We've been expecting you... */
 			__set_bit(IPS_EXPECTED_BIT, &ct->status);
 			/* exp->master safe, refcnt bumped in nf_ct_find_expectation */
@@ -1776,7 +1913,11 @@ init_conntrack(struct net *net, struct nf_conn *tmpl,
 			}
 
 #ifdef CONFIG_NF_CONNTRACK_MARK
+<<<<<<< HEAD
 			ct->mark = READ_ONCE(exp->master->mark);
+=======
+			ct->mark = exp->master->mark;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 #ifdef CONFIG_NF_CONNTRACK_SECMARK
 			ct->secmark = exp->master->secmark;
@@ -1828,8 +1969,15 @@ resolve_normal_ct(struct nf_conn *tmpl,
 
 	if (!nf_ct_get_tuple(skb, skb_network_offset(skb),
 			     dataoff, state->pf, protonum, state->net,
+<<<<<<< HEAD
 			     &tuple))
 		return 0;
+=======
+			     &tuple)) {
+		pr_debug("Can't get tuple\n");
+		return 0;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* look for tuple match */
 	zone = nf_ct_zone_tmpl(tmpl, skb, &tmp);
@@ -1861,6 +2009,7 @@ resolve_normal_ct(struct nf_conn *tmpl,
 	if (NF_CT_DIRECTION(h) == IP_CT_DIR_REPLY) {
 		ctinfo = IP_CT_ESTABLISHED_REPLY;
 	} else {
+<<<<<<< HEAD
 		unsigned long status = READ_ONCE(ct->status);
 
 		/* Once we've had two way comms, always ESTABLISHED. */
@@ -1870,6 +2019,19 @@ resolve_normal_ct(struct nf_conn *tmpl,
 			ctinfo = IP_CT_RELATED;
 		else
 			ctinfo = IP_CT_NEW;
+=======
+		/* Once we've had two way comms, always ESTABLISHED. */
+		if (test_bit(IPS_SEEN_REPLY_BIT, &ct->status)) {
+			pr_debug("normal packet for %p\n", ct);
+			ctinfo = IP_CT_ESTABLISHED;
+		} else if (test_bit(IPS_EXPECTED_BIT, &ct->status)) {
+			pr_debug("related packet for %p\n", ct);
+			ctinfo = IP_CT_RELATED;
+		} else {
+			pr_debug("new packet for %p\n", ct);
+			ctinfo = IP_CT_NEW;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	nf_ct_set(skb, ct, ctinfo);
 	return 0;
@@ -1983,6 +2145,10 @@ nf_conntrack_in(struct sk_buff *skb, const struct nf_hook_state *state)
 	/* rcu_read_lock()ed by nf_hook_thresh */
 	dataoff = get_l4proto(skb, skb_network_offset(skb), state->pf, &protonum);
 	if (dataoff <= 0) {
+<<<<<<< HEAD
+=======
+		pr_debug("not prepared to track yet or error occurred\n");
+>>>>>>> b7ba80a49124 (Commit)
 		NF_CT_STAT_INC_ATOMIC(state->net, invalid);
 		ret = NF_ACCEPT;
 		goto out;
@@ -2021,6 +2187,10 @@ repeat:
 	if (ret <= 0) {
 		/* Invalid: inverse of the return code tells
 		 * the netfilter core what to do */
+<<<<<<< HEAD
+=======
+		pr_debug("nf_conntrack_in: Can't track with proto module\n");
+>>>>>>> b7ba80a49124 (Commit)
 		nf_ct_put(ct);
 		skb->_nfct = 0;
 		/* Special case: TCP tracker reports an attempt to reopen a
@@ -2059,6 +2229,10 @@ void nf_conntrack_alter_reply(struct nf_conn *ct,
 	/* Should be unconfirmed, so not in hash table yet */
 	WARN_ON(nf_ct_is_confirmed(ct));
 
+<<<<<<< HEAD
+=======
+	pr_debug("Altering reply tuple of %p to ", ct);
+>>>>>>> b7ba80a49124 (Commit)
 	nf_ct_dump_tuple(newreply);
 
 	ct->tuplehash[IP_CT_DIR_REPLY].tuple = *newreply;
@@ -2753,6 +2927,7 @@ err_cachep:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void nf_conntrack_set_closing(struct nf_conntrack *nfct)
 {
 	struct nf_conn *ct = nf_ct_to_nf_conn(nfct);
@@ -2764,12 +2939,17 @@ static void nf_conntrack_set_closing(struct nf_conntrack *nfct)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct nf_ct_hook nf_conntrack_hook = {
 	.update		= nf_conntrack_update,
 	.destroy	= nf_ct_destroy,
 	.get_tuple_skb  = nf_conntrack_get_tuple_skb,
 	.attach		= nf_conntrack_attach,
+<<<<<<< HEAD
 	.set_closing	= nf_conntrack_set_closing,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void nf_conntrack_init_end(void)

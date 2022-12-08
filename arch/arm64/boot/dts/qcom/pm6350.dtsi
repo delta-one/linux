@@ -3,6 +3,7 @@
  * Copyright (c) 2021, Luca Weiss <luca@z3ntu.xyz>
  */
 
+<<<<<<< HEAD
 #include <dt-bindings/input/input.h>
 #include <dt-bindings/spmi/spmi.h>
 
@@ -37,6 +38,10 @@
 	};
 };
 
+=======
+#include <dt-bindings/spmi/spmi.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 &spmi_bus {
 	pmic@0 {
 		compatible = "qcom,pm6350", "qcom,spmi-pmic";
@@ -67,6 +72,7 @@
 			};
 		};
 
+<<<<<<< HEAD
 		pm6350_temp: temp-alarm@2400 {
 			compatible = "qcom,spmi-temp-alarm";
 			reg = <0x2400>;
@@ -75,6 +81,9 @@
 		};
 
 		pm6350_gpios: gpio@c000 {
+=======
+		pm6350_gpios: gpios@c000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,pm6350-gpio", "qcom,spmi-gpio";
 			reg = <0xc000>;
 			gpio-controller;

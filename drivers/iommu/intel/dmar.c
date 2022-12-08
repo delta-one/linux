@@ -34,7 +34,10 @@
 #include "../irq_remapping.h"
 #include "perf.h"
 #include "trace.h"
+<<<<<<< HEAD
 #include "perfmon.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 typedef int (*dmar_res_handler_t)(struct acpi_dmar_header *, void *);
 struct dmar_res_callback {
@@ -428,8 +431,11 @@ static int dmar_parse_one_drhd(struct acpi_dmar_header *header, void *arg)
 	memcpy(dmaru->hdr, header, header->length);
 	dmaru->reg_base_addr = drhd->address;
 	dmaru->segment = drhd->segment;
+<<<<<<< HEAD
 	/* The size of the register set is 2 ^ N 4 KB pages. */
 	dmaru->reg_size = 1UL << (drhd->size + 12);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dmaru->include_all = drhd->flags & 0x1; /* BIT0: INCLUDE_ALL */
 	dmaru->devices = dmar_alloc_dev_scope((void *)(drhd + 1),
 					      ((void *)drhd) + drhd->header.length,
@@ -823,7 +829,10 @@ int __init dmar_dev_scope_init(void)
 			info = dmar_alloc_pci_notify_info(dev,
 					BUS_NOTIFY_ADD_DEVICE);
 			if (!info) {
+<<<<<<< HEAD
 				pci_dev_put(dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				return dmar_dev_scope_status;
 			} else {
 				dmar_pci_bus_add_dev(info);
@@ -959,11 +968,16 @@ static void unmap_iommu(struct intel_iommu *iommu)
 /**
  * map_iommu: map the iommu's registers
  * @iommu: the iommu to map
+<<<<<<< HEAD
  * @drhd: DMA remapping hardware definition structure
+=======
+ * @phys_addr: the physical address of the base resgister
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Memory map the iommu's registers.  Start w/ a single page, and
  * possibly expand if that turns out to be insufficent.
  */
+<<<<<<< HEAD
 static int map_iommu(struct intel_iommu *iommu, struct dmar_drhd_unit *drhd)
 {
 	u64 phys_addr = drhd->reg_base_addr;
@@ -971,6 +985,14 @@ static int map_iommu(struct intel_iommu *iommu, struct dmar_drhd_unit *drhd)
 
 	iommu->reg_phys = phys_addr;
 	iommu->reg_size = drhd->reg_size;
+=======
+static int map_iommu(struct intel_iommu *iommu, u64 phys_addr)
+{
+	int map_size, err=0;
+
+	iommu->reg_phys = phys_addr;
+	iommu->reg_size = VTD_PAGE_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!request_mem_region(iommu->reg_phys, iommu->reg_size, iommu->name)) {
 		pr_err("Can't reserve memory\n");
@@ -1017,6 +1039,7 @@ static int map_iommu(struct intel_iommu *iommu, struct dmar_drhd_unit *drhd)
 			goto release;
 		}
 	}
+<<<<<<< HEAD
 
 	if (cap_ecmds(iommu->cap)) {
 		int i;
@@ -1027,6 +1050,8 @@ static int map_iommu(struct intel_iommu *iommu, struct dmar_drhd_unit *drhd)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = 0;
 	goto out;
 
@@ -1064,7 +1089,11 @@ static int alloc_iommu(struct dmar_drhd_unit *drhd)
 	}
 	sprintf(iommu->name, "dmar%d", iommu->seq_id);
 
+<<<<<<< HEAD
 	err = map_iommu(iommu, drhd);
+=======
+	err = map_iommu(iommu, drhd->reg_base_addr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		pr_err("Failed to map %s\n", iommu->name);
 		goto error_free_seq_id;
@@ -1117,6 +1146,7 @@ static int alloc_iommu(struct dmar_drhd_unit *drhd)
 	if (sts & DMA_GSTS_QIES)
 		iommu->gcmd |= DMA_GCMD_QIE;
 
+<<<<<<< HEAD
 	if (alloc_iommu_pmu(iommu))
 		pr_debug("Cannot alloc PMU for iommu (seq_id = %d)\n", iommu->seq_id);
 
@@ -1130,6 +1160,11 @@ static int alloc_iommu(struct dmar_drhd_unit *drhd)
 		iommu->iommu.max_pasids = 2UL << ecap_pss(iommu->ecap);
 
 	/*
+=======
+	raw_spin_lock_init(&iommu->register_lock);
+
+	/*
+>>>>>>> b7ba80a49124 (Commit)
 	 * This is only for hotplug; at boot time intel_iommu_enabled won't
 	 * be set yet. When intel_iommu_init() runs, it registers the units
 	 * present at boot time, then sets intel_iommu_enabled.
@@ -1144,8 +1179,11 @@ static int alloc_iommu(struct dmar_drhd_unit *drhd)
 		err = iommu_device_register(&iommu->iommu, &intel_iommu_ops, NULL);
 		if (err)
 			goto err_sysfs;
+<<<<<<< HEAD
 
 		iommu_pmu_register(iommu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	drhd->iommu = iommu;
@@ -1156,7 +1194,10 @@ static int alloc_iommu(struct dmar_drhd_unit *drhd)
 err_sysfs:
 	iommu_device_sysfs_remove(&iommu->iommu);
 err_unmap:
+<<<<<<< HEAD
 	free_iommu_pmu(iommu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unmap_iommu(iommu);
 error_free_seq_id:
 	ida_free(&dmar_seq_ids, iommu->seq_id);
@@ -1168,13 +1209,19 @@ error:
 static void free_iommu(struct intel_iommu *iommu)
 {
 	if (intel_iommu_enabled && !iommu->drhd->ignored) {
+<<<<<<< HEAD
 		iommu_pmu_unregister(iommu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		iommu_device_unregister(&iommu->iommu);
 		iommu_device_sysfs_remove(&iommu->iommu);
 	}
 
+<<<<<<< HEAD
 	free_iommu_pmu(iommu);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (iommu->irq) {
 		if (iommu->pr_irq) {
 			free_irq(iommu->pr_irq, iommu);
@@ -1882,8 +1929,11 @@ static inline int dmar_msi_reg(struct intel_iommu *iommu, int irq)
 		return DMAR_FECTL_REG;
 	else if (iommu->pr_irq == irq)
 		return DMAR_PECTL_REG;
+<<<<<<< HEAD
 	else if (iommu->perf_irq == irq)
 		return DMAR_PERFINTRCTL_REG;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		BUG();
 }

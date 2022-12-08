@@ -18,7 +18,11 @@ static ssize_t dpaa_eth_show_addr(struct device *dev,
 
 	if (mac_dev)
 		return sprintf(buf, "%llx",
+<<<<<<< HEAD
 				(unsigned long long)mac_dev->res->start);
+=======
+				(unsigned long long)mac_dev->vaddr);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		return sprintf(buf, "none");
 }

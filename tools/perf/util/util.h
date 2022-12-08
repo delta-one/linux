@@ -1,6 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0 */
+<<<<<<< HEAD
 #ifndef __PERF_UTIL_H
 #define __PERF_UTIL_H
+=======
+#ifndef GIT_COMPAT_UTIL_H
+#define GIT_COMPAT_UTIL_H
+>>>>>>> b7ba80a49124 (Commit)
 
 #define _BSD_SOURCE 1
 /* glibc 2.20 deprecates _BSD_SOURCE in favour of _DEFAULT_SOURCE */
@@ -94,6 +99,7 @@ int do_realloc_array_as_needed(void **arr, size_t *arr_sz, size_t x,
 		0;						\
 	})
 
+<<<<<<< HEAD
 static inline bool host_is_bigendian(void)
 {
 #ifdef __BYTE_ORDER__
@@ -114,3 +120,6 @@ static inline bool host_is_bigendian(void)
 }
 
 #endif /* __PERF_UTIL_H */
+=======
+#endif /* GIT_COMPAT_UTIL_H */
+>>>>>>> b7ba80a49124 (Commit)

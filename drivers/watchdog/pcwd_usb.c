@@ -325,8 +325,12 @@ static int usb_pcwd_set_heartbeat(struct usb_pcwd_private *usb_pcwd, int t)
 static int usb_pcwd_get_temperature(struct usb_pcwd_private *usb_pcwd,
 							int *temperature)
 {
+<<<<<<< HEAD
 	unsigned char msb = 0x00;
 	unsigned char lsb = 0x00;
+=======
+	unsigned char msb, lsb;
+>>>>>>> b7ba80a49124 (Commit)
 
 	usb_pcwd_send_command(usb_pcwd, CMD_READ_TEMP, &msb, &lsb);
 
@@ -342,8 +346,12 @@ static int usb_pcwd_get_temperature(struct usb_pcwd_private *usb_pcwd,
 static int usb_pcwd_get_timeleft(struct usb_pcwd_private *usb_pcwd,
 								int *time_left)
 {
+<<<<<<< HEAD
 	unsigned char msb = 0x00;
 	unsigned char lsb = 0x00;
+=======
+	unsigned char msb, lsb;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Read the time that's left before rebooting */
 	/* Note: if the board is not yet armed then we will read 0xFFFF */

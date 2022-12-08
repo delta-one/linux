@@ -3170,7 +3170,11 @@ struct wmi_start_scan_common {
 	/* dwell time in msec on passive channels */
 	__le32 dwell_time_passive;
 	/*
+<<<<<<< HEAD
 	 * min time in msec on the BSS channel,only valid if at least one
+=======
+	 * min time in msec on the BSS channel,only valid if atleast one
+>>>>>>> b7ba80a49124 (Commit)
 	 * VDEV is active
 	 */
 	__le32 min_rest_time;
@@ -3196,7 +3200,11 @@ struct wmi_start_scan_common {
 	 * and bssid_list
 	 */
 	__le32 repeat_probe_time;
+<<<<<<< HEAD
 	/* time in msec between 2 consecutive probe requests with in a set. */
+=======
+	/* time in msec between 2 consequetive probe requests with in a set. */
+>>>>>>> b7ba80a49124 (Commit)
 	__le32 probe_spacing_time;
 	/*
 	 * data inactivity time in msec on bss channel that will be used by
@@ -4397,7 +4405,11 @@ struct wmi_pdev_stats_tx {
 	/* wal pdev continuous xretry */
 	__le32 pdev_cont_xretry;
 
+<<<<<<< HEAD
 	/* wal pdev continuous xretry */
+=======
+	/* wal pdev continous xretry */
+>>>>>>> b7ba80a49124 (Commit)
 	__le32 pdev_tx_timeout;
 
 	/* wal pdev resets  */
@@ -5240,7 +5252,11 @@ enum wmi_vdev_param {
 	 * scheduler.
 	 */
 	WMI_VDEV_OC_SCHEDULER_AIR_TIME_LIMIT,
+<<<<<<< HEAD
 	/* enable/disable WDS for this VDEV  */
+=======
+	/* enable/dsiable WDS for this VDEV  */
+>>>>>>> b7ba80a49124 (Commit)
 	WMI_VDEV_PARAM_WDS,
 	/* ATIM Window */
 	WMI_VDEV_PARAM_ATIM_WINDOW,
@@ -5372,7 +5388,11 @@ enum wmi_10x_vdev_param {
 	 * scheduler.
 	 */
 	WMI_10X_VDEV_OC_SCHEDULER_AIR_TIME_LIMIT,
+<<<<<<< HEAD
 	/* enable/disable WDS for this VDEV  */
+=======
+	/* enable/dsiable WDS for this VDEV  */
+>>>>>>> b7ba80a49124 (Commit)
 	WMI_10X_VDEV_PARAM_WDS,
 	/* ATIM Window */
 	WMI_10X_VDEV_PARAM_ATIM_WINDOW,
@@ -5904,7 +5924,11 @@ enum wmi_sta_ps_param_tx_wake_threshold {
 enum wmi_sta_ps_param_pspoll_count {
 	WMI_STA_PS_PSPOLL_COUNT_NO_MAX = 0,
 	/*
+<<<<<<< HEAD
 	 * Values greater than 0 indicate the maximum number of PS-Poll frames
+=======
+	 * Values greater than 0 indicate the maximum numer of PS-Poll frames
+>>>>>>> b7ba80a49124 (Commit)
 	 * FW will send before waking up.
 	 */
 
@@ -6947,7 +6971,11 @@ struct wmi_echo_ev_arg {
 };
 
 struct wmi_pdev_temperature_event {
+<<<<<<< HEAD
 	/* temperature value in Celsius degree */
+=======
+	/* temperature value in Celcius degree */
+>>>>>>> b7ba80a49124 (Commit)
 	__le32 temperature;
 } __packed;
 

@@ -14,6 +14,10 @@
 #include <sound/pcm_params.h>
 #include <sound/soc.h>
 
+<<<<<<< HEAD
+=======
+#include "../../codecs/da7219-aad.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "../../codecs/da7219.h"
 #include "../../codecs/rt1015.h"
 #include "../common/mtk-afe-platform-driver.h"
@@ -591,7 +595,11 @@ mt8183_da7219_max98357_headset_init(struct snd_soc_component *component)
 	snd_jack_set_key(
 		priv->headset_jack.jack, SND_JACK_BTN_3, KEY_VOICECOMMAND);
 
+<<<<<<< HEAD
 	snd_soc_component_set_jack(component, &priv->headset_jack, NULL);
+=======
+	da7219_aad_jack_det(component, &priv->headset_jack);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -841,7 +849,10 @@ static const struct of_device_id mt8183_da7219_max98357_dt_match[] = {
 	},
 	{}
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(of, mt8183_da7219_max98357_dt_match);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 static struct platform_driver mt8183_da7219_max98357_driver = {

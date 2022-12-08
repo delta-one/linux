@@ -25,7 +25,11 @@ xchk_should_terminate(
 
 	if (fatal_signal_pending(current)) {
 		if (*error == 0)
+<<<<<<< HEAD
 			*error = -EINTR;
+=======
+			*error = -EAGAIN;
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 	}
 	return false;

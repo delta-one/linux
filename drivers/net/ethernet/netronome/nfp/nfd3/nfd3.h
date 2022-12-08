@@ -103,6 +103,7 @@ void nfp_nfd3_rx_ring_fill_freelist(struct nfp_net_dp *dp,
 void nfp_nfd3_xsk_tx_free(struct nfp_nfd3_tx_buf *txbuf);
 int nfp_nfd3_xsk_poll(struct napi_struct *napi, int budget);
 
+<<<<<<< HEAD
 #ifndef CONFIG_NFP_NET_IPSEC
 static inline void nfp_nfd3_ipsec_tx(struct nfp_nfd3_tx_desc *txd, struct sk_buff *skb)
 {
@@ -111,4 +112,6 @@ static inline void nfp_nfd3_ipsec_tx(struct nfp_nfd3_tx_desc *txd, struct sk_buf
 void nfp_nfd3_ipsec_tx(struct nfp_nfd3_tx_desc *txd, struct sk_buff *skb);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

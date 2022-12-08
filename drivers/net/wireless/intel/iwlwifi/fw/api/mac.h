@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
 /*
+<<<<<<< HEAD
  * Copyright (C) 2012-2014, 2018-2022 Intel Corporation
+=======
+ * Copyright (C) 2012-2014, 2018-2021 Intel Corporation
+>>>>>>> b7ba80a49124 (Commit)
  * Copyright (C) 2017 Intel Deutschland GmbH
  */
 #ifndef __iwl_fw_api_mac_h__
@@ -398,7 +402,11 @@ struct iwl_he_backoff_conf {
  * @IWL_HE_PKT_EXT_64QAM: 64-QAM
  * @IWL_HE_PKT_EXT_256QAM: 256-QAM
  * @IWL_HE_PKT_EXT_1024QAM: 1024-QAM
+<<<<<<< HEAD
  * @IWL_HE_PKT_EXT_4096QAM: 4096-QAM, for EHT only
+=======
+ * @IWL_HE_PKT_EXT_RESERVED: reserved value
+>>>>>>> b7ba80a49124 (Commit)
  * @IWL_HE_PKT_EXT_NONE: not defined
  */
 enum iwl_he_pkt_ext_constellations {
@@ -408,7 +416,11 @@ enum iwl_he_pkt_ext_constellations {
 	IWL_HE_PKT_EXT_64QAM,
 	IWL_HE_PKT_EXT_256QAM,
 	IWL_HE_PKT_EXT_1024QAM,
+<<<<<<< HEAD
 	IWL_HE_PKT_EXT_4096QAM,
+=======
+	IWL_HE_PKT_EXT_RESERVED,
+>>>>>>> b7ba80a49124 (Commit)
 	IWL_HE_PKT_EXT_NONE,
 };
 

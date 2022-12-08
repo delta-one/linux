@@ -31,11 +31,19 @@ properties:
     items:
       enum:
         # Board Connectors
+<<<<<<< HEAD
         - Headphone
         - Speaker
         - Headset Mic
         - Internal Mic 1
         - Internal Mic 2
+=======
+        - "Headphone"
+        - "Speaker"
+        - "Headset Mic"
+        - "Internal Mic 1"
+        - "Internal Mic 2"
+>>>>>>> b7ba80a49124 (Commit)
 
         # CODEC Pins
         - IN1P
@@ -47,6 +55,7 @@ properties:
         - DMIC2
         - DMIC3
         - DMIC4
+<<<<<<< HEAD
         - DMIC L1
         - DMIC L2
         - DMIC L3
@@ -55,6 +64,16 @@ properties:
         - DMIC R2
         - DMIC R3
         - DMIC R4
+=======
+        - "DMIC L1"
+        - "DMIC L2"
+        - "DMIC L3"
+        - "DMIC L4"
+        - "DMIC R1"
+        - "DMIC R2"
+        - "DMIC R3"
+        - "DMIC R4"
+>>>>>>> b7ba80a49124 (Commit)
         - LOUT1
         - LOUT2
         - LOUT3

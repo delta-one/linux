@@ -83,10 +83,15 @@ struct rethook *rethook_alloc(void *data, rethook_handler_t handler)
 {
 	struct rethook *rh = kzalloc(sizeof(struct rethook), GFP_KERNEL);
 
+<<<<<<< HEAD
 	if (!rh || !handler) {
 		kfree(rh);
 		return NULL;
 	}
+=======
+	if (!rh || !handler)
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rh->data = data;
 	rh->handler = handler;

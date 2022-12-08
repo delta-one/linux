@@ -19,6 +19,7 @@
 #define __page_to_pfn(page)	((unsigned long)((page) - mem_map) + \
 				 ARCH_PFN_OFFSET)
 
+<<<<<<< HEAD
 #ifndef pfn_valid
 static inline int pfn_valid(unsigned long pfn)
 {
@@ -31,6 +32,8 @@ static inline int pfn_valid(unsigned long pfn)
 #define pfn_valid pfn_valid
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #elif defined(CONFIG_SPARSEMEM_VMEMMAP)
 
 /* memmap is virtually contiguous.  */

@@ -7,13 +7,20 @@
  */
 
 #include <linux/gpio/driver.h>
+<<<<<<< HEAD
 #include <linux/hte.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/interrupt.h>
 #include <linux/irq.h>
 #include <linux/module.h>
 #include <linux/of_device.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/seq_file.h>
+=======
+#include <linux/hte.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <dt-bindings/gpio/tegra186-gpio.h>
 #include <dt-bindings/gpio/tegra194-gpio.h>
@@ -670,14 +677,21 @@ static unsigned int tegra186_gpio_child_offset_to_irq(struct gpio_chip *chip,
 static const struct of_device_id tegra186_pmc_of_match[] = {
 	{ .compatible = "nvidia,tegra186-pmc" },
 	{ .compatible = "nvidia,tegra194-pmc" },
+<<<<<<< HEAD
 	{ .compatible = "nvidia,tegra234-pmc" },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ /* sentinel */ }
 };
 
 static void tegra186_gpio_init_route_mapping(struct tegra_gpio *gpio)
 {
 	struct device *dev = gpio->gpio.parent;
+<<<<<<< HEAD
 	unsigned int i;
+=======
+	unsigned int i, j;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 value;
 
 	for (i = 0; i < gpio->soc->num_ports; i++) {
@@ -699,6 +713,7 @@ static void tegra186_gpio_init_route_mapping(struct tegra_gpio *gpio)
 			 * On Tegra194 and later, each pin can be routed to one or more
 			 * interrupts.
 			 */
+<<<<<<< HEAD
 			dev_dbg(dev, "programming default interrupt routing for port %s\n",
 				port->name);
 
@@ -716,6 +731,29 @@ static void tegra186_gpio_init_route_mapping(struct tegra_gpio *gpio)
 			value = readl(base + offset);
 			value = BIT(port->pins) - 1;
 			writel(value, base + offset);
+=======
+			for (j = 0; j < gpio->num_irqs_per_bank; j++) {
+				dev_dbg(dev, "programming default interrupt routing for port %s\n",
+					port->name);
+
+				offset = TEGRA186_GPIO_INT_ROUTE_MAPPING(p, j);
+
+				/*
+				 * By default we only want to route GPIO pins to IRQ 0. This works
+				 * only under the assumption that we're running as the host kernel
+				 * and hence all GPIO pins are owned by Linux.
+				 *
+				 * For cases where Linux is the guest OS, the hypervisor will have
+				 * to configure the interrupt routing and pass only the valid
+				 * interrupts via device tree.
+				 */
+				if (j == 0) {
+					value = readl(base + offset);
+					value = BIT(port->pins) - 1;
+					writel(value, base + offset);
+				}
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }

@@ -7,8 +7,11 @@
  */
 #ifndef _CRYPTO_AKCIPHER_H
 #define _CRYPTO_AKCIPHER_H
+<<<<<<< HEAD
 
 #include <linux/atomic.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/crypto.h>
 
 /**
@@ -45,6 +48,7 @@ struct akcipher_request {
  * struct crypto_akcipher - user-instantiated objects which encapsulate
  * algorithms and core processing logic
  *
+<<<<<<< HEAD
  * @reqsize:	Request context size required by algorithm implementation
  * @base:	Common crypto API algorithm data structure
  */
@@ -74,6 +78,14 @@ struct crypto_istat_akcipher {
 	atomic64_t err_cnt;
 };
 
+=======
+ * @base:	Common crypto API algorithm data structure
+ */
+struct crypto_akcipher {
+	struct crypto_tfm base;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct akcipher_alg - generic public key algorithm
  *
@@ -110,8 +122,13 @@ struct crypto_istat_akcipher {
  * @exit:	Deinitialize the cryptographic transformation object. This is a
  *		counterpart to @init, used to remove various changes set in
  *		@init.
+<<<<<<< HEAD
  * @stat:	Statistics for akcipher algorithm
  *
+=======
+ *
+ * @reqsize:	Request context size required by algorithm implementation
+>>>>>>> b7ba80a49124 (Commit)
  * @base:	Common crypto API algorithm data structure
  */
 struct akcipher_alg {
@@ -127,10 +144,14 @@ struct akcipher_alg {
 	int (*init)(struct crypto_akcipher *tfm);
 	void (*exit)(struct crypto_akcipher *tfm);
 
+<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_STATS
 	struct crypto_istat_akcipher stat;
 #endif
 
+=======
+	unsigned int reqsize;
+>>>>>>> b7ba80a49124 (Commit)
 	struct crypto_alg base;
 };
 
@@ -183,7 +204,11 @@ static inline struct akcipher_alg *crypto_akcipher_alg(
 
 static inline unsigned int crypto_akcipher_reqsize(struct crypto_akcipher *tfm)
 {
+<<<<<<< HEAD
 	return tfm->reqsize;
+=======
+	return crypto_akcipher_alg(tfm)->reqsize;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void akcipher_request_set_tfm(struct akcipher_request *req,
@@ -302,6 +327,7 @@ static inline unsigned int crypto_akcipher_maxsize(struct crypto_akcipher *tfm)
 	return alg->max_size(tfm);
 }
 
+<<<<<<< HEAD
 static inline struct crypto_istat_akcipher *akcipher_get_stat(
 	struct akcipher_alg *alg)
 {
@@ -323,6 +349,8 @@ static inline int crypto_akcipher_errstat(struct akcipher_alg *alg, int err)
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * crypto_akcipher_encrypt() - Invoke public key encrypt operation
  *
@@ -337,6 +365,7 @@ static inline int crypto_akcipher_encrypt(struct akcipher_request *req)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
 	struct akcipher_alg *alg = crypto_akcipher_alg(tfm);
+<<<<<<< HEAD
 
 	if (IS_ENABLED(CONFIG_CRYPTO_STATS)) {
 		struct crypto_istat_akcipher *istat = akcipher_get_stat(alg);
@@ -346,6 +375,16 @@ static inline int crypto_akcipher_encrypt(struct akcipher_request *req)
 	}
 
 	return crypto_akcipher_errstat(alg, alg->encrypt(req));
+=======
+	struct crypto_alg *calg = tfm->base.__crt_alg;
+	unsigned int src_len = req->src_len;
+	int ret;
+
+	crypto_stats_get(calg);
+	ret = alg->encrypt(req);
+	crypto_stats_akcipher_encrypt(src_len, ret, calg);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -362,6 +401,7 @@ static inline int crypto_akcipher_decrypt(struct akcipher_request *req)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
 	struct akcipher_alg *alg = crypto_akcipher_alg(tfm);
+<<<<<<< HEAD
 
 	if (IS_ENABLED(CONFIG_CRYPTO_STATS)) {
 		struct crypto_istat_akcipher *istat = akcipher_get_stat(alg);
@@ -371,6 +411,16 @@ static inline int crypto_akcipher_decrypt(struct akcipher_request *req)
 	}
 
 	return crypto_akcipher_errstat(alg, alg->decrypt(req));
+=======
+	struct crypto_alg *calg = tfm->base.__crt_alg;
+	unsigned int src_len = req->src_len;
+	int ret;
+
+	crypto_stats_get(calg);
+	ret = alg->decrypt(req);
+	crypto_stats_akcipher_decrypt(src_len, ret, calg);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -387,11 +437,21 @@ static inline int crypto_akcipher_sign(struct akcipher_request *req)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
 	struct akcipher_alg *alg = crypto_akcipher_alg(tfm);
+<<<<<<< HEAD
 
 	if (IS_ENABLED(CONFIG_CRYPTO_STATS))
 		atomic64_inc(&akcipher_get_stat(alg)->sign_cnt);
 
 	return crypto_akcipher_errstat(alg, alg->sign(req));
+=======
+	struct crypto_alg *calg = tfm->base.__crt_alg;
+	int ret;
+
+	crypto_stats_get(calg);
+	ret = alg->sign(req);
+	crypto_stats_akcipher_sign(ret, calg);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -412,11 +472,21 @@ static inline int crypto_akcipher_verify(struct akcipher_request *req)
 {
 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
 	struct akcipher_alg *alg = crypto_akcipher_alg(tfm);
+<<<<<<< HEAD
 
 	if (IS_ENABLED(CONFIG_CRYPTO_STATS))
 		atomic64_inc(&akcipher_get_stat(alg)->verify_cnt);
 
 	return crypto_akcipher_errstat(alg, alg->verify(req));
+=======
+	struct crypto_alg *calg = tfm->base.__crt_alg;
+	int ret;
+
+	crypto_stats_get(calg);
+	ret = alg->verify(req);
+	crypto_stats_akcipher_verify(ret, calg);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

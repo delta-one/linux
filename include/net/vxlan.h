@@ -3,7 +3,10 @@
 #define __NET_VXLAN_H 1
 
 #include <linux/if_vlan.h>
+<<<<<<< HEAD
 #include <linux/rhashtable-types.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/udp_tunnel.h>
 #include <net/dst_metadata.h>
 #include <net/rtnetlink.h>
@@ -303,10 +306,13 @@ struct vxlan_dev {
 	struct vxlan_vni_group  __rcu *vnigrp;
 
 	struct hlist_head fdb_head[FDB_HASH_SIZE];
+<<<<<<< HEAD
 
 	struct rhashtable mdb_tbl;
 	struct hlist_head mdb_list;
 	unsigned int mdb_seq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define VXLAN_F_LEARN			0x01
@@ -327,7 +333,10 @@ struct vxlan_dev {
 #define VXLAN_F_IPV6_LINKLOCAL		0x8000
 #define VXLAN_F_TTL_INHERIT		0x10000
 #define VXLAN_F_VNIFILTER               0x20000
+<<<<<<< HEAD
 #define VXLAN_F_MDB			0x40000
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Flags that are used in the receive path. These flags must match in
  * order for a socket to be shareable
@@ -572,6 +581,7 @@ static inline bool vxlan_fdb_nh_path_select(struct nexthop *nh,
 	return true;
 }
 
+<<<<<<< HEAD
 static inline void vxlan_build_gbp_hdr(struct vxlanhdr *vxh, const struct vxlan_metadata *md)
 {
 	struct vxlanhdr_gbp *gbp;
@@ -591,4 +601,6 @@ static inline void vxlan_build_gbp_hdr(struct vxlanhdr *vxh, const struct vxlan_
 	gbp->policy_id = htons(md->gbp & VXLAN_GBP_ID_MASK);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

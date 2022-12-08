@@ -63,6 +63,10 @@ struct safexcel_cipher_ctx {
 	u32 hash_alg;
 	u32 state_sz;
 
+<<<<<<< HEAD
+=======
+	struct crypto_cipher *hkaes;
+>>>>>>> b7ba80a49124 (Commit)
 	struct crypto_aead *fback;
 };
 
@@ -641,6 +645,7 @@ static int safexcel_handle_req_result(struct safexcel_crypto_priv *priv, int rin
 	safexcel_complete(priv, ring);
 
 	if (src == dst) {
+<<<<<<< HEAD
 		if (sreq->nr_src > 0)
 			dma_unmap_sg(priv->dev, src, sreq->nr_src,
 				     DMA_BIDIRECTIONAL);
@@ -651,6 +656,12 @@ static int safexcel_handle_req_result(struct safexcel_crypto_priv *priv, int rin
 		if (sreq->nr_dst > 0)
 			dma_unmap_sg(priv->dev, dst, sreq->nr_dst,
 				     DMA_FROM_DEVICE);
+=======
+		dma_unmap_sg(priv->dev, src, sreq->nr_src, DMA_BIDIRECTIONAL);
+	} else {
+		dma_unmap_sg(priv->dev, src, sreq->nr_src, DMA_TO_DEVICE);
+		dma_unmap_sg(priv->dev, dst, sreq->nr_dst, DMA_FROM_DEVICE);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -742,22 +753,31 @@ static int safexcel_send_req(struct crypto_async_request *base, int ring,
 				max(totlen_src, totlen_dst));
 			return -EINVAL;
 		}
+<<<<<<< HEAD
 		if (sreq->nr_src > 0)
 			dma_map_sg(priv->dev, src, sreq->nr_src,
 				   DMA_BIDIRECTIONAL);
+=======
+		dma_map_sg(priv->dev, src, sreq->nr_src, DMA_BIDIRECTIONAL);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		if (unlikely(totlen_src && (sreq->nr_src <= 0))) {
 			dev_err(priv->dev, "Source buffer not large enough (need %d bytes)!",
 				totlen_src);
 			return -EINVAL;
 		}
+<<<<<<< HEAD
 
 		if (sreq->nr_src > 0)
 			dma_map_sg(priv->dev, src, sreq->nr_src, DMA_TO_DEVICE);
+=======
+		dma_map_sg(priv->dev, src, sreq->nr_src, DMA_TO_DEVICE);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (unlikely(totlen_dst && (sreq->nr_dst <= 0))) {
 			dev_err(priv->dev, "Dest buffer not large enough (need %d bytes)!",
 				totlen_dst);
+<<<<<<< HEAD
 			ret = -EINVAL;
 			goto unmap;
 		}
@@ -765,6 +785,13 @@ static int safexcel_send_req(struct crypto_async_request *base, int ring,
 		if (sreq->nr_dst > 0)
 			dma_map_sg(priv->dev, dst, sreq->nr_dst,
 				   DMA_FROM_DEVICE);
+=======
+			dma_unmap_sg(priv->dev, src, sreq->nr_src,
+				     DMA_TO_DEVICE);
+			return -EINVAL;
+		}
+		dma_map_sg(priv->dev, dst, sreq->nr_dst, DMA_FROM_DEVICE);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	memcpy(ctx->base.ctxr->data, ctx->key, ctx->key_len);
@@ -894,6 +921,7 @@ rdesc_rollback:
 cdesc_rollback:
 	for (i = 0; i < n_cdesc; i++)
 		safexcel_ring_rollback_wptr(priv, &priv->ring[ring].cdr);
+<<<<<<< HEAD
 unmap:
 	if (src == dst) {
 		if (sreq->nr_src > 0)
@@ -906,6 +934,14 @@ unmap:
 		if (sreq->nr_dst > 0)
 			dma_unmap_sg(priv->dev, dst, sreq->nr_dst,
 				     DMA_FROM_DEVICE);
+=======
+
+	if (src == dst) {
+		dma_unmap_sg(priv->dev, src, sreq->nr_src, DMA_BIDIRECTIONAL);
+	} else {
+		dma_unmap_sg(priv->dev, src, sreq->nr_src, DMA_TO_DEVICE);
+		dma_unmap_sg(priv->dev, dst, sreq->nr_dst, DMA_FROM_DEVICE);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;
@@ -1091,12 +1127,21 @@ static int safexcel_aead_send(struct crypto_async_request *async, int ring,
 static int safexcel_cipher_exit_inv(struct crypto_tfm *tfm,
 				    struct crypto_async_request *base,
 				    struct safexcel_cipher_req *sreq,
+<<<<<<< HEAD
 				    struct crypto_wait *result)
+=======
+				    struct safexcel_inv_result *result)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct safexcel_cipher_ctx *ctx = crypto_tfm_ctx(tfm);
 	struct safexcel_crypto_priv *priv = ctx->base.priv;
 	int ring = ctx->base.ring;
+<<<<<<< HEAD
 	int err;
+=======
+
+	init_completion(&result->completion);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctx = crypto_tfm_ctx(base->tfm);
 	ctx->base.exit_inv = true;
@@ -1109,6 +1154,7 @@ static int safexcel_cipher_exit_inv(struct crypto_tfm *tfm,
 	queue_work(priv->ring[ring].workqueue,
 		   &priv->ring[ring].work_data.work);
 
+<<<<<<< HEAD
 	err = crypto_wait_req(-EINPROGRESS, result);
 
 	if (err) {
@@ -1116,6 +1162,15 @@ static int safexcel_cipher_exit_inv(struct crypto_tfm *tfm,
 			"cipher: sync: invalidate: completion error %d\n",
 			 err);
 		return err;
+=======
+	wait_for_completion(&result->completion);
+
+	if (result->error) {
+		dev_warn(priv->dev,
+			"cipher: sync: invalidate: completion error %d\n",
+			 result->error);
+		return result->error;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -1125,12 +1180,20 @@ static int safexcel_skcipher_exit_inv(struct crypto_tfm *tfm)
 {
 	EIP197_REQUEST_ON_STACK(req, skcipher, EIP197_SKCIPHER_REQ_SIZE);
 	struct safexcel_cipher_req *sreq = skcipher_request_ctx(req);
+<<<<<<< HEAD
 	DECLARE_CRYPTO_WAIT(result);
+=======
+	struct safexcel_inv_result result = {};
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(struct skcipher_request));
 
 	skcipher_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
+<<<<<<< HEAD
 				      crypto_req_done, &result);
+=======
+				      safexcel_inv_complete, &result);
+>>>>>>> b7ba80a49124 (Commit)
 	skcipher_request_set_tfm(req, __crypto_skcipher_cast(tfm));
 
 	return safexcel_cipher_exit_inv(tfm, &req->base, sreq, &result);
@@ -1140,12 +1203,20 @@ static int safexcel_aead_exit_inv(struct crypto_tfm *tfm)
 {
 	EIP197_REQUEST_ON_STACK(req, aead, EIP197_AEAD_REQ_SIZE);
 	struct safexcel_cipher_req *sreq = aead_request_ctx(req);
+<<<<<<< HEAD
 	DECLARE_CRYPTO_WAIT(result);
+=======
+	struct safexcel_inv_result result = {};
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(struct aead_request));
 
 	aead_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
+<<<<<<< HEAD
 				  crypto_req_done, &result);
+=======
+				  safexcel_inv_complete, &result);
+>>>>>>> b7ba80a49124 (Commit)
 	aead_request_set_tfm(req, __crypto_aead_cast(tfm));
 
 	return safexcel_cipher_exit_inv(tfm, &req->base, sreq, &result);
@@ -2605,8 +2676,20 @@ static int safexcel_aead_gcm_setkey(struct crypto_aead *ctfm, const u8 *key,
 	ctx->key_len = len;
 
 	/* Compute hash key by encrypting zeroes with cipher key */
+<<<<<<< HEAD
 	memset(hashkey, 0, AES_BLOCK_SIZE);
 	aes_encrypt(&aes, (u8 *)hashkey, (u8 *)hashkey);
+=======
+	crypto_cipher_clear_flags(ctx->hkaes, CRYPTO_TFM_REQ_MASK);
+	crypto_cipher_set_flags(ctx->hkaes, crypto_aead_get_flags(ctfm) &
+				CRYPTO_TFM_REQ_MASK);
+	ret = crypto_cipher_setkey(ctx->hkaes, key, len);
+	if (ret)
+		return ret;
+
+	memset(hashkey, 0, AES_BLOCK_SIZE);
+	crypto_cipher_encrypt_one(ctx->hkaes, (u8 *)hashkey, (u8 *)hashkey);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (priv->flags & EIP197_TRC_CACHE && ctx->base.ctxr_dma) {
 		for (i = 0; i < AES_BLOCK_SIZE / sizeof(u32); i++) {
@@ -2635,11 +2718,22 @@ static int safexcel_aead_gcm_cra_init(struct crypto_tfm *tfm)
 	ctx->xcm = EIP197_XCM_MODE_GCM;
 	ctx->mode = CONTEXT_CONTROL_CRYPTO_MODE_XCM; /* override default */
 
+<<<<<<< HEAD
 	return 0;
+=======
+	ctx->hkaes = crypto_alloc_cipher("aes", 0, 0);
+	return PTR_ERR_OR_ZERO(ctx->hkaes);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void safexcel_aead_gcm_cra_exit(struct crypto_tfm *tfm)
 {
+<<<<<<< HEAD
+=======
+	struct safexcel_cipher_ctx *ctx = crypto_tfm_ctx(tfm);
+
+	crypto_free_cipher(ctx->hkaes);
+>>>>>>> b7ba80a49124 (Commit)
 	safexcel_aead_cra_exit(tfm);
 }
 

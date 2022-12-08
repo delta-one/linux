@@ -30,7 +30,12 @@ static inline void zpci_zdev_get(struct zpci_dev *zdev)
 
 int zpci_alloc_domain(int domain);
 void zpci_free_domain(int domain);
+<<<<<<< HEAD
 int zpci_setup_bus_resources(struct zpci_dev *zdev);
+=======
+int zpci_setup_bus_resources(struct zpci_dev *zdev,
+			     struct list_head *resources);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline struct zpci_dev *zdev_from_bus(struct pci_bus *bus,
 					     unsigned int devfn)

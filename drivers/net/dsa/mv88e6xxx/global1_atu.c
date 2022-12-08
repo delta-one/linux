@@ -12,8 +12,11 @@
 
 #include "chip.h"
 #include "global1.h"
+<<<<<<< HEAD
 #include "switchdev.h"
 #include "trace.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Offset 0x01: ATU FID Register */
 
@@ -116,6 +119,7 @@ static int mv88e6xxx_g1_atu_op_wait(struct mv88e6xxx_chip *chip)
 	return mv88e6xxx_g1_wait_bit(chip, MV88E6XXX_G1_ATU_OP, bit, 0);
 }
 
+<<<<<<< HEAD
 static int mv88e6xxx_g1_read_atu_violation(struct mv88e6xxx_chip *chip)
 {
 	int err;
@@ -129,6 +133,8 @@ static int mv88e6xxx_g1_read_atu_violation(struct mv88e6xxx_chip *chip)
 	return mv88e6xxx_g1_atu_op_wait(chip);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mv88e6xxx_g1_atu_op(struct mv88e6xxx_chip *chip, u16 fid, u16 op)
 {
 	u16 val;
@@ -174,6 +180,7 @@ int mv88e6xxx_g1_atu_get_next(struct mv88e6xxx_chip *chip, u16 fid)
 	return mv88e6xxx_g1_atu_op(chip, fid, MV88E6XXX_G1_ATU_OP_GET_NEXT_DB);
 }
 
+<<<<<<< HEAD
 static int mv88e6xxx_g1_atu_fid_read(struct mv88e6xxx_chip *chip, u16 *fid)
 {
 	u16 val = 0, upper = 0, op = 0;
@@ -209,6 +216,8 @@ static int mv88e6xxx_g1_atu_fid_read(struct mv88e6xxx_chip *chip, u16 *fid)
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Offset 0x0C: ATU Data Register */
 
 static int mv88e6xxx_g1_atu_data_read(struct mv88e6xxx_chip *chip,
@@ -403,6 +412,7 @@ static irqreturn_t mv88e6xxx_g1_atu_prob_irq_thread_fn(int irq, void *dev_id)
 {
 	struct mv88e6xxx_chip *chip = dev_id;
 	struct mv88e6xxx_atu_entry entry;
+<<<<<<< HEAD
 	int err, spid;
 	u16 val, fid;
 
@@ -436,10 +446,48 @@ static irqreturn_t mv88e6xxx_g1_atu_prob_irq_thread_fn(int irq, void *dev_id)
 		trace_mv88e6xxx_atu_member_violation(chip->dev, spid,
 						     entry.portvec, entry.mac,
 						     fid);
+=======
+	int spid;
+	int err;
+	u16 val;
+
+	mv88e6xxx_reg_lock(chip);
+
+	err = mv88e6xxx_g1_atu_op(chip, 0,
+				  MV88E6XXX_G1_ATU_OP_GET_CLR_VIOLATION);
+	if (err)
+		goto out;
+
+	err = mv88e6xxx_g1_read(chip, MV88E6XXX_G1_ATU_OP, &val);
+	if (err)
+		goto out;
+
+	err = mv88e6xxx_g1_atu_data_read(chip, &entry);
+	if (err)
+		goto out;
+
+	err = mv88e6xxx_g1_atu_mac_read(chip, &entry);
+	if (err)
+		goto out;
+
+	spid = entry.state;
+
+	if (val & MV88E6XXX_G1_ATU_OP_AGE_OUT_VIOLATION) {
+		dev_err_ratelimited(chip->dev,
+				    "ATU age out violation for %pM\n",
+				    entry.mac);
+	}
+
+	if (val & MV88E6XXX_G1_ATU_OP_MEMBER_VIOLATION) {
+		dev_err_ratelimited(chip->dev,
+				    "ATU member violation for %pM portvec %x spid %d\n",
+				    entry.mac, entry.portvec, spid);
+>>>>>>> b7ba80a49124 (Commit)
 		chip->ports[spid].atu_member_violation++;
 	}
 
 	if (val & MV88E6XXX_G1_ATU_OP_MISS_VIOLATION) {
+<<<<<<< HEAD
 		trace_mv88e6xxx_atu_miss_violation(chip->dev, spid,
 						   entry.portvec, entry.mac,
 						   fid);
@@ -466,6 +514,27 @@ out_unlock:
 	mv88e6xxx_reg_unlock(chip);
 
 out:
+=======
+		dev_err_ratelimited(chip->dev,
+				    "ATU miss violation for %pM portvec %x spid %d\n",
+				    entry.mac, entry.portvec, spid);
+		chip->ports[spid].atu_miss_violation++;
+	}
+
+	if (val & MV88E6XXX_G1_ATU_OP_FULL_VIOLATION) {
+		dev_err_ratelimited(chip->dev,
+				    "ATU full violation for %pM portvec %x spid %d\n",
+				    entry.mac, entry.portvec, spid);
+		chip->ports[spid].atu_full_violation++;
+	}
+	mv88e6xxx_reg_unlock(chip);
+
+	return IRQ_HANDLED;
+
+out:
+	mv88e6xxx_reg_unlock(chip);
+
+>>>>>>> b7ba80a49124 (Commit)
 	dev_err(chip->dev, "ATU problem: error %d while handling interrupt\n",
 		err);
 	return IRQ_HANDLED;

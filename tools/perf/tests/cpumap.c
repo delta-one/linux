@@ -6,7 +6,11 @@
 #include "util/synthetic-events.h"
 #include <string.h>
 #include <linux/bitops.h>
+<<<<<<< HEAD
 #include <internal/cpumap.h>
+=======
+#include <perf/cpumap.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include "debug.h"
 
 struct machine;

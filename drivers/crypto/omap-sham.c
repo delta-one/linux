@@ -2114,7 +2114,11 @@ static int omap_sham_probe(struct platform_device *pdev)
 
 	pm_runtime_enable(dev);
 
+<<<<<<< HEAD
 	err = pm_runtime_resume_and_get(dev);
+=======
+	err = pm_runtime_get_sync(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err < 0) {
 		dev_err(dev, "failed to get sync: %d\n", err);
 		goto err_pm;

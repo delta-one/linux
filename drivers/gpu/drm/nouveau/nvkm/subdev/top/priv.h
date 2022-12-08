@@ -5,7 +5,11 @@
 #include <subdev/top.h>
 
 struct nvkm_top_func {
+<<<<<<< HEAD
 	int (*parse)(struct nvkm_top *);
+=======
+	int (*oneinit)(struct nvkm_top *);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int nvkm_top_new_(const struct nvkm_top_func *, struct nvkm_device *, enum nvkm_subdev_type, int,

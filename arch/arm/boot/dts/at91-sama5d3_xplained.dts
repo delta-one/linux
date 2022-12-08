@@ -392,13 +392,21 @@
 		pinctrl-0 = <&pinctrl_gpio_leds>;
 		status = "okay";
 
+<<<<<<< HEAD
 		led-d2 {
+=======
+		d2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "d2";
 			gpios = <&pioE 23 GPIO_ACTIVE_LOW>;	/* PE23, conflicts with A23, CTS2 */
 			linux,default-trigger = "heartbeat";
 		};
 
+<<<<<<< HEAD
 		led-d3 {
+=======
+		d3 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "d3"; /* Conflict with EBI CS0, USART2 CTS. */
 			gpios = <&pioE 24 GPIO_ACTIVE_HIGH>;
 		};

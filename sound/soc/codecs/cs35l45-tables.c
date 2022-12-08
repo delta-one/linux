@@ -38,17 +38,24 @@ int cs35l45_apply_patch(struct cs35l45_private *cs35l45)
 	return regmap_register_patch(cs35l45->regmap, cs35l45_patch,
 				     ARRAY_SIZE(cs35l45_patch));
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_NS_GPL(cs35l45_apply_patch, SND_SOC_CS35L45);
+=======
+EXPORT_SYMBOL_NS_GPL(cs35l45_apply_patch, SND_SOC_CS35L45_TABLES);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct reg_default cs35l45_defaults[] = {
 	{ CS35L45_BLOCK_ENABLES,		0x00003323 },
 	{ CS35L45_BLOCK_ENABLES2,		0x00000010 },
+<<<<<<< HEAD
 	{ CS35L45_SYNC_GPIO1,			0x00000007 },
 	{ CS35L45_INTB_GPIO2_MCLK_REF,		0x00000005 },
 	{ CS35L45_GPIO3,			0x00000005 },
 	{ CS35L45_PWRMGT_CTL,			0x00000000 },
 	{ CS35L45_WAKESRC_CTL,			0x00000008 },
 	{ CS35L45_WKI2C_CTL,			0x00000030 },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ CS35L45_REFCLK_INPUT,			0x00000510 },
 	{ CS35L45_GLOBAL_SAMPLE_RATE,		0x00000003 },
 	{ CS35L45_ASP_ENABLES1,			0x00000000 },
@@ -66,6 +73,7 @@ static const struct reg_default cs35l45_defaults[] = {
 	{ CS35L45_ASPTX3_INPUT,			0x00000020 },
 	{ CS35L45_ASPTX4_INPUT,			0x00000028 },
 	{ CS35L45_ASPTX5_INPUT,			0x00000048 },
+<<<<<<< HEAD
 	{ CS35L45_DSP1_RX1_RATE,		0x00000001 },
 	{ CS35L45_DSP1_RX2_RATE,		0x00000001 },
 	{ CS35L45_DSP1_RX3_RATE,		0x00000001 },
@@ -113,6 +121,9 @@ static const struct reg_default cs35l45_defaults[] = {
 	{ CS35L45_GPIO1_CTRL1,			0x81000001 },
 	{ CS35L45_GPIO2_CTRL1,			0x81000001 },
 	{ CS35L45_GPIO3_CTRL1,			0x81000001 },
+=======
+	{ CS35L45_AMP_PCM_CONTROL,		0x00100000 },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static bool cs35l45_readable_reg(struct device *dev, unsigned int reg)
@@ -124,6 +135,7 @@ static bool cs35l45_readable_reg(struct device *dev, unsigned int reg)
 	case CS35L45_BLOCK_ENABLES:
 	case CS35L45_BLOCK_ENABLES2:
 	case CS35L45_ERROR_RELEASE:
+<<<<<<< HEAD
 	case CS35L45_SYNC_GPIO1:
 	case CS35L45_INTB_GPIO2_MCLK_REF:
 	case CS35L45_GPIO3:
@@ -131,6 +143,8 @@ static bool cs35l45_readable_reg(struct device *dev, unsigned int reg)
 	case CS35L45_WAKESRC_CTL:
 	case CS35L45_WKI2C_CTL:
 	case CS35L45_PWRMGT_STS:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case CS35L45_REFCLK_INPUT:
 	case CS35L45_GLOBAL_SAMPLE_RATE:
 	case CS35L45_ASP_ENABLES1:
@@ -148,6 +162,7 @@ static bool cs35l45_readable_reg(struct device *dev, unsigned int reg)
 	case CS35L45_ASPTX3_INPUT:
 	case CS35L45_ASPTX4_INPUT:
 	case CS35L45_ASPTX5_INPUT:
+<<<<<<< HEAD
 	case CS35L45_DSP1RX1_INPUT:
 	case CS35L45_DSP1RX2_INPUT:
 	case CS35L45_DSP1RX3_INPUT:
@@ -201,6 +216,11 @@ static bool cs35l45_readable_reg(struct device *dev, unsigned int reg)
 	case CS35L45_DSP1_YMEM_UNPACK32_0 ... CS35L45_DSP1_YMEM_UNPACK32_1022:
 	case CS35L45_DSP1_YMEM_UNPACK24_0 ... CS35L45_DSP1_YMEM_UNPACK24_2043:
 	case CS35L45_DSP1_PMEM_0 ... CS35L45_DSP1_PMEM_3834:
+=======
+	case CS35L45_AMP_PCM_CONTROL:
+	case CS35L45_AMP_PCM_HPF_TST:
+	case CS35L45_IRQ1_EINT_4:
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 	default:
 		return false;
@@ -215,6 +235,7 @@ static bool cs35l45_volatile_reg(struct device *dev, unsigned int reg)
 	case CS35L45_GLOBAL_ENABLES:
 	case CS35L45_ERROR_RELEASE:
 	case CS35L45_AMP_PCM_HPF_TST:	/* not cachable */
+<<<<<<< HEAD
 	case CS35L45_PWRMGT_STS:
 	case CS35L45_IRQ1_STATUS:
 	case CS35L45_IRQ1_EINT_1 ... CS35L45_IRQ1_EINT_18:
@@ -238,6 +259,9 @@ static bool cs35l45_volatile_reg(struct device *dev, unsigned int reg)
 	case CS35L45_DSP1_YMEM_UNPACK32_0 ... CS35L45_DSP1_YMEM_UNPACK32_1022:
 	case CS35L45_DSP1_YMEM_UNPACK24_0 ... CS35L45_DSP1_YMEM_UNPACK24_2043:
 	case CS35L45_DSP1_PMEM_0 ... CS35L45_DSP1_PMEM_3834:
+=======
+	case CS35L45_IRQ1_EINT_4:
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 	default:
 		return false;
@@ -257,7 +281,11 @@ const struct regmap_config cs35l45_i2c_regmap = {
 	.readable_reg = cs35l45_readable_reg,
 	.cache_type = REGCACHE_RBTREE,
 };
+<<<<<<< HEAD
 EXPORT_SYMBOL_NS_GPL(cs35l45_i2c_regmap, SND_SOC_CS35L45);
+=======
+EXPORT_SYMBOL_NS_GPL(cs35l45_i2c_regmap, SND_SOC_CS35L45_TABLES);
+>>>>>>> b7ba80a49124 (Commit)
 
 const struct regmap_config cs35l45_spi_regmap = {
 	.reg_bits = 32,
@@ -273,7 +301,11 @@ const struct regmap_config cs35l45_spi_regmap = {
 	.readable_reg = cs35l45_readable_reg,
 	.cache_type = REGCACHE_RBTREE,
 };
+<<<<<<< HEAD
 EXPORT_SYMBOL_NS_GPL(cs35l45_spi_regmap, SND_SOC_CS35L45);
+=======
+EXPORT_SYMBOL_NS_GPL(cs35l45_spi_regmap, SND_SOC_CS35L45_TABLES);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct {
 	u8 cfg_id;
@@ -326,4 +358,12 @@ unsigned int cs35l45_get_clk_freq_id(unsigned int freq)
 
 	return -EINVAL;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_NS_GPL(cs35l45_get_clk_freq_id, SND_SOC_CS35L45);
+=======
+EXPORT_SYMBOL_NS_GPL(cs35l45_get_clk_freq_id, SND_SOC_CS35L45_TABLES);
+
+MODULE_DESCRIPTION("ASoC CS35L45 driver tables");
+MODULE_AUTHOR("James Schulman, Cirrus Logic Inc, <james.schulman@cirrus.com>");
+MODULE_LICENSE("Dual BSD/GPL");
+>>>>>>> b7ba80a49124 (Commit)

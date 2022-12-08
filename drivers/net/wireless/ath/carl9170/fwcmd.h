@@ -118,10 +118,17 @@ struct carl9170_reg_list {
 } __packed;
 
 struct carl9170_write_reg {
+<<<<<<< HEAD
 	DECLARE_FLEX_ARRAY(struct {
 		__le32		addr;
 		__le32		val;
 	} __packed, regs);
+=======
+	struct {
+		__le32		addr;
+		__le32		val;
+	} regs[0] __packed;
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 struct carl9170_write_reg_byte {

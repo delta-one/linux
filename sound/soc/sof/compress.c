@@ -10,7 +10,10 @@
 #include "sof-audio.h"
 #include "sof-priv.h"
 #include "sof-utils.h"
+<<<<<<< HEAD
 #include "ops.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void sof_set_transferred_bytes(struct sof_compr_stream *sstream,
 				      u64 host_pos, u64 buffer_size)
@@ -238,6 +241,7 @@ static int sof_compr_set_params(struct snd_soc_component *component,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	ret = snd_sof_set_stream_data_offset(sdev, &spcm->stream[cstream->direction],
 					     ipc_params_reply.posn_offset);
 	if (ret < 0) {
@@ -246,6 +250,8 @@ static int sof_compr_set_params(struct snd_soc_component *component,
 		goto out;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sstream->sampling_rate = params->codec.sample_rate;
 	sstream->channels = params->codec.ch_out;
 	sstream->sample_container_bytes = pcm->params.sample_container_bytes;

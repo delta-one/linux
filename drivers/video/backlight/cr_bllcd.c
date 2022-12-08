@@ -210,7 +210,11 @@ static int cr_backlight_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void cr_backlight_remove(struct platform_device *pdev)
+=======
+static int cr_backlight_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cr_panel *crp = platform_get_drvdata(pdev);
 
@@ -220,11 +224,20 @@ static void cr_backlight_remove(struct platform_device *pdev)
 	cr_backlight_set_intensity(crp->cr_backlight_device);
 	cr_lcd_set_power(crp->cr_lcd_device, FB_BLANK_POWERDOWN);
 	pci_dev_put(lpc_dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver cr_backlight_driver = {
 	.probe = cr_backlight_probe,
+<<<<<<< HEAD
 	.remove_new = cr_backlight_remove,
+=======
+	.remove = cr_backlight_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		   .name = "cr_backlight",
 		   },

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
+<<<<<<< HEAD
  * Copyright (C) 2020-2022 MaxLinear, Inc.
  * Copyright (C) 2020 Intel Corporation.
  * Zhu Yixin <yzhu@maxlinear.com>
@@ -7,6 +8,13 @@
  */
 #include <linux/clk-provider.h>
 #include <linux/mfd/syscon.h>
+=======
+ * Copyright (C) 2020 Intel Corporation.
+ * Zhu YiXin <yixin.zhu@intel.com>
+ * Rahul Tanwar <rahul.tanwar@intel.com>
+ */
+#include <linux/clk-provider.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/of.h>
 #include <linux/platform_device.h>
 #include <dt-bindings/clock/intel,lgm-clk.h>
@@ -255,8 +263,13 @@ static const struct lgm_clk_branch lgm_branch_clks[] = {
 	LGM_FIXED(LGM_CLK_SLIC, "slic", NULL, 0, CGU_IF_CLK1,
 		  8, 2, CLOCK_FLAG_VAL_INIT, 8192000, 2),
 	LGM_FIXED(LGM_CLK_DOCSIS, "v_docsis", NULL, 0, 0, 0, 0, 0, 16000000, 0),
+<<<<<<< HEAD
 	LGM_DIV(LGM_CLK_DCL, "dcl", "v_ifclk", CLK_SET_RATE_PARENT, CGU_PCMCR,
 		25, 3, 0, 0, DIV_CLK_NO_MASK, 0, dcl_div),
+=======
+	LGM_DIV(LGM_CLK_DCL, "dcl", "v_ifclk", 0, CGU_PCMCR,
+		25, 3, 0, 0, 0, 0, dcl_div),
+>>>>>>> b7ba80a49124 (Commit)
 	LGM_MUX(LGM_CLK_PCM, "pcm", pcm_p, 0, CGU_C55_PCMCR,
 		0, 1, CLK_MUX_ROUND_CLOSEST, 0),
 	LGM_FIXED_FACTOR(LGM_CLK_DDR_PHY, "ddr_phy", "ddr",
@@ -435,6 +448,7 @@ static int lgm_cgu_probe(struct platform_device *pdev)
 
 	ctx->clk_data.num = CLK_NR_CLKS;
 
+<<<<<<< HEAD
 	ctx->membase = syscon_node_to_regmap(np);
 	if (IS_ERR(ctx->membase)) {
 		dev_err(dev, "Failed to get clk CGU iomem\n");
@@ -444,6 +458,15 @@ static int lgm_cgu_probe(struct platform_device *pdev)
 
 	ctx->np = np;
 	ctx->dev = dev;
+=======
+	ctx->membase = devm_platform_ioremap_resource(pdev, 0);
+	if (IS_ERR(ctx->membase))
+		return PTR_ERR(ctx->membase);
+
+	ctx->np = np;
+	ctx->dev = dev;
+	spin_lock_init(&ctx->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = lgm_clk_register_plls(ctx, lgm_pll_clks,
 				    ARRAY_SIZE(lgm_pll_clks));

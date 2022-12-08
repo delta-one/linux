@@ -22,7 +22,11 @@ Optional properties:
 Example:
 
 	usb0: ohci@4c000000 {
+<<<<<<< HEAD
 		compatible = "marvell,pxa-ohci";
+=======
+		compatible = "marvell,pxa-ohci", "usb-ohci";
+>>>>>>> b7ba80a49124 (Commit)
 		reg = <0x4c000000 0x100000>;
 		interrupts = <18>;
 		marvell,enable-port1;

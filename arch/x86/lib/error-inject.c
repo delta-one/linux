@@ -11,7 +11,10 @@ asm(
 	".text\n"
 	".type just_return_func, @function\n"
 	".globl just_return_func\n"
+<<<<<<< HEAD
 	ASM_FUNC_ALIGN
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	"just_return_func:\n"
 		ANNOTATE_NOENDBR
 		ASM_RET

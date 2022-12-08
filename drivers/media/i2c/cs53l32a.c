@@ -128,9 +128,15 @@ static const struct v4l2_subdev_ops cs53l32a_ops = {
  * concerning the addresses: i2c wants 7 bit (without the r/w bit), so '>>1'
  */
 
+<<<<<<< HEAD
 static int cs53l32a_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int cs53l32a_probe(struct i2c_client *client,
+			  const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct cs53l32a_state *state;
 	struct v4l2_subdev *sd;
 	int i;
@@ -209,7 +215,11 @@ static struct i2c_driver cs53l32a_driver = {
 	.driver = {
 		.name	= "cs53l32a",
 	},
+<<<<<<< HEAD
 	.probe_new	= cs53l32a_probe,
+=======
+	.probe		= cs53l32a_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= cs53l32a_remove,
 	.id_table	= cs53l32a_id,
 };

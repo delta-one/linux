@@ -71,7 +71,11 @@ static int bcm2835_rng_read(struct hwrng *rng, void *buf, size_t max,
 	while ((rng_readl(priv, RNG_STATUS) >> 24) == 0) {
 		if (!wait)
 			return 0;
+<<<<<<< HEAD
 		hwrng_msleep(rng, 1000);
+=======
+		cpu_relax();
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	num_words = rng_readl(priv, RNG_STATUS) >> 24;

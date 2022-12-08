@@ -13,7 +13,11 @@
 /* See include/linux/spinlock.h */
 #define smp_mb__after_spinlock()	smp_mb()
 
+<<<<<<< HEAD
 #ifndef CONFIG_PPC_QUEUED_SPINLOCKS
+=======
+#ifndef CONFIG_PARAVIRT_SPINLOCKS
+>>>>>>> b7ba80a49124 (Commit)
 static inline void pv_spinlocks_init(void) { }
 #endif
 

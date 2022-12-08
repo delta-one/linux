@@ -1,6 +1,10 @@
 [
     {
         "BriefDescription": "Misaligned store references",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5",
         "EventName": "MISALIGN_MEM_REF.STORE",
         "SampleAfterValue": "200000",
@@ -8,613 +12,1157 @@
     },
     {
         "BriefDescription": "REQUEST = ANY_DATA read and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3011",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = ANY_DATA read and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf811",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = ANY_DATA read and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4011",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = ANY_DATA read and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_DATA.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2011",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = ANY IFETCH and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3044",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = ANY IFETCH and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf844",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = ANY IFETCH and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4044",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = ANY IFETCH and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2044",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = ANY_REQUEST and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x30ff",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = ANY_REQUEST and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf8ff",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = ANY_REQUEST and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x40ff",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = ANY_REQUEST and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x20ff",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = ANY RFO and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3022",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = ANY RFO and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf822",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = ANY RFO and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4022",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = ANY RFO and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ANY_RFO.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2022",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = CORE_WB and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = CORE_WB and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf808",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = CORE_WB and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = CORE_WB and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.COREWB.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2008",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DATA_IFETCH and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3077",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DATA_IFETCH and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf877",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DATA_IFETCH and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4077",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DATA_IFETCH and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2077",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DATA_IN and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3033",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DATA_IN and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf833",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DATA_IN and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4033",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DATA_IN and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2033",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DEMAND_DATA and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3003",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DEMAND_DATA and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf803",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DEMAND_DATA and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4003",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DEMAND_DATA and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2003",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DEMAND_DATA_RD and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DEMAND_DATA_RD and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf801",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DEMAND_DATA_RD and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DEMAND_DATA_RD and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DEMAND_IFETCH and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DEMAND_IFETCH and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf804",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DEMAND_IFETCH and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DEMAND_IFETCH and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DEMAND_RFO and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DEMAND_RFO and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf802",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DEMAND_RFO and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = DEMAND_RFO and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = OTHER and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = OTHER and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf880",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = OTHER and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = OTHER and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.OTHER.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PF_DATA and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3050",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PF_DATA and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf850",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PF_DATA and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4050",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PF_DATA and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_DATA.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2050",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PF_DATA_RD and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PF_DATA_RD and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf810",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PF_DATA_RD and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PF_DATA_RD and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PF_RFO and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PF_RFO and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf840",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PF_RFO and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PF_RFO and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PF_IFETCH and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PF_IFETCH and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf820",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PF_IFETCH and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PF_IFETCH and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_RFO.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PREFETCH and RESPONSE = ANY_DRAM AND REMOTE_FWD",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.ANY_DRAM_AND_REMOTE_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3070",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PREFETCH and RESPONSE = ANY_LLC_MISS",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.ANY_LLC_MISS",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0xf870",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PREFETCH and RESPONSE = OTHER_LOCAL_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.OTHER_LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x4070",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "REQUEST = PREFETCH and RESPONSE = REMOTE_DRAM",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PREFETCH.REMOTE_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x2070",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100000",
         "UMask": "0x1"
     }

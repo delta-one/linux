@@ -10,14 +10,20 @@
 #include <drm/display/drm_dsc_helper.h>
 
 #include "i915_drv.h"
+<<<<<<< HEAD
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_crtc.h"
 #include "intel_de.h"
 #include "intel_display_types.h"
 #include "intel_dsi.h"
 #include "intel_qp_tables.h"
 #include "intel_vdsc.h"
+<<<<<<< HEAD
 #include "intel_vdsc_regs.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum ROW_INDEX_BPP {
 	ROW_INDEX_6BPP = 0,
@@ -346,6 +352,7 @@ bool intel_dsc_source_support(const struct intel_crtc_state *crtc_state)
 	struct drm_i915_private *i915 = to_i915(crtc->base.dev);
 	enum transcoder cpu_transcoder = crtc_state->cpu_transcoder;
 
+<<<<<<< HEAD
 	if (!HAS_DSC(i915))
 		return false;
 
@@ -353,6 +360,18 @@ bool intel_dsc_source_support(const struct intel_crtc_state *crtc_state)
 		return false;
 
 	return true;
+=======
+	if (!RUNTIME_INFO(i915)->has_dsc)
+		return false;
+
+	if (DISPLAY_VER(i915) >= 12)
+		return true;
+
+	if (DISPLAY_VER(i915) >= 11 && cpu_transcoder != TRANSCODER_A)
+		return true;
+
+	return false;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool is_pipe_dsc(struct intel_crtc *crtc, enum transcoder cpu_transcoder)

@@ -4,7 +4,11 @@
 
 static u32 tcp_rack_reo_wnd(const struct sock *sk)
 {
+<<<<<<< HEAD
 	const struct tcp_sock *tp = tcp_sk(sk);
+=======
+	struct tcp_sock *tp = tcp_sk(sk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!tp->reord_seen) {
 		/* If reordering has not been observed, be aggressive during

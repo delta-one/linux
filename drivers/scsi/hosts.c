@@ -181,7 +181,10 @@ void scsi_remove_host(struct Scsi_Host *shost)
 	scsi_forget_host(shost);
 	mutex_unlock(&shost->scan_mutex);
 	scsi_proc_host_rm(shost);
+<<<<<<< HEAD
 	scsi_proc_hostdir_rm(shost->hostt);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * New SCSI devices cannot be attached anymore because of the SCSI host
@@ -341,6 +344,11 @@ static void scsi_host_dev_release(struct device *dev)
 	struct Scsi_Host *shost = dev_to_shost(dev);
 	struct device *parent = dev->parent;
 
+<<<<<<< HEAD
+=======
+	scsi_proc_hostdir_rm(shost->hostt);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Wait for functions invoked through call_rcu(&scmd->rcu, ...) */
 	rcu_barrier();
 
@@ -355,7 +363,11 @@ static void scsi_host_dev_release(struct device *dev)
 		/*
 		 * Free the shost_dev device name here if scsi_host_alloc()
 		 * and scsi_host_put() have been called but neither
+<<<<<<< HEAD
 		 * scsi_host_add() nor scsi_remove_host() has been called.
+=======
+		 * scsi_host_add() nor scsi_host_remove() has been called.
+>>>>>>> b7ba80a49124 (Commit)
 		 * This avoids that the memory allocated for the shost_dev
 		 * name is leaked.
 		 */
@@ -518,8 +530,12 @@ struct Scsi_Host *scsi_host_alloc(struct scsi_host_template *sht, int privsize)
 			     "failed to create tmf workq\n");
 		goto fail;
 	}
+<<<<<<< HEAD
 	if (scsi_proc_hostdir_add(shost->hostt) < 0)
 		goto fail;
+=======
+	scsi_proc_hostdir_add(shost->hostt);
+>>>>>>> b7ba80a49124 (Commit)
 	return shost;
  fail:
 	/*

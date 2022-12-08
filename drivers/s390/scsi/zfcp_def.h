@@ -129,7 +129,11 @@ struct zfcp_erp_action {
 	struct scsi_device *sdev;
 	u32		status;	      /* recovery status */
 	enum zfcp_erp_steps	step;	/* active step of this erp action */
+<<<<<<< HEAD
 	u64			fsf_req_id;
+=======
+	unsigned long		fsf_req_id;
+>>>>>>> b7ba80a49124 (Commit)
 	struct timer_list timer;
 };
 
@@ -163,7 +167,11 @@ struct zfcp_adapter {
 	struct Scsi_Host	*scsi_host;	   /* Pointer to mid-layer */
 	struct list_head	port_list;	   /* remote port list */
 	rwlock_t		port_list_lock;    /* port list lock */
+<<<<<<< HEAD
 	u64			req_no;		   /* unique FSF req number */
+=======
+	unsigned long		req_no;		   /* unique FSF req number */
+>>>>>>> b7ba80a49124 (Commit)
 	struct zfcp_reqlist	*req_list;
 	u32			fsf_req_seq_no;	   /* FSF cmnd seq number */
 	rwlock_t		abort_lock;        /* Protects against SCSI
@@ -325,7 +333,11 @@ static inline u64 zfcp_scsi_dev_lun(struct scsi_device *sdev)
  */
 struct zfcp_fsf_req {
 	struct list_head	list;
+<<<<<<< HEAD
 	u64			req_id;
+=======
+	unsigned long		req_id;
+>>>>>>> b7ba80a49124 (Commit)
 	struct zfcp_adapter	*adapter;
 	struct zfcp_qdio_req	qdio_req;
 	struct completion	completion;

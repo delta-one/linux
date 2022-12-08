@@ -136,7 +136,11 @@ static void uclogic_parse_ugee_v2_desc_case_desc(struct uclogic_parse_ugee_v2_de
 KUNIT_ARRAY_PARAM(uclogic_parse_ugee_v2_desc, uclogic_parse_ugee_v2_desc_cases,
 		  uclogic_parse_ugee_v2_desc_case_desc);
 
+<<<<<<< HEAD
 static void hid_test_uclogic_parse_ugee_v2_desc(struct kunit *test)
+=======
+static void uclogic_parse_ugee_v2_desc_test(struct kunit *test)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int res;
 	s32 desc_params[UCLOGIC_RDESC_PH_ID_NUM];
@@ -174,6 +178,7 @@ static void hid_test_uclogic_parse_ugee_v2_desc(struct kunit *test)
 	KUNIT_EXPECT_EQ(test, params->frame_type, frame_type);
 }
 
+<<<<<<< HEAD
 static void hid_test_uclogic_params_cleanup_event_hooks(struct kunit *test)
 {
 	int res, n;
@@ -193,6 +198,11 @@ static struct kunit_case hid_uclogic_params_test_cases[] = {
 	KUNIT_CASE_PARAM(hid_test_uclogic_parse_ugee_v2_desc,
 			 uclogic_parse_ugee_v2_desc_gen_params),
 	KUNIT_CASE(hid_test_uclogic_params_cleanup_event_hooks),
+=======
+static struct kunit_case hid_uclogic_params_test_cases[] = {
+	KUNIT_CASE_PARAM(uclogic_parse_ugee_v2_desc_test,
+			 uclogic_parse_ugee_v2_desc_gen_params),
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 

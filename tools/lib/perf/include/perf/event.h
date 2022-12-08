@@ -6,6 +6,10 @@
 #include <linux/types.h>
 #include <linux/limits.h>
 #include <linux/bpf.h>
+<<<<<<< HEAD
+=======
+#include <linux/compiler.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <sys/types.h> /* pid_t */
 
 #define event_contains(obj, mem) ((obj).header.size > offsetof(typeof(obj), mem))
@@ -70,8 +74,11 @@ struct perf_record_lost {
 	__u64			 lost;
 };
 
+<<<<<<< HEAD
 #define PERF_RECORD_MISC_LOST_SAMPLES_BPF (1 << 15)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct perf_record_lost_samples {
 	struct perf_event_header header;
 	__u64			 lost;
@@ -208,7 +215,11 @@ struct perf_record_range_cpu_map {
 	__u16 end_cpu;
 };
 
+<<<<<<< HEAD
 struct perf_record_cpu_map_data {
+=======
+struct __packed perf_record_cpu_map_data {
+>>>>>>> b7ba80a49124 (Commit)
 	__u16			 type;
 	union {
 		/* Used when type == PERF_CPU_MAP__CPUS. */
@@ -220,7 +231,11 @@ struct perf_record_cpu_map_data {
 		/* Used when type == PERF_CPU_MAP__RANGE_CPUS. */
 		struct perf_record_range_cpu_map range_cpu_data;
 	};
+<<<<<<< HEAD
 } __attribute__((packed));
+=======
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 #pragma GCC diagnostic pop
 

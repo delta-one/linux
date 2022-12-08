@@ -141,7 +141,11 @@ static struct macvlan_source_entry *macvlan_hash_lookup_source(
 	u32 idx = macvlan_eth_hash(addr);
 	struct hlist_head *h = &vlan->port->vlan_source_hash[idx];
 
+<<<<<<< HEAD
 	hlist_for_each_entry_rcu(entry, h, hlist, lockdep_rtnl_is_held()) {
+=======
+	hlist_for_each_entry_rcu(entry, h, hlist) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (ether_addr_equal_64bits(entry->addr, addr) &&
 		    entry->vlan == vlan)
 			return entry;
@@ -361,7 +365,11 @@ static void macvlan_broadcast_enqueue(struct macvlan_port *port,
 	}
 	spin_unlock(&port->bc_queue.lock);
 
+<<<<<<< HEAD
 	queue_work(system_unbound_wq, &port->bc_work);
+=======
+	schedule_work(&port->bc_work);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (err)
 		goto free_nskb;
@@ -948,13 +956,21 @@ static void macvlan_dev_get_stats64(struct net_device *dev,
 		for_each_possible_cpu(i) {
 			p = per_cpu_ptr(vlan->pcpu_stats, i);
 			do {
+<<<<<<< HEAD
 				start = u64_stats_fetch_begin(&p->syncp);
+=======
+				start = u64_stats_fetch_begin_irq(&p->syncp);
+>>>>>>> b7ba80a49124 (Commit)
 				rx_packets	= u64_stats_read(&p->rx_packets);
 				rx_bytes	= u64_stats_read(&p->rx_bytes);
 				rx_multicast	= u64_stats_read(&p->rx_multicast);
 				tx_packets	= u64_stats_read(&p->tx_packets);
 				tx_bytes	= u64_stats_read(&p->tx_bytes);
+<<<<<<< HEAD
 			} while (u64_stats_fetch_retry(&p->syncp, start));
+=======
+			} while (u64_stats_fetch_retry_irq(&p->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 			stats->rx_packets	+= rx_packets;
 			stats->rx_bytes		+= rx_bytes;
@@ -1192,7 +1208,11 @@ void macvlan_common_setup(struct net_device *dev)
 {
 	ether_setup(dev);
 
+<<<<<<< HEAD
 	/* ether_setup() has set dev->min_mtu to ETH_MIN_MTU. */
+=======
+	dev->min_mtu		= 0;
+>>>>>>> b7ba80a49124 (Commit)
 	dev->max_mtu		= ETH_MAX_MTU;
 	dev->priv_flags	       &= ~IFF_TX_SKB_SHARING;
 	netif_keep_dst(dev);
@@ -1533,10 +1553,15 @@ destroy_macvlan_port:
 	/* the macvlan port may be freed by macvlan_uninit when fail to register.
 	 * so we destroy the macvlan port only when it's valid.
 	 */
+<<<<<<< HEAD
 	if (create && macvlan_port_get_rtnl(lowerdev)) {
 		macvlan_flush_sources(port, vlan);
 		macvlan_port_destroy(port->dev);
 	}
+=======
+	if (create && macvlan_port_get_rtnl(lowerdev))
+		macvlan_port_destroy(port->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 EXPORT_SYMBOL_GPL(macvlan_common_newlink);
@@ -1647,7 +1672,11 @@ static int macvlan_fill_info_macaddr(struct sk_buff *skb,
 	struct hlist_head *h = &vlan->port->vlan_source_hash[i];
 	struct macvlan_source_entry *entry;
 
+<<<<<<< HEAD
 	hlist_for_each_entry_rcu(entry, h, hlist, lockdep_rtnl_is_held()) {
+=======
+	hlist_for_each_entry_rcu(entry, h, hlist) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (entry->vlan != vlan)
 			continue;
 		if (nla_put(skb, IFLA_MACVLAN_MACADDR, ETH_ALEN, entry->addr))

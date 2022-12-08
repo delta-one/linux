@@ -11,7 +11,11 @@
 #include <drm/drm_aperture.h>
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_generic.h>
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_gem_shmem_helper.h>
 #include <drm/drm_simple_kms_helper.h>
 
@@ -142,6 +146,11 @@ static int hyperv_vmbus_probe(struct hv_device *hdev,
 	if (ret)
 		drm_warn(dev, "Failed to update vram location.\n");
 
+<<<<<<< HEAD
+=======
+	hv->dirt_needed = true;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = hyperv_mode_config_init(hv);
 	if (ret)
 		goto err_free_mmio;
@@ -165,7 +174,11 @@ err_hv_set_drv_data:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void hyperv_vmbus_remove(struct hv_device *hdev)
+=======
+static int hyperv_vmbus_remove(struct hv_device *hdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drm_device *dev = hv_get_drvdata(hdev);
 	struct hyperv_drm_device *hv = to_hv(dev);
@@ -176,6 +189,11 @@ static void hyperv_vmbus_remove(struct hv_device *hdev)
 	hv_set_drvdata(hdev, NULL);
 
 	vmbus_free_mmio(hv->mem->start, hv->fb_size);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int hyperv_vmbus_suspend(struct hv_device *hdev)

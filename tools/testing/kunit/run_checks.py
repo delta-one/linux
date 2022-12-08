@@ -23,7 +23,11 @@ commands: Dict[str, Sequence[str]] = {
 	'kunit_tool_test.py': ['./kunit_tool_test.py'],
 	'kunit smoke test': ['./kunit.py', 'run', '--kunitconfig=lib/kunit', '--build_dir=kunit_run_checks'],
 	'pytype': ['/bin/sh', '-c', 'pytype *.py'],
+<<<<<<< HEAD
 	'mypy': ['mypy', '--strict', '--exclude', '_test.py$', '--exclude', 'qemu_configs/', '.'],
+=======
+	'mypy': ['/bin/sh', '-c', 'mypy *.py'],
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 # The user might not have mypy or pytype installed, skip them if so.
@@ -37,7 +41,11 @@ def main(argv: Sequence[str]) -> None:
 	if argv:
 		raise RuntimeError('This script takes no arguments')
 
+<<<<<<< HEAD
 	future_to_name: Dict[futures.Future[None], str] = {}
+=======
+	future_to_name: Dict[futures.Future, str] = {}
+>>>>>>> b7ba80a49124 (Commit)
 	executor = futures.ThreadPoolExecutor(max_workers=len(commands))
 	for name, argv in commands.items():
 		if name in necessary_deps and shutil.which(necessary_deps[name]) is None:
@@ -73,7 +81,11 @@ def main(argv: Sequence[str]) -> None:
 		sys.exit(1)
 
 
+<<<<<<< HEAD
 def run_cmd(argv: Sequence[str]) -> None:
+=======
+def run_cmd(argv: Sequence[str]):
+>>>>>>> b7ba80a49124 (Commit)
 	subprocess.check_output(argv, stderr=subprocess.STDOUT, cwd=ABS_TOOL_PATH, timeout=TIMEOUT)
 
 

@@ -54,8 +54,12 @@ static uint64_t get_callback_via(struct pci_dev *pdev)
 	pin = pdev->pin;
 
 	/* We don't know the GSI. Specify the PCI INTx line instead. */
+<<<<<<< HEAD
 	return ((uint64_t)HVM_PARAM_CALLBACK_TYPE_PCI_INTX <<
 			  HVM_CALLBACK_VIA_TYPE_SHIFT) |
+=======
+	return ((uint64_t)0x01 << HVM_CALLBACK_VIA_TYPE_SHIFT) | /* PCI INTx identifier */
+>>>>>>> b7ba80a49124 (Commit)
 		((uint64_t)pci_domain_nr(pdev->bus) << 32) |
 		((uint64_t)pdev->bus->number << 16) |
 		((uint64_t)(pdev->devfn & 0xff) << 8) |
@@ -64,13 +68,22 @@ static uint64_t get_callback_via(struct pci_dev *pdev)
 
 static irqreturn_t do_hvm_evtchn_intr(int irq, void *dev_id)
 {
+<<<<<<< HEAD
 	return xen_hvm_evtchn_do_upcall();
+=======
+	xen_hvm_evtchn_do_upcall();
+	return IRQ_HANDLED;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int xen_allocate_irq(struct pci_dev *pdev)
 {
 	return request_irq(pdev->irq, do_hvm_evtchn_intr,
+<<<<<<< HEAD
 			IRQF_NOBALANCING | IRQF_SHARED,
+=======
+			IRQF_NOBALANCING | IRQF_TRIGGER_RISING,
+>>>>>>> b7ba80a49124 (Commit)
 			"xen-platform-pci", pdev);
 }
 
@@ -144,7 +157,11 @@ static int platform_pci_probe(struct pci_dev *pdev,
 		if (ret) {
 			dev_warn(&pdev->dev, "Unable to set the evtchn callback "
 					 "err=%d\n", ret);
+<<<<<<< HEAD
 			goto irq_out;
+=======
+			goto out;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -152,16 +169,23 @@ static int platform_pci_probe(struct pci_dev *pdev,
 	grant_frames = alloc_xen_mmio(PAGE_SIZE * max_nr_gframes);
 	ret = gnttab_setup_auto_xlat_frames(grant_frames);
 	if (ret)
+<<<<<<< HEAD
 		goto irq_out;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	ret = gnttab_init();
 	if (ret)
 		goto grant_out;
 	return 0;
 grant_out:
 	gnttab_free_auto_xlat_frames();
+<<<<<<< HEAD
 irq_out:
 	if (!xen_have_vector_callback)
 		free_irq(pdev->irq, pdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	pci_release_region(pdev, 0);
 mem_out:

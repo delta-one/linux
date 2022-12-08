@@ -10,7 +10,10 @@
 #include <asm/mmu_context.h>
 #include <asm/ptrace.h>
 #include <asm/tlbflush.h>
+<<<<<<< HEAD
 #include <asm/pgalloc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_EFI
 extern void efi_init(void);
@@ -19,12 +22,18 @@ extern void efi_init(void);
 #endif
 
 int efi_create_mapping(struct mm_struct *mm, efi_memory_desc_t *md);
+<<<<<<< HEAD
 int efi_set_mapping_permissions(struct mm_struct *mm, efi_memory_desc_t *md, bool);
 
 #define arch_efi_call_virt_setup()      ({		\
 		sync_kernel_mappings(efi_mm.pgd);	\
 		efi_virtmap_load();			\
 	})
+=======
+int efi_set_mapping_permissions(struct mm_struct *mm, efi_memory_desc_t *md);
+
+#define arch_efi_call_virt_setup()      efi_virtmap_load()
+>>>>>>> b7ba80a49124 (Commit)
 #define arch_efi_call_virt_teardown()   efi_virtmap_unload()
 
 #define ARCH_EFI_IRQ_FLAGS_MASK (SR_IE | SR_SPIE)
@@ -35,6 +44,7 @@ static inline unsigned long efi_get_max_initrd_addr(unsigned long image_addr)
 	return ULONG_MAX;
 }
 
+<<<<<<< HEAD
 static inline unsigned long efi_get_kimg_min_align(void)
 {
 	/*
@@ -45,10 +55,20 @@ static inline unsigned long efi_get_kimg_min_align(void)
 }
 
 #define EFI_KIMG_PREFERRED_ADDRESS	efi_get_kimg_min_align()
+=======
+#define alloc_screen_info(x...)		(&screen_info)
+
+static inline void free_screen_info(struct screen_info *si)
+{
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 void efi_virtmap_load(void);
 void efi_virtmap_unload(void);
 
+<<<<<<< HEAD
 unsigned long stext_offset(void);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_EFI_H */

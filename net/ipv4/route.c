@@ -408,7 +408,11 @@ static struct neighbour *ipv4_neigh_lookup(const struct dst_entry *dst,
 	struct net_device *dev = dst->dev;
 	struct neighbour *n;
 
+<<<<<<< HEAD
 	rcu_read_lock();
+=======
+	rcu_read_lock_bh();
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (likely(rt->rt_gw_family == AF_INET)) {
 		n = ip_neigh_gw4(dev, rt->rt_gw4);
@@ -424,7 +428,11 @@ static struct neighbour *ipv4_neigh_lookup(const struct dst_entry *dst,
 	if (!IS_ERR(n) && !refcount_inc_not_zero(&n->refcnt))
 		n = NULL;
 
+<<<<<<< HEAD
 	rcu_read_unlock();
+=======
+	rcu_read_unlock_bh();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return n;
 }
@@ -471,7 +479,11 @@ static u32 ip_idents_reserve(u32 hash, int segs)
 	old = READ_ONCE(*p_tstamp);
 
 	if (old != now && cmpxchg(p_tstamp, old, now) == old)
+<<<<<<< HEAD
 		delta = get_random_u32_below(now - old);
+=======
+		delta = prandom_u32_max(now - old);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* If UBSAN reports an error there, please make sure your compiler
 	 * supports -fno-strict-overflow before reporting it that was a bug
@@ -689,7 +701,11 @@ static void update_or_create_fnhe(struct fib_nh_common *nhc, __be32 daddr,
 	} else {
 		/* Randomize max depth to avoid some side channels attacks. */
 		int max_depth = FNHE_RECLAIM_DEPTH +
+<<<<<<< HEAD
 				get_random_u32_below(FNHE_RECLAIM_DEPTH);
+=======
+				prandom_u32_max(FNHE_RECLAIM_DEPTH);
+>>>>>>> b7ba80a49124 (Commit)
 
 		while (depth > max_depth) {
 			fnhe_remove_oldest(hash);
@@ -784,7 +800,11 @@ static void __ip_do_redirect(struct rtable *rt, struct sk_buff *skb, struct flow
 	if (!n)
 		n = neigh_create(&arp_tbl, &new_gw, rt->dst.dev);
 	if (!IS_ERR(n)) {
+<<<<<<< HEAD
 		if (!(READ_ONCE(n->nud_state) & NUD_VALID)) {
+=======
+		if (!(n->nud_state & NUD_VALID)) {
+>>>>>>> b7ba80a49124 (Commit)
 			neigh_event_send(n, NULL);
 		} else {
 			if (fib_lookup(net, fl4, &res, 0) == 0) {
@@ -3664,7 +3684,11 @@ static __net_init int rt_genid_init(struct net *net)
 {
 	atomic_set(&net->ipv4.rt_genid, 0);
 	atomic_set(&net->fnhe_genid, 0);
+<<<<<<< HEAD
 	atomic_set(&net->ipv4.dev_addr_genid, get_random_u32());
+=======
+	atomic_set(&net->ipv4.dev_addr_genid, get_random_int());
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -3719,7 +3743,11 @@ int __init ip_rt_init(void)
 
 	ip_idents = idents_hash;
 
+<<<<<<< HEAD
 	get_random_bytes(ip_idents, (ip_idents_mask + 1) * sizeof(*ip_idents));
+=======
+	prandom_bytes(ip_idents, (ip_idents_mask + 1) * sizeof(*ip_idents));
+>>>>>>> b7ba80a49124 (Commit)
 
 	ip_tstamps = idents_hash + (ip_idents_mask + 1) * sizeof(*ip_idents);
 

@@ -22,8 +22,11 @@
 #include <linux/efi.h>
 #include <linux/platform_device.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/psp-sev.h>
 #include <uapi/linux/sev-guest.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/cpu_entry_area.h>
 #include <asm/stacktrace.h>
@@ -1538,23 +1541,36 @@ static enum es_result vc_handle_mmio_movs(struct es_em_ctxt *ctxt,
 static enum es_result vc_handle_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
 {
 	struct insn *insn = &ctxt->insn;
+<<<<<<< HEAD
 	enum insn_mmio_type mmio;
 	unsigned int bytes = 0;
+=======
+	unsigned int bytes = 0;
+	enum mmio_type mmio;
+>>>>>>> b7ba80a49124 (Commit)
 	enum es_result ret;
 	u8 sign_byte;
 	long *reg_data;
 
 	mmio = insn_decode_mmio(insn, &bytes);
+<<<<<<< HEAD
 	if (mmio == INSN_MMIO_DECODE_FAILED)
 		return ES_DECODE_FAILED;
 
 	if (mmio != INSN_MMIO_WRITE_IMM && mmio != INSN_MMIO_MOVS) {
+=======
+	if (mmio == MMIO_DECODE_FAILED)
+		return ES_DECODE_FAILED;
+
+	if (mmio != MMIO_WRITE_IMM && mmio != MMIO_MOVS) {
+>>>>>>> b7ba80a49124 (Commit)
 		reg_data = insn_get_modrm_reg_ptr(insn, ctxt->regs);
 		if (!reg_data)
 			return ES_DECODE_FAILED;
 	}
 
 	switch (mmio) {
+<<<<<<< HEAD
 	case INSN_MMIO_WRITE:
 		memcpy(ghcb->shared_buffer, reg_data, bytes);
 		ret = vc_do_mmio(ghcb, ctxt, bytes, false);
@@ -1564,6 +1580,17 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
 		ret = vc_do_mmio(ghcb, ctxt, bytes, false);
 		break;
 	case INSN_MMIO_READ:
+=======
+	case MMIO_WRITE:
+		memcpy(ghcb->shared_buffer, reg_data, bytes);
+		ret = vc_do_mmio(ghcb, ctxt, bytes, false);
+		break;
+	case MMIO_WRITE_IMM:
+		memcpy(ghcb->shared_buffer, insn->immediate1.bytes, bytes);
+		ret = vc_do_mmio(ghcb, ctxt, bytes, false);
+		break;
+	case MMIO_READ:
+>>>>>>> b7ba80a49124 (Commit)
 		ret = vc_do_mmio(ghcb, ctxt, bytes, true);
 		if (ret)
 			break;
@@ -1574,7 +1601,11 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
 
 		memcpy(reg_data, ghcb->shared_buffer, bytes);
 		break;
+<<<<<<< HEAD
 	case INSN_MMIO_READ_ZERO_EXTEND:
+=======
+	case MMIO_READ_ZERO_EXTEND:
+>>>>>>> b7ba80a49124 (Commit)
 		ret = vc_do_mmio(ghcb, ctxt, bytes, true);
 		if (ret)
 			break;
@@ -1583,7 +1614,11 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
 		memset(reg_data, 0, insn->opnd_bytes);
 		memcpy(reg_data, ghcb->shared_buffer, bytes);
 		break;
+<<<<<<< HEAD
 	case INSN_MMIO_READ_SIGN_EXTEND:
+=======
+	case MMIO_READ_SIGN_EXTEND:
+>>>>>>> b7ba80a49124 (Commit)
 		ret = vc_do_mmio(ghcb, ctxt, bytes, true);
 		if (ret)
 			break;
@@ -1602,7 +1637,11 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
 		memset(reg_data, sign_byte, insn->opnd_bytes);
 		memcpy(reg_data, ghcb->shared_buffer, bytes);
 		break;
+<<<<<<< HEAD
 	case INSN_MMIO_MOVS:
+=======
+	case MMIO_MOVS:
+>>>>>>> b7ba80a49124 (Commit)
 		ret = vc_handle_mmio_movs(ctxt, bytes);
 		break;
 	default:
@@ -2177,7 +2216,11 @@ static int __init init_sev_config(char *str)
 }
 __setup("sev=", init_sev_config);
 
+<<<<<<< HEAD
 int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input, struct snp_guest_request_ioctl *rio)
+=======
+int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input, unsigned long *fw_err)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ghcb_state state;
 	struct es_em_ctxt ctxt;
@@ -2185,7 +2228,15 @@ int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input, struct sn
 	struct ghcb *ghcb;
 	int ret;
 
+<<<<<<< HEAD
 	rio->exitinfo2 = SEV_RET_NO_FW_CALL;
+=======
+	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
+		return -ENODEV;
+
+	if (!fw_err)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * __sev_get_ghcb() needs to run with IRQs disabled because it is using
@@ -2210,6 +2261,7 @@ int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input, struct sn
 	if (ret)
 		goto e_put;
 
+<<<<<<< HEAD
 	rio->exitinfo2 = ghcb->save.sw_exit_info_2;
 	switch (rio->exitinfo2) {
 	case 0:
@@ -2230,6 +2282,17 @@ int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input, struct sn
 	default:
 		ret = -EIO;
 		break;
+=======
+	if (ghcb->save.sw_exit_info_2) {
+		/* Number of expected pages are returned in RBX */
+		if (exit_code == SVM_VMGEXIT_EXT_GUEST_REQUEST &&
+		    ghcb->save.sw_exit_info_2 == SNP_GUEST_REQ_INVALID_LEN)
+			input->data_npages = ghcb_get_rbx(ghcb);
+
+		*fw_err = ghcb->save.sw_exit_info_2;
+
+		ret = -EIO;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 e_put:

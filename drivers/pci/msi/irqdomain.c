@@ -14,7 +14,11 @@ int pci_msi_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
 
 	domain = dev_get_msi_domain(&dev->dev);
 	if (domain && irq_domain_is_hierarchy(domain))
+<<<<<<< HEAD
 		return msi_domain_alloc_irqs_all_locked(&dev->dev, MSI_DEFAULT_DOMAIN, nvec);
+=======
+		return msi_domain_alloc_irqs_descs_locked(domain, &dev->dev, nvec);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return pci_msi_legacy_setup_msi_irqs(dev, nvec, type);
 }
@@ -24,12 +28,20 @@ void pci_msi_teardown_msi_irqs(struct pci_dev *dev)
 	struct irq_domain *domain;
 
 	domain = dev_get_msi_domain(&dev->dev);
+<<<<<<< HEAD
 	if (domain && irq_domain_is_hierarchy(domain)) {
 		msi_domain_free_irqs_all_locked(&dev->dev, MSI_DEFAULT_DOMAIN);
 	} else {
 		pci_msi_legacy_teardown_msi_irqs(dev);
 		msi_free_msi_descs(&dev->dev);
 	}
+=======
+	if (domain && irq_domain_is_hierarchy(domain))
+		msi_domain_free_irqs_descs_locked(domain, &dev->dev);
+	else
+		pci_msi_legacy_teardown_msi_irqs(dev);
+	msi_free_msi_descs(&dev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -64,6 +76,54 @@ static irq_hw_number_t pci_msi_domain_calc_hwirq(struct msi_desc *desc)
 		(pci_domain_nr(dev->bus) & 0xFFFFFFFF) << 27;
 }
 
+<<<<<<< HEAD
+=======
+static inline bool pci_msi_desc_is_multi_msi(struct msi_desc *desc)
+{
+	return !desc->pci.msi_attrib.is_msix && desc->nvec_used > 1;
+}
+
+/**
+ * pci_msi_domain_check_cap - Verify that @domain supports the capabilities
+ *			      for @dev
+ * @domain:	The interrupt domain to check
+ * @info:	The domain info for verification
+ * @dev:	The device to check
+ *
+ * Returns:
+ *  0 if the functionality is supported
+ *  1 if Multi MSI is requested, but the domain does not support it
+ *  -ENOTSUPP otherwise
+ */
+static int pci_msi_domain_check_cap(struct irq_domain *domain,
+				    struct msi_domain_info *info,
+				    struct device *dev)
+{
+	struct msi_desc *desc = msi_first_desc(dev, MSI_DESC_ALL);
+
+	/* Special handling to support __pci_enable_msi_range() */
+	if (pci_msi_desc_is_multi_msi(desc) &&
+	    !(info->flags & MSI_FLAG_MULTI_PCI_MSI))
+		return 1;
+
+	if (desc->pci.msi_attrib.is_msix) {
+		if (!(info->flags & MSI_FLAG_PCI_MSIX))
+			return -ENOTSUPP;
+
+		if (info->flags & MSI_FLAG_MSIX_CONTIGUOUS) {
+			unsigned int idx = 0;
+
+			/* Check for gaps in the entry indices */
+			msi_for_each_desc(desc, dev, MSI_DESC_ALL) {
+				if (desc->msi_index != idx++)
+					return -ENOTSUPP;
+			}
+		}
+	}
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void pci_msi_domain_set_desc(msi_alloc_info_t *arg,
 				    struct msi_desc *desc)
 {
@@ -73,6 +133,10 @@ static void pci_msi_domain_set_desc(msi_alloc_info_t *arg,
 
 static struct msi_domain_ops pci_msi_domain_ops_default = {
 	.set_desc	= pci_msi_domain_set_desc,
+<<<<<<< HEAD
+=======
+	.msi_check	= pci_msi_domain_check_cap,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void pci_msi_domain_update_dom_ops(struct msi_domain_info *info)
@@ -84,6 +148,11 @@ static void pci_msi_domain_update_dom_ops(struct msi_domain_info *info)
 	} else {
 		if (ops->set_desc == NULL)
 			ops->set_desc = pci_msi_domain_set_desc;
+<<<<<<< HEAD
+=======
+		if (ops->msi_check == NULL)
+			ops->msi_check = pci_msi_domain_check_cap;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -115,6 +184,11 @@ struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
 					     struct msi_domain_info *info,
 					     struct irq_domain *parent)
 {
+<<<<<<< HEAD
+=======
+	struct irq_domain *domain;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (WARN_ON(info->flags & MSI_FLAG_LEVEL_CAPABLE))
 		info->flags &= ~MSI_FLAG_LEVEL_CAPABLE;
 
@@ -123,23 +197,37 @@ struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
 	if (info->flags & MSI_FLAG_USE_DEF_CHIP_OPS)
 		pci_msi_domain_update_chip_ops(info);
 
+<<<<<<< HEAD
 	/* Let the core code free MSI descriptors when freeing interrupts */
 	info->flags |= MSI_FLAG_FREE_MSI_DESCS;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	info->flags |= MSI_FLAG_ACTIVATE_EARLY | MSI_FLAG_DEV_SYSFS;
 	if (IS_ENABLED(CONFIG_GENERIC_IRQ_RESERVATION_MODE))
 		info->flags |= MSI_FLAG_MUST_REACTIVATE;
 
 	/* PCI-MSI is oneshot-safe */
 	info->chip->flags |= IRQCHIP_ONESHOT_SAFE;
+<<<<<<< HEAD
 	/* Let the core update the bus token */
 	info->bus_token = DOMAIN_BUS_PCI_MSI;
 
 	return msi_create_irq_domain(fwnode, info, parent);
+=======
+
+	domain = msi_create_irq_domain(fwnode, info, parent);
+	if (!domain)
+		return NULL;
+
+	irq_domain_update_bus_token(domain, DOMAIN_BUS_PCI_MSI);
+	return domain;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(pci_msi_create_irq_domain);
 
 /*
+<<<<<<< HEAD
  * Per device MSI[-X] domain functionality
  */
 static void pci_device_domain_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
@@ -415,6 +503,8 @@ bool pci_create_ims_domain(struct pci_dev *pdev, const struct msi_domain_templat
 EXPORT_SYMBOL_GPL(pci_create_ims_domain);
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Users of the generic MSI infrastructure expect a device to have a single ID,
  * so with DMA aliases we have to pick the least-worst compromise. Devices with
  * DMA phantom functions tend to still emit MSIs from the real function number,
@@ -483,3 +573,27 @@ struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
 					     DOMAIN_BUS_PCI_MSI);
 	return dom;
 }
+<<<<<<< HEAD
+=======
+
+/**
+ * pci_dev_has_special_msi_domain - Check whether the device is handled by
+ *				    a non-standard PCI-MSI domain
+ * @pdev:	The PCI device to check.
+ *
+ * Returns: True if the device irqdomain or the bus irqdomain is
+ * non-standard PCI/MSI.
+ */
+bool pci_dev_has_special_msi_domain(struct pci_dev *pdev)
+{
+	struct irq_domain *dom = dev_get_msi_domain(&pdev->dev);
+
+	if (!dom)
+		dom = dev_get_msi_domain(&pdev->bus->dev);
+
+	if (!dom)
+		return true;
+
+	return dom->bus_token != DOMAIN_BUS_PCI_MSI;
+}
+>>>>>>> b7ba80a49124 (Commit)

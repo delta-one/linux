@@ -107,7 +107,11 @@ initial_plane_vma(struct drm_i915_private *i915,
 	 */
 	if (IS_ENABLED(CONFIG_FRAMEBUFFER_CONSOLE) &&
 	    mem == i915->mm.stolen_region &&
+<<<<<<< HEAD
 	    size * 2 > i915->dsm.usable_size)
+=======
+	    size * 2 > i915->stolen_usable_size)
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	obj = i915_gem_object_create_region_at(mem, phys_base, size, 0);

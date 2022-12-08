@@ -257,7 +257,11 @@ static int azx_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 		azx_dev = get_azx_dev(s);
 		if (start) {
 			azx_dev->insufficient = 1;
+<<<<<<< HEAD
 			snd_hdac_stream_start(azx_stream(azx_dev));
+=======
+			snd_hdac_stream_start(azx_stream(azx_dev), true);
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			snd_hdac_stream_stop(azx_stream(azx_dev));
 		}
@@ -1231,7 +1235,10 @@ int azx_probe_codecs(struct azx *chip, unsigned int max_slots)
 				continue;
 			codec->jackpoll_interval = chip->jackpoll_interval;
 			codec->beep_mode = chip->beep_mode;
+<<<<<<< HEAD
 			codec->ctl_dev_id = chip->ctl_dev_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			codecs++;
 		}
 	}

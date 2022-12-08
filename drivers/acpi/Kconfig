@@ -27,6 +27,12 @@ menuconfig ACPI
 	  Management (APM) specification.  If both ACPI and APM support 
 	  are configured, ACPI is used.
 
+<<<<<<< HEAD
+=======
+	  The project home page for the Linux ACPI subsystem is here:
+	  <https://01.org/linux-acpi>
+
+>>>>>>> b7ba80a49124 (Commit)
 	  Linux support for ACPI is based on Intel Corporation's ACPI
 	  Component Architecture (ACPI CA).  For more information on the
 	  ACPI CA, see:
@@ -90,7 +96,11 @@ config ACPI_SPCR_TABLE
 
 config ACPI_FPDT
 	bool "ACPI Firmware Performance Data Table (FPDT) support"
+<<<<<<< HEAD
 	depends on X86_64 || ARM64
+=======
+	depends on X86_64
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Enable support for the Firmware Performance Data Table (FPDT).
 	  This table provides information on the timing of the system
@@ -345,6 +355,10 @@ config ACPI_CUSTOM_DSDT_FILE
 	depends on !STANDALONE
 	help
 	  This option supports a custom DSDT by linking it into the kernel.
+<<<<<<< HEAD
+=======
+	  See Documentation/admin-guide/acpi/dsdt-override.rst
+>>>>>>> b7ba80a49124 (Commit)
 
 	  Enter the full path name to the file which includes the AmlCode
 	  or dsdt_aml_code declaration.
@@ -564,6 +578,7 @@ config ACPI_PCC
 	  Enable this feature if you want to set up and install the PCC Address
 	  Space handler to handle PCC OpRegion in the firmware.
 
+<<<<<<< HEAD
 config ACPI_FFH
 	bool "ACPI FFH Address Space"
 	default n
@@ -574,6 +589,8 @@ config ACPI_FFH
 	  Enable this feature if you want to set up and install the FFH Address
 	  Space handler to handle FFH OpRegion in the firmware.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 source "drivers/acpi/pmic/Kconfig"
 
 config ACPI_VIOT

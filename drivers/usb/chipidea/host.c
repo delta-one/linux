@@ -459,6 +459,7 @@ static void ci_hdrc_unmap_urb_for_dma(struct usb_hcd *hcd, struct urb *urb)
 	ci_hdrc_free_dma_aligned_buffer(urb);
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_PM_SLEEP
 static void ci_hdrc_host_suspend(struct ci_hdrc *ci)
 {
@@ -471,6 +472,8 @@ static void ci_hdrc_host_resume(struct ci_hdrc *ci, bool power_lost)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ci_hdrc_host_init(struct ci_hdrc *ci)
 {
 	struct ci_role_driver *rdrv;
@@ -484,10 +487,13 @@ int ci_hdrc_host_init(struct ci_hdrc *ci)
 
 	rdrv->start	= host_start;
 	rdrv->stop	= host_stop;
+<<<<<<< HEAD
 #ifdef CONFIG_PM_SLEEP
 	rdrv->suspend	= ci_hdrc_host_suspend;
 	rdrv->resume	= ci_hdrc_host_resume;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rdrv->irq	= host_irq;
 	rdrv->name	= "host";
 	ci->roles[CI_ROLE_HOST] = rdrv;

@@ -238,10 +238,30 @@ static int ati_configure(void)
 }
 
 
+<<<<<<< HEAD
 static int agp_ati_resume(struct device *dev)
 {
 	return ati_configure();
 }
+=======
+#ifdef CONFIG_PM
+static int agp_ati_suspend(struct pci_dev *dev, pm_message_t state)
+{
+	pci_save_state(dev);
+	pci_set_power_state(dev, PCI_D3hot);
+
+	return 0;
+}
+
+static int agp_ati_resume(struct pci_dev *dev)
+{
+	pci_set_power_state(dev, PCI_D0);
+	pci_restore_state(dev);
+
+	return ati_configure();
+}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  *Since we don't need contiguous memory we just try
@@ -546,14 +566,24 @@ static const struct pci_device_id agp_ati_pci_table[] = {
 
 MODULE_DEVICE_TABLE(pci, agp_ati_pci_table);
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(agp_ati_pm_ops, NULL, agp_ati_resume);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct pci_driver agp_ati_pci_driver = {
 	.name		= "agpgart-ati",
 	.id_table	= agp_ati_pci_table,
 	.probe		= agp_ati_probe,
 	.remove		= agp_ati_remove,
+<<<<<<< HEAD
 	.driver.pm	= &agp_ati_pm_ops,
+=======
+#ifdef CONFIG_PM
+	.suspend	= agp_ati_suspend,
+	.resume		= agp_ati_resume,
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init agp_ati_init(void)

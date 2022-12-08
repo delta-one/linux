@@ -68,6 +68,12 @@ struct mfd_cell {
 	int			id;
 	int			level;
 
+<<<<<<< HEAD
+=======
+	int			(*enable)(struct platform_device *dev);
+	int			(*disable)(struct platform_device *dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	int			(*suspend)(struct platform_device *dev);
 	int			(*resume)(struct platform_device *dev);
 
@@ -75,9 +81,12 @@ struct mfd_cell {
 	void			*platform_data;
 	size_t			pdata_size;
 
+<<<<<<< HEAD
 	/* Matches ACPI */
 	const struct mfd_cell_acpi_match	*acpi_match;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Software node for the device. */
 	const struct software_node *swnode;
 
@@ -88,7 +97,11 @@ struct mfd_cell {
 	const char		*of_compatible;
 
 	/*
+<<<<<<< HEAD
 	 * Address as defined in Device Tree.  Used to complement 'of_compatible'
+=======
+	 * Address as defined in Device Tree.  Used to compement 'of_compatible'
+>>>>>>> b7ba80a49124 (Commit)
 	 * (above) when matching OF nodes with devices that have identical
 	 * compatible strings
 	 */
@@ -97,6 +110,12 @@ struct mfd_cell {
 	/* Set to 'true' to use 'of_reg' (above) - allows for of_reg=0 */
 	bool use_of_reg;
 
+<<<<<<< HEAD
+=======
+	/* Matches ACPI */
+	const struct mfd_cell_acpi_match	*acpi_match;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * These resources can be specified relative to the parent device.
 	 * For accessing hardware you should use resources from the platform dev
@@ -116,11 +135,28 @@ struct mfd_cell {
 	/* A list of regulator supplies that should be mapped to the MFD
 	 * device rather than the child device when requested
 	 */
+<<<<<<< HEAD
 	int			num_parent_supplies;
 	const char * const	*parent_supplies;
 };
 
 /*
+=======
+	const char * const	*parent_supplies;
+	int			num_parent_supplies;
+};
+
+/*
+ * Convenience functions for clients using shared cells.  Refcounting
+ * happens automatically, with the cell's enable/disable callbacks
+ * being called only when a device is first being enabled or no other
+ * clients are making use of it.
+ */
+extern int mfd_cell_enable(struct platform_device *pdev);
+extern int mfd_cell_disable(struct platform_device *pdev);
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * Given a platform device that's been created by mfd_add_devices(), fetch
  * the mfd_cell that created it.
  */

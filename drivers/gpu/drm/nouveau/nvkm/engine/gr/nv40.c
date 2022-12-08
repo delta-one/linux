@@ -275,8 +275,13 @@ nv40_gr_intr(struct nvkm_gr *base)
 				   "nstatus %08x [%s] ch %d [%08x %s] subc %d "
 				   "class %04x mthd %04x data %08x\n",
 			   show, msg, nsource, src, nstatus, sta,
+<<<<<<< HEAD
 			   chan ? chan->fifo->id : -1, inst << 4,
 			   chan ? chan->fifo->name : "unknown",
+=======
+			   chan ? chan->fifo->chid : -1, inst << 4,
+			   chan ? chan->fifo->object.client->name : "unknown",
+>>>>>>> b7ba80a49124 (Commit)
 			   subc, class, mthd, data);
 	}
 

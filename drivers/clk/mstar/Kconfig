@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 config MSTAR_MSC313_CPUPLL
 	bool "MStar CPUPLL driver"
 	depends on ARCH_MSTARV7 || COMPILE_TEST
@@ -6,6 +7,8 @@ config MSTAR_MSC313_CPUPLL
 	help
 	  Support for the CPU PLL present on MStar/Sigmastar SoCs.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config MSTAR_MSC313_MPLL
 	bool "MStar MPLL driver"
 	depends on ARCH_MSTARV7 || COMPILE_TEST

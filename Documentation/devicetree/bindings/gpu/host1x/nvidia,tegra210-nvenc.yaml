@@ -4,7 +4,11 @@
 $id: "http://devicetree.org/schemas/gpu/host1x/nvidia,tegra210-nvenc.yaml#"
 $schema: "http://devicetree.org/meta-schemas/core.yaml#"
 
+<<<<<<< HEAD
 title: NVIDIA Tegra NVENC
+=======
+title: Device tree binding for NVIDIA Tegra NVENC
+>>>>>>> b7ba80a49124 (Commit)
 
 description: |
   NVENC is the hardware video encoder present on NVIDIA Tegra210

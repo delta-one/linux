@@ -349,7 +349,11 @@ static int __power_supply_is_system_supplied(struct device *dev, void *data)
 	unsigned int *count = data;
 
 	(*count)++;
+<<<<<<< HEAD
 	if (psy->desc->type != POWER_SUPPLY_TYPE_BATTERY)
+=======
+	if (psy->desc->type != POWER_SUPPLY_TYPE_BATTERY && psy->desc->get_property)
+>>>>>>> b7ba80a49124 (Commit)
 		if (!psy->desc->get_property(psy, POWER_SUPPLY_PROP_ONLINE,
 					&ret))
 			return ret.intval;
@@ -388,7 +392,11 @@ static int __power_supply_get_supplier_property(struct device *dev, void *_data)
 	struct psy_get_supplier_prop_data *data = _data;
 
 	if (__power_supply_is_supplied_by(epsy, data->psy))
+<<<<<<< HEAD
 		if (!power_supply_get_property(epsy, data->psp, data->val))
+=======
+		if (!epsy->desc->get_property(epsy, data->psp, data->val))
+>>>>>>> b7ba80a49124 (Commit)
 			return 1; /* Success */
 
 	return 0; /* Continue iterating */
@@ -750,11 +758,14 @@ int power_supply_get_battery_info(struct power_supply *psy,
 		int i, tab_len, size;
 
 		propname = kasprintf(GFP_KERNEL, "ocv-capacity-table-%d", index);
+<<<<<<< HEAD
 		if (!propname) {
 			power_supply_put_battery_info(psy, info);
 			err = -ENOMEM;
 			goto out_put_node;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		list = of_get_property(battery_np, propname, &size);
 		if (!list || !size) {
 			dev_err(&psy->dev, "failed to get %s\n", propname);
@@ -832,6 +843,7 @@ void power_supply_put_battery_info(struct power_supply *psy,
 }
 EXPORT_SYMBOL_GPL(power_supply_put_battery_info);
 
+<<<<<<< HEAD
 const enum power_supply_property power_supply_battery_info_properties[] = {
 	POWER_SUPPLY_PROP_TECHNOLOGY,
 	POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
@@ -959,6 +971,8 @@ int power_supply_battery_info_get_prop(struct power_supply_battery_info *info,
 }
 EXPORT_SYMBOL_GPL(power_supply_battery_info_get_prop);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * power_supply_temp2resist_simple() - find the battery internal resistance
  * percent from temperature
@@ -1002,6 +1016,10 @@ EXPORT_SYMBOL_GPL(power_supply_temp2resist_simple);
  * power_supply_vbat2ri() - find the battery internal resistance
  * from the battery voltage
  * @info: The battery information container
+<<<<<<< HEAD
+=======
+ * @table: Pointer to battery resistance temperature table
+>>>>>>> b7ba80a49124 (Commit)
  * @vbat_uv: The battery voltage in microvolt
  * @charging: If we are charging (true) or not (false)
  *
@@ -1173,6 +1191,7 @@ bool power_supply_battery_bti_in_range(struct power_supply_battery_info *info,
 }
 EXPORT_SYMBOL_GPL(power_supply_battery_bti_in_range);
 
+<<<<<<< HEAD
 static bool psy_has_property(const struct power_supply_desc *psy_desc,
 			     enum power_supply_property psp)
 {
@@ -1189,6 +1208,8 @@ static bool psy_has_property(const struct power_supply_desc *psy_desc,
 	return found;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int power_supply_get_property(struct power_supply *psy,
 			    enum power_supply_property psp,
 			    union power_supply_propval *val)
@@ -1199,12 +1220,16 @@ int power_supply_get_property(struct power_supply *psy,
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
 	if (psy_has_property(psy->desc, psp))
 		return psy->desc->get_property(psy, psp, val);
 	else if (power_supply_battery_info_has_prop(psy->battery_info, psp))
 		return power_supply_battery_info_get_prop(psy->battery_info, psp, val);
 	else
 		return -EINVAL;
+=======
+	return psy->desc->get_property(psy, psp, val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(power_supply_get_property);
 
@@ -1265,6 +1290,25 @@ void power_supply_unreg_notifier(struct notifier_block *nb)
 }
 EXPORT_SYMBOL_GPL(power_supply_unreg_notifier);
 
+<<<<<<< HEAD
+=======
+static bool psy_has_property(const struct power_supply_desc *psy_desc,
+			     enum power_supply_property psp)
+{
+	bool found = false;
+	int i;
+
+	for (i = 0; i < psy_desc->num_properties; i++) {
+		if (psy_desc->properties[i] == psp) {
+			found = true;
+			break;
+		}
+	}
+
+	return found;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_THERMAL
 static int power_supply_read_temp(struct thermal_zone_device *tzd,
 		int *temp)
@@ -1274,7 +1318,11 @@ static int power_supply_read_temp(struct thermal_zone_device *tzd,
 	int ret;
 
 	WARN_ON(tzd == NULL);
+<<<<<<< HEAD
 	psy = thermal_zone_device_priv(tzd);
+=======
+	psy = tzd->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	ret = power_supply_get_property(psy, POWER_SUPPLY_PROP_TEMP, &val);
 	if (ret)
 		return ret;
@@ -1318,6 +1366,86 @@ static void psy_unregister_thermal(struct power_supply *psy)
 	thermal_zone_device_unregister(psy->tzd);
 }
 
+<<<<<<< HEAD
+=======
+/* thermal cooling device callbacks */
+static int ps_get_max_charge_cntl_limit(struct thermal_cooling_device *tcd,
+					unsigned long *state)
+{
+	struct power_supply *psy;
+	union power_supply_propval val;
+	int ret;
+
+	psy = tcd->devdata;
+	ret = power_supply_get_property(psy,
+			POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX, &val);
+	if (ret)
+		return ret;
+
+	*state = val.intval;
+
+	return ret;
+}
+
+static int ps_get_cur_charge_cntl_limit(struct thermal_cooling_device *tcd,
+					unsigned long *state)
+{
+	struct power_supply *psy;
+	union power_supply_propval val;
+	int ret;
+
+	psy = tcd->devdata;
+	ret = power_supply_get_property(psy,
+			POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT, &val);
+	if (ret)
+		return ret;
+
+	*state = val.intval;
+
+	return ret;
+}
+
+static int ps_set_cur_charge_cntl_limit(struct thermal_cooling_device *tcd,
+					unsigned long state)
+{
+	struct power_supply *psy;
+	union power_supply_propval val;
+	int ret;
+
+	psy = tcd->devdata;
+	val.intval = state;
+	ret = psy->desc->set_property(psy,
+		POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT, &val);
+
+	return ret;
+}
+
+static const struct thermal_cooling_device_ops psy_tcd_ops = {
+	.get_max_state = ps_get_max_charge_cntl_limit,
+	.get_cur_state = ps_get_cur_charge_cntl_limit,
+	.set_cur_state = ps_set_cur_charge_cntl_limit,
+};
+
+static int psy_register_cooler(struct power_supply *psy)
+{
+	/* Register for cooling device if psy can control charging */
+	if (psy_has_property(psy->desc, POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT)) {
+		psy->tcd = thermal_cooling_device_register(
+			(char *)psy->desc->name,
+			psy, &psy_tcd_ops);
+		return PTR_ERR_OR_ZERO(psy->tcd);
+	}
+
+	return 0;
+}
+
+static void psy_unregister_cooler(struct power_supply *psy)
+{
+	if (IS_ERR_OR_NULL(psy->tcd))
+		return;
+	thermal_cooling_device_unregister(psy->tcd);
+}
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static int psy_register_thermal(struct power_supply *psy)
 {
@@ -1327,6 +1455,18 @@ static int psy_register_thermal(struct power_supply *psy)
 static void psy_unregister_thermal(struct power_supply *psy)
 {
 }
+<<<<<<< HEAD
+=======
+
+static int psy_register_cooler(struct power_supply *psy)
+{
+	return 0;
+}
+
+static void psy_unregister_cooler(struct power_supply *psy)
+{
+}
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 static struct power_supply *__must_check
@@ -1339,13 +1479,22 @@ __power_supply_register(struct device *parent,
 	struct power_supply *psy;
 	int rc;
 
+<<<<<<< HEAD
 	if (!desc || !desc->name || !desc->properties || !desc->num_properties)
 		return ERR_PTR(-EINVAL);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!parent)
 		pr_warn("%s: Expected proper parent device for '%s'\n",
 			__func__, desc->name);
 
+<<<<<<< HEAD
+=======
+	if (!desc || !desc->name || !desc->properties || !desc->num_properties)
+		return ERR_PTR(-EINVAL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (psy_has_property(desc, POWER_SUPPLY_PROP_USB_TYPE) &&
 	    (!desc->usb_types || !desc->num_usb_types))
 		return ERR_PTR(-EINVAL);
@@ -1387,6 +1536,7 @@ __power_supply_register(struct device *parent,
 		goto check_supplies_failed;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Expose constant battery info, if it is available. While there are
 	 * some chargers accessing constant battery data, we only want to
@@ -1398,6 +1548,8 @@ __power_supply_register(struct device *parent,
 			goto check_supplies_failed;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_init(&psy->changed_lock);
 	rc = device_add(dev);
 	if (rc)
@@ -1411,6 +1563,13 @@ __power_supply_register(struct device *parent,
 	if (rc)
 		goto register_thermal_failed;
 
+<<<<<<< HEAD
+=======
+	rc = psy_register_cooler(psy);
+	if (rc)
+		goto register_cooler_failed;
+
+>>>>>>> b7ba80a49124 (Commit)
 	rc = power_supply_create_triggers(psy);
 	if (rc)
 		goto create_triggers_failed;
@@ -1440,10 +1599,19 @@ __power_supply_register(struct device *parent,
 add_hwmon_sysfs_failed:
 	power_supply_remove_triggers(psy);
 create_triggers_failed:
+<<<<<<< HEAD
 	psy_unregister_thermal(psy);
 register_thermal_failed:
 wakeup_init_failed:
 	device_del(dev);
+=======
+	psy_unregister_cooler(psy);
+register_cooler_failed:
+	psy_unregister_thermal(psy);
+register_thermal_failed:
+	device_del(dev);
+wakeup_init_failed:
+>>>>>>> b7ba80a49124 (Commit)
 device_add_failed:
 check_supplies_failed:
 dev_set_name_failed:
@@ -1591,6 +1759,10 @@ void power_supply_unregister(struct power_supply *psy)
 	sysfs_remove_link(&psy->dev.kobj, "powers");
 	power_supply_remove_hwmon_sysfs(psy);
 	power_supply_remove_triggers(psy);
+<<<<<<< HEAD
+=======
+	psy_unregister_cooler(psy);
+>>>>>>> b7ba80a49124 (Commit)
 	psy_unregister_thermal(psy);
 	device_init_wakeup(&psy->dev, false);
 	device_unregister(&psy->dev);
@@ -1605,7 +1777,11 @@ EXPORT_SYMBOL_GPL(power_supply_get_drvdata);
 
 static int __init power_supply_class_init(void)
 {
+<<<<<<< HEAD
 	power_supply_class = class_create("power_supply");
+=======
+	power_supply_class = class_create(THIS_MODULE, "power_supply");
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_ERR(power_supply_class))
 		return PTR_ERR(power_supply_class);
@@ -1628,3 +1804,7 @@ MODULE_DESCRIPTION("Universal power supply monitor class");
 MODULE_AUTHOR("Ian Molton <spyro@f2s.com>, "
 	      "Szabolcs Gyurko, "
 	      "Anton Vorontsov <cbou@mail.ru>");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

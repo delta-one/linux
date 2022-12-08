@@ -18,7 +18,10 @@
 #include "usbhid/usbhid.h"
 #include "hid-ids.h"
 #include <linux/ctype.h>
+<<<<<<< HEAD
 #include <linux/string.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/unaligned.h>
 
 /**
@@ -616,6 +619,7 @@ cleanup:
 }
 
 /**
+<<<<<<< HEAD
  * uclogic_params_cleanup_event_hooks - free resources used by the list of raw
  * event hooks.
  * Can be called repeatedly.
@@ -641,6 +645,8 @@ static void uclogic_params_cleanup_event_hooks(struct uclogic_params *params)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * uclogic_params_cleanup - free resources used by struct uclogic_params
  * (tablet interface's parameters).
  * Can be called repeatedly.
@@ -656,7 +662,10 @@ void uclogic_params_cleanup(struct uclogic_params *params)
 		for (i = 0; i < ARRAY_SIZE(params->frame_list); i++)
 			uclogic_params_frame_cleanup(&params->frame_list[i]);
 
+<<<<<<< HEAD
 		uclogic_params_cleanup_event_hooks(params);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		memset(params, 0, sizeof(*params));
 	}
 }
@@ -1047,8 +1056,13 @@ cleanup:
  * Returns:
  *	Zero, if successful. A negative errno code on error.
  */
+<<<<<<< HEAD
 static int uclogic_probe_interface(struct hid_device *hdev, const u8 *magic_arr,
 				   size_t magic_size, int endpoint)
+=======
+static int uclogic_probe_interface(struct hid_device *hdev, u8 *magic_arr,
+				   int magic_size, int endpoint)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct usb_device *udev;
 	unsigned int pipe = 0;
@@ -1239,6 +1253,7 @@ static int uclogic_params_ugee_v2_init_frame_mouse(struct uclogic_params *p)
 }
 
 /**
+<<<<<<< HEAD
  * uclogic_params_ugee_v2_has_battery() - check whether a UGEE v2 device has
  * battery or not.
  * @hdev:	The HID device of the tablet interface.
@@ -1373,6 +1388,8 @@ static int uclogic_params_ugee_v2_init_event_hooks(struct hid_device *hdev,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * uclogic_params_ugee_v2_init() - initialize a UGEE graphics tablets by
  * discovering their parameters.
  *
@@ -1395,7 +1412,10 @@ static int uclogic_params_ugee_v2_init(struct uclogic_params *params,
 				       struct hid_device *hdev)
 {
 	int rc = 0;
+<<<<<<< HEAD
 	struct uclogic_drvdata *drvdata;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct usb_interface *iface;
 	__u8 bInterfaceNumber;
 	const int str_desc_len = 12;
@@ -1403,6 +1423,12 @@ static int uclogic_params_ugee_v2_init(struct uclogic_params *params,
 	__u8 *rdesc_pen = NULL;
 	s32 desc_params[UCLOGIC_RDESC_PH_ID_NUM];
 	enum uclogic_params_frame_type frame_type;
+<<<<<<< HEAD
+=======
+	__u8 magic_arr[] = {
+		0x02, 0xb0, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	};
+>>>>>>> b7ba80a49124 (Commit)
 	/* The resulting parameters (noop) */
 	struct uclogic_params p = {0, };
 
@@ -1411,7 +1437,10 @@ static int uclogic_params_ugee_v2_init(struct uclogic_params *params,
 		goto cleanup;
 	}
 
+<<<<<<< HEAD
 	drvdata = hid_get_drvdata(hdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	iface = to_usb_interface(hdev->dev.parent);
 	bInterfaceNumber = iface->cur_altsetting->desc.bInterfaceNumber;
 
@@ -1433,9 +1462,13 @@ static int uclogic_params_ugee_v2_init(struct uclogic_params *params,
 	 * The specific data was discovered by sniffing the Windows driver
 	 * traffic.
 	 */
+<<<<<<< HEAD
 	rc = uclogic_probe_interface(hdev, uclogic_ugee_v2_probe_arr,
 				     uclogic_ugee_v2_probe_size,
 				     uclogic_ugee_v2_probe_endpoint);
+=======
+	rc = uclogic_probe_interface(hdev, magic_arr, sizeof(magic_arr), 0x03);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		uclogic_params_init_invalid(&p);
 		goto output;
@@ -1480,9 +1513,12 @@ static int uclogic_params_ugee_v2_init(struct uclogic_params *params,
 	p.pen.subreport_list[0].id = UCLOGIC_RDESC_V1_FRAME_ID;
 
 	/* Initialize the frame interface */
+<<<<<<< HEAD
 	if (drvdata->quirks & UCLOGIC_MOUSE_FRAME_QUIRK)
 		frame_type = UCLOGIC_PARAMS_FRAME_MOUSE;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	switch (frame_type) {
 	case UCLOGIC_PARAMS_FRAME_DIAL:
 	case UCLOGIC_PARAMS_FRAME_MOUSE:
@@ -1499,6 +1535,7 @@ static int uclogic_params_ugee_v2_init(struct uclogic_params *params,
 	if (rc)
 		goto cleanup;
 
+<<<<<<< HEAD
 	/* Initialize the battery interface*/
 	if (uclogic_params_ugee_v2_has_battery(hdev)) {
 		rc = uclogic_params_ugee_v2_init_battery(hdev, &p);
@@ -1515,6 +1552,8 @@ static int uclogic_params_ugee_v2_init(struct uclogic_params *params,
 		goto cleanup;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 output:
 	/* Output parameters */
 	memcpy(params, &p, sizeof(*params));
@@ -1764,6 +1803,7 @@ int uclogic_params_init(struct uclogic_params *params,
 	case VID_PID(USB_VENDOR_ID_UGEE,
 		     USB_DEVICE_ID_UGEE_PARBLO_A610_PRO):
 	case VID_PID(USB_VENDOR_ID_UGEE,
+<<<<<<< HEAD
 		     USB_DEVICE_ID_UGEE_XPPEN_TABLET_DECO01_V2):
 	case VID_PID(USB_VENDOR_ID_UGEE,
 		     USB_DEVICE_ID_UGEE_XPPEN_TABLET_DECO_L):
@@ -1773,6 +1813,11 @@ int uclogic_params_init(struct uclogic_params *params,
 		     USB_DEVICE_ID_UGEE_XPPEN_TABLET_DECO_PRO_S):
 	case VID_PID(USB_VENDOR_ID_UGEE,
 		     USB_DEVICE_ID_UGEE_XPPEN_TABLET_DECO_PRO_SW):
+=======
+		     USB_DEVICE_ID_UGEE_XPPEN_TABLET_DECO_L):
+	case VID_PID(USB_VENDOR_ID_UGEE,
+		     USB_DEVICE_ID_UGEE_XPPEN_TABLET_DECO_PRO_S):
+>>>>>>> b7ba80a49124 (Commit)
 		rc = uclogic_params_ugee_v2_init(&p, hdev);
 		if (rc != 0)
 			goto cleanup;

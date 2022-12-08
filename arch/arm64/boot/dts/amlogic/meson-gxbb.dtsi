@@ -300,8 +300,13 @@
 };
 
 &gpio_intc {
+<<<<<<< HEAD
 	compatible = "amlogic,meson-gxbb-gpio-intc",
 		     "amlogic,meson-gpio-intc";
+=======
+	compatible = "amlogic,meson-gpio-intc",
+		     "amlogic,meson-gxbb-gpio-intc";
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 
@@ -427,6 +432,7 @@
 			};
 		};
 
+<<<<<<< HEAD
 		spi_idle_high_pins: spi-idle-high-pins {
 			mux {
 				groups = "spi_sclk";
@@ -441,6 +447,8 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		spi_ss0_pins: spi-ss0 {
 			mux {
 				groups = "spi_ss0";

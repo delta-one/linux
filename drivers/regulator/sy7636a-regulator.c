@@ -127,7 +127,10 @@ MODULE_DEVICE_TABLE(platform, sy7636a_regulator_id_table);
 static struct platform_driver sy7636a_regulator_driver = {
 	.driver = {
 		.name = "sy7636a-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = sy7636a_regulator_probe,
 	.id_table = sy7636a_regulator_id_table,

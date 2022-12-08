@@ -27,6 +27,7 @@
 #include <nvif/if0011.h>
 
 int
+<<<<<<< HEAD
 nvif_conn_event_ctor(struct nvif_conn *conn, const char *name, nvif_event_func func, u8 types,
 		     struct nvif_event *event)
 {
@@ -46,6 +47,8 @@ nvif_conn_event_ctor(struct nvif_conn *conn, const char *name, nvif_event_func f
 }
 
 int
+=======
+>>>>>>> b7ba80a49124 (Commit)
 nvif_conn_hpd_status(struct nvif_conn *conn)
 {
 	struct nvif_conn_hpd_status_v0 args;

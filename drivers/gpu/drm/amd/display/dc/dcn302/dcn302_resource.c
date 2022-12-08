@@ -47,7 +47,10 @@
 
 #include "dcn10/dcn10_resource.h"
 
+<<<<<<< HEAD
 #include "link.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "dce/dce_abm.h"
 #include "dce/dce_audio.h"
 #include "dce/dce_aux.h"
@@ -94,8 +97,12 @@ static const struct dc_debug_options debug_defaults_drv = {
 		.underflow_assert_delay_us = 0xFFFFFFFF,
 		.dwb_fi_phase = -1, // -1 = disable,
 		.dmub_command_table = true,
+<<<<<<< HEAD
 		.use_max_lb = true,
 		.exit_idle_opt_for_cursor_updates = true
+=======
+		.use_max_lb = true
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct dc_debug_options debug_defaults_diags = {
@@ -113,6 +120,7 @@ static const struct dc_debug_options debug_defaults_diags = {
 		.dwb_fi_phase = -1, // -1 = disable
 		.dmub_command_table = true,
 		.enable_tri_buf = true,
+<<<<<<< HEAD
 		.use_max_lb = true
 };
 
@@ -123,6 +131,12 @@ static const struct dc_panel_config panel_config_defaults = {
 		},
 };
 
+=======
+		.disable_psr = true,
+		.use_max_lb = true
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 enum dcn302_clk_src_array_id {
 	DCN302_CLK_SRC_PLL0,
 	DCN302_CLK_SRC_PLL1,
@@ -147,6 +161,11 @@ static const struct resource_caps res_cap_dcn302 = {
 
 static const struct dc_plane_cap plane_cap = {
 		.type = DC_PLANE_TYPE_DCN_UNIVERSAL,
+<<<<<<< HEAD
+=======
+		.blends_with_above = true,
+		.blends_with_below = true,
+>>>>>>> b7ba80a49124 (Commit)
 		.per_pixel_alpha = true,
 		.pixel_format_support = {
 				.argb8888 = true,
@@ -182,6 +201,10 @@ static const struct dc_plane_cap plane_cap = {
 		mm ## reg_name
 
 /* DCN */
+<<<<<<< HEAD
+=======
+#undef BASE_INNER
+>>>>>>> b7ba80a49124 (Commit)
 #define BASE_INNER(seg) DCN_BASE__INST0_SEG ## seg
 
 #define BASE(seg) BASE_INNER(seg)
@@ -214,9 +237,12 @@ static const struct dc_plane_cap plane_cap = {
 		.reg_name[id] = BASE(mm ## block ## id ## _ ## temp_name ## _BASE_IDX) + \
 		mm ## block ## id ## _ ## temp_name
 
+<<<<<<< HEAD
 #define SF_DWB2(reg_name, block, id, field_name, post_fix)	\
 	.field_name = reg_name ## __ ## field_name ## post_fix
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define SRII_MPC_RMU(reg_name, block, id)\
 		.RMU##_##reg_name[id] = BASE(mm ## block ## id ## _ ## reg_name ## _BASE_IDX) + \
 		mm ## block ## id ## _ ## reg_name
@@ -465,7 +491,10 @@ static struct clock_source *dcn302_clock_source_create(struct dc_context *ctx, s
 		return &clk_src->base;
 	}
 
+<<<<<<< HEAD
 	kfree(clk_src);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BREAK_TO_DEBUGGER();
 	return NULL;
 }
@@ -1124,12 +1153,15 @@ static void dcn302_resource_destruct(struct resource_pool *pool)
 
 	if (pool->dccg != NULL)
 		dcn_dccg_destroy(&pool->dccg);
+<<<<<<< HEAD
 
 	if (pool->oem_device != NULL) {
 		struct dc *dc = pool->oem_device->ctx->dc;
 
 		dc->link_srv->destroy_ddc_service(&pool->oem_device);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void dcn302_destroy_resource_pool(struct resource_pool **pool)
@@ -1146,11 +1178,14 @@ void dcn302_update_bw_bounding_box(struct dc *dc, struct clk_bw_params *bw_param
 	DC_FP_END();
 }
 
+<<<<<<< HEAD
 static void dcn302_get_panel_config_defaults(struct dc_panel_config *panel_config)
 {
 	*panel_config = panel_config_defaults;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct resource_funcs dcn302_res_pool_funcs = {
 		.destroy = dcn302_destroy_resource_pool,
 		.link_enc_create = dcn302_link_encoder_create,
@@ -1170,7 +1205,10 @@ static struct resource_funcs dcn302_res_pool_funcs = {
 		.release_post_bldn_3dlut = dcn30_release_post_bldn_3dlut,
 		.update_bw_bounding_box = dcn302_update_bw_bounding_box,
 		.patch_unknown_plane_state = dcn20_patch_unknown_plane_state,
+<<<<<<< HEAD
 		.get_panel_config_defaults = dcn302_get_panel_config_defaults,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct dc_cap_funcs cap_funcs = {
@@ -1221,7 +1259,10 @@ static bool dcn302_resource_construct(
 	int i;
 	struct dc_context *ctx = dc->ctx;
 	struct irq_service_init_data init_data;
+<<<<<<< HEAD
 	struct ddc_service_init_data ddc_init_data = {0};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctx->dc_bios->regs = &bios_regs;
 
@@ -1287,8 +1328,11 @@ static bool dcn302_resource_construct(
 	dc->caps.color.mpc.ogam_rom_caps.hlg = 0;
 	dc->caps.color.mpc.ocsc = 1;
 
+<<<<<<< HEAD
 	dc->caps.dp_hdmi21_pcon_support = true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* read VBIOS LTTPR caps */
 	if (ctx->dc_bios->funcs->get_lttpr_caps) {
 		enum bp_result bp_query_result;
@@ -1503,6 +1547,7 @@ static bool dcn302_resource_construct(
 
 	dc->cap_funcs = cap_funcs;
 
+<<<<<<< HEAD
 	if (dc->ctx->dc_bios->fw_info.oem_i2c_present) {
 		ddc_init_data.ctx = dc->ctx;
 		ddc_init_data.link = NULL;
@@ -1514,6 +1559,8 @@ static bool dcn302_resource_construct(
 		pool->oem_device = NULL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 
 create_fail:

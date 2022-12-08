@@ -650,14 +650,18 @@ extern const struct iwl_cfg iwl_cfg_bz_a0_gf4_a0;
 extern const struct iwl_cfg iwl_cfg_bz_a0_mr_a0;
 extern const struct iwl_cfg iwl_cfg_bz_a0_fm_a0;
 extern const struct iwl_cfg iwl_cfg_bz_a0_fm4_a0;
+<<<<<<< HEAD
 extern const struct iwl_cfg iwl_cfg_bz_a0_fm_b0;
 extern const struct iwl_cfg iwl_cfg_bz_a0_fm4_b0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern const struct iwl_cfg iwl_cfg_gl_a0_fm_a0;
 extern const struct iwl_cfg iwl_cfg_gl_b0_fm_b0;
 extern const struct iwl_cfg iwl_cfg_bz_z0_gf_a0;
 extern const struct iwl_cfg iwl_cfg_bnj_a0_fm_a0;
 extern const struct iwl_cfg iwl_cfg_bnj_a0_fm4_a0;
 extern const struct iwl_cfg iwl_cfg_bnj_a0_gf_a0;
+<<<<<<< HEAD
 extern const struct iwl_cfg iwl_cfg_bnj_b0_gf_a0;
 extern const struct iwl_cfg iwl_cfg_bnj_a0_gf4_a0;
 extern const struct iwl_cfg iwl_cfg_bnj_b0_gf4_a0;
@@ -665,6 +669,11 @@ extern const struct iwl_cfg iwl_cfg_bnj_a0_hr_b0;
 extern const struct iwl_cfg iwl_cfg_bnj_b0_hr_b0;
 extern const struct iwl_cfg iwl_cfg_bnj_b0_fm_b0;
 extern const struct iwl_cfg iwl_cfg_bnj_b0_fm4_b0;
+=======
+extern const struct iwl_cfg iwl_cfg_bnj_a0_gf4_a0;
+extern const struct iwl_cfg iwl_cfg_bnj_a0_hr_b0;
+extern const struct iwl_cfg iwl_cfg_bnj_b0_fm_b0;
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_IWLMVM */
 
 #endif /* __IWL_CONFIG_H__ */

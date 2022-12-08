@@ -33,15 +33,26 @@ static bool __damon_pa_mkold(struct folio *folio, struct vm_area_struct *vma,
 
 static void damon_pa_mkold(unsigned long paddr)
 {
+<<<<<<< HEAD
 	struct folio *folio = damon_get_folio(PHYS_PFN(paddr));
+=======
+	struct folio *folio;
+	struct page *page = damon_get_page(PHYS_PFN(paddr));
+>>>>>>> b7ba80a49124 (Commit)
 	struct rmap_walk_control rwc = {
 		.rmap_one = __damon_pa_mkold,
 		.anon_lock = folio_lock_anon_vma_read,
 	};
 	bool need_lock;
 
+<<<<<<< HEAD
 	if (!folio)
 		return;
+=======
+	if (!page)
+		return;
+	folio = page_folio(page);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!folio_mapped(folio) || !folio_raw_mapping(folio)) {
 		folio_set_idle(folio);
@@ -79,6 +90,7 @@ static void damon_pa_prepare_access_checks(struct damon_ctx *ctx)
 	}
 }
 
+<<<<<<< HEAD
 static bool __damon_pa_young(struct folio *folio, struct vm_area_struct *vma,
 		unsigned long addr, void *arg)
 {
@@ -90,24 +102,55 @@ static bool __damon_pa_young(struct folio *folio, struct vm_area_struct *vma,
 		addr = pvmw.address;
 		if (pvmw.pte) {
 			*accessed = pte_young(*pvmw.pte) ||
+=======
+struct damon_pa_access_chk_result {
+	unsigned long page_sz;
+	bool accessed;
+};
+
+static bool __damon_pa_young(struct folio *folio, struct vm_area_struct *vma,
+		unsigned long addr, void *arg)
+{
+	struct damon_pa_access_chk_result *result = arg;
+	DEFINE_FOLIO_VMA_WALK(pvmw, folio, vma, addr, 0);
+
+	result->accessed = false;
+	result->page_sz = PAGE_SIZE;
+	while (page_vma_mapped_walk(&pvmw)) {
+		addr = pvmw.address;
+		if (pvmw.pte) {
+			result->accessed = pte_young(*pvmw.pte) ||
+>>>>>>> b7ba80a49124 (Commit)
 				!folio_test_idle(folio) ||
 				mmu_notifier_test_young(vma->vm_mm, addr);
 		} else {
 #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+<<<<<<< HEAD
 			*accessed = pmd_young(*pvmw.pmd) ||
 				!folio_test_idle(folio) ||
 				mmu_notifier_test_young(vma->vm_mm, addr);
+=======
+			result->accessed = pmd_young(*pvmw.pmd) ||
+				!folio_test_idle(folio) ||
+				mmu_notifier_test_young(vma->vm_mm, addr);
+			result->page_sz = HPAGE_PMD_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 #else
 			WARN_ON_ONCE(1);
 #endif	/* CONFIG_TRANSPARENT_HUGEPAGE */
 		}
+<<<<<<< HEAD
 		if (*accessed) {
+=======
+		if (result->accessed) {
+>>>>>>> b7ba80a49124 (Commit)
 			page_vma_mapped_walk_done(&pvmw);
 			break;
 		}
 	}
 
 	/* If accessed, stop walking */
+<<<<<<< HEAD
 	return *accessed == false;
 }
 
@@ -117,11 +160,27 @@ static bool damon_pa_young(unsigned long paddr, unsigned long *folio_sz)
 	bool accessed = false;
 	struct rmap_walk_control rwc = {
 		.arg = &accessed,
+=======
+	return !result->accessed;
+}
+
+static bool damon_pa_young(unsigned long paddr, unsigned long *page_sz)
+{
+	struct folio *folio;
+	struct page *page = damon_get_page(PHYS_PFN(paddr));
+	struct damon_pa_access_chk_result result = {
+		.page_sz = PAGE_SIZE,
+		.accessed = false,
+	};
+	struct rmap_walk_control rwc = {
+		.arg = &result,
+>>>>>>> b7ba80a49124 (Commit)
 		.rmap_one = __damon_pa_young,
 		.anon_lock = folio_lock_anon_vma_read,
 	};
 	bool need_lock;
 
+<<<<<<< HEAD
 	if (!folio)
 		return false;
 
@@ -130,39 +189,79 @@ static bool damon_pa_young(unsigned long paddr, unsigned long *folio_sz)
 			accessed = false;
 		else
 			accessed = true;
+=======
+	if (!page)
+		return false;
+	folio = page_folio(page);
+
+	if (!folio_mapped(folio) || !folio_raw_mapping(folio)) {
+		if (folio_test_idle(folio))
+			result.accessed = false;
+		else
+			result.accessed = true;
+		folio_put(folio);
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
 	need_lock = !folio_test_anon(folio) || folio_test_ksm(folio);
+<<<<<<< HEAD
 	if (need_lock && !folio_trylock(folio))
 		goto out;
+=======
+	if (need_lock && !folio_trylock(folio)) {
+		folio_put(folio);
+		return false;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	rmap_walk(folio, &rwc);
 
 	if (need_lock)
 		folio_unlock(folio);
+<<<<<<< HEAD
 
 out:
 	*folio_sz = folio_size(folio);
 	folio_put(folio);
 	return accessed;
+=======
+	folio_put(folio);
+
+out:
+	*page_sz = result.page_sz;
+	return result.accessed;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __damon_pa_check_access(struct damon_region *r)
 {
 	static unsigned long last_addr;
+<<<<<<< HEAD
 	static unsigned long last_folio_sz = PAGE_SIZE;
 	static bool last_accessed;
 
 	/* If the region is in the last checked page, reuse the result */
 	if (ALIGN_DOWN(last_addr, last_folio_sz) ==
 				ALIGN_DOWN(r->sampling_addr, last_folio_sz)) {
+=======
+	static unsigned long last_page_sz = PAGE_SIZE;
+	static bool last_accessed;
+
+	/* If the region is in the last checked page, reuse the result */
+	if (ALIGN_DOWN(last_addr, last_page_sz) ==
+				ALIGN_DOWN(r->sampling_addr, last_page_sz)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (last_accessed)
 			r->nr_accesses++;
 		return;
 	}
 
+<<<<<<< HEAD
 	last_accessed = damon_pa_young(r->sampling_addr, &last_folio_sz);
+=======
+	last_accessed = damon_pa_young(r->sampling_addr, &last_page_sz);
+>>>>>>> b7ba80a49124 (Commit)
 	if (last_accessed)
 		r->nr_accesses++;
 
@@ -185,6 +284,7 @@ static unsigned int damon_pa_check_accesses(struct damon_ctx *ctx)
 	return max_nr_accesses;
 }
 
+<<<<<<< HEAD
 static bool __damos_pa_filter_out(struct damos_filter *filter,
 		struct folio *folio)
 {
@@ -251,16 +351,48 @@ put_folio:
 		folio_put(folio);
 	}
 	applied = reclaim_pages(&folio_list);
+=======
+static unsigned long damon_pa_pageout(struct damon_region *r)
+{
+	unsigned long addr, applied;
+	LIST_HEAD(page_list);
+
+	for (addr = r->ar.start; addr < r->ar.end; addr += PAGE_SIZE) {
+		struct page *page = damon_get_page(PHYS_PFN(addr));
+
+		if (!page)
+			continue;
+
+		ClearPageReferenced(page);
+		test_and_clear_page_young(page);
+		if (isolate_lru_page(page)) {
+			put_page(page);
+			continue;
+		}
+		if (PageUnevictable(page)) {
+			putback_lru_page(page);
+		} else {
+			list_add(&page->lru, &page_list);
+			put_page(page);
+		}
+	}
+	applied = reclaim_pages(&page_list);
+>>>>>>> b7ba80a49124 (Commit)
 	cond_resched();
 	return applied * PAGE_SIZE;
 }
 
 static inline unsigned long damon_pa_mark_accessed_or_deactivate(
+<<<<<<< HEAD
 		struct damon_region *r, struct damos *s, bool mark_accessed)
+=======
+		struct damon_region *r, bool mark_accessed)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long addr, applied = 0;
 
 	for (addr = r->ar.start; addr < r->ar.end; addr += PAGE_SIZE) {
+<<<<<<< HEAD
 		struct folio *folio = damon_get_folio(PHYS_PFN(addr));
 
 		if (!folio)
@@ -276,10 +408,23 @@ static inline unsigned long damon_pa_mark_accessed_or_deactivate(
 		applied += folio_nr_pages(folio);
 put_folio:
 		folio_put(folio);
+=======
+		struct page *page = damon_get_page(PHYS_PFN(addr));
+
+		if (!page)
+			continue;
+		if (mark_accessed)
+			mark_page_accessed(page);
+		else
+			deactivate_page(page);
+		put_page(page);
+		applied++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return applied * PAGE_SIZE;
 }
 
+<<<<<<< HEAD
 static unsigned long damon_pa_mark_accessed(struct damon_region *r,
 	struct damos *s)
 {
@@ -290,6 +435,16 @@ static unsigned long damon_pa_deactivate_pages(struct damon_region *r,
 	struct damos *s)
 {
 	return damon_pa_mark_accessed_or_deactivate(r, s, false);
+=======
+static unsigned long damon_pa_mark_accessed(struct damon_region *r)
+{
+	return damon_pa_mark_accessed_or_deactivate(r, true);
+}
+
+static unsigned long damon_pa_deactivate_pages(struct damon_region *r)
+{
+	return damon_pa_mark_accessed_or_deactivate(r, false);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static unsigned long damon_pa_apply_scheme(struct damon_ctx *ctx,
@@ -298,11 +453,19 @@ static unsigned long damon_pa_apply_scheme(struct damon_ctx *ctx,
 {
 	switch (scheme->action) {
 	case DAMOS_PAGEOUT:
+<<<<<<< HEAD
 		return damon_pa_pageout(r, scheme);
 	case DAMOS_LRU_PRIO:
 		return damon_pa_mark_accessed(r, scheme);
 	case DAMOS_LRU_DEPRIO:
 		return damon_pa_deactivate_pages(r, scheme);
+=======
+		return damon_pa_pageout(r);
+	case DAMOS_LRU_PRIO:
+		return damon_pa_mark_accessed(r);
+	case DAMOS_LRU_DEPRIO:
+		return damon_pa_deactivate_pages(r);
+>>>>>>> b7ba80a49124 (Commit)
 	case DAMOS_STAT:
 		break;
 	default:

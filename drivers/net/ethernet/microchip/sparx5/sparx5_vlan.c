@@ -219,8 +219,13 @@ void sparx5_vlan_port_apply(struct sparx5 *sparx5,
 	spx5_wr(val, sparx5,
 		ANA_CL_VLAN_FILTER_CTRL(port->portno, 0));
 
+<<<<<<< HEAD
 	/* Egress configuration (REW_TAG_CFG): VLAN tag selected via IFH */
 	val = REW_TAG_CTRL_TAG_TPID_CFG_SET(5);
+=======
+	/* Egress configuration (REW_TAG_CFG): VLAN tag type to 8021Q */
+	val = REW_TAG_CTRL_TAG_TPID_CFG_SET(0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (port->vlan_aware) {
 		if (port->vid)
 			/* Tag all frames except when VID == DEFAULT_VLAN */

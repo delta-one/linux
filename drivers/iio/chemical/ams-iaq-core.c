@@ -135,7 +135,12 @@ static const struct iio_info ams_iaqcore_info = {
 	.read_raw	= ams_iaqcore_read_raw,
 };
 
+<<<<<<< HEAD
 static int ams_iaqcore_probe(struct i2c_client *client)
+=======
+static int ams_iaqcore_probe(struct i2c_client *client,
+			     const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct iio_dev *indio_dev;
 	struct ams_iaqcore_data *data;
@@ -179,7 +184,11 @@ static struct i2c_driver ams_iaqcore_driver = {
 		.name	= "ams-iaq-core",
 		.of_match_table = ams_iaqcore_dt_ids,
 	},
+<<<<<<< HEAD
 	.probe_new = ams_iaqcore_probe,
+=======
+	.probe = ams_iaqcore_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = ams_iaqcore_id,
 };
 module_i2c_driver(ams_iaqcore_driver);

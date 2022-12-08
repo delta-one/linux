@@ -404,13 +404,24 @@ static int go7007_start_streaming(struct vb2_queue *q, unsigned int count)
 	go->next_seq = 0;
 	go->active_buf = NULL;
 	go->modet_event_status = 0;
+<<<<<<< HEAD
+=======
+	q->streaming = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	if (go7007_start_encoder(go) < 0)
 		ret = -EIO;
 	else
 		ret = 0;
 	mutex_unlock(&go->hw_lock);
+<<<<<<< HEAD
 	if (ret)
 		return ret;
+=======
+	if (ret) {
+		q->streaming = 0;
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	call_all(&go->v4l2_dev, video, s_stream, 1);
 	v4l2_ctrl_grab(go->mpeg_video_gop_size, true);
 	v4l2_ctrl_grab(go->mpeg_video_gop_closure, true);
@@ -427,6 +438,10 @@ static void go7007_stop_streaming(struct vb2_queue *q)
 	struct go7007 *go = vb2_get_drv_priv(q);
 	unsigned long flags;
 
+<<<<<<< HEAD
+=======
+	q->streaming = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	go7007_stream_stop(go);
 	mutex_lock(&go->hw_lock);
 	go7007_reset_encoder(go);

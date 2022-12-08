@@ -27,26 +27,42 @@
 
 	leds {
 		compatible = "gpio-leds";
+<<<<<<< HEAD
 		led-user-green-1 {
+=======
+		user_green_1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "User_green_1";
 			gpios = <&pio1 3 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "heartbeat";
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-user-green-2 {
+=======
+		user_green_2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "User_green_2";
 			gpios = <&pio4 1 GPIO_ACTIVE_LOW>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-user-green-3 {
+=======
+		user_green_3 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "User_green_3";
 			gpios = <&pio2 1 GPIO_ACTIVE_LOW>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-user-green-4 {
+=======
+		user_green_4 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "User_green_4";
 			gpios = <&pio2 5 GPIO_ACTIVE_LOW>;
 			default-state = "off";

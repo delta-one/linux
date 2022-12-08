@@ -54,11 +54,17 @@ struct mlx5i_priv {
 	struct rdma_netdev rn; /* keep this first */
 	u32 qpn;
 	bool   sub_interface;
+<<<<<<< HEAD
 	u32    num_sub_interfaces;
 	u32    qkey;
 	u16    pkey_index;
 	struct mlx5i_pkey_qpn_ht *qpn_htbl;
 	struct net_device *parent_dev;
+=======
+	u32    qkey;
+	u16    pkey_index;
+	struct mlx5i_pkey_qpn_ht *qpn_htbl;
+>>>>>>> b7ba80a49124 (Commit)
 	char  *mlx5e_priv[];
 };
 
@@ -119,9 +125,12 @@ void mlx5i_sq_xmit(struct mlx5e_txqsq *sq, struct sk_buff *skb,
 		   struct mlx5_av *av, u32 dqpn, u32 dqkey, bool xmit_more);
 void mlx5i_get_stats(struct net_device *dev, struct rtnl_link_stats64 *stats);
 
+<<<<<<< HEAD
 /* Reference management for child to parent interfaces. */
 struct net_device *mlx5i_parent_get(struct net_device *netdev);
 void mlx5i_parent_put(struct net_device *netdev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_MLX5_CORE_IPOIB */
 #endif /* __MLX5E_IPOB_H__ */

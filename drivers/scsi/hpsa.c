@@ -5850,7 +5850,11 @@ static int hpsa_scsi_host_alloc(struct ctlr_info *h)
 {
 	struct Scsi_Host *sh;
 
+<<<<<<< HEAD
 	sh = scsi_host_alloc(&hpsa_driver_template, sizeof(struct ctlr_info));
+=======
+	sh = scsi_host_alloc(&hpsa_driver_template, sizeof(h));
+>>>>>>> b7ba80a49124 (Commit)
 	if (sh == NULL) {
 		dev_err(&h->pdev->dev, "scsi_host_alloc failed\n");
 		return -ENOMEM;
@@ -8925,7 +8929,11 @@ clean1:	/* wq/aer/h */
 		destroy_workqueue(h->monitor_ctlr_wq);
 		h->monitor_ctlr_wq = NULL;
 	}
+<<<<<<< HEAD
 	hpda_free_ctlr_info(h);
+=======
+	kfree(h);
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -9108,6 +9116,10 @@ static void hpsa_remove_one(struct pci_dev *pdev)
 
 	free_percpu(h->lockup_detected);		/* init_one 2 */
 	h->lockup_detected = NULL;			/* init_one 2 */
+<<<<<<< HEAD
+=======
+	/* (void) pci_disable_pcie_error_reporting(pdev); */	/* init_one 1 */
+>>>>>>> b7ba80a49124 (Commit)
 
 	hpda_free_ctlr_info(h);				/* init_one 1 */
 }
@@ -9785,8 +9797,12 @@ static int hpsa_add_sas_host(struct ctlr_info *h)
 	return 0;
 
 free_sas_phy:
+<<<<<<< HEAD
 	sas_phy_free(hpsa_sas_phy->phy);
 	kfree(hpsa_sas_phy);
+=======
+	hpsa_free_sas_phy(hpsa_sas_phy);
+>>>>>>> b7ba80a49124 (Commit)
 free_sas_port:
 	hpsa_free_sas_port(hpsa_sas_port);
 free_sas_node:
@@ -9822,12 +9838,19 @@ static int hpsa_add_sas_device(struct hpsa_sas_node *hpsa_sas_node,
 
 	rc = hpsa_sas_port_add_rphy(hpsa_sas_port, rphy);
 	if (rc)
+<<<<<<< HEAD
 		goto free_sas_rphy;
 
 	return 0;
 
 free_sas_rphy:
 	sas_rphy_free(rphy);
+=======
+		goto free_sas_port;
+
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 free_sas_port:
 	hpsa_free_sas_port(hpsa_sas_port);
 	device->sas_port = NULL;

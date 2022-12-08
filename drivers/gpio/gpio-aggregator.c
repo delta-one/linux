@@ -10,12 +10,20 @@
 #include <linux/bitmap.h>
 #include <linux/bitops.h>
 #include <linux/ctype.h>
+<<<<<<< HEAD
+=======
+#include <linux/gpio.h>
+#include <linux/gpio/consumer.h>
+#include <linux/gpio/driver.h>
+#include <linux/gpio/machine.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/idr.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/mutex.h>
 #include <linux/overflow.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/slab.h>
 #include <linux/spinlock.h>
 #include <linux/string.h>
@@ -25,6 +33,11 @@
 #include <linux/gpio/machine.h>
 
 #define AGGREGATOR_MAX_GPIOS 512
+=======
+#include <linux/spinlock.h>
+#include <linux/string.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * GPIO Aggregator sysfs interface
@@ -66,7 +79,11 @@ static int aggr_parse(struct gpio_aggregator *aggr)
 	unsigned int i, n = 0;
 	int error = 0;
 
+<<<<<<< HEAD
 	bitmap = bitmap_alloc(AGGREGATOR_MAX_GPIOS, GFP_KERNEL);
+=======
+	bitmap = bitmap_alloc(ARCH_NR_GPIOS, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!bitmap)
 		return -ENOMEM;
 
@@ -86,13 +103,21 @@ static int aggr_parse(struct gpio_aggregator *aggr)
 		}
 
 		/* GPIO chip + offset(s) */
+<<<<<<< HEAD
 		error = bitmap_parselist(offsets, bitmap, AGGREGATOR_MAX_GPIOS);
+=======
+		error = bitmap_parselist(offsets, bitmap, ARCH_NR_GPIOS);
+>>>>>>> b7ba80a49124 (Commit)
 		if (error) {
 			pr_err("Cannot parse %s: %d\n", offsets, error);
 			goto free_bitmap;
 		}
 
+<<<<<<< HEAD
 		for_each_set_bit(i, bitmap, AGGREGATOR_MAX_GPIOS) {
+=======
+		for_each_set_bit(i, bitmap, ARCH_NR_GPIOS) {
+>>>>>>> b7ba80a49124 (Commit)
 			error = aggr_add_gpio(aggr, name, i, &n);
 			if (error)
 				goto free_bitmap;

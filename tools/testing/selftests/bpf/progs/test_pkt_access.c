@@ -13,7 +13,10 @@
 #include <linux/pkt_cls.h>
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_endian.h>
+<<<<<<< HEAD
 #include "bpf_misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* llvm will optimize both subprograms into exactly the same BPF assembly
  *
@@ -52,8 +55,11 @@ int get_skb_len(struct __sk_buff *skb)
 {
 	volatile char buf[MAX_STACK] = {};
 
+<<<<<<< HEAD
 	__sink(buf[MAX_STACK - 1]);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return skb->len;
 }
 
@@ -76,8 +82,11 @@ int get_skb_ifindex(int val, struct __sk_buff *skb, int var)
 {
 	volatile char buf[MAX_STACK] = {};
 
+<<<<<<< HEAD
 	__sink(buf[MAX_STACK - 1]);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return skb->ifindex * val * var;
 }
 

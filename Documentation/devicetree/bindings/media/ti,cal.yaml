@@ -75,7 +75,11 @@ properties:
       port@0:
         $ref: /schemas/graph.yaml#/$defs/port-base
         unevaluatedProperties: false
+<<<<<<< HEAD
         description: 'CSI2 Port #0'
+=======
+        description: CSI2 Port #0
+>>>>>>> b7ba80a49124 (Commit)
 
         properties:
           endpoint:
@@ -93,7 +97,11 @@ properties:
       port@1:
         $ref: /schemas/graph.yaml#/$defs/port-base
         unevaluatedProperties: false
+<<<<<<< HEAD
         description: 'CSI2 Port #1'
+=======
+        description: CSI2 Port #1
+>>>>>>> b7ba80a49124 (Commit)
 
         properties:
           endpoint:

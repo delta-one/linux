@@ -49,6 +49,10 @@ struct wpcm450_bank;
 struct wpcm450_gpio {
 	struct gpio_chip	gc;
 	struct wpcm450_pinctrl	*pctrl;
+<<<<<<< HEAD
+=======
+	struct irq_chip		irqc;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct wpcm450_bank *bank;
 };
 
@@ -141,8 +145,12 @@ static void wpcm450_gpio_irq_ack(struct irq_data *d)
 
 static void wpcm450_gpio_irq_mask(struct irq_data *d)
 {
+<<<<<<< HEAD
 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
 	struct wpcm450_gpio *gpio = gpiochip_get_data(gc);
+=======
+	struct wpcm450_gpio *gpio = gpiochip_get_data(irq_data_get_irq_chip_data(d));
+>>>>>>> b7ba80a49124 (Commit)
 	struct wpcm450_pinctrl *pctrl = gpio->pctrl;
 	unsigned long flags;
 	unsigned long even;
@@ -157,14 +165,21 @@ static void wpcm450_gpio_irq_mask(struct irq_data *d)
 	__assign_bit(bit, &even, 0);
 	iowrite32(even, pctrl->gpio_base + WPCM450_GPEVEN);
 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+<<<<<<< HEAD
 
 	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void wpcm450_gpio_irq_unmask(struct irq_data *d)
 {
+<<<<<<< HEAD
 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
 	struct wpcm450_gpio *gpio = gpiochip_get_data(gc);
+=======
+	struct wpcm450_gpio *gpio = gpiochip_get_data(irq_data_get_irq_chip_data(d));
+>>>>>>> b7ba80a49124 (Commit)
 	struct wpcm450_pinctrl *pctrl = gpio->pctrl;
 	unsigned long flags;
 	unsigned long even;
@@ -174,8 +189,11 @@ static void wpcm450_gpio_irq_unmask(struct irq_data *d)
 	if (bit < 0)
 		return;
 
+<<<<<<< HEAD
 	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	raw_spin_lock_irqsave(&pctrl->lock, flags);
 	even = ioread32(pctrl->gpio_base + WPCM450_GPEVEN);
 	__assign_bit(bit, &even, 1);
@@ -298,8 +316,11 @@ static const struct irq_chip wpcm450_gpio_irqchip = {
 	.irq_unmask = wpcm450_gpio_irq_unmask,
 	.irq_mask = wpcm450_gpio_irq_mask,
 	.irq_set_type = wpcm450_gpio_set_irq_type,
+<<<<<<< HEAD
 	.flags = IRQCHIP_IMMUTABLE,
 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void wpcm450_gpio_irqhandler(struct irq_desc *desc)
@@ -628,9 +649,12 @@ struct wpcm450_pincfg {
 	int fn1, reg1, bit1;
 };
 
+<<<<<<< HEAD
 /* Add this value to bit0 or bit1 to indicate that the MFSEL bit is inverted */
 #define INV	BIT(5)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct wpcm450_pincfg pincfg[] = {
 	/*		PIN	  FUNCTION 1		   FUNCTION 2 */
 	WPCM450_PINCFG(0,	 none, NONE, 0,		  none, NONE, 0),
@@ -668,7 +692,11 @@ static const struct wpcm450_pincfg pincfg[] = {
 
 	WPCM450_PINCFG(32,	 scs1, MFSEL1, 3,	  none, NONE, 0),
 	WPCM450_PINCFG(33,	 scs2, MFSEL1, 4,	  none, NONE, 0),
+<<<<<<< HEAD
 	WPCM450_PINCFG(34,	 scs3, MFSEL1, 5 | INV,	  none, NONE, 0),
+=======
+	WPCM450_PINCFG(34,	 scs3, MFSEL1, 5,	  none, NONE, 0),
+>>>>>>> b7ba80a49124 (Commit)
 	WPCM450_PINCFG(35,	 xcs1, MFSEL1, 29,	  none, NONE, 0),
 	WPCM450_PINCFG(36,	 xcs2, MFSEL1, 28,	  none, NONE, 0),
 	WPCM450_PINCFG(37,	 none, NONE, 0,		  none, NONE, 0), /* DVO */
@@ -728,8 +756,13 @@ static const struct wpcm450_pincfg pincfg[] = {
 	WPCM450_PINCFG(90,	r2err, MFSEL1, 15,	  none, NONE, 0),
 	WPCM450_PINCFG(91,	 r2md, MFSEL1, 16,	  none, NONE, 0),
 	WPCM450_PINCFG(92,	 r2md, MFSEL1, 16,	  none, NONE, 0),
+<<<<<<< HEAD
 	WPCM450_PINCFG(93,	 kbcc, MFSEL1, 17 | INV,  none, NONE, 0),
 	WPCM450_PINCFG(94,	 kbcc, MFSEL1, 17 | INV,  none, NONE, 0),
+=======
+	WPCM450_PINCFG(93,	 kbcc, MFSEL1, 17,	  none, NONE, 0),
+	WPCM450_PINCFG(94,	 kbcc, MFSEL1, 17,	  none, NONE, 0),
+>>>>>>> b7ba80a49124 (Commit)
 	WPCM450_PINCFG(95,	 none, NONE, 0,		  none, NONE, 0),
 
 	WPCM450_PINCFG(96,	 none, NONE, 0,		  none, NONE, 0),
@@ -803,6 +836,7 @@ static const struct pinctrl_pin_desc wpcm450_pins[] = {
 	WPCM450_PIN(124), WPCM450_PIN(125), WPCM450_PIN(126), WPCM450_PIN(127),
 };
 
+<<<<<<< HEAD
 /* Helper function to update MFSEL field according to the selected function */
 static void wpcm450_update_mfsel(struct regmap *gcr_regmap, int reg, int bit, int fn, int fn_selected)
 {
@@ -816,6 +850,8 @@ static void wpcm450_update_mfsel(struct regmap *gcr_regmap, int reg, int bit, in
 	regmap_update_bits(gcr_regmap, reg, BIT(bit), value ? BIT(bit) : 0);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Enable mode in pin group */
 static void wpcm450_setfunc(struct regmap *gcr_regmap, const unsigned int *pin,
 			    int npins, int func)
@@ -827,11 +863,21 @@ static void wpcm450_setfunc(struct regmap *gcr_regmap, const unsigned int *pin,
 		cfg = &pincfg[pin[i]];
 		if (func == fn_gpio || cfg->fn0 == func || cfg->fn1 == func) {
 			if (cfg->reg0)
+<<<<<<< HEAD
 				wpcm450_update_mfsel(gcr_regmap, cfg->reg0,
 						     cfg->bit0, cfg->fn0, func);
 			if (cfg->reg1)
 				wpcm450_update_mfsel(gcr_regmap, cfg->reg1,
 						     cfg->bit1, cfg->fn1, func);
+=======
+				regmap_update_bits(gcr_regmap, cfg->reg0,
+						   BIT(cfg->bit0),
+						   (cfg->fn0 == func) ?  BIT(cfg->bit0) : 0);
+			if (cfg->reg1)
+				regmap_update_bits(gcr_regmap, cfg->reg1,
+						   BIT(cfg->bit1),
+						   (cfg->fn1 == func) ?  BIT(cfg->bit1) : 0);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }
@@ -1089,8 +1135,14 @@ static int wpcm450_gpio_register(struct platform_device *pdev,
 		gpio->gc.fwnode = child;
 		gpio->gc.add_pin_ranges = wpcm450_gpio_add_pin_ranges;
 
+<<<<<<< HEAD
 		girq = &gpio->gc.irq;
 		gpio_irq_chip_set_chip(girq, &wpcm450_gpio_irqchip);
+=======
+		gpio->irqc = wpcm450_gpio_irqchip;
+		girq = &gpio->gc.irq;
+		girq->chip = &gpio->irqc;
+>>>>>>> b7ba80a49124 (Commit)
 		girq->parent_handler = wpcm450_gpio_irqhandler;
 		girq->parents = devm_kcalloc(dev, WPCM450_NUM_GPIO_IRQS,
 					     sizeof(*girq->parents), GFP_KERNEL);
@@ -1101,6 +1153,7 @@ static int wpcm450_gpio_register(struct platform_device *pdev,
 
 		girq->num_parents = 0;
 		for (i = 0; i < WPCM450_NUM_GPIO_IRQS; i++) {
+<<<<<<< HEAD
 			int irq;
 
 			irq = fwnode_irq_get(child, i);
@@ -1108,6 +1161,12 @@ static int wpcm450_gpio_register(struct platform_device *pdev,
 				break;
 			if (!irq)
 				continue;
+=======
+			int irq = fwnode_irq_get(child, i);
+
+			if (irq < 0)
+				break;
+>>>>>>> b7ba80a49124 (Commit)
 
 			girq->parents[i] = irq;
 			girq->num_parents++;

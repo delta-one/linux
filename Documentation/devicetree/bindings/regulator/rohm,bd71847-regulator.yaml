@@ -7,7 +7,11 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
 title: ROHM BD71847 and BD71850 Power Management Integrated Circuit regulators
 
 maintainers:
+<<<<<<< HEAD
   - Matti Vaittinen <mazziesaccount@gmail.com>
+=======
+  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+>>>>>>> b7ba80a49124 (Commit)
 
 description: |
   List of regulators provided by this controller. BD71847 regulators node
@@ -22,9 +26,15 @@ description: |
   not be disabled by driver at startup. If BUCK5 is disabled at startup the
   voltage monitoring for LDO5/LDO6 can cause PMIC to reset.
 
+<<<<<<< HEAD
 # The valid names for BD71847 regulator nodes are:
 # BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6
 # LDO1, LDO2, LDO3, LDO4, LDO5, LDO6
+=======
+#The valid names for BD71847 regulator nodes are:
+#BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6
+#LDO1, LDO2, LDO3, LDO4, LDO5, LDO6
+>>>>>>> b7ba80a49124 (Commit)
 
 patternProperties:
   "^LDO[1-6]$":
@@ -54,7 +64,11 @@ patternProperties:
           should be "buck1", ..., "buck6"
 
       rohm,dvs-run-voltage:
+<<<<<<< HEAD
         $ref: /schemas/types.yaml#/definitions/uint32
+=======
+        $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
         minimum: 0
         maximum: 1300000
         description:
@@ -62,7 +76,11 @@ patternProperties:
           bucks which support this. 0 means disabled.
 
       rohm,dvs-idle-voltage:
+<<<<<<< HEAD
         $ref: /schemas/types.yaml#/definitions/uint32
+=======
+        $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
         minimum: 0
         maximum: 1300000
         description:
@@ -70,7 +88,11 @@ patternProperties:
           bucks which support this. 0 means disabled.
 
       rohm,dvs-suspend-voltage:
+<<<<<<< HEAD
         $ref: /schemas/types.yaml#/definitions/uint32
+=======
+        $ref: "/schemas/types.yaml#/definitions/uint32"
+>>>>>>> b7ba80a49124 (Commit)
         minimum: 0
         maximum: 1300000
         description:

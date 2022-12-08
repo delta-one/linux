@@ -106,8 +106,11 @@ static inline void efi_fpu_end(void)
 
 extern asmlinkage u64 __efi_call(void *fp, ...);
 
+<<<<<<< HEAD
 extern bool efi_disable_ibt_for_runtime;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define efi_call(...) ({						\
 	__efi_nargs_check(efi_call, 7, __VA_ARGS__);			\
 	__efi_call(__VA_ARGS__);					\
@@ -123,7 +126,11 @@ extern bool efi_disable_ibt_for_runtime;
 
 #undef arch_efi_call_virt
 #define arch_efi_call_virt(p, f, args...) ({				\
+<<<<<<< HEAD
 	u64 ret, ibt = ibt_save(efi_disable_ibt_for_runtime);		\
+=======
+	u64 ret, ibt = ibt_save();					\
+>>>>>>> b7ba80a49124 (Commit)
 	ret = efi_call((void *)p->f, args);				\
 	ibt_restore(ibt);						\
 	ret;								\
@@ -180,7 +187,11 @@ struct efi_setup_data {
 extern u64 efi_setup;
 
 #ifdef CONFIG_EFI
+<<<<<<< HEAD
 extern u64 __efi64_thunk(u32, ...);
+=======
+extern efi_status_t __efi64_thunk(u32, ...);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define efi64_thunk(...) ({						\
 	u64 __pad[3]; /* must have space for 3 args on the stack */	\
@@ -230,6 +241,7 @@ static inline bool efi_is_native(void)
 	return efi_is_64bit();
 }
 
+<<<<<<< HEAD
 #define efi_table_attr(inst, attr)					\
 	(efi_is_native() ? (inst)->attr					\
 			 : efi_mixed_table_attr((inst), attr))
@@ -239,6 +251,18 @@ static inline bool efi_is_native(void)
 		_Generic(inst->mixed_mode.attr,				\
 		u32:		(unsigned long)(inst->mixed_mode.attr),	\
 		default:	(inst->mixed_mode.attr))
+=======
+#define efi_mixed_mode_cast(attr)					\
+	__builtin_choose_expr(						\
+		__builtin_types_compatible_p(u32, __typeof__(attr)),	\
+			(unsigned long)(attr), (attr))
+
+#define efi_table_attr(inst, attr)					\
+	(efi_is_native()						\
+		? inst->attr						\
+		: (__typeof__(inst->attr))				\
+			efi_mixed_mode_cast(inst->mixed_mode.attr))
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * The following macros allow translating arguments if necessary from native to
@@ -326,6 +350,7 @@ static inline u32 efi64_convert_status(efi_status_t status)
 #define __efi64_argmap_set_memory_space_attributes(phys, size, flags) \
 	(__efi64_split(phys), __efi64_split(size), __efi64_split(flags))
 
+<<<<<<< HEAD
 /* file protocol */
 #define __efi64_argmap_open(prot, newh, fname, mode, attr) \
 	((prot), efi64_zero_upper(newh), (fname), __efi64_split(mode), \
@@ -347,6 +372,8 @@ static inline u32 efi64_convert_status(efi_status_t status)
 #define __efi64_argmap_clear_memory_attributes(protocol, phys, size, flags) \
 	((protocol), __efi64_split(phys), __efi64_split(size), __efi64_split(flags))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The macros below handle the plumbing for the argument mapping. To add a
  * mapping for a specific EFI method, simply define a macro
@@ -366,6 +393,7 @@ static inline u32 efi64_convert_status(efi_status_t status)
 #define __efi_eat(...)
 #define __efi_eval(...) __VA_ARGS__
 
+<<<<<<< HEAD
 static inline efi_status_t __efi64_widen_efi_status(u64 status)
 {
 	/* use rotate to move the value of bit #31 into position #63 */
@@ -387,6 +415,33 @@ static inline efi_status_t __efi64_widen_efi_status(u64 status)
 	default:							\
 		(__typeof__(inst->func(__VA_ARGS__)))			\
 			__efi64_thunk_map(inst, func, ##__VA_ARGS__))
+=======
+/* The three macros below handle dispatching via the thunk if needed */
+
+#define efi_call_proto(inst, func, ...)					\
+	(efi_is_native()						\
+		? inst->func(inst, ##__VA_ARGS__)			\
+		: __efi64_thunk_map(inst, func, inst, ##__VA_ARGS__))
+
+#define efi_bs_call(func, ...)						\
+	(efi_is_native()						\
+		? efi_system_table->boottime->func(__VA_ARGS__)		\
+		: __efi64_thunk_map(efi_table_attr(efi_system_table,	\
+						   boottime),		\
+				    func, __VA_ARGS__))
+
+#define efi_rt_call(func, ...)						\
+	(efi_is_native()						\
+		? efi_system_table->runtime->func(__VA_ARGS__)		\
+		: __efi64_thunk_map(efi_table_attr(efi_system_table,	\
+						   runtime),		\
+				    func, __VA_ARGS__))
+
+#define efi_dxe_call(func, ...)						\
+	(efi_is_native()						\
+		? efi_dxe_table->func(__VA_ARGS__)			\
+		: __efi64_thunk_map(efi_dxe_table, func, __VA_ARGS__))
+>>>>>>> b7ba80a49124 (Commit)
 
 #else /* CONFIG_EFI_MIXED */
 
@@ -418,11 +473,15 @@ static inline void efi_reserve_boot_services(void)
 
 #ifdef CONFIG_EFI_FAKE_MEMMAP
 extern void __init efi_fake_memmap_early(void);
+<<<<<<< HEAD
 extern void __init efi_fake_memmap(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline void efi_fake_memmap_early(void)
 {
 }
+<<<<<<< HEAD
 
 static inline void efi_fake_memmap(void)
 {
@@ -466,4 +525,11 @@ static inline int efi_runtime_map_copy(void *buf, size_t bufsz)
 
 #endif
 
+=======
+#endif
+
+#define arch_ima_efi_boot_mode	\
+	({ extern struct boot_params boot_params; boot_params.secure_boot; })
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_X86_EFI_H */

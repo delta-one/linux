@@ -43,8 +43,13 @@ static void ti_thermal_work(struct work_struct *work)
 
 	thermal_zone_device_update(data->ti_thermal, THERMAL_EVENT_UNSPECIFIED);
 
+<<<<<<< HEAD
 	dev_dbg(data->bgp->dev, "updated thermal zone %s\n",
 		thermal_zone_device_type(data->ti_thermal));
+=======
+	dev_dbg(&data->ti_thermal->device, "updated thermal zone %s\n",
+		data->ti_thermal->type);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -68,7 +73,11 @@ static inline int ti_thermal_hotspot_temperature(int t, int s, int c)
 static inline int __ti_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
 {
 	struct thermal_zone_device *pcb_tz = NULL;
+<<<<<<< HEAD
 	struct ti_thermal_data *data = thermal_zone_device_priv(tz);
+=======
+	struct ti_thermal_data *data = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ti_bandgap *bgp;
 	const struct ti_temp_sensor *s;
 	int ret, tmp, slope, constant;
@@ -109,7 +118,11 @@ static inline int __ti_thermal_get_temp(struct thermal_zone_device *tz, int *tem
 
 static int __ti_thermal_get_trend(struct thermal_zone_device *tz, int trip, enum thermal_trend *trend)
 {
+<<<<<<< HEAD
 	struct ti_thermal_data *data = thermal_zone_device_priv(tz);
+=======
+	struct ti_thermal_data *data = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ti_bandgap *bgp;
 	int id, tr, ret = 0;
 
@@ -182,7 +195,11 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
 	ti_bandgap_set_sensor_data(bgp, id, data);
 	ti_bandgap_write_update_interval(bgp, data->sensor_id, interval);
 
+<<<<<<< HEAD
 	if (devm_thermal_add_hwmon_sysfs(bgp->dev, data->ti_thermal))
+=======
+	if (devm_thermal_add_hwmon_sysfs(data->ti_thermal))
+>>>>>>> b7ba80a49124 (Commit)
 		dev_warn(bgp->dev, "failed to add hwmon sysfs attributes\n");
 
 	return 0;

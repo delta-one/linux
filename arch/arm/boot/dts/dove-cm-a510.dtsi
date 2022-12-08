@@ -101,7 +101,11 @@
 		pinctrl-0 = <&pmx_nand_gpo>;
 		pinctrl-names = "default";
 
+<<<<<<< HEAD
 		led-system {
+=======
+		system {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "cm-a510:system:green";
 			gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
 			default-state = "keep";
@@ -124,6 +128,7 @@
 };
 
 /* Optional RTL8211D GbE PHY on SMI address 0x03 */
+<<<<<<< HEAD
 &mdio {
 	ethphy: ethernet-phy@3 {
 		reg = <3>;
@@ -135,6 +140,11 @@
 	ethernet-port@0 {
 		phy-handle = <&ethphy>;
 	};
+=======
+&ethphy {
+	reg = <3>;
+	status = "disabled";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &i2c0 {

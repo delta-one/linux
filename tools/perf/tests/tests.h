@@ -147,8 +147,11 @@ DECLARE_SUITE(expand_cgroup_events);
 DECLARE_SUITE(perf_time_to_tsc);
 DECLARE_SUITE(dlfilter);
 DECLARE_SUITE(sigtrap);
+<<<<<<< HEAD
 DECLARE_SUITE(event_groups);
 DECLARE_SUITE(symbols);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * PowerPC and S390 do not support creation of instruction breakpoints using the
@@ -182,6 +185,7 @@ int test__arch_unwind_sample(struct perf_sample *sample,
 DECLARE_SUITE(vectors_page);
 #endif
 
+<<<<<<< HEAD
 /*
  * Define test workloads to be used in test suites.
  */
@@ -211,4 +215,6 @@ DECLARE_WORKLOAD(datasym);
 
 extern const char *dso_to_test;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* TESTS_H */

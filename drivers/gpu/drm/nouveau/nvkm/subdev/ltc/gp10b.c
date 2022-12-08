@@ -50,8 +50,12 @@ gp10b_ltc = {
 	.intr = gp100_ltc_intr,
 	.cbc_clear = gm107_ltc_cbc_clear,
 	.cbc_wait = gm107_ltc_cbc_wait,
+<<<<<<< HEAD
 	.zbc_color = 16,
 	.zbc_depth = 16,
+=======
+	.zbc = 16,
+>>>>>>> b7ba80a49124 (Commit)
 	.zbc_clear_color = gm107_ltc_zbc_clear_color,
 	.zbc_clear_depth = gm107_ltc_zbc_clear_depth,
 	.zbc_clear_stencil = gp102_ltc_zbc_clear_stencil,

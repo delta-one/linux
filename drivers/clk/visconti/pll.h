@@ -15,6 +15,10 @@
 
 struct visconti_pll_provider {
 	void __iomem *reg_base;
+<<<<<<< HEAD
+=======
+	struct regmap *regmap;
+>>>>>>> b7ba80a49124 (Commit)
 	struct clk_hw_onecell_data clk_data;
 	struct device_node *node;
 };

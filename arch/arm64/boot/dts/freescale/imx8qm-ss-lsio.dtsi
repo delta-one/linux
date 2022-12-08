@@ -6,28 +6,38 @@
 
 &lsio_gpio0 {
 	compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
+<<<<<<< HEAD
 	gpio-ranges = <&iomuxc 0 0 6>,
 		      <&iomuxc 6 7 22>,
 		      <&iomuxc 28 36 4>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lsio_gpio1 {
 	compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
+<<<<<<< HEAD
 	gpio-ranges = <&iomuxc 0 40 4>,
 		      <&iomuxc 4 50 12>,
 		      <&iomuxc 16 63 8>,
 		      <&iomuxc 24 72 8>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lsio_gpio2 {
 	compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
+<<<<<<< HEAD
 	gpio-ranges = <&iomuxc 0 80 4>,
 		      <&iomuxc 4 85 18>,
 		      <&iomuxc 22 104 10>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lsio_gpio3 {
 	compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
+<<<<<<< HEAD
 	gpio-ranges = <&iomuxc 0 114 2>,
 		      <&iomuxc 2 117 16>,
 		      <&iomuxc 18 141 1>,
@@ -40,20 +50,26 @@
 		      <&iomuxc 25 134 1>,
 		      <&iomuxc 26 142 3>,
 		      <&iomuxc 29 146 3>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lsio_gpio4 {
 	compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
+<<<<<<< HEAD
 	gpio-ranges = <&iomuxc 0 149 3>,
 		      <&iomuxc 3 153 4>,
 		      <&iomuxc 7 158 6>,
 		      <&iomuxc 13 165 6>,
 		      <&iomuxc 19 172 8>,
 		      <&iomuxc 27 198 5>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lsio_gpio5 {
 	compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
+<<<<<<< HEAD
 	gpio-ranges = <&iomuxc 0 203 1>,
 		      <&iomuxc 1 205 2>,
 		      <&iomuxc 3 210 11>,
@@ -62,12 +78,17 @@
 		      <&iomuxc 19 230 5>,
 		      <&iomuxc 24 236 6>,
 		      <&iomuxc 30 243 2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lsio_gpio6 {
 	compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
+<<<<<<< HEAD
 	gpio-ranges = <&iomuxc 0 245 10>,
 		      <&iomuxc 10 256 12>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lsio_gpio7 {

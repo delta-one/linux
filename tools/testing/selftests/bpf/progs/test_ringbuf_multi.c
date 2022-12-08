@@ -59,6 +59,10 @@ int test_ringbuf(void *ctx)
 	int cur_pid = bpf_get_current_pid_tgid() >> 32;
 	struct sample *sample;
 	void *rb;
+<<<<<<< HEAD
+=======
+	int zero = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (cur_pid != pid)
 		return 0;

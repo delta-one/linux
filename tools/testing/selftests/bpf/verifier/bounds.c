@@ -753,6 +753,7 @@
 	.result_unpriv = REJECT,
 	.result = ACCEPT,
 },
+<<<<<<< HEAD
 {
 	"bound check with JMP_JLT for crossing 64-bit signed boundary",
 	.insns = {
@@ -874,3 +875,5 @@
 	.result = REJECT,
 	.prog_type = BPF_PROG_TYPE_XDP,
 },
+=======
+>>>>>>> b7ba80a49124 (Commit)

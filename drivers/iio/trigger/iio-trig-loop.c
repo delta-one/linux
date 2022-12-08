@@ -46,7 +46,11 @@ static int iio_loop_thread(void *data)
 	set_freezable();
 
 	do {
+<<<<<<< HEAD
 		iio_trigger_poll_nested(trig);
+=======
+		iio_trigger_poll_chained(trig);
+>>>>>>> b7ba80a49124 (Commit)
 	} while (likely(!kthread_freezable_should_stop(NULL)));
 
 	return 0;

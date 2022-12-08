@@ -274,7 +274,11 @@ value will be the injected file descriptor number.
 The notifying process can be preempted, resulting in the notification being
 aborted. This can be problematic when trying to take actions on behalf of the
 notifying process that are long-running and typically retryable (mounting a
+<<<<<<< HEAD
 filesystem). Alternatively, at filter installation time, the
+=======
+filesytem). Alternatively, at filter installation time, the
+>>>>>>> b7ba80a49124 (Commit)
 ``SECCOMP_FILTER_FLAG_WAIT_KILLABLE_RECV`` flag can be set. This flag makes it
 such that when a user notification is received by the supervisor, the notifying
 process will ignore non-fatal signals until the response is sent. Signals that

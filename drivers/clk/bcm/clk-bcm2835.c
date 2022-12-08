@@ -30,7 +30,10 @@
 #include <linux/debugfs.h>
 #include <linux/delay.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/math.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/of_device.h>
 #include <linux/platform_device.h>
@@ -503,8 +506,11 @@ struct bcm2835_clock_data {
 	bool low_jitter;
 
 	u32 tcnt_mux;
+<<<<<<< HEAD
 
 	bool round_up;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct bcm2835_gate_data {
@@ -969,9 +975,15 @@ static u32 bcm2835_clock_choose_div(struct clk_hw *hw,
 	return div;
 }
 
+<<<<<<< HEAD
 static unsigned long bcm2835_clock_rate_from_divisor(struct bcm2835_clock *clock,
 						     unsigned long parent_rate,
 						     u32 div)
+=======
+static long bcm2835_clock_rate_from_divisor(struct bcm2835_clock *clock,
+					    unsigned long parent_rate,
+					    u32 div)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct bcm2835_clock_data *data = clock->data;
 	u64 temp;
@@ -996,6 +1008,7 @@ static unsigned long bcm2835_clock_rate_from_divisor(struct bcm2835_clock *clock
 	return temp;
 }
 
+<<<<<<< HEAD
 static unsigned long bcm2835_round_rate(unsigned long rate)
 {
 	unsigned long scaler;
@@ -1017,13 +1030,18 @@ static unsigned long bcm2835_round_rate(unsigned long rate)
 	return rate;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned long bcm2835_clock_get_rate(struct clk_hw *hw,
 					    unsigned long parent_rate)
 {
 	struct bcm2835_clock *clock = bcm2835_clock_from_hw(hw);
 	struct bcm2835_cprman *cprman = clock->cprman;
 	const struct bcm2835_clock_data *data = clock->data;
+<<<<<<< HEAD
 	unsigned long rate;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 div;
 
 	if (data->int_bits == 0 && data->frac_bits == 0)
@@ -1031,12 +1049,16 @@ static unsigned long bcm2835_clock_get_rate(struct clk_hw *hw,
 
 	div = cprman_read(cprman, data->div_reg);
 
+<<<<<<< HEAD
 	rate = bcm2835_clock_rate_from_divisor(clock, parent_rate, div);
 
 	if (data->round_up)
 		rate = bcm2835_round_rate(rate);
 
 	return rate;
+=======
+	return bcm2835_clock_rate_from_divisor(clock, parent_rate, div);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void bcm2835_clock_wait_busy(struct bcm2835_clock *clock)
@@ -1814,7 +1836,11 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
 		.load_mask = CM_PLLC_LOADPER,
 		.hold_mask = CM_PLLC_HOLDPER,
 		.fixed_divider = 1,
+<<<<<<< HEAD
 		.flags = CLK_IS_CRITICAL | CLK_SET_RATE_PARENT),
+=======
+		.flags = CLK_SET_RATE_PARENT),
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * PLLD is the display PLL, used to drive DSI display panels.
@@ -2173,8 +2199,12 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
 		.div_reg = CM_UARTDIV,
 		.int_bits = 10,
 		.frac_bits = 12,
+<<<<<<< HEAD
 		.tcnt_mux = 28,
 		.round_up = true),
+=======
+		.tcnt_mux = 28),
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* TV encoder clock.  Only operating frequency is 108Mhz.  */
 	[BCM2835_CLOCK_VEC]	= REGISTER_PER_CLK(
@@ -2350,3 +2380,7 @@ builtin_platform_driver(bcm2835_clk_driver);
 
 MODULE_AUTHOR("Eric Anholt <eric@anholt.net>");
 MODULE_DESCRIPTION("BCM2835 clock driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

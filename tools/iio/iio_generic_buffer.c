@@ -715,12 +715,21 @@ int main(int argc, char **argv)
 				continue;
 			}
 
+<<<<<<< HEAD
 		} else {
 			usleep(timedelay);
 		}
 
 		toread = buf_len;
 
+=======
+			toread = buf_len;
+		} else {
+			usleep(timedelay);
+			toread = 64;
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		read_size = read(buf_fd, data, toread * scan_size);
 		if (read_size < 0) {
 			if (errno == EAGAIN) {

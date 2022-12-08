@@ -29,6 +29,7 @@ int show_unhandled_signals = 1;
 
 static DEFINE_SPINLOCK(die_lock);
 
+<<<<<<< HEAD
 static void dump_kernel_instr(const char *loglvl, struct pt_regs *regs)
 {
 	char str[sizeof("0000 ") * 12 + 2 + 1], *p = str;
@@ -50,21 +51,31 @@ static void dump_kernel_instr(const char *loglvl, struct pt_regs *regs)
 	printk("%sCode: %s\n", loglvl, str);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void die(struct pt_regs *regs, const char *str)
 {
 	static int die_counter;
 	int ret;
+<<<<<<< HEAD
 	long cause;
 	unsigned long flags;
 
 	oops_enter();
 
 	spin_lock_irqsave(&die_lock, flags);
+=======
+
+	oops_enter();
+
+	spin_lock_irq(&die_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	console_verbose();
 	bust_spinlocks(1);
 
 	pr_emerg("%s [#%d]\n", str, ++die_counter);
 	print_modules();
+<<<<<<< HEAD
 	if (regs) {
 		show_regs(regs);
 		dump_kernel_instr(KERN_EMERG, regs);
@@ -74,11 +85,22 @@ void die(struct pt_regs *regs, const char *str)
 	ret = notify_die(DIE_OOPS, str, regs, 0, cause, SIGSEGV);
 
 	if (kexec_should_crash(current))
+=======
+	show_regs(regs);
+
+	ret = notify_die(DIE_OOPS, str, regs, 0, regs->cause, SIGSEGV);
+
+	if (regs && kexec_should_crash(current))
+>>>>>>> b7ba80a49124 (Commit)
 		crash_kexec(regs);
 
 	bust_spinlocks(0);
 	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
+<<<<<<< HEAD
 	spin_unlock_irqrestore(&die_lock, flags);
+=======
+	spin_unlock_irq(&die_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	oops_exit();
 
 	if (in_interrupt())
@@ -232,6 +254,7 @@ int is_valid_bugaddr(unsigned long pc)
 #endif /* CONFIG_GENERIC_BUG */
 
 #ifdef CONFIG_VMAP_STACK
+<<<<<<< HEAD
 /*
  * Extra stack space that allows us to provide panic messages when the kernel
  * has overflowed its stack.
@@ -254,6 +277,15 @@ long shadow_stack[SHADOW_OVERFLOW_STACK_SIZE/sizeof(long)] __aligned(16);
  */
 unsigned long spin_shadow_stack;
 
+=======
+static DEFINE_PER_CPU(unsigned long [OVERFLOW_STACK_SIZE/sizeof(long)],
+		overflow_stack)__aligned(16);
+/*
+ * shadow stack, handled_ kernel_ stack_ overflow(in kernel/entry.S) is used
+ * to get per-cpu overflow stack(get_overflow_stack).
+ */
+long shadow_stack[SHADOW_OVERFLOW_STACK_SIZE/sizeof(long)];
+>>>>>>> b7ba80a49124 (Commit)
 asmlinkage unsigned long get_overflow_stack(void)
 {
 	return (unsigned long)this_cpu_ptr(overflow_stack) +
@@ -265,6 +297,7 @@ asmlinkage void handle_bad_stack(struct pt_regs *regs)
 	unsigned long tsk_stk = (unsigned long)current->stack;
 	unsigned long ovf_stk = (unsigned long)this_cpu_ptr(overflow_stack);
 
+<<<<<<< HEAD
 	/*
 	 * We're done with the shadow stack by this point, as we're on the
 	 * overflow stack.  Tell any other concurrent overflowing harts that
@@ -274,6 +307,8 @@ asmlinkage void handle_bad_stack(struct pt_regs *regs)
 	 */
 	smp_store_release(&spin_shadow_stack, 0);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	console_verbose();
 
 	pr_emerg("Insufficient stack space to handle exception!\n");

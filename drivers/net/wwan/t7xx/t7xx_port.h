@@ -99,6 +99,10 @@ struct t7xx_port_conf {
 struct t7xx_port {
 	/* Members not initialized in definition */
 	const struct t7xx_port_conf	*port_conf;
+<<<<<<< HEAD
+=======
+	struct wwan_port		*wwan_port;
+>>>>>>> b7ba80a49124 (Commit)
 	struct t7xx_pci_dev		*t7xx_dev;
 	struct device			*dev;
 	u16				seq_nums[2];	/* TX/RX sequence numbers */
@@ -121,6 +125,7 @@ struct t7xx_port {
 	int				rx_length_th;
 	bool				chan_enable;
 	struct task_struct		*thread;
+<<<<<<< HEAD
 	union {
 		struct {
 			struct wwan_port		*wwan_port;
@@ -129,6 +134,8 @@ struct t7xx_port {
 			struct rchan			*relaych;
 		} log;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct sk_buff *t7xx_port_alloc_skb(int payload);

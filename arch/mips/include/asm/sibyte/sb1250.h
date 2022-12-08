@@ -32,6 +32,10 @@ extern unsigned int soc_type;
 extern unsigned int periph_rev;
 extern unsigned int zbbus_mhz;
 
+<<<<<<< HEAD
+=======
+extern void sb1250_time_init(void);
+>>>>>>> b7ba80a49124 (Commit)
 extern void sb1250_mask_irq(int cpu, int irq);
 extern void sb1250_unmask_irq(int cpu, int irq);
 

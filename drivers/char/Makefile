@@ -35,6 +35,10 @@ obj-$(CONFIG_TELCLOCK)		+= tlclk.o
 
 obj-$(CONFIG_MWAVE)		+= mwave/
 obj-y				+= agp/
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_PCMCIA)		+= pcmcia/
+>>>>>>> b7ba80a49124 (Commit)
 
 obj-$(CONFIG_HANGCHECK_TIMER)	+= hangcheck-timer.o
 obj-$(CONFIG_TCG_TPM)		+= tpm/

@@ -280,7 +280,11 @@ static void panel_simple_wait(ktime_t start_ktime, unsigned int min_ms)
 		return;
 
 	min_ktime = ktime_add(start_ktime, ms_to_ktime(min_ms));
+<<<<<<< HEAD
 	now_ktime = ktime_get_boottime();
+=======
+	now_ktime = ktime_get();
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ktime_before(now_ktime, min_ktime))
 		msleep(ktime_to_ms(ktime_sub(min_ktime, now_ktime)) + 1);
@@ -307,7 +311,11 @@ static int panel_simple_suspend(struct device *dev)
 
 	gpiod_set_value_cansleep(p->enable_gpio, 0);
 	regulator_disable(p->supply);
+<<<<<<< HEAD
 	p->unprepared_time = ktime_get_boottime();
+=======
+	p->unprepared_time = ktime_get();
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(p->edid);
 	p->edid = NULL;
@@ -351,7 +359,11 @@ static int panel_simple_resume(struct device *dev)
 	if (p->desc->delay.prepare)
 		msleep(p->desc->delay.prepare);
 
+<<<<<<< HEAD
 	p->prepared_time = ktime_get_boottime();
+=======
+	p->prepared_time = ktime_get();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -575,9 +587,18 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
 
 	panel->enable_gpio = devm_gpiod_get_optional(dev, "enable",
 						     GPIOD_OUT_LOW);
+<<<<<<< HEAD
 	if (IS_ERR(panel->enable_gpio))
 		return dev_err_probe(dev, PTR_ERR(panel->enable_gpio),
 				     "failed to request GPIO\n");
+=======
+	if (IS_ERR(panel->enable_gpio)) {
+		err = PTR_ERR(panel->enable_gpio);
+		if (err != -EPROBE_DEFER)
+			dev_err(dev, "failed to request GPIO: %d\n", err);
+		return err;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = of_drm_get_panel_orientation(dev->of_node, &panel->orientation);
 	if (err) {
@@ -2500,7 +2521,10 @@ static const struct display_timing logictechno_lt161010_2nh_timing = {
 static const struct panel_desc logictechno_lt161010_2nh = {
 	.timings = &logictechno_lt161010_2nh_timing,
 	.num_timings = 1,
+<<<<<<< HEAD
 	.bpc = 6,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.size = {
 		.width = 154,
 		.height = 86,
@@ -2530,7 +2554,10 @@ static const struct display_timing logictechno_lt170410_2whc_timing = {
 static const struct panel_desc logictechno_lt170410_2whc = {
 	.timings = &logictechno_lt170410_2whc_timing,
 	.num_timings = 1,
+<<<<<<< HEAD
 	.bpc = 8,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.size = {
 		.width = 217,
 		.height = 136,
@@ -2700,6 +2727,7 @@ static const struct panel_desc multi_inno_mi0700s4t_6 = {
 	.connector_type = DRM_MODE_CONNECTOR_DPI,
 };
 
+<<<<<<< HEAD
 static const struct display_timing multi_inno_mi0800ft_9_timing = {
 	.pixelclock = { 32000000, 40000000, 50000000 },
 	.hactive = { 800, 800, 800 },
@@ -2730,6 +2758,8 @@ static const struct panel_desc multi_inno_mi0800ft_9 = {
 	.connector_type = DRM_MODE_CONNECTOR_DPI,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct display_timing multi_inno_mi1010ait_1cp_timing = {
 	.pixelclock = { 68900000, 70000000, 73400000 },
 	.hactive = { 1280, 1280, 1280 },
@@ -4162,9 +4192,12 @@ static const struct of_device_id platform_of_match[] = {
 		.compatible = "multi-inno,mi0700s4t-6",
 		.data = &multi_inno_mi0700s4t_6,
 	}, {
+<<<<<<< HEAD
 		.compatible = "multi-inno,mi0800ft-9",
 		.data = &multi_inno_mi0800ft_9,
 	}, {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.compatible = "multi-inno,mi1010ait-1cp",
 		.data = &multi_inno_mi1010ait_1cp,
 	}, {

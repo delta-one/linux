@@ -35,7 +35,11 @@
 #include <drm/drm_edid.h>
 #include <drm/drm_encoder.h>
 #include <drm/drm_fixed.h>
+<<<<<<< HEAD
 #include <drm/drm_modeset_helper_vtables.h>
+=======
+#include <drm/drm_crtc_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/i2c.h>
 #include <linux/i2c-algo-bit.h>
 

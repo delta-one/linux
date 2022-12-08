@@ -15,6 +15,10 @@
 #include <linux/inet.h>
 #include <linux/pagemap.h>
 #include <linux/mount.h>
+<<<<<<< HEAD
+=======
+#include <linux/idr.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sched.h>
 #include <linux/slab.h>
 #include <linux/statfs.h>
@@ -64,8 +68,12 @@ v9fs_fill_super(struct super_block *sb, struct v9fs_session_info *v9ses,
 	sb->s_magic = V9FS_MAGIC;
 	if (v9fs_proto_dotl(v9ses)) {
 		sb->s_op = &v9fs_super_ops_dotl;
+<<<<<<< HEAD
 		if (!(v9ses->flags & V9FS_NO_XATTR))
 			sb->s_xattr = v9fs_xattr_handlers;
+=======
+		sb->s_xattr = v9fs_xattr_handlers;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		sb->s_op = &v9fs_super_ops;
 		sb->s_time_max = U32_MAX;
@@ -85,7 +93,13 @@ v9fs_fill_super(struct super_block *sb, struct v9fs_session_info *v9ses,
 		sb->s_bdi->io_pages = v9ses->maxdata >> PAGE_SHIFT;
 	}
 
+<<<<<<< HEAD
 	sb->s_flags |= SB_ACTIVE;
+=======
+	sb->s_flags |= SB_ACTIVE | SB_DIRSYNC;
+	if (!v9ses->cache)
+		sb->s_flags |= SB_SYNCHRONOUS;
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_9P_FS_POSIX_ACL
 	if ((v9ses->flags & V9FS_ACL_MASK) == V9FS_POSIX_ACL)

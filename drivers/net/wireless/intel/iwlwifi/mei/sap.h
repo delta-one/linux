@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
  * Copyright (C) 2021 - 2022 Intel Corporation
+=======
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Copyright (C) 2021 Intel Corporation
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #ifndef __sap_h__
@@ -25,7 +31,11 @@
  *
  * Since this messaging system cannot support high amounts of
  * traffic, iwlwifi and the CSME firmware's WLAN driver have an
+<<<<<<< HEAD
  * additional communication pipe to exchange information. The body
+=======
+ * addtional communication pipe to exchange information. The body
+>>>>>>> b7ba80a49124 (Commit)
  * of the message is copied to a shared area and the message that
  * goes over the ME interface just signals the other side
  * that a new message is waiting in the shared area. The ME
@@ -55,7 +65,11 @@
 /**
  * DOC: Host and driver state messages
  *
+<<<<<<< HEAD
  * In order to let CSME know about the host state and the host driver state,
+=======
+ * In order to let CSME konw about the host state and the host driver state,
+>>>>>>> b7ba80a49124 (Commit)
  * the host sends messages that let CSME know about the host's state.
  * When the host driver is loaded, the host sends %SAP_MSG_NOTIF_WIFIDR_UP.
  * When the host driver is unloaded, the host sends %SAP_MSG_NOTIF_WIFIDR_DOWN.
@@ -76,7 +90,11 @@
  * DOC: Ownership
  *
  * The device can be controlled either by the CSME firmware or
+<<<<<<< HEAD
  * by the host driver: iwlwifi. There is a negotiation between
+=======
+ * by the host driver: iwlwifi. There is a negotiaion between
+>>>>>>> b7ba80a49124 (Commit)
  * those two entities to determine who controls (or owns) the
  * device. Since the CSME can control the device even when the
  * OS is not working or even missing, the CSME can request the
@@ -136,7 +154,11 @@ enum iwl_sap_me_msg_id {
  * struct iwl_sap_me_msg_hdr - the header of the ME message
  * @type: the type of the message, see &enum iwl_sap_me_msg_id.
  * @seq_num: a sequence number used for debug only.
+<<<<<<< HEAD
  * @len: the length of the message.
+=======
+ * @len: the length of the mssage.
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct iwl_sap_me_msg_hdr {
 	__le32 type;
@@ -203,7 +225,10 @@ struct iwl_sap_me_msg_start_ok {
  * @SAP_MSG_NOTIF_NIC_OWNER: Payload is a DW. See &enum iwl_sap_nic_owner.
  * @SAP_MSG_NOTIF_CSME_CONN_STATUS: See &struct iwl_sap_notif_conn_status.
  * @SAP_MSG_NOTIF_NVM: See &struct iwl_sap_nvm.
+<<<<<<< HEAD
  * @SAP_MSG_NOTIF_PLDR_ACK: See &struct iwl_sap_pldr_ack_data.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @SAP_MSG_NOTIF_FROM_CSME_MAX: Not used.
  *
  * @SAP_MSG_NOTIF_FROM_HOST_MIN: Not used.
@@ -227,8 +252,11 @@ struct iwl_sap_me_msg_start_ok {
  * @SAP_MSG_NOTIF_HOST_OWNERSHIP_CONFIRMED: No payload.
  * @SAP_MSG_NOTIF_SAR_LIMITS: See &struct iwl_sap_notif_sar_limits.
  * @SAP_MSG_NOTIF_GET_NVM: No payload. Triggers %SAP_MSG_NOTIF_NVM.
+<<<<<<< HEAD
  * @SAP_MSG_NOTIF_PLDR: See &struct iwl_sap_pldr_data.
  * @SAP_MSG_NOTIF_PLDR_END: See &struct iwl_sap_pldr_end_data.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @SAP_MSG_NOTIF_FROM_HOST_MAX: Not used.
  *
  * @SAP_MSG_DATA_MIN: Not used.
@@ -261,8 +289,11 @@ enum iwl_sap_msg {
 	SAP_MSG_NOTIF_NIC_OWNER				= 511,
 	SAP_MSG_NOTIF_CSME_CONN_STATUS			= 512,
 	SAP_MSG_NOTIF_NVM				= 513,
+<<<<<<< HEAD
 	/* 514 - 517 not supported */
 	SAP_MSG_NOTIF_PLDR_ACK				= 518,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SAP_MSG_NOTIF_FROM_CSME_MAX,
 
 	SAP_MSG_NOTIF_FROM_HOST_MIN			= 1000,
@@ -284,9 +315,12 @@ enum iwl_sap_msg {
 	SAP_MSG_NOTIF_HOST_OWNERSHIP_CONFIRMED		= 1015,
 	SAP_MSG_NOTIF_SAR_LIMITS			= 1016,
 	SAP_MSG_NOTIF_GET_NVM				= 1017,
+<<<<<<< HEAD
 	/* 1018 - 1023 not supported */
 	SAP_MSG_NOTIF_PLDR				= 1024,
 	SAP_MSG_NOTIF_PLDR_END				= 1025,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SAP_MSG_NOTIF_FROM_HOST_MAX,
 
 	SAP_MSG_DATA_MIN				= 2000,
@@ -342,14 +376,20 @@ enum iwl_sap_wifi_auth_type {
 /**
  * enum iwl_sap_wifi_cipher_alg
  * @SAP_WIFI_CIPHER_ALG_NONE: TBD
+<<<<<<< HEAD
  * @SAP_WIFI_CIPHER_ALG_TKIP: TBD
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @SAP_WIFI_CIPHER_ALG_CCMP: TBD
  * @SAP_WIFI_CIPHER_ALG_GCMP: TBD
  * @SAP_WIFI_CIPHER_ALG_GCMP_256: TBD
  */
 enum iwl_sap_wifi_cipher_alg {
 	SAP_WIFI_CIPHER_ALG_NONE	= IWL_MEI_CIPHER_NONE,
+<<<<<<< HEAD
 	SAP_WIFI_CIPHER_ALG_TKIP	= IWL_MEI_CIPHER_TKIP,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SAP_WIFI_CIPHER_ALG_CCMP	= IWL_MEI_CIPHER_CCMP,
 	SAP_WIFI_CIPHER_ALG_GCMP	= IWL_MEI_CIPHER_GCMP,
 	SAP_WIFI_CIPHER_ALG_GCMP_256	= IWL_MEI_CIPHER_GCMP_256,
@@ -740,6 +780,7 @@ struct iwl_sap_cb_data {
 	u8 payload[];
 };
 
+<<<<<<< HEAD
 /**
  * struct iwl_sap_pldr_data - payload of %SAP_MSG_NOTIF_PLDR
  * @hdr: The SAP header.
@@ -783,4 +824,6 @@ struct iwl_sap_pldr_ack_data {
 	__le32 status;
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __sap_h__ */

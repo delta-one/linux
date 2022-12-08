@@ -2,7 +2,10 @@
 /*
  * Copyright (C) STMicroelectronics SA 2017
  * Author: Fabien Dessenne <fabien.dessenne@st.com>
+<<<<<<< HEAD
  * Ux500 support taken from snippets in the old Ux500 cryp driver
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/clk.h>
@@ -63,6 +66,7 @@
 #define CRYP_CSGCMCCM0R         0x00000050
 #define CRYP_CSGCM0R            0x00000070
 
+<<<<<<< HEAD
 #define UX500_CRYP_CR		0x00000000
 #define UX500_CRYP_SR		0x00000004
 #define UX500_CRYP_DIN		0x00000008
@@ -86,6 +90,8 @@
 #define UX500_CRYP_IV1L		0x00000050
 #define UX500_CRYP_IV1R		0x00000054
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Registers values */
 #define CR_DEC_NOT_ENC          0x00000004
 #define CR_TDES_ECB             0x00000000
@@ -95,8 +101,12 @@
 #define CR_AES_ECB              0x00000020
 #define CR_AES_CBC              0x00000028
 #define CR_AES_CTR              0x00000030
+<<<<<<< HEAD
 #define CR_AES_KP               0x00000038 /* Not on Ux500 */
 #define CR_AES_XTS              0x00000038 /* Only on Ux500 */
+=======
+#define CR_AES_KP               0x00000038
+>>>>>>> b7ba80a49124 (Commit)
 #define CR_AES_GCM              0x00080000
 #define CR_AES_CCM              0x00080008
 #define CR_AES_UNKNOWN          0xFFFFFFFF
@@ -108,8 +118,11 @@
 #define CR_KEY128               0x00000000
 #define CR_KEY192               0x00000100
 #define CR_KEY256               0x00000200
+<<<<<<< HEAD
 #define CR_KEYRDEN              0x00000400 /* Only on Ux500 */
 #define CR_KSE                  0x00000800 /* Only on Ux500 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CR_FFLUSH               0x00004000
 #define CR_CRYPEN               0x00008000
 #define CR_PH_INIT              0x00000000
@@ -134,6 +147,7 @@
 #define CRYP_AUTOSUSPEND_DELAY	50
 
 struct stm32_cryp_caps {
+<<<<<<< HEAD
 	bool			aeads_support;
 	bool			linear_aes_key;
 	bool			kp_mode;
@@ -153,6 +167,10 @@ struct stm32_cryp_caps {
 	u32			iv0r;
 	u32			iv1l;
 	u32			iv1r;
+=======
+	bool                    swap_final;
+	bool                    padding_wa;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct stm32_cryp_ctx {
@@ -272,21 +290,33 @@ static inline int stm32_cryp_wait_busy(struct stm32_cryp *cryp)
 {
 	u32 status;
 
+<<<<<<< HEAD
 	return readl_relaxed_poll_timeout(cryp->regs + cryp->caps->sr, status,
+=======
+	return readl_relaxed_poll_timeout(cryp->regs + CRYP_SR, status,
+>>>>>>> b7ba80a49124 (Commit)
 			!(status & SR_BUSY), 10, 100000);
 }
 
 static inline void stm32_cryp_enable(struct stm32_cryp *cryp)
 {
+<<<<<<< HEAD
 	writel_relaxed(readl_relaxed(cryp->regs + cryp->caps->cr) | CR_CRYPEN,
 		       cryp->regs + cryp->caps->cr);
+=======
+	writel_relaxed(readl_relaxed(cryp->regs + CRYP_CR) | CR_CRYPEN, cryp->regs + CRYP_CR);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline int stm32_cryp_wait_enable(struct stm32_cryp *cryp)
 {
 	u32 status;
 
+<<<<<<< HEAD
 	return readl_relaxed_poll_timeout(cryp->regs + cryp->caps->cr, status,
+=======
+	return readl_relaxed_poll_timeout(cryp->regs + CRYP_CR, status,
+>>>>>>> b7ba80a49124 (Commit)
 			!(status & CR_CRYPEN), 10, 100000);
 }
 
@@ -294,6 +324,7 @@ static inline int stm32_cryp_wait_output(struct stm32_cryp *cryp)
 {
 	u32 status;
 
+<<<<<<< HEAD
 	return readl_relaxed_poll_timeout(cryp->regs + cryp->caps->sr, status,
 			status & SR_OFNE, 10, 100000);
 }
@@ -310,6 +341,12 @@ static inline void stm32_cryp_key_read_disable(struct stm32_cryp *cryp)
 		       cryp->regs + cryp->caps->cr);
 }
 
+=======
+	return readl_relaxed_poll_timeout(cryp->regs + CRYP_SR, status,
+			status & SR_OFNE, 10, 100000);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int stm32_cryp_read_auth_tag(struct stm32_cryp *cryp);
 static void stm32_cryp_finish_req(struct stm32_cryp *cryp, int err);
 
@@ -338,12 +375,21 @@ static void stm32_cryp_hw_write_iv(struct stm32_cryp *cryp, __be32 *iv)
 	if (!iv)
 		return;
 
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->iv0l, be32_to_cpu(*iv++));
 	stm32_cryp_write(cryp, cryp->caps->iv0r, be32_to_cpu(*iv++));
 
 	if (is_aes(cryp)) {
 		stm32_cryp_write(cryp, cryp->caps->iv1l, be32_to_cpu(*iv++));
 		stm32_cryp_write(cryp, cryp->caps->iv1r, be32_to_cpu(*iv++));
+=======
+	stm32_cryp_write(cryp, CRYP_IV0LR, be32_to_cpu(*iv++));
+	stm32_cryp_write(cryp, CRYP_IV0RR, be32_to_cpu(*iv++));
+
+	if (is_aes(cryp)) {
+		stm32_cryp_write(cryp, CRYP_IV1LR, be32_to_cpu(*iv++));
+		stm32_cryp_write(cryp, CRYP_IV1RR, be32_to_cpu(*iv++));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -355,6 +401,7 @@ static void stm32_cryp_get_iv(struct stm32_cryp *cryp)
 	if (!tmp)
 		return;
 
+<<<<<<< HEAD
 	if (cryp->caps->iv_protection)
 		stm32_cryp_key_read_enable(cryp);
 
@@ -451,6 +498,14 @@ static inline void ux500_swizzle_key(const u8 *in, u8 *out, u32 len)
 				ux500_swap_bits_in_byte(in[index]);
 		}
 		j -= bpw;
+=======
+	*tmp++ = cpu_to_be32(stm32_cryp_read(cryp, CRYP_IV0LR));
+	*tmp++ = cpu_to_be32(stm32_cryp_read(cryp, CRYP_IV0RR));
+
+	if (is_aes(cryp)) {
+		*tmp++ = cpu_to_be32(stm32_cryp_read(cryp, CRYP_IV1LR));
+		*tmp++ = cpu_to_be32(stm32_cryp_read(cryp, CRYP_IV1RR));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -460,6 +515,7 @@ static void stm32_cryp_hw_write_key(struct stm32_cryp *c)
 	int r_id;
 
 	if (is_des(c)) {
+<<<<<<< HEAD
 		stm32_cryp_write(c, c->caps->k1l, be32_to_cpu(c->ctx->key[0]));
 		stm32_cryp_write(c, c->caps->k1r, be32_to_cpu(c->ctx->key[1]));
 		return;
@@ -487,6 +543,16 @@ static void stm32_cryp_hw_write_key(struct stm32_cryp *c)
 	r_id = c->caps->k3r;
 	for (i = c->ctx->keylen / sizeof(u32); i > 0; i--, r_id -= 4)
 		stm32_cryp_write(c, r_id, be32_to_cpu(c->ctx->key[i - 1]));
+=======
+		stm32_cryp_write(c, CRYP_K1LR, be32_to_cpu(c->ctx->key[0]));
+		stm32_cryp_write(c, CRYP_K1RR, be32_to_cpu(c->ctx->key[1]));
+	} else {
+		r_id = CRYP_K3RR;
+		for (i = c->ctx->keylen / sizeof(u32); i > 0; i--, r_id -= 4)
+			stm32_cryp_write(c, r_id,
+					 be32_to_cpu(c->ctx->key[i - 1]));
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static u32 stm32_cryp_get_hw_mode(struct stm32_cryp *cryp)
@@ -539,7 +605,11 @@ static int stm32_cryp_gcm_init(struct stm32_cryp *cryp, u32 cfg)
 	cryp->gcm_ctr = GCM_CTR_INIT;
 	stm32_cryp_hw_write_iv(cryp, iv);
 
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->cr, cfg | CR_PH_INIT | CR_CRYPEN);
+=======
+	stm32_cryp_write(cryp, CRYP_CR, cfg | CR_PH_INIT | CR_CRYPEN);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Wait for end of processing */
 	ret = stm32_cryp_wait_enable(cryp);
@@ -551,10 +621,17 @@ static int stm32_cryp_gcm_init(struct stm32_cryp *cryp, u32 cfg)
 	/* Prepare next phase */
 	if (cryp->areq->assoclen) {
 		cfg |= CR_PH_HEADER;
+<<<<<<< HEAD
 		stm32_cryp_write(cryp, cryp->caps->cr, cfg);
 	} else if (stm32_cryp_get_input_text_len(cryp)) {
 		cfg |= CR_PH_PAYLOAD;
 		stm32_cryp_write(cryp, cryp->caps->cr, cfg);
+=======
+		stm32_cryp_write(cryp, CRYP_CR, cfg);
+	} else if (stm32_cryp_get_input_text_len(cryp)) {
+		cfg |= CR_PH_PAYLOAD;
+		stm32_cryp_write(cryp, CRYP_CR, cfg);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -571,13 +648,18 @@ static void stm32_crypt_gcmccm_end_header(struct stm32_cryp *cryp)
 		err = stm32_cryp_wait_busy(cryp);
 		if (err) {
 			dev_err(cryp->dev, "Timeout (gcm/ccm header)\n");
+<<<<<<< HEAD
 			stm32_cryp_write(cryp, cryp->caps->imsc, 0);
+=======
+			stm32_cryp_write(cryp, CRYP_IMSCR, 0);
+>>>>>>> b7ba80a49124 (Commit)
 			stm32_cryp_finish_req(cryp, err);
 			return;
 		}
 
 		if (stm32_cryp_get_input_text_len(cryp)) {
 			/* Phase 3 : payload */
+<<<<<<< HEAD
 			cfg = stm32_cryp_read(cryp, cryp->caps->cr);
 			cfg &= ~CR_CRYPEN;
 			stm32_cryp_write(cryp, cryp->caps->cr, cfg);
@@ -585,6 +667,15 @@ static void stm32_crypt_gcmccm_end_header(struct stm32_cryp *cryp)
 			cfg &= ~CR_PH_MASK;
 			cfg |= CR_PH_PAYLOAD | CR_CRYPEN;
 			stm32_cryp_write(cryp, cryp->caps->cr, cfg);
+=======
+			cfg = stm32_cryp_read(cryp, CRYP_CR);
+			cfg &= ~CR_CRYPEN;
+			stm32_cryp_write(cryp, CRYP_CR, cfg);
+
+			cfg &= ~CR_PH_MASK;
+			cfg |= CR_PH_PAYLOAD | CR_CRYPEN;
+			stm32_cryp_write(cryp, CRYP_CR, cfg);
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			/*
 			 * Phase 4 : tag.
@@ -597,6 +688,10 @@ static void stm32_crypt_gcmccm_end_header(struct stm32_cryp *cryp)
 
 static void stm32_cryp_write_ccm_first_header(struct stm32_cryp *cryp)
 {
+<<<<<<< HEAD
+=======
+	unsigned int i;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t written;
 	size_t len;
 	u32 alen = cryp->areq->assoclen;
@@ -622,8 +717,13 @@ static void stm32_cryp_write_ccm_first_header(struct stm32_cryp *cryp)
 	written = min_t(size_t, AES_BLOCK_SIZE - len, alen);
 
 	scatterwalk_copychunks((char *)block + len, &cryp->in_walk, written, 0);
+<<<<<<< HEAD
 
 	writesl(cryp->regs + cryp->caps->din, block, AES_BLOCK_32);
+=======
+	for (i = 0; i < AES_BLOCK_32; i++)
+		stm32_cryp_write(cryp, CRYP_DIN, block[i]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	cryp->header_in -= written;
 
@@ -659,7 +759,11 @@ static int stm32_cryp_ccm_init(struct stm32_cryp *cryp, u32 cfg)
 	b0[AES_BLOCK_SIZE - 1] = textlen & 0xFF;
 
 	/* Enable HW */
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->cr, cfg | CR_PH_INIT | CR_CRYPEN);
+=======
+	stm32_cryp_write(cryp, CRYP_CR, cfg | CR_PH_INIT | CR_CRYPEN);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Write B0 */
 	d = (u32 *)b0;
@@ -670,7 +774,11 @@ static int stm32_cryp_ccm_init(struct stm32_cryp *cryp, u32 cfg)
 
 		if (!cryp->caps->padding_wa)
 			xd = be32_to_cpu(bd[i]);
+<<<<<<< HEAD
 		stm32_cryp_write(cryp, cryp->caps->din, xd);
+=======
+		stm32_cryp_write(cryp, CRYP_DIN, xd);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Wait for end of processing */
@@ -683,13 +791,21 @@ static int stm32_cryp_ccm_init(struct stm32_cryp *cryp, u32 cfg)
 	/* Prepare next phase */
 	if (cryp->areq->assoclen) {
 		cfg |= CR_PH_HEADER | CR_CRYPEN;
+<<<<<<< HEAD
 		stm32_cryp_write(cryp, cryp->caps->cr, cfg);
+=======
+		stm32_cryp_write(cryp, CRYP_CR, cfg);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Write first (special) block (may move to next phase [payload]) */
 		stm32_cryp_write_ccm_first_header(cryp);
 	} else if (stm32_cryp_get_input_text_len(cryp)) {
 		cfg |= CR_PH_PAYLOAD;
+<<<<<<< HEAD
 		stm32_cryp_write(cryp, cryp->caps->cr, cfg);
+=======
+		stm32_cryp_write(cryp, CRYP_CR, cfg);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -703,7 +819,11 @@ static int stm32_cryp_hw_init(struct stm32_cryp *cryp)
 	pm_runtime_get_sync(cryp->dev);
 
 	/* Disable interrupt */
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->imsc, 0);
+=======
+	stm32_cryp_write(cryp, CRYP_IMSCR, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Set configuration */
 	cfg = CR_DATA8 | CR_FFLUSH;
@@ -731,12 +851,16 @@ static int stm32_cryp_hw_init(struct stm32_cryp *cryp)
 	if (is_decrypt(cryp) &&
 	    ((hw_mode == CR_AES_ECB) || (hw_mode == CR_AES_CBC))) {
 		/* Configure in key preparation mode */
+<<<<<<< HEAD
 		if (cryp->caps->kp_mode)
 			stm32_cryp_write(cryp, cryp->caps->cr,
 				cfg | CR_AES_KP);
 		else
 			stm32_cryp_write(cryp,
 				cryp->caps->cr, cfg | CR_AES_ECB | CR_KSE);
+=======
+		stm32_cryp_write(cryp, CRYP_CR, cfg | CR_AES_KP);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Set key only after full configuration done */
 		stm32_cryp_hw_write_key(cryp);
@@ -753,14 +877,22 @@ static int stm32_cryp_hw_init(struct stm32_cryp *cryp)
 		cfg |= hw_mode | CR_DEC_NOT_ENC;
 
 		/* Apply updated config (Decrypt + algo) and flush */
+<<<<<<< HEAD
 		stm32_cryp_write(cryp, cryp->caps->cr, cfg);
+=======
+		stm32_cryp_write(cryp, CRYP_CR, cfg);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		cfg |= hw_mode;
 		if (is_decrypt(cryp))
 			cfg |= CR_DEC_NOT_ENC;
 
 		/* Apply config and flush */
+<<<<<<< HEAD
 		stm32_cryp_write(cryp, cryp->caps->cr, cfg);
+=======
+		stm32_cryp_write(cryp, CRYP_CR, cfg);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Set key only after configuration done */
 		stm32_cryp_hw_write_key(cryp);
@@ -819,7 +951,11 @@ static void stm32_cryp_finish_req(struct stm32_cryp *cryp, int err)
 static int stm32_cryp_cpu_start(struct stm32_cryp *cryp)
 {
 	/* Enable interrupt and let the IRQ handler do everything */
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->imsc, IMSCR_IN | IMSCR_OUT);
+=======
+	stm32_cryp_write(cryp, CRYP_IMSCR, IMSCR_IN | IMSCR_OUT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1307,14 +1443,22 @@ static int stm32_cryp_read_auth_tag(struct stm32_cryp *cryp)
 	int ret = 0;
 
 	/* Update Config */
+<<<<<<< HEAD
 	cfg = stm32_cryp_read(cryp, cryp->caps->cr);
+=======
+	cfg = stm32_cryp_read(cryp, CRYP_CR);
+>>>>>>> b7ba80a49124 (Commit)
 
 	cfg &= ~CR_PH_MASK;
 	cfg |= CR_PH_FINAL;
 	cfg &= ~CR_DEC_NOT_ENC;
 	cfg |= CR_CRYPEN;
 
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->cr, cfg);
+=======
+	stm32_cryp_write(cryp, CRYP_CR, cfg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (is_gcm(cryp)) {
 		/* GCM: write aad and payload size (in bits) */
@@ -1322,8 +1466,13 @@ static int stm32_cryp_read_auth_tag(struct stm32_cryp *cryp)
 		if (cryp->caps->swap_final)
 			size_bit = (__force u32)cpu_to_be32(size_bit);
 
+<<<<<<< HEAD
 		stm32_cryp_write(cryp, cryp->caps->din, 0);
 		stm32_cryp_write(cryp, cryp->caps->din, size_bit);
+=======
+		stm32_cryp_write(cryp, CRYP_DIN, 0);
+		stm32_cryp_write(cryp, CRYP_DIN, size_bit);
+>>>>>>> b7ba80a49124 (Commit)
 
 		size_bit = is_encrypt(cryp) ? cryp->areq->cryptlen :
 				cryp->areq->cryptlen - cryp->authsize;
@@ -1331,8 +1480,13 @@ static int stm32_cryp_read_auth_tag(struct stm32_cryp *cryp)
 		if (cryp->caps->swap_final)
 			size_bit = (__force u32)cpu_to_be32(size_bit);
 
+<<<<<<< HEAD
 		stm32_cryp_write(cryp, cryp->caps->din, 0);
 		stm32_cryp_write(cryp, cryp->caps->din, size_bit);
+=======
+		stm32_cryp_write(cryp, CRYP_DIN, 0);
+		stm32_cryp_write(cryp, CRYP_DIN, size_bit);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		/* CCM: write CTR0 */
 		u32 iv32[AES_BLOCK_32];
@@ -1347,7 +1501,11 @@ static int stm32_cryp_read_auth_tag(struct stm32_cryp *cryp)
 
 			if (!cryp->caps->padding_wa)
 				xiv = be32_to_cpu(biv[i]);
+<<<<<<< HEAD
 			stm32_cryp_write(cryp, cryp->caps->din, xiv);
+=======
+			stm32_cryp_write(cryp, CRYP_DIN, xiv);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -1362,14 +1520,26 @@ static int stm32_cryp_read_auth_tag(struct stm32_cryp *cryp)
 		u32 out_tag[AES_BLOCK_32];
 
 		/* Get and write tag */
+<<<<<<< HEAD
 		readsl(cryp->regs + cryp->caps->dout, out_tag, AES_BLOCK_32);
+=======
+		for (i = 0; i < AES_BLOCK_32; i++)
+			out_tag[i] = stm32_cryp_read(cryp, CRYP_DOUT);
+
+>>>>>>> b7ba80a49124 (Commit)
 		scatterwalk_copychunks(out_tag, &cryp->out_walk, cryp->authsize, 1);
 	} else {
 		/* Get and check tag */
 		u32 in_tag[AES_BLOCK_32], out_tag[AES_BLOCK_32];
 
 		scatterwalk_copychunks(in_tag, &cryp->in_walk, cryp->authsize, 0);
+<<<<<<< HEAD
 		readsl(cryp->regs + cryp->caps->dout, out_tag, AES_BLOCK_32);
+=======
+
+		for (i = 0; i < AES_BLOCK_32; i++)
+			out_tag[i] = stm32_cryp_read(cryp, CRYP_DOUT);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (crypto_memneq(in_tag, out_tag, cryp->authsize))
 			ret = -EBADMSG;
@@ -1377,7 +1547,11 @@ static int stm32_cryp_read_auth_tag(struct stm32_cryp *cryp)
 
 	/* Disable cryp */
 	cfg &= ~CR_CRYPEN;
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->cr, cfg);
+=======
+	stm32_cryp_write(cryp, CRYP_CR, cfg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -1393,6 +1567,7 @@ static void stm32_cryp_check_ctr_counter(struct stm32_cryp *cryp)
 		 */
 		crypto_inc((u8 *)cryp->last_ctr, sizeof(cryp->last_ctr));
 
+<<<<<<< HEAD
 		cr = stm32_cryp_read(cryp, cryp->caps->cr);
 		stm32_cryp_write(cryp, cryp->caps->cr, cr & ~CR_CRYPEN);
 
@@ -1406,13 +1581,37 @@ static void stm32_cryp_check_ctr_counter(struct stm32_cryp *cryp)
 	cryp->last_ctr[1] = cpu_to_be32(stm32_cryp_read(cryp, cryp->caps->iv0r));
 	cryp->last_ctr[2] = cpu_to_be32(stm32_cryp_read(cryp, cryp->caps->iv1l));
 	cryp->last_ctr[3] = cpu_to_be32(stm32_cryp_read(cryp, cryp->caps->iv1r));
+=======
+		cr = stm32_cryp_read(cryp, CRYP_CR);
+		stm32_cryp_write(cryp, CRYP_CR, cr & ~CR_CRYPEN);
+
+		stm32_cryp_hw_write_iv(cryp, cryp->last_ctr);
+
+		stm32_cryp_write(cryp, CRYP_CR, cr);
+	}
+
+	/* The IV registers are BE  */
+	cryp->last_ctr[0] = cpu_to_be32(stm32_cryp_read(cryp, CRYP_IV0LR));
+	cryp->last_ctr[1] = cpu_to_be32(stm32_cryp_read(cryp, CRYP_IV0RR));
+	cryp->last_ctr[2] = cpu_to_be32(stm32_cryp_read(cryp, CRYP_IV1LR));
+	cryp->last_ctr[3] = cpu_to_be32(stm32_cryp_read(cryp, CRYP_IV1RR));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void stm32_cryp_irq_read_data(struct stm32_cryp *cryp)
 {
+<<<<<<< HEAD
 	u32 block[AES_BLOCK_32];
 
 	readsl(cryp->regs + cryp->caps->dout, block, cryp->hw_blocksize / sizeof(u32));
+=======
+	unsigned int i;
+	u32 block[AES_BLOCK_32];
+
+	for (i = 0; i < cryp->hw_blocksize / sizeof(u32); i++)
+		block[i] = stm32_cryp_read(cryp, CRYP_DOUT);
+
+>>>>>>> b7ba80a49124 (Commit)
 	scatterwalk_copychunks(block, &cryp->out_walk, min_t(size_t, cryp->hw_blocksize,
 							     cryp->payload_out), 1);
 	cryp->payload_out -= min_t(size_t, cryp->hw_blocksize,
@@ -1421,11 +1620,21 @@ static void stm32_cryp_irq_read_data(struct stm32_cryp *cryp)
 
 static void stm32_cryp_irq_write_block(struct stm32_cryp *cryp)
 {
+<<<<<<< HEAD
+=======
+	unsigned int i;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 block[AES_BLOCK_32] = {0};
 
 	scatterwalk_copychunks(block, &cryp->in_walk, min_t(size_t, cryp->hw_blocksize,
 							    cryp->payload_in), 0);
+<<<<<<< HEAD
 	writesl(cryp->regs + cryp->caps->din, block, cryp->hw_blocksize / sizeof(u32));
+=======
+	for (i = 0; i < cryp->hw_blocksize / sizeof(u32); i++)
+		stm32_cryp_write(cryp, CRYP_DIN, block[i]);
+
+>>>>>>> b7ba80a49124 (Commit)
 	cryp->payload_in -= min_t(size_t, cryp->hw_blocksize, cryp->payload_in);
 }
 
@@ -1438,6 +1647,7 @@ static void stm32_cryp_irq_write_gcm_padded_data(struct stm32_cryp *cryp)
 	/* 'Special workaround' procedure described in the datasheet */
 
 	/* a) disable ip */
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->imsc, 0);
 	cfg = stm32_cryp_read(cryp, cryp->caps->cr);
 	cfg &= ~CR_CRYPEN;
@@ -1445,15 +1655,32 @@ static void stm32_cryp_irq_write_gcm_padded_data(struct stm32_cryp *cryp)
 
 	/* b) Update IV1R */
 	stm32_cryp_write(cryp, cryp->caps->iv1r, cryp->gcm_ctr - 2);
+=======
+	stm32_cryp_write(cryp, CRYP_IMSCR, 0);
+	cfg = stm32_cryp_read(cryp, CRYP_CR);
+	cfg &= ~CR_CRYPEN;
+	stm32_cryp_write(cryp, CRYP_CR, cfg);
+
+	/* b) Update IV1R */
+	stm32_cryp_write(cryp, CRYP_IV1RR, cryp->gcm_ctr - 2);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* c) change mode to CTR */
 	cfg &= ~CR_ALGO_MASK;
 	cfg |= CR_AES_CTR;
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->cr, cfg);
 
 	/* a) enable IP */
 	cfg |= CR_CRYPEN;
 	stm32_cryp_write(cryp, cryp->caps->cr, cfg);
+=======
+	stm32_cryp_write(cryp, CRYP_CR, cfg);
+
+	/* a) enable IP */
+	cfg |= CR_CRYPEN;
+	stm32_cryp_write(cryp, CRYP_CR, cfg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* b) pad and write the last block */
 	stm32_cryp_irq_write_block(cryp);
@@ -1469,7 +1696,12 @@ static void stm32_cryp_irq_write_gcm_padded_data(struct stm32_cryp *cryp)
 	 * Same code as stm32_cryp_irq_read_data(), but we want to store
 	 * block value
 	 */
+<<<<<<< HEAD
 	readsl(cryp->regs + cryp->caps->dout, block, cryp->hw_blocksize / sizeof(u32));
+=======
+	for (i = 0; i < cryp->hw_blocksize / sizeof(u32); i++)
+		block[i] = stm32_cryp_read(cryp, CRYP_DOUT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	scatterwalk_copychunks(block, &cryp->out_walk, min_t(size_t, cryp->hw_blocksize,
 							     cryp->payload_out), 1);
@@ -1479,15 +1711,27 @@ static void stm32_cryp_irq_write_gcm_padded_data(struct stm32_cryp *cryp)
 	/* d) change mode back to AES GCM */
 	cfg &= ~CR_ALGO_MASK;
 	cfg |= CR_AES_GCM;
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->cr, cfg);
+=======
+	stm32_cryp_write(cryp, CRYP_CR, cfg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* e) change phase to Final */
 	cfg &= ~CR_PH_MASK;
 	cfg |= CR_PH_FINAL;
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->cr, cfg);
 
 	/* f) write padded data */
 	writesl(cryp->regs + cryp->caps->din, block, AES_BLOCK_32);
+=======
+	stm32_cryp_write(cryp, CRYP_CR, cfg);
+
+	/* f) write padded data */
+	for (i = 0; i < AES_BLOCK_32; i++)
+		stm32_cryp_write(cryp, CRYP_DIN, block[i]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* g) Empty fifo out */
 	err = stm32_cryp_wait_output(cryp);
@@ -1497,7 +1741,11 @@ static void stm32_cryp_irq_write_gcm_padded_data(struct stm32_cryp *cryp)
 	}
 
 	for (i = 0; i < AES_BLOCK_32; i++)
+<<<<<<< HEAD
 		stm32_cryp_read(cryp, cryp->caps->dout);
+=======
+		stm32_cryp_read(cryp, CRYP_DOUT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* h) run the he normal Final phase */
 	stm32_cryp_finish_req(cryp, 0);
@@ -1508,6 +1756,7 @@ static void stm32_cryp_irq_set_npblb(struct stm32_cryp *cryp)
 	u32 cfg;
 
 	/* disable ip, set NPBLB and reneable ip */
+<<<<<<< HEAD
 	cfg = stm32_cryp_read(cryp, cryp->caps->cr);
 	cfg &= ~CR_CRYPEN;
 	stm32_cryp_write(cryp, cryp->caps->cr, cfg);
@@ -1515,6 +1764,15 @@ static void stm32_cryp_irq_set_npblb(struct stm32_cryp *cryp)
 	cfg |= (cryp->hw_blocksize - cryp->payload_in) << CR_NBPBL_SHIFT;
 	cfg |= CR_CRYPEN;
 	stm32_cryp_write(cryp, cryp->caps->cr, cfg);
+=======
+	cfg = stm32_cryp_read(cryp, CRYP_CR);
+	cfg &= ~CR_CRYPEN;
+	stm32_cryp_write(cryp, CRYP_CR, cfg);
+
+	cfg |= (cryp->hw_blocksize - cryp->payload_in) << CR_NBPBL_SHIFT;
+	cfg |= CR_CRYPEN;
+	stm32_cryp_write(cryp, CRYP_CR, cfg);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void stm32_cryp_irq_write_ccm_padded_data(struct stm32_cryp *cryp)
@@ -1528,11 +1786,19 @@ static void stm32_cryp_irq_write_ccm_padded_data(struct stm32_cryp *cryp)
 	/* 'Special workaround' procedure described in the datasheet */
 
 	/* a) disable ip */
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->imsc, 0);
 
 	cfg = stm32_cryp_read(cryp, cryp->caps->cr);
 	cfg &= ~CR_CRYPEN;
 	stm32_cryp_write(cryp, cryp->caps->cr, cfg);
+=======
+	stm32_cryp_write(cryp, CRYP_IMSCR, 0);
+
+	cfg = stm32_cryp_read(cryp, CRYP_CR);
+	cfg &= ~CR_CRYPEN;
+	stm32_cryp_write(cryp, CRYP_CR, cfg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* b) get IV1 from CRYP_CSGCMCCM7 */
 	iv1tmp = stm32_cryp_read(cryp, CRYP_CSGCMCCM0R + 7 * 4);
@@ -1542,23 +1808,39 @@ static void stm32_cryp_irq_write_ccm_padded_data(struct stm32_cryp *cryp)
 		cstmp1[i] = stm32_cryp_read(cryp, CRYP_CSGCMCCM0R + i * 4);
 
 	/* d) Write IV1R */
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->iv1r, iv1tmp);
+=======
+	stm32_cryp_write(cryp, CRYP_IV1RR, iv1tmp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* e) change mode to CTR */
 	cfg &= ~CR_ALGO_MASK;
 	cfg |= CR_AES_CTR;
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->cr, cfg);
 
 	/* a) enable IP */
 	cfg |= CR_CRYPEN;
 	stm32_cryp_write(cryp, cryp->caps->cr, cfg);
+=======
+	stm32_cryp_write(cryp, CRYP_CR, cfg);
+
+	/* a) enable IP */
+	cfg |= CR_CRYPEN;
+	stm32_cryp_write(cryp, CRYP_CR, cfg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* b) pad and write the last block */
 	stm32_cryp_irq_write_block(cryp);
 	/* wait end of process */
 	err = stm32_cryp_wait_output(cryp);
 	if (err) {
+<<<<<<< HEAD
 		dev_err(cryp->dev, "Timeout (write ccm padded data)\n");
+=======
+		dev_err(cryp->dev, "Timeout (wite ccm padded data)\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return stm32_cryp_finish_req(cryp, err);
 	}
 
@@ -1567,7 +1849,12 @@ static void stm32_cryp_irq_write_ccm_padded_data(struct stm32_cryp *cryp)
 	 * Same code as stm32_cryp_irq_read_data(), but we want to store
 	 * block value
 	 */
+<<<<<<< HEAD
 	readsl(cryp->regs + cryp->caps->dout, block, cryp->hw_blocksize / sizeof(u32));
+=======
+	for (i = 0; i < cryp->hw_blocksize / sizeof(u32); i++)
+		block[i] = stm32_cryp_read(cryp, CRYP_DOUT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	scatterwalk_copychunks(block, &cryp->out_walk, min_t(size_t, cryp->hw_blocksize,
 							     cryp->payload_out), 1);
@@ -1580,24 +1867,40 @@ static void stm32_cryp_irq_write_ccm_padded_data(struct stm32_cryp *cryp)
 	/* e) change mode back to AES CCM */
 	cfg &= ~CR_ALGO_MASK;
 	cfg |= CR_AES_CCM;
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->cr, cfg);
+=======
+	stm32_cryp_write(cryp, CRYP_CR, cfg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* f) change phase to header */
 	cfg &= ~CR_PH_MASK;
 	cfg |= CR_PH_HEADER;
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->cr, cfg);
+=======
+	stm32_cryp_write(cryp, CRYP_CR, cfg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* g) XOR and write padded data */
 	for (i = 0; i < ARRAY_SIZE(block); i++) {
 		block[i] ^= cstmp1[i];
 		block[i] ^= cstmp2[i];
+<<<<<<< HEAD
 		stm32_cryp_write(cryp, cryp->caps->din, block[i]);
+=======
+		stm32_cryp_write(cryp, CRYP_DIN, block[i]);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* h) wait for completion */
 	err = stm32_cryp_wait_busy(cryp);
 	if (err)
+<<<<<<< HEAD
 		dev_err(cryp->dev, "Timeout (write ccm padded data)\n");
+=======
+		dev_err(cryp->dev, "Timeout (wite ccm padded data)\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* i) run the he normal Final phase */
 	stm32_cryp_finish_req(cryp, err);
@@ -1646,14 +1949,23 @@ static void stm32_cryp_irq_write_data(struct stm32_cryp *cryp)
 
 static void stm32_cryp_irq_write_gcmccm_header(struct stm32_cryp *cryp)
 {
+<<<<<<< HEAD
+=======
+	unsigned int i;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 block[AES_BLOCK_32] = {0};
 	size_t written;
 
 	written = min_t(size_t, AES_BLOCK_SIZE, cryp->header_in);
 
 	scatterwalk_copychunks(block, &cryp->in_walk, written, 0);
+<<<<<<< HEAD
 
 	writesl(cryp->regs + cryp->caps->din, block, AES_BLOCK_32);
+=======
+	for (i = 0; i < AES_BLOCK_32; i++)
+		stm32_cryp_write(cryp, CRYP_DIN, block[i]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	cryp->header_in -= written;
 
@@ -1664,7 +1976,11 @@ static irqreturn_t stm32_cryp_irq_thread(int irq, void *arg)
 {
 	struct stm32_cryp *cryp = arg;
 	u32 ph;
+<<<<<<< HEAD
 	u32 it_mask = stm32_cryp_read(cryp, cryp->caps->imsc);
+=======
+	u32 it_mask = stm32_cryp_read(cryp, CRYP_IMSCR);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (cryp->irq_status & MISR_OUT)
 		/* Output FIFO IRQ: read data */
@@ -1672,7 +1988,11 @@ static irqreturn_t stm32_cryp_irq_thread(int irq, void *arg)
 
 	if (cryp->irq_status & MISR_IN) {
 		if (is_gcm(cryp) || is_ccm(cryp)) {
+<<<<<<< HEAD
 			ph = stm32_cryp_read(cryp, cryp->caps->cr) & CR_PH_MASK;
+=======
+			ph = stm32_cryp_read(cryp, CRYP_CR) & CR_PH_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 			if (unlikely(ph == CR_PH_HEADER))
 				/* Write Header */
 				stm32_cryp_irq_write_gcmccm_header(cryp);
@@ -1692,7 +2012,11 @@ static irqreturn_t stm32_cryp_irq_thread(int irq, void *arg)
 		it_mask &= ~IMSCR_IN;
 	if (!cryp->payload_out)
 		it_mask &= ~IMSCR_OUT;
+<<<<<<< HEAD
 	stm32_cryp_write(cryp, cryp->caps->imsc, it_mask);
+=======
+	stm32_cryp_write(cryp, CRYP_IMSCR, it_mask);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!cryp->payload_in && !cryp->header_in && !cryp->payload_out)
 		stm32_cryp_finish_req(cryp, 0);
@@ -1704,7 +2028,11 @@ static irqreturn_t stm32_cryp_irq(int irq, void *arg)
 {
 	struct stm32_cryp *cryp = arg;
 
+<<<<<<< HEAD
 	cryp->irq_status = stm32_cryp_read(cryp, cryp->caps->mis);
+=======
+	cryp->irq_status = stm32_cryp_read(cryp, CRYP_MISR);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return IRQ_WAKE_THREAD;
 }
@@ -1878,6 +2206,7 @@ static struct aead_alg aead_algs[] = {
 },
 };
 
+<<<<<<< HEAD
 static const struct stm32_cryp_caps ux500_data = {
 	.aeads_support = false,
 	.linear_aes_key = true,
@@ -1946,6 +2275,19 @@ static const struct stm32_cryp_caps mp1_data = {
 
 static const struct of_device_id stm32_dt_ids[] = {
 	{ .compatible = "stericsson,ux500-cryp", .data = &ux500_data},
+=======
+static const struct stm32_cryp_caps f7_data = {
+	.swap_final = true,
+	.padding_wa = true,
+};
+
+static const struct stm32_cryp_caps mp1_data = {
+	.swap_final = false,
+	.padding_wa = false,
+};
+
+static const struct of_device_id stm32_dt_ids[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "st,stm32f756-cryp", .data = &f7_data},
 	{ .compatible = "st,stm32mp1-cryp", .data = &mp1_data},
 	{},
@@ -2042,11 +2384,17 @@ static int stm32_cryp_probe(struct platform_device *pdev)
 		goto err_algs;
 	}
 
+<<<<<<< HEAD
 	if (cryp->caps->aeads_support) {
 		ret = crypto_register_aeads(aead_algs, ARRAY_SIZE(aead_algs));
 		if (ret)
 			goto err_aead_algs;
 	}
+=======
+	ret = crypto_register_aeads(aead_algs, ARRAY_SIZE(aead_algs));
+	if (ret)
+		goto err_aead_algs;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_info(dev, "Initialized\n");
 
@@ -2084,8 +2432,12 @@ static int stm32_cryp_remove(struct platform_device *pdev)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	if (cryp->caps->aeads_support)
 		crypto_unregister_aeads(aead_algs, ARRAY_SIZE(aead_algs));
+=======
+	crypto_unregister_aeads(aead_algs, ARRAY_SIZE(aead_algs));
+>>>>>>> b7ba80a49124 (Commit)
 	crypto_unregister_skciphers(crypto_algs, ARRAY_SIZE(crypto_algs));
 
 	crypto_engine_exit(cryp->engine);

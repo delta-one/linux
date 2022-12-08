@@ -22,7 +22,12 @@ static int init_inode_xattrs(struct inode *inode)
 	struct xattr_iter it;
 	unsigned int i;
 	struct erofs_xattr_ibody_header *ih;
+<<<<<<< HEAD
 	struct super_block *sb = inode->i_sb;
+=======
+	struct super_block *sb;
+	struct erofs_sb_info *sbi;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 
 	/* the most case is that xattrs of this inode are initialized. */
@@ -51,14 +56,23 @@ static int init_inode_xattrs(struct inode *inode)
 	 *    undefined right now (maybe use later with some new sb feature).
 	 */
 	if (vi->xattr_isize == sizeof(struct erofs_xattr_ibody_header)) {
+<<<<<<< HEAD
 		erofs_err(sb,
+=======
+		erofs_err(inode->i_sb,
+>>>>>>> b7ba80a49124 (Commit)
 			  "xattr_isize %d of nid %llu is not supported yet",
 			  vi->xattr_isize, vi->nid);
 		ret = -EOPNOTSUPP;
 		goto out_unlock;
 	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
 		if (vi->xattr_isize) {
+<<<<<<< HEAD
 			erofs_err(sb, "bogus xattr ibody @ nid %llu", vi->nid);
+=======
+			erofs_err(inode->i_sb,
+				  "bogus xattr ibody @ nid %llu", vi->nid);
+>>>>>>> b7ba80a49124 (Commit)
 			DBG_BUGON(1);
 			ret = -EFSCORRUPTED;
 			goto out_unlock;	/* xattr ondisk layout error */
@@ -67,9 +81,17 @@ static int init_inode_xattrs(struct inode *inode)
 		goto out_unlock;
 	}
 
+<<<<<<< HEAD
 	it.buf = __EROFS_BUF_INITIALIZER;
 	it.blkaddr = erofs_blknr(sb, erofs_iloc(inode) + vi->inode_isize);
 	it.ofs = erofs_blkoff(sb, erofs_iloc(inode) + vi->inode_isize);
+=======
+	sb = inode->i_sb;
+	sbi = EROFS_SB(sb);
+	it.buf = __EROFS_BUF_INITIALIZER;
+	it.blkaddr = erofs_blknr(iloc(sbi, vi->nid) + vi->inode_isize);
+	it.ofs = erofs_blkoff(iloc(sbi, vi->nid) + vi->inode_isize);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* read in shared xattr array (non-atomic, see kmalloc below) */
 	it.kaddr = erofs_read_metabuf(&it.buf, sb, it.blkaddr, EROFS_KMAP);
@@ -92,9 +114,15 @@ static int init_inode_xattrs(struct inode *inode)
 	it.ofs += sizeof(struct erofs_xattr_ibody_header);
 
 	for (i = 0; i < vi->xattr_shared_count; ++i) {
+<<<<<<< HEAD
 		if (it.ofs >= sb->s_blocksize) {
 			/* cannot be unaligned */
 			DBG_BUGON(it.ofs != sb->s_blocksize);
+=======
+		if (it.ofs >= EROFS_BLKSIZ) {
+			/* cannot be unaligned */
+			DBG_BUGON(it.ofs != EROFS_BLKSIZ);
+>>>>>>> b7ba80a49124 (Commit)
 
 			it.kaddr = erofs_read_metabuf(&it.buf, sb, ++it.blkaddr,
 						      EROFS_KMAP);
@@ -139,6 +167,7 @@ struct xattr_iter_handlers {
 
 static inline int xattr_iter_fixup(struct xattr_iter *it)
 {
+<<<<<<< HEAD
 	if (it->ofs < it->sb->s_blocksize)
 		return 0;
 
@@ -148,6 +177,17 @@ static inline int xattr_iter_fixup(struct xattr_iter *it)
 	if (IS_ERR(it->kaddr))
 		return PTR_ERR(it->kaddr);
 	it->ofs = erofs_blkoff(it->sb, it->ofs);
+=======
+	if (it->ofs < EROFS_BLKSIZ)
+		return 0;
+
+	it->blkaddr += erofs_blknr(it->ofs);
+	it->kaddr = erofs_read_metabuf(&it->buf, it->sb, it->blkaddr,
+				       EROFS_KMAP_ATOMIC);
+	if (IS_ERR(it->kaddr))
+		return PTR_ERR(it->kaddr);
+	it->ofs = erofs_blkoff(it->ofs);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -155,6 +195,10 @@ static int inline_xattr_iter_begin(struct xattr_iter *it,
 				   struct inode *inode)
 {
 	struct erofs_inode *const vi = EROFS_I(inode);
+<<<<<<< HEAD
+=======
+	struct erofs_sb_info *const sbi = EROFS_SB(inode->i_sb);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int xattr_header_sz, inline_xattr_ofs;
 
 	xattr_header_sz = inlinexattr_header_size(inode);
@@ -165,10 +209,18 @@ static int inline_xattr_iter_begin(struct xattr_iter *it,
 
 	inline_xattr_ofs = vi->inode_isize + xattr_header_sz;
 
+<<<<<<< HEAD
 	it->blkaddr = erofs_blknr(it->sb, erofs_iloc(inode) + inline_xattr_ofs);
 	it->ofs = erofs_blkoff(it->sb, erofs_iloc(inode) + inline_xattr_ofs);
 	it->kaddr = erofs_read_metabuf(&it->buf, inode->i_sb, it->blkaddr,
 				       EROFS_KMAP);
+=======
+	it->blkaddr = erofs_blknr(iloc(sbi, vi->nid) + inline_xattr_ofs);
+	it->ofs = erofs_blkoff(iloc(sbi, vi->nid) + inline_xattr_ofs);
+
+	it->kaddr = erofs_read_metabuf(&it->buf, inode->i_sb, it->blkaddr,
+				       EROFS_KMAP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(it->kaddr))
 		return PTR_ERR(it->kaddr);
 	return vi->xattr_isize - xattr_header_sz;
@@ -222,8 +274,13 @@ static int xattr_foreach(struct xattr_iter *it,
 	processed = 0;
 
 	while (processed < entry.e_name_len) {
+<<<<<<< HEAD
 		if (it->ofs >= it->sb->s_blocksize) {
 			DBG_BUGON(it->ofs > it->sb->s_blocksize);
+=======
+		if (it->ofs >= EROFS_BLKSIZ) {
+			DBG_BUGON(it->ofs > EROFS_BLKSIZ);
+>>>>>>> b7ba80a49124 (Commit)
 
 			err = xattr_iter_fixup(it);
 			if (err)
@@ -231,7 +288,11 @@ static int xattr_foreach(struct xattr_iter *it,
 			it->ofs = 0;
 		}
 
+<<<<<<< HEAD
 		slice = min_t(unsigned int, it->sb->s_blocksize - it->ofs,
+=======
+		slice = min_t(unsigned int, EROFS_BLKSIZ - it->ofs,
+>>>>>>> b7ba80a49124 (Commit)
 			      entry.e_name_len - processed);
 
 		/* handle name */
@@ -257,8 +318,13 @@ static int xattr_foreach(struct xattr_iter *it,
 	}
 
 	while (processed < value_sz) {
+<<<<<<< HEAD
 		if (it->ofs >= it->sb->s_blocksize) {
 			DBG_BUGON(it->ofs > it->sb->s_blocksize);
+=======
+		if (it->ofs >= EROFS_BLKSIZ) {
+			DBG_BUGON(it->ofs > EROFS_BLKSIZ);
+>>>>>>> b7ba80a49124 (Commit)
 
 			err = xattr_iter_fixup(it);
 			if (err)
@@ -266,7 +332,11 @@ static int xattr_foreach(struct xattr_iter *it,
 			it->ofs = 0;
 		}
 
+<<<<<<< HEAD
 		slice = min_t(unsigned int, it->sb->s_blocksize - it->ofs,
+=======
+		slice = min_t(unsigned int, EROFS_BLKSIZ - it->ofs,
+>>>>>>> b7ba80a49124 (Commit)
 			      value_sz - processed);
 		op->value(it, processed, it->kaddr + it->ofs, slice);
 		it->ofs += slice;
@@ -352,16 +422,28 @@ static int shared_getxattr(struct inode *inode, struct getxattr_iter *it)
 {
 	struct erofs_inode *const vi = EROFS_I(inode);
 	struct super_block *const sb = inode->i_sb;
+<<<<<<< HEAD
+=======
+	struct erofs_sb_info *const sbi = EROFS_SB(sb);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int i;
 	int ret = -ENOATTR;
 
 	for (i = 0; i < vi->xattr_shared_count; ++i) {
 		erofs_blk_t blkaddr =
+<<<<<<< HEAD
 			xattrblock_addr(sb, vi->xattr_shared_xattrs[i]);
 
 		it->it.ofs = xattrblock_offset(sb, vi->xattr_shared_xattrs[i]);
 		it->it.kaddr = erofs_read_metabuf(&it->it.buf, sb, blkaddr,
 						  EROFS_KMAP);
+=======
+			xattrblock_addr(sbi, vi->xattr_shared_xattrs[i]);
+
+		it->it.ofs = xattrblock_offset(sbi, vi->xattr_shared_xattrs[i]);
+		it->it.kaddr = erofs_read_metabuf(&it->it.buf, sb, blkaddr,
+						  EROFS_KMAP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(it->it.kaddr))
 			return PTR_ERR(it->it.kaddr);
 		it->it.blkaddr = blkaddr;
@@ -462,6 +544,13 @@ const struct xattr_handler __maybe_unused erofs_xattr_security_handler = {
 
 const struct xattr_handler *erofs_xattr_handlers[] = {
 	&erofs_xattr_user_handler,
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_EROFS_FS_POSIX_ACL
+	&posix_acl_access_xattr_handler,
+	&posix_acl_default_xattr_handler,
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	&erofs_xattr_trusted_handler,
 #ifdef CONFIG_EROFS_FS_SECURITY
 	&erofs_xattr_security_handler,
@@ -485,9 +574,19 @@ static int xattr_entrylist(struct xattr_iter *_it,
 	unsigned int prefix_len;
 	const char *prefix;
 
+<<<<<<< HEAD
 	prefix = erofs_xattr_prefix(entry->e_name_index, it->dentry);
 	if (!prefix)
 		return 1;
+=======
+	const struct xattr_handler *h =
+		erofs_xattr_handler(entry->e_name_index);
+
+	if (!h || (h->list && !h->list(it->dentry)))
+		return 1;
+
+	prefix = xattr_prefix(h);
+>>>>>>> b7ba80a49124 (Commit)
 	prefix_len = strlen(prefix);
 
 	if (!it->buffer) {
@@ -555,16 +654,28 @@ static int shared_listxattr(struct listxattr_iter *it)
 	struct inode *const inode = d_inode(it->dentry);
 	struct erofs_inode *const vi = EROFS_I(inode);
 	struct super_block *const sb = inode->i_sb;
+<<<<<<< HEAD
+=======
+	struct erofs_sb_info *const sbi = EROFS_SB(sb);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int i;
 	int ret = 0;
 
 	for (i = 0; i < vi->xattr_shared_count; ++i) {
 		erofs_blk_t blkaddr =
+<<<<<<< HEAD
 			xattrblock_addr(sb, vi->xattr_shared_xattrs[i]);
 
 		it->it.ofs = xattrblock_offset(sb, vi->xattr_shared_xattrs[i]);
 		it->it.kaddr = erofs_read_metabuf(&it->it.buf, sb, blkaddr,
 						  EROFS_KMAP);
+=======
+			xattrblock_addr(sbi, vi->xattr_shared_xattrs[i]);
+
+		it->it.ofs = xattrblock_offset(sbi, vi->xattr_shared_xattrs[i]);
+		it->it.kaddr = erofs_read_metabuf(&it->it.buf, sb, blkaddr,
+						  EROFS_KMAP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(it->it.kaddr))
 			return PTR_ERR(it->it.kaddr);
 		it->it.blkaddr = blkaddr;

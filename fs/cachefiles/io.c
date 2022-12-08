@@ -385,6 +385,7 @@ static int cachefiles_write(struct netfs_cache_resources *cres,
 				  term_func, term_func_priv);
 }
 
+<<<<<<< HEAD
 static inline enum netfs_io_source
 cachefiles_do_prepare_read(struct netfs_cache_resources *cres,
 			   loff_t start, size_t *_len, loff_t i_size,
@@ -392,28 +393,56 @@ cachefiles_do_prepare_read(struct netfs_cache_resources *cres,
 {
 	enum cachefiles_prepare_read_trace why;
 	struct cachefiles_object *object = NULL;
+=======
+/*
+ * Prepare a read operation, shortening it to a cached/uncached
+ * boundary as appropriate.
+ */
+static enum netfs_io_source cachefiles_prepare_read(struct netfs_io_subrequest *subreq,
+						      loff_t i_size)
+{
+	enum cachefiles_prepare_read_trace why;
+	struct netfs_io_request *rreq = subreq->rreq;
+	struct netfs_cache_resources *cres = &rreq->cache_resources;
+	struct cachefiles_object *object;
+>>>>>>> b7ba80a49124 (Commit)
 	struct cachefiles_cache *cache;
 	struct fscache_cookie *cookie = fscache_cres_cookie(cres);
 	const struct cred *saved_cred;
 	struct file *file = cachefiles_cres_file(cres);
 	enum netfs_io_source ret = NETFS_DOWNLOAD_FROM_SERVER;
+<<<<<<< HEAD
 	size_t len = *_len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	loff_t off, to;
 	ino_t ino = file ? file_inode(file)->i_ino : 0;
 	int rc;
 
+<<<<<<< HEAD
 	_enter("%zx @%llx/%llx", len, start, i_size);
 
 	if (start >= i_size) {
+=======
+	_enter("%zx @%llx/%llx", subreq->len, subreq->start, i_size);
+
+	if (subreq->start >= i_size) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = NETFS_FILL_WITH_ZEROES;
 		why = cachefiles_trace_read_after_eof;
 		goto out_no_object;
 	}
 
 	if (test_bit(FSCACHE_COOKIE_NO_DATA_TO_READ, &cookie->flags)) {
+<<<<<<< HEAD
 		__set_bit(NETFS_SREQ_COPY_TO_CACHE, _flags);
 		why = cachefiles_trace_read_no_data;
 		if (!test_bit(NETFS_SREQ_ONDEMAND, _flags))
+=======
+		__set_bit(NETFS_SREQ_COPY_TO_CACHE, &subreq->flags);
+		why = cachefiles_trace_read_no_data;
+		if (!test_bit(NETFS_SREQ_ONDEMAND, &subreq->flags))
+>>>>>>> b7ba80a49124 (Commit)
 			goto out_no_object;
 	}
 
@@ -434,7 +463,11 @@ cachefiles_do_prepare_read(struct netfs_cache_resources *cres,
 retry:
 	off = cachefiles_inject_read_error();
 	if (off == 0)
+<<<<<<< HEAD
 		off = vfs_llseek(file, start, SEEK_DATA);
+=======
+		off = vfs_llseek(file, subreq->start, SEEK_DATA);
+>>>>>>> b7ba80a49124 (Commit)
 	if (off < 0 && off >= (loff_t)-MAX_ERRNO) {
 		if (off == (loff_t)-ENXIO) {
 			why = cachefiles_trace_read_seek_nxio;
@@ -446,22 +479,36 @@ retry:
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if (off >= start + len) {
+=======
+	if (off >= subreq->start + subreq->len) {
+>>>>>>> b7ba80a49124 (Commit)
 		why = cachefiles_trace_read_found_hole;
 		goto download_and_store;
 	}
 
+<<<<<<< HEAD
 	if (off > start) {
 		off = round_up(off, cache->bsize);
 		len = off - start;
 		*_len = len;
+=======
+	if (off > subreq->start) {
+		off = round_up(off, cache->bsize);
+		subreq->len = off - subreq->start;
+>>>>>>> b7ba80a49124 (Commit)
 		why = cachefiles_trace_read_found_part;
 		goto download_and_store;
 	}
 
 	to = cachefiles_inject_read_error();
 	if (to == 0)
+<<<<<<< HEAD
 		to = vfs_llseek(file, start, SEEK_HOLE);
+=======
+		to = vfs_llseek(file, subreq->start, SEEK_HOLE);
+>>>>>>> b7ba80a49124 (Commit)
 	if (to < 0 && to >= (loff_t)-MAX_ERRNO) {
 		trace_cachefiles_io_error(object, file_inode(file), to,
 					  cachefiles_trace_seek_error);
@@ -469,6 +516,7 @@ retry:
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if (to < start + len) {
 		if (start + len >= i_size)
 			to = round_up(to, cache->bsize);
@@ -476,6 +524,14 @@ retry:
 			to = round_down(to, cache->bsize);
 		len = to - start;
 		*_len = len;
+=======
+	if (to < subreq->start + subreq->len) {
+		if (subreq->start + subreq->len >= i_size)
+			to = round_up(to, cache->bsize);
+		else
+			to = round_down(to, cache->bsize);
+		subreq->len = to - subreq->start;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	why = cachefiles_trace_read_have_data;
@@ -483,11 +539,20 @@ retry:
 	goto out;
 
 download_and_store:
+<<<<<<< HEAD
 	__set_bit(NETFS_SREQ_COPY_TO_CACHE, _flags);
 	if (test_bit(NETFS_SREQ_ONDEMAND, _flags)) {
 		rc = cachefiles_ondemand_read(object, start, len);
 		if (!rc) {
 			__clear_bit(NETFS_SREQ_ONDEMAND, _flags);
+=======
+	__set_bit(NETFS_SREQ_COPY_TO_CACHE, &subreq->flags);
+	if (test_bit(NETFS_SREQ_ONDEMAND, &subreq->flags)) {
+		rc = cachefiles_ondemand_read(object, subreq->start,
+					      subreq->len);
+		if (!rc) {
+			__clear_bit(NETFS_SREQ_ONDEMAND, &subreq->flags);
+>>>>>>> b7ba80a49124 (Commit)
 			goto retry;
 		}
 		ret = NETFS_INVALID_READ;
@@ -495,11 +560,16 @@ download_and_store:
 out:
 	cachefiles_end_secure(cache, saved_cred);
 out_no_object:
+<<<<<<< HEAD
 	trace_cachefiles_prep_read(object, start, len, *_flags, ret, why, ino, netfs_ino);
+=======
+	trace_cachefiles_prep_read(subreq, ret, why, ino);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
 /*
+<<<<<<< HEAD
  * Prepare a read operation, shortening it to a cached/uncached
  * boundary as appropriate.
  */
@@ -524,6 +594,8 @@ cachefiles_prepare_ondemand_read(struct netfs_cache_resources *cres,
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Prepare for a write to occur.
  */
 int __cachefiles_prepare_write(struct cachefiles_object *object,
@@ -643,7 +715,10 @@ static const struct netfs_cache_ops cachefiles_netfs_cache_ops = {
 	.write			= cachefiles_write,
 	.prepare_read		= cachefiles_prepare_read,
 	.prepare_write		= cachefiles_prepare_write,
+<<<<<<< HEAD
 	.prepare_ondemand_read	= cachefiles_prepare_ondemand_read,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.query_occupancy	= cachefiles_query_occupancy,
 };
 

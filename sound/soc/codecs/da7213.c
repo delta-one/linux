@@ -1157,6 +1157,7 @@ static int da7213_hw_params(struct snd_pcm_substream *substream,
 {
 	struct snd_soc_component *component = dai->component;
 	struct da7213_priv *da7213 = snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
 	u8 dai_clk_mode = DA7213_DAI_BCLKS_PER_WCLK_64;
 	u8 dai_ctrl = 0;
 	u8 fs;
@@ -1177,11 +1178,19 @@ static int da7213_hw_params(struct snd_pcm_substream *substream,
 		return -EINVAL;
 	}
 
+=======
+	u8 dai_ctrl = 0;
+	u8 fs;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Set DAI format */
 	switch (params_width(params)) {
 	case 16:
 		dai_ctrl |= DA7213_DAI_WORD_LENGTH_S16_LE;
+<<<<<<< HEAD
 		dai_clk_mode = DA7213_DAI_BCLKS_PER_WCLK_32; /* 32bit for 1ch and 2ch */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case 20:
 		dai_ctrl |= DA7213_DAI_WORD_LENGTH_S20_LE;
@@ -1242,11 +1251,16 @@ static int da7213_hw_params(struct snd_pcm_substream *substream,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	snd_soc_component_update_bits(component, DA7213_DAI_CLK_MODE,
 		DA7213_DAI_BCLKS_PER_WCLK_MASK, dai_clk_mode);
 
 	snd_soc_component_update_bits(component, DA7213_DAI_CTRL,
 		DA7213_DAI_WORD_LENGTH_MASK | DA7213_DAI_MONO_MODE_MASK, dai_ctrl);
+=======
+	snd_soc_component_update_bits(component, DA7213_DAI_CTRL, DA7213_DAI_WORD_LENGTH_MASK,
+			    dai_ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 	snd_soc_component_write(component, DA7213_SR, fs);
 
 	return 0;
@@ -1321,6 +1335,7 @@ static int da7213_set_dai_fmt(struct snd_soc_dai *codec_dai, unsigned int fmt)
 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
 	case SND_SOC_DAIFMT_I2S:
 		dai_ctrl |= DA7213_DAI_FORMAT_I2S_MODE;
+<<<<<<< HEAD
 		da7213->fmt = DA7213_DAI_FORMAT_I2S_MODE;
 		break;
 	case SND_SOC_DAIFMT_LEFT_J:
@@ -1330,15 +1345,29 @@ static int da7213_set_dai_fmt(struct snd_soc_dai *codec_dai, unsigned int fmt)
 	case SND_SOC_DAIFMT_RIGHT_J:
 		dai_ctrl |= DA7213_DAI_FORMAT_RIGHT_J;
 		da7213->fmt = DA7213_DAI_FORMAT_RIGHT_J;
+=======
+		break;
+	case SND_SOC_DAIFMT_LEFT_J:
+		dai_ctrl |= DA7213_DAI_FORMAT_LEFT_J;
+		break;
+	case SND_SOC_DAIFMT_RIGHT_J:
+		dai_ctrl |= DA7213_DAI_FORMAT_RIGHT_J;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case SND_SOC_DAI_FORMAT_DSP_A: /* L data MSB after FRM LRC */
 		dai_ctrl |= DA7213_DAI_FORMAT_DSP;
 		dai_offset = 1;
+<<<<<<< HEAD
 		da7213->fmt = DA7213_DAI_FORMAT_DSP;
 		break;
 	case SND_SOC_DAI_FORMAT_DSP_B: /* L data MSB during FRM LRC */
 		dai_ctrl |= DA7213_DAI_FORMAT_DSP;
 		da7213->fmt = DA7213_DAI_FORMAT_DSP;
+=======
+		break;
+	case SND_SOC_DAI_FORMAT_DSP_B: /* L data MSB during FRM LRC */
+		dai_ctrl |= DA7213_DAI_FORMAT_DSP;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		return -EINVAL;

@@ -325,6 +325,11 @@ dma_chan_tx_status(struct dma_chan *dchan, dma_cookie_t cookie,
 		len = vd_to_axi_desc(vdesc)->hw_desc[0].len;
 		completed_length = completed_blocks * len;
 		bytes = length - completed_length;
+<<<<<<< HEAD
+=======
+	} else {
+		bytes = vd_to_axi_desc(vdesc)->length;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	spin_unlock_irqrestore(&chan->vc.lock, flags);
@@ -1016,11 +1021,14 @@ static noinline void axi_chan_handle_err(struct axi_dma_chan *chan, u32 status)
 
 	/* The bad descriptor currently is in the head of vc list */
 	vd = vchan_next_desc(&chan->vc);
+<<<<<<< HEAD
 	if (!vd) {
 		dev_err(chan2dev(chan), "BUG: %s, IRQ with no descriptors\n",
 			axi_chan_name(chan));
 		goto out;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Remove the completed descriptor from issued list */
 	list_del(&vd->node);
 
@@ -1035,7 +1043,10 @@ static noinline void axi_chan_handle_err(struct axi_dma_chan *chan, u32 status)
 	/* Try to restart the controller */
 	axi_chan_start_first_queued(chan);
 
+<<<<<<< HEAD
 out:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irqrestore(&chan->vc.lock, flags);
 }
 
@@ -1369,6 +1380,10 @@ static int dw_probe(struct platform_device *pdev)
 {
 	struct device_node *node = pdev->dev.of_node;
 	struct axi_dma_chip *chip;
+<<<<<<< HEAD
+=======
+	struct resource *mem;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dw_axi_dma *dw;
 	struct dw_axi_dma_hcfg *hdata;
 	u32 i;
@@ -1394,7 +1409,12 @@ static int dw_probe(struct platform_device *pdev)
 	if (chip->irq < 0)
 		return chip->irq;
 
+<<<<<<< HEAD
 	chip->regs = devm_platform_ioremap_resource(pdev, 0);
+=======
+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	chip->regs = devm_ioremap_resource(chip->dev, mem);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(chip->regs))
 		return PTR_ERR(chip->regs);
 

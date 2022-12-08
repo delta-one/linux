@@ -1075,7 +1075,11 @@ static ssize_t charger_name_show(struct device *dev,
 	struct charger_regulator *charger
 		= container_of(attr, struct charger_regulator, attr_name);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", charger->regulator_name);
+=======
+	return sprintf(buf, "%s\n", charger->regulator_name);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t charger_state_show(struct device *dev,
@@ -1088,7 +1092,11 @@ static ssize_t charger_state_show(struct device *dev,
 	if (!charger->externally_control)
 		state = regulator_is_enabled(charger->consumer);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", state ? "enabled" : "disabled");
+=======
+	return sprintf(buf, "%s\n", state ? "enabled" : "disabled");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t charger_externally_control_show(struct device *dev,
@@ -1097,7 +1105,11 @@ static ssize_t charger_externally_control_show(struct device *dev,
 	struct charger_regulator *charger = container_of(attr,
 			struct charger_regulator, attr_externally_control);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", charger->externally_control);
+=======
+	return sprintf(buf, "%d\n", charger->externally_control);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t charger_externally_control_store(struct device *dev,
@@ -1331,7 +1343,11 @@ static struct charger_desc *of_cm_parse_desc(struct device *dev)
 	of_property_read_string(np, "cm-thermal-zone", &desc->thermal_zone);
 
 	of_property_read_u32(np, "cm-battery-cold", &desc->temp_min);
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "cm-battery-cold-in-minus"))
+=======
+	if (of_get_property(np, "cm-battery-cold-in-minus", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		desc->temp_min *= -1;
 	of_property_read_u32(np, "cm-battery-hot", &desc->temp_max);
 	of_property_read_u32(np, "cm-battery-temp-diff", &desc->temp_diff);

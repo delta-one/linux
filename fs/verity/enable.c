@@ -7,6 +7,7 @@
 
 #include "fsverity_private.h"
 
+<<<<<<< HEAD
 #include <linux/mount.h>
 #include <linux/sched/signal.h>
 #include <linux/uaccess.h>
@@ -50,6 +51,138 @@ static int write_merkle_tree_block(struct inode *inode, const u8 *buf,
 		fsverity_err(inode, "Error %d writing Merkle tree block %lu",
 			     err, index);
 	return err;
+=======
+#include <crypto/hash.h>
+#include <linux/backing-dev.h>
+#include <linux/mount.h>
+#include <linux/pagemap.h>
+#include <linux/sched/signal.h>
+#include <linux/uaccess.h>
+
+/*
+ * Read a file data page for Merkle tree construction.  Do aggressive readahead,
+ * since we're sequentially reading the entire file.
+ */
+static struct page *read_file_data_page(struct file *file, pgoff_t index,
+					struct file_ra_state *ra,
+					unsigned long remaining_pages)
+{
+	DEFINE_READAHEAD(ractl, file, ra, file->f_mapping, index);
+	struct folio *folio;
+
+	folio = __filemap_get_folio(ractl.mapping, index, FGP_ACCESSED, 0);
+	if (!folio || !folio_test_uptodate(folio)) {
+		if (folio)
+			folio_put(folio);
+		else
+			page_cache_sync_ra(&ractl, remaining_pages);
+		folio = read_cache_folio(ractl.mapping, index, NULL, file);
+		if (IS_ERR(folio))
+			return &folio->page;
+	}
+	if (folio_test_readahead(folio))
+		page_cache_async_ra(&ractl, folio, remaining_pages);
+	return folio_file_page(folio, index);
+}
+
+static int build_merkle_tree_level(struct file *filp, unsigned int level,
+				   u64 num_blocks_to_hash,
+				   const struct merkle_tree_params *params,
+				   u8 *pending_hashes,
+				   struct ahash_request *req)
+{
+	struct inode *inode = file_inode(filp);
+	const struct fsverity_operations *vops = inode->i_sb->s_vop;
+	struct file_ra_state ra = { 0 };
+	unsigned int pending_size = 0;
+	u64 dst_block_num;
+	u64 i;
+	int err;
+
+	if (WARN_ON(params->block_size != PAGE_SIZE)) /* checked earlier too */
+		return -EINVAL;
+
+	if (level < params->num_levels) {
+		dst_block_num = params->level_start[level];
+	} else {
+		if (WARN_ON(num_blocks_to_hash != 1))
+			return -EINVAL;
+		dst_block_num = 0; /* unused */
+	}
+
+	file_ra_state_init(&ra, filp->f_mapping);
+
+	for (i = 0; i < num_blocks_to_hash; i++) {
+		struct page *src_page;
+
+		if ((pgoff_t)i % 10000 == 0 || i + 1 == num_blocks_to_hash)
+			pr_debug("Hashing block %llu of %llu for level %u\n",
+				 i + 1, num_blocks_to_hash, level);
+
+		if (level == 0) {
+			/* Leaf: hashing a data block */
+			src_page = read_file_data_page(filp, i, &ra,
+						       num_blocks_to_hash - i);
+			if (IS_ERR(src_page)) {
+				err = PTR_ERR(src_page);
+				fsverity_err(inode,
+					     "Error %d reading data page %llu",
+					     err, i);
+				return err;
+			}
+		} else {
+			unsigned long num_ra_pages =
+				min_t(unsigned long, num_blocks_to_hash - i,
+				      inode->i_sb->s_bdi->io_pages);
+
+			/* Non-leaf: hashing hash block from level below */
+			src_page = vops->read_merkle_tree_page(inode,
+					params->level_start[level - 1] + i,
+					num_ra_pages);
+			if (IS_ERR(src_page)) {
+				err = PTR_ERR(src_page);
+				fsverity_err(inode,
+					     "Error %d reading Merkle tree page %llu",
+					     err, params->level_start[level - 1] + i);
+				return err;
+			}
+		}
+
+		err = fsverity_hash_page(params, inode, req, src_page,
+					 &pending_hashes[pending_size]);
+		put_page(src_page);
+		if (err)
+			return err;
+		pending_size += params->digest_size;
+
+		if (level == params->num_levels) /* Root hash? */
+			return 0;
+
+		if (pending_size + params->digest_size > params->block_size ||
+		    i + 1 == num_blocks_to_hash) {
+			/* Flush the pending hash block */
+			memset(&pending_hashes[pending_size], 0,
+			       params->block_size - pending_size);
+			err = vops->write_merkle_tree_block(inode,
+					pending_hashes,
+					dst_block_num,
+					params->log_blocksize);
+			if (err) {
+				fsverity_err(inode,
+					     "Error %d writing Merkle tree block %llu",
+					     err, dst_block_num);
+				return err;
+			}
+			dst_block_num++;
+			pending_size = 0;
+		}
+
+		if (fatal_signal_pending(current))
+			return -EINTR;
+		cond_resched();
+	}
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -65,6 +198,7 @@ static int build_merkle_tree(struct file *filp,
 			     u8 *root_hash)
 {
 	struct inode *inode = file_inode(filp);
+<<<<<<< HEAD
 	const u64 data_size = inode->i_size;
 	const int num_levels = params->num_levels;
 	struct ahash_request *req;
@@ -76,6 +210,15 @@ static int build_merkle_tree(struct file *filp,
 	int err;
 
 	if (data_size == 0) {
+=======
+	u8 *pending_hashes;
+	struct ahash_request *req;
+	u64 blocks;
+	unsigned int level;
+	int err = -ENOMEM;
+
+	if (inode->i_size == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Empty file is a special case; root hash is all 0's */
 		memset(root_hash, 0, params->digest_size);
 		return 0;
@@ -84,6 +227,7 @@ static int build_merkle_tree(struct file *filp,
 	/* This allocation never fails, since it's mempool-backed. */
 	req = fsverity_alloc_hash_request(params->hash_alg, GFP_KERNEL);
 
+<<<<<<< HEAD
 	/*
 	 * Allocate the block buffers.  Buffer "-1" is for data blocks.
 	 * Buffers 0 <= level < num_levels are for the actual tree levels.
@@ -173,6 +317,31 @@ static int build_merkle_tree(struct file *filp,
 out:
 	for (level = -1; level < num_levels; level++)
 		kfree(buffers[level].data);
+=======
+	pending_hashes = kmalloc(params->block_size, GFP_KERNEL);
+	if (!pending_hashes)
+		goto out;
+
+	/*
+	 * Build each level of the Merkle tree, starting at the leaf level
+	 * (level 0) and ascending to the root node (level 'num_levels - 1').
+	 * Then at the end (level 'num_levels'), calculate the root hash.
+	 */
+	blocks = ((u64)inode->i_size + params->block_size - 1) >>
+		 params->log_blocksize;
+	for (level = 0; level <= params->num_levels; level++) {
+		err = build_merkle_tree_level(filp, level, blocks, params,
+					      pending_hashes, req);
+		if (err)
+			goto out;
+		blocks = (blocks + params->hashes_per_block - 1) >>
+			 params->log_arity;
+	}
+	memcpy(root_hash, pending_hashes, params->digest_size);
+	err = 0;
+out:
+	kfree(pending_hashes);
+>>>>>>> b7ba80a49124 (Commit)
 	fsverity_free_hash_request(params->hash_alg, req);
 	return err;
 }
@@ -246,12 +415,21 @@ static int enable_verity(struct file *filp,
 	 * ->begin_enable_verity() and ->end_enable_verity() using the inode
 	 * lock and only allow one process to be here at a time on a given file.
 	 */
+<<<<<<< HEAD
+=======
+	pr_debug("Building Merkle tree...\n");
+>>>>>>> b7ba80a49124 (Commit)
 	BUILD_BUG_ON(sizeof(desc->root_hash) < FS_VERITY_MAX_DIGEST_SIZE);
 	err = build_merkle_tree(filp, &params, desc->root_hash);
 	if (err) {
 		fsverity_err(inode, "Error %d building Merkle tree", err);
 		goto rollback;
 	}
+<<<<<<< HEAD
+=======
+	pr_debug("Done building Merkle tree.  Root hash is %s:%*phN\n",
+		 params.hash_alg->name, params.digest_size, desc->root_hash);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Create the fsverity_info.  Don't bother trying to save work by
@@ -266,6 +444,13 @@ static int enable_verity(struct file *filp,
 		goto rollback;
 	}
 
+<<<<<<< HEAD
+=======
+	if (arg->sig_size)
+		pr_debug("Storing a %u-byte PKCS#7 signature alongside the file\n",
+			 arg->sig_size);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Tell the filesystem to finish enabling verity on the file.
 	 * Serialized with ->begin_enable_verity() by the inode lock.
@@ -328,7 +513,11 @@ int fsverity_ioctl_enable(struct file *filp, const void __user *uarg)
 	    memchr_inv(arg.__reserved2, 0, sizeof(arg.__reserved2)))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (!is_power_of_2(arg.block_size))
+=======
+	if (arg.block_size != PAGE_SIZE)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (arg.salt_size > sizeof_field(struct fsverity_descriptor, salt))
@@ -366,6 +555,7 @@ int fsverity_ioctl_enable(struct file *filp, const void __user *uarg)
 		goto out_drop_write;
 
 	err = enable_verity(filp, &arg);
+<<<<<<< HEAD
 
 	/*
 	 * We no longer drop the inode's pagecache after enabling verity.  This
@@ -382,11 +572,30 @@ int fsverity_ioctl_enable(struct file *filp, const void __user *uarg)
 	 * being used, evicted, *and* re-instantiated all while enabling verity
 	 * is quite small), we no longer drop the inode's pagecache.
 	 */
+=======
+	if (err)
+		goto out_allow_write_access;
+
+	/*
+	 * Some pages of the file may have been evicted from pagecache after
+	 * being used in the Merkle tree construction, then read into pagecache
+	 * again by another process reading from the file concurrently.  Since
+	 * these pages didn't undergo verification against the file digest which
+	 * fs-verity now claims to be enforcing, we have to wipe the pagecache
+	 * to ensure that all future reads are verified.
+	 */
+	filemap_write_and_wait(inode->i_mapping);
+	invalidate_inode_pages2(inode->i_mapping);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * allow_write_access() is needed to pair with deny_write_access().
 	 * Regardless, the filesystem won't allow writing to verity files.
 	 */
+<<<<<<< HEAD
+=======
+out_allow_write_access:
+>>>>>>> b7ba80a49124 (Commit)
 	allow_write_access(filp);
 out_drop_write:
 	mnt_drop_write_file(filp);

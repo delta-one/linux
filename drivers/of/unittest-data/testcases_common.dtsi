@@ -17,4 +17,7 @@
 #include "tests-address.dtsi"
 #include "tests-platform.dtsi"
 #include "tests-overlay.dtsi"
+<<<<<<< HEAD
 #include "tests-lifecycle.dtsi"
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -167,6 +167,7 @@ properties:
   snps,mtl-rx-config:
     $ref: /schemas/types.yaml#/definitions/phandle
     description:
+<<<<<<< HEAD
       Multiple RX Queues parameters. Phandle to a node that
       implements the 'rx-queues-config' object described in
       this binding.
@@ -288,10 +289,33 @@ properties:
                 snps,route-up: false
         additionalProperties: false
     additionalProperties: false
+=======
+      Multiple RX Queues parameters. Phandle to a node that can
+      contain the following properties
+        * snps,rx-queues-to-use, number of RX queues to be used in the
+          driver
+        * Choose one of these RX scheduling algorithms
+          * snps,rx-sched-sp, Strict priority
+          * snps,rx-sched-wsp, Weighted Strict priority
+        * For each RX queue
+          * Choose one of these modes
+            * snps,dcb-algorithm, Queue to be enabled as DCB
+            * snps,avb-algorithm, Queue to be enabled as AVB
+          * snps,map-to-dma-channel, Channel to map
+          * Specifiy specific packet routing
+            * snps,route-avcp, AV Untagged Control packets
+            * snps,route-ptp, PTP Packets
+            * snps,route-dcbcp, DCB Control Packets
+            * snps,route-up, Untagged Packets
+            * snps,route-multi-broad, Multicast & Broadcast Packets
+          * snps,priority, bitmask of the tagged frames priorities assigned to
+            the queue
+>>>>>>> b7ba80a49124 (Commit)
 
   snps,mtl-tx-config:
     $ref: /schemas/types.yaml#/definitions/phandle
     description:
+<<<<<<< HEAD
       Multiple TX Queues parameters. Phandle to a node that
       implements the 'tx-queues-config' object described in
       this binding.
@@ -399,6 +423,34 @@ properties:
                 snps,weight: false
         additionalProperties: false
     additionalProperties: false
+=======
+      Multiple TX Queues parameters. Phandle to a node that can
+      contain the following properties
+        * snps,tx-queues-to-use, number of TX queues to be used in the
+          driver
+        * Choose one of these TX scheduling algorithms
+          * snps,tx-sched-wrr, Weighted Round Robin
+          * snps,tx-sched-wfq, Weighted Fair Queuing
+          * snps,tx-sched-dwrr, Deficit Weighted Round Robin
+          * snps,tx-sched-sp, Strict priority
+        * For each TX queue
+          * snps,weight, TX queue weight (if using a DCB weight
+            algorithm)
+          * Choose one of these modes
+            * snps,dcb-algorithm, TX queue will be working in DCB
+            * snps,avb-algorithm, TX queue will be working in AVB
+              [Attention] Queue 0 is reserved for legacy traffic
+                          and so no AVB is available in this queue.
+          * Configure Credit Base Shaper (if AVB Mode selected)
+            * snps,send_slope, enable Low Power Interface
+            * snps,idle_slope, unlock on WoL
+            * snps,high_credit, max write outstanding req. limit
+            * snps,low_credit, max read outstanding req. limit
+          * snps,priority, bitmask of the priorities assigned to the queue.
+            When a PFC frame is received with priorities matching the bitmask,
+            the queue is blocked from transmitting for the pause time specified
+            in the PFC frame.
+>>>>>>> b7ba80a49124 (Commit)
 
   snps,reset-gpio:
     deprecated: true
@@ -471,11 +523,14 @@ properties:
       is supported. For example, this is used in case of SGMII and
       MAC2MAC connection.
 
+<<<<<<< HEAD
   snps,clk-csr:
     $ref: /schemas/types.yaml#/definitions/uint32
     description:
       Frequency division factor for MDC clock.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   mdio:
     $ref: mdio.yaml#
     unevaluatedProperties: false
@@ -489,6 +544,7 @@ properties:
     required:
       - compatible
 
+<<<<<<< HEAD
   stmmac-axi-config:
     type: object
     unevaluatedProperties: false
@@ -543,6 +599,8 @@ properties:
         description:
           rebuild INCRx Burst
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg
@@ -552,10 +610,17 @@ required:
 
 dependencies:
   snps,reset-active-low: ["snps,reset-gpio"]
+<<<<<<< HEAD
   snps,reset-delays-us: ["snps,reset-gpio"]
 
 allOf:
   - $ref: ethernet-controller.yaml#
+=======
+  snps,reset-delay-us: ["snps,reset-gpio"]
+
+allOf:
+  - $ref: "ethernet-controller.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -645,6 +710,44 @@ additionalProperties: true
 
 examples:
   - |
+<<<<<<< HEAD
+=======
+    stmmac_axi_setup: stmmac-axi-config {
+        snps,wr_osr_lmt = <0xf>;
+        snps,rd_osr_lmt = <0xf>;
+        snps,blen = <256 128 64 32 0 0 0>;
+    };
+
+    mtl_rx_setup: rx-queues-config {
+        snps,rx-queues-to-use = <1>;
+        snps,rx-sched-sp;
+        queue0 {
+            snps,dcb-algorithm;
+            snps,map-to-dma-channel = <0x0>;
+            snps,priority = <0x0>;
+        };
+    };
+
+    mtl_tx_setup: tx-queues-config {
+        snps,tx-queues-to-use = <2>;
+        snps,tx-sched-wrr;
+        queue0 {
+            snps,weight = <0x10>;
+            snps,dcb-algorithm;
+            snps,priority = <0x0>;
+        };
+
+        queue1 {
+            snps,avb-algorithm;
+            snps,send_slope = <0x1000>;
+            snps,idle_slope = <0x1000>;
+            snps,high_credit = <0x3E800>;
+            snps,low_credit = <0xFFC18000>;
+            snps,priority = <0x1>;
+        };
+    };
+
+>>>>>>> b7ba80a49124 (Commit)
     gmac0: ethernet@e0800000 {
         compatible = "snps,dwxgmac-2.10", "snps,dwxgmac";
         reg = <0xe0800000 0x8000>;
@@ -663,6 +766,7 @@ examples:
         snps,axi-config = <&stmmac_axi_setup>;
         snps,mtl-rx-config = <&mtl_rx_setup>;
         snps,mtl-tx-config = <&mtl_tx_setup>;
+<<<<<<< HEAD
 
         stmmac_axi_setup: stmmac-axi-config {
             snps,wr_osr_lmt = <0xf>;
@@ -699,6 +803,8 @@ examples:
             };
         };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
         mdio0 {
             #address-cells = <1>;
             #size-cells = <0>;

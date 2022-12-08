@@ -123,7 +123,11 @@ static int mwifiex_unregister(struct mwifiex_adapter *adapter)
 	if (adapter->if_ops.cleanup_if)
 		adapter->if_ops.cleanup_if(adapter);
 
+<<<<<<< HEAD
 	timer_shutdown_sync(&adapter->cmd_timer);
+=======
+	del_timer_sync(&adapter->cmd_timer);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Free private structures */
 	for (i = 0; i < adapter->priv_num; i++) {

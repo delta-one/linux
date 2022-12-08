@@ -14,7 +14,10 @@
 #include <sys/socket.h>
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_endian.h>
+<<<<<<< HEAD
 #include "bpf_misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Sockmap sample program connects a client and a backend together
  * using cgroups.
@@ -112,15 +115,21 @@ int bpf_prog2(struct __sk_buff *skb)
 	int len, *f, ret, zero = 0;
 	__u64 flags = 0;
 
+<<<<<<< HEAD
 	__sink(rport);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (lport == 10000)
 		ret = 10;
 	else
 		ret = 1;
 
 	len = (__u32)skb->data_end - (__u32)skb->data;
+<<<<<<< HEAD
 	__sink(len);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	f = bpf_map_lookup_elem(&sock_skb_opts, &zero);
 	if (f && *f) {
 		ret = 3;
@@ -184,6 +193,10 @@ int bpf_prog3(struct __sk_buff *skb)
 	if (err)
 		return SK_DROP;
 	bpf_write_pass(skb, 13);
+<<<<<<< HEAD
+=======
+tls_out:
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -191,7 +204,12 @@ SEC("sockops")
 int bpf_sockmap(struct bpf_sock_ops *skops)
 {
 	__u32 lport, rport;
+<<<<<<< HEAD
 	int op, err, ret;
+=======
+	int op, err = 0, index, key, ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 
 	op = (int) skops->op;
 
@@ -230,8 +248,11 @@ int bpf_sockmap(struct bpf_sock_ops *skops)
 		break;
 	}
 
+<<<<<<< HEAD
 	__sink(err);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -325,10 +346,13 @@ int bpf_prog8(struct sk_msg_md *msg)
 	} else {
 		return SK_DROP;
 	}
+<<<<<<< HEAD
 
 	__sink(data_end);
 	__sink(data);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return SK_PASS;
 }
 SEC("sk_msg4")

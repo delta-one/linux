@@ -7,7 +7,10 @@
 
 #include "fsverity_private.h"
 
+<<<<<<< HEAD
 #include <linux/mm.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 
 static struct kmem_cache *fsverity_info_cachep;
@@ -35,7 +38,10 @@ int fsverity_init_merkle_tree_params(struct merkle_tree_params *params,
 	struct fsverity_hash_alg *hash_alg;
 	int err;
 	u64 blocks;
+<<<<<<< HEAD
 	u64 blocks_in_level[FS_VERITY_MAX_LEVELS];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 offset;
 	int level;
 
@@ -56,6 +62,7 @@ int fsverity_init_merkle_tree_params(struct merkle_tree_params *params,
 		goto out_err;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * fs/verity/ directly assumes that the Merkle tree block size is a
 	 * power of 2 less than or equal to PAGE_SIZE.  Another restriction
@@ -73,6 +80,9 @@ int fsverity_init_merkle_tree_params(struct merkle_tree_params *params,
 	 */
 	if (log_blocksize < 10 || log_blocksize > PAGE_SHIFT ||
 	    log_blocksize > inode->i_blkbits) {
+=======
+	if (log_blocksize != PAGE_SHIFT) {
+>>>>>>> b7ba80a49124 (Commit)
 		fsverity_warn(inode, "Unsupported log_blocksize: %u",
 			      log_blocksize);
 		err = -EINVAL;
@@ -80,8 +90,11 @@ int fsverity_init_merkle_tree_params(struct merkle_tree_params *params,
 	}
 	params->log_blocksize = log_blocksize;
 	params->block_size = 1 << log_blocksize;
+<<<<<<< HEAD
 	params->log_blocks_per_page = PAGE_SHIFT - log_blocksize;
 	params->blocks_per_page = 1 << params->log_blocks_per_page;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (WARN_ON(!is_power_of_2(params->digest_size))) {
 		err = -EINVAL;
@@ -94,10 +107,20 @@ int fsverity_init_merkle_tree_params(struct merkle_tree_params *params,
 		err = -EINVAL;
 		goto out_err;
 	}
+<<<<<<< HEAD
 	params->log_digestsize = ilog2(params->digest_size);
 	params->log_arity = log_blocksize - params->log_digestsize;
 	params->hashes_per_block = 1 << params->log_arity;
 
+=======
+	params->log_arity = params->log_blocksize - ilog2(params->digest_size);
+	params->hashes_per_block = 1 << params->log_arity;
+
+	pr_debug("Merkle tree uses %s with %u-byte blocks (%u hashes/block), salt=%*phN\n",
+		 hash_alg->name, params->block_size, params->hashes_per_block,
+		 (int)salt_size, salt);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Compute the number of levels in the Merkle tree and create a map from
 	 * level to the starting block of that level.  Level 'num_levels - 1' is
@@ -107,20 +130,36 @@ int fsverity_init_merkle_tree_params(struct merkle_tree_params *params,
 
 	/* Compute number of levels and the number of blocks in each level */
 	blocks = ((u64)inode->i_size + params->block_size - 1) >> log_blocksize;
+<<<<<<< HEAD
 	while (blocks > 1) {
 		if (params->num_levels >= FS_VERITY_MAX_LEVELS) {
 			fsverity_err(inode, "Too many levels in Merkle tree");
 			err = -EFBIG;
+=======
+	pr_debug("Data is %lld bytes (%llu blocks)\n", inode->i_size, blocks);
+	while (blocks > 1) {
+		if (params->num_levels >= FS_VERITY_MAX_LEVELS) {
+			fsverity_err(inode, "Too many levels in Merkle tree");
+			err = -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 			goto out_err;
 		}
 		blocks = (blocks + params->hashes_per_block - 1) >>
 			 params->log_arity;
+<<<<<<< HEAD
 		blocks_in_level[params->num_levels++] = blocks;
 	}
+=======
+		/* temporarily using level_start[] to store blocks in level */
+		params->level_start[params->num_levels++] = blocks;
+	}
+	params->level0_blocks = params->level_start[0];
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Compute the starting block of each level */
 	offset = 0;
 	for (level = (int)params->num_levels - 1; level >= 0; level--) {
+<<<<<<< HEAD
 		params->level_start[level] = offset;
 		offset += blocks_in_level[level];
 	}
@@ -146,6 +185,16 @@ int fsverity_init_merkle_tree_params(struct merkle_tree_params *params,
 
 	params->tree_size = offset << log_blocksize;
 	params->tree_pages = PAGE_ALIGN(params->tree_size) >> PAGE_SHIFT;
+=======
+		blocks = params->level_start[level];
+		params->level_start[level] = offset;
+		pr_debug("Level %d is %llu blocks starting at index %llu\n",
+			 level, blocks, offset);
+		offset += blocks;
+	}
+
+	params->tree_size = offset << log_blocksize;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 out_err:
@@ -196,7 +245,11 @@ struct fsverity_info *fsverity_create_info(const struct inode *inode,
 		fsverity_err(inode,
 			     "Error %d initializing Merkle tree parameters",
 			     err);
+<<<<<<< HEAD
 		goto fail;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	memcpy(vi->root_hash, desc->root_hash, vi->tree_params.digest_size);
@@ -205,6 +258,7 @@ struct fsverity_info *fsverity_create_info(const struct inode *inode,
 				  vi->file_digest);
 	if (err) {
 		fsverity_err(inode, "Error %d computing file digest", err);
+<<<<<<< HEAD
 		goto fail;
 	}
 
@@ -247,6 +301,22 @@ struct fsverity_info *fsverity_create_info(const struct inode *inode,
 fail:
 	fsverity_free_info(vi);
 	return ERR_PTR(err);
+=======
+		goto out;
+	}
+	pr_debug("Computed file digest: %s:%*phN\n",
+		 vi->tree_params.hash_alg->name,
+		 vi->tree_params.digest_size, vi->file_digest);
+
+	err = fsverity_verify_signature(vi, desc->signature,
+					le32_to_cpu(desc->sig_size));
+out:
+	if (err) {
+		fsverity_free_info(vi);
+		vi = ERR_PTR(err);
+	}
+	return vi;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void fsverity_set_info(struct inode *inode, struct fsverity_info *vi)
@@ -273,7 +343,10 @@ void fsverity_free_info(struct fsverity_info *vi)
 	if (!vi)
 		return;
 	kfree(vi->tree_params.hashstate);
+<<<<<<< HEAD
 	kvfree(vi->hash_block_verified);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kmem_cache_free(fsverity_info_cachep, vi);
 }
 
@@ -385,6 +458,7 @@ out_free_desc:
 	return err;
 }
 
+<<<<<<< HEAD
 int __fsverity_file_open(struct inode *inode, struct file *filp)
 {
 	if (filp->f_mode & FMODE_WRITE)
@@ -402,11 +476,73 @@ int __fsverity_prepare_setattr(struct dentry *dentry, struct iattr *attr)
 EXPORT_SYMBOL_GPL(__fsverity_prepare_setattr);
 
 void __fsverity_cleanup_inode(struct inode *inode)
+=======
+/**
+ * fsverity_file_open() - prepare to open a verity file
+ * @inode: the inode being opened
+ * @filp: the struct file being set up
+ *
+ * When opening a verity file, deny the open if it is for writing.  Otherwise,
+ * set up the inode's ->i_verity_info if not already done.
+ *
+ * When combined with fscrypt, this must be called after fscrypt_file_open().
+ * Otherwise, we won't have the key set up to decrypt the verity metadata.
+ *
+ * Return: 0 on success, -errno on failure
+ */
+int fsverity_file_open(struct inode *inode, struct file *filp)
+{
+	if (!IS_VERITY(inode))
+		return 0;
+
+	if (filp->f_mode & FMODE_WRITE) {
+		pr_debug("Denying opening verity file (ino %lu) for write\n",
+			 inode->i_ino);
+		return -EPERM;
+	}
+
+	return ensure_verity_info(inode);
+}
+EXPORT_SYMBOL_GPL(fsverity_file_open);
+
+/**
+ * fsverity_prepare_setattr() - prepare to change a verity inode's attributes
+ * @dentry: dentry through which the inode is being changed
+ * @attr: attributes to change
+ *
+ * Verity files are immutable, so deny truncates.  This isn't covered by the
+ * open-time check because sys_truncate() takes a path, not a file descriptor.
+ *
+ * Return: 0 on success, -errno on failure
+ */
+int fsverity_prepare_setattr(struct dentry *dentry, struct iattr *attr)
+{
+	if (IS_VERITY(d_inode(dentry)) && (attr->ia_valid & ATTR_SIZE)) {
+		pr_debug("Denying truncate of verity file (ino %lu)\n",
+			 d_inode(dentry)->i_ino);
+		return -EPERM;
+	}
+	return 0;
+}
+EXPORT_SYMBOL_GPL(fsverity_prepare_setattr);
+
+/**
+ * fsverity_cleanup_inode() - free the inode's verity info, if present
+ * @inode: an inode being evicted
+ *
+ * Filesystems must call this on inode eviction to free ->i_verity_info.
+ */
+void fsverity_cleanup_inode(struct inode *inode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	fsverity_free_info(inode->i_verity_info);
 	inode->i_verity_info = NULL;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(__fsverity_cleanup_inode);
+=======
+EXPORT_SYMBOL_GPL(fsverity_cleanup_inode);
+>>>>>>> b7ba80a49124 (Commit)
 
 int __init fsverity_init_info_cache(void)
 {

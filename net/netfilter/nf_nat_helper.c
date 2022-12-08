@@ -223,7 +223,11 @@ u16 nf_nat_exp_find_port(struct nf_conntrack_expect *exp, u16 port)
 		if (res != -EBUSY || (--attempts_left < 0))
 			break;
 
+<<<<<<< HEAD
 		port = min + get_random_u32_below(range);
+=======
+		port = min + prandom_u32_max(range);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;

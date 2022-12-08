@@ -701,7 +701,12 @@ static irqreturn_t pca9450_irq_handler(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static int pca9450_i2c_probe(struct i2c_client *i2c)
+=======
+static int pca9450_i2c_probe(struct i2c_client *i2c,
+			     const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	enum pca9450_chip_type type = (unsigned int)(uintptr_t)
 				      of_device_get_match_data(&i2c->dev);
@@ -872,10 +877,16 @@ MODULE_DEVICE_TABLE(of, pca9450_of_match);
 static struct i2c_driver pca9450_i2c_driver = {
 	.driver = {
 		.name = "nxp-pca9450",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 		.of_match_table = pca9450_of_match,
 	},
 	.probe_new = pca9450_i2c_probe,
+=======
+		.of_match_table = pca9450_of_match,
+	},
+	.probe = pca9450_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_i2c_driver(pca9450_i2c_driver);

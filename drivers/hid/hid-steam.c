@@ -3,7 +3,10 @@
  * HID driver for Valve Steam Controller
  *
  * Copyright (c) 2018 Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
+<<<<<<< HEAD
  * Copyright (c) 2022 Valve Software
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Supports both the wired and wireless interfaces.
  *
@@ -54,7 +57,10 @@ static DEFINE_MUTEX(steam_devices_lock);
 static LIST_HEAD(steam_devices);
 
 #define STEAM_QUIRK_WIRELESS		BIT(0)
+<<<<<<< HEAD
 #define STEAM_QUIRK_DECK		BIT(1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Touch pads are 40 mm in diameter and 65535 units */
 #define STEAM_PAD_RESOLUTION 1638
@@ -62,10 +68,13 @@ static LIST_HEAD(steam_devices);
 #define STEAM_TRIGGER_RESOLUTION 51
 /* Joystick runs are about 5 mm and 256 units */
 #define STEAM_JOYSTICK_RESOLUTION 51
+<<<<<<< HEAD
 /* Trigger runs are about 6 mm and 32768 units */
 #define STEAM_DECK_TRIGGER_RESOLUTION 5461
 /* Joystick runs are about 5 mm and 32768 units */
 #define STEAM_DECK_JOYSTICK_RESOLUTION 6553
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define STEAM_PAD_FUZZ 256
 
@@ -91,7 +100,10 @@ static LIST_HEAD(steam_devices);
 #define STEAM_CMD_FORCEFEEDBAK		0x8f
 #define STEAM_CMD_REQUEST_COMM_STATUS	0xb4
 #define STEAM_CMD_GET_SERIAL		0xae
+<<<<<<< HEAD
 #define STEAM_CMD_HAPTIC_RUMBLE		0xeb
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Some useful register ids */
 #define STEAM_REG_LPAD_MODE		0x07
@@ -99,14 +111,20 @@ static LIST_HEAD(steam_devices);
 #define STEAM_REG_RPAD_MARGIN		0x18
 #define STEAM_REG_LED			0x2d
 #define STEAM_REG_GYRO_MODE		0x30
+<<<<<<< HEAD
 #define STEAM_REG_LPAD_CLICK_PRESSURE	0x34
 #define STEAM_REG_RPAD_CLICK_PRESSURE	0x35
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Raw event identifiers */
 #define STEAM_EV_INPUT_DATA		0x01
 #define STEAM_EV_CONNECT		0x03
 #define STEAM_EV_BATTERY		0x04
+<<<<<<< HEAD
 #define STEAM_EV_DECK_INPUT_DATA	0x09
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Values for GYRO_MODE (bitmask) */
 #define STEAM_GYRO_MODE_OFF		0x0000
@@ -134,10 +152,13 @@ struct steam_device {
 	struct power_supply __rcu *battery;
 	u8 battery_charge;
 	u16 voltage;
+<<<<<<< HEAD
 	struct delayed_work heartbeat;
 	struct work_struct rumble_work;
 	u16 rumble_left;
 	u16 rumble_right;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int steam_recv_report(struct steam_device *steam,
@@ -207,7 +228,11 @@ static int steam_send_report(struct steam_device *steam,
 	 */
 	do {
 		ret = hid_hw_raw_request(steam->hdev, 0,
+<<<<<<< HEAD
 				buf, max(size, 64) + 1,
+=======
+				buf, size + 1,
+>>>>>>> b7ba80a49124 (Commit)
 				HID_FEATURE_REPORT, HID_REQ_SET_REPORT);
 		if (ret != -EPIPE)
 			break;
@@ -233,7 +258,10 @@ static int steam_write_registers(struct steam_device *steam,
 	u8 reg;
 	u16 val;
 	u8 cmd[64] = {STEAM_CMD_WRITE_REGISTER, 0x00};
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	va_list args;
 
 	va_start(args, steam);
@@ -249,6 +277,7 @@ static int steam_write_registers(struct steam_device *steam,
 	}
 	va_end(args);
 
+<<<<<<< HEAD
 	ret = steam_send_report(steam, cmd, 2 + cmd[1]);
 	if (ret < 0)
 		return ret;
@@ -259,6 +288,9 @@ static int steam_write_registers(struct steam_device *steam,
 	 * this isn't explicitly queried
 	 */
 	return steam_recv_report(steam, cmd, 2 + cmd[1]);
+=======
+	return steam_send_report(steam, cmd, 2 + cmd[1]);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int steam_get_serial(struct steam_device *steam)
@@ -294,6 +326,7 @@ static inline int steam_request_conn_status(struct steam_device *steam)
 	return steam_send_report_byte(steam, STEAM_CMD_REQUEST_COMM_STATUS);
 }
 
+<<<<<<< HEAD
 static inline int steam_haptic_rumble(struct steam_device *steam,
 				u16 intensity, u16 left_speed, u16 right_speed,
 				u8 left_gain, u8 right_gain)
@@ -333,6 +366,8 @@ static int steam_play_effect(struct input_dev *dev, void *data,
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void steam_set_lizard_mode(struct steam_device *steam, bool enable)
 {
 	if (enable) {
@@ -343,6 +378,7 @@ static void steam_set_lizard_mode(struct steam_device *steam, bool enable)
 		steam_write_registers(steam,
 			STEAM_REG_RPAD_MARGIN, 0x01, /* enable margin */
 			0);
+<<<<<<< HEAD
 
 		cancel_delayed_work_sync(&steam->heartbeat);
 	} else {
@@ -370,6 +406,15 @@ static void steam_set_lizard_mode(struct steam_device *steam, bool enable)
 				STEAM_REG_RPAD_MODE, 0x07, /* disable mouse */
 				0);
 		}
+=======
+	} else {
+		/* disable esc, enter, cursor */
+		steam_send_report_byte(steam, STEAM_CMD_CLEAR_MAPPINGS);
+		steam_write_registers(steam,
+			STEAM_REG_RPAD_MODE, 0x07, /* disable mouse */
+			STEAM_REG_RPAD_MARGIN, 0x00, /* disable margin */
+			0);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -496,8 +541,13 @@ static int steam_input_register(struct steam_device *steam)
 	input->open = steam_input_open;
 	input->close = steam_input_close;
 
+<<<<<<< HEAD
 	input->name = (steam->quirks & STEAM_QUIRK_WIRELESS) ? "Wireless Steam Controller" :
 		(steam->quirks & STEAM_QUIRK_DECK) ? "Steam Deck" :
+=======
+	input->name = (steam->quirks & STEAM_QUIRK_WIRELESS) ?
+		"Wireless Steam Controller" :
+>>>>>>> b7ba80a49124 (Commit)
 		"Steam Controller";
 	input->phys = hdev->phys;
 	input->uniq = steam->serial_no;
@@ -521,10 +571,16 @@ static int steam_input_register(struct steam_device *steam)
 	input_set_capability(input, EV_KEY, BTN_SELECT);
 	input_set_capability(input, EV_KEY, BTN_MODE);
 	input_set_capability(input, EV_KEY, BTN_START);
+<<<<<<< HEAD
+=======
+	input_set_capability(input, EV_KEY, BTN_GEAR_DOWN);
+	input_set_capability(input, EV_KEY, BTN_GEAR_UP);
+>>>>>>> b7ba80a49124 (Commit)
 	input_set_capability(input, EV_KEY, BTN_THUMBR);
 	input_set_capability(input, EV_KEY, BTN_THUMBL);
 	input_set_capability(input, EV_KEY, BTN_THUMB);
 	input_set_capability(input, EV_KEY, BTN_THUMB2);
+<<<<<<< HEAD
 	if (steam->quirks & STEAM_QUIRK_DECK) {
 		input_set_capability(input, EV_KEY, BTN_BASE);
 		input_set_capability(input, EV_KEY, BTN_TRIGGER_HAPPY1);
@@ -539,10 +595,22 @@ static int steam_input_register(struct steam_device *steam)
 	input_set_abs_params(input, ABS_X, -32767, 32767, 0, 0);
 	input_set_abs_params(input, ABS_Y, -32767, 32767, 0, 0);
 
+=======
+
+	input_set_abs_params(input, ABS_HAT2Y, 0, 255, 0, 0);
+	input_set_abs_params(input, ABS_HAT2X, 0, 255, 0, 0);
+	input_set_abs_params(input, ABS_X, -32767, 32767, 0, 0);
+	input_set_abs_params(input, ABS_Y, -32767, 32767, 0, 0);
+	input_set_abs_params(input, ABS_RX, -32767, 32767,
+			STEAM_PAD_FUZZ, 0);
+	input_set_abs_params(input, ABS_RY, -32767, 32767,
+			STEAM_PAD_FUZZ, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	input_set_abs_params(input, ABS_HAT0X, -32767, 32767,
 			STEAM_PAD_FUZZ, 0);
 	input_set_abs_params(input, ABS_HAT0Y, -32767, 32767,
 			STEAM_PAD_FUZZ, 0);
+<<<<<<< HEAD
 
 	if (steam->quirks & STEAM_QUIRK_DECK) {
 		input_set_abs_params(input, ABS_HAT2Y, 0, 32767, 0, 0);
@@ -591,6 +659,16 @@ static int steam_input_register(struct steam_device *steam)
 			goto input_register_fail;
 	}
 #endif
+=======
+	input_abs_set_res(input, ABS_X, STEAM_JOYSTICK_RESOLUTION);
+	input_abs_set_res(input, ABS_Y, STEAM_JOYSTICK_RESOLUTION);
+	input_abs_set_res(input, ABS_RX, STEAM_PAD_RESOLUTION);
+	input_abs_set_res(input, ABS_RY, STEAM_PAD_RESOLUTION);
+	input_abs_set_res(input, ABS_HAT0X, STEAM_PAD_RESOLUTION);
+	input_abs_set_res(input, ABS_HAT0Y, STEAM_PAD_RESOLUTION);
+	input_abs_set_res(input, ABS_HAT2Y, STEAM_TRIGGER_RESOLUTION);
+	input_abs_set_res(input, ABS_HAT2X, STEAM_TRIGGER_RESOLUTION);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = input_register_device(input);
 	if (ret)
@@ -738,6 +816,7 @@ static bool steam_is_valve_interface(struct hid_device *hdev)
 	return !list_empty(&rep_enum->report_list);
 }
 
+<<<<<<< HEAD
 static void steam_lizard_mode_heartbeat(struct work_struct *work)
 {
 	struct steam_device *steam = container_of(work, struct steam_device,
@@ -754,6 +833,8 @@ static void steam_lizard_mode_heartbeat(struct work_struct *work)
 	mutex_unlock(&steam->mutex);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int steam_client_ll_parse(struct hid_device *hdev)
 {
 	struct steam_device *steam = hdev->driver_data;
@@ -816,7 +897,11 @@ static int steam_client_ll_raw_request(struct hid_device *hdev,
 			report_type, reqtype);
 }
 
+<<<<<<< HEAD
 static const struct hid_ll_driver steam_client_ll_driver = {
+=======
+static struct hid_ll_driver steam_client_ll_driver = {
+>>>>>>> b7ba80a49124 (Commit)
 	.parse = steam_client_ll_parse,
 	.start = steam_client_ll_start,
 	.stop = steam_client_ll_stop,
@@ -892,8 +977,11 @@ static int steam_probe(struct hid_device *hdev,
 	steam->quirks = id->driver_data;
 	INIT_WORK(&steam->work_connect, steam_work_connect_cb);
 	INIT_LIST_HEAD(&steam->list);
+<<<<<<< HEAD
 	INIT_DEFERRABLE_WORK(&steam->heartbeat, steam_lizard_mode_heartbeat);
 	INIT_WORK(&steam->rumble_work, steam_haptic_rumble_cb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	steam->client_hdev = steam_create_client_hid(hdev);
 	if (IS_ERR(steam->client_hdev)) {
@@ -949,8 +1037,11 @@ hid_hw_start_fail:
 	hid_destroy_device(steam->client_hdev);
 client_hdev_fail:
 	cancel_work_sync(&steam->work_connect);
+<<<<<<< HEAD
 	cancel_delayed_work_sync(&steam->heartbeat);
 	cancel_work_sync(&steam->rumble_work);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 steam_alloc_fail:
 	hid_err(hdev, "%s: failed with error %d\n",
 			__func__, ret);
@@ -967,11 +1058,15 @@ static void steam_remove(struct hid_device *hdev)
 	}
 
 	hid_destroy_device(steam->client_hdev);
+<<<<<<< HEAD
 	mutex_lock(&steam->mutex);
 	steam->client_hdev = NULL;
 	steam->client_opened = false;
 	cancel_delayed_work_sync(&steam->heartbeat);
 	mutex_unlock(&steam->mutex);
+=======
+	steam->client_opened = false;
+>>>>>>> b7ba80a49124 (Commit)
 	cancel_work_sync(&steam->work_connect);
 	if (steam->quirks & STEAM_QUIRK_WIRELESS) {
 		hid_info(hdev, "Steam wireless receiver disconnected");
@@ -1056,10 +1151,17 @@ static inline s16 steam_le16(u8 *data)
  *  8.5  | BTN_B      | button B
  *  8.6  | BTN_X      | button X
  *  8.7  | BTN_A      | button A
+<<<<<<< HEAD
  *  9.0  | BTN_DPAD_UP    | left-pad up
  *  9.1  | BTN_DPAD_RIGHT | left-pad right
  *  9.2  | BTN_DPAD_LEFT  | left-pad left
  *  9.3  | BTN_DPAD_DOWN  | left-pad down
+=======
+ *  9.0  | BTN_DPAD_UP    | lef-pad up
+ *  9.1  | BTN_DPAD_RIGHT | lef-pad right
+ *  9.2  | BTN_DPAD_LEFT  | lef-pad left
+ *  9.3  | BTN_DPAD_DOWN  | lef-pad down
+>>>>>>> b7ba80a49124 (Commit)
  *  9.4  | BTN_SELECT | menu left
  *  9.5  | BTN_MODE   | steam logo
  *  9.6  | BTN_START  | menu right
@@ -1144,6 +1246,7 @@ static void steam_do_input_event(struct steam_device *steam,
 }
 
 /*
+<<<<<<< HEAD
  * The size for this message payload is 56.
  * The known values are:
  *  Offset| Type  | Mapped to |Meaning
@@ -1310,6 +1413,8 @@ static void steam_do_deck_input_event(struct steam_device *steam,
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * The size for this message payload is 11.
  * The known values are:
  *  Offset| Type  | Meaning
@@ -1368,7 +1473,10 @@ static int steam_raw_event(struct hid_device *hdev,
 	 *  0x01: input data (60 bytes)
 	 *  0x03: wireless connect/disconnect (1 byte)
 	 *  0x04: battery status (11 bytes)
+<<<<<<< HEAD
 	 *  0x09: Steam Deck input data (56 bytes)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 
 	if (size != 64 || data[0] != 1 || data[1] != 0)
@@ -1384,6 +1492,7 @@ static int steam_raw_event(struct hid_device *hdev,
 			steam_do_input_event(steam, input, data);
 		rcu_read_unlock();
 		break;
+<<<<<<< HEAD
 	case STEAM_EV_DECK_INPUT_DATA:
 		if (steam->client_opened)
 			return 0;
@@ -1393,6 +1502,8 @@ static int steam_raw_event(struct hid_device *hdev,
 			steam_do_deck_input_event(steam, input, data);
 		rcu_read_unlock();
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case STEAM_EV_CONNECT:
 		/*
 		 * The payload of this event is a single byte:
@@ -1467,11 +1578,14 @@ static const struct hid_device_id steam_controllers[] = {
 		USB_DEVICE_ID_STEAM_CONTROLLER_WIRELESS),
 	  .driver_data = STEAM_QUIRK_WIRELESS
 	},
+<<<<<<< HEAD
 	{ /* Steam Deck */
 	  HID_USB_DEVICE(USB_VENDOR_ID_VALVE,
 		USB_DEVICE_ID_STEAM_DECK),
 	  .driver_data = STEAM_QUIRK_DECK
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 

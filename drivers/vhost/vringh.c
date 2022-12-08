@@ -1094,6 +1094,7 @@ EXPORT_SYMBOL(vringh_need_notify_kern);
 
 #if IS_REACHABLE(CONFIG_VHOST_IOTLB)
 
+<<<<<<< HEAD
 struct iotlb_vec {
 	union {
 		struct iovec *iovec;
@@ -1106,23 +1107,44 @@ struct iotlb_vec {
 static int iotlb_translate(const struct vringh *vrh,
 			   u64 addr, u64 len, u64 *translated,
 			   struct iotlb_vec *ivec, u32 perm)
+=======
+static int iotlb_translate(const struct vringh *vrh,
+			   u64 addr, u64 len, u64 *translated,
+			   struct bio_vec iov[],
+			   int iov_size, u32 perm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vhost_iotlb_map *map;
 	struct vhost_iotlb *iotlb = vrh->iotlb;
 	int ret = 0;
+<<<<<<< HEAD
 	u64 s = 0, last = addr + len - 1;
+=======
+	u64 s = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock(vrh->iotlb_lock);
 
 	while (len > s) {
+<<<<<<< HEAD
 		u64 size;
 
 		if (unlikely(ret >= ivec->count)) {
+=======
+		u64 size, pa, pfn;
+
+		if (unlikely(ret >= iov_size)) {
+>>>>>>> b7ba80a49124 (Commit)
 			ret = -ENOBUFS;
 			break;
 		}
 
+<<<<<<< HEAD
 		map = vhost_iotlb_itree_first(iotlb, addr, last);
+=======
+		map = vhost_iotlb_itree_first(iotlb, addr,
+					      addr + len - 1);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!map || map->start > addr) {
 			ret = -EINVAL;
 			break;
@@ -1132,6 +1154,7 @@ static int iotlb_translate(const struct vringh *vrh,
 		}
 
 		size = map->size - addr + map->start;
+<<<<<<< HEAD
 		if (ivec->is_iovec) {
 			struct iovec *iovec = ivec->iov.iovec;
 
@@ -1148,6 +1171,13 @@ static int iotlb_translate(const struct vringh *vrh,
 				      pa & (PAGE_SIZE - 1));
 		}
 
+=======
+		pa = map->addr + addr - map->start;
+		pfn = pa >> PAGE_SHIFT;
+		iov[ret].bv_page = pfn_to_page(pfn);
+		iov[ret].bv_len = min(len - s, size);
+		iov[ret].bv_offset = pa & (PAGE_SIZE - 1);
+>>>>>>> b7ba80a49124 (Commit)
 		s += size;
 		addr += size;
 		++ret;
@@ -1161,6 +1191,7 @@ static int iotlb_translate(const struct vringh *vrh,
 	return ret;
 }
 
+<<<<<<< HEAD
 #define IOTLB_IOV_SIZE 16
 
 static inline int copy_from_iotlb(const struct vringh *vrh, void *dst,
@@ -1178,12 +1209,22 @@ static inline int copy_from_iotlb(const struct vringh *vrh, void *dst,
 	ivec.is_iovec = vrh->use_va;
 
 	while (total_translated < len) {
+=======
+static inline int copy_from_iotlb(const struct vringh *vrh, void *dst,
+				  void *src, size_t len)
+{
+	u64 total_translated = 0;
+
+	while (total_translated < len) {
+		struct bio_vec iov[16];
+>>>>>>> b7ba80a49124 (Commit)
 		struct iov_iter iter;
 		u64 translated;
 		int ret;
 
 		ret = iotlb_translate(vrh, (u64)(uintptr_t)src,
 				      len - total_translated, &translated,
+<<<<<<< HEAD
 				      &ivec, VHOST_MAP_RO);
 		if (ret == -ENOBUFS)
 			ret = IOTLB_IOV_SIZE;
@@ -1197,6 +1238,15 @@ static inline int copy_from_iotlb(const struct vringh *vrh, void *dst,
 			iov_iter_bvec(&iter, ITER_SOURCE, ivec.iov.bvec, ret,
 				      translated);
 		}
+=======
+				      iov, ARRAY_SIZE(iov), VHOST_MAP_RO);
+		if (ret == -ENOBUFS)
+			ret = ARRAY_SIZE(iov);
+		else if (ret < 0)
+			return ret;
+
+		iov_iter_bvec(&iter, READ, iov, ret, translated);
+>>>>>>> b7ba80a49124 (Commit)
 
 		ret = copy_from_iter(dst, translated, &iter);
 		if (ret < 0)
@@ -1213,6 +1263,7 @@ static inline int copy_from_iotlb(const struct vringh *vrh, void *dst,
 static inline int copy_to_iotlb(const struct vringh *vrh, void *dst,
 				void *src, size_t len)
 {
+<<<<<<< HEAD
 	struct iotlb_vec ivec;
 	union {
 		struct iovec iovec[IOTLB_IOV_SIZE];
@@ -1225,12 +1276,19 @@ static inline int copy_to_iotlb(const struct vringh *vrh, void *dst,
 	ivec.is_iovec = vrh->use_va;
 
 	while (total_translated < len) {
+=======
+	u64 total_translated = 0;
+
+	while (total_translated < len) {
+		struct bio_vec iov[16];
+>>>>>>> b7ba80a49124 (Commit)
 		struct iov_iter iter;
 		u64 translated;
 		int ret;
 
 		ret = iotlb_translate(vrh, (u64)(uintptr_t)dst,
 				      len - total_translated, &translated,
+<<<<<<< HEAD
 				      &ivec, VHOST_MAP_WO);
 		if (ret == -ENOBUFS)
 			ret = IOTLB_IOV_SIZE;
@@ -1244,6 +1302,15 @@ static inline int copy_to_iotlb(const struct vringh *vrh, void *dst,
 			iov_iter_bvec(&iter, ITER_DEST, ivec.iov.bvec, ret,
 				      translated);
 		}
+=======
+				      iov, ARRAY_SIZE(iov), VHOST_MAP_WO);
+		if (ret == -ENOBUFS)
+			ret = ARRAY_SIZE(iov);
+		else if (ret < 0)
+			return ret;
+
+		iov_iter_bvec(&iter, WRITE, iov, ret, translated);
+>>>>>>> b7ba80a49124 (Commit)
 
 		ret = copy_to_iter(src, translated, &iter);
 		if (ret < 0)
@@ -1260,6 +1327,7 @@ static inline int copy_to_iotlb(const struct vringh *vrh, void *dst,
 static inline int getu16_iotlb(const struct vringh *vrh,
 			       u16 *val, const __virtio16 *p)
 {
+<<<<<<< HEAD
 	struct iotlb_vec ivec;
 	union {
 		struct iovec iovec[1];
@@ -1291,6 +1359,22 @@ static inline int getu16_iotlb(const struct vringh *vrh,
 	}
 
 	*val = vringh16_to_cpu(vrh, tmp);
+=======
+	struct bio_vec iov;
+	void *kaddr, *from;
+	int ret;
+
+	/* Atomic read is needed for getu16 */
+	ret = iotlb_translate(vrh, (u64)(uintptr_t)p, sizeof(*p), NULL,
+			      &iov, 1, VHOST_MAP_RO);
+	if (ret < 0)
+		return ret;
+
+	kaddr = kmap_atomic(iov.bv_page);
+	from = kaddr + iov.bv_offset;
+	*val = vringh16_to_cpu(vrh, READ_ONCE(*(__virtio16 *)from));
+	kunmap_atomic(kaddr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1298,6 +1382,7 @@ static inline int getu16_iotlb(const struct vringh *vrh,
 static inline int putu16_iotlb(const struct vringh *vrh,
 			       __virtio16 *p, u16 val)
 {
+<<<<<<< HEAD
 	struct iotlb_vec ivec;
 	union {
 		struct iovec iovec;
@@ -1329,6 +1414,22 @@ static inline int putu16_iotlb(const struct vringh *vrh,
 		WRITE_ONCE(*(__virtio16 *)to, tmp);
 		kunmap_local(kaddr);
 	}
+=======
+	struct bio_vec iov;
+	void *kaddr, *to;
+	int ret;
+
+	/* Atomic write is needed for putu16 */
+	ret = iotlb_translate(vrh, (u64)(uintptr_t)p, sizeof(*p), NULL,
+			      &iov, 1, VHOST_MAP_WO);
+	if (ret < 0)
+		return ret;
+
+	kaddr = kmap_atomic(iov.bv_page);
+	to = kaddr + iov.bv_offset;
+	WRITE_ONCE(*(__virtio16 *)to, cpu_to_vringh16(vrh, val));
+	kunmap_atomic(kaddr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1390,7 +1491,10 @@ static inline int putused_iotlb(const struct vringh *vrh,
  * @features: the feature bits for this ring.
  * @num: the number of elements.
  * @weak_barriers: true if we only need memory barriers, not I/O.
+<<<<<<< HEAD
  * @use_va: true if IOTLB contains user VA
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @desc: the userpace descriptor pointer.
  * @avail: the userpace avail pointer.
  * @used: the userpace used pointer.
@@ -1398,13 +1502,20 @@ static inline int putused_iotlb(const struct vringh *vrh,
  * Returns an error if num is invalid.
  */
 int vringh_init_iotlb(struct vringh *vrh, u64 features,
+<<<<<<< HEAD
 		      unsigned int num, bool weak_barriers, bool use_va,
+=======
+		      unsigned int num, bool weak_barriers,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct vring_desc *desc,
 		      struct vring_avail *avail,
 		      struct vring_used *used)
 {
+<<<<<<< HEAD
 	vrh->use_va = use_va;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return vringh_init_kern(vrh, features, num, weak_barriers,
 				desc, avail, used);
 }

@@ -1026,8 +1026,11 @@ static int mtk_star_enable(struct net_device *ndev)
 	return 0;
 
 err_free_irq:
+<<<<<<< HEAD
 	napi_disable(&priv->rx_napi);
 	napi_disable(&priv->tx_napi);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	free_irq(ndev->irq, ndev);
 err_free_skbs:
 	mtk_star_free_rx_skbs(priv);
@@ -1378,6 +1381,12 @@ static int mtk_star_mdio_read(struct mii_bus *mii, int phy_id, int regnum)
 	unsigned int val, data;
 	int ret;
 
+<<<<<<< HEAD
+=======
+	if (regnum & MII_ADDR_C45)
+		return -EOPNOTSUPP;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mtk_star_mdio_rwok_clear(priv);
 
 	val = (regnum << MTK_STAR_OFF_PHY_CTRL0_PREG);
@@ -1404,6 +1413,12 @@ static int mtk_star_mdio_write(struct mii_bus *mii, int phy_id,
 	struct mtk_star_priv *priv = mii->priv;
 	unsigned int val;
 
+<<<<<<< HEAD
+=======
+	if (regnum & MII_ADDR_C45)
+		return -EOPNOTSUPP;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mtk_star_mdio_rwok_clear(priv);
 
 	val = data;
@@ -1647,7 +1662,12 @@ static int mtk_star_probe(struct platform_device *pdev)
 	ndev->netdev_ops = &mtk_star_netdev_ops;
 	ndev->ethtool_ops = &mtk_star_ethtool_ops;
 
+<<<<<<< HEAD
 	netif_napi_add(ndev, &priv->rx_napi, mtk_star_rx_poll);
+=======
+	netif_napi_add(ndev, &priv->rx_napi, mtk_star_rx_poll,
+		       NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 	netif_napi_add_tx(ndev, &priv->tx_napi, mtk_star_tx_poll);
 
 	return devm_register_netdev(dev, ndev);

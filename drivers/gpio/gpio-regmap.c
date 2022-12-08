@@ -5,6 +5,7 @@
  * Copyright 2020 Michael Walle <michael@walle.cc>
  */
 
+<<<<<<< HEAD
 #include <linux/bits.h>
 #include <linux/device.h>
 #include <linux/err.h>
@@ -16,6 +17,13 @@
 
 #include <linux/gpio/driver.h>
 #include <linux/gpio/regmap.h>
+=======
+#include <linux/gpio/driver.h>
+#include <linux/gpio/regmap.h>
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/regmap.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 struct gpio_regmap {
 	struct device *parent;
@@ -117,11 +125,14 @@ static int gpio_regmap_get_direction(struct gpio_chip *chip,
 	unsigned int base, val, reg, mask;
 	int invert, ret;
 
+<<<<<<< HEAD
 	if (gpio->reg_dat_base && !gpio->reg_set_base)
 		return GPIO_LINE_DIRECTION_IN;
 	if (gpio->reg_set_base && !gpio->reg_dat_base)
 		return GPIO_LINE_DIRECTION_OUT;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (gpio->reg_dir_out_base) {
 		base = gpio_regmap_addr(gpio->reg_dir_out_base);
 		invert = 0;
@@ -260,7 +271,19 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
 	chip->ngpio = config->ngpio;
 	chip->names = config->names;
 	chip->label = config->label ?: dev_name(config->parent);
+<<<<<<< HEAD
 	chip->can_sleep = regmap_might_sleep(config->regmap);
+=======
+
+	/*
+	 * If our regmap is fast_io we should probably set can_sleep to false.
+	 * Right now, the regmap doesn't save this property, nor is there any
+	 * access function for it.
+	 * The only regmap type which uses fast_io is regmap-mmio. For now,
+	 * assume a safe default of true here.
+	 */
+	chip->can_sleep = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	chip->get = gpio_regmap_get;
 	if (gpio->reg_set_base && gpio->reg_clr_base)
@@ -268,8 +291,13 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
 	else if (gpio->reg_set_base)
 		chip->set = gpio_regmap_set;
 
+<<<<<<< HEAD
 	chip->get_direction = gpio_regmap_get_direction;
 	if (gpio->reg_dir_in_base || gpio->reg_dir_out_base) {
+=======
+	if (gpio->reg_dir_in_base || gpio->reg_dir_out_base) {
+		chip->get_direction = gpio_regmap_get_direction;
+>>>>>>> b7ba80a49124 (Commit)
 		chip->direction_input = gpio_regmap_direction_input;
 		chip->direction_output = gpio_regmap_direction_output;
 	}

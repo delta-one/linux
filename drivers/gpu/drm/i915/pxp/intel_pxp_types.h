@@ -12,29 +12,39 @@
 #include <linux/workqueue.h>
 
 struct intel_context;
+<<<<<<< HEAD
 struct intel_gt;
 struct i915_pxp_component;
 struct drm_i915_private;
+=======
+struct i915_pxp_component;
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct intel_pxp - pxp state
  */
 struct intel_pxp {
 	/**
+<<<<<<< HEAD
 	 * @ctrl_gt: poiner to the tile that owns the controls for PXP subsystem assets that
 	 * the VDBOX, the KCR engine (and GSC CS depending on the platform)
 	 */
 	struct intel_gt *ctrl_gt;
 
 	/**
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * @pxp_component: i915_pxp_component struct of the bound mei_pxp
 	 * module. Only set and cleared inside component bind/unbind functions,
 	 * which are protected by &tee_mutex.
 	 */
 	struct i915_pxp_component *pxp_component;
+<<<<<<< HEAD
 
 	/* @dev_link: Enforce module relationship for power management ordering. */
 	struct device_link *dev_link;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/**
 	 * @pxp_component_added: track if the pxp component has been added.
 	 * Set and cleared in tee init and fini functions respectively.
@@ -64,12 +74,15 @@ struct intel_pxp {
 	/** @tee_mutex: protects the tee channel binding and messaging. */
 	struct mutex tee_mutex;
 
+<<<<<<< HEAD
 	/** @stream_cmd: LMEM obj used to send stream PXP commands to the GSC */
 	struct {
 		struct drm_i915_gem_object *obj; /* contains PXP command memory */
 		void *vaddr; /* virtual memory for PXP command */
 	} stream_cmd;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/**
 	 * @hw_state_invalidated: if the HW perceives an attack on the integrity
 	 * of the encryption it will invalidate the keys and expect SW to

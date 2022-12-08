@@ -4,13 +4,21 @@
 /* Various instructions on x86 need to be replaced for
  * para-virtualization: those hooks are defined here. */
 
+<<<<<<< HEAD
 #include <asm/paravirt_types.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PARAVIRT
 #include <asm/pgtable_types.h>
 #include <asm/asm.h>
 #include <asm/nospec-branch.h>
 
+<<<<<<< HEAD
+=======
+#include <asm/paravirt_types.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef __ASSEMBLY__
 #include <linux/bug.h>
 #include <linux/types.h>
@@ -26,7 +34,11 @@ DECLARE_STATIC_CALL(pv_sched_clock, dummy_sched_clock);
 
 void paravirt_set_sched_clock(u64 (*func)(void));
 
+<<<<<<< HEAD
 static __always_inline u64 paravirt_sched_clock(void)
+=======
+static inline u64 paravirt_sched_clock(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return static_call(pv_sched_clock)();
 }
@@ -168,7 +180,11 @@ static inline void __write_cr4(unsigned long x)
 	PVOP_VCALL1(cpu.write_cr4, x);
 }
 
+<<<<<<< HEAD
 static __always_inline void arch_safe_halt(void)
+=======
+static inline void arch_safe_halt(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	PVOP_VCALL0(irq.safe_halt);
 }
@@ -178,9 +194,13 @@ static inline void halt(void)
 	PVOP_VCALL0(irq.halt);
 }
 
+<<<<<<< HEAD
 extern noinstr void pv_native_wbinvd(void);
 
 static __always_inline void wbinvd(void)
+=======
+static inline void wbinvd(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	PVOP_ALT_VCALL0(cpu.wbinvd, "wbinvd", ALT_NOT(X86_FEATURE_XENPV));
 }
@@ -334,9 +354,22 @@ static inline void tss_update_io_bitmap(void)
 }
 #endif
 
+<<<<<<< HEAD
 static inline void paravirt_enter_mmap(struct mm_struct *next)
 {
 	PVOP_VCALL1(mmu.enter_mmap, next);
+=======
+static inline void paravirt_activate_mm(struct mm_struct *prev,
+					struct mm_struct *next)
+{
+	PVOP_VCALL2(mmu.activate_mm, prev, next);
+}
+
+static inline void paravirt_arch_dup_mmap(struct mm_struct *oldmm,
+					  struct mm_struct *mm)
+{
+	PVOP_VCALL2(mmu.dup_mmap, oldmm, mm);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline int paravirt_pgd_alloc(struct mm_struct *mm)
@@ -660,7 +693,10 @@ bool __raw_callee_save___native_vcpu_is_preempted(long cpu);
 	asm(".pushsection " section ", \"ax\";"				\
 	    ".globl " PV_THUNK_NAME(func) ";"				\
 	    ".type " PV_THUNK_NAME(func) ", @function;"			\
+<<<<<<< HEAD
 	    ASM_FUNC_ALIGN						\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	    PV_THUNK_NAME(func) ":"					\
 	    ASM_ENDBR							\
 	    FRAME_BEGIN							\
@@ -726,6 +762,7 @@ static __always_inline unsigned long arch_local_irq_save(void)
 #undef PVOP_VCALL4
 #undef PVOP_CALL4
 
+<<<<<<< HEAD
 #define DEFINE_PARAVIRT_ASM(func, instr, sec)		\
 	asm (".pushsection " #sec ", \"ax\"\n"		\
 	     ".global " #func "\n\t"			\
@@ -738,6 +775,8 @@ static __always_inline unsigned long arch_local_irq_save(void)
 	     ".size " #func ", . - " #func "\n\t"	\
 	     ".popsection")
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern void default_banner(void);
 
 #else  /* __ASSEMBLY__ */
@@ -751,7 +790,10 @@ extern void default_banner(void);
 	 word 771b;				\
 	 .byte ptype;				\
 	 .byte 772b-771b;			\
+<<<<<<< HEAD
 	 _ASM_ALIGN;				\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.popsection
 
 
@@ -782,7 +824,12 @@ extern void default_banner(void);
 
 #ifndef __ASSEMBLY__
 #ifndef CONFIG_PARAVIRT_XXL
+<<<<<<< HEAD
 static inline void paravirt_enter_mmap(struct mm_struct *mm)
+=======
+static inline void paravirt_arch_dup_mmap(struct mm_struct *oldmm,
+					  struct mm_struct *mm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 #endif

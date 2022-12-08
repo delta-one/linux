@@ -33,7 +33,10 @@
 #include "archinsn.h"
 #include "dlfilter.h"
 #include "tests.h"
+<<<<<<< HEAD
 #include "util/sample.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MAP_START 0x400000
 
@@ -88,7 +91,11 @@ static __printf(1, 2) int system_cmd(const char *fmt, ...)
 	if (ret <= 0 || ret >= MAXCMD)
 		return -1;
 
+<<<<<<< HEAD
 	if (verbose <= 0)
+=======
+	if (!verbose)
+>>>>>>> b7ba80a49124 (Commit)
 		strcat(cmd, REDIRECT_TO_DEV_NULL);
 
 	pr_debug("Command: %s\n", cmd);

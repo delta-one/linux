@@ -212,10 +212,17 @@ struct fb_deferred_io {
 	/* delay between mkwrite and deferred handler */
 	unsigned long delay;
 	bool sort_pagereflist; /* sort pagelist by offset */
+<<<<<<< HEAD
 	int open_count; /* number of opened files; protected by fb_info lock */
 	struct mutex lock; /* mutex that protects the pageref list */
 	struct list_head pagereflist; /* list of pagerefs for touched pages */
 	/* callback */
+=======
+	struct mutex lock; /* mutex that protects the pageref list */
+	struct list_head pagereflist; /* list of pagerefs for touched pages */
+	/* callback */
+	void (*first_io)(struct fb_info *info);
+>>>>>>> b7ba80a49124 (Commit)
 	void (*deferred_io)(struct fb_info *info, struct list_head *pagelist);
 };
 #endif
@@ -423,6 +430,11 @@ struct fb_tile_ops {
  */
 #define FBINFO_MISC_ALWAYS_SETPAR   0x40000
 
+<<<<<<< HEAD
+=======
+/* where the fb is a firmware driver, and can be replaced with a proper one */
+#define FBINFO_MISC_FIRMWARE        0x80000
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Host and GPU endianness differ.
  */
@@ -497,10 +509,36 @@ struct fb_info {
 	void *fbcon_par;                /* fbcon use-only private area */
 	/* From here on everything is device dependent */
 	void *par;
+<<<<<<< HEAD
+=======
+	/* we need the PCI or similar aperture base/size not
+	   smem_start/size as smem_start may just be an object
+	   allocated inside the aperture so may not actually overlap */
+	struct apertures_struct {
+		unsigned int count;
+		struct aperture {
+			resource_size_t base;
+			resource_size_t size;
+		} ranges[0];
+	} *apertures;
+>>>>>>> b7ba80a49124 (Commit)
 
 	bool skip_vt_switch; /* no VT switch on suspend/resume required */
 };
 
+<<<<<<< HEAD
+=======
+static inline struct apertures_struct *alloc_apertures(unsigned int max_num) {
+	struct apertures_struct *a;
+
+	a = kzalloc(struct_size(a, ranges, max_num), GFP_KERNEL);
+	if (!a)
+		return NULL;
+	a->count = max_num;
+	return a;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #define FBINFO_FLAG_DEFAULT	FBINFO_DEFAULT
 
 /* This will go away
@@ -533,7 +571,11 @@ struct fb_info {
 
 #elif defined(__i386__) || defined(__alpha__) || defined(__x86_64__) ||	\
 	defined(__hppa__) || defined(__sh__) || defined(__powerpc__) ||	\
+<<<<<<< HEAD
 	defined(__arm__) || defined(__aarch64__) || defined(__mips__)
+=======
+	defined(__arm__) || defined(__aarch64__)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define fb_readb __raw_readb
 #define fb_readw __raw_readw
@@ -640,7 +682,10 @@ extern int  fb_deferred_io_init(struct fb_info *info);
 extern void fb_deferred_io_open(struct fb_info *info,
 				struct inode *inode,
 				struct file *file);
+<<<<<<< HEAD
 extern void fb_deferred_io_release(struct fb_info *info);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern void fb_deferred_io_cleanup(struct fb_info *info);
 extern int fb_deferred_io_fsync(struct file *file, loff_t start,
 				loff_t end, int datasync);
@@ -766,6 +811,10 @@ struct dmt_videomode {
 	const struct fb_videomode *mode;
 };
 
+<<<<<<< HEAD
+=======
+extern const char *fb_mode_option;
+>>>>>>> b7ba80a49124 (Commit)
 extern const struct fb_videomode vesa_modes[];
 extern const struct dmt_videomode dmt_modes[];
 
@@ -781,6 +830,7 @@ extern int fb_find_mode(struct fb_var_screeninfo *var,
 			const struct fb_videomode *default_mode,
 			unsigned int default_bpp);
 
+<<<<<<< HEAD
 #if defined(CONFIG_VIDEO_NOMODESET)
 bool fb_modesetting_disabled(const char *drvname);
 #else
@@ -790,6 +840,8 @@ static inline bool fb_modesetting_disabled(const char *drvname)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Convenience logging macros */
 #define fb_err(fb_info, fmt, ...)					\
 	pr_err("fb%d: " fmt, (fb_info)->node, ##__VA_ARGS__)

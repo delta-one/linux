@@ -22,6 +22,10 @@ static DEFINE_IDA(typec_index_ida);
 
 struct class typec_class = {
 	.name = "typec",
+<<<<<<< HEAD
+=======
+	.owner = THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* ------------------------------------------------------------------------- */
@@ -582,7 +586,10 @@ void typec_unregister_altmode(struct typec_altmode *adev)
 {
 	if (IS_ERR_OR_NULL(adev))
 		return;
+<<<<<<< HEAD
 	typec_retimer_put(to_altmode(adev)->retimer);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	typec_mux_put(to_altmode(adev)->mux);
 	device_unregister(&adev->dev);
 }
@@ -822,6 +829,7 @@ void typec_partner_set_svdm_version(struct typec_partner *partner,
 EXPORT_SYMBOL_GPL(typec_partner_set_svdm_version);
 
 /**
+<<<<<<< HEAD
  * typec_partner_usb_power_delivery_register - Register Type-C partner USB Power Delivery Support
  * @partner: Type-C partner device.
  * @desc: Description of the USB PD contract.
@@ -841,6 +849,8 @@ typec_partner_usb_power_delivery_register(struct typec_partner *partner,
 EXPORT_SYMBOL_GPL(typec_partner_usb_power_delivery_register);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * typec_register_partner - Register a USB Type-C Partner
  * @port: The USB Type-C Port the partner is connected to
  * @desc: Description of the partner
@@ -1737,7 +1747,11 @@ static const struct attribute_group *typec_groups[] = {
 	NULL
 };
 
+<<<<<<< HEAD
 static int typec_uevent(const struct device *dev, struct kobj_uevent_env *env)
+=======
+static int typec_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
@@ -2108,12 +2122,16 @@ typec_port_register_altmode(struct typec_port *port,
 {
 	struct typec_altmode *adev;
 	struct typec_mux *mux;
+<<<<<<< HEAD
 	struct typec_retimer *retimer;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	mux = typec_mux_get(&port->dev, desc);
 	if (IS_ERR(mux))
 		return ERR_CAST(mux);
 
+<<<<<<< HEAD
 	retimer = typec_retimer_get(&port->dev);
 	if (IS_ERR(retimer)) {
 		typec_mux_put(mux);
@@ -2128,6 +2146,13 @@ typec_port_register_altmode(struct typec_port *port,
 		to_altmode(adev)->mux = mux;
 		to_altmode(adev)->retimer = retimer;
 	}
+=======
+	adev = typec_register_altmode(&port->dev, desc);
+	if (IS_ERR(adev))
+		typec_mux_put(mux);
+	else
+		to_altmode(adev)->mux = mux;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return adev;
 }

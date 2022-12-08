@@ -9,10 +9,17 @@
 #define _TRACE_NFS4_H
 
 #include <linux/tracepoint.h>
+<<<<<<< HEAD
 #include <trace/misc/sunrpc.h>
 
 #include <trace/misc/fs.h>
 #include <trace/misc/nfs.h>
+=======
+#include <trace/events/sunrpc_base.h>
+
+#include <trace/events/fs.h>
+#include <trace/events/nfs.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define show_nfs_fattr_flags(valid) \
 	__print_flags((unsigned long)valid, "|", \
@@ -292,6 +299,7 @@ TRACE_DEFINE_ENUM(NFS4CLNT_MOVED);
 TRACE_DEFINE_ENUM(NFS4CLNT_LEASE_MOVED);
 TRACE_DEFINE_ENUM(NFS4CLNT_DELEGATION_EXPIRED);
 TRACE_DEFINE_ENUM(NFS4CLNT_RUN_MANAGER);
+<<<<<<< HEAD
 TRACE_DEFINE_ENUM(NFS4CLNT_MANAGER_AVAILABLE);
 TRACE_DEFINE_ENUM(NFS4CLNT_RECALL_RUNNING);
 TRACE_DEFINE_ENUM(NFS4CLNT_RECALL_ANY_LAYOUT_READ);
@@ -320,6 +328,34 @@ TRACE_DEFINE_ENUM(NFS4CLNT_DELEGRETURN_DELAYED);
 	{ BIT(NFS4CLNT_RECALL_ANY_LAYOUT_READ), "RECALL_ANY_LAYOUT_READ" }, \
 	{ BIT(NFS4CLNT_RECALL_ANY_LAYOUT_RW), "RECALL_ANY_LAYOUT_RW" }, \
 	{ BIT(NFS4CLNT_DELEGRETURN_DELAYED), "DELERETURN_DELAYED" })
+=======
+TRACE_DEFINE_ENUM(NFS4CLNT_RECALL_RUNNING);
+TRACE_DEFINE_ENUM(NFS4CLNT_RECALL_ANY_LAYOUT_READ);
+TRACE_DEFINE_ENUM(NFS4CLNT_RECALL_ANY_LAYOUT_RW);
+
+#define show_nfs4_clp_state(state) \
+	__print_flags(state, "|", \
+		{ NFS4CLNT_MANAGER_RUNNING,	"MANAGER_RUNNING" }, \
+		{ NFS4CLNT_CHECK_LEASE,		"CHECK_LEASE" }, \
+		{ NFS4CLNT_LEASE_EXPIRED,	"LEASE_EXPIRED" }, \
+		{ NFS4CLNT_RECLAIM_REBOOT,	"RECLAIM_REBOOT" }, \
+		{ NFS4CLNT_RECLAIM_NOGRACE,	"RECLAIM_NOGRACE" }, \
+		{ NFS4CLNT_DELEGRETURN,		"DELEGRETURN" }, \
+		{ NFS4CLNT_SESSION_RESET,	"SESSION_RESET" }, \
+		{ NFS4CLNT_LEASE_CONFIRM,	"LEASE_CONFIRM" }, \
+		{ NFS4CLNT_SERVER_SCOPE_MISMATCH, \
+						"SERVER_SCOPE_MISMATCH" }, \
+		{ NFS4CLNT_PURGE_STATE,		"PURGE_STATE" }, \
+		{ NFS4CLNT_BIND_CONN_TO_SESSION, \
+						"BIND_CONN_TO_SESSION" }, \
+		{ NFS4CLNT_MOVED,		"MOVED" }, \
+		{ NFS4CLNT_LEASE_MOVED,		"LEASE_MOVED" }, \
+		{ NFS4CLNT_DELEGATION_EXPIRED,	"DELEGATION_EXPIRED" }, \
+		{ NFS4CLNT_RUN_MANAGER,		"RUN_MANAGER" }, \
+		{ NFS4CLNT_RECALL_RUNNING,	"RECALL_RUNNING" }, \
+		{ NFS4CLNT_RECALL_ANY_LAYOUT_READ, "RECALL_ANY_LAYOUT_READ" }, \
+		{ NFS4CLNT_RECALL_ANY_LAYOUT_RW, "RECALL_ANY_LAYOUT_RW" })
+>>>>>>> b7ba80a49124 (Commit)
 
 TRACE_EVENT(nfs4_state_mgr,
 		TP_PROTO(
@@ -1817,7 +1853,11 @@ TRACE_EVENT(pnfs_update_layout,
 			__entry->count = count;
 			__entry->iomode = iomode;
 			__entry->reason = reason;
+<<<<<<< HEAD
 			if (lo != NULL && pnfs_layout_is_valid(lo)) {
+=======
+			if (lo != NULL) {
+>>>>>>> b7ba80a49124 (Commit)
 				__entry->layoutstateid_seq =
 				be32_to_cpu(lo->plh_stateid.seqid);
 				__entry->layoutstateid_hash =
@@ -1871,7 +1911,11 @@ DECLARE_EVENT_CLASS(pnfs_layout_event,
 			__entry->pos = pos;
 			__entry->count = count;
 			__entry->iomode = iomode;
+<<<<<<< HEAD
 			if (lo != NULL && pnfs_layout_is_valid(lo)) {
+=======
+			if (lo != NULL) {
+>>>>>>> b7ba80a49124 (Commit)
 				__entry->layoutstateid_seq =
 				be32_to_cpu(lo->plh_stateid.seqid);
 				__entry->layoutstateid_hash =
@@ -2099,7 +2143,10 @@ TRACE_EVENT(ff_layout_commit_error,
 		)
 );
 
+<<<<<<< HEAD
 #ifdef CONFIG_NFS_V4_2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 TRACE_DEFINE_ENUM(NFS4_CONTENT_DATA);
 TRACE_DEFINE_ENUM(NFS4_CONTENT_HOLE);
 
@@ -2108,6 +2155,10 @@ TRACE_DEFINE_ENUM(NFS4_CONTENT_HOLE);
 		{ NFS4_CONTENT_DATA, "DATA" },		\
 		{ NFS4_CONTENT_HOLE, "HOLE" })
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_NFS_V4_2
+>>>>>>> b7ba80a49124 (Commit)
 TRACE_EVENT(nfs4_llseek,
 		TP_PROTO(
 			const struct inode *inode,
@@ -2498,6 +2549,7 @@ TRACE_EVENT(nfs4_offload_cancel,
 			__entry->stateid_seq, __entry->stateid_hash
 		)
 );
+<<<<<<< HEAD
 
 DECLARE_EVENT_CLASS(nfs4_xattr_event,
 		TP_PROTO(
@@ -2546,6 +2598,8 @@ DEFINE_NFS4_XATTR_EVENT(nfs4_setxattr);
 DEFINE_NFS4_XATTR_EVENT(nfs4_removexattr);
 
 DEFINE_NFS4_INODE_EVENT(nfs4_listxattr);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_NFS_V4_2 */
 
 #endif /* CONFIG_NFS_V4_1 */

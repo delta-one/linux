@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-or-later
+=======
+// SPDX-License-Identifier: GPL-1.0-or-later
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * AMD Processor P-state Frequency Driver Unit Test
  *

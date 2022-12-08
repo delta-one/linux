@@ -33,9 +33,13 @@
 
 #include <linux/list.h>
 
+<<<<<<< HEAD
 struct ww_acquire_ctx;
 struct dma_fence;
 struct ttm_buffer_object;
+=======
+#include "ttm_bo_api.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct ttm_validate_buffer

@@ -14,7 +14,10 @@
 #include <asm/intel-mid.h>
 
 #include <drm/drm_edid.h>
+<<<<<<< HEAD
 #include <drm/drm_modeset_helper_vtables.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_simple_kms_helper.h>
 
 #include "intel_bios.h"

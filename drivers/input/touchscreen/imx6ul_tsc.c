@@ -512,7 +512,11 @@ static int imx6ul_tsc_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int imx6ul_tsc_suspend(struct device *dev)
+=======
+static int __maybe_unused imx6ul_tsc_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *pdev = to_platform_device(dev);
 	struct imx6ul_tsc *tsc = platform_get_drvdata(pdev);
@@ -528,7 +532,11 @@ static int imx6ul_tsc_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int imx6ul_tsc_resume(struct device *dev)
+=======
+static int __maybe_unused imx6ul_tsc_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *pdev = to_platform_device(dev);
 	struct imx6ul_tsc *tsc = platform_get_drvdata(pdev);
@@ -545,8 +553,13 @@ static int imx6ul_tsc_resume(struct device *dev)
 	return retval;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(imx6ul_tsc_pm_ops,
 				imx6ul_tsc_suspend, imx6ul_tsc_resume);
+=======
+static SIMPLE_DEV_PM_OPS(imx6ul_tsc_pm_ops,
+			 imx6ul_tsc_suspend, imx6ul_tsc_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct of_device_id imx6ul_tsc_match[] = {
 	{ .compatible = "fsl,imx6ul-tsc", },
@@ -558,7 +571,11 @@ static struct platform_driver imx6ul_tsc_driver = {
 	.driver		= {
 		.name	= "imx6ul-tsc",
 		.of_match_table	= imx6ul_tsc_match,
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&imx6ul_tsc_pm_ops),
+=======
+		.pm	= &imx6ul_tsc_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe		= imx6ul_tsc_probe,
 };

@@ -49,6 +49,7 @@
 	};
 
 	ocp@68000000 {
+<<<<<<< HEAD
 		target-module@5c040000 {
 			compatible = "ti,sysc-omap2", "ti,sysc";
 			reg = <0x5c040400 0x4>,
@@ -78,6 +79,15 @@
 				interrupts = <71>;
 				interrupt-names = "mc";
 			};
+=======
+		am35x_otg_hs: am35x_otg_hs@5c040000 {
+			compatible = "ti,omap3-musb";
+			ti,hwmods = "am35x_otg_hs";
+			status = "disabled";
+			reg = <0x5c040000 0x1000>;
+			interrupts = <71>;
+			interrupt-names = "mc";
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		davinci_emac: ethernet@5c000000 {
@@ -176,7 +186,11 @@
 };
 
 /* Table Table 5-79 of the TRM shows 480ab000 is reserved */
+<<<<<<< HEAD
 &usb_otg_target {
+=======
+&usb_otg_hs {
+>>>>>>> b7ba80a49124 (Commit)
 	status = "disabled";
 };
 

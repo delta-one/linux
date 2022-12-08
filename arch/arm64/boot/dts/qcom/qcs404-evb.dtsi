@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 /*
  * Copyright (c) 2018, Linaro Limited
  */
+=======
+// Copyright (c) 2018, Linaro Limited
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <dt-bindings/gpio/gpio.h>
 #include "qcs404.dtsi"
@@ -127,7 +131,11 @@
 };
 
 &rpm_requests {
+<<<<<<< HEAD
 	regulators {
+=======
+	pms405-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pms405-regulators";
 
 		vdd_s1-supply = <&vph_pwr>;
@@ -231,7 +239,11 @@
 };
 
 &tlmm {
+<<<<<<< HEAD
 	perst_state: perst-state {
+=======
+	perst_state: perst {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio43";
 		function = "gpio";
 
@@ -240,56 +252,91 @@
 		output-low;
 	};
 
+<<<<<<< HEAD
 	sdc1_on: sdc1-on-state {
 		clk-pins {
+=======
+	sdc1_on: sdc1-on {
+		clk {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc1_clk";
 			bias-disable;
 			drive-strength = <16>;
 		};
 
+<<<<<<< HEAD
 		cmd-pins {
+=======
+		cmd {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc1_cmd";
 			bias-pull-up;
 			drive-strength = <10>;
 		};
 
+<<<<<<< HEAD
 		data-pins {
+=======
+		data {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc1_data";
 			bias-pull-up;
 			drive-strength = <10>;
 		};
 
+<<<<<<< HEAD
 		rclk-pins {
+=======
+		rclk {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc1_rclk";
 			bias-pull-down;
 		};
 	};
 
+<<<<<<< HEAD
 	sdc1_off: sdc1-off-state {
 		clk-pins {
+=======
+	sdc1_off: sdc1-off {
+		clk {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc1_clk";
 			bias-disable;
 			drive-strength = <2>;
 		};
 
+<<<<<<< HEAD
 		cmd-pins {
+=======
+		cmd {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc1_cmd";
 			bias-pull-up;
 			drive-strength = <2>;
 		};
 
+<<<<<<< HEAD
 		data-pins {
+=======
+		data {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc1_data";
 			bias-pull-up;
 			drive-strength = <2>;
 		};
 
+<<<<<<< HEAD
 		rclk-pins {
+=======
+		rclk {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc1_rclk";
 			bias-pull-down;
 		};
 	};
 
+<<<<<<< HEAD
 	usb3_id_pin: usb3-id-state {
 		pins = "gpio116";
 		function = "gpio";
@@ -297,6 +344,20 @@
 		drive-strength = <2>;
 		bias-pull-up;
 		input-enable;
+=======
+	usb3_id_pin: usb3-id-pin {
+		pinmux {
+			pins = "gpio116";
+			function = "gpio";
+		};
+
+		pinconf {
+			pins = "gpio116";
+			drive-strength = <2>;
+			bias-pull-up;
+			input-enable;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -363,28 +424,51 @@
 /* PINCTRL - additions to nodes defined in qcs404.dtsi */
 
 &blsp1_uart2_default {
+<<<<<<< HEAD
 	rx-pins {
+=======
+	rx {
+>>>>>>> b7ba80a49124 (Commit)
 		drive-strength = <2>;
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	tx-pins {
+=======
+	tx {
+>>>>>>> b7ba80a49124 (Commit)
 		drive-strength = <2>;
 		bias-disable;
 	};
 };
 
 &blsp1_uart3_default {
+<<<<<<< HEAD
 	cts-pins {
 		bias-disable;
 	};
 
 	rts-tx-pins {
+=======
+	cts {
+		pins = "gpio84";
+		bias-disable;
+	};
+
+	rts-tx {
+		pins = "gpio85", "gpio82";
+>>>>>>> b7ba80a49124 (Commit)
 		drive-strength = <2>;
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	rx-pins {
+=======
+	rx {
+		pins = "gpio83";
+>>>>>>> b7ba80a49124 (Commit)
 		bias-pull-up;
 	};
 };

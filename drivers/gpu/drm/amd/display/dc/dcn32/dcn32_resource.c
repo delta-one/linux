@@ -57,6 +57,10 @@
 #include "dcn31/dcn31_hpo_dp_stream_encoder.h"
 #include "dcn31/dcn31_hpo_dp_link_encoder.h"
 #include "dcn32/dcn32_hpo_dp_link_encoder.h"
+<<<<<<< HEAD
+=======
+#include "dc_link_dp.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "dcn31/dcn31_apg.h"
 #include "dcn31/dcn31_dio_link_encoder.h"
 #include "dcn32/dcn32_dio_link_encoder.h"
@@ -68,7 +72,11 @@
 #include "dml/display_mode_vba.h"
 #include "dcn32/dcn32_dccg.h"
 #include "dcn10/dcn10_resource.h"
+<<<<<<< HEAD
 #include "link.h"
+=======
+#include "dc_link_ddc.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "dcn31/dcn31_panel_cntl.h"
 
 #include "dcn30/dcn30_dwb.h"
@@ -105,6 +113,11 @@ enum dcn32_clk_src_array_id {
  */
 
 /* DCN */
+<<<<<<< HEAD
+=======
+/* TODO awful hack. fixup dcn20_dwb.h */
+#undef BASE_INNER
+>>>>>>> b7ba80a49124 (Commit)
 #define BASE_INNER(seg) ctx->dcn_reg_offsets[seg]
 
 #define BASE(seg) BASE_INNER(seg)
@@ -164,9 +177,12 @@ enum dcn32_clk_src_array_id {
 	REG_STRUCT.reg_name[id] = BASE(reg ## block ## id ## _ ## temp_name ## _BASE_IDX) + \
 		reg ## block ## id ## _ ## temp_name
 
+<<<<<<< HEAD
 #define SF_DWB2(reg_name, block, id, field_name, post_fix)	\
 	.field_name = reg_name ## __ ## field_name ## post_fix
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DCCG_SRII(reg_name, block, id)\
 	REG_STRUCT.block ## _ ## reg_name[id] = BASE(reg ## block ## id ## _ ## reg_name ## _BASE_IDX) + \
 		reg ## block ## id ## _ ## reg_name
@@ -657,6 +673,11 @@ static const struct resource_caps res_cap_dcn32 = {
 
 static const struct dc_plane_cap plane_cap = {
 	.type = DC_PLANE_TYPE_DCN_UNIVERSAL,
+<<<<<<< HEAD
+=======
+	.blends_with_above = true,
+	.blends_with_below = true,
+>>>>>>> b7ba80a49124 (Commit)
 	.per_pixel_alpha = true,
 
 	.pixel_format_support = {
@@ -716,6 +737,7 @@ static const struct dc_debug_options debug_defaults_drv = {
 	.force_disable_subvp = false,
 	.exit_idle_opt_for_cursor_updates = true,
 	.enable_single_display_2to1_odm_policy = true,
+<<<<<<< HEAD
 
 	/* Must match enable_single_display_2to1_odm_policy to support dynamic ODM transitions*/
 	.enable_double_buffered_dsc_pg_support = true,
@@ -725,6 +747,11 @@ static const struct dc_debug_options debug_defaults_drv = {
 	.min_prefetch_in_strobe_ns = 60000, // 60us
 	.disable_unbounded_requesting = false,
 	.override_dispclk_programming = true,
+=======
+	.enable_dp_dig_pixel_rate_div_policy = 1,
+	.allow_sw_cursor_fallback = false,
+	.alloc_extra_way_for_cursor = true,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct dc_debug_options debug_defaults_diags = {
@@ -830,7 +857,10 @@ static struct clock_source *dcn32_clock_source_create(
 		return &clk_src->base;
 	}
 
+<<<<<<< HEAD
 	kfree(clk_src);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BREAK_TO_DEBUGGER();
 	return NULL;
 }
@@ -1505,11 +1535,16 @@ static void dcn32_resource_destruct(struct dcn32_resource_pool *pool)
 	if (pool->base.dccg != NULL)
 		dcn_dccg_destroy(&pool->base.dccg);
 
+<<<<<<< HEAD
 	if (pool->base.oem_device != NULL) {
 		struct dc *dc = pool->base.oem_device->ctx->dc;
 
 		dc->link_srv->destroy_ddc_service(&pool->base.oem_device);
 	}
+=======
+	if (pool->base.oem_device != NULL)
+		dal_ddc_service_destroy(&pool->base.oem_device);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 
@@ -1613,6 +1648,10 @@ bool dcn32_acquire_post_bldn_3dlut(
 		struct dc_transfer_func **shaper)
 {
 	bool ret = false;
+<<<<<<< HEAD
+=======
+	union dc_3dlut_state *state;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT(*lut == NULL && *shaper == NULL);
 	*lut = NULL;
@@ -1621,6 +1660,10 @@ bool dcn32_acquire_post_bldn_3dlut(
 	if (!res_ctx->is_mpc_3dlut_acquired[mpcc_id]) {
 		*lut = pool->mpc_lut[mpcc_id];
 		*shaper = pool->mpc_shaper[mpcc_id];
+<<<<<<< HEAD
+=======
+		state = &pool->mpc_lut[mpcc_id]->state;
+>>>>>>> b7ba80a49124 (Commit)
 		res_ctx->is_mpc_3dlut_acquired[mpcc_id] = true;
 		ret = true;
 	}
@@ -1681,9 +1724,13 @@ static void dcn32_enable_phantom_plane(struct dc *dc,
 
 		/* Shadow pipe has small viewport. */
 		phantom_plane->clip_rect.y = 0;
+<<<<<<< HEAD
 		phantom_plane->clip_rect.height = phantom_stream->src.height;
 
 		phantom_plane->is_phantom = true;
+=======
+		phantom_plane->clip_rect.height = phantom_stream->timing.v_addressable;
+>>>>>>> b7ba80a49124 (Commit)
 
 		dc_add_plane_to_context(dc, phantom_stream, phantom_plane, context);
 
@@ -1721,6 +1768,7 @@ static struct dc_stream_state *dcn32_enable_phantom_stream(struct dc *dc,
 	return phantom_stream;
 }
 
+<<<<<<< HEAD
 void dcn32_retain_phantom_pipes(struct dc *dc, struct dc_state *context)
 {
 	int i;
@@ -1744,6 +1792,10 @@ void dcn32_retain_phantom_pipes(struct dc *dc, struct dc_state *context)
 
 // return true if removed piped from ctx, false otherwise
 bool dcn32_remove_phantom_pipes(struct dc *dc, struct dc_state *context, bool fast_update)
+=======
+// return true if removed piped from ctx, false otherwise
+bool dcn32_remove_phantom_pipes(struct dc *dc, struct dc_state *context)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 	bool removed_pipe = false;
@@ -1770,6 +1822,7 @@ bool dcn32_remove_phantom_pipes(struct dc *dc, struct dc_state *context, bool fa
 			removed_pipe = true;
 		}
 
+<<<<<<< HEAD
 		/* For non-full updates, a shallow copy of the current state
 		 * is created. In this case we don't want to erase the current
 		 * state (there can be 2 HIRQL threads, one in flip, and one in
@@ -1787,6 +1840,12 @@ bool dcn32_remove_phantom_pipes(struct dc *dc, struct dc_state *context, bool fa
 			if (pipe->plane_state) {
 				pipe->plane_state->is_phantom = false;
 			}
+=======
+		// Clear all phantom stream info
+		if (pipe->stream) {
+			pipe->stream->mall_stream_config.type = SUBVP_NONE;
+			pipe->stream->mall_stream_config.paired_stream = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 	return removed_pipe;
@@ -1837,6 +1896,7 @@ bool dcn32_validate_bandwidth(struct dc *dc,
 	int vlevel = 0;
 	int pipe_cnt = 0;
 	display_e2e_pipe_params_st *pipes = kzalloc(dc->res_pool->pipe_count * sizeof(display_e2e_pipe_params_st), GFP_KERNEL);
+<<<<<<< HEAD
 	struct mall_temp_config mall_temp_config;
 
 	/* To handle Freesync properly, setting FreeSync DML parameters
@@ -1861,15 +1921,22 @@ bool dcn32_validate_bandwidth(struct dc *dc,
 		dcn32_save_mall_state(dc, context, &mall_temp_config);
 	}
 
+=======
+	DC_LOGGER_INIT(dc->ctx->logger);
+
+>>>>>>> b7ba80a49124 (Commit)
 	BW_VAL_TRACE_COUNT();
 
 	DC_FP_START();
 	out = dcn32_internal_validate_bw(dc, context, pipes, &pipe_cnt, &vlevel, fast_validate);
 	DC_FP_END();
 
+<<<<<<< HEAD
 	if (fast_validate)
 		dcn32_restore_mall_state(dc, context, &mall_temp_config);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (pipe_cnt == 0)
 		goto validate_out;
 
@@ -1913,8 +1980,13 @@ int dcn32_populate_dml_pipes_from_context(
 	struct resource_context *res_ctx = &context->res_ctx;
 	struct pipe_ctx *pipe;
 	bool subvp_in_use = false;
+<<<<<<< HEAD
 	struct dc_crtc_timing *timing;
 	bool vsr_odm_support = false;
+=======
+	int plane_count = 0;
+	struct dc_crtc_timing *timing;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dcn20_populate_dml_pipes_from_context(dc, context, pipes, fast_validate);
 
@@ -1932,6 +2004,7 @@ int dcn32_populate_dml_pipes_from_context(
 		timing = &pipe->stream->timing;
 
 		pipes[pipe_cnt].pipe.dest.odm_combine_policy = dm_odm_combine_policy_dal;
+<<<<<<< HEAD
 		vsr_odm_support = (res_ctx->pipe_ctx[i].stream->src.width >= 5120 &&
 				res_ctx->pipe_ctx[i].stream->src.width > res_ctx->pipe_ctx[i].stream->dst.width);
 		if (context->stream_count == 1 &&
@@ -1942,6 +2015,14 @@ int dcn32_populate_dml_pipes_from_context(
 				dc->debug.enable_single_display_2to1_odm_policy &&
 				!vsr_odm_support) { //excluding 2to1 ODM combine on >= 5k vsr
 			pipes[pipe_cnt].pipe.dest.odm_combine_policy = dm_odm_combine_policy_2to1;
+=======
+		if (context->stream_count == 1 && !dc_is_hdmi_signal(res_ctx->pipe_ctx[i].stream->signal) &&
+				is_h_timing_divisible_by_2(res_ctx->pipe_ctx[i].stream)) {
+			if (dc->debug.enable_single_display_2to1_odm_policy) {
+				if (!((plane_count > 2) && pipe->top_pipe))
+					pipes[pipe_cnt].pipe.dest.odm_combine_policy = dm_odm_combine_policy_2to1;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		pipe_cnt++;
 	}
@@ -1954,14 +2035,20 @@ int dcn32_populate_dml_pipes_from_context(
 		timing = &pipe->stream->timing;
 
 		pipes[pipe_cnt].pipe.src.gpuvm = true;
+<<<<<<< HEAD
 		DC_FP_START();
 		dcn32_zero_pipe_dcc_fraction(pipes, pipe_cnt);
 		DC_FP_END();
+=======
+		pipes[pipe_cnt].pipe.src.dcc_fraction_of_zs_req_luma = 0;
+		pipes[pipe_cnt].pipe.src.dcc_fraction_of_zs_req_chroma = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		pipes[pipe_cnt].pipe.dest.vfront_porch = timing->v_front_porch;
 		pipes[pipe_cnt].pipe.src.gpuvm_min_page_size_kbytes = 256; // according to spreadsheet
 		pipes[pipe_cnt].pipe.src.unbounded_req_mode = false;
 		pipes[pipe_cnt].pipe.scale_ratio_depth.lb_depth = dm_lb_19;
 
+<<<<<<< HEAD
 		/* Only populate DML input with subvp info for full updates.
 		 * This is just a workaround -- needs a proper fix.
 		 */
@@ -1984,6 +2071,25 @@ int dcn32_populate_dml_pipes_from_context(
 			default:
 				break;
 			}
+=======
+		switch (pipe->stream->mall_stream_config.type) {
+		case SUBVP_MAIN:
+			pipes[pipe_cnt].pipe.src.use_mall_for_pstate_change = dm_use_mall_pstate_change_sub_viewport;
+			subvp_in_use = true;
+			break;
+		case SUBVP_PHANTOM:
+			pipes[pipe_cnt].pipe.src.use_mall_for_pstate_change = dm_use_mall_pstate_change_phantom_pipe;
+			pipes[pipe_cnt].pipe.src.use_mall_for_static_screen = dm_use_mall_static_screen_disable;
+			// Disallow unbounded req for SubVP according to DCHUB programming guide
+			pipes[pipe_cnt].pipe.src.unbounded_req_mode = false;
+			break;
+		case SUBVP_NONE:
+			pipes[pipe_cnt].pipe.src.use_mall_for_pstate_change = dm_use_mall_pstate_change_disable;
+			pipes[pipe_cnt].pipe.src.use_mall_for_static_screen = dm_use_mall_static_screen_disable;
+			break;
+		default:
+			break;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		pipes[pipe_cnt].dout.dsc_input_bpc = 0;
@@ -2004,10 +2110,19 @@ int dcn32_populate_dml_pipes_from_context(
 			}
 		}
 
+<<<<<<< HEAD
 		DC_FP_START();
 		dcn32_predict_pipe_split(context, &pipes[pipe_cnt]);
 		DC_FP_END();
 
+=======
+		/* Calculate the number of planes we have so we can determine
+		 *  whether to apply ODM 2to1 policy or not
+		 */
+		if (pipe->stream && !pipe->prev_odm_pipe &&
+				(!pipe->top_pipe || pipe->top_pipe->plane_state != pipe->plane_state))
+			++plane_count;
+>>>>>>> b7ba80a49124 (Commit)
 		pipe_cnt++;
 	}
 
@@ -2071,9 +2186,12 @@ static struct resource_funcs dcn32_res_pool_funcs = {
 	.update_soc_for_wm_a = dcn30_update_soc_for_wm_a,
 	.add_phantom_pipes = dcn32_add_phantom_pipes,
 	.remove_phantom_pipes = dcn32_remove_phantom_pipes,
+<<<<<<< HEAD
 	.retain_phantom_pipes = dcn32_retain_phantom_pipes,
 	.save_mall_state = dcn32_save_mall_state,
 	.restore_mall_state = dcn32_restore_mall_state,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 
@@ -2152,12 +2270,17 @@ static bool dcn32_resource_construct(
 	dc->caps.max_cursor_size = 64;
 	dc->caps.min_horizontal_blanking_period = 80;
 	dc->caps.dmdata_alloc_size = 2048;
+<<<<<<< HEAD
 	dc->caps.mall_size_per_mem_channel = 4;
+=======
+	dc->caps.mall_size_per_mem_channel = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	dc->caps.mall_size_total = 0;
 	dc->caps.cursor_cache_size = dc->caps.max_cursor_size * dc->caps.max_cursor_size * 8;
 
 	dc->caps.cache_line_size = 64;
 	dc->caps.cache_num_ways = 16;
+<<<<<<< HEAD
 
 	/* Calculate the available MALL space */
 	dc->caps.max_cab_allocation_bytes = dcn32_calc_num_avail_chans_for_mall(
@@ -2167,25 +2290,38 @@ static bool dcn32_resource_construct(
 
 	dc->caps.subvp_fw_processing_delay_us = 15;
 	dc->caps.subvp_drr_max_vblank_margin_us = 40;
+=======
+	dc->caps.max_cab_allocation_bytes = 67108864; // 64MB = 1024 * 1024 * 64
+	dc->caps.subvp_fw_processing_delay_us = 15;
+>>>>>>> b7ba80a49124 (Commit)
 	dc->caps.subvp_prefetch_end_to_mall_start_us = 15;
 	dc->caps.subvp_swath_height_margin_lines = 16;
 	dc->caps.subvp_pstate_allow_width_us = 20;
 	dc->caps.subvp_vertical_int_margin_us = 30;
+<<<<<<< HEAD
 	dc->caps.subvp_drr_vblank_start_margin_us = 100; // 100us margin
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	dc->caps.max_slave_planes = 2;
 	dc->caps.max_slave_yuv_planes = 2;
 	dc->caps.max_slave_rgb_planes = 2;
 	dc->caps.post_blend_color_processing = true;
 	dc->caps.force_dp_tps4_for_cp2520 = true;
+<<<<<<< HEAD
 	if (dc->config.forceHBR2CP2520)
 		dc->caps.force_dp_tps4_for_cp2520 = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dc->caps.dp_hpo = true;
 	dc->caps.dp_hdmi21_pcon_support = true;
 	dc->caps.edp_dsc_support = true;
 	dc->caps.extended_aux_timeout_support = true;
 	dc->caps.dmcub_support = true;
+<<<<<<< HEAD
 	dc->caps.seamless_odm = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Color pipeline capabilities */
 	dc->caps.color.dpp.dcn_arch = 1;
@@ -2459,14 +2595,21 @@ static bool dcn32_resource_construct(
 		ddc_init_data.id.id = dc->ctx->dc_bios->fw_info.oem_i2c_obj_id;
 		ddc_init_data.id.enum_id = 0;
 		ddc_init_data.id.type = OBJECT_TYPE_GENERIC;
+<<<<<<< HEAD
 		pool->base.oem_device = dc->link_srv->create_ddc_service(&ddc_init_data);
+=======
+		pool->base.oem_device = dal_ddc_service_create(&ddc_init_data);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		pool->base.oem_device = NULL;
 	}
 
+<<<<<<< HEAD
 	if (ASICREV_IS_GC_11_0_3(dc->ctx->asic_id.hw_internal_rev) && (dc->config.sdpif_request_limit_words_per_umc == 0))
 		dc->config.sdpif_request_limit_words_per_umc = 16;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	DC_FP_END();
 
 	return true;
@@ -2602,6 +2745,7 @@ struct pipe_ctx *dcn32_acquire_idle_pipe_for_head_pipe_in_layer(
 
 	return idle_pipe;
 }
+<<<<<<< HEAD
 
 unsigned int dcn32_calc_num_avail_chans_for_mall(struct dc *dc, int num_chans)
 {
@@ -2654,3 +2798,5 @@ unsigned int dcn32_calc_num_avail_chans_for_mall(struct dc *dc, int num_chans)
 			gc_11_0_3_max_chans : gc_11_0_3_avail_chans;
 	}
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

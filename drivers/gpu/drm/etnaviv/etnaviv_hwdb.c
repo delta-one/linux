@@ -16,7 +16,10 @@ static const struct etnaviv_chip_identity etnaviv_chip_identities[] = {
 		.register_max = 64,
 		.thread_count = 128,
 		.shader_core_count = 1,
+<<<<<<< HEAD
 		.nn_core_count = 0,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.vertex_cache_size = 8,
 		.vertex_output_buffer_size = 1024,
 		.pixel_pipes = 1,
@@ -48,7 +51,10 @@ static const struct etnaviv_chip_identity etnaviv_chip_identities[] = {
 		.register_max = 64,
 		.thread_count = 512,
 		.shader_core_count = 2,
+<<<<<<< HEAD
 		.nn_core_count = 0,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.vertex_cache_size = 16,
 		.vertex_output_buffer_size = 1024,
 		.pixel_pipes = 1,
@@ -72,6 +78,7 @@ static const struct etnaviv_chip_identity etnaviv_chip_identities[] = {
 	},
 	{
 		.model = 0x7000,
+<<<<<<< HEAD
 		.revision = 0x6203,
 		.product_id = 0x70003,
 		.customer_id = 0x4,
@@ -104,6 +111,8 @@ static const struct etnaviv_chip_identity etnaviv_chip_identities[] = {
 	},
 	{
 		.model = 0x7000,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.revision = 0x6204,
 		.product_id = ~0U,
 		.customer_id = ~0U,
@@ -143,7 +152,10 @@ static const struct etnaviv_chip_identity etnaviv_chip_identities[] = {
 		.register_max = 64,
 		.thread_count = 1024,
 		.shader_core_count = 4,
+<<<<<<< HEAD
 		.nn_core_count = 0,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.vertex_cache_size = 16,
 		.vertex_output_buffer_size = 1024,
 		.pixel_pipes = 2,
@@ -165,6 +177,7 @@ static const struct etnaviv_chip_identity etnaviv_chip_identities[] = {
 		.minor_features10 = 0x90044250,
 		.minor_features11 = 0x00000024,
 	},
+<<<<<<< HEAD
 	{
 		.model = 0x8000,
 		.revision = 0x7120,
@@ -197,6 +210,8 @@ static const struct etnaviv_chip_identity etnaviv_chip_identities[] = {
 		.minor_features10 = 0x108048c0,
 		.minor_features11 = 0x00000010,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 bool etnaviv_fill_identity_from_hwdb(struct etnaviv_gpu *gpu)

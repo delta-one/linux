@@ -217,23 +217,34 @@ static DEVICE_ATTR(dscr_default, 0600,
 static void __init sysfs_create_dscr_default(void)
 {
 	if (cpu_has_feature(CPU_FTR_DSCR)) {
+<<<<<<< HEAD
 		struct device *dev_root;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		int cpu;
 
 		dscr_default = spr_default_dscr;
 		for_each_possible_cpu(cpu)
 			paca_ptrs[cpu]->dscr_default = dscr_default;
 
+<<<<<<< HEAD
 		dev_root = bus_get_dev_root(&cpu_subsys);
 		if (dev_root) {
 			device_create_file(dev_root, &dev_attr_dscr_default);
 			put_device(dev_root);
 		}
+=======
+		device_create_file(cpu_subsys.dev_root, &dev_attr_dscr_default);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 #endif /* CONFIG_PPC64 */
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_E500
+=======
+#ifdef CONFIG_PPC_FSL_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 #define MAX_BIT				63
 
 static u64 pw20_wt;
@@ -751,12 +762,16 @@ static DEVICE_ATTR(svm, 0444, show_svm, NULL);
 
 static void __init create_svm_file(void)
 {
+<<<<<<< HEAD
 	struct device *dev_root = bus_get_dev_root(&cpu_subsys);
 
 	if (dev_root) {
 		device_create_file(dev_root, &dev_attr_svm);
 		put_device(dev_root);
 	}
+=======
+	device_create_file(cpu_subsys.dev_root, &dev_attr_svm);
+>>>>>>> b7ba80a49124 (Commit)
 }
 #else
 static void __init create_svm_file(void)
@@ -917,7 +932,11 @@ static int register_cpu_online(unsigned int cpu)
 		device_create_file(s, &dev_attr_tscr);
 #endif /* CONFIG_PPC64 */
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_E500
+=======
+#ifdef CONFIG_PPC_FSL_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	if (PVR_VER(cur_cpu_spec->pvr_value) == PVR_VER_E6500) {
 		device_create_file(s, &dev_attr_pw20_state);
 		device_create_file(s, &dev_attr_pw20_wait_time);
@@ -1013,7 +1032,11 @@ static int unregister_cpu_online(unsigned int cpu)
 		device_remove_file(s, &dev_attr_tscr);
 #endif /* CONFIG_PPC64 */
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_E500
+=======
+#ifdef CONFIG_PPC_FSL_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	if (PVR_VER(cur_cpu_spec->pvr_value) == PVR_VER_E6500) {
 		device_remove_file(s, &dev_attr_pw20_state);
 		device_remove_file(s, &dev_attr_pw20_wait_time);

@@ -113,6 +113,7 @@ static void rockchip_cpuclk_set_dividers(struct rockchip_cpuclk *cpuclk,
 	}
 }
 
+<<<<<<< HEAD
 static void rockchip_cpuclk_set_pre_muxs(struct rockchip_cpuclk *cpuclk,
 					 const struct rockchip_cpuclk_rate_table *rate)
 {
@@ -149,6 +150,8 @@ static void rockchip_cpuclk_set_post_muxs(struct rockchip_cpuclk *cpuclk,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int rockchip_cpuclk_pre_rate_change(struct rockchip_cpuclk *cpuclk,
 					   struct clk_notifier_data *ndata)
 {
@@ -201,6 +204,7 @@ static int rockchip_cpuclk_pre_rate_change(struct rockchip_cpuclk *cpuclk,
 			       cpuclk->reg_base + reg_data->core_reg[i]);
 		}
 	}
+<<<<<<< HEAD
 
 	rockchip_cpuclk_set_pre_muxs(cpuclk, rate);
 
@@ -215,6 +219,13 @@ static int rockchip_cpuclk_pre_rate_change(struct rockchip_cpuclk *cpuclk,
 				     reg_data->mux_core_mask,
 				     reg_data->mux_core_shift),
 		       cpuclk->reg_base + reg_data->core_reg[0]);
+=======
+	/* select alternate parent */
+	writel(HIWORD_UPDATE(reg_data->mux_core_alt,
+			     reg_data->mux_core_mask,
+			     reg_data->mux_core_shift),
+	       cpuclk->reg_base + reg_data->core_reg[0]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_unlock_irqrestore(cpuclk->lock, flags);
 	return 0;
@@ -247,6 +258,7 @@ static int rockchip_cpuclk_post_rate_change(struct rockchip_cpuclk *cpuclk,
 	 * primary parent by the extra dividers that were needed for the alt.
 	 */
 
+<<<<<<< HEAD
 	if (reg_data->mux_core_reg)
 		writel(HIWORD_UPDATE(reg_data->mux_core_main,
 				     reg_data->mux_core_mask,
@@ -259,6 +271,12 @@ static int rockchip_cpuclk_post_rate_change(struct rockchip_cpuclk *cpuclk,
 		       cpuclk->reg_base + reg_data->core_reg[0]);
 
 	rockchip_cpuclk_set_post_muxs(cpuclk, rate);
+=======
+	writel(HIWORD_UPDATE(reg_data->mux_core_main,
+			     reg_data->mux_core_mask,
+			     reg_data->mux_core_shift),
+	       cpuclk->reg_base + reg_data->core_reg[0]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* remove dividers */
 	for (i = 0; i < reg_data->num_cores; i++) {

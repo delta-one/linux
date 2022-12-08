@@ -19,6 +19,10 @@
 #include <linux/of_fdt.h>
 #include <linux/of.h>
 #include <linux/of_platform.h>
+<<<<<<< HEAD
+=======
+#include <linux/pda_power.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <linux/serial_8250.h>
 #include <linux/slab.h>

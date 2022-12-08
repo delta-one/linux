@@ -414,7 +414,11 @@ static const struct mempolicy_operations mpol_ops[MPOL_MAX] = {
 	},
 };
 
+<<<<<<< HEAD
 static int migrate_folio_add(struct folio *folio, struct list_head *foliolist,
+=======
+static int migrate_page_add(struct page *page, struct list_head *pagelist,
+>>>>>>> b7ba80a49124 (Commit)
 				unsigned long flags);
 
 struct queue_pages {
@@ -427,21 +431,33 @@ struct queue_pages {
 };
 
 /*
+<<<<<<< HEAD
  * Check if the folio's nid is in qp->nmask.
+=======
+ * Check if the page's nid is in qp->nmask.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * If MPOL_MF_INVERT is set in qp->flags, check if the nid is
  * in the invert of qp->nmask.
  */
+<<<<<<< HEAD
 static inline bool queue_folio_required(struct folio *folio,
 					struct queue_pages *qp)
 {
 	int nid = folio_nid(folio);
+=======
+static inline bool queue_pages_required(struct page *page,
+					struct queue_pages *qp)
+{
+	int nid = page_to_nid(page);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flags = qp->flags;
 
 	return node_isset(nid, *qp->nmask) == !(flags & MPOL_MF_INVERT);
 }
 
 /*
+<<<<<<< HEAD
  * queue_folios_pmd() has three possible return values:
  * 0 - folios are placed on the right node or queued successfully, or
  *     special page is met, i.e. huge zero page.
@@ -452,11 +468,27 @@ static inline bool queue_folio_required(struct folio *folio,
  *        policy.
  */
 static int queue_folios_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
+=======
+ * queue_pages_pmd() has three possible return values:
+ * 0 - pages are placed on the right node or queued successfully, or
+ *     special page is met, i.e. huge zero page.
+ * 1 - there is unmovable page, and MPOL_MF_MOVE* & MPOL_MF_STRICT were
+ *     specified.
+ * -EIO - is migration entry or only MPOL_MF_STRICT was specified and an
+ *        existing page was already on a node that does not follow the
+ *        policy.
+ */
+static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
+>>>>>>> b7ba80a49124 (Commit)
 				unsigned long end, struct mm_walk *walk)
 	__releases(ptl)
 {
 	int ret = 0;
+<<<<<<< HEAD
 	struct folio *folio;
+=======
+	struct page *page;
+>>>>>>> b7ba80a49124 (Commit)
 	struct queue_pages *qp = walk->private;
 	unsigned long flags;
 
@@ -464,6 +496,7 @@ static int queue_folios_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
 		ret = -EIO;
 		goto unlock;
 	}
+<<<<<<< HEAD
 	folio = pfn_folio(pmd_pfn(*pmd));
 	if (is_huge_zero_page(&folio->page)) {
 		walk->action = ACTION_CONTINUE;
@@ -477,6 +510,21 @@ static int queue_folios_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
 	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
 		if (!vma_migratable(walk->vma) ||
 		    migrate_folio_add(folio, qp->pagelist, flags)) {
+=======
+	page = pmd_page(*pmd);
+	if (is_huge_zero_page(page)) {
+		walk->action = ACTION_CONTINUE;
+		goto unlock;
+	}
+	if (!queue_pages_required(page, qp))
+		goto unlock;
+
+	flags = qp->flags;
+	/* go to thp migration */
+	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
+		if (!vma_migratable(walk->vma) ||
+		    migrate_page_add(page, qp->pagelist, flags)) {
+>>>>>>> b7ba80a49124 (Commit)
 			ret = 1;
 			goto unlock;
 		}
@@ -491,6 +539,7 @@ unlock:
  * Scan through pages checking if pages follow certain conditions,
  * and move them to the pagelist if they do.
  *
+<<<<<<< HEAD
  * queue_folios_pte_range() has three possible return values:
  * 0 - folios are placed on the right node or queued successfully, or
  *     special page is met, i.e. zero page.
@@ -504,6 +553,21 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
 {
 	struct vm_area_struct *vma = walk->vma;
 	struct folio *folio;
+=======
+ * queue_pages_pte_range() has three possible return values:
+ * 0 - pages are placed on the right node or queued successfully, or
+ *     special page is met, i.e. zero page.
+ * 1 - there is unmovable page, and MPOL_MF_MOVE* & MPOL_MF_STRICT were
+ *     specified.
+ * -EIO - only MPOL_MF_STRICT was specified and an existing page was already
+ *        on a node that does not follow the policy.
+ */
+static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
+			unsigned long end, struct mm_walk *walk)
+{
+	struct vm_area_struct *vma = walk->vma;
+	struct page *page;
+>>>>>>> b7ba80a49124 (Commit)
 	struct queue_pages *qp = walk->private;
 	unsigned long flags = qp->flags;
 	bool has_unmovable = false;
@@ -512,7 +576,11 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
 
 	ptl = pmd_trans_huge_lock(pmd, vma);
 	if (ptl)
+<<<<<<< HEAD
 		return queue_folios_pmd(pmd, ptl, addr, end, walk);
+=======
+		return queue_pages_pmd(pmd, ptl, addr, end, walk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (pmd_trans_unstable(pmd))
 		return 0;
@@ -521,6 +589,7 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
 	for (; addr != end; pte++, addr += PAGE_SIZE) {
 		if (!pte_present(*pte))
 			continue;
+<<<<<<< HEAD
 		folio = vm_normal_folio(vma, addr, *pte);
 		if (!folio || folio_is_zone_device(folio))
 			continue;
@@ -531,6 +600,18 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
 		if (folio_test_reserved(folio))
 			continue;
 		if (!queue_folio_required(folio, qp))
+=======
+		page = vm_normal_page(vma, addr, *pte);
+		if (!page || is_zone_device_page(page))
+			continue;
+		/*
+		 * vm_normal_page() filters out zero pages, but there might
+		 * still be PageReserved pages to skip, perhaps in a VDSO.
+		 */
+		if (PageReserved(page))
+			continue;
+		if (!queue_pages_required(page, qp))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
 			/* MPOL_MF_STRICT must be specified if we get here */
@@ -544,7 +625,11 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
 			 * temporary off LRU pages in the range.  Still
 			 * need migrate other LRU pages.
 			 */
+<<<<<<< HEAD
 			if (migrate_folio_add(folio, qp->pagelist, flags))
+=======
+			if (migrate_page_add(page, qp->pagelist, flags))
+>>>>>>> b7ba80a49124 (Commit)
 				has_unmovable = true;
 		} else
 			break;
@@ -558,7 +643,11 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
 	return addr != end ? -EIO : 0;
 }
 
+<<<<<<< HEAD
 static int queue_folios_hugetlb(pte_t *pte, unsigned long hmask,
+=======
+static int queue_pages_hugetlb(pte_t *pte, unsigned long hmask,
+>>>>>>> b7ba80a49124 (Commit)
 			       unsigned long addr, unsigned long end,
 			       struct mm_walk *walk)
 {
@@ -566,7 +655,11 @@ static int queue_folios_hugetlb(pte_t *pte, unsigned long hmask,
 #ifdef CONFIG_HUGETLB_PAGE
 	struct queue_pages *qp = walk->private;
 	unsigned long flags = (qp->flags & MPOL_MF_VALID);
+<<<<<<< HEAD
 	struct folio *folio;
+=======
+	struct page *page;
+>>>>>>> b7ba80a49124 (Commit)
 	spinlock_t *ptl;
 	pte_t entry;
 
@@ -574,13 +667,22 @@ static int queue_folios_hugetlb(pte_t *pte, unsigned long hmask,
 	entry = huge_ptep_get(pte);
 	if (!pte_present(entry))
 		goto unlock;
+<<<<<<< HEAD
 	folio = pfn_folio(pte_pfn(entry));
 	if (!queue_folio_required(folio, qp))
+=======
+	page = pte_page(entry);
+	if (!queue_pages_required(page, qp))
+>>>>>>> b7ba80a49124 (Commit)
 		goto unlock;
 
 	if (flags == MPOL_MF_STRICT) {
 		/*
+<<<<<<< HEAD
 		 * STRICT alone means only detecting misplaced folio and no
+=======
+		 * STRICT alone means only detecting misplaced page and no
+>>>>>>> b7ba80a49124 (Commit)
 		 * need to further check other vma.
 		 */
 		ret = -EIO;
@@ -591,13 +693,18 @@ static int queue_folios_hugetlb(pte_t *pte, unsigned long hmask,
 		/*
 		 * Must be STRICT with MOVE*, otherwise .test_walk() have
 		 * stopped walking current vma.
+<<<<<<< HEAD
 		 * Detecting misplaced folio but allow migrating folios which
+=======
+		 * Detecting misplaced page but allow migrating pages which
+>>>>>>> b7ba80a49124 (Commit)
 		 * have been queued.
 		 */
 		ret = 1;
 		goto unlock;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * With MPOL_MF_MOVE, we try to migrate only unshared folios. If it
 	 * is shared it is likely not worth migrating.
@@ -613,6 +720,15 @@ static int queue_folios_hugetlb(pte_t *pte, unsigned long hmask,
 			(flags & MPOL_MF_STRICT))
 			/*
 			 * Failed to isolate folio but allow migrating pages
+=======
+	/* With MPOL_MF_MOVE, we migrate only unshared hugepage. */
+	if (flags & (MPOL_MF_MOVE_ALL) ||
+	    (flags & MPOL_MF_MOVE && page_mapcount(page) == 1)) {
+		if (isolate_hugetlb(page, qp->pagelist) &&
+			(flags & MPOL_MF_STRICT))
+			/*
+			 * Failed to isolate page but allow migrating pages
+>>>>>>> b7ba80a49124 (Commit)
 			 * which have been queued.
 			 */
 			ret = 1;
@@ -639,12 +755,22 @@ unsigned long change_prot_numa(struct vm_area_struct *vma,
 			unsigned long addr, unsigned long end)
 {
 	struct mmu_gather tlb;
+<<<<<<< HEAD
 	long nr_updated;
 
 	tlb_gather_mmu(&tlb, vma->vm_mm);
 
 	nr_updated = change_protection(&tlb, vma, addr, end, MM_CP_PROT_NUMA);
 	if (nr_updated > 0)
+=======
+	int nr_updated;
+
+	tlb_gather_mmu(&tlb, vma->vm_mm);
+
+	nr_updated = change_protection(&tlb, vma, addr, end, PAGE_NONE,
+				       MM_CP_PROT_NUMA);
+	if (nr_updated)
+>>>>>>> b7ba80a49124 (Commit)
 		count_vm_numa_events(NUMA_PTE_UPDATES, nr_updated);
 
 	tlb_finish_mmu(&tlb);
@@ -710,8 +836,13 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
 }
 
 static const struct mm_walk_ops queue_pages_walk_ops = {
+<<<<<<< HEAD
 	.hugetlb_entry		= queue_folios_hugetlb,
 	.pmd_entry		= queue_folios_pte_range,
+=======
+	.hugetlb_entry		= queue_pages_hugetlb,
+	.pmd_entry		= queue_pages_pte_range,
+>>>>>>> b7ba80a49124 (Commit)
 	.test_walk		= queue_pages_test_walk,
 };
 
@@ -794,12 +925,17 @@ static int vma_replace_policy(struct vm_area_struct *vma,
 static int mbind_range(struct mm_struct *mm, unsigned long start,
 		       unsigned long end, struct mempolicy *new_pol)
 {
+<<<<<<< HEAD
 	VMA_ITERATOR(vmi, mm, start);
+=======
+	MA_STATE(mas, &mm->mm_mt, start - 1, start - 1);
+>>>>>>> b7ba80a49124 (Commit)
 	struct vm_area_struct *prev;
 	struct vm_area_struct *vma;
 	int err = 0;
 	pgoff_t pgoff;
 
+<<<<<<< HEAD
 	prev = vma_prev(&vmi);
 	vma = vma_find(&vmi, end);
 	if (WARN_ON(!vma))
@@ -809,6 +945,15 @@ static int mbind_range(struct mm_struct *mm, unsigned long start,
 		prev = vma;
 
 	do {
+=======
+	prev = mas_find_rev(&mas, 0);
+	if (prev && (start < prev->vm_end))
+		vma = prev;
+	else
+		vma = mas_next(&mas, end - 1);
+
+	for (; vma; vma = mas_next(&mas, end - 1)) {
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned long vmstart = max(start, vma->vm_start);
 		unsigned long vmend = min(end, vma->vm_end);
 
@@ -817,15 +962,25 @@ static int mbind_range(struct mm_struct *mm, unsigned long start,
 
 		pgoff = vma->vm_pgoff +
 			((vmstart - vma->vm_start) >> PAGE_SHIFT);
+<<<<<<< HEAD
 		prev = vma_merge(&vmi, mm, prev, vmstart, vmend, vma->vm_flags,
+=======
+		prev = vma_merge(mm, prev, vmstart, vmend, vma->vm_flags,
+>>>>>>> b7ba80a49124 (Commit)
 				 vma->anon_vma, vma->vm_file, pgoff,
 				 new_pol, vma->vm_userfaultfd_ctx,
 				 anon_vma_name(vma));
 		if (prev) {
+<<<<<<< HEAD
+=======
+			/* vma_merge() invalidated the mas */
+			mas_pause(&mas);
+>>>>>>> b7ba80a49124 (Commit)
 			vma = prev;
 			goto replace;
 		}
 		if (vma->vm_start != vmstart) {
+<<<<<<< HEAD
 			err = split_vma(&vmi, vma, vmstart, 1);
 			if (err)
 				goto out;
@@ -834,6 +989,20 @@ static int mbind_range(struct mm_struct *mm, unsigned long start,
 			err = split_vma(&vmi, vma, vmend, 0);
 			if (err)
 				goto out;
+=======
+			err = split_vma(vma->vm_mm, vma, vmstart, 1);
+			if (err)
+				goto out;
+			/* split_vma() invalidated the mas */
+			mas_pause(&mas);
+		}
+		if (vma->vm_end != vmend) {
+			err = split_vma(vma->vm_mm, vma, vmend, 0);
+			if (err)
+				goto out;
+			/* split_vma() invalidated the mas */
+			mas_pause(&mas);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 replace:
 		err = vma_replace_policy(vma, new_pol);
@@ -841,7 +1010,11 @@ replace:
 			goto out;
 next:
 		prev = vma;
+<<<<<<< HEAD
 	} for_each_vma_range(vmi, vma, end);
+=======
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	return err;
@@ -1021,6 +1194,7 @@ static long do_get_mempolicy(int *policy, nodemask_t *nmask,
 }
 
 #ifdef CONFIG_MIGRATION
+<<<<<<< HEAD
 static int migrate_folio_add(struct folio *folio, struct list_head *foliolist,
 				unsigned long flags)
 {
@@ -1043,6 +1217,29 @@ static int migrate_folio_add(struct folio *folio, struct list_head *foliolist,
 			 * Non-movable folio may reach here.  And, there may be
 			 * temporary off LRU folios or non-LRU movable folios.
 			 * Treat them as unmovable folios since they can't be
+=======
+/*
+ * page migration, thp tail pages can be passed.
+ */
+static int migrate_page_add(struct page *page, struct list_head *pagelist,
+				unsigned long flags)
+{
+	struct page *head = compound_head(page);
+	/*
+	 * Avoid migrating a page that is shared with others.
+	 */
+	if ((flags & MPOL_MF_MOVE_ALL) || page_mapcount(head) == 1) {
+		if (!isolate_lru_page(head)) {
+			list_add_tail(&head->lru, pagelist);
+			mod_node_page_state(page_pgdat(head),
+				NR_ISOLATED_ANON + page_is_file_lru(head),
+				thp_nr_pages(head));
+		} else if (flags & MPOL_MF_STRICT) {
+			/*
+			 * Non-movable page may reach here.  And, there may be
+			 * temporary off LRU pages or non-LRU movable pages.
+			 * Treat them as unmovable pages since they can't be
+>>>>>>> b7ba80a49124 (Commit)
 			 * isolated, so they can't be moved at the moment.  It
 			 * should return -EIO for this case too.
 			 */
@@ -1218,11 +1415,17 @@ static struct page *new_page(struct page *page, unsigned long start)
 			break;
 	}
 
+<<<<<<< HEAD
 	if (folio_test_hugetlb(src)) {
 		dst = alloc_hugetlb_folio_vma(folio_hstate(src),
 				vma, address);
 		return &dst->page;
 	}
+=======
+	if (folio_test_hugetlb(src))
+		return alloc_huge_page_vma(page_hstate(&src->page),
+				vma, address);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (folio_test_large(src))
 		gfp = GFP_TRANSHUGE;
@@ -1236,7 +1439,11 @@ static struct page *new_page(struct page *page, unsigned long start)
 }
 #else
 
+<<<<<<< HEAD
 static int migrate_folio_add(struct folio *folio, struct list_head *foliolist,
+=======
+static int migrate_page_add(struct page *page, struct list_head *pagelist,
+>>>>>>> b7ba80a49124 (Commit)
 				unsigned long flags)
 {
 	return -EIO;
@@ -1490,7 +1697,11 @@ SYSCALL_DEFINE4(set_mempolicy_home_node, unsigned long, start, unsigned long, le
 {
 	struct mm_struct *mm = current->mm;
 	struct vm_area_struct *vma;
+<<<<<<< HEAD
 	struct mempolicy *new, *old;
+=======
+	struct mempolicy *new;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long vmstart;
 	unsigned long vmend;
 	unsigned long end;
@@ -1522,11 +1733,28 @@ SYSCALL_DEFINE4(set_mempolicy_home_node, unsigned long, start, unsigned long, le
 		return 0;
 	mmap_write_lock(mm);
 	for_each_vma_range(vmi, vma, end) {
+<<<<<<< HEAD
+=======
+		vmstart = max(start, vma->vm_start);
+		vmend   = min(end, vma->vm_end);
+		new = mpol_dup(vma_policy(vma));
+		if (IS_ERR(new)) {
+			err = PTR_ERR(new);
+			break;
+		}
+		/*
+		 * Only update home node if there is an existing vma policy
+		 */
+		if (!new)
+			continue;
+
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * If any vma in the range got policy other than MPOL_BIND
 		 * or MPOL_PREFERRED_MANY we return error. We don't reset
 		 * the home node for vmas we already updated before.
 		 */
+<<<<<<< HEAD
 		old = vma_policy(vma);
 		if (!old)
 			continue;
@@ -1543,6 +1771,14 @@ SYSCALL_DEFINE4(set_mempolicy_home_node, unsigned long, start, unsigned long, le
 		new->home_node = home_node;
 		vmstart = max(start, vma->vm_start);
 		vmend   = min(end, vma->vm_end);
+=======
+		if (new->mode != MPOL_BIND && new->mode != MPOL_PREFERRED_MANY) {
+			err = -EOPNOTSUPP;
+			break;
+		}
+
+		new->home_node = home_node;
+>>>>>>> b7ba80a49124 (Commit)
 		err = mbind_range(mm, vmstart, vmend, new);
 		mpol_put(new);
 		if (err)
@@ -2736,12 +2972,22 @@ restart:
 		sp_insert(sp, new);
 	write_unlock(&sp->lock);
 	ret = 0;
+<<<<<<< HEAD
 put_mpol:
 	mpol_put(mpol_new);
 
 	if (n_new)
 		kmem_cache_free(sn_cache, n_new);
 exit:
+=======
+
+err_out:
+	if (mpol_new)
+		mpol_put(mpol_new);
+	if (n_new)
+		kmem_cache_free(sn_cache, n_new);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 
 alloc_new:
@@ -2749,10 +2995,17 @@ alloc_new:
 	ret = -ENOMEM;
 	n_new = kmem_cache_alloc(sn_cache, GFP_KERNEL);
 	if (!n_new)
+<<<<<<< HEAD
 		goto exit;
 	mpol_new = kmem_cache_alloc(policy_cache, GFP_KERNEL);
 	if (!mpol_new)
 		goto put_mpol;
+=======
+		goto err_out;
+	mpol_new = kmem_cache_alloc(policy_cache, GFP_KERNEL);
+	if (!mpol_new)
+		goto err_out;
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_set(&mpol_new->refcnt, 1);
 	goto restart;
 }

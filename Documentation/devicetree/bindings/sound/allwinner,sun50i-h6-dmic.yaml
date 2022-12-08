@@ -9,6 +9,7 @@ title: Allwinner H6 DMIC
 maintainers:
   - Ban Tao <fengzheng923@gmail.com>
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
@@ -20,6 +21,11 @@ properties:
               - allwinner,sun20i-d1-dmic
           - const: allwinner,sun50i-h6-dmic
       - const: allwinner,sun50i-h6-dmic
+=======
+properties:
+  compatible:
+    const: allwinner,sun50i-h6-dmic
+>>>>>>> b7ba80a49124 (Commit)
 
   "#sound-dai-cells":
     const: 0
@@ -62,7 +68,11 @@ required:
   - dma-names
   - resets
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

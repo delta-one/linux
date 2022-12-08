@@ -2320,6 +2320,7 @@ static u32 iwl_dump_ini_info(struct iwl_fw_runtime *fwrt,
 	return entry->size;
 }
 
+<<<<<<< HEAD
 static u32 iwl_dump_ini_file_name_info(struct iwl_fw_runtime *fwrt,
 				       struct list_head *list)
 {
@@ -2348,6 +2349,8 @@ static u32 iwl_dump_ini_file_name_info(struct iwl_fw_runtime *fwrt,
 	return entry->size;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct iwl_dump_ini_mem_ops iwl_dump_ini_region_ops[] = {
 	[IWL_FW_INI_REGION_INVALID] = {},
 	[IWL_FW_INI_REGION_INTERNAL_BUFFER] = {
@@ -2523,10 +2526,15 @@ static u32 iwl_dump_ini_trigger(struct iwl_fw_runtime *fwrt,
 		size += iwl_dump_ini_mem(fwrt, list, &reg_data,
 					 &iwl_dump_ini_region_ops[IWL_FW_INI_REGION_DRAM_IMR]);
 
+<<<<<<< HEAD
 	if (size) {
 		size += iwl_dump_ini_file_name_info(fwrt, list);
 		size += iwl_dump_ini_info(fwrt, trigger, list);
 	}
+=======
+	if (size)
+		size += iwl_dump_ini_info(fwrt, trigger, list);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return size;
 }

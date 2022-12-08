@@ -3,7 +3,11 @@
  * Microchip / Atmel ECC (I2C) driver.
  *
  * Copyright (c) 2017, Microchip Technology Inc.
+<<<<<<< HEAD
  * Author: Tudor Ambarus
+=======
+ * Author: Tudor Ambarus <tudor.ambarus@microchip.com>
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/bitrev.h>
@@ -59,7 +63,11 @@ void atmel_i2c_init_read_cmd(struct atmel_i2c_cmd *cmd)
 	 * Read the word from Configuration zone that contains the lock bytes
 	 * (UserExtra, Selector, LockValue, LockConfig).
 	 */
+<<<<<<< HEAD
 	cmd->param1 = CONFIGURATION_ZONE;
+=======
+	cmd->param1 = CONFIG_ZONE;
+>>>>>>> b7ba80a49124 (Commit)
 	cmd->param2 = cpu_to_le16(DEVICE_LOCK_ADDR);
 	cmd->count = READ_COUNT;
 
@@ -324,7 +332,11 @@ free_cmd:
 	return ret;
 }
 
+<<<<<<< HEAD
 int atmel_i2c_probe(struct i2c_client *client)
+=======
+int atmel_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct atmel_i2c_client_priv *i2c_priv;
 	struct device *dev = &client->dev;
@@ -390,6 +402,10 @@ static void __exit atmel_i2c_exit(void)
 module_init(atmel_i2c_init);
 module_exit(atmel_i2c_exit);
 
+<<<<<<< HEAD
 MODULE_AUTHOR("Tudor Ambarus");
+=======
+MODULE_AUTHOR("Tudor Ambarus <tudor.ambarus@microchip.com>");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_DESCRIPTION("Microchip / Atmel ECC (I2C) driver");
 MODULE_LICENSE("GPL v2");

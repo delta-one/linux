@@ -48,7 +48,11 @@ static int __init early_page_owner_param(char *buf)
 	int ret = kstrtobool(buf, &page_owner_enabled);
 
 	if (page_owner_enabled)
+<<<<<<< HEAD
 		stack_depot_request_early_init();
+=======
+		stack_depot_want_early_init();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -99,7 +103,10 @@ struct page_ext_operations page_owner_ops = {
 	.size = sizeof(struct page_owner),
 	.need = need_page_owner,
 	.init = init_page_owner,
+<<<<<<< HEAD
 	.need_shared_flags = true,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct page_owner *get_page_owner(struct page_ext *page_ext)
@@ -163,7 +170,10 @@ static inline void __set_page_owner_handle(struct page_ext *page_ext,
 {
 	struct page_owner *page_owner;
 	int i;
+<<<<<<< HEAD
 	u64 ts_nsec = local_clock();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < (1 << order); i++) {
 		page_owner = get_page_owner(page_ext);
@@ -173,7 +183,11 @@ static inline void __set_page_owner_handle(struct page_ext *page_ext,
 		page_owner->last_migrate_reason = -1;
 		page_owner->pid = current->pid;
 		page_owner->tgid = current->tgid;
+<<<<<<< HEAD
 		page_owner->ts_nsec = ts_nsec;
+=======
+		page_owner->ts_nsec = local_clock();
+>>>>>>> b7ba80a49124 (Commit)
 		strscpy(page_owner->comm, current->comm,
 			sizeof(page_owner->comm));
 		__set_bit(PAGE_EXT_OWNER, &page_ext->flags);
@@ -315,7 +329,11 @@ void pagetypeinfo_showmixedcount_print(struct seq_file *m,
 				unsigned long freepage_order;
 
 				freepage_order = buddy_order_unsafe(page);
+<<<<<<< HEAD
 				if (freepage_order <= MAX_ORDER)
+=======
+				if (freepage_order < MAX_ORDER)
+>>>>>>> b7ba80a49124 (Commit)
 					pfn += (1UL << freepage_order) - 1;
 				continue;
 			}
@@ -549,7 +567,11 @@ read_page_owner(struct file *file, char __user *buf, size_t count, loff_t *ppos)
 		if (PageBuddy(page)) {
 			unsigned long freepage_order = buddy_order_unsafe(page);
 
+<<<<<<< HEAD
 			if (freepage_order <= MAX_ORDER)
+=======
+			if (freepage_order < MAX_ORDER)
+>>>>>>> b7ba80a49124 (Commit)
 				pfn += (1UL << freepage_order) - 1;
 			continue;
 		}
@@ -657,7 +679,11 @@ static void init_pages_in_zone(pg_data_t *pgdat, struct zone *zone)
 			if (PageBuddy(page)) {
 				unsigned long order = buddy_order_unsafe(page);
 
+<<<<<<< HEAD
 				if (order > 0 && order <= MAX_ORDER)
+=======
+				if (order > 0 && order < MAX_ORDER)
+>>>>>>> b7ba80a49124 (Commit)
 					pfn += (1UL << order) - 1;
 				continue;
 			}

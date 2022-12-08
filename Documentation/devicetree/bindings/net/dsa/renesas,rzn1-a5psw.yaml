@@ -14,7 +14,11 @@ description: |
   handles 4 ports + 1 CPU management port.
 
 allOf:
+<<<<<<< HEAD
   - $ref: dsa.yaml#/$defs/ethernet-ports
+=======
+  - $ref: dsa.yaml#
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -74,10 +78,17 @@ properties:
 
         properties:
           pcs-handle:
+<<<<<<< HEAD
             maxItems: 1
             description:
               phandle pointing to a PCS sub-node compatible with
               renesas,rzn1-miic.yaml#
+=======
+            description:
+              phandle pointing to a PCS sub-node compatible with
+              renesas,rzn1-miic.yaml#
+            $ref: /schemas/types.yaml#/definitions/phandle
+>>>>>>> b7ba80a49124 (Commit)
 
 unevaluatedProperties: false
 

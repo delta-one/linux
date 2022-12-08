@@ -176,6 +176,10 @@
 
 						switch_port0: port@0 {
 							reg = <0x0>;
+<<<<<<< HEAD
+=======
+							label = "cpu";
+>>>>>>> b7ba80a49124 (Commit)
 							ethernet = <&eth1>;
 
 							phy-mode = "gmii";

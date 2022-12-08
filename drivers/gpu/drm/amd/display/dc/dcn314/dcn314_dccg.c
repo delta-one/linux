@@ -45,6 +45,7 @@
 #define DC_LOGGER \
 	dccg->ctx->logger
 
+<<<<<<< HEAD
 static void dccg314_get_pixel_rate_div(
 		struct dccg *dccg,
 		uint32_t otg_inst,
@@ -87,6 +88,8 @@ static void dccg314_get_pixel_rate_div(
 	*k2 = (enum pixel_rate_div)val_k2;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void dccg314_set_pixel_rate_div(
 		struct dccg *dccg,
 		uint32_t otg_inst,
@@ -94,6 +97,7 @@ static void dccg314_set_pixel_rate_div(
 		enum pixel_rate_div k2)
 {
 	struct dcn_dccg *dccg_dcn = TO_DCN_DCCG(dccg);
+<<<<<<< HEAD
 	enum pixel_rate_div cur_k1 = PIXEL_RATE_DIV_NA, cur_k2 = PIXEL_RATE_DIV_NA;
 
 	// Don't program 0xF into the register field. Not valid since
@@ -106,6 +110,8 @@ static void dccg314_set_pixel_rate_div(
 	dccg314_get_pixel_rate_div(dccg, otg_inst, &cur_k1, &cur_k2);
 	if (k1 == cur_k1 && k2 == cur_k2)
 		return;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (otg_inst) {
 	case 0:

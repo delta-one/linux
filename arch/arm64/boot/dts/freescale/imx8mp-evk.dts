@@ -36,8 +36,13 @@
 
 	pcie0_refclk: pcie0-refclk {
 		compatible = "fixed-clock";
+<<<<<<< HEAD
 		#clock-cells = <0>;
 		clock-frequency = <100000000>;
+=======
+			#clock-cells = <0>;
+			clock-frequency = <100000000>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	reg_can1_stby: regulator-can1-stby {
@@ -85,6 +90,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &flexspi {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_flexspi0>;
@@ -99,6 +105,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &A53_0 {
 	cpu-supply = <&reg_arm>;
 };
@@ -331,6 +339,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &i2c2 {
 	clock-frequency = <400000>;
 	pinctrl-names = "default";
@@ -338,6 +347,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &i2c3 {
 	clock-frequency = <400000>;
 	pinctrl-names = "default";
@@ -400,10 +411,21 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_pcie0>;
 	reset-gpio = <&gpio2 7 GPIO_ACTIVE_LOW>;
+<<<<<<< HEAD
+=======
+	clocks = <&clk IMX8MP_CLK_HSIO_ROOT>,
+		 <&clk IMX8MP_CLK_PCIE_ROOT>,
+		 <&clk IMX8MP_CLK_HSIO_AXI>;
+	clock-names = "pcie", "pcie_aux", "pcie_bus";
+	assigned-clocks = <&clk IMX8MP_CLK_PCIE_AUX>;
+	assigned-clock-rates = <10000000>;
+	assigned-clock-parents = <&clk IMX8MP_SYS_PLL2_50M>;
+>>>>>>> b7ba80a49124 (Commit)
 	vpcie-supply = <&reg_pcie0>;
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &pwm1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_pwm1>;
@@ -422,10 +444,13 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &snvs_pwrkey {
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &uart1 { /* BT */
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_uart1>;
@@ -435,6 +460,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &uart2 {
 	/* console */
 	pinctrl-names = "default";
@@ -457,6 +484,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &uart3 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_uart3>;
@@ -466,6 +494,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &usdhc2 {
 	assigned-clocks = <&clk IMX8MP_CLK_USDHC2>;
 	assigned-clock-rates = <400000000>;
@@ -565,6 +595,7 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_flexspi0: flexspi0grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_NAND_ALE__FLEXSPI_A_SCLK           0x1c2
@@ -576,6 +607,8 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_gpio_led: gpioledgrp {
 		fsl,pins = <
 			MX8MP_IOMUXC_NAND_READY_B__GPIO3_IO16	0x140
@@ -589,6 +622,7 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_i2c2: i2c2grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_I2C2_SCL__I2C2_SCL		0x400001c2
@@ -596,6 +630,8 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_i2c3: i2c3grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_I2C3_SCL__I2C3_SCL		0x400001c2
@@ -612,14 +648,23 @@
 
 	pinctrl_pcie0: pcie0grp {
 		fsl,pins = <
+<<<<<<< HEAD
 			MX8MP_IOMUXC_I2C4_SCL__PCIE_CLKREQ_B	0x60 /* open drain, pull up */
 			MX8MP_IOMUXC_SD1_DATA5__GPIO2_IO07	0x40
+=======
+			MX8MP_IOMUXC_I2C4_SCL__PCIE_CLKREQ_B	0x61 /* open drain, pull up */
+			MX8MP_IOMUXC_SD1_DATA5__GPIO2_IO07	0x41
+>>>>>>> b7ba80a49124 (Commit)
 		>;
 	};
 
 	pinctrl_pcie0_reg: pcie0reggrp {
 		fsl,pins = <
+<<<<<<< HEAD
 			MX8MP_IOMUXC_SD1_DATA4__GPIO2_IO06	0x40
+=======
+			MX8MP_IOMUXC_SD1_DATA4__GPIO2_IO06	0x41
+>>>>>>> b7ba80a49124 (Commit)
 		>;
 	};
 
@@ -635,6 +680,7 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_pwm1: pwm1grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_GPIO1_IO01__PWM1_OUT	0x116
@@ -653,12 +699,15 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmcgrp {
 		fsl,pins = <
 			MX8MP_IOMUXC_SD2_RESET_B__GPIO2_IO19	0x40
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_uart1: uart1grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_UART1_RXD__UART1_DCE_RX	0x140
@@ -668,6 +717,8 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_uart2: uart2grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_UART2_RXD__UART2_DCE_RX	0x140
@@ -681,6 +732,7 @@
 		>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_uart3: uart3grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_ECSPI1_SCLK__UART3_DCE_RX		0x140
@@ -690,6 +742,8 @@
 		>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_usdhc2: usdhc2grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_SD2_CLK__USDHC2_CLK	0x190

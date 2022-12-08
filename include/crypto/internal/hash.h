@@ -75,6 +75,7 @@ void crypto_unregister_ahashes(struct ahash_alg *algs, int count);
 int ahash_register_instance(struct crypto_template *tmpl,
 			    struct ahash_instance *inst);
 
+<<<<<<< HEAD
 int shash_no_setkey(struct crypto_shash *tfm, const u8 *key,
 		    unsigned int keylen);
 
@@ -82,6 +83,9 @@ static inline bool crypto_shash_alg_has_setkey(struct shash_alg *alg)
 {
 	return alg->setkey != shash_no_setkey;
 }
+=======
+bool crypto_shash_alg_has_setkey(struct shash_alg *alg);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline bool crypto_shash_alg_needs_key(struct shash_alg *alg)
 {
@@ -140,11 +144,14 @@ static inline void *crypto_ahash_ctx(struct crypto_ahash *tfm)
 	return crypto_tfm_ctx(crypto_ahash_tfm(tfm));
 }
 
+<<<<<<< HEAD
 static inline void *crypto_ahash_ctx_dma(struct crypto_ahash *tfm)
 {
 	return crypto_tfm_ctx_dma(crypto_ahash_tfm(tfm));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct ahash_alg *__crypto_ahash_alg(struct crypto_alg *alg)
 {
 	return container_of(__crypto_hash_alg_common(alg), struct ahash_alg,
@@ -157,6 +164,7 @@ static inline void crypto_ahash_set_reqsize(struct crypto_ahash *tfm,
 	tfm->reqsize = reqsize;
 }
 
+<<<<<<< HEAD
 static inline void crypto_ahash_set_reqsize_dma(struct crypto_ahash *ahash,
 						unsigned int reqsize)
 {
@@ -164,6 +172,8 @@ static inline void crypto_ahash_set_reqsize_dma(struct crypto_ahash *ahash,
 	ahash->reqsize = reqsize;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct crypto_instance *ahash_crypto_instance(
 	struct ahash_instance *inst)
 {
@@ -187,6 +197,7 @@ static inline void *ahash_instance_ctx(struct ahash_instance *inst)
 	return crypto_instance_ctx(ahash_crypto_instance(inst));
 }
 
+<<<<<<< HEAD
 static inline void *ahash_request_ctx_dma(struct ahash_request *req)
 {
 	unsigned int align = crypto_dma_align();
@@ -200,6 +211,11 @@ static inline void *ahash_request_ctx_dma(struct ahash_request *req)
 static inline void ahash_request_complete(struct ahash_request *req, int err)
 {
 	crypto_request_complete(&req->base, err);
+=======
+static inline void ahash_request_complete(struct ahash_request *req, int err)
+{
+	req->base.complete(&req->base, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline u32 ahash_request_flags(struct ahash_request *req)

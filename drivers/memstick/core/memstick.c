@@ -57,10 +57,17 @@ static int memstick_bus_match(struct device *dev, struct device_driver *drv)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int memstick_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct memstick_dev *card = container_of_const(dev, struct memstick_dev,
 							     dev);
+=======
+static int memstick_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct memstick_dev *card = container_of(dev, struct memstick_dev,
+						  dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (add_uevent_var(env, "MEMSTICK_TYPE=%02X", card->id.type))
 		return -ENOMEM;

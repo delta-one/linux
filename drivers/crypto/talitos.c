@@ -1393,7 +1393,11 @@ static struct talitos_edesc *talitos_edesc_alloc(struct device *dev,
 		alloc_len += sizeof(struct talitos_desc);
 	alloc_len += ivsize;
 
+<<<<<<< HEAD
 	edesc = kmalloc(ALIGN(alloc_len, dma_get_cache_alignment()), flags);
+=======
+	edesc = kmalloc(alloc_len, GFP_DMA | flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!edesc)
 		return ERR_PTR(-ENOMEM);
 	if (ivsize) {
@@ -1560,7 +1564,11 @@ static void skcipher_done(struct device *dev,
 
 	kfree(edesc);
 
+<<<<<<< HEAD
 	skcipher_request_complete(areq, err);
+=======
+	areq->base.complete(&areq->base, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int common_nonsnoop(struct talitos_edesc *edesc,
@@ -1759,7 +1767,11 @@ static void ahash_done(struct device *dev,
 
 	kfree(edesc);
 
+<<<<<<< HEAD
 	ahash_request_complete(areq, err);
+=======
+	areq->base.complete(&areq->base, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1999,7 +2011,11 @@ static int ahash_process_req(struct ahash_request *areq, unsigned int nbytes)
 		/* Buffer up to one whole block */
 		nents = sg_nents_for_len(areq->src, nbytes);
 		if (nents < 0) {
+<<<<<<< HEAD
 			dev_err(dev, "Invalid number of src SG.\n");
+=======
+			dev_err(ctx->dev, "Invalid number of src SG.\n");
+>>>>>>> b7ba80a49124 (Commit)
 			return nents;
 		}
 		sg_copy_to_buffer(areq->src, nents,
@@ -2040,7 +2056,11 @@ static int ahash_process_req(struct ahash_request *areq, unsigned int nbytes)
 			offset = nbytes_to_hash - req_ctx->nbuf;
 		nents = sg_nents_for_len(areq->src, offset);
 		if (nents < 0) {
+<<<<<<< HEAD
 			dev_err(dev, "Invalid number of src SG.\n");
+=======
+			dev_err(ctx->dev, "Invalid number of src SG.\n");
+>>>>>>> b7ba80a49124 (Commit)
 			return nents;
 		}
 		sg_copy_to_buffer(areq->src, nents,
@@ -2054,7 +2074,11 @@ static int ahash_process_req(struct ahash_request *areq, unsigned int nbytes)
 	if (to_hash_later) {
 		nents = sg_nents_for_len(areq->src, nbytes);
 		if (nents < 0) {
+<<<<<<< HEAD
 			dev_err(dev, "Invalid number of src SG.\n");
+=======
+			dev_err(ctx->dev, "Invalid number of src SG.\n");
+>>>>>>> b7ba80a49124 (Commit)
 			return nents;
 		}
 		sg_pcopy_to_buffer(areq->src, nents,

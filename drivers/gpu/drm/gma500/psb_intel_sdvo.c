@@ -33,9 +33,13 @@
 #include <linux/slab.h>
 
 #include <drm/drm_crtc.h>
+<<<<<<< HEAD
 #include <drm/drm_crtc_helper.h>
 #include <drm/drm_edid.h>
 #include <drm/drm_modeset_helper_vtables.h>
+=======
+#include <drm/drm_edid.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "psb_drv.h"
 #include "psb_intel_drv.h"

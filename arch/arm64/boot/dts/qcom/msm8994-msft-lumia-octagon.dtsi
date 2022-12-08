@@ -127,98 +127,174 @@
 		 */
 
 		uefi_mem: memory@200000 {
+<<<<<<< HEAD
 			reg = <0 0x00200000 0 0x100000>;
+=======
+			reg = <0 0x200000 0 0x100000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		mppark_mem: memory@300000 {
+<<<<<<< HEAD
 			reg = <0 0x00300000 0 0x80000>;
+=======
+			reg = <0 0x300000 0 0x80000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		fbpt_mem: memory@380000 {
+<<<<<<< HEAD
 			reg = <0 0x00380000 0 0x1000>;
+=======
+			reg = <0 0x380000 0 0x1000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		dbg2_mem: memory@381000 {
+<<<<<<< HEAD
 			reg = <0 0x00381000 0 0x4000>;
+=======
+			reg = <0 0x381000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		capsule_mem: memory@385000 {
+<<<<<<< HEAD
 			reg = <0 0x00385000 0 0x1000>;
+=======
+			reg = <0 0x385000 0 0x1000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		tpmctrl_mem: memory@386000 {
+<<<<<<< HEAD
 			reg = <0 0x00386000 0 0x3000>;
+=======
+			reg = <0 0x386000 0 0x3000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		uefiinfo_mem: memory@389000 {
+<<<<<<< HEAD
 			reg = <0 0x00389000 0 0x1000>;
+=======
+			reg = <0 0x389000 0 0x1000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		reset_mem: memory@389000 {
+<<<<<<< HEAD
 			reg = <0 0x00389000 0 0x1000>;
+=======
+			reg = <0 0x389000 0 0x1000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		resuncached_mem: memory@38e000 {
+<<<<<<< HEAD
 			reg = <0 0x0038e000 0 0x72000>;
+=======
+			reg = <0 0x38e000 0 0x72000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		disp_mem: memory@400000 {
+<<<<<<< HEAD
 			reg = <0 0x00400000 0 0x800000>;
+=======
+			reg = <0 0x400000 0 0x800000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		uefistack_mem: memory@c00000 {
+<<<<<<< HEAD
 			reg = <0 0x00c00000 0 0x40000>;
+=======
+			reg = <0 0xc00000 0 0x40000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		cpuvect_mem: memory@c40000 {
+<<<<<<< HEAD
 			reg = <0 0x00c40000 0 0x10000>;
+=======
+			reg = <0 0xc40000 0 0x10000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		rescached_mem: memory@400000 {
+<<<<<<< HEAD
 			reg = <0 0x00c50000 0 0xb0000>;
+=======
+			reg = <0 0xc50000 0 0xb0000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		tzapps_mem: memory@6500000 {
+<<<<<<< HEAD
 			reg = <0 0x06500000 0 0x500000>;
+=======
+			reg = <0 0x6500000 0 0x500000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		smem_mem: memory@6a00000 {
+<<<<<<< HEAD
 			reg = <0 0x06a00000 0 0x200000>;
+=======
+			reg = <0 0x6a00000 0 0x200000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		hyp_mem: memory@6c00000 {
+<<<<<<< HEAD
 			reg = <0 0x06c00000 0 0x100000>;
+=======
+			reg = <0 0x6c00000 0 0x100000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		tz_mem: memory@6d00000 {
+<<<<<<< HEAD
 			reg = <0 0x06d00000 0 0x160000>;
+=======
+			reg = <0 0x6d00000 0 0x160000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		rfsa_adsp_mem: memory@6e60000 {
+<<<<<<< HEAD
 			reg = <0 0x06e60000 0 0x10000>;
+=======
+			reg = <0 0x6e60000 0 0x10000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		rfsa_mpss_mem: memory@6e70000 {
 			compatible = "qcom,rmtfs-mem";
+<<<<<<< HEAD
 			reg = <0 0x06e70000 0 0x10000>;
+=======
+			reg = <0 0x6e70000 0 0x10000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 
 			qcom,client-id = <1>;
@@ -229,7 +305,11 @@
 		 * MPSS_EFS / SBL
 		 */
 		mba_mem: memory@6e80000 {
+<<<<<<< HEAD
 			reg = <0 0x06e80000 0 0x180000>;
+=======
+			reg = <0 0x6e80000 0 0x180000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
@@ -239,33 +319,57 @@
 		 */
 
 		mpss_mem: memory@7000000 {
+<<<<<<< HEAD
 			reg = <0 0x07000000 0 0x5a00000>;
+=======
+			reg = <0 0x7000000 0 0x5a00000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		adsp_mem: memory@ca00000 {
+<<<<<<< HEAD
 			reg = <0 0x0ca00000 0 0x1800000>;
+=======
+			reg = <0 0xca00000 0 0x1800000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		venus_mem: memory@e200000 {
+<<<<<<< HEAD
 			reg = <0 0x0e200000 0 0x500000>;
+=======
+			reg = <0 0xe200000 0 0x500000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		pil_metadata_mem: memory@e700000 {
+<<<<<<< HEAD
 			reg = <0 0x0e700000 0 0x4000>;
+=======
+			reg = <0 0xe700000 0 0x4000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 
 		memory@e704000 {
+<<<<<<< HEAD
 			reg = <0 0x0e704000 0 0x7fc000>;
+=======
+			reg = <0 0xe704000 0 0x7fc000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 		/* Peripheral Image loader region end */
 
 		cnss_mem: memory@ef00000 {
+<<<<<<< HEAD
 			reg = <0 0x0ef00000 0 0x300000>;
+=======
+			reg = <0 0xef00000 0 0x300000>;
+>>>>>>> b7ba80a49124 (Commit)
 			no-map;
 		};
 	};
@@ -551,7 +655,11 @@
 
 &rpm_requests {
 	/* These values were taken from the original firmware ACPI tables */
+<<<<<<< HEAD
 	pm8994_regulators: regulators-0 {
+=======
+	pm8994_regulators: pm8994-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pm8994-regulators";
 
 		vdd_s1-supply = <&vph_pwr>;
@@ -835,7 +943,11 @@
 		vreg_lvs2a_1p8: lvs2 { };
 	};
 
+<<<<<<< HEAD
 	pmi8994_regulators: regulators-1 {
+=======
+	pmi8994_regulators: pmi8994-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pmi8994-regulators";
 
 		vdd_s1-supply = <&vph_pwr>;
@@ -881,28 +993,44 @@
 };
 
 &tlmm {
+<<<<<<< HEAD
 	grip_default: grip-default-state {
+=======
+	grip_default: grip-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio39";
 		function = "gpio";
 		drive-strength = <6>;
 		bias-pull-down;
 	};
 
+<<<<<<< HEAD
 	grip_sleep: grip-sleep-state {
+=======
+	grip_sleep: grip-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio39";
 		function = "gpio";
 		drive-strength = <2>;
 		bias-pull-down;
 	};
 
+<<<<<<< HEAD
 	hall_front_default: hall-front-default-state {
+=======
+	hall_front_default: hall-front-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio42";
 		function = "gpio";
 		drive-strength = <2>;
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	hall_back_default: hall-back-default-state {
+=======
+	hall_back_default: hall-back-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio75";
 		function = "gpio";
 		drive-strength = <2>;

@@ -35,6 +35,10 @@
 #include "en.h"
 #include "en/port.h"
 #include "en/params.h"
+<<<<<<< HEAD
+=======
+#include "en/xsk/pool.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "en/ptp.h"
 #include "lib/clock.h"
 #include "en/fs_ethtool.h"
@@ -220,7 +224,11 @@ static void mlx5e_ethtool_get_speed_arr(struct mlx5_core_dev *mdev,
 					struct ptys2ethtool_config **arr,
 					u32 *size)
 {
+<<<<<<< HEAD
 	bool ext = mlx5_ptys_ext_supported(mdev);
+=======
+	bool ext = mlx5e_ptys_ext_supported(mdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	*arr = ext ? ptys2ext_ethtool_table : ptys2legacy_ethtool_table;
 	*size = ext ? ARRAY_SIZE(ptys2ext_ethtool_table) :
@@ -310,6 +318,7 @@ void mlx5e_ethtool_get_ringparam(struct mlx5e_priv *priv,
 				 struct ethtool_ringparam *param,
 				 struct kernel_ethtool_ringparam *kernel_param)
 {
+<<<<<<< HEAD
 	/* Limitation for regular RQ. XSK RQ may clamp the queue length in
 	 * mlx5e_mpwqe_get_log_rq_size.
 	 */
@@ -319,6 +328,9 @@ void mlx5e_ethtool_get_ringparam(struct mlx5e_priv *priv,
 
 	param->rx_max_pending = 1 << min_t(u8, MLX5E_PARAMS_MAXIMUM_LOG_RQ_SIZE,
 					   max_log_mpwrq_pkts);
+=======
+	param->rx_max_pending = 1 << MLX5E_PARAMS_MAXIMUM_LOG_RQ_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 	param->tx_max_pending = 1 << MLX5E_PARAMS_MAXIMUM_LOG_SQ_SIZE;
 	param->rx_pending     = 1 << priv->channels.params.log_rq_mtu_frames;
 	param->tx_pending     = 1 << priv->channels.params.log_sq_size;
@@ -411,8 +423,20 @@ void mlx5e_ethtool_get_channels(struct mlx5e_priv *priv,
 				struct ethtool_channels *ch)
 {
 	mutex_lock(&priv->state_lock);
+<<<<<<< HEAD
 	ch->max_combined   = priv->max_nch;
 	ch->combined_count = priv->channels.params.num_channels;
+=======
+
+	ch->max_combined   = priv->max_nch;
+	ch->combined_count = priv->channels.params.num_channels;
+	if (priv->xsk.refcnt) {
+		/* The upper half are XSK queues. */
+		ch->max_combined *= 2;
+		ch->combined_count *= 2;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&priv->state_lock);
 }
 
@@ -446,6 +470,19 @@ int mlx5e_ethtool_set_channels(struct mlx5e_priv *priv,
 
 	mutex_lock(&priv->state_lock);
 
+<<<<<<< HEAD
+=======
+	/* Don't allow changing the number of channels if there is an active
+	 * XSK, because the numeration of the XSK and regular RQs will change.
+	 */
+	if (priv->xsk.refcnt) {
+		err = -EINVAL;
+		netdev_err(priv->netdev, "%s: AF_XDP is active, cannot change the number of channels\n",
+			   __func__);
+		goto out;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Don't allow changing the number of channels if HTB offload is active,
 	 * because the numeration of the QoS SQs will change, while per-queue
 	 * qdiscs are attached.
@@ -895,7 +932,11 @@ static void get_speed_duplex(struct net_device *netdev,
 	if (!netif_carrier_ok(netdev))
 		goto out;
 
+<<<<<<< HEAD
 	speed = mlx5_port_ptys2speed(priv->mdev, eth_proto_oper, force_legacy);
+=======
+	speed = mlx5e_port_ptys2speed(priv->mdev, eth_proto_oper, force_legacy);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!speed) {
 		if (data_rate_oper)
 			speed = 100 * data_rate_oper;
@@ -980,7 +1021,11 @@ static void get_lp_advertising(struct mlx5_core_dev *mdev, u32 eth_proto_lp,
 			       struct ethtool_link_ksettings *link_ksettings)
 {
 	unsigned long *lp_advertising = link_ksettings->link_modes.lp_advertising;
+<<<<<<< HEAD
 	bool ext = mlx5_ptys_ext_supported(mdev);
+=======
+	bool ext = mlx5e_ptys_ext_supported(mdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ptys2ethtool_adver_link(lp_advertising, eth_proto_lp, ext);
 }
@@ -1160,7 +1205,11 @@ int mlx5e_ethtool_set_link_ksettings(struct mlx5e_priv *priv,
 				     const struct ethtool_link_ksettings *link_ksettings)
 {
 	struct mlx5_core_dev *mdev = priv->mdev;
+<<<<<<< HEAD
 	struct mlx5_port_eth_proto eproto;
+=======
+	struct mlx5e_port_eth_proto eproto;
+>>>>>>> b7ba80a49124 (Commit)
 	const unsigned long *adver;
 	bool an_changes = false;
 	u8 an_disable_admin;
@@ -1180,7 +1229,11 @@ int mlx5e_ethtool_set_link_ksettings(struct mlx5e_priv *priv,
 	autoneg = link_ksettings->base.autoneg;
 	speed = link_ksettings->base.speed;
 
+<<<<<<< HEAD
 	ext_supported = mlx5_ptys_ext_supported(mdev);
+=======
+	ext_supported = mlx5e_ptys_ext_supported(mdev);
+>>>>>>> b7ba80a49124 (Commit)
 	ext = ext_requested(autoneg, adver, ext_supported);
 	if (!ext_supported && ext)
 		return -EOPNOTSUPP;
@@ -1194,7 +1247,11 @@ int mlx5e_ethtool_set_link_ksettings(struct mlx5e_priv *priv,
 		goto out;
 	}
 	link_modes = autoneg == AUTONEG_ENABLE ? ethtool2ptys_adver_func(adver) :
+<<<<<<< HEAD
 		mlx5_port_speed2linkmodes(mdev, speed, !ext);
+=======
+		mlx5e_port_speed2linkmodes(mdev, speed, !ext);
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = mlx5e_speed_validate(priv->netdev, ext, link_modes, autoneg);
 	if (err)
@@ -1985,6 +2042,7 @@ static int set_pflag_rx_striding_rq(struct net_device *netdev, bool enable)
 	struct mlx5e_priv *priv = netdev_priv(netdev);
 	struct mlx5_core_dev *mdev = priv->mdev;
 	struct mlx5e_params new_params;
+<<<<<<< HEAD
 	int err;
 
 	if (enable) {
@@ -1996,6 +2054,14 @@ static int set_pflag_rx_striding_rq(struct net_device *netdev, bool enable)
 
 		if (err)
 			return err;
+=======
+
+	if (enable) {
+		if (!mlx5e_check_fragmented_striding_rq_cap(mdev))
+			return -EOPNOTSUPP;
+		if (!mlx5e_striding_rq_possible(mdev, &priv->channels.params))
+			return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (priv->channels.params.packet_merge.type != MLX5E_PACKET_MERGE_NONE) {
 		netdev_warn(netdev, "Can't set legacy RQ with HW-GRO/LRO, disable them first\n");
 		return -EINVAL;
@@ -2006,6 +2072,7 @@ static int set_pflag_rx_striding_rq(struct net_device *netdev, bool enable)
 	MLX5E_SET_PFLAG(&new_params, MLX5E_PFLAG_RX_STRIDING_RQ, enable);
 	mlx5e_set_rq_type(mdev, &new_params);
 
+<<<<<<< HEAD
 	err = mlx5e_safe_switch_params(priv, &new_params, NULL, NULL, true);
 	if (err)
 		return err;
@@ -2014,6 +2081,9 @@ static int set_pflag_rx_striding_rq(struct net_device *netdev, bool enable)
 	mlx5e_set_xdp_feature(netdev);
 
 	return 0;
+=======
+	return mlx5e_safe_switch_params(priv, &new_params, NULL, NULL, true);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int set_pflag_rx_no_csum_complete(struct net_device *netdev, bool enable)
@@ -2453,5 +2523,8 @@ const struct ethtool_ops mlx5e_ethtool_ops = {
 	.get_eth_mac_stats = mlx5e_get_eth_mac_stats,
 	.get_eth_ctrl_stats = mlx5e_get_eth_ctrl_stats,
 	.get_rmon_stats    = mlx5e_get_rmon_stats,
+<<<<<<< HEAD
 	.get_link_ext_stats = mlx5e_get_link_ext_stats
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

@@ -1,6 +1,11 @@
 [
     {
         "BriefDescription": "Number of times an HLE execution aborted due to any reasons (multiple categories may count as one).",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc8",
         "EventName": "HLE_RETIRED.ABORTED",
         "PEBS": "1",
@@ -9,6 +14,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution aborted due to various memory events (e.g., read/write capacity and conflicts).",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc8",
         "EventName": "HLE_RETIRED.ABORTED_MISC1",
         "SampleAfterValue": "2000003",
@@ -16,6 +26,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution aborted due to uncommon conditions.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc8",
         "EventName": "HLE_RETIRED.ABORTED_MISC2",
         "SampleAfterValue": "2000003",
@@ -23,6 +38,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution aborted due to HLE-unfriendly instructions.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc8",
         "EventName": "HLE_RETIRED.ABORTED_MISC3",
         "SampleAfterValue": "2000003",
@@ -30,6 +50,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution aborted due to incompatible memory type.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "Errata": "HSD65",
         "EventCode": "0xc8",
         "EventName": "HLE_RETIRED.ABORTED_MISC4",
@@ -38,6 +63,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution aborted due to none of the previous 4 categories (e.g. interrupts)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc8",
         "EventName": "HLE_RETIRED.ABORTED_MISC5",
         "PublicDescription": "Number of times an HLE execution aborted due to none of the previous 4 categories (e.g. interrupts).",
@@ -46,6 +76,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution successfully committed.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc8",
         "EventName": "HLE_RETIRED.COMMIT",
         "SampleAfterValue": "2000003",
@@ -53,6 +88,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution started.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC8",
         "EventName": "HLE_RETIRED.START",
         "SampleAfterValue": "2000003",
@@ -60,6 +100,11 @@
     },
     {
         "BriefDescription": "Counts the number of machine clears due to memory order conflicts.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC3",
         "EventName": "MACHINE_CLEARS.MEMORY_ORDERING",
         "PublicDescription": "This event counts the number of memory ordering machine clears detected. Memory ordering machine clears can result from memory address aliasing or snoops from another hardware thread or core to data inflight in the pipeline.  Machine clears can have a significant performance impact if they are happening frequently.",
@@ -68,6 +113,11 @@
     },
     {
         "BriefDescription": "Randomly selected loads with latency value being above 128.",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+        "CounterHTOff": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "Errata": "HSD76, HSD25, HSM26",
         "EventCode": "0xcd",
@@ -76,10 +126,19 @@
         "MSRValue": "0x80",
         "PEBS": "2",
         "SampleAfterValue": "1009",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Randomly selected loads with latency value being above 16.",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+        "CounterHTOff": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "Errata": "HSD76, HSD25, HSM26",
         "EventCode": "0xcd",
@@ -88,10 +147,19 @@
         "MSRValue": "0x10",
         "PEBS": "2",
         "SampleAfterValue": "20011",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Randomly selected loads with latency value being above 256.",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+        "CounterHTOff": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "Errata": "HSD76, HSD25, HSM26",
         "EventCode": "0xcd",
@@ -100,10 +168,19 @@
         "MSRValue": "0x100",
         "PEBS": "2",
         "SampleAfterValue": "503",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Randomly selected loads with latency value being above 32.",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+        "CounterHTOff": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "Errata": "HSD76, HSD25, HSM26",
         "EventCode": "0xcd",
@@ -112,10 +189,19 @@
         "MSRValue": "0x20",
         "PEBS": "2",
         "SampleAfterValue": "100003",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Randomly selected loads with latency value being above 4.",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+        "CounterHTOff": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "Errata": "HSD76, HSD25, HSM26",
         "EventCode": "0xcd",
@@ -124,10 +210,19 @@
         "MSRValue": "0x4",
         "PEBS": "2",
         "SampleAfterValue": "100003",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Randomly selected loads with latency value being above 512.",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+        "CounterHTOff": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "Errata": "HSD76, HSD25, HSM26",
         "EventCode": "0xcd",
@@ -136,10 +231,19 @@
         "MSRValue": "0x200",
         "PEBS": "2",
         "SampleAfterValue": "101",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Randomly selected loads with latency value being above 64.",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+        "CounterHTOff": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "Errata": "HSD76, HSD25, HSM26",
         "EventCode": "0xcd",
@@ -148,10 +252,19 @@
         "MSRValue": "0x40",
         "PEBS": "2",
         "SampleAfterValue": "2003",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Randomly selected loads with latency value being above 8.",
+<<<<<<< HEAD
+=======
+        "Counter": "3",
+        "CounterHTOff": "3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "Errata": "HSD76, HSD25, HSM26",
         "EventCode": "0xcd",
@@ -160,10 +273,19 @@
         "MSRValue": "0x8",
         "PEBS": "2",
         "SampleAfterValue": "50021",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Speculative cache line split load uops dispatched to L1 cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x05",
         "EventName": "MISALIGN_MEM_REF.LOADS",
         "PublicDescription": "Speculative cache-line split load uops dispatched to L1D.",
@@ -172,6 +294,11 @@
     },
     {
         "BriefDescription": "Speculative cache line split STA uops dispatched to L1 cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x05",
         "EventName": "MISALIGN_MEM_REF.STORES",
         "PublicDescription": "Speculative cache-line split store-address uops dispatched to L1D.",
@@ -180,195 +307,389 @@
     },
     {
         "BriefDescription": "Counts all demand & prefetch code readsmiss in the L3",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_CODE_RD.L3_MISS.ANY_RESPONSE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FFFC00244",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch code readsmiss the L3 and the data is returned from local dram",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_CODE_RD.L3_MISS.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x100400244",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data readsmiss in the L3",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS.ANY_RESPONSE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FFFC00091",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data readsmiss the L3 and the data is returned from local dram",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x100400091",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "miss in the L3",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_READS.L3_MISS.ANY_RESPONSE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FFFC007F7",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "miss the L3 and the data is returned from local dram",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_READS.L3_MISS.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x1004007F7",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all requestsmiss in the L3",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_REQUESTS.L3_MISS.ANY_RESPONSE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FFFC08FFF",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOsmiss in the L3",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS.ANY_RESPONSE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FFFC00122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOsmiss the L3 and the data is returned from local dram",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x100400122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code readsmiss in the L3",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.ANY_RESPONSE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FFFC00004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code readsmiss the L3 and the data is returned from local dram",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x100400004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data readsmiss in the L3",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.ANY_RESPONSE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FFFC00001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data readsmiss the L3 and the data is returned from local dram",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x100400001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand data writes (RFOs)miss in the L3",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.ANY_RESPONSE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FFFC00002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand data writes (RFOs)miss the L3 and the data is returned from local dram",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.LOCAL_DRAM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x100400002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) code readsmiss in the L3",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS.ANY_RESPONSE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FFFC00040",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data readsmiss in the L3",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS.ANY_RESPONSE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FFFC00010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOsmiss in the L3",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS.ANY_RESPONSE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FFFC00020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to LLC only) code readsmiss in the L3",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS.ANY_RESPONSE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FFFC00200",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data readsmiss in the L3",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS.ANY_RESPONSE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FFFC00080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOsmiss in the L3",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS.ANY_RESPONSE",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FFFC00100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to any reasons (multiple categories may count as one).",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc9",
         "EventName": "RTM_RETIRED.ABORTED",
         "PEBS": "1",
@@ -377,6 +698,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to various memory events (e.g. read/write capacity and conflicts)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc9",
         "EventName": "RTM_RETIRED.ABORTED_MISC1",
         "PublicDescription": "Number of times an RTM execution aborted due to various memory events (e.g. read/write capacity and conflicts).",
@@ -385,6 +711,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to various memory events (e.g., read/write capacity and conflicts).",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc9",
         "EventName": "RTM_RETIRED.ABORTED_MISC2",
         "SampleAfterValue": "2000003",
@@ -392,6 +723,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to HLE-unfriendly instructions.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc9",
         "EventName": "RTM_RETIRED.ABORTED_MISC3",
         "SampleAfterValue": "2000003",
@@ -399,6 +735,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to incompatible memory type.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "Errata": "HSD65",
         "EventCode": "0xc9",
         "EventName": "RTM_RETIRED.ABORTED_MISC4",
@@ -407,6 +748,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to none of the previous 4 categories (e.g. interrupt)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc9",
         "EventName": "RTM_RETIRED.ABORTED_MISC5",
         "PublicDescription": "Number of times an RTM execution aborted due to none of the previous 4 categories (e.g. interrupt).",
@@ -415,6 +761,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution successfully committed.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xc9",
         "EventName": "RTM_RETIRED.COMMIT",
         "SampleAfterValue": "2000003",
@@ -422,6 +773,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution started.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC9",
         "EventName": "RTM_RETIRED.START",
         "SampleAfterValue": "2000003",
@@ -429,6 +785,11 @@
     },
     {
         "BriefDescription": "Counts the number of times a class of instructions that may cause a transactional abort was executed. Since this is the count of execution, it may not always cause a transactional abort.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5d",
         "EventName": "TX_EXEC.MISC1",
         "SampleAfterValue": "2000003",
@@ -436,6 +797,11 @@
     },
     {
         "BriefDescription": "Counts the number of times a class of instructions (e.g., vzeroupper) that may cause a transactional abort was executed inside a transactional region.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5d",
         "EventName": "TX_EXEC.MISC2",
         "SampleAfterValue": "2000003",
@@ -443,6 +809,11 @@
     },
     {
         "BriefDescription": "Counts the number of times an instruction execution caused the transactional nest count supported to be exceeded.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5d",
         "EventName": "TX_EXEC.MISC3",
         "SampleAfterValue": "2000003",
@@ -450,6 +821,11 @@
     },
     {
         "BriefDescription": "Counts the number of times a XBEGIN instruction was executed inside an HLE transactional region.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5d",
         "EventName": "TX_EXEC.MISC4",
         "SampleAfterValue": "2000003",
@@ -457,6 +833,11 @@
     },
     {
         "BriefDescription": "Counts the number of times an HLE XACQUIRE instruction was executed inside an RTM transactional region.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5d",
         "EventName": "TX_EXEC.MISC5",
         "SampleAfterValue": "2000003",
@@ -464,6 +845,11 @@
     },
     {
         "BriefDescription": "Number of times a transactional abort was signaled due to a data capacity limitation for transactional writes.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_CAPACITY_WRITE",
         "SampleAfterValue": "2000003",
@@ -471,6 +857,11 @@
     },
     {
         "BriefDescription": "Number of times a transactional abort was signaled due to a data conflict on a transactionally accessed address.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_CONFLICT",
         "SampleAfterValue": "2000003",
@@ -478,6 +869,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE transactional execution aborted due to XRELEASE lock not satisfying the address and value requirements in the elision buffer.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_HLE_ELISION_BUFFER_MISMATCH",
         "SampleAfterValue": "2000003",
@@ -485,6 +881,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE transactional execution aborted due to NoAllocatedElisionBuffer being non-zero.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_HLE_ELISION_BUFFER_NOT_EMPTY",
         "SampleAfterValue": "2000003",
@@ -492,6 +893,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE transactional execution aborted due to an unsupported read alignment from the elision buffer.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_HLE_ELISION_BUFFER_UNSUPPORTED_ALIGNMENT",
         "SampleAfterValue": "2000003",
@@ -499,6 +905,11 @@
     },
     {
         "BriefDescription": "Number of times a HLE transactional region aborted due to a non XRELEASE prefixed instruction writing to an elided lock in the elision buffer.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_HLE_STORE_TO_ELIDED_LOCK",
         "SampleAfterValue": "2000003",
@@ -506,6 +917,11 @@
     },
     {
         "BriefDescription": "Number of times HLE lock could not be elided due to ElisionBufferAvailable being zero.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.HLE_ELISION_BUFFER_FULL",
         "SampleAfterValue": "2000003",

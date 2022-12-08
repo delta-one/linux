@@ -14,9 +14,14 @@ struct path;
 struct mount;
 struct shrink_control;
 struct fs_context;
+<<<<<<< HEAD
 struct pipe_inode_info;
 struct iov_iter;
 struct mnt_idmap;
+=======
+struct user_namespace;
+struct pipe_inode_info;
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * block/bdev.c
@@ -63,7 +68,11 @@ extern int vfs_path_lookup(struct dentry *, struct vfsmount *,
 			   const char *, unsigned int, struct path *);
 int do_rmdir(int dfd, struct filename *name);
 int do_unlinkat(int dfd, struct filename *name);
+<<<<<<< HEAD
 int may_linkat(struct mnt_idmap *idmap, const struct path *link);
+=======
+int may_linkat(struct user_namespace *mnt_userns, const struct path *link);
+>>>>>>> b7ba80a49124 (Commit)
 int do_renameat2(int olddfd, struct filename *oldname, int newdfd,
 		 struct filename *newname, unsigned int flags);
 int do_mkdirat(int dfd, struct filename *name, umode_t mode);
@@ -120,7 +129,10 @@ extern bool trylock_super(struct super_block *sb);
 struct super_block *user_get_super(dev_t, bool excl);
 void put_super(struct super_block *sb);
 extern bool mount_capable(struct fs_context *);
+<<<<<<< HEAD
 int sb_init_dio_done_wq(struct super_block *sb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * open.c
@@ -151,9 +163,13 @@ extern int vfs_open(const struct path *, struct file *);
  * inode.c
  */
 extern long prune_icache_sb(struct super_block *sb, struct shrink_control *sc);
+<<<<<<< HEAD
 int dentry_needs_remove_privs(struct mnt_idmap *, struct dentry *dentry);
 bool in_group_or_capable(struct mnt_idmap *idmap,
 			 const struct inode *inode, vfsgid_t vfsgid);
+=======
+extern int dentry_needs_remove_privs(struct dentry *dentry);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * fs-writeback.c
@@ -188,6 +204,12 @@ extern void mnt_pin_kill(struct mount *m);
  */
 extern const struct dentry_operations ns_dentry_operations;
 
+<<<<<<< HEAD
+=======
+/* direct-io.c: */
+int sb_init_dio_done_wq(struct super_block *sb);
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * fs/stat.c:
  */
@@ -225,11 +247,16 @@ struct xattr_ctx {
 };
 
 
+<<<<<<< HEAD
 ssize_t do_getxattr(struct mnt_idmap *idmap,
+=======
+ssize_t do_getxattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		    struct dentry *d,
 		    struct xattr_ctx *ctx);
 
 int setxattr_copy(const char __user *name, struct xattr_ctx *ctx);
+<<<<<<< HEAD
 int do_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
 		struct xattr_ctx *ctx);
 int may_write_xattr(struct mnt_idmap *idmap, struct inode *inode);
@@ -264,3 +291,7 @@ int setattr_should_drop_sgid(struct mnt_idmap *idmap,
 struct mnt_idmap *alloc_mnt_idmap(struct user_namespace *mnt_userns);
 struct mnt_idmap *mnt_idmap_get(struct mnt_idmap *idmap);
 void mnt_idmap_put(struct mnt_idmap *idmap);
+=======
+int do_setxattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+		struct xattr_ctx *ctx);
+>>>>>>> b7ba80a49124 (Commit)

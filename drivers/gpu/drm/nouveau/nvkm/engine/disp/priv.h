@@ -42,6 +42,13 @@ struct nvkm_disp_func {
 	} user[];
 };
 
+<<<<<<< HEAD
+=======
+int  nvkm_disp_ntfy(struct nvkm_object *, u32, struct nvkm_event **);
+int nv04_disp_mthd(struct nvkm_object *, u32, void *, u32);
+int nv50_disp_root_mthd_(struct nvkm_object *, u32, void *, u32);
+
+>>>>>>> b7ba80a49124 (Commit)
 int nv50_disp_oneinit(struct nvkm_disp *);
 int nv50_disp_init(struct nvkm_disp *);
 void nv50_disp_fini(struct nvkm_disp *);
@@ -82,5 +89,8 @@ extern const struct nvkm_event_func gv100_disp_chan_uevent;
 int nvkm_udisp_new(const struct nvkm_oclass *, void *, u32, struct nvkm_object **);
 int nvkm_uconn_new(const struct nvkm_oclass *, void *, u32, struct nvkm_object **);
 int nvkm_uoutp_new(const struct nvkm_oclass *, void *, u32, struct nvkm_object **);
+<<<<<<< HEAD
 int nvkm_uhead_new(const struct nvkm_oclass *, void *, u32, struct nvkm_object **);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

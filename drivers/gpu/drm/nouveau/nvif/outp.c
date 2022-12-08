@@ -24,6 +24,7 @@
 #include <nvif/printf.h>
 
 #include <nvif/class.h>
+<<<<<<< HEAD
 
 int
 nvif_outp_dp_mst_vcpi(struct nvif_outp *outp, int head,
@@ -195,6 +196,9 @@ nvif_outp_acquire_rgb_crt(struct nvif_outp *outp)
 	NVIF_ERRON(ret, &outp->object, "[ACQUIRE proto:RGB_CRT] or:%d", args.or);
 	return ret;
 }
+=======
+#include <nvif/if0012.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 int
 nvif_outp_load_detect(struct nvif_outp *outp, u32 loadval)
@@ -228,9 +232,13 @@ nvif_outp_ctor(struct nvif_disp *disp, const char *name, int id, struct nvif_out
 	ret = nvif_object_ctor(&disp->object, name ?: "nvifOutp", id, NVIF_CLASS_OUTP,
 			       &args, sizeof(args), &outp->object);
 	NVIF_ERRON(ret, &disp->object, "[NEW outp id:%d]", id);
+<<<<<<< HEAD
 	if (ret)
 		return ret;
 
 	outp->or.id = -1;
 	return 0;
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }

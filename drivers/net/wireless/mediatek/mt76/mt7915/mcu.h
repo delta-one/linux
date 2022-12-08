@@ -129,6 +129,7 @@ struct mt7915_mcu_background_chain_ctrl {
 	u8 rsv[2];
 } __packed;
 
+<<<<<<< HEAD
 struct mt7915_mcu_sr_ctrl {
 	u8 action;
 	u8 argnum;
@@ -140,6 +141,8 @@ struct mt7915_mcu_sr_ctrl {
 	__le32 val;
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mt7915_mcu_eeprom {
 	u8 buffer_mode;
 	u8 format;
@@ -171,6 +174,7 @@ struct mt7915_mcu_mib {
 
 enum mt7915_chan_mib_offs {
 	/* mt7915 */
+<<<<<<< HEAD
 	MIB_TX_TIME = 81,
 	MIB_RX_TIME,
 	MIB_OBSS_AIRTIME = 86,
@@ -191,6 +195,19 @@ struct mt7915_mcu_txpower_sku {
 	s8 txpower_sku[MT7915_SKU_RATE_NUM];
 } __packed;
 
+=======
+	MIB_BUSY_TIME = 14,
+	MIB_TX_TIME = 81,
+	MIB_RX_TIME,
+	MIB_OBSS_AIRTIME = 86,
+	/* mt7916 */
+	MIB_BUSY_TIME_V2 = 0,
+	MIB_TX_TIME_V2 = 6,
+	MIB_RX_TIME_V2 = 8,
+	MIB_OBSS_AIRTIME_V2 = 490
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct edca {
 	u8 queue;
 	u8 set;
@@ -278,7 +295,10 @@ enum {
 	MCU_WA_PARAM_PDMA_RX = 0x04,
 	MCU_WA_PARAM_CPU_UTIL = 0x0b,
 	MCU_WA_PARAM_RED = 0x0e,
+<<<<<<< HEAD
 	MCU_WA_PARAM_RED_SETTING = 0x40,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum mcu_mmps_mode {
@@ -415,7 +435,10 @@ enum {
 	RATE_PARAM_FIXED_MCS,
 	RATE_PARAM_FIXED_GI = 11,
 	RATE_PARAM_AUTO = 20,
+<<<<<<< HEAD
 	RATE_PARAM_SPE_UPDATE = 22,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define RATE_CFG_MCS			GENMASK(3, 0)
@@ -428,6 +451,7 @@ enum {
 #define RATE_CFG_HE_LTF			GENMASK(31, 28)
 
 enum {
+<<<<<<< HEAD
 	TX_POWER_LIMIT_ENABLE,
 	TX_POWER_LIMIT_TABLE = 0x4,
 	TX_POWER_LIMIT_INFO = 0x7,
@@ -447,6 +471,8 @@ enum {
 };
 
 enum {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	THERMAL_PROTECT_PARAMETER_CTRL,
 	THERMAL_PROTECT_BASIC_INFO,
 	THERMAL_PROTECT_ENABLE,
@@ -488,8 +514,11 @@ enum {
 	SER_SET_RECOVER_L3_TX_ABORT,
 	SER_SET_RECOVER_L3_TX_DISABLE,
 	SER_SET_RECOVER_L3_BF,
+<<<<<<< HEAD
 	SER_SET_RECOVER_FULL,
 	SER_SET_SYSTEM_ASSERT,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* action */
 	SER_ENABLE = 2,
 	SER_RECOVER
@@ -517,6 +546,7 @@ enum {
 					 sizeof(struct bss_info_bcn_cont) + \
 					 sizeof(struct bss_info_inband_discovery))
 
+<<<<<<< HEAD
 static inline s8
 mt7915_get_power_bound(struct mt7915_phy *phy, s8 txpower)
 {
@@ -529,4 +559,6 @@ mt7915_get_power_bound(struct mt7915_phy *phy, s8 txpower)
 	return txpower;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

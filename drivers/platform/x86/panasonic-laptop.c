@@ -183,7 +183,11 @@ enum SINF_BITS { SINF_NUM_BATTERIES = 0,
 /* R1 handles SINF_AC_CUR_BRIGHT as SINF_CUR_BRIGHT, doesn't know AC state */
 
 static int acpi_pcc_hotkey_add(struct acpi_device *device);
+<<<<<<< HEAD
 static void acpi_pcc_hotkey_remove(struct acpi_device *device);
+=======
+static int acpi_pcc_hotkey_remove(struct acpi_device *device);
+>>>>>>> b7ba80a49124 (Commit)
 static void acpi_pcc_hotkey_notify(struct acpi_device *device, u32 event);
 
 static const struct acpi_device_id pcc_device_ids[] = {
@@ -1034,7 +1038,11 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
 	/* optical drive initialization */
 	if (ACPI_SUCCESS(check_optd_present())) {
 		pcc->platform = platform_device_register_simple("panasonic",
+<<<<<<< HEAD
 			PLATFORM_DEVID_NONE, NULL, 0);
+=======
+			-1, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(pcc->platform)) {
 			result = PTR_ERR(pcc->platform);
 			goto out_backlight;
@@ -1065,12 +1073,20 @@ out_hotkey:
 	return result;
 }
 
+<<<<<<< HEAD
 static void acpi_pcc_hotkey_remove(struct acpi_device *device)
+=======
+static int acpi_pcc_hotkey_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pcc_acpi *pcc = acpi_driver_data(device);
 
 	if (!device || !pcc)
+<<<<<<< HEAD
 		return;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	i8042_remove_filter(panasonic_i8042_filter);
 
@@ -1088,6 +1104,11 @@ static void acpi_pcc_hotkey_remove(struct acpi_device *device)
 
 	kfree(pcc->sinf);
 	kfree(pcc);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 module_acpi_driver(acpi_pcc_driver);

@@ -2,12 +2,18 @@
 #ifndef _PERF_UTIL_TRACE_EVENT_H
 #define _PERF_UTIL_TRACE_EVENT_H
 
+<<<<<<< HEAD
 #include <stdbool.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <linux/types.h>
 
 struct evlist;
+=======
+#include <traceevent/event-parse.h>
+#include "parse-events.h"
+
+>>>>>>> b7ba80a49124 (Commit)
 struct machine;
 struct perf_sample;
 union perf_event;
@@ -21,6 +27,7 @@ struct trace_event {
 	struct tep_plugin_list	*plugin_list;
 };
 
+<<<<<<< HEAD
 /* Computes a version number comparable with LIBTRACEEVENT_VERSION from Makefile.config. */
 #define MAKE_LIBTRACEEVENT_VERSION(a, b, c) ((a)*255*255+(b)*255+(c))
 
@@ -29,6 +36,8 @@ typedef char *(tep_func_resolver_t)(void *priv,
 
 bool have_tracepoints(struct list_head *evlist);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int trace_event__init(struct trace_event *t);
 void trace_event__cleanup(struct trace_event *t);
 int trace_event__register_resolver(struct machine *machine,
@@ -38,6 +47,11 @@ trace_event__tp_format(const char *sys, const char *name);
 
 struct tep_event *trace_event__tp_format_id(int id);
 
+<<<<<<< HEAD
+=======
+int bigendian(void);
+
+>>>>>>> b7ba80a49124 (Commit)
 void event_format__fprintf(struct tep_event *event,
 			   int cpu, void *data, int size, FILE *fp);
 
@@ -140,6 +154,7 @@ int common_lock_depth(struct scripting_context *context);
 #define SAMPLE_FLAGS_BUF_SIZE 64
 int perf_sample__sprintf_flags(u32 flags, char *str, size_t sz);
 
+<<<<<<< HEAD
 #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
 #include <traceevent/event-parse.h>
 
@@ -156,4 +171,6 @@ static inline bool tep_field_is_relative(unsigned long flags __maybe_unused)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _PERF_UTIL_TRACE_EVENT_H */

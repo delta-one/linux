@@ -38,6 +38,7 @@ nvfw_hs_header(struct nvkm_subdev *subdev, const void *data)
 	return hdr;
 }
 
+<<<<<<< HEAD
 const struct nvfw_hs_header_v2 *
 nvfw_hs_header_v2(struct nvkm_subdev *subdev, const void *data)
 {
@@ -56,6 +57,8 @@ nvfw_hs_header_v2(struct nvkm_subdev *subdev, const void *data)
 	return hdr;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct nvfw_hs_load_header *
 nvfw_hs_load_header(struct nvkm_subdev *subdev, const void *data)
 {
@@ -78,6 +81,7 @@ nvfw_hs_load_header(struct nvkm_subdev *subdev, const void *data)
 
 	return hdr;
 }
+<<<<<<< HEAD
 
 const struct nvfw_hs_load_header_v2 *
 nvfw_hs_load_header_v2(struct nvkm_subdev *subdev, const void *data)
@@ -99,3 +103,5 @@ nvfw_hs_load_header_v2(struct nvkm_subdev *subdev, const void *data)
 
 	return hdr;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

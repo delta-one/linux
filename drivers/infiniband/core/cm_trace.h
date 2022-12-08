@@ -16,7 +16,11 @@
 
 #include <linux/tracepoint.h>
 #include <rdma/ib_cm.h>
+<<<<<<< HEAD
 #include <trace/misc/rdma.h>
+=======
+#include <trace/events/rdma.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * enum ib_cm_state, from include/rdma/ib_cm.h

@@ -7,9 +7,13 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
 title: Freescale Fast Ethernet Controller (FEC)
 
 maintainers:
+<<<<<<< HEAD
   - Shawn Guo <shawnguo@kernel.org>
   - Wei Fang <wei.fang@nxp.com>
   - NXP Linux Team <linux-imx@nxp.com>
+=======
+  - Joakim Zhang <qiangqing.zhang@nxp.com>
+>>>>>>> b7ba80a49124 (Commit)
 
 allOf:
   - $ref: ethernet-controller.yaml#
@@ -51,7 +55,10 @@ properties:
               - fsl,imx8mm-fec
               - fsl,imx8mn-fec
               - fsl,imx8mp-fec
+<<<<<<< HEAD
               - fsl,imx93-fec
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - const: fsl,imx8mq-fec
           - const: fsl,imx6sx-fec
       - items:

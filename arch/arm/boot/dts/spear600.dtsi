@@ -47,7 +47,11 @@
 			compatible = "arm,pl110", "arm,primecell";
 			reg = <0xfc200000 0x1000>;
 			interrupt-parent = <&vic1>;
+<<<<<<< HEAD
 			interrupts = <13>;
+=======
+			interrupts = <12>;
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 		};
 
@@ -207,6 +211,7 @@
 				interrupts = <6>;
 				status = "disabled";
 			};
+<<<<<<< HEAD
 
 			ssp1: spi@d0100000 {
 				compatible = "arm,pl022", "arm,primecell";
@@ -237,6 +242,8 @@
 				interrupts = <5>;
 				status = "disabled";
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };

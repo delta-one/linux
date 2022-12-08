@@ -150,7 +150,11 @@ LLC
 
 Communication between the CPU and the chip often requires some link layer
 protocol. Those are isolated as modules managed by the HCI layer. There are
+<<<<<<< HEAD
 currently two modules : nop (raw transfer) and shdlc.
+=======
+currently two modules : nop (raw transfert) and shdlc.
+>>>>>>> b7ba80a49124 (Commit)
 A new llc must implement the following functions::
 
   struct nfc_llc_ops {

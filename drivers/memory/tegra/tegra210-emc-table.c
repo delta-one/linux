@@ -22,6 +22,11 @@ static int tegra210_emc_table_device_init(struct reserved_mem *rmem,
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
+=======
+	count = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < TEGRA_EMC_MAX_FREQS; i++) {
 		if (timings[i].revision == 0)
 			break;

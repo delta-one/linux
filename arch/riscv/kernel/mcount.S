@@ -15,8 +15,13 @@
 
 	.macro SAVE_ABI_STATE
 	addi	sp, sp, -16
+<<<<<<< HEAD
 	REG_S	s0, 0*SZREG(sp)
 	REG_S	ra, 1*SZREG(sp)
+=======
+	sd	s0, 0(sp)
+	sd	ra, 8(sp)
+>>>>>>> b7ba80a49124 (Commit)
 	addi	s0, sp, 16
 	.endm
 
@@ -25,6 +30,7 @@
 	 * register if a0 was not saved.
 	 */
 	.macro SAVE_RET_ABI_STATE
+<<<<<<< HEAD
 	addi	sp, sp, -4*SZREG
 	REG_S	s0, 2*SZREG(sp)
 	REG_S	ra, 3*SZREG(sp)
@@ -36,15 +42,34 @@
 	.macro RESTORE_ABI_STATE
 	REG_L	ra, 1*SZREG(sp)
 	REG_L	s0, 0*SZREG(sp)
+=======
+	addi	sp, sp, -32
+	sd	s0, 16(sp)
+	sd	ra, 24(sp)
+	sd	a0, 8(sp)
+	addi	s0, sp, 32
+	.endm
+
+	.macro RESTORE_ABI_STATE
+	ld	ra, 8(sp)
+	ld	s0, 0(sp)
+>>>>>>> b7ba80a49124 (Commit)
 	addi	sp, sp, 16
 	.endm
 
 	.macro RESTORE_RET_ABI_STATE
+<<<<<<< HEAD
 	REG_L	ra, 3*SZREG(sp)
 	REG_L	s0, 2*SZREG(sp)
 	REG_L	a0, 1*SZREG(sp)
 	REG_L	a1, 0*SZREG(sp)
 	addi	sp, sp, 4*SZREG
+=======
+	ld	ra, 24(sp)
+	ld	s0, 16(sp)
+	ld	a0, 8(sp)
+	addi	sp, sp, 32
+>>>>>>> b7ba80a49124 (Commit)
 	.endm
 
 ENTRY(ftrace_stub)
@@ -73,9 +98,15 @@ ENTRY(return_to_handler)
 	mv	a0, t6
 #endif
 	call	ftrace_return_to_handler
+<<<<<<< HEAD
 	mv	a2, a0
 	RESTORE_RET_ABI_STATE
 	jalr	a2
+=======
+	mv	a1, a0
+	RESTORE_RET_ABI_STATE
+	jalr	a1
+>>>>>>> b7ba80a49124 (Commit)
 ENDPROC(return_to_handler)
 #endif
 
@@ -84,16 +115,28 @@ ENTRY(MCOUNT_NAME)
 	la	t4, ftrace_stub
 #ifdef CONFIG_FUNCTION_GRAPH_TRACER
 	la	t0, ftrace_graph_return
+<<<<<<< HEAD
 	REG_L	t1, 0(t0)
 	bne	t1, t4, do_ftrace_graph_caller
 
 	la	t3, ftrace_graph_entry
 	REG_L	t2, 0(t3)
+=======
+	ld	t1, 0(t0)
+	bne	t1, t4, do_ftrace_graph_caller
+
+	la	t3, ftrace_graph_entry
+	ld	t2, 0(t3)
+>>>>>>> b7ba80a49124 (Commit)
 	la	t6, ftrace_graph_entry_stub
 	bne	t2, t6, do_ftrace_graph_caller
 #endif
 	la	t3, ftrace_trace_function
+<<<<<<< HEAD
 	REG_L	t5, 0(t3)
+=======
+	ld	t5, 0(t3)
+>>>>>>> b7ba80a49124 (Commit)
 	bne	t5, t4, do_trace
 	ret
 
@@ -103,10 +146,17 @@ ENTRY(MCOUNT_NAME)
  * prepare_to_return(&ra_to_caller_of_caller, ra_to_caller)
  */
 do_ftrace_graph_caller:
+<<<<<<< HEAD
 	addi	a0, s0, -SZREG
 	mv	a1, ra
 #ifdef HAVE_FUNCTION_GRAPH_FP_TEST
 	REG_L	a2, -2*SZREG(s0)
+=======
+	addi	a0, s0, -8
+	mv	a1, ra
+#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
+	ld	a2, -16(s0)
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	SAVE_ABI_STATE
 	call	prepare_ftrace_return
@@ -119,7 +169,11 @@ do_ftrace_graph_caller:
  * (*ftrace_trace_function)(ra_to_caller, ra_to_caller_of_caller)
  */
 do_trace:
+<<<<<<< HEAD
 	REG_L	a1, -SZREG(s0)
+=======
+	ld	a1, -8(s0)
+>>>>>>> b7ba80a49124 (Commit)
 	mv	a0, ra
 
 	SAVE_ABI_STATE

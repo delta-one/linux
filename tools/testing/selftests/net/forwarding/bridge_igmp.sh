@@ -96,6 +96,12 @@ cleanup()
 
 	switch_destroy
 
+<<<<<<< HEAD
+=======
+	# Always cleanup the mcast group
+	ip address del dev $h2 $TEST_GROUP/32 2>&1 1>/dev/null
+
+>>>>>>> b7ba80a49124 (Commit)
 	h2_destroy
 	h1_destroy
 

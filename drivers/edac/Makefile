@@ -84,4 +84,7 @@ obj-$(CONFIG_EDAC_QCOM)			+= qcom_edac.o
 obj-$(CONFIG_EDAC_ASPEED)		+= aspeed_edac.o
 obj-$(CONFIG_EDAC_BLUEFIELD)		+= bluefield_edac.o
 obj-$(CONFIG_EDAC_DMC520)		+= dmc520_edac.o
+<<<<<<< HEAD
 obj-$(CONFIG_EDAC_ZYNQMP)		+= zynqmp_edac.o
+=======
+>>>>>>> b7ba80a49124 (Commit)

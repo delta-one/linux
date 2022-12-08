@@ -35,7 +35,12 @@ struct sctp_ulpq {
 };
 
 /* Prototypes. */
+<<<<<<< HEAD
 void sctp_ulpq_init(struct sctp_ulpq *ulpq, struct sctp_association *asoc);
+=======
+struct sctp_ulpq *sctp_ulpq_init(struct sctp_ulpq *,
+				 struct sctp_association *);
+>>>>>>> b7ba80a49124 (Commit)
 void sctp_ulpq_flush(struct sctp_ulpq *ulpq);
 void sctp_ulpq_free(struct sctp_ulpq *);
 

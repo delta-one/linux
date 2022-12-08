@@ -484,11 +484,19 @@ static int acpi_fujitsu_add(struct acpi_device *adev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void acpi_fujitsu_remove(struct acpi_device *adev)
+=======
+static int acpi_fujitsu_remove(struct acpi_device *adev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	free_irq(fujitsu.irq, fujitsu_interrupt);
 	release_region(fujitsu.io_base, fujitsu.io_length);
 	input_fujitsu_remove();
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP

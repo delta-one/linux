@@ -25,8 +25,12 @@
 #define swp_is_buggy
 #endif
 
+<<<<<<< HEAD
 static inline unsigned long
 __arch_xchg(unsigned long x, volatile void *ptr, int size)
+=======
+static inline unsigned long __xchg(unsigned long x, volatile void *ptr, int size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	extern void __bad_xchg(volatile void *, int);
 	unsigned long ret;
@@ -116,8 +120,13 @@ __arch_xchg(unsigned long x, volatile void *ptr, int size)
 }
 
 #define arch_xchg_relaxed(ptr, x) ({					\
+<<<<<<< HEAD
 	(__typeof__(*(ptr)))__arch_xchg((unsigned long)(x), (ptr),	\
 					sizeof(*(ptr)));		\
+=======
+	(__typeof__(*(ptr)))__xchg((unsigned long)(x), (ptr),		\
+				   sizeof(*(ptr)));			\
+>>>>>>> b7ba80a49124 (Commit)
 })
 
 #include <asm-generic/cmpxchg-local.h>

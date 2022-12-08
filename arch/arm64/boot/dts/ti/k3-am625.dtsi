@@ -48,8 +48,11 @@
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
 			next-level-cache = <&L2_0>;
+<<<<<<< HEAD
 			operating-points-v2 = <&a53_opp_table>;
 			clocks = <&k3_clks 135 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		cpu1: cpu@1 {
@@ -64,8 +67,11 @@
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
 			next-level-cache = <&L2_0>;
+<<<<<<< HEAD
 			operating-points-v2 = <&a53_opp_table>;
 			clocks = <&k3_clks 136 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		cpu2: cpu@2 {
@@ -80,8 +86,11 @@
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
 			next-level-cache = <&L2_0>;
+<<<<<<< HEAD
 			operating-points-v2 = <&a53_opp_table>;
 			clocks = <&k3_clks 137 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		cpu3: cpu@3 {
@@ -96,6 +105,7 @@
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
 			next-level-cache = <&L2_0>;
+<<<<<<< HEAD
 			operating-points-v2 = <&a53_opp_table>;
 			clocks = <&k3_clks 138 0>;
 		};
@@ -141,14 +151,21 @@
 			opp-supported-hw = <0x01 0x0004>;
 			clock-latency-ns = <6000000>;
 			opp-suspend;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
 	L2_0: l2-cache0 {
 		compatible = "cache";
+<<<<<<< HEAD
 		cache-unified;
 		cache-level = <2>;
 		cache-size = <0x80000>;
+=======
+		cache-level = <2>;
+		cache-size = <0x40000>;
+>>>>>>> b7ba80a49124 (Commit)
 		cache-line-size = <64>;
 		cache-sets = <512>;
 	};

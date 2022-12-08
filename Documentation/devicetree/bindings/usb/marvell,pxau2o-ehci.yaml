@@ -5,7 +5,11 @@
 $id: http://devicetree.org/schemas/usb/marvell,pxau2o-ehci.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Marvell PXA/MMP EHCI
+=======
+title: Marvell PXA/MMP EHCI bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Lubomir Rintel <lkundrak@v3.sk>

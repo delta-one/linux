@@ -33,6 +33,10 @@ struct kmem_cache {
 
 	size_t colour;			/* cache colouring range */
 	unsigned int colour_off;	/* colour offset */
+<<<<<<< HEAD
+=======
+	struct kmem_cache *freelist_cache;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int freelist_size;
 
 	/* constructor func */
@@ -72,7 +76,11 @@ struct kmem_cache {
 	int obj_offset;
 #endif /* CONFIG_DEBUG_SLAB */
 
+<<<<<<< HEAD
 #ifdef CONFIG_KASAN_GENERIC
+=======
+#ifdef CONFIG_KASAN
+>>>>>>> b7ba80a49124 (Commit)
 	struct kasan_cache kasan_info;
 #endif
 
@@ -80,10 +88,15 @@ struct kmem_cache {
 	unsigned int *random_seq;
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_HARDENED_USERCOPY
 	unsigned int useroffset;	/* Usercopy region offset */
 	unsigned int usersize;		/* Usercopy region size */
 #endif
+=======
+	unsigned int useroffset;	/* Usercopy region offset */
+	unsigned int usersize;		/* Usercopy region size */
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct kmem_cache_node *node[MAX_NUMNODES];
 };

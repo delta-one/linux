@@ -48,6 +48,7 @@
 		| ((\offset) & 7)
 .endm
 
+<<<<<<< HEAD
 /*
  * LDR (ZT0)
  *
@@ -68,4 +69,6 @@
 		| (((\nx) & 0x1f) << 5)
 .endm
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

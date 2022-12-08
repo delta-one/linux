@@ -738,6 +738,12 @@ bfad_pci_init(struct pci_dev *pdev, struct bfad_s *bfad)
 		goto out_release_region;
 	}
 
+<<<<<<< HEAD
+=======
+	/* Enable PCIE Advanced Error Recovery (AER) if kernel supports */
+	pci_enable_pcie_error_reporting(pdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	bfad->pci_bar0_kva = pci_iomap(pdev, 0, pci_resource_len(pdev, 0));
 	bfad->pci_bar2_kva = pci_iomap(pdev, 2, pci_resource_len(pdev, 2));
 
@@ -798,6 +804,11 @@ bfad_pci_uninit(struct pci_dev *pdev, struct bfad_s *bfad)
 	pci_iounmap(pdev, bfad->pci_bar0_kva);
 	pci_iounmap(pdev, bfad->pci_bar2_kva);
 	pci_release_regions(pdev);
+<<<<<<< HEAD
+=======
+	/* Disable PCIE Advanced Error Recovery (AER) */
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_disable_device(pdev);
 }
 
@@ -1557,6 +1568,10 @@ bfad_pci_slot_reset(struct pci_dev *pdev)
 	if (restart_bfa(bfad) == -1)
 		goto out_disable_device;
 
+<<<<<<< HEAD
+=======
+	pci_enable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	dev_printk(KERN_WARNING, &pdev->dev,
 		   "slot_reset completed  flags: 0x%x!\n", bfad->bfad_flags);
 

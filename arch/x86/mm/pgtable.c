@@ -299,6 +299,12 @@ static void pgd_prepopulate_pmd(struct mm_struct *mm, pgd_t *pgd, pmd_t *pmds[])
 	pud_t *pud;
 	int i;
 
+<<<<<<< HEAD
+=======
+	if (PREALLOCATED_PMDS == 0) /* Work around gcc-3.4.x bug */
+		return;
+
+>>>>>>> b7ba80a49124 (Commit)
 	p4d = p4d_offset(pgd, 0);
 	pud = pud_offset(p4d, 0);
 
@@ -431,12 +437,19 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
 
 	mm->pgd = pgd;
 
+<<<<<<< HEAD
 	if (sizeof(pmds) != 0 &&
 			preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
 		goto out_free_pgd;
 
 	if (sizeof(u_pmds) != 0 &&
 			preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
+=======
+	if (preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
+		goto out_free_pgd;
+
+	if (preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_free_pmds;
 
 	if (paravirt_pgd_alloc(mm) != 0)
@@ -450,22 +463,33 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
 	spin_lock(&pgd_lock);
 
 	pgd_ctor(mm, pgd);
+<<<<<<< HEAD
 	if (sizeof(pmds) != 0)
 		pgd_prepopulate_pmd(mm, pgd, pmds);
 
 	if (sizeof(u_pmds) != 0)
 		pgd_prepopulate_user_pmd(mm, pgd, u_pmds);
+=======
+	pgd_prepopulate_pmd(mm, pgd, pmds);
+	pgd_prepopulate_user_pmd(mm, pgd, u_pmds);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_unlock(&pgd_lock);
 
 	return pgd;
 
 out_free_user_pmds:
+<<<<<<< HEAD
 	if (sizeof(u_pmds) != 0)
 		free_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS);
 out_free_pmds:
 	if (sizeof(pmds) != 0)
 		free_pmds(mm, pmds, PREALLOCATED_PMDS);
+=======
+	free_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS);
+out_free_pmds:
+	free_pmds(mm, pmds, PREALLOCATED_PMDS);
+>>>>>>> b7ba80a49124 (Commit)
 out_free_pgd:
 	_pgd_free(pgd);
 out:
@@ -880,6 +904,7 @@ int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
 
 #endif /* CONFIG_X86_64 */
 #endif	/* CONFIG_HAVE_ARCH_HUGE_VMAP */
+<<<<<<< HEAD
 
 pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
 {
@@ -918,3 +943,5 @@ void arch_check_zapped_pmd(struct vm_area_struct *vma, pmd_t pmd)
 	VM_WARN_ON_ONCE(!(vma->vm_flags & VM_SHADOW_STACK) &&
 			pmd_shstk(pmd));
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

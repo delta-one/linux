@@ -1942,8 +1942,11 @@ static int _regmap_bus_reg_write(void *context, unsigned int reg,
 {
 	struct regmap *map = context;
 
+<<<<<<< HEAD
 	reg += map->reg_base;
 	reg >>= map->format.reg_downshift;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return map->bus->reg_write(map->bus_context, reg, val);
 }
 
@@ -2842,8 +2845,11 @@ static int _regmap_bus_reg_read(void *context, unsigned int reg,
 {
 	struct regmap *map = context;
 
+<<<<<<< HEAD
 	reg += map->reg_base;
 	reg >>= map->format.reg_downshift;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return map->bus->reg_read(map->bus_context, reg, val);
 }
 
@@ -3235,8 +3241,11 @@ static int _regmap_update_bits(struct regmap *map, unsigned int reg,
 		*change = false;
 
 	if (regmap_volatile(map, reg) && map->reg_update_bits) {
+<<<<<<< HEAD
 		reg += map->reg_base;
 		reg >>= map->format.reg_downshift;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ret = map->reg_update_bits(map->bus_context, reg, mask, val);
 		if (ret == 0 && change)
 			*change = true;
@@ -3492,6 +3501,7 @@ int regmap_get_reg_stride(struct regmap *map)
 }
 EXPORT_SYMBOL_GPL(regmap_get_reg_stride);
 
+<<<<<<< HEAD
 /**
  * regmap_might_sleep() - Returns whether a regmap access might sleep.
  *
@@ -3505,6 +3515,8 @@ bool regmap_might_sleep(struct regmap *map)
 }
 EXPORT_SYMBOL_GPL(regmap_might_sleep);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int regmap_parse_val(struct regmap *map, const void *buf,
 			unsigned int *val)
 {

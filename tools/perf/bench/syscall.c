@@ -14,7 +14,10 @@
 #include <sys/time.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
+<<<<<<< HEAD
 #include <sys/wait.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <unistd.h>
 #include <stdlib.h>
 
@@ -31,6 +34,7 @@ static const char * const bench_syscall_usage[] = {
 	NULL
 };
 
+<<<<<<< HEAD
 static void test_execve(void)
 {
 	const char *pathname = "/bin/true";
@@ -57,12 +61,19 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
 	struct timeval start, stop, diff;
 	unsigned long long result_usec = 0;
 	const char *name = NULL;
+=======
+int bench_syscall_basic(int argc, const char **argv)
+{
+	struct timeval start, stop, diff;
+	unsigned long long result_usec = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	argc = parse_options(argc, argv, options, bench_syscall_usage, 0);
 
 	gettimeofday(&start, NULL);
 
+<<<<<<< HEAD
 	for (i = 0; i < loops; i++) {
 		switch (syscall) {
 		case __NR_getppid:
@@ -81,10 +92,15 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
 			break;
 		}
 	}
+=======
+	for (i = 0; i < loops; i++)
+		getppid();
+>>>>>>> b7ba80a49124 (Commit)
 
 	gettimeofday(&stop, NULL);
 	timersub(&stop, &start, &diff);
 
+<<<<<<< HEAD
 	switch (syscall) {
 	case __NR_getppid:
 		name = "getppid()";
@@ -102,6 +118,11 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
 	switch (bench_format) {
 	case BENCH_FORMAT_DEFAULT:
 		printf("# Executed %'d %s calls\n", loops, name);
+=======
+	switch (bench_format) {
+	case BENCH_FORMAT_DEFAULT:
+		printf("# Executed %'d getppid() calls\n", loops);
+>>>>>>> b7ba80a49124 (Commit)
 
 		result_usec = diff.tv_sec * 1000000;
 		result_usec += diff.tv_usec;
@@ -132,6 +153,7 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 int bench_syscall_basic(int argc, const char **argv)
 {
@@ -147,3 +169,5 @@ int bench_syscall_execve(int argc, const char **argv)
 {
 	return bench_syscall_common(argc, argv, __NR_execve);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

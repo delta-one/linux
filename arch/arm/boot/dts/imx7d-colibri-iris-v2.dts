@@ -79,6 +79,9 @@
 
 /* Colibri USBH */
 &usbotg2 {
+<<<<<<< HEAD
 	disable-over-current;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };

@@ -61,7 +61,10 @@ my @skip_abs = (
 	'/proc/device-tree',
 	'/proc/1/syscall',
 	'/sys/firmware/devicetree',
+<<<<<<< HEAD
 	'/sys/kernel/tracing/trace_pipe',
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	'/sys/kernel/debug/tracing/trace_pipe',
 	'/sys/kernel/security/apparmor/revision');
 

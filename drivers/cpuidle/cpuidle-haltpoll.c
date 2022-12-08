@@ -32,7 +32,11 @@ static int default_enter_idle(struct cpuidle_device *dev,
 		local_irq_enable();
 		return index;
 	}
+<<<<<<< HEAD
 	arch_cpu_idle();
+=======
+	default_idle();
+>>>>>>> b7ba80a49124 (Commit)
 	return index;
 }
 

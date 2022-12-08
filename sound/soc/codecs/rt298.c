@@ -1166,6 +1166,7 @@ static const struct dmi_system_id force_combo_jack_table[] = {
 			DMI_MATCH(DMI_PRODUCT_NAME, "Geminilake")
 		}
 	},
+<<<<<<< HEAD
 	{
 		.ident = "Intel Kabylake R RVP",
 		.matches = {
@@ -1173,6 +1174,8 @@ static const struct dmi_system_id force_combo_jack_table[] = {
 			DMI_MATCH(DMI_PRODUCT_NAME, "Kabylake Client platform")
 		}
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 

@@ -262,13 +262,21 @@
 		pinctrl-0 = <&pinctrl_gpio_leds>;
 		status = "okay";
 
+<<<<<<< HEAD
 		led-d8 {
+=======
+		d8 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "d8";
 			gpios = <&pioD 30 GPIO_ACTIVE_HIGH>;
 			default-state = "on";
 		};
 
+<<<<<<< HEAD
 		led-d10 {
+=======
+		d10 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "d10";
 			gpios = <&pioE 15 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "heartbeat";

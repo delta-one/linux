@@ -75,6 +75,7 @@ vmxnet3_enable_all_intrs(struct vmxnet3_adapter *adapter)
 
 	for (i = 0; i < adapter->intr.num_intrs; i++)
 		vmxnet3_enable_intr(adapter, i);
+<<<<<<< HEAD
 	if (!VMXNET3_VERSION_GE_6(adapter) ||
 	    !adapter->queuesExtEnabled) {
 		adapter->shared->devRead.intrConf.intrCtrl &=
@@ -83,6 +84,10 @@ vmxnet3_enable_all_intrs(struct vmxnet3_adapter *adapter)
 		adapter->shared->devReadExt.intrConfExt.intrCtrl &=
 					cpu_to_le32(~VMXNET3_IC_DISABLE_ALL);
 	}
+=======
+	adapter->shared->devRead.intrConf.intrCtrl &=
+					cpu_to_le32(~VMXNET3_IC_DISABLE_ALL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 
@@ -91,6 +96,7 @@ vmxnet3_disable_all_intrs(struct vmxnet3_adapter *adapter)
 {
 	int i;
 
+<<<<<<< HEAD
 	if (!VMXNET3_VERSION_GE_6(adapter) ||
 	    !adapter->queuesExtEnabled) {
 		adapter->shared->devRead.intrConf.intrCtrl |=
@@ -99,6 +105,10 @@ vmxnet3_disable_all_intrs(struct vmxnet3_adapter *adapter)
 		adapter->shared->devReadExt.intrConfExt.intrCtrl |=
 					cpu_to_le32(VMXNET3_IC_DISABLE_ALL);
 	}
+=======
+	adapter->shared->devRead.intrConf.intrCtrl |=
+					cpu_to_le32(VMXNET3_IC_DISABLE_ALL);
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < adapter->intr.num_intrs; i++)
 		vmxnet3_disable_intr(adapter, i);
 }
@@ -1288,10 +1298,13 @@ vmxnet3_rx_csum(struct vmxnet3_adapter *adapter,
 		    (le32_to_cpu(gdesc->dword[3]) &
 		     VMXNET3_RCD_CSUM_OK) == VMXNET3_RCD_CSUM_OK) {
 			skb->ip_summed = CHECKSUM_UNNECESSARY;
+<<<<<<< HEAD
 			if ((le32_to_cpu(gdesc->dword[0]) &
 				     (1UL << VMXNET3_RCD_HDR_INNER_SHIFT))) {
 				skb->csum_level = 1;
 			}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			WARN_ON_ONCE(!(gdesc->rcd.tcp || gdesc->rcd.udp) &&
 				     !(le32_to_cpu(gdesc->dword[0]) &
 				     (1UL << VMXNET3_RCD_HDR_INNER_SHIFT)));
@@ -1301,10 +1314,13 @@ vmxnet3_rx_csum(struct vmxnet3_adapter *adapter,
 		} else if (gdesc->rcd.v6 && (le32_to_cpu(gdesc->dword[3]) &
 					     (1 << VMXNET3_RCD_TUC_SHIFT))) {
 			skb->ip_summed = CHECKSUM_UNNECESSARY;
+<<<<<<< HEAD
 			if ((le32_to_cpu(gdesc->dword[0]) &
 				     (1UL << VMXNET3_RCD_HDR_INNER_SHIFT))) {
 				skb->csum_level = 1;
 			}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			WARN_ON_ONCE(!(gdesc->rcd.tcp || gdesc->rcd.udp) &&
 				     !(le32_to_cpu(gdesc->dword[0]) &
 				     (1UL << VMXNET3_RCD_HDR_INNER_SHIFT)));
@@ -1416,7 +1432,10 @@ vmxnet3_rq_rx_complete(struct vmxnet3_rx_queue *rq,
 	};
 	u32 num_pkts = 0;
 	bool skip_page_frags = false;
+<<<<<<< HEAD
 	bool encap_lro = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct Vmxnet3_RxCompDesc *rcd;
 	struct vmxnet3_rx_ctx *ctx = &rq->rx_ctx;
 	u16 segCnt = 0, mss = 0;
@@ -1546,24 +1565,59 @@ vmxnet3_rq_rx_complete(struct vmxnet3_rx_queue *rq,
 				rxd->len = rbi->len;
 			}
 
+<<<<<<< HEAD
+=======
+#ifdef VMXNET3_RSS
+			if (rcd->rssType != VMXNET3_RCD_RSS_TYPE_NONE &&
+			    (adapter->netdev->features & NETIF_F_RXHASH)) {
+				enum pkt_hash_types hash_type;
+
+				switch (rcd->rssType) {
+				case VMXNET3_RCD_RSS_TYPE_IPV4:
+				case VMXNET3_RCD_RSS_TYPE_IPV6:
+					hash_type = PKT_HASH_TYPE_L3;
+					break;
+				case VMXNET3_RCD_RSS_TYPE_TCPIPV4:
+				case VMXNET3_RCD_RSS_TYPE_TCPIPV6:
+				case VMXNET3_RCD_RSS_TYPE_UDPIPV4:
+				case VMXNET3_RCD_RSS_TYPE_UDPIPV6:
+					hash_type = PKT_HASH_TYPE_L4;
+					break;
+				default:
+					hash_type = PKT_HASH_TYPE_L3;
+					break;
+				}
+				skb_set_hash(ctx->skb,
+					     le32_to_cpu(rcd->rssHash),
+					     hash_type);
+			}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 			skb_record_rx_queue(ctx->skb, rq->qid);
 			skb_put(ctx->skb, rcd->len);
 
 			if (VMXNET3_VERSION_GE_2(adapter) &&
 			    rcd->type == VMXNET3_CDTYPE_RXCOMP_LRO) {
 				struct Vmxnet3_RxCompDescExt *rcdlro;
+<<<<<<< HEAD
 				union Vmxnet3_GenericDesc *gdesc;
 
 				rcdlro = (struct Vmxnet3_RxCompDescExt *)rcd;
 				gdesc = (union Vmxnet3_GenericDesc *)rcd;
+=======
+				rcdlro = (struct Vmxnet3_RxCompDescExt *)rcd;
+>>>>>>> b7ba80a49124 (Commit)
 
 				segCnt = rcdlro->segCnt;
 				WARN_ON_ONCE(segCnt == 0);
 				mss = rcdlro->mss;
 				if (unlikely(segCnt <= 1))
 					segCnt = 0;
+<<<<<<< HEAD
 				encap_lro = (le32_to_cpu(gdesc->dword[0]) &
 					(1UL << VMXNET3_RCD_HDR_INNER_SHIFT));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			} else {
 				segCnt = 0;
 			}
@@ -1628,6 +1682,7 @@ vmxnet3_rq_rx_complete(struct vmxnet3_rx_queue *rq,
 			u32 mtu = adapter->netdev->mtu;
 			skb->len += skb->data_len;
 
+<<<<<<< HEAD
 #ifdef VMXNET3_RSS
 			if (rcd->rssType != VMXNET3_RCD_RSS_TYPE_NONE &&
 			    (adapter->netdev->features & NETIF_F_RXHASH)) {
@@ -1657,6 +1712,12 @@ vmxnet3_rq_rx_complete(struct vmxnet3_rx_queue *rq,
 					(union Vmxnet3_GenericDesc *)rcd);
 			skb->protocol = eth_type_trans(skb, adapter->netdev);
 			if ((!rcd->tcp && !encap_lro) ||
+=======
+			vmxnet3_rx_csum(adapter, skb,
+					(union Vmxnet3_GenericDesc *)rcd);
+			skb->protocol = eth_type_trans(skb, adapter->netdev);
+			if (!rcd->tcp ||
+>>>>>>> b7ba80a49124 (Commit)
 			    !(adapter->netdev->features & NETIF_F_LRO))
 				goto not_lro;
 
@@ -1665,7 +1726,11 @@ vmxnet3_rq_rx_complete(struct vmxnet3_rx_queue *rq,
 					SKB_GSO_TCPV4 : SKB_GSO_TCPV6;
 				skb_shinfo(skb)->gso_size = mss;
 				skb_shinfo(skb)->gso_segs = segCnt;
+<<<<<<< HEAD
 			} else if ((segCnt != 0 || skb->len > mtu) && !encap_lro) {
+=======
+			} else if (segCnt != 0 || skb->len > mtu) {
+>>>>>>> b7ba80a49124 (Commit)
 				u32 hlen;
 
 				hlen = vmxnet3_get_hdr_len(adapter, skb,
@@ -1694,7 +1759,10 @@ not_lro:
 				napi_gro_receive(&rq->napi, skb);
 
 			ctx->skb = NULL;
+<<<<<<< HEAD
 			encap_lro = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			num_pkts++;
 		}
 
@@ -3909,11 +3977,19 @@ vmxnet3_probe_device(struct pci_dev *pdev,
 		for (i = 0; i < adapter->num_rx_queues; i++) {
 			netif_napi_add(adapter->netdev,
 				       &adapter->rx_queue[i].napi,
+<<<<<<< HEAD
 				       vmxnet3_poll_rx_only);
 		}
 	} else {
 		netif_napi_add(adapter->netdev, &adapter->rx_queue[0].napi,
 			       vmxnet3_poll);
+=======
+				       vmxnet3_poll_rx_only, 64);
+		}
+	} else {
+		netif_napi_add(adapter->netdev, &adapter->rx_queue[0].napi,
+			       vmxnet3_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	netif_set_real_num_tx_queues(adapter->netdev, adapter->num_tx_queues);

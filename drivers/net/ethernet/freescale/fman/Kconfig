@@ -3,8 +3,12 @@ config FSL_FMAN
 	tristate "FMan support"
 	depends on FSL_SOC || ARCH_LAYERSCAPE || COMPILE_TEST
 	select GENERIC_ALLOCATOR
+<<<<<<< HEAD
 	select PHYLINK
 	select PCS_LYNX
+=======
+	select PHYLIB
+>>>>>>> b7ba80a49124 (Commit)
 	select CRC32
 	default n
 	help

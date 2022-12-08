@@ -114,7 +114,11 @@
 					    _x_, sizeof(*(ptr)));	\
 })
 
+<<<<<<< HEAD
 #define __arch_xchg(ptr, new, size)					\
+=======
+#define __xchg(ptr, new, size)						\
+>>>>>>> b7ba80a49124 (Commit)
 ({									\
 	__typeof__(ptr) __ptr = (ptr);					\
 	__typeof__(new) __new = (new);					\
@@ -143,7 +147,11 @@
 #define arch_xchg(ptr, x)						\
 ({									\
 	__typeof__(*(ptr)) _x_ = (x);					\
+<<<<<<< HEAD
 	(__typeof__(*(ptr))) __arch_xchg((ptr), _x_, sizeof(*(ptr)));	\
+=======
+	(__typeof__(*(ptr))) __xchg((ptr), _x_, sizeof(*(ptr)));	\
+>>>>>>> b7ba80a49124 (Commit)
 })
 
 #define xchg32(ptr, x)							\

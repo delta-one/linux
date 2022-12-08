@@ -9,9 +9,12 @@ title: Wolfson WM8962 Ultra-Low Power Stereo CODEC
 maintainers:
   - patches@opensource.cirrus.com
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     const: wlf,wm8962
@@ -90,7 +93,11 @@ required:
   - SPKVDD1-supply
   - SPKVDD2-supply
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

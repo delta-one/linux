@@ -287,7 +287,11 @@ static ssize_t rrtime_store(struct device *dev,
 static ssize_t rrtime_show(struct device *dev,
 	struct device_attribute *attr, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", round_robin_time);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%d\n", round_robin_time);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RW(rrtime);
 
@@ -309,7 +313,11 @@ static ssize_t idlepct_store(struct device *dev,
 static ssize_t idlepct_show(struct device *dev,
 	struct device_attribute *attr, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", idle_pct);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%d\n", idle_pct);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RW(idlepct);
 
@@ -449,7 +457,11 @@ static int acpi_pad_add(struct acpi_device *device)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void acpi_pad_remove(struct acpi_device *device)
+=======
+static int acpi_pad_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	mutex_lock(&isolated_cpus_lock);
 	acpi_pad_idle_cpus(0);
@@ -458,6 +470,10 @@ static void acpi_pad_remove(struct acpi_device *device)
 	acpi_remove_notify_handler(device->handle,
 		ACPI_DEVICE_NOTIFY, acpi_pad_notify);
 	acpi_pad_remove_sysfs(device);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id pad_device_ids[] = {

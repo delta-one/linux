@@ -14,7 +14,10 @@
  * Access to the event log extended by the TCG BIOS of PC platform
  */
 
+<<<<<<< HEAD
 #include <linux/device.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/seq_file.h>
 #include <linux/fs.h>
 #include <linux/security.h>
@@ -91,21 +94,32 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
 			return -ENODEV;
 
 		if (tbl->header.length <
+<<<<<<< HEAD
 				sizeof(*tbl) + sizeof(struct acpi_tpm2_phy)) {
 			acpi_put_table((struct acpi_table_header *)tbl);
 			return -ENODEV;
 		}
+=======
+				sizeof(*tbl) + sizeof(struct acpi_tpm2_phy))
+			return -ENODEV;
+>>>>>>> b7ba80a49124 (Commit)
 
 		tpm2_phy = (void *)tbl + sizeof(*tbl);
 		len = tpm2_phy->log_area_minimum_length;
 
 		start = tpm2_phy->log_area_start_address;
+<<<<<<< HEAD
 		if (!start || !len) {
 			acpi_put_table((struct acpi_table_header *)tbl);
 			return -ENODEV;
 		}
 
 		acpi_put_table((struct acpi_table_header *)tbl);
+=======
+		if (!start || !len)
+			return -ENODEV;
+
+>>>>>>> b7ba80a49124 (Commit)
 		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
 	} else {
 		/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
@@ -126,17 +140,26 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
 			break;
 		}
 
+<<<<<<< HEAD
 		acpi_put_table((struct acpi_table_header *)buff);
 		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
 	}
 
+=======
+		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (!len) {
 		dev_warn(&chip->dev, "%s: TCPA log area empty\n", __func__);
 		return -EIO;
 	}
 
 	/* malloc EventLog space */
+<<<<<<< HEAD
 	log->bios_event_log = devm_kmalloc(&chip->dev, len, GFP_KERNEL);
+=======
+	log->bios_event_log = kmalloc(len, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!log->bios_event_log)
 		return -ENOMEM;
 
@@ -144,12 +167,17 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
 
 	ret = -EIO;
 	virt = acpi_os_map_iomem(start, len);
+<<<<<<< HEAD
 	if (!virt) {
 		dev_warn(&chip->dev, "%s: Failed to map ACPI memory\n", __func__);
 		/* try EFI log next */
 		ret = -ENODEV;
 		goto err;
 	}
+=======
+	if (!virt)
+		goto err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	memcpy_fromio(log->bios_event_log, virt, len);
 
@@ -165,7 +193,14 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
 	return format;
 
 err:
+<<<<<<< HEAD
 	devm_kfree(&chip->dev, log->bios_event_log);
 	log->bios_event_log = NULL;
 	return ret;
+=======
+	kfree(log->bios_event_log);
+	log->bios_event_log = NULL;
+	return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 }

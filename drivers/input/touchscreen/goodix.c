@@ -124,6 +124,7 @@ static const unsigned long goodix_irq_flags[] = {
 static const struct dmi_system_id nine_bytes_report[] = {
 #if defined(CONFIG_DMI) && defined(CONFIG_X86)
 	{
+<<<<<<< HEAD
 		/* Lenovo Yoga Book X90F / X90L */
 		.matches = {
 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
@@ -136,6 +137,12 @@ static const struct dmi_system_id nine_bytes_report[] = {
 		.matches = {
 			/* Non exact match to match F + L versions */
 			DMI_MATCH(DMI_PRODUCT_NAME, "Lenovo YB1-X91"),
+=======
+		.ident = "Lenovo YogaBook",
+		/* YB1-X91L/F and YB1-X90L/F */
+		.matches = {
+			DMI_MATCH(DMI_PRODUCT_NAME, "Lenovo YB1-X9")
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	},
 #endif
@@ -1166,7 +1173,10 @@ static int goodix_configure_dev(struct goodix_ts_data *ts)
 	input_set_abs_params(ts->input_dev, ABS_MT_WIDTH_MAJOR, 0, 255, 0, 0);
 	input_set_abs_params(ts->input_dev, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
 
+<<<<<<< HEAD
 retry_read_config:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Read configuration and apply touchscreen parameters */
 	goodix_read_config(ts);
 
@@ -1174,6 +1184,7 @@ retry_read_config:
 	touchscreen_parse_properties(ts->input_dev, true, &ts->prop);
 
 	if (!ts->prop.max_x || !ts->prop.max_y || !ts->max_touch_num) {
+<<<<<<< HEAD
 		if (!ts->reset_controller_at_probe &&
 		    ts->irq_pin_access_method != IRQ_PIN_ACCESS_NONE) {
 			dev_info(&ts->client->dev, "Config not set, resetting controller\n");
@@ -1184,6 +1195,8 @@ retry_read_config:
 				return error;
 			goto retry_read_config;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(&ts->client->dev,
 			"Invalid config (%d, %d, %d), using defaults\n",
 			ts->prop.max_x, ts->prop.max_y, ts->max_touch_num);
@@ -1290,7 +1303,12 @@ static void goodix_disable_regulators(void *arg)
 	regulator_disable(ts->avdd28);
 }
 
+<<<<<<< HEAD
 static int goodix_ts_probe(struct i2c_client *client)
+=======
+static int goodix_ts_probe(struct i2c_client *client,
+			   const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct goodix_ts_data *ts;
 	const char *cfg_name;
@@ -1409,7 +1427,11 @@ static void goodix_ts_remove(struct i2c_client *client)
 		wait_for_completion(&ts->firmware_loading_complete);
 }
 
+<<<<<<< HEAD
 static int goodix_suspend(struct device *dev)
+=======
+static int __maybe_unused goodix_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct goodix_ts_data *ts = i2c_get_clientdata(client);
@@ -1456,7 +1478,11 @@ static int goodix_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int goodix_resume(struct device *dev)
+=======
+static int __maybe_unused goodix_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct goodix_ts_data *ts = i2c_get_clientdata(client);
@@ -1505,7 +1531,11 @@ static int goodix_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(goodix_pm_ops, goodix_suspend, goodix_resume);
+=======
+static SIMPLE_DEV_PM_OPS(goodix_pm_ops, goodix_suspend, goodix_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id goodix_ts_id[] = {
 	{ "GDIX1001:00", 0 },
@@ -1544,14 +1574,22 @@ MODULE_DEVICE_TABLE(of, goodix_of_match);
 #endif
 
 static struct i2c_driver goodix_ts_driver = {
+<<<<<<< HEAD
 	.probe_new = goodix_ts_probe,
+=======
+	.probe = goodix_ts_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = goodix_ts_remove,
 	.id_table = goodix_ts_id,
 	.driver = {
 		.name = "Goodix-TS",
 		.acpi_match_table = ACPI_PTR(goodix_acpi_match),
 		.of_match_table = of_match_ptr(goodix_of_match),
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&goodix_pm_ops),
+=======
+		.pm = &goodix_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 module_i2c_driver(goodix_ts_driver);

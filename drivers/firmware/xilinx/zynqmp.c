@@ -206,7 +206,11 @@ static int do_feature_check_call(const u32 api_id)
 	}
 
 	/* Add new entry if not present */
+<<<<<<< HEAD
 	feature_data = kmalloc(sizeof(*feature_data), GFP_ATOMIC);
+=======
+	feature_data = kmalloc(sizeof(*feature_data), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!feature_data)
 		return -ENOMEM;
 
@@ -738,6 +742,7 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_get_pll_frac_data);
  */
 int zynqmp_pm_set_sd_tapdelay(u32 node_id, u32 type, u32 value)
 {
+<<<<<<< HEAD
 	u32 reg = (type == PM_TAPDELAY_INPUT) ? SD_ITAPDLY : SD_OTAPDLYSEL;
 	u32 mask = (node_id == NODE_SD_0) ? GENMASK(15, 0) : GENMASK(31, 16);
 
@@ -763,6 +768,10 @@ int zynqmp_pm_set_sd_tapdelay(u32 node_id, u32 type, u32 value)
 	 * part of IOCTL_SET_SD_TAPDELAY which clears SDx_ITAPDLYENA bits.
 	 */
 	return zynqmp_pm_invoke_fn(PM_MMIO_WRITE, reg, mask, 0, 0, NULL);
+=======
+	return zynqmp_pm_invoke_fn(PM_IOCTL, node_id, IOCTL_SET_SD_TAPDELAY,
+				   type, value, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(zynqmp_pm_set_sd_tapdelay);
 
@@ -866,6 +875,7 @@ int zynqmp_pm_read_pggs(u32 index, u32 *value)
 }
 EXPORT_SYMBOL_GPL(zynqmp_pm_read_pggs);
 
+<<<<<<< HEAD
 int zynqmp_pm_set_tapdelay_bypass(u32 index, u32 value)
 {
 	return zynqmp_pm_invoke_fn(PM_IOCTL, 0, IOCTL_SET_TAPDELAY_BYPASS,
@@ -873,6 +883,8 @@ int zynqmp_pm_set_tapdelay_bypass(u32 index, u32 value)
 }
 EXPORT_SYMBOL_GPL(zynqmp_pm_set_tapdelay_bypass);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * zynqmp_pm_set_boot_health_status() - PM API for setting healthy boot status
  * @value:	Status value to be written
@@ -972,6 +984,7 @@ int zynqmp_pm_fpga_get_status(u32 *value)
 EXPORT_SYMBOL_GPL(zynqmp_pm_fpga_get_status);
 
 /**
+<<<<<<< HEAD
  * zynqmp_pm_fpga_get_config_status - Get the FPGA configuration status.
  * @value: Buffer to store FPGA configuration status.
  *
@@ -1005,6 +1018,8 @@ int zynqmp_pm_fpga_get_config_status(u32 *value)
 EXPORT_SYMBOL_GPL(zynqmp_pm_fpga_get_config_status);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * zynqmp_pm_pinctrl_request - Request Pin from firmware
  * @pin: Pin number to request
  *
@@ -1223,6 +1238,7 @@ int zynqmp_pm_release_node(const u32 node)
 EXPORT_SYMBOL_GPL(zynqmp_pm_release_node);
 
 /**
+<<<<<<< HEAD
  * zynqmp_pm_get_rpu_mode() - Get RPU mode
  * @node_id:	Node ID of the device
  * @rpu_mode:	return by reference value
@@ -1320,6 +1336,8 @@ int zynqmp_pm_request_wake(const u32 node,
 EXPORT_SYMBOL_GPL(zynqmp_pm_request_wake);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * zynqmp_pm_set_requirement() - PM call to set requirement for PM slaves
  * @node:		Node ID of the slave
  * @capabilities:	Requested capabilities of the slave

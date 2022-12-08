@@ -104,7 +104,10 @@ struct mod_hdcp_displayport {
 	uint8_t rev;
 	uint8_t assr_enabled;
 	uint8_t mst_enabled;
+<<<<<<< HEAD
 	uint8_t dp2_enabled;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	uint8_t usb4_enabled;
 };
 

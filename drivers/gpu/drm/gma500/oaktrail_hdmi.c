@@ -27,9 +27,13 @@
 #include <linux/delay.h>
 
 #include <drm/drm.h>
+<<<<<<< HEAD
 #include <drm/drm_crtc_helper.h>
 #include <drm/drm_edid.h>
 #include <drm/drm_modeset_helper_vtables.h>
+=======
+#include <drm/drm_edid.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_simple_kms_helper.h>
 
 #include "psb_drv.h"

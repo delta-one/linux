@@ -65,10 +65,17 @@ nvkm_falcon_intr(struct nvkm_engine *engine)
 	u32 dest = nvkm_rd32(device, base + 0x01c);
 	u32 intr = nvkm_rd32(device, base + 0x008) & dest & ~(dest >> 16);
 	u32 inst = nvkm_rd32(device, base + 0x050) & 0x3fffffff;
+<<<<<<< HEAD
 	struct nvkm_chan *chan;
 	unsigned long flags;
 
 	chan = nvkm_chan_get_inst(engine, (u64)inst << 12, &flags);
+=======
+	struct nvkm_fifo_chan *chan;
+	unsigned long flags;
+
+	chan = nvkm_fifo_chan_inst(device->fifo, (u64)inst << 12, &flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (intr & 0x00000040) {
 		if (falcon->func->intr) {
@@ -89,7 +96,11 @@ nvkm_falcon_intr(struct nvkm_engine *engine)
 		nvkm_wr32(device, base + 0x004, intr);
 	}
 
+<<<<<<< HEAD
 	nvkm_chan_put(&chan, flags);
+=======
+	nvkm_fifo_chan_put(device->fifo, flags, &chan);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int

@@ -13,7 +13,10 @@
 #include <ctype.h>
 #include <endian.h>
 #include <errno.h>
+<<<<<<< HEAD
 #include <limits.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/err.h>
 #include <linux/btf.h>
 #include <linux/kernel.h>
@@ -118,6 +121,7 @@ struct btf_dump {
 	struct btf_dump_data *typed_dump;
 };
 
+<<<<<<< HEAD
 static size_t str_hash_fn(long key, void *ctx)
 {
 	return str_hash((void *)key);
@@ -126,6 +130,16 @@ static size_t str_hash_fn(long key, void *ctx)
 static bool str_equal_fn(long a, long b, void *ctx)
 {
 	return strcmp((void *)a, (void *)b) == 0;
+=======
+static size_t str_hash_fn(const void *key, void *ctx)
+{
+	return str_hash(key);
+}
+
+static bool str_equal_fn(const void *a, const void *b, void *ctx)
+{
+	return strcmp(a, b) == 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const char *btf_name_of(const struct btf_dump *d, __u32 name_off)
@@ -220,6 +234,7 @@ static int btf_dump_resize(struct btf_dump *d)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void btf_dump_free_names(struct hashmap *map)
 {
 	size_t bkt;
@@ -231,6 +246,8 @@ static void btf_dump_free_names(struct hashmap *map)
 	hashmap__free(map);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void btf_dump__free(struct btf_dump *d)
 {
 	int i;
@@ -249,8 +266,13 @@ void btf_dump__free(struct btf_dump *d)
 	free(d->cached_names);
 	free(d->emit_queue);
 	free(d->decl_stack);
+<<<<<<< HEAD
 	btf_dump_free_names(d->type_names);
 	btf_dump_free_names(d->ident_names);
+=======
+	hashmap__free(d->type_names);
+	hashmap__free(d->ident_names);
+>>>>>>> b7ba80a49124 (Commit)
 
 	free(d);
 }
@@ -834,9 +856,20 @@ static bool btf_is_struct_packed(const struct btf *btf, __u32 id,
 				 const struct btf_type *t)
 {
 	const struct btf_member *m;
+<<<<<<< HEAD
 	int max_align = 1, align, i, bit_sz;
 	__u16 vlen;
 
+=======
+	int align, i, bit_sz;
+	__u16 vlen;
+
+	align = btf__align_of(btf, id);
+	/* size of a non-packed struct has to be a multiple of its alignment*/
+	if (align && t->size % align)
+		return true;
+
+>>>>>>> b7ba80a49124 (Commit)
 	m = btf_members(t);
 	vlen = btf_vlen(t);
 	/* all non-bitfield fields have to be naturally aligned */
@@ -845,11 +878,16 @@ static bool btf_is_struct_packed(const struct btf *btf, __u32 id,
 		bit_sz = btf_member_bitfield_size(t, i);
 		if (align && bit_sz == 0 && m->offset % (8 * align) != 0)
 			return true;
+<<<<<<< HEAD
 		max_align = max(align, max_align);
 	}
 	/* size of a non-packed struct has to be a multiple of its alignment */
 	if (t->size % max_align != 0)
 		return true;
+=======
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * if original struct was marked as packed, but its layout is
 	 * naturally aligned, we'll detect that it's not packed
@@ -857,6 +895,7 @@ static bool btf_is_struct_packed(const struct btf *btf, __u32 id,
 	return false;
 }
 
+<<<<<<< HEAD
 static void btf_dump_emit_bit_padding(const struct btf_dump *d,
 				      int cur_off, int next_off, int next_align,
 				      bool in_bitfield, int lvl)
@@ -948,6 +987,46 @@ static void btf_dump_emit_bit_padding(const struct btf_dump *d,
 			cur_off += bits;
 			break;
 		}
+=======
+static int chip_away_bits(int total, int at_most)
+{
+	return total % at_most ? : at_most;
+}
+
+static void btf_dump_emit_bit_padding(const struct btf_dump *d,
+				      int cur_off, int m_off, int m_bit_sz,
+				      int align, int lvl)
+{
+	int off_diff = m_off - cur_off;
+	int ptr_bits = d->ptr_sz * 8;
+
+	if (off_diff <= 0)
+		/* no gap */
+		return;
+	if (m_bit_sz == 0 && off_diff < align * 8)
+		/* natural padding will take care of a gap */
+		return;
+
+	while (off_diff > 0) {
+		const char *pad_type;
+		int pad_bits;
+
+		if (ptr_bits > 32 && off_diff > 32) {
+			pad_type = "long";
+			pad_bits = chip_away_bits(off_diff, ptr_bits);
+		} else if (off_diff > 16) {
+			pad_type = "int";
+			pad_bits = chip_away_bits(off_diff, 32);
+		} else if (off_diff > 8) {
+			pad_type = "short";
+			pad_bits = chip_away_bits(off_diff, 16);
+		} else {
+			pad_type = "char";
+			pad_bits = chip_away_bits(off_diff, 8);
+		}
+		btf_dump_printf(d, "\n%s%s: %d;", pfx(lvl), pad_type, pad_bits);
+		off_diff -= pad_bits;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -967,11 +1046,17 @@ static void btf_dump_emit_struct_def(struct btf_dump *d,
 {
 	const struct btf_member *m = btf_members(t);
 	bool is_struct = btf_is_struct(t);
+<<<<<<< HEAD
 	bool packed, prev_bitfield = false;
 	int align, i, off = 0;
 	__u16 vlen = btf_vlen(t);
 
 	align = btf__align_of(d->btf, id);
+=======
+	int align, i, packed, off = 0;
+	__u16 vlen = btf_vlen(t);
+
+>>>>>>> b7ba80a49124 (Commit)
 	packed = is_struct ? btf_is_struct_packed(d->btf, id, t) : 0;
 
 	btf_dump_printf(d, "%s%s%s {",
@@ -981,23 +1066,34 @@ static void btf_dump_emit_struct_def(struct btf_dump *d,
 
 	for (i = 0; i < vlen; i++, m++) {
 		const char *fname;
+<<<<<<< HEAD
 		int m_off, m_sz, m_align;
 		bool in_bitfield;
+=======
+		int m_off, m_sz;
+>>>>>>> b7ba80a49124 (Commit)
 
 		fname = btf_name_of(d, m->name_off);
 		m_sz = btf_member_bitfield_size(t, i);
 		m_off = btf_member_bit_offset(t, i);
+<<<<<<< HEAD
 		m_align = packed ? 1 : btf__align_of(d->btf, m->type);
 
 		in_bitfield = prev_bitfield && m_sz != 0;
 
 		btf_dump_emit_bit_padding(d, off, m_off, m_align, in_bitfield, lvl + 1);
+=======
+		align = packed ? 1 : btf__align_of(d->btf, m->type);
+
+		btf_dump_emit_bit_padding(d, off, m_off, m_sz, align, lvl + 1);
+>>>>>>> b7ba80a49124 (Commit)
 		btf_dump_printf(d, "\n%s", pfx(lvl + 1));
 		btf_dump_emit_type_decl(d, m->type, fname, lvl + 1);
 
 		if (m_sz) {
 			btf_dump_printf(d, ": %d", m_sz);
 			off = m_off + m_sz;
+<<<<<<< HEAD
 			prev_bitfield = true;
 		} else {
 			m_sz = max((__s64)0, btf__resolve_size(d->btf, m->type));
@@ -1005,10 +1101,17 @@ static void btf_dump_emit_struct_def(struct btf_dump *d,
 			prev_bitfield = false;
 		}
 
+=======
+		} else {
+			m_sz = max((__s64)0, btf__resolve_size(d->btf, m->type));
+			off = m_off + m_sz * 8;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		btf_dump_printf(d, ";");
 	}
 
 	/* pad at the end, if necessary */
+<<<<<<< HEAD
 	if (is_struct)
 		btf_dump_emit_bit_padding(d, off, t->size * 8, align, false, lvl + 1);
 
@@ -1022,6 +1125,17 @@ static void btf_dump_emit_struct_def(struct btf_dump *d,
 	} else {
 		btf_dump_printf(d, "}");
 	}
+=======
+	if (is_struct) {
+		align = packed ? 1 : btf__align_of(d->btf, id);
+		btf_dump_emit_bit_padding(d, off, t->size * 8, 0, align,
+					  lvl + 1);
+	}
+
+	if (vlen)
+		btf_dump_printf(d, "\n");
+	btf_dump_printf(d, "%s}", pfx(lvl));
+>>>>>>> b7ba80a49124 (Commit)
 	if (packed)
 		btf_dump_printf(d, " __attribute__((packed))");
 }
@@ -1133,6 +1247,7 @@ static void btf_dump_emit_enum_def(struct btf_dump *d, __u32 id,
 	else
 		btf_dump_emit_enum64_val(d, t, lvl, vlen);
 	btf_dump_printf(d, "\n%s}", pfx(lvl));
+<<<<<<< HEAD
 
 	/* special case enums with special sizes */
 	if (t->size == 1) {
@@ -1170,6 +1285,8 @@ static void btf_dump_emit_enum_def(struct btf_dump *d, __u32 id,
 			btf_dump_printf(d, " __attribute__((mode(word)))");
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void btf_dump_emit_fwd_def(struct btf_dump *d, __u32 id,
@@ -1632,6 +1749,7 @@ static void btf_dump_emit_type_cast(struct btf_dump *d, __u32 id,
 static size_t btf_dump_name_dups(struct btf_dump *d, struct hashmap *name_map,
 				 const char *orig_name)
 {
+<<<<<<< HEAD
 	char *old_name, *new_name;
 	size_t dup_cnt = 0;
 	int err;
@@ -1648,6 +1766,13 @@ static size_t btf_dump_name_dups(struct btf_dump *d, struct hashmap *name_map,
 		free(new_name);
 
 	free(old_name);
+=======
+	size_t dup_cnt = 0;
+
+	hashmap__find(name_map, orig_name, (void **)&dup_cnt);
+	dup_cnt++;
+	hashmap__set(name_map, orig_name, (void *)dup_cnt, NULL, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return dup_cnt;
 }
@@ -2086,7 +2211,11 @@ static int btf_dump_struct_data(struct btf_dump *d,
 {
 	const struct btf_member *m = btf_members(t);
 	__u16 n = btf_vlen(t);
+<<<<<<< HEAD
 	int i, err = 0;
+=======
+	int i, err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* note that we increment depth before calling btf_dump_print() below;
 	 * this is intentional.  btf_dump_data_newline() will not print a

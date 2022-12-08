@@ -18,6 +18,14 @@
  * with 4K (section size = 2M) but not with 16K (section size = 32M) or
  * 64K (section size = 512M).
  */
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_ARM64_4K_PAGES
+#define ARM64_KERNEL_USES_PMD_MAPS 1
+#else
+#define ARM64_KERNEL_USES_PMD_MAPS 0
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * The idmap and swapper page tables need some space reserved in the kernel
@@ -29,7 +37,11 @@
  * VA range, so pages required to map highest possible PA are reserved in all
  * cases.
  */
+<<<<<<< HEAD
 #ifdef CONFIG_ARM64_4K_PAGES
+=======
+#if ARM64_KERNEL_USES_PMD_MAPS
+>>>>>>> b7ba80a49124 (Commit)
 #define SWAPPER_PGTABLE_LEVELS	(CONFIG_PGTABLE_LEVELS - 1)
 #else
 #define SWAPPER_PGTABLE_LEVELS	(CONFIG_PGTABLE_LEVELS)
@@ -91,7 +103,11 @@
 #define INIT_IDMAP_DIR_PAGES	EARLY_PAGES(KIMAGE_VADDR, _end + MAX_FDT_SIZE + SWAPPER_BLOCK_SIZE, 1)
 
 /* Initial memory map size */
+<<<<<<< HEAD
 #ifdef CONFIG_ARM64_4K_PAGES
+=======
+#if ARM64_KERNEL_USES_PMD_MAPS
+>>>>>>> b7ba80a49124 (Commit)
 #define SWAPPER_BLOCK_SHIFT	PMD_SHIFT
 #define SWAPPER_BLOCK_SIZE	PMD_SIZE
 #define SWAPPER_TABLE_SHIFT	PUD_SHIFT
@@ -107,7 +123,11 @@
 #define SWAPPER_PTE_FLAGS	(PTE_TYPE_PAGE | PTE_AF | PTE_SHARED)
 #define SWAPPER_PMD_FLAGS	(PMD_TYPE_SECT | PMD_SECT_AF | PMD_SECT_S)
 
+<<<<<<< HEAD
 #ifdef CONFIG_ARM64_4K_PAGES
+=======
+#if ARM64_KERNEL_USES_PMD_MAPS
+>>>>>>> b7ba80a49124 (Commit)
 #define SWAPPER_RW_MMUFLAGS	(PMD_ATTRINDX(MT_NORMAL) | SWAPPER_PMD_FLAGS)
 #define SWAPPER_RX_MMUFLAGS	(SWAPPER_RW_MMUFLAGS | PMD_SECT_RDONLY)
 #else

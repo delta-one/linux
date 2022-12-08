@@ -4,7 +4,10 @@
  * Copyright (c) 2015-2016 HGST, a Western Digital Company.
  */
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/slab.h>
@@ -268,7 +271,11 @@ static ssize_t nvmet_param_pi_enable_store(struct config_item *item,
 	struct nvmet_port *port = to_nvmet_port(item);
 	bool val;
 
+<<<<<<< HEAD
 	if (kstrtobool(page, &val))
+=======
+	if (strtobool(page, &val))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (nvmet_is_port_enabled(port, __func__))
@@ -533,7 +540,11 @@ static ssize_t nvmet_ns_enable_store(struct config_item *item,
 	bool enable;
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (kstrtobool(page, &enable))
+=======
+	if (strtobool(page, &enable))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (enable)
@@ -557,7 +568,11 @@ static ssize_t nvmet_ns_buffered_io_store(struct config_item *item,
 	struct nvmet_ns *ns = to_nvmet_ns(item);
 	bool val;
 
+<<<<<<< HEAD
 	if (kstrtobool(page, &val))
+=======
+	if (strtobool(page, &val))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	mutex_lock(&ns->subsys->lock);
@@ -580,7 +595,11 @@ static ssize_t nvmet_ns_revalidate_size_store(struct config_item *item,
 	struct nvmet_ns *ns = to_nvmet_ns(item);
 	bool val;
 
+<<<<<<< HEAD
 	if (kstrtobool(page, &val))
+=======
+	if (strtobool(page, &val))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (!val)
@@ -729,7 +748,11 @@ static ssize_t nvmet_passthru_enable_store(struct config_item *item,
 	bool enable;
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (kstrtobool(page, &enable))
+=======
+	if (strtobool(page, &enable))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (enable)
@@ -996,7 +1019,11 @@ static ssize_t nvmet_subsys_attr_allow_any_host_store(struct config_item *item,
 	bool allow_any_host;
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (kstrtobool(page, &allow_any_host))
+=======
+	if (strtobool(page, &allow_any_host))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	down_write(&nvmet_config_sem);
@@ -1216,7 +1243,10 @@ static ssize_t nvmet_subsys_attr_model_store_locked(struct nvmet_subsys *subsys,
 		const char *page, size_t count)
 {
 	int pos = 0, len;
+<<<<<<< HEAD
 	char *val;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (subsys->subsys_discovered) {
 		pr_err("Can't set model number. %s is already assigned\n",
@@ -1239,11 +1269,17 @@ static ssize_t nvmet_subsys_attr_model_store_locked(struct nvmet_subsys *subsys,
 			return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	val = kmemdup_nul(page, len, GFP_KERNEL);
 	if (!val)
 		return -ENOMEM;
 	kfree(subsys->model_number);
 	subsys->model_number = val;
+=======
+	subsys->model_number = kmemdup_nul(page, len, GFP_KERNEL);
+	if (!subsys->model_number)
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 	return count;
 }
 
@@ -1263,6 +1299,7 @@ static ssize_t nvmet_subsys_attr_model_store(struct config_item *item,
 }
 CONFIGFS_ATTR(nvmet_subsys_, attr_model);
 
+<<<<<<< HEAD
 static ssize_t nvmet_subsys_attr_ieee_oui_show(struct config_item *item,
 					    char *page)
 {
@@ -1373,6 +1410,8 @@ static ssize_t nvmet_subsys_attr_firmware_store(struct config_item *item,
 }
 CONFIGFS_ATTR(nvmet_subsys_, attr_firmware);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_BLK_DEV_INTEGRITY
 static ssize_t nvmet_subsys_attr_pi_enable_show(struct config_item *item,
 						char *page)
@@ -1386,7 +1425,11 @@ static ssize_t nvmet_subsys_attr_pi_enable_store(struct config_item *item,
 	struct nvmet_subsys *subsys = to_subsys(item);
 	bool pi_enable;
 
+<<<<<<< HEAD
 	if (kstrtobool(page, &pi_enable))
+=======
+	if (strtobool(page, &pi_enable))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	subsys->pi_support = pi_enable;
@@ -1404,10 +1447,19 @@ static ssize_t nvmet_subsys_attr_qid_max_show(struct config_item *item,
 static ssize_t nvmet_subsys_attr_qid_max_store(struct config_item *item,
 					       const char *page, size_t cnt)
 {
+<<<<<<< HEAD
 	struct nvmet_subsys *subsys = to_subsys(item);
 	struct nvmet_ctrl *ctrl;
 	u16 qid_max;
 
+=======
+	struct nvmet_port *port = to_nvmet_port(item);
+	u16 qid_max;
+
+	if (nvmet_is_port_enabled(port, __func__))
+		return -EACCES;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (sscanf(page, "%hu\n", &qid_max) != 1)
 		return -EINVAL;
 
@@ -1415,6 +1467,7 @@ static ssize_t nvmet_subsys_attr_qid_max_store(struct config_item *item,
 		return -EINVAL;
 
 	down_write(&nvmet_config_sem);
+<<<<<<< HEAD
 	subsys->max_qid = qid_max;
 
 	/* Force reconnect */
@@ -1422,6 +1475,10 @@ static ssize_t nvmet_subsys_attr_qid_max_store(struct config_item *item,
 		ctrl->ops->delete_ctrl(ctrl);
 	up_write(&nvmet_config_sem);
 
+=======
+	to_subsys(item)->max_qid = qid_max;
+	up_write(&nvmet_config_sem);
+>>>>>>> b7ba80a49124 (Commit)
 	return cnt;
 }
 CONFIGFS_ATTR(nvmet_subsys_, attr_qid_max);
@@ -1434,8 +1491,11 @@ static struct configfs_attribute *nvmet_subsys_attrs[] = {
 	&nvmet_subsys_attr_attr_cntlid_max,
 	&nvmet_subsys_attr_attr_model,
 	&nvmet_subsys_attr_attr_qid_max,
+<<<<<<< HEAD
 	&nvmet_subsys_attr_attr_ieee_oui,
 	&nvmet_subsys_attr_attr_firmware,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_BLK_DEV_INTEGRITY
 	&nvmet_subsys_attr_attr_pi_enable,
 #endif
@@ -1515,7 +1575,11 @@ static ssize_t nvmet_referral_enable_store(struct config_item *item,
 	struct nvmet_port *port = to_nvmet_port(item);
 	bool enable;
 
+<<<<<<< HEAD
 	if (kstrtobool(page, &enable))
+=======
+	if (strtobool(page, &enable))
+>>>>>>> b7ba80a49124 (Commit)
 		goto inval;
 
 	if (enable)
@@ -1959,7 +2023,10 @@ static void nvmet_host_release(struct config_item *item)
 
 #ifdef CONFIG_NVME_TARGET_AUTH
 	kfree(host->dhchap_secret);
+<<<<<<< HEAD
 	kfree(host->dhchap_ctrl_secret);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	kfree(host);
 }

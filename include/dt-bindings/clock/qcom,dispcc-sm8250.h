@@ -64,7 +64,10 @@
 #define DISP_CC_MDSS_EDP_LINK_INTF_CLK		54
 #define DISP_CC_MDSS_EDP_PIXEL_CLK		55
 #define DISP_CC_MDSS_EDP_PIXEL_CLK_SRC		56
+<<<<<<< HEAD
 #define DISP_CC_MDSS_EDP_LINK_DIV_CLK_SRC	57
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* DISP_CC Reset */
 #define DISP_CC_MDSS_CORE_BCR			0

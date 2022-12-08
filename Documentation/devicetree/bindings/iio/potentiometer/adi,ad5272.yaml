@@ -44,7 +44,11 @@ examples:
 
         potentiometer@2f {
             compatible = "adi,ad5272-020";
+<<<<<<< HEAD
             reg = <0x2f>;
+=======
+            reg = <0x2F>;
+>>>>>>> b7ba80a49124 (Commit)
             reset-gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;
         };
     };

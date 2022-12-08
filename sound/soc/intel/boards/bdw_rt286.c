@@ -73,6 +73,7 @@ static int codec_link_init(struct snd_soc_pcm_runtime *rtd)
 	return snd_soc_component_set_jack(codec, &card_headset, NULL);
 }
 
+<<<<<<< HEAD
 static void codec_link_exit(struct snd_soc_pcm_runtime *rtd)
 {
 	struct snd_soc_component *codec = asoc_rtd_to_codec(rtd, 0)->component;
@@ -80,6 +81,8 @@ static void codec_link_exit(struct snd_soc_pcm_runtime *rtd)
 	snd_soc_component_set_jack(codec, NULL, NULL);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int codec_link_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
 				      struct snd_pcm_hw_params *params)
 {
@@ -172,7 +175,10 @@ static struct snd_soc_dai_link card_dai_links[] = {
 		.nonatomic = 1,
 		.no_pcm = 1,
 		.init = codec_link_init,
+<<<<<<< HEAD
 		.exit = codec_link_exit,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_CBC_CFC,
 		.ignore_pmdown_time = 1,
 		.be_hw_params_fixup = codec_link_hw_params_fixup,
@@ -183,6 +189,7 @@ static struct snd_soc_dai_link card_dai_links[] = {
 	},
 };
 
+<<<<<<< HEAD
 static int card_suspend_pre(struct snd_soc_card *card)
 {
 	struct snd_soc_dai *codec_dai = snd_soc_card_get_codec_dai(card, "rt286-aif1");
@@ -195,12 +202,50 @@ static int card_resume_post(struct snd_soc_card *card)
 	struct snd_soc_dai *codec_dai = snd_soc_card_get_codec_dai(card, "rt286-aif1");
 
 	return snd_soc_component_set_jack(codec_dai->component, &card_headset, NULL);
+=======
+static void bdw_rt286_disable_jack(struct snd_soc_card *card)
+{
+	struct snd_soc_component *component;
+
+	for_each_card_components(card, component) {
+		if (!strcmp(component->name, "i2c-INT343A:00")) {
+			dev_dbg(component->dev, "disabling jack detect before going to suspend.\n");
+			snd_soc_component_set_jack(component, NULL, NULL);
+			break;
+		}
+	}
+}
+
+static int bdw_rt286_suspend(struct snd_soc_card *card)
+{
+	bdw_rt286_disable_jack(card);
+
+	return 0;
+}
+
+static int bdw_rt286_resume(struct snd_soc_card *card)
+{
+	struct snd_soc_component *component;
+
+	for_each_card_components(card, component) {
+		if (!strcmp(component->name, "i2c-INT343A:00")) {
+			dev_dbg(component->dev, "enabling jack detect for resume.\n");
+			snd_soc_component_set_jack(component, &card_headset, NULL);
+			break;
+		}
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct snd_soc_card bdw_rt286_card = {
 	.owner = THIS_MODULE,
+<<<<<<< HEAD
 	.suspend_pre = card_suspend_pre,
 	.resume_post = card_resume_post,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.dai_link = card_dai_links,
 	.num_links = ARRAY_SIZE(card_dai_links),
 	.controls = card_controls,
@@ -210,6 +255,11 @@ static struct snd_soc_card bdw_rt286_card = {
 	.dapm_routes = card_routes,
 	.num_dapm_routes = ARRAY_SIZE(card_routes),
 	.fully_routed = true,
+<<<<<<< HEAD
+=======
+	.suspend_pre = bdw_rt286_suspend,
+	.resume_post = bdw_rt286_resume,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Use space before codec name to simplify card ID, and simplify driver name. */
@@ -241,8 +291,23 @@ static int bdw_rt286_probe(struct platform_device *pdev)
 	return devm_snd_soc_register_card(dev, &bdw_rt286_card);
 }
 
+<<<<<<< HEAD
 static struct platform_driver bdw_rt286_driver = {
 	.probe = bdw_rt286_probe,
+=======
+static int bdw_rt286_remove(struct platform_device *pdev)
+{
+	struct snd_soc_card *card = platform_get_drvdata(pdev);
+
+	bdw_rt286_disable_jack(card);
+
+	return 0;
+}
+
+static struct platform_driver bdw_rt286_driver = {
+	.probe = bdw_rt286_probe,
+	.remove = bdw_rt286_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "bdw_rt286",
 		.pm = &snd_soc_pm_ops

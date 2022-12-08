@@ -173,6 +173,7 @@ done:
 static int xvip_pipeline_validate(struct xvip_pipeline *pipe,
 				  struct xvip_dma *start)
 {
+<<<<<<< HEAD
 	struct media_pipeline_pad_iter iter;
 	unsigned int num_inputs = 0;
 	unsigned int num_outputs = 0;
@@ -186,6 +187,33 @@ static int xvip_pipeline_validate(struct xvip_pipeline *pipe,
 			continue;
 
 		dma = to_xvip_dma(media_entity_to_video_device(pad->entity));
+=======
+	struct media_graph graph;
+	struct media_entity *entity = &start->video.entity;
+	struct media_device *mdev = entity->graph_obj.mdev;
+	unsigned int num_inputs = 0;
+	unsigned int num_outputs = 0;
+	int ret;
+
+	mutex_lock(&mdev->graph_mutex);
+
+	/* Walk the graph to locate the video nodes. */
+	ret = media_graph_walk_init(&graph, mdev);
+	if (ret) {
+		mutex_unlock(&mdev->graph_mutex);
+		return ret;
+	}
+
+	media_graph_walk_start(&graph, entity);
+
+	while ((entity = media_graph_walk_next(&graph))) {
+		struct xvip_dma *dma;
+
+		if (entity->function != MEDIA_ENT_F_IO_V4L)
+			continue;
+
+		dma = to_xvip_dma(media_entity_to_video_device(entity));
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (dma->pad.flags & MEDIA_PAD_FL_SINK) {
 			pipe->output = dma;
@@ -195,6 +223,13 @@ static int xvip_pipeline_validate(struct xvip_pipeline *pipe,
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	mutex_unlock(&mdev->graph_mutex);
+
+	media_graph_walk_cleanup(&graph);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* We need exactly one output and zero or one input. */
 	if (num_outputs != 1 || num_inputs > 1)
 		return -EPIPE;
@@ -386,9 +421,16 @@ static int xvip_dma_start_streaming(struct vb2_queue *vq, unsigned int count)
 	 * Use the pipeline object embedded in the first DMA object that starts
 	 * streaming.
 	 */
+<<<<<<< HEAD
 	pipe = to_xvip_pipeline(&dma->video) ? : &dma->pipe;
 
 	ret = video_device_pipeline_start(&dma->video, &pipe->pipe);
+=======
+	pipe = dma->video.entity.pipe
+	     ? to_xvip_pipeline(&dma->video.entity) : &dma->pipe;
+
+	ret = media_pipeline_start(&dma->video.entity, &pipe->pipe);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		goto error;
 
@@ -414,7 +456,11 @@ static int xvip_dma_start_streaming(struct vb2_queue *vq, unsigned int count)
 	return 0;
 
 error_stop:
+<<<<<<< HEAD
 	video_device_pipeline_stop(&dma->video);
+=======
+	media_pipeline_stop(&dma->video.entity);
+>>>>>>> b7ba80a49124 (Commit)
 
 error:
 	/* Give back all queued buffers to videobuf2. */
@@ -431,7 +477,11 @@ error:
 static void xvip_dma_stop_streaming(struct vb2_queue *vq)
 {
 	struct xvip_dma *dma = vb2_get_drv_priv(vq);
+<<<<<<< HEAD
 	struct xvip_pipeline *pipe = to_xvip_pipeline(&dma->video);
+=======
+	struct xvip_pipeline *pipe = to_xvip_pipeline(&dma->video.entity);
+>>>>>>> b7ba80a49124 (Commit)
 	struct xvip_dma_buffer *buf, *nbuf;
 
 	/* Stop the pipeline. */
@@ -442,7 +492,11 @@ static void xvip_dma_stop_streaming(struct vb2_queue *vq)
 
 	/* Cleanup the pipeline and mark it as being stopped. */
 	xvip_pipeline_cleanup(pipe);
+<<<<<<< HEAD
 	video_device_pipeline_stop(&dma->video);
+=======
+	media_pipeline_stop(&dma->video.entity);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Give back all queued buffers to videobuf2. */
 	spin_lock_irq(&dma->queued_lock);

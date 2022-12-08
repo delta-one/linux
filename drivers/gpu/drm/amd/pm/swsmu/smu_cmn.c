@@ -233,6 +233,7 @@ static void __smu_cmn_send_msg(struct smu_context *smu,
 	WREG32(smu->msg_reg, msg);
 }
 
+<<<<<<< HEAD
 static int __smu_cmn_send_debug_msg(struct smu_context *smu,
 			       u32 msg,
 			       u32 param)
@@ -245,6 +246,8 @@ static int __smu_cmn_send_debug_msg(struct smu_context *smu,
 
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * smu_cmn_send_msg_without_waiting -- send the message; don't wait for status
  * @smu: pointer to an SMU context
@@ -398,6 +401,7 @@ int smu_cmn_send_smc_msg(struct smu_context *smu,
 					       read_arg);
 }
 
+<<<<<<< HEAD
 int smu_cmn_send_debug_smc_msg(struct smu_context *smu,
 			 uint32_t msg)
 {
@@ -410,6 +414,8 @@ int smu_cmn_send_debug_smc_msg_with_param(struct smu_context *smu,
 	return __smu_cmn_send_debug_msg(smu, msg, param);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int smu_cmn_to_asic_specific_index(struct smu_context *smu,
 				   enum smu_cmn2asic_mapping_type type,
 				   uint32_t index)
@@ -478,13 +484,21 @@ int smu_cmn_to_asic_specific_index(struct smu_context *smu,
 		return mapping.map_to;
 
 	case CMN2ASIC_MAPPING_WORKLOAD:
+<<<<<<< HEAD
 		if (index >= PP_SMC_POWER_PROFILE_COUNT ||
+=======
+		if (index > PP_SMC_POWER_PROFILE_WINDOW3D ||
+>>>>>>> b7ba80a49124 (Commit)
 		    !smu->workload_map)
 			return -EINVAL;
 
 		mapping = smu->workload_map[index];
 		if (!mapping.valid_mapping)
+<<<<<<< HEAD
 			return -ENOTSUPP;
+=======
+			return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 		return mapping.map_to;
 

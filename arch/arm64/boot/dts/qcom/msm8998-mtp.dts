@@ -46,7 +46,11 @@
 };
 
 &blsp1_uart3_on {
+<<<<<<< HEAD
 	rx-pins {
+=======
+	rx {
+>>>>>>> b7ba80a49124 (Commit)
 		/delete-property/ bias-disable;
 		/*
 		 * Configure a pull-up on 45 (RX). This is needed to
@@ -57,7 +61,11 @@
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	cts-pins {
+=======
+	cts {
+>>>>>>> b7ba80a49124 (Commit)
 		/delete-property/ bias-disable;
 		/*
 		 * Configure a pull-down on 47 (CTS) to match the pull
@@ -124,11 +132,23 @@
 };
 
 &funnel4 {
+<<<<<<< HEAD
 	/* FIXME: Figure out why clock late_initcall crashes the board with this enabled. */
 };
 
 &funnel5 {
 	/* FIXME: Figure out why clock late_initcall crashes the board with this enabled. */
+=======
+	// FIXME: Figure out why clock late_initcall crashes the board with
+	// this enabled.
+	// status = "okay";
+};
+
+&funnel5 {
+	// FIXME: Figure out why clock late_initcall crashes the board with
+	// this enabled.
+	// status = "okay";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &pcie0 {
@@ -164,7 +184,11 @@
 };
 
 &rpm_requests {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pm8998-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pm8998-regulators";
 
 		vdd_s1-supply = <&vph_pwr>;
@@ -362,7 +386,11 @@
 
 	};
 
+<<<<<<< HEAD
 	regulators-1 {
+=======
+	pmi8998-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pmi8998-regulators";
 
 		vdd_bob-supply = <&vph_pwr>;

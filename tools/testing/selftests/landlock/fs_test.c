@@ -11,7 +11,10 @@
 #include <fcntl.h>
 #include <linux/landlock.h>
 #include <sched.h>
+<<<<<<< HEAD
 #include <stdio.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <string.h>
 #include <sys/capability.h>
 #include <sys/mount.h>
@@ -90,6 +93,7 @@ static const char dir_s3d3[] = TMP_DIR "/s3d1/s3d2/s3d3";
  *         └── s3d3
  */
 
+<<<<<<< HEAD
 static bool fgrep(FILE *const inf, const char *const str)
 {
 	char line[32];
@@ -124,6 +128,8 @@ static bool supports_overlayfs(void)
 	return res;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void mkdir_parents(struct __test_metadata *const _metadata,
 			  const char *const path)
 {
@@ -3205,6 +3211,17 @@ static int test_truncate(const char *const path)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+/* Invokes ftruncate(2) and returns its errno or 0. */
+static int test_ftruncate(int fd)
+{
+	if (ftruncate(fd, 10) < 0)
+		return errno;
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Invokes creat(2) and returns its errno or 0.
  * Closes the opened file descriptor on success.
@@ -3246,12 +3263,31 @@ TEST_F_FORK(layout1, truncate_unhandled)
 		/* Implicitly: No rights for file_none. */
 		{},
 	};
+<<<<<<< HEAD
 
 	const __u64 handled = LANDLOCK_ACCESS_FS_READ_FILE |
 			      LANDLOCK_ACCESS_FS_WRITE_FILE;
 	int ruleset_fd;
 
 	/* Enable Landlock. */
+=======
+	const __u64 handled = LANDLOCK_ACCESS_FS_READ_FILE |
+			      LANDLOCK_ACCESS_FS_WRITE_FILE;
+	int ruleset_fd, file_r_fd, file_w_fd, file_none_fd;
+
+	/*
+	 * Opens some writable file descriptors before enabling Landlock, so
+	 * that we can test ftruncate() without making open() a prerequisite.
+	 */
+	file_r_fd = open(file_r, O_WRONLY | O_CLOEXEC);
+	ASSERT_LE(0, file_r_fd);
+	file_w_fd = open(file_w, O_WRONLY | O_CLOEXEC);
+	ASSERT_LE(0, file_w_fd);
+	file_none_fd = open(file_none, O_WRONLY | O_CLOEXEC);
+	ASSERT_LE(0, file_none_fd);
+
+	/* Enables Landlock. */
+>>>>>>> b7ba80a49124 (Commit)
 	ruleset_fd = create_ruleset(_metadata, handled, rules);
 
 	ASSERT_LE(0, ruleset_fd);
@@ -3259,24 +3295,41 @@ TEST_F_FORK(layout1, truncate_unhandled)
 	ASSERT_EQ(0, close(ruleset_fd));
 
 	/*
+<<<<<<< HEAD
 	 * Checks read right: truncate and open with O_TRUNC work, unless the
 	 * file is attempted to be opened for writing.
 	 */
 	EXPECT_EQ(0, test_truncate(file_r));
+=======
+	 * Checks read right: truncate, ftruncate and open with O_TRUNC work,
+	 * unless the file is attempted to be opened for writing.
+	 */
+	EXPECT_EQ(0, test_truncate(file_r));
+	EXPECT_EQ(0, test_ftruncate(file_r_fd));
+>>>>>>> b7ba80a49124 (Commit)
 	EXPECT_EQ(0, test_open(file_r, O_RDONLY | O_TRUNC));
 	EXPECT_EQ(EACCES, test_open(file_r, O_WRONLY | O_TRUNC));
 	EXPECT_EQ(EACCES, test_creat(file_r));
 
 	/*
+<<<<<<< HEAD
 	 * Checks write right: truncate and open with O_TRUNC work, unless the
 	 * file is attempted to be opened for reading.
 	 */
 	EXPECT_EQ(0, test_truncate(file_w));
+=======
+	 * Checks write right: truncate, ftruncate and open with O_TRUNC work,
+	 * unless the file is attempted to be opened for reading.
+	 */
+	EXPECT_EQ(0, test_truncate(file_w));
+	EXPECT_EQ(0, test_ftruncate(file_w_fd));
+>>>>>>> b7ba80a49124 (Commit)
 	EXPECT_EQ(EACCES, test_open(file_w, O_RDONLY | O_TRUNC));
 	EXPECT_EQ(0, test_open(file_w, O_WRONLY | O_TRUNC));
 	EXPECT_EQ(0, test_creat(file_w));
 
 	/*
+<<<<<<< HEAD
 	 * Checks "no rights" case: truncate works but all open attempts fail,
 	 * including creat.
 	 */
@@ -3284,6 +3337,20 @@ TEST_F_FORK(layout1, truncate_unhandled)
 	EXPECT_EQ(EACCES, test_open(file_none, O_RDONLY | O_TRUNC));
 	EXPECT_EQ(EACCES, test_open(file_none, O_WRONLY | O_TRUNC));
 	EXPECT_EQ(EACCES, test_creat(file_none));
+=======
+	 * Checks "no rights" case: truncate and ftruncate work but all open
+	 * attempts fail, including creat.
+	 */
+	EXPECT_EQ(0, test_truncate(file_none));
+	EXPECT_EQ(0, test_ftruncate(file_none_fd));
+	EXPECT_EQ(EACCES, test_open(file_none, O_RDONLY | O_TRUNC));
+	EXPECT_EQ(EACCES, test_open(file_none, O_WRONLY | O_TRUNC));
+	EXPECT_EQ(EACCES, test_creat(file_none));
+
+	ASSERT_EQ(0, close(file_r_fd));
+	ASSERT_EQ(0, close(file_w_fd));
+	ASSERT_EQ(0, close(file_none_fd));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 TEST_F_FORK(layout1, truncate)
@@ -3332,9 +3399,35 @@ TEST_F_FORK(layout1, truncate)
 	const __u64 handled = LANDLOCK_ACCESS_FS_READ_FILE |
 			      LANDLOCK_ACCESS_FS_WRITE_FILE |
 			      LANDLOCK_ACCESS_FS_TRUNCATE;
+<<<<<<< HEAD
 	int ruleset_fd;
 
 	/* Enable Landlock. */
+=======
+	int ruleset_fd, file_rwt_fd, file_rw_fd, file_rt_fd, file_t_fd,
+		file_none_fd, file_in_dir_t_fd, file_in_dir_w_fd;
+
+	/*
+	 * Opens some writable file descriptors before enabling Landlock, so
+	 * that we can test ftruncate() without making open() a prerequisite.
+	 */
+	file_rwt_fd = open(file_rwt, O_WRONLY | O_CLOEXEC);
+	ASSERT_LE(0, file_rwt_fd);
+	file_rw_fd = open(file_rw, O_WRONLY | O_CLOEXEC);
+	ASSERT_LE(0, file_rw_fd);
+	file_rt_fd = open(file_rt, O_WRONLY | O_CLOEXEC);
+	ASSERT_LE(0, file_rt_fd);
+	file_t_fd = open(file_t, O_WRONLY | O_CLOEXEC);
+	ASSERT_LE(0, file_t_fd);
+	file_none_fd = open(file_none, O_WRONLY | O_CLOEXEC);
+	ASSERT_LE(0, file_none_fd);
+	file_in_dir_t_fd = open(file_in_dir_t, O_WRONLY | O_CLOEXEC);
+	ASSERT_LE(0, file_in_dir_t_fd);
+	file_in_dir_w_fd = open(file_in_dir_w, O_WRONLY | O_CLOEXEC);
+	ASSERT_LE(0, file_in_dir_w_fd);
+
+	/* Enables Landlock. */
+>>>>>>> b7ba80a49124 (Commit)
 	ruleset_fd = create_ruleset(_metadata, handled, rules);
 
 	ASSERT_LE(0, ruleset_fd);
@@ -3343,11 +3436,19 @@ TEST_F_FORK(layout1, truncate)
 
 	/* Checks read, write and truncate rights: truncation works. */
 	EXPECT_EQ(0, test_truncate(file_rwt));
+<<<<<<< HEAD
+=======
+	EXPECT_EQ(0, test_ftruncate(file_rwt_fd));
+>>>>>>> b7ba80a49124 (Commit)
 	EXPECT_EQ(0, test_open(file_rwt, O_RDONLY | O_TRUNC));
 	EXPECT_EQ(0, test_open(file_rwt, O_WRONLY | O_TRUNC));
 
 	/* Checks read and write rights: no truncate variant works. */
 	EXPECT_EQ(EACCES, test_truncate(file_rw));
+<<<<<<< HEAD
+=======
+	EXPECT_EQ(EACCES, test_ftruncate(file_rw_fd));
+>>>>>>> b7ba80a49124 (Commit)
 	EXPECT_EQ(EACCES, test_open(file_rw, O_RDONLY | O_TRUNC));
 	EXPECT_EQ(EACCES, test_open(file_rw, O_WRONLY | O_TRUNC));
 
@@ -3357,16 +3458,28 @@ TEST_F_FORK(layout1, truncate)
 	 * Note: Files can get truncated using open() even with O_RDONLY.
 	 */
 	EXPECT_EQ(0, test_truncate(file_rt));
+<<<<<<< HEAD
+=======
+	EXPECT_EQ(0, test_ftruncate(file_rt_fd));
+>>>>>>> b7ba80a49124 (Commit)
 	EXPECT_EQ(0, test_open(file_rt, O_RDONLY | O_TRUNC));
 	EXPECT_EQ(EACCES, test_open(file_rt, O_WRONLY | O_TRUNC));
 
 	/* Checks truncate right: truncate works, but can't open file. */
 	EXPECT_EQ(0, test_truncate(file_t));
+<<<<<<< HEAD
+=======
+	EXPECT_EQ(0, test_ftruncate(file_t_fd));
+>>>>>>> b7ba80a49124 (Commit)
 	EXPECT_EQ(EACCES, test_open(file_t, O_RDONLY | O_TRUNC));
 	EXPECT_EQ(EACCES, test_open(file_t, O_WRONLY | O_TRUNC));
 
 	/* Checks "no rights" case: No form of truncation works. */
 	EXPECT_EQ(EACCES, test_truncate(file_none));
+<<<<<<< HEAD
+=======
+	EXPECT_EQ(EACCES, test_ftruncate(file_none_fd));
+>>>>>>> b7ba80a49124 (Commit)
 	EXPECT_EQ(EACCES, test_open(file_none, O_RDONLY | O_TRUNC));
 	EXPECT_EQ(EACCES, test_open(file_none, O_WRONLY | O_TRUNC));
 
@@ -3375,6 +3488,10 @@ TEST_F_FORK(layout1, truncate)
 	 * files.
 	 */
 	EXPECT_EQ(0, test_truncate(file_in_dir_t));
+<<<<<<< HEAD
+=======
+	EXPECT_EQ(0, test_ftruncate(file_in_dir_t_fd));
+>>>>>>> b7ba80a49124 (Commit)
 	EXPECT_EQ(EACCES, test_open(file_in_dir_t, O_RDONLY | O_TRUNC));
 	EXPECT_EQ(EACCES, test_open(file_in_dir_t, O_WRONLY | O_TRUNC));
 
@@ -3389,6 +3506,7 @@ TEST_F_FORK(layout1, truncate)
 	EXPECT_EQ(0, test_creat(file_in_dir_w));
 }
 
+<<<<<<< HEAD
 /* Invokes ftruncate(2) and returns its errno or 0. */
 static int test_ftruncate(int fd)
 {
@@ -3654,6 +3772,8 @@ TEST(memfd_ftruncate)
 	ASSERT_EQ(0, close(fd));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* clang-format off */
 FIXTURE(layout1_bind) {};
 /* clang-format on */
@@ -4036,9 +4156,12 @@ FIXTURE(layout2_overlay) {};
 
 FIXTURE_SETUP(layout2_overlay)
 {
+<<<<<<< HEAD
 	if (!supports_overlayfs())
 		SKIP(return, "overlayfs is not supported");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	prepare_layout(_metadata);
 
 	create_directory(_metadata, LOWER_BASE);
@@ -4075,9 +4198,12 @@ FIXTURE_SETUP(layout2_overlay)
 
 FIXTURE_TEARDOWN(layout2_overlay)
 {
+<<<<<<< HEAD
 	if (!supports_overlayfs())
 		SKIP(return, "overlayfs is not supported");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	EXPECT_EQ(0, remove_path(lower_do1_fl3));
 	EXPECT_EQ(0, remove_path(lower_dl1_fl2));
 	EXPECT_EQ(0, remove_path(lower_fl1));
@@ -4109,9 +4235,12 @@ FIXTURE_TEARDOWN(layout2_overlay)
 
 TEST_F_FORK(layout2_overlay, no_restriction)
 {
+<<<<<<< HEAD
 	if (!supports_overlayfs())
 		SKIP(return, "overlayfs is not supported");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ASSERT_EQ(0, test_open(lower_fl1, O_RDONLY));
 	ASSERT_EQ(0, test_open(lower_dl1, O_RDONLY));
 	ASSERT_EQ(0, test_open(lower_dl1_fl2, O_RDONLY));
@@ -4275,9 +4404,12 @@ TEST_F_FORK(layout2_overlay, same_content_different_file)
 	size_t i;
 	const char *path_entry;
 
+<<<<<<< HEAD
 	if (!supports_overlayfs())
 		SKIP(return, "overlayfs is not supported");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Sets rules on base directories (i.e. outside overlay scope). */
 	ruleset_fd = create_ruleset(_metadata, ACCESS_RW, layer1_base);
 	ASSERT_LE(0, ruleset_fd);

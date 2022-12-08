@@ -20,6 +20,10 @@
 #include <linux/module.h>
 #include <linux/mod_devicetable.h>
 #include <linux/of.h>
+<<<<<<< HEAD
+=======
+#include <linux/pci.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <linux/pm_runtime.h>
 #include <linux/property.h>
@@ -368,7 +372,11 @@ static void lpss_ssp_select_cs(struct spi_device *spi,
 
 	value = __lpss_ssp_read_priv(drv_data, config->reg_cs_ctrl);
 
+<<<<<<< HEAD
 	cs = spi_get_chipselect(spi, 0);
+=======
+	cs = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 	cs <<= config->cs_sel_shift;
 	if (cs != (value & config->cs_sel_mask)) {
 		/*
@@ -429,7 +437,11 @@ static void cs_assert(struct spi_device *spi)
 		spi_controller_get_devdata(spi->controller);
 
 	if (drv_data->ssp_type == CE4100_SSP) {
+<<<<<<< HEAD
 		pxa2xx_spi_write(drv_data, SSSR, spi_get_chipselect(spi, 0));
+=======
+		pxa2xx_spi_write(drv_data, SSSR, spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -1217,7 +1229,11 @@ static int setup(struct spi_device *spi)
 			return -ENOMEM;
 
 		if (drv_data->ssp_type == CE4100_SSP) {
+<<<<<<< HEAD
 			if (spi_get_chipselect(spi, 0) > 4) {
+=======
+			if (spi->chip_select > 4) {
+>>>>>>> b7ba80a49124 (Commit)
 				dev_err(&spi->dev,
 					"failed setup: cs number must not be > 4.\n");
 				kfree(chip);
@@ -1321,11 +1337,140 @@ static void cleanup(struct spi_device *spi)
 	kfree(chip);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_ACPI
+static const struct acpi_device_id pxa2xx_spi_acpi_match[] = {
+	{ "INT33C0", LPSS_LPT_SSP },
+	{ "INT33C1", LPSS_LPT_SSP },
+	{ "INT3430", LPSS_LPT_SSP },
+	{ "INT3431", LPSS_LPT_SSP },
+	{ "80860F0E", LPSS_BYT_SSP },
+	{ "8086228E", LPSS_BSW_SSP },
+	{ },
+};
+MODULE_DEVICE_TABLE(acpi, pxa2xx_spi_acpi_match);
+#endif
+
+/*
+ * PCI IDs of compound devices that integrate both host controller and private
+ * integrated DMA engine. Please note these are not used in module
+ * autoloading and probing in this module but matching the LPSS SSP type.
+ */
+static const struct pci_device_id pxa2xx_spi_pci_compound_match[] = {
+	/* SPT-LP */
+	{ PCI_VDEVICE(INTEL, 0x9d29), LPSS_SPT_SSP },
+	{ PCI_VDEVICE(INTEL, 0x9d2a), LPSS_SPT_SSP },
+	/* SPT-H */
+	{ PCI_VDEVICE(INTEL, 0xa129), LPSS_SPT_SSP },
+	{ PCI_VDEVICE(INTEL, 0xa12a), LPSS_SPT_SSP },
+	/* KBL-H */
+	{ PCI_VDEVICE(INTEL, 0xa2a9), LPSS_SPT_SSP },
+	{ PCI_VDEVICE(INTEL, 0xa2aa), LPSS_SPT_SSP },
+	/* CML-V */
+	{ PCI_VDEVICE(INTEL, 0xa3a9), LPSS_SPT_SSP },
+	{ PCI_VDEVICE(INTEL, 0xa3aa), LPSS_SPT_SSP },
+	/* BXT A-Step */
+	{ PCI_VDEVICE(INTEL, 0x0ac2), LPSS_BXT_SSP },
+	{ PCI_VDEVICE(INTEL, 0x0ac4), LPSS_BXT_SSP },
+	{ PCI_VDEVICE(INTEL, 0x0ac6), LPSS_BXT_SSP },
+	/* BXT B-Step */
+	{ PCI_VDEVICE(INTEL, 0x1ac2), LPSS_BXT_SSP },
+	{ PCI_VDEVICE(INTEL, 0x1ac4), LPSS_BXT_SSP },
+	{ PCI_VDEVICE(INTEL, 0x1ac6), LPSS_BXT_SSP },
+	/* GLK */
+	{ PCI_VDEVICE(INTEL, 0x31c2), LPSS_BXT_SSP },
+	{ PCI_VDEVICE(INTEL, 0x31c4), LPSS_BXT_SSP },
+	{ PCI_VDEVICE(INTEL, 0x31c6), LPSS_BXT_SSP },
+	/* ICL-LP */
+	{ PCI_VDEVICE(INTEL, 0x34aa), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x34ab), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x34fb), LPSS_CNL_SSP },
+	/* EHL */
+	{ PCI_VDEVICE(INTEL, 0x4b2a), LPSS_BXT_SSP },
+	{ PCI_VDEVICE(INTEL, 0x4b2b), LPSS_BXT_SSP },
+	{ PCI_VDEVICE(INTEL, 0x4b37), LPSS_BXT_SSP },
+	/* JSL */
+	{ PCI_VDEVICE(INTEL, 0x4daa), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x4dab), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x4dfb), LPSS_CNL_SSP },
+	/* TGL-H */
+	{ PCI_VDEVICE(INTEL, 0x43aa), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x43ab), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x43fb), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x43fd), LPSS_CNL_SSP },
+	/* ADL-P */
+	{ PCI_VDEVICE(INTEL, 0x51aa), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x51ab), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x51fb), LPSS_CNL_SSP },
+	/* ADL-M */
+	{ PCI_VDEVICE(INTEL, 0x54aa), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x54ab), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x54fb), LPSS_CNL_SSP },
+	/* APL */
+	{ PCI_VDEVICE(INTEL, 0x5ac2), LPSS_BXT_SSP },
+	{ PCI_VDEVICE(INTEL, 0x5ac4), LPSS_BXT_SSP },
+	{ PCI_VDEVICE(INTEL, 0x5ac6), LPSS_BXT_SSP },
+	/* RPL-S */
+	{ PCI_VDEVICE(INTEL, 0x7a2a), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x7a2b), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x7a79), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x7a7b), LPSS_CNL_SSP },
+	/* ADL-S */
+	{ PCI_VDEVICE(INTEL, 0x7aaa), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x7aab), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x7af9), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x7afb), LPSS_CNL_SSP },
+	/* MTL-P */
+	{ PCI_VDEVICE(INTEL, 0x7e27), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x7e30), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x7e46), LPSS_CNL_SSP },
+	/* CNL-LP */
+	{ PCI_VDEVICE(INTEL, 0x9daa), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x9dab), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x9dfb), LPSS_CNL_SSP },
+	/* CNL-H */
+	{ PCI_VDEVICE(INTEL, 0xa32a), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0xa32b), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0xa37b), LPSS_CNL_SSP },
+	/* CML-LP */
+	{ PCI_VDEVICE(INTEL, 0x02aa), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x02ab), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x02fb), LPSS_CNL_SSP },
+	/* CML-H */
+	{ PCI_VDEVICE(INTEL, 0x06aa), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x06ab), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0x06fb), LPSS_CNL_SSP },
+	/* TGL-LP */
+	{ PCI_VDEVICE(INTEL, 0xa0aa), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0xa0ab), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0xa0de), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0xa0df), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0xa0fb), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0xa0fd), LPSS_CNL_SSP },
+	{ PCI_VDEVICE(INTEL, 0xa0fe), LPSS_CNL_SSP },
+	{ },
+};
+
+static const struct of_device_id pxa2xx_spi_of_match[] = {
+	{ .compatible = "marvell,mmp2-ssp", .data = (void *)MMP2_SSP },
+	{},
+};
+MODULE_DEVICE_TABLE(of, pxa2xx_spi_of_match);
+
+#ifdef CONFIG_PCI
+
+>>>>>>> b7ba80a49124 (Commit)
 static bool pxa2xx_spi_idma_filter(struct dma_chan *chan, void *param)
 {
 	return param == chan->device->dev;
 }
 
+<<<<<<< HEAD
+=======
+#endif /* CONFIG_PCI */
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct pxa2xx_spi_controller *
 pxa2xx_spi_init_pdata(struct platform_device *pdev)
 {
@@ -1334,6 +1479,7 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
 	struct device *parent = dev->parent;
 	struct ssp_device *ssp;
 	struct resource *res;
+<<<<<<< HEAD
 	enum pxa_ssp_type type = SSP_UNDEFINED;
 	const void *match;
 	bool is_lpss_priv;
@@ -1360,25 +1506,62 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
 		return ERR_PTR(-EINVAL);
 
 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+=======
+	struct pci_dev *pcidev = dev_is_pci(parent) ? to_pci_dev(parent) : NULL;
+	const struct pci_device_id *pcidev_id = NULL;
+	enum pxa_ssp_type type;
+	const void *match;
+	int status;
+	u64 uid;
+
+	if (pcidev)
+		pcidev_id = pci_match_id(pxa2xx_spi_pci_compound_match, pcidev);
+
+	match = device_get_match_data(&pdev->dev);
+	if (match)
+		type = (enum pxa_ssp_type)match;
+	else if (pcidev_id)
+		type = (enum pxa_ssp_type)pcidev_id->driver_data;
+	else
+		return ERR_PTR(-EINVAL);
+
+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!pdata)
 		return ERR_PTR(-ENOMEM);
 
 	ssp = &pdata->ssp;
 
+<<<<<<< HEAD
 	ssp->mmio_base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	ssp->mmio_base = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(ssp->mmio_base))
 		return ERR_CAST(ssp->mmio_base);
 
 	ssp->phys_base = res->start;
 
+<<<<<<< HEAD
 	/* Platforms with iDMA 64-bit */
 	if (is_lpss_priv) {
+=======
+#ifdef CONFIG_PCI
+	if (pcidev_id) {
+>>>>>>> b7ba80a49124 (Commit)
 		pdata->tx_param = parent;
 		pdata->rx_param = parent;
 		pdata->dma_filter = pxa2xx_spi_idma_filter;
 	}
+<<<<<<< HEAD
 
 	ssp->clk = devm_clk_get(dev, NULL);
+=======
+#endif
+
+	ssp->clk = devm_clk_get(&pdev->dev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(ssp->clk))
 		return ERR_CAST(ssp->clk);
 
@@ -1387,7 +1570,11 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
 		return ERR_PTR(ssp->irq);
 
 	ssp->type = type;
+<<<<<<< HEAD
 	ssp->dev = dev;
+=======
+	ssp->dev = &pdev->dev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	status = acpi_dev_uid_to_integer(ACPI_COMPANION(dev), &uid);
 	if (status)
@@ -1395,7 +1582,11 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
 	else
 		ssp->port_id = uid;
 
+<<<<<<< HEAD
 	pdata->is_slave = device_property_read_bool(dev, "spi-slave");
+=======
+	pdata->is_slave = device_property_read_bool(&pdev->dev, "spi-slave");
+>>>>>>> b7ba80a49124 (Commit)
 	pdata->num_chipselect = 1;
 	pdata->enable_dma = true;
 	pdata->dma_burst_size = 1;
@@ -1659,7 +1850,11 @@ out_error_controller_alloc:
 	return status;
 }
 
+<<<<<<< HEAD
 static void pxa2xx_spi_remove(struct platform_device *pdev)
+=======
+static int pxa2xx_spi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct driver_data *drv_data = platform_get_drvdata(pdev);
 	struct ssp_device *ssp = drv_data->ssp;
@@ -1684,8 +1879,16 @@ static void pxa2xx_spi_remove(struct platform_device *pdev)
 
 	/* Release SSP */
 	pxa_ssp_free(ssp);
+<<<<<<< HEAD
 }
 
+=======
+
+	return 0;
+}
+
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int pxa2xx_spi_suspend(struct device *dev)
 {
 	struct driver_data *drv_data = dev_get_drvdata(dev);
@@ -1720,7 +1923,13 @@ static int pxa2xx_spi_resume(struct device *dev)
 	/* Start the queue running */
 	return spi_controller_resume(drv_data->controller);
 }
+<<<<<<< HEAD
 
+=======
+#endif
+
+#ifdef CONFIG_PM
+>>>>>>> b7ba80a49124 (Commit)
 static int pxa2xx_spi_runtime_suspend(struct device *dev)
 {
 	struct driver_data *drv_data = dev_get_drvdata(dev);
@@ -1735,6 +1944,7 @@ static int pxa2xx_spi_runtime_resume(struct device *dev)
 
 	return clk_prepare_enable(drv_data->ssp->clk);
 }
+<<<<<<< HEAD
 
 static const struct dev_pm_ops pxa2xx_spi_pm_ops = {
 	SYSTEM_SLEEP_PM_OPS(pxa2xx_spi_suspend, pxa2xx_spi_resume)
@@ -1759,16 +1969,33 @@ static const struct of_device_id pxa2xx_spi_of_match[] __maybe_unused = {
 	{}
 };
 MODULE_DEVICE_TABLE(of, pxa2xx_spi_of_match);
+=======
+#endif
+
+static const struct dev_pm_ops pxa2xx_spi_pm_ops = {
+	SET_SYSTEM_SLEEP_PM_OPS(pxa2xx_spi_suspend, pxa2xx_spi_resume)
+	SET_RUNTIME_PM_OPS(pxa2xx_spi_runtime_suspend,
+			   pxa2xx_spi_runtime_resume, NULL)
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_driver driver = {
 	.driver = {
 		.name	= "pxa2xx-spi",
+<<<<<<< HEAD
 		.pm	= pm_ptr(&pxa2xx_spi_pm_ops),
+=======
+		.pm	= &pxa2xx_spi_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.acpi_match_table = ACPI_PTR(pxa2xx_spi_acpi_match),
 		.of_match_table = of_match_ptr(pxa2xx_spi_of_match),
 	},
 	.probe = pxa2xx_spi_probe,
+<<<<<<< HEAD
 	.remove_new = pxa2xx_spi_remove,
+=======
+	.remove = pxa2xx_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init pxa2xx_spi_init(void)

@@ -296,10 +296,24 @@ static struct tps62360_regulator_platform_data *
 		return NULL;
 	}
 
+<<<<<<< HEAD
 	pdata->vsel0_def_state = of_property_read_bool(np, "ti,vsel0-state-high");
 	pdata->vsel1_def_state = of_property_read_bool(np, "ti,vsel1-state-high");
 	pdata->en_internal_pulldn = of_property_read_bool(np, "ti,enable-pull-down");
 	pdata->en_discharge = of_property_read_bool(np, "ti,enable-vout-discharge");
+=======
+	if (of_find_property(np, "ti,vsel0-state-high", NULL))
+		pdata->vsel0_def_state = 1;
+
+	if (of_find_property(np, "ti,vsel1-state-high", NULL))
+		pdata->vsel1_def_state = 1;
+
+	if (of_find_property(np, "ti,enable-pull-down", NULL))
+		pdata->en_internal_pulldn = true;
+
+	if (of_find_property(np, "ti,enable-vout-discharge", NULL))
+		pdata->en_discharge = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return pdata;
 }
@@ -315,9 +329,15 @@ static const struct of_device_id tps62360_of_match[] = {
 MODULE_DEVICE_TABLE(of, tps62360_of_match);
 #endif
 
+<<<<<<< HEAD
 static int tps62360_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int tps62360_probe(struct i2c_client *client,
+				     const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct regulator_config config = { };
 	struct tps62360_regulator_platform_data *pdata;
 	struct regulator_dev *rdev;
@@ -488,10 +508,16 @@ MODULE_DEVICE_TABLE(i2c, tps62360_id);
 static struct i2c_driver tps62360_i2c_driver = {
 	.driver = {
 		.name = "tps62360",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 		.of_match_table = of_match_ptr(tps62360_of_match),
 	},
 	.probe_new = tps62360_probe,
+=======
+		.of_match_table = of_match_ptr(tps62360_of_match),
+	},
+	.probe = tps62360_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.shutdown = tps62360_shutdown,
 	.id_table = tps62360_id,
 };

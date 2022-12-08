@@ -9,6 +9,11 @@
 #include <linux/list.h>
 #include <linux/completion.h>
 
+<<<<<<< HEAD
+=======
+#include <generated/utsrelease.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * enum fw_opt - options to control firmware loading behaviour
  *

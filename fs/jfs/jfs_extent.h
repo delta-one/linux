@@ -10,7 +10,13 @@
 	(addressPXD(&(JFS_IP(ip)->ixpxd)) + lengthPXD(&(JFS_IP(ip)->ixpxd)) - 1)
 
 extern int	extAlloc(struct inode *, s64, s64, xad_t *, bool);
+<<<<<<< HEAD
 extern int	extHint(struct inode *, s64, xad_t *);
+=======
+extern int	extFill(struct inode *, xad_t *);
+extern int	extHint(struct inode *, s64, xad_t *);
+extern int	extRealloc(struct inode *, s64, xad_t *, bool);
+>>>>>>> b7ba80a49124 (Commit)
 extern int	extRecord(struct inode *, xad_t *);
 
 #endif	/* _H_JFS_EXTENT */

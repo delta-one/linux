@@ -568,9 +568,15 @@ static const struct ad5446_chip_info ad5446_i2c_chip_info[] = {
 	},
 };
 
+<<<<<<< HEAD
 static int ad5446_i2c_probe(struct i2c_client *i2c)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(i2c);
+=======
+static int ad5446_i2c_probe(struct i2c_client *i2c,
+			    const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	return ad5446_probe(&i2c->dev, id->name,
 		&ad5446_i2c_chip_info[id->driver_data]);
 }
@@ -595,7 +601,11 @@ static struct i2c_driver ad5446_i2c_driver = {
 	.driver = {
 		   .name = "ad5446",
 	},
+<<<<<<< HEAD
 	.probe_new = ad5446_i2c_probe,
+=======
+	.probe = ad5446_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = ad5446_i2c_remove,
 	.id_table = ad5446_i2c_ids,
 };

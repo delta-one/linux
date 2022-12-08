@@ -351,3 +351,11 @@
 	status = "okay";
 	timeout-sec = <60>;
 };
+<<<<<<< HEAD
+=======
+
+&wdt2 {
+	status = "okay";
+	timeout-sec = <60>;
+};
+>>>>>>> b7ba80a49124 (Commit)

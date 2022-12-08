@@ -175,6 +175,14 @@ static const struct watchdog_info qcom_wdt_pt_info = {
 	.identity	= KBUILD_MODNAME,
 };
 
+<<<<<<< HEAD
+=======
+static void qcom_clk_disable_unprepare(void *data)
+{
+	clk_disable_unprepare(data);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct qcom_wdt_match_data match_data_apcs_tmr = {
 	.offset = reg_offset_data_apcs_tmr,
 	.pretimeout = false,
@@ -221,12 +229,28 @@ static int qcom_wdt_probe(struct platform_device *pdev)
 	if (IS_ERR(wdt->base))
 		return PTR_ERR(wdt->base);
 
+<<<<<<< HEAD
 	clk = devm_clk_get_enabled(dev, NULL);
+=======
+	clk = devm_clk_get(dev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(clk)) {
 		dev_err(dev, "failed to get input clock\n");
 		return PTR_ERR(clk);
 	}
 
+<<<<<<< HEAD
+=======
+	ret = clk_prepare_enable(clk);
+	if (ret) {
+		dev_err(dev, "failed to setup clock\n");
+		return ret;
+	}
+	ret = devm_add_action_or_reset(dev, qcom_clk_disable_unprepare, clk);
+	if (ret)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * We use the clock rate to calculate the max timeout, so ensure it's
 	 * not zero to avoid a divide-by-zero exception.

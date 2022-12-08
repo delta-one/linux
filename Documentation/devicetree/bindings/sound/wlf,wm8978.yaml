@@ -9,9 +9,12 @@ title: Wolfson WM8978 Codec
 maintainers:
   - patches@opensource.cirrus.com
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   '#sound-dai-cells':
     const: 0
@@ -30,7 +33,11 @@ required:
   - compatible
   - reg
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

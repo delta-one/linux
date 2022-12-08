@@ -89,7 +89,11 @@ The following command returns the state of the test. ::
 
     % cat /sys/module/dmatest/parameters/run
 
+<<<<<<< HEAD
 To wait for test completion userspace can poll 'run' until it is false, or use
+=======
+To wait for test completion userpace can poll 'run' until it is false, or use
+>>>>>>> b7ba80a49124 (Commit)
 the wait parameter. Specifying 'wait=1' when loading the module causes module
 initialization to pause until a test run has completed, while reading
 /sys/module/dmatest/parameters/wait waits for any running test to complete

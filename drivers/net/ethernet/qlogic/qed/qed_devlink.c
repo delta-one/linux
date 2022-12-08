@@ -162,6 +162,13 @@ static int qed_devlink_info_get(struct devlink *devlink,
 
 	dev_info = &cdev->common_dev_info;
 
+<<<<<<< HEAD
+=======
+	err = devlink_info_driver_name_put(req, KBUILD_MODNAME);
+	if (err)
+		return err;
+
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(buf, cdev->hwfns[0].hw_info.part_num, sizeof(cdev->hwfns[0].hw_info.part_num));
 	buf[sizeof(cdev->hwfns[0].hw_info.part_num)] = 0;
 
@@ -198,6 +205,10 @@ static const struct devlink_ops qed_dl_ops = {
 
 struct devlink *qed_devlink_register(struct qed_dev *cdev)
 {
+<<<<<<< HEAD
+=======
+	union devlink_param_value value;
+>>>>>>> b7ba80a49124 (Commit)
 	struct qed_devlink *qdevlink;
 	struct devlink *dl;
 	int rc;
@@ -215,6 +226,14 @@ struct devlink *qed_devlink_register(struct qed_dev *cdev)
 	if (rc)
 		goto err_unregister;
 
+<<<<<<< HEAD
+=======
+	value.vbool = false;
+	devlink_param_driverinit_value_set(dl,
+					   QED_DEVLINK_PARAM_ID_IWARP_CMT,
+					   value);
+
+>>>>>>> b7ba80a49124 (Commit)
 	cdev->iwarp_cmt = false;
 
 	qed_fw_reporters_create(dl);

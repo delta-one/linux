@@ -14,11 +14,14 @@
 #include "osnoise.h"
 #include "utils.h"
 
+<<<<<<< HEAD
 enum osnoise_mode {
 	MODE_OSNOISE = 0,
 	MODE_HWNOISE
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * osnoise top parameters
  */
@@ -37,7 +40,10 @@ struct osnoise_top_params {
 	int			set_sched;
 	struct sched_attr	sched_param;
 	struct trace_events	*events;
+<<<<<<< HEAD
 	enum osnoise_mode	mode;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct osnoise_top_cpu {
@@ -149,13 +155,17 @@ osnoise_top_handler(struct trace_seq *s, struct tep_record *record,
  */
 static void osnoise_top_header(struct osnoise_tool *top)
 {
+<<<<<<< HEAD
 	struct osnoise_top_params *params = top->params;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct trace_seq *s = top->trace.seq;
 	char duration[26];
 
 	get_duration(top->start_time, duration, sizeof(duration));
 
 	trace_seq_printf(s, "\033[2;37;40m");
+<<<<<<< HEAD
 	trace_seq_printf(s, "                                          ");
 
 	if (params->mode == MODE_OSNOISE) {
@@ -166,6 +176,11 @@ static void osnoise_top_header(struct osnoise_tool *top)
 	}
 
 	trace_seq_printf(s, "                                   ");
+=======
+	trace_seq_printf(s, "                                          Operating System Noise");
+	trace_seq_printf(s, "                                     ");
+	trace_seq_printf(s, "                                     ");
+>>>>>>> b7ba80a49124 (Commit)
 	trace_seq_printf(s, "\033[0;0;0m");
 	trace_seq_printf(s, "\n");
 
@@ -176,6 +191,7 @@ static void osnoise_top_header(struct osnoise_tool *top)
 	trace_seq_printf(s, "       Noise ");
 	trace_seq_printf(s, " %% CPU Aval ");
 	trace_seq_printf(s, "  Max Noise   Max Single ");
+<<<<<<< HEAD
 	trace_seq_printf(s, "         HW          NMI");
 
 	if (params->mode == MODE_HWNOISE)
@@ -184,6 +200,9 @@ static void osnoise_top_header(struct osnoise_tool *top)
 	trace_seq_printf(s, "          IRQ      Softirq       Thread");
 
 eol:
+=======
+	trace_seq_printf(s, "         HW          NMI          IRQ      Softirq       Thread");
+>>>>>>> b7ba80a49124 (Commit)
 	trace_seq_printf(s, "\033[0;0;0m");
 	trace_seq_printf(s, "\n");
 }
@@ -202,7 +221,10 @@ static void clear_terminal(struct trace_seq *seq)
  */
 static void osnoise_top_print(struct osnoise_tool *tool, int cpu)
 {
+<<<<<<< HEAD
 	struct osnoise_top_params *params = tool->params;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct trace_seq *s = tool->trace.seq;
 	struct osnoise_top_cpu *cpu_data;
 	struct osnoise_top_data *data;
@@ -227,12 +249,15 @@ static void osnoise_top_print(struct osnoise_tool *tool, int cpu)
 
 	trace_seq_printf(s, "%12llu ", cpu_data->hw_count);
 	trace_seq_printf(s, "%12llu ", cpu_data->nmi_count);
+<<<<<<< HEAD
 
 	if (params->mode == MODE_HWNOISE) {
 		trace_seq_printf(s, "\n");
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	trace_seq_printf(s, "%12llu ", cpu_data->irq_count);
 	trace_seq_printf(s, "%12llu ", cpu_data->softirq_count);
 	trace_seq_printf(s, "%12llu\n", cpu_data->thread_count);
@@ -269,12 +294,20 @@ osnoise_print_stats(struct osnoise_top_params *params, struct osnoise_tool *top)
 /*
  * osnoise_top_usage - prints osnoise top usage message
  */
+<<<<<<< HEAD
 static void osnoise_top_usage(struct osnoise_top_params *params, char *usage)
+=======
+void osnoise_top_usage(char *usage)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 
 	static const char * const msg[] = {
+<<<<<<< HEAD
 		" [-h] [-q] [-D] [-d s] [-a us] [-p us] [-r us] [-s us] [-S us] \\",
+=======
+		"  usage: rtla osnoise [top] [-h] [-q] [-D] [-d s] [-a us] [-p us] [-r us] [-s us] [-S us] \\",
+>>>>>>> b7ba80a49124 (Commit)
 		"	  [-T us] [-t[=file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] \\",
 		"	  [-c cpu-list] [-P priority]",
 		"",
@@ -305,6 +338,7 @@ static void osnoise_top_usage(struct osnoise_top_params *params, char *usage)
 	if (usage)
 		fprintf(stderr, "%s\n", usage);
 
+<<<<<<< HEAD
 	if (params->mode == MODE_OSNOISE) {
 		fprintf(stderr,
 			"rtla osnoise top: a per-cpu summary of the OS noise (version %s)\n",
@@ -321,6 +355,11 @@ static void osnoise_top_usage(struct osnoise_top_params *params, char *usage)
 		fprintf(stderr, "  usage: rtla hwnoise");
 	}
 
+=======
+	fprintf(stderr, "rtla osnoise top: a per-cpu summary of the OS noise (version %s)\n",
+			VERSION);
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; msg[i]; i++)
 		fprintf(stderr, "%s\n", msg[i]);
 	exit(1);
@@ -340,9 +379,12 @@ struct osnoise_top_params *osnoise_top_parse_args(int argc, char **argv)
 	if (!params)
 		exit(1);
 
+<<<<<<< HEAD
 	if (strcmp(argv[0], "hwnoise") == 0)
 		params->mode = MODE_HWNOISE;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	while (1) {
 		static struct option long_options[] = {
 			{"auto",		required_argument,	0, 'a'},
@@ -389,7 +431,11 @@ struct osnoise_top_params *osnoise_top_parse_args(int argc, char **argv)
 		case 'c':
 			retval = parse_cpu_list(optarg, &params->monitored_cpus);
 			if (retval)
+<<<<<<< HEAD
 				osnoise_top_usage(params, "\nInvalid -c cpu list\n");
+=======
+				osnoise_top_usage("\nInvalid -c cpu list\n");
+>>>>>>> b7ba80a49124 (Commit)
 			params->cpus = optarg;
 			break;
 		case 'D':
@@ -398,7 +444,11 @@ struct osnoise_top_params *osnoise_top_parse_args(int argc, char **argv)
 		case 'd':
 			params->duration = parse_seconds_duration(optarg);
 			if (!params->duration)
+<<<<<<< HEAD
 				osnoise_top_usage(params, "Invalid -D duration\n");
+=======
+				osnoise_top_usage("Invalid -D duration\n");
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 'e':
 			tevent = trace_event_alloc(optarg);
@@ -414,17 +464,29 @@ struct osnoise_top_params *osnoise_top_parse_args(int argc, char **argv)
 			break;
 		case 'h':
 		case '?':
+<<<<<<< HEAD
 			osnoise_top_usage(params, NULL);
+=======
+			osnoise_top_usage(NULL);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 'p':
 			params->period = get_llong_from_str(optarg);
 			if (params->period > 10000000)
+<<<<<<< HEAD
 				osnoise_top_usage(params, "Period longer than 10 s\n");
+=======
+				osnoise_top_usage("Period longer than 10 s\n");
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 'P':
 			retval = parse_prio(optarg, &params->sched_param);
 			if (retval == -1)
+<<<<<<< HEAD
 				osnoise_top_usage(params, "Invalid -P priority");
+=======
+				osnoise_top_usage("Invalid -P priority");
+>>>>>>> b7ba80a49124 (Commit)
 			params->set_sched = 1;
 			break;
 		case 'q':
@@ -433,7 +495,11 @@ struct osnoise_top_params *osnoise_top_parse_args(int argc, char **argv)
 		case 'r':
 			params->runtime = get_llong_from_str(optarg);
 			if (params->runtime < 100)
+<<<<<<< HEAD
 				osnoise_top_usage(params, "Runtime shorter than 100 us\n");
+=======
+				osnoise_top_usage("Runtime shorter than 100 us\n");
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 's':
 			params->stop_us = get_llong_from_str(optarg);
@@ -459,7 +525,11 @@ struct osnoise_top_params *osnoise_top_parse_args(int argc, char **argv)
 					exit(EXIT_FAILURE);
 				}
 			} else {
+<<<<<<< HEAD
 				osnoise_top_usage(params, "--trigger requires a previous -e\n");
+=======
+				osnoise_top_usage("--trigger requires a previous -e\n");
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			break;
 		case '1': /* filter */
@@ -470,11 +540,19 @@ struct osnoise_top_params *osnoise_top_parse_args(int argc, char **argv)
 					exit(EXIT_FAILURE);
 				}
 			} else {
+<<<<<<< HEAD
 				osnoise_top_usage(params, "--filter requires a previous -e\n");
 			}
 			break;
 		default:
 			osnoise_top_usage(params, "Invalid option");
+=======
+				osnoise_top_usage("--filter requires a previous -e\n");
+			}
+			break;
+		default:
+			osnoise_top_usage("Invalid option");
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -539,6 +617,7 @@ osnoise_top_apply_config(struct osnoise_tool *tool, struct osnoise_top_params *p
 		}
 	}
 
+<<<<<<< HEAD
 	if (params->mode == MODE_HWNOISE) {
 		retval = osnoise_set_irq_disable(tool->context, 1);
 		if (retval) {
@@ -547,6 +626,8 @@ osnoise_top_apply_config(struct osnoise_tool *tool, struct osnoise_top_params *p
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 out_err:

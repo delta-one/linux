@@ -1074,7 +1074,11 @@ static int igbvf_request_msix(struct igbvf_adapter *adapter)
 			  igbvf_intr_msix_rx, 0, adapter->rx_ring->name,
 			  netdev);
 	if (err)
+<<<<<<< HEAD
 		goto free_irq_tx;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	adapter->rx_ring->itr_register = E1000_EITR(vector);
 	adapter->rx_ring->itr_val = adapter->current_itr;
@@ -1083,6 +1087,7 @@ static int igbvf_request_msix(struct igbvf_adapter *adapter)
 	err = request_irq(adapter->msix_entries[vector].vector,
 			  igbvf_msix_other, 0, netdev->name, netdev);
 	if (err)
+<<<<<<< HEAD
 		goto free_irq_rx;
 
 	igbvf_configure_msix(adapter);
@@ -1091,6 +1096,12 @@ free_irq_rx:
 	free_irq(adapter->msix_entries[--vector].vector, netdev);
 free_irq_tx:
 	free_irq(adapter->msix_entries[--vector].vector, netdev);
+=======
+		goto out;
+
+	igbvf_configure_msix(adapter);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	return err;
 }
@@ -1113,7 +1124,11 @@ static int igbvf_alloc_queues(struct igbvf_adapter *adapter)
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	netif_napi_add(netdev, &adapter->rx_ring->napi, igbvf_poll);
+=======
+	netif_napi_add(netdev, &adapter->rx_ring->napi, igbvf_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -2593,6 +2608,7 @@ static void igbvf_io_resume(struct pci_dev *pdev)
 	netif_device_attach(netdev);
 }
 
+<<<<<<< HEAD
 /**
  * igbvf_io_prepare - prepare device driver for PCI reset
  * @pdev: PCI device information struct
@@ -2620,6 +2636,8 @@ static void igbvf_io_reset_done(struct pci_dev *pdev)
 	clear_bit(__IGBVF_RESETTING, &adapter->state);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void igbvf_print_device_info(struct igbvf_adapter *adapter)
 {
 	struct e1000_hw *hw = &adapter->hw;
@@ -2947,8 +2965,11 @@ static const struct pci_error_handlers igbvf_err_handler = {
 	.error_detected = igbvf_io_error_detected,
 	.slot_reset = igbvf_io_slot_reset,
 	.resume = igbvf_io_resume,
+<<<<<<< HEAD
 	.reset_prepare = igbvf_io_prepare,
 	.reset_done = igbvf_io_reset_done,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct pci_device_id igbvf_pci_tbl[] = {

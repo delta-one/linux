@@ -10,7 +10,11 @@ config CRYPTO_DEV_STM32_CRC
 
 config CRYPTO_DEV_STM32_HASH
 	tristate "Support for STM32 hash accelerators"
+<<<<<<< HEAD
 	depends on ARCH_STM32 || ARCH_U8500
+=======
+	depends on ARCH_STM32
+>>>>>>> b7ba80a49124 (Commit)
 	depends on HAS_DMA
 	select CRYPTO_HASH
 	select CRYPTO_MD5
@@ -23,7 +27,11 @@ config CRYPTO_DEV_STM32_HASH
 
 config CRYPTO_DEV_STM32_CRYP
 	tristate "Support for STM32 cryp accelerators"
+<<<<<<< HEAD
 	depends on ARCH_STM32 || ARCH_U8500
+=======
+	depends on ARCH_STM32
+>>>>>>> b7ba80a49124 (Commit)
 	select CRYPTO_HASH
 	select CRYPTO_ENGINE
 	select CRYPTO_LIB_DES

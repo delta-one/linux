@@ -24,12 +24,18 @@
 
 	/* these aliases provide the FMan ports mapping */
 	enet0: ethernet@e0000 {
+<<<<<<< HEAD
 		pcs-handle-names = "qsgmii";
 	};
 
 	enet1: ethernet@e2000 {
 		pcsphy-handle = <&pcsphy1>, <&qsgmiib_pcs1>;
 		pcs-handle-names = "sgmii", "qsgmii";
+=======
+	};
+
+	enet1: ethernet@e2000 {
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	enet2: ethernet@e4000 {
@@ -39,6 +45,7 @@
 	};
 
 	enet4: ethernet@e8000 {
+<<<<<<< HEAD
 		pcsphy-handle = <&pcsphy4>, <&qsgmiib_pcs2>;
 		pcs-handle-names = "sgmii", "qsgmii";
 	};
@@ -46,10 +53,16 @@
 	enet5: ethernet@ea000 {
 		pcsphy-handle = <&pcsphy5>, <&qsgmiib_pcs3>;
 		pcs-handle-names = "sgmii", "qsgmii";
+=======
+	};
+
+	enet5: ethernet@ea000 {
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	enet6: ethernet@f0000 {
 	};
+<<<<<<< HEAD
 
 	mdio@e1000 {
 		qsgmiib_pcs1: ethernet-pcs@1 {
@@ -67,4 +80,6 @@
 			reg = <0x3>;
 		};
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

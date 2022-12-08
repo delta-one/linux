@@ -10,8 +10,11 @@
 
 #include <linux/kernel.h>
 #include <linux/init.h>
+<<<<<<< HEAD
 #include <linux/slab.h>
 #include <linux/sys_soc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/mipsregs.h>
 #include <asm/mach-ralink/ralink_regs.h>
@@ -19,8 +22,11 @@
 
 #include "common.h"
 
+<<<<<<< HEAD
 static struct ralink_soc_info *soc_info_ptr;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void __init ralink_clk_init(void)
 {
 	unsigned long cpu_rate, sys_rate;
@@ -74,6 +80,7 @@ void __init ralink_of_remap(void)
 		panic("Failed to remap core resources");
 }
 
+<<<<<<< HEAD
 static unsigned int __init rt3883_get_soc_name0(void)
 {
 	return __raw_readl(RT3883_SYSC_BASE + RT3883_SYSC_REG_CHIPID0_3);
@@ -153,11 +160,40 @@ void __init prom_soc_init(struct ralink_soc_info *soc_info)
 		rt3883_get_soc_name(),
 		rt3883_get_soc_ver(),
 		rt3883_get_soc_rev());
+=======
+void __init prom_soc_init(struct ralink_soc_info *soc_info)
+{
+	void __iomem *sysc = (void __iomem *) KSEG1ADDR(RT3883_SYSC_BASE);
+	const char *name;
+	u32 n0;
+	u32 n1;
+	u32 id;
+
+	n0 = __raw_readl(sysc + RT3883_SYSC_REG_CHIPID0_3);
+	n1 = __raw_readl(sysc + RT3883_SYSC_REG_CHIPID4_7);
+	id = __raw_readl(sysc + RT3883_SYSC_REG_REVID);
+
+	if (n0 == RT3883_CHIP_NAME0 && n1 == RT3883_CHIP_NAME1) {
+		soc_info->compatible = "ralink,rt3883-soc";
+		name = "RT3883";
+	} else {
+		panic("rt3883: unknown SoC, n0:%08x n1:%08x", n0, n1);
+	}
+
+	snprintf(soc_info->sys_type, RAMIPS_SYS_TYPE_LEN,
+		"Ralink %s ver:%u eco:%u",
+		name,
+		(id >> RT3883_REVID_VER_ID_SHIFT) & RT3883_REVID_VER_ID_MASK,
+		(id & RT3883_REVID_ECO_ID_MASK));
+>>>>>>> b7ba80a49124 (Commit)
 
 	soc_info->mem_base = RT3883_SDRAM_BASE;
 	soc_info->mem_size_min = RT3883_MEM_SIZE_MIN;
 	soc_info->mem_size_max = RT3883_MEM_SIZE_MAX;
 
 	ralink_soc = RT3883_SOC;
+<<<<<<< HEAD
 	soc_info_ptr = soc_info;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

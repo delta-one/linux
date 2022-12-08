@@ -10,7 +10,10 @@
 #define DSS_SUBSYS_NAME "DISPLAY"
 
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/platform_device.h>
 #include <linux/sysfs.h>
@@ -37,7 +40,11 @@ static ssize_t display_enabled_store(struct omap_dss_device *dssdev,
 	int r;
 	bool enable;
 
+<<<<<<< HEAD
 	r = kstrtobool(buf, &enable);
+=======
+	r = strtobool(buf, &enable);
+>>>>>>> b7ba80a49124 (Commit)
 	if (r)
 		return r;
 
@@ -74,7 +81,11 @@ static ssize_t display_tear_store(struct omap_dss_device *dssdev,
 	if (!dssdev->driver->enable_te || !dssdev->driver->get_te)
 		return -ENOENT;
 
+<<<<<<< HEAD
 	r = kstrtobool(buf, &te);
+=======
+	r = strtobool(buf, &te);
+>>>>>>> b7ba80a49124 (Commit)
 	if (r)
 		return r;
 
@@ -184,7 +195,11 @@ static ssize_t display_mirror_store(struct omap_dss_device *dssdev,
 	if (!dssdev->driver->set_mirror || !dssdev->driver->get_mirror)
 		return -ENOENT;
 
+<<<<<<< HEAD
 	r = kstrtobool(buf, &mirror);
+=======
+	r = strtobool(buf, &mirror);
+>>>>>>> b7ba80a49124 (Commit)
 	if (r)
 		return r;
 

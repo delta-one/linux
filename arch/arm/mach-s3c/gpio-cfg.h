@@ -95,6 +95,20 @@ struct samsung_gpio_cfg {
 extern int s3c_gpio_cfgpin(unsigned int pin, unsigned int to);
 
 /**
+<<<<<<< HEAD
+=======
+ * s3c_gpio_getcfg - Read the current function for a GPIO pin
+ * @pin: The pin to read the configuration value for.
+ *
+ * Read the configuration state of the given @pin, returning a value that
+ * could be passed back to s3c_gpio_cfgpin().
+ *
+ * @sa s3c_gpio_cfgpin
+ */
+extern unsigned s3c_gpio_getcfg(unsigned int pin);
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * s3c_gpio_cfgpin_range() - Change the GPIO function for configuring pin range
  * @start: The pin number to start at
  * @nr: The number of pins to configure from @start.
@@ -131,6 +145,17 @@ extern int s3c_gpio_cfgpin_range(unsigned int start, unsigned int nr,
 */
 extern int s3c_gpio_setpull(unsigned int pin, samsung_gpio_pull_t pull);
 
+<<<<<<< HEAD
+=======
+/**
+ * s3c_gpio_getpull() - get the pull resistor state of a gpio pin
+ * @pin: The pin number to get the settings for
+ *
+ * Read the pull resistor value for the specified pin.
+*/
+extern samsung_gpio_pull_t s3c_gpio_getpull(unsigned int pin);
+
+>>>>>>> b7ba80a49124 (Commit)
 /* configure `all` aspects of an gpio */
 
 /**

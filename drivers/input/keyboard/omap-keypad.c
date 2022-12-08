@@ -296,7 +296,11 @@ static int omap_kp_remove(struct platform_device *pdev)
 	omap_writew(1, OMAP1_MPUIO_BASE + OMAP_MPUIO_KBD_MASKIT);
 	free_irq(omap_kp->irq, omap_kp);
 
+<<<<<<< HEAD
 	timer_shutdown_sync(&omap_kp->timer);
+=======
+	del_timer_sync(&omap_kp->timer);
+>>>>>>> b7ba80a49124 (Commit)
 	tasklet_kill(&kp_tasklet);
 
 	/* unregister everything */

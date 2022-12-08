@@ -1,4 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
+=======
+#include <linux/string.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kernel.h>
 #include <linux/of.h>
 #include <linux/of_device.h>
@@ -8,6 +12,10 @@
 #include <linux/dma-direct.h> /* for bus_dma_region */
 #include <linux/dma-map-ops.h>
 #include <linux/init.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mod_devicetable.h>
 #include <linux/slab.h>
 #include <linux/platform_device.h>
@@ -114,12 +122,16 @@ int of_dma_configure_id(struct device *dev, struct device_node *np,
 {
 	const struct iommu_ops *iommu;
 	const struct bus_dma_region *map = NULL;
+<<<<<<< HEAD
 	struct device_node *bus_np;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 dma_start = 0;
 	u64 mask, end, size = 0;
 	bool coherent;
 	int ret;
 
+<<<<<<< HEAD
 	if (np == dev->of_node)
 		bus_np = __of_get_dma_parent(np);
 	else
@@ -127,6 +139,9 @@ int of_dma_configure_id(struct device *dev, struct device_node *np,
 
 	ret = of_dma_get_range(bus_np, &map);
 	of_node_put(bus_np);
+=======
+	ret = of_dma_get_range(np, &map);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0) {
 		/*
 		 * For legacy reasons, we have to assume some devices need
@@ -246,6 +261,71 @@ const void *of_device_get_match_data(const struct device *dev)
 }
 EXPORT_SYMBOL(of_device_get_match_data);
 
+<<<<<<< HEAD
+=======
+static ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
+{
+	const char *compat;
+	char *c;
+	struct property *p;
+	ssize_t csize;
+	ssize_t tsize;
+
+	if ((!dev) || (!dev->of_node))
+		return -ENODEV;
+
+	/* Name & Type */
+	/* %p eats all alphanum characters, so %c must be used here */
+	csize = snprintf(str, len, "of:N%pOFn%c%s", dev->of_node, 'T',
+			 of_node_get_device_type(dev->of_node));
+	tsize = csize;
+	len -= csize;
+	if (str)
+		str += csize;
+
+	of_property_for_each_string(dev->of_node, "compatible", p, compat) {
+		csize = strlen(compat) + 1;
+		tsize += csize;
+		if (csize > len)
+			continue;
+
+		csize = snprintf(str, len, "C%s", compat);
+		for (c = str; c; ) {
+			c = strchr(c, ' ');
+			if (c)
+				*c++ = '_';
+		}
+		len -= csize;
+		str += csize;
+	}
+
+	return tsize;
+}
+
+int of_device_request_module(struct device *dev)
+{
+	char *str;
+	ssize_t size;
+	int ret;
+
+	size = of_device_get_modalias(dev, NULL, 0);
+	if (size < 0)
+		return size;
+
+	str = kmalloc(size + 1, GFP_KERNEL);
+	if (!str)
+		return -ENOMEM;
+
+	of_device_get_modalias(dev, str, size);
+	str[size] = '\0';
+	ret = request_module(str);
+	kfree(str);
+
+	return ret;
+}
+EXPORT_SYMBOL_GPL(of_device_request_module);
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * of_device_modalias - Fill buffer with newline terminated modalias string
  * @dev:	Calling device
@@ -254,12 +334,16 @@ EXPORT_SYMBOL(of_device_get_match_data);
  */
 ssize_t of_device_modalias(struct device *dev, char *str, ssize_t len)
 {
+<<<<<<< HEAD
 	ssize_t sl;
 
 	if (!dev || !dev->of_node || dev->of_node_reused)
 		return -ENODEV;
 
 	sl = of_modalias(dev->of_node, str, len - 2);
+=======
+	ssize_t sl = of_device_get_modalias(dev, str, len - 2);
+>>>>>>> b7ba80a49124 (Commit)
 	if (sl < 0)
 		return sl;
 	if (sl > len - 2)
@@ -273,10 +357,17 @@ EXPORT_SYMBOL_GPL(of_device_modalias);
 
 /**
  * of_device_uevent - Display OF related uevent information
+<<<<<<< HEAD
  * @dev:	Device to display the uevent information for
  * @env:	Kernel object's userspace event reference to fill up
  */
 void of_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
+=======
+ * @dev:	Device to apply DMA configuration
+ * @env:	Kernel object's userspace event reference
+ */
+void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const char *compat, *type;
 	struct alias_prop *app;
@@ -313,21 +404,34 @@ void of_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
 	mutex_unlock(&of_mutex);
 }
 
+<<<<<<< HEAD
 int of_device_uevent_modalias(const struct device *dev, struct kobj_uevent_env *env)
 {
 	int sl;
 
 	if ((!dev) || (!dev->of_node) || dev->of_node_reused)
+=======
+int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
+{
+	int sl;
+
+	if ((!dev) || (!dev->of_node))
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODEV;
 
 	/* Devicetree modalias is tricky, we add it in 2 steps */
 	if (add_uevent_var(env, "MODALIAS="))
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	sl = of_modalias(dev->of_node, &env->buf[env->buflen-1],
 			 sizeof(env->buf) - env->buflen);
 	if (sl < 0)
 		return sl;
+=======
+	sl = of_device_get_modalias(dev, &env->buf[env->buflen-1],
+				    sizeof(env->buf) - env->buflen);
+>>>>>>> b7ba80a49124 (Commit)
 	if (sl >= (sizeof(env->buf) - env->buflen))
 		return -ENOMEM;
 	env->buflen += sl;

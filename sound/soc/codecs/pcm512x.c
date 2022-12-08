@@ -1634,7 +1634,11 @@ int pcm512x_probe(struct device *dev, struct regmap *regmap)
 			if (val > 6) {
 				dev_err(dev, "Invalid pll-in\n");
 				ret = -EINVAL;
+<<<<<<< HEAD
 				goto err_pm;
+=======
+				goto err_clk;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			pcm512x->pll_in = val;
 		}
@@ -1643,7 +1647,11 @@ int pcm512x_probe(struct device *dev, struct regmap *regmap)
 			if (val > 6) {
 				dev_err(dev, "Invalid pll-out\n");
 				ret = -EINVAL;
+<<<<<<< HEAD
 				goto err_pm;
+=======
+				goto err_clk;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			pcm512x->pll_out = val;
 		}
@@ -1652,12 +1660,20 @@ int pcm512x_probe(struct device *dev, struct regmap *regmap)
 			dev_err(dev,
 				"Error: both pll-in and pll-out, or none\n");
 			ret = -EINVAL;
+<<<<<<< HEAD
 			goto err_pm;
+=======
+			goto err_clk;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		if (pcm512x->pll_in && pcm512x->pll_in == pcm512x->pll_out) {
 			dev_err(dev, "Error: pll-in == pll-out\n");
 			ret = -EINVAL;
+<<<<<<< HEAD
 			goto err_pm;
+=======
+			goto err_clk;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 #endif

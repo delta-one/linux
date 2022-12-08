@@ -199,7 +199,11 @@ out_active:	spin_lock(&timelines->lock);
 	if (remaining_timeout)
 		*remaining_timeout = timeout;
 
+<<<<<<< HEAD
 	return active_count ? timeout ?: -ETIME : 0;
+=======
+	return active_count ? timeout : 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void retire_work_handler(struct work_struct *work)

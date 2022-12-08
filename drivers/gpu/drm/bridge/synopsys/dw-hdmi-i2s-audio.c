@@ -193,7 +193,10 @@ static int snd_dw_hdmi_probe(struct platform_device *pdev)
 	struct hdmi_codec_pdata pdata;
 	struct platform_device *platform;
 
+<<<<<<< HEAD
 	memset(&pdata, 0, sizeof(pdata));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pdata.ops		= &dw_hdmi_i2s_ops;
 	pdata.i2s		= 1;
 	pdata.max_i2s_channels	= 8;
@@ -216,16 +219,29 @@ static int snd_dw_hdmi_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void snd_dw_hdmi_remove(struct platform_device *pdev)
+=======
+static int snd_dw_hdmi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *platform = dev_get_drvdata(&pdev->dev);
 
 	platform_device_unregister(platform);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver snd_dw_hdmi_driver = {
 	.probe	= snd_dw_hdmi_probe,
+<<<<<<< HEAD
 	.remove_new = snd_dw_hdmi_remove,
+=======
+	.remove	= snd_dw_hdmi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name = DRIVER_NAME,
 	},

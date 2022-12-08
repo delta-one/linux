@@ -15,7 +15,11 @@
 /* Default disabled for now until it has some more testing on the different
  * iommu combinations that can be paired with the driver:
  */
+<<<<<<< HEAD
 static bool enable_eviction = true;
+=======
+static bool enable_eviction = false;
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_PARM_DESC(enable_eviction, "Enable swappable GEM buffers");
 module_param(enable_eviction, bool, 0600);
 
@@ -24,6 +28,7 @@ static bool can_swap(void)
 	return enable_eviction && get_nr_swap_pages() > 0;
 }
 
+<<<<<<< HEAD
 static bool can_block(struct shrink_control *sc)
 {
 	if (!(sc->gfp_mask & __GFP_DIRECT_RECLAIM))
@@ -31,6 +36,8 @@ static bool can_block(struct shrink_control *sc)
 	return current_is_kswapd() || (sc->gfp_mask & __GFP_RECLAIM);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned long
 msm_gem_shrinker_count(struct shrinker *shrinker, struct shrink_control *sc)
 {
@@ -72,6 +79,7 @@ evict(struct drm_gem_object *obj)
 	return true;
 }
 
+<<<<<<< HEAD
 static bool
 wait_for_idle(struct drm_gem_object *obj)
 {
@@ -97,11 +105,14 @@ active_evict(struct drm_gem_object *obj)
 	return evict(obj);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned long
 msm_gem_shrinker_scan(struct shrinker *shrinker, struct shrink_control *sc)
 {
 	struct msm_drm_private *priv =
 		container_of(shrinker, struct msm_drm_private, shrinker);
+<<<<<<< HEAD
 	struct {
 		struct drm_gem_lru *lru;
 		bool (*shrink)(struct drm_gem_object *obj);
@@ -138,6 +149,25 @@ msm_gem_shrinker_scan(struct shrinker *shrinker, struct shrink_control *sc)
 	}
 
 	return (freed > 0 && remaining > 0) ? freed : SHRINK_STOP;
+=======
+	long nr = sc->nr_to_scan;
+	unsigned long freed, purged, evicted = 0;
+
+	purged = drm_gem_lru_scan(&priv->lru.dontneed, nr, purge);
+	nr -= purged;
+
+	if (can_swap() && nr > 0) {
+		evicted = drm_gem_lru_scan(&priv->lru.willneed, nr, evict);
+		nr -= evicted;
+	}
+
+	freed = purged + evicted;
+
+	if (freed)
+		trace_msm_gem_shrink(sc->nr_to_scan, purged, evicted);
+
+	return (freed > 0) ? freed : SHRINK_STOP;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_DEBUG_FS
@@ -187,12 +217,18 @@ msm_gem_shrinker_vmap(struct notifier_block *nb, unsigned long event, void *ptr)
 		NULL,
 	};
 	unsigned idx, unmapped = 0;
+<<<<<<< HEAD
 	unsigned long remaining = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (idx = 0; lrus[idx] && unmapped < vmap_shrink_limit; idx++) {
 		unmapped += drm_gem_lru_scan(lrus[idx],
 					     vmap_shrink_limit - unmapped,
+<<<<<<< HEAD
 					     &remaining,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 					     vmap_shrink);
 	}
 

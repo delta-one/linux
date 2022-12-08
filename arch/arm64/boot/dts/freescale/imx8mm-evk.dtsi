@@ -56,7 +56,10 @@
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
 		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+<<<<<<< HEAD
 		off-on-delay-us = <20000>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		enable-active-high;
 	};
 
@@ -340,11 +343,18 @@
 	status = "okay";
 
 	pca6416: gpio@20 {
+<<<<<<< HEAD
 		compatible = "nxp,pca6416";
 		reg = <0x20>;
 		gpio-controller;
 		#gpio-cells = <2>;
 		vcc-supply = <&buck4_reg>;
+=======
+		compatible = "ti,tca6416";
+		reg = <0x20>;
+		gpio-controller;
+		#gpio-cells = <2>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -360,8 +370,14 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_pcie0>;
 	reset-gpio = <&gpio4 21 GPIO_ACTIVE_LOW>;
+<<<<<<< HEAD
 	clocks = <&clk IMX8MM_CLK_PCIE1_ROOT>, <&pcie0_refclk>,
 		 <&clk IMX8MM_CLK_PCIE1_AUX>;
+=======
+	clocks = <&clk IMX8MM_CLK_PCIE1_ROOT>, <&clk IMX8MM_CLK_PCIE1_AUX>,
+		 <&pcie0_refclk>;
+	clock-names = "pcie", "pcie_aux", "pcie_bus";
+>>>>>>> b7ba80a49124 (Commit)
 	assigned-clocks = <&clk IMX8MM_CLK_PCIE1_AUX>,
 			  <&clk IMX8MM_CLK_PCIE1_CTRL>;
 	assigned-clock-rates = <10000000>, <250000000>;
@@ -400,10 +416,13 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &usbphynop1 {
 	wakeup-source;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &usbotg1 {
 	dr_mode = "otg";
 	hnp-disable;

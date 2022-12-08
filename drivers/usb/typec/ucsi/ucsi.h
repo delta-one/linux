@@ -287,7 +287,10 @@ struct ucsi {
 	struct ucsi_capability cap;
 	struct ucsi_connector *connector;
 
+<<<<<<< HEAD
 	struct work_struct resume_work;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct delayed_work work;
 	int work_count;
 #define UCSI_ROLE_SWITCH_RETRY_PER_HZ	10
@@ -322,7 +325,10 @@ struct ucsi_connector {
 	struct work_struct work;
 	struct completion complete;
 	struct workqueue_struct *wq;
+<<<<<<< HEAD
 	struct list_head partner_tasks;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct typec_port *port;
 	struct typec_partner *partner;
@@ -340,6 +346,7 @@ struct ucsi_connector {
 	u32 src_pdos[PDO_MAX_OBJECTS];
 	int num_pdos;
 
+<<<<<<< HEAD
 	/* USB PD objects */
 	struct usb_power_delivery *pd;
 	struct usb_power_delivery_capabilities *port_source_caps;
@@ -348,6 +355,8 @@ struct ucsi_connector {
 	struct usb_power_delivery_capabilities *partner_source_caps;
 	struct usb_power_delivery_capabilities *partner_sink_caps;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct usb_role_switch *usb_role_sw;
 };
 

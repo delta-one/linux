@@ -98,7 +98,11 @@
 };
 
 &apps_rsc {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pmx55-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pmx55-rpmh-regulators";
 		qcom,pmic-id = "e";
 
@@ -233,6 +237,7 @@
 };
 
 &blsp1_uart3 {
+<<<<<<< HEAD
 	status = "okay";
 };
 
@@ -265,6 +270,23 @@
 
 &qpic_nand {
 	status = "okay";
+=======
+	status = "ok";
+};
+
+&ipa {
+	status = "okay";
+
+	memory-region = <&ipa_fw_mem>;
+};
+
+&qpic_bam {
+	status = "ok";
+};
+
+&qpic_nand {
+	status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 
 	nand@0 {
 		reg = <0>;
@@ -278,6 +300,7 @@
 };
 
 &remoteproc_mpss {
+<<<<<<< HEAD
 	memory-region = <&mpss_adsp_mem>;
 	status = "okay";
 };
@@ -320,6 +343,23 @@
 	vdda-pll-supply = <&vreg_l1e_bb_1p2>;
 
 	status = "okay";
+=======
+	status = "okay";
+	memory-region = <&mpss_adsp_mem>;
+};
+
+&usb_hsphy {
+	status = "okay";
+	vdda-pll-supply = <&vreg_l4e_bb_0p875>;
+	vdda33-supply = <&vreg_l10e_3p1>;
+	vdda18-supply = <&vreg_l5e_bb_1p7>;
+};
+
+&usb_qmpphy {
+	status = "okay";
+	vdda-phy-supply = <&vreg_l4e_bb_0p875>;
+	vdda-pll-supply = <&vreg_l1e_bb_1p2>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &usb {

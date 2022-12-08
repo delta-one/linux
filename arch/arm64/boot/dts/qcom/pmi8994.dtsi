@@ -10,7 +10,11 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
+<<<<<<< HEAD
 		pmi8994_gpios: gpio@c000 {
+=======
+		pmi8994_gpios: gpios@c000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,pmi8994-gpio", "qcom,spmi-gpio";
 			reg = <0xc000>;
 			gpio-controller;

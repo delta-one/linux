@@ -18,8 +18,11 @@
 #include <linux/falloc.h>
 #include <linux/uio.h>
 #include <linux/fs.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
 #include <linux/file.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int fuse_send_open(struct fuse_mount *fm, u64 nodeid,
 			  unsigned int open_flags, int opcode,
@@ -479,6 +482,7 @@ static void fuse_sync_writes(struct inode *inode)
 	fuse_release_nowrite(inode);
 }
 
+<<<<<<< HEAD
 struct fuse_flush_args {
 	struct fuse_args args;
 	struct fuse_flush_in inarg;
@@ -495,20 +499,60 @@ static int fuse_do_flush(struct fuse_flush_args *fa)
 	err = write_inode_now(inode, 1);
 	if (err)
 		goto out;
+=======
+static int fuse_flush(struct file *file, fl_owner_t id)
+{
+	struct inode *inode = file_inode(file);
+	struct fuse_mount *fm = get_fuse_mount(inode);
+	struct fuse_file *ff = file->private_data;
+	struct fuse_flush_in inarg;
+	FUSE_ARGS(args);
+	int err;
+
+	if (fuse_is_bad(inode))
+		return -EIO;
+
+	if (ff->open_flags & FOPEN_NOFLUSH && !fm->fc->writeback_cache)
+		return 0;
+
+	err = write_inode_now(inode, 1);
+	if (err)
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	inode_lock(inode);
 	fuse_sync_writes(inode);
 	inode_unlock(inode);
 
+<<<<<<< HEAD
 	err = filemap_check_errors(fa->file->f_mapping);
 	if (err)
 		goto out;
+=======
+	err = filemap_check_errors(file->f_mapping);
+	if (err)
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = 0;
 	if (fm->fc->no_flush)
 		goto inval_attr_out;
 
+<<<<<<< HEAD
 	err = fuse_simple_request(fm, &fa->args);
+=======
+	memset(&inarg, 0, sizeof(inarg));
+	inarg.fh = ff->fh;
+	inarg.lock_owner = fuse_lock_owner_id(fm->fc, id);
+	args.opcode = FUSE_FLUSH;
+	args.nodeid = get_node_id(inode);
+	args.in_numargs = 1;
+	args.in_args[0].size = sizeof(inarg);
+	args.in_args[0].value = &inarg;
+	args.force = true;
+
+	err = fuse_simple_request(fm, &args);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err == -ENOSYS) {
 		fm->fc->no_flush = 1;
 		err = 0;
@@ -521,6 +565,7 @@ inval_attr_out:
 	 */
 	if (!err && fm->fc->writeback_cache)
 		fuse_invalidate_attr_mask(inode, STATX_BLOCKS);
+<<<<<<< HEAD
 
 out:
 	fput(fa->file);
@@ -572,6 +617,11 @@ static int fuse_flush(struct file *file, fl_owner_t id)
 	return fuse_do_flush(fa);
 }
 
+=======
+	return err;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int fuse_fsync_common(struct file *file, loff_t start, loff_t end,
 		      int datasync, int opcode)
 {
@@ -663,6 +713,7 @@ void fuse_read_args_fill(struct fuse_io_args *ia, struct file *file, loff_t pos,
 }
 
 static void fuse_release_user_pages(struct fuse_args_pages *ap,
+<<<<<<< HEAD
 				    bool should_dirty)
 {
 	unsigned int i;
@@ -671,6 +722,21 @@ static void fuse_release_user_pages(struct fuse_args_pages *ap,
 		if (should_dirty)
 			set_page_dirty_lock(ap->pages[i]);
 		put_page(ap->pages[i]);
+=======
+				    bool should_dirty, bool is_user_or_bvec)
+{
+	unsigned int i;
+
+	if (is_user_or_bvec) {
+		dio_w_unpin_user_pages_dirty_lock(ap->pages, ap->num_pages,
+						  should_dirty);
+	} else {
+		for (i = 0; i < ap->num_pages; i++) {
+			if (should_dirty)
+				set_page_dirty_lock(ap->pages[i]);
+			put_page(ap->pages[i]);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -690,7 +756,11 @@ static ssize_t fuse_get_res_by_io(struct fuse_io_priv *io)
 	return io->bytes < 0 ? io->size : io->bytes;
 }
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * In case of short read, the caller sets 'pos' to the position of
  * actual end of fuse request in IO request. Otherwise, if bytes_requested
  * == bytes_transferred or rw == WRITE, the caller sets 'pos' to -1.
@@ -771,7 +841,11 @@ static void fuse_aio_complete_req(struct fuse_mount *fm, struct fuse_args *args,
 	struct fuse_io_priv *io = ia->io;
 	ssize_t pos = -1;
 
+<<<<<<< HEAD
 	fuse_release_user_pages(&ia->ap, io->should_dirty);
+=======
+	fuse_release_user_pages(&ia->ap, io->should_dirty, io->is_user_or_bvec);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (err) {
 		/* Nothing */
@@ -1351,8 +1425,12 @@ static ssize_t fuse_cache_write_iter(struct kiocb *iocb, struct iov_iter *from)
 			return err;
 
 		if (fc->handle_killpriv_v2 &&
+<<<<<<< HEAD
 		    setattr_should_drop_suidgid(&nop_mnt_idmap,
 						file_inode(file))) {
+=======
+		    should_remove_suid(file_dentry(file))) {
+>>>>>>> b7ba80a49124 (Commit)
 			goto writethrough;
 		}
 
@@ -1453,10 +1531,17 @@ static int fuse_get_user_pages(struct fuse_args_pages *ap, struct iov_iter *ii,
 	while (nbytes < *nbytesp && ap->num_pages < max_pages) {
 		unsigned npages;
 		size_t start;
+<<<<<<< HEAD
 		ret = iov_iter_get_pages2(ii, &ap->pages[ap->num_pages],
 					*nbytesp - nbytes,
 					max_pages - ap->num_pages,
 					&start);
+=======
+		ret = dio_w_iov_iter_pin_pages(ii, &ap->pages[ap->num_pages],
+					       *nbytesp - nbytes,
+					       max_pages - ap->num_pages,
+					       &start);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret < 0)
 			break;
 
@@ -1522,6 +1607,13 @@ ssize_t fuse_direct_io(struct fuse_io_priv *io, struct iov_iter *iter,
 		fl_owner_t owner = current->files;
 		size_t nbytes = min(count, nmax);
 
+<<<<<<< HEAD
+=======
+		/* For use in fuse_release_user_pages(): */
+		io->is_user_or_bvec = user_backed_iter(iter) ||
+				      iov_iter_is_bvec(iter);
+
+>>>>>>> b7ba80a49124 (Commit)
 		err = fuse_get_user_pages(&ia->ap, iter, &nbytes, write,
 					  max_pages);
 		if (err && !nbytes)
@@ -1537,7 +1629,12 @@ ssize_t fuse_direct_io(struct fuse_io_priv *io, struct iov_iter *iter,
 		}
 
 		if (!io->async || nres < 0) {
+<<<<<<< HEAD
 			fuse_release_user_pages(&ia->ap, io->should_dirty);
+=======
+			fuse_release_user_pages(&ia->ap, io->should_dirty,
+						io->is_user_or_bvec);
+>>>>>>> b7ba80a49124 (Commit)
 			fuse_io_free(ia);
 		}
 		ia = NULL;
@@ -1602,6 +1699,7 @@ static ssize_t fuse_direct_read_iter(struct kiocb *iocb, struct iov_iter *to)
 	return res;
 }
 
+<<<<<<< HEAD
 static bool fuse_direct_write_extending_i_size(struct kiocb *iocb,
 					       struct iov_iter *iter)
 {
@@ -1643,6 +1741,16 @@ static ssize_t fuse_direct_write_iter(struct kiocb *iocb, struct iov_iter *from)
 		}
 	}
 
+=======
+static ssize_t fuse_direct_write_iter(struct kiocb *iocb, struct iov_iter *from)
+{
+	struct inode *inode = file_inode(iocb->ki_filp);
+	struct fuse_io_priv io = FUSE_IO_PRIV_SYNC(iocb);
+	ssize_t res;
+
+	/* Don't allow parallel writes to the same file */
+	inode_lock(inode);
+>>>>>>> b7ba80a49124 (Commit)
 	res = generic_write_checks(iocb, from);
 	if (res > 0) {
 		if (!is_sync_kiocb(iocb) && iocb->ki_flags & IOCB_DIRECT) {
@@ -1653,10 +1761,14 @@ static ssize_t fuse_direct_write_iter(struct kiocb *iocb, struct iov_iter *from)
 			fuse_write_update_attr(inode, iocb->ki_pos, res);
 		}
 	}
+<<<<<<< HEAD
 	if (exclusive_lock)
 		inode_unlock(inode);
 	else
 		inode_unlock_shared(inode);
+=======
+	inode_unlock(inode);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return res;
 }
@@ -2223,7 +2335,11 @@ static bool fuse_writepage_need_send(struct fuse_conn *fc, struct page *page,
 	return false;
 }
 
+<<<<<<< HEAD
 static int fuse_writepages_fill(struct folio *folio,
+=======
+static int fuse_writepages_fill(struct page *page,
+>>>>>>> b7ba80a49124 (Commit)
 		struct writeback_control *wbc, void *_data)
 {
 	struct fuse_fill_wb_data *data = _data;
@@ -2242,7 +2358,11 @@ static int fuse_writepages_fill(struct folio *folio,
 			goto out_unlock;
 	}
 
+<<<<<<< HEAD
 	if (wpa && fuse_writepage_need_send(fc, &folio->page, ap, data)) {
+=======
+	if (wpa && fuse_writepage_need_send(fc, page, ap, data)) {
+>>>>>>> b7ba80a49124 (Commit)
 		fuse_writepages_send(data);
 		data->wpa = NULL;
 	}
@@ -2277,7 +2397,11 @@ static int fuse_writepages_fill(struct folio *folio,
 		data->max_pages = 1;
 
 		ap = &wpa->ia.ap;
+<<<<<<< HEAD
 		fuse_write_args_fill(&wpa->ia, data->ff, folio_pos(folio), 0);
+=======
+		fuse_write_args_fill(&wpa->ia, data->ff, page_offset(page), 0);
+>>>>>>> b7ba80a49124 (Commit)
 		wpa->ia.write.in.write_flags |= FUSE_WRITE_CACHE;
 		wpa->next = NULL;
 		ap->args.in_pages = true;
@@ -2285,6 +2409,7 @@ static int fuse_writepages_fill(struct folio *folio,
 		ap->num_pages = 0;
 		wpa->inode = inode;
 	}
+<<<<<<< HEAD
 	folio_start_writeback(folio);
 
 	copy_highpage(tmp_page, &folio->page);
@@ -2292,6 +2417,15 @@ static int fuse_writepages_fill(struct folio *folio,
 	ap->descs[ap->num_pages].offset = 0;
 	ap->descs[ap->num_pages].length = PAGE_SIZE;
 	data->orig_pages[ap->num_pages] = &folio->page;
+=======
+	set_page_writeback(page);
+
+	copy_highpage(tmp_page, page);
+	ap->pages[ap->num_pages] = tmp_page;
+	ap->descs[ap->num_pages].offset = 0;
+	ap->descs[ap->num_pages].length = PAGE_SIZE;
+	data->orig_pages[ap->num_pages] = page;
+>>>>>>> b7ba80a49124 (Commit)
 
 	inc_wb_stat(&inode_to_bdi(inode)->wb, WB_WRITEBACK);
 	inc_node_page_state(tmp_page, NR_WRITEBACK_TEMP);
@@ -2305,6 +2439,7 @@ static int fuse_writepages_fill(struct folio *folio,
 		spin_lock(&fi->lock);
 		ap->num_pages++;
 		spin_unlock(&fi->lock);
+<<<<<<< HEAD
 	} else if (fuse_writepage_add(wpa, &folio->page)) {
 		data->wpa = wpa;
 	} else {
@@ -2312,6 +2447,15 @@ static int fuse_writepages_fill(struct folio *folio,
 	}
 out_unlock:
 	folio_unlock(folio);
+=======
+	} else if (fuse_writepage_add(wpa, page)) {
+		data->wpa = wpa;
+	} else {
+		end_page_writeback(page);
+	}
+out_unlock:
+	unlock_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return err;
 }
@@ -3006,7 +3150,10 @@ fuse_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
 
 	if (iov_iter_rw(iter) == WRITE) {
 		fuse_write_update_attr(inode, pos, ret);
+<<<<<<< HEAD
 		/* For extending writes we already hold exclusive lock */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret < 0 && offset + count > i_size)
 			fuse_do_truncate(file);
 	}
@@ -3039,9 +3186,17 @@ static long fuse_file_fallocate(struct file *file, int mode, loff_t offset,
 		.mode = mode
 	};
 	int err;
+<<<<<<< HEAD
 	bool block_faults = FUSE_IS_DAX(inode) &&
 		(!(mode & FALLOC_FL_KEEP_SIZE) ||
 		 (mode & (FALLOC_FL_PUNCH_HOLE | FALLOC_FL_ZERO_RANGE)));
+=======
+	bool lock_inode = !(mode & FALLOC_FL_KEEP_SIZE) ||
+			   (mode & (FALLOC_FL_PUNCH_HOLE |
+				    FALLOC_FL_ZERO_RANGE));
+
+	bool block_faults = FUSE_IS_DAX(inode) && lock_inode;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (mode & ~(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE |
 		     FALLOC_FL_ZERO_RANGE))
@@ -3050,6 +3205,7 @@ static long fuse_file_fallocate(struct file *file, int mode, loff_t offset,
 	if (fm->fc->no_fallocate)
 		return -EOPNOTSUPP;
 
+<<<<<<< HEAD
 	inode_lock(inode);
 	if (block_faults) {
 		filemap_invalidate_lock(inode->i_mapping);
@@ -3064,6 +3220,24 @@ static long fuse_file_fallocate(struct file *file, int mode, loff_t offset,
 		err = fuse_writeback_range(inode, offset, endbyte);
 		if (err)
 			goto out;
+=======
+	if (lock_inode) {
+		inode_lock(inode);
+		if (block_faults) {
+			filemap_invalidate_lock(inode->i_mapping);
+			err = fuse_dax_break_layouts(inode, 0, 0);
+			if (err)
+				goto out;
+		}
+
+		if (mode & (FALLOC_FL_PUNCH_HOLE | FALLOC_FL_ZERO_RANGE)) {
+			loff_t endbyte = offset + length - 1;
+
+			err = fuse_writeback_range(inode, offset, endbyte);
+			if (err)
+				goto out;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (!(mode & FALLOC_FL_KEEP_SIZE) &&
@@ -3073,10 +3247,13 @@ static long fuse_file_fallocate(struct file *file, int mode, loff_t offset,
 			goto out;
 	}
 
+<<<<<<< HEAD
 	err = file_modified(file);
 	if (err)
 		goto out;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!(mode & FALLOC_FL_KEEP_SIZE))
 		set_bit(FUSE_I_SIZE_UNSTABLE, &fi->state);
 
@@ -3111,7 +3288,12 @@ out:
 	if (block_faults)
 		filemap_invalidate_unlock(inode->i_mapping);
 
+<<<<<<< HEAD
 	inode_unlock(inode);
+=======
+	if (lock_inode)
+		inode_unlock(inode);
+>>>>>>> b7ba80a49124 (Commit)
 
 	fuse_flush_time_update(inode);
 

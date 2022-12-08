@@ -45,6 +45,12 @@ machine_device_initcall(ebony, ebony_device_probe);
  */
 static int __init ebony_probe(void)
 {
+<<<<<<< HEAD
+=======
+	if (!of_machine_is_compatible("ibm,ebony"))
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	pci_set_flags(PCI_REASSIGN_ALL_RSRC);
 
 	return 1;
@@ -52,10 +58,17 @@ static int __init ebony_probe(void)
 
 define_machine(ebony) {
 	.name			= "Ebony",
+<<<<<<< HEAD
 	.compatible		= "ibm,ebony",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.probe			= ebony_probe,
 	.progress		= udbg_progress,
 	.init_IRQ		= uic_init_tree,
 	.get_irq		= uic_get_irq,
 	.restart		= ppc4xx_reset_system,
+<<<<<<< HEAD
+=======
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 };

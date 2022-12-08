@@ -60,7 +60,11 @@ enum adc_sort_mode {
 
 #include "thermal_hwmon.h"
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * The max sensors is two in rockchip SoCs.
  * Two sensors: CPU and GPU sensor.
  */
@@ -169,7 +173,11 @@ struct rockchip_thermal_data {
 	enum tshut_polarity tshut_polarity;
 };
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * TSADC Sensor Register description:
  *
  * TSADCV2_* are used for RK3288 SoCs, the other chips can reuse it.
@@ -1213,7 +1221,11 @@ static irqreturn_t rockchip_thermal_alarm_irq_thread(int irq, void *dev)
 
 static int rockchip_thermal_set_trips(struct thermal_zone_device *tz, int low, int high)
 {
+<<<<<<< HEAD
 	struct rockchip_thermal_sensor *sensor = thermal_zone_device_priv(tz);
+=======
+	struct rockchip_thermal_sensor *sensor = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct rockchip_thermal_data *thermal = sensor->thermal;
 	const struct rockchip_tsadc_chip *tsadc = thermal->chip;
 
@@ -1226,13 +1238,23 @@ static int rockchip_thermal_set_trips(struct thermal_zone_device *tz, int low, i
 
 static int rockchip_thermal_get_temp(struct thermal_zone_device *tz, int *out_temp)
 {
+<<<<<<< HEAD
 	struct rockchip_thermal_sensor *sensor = thermal_zone_device_priv(tz);
+=======
+	struct rockchip_thermal_sensor *sensor = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct rockchip_thermal_data *thermal = sensor->thermal;
 	const struct rockchip_tsadc_chip *tsadc = sensor->thermal->chip;
 	int retval;
 
 	retval = tsadc->get_temp(&tsadc->table,
 				 sensor->id, thermal->regs, out_temp);
+<<<<<<< HEAD
+=======
+	dev_dbg(&thermal->pdev->dev, "sensor %d - temp: %d, retval: %d\n",
+		sensor->id, *out_temp, retval);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return retval;
 }
 
@@ -1336,7 +1358,11 @@ rockchip_thermal_register_sensor(struct platform_device *pdev,
 }
 
 /**
+<<<<<<< HEAD
  * rockchip_thermal_reset_controller - Reset TSADC Controller, reset all tsadc registers.
+=======
+ * Reset TSADC Controller, reset all tsadc registers.
+>>>>>>> b7ba80a49124 (Commit)
  * @reset: the reset controller of tsadc
  */
 static void rockchip_thermal_reset_controller(struct reset_control *reset)
@@ -1351,6 +1377,10 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
 	struct device_node *np = pdev->dev.of_node;
 	struct rockchip_thermal_data *thermal;
 	const struct of_device_id *match;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	int irq;
 	int i;
 	int error;
@@ -1374,7 +1404,12 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
 	if (!thermal->chip)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	thermal->regs = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	thermal->regs = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(thermal->regs))
 		return PTR_ERR(thermal->regs);
 
@@ -1451,6 +1486,10 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
 
 	for (i = 0; i < thermal->chip->chn_num; i++) {
 		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
+<<<<<<< HEAD
+=======
+		thermal->sensors[i].tzd->tzp->no_hwmon = false;
+>>>>>>> b7ba80a49124 (Commit)
 		error = thermal_add_hwmon_sysfs(thermal->sensors[i].tzd);
 		if (error)
 			dev_warn(&pdev->dev,

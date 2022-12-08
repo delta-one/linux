@@ -111,6 +111,7 @@ int x86_acpi_suspend_lowlevel(void)
 	saved_magic = 0x12345678;
 #else /* CONFIG_64BIT */
 #ifdef CONFIG_SMP
+<<<<<<< HEAD
 	/*
 	 * As each CPU starts up, it will find its own stack pointer
 	 * from its current_task->thread.sp. Typically that will be
@@ -131,6 +132,15 @@ int x86_acpi_suspend_lowlevel(void)
 #endif
 	initial_code = (unsigned long)wakeup_long64;
 	saved_magic = 0x123456789abcdef0L;
+=======
+	initial_stack = (unsigned long)temp_stack + sizeof(temp_stack);
+	early_gdt_descr.address =
+			(unsigned long)get_cpu_gdt_rw(smp_processor_id());
+	initial_gs = per_cpu_offset(smp_processor_id());
+#endif
+	initial_code = (unsigned long)wakeup_long64;
+       saved_magic = 0x123456789abcdef0L;
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_64BIT */
 
 	/*

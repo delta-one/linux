@@ -12,6 +12,7 @@
 //! do so first instead of bypassing this crate.
 
 #![no_std]
+<<<<<<< HEAD
 #![feature(allocator_api)]
 #![feature(coerce_unsized)]
 #![feature(core_ffi_c)]
@@ -19,6 +20,9 @@
 #![feature(generic_associated_types)]
 #![feature(receiver_trait)]
 #![feature(unsize)]
+=======
+#![feature(core_ffi_c)]
+>>>>>>> b7ba80a49124 (Commit)
 
 // Ensure conditional compilation based on the kernel configuration works;
 // otherwise we may silently break things like initcall handling.
@@ -28,6 +32,7 @@ compile_error!("Missing kernel configuration for conditional compilation");
 #[cfg(not(test))]
 #[cfg(not(testlib))]
 mod allocator;
+<<<<<<< HEAD
 mod build_assert;
 pub mod error;
 pub mod prelude;
@@ -38,14 +43,23 @@ pub mod std_vendor;
 pub mod str;
 pub mod sync;
 pub mod types;
+=======
+pub mod error;
+pub mod prelude;
+pub mod print;
+pub mod str;
+>>>>>>> b7ba80a49124 (Commit)
 
 #[doc(hidden)]
 pub use bindings;
 pub use macros;
 
+<<<<<<< HEAD
 #[doc(hidden)]
 pub use build_error::build_error;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /// Prefix to appear before log messages printed from within the `kernel` crate.
 const __LOG_PREFIX: &[u8] = b"rust_kernel\0";
 

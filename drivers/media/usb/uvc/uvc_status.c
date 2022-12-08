@@ -6,7 +6,10 @@
  *          Laurent Pinchart (laurent.pinchart@ideasonboard.com)
  */
 
+<<<<<<< HEAD
 #include <asm/barrier.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kernel.h>
 #include <linux/input.h>
 #include <linux/slab.h>
@@ -19,6 +22,7 @@
  * Input device
  */
 #ifdef CONFIG_USB_VIDEO_CLASS_INPUT_EVDEV
+<<<<<<< HEAD
 
 static bool uvc_input_has_button(struct uvc_device *dev)
 {
@@ -39,14 +43,19 @@ static bool uvc_input_has_button(struct uvc_device *dev)
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int uvc_input_init(struct uvc_device *dev)
 {
 	struct input_dev *input;
 	int ret;
 
+<<<<<<< HEAD
 	if (!uvc_input_has_button(dev))
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	input = input_allocate_device();
 	if (input == NULL)
 		return -ENOMEM;
@@ -97,16 +106,40 @@ static void uvc_input_report_key(struct uvc_device *dev, unsigned int code,
 /* --------------------------------------------------------------------------
  * Status interrupt endpoint
  */
+<<<<<<< HEAD
 static void uvc_event_streaming(struct uvc_device *dev,
 				struct uvc_status *status, int len)
 {
 	if (len <= offsetof(struct uvc_status, bEvent)) {
+=======
+struct uvc_streaming_status {
+	u8	bStatusType;
+	u8	bOriginator;
+	u8	bEvent;
+	u8	bValue[];
+} __packed;
+
+struct uvc_control_status {
+	u8	bStatusType;
+	u8	bOriginator;
+	u8	bEvent;
+	u8	bSelector;
+	u8	bAttribute;
+	u8	bValue[];
+} __packed;
+
+static void uvc_event_streaming(struct uvc_device *dev,
+				struct uvc_streaming_status *status, int len)
+{
+	if (len < 3) {
+>>>>>>> b7ba80a49124 (Commit)
 		uvc_dbg(dev, STATUS,
 			"Invalid streaming status event received\n");
 		return;
 	}
 
 	if (status->bEvent == 0) {
+<<<<<<< HEAD
 		if (len <= offsetof(struct uvc_status, streaming))
 			return;
 
@@ -114,6 +147,14 @@ static void uvc_event_streaming(struct uvc_device *dev,
 			status->bOriginator,
 			status->streaming.button ? "pressed" : "released", len);
 		uvc_input_report_key(dev, KEY_CAMERA, status->streaming.button);
+=======
+		if (len < 4)
+			return;
+		uvc_dbg(dev, STATUS, "Button (intf %u) %s len %d\n",
+			status->bOriginator,
+			status->bValue[0] ? "pressed" : "released", len);
+		uvc_input_report_key(dev, KEY_CAMERA, status->bValue[0]);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		uvc_dbg(dev, STATUS, "Stream %u error event %02x len %d\n",
 			status->bOriginator, status->bEvent, len);
@@ -140,7 +181,11 @@ static struct uvc_control *uvc_event_entity_find_ctrl(struct uvc_entity *entity,
 }
 
 static struct uvc_control *uvc_event_find_ctrl(struct uvc_device *dev,
+<<<<<<< HEAD
 					const struct uvc_status *status,
+=======
+					const struct uvc_control_status *status,
+>>>>>>> b7ba80a49124 (Commit)
 					struct uvc_video_chain **chain)
 {
 	list_for_each_entry((*chain), &dev->chains, list) {
@@ -152,7 +197,11 @@ static struct uvc_control *uvc_event_find_ctrl(struct uvc_device *dev,
 				continue;
 
 			ctrl = uvc_event_entity_find_ctrl(entity,
+<<<<<<< HEAD
 						     status->control.bSelector);
+=======
+							  status->bSelector);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ctrl)
 				return ctrl;
 		}
@@ -162,7 +211,11 @@ static struct uvc_control *uvc_event_find_ctrl(struct uvc_device *dev,
 }
 
 static bool uvc_event_control(struct urb *urb,
+<<<<<<< HEAD
 			      const struct uvc_status *status, int len)
+=======
+			      const struct uvc_control_status *status, int len)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	static const char *attrs[] = { "value", "info", "failure", "min", "max" };
 	struct uvc_device *dev = urb->context;
@@ -170,24 +223,40 @@ static bool uvc_event_control(struct urb *urb,
 	struct uvc_control *ctrl;
 
 	if (len < 6 || status->bEvent != 0 ||
+<<<<<<< HEAD
 	    status->control.bAttribute >= ARRAY_SIZE(attrs)) {
+=======
+	    status->bAttribute >= ARRAY_SIZE(attrs)) {
+>>>>>>> b7ba80a49124 (Commit)
 		uvc_dbg(dev, STATUS, "Invalid control status event received\n");
 		return false;
 	}
 
 	uvc_dbg(dev, STATUS, "Control %u/%u %s change len %d\n",
+<<<<<<< HEAD
 		status->bOriginator, status->control.bSelector,
 		attrs[status->control.bAttribute], len);
+=======
+		status->bOriginator, status->bSelector,
+		attrs[status->bAttribute], len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Find the control. */
 	ctrl = uvc_event_find_ctrl(dev, status, &chain);
 	if (!ctrl)
 		return false;
 
+<<<<<<< HEAD
 	switch (status->control.bAttribute) {
 	case UVC_CTRL_VALUE_CHANGE:
 		return uvc_ctrl_status_event_async(urb, chain, ctrl,
 						   status->control.bValue);
+=======
+	switch (status->bAttribute) {
+	case UVC_CTRL_VALUE_CHANGE:
+		return uvc_ctrl_status_event_async(urb, chain, ctrl,
+						   status->bValue);
+>>>>>>> b7ba80a49124 (Commit)
 
 	case UVC_CTRL_INFO_CHANGE:
 	case UVC_CTRL_FAILURE_CHANGE:
@@ -223,22 +292,42 @@ static void uvc_status_complete(struct urb *urb)
 
 	len = urb->actual_length;
 	if (len > 0) {
+<<<<<<< HEAD
 		switch (dev->status->bStatusType & 0x0f) {
 		case UVC_STATUS_TYPE_CONTROL: {
 			if (uvc_event_control(urb, dev->status, len))
+=======
+		switch (dev->status[0] & 0x0f) {
+		case UVC_STATUS_TYPE_CONTROL: {
+			struct uvc_control_status *status =
+				(struct uvc_control_status *)dev->status;
+
+			if (uvc_event_control(urb, status, len))
+>>>>>>> b7ba80a49124 (Commit)
 				/* The URB will be resubmitted in work context. */
 				return;
 			break;
 		}
 
 		case UVC_STATUS_TYPE_STREAMING: {
+<<<<<<< HEAD
 			uvc_event_streaming(dev, dev->status, len);
+=======
+			struct uvc_streaming_status *status =
+				(struct uvc_streaming_status *)dev->status;
+
+			uvc_event_streaming(dev, status, len);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 
 		default:
 			uvc_dbg(dev, STATUS, "Unknown status event type %u\n",
+<<<<<<< HEAD
 				dev->status->bStatusType);
+=======
+				dev->status[0]);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 	}
@@ -262,12 +351,21 @@ int uvc_status_init(struct uvc_device *dev)
 
 	uvc_input_init(dev);
 
+<<<<<<< HEAD
 	dev->status = kzalloc(sizeof(*dev->status), GFP_KERNEL);
 	if (!dev->status)
 		return -ENOMEM;
 
 	dev->int_urb = usb_alloc_urb(0, GFP_KERNEL);
 	if (!dev->int_urb) {
+=======
+	dev->status = kzalloc(UVC_MAX_STATUS_SIZE, GFP_KERNEL);
+	if (dev->status == NULL)
+		return -ENOMEM;
+
+	dev->int_urb = usb_alloc_urb(0, GFP_KERNEL);
+	if (dev->int_urb == NULL) {
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(dev->status);
 		return -ENOMEM;
 	}
@@ -284,7 +382,11 @@ int uvc_status_init(struct uvc_device *dev)
 		interval = fls(interval) - 1;
 
 	usb_fill_int_urb(dev->int_urb, dev->udev, pipe,
+<<<<<<< HEAD
 		dev->status, sizeof(*dev->status), uvc_status_complete,
+=======
+		dev->status, UVC_MAX_STATUS_SIZE, uvc_status_complete,
+>>>>>>> b7ba80a49124 (Commit)
 		dev, interval);
 
 	return 0;
@@ -312,6 +414,7 @@ int uvc_status_start(struct uvc_device *dev, gfp_t flags)
 
 void uvc_status_stop(struct uvc_device *dev)
 {
+<<<<<<< HEAD
 	struct uvc_ctrl_work *w = &dev->async_ctrl;
 
 	/*
@@ -349,4 +452,7 @@ void uvc_status_stop(struct uvc_device *dev)
 	 * again.
 	 */
 	smp_store_release(&dev->flush_status, false);
+=======
+	usb_kill_urb(dev->int_urb);
+>>>>>>> b7ba80a49124 (Commit)
 }

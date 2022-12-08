@@ -2364,8 +2364,14 @@ static int mp_irqdomain_create(int ioapic)
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
 	ip->irqdomain = irq_domain_create_hierarchy(parent, 0, hwirqs, fn, cfg->ops,
 						    (void *)(long)ioapic);
+=======
+	ip->irqdomain = irq_domain_create_linear(fn, hwirqs, cfg->ops,
+						 (void *)(long)ioapic);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ip->irqdomain) {
 		/* Release fw handle if it was allocated above */
 		if (!cfg->dev)
@@ -2373,6 +2379,11 @@ static int mp_irqdomain_create(int ioapic)
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
+=======
+	ip->irqdomain->parent = parent;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (cfg->type == IOAPIC_DOMAIN_LEGACY ||
 	    cfg->type == IOAPIC_DOMAIN_STRICT)
 		ioapic_dynirq_base = max(ioapic_dynirq_base,

@@ -8,6 +8,15 @@
 #include <linux/slab.h>
 #include "ar-internal.h"
 
+<<<<<<< HEAD
+=======
+static struct rxrpc_bundle rxrpc_service_dummy_bundle = {
+	.ref		= REFCOUNT_INIT(1),
+	.debug_id	= UINT_MAX,
+	.channel_lock	= __SPIN_LOCK_UNLOCKED(&rxrpc_service_dummy_bundle.channel_lock),
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Find a service connection under RCU conditions.
  *
@@ -67,7 +76,11 @@ static void rxrpc_publish_service_conn(struct rxrpc_peer *peer,
 	struct rxrpc_conn_proto k = conn->proto;
 	struct rb_node **pp, *parent;
 
+<<<<<<< HEAD
 	write_seqlock(&peer->service_conn_lock);
+=======
+	write_seqlock_bh(&peer->service_conn_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pp = &peer->service_conns.rb_node;
 	parent = NULL;
@@ -88,14 +101,22 @@ static void rxrpc_publish_service_conn(struct rxrpc_peer *peer,
 	rb_insert_color(&conn->service_node, &peer->service_conns);
 conn_published:
 	set_bit(RXRPC_CONN_IN_SERVICE_CONNS, &conn->flags);
+<<<<<<< HEAD
 	write_sequnlock(&peer->service_conn_lock);
+=======
+	write_sequnlock_bh(&peer->service_conn_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	_leave(" = %d [new]", conn->debug_id);
 	return;
 
 found_extant_conn:
 	if (refcount_read(&cursor->ref) == 0)
 		goto replace_old_connection;
+<<<<<<< HEAD
 	write_sequnlock(&peer->service_conn_lock);
+=======
+	write_sequnlock_bh(&peer->service_conn_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	/* We should not be able to get here.  rxrpc_incoming_connection() is
 	 * called in a non-reentrant context, so there can't be a race to
 	 * insert a new connection.
@@ -119,7 +140,11 @@ replace_old_connection:
 struct rxrpc_connection *rxrpc_prealloc_service_connection(struct rxrpc_net *rxnet,
 							   gfp_t gfp)
 {
+<<<<<<< HEAD
 	struct rxrpc_connection *conn = rxrpc_alloc_connection(rxnet, gfp);
+=======
+	struct rxrpc_connection *conn = rxrpc_alloc_connection(gfp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (conn) {
 		/* We maintain an extra ref on the connection whilst it is on
@@ -127,6 +152,10 @@ struct rxrpc_connection *rxrpc_prealloc_service_connection(struct rxrpc_net *rxn
 		 */
 		conn->state = RXRPC_CONN_SERVICE_PREALLOC;
 		refcount_set(&conn->ref, 2);
+<<<<<<< HEAD
+=======
+		conn->bundle = rxrpc_get_bundle(&rxrpc_service_dummy_bundle);
+>>>>>>> b7ba80a49124 (Commit)
 
 		atomic_inc(&rxnet->nr_conns);
 		write_lock(&rxnet->conn_lock);
@@ -134,7 +163,13 @@ struct rxrpc_connection *rxrpc_prealloc_service_connection(struct rxrpc_net *rxn
 		list_add_tail(&conn->proc_link, &rxnet->conn_proc_list);
 		write_unlock(&rxnet->conn_lock);
 
+<<<<<<< HEAD
 		rxrpc_see_connection(conn, rxrpc_conn_new_service);
+=======
+		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_new_service,
+				 refcount_read(&conn->ref),
+				 __builtin_return_address(0));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return conn;
@@ -155,7 +190,11 @@ void rxrpc_new_incoming_connection(struct rxrpc_sock *rx,
 
 	conn->proto.epoch	= sp->hdr.epoch;
 	conn->proto.cid		= sp->hdr.cid & RXRPC_CIDMASK;
+<<<<<<< HEAD
 	conn->orig_service_id	= sp->hdr.serviceId;
+=======
+	conn->params.service_id	= sp->hdr.serviceId;
+>>>>>>> b7ba80a49124 (Commit)
 	conn->service_id	= sp->hdr.serviceId;
 	conn->security_ix	= sp->hdr.securityIndex;
 	conn->out_clientflag	= 0;
@@ -173,10 +212,17 @@ void rxrpc_new_incoming_connection(struct rxrpc_sock *rx,
 	    conn->service_id == rx->service_upgrade.from)
 		conn->service_id = rx->service_upgrade.to;
 
+<<<<<<< HEAD
 	atomic_set(&conn->active, 1);
 
 	/* Make the connection a target for incoming packets. */
 	rxrpc_publish_service_conn(conn->peer, conn);
+=======
+	/* Make the connection a target for incoming packets. */
+	rxrpc_publish_service_conn(conn->params.peer, conn);
+
+	_net("CONNECTION new %d {%x}", conn->debug_id, conn->proto.cid);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -185,10 +231,19 @@ void rxrpc_new_incoming_connection(struct rxrpc_sock *rx,
  */
 void rxrpc_unpublish_service_conn(struct rxrpc_connection *conn)
 {
+<<<<<<< HEAD
 	struct rxrpc_peer *peer = conn->peer;
 
 	write_seqlock(&peer->service_conn_lock);
 	if (test_and_clear_bit(RXRPC_CONN_IN_SERVICE_CONNS, &conn->flags))
 		rb_erase(&conn->service_node, &peer->service_conns);
 	write_sequnlock(&peer->service_conn_lock);
+=======
+	struct rxrpc_peer *peer = conn->params.peer;
+
+	write_seqlock_bh(&peer->service_conn_lock);
+	if (test_and_clear_bit(RXRPC_CONN_IN_SERVICE_CONNS, &conn->flags))
+		rb_erase(&conn->service_node, &peer->service_conns);
+	write_sequnlock_bh(&peer->service_conn_lock);
+>>>>>>> b7ba80a49124 (Commit)
 }

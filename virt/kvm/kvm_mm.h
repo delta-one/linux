@@ -14,14 +14,28 @@
 #define KVM_MMU_LOCK_INIT(kvm)		rwlock_init(&(kvm)->mmu_lock)
 #define KVM_MMU_LOCK(kvm)		write_lock(&(kvm)->mmu_lock)
 #define KVM_MMU_UNLOCK(kvm)		write_unlock(&(kvm)->mmu_lock)
+<<<<<<< HEAD
+=======
+#define KVM_MMU_READ_LOCK(kvm)		read_lock(&(kvm)->mmu_lock)
+#define KVM_MMU_READ_UNLOCK(kvm)	read_unlock(&(kvm)->mmu_lock)
+>>>>>>> b7ba80a49124 (Commit)
 #else
 #define KVM_MMU_LOCK_INIT(kvm)		spin_lock_init(&(kvm)->mmu_lock)
 #define KVM_MMU_LOCK(kvm)		spin_lock(&(kvm)->mmu_lock)
 #define KVM_MMU_UNLOCK(kvm)		spin_unlock(&(kvm)->mmu_lock)
+<<<<<<< HEAD
 #endif /* KVM_HAVE_MMU_RWLOCK */
 
 kvm_pfn_t hva_to_pfn(unsigned long addr, bool atomic, bool interruptible,
 		     bool *async, bool write_fault, bool *writable);
+=======
+#define KVM_MMU_READ_LOCK(kvm)		spin_lock(&(kvm)->mmu_lock)
+#define KVM_MMU_READ_UNLOCK(kvm)	spin_unlock(&(kvm)->mmu_lock)
+#endif /* KVM_HAVE_MMU_RWLOCK */
+
+kvm_pfn_t hva_to_pfn(unsigned long addr, bool atomic, bool *async,
+		     bool write_fault, bool *writable);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_HAVE_KVM_PFNCACHE
 void gfn_to_pfn_cache_invalidate_start(struct kvm *kvm,

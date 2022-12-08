@@ -2196,7 +2196,10 @@ static int da7219_register_dai_clks(struct snd_soc_component *component)
 			dai_clk_lookup = clkdev_hw_create(dai_clk_hw, init.name,
 							  "%s", dev_name(dev));
 			if (!dai_clk_lookup) {
+<<<<<<< HEAD
 				clk_hw_unregister(dai_clk_hw);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				ret = -ENOMEM;
 				goto err;
 			} else {
@@ -2218,12 +2221,20 @@ static int da7219_register_dai_clks(struct snd_soc_component *component)
 	return 0;
 
 err:
+<<<<<<< HEAD
 	while (--i >= 0) {
+=======
+	do {
+>>>>>>> b7ba80a49124 (Commit)
 		if (da7219->dai_clks_lookup[i])
 			clkdev_drop(da7219->dai_clks_lookup[i]);
 
 		clk_hw_unregister(&da7219->dai_clks_hw[i]);
+<<<<<<< HEAD
 	}
+=======
+	} while (i-- > 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (np)
 		kfree(da7219->clk_hw_data);
@@ -2633,6 +2644,7 @@ static int da7219_resume(struct snd_soc_component *component)
 #define da7219_resume NULL
 #endif
 
+<<<<<<< HEAD
 static int da7219_set_jack(struct snd_soc_component *component, struct snd_soc_jack *jack,
 			   void *data)
 {
@@ -2641,12 +2653,17 @@ static int da7219_set_jack(struct snd_soc_component *component, struct snd_soc_j
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_soc_component_driver soc_component_dev_da7219 = {
 	.probe			= da7219_probe,
 	.remove			= da7219_remove,
 	.suspend		= da7219_suspend,
 	.resume			= da7219_resume,
+<<<<<<< HEAD
 	.set_jack		= da7219_set_jack,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.set_bias_level		= da7219_set_bias_level,
 	.controls		= da7219_snd_controls,
 	.num_controls		= ARRAY_SIZE(da7219_snd_controls),

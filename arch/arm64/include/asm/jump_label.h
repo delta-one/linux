@@ -15,8 +15,13 @@
 
 #define JUMP_LABEL_NOP_SIZE		AARCH64_INSN_SIZE
 
+<<<<<<< HEAD
 static __always_inline bool arch_static_branch(struct static_key * const key,
 					       const bool branch)
+=======
+static __always_inline bool arch_static_branch(struct static_key *key,
+					       bool branch)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	asm_volatile_goto(
 		"1:	nop					\n\t"
@@ -32,8 +37,13 @@ l_yes:
 	return true;
 }
 
+<<<<<<< HEAD
 static __always_inline bool arch_static_branch_jump(struct static_key * const key,
 						    const bool branch)
+=======
+static __always_inline bool arch_static_branch_jump(struct static_key *key,
+						    bool branch)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	asm_volatile_goto(
 		"1:	b		%l[l_yes]		\n\t"

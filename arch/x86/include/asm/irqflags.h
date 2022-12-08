@@ -8,6 +8,12 @@
 
 #include <asm/nospec-branch.h>
 
+<<<<<<< HEAD
+=======
+/* Provide __cpuidle; we can't safely include <linux/cpu.h> */
+#define __cpuidle __section(".cpuidle.text")
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Interrupt control:
  */
@@ -42,13 +48,21 @@ static __always_inline void native_irq_enable(void)
 	asm volatile("sti": : :"memory");
 }
 
+<<<<<<< HEAD
 static __always_inline void native_safe_halt(void)
+=======
+static inline __cpuidle void native_safe_halt(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	mds_idle_clear_cpu_buffers();
 	asm volatile("sti; hlt": : :"memory");
 }
 
+<<<<<<< HEAD
 static __always_inline void native_halt(void)
+=======
+static inline __cpuidle void native_halt(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	mds_idle_clear_cpu_buffers();
 	asm volatile("hlt": : :"memory");
@@ -81,7 +95,11 @@ static __always_inline void arch_local_irq_enable(void)
  * Used in the idle loop; sti takes one instruction cycle
  * to complete:
  */
+<<<<<<< HEAD
 static __always_inline void arch_safe_halt(void)
+=======
+static inline __cpuidle void arch_safe_halt(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	native_safe_halt();
 }
@@ -90,7 +108,11 @@ static __always_inline void arch_safe_halt(void)
  * Used when interrupts are already enabled or to
  * shutdown the processor:
  */
+<<<<<<< HEAD
 static __always_inline void halt(void)
+=======
+static inline __cpuidle void halt(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	native_halt();
 }

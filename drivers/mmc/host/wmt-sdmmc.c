@@ -802,8 +802,15 @@ static int wmt_mci_probe(struct platform_device *pdev)
 	priv->power_inverted = 0;
 	priv->cd_inverted = 0;
 
+<<<<<<< HEAD
 	priv->power_inverted = of_property_read_bool(np, "sdon-inverted");
 	priv->cd_inverted = of_property_read_bool(np, "cd-inverted");
+=======
+	if (of_get_property(np, "sdon-inverted", NULL))
+		priv->power_inverted = 1;
+	if (of_get_property(np, "cd-inverted", NULL))
+		priv->cd_inverted = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	priv->sdmmc_base = of_iomap(np, 0);
 	if (!priv->sdmmc_base) {
@@ -844,7 +851,11 @@ static int wmt_mci_probe(struct platform_device *pdev)
 	if (IS_ERR(priv->clk_sdmmc)) {
 		dev_err(&pdev->dev, "Error getting clock\n");
 		ret = PTR_ERR(priv->clk_sdmmc);
+<<<<<<< HEAD
 		goto fail5_and_a_half;
+=======
+		goto fail5;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = clk_prepare_enable(priv->clk_sdmmc);
@@ -854,13 +865,18 @@ static int wmt_mci_probe(struct platform_device *pdev)
 	/* configure the controller to a known 'ready' state */
 	wmt_reset_hardware(mmc);
 
+<<<<<<< HEAD
 	ret = mmc_add_host(mmc);
 	if (ret)
 		goto fail7;
+=======
+	mmc_add_host(mmc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_info(&pdev->dev, "WMT SDHC Controller initialized\n");
 
 	return 0;
+<<<<<<< HEAD
 fail7:
 	clk_disable_unprepare(priv->clk_sdmmc);
 fail6:
@@ -868,6 +884,10 @@ fail6:
 fail5_and_a_half:
 	dma_free_coherent(&pdev->dev, mmc->max_blk_count * 16,
 			  priv->dma_desc_buffer, priv->dma_desc_device_addr);
+=======
+fail6:
+	clk_put(priv->clk_sdmmc);
+>>>>>>> b7ba80a49124 (Commit)
 fail5:
 	free_irq(dma_irq, priv);
 fail4:

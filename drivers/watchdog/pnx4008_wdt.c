@@ -179,6 +179,14 @@ static struct watchdog_device pnx4008_wdd = {
 	.max_timeout = MAX_HEARTBEAT,
 };
 
+<<<<<<< HEAD
+=======
+static void pnx4008_clk_disable_unprepare(void *data)
+{
+	clk_disable_unprepare(data);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int pnx4008_wdt_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
@@ -190,10 +198,25 @@ static int pnx4008_wdt_probe(struct platform_device *pdev)
 	if (IS_ERR(wdt_base))
 		return PTR_ERR(wdt_base);
 
+<<<<<<< HEAD
 	wdt_clk = devm_clk_get_enabled(dev, NULL);
 	if (IS_ERR(wdt_clk))
 		return PTR_ERR(wdt_clk);
 
+=======
+	wdt_clk = devm_clk_get(dev, NULL);
+	if (IS_ERR(wdt_clk))
+		return PTR_ERR(wdt_clk);
+
+	ret = clk_prepare_enable(wdt_clk);
+	if (ret)
+		return ret;
+	ret = devm_add_action_or_reset(dev, pnx4008_clk_disable_unprepare,
+				       wdt_clk);
+	if (ret)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	pnx4008_wdd.bootstatus = (readl(WDTIM_RES(wdt_base)) & WDOG_RESET) ?
 			WDIOF_CARDRESET : 0;
 	pnx4008_wdd.parent = dev;

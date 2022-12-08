@@ -117,14 +117,22 @@ static struct snd_soc_dai_driver fsl_rpmsg_dai = {
 	.playback = {
 		.stream_name = "CPU-Playback",
 		.channels_min = 2,
+<<<<<<< HEAD
 		.channels_max = 32,
+=======
+		.channels_max = 2,
+>>>>>>> b7ba80a49124 (Commit)
 		.rates = SNDRV_PCM_RATE_KNOT,
 		.formats = FSL_RPMSG_FORMATS,
 	},
 	.capture = {
 		.stream_name = "CPU-Capture",
 		.channels_min = 2,
+<<<<<<< HEAD
 		.channels_max = 32,
+=======
+		.channels_max = 2,
+>>>>>>> b7ba80a49124 (Commit)
 		.rates = SNDRV_PCM_RATE_KNOT,
 		.formats = FSL_RPMSG_FORMATS,
 	},
@@ -235,7 +243,11 @@ static int fsl_rpmsg_probe(struct platform_device *pdev)
 
 	rpmsg->card_pdev = platform_device_register_data(&pdev->dev,
 							 "imx-audio-rpmsg",
+<<<<<<< HEAD
 							 PLATFORM_DEVID_AUTO,
+=======
+							 PLATFORM_DEVID_NONE,
+>>>>>>> b7ba80a49124 (Commit)
 							 NULL,
 							 0);
 	if (IS_ERR(rpmsg->card_pdev)) {
@@ -247,12 +259,21 @@ static int fsl_rpmsg_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void fsl_rpmsg_remove(struct platform_device *pdev)
+=======
+static int fsl_rpmsg_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fsl_rpmsg *rpmsg = platform_get_drvdata(pdev);
 
 	if (rpmsg->card_pdev)
 		platform_device_unregister(rpmsg->card_pdev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM
@@ -300,7 +321,11 @@ static const struct dev_pm_ops fsl_rpmsg_pm_ops = {
 
 static struct platform_driver fsl_rpmsg_driver = {
 	.probe  = fsl_rpmsg_probe,
+<<<<<<< HEAD
 	.remove_new = fsl_rpmsg_remove,
+=======
+	.remove = fsl_rpmsg_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "fsl_rpmsg",
 		.pm = &fsl_rpmsg_pm_ops,

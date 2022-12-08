@@ -28,7 +28,11 @@
 /*
  * The number of tasks checked:
  */
+<<<<<<< HEAD
 static int __read_mostly sysctl_hung_task_check_count = PID_MAX_LIMIT;
+=======
+int __read_mostly sysctl_hung_task_check_count = PID_MAX_LIMIT;
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Limit number of tasks checked in a batch.
@@ -47,9 +51,15 @@ unsigned long __read_mostly sysctl_hung_task_timeout_secs = CONFIG_DEFAULT_HUNG_
 /*
  * Zero (default value) means use sysctl_hung_task_timeout_secs:
  */
+<<<<<<< HEAD
 static unsigned long __read_mostly sysctl_hung_task_check_interval_secs;
 
 static int __read_mostly sysctl_hung_task_warnings = 10;
+=======
+unsigned long __read_mostly sysctl_hung_task_check_interval_secs;
+
+int __read_mostly sysctl_hung_task_warnings = 10;
+>>>>>>> b7ba80a49124 (Commit)
 
 static int __read_mostly did_panic;
 static bool hung_task_show_lock;
@@ -72,8 +82,13 @@ static unsigned int __read_mostly sysctl_hung_task_all_cpu_backtrace;
  * Should we panic (and reboot, if panic_timeout= is set) when a
  * hung task is detected:
  */
+<<<<<<< HEAD
 static unsigned int __read_mostly sysctl_hung_task_panic =
 	IS_ENABLED(CONFIG_BOOTPARAM_HUNG_TASK_PANIC);
+=======
+unsigned int __read_mostly sysctl_hung_task_panic =
+				IS_ENABLED(CONFIG_BOOTPARAM_HUNG_TASK_PANIC);
+>>>>>>> b7ba80a49124 (Commit)
 
 static int
 hung_task_panic(struct notifier_block *this, unsigned long event, void *ptr)
@@ -95,7 +110,11 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
 	 * Ensure the task is not frozen.
 	 * Also, skip vfork and any other user process that freezer should skip.
 	 */
+<<<<<<< HEAD
 	if (unlikely(READ_ONCE(t->__state) & TASK_FROZEN))
+=======
+	if (unlikely(READ_ONCE(t->__state) & (TASK_FREEZABLE | TASK_FROZEN)))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	/*
@@ -142,8 +161,11 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
 
 		if (sysctl_hung_task_all_cpu_backtrace)
 			hung_task_show_all_bt = true;
+<<<<<<< HEAD
 		if (!sysctl_hung_task_warnings)
 			pr_info("Future hung task reports are suppressed, see sysctl kernel.hung_task_warnings\n");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	touch_nmi_watchdog();
@@ -193,8 +215,11 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
 	hung_task_show_lock = false;
 	rcu_read_lock();
 	for_each_process_thread(g, t) {
+<<<<<<< HEAD
 		unsigned int state;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (!max_count--)
 			goto unlock;
 		if (time_after(jiffies, last_break + HUNG_TASK_LOCK_BREAK)) {
@@ -202,6 +227,7 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
 				goto unlock;
 			last_break = jiffies;
 		}
+<<<<<<< HEAD
 		/*
 		 * skip the TASK_KILLABLE tasks -- these can be killed
 		 * skip the TASK_IDLE tasks -- those are genuinely idle
@@ -210,6 +236,10 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
 		if ((state & TASK_UNINTERRUPTIBLE) &&
 		    !(state & TASK_WAKEKILL) &&
 		    !(state & TASK_NOLOAD))
+=======
+		/* use "==" to skip the TASK_KILLABLE tasks waiting on NFS */
+		if (READ_ONCE(t->__state) == TASK_UNINTERRUPTIBLE)
+>>>>>>> b7ba80a49124 (Commit)
 			check_hung_task(t, timeout);
 	}
  unlock:

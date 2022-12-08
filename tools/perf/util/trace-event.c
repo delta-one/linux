@@ -1,4 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>

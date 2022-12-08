@@ -27,7 +27,10 @@
 #include <linux/if_vlan.h>
 #include <linux/rcupdate_wait.h>
 #include <linux/ctype.h>
+<<<<<<< HEAD
 #include <linux/splice.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <net/sock.h>
 #include <net/tcp.h>
@@ -360,6 +363,11 @@ static void smc_destruct(struct sock *sk)
 		return;
 	if (!sock_flag(sk, SOCK_DEAD))
 		return;
+<<<<<<< HEAD
+=======
+
+	sk_refcnt_debug_dec(sk);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct sock *smc_sock_alloc(struct net *net, struct socket *sock,
@@ -388,6 +396,10 @@ static struct sock *smc_sock_alloc(struct net *net, struct socket *sock,
 	spin_lock_init(&smc->accept_q_lock);
 	spin_lock_init(&smc->conn.send_lock);
 	sk->sk_prot->hash(sk);
+<<<<<<< HEAD
+=======
+	sk_refcnt_debug_inc(sk);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&smc->clcsock_release_lock);
 	smc_init_saved_callbacks(smc);
 
@@ -427,7 +439,10 @@ static int smc_bind(struct socket *sock, struct sockaddr *uaddr,
 		goto out_rel;
 
 	smc->clcsock->sk->sk_reuse = sk->sk_reuse;
+<<<<<<< HEAD
 	smc->clcsock->sk->sk_reuseport = sk->sk_reuseport;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rc = kernel_bind(smc->clcsock, uaddr, addr_len);
 
 out_rel:
@@ -499,7 +514,11 @@ static int smcr_lgr_reg_sndbufs(struct smc_link *link,
 		return -EINVAL;
 
 	/* protect against parallel smcr_link_reg_buf() */
+<<<<<<< HEAD
 	down_write(&lgr->llc_conf_mutex);
+=======
+	mutex_lock(&lgr->llc_conf_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < SMC_LINKS_PER_LGR_MAX; i++) {
 		if (!smc_link_active(&lgr->lnk[i]))
 			continue;
@@ -507,7 +526,11 @@ static int smcr_lgr_reg_sndbufs(struct smc_link *link,
 		if (rc)
 			break;
 	}
+<<<<<<< HEAD
 	up_write(&lgr->llc_conf_mutex);
+=======
+	mutex_unlock(&lgr->llc_conf_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -516,12 +539,16 @@ static int smcr_lgr_reg_rmbs(struct smc_link *link,
 			     struct smc_buf_desc *rmb_desc)
 {
 	struct smc_link_group *lgr = link->lgr;
+<<<<<<< HEAD
 	bool do_slow = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i, rc = 0;
 
 	rc = smc_llc_flow_initiate(lgr, SMC_LLC_FLOW_RKEY);
 	if (rc)
 		return rc;
+<<<<<<< HEAD
 
 	down_read(&lgr->llc_conf_mutex);
 	for (i = 0; i < SMC_LINKS_PER_LGR_MAX; i++) {
@@ -540,6 +567,12 @@ slow_path:
 	 * parallel smcr_link_reg_buf()
 	 */
 	down_write(&lgr->llc_conf_mutex);
+=======
+	/* protect against parallel smc_llc_cli_rkey_exchange() and
+	 * parallel smcr_link_reg_buf()
+	 */
+	mutex_lock(&lgr->llc_conf_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < SMC_LINKS_PER_LGR_MAX; i++) {
 		if (!smc_link_active(&lgr->lnk[i]))
 			continue;
@@ -547,7 +580,11 @@ slow_path:
 		if (rc)
 			goto out;
 	}
+<<<<<<< HEAD
 fast_path:
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* exchange confirm_rkey msg with peer */
 	rc = smc_llc_do_confirm_rkey(link, rmb_desc);
 	if (rc) {
@@ -556,7 +593,11 @@ fast_path:
 	}
 	rmb_desc->is_conf_rkey = true;
 out:
+<<<<<<< HEAD
 	do_slow ? up_write(&lgr->llc_conf_mutex) : up_read(&lgr->llc_conf_mutex);
+=======
+	mutex_unlock(&lgr->llc_conf_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	smc_llc_flow_stop(lgr, &lgr->llc_flow_lcl);
 	return rc;
 }
@@ -1839,10 +1880,15 @@ static int smcr_serv_conf_first_link(struct smc_sock *smc)
 	smc_llc_link_active(link);
 	smcr_lgr_set_type(link->lgr, SMC_LGR_SINGLE);
 
+<<<<<<< HEAD
 	down_write(&link->lgr->llc_conf_mutex);
 	/* initial contact - try to establish second link */
 	smc_llc_srv_add_link(link, NULL);
 	up_write(&link->lgr->llc_conf_mutex);
+=======
+	/* initial contact - try to establish second link */
+	smc_llc_srv_add_link(link, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -2657,6 +2703,7 @@ static int smc_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
 {
 	struct sock *sk = sock->sk;
 	struct smc_sock *smc;
+<<<<<<< HEAD
 	int rc;
 
 	smc = smc_sk(sk);
@@ -2665,6 +2712,18 @@ static int smc_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
 	/* SMC does not support connect with fastopen */
 	if (msg->msg_flags & MSG_FASTOPEN) {
 		/* not connected yet, fallback */
+=======
+	int rc = -EPIPE;
+
+	smc = smc_sk(sk);
+	lock_sock(sk);
+	if ((sk->sk_state != SMC_ACTIVE) &&
+	    (sk->sk_state != SMC_APPCLOSEWAIT1) &&
+	    (sk->sk_state != SMC_INIT))
+		goto out;
+
+	if (msg->msg_flags & MSG_FASTOPEN) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (sk->sk_state == SMC_INIT && !smc->connect_nonblock) {
 			rc = smc_switch_to_fallback(smc, SMC_CLC_DECL_OPTUNSUPP);
 			if (rc)
@@ -2673,11 +2732,14 @@ static int smc_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
 			rc = -EINVAL;
 			goto out;
 		}
+<<<<<<< HEAD
 	} else if ((sk->sk_state != SMC_ACTIVE) &&
 		   (sk->sk_state != SMC_APPCLOSEWAIT1) &&
 		   (sk->sk_state != SMC_INIT)) {
 		rc = -EPIPE;
 		goto out;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (smc->use_fallback) {
@@ -3398,16 +3460,26 @@ static int __init smc_init(void)
 
 	rc = register_pernet_subsys(&smc_net_stat_ops);
 	if (rc)
+<<<<<<< HEAD
 		goto out_pernet_subsys;
 
 	rc = smc_ism_init();
 	if (rc)
 		goto out_pernet_subsys_stat;
+=======
+		return rc;
+
+	smc_ism_init();
+>>>>>>> b7ba80a49124 (Commit)
 	smc_clc_init();
 
 	rc = smc_nl_init();
 	if (rc)
+<<<<<<< HEAD
 		goto out_ism;
+=======
+		goto out_pernet_subsys;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = smc_pnet_init();
 	if (rc)
@@ -3500,11 +3572,14 @@ out_pnet:
 	smc_pnet_exit();
 out_nl:
 	smc_nl_exit();
+<<<<<<< HEAD
 out_ism:
 	smc_clc_exit();
 	smc_ism_exit();
 out_pernet_subsys_stat:
 	unregister_pernet_subsys(&smc_net_stat_ops);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 out_pernet_subsys:
 	unregister_pernet_subsys(&smc_net_ops);
 
@@ -3518,7 +3593,10 @@ static void __exit smc_exit(void)
 	sock_unregister(PF_SMC);
 	smc_core_exit();
 	smc_ib_unregister_client();
+<<<<<<< HEAD
 	smc_ism_exit();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	destroy_workqueue(smc_close_wq);
 	destroy_workqueue(smc_tcp_ls_wq);
 	destroy_workqueue(smc_hs_wq);

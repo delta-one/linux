@@ -26,7 +26,10 @@
 #define __I915_UTILS_H
 
 #include <linux/list.h>
+<<<<<<< HEAD
 #include <linux/non-atomic/xchg.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/overflow.h>
 #include <linux/sched.h>
 #include <linux/string_helpers.h>
@@ -112,6 +115,13 @@ bool i915_error_injected(void);
 #define range_overflows_end_t(type, start, size, max) \
 	range_overflows_end((type)(start), (type)(size), (type)(max))
 
+<<<<<<< HEAD
+=======
+/* Note we don't consider signbits :| */
+#define overflows_type(x, T) \
+	(sizeof(x) > sizeof(T) && (x) >> BITS_PER_TYPE(T))
+
+>>>>>>> b7ba80a49124 (Commit)
 #define ptr_mask_bits(ptr, n) ({					\
 	unsigned long __v = (unsigned long)(ptr);			\
 	(typeof(ptr))(__v & -BIT(n));					\
@@ -146,6 +156,11 @@ bool i915_error_injected(void);
 #define page_pack_bits(ptr, bits) ptr_pack_bits(ptr, bits, PAGE_SHIFT)
 #define page_unpack_bits(ptr, bits) ptr_unpack_bits(ptr, bits, PAGE_SHIFT)
 
+<<<<<<< HEAD
+=======
+#define struct_member(T, member) (((T *)0)->member)
+
+>>>>>>> b7ba80a49124 (Commit)
 #define fetch_and_zero(ptr) ({						\
 	typeof(*ptr) __T = *(ptr);					\
 	*(ptr) = (typeof(*ptr))0;					\
@@ -165,7 +180,11 @@ static __always_inline ptrdiff_t ptrdiff(const void *a, const void *b)
  */
 #define container_of_user(ptr, type, member) ({				\
 	void __user *__mptr = (void __user *)(ptr);			\
+<<<<<<< HEAD
 	BUILD_BUG_ON_MSG(!__same_type(*(ptr), typeof_member(type, member)) && \
+=======
+	BUILD_BUG_ON_MSG(!__same_type(*(ptr), struct_member(type, member)) && \
+>>>>>>> b7ba80a49124 (Commit)
 			 !__same_type(*(ptr), void),			\
 			 "pointer type mismatch in container_of()");	\
 	((type __user *)(__mptr - offsetof(type, member))); })

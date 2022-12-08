@@ -490,7 +490,11 @@ struct v4l2_mpeg_vbi_fmt_ivtv
       - An alternate form of the sliced VBI data payload used when 36
 	lines of sliced VBI data are present. No line masks are provided
 	in this form of the payload; all valid line mask bits are
+<<<<<<< HEAD
 	implicitly set.
+=======
+	implcitly set.
+>>>>>>> b7ba80a49124 (Commit)
     * - }
       -
 

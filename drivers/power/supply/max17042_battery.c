@@ -1031,9 +1031,15 @@ static const struct power_supply_desc max17042_no_current_sense_psy_desc = {
 	.num_properties	= ARRAY_SIZE(max17042_battery_props) - 2,
 };
 
+<<<<<<< HEAD
 static int max17042_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int max17042_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct i2c_adapter *adapter = client->adapter;
 	const struct power_supply_desc *max17042_desc = &max17042_psy_desc;
 	struct power_supply_config psy_cfg = {};
@@ -1220,7 +1226,11 @@ static struct i2c_driver max17042_i2c_driver = {
 		.of_match_table = of_match_ptr(max17042_dt_match),
 		.pm	= &max17042_pm_ops,
 	},
+<<<<<<< HEAD
 	.probe_new	= max17042_probe,
+=======
+	.probe		= max17042_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= max17042_id,
 };
 module_i2c_driver(max17042_i2c_driver);

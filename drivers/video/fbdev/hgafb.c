@@ -595,7 +595,11 @@ static int hgafb_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void hgafb_remove(struct platform_device *pdev)
+=======
+static int hgafb_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = platform_get_drvdata(pdev);
 
@@ -614,11 +618,20 @@ static void hgafb_remove(struct platform_device *pdev)
 
 	if (release_io_port)
 		release_region(0x3bf, 1);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver hgafb_driver = {
 	.probe = hgafb_probe,
+<<<<<<< HEAD
 	.remove_new = hgafb_remove,
+=======
+	.remove = hgafb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "hgafb",
 	},

@@ -34,7 +34,10 @@
 #define ECM_INT_LINK 0x00000020
 #define ECM_INT_TX_0 0x00000100
 #define ECM_INT_RX_0 0x00000200
+<<<<<<< HEAD
 #define ECM_INT_TXRX_SHIFT 2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ECM_INT_ALL 0x7FFFFFFF
 #define ECM_INT_DISABLE 0x80000000
 
@@ -48,6 +51,7 @@
 #define ECM_COUNTER_LOW 0x0028
 #define ECM_COUNTER_HIGH 0x002C
 
+<<<<<<< HEAD
 /* interrupt delay */
 #define ECM_INT_DELAY 0x0030
 #define ECM_INT_DELAY_MASK 0xF0
@@ -55,6 +59,8 @@
 #define ECM_INT_DELAY_BASE_US 16
 #define ECM_INT_DELAY_OFFSET 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* control and status */
 #define ECM_STATUS 0x0080
 #define ECM_LINK_MODE_OFF 0x01000000
@@ -129,6 +135,13 @@
 #define TSNEP_RX_STATISTIC_BUFFER_TOO_SMALL 0x0191
 #define TSNEP_RX_STATISTIC_FIFO_OVERFLOW 0x0192
 #define TSNEP_RX_STATISTIC_INVALID_FRAME 0x0193
+<<<<<<< HEAD
+=======
+#define TSNEP_RX_ASSIGN 0x01A0
+#define TSNEP_RX_ASSIGN_ETHER_TYPE_ACTIVE 0x00000001
+#define TSNEP_RX_ASSIGN_ETHER_TYPE_MASK 0xFFFF0000
+#define TSNEP_RX_ASSIGN_ETHER_TYPE_SHIFT 16
+>>>>>>> b7ba80a49124 (Commit)
 #define TSNEP_MAC_ADDRESS_LOW 0x0800
 #define TSNEP_MAC_ADDRESS_HIGH 0x0804
 #define TSNEP_RX_FILTER 0x0806
@@ -155,6 +168,7 @@
 #define TSNEP_GCL_A 0x2000
 #define TSNEP_GCL_B 0x2800
 #define TSNEP_GCL_SIZE SZ_2K
+<<<<<<< HEAD
 #define TSNEP_RX_ASSIGN 0x0840
 #define TSNEP_RX_ASSIGN_ACTIVE 0x00000001
 #define TSNEP_RX_ASSIGN_QUEUE_MASK 0x00000006
@@ -163,6 +177,8 @@
 #define TSNEP_RX_ASSIGN_ETHER_TYPE 0x0880
 #define TSNEP_RX_ASSIGN_ETHER_TYPE_OFFSET 2
 #define TSNEP_RX_ASSIGN_ETHER_TYPE_COUNT 2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* tsnep gate control list operation */
 struct tsnep_gcl_operation {

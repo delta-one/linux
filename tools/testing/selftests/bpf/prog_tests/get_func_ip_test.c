@@ -2,7 +2,11 @@
 #include <test_progs.h>
 #include "get_func_ip_test.skel.h"
 
+<<<<<<< HEAD
 static void test_function_entry(void)
+=======
+void test_get_func_ip_test(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct get_func_ip_test *skel = NULL;
 	int err, prog_fd;
@@ -12,6 +16,17 @@ static void test_function_entry(void)
 	if (!ASSERT_OK_PTR(skel, "get_func_ip_test__open"))
 		return;
 
+<<<<<<< HEAD
+=======
+	/* test6 is x86_64 specifc because of the instruction
+	 * offset, disabling it for all other archs
+	 */
+#ifndef __x86_64__
+	bpf_program__set_autoload(skel->progs.test6, false);
+	bpf_program__set_autoload(skel->progs.test7, false);
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = get_func_ip_test__load(skel);
 	if (!ASSERT_OK(err, "get_func_ip_test__load"))
 		goto cleanup;
@@ -35,6 +50,7 @@ static void test_function_entry(void)
 	ASSERT_EQ(skel->bss->test3_result, 1, "test3_result");
 	ASSERT_EQ(skel->bss->test4_result, 1, "test4_result");
 	ASSERT_EQ(skel->bss->test5_result, 1, "test5_result");
+<<<<<<< HEAD
 
 cleanup:
 	get_func_ip_test__destroy(skel);
@@ -87,4 +103,13 @@ void test_get_func_ip_test(void)
 {
 	test_function_entry();
 	test_function_body();
+=======
+#ifdef __x86_64__
+	ASSERT_EQ(skel->bss->test6_result, 1, "test6_result");
+	ASSERT_EQ(skel->bss->test7_result, 1, "test7_result");
+#endif
+
+cleanup:
+	get_func_ip_test__destroy(skel);
+>>>>>>> b7ba80a49124 (Commit)
 }

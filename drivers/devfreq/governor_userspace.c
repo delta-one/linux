@@ -21,7 +21,11 @@ struct userspace_data {
 
 static int devfreq_userspace_func(struct devfreq *df, unsigned long *freq)
 {
+<<<<<<< HEAD
 	struct userspace_data *data = df->governor_data;
+=======
+	struct userspace_data *data = df->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (data->valid)
 		*freq = data->user_frequency;
@@ -40,7 +44,11 @@ static ssize_t set_freq_store(struct device *dev, struct device_attribute *attr,
 	int err = 0;
 
 	mutex_lock(&devfreq->lock);
+<<<<<<< HEAD
 	data = devfreq->governor_data;
+=======
+	data = devfreq->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	sscanf(buf, "%lu", &wanted);
 	data->user_frequency = wanted;
@@ -60,7 +68,11 @@ static ssize_t set_freq_show(struct device *dev,
 	int err = 0;
 
 	mutex_lock(&devfreq->lock);
+<<<<<<< HEAD
 	data = devfreq->governor_data;
+=======
+	data = devfreq->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (data->valid)
 		err = sprintf(buf, "%lu\n", data->user_frequency);
@@ -91,7 +103,11 @@ static int userspace_init(struct devfreq *devfreq)
 		goto out;
 	}
 	data->valid = false;
+<<<<<<< HEAD
 	devfreq->governor_data = data;
+=======
+	devfreq->data = data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = sysfs_create_group(&devfreq->dev.kobj, &dev_attr_group);
 out:
@@ -107,8 +123,13 @@ static void userspace_exit(struct devfreq *devfreq)
 	if (devfreq->dev.kobj.sd)
 		sysfs_remove_group(&devfreq->dev.kobj, &dev_attr_group);
 
+<<<<<<< HEAD
 	kfree(devfreq->governor_data);
 	devfreq->governor_data = NULL;
+=======
+	kfree(devfreq->data);
+	devfreq->data = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int devfreq_userspace_handler(struct devfreq *devfreq,

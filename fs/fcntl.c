@@ -10,7 +10,10 @@
 #include <linux/mm.h>
 #include <linux/sched/task.h>
 #include <linux/fs.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/file.h>
 #include <linux/fdtable.h>
 #include <linux/capability.h>
@@ -48,7 +51,11 @@ static int setfl(int fd, struct file * filp, unsigned long arg)
 
 	/* O_NOATIME can only be set by the owner or superuser */
 	if ((arg & O_NOATIME) && !(filp->f_flags & O_NOATIME))
+<<<<<<< HEAD
 		if (!inode_owner_or_capable(file_mnt_idmap(filp), inode))
+=======
+		if (!inode_owner_or_capable(file_mnt_user_ns(filp), inode))
+>>>>>>> b7ba80a49124 (Commit)
 			return -EPERM;
 
 	/* required for strict SunOS emulation */

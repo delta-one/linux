@@ -115,6 +115,7 @@ static void regmap_irq_sync_unlock(struct irq_data *data)
 	 */
 	for (i = 0; i < d->chip->num_regs; i++) {
 		if (d->mask_base) {
+<<<<<<< HEAD
 			if (d->chip->handle_mask_sync)
 				d->chip->handle_mask_sync(d->map, i,
 							  d->mask_buf_def[i],
@@ -129,6 +130,14 @@ static void regmap_irq_sync_unlock(struct irq_data *data)
 					dev_err(d->map->dev, "Failed to sync masks in %x\n",
 						reg);
 			}
+=======
+			reg = d->get_irq_reg(d, d->mask_base, i);
+			ret = regmap_update_bits(d->map, reg,
+					d->mask_buf_def[i], d->mask_buf[i]);
+			if (ret)
+				dev_err(d->map->dev, "Failed to sync masks in %x\n",
+					reg);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (d->unmask_base) {
@@ -189,8 +198,17 @@ static void regmap_irq_sync_unlock(struct irq_data *data)
 			if (!d->type_buf_def[i])
 				continue;
 			reg = d->get_irq_reg(d, d->chip->type_base, i);
+<<<<<<< HEAD
 			ret = regmap_update_bits(d->map, reg,
 						 d->type_buf_def[i], d->type_buf[i]);
+=======
+			if (d->chip->type_invert)
+				ret = regmap_update_bits(d->map, reg,
+					d->type_buf_def[i], ~d->type_buf[i]);
+			else
+				ret = regmap_update_bits(d->map, reg,
+					d->type_buf_def[i], d->type_buf[i]);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret != 0)
 				dev_err(d->map->dev, "Failed to sync type in %x\n",
 					reg);
@@ -433,10 +451,14 @@ static irqreturn_t regmap_irq_thread(int irq, void *d)
 	 * possible in order to reduce the I/O overheads.
 	 */
 
+<<<<<<< HEAD
 	if (chip->no_status) {
 		/* no status register so default to all active */
 		memset32(data->status_buf, GENMASK(31, 0), chip->num_regs);
 	} else if (chip->num_main_regs) {
+=======
+	if (chip->num_main_regs) {
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned int max_main_bits;
 		unsigned long size;
 
@@ -729,7 +751,10 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
 	int i;
 	int ret = -ENOMEM;
 	int num_type_reg;
+<<<<<<< HEAD
 	int num_regs;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 reg;
 
 	if (chip->num_regs <= 0)
@@ -804,6 +829,7 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
 			goto err_alloc;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Use num_config_regs if defined, otherwise fall back to num_type_reg
 	 * to maintain backward compatibility.
@@ -813,11 +839,20 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
 	num_regs = chip->type_in_mask ? chip->num_regs : num_type_reg;
 	if (num_regs) {
 		d->type_buf_def = kcalloc(num_regs,
+=======
+	num_type_reg = chip->type_in_mask ? chip->num_regs : chip->num_type_reg;
+	if (num_type_reg) {
+		d->type_buf_def = kcalloc(num_type_reg,
+>>>>>>> b7ba80a49124 (Commit)
 					  sizeof(*d->type_buf_def), GFP_KERNEL);
 		if (!d->type_buf_def)
 			goto err_alloc;
 
+<<<<<<< HEAD
 		d->type_buf = kcalloc(num_regs, sizeof(*d->type_buf),
+=======
+		d->type_buf = kcalloc(num_type_reg, sizeof(*d->type_buf),
+>>>>>>> b7ba80a49124 (Commit)
 				      GFP_KERNEL);
 		if (!d->type_buf)
 			goto err_alloc;
@@ -881,6 +916,23 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
 		 */
 		dev_warn(map->dev, "mask_base and unmask_base are inverted, please fix it");
 
+<<<<<<< HEAD
+=======
+		/* Might as well warn about mask_invert while we're at it... */
+		if (chip->mask_invert)
+			dev_warn(map->dev, "mask_invert=true ignored");
+
+		d->mask_base = chip->unmask_base;
+		d->unmask_base = chip->mask_base;
+	} else if (chip->mask_invert) {
+		/*
+		 * Swap the roles of mask_base and unmask_base if the bits are
+		 * inverted. This is deprecated, drivers should use unmask_base
+		 * directly.
+		 */
+		dev_warn(map->dev, "mask_invert=true is deprecated; please switch to unmask_base");
+
+>>>>>>> b7ba80a49124 (Commit)
 		d->mask_base = chip->unmask_base;
 		d->unmask_base = chip->mask_base;
 	} else {
@@ -917,6 +969,7 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
 		d->mask_buf[i] = d->mask_buf_def[i];
 
 		if (d->mask_base) {
+<<<<<<< HEAD
 			if (chip->handle_mask_sync) {
 				ret = chip->handle_mask_sync(d->map, i,
 							     d->mask_buf_def[i],
@@ -934,6 +987,15 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
 						reg, ret);
 					goto err_alloc;
 				}
+=======
+			reg = d->get_irq_reg(d, d->mask_base, i);
+			ret = regmap_update_bits(d->map, reg,
+					d->mask_buf_def[i], d->mask_buf[i]);
+			if (ret) {
+				dev_err(map->dev, "Failed to set masks in 0x%x: %d\n",
+					reg, ret);
+				goto err_alloc;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 
@@ -952,6 +1014,7 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
 			continue;
 
 		/* Ack masked but set interrupts */
+<<<<<<< HEAD
 		if (d->chip->no_status) {
 			/* no status register so default to all active */
 			d->status_buf[i] = GENMASK(31, 0);
@@ -963,6 +1026,14 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
 					ret);
 				goto err_alloc;
 			}
+=======
+		reg = d->get_irq_reg(d, d->chip->status_base, i);
+		ret = regmap_read(map, reg, &d->status_buf[i]);
+		if (ret != 0) {
+			dev_err(map->dev, "Failed to read IRQ status: %d\n",
+				ret);
+			goto err_alloc;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (chip->status_invert)
@@ -1018,6 +1089,12 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
 
 			ret = regmap_read(map, reg, &d->type_buf_def[i]);
 
+<<<<<<< HEAD
+=======
+			if (d->chip->type_invert)
+				d->type_buf_def[i] = ~d->type_buf_def[i];
+
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret) {
 				dev_err(map->dev, "Failed to get type defaults at 0x%x: %d\n",
 					reg, ret);

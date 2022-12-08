@@ -156,7 +156,11 @@ static int mlxbf_gige_open(struct net_device *netdev)
 
 	phy_start(phydev);
 
+<<<<<<< HEAD
 	netif_napi_add(netdev, &priv->napi, mlxbf_gige_poll);
+=======
+	netif_napi_add(netdev, &priv->napi, mlxbf_gige_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 	napi_enable(&priv->napi);
 	netif_start_queue(netdev);
 
@@ -205,7 +209,11 @@ static int mlxbf_gige_stop(struct net_device *netdev)
 }
 
 static int mlxbf_gige_eth_ioctl(struct net_device *netdev,
+<<<<<<< HEAD
 				struct ifreq *ifr, int cmd)
+=======
+			       struct ifreq *ifr, int cmd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!(netif_running(netdev)))
 		return -EINVAL;
@@ -263,13 +271,18 @@ static const struct net_device_ops mlxbf_gige_netdev_ops = {
 	.ndo_get_stats64        = mlxbf_gige_get_stats64,
 };
 
+<<<<<<< HEAD
 static void mlxbf_gige_bf2_adjust_link(struct net_device *netdev)
+=======
+static void mlxbf_gige_adjust_link(struct net_device *netdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct phy_device *phydev = netdev->phydev;
 
 	phy_print_status(phydev);
 }
 
+<<<<<<< HEAD
 static void mlxbf_gige_bf3_adjust_link(struct net_device *netdev)
 {
 	struct mlxbf_gige *priv = netdev_priv(netdev);
@@ -356,6 +369,8 @@ static struct mlxbf_gige_link_cfg mlxbf_gige_link_cfgs[] = {
 	}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mlxbf_gige_probe(struct platform_device *pdev)
 {
 	struct phy_device *phydev;
@@ -401,8 +416,11 @@ static int mlxbf_gige_probe(struct platform_device *pdev)
 
 	spin_lock_init(&priv->lock);
 
+<<<<<<< HEAD
 	priv->hw_version = readq(base + MLXBF_GIGE_VERSION);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Attach MDIO device */
 	err = mlxbf_gige_mdio_probe(pdev, priv);
 	if (err)
@@ -445,14 +463,34 @@ static int mlxbf_gige_probe(struct platform_device *pdev)
 	phydev->irq = phy_irq;
 
 	err = phy_connect_direct(netdev, phydev,
+<<<<<<< HEAD
 				 mlxbf_gige_link_cfgs[priv->hw_version].adjust_link,
 				 mlxbf_gige_link_cfgs[priv->hw_version].phy_mode);
+=======
+				 mlxbf_gige_adjust_link,
+				 PHY_INTERFACE_MODE_GMII);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		dev_err(&pdev->dev, "Could not attach to PHY\n");
 		goto out;
 	}
 
+<<<<<<< HEAD
 	mlxbf_gige_link_cfgs[priv->hw_version].set_phy_link_mode(phydev);
+=======
+	/* MAC only supports 1000T full duplex mode */
+	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
+	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_100baseT_Full_BIT);
+	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_100baseT_Half_BIT);
+	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_10baseT_Full_BIT);
+	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_10baseT_Half_BIT);
+
+	/* Only symmetric pause with flow control enabled is supported so no
+	 * need to negotiate pause.
+	 */
+	linkmode_clear_bit(ETHTOOL_LINK_MODE_Pause_BIT, phydev->advertising);
+	linkmode_clear_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT, phydev->advertising);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Display information about attached PHY device */
 	phy_attached_info(phydev);

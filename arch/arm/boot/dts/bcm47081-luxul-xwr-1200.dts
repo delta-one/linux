@@ -29,62 +29,102 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-power {
+=======
+		power {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:power";
 			gpios = <&chipcommon 0 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "default-on";
 		};
 
+<<<<<<< HEAD
 		led-lan3 {
+=======
+		lan3 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:lan3";
 			gpios = <&chipcommon 1 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "none";
 		};
 
+<<<<<<< HEAD
 		led-lan4 {
+=======
+		lan4 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:lan4";
 			gpios = <&chipcommon 2 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "none";
 		};
 
+<<<<<<< HEAD
 		led-wan {
+=======
+		wan {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:wan";
 			gpios = <&chipcommon 3 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "none";
 		};
 
+<<<<<<< HEAD
 		led-lan2 {
+=======
+		lan2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:lan2";
 			gpios = <&chipcommon 6 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "none";
 		};
 
+<<<<<<< HEAD
 		led-usb {
+=======
+		usb {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:usb";
 			gpios = <&chipcommon 8 GPIO_ACTIVE_LOW>;
 			trigger-sources = <&ohci_port2>, <&ehci_port2>;
 			linux,default-trigger = "usbport";
 		};
 
+<<<<<<< HEAD
 		led-status {
+=======
+		status {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:status";
 			gpios = <&chipcommon 10 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "timer";
 		};
 
+<<<<<<< HEAD
 		led-2ghz {
+=======
+		2ghz {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:2ghz";
 			gpios = <&chipcommon 13 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "none";
 		};
 
+<<<<<<< HEAD
 		led-5ghz {
+=======
+		5ghz {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:5ghz";
 			gpios = <&chipcommon 14 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "none";
 		};
 
+<<<<<<< HEAD
 		led-lan1 {
+=======
+		lan1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:lan1";
 			gpios = <&chipcommon 15 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "none";

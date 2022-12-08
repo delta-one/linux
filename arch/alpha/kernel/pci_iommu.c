@@ -127,12 +127,19 @@ again:
 			goto again;
 		}
 
+<<<<<<< HEAD
 		if (ptes[p+i]) {
 			p = ALIGN(p + i + 1, mask + 1);
 			i = 0;
 		} else {
 			i = i + 1;
 		}
+=======
+		if (ptes[p+i])
+			p = ALIGN(p + i + 1, mask + 1), i = 0;
+		else
+			i = i + 1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (i < n) {

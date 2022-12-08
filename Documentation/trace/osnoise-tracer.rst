@@ -92,8 +92,13 @@ Note that the example above shows a high number of HW noise samples.
 The reason being is that this sample was taken on a virtual machine,
 and the host interference is detected as a hardware interference.
 
+<<<<<<< HEAD
 Tracer Configuration
 --------------------
+=======
+Tracer options
+---------------------
+>>>>>>> b7ba80a49124 (Commit)
 
 The tracer has a set of options inside the osnoise directory, they are:
 
@@ -109,6 +114,7 @@ The tracer has a set of options inside the osnoise directory, they are:
  - tracing_threshold: the minimum delta between two time() reads to be
    considered as noise, in us. When set to 0, the default value will
    be used, which is currently 5 us.
+<<<<<<< HEAD
  - osnoise/options: a set of on/off options that can be enabled by
    writing the option name to the file or disabled by writing the option
    name preceded with the 'NO\_' prefix. For example, writing
@@ -130,6 +136,8 @@ the osnoise tracer. These options are:
    workload, allowing only IRQ and hardware-related noise.
  - OSNOISE_IRQ_DISABLE: disable IRQs while running the osnoise workload,
    allowing only NMIs and hardware-related noise, like hwlat tracer.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 Additional Tracing
 ------------------
@@ -171,6 +179,7 @@ tracepoints is smaller than eight us reported in the sample_threshold.
 The reason roots in the overhead of the entry and exit code that happens
 before and after any interference execution. This justifies the dual
 approach: measuring thread and tracing.
+<<<<<<< HEAD
 
 Running osnoise tracer without workload
 ---------------------------------------
@@ -178,3 +187,5 @@ Running osnoise tracer without workload
 By enabling the osnoise tracer with the NO_OSNOISE_WORKLOAD option set,
 the osnoise: tracepoints serve to measure the execution time of
 any type of Linux task, free from the interference of other tasks.
+=======
+>>>>>>> b7ba80a49124 (Commit)

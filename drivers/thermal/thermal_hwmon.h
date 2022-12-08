@@ -17,7 +17,11 @@
 
 #ifdef CONFIG_THERMAL_HWMON
 int thermal_add_hwmon_sysfs(struct thermal_zone_device *tz);
+<<<<<<< HEAD
 int devm_thermal_add_hwmon_sysfs(struct device *dev, struct thermal_zone_device *tz);
+=======
+int devm_thermal_add_hwmon_sysfs(struct thermal_zone_device *tz);
+>>>>>>> b7ba80a49124 (Commit)
 void thermal_remove_hwmon_sysfs(struct thermal_zone_device *tz);
 #else
 static inline int
@@ -27,7 +31,11 @@ thermal_add_hwmon_sysfs(struct thermal_zone_device *tz)
 }
 
 static inline int
+<<<<<<< HEAD
 devm_thermal_add_hwmon_sysfs(struct device *dev, struct thermal_zone_device *tz)
+=======
+devm_thermal_add_hwmon_sysfs(struct thermal_zone_device *tz)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return 0;
 }

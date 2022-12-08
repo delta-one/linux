@@ -8,7 +8,10 @@
 
 #include <dt-bindings/leds/common.h>
 #include <dt-bindings/net/ti-dp83867.h>
+<<<<<<< HEAD
 #include <dt-bindings/phy/phy-imx8-pcie.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <dt-bindings/pwm/pwm.h>
 #include "imx8mp-tqma8mpql.dtsi"
 
@@ -49,6 +52,7 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
 	clk_xtal25: clk-xtal25 {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
@@ -70,6 +74,8 @@
 		status = "disabled";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gpio-keys {
 		compatible = "gpio-keys";
 		pinctrl-names = "default";
@@ -80,14 +86,20 @@
 			label = "S12";
 			linux,code = <BTN_0>;
 			gpios = <&gpio5 27 GPIO_ACTIVE_LOW>;
+<<<<<<< HEAD
 			wakeup-source;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		switch-2 {
 			label = "S13";
 			linux,code = <BTN_1>;
 			gpios = <&gpio5 26 GPIO_ACTIVE_LOW>;
+<<<<<<< HEAD
 			wakeup-source;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -132,6 +144,7 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
 	reg_pwm_fan: regulator-pwm-fan {
 		compatible = "regulator-fixed";
 		pinctrl-names = "default";
@@ -144,6 +157,8 @@
 		vin-supply = <&reg_vcc_12v0>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	reg_usdhc2_vmmc: regulator-usdhc2 {
 		compatible = "regulator-fixed";
 		pinctrl-names = "default";
@@ -201,6 +216,7 @@
 			linux,cma-default;
 		};
 	};
+<<<<<<< HEAD
 
 	thermal-zones {
 		soc-thermal {
@@ -242,6 +258,8 @@
 			};
 		};
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &ecspi1 {
@@ -417,6 +435,7 @@
 			  "", "", "", "",
 			  "", "", "", "",
 			  "", "", "DP_IRQ", "DSI_EN",
+<<<<<<< HEAD
 			  "HDMI_OC#", "TEMP_EVENT#", "PCIE_REFCLK_OE#", "",
 			  "", "", "", "FAN_PWR",
 			  "RTC_EVENT#", "CODEC_RST#", "", "";
@@ -427,6 +446,11 @@
 		output-high;
 		line-name = "PCIE_REFCLK_OE#";
 	};
+=======
+			  "HDMI_OC#", "TEMP_EVENT#", "PCIE_CLK_OE#", "",
+			  "", "", "", "FAN_PWR",
+			  "RTC_EVENT#", "CODEC_RST#", "", "";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &gpio5 {
@@ -449,8 +473,14 @@
 	sda-gpios = <&gpio5 17 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 	status = "okay";
 
+<<<<<<< HEAD
 	se97_1c: temperature-sensor@1c {
 		compatible = "nxp,se97b", "jedec,jc-42.4-temp";
+=======
+	/* NXP SE97BTP with temperature sensor + eeprom */
+	se97_1c: temperature-sensor-eeprom@1c {
+		compatible = "nxp,se97", "jedec,jc-42.4-temp";
+>>>>>>> b7ba80a49124 (Commit)
 		reg = <0x1c>;
 	};
 
@@ -460,6 +490,7 @@
 		pagesize = <16>;
 		vcc-supply = <&reg_vcc_3v3>;
 	};
+<<<<<<< HEAD
 
 	pcieclk: clock-generator@6a {
 		compatible = "renesas,9fgv0241";
@@ -467,6 +498,8 @@
 		clocks = <&clk_xtal25>;
 		#clock-cells = <1>;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &i2c4 {
@@ -497,6 +530,7 @@
 	interrupts = <28 IRQ_TYPE_EDGE_FALLING>;
 };
 
+<<<<<<< HEAD
 &pcie_phy {
 	fsl,clkreq-unsupported;
 	fsl,refclk-pad-mode = <IMX8_PCIE_REFCLK_PAD_INPUT>;
@@ -516,6 +550,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &pwm2 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_pwm2>;
@@ -570,6 +606,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &usb3_1 {
 	fsl,disable-port-power-control;
 	fsl,permanently-attached;
@@ -577,16 +614,21 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &usb3_phy0 {
 	vbus-supply = <&reg_vcc_5v0>;
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &usb3_phy1 {
 	vbus-supply = <&reg_vcc_5v0>;
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &usb_dwc3_0 {
 	/* dual role is implemented, but not a full featured OTG */
 	hnp-disable;
@@ -607,6 +649,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &usb_dwc3_1 {
 	dr_mode = "host";
 	#address-cells = <1>;
@@ -632,6 +675,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &usdhc2 {
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
 	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
@@ -831,18 +876,24 @@
 		fsl,pins = <MX8MP_IOMUXC_I2C3_SDA__PWM3_OUT		0x14>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_pwmfan: pwmfangrp {
 		fsl,pins = <MX8MP_IOMUXC_I2C3_SCL__GPIO5_IO18		0x80>; /* FAN RPM */
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_reg12v0: reg12v0grp {
 		fsl,pins = <MX8MP_IOMUXC_SD1_DATA4__GPIO2_IO06		0x140>; /* VCC12V enable */
 	};
 
+<<<<<<< HEAD
 	pinctrl_regpwmfan: regpwmfangrp {
 		fsl,pins = <MX8MP_IOMUXC_SAI2_MCLK__GPIO4_IO27		0x80>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* X61 */
 	pinctrl_uart1: uart1grp {
 		fsl,pins = <MX8MP_IOMUXC_SD1_CLK__UART1_DCE_TX		0x140>,
@@ -874,10 +925,13 @@
 		fsl,pins = <MX8MP_IOMUXC_GPIO1_IO10__GPIO1_IO10		0x1c0>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_usbhub: usbhubgrp {
 		fsl,pins = <MX8MP_IOMUXC_GPIO1_IO11__GPIO1_IO11		0x10>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl_usdhc2: usdhc2grp {
 		fsl,pins = <MX8MP_IOMUXC_SD2_CLK__USDHC2_CLK		0x192>,
 			   <MX8MP_IOMUXC_SD2_CMD__USDHC2_CMD		0x1d2>,

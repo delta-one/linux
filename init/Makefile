@@ -59,4 +59,7 @@ include/generated/utsversion.h: FORCE
 
 $(obj)/version-timestamp.o: include/generated/utsversion.h
 CFLAGS_version-timestamp.o := -include include/generated/utsversion.h
+<<<<<<< HEAD
 KASAN_SANITIZE_version-timestamp.o := n
+=======
+>>>>>>> b7ba80a49124 (Commit)

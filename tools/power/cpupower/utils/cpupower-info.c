@@ -67,9 +67,15 @@ int cmd_info(int argc, char **argv)
 	if (!params.params)
 		params.params = 0x7;
 
+<<<<<<< HEAD
 	/* Default is: show output of base_cpu only */
 	if (bitmask_isallclear(cpus_chosen))
 		bitmask_setbit(cpus_chosen, base_cpu);
+=======
+	/* Default is: show output of CPU 0 only */
+	if (bitmask_isallclear(cpus_chosen))
+		bitmask_setbit(cpus_chosen, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Add more per cpu options here */
 	if (!params.perf_bias)

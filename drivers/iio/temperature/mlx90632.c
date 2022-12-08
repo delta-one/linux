@@ -6,14 +6,21 @@
  *
  * Driver for the Melexis MLX90632 I2C 16-bit IR thermopile sensor
  */
+<<<<<<< HEAD
 #include <linux/bitfield.h>
 #include <linux/delay.h>
 #include <linux/device.h>
+=======
+#include <linux/delay.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/err.h>
 #include <linux/gpio/consumer.h>
 #include <linux/i2c.h>
 #include <linux/iopoll.h>
+<<<<<<< HEAD
 #include <linux/jiffies.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kernel.h>
 #include <linux/limits.h>
 #include <linux/mod_devicetable.h>
@@ -58,12 +65,15 @@
 #define MLX90632_EE_Ha		0x2481 /* Ha customer calib value reg 16bit */
 #define MLX90632_EE_Hb		0x2482 /* Hb customer calib value reg 16bit */
 
+<<<<<<< HEAD
 #define MLX90632_EE_MEDICAL_MEAS1      0x24E1 /* Medical measurement 1 16bit */
 #define MLX90632_EE_MEDICAL_MEAS2      0x24E2 /* Medical measurement 2 16bit */
 #define MLX90632_EE_EXTENDED_MEAS1     0x24F1 /* Extended measurement 1 16bit */
 #define MLX90632_EE_EXTENDED_MEAS2     0x24F2 /* Extended measurement 2 16bit */
 #define MLX90632_EE_EXTENDED_MEAS3     0x24F3 /* Extended measurement 3 16bit */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Register addresses - volatile */
 #define MLX90632_REG_I2C_ADDR	0x3000 /* Chip I2C address register */
 
@@ -71,11 +81,15 @@
 #define MLX90632_REG_CONTROL	0x3001 /* Control Register address */
 #define   MLX90632_CFG_PWR_MASK		GENMASK(2, 1) /* PowerMode Mask */
 #define   MLX90632_CFG_MTYP_MASK		GENMASK(8, 4) /* Meas select Mask */
+<<<<<<< HEAD
 #define   MLX90632_CFG_SOB_MASK BIT(11)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* PowerModes statuses */
 #define MLX90632_PWR_STATUS(ctrl_val) (ctrl_val << 1)
 #define MLX90632_PWR_STATUS_HALT MLX90632_PWR_STATUS(0) /* hold */
+<<<<<<< HEAD
 #define MLX90632_PWR_STATUS_SLEEP_STEP MLX90632_PWR_STATUS(1) /* sleep step */
 #define MLX90632_PWR_STATUS_STEP MLX90632_PWR_STATUS(2) /* step */
 #define MLX90632_PWR_STATUS_CONTINUOUS MLX90632_PWR_STATUS(3) /* continuous */
@@ -84,6 +98,11 @@
 #define MLX90632_REFRESH_RATE(ee_val) FIELD_GET(MLX90632_EE_RR, ee_val)
 					/* Extract Refresh Rate from ee register */
 #define MLX90632_REFRESH_RATE_STATUS(refresh_rate) (refresh_rate << 8)
+=======
+#define MLX90632_PWR_STATUS_SLEEP_STEP MLX90632_PWR_STATUS(1) /* sleep step*/
+#define MLX90632_PWR_STATUS_STEP MLX90632_PWR_STATUS(2) /* step */
+#define MLX90632_PWR_STATUS_CONTINUOUS MLX90632_PWR_STATUS(3) /* continuous*/
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Measurement types */
 #define MLX90632_MTYP_MEDICAL 0
@@ -131,9 +150,14 @@
 #define MLX90632_REF_12 	12LL /* ResCtrlRef value of Ch 1 or Ch 2 */
 #define MLX90632_REF_3		12LL /* ResCtrlRef value of Channel 3 */
 #define MLX90632_MAX_MEAS_NUM	31 /* Maximum measurements in list */
+<<<<<<< HEAD
 #define MLX90632_SLEEP_DELAY_MS 6000 /* Autosleep delay */
 #define MLX90632_EXTENDED_LIMIT 27000 /* Extended mode raw value limit */
 #define MLX90632_MEAS_MAX_TIME 2000 /* Max measurement time in ms for the lowest refresh rate */
+=======
+#define MLX90632_SLEEP_DELAY_MS 3000 /* Autosleep delay */
+#define MLX90632_EXTENDED_LIMIT 27000 /* Extended mode raw value limit */
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct mlx90632_data - private data for the MLX90632 device
@@ -146,9 +170,12 @@
  * @object_ambient_temperature: Ambient temperature at object (might differ of
  *                              the ambient temperature of sensor.
  * @regulator: Regulator of the device
+<<<<<<< HEAD
  * @powerstatus: Current POWER status of the device
  * @interaction_ts: Timestamp of the last temperature read that is used
  *		    for power management in jiffies
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct mlx90632_data {
 	struct i2c_client *client;
@@ -158,8 +185,11 @@ struct mlx90632_data {
 	u8 mtyp;
 	u32 object_ambient_temperature;
 	struct regulator *regulator;
+<<<<<<< HEAD
 	int powerstatus;
 	unsigned long interaction_ts;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct regmap_range mlx90632_volatile_reg_range[] = {
@@ -179,8 +209,11 @@ static const struct regmap_range mlx90632_read_reg_range[] = {
 	regmap_reg_range(MLX90632_EE_VERSION, MLX90632_EE_Ka),
 	regmap_reg_range(MLX90632_EE_CTRL, MLX90632_EE_I2C_ADDR),
 	regmap_reg_range(MLX90632_EE_Ha, MLX90632_EE_Hb),
+<<<<<<< HEAD
 	regmap_reg_range(MLX90632_EE_MEDICAL_MEAS1, MLX90632_EE_MEDICAL_MEAS2),
 	regmap_reg_range(MLX90632_EE_EXTENDED_MEAS1, MLX90632_EE_EXTENDED_MEAS3),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	regmap_reg_range(MLX90632_REG_I2C_ADDR, MLX90632_REG_CONTROL),
 	regmap_reg_range(MLX90632_REG_I2C_CMD, MLX90632_REG_I2C_CMD),
 	regmap_reg_range(MLX90632_REG_STATUS, MLX90632_REG_STATUS),
@@ -219,6 +252,7 @@ static const struct regmap_config mlx90632_regmap = {
 	.cache_type = REGCACHE_RBTREE,
 };
 
+<<<<<<< HEAD
 static int mlx90632_pwr_set_sleep_step(struct regmap *regmap)
 {
 	struct mlx90632_data *data =
@@ -253,6 +287,20 @@ static int mlx90632_pwr_continuous(struct regmap *regmap)
 
 	data->powerstatus = MLX90632_PWR_STATUS_CONTINUOUS;
 	return 0;
+=======
+static s32 mlx90632_pwr_set_sleep_step(struct regmap *regmap)
+{
+	return regmap_update_bits(regmap, MLX90632_REG_CONTROL,
+				  MLX90632_CFG_PWR_MASK,
+				  MLX90632_PWR_STATUS_SLEEP_STEP);
+}
+
+static s32 mlx90632_pwr_continuous(struct regmap *regmap)
+{
+	return regmap_update_bits(regmap, MLX90632_REG_CONTROL,
+				  MLX90632_CFG_PWR_MASK,
+				  MLX90632_PWR_STATUS_CONTINUOUS);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -264,6 +312,7 @@ static void mlx90632_reset_delay(void)
 	usleep_range(150, 200);
 }
 
+<<<<<<< HEAD
 static int mlx90632_get_measurement_time(struct regmap *regmap, u16 meas)
 {
 	unsigned int reg;
@@ -321,6 +370,8 @@ static int mlx90632_calculate_dataset_ready_time(struct mlx90632_data *data)
 	return refresh_time;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * mlx90632_perform_measurement() - Trigger and retrieve current measurement cycle
  * @data: pointer to mlx90632_data object containing regmap information
@@ -351,6 +402,7 @@ static int mlx90632_perform_measurement(struct mlx90632_data *data)
 	return (reg_status & MLX90632_STAT_CYCLE_POS) >> 2;
 }
 
+<<<<<<< HEAD
 /**
  * mlx90632_perform_measurement_burst() - Trigger and retrieve current measurement
  * cycle in step sleep mode
@@ -402,17 +454,32 @@ static int mlx90632_set_meas_type(struct mlx90632_data *data, u8 type)
 		return ret;
 
 	ret = regmap_write(data->regmap, MLX90632_REG_I2C_CMD, MLX90632_RESET_CMD);
+=======
+static int mlx90632_set_meas_type(struct regmap *regmap, u8 type)
+{
+	int ret;
+
+	if ((type != MLX90632_MTYP_MEDICAL) && (type != MLX90632_MTYP_EXTENDED))
+		return -EINVAL;
+
+	ret = regmap_write(regmap, MLX90632_REG_I2C_CMD, MLX90632_RESET_CMD);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
 	mlx90632_reset_delay();
 
+<<<<<<< HEAD
 	ret = regmap_update_bits(data->regmap, MLX90632_REG_CONTROL,
+=======
+	ret = regmap_write_bits(regmap, MLX90632_REG_CONTROL,
+>>>>>>> b7ba80a49124 (Commit)
 				 (MLX90632_CFG_MTYP_MASK | MLX90632_CFG_PWR_MASK),
 				 (MLX90632_MTYP_STATUS(type) | MLX90632_PWR_STATUS_HALT));
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	data->mtyp = type;
 	data->powerstatus = MLX90632_PWR_STATUS_HALT;
 
@@ -420,6 +487,9 @@ static int mlx90632_set_meas_type(struct mlx90632_data *data, u8 type)
 		return mlx90632_pwr_set_sleep_step(data->regmap);
 
 	return mlx90632_pwr_continuous(data->regmap);
+=======
+	return mlx90632_pwr_continuous(regmap);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mlx90632_channel_new_select(int perform_ret, uint8_t *channel_new,
@@ -435,7 +505,11 @@ static int mlx90632_channel_new_select(int perform_ret, uint8_t *channel_new,
 		*channel_old = 1;
 		break;
 	default:
+<<<<<<< HEAD
 		return -ECHRNG;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -444,8 +518,13 @@ static int mlx90632_channel_new_select(int perform_ret, uint8_t *channel_new,
 static int mlx90632_read_ambient_raw(struct regmap *regmap,
 				     s16 *ambient_new_raw, s16 *ambient_old_raw)
 {
+<<<<<<< HEAD
 	unsigned int read_tmp;
 	int ret;
+=======
+	int ret;
+	unsigned int read_tmp;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = regmap_read(regmap, MLX90632_RAM_3(1), &read_tmp);
 	if (ret < 0)
@@ -464,11 +543,19 @@ static int mlx90632_read_object_raw(struct regmap *regmap,
 				    int perform_measurement_ret,
 				    s16 *object_new_raw, s16 *object_old_raw)
 {
+<<<<<<< HEAD
 	unsigned int read_tmp;
 	u8 channel_old = 0;
 	u8 channel = 0;
 	s16 read;
 	int ret;
+=======
+	int ret;
+	unsigned int read_tmp;
+	s16 read;
+	u8 channel = 0;
+	u8 channel_old = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = mlx90632_channel_new_select(perform_measurement_ret, &channel,
 					  &channel_old);
@@ -503,6 +590,7 @@ static int mlx90632_read_all_channel(struct mlx90632_data *data,
 				     s16 *ambient_new_raw, s16 *ambient_old_raw,
 				     s16 *object_new_raw, s16 *object_old_raw)
 {
+<<<<<<< HEAD
 	s32 measurement;
 	int ret;
 
@@ -531,6 +619,16 @@ static int mlx90632_read_all_channel(struct mlx90632_data *data,
 
 	measurement = ret; /* If we came here ret holds the measurement position */
 
+=======
+	s32 ret, measurement;
+
+	mutex_lock(&data->lock);
+	measurement = mlx90632_perform_measurement(data);
+	if (measurement < 0) {
+		ret = measurement;
+		goto read_unlock;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	ret = mlx90632_read_ambient_raw(data->regmap, ambient_new_raw,
 					ambient_old_raw);
 	if (ret < 0)
@@ -612,6 +710,7 @@ static int mlx90632_read_all_channel_extended(struct mlx90632_data *data, s16 *o
 	s32 ret, meas;
 
 	mutex_lock(&data->lock);
+<<<<<<< HEAD
 	ret = mlx90632_set_meas_type(data, MLX90632_MTYP_EXTENDED);
 	if (ret < 0)
 		goto read_unlock;
@@ -632,6 +731,16 @@ static int mlx90632_read_all_channel_extended(struct mlx90632_data *data, s16 *o
 		ret = -EOPNOTSUPP;
 		goto read_unlock;
 	}
+=======
+	ret = mlx90632_set_meas_type(data->regmap, MLX90632_MTYP_EXTENDED);
+	if (ret < 0)
+		goto read_unlock;
+
+	ret = read_poll_timeout(mlx90632_perform_measurement, meas, meas == 19,
+				50000, 800000, false, data);
+	if (ret != 0)
+		goto read_unlock;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = mlx90632_read_object_raw_extended(data->regmap, object_new_raw);
 	if (ret < 0)
@@ -640,6 +749,11 @@ static int mlx90632_read_all_channel_extended(struct mlx90632_data *data, s16 *o
 	ret = mlx90632_read_ambient_raw_extended(data->regmap, ambient_new_raw, ambient_old_raw);
 
 read_unlock:
+<<<<<<< HEAD
+=======
+	(void) mlx90632_set_meas_type(data->regmap, MLX90632_MTYP_MEDICAL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&data->lock);
 	return ret;
 }
@@ -647,9 +761,15 @@ read_unlock:
 static int mlx90632_read_ee_register(struct regmap *regmap, u16 reg_lsb,
 				     s32 *reg_value)
 {
+<<<<<<< HEAD
 	unsigned int read;
 	u32 value;
 	int ret;
+=======
+	s32 ret;
+	unsigned int read;
+	u32 value;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = regmap_read(regmap, reg_lsb, &read);
 	if (ret < 0)
@@ -813,12 +933,21 @@ static s32 mlx90632_calc_temp_object_extended(s64 object, s64 ambient, s64 refle
 
 static int mlx90632_calc_object_dsp105(struct mlx90632_data *data, int *val)
 {
+<<<<<<< HEAD
 	s16 ambient_new_raw, ambient_old_raw, object_new_raw, object_old_raw;
 	s32 Ea, Eb, Fa, Fb, Ga;
 	unsigned int read_tmp;
 	s64 object, ambient;
 	s16 Ha, Hb, Gb, Ka;
 	int ret;
+=======
+	s32 ret;
+	s32 Ea, Eb, Fa, Fb, Ga;
+	unsigned int read_tmp;
+	s16 Ha, Hb, Gb, Ka;
+	s16 ambient_new_raw, ambient_old_raw, object_new_raw, object_old_raw;
+	s64 object, ambient;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = mlx90632_read_ee_register(data->regmap, MLX90632_EE_Ea, &Ea);
 	if (ret < 0)
@@ -892,11 +1021,19 @@ static int mlx90632_calc_object_dsp105(struct mlx90632_data *data, int *val)
 
 static int mlx90632_calc_ambient_dsp105(struct mlx90632_data *data, int *val)
 {
+<<<<<<< HEAD
 	s16 ambient_new_raw, ambient_old_raw;
 	unsigned int read_tmp;
 	s32 PT, PR, PG, PO;
 	int ret;
 	s16 Gb;
+=======
+	s32 ret;
+	unsigned int read_tmp;
+	s32 PT, PR, PG, PO;
+	s16 Gb;
+	s16 ambient_new_raw, ambient_old_raw;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = mlx90632_read_ee_register(data->regmap, MLX90632_EE_P_R, &PR);
 	if (ret < 0)
@@ -924,6 +1061,7 @@ static int mlx90632_calc_ambient_dsp105(struct mlx90632_data *data, int *val)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int mlx90632_get_refresh_rate(struct mlx90632_data *data,
 				     int *refresh_rate)
 {
@@ -979,18 +1117,23 @@ static int mlx90632_pm_interraction_wakeup(struct mlx90632_data *data)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mlx90632_read_raw(struct iio_dev *indio_dev,
 			     struct iio_chan_spec const *channel, int *val,
 			     int *val2, long mask)
 {
 	struct mlx90632_data *data = iio_priv(indio_dev);
 	int ret;
+<<<<<<< HEAD
 	int cr;
 
 	pm_runtime_get_sync(&data->client->dev);
 	ret = mlx90632_pm_interraction_wakeup(data);
 	if (ret < 0)
 		goto mlx90632_read_raw_pm;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (mask) {
 	case IIO_CHAN_INFO_PROCESSED:
@@ -998,6 +1141,7 @@ static int mlx90632_read_raw(struct iio_dev *indio_dev,
 		case IIO_MOD_TEMP_AMBIENT:
 			ret = mlx90632_calc_ambient_dsp105(data, val);
 			if (ret < 0)
+<<<<<<< HEAD
 				goto mlx90632_read_raw_pm;
 
 			ret = IIO_VAL_INT;
@@ -1014,6 +1158,18 @@ static int mlx90632_read_raw(struct iio_dev *indio_dev,
 			break;
 		}
 		break;
+=======
+				return ret;
+			return IIO_VAL_INT;
+		case IIO_MOD_TEMP_OBJECT:
+			ret = mlx90632_calc_object_dsp105(data, val);
+			if (ret < 0)
+				return ret;
+			return IIO_VAL_INT;
+		default:
+			return -EINVAL;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	case IIO_CHAN_INFO_CALIBEMISSIVITY:
 		if (data->emissivity == 1000) {
 			*val = 1;
@@ -1022,6 +1178,7 @@ static int mlx90632_read_raw(struct iio_dev *indio_dev,
 			*val = 0;
 			*val2 = data->emissivity * 1000;
 		}
+<<<<<<< HEAD
 		ret = IIO_VAL_INT_PLUS_MICRO;
 		break;
 	case IIO_CHAN_INFO_CALIBAMBIENT:
@@ -1046,6 +1203,15 @@ mlx90632_read_raw_pm:
 	pm_runtime_mark_last_busy(&data->client->dev);
 	pm_runtime_put_autosuspend(&data->client->dev);
 	return ret;
+=======
+		return IIO_VAL_INT_PLUS_MICRO;
+	case IIO_CHAN_INFO_CALIBAMBIENT:
+		*val = data->object_ambient_temperature;
+		return IIO_VAL_INT;
+	default:
+		return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mlx90632_write_raw(struct iio_dev *indio_dev,
@@ -1070,6 +1236,7 @@ static int mlx90632_write_raw(struct iio_dev *indio_dev,
 	}
 }
 
+<<<<<<< HEAD
 static int mlx90632_read_avail(struct iio_dev *indio_dev,
 			       struct iio_chan_spec const *chan,
 			       const int **vals, int *type, int *length,
@@ -1086,14 +1253,19 @@ static int mlx90632_read_avail(struct iio_dev *indio_dev,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct iio_chan_spec mlx90632_channels[] = {
 	{
 		.type = IIO_TEMP,
 		.modified = 1,
 		.channel2 = IIO_MOD_TEMP_AMBIENT,
 		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
+<<<<<<< HEAD
 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
 		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.type = IIO_TEMP,
@@ -1101,14 +1273,18 @@ static const struct iio_chan_spec mlx90632_channels[] = {
 		.channel2 = IIO_MOD_TEMP_OBJECT,
 		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
 			BIT(IIO_CHAN_INFO_CALIBEMISSIVITY) | BIT(IIO_CHAN_INFO_CALIBAMBIENT),
+<<<<<<< HEAD
 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
 		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 
 static const struct iio_info mlx90632_info = {
 	.read_raw = mlx90632_read_raw,
 	.write_raw = mlx90632_write_raw,
+<<<<<<< HEAD
 	.read_avail = mlx90632_read_avail,
 };
 
@@ -1124,6 +1300,15 @@ static int mlx90632_suspend(struct mlx90632_data *data)
 	regcache_mark_dirty(data->regmap);
 
 	dev_dbg(&data->client->dev, "Requesting suspend");
+=======
+};
+
+static int mlx90632_sleep(struct mlx90632_data *data)
+{
+	regcache_mark_dirty(data->regmap);
+
+	dev_dbg(&data->client->dev, "Requesting sleep");
+>>>>>>> b7ba80a49124 (Commit)
 	return mlx90632_pwr_set_sleep_step(data->regmap);
 }
 
@@ -1168,6 +1353,7 @@ static int mlx90632_enable_regulator(struct mlx90632_data *data)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int mlx90632_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
@@ -1176,6 +1362,16 @@ static int mlx90632_probe(struct i2c_client *client)
 	struct regmap *regmap;
 	unsigned int read;
 	int ret;
+=======
+static int mlx90632_probe(struct i2c_client *client,
+			  const struct i2c_device_id *id)
+{
+	struct iio_dev *indio_dev;
+	struct mlx90632_data *mlx90632;
+	struct regmap *regmap;
+	int ret;
+	unsigned int read;
+>>>>>>> b7ba80a49124 (Commit)
 
 	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*mlx90632));
 	if (!indio_dev) {
@@ -1195,7 +1391,10 @@ static int mlx90632_probe(struct i2c_client *client)
 	mlx90632->client = client;
 	mlx90632->regmap = regmap;
 	mlx90632->mtyp = MLX90632_MTYP_MEDICAL;
+<<<<<<< HEAD
 	mlx90632->powerstatus = MLX90632_PWR_STATUS_HALT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_init(&mlx90632->lock);
 	indio_dev->name = id->name;
@@ -1227,6 +1426,7 @@ static int mlx90632_probe(struct i2c_client *client)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = devm_add_action_or_reset(&client->dev, mlx90632_sleep, mlx90632);
 	if (ret < 0) {
 		dev_err(&client->dev, "Failed to setup low power cleanup action %d\n",
@@ -1234,6 +1434,8 @@ static int mlx90632_probe(struct i2c_client *client)
 		return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = regmap_read(mlx90632->regmap, MLX90632_EE_VERSION, &read);
 	if (ret < 0) {
 		dev_err(&client->dev, "read of version failed: %d\n", ret);
@@ -1262,6 +1464,7 @@ static int mlx90632_probe(struct i2c_client *client)
 
 	mlx90632->emissivity = 1000;
 	mlx90632->object_ambient_temperature = 25000; /* 25 degrees milliCelsius */
+<<<<<<< HEAD
 	mlx90632->interaction_ts = jiffies; /* Set initial value */
 
 	pm_runtime_get_noresume(&client->dev);
@@ -1276,6 +1479,34 @@ static int mlx90632_probe(struct i2c_client *client)
 	pm_runtime_put_autosuspend(&client->dev);
 
 	return devm_iio_device_register(&client->dev, indio_dev);
+=======
+
+	pm_runtime_disable(&client->dev);
+	ret = pm_runtime_set_active(&client->dev);
+	if (ret < 0) {
+		mlx90632_sleep(mlx90632);
+		return ret;
+	}
+	pm_runtime_enable(&client->dev);
+	pm_runtime_set_autosuspend_delay(&client->dev, MLX90632_SLEEP_DELAY_MS);
+	pm_runtime_use_autosuspend(&client->dev);
+
+	return iio_device_register(indio_dev);
+}
+
+static void mlx90632_remove(struct i2c_client *client)
+{
+	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+	struct mlx90632_data *data = iio_priv(indio_dev);
+
+	iio_device_unregister(indio_dev);
+
+	pm_runtime_disable(&client->dev);
+	pm_runtime_set_suspended(&client->dev);
+	pm_runtime_put_noidle(&client->dev);
+
+	mlx90632_sleep(data);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct i2c_device_id mlx90632_id[] = {
@@ -1290,6 +1521,7 @@ static const struct of_device_id mlx90632_of_match[] = {
 };
 MODULE_DEVICE_TABLE(of, mlx90632_of_match);
 
+<<<<<<< HEAD
 static int mlx90632_pm_suspend(struct device *dev)
 {
 	struct mlx90632_data *data = iio_priv(dev_get_drvdata(dev));
@@ -1315,10 +1547,25 @@ static int mlx90632_pm_resume(struct device *dev)
 	ret = mlx90632_enable_regulator(data);
 	if (ret < 0)
 		return ret;
+=======
+static int __maybe_unused mlx90632_pm_suspend(struct device *dev)
+{
+	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
+	struct mlx90632_data *data = iio_priv(indio_dev);
+
+	return mlx90632_sleep(data);
+}
+
+static int __maybe_unused mlx90632_pm_resume(struct device *dev)
+{
+	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
+	struct mlx90632_data *data = iio_priv(indio_dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return mlx90632_wakeup(data);
 }
 
+<<<<<<< HEAD
 static int mlx90632_pm_runtime_suspend(struct device *dev)
 {
 	struct mlx90632_data *data = iio_priv(dev_get_drvdata(dev));
@@ -1330,14 +1577,25 @@ static const struct dev_pm_ops mlx90632_pm_ops = {
 	SYSTEM_SLEEP_PM_OPS(mlx90632_pm_suspend, mlx90632_pm_resume)
 	RUNTIME_PM_OPS(mlx90632_pm_runtime_suspend, NULL, NULL)
 };
+=======
+static UNIVERSAL_DEV_PM_OPS(mlx90632_pm_ops, mlx90632_pm_suspend,
+			    mlx90632_pm_resume, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct i2c_driver mlx90632_driver = {
 	.driver = {
 		.name	= "mlx90632",
 		.of_match_table = mlx90632_of_match,
+<<<<<<< HEAD
 		.pm	= pm_ptr(&mlx90632_pm_ops),
 	},
 	.probe_new = mlx90632_probe,
+=======
+		.pm	= &mlx90632_pm_ops,
+	},
+	.probe = mlx90632_probe,
+	.remove = mlx90632_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = mlx90632_id,
 };
 module_i2c_driver(mlx90632_driver);

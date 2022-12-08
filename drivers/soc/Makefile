@@ -18,18 +18,27 @@ obj-y				+= imx/
 obj-y				+= ixp4xx/
 obj-$(CONFIG_SOC_XWAY)		+= lantiq/
 obj-$(CONFIG_LITEX_SOC_CONTROLLER) += litex/
+<<<<<<< HEAD
 obj-y				+= loongson/
 obj-y				+= mediatek/
 obj-y				+= microchip/
 obj-y				+= nuvoton/
+=======
+obj-y				+= mediatek/
+obj-y				+= microchip/
+>>>>>>> b7ba80a49124 (Commit)
 obj-y				+= pxa/
 obj-y				+= amlogic/
 obj-y				+= qcom/
 obj-y				+= renesas/
 obj-y				+= rockchip/
 obj-$(CONFIG_SOC_SAMSUNG)	+= samsung/
+<<<<<<< HEAD
 obj-y				+= sifive/
 obj-$(CONFIG_SOC_STARFIVE)	+= starfive/
+=======
+obj-$(CONFIG_SOC_SIFIVE)	+= sifive/
+>>>>>>> b7ba80a49124 (Commit)
 obj-y				+= sunxi/
 obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
 obj-y				+= ti/

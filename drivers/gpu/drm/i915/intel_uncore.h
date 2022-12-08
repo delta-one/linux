@@ -62,7 +62,10 @@ enum forcewake_domain_id {
 	FW_DOMAIN_ID_MEDIA_VEBOX1,
 	FW_DOMAIN_ID_MEDIA_VEBOX2,
 	FW_DOMAIN_ID_MEDIA_VEBOX3,
+<<<<<<< HEAD
 	FW_DOMAIN_ID_GSC,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	FW_DOMAIN_ID_COUNT
 };
@@ -83,7 +86,10 @@ enum forcewake_domains {
 	FORCEWAKE_MEDIA_VEBOX1	= BIT(FW_DOMAIN_ID_MEDIA_VEBOX1),
 	FORCEWAKE_MEDIA_VEBOX2	= BIT(FW_DOMAIN_ID_MEDIA_VEBOX2),
 	FORCEWAKE_MEDIA_VEBOX3	= BIT(FW_DOMAIN_ID_MEDIA_VEBOX3),
+<<<<<<< HEAD
 	FORCEWAKE_GSC		= BIT(FW_DOMAIN_ID_GSC),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	FORCEWAKE_ALL = BIT(FW_DOMAIN_ID_COUNT) - 1,
 };
@@ -153,7 +159,10 @@ struct intel_uncore {
 #define UNCORE_HAS_FPGA_DBG_UNCLAIMED	BIT(1)
 #define UNCORE_HAS_DBG_UNCLAIMED	BIT(2)
 #define UNCORE_HAS_FIFO			BIT(3)
+<<<<<<< HEAD
 #define UNCORE_NEEDS_FLR_ON_FINI	BIT(4)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	const struct intel_forcewake_range *fw_domains_table;
 	unsigned int fw_domains_table_entries;
@@ -224,6 +233,7 @@ intel_uncore_has_fifo(const struct intel_uncore *uncore)
 	return uncore->flags & UNCORE_HAS_FIFO;
 }
 
+<<<<<<< HEAD
 static inline bool
 intel_uncore_needs_flr_on_fini(const struct intel_uncore *uncore)
 {
@@ -236,6 +246,8 @@ intel_uncore_set_flr_on_fini(struct intel_uncore *uncore)
 	return uncore->flags |= UNCORE_NEEDS_FLR_ON_FINI;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void intel_uncore_mmio_debug_init_early(struct drm_i915_private *i915);
 void intel_uncore_init_early(struct intel_uncore *uncore,
 			     struct intel_gt *gt);
@@ -395,6 +407,23 @@ __uncore_write(write_notrace, 32, l, false)
  */
 __uncore_read(read64, 64, q, true)
 
+<<<<<<< HEAD
+=======
+static inline u64
+intel_uncore_read64_2x32(struct intel_uncore *uncore,
+			 i915_reg_t lower_reg, i915_reg_t upper_reg)
+{
+	u32 upper, lower, old_upper, loop = 0;
+	upper = intel_uncore_read(uncore, upper_reg);
+	do {
+		old_upper = upper;
+		lower = intel_uncore_read(uncore, lower_reg);
+		upper = intel_uncore_read(uncore, upper_reg);
+	} while (upper != old_upper && loop++ < 2);
+	return (u64)upper << 32 | lower;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #define intel_uncore_posting_read(...) ((void)intel_uncore_read_notrace(__VA_ARGS__))
 #define intel_uncore_posting_read16(...) ((void)intel_uncore_read16_notrace(__VA_ARGS__))
 
@@ -432,15 +461,25 @@ __uncore_read(read64, 64, q, true)
 #define intel_uncore_write64_fw(...) __raw_uncore_write64(__VA_ARGS__)
 #define intel_uncore_posting_read_fw(...) ((void)intel_uncore_read_fw(__VA_ARGS__))
 
+<<<<<<< HEAD
 static inline u32 intel_uncore_rmw(struct intel_uncore *uncore,
 				   i915_reg_t reg, u32 clear, u32 set)
+=======
+static inline void intel_uncore_rmw(struct intel_uncore *uncore,
+				    i915_reg_t reg, u32 clear, u32 set)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 old, val;
 
 	old = intel_uncore_read(uncore, reg);
 	val = (old & ~clear) | set;
+<<<<<<< HEAD
 	intel_uncore_write(uncore, reg, val);
 	return old;
+=======
+	if (val != old)
+		intel_uncore_write(uncore, reg, val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void intel_uncore_rmw_fw(struct intel_uncore *uncore,
@@ -454,6 +493,7 @@ static inline void intel_uncore_rmw_fw(struct intel_uncore *uncore,
 		intel_uncore_write_fw(uncore, reg, val);
 }
 
+<<<<<<< HEAD
 static inline u64
 intel_uncore_read64_2x32(struct intel_uncore *uncore,
 			 i915_reg_t lower_reg, i915_reg_t upper_reg)
@@ -484,6 +524,8 @@ intel_uncore_read64_2x32(struct intel_uncore *uncore,
 	return (u64)upper << 32 | lower;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int intel_uncore_write_and_verify(struct intel_uncore *uncore,
 						i915_reg_t reg, u32 val,
 						u32 mask, u32 expected_val)

@@ -168,6 +168,7 @@ int qxl_bo_vmap_locked(struct qxl_bo *bo, struct iosys_map *map)
 		bo->map_count++;
 		goto out;
 	}
+<<<<<<< HEAD
 
 	r = __qxl_bo_pin(bo);
 	if (r)
@@ -178,6 +179,11 @@ int qxl_bo_vmap_locked(struct qxl_bo *bo, struct iosys_map *map)
 		__qxl_bo_unpin(bo);
 		return r;
 	}
+=======
+	r = ttm_bo_vmap(&bo->tbo, &bo->map);
+	if (r)
+		return r;
+>>>>>>> b7ba80a49124 (Commit)
 	bo->map_count = 1;
 
 	/* TODO: Remove kptr in favor of map everywhere. */
@@ -199,6 +205,15 @@ int qxl_bo_vmap(struct qxl_bo *bo, struct iosys_map *map)
 	if (r)
 		return r;
 
+<<<<<<< HEAD
+=======
+	r = __qxl_bo_pin(bo);
+	if (r) {
+		qxl_bo_unreserve(bo);
+		return r;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	r = qxl_bo_vmap_locked(bo, map);
 	qxl_bo_unreserve(bo);
 	return r;
@@ -248,7 +263,10 @@ void qxl_bo_vunmap_locked(struct qxl_bo *bo)
 		return;
 	bo->kptr = NULL;
 	ttm_bo_vunmap(&bo->tbo, &bo->map);
+<<<<<<< HEAD
 	__qxl_bo_unpin(bo);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int qxl_bo_vunmap(struct qxl_bo *bo)
@@ -260,6 +278,10 @@ int qxl_bo_vunmap(struct qxl_bo *bo)
 		return r;
 
 	qxl_bo_vunmap_locked(bo);
+<<<<<<< HEAD
+=======
+	__qxl_bo_unpin(bo);
+>>>>>>> b7ba80a49124 (Commit)
 	qxl_bo_unreserve(bo);
 	return 0;
 }

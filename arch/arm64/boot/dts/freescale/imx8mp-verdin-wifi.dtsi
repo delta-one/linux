@@ -65,11 +65,14 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_bt_uart>;
 	status = "okay";
+<<<<<<< HEAD
 
 	bluetooth {
 		compatible = "mrvl,88w8997";
 		max-speed = <921600>;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* On-module Wi-Fi */

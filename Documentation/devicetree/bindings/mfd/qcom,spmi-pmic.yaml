@@ -33,8 +33,11 @@ properties:
   compatible:
     items:
       - enum:
+<<<<<<< HEAD
           - qcom,pm2250
           - qcom,pm6125
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - qcom,pm6150
           - qcom,pm6150l
           - qcom,pm6350
@@ -45,7 +48,10 @@ properties:
           - qcom,pm8004
           - qcom,pm8005
           - qcom,pm8009
+<<<<<<< HEAD
           - qcom,pm8010
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - qcom,pm8019
           - qcom,pm8028
           - qcom,pm8110
@@ -57,10 +63,13 @@ properties:
           - qcom,pm8350
           - qcom,pm8350b
           - qcom,pm8350c
+<<<<<<< HEAD
           - qcom,pm8550
           - qcom,pm8550b
           - qcom,pm8550ve
           - qcom,pm8550vs
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - qcom,pm8841
           - qcom,pm8909
           - qcom,pm8916
@@ -77,12 +86,18 @@ properties:
           - qcom,pmi8998
           - qcom,pmk8002
           - qcom,pmk8350
+<<<<<<< HEAD
           - qcom,pmk8550
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - qcom,pmm8155au
           - qcom,pmp8074
           - qcom,pmr735a
           - qcom,pmr735b
+<<<<<<< HEAD
           - qcom,pmr735d
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - qcom,pms405
           - qcom,pmx55
           - qcom,pmx65
@@ -107,6 +122,7 @@ properties:
     type: object
     $ref: /schemas/regulator/qcom,spmi-regulator.yaml#
 
+<<<<<<< HEAD
   pwm:
     type: object
     $ref: /schemas/leds/leds-qcom-lpg.yaml#
@@ -118,6 +134,12 @@ patternProperties:
       - $ref: /schemas/iio/adc/qcom,spmi-iadc.yaml#
       - $ref: /schemas/iio/adc/qcom,spmi-rradc.yaml#
       - $ref: /schemas/iio/adc/qcom,spmi-vadc.yaml#
+=======
+patternProperties:
+  "^adc@[0-9a-f]+$":
+    type: object
+    $ref: /schemas/iio/adc/qcom,spmi-vadc.yaml#
+>>>>>>> b7ba80a49124 (Commit)
 
   "^adc-tm@[0-9a-f]+$":
     type: object
@@ -127,6 +149,7 @@ patternProperties:
     type: object
     additionalProperties: true # FIXME qcom,pm8916-wcd-analog-codec binding not converted yet
 
+<<<<<<< HEAD
   "^charger@[0-9a-f]+$":
     type: object
     oneOf:
@@ -134,6 +157,13 @@ patternProperties:
       - $ref: /schemas/power/supply/qcom,pm8941-coincell.yaml#
 
   "gpio@[0-9a-f]+$":
+=======
+  "extcon@[0-9a-f]+$":
+    type: object
+    $ref: /schemas/extcon/qcom,pm8941-misc.yaml#
+
+  "gpio(s)?@[0-9a-f]+$":
+>>>>>>> b7ba80a49124 (Commit)
     type: object
     $ref: /schemas/pinctrl/qcom,pmic-gpio.yaml#
 
@@ -141,6 +171,13 @@ patternProperties:
     type: object
     $ref: /schemas/power/reset/qcom,pon.yaml#
 
+<<<<<<< HEAD
+=======
+  "pwm@[0-9a-f]+$":
+    type: object
+    $ref: /schemas/leds/leds-qcom-lpg.yaml#
+
+>>>>>>> b7ba80a49124 (Commit)
   "^rtc@[0-9a-f]+$":
     type: object
     $ref: /schemas/rtc/qcom-pm8xxx-rtc.yaml#
@@ -149,6 +186,7 @@ patternProperties:
     type: object
     $ref: /schemas/thermal/qcom,spmi-temp-alarm.yaml#
 
+<<<<<<< HEAD
   "^usb-detect@[0-9a-f]+$":
     type: object
     $ref: /schemas/extcon/qcom,pm8941-misc.yaml#
@@ -160,6 +198,11 @@ patternProperties:
   "^vibrator@[0-9a-f]+$":
     type: object
     $ref: /schemas/input/qcom,pm8xxx-vib.yaml#
+=======
+  "^vibrator@[0-9a-f]+$":
+    type: object
+    additionalProperties: true # FIXME qcom,pm8916-vib binding not converted yet
+>>>>>>> b7ba80a49124 (Commit)
 
   "^mpps@[0-9a-f]+$":
     type: object
@@ -221,7 +264,11 @@ examples:
             #address-cells = <1>;
             #size-cells = <0>;
 
+<<<<<<< HEAD
             pmi8998_gpio: gpio@c000 {
+=======
+            pmi8998_gpio: gpios@c000 {
+>>>>>>> b7ba80a49124 (Commit)
                 compatible = "qcom,pmi8998-gpio", "qcom,spmi-gpio";
                 reg = <0xc000>;
                 gpio-controller;
@@ -306,7 +353,11 @@ examples:
             };
         };
 
+<<<<<<< HEAD
         pm6150_gpio: gpio@c000 {
+=======
+        pm6150_gpio: gpios@c000 {
+>>>>>>> b7ba80a49124 (Commit)
             compatible = "qcom,pm6150-gpio", "qcom,spmi-gpio";
             reg = <0xc000>;
             gpio-controller;

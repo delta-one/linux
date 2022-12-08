@@ -452,7 +452,11 @@ int snd_soc_put_volsw_sx(struct snd_kcontrol *kcontrol,
 	val = ucontrol->value.integer.value[0];
 	if (mc->platform_max && val > mc->platform_max)
 		return -EINVAL;
+<<<<<<< HEAD
 	if (val > max)
+=======
+	if (val > max - min)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	val_mask = mask << shift;
 	val = (val + min) & mask;
@@ -464,6 +468,7 @@ int snd_soc_put_volsw_sx(struct snd_kcontrol *kcontrol,
 	ret = err;
 
 	if (snd_soc_volsw_is_stereo(mc)) {
+<<<<<<< HEAD
 		unsigned int val2 = ucontrol->value.integer.value[1];
 
 		if (mc->platform_max && val2 > mc->platform_max)
@@ -473,6 +478,12 @@ int snd_soc_put_volsw_sx(struct snd_kcontrol *kcontrol,
 
 		val_mask = mask << rshift;
 		val2 = (val2 + min) & mask;
+=======
+		unsigned int val2;
+
+		val_mask = mask << rshift;
+		val2 = (ucontrol->value.integer.value[1] + min) & mask;
+>>>>>>> b7ba80a49124 (Commit)
 		val2 = val2 << rshift;
 
 		err = snd_soc_component_update_bits(component, reg2, val_mask,

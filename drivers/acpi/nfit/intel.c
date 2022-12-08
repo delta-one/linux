@@ -3,7 +3,10 @@
 #include <linux/libnvdimm.h>
 #include <linux/ndctl.h>
 #include <linux/acpi.h>
+<<<<<<< HEAD
 #include <linux/memregion.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/smp.h>
 #include "intel.h"
 #include "nfit.h"
@@ -191,6 +194,11 @@ static int intel_security_change_key(struct nvdimm *nvdimm,
 	}
 }
 
+<<<<<<< HEAD
+=======
+static void nvdimm_invalidate_cache(void);
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
 		const struct nvdimm_key_data *key_data)
 {
@@ -226,6 +234,12 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
 		return -EIO;
 	}
 
+<<<<<<< HEAD
+=======
+	/* DIMM unlocked, invalidate all CPU caches before we read it */
+	nvdimm_invalidate_cache();
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -293,6 +307,11 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
 	if (!test_bit(cmd, &nfit_mem->dsm_mask))
 		return -ENOTTY;
 
+<<<<<<< HEAD
+=======
+	/* flush all cache before we erase DIMM */
+	nvdimm_invalidate_cache();
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(nd_cmd.cmd.passphrase, key->data,
 			sizeof(nd_cmd.cmd.passphrase));
 	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
@@ -311,6 +330,11 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
 		return -ENXIO;
 	}
 
+<<<<<<< HEAD
+=======
+	/* DIMM erased, invalidate all CPU caches before we read it */
+	nvdimm_invalidate_cache();
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -346,6 +370,11 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
 		return -ENXIO;
 	}
 
+<<<<<<< HEAD
+=======
+	/* flush all cache before we make the nvdimms available */
+	nvdimm_invalidate_cache();
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -370,6 +399,11 @@ static int __maybe_unused intel_security_overwrite(struct nvdimm *nvdimm,
 	if (!test_bit(NVDIMM_INTEL_OVERWRITE, &nfit_mem->dsm_mask))
 		return -ENOTTY;
 
+<<<<<<< HEAD
+=======
+	/* flush all cache before we erase DIMM */
+	nvdimm_invalidate_cache();
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(nd_cmd.cmd.passphrase, nkey->data,
 			sizeof(nd_cmd.cmd.passphrase));
 	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
@@ -389,6 +423,25 @@ static int __maybe_unused intel_security_overwrite(struct nvdimm *nvdimm,
 	}
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * TODO: define a cross arch wbinvd equivalent when/if
+ * NVDIMM_FAMILY_INTEL command support arrives on another arch.
+ */
+#ifdef CONFIG_X86
+static void nvdimm_invalidate_cache(void)
+{
+	wbinvd_on_all_cpus();
+}
+#else
+static void nvdimm_invalidate_cache(void)
+{
+	WARN_ON_ONCE("cache invalidation required after unlock\n");
+}
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct nvdimm_security_ops __intel_security_ops = {
 	.get_flags = intel_security_flags,
 	.freeze = intel_security_freeze,

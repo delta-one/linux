@@ -7,7 +7,11 @@
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_bridge_connector.h>
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_dma.h>
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_gem_dma_helper.h>
 #include <drm/drm_gem_framebuffer_helper.h>
 #include <drm/drm_of.h>
@@ -21,6 +25,10 @@ DEFINE_DRM_GEM_DMA_FOPS(dcss_cma_fops);
 
 static const struct drm_mode_config_funcs dcss_drm_mode_config_funcs = {
 	.fb_create = drm_gem_fb_create,
+<<<<<<< HEAD
+=======
+	.output_poll_changed = drm_fb_helper_output_poll_changed,
+>>>>>>> b7ba80a49124 (Commit)
 	.atomic_check = drm_atomic_helper_check,
 	.atomic_commit = drm_atomic_helper_commit,
 };
@@ -145,11 +153,19 @@ struct dcss_kms_dev *dcss_kms_attach(struct dcss_dev *dcss)
 	if (ret)
 		goto cleanup_crtc;
 
+<<<<<<< HEAD
 	drm_fbdev_dma_setup(drm, 32);
+=======
+	drm_fbdev_generic_setup(drm, 32);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return kms;
 
 cleanup_crtc:
+<<<<<<< HEAD
+=======
+	drm_bridge_connector_disable_hpd(kms->connector);
+>>>>>>> b7ba80a49124 (Commit)
 	drm_kms_helper_poll_fini(drm);
 	dcss_crtc_deinit(crtc, drm);
 
@@ -165,6 +181,10 @@ void dcss_kms_detach(struct dcss_kms_dev *kms)
 	struct drm_device *drm = &kms->base;
 
 	drm_dev_unregister(drm);
+<<<<<<< HEAD
+=======
+	drm_bridge_connector_disable_hpd(kms->connector);
+>>>>>>> b7ba80a49124 (Commit)
 	drm_kms_helper_poll_fini(drm);
 	drm_atomic_helper_shutdown(drm);
 	drm_crtc_vblank_off(&kms->crtc.base);

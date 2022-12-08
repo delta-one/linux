@@ -697,7 +697,10 @@ static int out_pga_event(struct snd_soc_dapm_widget *w,
 	int dcs_mask;
 	int dcs_l, dcs_r;
 	int dcs_l_reg, dcs_r_reg;
+<<<<<<< HEAD
 	int an_out_reg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int timeout;
 	int pwr_reg;
 
@@ -713,7 +716,10 @@ static int out_pga_event(struct snd_soc_dapm_widget *w,
 		dcs_mask = WM8904_DCS_ENA_CHAN_0 | WM8904_DCS_ENA_CHAN_1;
 		dcs_r_reg = WM8904_DC_SERVO_8;
 		dcs_l_reg = WM8904_DC_SERVO_9;
+<<<<<<< HEAD
 		an_out_reg = WM8904_ANALOGUE_OUT1_LEFT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		dcs_l = 0;
 		dcs_r = 1;
 		break;
@@ -722,7 +728,10 @@ static int out_pga_event(struct snd_soc_dapm_widget *w,
 		dcs_mask = WM8904_DCS_ENA_CHAN_2 | WM8904_DCS_ENA_CHAN_3;
 		dcs_r_reg = WM8904_DC_SERVO_6;
 		dcs_l_reg = WM8904_DC_SERVO_7;
+<<<<<<< HEAD
 		an_out_reg = WM8904_ANALOGUE_OUT2_LEFT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		dcs_l = 2;
 		dcs_r = 3;
 		break;
@@ -795,10 +804,13 @@ static int out_pga_event(struct snd_soc_dapm_widget *w,
 		snd_soc_component_update_bits(component, reg,
 				    WM8904_HPL_ENA_OUTP | WM8904_HPR_ENA_OUTP,
 				    WM8904_HPL_ENA_OUTP | WM8904_HPR_ENA_OUTP);
+<<<<<<< HEAD
 
 		/* Update volume, requires PGA to be powered */
 		val = snd_soc_component_read(component, an_out_reg);
 		snd_soc_component_write(component, an_out_reg, val);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case SND_SOC_DAPM_POST_PMU:

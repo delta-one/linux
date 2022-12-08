@@ -19,11 +19,18 @@
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_crtc.h>
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_dma.h>
 #include <drm/drm_fourcc.h>
 #include <drm/drm_gem_dma_helper.h>
 #include <drm/drm_gem_framebuffer_helper.h>
 #include <drm/drm_managed.h>
+=======
+#include <drm/drm_fb_helper.h>
+#include <drm/drm_fourcc.h>
+#include <drm/drm_gem_dma_helper.h>
+#include <drm/drm_gem_framebuffer_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_modeset_helper.h>
 #include <drm/drm_module.h>
 #include <drm/drm_of.h>
@@ -169,7 +176,11 @@ static void malidp_atomic_commit_se_config(struct drm_crtc *crtc,
  */
 static int malidp_set_and_wait_config_valid(struct drm_device *drm)
 {
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	struct malidp_hw_device *hwdev = malidp->dev;
 	int ret;
 
@@ -190,7 +201,11 @@ static int malidp_set_and_wait_config_valid(struct drm_device *drm)
 static void malidp_atomic_commit_hw_done(struct drm_atomic_state *state)
 {
 	struct drm_device *drm = state->dev;
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	int loop = 5;
 
 	malidp->event = malidp->crtc.state->event;
@@ -231,7 +246,11 @@ static void malidp_atomic_commit_hw_done(struct drm_atomic_state *state)
 static void malidp_atomic_commit_tail(struct drm_atomic_state *state)
 {
 	struct drm_device *drm = state->dev;
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_crtc *crtc;
 	struct drm_crtc_state *old_crtc_state;
 	int i;
@@ -393,12 +412,19 @@ static const struct drm_mode_config_funcs malidp_mode_config_funcs = {
 static int malidp_init(struct drm_device *drm)
 {
 	int ret;
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
 	struct malidp_hw_device *hwdev = malidp->dev;
 
 	ret = drmm_mode_config_init(drm);
 	if (ret)
 		goto out;
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+	struct malidp_hw_device *hwdev = malidp->dev;
+
+	drm_mode_config_init(drm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm->mode_config.min_width = hwdev->min_line_size;
 	drm->mode_config.min_height = hwdev->min_line_size;
@@ -409,6 +435,7 @@ static int malidp_init(struct drm_device *drm)
 
 	ret = malidp_crtc_init(drm);
 	if (ret)
+<<<<<<< HEAD
 		goto out;
 
 	ret = malidp_mw_connector_init(drm);
@@ -419,11 +446,35 @@ out:
 	return ret;
 }
 
+=======
+		goto crtc_fail;
+
+	ret = malidp_mw_connector_init(drm);
+	if (ret)
+		goto crtc_fail;
+
+	return 0;
+
+crtc_fail:
+	drm_mode_config_cleanup(drm);
+	return ret;
+}
+
+static void malidp_fini(struct drm_device *drm)
+{
+	drm_mode_config_cleanup(drm);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int malidp_irq_init(struct platform_device *pdev)
 {
 	int irq_de, irq_se, ret = 0;
 	struct drm_device *drm = dev_get_drvdata(&pdev->dev);
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	struct malidp_hw_device *hwdev = malidp->dev;
 
 	/* fetch the interrupts from DT */
@@ -457,7 +508,11 @@ static int malidp_dumb_create(struct drm_file *file_priv,
 			      struct drm_device *drm,
 			      struct drm_mode_create_dumb *args)
 {
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	/* allocate for the worst case scenario, i.e. rotated buffers */
 	u8 alignment = malidp_hw_get_pitch_align(malidp->dev, 1);
 
@@ -503,7 +558,11 @@ static void malidp_error_stats_dump(const char *prefix,
 static int malidp_show_stats(struct seq_file *m, void *arg)
 {
 	struct drm_device *drm = m->private;
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long irqflags;
 	struct malidp_error_stats de_errors, se_errors;
 
@@ -526,7 +585,11 @@ static ssize_t malidp_debugfs_write(struct file *file, const char __user *ubuf,
 {
 	struct seq_file *m = file->private_data;
 	struct drm_device *drm = m->private;
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long irqflags;
 
 	spin_lock_irqsave(&malidp->errors_lock, irqflags);
@@ -547,7 +610,11 @@ static const struct file_operations malidp_debugfs_fops = {
 
 static void malidp_debugfs_init(struct drm_minor *minor)
 {
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(minor->dev);
+=======
+	struct malidp_drm *malidp = minor->dev->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 
 	malidp_error_stats_init(&malidp->de_errors);
 	malidp_error_stats_init(&malidp->se_errors);
@@ -647,9 +714,15 @@ static ssize_t core_id_show(struct device *dev, struct device_attribute *attr,
 			    char *buf)
 {
 	struct drm_device *drm = dev_get_drvdata(dev);
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
 
 	return sysfs_emit(buf, "%08x\n", malidp->core_id);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+
+	return snprintf(buf, PAGE_SIZE, "%08x\n", malidp->core_id);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR_RO(core_id);
@@ -665,7 +738,11 @@ ATTRIBUTE_GROUPS(mali_dp);
 static int malidp_runtime_pm_suspend(struct device *dev)
 {
 	struct drm_device *drm = dev_get_drvdata(dev);
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	struct malidp_hw_device *hwdev = malidp->dev;
 
 	/* we can only suspend if the hardware is in config mode */
@@ -684,7 +761,11 @@ static int malidp_runtime_pm_suspend(struct device *dev)
 static int malidp_runtime_pm_resume(struct device *dev)
 {
 	struct drm_device *drm = dev_get_drvdata(dev);
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	struct malidp_hw_device *hwdev = malidp->dev;
 
 	clk_prepare_enable(hwdev->pclk);
@@ -711,6 +792,7 @@ static int malidp_bind(struct device *dev)
 	int ret = 0, i;
 	u32 version, out_depth = 0;
 
+<<<<<<< HEAD
 	malidp = devm_drm_dev_alloc(dev, &malidp_driver, typeof(*malidp), base);
 	if (IS_ERR(malidp))
 		return PTR_ERR(malidp);
@@ -718,13 +800,25 @@ static int malidp_bind(struct device *dev)
 	drm = &malidp->base;
 
 	hwdev = drmm_kzalloc(drm, sizeof(*hwdev), GFP_KERNEL);
+=======
+	malidp = devm_kzalloc(dev, sizeof(*malidp), GFP_KERNEL);
+	if (!malidp)
+		return -ENOMEM;
+
+	hwdev = devm_kzalloc(dev, sizeof(*hwdev), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!hwdev)
 		return -ENOMEM;
 
 	hwdev->hw = (struct malidp_hw *)of_device_get_match_data(dev);
 	malidp->dev = hwdev;
 
+<<<<<<< HEAD
 	hwdev->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	hwdev->regs = devm_ioremap_resource(dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(hwdev->regs))
 		return PTR_ERR(hwdev->regs);
 
@@ -749,6 +843,16 @@ static int malidp_bind(struct device *dev)
 	if (ret && ret != -ENODEV)
 		return ret;
 
+<<<<<<< HEAD
+=======
+	drm = drm_dev_alloc(&malidp_driver, dev);
+	if (IS_ERR(drm)) {
+		ret = PTR_ERR(drm);
+		goto alloc_fail;
+	}
+
+	drm->dev_private = malidp;
+>>>>>>> b7ba80a49124 (Commit)
 	dev_set_drvdata(dev, drm);
 
 	/* Enable power management */
@@ -851,7 +955,11 @@ static int malidp_bind(struct device *dev)
 	if (ret)
 		goto register_fail;
 
+<<<<<<< HEAD
 	drm_fbdev_dma_setup(drm, 32);
+=======
+	drm_fbdev_generic_setup(drm, 32);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -867,13 +975,24 @@ irq_init_fail:
 bind_fail:
 	of_node_put(malidp->crtc.port);
 	malidp->crtc.port = NULL;
+<<<<<<< HEAD
+=======
+	malidp_fini(drm);
+>>>>>>> b7ba80a49124 (Commit)
 query_hw_fail:
 	pm_runtime_put(dev);
 	if (pm_runtime_enabled(dev))
 		pm_runtime_disable(dev);
 	else
 		malidp_runtime_pm_suspend(dev);
+<<<<<<< HEAD
 	dev_set_drvdata(dev, NULL);
+=======
+	drm->dev_private = NULL;
+	dev_set_drvdata(dev, NULL);
+	drm_dev_put(drm);
+alloc_fail:
+>>>>>>> b7ba80a49124 (Commit)
 	of_reserved_mem_device_release(dev);
 
 	return ret;
@@ -882,7 +1001,11 @@ query_hw_fail:
 static void malidp_unbind(struct device *dev)
 {
 	struct drm_device *drm = dev_get_drvdata(dev);
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	struct malidp_hw_device *hwdev = malidp->dev;
 
 	drm_dev_unregister(drm);
@@ -894,12 +1017,22 @@ static void malidp_unbind(struct device *dev)
 	component_unbind_all(dev, drm);
 	of_node_put(malidp->crtc.port);
 	malidp->crtc.port = NULL;
+<<<<<<< HEAD
+=======
+	malidp_fini(drm);
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_put(dev);
 	if (pm_runtime_enabled(dev))
 		pm_runtime_disable(dev);
 	else
 		malidp_runtime_pm_suspend(dev);
+<<<<<<< HEAD
 	dev_set_drvdata(dev, NULL);
+=======
+	drm->dev_private = NULL;
+	dev_set_drvdata(dev, NULL);
+	drm_dev_put(drm);
+>>>>>>> b7ba80a49124 (Commit)
 	of_reserved_mem_device_release(dev);
 }
 

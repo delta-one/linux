@@ -1,6 +1,10 @@
 [
     {
         "BriefDescription": "DTLB load misses",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x8",
         "EventName": "DTLB_LOAD_MISSES.ANY",
         "SampleAfterValue": "200000",
@@ -8,6 +12,10 @@
     },
     {
         "BriefDescription": "DTLB load miss caused by low part of address",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x8",
         "EventName": "DTLB_LOAD_MISSES.PDE_MISS",
         "SampleAfterValue": "200000",
@@ -15,6 +23,10 @@
     },
     {
         "BriefDescription": "DTLB second level hit",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x8",
         "EventName": "DTLB_LOAD_MISSES.STLB_HIT",
         "SampleAfterValue": "2000000",
@@ -22,6 +34,10 @@
     },
     {
         "BriefDescription": "DTLB load miss page walks complete",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x8",
         "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED",
         "SampleAfterValue": "200000",
@@ -29,6 +45,10 @@
     },
     {
         "BriefDescription": "DTLB load miss page walk cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x8",
         "EventName": "DTLB_LOAD_MISSES.WALK_CYCLES",
         "SampleAfterValue": "200000",
@@ -36,6 +56,10 @@
     },
     {
         "BriefDescription": "DTLB misses",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x49",
         "EventName": "DTLB_MISSES.ANY",
         "SampleAfterValue": "200000",
@@ -43,6 +67,10 @@
     },
     {
         "BriefDescription": "DTLB miss large page walks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x49",
         "EventName": "DTLB_MISSES.LARGE_WALK_COMPLETED",
         "SampleAfterValue": "200000",
@@ -50,6 +78,10 @@
     },
     {
         "BriefDescription": "DTLB first level misses but second level hit",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x49",
         "EventName": "DTLB_MISSES.STLB_HIT",
         "SampleAfterValue": "200000",
@@ -57,6 +89,10 @@
     },
     {
         "BriefDescription": "DTLB miss page walks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x49",
         "EventName": "DTLB_MISSES.WALK_COMPLETED",
         "SampleAfterValue": "200000",
@@ -64,6 +100,10 @@
     },
     {
         "BriefDescription": "DTLB miss page walk cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x49",
         "EventName": "DTLB_MISSES.WALK_CYCLES",
         "SampleAfterValue": "2000000",
@@ -71,6 +111,10 @@
     },
     {
         "BriefDescription": "Extended Page Table walk cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x4F",
         "EventName": "EPT.WALK_CYCLES",
         "SampleAfterValue": "2000000",
@@ -78,6 +122,10 @@
     },
     {
         "BriefDescription": "ITLB flushes",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xAE",
         "EventName": "ITLB_FLUSH",
         "SampleAfterValue": "2000000",
@@ -85,6 +133,10 @@
     },
     {
         "BriefDescription": "ITLB miss",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x85",
         "EventName": "ITLB_MISSES.ANY",
         "SampleAfterValue": "200000",
@@ -92,6 +144,10 @@
     },
     {
         "BriefDescription": "ITLB miss page walks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x85",
         "EventName": "ITLB_MISSES.WALK_COMPLETED",
         "SampleAfterValue": "200000",
@@ -99,6 +155,10 @@
     },
     {
         "BriefDescription": "ITLB miss page walk cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x85",
         "EventName": "ITLB_MISSES.WALK_CYCLES",
         "SampleAfterValue": "2000000",
@@ -106,6 +166,10 @@
     },
     {
         "BriefDescription": "Retired instructions that missed the ITLB (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC8",
         "EventName": "ITLB_MISS_RETIRED",
         "PEBS": "1",
@@ -114,6 +178,10 @@
     },
     {
         "BriefDescription": "Retired loads that miss the DTLB (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xCB",
         "EventName": "MEM_LOAD_RETIRED.DTLB_MISS",
         "PEBS": "1",
@@ -122,6 +190,10 @@
     },
     {
         "BriefDescription": "Retired stores that miss the DTLB (Precise Event)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC",
         "EventName": "MEM_STORE_RETIRED.DTLB_MISS",
         "PEBS": "1",

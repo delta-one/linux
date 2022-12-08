@@ -48,6 +48,10 @@
 #include <linux/cache.h>
 #include <linux/firmware.h>
 #include <linux/log2.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/crash_dump.h>
 
 #if IS_ENABLED(CONFIG_CNIC)
@@ -175,12 +179,20 @@ static const struct flash_spec flash_table[] =
 	{0x19000002, 0x5b808201, 0x000500db, 0x03840253, 0xaf020406,
 	 NONBUFFERED_FLAGS, ST_MICRO_FLASH_PAGE_BITS, ST_MICRO_FLASH_PAGE_SIZE,
 	 ST_MICRO_FLASH_BYTE_ADDR_MASK, ST_MICRO_FLASH_BASE_TOTAL_SIZE*2,
+<<<<<<< HEAD
 	 "Entry 0101: ST M45PE10 (128kB non-buffered)"},
+=======
+	 "Entry 0101: ST M45PE10 (128kB non-bufferred)"},
+>>>>>>> b7ba80a49124 (Commit)
 	/* Entry 0110: ST M45PE20 (non-buffered flash)*/
 	{0x15000001, 0x57808201, 0x000500db, 0x03840253, 0xaf020406,
 	 NONBUFFERED_FLAGS, ST_MICRO_FLASH_PAGE_BITS, ST_MICRO_FLASH_PAGE_SIZE,
 	 ST_MICRO_FLASH_BYTE_ADDR_MASK, ST_MICRO_FLASH_BASE_TOTAL_SIZE*4,
+<<<<<<< HEAD
 	 "Entry 0110: ST M45PE20 (256kB non-buffered)"},
+=======
+	 "Entry 0110: ST M45PE20 (256kB non-bufferred)"},
+>>>>>>> b7ba80a49124 (Commit)
 	/* Saifun SA25F005 (non-buffered flash) */
 	/* strap, cfg1, & write1 need updates */
 	{0x1d000003, 0x5f808201, 0x00050081, 0x03840253, 0xaf020406,
@@ -3044,7 +3056,11 @@ error:
 
 	dma_unmap_single(&bp->pdev->dev, dma_addr, bp->rx_buf_use_size,
 			 DMA_FROM_DEVICE);
+<<<<<<< HEAD
 	skb = slab_build_skb(data);
+=======
+	skb = build_skb(data, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!skb) {
 		kfree(data);
 		goto error;
@@ -5414,9 +5430,14 @@ bnx2_set_rx_ring_size(struct bnx2 *bp, u32 size)
 
 	bp->rx_buf_use_size = rx_size;
 	/* hw alignment + build_skb() overhead*/
+<<<<<<< HEAD
 	bp->rx_buf_size = kmalloc_size_roundup(
 		SKB_DATA_ALIGN(bp->rx_buf_use_size + BNX2_RX_ALIGN) +
 		NET_SKB_PAD + SKB_DATA_ALIGN(sizeof(struct skb_shared_info)));
+=======
+	bp->rx_buf_size = SKB_DATA_ALIGN(bp->rx_buf_use_size + BNX2_RX_ALIGN) +
+		NET_SKB_PAD + SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+>>>>>>> b7ba80a49124 (Commit)
 	bp->rx_jumbo_thresh = rx_size - BNX2_RX_OFFSET;
 	bp->rx_ring_size = size;
 	bp->rx_max_ring = bnx2_find_max_ring(size, BNX2_MAX_RX_RINGS);
@@ -8092,6 +8113,10 @@ bnx2_init_board(struct pci_dev *pdev, struct net_device *dev)
 	int rc, i, j;
 	u32 reg;
 	u64 dma_mask, persist_dma_mask;
+<<<<<<< HEAD
+=======
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	SET_NETDEV_DEV(dev, &pdev->dev);
 	bp = netdev_priv(dev);
@@ -8174,6 +8199,15 @@ bnx2_init_board(struct pci_dev *pdev, struct net_device *dev)
 		bp->flags |= BNX2_FLAG_PCIE;
 		if (BNX2_CHIP_REV(bp) == BNX2_CHIP_REV_Ax)
 			bp->flags |= BNX2_FLAG_JUMBO_BROKEN;
+<<<<<<< HEAD
+=======
+
+		/* AER (Advanced Error Reporting) hooks */
+		err = pci_enable_pcie_error_reporting(pdev);
+		if (!err)
+			bp->flags |= BNX2_FLAG_AER_ENABLED;
+
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		bp->pcix_cap = pci_find_capability(pdev, PCI_CAP_ID_PCIX);
 		if (bp->pcix_cap == 0) {
@@ -8452,6 +8486,14 @@ bnx2_init_board(struct pci_dev *pdev, struct net_device *dev)
 	return 0;
 
 err_out_unmap:
+<<<<<<< HEAD
+=======
+	if (bp->flags & BNX2_FLAG_AER_ENABLED) {
+		pci_disable_pcie_error_reporting(pdev);
+		bp->flags &= ~BNX2_FLAG_AER_ENABLED;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	pci_iounmap(pdev, bp->regview);
 	bp->regview = NULL;
 
@@ -8510,7 +8552,11 @@ bnx2_init_napi(struct bnx2 *bp)
 		else
 			poll = bnx2_poll_msix;
 
+<<<<<<< HEAD
 		netif_napi_add(bp->dev, &bp->bnx2_napi[i].napi, poll);
+=======
+		netif_napi_add(bp->dev, &bp->bnx2_napi[i].napi, poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 		bnapi->bp = bp;
 	}
 }
@@ -8625,6 +8671,14 @@ bnx2_remove_one(struct pci_dev *pdev)
 	bnx2_free_stats_blk(dev);
 	kfree(bp->temp_stats_blk);
 
+<<<<<<< HEAD
+=======
+	if (bp->flags & BNX2_FLAG_AER_ENABLED) {
+		pci_disable_pcie_error_reporting(pdev);
+		bp->flags &= ~BNX2_FLAG_AER_ENABLED;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	bnx2_release_firmware(bp);
 
 	free_netdev(dev);
@@ -8748,6 +8802,12 @@ static pci_ers_result_t bnx2_io_slot_reset(struct pci_dev *pdev)
 	}
 	rtnl_unlock();
 
+<<<<<<< HEAD
+=======
+	if (!(bp->flags & BNX2_FLAG_AER_ENABLED))
+		return result;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return result;
 }
 

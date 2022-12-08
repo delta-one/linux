@@ -225,7 +225,15 @@ static struct snd_sof_dsp_ops sof_byt_ops = {
 	.run		= atom_run,
 	.reset		= atom_reset,
 
+<<<<<<< HEAD
 	/* Register IO uses direct mmio */
+=======
+	/* Register IO */
+	.write		= sof_io_write,
+	.read		= sof_io_read,
+	.write64	= sof_io_write64,
+	.read64		= sof_io_read64,
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Block IO */
 	.block_read	= sof_block_read,
@@ -300,7 +308,15 @@ static struct snd_sof_dsp_ops sof_cht_ops = {
 	.run		= atom_run,
 	.reset		= atom_reset,
 
+<<<<<<< HEAD
 	/* Register IO uses direct mmio */
+=======
+	/* Register IO */
+	.write		= sof_io_write,
+	.read		= sof_io_read,
+	.write64	= sof_io_write64,
+	.read64		= sof_io_read64,
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Block IO */
 	.block_read	= sof_block_read,

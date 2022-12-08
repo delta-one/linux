@@ -661,12 +661,20 @@ static int i82092aa_set_mem_map(struct pcmcia_socket *socket,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int __init i82092aa_module_init(void)
+=======
+static int i82092aa_module_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return pci_register_driver(&i82092aa_pci_driver);
 }
 
+<<<<<<< HEAD
 static void __exit i82092aa_module_exit(void)
+=======
+static void i82092aa_module_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pci_unregister_driver(&i82092aa_pci_driver);
 	if (sockets[0].io_base > 0)

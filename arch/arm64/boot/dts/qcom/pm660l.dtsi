@@ -11,7 +11,11 @@
 
 / {
 	thermal-zones {
+<<<<<<< HEAD
 		pm660l-thermal {
+=======
+		pm660l {
+>>>>>>> b7ba80a49124 (Commit)
 			polling-delay-passive = <250>;
 			polling-delay = <1000>;
 
@@ -48,7 +52,11 @@
 			#thermal-sensor-cells = <0>;
 		};
 
+<<<<<<< HEAD
 		pm660l_gpios: gpio@c000 {
+=======
+		pm660l_gpios: gpios@c000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,pm660l-gpio", "qcom,spmi-gpio";
 			reg = <0xc000>;
 			gpio-controller;

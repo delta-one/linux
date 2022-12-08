@@ -68,7 +68,11 @@ extern unsigned long __xchg_small(volatile void *ptr, unsigned long val,
 				  unsigned int size);
 
 static __always_inline
+<<<<<<< HEAD
 unsigned long __arch_xchg(volatile void *ptr, unsigned long x, int size)
+=======
+unsigned long __xchg(volatile void *ptr, unsigned long x, int size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (size) {
 	case 1:
@@ -102,7 +106,11 @@ unsigned long __arch_xchg(volatile void *ptr, unsigned long x, int size)
 		smp_mb__before_llsc();					\
 									\
 	__res = (__typeof__(*(ptr)))					\
+<<<<<<< HEAD
 		__arch_xchg((ptr), (unsigned long)(x), sizeof(*(ptr)));	\
+=======
+		__xchg((ptr), (unsigned long)(x), sizeof(*(ptr)));	\
+>>>>>>> b7ba80a49124 (Commit)
 									\
 	smp_llsc_mb();							\
 									\

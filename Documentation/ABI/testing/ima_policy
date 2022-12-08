@@ -35,7 +35,11 @@ Description:
 				[FIRMWARE_CHECK]
 				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
 				[KEXEC_CMDLINE] [KEY_CHECK] [CRITICAL_DATA]
+<<<<<<< HEAD
 				[SETXATTR_CHECK][MMAP_CHECK_REQPROT]
+=======
+				[SETXATTR_CHECK]
+>>>>>>> b7ba80a49124 (Commit)
 			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
 			       [[^]MAY_EXEC]
 			fsmagic:= hex value

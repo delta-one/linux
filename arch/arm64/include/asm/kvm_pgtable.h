@@ -13,6 +13,7 @@
 
 #define KVM_PGTABLE_MAX_LEVELS		4U
 
+<<<<<<< HEAD
 /*
  * The largest supported block sizes for KVM (no 52-bit PA support):
  *  - 4K (level 1):	1GB
@@ -25,6 +26,8 @@
 #define KVM_PGTABLE_MIN_BLOCK_LEVEL	2U
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline u64 kvm_get_parange(u64 mmfr0)
 {
 	u64 parange = cpuid_feature_extract_unsigned_field(mmfr0,
@@ -42,8 +45,11 @@ typedef u64 kvm_pte_t;
 #define KVM_PTE_ADDR_MASK		GENMASK(47, PAGE_SHIFT)
 #define KVM_PTE_ADDR_51_48		GENMASK(15, 12)
 
+<<<<<<< HEAD
 #define KVM_PHYS_INVALID		(-1ULL)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool kvm_pte_valid(kvm_pte_t pte)
 {
 	return pte & KVM_PTE_VALID;
@@ -59,6 +65,7 @@ static inline u64 kvm_pte_to_phys(kvm_pte_t pte)
 	return pa;
 }
 
+<<<<<<< HEAD
 static inline kvm_pte_t kvm_phys_to_pte(u64 pa)
 {
 	kvm_pte_t pte = pa & KVM_PTE_ADDR_MASK;
@@ -76,6 +83,8 @@ static inline kvm_pfn_t kvm_pte_to_pfn(kvm_pte_t pte)
 	return __phys_to_pfn(kvm_pte_to_phys(pte));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline u64 kvm_granule_shift(u32 level)
 {
 	/* Assumes KVM_PGTABLE_MAX_LEVELS is 4 */
@@ -89,7 +98,15 @@ static inline u64 kvm_granule_size(u32 level)
 
 static inline bool kvm_level_supports_block_mapping(u32 level)
 {
+<<<<<<< HEAD
 	return level >= KVM_PGTABLE_MIN_BLOCK_LEVEL;
+=======
+	/*
+	 * Reject invalid block mappings and don't bother with 4TB mappings for
+	 * 52-bit PAs.
+	 */
+	return !(level == 0 || (PAGE_SIZE != SZ_4K && level == 1));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -104,8 +121,11 @@ static inline bool kvm_level_supports_block_mapping(u32 level)
  *				allocation is physically contiguous.
  * @free_pages_exact:		Free an exact number of memory pages previously
  *				allocated by zalloc_pages_exact.
+<<<<<<< HEAD
  * @free_removed_table:		Free a removed paging structure by unlinking and
  *				dropping references.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @get_page:			Increment the refcount on a page.
  * @put_page:			Decrement the refcount on a page. When the
  *				refcount reaches 0 the page is automatically
@@ -124,7 +144,10 @@ struct kvm_pgtable_mm_ops {
 	void*		(*zalloc_page)(void *arg);
 	void*		(*zalloc_pages_exact)(size_t size);
 	void		(*free_pages_exact)(void *addr, size_t size);
+<<<<<<< HEAD
 	void		(*free_removed_table)(void *addr, u32 level);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void		(*get_page)(void *addr);
 	void		(*put_page)(void *addr);
 	int		(*page_count)(void *addr);
@@ -184,6 +207,7 @@ typedef bool (*kvm_pgtable_force_pte_cb_t)(u64 addr, u64 end,
 					   enum kvm_pgtable_prot prot);
 
 /**
+<<<<<<< HEAD
  * enum kvm_pgtable_walk_flags - Flags to control a depth-first page-table walk.
  * @KVM_PGTABLE_WALK_LEAF:		Visit leaf entries, including invalid
  *					entries.
@@ -302,6 +326,8 @@ static inline bool kvm_pgtable_walk_lock_held(void)
 #endif
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct kvm_pgtable - KVM page-table.
  * @ia_bits:		Maximum input address size, in bits.
  * @start_level:	Level at which the page-table walk starts.
@@ -315,7 +341,11 @@ static inline bool kvm_pgtable_walk_lock_held(void)
 struct kvm_pgtable {
 	u32					ia_bits;
 	u32					start_level;
+<<<<<<< HEAD
 	kvm_pteref_t				pgd;
+=======
+	kvm_pte_t				*pgd;
+>>>>>>> b7ba80a49124 (Commit)
 	struct kvm_pgtable_mm_ops		*mm_ops;
 
 	/* Stage-2 only */
@@ -325,6 +355,42 @@ struct kvm_pgtable {
 };
 
 /**
+<<<<<<< HEAD
+=======
+ * enum kvm_pgtable_walk_flags - Flags to control a depth-first page-table walk.
+ * @KVM_PGTABLE_WALK_LEAF:		Visit leaf entries, including invalid
+ *					entries.
+ * @KVM_PGTABLE_WALK_TABLE_PRE:		Visit table entries before their
+ *					children.
+ * @KVM_PGTABLE_WALK_TABLE_POST:	Visit table entries after their
+ *					children.
+ */
+enum kvm_pgtable_walk_flags {
+	KVM_PGTABLE_WALK_LEAF			= BIT(0),
+	KVM_PGTABLE_WALK_TABLE_PRE		= BIT(1),
+	KVM_PGTABLE_WALK_TABLE_POST		= BIT(2),
+};
+
+typedef int (*kvm_pgtable_visitor_fn_t)(u64 addr, u64 end, u32 level,
+					kvm_pte_t *ptep,
+					enum kvm_pgtable_walk_flags flag,
+					void * const arg);
+
+/**
+ * struct kvm_pgtable_walker - Hook into a page-table walk.
+ * @cb:		Callback function to invoke during the walk.
+ * @arg:	Argument passed to the callback function.
+ * @flags:	Bitwise-OR of flags to identify the entry types on which to
+ *		invoke the callback function.
+ */
+struct kvm_pgtable_walker {
+	const kvm_pgtable_visitor_fn_t		cb;
+	void * const				arg;
+	const enum kvm_pgtable_walk_flags	flags;
+};
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * kvm_pgtable_hyp_init() - Initialise a hypervisor stage-1 page-table.
  * @pgt:	Uninitialised page-table structure to initialise.
  * @va_bits:	Maximum virtual address bits.
@@ -404,6 +470,7 @@ u64 kvm_pgtable_hyp_unmap(struct kvm_pgtable *pgt, u64 addr, u64 size);
 u64 kvm_get_vtcr(u64 mmfr0, u64 mmfr1, u32 phys_shift);
 
 /**
+<<<<<<< HEAD
  * kvm_pgtable_stage2_pgd_size() - Helper to compute size of a stage-2 PGD
  * @vtcr:	Content of the VTCR register.
  *
@@ -412,6 +479,8 @@ u64 kvm_get_vtcr(u64 mmfr0, u64 mmfr1, u32 phys_shift);
 size_t kvm_pgtable_stage2_pgd_size(u64 vtcr);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * __kvm_pgtable_stage2_init() - Initialise a guest stage-2 page-table.
  * @pgt:	Uninitialised page-table structure to initialise.
  * @mmu:	S2 MMU context for this S2 translation
@@ -440,6 +509,7 @@ int __kvm_pgtable_stage2_init(struct kvm_pgtable *pgt, struct kvm_s2_mmu *mmu,
 void kvm_pgtable_stage2_destroy(struct kvm_pgtable *pgt);
 
 /**
+<<<<<<< HEAD
  * kvm_pgtable_stage2_free_removed() - Free a removed stage-2 paging structure.
  * @mm_ops:	Memory management callbacks.
  * @pgtable:	Unlinked stage-2 paging structure to be freed.
@@ -451,6 +521,8 @@ void kvm_pgtable_stage2_destroy(struct kvm_pgtable *pgt);
 void kvm_pgtable_stage2_free_removed(struct kvm_pgtable_mm_ops *mm_ops, void *pgtable, u32 level);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * kvm_pgtable_stage2_map() - Install a mapping in a guest stage-2 page-table.
  * @pgt:	Page-table structure initialised by kvm_pgtable_stage2_init*().
  * @addr:	Intermediate physical address at which to place the mapping.
@@ -459,7 +531,10 @@ void kvm_pgtable_stage2_free_removed(struct kvm_pgtable_mm_ops *mm_ops, void *pg
  * @prot:	Permissions and attributes for the mapping.
  * @mc:		Cache of pre-allocated and zeroed memory from which to allocate
  *		page-table pages.
+<<<<<<< HEAD
  * @flags:	Flags to control the page-table walk (ex. a shared walk)
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * The offset of @addr within a page is ignored, @size is rounded-up to
  * the next page boundary and @phys is rounded-down to the previous page
@@ -481,7 +556,11 @@ void kvm_pgtable_stage2_free_removed(struct kvm_pgtable_mm_ops *mm_ops, void *pg
  */
 int kvm_pgtable_stage2_map(struct kvm_pgtable *pgt, u64 addr, u64 size,
 			   u64 phys, enum kvm_pgtable_prot prot,
+<<<<<<< HEAD
 			   void *mc, enum kvm_pgtable_walk_flags flags);
+=======
+			   void *mc);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * kvm_pgtable_stage2_set_owner() - Unmap and annotate pages in the IPA space to

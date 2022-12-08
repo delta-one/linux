@@ -26,7 +26,10 @@ struct thread_info {
 	int bpt_nsaved;
 	unsigned long bpt_addr[2];		/* breakpoint handling  */
 	unsigned int bpt_insn[2];
+<<<<<<< HEAD
 	unsigned long fp[32];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -42,8 +45,11 @@ struct thread_info {
 register struct thread_info *__current_thread_info __asm__("$8");
 #define current_thread_info()  __current_thread_info
 
+<<<<<<< HEAD
 register unsigned long *current_stack_pointer __asm__ ("$30");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __ASSEMBLY__ */
 
 /* Thread information allocation.  */
@@ -78,15 +84,26 @@ register unsigned long *current_stack_pointer __asm__ ("$30");
 
 /* Work to do on interrupt/exception return.  */
 #define _TIF_WORK_MASK		(_TIF_SIGPENDING | _TIF_NEED_RESCHED | \
+<<<<<<< HEAD
 				 _TIF_NOTIFY_RESUME | _TIF_NOTIFY_SIGNAL)
+=======
+				 _TIF_NOTIFY_RESUME)
+
+/* Work to do on any return to userspace.  */
+#define _TIF_ALLWORK_MASK	(_TIF_WORK_MASK		\
+				 | _TIF_SYSCALL_TRACE)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define TS_UAC_NOPRINT		0x0001	/* ! Preserve the following three */
 #define TS_UAC_NOFIX		0x0002	/* ! flags as they match          */
 #define TS_UAC_SIGBUS		0x0004	/* ! userspace part of 'osf_sysinfo' */
 
+<<<<<<< HEAD
 #define TS_SAVED_FP		0x0008
 #define TS_RESTORE_FP		0x0010
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define SET_UNALIGN_CTL(task,value)	({				\
 	__u32 status = task_thread_info(task)->status & ~UAC_BITMASK;	\
 	if (value & PR_UNALIGN_NOPRINT)					\
@@ -110,6 +127,7 @@ register unsigned long *current_stack_pointer __asm__ ("$30");
 	put_user(res, (int __user *)(value));				\
 	})
 
+<<<<<<< HEAD
 #ifndef __ASSEMBLY__
 extern void __save_fpu(void);
 
@@ -122,5 +140,7 @@ static inline void save_fpu(void)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __KERNEL__ */
 #endif /* _ALPHA_THREAD_INFO_H */

@@ -287,9 +287,12 @@
 };
 
 &pfc {
+<<<<<<< HEAD
 	pinctrl-0 = <&scif_clk_pins>;
 	pinctrl-names = "default";
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	avb_pins: avb0 {
 		groups = "avb0_mdio", "avb0_rgmii", "avb0_txcrefclk";
 		function = "avb0";
@@ -319,11 +322,14 @@
 		groups = "scif0_data";
 		function = "scif0";
 	};
+<<<<<<< HEAD
 
 	scif_clk_pins: scif_clk {
 		groups = "scif_clk_b";
 		function = "scif_clk";
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &rpc {
@@ -399,7 +405,10 @@
 
 	status = "okay";
 };
+<<<<<<< HEAD
 
 &scif_clk {
 	clock-frequency = <14745600>;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

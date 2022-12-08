@@ -12,6 +12,10 @@
 #include <linux/mmc/sdio_func.h>
 #include <linux/mmc/sdio_ids.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
+=======
+#include <linux/wl12xx.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/irq.h>
 #include <linux/pm_runtime.h>
 #include <linux/of.h>
@@ -196,6 +200,10 @@ static int wl1251_sdio_probe(struct sdio_func *func,
 	struct wl1251 *wl;
 	struct ieee80211_hw *hw;
 	struct wl1251_sdio *wl_sdio;
+<<<<<<< HEAD
+=======
+	const struct wl1251_platform_data *wl1251_board_data;
+>>>>>>> b7ba80a49124 (Commit)
 	struct device_node *np = func->dev.of_node;
 
 	hw = wl1251_alloc_hw();
@@ -223,7 +231,15 @@ static int wl1251_sdio_probe(struct sdio_func *func,
 	wl->if_priv = wl_sdio;
 	wl->if_ops = &wl1251_sdio_ops;
 
+<<<<<<< HEAD
 	if (np) {
+=======
+	wl1251_board_data = wl1251_get_platform_data();
+	if (!IS_ERR(wl1251_board_data)) {
+		wl->irq = wl1251_board_data->irq;
+		wl->use_eeprom = wl1251_board_data->use_eeprom;
+	} else if (np) {
+>>>>>>> b7ba80a49124 (Commit)
 		wl->use_eeprom = of_property_read_bool(np, "ti,wl1251-has-eeprom");
 		wl->irq = of_irq_get(np, 0);
 		if (wl->irq == -EPROBE_DEFER) {

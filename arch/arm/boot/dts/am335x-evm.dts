@@ -544,7 +544,11 @@
 		#size-cells = <1>;
 		partition@0 {
 			label = "NAND.SPL";
+<<<<<<< HEAD
 			reg = <0x00000000 0x00020000>;
+=======
+			reg = <0x00000000 0x000020000>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 		partition@1 {
 			label = "NAND.SPL.backup1";

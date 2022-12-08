@@ -64,8 +64,11 @@ static void audit_cb(struct audit_buffer *ab, void *va)
 static int audit_caps(struct common_audit_data *sa, struct aa_profile *profile,
 		      int cap, int error)
 {
+<<<<<<< HEAD
 	struct aa_ruleset *rules = list_first_entry(&profile->rules,
 						    typeof(*rules), list);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct audit_cache *ent;
 	int type = AUDIT_APPARMOR_AUTO;
 
@@ -74,6 +77,7 @@ static int audit_caps(struct common_audit_data *sa, struct aa_profile *profile,
 	if (likely(!error)) {
 		/* test if auditing is being forced */
 		if (likely((AUDIT_MODE(profile) != AUDIT_ALL) &&
+<<<<<<< HEAD
 			   !cap_raised(rules->caps.audit, cap)))
 			return 0;
 		type = AUDIT_APPARMOR_AUDIT;
@@ -81,6 +85,15 @@ static int audit_caps(struct common_audit_data *sa, struct aa_profile *profile,
 		   cap_raised(rules->caps.kill, cap)) {
 		type = AUDIT_APPARMOR_KILL;
 	} else if (cap_raised(rules->caps.quiet, cap) &&
+=======
+			   !cap_raised(profile->caps.audit, cap)))
+			return 0;
+		type = AUDIT_APPARMOR_AUDIT;
+	} else if (KILL_MODE(profile) ||
+		   cap_raised(profile->caps.kill, cap)) {
+		type = AUDIT_APPARMOR_KILL;
+	} else if (cap_raised(profile->caps.quiet, cap) &&
+>>>>>>> b7ba80a49124 (Commit)
 		   AUDIT_MODE(profile) != AUDIT_NOQUIET &&
 		   AUDIT_MODE(profile) != AUDIT_ALL) {
 		/* quiet auditing */
@@ -116,12 +129,19 @@ static int audit_caps(struct common_audit_data *sa, struct aa_profile *profile,
 static int profile_capable(struct aa_profile *profile, int cap,
 			   unsigned int opts, struct common_audit_data *sa)
 {
+<<<<<<< HEAD
 	struct aa_ruleset *rules = list_first_entry(&profile->rules,
 						    typeof(*rules), list);
 	int error;
 
 	if (cap_raised(rules->caps.allow, cap) &&
 	    !cap_raised(rules->caps.denied, cap))
+=======
+	int error;
+
+	if (cap_raised(profile->caps.allow, cap) &&
+	    !cap_raised(profile->caps.denied, cap))
+>>>>>>> b7ba80a49124 (Commit)
 		error = 0;
 	else
 		error = -EPERM;
@@ -152,7 +172,11 @@ int aa_capable(struct aa_label *label, int cap, unsigned int opts)
 {
 	struct aa_profile *profile;
 	int error = 0;
+<<<<<<< HEAD
 	DEFINE_AUDIT_DATA(sa, LSM_AUDIT_DATA_CAP, AA_CLASS_CAP, OP_CAPABLE);
+=======
+	DEFINE_AUDIT_DATA(sa, LSM_AUDIT_DATA_CAP, OP_CAPABLE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	sa.u.cap = cap;
 	error = fn_for_each_confined(label, profile,

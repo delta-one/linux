@@ -26,6 +26,7 @@ properties:
     const: audiosys
 
   mediatek,apmixedsys:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/phandle
     description: The phandle of the mediatek apmixedsys controller
 
@@ -35,6 +36,17 @@ properties:
 
   mediatek,topckgen:
     $ref: /schemas/types.yaml#/definitions/phandle
+=======
+    $ref: "/schemas/types.yaml#/definitions/phandle"
+    description: The phandle of the mediatek apmixedsys controller
+
+  mediatek,infracfg:
+    $ref: "/schemas/types.yaml#/definitions/phandle"
+    description: The phandle of the mediatek infracfg controller
+
+  mediatek,topckgen:
+    $ref: "/schemas/types.yaml#/definitions/phandle"
+>>>>>>> b7ba80a49124 (Commit)
     description: The phandle of the mediatek topckgen controller
 
   clocks:

@@ -16,7 +16,10 @@
 
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
+<<<<<<< HEAD
 #include <linux/random.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "txrx.h"
 
 static inline int get_rssi0(struct wcn36xx_rx_bd *bd)
@@ -279,7 +282,10 @@ static void wcn36xx_update_survey(struct wcn36xx *wcn, int rssi, int snr,
 	struct ieee80211_supported_band *sband;
 	int idx;
 	int i;
+<<<<<<< HEAD
 	u8 snr_sample = snr & 0xff;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	idx = 0;
 	if (band == NL80211_BAND_5GHZ)
@@ -299,8 +305,11 @@ static void wcn36xx_update_survey(struct wcn36xx *wcn, int rssi, int snr,
 	wcn->chan_survey[idx].rssi = rssi;
 	wcn->chan_survey[idx].snr = snr;
 	spin_unlock(&wcn->survey_lock);
+<<<<<<< HEAD
 
 	add_device_randomness(&snr_sample, sizeof(snr_sample));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int wcn36xx_rx_skb(struct wcn36xx *wcn, struct sk_buff *skb)

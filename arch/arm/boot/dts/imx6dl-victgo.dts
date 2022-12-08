@@ -54,7 +54,10 @@
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		clock-frequency = <50000000>;
+<<<<<<< HEAD
 		clock-output-names = "enet_ref_pad";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	rotary-encoder {
@@ -135,6 +138,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &clks {
 	clocks = <&clk50m_phy>;
 	clock-names = "enet_ref_pad";
@@ -142,6 +146,8 @@
 	assigned-clock-parents = <&clk50m_phy>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &ecspi2 {
 	cs-gpios = <&gpio5 12 GPIO_ACTIVE_LOW>;
 	pinctrl-names = "default";
@@ -190,6 +196,13 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_enet>;
 	phy-mode = "rmii";
+<<<<<<< HEAD
+=======
+	clocks = <&clks IMX6QDL_CLK_ENET>,
+		 <&clks IMX6QDL_CLK_ENET>,
+		 <&clk50m_phy>;
+	clock-names = "ipg", "ahb", "ptp";
+>>>>>>> b7ba80a49124 (Commit)
 	phy-handle = <&rmii_phy>;
 	status = "okay";
 

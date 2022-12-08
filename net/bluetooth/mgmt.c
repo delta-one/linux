@@ -859,12 +859,15 @@ static u32 get_supported_settings(struct hci_dev *hdev)
 	    hdev->set_bdaddr)
 		settings |= MGMT_SETTING_CONFIGURATION;
 
+<<<<<<< HEAD
 	if (cis_central_capable(hdev))
 		settings |= MGMT_SETTING_CIS_CENTRAL;
 
 	if (cis_peripheral_capable(hdev))
 		settings |= MGMT_SETTING_CIS_PERIPHERAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	settings |= MGMT_SETTING_PHY_CONFIGURATION;
 
 	return settings;
@@ -938,12 +941,15 @@ static u32 get_current_settings(struct hci_dev *hdev)
 	if (hci_dev_test_flag(hdev, HCI_WIDEBAND_SPEECH_ENABLED))
 		settings |= MGMT_SETTING_WIDEBAND_SPEECH;
 
+<<<<<<< HEAD
 	if (cis_central_capable(hdev))
 		settings |= MGMT_SETTING_CIS_CENTRAL;
 
 	if (cis_peripheral_capable(hdev))
 		settings |= MGMT_SETTING_CIS_PERIPHERAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return settings;
 }
 
@@ -4639,6 +4645,15 @@ static int set_mgmt_mesh_func(struct sock *sk, struct hci_dev *hdev,
 				       MGMT_OP_SET_EXP_FEATURE,
 				       MGMT_STATUS_INVALID_INDEX);
 
+<<<<<<< HEAD
+=======
+	/* Changes can only be made when controller is powered down */
+	if (hdev_is_powered(hdev))
+		return mgmt_cmd_status(sk, hdev->id,
+				       MGMT_OP_SET_EXP_FEATURE,
+				       MGMT_STATUS_REJECTED);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Parameters are limited to a single octet */
 	if (data_len != MGMT_SET_EXP_FEATURE_SIZE + 1)
 		return mgmt_cmd_status(sk, hdev->id,
@@ -7379,8 +7394,14 @@ static int get_conn_info(struct sock *sk, struct hci_dev *hdev, void *data,
 	/* To avoid client trying to guess when to poll again for information we
 	 * calculate conn info age as random value between min/max set in hdev.
 	 */
+<<<<<<< HEAD
 	conn_info_age = get_random_u32_inclusive(hdev->conn_info_min_age,
 						 hdev->conn_info_max_age - 1);
+=======
+	conn_info_age = hdev->conn_info_min_age +
+			prandom_u32_max(hdev->conn_info_max_age -
+					hdev->conn_info_min_age);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Query controller to refresh cached values if they are too old or were
 	 * never read.
@@ -8864,7 +8885,11 @@ static int add_ext_adv_params(struct sock *sk, struct hci_dev *hdev,
 	 * extra parameters we don't know about will be ignored in this request.
 	 */
 	if (data_len < MGMT_ADD_EXT_ADV_PARAMS_MIN_SIZE)
+<<<<<<< HEAD
 		return mgmt_cmd_status(sk, hdev->id, MGMT_OP_ADD_EXT_ADV_PARAMS,
+=======
+		return mgmt_cmd_status(sk, hdev->id, MGMT_OP_ADD_ADVERTISING,
+>>>>>>> b7ba80a49124 (Commit)
 				       MGMT_STATUS_INVALID_PARAMS);
 
 	flags = __le32_to_cpu(cp->flags);
@@ -9357,8 +9382,12 @@ static const struct hci_mgmt_handler mgmt_handlers[] = {
 	{ add_ext_adv_data,        MGMT_ADD_EXT_ADV_DATA_SIZE,
 						HCI_MGMT_VAR_LEN },
 	{ add_adv_patterns_monitor_rssi,
+<<<<<<< HEAD
 				   MGMT_ADD_ADV_PATTERNS_MONITOR_RSSI_SIZE,
 						HCI_MGMT_VAR_LEN },
+=======
+				   MGMT_ADD_ADV_PATTERNS_MONITOR_RSSI_SIZE },
+>>>>>>> b7ba80a49124 (Commit)
 	{ set_mesh,                MGMT_SET_MESH_RECEIVER_SIZE,
 						HCI_MGMT_VAR_LEN },
 	{ mesh_features,           MGMT_MESH_READ_FEATURES_SIZE },

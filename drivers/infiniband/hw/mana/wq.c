@@ -23,7 +23,11 @@ struct ib_wq *mana_ib_create_wq(struct ib_pd *pd,
 	if (err) {
 		ibdev_dbg(&mdev->ib_dev,
 			  "Failed to copy from udata for create wq, %d\n", err);
+<<<<<<< HEAD
 		return ERR_PTR(err);
+=======
+		return ERR_PTR(-EFAULT);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	wq = kzalloc(sizeof(*wq), GFP_KERNEL);
@@ -46,9 +50,16 @@ struct ib_wq *mana_ib_create_wq(struct ib_pd *pd,
 	wq->wq_buf_size = ucmd.wq_buf_size;
 	wq->rx_object = INVALID_MANA_HANDLE;
 
+<<<<<<< HEAD
 	err = mana_ib_gd_create_dma_region(mdev, wq->umem, &wq->gdma_region);
 	if (err) {
 		ibdev_dbg(&mdev->ib_dev,
+=======
+	err = mana_ib_gd_create_dma_region(mdev, wq->umem, &wq->gdma_region,
+					   PAGE_SIZE);
+	if (err) {
+		ibdev_err(&mdev->ib_dev,
+>>>>>>> b7ba80a49124 (Commit)
 			  "Failed to create dma region for create wq, %d\n",
 			  err);
 		goto err_release_umem;
@@ -98,8 +109,12 @@ int mana_ib_create_rwq_ind_table(struct ib_rwq_ind_table *ib_rwq_ind_table,
 				 struct ib_rwq_ind_table_init_attr *init_attr,
 				 struct ib_udata *udata)
 {
+<<<<<<< HEAD
 	/*
 	 * There is no additional data in ind_table to be maintained by this
+=======
+	/* There is no additional data in ind_table to be maintained by this
+>>>>>>> b7ba80a49124 (Commit)
 	 * driver, do nothing
 	 */
 	return 0;
@@ -107,8 +122,12 @@ int mana_ib_create_rwq_ind_table(struct ib_rwq_ind_table *ib_rwq_ind_table,
 
 int mana_ib_destroy_rwq_ind_table(struct ib_rwq_ind_table *ib_rwq_ind_tbl)
 {
+<<<<<<< HEAD
 	/*
 	 * There is no additional data in ind_table to be maintained by this
+=======
+	/* There is no additional data in ind_table to be maintained by this
+>>>>>>> b7ba80a49124 (Commit)
 	 * driver, do nothing
 	 */
 	return 0;

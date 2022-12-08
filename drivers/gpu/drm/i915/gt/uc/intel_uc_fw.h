@@ -6,7 +6,10 @@
 #ifndef _INTEL_UC_FW_H_
 #define _INTEL_UC_FW_H_
 
+<<<<<<< HEAD
 #include <linux/sizes.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/types.h>
 #include "intel_uc_fw_abi.h"
 #include "intel_device_info.h"
@@ -61,6 +64,7 @@ enum intel_uc_fw_status {
 
 enum intel_uc_fw_type {
 	INTEL_UC_FW_TYPE_GUC = 0,
+<<<<<<< HEAD
 	INTEL_UC_FW_TYPE_HUC,
 	INTEL_UC_FW_TYPE_GSC,
 };
@@ -71,6 +75,11 @@ struct intel_uc_fw_ver {
 	u32 minor;
 	u32 patch;
 };
+=======
+	INTEL_UC_FW_TYPE_HUC
+};
+#define INTEL_UC_FW_NUM_TYPES 2
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * The firmware build process will generate a version header file with major and
@@ -79,7 +88,13 @@ struct intel_uc_fw_ver {
  */
 struct intel_uc_fw_file {
 	const char *path;
+<<<<<<< HEAD
 	struct intel_uc_fw_ver ver;
+=======
+	u16 major_ver;
+	u16 minor_ver;
+	u16 patch_ver;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -115,6 +130,7 @@ struct intel_uc_fw {
 	bool loaded_via_gsc;
 };
 
+<<<<<<< HEAD
 /*
  * When we load the uC binaries, we pin them in a reserved section at the top of
  * the GGTT, which is ~18 MBs. On multi-GT systems where the GTs share the GGTT,
@@ -127,6 +143,12 @@ struct intel_uc_fw {
  * chunk for each binary.
  */
 #define INTEL_UC_RSVD_GGTT_PER_FW SZ_2M
+=======
+#define MAKE_UC_VER(maj, min, pat)	((pat) | ((min) << 8) | ((maj) << 16))
+#define GET_UC_VER(uc)			(MAKE_UC_VER((uc)->fw.file_selected.major_ver, \
+						     (uc)->fw.file_selected.minor_ver, \
+						     (uc)->fw.file_selected.patch_ver))
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_DRM_I915_DEBUG_GUC
 void intel_uc_fw_change_status(struct intel_uc_fw *uc_fw,
@@ -205,8 +227,11 @@ static inline const char *intel_uc_fw_type_repr(enum intel_uc_fw_type type)
 		return "GuC";
 	case INTEL_UC_FW_TYPE_HUC:
 		return "HuC";
+<<<<<<< HEAD
 	case INTEL_UC_FW_TYPE_GSC:
 		return "GSC";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return "uC";
 }
@@ -289,7 +314,10 @@ int intel_uc_fw_upload(struct intel_uc_fw *uc_fw, u32 offset, u32 dma_flags);
 int intel_uc_fw_init(struct intel_uc_fw *uc_fw);
 void intel_uc_fw_fini(struct intel_uc_fw *uc_fw);
 size_t intel_uc_fw_copy_rsa(struct intel_uc_fw *uc_fw, void *dst, u32 max_len);
+<<<<<<< HEAD
 int intel_uc_fw_mark_load_failed(struct intel_uc_fw *uc_fw, int err);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void intel_uc_fw_dump(const struct intel_uc_fw *uc_fw, struct drm_printer *p);
 
 #endif

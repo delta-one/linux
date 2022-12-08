@@ -206,8 +206,11 @@ static int tegra_fb_mmap(struct fb_info *info, struct vm_area_struct *vma)
 static const struct fb_ops tegra_fb_ops = {
 	.owner = THIS_MODULE,
 	DRM_FB_HELPER_DEFAULT_OPS,
+<<<<<<< HEAD
 	.fb_read = drm_fb_helper_sys_read,
 	.fb_write = drm_fb_helper_sys_write,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.fb_fillrect = drm_fb_helper_sys_fillrect,
 	.fb_copyarea = drm_fb_helper_sys_copyarea,
 	.fb_imageblit = drm_fb_helper_sys_imageblit,
@@ -245,7 +248,11 @@ static int tegra_fbdev_probe(struct drm_fb_helper *helper,
 	if (IS_ERR(bo))
 		return PTR_ERR(bo);
 
+<<<<<<< HEAD
 	info = drm_fb_helper_alloc_info(helper);
+=======
+	info = drm_fb_helper_alloc_fbi(helper);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(info)) {
 		dev_err(drm->dev, "failed to allocate framebuffer info\n");
 		drm_gem_object_put(&bo->gem);
@@ -263,7 +270,11 @@ static int tegra_fbdev_probe(struct drm_fb_helper *helper,
 
 	fb = fbdev->fb;
 	helper->fb = fb;
+<<<<<<< HEAD
 	helper->info = info;
+=======
+	helper->fbdev = info;
+>>>>>>> b7ba80a49124 (Commit)
 
 	info->fbops = &tegra_fb_ops;
 
@@ -282,6 +293,10 @@ static int tegra_fbdev_probe(struct drm_fb_helper *helper,
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	drm->mode_config.fb_base = (resource_size_t)bo->iova;
+>>>>>>> b7ba80a49124 (Commit)
 	info->screen_base = (void __iomem *)bo->vaddr + offset;
 	info->screen_size = size;
 	info->fix.smem_start = (unsigned long)(bo->iova + offset);
@@ -308,18 +323,29 @@ static struct tegra_fbdev *tegra_fbdev_create(struct drm_device *drm)
 		return ERR_PTR(-ENOMEM);
 	}
 
+<<<<<<< HEAD
 	drm_fb_helper_prepare(drm, &fbdev->base, 32, &tegra_fb_helper_funcs);
+=======
+	drm_fb_helper_prepare(drm, &fbdev->base, &tegra_fb_helper_funcs);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return fbdev;
 }
 
 static void tegra_fbdev_free(struct tegra_fbdev *fbdev)
 {
+<<<<<<< HEAD
 	drm_fb_helper_unprepare(&fbdev->base);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(fbdev);
 }
 
 static int tegra_fbdev_init(struct tegra_fbdev *fbdev,
+<<<<<<< HEAD
+=======
+			    unsigned int preferred_bpp,
+>>>>>>> b7ba80a49124 (Commit)
 			    unsigned int num_crtc,
 			    unsigned int max_connectors)
 {
@@ -333,7 +359,11 @@ static int tegra_fbdev_init(struct tegra_fbdev *fbdev,
 		return err;
 	}
 
+<<<<<<< HEAD
 	err = drm_fb_helper_initial_config(&fbdev->base);
+=======
+	err = drm_fb_helper_initial_config(&fbdev->base, preferred_bpp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err < 0) {
 		dev_err(drm->dev, "failed to set initial configuration: %d\n",
 			err);
@@ -349,7 +379,11 @@ fini:
 
 static void tegra_fbdev_exit(struct tegra_fbdev *fbdev)
 {
+<<<<<<< HEAD
 	drm_fb_helper_unregister_info(&fbdev->base);
+=======
+	drm_fb_helper_unregister_fbi(&fbdev->base);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (fbdev->fb) {
 		struct tegra_bo *bo = tegra_fb_get_plane(fbdev->fb, 0);
@@ -396,7 +430,11 @@ int tegra_drm_fb_init(struct drm_device *drm)
 	struct tegra_drm *tegra = drm->dev_private;
 	int err;
 
+<<<<<<< HEAD
 	err = tegra_fbdev_init(tegra->fbdev, drm->mode_config.num_crtc,
+=======
+	err = tegra_fbdev_init(tegra->fbdev, 32, drm->mode_config.num_crtc,
+>>>>>>> b7ba80a49124 (Commit)
 			       drm->mode_config.num_connector);
 	if (err < 0)
 		return err;

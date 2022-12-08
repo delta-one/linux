@@ -93,8 +93,13 @@ static int pm8058_led_probe(struct platform_device *pdev)
 	struct device_node *np;
 	int ret;
 	struct regmap *map;
+<<<<<<< HEAD
 	enum led_brightness maxbright;
 	enum led_default_state state;
+=======
+	const char *state;
+	enum led_brightness maxbright;
+>>>>>>> b7ba80a49124 (Commit)
 
 	led = devm_kzalloc(dev, sizeof(*led), GFP_KERNEL);
 	if (!led)
@@ -125,6 +130,7 @@ static int pm8058_led_probe(struct platform_device *pdev)
 		maxbright = 15; /* 4 bits */
 	led->cdev.max_brightness = maxbright;
 
+<<<<<<< HEAD
 	init_data.fwnode = of_fwnode_handle(np);
 
 	state = led_init_default_state_get(init_data.fwnode);
@@ -139,12 +145,30 @@ static int pm8058_led_probe(struct platform_device *pdev)
 	default:
 		led->cdev.brightness = LED_OFF;
 		pm8058_led_set(&led->cdev, LED_OFF);
+=======
+	state = of_get_property(np, "default-state", NULL);
+	if (state) {
+		if (!strcmp(state, "keep")) {
+			led->cdev.brightness = pm8058_led_get(&led->cdev);
+		} else if (!strcmp(state, "on")) {
+			led->cdev.brightness = maxbright;
+			pm8058_led_set(&led->cdev, maxbright);
+		} else {
+			led->cdev.brightness = LED_OFF;
+			pm8058_led_set(&led->cdev, LED_OFF);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (led->ledtype == PM8058_LED_TYPE_KEYPAD ||
 	    led->ledtype == PM8058_LED_TYPE_FLASH)
 		led->cdev.flags	= LED_CORE_SUSPENDRESUME;
 
+<<<<<<< HEAD
+=======
+	init_data.fwnode = of_fwnode_handle(np);
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = devm_led_classdev_register_ext(dev, &led->cdev, &init_data);
 	if (ret)
 		dev_err(dev, "Failed to register LED for %pOF\n", np);

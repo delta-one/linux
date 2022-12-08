@@ -43,7 +43,11 @@ void __no_sanitize_address arch_stack_walk(stack_trace_consume_fn consume_entry,
 		unsigned long *stack = (unsigned long *) sp;
 		unsigned long newsp, ip;
 
+<<<<<<< HEAD
 		if (!validate_sp(sp, task))
+=======
+		if (!validate_sp(sp, task, STACK_FRAME_OVERHEAD))
+>>>>>>> b7ba80a49124 (Commit)
 			return;
 
 		newsp = stack[0];
@@ -77,7 +81,11 @@ int __no_sanitize_address arch_stack_walk_reliable(stack_trace_consume_fn consum
 		/*
 		 * For user tasks, this is the SP value loaded on
 		 * kernel entry, see "PACAKSAVE(r13)" in _switch() and
+<<<<<<< HEAD
 		 * system_call_common().
+=======
+		 * system_call_common()/EXCEPTION_PROLOG_COMMON().
+>>>>>>> b7ba80a49124 (Commit)
 		 *
 		 * Likewise for non-swapper kernel threads,
 		 * this also happens to be the top of the stack
@@ -88,13 +96,21 @@ int __no_sanitize_address arch_stack_walk_reliable(stack_trace_consume_fn consum
 		 * an unreliable stack trace until it's been
 		 * _switch()'ed to for the first time.
 		 */
+<<<<<<< HEAD
 		stack_end -= STACK_USER_INT_FRAME_SIZE;
+=======
+		stack_end -= STACK_FRAME_OVERHEAD + sizeof(struct pt_regs);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		/*
 		 * idle tasks have a custom stack layout,
 		 * c.f. cpu_idle_thread_init().
 		 */
+<<<<<<< HEAD
 		stack_end -= STACK_FRAME_MIN_SIZE;
+=======
+		stack_end -= STACK_FRAME_OVERHEAD;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (task == current)
@@ -136,7 +152,11 @@ int __no_sanitize_address arch_stack_walk_reliable(stack_trace_consume_fn consum
 
 		/* Mark stacktraces with exception frames as unreliable. */
 		if (sp <= stack_end - STACK_INT_FRAME_SIZE &&
+<<<<<<< HEAD
 		    stack[STACK_INT_FRAME_MARKER_LONGS] == STACK_FRAME_REGS_MARKER) {
+=======
+		    stack[STACK_FRAME_MARKER] == STACK_FRAME_REGS_MARKER) {
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 

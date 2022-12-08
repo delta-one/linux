@@ -32,7 +32,10 @@
 #include <linux/export.h>
 #include <linux/kernel.h>
 #include <linux/moduleparam.h>
+<<<<<<< HEAD
 #include <linux/dynamic_debug.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <drm/drm_atomic.h>
 #include <drm/drm_atomic_helper.h>
@@ -43,6 +46,10 @@
 #include <drm/drm_drv.h>
 #include <drm/drm_edid.h>
 #include <drm/drm_encoder.h>
+<<<<<<< HEAD
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_fourcc.h>
 #include <drm/drm_framebuffer.h>
 #include <drm/drm_print.h>
@@ -50,6 +57,7 @@
 
 #include "drm_crtc_helper_internal.h"
 
+<<<<<<< HEAD
 DECLARE_DYNDBG_CLASSMAP(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS, 0,
 			"DRM_UT_CORE",
 			"DRM_UT_DRIVER",
@@ -62,6 +70,8 @@ DECLARE_DYNDBG_CLASSMAP(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS, 0,
 			"DRM_UT_DP",
 			"DRM_UT_DRMRES");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * DOC: overview
  *
@@ -433,6 +443,7 @@ done:
 }
 EXPORT_SYMBOL(drm_crtc_helper_set_mode);
 
+<<<<<<< HEAD
 /**
  * drm_crtc_helper_atomic_check() - Helper to check CRTC atomic-state
  * @crtc: CRTC to check
@@ -459,6 +470,8 @@ int drm_crtc_helper_atomic_check(struct drm_crtc *crtc, struct drm_atomic_state 
 }
 EXPORT_SYMBOL(drm_crtc_helper_atomic_check);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void
 drm_crtc_helper_disable(struct drm_crtc *crtc)
 {

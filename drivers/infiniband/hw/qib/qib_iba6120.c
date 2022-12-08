@@ -799,9 +799,18 @@ static void qib_handle_6120_hwerrors(struct qib_devdata *dd, char *msg,
 			hwerrs &= ~TXE_PIO_PARITY;
 		}
 
+<<<<<<< HEAD
 		if (!hwerrs)
 			qib_6120_clear_freeze(dd);
 		else
+=======
+		if (!hwerrs) {
+			static u32 freeze_cnt;
+
+			freeze_cnt++;
+			qib_6120_clear_freeze(dd);
+		} else
+>>>>>>> b7ba80a49124 (Commit)
 			isfatal = 1;
 	}
 
@@ -2072,7 +2081,11 @@ static void alloc_dummy_hdrq(struct qib_devdata *dd)
 	dd->cspec->dummy_hdrq = dma_alloc_coherent(&dd->pcidev->dev,
 					dd->rcd[0]->rcvhdrq_size,
 					&dd->cspec->dummy_hdrq_phys,
+<<<<<<< HEAD
 					GFP_ATOMIC);
+=======
+					GFP_ATOMIC | __GFP_COMP);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!dd->cspec->dummy_hdrq) {
 		qib_devinfo(dd->pcidev, "Couldn't allocate dummy hdrq\n");
 		/* fallback to just 0'ing */

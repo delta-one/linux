@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _remap_file_pages:
+
+>>>>>>> b7ba80a49124 (Commit)
 ==============================
 remap_file_pages() system call
 ==============================

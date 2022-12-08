@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
+<<<<<<< HEAD
 * Watchdog Driver Test Program
 * - Tests all ioctls
 * - Tests Magic Close - CONFIG_WATCHDOG_NOWAYOUT
@@ -9,6 +10,9 @@
 * - Enhance test to add coverage for WDIOC_GETTEMP.
 *
 * Reference: Documentation/watchdog/watchdog-api.rst
+=======
+ * Watchdog Driver Test Program
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <errno.h>
@@ -27,14 +31,21 @@
 
 int fd;
 const char v = 'V';
+<<<<<<< HEAD
 static const char sopts[] = "bdehp:st:Tn:NLf:i";
+=======
+static const char sopts[] = "bdehp:t:Tn:NLf:i";
+>>>>>>> b7ba80a49124 (Commit)
 static const struct option lopts[] = {
 	{"bootstatus",          no_argument, NULL, 'b'},
 	{"disable",             no_argument, NULL, 'd'},
 	{"enable",              no_argument, NULL, 'e'},
 	{"help",                no_argument, NULL, 'h'},
 	{"pingrate",      required_argument, NULL, 'p'},
+<<<<<<< HEAD
 	{"status",              no_argument, NULL, 's'},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{"timeout",       required_argument, NULL, 't'},
 	{"gettimeout",          no_argument, NULL, 'T'},
 	{"pretimeout",    required_argument, NULL, 'n'},
@@ -83,7 +94,10 @@ static void usage(char *progname)
 	printf(" -f, --file\t\tOpen watchdog device file\n");
 	printf("\t\t\tDefault is /dev/watchdog\n");
 	printf(" -i, --info\t\tShow watchdog_info\n");
+<<<<<<< HEAD
 	printf(" -s, --status\t\tGet status & supported features\n");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	printf(" -b, --bootstatus\tGet last boot status (Watchdog/POR)\n");
 	printf(" -d, --disable\t\tTurn off the watchdog timer\n");
 	printf(" -e, --enable\t\tTurn on the watchdog timer\n");
@@ -101,6 +115,7 @@ static void usage(char *progname)
 	printf("Example: %s -t 12 -T -n 7 -N\n", progname);
 }
 
+<<<<<<< HEAD
 struct wdiof_status {
 	int flag;
 	const char *status_str;
@@ -168,6 +183,8 @@ static void print_boot_status(int flags)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int main(int argc, char *argv[])
 {
 	int flags;
@@ -177,7 +194,10 @@ int main(int argc, char *argv[])
 	int oneshot = 0;
 	char *file = "/dev/watchdog";
 	struct watchdog_info info;
+<<<<<<< HEAD
 	int temperature;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	setbuf(stdout, NULL);
 
@@ -218,7 +238,12 @@ int main(int argc, char *argv[])
 			oneshot = 1;
 			ret = ioctl(fd, WDIOC_GETBOOTSTATUS, &flags);
 			if (!ret)
+<<<<<<< HEAD
 				print_boot_status(flags);
+=======
+				printf("Last boot is caused by: %s.\n", (flags != 0) ?
+					"Watchdog" : "Power-On-Reset");
+>>>>>>> b7ba80a49124 (Commit)
 			else
 				printf("WDIOC_GETBOOTSTATUS error '%s'\n", strerror(errno));
 			break;
@@ -248,6 +273,7 @@ int main(int argc, char *argv[])
 				ping_rate = DEFAULT_PING_RATE;
 			printf("Watchdog ping rate set to %u seconds.\n", ping_rate);
 			break;
+<<<<<<< HEAD
 		case 's':
 			flags = 0;
 			oneshot = 1;
@@ -263,6 +289,8 @@ int main(int argc, char *argv[])
 				printf("Temperature %d\n", temperature);
 
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		case 't':
 			flags = strtoul(optarg, NULL, 0);
 			ret = ioctl(fd, WDIOC_SETTIMEOUT, &flags);
@@ -320,7 +348,11 @@ int main(int argc, char *argv[])
 			printf(" identity:\t\t%s\n", info.identity);
 			printf(" firmware_version:\t%u\n",
 			       info.firmware_version);
+<<<<<<< HEAD
 			print_status(info.options);
+=======
+			printf(" options:\t\t%08x\n", info.options);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		default:
@@ -341,10 +373,13 @@ int main(int argc, char *argv[])
 		sleep(ping_rate);
 	}
 end:
+<<<<<<< HEAD
 	/*
 	 * Send specific magic character 'V' just in case Magic Close is
 	 * enabled to ensure watchdog gets disabled on close.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = write(fd, &v, 1);
 	if (ret < 0)
 		printf("Stopping watchdog ticks failed (%d)...\n", errno);

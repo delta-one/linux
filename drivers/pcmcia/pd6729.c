@@ -727,7 +727,11 @@ err_out_free_res2:
 	if (irq_mode == 1)
 		free_irq(dev->irq, socket);
 	else
+<<<<<<< HEAD
 		timer_shutdown_sync(&socket->poll_timer);
+=======
+		del_timer_sync(&socket->poll_timer);
+>>>>>>> b7ba80a49124 (Commit)
 err_out_free_res:
 	pci_release_regions(dev);
 err_out_disable:
@@ -754,7 +758,11 @@ static void pd6729_pci_remove(struct pci_dev *dev)
 	if (irq_mode == 1)
 		free_irq(dev->irq, socket);
 	else
+<<<<<<< HEAD
 		timer_shutdown_sync(&socket->poll_timer);
+=======
+		del_timer_sync(&socket->poll_timer);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_release_regions(dev);
 	pci_disable_device(dev);
 

@@ -613,6 +613,7 @@ typedef struct xfs_efi_log_format {
 	uint16_t		efi_size;	/* size of this item */
 	uint32_t		efi_nextents;	/* # extents to free */
 	uint64_t		efi_id;		/* efi identifier */
+<<<<<<< HEAD
 	xfs_extent_t		efi_extents[];	/* array of extents to free */
 } xfs_efi_log_format_t;
 
@@ -624,11 +625,17 @@ xfs_efi_log_format_sizeof(
 			nr * sizeof(struct xfs_extent);
 }
 
+=======
+	xfs_extent_t		efi_extents[1];	/* array of extents to free */
+} xfs_efi_log_format_t;
+
+>>>>>>> b7ba80a49124 (Commit)
 typedef struct xfs_efi_log_format_32 {
 	uint16_t		efi_type;	/* efi log item type */
 	uint16_t		efi_size;	/* size of this item */
 	uint32_t		efi_nextents;	/* # extents to free */
 	uint64_t		efi_id;		/* efi identifier */
+<<<<<<< HEAD
 	xfs_extent_32_t		efi_extents[];	/* array of extents to free */
 } __attribute__((packed)) xfs_efi_log_format_32_t;
 
@@ -640,11 +647,17 @@ xfs_efi_log_format32_sizeof(
 			nr * sizeof(struct xfs_extent_32);
 }
 
+=======
+	xfs_extent_32_t		efi_extents[1];	/* array of extents to free */
+} __attribute__((packed)) xfs_efi_log_format_32_t;
+
+>>>>>>> b7ba80a49124 (Commit)
 typedef struct xfs_efi_log_format_64 {
 	uint16_t		efi_type;	/* efi log item type */
 	uint16_t		efi_size;	/* size of this item */
 	uint32_t		efi_nextents;	/* # extents to free */
 	uint64_t		efi_id;		/* efi identifier */
+<<<<<<< HEAD
 	xfs_extent_64_t		efi_extents[];	/* array of extents to free */
 } xfs_efi_log_format_64_t;
 
@@ -656,6 +669,11 @@ xfs_efi_log_format64_sizeof(
 			nr * sizeof(struct xfs_extent_64);
 }
 
+=======
+	xfs_extent_64_t		efi_extents[1];	/* array of extents to free */
+} xfs_efi_log_format_64_t;
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This is the structure used to lay out an efd log item in the
  * log.  The efd_extents array is a variable size array whose
@@ -666,6 +684,7 @@ typedef struct xfs_efd_log_format {
 	uint16_t		efd_size;	/* size of this item */
 	uint32_t		efd_nextents;	/* # of extents freed */
 	uint64_t		efd_efi_id;	/* id of corresponding efi */
+<<<<<<< HEAD
 	xfs_extent_t		efd_extents[];	/* array of extents freed */
 } xfs_efd_log_format_t;
 
@@ -677,11 +696,17 @@ xfs_efd_log_format_sizeof(
 			nr * sizeof(struct xfs_extent);
 }
 
+=======
+	xfs_extent_t		efd_extents[1];	/* array of extents freed */
+} xfs_efd_log_format_t;
+
+>>>>>>> b7ba80a49124 (Commit)
 typedef struct xfs_efd_log_format_32 {
 	uint16_t		efd_type;	/* efd log item type */
 	uint16_t		efd_size;	/* size of this item */
 	uint32_t		efd_nextents;	/* # of extents freed */
 	uint64_t		efd_efi_id;	/* id of corresponding efi */
+<<<<<<< HEAD
 	xfs_extent_32_t		efd_extents[];	/* array of extents freed */
 } __attribute__((packed)) xfs_efd_log_format_32_t;
 
@@ -693,11 +718,17 @@ xfs_efd_log_format32_sizeof(
 			nr * sizeof(struct xfs_extent_32);
 }
 
+=======
+	xfs_extent_32_t		efd_extents[1];	/* array of extents freed */
+} __attribute__((packed)) xfs_efd_log_format_32_t;
+
+>>>>>>> b7ba80a49124 (Commit)
 typedef struct xfs_efd_log_format_64 {
 	uint16_t		efd_type;	/* efd log item type */
 	uint16_t		efd_size;	/* size of this item */
 	uint32_t		efd_nextents;	/* # of extents freed */
 	uint64_t		efd_efi_id;	/* id of corresponding efi */
+<<<<<<< HEAD
 	xfs_extent_64_t		efd_extents[];	/* array of extents freed */
 } xfs_efd_log_format_64_t;
 
@@ -709,6 +740,11 @@ xfs_efd_log_format64_sizeof(
 			nr * sizeof(struct xfs_extent_64);
 }
 
+=======
+	xfs_extent_64_t		efd_extents[1];	/* array of extents freed */
+} xfs_efd_log_format_64_t;
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * RUI/RUD (reverse mapping) log format definitions
  */

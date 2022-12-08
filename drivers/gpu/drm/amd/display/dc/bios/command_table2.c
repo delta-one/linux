@@ -986,8 +986,12 @@ static unsigned int get_smu_clock_info_v3_1(struct bios_parser *bp, uint8_t id)
 static enum bp_result enable_lvtma_control(
 	struct bios_parser *bp,
 	uint8_t uc_pwr_on,
+<<<<<<< HEAD
 	uint8_t panel_instance,
 	uint8_t bypass_panel_control_wait);
+=======
+	uint8_t panel_instance);
+>>>>>>> b7ba80a49124 (Commit)
 
 static void init_enable_lvtma_control(struct bios_parser *bp)
 {
@@ -999,8 +1003,12 @@ static void init_enable_lvtma_control(struct bios_parser *bp)
 static void enable_lvtma_control_dmcub(
 	struct dc_dmub_srv *dmcub,
 	uint8_t uc_pwr_on,
+<<<<<<< HEAD
 	uint8_t panel_instance,
 	uint8_t bypass_panel_control_wait)
+=======
+	uint8_t panel_instance)
+>>>>>>> b7ba80a49124 (Commit)
 {
 
 	union dmub_rb_cmd cmd;
@@ -1014,8 +1022,11 @@ static void enable_lvtma_control_dmcub(
 			uc_pwr_on;
 	cmd.lvtma_control.data.panel_inst =
 			panel_instance;
+<<<<<<< HEAD
 	cmd.lvtma_control.data.bypass_panel_control_wait =
 			bypass_panel_control_wait;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dc_dmub_srv_cmd_queue(dmcub, &cmd);
 	dc_dmub_srv_cmd_execute(dmcub);
 	dc_dmub_srv_wait_idle(dmcub);
@@ -1025,8 +1036,12 @@ static void enable_lvtma_control_dmcub(
 static enum bp_result enable_lvtma_control(
 	struct bios_parser *bp,
 	uint8_t uc_pwr_on,
+<<<<<<< HEAD
 	uint8_t panel_instance,
 	uint8_t bypass_panel_control_wait)
+=======
+	uint8_t panel_instance)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	enum bp_result result = BP_RESULT_FAILURE;
 
@@ -1034,8 +1049,12 @@ static enum bp_result enable_lvtma_control(
 	    bp->base.ctx->dc->debug.dmub_command_table) {
 		enable_lvtma_control_dmcub(bp->base.ctx->dmub_srv,
 				uc_pwr_on,
+<<<<<<< HEAD
 				panel_instance,
 				bypass_panel_control_wait);
+=======
+				panel_instance);
+>>>>>>> b7ba80a49124 (Commit)
 		return BP_RESULT_OK;
 	}
 	return result;

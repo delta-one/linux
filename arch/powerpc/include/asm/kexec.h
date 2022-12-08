@@ -3,7 +3,11 @@
 #define _ASM_POWERPC_KEXEC_H
 #ifdef __KERNEL__
 
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_85xx) || defined(CONFIG_44x)
+=======
+#if defined(CONFIG_FSL_BOOKE) || defined(CONFIG_44x)
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * On FSL-BookE we setup a 1:1 mapping which covers the first 2GiB of memory

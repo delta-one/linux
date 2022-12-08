@@ -15,11 +15,18 @@
 #include "ptrace.h"
 #include "setup.h"
 
+<<<<<<< HEAD
 bool landlock_initialized __ro_after_init = false;
 
 struct lsm_blob_sizes landlock_blob_sizes __ro_after_init = {
 	.lbs_cred = sizeof(struct landlock_cred_security),
 	.lbs_file = sizeof(struct landlock_file_security),
+=======
+bool landlock_initialized __lsm_ro_after_init = false;
+
+struct lsm_blob_sizes landlock_blob_sizes __lsm_ro_after_init = {
+	.lbs_cred = sizeof(struct landlock_cred_security),
+>>>>>>> b7ba80a49124 (Commit)
 	.lbs_inode = sizeof(struct landlock_inode_security),
 	.lbs_superblock = sizeof(struct landlock_superblock_security),
 };

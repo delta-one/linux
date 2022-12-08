@@ -267,6 +267,7 @@ static void handle_responder(struct ib_wc *wc, struct mlx5_cqe64 *cqe,
 	wc->wc_flags |= IB_WC_WITH_NETWORK_HDR_TYPE;
 }
 
+<<<<<<< HEAD
 static void dump_cqe(struct mlx5_ib_dev *dev, struct mlx5_err_cqe *cqe,
 		     struct ib_wc *wc, const char *level)
 {
@@ -274,13 +275,23 @@ static void dump_cqe(struct mlx5_ib_dev *dev, struct mlx5_err_cqe *cqe,
 		    ib_wc_status_msg(wc->status));
 	print_hex_dump(level, "cqe_dump: ", DUMP_PREFIX_OFFSET, 16, 1,
 		       cqe, sizeof(*cqe), false);
+=======
+static void dump_cqe(struct mlx5_ib_dev *dev, struct mlx5_err_cqe *cqe)
+{
+	mlx5_ib_warn(dev, "dump error cqe\n");
+	mlx5_dump_err_cqe(dev->mdev, cqe);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mlx5_handle_error_cqe(struct mlx5_ib_dev *dev,
 				  struct mlx5_err_cqe *cqe,
 				  struct ib_wc *wc)
 {
+<<<<<<< HEAD
 	const char *dump = KERN_WARNING;
+=======
+	int dump = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (cqe->syndrome) {
 	case MLX5_CQE_SYNDROME_LOCAL_LENGTH_ERR:
@@ -290,11 +301,18 @@ static void mlx5_handle_error_cqe(struct mlx5_ib_dev *dev,
 		wc->status = IB_WC_LOC_QP_OP_ERR;
 		break;
 	case MLX5_CQE_SYNDROME_LOCAL_PROT_ERR:
+<<<<<<< HEAD
 		dump = KERN_DEBUG;
 		wc->status = IB_WC_LOC_PROT_ERR;
 		break;
 	case MLX5_CQE_SYNDROME_WR_FLUSH_ERR:
 		dump = NULL;
+=======
+		wc->status = IB_WC_LOC_PROT_ERR;
+		break;
+	case MLX5_CQE_SYNDROME_WR_FLUSH_ERR:
+		dump = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		wc->status = IB_WC_WR_FLUSH_ERR;
 		break;
 	case MLX5_CQE_SYNDROME_MW_BIND_ERR:
@@ -310,6 +328,7 @@ static void mlx5_handle_error_cqe(struct mlx5_ib_dev *dev,
 		wc->status = IB_WC_REM_INV_REQ_ERR;
 		break;
 	case MLX5_CQE_SYNDROME_REMOTE_ACCESS_ERR:
+<<<<<<< HEAD
 		dump = KERN_DEBUG;
 		wc->status = IB_WC_REM_ACCESS_ERR;
 		break;
@@ -324,6 +343,20 @@ static void mlx5_handle_error_cqe(struct mlx5_ib_dev *dev,
 	case MLX5_CQE_SYNDROME_RNR_RETRY_EXC_ERR:
 		dump = NULL;
 		wc->status = IB_WC_RNR_RETRY_EXC_ERR;
+=======
+		wc->status = IB_WC_REM_ACCESS_ERR;
+		break;
+	case MLX5_CQE_SYNDROME_REMOTE_OP_ERR:
+		wc->status = IB_WC_REM_OP_ERR;
+		break;
+	case MLX5_CQE_SYNDROME_TRANSPORT_RETRY_EXC_ERR:
+		wc->status = IB_WC_RETRY_EXC_ERR;
+		dump = 0;
+		break;
+	case MLX5_CQE_SYNDROME_RNR_RETRY_EXC_ERR:
+		wc->status = IB_WC_RNR_RETRY_EXC_ERR;
+		dump = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case MLX5_CQE_SYNDROME_REMOTE_ABORTED_ERR:
 		wc->status = IB_WC_REM_ABORT_ERR;
@@ -334,8 +367,16 @@ static void mlx5_handle_error_cqe(struct mlx5_ib_dev *dev,
 	}
 
 	wc->vendor_err = cqe->vendor_err_synd;
+<<<<<<< HEAD
 	if (dump)
 		dump_cqe(dev, cqe, wc, dump);
+=======
+	if (dump) {
+		mlx5_ib_warn(dev, "WC error: %d, Message: %s\n", wc->status,
+			     ib_wc_status_msg(wc->status));
+		dump_cqe(dev, cqe);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void handle_atomics(struct mlx5_ib_qp *qp, struct mlx5_cqe64 *cqe64,

@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0-only */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2011 Red Hat, Inc.
  *
@@ -59,14 +62,22 @@ struct dm_btree_value_type {
 	 * somewhere.) This method is _not_ called for insertion of a new
 	 * value: It is assumed the ref count is already 1.
 	 */
+<<<<<<< HEAD
 	void (*inc)(void *context, const void *value, unsigned int count);
+=======
+	void (*inc)(void *context, const void *value, unsigned count);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * These values are being deleted.  The btree takes care of freeing
 	 * the memory pointed to by @value.  Often the del function just
 	 * needs to decrement a reference counts somewhere.
 	 */
+<<<<<<< HEAD
 	void (*dec)(void *context, const void *value, unsigned int count);
+=======
+	void (*dec)(void *context, const void *value, unsigned count);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * A test for equality between two values.  When a value is
@@ -85,7 +96,11 @@ struct dm_btree_info {
 	/*
 	 * Number of nested btrees. (Not the depth of a single tree.)
 	 */
+<<<<<<< HEAD
 	unsigned int levels;
+=======
+	unsigned levels;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_btree_value_type value_type;
 };
 
@@ -122,7 +137,11 @@ int dm_btree_lookup_next(struct dm_btree_info *info, dm_block_t root,
  */
 int dm_btree_insert(struct dm_btree_info *info, dm_block_t root,
 		    uint64_t *keys, void *value, dm_block_t *new_root)
+<<<<<<< HEAD
 	__dm_written_to_disk(value);
+=======
+		    __dm_written_to_disk(value);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * A variant of insert that indicates whether it actually inserted or just
@@ -150,7 +169,11 @@ int dm_btree_remove(struct dm_btree_info *info, dm_block_t root,
  */
 int dm_btree_remove_leaves(struct dm_btree_info *info, dm_block_t root,
 			   uint64_t *keys, uint64_t end_key,
+<<<<<<< HEAD
 			   dm_block_t *new_root, unsigned int *nr_removed);
+=======
+			   dm_block_t *new_root, unsigned *nr_removed);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Returns < 0 on failure.  Otherwise the number of key entries that have
@@ -189,7 +212,11 @@ int dm_btree_walk(struct dm_btree_info *info, dm_block_t root,
 
 struct cursor_node {
 	struct dm_block *b;
+<<<<<<< HEAD
 	unsigned int index;
+=======
+	unsigned index;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct dm_btree_cursor {
@@ -197,7 +224,11 @@ struct dm_btree_cursor {
 	dm_block_t root;
 
 	bool prefetch_leaves;
+<<<<<<< HEAD
 	unsigned int depth;
+=======
+	unsigned depth;
+>>>>>>> b7ba80a49124 (Commit)
 	struct cursor_node nodes[DM_BTREE_CURSOR_MAX_DEPTH];
 };
 

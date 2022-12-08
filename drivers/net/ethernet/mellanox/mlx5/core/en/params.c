@@ -6,6 +6,7 @@
 #include "en/port.h"
 #include "en_accel/en_accel.h"
 #include "en_accel/ipsec.h"
+<<<<<<< HEAD
 #include <net/xdp_sock_drv.h>
 
 static u8 mlx5e_mpwrq_min_page_shift(struct mlx5_core_dev *mdev)
@@ -212,6 +213,13 @@ u8 mlx5e_mpwrq_max_log_rq_pkts(struct mlx5_core_dev *mdev, u8 page_shift,
 	return mlx5e_mpwrq_max_log_rq_size(mdev, page_shift, umr_mode) +
 		mlx5e_mpwrq_log_wqe_sz(mdev, page_shift, umr_mode) -
 		MLX5E_ORDER2_MAX_PACKET_MTU;
+=======
+
+static bool mlx5e_rx_is_xdp(struct mlx5e_params *params,
+			    struct mlx5e_xsk_param *xsk)
+{
+	return params->xdp_prog || xsk;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 u16 mlx5e_get_linear_rq_headroom(struct mlx5e_params *params,
@@ -223,7 +231,11 @@ u16 mlx5e_get_linear_rq_headroom(struct mlx5e_params *params,
 		return xsk->headroom;
 
 	headroom = NET_IP_ALIGN;
+<<<<<<< HEAD
 	if (params->xdp_prog)
+=======
+	if (mlx5e_rx_is_xdp(params, xsk))
+>>>>>>> b7ba80a49124 (Commit)
 		headroom += XDP_PACKET_HEADROOM;
 	else
 		headroom += MLX5_RX_HEADROOM;
@@ -231,6 +243,7 @@ u16 mlx5e_get_linear_rq_headroom(struct mlx5e_params *params,
 	return headroom;
 }
 
+<<<<<<< HEAD
 static u32 mlx5e_rx_get_linear_sz_xsk(struct mlx5e_params *params,
 				      struct mlx5e_xsk_param *xsk)
 {
@@ -305,6 +318,72 @@ static bool mlx5e_verify_rx_mpwqe_strides(struct mlx5_core_dev *mdev,
 {
 	if (log_stride_sz + log_num_strides !=
 	    mlx5e_mpwrq_log_wqe_sz(mdev, page_shift, umr_mode))
+=======
+u32 mlx5e_rx_get_min_frag_sz(struct mlx5e_params *params,
+			     struct mlx5e_xsk_param *xsk)
+{
+	u32 hw_mtu = MLX5E_SW2HW_MTU(params, params->sw_mtu);
+	u16 linear_rq_headroom = mlx5e_get_linear_rq_headroom(params, xsk);
+
+	return linear_rq_headroom + hw_mtu;
+}
+
+static u32 mlx5e_rx_get_linear_frag_sz(struct mlx5e_params *params,
+				       struct mlx5e_xsk_param *xsk)
+{
+	u32 frag_sz = mlx5e_rx_get_min_frag_sz(params, xsk);
+
+	/* AF_XDP doesn't build SKBs in place. */
+	if (!xsk)
+		frag_sz = MLX5_SKB_FRAG_SZ(frag_sz);
+
+	/* XDP in mlx5e doesn't support multiple packets per page. AF_XDP is a
+	 * special case. It can run with frames smaller than a page, as it
+	 * doesn't allocate pages dynamically. However, here we pretend that
+	 * fragments are page-sized: it allows to treat XSK frames like pages
+	 * by redirecting alloc and free operations to XSK rings and by using
+	 * the fact there are no multiple packets per "page" (which is a frame).
+	 * The latter is important, because frames may come in a random order,
+	 * and we will have trouble assemblying a real page of multiple frames.
+	 */
+	if (mlx5e_rx_is_xdp(params, xsk))
+		frag_sz = max_t(u32, frag_sz, PAGE_SIZE);
+
+	/* Even if we can go with a smaller fragment size, we must not put
+	 * multiple packets into a single frame.
+	 */
+	if (xsk)
+		frag_sz = max_t(u32, frag_sz, xsk->chunk_size);
+
+	return frag_sz;
+}
+
+u8 mlx5e_mpwqe_log_pkts_per_wqe(struct mlx5e_params *params,
+				struct mlx5e_xsk_param *xsk)
+{
+	u32 linear_frag_sz = mlx5e_rx_get_linear_frag_sz(params, xsk);
+
+	return MLX5_MPWRQ_LOG_WQE_SZ - order_base_2(linear_frag_sz);
+}
+
+bool mlx5e_rx_is_linear_skb(struct mlx5e_params *params,
+			    struct mlx5e_xsk_param *xsk)
+{
+	/* AF_XDP allocates SKBs on XDP_PASS - ensure they don't occupy more
+	 * than one page. For this, check both with and without xsk.
+	 */
+	u32 linear_frag_sz = max(mlx5e_rx_get_linear_frag_sz(params, xsk),
+				 mlx5e_rx_get_linear_frag_sz(params, NULL));
+
+	return params->packet_merge.type == MLX5E_PACKET_MERGE_NONE &&
+		linear_frag_sz <= PAGE_SIZE;
+}
+
+bool mlx5e_verify_rx_mpwqe_strides(struct mlx5_core_dev *mdev,
+				   u8 log_stride_sz, u8 log_num_strides)
+{
+	if (log_stride_sz + log_num_strides != MLX5_MPWRQ_LOG_WQE_SZ)
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	if (log_stride_sz < MLX5_MPWQE_LOG_STRIDE_SZ_BASE ||
@@ -324,6 +403,7 @@ bool mlx5e_rx_mpwqe_is_linear_skb(struct mlx5_core_dev *mdev,
 				  struct mlx5e_params *params,
 				  struct mlx5e_xsk_param *xsk)
 {
+<<<<<<< HEAD
 	enum mlx5e_mpwrq_umr_mode umr_mode = mlx5e_mpwrq_umr_mode(mdev, xsk);
 	u8 page_shift = mlx5e_mpwrq_page_shift(mdev, xsk);
 	u8 log_num_strides;
@@ -356,12 +436,31 @@ u8 mlx5e_mpwqe_get_log_rq_size(struct mlx5_core_dev *mdev,
 	log_pkts_per_wqe = mlx5e_mpwqe_log_pkts_per_wqe(mdev, params, xsk);
 	page_shift = mlx5e_mpwrq_page_shift(mdev, xsk);
 	max_log_rq_size = mlx5e_mpwrq_max_log_rq_size(mdev, page_shift, umr_mode);
+=======
+	s8 log_num_strides;
+	u8 log_stride_sz;
+
+	if (!mlx5e_rx_is_linear_skb(params, xsk))
+		return false;
+
+	log_stride_sz = order_base_2(mlx5e_rx_get_linear_frag_sz(params, xsk));
+	log_num_strides = MLX5_MPWRQ_LOG_WQE_SZ - log_stride_sz;
+
+	return mlx5e_verify_rx_mpwqe_strides(mdev, log_stride_sz, log_num_strides);
+}
+
+u8 mlx5e_mpwqe_get_log_rq_size(struct mlx5e_params *params,
+			       struct mlx5e_xsk_param *xsk)
+{
+	u8 log_pkts_per_wqe = mlx5e_mpwqe_log_pkts_per_wqe(params, xsk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Numbers are unsigned, don't subtract to avoid underflow. */
 	if (params->log_rq_mtu_frames <
 	    log_pkts_per_wqe + MLX5E_PARAMS_MINIMUM_LOG_RQ_SIZE_MPW)
 		return MLX5E_PARAMS_MINIMUM_LOG_RQ_SIZE_MPW;
 
+<<<<<<< HEAD
 	/* Ethtool's rx_max_pending is calculated for regular RQ, that uses
 	 * pages of PAGE_SIZE. Max length of an XSK RQ might differ if it uses a
 	 * frame size not equal to PAGE_SIZE.
@@ -371,6 +470,8 @@ u8 mlx5e_mpwqe_get_log_rq_size(struct mlx5_core_dev *mdev,
 	if (WARN_ON_ONCE(params->log_rq_mtu_frames > log_pkts_per_wqe + max_log_rq_size))
 		return max_log_rq_size;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return params->log_rq_mtu_frames - log_pkts_per_wqe;
 }
 
@@ -400,7 +501,11 @@ u8 mlx5e_mpwqe_get_log_stride_size(struct mlx5_core_dev *mdev,
 				   struct mlx5e_xsk_param *xsk)
 {
 	if (mlx5e_rx_mpwqe_is_linear_skb(mdev, params, xsk))
+<<<<<<< HEAD
 		return order_base_2(mlx5e_rx_get_linear_stride_sz(mdev, params, xsk, true));
+=======
+		return order_base_2(mlx5e_rx_get_linear_frag_sz(params, xsk));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return MLX5_MPWRQ_DEF_LOG_STRIDE_SZ(mdev);
 }
@@ -409,6 +514,7 @@ u8 mlx5e_mpwqe_get_log_num_strides(struct mlx5_core_dev *mdev,
 				   struct mlx5e_params *params,
 				   struct mlx5e_xsk_param *xsk)
 {
+<<<<<<< HEAD
 	enum mlx5e_mpwrq_umr_mode umr_mode = mlx5e_mpwrq_umr_mode(mdev, xsk);
 	u8 page_shift = mlx5e_mpwrq_page_shift(mdev, xsk);
 	u8 log_wqe_size, log_stride_size;
@@ -419,6 +525,10 @@ u8 mlx5e_mpwqe_get_log_num_strides(struct mlx5_core_dev *mdev,
 	     "Log WQE size %u < log stride size %u (page shift %u, umr mode %d, xsk on? %d)\n",
 	     log_wqe_size, log_stride_size, page_shift, umr_mode, !!xsk);
 	return log_wqe_size - log_stride_size;
+=======
+	return MLX5_MPWRQ_LOG_WQE_SZ -
+		mlx5e_mpwqe_get_log_stride_size(mdev, params, xsk);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 u8 mlx5e_mpwqe_get_min_wqe_bulk(unsigned int wq_sz)
@@ -453,11 +563,19 @@ u16 mlx5e_calc_sq_stop_room(struct mlx5_core_dev *mdev, struct mlx5e_params *par
 	stop_room  = mlx5e_ktls_get_stop_room(mdev, params);
 	stop_room += mlx5e_stop_room_for_max_wqe(mdev);
 	if (is_mpwqe)
+<<<<<<< HEAD
 		/* A MPWQE can take up to the maximum cacheline-aligned WQE +
 		 * all the normal stop room can be taken if a new packet breaks
 		 * the active MPWQE session and allocates its WQEs right away.
 		 */
 		stop_room += mlx5e_stop_room_for_mpwqe(mdev);
+=======
+		/* A MPWQE can take up to the maximum-sized WQE + all the normal
+		 * stop room can be taken if a new packet breaks the active
+		 * MPWQE session and allocates its WQEs right away.
+		 */
+		stop_room += mlx5e_stop_room_for_max_wqe(mdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return stop_room;
 }
@@ -553,7 +671,11 @@ bool slow_pci_heuristic(struct mlx5_core_dev *mdev)
 	u32 link_speed = 0;
 	u32 pci_bw = 0;
 
+<<<<<<< HEAD
 	mlx5_port_max_linkspeed(mdev, &link_speed);
+=======
+	mlx5e_port_max_linkspeed(mdev, &link_speed);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_bw = pcie_bandwidth_available(mdev->pdev, NULL, NULL, NULL);
 	mlx5_core_dbg_once(mdev, "Max link speed = %d, PCI BW = %d\n",
 			   link_speed, pci_bw);
@@ -564,6 +686,7 @@ bool slow_pci_heuristic(struct mlx5_core_dev *mdev)
 		link_speed > MLX5E_SLOW_PCI_RATIO * pci_bw;
 }
 
+<<<<<<< HEAD
 int mlx5e_mpwrq_validate_regular(struct mlx5_core_dev *mdev, struct mlx5e_params *params)
 {
 	enum mlx5e_mpwrq_umr_mode umr_mode = mlx5e_mpwrq_umr_mode(mdev, NULL);
@@ -608,6 +731,24 @@ int mlx5e_mpwrq_validate_xsk(struct mlx5_core_dev *mdev, struct mlx5e_params *pa
 	}
 
 	return 0;
+=======
+bool mlx5e_striding_rq_possible(struct mlx5_core_dev *mdev,
+				struct mlx5e_params *params)
+{
+	if (!mlx5e_check_fragmented_striding_rq_cap(mdev))
+		return false;
+
+	if (params->xdp_prog) {
+		/* XSK params are not considered here. If striding RQ is in use,
+		 * and an XSK is being opened, mlx5e_rx_mpwqe_is_linear_skb will
+		 * be called with the known XSK params.
+		 */
+		if (!mlx5e_rx_mpwqe_is_linear_skb(mdev, params, NULL))
+			return false;
+	}
+
+	return true;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void mlx5e_init_rq_type_params(struct mlx5_core_dev *mdev,
@@ -616,11 +757,27 @@ void mlx5e_init_rq_type_params(struct mlx5_core_dev *mdev,
 	params->log_rq_mtu_frames = is_kdump_kernel() ?
 		MLX5E_PARAMS_MINIMUM_LOG_RQ_SIZE :
 		MLX5E_PARAMS_DEFAULT_LOG_RQ_SIZE;
+<<<<<<< HEAD
+=======
+
+	mlx5_core_info(mdev, "MLX5E: StrdRq(%d) RqSz(%ld) StrdSz(%ld) RxCqeCmprss(%d)\n",
+		       params->rq_wq_type == MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ,
+		       params->rq_wq_type == MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ ?
+		       BIT(mlx5e_mpwqe_get_log_rq_size(params, NULL)) :
+		       BIT(params->log_rq_mtu_frames),
+		       BIT(mlx5e_mpwqe_get_log_stride_size(mdev, params, NULL)),
+		       MLX5E_GET_PFLAG(params, MLX5E_PFLAG_RX_CQE_COMPRESS));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void mlx5e_set_rq_type(struct mlx5_core_dev *mdev, struct mlx5e_params *params)
 {
+<<<<<<< HEAD
 	params->rq_wq_type = MLX5E_GET_PFLAG(params, MLX5E_PFLAG_RX_STRIDING_RQ) ?
+=======
+	params->rq_wq_type = mlx5e_striding_rq_possible(mdev, params) &&
+		MLX5E_GET_PFLAG(params, MLX5E_PFLAG_RX_STRIDING_RQ) ?
+>>>>>>> b7ba80a49124 (Commit)
 		MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ :
 		MLX5_WQ_TYPE_CYCLIC;
 }
@@ -637,9 +794,15 @@ void mlx5e_build_rq_params(struct mlx5_core_dev *mdev,
 	 */
 	if ((!MLX5E_GET_PFLAG(params, MLX5E_PFLAG_RX_CQE_COMPRESS) ||
 	     MLX5_CAP_GEN(mdev, mini_cqe_resp_stride_index)) &&
+<<<<<<< HEAD
 	    !mlx5e_mpwrq_validate_regular(mdev, params) &&
 	    (mlx5e_rx_mpwqe_is_linear_skb(mdev, params, NULL) ||
 	     !mlx5e_rx_is_linear_skb(mdev, params, NULL)))
+=======
+	    mlx5e_striding_rq_possible(mdev, params) &&
+	    (mlx5e_rx_mpwqe_is_linear_skb(mdev, params, NULL) ||
+	     !mlx5e_rx_is_linear_skb(params, NULL)))
+>>>>>>> b7ba80a49124 (Commit)
 		MLX5E_SET_PFLAG(params, MLX5E_PFLAG_RX_STRIDING_RQ, true);
 	mlx5e_set_rq_type(mdev, params);
 	mlx5e_init_rq_type_params(mdev, params);
@@ -682,14 +845,23 @@ static int mlx5e_build_rq_frags_info(struct mlx5_core_dev *mdev,
 	int max_mtu;
 	int i;
 
+<<<<<<< HEAD
 	if (mlx5e_rx_is_linear_skb(mdev, params, xsk)) {
 		int frag_stride;
 
 		frag_stride = mlx5e_rx_get_linear_stride_sz(mdev, params, xsk, false);
+=======
+	if (mlx5e_rx_is_linear_skb(params, xsk)) {
+		int frag_stride;
+
+		frag_stride = mlx5e_rx_get_linear_frag_sz(params, xsk);
+		frag_stride = roundup_pow_of_two(frag_stride);
+>>>>>>> b7ba80a49124 (Commit)
 
 		info->arr[0].frag_size = byte_count;
 		info->arr[0].frag_stride = frag_stride;
 		info->num_frags = 1;
+<<<<<<< HEAD
 
 		/* N WQEs share the same page, N = PAGE_SIZE / frag_stride. The
 		 * first WQE in the page is responsible for allocation of this
@@ -698,6 +870,9 @@ static int mlx5e_build_rq_frags_info(struct mlx5_core_dev *mdev,
 		 */
 		info->wqe_index_mask = (PAGE_SIZE / frag_stride) - 1;
 
+=======
+		info->wqe_bulk = PAGE_SIZE / frag_stride;
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -746,6 +921,7 @@ static int mlx5e_build_rq_frags_info(struct mlx5_core_dev *mdev,
 		i++;
 	}
 	info->num_frags = i;
+<<<<<<< HEAD
 
 	/* The last fragment of WQE with index 2*N may share the page with the
 	 * first fragment of WQE with index 2*N+1 in certain cases. If WQE 2*N+1
@@ -780,6 +956,13 @@ out:
 	 */
 	info->wqe_bulk = max_t(u8, info->wqe_index_mask + 1, 8);
 
+=======
+	/* number of different wqes sharing a page */
+	info->wqe_bulk = 1 + (info->num_frags % 2);
+
+out:
+	info->wqe_bulk = max_t(u8, info->wqe_bulk, 8);
+>>>>>>> b7ba80a49124 (Commit)
 	info->log_num_frags = order_base_2(info->num_frags);
 
 	return 0;
@@ -818,7 +1001,11 @@ static u32 mlx5e_shampo_get_log_cq_size(struct mlx5_core_dev *mdev,
 	u16 num_strides = BIT(mlx5e_mpwqe_get_log_num_strides(mdev, params, xsk));
 	int pkt_per_rsrv = BIT(mlx5e_shampo_get_log_pkt_per_rsrv(mdev, params));
 	u8 log_stride_sz = mlx5e_mpwqe_get_log_stride_size(mdev, params, xsk);
+<<<<<<< HEAD
 	int wq_size = BIT(mlx5e_mpwqe_get_log_rq_size(mdev, params, xsk));
+=======
+	int wq_size = BIT(mlx5e_mpwqe_get_log_rq_size(params, xsk));
+>>>>>>> b7ba80a49124 (Commit)
 	int wqe_size = BIT(log_stride_sz) * num_strides;
 
 	/* +1 is for the case that the pkt_per_rsrv dont consume the reservation
@@ -842,7 +1029,11 @@ static void mlx5e_build_rx_cq_param(struct mlx5_core_dev *mdev,
 		if (params->packet_merge.type == MLX5E_PACKET_MERGE_SHAMPO)
 			log_cq_size = mlx5e_shampo_get_log_cq_size(mdev, params, xsk);
 		else
+<<<<<<< HEAD
 			log_cq_size = mlx5e_mpwqe_get_log_rq_size(mdev, params, xsk) +
+=======
+			log_cq_size = mlx5e_mpwqe_get_log_rq_size(params, xsk) +
+>>>>>>> b7ba80a49124 (Commit)
 				mlx5e_mpwqe_get_log_num_strides(mdev, params, xsk);
 		break;
 	default: /* MLX5_WQ_TYPE_CYCLIC */
@@ -853,10 +1044,13 @@ static void mlx5e_build_rx_cq_param(struct mlx5_core_dev *mdev,
 	if (MLX5E_GET_PFLAG(params, MLX5E_PFLAG_RX_CQE_COMPRESS)) {
 		MLX5_SET(cqc, cqc, mini_cqe_res_format, hw_stridx ?
 			 MLX5_CQE_FORMAT_CSUM_STRIDX : MLX5_CQE_FORMAT_CSUM);
+<<<<<<< HEAD
 		MLX5_SET(cqc, cqc, cqe_compression_layout,
 			 MLX5_CAP_GEN(mdev, enhanced_cqe_compression) ?
 			 MLX5_CQE_COMPRESS_LAYOUT_ENHANCED :
 			 MLX5_CQE_COMPRESS_LAYOUT_BASIC);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		MLX5_SET(cqc, cqc, cqe_comp_en, 1);
 	}
 
@@ -889,6 +1083,7 @@ int mlx5e_build_rq_param(struct mlx5_core_dev *mdev,
 	case MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ: {
 		u8 log_wqe_num_of_strides = mlx5e_mpwqe_get_log_num_strides(mdev, params, xsk);
 		u8 log_wqe_stride_size = mlx5e_mpwqe_get_log_stride_size(mdev, params, xsk);
+<<<<<<< HEAD
 		enum mlx5e_mpwrq_umr_mode umr_mode = mlx5e_mpwrq_umr_mode(mdev, xsk);
 		u8 page_shift = mlx5e_mpwrq_page_shift(mdev, xsk);
 
@@ -899,6 +1094,14 @@ int mlx5e_build_rq_param(struct mlx5_core_dev *mdev,
 				      "Bad RX MPWQE params: log_stride_size %u, log_num_strides %u, umr_mode %d\n",
 				      log_wqe_stride_size, log_wqe_num_of_strides,
 				      umr_mode);
+=======
+
+		if (!mlx5e_verify_rx_mpwqe_strides(mdev, log_wqe_stride_size,
+						   log_wqe_num_of_strides)) {
+			mlx5_core_err(mdev,
+				      "Bad RX MPWQE params: log_stride_size %u, log_num_strides %u\n",
+				      log_wqe_stride_size, log_wqe_num_of_strides);
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 
@@ -906,7 +1109,11 @@ int mlx5e_build_rq_param(struct mlx5_core_dev *mdev,
 			 log_wqe_num_of_strides - MLX5_MPWQE_LOG_NUM_STRIDES_BASE);
 		MLX5_SET(wq, wq, log_wqe_stride_size,
 			 log_wqe_stride_size - MLX5_MPWQE_LOG_STRIDE_SZ_BASE);
+<<<<<<< HEAD
 		MLX5_SET(wq, wq, log_wq_sz, mlx5e_mpwqe_get_log_rq_size(mdev, params, xsk));
+=======
+		MLX5_SET(wq, wq, log_wq_sz, mlx5e_mpwqe_get_log_rq_size(params, xsk));
+>>>>>>> b7ba80a49124 (Commit)
 		if (params->packet_merge.type == MLX5E_PACKET_MERGE_SHAMPO) {
 			MLX5_SET(wq, wq, shampo_enable, true);
 			MLX5_SET(wq, wq, log_reservation_size,
@@ -1018,6 +1225,16 @@ static void mlx5e_build_ico_cq_param(struct mlx5_core_dev *mdev,
 	param->cq_period_mode = DIM_CQ_PERIOD_MODE_START_FROM_EQE;
 }
 
+<<<<<<< HEAD
+=======
+static u8 mlx5e_get_rq_log_wq_sz(void *rqc)
+{
+	void *wq = MLX5_ADDR_OF(rqc, rqc, wq);
+
+	return MLX5_GET(wq, wq, log_wq_sz);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* This function calculates the maximum number of headers entries that are needed
  * per WQE, the formula is based on the size of the reservations and the
  * restriction we have about max packets for reservation that is equal to max
@@ -1078,6 +1295,7 @@ static u32 mlx5e_shampo_icosq_sz(struct mlx5_core_dev *mdev,
 	return wqebbs;
 }
 
+<<<<<<< HEAD
 static u32 mlx5e_mpwrq_total_umr_wqebbs(struct mlx5_core_dev *mdev,
 					struct mlx5e_params *params,
 					struct mlx5e_xsk_param *xsk)
@@ -1091,22 +1309,33 @@ static u32 mlx5e_mpwrq_total_umr_wqebbs(struct mlx5_core_dev *mdev,
 	return umr_wqebbs * (1 << mlx5e_mpwqe_get_log_rq_size(mdev, params, xsk));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static u8 mlx5e_build_icosq_log_wq_sz(struct mlx5_core_dev *mdev,
 				      struct mlx5e_params *params,
 				      struct mlx5e_rq_param *rqp)
 {
+<<<<<<< HEAD
 	u32 wqebbs, total_pages, useful_space;
+=======
+	u32 wqebbs;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* MLX5_WQ_TYPE_CYCLIC */
 	if (params->rq_wq_type != MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ)
 		return MLX5E_PARAMS_MINIMUM_LOG_SQ_SIZE;
 
+<<<<<<< HEAD
 	/* UMR WQEs for the regular RQ. */
 	wqebbs = mlx5e_mpwrq_total_umr_wqebbs(mdev, params, NULL);
+=======
+	wqebbs = MLX5E_UMR_WQEBBS * BIT(mlx5e_get_rq_log_wq_sz(rqp->rqc));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* If XDP program is attached, XSK may be turned on at any time without
 	 * restarting the channel. ICOSQ must be big enough to fit UMR WQEs of
 	 * both regular RQ and XSK RQ.
+<<<<<<< HEAD
 	 *
 	 * XSK uses different values of page_shift, and the total number of UMR
 	 * WQEBBs depends on it. This dependency is complex and not monotonic,
@@ -1148,10 +1377,19 @@ static u8 mlx5e_build_icosq_log_wq_sz(struct mlx5_core_dev *mdev,
 
 		wqebbs += max_xsk_wqebbs;
 	}
+=======
+	 * Although mlx5e_mpwqe_get_log_rq_size accepts mlx5e_xsk_param, it
+	 * doesn't affect its return value, as long as params->xdp_prog != NULL,
+	 * so we can just multiply by 2.
+	 */
+	if (params->xdp_prog)
+		wqebbs *= 2;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (params->packet_merge.type == MLX5E_PACKET_MERGE_SHAMPO)
 		wqebbs += mlx5e_shampo_icosq_sz(mdev, params, rqp);
 
+<<<<<<< HEAD
 	/* UMR WQEs don't cross the page boundary, they are padded with NOPs.
 	 * This padding is always smaller than the max WQE size. That gives us
 	 * at least (PAGE_SIZE - (max WQE size - MLX5_SEND_WQE_BB)) useful bytes
@@ -1164,6 +1402,8 @@ static u8 mlx5e_build_icosq_log_wq_sz(struct mlx5_core_dev *mdev,
 	total_pages = DIV_ROUND_UP(wqebbs * MLX5_SEND_WQE_BB, useful_space);
 	wqebbs = total_pages * (PAGE_SIZE / MLX5_SEND_WQE_BB);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return max_t(u8, MLX5E_PARAMS_MINIMUM_LOG_SQ_SIZE, order_base_2(wqebbs));
 }
 
@@ -1217,7 +1457,11 @@ void mlx5e_build_xdpsq_param(struct mlx5_core_dev *mdev,
 	mlx5e_build_sq_param_common(mdev, param);
 	MLX5_SET(wq, wq, log_wq_sz, params->log_sq_size);
 	param->is_mpw = MLX5E_GET_PFLAG(params, MLX5E_PFLAG_XDP_TX_MPWQE);
+<<<<<<< HEAD
 	param->is_xdp_mb = !mlx5e_rx_is_linear_skb(mdev, params, xsk);
+=======
+	param->is_xdp_mb = !mlx5e_rx_is_linear_skb(params, xsk);
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5e_build_tx_cq_param(mdev, params, &param->cqp);
 }
 

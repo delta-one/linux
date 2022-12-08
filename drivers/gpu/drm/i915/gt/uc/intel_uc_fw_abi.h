@@ -74,8 +74,12 @@ struct uc_css_header {
 #define CSS_SW_VERSION_UC_MAJOR		(0xFF << 16)
 #define CSS_SW_VERSION_UC_MINOR		(0xFF << 8)
 #define CSS_SW_VERSION_UC_PATCH		(0xFF << 0)
+<<<<<<< HEAD
 	u32 vf_version;
 	u32 reserved0[12];
+=======
+	u32 reserved0[13];
+>>>>>>> b7ba80a49124 (Commit)
 	union {
 		u32 private_data_size; /* only applies to GuC */
 		u32 reserved1;

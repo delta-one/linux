@@ -16,11 +16,18 @@
 #include <linux/of_address.h>
 #include <linux/of_irq.h>
 #include <linux/of_platform.h>
+<<<<<<< HEAD
 #include <linux/syscore_ops.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Registers */
 #define HTVEC_EN_OFF		0x20
 #define HTVEC_MAX_PARENT_IRQ	8
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 #define VEC_COUNT_PER_REG	32
 #define VEC_REG_IDX(irq_id)	((irq_id) / VEC_COUNT_PER_REG)
 #define VEC_REG_BIT(irq_id)	((irq_id) % VEC_COUNT_PER_REG)
@@ -30,11 +37,16 @@ struct htvec {
 	void __iomem		*base;
 	struct irq_domain	*htvec_domain;
 	raw_spinlock_t		htvec_lock;
+<<<<<<< HEAD
 	u32			saved_vec_en[HTVEC_MAX_PARENT_IRQ];
 };
 
 static struct htvec *htvec_priv;
 
+=======
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static void htvec_irq_dispatch(struct irq_desc *desc)
 {
 	int i;
@@ -158,6 +170,7 @@ static void htvec_reset(struct htvec *priv)
 	}
 }
 
+<<<<<<< HEAD
 static int htvec_suspend(void)
 {
 	int i;
@@ -186,11 +199,19 @@ static int htvec_init(phys_addr_t addr, unsigned long size,
 {
 	int i;
 	struct htvec *priv;
+=======
+static int htvec_of_init(struct device_node *node,
+				struct device_node *parent)
+{
+	struct htvec *priv;
+	int err, parent_irq[8], i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
 	if (!priv)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	priv->num_parents = num_parents;
 	priv->base = ioremap(addr, size);
 	raw_spin_lock_init(&priv->htvec_lock);
@@ -237,12 +258,22 @@ static int htvec_of_init(struct device_node *node,
 	if (of_address_to_resource(node, 0, &res))
 		return -EINVAL;
 
+=======
+	raw_spin_lock_init(&priv->htvec_lock);
+	priv->base = of_iomap(node, 0);
+	if (!priv->base) {
+		err = -ENOMEM;
+		goto free_priv;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Interrupt may come from any of the 8 interrupt lines */
 	for (i = 0; i < HTVEC_MAX_PARENT_IRQ; i++) {
 		parent_irq[i] = irq_of_parse_and_map(node, i);
 		if (parent_irq[i] <= 0)
 			break;
 
+<<<<<<< HEAD
 		num_parents++;
 	}
 
@@ -324,3 +355,43 @@ int __init htvec_acpi_init(struct irq_domain *parent,
 }
 
 #endif
+=======
+		priv->num_parents++;
+	}
+
+	if (!priv->num_parents) {
+		pr_err("Failed to get parent irqs\n");
+		err = -ENODEV;
+		goto iounmap_base;
+	}
+
+	priv->htvec_domain = irq_domain_create_linear(of_node_to_fwnode(node),
+					(VEC_COUNT_PER_REG * priv->num_parents),
+					&htvec_domain_ops, priv);
+	if (!priv->htvec_domain) {
+		pr_err("Failed to create IRQ domain\n");
+		err = -ENOMEM;
+		goto irq_dispose;
+	}
+
+	htvec_reset(priv);
+
+	for (i = 0; i < priv->num_parents; i++)
+		irq_set_chained_handler_and_data(parent_irq[i],
+						 htvec_irq_dispatch, priv);
+
+	return 0;
+
+irq_dispose:
+	for (; i > 0; i--)
+		irq_dispose_mapping(parent_irq[i - 1]);
+iounmap_base:
+	iounmap(priv->base);
+free_priv:
+	kfree(priv);
+
+	return err;
+}
+
+IRQCHIP_DECLARE(htvec, "loongson,htvec-1.0", htvec_of_init);
+>>>>>>> b7ba80a49124 (Commit)

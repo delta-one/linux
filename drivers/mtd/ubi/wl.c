@@ -165,7 +165,11 @@ static void wl_tree_add(struct ubi_wl_entry *e, struct rb_root *root)
 }
 
 /**
+<<<<<<< HEAD
  * wl_entry_destroy - destroy a wear-leveling entry.
+=======
+ * wl_tree_destroy - destroy a wear-leveling entry.
+>>>>>>> b7ba80a49124 (Commit)
  * @ubi: UBI device description object
  * @e: the wear-leveling entry to add
  *
@@ -575,7 +579,11 @@ static int erase_worker(struct ubi_device *ubi, struct ubi_work *wl_wrk,
  * @vol_id: the volume ID that last used this PEB
  * @lnum: the last used logical eraseblock number for the PEB
  * @torture: if the physical eraseblock has to be tortured
+<<<<<<< HEAD
  * @nested: denotes whether the work_sem is already held
+=======
+ * @nested: denotes whether the work_sem is already held in read mode
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This function returns zero in case of success and a %-ENOMEM in case of
  * failure.
@@ -890,11 +898,16 @@ static int wear_leveling_worker(struct ubi_device *ubi, struct ubi_work *wrk,
 
 	err = do_sync_erase(ubi, e1, vol_id, lnum, 0);
 	if (err) {
+<<<<<<< HEAD
 		if (e2) {
 			spin_lock(&ubi->wl_lock);
 			wl_entry_destroy(ubi, e2);
 			spin_unlock(&ubi->wl_lock);
 		}
+=======
+		if (e2)
+			wl_entry_destroy(ubi, e2);
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_ro;
 	}
 
@@ -976,11 +989,19 @@ out_error:
 	spin_lock(&ubi->wl_lock);
 	ubi->move_from = ubi->move_to = NULL;
 	ubi->move_to_put = ubi->wl_scheduled = 0;
+<<<<<<< HEAD
 	wl_entry_destroy(ubi, e1);
 	wl_entry_destroy(ubi, e2);
 	spin_unlock(&ubi->wl_lock);
 
 	ubi_free_vid_buf(vidb);
+=======
+	spin_unlock(&ubi->wl_lock);
+
+	ubi_free_vid_buf(vidb);
+	wl_entry_destroy(ubi, e1);
+	wl_entry_destroy(ubi, e2);
+>>>>>>> b7ba80a49124 (Commit)
 
 out_ro:
 	ubi_ro_mode(ubi);
@@ -1131,20 +1152,30 @@ static int __erase_worker(struct ubi_device *ubi, struct ubi_work *wl_wrk)
 		int err1;
 
 		/* Re-schedule the LEB for erasure */
+<<<<<<< HEAD
 		err1 = schedule_erase(ubi, e, vol_id, lnum, 0, true);
 		if (err1) {
 			spin_lock(&ubi->wl_lock);
 			wl_entry_destroy(ubi, e);
 			spin_unlock(&ubi->wl_lock);
+=======
+		err1 = schedule_erase(ubi, e, vol_id, lnum, 0, false);
+		if (err1) {
+			wl_entry_destroy(ubi, e);
+>>>>>>> b7ba80a49124 (Commit)
 			err = err1;
 			goto out_ro;
 		}
 		return err;
 	}
 
+<<<<<<< HEAD
 	spin_lock(&ubi->wl_lock);
 	wl_entry_destroy(ubi, e);
 	spin_unlock(&ubi->wl_lock);
+=======
+	wl_entry_destroy(ubi, e);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err != -EIO)
 		/*
 		 * If this is not %-EIO, we have no idea what to do. Scheduling
@@ -1260,6 +1291,7 @@ int ubi_wl_put_peb(struct ubi_device *ubi, int vol_id, int lnum,
 retry:
 	spin_lock(&ubi->wl_lock);
 	e = ubi->lookuptbl[pnum];
+<<<<<<< HEAD
 	if (!e) {
 		/*
 		 * This wl entry has been removed for some errors by other
@@ -1272,6 +1304,8 @@ retry:
 		up_read(&ubi->fm_protect);
 		return 0;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (e == ubi->move_from) {
 		/*
 		 * User is putting the physical eraseblock which was selected to

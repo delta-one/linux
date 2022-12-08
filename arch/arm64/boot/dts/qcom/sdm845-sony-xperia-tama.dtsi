@@ -4,7 +4,10 @@
  */
 
 #include <dt-bindings/input/input.h>
+<<<<<<< HEAD
 #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
 #include "sdm845.dtsi"
 #include "pm8005.dtsi"
@@ -18,6 +21,7 @@
 	gpio-keys {
 		compatible = "gpio-keys";
 
+<<<<<<< HEAD
 		pinctrl-0 = <&focus_n &snapshot_n &vol_down_n &vol_up_n>;
 		pinctrl-names = "default";
 
@@ -55,6 +59,16 @@
 			debounce-interval = <15>;
 			linux,can-disable;
 			wakeup-source;
+=======
+		/* Neither Camera Focus, nor Camera Shutter seem to work... */
+
+		key-vol-down {
+			label = "volume_down";
+			gpios = <&pm8998_gpio 5 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_VOLUMEDOWN>;
+			debounce-interval = <15>;
+			gpio-key,wakeup;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -99,7 +113,11 @@
 };
 
 &apps_rsc {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pm8998-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8998-rpmh-regulators";
 		qcom,pmic-id = "a";
 
@@ -329,7 +347,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-1 {
+=======
+	pmi8998-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pmi8998-rpmh-regulators";
 		qcom,pmic-id = "b";
 
@@ -340,7 +362,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-2 {
+=======
+	pm8005-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8005-rpmh-regulators";
 		qcom,pmic-id = "c";
 
@@ -388,6 +414,7 @@
 	/* AMS TCS3490 RGB+IR color sensor @ 72 */
 };
 
+<<<<<<< HEAD
 &pm8998_gpios {
 	focus_n: focus-n-state {
 		pins = "gpio2";
@@ -422,6 +449,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &qupv3_id_0 {
 	status = "okay";
 };
@@ -440,26 +469,42 @@
 	pinctrl-names = "default";
 	bus-width = <4>;
 	no-sdio;
+<<<<<<< HEAD
 	no-mmc;
+=======
+	no-emmc;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &tlmm {
 	gpio-reserved-ranges = <0 4>, <81 4>;
 
 	sdc2_default_state: sdc2-default-state {
+<<<<<<< HEAD
 		clk-pins {
+=======
+		clk {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_clk";
 			drive-strength = <16>;
 			bias-disable;
 		};
 
+<<<<<<< HEAD
 		cmd-pins {
+=======
+		cmd {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_cmd";
 			drive-strength = <10>;
 			bias-pull-up;
 		};
 
+<<<<<<< HEAD
 		data-pins {
+=======
+		data {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_data";
 			drive-strength = <10>;
 			bias-pull-up;

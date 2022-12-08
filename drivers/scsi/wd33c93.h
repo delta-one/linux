@@ -180,8 +180,18 @@
 
    /* This is what the 3393 chip looks like to us */
 typedef struct {
+<<<<<<< HEAD
    volatile unsigned char  *SASR;
    volatile unsigned char  *SCMD;
+=======
+#ifdef CONFIG_WD33C93_PIO
+   unsigned int   SASR;
+   unsigned int   SCMD;
+#else
+   volatile unsigned char  *SASR;
+   volatile unsigned char  *SCMD;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 } wd33c93_regs;
 
 

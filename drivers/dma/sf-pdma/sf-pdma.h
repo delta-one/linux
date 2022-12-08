@@ -78,6 +78,10 @@ struct sf_pdma_desc {
 	u64				src_addr;
 	struct virt_dma_desc		vdesc;
 	struct sf_pdma_chan		*chan;
+<<<<<<< HEAD
+=======
+	bool				in_use;
+>>>>>>> b7ba80a49124 (Commit)
 	enum dma_transfer_direction	dirn;
 	struct dma_async_tx_descriptor *async_tx;
 };

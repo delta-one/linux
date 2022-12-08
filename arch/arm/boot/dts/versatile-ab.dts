@@ -237,7 +237,11 @@
 			clock-names = "apb_pclk";
 		};
 
+<<<<<<< HEAD
 		uart0: serial@101f1000 {
+=======
+		uart0: uart@101f1000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "arm,pl011", "arm,primecell";
 			reg = <0x101f1000 0x1000>;
 			interrupts = <12>;
@@ -245,7 +249,11 @@
 			clock-names = "uartclk", "apb_pclk";
 		};
 
+<<<<<<< HEAD
 		uart1: serial@101f2000 {
+=======
+		uart1: uart@101f2000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "arm,pl011", "arm,primecell";
 			reg = <0x101f2000 0x1000>;
 			interrupts = <13>;
@@ -253,7 +261,11 @@
 			clock-names = "uartclk", "apb_pclk";
 		};
 
+<<<<<<< HEAD
 		uart2: serial@101f3000 {
+=======
+		uart2: uart@101f3000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "arm,pl011", "arm,primecell";
 			reg = <0x101f3000 0x1000>;
 			interrupts = <14>;

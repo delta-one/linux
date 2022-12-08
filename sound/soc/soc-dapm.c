@@ -71,9 +71,15 @@ static int dapm_up_seq[] = {
 	[snd_soc_dapm_pinctrl] = 2,
 	[snd_soc_dapm_clock_supply] = 2,
 	[snd_soc_dapm_supply] = 3,
+<<<<<<< HEAD
 	[snd_soc_dapm_dai_link] = 3,
 	[snd_soc_dapm_micbias] = 4,
 	[snd_soc_dapm_vmid] = 4,
+=======
+	[snd_soc_dapm_micbias] = 4,
+	[snd_soc_dapm_vmid] = 4,
+	[snd_soc_dapm_dai_link] = 3,
+>>>>>>> b7ba80a49124 (Commit)
 	[snd_soc_dapm_dai_in] = 5,
 	[snd_soc_dapm_dai_out] = 5,
 	[snd_soc_dapm_aif_in] = 5,
@@ -149,7 +155,11 @@ static int dapm_down_seq[] = {
 
 static void dapm_assert_locked(struct snd_soc_dapm_context *dapm)
 {
+<<<<<<< HEAD
 	if (snd_soc_card_is_instantiated(dapm->card))
+=======
+	if (dapm->card && dapm->card->instantiated)
+>>>>>>> b7ba80a49124 (Commit)
 		lockdep_assert_held(&dapm->card->dapm_mutex);
 }
 
@@ -652,8 +662,15 @@ static void soc_dapm_async_complete(struct snd_soc_dapm_context *dapm)
 }
 
 static struct snd_soc_dapm_widget *
+<<<<<<< HEAD
 dapm_wcache_lookup(struct snd_soc_dapm_widget *w, const char *name)
 {
+=======
+dapm_wcache_lookup(struct snd_soc_dapm_wcache *wcache, const char *name)
+{
+	struct snd_soc_dapm_widget *w = wcache->widget;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (w) {
 		struct list_head *wlist = &w->dapm->card->widgets;
 		const int depth = 2;
@@ -671,6 +688,15 @@ dapm_wcache_lookup(struct snd_soc_dapm_widget *w, const char *name)
 	return NULL;
 }
 
+<<<<<<< HEAD
+=======
+static inline void dapm_wcache_update(struct snd_soc_dapm_wcache *wcache,
+				      struct snd_soc_dapm_widget *w)
+{
+	wcache->widget = w;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * snd_soc_dapm_force_bias_level() - Sets the DAPM bias level
  * @dapm: The DAPM context for which to set the level
@@ -1297,7 +1323,11 @@ int snd_soc_dapm_dai_get_connected_widgets(struct snd_soc_dai *dai, int stream,
 				      enum snd_soc_dapm_direction))
 {
 	struct snd_soc_card *card = dai->component->card;
+<<<<<<< HEAD
 	struct snd_soc_dapm_widget *w = snd_soc_dai_get_widget(dai, stream);
+=======
+	struct snd_soc_dapm_widget *w;
+>>>>>>> b7ba80a49124 (Commit)
 	LIST_HEAD(widgets);
 	int paths;
 	int ret;
@@ -1305,10 +1335,18 @@ int snd_soc_dapm_dai_get_connected_widgets(struct snd_soc_dai *dai, int stream,
 	mutex_lock_nested(&card->dapm_mutex, SND_SOC_DAPM_CLASS_RUNTIME);
 
 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
+<<<<<<< HEAD
+=======
+		w = dai->playback_widget;
+>>>>>>> b7ba80a49124 (Commit)
 		invalidate_paths_ep(w, SND_SOC_DAPM_DIR_OUT);
 		paths = is_connected_output_ep(w, &widgets,
 				custom_stop_condition);
 	} else {
+<<<<<<< HEAD
+=======
+		w = dai->capture_widget;
+>>>>>>> b7ba80a49124 (Commit)
 		invalidate_paths_ep(w, SND_SOC_DAPM_DIR_IN);
 		paths = is_connected_input_ep(w, &widgets,
 				custom_stop_condition);
@@ -1871,11 +1909,16 @@ static void dapm_widget_set_peer_power(struct snd_soc_dapm_widget *peer,
 		dapm_mark_dirty(peer, "peer state change");
 }
 
+<<<<<<< HEAD
 static void dapm_power_one_widget(struct snd_soc_dapm_widget *w,
+=======
+static void dapm_widget_set_power(struct snd_soc_dapm_widget *w, bool power,
+>>>>>>> b7ba80a49124 (Commit)
 				  struct list_head *up_list,
 				  struct list_head *down_list)
 {
 	struct snd_soc_dapm_path *path;
+<<<<<<< HEAD
 	int power;
 
 	switch (w->id) {
@@ -1890,19 +1933,27 @@ static void dapm_power_one_widget(struct snd_soc_dapm_widget *w,
 	}
 
 	power = dapm_widget_power_check(w);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (w->power == power)
 		return;
 
 	trace_snd_soc_dapm_widget_power(w, power);
 
+<<<<<<< HEAD
 	/*
 	 * If we changed our power state perhaps our neigbours
 	 * changed also.
+=======
+	/* If we changed our power state perhaps our neigbours changed
+	 * also.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	snd_soc_dapm_widget_for_each_source_path(w, path)
 		dapm_widget_set_peer_power(path->source, power, path->connect);
 
+<<<<<<< HEAD
 	/*
 	 * Supplies can't affect their outputs, only their inputs
 	 */
@@ -1911,12 +1962,46 @@ static void dapm_power_one_widget(struct snd_soc_dapm_widget *w,
 			dapm_widget_set_peer_power(path->sink, power, path->connect);
 
 end:
+=======
+	/* Supplies can't affect their outputs, only their inputs */
+	if (!w->is_supply) {
+		snd_soc_dapm_widget_for_each_sink_path(w, path)
+			dapm_widget_set_peer_power(path->sink, power,
+						   path->connect);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (power)
 		dapm_seq_insert(w, up_list, true);
 	else
 		dapm_seq_insert(w, down_list, false);
 }
 
+<<<<<<< HEAD
+=======
+static void dapm_power_one_widget(struct snd_soc_dapm_widget *w,
+				  struct list_head *up_list,
+				  struct list_head *down_list)
+{
+	int power;
+
+	switch (w->id) {
+	case snd_soc_dapm_pre:
+		dapm_seq_insert(w, down_list, false);
+		break;
+	case snd_soc_dapm_post:
+		dapm_seq_insert(w, up_list, true);
+		break;
+
+	default:
+		power = dapm_widget_power_check(w);
+
+		dapm_widget_set_power(w, power, up_list, down_list);
+		break;
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static bool dapm_idle_bias_off(struct snd_soc_dapm_context *dapm)
 {
 	if (dapm->idle_bias_off)
@@ -2481,9 +2566,12 @@ void snd_soc_dapm_free_widget(struct snd_soc_dapm_widget *w)
 	struct snd_soc_dapm_path *p, *next_p;
 	enum snd_soc_dapm_direction dir;
 
+<<<<<<< HEAD
 	if (!w)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	list_del(&w->list);
 	list_del(&w->dirty);
 	/*
@@ -2503,6 +2591,15 @@ void snd_soc_dapm_free_widget(struct snd_soc_dapm_widget *w)
 }
 EXPORT_SYMBOL_GPL(snd_soc_dapm_free_widget);
 
+<<<<<<< HEAD
+=======
+void snd_soc_dapm_reset_cache(struct snd_soc_dapm_context *dapm)
+{
+	dapm->path_sink_cache.widget = NULL;
+	dapm->path_source_cache.widget = NULL;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* free all dapm widgets and resources */
 static void dapm_free_widgets(struct snd_soc_dapm_context *dapm)
 {
@@ -2513,9 +2610,13 @@ static void dapm_free_widgets(struct snd_soc_dapm_context *dapm)
 			continue;
 		snd_soc_dapm_free_widget(w);
 	}
+<<<<<<< HEAD
 
 	dapm->wcache_sink	= NULL;
 	dapm->wcache_source	= NULL;
+=======
+	snd_soc_dapm_reset_cache(dapm);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct snd_soc_dapm_widget *dapm_find_widget(
@@ -2612,7 +2713,11 @@ int snd_soc_dapm_sync_unlocked(struct snd_soc_dapm_context *dapm)
 	 * Suppress early reports (eg, jacks syncing their state) to avoid
 	 * silly DAPM runs during card startup.
 	 */
+<<<<<<< HEAD
 	if (!snd_soc_card_is_instantiated(dapm->card))
+=======
+	if (!dapm->card || !dapm->card->instantiated)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	return dapm_power_widgets(dapm->card, SND_SOC_DAPM_STREAM_NOP);
@@ -2821,6 +2926,10 @@ static int snd_soc_dapm_add_path(struct snd_soc_dapm_context *dapm,
 	int (*connected)(struct snd_soc_dapm_widget *source,
 			 struct snd_soc_dapm_widget *sink))
 {
+<<<<<<< HEAD
+=======
+	struct snd_soc_dapm_widget *widgets[2];
+>>>>>>> b7ba80a49124 (Commit)
 	enum snd_soc_dapm_direction dir;
 	struct snd_soc_dapm_path *path;
 	int ret;
@@ -2856,6 +2965,11 @@ static int snd_soc_dapm_add_path(struct snd_soc_dapm_context *dapm,
 
 	path->node[SND_SOC_DAPM_DIR_IN] = wsource;
 	path->node[SND_SOC_DAPM_DIR_OUT] = wsink;
+<<<<<<< HEAD
+=======
+	widgets[SND_SOC_DAPM_DIR_IN] = wsource;
+	widgets[SND_SOC_DAPM_DIR_OUT] = wsink;
+>>>>>>> b7ba80a49124 (Commit)
 
 	path->connected = connected;
 	INIT_LIST_HEAD(&path->list);
@@ -2897,6 +3011,7 @@ static int snd_soc_dapm_add_path(struct snd_soc_dapm_context *dapm,
 	}
 
 	list_add(&path->list, &dapm->card->paths);
+<<<<<<< HEAD
 
 	snd_soc_dapm_for_each_direction(dir)
 		list_add(&path->list_node[dir], &path->node[dir]->edges[dir]);
@@ -2907,6 +3022,17 @@ static int snd_soc_dapm_add_path(struct snd_soc_dapm_context *dapm,
 	}
 
 	if (snd_soc_card_is_instantiated(dapm->card) && path->connect)
+=======
+	snd_soc_dapm_for_each_direction(dir)
+		list_add(&path->list_node[dir], &widgets[dir]->edges[dir]);
+
+	snd_soc_dapm_for_each_direction(dir) {
+		dapm_update_widget_flags(widgets[dir]);
+		dapm_mark_dirty(widgets[dir], "Route added");
+	}
+
+	if (dapm->card->instantiated && path->connect)
+>>>>>>> b7ba80a49124 (Commit)
 		dapm_path_invalidate(path);
 
 	return 0;
@@ -2942,8 +3068,13 @@ static int snd_soc_dapm_add_route(struct snd_soc_dapm_context *dapm,
 		source = route->source;
 	}
 
+<<<<<<< HEAD
 	wsource	= dapm_wcache_lookup(dapm->wcache_source, source);
 	wsink	= dapm_wcache_lookup(dapm->wcache_sink,   sink);
+=======
+	wsource = dapm_wcache_lookup(&dapm->path_source_cache, source);
+	wsink = dapm_wcache_lookup(&dapm->path_sink_cache, sink);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (wsink && wsource)
 		goto skip_search;
@@ -2987,6 +3118,7 @@ static int snd_soc_dapm_add_route(struct snd_soc_dapm_context *dapm,
 	if (!wsource)
 		wsource = wtsource;
 
+<<<<<<< HEAD
 	ret = -ENODEV;
 	if (!wsource)
 		goto err;
@@ -3008,6 +3140,32 @@ err:
 			!route->control ? "" : route->control,
 			!route->control ? "" : "] -",
 			sink,  !wsink ? "(*)" : "");
+=======
+	if (wsource == NULL) {
+		dev_err(dapm->dev, "ASoC: no source widget found for %s\n",
+			route->source);
+		return -ENODEV;
+	}
+	if (wsink == NULL) {
+		dev_err(dapm->dev, "ASoC: no sink widget found for %s\n",
+			route->sink);
+		return -ENODEV;
+	}
+
+skip_search:
+	dapm_wcache_update(&dapm->path_sink_cache, wsink);
+	dapm_wcache_update(&dapm->path_source_cache, wsource);
+
+	ret = snd_soc_dapm_add_path(dapm, wsource, wsink, route->control,
+		route->connected);
+	if (ret)
+		goto err;
+
+	return 0;
+err:
+	dev_warn(dapm->dev, "ASoC: no dapm match for %s --> %s --> %s\n",
+		 source, route->control, sink);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -3093,8 +3251,18 @@ int snd_soc_dapm_add_routes(struct snd_soc_dapm_context *dapm,
 	mutex_lock_nested(&dapm->card->dapm_mutex, SND_SOC_DAPM_CLASS_RUNTIME);
 	for (i = 0; i < num; i++) {
 		int r = snd_soc_dapm_add_route(dapm, route);
+<<<<<<< HEAD
 		if (r < 0)
 			ret = r;
+=======
+		if (r < 0) {
+			dev_err(dapm->dev, "ASoC: Failed to add route %s -> %s -> %s\n",
+				route->source,
+				route->control ? route->control : "direct",
+				route->sink);
+			ret = r;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		route++;
 	}
 	mutex_unlock(&dapm->card->dapm_mutex);
@@ -3618,7 +3786,11 @@ snd_soc_dapm_new_control_unlocked(struct snd_soc_dapm_context *dapm,
 
 	switch (w->id) {
 	case snd_soc_dapm_regulator_supply:
+<<<<<<< HEAD
 		w->regulator = devm_regulator_get(dapm->dev, widget->name);
+=======
+		w->regulator = devm_regulator_get(dapm->dev, w->name);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(w->regulator)) {
 			ret = PTR_ERR(w->regulator);
 			goto request_failed;
@@ -4130,26 +4302,49 @@ snd_soc_dapm_new_dai(struct snd_soc_card *card,
 	struct snd_soc_pcm_runtime *rtd = asoc_substream_to_rtd(substream);
 	struct snd_soc_dapm_widget template;
 	struct snd_soc_dapm_widget *w;
+<<<<<<< HEAD
 	const struct snd_kcontrol_new *kcontrol_news;
 	int num_kcontrols;
 	const char **w_param_text;
 	unsigned long private_value = 0;
 	char *link_name;
 	int ret = -ENOMEM;
+=======
+	const char **w_param_text;
+	unsigned long private_value = 0;
+	char *link_name;
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	link_name = devm_kasprintf(card->dev, GFP_KERNEL, "%s-%s",
 				   rtd->dai_link->name, id);
 	if (!link_name)
+<<<<<<< HEAD
 		goto name_fail;
 
 	/* allocate memory for control, only in case of multiple configs */
 	w_param_text	= NULL;
 	kcontrol_news	= NULL;
 	num_kcontrols	= 0;
+=======
+		return ERR_PTR(-ENOMEM);
+
+	memset(&template, 0, sizeof(template));
+	template.reg = SND_SOC_NOPM;
+	template.id = snd_soc_dapm_dai_link;
+	template.name = link_name;
+	template.event = snd_soc_dai_link_event;
+	template.event_flags = SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU |
+		SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD;
+	template.kcontrol_news = NULL;
+
+	/* allocate memory for control, only in case of multiple configs */
+>>>>>>> b7ba80a49124 (Commit)
 	if (rtd->dai_link->num_params > 1) {
 		w_param_text = devm_kcalloc(card->dev,
 					    rtd->dai_link->num_params,
 					    sizeof(char *), GFP_KERNEL);
+<<<<<<< HEAD
 		if (!w_param_text)
 			goto param_fail;
 
@@ -4172,11 +4367,37 @@ snd_soc_dapm_new_dai(struct snd_soc_card *card,
 	template.kcontrol_news	= kcontrol_news;
 	template.num_kcontrols	= num_kcontrols;
 
+=======
+		if (!w_param_text) {
+			ret = -ENOMEM;
+			goto param_fail;
+		}
+
+		template.num_kcontrols = 1;
+		template.kcontrol_news =
+					snd_soc_dapm_alloc_kcontrol(card,
+						link_name,
+						rtd->dai_link->params,
+						rtd->dai_link->num_params,
+						w_param_text, &private_value);
+		if (!template.kcontrol_news) {
+			ret = -ENOMEM;
+			goto param_fail;
+		}
+	} else {
+		w_param_text = NULL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	dev_dbg(card->dev, "ASoC: adding %s widget\n", link_name);
 
 	w = snd_soc_dapm_new_control_unlocked(&card->dapm, &template);
 	if (IS_ERR(w)) {
 		ret = PTR_ERR(w);
+<<<<<<< HEAD
+=======
+		dev_err(rtd->dev, "ASoC: Failed to create %s widget: %d\n",
+			link_name, ret);
+>>>>>>> b7ba80a49124 (Commit)
 		goto outfree_kcontrol_news;
 	}
 
@@ -4190,9 +4411,12 @@ outfree_kcontrol_news:
 				   rtd->dai_link->num_params, w_param_text);
 param_fail:
 	devm_kfree(card->dev, link_name);
+<<<<<<< HEAD
 name_fail:
 	dev_err(rtd->dev, "ASoC: Failed to create %s-%s widget: %d\n",
 		rtd->dai_link->name, id, ret);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ERR_PTR(ret);
 }
 
@@ -4227,7 +4451,11 @@ int snd_soc_dapm_new_dai_widgets(struct snd_soc_dapm_context *dapm,
 			return PTR_ERR(w);
 
 		w->priv = dai;
+<<<<<<< HEAD
 		snd_soc_dai_set_widget_playback(dai, w);
+=======
+		dai->playback_widget = w;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (dai->driver->capture.stream_name) {
@@ -4243,7 +4471,11 @@ int snd_soc_dapm_new_dai_widgets(struct snd_soc_dapm_context *dapm,
 			return PTR_ERR(w);
 
 		w->priv = dai;
+<<<<<<< HEAD
 		snd_soc_dai_set_widget_capture(dai, w);
+=======
+		dai->capture_widget = w;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -4337,16 +4569,28 @@ static void dapm_connect_dai_pair(struct snd_soc_card *card,
 	int stream;
 
 	if (dai_link->params) {
+<<<<<<< HEAD
 		playback_cpu	= snd_soc_dai_get_widget_capture(cpu_dai);
 		capture_cpu	= snd_soc_dai_get_widget_playback(cpu_dai);
 	} else {
 		playback_cpu	= snd_soc_dai_get_widget_playback(cpu_dai);
 		capture_cpu	= snd_soc_dai_get_widget_capture(cpu_dai);
+=======
+		playback_cpu = cpu_dai->capture_widget;
+		capture_cpu = cpu_dai->playback_widget;
+	} else {
+		playback_cpu = cpu_dai->playback_widget;
+		capture_cpu = cpu_dai->capture_widget;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* connect BE DAI playback if widgets are valid */
 	stream = SNDRV_PCM_STREAM_PLAYBACK;
+<<<<<<< HEAD
 	codec = snd_soc_dai_get_widget(codec_dai, stream);
+=======
+	codec = codec_dai->playback_widget;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (playback_cpu && codec) {
 		if (dai_link->params && !rtd->c2c_widget[stream]) {
@@ -4365,7 +4609,11 @@ static void dapm_connect_dai_pair(struct snd_soc_card *card,
 capture:
 	/* connect BE DAI capture if widgets are valid */
 	stream = SNDRV_PCM_STREAM_CAPTURE;
+<<<<<<< HEAD
 	codec = snd_soc_dai_get_widget(codec_dai, stream);
+=======
+	codec = codec_dai->capture_widget;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (codec && capture_cpu) {
 		if (dai_link->params && !rtd->c2c_widget[stream]) {

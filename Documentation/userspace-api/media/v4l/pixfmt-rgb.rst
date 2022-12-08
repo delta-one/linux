@@ -763,6 +763,7 @@ nomenclature that instead use the order of components as seen in a 24- or
     \normalsize
 
 
+<<<<<<< HEAD
 10 Bits Per Component
 =====================
 
@@ -957,6 +958,8 @@ number of bits for each component.
     \endgroup
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Deprecated RGB Formats
 ======================
 

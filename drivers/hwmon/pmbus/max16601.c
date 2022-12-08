@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
+<<<<<<< HEAD
  * Hardware monitoring driver for Maxim MAX16508, MAX16600, MAX16601,
  * and MAX16602.
+=======
+ * Hardware monitoring driver for Maxim MAX16508, MAX16601 and MAX16602.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Implementation notes:
  *
@@ -32,7 +36,11 @@
 
 #include "pmbus.h"
 
+<<<<<<< HEAD
 enum chips { max16508, max16600, max16601, max16602 };
+=======
+enum chips { max16508, max16601, max16602 };
+>>>>>>> b7ba80a49124 (Commit)
 
 #define REG_DEFAULT_NUM_POP	0xc4
 #define REG_SETPT_DVID		0xd1
@@ -203,7 +211,11 @@ static int max16601_identify(struct i2c_client *client,
 	else
 		info->vrm_version[0] = vr12;
 
+<<<<<<< HEAD
 	if (data->id != max16600 && data->id != max16601 && data->id != max16602)
+=======
+	if (data->id != max16601 && data->id != max16602)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	reg = i2c_smbus_read_byte_data(client, REG_DEFAULT_NUM_POP);
@@ -264,7 +276,10 @@ static void max16601_remove(void *_data)
 
 static const struct i2c_device_id max16601_id[] = {
 	{"max16508", max16508},
+<<<<<<< HEAD
 	{"max16600", max16600},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{"max16601", max16601},
 	{"max16602", max16602},
 	{}
@@ -283,6 +298,7 @@ static int max16601_get_id(struct i2c_client *client)
 		return -ENODEV;
 
 	/*
+<<<<<<< HEAD
 	 * PMBUS_IC_DEVICE_ID is expected to return MAX1660[012]y.xx" or
 	 * "MAX16500y.xx".cdxxcccccccccc
 	 */
@@ -290,6 +306,13 @@ static int max16601_get_id(struct i2c_client *client)
 		id = max16508;
 	} else if (!strncmp(buf, "MAX16600", 8)) {
 		id = max16600;
+=======
+	 * PMBUS_IC_DEVICE_ID is expected to return "MAX16601y.xx" or
+	 * MAX16602y.xx or "MAX16500y.xx".cdxxcccccccccc
+	 */
+	if (!strncmp(buf, "MAX16500", 8)) {
+		id = max16508;
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (!strncmp(buf, "MAX16601", 8)) {
 		id = max16601;
 	} else if (!strncmp(buf, "MAX16602", 8)) {

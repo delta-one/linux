@@ -214,6 +214,11 @@ static int ls_recover(struct dlm_ls *ls, struct dlm_recover *rv)
 
 	dlm_clear_members_gone(ls);
 
+<<<<<<< HEAD
+=======
+	dlm_adjust_timeouts(ls);
+
+>>>>>>> b7ba80a49124 (Commit)
 	dlm_callback_resume(ls);
 
 	error = enable_locking(ls, rv->seq);

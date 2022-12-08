@@ -41,7 +41,10 @@ description: |+
 
 allOf:
   - $ref: panel-common.yaml#
+<<<<<<< HEAD
   - $ref: /schemas/spi/spi-peripheral-props.yaml#
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

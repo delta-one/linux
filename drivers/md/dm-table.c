@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2001 Sistina Software (UK) Limited.
  * Copyright (C) 2004-2008 Red Hat, Inc. All rights reserved.
@@ -73,7 +76,11 @@ static sector_t high(struct dm_table *t, unsigned int l, unsigned int n)
 		n = get_child(n, CHILDREN_PER_NODE - 1);
 
 	if (n >= t->counts[l])
+<<<<<<< HEAD
 		return (sector_t) -1;
+=======
+		return (sector_t) - 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return get_node(t, l, n)[KEYS_PER_NODE - 1];
 }
@@ -127,7 +134,11 @@ static int alloc_targets(struct dm_table *t, unsigned int num)
 }
 
 int dm_table_create(struct dm_table **result, fmode_t mode,
+<<<<<<< HEAD
 		    unsigned int num_targets, struct mapped_device *md)
+=======
+		    unsigned num_targets, struct mapped_device *md)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dm_table *t = kzalloc(sizeof(*t), GFP_KERNEL);
 
@@ -212,7 +223,11 @@ static struct dm_dev_internal *find_device(struct list_head *l, dev_t dev)
 {
 	struct dm_dev_internal *dd;
 
+<<<<<<< HEAD
 	list_for_each_entry(dd, l, list)
+=======
+	list_for_each_entry (dd, l, list)
+>>>>>>> b7ba80a49124 (Commit)
 		if (dd->dm_dev->bdev->bd_dev == dev)
 			return dd;
 
@@ -235,7 +250,12 @@ static int device_area_is_invalid(struct dm_target *ti, struct dm_dev *dev,
 		return 0;
 
 	if ((start >= dev_size) || (start + len > dev_size)) {
+<<<<<<< HEAD
 		DMERR("%s: %pg too small for target: start=%llu, len=%llu, dev_size=%llu",
+=======
+		DMERR("%s: %pg too small for target: "
+		      "start=%llu, len=%llu, dev_size=%llu",
+>>>>>>> b7ba80a49124 (Commit)
 		      dm_device_name(ti->table->md), bdev,
 		      (unsigned long long)start,
 		      (unsigned long long)len,
@@ -280,7 +300,12 @@ static int device_area_is_invalid(struct dm_target *ti, struct dm_dev *dev,
 		return 0;
 
 	if (start & (logical_block_size_sectors - 1)) {
+<<<<<<< HEAD
 		DMERR("%s: start=%llu not aligned to h/w logical block size %u of %pg",
+=======
+		DMERR("%s: start=%llu not aligned to h/w "
+		      "logical block size %u of %pg",
+>>>>>>> b7ba80a49124 (Commit)
 		      dm_device_name(ti->table->md),
 		      (unsigned long long)start,
 		      limits->logical_block_size, bdev);
@@ -288,7 +313,12 @@ static int device_area_is_invalid(struct dm_target *ti, struct dm_dev *dev,
 	}
 
 	if (len & (logical_block_size_sectors - 1)) {
+<<<<<<< HEAD
 		DMERR("%s: len=%llu not aligned to h/w logical block size %u of %pg",
+=======
+		DMERR("%s: len=%llu not aligned to h/w "
+		      "logical block size %u of %pg",
+>>>>>>> b7ba80a49124 (Commit)
 		      dm_device_name(ti->table->md),
 		      (unsigned long long)len,
 		      limits->logical_block_size, bdev);
@@ -362,8 +392,11 @@ int dm_get_device(struct dm_target *ti, const char *path, fmode_t mode,
 		if (!dev)
 			return -ENODEV;
 	}
+<<<<<<< HEAD
 	if (dev == disk_devt(t->md->disk))
 		return -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	dd = find_device(&t->devices, dev);
 	if (!dd) {
@@ -371,8 +404,12 @@ int dm_get_device(struct dm_target *ti, const char *path, fmode_t mode,
 		if (!dd)
 			return -ENOMEM;
 
+<<<<<<< HEAD
 		r = dm_get_table_device(t->md, dev, mode, &dd->dm_dev);
 		if (r) {
+=======
+		if ((r = dm_get_table_device(t->md, dev, mode, &dd->dm_dev))) {
+>>>>>>> b7ba80a49124 (Commit)
 			kfree(dd);
 			return r;
 		}
@@ -471,10 +508,17 @@ static int adjoin(struct dm_table *t, struct dm_target *ti)
  * On the other hand, dm-switch needs to process bulk data using messages and
  * excessive use of GFP_NOIO could cause trouble.
  */
+<<<<<<< HEAD
 static char **realloc_argv(unsigned int *size, char **old_argv)
 {
 	char **argv;
 	unsigned int new_size;
+=======
+static char **realloc_argv(unsigned *size, char **old_argv)
+{
+	char **argv;
+	unsigned new_size;
+>>>>>>> b7ba80a49124 (Commit)
 	gfp_t gfp;
 
 	if (*size) {
@@ -500,7 +544,11 @@ static char **realloc_argv(unsigned int *size, char **old_argv)
 int dm_split_args(int *argc, char ***argvp, char *input)
 {
 	char *start, *end = input, *out, **argv = NULL;
+<<<<<<< HEAD
 	unsigned int array_size = 0;
+=======
+	unsigned array_size = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	*argc = 0;
 
@@ -632,12 +680,18 @@ static int validate_hardware_logical_block_alignment(struct dm_table *t,
 }
 
 int dm_table_add_target(struct dm_table *t, const char *type,
+<<<<<<< HEAD
 			sector_t start, sector_t len, char *params)
+=======
+			sector_t start, sector_t len, char *params,
+			char **ti_error)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r = -EINVAL, argc;
 	char **argv;
 	struct dm_target *ti;
 
+<<<<<<< HEAD
 	if (t->singleton) {
 		DMERR("%s: target type %s must appear alone in table",
 		      dm_device_name(t->md), t->targets->type->name);
@@ -652,36 +706,74 @@ int dm_table_add_target(struct dm_table *t, const char *type,
 	if (!len) {
 		DMERR("%s: zero-length target", dm_device_name(t->md));
 		return -EINVAL;
+=======
+	BUG_ON(t->num_targets >= t->num_allocated);
+	ti = t->targets + t->num_targets;
+	memset(ti, 0, sizeof(*ti));
+
+	if (t->singleton) {
+		ti->error = "singleton target must appear alone in table";
+		r = -EINVAL;
+		goto bad0;
+	}
+
+	if (!len) {
+		ti->error = "zero-length target";
+		r = -EINVAL;
+		goto bad0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ti->type = dm_get_target_type(type);
 	if (!ti->type) {
+<<<<<<< HEAD
 		DMERR("%s: %s: unknown target type", dm_device_name(t->md), type);
 		return -EINVAL;
+=======
+		ti->error = "unknown target type";
+		r = -EINVAL;
+		goto bad0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (dm_target_needs_singleton(ti->type)) {
 		if (t->num_targets) {
 			ti->error = "singleton target type must appear alone in table";
+<<<<<<< HEAD
 			goto bad;
+=======
+			goto bad1;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		t->singleton = true;
 	}
 
 	if (dm_target_always_writeable(ti->type) && !(t->mode & FMODE_WRITE)) {
 		ti->error = "target type may not be included in a read-only table";
+<<<<<<< HEAD
 		goto bad;
+=======
+		goto bad1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (t->immutable_target_type) {
 		if (t->immutable_target_type != ti->type) {
 			ti->error = "immutable target type cannot be mixed with other target types";
+<<<<<<< HEAD
 			goto bad;
+=======
+			goto bad1;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	} else if (dm_target_is_immutable(ti->type)) {
 		if (t->num_targets) {
 			ti->error = "immutable target type cannot be mixed with other target types";
+<<<<<<< HEAD
 			goto bad;
+=======
+			goto bad1;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		t->immutable_target_type = ti->type;
 	}
@@ -699,19 +791,31 @@ int dm_table_add_target(struct dm_table *t, const char *type,
 	 */
 	if (!adjoin(t, ti)) {
 		ti->error = "Gap in table";
+<<<<<<< HEAD
 		goto bad;
+=======
+		goto bad1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	r = dm_split_args(&argc, &argv, params);
 	if (r) {
 		ti->error = "couldn't split parameters";
+<<<<<<< HEAD
 		goto bad;
+=======
+		goto bad1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	r = ti->type->ctr(ti, argc, argv);
 	kfree(argv);
 	if (r)
+<<<<<<< HEAD
 		goto bad;
+=======
+		goto bad1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	t->highs[t->num_targets++] = ti->begin + ti->len - 1;
 
@@ -724,17 +828,32 @@ int dm_table_add_target(struct dm_table *t, const char *type,
 
 	return 0;
 
+<<<<<<< HEAD
  bad:
 	DMERR("%s: %s: %s (%pe)", dm_device_name(t->md), type, ti->error, ERR_PTR(r));
 	dm_put_target_type(ti->type);
+=======
+bad1:
+	dm_put_target_type(ti->type);
+bad0:
+	DMERR("%s: %s: %s (%pe)", dm_device_name(t->md), type, ti->error, ERR_PTR(r));
+	if (ti_error)
+		*ti_error = ti->error;
+>>>>>>> b7ba80a49124 (Commit)
 	return r;
 }
 
 /*
  * Target argument parsing helpers.
  */
+<<<<<<< HEAD
 static int validate_next_arg(const struct dm_arg *arg, struct dm_arg_set *arg_set,
 			     unsigned int *value, char **error, unsigned int grouped)
+=======
+static int validate_next_arg(const struct dm_arg *arg,
+			     struct dm_arg_set *arg_set,
+			     unsigned *value, char **error, unsigned grouped)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const char *arg_str = dm_shift_arg(arg_set);
 	char dummy;
@@ -752,14 +871,22 @@ static int validate_next_arg(const struct dm_arg *arg, struct dm_arg_set *arg_se
 }
 
 int dm_read_arg(const struct dm_arg *arg, struct dm_arg_set *arg_set,
+<<<<<<< HEAD
 		unsigned int *value, char **error)
+=======
+		unsigned *value, char **error)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return validate_next_arg(arg, arg_set, value, error, 0);
 }
 EXPORT_SYMBOL(dm_read_arg);
 
 int dm_read_arg_group(const struct dm_arg *arg, struct dm_arg_set *arg_set,
+<<<<<<< HEAD
 		      unsigned int *value, char **error)
+=======
+		      unsigned *value, char **error)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return validate_next_arg(arg, arg_set, value, error, 1);
 }
@@ -780,7 +907,11 @@ const char *dm_shift_arg(struct dm_arg_set *as)
 }
 EXPORT_SYMBOL(dm_shift_arg);
 
+<<<<<<< HEAD
 void dm_consume_args(struct dm_arg_set *as, unsigned int num_args)
+=======
+void dm_consume_args(struct dm_arg_set *as, unsigned num_args)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	BUG_ON(as->argc < num_args);
 	as->argc -= num_args;
@@ -856,7 +987,11 @@ static int device_is_rq_stackable(struct dm_target *ti, struct dm_dev *dev,
 
 static int dm_table_determine_type(struct dm_table *t)
 {
+<<<<<<< HEAD
 	unsigned int bio_based = 0, request_based = 0, hybrid = 0;
+=======
+	unsigned bio_based = 0, request_based = 0, hybrid = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_target *ti;
 	struct list_head *devices = dm_table_get_devices(t);
 	enum dm_queue_mode live_md_type = dm_get_md_type(t->md);
@@ -881,7 +1016,12 @@ static int dm_table_determine_type(struct dm_table *t)
 			bio_based = 1;
 
 		if (bio_based && request_based) {
+<<<<<<< HEAD
 			DMERR("Inconsistent table: different target types can't be mixed up");
+=======
+			DMERR("Inconsistent table: different target types"
+			      " can't be mixed up");
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 	}
@@ -1184,7 +1324,12 @@ static int dm_table_register_integrity(struct dm_table *t)
 	 * profile the new profile should not conflict.
 	 */
 	if (blk_integrity_compare(dm_disk(md), template_disk) < 0) {
+<<<<<<< HEAD
 		DMERR("%s: conflict with existing integrity profile: %s profile mismatch",
+=======
+		DMERR("%s: conflict with existing integrity profile: "
+		      "%s profile mismatch",
+>>>>>>> b7ba80a49124 (Commit)
 		      dm_device_name(t->md),
 		      template_disk->disk_name);
 		return 1;
@@ -1202,12 +1347,30 @@ struct dm_crypto_profile {
 	struct mapped_device *md;
 };
 
+<<<<<<< HEAD
 static int dm_keyslot_evict_callback(struct dm_target *ti, struct dm_dev *dev,
 				     sector_t start, sector_t len, void *data)
 {
 	const struct blk_crypto_key *key = data;
 
 	blk_crypto_evict_key(dev->bdev, key);
+=======
+struct dm_keyslot_evict_args {
+	const struct blk_crypto_key *key;
+	int err;
+};
+
+static int dm_keyslot_evict_callback(struct dm_target *ti, struct dm_dev *dev,
+				     sector_t start, sector_t len, void *data)
+{
+	struct dm_keyslot_evict_args *args = data;
+	int err;
+
+	err = blk_crypto_evict_key(bdev_get_queue(dev->bdev), args->key);
+	if (!args->err)
+		args->err = err;
+	/* Always try to evict the key from all devices. */
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1220,6 +1383,10 @@ static int dm_keyslot_evict(struct blk_crypto_profile *profile,
 {
 	struct mapped_device *md =
 		container_of(profile, struct dm_crypto_profile, profile)->md;
+<<<<<<< HEAD
+=======
+	struct dm_keyslot_evict_args args = { key };
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_table *t;
 	int srcu_idx;
 
@@ -1232,12 +1399,20 @@ static int dm_keyslot_evict(struct blk_crypto_profile *profile,
 
 		if (!ti->type->iterate_devices)
 			continue;
+<<<<<<< HEAD
 		ti->type->iterate_devices(ti, dm_keyslot_evict_callback,
 					  (void *)key);
 	}
 
 	dm_put_live_table(md, srcu_idx);
 	return 0;
+=======
+		ti->type->iterate_devices(ti, dm_keyslot_evict_callback, &args);
+	}
+
+	dm_put_live_table(md, srcu_idx);
+	return args.err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int
@@ -1516,7 +1691,11 @@ static bool dm_table_any_dev_attr(struct dm_table *t,
 		if (ti->type->iterate_devices &&
 		    ti->type->iterate_devices(ti, func, data))
 			return true;
+<<<<<<< HEAD
 	}
+=======
+        }
+>>>>>>> b7ba80a49124 (Commit)
 
 	return false;
 }
@@ -1524,7 +1703,11 @@ static bool dm_table_any_dev_attr(struct dm_table *t,
 static int count_device(struct dm_target *ti, struct dm_dev *dev,
 			sector_t start, sector_t len, void *data)
 {
+<<<<<<< HEAD
 	unsigned int *num_devices = data;
+=======
+	unsigned *num_devices = data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	(*num_devices)++;
 
@@ -1554,7 +1737,11 @@ bool dm_table_has_no_data_devices(struct dm_table *t)
 {
 	for (unsigned int i = 0; i < t->num_targets; i++) {
 		struct dm_target *ti = dm_table_get_target(t, i);
+<<<<<<< HEAD
 		unsigned int num_devices = 0;
+=======
+		unsigned num_devices = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!ti->type->iterate_devices)
 			return false;
@@ -1697,7 +1884,12 @@ combine_limits:
 		 * for the table.
 		 */
 		if (blk_stack_limits(limits, &ti_limits, 0) < 0)
+<<<<<<< HEAD
 			DMWARN("%s: adding target device (start sect %llu len %llu) "
+=======
+			DMWARN("%s: adding target device "
+			       "(start sect %llu len %llu) "
+>>>>>>> b7ba80a49124 (Commit)
 			       "caused an alignment inconsistency",
 			       dm_device_name(t->md),
 			       (unsigned long long) ti->begin,
@@ -1844,7 +2036,13 @@ static bool dm_table_supports_write_zeroes(struct dm_table *t)
 static int device_not_nowait_capable(struct dm_target *ti, struct dm_dev *dev,
 				     sector_t start, sector_t len, void *data)
 {
+<<<<<<< HEAD
 	return !bdev_nowait(dev->bdev);
+=======
+	struct request_queue *q = bdev_get_queue(dev->bdev);
+
+	return !blk_queue_nowait(q);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool dm_table_supports_nowait(struct dm_table *t)
@@ -1959,7 +2157,12 @@ int dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
 		blk_queue_flag_set(QUEUE_FLAG_DAX, q);
 		if (dm_table_supports_dax(t, device_not_dax_synchronous_capable))
 			set_dax_synchronous(t->md->dax_dev);
+<<<<<<< HEAD
 	} else
+=======
+	}
+	else
+>>>>>>> b7ba80a49124 (Commit)
 		blk_queue_flag_clear(QUEUE_FLAG_DAX, q);
 
 	if (dm_table_any_dev_attr(t, device_dax_write_cache_enabled, NULL))

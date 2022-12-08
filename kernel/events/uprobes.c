@@ -22,6 +22,10 @@
 #include <linux/swap.h>		/* folio_free_swap */
 #include <linux/ptrace.h>	/* user_enable_single_step */
 #include <linux/kdebug.h>	/* notifier mechanism */
+<<<<<<< HEAD
+=======
+#include "../../mm/internal.h"	/* munlock_vma_page */
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/percpu-rwsem.h>
 #include <linux/task_work.h>
 #include <linux/shmem_fs.h>
@@ -160,7 +164,11 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
 	int err;
 	struct mmu_notifier_range range;
 
+<<<<<<< HEAD
 	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, addr,
+=======
+	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, mm, addr,
+>>>>>>> b7ba80a49124 (Commit)
 				addr + PAGE_SIZE);
 
 	if (new_page) {
@@ -1351,7 +1359,11 @@ static int delayed_ref_ctr_inc(struct vm_area_struct *vma)
 }
 
 /*
+<<<<<<< HEAD
  * Called from mmap_region/vma_merge with mm->mmap_lock acquired.
+=======
+ * Called from mmap_region/vma_adjust with mm->mmap_lock acquired.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Currently we ignore all errors and always return 0, the callers
  * can't handle the failure anyway.

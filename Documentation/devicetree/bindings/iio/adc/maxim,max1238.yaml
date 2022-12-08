@@ -10,7 +10,11 @@ maintainers:
   - Jonathan Cameron <jic23@kernel.org>
 
 description: |
+<<<<<<< HEAD
   Family of simple ADCs with i2c interface and internal references.
+=======
+  Family of simple ADCs with i2c inteface and internal references.
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

@@ -15,7 +15,11 @@ EXPORT_SYMBOL_GPL(ras_userspace_consumers);
 
 static int trace_show(struct seq_file *m, void *v)
 {
+<<<<<<< HEAD
 	return 0;
+=======
+	return atomic_read(&trace_count);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int trace_open(struct inode *inode, struct file *file)

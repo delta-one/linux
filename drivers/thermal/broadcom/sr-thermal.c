@@ -32,7 +32,11 @@ struct sr_thermal {
 
 static int sr_get_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	struct sr_tmon *tmon = thermal_zone_device_priv(tz);
+=======
+	struct sr_tmon *tmon = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sr_thermal *sr_thermal = tmon->priv;
 
 	*temp = readl(sr_thermal->regs + SR_TMON_TEMP_BASE(tmon->tmon_id));

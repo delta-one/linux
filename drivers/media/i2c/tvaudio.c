@@ -1934,9 +1934,14 @@ static const struct v4l2_subdev_ops tvaudio_ops = {
 
 /* i2c registration                                                       */
 
+<<<<<<< HEAD
 static int tvaudio_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int tvaudio_probe(struct i2c_client *client, const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct CHIPSTATE *chip;
 	struct CHIPDESC  *desc;
 	struct v4l2_subdev *sd;
@@ -2095,7 +2100,11 @@ static struct i2c_driver tvaudio_driver = {
 	.driver = {
 		.name	= "tvaudio",
 	},
+<<<<<<< HEAD
 	.probe_new	= tvaudio_probe,
+=======
+	.probe		= tvaudio_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= tvaudio_remove,
 	.id_table	= tvaudio_id,
 };

@@ -310,7 +310,11 @@ static void pn532_uart_remove(struct serdev_device *serdev)
 	pn53x_unregister_nfc(pn532->priv);
 	serdev_device_close(serdev);
 	pn53x_common_clean(pn532->priv);
+<<<<<<< HEAD
 	timer_shutdown_sync(&pn532->cmd_timeout);
+=======
+	del_timer_sync(&pn532->cmd_timeout);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree_skb(pn532->recv_skb);
 	kfree(pn532);
 }

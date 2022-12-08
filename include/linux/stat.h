@@ -52,6 +52,7 @@ struct kstat {
 	u64		mnt_id;
 	u32		dio_mem_align;
 	u32		dio_offset_align;
+<<<<<<< HEAD
 	u64		change_cookie;
 };
 
@@ -63,4 +64,8 @@ struct kstat {
 /* file attribute values */
 #define STATX_ATTR_CHANGE_MONOTONIC	0x8000000000000000ULL /* version monotonically increases */
 
+=======
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif

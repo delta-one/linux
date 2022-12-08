@@ -34,7 +34,10 @@
 #include <linux/module.h>
 #include <linux/pci.h>
 #include <linux/platform_data/x86/nvidia-wmi-ec-backlight.h>
+<<<<<<< HEAD
 #include <linux/pnp.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/types.h>
 #include <linux/workqueue.h>
 #include <acpi/video.h>
@@ -50,10 +53,13 @@ static void acpi_video_parse_cmdline(void)
 		acpi_backlight_cmdline = acpi_backlight_video;
 	if (!strcmp("native", acpi_video_backlight_string))
 		acpi_backlight_cmdline = acpi_backlight_native;
+<<<<<<< HEAD
 	if (!strcmp("nvidia_wmi_ec", acpi_video_backlight_string))
 		acpi_backlight_cmdline = acpi_backlight_nvidia_wmi_ec;
 	if (!strcmp("apple_gmux", acpi_video_backlight_string))
 		acpi_backlight_cmdline = acpi_backlight_apple_gmux;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!strcmp("none", acpi_video_backlight_string))
 		acpi_backlight_cmdline = acpi_backlight_none;
 }
@@ -137,10 +143,13 @@ static int video_detect_force_none(const struct dmi_system_id *d)
 }
 
 static const struct dmi_system_id video_detect_dmi_table[] = {
+<<<<<<< HEAD
 	/*
 	 * Models which should use the vendor backlight interface,
 	 * because of broken ACPI video backlight control.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{
 	 /* https://bugzilla.redhat.com/show_bug.cgi?id=1128309 */
 	 .callback = video_detect_force_vendor,
@@ -175,7 +184,10 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 		},
 	},
 	{
+<<<<<<< HEAD
 	 /* https://bugs.launchpad.net/bugs/1000146 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 .callback = video_detect_force_vendor,
 	 /* Asus X101CH */
 	 .matches = {
@@ -200,7 +212,10 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 		},
 	},
 	{
+<<<<<<< HEAD
 	 /* https://bugs.launchpad.net/bugs/1000146 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 .callback = video_detect_force_vendor,
 	 /* Asus 1015CX */
 	 .matches = {
@@ -210,6 +225,17 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 	},
 	{
 	 .callback = video_detect_force_vendor,
+<<<<<<< HEAD
+=======
+	 /* GIGABYTE GB-BXBT-2807 */
+	 .matches = {
+		DMI_MATCH(DMI_SYS_VENDOR, "GIGABYTE"),
+		DMI_MATCH(DMI_PRODUCT_NAME, "GB-BXBT-2807"),
+		},
+	},
+	{
+	 .callback = video_detect_force_vendor,
+>>>>>>> b7ba80a49124 (Commit)
 	 /* Samsung N150/N210/N220 */
 	 .matches = {
 		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
@@ -237,6 +263,17 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 	},
 	{
 	 .callback = video_detect_force_vendor,
+<<<<<<< HEAD
+=======
+	 /* Sony VPCEH3U1E */
+	 .matches = {
+		DMI_MATCH(DMI_SYS_VENDOR, "Sony Corporation"),
+		DMI_MATCH(DMI_PRODUCT_NAME, "VPCEH3U1E"),
+		},
+	},
+	{
+	 .callback = video_detect_force_vendor,
+>>>>>>> b7ba80a49124 (Commit)
 	 /* Xiaomi Mi Pad 2 */
 	 .matches = {
 			DMI_MATCH(DMI_SYS_VENDOR, "Xiaomi Inc"),
@@ -245,6 +282,7 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 	},
 
 	/*
+<<<<<<< HEAD
 	 * Models which should use the vendor backlight interface,
 	 * because of broken native backlight control.
 	 */
@@ -258,6 +296,8 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 	},
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * Toshiba models with Transflective display, these need to use
 	 * the toshiba_acpi vendor driver for proper Transflective handling.
 	 */
@@ -408,8 +448,13 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 		DMI_MATCH(DMI_PRODUCT_NAME, "530U4E/540U4E"),
 		},
 	},
+<<<<<<< HEAD
 	{
 	 /* https://bugs.launchpad.net/bugs/1894667 */
+=======
+	/* https://bugs.launchpad.net/bugs/1894667 */
+	{
+>>>>>>> b7ba80a49124 (Commit)
 	 .callback = video_detect_force_video,
 	 /* HP 635 Notebook */
 	 .matches = {
@@ -434,7 +479,11 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 	 /* Lenovo Ideapad Z570 */
 	 .matches = {
 		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+<<<<<<< HEAD
 		DMI_MATCH(DMI_PRODUCT_VERSION, "Ideapad Z570"),
+=======
+		DMI_MATCH(DMI_PRODUCT_NAME, "102434U"),
+>>>>>>> b7ba80a49124 (Commit)
 		},
 	},
 	{
@@ -497,6 +546,7 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 	},
 	{
 	 .callback = video_detect_force_native,
+<<<<<<< HEAD
 	 /* Acer Aspire 3830TG */
 	 .matches = {
 		DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
@@ -513,6 +563,8 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 	},
 	{
 	 .callback = video_detect_force_native,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 /* Acer Aspire 5738z */
 	 .matches = {
 		DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
@@ -600,6 +652,7 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 	},
 	{
 	 .callback = video_detect_force_native,
+<<<<<<< HEAD
 	 /* Asus U46E */
 	 .matches = {
 		DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK Computer Inc."),
@@ -608,6 +661,8 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 	},
 	{
 	 .callback = video_detect_force_native,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 /* Asus UX303UB */
 	 .matches = {
 		DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
@@ -616,6 +671,7 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 	},
 	{
 	 .callback = video_detect_force_native,
+<<<<<<< HEAD
 	 /* HP EliteBook 8460p */
 	 .matches = {
 		DMI_MATCH(DMI_SYS_VENDOR, "Hewlett-Packard"),
@@ -633,6 +689,8 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 	},
 	{
 	 .callback = video_detect_force_native,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 /* Samsung N150P */
 	 .matches = {
 		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
@@ -658,6 +716,7 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 		DMI_MATCH(DMI_BOARD_NAME, "N250P"),
 		},
 	},
+<<<<<<< HEAD
 	{
 	 /* https://bugzilla.kernel.org/show_bug.cgi?id=202401 */
 	 .callback = video_detect_force_native,
@@ -675,6 +734,8 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 		DMI_MATCH(DMI_PRODUCT_NAME, "VPCY11S1E"),
 		},
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * These Toshibas have a broken acpi-video interface for brightness
@@ -712,6 +773,7 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 	},
 
 	/*
+<<<<<<< HEAD
 	 * Models which have nvidia-ec-wmi support, but should not use it.
 	 * Note this indicates a likely firmware bug on these models and should
 	 * be revisited if/when Linux gets support for dynamic mux mode.
@@ -733,6 +795,8 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 	},
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * Desktops which falsely report a backlight and which our heuristics
 	 * for this do not catch.
 	 */
@@ -746,6 +810,7 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 	},
 	{
 	 .callback = video_detect_force_none,
+<<<<<<< HEAD
 	 /* GIGABYTE GB-BXBT-2807 */
 	 .matches = {
 		DMI_MATCH(DMI_SYS_VENDOR, "GIGABYTE"),
@@ -754,6 +819,8 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 	},
 	{
 	 .callback = video_detect_force_none,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 /* MSI MS-7721 */
 	 .matches = {
 		DMI_MATCH(DMI_SYS_VENDOR, "MSI"),
@@ -763,6 +830,7 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
 	{ },
 };
 
+<<<<<<< HEAD
 static bool google_cros_ec_present(void)
 {
 	return acpi_dev_found("GOOG0004") || acpi_dev_found("GOOG000C");
@@ -778,6 +846,8 @@ static bool prefer_native_over_acpi_video(void)
 	return acpi_osi_is_win8() || google_cros_ec_present();
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Determine which type of backlight interface to use on this system,
  * First check cmdline, then dmi quirks, then do autodetect.
@@ -786,7 +856,10 @@ static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
 {
 	static DEFINE_MUTEX(init_mutex);
 	static bool nvidia_wmi_ec_present;
+<<<<<<< HEAD
 	static bool apple_gmux_present;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	static bool native_available;
 	static bool init_done;
 	static long video_caps;
@@ -800,7 +873,10 @@ static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
 				    ACPI_UINT32_MAX, find_video, NULL,
 				    &video_caps, NULL);
 		nvidia_wmi_ec_present = nvidia_wmi_ec_supported();
+<<<<<<< HEAD
 		apple_gmux_present = apple_gmux_detect(NULL, NULL);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		init_done = true;
 	}
 	if (native)
@@ -822,6 +898,7 @@ static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
 	if (nvidia_wmi_ec_present)
 		return acpi_backlight_nvidia_wmi_ec;
 
+<<<<<<< HEAD
 	if (apple_gmux_present)
 		return acpi_backlight_apple_gmux;
 
@@ -835,6 +912,29 @@ static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
 		return acpi_backlight_native;
 
 	/* No ACPI video/native (old hw), use vendor specific fw methods. */
+=======
+	if (apple_gmux_present())
+		return acpi_backlight_apple_gmux;
+
+	/* On systems with ACPI video use either native or ACPI video. */
+	if (video_caps & ACPI_VIDEO_BACKLIGHT) {
+		/*
+		 * Windows 8 and newer no longer use the ACPI video interface,
+		 * so it often does not work. If the ACPI tables are written
+		 * for win8 and native brightness ctl is available, use that.
+		 *
+		 * The native check deliberately is inside the if acpi-video
+		 * block on older devices without acpi-video support native
+		 * is usually not the best choice.
+		 */
+		if (acpi_osi_is_win8() && native_available)
+			return acpi_backlight_native;
+		else
+			return acpi_backlight_video;
+	}
+
+	/* No ACPI video (old hw), use vendor specific fw methods. */
+>>>>>>> b7ba80a49124 (Commit)
 	return acpi_backlight_vendor;
 }
 

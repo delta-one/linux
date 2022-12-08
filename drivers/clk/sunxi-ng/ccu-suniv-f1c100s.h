@@ -29,6 +29,10 @@
 
 /* All bus gates, DRAM gates and mod clocks are exported */
 
+<<<<<<< HEAD
 #define CLK_NUMBER		(CLK_IR + 1)
+=======
+#define CLK_NUMBER		(CLK_AVS + 1)
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _CCU_SUNIV_F1C100S_H_ */

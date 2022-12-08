@@ -62,7 +62,11 @@ patternProperties:
         description: phandle of the CPU DAI
 
     patternProperties:
+<<<<<<< HEAD
       "^codec(-[0-9]+)?$":
+=======
+      "^codec-[0-9]+$":
+>>>>>>> b7ba80a49124 (Commit)
         type: object
         additionalProperties: false
         description: |-

@@ -13,7 +13,11 @@
 /delete-node/ &usb_c1;
 
 / {
+<<<<<<< HEAD
 	ppvar_lcd: ppvar-lcd-regulator {
+=======
+	ppvar_lcd: ppvar-lcd {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "ppvar_lcd";
 
@@ -25,7 +29,11 @@
 		vin-supply = <&pp5000_a>;
 	};
 
+<<<<<<< HEAD
 	v1p8_disp: v1p8-disp-regulator {
+=======
+	v1p8_disp: v1p8-disp {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "v1p8_disp";
 
@@ -147,7 +155,17 @@ pp3300_disp_on: &pp3300_dx_edp {
  */
 
 tp_en: &en_pp3300_dx_edp {
+<<<<<<< HEAD
 	pins = "gpio67";
+=======
+	pinmux {
+		pins = "gpio67";
+	};
+
+	pinconf {
+		pins = "gpio67";
+	};
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* PINCTRL - board-specific pinctrl */
@@ -277,6 +295,7 @@ tp_en: &en_pp3300_dx_edp {
 			  "DP_HOT_PLUG_DET",
 			  "EC_IN_RW_ODL";
 
+<<<<<<< HEAD
 	lcd_rst: lcd-rst-state {
 		pins = "gpio87";
 		function = "gpio";
@@ -296,5 +315,44 @@ tp_en: &en_pp3300_dx_edp {
 		function = "gpio";
 		drive-strength = <2>;
 		bias-disable;
+=======
+	lcd_rst: lcd-rst {
+		pinmux {
+			pins = "gpio87";
+			function = "gpio";
+		};
+
+		pinconf {
+			pins = "gpio87";
+			drive-strength = <2>;
+			bias-disable;
+		};
+	};
+
+	ppvar_lcd_en: ppvar-lcd-en {
+		pinmux {
+			pins = "gpio88";
+			function = "gpio";
+		};
+
+		pinconf {
+			pins = "gpio88";
+			drive-strength = <2>;
+			bias-disable;
+		};
+	};
+
+	pp1800_disp_on: pp1800-disp-on {
+		pinmux {
+			pins = "gpio86";
+			function = "gpio";
+		};
+
+		pinconf {
+			pins = "gpio86";
+			drive-strength = <2>;
+			bias-disable;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };

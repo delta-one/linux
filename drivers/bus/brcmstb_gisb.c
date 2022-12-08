@@ -401,10 +401,18 @@ static int __init brcmstb_gisb_arb_probe(struct platform_device *pdev)
 	struct device_node *dn = pdev->dev.of_node;
 	struct brcmstb_gisb_arb_device *gdev;
 	const struct of_device_id *of_id;
+<<<<<<< HEAD
+=======
+	struct resource *r;
+>>>>>>> b7ba80a49124 (Commit)
 	int err, timeout_irq, tea_irq, bp_irq;
 	unsigned int num_masters, j = 0;
 	int i, first, last;
 
+<<<<<<< HEAD
+=======
+	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	timeout_irq = platform_get_irq(pdev, 0);
 	tea_irq = platform_get_irq(pdev, 1);
 	bp_irq = platform_get_irq(pdev, 2);
@@ -416,7 +424,11 @@ static int __init brcmstb_gisb_arb_probe(struct platform_device *pdev)
 	mutex_init(&gdev->lock);
 	INIT_LIST_HEAD(&gdev->next);
 
+<<<<<<< HEAD
 	gdev->base = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+=======
+	gdev->base = devm_ioremap_resource(&pdev->dev, r);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(gdev->base))
 		return PTR_ERR(gdev->base);
 

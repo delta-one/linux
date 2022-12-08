@@ -620,12 +620,16 @@ static int g762_of_clock_enable(struct i2c_client *client)
 	data = i2c_get_clientdata(client);
 	data->clk = clk;
 
+<<<<<<< HEAD
 	ret = devm_add_action(&client->dev, g762_of_clock_disable, data);
 	if (ret) {
 		dev_err(&client->dev, "failed to add disable clock action\n");
 		goto clk_unprep;
 	}
 
+=======
+	devm_add_action(&client->dev, g762_of_clock_disable, data);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
  clk_unprep:

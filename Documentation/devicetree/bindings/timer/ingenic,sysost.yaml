@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/timer/ingenic,sysost.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: SYSOST in Ingenic XBurst family SoCs
+=======
+title: Bindings for SYSOST in Ingenic XBurst family SoCs
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>

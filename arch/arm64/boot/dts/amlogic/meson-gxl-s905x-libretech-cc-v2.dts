@@ -305,6 +305,10 @@
 };
 
 &usb2_phy0 {
+<<<<<<< HEAD
+=======
+	pinctrl-names = "default";
+>>>>>>> b7ba80a49124 (Commit)
 	phy-supply = <&vcc5v>;
 };
 

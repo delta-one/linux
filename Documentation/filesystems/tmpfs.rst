@@ -13,6 +13,7 @@ everything stored therein is lost.
 
 tmpfs puts everything into the kernel internal caches and grows and
 shrinks to accommodate the files it contains and is able to swap
+<<<<<<< HEAD
 unneeded pages out to swap space, if swap was enabled for the tmpfs
 mount. tmpfs also supports THP.
 
@@ -36,6 +37,19 @@ block layer at all.
 
 Since tmpfs lives completely in the page cache and optionally on swap,
 all tmpfs pages will be shown as "Shmem" in /proc/meminfo and "Shared" in
+=======
+unneeded pages out to swap space. It has maximum size limits which can
+be adjusted on the fly via 'mount -o remount ...'
+
+If you compare it to ramfs (which was the template to create tmpfs)
+you gain swapping and limit checking. Another similar thing is the RAM
+disk (/dev/ram*), which simulates a fixed size hard disk in physical
+RAM, where you have to create an ordinary filesystem on top. Ramdisks
+cannot swap and you do not have the possibility to resize them.
+
+Since tmpfs lives completely in the page cache and on swap, all tmpfs
+pages will be shown as "Shmem" in /proc/meminfo and "Shared" in
+>>>>>>> b7ba80a49124 (Commit)
 free(1). Notice that these counters also include shared memory
 (shmem, see ipcs(1)). The most reliable way to get the count is
 using df(1) and du(1).
@@ -84,8 +98,11 @@ nr_inodes  The maximum number of inodes for this instance. The default
            is half of the number of your physical RAM pages, or (on a
            machine with highmem) the number of lowmem RAM pages,
            whichever is the lower.
+<<<<<<< HEAD
 noswap     Disables swap. Remounts must respect the original settings.
            By default swap is enabled.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 =========  ============================================================
 
 These parameters accept a suffix k, m or g for kilo, mega and giga and
@@ -99,6 +116,7 @@ mount with such options, since it allows any user with write access to
 use up all the memory on the machine; but enhances the scalability of
 that instance in a system with many CPUs making intensive use of it.
 
+<<<<<<< HEAD
 tmpfs also supports Transparent Huge Pages which requires a kernel
 configured with CONFIG_TRANSPARENT_HUGEPAGE and with huge supported for
 your system (has_transparent_hugepage(), which is architecture specific).
@@ -129,6 +147,8 @@ for emergency or testing purposes. The values you can set for shmem_enabled are:
 -2  force: enables huge on shm_mnt and all mounts, w/o needing
     option, for testing
 ==  ============================================================
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 tmpfs has a mount option to set the NUMA memory allocation policy for
 all files in that instance (if CONFIG_NUMA is enabled) - which can be

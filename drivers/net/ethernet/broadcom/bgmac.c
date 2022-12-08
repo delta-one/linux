@@ -890,13 +890,21 @@ static void bgmac_chip_reset_idm_config(struct bgmac *bgmac)
 
 		if (iost & BGMAC_BCMA_IOST_ATTACHED) {
 			flags = BGMAC_BCMA_IOCTL_SW_CLKEN;
+<<<<<<< HEAD
 			if (bgmac->in_init || !bgmac->has_robosw)
+=======
+			if (!bgmac->has_robosw)
+>>>>>>> b7ba80a49124 (Commit)
 				flags |= BGMAC_BCMA_IOCTL_SW_RESET;
 		}
 		bgmac_clk_enable(bgmac, flags);
 	}
 
+<<<<<<< HEAD
 	if (iost & BGMAC_BCMA_IOST_ATTACHED && (bgmac->in_init || !bgmac->has_robosw))
+=======
+	if (iost & BGMAC_BCMA_IOST_ATTACHED && !bgmac->has_robosw)
+>>>>>>> b7ba80a49124 (Commit)
 		bgmac_idm_write(bgmac, BCMA_IOCTL,
 				bgmac_idm_read(bgmac, BCMA_IOCTL) &
 				~BGMAC_BCMA_IOCTL_SW_RESET);
@@ -1490,8 +1498,11 @@ int bgmac_enet_probe(struct bgmac *bgmac)
 	struct net_device *net_dev = bgmac->net_dev;
 	int err;
 
+<<<<<<< HEAD
 	bgmac->in_init = true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bgmac_chip_intrs_off(bgmac);
 
 	net_dev->irq = bgmac->irq;
@@ -1529,7 +1540,11 @@ int bgmac_enet_probe(struct bgmac *bgmac)
 	if (bcm47xx_nvram_getenv("et0_no_txint", NULL, 0) == 0)
 		bgmac->int_mask &= ~BGMAC_IS_TX_MASK;
 
+<<<<<<< HEAD
 	netif_napi_add(net_dev, &bgmac->napi, bgmac_poll);
+=======
+	netif_napi_add(net_dev, &bgmac->napi, bgmac_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = bgmac_phy_connect(bgmac);
 	if (err) {
@@ -1544,8 +1559,11 @@ int bgmac_enet_probe(struct bgmac *bgmac)
 	/* Omit FCS from max MTU size */
 	net_dev->max_mtu = BGMAC_RX_MAX_FRAME_SIZE - ETH_FCS_LEN;
 
+<<<<<<< HEAD
 	bgmac->in_init = false;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = register_netdev(bgmac->net_dev);
 	if (err) {
 		dev_err(bgmac->dev, "Cannot register net device\n");
@@ -1572,6 +1590,10 @@ void bgmac_enet_remove(struct bgmac *bgmac)
 	phy_disconnect(bgmac->net_dev->phydev);
 	netif_napi_del(&bgmac->napi);
 	bgmac_dma_free(bgmac);
+<<<<<<< HEAD
+=======
+	free_netdev(bgmac->net_dev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(bgmac_enet_remove);
 

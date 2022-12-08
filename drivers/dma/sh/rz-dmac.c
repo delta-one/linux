@@ -20,7 +20,10 @@
 #include <linux/of_platform.h>
 #include <linux/platform_device.h>
 #include <linux/pm_runtime.h>
+<<<<<<< HEAD
 #include <linux/reset.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/spinlock.h>
 
@@ -93,7 +96,10 @@ struct rz_dmac_chan {
 struct rz_dmac {
 	struct dma_device engine;
 	struct device *dev;
+<<<<<<< HEAD
 	struct reset_control *rstc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem *base;
 	void __iomem *ext_base;
 
@@ -891,11 +897,14 @@ static int rz_dmac_probe(struct platform_device *pdev)
 	/* Initialize the channels. */
 	INIT_LIST_HEAD(&dmac->engine.channels);
 
+<<<<<<< HEAD
 	dmac->rstc = devm_reset_control_array_get_exclusive(&pdev->dev);
 	if (IS_ERR(dmac->rstc))
 		return dev_err_probe(&pdev->dev, PTR_ERR(dmac->rstc),
 				     "failed to get resets\n");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_enable(&pdev->dev);
 	ret = pm_runtime_resume_and_get(&pdev->dev);
 	if (ret < 0) {
@@ -903,10 +912,13 @@ static int rz_dmac_probe(struct platform_device *pdev)
 		goto err_pm_disable;
 	}
 
+<<<<<<< HEAD
 	ret = reset_control_deassert(dmac->rstc);
 	if (ret)
 		goto err_pm_runtime_put;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < dmac->n_channels; i++) {
 		ret = rz_dmac_chan_probe(dmac, &dmac->channels[i], i);
 		if (ret < 0)
@@ -951,7 +963,10 @@ static int rz_dmac_probe(struct platform_device *pdev)
 dma_register_err:
 	of_dma_controller_free(pdev->dev.of_node);
 err:
+<<<<<<< HEAD
 	reset_control_assert(dmac->rstc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	channel_num = i ? i - 1 : 0;
 	for (i = 0; i < channel_num; i++) {
 		struct rz_dmac_chan *channel = &dmac->channels[i];
@@ -962,7 +977,10 @@ err:
 				  channel->lmdesc.base_dma);
 	}
 
+<<<<<<< HEAD
 err_pm_runtime_put:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_put(&pdev->dev);
 err_pm_disable:
 	pm_runtime_disable(&pdev->dev);
@@ -985,7 +1003,10 @@ static int rz_dmac_remove(struct platform_device *pdev)
 	}
 	of_dma_controller_free(pdev->dev.of_node);
 	dma_async_device_unregister(&dmac->engine);
+<<<<<<< HEAD
 	reset_control_assert(dmac->rstc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_put(&pdev->dev);
 	pm_runtime_disable(&pdev->dev);
 

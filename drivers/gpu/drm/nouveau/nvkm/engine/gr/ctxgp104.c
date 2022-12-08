@@ -31,8 +31,11 @@ gp104_grctx = {
 	.bundle_token_limit = 0x900,
 	.pagepool = gp100_grctx_generate_pagepool,
 	.pagepool_size = 0x20000,
+<<<<<<< HEAD
 	.attrib_cb_size = gp102_grctx_generate_attrib_cb_size,
 	.attrib_cb = gp100_grctx_generate_attrib_cb,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.attrib = gp102_grctx_generate_attrib,
 	.attrib_nr_max = 0x4b0,
 	.attrib_nr = 0x320,

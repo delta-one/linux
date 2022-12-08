@@ -45,6 +45,7 @@ KBUILD_CFLAGS	+= $(call cc-option,-mabi=lp64)
 KBUILD_AFLAGS	+= $(call cc-option,-mabi=lp64)
 
 # Avoid generating .eh_frame* sections.
+<<<<<<< HEAD
 ifneq ($(CONFIG_UNWIND_TABLES),y)
 KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables -fno-unwind-tables
 KBUILD_AFLAGS	+= -fno-asynchronous-unwind-tables -fno-unwind-tables
@@ -52,6 +53,10 @@ else
 KBUILD_CFLAGS	+= -fasynchronous-unwind-tables
 KBUILD_AFLAGS	+= -fasynchronous-unwind-tables
 endif
+=======
+KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables -fno-unwind-tables
+KBUILD_AFLAGS	+= -fno-asynchronous-unwind-tables -fno-unwind-tables
+>>>>>>> b7ba80a49124 (Commit)
 
 ifeq ($(CONFIG_STACKPROTECTOR_PER_TASK),y)
 prepare: stack_protector_prepare
@@ -63,6 +68,7 @@ stack_protector_prepare: prepare0
 					include/generated/asm-offsets.h))
 endif
 
+<<<<<<< HEAD
 ifeq ($(CONFIG_ARM64_BTI_KERNEL),y)
   KBUILD_CFLAGS += -mbranch-protection=pac-ret+bti
 else ifeq ($(CONFIG_ARM64_PTR_AUTH_KERNEL),y)
@@ -94,6 +100,46 @@ else ifeq ($(CONFIG_AS_HAS_ARMV8_3), y)
   asm-arch := armv8.3-a
 else ifeq ($(CONFIG_AS_HAS_ARMV8_2), y)
   asm-arch := armv8.2-a
+=======
+ifeq ($(CONFIG_AS_HAS_ARMV8_2), y)
+# make sure to pass the newest target architecture to -march.
+asm-arch := armv8.2-a
+endif
+
+# Ensure that if the compiler supports branch protection we default it
+# off, this will be overridden if we are using branch protection.
+branch-prot-flags-y += $(call cc-option,-mbranch-protection=none)
+
+ifeq ($(CONFIG_ARM64_PTR_AUTH_KERNEL),y)
+branch-prot-flags-$(CONFIG_CC_HAS_SIGN_RETURN_ADDRESS) := -msign-return-address=all
+# We enable additional protection for leaf functions as there is some
+# narrow potential for ROP protection benefits and no substantial
+# performance impact has been observed.
+ifeq ($(CONFIG_ARM64_BTI_KERNEL),y)
+branch-prot-flags-$(CONFIG_CC_HAS_BRANCH_PROT_PAC_RET_BTI) := -mbranch-protection=pac-ret+leaf+bti
+else
+branch-prot-flags-$(CONFIG_CC_HAS_BRANCH_PROT_PAC_RET) := -mbranch-protection=pac-ret+leaf
+endif
+# -march=armv8.3-a enables the non-nops instructions for PAC, to avoid the
+# compiler to generate them and consequently to break the single image contract
+# we pass it only to the assembler. This option is utilized only in case of non
+# integrated assemblers.
+ifeq ($(CONFIG_AS_HAS_PAC), y)
+asm-arch := armv8.3-a
+endif
+endif
+
+KBUILD_CFLAGS += $(branch-prot-flags-y)
+
+ifeq ($(CONFIG_AS_HAS_ARMV8_4), y)
+# make sure to pass the newest target architecture to -march.
+asm-arch := armv8.4-a
+endif
+
+ifeq ($(CONFIG_AS_HAS_ARMV8_5), y)
+# make sure to pass the newest target architecture to -march.
+asm-arch := armv8.5-a
+>>>>>>> b7ba80a49124 (Commit)
 endif
 
 ifdef asm-arch
@@ -126,10 +172,14 @@ endif
 
 CHECKFLAGS	+= -D__aarch64__
 
+<<<<<<< HEAD
 ifeq ($(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS),y)
   KBUILD_CPPFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY
   CC_FLAGS_FTRACE := -fpatchable-function-entry=4,2
 else ifeq ($(CONFIG_DYNAMIC_FTRACE_WITH_ARGS),y)
+=======
+ifeq ($(CONFIG_DYNAMIC_FTRACE_WITH_REGS),y)
+>>>>>>> b7ba80a49124 (Commit)
   KBUILD_CPPFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY
   CC_FLAGS_FTRACE := -fpatchable-function-entry=2
 endif
@@ -205,12 +255,15 @@ ifdef CONFIG_COMPAT_VDSO
 endif
 endif
 
+<<<<<<< HEAD
 include $(srctree)/scripts/Makefile.defconf
 
 PHONY += virtconfig
 virtconfig:
 	$(call merge_into_defconfig_override,defconfig,virt)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 define archhelp
   echo  '* Image.gz      - Compressed kernel image (arch/$(ARCH)/boot/Image.gz)'
   echo  '  Image         - Uncompressed kernel image (arch/$(ARCH)/boot/Image)'

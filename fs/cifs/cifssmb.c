@@ -15,7 +15,10 @@
  /* want to reuse a stale file handle and only the caller knows the file info */
 
 #include <linux/fs.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kernel.h>
 #include <linux/vfs.h>
 #include <linux/slab.h>
@@ -25,7 +28,10 @@
 #include <linux/task_io_accounting_ops.h>
 #include <linux/uaccess.h>
 #include "cifspdu.h"
+<<<<<<< HEAD
 #include "cifsfs.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "cifsglob.h"
 #include "cifsacl.h"
 #include "cifsproto.h"
@@ -72,6 +78,10 @@ cifs_reconnect_tcon(struct cifs_tcon *tcon, int smb_command)
 	struct cifs_ses *ses;
 	struct TCP_Server_Info *server;
 	struct nls_table *nls_codepage;
+<<<<<<< HEAD
+=======
+	int retries;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * SMBs NegProt, SessSetup, uLogoff do not have tcon yet so check for
@@ -101,9 +111,51 @@ cifs_reconnect_tcon(struct cifs_tcon *tcon, int smb_command)
 	}
 	spin_unlock(&tcon->tc_lock);
 
+<<<<<<< HEAD
 	rc = cifs_wait_for_server_reconnect(server, tcon->retry);
 	if (rc)
 		return rc;
+=======
+	retries = server->nr_targets;
+
+	/*
+	 * Give demultiplex thread up to 10 seconds to each target available for
+	 * reconnect -- should be greater than cifs socket timeout which is 7
+	 * seconds.
+	 */
+	while (server->tcpStatus == CifsNeedReconnect) {
+		rc = wait_event_interruptible_timeout(server->response_q,
+						      (server->tcpStatus != CifsNeedReconnect),
+						      10 * HZ);
+		if (rc < 0) {
+			cifs_dbg(FYI, "%s: aborting reconnect due to a received signal by the process\n",
+				 __func__);
+			return -ERESTARTSYS;
+		}
+
+		/* are we still trying to reconnect? */
+		spin_lock(&server->srv_lock);
+		if (server->tcpStatus != CifsNeedReconnect) {
+			spin_unlock(&server->srv_lock);
+			break;
+		}
+		spin_unlock(&server->srv_lock);
+
+		if (retries && --retries)
+			continue;
+
+		/*
+		 * on "soft" mounts we wait once. Hard mounts keep
+		 * retrying until process is killed or server comes
+		 * back on-line
+		 */
+		if (!tcon->retry) {
+			cifs_dbg(FYI, "gave up waiting on reconnect in smb_init\n");
+			return -EHOSTDOWN;
+		}
+		retries = server->nr_targets;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock(&ses->chan_lock);
 	if (!cifs_chan_needs_reconnect(ses, server) && !tcon->need_reconnect) {
@@ -430,7 +482,11 @@ CIFSSMBNegotiate(const unsigned int xid,
 	for (i = 0; i < CIFS_NUM_PROT; i++) {
 		size_t len = strlen(protocols[i].name) + 1;
 
+<<<<<<< HEAD
 		memcpy(&pSMB->DialectsArray[count], protocols[i].name, len);
+=======
+		memcpy(pSMB->DialectsArray+count, protocols[i].name, len);
+>>>>>>> b7ba80a49124 (Commit)
 		count += len;
 	}
 	inc_rfc1001_len(pSMB, count);
@@ -1259,8 +1315,16 @@ cifs_readv_callback(struct mid_q_entry *mid)
 	struct TCP_Server_Info *server = tcon->ses->server;
 	struct smb_rqst rqst = { .rq_iov = rdata->iov,
 				 .rq_nvec = 2,
+<<<<<<< HEAD
 				 .rq_iter_size = iov_iter_count(&rdata->iter),
 				 .rq_iter = rdata->iter };
+=======
+				 .rq_pages = rdata->pages,
+				 .rq_offset = rdata->page_offset,
+				 .rq_npages = rdata->nr_pages,
+				 .rq_pagesz = rdata->pagesz,
+				 .rq_tailsz = rdata->tailsz };
+>>>>>>> b7ba80a49124 (Commit)
 	struct cifs_credits credits = { .value = 1, .instance = 0 };
 
 	cifs_dbg(FYI, "%s: mid=%llu state=%d result=%d bytes=%u\n",
@@ -1699,8 +1763,16 @@ cifs_async_writev(struct cifs_writedata *wdata,
 
 	rqst.rq_iov = iov;
 	rqst.rq_nvec = 2;
+<<<<<<< HEAD
 	rqst.rq_iter = wdata->iter;
 	rqst.rq_iter_size = iov_iter_count(&wdata->iter);
+=======
+	rqst.rq_pages = wdata->pages;
+	rqst.rq_offset = wdata->page_offset;
+	rqst.rq_npages = wdata->nr_pages;
+	rqst.rq_pagesz = wdata->pagesz;
+	rqst.rq_tailsz = wdata->tailsz;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cifs_dbg(FYI, "async write at %llu %u bytes\n",
 		 wdata->offset, wdata->bytes);
@@ -2264,7 +2336,11 @@ int CIFSSMBRenameOpenFile(const unsigned int xid, struct cifs_tcon *pTcon,
 					remap);
 	}
 	rename_info->target_name_len = cpu_to_le32(2 * len_of_str);
+<<<<<<< HEAD
 	count = sizeof(struct set_file_rename) + (2 * len_of_str);
+=======
+	count = 12 /* sizeof(struct set_file_rename) */ + (2 * len_of_str);
+>>>>>>> b7ba80a49124 (Commit)
 	byte_count += count;
 	pSMB->DataCount = cpu_to_le16(count);
 	pSMB->TotalDataCount = pSMB->DataCount;
@@ -2873,6 +2949,7 @@ CIFSSMB_set_compression(const unsigned int xid, struct cifs_tcon *tcon,
 
 #ifdef CONFIG_CIFS_POSIX
 
+<<<<<<< HEAD
 #ifdef CONFIG_FS_POSIX_ACL
 /**
  * cifs_init_posix_acl - convert ACL from cifs to POSIX ACL format
@@ -2924,6 +3001,34 @@ static int cifs_to_posix_acl(struct posix_acl **acl, char *src,
 	struct cifs_posix_acl *cifs_acl = (struct cifs_posix_acl *)src;
 	struct posix_acl *kacl = NULL;
 	struct posix_acl_entry *pa, *pe;
+=======
+/*Convert an Access Control Entry from wire format to local POSIX xattr format*/
+static void cifs_convert_ace(struct posix_acl_xattr_entry *ace,
+			     struct cifs_posix_ace *cifs_ace)
+{
+	/* u8 cifs fields do not need le conversion */
+	ace->e_perm = cpu_to_le16(cifs_ace->cifs_e_perm);
+	ace->e_tag  = cpu_to_le16(cifs_ace->cifs_e_tag);
+	ace->e_id   = cpu_to_le32(le64_to_cpu(cifs_ace->cifs_uid));
+/*
+	cifs_dbg(FYI, "perm %d tag %d id %d\n",
+		 ace->e_perm, ace->e_tag, ace->e_id);
+*/
+
+	return;
+}
+
+/* Convert ACL from CIFS POSIX wire format to local Linux POSIX ACL xattr */
+static int cifs_copy_posix_acl(char *trgt, char *src, const int buflen,
+			       const int acl_type, const int size_of_data_area)
+{
+	int size =  0;
+	int i;
+	__u16 count;
+	struct cifs_posix_ace *pACE;
+	struct cifs_posix_acl *cifs_acl = (struct cifs_posix_acl *)src;
+	struct posix_acl_xattr_header *local_acl = (void *)trgt;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (le16_to_cpu(cifs_acl->version) != CIFS_ACL_VERSION)
 		return -EOPNOTSUPP;
@@ -2943,7 +3048,11 @@ static int cifs_to_posix_acl(struct posix_acl **acl, char *src,
 		count = le16_to_cpu(cifs_acl->access_entry_count);
 		size = sizeof(struct cifs_posix_acl);
 		size += sizeof(struct cifs_posix_ace) * count;
+<<<<<<< HEAD
 		/* skip past access ACEs to get to default ACEs */
+=======
+/* skip past access ACEs to get to default ACEs */
+>>>>>>> b7ba80a49124 (Commit)
 		pACE = &cifs_acl->ace_array[count];
 		count = le16_to_cpu(cifs_acl->default_entry_count);
 		size += sizeof(struct cifs_posix_ace) * count;
@@ -2955,6 +3064,7 @@ static int cifs_to_posix_acl(struct posix_acl **acl, char *src,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	/* Allocate number of POSIX ACLs to store in VFS format. */
 	kacl = posix_acl_alloc(count, GFP_NOFS);
 	if (!kacl)
@@ -3024,6 +3134,64 @@ static __u16 posix_acl_to_cifs(char *parm_data, const struct posix_acl *acl,
 	 * version in struct posix_acl from the VFS. For now there's really
 	 * only one that all filesystems know how to deal with.
 	 */
+=======
+	size = posix_acl_xattr_size(count);
+	if ((buflen == 0) || (local_acl == NULL)) {
+		/* used to query ACL EA size */
+	} else if (size > buflen) {
+		return -ERANGE;
+	} else /* buffer big enough */ {
+		struct posix_acl_xattr_entry *ace = (void *)(local_acl + 1);
+
+		local_acl->a_version = cpu_to_le32(POSIX_ACL_XATTR_VERSION);
+		for (i = 0; i < count ; i++) {
+			cifs_convert_ace(&ace[i], pACE);
+			pACE++;
+		}
+	}
+	return size;
+}
+
+static void convert_ace_to_cifs_ace(struct cifs_posix_ace *cifs_ace,
+				     const struct posix_acl_xattr_entry *local_ace)
+{
+	cifs_ace->cifs_e_perm = le16_to_cpu(local_ace->e_perm);
+	cifs_ace->cifs_e_tag =  le16_to_cpu(local_ace->e_tag);
+	/* BB is there a better way to handle the large uid? */
+	if (local_ace->e_id == cpu_to_le32(-1)) {
+	/* Probably no need to le convert -1 on any arch but can not hurt */
+		cifs_ace->cifs_uid = cpu_to_le64(-1);
+	} else
+		cifs_ace->cifs_uid = cpu_to_le64(le32_to_cpu(local_ace->e_id));
+/*
+	cifs_dbg(FYI, "perm %d tag %d id %d\n",
+		 ace->e_perm, ace->e_tag, ace->e_id);
+*/
+}
+
+/* Convert ACL from local Linux POSIX xattr to CIFS POSIX ACL wire format */
+static __u16 ACL_to_cifs_posix(char *parm_data, const char *pACL,
+			       const int buflen, const int acl_type)
+{
+	__u16 rc = 0;
+	struct cifs_posix_acl *cifs_acl = (struct cifs_posix_acl *)parm_data;
+	struct posix_acl_xattr_header *local_acl = (void *)pACL;
+	struct posix_acl_xattr_entry *ace = (void *)(local_acl + 1);
+	int count;
+	int i;
+
+	if ((buflen == 0) || (pACL == NULL) || (cifs_acl == NULL))
+		return 0;
+
+	count = posix_acl_xattr_count((size_t)buflen);
+	cifs_dbg(FYI, "setting acl with %d entries from buf of length %d and version of %d\n",
+		 count, buflen, le32_to_cpu(local_acl->a_version));
+	if (le32_to_cpu(local_acl->a_version) != 2) {
+		cifs_dbg(FYI, "unknown POSIX ACL version %d\n",
+			 le32_to_cpu(local_acl->a_version));
+		return 0;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	cifs_acl->version = cpu_to_le16(1);
 	if (acl_type == ACL_TYPE_ACCESS) {
 		cifs_acl->access_entry_count = cpu_to_le16(count);
@@ -3035,9 +3203,14 @@ static __u16 posix_acl_to_cifs(char *parm_data, const struct posix_acl *acl,
 		cifs_dbg(FYI, "unknown ACL type %d\n", acl_type);
 		return 0;
 	}
+<<<<<<< HEAD
 	FOREACH_ACL_ENTRY(pa, acl, pe) {
 		cifs_init_ace(&cifs_acl->ace_array[i++], pa);
 	}
+=======
+	for (i = 0; i < count; i++)
+		convert_ace_to_cifs_ace(&cifs_acl->ace_array[i], &ace[i]);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc == 0) {
 		rc = (__u16)(count * sizeof(struct cifs_posix_ace));
 		rc += sizeof(struct cifs_posix_acl);
@@ -3046,10 +3219,18 @@ static __u16 posix_acl_to_cifs(char *parm_data, const struct posix_acl *acl,
 	return rc;
 }
 
+<<<<<<< HEAD
 int cifs_do_get_acl(const unsigned int xid, struct cifs_tcon *tcon,
 		    const unsigned char *searchName, struct posix_acl **acl,
 		    const int acl_type, const struct nls_table *nls_codepage,
 		    int remap)
+=======
+int
+CIFSSMBGetPosixACL(const unsigned int xid, struct cifs_tcon *tcon,
+		   const unsigned char *searchName,
+		   char *acl_inf, const int buflen, const int acl_type,
+		   const struct nls_table *nls_codepage, int remap)
+>>>>>>> b7ba80a49124 (Commit)
 {
 /* SMB_QUERY_POSIX_ACL */
 	TRANSACTION2_QPI_REQ *pSMB = NULL;
@@ -3121,6 +3302,7 @@ queryAclRetry:
 		else {
 			__u16 data_offset = le16_to_cpu(pSMBr->t2.DataOffset);
 			__u16 count = le16_to_cpu(pSMBr->t2.DataCount);
+<<<<<<< HEAD
 			rc = cifs_to_posix_acl(acl,
 				(char *)&pSMBr->hdr.Protocol+data_offset,
 				acl_type, count);
@@ -3132,15 +3314,32 @@ queryAclRetry:
 	 * allocated @acl in cifs_to_posix_acl() we are guaranteed to return
 	 * here and don't leak POSIX ACLs.
 	 */
+=======
+			rc = cifs_copy_posix_acl(acl_inf,
+				(char *)&pSMBr->hdr.Protocol+data_offset,
+				buflen, acl_type, count);
+		}
+	}
+	cifs_buf_release(pSMB);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc == -EAGAIN)
 		goto queryAclRetry;
 	return rc;
 }
 
+<<<<<<< HEAD
 int cifs_do_set_acl(const unsigned int xid, struct cifs_tcon *tcon,
 		    const unsigned char *fileName, const struct posix_acl *acl,
 		    const int acl_type, const struct nls_table *nls_codepage,
 		    int remap)
+=======
+int
+CIFSSMBSetPosixACL(const unsigned int xid, struct cifs_tcon *tcon,
+		   const unsigned char *fileName,
+		   const char *local_acl, const int buflen,
+		   const int acl_type,
+		   const struct nls_table *nls_codepage, int remap)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct smb_com_transaction2_spi_req *pSMB = NULL;
 	struct smb_com_transaction2_spi_rsp *pSMBr = NULL;
@@ -3181,7 +3380,11 @@ setAclRetry:
 	pSMB->ParameterOffset = cpu_to_le16(param_offset);
 
 	/* convert to on the wire format for POSIX ACL */
+<<<<<<< HEAD
 	data_count = posix_acl_to_cifs(parm_data, acl, acl_type);
+=======
+	data_count = ACL_to_cifs_posix(parm_data, local_acl, buflen, acl_type);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (data_count == 0) {
 		rc = -EOPNOTSUPP;
@@ -3211,6 +3414,7 @@ setACLerrorExit:
 		goto setAclRetry;
 	return rc;
 }
+<<<<<<< HEAD
 #else
 int cifs_do_get_acl(const unsigned int xid, struct cifs_tcon *tcon,
 		    const unsigned char *searchName, struct posix_acl **acl,
@@ -3228,6 +3432,8 @@ int cifs_do_set_acl(const unsigned int xid, struct cifs_tcon *tcon,
 	return -EOPNOTSUPP;
 }
 #endif /* CONFIG_FS_POSIX_ACL */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int
 CIFSGetExtAttr(const unsigned int xid, struct cifs_tcon *tcon,
@@ -5331,6 +5537,7 @@ CIFSSMBSetPathInfoFB(const unsigned int xid, struct cifs_tcon *tcon,
 	struct cifs_fid fid;
 	int rc;
 
+<<<<<<< HEAD
 	oparms = (struct cifs_open_parms) {
 		.tcon = tcon,
 		.cifs_sb = cifs_sb,
@@ -5340,6 +5547,16 @@ CIFSSMBSetPathInfoFB(const unsigned int xid, struct cifs_tcon *tcon,
 		.path = fileName,
 		.fid = &fid,
 	};
+=======
+	oparms.tcon = tcon;
+	oparms.cifs_sb = cifs_sb;
+	oparms.desired_access = GENERIC_WRITE;
+	oparms.create_options = cifs_create_options(cifs_sb, 0);
+	oparms.disposition = FILE_OPEN;
+	oparms.path = fileName;
+	oparms.fid = &fid;
+	oparms.reconnect = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = CIFS_open(xid, &oparms, &oplock, NULL);
 	if (rc)
@@ -5746,7 +5963,11 @@ QAllEAsRetry:
 
 	/* account for ea list len */
 	list_len -= 4;
+<<<<<<< HEAD
 	temp_fea = &ea_response_data->list;
+=======
+	temp_fea = ea_response_data->list;
+>>>>>>> b7ba80a49124 (Commit)
 	temp_ptr = (char *)temp_fea;
 	while (list_len > 0) {
 		unsigned int name_len;
@@ -5861,7 +6082,11 @@ SetEARetry:
 	else
 		name_len = strnlen(ea_name, 255);
 
+<<<<<<< HEAD
 	count = sizeof(*parm_data) + 1 + ea_value_len + name_len;
+=======
+	count = sizeof(*parm_data) + ea_value_len + name_len;
+>>>>>>> b7ba80a49124 (Commit)
 	pSMB->MaxParameterCount = cpu_to_le16(2);
 	/* BB find max SMB PDU from sess */
 	pSMB->MaxDataCount = cpu_to_le16(1000);
@@ -5885,6 +6110,7 @@ SetEARetry:
 	byte_count = 3 /* pad */  + params + count;
 	pSMB->DataCount = cpu_to_le16(count);
 	parm_data->list_len = cpu_to_le32(count);
+<<<<<<< HEAD
 	parm_data->list.EA_flags = 0;
 	/* we checked above that name len is less than 255 */
 	parm_data->list.name_len = (__u8)name_len;
@@ -5893,6 +6119,16 @@ SetEARetry:
 		strncpy(parm_data->list.name, ea_name, name_len);
 	parm_data->list.name[name_len] = '\0';
 	parm_data->list.value_len = cpu_to_le16(ea_value_len);
+=======
+	parm_data->list[0].EA_flags = 0;
+	/* we checked above that name len is less than 255 */
+	parm_data->list[0].name_len = (__u8)name_len;
+	/* EA names are always ASCII */
+	if (ea_name)
+		strncpy(parm_data->list[0].name, ea_name, name_len);
+	parm_data->list[0].name[name_len] = 0;
+	parm_data->list[0].value_len = cpu_to_le16(ea_value_len);
+>>>>>>> b7ba80a49124 (Commit)
 	/* caller ensures that ea_value_len is less than 64K but
 	we need to ensure that it fits within the smb */
 
@@ -5900,7 +6136,11 @@ SetEARetry:
 	     negotiated SMB buffer size BB */
 	/* if (ea_value_len > buffer_size - 512 (enough for header)) */
 	if (ea_value_len)
+<<<<<<< HEAD
 		memcpy(parm_data->list.name + name_len + 1,
+=======
+		memcpy(parm_data->list[0].name+name_len+1,
+>>>>>>> b7ba80a49124 (Commit)
 		       ea_value, ea_value_len);
 
 	pSMB->TotalDataCount = pSMB->DataCount;

@@ -38,6 +38,9 @@ gma500_gfx-y += \
 	  psb_irq.o
 
 gma500_gfx-$(CONFIG_ACPI) +=  opregion.o
+<<<<<<< HEAD
 gma500_gfx-$(CONFIG_DRM_FBDEV_EMULATION) +=  fbdev.o
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 obj-$(CONFIG_DRM_GMA500) += gma500_gfx.o

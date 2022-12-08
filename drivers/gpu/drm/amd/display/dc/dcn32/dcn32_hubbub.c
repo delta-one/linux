@@ -41,10 +41,13 @@
 #define FN(reg_name, field_name) \
 	hubbub2->shifts->field_name, hubbub2->masks->field_name
 
+<<<<<<< HEAD
 /**
  * @DCN32_CRB_SEGMENT_SIZE_KB: Maximum Configurable Return Buffer size for
  * DCN32
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DCN32_CRB_SEGMENT_SIZE_KB 64
 
 static void dcn32_init_crb(struct hubbub *hubbub)
@@ -72,6 +75,7 @@ static void dcn32_init_crb(struct hubbub *hubbub)
 	REG_UPDATE(DCHUBBUB_DEBUG_CTRL_0, DET_DEPTH, 0x47F);
 }
 
+<<<<<<< HEAD
 void hubbub32_set_request_limit(struct hubbub *hubbub, int memory_channel_count, int words_per_channel)
 {
 	struct dcn20_hubbub *hubbub2 = TO_DCN20_HUBBUB(hubbub);
@@ -89,6 +93,8 @@ void hubbub32_set_request_limit(struct hubbub *hubbub, int memory_channel_count,
 }
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void dcn32_program_det_size(struct hubbub *hubbub, int hubp_inst, unsigned int det_buffer_size_in_kbyte)
 {
 	struct dcn20_hubbub *hubbub2 = TO_DCN20_HUBBUB(hubbub);
@@ -119,6 +125,7 @@ void dcn32_program_det_size(struct hubbub *hubbub, int hubp_inst, unsigned int d
 	default:
 		break;
 	}
+<<<<<<< HEAD
 	if (hubbub2->det0_size + hubbub2->det1_size + hubbub2->det2_size
 			+ hubbub2->det3_size + hubbub2->compbuf_size_segments > hubbub2->crb_size_segs) {
 		/* This may happen during seamless transition from ODM 2:1 to ODM4:1 */
@@ -126,6 +133,11 @@ void dcn32_program_det_size(struct hubbub *hubbub, int hubp_inst, unsigned int d
 						hubbub2->det0_size, hubbub2->det1_size, hubbub2->det2_size, hubbub2->det3_size,
 						hubbub2->compbuf_size_segments, hubbub2->crb_size_segs);
 	}
+=======
+	/* Should never be hit, if it is we have an erroneous hw config*/
+	ASSERT(hubbub2->det0_size + hubbub2->det1_size + hubbub2->det2_size
+			+ hubbub2->det3_size + hubbub2->compbuf_size_segments <= hubbub2->crb_size_segs);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void dcn32_program_compbuf_size(struct hubbub *hubbub, unsigned int compbuf_size_kb, bool safe_to_increase)
@@ -865,7 +877,11 @@ static void hubbub32_wm_read_state(struct hubbub *hubbub,
 			DCHUBBUB_ARB_ALLOW_SR_EXIT_WATERMARK_A, &s->sr_exit);
 
 	REG_GET(DCHUBBUB_ARB_UCLK_PSTATE_CHANGE_WATERMARK_A,
+<<<<<<< HEAD
 			 DCHUBBUB_ARB_UCLK_PSTATE_CHANGE_WATERMARK_A, &s->dram_clk_change);
+=======
+			 DCHUBBUB_ARB_UCLK_PSTATE_CHANGE_WATERMARK_A, &s->dram_clk_chanage);
+>>>>>>> b7ba80a49124 (Commit)
 
 	REG_GET(DCHUBBUB_ARB_USR_RETRAINING_WATERMARK_A,
 			 DCHUBBUB_ARB_USR_RETRAINING_WATERMARK_A, &s->usr_retrain);
@@ -885,7 +901,11 @@ static void hubbub32_wm_read_state(struct hubbub *hubbub,
 			DCHUBBUB_ARB_ALLOW_SR_EXIT_WATERMARK_B, &s->sr_exit);
 
 	REG_GET(DCHUBBUB_ARB_UCLK_PSTATE_CHANGE_WATERMARK_B,
+<<<<<<< HEAD
 			DCHUBBUB_ARB_UCLK_PSTATE_CHANGE_WATERMARK_B, &s->dram_clk_change);
+=======
+			DCHUBBUB_ARB_UCLK_PSTATE_CHANGE_WATERMARK_B, &s->dram_clk_chanage);
+>>>>>>> b7ba80a49124 (Commit)
 
 	REG_GET(DCHUBBUB_ARB_USR_RETRAINING_WATERMARK_B,
 			 DCHUBBUB_ARB_USR_RETRAINING_WATERMARK_B, &s->usr_retrain);
@@ -905,7 +925,11 @@ static void hubbub32_wm_read_state(struct hubbub *hubbub,
 			DCHUBBUB_ARB_ALLOW_SR_EXIT_WATERMARK_C, &s->sr_exit);
 
 	REG_GET(DCHUBBUB_ARB_UCLK_PSTATE_CHANGE_WATERMARK_C,
+<<<<<<< HEAD
 			DCHUBBUB_ARB_UCLK_PSTATE_CHANGE_WATERMARK_C, &s->dram_clk_change);
+=======
+			DCHUBBUB_ARB_UCLK_PSTATE_CHANGE_WATERMARK_C, &s->dram_clk_chanage);
+>>>>>>> b7ba80a49124 (Commit)
 
 	REG_GET(DCHUBBUB_ARB_USR_RETRAINING_WATERMARK_C,
 			 DCHUBBUB_ARB_USR_RETRAINING_WATERMARK_C, &s->usr_retrain);
@@ -925,7 +949,11 @@ static void hubbub32_wm_read_state(struct hubbub *hubbub,
 			DCHUBBUB_ARB_ALLOW_SR_EXIT_WATERMARK_D, &s->sr_exit);
 
 	REG_GET(DCHUBBUB_ARB_UCLK_PSTATE_CHANGE_WATERMARK_D,
+<<<<<<< HEAD
 			DCHUBBUB_ARB_UCLK_PSTATE_CHANGE_WATERMARK_D, &s->dram_clk_change);
+=======
+			DCHUBBUB_ARB_UCLK_PSTATE_CHANGE_WATERMARK_D, &s->dram_clk_chanage);
+>>>>>>> b7ba80a49124 (Commit)
 
 	REG_GET(DCHUBBUB_ARB_USR_RETRAINING_WATERMARK_D,
 			 DCHUBBUB_ARB_USR_RETRAINING_WATERMARK_D, &s->usr_retrain);
@@ -945,6 +973,7 @@ void hubbub32_force_wm_propagate_to_pipes(struct hubbub *hubbub)
 			DCHUBBUB_ARB_DATA_URGENCY_WATERMARK_A, prog_wm_value);
 }
 
+<<<<<<< HEAD
 void hubbub32_init(struct hubbub *hubbub)
 {
 	struct dcn20_hubbub *hubbub2 = TO_DCN20_HUBBUB(hubbub);
@@ -974,6 +1003,8 @@ void hubbub32_init(struct hubbub *hubbub)
 			DCHUBBUB_ARB_MIN_REQ_OUTSTAND, 512);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct hubbub_funcs hubbub32_funcs = {
 	.update_dchub = hubbub2_update_dchub,
 	.init_dchub_sys_ctx = hubbub3_init_dchub_sys_ctx,
@@ -986,7 +1017,10 @@ static const struct hubbub_funcs hubbub32_funcs = {
 	.program_watermarks = hubbub32_program_watermarks,
 	.allow_self_refresh_control = hubbub1_allow_self_refresh_control,
 	.is_allow_self_refresh_enabled = hubbub1_is_allow_self_refresh_enabled,
+<<<<<<< HEAD
 	.verify_allow_pstate_change_high = hubbub1_verify_allow_pstate_change_high,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.force_wm_propagate_to_pipes = hubbub32_force_wm_propagate_to_pipes,
 	.force_pstate_change_control = hubbub3_force_pstate_change_control,
 	.init_watermarks = hubbub32_init_watermarks,
@@ -995,7 +1029,10 @@ static const struct hubbub_funcs hubbub32_funcs = {
 	.init_crb = dcn32_init_crb,
 	.hubbub_read_state = hubbub2_read_state,
 	.force_usr_retraining_allow = hubbub32_force_usr_retraining_allow,
+<<<<<<< HEAD
 	.set_request_limit = hubbub32_set_request_limit
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void hubbub32_construct(struct dcn20_hubbub *hubbub2,

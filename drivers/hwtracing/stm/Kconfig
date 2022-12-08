@@ -2,6 +2,10 @@
 config STM
 	tristate "System Trace Module devices"
 	select CONFIGFS_FS
+<<<<<<< HEAD
+=======
+	select SRCU
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  A System Trace Module (STM) is a device exporting data in System
 	  Trace Protocol (STP) format as defined by MIPI STP standards.

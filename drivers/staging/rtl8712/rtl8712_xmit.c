@@ -601,7 +601,11 @@ int r8712_xmitframe_complete(struct _adapter *padapter,
 #ifdef CONFIG_R8712_TX_AGGR
 	struct xmit_frame *p2ndxmitframe = NULL;
 #else
+<<<<<<< HEAD
 	int res = _SUCCESS;
+=======
+	int res = _SUCCESS, xcnt = 0;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	phwxmits = pxmitpriv->hwxmits;
@@ -673,6 +677,10 @@ int r8712_xmitframe_complete(struct _adapter *padapter,
 			dump_xframe(padapter, pxmitframe);
 		else
 			r8712_free_xmitframe_ex(pxmitpriv, pxmitframe);
+<<<<<<< HEAD
+=======
+		xcnt++;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	} else { /* pxmitframe == NULL && p2ndxmitframe == NULL */

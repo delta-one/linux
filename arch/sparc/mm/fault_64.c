@@ -424,6 +424,7 @@ good_area:
 
 	fault = handle_mm_fault(vma, address, flags, regs);
 
+<<<<<<< HEAD
 	if (fault_signal_pending(fault, regs)) {
 		if (regs->tstate & TSTATE_PRIV) {
 			insn = get_fault_insn(regs, insn);
@@ -431,6 +432,10 @@ good_area:
 		}
 		goto exit_exception;
 	}
+=======
+	if (fault_signal_pending(fault, regs))
+		goto exit_exception;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* The fault is fully completed (including releasing mmap lock) */
 	if (fault & VM_FAULT_COMPLETED)

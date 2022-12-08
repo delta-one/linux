@@ -281,11 +281,14 @@ static bool check_tick_dependency(atomic_t *dep)
 		return true;
 	}
 
+<<<<<<< HEAD
 	if (val & TICK_DEP_MASK_RCU_EXP) {
 		trace_tick_stop(0, TICK_DEP_MASK_RCU_EXP);
 		return true;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return false;
 }
 
@@ -532,7 +535,11 @@ void __init tick_nohz_full_setup(cpumask_var_t cpumask)
 	tick_nohz_full_running = true;
 }
 
+<<<<<<< HEAD
 bool tick_nohz_cpu_hotpluggable(unsigned int cpu)
+=======
+static int tick_nohz_cpu_down(unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/*
 	 * The tick_do_timer_cpu CPU handles housekeeping duty (unbound
@@ -540,6 +547,7 @@ bool tick_nohz_cpu_hotpluggable(unsigned int cpu)
 	 * CPUs. It must remain online when nohz full is enabled.
 	 */
 	if (tick_nohz_full_running && tick_do_timer_cpu == cpu)
+<<<<<<< HEAD
 		return false;
 	return true;
 }
@@ -547,6 +555,10 @@ bool tick_nohz_cpu_hotpluggable(unsigned int cpu)
 static int tick_nohz_cpu_down(unsigned int cpu)
 {
 	return tick_nohz_cpu_hotpluggable(cpu) ? 0 : -EBUSY;
+=======
+		return -EBUSY;
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void __init tick_nohz_init(void)

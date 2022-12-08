@@ -122,6 +122,7 @@
 	clock-frequency = <100000>;
 	status = "okay";
 
+<<<<<<< HEAD
 	touchscreen@24 {
 		compatible = "cypress,tt21000";
 		reg = <0x24>;
@@ -132,6 +133,9 @@
 		reset-gpios = <&gpio4 18 GPIO_ACTIVE_LOW>;
 		vdd-supply = <&ldo5_reg>;
 	};
+=======
+	/* TODO: CYTTSP5 touch controller at 0x24 */
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* TODO: SY7636 PMIC for E Ink at 0x62 */
 
@@ -321,7 +325,10 @@
 
 &usbotg1 {
 	pinctrl-names = "default";
+<<<<<<< HEAD
 	pinctrl-0 = <&pinctrl_usbotg1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	disable-over-current;
 	srp-disable;
 	hnp-disable;

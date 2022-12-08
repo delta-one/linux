@@ -656,6 +656,7 @@ static inline void list_splice_tail_init(struct list_head *list,
 	     pos = n, n = pos->prev)
 
 /**
+<<<<<<< HEAD
  * list_count_nodes - count nodes in the list
  * @head:	the head for your list.
  */
@@ -671,6 +672,8 @@ static inline size_t list_count_nodes(struct list_head *head)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * list_entry_is_head - test if the entry points to the head of the list
  * @pos:	the type * to cursor
  * @head:	the head for your list.

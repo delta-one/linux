@@ -53,7 +53,10 @@
 #define MT7916_EEPROM_SIZE		4096
 
 #define MT7915_EEPROM_BLOCK_SIZE	16
+<<<<<<< HEAD
 #define MT7915_HW_TOKEN_SIZE		4096
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MT7915_TOKEN_SIZE		8192
 
 #define MT7915_CFEND_RATE_DEFAULT	0x49	/* OFDM 24M */
@@ -69,6 +72,7 @@
 #define MT7915_MIN_TWT_DUR 64
 #define MT7915_MAX_QUEUE		(MT_RXQ_BAND2 + __MT_MCUQ_MAX + 2)
 
+<<<<<<< HEAD
 #define MT7915_WED_RX_TOKEN_SIZE	12288
 
 #define MT7915_CRIT_TEMP_IDX		0
@@ -76,6 +80,8 @@
 #define MT7915_CRIT_TEMP		110
 #define MT7915_MAX_TEMP			120
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mt7915_vif;
 struct mt7915_sta;
 struct mt7915_dfs_pulse;
@@ -122,8 +128,11 @@ struct mt7915_twt_flow {
 	u8 sched:1;
 };
 
+<<<<<<< HEAD
 DECLARE_EWMA(avg_signal, 10, 8)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mt7915_sta {
 	struct mt76_wcid wcid; /* must be first */
 
@@ -133,12 +142,19 @@ struct mt7915_sta {
 	struct list_head rc_list;
 	u32 airtime_ac[8];
 
+<<<<<<< HEAD
 	int ack_signal;
 	struct ewma_avg_signal avg_ack_signal;
 
 	unsigned long changed;
 	unsigned long jiffies;
 	unsigned long ampdu_state;
+=======
+	unsigned long changed;
+	unsigned long jiffies;
+	unsigned long ampdu_state;
+
+>>>>>>> b7ba80a49124 (Commit)
 	struct mt76_connac_sta_key_conf bip;
 
 	struct {
@@ -232,6 +248,7 @@ struct mib_stats {
 	u32 tx_amsdu_cnt;
 };
 
+<<<<<<< HEAD
 /* crash-dump */
 struct mt7915_crash_data {
 	guid_t guid;
@@ -241,6 +258,8 @@ struct mt7915_crash_data {
 	size_t memdump_buf_len;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mt7915_hif {
 	struct list_head list;
 
@@ -264,6 +283,10 @@ struct mt7915_phy {
 
 	u32 rxfilter;
 	u64 omac_mask;
+<<<<<<< HEAD
+=======
+	u8 band_idx;
+>>>>>>> b7ba80a49124 (Commit)
 
 	u16 noise;
 
@@ -321,6 +344,7 @@ struct mt7915_dev {
 
 	struct work_struct init_work;
 	struct work_struct rc_work;
+<<<<<<< HEAD
 	struct work_struct dump_work;
 	struct work_struct reset_work;
 	wait_queue_head_t reset_wait;
@@ -341,6 +365,11 @@ struct mt7915_dev {
 		struct mt7915_crash_data *crash_data;
 	} coredump;
 #endif
+=======
+	struct work_struct reset_work;
+	wait_queue_head_t reset_wait;
+	u32 reset_state;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct list_head sta_rc_list;
 	struct list_head sta_poll_list;
@@ -394,7 +423,10 @@ enum mt7915_rdd_cmd {
 	RDD_DET_MODE,
 	RDD_RADAR_EMULATE,
 	RDD_START_TXQ = 20,
+<<<<<<< HEAD
 	RDD_SET_WF_ANT = 30,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	RDD_CAC_START = 50,
 	RDD_CAC_END,
 	RDD_NORMAL_START,
@@ -480,6 +512,7 @@ s8 mt7915_eeprom_get_power_delta(struct mt7915_dev *dev, int band);
 int mt7915_dma_init(struct mt7915_dev *dev, struct mt7915_phy *phy2);
 void mt7915_dma_prefetch(struct mt7915_dev *dev);
 void mt7915_dma_cleanup(struct mt7915_dev *dev);
+<<<<<<< HEAD
 int mt7915_dma_reset(struct mt7915_dev *dev, bool force);
 int mt7915_txbf_init(struct mt7915_dev *dev);
 void mt7915_init_txpower(struct mt7915_dev *dev,
@@ -488,6 +521,9 @@ void mt7915_reset(struct mt7915_dev *dev);
 int mt7915_run(struct ieee80211_hw *hw);
 int mt7915_mcu_init(struct mt7915_dev *dev);
 int mt7915_mcu_init_firmware(struct mt7915_dev *dev);
+=======
+int mt7915_mcu_init(struct mt7915_dev *dev);
+>>>>>>> b7ba80a49124 (Commit)
 int mt7915_mcu_twt_agrt_update(struct mt7915_dev *dev,
 			       struct mt7915_vif *mvif,
 			       struct mt7915_twt_flow *flow,
@@ -508,8 +544,13 @@ int mt7915_mcu_update_bss_color(struct mt7915_dev *dev, struct ieee80211_vif *vi
 				struct cfg80211_he_bss_color *he_bss_color);
 int mt7915_mcu_add_beacon(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 			  int enable, u32 changed);
+<<<<<<< HEAD
 int mt7915_mcu_add_obss_spr(struct mt7915_phy *phy, struct ieee80211_vif *vif,
 			    struct ieee80211_he_obss_pd *he_obss_pd);
+=======
+int mt7915_mcu_add_obss_spr(struct mt7915_dev *dev, struct ieee80211_vif *vif,
+                            bool enable);
+>>>>>>> b7ba80a49124 (Commit)
 int mt7915_mcu_add_rate_ctrl(struct mt7915_dev *dev, struct ieee80211_vif *vif,
 			     struct ieee80211_sta *sta, bool changed);
 int mt7915_mcu_add_smps(struct mt7915_dev *dev, struct ieee80211_vif *vif,
@@ -533,10 +574,13 @@ int mt7915_mcu_set_ser(struct mt7915_dev *dev, u8 action, u8 set, u8 band);
 int mt7915_mcu_set_sku_en(struct mt7915_phy *phy, bool enable);
 int mt7915_mcu_set_txpower_sku(struct mt7915_phy *phy);
 int mt7915_mcu_get_txpower_sku(struct mt7915_phy *phy, s8 *txpower, int len);
+<<<<<<< HEAD
 int mt7915_mcu_set_txpower_frame_min(struct mt7915_phy *phy, s8 txpower);
 int mt7915_mcu_set_txpower_frame(struct mt7915_phy *phy,
 				 struct ieee80211_vif *vif,
 				 struct ieee80211_sta *sta, s8 txpower);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int mt7915_mcu_set_txbf(struct mt7915_dev *dev, u8 action);
 int mt7915_mcu_set_fcc5_lpn(struct mt7915_dev *dev, int val);
 int mt7915_mcu_set_pulse_th(struct mt7915_dev *dev,
@@ -549,7 +593,10 @@ int mt7915_mcu_apply_tx_dpd(struct mt7915_phy *phy);
 int mt7915_mcu_get_chan_mib_info(struct mt7915_phy *phy, bool chan_switch);
 int mt7915_mcu_get_temperature(struct mt7915_phy *phy);
 int mt7915_mcu_set_thermal_throttling(struct mt7915_phy *phy, u8 state);
+<<<<<<< HEAD
 int mt7915_mcu_set_thermal_protect(struct mt7915_phy *phy);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int mt7915_mcu_get_rx_rate(struct mt7915_phy *phy, struct ieee80211_vif *vif,
 			   struct ieee80211_sta *sta, struct rate_info *rate);
 int mt7915_mcu_rdd_background_enable(struct mt7915_phy *phy,
@@ -592,17 +639,23 @@ static inline void mt7915_irq_disable(struct mt7915_dev *dev, u32 mask)
 		mt76_set_irq_mask(&dev->mt76, MT_INT_MASK_CSR, mask, 0);
 }
 
+<<<<<<< HEAD
 void mt7915_memcpy_fromio(struct mt7915_dev *dev, void *buf, u32 offset,
 			  size_t len);
 
 void mt7915_mac_init(struct mt7915_dev *dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 u32 mt7915_mac_wtbl_lmac_addr(struct mt7915_dev *dev, u16 wcid, u8 dw);
 bool mt7915_mac_wtbl_update(struct mt7915_dev *dev, int idx, u32 mask);
 void mt7915_mac_reset_counters(struct mt7915_phy *phy);
 void mt7915_mac_cca_stats_reset(struct mt7915_phy *phy);
 void mt7915_mac_enable_nf(struct mt7915_dev *dev, bool ext_phy);
+<<<<<<< HEAD
 void mt7915_mac_enable_rtscts(struct mt7915_dev *dev,
 			      struct ieee80211_vif *vif, bool enable);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void mt7915_mac_write_txwi(struct mt76_dev *dev, __le32 *txwi,
 			   struct sk_buff *skb, struct mt76_wcid *wcid, int pid,
 			   struct ieee80211_key_conf *key,
@@ -614,7 +667,10 @@ void mt7915_mac_sta_remove(struct mt76_dev *mdev, struct ieee80211_vif *vif,
 			   struct ieee80211_sta *sta);
 void mt7915_mac_work(struct work_struct *work);
 void mt7915_mac_reset_work(struct work_struct *work);
+<<<<<<< HEAD
 void mt7915_mac_dump_work(struct work_struct *work);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void mt7915_mac_sta_rc_work(struct work_struct *work);
 void mt7915_mac_update_stats(struct mt7915_phy *phy);
 void mt7915_mac_twt_teardown_flow(struct mt7915_dev *dev,
@@ -629,7 +685,11 @@ int mt7915_tx_prepare_skb(struct mt76_dev *mdev, void *txwi_ptr,
 			  struct mt76_tx_info *tx_info);
 void mt7915_tx_token_put(struct mt7915_dev *dev);
 void mt7915_queue_rx_skb(struct mt76_dev *mdev, enum mt76_rxq_id q,
+<<<<<<< HEAD
 			 struct sk_buff *skb, u32 *info);
+=======
+			 struct sk_buff *skb);
+>>>>>>> b7ba80a49124 (Commit)
 bool mt7915_rx_check(struct mt76_dev *mdev, void *data, int len);
 void mt7915_sta_ps(struct mt76_dev *mdev, struct ieee80211_sta *sta, bool ps);
 void mt7915_stats_work(struct work_struct *work);
@@ -640,7 +700,10 @@ void mt7915_set_stream_vht_txbf_caps(struct mt7915_phy *phy);
 void mt7915_update_channel(struct mt76_phy *mphy);
 int mt7915_mcu_muru_debug_set(struct mt7915_dev *dev, bool enable);
 int mt7915_mcu_muru_debug_get(struct mt7915_phy *phy, void *ms);
+<<<<<<< HEAD
 int mt7915_mcu_wed_enable_rx_stats(struct mt7915_dev *dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int mt7915_init_debugfs(struct mt7915_phy *phy);
 void mt7915_debugfs_rx_fw_monitor(struct mt7915_dev *dev, const void *data, int len);
 bool mt7915_debugfs_rx_log(struct mt7915_dev *dev, const void *data, int len);
@@ -648,7 +711,10 @@ bool mt7915_debugfs_rx_log(struct mt7915_dev *dev, const void *data, int len);
 void mt7915_sta_add_debugfs(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 			    struct ieee80211_sta *sta, struct dentry *dir);
 #endif
+<<<<<<< HEAD
 int mt7915_mmio_wed_init(struct mt7915_dev *dev, void *pdev_ptr,
 			 bool pci, int *irq);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

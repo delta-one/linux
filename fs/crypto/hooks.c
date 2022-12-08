@@ -111,6 +111,7 @@ int __fscrypt_prepare_lookup(struct inode *dir, struct dentry *dentry,
 }
 EXPORT_SYMBOL_GPL(__fscrypt_prepare_lookup);
 
+<<<<<<< HEAD
 /**
  * fscrypt_prepare_lookup_partial() - prepare lookup without filename setup
  * @dir: the encrypted directory being searched
@@ -141,6 +142,8 @@ int fscrypt_prepare_lookup_partial(struct inode *dir, struct dentry *dentry)
 }
 EXPORT_SYMBOL_GPL(fscrypt_prepare_lookup_partial);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int __fscrypt_prepare_readdir(struct inode *dir)
 {
 	return fscrypt_get_encryption_info(dir, true);

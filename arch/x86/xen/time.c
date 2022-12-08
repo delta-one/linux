@@ -20,7 +20,10 @@
 #include <asm/pvclock.h>
 #include <asm/xen/hypervisor.h>
 #include <asm/xen/hypercall.h>
+<<<<<<< HEAD
 #include <asm/xen/cpuid.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <xen/events.h>
 #include <xen/features.h>
@@ -61,6 +64,7 @@ static u64 xen_clocksource_get_cycles(struct clocksource *cs)
 	return xen_clocksource_read();
 }
 
+<<<<<<< HEAD
 static noinstr u64 xen_sched_clock(void)
 {
         struct pvclock_vcpu_time_info *src;
@@ -72,6 +76,11 @@ static noinstr u64 xen_sched_clock(void)
 	ret -= xen_sched_clock_offset;
 	preempt_enable_notrace();
 	return ret;
+=======
+static u64 xen_sched_clock(void)
+{
+	return xen_clocksource_read() - xen_sched_clock_offset;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void xen_read_wallclock(struct timespec64 *ts)
@@ -483,6 +492,7 @@ static void xen_setup_vsyscall_time_info(void)
 	xen_clocksource.vdso_clock_mode = VDSO_CLOCKMODE_PVCLOCK;
 }
 
+<<<<<<< HEAD
 /*
  * Check if it is possible to safely use the tsc as a clocksource.  This is
  * only true if the hypervisor notifies the guest that its tsc is invariant,
@@ -507,12 +517,15 @@ static int __init xen_tsc_safe_clocksource(void)
 	return ebx == XEN_CPUID_TSC_MODE_NEVER_EMULATE;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void __init xen_time_init(void)
 {
 	struct pvclock_vcpu_time_info *pvti;
 	int cpu = smp_processor_id();
 	struct timespec64 tp;
 
+<<<<<<< HEAD
 	/*
 	 * As Dom0 is never moved, no penalty on using TSC there.
 	 *
@@ -524,6 +537,11 @@ static void __init xen_time_init(void)
 		xen_clocksource.rating = 275;
 	else if (xen_tsc_safe_clocksource())
 		xen_clocksource.rating = 299;
+=======
+	/* As Dom0 is never moved, no penalty on using TSC there */
+	if (xen_initial_domain())
+		xen_clocksource.rating = 275;
+>>>>>>> b7ba80a49124 (Commit)
 
 	clocksource_register_hz(&xen_clocksource, NSEC_PER_SEC);
 

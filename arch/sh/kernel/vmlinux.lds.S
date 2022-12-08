@@ -4,7 +4,10 @@
  * Written by Niibe Yutaka and Paul Mundt
  */
 OUTPUT_ARCH(sh)
+<<<<<<< HEAD
 #define RUNTIME_DISCARD_EXIT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/thread_info.h>
 #include <asm/cache.h>
 #include <asm/vmlinux.lds.h>
@@ -30,6 +33,10 @@ SECTIONS
 		HEAD_TEXT
 		TEXT_TEXT
 		SCHED_TEXT
+<<<<<<< HEAD
+=======
+		CPUIDLE_TEXT
+>>>>>>> b7ba80a49124 (Commit)
 		LOCK_TEXT
 		KPROBES_TEXT
 		IRQENTRY_TEXT

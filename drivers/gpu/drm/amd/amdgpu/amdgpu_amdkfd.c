@@ -75,6 +75,12 @@ void amdgpu_amdkfd_device_probe(struct amdgpu_device *adev)
 		return;
 
 	adev->kfd.dev = kgd2kfd_probe(adev, vf);
+<<<<<<< HEAD
+=======
+
+	if (adev->kfd.dev)
+		amdgpu_amdkfd_total_mem_size += adev->gmc.real_vram_size;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -134,6 +140,10 @@ static void amdgpu_amdkfd_reset_work(struct work_struct *work)
 	reset_context.method = AMD_RESET_METHOD_NONE;
 	reset_context.reset_req_dev = adev;
 	clear_bit(AMDGPU_NEED_FULL_RESET, &reset_context.flags);
+<<<<<<< HEAD
+=======
+	clear_bit(AMDGPU_SKIP_MODE2_RESET, &reset_context.flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	amdgpu_device_gpu_recover(adev, NULL, &reset_context);
 }
@@ -195,9 +205,13 @@ void amdgpu_amdkfd_device_init(struct amdgpu_device *adev)
 		}
 
 		adev->kfd.init_complete = kgd2kfd_device_init(adev->kfd.dev,
+<<<<<<< HEAD
 							&gpu_resources);
 
 		amdgpu_amdkfd_total_mem_size += adev->gmc.real_vram_size;
+=======
+						adev_to_drm(adev), &gpu_resources);
+>>>>>>> b7ba80a49124 (Commit)
 
 		INIT_WORK(&adev->kfd.reset_work, amdgpu_amdkfd_reset_work);
 	}
@@ -208,7 +222,10 @@ void amdgpu_amdkfd_device_fini_sw(struct amdgpu_device *adev)
 	if (adev->kfd.dev) {
 		kgd2kfd_device_exit(adev->kfd.dev);
 		adev->kfd.dev = NULL;
+<<<<<<< HEAD
 		amdgpu_amdkfd_total_mem_size -= adev->gmc.real_vram_size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -673,7 +690,11 @@ int amdgpu_amdkfd_submit_ib(struct amdgpu_device *adev,
 		goto err;
 	}
 
+<<<<<<< HEAD
 	ret = amdgpu_job_alloc(adev, NULL, NULL, NULL, 1, &job);
+=======
+	ret = amdgpu_job_alloc(adev, 1, &job, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto err;
 
@@ -706,6 +727,7 @@ err:
 
 void amdgpu_amdkfd_set_compute_idle(struct amdgpu_device *adev, bool idle)
 {
+<<<<<<< HEAD
 	/* Temporary workaround to fix issues observed in some
 	 * compute applications when GFXOFF is enabled on GFX11.
 	 */
@@ -713,6 +735,8 @@ void amdgpu_amdkfd_set_compute_idle(struct amdgpu_device *adev, bool idle)
 		pr_debug("GFXOFF is %s\n", idle ? "enabled" : "disabled");
 		amdgpu_gfx_off_ctrl(adev, idle);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	amdgpu_dpm_switch_power_profile(adev,
 					PP_SMC_POWER_PROFILE_COMPUTE,
 					!idle);
@@ -760,7 +784,17 @@ bool amdgpu_amdkfd_have_atomics_support(struct amdgpu_device *adev)
 
 void amdgpu_amdkfd_ras_poison_consumption_handler(struct amdgpu_device *adev, bool reset)
 {
+<<<<<<< HEAD
 	amdgpu_umc_poison_handler(adev, reset);
+=======
+	struct ras_err_data err_data = {0, 0, 0, NULL};
+
+	/* CPU MCA will handle page retirement if connected_to_cpu is 1 */
+	if (!adev->gmc.xgmi.connected_to_cpu)
+		amdgpu_umc_poison_handler(adev, &err_data, reset);
+	else if (reset)
+		amdgpu_amdkfd_gpu_reset(adev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 bool amdgpu_amdkfd_ras_query_utcl2_poison_status(struct amdgpu_device *adev)

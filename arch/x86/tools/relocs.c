@@ -56,7 +56,10 @@ static const char * const sym_regex_kernel[S_NSYMTYPES] = {
 	"^(xen_irq_disable_direct_reloc$|"
 	"xen_save_fl_direct_reloc$|"
 	"VDSO|"
+<<<<<<< HEAD
 	"__kcfi_typeid_|"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	"__crc_)",
 
 /*
@@ -406,7 +409,11 @@ static void read_ehdr(FILE *fp)
 	if (ehdr.e_version != EV_CURRENT)
 		die("Unknown ELF version\n");
 	if (ehdr.e_ehsize != sizeof(Elf_Ehdr))
+<<<<<<< HEAD
 		die("Bad ELF header size\n");
+=======
+		die("Bad Elf header size\n");
+>>>>>>> b7ba80a49124 (Commit)
 	if (ehdr.e_phentsize != sizeof(Elf_Phdr))
 		die("Bad program header entry\n");
 	if (ehdr.e_shentsize != sizeof(Elf_Shdr))

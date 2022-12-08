@@ -185,7 +185,10 @@ void free_uid(struct user_struct *up)
 	if (refcount_dec_and_lock_irqsave(&up->__count, &uidhash_lock, &flags))
 		free_user(up, flags);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(free_uid);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct user_struct *alloc_uid(kuid_t uid)
 {

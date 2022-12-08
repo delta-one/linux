@@ -609,6 +609,10 @@ static int snd_usb_audio_create(struct usb_interface *intf,
 	case USB_SPEED_LOW:
 	case USB_SPEED_FULL:
 	case USB_SPEED_HIGH:
+<<<<<<< HEAD
+=======
+	case USB_SPEED_WIRELESS:
+>>>>>>> b7ba80a49124 (Commit)
 	case USB_SPEED_SUPER:
 	case USB_SPEED_SUPER_PLUS:
 		break;
@@ -741,6 +745,7 @@ get_alias_quirk(struct usb_device *dev, unsigned int id)
 	return NULL;
 }
 
+<<<<<<< HEAD
 /* register card if we reach to the last interface or to the specified
  * one given via option
  */
@@ -753,6 +758,8 @@ static int try_to_register_card(struct snd_usb_audio *chip, int ifnum)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * probe the active usb device
  *
@@ -891,9 +898,21 @@ static int usb_audio_probe(struct usb_interface *intf,
 		chip->need_delayed_register = false; /* clear again */
 	}
 
+<<<<<<< HEAD
 	err = try_to_register_card(chip, ifnum);
 	if (err < 0)
 		goto __error_no_register;
+=======
+	/* register card if we reach to the last interface or to the specified
+	 * one given via option
+	 */
+	if (check_delayed_register_option(chip) == ifnum ||
+	    usb_interface_claimed(usb_ifnum_to_if(dev, chip->last_iface))) {
+		err = snd_card_register(chip->card);
+		if (err < 0)
+			goto __error;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (chip->quirk_flags & QUIRK_FLAG_SHARE_MEDIA_DEVICE) {
 		/* don't want to fail when snd_media_device_create() fails */
@@ -912,11 +931,14 @@ static int usb_audio_probe(struct usb_interface *intf,
 	return 0;
 
  __error:
+<<<<<<< HEAD
 	/* in the case of error in secondary interface, still try to register */
 	if (chip)
 		try_to_register_card(chip, ifnum);
 
  __error_no_register:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (chip) {
 		/* chip->active is inside the chip->card object,
 		 * decrement before memory is possibly returned.

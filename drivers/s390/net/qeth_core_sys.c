@@ -23,6 +23,7 @@ static ssize_t qeth_dev_state_show(struct device *dev,
 
 	switch (card->state) {
 	case CARD_STATE_DOWN:
+<<<<<<< HEAD
 		return sysfs_emit(buf, "DOWN\n");
 	case CARD_STATE_SOFTSETUP:
 		if (card->dev->flags & IFF_UP)
@@ -32,6 +33,17 @@ static ssize_t qeth_dev_state_show(struct device *dev,
 		return sysfs_emit(buf, "SOFTSETUP\n");
 	default:
 		return sysfs_emit(buf, "UNKNOWN\n");
+=======
+		return sprintf(buf, "DOWN\n");
+	case CARD_STATE_SOFTSETUP:
+		if (card->dev->flags & IFF_UP)
+			return sprintf(buf, "UP (LAN %s)\n",
+				       netif_carrier_ok(card->dev) ? "ONLINE" :
+								     "OFFLINE");
+		return sprintf(buf, "SOFTSETUP\n");
+	default:
+		return sprintf(buf, "UNKNOWN\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -42,7 +54,11 @@ static ssize_t qeth_dev_chpid_show(struct device *dev,
 {
 	struct qeth_card *card = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%02X\n", card->info.chpid);
+=======
+	return sprintf(buf, "%02X\n", card->info.chpid);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR(chpid, 0444, qeth_dev_chpid_show, NULL);
@@ -52,7 +68,11 @@ static ssize_t qeth_dev_if_name_show(struct device *dev,
 {
 	struct qeth_card *card = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", netdev_name(card->dev));
+=======
+	return sprintf(buf, "%s\n", netdev_name(card->dev));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR(if_name, 0444, qeth_dev_if_name_show, NULL);
@@ -62,7 +82,11 @@ static ssize_t qeth_dev_card_type_show(struct device *dev,
 {
 	struct qeth_card *card = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", qeth_get_cardname_short(card));
+=======
+	return sprintf(buf, "%s\n", qeth_get_cardname_short(card));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR(card_type, 0444, qeth_dev_card_type_show, NULL);
@@ -86,7 +110,11 @@ static ssize_t qeth_dev_inbuf_size_show(struct device *dev,
 {
 	struct qeth_card *card = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", qeth_get_bufsize_str(card));
+=======
+	return sprintf(buf, "%s\n", qeth_get_bufsize_str(card));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR(inbuf_size, 0444, qeth_dev_inbuf_size_show, NULL);
@@ -96,7 +124,11 @@ static ssize_t qeth_dev_portno_show(struct device *dev,
 {
 	struct qeth_card *card = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%i\n", card->dev->dev_port);
+=======
+	return sprintf(buf, "%i\n", card->dev->dev_port);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t qeth_dev_portno_store(struct device *dev,
@@ -134,7 +166,11 @@ static DEVICE_ATTR(portno, 0644, qeth_dev_portno_show, qeth_dev_portno_store);
 static ssize_t qeth_dev_portname_show(struct device *dev,
 				struct device_attribute *attr, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "no portname required\n");
+=======
+	return sprintf(buf, "no portname required\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t qeth_dev_portname_store(struct device *dev,
@@ -157,6 +193,7 @@ static ssize_t qeth_dev_prioqing_show(struct device *dev,
 
 	switch (card->qdio.do_prio_queueing) {
 	case QETH_PRIO_Q_ING_PREC:
+<<<<<<< HEAD
 		return sysfs_emit(buf, "%s\n", "by precedence");
 	case QETH_PRIO_Q_ING_TOS:
 		return sysfs_emit(buf, "%s\n", "by type of service");
@@ -169,6 +206,20 @@ static ssize_t qeth_dev_prioqing_show(struct device *dev,
 			       card->qdio.default_out_queue);
 	default:
 		return sysfs_emit(buf, "disabled\n");
+=======
+		return sprintf(buf, "%s\n", "by precedence");
+	case QETH_PRIO_Q_ING_TOS:
+		return sprintf(buf, "%s\n", "by type of service");
+	case QETH_PRIO_Q_ING_SKB:
+		return sprintf(buf, "%s\n", "by skb-priority");
+	case QETH_PRIO_Q_ING_VLAN:
+		return sprintf(buf, "%s\n", "by VLAN headers");
+	case QETH_PRIO_Q_ING_FIXED:
+		return sprintf(buf, "always queue %i\n",
+			       card->qdio.default_out_queue);
+	default:
+		return sprintf(buf, "disabled\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -242,7 +293,11 @@ static ssize_t qeth_dev_bufcnt_show(struct device *dev,
 {
 	struct qeth_card *card = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%i\n", card->qdio.in_buf_pool.buf_count);
+=======
+	return sprintf(buf, "%i\n", card->qdio.in_buf_pool.buf_count);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t qeth_dev_bufcnt_store(struct device *dev,
@@ -298,7 +353,11 @@ static DEVICE_ATTR(recover, 0200, NULL, qeth_dev_recover_store);
 static ssize_t qeth_dev_performance_stats_show(struct device *dev,
 				struct device_attribute *attr, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "1\n");
+=======
+	return sprintf(buf, "1\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t qeth_dev_performance_stats_store(struct device *dev,
@@ -335,7 +394,11 @@ static ssize_t qeth_dev_layer2_show(struct device *dev,
 {
 	struct qeth_card *card = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%i\n", card->options.layer);
+=======
+	return sprintf(buf, "%i\n", card->options.layer);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t qeth_dev_layer2_store(struct device *dev,
@@ -410,6 +473,7 @@ static ssize_t qeth_dev_isolation_show(struct device *dev,
 
 	switch (card->options.isolation) {
 	case ISOLATION_MODE_NONE:
+<<<<<<< HEAD
 		return sysfs_emit(buf, "%s\n", ATTR_QETH_ISOLATION_NONE);
 	case ISOLATION_MODE_FWD:
 		return sysfs_emit(buf, "%s\n", ATTR_QETH_ISOLATION_FWD);
@@ -417,6 +481,15 @@ static ssize_t qeth_dev_isolation_show(struct device *dev,
 		return sysfs_emit(buf, "%s\n", ATTR_QETH_ISOLATION_DROP);
 	default:
 		return sysfs_emit(buf, "%s\n", "N/A");
+=======
+		return snprintf(buf, 6, "%s\n", ATTR_QETH_ISOLATION_NONE);
+	case ISOLATION_MODE_FWD:
+		return snprintf(buf, 9, "%s\n", ATTR_QETH_ISOLATION_FWD);
+	case ISOLATION_MODE_DROP:
+		return snprintf(buf, 6, "%s\n", ATTR_QETH_ISOLATION_DROP);
+	default:
+		return snprintf(buf, 5, "%s\n", "N/A");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -470,13 +543,18 @@ static ssize_t qeth_dev_switch_attrs_show(struct device *dev,
 	int	rc = 0;
 
 	if (!qeth_card_hw_is_reachable(card))
+<<<<<<< HEAD
 		return sysfs_emit(buf, "n/a\n");
+=======
+		return sprintf(buf, "n/a\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = qeth_query_switch_attributes(card, &sw_info);
 	if (rc)
 		return rc;
 
 	if (!sw_info.capabilities)
+<<<<<<< HEAD
 		rc = sysfs_emit(buf, "unknown");
 
 	if (sw_info.capabilities & QETH_SWITCH_FORW_802_1)
@@ -489,6 +567,18 @@ static ssize_t qeth_dev_switch_attrs_show(struct device *dev,
 				    QETH_SWITCH_FORW_REFL_RELAY ?
 				    " [rr]" : " rr"));
 	rc += sysfs_emit_at(buf, rc, "\n");
+=======
+		rc = sprintf(buf, "unknown");
+
+	if (sw_info.capabilities & QETH_SWITCH_FORW_802_1)
+		rc = sprintf(buf, (sw_info.settings & QETH_SWITCH_FORW_802_1 ?
+							"[802.1]" : "802.1"));
+	if (sw_info.capabilities & QETH_SWITCH_FORW_REFL_RELAY)
+		rc += sprintf(buf + rc,
+			(sw_info.settings & QETH_SWITCH_FORW_REFL_RELAY ?
+							" [rr]" : " rr"));
+	rc += sprintf(buf + rc, "\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	return rc;
 }
@@ -502,9 +592,15 @@ static ssize_t qeth_hw_trap_show(struct device *dev,
 	struct qeth_card *card = dev_get_drvdata(dev);
 
 	if (card->info.hwtrap)
+<<<<<<< HEAD
 		return sysfs_emit(buf, "arm\n");
 	else
 		return sysfs_emit(buf, "disarm\n");
+=======
+		return snprintf(buf, 5, "arm\n");
+	else
+		return snprintf(buf, 8, "disarm\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t qeth_hw_trap_store(struct device *dev,
@@ -575,7 +671,11 @@ static ssize_t qeth_dev_blkt_total_show(struct device *dev,
 {
 	struct qeth_card *card = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%i\n", card->info.blkt.time_total);
+=======
+	return sprintf(buf, "%i\n", card->info.blkt.time_total);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t qeth_dev_blkt_total_store(struct device *dev,
@@ -595,7 +695,11 @@ static ssize_t qeth_dev_blkt_inter_show(struct device *dev,
 {
 	struct qeth_card *card = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%i\n", card->info.blkt.inter_packet);
+=======
+	return sprintf(buf, "%i\n", card->info.blkt.inter_packet);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t qeth_dev_blkt_inter_store(struct device *dev,
@@ -615,7 +719,11 @@ static ssize_t qeth_dev_blkt_inter_jumbo_show(struct device *dev,
 {
 	struct qeth_card *card = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%i\n", card->info.blkt.inter_packet_jumbo);
+=======
+	return sprintf(buf, "%i\n", card->info.blkt.inter_packet_jumbo);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t qeth_dev_blkt_inter_jumbo_store(struct device *dev,

@@ -89,7 +89,11 @@ void kasan_complete_mode_report_info(struct kasan_report_info *info)
 			 * a use-after-free.
 			 */
 			if (!info->bug_type)
+<<<<<<< HEAD
 				info->bug_type = "slab-use-after-free";
+=======
+				info->bug_type = "use-after-free";
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			/* Second alloc of the same object. Give up. */
 			if (alloc_found)

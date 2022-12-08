@@ -406,6 +406,7 @@ static void aspeed_kcs_check_obe(struct timer_list *timer)
 static void aspeed_kcs_irq_mask_update(struct kcs_bmc_device *kcs_bmc, u8 mask, u8 state)
 {
 	struct aspeed_kcs_bmc *priv = to_aspeed_kcs_bmc(kcs_bmc);
+<<<<<<< HEAD
 	int rc;
 	u8 str;
 
@@ -431,6 +432,15 @@ static void aspeed_kcs_irq_mask_update(struct kcs_bmc_device *kcs_bmc, u8 mask, 
 		} else {
 			del_timer(&priv->obe.timer);
 		}
+=======
+
+	/* We don't have an OBE IRQ, emulate it */
+	if (mask & KCS_BMC_EVENT_TYPE_OBE) {
+		if (KCS_BMC_EVENT_TYPE_OBE & state)
+			mod_timer(&priv->obe.timer, jiffies + OBE_POLL_PERIOD);
+		else
+			del_timer(&priv->obe.timer);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (mask & KCS_BMC_EVENT_TYPE_IBF) {

@@ -1499,6 +1499,7 @@ static int ips_is_passthru(struct scsi_cmnd *SC)
                 struct scatterlist *sg = scsi_sglist(SC);
                 char  *buffer;
 
+<<<<<<< HEAD
                 /* local_irq_save() protects the KM_IRQ0 address slot.     */
                 local_irq_save(flags);
 		buffer = kmap_local_page(sg_page(sg)) + sg->offset;
@@ -1509,6 +1510,19 @@ static int ips_is_passthru(struct scsi_cmnd *SC)
                         return 1;
                 }
 		kunmap_local(buffer);
+=======
+                /* kmap_atomic() ensures addressability of the user buffer.*/
+                /* local_irq_save() protects the KM_IRQ0 address slot.     */
+                local_irq_save(flags);
+                buffer = kmap_atomic(sg_page(sg)) + sg->offset;
+                if (buffer && buffer[0] == 'C' && buffer[1] == 'O' &&
+                    buffer[2] == 'P' && buffer[3] == 'P') {
+                        kunmap_atomic(buffer - sg->offset);
+                        local_irq_restore(flags);
+                        return 1;
+                }
+                kunmap_atomic(buffer - sg->offset);
+>>>>>>> b7ba80a49124 (Commit)
                 local_irq_restore(flags);
 	}
 	return 0;

@@ -2607,12 +2607,16 @@ static int __init radeonfb_init (void)
 {
 #ifndef MODULE
 	char *option = NULL;
+<<<<<<< HEAD
 #endif
 
 	if (fb_modesetting_disabled("radeonfb"))
 		return -ENODEV;
 
 #ifndef MODULE
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (fb_get_options("radeonfb", &option))
 		return -ENODEV;
 	radeonfb_setup(option);

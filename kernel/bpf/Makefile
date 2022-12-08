@@ -25,7 +25,11 @@ ifeq ($(CONFIG_PERF_EVENTS),y)
 obj-$(CONFIG_BPF_SYSCALL) += stackmap.o
 endif
 ifeq ($(CONFIG_CGROUPS),y)
+<<<<<<< HEAD
 obj-$(CONFIG_BPF_SYSCALL) += cgroup_iter.o bpf_cgrp_storage.o
+=======
+obj-$(CONFIG_BPF_SYSCALL) += cgroup_iter.o
+>>>>>>> b7ba80a49124 (Commit)
 endif
 obj-$(CONFIG_CGROUP_BPF) += cgroup.o
 ifeq ($(CONFIG_INET),y)
@@ -36,7 +40,10 @@ obj-$(CONFIG_DEBUG_INFO_BTF) += sysfs_btf.o
 endif
 ifeq ($(CONFIG_BPF_JIT),y)
 obj-$(CONFIG_BPF_SYSCALL) += bpf_struct_ops.o
+<<<<<<< HEAD
 obj-$(CONFIG_BPF_SYSCALL) += cpumask.o
+=======
+>>>>>>> b7ba80a49124 (Commit)
 obj-${CONFIG_BPF_LSM} += bpf_lsm.o
 endif
 obj-$(CONFIG_BPF_PRELOAD) += preload/

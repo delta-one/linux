@@ -394,6 +394,7 @@ static void nbio_v7_2_init_registers(struct amdgpu_device *adev)
 		break;
 	}
 
+<<<<<<< HEAD
 	switch (adev->ip_versions[NBIO_HWIP][0]) {
 	case IP_VERSION(7, 3, 0):
 	case IP_VERSION(7, 5, 1):
@@ -403,6 +404,8 @@ static void nbio_v7_2_init_registers(struct amdgpu_device *adev)
 		break;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (amdgpu_sriov_vf(adev))
 		adev->rmmio_remap.reg_offset = SOC15_REG_OFFSET(NBIO, 0,
 			regBIF_BX_PF0_HDP_MEM_COHERENCY_FLUSH_CNTL) << 2;

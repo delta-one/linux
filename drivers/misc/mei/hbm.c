@@ -340,6 +340,7 @@ static int mei_hbm_capabilities_req(struct mei_device *dev)
 	req.hbm_cmd = MEI_HBM_CAPABILITIES_REQ_CMD;
 	if (dev->hbm_f_vt_supported)
 		req.capability_requested[0] |= HBM_CAP_VT;
+<<<<<<< HEAD
 
 	if (dev->hbm_f_cd_supported)
 		req.capability_requested[0] |= HBM_CAP_CD;
@@ -347,6 +348,11 @@ static int mei_hbm_capabilities_req(struct mei_device *dev)
 	if (dev->hbm_f_gsc_supported)
 		req.capability_requested[0] |= HBM_CAP_GSC;
 
+=======
+	if (dev->hbm_f_cd_supported)
+		req.capability_requested[0] |= HBM_CAP_CD;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = mei_hbm_write_message(dev, &mei_hdr, &req);
 	if (ret) {
 		dev_err(dev->dev,
@@ -1204,12 +1210,15 @@ static void mei_hbm_config_features(struct mei_device *dev)
 	     dev->version.minor_version >= HBM_MINOR_VERSION_VT))
 		dev->hbm_f_vt_supported = 1;
 
+<<<<<<< HEAD
 	/* GSC support */
 	if (dev->version.major_version > HBM_MAJOR_VERSION_GSC ||
 	    (dev->version.major_version == HBM_MAJOR_VERSION_GSC &&
 	     dev->version.minor_version >= HBM_MINOR_VERSION_GSC))
 		dev->hbm_f_gsc_supported = 1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Capability message Support */
 	dev->hbm_f_cap_supported = 0;
 	if (dev->version.major_version > HBM_MAJOR_VERSION_CAP ||
@@ -1377,9 +1386,12 @@ int mei_hbm_dispatch(struct mei_device *dev, struct mei_msg_hdr *hdr)
 		if (!(capability_res->capability_granted[0] & HBM_CAP_CD))
 			dev->hbm_f_cd_supported = 0;
 
+<<<<<<< HEAD
 		if (!(capability_res->capability_granted[0] & HBM_CAP_GSC))
 			dev->hbm_f_gsc_supported = 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (dev->hbm_f_dr_supported) {
 			if (mei_dmam_ring_alloc(dev))
 				dev_info(dev->dev, "running w/o dma ring\n");

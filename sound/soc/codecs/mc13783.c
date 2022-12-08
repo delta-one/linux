@@ -776,10 +776,22 @@ static int __init mc13783_codec_probe(struct platform_device *pdev)
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static int mc13783_codec_remove(struct platform_device *pdev)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver mc13783_codec_driver = {
 	.driver = {
 		.name	= "mc13783-codec",
 	},
+<<<<<<< HEAD
+=======
+	.remove = mc13783_codec_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver_probe(mc13783_codec_driver, mc13783_codec_probe);
 

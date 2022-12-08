@@ -16,7 +16,10 @@ struct env env = {
 	.warmup_sec = 1,
 	.duration_sec = 5,
 	.affinity = false,
+<<<<<<< HEAD
 	.quiet = false,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.consumer_cnt = 1,
 	.producer_cnt = 1,
 };
@@ -263,7 +266,10 @@ static const struct argp_option opts[] = {
 	{ "consumers", 'c', "NUM", 0, "Number of consumer threads"},
 	{ "verbose", 'v', NULL, 0, "Verbose debug output"},
 	{ "affinity", 'a', NULL, 0, "Set consumer/producer thread affinity"},
+<<<<<<< HEAD
 	{ "quiet", 'q', NULL, 0, "Be more quiet"},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ "prod-affinity", ARG_PROD_AFFINITY_SET, "CPUSET", 0,
 	  "Set of CPUs for producer threads; implies --affinity"},
 	{ "cons-affinity", ARG_CONS_AFFINITY_SET, "CPUSET", 0,
@@ -277,7 +283,10 @@ extern struct argp bench_bpf_loop_argp;
 extern struct argp bench_local_storage_argp;
 extern struct argp bench_local_storage_rcu_tasks_trace_argp;
 extern struct argp bench_strncmp_argp;
+<<<<<<< HEAD
 extern struct argp bench_hashmap_lookup_argp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct argp_child bench_parsers[] = {
 	{ &bench_ringbufs_argp, 0, "Ring buffers benchmark", 0 },
@@ -287,6 +296,7 @@ static const struct argp_child bench_parsers[] = {
 	{ &bench_strncmp_argp, 0, "bpf_strncmp helper benchmark", 0 },
 	{ &bench_local_storage_rcu_tasks_trace_argp, 0,
 		"local_storage RCU Tasks Trace slowdown benchmark", 0 },
+<<<<<<< HEAD
 	{ &bench_hashmap_lookup_argp, 0, "Hashmap lookup benchmark", 0 },
 	{},
 };
@@ -296,6 +306,15 @@ static int pos_args;
 
 static error_t parse_arg(int key, char *arg, struct argp_state *state)
 {
+=======
+	{},
+};
+
+static error_t parse_arg(int key, char *arg, struct argp_state *state)
+{
+	static int pos_args;
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (key) {
 	case 'v':
 		env.verbose = true;
@@ -334,9 +353,12 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 	case 'a':
 		env.affinity = true;
 		break;
+<<<<<<< HEAD
 	case 'q':
 		env.quiet = true;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case ARG_PROD_AFFINITY_SET:
 		env.affinity = true;
 		if (parse_num_list(arg, &env.prod_cpus.cpus,
@@ -367,7 +389,11 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void parse_cmdline_args_init(int argc, char **argv)
+=======
+static void parse_cmdline_args(int argc, char **argv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	static const struct argp argp = {
 		.options = opts,
@@ -377,6 +403,7 @@ static void parse_cmdline_args_init(int argc, char **argv)
 	};
 	if (argp_parse(&argp, argc, argv, 0, NULL, NULL))
 		exit(1);
+<<<<<<< HEAD
 }
 
 static void parse_cmdline_args_final(int argc, char **argv)
@@ -396,6 +423,11 @@ static void parse_cmdline_args_final(int argc, char **argv)
 		pos_args = 0;
 		if (argp_parse(&argp, argc, argv, 0, NULL, NULL))
 			exit(1);
+=======
+	if (!env.list && !env.bench_name) {
+		argp_help(&argp, stderr, ARGP_HELP_DOC, "bench");
+		exit(1);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -514,8 +546,11 @@ extern const struct bench bench_local_storage_cache_seq_get;
 extern const struct bench bench_local_storage_cache_interleaved_get;
 extern const struct bench bench_local_storage_cache_hashmap_control;
 extern const struct bench bench_local_storage_tasks_trace;
+<<<<<<< HEAD
 extern const struct bench bench_bpf_hashmap_lookup;
 extern const struct bench bench_local_storage_create;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct bench *benchs[] = {
 	&bench_count_global,
@@ -555,6 +590,7 @@ static const struct bench *benchs[] = {
 	&bench_local_storage_cache_interleaved_get,
 	&bench_local_storage_cache_hashmap_control,
 	&bench_local_storage_tasks_trace,
+<<<<<<< HEAD
 	&bench_bpf_hashmap_lookup,
 	&bench_local_storage_create,
 };
@@ -562,11 +598,22 @@ static const struct bench *benchs[] = {
 static void find_benchmark(void)
 {
 	int i;
+=======
+};
+
+static void setup_benchmark()
+{
+	int i, err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!env.bench_name) {
 		fprintf(stderr, "benchmark name is not specified\n");
 		exit(1);
 	}
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < ARRAY_SIZE(benchs); i++) {
 		if (strcmp(benchs[i]->name, env.bench_name) == 0) {
 			bench = benchs[i];
@@ -577,6 +624,7 @@ static void find_benchmark(void)
 		fprintf(stderr, "benchmark '%s' not found\n", env.bench_name);
 		exit(1);
 	}
+<<<<<<< HEAD
 }
 
 static void setup_benchmark(void)
@@ -585,6 +633,10 @@ static void setup_benchmark(void)
 
 	if (!env.quiet)
 		printf("Setting up benchmark '%s'...\n", bench->name);
+=======
+
+	printf("Setting up benchmark '%s'...\n", bench->name);
+>>>>>>> b7ba80a49124 (Commit)
 
 	state.producers = calloc(env.producer_cnt, sizeof(*state.producers));
 	state.consumers = calloc(env.consumer_cnt, sizeof(*state.consumers));
@@ -630,8 +682,12 @@ static void setup_benchmark(void)
 					    next_cpu(&env.prod_cpus));
 	}
 
+<<<<<<< HEAD
 	if (!env.quiet)
 		printf("Benchmark '%s' started.\n", bench->name);
+=======
+	printf("Benchmark '%s' started.\n", bench->name);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static pthread_mutex_t bench_done_mtx = PTHREAD_MUTEX_INITIALIZER;
@@ -655,7 +711,11 @@ static void collect_measurements(long delta_ns) {
 
 int main(int argc, char **argv)
 {
+<<<<<<< HEAD
 	parse_cmdline_args_init(argc, argv);
+=======
+	parse_cmdline_args(argc, argv);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (env.list) {
 		int i;
@@ -667,9 +727,12 @@ int main(int argc, char **argv)
 		return 0;
 	}
 
+<<<<<<< HEAD
 	find_benchmark();
 	parse_cmdline_args_final(argc, argv);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	setup_benchmark();
 
 	setup_timer();

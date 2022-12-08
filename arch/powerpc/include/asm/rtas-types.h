@@ -18,6 +18,11 @@ struct rtas_t {
 	unsigned long entry;		/* physical address pointer */
 	unsigned long base;		/* physical address pointer */
 	unsigned long size;
+<<<<<<< HEAD
+=======
+	arch_spinlock_t lock;
+	struct rtas_args args;
+>>>>>>> b7ba80a49124 (Commit)
 	struct device_node *dev;	/* virtual address pointer */
 };
 

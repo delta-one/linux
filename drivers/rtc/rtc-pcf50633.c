@@ -260,12 +260,21 @@ static int pcf50633_rtc_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void pcf50633_rtc_remove(struct platform_device *pdev)
+=======
+static int pcf50633_rtc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pcf50633_rtc *rtc;
 
 	rtc = platform_get_drvdata(pdev);
 	pcf50633_free_irq(rtc->pcf, PCF50633_IRQ_ALARM);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver pcf50633_rtc_driver = {
@@ -273,7 +282,11 @@ static struct platform_driver pcf50633_rtc_driver = {
 		.name = "pcf50633-rtc",
 	},
 	.probe = pcf50633_rtc_probe,
+<<<<<<< HEAD
 	.remove_new = pcf50633_rtc_remove,
+=======
+	.remove = pcf50633_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(pcf50633_rtc_driver);

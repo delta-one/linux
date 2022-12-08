@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/mux/gpio-mux.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: GPIO-based multiplexer controller
+=======
+title: GPIO-based multiplexer controller bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Peter Rosin <peda@axentia.se>

@@ -113,7 +113,11 @@ static inline void btrfs_init_delayed_root(
 int btrfs_insert_delayed_dir_index(struct btrfs_trans_handle *trans,
 				   const char *name, int name_len,
 				   struct btrfs_inode *dir,
+<<<<<<< HEAD
 				   struct btrfs_disk_key *disk_key, u8 flags,
+=======
+				   struct btrfs_disk_key *disk_key, u8 type,
+>>>>>>> b7ba80a49124 (Commit)
 				   u64 index);
 
 int btrfs_delete_delayed_dir_index(struct btrfs_trans_handle *trans,

@@ -70,7 +70,11 @@ bool efivarfs_valid_name(const char *str, int len)
 	return uuid_is_valid(s);
 }
 
+<<<<<<< HEAD
 static int efivarfs_create(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int efivarfs_create(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 			   struct dentry *dentry, umode_t mode, bool excl)
 {
 	struct inode *inode = NULL;
@@ -91,10 +95,13 @@ static int efivarfs_create(struct mnt_idmap *idmap, struct inode *dir,
 	err = guid_parse(dentry->d_name.name + namelen + 1, &var->var.VendorGuid);
 	if (err)
 		goto out;
+<<<<<<< HEAD
 	if (guid_equal(&var->var.VendorGuid, &LINUX_EFI_RANDOM_SEED_TABLE_GUID)) {
 		err = -EPERM;
 		goto out;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (efivar_variable_is_removable(var->var.VendorGuid,
 					 dentry->d_name.name, namelen))
@@ -163,7 +170,11 @@ efivarfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
 }
 
 static int
+<<<<<<< HEAD
 efivarfs_fileattr_set(struct mnt_idmap *idmap,
+=======
+efivarfs_fileattr_set(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *dentry, struct fileattr *fa)
 {
 	unsigned int i_flags = 0;

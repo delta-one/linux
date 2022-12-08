@@ -38,7 +38,12 @@ static void sctp_ulpq_reasm_drain(struct sctp_ulpq *ulpq);
 /* 1st Level Abstractions */
 
 /* Initialize a ULP queue from a block of memory.  */
+<<<<<<< HEAD
 void sctp_ulpq_init(struct sctp_ulpq *ulpq, struct sctp_association *asoc)
+=======
+struct sctp_ulpq *sctp_ulpq_init(struct sctp_ulpq *ulpq,
+				 struct sctp_association *asoc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	memset(ulpq, 0, sizeof(struct sctp_ulpq));
 
@@ -47,6 +52,11 @@ void sctp_ulpq_init(struct sctp_ulpq *ulpq, struct sctp_association *asoc)
 	skb_queue_head_init(&ulpq->reasm_uo);
 	skb_queue_head_init(&ulpq->lobby);
 	ulpq->pd_mode  = 0;
+<<<<<<< HEAD
+=======
+
+	return ulpq;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 
@@ -256,7 +266,14 @@ int sctp_ulpq_tail_event(struct sctp_ulpq *ulpq, struct sk_buff_head *skb_list)
 	return 1;
 
 out_free:
+<<<<<<< HEAD
 	sctp_queue_purge_ulpevents(skb_list);
+=======
+	if (skb_list)
+		sctp_queue_purge_ulpevents(skb_list);
+	else
+		sctp_ulpevent_free(event);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

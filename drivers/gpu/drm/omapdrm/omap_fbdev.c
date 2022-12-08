@@ -38,7 +38,11 @@ static struct drm_fb_helper *get_fb(struct fb_info *fbi);
 static void pan_worker(struct work_struct *work)
 {
 	struct omap_fbdev *fbdev = container_of(work, struct omap_fbdev, work);
+<<<<<<< HEAD
 	struct fb_info *fbi = fbdev->base.info;
+=======
+	struct fb_info *fbi = fbdev->base.fbdev;
+>>>>>>> b7ba80a49124 (Commit)
 	int npages;
 
 	/* DMM roll shifts in 4K pages: */
@@ -161,7 +165,11 @@ static int omap_fbdev_create(struct drm_fb_helper *helper,
 		goto fail;
 	}
 
+<<<<<<< HEAD
 	fbi = drm_fb_helper_alloc_info(helper);
+=======
+	fbi = drm_fb_helper_alloc_fbi(helper);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(fbi)) {
 		dev_err(dev->dev, "failed to allocate fb info\n");
 		ret = PTR_ERR(fbi);
@@ -177,6 +185,11 @@ static int omap_fbdev_create(struct drm_fb_helper *helper,
 
 	drm_fb_helper_fill_info(fbi, helper, sizes);
 
+<<<<<<< HEAD
+=======
+	dev->mode_config.fb_base = dma_addr;
+
+>>>>>>> b7ba80a49124 (Commit)
 	fbi->screen_buffer = omap_gem_vaddr(fbdev->bo);
 	fbi->screen_size = fbdev->bo->size;
 	fbi->fix.smem_start = dma_addr;
@@ -233,19 +246,31 @@ void omap_fbdev_init(struct drm_device *dev)
 
 	fbdev = kzalloc(sizeof(*fbdev), GFP_KERNEL);
 	if (!fbdev)
+<<<<<<< HEAD
 		return;
+=======
+		goto fail;
+>>>>>>> b7ba80a49124 (Commit)
 
 	INIT_WORK(&fbdev->work, pan_worker);
 
 	helper = &fbdev->base;
 
+<<<<<<< HEAD
 	drm_fb_helper_prepare(dev, helper, 32, &omap_fb_helper_funcs);
+=======
+	drm_fb_helper_prepare(dev, helper, &omap_fb_helper_funcs);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = drm_fb_helper_init(dev, helper);
 	if (ret)
 		goto fail;
 
+<<<<<<< HEAD
 	ret = drm_fb_helper_initial_config(helper);
+=======
+	ret = drm_fb_helper_initial_config(helper, 32);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto fini;
 
@@ -256,7 +281,10 @@ void omap_fbdev_init(struct drm_device *dev)
 fini:
 	drm_fb_helper_fini(helper);
 fail:
+<<<<<<< HEAD
 	drm_fb_helper_unprepare(helper);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(fbdev);
 
 	dev_warn(dev->dev, "omap_fbdev_init failed\n");
@@ -273,7 +301,11 @@ void omap_fbdev_fini(struct drm_device *dev)
 	if (!helper)
 		return;
 
+<<<<<<< HEAD
 	drm_fb_helper_unregister_info(helper);
+=======
+	drm_fb_helper_unregister_fbi(helper);
+>>>>>>> b7ba80a49124 (Commit)
 
 	drm_fb_helper_fini(helper);
 
@@ -287,7 +319,10 @@ void omap_fbdev_fini(struct drm_device *dev)
 	if (fbdev->fb)
 		drm_framebuffer_remove(fbdev->fb);
 
+<<<<<<< HEAD
 	drm_fb_helper_unprepare(helper);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(fbdev);
 
 	priv->fbdev = NULL;

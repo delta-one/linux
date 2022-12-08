@@ -19,9 +19,12 @@
 
 /* Command2 BKx selection command */
 #define DSI_CMD2BKX_SEL			0xFF
+<<<<<<< HEAD
 #define DSI_CMD1			0
 #define DSI_CMD2			BIT(4)
 #define DSI_CMD2BK_MASK			GENMASK(3, 0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Command2, BK0 commands */
 #define DSI_CMD2_BK0_PVGAMCTRL		0xB0 /* Positive Voltage Gamma Control */
@@ -42,6 +45,24 @@
 #define DSI_CMD2_BK1_SPD2		0xC2 /* Source EQ2 Setting */
 #define DSI_CMD2_BK1_MIPISET1		0xD0 /* MIPI Setting 1 */
 
+<<<<<<< HEAD
+=======
+/*
+ * Command2 with BK function selection.
+ *
+ * BIT[4].....CN2
+ * BIT[1:0]...BKXSEL
+ * 1:00 = CMD2BK0, Command2 BK0
+ * 1:01 = CMD2BK1, Command2 BK1
+ * 1:11 = CMD2BK3, Command2 BK3
+ * 0:00 = Command2 disable
+ */
+#define DSI_CMD2BK0_SEL			0x10
+#define DSI_CMD2BK1_SEL			0x11
+#define DSI_CMD2BK3_SEL			0x13
+#define DSI_CMD2BKX_SEL_NONE		0x00
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Command2, BK0 bytes */
 #define DSI_CMD2_BK0_GAMCTRL_AJ_MASK	GENMASK(7, 6)
 #define DSI_CMD2_BK0_GAMCTRL_VC0_MASK	GENMASK(3, 0)
@@ -135,7 +156,10 @@ struct st7701 {
 	struct regulator_bulk_data supplies[2];
 	struct gpio_desc *reset;
 	unsigned int sleep_delay;
+<<<<<<< HEAD
 	enum drm_panel_orientation orientation;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct st7701 *panel_to_st7701(struct drm_panel *panel)
@@ -180,6 +204,7 @@ static u8 st7701_vgls_map(struct st7701 *st7701)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void st7701_switch_cmd_bkx(struct st7701 *st7701, bool cmd2, u8 bkx)
 {
 	u8 val;
@@ -192,6 +217,8 @@ static void st7701_switch_cmd_bkx(struct st7701 *st7701, bool cmd2, u8 bkx)
 	ST7701_DSI(st7701, DSI_CMD2BKX_SEL, 0x77, 0x01, 0x00, 0x00, val);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void st7701_init_sequence(struct st7701 *st7701)
 {
 	const struct st7701_panel_desc *desc = st7701->desc;
@@ -209,8 +236,13 @@ static void st7701_init_sequence(struct st7701 *st7701)
 	msleep(st7701->sleep_delay);
 
 	/* Command2, BK0 */
+<<<<<<< HEAD
 	st7701_switch_cmd_bkx(st7701, true, 0);
 
+=======
+	ST7701_DSI(st7701, DSI_CMD2BKX_SEL,
+		   0x77, 0x01, 0x00, 0x00, DSI_CMD2BK0_SEL);
+>>>>>>> b7ba80a49124 (Commit)
 	mipi_dsi_dcs_write(st7701->dsi, DSI_CMD2_BK0_PVGAMCTRL,
 			   desc->pv_gamma, ARRAY_SIZE(desc->pv_gamma));
 	mipi_dsi_dcs_write(st7701->dsi, DSI_CMD2_BK0_NVGAMCTRL,
@@ -245,10 +277,18 @@ static void st7701_init_sequence(struct st7701 *st7701)
 		   DSI_CMD2_BK0_INVSEL_ONES_MASK |
 		   FIELD_PREP(DSI_CMD2_BK0_INVSEL_NLINV_MASK, desc->nlinv),
 		   FIELD_PREP(DSI_CMD2_BK0_INVSEL_RTNI_MASK,
+<<<<<<< HEAD
 			      (clamp((u32)mode->htotal, 512U, 1008U) - 512) / 16));
 
 	/* Command2, BK1 */
 	st7701_switch_cmd_bkx(st7701, true, 1);
+=======
+			      DIV_ROUND_UP(mode->htotal, 16)));
+
+	/* Command2, BK1 */
+	ST7701_DSI(st7701, DSI_CMD2BKX_SEL,
+			0x77, 0x01, 0x00, 0x00, DSI_CMD2BK1_SEL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Vop = 3.5375V + (VRHA[7:0] * 0.0125V) */
 	ST7701_DSI(st7701, DSI_CMD2_BK1_VRHS,
@@ -373,6 +413,7 @@ static void dmt028vghmcmi_1a_gip_sequence(struct st7701 *st7701)
 		   0x08, 0x08, 0x08, 0x40,
 			   0x3F, 0x64);
 
+<<<<<<< HEAD
 	st7701_switch_cmd_bkx(st7701, false, 0);
 
 	st7701_switch_cmd_bkx(st7701, true, 3);
@@ -384,20 +425,48 @@ static void dmt028vghmcmi_1a_gip_sequence(struct st7701 *st7701)
 	msleep(120);
 
 	st7701_switch_cmd_bkx(st7701, true, 3);
+=======
+	ST7701_DSI(st7701, DSI_CMD2BKX_SEL,
+		   0x77, 0x01, 0x00, 0x00, DSI_CMD2BKX_SEL_NONE);
+
+	ST7701_DSI(st7701, DSI_CMD2BKX_SEL,
+		   0x77, 0x01, 0x00, 0x00, DSI_CMD2BK3_SEL);
+	ST7701_DSI(st7701, 0xE6, 0x7C);
+	ST7701_DSI(st7701, 0xE8, 0x00, 0x0E);
+
+	ST7701_DSI(st7701, DSI_CMD2BKX_SEL,
+		   0x77, 0x01, 0x00, 0x00, DSI_CMD2BKX_SEL_NONE);
+	ST7701_DSI(st7701, 0x11);
+	msleep(120);
+
+	ST7701_DSI(st7701, DSI_CMD2BKX_SEL,
+		   0x77, 0x01, 0x00, 0x00, DSI_CMD2BK3_SEL);
+>>>>>>> b7ba80a49124 (Commit)
 	ST7701_DSI(st7701, 0xE8, 0x00, 0x0C);
 	msleep(10);
 	ST7701_DSI(st7701, 0xE8, 0x00, 0x00);
 
+<<<<<<< HEAD
 	st7701_switch_cmd_bkx(st7701, false, 0);
+=======
+	ST7701_DSI(st7701, DSI_CMD2BKX_SEL,
+		   0x77, 0x01, 0x00, 0x00, DSI_CMD2BKX_SEL_NONE);
+>>>>>>> b7ba80a49124 (Commit)
 	ST7701_DSI(st7701, 0x11);
 	msleep(120);
 	ST7701_DSI(st7701, 0xE8, 0x00, 0x00);
 
+<<<<<<< HEAD
 	st7701_switch_cmd_bkx(st7701, false, 0);
+=======
+	ST7701_DSI(st7701, DSI_CMD2BKX_SEL,
+		   0x77, 0x01, 0x00, 0x00, DSI_CMD2BKX_SEL_NONE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ST7701_DSI(st7701, 0x3A, 0x70);
 }
 
+<<<<<<< HEAD
 static void kd50t048a_gip_sequence(struct st7701 *st7701)
 {
 	/**
@@ -423,6 +492,8 @@ static void kd50t048a_gip_sequence(struct st7701 *st7701)
 		   0xFF, 0xFF, 0xFF, 0xFF, 0x10, 0x45, 0x67, 0x98, 0xBA);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int st7701_prepare(struct drm_panel *panel)
 {
 	struct st7701 *st7701 = panel_to_st7701(panel);
@@ -445,7 +516,12 @@ static int st7701_prepare(struct drm_panel *panel)
 		st7701->desc->gip_sequence(st7701);
 
 	/* Disable Command2 */
+<<<<<<< HEAD
 	st7701_switch_cmd_bkx(st7701, false, 0);
+=======
+	ST7701_DSI(st7701, DSI_CMD2BKX_SEL,
+		   0x77, 0x01, 0x00, 0x00, DSI_CMD2BKX_SEL_NONE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -515,6 +591,7 @@ static int st7701_get_modes(struct drm_panel *panel,
 	connector->display_info.width_mm = desc_mode->width_mm;
 	connector->display_info.height_mm = desc_mode->height_mm;
 
+<<<<<<< HEAD
 	/*
 	 * TODO: Remove once all drm drivers call
 	 * drm_connector_set_orientation_from_panel()
@@ -531,13 +608,21 @@ static enum drm_panel_orientation st7701_get_orientation(struct drm_panel *panel
 	return st7701->orientation;
 }
 
+=======
+	return 1;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct drm_panel_funcs st7701_funcs = {
 	.disable	= st7701_disable,
 	.unprepare	= st7701_unprepare,
 	.prepare	= st7701_prepare,
 	.enable		= st7701_enable,
 	.get_modes	= st7701_get_modes,
+<<<<<<< HEAD
 	.get_orientation = st7701_get_orientation,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct drm_display_mode ts8550b_mode = {
@@ -740,6 +825,7 @@ static const struct st7701_panel_desc dmt028vghmcmi_1a_desc = {
 	.gip_sequence = dmt028vghmcmi_1a_gip_sequence,
 };
 
+<<<<<<< HEAD
 static const struct drm_display_mode kd50t048a_mode = {
 	.clock          = 27500,
 
@@ -839,6 +925,8 @@ static const struct st7701_panel_desc kd50t048a_desc = {
 	.gip_sequence = kd50t048a_gip_sequence,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int st7701_dsi_probe(struct mipi_dsi_device *dsi)
 {
 	const struct st7701_panel_desc *desc;
@@ -869,10 +957,13 @@ static int st7701_dsi_probe(struct mipi_dsi_device *dsi)
 		return PTR_ERR(st7701->reset);
 	}
 
+<<<<<<< HEAD
 	ret = of_drm_get_panel_orientation(dsi->dev.of_node, &st7701->orientation);
 	if (ret < 0)
 		return dev_err_probe(&dsi->dev, ret, "Failed to get orientation\n");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	drm_panel_init(&st7701->panel, &dsi->dev, &st7701_funcs,
 		       DRM_MODE_CONNECTOR_DSI);
 
@@ -897,6 +988,7 @@ static int st7701_dsi_probe(struct mipi_dsi_device *dsi)
 	st7701->dsi = dsi;
 	st7701->desc = desc;
 
+<<<<<<< HEAD
 	ret = mipi_dsi_attach(dsi);
 	if (ret)
 		goto err_attach;
@@ -906,6 +998,9 @@ static int st7701_dsi_probe(struct mipi_dsi_device *dsi)
 err_attach:
 	drm_panel_remove(&st7701->panel);
 	return ret;
+=======
+	return mipi_dsi_attach(dsi);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void st7701_dsi_remove(struct mipi_dsi_device *dsi)
@@ -918,7 +1013,10 @@ static void st7701_dsi_remove(struct mipi_dsi_device *dsi)
 
 static const struct of_device_id st7701_of_match[] = {
 	{ .compatible = "densitron,dmt028vghmcmi-1a", .data = &dmt028vghmcmi_1a_desc },
+<<<<<<< HEAD
 	{ .compatible = "elida,kd50t048a", .data = &kd50t048a_desc },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "techstar,ts8550b", .data = &ts8550b_desc },
 	{ }
 };

@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
 /*
+<<<<<<< HEAD
  * Copyright (C) 2012-2014, 2018-2023 Intel Corporation
+=======
+ * Copyright (C) 2012-2014, 2018-2021 Intel Corporation
+>>>>>>> b7ba80a49124 (Commit)
  * Copyright (C) 2013-2015 Intel Mobile Communications GmbH
  * Copyright (C) 2016-2017 Intel Deutschland GmbH
  */
@@ -8,7 +12,10 @@
 #include <linux/err.h>
 #include <linux/ieee80211.h>
 #include <linux/netdevice.h>
+<<<<<<< HEAD
 #include <linux/dmi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "mvm.h"
 #include "sta.h"
@@ -16,7 +23,10 @@
 #include "debugfs.h"
 #include "iwl-modparams.h"
 #include "fw/error-dump.h"
+<<<<<<< HEAD
 #include "fw/api/phy-ctxt.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static ssize_t iwl_dbgfs_ctdp_budget_read(struct file *file,
 					  char __user *user_buf,
@@ -216,9 +226,15 @@ static ssize_t iwl_dbgfs_set_nic_temperature_read(struct file *file,
 	int pos;
 
 	if (!mvm->temperature_test)
+<<<<<<< HEAD
 		pos = scnprintf(buf, sizeof(buf), "disabled\n");
 	else
 		pos = scnprintf(buf, sizeof(buf), "%d\n", mvm->temperature);
+=======
+		pos = scnprintf(buf , sizeof(buf), "disabled\n");
+	else
+		pos = scnprintf(buf , sizeof(buf), "%d\n", mvm->temperature);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return simple_read_from_buffer(user_buf, count, ppos, buf, pos);
 }
@@ -263,7 +279,11 @@ static ssize_t iwl_dbgfs_set_nic_temperature_write(struct iwl_mvm *mvm,
 		mvm->temperature = temperature;
 	}
 	IWL_DEBUG_TEMP(mvm, "%sabling debug set temperature (temp = %d)\n",
+<<<<<<< HEAD
 		       mvm->temperature_test ? "En" : "Dis",
+=======
+		       mvm->temperature_test ? "En" : "Dis" ,
+>>>>>>> b7ba80a49124 (Commit)
 		       mvm->temperature);
 	/* handle the temperature change */
 	iwl_mvm_tt_handler(mvm);
@@ -293,7 +313,11 @@ static ssize_t iwl_dbgfs_nic_temp_read(struct file *file,
 	if (ret)
 		return -EIO;
 
+<<<<<<< HEAD
 	pos = scnprintf(buf, sizeof(buf), "%d\n", temp);
+=======
+	pos = scnprintf(buf , sizeof(buf), "%d\n", temp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return simple_read_from_buffer(user_buf, count, ppos, buf, pos);
 }
@@ -326,12 +350,20 @@ static ssize_t iwl_dbgfs_sar_geo_profile_read(struct file *file,
 		pos += scnprintf(buf + pos, bufsz - pos,
 				 "Use geographic profile %d\n", tbl_idx);
 		pos += scnprintf(buf + pos, bufsz - pos,
+<<<<<<< HEAD
 				 "2.4GHz:\n\tChain A offset: %u dBm\n\tChain B offset: %u dBm\n\tmax tx power: %u dBm\n",
+=======
+				 "2.4GHz:\n\tChain A offset: %hhu dBm\n\tChain B offset: %hhu dBm\n\tmax tx power: %hhu dBm\n",
+>>>>>>> b7ba80a49124 (Commit)
 				 mvm->fwrt.geo_profiles[tbl_idx - 1].bands[0].chains[0],
 				 mvm->fwrt.geo_profiles[tbl_idx - 1].bands[0].chains[1],
 				 mvm->fwrt.geo_profiles[tbl_idx - 1].bands[0].max);
 		pos += scnprintf(buf + pos, bufsz - pos,
+<<<<<<< HEAD
 				 "5.2GHz:\n\tChain A offset: %u dBm\n\tChain B offset: %u dBm\n\tmax tx power: %u dBm\n",
+=======
+				 "5.2GHz:\n\tChain A offset: %hhu dBm\n\tChain B offset: %hhu dBm\n\tmax tx power: %hhu dBm\n",
+>>>>>>> b7ba80a49124 (Commit)
 				 mvm->fwrt.geo_profiles[tbl_idx - 1].bands[1].chains[0],
 				 mvm->fwrt.geo_profiles[tbl_idx - 1].bands[1].chains[1],
 				 mvm->fwrt.geo_profiles[tbl_idx - 1].bands[1].max);
@@ -716,6 +748,7 @@ static ssize_t iwl_dbgfs_fw_ver_read(struct file *file, char __user *user_buf,
 	return ret;
 }
 
+<<<<<<< HEAD
 static ssize_t iwl_dbgfs_tas_get_status_read(struct file *file,
 					     char __user *user_buf,
 					     size_t count, loff_t *ppos)
@@ -900,6 +933,8 @@ out:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t iwl_dbgfs_phy_integration_ver_read(struct file *file,
 						  char __user *user_buf,
 						  size_t count, loff_t *ppos)
@@ -1255,7 +1290,11 @@ iwl_dbgfs_scan_ant_rxchain_read(struct file *file,
 		pos += scnprintf(buf + pos, bufsz - pos, "A");
 	if (mvm->scan_rx_ant & ANT_B)
 		pos += scnprintf(buf + pos, bufsz - pos, "B");
+<<<<<<< HEAD
 	pos += scnprintf(buf + pos, bufsz - pos, " (%x)\n", mvm->scan_rx_ant);
+=======
+	pos += scnprintf(buf + pos, bufsz - pos, " (%hhx)\n", mvm->scan_rx_ant);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return simple_read_from_buffer(user_buf, count, ppos, buf, pos);
 }
@@ -1434,7 +1473,11 @@ static int _iwl_dbgfs_inject_beacon_ie(struct iwl_mvm *mvm, char *bin, int len)
 
 	mvmvif = iwl_mvm_vif_from_mac80211(vif);
 	info = IEEE80211_SKB_CB(beacon);
+<<<<<<< HEAD
 	rate = iwl_mvm_mac_ctxt_get_beacon_rate(mvm, info, vif);
+=======
+	rate = iwl_mvm_mac_ctxt_get_lowest_rate(info, vif);
+>>>>>>> b7ba80a49124 (Commit)
 
 	beacon_cmd.flags =
 		cpu_to_le16(iwl_mvm_mac_ctxt_get_beacon_flags(mvm->fw, rate));
@@ -1871,7 +1914,10 @@ MVM_DEBUGFS_READ_FILE_OPS(fw_rx_stats);
 MVM_DEBUGFS_READ_FILE_OPS(drv_rx_stats);
 MVM_DEBUGFS_READ_FILE_OPS(fw_ver);
 MVM_DEBUGFS_READ_FILE_OPS(phy_integration_ver);
+<<<<<<< HEAD
 MVM_DEBUGFS_READ_FILE_OPS(tas_get_status);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 MVM_DEBUGFS_WRITE_FILE_OPS(fw_restart, 10);
 MVM_DEBUGFS_WRITE_FILE_OPS(fw_nmi, 10);
 MVM_DEBUGFS_WRITE_FILE_OPS(bt_tx_prio, 10);
@@ -2081,7 +2127,10 @@ void iwl_mvm_dbgfs_register(struct iwl_mvm *mvm)
 
 	if (mvm->fw->phy_integration_ver)
 		MVM_DEBUGFS_ADD_FILE(phy_integration_ver, mvm->debugfs_dir, 0400);
+<<<<<<< HEAD
 	MVM_DEBUGFS_ADD_FILE(tas_get_status, mvm->debugfs_dir, 0400);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_ACPI
 	MVM_DEBUGFS_ADD_FILE(sar_geo_profile, mvm->debugfs_dir, 0400);
 #endif

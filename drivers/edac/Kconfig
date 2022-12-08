@@ -53,8 +53,13 @@ config EDAC_DECODE_MCE
 	  has been initialized.
 
 config EDAC_GHES
+<<<<<<< HEAD
 	tristate "Output ACPI APEI/GHES BIOS detected errors via EDAC"
 	depends on ACPI_APEI_GHES
+=======
+	bool "Output ACPI APEI/GHES BIOS detected errors via EDAC"
+	depends on ACPI_APEI_GHES && (EDAC=y)
+>>>>>>> b7ba80a49124 (Commit)
 	select UEFI_CPER
 	help
 	  Not all machines support hardware-driven error report. Some of those
@@ -211,7 +216,10 @@ config EDAC_R82600
 config EDAC_I5000
 	tristate "Intel Greencreek/Blackford chipset"
 	depends on X86 && PCI
+<<<<<<< HEAD
 	depends on BROKEN
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Support for error detection and correction the Intel
 	  Greekcreek/Blackford chipsets.
@@ -474,7 +482,11 @@ config EDAC_ALTERA_SDMMC
 
 config EDAC_SIFIVE
 	bool "Sifive platform EDAC driver"
+<<<<<<< HEAD
 	depends on EDAC=y && SIFIVE_CCACHE
+=======
+	depends on EDAC=y && SIFIVE_L2
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Support for error detection and correction on the SiFive SoCs.
 
@@ -542,6 +554,7 @@ config EDAC_DMC520
 	  Support for error detection and correction on the
 	  SoCs with ARM DMC-520 DRAM controller.
 
+<<<<<<< HEAD
 config EDAC_ZYNQMP
 	tristate "Xilinx ZynqMP OCM Controller"
 	depends on ARCH_ZYNQMP || COMPILE_TEST
@@ -550,4 +563,6 @@ config EDAC_ZYNQMP
 	  Xilinx ZynqMP OCM (On Chip Memory) controller. It can also be
 	  built as a module. In that case it will be called zynqmp_edac.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endif # EDAC

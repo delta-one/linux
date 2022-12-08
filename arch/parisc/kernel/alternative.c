@@ -26,7 +26,11 @@ void __init_or_module apply_alternatives(struct alt_instr *start,
 	struct alt_instr *entry;
 	int index = 0, applied = 0;
 	int num_cpus = num_online_cpus();
+<<<<<<< HEAD
 	u16 cond_check;
+=======
+	u32 cond_check;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cond_check = ALT_COND_ALWAYS |
 		((num_cpus == 1) ? ALT_COND_NO_SMP : 0) |
@@ -45,9 +49,14 @@ void __init_or_module apply_alternatives(struct alt_instr *start,
 
 	for (entry = start; entry < end; entry++, index++) {
 
+<<<<<<< HEAD
 		u32 *from, replacement;
 		u16 cond;
 		s16 len;
+=======
+		u32 *from, cond, replacement;
+		s32 len;
+>>>>>>> b7ba80a49124 (Commit)
 
 		from = (u32 *)((ulong)&entry->orig_offset + entry->orig_offset);
 		len = entry->len;

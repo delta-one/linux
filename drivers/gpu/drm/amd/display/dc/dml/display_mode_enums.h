@@ -105,6 +105,7 @@ enum source_macro_tile_size {
 enum cursor_bpp {
 	dm_cur_2bit = 0, dm_cur_32bit = 1, dm_cur_64bit = 2
 };
+<<<<<<< HEAD
 
 /**
  * @enum clock_change_support - It represents possible reasons to change the DRAM clock.
@@ -130,14 +131,23 @@ enum clock_change_support {
 	 */
 	dm_dram_clock_change_vblank,
 
+=======
+enum clock_change_support {
+	dm_dram_clock_change_uninitialized = 0,
+	dm_dram_clock_change_vactive,
+	dm_dram_clock_change_vblank,
+>>>>>>> b7ba80a49124 (Commit)
 	dm_dram_clock_change_vactive_w_mall_full_frame,
 	dm_dram_clock_change_vactive_w_mall_sub_vp,
 	dm_dram_clock_change_vblank_w_mall_full_frame,
 	dm_dram_clock_change_vblank_w_mall_sub_vp,
+<<<<<<< HEAD
 
 	/**
 	 * @dm_dram_clock_change_unsupported: Do not support DRAM switch
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dm_dram_clock_change_unsupported
 };
 

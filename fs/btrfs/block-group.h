@@ -12,6 +12,7 @@ enum btrfs_disk_cache_state {
 	BTRFS_DC_SETUP,
 };
 
+<<<<<<< HEAD
 enum btrfs_block_group_size_class {
 	/* Unset */
 	BTRFS_BG_SZ_NONE,
@@ -23,6 +24,8 @@ enum btrfs_block_group_size_class {
 	BTRFS_BG_SZ_LARGE,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This describes the state of the block_group for async discard.  This is due
  * to the two pass nature of it where extent discarding is prioritized over
@@ -66,10 +69,13 @@ enum btrfs_block_group_flags {
 	BLOCK_GROUP_FLAG_CHUNK_ITEM_INSERTED,
 	BLOCK_GROUP_FLAG_ZONE_IS_ACTIVE,
 	BLOCK_GROUP_FLAG_ZONED_DATA_RELOC,
+<<<<<<< HEAD
 	/* Does the block group need to be added to the free space tree? */
 	BLOCK_GROUP_FLAG_NEEDS_FREE_SPACE,
 	/* Indicate that the block group is placed on a sequential zone */
 	BLOCK_GROUP_FLAG_SEQUENTIAL_ZONE,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum btrfs_caching_type {
@@ -115,12 +121,15 @@ struct btrfs_block_group {
 	u64 global_root_id;
 
 	/*
+<<<<<<< HEAD
 	 * The last committed used bytes of this block group, if the above @used
 	 * is still the same as @commit_used, we don't need to update block
 	 * group item of this block group.
 	 */
 	u64 commit_used;
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * If the free space extent count exceeds this number, convert the block
 	 * group to bitmaps.
 	 */
@@ -224,6 +233,18 @@ struct btrfs_block_group {
 	struct mutex free_space_lock;
 
 	/*
+<<<<<<< HEAD
+=======
+	 * Does the block group need to be added to the free space tree?
+	 * Protected by free_space_lock.
+	 */
+	int needs_free_space;
+
+	/* Flag indicating this block group is placed on a sequential zone */
+	bool seq_zone;
+
+	/*
+>>>>>>> b7ba80a49124 (Commit)
 	 * Number of extents in this block group used for swap files.
 	 * All accesses protected by the spinlock 'lock'.
 	 */
@@ -244,7 +265,10 @@ struct btrfs_block_group {
 	struct list_head active_bg_list;
 	struct work_struct zone_finish_work;
 	struct extent_buffer *last_eb;
+<<<<<<< HEAD
 	enum btrfs_block_group_size_class size_class;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline u64 btrfs_block_group_end(struct btrfs_block_group *block_group)
@@ -264,7 +288,20 @@ static inline bool btrfs_is_block_group_data_only(
 }
 
 #ifdef CONFIG_BTRFS_DEBUG
+<<<<<<< HEAD
 int btrfs_should_fragment_free_space(struct btrfs_block_group *block_group);
+=======
+static inline int btrfs_should_fragment_free_space(
+		struct btrfs_block_group *block_group)
+{
+	struct btrfs_fs_info *fs_info = block_group->fs_info;
+
+	return (btrfs_test_opt(fs_info, FRAGMENT_METADATA) &&
+		block_group->flags & BTRFS_BLOCK_GROUP_METADATA) ||
+	       (btrfs_test_opt(fs_info, FRAGMENT_DATA) &&
+		block_group->flags &  BTRFS_BLOCK_GROUP_DATA);
+}
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 struct btrfs_block_group *btrfs_lookup_first_block_group(
@@ -314,8 +351,12 @@ int btrfs_setup_space_cache(struct btrfs_trans_handle *trans);
 int btrfs_update_block_group(struct btrfs_trans_handle *trans,
 			     u64 bytenr, u64 num_bytes, bool alloc);
 int btrfs_add_reserved_bytes(struct btrfs_block_group *cache,
+<<<<<<< HEAD
 			     u64 ram_bytes, u64 num_bytes, int delalloc,
 			     bool force_wrong_size_class);
+=======
+			     u64 ram_bytes, u64 num_bytes, int delalloc);
+>>>>>>> b7ba80a49124 (Commit)
 void btrfs_free_reserved_bytes(struct btrfs_block_group *cache,
 			       u64 num_bytes, int delalloc);
 int btrfs_chunk_alloc(struct btrfs_trans_handle *trans, u64 flags,
@@ -328,7 +369,12 @@ u64 btrfs_get_alloc_profile(struct btrfs_fs_info *fs_info, u64 orig_flags);
 void btrfs_put_block_group_cache(struct btrfs_fs_info *info);
 int btrfs_free_block_groups(struct btrfs_fs_info *info);
 int btrfs_rmap_block(struct btrfs_fs_info *fs_info, u64 chunk_start,
+<<<<<<< HEAD
 		     u64 physical, u64 **logical, int *naddrs, int *stripe_len);
+=======
+		       struct block_device *bdev, u64 physical, u64 **logical,
+		       int *naddrs, int *stripe_len);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline u64 btrfs_data_alloc_profile(struct btrfs_fs_info *fs_info)
 {
@@ -358,10 +404,13 @@ void btrfs_unfreeze_block_group(struct btrfs_block_group *cache);
 bool btrfs_inc_block_group_swap_extents(struct btrfs_block_group *bg);
 void btrfs_dec_block_group_swap_extents(struct btrfs_block_group *bg, int amount);
 
+<<<<<<< HEAD
 enum btrfs_block_group_size_class btrfs_calc_block_group_size_class(u64 size);
 int btrfs_use_block_group_size_class(struct btrfs_block_group *bg,
 				     enum btrfs_block_group_size_class size_class,
 				     bool force_wrong_size_class);
 bool btrfs_block_group_should_use_size_class(struct btrfs_block_group *bg);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* BTRFS_BLOCK_GROUP_H */

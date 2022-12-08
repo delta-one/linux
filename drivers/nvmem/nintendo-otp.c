@@ -76,6 +76,10 @@ static int nintendo_otp_probe(struct platform_device *pdev)
 	struct device *dev = &pdev->dev;
 	const struct of_device_id *of_id =
 		of_match_device(nintendo_otp_of_table, dev);
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nvmem_device *nvmem;
 	struct nintendo_otp_priv *priv;
 
@@ -91,7 +95,12 @@ static int nintendo_otp_probe(struct platform_device *pdev)
 	if (!priv)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	priv->regs = devm_platform_ioremap_resource(pdev, 0);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	priv->regs = devm_ioremap_resource(dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(priv->regs))
 		return PTR_ERR(priv->regs);
 

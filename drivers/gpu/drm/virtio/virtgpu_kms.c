@@ -43,6 +43,7 @@ static void virtio_gpu_config_changed_work_func(struct work_struct *work)
 	virtio_cread_le(vgdev->vdev, struct virtio_gpu_config,
 			events_read, &events_read);
 	if (events_read & VIRTIO_GPU_EVENT_DISPLAY) {
+<<<<<<< HEAD
 		if (vgdev->num_scanouts) {
 			if (vgdev->has_edid)
 				virtio_gpu_cmd_get_edids(vgdev);
@@ -50,6 +51,13 @@ static void virtio_gpu_config_changed_work_func(struct work_struct *work)
 			virtio_gpu_notify(vgdev);
 			drm_helper_hpd_irq_event(vgdev->ddev);
 		}
+=======
+		if (vgdev->has_edid)
+			virtio_gpu_cmd_get_edids(vgdev);
+		virtio_gpu_cmd_get_display_info(vgdev);
+		virtio_gpu_notify(vgdev);
+		drm_helper_hpd_irq_event(vgdev->ddev);
+>>>>>>> b7ba80a49124 (Commit)
 		events_clear |= VIRTIO_GPU_EVENT_DISPLAY;
 	}
 	virtio_cwrite_le(vgdev->vdev, struct virtio_gpu_config,
@@ -225,6 +233,7 @@ int virtio_gpu_init(struct virtio_device *vdev, struct drm_device *dev)
 			num_scanouts, &num_scanouts);
 	vgdev->num_scanouts = min_t(uint32_t, num_scanouts,
 				    VIRTIO_GPU_MAX_SCANOUTS);
+<<<<<<< HEAD
 
 	if (!IS_ENABLED(CONFIG_DRM_VIRTIO_GPU_KMS) || !vgdev->num_scanouts) {
 		DRM_INFO("KMS disabled\n");
@@ -234,6 +243,14 @@ int virtio_gpu_init(struct virtio_device *vdev, struct drm_device *dev)
 	} else {
 		DRM_INFO("number of scanouts: %d\n", num_scanouts);
 	}
+=======
+	if (!vgdev->num_scanouts) {
+		DRM_ERROR("num_scanouts is zero\n");
+		ret = -EINVAL;
+		goto err_scanouts;
+	}
+	DRM_INFO("number of scanouts: %d\n", num_scanouts);
+>>>>>>> b7ba80a49124 (Commit)
 
 	virtio_cread_le(vgdev->vdev, struct virtio_gpu_config,
 			num_capsets, &num_capsets);
@@ -249,6 +266,7 @@ int virtio_gpu_init(struct virtio_device *vdev, struct drm_device *dev)
 
 	if (num_capsets)
 		virtio_gpu_get_capsets(vgdev, num_capsets);
+<<<<<<< HEAD
 	if (vgdev->num_scanouts) {
 		if (vgdev->has_edid)
 			virtio_gpu_cmd_get_edids(vgdev);
@@ -257,6 +275,14 @@ int virtio_gpu_init(struct virtio_device *vdev, struct drm_device *dev)
 		wait_event_timeout(vgdev->resp_wq, !vgdev->display_info_pending,
 				   5 * HZ);
 	}
+=======
+	if (vgdev->has_edid)
+		virtio_gpu_cmd_get_edids(vgdev);
+	virtio_gpu_cmd_get_display_info(vgdev);
+	virtio_gpu_notify(vgdev);
+	wait_event_timeout(vgdev->resp_wq, !vgdev->display_info_pending,
+			   5 * HZ);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_scanouts:

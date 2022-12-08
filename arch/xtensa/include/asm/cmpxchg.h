@@ -170,7 +170,11 @@ static inline unsigned long xchg_u32(volatile int * m, unsigned long val)
 }
 
 #define arch_xchg(ptr,x) \
+<<<<<<< HEAD
 	((__typeof__(*(ptr)))__arch_xchg((unsigned long)(x),(ptr),sizeof(*(ptr))))
+=======
+	((__typeof__(*(ptr)))__xchg((unsigned long)(x),(ptr),sizeof(*(ptr))))
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline u32 xchg_small(volatile void *ptr, u32 x, int size)
 {
@@ -203,7 +207,11 @@ static inline u32 xchg_small(volatile void *ptr, u32 x, int size)
 extern void __xchg_called_with_bad_pointer(void);
 
 static __inline__ unsigned long
+<<<<<<< HEAD
 __arch_xchg(unsigned long x, volatile void * ptr, int size)
+=======
+__xchg(unsigned long x, volatile void * ptr, int size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (size) {
 	case 1:

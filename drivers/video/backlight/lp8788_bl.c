@@ -298,7 +298,11 @@ err_dev:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void lp8788_backlight_remove(struct platform_device *pdev)
+=======
+static int lp8788_backlight_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lp8788_bl *bl = platform_get_drvdata(pdev);
 	struct backlight_device *bl_dev = bl->bl_dev;
@@ -307,11 +311,20 @@ static void lp8788_backlight_remove(struct platform_device *pdev)
 	backlight_update_status(bl_dev);
 	sysfs_remove_group(&pdev->dev.kobj, &lp8788_attr_group);
 	lp8788_backlight_unregister(bl);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver lp8788_bl_driver = {
 	.probe = lp8788_backlight_probe,
+<<<<<<< HEAD
 	.remove_new = lp8788_backlight_remove,
+=======
+	.remove = lp8788_backlight_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = LP8788_DEV_BACKLIGHT,
 	},

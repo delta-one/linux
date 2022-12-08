@@ -28,29 +28,49 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-logo {
+=======
+		logo {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:white:logo";
 			gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "default-on";
 		};
 
+<<<<<<< HEAD
 		led-power0 {
+=======
+		power0 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:power";
 			gpios = <&chipcommon 2 GPIO_ACTIVE_LOW>;
 		};
 
+<<<<<<< HEAD
 		led-power1 {
+=======
+		power1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:amber:power";
 			gpios = <&chipcommon 3 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "default-on";
 		};
 
+<<<<<<< HEAD
 		led-usb {
+=======
+		usb {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:blue:usb";
 			gpios = <&chipcommon 8 GPIO_ACTIVE_LOW>;
 		};
 
+<<<<<<< HEAD
 		led-wireless {
+=======
+		wireless {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:blue:wireless";
 			gpios = <&chipcommon 11 GPIO_ACTIVE_LOW>;
 		};

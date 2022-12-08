@@ -243,7 +243,11 @@ static int ieee80211_can_powered_addr_change(struct ieee80211_sub_if_data *sdata
 		 */
 		break;
 	default:
+<<<<<<< HEAD
 		ret = -EOPNOTSUPP;
+=======
+		return -EOPNOTSUPP;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 unlock:
@@ -364,9 +368,13 @@ static int ieee80211_check_concurrent_iface(struct ieee80211_sub_if_data *sdata,
 
 			/* No support for VLAN with MLO yet */
 			if (iftype == NL80211_IFTYPE_AP_VLAN &&
+<<<<<<< HEAD
 			    sdata->wdev.use_4addr &&
 			    nsdata->vif.type == NL80211_IFTYPE_AP &&
 			    nsdata->vif.valid_links)
+=======
+			    nsdata->wdev.use_4addr)
+>>>>>>> b7ba80a49124 (Commit)
 				return -EOPNOTSUPP;
 
 			/*
@@ -460,6 +468,15 @@ static void ieee80211_do_stop(struct ieee80211_sub_if_data *sdata, bool going_do
 	if (cancel_scan)
 		ieee80211_scan_cancel(local);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Stop TX on this interface first.
+	 */
+	if (sdata->dev)
+		netif_tx_stop_all_queues(sdata->dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	ieee80211_roc_purge(local, sdata);
 
 	switch (sdata->vif.type) {
@@ -807,12 +824,23 @@ static void ieee80211_uninit(struct net_device *dev)
 	ieee80211_teardown_sdata(IEEE80211_DEV_TO_SUB_IF(dev));
 }
 
+<<<<<<< HEAD
+=======
+static u16 ieee80211_netdev_select_queue(struct net_device *dev,
+					 struct sk_buff *skb,
+					 struct net_device *sb_dev)
+{
+	return ieee80211_select_queue(IEEE80211_DEV_TO_SUB_IF(dev), skb);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void
 ieee80211_get_stats64(struct net_device *dev, struct rtnl_link_stats64 *stats)
 {
 	dev_fetch_sw_netstats(stats, dev->tstats);
 }
 
+<<<<<<< HEAD
 static int ieee80211_netdev_setup_tc(struct net_device *dev,
 				     enum tc_setup_type type, void *type_data)
 {
@@ -822,6 +850,8 @@ static int ieee80211_netdev_setup_tc(struct net_device *dev,
 	return drv_net_setup_tc(local, sdata, dev, type, type_data);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct net_device_ops ieee80211_dataif_ops = {
 	.ndo_open		= ieee80211_open,
 	.ndo_stop		= ieee80211_stop,
@@ -829,8 +859,13 @@ static const struct net_device_ops ieee80211_dataif_ops = {
 	.ndo_start_xmit		= ieee80211_subif_start_xmit,
 	.ndo_set_rx_mode	= ieee80211_set_multicast_list,
 	.ndo_set_mac_address 	= ieee80211_change_mac,
+<<<<<<< HEAD
 	.ndo_get_stats64	= ieee80211_get_stats64,
 	.ndo_setup_tc		= ieee80211_netdev_setup_tc,
+=======
+	.ndo_select_queue	= ieee80211_netdev_select_queue,
+	.ndo_get_stats64	= ieee80211_get_stats64,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static u16 ieee80211_monitor_select_queue(struct net_device *dev,
@@ -937,9 +972,15 @@ static const struct net_device_ops ieee80211_dataif_8023_ops = {
 	.ndo_start_xmit		= ieee80211_subif_start_xmit_8023,
 	.ndo_set_rx_mode	= ieee80211_set_multicast_list,
 	.ndo_set_mac_address	= ieee80211_change_mac,
+<<<<<<< HEAD
 	.ndo_get_stats64	= ieee80211_get_stats64,
 	.ndo_fill_forward_path	= ieee80211_netdev_fill_forward_path,
 	.ndo_setup_tc		= ieee80211_netdev_setup_tc,
+=======
+	.ndo_select_queue	= ieee80211_netdev_select_queue,
+	.ndo_get_stats64	= ieee80211_get_stats64,
+	.ndo_fill_forward_path	= ieee80211_netdev_fill_forward_path,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static bool ieee80211_iftype_supports_hdr_offload(enum nl80211_iftype iftype)
@@ -1410,6 +1451,11 @@ int ieee80211_do_open(struct wireless_dev *wdev, bool coming_up)
 			sdata->vif.type != NL80211_IFTYPE_STATION);
 	}
 
+<<<<<<< HEAD
+=======
+	set_bit(SDATA_STATE_RUNNING, &sdata->state);
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (sdata->vif.type) {
 	case NL80211_IFTYPE_P2P_DEVICE:
 		rcu_assign_pointer(local->p2p_sdata, sdata);
@@ -1439,7 +1485,38 @@ int ieee80211_do_open(struct wireless_dev *wdev, bool coming_up)
 
 	ieee80211_recalc_ps(local);
 
+<<<<<<< HEAD
 	set_bit(SDATA_STATE_RUNNING, &sdata->state);
+=======
+	if (sdata->vif.type == NL80211_IFTYPE_MONITOR ||
+	    sdata->vif.type == NL80211_IFTYPE_AP_VLAN ||
+	    local->ops->wake_tx_queue) {
+		/* XXX: for AP_VLAN, actually track AP queues */
+		if (dev)
+			netif_tx_start_all_queues(dev);
+	} else if (dev) {
+		unsigned long flags;
+		int n_acs = IEEE80211_NUM_ACS;
+		int ac;
+
+		if (local->hw.queues < IEEE80211_NUM_ACS)
+			n_acs = 1;
+
+		spin_lock_irqsave(&local->queue_stop_reason_lock, flags);
+		if (sdata->vif.cab_queue == IEEE80211_INVAL_HW_QUEUE ||
+		    (local->queue_stop_reasons[sdata->vif.cab_queue] == 0 &&
+		     skb_queue_empty(&local->pending[sdata->vif.cab_queue]))) {
+			for (ac = 0; ac < n_acs; ac++) {
+				int ac_queue = sdata->vif.hw_queue[ac];
+
+				if (local->queue_stop_reasons[ac_queue] == 0 &&
+				    skb_queue_empty(&local->pending[ac_queue]))
+					netif_start_subqueue(dev, ac);
+			}
+		}
+		spin_unlock_irqrestore(&local->queue_stop_reason_lock, flags);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
  err_del_interface:
@@ -1468,12 +1545,24 @@ static void ieee80211_if_setup(struct net_device *dev)
 {
 	ether_setup(dev);
 	dev->priv_flags &= ~IFF_TX_SKB_SHARING;
+<<<<<<< HEAD
 	dev->priv_flags |= IFF_NO_QUEUE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev->netdev_ops = &ieee80211_dataif_ops;
 	dev->needs_free_netdev = true;
 	dev->priv_destructor = ieee80211_if_free;
 }
 
+<<<<<<< HEAD
+=======
+static void ieee80211_if_setup_no_queue(struct net_device *dev)
+{
+	ieee80211_if_setup(dev);
+	dev->priv_flags |= IFF_NO_QUEUE;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void ieee80211_iface_process_skb(struct ieee80211_local *local,
 					struct ieee80211_sub_if_data *sdata,
 					struct sk_buff *skb)
@@ -1862,7 +1951,12 @@ static int ieee80211_runtime_change_iftype(struct ieee80211_sub_if_data *sdata,
 
 	ieee80211_stop_vif_queues(local, sdata,
 				  IEEE80211_QUEUE_STOP_REASON_IFTYPE_CHANGE);
+<<<<<<< HEAD
 	/* do_stop will synchronize_rcu() first thing */
+=======
+	synchronize_net();
+
+>>>>>>> b7ba80a49124 (Commit)
 	ieee80211_do_stop(sdata, false);
 
 	ieee80211_teardown_sdata(sdata);
@@ -2057,7 +2151,13 @@ int ieee80211_if_add(struct ieee80211_local *local, const char *name,
 	struct net_device *ndev = NULL;
 	struct ieee80211_sub_if_data *sdata = NULL;
 	struct txq_info *txqi;
+<<<<<<< HEAD
 	int ret, i;
+=======
+	void (*if_setup)(struct net_device *dev);
+	int ret, i;
+	int txqs = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_RTNL();
 
@@ -2080,18 +2180,43 @@ int ieee80211_if_add(struct ieee80211_local *local, const char *name,
 				 sizeof(void *));
 		int txq_size = 0;
 
+<<<<<<< HEAD
 		if (type != NL80211_IFTYPE_AP_VLAN &&
+=======
+		if (local->ops->wake_tx_queue &&
+		    type != NL80211_IFTYPE_AP_VLAN &&
+>>>>>>> b7ba80a49124 (Commit)
 		    (type != NL80211_IFTYPE_MONITOR ||
 		     (params->flags & MONITOR_FLAG_ACTIVE)))
 			txq_size += sizeof(struct txq_info) +
 				    local->hw.txq_data_size;
 
+<<<<<<< HEAD
 		ndev = alloc_netdev_mqs(size + txq_size,
 					name, name_assign_type,
 					ieee80211_if_setup, 1, 1);
 		if (!ndev)
 			return -ENOMEM;
 
+=======
+		if (local->ops->wake_tx_queue) {
+			if_setup = ieee80211_if_setup_no_queue;
+		} else {
+			if_setup = ieee80211_if_setup;
+			if (local->hw.queues >= IEEE80211_NUM_ACS)
+				txqs = IEEE80211_NUM_ACS;
+		}
+
+		ndev = alloc_netdev_mqs(size + txq_size,
+					name, name_assign_type,
+					if_setup, txqs, 1);
+		if (!ndev)
+			return -ENOMEM;
+
+		if (!local->ops->wake_tx_queue && local->hw.wiphy->tx_queue_len)
+			ndev->tx_queue_len = local->hw.wiphy->tx_queue_len;
+
+>>>>>>> b7ba80a49124 (Commit)
 		dev_net_set(ndev, wiphy_net(local->hw.wiphy));
 
 		ndev->tstats = netdev_alloc_pcpu_stats(struct pcpu_sw_netstats);
@@ -2191,7 +2316,10 @@ int ieee80211_if_add(struct ieee80211_local *local, const char *name,
 		ndev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
 		ndev->hw_features |= ndev->features &
 					MAC80211_SUPPORTED_FEATURES_TX;
+<<<<<<< HEAD
 		sdata->vif.netdev_features = local->hw.netdev_features;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		netdev_set_default_ethtool_ops(ndev, &ieee80211_ethtool_ops);
 

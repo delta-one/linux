@@ -5,18 +5,24 @@
 #include <linux/types.h>
 #include <linux/jump_label.h>
 
+<<<<<<< HEAD
 /* Helpers used from arbitrary contexts.
  * Hard irqs are blocked, be cautious.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool __do_once_start(bool *done, unsigned long *flags);
 void __do_once_done(bool *done, struct static_key_true *once_key,
 		    unsigned long *flags, struct module *mod);
 
+<<<<<<< HEAD
 /* Variant for process contexts only. */
 bool __do_once_sleepable_start(bool *done);
 void __do_once_sleepable_done(bool *done, struct static_key_true *once_key,
 			      struct module *mod);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Call a function exactly once. The idea of DO_ONCE() is to perform
  * a function call such as initialization of random seeds, etc, only
  * once, where DO_ONCE() can live in the fast-path. After @func has
@@ -60,6 +66,7 @@ void __do_once_sleepable_done(bool *done, struct static_key_true *once_key,
 		___ret;							     \
 	})
 
+<<<<<<< HEAD
 /* Variant of DO_ONCE() for process/sleepable contexts. */
 #define DO_ONCE_SLEEPABLE(func, ...)						\
 	({									\
@@ -83,4 +90,9 @@ void __do_once_sleepable_done(bool *done, struct static_key_true *once_key,
 #define get_random_sleepable_once(buf, nbytes)				     \
 	DO_ONCE_SLEEPABLE(get_random_bytes, (buf), (nbytes))
 
+=======
+#define get_random_once(buf, nbytes)					     \
+	DO_ONCE(get_random_bytes, (buf), (nbytes))
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _LINUX_ONCE_H */

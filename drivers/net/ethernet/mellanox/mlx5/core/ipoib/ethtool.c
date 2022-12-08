@@ -90,6 +90,7 @@ static void mlx5i_get_ringparam(struct net_device *dev,
 static int mlx5i_set_channels(struct net_device *dev,
 			      struct ethtool_channels *ch)
 {
+<<<<<<< HEAD
 	struct mlx5i_priv *ipriv = netdev_priv(dev);
 	struct mlx5e_priv *epriv = mlx5i_epriv(dev);
 
@@ -105,6 +106,11 @@ static int mlx5i_set_channels(struct net_device *dev,
 	}
 
 	return mlx5e_ethtool_set_channels(epriv, ch);
+=======
+	struct mlx5e_priv *priv = mlx5i_epriv(dev);
+
+	return mlx5e_ethtool_set_channels(priv, ch);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mlx5i_get_channels(struct net_device *dev,
@@ -172,7 +178,10 @@ enum mlx5_ptys_rate {
 	MLX5_PTYS_RATE_EDR	= 1 << 5,
 	MLX5_PTYS_RATE_HDR	= 1 << 6,
 	MLX5_PTYS_RATE_NDR	= 1 << 7,
+<<<<<<< HEAD
 	MLX5_PTYS_RATE_XDR	= 1 << 8,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline int mlx5_ptys_rate_enum_to_int(enum mlx5_ptys_rate rate)
@@ -186,21 +195,35 @@ static inline int mlx5_ptys_rate_enum_to_int(enum mlx5_ptys_rate rate)
 	case MLX5_PTYS_RATE_EDR:   return 25000;
 	case MLX5_PTYS_RATE_HDR:   return 50000;
 	case MLX5_PTYS_RATE_NDR:   return 100000;
+<<<<<<< HEAD
 	case MLX5_PTYS_RATE_XDR:   return 200000;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:		   return -1;
 	}
 }
 
+<<<<<<< HEAD
 static u32 mlx5i_get_speed_settings(u16 ib_link_width_oper, u16 ib_proto_oper)
+=======
+static int mlx5i_get_speed_settings(u16 ib_link_width_oper, u16 ib_proto_oper)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int rate, width;
 
 	rate = mlx5_ptys_rate_enum_to_int(ib_proto_oper);
 	if (rate < 0)
+<<<<<<< HEAD
 		return SPEED_UNKNOWN;
 	width = mlx5_ptys_width_enum_to_int(ib_link_width_oper);
 	if (width < 0)
 		return SPEED_UNKNOWN;
+=======
+		return -EINVAL;
+	width = mlx5_ptys_width_enum_to_int(ib_link_width_oper);
+	if (width < 0)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return rate * width;
 }
@@ -223,13 +246,25 @@ static int mlx5i_get_link_ksettings(struct net_device *netdev,
 	ethtool_link_ksettings_zero_link_mode(link_ksettings, advertising);
 
 	speed = mlx5i_get_speed_settings(ib_link_width_oper, ib_proto_oper);
+<<<<<<< HEAD
 	link_ksettings->base.speed = speed;
 	link_ksettings->base.duplex = speed == SPEED_UNKNOWN ? DUPLEX_UNKNOWN : DUPLEX_FULL;
 
+=======
+	if (speed < 0)
+		return -EINVAL;
+
+	link_ksettings->base.duplex = DUPLEX_FULL;
+>>>>>>> b7ba80a49124 (Commit)
 	link_ksettings->base.port = PORT_OTHER;
 
 	link_ksettings->base.autoneg = AUTONEG_DISABLE;
 
+<<<<<<< HEAD
+=======
+	link_ksettings->base.speed = speed;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

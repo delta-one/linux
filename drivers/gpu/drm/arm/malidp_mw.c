@@ -129,7 +129,11 @@ malidp_mw_encoder_atomic_check(struct drm_encoder *encoder,
 			       struct drm_connector_state *conn_state)
 {
 	struct malidp_mw_connector_state *mw_state = to_mw_state(conn_state);
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(encoder->dev);
+=======
+	struct malidp_drm *malidp = encoder->dev->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_framebuffer *fb;
 	int i, n_planes;
 
@@ -207,7 +211,11 @@ static u32 *get_writeback_formats(struct malidp_drm *malidp, int *n_formats)
 
 int malidp_mw_connector_init(struct drm_device *drm)
 {
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 *formats;
 	int ret, n_formats;
 
@@ -236,7 +244,11 @@ int malidp_mw_connector_init(struct drm_device *drm)
 void malidp_mw_atomic_commit(struct drm_device *drm,
 			     struct drm_atomic_state *old_state)
 {
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_writeback_connector *mw_conn = &malidp->mw_connector;
 	struct drm_connector_state *conn_state = mw_conn->base.state;
 	struct malidp_hw_device *hwdev = malidp->dev;

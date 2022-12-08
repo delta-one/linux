@@ -117,11 +117,19 @@ static int ip_clear_mutable_options(const struct iphdr *iph, __be32 *daddr)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void ah_output_done(void *data, int err)
 {
 	u8 *icv;
 	struct iphdr *iph;
 	struct sk_buff *skb = data;
+=======
+static void ah_output_done(struct crypto_async_request *base, int err)
+{
+	u8 *icv;
+	struct iphdr *iph;
+	struct sk_buff *skb = base->data;
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfrm_state *x = skb_dst(skb)->xfrm;
 	struct ah_data *ahp = x->data;
 	struct iphdr *top_iph = ip_hdr(skb);
@@ -262,12 +270,20 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static void ah_input_done(void *data, int err)
+=======
+static void ah_input_done(struct crypto_async_request *base, int err)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u8 *auth_data;
 	u8 *icv;
 	struct iphdr *work_iph;
+<<<<<<< HEAD
 	struct sk_buff *skb = data;
+=======
+	struct sk_buff *skb = base->data;
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfrm_state *x = xfrm_input_state(skb);
 	struct ah_data *ahp = x->data;
 	struct ip_auth_hdr *ah = ip_auth_hdr(skb);
@@ -471,12 +487,17 @@ static int ah4_err(struct sk_buff *skb, u32 info)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ah_init_state(struct xfrm_state *x, struct netlink_ext_ack *extack)
+=======
+static int ah_init_state(struct xfrm_state *x)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ah_data *ahp = NULL;
 	struct xfrm_algo_desc *aalg_desc;
 	struct crypto_ahash *ahash;
 
+<<<<<<< HEAD
 	if (!x->aalg) {
 		NL_SET_ERR_MSG(extack, "AH requires a state with an AUTH algorithm");
 		goto error;
@@ -486,12 +507,20 @@ static int ah_init_state(struct xfrm_state *x, struct netlink_ext_ack *extack)
 		NL_SET_ERR_MSG(extack, "AH is not compatible with encapsulation");
 		goto error;
 	}
+=======
+	if (!x->aalg)
+		goto error;
+
+	if (x->encap)
+		goto error;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ahp = kzalloc(sizeof(*ahp), GFP_KERNEL);
 	if (!ahp)
 		return -ENOMEM;
 
 	ahash = crypto_alloc_ahash(x->aalg->alg_name, 0, 0);
+<<<<<<< HEAD
 	if (IS_ERR(ahash)) {
 		NL_SET_ERR_MSG(extack, "Kernel was unable to initialize cryptographic operations");
 		goto error;
@@ -503,6 +532,15 @@ static int ah_init_state(struct xfrm_state *x, struct netlink_ext_ack *extack)
 		NL_SET_ERR_MSG(extack, "Kernel was unable to initialize cryptographic operations");
 		goto error;
 	}
+=======
+	if (IS_ERR(ahash))
+		goto error;
+
+	ahp->ahash = ahash;
+	if (crypto_ahash_setkey(ahash, x->aalg->alg_key,
+				(x->aalg->alg_key_len + 7) / 8))
+		goto error;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Lookup the algorithm description maintained by xfrm_algo,
@@ -515,7 +553,14 @@ static int ah_init_state(struct xfrm_state *x, struct netlink_ext_ack *extack)
 
 	if (aalg_desc->uinfo.auth.icv_fullbits/8 !=
 	    crypto_ahash_digestsize(ahash)) {
+<<<<<<< HEAD
 		NL_SET_ERR_MSG(extack, "Kernel was unable to initialize cryptographic operations");
+=======
+		pr_info("%s: %s digestsize %u != %u\n",
+			__func__, x->aalg->alg_name,
+			crypto_ahash_digestsize(ahash),
+			aalg_desc->uinfo.auth.icv_fullbits / 8);
+>>>>>>> b7ba80a49124 (Commit)
 		goto error;
 	}
 

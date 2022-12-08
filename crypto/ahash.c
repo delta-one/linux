@@ -8,18 +8,31 @@
  * Copyright (c) 2008 Loc Ho <lho@amcc.com>
  */
 
+<<<<<<< HEAD
 #include <crypto/scatterwalk.h>
 #include <linux/cryptouser.h>
+=======
+#include <crypto/internal/hash.h>
+#include <crypto/scatterwalk.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/err.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/sched.h>
 #include <linux/slab.h>
 #include <linux/seq_file.h>
+<<<<<<< HEAD
 #include <linux/string.h>
 #include <net/netlink.h>
 
 #include "hash.h"
+=======
+#include <linux/cryptouser.h>
+#include <linux/compiler.h>
+#include <net/netlink.h>
+
+#include "internal.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct crypto_type crypto_ahash_type;
 
@@ -44,7 +57,11 @@ static int hash_walk_next(struct crypto_hash_walk *walk)
 	unsigned int nbytes = min(walk->entrylen,
 				  ((unsigned int)(PAGE_SIZE)) - offset);
 
+<<<<<<< HEAD
 	walk->data = kmap_local_page(walk->pg);
+=======
+	walk->data = kmap_atomic(walk->pg);
+>>>>>>> b7ba80a49124 (Commit)
 	walk->data += offset;
 
 	if (offset & alignmask) {
@@ -94,7 +111,11 @@ int crypto_hash_walk_done(struct crypto_hash_walk *walk, int err)
 		}
 	}
 
+<<<<<<< HEAD
 	kunmap_local(walk->data);
+=======
+	kunmap_atomic(walk->data);
+>>>>>>> b7ba80a49124 (Commit)
 	crypto_yield(walk->flags);
 
 	if (err)
@@ -189,12 +210,23 @@ int crypto_ahash_setkey(struct crypto_ahash *tfm, const u8 *key,
 }
 EXPORT_SYMBOL_GPL(crypto_ahash_setkey);
 
+<<<<<<< HEAD
 static int ahash_save_req(struct ahash_request *req, crypto_completion_t cplt,
 			  bool has_state)
+=======
+static inline unsigned int ahash_align_buffer_size(unsigned len,
+						   unsigned long mask)
+{
+	return len + (mask & ~(crypto_tfm_ctx_alignment() - 1));
+}
+
+static int ahash_save_req(struct ahash_request *req, crypto_completion_t cplt)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
 	unsigned long alignmask = crypto_ahash_alignmask(tfm);
 	unsigned int ds = crypto_ahash_digestsize(tfm);
+<<<<<<< HEAD
 	struct ahash_request *subreq;
 	unsigned int subreq_size;
 	unsigned int reqsize;
@@ -238,12 +270,63 @@ static int ahash_save_req(struct ahash_request *req, crypto_completion_t cplt,
 	}
 
 	req->priv = subreq;
+=======
+	struct ahash_request_priv *priv;
+
+	priv = kmalloc(sizeof(*priv) + ahash_align_buffer_size(ds, alignmask),
+		       (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+		       GFP_KERNEL : GFP_ATOMIC);
+	if (!priv)
+		return -ENOMEM;
+
+	/*
+	 * WARNING: Voodoo programming below!
+	 *
+	 * The code below is obscure and hard to understand, thus explanation
+	 * is necessary. See include/crypto/hash.h and include/linux/crypto.h
+	 * to understand the layout of structures used here!
+	 *
+	 * The code here will replace portions of the ORIGINAL request with
+	 * pointers to new code and buffers so the hashing operation can store
+	 * the result in aligned buffer. We will call the modified request
+	 * an ADJUSTED request.
+	 *
+	 * The newly mangled request will look as such:
+	 *
+	 * req {
+	 *   .result        = ADJUSTED[new aligned buffer]
+	 *   .base.complete = ADJUSTED[pointer to completion function]
+	 *   .base.data     = ADJUSTED[*req (pointer to self)]
+	 *   .priv          = ADJUSTED[new priv] {
+	 *           .result   = ORIGINAL(result)
+	 *           .complete = ORIGINAL(base.complete)
+	 *           .data     = ORIGINAL(base.data)
+	 *   }
+	 */
+
+	priv->result = req->result;
+	priv->complete = req->base.complete;
+	priv->data = req->base.data;
+	priv->flags = req->base.flags;
+
+	/*
+	 * WARNING: We do not backup req->priv here! The req->priv
+	 *          is for internal use of the Crypto API and the
+	 *          user must _NOT_ _EVER_ depend on it's content!
+	 */
+
+	req->result = PTR_ALIGN((u8 *)priv->ubuf, alignmask + 1);
+	req->base.complete = cplt;
+	req->base.data = req;
+	req->priv = priv;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 static void ahash_restore_req(struct ahash_request *req, int err)
 {
+<<<<<<< HEAD
 	struct ahash_request *subreq = req->priv;
 
 	if (!err)
@@ -261,10 +344,57 @@ static void ahash_op_unaligned_done(void *data, int err)
 
 	if (err == -EINPROGRESS)
 		goto out;
+=======
+	struct ahash_request_priv *priv = req->priv;
+
+	if (!err)
+		memcpy(priv->result, req->result,
+		       crypto_ahash_digestsize(crypto_ahash_reqtfm(req)));
+
+	/* Restore the original crypto request. */
+	req->result = priv->result;
+
+	ahash_request_set_callback(req, priv->flags,
+				   priv->complete, priv->data);
+	req->priv = NULL;
+
+	/* Free the req->priv.priv from the ADJUSTED request. */
+	kfree_sensitive(priv);
+}
+
+static void ahash_notify_einprogress(struct ahash_request *req)
+{
+	struct ahash_request_priv *priv = req->priv;
+	struct crypto_async_request oreq;
+
+	oreq.data = priv->data;
+
+	priv->complete(&oreq, -EINPROGRESS);
+}
+
+static void ahash_op_unaligned_done(struct crypto_async_request *req, int err)
+{
+	struct ahash_request *areq = req->data;
+
+	if (err == -EINPROGRESS) {
+		ahash_notify_einprogress(areq);
+		return;
+	}
+
+	/*
+	 * Restore the original request, see ahash_op_unaligned() for what
+	 * goes where.
+	 *
+	 * The "struct ahash_request *req" here is in fact the "req.base"
+	 * from the ADJUSTED request from ahash_op_unaligned(), thus as it
+	 * is a pointer to self, it is also the ADJUSTED "req" .
+	 */
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* First copy req->result into req->priv.result */
 	ahash_restore_req(areq, err);
 
+<<<<<<< HEAD
 out:
 	/* Complete the ORIGINAL request. */
 	ahash_request_complete(areq, err);
@@ -281,6 +411,22 @@ static int ahash_op_unaligned(struct ahash_request *req,
 		return err;
 
 	err = op(req->priv);
+=======
+	/* Complete the ORIGINAL request. */
+	areq->base.complete(&areq->base, err);
+}
+
+static int ahash_op_unaligned(struct ahash_request *req,
+			      int (*op)(struct ahash_request *))
+{
+	int err;
+
+	err = ahash_save_req(req, ahash_op_unaligned_done);
+	if (err)
+		return err;
+
+	err = op(req);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err == -EINPROGRESS || err == -EBUSY)
 		return err;
 
@@ -290,6 +436,7 @@ static int ahash_op_unaligned(struct ahash_request *req,
 }
 
 static int crypto_ahash_op(struct ahash_request *req,
+<<<<<<< HEAD
 			   int (*op)(struct ahash_request *),
 			   bool has_state)
 {
@@ -303,23 +450,46 @@ static int crypto_ahash_op(struct ahash_request *req,
 		err = op(req);
 
 	return crypto_hash_errstat(crypto_hash_alg_common(tfm), err);
+=======
+			   int (*op)(struct ahash_request *))
+{
+	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
+	unsigned long alignmask = crypto_ahash_alignmask(tfm);
+
+	if ((unsigned long)req->result & alignmask)
+		return ahash_op_unaligned(req, op);
+
+	return op(req);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int crypto_ahash_final(struct ahash_request *req)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
+<<<<<<< HEAD
 	struct hash_alg_common *alg = crypto_hash_alg_common(tfm);
 
 	if (IS_ENABLED(CONFIG_CRYPTO_STATS))
 		atomic64_inc(&hash_get_stat(alg)->hash_cnt);
 
 	return crypto_ahash_op(req, tfm->final, true);
+=======
+	struct crypto_alg *alg = tfm->base.__crt_alg;
+	unsigned int nbytes = req->nbytes;
+	int ret;
+
+	crypto_stats_get(alg);
+	ret = crypto_ahash_op(req, crypto_ahash_reqtfm(req)->final);
+	crypto_stats_ahash_final(nbytes, ret, alg);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(crypto_ahash_final);
 
 int crypto_ahash_finup(struct ahash_request *req)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
+<<<<<<< HEAD
 	struct hash_alg_common *alg = crypto_hash_alg_common(tfm);
 
 	if (IS_ENABLED(CONFIG_CRYPTO_STATS)) {
@@ -330,12 +500,23 @@ int crypto_ahash_finup(struct ahash_request *req)
 	}
 
 	return crypto_ahash_op(req, tfm->finup, true);
+=======
+	struct crypto_alg *alg = tfm->base.__crt_alg;
+	unsigned int nbytes = req->nbytes;
+	int ret;
+
+	crypto_stats_get(alg);
+	ret = crypto_ahash_op(req, crypto_ahash_reqtfm(req)->finup);
+	crypto_stats_ahash_final(nbytes, ret, alg);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(crypto_ahash_finup);
 
 int crypto_ahash_digest(struct ahash_request *req)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
+<<<<<<< HEAD
 	struct hash_alg_common *alg = crypto_hash_alg_common(tfm);
 
 	if (IS_ENABLED(CONFIG_CRYPTO_STATS)) {
@@ -355,17 +536,41 @@ EXPORT_SYMBOL_GPL(crypto_ahash_digest);
 static void ahash_def_finup_done2(void *data, int err)
 {
 	struct ahash_request *areq = data;
+=======
+	struct crypto_alg *alg = tfm->base.__crt_alg;
+	unsigned int nbytes = req->nbytes;
+	int ret;
+
+	crypto_stats_get(alg);
+	if (crypto_ahash_get_flags(tfm) & CRYPTO_TFM_NEED_KEY)
+		ret = -ENOKEY;
+	else
+		ret = crypto_ahash_op(req, tfm->digest);
+	crypto_stats_ahash_final(nbytes, ret, alg);
+	return ret;
+}
+EXPORT_SYMBOL_GPL(crypto_ahash_digest);
+
+static void ahash_def_finup_done2(struct crypto_async_request *req, int err)
+{
+	struct ahash_request *areq = req->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (err == -EINPROGRESS)
 		return;
 
 	ahash_restore_req(areq, err);
 
+<<<<<<< HEAD
 	ahash_request_complete(areq, err);
+=======
+	areq->base.complete(&areq->base, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ahash_def_finup_finish1(struct ahash_request *req, int err)
 {
+<<<<<<< HEAD
 	struct ahash_request *subreq = req->priv;
 
 	if (err)
@@ -374,6 +579,14 @@ static int ahash_def_finup_finish1(struct ahash_request *req, int err)
 	subreq->base.complete = ahash_def_finup_done2;
 
 	err = crypto_ahash_reqtfm(req)->final(subreq);
+=======
+	if (err)
+		goto out;
+
+	req->base.complete = ahash_def_finup_done2;
+
+	err = crypto_ahash_reqtfm(req)->final(req);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err == -EINPROGRESS || err == -EBUSY)
 		return err;
 
@@ -382,6 +595,7 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static void ahash_def_finup_done1(void *data, int err)
 {
 	struct ahash_request *areq = data;
@@ -399,6 +613,24 @@ static void ahash_def_finup_done1(void *data, int err)
 
 out:
 	ahash_request_complete(areq, err);
+=======
+static void ahash_def_finup_done1(struct crypto_async_request *req, int err)
+{
+	struct ahash_request *areq = req->data;
+
+	if (err == -EINPROGRESS) {
+		ahash_notify_einprogress(areq);
+		return;
+	}
+
+	areq->base.flags &= ~CRYPTO_TFM_REQ_MAY_SLEEP;
+
+	err = ahash_def_finup_finish1(areq, err);
+	if (areq->priv)
+		return;
+
+	areq->base.complete(&areq->base, err);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ahash_def_finup(struct ahash_request *req)
@@ -406,11 +638,19 @@ static int ahash_def_finup(struct ahash_request *req)
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
 	int err;
 
+<<<<<<< HEAD
 	err = ahash_save_req(req, ahash_def_finup_done1, true);
 	if (err)
 		return err;
 
 	err = tfm->update(req->priv);
+=======
+	err = ahash_save_req(req, ahash_def_finup_done1);
+	if (err)
+		return err;
+
+	err = tfm->update(req);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err == -EINPROGRESS || err == -EBUSY)
 		return err;
 
@@ -469,8 +709,13 @@ static void crypto_ahash_free_instance(struct crypto_instance *inst)
 	ahash->free(ahash);
 }
 
+<<<<<<< HEAD
 static int __maybe_unused crypto_ahash_report(
 	struct sk_buff *skb, struct crypto_alg *alg)
+=======
+#ifdef CONFIG_NET
+static int crypto_ahash_report(struct sk_buff *skb, struct crypto_alg *alg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct crypto_report_hash rhash;
 
@@ -483,6 +728,15 @@ static int __maybe_unused crypto_ahash_report(
 
 	return nla_put(skb, CRYPTOCFGA_REPORT_HASH, sizeof(rhash), &rhash);
 }
+<<<<<<< HEAD
+=======
+#else
+static int crypto_ahash_report(struct sk_buff *skb, struct crypto_alg *alg)
+{
+	return -ENOSYS;
+}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static void crypto_ahash_show(struct seq_file *m, struct crypto_alg *alg)
 	__maybe_unused;
@@ -496,12 +750,15 @@ static void crypto_ahash_show(struct seq_file *m, struct crypto_alg *alg)
 		   __crypto_hash_alg_common(alg)->digestsize);
 }
 
+<<<<<<< HEAD
 static int __maybe_unused crypto_ahash_report_stat(
 	struct sk_buff *skb, struct crypto_alg *alg)
 {
 	return crypto_hash_report_stat(skb, alg, "ahash");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct crypto_type crypto_ahash_type = {
 	.extsize = crypto_ahash_extsize,
 	.init_tfm = crypto_ahash_init_tfm,
@@ -509,12 +766,16 @@ static const struct crypto_type crypto_ahash_type = {
 #ifdef CONFIG_PROC_FS
 	.show = crypto_ahash_show,
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_USER
 	.report = crypto_ahash_report,
 #endif
 #ifdef CONFIG_CRYPTO_STATS
 	.report_stat = crypto_ahash_report_stat,
 #endif
+=======
+	.report = crypto_ahash_report,
+>>>>>>> b7ba80a49124 (Commit)
 	.maskclear = ~CRYPTO_ALG_TYPE_MASK,
 	.maskset = CRYPTO_ALG_TYPE_AHASH_MASK,
 	.type = CRYPTO_ALG_TYPE_AHASH,
@@ -546,6 +807,7 @@ EXPORT_SYMBOL_GPL(crypto_has_ahash);
 static int ahash_prepare_alg(struct ahash_alg *alg)
 {
 	struct crypto_alg *base = &alg->halg.base;
+<<<<<<< HEAD
 	int err;
 
 	if (alg->halg.statesize == 0)
@@ -556,6 +818,16 @@ static int ahash_prepare_alg(struct ahash_alg *alg)
 		return err;
 
 	base->cra_type = &crypto_ahash_type;
+=======
+
+	if (alg->halg.digestsize > HASH_MAX_DIGESTSIZE ||
+	    alg->halg.statesize > HASH_MAX_STATESIZE ||
+	    alg->halg.statesize == 0)
+		return -EINVAL;
+
+	base->cra_type = &crypto_ahash_type;
+	base->cra_flags &= ~CRYPTO_ALG_TYPE_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 	base->cra_flags |= CRYPTO_ALG_TYPE_AHASH;
 
 	return 0;

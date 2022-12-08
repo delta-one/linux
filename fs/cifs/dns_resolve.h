@@ -11,10 +11,15 @@
 #ifndef _DNS_RESOLVE_H
 #define _DNS_RESOLVE_H
 
+<<<<<<< HEAD
 #include <linux/net.h>
 
 #ifdef __KERNEL__
 int dns_resolve_server_name_to_ip(const char *unc, struct sockaddr *ip_addr, time64_t *expiry);
+=======
+#ifdef __KERNEL__
+extern int dns_resolve_server_name_to_ip(const char *unc, char **ip_addr, time64_t *expiry);
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* KERNEL */
 
 #endif /* _DNS_RESOLVE_H */

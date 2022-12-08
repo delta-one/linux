@@ -586,6 +586,11 @@ static void ps3vram_submit_bio(struct bio *bio)
 
 	dev_dbg(&dev->core, "%s\n", __func__);
 
+<<<<<<< HEAD
+=======
+	bio = bio_split_to_limits(bio);
+
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_irq(&priv->lock);
 	busy = !bio_list_empty(&priv->list);
 	bio_list_add(&priv->list, bio);
@@ -745,6 +750,12 @@ static int ps3vram_probe(struct ps3_system_bus_device *dev)
 	gendisk->private_data = dev;
 	strscpy(gendisk->disk_name, DEVICE_NAME, sizeof(gendisk->disk_name));
 	set_capacity(gendisk, priv->size >> 9);
+<<<<<<< HEAD
+=======
+	blk_queue_max_segments(gendisk->queue, BLK_MAX_SEGMENTS);
+	blk_queue_max_segment_size(gendisk->queue, BLK_MAX_SEGMENT_SIZE);
+	blk_queue_max_hw_sectors(gendisk->queue, BLK_SAFE_MAX_SECTORS);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_info(&dev->core, "%s: Using %llu MiB of GPU memory\n",
 		 gendisk->disk_name, get_capacity(gendisk) >> 11);

@@ -856,7 +856,12 @@ static const struct v4l2_subdev_internal_ops mt9t001_subdev_internal_ops = {
 	.close = mt9t001_close,
 };
 
+<<<<<<< HEAD
 static int mt9t001_probe(struct i2c_client *client)
+=======
+static int mt9t001_probe(struct i2c_client *client,
+			 const struct i2c_device_id *did)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mt9t001_platform_data *pdata = client->dev.platform_data;
 	struct mt9t001 *mt9t001;
@@ -980,7 +985,11 @@ static struct i2c_driver mt9t001_driver = {
 	.driver = {
 		.name = "mt9t001",
 	},
+<<<<<<< HEAD
 	.probe_new	= mt9t001_probe,
+=======
+	.probe		= mt9t001_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= mt9t001_remove,
 	.id_table	= mt9t001_id,
 };

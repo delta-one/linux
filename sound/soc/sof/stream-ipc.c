@@ -19,7 +19,10 @@
 
 #include "ops.h"
 #include "sof-priv.h"
+<<<<<<< HEAD
 #include "sof-audio.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct sof_stream {
 	size_t posn_offset;
@@ -27,6 +30,7 @@ struct sof_stream {
 
 /* Mailbox-based Generic IPC implementation */
 int sof_ipc_msg_data(struct snd_sof_dev *sdev,
+<<<<<<< HEAD
 		     struct snd_sof_pcm_stream *sps,
 		     void *p, size_t sz)
 {
@@ -54,6 +58,21 @@ int sof_ipc_msg_data(struct snd_sof_dev *sdev,
 		}
 
 		snd_sof_dsp_mailbox_read(sdev, posn_offset, p, sz);
+=======
+		     struct snd_pcm_substream *substream,
+		     void *p, size_t sz)
+{
+	if (!substream || !sdev->stream_box.size) {
+		snd_sof_dsp_mailbox_read(sdev, sdev->dsp_box.offset, p, sz);
+	} else {
+		struct sof_stream *stream = substream->runtime->private_data;
+
+		/* The stream might already be closed */
+		if (!stream)
+			return -ESTRPIPE;
+
+		snd_sof_dsp_mailbox_read(sdev, stream->posn_offset, p, sz);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -61,14 +80,23 @@ int sof_ipc_msg_data(struct snd_sof_dev *sdev,
 EXPORT_SYMBOL(sof_ipc_msg_data);
 
 int sof_set_stream_data_offset(struct snd_sof_dev *sdev,
+<<<<<<< HEAD
 			       struct snd_sof_pcm_stream *sps,
 			       size_t posn_offset)
 {
+=======
+			       struct snd_pcm_substream *substream,
+			       size_t posn_offset)
+{
+	struct sof_stream *stream = substream->runtime->private_data;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* check if offset is overflow or it is not aligned */
 	if (posn_offset > sdev->stream_box.size ||
 	    posn_offset % sizeof(struct sof_ipc_stream_posn) != 0)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	posn_offset += sdev->stream_box.offset;
 
 	if (sps->substream) {
@@ -87,6 +115,12 @@ int sof_set_stream_data_offset(struct snd_sof_dev *sdev,
 		dev_err(sdev->dev, "No stream opened");
 		return -EINVAL;
 	}
+=======
+	stream->posn_offset = sdev->stream_box.offset + posn_offset;
+
+	dev_dbg(sdev->dev, "pcm: stream dir %d, posn mailbox offset is %zu",
+		substream->stream, stream->posn_offset);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

@@ -56,6 +56,16 @@ struct jit_buf_desc {
 	char		 dir[PATH_MAX];
 };
 
+<<<<<<< HEAD
+=======
+struct debug_line_info {
+	unsigned long vma;
+	unsigned int lineno;
+	/* The filename format is unspecified, absolute path, relative etc. */
+	char const filename[];
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct jit_tool {
 	struct perf_tool tool;
 	struct perf_data	output;

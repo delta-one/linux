@@ -32,9 +32,12 @@ struct vringh {
 	/* Can we get away with weak barriers? */
 	bool weak_barriers;
 
+<<<<<<< HEAD
 	/* Use user's VA */
 	bool use_va;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Last available index we saw (ie. where we're up to). */
 	u16 last_avail_idx;
 
@@ -95,7 +98,11 @@ struct vringh_iov {
 };
 
 /**
+<<<<<<< HEAD
  * struct vringh_kiov - kvec mangler.
+=======
+ * struct vringh_iov - kvec mangler.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Mangles kvec in place, and restores it.
  * Remaining data is iov + i, of used - i elements.
@@ -282,7 +289,11 @@ void vringh_set_iotlb(struct vringh *vrh, struct vhost_iotlb *iotlb,
 		      spinlock_t *iotlb_lock);
 
 int vringh_init_iotlb(struct vringh *vrh, u64 features,
+<<<<<<< HEAD
 		      unsigned int num, bool weak_barriers, bool use_va,
+=======
+		      unsigned int num, bool weak_barriers,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct vring_desc *desc,
 		      struct vring_avail *avail,
 		      struct vring_used *used);

@@ -22,25 +22,41 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-wlan {
+=======
+		wlan {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "dragino2:red:wlan";
 			gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-lan {
+=======
+		lan {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "dragino2:red:lan";
 			gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-wan {
+=======
+		wan {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "dragino2:red:wan";
 			gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-system {
+=======
+		system {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "dragino2:red:system";
 			gpios = <&gpio 28 GPIO_ACTIVE_HIGH>;
 			default-state = "off";

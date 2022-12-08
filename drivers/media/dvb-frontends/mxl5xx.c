@@ -1644,6 +1644,11 @@ static int validate_sku(struct mxl *state)
 		default:
 			return -1;
 		}
+<<<<<<< HEAD
+=======
+	} else {
+
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return -1;
 }

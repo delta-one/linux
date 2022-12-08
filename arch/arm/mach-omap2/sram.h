@@ -17,6 +17,13 @@ extern int __init omap_sram_init(void);
 
 extern void *omap_sram_push(void *funcp, unsigned long size);
 
+<<<<<<< HEAD
+=======
+/* Do not use these */
+extern void omap24xx_sram_reprogram_clock(u32 ckctl, u32 dpllctl);
+extern unsigned long omap24xx_sram_reprogram_clock_sz;
+
+>>>>>>> b7ba80a49124 (Commit)
 extern void omap242x_sram_ddr_init(u32 *slow_dll_ctrl, u32 fast_dll_ctrl,
 						u32 base_cs, u32 force_unlock);
 extern unsigned long omap242x_sram_ddr_init_sz;

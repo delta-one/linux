@@ -8,7 +8,10 @@ title: Maxim 63xx Watchdog Timers
 
 allOf:
   - $ref: "watchdog.yaml#"
+<<<<<<< HEAD
   - $ref: /schemas/memory-controllers/mc-peripheral-props.yaml#
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Marc Zyngier <maz@kernel.org>

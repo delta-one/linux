@@ -8,9 +8,13 @@
 #include <linux/etherdevice.h>
 #include <linux/if_vlan.h>
 
+<<<<<<< HEAD
 #include "tag.h"
 
 #define MTK_NAME		"mtk"
+=======
+#include "dsa_priv.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MTK_HDR_LEN		4
 #define MTK_HDR_XMIT_UNTAGGED		0
@@ -27,8 +31,11 @@ static struct sk_buff *mtk_tag_xmit(struct sk_buff *skb,
 	u8 xmit_tpid;
 	u8 *mtk_tag;
 
+<<<<<<< HEAD
 	skb_set_queue_mapping(skb, dp->index);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Build the special tag after the MAC Source Address. If VLAN header
 	 * is present, it's required that VLAN header and special tag is
 	 * being combined. Only in this way we can allow the switch can parse
@@ -95,7 +102,11 @@ static struct sk_buff *mtk_tag_rcv(struct sk_buff *skb, struct net_device *dev)
 }
 
 static const struct dsa_device_ops mtk_netdev_ops = {
+<<<<<<< HEAD
 	.name		= MTK_NAME,
+=======
+	.name		= "mtk",
+>>>>>>> b7ba80a49124 (Commit)
 	.proto		= DSA_TAG_PROTO_MTK,
 	.xmit		= mtk_tag_xmit,
 	.rcv		= mtk_tag_rcv,
@@ -103,6 +114,10 @@ static const struct dsa_device_ops mtk_netdev_ops = {
 };
 
 MODULE_LICENSE("GPL");
+<<<<<<< HEAD
 MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_MTK, MTK_NAME);
+=======
+MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_MTK);
+>>>>>>> b7ba80a49124 (Commit)
 
 module_dsa_tag_driver(mtk_netdev_ops);

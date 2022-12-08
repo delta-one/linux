@@ -63,7 +63,11 @@ static unsigned long romfs_get_unmapped_area(struct file *file,
  */
 static int romfs_mmap(struct file *file, struct vm_area_struct *vma)
 {
+<<<<<<< HEAD
 	return is_nommu_shared_mapping(vma->vm_flags) ? 0 : -ENOSYS;
+=======
+	return vma->vm_flags & (VM_SHARED | VM_MAYSHARE) ? 0 : -ENOSYS;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static unsigned romfs_mmap_capabilities(struct file *file)

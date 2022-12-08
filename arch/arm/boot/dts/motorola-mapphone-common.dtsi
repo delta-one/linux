@@ -133,7 +133,11 @@
 		dais = <&mcbsp2_port>, <&mcbsp3_port>;
 	};
 
+<<<<<<< HEAD
 	pwm8: pwm-8 {
+=======
+	pwm8: dmtimer-pwm-8 {
+>>>>>>> b7ba80a49124 (Commit)
 		pinctrl-names = "default";
 		pinctrl-0 = <&vibrator_direction_pin>;
 
@@ -143,7 +147,11 @@
 		ti,clock-source = <0x01>;
 	};
 
+<<<<<<< HEAD
 	pwm9: pwm-9 {
+=======
+	pwm9: dmtimer-pwm-9 {
+>>>>>>> b7ba80a49124 (Commit)
 		pinctrl-names = "default";
 		pinctrl-0 = <&vibrator_enable_pin>;
 

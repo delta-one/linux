@@ -211,7 +211,11 @@ static int da8xx_usb_phy_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void da8xx_usb_phy_remove(struct platform_device *pdev)
+=======
+static int da8xx_usb_phy_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct da8xx_usb_phy *d_phy = platform_get_drvdata(pdev);
 
@@ -219,6 +223,11 @@ static void da8xx_usb_phy_remove(struct platform_device *pdev)
 		phy_remove_lookup(d_phy->usb20_phy, "usb-phy", "musb-da8xx");
 		phy_remove_lookup(d_phy->usb11_phy, "usb-phy", "ohci-da8xx");
 	}
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id da8xx_usb_phy_ids[] = {
@@ -229,7 +238,11 @@ MODULE_DEVICE_TABLE(of, da8xx_usb_phy_ids);
 
 static struct platform_driver da8xx_usb_phy_driver = {
 	.probe	= da8xx_usb_phy_probe,
+<<<<<<< HEAD
 	.remove_new = da8xx_usb_phy_remove,
+=======
+	.remove	= da8xx_usb_phy_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name	= "da8xx-usb-phy",
 		.of_match_table = da8xx_usb_phy_ids,

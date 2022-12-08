@@ -395,10 +395,15 @@ int pinconf_generic_dt_node_to_map(struct pinctrl_dev *pctldev,
 	for_each_available_child_of_node(np_config, np) {
 		ret = pinconf_generic_dt_subnode_to_map(pctldev, np, map,
 					&reserved_maps, num_maps, type);
+<<<<<<< HEAD
 		if (ret < 0) {
 			of_node_put(np);
 			goto exit;
 		}
+=======
+		if (ret < 0)
+			goto exit;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return 0;
 

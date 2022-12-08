@@ -13,10 +13,16 @@
 #include <drm/drm_simple_kms_helper.h>
 
 struct drm_rect;
+<<<<<<< HEAD
 struct gpio_desc;
 struct iosys_map;
 struct regulator;
 struct spi_device;
+=======
+struct spi_device;
+struct gpio_desc;
+struct regulator;
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct mipi_dbi - MIPI DBI interface
@@ -123,16 +129,23 @@ struct mipi_dbi_dev {
 	struct backlight_device *backlight;
 
 	/**
+<<<<<<< HEAD
 	 * @regulator: power regulator (Vdd) (optional)
+=======
+	 * @regulator: power regulator (optional)
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	struct regulator *regulator;
 
 	/**
+<<<<<<< HEAD
 	 * @io_regulator: I/O power regulator (Vddi) (optional)
 	 */
 	struct regulator *io_regulator;
 
 	/**
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * @dbi: MIPI DBI interface
 	 */
 	struct mipi_dbi dbi;
@@ -169,6 +182,7 @@ void mipi_dbi_enable_flush(struct mipi_dbi_dev *dbidev,
 			   struct drm_crtc_state *crtc_state,
 			   struct drm_plane_state *plan_state);
 void mipi_dbi_pipe_disable(struct drm_simple_display_pipe *pipe);
+<<<<<<< HEAD
 int mipi_dbi_pipe_begin_fb_access(struct drm_simple_display_pipe *pipe,
 				  struct drm_plane_state *plane_state);
 void mipi_dbi_pipe_end_fb_access(struct drm_simple_display_pipe *pipe,
@@ -178,6 +192,8 @@ struct drm_plane_state *mipi_dbi_pipe_duplicate_plane_state(struct drm_simple_di
 void mipi_dbi_pipe_destroy_plane_state(struct drm_simple_display_pipe *pipe,
 				       struct drm_plane_state *plane_state);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void mipi_dbi_hw_reset(struct mipi_dbi *dbi);
 bool mipi_dbi_display_is_on(struct mipi_dbi *dbi);
 int mipi_dbi_poweron_reset(struct mipi_dbi_dev *dbidev);
@@ -191,9 +207,14 @@ int mipi_dbi_command_read(struct mipi_dbi *dbi, u8 cmd, u8 *val);
 int mipi_dbi_command_buf(struct mipi_dbi *dbi, u8 cmd, u8 *data, size_t len);
 int mipi_dbi_command_stackbuf(struct mipi_dbi *dbi, u8 cmd, const u8 *data,
 			      size_t len);
+<<<<<<< HEAD
 int mipi_dbi_buf_copy(void *dst, struct iosys_map *src, struct drm_framebuffer *fb,
 		      struct drm_rect *clip, bool swap);
 
+=======
+int mipi_dbi_buf_copy(void *dst, struct drm_framebuffer *fb,
+		      struct drm_rect *clip, bool swap);
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * mipi_dbi_command - MIPI DCS command with optional parameter(s)
  * @dbi: MIPI DBI structure
@@ -223,6 +244,7 @@ void mipi_dbi_debugfs_init(struct drm_minor *minor);
 static inline void mipi_dbi_debugfs_init(struct drm_minor *minor) {}
 #endif
 
+<<<<<<< HEAD
 /**
  * DRM_MIPI_DBI_SIMPLE_DISPLAY_PIPE_FUNCS - Initializes struct drm_simple_display_pipe_funcs
  *                                          for MIPI-DBI devices
@@ -244,4 +266,6 @@ static inline void mipi_dbi_debugfs_init(struct drm_minor *minor) {}
 	.duplicate_plane_state = mipi_dbi_pipe_duplicate_plane_state, \
 	.destroy_plane_state = mipi_dbi_pipe_destroy_plane_state
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __LINUX_MIPI_DBI_H */

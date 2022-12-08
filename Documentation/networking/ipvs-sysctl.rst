@@ -129,6 +129,7 @@ drop_packet - INTEGER
 	threshold. When the mode 3 is set, the always mode drop rate
 	is controlled by the /proc/sys/net/ipv4/vs/am_droprate.
 
+<<<<<<< HEAD
 est_cpulist - CPULIST
 	Allowed	CPUs for estimation kthreads
 
@@ -149,6 +150,8 @@ est_nice - INTEGER
 	Niceness value to use for the estimation kthreads (scheduling
 	priority)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 expire_nodest_conn - BOOLEAN
 	- 0 - disabled (default)
 	- not 0 - enabled
@@ -324,8 +327,13 @@ run_estimation - BOOLEAN
 	0 - disabled
 	not 0 - enabled (default)
 
+<<<<<<< HEAD
 	If disabled, the estimation will be suspended and kthread tasks
 	stopped.
+=======
+	If disabled, the estimation will be stop, and you can't see
+	any update on speed estimation data.
+>>>>>>> b7ba80a49124 (Commit)
 
 	You can always re-enable estimation by setting this value to 1.
 	But be careful, the first estimation after re-enable is not

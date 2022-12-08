@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0-only */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2011 Red Hat, Inc.
  *
@@ -33,11 +36,19 @@ void *dm_block_data(struct dm_block *b);
  */
 struct dm_block_manager;
 struct dm_block_manager *dm_block_manager_create(
+<<<<<<< HEAD
 	struct block_device *bdev, unsigned int block_size,
 	unsigned int max_held_per_thread);
 void dm_block_manager_destroy(struct dm_block_manager *bm);
 
 unsigned int dm_bm_block_size(struct dm_block_manager *bm);
+=======
+	struct block_device *bdev, unsigned block_size,
+	unsigned max_held_per_thread);
+void dm_block_manager_destroy(struct dm_block_manager *bm);
+
+unsigned dm_bm_block_size(struct dm_block_manager *bm);
+>>>>>>> b7ba80a49124 (Commit)
 dm_block_t dm_bm_nr_blocks(struct dm_block_manager *bm);
 
 /*----------------------------------------------------------------*/

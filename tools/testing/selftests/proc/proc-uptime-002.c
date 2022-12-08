@@ -17,7 +17,10 @@
 // while shifting across CPUs.
 #undef NDEBUG
 #include <assert.h>
+<<<<<<< HEAD
 #include <errno.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <unistd.h>
 #include <sys/syscall.h>
 #include <stdlib.h>
@@ -55,7 +58,11 @@ int main(void)
 		len += sizeof(unsigned long);
 		free(m);
 		m = malloc(len);
+<<<<<<< HEAD
 	} while (sys_sched_getaffinity(0, len, m) == -1 && errno == EINVAL);
+=======
+	} while (sys_sched_getaffinity(0, len, m) == -EINVAL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	fd = open("/proc/uptime", O_RDONLY);
 	assert(fd >= 0);

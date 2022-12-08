@@ -108,6 +108,7 @@ static const struct clk_ops clk_dummy_single_parent_ops = {
 	.get_parent = clk_dummy_single_get_parent,
 };
 
+<<<<<<< HEAD
 struct clk_multiple_parent_ctx {
 	struct clk_dummy_context parents_ctx[2];
 	struct clk_hw hw;
@@ -141,6 +142,8 @@ static const struct clk_ops clk_multiple_parents_mux_ops = {
 	.determine_rate = __clk_mux_determine_rate_closest,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int clk_test_init_with_ops(struct kunit *test, const struct clk_ops *ops)
 {
 	struct clk_dummy_context *ctx;
@@ -193,14 +196,21 @@ static void clk_test_get_rate(struct kunit *test)
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long rate;
 
 	rate = clk_get_rate(clk);
 	KUNIT_ASSERT_GT(test, rate, 0);
 	KUNIT_EXPECT_EQ(test, rate, ctx->rate);
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -214,7 +224,11 @@ static void clk_test_set_get_rate(struct kunit *test)
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long rate;
 
 	KUNIT_ASSERT_EQ(test,
@@ -224,8 +238,11 @@ static void clk_test_set_get_rate(struct kunit *test)
 	rate = clk_get_rate(clk);
 	KUNIT_ASSERT_GT(test, rate, 0);
 	KUNIT_EXPECT_EQ(test, rate, DUMMY_CLOCK_RATE_1);
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -239,7 +256,11 @@ static void clk_test_set_set_get_rate(struct kunit *test)
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long rate;
 
 	KUNIT_ASSERT_EQ(test,
@@ -253,8 +274,11 @@ static void clk_test_set_set_get_rate(struct kunit *test)
 	rate = clk_get_rate(clk);
 	KUNIT_ASSERT_GT(test, rate, 0);
 	KUNIT_EXPECT_EQ(test, rate, DUMMY_CLOCK_RATE_2);
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -265,7 +289,11 @@ static void clk_test_round_set_get_rate(struct kunit *test)
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long rounded_rate, set_rate;
 
 	rounded_rate = clk_round_rate(clk, DUMMY_CLOCK_RATE_1);
@@ -279,8 +307,11 @@ static void clk_test_round_set_get_rate(struct kunit *test)
 	set_rate = clk_get_rate(clk);
 	KUNIT_ASSERT_GT(test, set_rate, 0);
 	KUNIT_EXPECT_EQ(test, rounded_rate, set_rate);
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct kunit_case clk_test_cases[] = {
@@ -291,11 +322,14 @@ static struct kunit_case clk_test_cases[] = {
 	{}
 };
 
+<<<<<<< HEAD
 /*
  * Test suite for a basic rate clock, without any parent.
  *
  * These tests exercise the rate API with simple scenarios
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct kunit_suite clk_test_suite = {
 	.name = "clk-test",
 	.init = clk_test_init,
@@ -303,6 +337,7 @@ static struct kunit_suite clk_test_suite = {
 	.test_cases = clk_test_cases,
 };
 
+<<<<<<< HEAD
 static int clk_uncached_test_init(struct kunit *test)
 {
 	struct clk_dummy_context *ctx;
@@ -932,11 +967,14 @@ static struct kunit_suite clk_orphan_transparent_multiple_parent_mux_test_suite 
 	.test_cases = clk_orphan_transparent_multiple_parent_mux_test_cases,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct clk_single_parent_ctx {
 	struct clk_dummy_context parent_ctx;
 	struct clk_hw hw;
 };
 
+<<<<<<< HEAD
 static int clk_single_parent_mux_test_init(struct kunit *test)
 {
 	struct clk_single_parent_ctx *ctx;
@@ -1209,6 +1247,8 @@ clk_single_parent_mux_test_suite = {
 	.test_cases = clk_single_parent_mux_test_cases,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int clk_orphan_transparent_single_parent_mux_test_init(struct kunit *test)
 {
 	struct clk_single_parent_ctx *ctx;
@@ -1245,18 +1285,36 @@ static int clk_orphan_transparent_single_parent_mux_test_init(struct kunit *test
 	return 0;
 }
 
+<<<<<<< HEAD
 /*
  * Test that a mux-only clock, with an initial rate within a range,
  * will still have the same rate after the range has been enforced.
  *
  * See:
  * https://lore.kernel.org/linux-clk/7720158d-10a7-a17b-73a4-a8615c9c6d5c@collabora.com/
+=======
+static void clk_orphan_transparent_single_parent_mux_test_exit(struct kunit *test)
+{
+	struct clk_single_parent_ctx *ctx = test->priv;
+
+	clk_hw_unregister(&ctx->hw);
+	clk_hw_unregister(&ctx->parent_ctx.hw);
+}
+
+/*
+ * Test that a mux-only clock, with an initial rate within a range,
+ * will still have the same rate after the range has been enforced.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static void clk_test_orphan_transparent_parent_mux_set_range(struct kunit *test)
 {
 	struct clk_single_parent_ctx *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long rate, new_rate;
 
 	rate = clk_get_rate(clk);
@@ -1271,8 +1329,11 @@ static void clk_test_orphan_transparent_parent_mux_set_range(struct kunit *test)
 	new_rate = clk_get_rate(clk);
 	KUNIT_ASSERT_GT(test, new_rate, 0);
 	KUNIT_EXPECT_EQ(test, rate, new_rate);
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct kunit_case clk_orphan_transparent_single_parent_mux_test_cases[] = {
@@ -1280,6 +1341,7 @@ static struct kunit_case clk_orphan_transparent_single_parent_mux_test_cases[] =
 	{}
 };
 
+<<<<<<< HEAD
 /*
  * Test suite for a basic mux clock with one parent. The parent is
  * registered after its child. The clock will thus be an orphan when
@@ -1425,6 +1487,15 @@ clk_orphan_two_level_root_last_test_suite = {
 	.test_cases = clk_orphan_two_level_root_last_test_cases,
 };
 
+=======
+static struct kunit_suite clk_orphan_transparent_single_parent_test_suite = {
+	.name = "clk-orphan-transparent-single-parent-test",
+	.init = clk_orphan_transparent_single_parent_mux_test_init,
+	.exit = clk_orphan_transparent_single_parent_mux_test_exit,
+	.test_cases = clk_orphan_transparent_single_parent_mux_test_cases,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Test that clk_set_rate_range won't return an error for a valid range
  * and that it will make sure the rate of the clock is within the
@@ -1434,7 +1505,11 @@ static void clk_range_test_set_range(struct kunit *test)
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long rate;
 
 	KUNIT_ASSERT_EQ(test,
@@ -1447,8 +1522,11 @@ static void clk_range_test_set_range(struct kunit *test)
 	KUNIT_ASSERT_GT(test, rate, 0);
 	KUNIT_EXPECT_GE(test, rate, DUMMY_CLOCK_RATE_1);
 	KUNIT_EXPECT_LE(test, rate, DUMMY_CLOCK_RATE_2);
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1459,15 +1537,22 @@ static void clk_range_test_set_range_invalid(struct kunit *test)
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 
 	KUNIT_EXPECT_LT(test,
 			clk_set_rate_range(clk,
 					   DUMMY_CLOCK_RATE_1 + 1000,
 					   DUMMY_CLOCK_RATE_1),
 			0);
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1506,7 +1591,11 @@ static void clk_range_test_set_range_round_rate_lower(struct kunit *test)
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	long rate;
 
 	KUNIT_ASSERT_EQ(test,
@@ -1519,8 +1608,11 @@ static void clk_range_test_set_range_round_rate_lower(struct kunit *test)
 	KUNIT_ASSERT_GT(test, rate, 0);
 	KUNIT_EXPECT_GE(test, rate, DUMMY_CLOCK_RATE_1);
 	KUNIT_EXPECT_LE(test, rate, DUMMY_CLOCK_RATE_2);
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1531,7 +1623,11 @@ static void clk_range_test_set_range_set_rate_lower(struct kunit *test)
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long rate;
 
 	KUNIT_ASSERT_EQ(test,
@@ -1548,8 +1644,11 @@ static void clk_range_test_set_range_set_rate_lower(struct kunit *test)
 	KUNIT_ASSERT_GT(test, rate, 0);
 	KUNIT_EXPECT_GE(test, rate, DUMMY_CLOCK_RATE_1);
 	KUNIT_EXPECT_LE(test, rate, DUMMY_CLOCK_RATE_2);
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1562,7 +1661,11 @@ static void clk_range_test_set_range_set_round_rate_consistent_lower(struct kuni
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	long rounded;
 
 	KUNIT_ASSERT_EQ(test,
@@ -1579,8 +1682,11 @@ static void clk_range_test_set_range_set_round_rate_consistent_lower(struct kuni
 			0);
 
 	KUNIT_EXPECT_EQ(test, rounded, clk_get_rate(clk));
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1591,7 +1697,11 @@ static void clk_range_test_set_range_round_rate_higher(struct kunit *test)
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	long rate;
 
 	KUNIT_ASSERT_EQ(test,
@@ -1604,8 +1714,11 @@ static void clk_range_test_set_range_round_rate_higher(struct kunit *test)
 	KUNIT_ASSERT_GT(test, rate, 0);
 	KUNIT_EXPECT_GE(test, rate, DUMMY_CLOCK_RATE_1);
 	KUNIT_EXPECT_LE(test, rate, DUMMY_CLOCK_RATE_2);
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1616,7 +1729,11 @@ static void clk_range_test_set_range_set_rate_higher(struct kunit *test)
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long rate;
 
 	KUNIT_ASSERT_EQ(test,
@@ -1633,8 +1750,11 @@ static void clk_range_test_set_range_set_rate_higher(struct kunit *test)
 	KUNIT_ASSERT_GT(test, rate, 0);
 	KUNIT_EXPECT_GE(test, rate, DUMMY_CLOCK_RATE_1);
 	KUNIT_EXPECT_LE(test, rate, DUMMY_CLOCK_RATE_2);
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1647,7 +1767,11 @@ static void clk_range_test_set_range_set_round_rate_consistent_higher(struct kun
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	long rounded;
 
 	KUNIT_ASSERT_EQ(test,
@@ -1664,8 +1788,11 @@ static void clk_range_test_set_range_set_round_rate_consistent_higher(struct kun
 			0);
 
 	KUNIT_EXPECT_EQ(test, rounded, clk_get_rate(clk));
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1680,7 +1807,11 @@ static void clk_range_test_set_range_get_rate_raised(struct kunit *test)
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long rate;
 
 	KUNIT_ASSERT_EQ(test,
@@ -1696,8 +1827,11 @@ static void clk_range_test_set_range_get_rate_raised(struct kunit *test)
 	rate = clk_get_rate(clk);
 	KUNIT_ASSERT_GT(test, rate, 0);
 	KUNIT_EXPECT_EQ(test, rate, DUMMY_CLOCK_RATE_1);
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1712,7 +1846,11 @@ static void clk_range_test_set_range_get_rate_lowered(struct kunit *test)
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long rate;
 
 	KUNIT_ASSERT_EQ(test,
@@ -1728,8 +1866,11 @@ static void clk_range_test_set_range_get_rate_lowered(struct kunit *test)
 	rate = clk_get_rate(clk);
 	KUNIT_ASSERT_GT(test, rate, 0);
 	KUNIT_EXPECT_EQ(test, rate, DUMMY_CLOCK_RATE_2);
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct kunit_case clk_range_test_cases[] = {
@@ -1747,12 +1888,15 @@ static struct kunit_case clk_range_test_cases[] = {
 	{}
 };
 
+<<<<<<< HEAD
 /*
  * Test suite for a basic rate clock, without any parent.
  *
  * These tests exercise the rate range API: clk_set_rate_range(),
  * clk_set_min_rate(), clk_set_max_rate(), clk_drop_range().
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct kunit_suite clk_range_test_suite = {
 	.name = "clk-range-test",
 	.init = clk_test_init,
@@ -1772,7 +1916,11 @@ static void clk_range_test_set_range_rate_maximized(struct kunit *test)
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long rate;
 
 	KUNIT_ASSERT_EQ(test,
@@ -1808,8 +1956,11 @@ static void clk_range_test_set_range_rate_maximized(struct kunit *test)
 	rate = clk_get_rate(clk);
 	KUNIT_ASSERT_GT(test, rate, 0);
 	KUNIT_EXPECT_EQ(test, rate, DUMMY_CLOCK_RATE_2);
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1824,7 +1975,11 @@ static void clk_range_test_multiple_set_range_rate_maximized(struct kunit *test)
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	struct clk *user1, *user2;
 	unsigned long rate;
 
@@ -1868,6 +2023,7 @@ static void clk_range_test_multiple_set_range_rate_maximized(struct kunit *test)
 
 	clk_put(user2);
 	clk_put(user1);
+<<<<<<< HEAD
 	clk_put(clk);
 }
 
@@ -1925,11 +2081,14 @@ static void clk_range_test_multiple_set_range_rate_put_maximized(struct kunit *t
 
 	clk_put(user1);
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct kunit_case clk_range_maximize_test_cases[] = {
 	KUNIT_CASE(clk_range_test_set_range_rate_maximized),
 	KUNIT_CASE(clk_range_test_multiple_set_range_rate_maximized),
+<<<<<<< HEAD
 	KUNIT_CASE(clk_range_test_multiple_set_range_rate_put_maximized),
 	{}
 };
@@ -1941,6 +2100,11 @@ static struct kunit_case clk_range_maximize_test_cases[] = {
  * clk_set_min_rate(), clk_set_max_rate(), clk_drop_range(), with a
  * driver that will always try to run at the highest possible rate.
  */
+=======
+	{}
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct kunit_suite clk_range_maximize_test_suite = {
 	.name = "clk-range-maximize-test",
 	.init = clk_maximize_test_init,
@@ -1960,7 +2124,11 @@ static void clk_range_test_set_range_rate_minimized(struct kunit *test)
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long rate;
 
 	KUNIT_ASSERT_EQ(test,
@@ -1996,8 +2164,11 @@ static void clk_range_test_set_range_rate_minimized(struct kunit *test)
 	rate = clk_get_rate(clk);
 	KUNIT_ASSERT_GT(test, rate, 0);
 	KUNIT_EXPECT_EQ(test, rate, DUMMY_CLOCK_RATE_1);
+<<<<<<< HEAD
 
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -2012,7 +2183,11 @@ static void clk_range_test_multiple_set_range_rate_minimized(struct kunit *test)
 {
 	struct clk_dummy_context *ctx = test->priv;
 	struct clk_hw *hw = &ctx->hw;
+<<<<<<< HEAD
 	struct clk *clk = clk_hw_get_clk(hw, NULL);
+=======
+	struct clk *clk = hw->clk;
+>>>>>>> b7ba80a49124 (Commit)
 	struct clk *user1, *user2;
 	unsigned long rate;
 
@@ -2052,6 +2227,7 @@ static void clk_range_test_multiple_set_range_rate_minimized(struct kunit *test)
 
 	clk_put(user2);
 	clk_put(user1);
+<<<<<<< HEAD
 	clk_put(clk);
 }
 
@@ -2105,11 +2281,14 @@ static void clk_range_test_multiple_set_range_rate_put_minimized(struct kunit *t
 
 	clk_put(user1);
 	clk_put(clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct kunit_case clk_range_minimize_test_cases[] = {
 	KUNIT_CASE(clk_range_test_set_range_rate_minimized),
 	KUNIT_CASE(clk_range_test_multiple_set_range_rate_minimized),
+<<<<<<< HEAD
 	KUNIT_CASE(clk_range_test_multiple_set_range_rate_put_minimized),
 	{}
 };
@@ -2121,6 +2300,11 @@ static struct kunit_case clk_range_minimize_test_cases[] = {
  * clk_set_min_rate(), clk_set_max_rate(), clk_drop_range(), with a
  * driver that will always try to run at the lowest possible rate.
  */
+=======
+	{}
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct kunit_suite clk_range_minimize_test_suite = {
 	.name = "clk-range-minimize-test",
 	.init = clk_minimize_test_init,
@@ -2128,6 +2312,7 @@ static struct kunit_suite clk_range_minimize_test_suite = {
 	.test_cases = clk_range_minimize_test_cases,
 };
 
+<<<<<<< HEAD
 struct clk_leaf_mux_ctx {
 	struct clk_multiple_parent_ctx mux_ctx;
 	struct clk_hw hw;
@@ -2407,5 +2592,13 @@ kunit_test_suites(
 	&clk_range_minimize_test_suite,
 	&clk_single_parent_mux_test_suite,
 	&clk_uncached_test_suite
+=======
+kunit_test_suites(
+	&clk_test_suite,
+	&clk_orphan_transparent_single_parent_test_suite,
+	&clk_range_test_suite,
+	&clk_range_maximize_test_suite,
+	&clk_range_minimize_test_suite
+>>>>>>> b7ba80a49124 (Commit)
 );
 MODULE_LICENSE("GPL v2");

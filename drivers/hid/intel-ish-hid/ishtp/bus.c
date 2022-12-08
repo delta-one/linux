@@ -361,7 +361,11 @@ static struct attribute *ishtp_cl_dev_attrs[] = {
 };
 ATTRIBUTE_GROUPS(ishtp_cl_dev);
 
+<<<<<<< HEAD
 static int ishtp_cl_uevent(const struct device *dev, struct kobj_uevent_env *env)
+=======
+static int ishtp_cl_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (add_uevent_var(env, "MODALIAS=" ISHTP_MODULE_PREFIX "%s", dev_name(dev)))
 		return -ENOMEM;

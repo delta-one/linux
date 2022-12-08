@@ -4,9 +4,13 @@
  * Copyright 2022 Pengutronix, Lucas Stach <kernel@pengutronix.de>
  */
 
+<<<<<<< HEAD
 #include <linux/bitfield.h>
 #include <linux/clk.h>
 #include <linux/clk-provider.h>
+=======
+#include <linux/clk.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/device.h>
 #include <linux/interconnect.h>
 #include <linux/module.h>
@@ -23,6 +27,7 @@
 #define  USB_CLOCK_MODULE_EN	BIT(1)
 #define  PCIE_PHY_APB_RST	BIT(4)
 #define  PCIE_PHY_INIT_RST	BIT(5)
+<<<<<<< HEAD
 #define GPR_REG1		0x4
 #define  PLL_LOCK		BIT(13)
 #define GPR_REG2		0x8
@@ -32,6 +37,8 @@
 #define GPR_REG3		0xc
 #define  PLL_CKE		BIT(17)
 #define  PLL_RST		BIT(31)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct imx8mp_blk_ctrl_domain;
 
@@ -71,7 +78,10 @@ struct imx8mp_blk_ctrl_domain {
 
 struct imx8mp_blk_ctrl_data {
 	int max_reg;
+<<<<<<< HEAD
 	int (*probe) (struct imx8mp_blk_ctrl *bc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	notifier_fn_t power_notifier_fn;
 	void (*power_off) (struct imx8mp_blk_ctrl *bc, struct imx8mp_blk_ctrl_domain *domain);
 	void (*power_on) (struct imx8mp_blk_ctrl *bc, struct imx8mp_blk_ctrl_domain *domain);
@@ -85,6 +95,7 @@ to_imx8mp_blk_ctrl_domain(struct generic_pm_domain *genpd)
 	return container_of(genpd, struct imx8mp_blk_ctrl_domain, genpd);
 }
 
+<<<<<<< HEAD
 struct clk_hsio_pll {
 	struct clk_hw	hw;
 	struct regmap *regmap;
@@ -171,6 +182,8 @@ static int imx8mp_hsio_blk_ctrl_probe(struct imx8mp_blk_ctrl *bc)
 	return devm_of_clk_add_hw_provider(bc->dev, of_clk_hw_simple_get, hw);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void imx8mp_hsio_blk_ctrl_power_on(struct imx8mp_blk_ctrl *bc,
 					  struct imx8mp_blk_ctrl_domain *domain)
 {
@@ -285,7 +298,10 @@ static const struct imx8mp_blk_ctrl_domain_data imx8mp_hsio_domain_data[] = {
 
 static const struct imx8mp_blk_ctrl_data imx8mp_hsio_blk_ctl_dev_data = {
 	.max_reg = 0x24,
+<<<<<<< HEAD
 	.probe = imx8mp_hsio_blk_ctrl_probe,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.power_on = imx8mp_hsio_blk_ctrl_power_on,
 	.power_off = imx8mp_hsio_blk_ctrl_power_off,
 	.power_notifier_fn = imx8mp_hsio_power_notifier,
@@ -300,7 +316,10 @@ static const struct imx8mp_blk_ctrl_data imx8mp_hsio_blk_ctl_dev_data = {
 #define HDMI_RTX_CLK_CTL3	0x70
 #define HDMI_RTX_CLK_CTL4	0x80
 #define HDMI_TX_CONTROL0	0x200
+<<<<<<< HEAD
 #define  HDMI_LCDIF_NOC_HURRY_MASK		GENMASK(14, 12)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void imx8mp_hdmi_blk_ctrl_power_on(struct imx8mp_blk_ctrl *bc,
 					  struct imx8mp_blk_ctrl_domain *domain)
@@ -312,13 +331,20 @@ static void imx8mp_hdmi_blk_ctrl_power_on(struct imx8mp_blk_ctrl *bc,
 		break;
 	case IMX8MP_HDMIBLK_PD_LCDIF:
 		regmap_set_bits(bc->regmap, HDMI_RTX_CLK_CTL0,
+<<<<<<< HEAD
 				BIT(16) | BIT(17) | BIT(18) |
+=======
+				BIT(7) | BIT(16) | BIT(17) | BIT(18) |
+>>>>>>> b7ba80a49124 (Commit)
 				BIT(19) | BIT(20));
 		regmap_set_bits(bc->regmap, HDMI_RTX_CLK_CTL1, BIT(11));
 		regmap_set_bits(bc->regmap, HDMI_RTX_RESET_CTL0,
 				BIT(4) | BIT(5) | BIT(6));
+<<<<<<< HEAD
 		regmap_set_bits(bc->regmap, HDMI_TX_CONTROL0,
 				FIELD_PREP(HDMI_LCDIF_NOC_HURRY_MASK, 7));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case IMX8MP_HDMIBLK_PD_PAI:
 		regmap_set_bits(bc->regmap, HDMI_RTX_CLK_CTL1, BIT(17));
@@ -343,7 +369,10 @@ static void imx8mp_hdmi_blk_ctrl_power_on(struct imx8mp_blk_ctrl *bc,
 		regmap_set_bits(bc->regmap, HDMI_TX_CONTROL0, BIT(1));
 		break;
 	case IMX8MP_HDMIBLK_PD_HDMI_TX_PHY:
+<<<<<<< HEAD
 		regmap_set_bits(bc->regmap, HDMI_RTX_CLK_CTL0, BIT(7));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		regmap_set_bits(bc->regmap, HDMI_RTX_CLK_CTL1, BIT(22) | BIT(24));
 		regmap_set_bits(bc->regmap, HDMI_RTX_RESET_CTL0, BIT(12));
 		regmap_clear_bits(bc->regmap, HDMI_TX_CONTROL0, BIT(3));
@@ -373,7 +402,11 @@ static void imx8mp_hdmi_blk_ctrl_power_off(struct imx8mp_blk_ctrl *bc,
 				  BIT(4) | BIT(5) | BIT(6));
 		regmap_clear_bits(bc->regmap, HDMI_RTX_CLK_CTL1, BIT(11));
 		regmap_clear_bits(bc->regmap, HDMI_RTX_CLK_CTL0,
+<<<<<<< HEAD
 				  BIT(16) | BIT(17) | BIT(18) |
+=======
+				  BIT(7) | BIT(16) | BIT(17) | BIT(18) |
+>>>>>>> b7ba80a49124 (Commit)
 				  BIT(19) | BIT(20));
 		break;
 	case IMX8MP_HDMIBLK_PD_PAI:
@@ -401,7 +434,10 @@ static void imx8mp_hdmi_blk_ctrl_power_off(struct imx8mp_blk_ctrl *bc,
 	case IMX8MP_HDMIBLK_PD_HDMI_TX_PHY:
 		regmap_set_bits(bc->regmap, HDMI_TX_CONTROL0, BIT(3));
 		regmap_clear_bits(bc->regmap, HDMI_RTX_RESET_CTL0, BIT(12));
+<<<<<<< HEAD
 		regmap_clear_bits(bc->regmap, HDMI_RTX_CLK_CTL0, BIT(7));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		regmap_clear_bits(bc->regmap, HDMI_RTX_CLK_CTL1, BIT(22) | BIT(24));
 		break;
 	case IMX8MP_HDMIBLK_PD_HDCP:
@@ -642,7 +678,11 @@ static int imx8mp_blk_ctrl_probe(struct platform_device *pdev)
 	if (!bc->onecell_data.domains)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	bc->bus_power_dev = dev_pm_domain_attach_by_name(dev, "bus");
+=======
+	bc->bus_power_dev = genpd_dev_pm_attach_by_name(dev, "bus");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(bc->bus_power_dev))
 		return dev_err_probe(dev, PTR_ERR(bc->bus_power_dev),
 				     "failed to attach bus power domain\n");
@@ -694,6 +734,10 @@ static int imx8mp_blk_ctrl_probe(struct platform_device *pdev)
 			ret = PTR_ERR(domain->power_dev);
 			goto cleanup_pds;
 		}
+<<<<<<< HEAD
+=======
+		dev_set_name(domain->power_dev, "%s", data->name);
+>>>>>>> b7ba80a49124 (Commit)
 
 		domain->genpd.name = data->name;
 		domain->genpd.power_on = imx8mp_blk_ctrl_power_on;
@@ -737,12 +781,15 @@ static int imx8mp_blk_ctrl_probe(struct platform_device *pdev)
 		goto cleanup_provider;
 	}
 
+<<<<<<< HEAD
 	if (bc_data->probe) {
 		ret = bc_data->probe(bc);
 		if (ret)
 			goto cleanup_provider;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev_set_drvdata(dev, bc);
 
 	return 0;
@@ -852,7 +899,11 @@ static const struct of_device_id imx8mp_blk_ctrl_of_match[] = {
 		/* Sentinel */
 	}
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(of, imx8mp_blk_ctrl_of_match);
+=======
+MODULE_DEVICE_TABLE(of, imx8m_blk_ctrl_of_match);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_driver imx8mp_blk_ctrl_driver = {
 	.probe = imx8mp_blk_ctrl_probe,
@@ -864,4 +915,7 @@ static struct platform_driver imx8mp_blk_ctrl_driver = {
 	},
 };
 module_platform_driver(imx8mp_blk_ctrl_driver);
+<<<<<<< HEAD
 MODULE_LICENSE("GPL");
+=======
+>>>>>>> b7ba80a49124 (Commit)

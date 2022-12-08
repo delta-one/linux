@@ -112,6 +112,7 @@ bool dal_irq_service_set(
 
 	dal_irq_service_ack(irq_service, source);
 
+<<<<<<< HEAD
 	if (info->funcs && info->funcs->set) {
 		if (info->funcs->set == dal_irq_service_dummy_set) {
 			DC_LOG_WARNING("%s: src: %d, st: %d\n", __func__,
@@ -121,6 +122,10 @@ bool dal_irq_service_set(
 
 		return info->funcs->set(irq_service, info, enable);
 	}
+=======
+	if (info->funcs && info->funcs->set)
+		return info->funcs->set(irq_service, info, enable);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dal_irq_service_set_generic(irq_service, info, enable);
 
@@ -153,6 +158,7 @@ bool dal_irq_service_ack(
 		return false;
 	}
 
+<<<<<<< HEAD
 	if (info->funcs && info->funcs->ack) {
 		if (info->funcs->ack == dal_irq_service_dummy_ack) {
 			DC_LOG_WARNING("%s: src: %d\n", __func__, source);
@@ -161,6 +167,10 @@ bool dal_irq_service_ack(
 
 		return info->funcs->ack(irq_service, info);
 	}
+=======
+	if (info->funcs && info->funcs->ack)
+		return info->funcs->ack(irq_service, info);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dal_irq_service_ack_generic(irq_service, info);
 

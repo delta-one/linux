@@ -35,11 +35,14 @@ struct msm_rbmemptrs {
 	volatile u64 ttbr0;
 };
 
+<<<<<<< HEAD
 struct msm_cp_state {
 	uint64_t ib1_base, ib2_base;
 	uint32_t ib1_rem, ib2_rem;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct msm_ringbuffer {
 	struct msm_gpu *gpu;
 	int id;
@@ -69,6 +72,7 @@ struct msm_ringbuffer {
 	uint64_t memptrs_iova;
 	struct msm_fence_context *fctx;
 
+<<<<<<< HEAD
 	/**
 	 * hangcheck_progress_retries:
 	 *
@@ -92,6 +96,8 @@ struct msm_ringbuffer {
 	 */
 	struct msm_cp_state last_cp_state;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * preempt_lock protects preemption and serializes wptr updates against
 	 * preemption.  Can be aquired from irq context.

@@ -170,6 +170,10 @@ static void free_tty_struct(struct tty_struct *tty)
 	tty_ldisc_deinit(tty);
 	put_device(tty->dev);
 	kvfree(tty->write_buf);
+<<<<<<< HEAD
+=======
+	tty->magic = 0xDEADDEAD;
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(tty);
 }
 
@@ -264,6 +268,14 @@ static int tty_paranoia_check(struct tty_struct *tty, struct inode *inode,
 			imajor(inode), iminor(inode), routine);
 		return 1;
 	}
+<<<<<<< HEAD
+=======
+	if (tty->magic != TTY_MAGIC) {
+		pr_warn("(%d:%d): %s: bad magic number\n",
+			imajor(inode), iminor(inode), routine);
+		return 1;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	return 0;
 }
@@ -466,7 +478,11 @@ static const struct file_operations tty_fops = {
 	.llseek		= no_llseek,
 	.read_iter	= tty_read,
 	.write_iter	= tty_write,
+<<<<<<< HEAD
 	.splice_read	= direct_splice_read,
+=======
+	.splice_read	= generic_file_splice_read,
+>>>>>>> b7ba80a49124 (Commit)
 	.splice_write	= iter_file_splice_write,
 	.poll		= tty_poll,
 	.unlocked_ioctl	= tty_ioctl,
@@ -481,7 +497,11 @@ static const struct file_operations console_fops = {
 	.llseek		= no_llseek,
 	.read_iter	= tty_read,
 	.write_iter	= redirected_tty_write,
+<<<<<<< HEAD
 	.splice_read	= direct_splice_read,
+=======
+	.splice_read	= generic_file_splice_read,
+>>>>>>> b7ba80a49124 (Commit)
 	.splice_write	= iter_file_splice_write,
 	.poll		= tty_poll,
 	.unlocked_ioctl	= tty_ioctl,
@@ -1224,16 +1244,26 @@ static struct tty_struct *tty_driver_lookup_tty(struct tty_driver *driver,
 {
 	struct tty_struct *tty;
 
+<<<<<<< HEAD
 	if (driver->ops->lookup) {
+=======
+	if (driver->ops->lookup)
+>>>>>>> b7ba80a49124 (Commit)
 		if (!file)
 			tty = ERR_PTR(-EIO);
 		else
 			tty = driver->ops->lookup(driver, file, idx);
+<<<<<<< HEAD
 	} else {
 		if (idx >= driver->num)
 			return ERR_PTR(-EINVAL);
 		tty = driver->ttys[idx];
 	}
+=======
+	else
+		tty = driver->ttys[idx];
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!IS_ERR(tty))
 		tty_kref_get(tty);
 	return tty;
@@ -1529,6 +1559,10 @@ static void release_one_tty(struct work_struct *work)
 	if (tty->ops->cleanup)
 		tty->ops->cleanup(tty);
 
+<<<<<<< HEAD
+=======
+	tty->magic = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	tty_driver_kref_put(driver);
 	module_put(owner);
 
@@ -2257,7 +2291,10 @@ static int tty_fasync(int fd, struct file *filp, int on)
 	return retval;
 }
 
+<<<<<<< HEAD
 static bool tty_legacy_tiocsti __read_mostly = IS_ENABLED(CONFIG_LEGACY_TIOCSTI);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * tiocsti		-	fake input character
  * @tty: tty to fake input into
@@ -2276,9 +2313,12 @@ static int tiocsti(struct tty_struct *tty, char __user *p)
 	char ch, mbz = 0;
 	struct tty_ldisc *ld;
 
+<<<<<<< HEAD
 	if (!tty_legacy_tiocsti)
 		return -EIO;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if ((current->signal->tty != tty) && !capable(CAP_SYS_ADMIN))
 		return -EPERM;
 	if (get_user(ch, p))
@@ -3092,6 +3132,10 @@ struct tty_struct *alloc_tty_struct(struct tty_driver *driver, int idx)
 		return NULL;
 
 	kref_init(&tty->kref);
+<<<<<<< HEAD
+=======
+	tty->magic = TTY_MAGIC;
+>>>>>>> b7ba80a49124 (Commit)
 	if (tty_ldisc_init(tty)) {
 		kfree(tty);
 		return NULL;
@@ -3327,6 +3371,10 @@ struct tty_driver *__tty_alloc_driver(unsigned int lines, struct module *owner,
 		return ERR_PTR(-ENOMEM);
 
 	kref_init(&driver->kref);
+<<<<<<< HEAD
+=======
+	driver->magic = TTY_DRIVER_MAGIC;
+>>>>>>> b7ba80a49124 (Commit)
 	driver->num = lines;
 	driver->owner = owner;
 	driver->flags = flags;
@@ -3500,7 +3548,11 @@ void tty_default_fops(struct file_operations *fops)
 	*fops = tty_fops;
 }
 
+<<<<<<< HEAD
 static char *tty_devnode(const struct device *dev, umode_t *mode)
+=======
+static char *tty_devnode(struct device *dev, umode_t *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!mode)
 		return NULL;
@@ -3512,7 +3564,11 @@ static char *tty_devnode(const struct device *dev, umode_t *mode)
 
 static int __init tty_class_init(void)
 {
+<<<<<<< HEAD
 	tty_class = class_create("tty");
+=======
+	tty_class = class_create(THIS_MODULE, "tty");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(tty_class))
 		return PTR_ERR(tty_class);
 	tty_class->devnode = tty_devnode;
@@ -3532,6 +3588,7 @@ static ssize_t show_cons_active(struct device *dev,
 	struct console *c;
 	ssize_t count = 0;
 
+<<<<<<< HEAD
 	/*
 	 * Hold the console_list_lock to guarantee that no consoles are
 	 * unregistered until all console processing is complete.
@@ -3540,6 +3597,9 @@ static ssize_t show_cons_active(struct device *dev,
 	 */
 	console_list_lock();
 
+=======
+	console_lock();
+>>>>>>> b7ba80a49124 (Commit)
 	for_each_console(c) {
 		if (!c->device)
 			continue;
@@ -3551,6 +3611,7 @@ static ssize_t show_cons_active(struct device *dev,
 		if (i >= ARRAY_SIZE(cs))
 			break;
 	}
+<<<<<<< HEAD
 
 	/*
 	 * Take console_lock to serialize device() callback with
@@ -3558,6 +3619,8 @@ static ssize_t show_cons_active(struct device *dev,
 	 * modified under console_lock when switching vt.
 	 */
 	console_lock();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	while (i--) {
 		int index = cs[i]->index;
 		struct tty_driver *drv = cs[i]->device(cs[i], &index);
@@ -3573,8 +3636,11 @@ static ssize_t show_cons_active(struct device *dev,
 	}
 	console_unlock();
 
+<<<<<<< HEAD
 	console_list_unlock();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return count;
 }
 static DEVICE_ATTR(active, S_IRUGO, show_cons_active, NULL);
@@ -3594,6 +3660,7 @@ void console_sysfs_notify(void)
 		sysfs_notify(&consdev->kobj, NULL, "active");
 }
 
+<<<<<<< HEAD
 static struct ctl_table tty_table[] = {
 	{
 		.procname	= "legacy_tiocsti",
@@ -3614,13 +3681,19 @@ static struct ctl_table tty_table[] = {
 	{ }
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Ok, now we can initialize the rest of the tty devices and can count
  * on memory allocations, interrupts etc..
  */
 int __init tty_init(void)
 {
+<<<<<<< HEAD
 	register_sysctl_init("dev/tty", tty_table);
+=======
+	tty_sysctl_init();
+>>>>>>> b7ba80a49124 (Commit)
 	cdev_init(&tty_cdev, &tty_fops);
 	if (cdev_add(&tty_cdev, MKDEV(TTYAUX_MAJOR, 0), 1) ||
 	    register_chrdev_region(MKDEV(TTYAUX_MAJOR, 0), 1, "/dev/tty") < 0)
@@ -3642,3 +3715,7 @@ int __init tty_init(void)
 #endif
 	return 0;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)

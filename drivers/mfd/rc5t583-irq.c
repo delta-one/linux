@@ -228,12 +228,22 @@ static void rc5t583_irq_sync_unlock(struct irq_data *irq_data)
 
 	mutex_unlock(&rc5t583->irq_lock);
 }
+<<<<<<< HEAD
 
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int rc5t583_irq_set_wake(struct irq_data *irq_data, unsigned int on)
 {
 	struct rc5t583 *rc5t583 = irq_data_get_irq_chip_data(irq_data);
 	return irq_set_irq_wake(rc5t583->chip_irq, on);
 }
+<<<<<<< HEAD
+=======
+#else
+#define rc5t583_irq_set_wake NULL
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static irqreturn_t rc5t583_irq(int irq, void *data)
 {
@@ -314,7 +324,11 @@ static struct irq_chip rc5t583_irq_chip = {
 	.irq_bus_lock = rc5t583_irq_lock,
 	.irq_bus_sync_unlock = rc5t583_irq_sync_unlock,
 	.irq_set_type = rc5t583_irq_set_type,
+<<<<<<< HEAD
 	.irq_set_wake = pm_sleep_ptr(rc5t583_irq_set_wake),
+=======
+	.irq_set_wake = rc5t583_irq_set_wake,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int rc5t583_irq_init(struct rc5t583 *rc5t583, int irq, int irq_base)

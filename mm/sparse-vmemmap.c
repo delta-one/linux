@@ -196,10 +196,13 @@ pmd_t * __meminit vmemmap_pmd_populate(pud_t *pud, unsigned long addr, int node)
 	return pmd;
 }
 
+<<<<<<< HEAD
 void __weak __meminit pmd_init(void *addr)
 {
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 pud_t * __meminit vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node)
 {
 	pud_t *pud = pud_offset(p4d, addr);
@@ -207,16 +210,22 @@ pud_t * __meminit vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node)
 		void *p = vmemmap_alloc_block_zero(PAGE_SIZE, node);
 		if (!p)
 			return NULL;
+<<<<<<< HEAD
 		pmd_init(p);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pud_populate(&init_mm, pud, p);
 	}
 	return pud;
 }
 
+<<<<<<< HEAD
 void __weak __meminit pud_init(void *addr)
 {
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 p4d_t * __meminit vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node)
 {
 	p4d_t *p4d = p4d_offset(pgd, addr);
@@ -224,7 +233,10 @@ p4d_t * __meminit vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node)
 		void *p = vmemmap_alloc_block_zero(PAGE_SIZE, node);
 		if (!p)
 			return NULL;
+<<<<<<< HEAD
 		pud_init(p);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		p4d_populate(&init_mm, p4d, p);
 	}
 	return p4d;
@@ -295,6 +307,7 @@ int __meminit vmemmap_populate_basepages(unsigned long start, unsigned long end,
 	return vmemmap_populate_range(start, end, node, altmap, NULL);
 }
 
+<<<<<<< HEAD
 void __weak __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
 				      unsigned long addr, unsigned long next)
 {
@@ -358,6 +371,8 @@ int __meminit vmemmap_populate_hugepages(unsigned long start, unsigned long end,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * For compound pages bigger than section size (e.g. x86 1G compound
  * pages with 2M subsection size) fill the rest of sections as tail

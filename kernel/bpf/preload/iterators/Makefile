@@ -35,14 +35,19 @@ endif
 
 .PHONY: all clean
 
+<<<<<<< HEAD
 all: iterators.lskel-little-endian.h
 
 big: iterators.lskel-big-endian.h
+=======
+all: iterators.lskel.h
+>>>>>>> b7ba80a49124 (Commit)
 
 clean:
 	$(call msg,CLEAN)
 	$(Q)rm -rf $(OUTPUT) iterators
 
+<<<<<<< HEAD
 iterators.lskel-%.h: $(OUTPUT)/%/iterators.bpf.o | $(BPFTOOL)
 	$(call msg,GEN-SKEL,$@)
 	$(Q)$(BPFTOOL) gen skeleton -L $< > $@
@@ -51,6 +56,16 @@ $(OUTPUT)/%/iterators.bpf.o: iterators.bpf.c $(BPFOBJ) | $(OUTPUT)
 	$(call msg,BPF,$@)
 	$(Q)mkdir -p $(@D)
 	$(Q)$(CLANG) -g -O2 -target bpf -m$* $(INCLUDES)		      \
+=======
+iterators.lskel.h: $(OUTPUT)/iterators.bpf.o | $(BPFTOOL)
+	$(call msg,GEN-SKEL,$@)
+	$(Q)$(BPFTOOL) gen skeleton -L $< > $@
+
+
+$(OUTPUT)/iterators.bpf.o: iterators.bpf.c $(BPFOBJ) | $(OUTPUT)
+	$(call msg,BPF,$@)
+	$(Q)$(CLANG) -g -O2 -target bpf $(INCLUDES)			      \
+>>>>>>> b7ba80a49124 (Commit)
 		 -c $(filter %.c,$^) -o $@ &&				      \
 	$(LLVM_STRIP) -g $@
 

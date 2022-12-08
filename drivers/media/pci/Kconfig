@@ -27,7 +27,10 @@ if MEDIA_ANALOG_TV_SUPPORT
 
 source "drivers/media/pci/dt3155/Kconfig"
 source "drivers/media/pci/ivtv/Kconfig"
+<<<<<<< HEAD
 source "drivers/media/pci/saa7146/Kconfig"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 endif
 
@@ -58,7 +61,10 @@ source "drivers/media/pci/pluto2/Kconfig"
 source "drivers/media/pci/pt1/Kconfig"
 source "drivers/media/pci/pt3/Kconfig"
 source "drivers/media/pci/smipcie/Kconfig"
+<<<<<<< HEAD
 source "drivers/media/pci/ttpci/Kconfig"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 endif
 

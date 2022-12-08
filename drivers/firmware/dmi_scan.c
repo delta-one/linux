@@ -567,6 +567,7 @@ static int __init dmi_present(const u8 *buf)
 {
 	u32 smbios_ver;
 
+<<<<<<< HEAD
 	/*
 	 * The size of this structure is 31 bytes, but we also accept value
 	 * 30 due to a mistake in SMBIOS specification version 2.1.
@@ -574,6 +575,10 @@ static int __init dmi_present(const u8 *buf)
 	if (memcmp(buf, "_SM_", 4) == 0 &&
 	    buf[5] >= 30 && buf[5] <= 32 &&
 	    dmi_checksum(buf, buf[5])) {
+=======
+	if (memcmp(buf, "_SM_", 4) == 0 &&
+	    buf[5] < 32 && dmi_checksum(buf, buf[5])) {
+>>>>>>> b7ba80a49124 (Commit)
 		smbios_ver = get_unaligned_be16(buf + 6);
 		smbios_entry_point_size = buf[5];
 		memcpy(smbios_entry_point, buf, smbios_entry_point_size);
@@ -634,8 +639,12 @@ static int __init dmi_present(const u8 *buf)
 static int __init dmi_smbios3_present(const u8 *buf)
 {
 	if (memcmp(buf, "_SM3_", 5) == 0 &&
+<<<<<<< HEAD
 	    buf[6] >= 24 && buf[6] <= 32 &&
 	    dmi_checksum(buf, buf[6])) {
+=======
+	    buf[6] < 32 && dmi_checksum(buf, buf[6])) {
+>>>>>>> b7ba80a49124 (Commit)
 		dmi_ver = get_unaligned_be24(buf + 7);
 		dmi_num = 0;			/* No longer specified */
 		dmi_len = get_unaligned_le32(buf + 12);

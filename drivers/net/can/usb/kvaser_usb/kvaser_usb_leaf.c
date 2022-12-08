@@ -21,7 +21,10 @@
 #include <linux/types.h>
 #include <linux/units.h>
 #include <linux/usb.h>
+<<<<<<< HEAD
 #include <linux/workqueue.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/can.h>
 #include <linux/can/dev.h>
@@ -57,9 +60,12 @@
 #define CMD_RX_EXT_MESSAGE		14
 #define CMD_TX_EXT_MESSAGE		15
 #define CMD_SET_BUS_PARAMS		16
+<<<<<<< HEAD
 #define CMD_GET_BUS_PARAMS		17
 #define CMD_GET_BUS_PARAMS_REPLY	18
 #define CMD_GET_CHIP_STATE		19
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CMD_CHIP_STATE_EVENT		20
 #define CMD_SET_CTRL_MODE		21
 #define CMD_RESET_CHIP			24
@@ -74,13 +80,19 @@
 #define CMD_GET_CARD_INFO_REPLY		35
 #define CMD_GET_SOFTWARE_INFO		38
 #define CMD_GET_SOFTWARE_INFO_REPLY	39
+<<<<<<< HEAD
 #define CMD_ERROR_EVENT			45
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CMD_FLUSH_QUEUE			48
 #define CMD_TX_ACKNOWLEDGE		50
 #define CMD_CAN_ERROR_EVENT		51
 #define CMD_FLUSH_QUEUE_REPLY		68
+<<<<<<< HEAD
 #define CMD_GET_CAPABILITIES_REQ	95
 #define CMD_GET_CAPABILITIES_RESP	96
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define CMD_LEAF_LOG_MESSAGE		106
 
@@ -90,8 +102,11 @@
 #define KVASER_USB_LEAF_SWOPTION_FREQ_32_MHZ_CLK BIT(5)
 #define KVASER_USB_LEAF_SWOPTION_FREQ_24_MHZ_CLK BIT(6)
 
+<<<<<<< HEAD
 #define KVASER_USB_LEAF_SWOPTION_EXT_CAP BIT(12)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* error factors */
 #define M16C_EF_ACKE			BIT(0)
 #define M16C_EF_CRCE			BIT(1)
@@ -166,7 +181,15 @@ struct usbcan_cmd_softinfo {
 struct kvaser_cmd_busparams {
 	u8 tid;
 	u8 channel;
+<<<<<<< HEAD
 	struct kvaser_usb_busparams busparams;
+=======
+	__le32 bitrate;
+	u8 tseg1;
+	u8 tseg2;
+	u8 sjw;
+	u8 no_samp;
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 struct kvaser_cmd_tx_can {
@@ -235,7 +258,11 @@ struct kvaser_cmd_tx_acknowledge_header {
 	u8 tid;
 } __packed;
 
+<<<<<<< HEAD
 struct leaf_cmd_can_error_event {
+=======
+struct leaf_cmd_error_event {
+>>>>>>> b7ba80a49124 (Commit)
 	u8 tid;
 	u8 flags;
 	__le16 time[3];
@@ -247,7 +274,11 @@ struct leaf_cmd_can_error_event {
 	u8 error_factor;
 } __packed;
 
+<<<<<<< HEAD
 struct usbcan_cmd_can_error_event {
+=======
+struct usbcan_cmd_error_event {
+>>>>>>> b7ba80a49124 (Commit)
 	u8 tid;
 	u8 padding;
 	u8 tx_errors_count_ch0;
@@ -259,6 +290,7 @@ struct usbcan_cmd_can_error_event {
 	__le16 time;
 } __packed;
 
+<<<<<<< HEAD
 /* CMD_ERROR_EVENT error codes */
 #define KVASER_USB_LEAF_ERROR_EVENT_TX_QUEUE_FULL 0x8
 #define KVASER_USB_LEAF_ERROR_EVENT_PARAM 0x9
@@ -281,6 +313,8 @@ struct usbcan_cmd_error_event {
 	__le16 padding;
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct kvaser_cmd_ctrl_mode {
 	u8 tid;
 	u8 channel;
@@ -305,6 +339,7 @@ struct leaf_cmd_log_message {
 	u8 data[8];
 } __packed;
 
+<<<<<<< HEAD
 /* Sub commands for cap_req and cap_res */
 #define KVASER_USB_LEAF_CAP_CMD_LISTEN_MODE 0x02
 #define KVASER_USB_LEAF_CAP_CMD_ERR_REPORT 0x05
@@ -327,6 +362,8 @@ struct kvaser_cmd_cap_res {
 	__le32 value;
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct kvaser_cmd {
 	u8 len;
 	u8 id;
@@ -342,18 +379,26 @@ struct kvaser_cmd {
 			struct leaf_cmd_softinfo softinfo;
 			struct leaf_cmd_rx_can rx_can;
 			struct leaf_cmd_chip_state_event chip_state_event;
+<<<<<<< HEAD
 			struct leaf_cmd_can_error_event can_error_event;
 			struct leaf_cmd_log_message log_message;
 			struct leaf_cmd_error_event error_event;
 			struct kvaser_cmd_cap_req cap_req;
 			struct kvaser_cmd_cap_res cap_res;
+=======
+			struct leaf_cmd_error_event error_event;
+			struct leaf_cmd_log_message log_message;
+>>>>>>> b7ba80a49124 (Commit)
 		} __packed leaf;
 
 		union {
 			struct usbcan_cmd_softinfo softinfo;
 			struct usbcan_cmd_rx_can rx_can;
 			struct usbcan_cmd_chip_state_event chip_state_event;
+<<<<<<< HEAD
 			struct usbcan_cmd_can_error_event can_error_event;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			struct usbcan_cmd_error_event error_event;
 		} __packed usbcan;
 
@@ -363,6 +408,7 @@ struct kvaser_cmd {
 	} u;
 } __packed;
 
+<<<<<<< HEAD
 #define CMD_SIZE_ANY 0xff
 #define kvaser_fsize(field) sizeof_field(struct kvaser_cmd, field)
 
@@ -399,6 +445,8 @@ static const u8 kvaser_usb_leaf_cmd_sizes_usbcan[] = {
 	[CMD_USBCAN_CLOCK_OVERFLOW_EVENT] = CMD_SIZE_ANY,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Summary of a kvaser error event, for a unified Leaf/Usbcan error
  * handling. Some discrepancies between the two families exist:
  *
@@ -422,6 +470,7 @@ struct kvaser_usb_err_summary {
 	};
 };
 
+<<<<<<< HEAD
 struct kvaser_usb_net_leaf_priv {
 	struct kvaser_usb_net_priv *net;
 
@@ -431,6 +480,8 @@ struct kvaser_usb_net_leaf_priv {
 	bool joining_bus;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct can_bittiming_const kvaser_usb_leaf_m16c_bittiming_const = {
 	.name = "kvaser_usb_ucii",
 	.tseg1_min = 4,
@@ -495,6 +546,7 @@ static const struct kvaser_usb_dev_cfg kvaser_usb_leaf_imx_dev_cfg_32mhz = {
 	.bittiming_const = &kvaser_usb_flexc_bittiming_const,
 };
 
+<<<<<<< HEAD
 static int kvaser_usb_leaf_verify_size(const struct kvaser_usb *dev,
 				       const struct kvaser_cmd *cmd)
 {
@@ -532,6 +584,8 @@ static int kvaser_usb_leaf_verify_size(const struct kvaser_usb *dev,
 	return -EINVAL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void *
 kvaser_usb_leaf_frame_to_cmd(const struct kvaser_usb_net_priv *priv,
 			     const struct sk_buff *skb, int *cmd_len,
@@ -637,9 +691,12 @@ static int kvaser_usb_leaf_wait_cmd(const struct kvaser_usb *dev, u8 id,
 end:
 	kfree(buf);
 
+<<<<<<< HEAD
 	if (err == 0)
 		err = kvaser_usb_leaf_verify_size(dev, cmd);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -672,9 +729,12 @@ static void kvaser_usb_leaf_get_software_info_leaf(struct kvaser_usb *dev,
 	dev->fw_version = le32_to_cpu(softinfo->fw_version);
 	dev->max_tx_urbs = le16_to_cpu(softinfo->max_outstanding_tx);
 
+<<<<<<< HEAD
 	if (sw_options & KVASER_USB_LEAF_SWOPTION_EXT_CAP)
 		dev->card_data.capabilities |= KVASER_USB_CAP_EXT_CAP;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (dev->driver_info->quirks & KVASER_USB_QUIRK_IGNORE_CLK_FREQ) {
 		/* Firmware expects bittiming parameters calculated for 16MHz
 		 * clock, regardless of the actual clock
@@ -762,6 +822,7 @@ static int kvaser_usb_leaf_get_card_info(struct kvaser_usb *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int kvaser_usb_leaf_get_single_capability(struct kvaser_usb *dev,
 						 u16 cap_cmd_req, u16 *status)
 {
@@ -872,6 +933,8 @@ static int kvaser_usb_leaf_get_capabilities(struct kvaser_usb *dev)
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void kvaser_usb_leaf_tx_acknowledge(const struct kvaser_usb *dev,
 					   const struct kvaser_cmd *cmd)
 {
@@ -900,7 +963,11 @@ static void kvaser_usb_leaf_tx_acknowledge(const struct kvaser_usb *dev,
 	context = &priv->tx_contexts[tid % dev->max_tx_urbs];
 
 	/* Sometimes the state change doesn't come after a bus-off event */
+<<<<<<< HEAD
 	if (priv->can.restart_ms && priv->can.state == CAN_STATE_BUS_OFF) {
+=======
+	if (priv->can.restart_ms && priv->can.state >= CAN_STATE_BUS_OFF) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct sk_buff *skb;
 		struct can_frame *cf;
 
@@ -953,6 +1020,7 @@ static int kvaser_usb_leaf_simple_cmd_async(struct kvaser_usb_net_priv *priv,
 	return err;
 }
 
+<<<<<<< HEAD
 static void kvaser_usb_leaf_chip_state_req_work(struct work_struct *work)
 {
 	struct kvaser_usb_net_leaf_priv *leaf =
@@ -963,12 +1031,17 @@ static void kvaser_usb_leaf_chip_state_req_work(struct work_struct *work)
 	kvaser_usb_leaf_simple_cmd_async(priv, CMD_GET_CHIP_STATE);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void
 kvaser_usb_leaf_rx_error_update_can_state(struct kvaser_usb_net_priv *priv,
 					const struct kvaser_usb_err_summary *es,
 					struct can_frame *cf)
 {
+<<<<<<< HEAD
 	struct kvaser_usb_net_leaf_priv *leaf = priv->sub_priv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct kvaser_usb *dev = priv->dev;
 	struct net_device_stats *stats = &priv->netdev->stats;
 	enum can_state cur_state, new_state, tx_state, rx_state;
@@ -982,6 +1055,7 @@ kvaser_usb_leaf_rx_error_update_can_state(struct kvaser_usb_net_priv *priv,
 		new_state = CAN_STATE_BUS_OFF;
 	} else if (es->status & M16C_STATE_BUS_PASSIVE) {
 		new_state = CAN_STATE_ERROR_PASSIVE;
+<<<<<<< HEAD
 	} else if ((es->status & M16C_STATE_BUS_ERROR) &&
 		   cur_state >= CAN_STATE_BUS_OFF) {
 		/* Guard against spurious error events after a busoff */
@@ -1009,6 +1083,23 @@ kvaser_usb_leaf_rx_error_update_can_state(struct kvaser_usb_net_priv *priv,
 		}
 	}
 
+=======
+	} else if (es->status & M16C_STATE_BUS_ERROR) {
+		/* Guard against spurious error events after a busoff */
+		if (cur_state < CAN_STATE_BUS_OFF) {
+			if (es->txerr >= 128 || es->rxerr >= 128)
+				new_state = CAN_STATE_ERROR_PASSIVE;
+			else if (es->txerr >= 96 || es->rxerr >= 96)
+				new_state = CAN_STATE_ERROR_WARNING;
+			else if (cur_state > CAN_STATE_ERROR_ACTIVE)
+				new_state = CAN_STATE_ERROR_ACTIVE;
+		}
+	}
+
+	if (!es->status)
+		new_state = CAN_STATE_ERROR_ACTIVE;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (new_state != cur_state) {
 		tx_state = (es->txerr >= es->rxerr) ? new_state : 0;
 		rx_state = (es->txerr <= es->rxerr) ? new_state : 0;
@@ -1017,7 +1108,11 @@ kvaser_usb_leaf_rx_error_update_can_state(struct kvaser_usb_net_priv *priv,
 	}
 
 	if (priv->can.restart_ms &&
+<<<<<<< HEAD
 	    cur_state == CAN_STATE_BUS_OFF &&
+=======
+	    cur_state >= CAN_STATE_BUS_OFF &&
+>>>>>>> b7ba80a49124 (Commit)
 	    new_state < CAN_STATE_BUS_OFF)
 		priv->can.can_stats.restarts++;
 
@@ -1051,7 +1146,10 @@ static void kvaser_usb_leaf_rx_error(const struct kvaser_usb *dev,
 	struct sk_buff *skb;
 	struct net_device_stats *stats;
 	struct kvaser_usb_net_priv *priv;
+<<<<<<< HEAD
 	struct kvaser_usb_net_leaf_priv *leaf;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	enum can_state old_state, new_state;
 
 	if (es->channel >= dev->nchannels) {
@@ -1061,6 +1159,7 @@ static void kvaser_usb_leaf_rx_error(const struct kvaser_usb *dev,
 	}
 
 	priv = dev->nets[es->channel];
+<<<<<<< HEAD
 	leaf = priv->sub_priv;
 	stats = &priv->netdev->stats;
 
@@ -1068,6 +1167,10 @@ static void kvaser_usb_leaf_rx_error(const struct kvaser_usb *dev,
 	if (!netif_running(priv->netdev))
 		return;
 
+=======
+	stats = &priv->netdev->stats;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Update all of the CAN interface's state and error counters before
 	 * trying any memory allocation that can actually fail with -ENOMEM.
 	 *
@@ -1082,6 +1185,7 @@ static void kvaser_usb_leaf_rx_error(const struct kvaser_usb *dev,
 	kvaser_usb_leaf_rx_error_update_can_state(priv, es, &tmp_cf);
 	new_state = priv->can.state;
 
+<<<<<<< HEAD
 	/* If there are errors, request status updates periodically as we do
 	 * not get automatic notifications of improved state.
 	 * Also request updates if we saw a stale BUS_OFF during startup
@@ -1093,6 +1197,8 @@ static void kvaser_usb_leaf_rx_error(const struct kvaser_usb *dev,
 		schedule_delayed_work(&leaf->chip_state_req_work,
 				      msecs_to_jiffies(500));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	skb = alloc_can_err_skb(priv->netdev, &cf);
 	if (!skb) {
 		stats->rx_dropped++;
@@ -1110,7 +1216,11 @@ static void kvaser_usb_leaf_rx_error(const struct kvaser_usb *dev,
 		}
 
 		if (priv->can.restart_ms &&
+<<<<<<< HEAD
 		    old_state == CAN_STATE_BUS_OFF &&
+=======
+		    old_state >= CAN_STATE_BUS_OFF &&
+>>>>>>> b7ba80a49124 (Commit)
 		    new_state < CAN_STATE_BUS_OFF) {
 			cf->can_id |= CAN_ERR_RESTARTED;
 			netif_carrier_on(priv->netdev);
@@ -1209,11 +1319,19 @@ static void kvaser_usb_leaf_usbcan_rx_error(const struct kvaser_usb *dev,
 
 	case CMD_CAN_ERROR_EVENT:
 		es.channel = 0;
+<<<<<<< HEAD
 		es.status = cmd->u.usbcan.can_error_event.status_ch0;
 		es.txerr = cmd->u.usbcan.can_error_event.tx_errors_count_ch0;
 		es.rxerr = cmd->u.usbcan.can_error_event.rx_errors_count_ch0;
 		es.usbcan.other_ch_status =
 			cmd->u.usbcan.can_error_event.status_ch1;
+=======
+		es.status = cmd->u.usbcan.error_event.status_ch0;
+		es.txerr = cmd->u.usbcan.error_event.tx_errors_count_ch0;
+		es.rxerr = cmd->u.usbcan.error_event.rx_errors_count_ch0;
+		es.usbcan.other_ch_status =
+			cmd->u.usbcan.error_event.status_ch1;
+>>>>>>> b7ba80a49124 (Commit)
 		kvaser_usb_leaf_usbcan_conditionally_rx_error(dev, &es);
 
 		/* The USBCAN firmware supports up to 2 channels.
@@ -1221,6 +1339,7 @@ static void kvaser_usb_leaf_usbcan_rx_error(const struct kvaser_usb *dev,
 		 */
 		if (dev->nchannels == MAX_USBCAN_NET_DEVICES) {
 			es.channel = 1;
+<<<<<<< HEAD
 			es.status = cmd->u.usbcan.can_error_event.status_ch1;
 			es.txerr =
 				cmd->u.usbcan.can_error_event.tx_errors_count_ch1;
@@ -1228,6 +1347,15 @@ static void kvaser_usb_leaf_usbcan_rx_error(const struct kvaser_usb *dev,
 				cmd->u.usbcan.can_error_event.rx_errors_count_ch1;
 			es.usbcan.other_ch_status =
 				cmd->u.usbcan.can_error_event.status_ch0;
+=======
+			es.status = cmd->u.usbcan.error_event.status_ch1;
+			es.txerr =
+				cmd->u.usbcan.error_event.tx_errors_count_ch1;
+			es.rxerr =
+				cmd->u.usbcan.error_event.rx_errors_count_ch1;
+			es.usbcan.other_ch_status =
+				cmd->u.usbcan.error_event.status_ch0;
+>>>>>>> b7ba80a49124 (Commit)
 			kvaser_usb_leaf_usbcan_conditionally_rx_error(dev, &es);
 		}
 		break;
@@ -1244,11 +1372,19 @@ static void kvaser_usb_leaf_leaf_rx_error(const struct kvaser_usb *dev,
 
 	switch (cmd->id) {
 	case CMD_CAN_ERROR_EVENT:
+<<<<<<< HEAD
 		es.channel = cmd->u.leaf.can_error_event.channel;
 		es.status = cmd->u.leaf.can_error_event.status;
 		es.txerr = cmd->u.leaf.can_error_event.tx_errors_count;
 		es.rxerr = cmd->u.leaf.can_error_event.rx_errors_count;
 		es.leaf.error_factor = cmd->u.leaf.can_error_event.error_factor;
+=======
+		es.channel = cmd->u.leaf.error_event.channel;
+		es.status = cmd->u.leaf.error_event.status;
+		es.txerr = cmd->u.leaf.error_event.tx_errors_count;
+		es.rxerr = cmd->u.leaf.error_event.rx_errors_count;
+		es.leaf.error_factor = cmd->u.leaf.error_event.error_factor;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case CMD_LEAF_LOG_MESSAGE:
 		es.channel = cmd->u.leaf.log_message.channel;
@@ -1381,6 +1517,7 @@ static void kvaser_usb_leaf_rx_can_msg(const struct kvaser_usb *dev,
 	netif_rx(skb);
 }
 
+<<<<<<< HEAD
 static void kvaser_usb_leaf_error_event_parameter(const struct kvaser_usb *dev,
 						  const struct kvaser_cmd *cmd)
 {
@@ -1449,6 +1586,8 @@ static void kvaser_usb_leaf_error_event(const struct kvaser_usb *dev,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void kvaser_usb_leaf_start_chip_reply(const struct kvaser_usb *dev,
 					     const struct kvaser_cmd *cmd)
 {
@@ -1489,6 +1628,7 @@ static void kvaser_usb_leaf_stop_chip_reply(const struct kvaser_usb *dev,
 	complete(&priv->stop_comp);
 }
 
+<<<<<<< HEAD
 static void kvaser_usb_leaf_get_busparams_reply(const struct kvaser_usb *dev,
 						const struct kvaser_cmd *cmd)
 {
@@ -1514,6 +1654,11 @@ static void kvaser_usb_leaf_handle_command(const struct kvaser_usb *dev,
 	if (kvaser_usb_leaf_verify_size(dev, cmd) < 0)
 		return;
 
+=======
+static void kvaser_usb_leaf_handle_command(const struct kvaser_usb *dev,
+					   const struct kvaser_cmd *cmd)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	switch (cmd->id) {
 	case CMD_START_CHIP_REPLY:
 		kvaser_usb_leaf_start_chip_reply(dev, cmd);
@@ -1546,6 +1691,7 @@ static void kvaser_usb_leaf_handle_command(const struct kvaser_usb *dev,
 		kvaser_usb_leaf_tx_acknowledge(dev, cmd);
 		break;
 
+<<<<<<< HEAD
 	case CMD_ERROR_EVENT:
 		kvaser_usb_leaf_error_event(dev, cmd);
 		break;
@@ -1554,6 +1700,8 @@ static void kvaser_usb_leaf_handle_command(const struct kvaser_usb *dev,
 		kvaser_usb_leaf_get_busparams_reply(dev, cmd);
 		break;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Ignored commands */
 	case CMD_USBCAN_CLOCK_OVERFLOW_EVENT:
 		if (dev->driver_info->family != KVASER_USBCAN)
@@ -1632,12 +1780,18 @@ static int kvaser_usb_leaf_set_opt_mode(const struct kvaser_usb_net_priv *priv)
 
 static int kvaser_usb_leaf_start_chip(struct kvaser_usb_net_priv *priv)
 {
+<<<<<<< HEAD
 	struct kvaser_usb_net_leaf_priv *leaf = priv->sub_priv;
 	int err;
 
 	leaf->joining_bus = true;
 
 	reinit_completion(&priv->start_comp);
+=======
+	int err;
+
+	init_completion(&priv->start_comp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = kvaser_usb_leaf_send_simple_cmd(priv->dev, CMD_START_CHIP,
 					      priv->channel);
@@ -1653,12 +1807,18 @@ static int kvaser_usb_leaf_start_chip(struct kvaser_usb_net_priv *priv)
 
 static int kvaser_usb_leaf_stop_chip(struct kvaser_usb_net_priv *priv)
 {
+<<<<<<< HEAD
 	struct kvaser_usb_net_leaf_priv *leaf = priv->sub_priv;
 	int err;
 
 	reinit_completion(&priv->stop_comp);
 
 	cancel_delayed_work(&leaf->chip_state_req_work);
+=======
+	int err;
+
+	init_completion(&priv->stop_comp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = kvaser_usb_leaf_send_simple_cmd(priv->dev, CMD_STOP_CHIP,
 					      priv->channel);
@@ -1706,6 +1866,7 @@ static int kvaser_usb_leaf_init_card(struct kvaser_usb *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int kvaser_usb_leaf_init_channel(struct kvaser_usb_net_priv *priv)
 {
 	struct kvaser_usb_net_leaf_priv *leaf;
@@ -1735,6 +1896,12 @@ static int kvaser_usb_leaf_set_bittiming(const struct net_device *netdev,
 					 const struct kvaser_usb_busparams *busparams)
 {
 	struct kvaser_usb_net_priv *priv = netdev_priv(netdev);
+=======
+static int kvaser_usb_leaf_set_bittiming(struct net_device *netdev)
+{
+	struct kvaser_usb_net_priv *priv = netdev_priv(netdev);
+	struct can_bittiming *bt = &priv->can.bittiming;
+>>>>>>> b7ba80a49124 (Commit)
 	struct kvaser_usb *dev = priv->dev;
 	struct kvaser_cmd *cmd;
 	int rc;
@@ -1747,8 +1914,20 @@ static int kvaser_usb_leaf_set_bittiming(const struct net_device *netdev,
 	cmd->len = CMD_HEADER_LEN + sizeof(struct kvaser_cmd_busparams);
 	cmd->u.busparams.channel = priv->channel;
 	cmd->u.busparams.tid = 0xff;
+<<<<<<< HEAD
 	memcpy(&cmd->u.busparams.busparams, busparams,
 	       sizeof(cmd->u.busparams.busparams));
+=======
+	cmd->u.busparams.bitrate = cpu_to_le32(bt->bitrate);
+	cmd->u.busparams.sjw = bt->sjw;
+	cmd->u.busparams.tseg1 = bt->prop_seg + bt->phase_seg1;
+	cmd->u.busparams.tseg2 = bt->phase_seg2;
+
+	if (priv->can.ctrlmode & CAN_CTRLMODE_3_SAMPLES)
+		cmd->u.busparams.no_samp = 3;
+	else
+		cmd->u.busparams.no_samp = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = kvaser_usb_send_cmd(dev, cmd, cmd->len);
 
@@ -1756,6 +1935,7 @@ static int kvaser_usb_leaf_set_bittiming(const struct net_device *netdev,
 	return rc;
 }
 
+<<<<<<< HEAD
 static int kvaser_usb_leaf_get_busparams(struct kvaser_usb_net_priv *priv)
 {
 	int err;
@@ -1777,15 +1957,21 @@ static int kvaser_usb_leaf_get_busparams(struct kvaser_usb_net_priv *priv)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int kvaser_usb_leaf_set_mode(struct net_device *netdev,
 				    enum can_mode mode)
 {
 	struct kvaser_usb_net_priv *priv = netdev_priv(netdev);
+<<<<<<< HEAD
 	struct kvaser_usb_net_leaf_priv *leaf = priv->sub_priv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	switch (mode) {
 	case CAN_MODE_START:
+<<<<<<< HEAD
 		kvaser_usb_unlink_tx_urbs(priv);
 
 		leaf->joining_bus = true;
@@ -1795,6 +1981,11 @@ static int kvaser_usb_leaf_set_mode(struct net_device *netdev,
 			return err;
 
 		priv->can.state = CAN_STATE_ERROR_ACTIVE;
+=======
+		err = kvaser_usb_leaf_simple_cmd_async(priv, CMD_START_CHIP);
+		if (err)
+			return err;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		return -EOPNOTSUPP;
@@ -1841,6 +2032,7 @@ static int kvaser_usb_leaf_setup_endpoints(struct kvaser_usb *dev)
 const struct kvaser_usb_dev_ops kvaser_usb_leaf_dev_ops = {
 	.dev_set_mode = kvaser_usb_leaf_set_mode,
 	.dev_set_bittiming = kvaser_usb_leaf_set_bittiming,
+<<<<<<< HEAD
 	.dev_get_busparams = kvaser_usb_leaf_get_busparams,
 	.dev_set_data_bittiming = NULL,
 	.dev_get_data_busparams = NULL,
@@ -1853,6 +2045,16 @@ const struct kvaser_usb_dev_ops kvaser_usb_leaf_dev_ops = {
 	.dev_get_software_details = NULL,
 	.dev_get_card_info = kvaser_usb_leaf_get_card_info,
 	.dev_get_capabilities = kvaser_usb_leaf_get_capabilities,
+=======
+	.dev_set_data_bittiming = NULL,
+	.dev_get_berr_counter = kvaser_usb_leaf_get_berr_counter,
+	.dev_setup_endpoints = kvaser_usb_leaf_setup_endpoints,
+	.dev_init_card = kvaser_usb_leaf_init_card,
+	.dev_get_software_info = kvaser_usb_leaf_get_software_info,
+	.dev_get_software_details = NULL,
+	.dev_get_card_info = kvaser_usb_leaf_get_card_info,
+	.dev_get_capabilities = NULL,
+>>>>>>> b7ba80a49124 (Commit)
 	.dev_set_opt_mode = kvaser_usb_leaf_set_opt_mode,
 	.dev_start_chip = kvaser_usb_leaf_start_chip,
 	.dev_stop_chip = kvaser_usb_leaf_stop_chip,

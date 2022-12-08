@@ -69,10 +69,13 @@ patternProperties:
     description: Annapurna Labs
   "^alcatel,.*":
     description: Alcatel
+<<<<<<< HEAD
   "^aldec,.*":
     description: Aldec, Inc.
   "^alfa-network,.*":
     description: ALFA Network Inc.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^allegro,.*":
     description: Allegro DVT
   "^allo,.*":
@@ -200,10 +203,17 @@ patternProperties:
     description: Bosch Sensortec GmbH
   "^boundary,.*":
     description: Boundary Devices Inc.
+<<<<<<< HEAD
   "^brcm,.*":
     description: Broadcom Corporation
   "^broadmobi,.*":
     description: Shanghai Broadmobi Communication Technology Co.,Ltd.
+=======
+  "^broadmobi,.*":
+    description: Shanghai Broadmobi Communication Technology Co.,Ltd.
+  "^brcm,.*":
+    description: Broadcom Corporation
+>>>>>>> b7ba80a49124 (Commit)
   "^bsh,.*":
     description: BSH Hausgeraete GmbH
   "^bticino,.*":
@@ -250,8 +260,11 @@ patternProperties:
     description: ChipOne
   "^chipspark,.*":
     description: ChipSPARK
+<<<<<<< HEAD
   "^chongzhou,.*":
     description: Shenzhen Chongzhou Electronic Technology Co., Ltd
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^chrontel,.*":
     description: Chrontel, Inc.
   "^chrp,.*":
@@ -266,10 +279,13 @@ patternProperties:
     description: Cirrus Logic, Inc.
   "^cisco,.*":
     description: Cisco Systems, Inc.
+<<<<<<< HEAD
   "^clockwork,.*":
     description: Clockwork Tech LLC
   "^cloos,.*":
     description: Carl Cloos Schweisstechnik GmbH.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^cloudengines,.*":
     description: Cloud Engines, Inc.
   "^cnm,.*":
@@ -378,8 +394,11 @@ patternProperties:
     description: EBV Elektronik
   "^eckelmann,.*":
     description: Eckelmann AG
+<<<<<<< HEAD
   "^edgeble,.*":
     description: Edgeble AI Technologies Pvt. Ltd.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^edimax,.*":
     description: EDIMAX Technology Co., Ltd
   "^edt,.*":
@@ -402,8 +421,11 @@ patternProperties:
     description: Elimo Engineering Ltd.
   "^elpida,.*":
     description: Elpida Memory, Inc.
+<<<<<<< HEAD
   "^embedfire,.*":
     description: Dongguan EmbedFire Electronic Technology Co., Ltd.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^embest,.*":
     description: Shenzhen Embest Technology Co., Ltd.
   "^emlid,.*":
@@ -502,8 +524,11 @@ patternProperties:
     description: GE Fanuc Intelligent Platforms Embedded Systems, Inc.
   "^gemei,.*":
     description: Gemei Digital Technology Co., Ltd.
+<<<<<<< HEAD
   "^genesys,.*":
     description: Genesys Logic, Inc.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^geniatech,.*":
     description: Geniatech, Inc.
   "^giantec,.*":
@@ -520,8 +545,11 @@ patternProperties:
     description: Shenzhen Huiding Technology Co., Ltd.
   "^google,.*":
     description: Google, Inc.
+<<<<<<< HEAD
   "^gplus,.*":
     description: GPLUS
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^grinn,.*":
     description: Grinn
   "^grmn,.*":
@@ -559,8 +587,11 @@ patternProperties:
     description: Hitex Development Tools
   "^holt,.*":
     description: Holt Integrated Circuits, Inc.
+<<<<<<< HEAD
   "^holtek,.*":
     description: Holtek Semiconductor, Inc.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^honestar,.*":
     description: Honestar Technologies Co., Ltd.
   "^honeywell,.*":
@@ -573,6 +604,11 @@ patternProperties:
     description: Hewlett Packard Enterprise
   "^hsg,.*":
     description: HannStar Display Co.
+<<<<<<< HEAD
+=======
+  "^holtek,.*":
+    description: Holtek Semiconductor, Inc.
+>>>>>>> b7ba80a49124 (Commit)
   "^huawei,.*":
     description: Huawei Technologies Co., Ltd.
   "^hugsun,.*":
@@ -585,8 +621,11 @@ patternProperties:
     description: Hycon Technology Corp.
   "^hydis,.*":
     description: Hydis Technologies
+<<<<<<< HEAD
   "^hynitron,.*":
     description: Shanghai Hynitron Microelectronics Co. Ltd.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^hynix,.*":
     description: SK Hynix Inc.
   "^hyundai,.*":
@@ -617,6 +656,7 @@ patternProperties:
     description: Infineon Technologies
   "^inforce,.*":
     description: Inforce Computing
+<<<<<<< HEAD
   "^ingenic,.*":
     description: Ingenic Semiconductor
   "^ingrasys,.*":
@@ -625,6 +665,16 @@ patternProperties:
     description: Injoinic Technology Corp.
   "^innocomm,.*":
     description: InnoComm Mobile Technology Corp.
+=======
+  "^ingrasys,.*":
+    description: Ingrasys Technology Inc.
+  "^ivo,.*":
+    description: InfoVision Optoelectronics Kunshan Co. Ltd.
+  "^ingenic,.*":
+    description: Ingenic Semiconductor
+  "^injoinic,.*":
+    description: Injoinic Technology Corp.
+>>>>>>> b7ba80a49124 (Commit)
   "^innolux,.*":
     description: Innolux Corporation
   "^inside-secure,.*":
@@ -645,8 +695,11 @@ patternProperties:
     description: Inverse Path
   "^iom,.*":
     description: Iomega Corporation
+<<<<<<< HEAD
   "^irondevice,.*":
     description: Iron Device Corporation
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^isee,.*":
     description: ISEE 2007 S.L.
   "^isil,.*":
@@ -659,12 +712,17 @@ patternProperties:
     description: ITEAD Intelligent Systems Co.Ltd
   "^itian,.*":
     description: ITian Corporation
+<<<<<<< HEAD
   "^ivo,.*":
     description: InfoVision Optoelectronics Kunshan Co. Ltd.
   "^iwave,.*":
     description: iWave Systems Technologies Pvt. Ltd.
   "^jadard,.*":
     description: Jadard Technology Inc.
+=======
+  "^iwave,.*":
+    description: iWave Systems Technologies Pvt. Ltd.
+>>>>>>> b7ba80a49124 (Commit)
   "^jdi,.*":
     description: Japan Display Inc.
   "^jedec,.*":
@@ -721,8 +779,11 @@ patternProperties:
     description: Lantiq Semiconductor
   "^lattice,.*":
     description: Lattice Semiconductor
+<<<<<<< HEAD
   "^lctech,.*":
     description: Shenzen LC Technology Co., Ltd.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^leadtek,.*":
     description: Shenzhen Leadtek Technology Co., Ltd.
   "^leez,.*":
@@ -743,8 +804,11 @@ patternProperties:
     description: Lichee Pi
   "^linaro,.*":
     description: Linaro Limited
+<<<<<<< HEAD
   "^lineartechnology,.*":
     description: Linear Technology
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^linksprite,.*":
     description: LinkSprite Technologies, Inc.
   "^linksys,.*":
@@ -771,8 +835,11 @@ patternProperties:
     description: Lontium Semiconductor Corporation
   "^loongson,.*":
     description: Loongson Technology Corporation Limited
+<<<<<<< HEAD
   "^loongmasses,.*":
     description: Nanjing Loongmasses Ltd.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^lsi,.*":
     description: LSI Corp. (LSI Logic)
   "^lwn,.*":
@@ -793,8 +860,11 @@ patternProperties:
     description: MaxBotix Inc.
   "^maxim,.*":
     description: Maxim Integrated Products
+<<<<<<< HEAD
   "^maxlinear,.*":
     description: MaxLinear Inc.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^mbvl,.*":
     description: Mobiveil Inc.
   "^mcube,.*":
@@ -865,8 +935,11 @@ patternProperties:
     description: Moortec Semiconductor Ltd.
   "^mosaixtech,.*":
     description: Mosaix Technologies, Inc.
+<<<<<<< HEAD
   "^motorcomm,.*":
     description: MotorComm, Inc.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^motorola,.*":
     description: Motorola, Inc.
   "^moxa,.*":
@@ -919,14 +992,22 @@ patternProperties:
     description: Shenzhen Netxeon Technology CO., LTD
   "^neweast,.*":
     description: Guangdong Neweast Optoelectronics CO., LTD
+<<<<<<< HEAD
   "^newhaven,.*":
     description: Newhaven Display International
   "^newvision,.*":
     description: New Vision Display (Shenzhen) Co., Ltd.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^nexbox,.*":
     description: Nexbox
   "^nextthing,.*":
     description: Next Thing Co.
+<<<<<<< HEAD
+=======
+  "^newhaven,.*":
+    description: Newhaven Display International
+>>>>>>> b7ba80a49124 (Commit)
   "^ni,.*":
     description: National Instruments
   "^nintendo,.*":
@@ -965,8 +1046,11 @@ patternProperties:
     description: One Laptop Per Child
   "^oneplus,.*":
     description: OnePlus Technology (Shenzhen) Co., Ltd.
+<<<<<<< HEAD
   "^onie,.*":
     description: Open Network Install Environment group
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^onion,.*":
     description: Onion Corporation
   "^onnn,.*":
@@ -1047,8 +1131,11 @@ patternProperties:
     description: PocketBook International SA
   "^polaroid,.*":
     description: Polaroid Corporation
+<<<<<<< HEAD
   "^polyhex,.*":
     description: Polyhex Technology Co. Ltd.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^portwell,.*":
     description: Portwell Inc.
   "^poslab,.*":
@@ -1077,10 +1164,17 @@ patternProperties:
     description: QEMU, a generic and open source machine emulator and virtualizer
   "^qi,.*":
     description: Qi Hardware
+<<<<<<< HEAD
   "^qiaodian,.*":
     description: QiaoDian XianShi Corporation
   "^qihua,.*":
     description: Chengdu Kaixuan Information Technology Co., Ltd.
+=======
+  "^qihua,.*":
+    description: Chengdu Kaixuan Information Technology Co., Ltd.
+  "^qiaodian,.*":
+    description: QiaoDian XianShi Corporation
+>>>>>>> b7ba80a49124 (Commit)
   "^qishenglong,.*":
     description: Shenzhen QiShenglong Industrialist Co., Ltd.
   "^qnap,.*":
@@ -1107,22 +1201,37 @@ patternProperties:
     description: reMarkable AS
   "^renesas,.*":
     description: Renesas Electronics Corporation
+<<<<<<< HEAD
+=======
+  "^rex,.*":
+    description: iMX6 Rex Project
+>>>>>>> b7ba80a49124 (Commit)
   "^rervision,.*":
     description: Shenzhen Rervision Technology Co., Ltd.
   "^revotics,.*":
     description: Revolution Robotics, Inc. (Revotics)
+<<<<<<< HEAD
   "^rex,.*":
     description: iMX6 Rex Project
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^richtek,.*":
     description: Richtek Technology Corporation
   "^ricoh,.*":
     description: Ricoh Co. Ltd.
   "^rikomagic,.*":
     description: Rikomagic Tech Corp. Ltd
+<<<<<<< HEAD
   "^riot,.*":
     description: Embest RIoT
   "^riscv,.*":
     description: RISC-V Foundation
+=======
+  "^riscv,.*":
+    description: RISC-V Foundation
+  "^riot,.*":
+    description: Embest RIoT
+>>>>>>> b7ba80a49124 (Commit)
   "^rockchip,.*":
     description: Fuzhou Rockchip Electronics Co., Ltd
   "^rocktech,.*":
@@ -1185,8 +1294,11 @@ patternProperties:
     description: Si-En Technology Ltd.
   "^si-linux,.*":
     description: Silicon Linux Corporation
+<<<<<<< HEAD
   "^siemens,.*":
     description: Siemens AG
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^sifive,.*":
     description: SiFive, Inc.
   "^sigma,.*":
@@ -1209,8 +1321,13 @@ patternProperties:
     description: Siliconfile Technologies lnc.
   "^siliconmitus,.*":
     description: Silicon Mitus, Inc.
+<<<<<<< HEAD
   "^silvaco,.*":
     description: Silvaco, Inc.
+=======
+  "^siemens,.*":
+    description: Siemens AG
+>>>>>>> b7ba80a49124 (Commit)
   "^simtek,.*":
     description: Cypress Semiconductor Corporation (Simtek Corporation)
   "^sinlinx,.*":
@@ -1247,8 +1364,11 @@ patternProperties:
     description: Solomon Systech Limited
   "^sony,.*":
     description: Sony Corporation
+<<<<<<< HEAD
   "^sourceparts,.*":
     description: Source Parts Inc.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^spansion,.*":
     description: Spansion Inc.
   "^sparkfun,.*":
@@ -1272,8 +1392,11 @@ patternProperties:
     description: Starry Electronic Technology (ShenZhen) Co., LTD
   "^startek,.*":
     description: Startek
+<<<<<<< HEAD
   "^starterkit,.*":
     description: Starterkit
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^ste,.*":
     description: ST-Ericsson
     deprecated: true
@@ -1300,6 +1423,11 @@ patternProperties:
     description: Sun Microsystems, Inc
   "^supermicro,.*":
     description: Super Micro Computer, Inc.
+<<<<<<< HEAD
+=======
+  "^silvaco,.*":
+    description: Silvaco, Inc.
+>>>>>>> b7ba80a49124 (Commit)
   "^swir,.*":
     description: Sierra Wireless
   "^syna,.*":
@@ -1321,18 +1449,29 @@ patternProperties:
     description: Shenzhen City Tang Cheng Technology Co., Ltd.
   "^tdo,.*":
     description: Shangai Top Display Optoelectronics Co., Ltd
+<<<<<<< HEAD
   "^team-source-display,.*":
     description: Shenzhen Team Source Display Technology Co., Ltd. (TSD)
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^technexion,.*":
     description: TechNexion
   "^technologic,.*":
     description: Technologic Systems
+<<<<<<< HEAD
   "^techstar,.*":
     description: Shenzhen Techstar Electronics Co., Ltd.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^teltonika,.*":
     description: Teltonika Networks
   "^tempo,.*":
     description: Tempo Semiconductor
+<<<<<<< HEAD
+=======
+  "^techstar,.*":
+    description: Shenzhen Techstar Electronics Co., Ltd.
+>>>>>>> b7ba80a49124 (Commit)
   "^terasic,.*":
     description: Terasic Inc.
   "^tesla,.*":
@@ -1347,8 +1486,11 @@ patternProperties:
     description: thingy.jp
   "^thundercomm,.*":
     description: Thundercomm Technology Co., Ltd.
+<<<<<<< HEAD
   "^thwc,.*":
     description: Shenzhen Tong Heng Wei Chuang Technology Co., Ltd.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^ti,.*":
     description: Texas Instruments
   "^tianma,.*":
@@ -1388,6 +1530,13 @@ patternProperties:
     description: Tronsmart
   "^truly,.*":
     description: Truly Semiconductors Limited
+<<<<<<< HEAD
+=======
+  "^visionox,.*":
+    description: Visionox
+  "^team-source-display,.*":
+    description: Shenzhen Team Source Display Technology Co., Ltd. (TSD)
+>>>>>>> b7ba80a49124 (Commit)
   "^tsd,.*":
     description: Theobroma Systems Design und Consulting GmbH
   "^tyan,.*":
@@ -1396,6 +1545,7 @@ patternProperties:
     description: u-blox
   "^u-boot,.*":
     description: U-Boot bootloader
+<<<<<<< HEAD
   "^ubnt,.*":
     description: Ubiquiti Networks
   "^ucrobotics,.*":
@@ -1404,6 +1554,14 @@ patternProperties:
     description: Udoo
   "^ufispace,.*":
     description: Ufi Space Co., Ltd.
+=======
+  "^ucrobotics,.*":
+    description: uCRobotics
+  "^ubnt,.*":
+    description: Ubiquiti Networks
+  "^udoo,.*":
+    description: Udoo
+>>>>>>> b7ba80a49124 (Commit)
   "^ugoos,.*":
     description: Ugoos Industrial Co., Ltd.
   "^uniwest,.*":
@@ -1430,8 +1588,11 @@ patternProperties:
     description: Vertexcom Technologies, Inc.
   "^via,.*":
     description: VIA Technologies, Inc.
+<<<<<<< HEAD
   "^vialab,.*":
     description: VIA Labs, Inc.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^vicor,.*":
     description: Vicor Corporation
   "^videostrong,.*":
@@ -1442,8 +1603,11 @@ patternProperties:
     description: Used for virtual device without specific vendor.
   "^vishay,.*":
     description: Vishay Intertechnology, Inc
+<<<<<<< HEAD
   "^visionox,.*":
     description: Visionox
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^vitesse,.*":
     description: Vitesse Semiconductor Corporation
   "^vivante,.*":
@@ -1458,8 +1622,11 @@ patternProperties:
     description: Vision Optical Technology Co., Ltd.
   "^vxt,.*":
     description: VXT Ltd
+<<<<<<< HEAD
   "^wanchanglong,.*":
     description: Wanchanglong Electronics Technology（SHENZHEN）Co.，Ltd.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^wand,.*":
     description: Wandbord (Technexion)
   "^waveshare,.*":
@@ -1478,8 +1645,11 @@ patternProperties:
     description: Shenzhen whwave Electronics, Inc.
   "^wi2wi,.*":
     description: Wi2Wi, Inc.
+<<<<<<< HEAD
   "^widora,.*":
     description: Beijing Widora Technology Co., Ltd.
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "^wiligear,.*":
     description: Wiligear, Ltd.
   "^willsemi,.*":
@@ -1502,6 +1672,11 @@ patternProperties:
     description: Wondermedia Technologies, Inc.
   "^wobo,.*":
     description: Wobo
+<<<<<<< HEAD
+=======
+  "^wanchanglong,.*":
+    description: Wanchanglong Electronics Technology（SHENZHEN）Co.，Ltd.
+>>>>>>> b7ba80a49124 (Commit)
   "^x-powers,.*":
     description: X-Powers
   "^xen,.*":
@@ -1544,10 +1719,17 @@ patternProperties:
     description: Shenzhen Yashi Changhua Intelligent Technology Co., Ltd.
   "^ysoft,.*":
     description: Y Soft Corporation a.s.
+<<<<<<< HEAD
   "^zarlink,.*":
     description: Zarlink Semiconductor
   "^zealz,.*":
     description: Zealz
+=======
+  "^zealz,.*":
+    description: Zealz
+  "^zarlink,.*":
+    description: Zarlink Semiconductor
+>>>>>>> b7ba80a49124 (Commit)
   "^zeitec,.*":
     description: ZEITEC Semiconductor Co., LTD.
   "^zidoo,.*":

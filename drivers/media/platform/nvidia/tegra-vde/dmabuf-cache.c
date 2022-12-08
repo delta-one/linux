@@ -38,7 +38,11 @@ static void tegra_vde_release_entry(struct tegra_vde_cache_entry *entry)
 	if (entry->vde->domain)
 		tegra_vde_iommu_unmap(entry->vde, entry->iova);
 
+<<<<<<< HEAD
 	dma_buf_unmap_attachment_unlocked(entry->a, entry->sgt, entry->dma_dir);
+=======
+	dma_buf_unmap_attachment(entry->a, entry->sgt, entry->dma_dir);
+>>>>>>> b7ba80a49124 (Commit)
 	dma_buf_detach(dmabuf, entry->a);
 	dma_buf_put(dmabuf);
 
@@ -102,7 +106,11 @@ int tegra_vde_dmabuf_cache_map(struct tegra_vde *vde,
 		goto err_unlock;
 	}
 
+<<<<<<< HEAD
 	sgt = dma_buf_map_attachment_unlocked(attachment, dma_dir);
+=======
+	sgt = dma_buf_map_attachment(attachment, dma_dir);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(sgt)) {
 		dev_err(dev, "Failed to get dmabufs sg_table\n");
 		err = PTR_ERR(sgt);
@@ -152,7 +160,11 @@ ref:
 err_free:
 	kfree(entry);
 err_unmap:
+<<<<<<< HEAD
 	dma_buf_unmap_attachment_unlocked(attachment, sgt, dma_dir);
+=======
+	dma_buf_unmap_attachment(attachment, sgt, dma_dir);
+>>>>>>> b7ba80a49124 (Commit)
 err_detach:
 	dma_buf_detach(dmabuf, attachment);
 err_unlock:

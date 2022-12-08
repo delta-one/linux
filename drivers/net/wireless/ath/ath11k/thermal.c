@@ -99,7 +99,11 @@ static ssize_t ath11k_thermal_show_temp(struct device *dev,
 	temperature = ar->thermal.temperature;
 	spin_unlock_bh(&ar->data_lock);
 
+<<<<<<< HEAD
 	/* display in millidegree Celsius */
+=======
+	/* display in millidegree celcius */
+>>>>>>> b7ba80a49124 (Commit)
 	ret = snprintf(buf, PAGE_SIZE, "%d\n", temperature * 1000);
 out:
 	mutex_unlock(&ar->conf_mutex);

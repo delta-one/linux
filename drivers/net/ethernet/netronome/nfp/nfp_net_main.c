@@ -16,6 +16,10 @@
 #include <linux/lockdep.h>
 #include <linux/pci.h>
 #include <linux/pci_regs.h>
+<<<<<<< HEAD
+=======
+#include <linux/msi.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/random.h>
 #include <linux/rtnetlink.h>
 
@@ -76,6 +80,15 @@ static int nfp_net_pf_get_num_ports(struct nfp_pf *pf)
 	return nfp_pf_rtsym_read_optional(pf, "nfd_cfg_pf%u_num_ports", 1);
 }
 
+<<<<<<< HEAD
+=======
+static int nfp_net_pf_get_app_id(struct nfp_pf *pf)
+{
+	return nfp_pf_rtsym_read_optional(pf, "_pf%u_net_app_id",
+					  NFP_APP_CORE_NIC);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void nfp_net_pf_free_vnic(struct nfp_pf *pf, struct nfp_net *nn)
 {
 	if (nfp_net_is_data_vnic(nn))
@@ -155,17 +168,33 @@ nfp_net_pf_init_vnic(struct nfp_pf *pf, struct nfp_net *nn, unsigned int id)
 
 	nfp_net_debugfs_vnic_add(nn, pf->ddir);
 
+<<<<<<< HEAD
+=======
+	if (nn->port)
+		nfp_devlink_port_type_eth_set(nn->port);
+
+>>>>>>> b7ba80a49124 (Commit)
 	nfp_net_info(nn);
 
 	if (nfp_net_is_data_vnic(nn)) {
 		err = nfp_app_vnic_init(pf->app, nn);
 		if (err)
+<<<<<<< HEAD
 			goto err_debugfs_vnic_clean;
+=======
+			goto err_devlink_port_type_clean;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
 
+<<<<<<< HEAD
 err_debugfs_vnic_clean:
+=======
+err_devlink_port_type_clean:
+	if (nn->port)
+		nfp_devlink_port_type_clear(nn->port);
+>>>>>>> b7ba80a49124 (Commit)
 	nfp_net_debugfs_dir_clean(&nn->debugfs_dir);
 	nfp_net_clean(nn);
 err_devlink_port_clean:
@@ -194,6 +223,10 @@ nfp_net_pf_alloc_vnics(struct nfp_pf *pf, void __iomem *ctrl_bar,
 			nn->port->link_cb = nfp_net_refresh_port_table;
 
 		ctrl_bar += NFP_PF_CSR_SLICE_SIZE;
+<<<<<<< HEAD
+=======
+		pf->sp_indiff |= nn->tlv_caps.sp_indiff;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Kill the vNIC if app init marked it as invalid */
 		if (nn->port && nn->port->type == NFP_PORT_INVALID)
@@ -214,6 +247,11 @@ static void nfp_net_pf_clean_vnic(struct nfp_pf *pf, struct nfp_net *nn)
 {
 	if (nfp_net_is_data_vnic(nn))
 		nfp_app_vnic_clean(pf->app, nn);
+<<<<<<< HEAD
+=======
+	if (nn->port)
+		nfp_devlink_port_type_clear(nn->port);
+>>>>>>> b7ba80a49124 (Commit)
 	nfp_net_debugfs_dir_clean(&nn->debugfs_dir);
 	nfp_net_clean(nn);
 	if (nn->port)
@@ -293,6 +331,40 @@ err_prev_deinit:
 	return err;
 }
 
+<<<<<<< HEAD
+=======
+static int nfp_net_pf_cfg_nsp(struct nfp_pf *pf, bool sp_indiff)
+{
+	struct nfp_nsp *nsp;
+	char hwinfo[32];
+	int err;
+
+	nsp = nfp_nsp_open(pf->cpp);
+	if (IS_ERR(nsp)) {
+		err = PTR_ERR(nsp);
+		return err;
+	}
+
+	snprintf(hwinfo, sizeof(hwinfo), "sp_indiff=%d", sp_indiff);
+	err = nfp_nsp_hwinfo_set(nsp, hwinfo, sizeof(hwinfo));
+	if (err)
+		nfp_warn(pf->cpp, "HWinfo(sp_indiff=%d) set failed: %d\n", sp_indiff, err);
+
+	nfp_nsp_close(nsp);
+	return err;
+}
+
+static int nfp_net_pf_init_nsp(struct nfp_pf *pf)
+{
+	return nfp_net_pf_cfg_nsp(pf, pf->sp_indiff);
+}
+
+static void nfp_net_pf_clean_nsp(struct nfp_pf *pf)
+{
+	(void)nfp_net_pf_cfg_nsp(pf, false);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int
 nfp_net_pf_app_init(struct nfp_pf *pf, u8 __iomem *qc_bar, unsigned int stride)
 {
@@ -304,6 +376,11 @@ nfp_net_pf_app_init(struct nfp_pf *pf, u8 __iomem *qc_bar, unsigned int stride)
 	if (IS_ERR(pf->app))
 		return PTR_ERR(pf->app);
 
+<<<<<<< HEAD
+=======
+	pf->sp_indiff |= pf->app->type->id == NFP_APP_FLOWER_NIC;
+
+>>>>>>> b7ba80a49124 (Commit)
 	devl_lock(devlink);
 	err = nfp_app_init(pf->app);
 	devl_unlock(devlink);
@@ -754,11 +831,18 @@ int nfp_net_pci_probe(struct nfp_pf *pf)
 	if (err)
 		goto err_devlink_unreg;
 
+<<<<<<< HEAD
 	devl_lock(devlink);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = nfp_devlink_params_register(pf);
 	if (err)
 		goto err_shared_buf_unreg;
 
+<<<<<<< HEAD
+=======
+	devl_lock(devlink);
+>>>>>>> b7ba80a49124 (Commit)
 	pf->ddir = nfp_net_debugfs_device_add(pf->pdev);
 
 	/* Allocate the vnics and do basic init */
@@ -766,10 +850,21 @@ int nfp_net_pci_probe(struct nfp_pf *pf)
 	if (err)
 		goto err_clean_ddir;
 
+<<<<<<< HEAD
 	err = nfp_net_pf_alloc_irqs(pf);
 	if (err)
 		goto err_free_vnics;
 
+=======
+	err = nfp_net_pf_init_nsp(pf);
+	if (err)
+		goto err_free_vnics;
+
+	err = nfp_net_pf_alloc_irqs(pf);
+	if (err)
+		goto err_clean_nsp;
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = nfp_net_pf_app_start(pf);
 	if (err)
 		goto err_free_irqs;
@@ -787,13 +882,24 @@ err_stop_app:
 	nfp_net_pf_app_stop(pf);
 err_free_irqs:
 	nfp_net_pf_free_irqs(pf);
+<<<<<<< HEAD
+=======
+err_clean_nsp:
+	nfp_net_pf_clean_nsp(pf);
+>>>>>>> b7ba80a49124 (Commit)
 err_free_vnics:
 	nfp_net_pf_free_vnics(pf);
 err_clean_ddir:
 	nfp_net_debugfs_dir_clean(&pf->ddir);
+<<<<<<< HEAD
 	nfp_devlink_params_unregister(pf);
 err_shared_buf_unreg:
 	devl_unlock(devlink);
+=======
+	devl_unlock(devlink);
+	nfp_devlink_params_unregister(pf);
+err_shared_buf_unreg:
+>>>>>>> b7ba80a49124 (Commit)
 	nfp_shared_buf_unregister(pf);
 err_devlink_unreg:
 	cancel_work_sync(&pf->port_refresh_work);
@@ -817,14 +923,24 @@ void nfp_net_pci_remove(struct nfp_pf *pf)
 		nfp_net_pf_free_vnic(pf, nn);
 	}
 
+<<<<<<< HEAD
+=======
+	nfp_net_pf_clean_nsp(pf);
+>>>>>>> b7ba80a49124 (Commit)
 	nfp_net_pf_app_stop(pf);
 	/* stop app first, to avoid double free of ctrl vNIC's ddir */
 	nfp_net_debugfs_dir_clean(&pf->ddir);
 
+<<<<<<< HEAD
 	nfp_devlink_params_unregister(pf);
 
 	devl_unlock(devlink);
 
+=======
+	devl_unlock(devlink);
+
+	nfp_devlink_params_unregister(pf);
+>>>>>>> b7ba80a49124 (Commit)
 	nfp_shared_buf_unregister(pf);
 
 	nfp_net_pf_free_irqs(pf);

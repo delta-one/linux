@@ -21,13 +21,20 @@
 #include <linux/ioport.h>
 #include <linux/serial_core.h>
 #include <linux/serial_s3c.h>
+<<<<<<< HEAD
 #include <linux/of.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <linux/reboot.h>
 #include <linux/io.h>
 #include <linux/clk/samsung.h>
 #include <linux/dma-mapping.h>
 #include <linux/irq.h>
+<<<<<<< HEAD
+=======
+#include <linux/gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/irqchip/arm-vic.h>
 #include <clocksource/samsung_pwm.h>
 
@@ -72,10 +79,24 @@ static void __init s3c64xx_init_uarts(struct s3c2410_uartcfg *cfg, int no)
 
 /* table of supported CPUs */
 
+<<<<<<< HEAD
+=======
+static const char name_s3c6400[] = "S3C6400";
+>>>>>>> b7ba80a49124 (Commit)
 static const char name_s3c6410[] = "S3C6410";
 
 static struct cpu_table cpu_ids[] __initdata = {
 	{
+<<<<<<< HEAD
+=======
+		.idcode		= S3C6400_CPU_ID,
+		.idmask		= S3C64XX_CPU_MASK,
+		.map_io		= s3c6400_map_io,
+		.init_uarts	= s3c64xx_init_uarts,
+		.init		= s3c6400_init,
+		.name		= name_s3c6400,
+	}, {
+>>>>>>> b7ba80a49124 (Commit)
 		.idcode		= S3C6410_CPU_ID,
 		.idmask		= S3C64XX_CPU_MASK,
 		.map_io		= s3c6410_map_io,
@@ -165,8 +186,12 @@ static struct samsung_pwm_variant s3c64xx_pwm_variant = {
 	.tclk_mask	= (1 << 7) | (1 << 6) | (1 << 5),
 };
 
+<<<<<<< HEAD
 void __init s3c64xx_set_timer_source(enum s3c64xx_timer_mode event,
 				     enum s3c64xx_timer_mode source)
+=======
+void __init s3c64xx_set_timer_source(unsigned int event, unsigned int source)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	s3c64xx_pwm_variant.output_mask = BIT(SAMSUNG_PWM_NUM) - 1;
 	s3c64xx_pwm_variant.output_mask &= ~(BIT(event) | BIT(source));

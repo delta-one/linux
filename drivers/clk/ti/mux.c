@@ -118,7 +118,11 @@ const struct clk_ops ti_clk_mux_ops = {
 	.restore_context = clk_mux_restore_context,
 };
 
+<<<<<<< HEAD
 static struct clk *_register_mux(struct device_node *node, const char *name,
+=======
+static struct clk *_register_mux(struct device *dev, const char *name,
+>>>>>>> b7ba80a49124 (Commit)
 				 const char * const *parent_names,
 				 u8 num_parents, unsigned long flags,
 				 struct clk_omap_reg *reg, u8 shift, u32 mask,
@@ -148,7 +152,11 @@ static struct clk *_register_mux(struct device_node *node, const char *name,
 	mux->table = table;
 	mux->hw.init = &init;
 
+<<<<<<< HEAD
 	clk = of_ti_clk_register(node, &mux->hw, name);
+=======
+	clk = ti_clk_register(dev, &mux->hw, name);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_ERR(clk))
 		kfree(mux);
@@ -207,7 +215,11 @@ static void of_mux_clk_setup(struct device_node *node)
 	mask = (1 << fls(mask)) - 1;
 
 	name = ti_dt_clk_name(node);
+<<<<<<< HEAD
 	clk = _register_mux(node, name, parent_names, num_parents,
+=======
+	clk = _register_mux(NULL, name, parent_names, num_parents,
+>>>>>>> b7ba80a49124 (Commit)
 			    flags, &reg, shift, mask, latch, clk_mux_flags,
 			    NULL);
 

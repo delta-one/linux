@@ -22,6 +22,16 @@
 
 #define ITERS_PER_TEST 2000
 
+<<<<<<< HEAD
+=======
+/* Test requirements. */
+static bool __init test_requires(void)
+{
+	/* random should be initialized for the below tests */
+	return prandom_u32() + prandom_u32() != 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Test watchpoint encode and decode: check that encoding some access's info,
  * and then subsequent decode preserves the access's info.
@@ -31,15 +41,24 @@ static bool __init test_encode_decode(void)
 	int i;
 
 	for (i = 0; i < ITERS_PER_TEST; ++i) {
+<<<<<<< HEAD
 		size_t size = get_random_u32_inclusive(1, MAX_ENCODABLE_SIZE);
 		bool is_write = !!get_random_u32_below(2);
+=======
+		size_t size = prandom_u32_max(MAX_ENCODABLE_SIZE) + 1;
+		bool is_write = !!prandom_u32_max(2);
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned long verif_masked_addr;
 		long encoded_watchpoint;
 		bool verif_is_write;
 		unsigned long addr;
 		size_t verif_size;
 
+<<<<<<< HEAD
 		get_random_bytes(&addr, sizeof(addr));
+=======
+		prandom_bytes(&addr, sizeof(addr));
+>>>>>>> b7ba80a49124 (Commit)
 		if (addr < PAGE_SIZE)
 			addr = PAGE_SIZE;
 
@@ -252,6 +271,10 @@ static int __init kcsan_selftest(void)
 			pr_err("selftest: " #do_test " failed");               \
 	} while (0)
 
+<<<<<<< HEAD
+=======
+	RUN_TEST(test_requires);
+>>>>>>> b7ba80a49124 (Commit)
 	RUN_TEST(test_encode_decode);
 	RUN_TEST(test_matching_access);
 	RUN_TEST(test_barrier);

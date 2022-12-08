@@ -56,11 +56,14 @@ struct hybrid_topology {
 	struct hybrid_topology_node	nodes[];
 };
 
+<<<<<<< HEAD
 /*
  * The topology for online CPUs, lazily created.
  */
 const struct cpu_topology *online_topology(void);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct cpu_topology *cpu_topology__new(void);
 void cpu_topology__delete(struct cpu_topology *tp);
 /* Determine from the core list whether SMT was enabled. */

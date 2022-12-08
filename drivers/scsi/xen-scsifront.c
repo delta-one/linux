@@ -995,7 +995,11 @@ static int scsifront_suspend(struct xenbus_device *dev)
 	return err;
 }
 
+<<<<<<< HEAD
 static void scsifront_remove(struct xenbus_device *dev)
+=======
+static int scsifront_remove(struct xenbus_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vscsifrnt_info *info = dev_get_drvdata(&dev->dev);
 
@@ -1011,6 +1015,11 @@ static void scsifront_remove(struct xenbus_device *dev)
 
 	scsifront_free_ring(info);
 	scsi_host_put(info->host);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void scsifront_disconnect(struct vscsifrnt_info *info)

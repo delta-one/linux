@@ -285,7 +285,11 @@ static int adis16203_probe(struct spi_device *spi)
 		return ret;
 
 	/* Get the device into a sane initial state */
+<<<<<<< HEAD
 	ret = __adis_initial_startup(st);
+=======
+	ret = adis_initial_startup(st);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 

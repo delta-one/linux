@@ -10,7 +10,11 @@ maintainers:
   - Stephan Gerhold <stephan@gerhold.net>
 
 allOf:
+<<<<<<< HEAD
   - $ref: dai-common.yaml#
+=======
+  - $ref: name-prefix.yaml#
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

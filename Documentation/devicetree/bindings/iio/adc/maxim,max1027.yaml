@@ -54,8 +54,13 @@ examples:
   - |
     #include <dt-bindings/interrupt-controller/irq.h>
     spi {
+<<<<<<< HEAD
         #address-cells = <1>;
         #size-cells = <0>;
+=======
+       #address-cells = <1>;
+       #size-cells = <0>;
+>>>>>>> b7ba80a49124 (Commit)
         maxadc: adc@0 {
             compatible = "maxim,max1027";
             reg = <0>;

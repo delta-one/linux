@@ -192,6 +192,14 @@ static void __init mpc885ads_setup_arch(void)
 	}
 }
 
+<<<<<<< HEAD
+=======
+static int __init mpc885ads_probe(void)
+{
+	return of_machine_is_compatible("fsl,mpc885ads");
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id of_bus_ids[] __initconst = {
 	{ .name = "soc", },
 	{ .name = "cpm", },
@@ -210,7 +218,11 @@ machine_device_initcall(mpc885_ads, declare_of_platform_devices);
 
 define_machine(mpc885_ads) {
 	.name			= "Freescale MPC885 ADS",
+<<<<<<< HEAD
 	.compatible		= "fsl,mpc885ads",
+=======
+	.probe			= mpc885ads_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.setup_arch		= mpc885ads_setup_arch,
 	.init_IRQ		= mpc8xx_pic_init,
 	.get_irq		= mpc8xx_get_irq,

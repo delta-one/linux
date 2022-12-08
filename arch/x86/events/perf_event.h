@@ -35,6 +35,7 @@
  * per-core reg tables.
  */
 enum extra_reg_type {
+<<<<<<< HEAD
 	EXTRA_REG_NONE		= -1, /* not used */
 
 	EXTRA_REG_RSP_0		= 0,  /* offcore_response_0 */
@@ -46,6 +47,17 @@ enum extra_reg_type {
 	EXTRA_REG_SNOOP_1	= 6,  /* snoop response 1 */
 
 	EXTRA_REG_MAX		      /* number of entries needed */
+=======
+	EXTRA_REG_NONE  = -1,	/* not used */
+
+	EXTRA_REG_RSP_0 = 0,	/* offcore_response_0 */
+	EXTRA_REG_RSP_1 = 1,	/* offcore_response_1 */
+	EXTRA_REG_LBR   = 2,	/* lbr_select */
+	EXTRA_REG_LDLAT = 3,	/* ld_lat_threshold */
+	EXTRA_REG_FE    = 4,    /* fe_* */
+
+	EXTRA_REG_MAX		/* number of entries needed */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct event_constraint {
@@ -608,7 +620,10 @@ union perf_capabilities {
 		u64     pebs_baseline:1;
 		u64	perf_metrics:1;
 		u64	pebs_output_pt_available:1;
+<<<<<<< HEAD
 		u64	pebs_timing_info:1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		u64	anythread_deprecated:1;
 	};
 	u64	capabilities;
@@ -650,7 +665,10 @@ enum {
 };
 
 #define PERF_PEBS_DATA_SOURCE_MAX	0x10
+<<<<<<< HEAD
 #define PERF_PEBS_DATA_SOURCE_MASK	(PERF_PEBS_DATA_SOURCE_MAX - 1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct x86_hybrid_pmu {
 	struct pmu			pmu;
@@ -815,7 +833,11 @@ struct x86_pmu {
 	void		(*cpu_dead)(int cpu);
 
 	void		(*check_microcode)(void);
+<<<<<<< HEAD
 	void		(*sched_task)(struct perf_event_pmu_context *pmu_ctx,
+=======
+	void		(*sched_task)(struct perf_event_context *ctx,
+>>>>>>> b7ba80a49124 (Commit)
 				      bool sched_in);
 
 	/*
@@ -898,12 +920,21 @@ struct x86_pmu {
 	int		num_topdown_events;
 
 	/*
+<<<<<<< HEAD
 	 * perf task context (i.e. struct perf_event_pmu_context::task_ctx_data)
 	 * switch helper to bridge calls from perf/core to perf/x86.
 	 * See struct pmu::swap_task_ctx() usage for examples;
 	 */
 	void		(*swap_task_ctx)(struct perf_event_pmu_context *prev_epc,
 					 struct perf_event_pmu_context *next_epc);
+=======
+	 * perf task context (i.e. struct perf_event_context::task_ctx_data)
+	 * switch helper to bridge calls from perf/core to perf/x86.
+	 * See struct pmu::swap_task_ctx() usage for examples;
+	 */
+	void		(*swap_task_ctx)(struct perf_event_context *prev,
+					 struct perf_event_context *next);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * AMD bits
@@ -929,7 +960,11 @@ struct x86_pmu {
 
 	int (*aux_output_match) (struct perf_event *event);
 
+<<<<<<< HEAD
 	void (*filter)(struct pmu *pmu, int cpu, bool *ret);
+=======
+	int (*filter_match)(struct perf_event *event);
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Hybrid support
 	 *
@@ -1004,7 +1039,10 @@ do {									\
 #define PMU_FL_PAIR		0x40 /* merge counters for large incr. events */
 #define PMU_FL_INSTR_LATENCY	0x80 /* Support Instruction Latency in PEBS Memory Info Record */
 #define PMU_FL_MEM_LOADS_AUX	0x100 /* Require an auxiliary event for the complete memory info */
+<<<<<<< HEAD
 #define PMU_FL_RETIRE_LATENCY	0x200 /* Support Retire Latency in PEBS */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define EVENT_VAR(_id)  event_attr_##_id
 #define EVENT_PTR(_id) &event_attr_##_id.attr.attr
@@ -1185,6 +1223,11 @@ int x86_pmu_handle_irq(struct pt_regs *regs);
 void x86_pmu_show_pmu_cap(int num_counters, int num_counters_fixed,
 			  u64 intel_ctrl);
 
+<<<<<<< HEAD
+=======
+void x86_pmu_update_cpu_context(struct pmu *pmu, int cpu);
+
+>>>>>>> b7ba80a49124 (Commit)
 extern struct event_constraint emptyconstraint;
 
 extern struct event_constraint unconstrained;
@@ -1309,7 +1352,11 @@ void amd_pmu_lbr_reset(void);
 void amd_pmu_lbr_read(void);
 void amd_pmu_lbr_add(struct perf_event *event);
 void amd_pmu_lbr_del(struct perf_event *event);
+<<<<<<< HEAD
 void amd_pmu_lbr_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
+=======
+void amd_pmu_lbr_sched_task(struct perf_event_context *ctx, bool sched_in);
+>>>>>>> b7ba80a49124 (Commit)
 void amd_pmu_lbr_enable_all(void);
 void amd_pmu_lbr_disable_all(void);
 int amd_pmu_lbr_hw_config(struct perf_event *event);
@@ -1325,6 +1372,10 @@ void amd_brs_enable_all(void);
 void amd_brs_disable_all(void);
 void amd_brs_drain(void);
 void amd_brs_lopwr_init(void);
+<<<<<<< HEAD
+=======
+void amd_brs_disable_all(void);
+>>>>>>> b7ba80a49124 (Commit)
 int amd_brs_hw_config(struct perf_event *event);
 void amd_brs_reset(void);
 
@@ -1332,7 +1383,11 @@ static inline void amd_pmu_brs_add(struct perf_event *event)
 {
 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
 
+<<<<<<< HEAD
 	perf_sched_cb_inc(event->pmu);
+=======
+	perf_sched_cb_inc(event->ctx->pmu);
+>>>>>>> b7ba80a49124 (Commit)
 	cpuc->lbr_users++;
 	/*
 	 * No need to reset BRS because it is reset
@@ -1347,10 +1402,17 @@ static inline void amd_pmu_brs_del(struct perf_event *event)
 	cpuc->lbr_users--;
 	WARN_ON_ONCE(cpuc->lbr_users < 0);
 
+<<<<<<< HEAD
 	perf_sched_cb_dec(event->pmu);
 }
 
 void amd_pmu_brs_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
+=======
+	perf_sched_cb_dec(event->ctx->pmu);
+}
+
+void amd_pmu_brs_sched_task(struct perf_event_context *ctx, bool sched_in);
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline int amd_brs_init(void)
 {
@@ -1375,7 +1437,11 @@ static inline void amd_pmu_brs_del(struct perf_event *event)
 {
 }
 
+<<<<<<< HEAD
 static inline void amd_pmu_brs_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in)
+=======
+static inline void amd_pmu_brs_sched_task(struct perf_event_context *ctx, bool sched_in)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 
@@ -1491,8 +1557,11 @@ int intel_pmu_drain_bts_buffer(void);
 
 u64 adl_latency_data_small(struct perf_event *event, u64 status);
 
+<<<<<<< HEAD
 u64 mtl_latency_data_small(struct perf_event *event, u64 status);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern struct event_constraint intel_core2_pebs_event_constraints[];
 
 extern struct event_constraint intel_atom_pebs_event_constraints[];
@@ -1537,7 +1606,11 @@ void intel_pmu_pebs_enable_all(void);
 
 void intel_pmu_pebs_disable_all(void);
 
+<<<<<<< HEAD
 void intel_pmu_pebs_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
+=======
+void intel_pmu_pebs_sched_task(struct perf_event_context *ctx, bool sched_in);
+>>>>>>> b7ba80a49124 (Commit)
 
 void intel_pmu_auto_reload_read(struct perf_event *event);
 
@@ -1545,10 +1618,17 @@ void intel_pmu_store_pebs_lbrs(struct lbr_entry *lbr);
 
 void intel_ds_init(void);
 
+<<<<<<< HEAD
 void intel_pmu_lbr_swap_task_ctx(struct perf_event_pmu_context *prev_epc,
 				 struct perf_event_pmu_context *next_epc);
 
 void intel_pmu_lbr_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
+=======
+void intel_pmu_lbr_swap_task_ctx(struct perf_event_context *prev,
+				 struct perf_event_context *next);
+
+void intel_pmu_lbr_sched_task(struct perf_event_context *ctx, bool sched_in);
+>>>>>>> b7ba80a49124 (Commit)
 
 u64 lbr_from_signext_quirk_wr(u64 val);
 
@@ -1604,8 +1684,11 @@ void intel_pmu_pebs_data_source_adl(void);
 
 void intel_pmu_pebs_data_source_grt(void);
 
+<<<<<<< HEAD
 void intel_pmu_pebs_data_source_mtl(void);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int intel_pmu_setup_lbr_filter(struct perf_event *event);
 
 void intel_pt_interrupt(void);

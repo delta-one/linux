@@ -6,7 +6,10 @@
  */
 
 #include <dt-bindings/gpio/gpio.h>
+<<<<<<< HEAD
 #include <dt-bindings/interrupt-controller/irqc-rzg2l.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
 
 / {
@@ -78,8 +81,11 @@
 		compatible = "ethernet-phy-id0022.1640",
 			     "ethernet-phy-ieee802.3-c22";
 		reg = <7>;
+<<<<<<< HEAD
 		interrupt-parent = <&irqc>;
 		interrupts = <RZG2L_IRQ2 IRQ_TYPE_LEVEL_LOW>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		rxc-skew-psec = <2400>;
 		txc-skew-psec = <2400>;
 		rxdv-skew-psec = <0>;
@@ -107,8 +113,11 @@
 		compatible = "ethernet-phy-id0022.1640",
 			     "ethernet-phy-ieee802.3-c22";
 		reg = <7>;
+<<<<<<< HEAD
 		interrupt-parent = <&irqc>;
 		interrupts = <RZG2L_IRQ7 IRQ_TYPE_LEVEL_LOW>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		rxc-skew-psec = <2400>;
 		txc-skew-psec = <2400>;
 		rxdv-skew-psec = <0>;
@@ -156,8 +165,12 @@
 			 <RZG2L_PORT_PINMUX(3, 2, 1)>, /* ET0_RXD0 */
 			 <RZG2L_PORT_PINMUX(3, 3, 1)>, /* ET0_RXD1 */
 			 <RZG2L_PORT_PINMUX(4, 0, 1)>, /* ET0_RXD2 */
+<<<<<<< HEAD
 			 <RZG2L_PORT_PINMUX(4, 1, 1)>, /* ET0_RXD3 */
 			 <RZG2L_PORT_PINMUX(5, 1, 7)>; /* IRQ2 */
+=======
+			 <RZG2L_PORT_PINMUX(4, 1, 1)>; /* ET0_RXD3 */
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	eth1_pins: eth1 {
@@ -175,8 +188,12 @@
 			 <RZG2L_PORT_PINMUX(9, 1, 1)>, /* ET1_RXD0 */
 			 <RZG2L_PORT_PINMUX(9, 2, 1)>, /* ET1_RXD1 */
 			 <RZG2L_PORT_PINMUX(9, 3, 1)>, /* ET1_RXD2 */
+<<<<<<< HEAD
 			 <RZG2L_PORT_PINMUX(10, 0, 1)>, /* ET1_RXD3 */
 			 <RZG2L_PORT_PINMUX(18, 5, 1)>; /* IRQ7 */
+=======
+			 <RZG2L_PORT_PINMUX(10, 0, 1)>; /* ET1_RXD3 */
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	sdhi0_emmc_pins: sd0emmc {
@@ -228,6 +245,16 @@
 			pinmux = <RZG2L_PORT_PINMUX(0, 0, 1)>; /* SD0_CD */
 		};
 	};
+<<<<<<< HEAD
+=======
+
+	spi1_pins: rspi1 {
+		pinmux = <RZG2L_PORT_PINMUX(4, 0, 2)>, /* CK */
+			 <RZG2L_PORT_PINMUX(4, 1, 2)>, /* MOSI */
+			 <RZG2L_PORT_PINMUX(4, 2, 2)>, /* MISO */
+			 <RZG2L_PORT_PINMUX(4, 3, 2)>; /* SSL */
+	};
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #if (SW_SW0_DEV_SEL)

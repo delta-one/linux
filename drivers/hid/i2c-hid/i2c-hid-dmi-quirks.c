@@ -10,10 +10,15 @@
 #include <linux/types.h>
 #include <linux/dmi.h>
 #include <linux/mod_devicetable.h>
+<<<<<<< HEAD
 #include <linux/hid.h>
 
 #include "i2c-hid.h"
 #include "../hid-ids.h"
+=======
+
+#include "i2c-hid.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 
 struct i2c_hid_desc_override {
@@ -418,6 +423,7 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
 	{ }	/* Terminate list */
 };
 
+<<<<<<< HEAD
 static const struct hid_device_id i2c_hid_elan_flipped_quirks = {
 	HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8, USB_VENDOR_ID_ELAN, 0x2dcd),
 		HID_QUIRK_X_INVERT | HID_QUIRK_Y_INVERT
@@ -440,6 +446,8 @@ static const struct dmi_system_id i2c_hid_dmi_quirk_table[] = {
 	{ }	/* Terminate list */
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct i2c_hid_desc *i2c_hid_get_dmi_i2c_hid_desc_override(uint8_t *i2c_name)
 {
@@ -474,6 +482,7 @@ char *i2c_hid_get_dmi_hid_report_desc_override(uint8_t *i2c_name,
 	*size = override->hid_report_desc_size;
 	return override->hid_report_desc;
 }
+<<<<<<< HEAD
 
 u32 i2c_hid_get_dmi_quirks(const u16 vendor, const u16 product)
 {
@@ -492,3 +501,5 @@ u32 i2c_hid_get_dmi_quirks(const u16 vendor, const u16 product)
 
 	return quirks;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

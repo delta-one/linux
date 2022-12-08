@@ -510,7 +510,12 @@ static const struct of_device_id max9611_of_table[] = {
 };
 
 MODULE_DEVICE_TABLE(of, max9611_of_table);
+<<<<<<< HEAD
 static int max9611_probe(struct i2c_client *client)
+=======
+static int max9611_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const char * const shunt_res_prop = "shunt-resistor-micro-ohms";
 	struct max9611_dev *max9611;
@@ -556,7 +561,11 @@ static struct i2c_driver max9611_driver = {
 		   .name = DRIVER_NAME,
 		   .of_match_table = max9611_of_table,
 	},
+<<<<<<< HEAD
 	.probe_new = max9611_probe,
+=======
+	.probe = max9611_probe,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_i2c_driver(max9611_driver);
 

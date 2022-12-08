@@ -22,7 +22,11 @@ static void perf_output_wakeup(struct perf_output_handle *handle)
 	atomic_set(&handle->rb->poll, EPOLLIN);
 
 	handle->event->pending_wakeup = 1;
+<<<<<<< HEAD
 	irq_work_queue(&handle->event->pending_irq);
+=======
+	irq_work_queue(&handle->event->pending);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -814,7 +818,11 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
 	size = sizeof(struct perf_buffer);
 	size += nr_pages * sizeof(void *);
 
+<<<<<<< HEAD
 	if (order_base_2(size) > PAGE_SHIFT+MAX_ORDER)
+=======
+	if (order_base_2(size) >= PAGE_SHIFT+MAX_ORDER)
+>>>>>>> b7ba80a49124 (Commit)
 		goto fail;
 
 	node = (cpu == -1) ? cpu : cpu_to_node(cpu);

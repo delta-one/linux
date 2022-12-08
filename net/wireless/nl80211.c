@@ -462,11 +462,14 @@ nl80211_sta_wme_policy[NL80211_STA_WME_MAX + 1] = {
 	[NL80211_STA_WME_MAX_SP] = { .type = NLA_U8 },
 };
 
+<<<<<<< HEAD
 static struct netlink_range_validation nl80211_punct_bitmap_range = {
 	.min = 0,
 	.max = 0xffff,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct nla_policy nl80211_policy[NUM_NL80211_ATTR] = {
 	[0] = { .strict_start_type = NL80211_ATTR_HE_OBSS_PD },
 	[NL80211_ATTR_WIPHY] = { .type = NLA_U32 },
@@ -810,11 +813,14 @@ static const struct nla_policy nl80211_policy[NUM_NL80211_ATTR] = {
 	[NL80211_ATTR_MLD_ADDR] = NLA_POLICY_EXACT_LEN(ETH_ALEN),
 	[NL80211_ATTR_MLO_SUPPORT] = { .type = NLA_FLAG },
 	[NL80211_ATTR_MAX_NUM_AKM_SUITES] = { .type = NLA_REJECT },
+<<<<<<< HEAD
 	[NL80211_ATTR_PUNCT_BITMAP] =
 		NLA_POLICY_FULL_RANGE(NLA_U32, &nl80211_punct_bitmap_range),
 
 	[NL80211_ATTR_MAX_HW_TIMESTAMP_PEERS] = { .type = NLA_U16 },
 	[NL80211_ATTR_HW_TIMESTAMP_ENABLED] = { .type = NLA_FLAG },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* policy for the key attributes */
@@ -893,7 +899,11 @@ nl80211_rekey_policy[NUM_NL80211_REKEY_DATA] = {
 	},
 	[NL80211_REKEY_DATA_KCK] = {
 		.type = NLA_BINARY,
+<<<<<<< HEAD
 		.len = NL80211_KCK_EXT_LEN_32
+=======
+		.len = NL80211_KCK_EXT_LEN
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	[NL80211_REKEY_DATA_REPLAY_CTR] = NLA_POLICY_EXACT_LEN(NL80211_REPLAY_CTR_LEN),
 	[NL80211_REKEY_DATA_AKM] = { .type = NLA_U32 },
@@ -1558,6 +1568,7 @@ static int nl80211_key_allowed(struct wireless_dev *wdev)
 		if (wdev->connected)
 			return 0;
 		return -ENOLINK;
+<<<<<<< HEAD
 	case NL80211_IFTYPE_NAN:
 		if (wiphy_ext_feature_isset(wdev->wiphy,
 					    NL80211_EXT_FEATURE_SECURE_NAN))
@@ -1566,6 +1577,12 @@ static int nl80211_key_allowed(struct wireless_dev *wdev)
 	case NL80211_IFTYPE_UNSPECIFIED:
 	case NL80211_IFTYPE_OCB:
 	case NL80211_IFTYPE_MONITOR:
+=======
+	case NL80211_IFTYPE_UNSPECIFIED:
+	case NL80211_IFTYPE_OCB:
+	case NL80211_IFTYPE_MONITOR:
+	case NL80211_IFTYPE_NAN:
+>>>>>>> b7ba80a49124 (Commit)
 	case NL80211_IFTYPE_P2P_DEVICE:
 	case NL80211_IFTYPE_WDS:
 	case NUM_NL80211_IFTYPES:
@@ -2973,11 +2990,14 @@ static int nl80211_send_wiphy(struct cfg80211_registered_device *rdev,
 		if (rdev->wiphy.flags & WIPHY_FLAG_SUPPORTS_MLO)
 			nla_put_flag(msg, NL80211_ATTR_MLO_SUPPORT);
 
+<<<<<<< HEAD
 		if (rdev->wiphy.hw_timestamp_max_peers &&
 		    nla_put_u16(msg, NL80211_ATTR_MAX_HW_TIMESTAMP_PEERS,
 				rdev->wiphy.hw_timestamp_max_peers))
 			goto nla_put_failure;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* done */
 		state->split_start = 0;
 		break;
@@ -3192,6 +3212,7 @@ static bool nl80211_can_set_dev_channel(struct wireless_dev *wdev)
 		wdev->iftype == NL80211_IFTYPE_P2P_GO;
 }
 
+<<<<<<< HEAD
 static int nl80211_parse_punct_bitmap(struct cfg80211_registered_device *rdev,
 				      struct genl_info *info,
 				      const struct cfg80211_chan_def *chandef,
@@ -3207,6 +3228,8 @@ static int nl80211_parse_punct_bitmap(struct cfg80211_registered_device *rdev,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int nl80211_parse_chandef(struct cfg80211_registered_device *rdev,
 			  struct genl_info *info,
 			  struct cfg80211_chan_def *chandef)
@@ -3215,11 +3238,16 @@ int nl80211_parse_chandef(struct cfg80211_registered_device *rdev,
 	struct nlattr **attrs = info->attrs;
 	u32 control_freq;
 
+<<<<<<< HEAD
 	if (!attrs[NL80211_ATTR_WIPHY_FREQ]) {
 		NL_SET_ERR_MSG_ATTR(extack, attrs[NL80211_ATTR_WIPHY_FREQ],
 				    "Frequency is missing");
 		return -EINVAL;
 	}
+=======
+	if (!attrs[NL80211_ATTR_WIPHY_FREQ])
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	control_freq = MHZ_TO_KHZ(
 			nla_get_u32(info->attrs[NL80211_ATTR_WIPHY_FREQ]));
@@ -3905,9 +3933,12 @@ static int nl80211_send_iface(struct sk_buff *msg, u32 portid, u32 seq, int flag
 			struct cfg80211_chan_def chandef = {};
 			int ret;
 
+<<<<<<< HEAD
 			if (!link)
 				goto nla_put_failure;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			if (nla_put_u8(msg, NL80211_ATTR_MLO_LINK_ID, link_id))
 				goto nla_put_failure;
 			if (nla_put(msg, NL80211_ATTR_MAC, ETH_ALEN,
@@ -5807,6 +5838,7 @@ static bool nl80211_valid_auth_type(struct cfg80211_registered_device *rdev,
 	}
 }
 
+<<<<<<< HEAD
 static void nl80211_send_ap_started(struct wireless_dev *wdev,
 				    unsigned int link_id)
 {
@@ -5843,6 +5875,8 @@ out:
 	nlmsg_free(msg);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int nl80211_start_ap(struct sk_buff *skb, struct genl_info *info)
 {
 	struct cfg80211_registered_device *rdev = info->user_ptr[0];
@@ -5991,6 +6025,7 @@ static int nl80211_start_ap(struct sk_buff *skb, struct genl_info *info)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if (info->attrs[NL80211_ATTR_PUNCT_BITMAP]) {
 		err = nl80211_parse_punct_bitmap(rdev, info,
 						 &params->chandef,
@@ -5999,6 +6034,8 @@ static int nl80211_start_ap(struct sk_buff *skb, struct genl_info *info)
 			goto out;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!cfg80211_reg_can_beacon_relax(&rdev->wiphy, &params->chandef,
 					   wdev->iftype)) {
 		err = -EINVAL;
@@ -6131,8 +6168,11 @@ static int nl80211_start_ap(struct sk_buff *skb, struct genl_info *info)
 
 		if (info->attrs[NL80211_ATTR_SOCKET_OWNER])
 			wdev->conn_owner_nlportid = info->snd_portid;
+<<<<<<< HEAD
 
 		nl80211_send_ap_started(wdev, link_id);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 out_unlock:
 	wdev_unlock(wdev);
@@ -6610,6 +6650,7 @@ static int nl80211_send_station(struct sk_buff *msg, u32 cmd, u32 portid,
 		    sinfo->assoc_req_ies))
 		goto nla_put_failure;
 
+<<<<<<< HEAD
 	if (sinfo->assoc_resp_ies_len &&
 	    nla_put(msg, NL80211_ATTR_RESP_IE, sinfo->assoc_resp_ies_len,
 		    sinfo->assoc_resp_ies))
@@ -6626,6 +6667,8 @@ static int nl80211_send_station(struct sk_buff *msg, u32 cmd, u32 portid,
 			goto nla_put_failure;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cfg80211_sinfo_release_content(sinfo);
 	genlmsg_end(msg, hdr);
 	return 0;
@@ -7882,7 +7925,10 @@ static int nl80211_set_bss(struct sk_buff *skb, struct genl_info *info)
 	int err;
 
 	memset(&params, 0, sizeof(params));
+<<<<<<< HEAD
 	params.link_id = nl80211_link_id_or_invalid(info->attrs);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* default to not changing parameters */
 	params.use_cts_prot = -1;
 	params.use_short_preamble = -1;
@@ -8915,7 +8961,11 @@ static bool cfg80211_off_channel_oper_allowed(struct wireless_dev *wdev,
 		struct cfg80211_chan_def *chandef;
 
 		chandef = wdev_chandef(wdev, link_id);
+<<<<<<< HEAD
 		if (!chandef || !chandef->chan)
+=======
+		if (!chandef)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		/*
@@ -9033,7 +9083,11 @@ static int nl80211_trigger_scan(struct sk_buff *skb, struct genl_info *info)
 	struct nlattr *attr;
 	struct wiphy *wiphy;
 	int err, tmp, n_ssids = 0, n_channels, i;
+<<<<<<< HEAD
 	size_t ie_len, size;
+=======
+	size_t ie_len;
+>>>>>>> b7ba80a49124 (Commit)
 
 	wiphy = &rdev->wiphy;
 
@@ -9078,10 +9132,17 @@ static int nl80211_trigger_scan(struct sk_buff *skb, struct genl_info *info)
 	if (ie_len > wiphy->max_scan_ie_len)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	size = struct_size(request, channels, n_channels);
 	size = size_add(size, array_size(sizeof(*request->ssids), n_ssids));
 	size = size_add(size, ie_len);
 	request = kzalloc(size, GFP_KERNEL);
+=======
+	request = kzalloc(sizeof(*request)
+			+ sizeof(*request->ssids) * n_ssids
+			+ sizeof(*request->channels) * n_channels
+			+ ie_len, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!request)
 		return -ENOMEM;
 
@@ -9414,7 +9475,11 @@ nl80211_parse_sched_scan(struct wiphy *wiphy, struct wireless_dev *wdev,
 	struct nlattr *attr;
 	int err, tmp, n_ssids = 0, n_match_sets = 0, n_channels, i, n_plans = 0;
 	enum nl80211_band band;
+<<<<<<< HEAD
 	size_t ie_len, size;
+=======
+	size_t ie_len;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nlattr *tb[NL80211_SCHED_SCAN_MATCH_ATTR_MAX + 1];
 	s32 default_match_rssi = NL80211_SCAN_RSSI_THOLD_OFF;
 
@@ -9523,6 +9588,7 @@ nl80211_parse_sched_scan(struct wiphy *wiphy, struct wireless_dev *wdev,
 	     attrs[NL80211_ATTR_SCHED_SCAN_RSSI_ADJUST]))
 		return ERR_PTR(-EINVAL);
 
+<<<<<<< HEAD
 	size = struct_size(request, channels, n_channels);
 	size = size_add(size, array_size(sizeof(*request->ssids), n_ssids));
 	size = size_add(size, array_size(sizeof(*request->match_sets),
@@ -9531,6 +9597,14 @@ nl80211_parse_sched_scan(struct wiphy *wiphy, struct wireless_dev *wdev,
 					 n_plans));
 	size = size_add(size, ie_len);
 	request = kzalloc(size, GFP_KERNEL);
+=======
+	request = kzalloc(sizeof(*request)
+			+ sizeof(*request->ssids) * n_ssids
+			+ sizeof(*request->match_sets) * n_match_sets
+			+ sizeof(*request->scan_plans) * n_plans
+			+ sizeof(*request->channels) * n_channels
+			+ ie_len, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!request)
 		return ERR_PTR(-ENOMEM);
 
@@ -10158,6 +10232,7 @@ skip_beacons:
 	if (info->attrs[NL80211_ATTR_CH_SWITCH_BLOCK_TX])
 		params.block_tx = true;
 
+<<<<<<< HEAD
 	if (info->attrs[NL80211_ATTR_PUNCT_BITMAP]) {
 		err = nl80211_parse_punct_bitmap(rdev, info,
 						 &params.chandef,
@@ -10166,6 +10241,8 @@ skip_beacons:
 			goto free;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	wdev_lock(wdev);
 	err = rdev_channel_switch(rdev, dev, &params);
 	wdev_unlock(wdev);
@@ -10809,7 +10886,12 @@ static int nl80211_crypto_settings(struct cfg80211_registered_device *rdev,
 
 static struct cfg80211_bss *nl80211_assoc_bss(struct cfg80211_registered_device *rdev,
 					      const u8 *ssid, int ssid_len,
+<<<<<<< HEAD
 					      struct nlattr **attrs)
+=======
+					      struct nlattr **attrs,
+					      const u8 **bssid_out)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ieee80211_channel *chan;
 	struct cfg80211_bss *bss;
@@ -10836,6 +10918,10 @@ static struct cfg80211_bss *nl80211_assoc_bss(struct cfg80211_registered_device 
 	if (!bss)
 		return ERR_PTR(-ENOENT);
 
+<<<<<<< HEAD
+=======
+	*bssid_out = bssid;
+>>>>>>> b7ba80a49124 (Commit)
 	return bss;
 }
 
@@ -10845,7 +10931,11 @@ static int nl80211_associate(struct sk_buff *skb, struct genl_info *info)
 	struct net_device *dev = info->user_ptr[1];
 	struct cfg80211_assoc_request req = {};
 	struct nlattr **attrs = NULL;
+<<<<<<< HEAD
 	const u8 *ap_addr, *ssid;
+=======
+	const u8 *bssid, *ssid;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int link_id;
 	int err, ssid_len;
 
@@ -10982,7 +11072,10 @@ static int nl80211_associate(struct sk_buff *skb, struct genl_info *info)
 			return -EINVAL;
 
 		req.ap_mld_addr = nla_data(info->attrs[NL80211_ATTR_MLD_ADDR]);
+<<<<<<< HEAD
 		ap_addr = req.ap_mld_addr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		attrs = kzalloc(attrsize, GFP_KERNEL);
 		if (!attrs)
@@ -11008,7 +11101,12 @@ static int nl80211_associate(struct sk_buff *skb, struct genl_info *info)
 				goto free;
 			}
 			req.links[link_id].bss =
+<<<<<<< HEAD
 				nl80211_assoc_bss(rdev, ssid, ssid_len, attrs);
+=======
+				nl80211_assoc_bss(rdev, ssid, ssid_len, attrs,
+						  &bssid);
+>>>>>>> b7ba80a49124 (Commit)
 			if (IS_ERR(req.links[link_id].bss)) {
 				err = PTR_ERR(req.links[link_id].bss);
 				req.links[link_id].bss = NULL;
@@ -11059,10 +11157,17 @@ static int nl80211_associate(struct sk_buff *skb, struct genl_info *info)
 		if (req.link_id >= 0)
 			return -EINVAL;
 
+<<<<<<< HEAD
 		req.bss = nl80211_assoc_bss(rdev, ssid, ssid_len, info->attrs);
 		if (IS_ERR(req.bss))
 			return PTR_ERR(req.bss);
 		ap_addr = req.bss->bssid;
+=======
+		req.bss = nl80211_assoc_bss(rdev, ssid, ssid_len, info->attrs,
+					    &bssid);
+		if (IS_ERR(req.bss))
+			return PTR_ERR(req.bss);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	err = nl80211_crypto_settings(rdev, info, &req.crypto, 1);
@@ -11075,7 +11180,11 @@ static int nl80211_associate(struct sk_buff *skb, struct genl_info *info)
 			dev->ieee80211_ptr->conn_owner_nlportid =
 				info->snd_portid;
 			memcpy(dev->ieee80211_ptr->disconnect_bssid,
+<<<<<<< HEAD
 			       ap_addr, ETH_ALEN);
+=======
+			       bssid, ETH_ALEN);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		wdev_unlock(dev->ieee80211_ptr);
@@ -12360,10 +12469,13 @@ static int nl80211_register_mgmt(struct sk_buff *skb, struct genl_info *info)
 	case NL80211_IFTYPE_P2P_DEVICE:
 		break;
 	case NL80211_IFTYPE_NAN:
+<<<<<<< HEAD
 		if (!wiphy_ext_feature_isset(wdev->wiphy,
 					     NL80211_EXT_FEATURE_SECURE_NAN))
 			return -EOPNOTSUPP;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -EOPNOTSUPP;
 	}
@@ -12421,10 +12533,13 @@ static int nl80211_tx_mgmt(struct sk_buff *skb, struct genl_info *info)
 	case NL80211_IFTYPE_P2P_GO:
 		break;
 	case NL80211_IFTYPE_NAN:
+<<<<<<< HEAD
 		if (!wiphy_ext_feature_isset(wdev->wiphy,
 					     NL80211_EXT_FEATURE_SECURE_NAN))
 			return -EOPNOTSUPP;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -EOPNOTSUPP;
 	}
@@ -12562,10 +12677,13 @@ static int nl80211_tx_mgmt_cancel_wait(struct sk_buff *skb, struct genl_info *in
 	case NL80211_IFTYPE_P2P_DEVICE:
 		break;
 	case NL80211_IFTYPE_NAN:
+<<<<<<< HEAD
 		if (!wiphy_ext_feature_isset(wdev->wiphy,
 					     NL80211_EXT_FEATURE_SECURE_NAN))
 			return -EOPNOTSUPP;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -EOPNOTSUPP;
 	}
@@ -13388,9 +13506,13 @@ static int nl80211_parse_wowlan_tcp(struct cfg80211_registered_device *rdev,
 	       wake_mask_size);
 	if (tok) {
 		cfg->tokens_size = tokens_size;
+<<<<<<< HEAD
 		cfg->payload_tok = *tok;
 		memcpy(cfg->payload_tok.token_stream, tok->token_stream,
 		       tokens_size);
+=======
+		memcpy(&cfg->payload_tok, tok, sizeof(*tok) + tokens_size);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	trig->tcp = cfg;
@@ -13928,9 +14050,13 @@ static int nl80211_set_rekey_data(struct sk_buff *skb, struct genl_info *info)
 		return -ERANGE;
 	if (nla_len(tb[NL80211_REKEY_DATA_KCK]) != NL80211_KCK_LEN &&
 	    !(rdev->wiphy.flags & WIPHY_FLAG_SUPPORTS_EXT_KEK_KCK &&
+<<<<<<< HEAD
 	      nla_len(tb[NL80211_REKEY_DATA_KCK]) == NL80211_KCK_EXT_LEN) &&
 	     !(rdev->wiphy.flags & WIPHY_FLAG_SUPPORTS_EXT_KCK_32 &&
 	       nla_len(tb[NL80211_REKEY_DATA_KCK]) == NL80211_KCK_EXT_LEN_32))
+=======
+	      nla_len(tb[NL80211_REKEY_DATA_KEK]) == NL80211_KCK_EXT_LEN))
+>>>>>>> b7ba80a49124 (Commit)
 		return -ERANGE;
 
 	rekey_data.kek = nla_data(tb[NL80211_REKEY_DATA_KEK]);
@@ -16176,6 +16302,7 @@ nl80211_remove_link_station(struct sk_buff *skb, struct genl_info *info)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int nl80211_set_hw_timestamp(struct sk_buff *skb,
 				    struct genl_info *info)
 {
@@ -16199,6 +16326,8 @@ static int nl80211_set_hw_timestamp(struct sk_buff *skb,
 	return rdev_set_hw_timestamp(rdev, dev, &hwts);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define NL80211_FLAG_NEED_WIPHY		0x01
 #define NL80211_FLAG_NEED_NETDEV	0x02
 #define NL80211_FLAG_NEED_RTNL		0x04
@@ -16287,8 +16416,12 @@ static u32 nl80211_internal_flags[] = {
 #undef SELECTOR
 };
 
+<<<<<<< HEAD
 static int nl80211_pre_doit(const struct genl_split_ops *ops,
 			    struct sk_buff *skb,
+=======
+static int nl80211_pre_doit(const struct genl_ops *ops, struct sk_buff *skb,
+>>>>>>> b7ba80a49124 (Commit)
 			    struct genl_info *info)
 {
 	struct cfg80211_registered_device *rdev = NULL;
@@ -16389,8 +16522,12 @@ out_unlock:
 	return err;
 }
 
+<<<<<<< HEAD
 static void nl80211_post_doit(const struct genl_split_ops *ops,
 			      struct sk_buff *skb,
+=======
+static void nl80211_post_doit(const struct genl_ops *ops, struct sk_buff *skb,
+>>>>>>> b7ba80a49124 (Commit)
 			      struct genl_info *info)
 {
 	u32 internal_flags = nl80211_internal_flags[ops->internal_flags];
@@ -16716,8 +16853,12 @@ static const struct genl_small_ops nl80211_small_ops[] = {
 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
 		.doit = nl80211_set_bss,
 		.flags = GENL_UNS_ADMIN_PERM,
+<<<<<<< HEAD
 		.internal_flags = IFLAGS(NL80211_FLAG_NEED_NETDEV_UP |
 					 NL80211_FLAG_MLO_VALID_LINK_ID),
+=======
+		.internal_flags = IFLAGS(NL80211_FLAG_NEED_NETDEV_UP),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cmd = NL80211_CMD_GET_REG,
@@ -17373,12 +17514,15 @@ static const struct genl_small_ops nl80211_small_ops[] = {
 		.internal_flags = IFLAGS(NL80211_FLAG_NEED_NETDEV_UP |
 					 NL80211_FLAG_MLO_VALID_LINK_ID),
 	},
+<<<<<<< HEAD
 	{
 		.cmd = NL80211_CMD_SET_HW_TIMESTAMP,
 		.doit = nl80211_set_hw_timestamp,
 		.flags = GENL_UNS_ADMIN_PERM,
 		.internal_flags = IFLAGS(NL80211_FLAG_NEED_NETDEV_UP),
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct genl_family nl80211_fam __ro_after_init = {
@@ -17904,7 +18048,10 @@ void nl80211_send_connect_result(struct cfg80211_registered_device *rdev,
 			link_info_size += (cr->links[link].bssid ||
 					   cr->links[link].bss) ?
 					  nla_total_size(ETH_ALEN) : 0;
+<<<<<<< HEAD
 			link_info_size += nla_total_size(sizeof(u16));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -17973,9 +18120,13 @@ void nl80211_send_connect_result(struct cfg80211_registered_device *rdev,
 			     nla_put(msg, NL80211_ATTR_BSSID, ETH_ALEN, bssid)) ||
 			    (cr->links[link].addr &&
 			     nla_put(msg, NL80211_ATTR_MAC, ETH_ALEN,
+<<<<<<< HEAD
 				     cr->links[link].addr)) ||
 			    nla_put_u16(msg, NL80211_ATTR_STATUS_CODE,
 					cr->links[link].status))
+=======
+				     cr->links[link].addr)))
+>>>>>>> b7ba80a49124 (Commit)
 				goto nla_put_failure;
 
 			nla_nest_end(msg, nested_mlo_links);
@@ -18099,8 +18250,12 @@ void nl80211_send_roamed(struct cfg80211_registered_device *rdev,
 }
 
 void nl80211_send_port_authorized(struct cfg80211_registered_device *rdev,
+<<<<<<< HEAD
 				  struct net_device *netdev, const u8 *bssid,
 				  const u8 *td_bitmap, u8 td_bitmap_len)
+=======
+				  struct net_device *netdev, const u8 *bssid)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sk_buff *msg;
 	void *hdr;
@@ -18120,11 +18275,14 @@ void nl80211_send_port_authorized(struct cfg80211_registered_device *rdev,
 	    nla_put(msg, NL80211_ATTR_MAC, ETH_ALEN, bssid))
 		goto nla_put_failure;
 
+<<<<<<< HEAD
 	if ((td_bitmap_len > 0) && td_bitmap)
 		if (nla_put(msg, NL80211_ATTR_TD_BITMAP,
 			    td_bitmap_len, td_bitmap))
 			goto nla_put_failure;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	genlmsg_end(msg, hdr);
 
 	genlmsg_multicast_netns(&nl80211_fam, wiphy_net(&rdev->wiphy), msg, 0,
@@ -18760,9 +18918,13 @@ EXPORT_SYMBOL(cfg80211_mgmt_tx_status_ext);
 
 static int __nl80211_rx_control_port(struct net_device *dev,
 				     struct sk_buff *skb,
+<<<<<<< HEAD
 				     bool unencrypted,
 				     int link_id,
 				     gfp_t gfp)
+=======
+				     bool unencrypted, gfp_t gfp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct wireless_dev *wdev = dev->ieee80211_ptr;
 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wdev->wiphy);
@@ -18794,8 +18956,11 @@ static int __nl80211_rx_control_port(struct net_device *dev,
 			      NL80211_ATTR_PAD) ||
 	    nla_put(msg, NL80211_ATTR_MAC, ETH_ALEN, addr) ||
 	    nla_put_u16(msg, NL80211_ATTR_CONTROL_PORT_ETHERTYPE, proto) ||
+<<<<<<< HEAD
 	    (link_id >= 0 &&
 	     nla_put_u8(msg, NL80211_ATTR_MLO_LINK_ID, link_id)) ||
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	    (unencrypted && nla_put_flag(msg,
 					 NL80211_ATTR_CONTROL_PORT_NO_ENCRYPT)))
 		goto nla_put_failure;
@@ -18814,6 +18979,7 @@ static int __nl80211_rx_control_port(struct net_device *dev,
 	return -ENOBUFS;
 }
 
+<<<<<<< HEAD
 bool cfg80211_rx_control_port(struct net_device *dev, struct sk_buff *skb,
 			      bool unencrypted, int link_id)
 {
@@ -18822,6 +18988,15 @@ bool cfg80211_rx_control_port(struct net_device *dev, struct sk_buff *skb,
 	trace_cfg80211_rx_control_port(dev, skb, unencrypted, link_id);
 	ret = __nl80211_rx_control_port(dev, skb, unencrypted, link_id,
 					GFP_ATOMIC);
+=======
+bool cfg80211_rx_control_port(struct net_device *dev,
+			      struct sk_buff *skb, bool unencrypted)
+{
+	int ret;
+
+	trace_cfg80211_rx_control_port(dev, skb, unencrypted);
+	ret = __nl80211_rx_control_port(dev, skb, unencrypted, GFP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 	trace_cfg80211_return_bool(ret == 0);
 	return ret == 0;
 }
@@ -19109,7 +19284,11 @@ static void nl80211_ch_switch_notify(struct cfg80211_registered_device *rdev,
 				     struct cfg80211_chan_def *chandef,
 				     gfp_t gfp,
 				     enum nl80211_commands notif,
+<<<<<<< HEAD
 				     u8 count, bool quiet, u16 punct_bitmap)
+=======
+				     u8 count, bool quiet)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct wireless_dev *wdev = netdev->ieee80211_ptr;
 	struct sk_buff *msg;
@@ -19143,9 +19322,12 @@ static void nl80211_ch_switch_notify(struct cfg80211_registered_device *rdev,
 			goto nla_put_failure;
 	}
 
+<<<<<<< HEAD
 	if (nla_put_u32(msg, NL80211_ATTR_PUNCT_BITMAP, punct_bitmap))
 		goto nla_put_failure;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	genlmsg_end(msg, hdr);
 
 	genlmsg_multicast_netns(&nl80211_fam, wiphy_net(&rdev->wiphy), msg, 0,
@@ -19158,7 +19340,11 @@ static void nl80211_ch_switch_notify(struct cfg80211_registered_device *rdev,
 
 void cfg80211_ch_switch_notify(struct net_device *dev,
 			       struct cfg80211_chan_def *chandef,
+<<<<<<< HEAD
 			       unsigned int link_id, u16 punct_bitmap)
+=======
+			       unsigned int link_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct wireless_dev *wdev = dev->ieee80211_ptr;
 	struct wiphy *wiphy = wdev->wiphy;
@@ -19167,7 +19353,11 @@ void cfg80211_ch_switch_notify(struct net_device *dev,
 	ASSERT_WDEV_LOCK(wdev);
 	WARN_INVALID_LINK_ID(wdev, link_id);
 
+<<<<<<< HEAD
 	trace_cfg80211_ch_switch_notify(dev, chandef, link_id, punct_bitmap);
+=======
+	trace_cfg80211_ch_switch_notify(dev, chandef, link_id);
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (wdev->iftype) {
 	case NL80211_IFTYPE_STATION:
@@ -19195,15 +19385,23 @@ void cfg80211_ch_switch_notify(struct net_device *dev,
 	cfg80211_sched_dfs_chan_update(rdev);
 
 	nl80211_ch_switch_notify(rdev, dev, link_id, chandef, GFP_KERNEL,
+<<<<<<< HEAD
 				 NL80211_CMD_CH_SWITCH_NOTIFY, 0, false,
 				 punct_bitmap);
+=======
+				 NL80211_CMD_CH_SWITCH_NOTIFY, 0, false);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(cfg80211_ch_switch_notify);
 
 void cfg80211_ch_switch_started_notify(struct net_device *dev,
 				       struct cfg80211_chan_def *chandef,
 				       unsigned int link_id, u8 count,
+<<<<<<< HEAD
 				       bool quiet, u16 punct_bitmap)
+=======
+				       bool quiet)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct wireless_dev *wdev = dev->ieee80211_ptr;
 	struct wiphy *wiphy = wdev->wiphy;
@@ -19212,6 +19410,7 @@ void cfg80211_ch_switch_started_notify(struct net_device *dev,
 	ASSERT_WDEV_LOCK(wdev);
 	WARN_INVALID_LINK_ID(wdev, link_id);
 
+<<<<<<< HEAD
 	trace_cfg80211_ch_switch_started_notify(dev, chandef, link_id,
 						punct_bitmap);
 
@@ -19223,6 +19422,17 @@ void cfg80211_ch_switch_started_notify(struct net_device *dev,
 EXPORT_SYMBOL(cfg80211_ch_switch_started_notify);
 
 int cfg80211_bss_color_notify(struct net_device *dev,
+=======
+	trace_cfg80211_ch_switch_started_notify(dev, chandef, link_id);
+
+	nl80211_ch_switch_notify(rdev, dev, link_id, chandef, GFP_KERNEL,
+				 NL80211_CMD_CH_SWITCH_STARTED_NOTIFY,
+				 count, quiet);
+}
+EXPORT_SYMBOL(cfg80211_ch_switch_started_notify);
+
+int cfg80211_bss_color_notify(struct net_device *dev, gfp_t gfp,
+>>>>>>> b7ba80a49124 (Commit)
 			      enum nl80211_commands cmd, u8 count,
 			      u64 color_bitmap)
 {
@@ -19236,7 +19446,11 @@ int cfg80211_bss_color_notify(struct net_device *dev,
 
 	trace_cfg80211_bss_color_notify(dev, cmd, count, color_bitmap);
 
+<<<<<<< HEAD
 	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
+=======
+	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!msg)
 		return -ENOMEM;
 
@@ -19259,7 +19473,11 @@ int cfg80211_bss_color_notify(struct net_device *dev,
 	genlmsg_end(msg, hdr);
 
 	return genlmsg_multicast_netns(&nl80211_fam, wiphy_net(&rdev->wiphy),
+<<<<<<< HEAD
 				       msg, 0, NL80211_MCGRP_MLME, GFP_KERNEL);
+=======
+				       msg, 0, NL80211_MCGRP_MLME, gfp);
+>>>>>>> b7ba80a49124 (Commit)
 
 nla_put_failure:
 	nlmsg_free(msg);
@@ -19822,7 +20040,11 @@ void cfg80211_crit_proto_stopped(struct wireless_dev *wdev, gfp_t gfp)
 }
 EXPORT_SYMBOL(cfg80211_crit_proto_stopped);
 
+<<<<<<< HEAD
 void nl80211_send_ap_stopped(struct wireless_dev *wdev, unsigned int link_id)
+=======
+void nl80211_send_ap_stopped(struct wireless_dev *wdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct wiphy *wiphy = wdev->wiphy;
 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wiphy);
@@ -19840,9 +20062,13 @@ void nl80211_send_ap_stopped(struct wireless_dev *wdev, unsigned int link_id)
 	if (nla_put_u32(msg, NL80211_ATTR_WIPHY, rdev->wiphy_idx) ||
 	    nla_put_u32(msg, NL80211_ATTR_IFINDEX, wdev->netdev->ifindex) ||
 	    nla_put_u64_64bit(msg, NL80211_ATTR_WDEV, wdev_id(wdev),
+<<<<<<< HEAD
 			      NL80211_ATTR_PAD) ||
 	    (wdev->valid_links &&
 	     nla_put_u8(msg, NL80211_ATTR_MLO_LINK_ID, link_id)))
+=======
+			      NL80211_ATTR_PAD))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	genlmsg_end(msg, hdr);
@@ -19881,9 +20107,13 @@ int cfg80211_external_auth_request(struct net_device *dev,
 			params->action) ||
 	    nla_put(msg, NL80211_ATTR_BSSID, ETH_ALEN, params->bssid) ||
 	    nla_put(msg, NL80211_ATTR_SSID, params->ssid.ssid_len,
+<<<<<<< HEAD
 		    params->ssid.ssid) ||
 	    (!is_zero_ether_addr(params->mld_addr) &&
 	     nla_put(msg, NL80211_ATTR_MLD_ADDR, ETH_ALEN, params->mld_addr)))
+=======
+		    params->ssid.ssid))
+>>>>>>> b7ba80a49124 (Commit)
 		goto nla_put_failure;
 
 	genlmsg_end(msg, hdr);
@@ -19925,6 +20155,7 @@ void cfg80211_update_owe_info_event(struct net_device *netdev,
 	    nla_put(msg, NL80211_ATTR_IE, owe_info->ie_len, owe_info->ie))
 		goto nla_put_failure;
 
+<<<<<<< HEAD
 	if (owe_info->assoc_link_id != -1) {
 		if (nla_put_u8(msg, NL80211_ATTR_MLO_LINK_ID,
 			       owe_info->assoc_link_id))
@@ -19936,6 +20167,8 @@ void cfg80211_update_owe_info_event(struct net_device *netdev,
 			goto nla_put_failure;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	genlmsg_end(msg, hdr);
 
 	genlmsg_multicast_netns(&nl80211_fam, wiphy_net(&rdev->wiphy), msg, 0,

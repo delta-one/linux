@@ -108,6 +108,16 @@ static inline int PAR_EQUAL(struct fb_par_control *x, struct fb_par_control *y)
 	return (!DIRTY(cmode) && !DIRTY(xres) && !DIRTY(yres)
 		&& !DIRTY(vxres) && !DIRTY(vyres));
 }
+<<<<<<< HEAD
+=======
+static inline int VAR_MATCH(struct fb_var_screeninfo *x, struct fb_var_screeninfo *y)
+{
+	return (!DIRTY(bits_per_pixel) && !DIRTY(xres)
+		&& !DIRTY(yres) && !DIRTY(xres_virtual)
+		&& !DIRTY(yres_virtual)
+		&& !DIRTY_CMAP(red) && !DIRTY_CMAP(green) && !DIRTY_CMAP(blue));
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 struct fb_info_control {
 	struct fb_info		info;
@@ -376,7 +386,11 @@ static int read_control_sense(struct fb_info_control *p)
 #define CONTROL_PIXCLOCK_MIN	5000	/* ~ 200 MHz dot clock */
 
 /*
+<<<<<<< HEAD
  * calculate the clock parameters to be sent to CUDA according to given
+=======
+ * calculate the clock paramaters to be sent to CUDA according to given
+>>>>>>> b7ba80a49124 (Commit)
  * pixclock in pico second.
  */
 static int calc_clock_params(unsigned long clk, unsigned char *param)

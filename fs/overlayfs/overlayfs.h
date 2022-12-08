@@ -8,8 +8,11 @@
 #include <linux/uuid.h>
 #include <linux/fs.h>
 #include <linux/namei.h>
+<<<<<<< HEAD
 #include <linux/posix_acl.h>
 #include <linux/posix_acl_xattr.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "ovl_entry.h"
 
 #undef pr_fmt
@@ -110,7 +113,11 @@ struct ovl_fh {
 	u8 padding[3];	/* make sure fb.fid is 32bit aligned */
 	union {
 		struct ovl_fb fb;
+<<<<<<< HEAD
 		DECLARE_FLEX_ARRAY(u8, buf);
+=======
+		u8 buf[0];
+>>>>>>> b7ba80a49124 (Commit)
 	};
 } __packed;
 
@@ -141,13 +148,21 @@ static inline int ovl_do_notify_change(struct ovl_fs *ofs,
 				       struct dentry *upperdentry,
 				       struct iattr *attr)
 {
+<<<<<<< HEAD
 	return notify_change(ovl_upper_mnt_idmap(ofs), upperdentry, attr, NULL);
+=======
+	return notify_change(ovl_upper_mnt_userns(ofs), upperdentry, attr, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline int ovl_do_rmdir(struct ovl_fs *ofs,
 			       struct inode *dir, struct dentry *dentry)
 {
+<<<<<<< HEAD
 	int err = vfs_rmdir(ovl_upper_mnt_idmap(ofs), dir, dentry);
+=======
+	int err = vfs_rmdir(ovl_upper_mnt_userns(ofs), dir, dentry);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_debug("rmdir(%pd2) = %i\n", dentry, err);
 	return err;
@@ -156,7 +171,11 @@ static inline int ovl_do_rmdir(struct ovl_fs *ofs,
 static inline int ovl_do_unlink(struct ovl_fs *ofs, struct inode *dir,
 				struct dentry *dentry)
 {
+<<<<<<< HEAD
 	int err = vfs_unlink(ovl_upper_mnt_idmap(ofs), dir, dentry, NULL);
+=======
+	int err = vfs_unlink(ovl_upper_mnt_userns(ofs), dir, dentry, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_debug("unlink(%pd2) = %i\n", dentry, err);
 	return err;
@@ -165,8 +184,12 @@ static inline int ovl_do_unlink(struct ovl_fs *ofs, struct inode *dir,
 static inline int ovl_do_link(struct ovl_fs *ofs, struct dentry *old_dentry,
 			      struct inode *dir, struct dentry *new_dentry)
 {
+<<<<<<< HEAD
 	int err = vfs_link(old_dentry, ovl_upper_mnt_idmap(ofs), dir,
 			   new_dentry, NULL);
+=======
+	int err = vfs_link(old_dentry, ovl_upper_mnt_userns(ofs), dir, new_dentry, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_debug("link(%pd2, %pd2) = %i\n", old_dentry, new_dentry, err);
 	return err;
@@ -176,7 +199,11 @@ static inline int ovl_do_create(struct ovl_fs *ofs,
 				struct inode *dir, struct dentry *dentry,
 				umode_t mode)
 {
+<<<<<<< HEAD
 	int err = vfs_create(ovl_upper_mnt_idmap(ofs), dir, dentry, mode, true);
+=======
+	int err = vfs_create(ovl_upper_mnt_userns(ofs), dir, dentry, mode, true);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_debug("create(%pd2, 0%o) = %i\n", dentry, mode, err);
 	return err;
@@ -186,7 +213,11 @@ static inline int ovl_do_mkdir(struct ovl_fs *ofs,
 			       struct inode *dir, struct dentry *dentry,
 			       umode_t mode)
 {
+<<<<<<< HEAD
 	int err = vfs_mkdir(ovl_upper_mnt_idmap(ofs), dir, dentry, mode);
+=======
+	int err = vfs_mkdir(ovl_upper_mnt_userns(ofs), dir, dentry, mode);
+>>>>>>> b7ba80a49124 (Commit)
 	pr_debug("mkdir(%pd2, 0%o) = %i\n", dentry, mode, err);
 	return err;
 }
@@ -195,7 +226,11 @@ static inline int ovl_do_mknod(struct ovl_fs *ofs,
 			       struct inode *dir, struct dentry *dentry,
 			       umode_t mode, dev_t dev)
 {
+<<<<<<< HEAD
 	int err = vfs_mknod(ovl_upper_mnt_idmap(ofs), dir, dentry, mode, dev);
+=======
+	int err = vfs_mknod(ovl_upper_mnt_userns(ofs), dir, dentry, mode, dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_debug("mknod(%pd2, 0%o, 0%o) = %i\n", dentry, mode, dev, err);
 	return err;
@@ -205,7 +240,11 @@ static inline int ovl_do_symlink(struct ovl_fs *ofs,
 				 struct inode *dir, struct dentry *dentry,
 				 const char *oldname)
 {
+<<<<<<< HEAD
 	int err = vfs_symlink(ovl_upper_mnt_idmap(ofs), dir, dentry, oldname);
+=======
+	int err = vfs_symlink(ovl_upper_mnt_userns(ofs), dir, dentry, oldname);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_debug("symlink(\"%s\", %pd2) = %i\n", oldname, dentry, err);
 	return err;
@@ -218,7 +257,11 @@ static inline ssize_t ovl_do_getxattr(const struct path *path, const char *name,
 
 	WARN_ON(path->dentry->d_sb != path->mnt->mnt_sb);
 
+<<<<<<< HEAD
 	err = vfs_getxattr(mnt_idmap(path->mnt), path->dentry,
+=======
+	err = vfs_getxattr(mnt_user_ns(path->mnt), path->dentry,
+>>>>>>> b7ba80a49124 (Commit)
 			       name, value, size);
 	len = (value && err > 0) ? err : 0;
 
@@ -252,7 +295,11 @@ static inline int ovl_do_setxattr(struct ovl_fs *ofs, struct dentry *dentry,
 				  const char *name, const void *value,
 				  size_t size, int flags)
 {
+<<<<<<< HEAD
 	int err = vfs_setxattr(ovl_upper_mnt_idmap(ofs), dentry, name,
+=======
+	int err = vfs_setxattr(ovl_upper_mnt_userns(ofs), dentry, name,
+>>>>>>> b7ba80a49124 (Commit)
 			       value, size, flags);
 
 	pr_debug("setxattr(%pd2, \"%s\", \"%*pE\", %zu, %d) = %i\n",
@@ -270,7 +317,11 @@ static inline int ovl_setxattr(struct ovl_fs *ofs, struct dentry *dentry,
 static inline int ovl_do_removexattr(struct ovl_fs *ofs, struct dentry *dentry,
 				     const char *name)
 {
+<<<<<<< HEAD
 	int err = vfs_removexattr(ovl_upper_mnt_idmap(ofs), dentry, name);
+=======
+	int err = vfs_removexattr(ovl_upper_mnt_userns(ofs), dentry, name);
+>>>>>>> b7ba80a49124 (Commit)
 	pr_debug("removexattr(%pd2, \"%s\") = %i\n", dentry, name, err);
 	return err;
 }
@@ -281,6 +332,7 @@ static inline int ovl_removexattr(struct ovl_fs *ofs, struct dentry *dentry,
 	return ovl_do_removexattr(ofs, dentry, ovl_xattr(ofs, ox));
 }
 
+<<<<<<< HEAD
 static inline int ovl_do_set_acl(struct ovl_fs *ofs, struct dentry *dentry,
 				 const char *acl_name, struct posix_acl *acl)
 {
@@ -293,16 +345,25 @@ static inline int ovl_do_remove_acl(struct ovl_fs *ofs, struct dentry *dentry,
 	return vfs_remove_acl(ovl_upper_mnt_idmap(ofs), dentry, acl_name);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int ovl_do_rename(struct ovl_fs *ofs, struct inode *olddir,
 				struct dentry *olddentry, struct inode *newdir,
 				struct dentry *newdentry, unsigned int flags)
 {
 	int err;
 	struct renamedata rd = {
+<<<<<<< HEAD
 		.old_mnt_idmap	= ovl_upper_mnt_idmap(ofs),
 		.old_dir 	= olddir,
 		.old_dentry 	= olddentry,
 		.new_mnt_idmap	= ovl_upper_mnt_idmap(ofs),
+=======
+		.old_mnt_userns	= ovl_upper_mnt_userns(ofs),
+		.old_dir 	= olddir,
+		.old_dentry 	= olddentry,
+		.new_mnt_userns	= ovl_upper_mnt_userns(ofs),
+>>>>>>> b7ba80a49124 (Commit)
 		.new_dir 	= newdir,
 		.new_dentry 	= newdentry,
 		.flags 		= flags,
@@ -320,11 +381,16 @@ static inline int ovl_do_rename(struct ovl_fs *ofs, struct inode *olddir,
 static inline int ovl_do_whiteout(struct ovl_fs *ofs,
 				  struct inode *dir, struct dentry *dentry)
 {
+<<<<<<< HEAD
 	int err = vfs_whiteout(ovl_upper_mnt_idmap(ofs), dir, dentry);
+=======
+	int err = vfs_whiteout(ovl_upper_mnt_userns(ofs), dir, dentry);
+>>>>>>> b7ba80a49124 (Commit)
 	pr_debug("whiteout(%pd2) = %i\n", dentry, err);
 	return err;
 }
 
+<<<<<<< HEAD
 static inline struct file *ovl_do_tmpfile(struct ovl_fs *ofs,
 					  struct dentry *dentry, umode_t mode)
 {
@@ -335,13 +401,27 @@ static inline struct file *ovl_do_tmpfile(struct ovl_fs *ofs,
 
 	pr_debug("tmpfile(%pd2, 0%o) = %i\n", dentry, mode, err);
 	return file;
+=======
+static inline struct dentry *ovl_do_tmpfile(struct ovl_fs *ofs,
+					    struct dentry *dentry, umode_t mode)
+{
+	struct dentry *ret = vfs_tmpfile(ovl_upper_mnt_userns(ofs), dentry, mode, 0);
+	int err = PTR_ERR_OR_ZERO(ret);
+
+	pr_debug("tmpfile(%pd2, 0%o) = %i\n", dentry, mode, err);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline struct dentry *ovl_lookup_upper(struct ovl_fs *ofs,
 					      const char *name,
 					      struct dentry *base, int len)
 {
+<<<<<<< HEAD
 	return lookup_one(ovl_upper_mnt_idmap(ofs), name, base, len);
+=======
+	return lookup_one(ovl_upper_mnt_userns(ofs), name, base, len);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool ovl_open_flags_need_copy_up(int flags)
@@ -416,7 +496,11 @@ const char *ovl_dentry_get_redirect(struct dentry *dentry);
 void ovl_dentry_set_redirect(struct dentry *dentry, const char *redirect);
 void ovl_inode_update(struct inode *inode, struct dentry *upperdentry);
 void ovl_dir_modified(struct dentry *dentry, bool impurity);
+<<<<<<< HEAD
 u64 ovl_inode_version_get(struct inode *inode);
+=======
+u64 ovl_dentry_version_get(struct dentry *dentry);
+>>>>>>> b7ba80a49124 (Commit)
 bool ovl_is_whiteout(struct dentry *dentry);
 struct file *ovl_path_open(const struct path *path, int flags);
 int ovl_copy_up_start(struct dentry *dentry, int flags);
@@ -540,8 +624,12 @@ int ovl_check_origin_fh(struct ovl_fs *ofs, struct ovl_fh *fh, bool connected,
 int ovl_verify_set_fh(struct ovl_fs *ofs, struct dentry *dentry,
 		      enum ovl_xattr ox, struct dentry *real, bool is_upper,
 		      bool set);
+<<<<<<< HEAD
 struct dentry *ovl_index_upper(struct ovl_fs *ofs, struct dentry *index,
 			       bool connected);
+=======
+struct dentry *ovl_index_upper(struct ovl_fs *ofs, struct dentry *index);
+>>>>>>> b7ba80a49124 (Commit)
 int ovl_verify_index(struct ovl_fs *ofs, struct dentry *index);
 int ovl_get_index_name(struct ovl_fs *ofs, struct dentry *origin,
 		       struct qstr *name);
@@ -586,9 +674,15 @@ int ovl_indexdir_cleanup(struct ovl_fs *ofs);
  * lower dir was removed under it and possibly before it was rotated from upper
  * to lower layer.
  */
+<<<<<<< HEAD
 static inline bool ovl_dir_is_real(struct inode *dir)
 {
 	return !ovl_test_flag(OVL_WHITEOUTS, dir);
+=======
+static inline bool ovl_dir_is_real(struct dentry *dir)
+{
+	return !ovl_test_flag(OVL_WHITEOUTS, d_inode(dir));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* inode.c */
@@ -597,11 +691,19 @@ int ovl_set_nlink_lower(struct dentry *dentry);
 unsigned int ovl_get_nlink(struct ovl_fs *ofs, struct dentry *lowerdentry,
 			   struct dentry *upperdentry,
 			   unsigned int fallback);
+<<<<<<< HEAD
 int ovl_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 		struct iattr *attr);
 int ovl_getattr(struct mnt_idmap *idmap, const struct path *path,
 		struct kstat *stat, u32 request_mask, unsigned int flags);
 int ovl_permission(struct mnt_idmap *idmap, struct inode *inode,
+=======
+int ovl_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+		struct iattr *attr);
+int ovl_getattr(struct user_namespace *mnt_userns, const struct path *path,
+		struct kstat *stat, u32 request_mask, unsigned int flags);
+int ovl_permission(struct user_namespace *mnt_userns, struct inode *inode,
+>>>>>>> b7ba80a49124 (Commit)
 		   int mask);
 int ovl_xattr_set(struct dentry *dentry, struct inode *inode, const char *name,
 		  const void *value, size_t size, int flags);
@@ -610,6 +712,7 @@ int ovl_xattr_get(struct dentry *dentry, struct inode *inode, const char *name,
 ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size);
 
 #ifdef CONFIG_FS_POSIX_ACL
+<<<<<<< HEAD
 struct posix_acl *do_ovl_get_acl(struct mnt_idmap *idmap,
 				 struct inode *inode, int type,
 				 bool rcu, bool noperm);
@@ -637,6 +740,11 @@ static inline struct posix_acl *ovl_get_acl_path(const struct path *path,
 {
 	return NULL;
 }
+=======
+struct posix_acl *ovl_get_acl(struct inode *inode, int type, bool rcu);
+#else
+#define ovl_get_acl	NULL
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 int ovl_update_time(struct inode *inode, struct timespec64 *ts, int flags);
@@ -718,7 +826,11 @@ void ovl_aio_request_cache_destroy(void);
 int ovl_real_fileattr_get(const struct path *realpath, struct fileattr *fa);
 int ovl_real_fileattr_set(const struct path *realpath, struct fileattr *fa);
 int ovl_fileattr_get(struct dentry *dentry, struct fileattr *fa);
+<<<<<<< HEAD
 int ovl_fileattr_set(struct mnt_idmap *idmap,
+=======
+int ovl_fileattr_set(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		     struct dentry *dentry, struct fileattr *fa);
 
 /* copy_up.c */

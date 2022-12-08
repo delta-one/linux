@@ -2,9 +2,13 @@
 #ifndef _LINUX_INIT_H
 #define _LINUX_INIT_H
 
+<<<<<<< HEAD
 #include <linux/build_bug.h>
 #include <linux/compiler.h>
 #include <linux/stringify.h>
+=======
+#include <linux/compiler.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/types.h>
 
 /* Built-in __init functions needn't be compiled with retpoline */
@@ -49,7 +53,11 @@
 
 /* These are for everybody (although not all archs will actually
    discard it in modules) */
+<<<<<<< HEAD
 #define __init		__section(".init.text") __cold  __latent_entropy __noinitretpoline
+=======
+#define __init		__section(".init.text") __cold  __latent_entropy __noinitretpoline __nocfi
+>>>>>>> b7ba80a49124 (Commit)
 #define __initdata	__section(".init.data")
 #define __initconst	__section(".init.rodata")
 #define __exitdata	__section(".exit.data")
@@ -145,7 +153,10 @@ struct file_system_type;
 extern int do_one_initcall(initcall_t fn);
 extern char __initdata boot_command_line[];
 extern char *saved_command_line;
+<<<<<<< HEAD
 extern unsigned int saved_command_line_len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern unsigned int reset_devices;
 
 /* used by init/main.c */
@@ -223,8 +234,13 @@ extern bool initcall_debug;
 	__initcall_name(initstub, __iid, id)
 
 #define __define_initcall_stub(__stub, fn)			\
+<<<<<<< HEAD
 	int __init __stub(void);				\
 	int __init __stub(void)					\
+=======
+	int __init __cficanonical __stub(void);			\
+	int __init __cficanonical __stub(void)			\
+>>>>>>> b7ba80a49124 (Commit)
 	{ 							\
 		return fn();					\
 	}							\

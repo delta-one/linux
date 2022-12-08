@@ -1311,10 +1311,17 @@ xfs_rtalloc_reinit_frextents(
 	uint64_t		val = 0;
 	int			error;
 
+<<<<<<< HEAD
 	xfs_ilock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
 	error = xfs_rtalloc_query_all(mp, NULL, xfs_rtalloc_count_frextent,
 			&val);
 	xfs_iunlock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
+=======
+	xfs_ilock(mp->m_rbmip, XFS_ILOCK_EXCL);
+	error = xfs_rtalloc_query_all(mp, NULL, xfs_rtalloc_count_frextent,
+			&val);
+	xfs_iunlock(mp->m_rbmip, XFS_ILOCK_EXCL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		return error;
 
@@ -1326,6 +1333,7 @@ xfs_rtalloc_reinit_frextents(
 }
 
 /*
+<<<<<<< HEAD
  * Read in the bmbt of an rt metadata inode so that we never have to load them
  * at runtime.  This enables the use of shared ILOCKs for rtbitmap scans.  Use
  * an empty transaction to avoid deadlocking on loops in the bmbt.
@@ -1361,6 +1369,8 @@ out_unlock:
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Get the bitmap and summary inodes and the summary cache into the mount
  * structure at mount time.
  */
@@ -1377,6 +1387,7 @@ xfs_rtmount_inodes(
 		return error;
 	ASSERT(mp->m_rbmip != NULL);
 
+<<<<<<< HEAD
 	error = xfs_rtmount_iread_extents(mp->m_rbmip, XFS_ILOCK_RTBITMAP);
 	if (error)
 		goto out_rele_bitmap;
@@ -1398,6 +1409,16 @@ out_rele_summary:
 out_rele_bitmap:
 	xfs_irele(mp->m_rbmip);
 	return error;
+=======
+	error = xfs_iget(mp, NULL, sbp->sb_rsumino, 0, 0, &mp->m_rsumip);
+	if (error) {
+		xfs_irele(mp->m_rbmip);
+		return error;
+	}
+	ASSERT(mp->m_rsumip != NULL);
+	xfs_alloc_rsum_cache(mp, sbp->sb_rbmblocks);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void

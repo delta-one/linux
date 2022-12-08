@@ -43,6 +43,18 @@ static void test_guest_cpuids(struct kvm_cpuid2 *guest_cpuid)
 
 }
 
+<<<<<<< HEAD
+=======
+static void test_cpuid_40000000(struct kvm_cpuid2 *guest_cpuid)
+{
+	u32 eax, ebx, ecx, edx;
+
+	cpuid(0x40000000, &eax, &ebx, &ecx, &edx);
+
+	GUEST_ASSERT(eax == 0x40000001);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void guest_main(struct kvm_cpuid2 *guest_cpuid)
 {
 	GUEST_SYNC(1);
@@ -51,7 +63,11 @@ static void guest_main(struct kvm_cpuid2 *guest_cpuid)
 
 	GUEST_SYNC(2);
 
+<<<<<<< HEAD
 	GUEST_ASSERT(this_cpu_property(X86_PROPERTY_MAX_KVM_LEAF) == 0x40000001);
+=======
+	test_cpuid_40000000(guest_cpuid);
+>>>>>>> b7ba80a49124 (Commit)
 
 	GUEST_DONE();
 }

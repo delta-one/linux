@@ -126,6 +126,7 @@ static inline void cpu_svm_disable(void)
 
 	wrmsrl(MSR_VM_HSAVE_PA, 0);
 	rdmsrl(MSR_EFER, efer);
+<<<<<<< HEAD
 	if (efer & EFER_SVME) {
 		/*
 		 * Force GIF=1 prior to disabling SVM to ensure INIT and NMI
@@ -141,6 +142,9 @@ static inline void cpu_svm_disable(void)
 fault:
 		wrmsrl(MSR_EFER, efer & ~EFER_SVME);
 	}
+=======
+	wrmsrl(MSR_EFER, efer & ~EFER_SVME);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /** Makes sure SVM is disabled, if it is supported on the CPU

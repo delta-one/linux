@@ -11,7 +11,10 @@ nf_conntrack-$(CONFIG_NF_CONNTRACK_TIMEOUT) += nf_conntrack_timeout.o
 nf_conntrack-$(CONFIG_NF_CONNTRACK_TIMESTAMP) += nf_conntrack_timestamp.o
 nf_conntrack-$(CONFIG_NF_CONNTRACK_EVENTS) += nf_conntrack_ecache.o
 nf_conntrack-$(CONFIG_NF_CONNTRACK_LABELS) += nf_conntrack_labels.o
+<<<<<<< HEAD
 nf_conntrack-$(CONFIG_NF_CONNTRACK_OVS) += nf_conntrack_ovs.o
+=======
+>>>>>>> b7ba80a49124 (Commit)
 nf_conntrack-$(CONFIG_NF_CT_PROTO_DCCP) += nf_conntrack_proto_dccp.o
 nf_conntrack-$(CONFIG_NF_CT_PROTO_SCTP) += nf_conntrack_proto_sctp.o
 nf_conntrack-$(CONFIG_NF_CT_PROTO_GRE) += nf_conntrack_proto_gre.o
@@ -60,6 +63,7 @@ obj-$(CONFIG_NF_LOG_SYSLOG) += nf_log_syslog.o
 obj-$(CONFIG_NF_NAT) += nf_nat.o
 nf_nat-$(CONFIG_NF_NAT_REDIRECT) += nf_nat_redirect.o
 nf_nat-$(CONFIG_NF_NAT_MASQUERADE) += nf_nat_masquerade.o
+<<<<<<< HEAD
 nf_nat-$(CONFIG_NF_NAT_OVS) += nf_nat_ovs.o
 
 ifeq ($(CONFIG_NF_NAT),m)
@@ -67,6 +71,8 @@ nf_nat-$(CONFIG_DEBUG_INFO_BTF_MODULES) += nf_nat_bpf.o
 else ifeq ($(CONFIG_NF_NAT),y)
 nf_nat-$(CONFIG_DEBUG_INFO_BTF) += nf_nat_bpf.o
 endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 # NAT helpers
 obj-$(CONFIG_NF_NAT_AMANDA) += nf_nat_amanda.o
@@ -88,8 +94,12 @@ nf_tables-objs := nf_tables_core.o nf_tables_api.o nft_chain_filter.o \
 		  nf_tables_trace.o nft_immediate.o nft_cmp.o nft_range.o \
 		  nft_bitwise.o nft_byteorder.o nft_payload.o nft_lookup.o \
 		  nft_dynset.o nft_meta.o nft_rt.o nft_exthdr.o nft_last.o \
+<<<<<<< HEAD
 		  nft_counter.o nft_objref.o nft_inner.o \
 		  nft_chain_route.o nf_tables_offload.o \
+=======
+		  nft_counter.o nft_chain_route.o nf_tables_offload.o \
+>>>>>>> b7ba80a49124 (Commit)
 		  nft_set_hash.o nft_set_bitmap.o nft_set_rbtree.o \
 		  nft_set_pipapo.o
 
@@ -99,12 +109,15 @@ nf_tables-objs += nft_set_pipapo_avx2.o
 endif
 endif
 
+<<<<<<< HEAD
 ifdef CONFIG_NFT_CT
 ifdef CONFIG_RETPOLINE
 nf_tables-objs += nft_ct_fast.o
 endif
 endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_NF_TABLES)		+= nf_tables.o
 obj-$(CONFIG_NFT_COMPAT)	+= nft_compat.o
 obj-$(CONFIG_NFT_CONNLIMIT)	+= nft_connlimit.o
@@ -113,6 +126,10 @@ obj-$(CONFIG_NFT_CT)		+= nft_ct.o
 obj-$(CONFIG_NFT_FLOW_OFFLOAD)	+= nft_flow_offload.o
 obj-$(CONFIG_NFT_LIMIT)		+= nft_limit.o
 obj-$(CONFIG_NFT_NAT)		+= nft_nat.o
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_NFT_OBJREF)	+= nft_objref.o
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_NFT_QUEUE)		+= nft_queue.o
 obj-$(CONFIG_NFT_QUOTA)		+= nft_quota.o
 obj-$(CONFIG_NFT_REJECT) 	+= nft_reject.o

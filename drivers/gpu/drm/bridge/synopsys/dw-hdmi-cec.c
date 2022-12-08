@@ -296,17 +296,30 @@ static int dw_hdmi_cec_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void dw_hdmi_cec_remove(struct platform_device *pdev)
+=======
+static int dw_hdmi_cec_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dw_hdmi_cec *cec = platform_get_drvdata(pdev);
 
 	cec_notifier_cec_adap_unregister(cec->notify, cec->adap);
 	cec_unregister_adapter(cec->adap);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver dw_hdmi_cec_driver = {
 	.probe	= dw_hdmi_cec_probe,
+<<<<<<< HEAD
 	.remove_new = dw_hdmi_cec_remove,
+=======
+	.remove	= dw_hdmi_cec_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "dw-hdmi-cec",
 	},

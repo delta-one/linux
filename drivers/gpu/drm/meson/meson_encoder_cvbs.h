@@ -25,6 +25,9 @@ struct meson_cvbs_mode {
 extern struct meson_cvbs_mode meson_cvbs_modes[MESON_CVBS_MODES_COUNT];
 
 int meson_encoder_cvbs_init(struct meson_drm *priv);
+<<<<<<< HEAD
 void meson_encoder_cvbs_remove(struct meson_drm *priv);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __MESON_VENC_CVBS_H */

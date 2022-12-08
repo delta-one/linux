@@ -39,6 +39,7 @@ static inline int ap_test_bit(unsigned int *ptr, unsigned int nr)
 	return (*ptr & (0x80000000u >> nr)) != 0;
 }
 
+<<<<<<< HEAD
 #define AP_RESPONSE_NORMAL		     0x00
 #define AP_RESPONSE_Q_NOT_AVAIL		     0x01
 #define AP_RESPONSE_RESET_IN_PROGRESS	     0x02
@@ -65,6 +66,24 @@ static inline int ap_test_bit(unsigned int *ptr, unsigned int nr)
 #define AP_RESPONSE_ASSOC_SECRET_NOT_UNIQUE  0x35
 #define AP_RESPONSE_ASSOC_FAILED	     0x36
 #define AP_RESPONSE_INVALID_DOMAIN	     0x42
+=======
+#define AP_RESPONSE_NORMAL		0x00
+#define AP_RESPONSE_Q_NOT_AVAIL		0x01
+#define AP_RESPONSE_RESET_IN_PROGRESS	0x02
+#define AP_RESPONSE_DECONFIGURED	0x03
+#define AP_RESPONSE_CHECKSTOPPED	0x04
+#define AP_RESPONSE_BUSY		0x05
+#define AP_RESPONSE_INVALID_ADDRESS	0x06
+#define AP_RESPONSE_OTHERWISE_CHANGED	0x07
+#define AP_RESPONSE_INVALID_GISA	0x08
+#define AP_RESPONSE_Q_FULL		0x10
+#define AP_RESPONSE_NO_PENDING_REPLY	0x10
+#define AP_RESPONSE_INDEX_TOO_BIG	0x11
+#define AP_RESPONSE_NO_FIRST_PART	0x13
+#define AP_RESPONSE_MESSAGE_TOO_BIG	0x15
+#define AP_RESPONSE_REQ_FAC_NOT_INST	0x16
+#define AP_RESPONSE_INVALID_DOMAIN	0x42
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Known device types
@@ -102,7 +121,10 @@ enum ap_sm_state {
 	AP_SM_STATE_IDLE,
 	AP_SM_STATE_WORKING,
 	AP_SM_STATE_QUEUE_FULL,
+<<<<<<< HEAD
 	AP_SM_STATE_ASSOC_WAIT,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	NR_AP_SM_STATES
 };
 
@@ -119,11 +141,18 @@ enum ap_sm_event {
  * AP queue state wait behaviour
  */
 enum ap_sm_wait {
+<<<<<<< HEAD
 	AP_SM_WAIT_AGAIN = 0,	 /* retry immediately */
 	AP_SM_WAIT_HIGH_TIMEOUT, /* poll high freq, wait for timeout */
 	AP_SM_WAIT_LOW_TIMEOUT,	 /* poll low freq, wait for timeout */
 	AP_SM_WAIT_INTERRUPT,	 /* wait for thin interrupt (if available) */
 	AP_SM_WAIT_NONE,	 /* no wait */
+=======
+	AP_SM_WAIT_AGAIN = 0,	/* retry immediately */
+	AP_SM_WAIT_TIMEOUT,	/* wait for timeout */
+	AP_SM_WAIT_INTERRUPT,	/* wait for thin interrupt (if available) */
+	AP_SM_WAIT_NONE,	/* no wait */
+>>>>>>> b7ba80a49124 (Commit)
 	NR_AP_SM_WAIT
 };
 
@@ -190,7 +219,11 @@ struct ap_device {
 struct ap_card {
 	struct ap_device ap_dev;
 	int raw_hwtype;			/* AP raw hardware type. */
+<<<<<<< HEAD
 	unsigned int functions;		/* TAPQ GR2 upper 32 facility bits */
+=======
+	unsigned int functions;		/* AP device function bitfield. */
+>>>>>>> b7ba80a49124 (Commit)
 	int queue_depth;		/* AP queue depth.*/
 	int id;				/* AP card number. */
 	unsigned int maxmsgsize;	/* AP msg limit for this card */
@@ -199,9 +232,12 @@ struct ap_card {
 	atomic64_t total_request_count;	/* # requests ever for this AP device.*/
 };
 
+<<<<<<< HEAD
 #define TAPQ_CARD_FUNC_CMP_MASK 0xFFFF0000
 #define ASSOC_IDX_INVALID 0x10000
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define to_ap_card(x) container_of((x), struct ap_card, ap_dev.device)
 
 struct ap_queue {
@@ -214,7 +250,10 @@ struct ap_queue {
 	bool chkstop;			/* checkstop state */
 	ap_qid_t qid;			/* AP queue id. */
 	bool interrupt;			/* indicate if interrupts are enabled */
+<<<<<<< HEAD
 	unsigned int assoc_idx;		/* SE association index */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int queue_count;		/* # messages currently on AP queue. */
 	int pendingq_count;		/* # requests on pendingq list. */
 	int requestq_count;		/* # requests on requestq list. */
@@ -225,7 +264,10 @@ struct ap_queue {
 	struct list_head requestq;	/* List of message yet to be sent. */
 	struct ap_message *reply;	/* Per device reply message. */
 	enum ap_sm_state sm_state;	/* ap queue state machine state */
+<<<<<<< HEAD
 	int rapq_fbit;			/* fbit arg for next rapq invocation */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int last_err_rc;		/* last error state response code */
 };
 
@@ -259,10 +301,17 @@ enum ap_fi_flags {
 
 struct ap_message {
 	struct list_head list;		/* Request queueing. */
+<<<<<<< HEAD
 	unsigned long psmid;		/* Message id. */
 	void *msg;			/* Pointer to message buffer. */
 	size_t len;			/* actual msg len in msg buffer */
 	size_t bufsize;			/* allocated msg buffer size */
+=======
+	unsigned long long psmid;	/* Message id. */
+	void *msg;			/* Pointer to message buffer. */
+	unsigned int len;		/* actual msg len in msg buffer */
+	unsigned int bufsize;		/* allocated msg buffer size */
+>>>>>>> b7ba80a49124 (Commit)
 	u16 flags;			/* Flags, see AP_MSG_FLAG_xxx */
 	struct ap_fi fi;		/* Failure Injection cmd */
 	int rc;				/* Return code for this message */
@@ -302,8 +351,13 @@ static inline void ap_release_message(struct ap_message *ap_msg)
  * for the first time. Otherwise the ap message queue will get
  * confused.
  */
+<<<<<<< HEAD
 int ap_send(ap_qid_t qid, unsigned long psmid, void *msg, size_t msglen);
 int ap_recv(ap_qid_t qid, unsigned long *psmid, void *msg, size_t msglen);
+=======
+int ap_send(ap_qid_t, unsigned long long, void *, size_t);
+int ap_recv(ap_qid_t, unsigned long long *, void *, size_t);
+>>>>>>> b7ba80a49124 (Commit)
 
 enum ap_sm_wait ap_sm_event(struct ap_queue *aq, enum ap_sm_event event);
 enum ap_sm_wait ap_sm_event_loop(struct ap_queue *aq, enum ap_sm_event event);
@@ -313,7 +367,10 @@ void ap_cancel_message(struct ap_queue *aq, struct ap_message *ap_msg);
 void ap_flush_queue(struct ap_queue *aq);
 
 void *ap_airq_ptr(void);
+<<<<<<< HEAD
 int ap_sb_available(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void ap_wait(enum ap_sm_wait wait);
 void ap_request_timeout(struct timer_list *t);
 void ap_bus_force_rescan(void);

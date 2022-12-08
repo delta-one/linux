@@ -609,7 +609,12 @@ static const struct dvb_tuner_ops e4000_dvb_tuner_ops = {
 	.get_if_frequency = e4000_dvb_get_if_frequency,
 };
 
+<<<<<<< HEAD
 static int e4000_probe(struct i2c_client *client)
+=======
+static int e4000_probe(struct i2c_client *client,
+		       const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct e4000_dev *dev;
 	struct e4000_config *cfg = client->dev.platform_data;
@@ -729,7 +734,11 @@ static struct i2c_driver e4000_driver = {
 		.name	= "e4000",
 		.suppress_bind_attrs = true,
 	},
+<<<<<<< HEAD
 	.probe_new	= e4000_probe,
+=======
+	.probe		= e4000_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= e4000_remove,
 	.id_table	= e4000_id_table,
 };

@@ -92,7 +92,11 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		user_led: led-user {
+=======
+		user_led: user {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "Heartbeat";
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_user_led>;

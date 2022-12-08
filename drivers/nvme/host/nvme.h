@@ -162,9 +162,12 @@ struct nvme_request {
 	u8			retries;
 	u8			flags;
 	u16			status;
+<<<<<<< HEAD
 #ifdef CONFIG_NVME_MULTIPATH
 	unsigned long		start_time;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct nvme_ctrl	*ctrl;
 };
 
@@ -176,7 +179,10 @@ struct nvme_request {
 enum {
 	NVME_REQ_CANCELLED		= (1 << 0),
 	NVME_REQ_USERCMD		= (1 << 1),
+<<<<<<< HEAD
 	NVME_MPATH_IO_STATS		= (1 << 2),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct nvme_request *nvme_req(struct request *req)
@@ -237,6 +243,7 @@ struct nvme_fault_inject {
 #endif
 };
 
+<<<<<<< HEAD
 enum nvme_ctrl_flags {
 	NVME_CTRL_FAILFAST_EXPIRED	= 0,
 	NVME_CTRL_ADMIN_Q_STOPPED	= 1,
@@ -244,6 +251,8 @@ enum nvme_ctrl_flags {
 	NVME_CTRL_STOPPED		= 3,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct nvme_ctrl {
 	bool comp_seen;
 	enum nvme_ctrl_state state;
@@ -341,8 +350,13 @@ struct nvme_ctrl {
 
 #ifdef CONFIG_NVME_AUTH
 	struct work_struct dhchap_auth_work;
+<<<<<<< HEAD
 	struct mutex dhchap_auth_mutex;
 	struct nvme_dhchap_queue_context *dhchap_ctxs;
+=======
+	struct list_head dhchap_auth_list;
+	struct mutex dhchap_auth_mutex;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nvme_dhchap_key *host_key;
 	struct nvme_dhchap_key *ctrl_key;
 	u16 transaction;
@@ -365,6 +379,11 @@ struct nvme_ctrl {
 	u16 maxcmd;
 	int nr_reconnects;
 	unsigned long flags;
+<<<<<<< HEAD
+=======
+#define NVME_CTRL_FAILFAST_EXPIRED	0
+#define NVME_CTRL_ADMIN_Q_STOPPED	1
+>>>>>>> b7ba80a49124 (Commit)
 	struct nvmf_ctrl_options *opts;
 
 	struct page *discard_page;
@@ -459,7 +478,10 @@ static inline bool nvme_ns_head_multipath(struct nvme_ns_head *head)
 enum nvme_ns_features {
 	NVME_NS_EXT_LBAS = 1 << 0, /* support extended LBA format */
 	NVME_NS_METADATA_SUPPORTED = 1 << 1, /* support getting generated md */
+<<<<<<< HEAD
 	NVME_NS_DEAC,		/* DEAC bit in Write Zeores supported */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct nvme_ns {
@@ -489,9 +511,17 @@ struct nvme_ns {
 	unsigned long features;
 	unsigned long flags;
 #define NVME_NS_REMOVING	0
+<<<<<<< HEAD
 #define NVME_NS_ANA_PENDING	2
 #define NVME_NS_FORCE_RO	3
 #define NVME_NS_READY		4
+=======
+#define NVME_NS_DEAD     	1
+#define NVME_NS_ANA_PENDING	2
+#define NVME_NS_FORCE_RO	3
+#define NVME_NS_READY		4
+#define NVME_NS_STOPPED		5
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct cdev		cdev;
 	struct device		cdev_device;
@@ -512,9 +542,12 @@ struct nvme_ctrl_ops {
 	unsigned int flags;
 #define NVME_F_FABRICS			(1 << 0)
 #define NVME_F_METADATA_SUPPORTED	(1 << 1)
+<<<<<<< HEAD
 #define NVME_F_BLOCKING			(1 << 2)
 
 	const struct attribute_group **dev_attr_groups;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int (*reg_read32)(struct nvme_ctrl *ctrl, u32 off, u32 *val);
 	int (*reg_write32)(struct nvme_ctrl *ctrl, u32 off, u32 val);
 	int (*reg_read64)(struct nvme_ctrl *ctrl, u32 off, u64 *val);
@@ -613,6 +646,7 @@ static inline void nvme_fault_inject_fini(struct nvme_fault_inject *fault_inj)
 static inline void nvme_should_fail(struct request *req) {}
 #endif
 
+<<<<<<< HEAD
 bool nvme_wait_reset(struct nvme_ctrl *ctrl);
 int nvme_try_sched_reset(struct nvme_ctrl *ctrl);
 
@@ -630,6 +664,13 @@ static inline int nvme_reset_subsystem(struct nvme_ctrl *ctrl)
 		return ret;
 
 	return nvme_try_sched_reset(ctrl);
+=======
+static inline int nvme_reset_subsystem(struct nvme_ctrl *ctrl)
+{
+	if (!ctrl->subsystem)
+		return -ENOTTY;
+	return ctrl->ops->reg_write32(ctrl, NVME_REG_NSSR, 0x4E564D65);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -735,13 +776,21 @@ void nvme_cancel_tagset(struct nvme_ctrl *ctrl);
 void nvme_cancel_admin_tagset(struct nvme_ctrl *ctrl);
 bool nvme_change_ctrl_state(struct nvme_ctrl *ctrl,
 		enum nvme_ctrl_state new_state);
+<<<<<<< HEAD
 int nvme_disable_ctrl(struct nvme_ctrl *ctrl, bool shutdown);
 int nvme_enable_ctrl(struct nvme_ctrl *ctrl);
+=======
+bool nvme_wait_reset(struct nvme_ctrl *ctrl);
+int nvme_disable_ctrl(struct nvme_ctrl *ctrl);
+int nvme_enable_ctrl(struct nvme_ctrl *ctrl);
+int nvme_shutdown_ctrl(struct nvme_ctrl *ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
 		const struct nvme_ctrl_ops *ops, unsigned long quirks);
 void nvme_uninit_ctrl(struct nvme_ctrl *ctrl);
 void nvme_start_ctrl(struct nvme_ctrl *ctrl);
 void nvme_stop_ctrl(struct nvme_ctrl *ctrl);
+<<<<<<< HEAD
 int nvme_init_ctrl_finish(struct nvme_ctrl *ctrl, bool was_suspended);
 int nvme_alloc_admin_tag_set(struct nvme_ctrl *ctrl, struct blk_mq_tag_set *set,
 		const struct blk_mq_ops *ops, unsigned int cmd_size);
@@ -761,6 +810,23 @@ void nvme_unquiesce_io_queues(struct nvme_ctrl *ctrl);
 void nvme_quiesce_admin_queue(struct nvme_ctrl *ctrl);
 void nvme_unquiesce_admin_queue(struct nvme_ctrl *ctrl);
 void nvme_mark_namespaces_dead(struct nvme_ctrl *ctrl);
+=======
+int nvme_init_ctrl_finish(struct nvme_ctrl *ctrl);
+
+void nvme_remove_namespaces(struct nvme_ctrl *ctrl);
+
+int nvme_sec_submit(void *data, u16 spsp, u8 secp, void *buffer, size_t len,
+		bool send);
+
+void nvme_complete_async_event(struct nvme_ctrl *ctrl, __le16 status,
+		volatile union nvme_result *res);
+
+void nvme_stop_queues(struct nvme_ctrl *ctrl);
+void nvme_start_queues(struct nvme_ctrl *ctrl);
+void nvme_stop_admin_queue(struct nvme_ctrl *ctrl);
+void nvme_start_admin_queue(struct nvme_ctrl *ctrl);
+void nvme_kill_queues(struct nvme_ctrl *ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 void nvme_sync_queues(struct nvme_ctrl *ctrl);
 void nvme_sync_io_queues(struct nvme_ctrl *ctrl);
 void nvme_unfreeze(struct nvme_ctrl *ctrl);
@@ -827,6 +893,10 @@ int nvme_set_queue_count(struct nvme_ctrl *ctrl, int *count);
 void nvme_stop_keep_alive(struct nvme_ctrl *ctrl);
 int nvme_reset_ctrl(struct nvme_ctrl *ctrl);
 int nvme_reset_ctrl_sync(struct nvme_ctrl *ctrl);
+<<<<<<< HEAD
+=======
+int nvme_try_sched_reset(struct nvme_ctrl *ctrl);
+>>>>>>> b7ba80a49124 (Commit)
 int nvme_delete_ctrl(struct nvme_ctrl *ctrl);
 void nvme_queue_scan(struct nvme_ctrl *ctrl);
 int nvme_get_log(struct nvme_ctrl *ctrl, u32 nsid, u8 log_page, u8 lsp, u8 csi,
@@ -859,7 +929,10 @@ int nvme_dev_uring_cmd(struct io_uring_cmd *ioucmd, unsigned int issue_flags);
 extern const struct attribute_group *nvme_ns_id_attr_groups[];
 extern const struct pr_ops nvme_pr_ops;
 extern const struct block_device_operations nvme_ns_head_ops;
+<<<<<<< HEAD
 extern const struct attribute_group nvme_dev_attrs_group;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct nvme_ns *nvme_find_path(struct nvme_ns_head *head);
 #ifdef CONFIG_NVME_MULTIPATH
@@ -886,14 +959,21 @@ bool nvme_mpath_clear_current_path(struct nvme_ns *ns);
 void nvme_mpath_revalidate_paths(struct nvme_ns *ns);
 void nvme_mpath_clear_ctrl_paths(struct nvme_ctrl *ctrl);
 void nvme_mpath_shutdown_disk(struct nvme_ns_head *head);
+<<<<<<< HEAD
 void nvme_mpath_start_request(struct request *rq);
 void nvme_mpath_end_request(struct request *rq);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void nvme_trace_bio_complete(struct request *req)
 {
 	struct nvme_ns *ns = req->q->queuedata;
 
+<<<<<<< HEAD
 	if ((req->cmd_flags & REQ_NVME_MPATH) && req->bio)
+=======
+	if (req->cmd_flags & REQ_NVME_MPATH)
+>>>>>>> b7ba80a49124 (Commit)
 		trace_block_bio_complete(ns->head->disk->queue, req->bio);
 }
 
@@ -973,12 +1053,15 @@ static inline void nvme_mpath_start_freeze(struct nvme_subsystem *subsys)
 static inline void nvme_mpath_default_iopolicy(struct nvme_subsystem *subsys)
 {
 }
+<<<<<<< HEAD
 static inline void nvme_mpath_start_request(struct request *rq)
 {
 }
 static inline void nvme_mpath_end_request(struct request *rq)
 {
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_NVME_MULTIPATH */
 
 int nvme_revalidate_zones(struct nvme_ns *ns);
@@ -1005,6 +1088,17 @@ static inline int nvme_update_zone_info(struct nvme_ns *ns, unsigned lbaf)
 }
 #endif
 
+<<<<<<< HEAD
+=======
+static inline int nvme_ctrl_init_connect_q(struct nvme_ctrl *ctrl)
+{
+	ctrl->connect_q = blk_mq_init_queue(ctrl->tagset);
+	if (IS_ERR(ctrl->connect_q))
+		return PTR_ERR(ctrl->connect_q);
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct nvme_ns *nvme_get_ns_from_dev(struct device *dev)
 {
 	return dev_to_disk(dev)->private_data;
@@ -1024,6 +1118,7 @@ static inline void nvme_hwmon_exit(struct nvme_ctrl *ctrl)
 }
 #endif
 
+<<<<<<< HEAD
 static inline void nvme_start_request(struct request *rq)
 {
 	if (rq->cmd_flags & REQ_NVME_MPATH)
@@ -1031,12 +1126,15 @@ static inline void nvme_start_request(struct request *rq)
 	blk_mq_start_request(rq);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool nvme_ctrl_sgl_supported(struct nvme_ctrl *ctrl)
 {
 	return ctrl->sgls & ((1 << 0) | (1 << 1));
 }
 
 #ifdef CONFIG_NVME_AUTH
+<<<<<<< HEAD
 int __init nvme_init_auth(void);
 void __exit nvme_exit_auth(void);
 int nvme_auth_init_ctrl(struct nvme_ctrl *ctrl);
@@ -1056,6 +1154,16 @@ static inline int __init nvme_init_auth(void)
 static inline void __exit nvme_exit_auth(void)
 {
 }
+=======
+void nvme_auth_init_ctrl(struct nvme_ctrl *ctrl);
+void nvme_auth_stop(struct nvme_ctrl *ctrl);
+int nvme_auth_negotiate(struct nvme_ctrl *ctrl, int qid);
+int nvme_auth_wait(struct nvme_ctrl *ctrl, int qid);
+void nvme_auth_reset(struct nvme_ctrl *ctrl);
+void nvme_auth_free(struct nvme_ctrl *ctrl);
+#else
+static inline void nvme_auth_init_ctrl(struct nvme_ctrl *ctrl) {};
+>>>>>>> b7ba80a49124 (Commit)
 static inline void nvme_auth_stop(struct nvme_ctrl *ctrl) {};
 static inline int nvme_auth_negotiate(struct nvme_ctrl *ctrl, int qid)
 {
@@ -1070,10 +1178,14 @@ static inline void nvme_auth_free(struct nvme_ctrl *ctrl) {};
 
 u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
 			 u8 opcode);
+<<<<<<< HEAD
 u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns, u8 opcode);
 int nvme_execute_rq(struct request *rq, bool at_head);
 void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects,
 		       struct nvme_command *cmd, int status);
+=======
+int nvme_execute_passthru_rq(struct request *rq);
+>>>>>>> b7ba80a49124 (Commit)
 struct nvme_ctrl *nvme_ctrl_from_file(struct file *file);
 struct nvme_ns *nvme_find_get_ns(struct nvme_ctrl *ctrl, unsigned nsid);
 void nvme_put_ns(struct nvme_ns *ns);
@@ -1087,7 +1199,10 @@ static inline bool nvme_multi_css(struct nvme_ctrl *ctrl)
 const unsigned char *nvme_get_error_status_str(u16 status);
 const unsigned char *nvme_get_opcode_str(u8 opcode);
 const unsigned char *nvme_get_admin_opcode_str(u8 opcode);
+<<<<<<< HEAD
 const unsigned char *nvme_get_fabrics_opcode_str(u8 opcode);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else /* CONFIG_NVME_VERBOSE_ERRORS */
 static inline const unsigned char *nvme_get_error_status_str(u16 status)
 {
@@ -1101,6 +1216,7 @@ static inline const unsigned char *nvme_get_admin_opcode_str(u8 opcode)
 {
 	return "Admin Cmd";
 }
+<<<<<<< HEAD
 
 static inline const unsigned char *nvme_get_fabrics_opcode_str(u8 opcode)
 {
@@ -1115,4 +1231,8 @@ static inline const unsigned char *nvme_opcode_str(int qid, u8 opcode, u8 fctype
 	return qid ? nvme_get_opcode_str(opcode) :
 		nvme_get_admin_opcode_str(opcode);
 }
+=======
+#endif /* CONFIG_NVME_VERBOSE_ERRORS */
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _NVME_H */

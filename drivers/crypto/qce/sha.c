@@ -38,7 +38,11 @@ static void qce_ahash_done(void *data)
 	struct crypto_async_request *async_req = data;
 	struct ahash_request *req = ahash_request_cast(async_req);
 	struct crypto_ahash *ahash = crypto_ahash_reqtfm(req);
+<<<<<<< HEAD
 	struct qce_sha_reqctx *rctx = ahash_request_ctx_dma(req);
+=======
+	struct qce_sha_reqctx *rctx = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct qce_alg_template *tmpl = to_ahash_tmpl(async_req->tfm);
 	struct qce_device *qce = tmpl->qce;
 	struct qce_result_dump *result = qce->dma.result_buf;
@@ -75,7 +79,11 @@ static void qce_ahash_done(void *data)
 static int qce_ahash_async_req_handle(struct crypto_async_request *async_req)
 {
 	struct ahash_request *req = ahash_request_cast(async_req);
+<<<<<<< HEAD
 	struct qce_sha_reqctx *rctx = ahash_request_ctx_dma(req);
+=======
+	struct qce_sha_reqctx *rctx = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct qce_sha_ctx *ctx = crypto_tfm_ctx(async_req->tfm);
 	struct qce_alg_template *tmpl = to_ahash_tmpl(async_req->tfm);
 	struct qce_device *qce = tmpl->qce;
@@ -132,7 +140,11 @@ error_unmap_src:
 
 static int qce_ahash_init(struct ahash_request *req)
 {
+<<<<<<< HEAD
 	struct qce_sha_reqctx *rctx = ahash_request_ctx_dma(req);
+=======
+	struct qce_sha_reqctx *rctx = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct qce_alg_template *tmpl = to_ahash_tmpl(req->base.tfm);
 	const u32 *std_iv = tmpl->std_iv;
 
@@ -147,7 +159,11 @@ static int qce_ahash_init(struct ahash_request *req)
 
 static int qce_ahash_export(struct ahash_request *req, void *out)
 {
+<<<<<<< HEAD
 	struct qce_sha_reqctx *rctx = ahash_request_ctx_dma(req);
+=======
+	struct qce_sha_reqctx *rctx = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct qce_sha_saved_state *export_state = out;
 
 	memcpy(export_state->pending_buf, rctx->buf, rctx->buflen);
@@ -164,7 +180,11 @@ static int qce_ahash_export(struct ahash_request *req, void *out)
 
 static int qce_ahash_import(struct ahash_request *req, const void *in)
 {
+<<<<<<< HEAD
 	struct qce_sha_reqctx *rctx = ahash_request_ctx_dma(req);
+=======
+	struct qce_sha_reqctx *rctx = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	const struct qce_sha_saved_state *import_state = in;
 
 	memset(rctx, 0, sizeof(*rctx));
@@ -183,7 +203,11 @@ static int qce_ahash_import(struct ahash_request *req, const void *in)
 static int qce_ahash_update(struct ahash_request *req)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
+<<<<<<< HEAD
 	struct qce_sha_reqctx *rctx = ahash_request_ctx_dma(req);
+=======
+	struct qce_sha_reqctx *rctx = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct qce_alg_template *tmpl = to_ahash_tmpl(req->base.tfm);
 	struct qce_device *qce = tmpl->qce;
 	struct scatterlist *sg_last, *sg;
@@ -275,7 +299,11 @@ static int qce_ahash_update(struct ahash_request *req)
 
 static int qce_ahash_final(struct ahash_request *req)
 {
+<<<<<<< HEAD
 	struct qce_sha_reqctx *rctx = ahash_request_ctx_dma(req);
+=======
+	struct qce_sha_reqctx *rctx = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct qce_alg_template *tmpl = to_ahash_tmpl(req->base.tfm);
 	struct qce_device *qce = tmpl->qce;
 
@@ -302,7 +330,11 @@ static int qce_ahash_final(struct ahash_request *req)
 
 static int qce_ahash_digest(struct ahash_request *req)
 {
+<<<<<<< HEAD
 	struct qce_sha_reqctx *rctx = ahash_request_ctx_dma(req);
+=======
+	struct qce_sha_reqctx *rctx = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct qce_alg_template *tmpl = to_ahash_tmpl(req->base.tfm);
 	struct qce_device *qce = tmpl->qce;
 	int ret;
@@ -395,7 +427,11 @@ static int qce_ahash_cra_init(struct crypto_tfm *tfm)
 	struct crypto_ahash *ahash = __crypto_ahash_cast(tfm);
 	struct qce_sha_ctx *ctx = crypto_tfm_ctx(tfm);
 
+<<<<<<< HEAD
 	crypto_ahash_set_reqsize_dma(ahash, sizeof(struct qce_sha_reqctx));
+=======
+	crypto_ahash_set_reqsize(ahash, sizeof(struct qce_sha_reqctx));
+>>>>>>> b7ba80a49124 (Commit)
 	memset(ctx, 0, sizeof(*ctx));
 	return 0;
 }

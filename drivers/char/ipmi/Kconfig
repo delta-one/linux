@@ -162,14 +162,19 @@ config IPMI_KCS_BMC_SERIO
 
 config ASPEED_BT_IPMI_BMC
 	depends on ARCH_ASPEED || COMPILE_TEST
+<<<<<<< HEAD
 	depends on MFD_SYSCON
 	select REGMAP_MMIO
+=======
+	depends on REGMAP && REGMAP_MMIO && MFD_SYSCON
+>>>>>>> b7ba80a49124 (Commit)
 	tristate "BT IPMI bmc driver"
 	help
 	  Provides a driver for the BT (Block Transfer) IPMI interface
 	  found on Aspeed SOCs (AST2400 and AST2500). The driver
 	  implements the BMC side of the BT interface.
 
+<<<<<<< HEAD
 config SSIF_IPMI_BMC
 	tristate "SSIF IPMI BMC driver"
 	depends on I2C && I2C_SLAVE
@@ -180,6 +185,8 @@ config SSIF_IPMI_BMC
 	  The driver implements the BMC side of the SMBus system
 	  interface (SSIF).
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config IPMB_DEVICE_INTERFACE
 	tristate 'IPMB Interface handler'
 	depends on I2C

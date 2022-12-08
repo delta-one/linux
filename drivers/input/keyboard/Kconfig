@@ -390,7 +390,11 @@ config KEYBOARD_LOCOMO
 
 config KEYBOARD_LPC32XX
 	tristate "LPC32XX matrix key scanner support"
+<<<<<<< HEAD
 	depends on (ARCH_LPC32XX && OF) || COMPILE_TEST
+=======
+	depends on ARCH_LPC32XX && OF
+>>>>>>> b7ba80a49124 (Commit)
 	select INPUT_MATRIXKMAP
 	help
 	  Say Y here if you want to use NXP LPC32XX SoC key scanner interface,
@@ -487,7 +491,11 @@ config KEYBOARD_NEWTON
 
 config KEYBOARD_NOMADIK
 	tristate "ST-Ericsson Nomadik SKE keyboard"
+<<<<<<< HEAD
 	depends on (ARCH_NOMADIK || ARCH_U8500 || COMPILE_TEST)
+=======
+	depends on (ARCH_NOMADIK || ARCH_U8500)
+>>>>>>> b7ba80a49124 (Commit)
 	select INPUT_MATRIXKMAP
 	help
 	  Say Y here if you want to use a keypad provided on the SKE controller
@@ -508,7 +516,11 @@ config KEYBOARD_NSPIRE
 
 config KEYBOARD_TEGRA
 	tristate "NVIDIA Tegra internal matrix keyboard controller support"
+<<<<<<< HEAD
 	depends on (ARCH_TEGRA && OF) || COMPILE_TEST
+=======
+	depends on ARCH_TEGRA && OF
+>>>>>>> b7ba80a49124 (Commit)
 	select INPUT_MATRIXKMAP
 	help
 	  Say Y here if you want to use a matrix keyboard connected directly
@@ -527,6 +539,7 @@ config KEYBOARD_OPENCORES
 	  To compile this driver as a module, choose M here; the
 	  module will be called opencores-kbd.
 
+<<<<<<< HEAD
 config KEYBOARD_PINEPHONE
 	tristate "Pine64 PinePhone Keyboard"
 	depends on I2C && REGULATOR
@@ -543,6 +556,11 @@ config KEYBOARD_PINEPHONE
 config KEYBOARD_PXA27x
 	tristate "PXA27x/PXA3xx keypad support"
 	depends on PXA27x || PXA3xx || ARCH_MMP || COMPILE_TEST
+=======
+config KEYBOARD_PXA27x
+	tristate "PXA27x/PXA3xx keypad support"
+	depends on PXA27x || PXA3xx || ARCH_MMP
+>>>>>>> b7ba80a49124 (Commit)
 	select INPUT_MATRIXKMAP
 	help
 	  Enable support for PXA27x/PXA3xx keypad controller.
@@ -550,6 +568,18 @@ config KEYBOARD_PXA27x
 	  To compile this driver as a module, choose M here: the
 	  module will be called pxa27x_keypad.
 
+<<<<<<< HEAD
+=======
+config KEYBOARD_PXA930_ROTARY
+	tristate "PXA930/PXA935 Enhanced Rotary Controller Support"
+	depends on CPU_PXA930 || CPU_PXA935
+	help
+	  Enable support for PXA930/PXA935 Enhanced Rotary Controller.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called pxa930_rotary.
+
+>>>>>>> b7ba80a49124 (Commit)
 config KEYBOARD_PMIC8XXX
 	tristate "Qualcomm PMIC8XXX keypad support"
 	depends on MFD_PM8XXX
@@ -557,7 +587,11 @@ config KEYBOARD_PMIC8XXX
 	help
 	  Say Y here if you want to enable the driver for the PMIC8XXX
 	  keypad provided as a reference design from Qualcomm. This is intended
+<<<<<<< HEAD
 	  to support up to 18x8 matrix-based keypad design.
+=======
+	  to support upto 18x8 matrix based keypad design.
+>>>>>>> b7ba80a49124 (Commit)
 
 	  To compile this driver as a module, choose M here: the module will
 	  be called pmic8xxx-keypad.
@@ -648,6 +682,19 @@ config KEYBOARD_SUN4I_LRADC
 	  To compile this driver as a module, choose M here: the
 	  module will be called sun4i-lradc-keys.
 
+<<<<<<< HEAD
+=======
+config KEYBOARD_DAVINCI
+	tristate "TI DaVinci Key Scan"
+	depends on ARCH_DAVINCI_DM365
+	help
+	  Say Y to enable keypad module support for the TI DaVinci
+	  platforms (DM365).
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called davinci_keyscan.
+
+>>>>>>> b7ba80a49124 (Commit)
 config KEYBOARD_IPAQ_MICRO
 	tristate "Buttons on Micro SoC (iPaq h3100,h3600,h3700)"
 	depends on MFD_IPAQ_MICRO
@@ -690,7 +737,11 @@ config KEYBOARD_OMAP4
 
 config KEYBOARD_SPEAR
 	tristate "ST SPEAR keyboard support"
+<<<<<<< HEAD
 	depends on PLAT_SPEAR || COMPILE_TEST
+=======
+	depends on PLAT_SPEAR
+>>>>>>> b7ba80a49124 (Commit)
 	select INPUT_MATRIXKMAP
 	help
 	  Say Y here if you want to use the SPEAR keyboard.

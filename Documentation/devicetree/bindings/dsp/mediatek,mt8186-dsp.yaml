@@ -15,9 +15,13 @@ description: |
 
 properties:
   compatible:
+<<<<<<< HEAD
     enum:
       - mediatek,mt8186-dsp
       - mediatek,mt8188-dsp
+=======
+    const: mediatek,mt8186-dsp
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     items:

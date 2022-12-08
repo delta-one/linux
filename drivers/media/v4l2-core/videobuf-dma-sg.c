@@ -151,16 +151,29 @@ static void videobuf_dma_init(struct videobuf_dmabuf *dma)
 static int videobuf_dma_init_user_locked(struct videobuf_dmabuf *dma,
 			int direction, unsigned long data, unsigned long size)
 {
+<<<<<<< HEAD
 	unsigned int gup_flags = FOLL_LONGTERM;
 	unsigned long first, last;
 	int err;
+=======
+	unsigned long first, last;
+	int err, rw = 0;
+	unsigned int flags = FOLL_FORCE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dma->direction = direction;
 	switch (dma->direction) {
 	case DMA_FROM_DEVICE:
+<<<<<<< HEAD
 		gup_flags |= FOLL_WRITE;
 		break;
 	case DMA_TO_DEVICE:
+=======
+		rw = READ;
+		break;
+	case DMA_TO_DEVICE:
+		rw = WRITE;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		BUG();
@@ -176,11 +189,22 @@ static int videobuf_dma_init_user_locked(struct videobuf_dmabuf *dma,
 	if (NULL == dma->pages)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	dprintk(1, "init user [0x%lx+0x%lx => %lu pages]\n",
 		data, size, dma->nr_pages);
 
 	err = pin_user_pages(data & PAGE_MASK, dma->nr_pages, gup_flags,
 			     dma->pages, NULL);
+=======
+	if (rw == READ)
+		flags |= FOLL_WRITE;
+
+	dprintk(1, "init user [0x%lx+0x%lx => %lu pages]\n",
+		data, size, dma->nr_pages);
+
+	err = pin_user_pages(data & PAGE_MASK, dma->nr_pages,
+			     flags | FOLL_LONGTERM, dma->pages, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (err != dma->nr_pages) {
 		dma->nr_pages = (err >= 0) ? err : 0;
@@ -630,8 +654,13 @@ static int __videobuf_mmap_mapper(struct videobuf_queue *q,
 	map->count    = 1;
 	map->q        = q;
 	vma->vm_ops   = &videobuf_vm_ops;
+<<<<<<< HEAD
 	/* using shared anonymous pages */
 	vm_flags_mod(vma, VM_DONTEXPAND | VM_DONTDUMP, VM_IO);
+=======
+	vma->vm_flags |= VM_DONTEXPAND | VM_DONTDUMP;
+	vma->vm_flags &= ~VM_IO; /* using shared anonymous pages */
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_private_data = map;
 	dprintk(1, "mmap %p: q=%p %08lx-%08lx pgoff %08lx bufs %d-%d\n",
 		map, q, vma->vm_start, vma->vm_end, vma->vm_pgoff, first, last);

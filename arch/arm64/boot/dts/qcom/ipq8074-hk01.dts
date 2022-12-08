@@ -1,11 +1,17 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /dts-v1/;
+<<<<<<< HEAD
 /*
  * Copyright (c) 2017, The Linux Foundation. All rights reserved.
  */
 #include "ipq8074.dtsi"
 #include "pmp8074.dtsi"
 #include <dt-bindings/gpio/gpio.h>
+=======
+/* Copyright (c) 2017, The Linux Foundation. All rights reserved.
+ */
+#include "ipq8074.dtsi"
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	model = "Qualcomm Technologies, Inc. IPQ8074-HK01";
@@ -54,12 +60,20 @@
 
 &pcie0 {
 	status = "okay";
+<<<<<<< HEAD
 	perst-gpios = <&tlmm 61 GPIO_ACTIVE_LOW>;
+=======
+	perst-gpios = <&tlmm 61 0x1>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &pcie1 {
 	status = "okay";
+<<<<<<< HEAD
 	perst-gpios = <&tlmm 58 GPIO_ACTIVE_LOW>;
+=======
+	perst-gpios = <&tlmm 58 0x1>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &pcie_phy0 {
@@ -87,7 +101,10 @@
 
 &sdhc_1 {
 	status = "okay";
+<<<<<<< HEAD
 	vqmmc-supply = <&l11>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &qusb_phy_0 {

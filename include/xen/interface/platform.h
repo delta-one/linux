@@ -483,8 +483,11 @@ struct xenpf_symdata {
 };
 DEFINE_GUEST_HANDLE_STRUCT(xenpf_symdata);
 
+<<<<<<< HEAD
 #define XENPF_get_dom0_console 64
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct xen_platform_op {
 	uint32_t cmd;
 	uint32_t interface_version; /* XENPF_INTERFACE_VERSION */
@@ -508,7 +511,10 @@ struct xen_platform_op {
 		struct xenpf_mem_hotadd        mem_add;
 		struct xenpf_core_parking      core_parking;
 		struct xenpf_symdata           symdata;
+<<<<<<< HEAD
 		struct dom0_vga_console_info   dom0_console;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		uint8_t                        pad[128];
 	} u;
 };

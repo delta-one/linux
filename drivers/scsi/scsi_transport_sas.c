@@ -722,6 +722,7 @@ int sas_phy_add(struct sas_phy *phy)
 	int error;
 
 	error = device_add(&phy->dev);
+<<<<<<< HEAD
 	if (error)
 		return error;
 
@@ -733,6 +734,14 @@ int sas_phy_add(struct sas_phy *phy)
 	transport_configure_device(&phy->dev);
 
 	return 0;
+=======
+	if (!error) {
+		transport_add_device(&phy->dev);
+		transport_configure_device(&phy->dev);
+	}
+
+	return error;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(sas_phy_add);
 

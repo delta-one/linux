@@ -27,6 +27,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	gpio@6000d000 {
 		lan-reset-n-hog {
 			gpio-hog;
@@ -52,6 +53,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinmux@70000014 {
 		pinctrl-names = "default";
 		pinctrl-0 = <&state_default>;
@@ -730,16 +733,23 @@
 		vbus-supply = <&reg_lan_v_bus>;
 	};
 
+<<<<<<< HEAD
 	clk32k_in: clock-xtal3 {
+=======
+	clk32k_in: xtal3 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		clock-frequency = <32768>;
 	};
 
+<<<<<<< HEAD
 	opp-table-emc {
 		/delete-node/ opp-760000000;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	reg_lan_v_bus: regulator-lan-v-bus {
 		compatible = "regulator-fixed";
 		regulator-name = "LAN_V_BUS";
@@ -774,3 +784,35 @@
 		clock-names = "pll_a", "pll_a_out0", "mclk";
 	};
 };
+<<<<<<< HEAD
+=======
+
+&emc_icc_dvfs_opp_table {
+	/delete-node/ opp-760000000;
+};
+
+&gpio {
+	lan-reset-n-hog {
+		gpio-hog;
+		gpios = <TEGRA_GPIO(V, 4) GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "LAN_RESET#";
+	};
+
+	/* Tri-stating GMI_WR_N on SODIMM pin 99 nPWE */
+	npwe-hog {
+		gpio-hog;
+		gpios = <TEGRA_GPIO(T, 5) GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "Tri-state nPWE";
+	};
+
+	/* Not tri-stating GMI_WR_N on SODIMM pin 93 RDnWR */
+	rdnwr-hog {
+		gpio-hog;
+		gpios = <TEGRA_GPIO(T, 6) GPIO_ACTIVE_HIGH>;
+		output-low;
+		line-name = "Not tri-state RDnWR";
+	};
+};
+>>>>>>> b7ba80a49124 (Commit)

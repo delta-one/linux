@@ -39,6 +39,12 @@ MODULE_PARM_DESC(trace, "Trace level bitmask");
 
 /* string IDs are assigned dynamically */
 
+<<<<<<< HEAD
+=======
+#define UVC_STRING_CONTROL_IDX			0
+#define UVC_STRING_STREAMING_IDX		1
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct usb_string uvc_en_us_strings[] = {
 	/* [UVC_STRING_CONTROL_IDX].s = DYNAMIC, */
 	[UVC_STRING_STREAMING_IDX].s = "Video Streaming",
@@ -76,14 +82,22 @@ static struct usb_interface_descriptor uvc_control_intf = {
 	.bDescriptorType	= USB_DT_INTERFACE,
 	.bInterfaceNumber	= UVC_INTF_VIDEO_CONTROL,
 	.bAlternateSetting	= 0,
+<<<<<<< HEAD
 	.bNumEndpoints		= 0,
+=======
+	.bNumEndpoints		= 1,
+>>>>>>> b7ba80a49124 (Commit)
 	.bInterfaceClass	= USB_CLASS_VIDEO,
 	.bInterfaceSubClass	= UVC_SC_VIDEOCONTROL,
 	.bInterfaceProtocol	= 0x00,
 	.iInterface		= 0,
 };
 
+<<<<<<< HEAD
 static struct usb_endpoint_descriptor uvc_interrupt_ep = {
+=======
+static struct usb_endpoint_descriptor uvc_control_ep = {
+>>>>>>> b7ba80a49124 (Commit)
 	.bLength		= USB_DT_ENDPOINT_SIZE,
 	.bDescriptorType	= USB_DT_ENDPOINT,
 	.bEndpointAddress	= USB_DIR_IN,
@@ -92,8 +106,13 @@ static struct usb_endpoint_descriptor uvc_interrupt_ep = {
 	.bInterval		= 8,
 };
 
+<<<<<<< HEAD
 static struct usb_ss_ep_comp_descriptor uvc_ss_interrupt_comp = {
 	.bLength		= sizeof(uvc_ss_interrupt_comp),
+=======
+static struct usb_ss_ep_comp_descriptor uvc_ss_control_comp = {
+	.bLength		= sizeof(uvc_ss_control_comp),
+>>>>>>> b7ba80a49124 (Commit)
 	.bDescriptorType	= USB_DT_SS_ENDPOINT_COMP,
 	/* The following 3 values can be tweaked if necessary. */
 	.bMaxBurst		= 0,
@@ -101,7 +120,11 @@ static struct usb_ss_ep_comp_descriptor uvc_ss_interrupt_comp = {
 	.wBytesPerInterval	= cpu_to_le16(UVC_STATUS_MAX_PACKET_SIZE),
 };
 
+<<<<<<< HEAD
 static struct uvc_control_endpoint_descriptor uvc_interrupt_cs_ep = {
+=======
+static struct uvc_control_endpoint_descriptor uvc_control_cs_ep = {
+>>>>>>> b7ba80a49124 (Commit)
 	.bLength		= UVC_DT_CONTROL_ENDPOINT_SIZE,
 	.bDescriptorType	= USB_DT_CS_ENDPOINT,
 	.bDescriptorSubType	= UVC_EP_INTERRUPT,
@@ -213,9 +236,14 @@ uvc_function_ep0_complete(struct usb_ep *ep, struct usb_request *req)
 
 		memset(&v4l2_event, 0, sizeof(v4l2_event));
 		v4l2_event.type = UVC_EVENT_DATA;
+<<<<<<< HEAD
 		uvc_event->data.length = min_t(unsigned int, req->actual,
 			sizeof(uvc_event->data.data));
 		memcpy(&uvc_event->data.data, req->buf, uvc_event->data.length);
+=======
+		uvc_event->data.length = req->actual;
+		memcpy(&uvc_event->data.data, req->buf, req->actual);
+>>>>>>> b7ba80a49124 (Commit)
 		v4l2_event_queue(&uvc->vdev, &v4l2_event);
 	}
 }
@@ -226,8 +254,11 @@ uvc_function_setup(struct usb_function *f, const struct usb_ctrlrequest *ctrl)
 	struct uvc_device *uvc = to_uvc(f);
 	struct v4l2_event v4l2_event;
 	struct uvc_event *uvc_event = (void *)&v4l2_event.u.data;
+<<<<<<< HEAD
 	unsigned int interface = le16_to_cpu(ctrl->wIndex) & 0xff;
 	struct usb_ctrlrequest *mctrl;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if ((ctrl->bRequestType & USB_TYPE_MASK) != USB_TYPE_CLASS) {
 		uvcg_info(f, "invalid request type\n");
@@ -248,6 +279,7 @@ uvc_function_setup(struct usb_function *f, const struct usb_ctrlrequest *ctrl)
 	memset(&v4l2_event, 0, sizeof(v4l2_event));
 	v4l2_event.type = UVC_EVENT_SETUP;
 	memcpy(&uvc_event->req, ctrl, sizeof(uvc_event->req));
+<<<<<<< HEAD
 
 	/* check for the interface number, fixup the interface number in
 	 * the ctrl request so the userspace doesn't have to bother with
@@ -258,6 +290,8 @@ uvc_function_setup(struct usb_function *f, const struct usb_ctrlrequest *ctrl)
 	if (interface == uvc->streaming_intf)
 		mctrl->wIndex = cpu_to_le16(UVC_STRING_STREAMING_IDX);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	v4l2_event_queue(&uvc->vdev, &v4l2_event);
 
 	return 0;
@@ -300,6 +334,7 @@ uvc_function_set_alt(struct usb_function *f, unsigned interface, unsigned alt)
 		if (alt)
 			return -EINVAL;
 
+<<<<<<< HEAD
 		if (uvc->enable_interrupt_ep) {
 			uvcg_info(f, "reset UVC interrupt endpoint\n");
 			usb_ep_disable(uvc->interrupt_ep);
@@ -311,6 +346,16 @@ uvc_function_set_alt(struct usb_function *f, unsigned interface, unsigned alt)
 
 			usb_ep_enable(uvc->interrupt_ep);
 		}
+=======
+		uvcg_info(f, "reset UVC Control\n");
+		usb_ep_disable(uvc->control_ep);
+
+		if (!uvc->control_ep->desc)
+			if (config_ep_by_speed(cdev->gadget, f, uvc->control_ep))
+				return -EINVAL;
+
+		usb_ep_enable(uvc->control_ep);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (uvc->state == UVC_STATE_DISCONNECTED) {
 			memset(&v4l2_event, 0, sizeof(v4l2_event));
@@ -388,8 +433,12 @@ uvc_function_disable(struct usb_function *f)
 	uvc->state = UVC_STATE_DISCONNECTED;
 
 	usb_ep_disable(uvc->video.ep);
+<<<<<<< HEAD
 	if (uvc->enable_interrupt_ep)
 		usb_ep_disable(uvc->interrupt_ep);
+=======
+	usb_ep_disable(uvc->control_ep);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* --------------------------------------------------------------------------
@@ -435,7 +484,11 @@ uvc_register_video(struct uvc_device *uvc)
 	int ret;
 
 	/* TODO reference counting. */
+<<<<<<< HEAD
 	memset(&uvc->vdev, 0, sizeof(uvc->vdev));
+=======
+	memset(&uvc->vdev, 0, sizeof(uvc->video));
+>>>>>>> b7ba80a49124 (Commit)
 	uvc->vdev.v4l2_dev = &uvc->v4l2_dev;
 	uvc->vdev.v4l2_dev->dev = &cdev->gadget->dev;
 	uvc->vdev.fops = &uvc_v4l2_fops;
@@ -478,6 +531,7 @@ uvc_register_video(struct uvc_device *uvc)
 		} \
 	} while (0)
 
+<<<<<<< HEAD
 #define UVC_COPY_XU_DESCRIPTOR(mem, dst, desc)					\
 	do {									\
 		*(dst)++ = mem;							\
@@ -497,6 +551,8 @@ uvc_register_video(struct uvc_device *uvc)
 		mem++;								\
 	} while (0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct usb_descriptor_header **
 uvc_copy_descriptors(struct uvc_device *uvc, enum usb_device_speed speed)
 {
@@ -508,7 +564,10 @@ uvc_copy_descriptors(struct uvc_device *uvc, enum usb_device_speed speed)
 	const struct usb_descriptor_header * const *src;
 	struct usb_descriptor_header **dst;
 	struct usb_descriptor_header **hdr;
+<<<<<<< HEAD
 	struct uvcg_extension *xu;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int control_size;
 	unsigned int streaming_size;
 	unsigned int n_desc;
@@ -545,9 +604,15 @@ uvc_copy_descriptors(struct uvc_device *uvc, enum usb_device_speed speed)
 	 * uvc_iad
 	 * uvc_control_intf
 	 * Class-specific UVC control descriptors
+<<<<<<< HEAD
 	 * uvc_interrupt_ep
 	 * uvc_interrupt_cs_ep
 	 * uvc_ss_interrupt_comp (for SS only)
+=======
+	 * uvc_control_ep
+	 * uvc_control_cs_ep
+	 * uvc_ss_control_comp (for SS only)
+>>>>>>> b7ba80a49124 (Commit)
 	 * uvc_streaming_intf_alt0
 	 * Class-specific UVC streaming descriptors
 	 * uvc_{fs|hs}_streaming
@@ -557,6 +622,7 @@ uvc_copy_descriptors(struct uvc_device *uvc, enum usb_device_speed speed)
 	control_size = 0;
 	streaming_size = 0;
 	bytes = uvc_iad.bLength + uvc_control_intf.bLength
+<<<<<<< HEAD
 	      + uvc_streaming_intf_alt0.bLength;
 
 	n_desc = 3;
@@ -568,6 +634,16 @@ uvc_copy_descriptors(struct uvc_device *uvc, enum usb_device_speed speed)
 			bytes += uvc_ss_interrupt_comp.bLength;
 			n_desc += 1;
 		}
+=======
+	      + uvc_control_ep.bLength + uvc_control_cs_ep.bLength
+	      + uvc_streaming_intf_alt0.bLength;
+
+	if (speed == USB_SPEED_SUPER) {
+		bytes += uvc_ss_control_comp.bLength;
+		n_desc = 6;
+	} else {
+		n_desc = 5;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (src = (const struct usb_descriptor_header **)uvc_control_desc;
@@ -576,6 +652,7 @@ uvc_copy_descriptors(struct uvc_device *uvc, enum usb_device_speed speed)
 		bytes += (*src)->bLength;
 		n_desc++;
 	}
+<<<<<<< HEAD
 
 	list_for_each_entry(xu, uvc->desc.extension_units, list) {
 		control_size += xu->desc.bLength;
@@ -583,6 +660,8 @@ uvc_copy_descriptors(struct uvc_device *uvc, enum usb_device_speed speed)
 		n_desc++;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (src = (const struct usb_descriptor_header **)uvc_streaming_cls;
 	     *src; ++src) {
 		streaming_size += (*src)->bLength;
@@ -609,14 +688,18 @@ uvc_copy_descriptors(struct uvc_device *uvc, enum usb_device_speed speed)
 	uvc_control_header = mem;
 	UVC_COPY_DESCRIPTORS(mem, dst,
 		(const struct usb_descriptor_header **)uvc_control_desc);
+<<<<<<< HEAD
 
 	list_for_each_entry(xu, uvc->desc.extension_units, list)
 		UVC_COPY_XU_DESCRIPTOR(mem, dst, &xu->desc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	uvc_control_header->wTotalLength = cpu_to_le16(control_size);
 	uvc_control_header->bInCollection = 1;
 	uvc_control_header->baInterfaceNr[0] = uvc->streaming_intf;
 
+<<<<<<< HEAD
 	if (uvc->enable_interrupt_ep) {
 		UVC_COPY_DESCRIPTOR(mem, dst, &uvc_interrupt_ep);
 		if (speed == USB_SPEED_SUPER)
@@ -625,6 +708,13 @@ uvc_copy_descriptors(struct uvc_device *uvc, enum usb_device_speed speed)
 		UVC_COPY_DESCRIPTOR(mem, dst, &uvc_interrupt_cs_ep);
 	}
 
+=======
+	UVC_COPY_DESCRIPTOR(mem, dst, &uvc_control_ep);
+	if (speed == USB_SPEED_SUPER)
+		UVC_COPY_DESCRIPTOR(mem, dst, &uvc_ss_control_comp);
+
+	UVC_COPY_DESCRIPTOR(mem, dst, &uvc_control_cs_ep);
+>>>>>>> b7ba80a49124 (Commit)
 	UVC_COPY_DESCRIPTOR(mem, dst, &uvc_streaming_intf_alt0);
 
 	uvc_streaming_header = mem;
@@ -644,7 +734,10 @@ uvc_function_bind(struct usb_configuration *c, struct usb_function *f)
 {
 	struct usb_composite_dev *cdev = c->cdev;
 	struct uvc_device *uvc = to_uvc(f);
+<<<<<<< HEAD
 	struct uvcg_extension *xu;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct usb_string *us;
 	unsigned int max_packet_mult;
 	unsigned int max_packet_size;
@@ -708,6 +801,7 @@ uvc_function_bind(struct usb_configuration *c, struct usb_function *f)
 			    (opts->streaming_maxburst + 1));
 
 	/* Allocate endpoints. */
+<<<<<<< HEAD
 	if (opts->enable_interrupt_ep) {
 		ep = usb_ep_autoconfig(cdev->gadget, &uvc_interrupt_ep);
 		if (!ep) {
@@ -718,6 +812,14 @@ uvc_function_bind(struct usb_configuration *c, struct usb_function *f)
 		uvc_control_intf.bNumEndpoints = 1;
 	}
 	uvc->enable_interrupt_ep = opts->enable_interrupt_ep;
+=======
+	ep = usb_ep_autoconfig(cdev->gadget, &uvc_control_ep);
+	if (!ep) {
+		uvcg_info(f, "Unable to allocate control EP\n");
+		goto error;
+	}
+	uvc->control_ep = ep;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (gadget_is_superspeed(c->cdev->gadget))
 		ep = usb_ep_autoconfig_ss(cdev->gadget, &uvc_ss_streaming_ep,
@@ -737,6 +839,7 @@ uvc_function_bind(struct usb_configuration *c, struct usb_function *f)
 	uvc_hs_streaming_ep.bEndpointAddress = uvc->video.ep->address;
 	uvc_ss_streaming_ep.bEndpointAddress = uvc->video.ep->address;
 
+<<<<<<< HEAD
 	/*
 	 * XUs can have an arbitrary string descriptor describing them. If they
 	 * have one pick up the ID.
@@ -749,6 +852,8 @@ uvc_function_bind(struct usb_configuration *c, struct usb_function *f)
 	 * We attach the hard-coded defaults incase the user does not provide
 	 * any more appropriate strings through configfs.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	uvc_en_us_strings[UVC_STRING_CONTROL_IDX].s = opts->function_name;
 	us = usb_gstrings_attach(cdev, uvc_function_strings,
 				 ARRAY_SIZE(uvc_en_us_strings));
@@ -756,6 +861,7 @@ uvc_function_bind(struct usb_configuration *c, struct usb_function *f)
 		ret = PTR_ERR(us);
 		goto error;
 	}
+<<<<<<< HEAD
 
 	uvc_iad.iFunction = opts->iad_index ? cdev->usb_strings[opts->iad_index].id :
 			    us[UVC_STRING_CONTROL_IDX].id;
@@ -765,6 +871,13 @@ uvc_function_bind(struct usb_configuration *c, struct usb_function *f)
 	uvc_streaming_intf_alt1.iInterface = opts->vs1_index ?
 					     cdev->usb_strings[opts->vs1_index].id :
 					     us[UVC_STRING_STREAMING_IDX].id;
+=======
+	uvc_iad.iFunction = us[UVC_STRING_CONTROL_IDX].id;
+	uvc_control_intf.iInterface = us[UVC_STRING_CONTROL_IDX].id;
+	ret = us[UVC_STRING_STREAMING_IDX].id;
+	uvc_streaming_intf_alt0.iInterface = ret;
+	uvc_streaming_intf_alt1.iInterface = ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Allocate interface IDs. */
 	if ((ret = usb_interface_id(c, f)) < 0)
@@ -865,6 +978,10 @@ static struct usb_function_instance *uvc_alloc_inst(void)
 	struct uvc_camera_terminal_descriptor *cd;
 	struct uvc_processing_unit_descriptor *pd;
 	struct uvc_output_terminal_descriptor *od;
+<<<<<<< HEAD
+=======
+	struct uvc_color_matching_descriptor *md;
+>>>>>>> b7ba80a49124 (Commit)
 	struct uvc_descriptor_header **ctl_cls;
 	int ret;
 
@@ -913,12 +1030,22 @@ static struct usb_function_instance *uvc_alloc_inst(void)
 	od->bSourceID			= 2;
 	od->iTerminal			= 0;
 
+<<<<<<< HEAD
 	/*
 	 * With the ability to add XUs to the UVC function graph, we need to be
 	 * able to allocate unique unit IDs to them. The IDs are 1-based, with
 	 * the CT, PU and OT above consuming the first 3.
 	 */
 	opts->last_unit_id		= 3;
+=======
+	md = &opts->uvc_color_matching;
+	md->bLength			= UVC_DT_COLOR_MATCHING_SIZE;
+	md->bDescriptorType		= USB_DT_CS_INTERFACE;
+	md->bDescriptorSubType		= UVC_VS_COLORFORMAT;
+	md->bColorPrimaries		= 1;
+	md->bTransferCharacteristics	= 1;
+	md->bMatrixCoefficients		= 4;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Prepare fs control class descriptors for configfs-based gadgets */
 	ctl_cls = opts->uvc_fs_control_cls;
@@ -940,8 +1067,11 @@ static struct usb_function_instance *uvc_alloc_inst(void)
 	opts->ss_control =
 		(const struct uvc_descriptor_header * const *)ctl_cls;
 
+<<<<<<< HEAD
 	INIT_LIST_HEAD(&opts->extension_units);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	opts->streaming_interval = 1;
 	opts->streaming_maxpacket = 1024;
 	snprintf(opts->function_name, sizeof(opts->function_name), "UVC Camera");
@@ -960,7 +1090,10 @@ static void uvc_free(struct usb_function *f)
 	struct uvc_device *uvc = to_uvc(f);
 	struct f_uvc_opts *opts = container_of(f->fi, struct f_uvc_opts,
 					       func_inst);
+<<<<<<< HEAD
 	config_item_put(&uvc->header->item);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	--opts->refcnt;
 	kfree(uvc);
 }
@@ -1018,7 +1151,10 @@ static struct usb_function *uvc_alloc(struct usb_function_instance *fi)
 	struct uvc_device *uvc;
 	struct f_uvc_opts *opts;
 	struct uvc_descriptor_header **strm_cls;
+<<<<<<< HEAD
 	struct config_item *streaming, *header, *h;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	uvc = kzalloc(sizeof(*uvc), GFP_KERNEL);
 	if (uvc == NULL)
@@ -1051,6 +1187,7 @@ static struct usb_function *uvc_alloc(struct usb_function_instance *fi)
 	uvc->desc.fs_streaming = opts->fs_streaming;
 	uvc->desc.hs_streaming = opts->hs_streaming;
 	uvc->desc.ss_streaming = opts->ss_streaming;
+<<<<<<< HEAD
 
 	streaming = config_group_find_item(&opts->func_inst.group, "streaming");
 	if (!streaming)
@@ -1075,6 +1212,8 @@ static struct usb_function *uvc_alloc(struct usb_function_instance *fi)
 
 	uvc->desc.extension_units = &opts->extension_units;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	++opts->refcnt;
 	mutex_unlock(&opts->lock);
 
@@ -1090,11 +1229,14 @@ static struct usb_function *uvc_alloc(struct usb_function_instance *fi)
 	uvc->func.bind_deactivated = true;
 
 	return &uvc->func;
+<<<<<<< HEAD
 
 err_config:
 	mutex_unlock(&opts->lock);
 	kfree(uvc);
 	return ERR_PTR(-ENOENT);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 DECLARE_USB_FUNCTION_INIT(uvc, uvc_alloc_inst, uvc_alloc);

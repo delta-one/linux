@@ -22,6 +22,7 @@
 		#address-cells = <2>;
 		#size-cells = <0>;
 
+<<<<<<< HEAD
 		cpu-map {
 			cluster0 {
 				core0 {
@@ -55,11 +56,15 @@
 		};
 
 		cpu_e0: cpu@0 {
+=======
+		cpu0: cpu@0 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "apple,icestorm";
 			device_type = "cpu";
 			reg = <0x0 0x0>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			operating-points-v2 = <&ecluster_opp>;
 			capacity-dmips-mhz = <714>;
 			performance-domains = <&cpufreq_e>;
@@ -69,11 +74,17 @@
 		};
 
 		cpu_e1: cpu@1 {
+=======
+		};
+
+		cpu1: cpu@1 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "apple,icestorm";
 			device_type = "cpu";
 			reg = <0x0 0x1>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			operating-points-v2 = <&ecluster_opp>;
 			capacity-dmips-mhz = <714>;
 			performance-domains = <&cpufreq_e>;
@@ -83,11 +94,17 @@
 		};
 
 		cpu_e2: cpu@2 {
+=======
+		};
+
+		cpu2: cpu@2 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "apple,icestorm";
 			device_type = "cpu";
 			reg = <0x0 0x2>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			operating-points-v2 = <&ecluster_opp>;
 			capacity-dmips-mhz = <714>;
 			performance-domains = <&cpufreq_e>;
@@ -97,11 +114,17 @@
 		};
 
 		cpu_e3: cpu@3 {
+=======
+		};
+
+		cpu3: cpu@3 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "apple,icestorm";
 			device_type = "cpu";
 			reg = <0x0 0x3>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			operating-points-v2 = <&ecluster_opp>;
 			capacity-dmips-mhz = <714>;
 			performance-domains = <&cpufreq_e>;
@@ -111,11 +134,17 @@
 		};
 
 		cpu_p0: cpu@10100 {
+=======
+		};
+
+		cpu4: cpu@10100 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "apple,firestorm";
 			device_type = "cpu";
 			reg = <0x0 0x10100>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			operating-points-v2 = <&pcluster_opp>;
 			capacity-dmips-mhz = <1024>;
 			performance-domains = <&cpufreq_p>;
@@ -125,11 +154,17 @@
 		};
 
 		cpu_p1: cpu@10101 {
+=======
+		};
+
+		cpu5: cpu@10101 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "apple,firestorm";
 			device_type = "cpu";
 			reg = <0x0 0x10101>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			operating-points-v2 = <&pcluster_opp>;
 			capacity-dmips-mhz = <1024>;
 			performance-domains = <&cpufreq_p>;
@@ -139,11 +174,17 @@
 		};
 
 		cpu_p2: cpu@10102 {
+=======
+		};
+
+		cpu6: cpu@10102 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "apple,firestorm";
 			device_type = "cpu";
 			reg = <0x0 0x10102>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			operating-points-v2 = <&pcluster_opp>;
 			capacity-dmips-mhz = <1024>;
 			performance-domains = <&cpufreq_p>;
@@ -153,11 +194,17 @@
 		};
 
 		cpu_p3: cpu@10103 {
+=======
+		};
+
+		cpu7: cpu@10103 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "apple,firestorm";
 			device_type = "cpu";
 			reg = <0x0 0x10103>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			operating-points-v2 = <&pcluster_opp>;
 			capacity-dmips-mhz = <1024>;
 			performance-domains = <&cpufreq_p>;
@@ -295,6 +342,9 @@
 			turbo-mode;
 		};
 #endif
+=======
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	timer {
@@ -344,6 +394,7 @@
 		ranges;
 		nonposted-mmio;
 
+<<<<<<< HEAD
 		cpufreq_e: performance-controller@210e20000 {
 			compatible = "apple,t8103-cluster-cpufreq", "apple,cluster-cpufreq";
 			reg = <0x2 0x10e20000 0 0x1000>;
@@ -357,6 +408,9 @@
 		};
 
 		sio_dart: iommu@235004000 {
+=======
+		dart_sio: iommu@235004000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "apple,t8103-dart";
 			reg = <0x2 0x35004000 0x0 0x4000>;
 			interrupt-parent = <&aic>;
@@ -469,7 +523,11 @@
 					      <0>,
 					      <0>;
 			#dma-cells = <1>;
+<<<<<<< HEAD
 			iommus = <&sio_dart 2>;
+=======
+			iommus = <&dart_sio 2>;
+>>>>>>> b7ba80a49124 (Commit)
 			power-domains = <&ps_sio_adma>;
 			resets = <&ps_audio_p>;
 		};
@@ -525,12 +583,20 @@
 			affinities {
 				e-core-pmu-affinity {
 					apple,fiq-index = <AIC_CPU_PMU_E>;
+<<<<<<< HEAD
 					cpus = <&cpu_e0 &cpu_e1 &cpu_e2 &cpu_e3>;
+=======
+					cpus = <&cpu0 &cpu1 &cpu2 &cpu3>;
+>>>>>>> b7ba80a49124 (Commit)
 				};
 
 				p-core-pmu-affinity {
 					apple,fiq-index = <AIC_CPU_PMU_P>;
+<<<<<<< HEAD
 					cpus = <&cpu_p0 &cpu_p1 &cpu_p2 &cpu_p3>;
+=======
+					cpus = <&cpu4 &cpu5 &cpu6 &cpu7>;
+>>>>>>> b7ba80a49124 (Commit)
 				};
 			};
 		};
@@ -708,7 +774,11 @@
 			resets = <&ps_ans2>;
 		};
 
+<<<<<<< HEAD
 		pcie0_dart_0: iommu@681008000 {
+=======
+		pcie0_dart_0: dart@681008000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "apple,t8103-dart";
 			reg = <0x6 0x81008000 0x0 0x4000>;
 			#iommu-cells = <1>;
@@ -717,7 +787,11 @@
 			power-domains = <&ps_apcie_gp>;
 		};
 
+<<<<<<< HEAD
 		pcie0_dart_1: iommu@682008000 {
+=======
+		pcie0_dart_1: dart@682008000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "apple,t8103-dart";
 			reg = <0x6 0x82008000 0x0 0x4000>;
 			#iommu-cells = <1>;
@@ -726,7 +800,11 @@
 			power-domains = <&ps_apcie_gp>;
 		};
 
+<<<<<<< HEAD
 		pcie0_dart_2: iommu@683008000 {
+=======
+		pcie0_dart_2: dart@683008000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "apple,t8103-dart";
 			reg = <0x6 0x83008000 0x0 0x4000>;
 			#iommu-cells = <1>;

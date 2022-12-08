@@ -20,7 +20,11 @@ Overview of the ``pldmfw`` library
 
 The ``pldmfw`` library is intended to be used by device drivers for
 implementing device flash update based on firmware files following the PLDM
+<<<<<<< HEAD
 firmware file format.
+=======
+firwmare file format.
+>>>>>>> b7ba80a49124 (Commit)
 
 It is implemented using an ops table that allows device drivers to provide
 the underlying device specific functionality.

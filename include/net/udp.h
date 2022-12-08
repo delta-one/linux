@@ -174,6 +174,7 @@ INDIRECT_CALLABLE_DECLARE(int udpv6_rcv(struct sk_buff *));
 struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
 				  netdev_features_t features, bool is_ipv6);
 
+<<<<<<< HEAD
 static inline void udp_lib_init_sock(struct sock *sk)
 {
 	struct udp_sock *up = udp_sk(sk);
@@ -183,6 +184,8 @@ static inline void udp_lib_init_sock(struct sock *sk)
 	set_bit(SOCK_CUSTOM_SOCKOPT, &sk->sk_socket->flags);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* hash routines shared between UDPv4/6 and UDP-Litev4/6 */
 static inline int udp_lib_hash(struct sock *sk)
 {
@@ -256,7 +259,11 @@ static inline bool udp_sk_bound_dev_eq(struct net *net, int bound_dev_if,
 }
 
 /* net/ipv4/udp.c */
+<<<<<<< HEAD
 void udp_destruct_common(struct sock *sk);
+=======
+void udp_destruct_sock(struct sock *sk);
+>>>>>>> b7ba80a49124 (Commit)
 void skb_consume_udp(struct sock *sk, struct sk_buff *skb, int len);
 int __udp_enqueue_schedule_skb(struct sock *sk, struct sk_buff *skb);
 void udp_skb_destructor(struct sock *sk, struct sk_buff *skb);

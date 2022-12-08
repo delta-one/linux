@@ -1123,7 +1123,11 @@ static int sa1111_probe(struct platform_device *pdev)
 	return __sa1111_probe(&pdev->dev, mem, irq);
 }
 
+<<<<<<< HEAD
 static void sa1111_remove(struct platform_device *pdev)
+=======
+static int sa1111_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sa1111 *sachip = platform_get_drvdata(pdev);
 
@@ -1135,6 +1139,11 @@ static void sa1111_remove(struct platform_device *pdev)
 		__sa1111_remove(sachip);
 		platform_set_drvdata(pdev, NULL);
 	}
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct dev_pm_ops sa1111_pm_ops = {
@@ -1153,7 +1162,11 @@ static struct dev_pm_ops sa1111_pm_ops = {
  */
 static struct platform_driver sa1111_device_driver = {
 	.probe		= sa1111_probe,
+<<<<<<< HEAD
 	.remove_new	= sa1111_remove,
+=======
+	.remove		= sa1111_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "sa1111",
 		.pm	= &sa1111_pm_ops,

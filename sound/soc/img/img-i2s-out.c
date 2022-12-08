@@ -532,11 +532,20 @@ err_pm_disable:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void img_i2s_out_dev_remove(struct platform_device *pdev)
+=======
+static int img_i2s_out_dev_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pm_runtime_disable(&pdev->dev);
 	if (!pm_runtime_status_suspended(&pdev->dev))
 		img_i2s_out_runtime_suspend(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -607,7 +616,11 @@ static struct platform_driver img_i2s_out_driver = {
 		.pm = &img_i2s_out_pm_ops
 	},
 	.probe = img_i2s_out_probe,
+<<<<<<< HEAD
 	.remove_new = img_i2s_out_dev_remove
+=======
+	.remove = img_i2s_out_dev_remove
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(img_i2s_out_driver);
 

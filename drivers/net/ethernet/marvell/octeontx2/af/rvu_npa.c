@@ -4,7 +4,11 @@
  * Copyright (C) 2018 Marvell.
  *
  */
+<<<<<<< HEAD
 #include <linux/bitfield.h>
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/pci.h>
 
@@ -42,6 +46,7 @@ static int npa_aq_enqueue_wait(struct rvu *rvu, struct rvu_block *block,
 			return -EBUSY;
 	}
 
+<<<<<<< HEAD
 	if (result->compcode != NPA_AQ_COMP_GOOD) {
 		/* TODO: Replace this with some error code */
 		if (result->compcode == NPA_AQ_COMP_CTX_FAULT ||
@@ -54,6 +59,11 @@ static int npa_aq_enqueue_wait(struct rvu *rvu, struct rvu_block *block,
 
 		return -EBUSY;
 	}
+=======
+	if (result->compcode != NPA_AQ_COMP_GOOD)
+		/* TODO: Replace this with some error code */
+		return -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -554,6 +564,7 @@ void rvu_npa_lf_teardown(struct rvu *rvu, u16 pcifunc, int npalf)
 
 	npa_ctx_free(rvu, pfvf);
 }
+<<<<<<< HEAD
 
 /* Due to an Hardware errata, in some corner cases, AQ context lock
  * operations can result in a NDC way getting into an illegal state
@@ -599,3 +610,5 @@ int rvu_ndc_fix_locked_cacheline(struct rvu *rvu, int blkaddr)
 
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -6,7 +6,10 @@
 
 #include <linux/clk-provider.h>
 #include <linux/gpio/machine.h>
+<<<<<<< HEAD
 #include <linux/leds.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regulator/driver.h>
 #include <linux/regulator/machine.h>
 #include <linux/types.h>
@@ -29,8 +32,11 @@
 #define GPIO_REGULATOR_NAME_LENGTH				21
 #define GPIO_REGULATOR_SUPPLY_NAME_LENGTH			9
 
+<<<<<<< HEAD
 #define INT3472_LED_MAX_NAME_LEN				32
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CIO2_SENSOR_SSDB_MCLKSPEED_OFFSET			86
 
 #define INT3472_REGULATOR(_name, _supply, _ops)			\
@@ -99,6 +105,7 @@ struct int3472_discrete_device {
 		struct clk_hw clk_hw;
 		struct clk_lookup *cl;
 		struct gpio_desc *ena_gpio;
+<<<<<<< HEAD
 		u32 frequency;
 	} clock;
 
@@ -109,6 +116,12 @@ struct int3472_discrete_device {
 		struct gpio_desc *gpio;
 	} pled;
 
+=======
+		struct gpio_desc *led_gpio;
+		u32 frequency;
+	} clock;
+
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int ngpios; /* how many GPIOs have we seen */
 	unsigned int n_sensor_gpios; /* how many have we mapped to sensor */
 	struct gpiod_lookup_table gpios;
@@ -121,16 +134,23 @@ int skl_int3472_get_sensor_adev_and_name(struct device *dev,
 					 struct acpi_device **sensor_adev_ret,
 					 const char **name_ret);
 
+<<<<<<< HEAD
 int skl_int3472_register_clock(struct int3472_discrete_device *int3472,
 			       struct acpi_resource_gpio *agpio, u32 polarity);
+=======
+int skl_int3472_register_clock(struct int3472_discrete_device *int3472);
+>>>>>>> b7ba80a49124 (Commit)
 void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472);
 
 int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
 				   struct acpi_resource_gpio *agpio);
 void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472);
 
+<<<<<<< HEAD
 int skl_int3472_register_pled(struct int3472_discrete_device *int3472,
 			      struct acpi_resource_gpio *agpio, u32 polarity);
 void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

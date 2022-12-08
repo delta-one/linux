@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/clock/imx8m-clock.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: NXP i.MX8M Family Clock Control Module
+=======
+title: NXP i.MX8M Family Clock Control Module Binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Anson Huang <Anson.Huang@nxp.com>
@@ -108,7 +112,11 @@ examples:
     };
 
   - |
+<<<<<<< HEAD
     clock-controller@30380000 {
+=======
+    clock-controller@30390000 {
+>>>>>>> b7ba80a49124 (Commit)
         compatible = "fsl,imx8mq-ccm";
         reg = <0x30380000 0x10000>;
         #clock-cells = <1>;

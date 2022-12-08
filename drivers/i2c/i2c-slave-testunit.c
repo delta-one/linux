@@ -171,7 +171,11 @@ static struct i2c_driver i2c_slave_testunit_driver = {
 	.driver = {
 		.name = "i2c-slave-testunit",
 	},
+<<<<<<< HEAD
 	.probe = i2c_slave_testunit_probe,
+=======
+	.probe_new = i2c_slave_testunit_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = i2c_slave_testunit_remove,
 	.id_table = i2c_slave_testunit_id,
 };

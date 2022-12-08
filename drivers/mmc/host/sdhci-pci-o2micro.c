@@ -32,7 +32,10 @@
 #define O2_SD_CAPS		0xE0
 #define O2_SD_ADMA1		0xE2
 #define O2_SD_ADMA2		0xE7
+<<<<<<< HEAD
 #define O2_SD_MISC_CTRL2	0xF0
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define O2_SD_INF_MOD		0xF1
 #define O2_SD_MISC_CTRL4	0xFC
 #define O2_SD_MISC_CTRL		0x1C0
@@ -326,7 +329,12 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
 		(host->timing != MMC_TIMING_UHS_SDR50))
 		return sdhci_execute_tuning(mmc, opcode);
 
+<<<<<<< HEAD
 	if (WARN_ON(!mmc_op_tuning(opcode)))
+=======
+	if (WARN_ON((opcode != MMC_SEND_TUNING_BLOCK_HS200) &&
+			(opcode != MMC_SEND_TUNING_BLOCK)))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	/* Force power mode enter L0 */
@@ -339,6 +347,7 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
 	reg_val &= ~SDHCI_CLOCK_CARD_EN;
 	sdhci_writew(host, reg_val, SDHCI_CLOCK_CONTROL);
 
+<<<<<<< HEAD
 	if ((host->timing == MMC_TIMING_MMC_HS200) ||
 		(host->timing == MMC_TIMING_UHS_SDR104)) {
 		/* UnLock WP */
@@ -357,6 +366,24 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
 		scratch_8 |= 0x80;
 		pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch_8);
 	}
+=======
+	/* UnLock WP */
+	pci_read_config_byte(chip->pdev, O2_SD_LOCK_WP, &scratch_8);
+	scratch_8 &= 0x7f;
+	pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch_8);
+
+	/* Set pcr 0x354[16] to choose dll clock, and set the default phase */
+	pci_read_config_dword(chip->pdev, O2_SD_OUTPUT_CLK_SOURCE_SWITCH, &reg_val);
+	reg_val &= ~(O2_SD_SEL_DLL | O2_SD_PHASE_MASK);
+	reg_val |= (O2_SD_SEL_DLL | O2_SD_FIX_PHASE);
+	pci_write_config_dword(chip->pdev, O2_SD_OUTPUT_CLK_SOURCE_SWITCH, reg_val);
+
+	/* Lock WP */
+	pci_read_config_byte(chip->pdev, O2_SD_LOCK_WP, &scratch_8);
+	scratch_8 |= 0x80;
+	pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch_8);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Start clk */
 	reg_val = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
 	reg_val |= SDHCI_CLOCK_CARD_EN;
@@ -879,12 +906,15 @@ static int sdhci_pci_o2_probe(struct sdhci_pci_chip *chip)
 		/* Set Tuning Windows to 5 */
 		pci_write_config_byte(chip->pdev,
 				O2_SD_TUNING_CTRL, 0x55);
+<<<<<<< HEAD
 		//Adjust 1st and 2nd CD debounce time
 		pci_read_config_dword(chip->pdev, O2_SD_MISC_CTRL2, &scratch_32);
 		scratch_32 &= 0xFFE7FFFF;
 		scratch_32 |= 0x00180000;
 		pci_write_config_dword(chip->pdev, O2_SD_MISC_CTRL2, scratch_32);
 		pci_write_config_dword(chip->pdev, O2_SD_DETECT_SETTING, 1);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Lock WP */
 		ret = pci_read_config_byte(chip->pdev,
 					   O2_SD_LOCK_WP, &scratch);

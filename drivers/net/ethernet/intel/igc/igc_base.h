@@ -7,8 +7,11 @@
 /* forward declaration */
 void igc_rx_fifo_flush_base(struct igc_hw *hw);
 void igc_power_down_phy_copper_base(struct igc_hw *hw);
+<<<<<<< HEAD
 bool igc_is_device_id_i225(struct igc_hw *hw);
 bool igc_is_device_id_i226(struct igc_hw *hw);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Transmit Descriptor - Advanced */
 union igc_adv_tx_desc {

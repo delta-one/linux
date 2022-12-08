@@ -92,6 +92,11 @@
 #define BOND_XFRM_FEATURES (NETIF_F_HW_ESP | NETIF_F_HW_ESP_TX_CSUM | \
 			    NETIF_F_GSO_ESP)
 
+<<<<<<< HEAD
+=======
+#define BOND_TLS_FEATURES (NETIF_F_HW_TLS_TX | NETIF_F_HW_TLS_RX)
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_NET_POLL_CONTROLLER
 extern atomic_t netpoll_block_tx;
 
@@ -278,6 +283,11 @@ struct bond_vlan_tag {
 	unsigned short	vlan_id;
 };
 
+<<<<<<< HEAD
+=======
+bool bond_sk_check(struct bonding *bond);
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * Returns NULL if the net_device does not belong to any of the bond's slaves
  *

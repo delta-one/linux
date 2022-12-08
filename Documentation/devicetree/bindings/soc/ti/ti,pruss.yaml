@@ -313,7 +313,11 @@ additionalProperties: false
 # Due to inability of correctly verifying sub-nodes with an @address through
 # the "required" list, the required sub-nodes below are commented out for now.
 
+<<<<<<< HEAD
 # required:
+=======
+#required:
+>>>>>>> b7ba80a49124 (Commit)
 # - memories
 # - interrupt-controller
 # - pru

@@ -83,7 +83,11 @@ passed in.
 6. Freeze
 ---------
 The freeze operation does not require any keys. The security config can be
+<<<<<<< HEAD
 frozen by a user with root privilege.
+=======
+frozen by a user with root privelege.
+>>>>>>> b7ba80a49124 (Commit)
 
 7. Disable
 ----------

@@ -361,8 +361,14 @@ void truncate_inode_pages_range(struct address_space *mapping,
 
 	folio_batch_init(&fbatch);
 	index = start;
+<<<<<<< HEAD
 	while (index < end && find_lock_entries(mapping, &index, end - 1,
 			&fbatch, indices)) {
+=======
+	while (index < end && find_lock_entries(mapping, index, end - 1,
+			&fbatch, indices)) {
+		index = indices[folio_batch_count(&fbatch) - 1] + 1;
+>>>>>>> b7ba80a49124 (Commit)
 		truncate_folio_batch_exceptionals(mapping, &fbatch, indices);
 		for (i = 0; i < folio_batch_count(&fbatch); i++)
 			truncate_cleanup_folio(fbatch.folios[i]);
@@ -375,7 +381,11 @@ void truncate_inode_pages_range(struct address_space *mapping,
 
 	same_folio = (lstart >> PAGE_SHIFT) == (lend >> PAGE_SHIFT);
 	folio = __filemap_get_folio(mapping, lstart >> PAGE_SHIFT, FGP_LOCK, 0);
+<<<<<<< HEAD
 	if (!IS_ERR(folio)) {
+=======
+	if (folio) {
+>>>>>>> b7ba80a49124 (Commit)
 		same_folio = lend < folio_pos(folio) + folio_size(folio);
 		if (!truncate_inode_partial_folio(folio, lstart, lend)) {
 			start = folio->index + folio_nr_pages(folio);
@@ -387,6 +397,7 @@ void truncate_inode_pages_range(struct address_space *mapping,
 		folio = NULL;
 	}
 
+<<<<<<< HEAD
 	if (!same_folio) {
 		folio = __filemap_get_folio(mapping, lend >> PAGE_SHIFT,
 						FGP_LOCK, 0);
@@ -396,12 +407,26 @@ void truncate_inode_pages_range(struct address_space *mapping,
 			folio_unlock(folio);
 			folio_put(folio);
 		}
+=======
+	if (!same_folio)
+		folio = __filemap_get_folio(mapping, lend >> PAGE_SHIFT,
+						FGP_LOCK, 0);
+	if (folio) {
+		if (!truncate_inode_partial_folio(folio, lstart, lend))
+			end = folio->index;
+		folio_unlock(folio);
+		folio_put(folio);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	index = start;
 	while (index < end) {
 		cond_resched();
+<<<<<<< HEAD
 		if (!find_get_entries(mapping, &index, end - 1, &fbatch,
+=======
+		if (!find_get_entries(mapping, index, end - 1, &fbatch,
+>>>>>>> b7ba80a49124 (Commit)
 				indices)) {
 			/* If all gone from start onwards, we're done */
 			if (index == start)
@@ -415,11 +440,16 @@ void truncate_inode_pages_range(struct address_space *mapping,
 			struct folio *folio = fbatch.folios[i];
 
 			/* We rely upon deletion not changing page->index */
+<<<<<<< HEAD
+=======
+			index = indices[i];
+>>>>>>> b7ba80a49124 (Commit)
 
 			if (xa_is_value(folio))
 				continue;
 
 			folio_lock(folio);
+<<<<<<< HEAD
 			VM_BUG_ON_FOLIO(!folio_contains(folio, indices[i]), folio);
 			folio_wait_writeback(folio);
 			truncate_inode_folio(mapping, folio);
@@ -427,6 +457,17 @@ void truncate_inode_pages_range(struct address_space *mapping,
 		}
 		truncate_folio_batch_exceptionals(mapping, &fbatch, indices);
 		folio_batch_release(&fbatch);
+=======
+			VM_BUG_ON_FOLIO(!folio_contains(folio, index), folio);
+			folio_wait_writeback(folio);
+			truncate_inode_folio(mapping, folio);
+			folio_unlock(folio);
+			index = folio_index(folio) + folio_nr_pages(folio) - 1;
+		}
+		truncate_folio_batch_exceptionals(mapping, &fbatch, indices);
+		folio_batch_release(&fbatch);
+		index++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 EXPORT_SYMBOL(truncate_inode_pages_range);
@@ -507,17 +548,33 @@ unsigned long invalidate_mapping_pagevec(struct address_space *mapping,
 	int i;
 
 	folio_batch_init(&fbatch);
+<<<<<<< HEAD
 	while (find_lock_entries(mapping, &index, end, &fbatch, indices)) {
+=======
+	while (find_lock_entries(mapping, index, end, &fbatch, indices)) {
+>>>>>>> b7ba80a49124 (Commit)
 		for (i = 0; i < folio_batch_count(&fbatch); i++) {
 			struct folio *folio = fbatch.folios[i];
 
 			/* We rely upon deletion not changing folio->index */
+<<<<<<< HEAD
 
 			if (xa_is_value(folio)) {
 				count += invalidate_exceptional_entry(mapping,
 							     indices[i], folio);
 				continue;
 			}
+=======
+			index = indices[i];
+
+			if (xa_is_value(folio)) {
+				count += invalidate_exceptional_entry(mapping,
+								      index,
+								      folio);
+				continue;
+			}
+			index += folio_nr_pages(folio) - 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 			ret = mapping_evict_folio(mapping, folio);
 			folio_unlock(folio);
@@ -536,6 +593,10 @@ unsigned long invalidate_mapping_pagevec(struct address_space *mapping,
 		folio_batch_remove_exceptionals(&fbatch);
 		folio_batch_release(&fbatch);
 		cond_resched();
+<<<<<<< HEAD
+=======
+		index++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return count;
 }
@@ -566,7 +627,11 @@ EXPORT_SYMBOL(invalidate_mapping_pages);
  * refcount.  We do this because invalidate_inode_pages2() needs stronger
  * invalidation guarantees, and cannot afford to leave pages behind because
  * shrink_page_list() has a temp ref on them, or because they're transiently
+<<<<<<< HEAD
  * sitting in the folio_add_lru() pagevecs.
+=======
+ * sitting in the lru_cache_add() pagevecs.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int invalidate_complete_folio2(struct address_space *mapping,
 					struct folio *folio)
@@ -634,15 +699,27 @@ int invalidate_inode_pages2_range(struct address_space *mapping,
 
 	folio_batch_init(&fbatch);
 	index = start;
+<<<<<<< HEAD
 	while (find_get_entries(mapping, &index, end, &fbatch, indices)) {
+=======
+	while (find_get_entries(mapping, index, end, &fbatch, indices)) {
+>>>>>>> b7ba80a49124 (Commit)
 		for (i = 0; i < folio_batch_count(&fbatch); i++) {
 			struct folio *folio = fbatch.folios[i];
 
 			/* We rely upon deletion not changing folio->index */
+<<<<<<< HEAD
 
 			if (xa_is_value(folio)) {
 				if (!invalidate_exceptional_entry2(mapping,
 						indices[i], folio))
+=======
+			index = indices[i];
+
+			if (xa_is_value(folio)) {
+				if (!invalidate_exceptional_entry2(mapping,
+						index, folio))
+>>>>>>> b7ba80a49124 (Commit)
 					ret = -EBUSY;
 				continue;
 			}
@@ -652,13 +729,22 @@ int invalidate_inode_pages2_range(struct address_space *mapping,
 				 * If folio is mapped, before taking its lock,
 				 * zap the rest of the file in one hit.
 				 */
+<<<<<<< HEAD
 				unmap_mapping_pages(mapping, indices[i],
 						(1 + end - indices[i]), false);
+=======
+				unmap_mapping_pages(mapping, index,
+						(1 + end - index), false);
+>>>>>>> b7ba80a49124 (Commit)
 				did_range_unmap = 1;
 			}
 
 			folio_lock(folio);
+<<<<<<< HEAD
 			VM_BUG_ON_FOLIO(!folio_contains(folio, indices[i]), folio);
+=======
+			VM_BUG_ON_FOLIO(!folio_contains(folio, index), folio);
+>>>>>>> b7ba80a49124 (Commit)
 			if (folio->mapping != mapping) {
 				folio_unlock(folio);
 				continue;
@@ -681,6 +767,10 @@ int invalidate_inode_pages2_range(struct address_space *mapping,
 		folio_batch_remove_exceptionals(&fbatch);
 		folio_batch_release(&fbatch);
 		cond_resched();
+<<<<<<< HEAD
+=======
+		index++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	/*
 	 * For DAX we invalidate page tables after invalidating page cache.  We

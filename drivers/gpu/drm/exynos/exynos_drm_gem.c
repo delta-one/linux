@@ -274,7 +274,11 @@ static int exynos_drm_gem_mmap_buffer(struct exynos_drm_gem *exynos_gem,
 	unsigned long vm_size;
 	int ret;
 
+<<<<<<< HEAD
 	vm_flags_clear(vma, VM_PFNMAP);
+=======
+	vma->vm_flags &= ~VM_PFNMAP;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_pgoff = 0;
 
 	vm_size = vma->vm_end - vma->vm_start;
@@ -368,7 +372,11 @@ static int exynos_drm_gem_mmap(struct drm_gem_object *obj, struct vm_area_struct
 	if (obj->import_attach)
 		return dma_buf_mmap(obj->dma_buf, vma, 0);
 
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_IO | VM_DONTEXPAND | VM_DONTDUMP);
+=======
+	vma->vm_flags |= VM_IO | VM_DONTEXPAND | VM_DONTDUMP;
+>>>>>>> b7ba80a49124 (Commit)
 
 	DRM_DEV_DEBUG_KMS(to_dma_dev(obj->dev), "flags = 0x%x\n",
 			  exynos_gem->flags);

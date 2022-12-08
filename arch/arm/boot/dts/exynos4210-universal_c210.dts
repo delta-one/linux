@@ -516,7 +516,11 @@
 };
 
 &mct {
+<<<<<<< HEAD
 	status = "disabled";
+=======
+	compatible = "none";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &mdma1 {

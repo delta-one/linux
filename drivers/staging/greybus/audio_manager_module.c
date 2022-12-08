@@ -70,8 +70,14 @@ static void gb_audio_module_release(struct kobject *kobj)
 	kfree(module);
 }
 
+<<<<<<< HEAD
 static ssize_t gb_audio_module_name_show(struct gb_audio_manager_module *module,
 					 struct gb_audio_manager_module_attribute *attr, char *buf)
+=======
+static ssize_t gb_audio_module_name_show(
+	struct gb_audio_manager_module *module,
+	struct gb_audio_manager_module_attribute *attr, char *buf)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return sprintf(buf, "%s", module->desc.name);
 }
@@ -79,8 +85,14 @@ static ssize_t gb_audio_module_name_show(struct gb_audio_manager_module *module,
 static struct gb_audio_manager_module_attribute gb_audio_module_name_attribute =
 	__ATTR(name, 0664, gb_audio_module_name_show, NULL);
 
+<<<<<<< HEAD
 static ssize_t gb_audio_module_vid_show(struct gb_audio_manager_module *module,
 					struct gb_audio_manager_module_attribute *attr, char *buf)
+=======
+static ssize_t gb_audio_module_vid_show(
+	struct gb_audio_manager_module *module,
+	struct gb_audio_manager_module_attribute *attr, char *buf)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return sprintf(buf, "%d", module->desc.vid);
 }
@@ -88,8 +100,14 @@ static ssize_t gb_audio_module_vid_show(struct gb_audio_manager_module *module,
 static struct gb_audio_manager_module_attribute gb_audio_module_vid_attribute =
 	__ATTR(vid, 0664, gb_audio_module_vid_show, NULL);
 
+<<<<<<< HEAD
 static ssize_t gb_audio_module_pid_show(struct gb_audio_manager_module *module,
 					struct gb_audio_manager_module_attribute *attr, char *buf)
+=======
+static ssize_t gb_audio_module_pid_show(
+	struct gb_audio_manager_module *module,
+	struct gb_audio_manager_module_attribute *attr, char *buf)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return sprintf(buf, "%d", module->desc.pid);
 }
@@ -97,9 +115,15 @@ static ssize_t gb_audio_module_pid_show(struct gb_audio_manager_module *module,
 static struct gb_audio_manager_module_attribute gb_audio_module_pid_attribute =
 	__ATTR(pid, 0664, gb_audio_module_pid_show, NULL);
 
+<<<<<<< HEAD
 static ssize_t gb_audio_module_intf_id_show(struct gb_audio_manager_module *module,
 					    struct gb_audio_manager_module_attribute *attr,
 					    char *buf)
+=======
+static ssize_t gb_audio_module_intf_id_show(
+	struct gb_audio_manager_module *module,
+	struct gb_audio_manager_module_attribute *attr, char *buf)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return sprintf(buf, "%d", module->desc.intf_id);
 }
@@ -108,9 +132,15 @@ static struct gb_audio_manager_module_attribute
 					gb_audio_module_intf_id_attribute =
 	__ATTR(intf_id, 0664, gb_audio_module_intf_id_show, NULL);
 
+<<<<<<< HEAD
 static ssize_t gb_audio_module_ip_devices_show(struct gb_audio_manager_module *module,
 					       struct gb_audio_manager_module_attribute *attr,
 					       char *buf)
+=======
+static ssize_t gb_audio_module_ip_devices_show(
+	struct gb_audio_manager_module *module,
+	struct gb_audio_manager_module_attribute *attr, char *buf)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return sprintf(buf, "0x%X", module->desc.ip_devices);
 }
@@ -119,9 +149,15 @@ static struct gb_audio_manager_module_attribute
 					gb_audio_module_ip_devices_attribute =
 	__ATTR(ip_devices, 0664, gb_audio_module_ip_devices_show, NULL);
 
+<<<<<<< HEAD
 static ssize_t gb_audio_module_op_devices_show(struct gb_audio_manager_module *module,
 					       struct gb_audio_manager_module_attribute *attr,
 					       char *buf)
+=======
+static ssize_t gb_audio_module_op_devices_show(
+	struct gb_audio_manager_module *module,
+	struct gb_audio_manager_module_attribute *attr, char *buf)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return sprintf(buf, "0x%X", module->desc.op_devices);
 }
@@ -178,9 +214,16 @@ static void send_add_uevent(struct gb_audio_manager_module *module)
 	kobject_uevent_env(&module->kobj, KOBJ_ADD, envp);
 }
 
+<<<<<<< HEAD
 int gb_audio_manager_module_create(struct gb_audio_manager_module **module,
 				   struct kset *manager_kset,
 				   int id, struct gb_audio_manager_module_descriptor *desc)
+=======
+int gb_audio_manager_module_create(
+	struct gb_audio_manager_module **module,
+	struct kset *manager_kset,
+	int id, struct gb_audio_manager_module_descriptor *desc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 	struct gb_audio_manager_module *m;

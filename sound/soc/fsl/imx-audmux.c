@@ -75,7 +75,12 @@ static ssize_t audmux_read_file(struct file *file, char __user *user_buf,
 	if (!buf)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	ret = sysfs_emit(buf, "PDCR: %08x\nPTCR: %08x\n", pdcr, ptcr);
+=======
+	ret = scnprintf(buf, PAGE_SIZE, "PDCR: %08x\nPTCR: %08x\n",
+		       pdcr, ptcr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ptcr & IMX_AUDMUX_V2_PTCR_TFSDIR)
 		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
@@ -315,10 +320,19 @@ static int imx_audmux_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void imx_audmux_remove(struct platform_device *pdev)
 {
 	if (audmux_type == IMX31_AUDMUX)
 		audmux_debugfs_remove();
+=======
+static int imx_audmux_remove(struct platform_device *pdev)
+{
+	if (audmux_type == IMX31_AUDMUX)
+		audmux_debugfs_remove();
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -357,7 +371,11 @@ static const struct dev_pm_ops imx_audmux_pm = {
 
 static struct platform_driver imx_audmux_driver = {
 	.probe		= imx_audmux_probe,
+<<<<<<< HEAD
 	.remove_new	= imx_audmux_remove,
+=======
+	.remove		= imx_audmux_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name	= DRIVER_NAME,
 		.pm = &imx_audmux_pm,

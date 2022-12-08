@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0-only */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2001-2002 Sistina Software (UK) Limited.
  * Copyright (C) 2008 Red Hat, Inc. All rights reserved.
@@ -44,36 +47,63 @@ struct dm_exception_store_type {
 	const char *name;
 	struct module *module;
 
+<<<<<<< HEAD
 	int (*ctr)(struct dm_exception_store *store, char *options);
+=======
+	int (*ctr) (struct dm_exception_store *store, char *options);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Destroys this object when you've finished with it.
 	 */
+<<<<<<< HEAD
 	void (*dtr)(struct dm_exception_store *store);
+=======
+	void (*dtr) (struct dm_exception_store *store);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * The target shouldn't read the COW device until this is
 	 * called.  As exceptions are read from the COW, they are
 	 * reported back via the callback.
 	 */
+<<<<<<< HEAD
 	int (*read_metadata)(struct dm_exception_store *store,
 			     int (*callback)(void *callback_context,
 					     chunk_t old, chunk_t new),
 			     void *callback_context);
+=======
+	int (*read_metadata) (struct dm_exception_store *store,
+			      int (*callback)(void *callback_context,
+					      chunk_t old, chunk_t new),
+			      void *callback_context);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Find somewhere to store the next exception.
 	 */
+<<<<<<< HEAD
 	int (*prepare_exception)(struct dm_exception_store *store,
 				 struct dm_exception *e);
+=======
+	int (*prepare_exception) (struct dm_exception_store *store,
+				  struct dm_exception *e);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Update the metadata with this exception.
 	 */
+<<<<<<< HEAD
 	void (*commit_exception)(struct dm_exception_store *store,
 				 struct dm_exception *e, int valid,
 				 void (*callback)(void *, int success),
 				 void *callback_context);
+=======
+	void (*commit_exception) (struct dm_exception_store *store,
+				  struct dm_exception *e, int valid,
+				  void (*callback) (void *, int success),
+				  void *callback_context);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Returns 0 if the exception store is empty.
@@ -83,30 +113,53 @@ struct dm_exception_store_type {
 	 * still-to-be-merged chunk and returns the number of
 	 * consecutive previous ones.
 	 */
+<<<<<<< HEAD
 	int (*prepare_merge)(struct dm_exception_store *store,
 			     chunk_t *last_old_chunk, chunk_t *last_new_chunk);
+=======
+	int (*prepare_merge) (struct dm_exception_store *store,
+			      chunk_t *last_old_chunk, chunk_t *last_new_chunk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Clear the last n exceptions.
 	 * nr_merged must be <= the value returned by prepare_merge.
 	 */
+<<<<<<< HEAD
 	int (*commit_merge)(struct dm_exception_store *store, int nr_merged);
+=======
+	int (*commit_merge) (struct dm_exception_store *store, int nr_merged);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * The snapshot is invalid, note this in the metadata.
 	 */
+<<<<<<< HEAD
 	void (*drop_snapshot)(struct dm_exception_store *store);
 
 	unsigned int (*status)(struct dm_exception_store *store,
 			       status_type_t status, char *result,
 			       unsigned int maxlen);
+=======
+	void (*drop_snapshot) (struct dm_exception_store *store);
+
+	unsigned (*status) (struct dm_exception_store *store,
+			    status_type_t status, char *result,
+			    unsigned maxlen);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Return how full the snapshot is.
 	 */
+<<<<<<< HEAD
 	void (*usage)(struct dm_exception_store *store,
 		      sector_t *total_sectors, sector_t *sectors_allocated,
 		      sector_t *metadata_sectors);
+=======
+	void (*usage) (struct dm_exception_store *store,
+		       sector_t *total_sectors, sector_t *sectors_allocated,
+		       sector_t *metadata_sectors);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* For internal device-mapper use only. */
 	struct list_head list;
@@ -119,9 +172,15 @@ struct dm_exception_store {
 	struct dm_snapshot *snap;
 
 	/* Size of data blocks saved - must be a power of 2 */
+<<<<<<< HEAD
 	unsigned int chunk_size;
 	unsigned int chunk_mask;
 	unsigned int chunk_shift;
+=======
+	unsigned chunk_size;
+	unsigned chunk_mask;
+	unsigned chunk_shift;
+>>>>>>> b7ba80a49124 (Commit)
 
 	void *context;
 
@@ -145,7 +204,11 @@ static inline chunk_t dm_chunk_number(chunk_t chunk)
 	return chunk & (chunk_t)((1ULL << DM_CHUNK_NUMBER_BITS) - 1ULL);
 }
 
+<<<<<<< HEAD
 static inline unsigned int dm_consecutive_chunk_count(struct dm_exception *e)
+=======
+static inline unsigned dm_consecutive_chunk_count(struct dm_exception *e)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return e->new_chunk >> DM_CHUNK_NUMBER_BITS;
 }
@@ -182,12 +245,20 @@ int dm_exception_store_type_register(struct dm_exception_store_type *type);
 int dm_exception_store_type_unregister(struct dm_exception_store_type *type);
 
 int dm_exception_store_set_chunk_size(struct dm_exception_store *store,
+<<<<<<< HEAD
 				      unsigned int chunk_size,
+=======
+				      unsigned chunk_size,
+>>>>>>> b7ba80a49124 (Commit)
 				      char **error);
 
 int dm_exception_store_create(struct dm_target *ti, int argc, char **argv,
 			      struct dm_snapshot *snap,
+<<<<<<< HEAD
 			      unsigned int *args_used,
+=======
+			      unsigned *args_used,
+>>>>>>> b7ba80a49124 (Commit)
 			      struct dm_exception_store **store);
 void dm_exception_store_destroy(struct dm_exception_store *store);
 

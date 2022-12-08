@@ -30,7 +30,11 @@ struct section {
 	struct hlist_node hash;
 	struct hlist_node name_hash;
 	GElf_Shdr sh;
+<<<<<<< HEAD
 	struct rb_root_cached symbol_tree;
+=======
+	struct rb_root symbol_tree;
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head symbol_list;
 	struct list_head reloc_list;
 	struct section *base, *reloc;
@@ -38,8 +42,12 @@ struct section {
 	Elf_Data *data;
 	char *name;
 	int idx;
+<<<<<<< HEAD
 	bool changed, text, rodata, noinstr, init, truncate;
 	struct reloc *reloc_data;
+=======
+	bool changed, text, rodata, noinstr;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct symbol {
@@ -50,11 +58,19 @@ struct symbol {
 	GElf_Sym sym;
 	struct section *sec;
 	char *name;
+<<<<<<< HEAD
 	unsigned int idx, len;
 	unsigned long offset;
 	unsigned long __subtree_last;
 	struct symbol *pfunc, *cfunc, *alias;
 	unsigned char bind, type;
+=======
+	unsigned int idx;
+	unsigned char bind, type;
+	unsigned long offset;
+	unsigned int len;
+	struct symbol *pfunc, *cfunc, *alias;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 uaccess_safe      : 1;
 	u8 static_call_tramp : 1;
 	u8 retpoline_thunk   : 1;
@@ -62,7 +78,10 @@ struct symbol {
 	u8 fentry            : 1;
 	u8 profiling_func    : 1;
 	struct list_head pv_target;
+<<<<<<< HEAD
 	struct list_head reloc_list;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct reloc {
@@ -74,7 +93,10 @@ struct reloc {
 	};
 	struct section *sec;
 	struct symbol *sym;
+<<<<<<< HEAD
 	struct list_head sym_reloc_entry;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long offset;
 	unsigned int type;
 	s64 addend;
@@ -104,9 +126,12 @@ struct elf {
 	struct hlist_head *section_hash;
 	struct hlist_head *section_name_hash;
 	struct hlist_head *reloc_hash;
+<<<<<<< HEAD
 
 	struct section *section_data;
 	struct symbol *symbol_data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define OFFSET_STRIDE_BITS	4
@@ -148,6 +173,7 @@ static inline bool has_multiple_files(struct elf *elf)
 	return elf->num_files > 1;
 }
 
+<<<<<<< HEAD
 static inline int elf_class_addrsize(struct elf *elf)
 {
 	if (elf->ehdr.e_ident[EI_CLASS] == ELFCLASS32)
@@ -161,6 +187,11 @@ struct section *elf_create_section(struct elf *elf, const char *name, unsigned i
 
 struct symbol *elf_create_prefix_symbol(struct elf *elf, struct symbol *orig, long size);
 
+=======
+struct elf *elf_open_read(const char *name, int flags);
+struct section *elf_create_section(struct elf *elf, const char *name, unsigned int sh_flags, size_t entsize, int nr);
+
+>>>>>>> b7ba80a49124 (Commit)
 int elf_add_reloc(struct elf *elf, struct section *sec, unsigned long offset,
 		  unsigned int type, struct symbol *sym, s64 addend);
 int elf_add_reloc_to_insn(struct elf *elf, struct section *sec,

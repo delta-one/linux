@@ -9,9 +9,16 @@
 
 #include "xen-ops.h"
 
+<<<<<<< HEAD
 void __init xen_init_vga(const struct dom0_vga_console_info *info, size_t size,
 			 struct screen_info *screen_info)
 {
+=======
+void __init xen_init_vga(const struct dom0_vga_console_info *info, size_t size)
+{
+	struct screen_info *screen_info = &boot_params.screen_info;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* This is drawn from a dump from vgacon:startup in
 	 * standard Linux. */
 	screen_info->orig_video_mode = 3;

@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
 /*
+<<<<<<< HEAD
  * Copyright(c) 2021-2022 Intel Corporation
+=======
+ * Copyright(c) 2021 Intel Corporation
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include "iwl-drv.h"
@@ -246,6 +250,7 @@ void *iwl_uefi_get_reduced_power(struct iwl_trans *trans, size_t *len)
 	return data;
 }
 
+<<<<<<< HEAD
 static int iwl_uefi_step_parse(struct uefi_cnv_common_step_data *common_step_data,
 			       struct iwl_trans *trans)
 {
@@ -303,6 +308,8 @@ out_free:
 }
 IWL_EXPORT_SYMBOL(iwl_uefi_get_step_table);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_ACPI
 static int iwl_uefi_sgom_parse(struct uefi_cnv_wlan_sgom_data *sgom_data,
 			       struct iwl_fw_runtime *fwrt)

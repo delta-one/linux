@@ -698,6 +698,7 @@ static int xgene_hwmon_probe(struct platform_device *pdev)
 		ctx->comm_base_addr = pcc_chan->shmem_base_addr;
 		if (ctx->comm_base_addr) {
 			if (version == XGENE_HWMON_V2)
+<<<<<<< HEAD
 				ctx->pcc_comm_addr = (void __force *)devm_ioremap(&pdev->dev,
 								  ctx->comm_base_addr,
 								  pcc_chan->shmem_size);
@@ -706,6 +707,16 @@ static int xgene_hwmon_probe(struct platform_device *pdev)
 								   ctx->comm_base_addr,
 								   pcc_chan->shmem_size,
 								   MEMREMAP_WB);
+=======
+				ctx->pcc_comm_addr = (void __force *)ioremap(
+							ctx->comm_base_addr,
+							pcc_chan->shmem_size);
+			else
+				ctx->pcc_comm_addr = memremap(
+							ctx->comm_base_addr,
+							pcc_chan->shmem_size,
+							MEMREMAP_WB);
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			dev_err(&pdev->dev, "Failed to get PCC comm region\n");
 			rc = -ENODEV;
@@ -761,7 +772,10 @@ static int xgene_hwmon_remove(struct platform_device *pdev)
 {
 	struct xgene_hwmon_dev *ctx = platform_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	cancel_work_sync(&ctx->workq);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hwmon_device_unregister(ctx->hwmon_dev);
 	kfifo_free(&ctx->async_msg_fifo);
 	if (acpi_disabled)

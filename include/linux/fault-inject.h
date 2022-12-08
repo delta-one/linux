@@ -20,6 +20,10 @@ struct fault_attr {
 	atomic_t space;
 	unsigned long verbose;
 	bool task_filter;
+<<<<<<< HEAD
+=======
+	bool no_warn;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long stacktrace_depth;
 	unsigned long require_start;
 	unsigned long require_end;
@@ -31,10 +35,13 @@ struct fault_attr {
 	struct dentry *dname;
 };
 
+<<<<<<< HEAD
 enum fault_flags {
 	FAULT_NOWARN =	1 << 0,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define FAULT_ATTR_INITIALIZER {					\
 		.interval = 1,						\
 		.times = ATOMIC_INIT(1),				\
@@ -43,11 +50,18 @@ enum fault_flags {
 		.ratelimit_state = RATELIMIT_STATE_INIT_DISABLED,	\
 		.verbose = 2,						\
 		.dname = NULL,						\
+<<<<<<< HEAD
+=======
+		.no_warn = false,					\
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 #define DECLARE_FAULT_ATTR(name) struct fault_attr name = FAULT_ATTR_INITIALIZER
 int setup_fault_attr(struct fault_attr *attr, char *str);
+<<<<<<< HEAD
 bool should_fail_ex(struct fault_attr *attr, ssize_t size, int flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool should_fail(struct fault_attr *attr, ssize_t size);
 
 #ifdef CONFIG_FAULT_INJECTION_DEBUG_FS

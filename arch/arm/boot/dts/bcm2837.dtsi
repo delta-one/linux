@@ -1,5 +1,9 @@
 #include "bcm283x.dtsi"
 #include "bcm2835-common.dtsi"
+<<<<<<< HEAD
+=======
+#include "bcm2835-rpi-common.dtsi"
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	compatible = "brcm,bcm2837";
@@ -114,7 +118,10 @@
 		 */
 		l2: l2-cache0 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-unified;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			cache-size = <0x80000>;
 			cache-line-size = <64>;
 			cache-sets = <512>; // 512KiB(size)/64(line-size)=8192ways/16-way set

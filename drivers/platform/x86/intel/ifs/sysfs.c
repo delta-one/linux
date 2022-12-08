@@ -13,7 +13,11 @@
  * Protects against simultaneous tests on multiple cores, or
  * reloading can file while a test is in progress
  */
+<<<<<<< HEAD
 static DEFINE_SEMAPHORE(ifs_sem);
+=======
+DEFINE_SEMAPHORE(ifs_sem);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * The sysfs interface to check additional details of last test
@@ -87,6 +91,7 @@ static ssize_t run_test_store(struct device *dev,
 
 static DEVICE_ATTR_WO(run_test);
 
+<<<<<<< HEAD
 static ssize_t current_batch_store(struct device *dev,
 				   struct device_attribute *attr,
 				   const char *buf, size_t count)
@@ -98,10 +103,28 @@ static ssize_t current_batch_store(struct device *dev,
 	rc = kstrtouint(buf, 0, &cur_batch);
 	if (rc < 0 || cur_batch > 0xff)
 		return -EINVAL;
+=======
+/*
+ * Reload the IFS image. When user wants to install new IFS image
+ */
+static ssize_t reload_store(struct device *dev,
+			    struct device_attribute *attr,
+			    const char *buf, size_t count)
+{
+	struct ifs_data *ifsd = ifs_get_data(dev);
+	bool res;
+
+
+	if (kstrtobool(buf, &res))
+		return -EINVAL;
+	if (!res)
+		return count;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (down_interruptible(&ifs_sem))
 		return -EINTR;
 
+<<<<<<< HEAD
 	ifsd->cur_batch = cur_batch;
 
 	rc = ifs_load_firmware(dev);
@@ -123,6 +146,16 @@ static ssize_t current_batch_show(struct device *dev,
 }
 
 static DEVICE_ATTR_RW(current_batch);
+=======
+	ifs_load_firmware(dev);
+
+	up(&ifs_sem);
+
+	return ifsd->loaded ? count : -ENODEV;
+}
+
+static DEVICE_ATTR_WO(reload);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Display currently loaded IFS image version.
@@ -145,7 +178,11 @@ static struct attribute *plat_ifs_attrs[] = {
 	&dev_attr_details.attr,
 	&dev_attr_status.attr,
 	&dev_attr_run_test.attr,
+<<<<<<< HEAD
 	&dev_attr_current_batch.attr,
+=======
+	&dev_attr_reload.attr,
+>>>>>>> b7ba80a49124 (Commit)
 	&dev_attr_image_version.attr,
 	NULL
 };

@@ -235,6 +235,7 @@ static const struct at91_soc socs[] __initconst = {
 	AT91_SOC(SAMA7G5_CIDR_MATCH, AT91_CIDR_MATCH_MASK,
 		 AT91_CIDR_VERSION_MASK_SAMA7G5, SAMA7G54_EXID_MATCH,
 		 "sama7g54", "sama7g5"),
+<<<<<<< HEAD
 	AT91_SOC(SAMA7G5_CIDR_MATCH, AT91_CIDR_MATCH_MASK,
 		 AT91_CIDR_VERSION_MASK_SAMA7G5, SAMA7G54_D1G_EXID_MATCH,
 		 "SAMA7G54 1Gb DDR3L SiP", "sama7g5"),
@@ -244,6 +245,8 @@ static const struct at91_soc socs[] __initconst = {
 	AT91_SOC(SAMA7G5_CIDR_MATCH, AT91_CIDR_MATCH_MASK,
 		 AT91_CIDR_VERSION_MASK_SAMA7G5, SAMA7G54_D4G_EXID_MATCH,
 		 "SAMA7G54 4Gb DDR3L SiP", "sama7g5"),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	{ /* sentinel */ },
 };

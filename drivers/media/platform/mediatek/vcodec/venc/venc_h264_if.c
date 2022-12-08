@@ -565,7 +565,11 @@ static int h264_encode_frame(struct venc_h264_inst *inst,
 		       *bs_size);
 		++inst->frm_cnt;
 		++inst->skip_frm_cnt;
+<<<<<<< HEAD
 		return 0;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	irq_status = h264_enc_wait_venc_done(inst);
@@ -580,7 +584,11 @@ static int h264_encode_frame(struct venc_h264_inst *inst,
 	mtk_vcodec_debug(inst, "frm %d bs_size %d key_frm %d <-",
 			 inst->frm_cnt, *bs_size, inst->vpu_inst.is_key_frm);
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void h264_encode_filler(struct venc_h264_inst *inst, void *buf,

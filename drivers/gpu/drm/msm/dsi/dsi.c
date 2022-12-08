@@ -211,6 +211,7 @@ void __exit msm_dsi_unregister(void)
 int msm_dsi_modeset_init(struct msm_dsi *msm_dsi, struct drm_device *dev,
 			 struct drm_encoder *encoder)
 {
+<<<<<<< HEAD
 	struct msm_drm_private *priv = dev->dev_private;
 	int ret;
 
@@ -219,6 +220,15 @@ int msm_dsi_modeset_init(struct msm_dsi *msm_dsi, struct drm_device *dev,
 		return -ENOSPC;
 	}
 
+=======
+	struct msm_drm_private *priv;
+	int ret;
+
+	if (WARN_ON(!encoder) || WARN_ON(!msm_dsi) || WARN_ON(!dev))
+		return -EINVAL;
+
+	priv = dev->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	msm_dsi->dev = dev;
 
 	ret = msm_dsi_host_modeset_init(msm_dsi->host, dev);

@@ -124,7 +124,10 @@ struct azx {
 	/* HD codec */
 	int  codec_probe_mask; /* copied from probe_mask option */
 	unsigned int beep_mode;
+<<<<<<< HEAD
 	bool ctl_dev_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_SND_HDA_PATCH_LOADER
 	const struct firmware *fw;

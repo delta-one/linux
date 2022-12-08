@@ -91,6 +91,7 @@ static void __cw1200_queue_gc(struct cw1200_queue *queue,
 			      bool unlock)
 {
 	struct cw1200_queue_stats *stats = queue->stats;
+<<<<<<< HEAD
 	struct cw1200_queue_item *item = NULL, *iter, *tmp;
 	bool wakeup_stats = false;
 
@@ -110,6 +111,25 @@ static void __cw1200_queue_gc(struct cw1200_queue *queue,
 		cw1200_queue_register_post_gc(head, iter);
 		iter->skb = NULL;
 		list_move_tail(&iter->head, &queue->free_pool);
+=======
+	struct cw1200_queue_item *item = NULL, *tmp;
+	bool wakeup_stats = false;
+
+	list_for_each_entry_safe(item, tmp, &queue->queue, head) {
+		if (time_is_after_jiffies(item->queue_timestamp + queue->ttl))
+			break;
+		--queue->num_queued;
+		--queue->link_map_cache[item->txpriv.link_id];
+		spin_lock_bh(&stats->lock);
+		--stats->num_queued;
+		if (!--stats->link_map_cache[item->txpriv.link_id])
+			wakeup_stats = true;
+		spin_unlock_bh(&stats->lock);
+		cw1200_debug_tx_ttl(stats->priv);
+		cw1200_queue_register_post_gc(head, item);
+		item->skb = NULL;
+		list_move_tail(&item->head, &queue->free_pool);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (wakeup_stats)

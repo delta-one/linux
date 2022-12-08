@@ -89,17 +89,32 @@ static struct ocfs2_xattr_def_value_root def_xv = {
 
 const struct xattr_handler *ocfs2_xattr_handlers[] = {
 	&ocfs2_xattr_user_handler,
+<<<<<<< HEAD
+=======
+	&posix_acl_access_xattr_handler,
+	&posix_acl_default_xattr_handler,
+>>>>>>> b7ba80a49124 (Commit)
 	&ocfs2_xattr_trusted_handler,
 	&ocfs2_xattr_security_handler,
 	NULL
 };
 
 static const struct xattr_handler *ocfs2_xattr_handler_map[OCFS2_XATTR_MAX] = {
+<<<<<<< HEAD
 	[OCFS2_XATTR_INDEX_USER]		= &ocfs2_xattr_user_handler,
 	[OCFS2_XATTR_INDEX_POSIX_ACL_ACCESS]	= &nop_posix_acl_access,
 	[OCFS2_XATTR_INDEX_POSIX_ACL_DEFAULT]	= &nop_posix_acl_default,
 	[OCFS2_XATTR_INDEX_TRUSTED]		= &ocfs2_xattr_trusted_handler,
 	[OCFS2_XATTR_INDEX_SECURITY]		= &ocfs2_xattr_security_handler,
+=======
+	[OCFS2_XATTR_INDEX_USER]	= &ocfs2_xattr_user_handler,
+	[OCFS2_XATTR_INDEX_POSIX_ACL_ACCESS]
+					= &posix_acl_access_xattr_handler,
+	[OCFS2_XATTR_INDEX_POSIX_ACL_DEFAULT]
+					= &posix_acl_default_xattr_handler,
+	[OCFS2_XATTR_INDEX_TRUSTED]	= &ocfs2_xattr_trusted_handler,
+	[OCFS2_XATTR_INDEX_SECURITY]	= &ocfs2_xattr_security_handler,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ocfs2_xattr_info {
@@ -7199,16 +7214,25 @@ out:
 /*
  * Initialize security and acl for a already created inode.
  * Used for reflink a non-preserve-security file.
+<<<<<<< HEAD
  *
  * It uses common api like ocfs2_xattr_set, so the caller
  * must not hold any lock expect i_rwsem.
  */
 int ocfs2_init_security_and_acl(struct inode *dir,
+=======
+ */
+int ocfs2_init_security_and_acl(struct inode *dir,
+				struct buffer_head *dir_bh,
+>>>>>>> b7ba80a49124 (Commit)
 				struct inode *inode,
 				const struct qstr *qstr)
 {
 	int ret = 0;
+<<<<<<< HEAD
 	struct buffer_head *dir_bh = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = ocfs2_init_security_get(inode, dir, qstr, NULL);
 	if (ret) {
@@ -7216,17 +7240,23 @@ int ocfs2_init_security_and_acl(struct inode *dir,
 		goto leave;
 	}
 
+<<<<<<< HEAD
 	ret = ocfs2_inode_lock(dir, &dir_bh, 0);
 	if (ret) {
 		mlog_errno(ret);
 		goto leave;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ocfs2_init_acl(NULL, inode, dir, NULL, dir_bh, NULL, NULL);
 	if (ret)
 		mlog_errno(ret);
 
+<<<<<<< HEAD
 	ocfs2_inode_unlock(dir, 0);
 	brelse(dir_bh);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 leave:
 	return ret;
 }
@@ -7243,7 +7273,11 @@ static int ocfs2_xattr_security_get(const struct xattr_handler *handler,
 }
 
 static int ocfs2_xattr_security_set(const struct xattr_handler *handler,
+<<<<<<< HEAD
 				    struct mnt_idmap *idmap,
+=======
+				    struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				    struct dentry *unused, struct inode *inode,
 				    const char *name, const void *value,
 				    size_t size, int flags)
@@ -7255,6 +7289,7 @@ static int ocfs2_xattr_security_set(const struct xattr_handler *handler,
 static int ocfs2_initxattrs(struct inode *inode, const struct xattr *xattr_array,
 		     void *fs_info)
 {
+<<<<<<< HEAD
 	struct ocfs2_security_xattr_info *si = fs_info;
 	const struct xattr *xattr;
 	int err = 0;
@@ -7270,6 +7305,11 @@ static int ocfs2_initxattrs(struct inode *inode, const struct xattr *xattr_array
 		return 0;
 	}
 
+=======
+	const struct xattr *xattr;
+	int err = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (xattr = xattr_array; xattr->name != NULL; xattr++) {
 		err = ocfs2_xattr_set(inode, OCFS2_XATTR_INDEX_SECURITY,
 				      xattr->name, xattr->value,
@@ -7285,6 +7325,7 @@ int ocfs2_init_security_get(struct inode *inode,
 			    const struct qstr *qstr,
 			    struct ocfs2_security_xattr_info *si)
 {
+<<<<<<< HEAD
 	int ret;
 
 	/* check whether ocfs2 support feature xattr */
@@ -7302,6 +7343,15 @@ int ocfs2_init_security_get(struct inode *inode,
 
 		return ret;
 	}
+=======
+	/* check whether ocfs2 support feature xattr */
+	if (!ocfs2_supports_xattr(OCFS2_SB(dir->i_sb)))
+		return -EOPNOTSUPP;
+	if (si)
+		return security_old_inode_init_security(inode, dir, qstr,
+							&si->name, &si->value,
+							&si->value_len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return security_inode_init_security(inode, dir, qstr,
 					    &ocfs2_initxattrs, NULL);
@@ -7338,7 +7388,11 @@ static int ocfs2_xattr_trusted_get(const struct xattr_handler *handler,
 }
 
 static int ocfs2_xattr_trusted_set(const struct xattr_handler *handler,
+<<<<<<< HEAD
 				   struct mnt_idmap *idmap,
+=======
+				   struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				   struct dentry *unused, struct inode *inode,
 				   const char *name, const void *value,
 				   size_t size, int flags)
@@ -7369,7 +7423,11 @@ static int ocfs2_xattr_user_get(const struct xattr_handler *handler,
 }
 
 static int ocfs2_xattr_user_set(const struct xattr_handler *handler,
+<<<<<<< HEAD
 				struct mnt_idmap *idmap,
+=======
+				struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				struct dentry *unused, struct inode *inode,
 				const char *name, const void *value,
 				size_t size, int flags)

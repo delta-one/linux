@@ -973,7 +973,11 @@ static int sprd_mcdt_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void sprd_mcdt_remove(struct platform_device *pdev)
+=======
+static int sprd_mcdt_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sprd_mcdt_chan *chan, *temp;
 
@@ -983,6 +987,11 @@ static void sprd_mcdt_remove(struct platform_device *pdev)
 		list_del(&chan->list);
 
 	mutex_unlock(&sprd_mcdt_list_mutex);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id sprd_mcdt_of_match[] = {
@@ -993,7 +1002,11 @@ MODULE_DEVICE_TABLE(of, sprd_mcdt_of_match);
 
 static struct platform_driver sprd_mcdt_driver = {
 	.probe = sprd_mcdt_probe,
+<<<<<<< HEAD
 	.remove_new = sprd_mcdt_remove,
+=======
+	.remove = sprd_mcdt_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "sprd-mcdt",
 		.of_match_table = sprd_mcdt_of_match,

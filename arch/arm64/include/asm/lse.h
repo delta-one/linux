@@ -10,6 +10,10 @@
 
 #include <linux/compiler_types.h>
 #include <linux/export.h>
+<<<<<<< HEAD
+=======
+#include <linux/jump_label.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/stringify.h>
 #include <asm/alternative.h>
 #include <asm/alternative-macros.h>

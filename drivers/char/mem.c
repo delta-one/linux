@@ -343,7 +343,11 @@ static unsigned zero_mmap_capabilities(struct file *file)
 /* can't do an in-place private mapping if there's no MMU */
 static inline int private_mapping_ok(struct vm_area_struct *vma)
 {
+<<<<<<< HEAD
 	return is_nommu_shared_mapping(vma->vm_flags);
+=======
+	return vma->vm_flags & VM_MAYSHARE;
+>>>>>>> b7ba80a49124 (Commit)
 }
 #else
 
@@ -746,7 +750,11 @@ static const struct file_operations memory_fops = {
 	.llseek = noop_llseek,
 };
 
+<<<<<<< HEAD
 static char *mem_devnode(const struct device *dev, umode_t *mode)
+=======
+static char *mem_devnode(struct device *dev, umode_t *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (mode && devlist[MINOR(dev->devt)].mode)
 		*mode = devlist[MINOR(dev->devt)].mode;
@@ -762,7 +770,11 @@ static int __init chr_dev_init(void)
 	if (register_chrdev(MEM_MAJOR, "mem", &memory_fops))
 		printk("unable to get major %d for memory devs\n", MEM_MAJOR);
 
+<<<<<<< HEAD
 	mem_class = class_create("mem");
+=======
+	mem_class = class_create(THIS_MODULE, "mem");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(mem_class))
 		return PTR_ERR(mem_class);
 

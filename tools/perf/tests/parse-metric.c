@@ -30,22 +30,38 @@ static u64 find_value(const char *name, struct value *values)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void load_runtime_stat(struct evlist *evlist, struct value *vals)
+=======
+static void load_runtime_stat(struct runtime_stat *st, struct evlist *evlist,
+			      struct value *vals)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct evsel *evsel;
 	u64 count;
 
+<<<<<<< HEAD
 	evlist__alloc_aggr_stats(evlist, 1);
 	evlist__for_each_entry(evlist, evsel) {
 		count = find_value(evsel->name, vals);
 		evsel->stats->aggr->counts.val = count;
+=======
+	perf_stat__reset_shadow_stats();
+	evlist__for_each_entry(evlist, evsel) {
+		count = find_value(evsel->name, vals);
+		perf_stat__update_shadow_stats(evsel, count, 0, st);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!strcmp(evsel->name, "duration_time"))
 			update_stats(&walltime_nsecs_stats, count);
 	}
 }
 
 static double compute_single(struct rblist *metric_events, struct evlist *evlist,
+<<<<<<< HEAD
 			     const char *name)
+=======
+			     struct runtime_stat *st, const char *name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct metric_expr *mexp;
 	struct metric_event *me;
@@ -57,7 +73,11 @@ static double compute_single(struct rblist *metric_events, struct evlist *evlist
 			list_for_each_entry (mexp, &me->head, nd) {
 				if (strcmp(mexp->metric_name, name))
 					continue;
+<<<<<<< HEAD
 				return test_generic_metric(mexp, 0);
+=======
+				return test_generic_metric(mexp, 0, st);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 	}
@@ -71,8 +91,14 @@ static int __compute_metric(const char *name, struct value *vals,
 	struct rblist metric_events = {
 		.nr_entries = 0,
 	};
+<<<<<<< HEAD
 	const struct pmu_metrics_table *pme_test;
 	struct perf_cpu_map *cpus;
+=======
+	const struct pmu_events_table *pme_test;
+	struct perf_cpu_map *cpus;
+	struct runtime_stat st;
+>>>>>>> b7ba80a49124 (Commit)
 	struct evlist *evlist;
 	int err;
 
@@ -91,19 +117,33 @@ static int __compute_metric(const char *name, struct value *vals,
 	}
 
 	perf_evlist__set_maps(&evlist->core, cpus, NULL);
+<<<<<<< HEAD
 
 	/* Parse the metric into metric_events list. */
 	pme_test = find_core_metrics_table("testarch", "testcpu");
 	err = metricgroup__parse_groups_test(evlist, pme_test, name,
+=======
+	runtime_stat__init(&st);
+
+	/* Parse the metric into metric_events list. */
+	pme_test = find_core_events_table("testarch", "testcpu");
+	err = metricgroup__parse_groups_test(evlist, pme_test, name,
+					     false, false,
+>>>>>>> b7ba80a49124 (Commit)
 					     &metric_events);
 	if (err)
 		goto out;
 
+<<<<<<< HEAD
 	err = evlist__alloc_stats(/*config=*/NULL, evlist, /*alloc_raw=*/false);
+=======
+	err = evlist__alloc_stats(evlist, false);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out;
 
 	/* Load the runtime stats with given numbers for events. */
+<<<<<<< HEAD
 	load_runtime_stat(evlist, vals);
 
 	/* And execute the metric */
@@ -111,10 +151,23 @@ static int __compute_metric(const char *name, struct value *vals,
 		*ratio1 = compute_single(&metric_events, evlist, name1);
 	if (name2 && ratio2)
 		*ratio2 = compute_single(&metric_events, evlist, name2);
+=======
+	load_runtime_stat(&st, evlist, vals);
+
+	/* And execute the metric */
+	if (name1 && ratio1)
+		*ratio1 = compute_single(&metric_events, evlist, &st, name1);
+	if (name2 && ratio2)
+		*ratio2 = compute_single(&metric_events, evlist, &st, name2);
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	/* ... cleanup. */
 	metricgroup__rblist_exit(&metric_events);
+<<<<<<< HEAD
+=======
+	runtime_stat__exit(&st);
+>>>>>>> b7ba80a49124 (Commit)
 	evlist__free_stats(evlist);
 	perf_cpu_map__put(cpus);
 	evlist__delete(evlist);

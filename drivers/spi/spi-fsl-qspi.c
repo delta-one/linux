@@ -528,7 +528,11 @@ static void fsl_qspi_select_mem(struct fsl_qspi *q, struct spi_device *spi)
 	unsigned long rate = spi->max_speed_hz;
 	int ret;
 
+<<<<<<< HEAD
 	if (q->selected == spi_get_chipselect(spi, 0))
+=======
+	if (q->selected == spi->chip_select)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	if (needs_4x_clock(q))
@@ -544,7 +548,11 @@ static void fsl_qspi_select_mem(struct fsl_qspi *q, struct spi_device *spi)
 	if (ret)
 		return;
 
+<<<<<<< HEAD
 	q->selected = spi_get_chipselect(spi, 0);
+=======
+	q->selected = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 
 	fsl_qspi_invalidate(q);
 }
@@ -823,7 +831,11 @@ static const char *fsl_qspi_get_name(struct spi_mem *mem)
 
 	name = devm_kasprintf(dev, GFP_KERNEL,
 			      "%s-%d", dev_name(q->dev),
+<<<<<<< HEAD
 			      spi_get_chipselect(mem->spi, 0));
+=======
+			      mem->spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!name) {
 		dev_err(dev, "failed to get memory for custom flash name\n");
@@ -867,7 +879,12 @@ static int fsl_qspi_probe(struct platform_device *pdev)
 	platform_set_drvdata(pdev, q);
 
 	/* find the resources */
+<<<<<<< HEAD
 	q->iobase = devm_platform_ioremap_resource_byname(pdev, "QuadSPI");
+=======
+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "QuadSPI");
+	q->iobase = devm_ioremap_resource(dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(q->iobase)) {
 		ret = PTR_ERR(q->iobase);
 		goto err_put_ctrl;
@@ -948,7 +965,11 @@ err_put_ctrl:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void fsl_qspi_remove(struct platform_device *pdev)
+=======
+static int fsl_qspi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fsl_qspi *q = platform_get_drvdata(pdev);
 
@@ -959,6 +980,11 @@ static void fsl_qspi_remove(struct platform_device *pdev)
 	fsl_qspi_clk_disable_unprep(q);
 
 	mutex_destroy(&q->lock);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int fsl_qspi_suspend(struct device *dev)
@@ -998,7 +1024,11 @@ static struct platform_driver fsl_qspi_driver = {
 		.pm =   &fsl_qspi_pm_ops,
 	},
 	.probe          = fsl_qspi_probe,
+<<<<<<< HEAD
 	.remove_new	= fsl_qspi_remove,
+=======
+	.remove		= fsl_qspi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(fsl_qspi_driver);
 

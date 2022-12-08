@@ -1,12 +1,21 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 /*
+<<<<<<< HEAD
  *  Copyright 2016-2023 Broadcom Inc. All rights reserved.
+=======
+ *  Copyright 2016-2021 Broadcom Inc. All rights reserved.
+ *
+>>>>>>> b7ba80a49124 (Commit)
  */
 #ifndef MPI30_INIT_H
 #define MPI30_INIT_H     1
 struct mpi3_scsi_io_cdb_eedp32 {
 	u8                 cdb[20];
+<<<<<<< HEAD
 	__be32             primary_reference_tag;
+=======
+	__be32          primary_reference_tag;
+>>>>>>> b7ba80a49124 (Commit)
 	__le16             primary_application_tag;
 	__le16             primary_application_tag_mask;
 	__le32             transfer_length;
@@ -56,7 +65,10 @@ struct mpi3_scsi_io_request {
 #define MPI3_SCSIIO_FLAGS_DMAOPERATION_HOST_PI              (0x00010000)
 #define MPI3_SCSIIO_FLAGS_DIVERT_REASON_MASK                (0x000000f0)
 #define MPI3_SCSIIO_FLAGS_DIVERT_REASON_IO_THROTTLING       (0x00000010)
+<<<<<<< HEAD
 #define MPI3_SCSIIO_FLAGS_DIVERT_REASON_WRITE_SAME_TOO_LARGE (0x00000020)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MPI3_SCSIIO_FLAGS_DIVERT_REASON_PROD_SPECIFIC       (0x00000080)
 #define MPI3_SCSIIO_METASGL_INDEX                           (3)
 struct mpi3_scsi_io_reply {
@@ -115,6 +127,7 @@ struct mpi3_scsi_io_reply {
 #define MPI3_SCSI_RSP_ARI0_MASK                 (0xff000000)
 #define MPI3_SCSI_RSP_ARI0_SHIFT                (24)
 #define MPI3_SCSI_TASKTAG_UNKNOWN               (0xffff)
+<<<<<<< HEAD
 #define MPI3_SCSITASKMGMT_MSGFLAGS_DO_NOT_SEND_TASK_IU      (0x08)
 #define MPI3_SCSITASKMGMT_TASKTYPE_ABORT_TASK               (0x01)
 #define MPI3_SCSITASKMGMT_TASKTYPE_ABORT_TASK_SET           (0x02)
@@ -135,4 +148,6 @@ struct mpi3_scsi_io_reply {
 #define MPI3_SCSITASKMGMT_RSPCODE_TM_OVERLAPPED_TAG          (0x0a)
 #define MPI3_SCSITASKMGMT_RSPCODE_IO_QUEUED_ON_IOC           (0x80)
 #define MPI3_SCSITASKMGMT_RSPCODE_TM_NVME_DENIED             (0x81)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

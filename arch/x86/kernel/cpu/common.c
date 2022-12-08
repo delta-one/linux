@@ -22,9 +22,15 @@
 #include <linux/io.h>
 #include <linux/syscore_ops.h>
 #include <linux/pgtable.h>
+<<<<<<< HEAD
 #include <linux/stackprotector.h>
 
 #include <asm/cmdline.h>
+=======
+
+#include <asm/cmdline.h>
+#include <asm/stackprotector.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/perf_event.h>
 #include <asm/mmu_context.h>
 #include <asm/doublefault.h>
@@ -52,7 +58,10 @@
 #include <asm/cpu.h>
 #include <asm/mce.h>
 #include <asm/msr.h>
+<<<<<<< HEAD
 #include <asm/cacheinfo.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/memtype.h>
 #include <asm/microcode.h>
 #include <asm/microcode_intel.h>
@@ -567,18 +576,30 @@ static __init int setup_disable_pku(char *arg)
 	return 1;
 }
 __setup("nopku", setup_disable_pku);
+<<<<<<< HEAD
 #endif
 
 #ifdef CONFIG_X86_KERNEL_IBT
 
 __noendbr u64 ibt_save(bool disable)
+=======
+#endif /* CONFIG_X86_64 */
+
+#ifdef CONFIG_X86_KERNEL_IBT
+
+__noendbr u64 ibt_save(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u64 msr = 0;
 
 	if (cpu_feature_enabled(X86_FEATURE_IBT)) {
 		rdmsrl(MSR_IA32_S_CET, msr);
+<<<<<<< HEAD
 		if (disable)
 			wrmsrl(MSR_IA32_S_CET, msr & ~CET_ENDBR_EN);
+=======
+		wrmsrl(MSR_IA32_S_CET, msr & ~CET_ENDBR_EN);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return msr;
@@ -600,6 +621,7 @@ __noendbr void ibt_restore(u64 save)
 
 static __always_inline void setup_cet(struct cpuinfo_x86 *c)
 {
+<<<<<<< HEAD
 	bool user_shstk, kernel_ibt;
 
 	if (!IS_ENABLED(CONFIG_X86_CET))
@@ -626,17 +648,37 @@ static __always_inline void setup_cet(struct cpuinfo_x86 *c)
 		pr_err("IBT selftest: Failed!\n");
 		wrmsrl(MSR_IA32_S_CET, 0);
 		setup_clear_cpu_cap(X86_FEATURE_IBT);
+=======
+	u64 msr = CET_ENDBR_EN;
+
+	if (!HAS_KERNEL_IBT ||
+	    !cpu_feature_enabled(X86_FEATURE_IBT))
+		return;
+
+	wrmsrl(MSR_IA32_S_CET, msr);
+	cr4_set_bits(X86_CR4_CET);
+
+	if (!ibt_selftest()) {
+		pr_err("IBT selftest: Failed!\n");
+		setup_clear_cpu_cap(X86_FEATURE_IBT);
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
 __noendbr void cet_disable(void)
 {
+<<<<<<< HEAD
 	if (!(cpu_feature_enabled(X86_FEATURE_IBT) ||
 	      cpu_feature_enabled(X86_FEATURE_SHSTK)))
 		return;
 
 	wrmsrl(MSR_IA32_S_CET, 0);
 	wrmsrl(MSR_IA32_U_CET, 0);
+=======
+	if (cpu_feature_enabled(X86_FEATURE_IBT))
+		wrmsrl(MSR_IA32_S_CET, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -720,6 +762,19 @@ static const char *table_lookup_model(struct cpuinfo_x86 *c)
 __u32 cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
 __u32 cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
 
+<<<<<<< HEAD
+=======
+void load_percpu_segment(int cpu)
+{
+#ifdef CONFIG_X86_32
+	loadsegment(fs, __KERNEL_PERCPU);
+#else
+	__loadsegment_simple(gs, 0);
+	wrmsrl(MSR_GS_BASE, cpu_kernelmode_gs_base(cpu));
+#endif
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_X86_32
 /* The 32-bit entry code needs to find cpu_entry_area. */
 DEFINE_PER_CPU(struct cpu_entry_area *, cpu_entry_area);
@@ -747,6 +802,7 @@ void load_fixmap_gdt(int cpu)
 }
 EXPORT_SYMBOL_GPL(load_fixmap_gdt);
 
+<<<<<<< HEAD
 /**
  * switch_gdt_and_percpu_base - Switch to direct GDT and runtime per CPU base
  * @cpu:	The CPU number for which this is invoked
@@ -786,6 +842,18 @@ void __init switch_gdt_and_percpu_base(int cpu)
 	 */
 	loadsegment(fs, __KERNEL_PERCPU);
 #endif
+=======
+/*
+ * Current gdt points %fs at the "master" per-cpu area: after this,
+ * it's on the real one.
+ */
+void switch_to_new_gdt(int cpu)
+{
+	/* Load the original GDT */
+	load_direct_gdt(cpu);
+	/* Reload the per-cpu base */
+	load_percpu_segment(cpu);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct cpu_dev *cpu_devs[X86_VENDOR_NUM] = {};
@@ -1110,9 +1178,12 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
 	if (c->extended_cpuid_level >= 0x8000001f)
 		c->x86_capability[CPUID_8000_001F_EAX] = cpuid_eax(0x8000001f);
 
+<<<<<<< HEAD
 	if (c->extended_cpuid_level >= 0x80000021)
 		c->x86_capability[CPUID_8000_0021_EAX] = cpuid_eax(0x80000021);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	init_scattered_cpuid_features(c);
 	init_speculation_control(c);
 
@@ -1246,8 +1317,13 @@ static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
 	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT | NO_MMIO),
 
 	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
+<<<<<<< HEAD
 	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT | NO_MMIO | NO_EIBRS_PBRSB),
 	VULNWL_HYGON(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT | NO_MMIO | NO_EIBRS_PBRSB),
+=======
+	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT | NO_MMIO),
+	VULNWL_HYGON(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT | NO_MMIO),
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Zhaoxin Family 7 */
 	VULNWL(CENTAUR,	7, X86_MODEL_ANY,	NO_SPECTRE_V2 | NO_SWAPGS | NO_MMIO),
@@ -1276,8 +1352,11 @@ static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
 #define MMIO_SBDS	BIT(2)
 /* CPU is affected by RETbleed, speculating where you would not expect it */
 #define RETBLEED	BIT(3)
+<<<<<<< HEAD
 /* CPU is affected by SMT (cross-thread) return predictions */
 #define SMT_RSB		BIT(4)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct x86_cpu_id cpu_vuln_blacklist[] __initconst = {
 	VULNBL_INTEL_STEPPINGS(IVYBRIDGE,	X86_STEPPING_ANY,		SRBDS),
@@ -1309,8 +1388,13 @@ static const struct x86_cpu_id cpu_vuln_blacklist[] __initconst = {
 
 	VULNBL_AMD(0x15, RETBLEED),
 	VULNBL_AMD(0x16, RETBLEED),
+<<<<<<< HEAD
 	VULNBL_AMD(0x17, RETBLEED | SMT_RSB),
 	VULNBL_HYGON(0x18, RETBLEED | SMT_RSB),
+=======
+	VULNBL_AMD(0x17, RETBLEED),
+	VULNBL_HYGON(0x18, RETBLEED),
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 
@@ -1360,6 +1444,7 @@ static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
 	   !cpu_has(c, X86_FEATURE_AMD_SSB_NO))
 		setup_force_cpu_bug(X86_BUG_SPEC_STORE_BYPASS);
 
+<<<<<<< HEAD
 	/*
 	 * AMD's AutoIBRS is equivalent to Intel's eIBRS - use the Intel feature
 	 * flag and protect from vendor-specific bugs via the whitelist.
@@ -1370,6 +1455,10 @@ static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
 		    !(ia32_cap & ARCH_CAP_PBRSB_NO))
 			setup_force_cpu_bug(X86_BUG_EIBRS_PBRSB);
 	}
+=======
+	if (ia32_cap & ARCH_CAP_IBRS_ALL)
+		setup_force_cpu_cap(X86_FEATURE_IBRS_ENHANCED);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!cpu_matches(cpu_vuln_whitelist, NO_MDS) &&
 	    !(ia32_cap & ARCH_CAP_MDS_NO)) {
@@ -1431,8 +1520,15 @@ static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
 			setup_force_cpu_bug(X86_BUG_RETBLEED);
 	}
 
+<<<<<<< HEAD
 	if (cpu_matches(cpu_vuln_blacklist, SMT_RSB))
 		setup_force_cpu_bug(X86_BUG_SMT_RSB);
+=======
+	if (cpu_has(c, X86_FEATURE_IBRS_ENHANCED) &&
+	    !cpu_matches(cpu_vuln_whitelist, NO_EIBRS_PBRSB) &&
+	    !(ia32_cap & ARCH_CAP_PBRSB_NO))
+		setup_force_cpu_bug(X86_BUG_EIBRS_PBRSB);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (cpu_matches(cpu_vuln_whitelist, NO_MELTDOWN))
 		return;
@@ -1498,9 +1594,12 @@ static void __init cpu_parse_early_param(void)
 	if (cmdline_find_option_bool(boot_command_line, "noxsaves"))
 		setup_clear_cpu_cap(X86_FEATURE_XSAVES);
 
+<<<<<<< HEAD
 	if (cmdline_find_option_bool(boot_command_line, "nousershstk"))
 		setup_clear_cpu_cap(X86_FEATURE_USER_SHSTK);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	arglen = cmdline_find_option(boot_command_line, "clearcpuid", arg, sizeof(arg));
 	if (arglen <= 0)
 		return;
@@ -1713,7 +1812,13 @@ void check_null_seg_clears_base(struct cpuinfo_x86 *c)
 	if (!IS_ENABLED(CONFIG_X86_64))
 		return;
 
+<<<<<<< HEAD
 	if (cpu_has(c, X86_FEATURE_NULL_SEL_CLR_BASE))
+=======
+	/* Zen3 CPUs advertise Null Selector Clears Base in CPUID. */
+	if (c->extended_cpuid_level >= 0x80000021 &&
+	    cpuid_eax(0x80000021) & BIT(6))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	/*
@@ -1982,13 +2087,20 @@ void __init identify_boot_cpu(void)
 	if (HAS_KERNEL_IBT && cpu_feature_enabled(X86_FEATURE_IBT))
 		pr_info("CET detected: Indirect Branch Tracking enabled\n");
 #ifdef CONFIG_X86_32
+<<<<<<< HEAD
+=======
+	sysenter_setup();
+>>>>>>> b7ba80a49124 (Commit)
 	enable_sep_cpu();
 #endif
 	cpu_detect_tlb(&boot_cpu_data);
 	setup_cr_pinning();
 
 	tsx_init();
+<<<<<<< HEAD
 	lkgs_init();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void identify_secondary_cpu(struct cpuinfo_x86 *c)
@@ -1998,6 +2110,10 @@ void identify_secondary_cpu(struct cpuinfo_x86 *c)
 #ifdef CONFIG_X86_32
 	enable_sep_cpu();
 #endif
+<<<<<<< HEAD
+=======
+	mtrr_ap_init();
+>>>>>>> b7ba80a49124 (Commit)
 	validate_apic_and_package_id(c);
 	x86_spec_ctrl_setup_ap();
 	update_srbds_msr();
@@ -2042,6 +2158,7 @@ static __init int setup_clearcpuid(char *arg)
 }
 __setup("clearcpuid=", setup_clearcpuid);
 
+<<<<<<< HEAD
 DEFINE_PER_CPU_ALIGNED(struct pcpu_hot, pcpu_hot) = {
 	.current_task	= &init_task,
 	.preempt_count	= INIT_PREEMPT_COUNT,
@@ -2049,11 +2166,32 @@ DEFINE_PER_CPU_ALIGNED(struct pcpu_hot, pcpu_hot) = {
 };
 EXPORT_PER_CPU_SYMBOL(pcpu_hot);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_X86_64
 DEFINE_PER_CPU_FIRST(struct fixed_percpu_data,
 		     fixed_percpu_data) __aligned(PAGE_SIZE) __visible;
 EXPORT_PER_CPU_SYMBOL_GPL(fixed_percpu_data);
 
+<<<<<<< HEAD
+=======
+/*
+ * The following percpu variables are hot.  Align current_task to
+ * cacheline size such that they fall in the same cacheline.
+ */
+DEFINE_PER_CPU(struct task_struct *, current_task) ____cacheline_aligned =
+	&init_task;
+EXPORT_PER_CPU_SYMBOL(current_task);
+
+DEFINE_PER_CPU(void *, hardirq_stack_ptr);
+DEFINE_PER_CPU(bool, hardirq_stack_inuse);
+
+DEFINE_PER_CPU(int, __preempt_count) = INIT_PREEMPT_COUNT;
+EXPORT_PER_CPU_SYMBOL(__preempt_count);
+
+DEFINE_PER_CPU(unsigned long, cpu_current_top_of_stack) = TOP_OF_INIT_STACK;
+
+>>>>>>> b7ba80a49124 (Commit)
 static void wrmsrl_cstar(unsigned long val)
 {
 	/*
@@ -2104,6 +2242,23 @@ void syscall_init(void)
 
 #else	/* CONFIG_X86_64 */
 
+<<<<<<< HEAD
+=======
+DEFINE_PER_CPU(struct task_struct *, current_task) = &init_task;
+EXPORT_PER_CPU_SYMBOL(current_task);
+DEFINE_PER_CPU(int, __preempt_count) = INIT_PREEMPT_COUNT;
+EXPORT_PER_CPU_SYMBOL(__preempt_count);
+
+/*
+ * On x86_32, vm86 modifies tss.sp0, so sp0 isn't a reliable way to find
+ * the top of the kernel stack.  Use an extra percpu variable to track the
+ * top of the kernel stack directly.
+ */
+DEFINE_PER_CPU(unsigned long, cpu_current_top_of_stack) =
+	(unsigned long)&init_thread_union + THREAD_SIZE;
+EXPORT_PER_CPU_SYMBOL(cpu_current_top_of_stack);
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_STACKPROTECTOR
 DEFINE_PER_CPU(unsigned long, __stack_chk_guard);
 EXPORT_PER_CPU_SYMBOL(__stack_chk_guard);
@@ -2154,6 +2309,10 @@ static void wait_for_master_cpu(int cpu)
 #endif
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_X86_64
+>>>>>>> b7ba80a49124 (Commit)
 static inline void setup_getcpu(int cpu)
 {
 	unsigned long cpudata = vdso_encode_cpunode(cpu, early_cpu_to_node(cpu));
@@ -2175,7 +2334,10 @@ static inline void setup_getcpu(int cpu)
 	write_gdt_entry(get_cpu_gdt_rw(cpu), GDT_ENTRY_CPUNODE, &d, DESCTYPE_S);
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_X86_64
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void ucode_cpu_init(int cpu)
 {
 	if (cpu)
@@ -2195,6 +2357,11 @@ static inline void tss_setup_ist(struct tss_struct *tss)
 
 #else /* CONFIG_X86_64 */
 
+<<<<<<< HEAD
+=======
+static inline void setup_getcpu(int cpu) { }
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void ucode_cpu_init(int cpu)
 {
 	show_ucode_info_early();
@@ -2272,6 +2439,15 @@ void cpu_init(void)
 	    boot_cpu_has(X86_FEATURE_TSC) || boot_cpu_has(X86_FEATURE_DE))
 		cr4_clear_bits(X86_CR4_VME|X86_CR4_PVI|X86_CR4_TSD|X86_CR4_DE);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Initialize the per-CPU GDT with the boot GDT,
+	 * and set up the GDT descriptor:
+	 */
+	switch_to_new_gdt(cpu);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ENABLED(CONFIG_X86_64)) {
 		loadsegment(fs, 0);
 		memset(cur->thread.tls_array, 0, GDT_ENTRY_TLS_ENTRIES * 8);
@@ -2324,6 +2500,7 @@ void cpu_init_secondary(void)
 #endif
 
 #ifdef CONFIG_MICROCODE_LATE_LOADING
+<<<<<<< HEAD
 /**
  * store_cpu_caps() - Store a snapshot of CPU capabilities
  * @curr_info: Pointer where to store it
@@ -2363,6 +2540,32 @@ void microcode_check(struct cpuinfo_x86 *prev_info)
 
 	if (!memcmp(&prev_info->x86_capability, &curr_info.x86_capability,
 		    sizeof(prev_info->x86_capability)))
+=======
+/*
+ * The microcode loader calls this upon late microcode load to recheck features,
+ * only when microcode has been updated. Caller holds microcode_mutex and CPU
+ * hotplug lock.
+ */
+void microcode_check(void)
+{
+	struct cpuinfo_x86 info;
+
+	perf_check_microcode();
+
+	/* Reload CPUID max function as it might've changed. */
+	info.cpuid_level = cpuid_eax(0);
+
+	/*
+	 * Copy all capability leafs to pick up the synthetic ones so that
+	 * memcmp() below doesn't fail on that. The ones coming from CPUID will
+	 * get overwritten in get_cpu_cap().
+	 */
+	memcpy(&info.x86_capability, &boot_cpu_data.x86_capability, sizeof(info.x86_capability));
+
+	get_cpu_cap(&info);
+
+	if (!memcmp(&info.x86_capability, &boot_cpu_data.x86_capability, sizeof(info.x86_capability)))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	pr_warn("x86/CPU: CPU features have changed after loading microcode, but might not take effect.\n");

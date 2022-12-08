@@ -6,6 +6,7 @@
 
 int __pure cacheline_size(void);
 
+<<<<<<< HEAD
 
 /*
  * Some architectures have 'Adjacent Cacheline Prefetch' feature,
@@ -31,6 +32,18 @@ static inline u64 cl_offset(u64 address, bool double_cl)
 
 	/* return the offset inside cacheline */
 	return (address & (size - 1));
+=======
+static inline u64 cl_address(u64 address)
+{
+	/* return the cacheline of the address */
+	return (address & ~(cacheline_size() - 1));
+}
+
+static inline u64 cl_offset(u64 address)
+{
+	/* return the cacheline of the address */
+	return (address & (cacheline_size() - 1));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #endif // PERF_CACHELINE_H

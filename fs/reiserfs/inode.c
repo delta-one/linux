@@ -2087,8 +2087,15 @@ int reiserfs_new_inode(struct reiserfs_transaction_handle *th,
 	 * Mark it private if we're creating the privroot
 	 * or something under it.
 	 */
+<<<<<<< HEAD
 	if (IS_PRIVATE(dir) || dentry == REISERFS_SB(sb)->priv_root)
 		reiserfs_init_priv_inode(inode);
+=======
+	if (IS_PRIVATE(dir) || dentry == REISERFS_SB(sb)->priv_root) {
+		inode->i_flags |= S_PRIVATE;
+		inode->i_opflags &= ~IOP_XATTR;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (reiserfs_posixacl(inode->i_sb)) {
 		reiserfs_write_unlock(inode->i_sb);
@@ -3260,21 +3267,33 @@ static ssize_t reiserfs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
 	return ret;
 }
 
+<<<<<<< HEAD
 int reiserfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+int reiserfs_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		     struct iattr *attr)
 {
 	struct inode *inode = d_inode(dentry);
 	unsigned int ia_valid;
 	int error;
 
+<<<<<<< HEAD
 	error = setattr_prepare(&nop_mnt_idmap, dentry, attr);
+=======
+	error = setattr_prepare(&init_user_ns, dentry, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		return error;
 
 	/* must be turned off for recursive notify_change calls */
 	ia_valid = attr->ia_valid &= ~(ATTR_KILL_SUID|ATTR_KILL_SGID);
 
+<<<<<<< HEAD
 	if (is_quota_modification(&nop_mnt_idmap, inode, attr)) {
+=======
+	if (is_quota_modification(mnt_userns, inode, attr)) {
+>>>>>>> b7ba80a49124 (Commit)
 		error = dquot_initialize(inode);
 		if (error)
 			return error;
@@ -3357,7 +3376,11 @@ int reiserfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 		reiserfs_write_unlock(inode->i_sb);
 		if (error)
 			goto out;
+<<<<<<< HEAD
 		error = dquot_transfer(&nop_mnt_idmap, inode, attr);
+=======
+		error = dquot_transfer(mnt_userns, inode, attr);
+>>>>>>> b7ba80a49124 (Commit)
 		reiserfs_write_lock(inode->i_sb);
 		if (error) {
 			journal_end(&th);
@@ -3396,13 +3419,21 @@ int reiserfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 	}
 
 	if (!error) {
+<<<<<<< HEAD
 		setattr_copy(&nop_mnt_idmap, inode, attr);
+=======
+		setattr_copy(&init_user_ns, inode, attr);
+>>>>>>> b7ba80a49124 (Commit)
 		mark_inode_dirty(inode);
 	}
 
 	if (!error && reiserfs_posixacl(inode->i_sb)) {
 		if (attr->ia_valid & ATTR_MODE)
+<<<<<<< HEAD
 			error = reiserfs_acl_chmod(dentry);
+=======
+			error = reiserfs_acl_chmod(inode);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 out:

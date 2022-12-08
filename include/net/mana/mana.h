@@ -48,10 +48,13 @@ enum TRI_STATE {
 
 #define MAX_PORTS_IN_MANA_DEV 256
 
+<<<<<<< HEAD
 /* Update this count whenever the respective structures are changed */
 #define MANA_STATS_RX_COUNT 5
 #define MANA_STATS_TX_COUNT 11
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mana_stats_rx {
 	u64 packets;
 	u64 bytes;
@@ -65,6 +68,7 @@ struct mana_stats_tx {
 	u64 packets;
 	u64 bytes;
 	u64 xdp_xmit;
+<<<<<<< HEAD
 	u64 tso_packets;
 	u64 tso_bytes;
 	u64 tso_inner_packets;
@@ -73,6 +77,8 @@ struct mana_stats_tx {
 	u64 long_pkt_fmt;
 	u64 csum_partial;
 	u64 mana_map_err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct u64_stats_sync syncp;
 };
 
@@ -343,12 +349,15 @@ struct mana_tx_qp {
 struct mana_ethtool_stats {
 	u64 stop_queue;
 	u64 wake_queue;
+<<<<<<< HEAD
 	u64 tx_cqes;
 	u64 tx_cqe_err;
 	u64 tx_cqe_unknown_type;
 	u64 rx_cqes;
 	u64 rx_coalesced_err;
 	u64 rx_cqe_unknown_type;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mana_context {
@@ -408,7 +417,11 @@ struct mana_port_context {
 	struct mana_ethtool_stats eth_stats;
 };
 
+<<<<<<< HEAD
 netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev);
+=======
+int mana_start_xmit(struct sk_buff *skb, struct net_device *ndev);
+>>>>>>> b7ba80a49124 (Commit)
 int mana_config_rss(struct mana_port_context *ac, enum TRI_STATE rx,
 		    bool update_hash, bool update_tab);
 

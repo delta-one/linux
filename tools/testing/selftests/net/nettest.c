@@ -87,7 +87,10 @@ struct sock_args {
 	int use_setsockopt;
 	int use_freebind;
 	int use_cmsg;
+<<<<<<< HEAD
 	uint8_t dsfield;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const char *dev;
 	const char *server_dev;
 	int ifindex;
@@ -581,6 +584,7 @@ static int set_reuseaddr(int sd)
 	return rc;
 }
 
+<<<<<<< HEAD
 static int set_dsfield(int sd, int version, int dsfield)
 {
 	if (!dsfield)
@@ -611,6 +615,8 @@ static int set_dsfield(int sd, int version, int dsfield)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int str_to_uint(const char *str, int min, int max, unsigned int *value)
 {
 	int number;
@@ -1348,9 +1354,12 @@ static int msock_init(struct sock_args *args, int server)
 		       (char *)&one, sizeof(one)) < 0)
 		log_err_errno("Setting SO_BROADCAST error");
 
+<<<<<<< HEAD
 	if (set_dsfield(sd, AF_INET, args->dsfield) != 0)
 		goto out_err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (args->dev && bind_to_device(sd, args->dev) != 0)
 		goto out_err;
 	else if (args->use_setsockopt &&
@@ -1479,9 +1488,12 @@ static int lsock_init(struct sock_args *args)
 	if (set_reuseport(sd) != 0)
 		goto err;
 
+<<<<<<< HEAD
 	if (set_dsfield(sd, args->version, args->dsfield) != 0)
 		goto err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (args->dev && bind_to_device(sd, args->dev) != 0)
 		goto err;
 	else if (args->use_setsockopt &&
@@ -1695,9 +1707,12 @@ static int connectsock(void *addr, socklen_t alen, struct sock_args *args)
 	if (set_reuseport(sd) != 0)
 		goto err;
 
+<<<<<<< HEAD
 	if (set_dsfield(sd, args->version, args->dsfield) != 0)
 		goto err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (args->dev && bind_to_device(sd, args->dev) != 0)
 		goto err;
 	else if (args->use_setsockopt &&
@@ -1902,7 +1917,11 @@ static int ipc_parent(int cpid, int fd, struct sock_args *args)
 	return client_status;
 }
 
+<<<<<<< HEAD
 #define GETOPT_STR  "sr:l:c:Q:p:t:g:P:DRn:M:X:m:d:I:BN:O:SUCi6xL:0:1:2:3:Fbqf"
+=======
+#define GETOPT_STR  "sr:l:c:p:t:g:P:DRn:M:X:m:d:I:BN:O:SUCi6xL:0:1:2:3:Fbqf"
+>>>>>>> b7ba80a49124 (Commit)
 #define OPT_FORCE_BIND_KEY_IFINDEX 1001
 #define OPT_NO_BIND_KEY_IFINDEX 1002
 
@@ -1933,8 +1952,11 @@ static void print_usage(char *prog)
 	"    -D|R          datagram (D) / raw (R) socket (default stream)\n"
 	"    -l addr       local address to bind to in server mode\n"
 	"    -c addr       local address to bind to in client mode\n"
+<<<<<<< HEAD
 	"    -Q dsfield    DS Field value of the socket (the IP_TOS or\n"
 	"                  IPV6_TCLASS socket option)\n"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	"    -x            configure XFRM policy on socket\n"
 	"\n"
 	"    -d dev        bind socket to given device name\n"
@@ -2013,6 +2035,7 @@ int main(int argc, char *argv[])
 			args.has_local_ip = 1;
 			args.client_local_addr_str = optarg;
 			break;
+<<<<<<< HEAD
 		case 'Q':
 			if (str_to_uint(optarg, 0, 255, &tmp) != 0) {
 				fprintf(stderr, "Invalid DS Field\n");
@@ -2020,6 +2043,8 @@ int main(int argc, char *argv[])
 			}
 			args.dsfield = tmp;
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		case 'p':
 			if (str_to_uint(optarg, 1, 65535, &tmp) != 0) {
 				fprintf(stderr, "Invalid port\n");

@@ -1217,7 +1217,12 @@ int aq_ptp_init(struct aq_nic_s *aq_nic, unsigned int idx_vec)
 	atomic_set(&aq_ptp->offset_egress, 0);
 	atomic_set(&aq_ptp->offset_ingress, 0);
 
+<<<<<<< HEAD
 	netif_napi_add(aq_nic_get_ndev(aq_nic), &aq_ptp->napi, aq_ptp_poll);
+=======
+	netif_napi_add(aq_nic_get_ndev(aq_nic), &aq_ptp->napi,
+		       aq_ptp_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	aq_ptp->idx_vector = idx_vec;
 

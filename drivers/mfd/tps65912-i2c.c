@@ -21,7 +21,12 @@ static const struct of_device_id tps65912_i2c_of_match_table[] = {
 };
 MODULE_DEVICE_TABLE(of, tps65912_i2c_of_match_table);
 
+<<<<<<< HEAD
 static int tps65912_i2c_probe(struct i2c_client *client)
+=======
+static int tps65912_i2c_probe(struct i2c_client *client,
+			      const struct i2c_device_id *ids)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tps65912 *tps;
 
@@ -60,7 +65,11 @@ static struct i2c_driver tps65912_i2c_driver = {
 		.name	= "tps65912",
 		.of_match_table = tps65912_i2c_of_match_table,
 	},
+<<<<<<< HEAD
 	.probe_new	= tps65912_i2c_probe,
+=======
+	.probe		= tps65912_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= tps65912_i2c_remove,
 	.id_table       = tps65912_i2c_id_table,
 };

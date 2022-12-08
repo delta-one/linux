@@ -2,7 +2,11 @@
 #ifndef IOU_OP_DEF_H
 #define IOU_OP_DEF_H
 
+<<<<<<< HEAD
 struct io_issue_def {
+=======
+struct io_op_def {
+>>>>>>> b7ba80a49124 (Commit)
 	/* needs req->file assigned */
 	unsigned		needs_file : 1;
 	/* should block plug */
@@ -25,6 +29,7 @@ struct io_issue_def {
 	unsigned		ioprio : 1;
 	/* supports iopoll */
 	unsigned		iopoll : 1;
+<<<<<<< HEAD
 	/* have to be put into the iopoll list */
 	unsigned		iopoll_queue : 1;
 	/* opcode specific path will handle ->async_data allocation if needed */
@@ -35,18 +40,31 @@ struct io_issue_def {
 };
 
 struct io_cold_def {
+=======
+	/* opcode specific path will handle ->async_data allocation if needed */
+	unsigned		manual_alloc : 1;
+>>>>>>> b7ba80a49124 (Commit)
 	/* size of async data needed, if any */
 	unsigned short		async_size;
 
 	const char		*name;
 
+<<<<<<< HEAD
+=======
+	int (*prep)(struct io_kiocb *, const struct io_uring_sqe *);
+	int (*issue)(struct io_kiocb *, unsigned int);
+>>>>>>> b7ba80a49124 (Commit)
 	int (*prep_async)(struct io_kiocb *);
 	void (*cleanup)(struct io_kiocb *);
 	void (*fail)(struct io_kiocb *);
 };
 
+<<<<<<< HEAD
 extern const struct io_issue_def io_issue_defs[];
 extern const struct io_cold_def io_cold_defs[];
+=======
+extern const struct io_op_def io_op_defs[];
+>>>>>>> b7ba80a49124 (Commit)
 
 void io_uring_optable_init(void);
 #endif

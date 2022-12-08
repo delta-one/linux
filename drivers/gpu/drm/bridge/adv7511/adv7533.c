@@ -100,6 +100,7 @@ void adv7533_dsi_power_off(struct adv7511 *adv)
 	regmap_write(adv->regmap_cec, 0x27, 0x0b);
 }
 
+<<<<<<< HEAD
 enum drm_mode_status adv7533_mode_valid(struct adv7511 *adv,
 					const struct drm_display_mode *mode)
 {
@@ -118,6 +119,28 @@ enum drm_mode_status adv7533_mode_valid(struct adv7511 *adv,
 		return MODE_CLOCK_HIGH;
 
 	return MODE_OK;
+=======
+void adv7533_mode_set(struct adv7511 *adv, const struct drm_display_mode *mode)
+{
+	struct mipi_dsi_device *dsi = adv->dsi;
+	int lanes, ret;
+
+	if (adv->num_dsi_lanes != 4)
+		return;
+
+	if (mode->clock > 80000)
+		lanes = 4;
+	else
+		lanes = 3;
+
+	if (lanes != dsi->lanes) {
+		mipi_dsi_detach(dsi);
+		dsi->lanes = lanes;
+		ret = mipi_dsi_attach(dsi);
+		if (ret)
+			dev_err(&dsi->dev, "failed to change host lanes\n");
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int adv7533_patch_registers(struct adv7511 *adv)
@@ -146,6 +169,7 @@ int adv7533_attach_dsi(struct adv7511 *adv)
 						 };
 
 	host = of_find_mipi_dsi_host_by_node(adv->host_node);
+<<<<<<< HEAD
 	if (!host)
 		return dev_err_probe(dev, -EPROBE_DEFER,
 				     "failed to find dsi host\n");
@@ -154,6 +178,18 @@ int adv7533_attach_dsi(struct adv7511 *adv)
 	if (IS_ERR(dsi))
 		return dev_err_probe(dev, PTR_ERR(dsi),
 				     "failed to create dsi device\n");
+=======
+	if (!host) {
+		dev_err(dev, "failed to find dsi host\n");
+		return -EPROBE_DEFER;
+	}
+
+	dsi = devm_mipi_dsi_device_register_full(dev, host, &info);
+	if (IS_ERR(dsi)) {
+		dev_err(dev, "failed to create dsi device\n");
+		return PTR_ERR(dsi);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	adv->dsi = dsi;
 
@@ -163,8 +199,15 @@ int adv7533_attach_dsi(struct adv7511 *adv)
 			  MIPI_DSI_MODE_NO_EOT_PACKET | MIPI_DSI_MODE_VIDEO_HSE;
 
 	ret = devm_mipi_dsi_attach(dev, dsi);
+<<<<<<< HEAD
 	if (ret < 0)
 		return dev_err_probe(dev, ret, "failed to attach dsi to host\n");
+=======
+	if (ret < 0) {
+		dev_err(dev, "failed to attach dsi to host\n");
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

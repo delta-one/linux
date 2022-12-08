@@ -160,8 +160,13 @@ static int tegra_cpuidle_coupled_barrier(struct cpuidle_device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static __cpuidle int tegra_cpuidle_state_enter(struct cpuidle_device *dev,
 					       int index, unsigned int cpu)
+=======
+static int tegra_cpuidle_state_enter(struct cpuidle_device *dev,
+				     int index, unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 
@@ -180,11 +185,17 @@ static __cpuidle int tegra_cpuidle_state_enter(struct cpuidle_device *dev,
 	}
 
 	local_fiq_disable();
+<<<<<<< HEAD
 	tegra_pm_set_cpu_in_lp2();
 	cpu_pm_enter();
 
 	ct_cpuidle_enter();
 
+=======
+	RCU_NONIDLE(tegra_pm_set_cpu_in_lp2());
+	cpu_pm_enter();
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (index) {
 	case TEGRA_C7:
 		err = tegra_cpuidle_c7_enter();
@@ -199,10 +210,15 @@ static __cpuidle int tegra_cpuidle_state_enter(struct cpuidle_device *dev,
 		break;
 	}
 
+<<<<<<< HEAD
 	ct_cpuidle_exit();
 
 	cpu_pm_exit();
 	tegra_pm_clear_cpu_in_lp2();
+=======
+	cpu_pm_exit();
+	RCU_NONIDLE(tegra_pm_clear_cpu_in_lp2());
+>>>>>>> b7ba80a49124 (Commit)
 	local_fiq_enable();
 
 	return err ?: index;
@@ -226,11 +242,18 @@ static int tegra_cpuidle_adjust_state_index(int index, unsigned int cpu)
 	return index;
 }
 
+<<<<<<< HEAD
 static __cpuidle int tegra_cpuidle_enter(struct cpuidle_device *dev,
 					 struct cpuidle_driver *drv,
 					 int index)
 {
 	bool do_rcu = drv->states[index].flags & CPUIDLE_FLAG_RCU_IDLE;
+=======
+static int tegra_cpuidle_enter(struct cpuidle_device *dev,
+			       struct cpuidle_driver *drv,
+			       int index)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int cpu = cpu_logical_map(dev->cpu);
 	int ret;
 
@@ -238,6 +261,7 @@ static __cpuidle int tegra_cpuidle_enter(struct cpuidle_device *dev,
 	if (dev->states_usage[index].disable)
 		return -1;
 
+<<<<<<< HEAD
 	if (index == TEGRA_C1) {
 		if (do_rcu)
 			ct_cpuidle_enter();
@@ -245,6 +269,11 @@ static __cpuidle int tegra_cpuidle_enter(struct cpuidle_device *dev,
 		if (do_rcu)
 			ct_cpuidle_exit();
 	} else
+=======
+	if (index == TEGRA_C1)
+		ret = arm_cpuidle_simple_enter(dev, drv, index);
+	else
+>>>>>>> b7ba80a49124 (Commit)
 		ret = tegra_cpuidle_state_enter(dev, index, cpu);
 
 	if (ret < 0) {
@@ -294,8 +323,12 @@ static struct cpuidle_driver tegra_idle_driver = {
 			.exit_latency		= 2000,
 			.target_residency	= 2200,
 			.power_usage		= 100,
+<<<<<<< HEAD
 			.flags			= CPUIDLE_FLAG_TIMER_STOP |
 						  CPUIDLE_FLAG_RCU_IDLE,
+=======
+			.flags			= CPUIDLE_FLAG_TIMER_STOP,
+>>>>>>> b7ba80a49124 (Commit)
 			.name			= "C7",
 			.desc			= "CPU core powered off",
 		},
@@ -305,7 +338,10 @@ static struct cpuidle_driver tegra_idle_driver = {
 			.target_residency	= 10000,
 			.power_usage		= 0,
 			.flags			= CPUIDLE_FLAG_TIMER_STOP |
+<<<<<<< HEAD
 						  CPUIDLE_FLAG_RCU_IDLE   |
+=======
+>>>>>>> b7ba80a49124 (Commit)
 						  CPUIDLE_FLAG_COUPLED,
 			.name			= "CC6",
 			.desc			= "CPU cluster powered off",

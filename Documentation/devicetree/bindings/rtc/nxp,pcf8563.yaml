@@ -19,6 +19,11 @@ properties:
       - microcrystal,rv8564
       - nxp,pca8565
       - nxp,pcf8563
+<<<<<<< HEAD
+=======
+      - nxp,pcf85263
+      - nxp,pcf85363
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1

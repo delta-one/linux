@@ -48,7 +48,11 @@ unsigned int zfcp_fc_port_scan_backoff(void)
 {
 	if (!port_scan_backoff)
 		return 0;
+<<<<<<< HEAD
 	return get_random_u32_below(port_scan_backoff);
+=======
+	return prandom_u32_max(port_scan_backoff);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void zfcp_fc_port_scan_time(struct zfcp_adapter *adapter)

@@ -918,8 +918,13 @@ static int cs35l36_dai_set_sysclk(struct snd_soc_dai *dai, int clk_id,
 		fs1 = CS35L36_FS1_DEFAULT_VAL;
 		fs2 = CS35L36_FS2_DEFAULT_VAL;
 	} else {
+<<<<<<< HEAD
 		fs1 = 3 * DIV_ROUND_UP(CS35L36_FS_NOM_6MHZ * 4, freq) + 4;
 		fs2 = 5 * DIV_ROUND_UP(CS35L36_FS_NOM_6MHZ * 4, freq) + 4;
+=======
+		fs1 = 3 * ((CS35L36_FS_NOM_6MHZ * 4 + freq - 1) / freq) + 4;
+		fs2 = 5 * ((CS35L36_FS_NOM_6MHZ * 4 + freq - 1) / freq) + 4;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	regmap_write(cs35l36->regmap, CS35L36_TESTKEY_CTRL,

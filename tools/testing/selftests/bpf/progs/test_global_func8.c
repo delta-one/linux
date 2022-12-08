@@ -3,7 +3,10 @@
 #include <stddef.h>
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
+<<<<<<< HEAD
 #include "bpf_misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 __noinline int foo(struct __sk_buff *skb)
 {
@@ -11,8 +14,12 @@ __noinline int foo(struct __sk_buff *skb)
 }
 
 SEC("cgroup_skb/ingress")
+<<<<<<< HEAD
 __success
 int global_func8(struct __sk_buff *skb)
+=======
+int test_cls(struct __sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!foo(skb))
 		return 0;

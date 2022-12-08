@@ -1220,12 +1220,21 @@ err_clk:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void msm8916_wcd_digital_remove(struct platform_device *pdev)
+=======
+static int msm8916_wcd_digital_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct msm8916_wcd_digital_priv *priv = dev_get_drvdata(&pdev->dev);
 
 	clk_disable_unprepare(priv->mclk);
 	clk_disable_unprepare(priv->ahbclk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id msm8916_wcd_digital_match_table[] = {
@@ -1241,7 +1250,11 @@ static struct platform_driver msm8916_wcd_digital_driver = {
 		   .of_match_table = msm8916_wcd_digital_match_table,
 	},
 	.probe = msm8916_wcd_digital_probe,
+<<<<<<< HEAD
 	.remove_new = msm8916_wcd_digital_remove,
+=======
+	.remove = msm8916_wcd_digital_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(msm8916_wcd_digital_driver);

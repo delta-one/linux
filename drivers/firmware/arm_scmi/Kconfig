@@ -23,6 +23,7 @@ config ARM_SCMI_PROTOCOL
 
 if ARM_SCMI_PROTOCOL
 
+<<<<<<< HEAD
 config ARM_SCMI_NEED_DEBUGFS
 	bool
 	help
@@ -55,6 +56,8 @@ config ARM_SCMI_RAW_MODE_SUPPORT_COEX
 	  operate normally, thing which could make an SCMI test suite using the
 	  SCMI Raw mode support unreliable. If unsure, say N.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config ARM_SCMI_HAVE_TRANSPORT
 	bool
 	help

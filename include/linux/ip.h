@@ -35,6 +35,7 @@ static inline unsigned int ip_transport_len(const struct sk_buff *skb)
 {
 	return ntohs(ip_hdr(skb)->tot_len) - skb_network_header_len(skb);
 }
+<<<<<<< HEAD
 
 static inline unsigned int iph_totlen(const struct sk_buff *skb, const struct iphdr *iph)
 {
@@ -56,4 +57,6 @@ static inline void iph_set_totlen(struct iphdr *iph, unsigned int len)
 {
 	iph->tot_len = len <= IP_MAX_MTU ? htons(len) : 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif	/* _LINUX_IP_H */

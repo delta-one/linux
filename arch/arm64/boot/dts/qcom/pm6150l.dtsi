@@ -1,12 +1,17 @@
 // SPDX-License-Identifier: BSD-3-Clause
+<<<<<<< HEAD
 /*
  * Copyright (c) 2019, The Linux Foundation. All rights reserved.
  */
+=======
+// Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <dt-bindings/iio/qcom,spmi-vadc.h>
 #include <dt-bindings/interrupt-controller/irq.h>
 #include <dt-bindings/spmi/spmi.h>
 
+<<<<<<< HEAD
 / {
 	thermal-zones {
 		pm6150l-thermal {
@@ -38,6 +43,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &spmi_bus {
 	pm6150l_lsid4: pmic@4 {
 		compatible = "qcom,pm6150l", "qcom,spmi-pmic";
@@ -45,6 +52,7 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
+<<<<<<< HEAD
 		pm6150l_temp: temp-alarm@2400 {
 			compatible = "qcom,spmi-temp-alarm";
 			reg = <0x2400>;
@@ -52,6 +60,8 @@
 			#thermal-sensor-cells = <0>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pm6150l_adc: adc@3100 {
 			compatible = "qcom,spmi-adc5";
 			reg = <0x3100>;
@@ -95,11 +105,19 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		pm6150l_gpios: gpio@c000 {
 			compatible = "qcom,pm6150l-gpio", "qcom,spmi-gpio";
 			reg = <0xc000>;
 			gpio-controller;
 			gpio-ranges = <&pm6150l_gpios 0 0 12>;
+=======
+		pm6150l_gpio: gpios@c000 {
+			compatible = "qcom,pm6150l-gpio", "qcom,spmi-gpio";
+			reg = <0xc000>;
+			gpio-controller;
+			gpio-ranges = <&pm6150l_gpio 0 0 12>;
+>>>>>>> b7ba80a49124 (Commit)
 			#gpio-cells = <2>;
 			interrupt-controller;
 			#interrupt-cells = <2>;
@@ -112,12 +130,15 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
+<<<<<<< HEAD
 		pm6150l_flash: led-controller@d300 {
 			compatible = "qcom,pm6150l-flash-led", "qcom,spmi-flash-led";
 			reg = <0xd300>;
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pm6150l_wled: leds@d800 {
 			compatible = "qcom,pm6150l-wled";
 			reg = <0xd800>, <0xd900>;

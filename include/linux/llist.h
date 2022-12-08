@@ -50,7 +50,10 @@
 
 #include <linux/atomic.h>
 #include <linux/container_of.h>
+<<<<<<< HEAD
 #include <linux/non-atomic/xchg.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/stddef.h>
 #include <linux/types.h>
 
@@ -242,7 +245,14 @@ static inline struct llist_node *llist_del_all(struct llist_head *head)
 
 static inline struct llist_node *__llist_del_all(struct llist_head *head)
 {
+<<<<<<< HEAD
 	return __xchg(&head->first, NULL);
+=======
+	struct llist_node *first = head->first;
+
+	head->first = NULL;
+	return first;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 extern struct llist_node *llist_del_first(struct llist_head *head);

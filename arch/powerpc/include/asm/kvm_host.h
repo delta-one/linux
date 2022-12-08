@@ -443,7 +443,11 @@ struct kvmppc_passthru_irqmap {
 };
 #endif
 
+<<<<<<< HEAD
 # ifdef CONFIG_PPC_E500
+=======
+# ifdef CONFIG_PPC_FSL_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 #define KVMPPC_BOOKE_IAC_NUM	2
 #define KVMPPC_BOOKE_DAC_NUM	2
 # else
@@ -876,10 +880,19 @@ struct kvm_vcpu_arch {
 #define __KVM_HAVE_ARCH_WQP
 #define __KVM_HAVE_CREATE_DEVICE
 
+<<<<<<< HEAD
+=======
+static inline void kvm_arch_hardware_disable(void) {}
+static inline void kvm_arch_hardware_unsetup(void) {}
+>>>>>>> b7ba80a49124 (Commit)
 static inline void kvm_arch_sync_events(struct kvm *kvm) {}
 static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
 static inline void kvm_arch_flush_shadow_all(struct kvm *kvm) {}
 static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
+<<<<<<< HEAD
+=======
+static inline void kvm_arch_exit(void) {}
+>>>>>>> b7ba80a49124 (Commit)
 static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
 static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
 

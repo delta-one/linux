@@ -861,6 +861,7 @@ gk104_grctx_generate_r418800(struct gf100_gr *gr)
 }
 
 void
+<<<<<<< HEAD
 gk104_grctx_generate_patch_ltc(struct gf100_gr_chan *chan)
 {
 	struct nvkm_device *device = chan->gr->base.engine.subdev.device;
@@ -888,6 +889,45 @@ gk104_grctx_generate_pagepool(struct gf100_gr_chan *chan, u64 addr)
 {
 	gf100_grctx_generate_pagepool(chan, addr);
 	gf100_grctx_patch_wr32(chan, 0x4064cc, 0x80000000);
+=======
+gk104_grctx_generate_patch_ltc(struct gf100_grctx *info)
+{
+	struct nvkm_device *device = info->gr->base.engine.subdev.device;
+	u32 data0 = nvkm_rd32(device, 0x17e91c);
+	u32 data1 = nvkm_rd32(device, 0x17e920);
+	/*XXX: Figure out how to modify this correctly! */
+	mmio_wr32(info, 0x17e91c, data0);
+	mmio_wr32(info, 0x17e920, data1);
+}
+
+void
+gk104_grctx_generate_bundle(struct gf100_grctx *info)
+{
+	const struct gf100_grctx_func *grctx = info->gr->func->grctx;
+	const u32 state_limit = min(grctx->bundle_min_gpm_fifo_depth,
+				    grctx->bundle_size / 0x20);
+	const u32 token_limit = grctx->bundle_token_limit;
+	const int s = 8;
+	const int b = mmio_vram(info, grctx->bundle_size, (1 << s), true);
+	mmio_refn(info, 0x408004, 0x00000000, s, b);
+	mmio_wr32(info, 0x408008, 0x80000000 | (grctx->bundle_size >> s));
+	mmio_refn(info, 0x418808, 0x00000000, s, b);
+	mmio_wr32(info, 0x41880c, 0x80000000 | (grctx->bundle_size >> s));
+	mmio_wr32(info, 0x4064c8, (state_limit << 16) | token_limit);
+}
+
+void
+gk104_grctx_generate_pagepool(struct gf100_grctx *info)
+{
+	const struct gf100_grctx_func *grctx = info->gr->func->grctx;
+	const int s = 8;
+	const int b = mmio_vram(info, grctx->pagepool_size, (1 << s), true);
+	mmio_refn(info, 0x40800c, 0x00000000, s, b);
+	mmio_wr32(info, 0x408010, 0x80000000);
+	mmio_refn(info, 0x419004, 0x00000000, s, b);
+	mmio_wr32(info, 0x419008, 0x00000000);
+	mmio_wr32(info, 0x4064cc, 0x80000000);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void
@@ -981,8 +1021,11 @@ gk104_grctx = {
 	.bundle_token_limit = 0x600,
 	.pagepool = gk104_grctx_generate_pagepool,
 	.pagepool_size = 0x8000,
+<<<<<<< HEAD
 	.attrib_cb_size = gf100_grctx_generate_attrib_cb_size,
 	.attrib_cb = gf100_grctx_generate_attrib_cb,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.attrib = gf117_grctx_generate_attrib,
 	.attrib_nr_max = 0x324,
 	.attrib_nr = 0x218,

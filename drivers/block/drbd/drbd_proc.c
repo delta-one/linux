@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+// SPDX-License-Identifier: GPL-2.0-or-later
+>>>>>>> b7ba80a49124 (Commit)
 /*
    drbd_proc.c
 
@@ -228,7 +232,11 @@ int drbd_seq_show(struct seq_file *seq, void *v)
 	};
 
 	seq_printf(seq, "version: " REL_VERSION " (api:%d/proto:%d-%d)\n%s\n",
+<<<<<<< HEAD
 		   GENL_MAGIC_VERSION, PRO_VERSION_MIN, PRO_VERSION_MAX, drbd_buildtag());
+=======
+		   API_VERSION, PRO_VERSION_MIN, PRO_VERSION_MAX, drbd_buildtag());
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	  cs .. connection state

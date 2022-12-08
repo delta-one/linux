@@ -366,11 +366,14 @@ static int ip_rcv_finish_core(struct net *net, struct sock *sk,
 					   iph->tos, dev);
 		if (unlikely(err))
 			goto drop_error;
+<<<<<<< HEAD
 	} else {
 		struct in_device *in_dev = __in_dev_get_rcu(dev);
 
 		if (in_dev && IN_DEV_ORCONF(in_dev, NOPOLICY))
 			IPCB(skb)->flags |= IPSKB_NOPOLICY;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 #ifdef CONFIG_IP_ROUTE_CLASSID
@@ -511,7 +514,11 @@ static struct sk_buff *ip_rcv_core(struct sk_buff *skb, struct net *net)
 	if (unlikely(ip_fast_csum((u8 *)iph, iph->ihl)))
 		goto csum_error;
 
+<<<<<<< HEAD
 	len = iph_totlen(skb, iph);
+=======
+	len = ntohs(iph->tot_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (skb->len < len) {
 		drop_reason = SKB_DROP_REASON_PKT_TOO_SMALL;
 		__IP_INC_STATS(net, IPSTATS_MIB_INTRUNCATEDPKTS);

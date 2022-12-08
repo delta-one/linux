@@ -7,6 +7,7 @@
 #include <net/sock.h>
 #include <net/af_vsock.h>
 
+<<<<<<< HEAD
 #define VIRTIO_VSOCK_SKB_HEADROOM (sizeof(struct virtio_vsock_hdr))
 
 struct virtio_vsock_skb_cb {
@@ -110,6 +111,8 @@ static inline size_t virtio_vsock_skb_len(struct sk_buff *skb)
 	return (size_t)(skb_end_pointer(skb) - skb->head);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE	(1024 * 4)
 #define VIRTIO_VSOCK_MAX_BUF_SIZE		0xFFFFFFFFUL
 #define VIRTIO_VSOCK_MAX_PKT_BUF_SIZE		(1024 * 64)
@@ -138,10 +141,30 @@ struct virtio_vsock_sock {
 	u32 last_fwd_cnt;
 	u32 rx_bytes;
 	u32 buf_alloc;
+<<<<<<< HEAD
 	struct sk_buff_head rx_queue;
 	u32 msg_count;
 };
 
+=======
+	struct list_head rx_queue;
+	u32 msg_count;
+};
+
+struct virtio_vsock_pkt {
+	struct virtio_vsock_hdr	hdr;
+	struct list_head list;
+	/* socket refcnt not held, only use for cancellation */
+	struct vsock_sock *vsk;
+	void *buf;
+	u32 buf_len;
+	u32 len;
+	u32 off;
+	bool reply;
+	bool tap_delivered;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct virtio_vsock_pkt_info {
 	u32 remote_cid, remote_port;
 	struct vsock_sock *vsk;
@@ -158,7 +181,11 @@ struct virtio_transport {
 	struct vsock_transport transport;
 
 	/* Takes ownership of the packet */
+<<<<<<< HEAD
 	int (*send_pkt)(struct sk_buff *skb);
+=======
+	int (*send_pkt)(struct virtio_vsock_pkt *pkt);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 ssize_t
@@ -239,10 +266,20 @@ virtio_transport_dgram_enqueue(struct vsock_sock *vsk,
 void virtio_transport_destruct(struct vsock_sock *vsk);
 
 void virtio_transport_recv_pkt(struct virtio_transport *t,
+<<<<<<< HEAD
 			       struct sk_buff *skb);
 void virtio_transport_inc_tx_pkt(struct virtio_vsock_sock *vvs, struct sk_buff *skb);
 u32 virtio_transport_get_credit(struct virtio_vsock_sock *vvs, u32 wanted);
 void virtio_transport_put_credit(struct virtio_vsock_sock *vvs, u32 credit);
 void virtio_transport_deliver_tap_pkt(struct sk_buff *skb);
 int virtio_transport_purge_skbs(void *vsk, struct sk_buff_head *list);
+=======
+			       struct virtio_vsock_pkt *pkt);
+void virtio_transport_free_pkt(struct virtio_vsock_pkt *pkt);
+void virtio_transport_inc_tx_pkt(struct virtio_vsock_sock *vvs, struct virtio_vsock_pkt *pkt);
+u32 virtio_transport_get_credit(struct virtio_vsock_sock *vvs, u32 wanted);
+void virtio_transport_put_credit(struct virtio_vsock_sock *vvs, u32 credit);
+void virtio_transport_deliver_tap_pkt(struct virtio_vsock_pkt *pkt);
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _LINUX_VIRTIO_VSOCK_H */

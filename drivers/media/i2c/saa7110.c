@@ -358,7 +358,12 @@ static const struct v4l2_subdev_ops saa7110_ops = {
 
 /* ----------------------------------------------------------------------- */
 
+<<<<<<< HEAD
 static int saa7110_probe(struct i2c_client *client)
+=======
+static int saa7110_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct saa7110 *decoder;
 	struct v4l2_subdev *sd;
@@ -448,7 +453,11 @@ static struct i2c_driver saa7110_driver = {
 	.driver = {
 		.name	= "saa7110",
 	},
+<<<<<<< HEAD
 	.probe_new	= saa7110_probe,
+=======
+	.probe		= saa7110_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= saa7110_remove,
 	.id_table	= saa7110_id,
 };

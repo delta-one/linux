@@ -3253,7 +3253,11 @@ err_pm_put:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void mt8195_afe_pcm_dev_remove(struct platform_device *pdev)
+=======
+static int mt8195_afe_pcm_dev_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mtk_base_afe *afe = platform_get_drvdata(pdev);
 
@@ -3264,6 +3268,10 @@ static void mt8195_afe_pcm_dev_remove(struct platform_device *pdev)
 		mt8195_afe_runtime_suspend(&pdev->dev);
 
 	mt8195_afe_deinit_clock(afe);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id mt8195_afe_pcm_dt_match[] = {
@@ -3284,7 +3292,11 @@ static struct platform_driver mt8195_afe_pcm_driver = {
 		   .pm = &mt8195_afe_pm_ops,
 	},
 	.probe = mt8195_afe_pcm_dev_probe,
+<<<<<<< HEAD
 	.remove_new = mt8195_afe_pcm_dev_remove,
+=======
+	.remove = mt8195_afe_pcm_dev_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(mt8195_afe_pcm_driver);

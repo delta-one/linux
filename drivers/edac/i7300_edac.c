@@ -1193,7 +1193,11 @@ static int __init i7300_init(void)
 }
 
 /**
+<<<<<<< HEAD
  * i7300_exit() - Unregisters the driver
+=======
+ * i7300_init() - Unregisters the driver
+>>>>>>> b7ba80a49124 (Commit)
  */
 static void __exit i7300_exit(void)
 {

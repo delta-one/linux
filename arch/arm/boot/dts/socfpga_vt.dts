@@ -29,7 +29,11 @@
 			};
 		};
 
+<<<<<<< HEAD
 		mmc@ff704000 {
+=======
+		dwmmc0@ff704000 {
+>>>>>>> b7ba80a49124 (Commit)
 			broken-cd;
 			bus-width = <4>;
 			cap-mmc-highspeed;
@@ -57,11 +61,19 @@
 			clock-frequency = <7000000>;
 		};
 
+<<<<<<< HEAD
 		serial@ffc02000 {
 			clock-frequency = <7372800>;
 		};
 
 		serial@ffc03000 {
+=======
+		serial0@ffc02000 {
+			clock-frequency = <7372800>;
+		};
+
+		serial1@ffc03000 {
+>>>>>>> b7ba80a49124 (Commit)
 			clock-frequency = <7372800>;
 		};
 

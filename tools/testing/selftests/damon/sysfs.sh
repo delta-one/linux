@@ -24,7 +24,11 @@ ensure_write_fail()
 	content=$2
 	reason=$3
 
+<<<<<<< HEAD
 	if (echo "$content" > "$file") 2> /dev/null
+=======
+	if echo "$content" > "$file"
+>>>>>>> b7ba80a49124 (Commit)
 	then
 		echo "writing $content to $file succeed ($fail_reason)"
 		echo "expected failure because $reason"
@@ -80,12 +84,15 @@ test_range()
 	ensure_file "$range_dir/max" "exist" 600
 }
 
+<<<<<<< HEAD
 test_tried_regions()
 {
 	tried_regions_dir=$1
 	ensure_dir "$tried_regions_dir" "exist"
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 test_stats()
 {
 	stats_dir=$1
@@ -96,6 +103,7 @@ test_stats()
 	done
 }
 
+<<<<<<< HEAD
 test_filter()
 {
 	filter_dir=$1
@@ -124,6 +132,8 @@ test_filters()
 	ensure_dir "$filters_dir/1" "not_exist"
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 test_watermarks()
 {
 	watermarks_dir=$1
@@ -171,9 +181,13 @@ test_scheme()
 	test_access_pattern "$scheme_dir/access_pattern"
 	test_quotas "$scheme_dir/quotas"
 	test_watermarks "$scheme_dir/watermarks"
+<<<<<<< HEAD
 	test_filters "$scheme_dir/filters"
 	test_stats "$scheme_dir/stats"
 	test_tried_regions "$scheme_dir/tried_regions"
+=======
+	test_stats "$scheme_dir/stats"
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 test_schemes()

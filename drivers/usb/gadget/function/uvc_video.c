@@ -88,7 +88,10 @@ uvc_video_encode_bulk(struct usb_request *req, struct uvc_video *video,
 		struct uvc_buffer *buf)
 {
 	void *mem = req->buf;
+<<<<<<< HEAD
 	struct uvc_request *ureq = req->context;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int len = video->req_size;
 	int ret;
 
@@ -114,14 +117,22 @@ uvc_video_encode_bulk(struct usb_request *req, struct uvc_video *video,
 		video->queue.buf_used = 0;
 		buf->state = UVC_BUF_STATE_DONE;
 		list_del(&buf->queue);
+<<<<<<< HEAD
 		video->fid ^= UVC_STREAM_FID;
 		ureq->last_buf = buf;
+=======
+		uvcg_complete_buffer(&video->queue, buf);
+		video->fid ^= UVC_STREAM_FID;
+>>>>>>> b7ba80a49124 (Commit)
 
 		video->payload_size = 0;
 	}
 
 	if (video->payload_size == video->max_payload_size ||
+<<<<<<< HEAD
 	    video->queue.flags & UVC_QUEUE_DROP_INCOMPLETE ||
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	    buf->bytesused == video->queue.buf_used)
 		video->payload_size = 0;
 }
@@ -157,10 +168,17 @@ uvc_video_encode_isoc_sg(struct usb_request *req, struct uvc_video *video,
 	sg = sg_next(sg);
 
 	for_each_sg(sg, iter, ureq->sgt.nents - 1, i) {
+<<<<<<< HEAD
 		if (!len || !buf->sg || !buf->sg->length)
 			break;
 
 		sg_left = buf->sg->length - buf->offset;
+=======
+		if (!len || !buf->sg || !sg_dma_len(buf->sg))
+			break;
+
+		sg_left = sg_dma_len(buf->sg) - buf->offset;
+>>>>>>> b7ba80a49124 (Commit)
 		part = min_t(unsigned int, len, sg_left);
 
 		sg_set_page(iter, sg_page(buf->sg), part, buf->offset);
@@ -182,8 +200,12 @@ uvc_video_encode_isoc_sg(struct usb_request *req, struct uvc_video *video,
 	req->length -= len;
 	video->queue.buf_used += req->length - header_len;
 
+<<<<<<< HEAD
 	if (buf->bytesused == video->queue.buf_used || !buf->sg ||
 			video->queue.flags & UVC_QUEUE_DROP_INCOMPLETE) {
+=======
+	if (buf->bytesused == video->queue.buf_used || !buf->sg) {
+>>>>>>> b7ba80a49124 (Commit)
 		video->queue.buf_used = 0;
 		buf->state = UVC_BUF_STATE_DONE;
 		buf->offset = 0;
@@ -198,7 +220,10 @@ uvc_video_encode_isoc(struct usb_request *req, struct uvc_video *video,
 		struct uvc_buffer *buf)
 {
 	void *mem = req->buf;
+<<<<<<< HEAD
 	struct uvc_request *ureq = req->context;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int len = video->req_size;
 	int ret;
 
@@ -213,6 +238,7 @@ uvc_video_encode_isoc(struct usb_request *req, struct uvc_video *video,
 
 	req->length = video->req_size - len;
 
+<<<<<<< HEAD
 	if (buf->bytesused == video->queue.buf_used ||
 			video->queue.flags & UVC_QUEUE_DROP_INCOMPLETE) {
 		video->queue.buf_used = 0;
@@ -220,6 +246,14 @@ uvc_video_encode_isoc(struct usb_request *req, struct uvc_video *video,
 		list_del(&buf->queue);
 		video->fid ^= UVC_STREAM_FID;
 		ureq->last_buf = buf;
+=======
+	if (buf->bytesused == video->queue.buf_used) {
+		video->queue.buf_used = 0;
+		buf->state = UVC_BUF_STATE_DONE;
+		list_del(&buf->queue);
+		uvcg_complete_buffer(&video->queue, buf);
+		video->fid ^= UVC_STREAM_FID;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -260,11 +294,14 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
 	case 0:
 		break;
 
+<<<<<<< HEAD
 	case -EXDEV:
 		uvcg_dbg(&video->uvc->func, "VS request missed xfer.\n");
 		queue->flags |= UVC_QUEUE_DROP_INCOMPLETE;
 		break;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case -ESHUTDOWN:	/* disconnect from host. */
 		uvcg_dbg(&video->uvc->func, "VS request cancelled.\n");
 		uvcg_queue_cancel(queue, 1);
@@ -441,8 +478,12 @@ static void uvcg_video_pump(struct work_struct *work)
 
 		/* Endpoint now owns the request */
 		req = NULL;
+<<<<<<< HEAD
 		if (buf->state != UVC_BUF_STATE_DONE)
 			video->req_int_count++;
+=======
+		video->req_int_count++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (!req)

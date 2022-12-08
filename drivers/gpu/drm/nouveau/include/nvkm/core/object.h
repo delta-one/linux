@@ -4,7 +4,10 @@
 #include <core/oclass.h>
 struct nvkm_event;
 struct nvkm_gpuobj;
+<<<<<<< HEAD
 struct nvkm_uevent;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct nvkm_object {
 	const struct nvkm_object_func *func;
@@ -44,7 +47,10 @@ struct nvkm_object_func {
 	int (*bind)(struct nvkm_object *, struct nvkm_gpuobj *, int align,
 		    struct nvkm_gpuobj **);
 	int (*sclass)(struct nvkm_object *, int index, struct nvkm_oclass *);
+<<<<<<< HEAD
 	int (*uevent)(struct nvkm_object *, void *argv, u32 argc, struct nvkm_uevent *);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void nvkm_object_ctor(const struct nvkm_object_func *,

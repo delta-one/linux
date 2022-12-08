@@ -29,6 +29,7 @@ static void rtw8822ce_efuse_parsing(struct rtw_efuse *efuse,
 	ether_addr_copy(efuse->addr, map->e.mac_addr);
 }
 
+<<<<<<< HEAD
 static void rtw8822cu_efuse_parsing(struct rtw_efuse *efuse,
 				    struct rtw8822c_efuse *map)
 {
@@ -41,6 +42,8 @@ static void rtw8822cs_efuse_parsing(struct rtw_efuse *efuse,
 	ether_addr_copy(efuse->addr, map->s.mac_addr);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int rtw8822c_read_efuse(struct rtw_dev *rtwdev, u8 *log_map)
 {
 	struct rtw_efuse *efuse = &rtwdev->efuse;
@@ -70,12 +73,15 @@ static int rtw8822c_read_efuse(struct rtw_dev *rtwdev, u8 *log_map)
 	case RTW_HCI_TYPE_PCIE:
 		rtw8822ce_efuse_parsing(efuse, map);
 		break;
+<<<<<<< HEAD
 	case RTW_HCI_TYPE_USB:
 		rtw8822cu_efuse_parsing(efuse, map);
 		break;
 	case RTW_HCI_TYPE_SDIO:
 		rtw8822cs_efuse_parsing(efuse, map);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		/* unsupported now */
 		return -ENOTSUPP;
@@ -4575,6 +4581,7 @@ static void rtw8822c_adaptivity(struct rtw_dev *rtwdev)
 	rtw_phy_set_edcca_th(rtwdev, l2h, h2l);
 }
 
+<<<<<<< HEAD
 static void rtw8822c_fill_txdesc_checksum(struct rtw_dev *rtwdev,
 					  struct rtw_tx_pkt_info *pkt_info,
 					  u8 *txdesc)
@@ -4587,6 +4594,8 @@ static void rtw8822c_fill_txdesc_checksum(struct rtw_dev *rtwdev,
 	fill_txdesc_checksum_common(txdesc, words);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct rtw_pwr_seq_cmd trans_carddis_to_cardemu_8822c[] = {
 	{0x0086,
 	 RTW_PWR_CUT_ALL_MSK,
@@ -4925,8 +4934,11 @@ static const struct rtw_rfe_def rtw8822c_rfe_defs[] = {
 	[0] = RTW_DEF_RFE(8822c, 0, 0),
 	[1] = RTW_DEF_RFE(8822c, 0, 0),
 	[2] = RTW_DEF_RFE(8822c, 0, 0),
+<<<<<<< HEAD
 	[3] = RTW_DEF_RFE(8822c, 0, 0),
 	[4] = RTW_DEF_RFE(8822c, 0, 0),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	[5] = RTW_DEF_RFE(8822c, 0, 5),
 	[6] = RTW_DEF_RFE(8822c, 0, 0),
 };
@@ -5010,7 +5022,10 @@ static struct rtw_chip_ops rtw8822c_ops = {
 	.cfo_track		= rtw8822c_cfo_track,
 	.config_tx_path		= rtw8822c_config_tx_path,
 	.config_txrx_mode	= rtw8822c_config_trx_mode,
+<<<<<<< HEAD
 	.fill_txdesc_checksum	= rtw8822c_fill_txdesc_checksum,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	.coex_set_init		= rtw8822c_coex_cfg_init,
 	.coex_set_ant_switch	= NULL,

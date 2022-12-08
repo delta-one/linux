@@ -427,7 +427,11 @@ list_set_destroy(struct ip_set *set)
 	struct set_elem *e, *n;
 
 	if (SET_WITH_TIMEOUT(set))
+<<<<<<< HEAD
 		timer_shutdown_sync(&map->gc);
+=======
+		del_timer_sync(&map->gc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	list_for_each_entry_safe(e, n, &map->members, list) {
 		list_del(&e->list);

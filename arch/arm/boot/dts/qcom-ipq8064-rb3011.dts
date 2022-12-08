@@ -5,7 +5,11 @@
 
 / {
 	model = "MikroTik RB3011UiAS-RM";
+<<<<<<< HEAD
 	compatible = "mikrotik,rb3011", "qcom,ipq8064";
+=======
+	compatible = "mikrotik,rb3011";
+>>>>>>> b7ba80a49124 (Commit)
 
 	aliases {
 		serial0 = &gsbi7_serial;
@@ -264,7 +268,12 @@
 &nand {
 	status = "okay";
 
+<<<<<<< HEAD
 	nand@0 {
+=======
+	nandcs@0 {
+		compatible = "qcom,nandcs";
+>>>>>>> b7ba80a49124 (Commit)
 		reg = <0>;
 
 		nand-ecc-strength = <4>;

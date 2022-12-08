@@ -59,7 +59,11 @@ differences.
 * JFFS2 is a write-through file-system, while UBIFS supports write-back,
   which makes UBIFS much faster on writes.
 
+<<<<<<< HEAD
 Similarly to JFFS2, UBIFS supports on-the-fly compression which makes
+=======
+Similarly to JFFS2, UBIFS supports on-the-flight compression which makes
+>>>>>>> b7ba80a49124 (Commit)
 it possible to fit quite a lot of data to the flash.
 
 Similarly to JFFS2, UBIFS is tolerant of unclean reboots and power-cuts.

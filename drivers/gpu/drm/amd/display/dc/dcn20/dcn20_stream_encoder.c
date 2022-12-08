@@ -29,7 +29,11 @@
 #include "dcn20_stream_encoder.h"
 #include "reg_helper.h"
 #include "hw_shared.h"
+<<<<<<< HEAD
 #include "link.h"
+=======
+#include "inc/link_dpcd.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "dpcd_defs.h"
 
 #define DC_LOGGER \
@@ -423,6 +427,7 @@ void enc2_set_dynamic_metadata(struct stream_encoder *enc,
 	}
 }
 
+<<<<<<< HEAD
 static void enc2_stream_encoder_update_dp_info_packets_sdp_line_num(
 		struct stream_encoder *enc,
 		struct encoder_info_frame *info_frame)
@@ -439,6 +444,8 @@ static void enc2_stream_encoder_update_dp_info_packets_sdp_line_num(
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void enc2_stream_encoder_update_dp_info_packets(
 	struct stream_encoder *enc,
 	const struct encoder_info_frame *info_frame)
@@ -546,8 +553,12 @@ void enc2_stream_encoder_dp_unblank(
 
 	REG_UPDATE(DP_VID_STREAM_CNTL, DP_VID_STREAM_ENABLE, true);
 
+<<<<<<< HEAD
 	link->dc->link_srv->dp_trace_source_sequence(link,
 			DPCD_SOURCE_SEQ_AFTER_ENABLE_DP_VID_STREAM);
+=======
+	dp_source_sequence_trace(link, DPCD_SOURCE_SEQ_AFTER_ENABLE_DP_VID_STREAM);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void enc2_dp_set_odm_combine(
@@ -604,8 +615,11 @@ static const struct stream_encoder_funcs dcn20_str_enc_funcs = {
 		enc2_stream_encoder_update_hdmi_info_packets,
 	.stop_hdmi_info_packets =
 		enc2_stream_encoder_stop_hdmi_info_packets,
+<<<<<<< HEAD
 	.update_dp_info_packets_sdp_line_num =
 		enc2_stream_encoder_update_dp_info_packets_sdp_line_num,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.update_dp_info_packets =
 		enc2_stream_encoder_update_dp_info_packets,
 	.send_immediate_sdp_message =

@@ -11,15 +11,24 @@
 #include <linux/bitfield.h>
 #include <linux/clk.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
 #include <linux/gpio/consumer.h>
 #include <linux/init.h>
 #include <linux/irqchip/chained_irq.h>
 #include <linux/irqdomain.h>
+=======
+#include <linux/gpio.h>
+#include <linux/init.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mbus.h>
 #include <linux/slab.h>
 #include <linux/platform_device.h>
 #include <linux/of_address.h>
 #include <linux/of_irq.h>
+<<<<<<< HEAD
+=======
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/of_pci.h>
 #include <linux/of_platform.h>
 
@@ -1262,8 +1271,14 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
 	struct mvebu_pcie_port *port, struct device_node *child)
 {
 	struct device *dev = &pcie->pdev->dev;
+<<<<<<< HEAD
 	u32 slot_power_limit;
 	int ret;
+=======
+	enum of_gpio_flags flags;
+	u32 slot_power_limit;
+	int reset_gpio, ret;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 num_lanes;
 
 	port->pcie = pcie;
@@ -1327,6 +1342,7 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
 			 port->name, child);
 	}
 
+<<<<<<< HEAD
 	port->reset_name = devm_kasprintf(dev, GFP_KERNEL, "%s-reset",
 					  port->name);
 	if (!port->reset_name) {
@@ -1345,6 +1361,42 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
 		port->reset_gpio = NULL;
 		devm_kfree(dev, port->reset_name);
 		port->reset_name = NULL;
+=======
+	reset_gpio = of_get_named_gpio_flags(child, "reset-gpios", 0, &flags);
+	if (reset_gpio == -EPROBE_DEFER) {
+		ret = reset_gpio;
+		goto err;
+	}
+
+	if (gpio_is_valid(reset_gpio)) {
+		unsigned long gpio_flags;
+
+		port->reset_name = devm_kasprintf(dev, GFP_KERNEL, "%s-reset",
+						  port->name);
+		if (!port->reset_name) {
+			ret = -ENOMEM;
+			goto err;
+		}
+
+		if (flags & OF_GPIO_ACTIVE_LOW) {
+			dev_info(dev, "%pOF: reset gpio is active low\n",
+				 child);
+			gpio_flags = GPIOF_ACTIVE_LOW |
+				     GPIOF_OUT_INIT_LOW;
+		} else {
+			gpio_flags = GPIOF_OUT_INIT_HIGH;
+		}
+
+		ret = devm_gpio_request_one(dev, reset_gpio, gpio_flags,
+					    port->reset_name);
+		if (ret) {
+			if (ret == -EPROBE_DEFER)
+				goto err;
+			goto skip;
+		}
+
+		port->reset_gpio = gpio_to_desc(reset_gpio);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	slot_power_limit = of_pci_get_slot_power_limit(child,

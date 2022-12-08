@@ -32,7 +32,11 @@ struct erdma_eq {
 	atomic64_t event_num;
 	atomic64_t notify_num;
 
+<<<<<<< HEAD
 	void __iomem *db;
+=======
+	u64 __iomem *db_addr;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 *db_record;
 };
 
@@ -124,7 +128,10 @@ struct erdma_devattr {
 	u32 fw_version;
 
 	unsigned char peer_addr[ETH_ALEN];
+<<<<<<< HEAD
 	unsigned long cap_flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	int numa_node;
 	enum erdma_cc_alg cc;
@@ -190,7 +197,10 @@ struct erdma_dev {
 	struct net_device *netdev;
 	struct pci_dev *pdev;
 	struct notifier_block netdev_nb;
+<<<<<<< HEAD
 	struct workqueue_struct *reflush_wq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	resource_size_t func_bar_addr;
 	resource_size_t func_bar_len;
@@ -220,7 +230,11 @@ struct erdma_dev {
 	DECLARE_BITMAP(sdb_page, ERDMA_DWQE_TYPE0_CNT);
 	/*
 	 * We provide max 496 uContexts that each has one SQ normal Db,
+<<<<<<< HEAD
 	 * and one directWQE db.
+=======
+	 * and one directWQE db。
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	DECLARE_BITMAP(sdb_entry, ERDMA_DWQE_TYPE1_CNT);
 

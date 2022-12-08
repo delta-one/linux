@@ -64,7 +64,10 @@ enum intel_vsec_id {
 	VSEC_ID_WATCHER		= 3,
 	VSEC_ID_CRASHLOG	= 4,
 	VSEC_ID_SDSI		= 65,
+<<<<<<< HEAD
 	VSEC_ID_TPMI		= 66,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static enum intel_vsec_id intel_vsec_allow_list[] = {
@@ -72,7 +75,10 @@ static enum intel_vsec_id intel_vsec_allow_list[] = {
 	VSEC_ID_WATCHER,
 	VSEC_ID_CRASHLOG,
 	VSEC_ID_SDSI,
+<<<<<<< HEAD
 	VSEC_ID_TPMI,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const char *intel_vsec_name(enum intel_vsec_id id)
@@ -90,9 +96,12 @@ static const char *intel_vsec_name(enum intel_vsec_id id)
 	case VSEC_ID_SDSI:
 		return "sdsi";
 
+<<<<<<< HEAD
 	case VSEC_ID_TPMI:
 		return "tpmi";
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return NULL;
 	}
@@ -129,49 +138,76 @@ static void intel_vsec_remove_aux(void *data)
 	auxiliary_device_uninit(data);
 }
 
+<<<<<<< HEAD
 static DEFINE_MUTEX(vsec_ida_lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void intel_vsec_dev_release(struct device *dev)
 {
 	struct intel_vsec_device *intel_vsec_dev = dev_to_ivdev(dev);
 
+<<<<<<< HEAD
 	mutex_lock(&vsec_ida_lock);
 	ida_free(intel_vsec_dev->ida, intel_vsec_dev->auxdev.id);
 	mutex_unlock(&vsec_ida_lock);
 
+=======
+	ida_free(intel_vsec_dev->ida, intel_vsec_dev->auxdev.id);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(intel_vsec_dev->resource);
 	kfree(intel_vsec_dev);
 }
 
+<<<<<<< HEAD
 int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
 		       struct intel_vsec_device *intel_vsec_dev,
 		       const char *name)
+=======
+static int intel_vsec_add_aux(struct pci_dev *pdev, struct intel_vsec_device *intel_vsec_dev,
+			      const char *name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct auxiliary_device *auxdev = &intel_vsec_dev->auxdev;
 	int ret, id;
 
+<<<<<<< HEAD
 	mutex_lock(&vsec_ida_lock);
 	ret = ida_alloc(intel_vsec_dev->ida, GFP_KERNEL);
 	mutex_unlock(&vsec_ida_lock);
 	if (ret < 0) {
 		kfree(intel_vsec_dev->resource);
+=======
+	ret = ida_alloc(intel_vsec_dev->ida, GFP_KERNEL);
+	if (ret < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(intel_vsec_dev);
 		return ret;
 	}
 
+<<<<<<< HEAD
 	if (!parent)
 		parent = &pdev->dev;
 
 	auxdev->id = ret;
 	auxdev->name = name;
 	auxdev->dev.parent = parent;
+=======
+	auxdev->id = ret;
+	auxdev->name = name;
+	auxdev->dev.parent = &pdev->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	auxdev->dev.release = intel_vsec_dev_release;
 
 	ret = auxiliary_device_init(auxdev);
 	if (ret < 0) {
+<<<<<<< HEAD
 		mutex_lock(&vsec_ida_lock);
 		ida_free(intel_vsec_dev->ida, auxdev->id);
 		mutex_unlock(&vsec_ida_lock);
+=======
+		ida_free(intel_vsec_dev->ida, auxdev->id);
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(intel_vsec_dev->resource);
 		kfree(intel_vsec_dev);
 		return ret;
@@ -183,7 +219,11 @@ int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = devm_add_action_or_reset(parent, intel_vsec_remove_aux,
+=======
+	ret = devm_add_action_or_reset(&pdev->dev, intel_vsec_remove_aux,
+>>>>>>> b7ba80a49124 (Commit)
 				       auxdev);
 	if (ret < 0)
 		return ret;
@@ -196,7 +236,10 @@ int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
 
 	return 0;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_NS_GPL(intel_vsec_add_aux, INTEL_VSEC);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *header,
 			      struct intel_vsec_platform_info *info)
@@ -254,8 +297,12 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
 	else
 		intel_vsec_dev->ida = &intel_vsec_ida;
 
+<<<<<<< HEAD
 	return intel_vsec_add_aux(pdev, NULL, intel_vsec_dev,
 				  intel_vsec_name(header->id));
+=======
+	return intel_vsec_add_aux(pdev, intel_vsec_dev, intel_vsec_name(header->id));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool intel_vsec_walk_header(struct pci_dev *pdev,
@@ -429,6 +476,7 @@ static const struct intel_vsec_platform_info dg1_info = {
 	.quirks = VSEC_QUIRK_NO_DVSEC | VSEC_QUIRK_EARLY_HW,
 };
 
+<<<<<<< HEAD
 /* MTL info */
 static const struct intel_vsec_platform_info mtl_info = {
 	.quirks = VSEC_QUIRK_NO_WATCHER | VSEC_QUIRK_NO_CRASHLOG,
@@ -438,14 +486,21 @@ static const struct intel_vsec_platform_info mtl_info = {
 #define PCI_DEVICE_ID_INTEL_VSEC_DG1		0x490e
 #define PCI_DEVICE_ID_INTEL_VSEC_MTL_M		0x7d0d
 #define PCI_DEVICE_ID_INTEL_VSEC_MTL_S		0xad0d
+=======
+#define PCI_DEVICE_ID_INTEL_VSEC_ADL		0x467d
+#define PCI_DEVICE_ID_INTEL_VSEC_DG1		0x490e
+>>>>>>> b7ba80a49124 (Commit)
 #define PCI_DEVICE_ID_INTEL_VSEC_OOBMSM		0x09a7
 #define PCI_DEVICE_ID_INTEL_VSEC_RPL		0xa77d
 #define PCI_DEVICE_ID_INTEL_VSEC_TGL		0x9a0d
 static const struct pci_device_id intel_vsec_pci_ids[] = {
 	{ PCI_DEVICE_DATA(INTEL, VSEC_ADL, &tgl_info) },
 	{ PCI_DEVICE_DATA(INTEL, VSEC_DG1, &dg1_info) },
+<<<<<<< HEAD
 	{ PCI_DEVICE_DATA(INTEL, VSEC_MTL_M, &mtl_info) },
 	{ PCI_DEVICE_DATA(INTEL, VSEC_MTL_S, &mtl_info) },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ PCI_DEVICE_DATA(INTEL, VSEC_OOBMSM, &(struct intel_vsec_platform_info) {}) },
 	{ PCI_DEVICE_DATA(INTEL, VSEC_RPL, &tgl_info) },
 	{ PCI_DEVICE_DATA(INTEL, VSEC_TGL, &tgl_info) },

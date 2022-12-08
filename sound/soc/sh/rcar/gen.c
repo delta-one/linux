@@ -216,6 +216,7 @@ static int _rsnd_gen_regmap_init(struct rsnd_priv *priv,
 }
 
 /*
+<<<<<<< HEAD
  *		Gen4
  */
 static int rsnd_gen4_probe(struct rsnd_priv *priv)
@@ -284,6 +285,8 @@ static int rsnd_gen4_probe(struct rsnd_priv *priv)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *		Gen2
  */
 static int rsnd_gen2_probe(struct rsnd_priv *priv)
@@ -552,8 +555,11 @@ int rsnd_gen_probe(struct rsnd_priv *priv)
 	else if (rsnd_is_gen2(priv) ||
 		 rsnd_is_gen3(priv))
 		ret = rsnd_gen2_probe(priv);
+<<<<<<< HEAD
 	else if (rsnd_is_gen4(priv))
 		ret = rsnd_gen4_probe(priv);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ret < 0)
 		dev_err(dev, "unknown generation R-Car sound device\n");

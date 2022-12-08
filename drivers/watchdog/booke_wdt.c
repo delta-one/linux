@@ -27,7 +27,11 @@
  */
 
 
+<<<<<<< HEAD
 #ifdef	CONFIG_PPC_E500
+=======
+#ifdef	CONFIG_PPC_FSL_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 #define WDTP(x)		((((x)&0x3)<<30)|(((x)&0x3c)<<15))
 #define WDTP_MASK	(WDTP(0x3f))
 #else
@@ -45,7 +49,11 @@ MODULE_PARM_DESC(nowayout,
 		"Watchdog cannot be stopped once started (default="
 				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_E500
+=======
+#ifdef CONFIG_PPC_FSL_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 
 /* For the specified period, determine the number of seconds
  * corresponding to the reset time.  There will be a watchdog
@@ -88,7 +96,11 @@ static unsigned int sec_to_period(unsigned int secs)
 
 #define MAX_WDT_TIMEOUT		period_to_sec(1)
 
+<<<<<<< HEAD
 #else /* CONFIG_PPC_E500 */
+=======
+#else /* CONFIG_PPC_FSL_BOOK3E */
+>>>>>>> b7ba80a49124 (Commit)
 
 static unsigned long long period_to_sec(unsigned int period)
 {
@@ -102,7 +114,11 @@ static unsigned int sec_to_period(unsigned int secs)
 
 #define MAX_WDT_TIMEOUT		3	/* from Kconfig */
 
+<<<<<<< HEAD
 #endif /* !CONFIG_PPC_E500 */
+=======
+#endif /* !CONFIG_PPC_FSL_BOOK3E */
+>>>>>>> b7ba80a49124 (Commit)
 
 static void __booke_wdt_set(void *data)
 {

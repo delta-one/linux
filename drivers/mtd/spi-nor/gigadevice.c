@@ -8,6 +8,7 @@
 
 #include "core.h"
 
+<<<<<<< HEAD
 static int
 gd25q256_post_bfpt(struct spi_nor *nor,
 		   const struct sfdp_parameter_header *bfpt_header,
@@ -31,6 +32,21 @@ gd25q256_post_bfpt(struct spi_nor *nor,
 
 static const struct spi_nor_fixups gd25q256_fixups = {
 	.post_bfpt = gd25q256_post_bfpt,
+=======
+static void gd25q256_default_init(struct spi_nor *nor)
+{
+	/*
+	 * Some manufacturer like GigaDevice may use different
+	 * bit to set QE on different memories, so the MFR can't
+	 * indicate the quad_enable method for this case, we need
+	 * to set it in the default_init fixup hook.
+	 */
+	nor->params->quad_enable = spi_nor_sr1_bit6_quad_enable;
+}
+
+static const struct spi_nor_fixups gd25q256_fixups = {
+	.default_init = gd25q256_default_init,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct flash_info gigadevice_nor_parts[] = {

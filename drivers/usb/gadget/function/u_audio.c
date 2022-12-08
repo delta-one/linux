@@ -1422,7 +1422,11 @@ void g_audio_cleanup(struct g_audio *g_audio)
 	uac = g_audio->uac;
 	card = uac->card;
 	if (card)
+<<<<<<< HEAD
 		snd_card_free_when_closed(card);
+=======
+		snd_card_free(card);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(uac->p_prm.reqs);
 	kfree(uac->c_prm.reqs);

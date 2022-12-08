@@ -64,7 +64,11 @@
 struct raw_hashinfo raw_v6_hashinfo;
 EXPORT_SYMBOL_GPL(raw_v6_hashinfo);
 
+<<<<<<< HEAD
 bool raw_v6_match(struct net *net, const struct sock *sk, unsigned short num,
+=======
+bool raw_v6_match(struct net *net, struct sock *sk, unsigned short num,
+>>>>>>> b7ba80a49124 (Commit)
 		  const struct in6_addr *loc_addr,
 		  const struct in6_addr *rmt_addr, int dif, int sdif)
 {
@@ -152,7 +156,11 @@ static bool ipv6_raw_deliver(struct sk_buff *skb, int nexthdr)
 	saddr = &ipv6_hdr(skb)->saddr;
 	daddr = saddr + 1;
 
+<<<<<<< HEAD
 	hash = raw_hashfunc(net, nexthdr);
+=======
+	hash = nexthdr & (RAW_HTABLE_SIZE - 1);
+>>>>>>> b7ba80a49124 (Commit)
 	hlist = &raw_v6_hashinfo.ht[hash];
 	rcu_read_lock();
 	sk_nulls_for_each(sk, hnode, hlist) {
@@ -194,8 +202,15 @@ static bool ipv6_raw_deliver(struct sk_buff *skb, int nexthdr)
 			struct sk_buff *clone = skb_clone(skb, GFP_ATOMIC);
 
 			/* Not releasing hash table! */
+<<<<<<< HEAD
 			if (clone)
 				rawv6_rcv(sk, clone);
+=======
+			if (clone) {
+				nf_reset_ct(clone);
+				rawv6_rcv(sk, clone);
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 	rcu_read_unlock();
@@ -336,7 +351,11 @@ void raw6_icmp_error(struct sk_buff *skb, int nexthdr,
 	struct sock *sk;
 	int hash;
 
+<<<<<<< HEAD
 	hash = raw_hashfunc(net, nexthdr);
+=======
+	hash = nexthdr & (RAW_HTABLE_SIZE - 1);
+>>>>>>> b7ba80a49124 (Commit)
 	hlist = &raw_v6_hashinfo.ht[hash];
 	rcu_read_lock();
 	sk_nulls_for_each(sk, hnode, hlist) {
@@ -353,19 +372,31 @@ void raw6_icmp_error(struct sk_buff *skb, int nexthdr,
 
 static inline int rawv6_rcv_skb(struct sock *sk, struct sk_buff *skb)
 {
+<<<<<<< HEAD
 	enum skb_drop_reason reason;
 
 	if ((raw6_sk(sk)->checksum || rcu_access_pointer(sk->sk_filter)) &&
 	    skb_checksum_complete(skb)) {
 		atomic_inc(&sk->sk_drops);
 		kfree_skb_reason(skb, SKB_DROP_REASON_SKB_CSUM);
+=======
+	if ((raw6_sk(sk)->checksum || rcu_access_pointer(sk->sk_filter)) &&
+	    skb_checksum_complete(skb)) {
+		atomic_inc(&sk->sk_drops);
+		kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 		return NET_RX_DROP;
 	}
 
 	/* Charge it to the socket. */
 	skb_dst_drop(skb);
+<<<<<<< HEAD
 	if (sock_queue_rcv_skb_reason(sk, skb, &reason) < 0) {
 		kfree_skb_reason(skb, reason);
+=======
+	if (sock_queue_rcv_skb(sk, skb) < 0) {
+		kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 		return NET_RX_DROP;
 	}
 
@@ -386,10 +417,16 @@ int rawv6_rcv(struct sock *sk, struct sk_buff *skb)
 
 	if (!xfrm6_policy_check(sk, XFRM_POLICY_IN, skb)) {
 		atomic_inc(&sk->sk_drops);
+<<<<<<< HEAD
 		kfree_skb_reason(skb, SKB_DROP_REASON_XFRM_POLICY);
 		return NET_RX_DROP;
 	}
 	nf_reset_ct(skb);
+=======
+		kfree_skb(skb);
+		return NET_RX_DROP;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!rp->checksum)
 		skb->ip_summed = CHECKSUM_UNNECESSARY;
@@ -411,7 +448,11 @@ int rawv6_rcv(struct sock *sk, struct sk_buff *skb)
 	if (inet->hdrincl) {
 		if (skb_checksum_complete(skb)) {
 			atomic_inc(&sk->sk_drops);
+<<<<<<< HEAD
 			kfree_skb_reason(skb, SKB_DROP_REASON_SKB_CSUM);
+=======
+			kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 			return NET_RX_DROP;
 		}
 	}
@@ -506,7 +547,10 @@ csum_copy_err:
 static int rawv6_push_pending_frames(struct sock *sk, struct flowi6 *fl6,
 				     struct raw6_sock *rp)
 {
+<<<<<<< HEAD
 	struct ipv6_txoptions *opt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct sk_buff *skb;
 	int err = 0;
 	int offset;
@@ -524,9 +568,12 @@ static int rawv6_push_pending_frames(struct sock *sk, struct flowi6 *fl6,
 
 	offset = rp->offset;
 	total_len = inet_sk(sk)->cork.base.length;
+<<<<<<< HEAD
 	opt = inet6_sk(sk)->cork.opt;
 	total_len -= opt ? opt->opt_flen : 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (offset >= total_len - 1) {
 		err = -EINVAL;
 		ip6_flush_pending_frames(sk);
@@ -1178,6 +1225,11 @@ static void raw6_destroy(struct sock *sk)
 	lock_sock(sk);
 	ip6_flush_pending_frames(sk);
 	release_sock(sk);
+<<<<<<< HEAD
+=======
+
+	inet6_destroy_sock(sk);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int rawv6_init_sk(struct sock *sk)

@@ -24,7 +24,11 @@
 #include "nouveau_chan.h"
 #include "nouveau_dmem.h"
 
+<<<<<<< HEAD
 #include <nvif/event.h>
+=======
+#include <nvif/notify.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <nvif/object.h>
 #include <nvif/vmm.h>
 
@@ -51,8 +55,12 @@ struct nouveau_svm {
 		u32 putaddr;
 		u32 get;
 		u32 put;
+<<<<<<< HEAD
 		struct nvif_event notify;
 		struct work_struct work;
+=======
+		struct nvif_notify notify;
+>>>>>>> b7ba80a49124 (Commit)
 
 		struct nouveau_svm_fault {
 			u64 inst;
@@ -712,11 +720,21 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void
 nouveau_svm_fault(struct work_struct *work)
 {
 	struct nouveau_svm_fault_buffer *buffer = container_of(work, typeof(*buffer), work);
 	struct nouveau_svm *svm = container_of(buffer, typeof(*svm), buffer[buffer->id]);
+=======
+static int
+nouveau_svm_fault(struct nvif_notify *notify)
+{
+	struct nouveau_svm_fault_buffer *buffer =
+		container_of(notify, typeof(*buffer), notify);
+	struct nouveau_svm *svm =
+		container_of(buffer, typeof(*svm), buffer[buffer->id]);
+>>>>>>> b7ba80a49124 (Commit)
 	struct nvif_object *device = &svm->drm->client.device.object;
 	struct nouveau_svmm *svmm;
 	struct {
@@ -736,7 +754,11 @@ nouveau_svm_fault(struct work_struct *work)
 		buffer->put = nvif_rd32(device, buffer->putaddr);
 		buffer->get = nvif_rd32(device, buffer->getaddr);
 		if (buffer->get == buffer->put)
+<<<<<<< HEAD
 			return;
+=======
+			return NVIF_NOTIFY_KEEP;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	buffer->fault_nr = 0;
 
@@ -880,6 +902,7 @@ nouveau_svm_fault(struct work_struct *work)
 	/* Issue fault replay to the GPU. */
 	if (replay)
 		nouveau_svm_fault_replay(svm);
+<<<<<<< HEAD
 }
 
 static int
@@ -889,6 +912,9 @@ nouveau_svm_event(struct nvif_event *event, void *argv, u32 argc)
 
 	schedule_work(&buffer->work);
 	return NVIF_EVENT_KEEP;
+=======
+	return NVIF_NOTIFY_KEEP;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct nouveau_pfnmap_args *
@@ -943,9 +969,13 @@ static void
 nouveau_svm_fault_buffer_fini(struct nouveau_svm *svm, int id)
 {
 	struct nouveau_svm_fault_buffer *buffer = &svm->buffer[id];
+<<<<<<< HEAD
 
 	nvif_event_block(&buffer->notify);
 	flush_work(&buffer->work);
+=======
+	nvif_notify_put(&buffer->notify);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int
@@ -953,12 +983,19 @@ nouveau_svm_fault_buffer_init(struct nouveau_svm *svm, int id)
 {
 	struct nouveau_svm_fault_buffer *buffer = &svm->buffer[id];
 	struct nvif_object *device = &svm->drm->client.device.object;
+<<<<<<< HEAD
 
 	buffer->get = nvif_rd32(device, buffer->getaddr);
 	buffer->put = nvif_rd32(device, buffer->putaddr);
 	SVM_DBG(svm, "get %08x put %08x (init)", buffer->get, buffer->put);
 
 	return nvif_event_allow(&buffer->notify);
+=======
+	buffer->get = nvif_rd32(device, buffer->getaddr);
+	buffer->put = nvif_rd32(device, buffer->putaddr);
+	SVM_DBG(svm, "get %08x put %08x (init)", buffer->get, buffer->put);
+	return nvif_notify_get(&buffer->notify);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -967,18 +1004,27 @@ nouveau_svm_fault_buffer_dtor(struct nouveau_svm *svm, int id)
 	struct nouveau_svm_fault_buffer *buffer = &svm->buffer[id];
 	int i;
 
+<<<<<<< HEAD
 	if (!nvif_object_constructed(&buffer->object))
 		return;
 
 	nouveau_svm_fault_buffer_fini(svm, id);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (buffer->fault) {
 		for (i = 0; buffer->fault[i] && i < buffer->entries; i++)
 			kfree(buffer->fault[i]);
 		kvfree(buffer->fault);
 	}
 
+<<<<<<< HEAD
 	nvif_event_dtor(&buffer->notify);
+=======
+	nouveau_svm_fault_buffer_fini(svm, id);
+
+	nvif_notify_dtor(&buffer->notify);
+>>>>>>> b7ba80a49124 (Commit)
 	nvif_object_dtor(&buffer->object);
 }
 
@@ -1004,10 +1050,17 @@ nouveau_svm_fault_buffer_ctor(struct nouveau_svm *svm, s32 oclass, int id)
 	buffer->entries = args.entries;
 	buffer->getaddr = args.get;
 	buffer->putaddr = args.put;
+<<<<<<< HEAD
 	INIT_WORK(&buffer->work, nouveau_svm_fault);
 
 	ret = nvif_event_ctor(&buffer->object, "svmFault", id, nouveau_svm_event, true, NULL, 0,
 			      &buffer->notify);
+=======
+
+	ret = nvif_notify_ctor(&buffer->object, "svmFault", nouveau_svm_fault,
+			       true, NVB069_V0_NTFY_FAULT, NULL, 0, 0,
+			       &buffer->notify);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 

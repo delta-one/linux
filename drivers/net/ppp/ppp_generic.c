@@ -480,7 +480,11 @@ static ssize_t ppp_read(struct file *file, char __user *buf,
 	ret = -EFAULT;
 	iov.iov_base = buf;
 	iov.iov_len = count;
+<<<<<<< HEAD
 	iov_iter_init(&to, ITER_DEST, &iov, 1, count);
+=======
+	iov_iter_init(&to, READ, &iov, 1, count);
+>>>>>>> b7ba80a49124 (Commit)
 	if (skb_copy_datagram_iter(skb, 0, &to, skb->len))
 		goto outf;
 	ret = skb->len;
@@ -1394,7 +1398,11 @@ static int __init ppp_init(void)
 		goto out_net;
 	}
 
+<<<<<<< HEAD
 	ppp_class = class_create("ppp");
+=======
+	ppp_class = class_create(THIS_MODULE, "ppp");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(ppp_class)) {
 		err = PTR_ERR(ppp_class);
 		goto out_chrdev;
@@ -1743,8 +1751,11 @@ ppp_send_frame(struct ppp *ppp, struct sk_buff *skb)
 	int len;
 	unsigned char *cp;
 
+<<<<<<< HEAD
 	skb->dev = ppp->dev;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (proto < 0x8000) {
 #ifdef CONFIG_PPP_FILTER
 		/* check if we should pass this packet */

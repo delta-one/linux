@@ -41,7 +41,11 @@ properties:
     description: Startup time expressed in ms, it depends on SoC.
 
   atmel,trigger-edge-type:
+<<<<<<< HEAD
     $ref: /schemas/types.yaml#/definitions/uint32
+=======
+    $ref: '/schemas/types.yaml#/definitions/uint32'
+>>>>>>> b7ba80a49124 (Commit)
     description:
       One of possible edge types for the ADTRG hardware trigger pin.
       When the specific edge type is detected, the conversion will

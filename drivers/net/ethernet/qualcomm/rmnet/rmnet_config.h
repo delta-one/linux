@@ -6,7 +6,10 @@
  */
 
 #include <linux/skbuff.h>
+<<<<<<< HEAD
 #include <linux/time.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/gro_cells.h>
 
 #ifndef _RMNET_CONFIG_H_
@@ -20,12 +23,15 @@ struct rmnet_endpoint {
 	struct hlist_node hlnode;
 };
 
+<<<<<<< HEAD
 struct rmnet_egress_agg_params {
 	u32 bytes;
 	u32 count;
 	u64 time_nsec;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* One instance of this structure is instantiated for each real_dev associated
  * with rmnet.
  */
@@ -37,6 +43,7 @@ struct rmnet_port {
 	struct hlist_head muxed_ep[RMNET_MAX_LOGICAL_EP];
 	struct net_device *bridge_ep;
 	struct net_device *rmnet_dev;
+<<<<<<< HEAD
 
 	/* Egress aggregation information */
 	struct rmnet_egress_agg_params egress_agg_params;
@@ -50,6 +57,8 @@ struct rmnet_port {
 	struct timespec64 agg_last;
 	struct hrtimer hrtimer;
 	struct work_struct agg_wq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 extern struct rtnl_link_ops rmnet_link_ops;

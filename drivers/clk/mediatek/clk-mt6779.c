@@ -880,7 +880,10 @@ static const struct mtk_gate_regs infra3_cg_regs = {
 		&mtk_clk_gate_ops_setclr)
 
 static const struct mtk_gate infra_clks[] = {
+<<<<<<< HEAD
 	GATE_DUMMY(CLK_DUMMY, "ifa_dummy"),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* INFRA0 */
 	GATE_INFRA0(CLK_INFRA_PMIC_TMR, "infra_pmic_tmr",
 		    "axi_sel", 0),
@@ -1222,7 +1225,11 @@ static int clk_mt6779_apmixed_probe(struct platform_device *pdev)
 
 	mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
 
+<<<<<<< HEAD
 	mtk_clk_register_gates(&pdev->dev, node, apmixed_clks,
+=======
+	mtk_clk_register_gates(node, apmixed_clks,
+>>>>>>> b7ba80a49124 (Commit)
 			       ARRAY_SIZE(apmixed_clks), clk_data);
 
 	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
@@ -1245,6 +1252,7 @@ static int clk_mt6779_top_probe(struct platform_device *pdev)
 
 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
 
+<<<<<<< HEAD
 	mtk_clk_register_muxes(&pdev->dev, top_muxes,
 			       ARRAY_SIZE(top_muxes), node,
 			       &mt6779_clk_lock, clk_data);
@@ -1256,6 +1264,29 @@ static int clk_mt6779_top_probe(struct platform_device *pdev)
 	mtk_clk_register_composites(&pdev->dev, top_aud_divs,
 				    ARRAY_SIZE(top_aud_divs), base,
 				    &mt6779_clk_lock, clk_data);
+=======
+	mtk_clk_register_muxes(top_muxes, ARRAY_SIZE(top_muxes),
+			       node, &mt6779_clk_lock, clk_data);
+
+	mtk_clk_register_composites(top_aud_muxes, ARRAY_SIZE(top_aud_muxes),
+				    base, &mt6779_clk_lock, clk_data);
+
+	mtk_clk_register_composites(top_aud_divs, ARRAY_SIZE(top_aud_divs),
+				    base, &mt6779_clk_lock, clk_data);
+
+	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+}
+
+static int clk_mt6779_infra_probe(struct platform_device *pdev)
+{
+	struct clk_hw_onecell_data *clk_data;
+	struct device_node *node = pdev->dev.of_node;
+
+	clk_data = mtk_alloc_clk_data(CLK_INFRA_NR_CLK);
+
+	mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks),
+			       clk_data);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
 }
@@ -1268,6 +1299,12 @@ static const struct of_device_id of_match_clk_mt6779[] = {
 		.compatible = "mediatek,mt6779-topckgen",
 		.data = clk_mt6779_top_probe,
 	}, {
+<<<<<<< HEAD
+=======
+		.compatible = "mediatek,mt6779-infracfg_ao",
+		.data = clk_mt6779_infra_probe,
+	}, {
+>>>>>>> b7ba80a49124 (Commit)
 		/* sentinel */
 	}
 };
@@ -1290,6 +1327,7 @@ static int clk_mt6779_probe(struct platform_device *pdev)
 	return r;
 }
 
+<<<<<<< HEAD
 static const struct mtk_clk_desc infra_desc = {
 	.clks = infra_clks,
 	.num_clks = ARRAY_SIZE(infra_clks),
@@ -1310,6 +1348,8 @@ static struct platform_driver clk_mt6779_infra_drv  = {
 	},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver clk_mt6779_drv = {
 	.probe = clk_mt6779_probe,
 	.driver = {
@@ -1320,11 +1360,15 @@ static struct platform_driver clk_mt6779_drv = {
 
 static int __init clk_mt6779_init(void)
 {
+<<<<<<< HEAD
 	int ret = platform_driver_register(&clk_mt6779_drv);
 
 	if (ret)
 		return ret;
 	return platform_driver_register(&clk_mt6779_infra_drv);
+=======
+	return platform_driver_register(&clk_mt6779_drv);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 arch_initcall(clk_mt6779_init);

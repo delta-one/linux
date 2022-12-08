@@ -210,7 +210,11 @@ void minix_free_inode(struct inode * inode)
 	mark_buffer_dirty(bh);
 }
 
+<<<<<<< HEAD
 struct inode *minix_new_inode(const struct inode *dir, umode_t mode)
+=======
+struct inode *minix_new_inode(const struct inode *dir, umode_t mode, int *error)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct super_block *sb = dir->i_sb;
 	struct minix_sb_info *sbi = minix_sb(sb);
@@ -220,10 +224,20 @@ struct inode *minix_new_inode(const struct inode *dir, umode_t mode)
 	unsigned long j;
 	int i;
 
+<<<<<<< HEAD
 	if (!inode)
 		return ERR_PTR(-ENOMEM);
 	j = bits_per_zone;
 	bh = NULL;
+=======
+	if (!inode) {
+		*error = -ENOMEM;
+		return NULL;
+	}
+	j = bits_per_zone;
+	bh = NULL;
+	*error = -ENOSPC;
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock(&bitmap_lock);
 	for (i = 0; i < sbi->s_imap_blocks; i++) {
 		bh = sbi->s_imap[i];
@@ -234,22 +248,36 @@ struct inode *minix_new_inode(const struct inode *dir, umode_t mode)
 	if (!bh || j >= bits_per_zone) {
 		spin_unlock(&bitmap_lock);
 		iput(inode);
+<<<<<<< HEAD
 		return ERR_PTR(-ENOSPC);
+=======
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (minix_test_and_set_bit(j, bh->b_data)) {	/* shouldn't happen */
 		spin_unlock(&bitmap_lock);
 		printk("minix_new_inode: bit already set\n");
 		iput(inode);
+<<<<<<< HEAD
 		return ERR_PTR(-ENOSPC);
+=======
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	spin_unlock(&bitmap_lock);
 	mark_buffer_dirty(bh);
 	j += i * bits_per_zone;
 	if (!j || j > sbi->s_ninodes) {
 		iput(inode);
+<<<<<<< HEAD
 		return ERR_PTR(-ENOSPC);
 	}
 	inode_init_owner(&nop_mnt_idmap, inode, dir, mode);
+=======
+		return NULL;
+	}
+	inode_init_owner(&init_user_ns, inode, dir, mode);
+>>>>>>> b7ba80a49124 (Commit)
 	inode->i_ino = j;
 	inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
 	inode->i_blocks = 0;
@@ -257,6 +285,10 @@ struct inode *minix_new_inode(const struct inode *dir, umode_t mode)
 	insert_inode_hash(inode);
 	mark_inode_dirty(inode);
 
+<<<<<<< HEAD
+=======
+	*error = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	return inode;
 }
 

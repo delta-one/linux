@@ -1,5 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
+=======
+always-$(CONFIG_RUST) += target.json
+no-clean-files += target.json
+
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_RUST) += core.o compiler_builtins.o
 always-$(CONFIG_RUST) += exports_core_generated.h
 
@@ -16,12 +22,15 @@ obj-$(CONFIG_RUST) += alloc.o bindings.o kernel.o
 always-$(CONFIG_RUST) += exports_alloc_generated.h exports_bindings_generated.h \
     exports_kernel_generated.h
 
+<<<<<<< HEAD
 ifdef CONFIG_RUST_BUILD_ASSERT_ALLOW
 obj-$(CONFIG_RUST) += build_error.o
 else
 always-$(CONFIG_RUST) += build_error.o
 endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_RUST) += exports.o
 
 # Avoids running `$(RUSTC)` for the sysroot when it may not be available.
@@ -47,7 +56,10 @@ core-cfgs = \
     --cfg no_fp_fmt_parse
 
 alloc-cfgs = \
+<<<<<<< HEAD
     --cfg no_borrow \
+=======
+>>>>>>> b7ba80a49124 (Commit)
     --cfg no_fmt \
     --cfg no_global_oom_handling \
     --cfg no_macros \
@@ -112,7 +124,11 @@ rustdoc-alloc: $(src)/alloc/lib.rs rustdoc-core rustdoc-compiler_builtins FORCE
 	$(call if_changed,rustdoc)
 
 rustdoc-kernel: private rustc_target_flags = --extern alloc \
+<<<<<<< HEAD
     --extern build_error --extern macros=$(objtree)/$(obj)/libmacros.so \
+=======
+    --extern macros=$(objtree)/$(obj)/libmacros.so \
+>>>>>>> b7ba80a49124 (Commit)
     --extern bindings
 rustdoc-kernel: $(src)/kernel/lib.rs rustdoc-core rustdoc-macros \
     rustdoc-compiler_builtins rustdoc-alloc $(obj)/libmacros.so \
@@ -130,9 +146,12 @@ quiet_cmd_rustc_test_library = RUSTC TL $<
 		-L$(objtree)/$(obj)/test \
 		--crate-name $(subst rusttest-,,$(subst rusttestlib-,,$@)) $<
 
+<<<<<<< HEAD
 rusttestlib-build_error: $(src)/build_error.rs rusttest-prepare FORCE
 	$(call if_changed,rustc_test_library)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 rusttestlib-macros: private rustc_target_flags = --extern proc_macro
 rusttestlib-macros: private rustc_test_library_proc = yes
 rusttestlib-macros: $(src)/macros/lib.rs rusttest-prepare FORCE
@@ -223,12 +242,26 @@ rusttest-macros: $(src)/macros/lib.rs rusttest-prepare FORCE
 	$(call if_changed,rustdoc_test)
 
 rusttest-kernel: private rustc_target_flags = --extern alloc \
+<<<<<<< HEAD
     --extern build_error --extern macros --extern bindings
 rusttest-kernel: $(src)/kernel/lib.rs rusttest-prepare \
     rusttestlib-build_error rusttestlib-macros rusttestlib-bindings FORCE
 	$(call if_changed,rustc_test)
 	$(call if_changed,rustc_test_library)
 
+=======
+    --extern macros --extern bindings
+rusttest-kernel: $(src)/kernel/lib.rs rusttest-prepare \
+    rusttestlib-macros rusttestlib-bindings FORCE
+	$(call if_changed,rustc_test)
+	$(call if_changed,rustc_test_library)
+
+filechk_rust_target = $(objtree)/scripts/generate_rust_target < $<
+
+$(obj)/target.json: $(objtree)/include/config/auto.conf FORCE
+	$(call filechk,rust_target)
+
+>>>>>>> b7ba80a49124 (Commit)
 ifdef CONFIG_CC_IS_CLANG
 bindgen_c_flags = $(c_flags)
 else
@@ -324,9 +357,17 @@ $(obj)/exports_kernel_generated.h: $(obj)/kernel.o FORCE
 quiet_cmd_rustc_procmacro = $(RUSTC_OR_CLIPPY_QUIET) P $@
       cmd_rustc_procmacro = \
 	$(RUSTC_OR_CLIPPY) $(rust_common_flags) \
+<<<<<<< HEAD
 		--emit=dep-info=$(depfile) --emit=link=$@ --extern proc_macro \
 		--crate-type proc-macro \
 		--crate-name $(patsubst lib%.so,%,$(notdir $@)) $<
+=======
+		--emit=dep-info,link --extern proc_macro \
+		--crate-type proc-macro --out-dir $(objtree)/$(obj) \
+		--crate-name $(patsubst lib%.so,%,$(notdir $@)) $<; \
+	mv $(objtree)/$(obj)/$(patsubst lib%.so,%,$(notdir $@)).d $(depfile); \
+	sed -i '/^\#/d' $(depfile)
+>>>>>>> b7ba80a49124 (Commit)
 
 # Procedural macros can only be used with the `rustc` that compiled it.
 # Therefore, to get `libmacros.so` automatically recompiled when the compiler
@@ -339,16 +380,25 @@ quiet_cmd_rustc_library = $(if $(skip_clippy),RUSTC,$(RUSTC_OR_CLIPPY_QUIET)) L 
 	OBJTREE=$(abspath $(objtree)) \
 	$(if $(skip_clippy),$(RUSTC),$(RUSTC_OR_CLIPPY)) \
 		$(filter-out $(skip_flags),$(rust_flags) $(rustc_target_flags)) \
+<<<<<<< HEAD
 		--emit=dep-info=$(depfile) --emit=obj=$@ \
 		--emit=metadata=$(dir $@)$(patsubst %.o,lib%.rmeta,$(notdir $@)) \
 		--crate-type rlib -L$(objtree)/$(obj) \
 		--crate-name $(patsubst %.o,%,$(notdir $@)) $< \
+=======
+		--emit=dep-info,obj,metadata --crate-type rlib \
+		--out-dir $(objtree)/$(obj) -L$(objtree)/$(obj) \
+		--crate-name $(patsubst %.o,%,$(notdir $@)) $<; \
+	mv $(objtree)/$(obj)/$(patsubst %.o,%,$(notdir $@)).d $(depfile); \
+	sed -i '/^\#/d' $(depfile) \
+>>>>>>> b7ba80a49124 (Commit)
 	$(if $(rustc_objcopy),;$(OBJCOPY) $(rustc_objcopy) $@)
 
 rust-analyzer:
 	$(Q)$(srctree)/scripts/generate_rust_analyzer.py $(srctree) $(objtree) \
 		$(RUST_LIB_SRC) > $(objtree)/rust-project.json
 
+<<<<<<< HEAD
 redirect-intrinsics = \
 	__eqsf2 __gesf2 __lesf2 __nesf2 __unordsf2 \
 	__unorddf2 \
@@ -367,6 +417,12 @@ $(obj)/core.o: private skip_flags = -Dunreachable_pub
 $(obj)/core.o: private rustc_objcopy = $(foreach sym,$(redirect-intrinsics),--redefine-sym $(sym)=__rust$(sym))
 $(obj)/core.o: private rustc_target_flags = $(core-cfgs)
 $(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs scripts/target.json FORCE
+=======
+$(obj)/core.o: private skip_clippy = 1
+$(obj)/core.o: private skip_flags = -Dunreachable_pub
+$(obj)/core.o: private rustc_target_flags = $(core-cfgs)
+$(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs $(obj)/target.json FORCE
+>>>>>>> b7ba80a49124 (Commit)
 	$(call if_changed_dep,rustc_library)
 
 $(obj)/compiler_builtins.o: private rustc_objcopy = -w -W '__*'
@@ -379,9 +435,12 @@ $(obj)/alloc.o: private rustc_target_flags = $(alloc-cfgs)
 $(obj)/alloc.o: $(src)/alloc/lib.rs $(obj)/compiler_builtins.o FORCE
 	$(call if_changed_dep,rustc_library)
 
+<<<<<<< HEAD
 $(obj)/build_error.o: $(src)/build_error.rs $(obj)/compiler_builtins.o FORCE
 	$(call if_changed_dep,rustc_library)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 $(obj)/bindings.o: $(src)/bindings/lib.rs \
     $(obj)/compiler_builtins.o \
     $(obj)/bindings/bindings_generated.rs \
@@ -389,8 +448,13 @@ $(obj)/bindings.o: $(src)/bindings/lib.rs \
 	$(call if_changed_dep,rustc_library)
 
 $(obj)/kernel.o: private rustc_target_flags = --extern alloc \
+<<<<<<< HEAD
     --extern build_error --extern macros --extern bindings
 $(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/alloc.o $(obj)/build_error.o \
+=======
+    --extern macros --extern bindings
+$(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/alloc.o \
+>>>>>>> b7ba80a49124 (Commit)
     $(obj)/libmacros.so $(obj)/bindings.o FORCE
 	$(call if_changed_dep,rustc_library)
 

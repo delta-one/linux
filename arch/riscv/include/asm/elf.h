@@ -14,7 +14,10 @@
 #include <asm/auxvec.h>
 #include <asm/byteorder.h>
 #include <asm/cacheinfo.h>
+<<<<<<< HEAD
 #include <asm/hwcap.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * These are used to set parameters in the core dumps.
@@ -60,6 +63,7 @@ extern bool compat_elf_check_arch(Elf32_Ehdr *hdr);
 #define STACK_RND_MASK		(0x3ffff >> (PAGE_SHIFT - 12))
 #endif
 #endif
+<<<<<<< HEAD
 
 /*
  * Provides information on the availiable set of ISA extensions to userspace,
@@ -67,6 +71,14 @@ extern bool compat_elf_check_arch(Elf32_Ehdr *hdr);
  * essentially defunct, but will remain for compatibility with userspace.
  */
 #define ELF_HWCAP	(elf_hwcap & ((1UL << RISCV_ISA_EXT_BASE) - 1))
+=======
+/*
+ * This yields a mask that user programs can use to figure out what
+ * instruction set this CPU supports.  This could be done in user space,
+ * but it's not easy, and we've already done it here.
+ */
+#define ELF_HWCAP	(elf_hwcap)
+>>>>>>> b7ba80a49124 (Commit)
 extern unsigned long elf_hwcap;
 
 /*
@@ -101,10 +113,13 @@ do {								\
 		get_cache_size(2, CACHE_TYPE_UNIFIED));		\
 	NEW_AUX_ENT(AT_L2_CACHEGEOMETRY,			\
 		get_cache_geometry(2, CACHE_TYPE_UNIFIED));	\
+<<<<<<< HEAD
 	NEW_AUX_ENT(AT_L3_CACHESIZE,				\
 		get_cache_size(3, CACHE_TYPE_UNIFIED));		\
 	NEW_AUX_ENT(AT_L3_CACHEGEOMETRY,			\
 		get_cache_geometry(3, CACHE_TYPE_UNIFIED));	\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } while (0)
 #define ARCH_HAS_SETUP_ADDITIONAL_PAGES
 struct linux_binprm;

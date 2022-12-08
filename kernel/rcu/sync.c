@@ -44,7 +44,11 @@ static void rcu_sync_func(struct rcu_head *rhp);
 
 static void rcu_sync_call(struct rcu_sync *rsp)
 {
+<<<<<<< HEAD
 	call_rcu_hurry(&rsp->cb_head, rcu_sync_func);
+=======
+	call_rcu(&rsp->cb_head, rcu_sync_func);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

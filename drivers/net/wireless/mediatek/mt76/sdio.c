@@ -395,7 +395,11 @@ mt76s_process_rx_queue(struct mt76_dev *dev, struct mt76_queue *q)
 		if (!e || !e->skb)
 			break;
 
+<<<<<<< HEAD
 		dev->drv->rx_skb(dev, MT_RXQ_MAIN, e->skb, NULL);
+=======
+		dev->drv->rx_skb(dev, MT_RXQ_MAIN, e->skb);
+>>>>>>> b7ba80a49124 (Commit)
 		e->skb = NULL;
 		nframes++;
 	}
@@ -562,10 +566,13 @@ mt76s_tx_queue_skb_raw(struct mt76_dev *dev, struct mt76_queue *q,
 
 	q->entry[q->head].buf_sz = len;
 	q->entry[q->head].skb = skb;
+<<<<<<< HEAD
 
 	/* ensure the entry fully updated before bus access */
 	smp_wmb();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	q->head = (q->head + 1) % q->ndesc;
 	q->queued++;
 

@@ -423,6 +423,7 @@ static int memblock_add_near_max_check(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 /*
  * A test that trying to add the 129th memory block.
  * Expect to trigger memblock_double_array() to double the
@@ -515,6 +516,8 @@ static int memblock_add_many_check(void)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int memblock_add_checks(void)
 {
 	prefix_reset();
@@ -530,7 +533,10 @@ static int memblock_add_checks(void)
 	memblock_add_twice_check();
 	memblock_add_between_check();
 	memblock_add_near_max_check();
+<<<<<<< HEAD
 	memblock_add_many_check();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	prefix_pop();
 
@@ -892,6 +898,7 @@ static int memblock_reserve_near_max_check(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 /*
  * A test that trying to reserve the 129th memory block.
  * Expect to trigger memblock_double_array() to double the
@@ -982,6 +989,8 @@ static int memblock_reserve_many_check(void)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int memblock_reserve_checks(void)
 {
 	prefix_reset();
@@ -996,7 +1005,10 @@ static int memblock_reserve_checks(void)
 	memblock_reserve_twice_check();
 	memblock_reserve_between_check();
 	memblock_reserve_near_max_check();
+<<<<<<< HEAD
 	memblock_reserve_many_check();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	prefix_pop();
 

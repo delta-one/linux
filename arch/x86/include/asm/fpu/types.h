@@ -115,8 +115,13 @@ enum xfeature {
 	XFEATURE_PT_UNIMPLEMENTED_SO_FAR,
 	XFEATURE_PKRU,
 	XFEATURE_PASID,
+<<<<<<< HEAD
 	XFEATURE_CET_USER,
 	XFEATURE_CET_KERNEL_UNUSED,
+=======
+	XFEATURE_RSRVD_COMP_11,
+	XFEATURE_RSRVD_COMP_12,
+>>>>>>> b7ba80a49124 (Commit)
 	XFEATURE_RSRVD_COMP_13,
 	XFEATURE_RSRVD_COMP_14,
 	XFEATURE_LBR,
@@ -138,8 +143,11 @@ enum xfeature {
 #define XFEATURE_MASK_PT		(1 << XFEATURE_PT_UNIMPLEMENTED_SO_FAR)
 #define XFEATURE_MASK_PKRU		(1 << XFEATURE_PKRU)
 #define XFEATURE_MASK_PASID		(1 << XFEATURE_PASID)
+<<<<<<< HEAD
 #define XFEATURE_MASK_CET_USER		(1 << XFEATURE_CET_USER)
 #define XFEATURE_MASK_CET_KERNEL	(1 << XFEATURE_CET_KERNEL_UNUSED)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define XFEATURE_MASK_LBR		(1 << XFEATURE_LBR)
 #define XFEATURE_MASK_XTILE_CFG		(1 << XFEATURE_XTILE_CFG)
 #define XFEATURE_MASK_XTILE_DATA	(1 << XFEATURE_XTILE_DATA)
@@ -255,6 +263,7 @@ struct pkru_state {
 } __packed;
 
 /*
+<<<<<<< HEAD
  * State component 11 is Control-flow Enforcement user states
  */
 struct cet_user_state {
@@ -265,6 +274,8 @@ struct cet_user_state {
 };
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * State component 15: Architectural LBR configuration state.
  * The size of Arch LBR state depends on the number of LBRs (lbr_depth).
  */
@@ -333,7 +344,11 @@ struct xstate_header {
 struct xregs_state {
 	struct fxregs_state		i387;
 	struct xstate_header		header;
+<<<<<<< HEAD
 	u8				extended_state_area[];
+=======
+	u8				extended_state_area[0];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__ ((packed, aligned (64)));
 
 /*

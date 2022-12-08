@@ -110,6 +110,10 @@ static const char *wm8958_main_supplies[] = {
 	"SPKVDD2",
 };
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM
+>>>>>>> b7ba80a49124 (Commit)
 static int wm8994_suspend(struct device *dev)
 {
 	struct wm8994 *wm8994 = dev_get_drvdata(dev);
@@ -212,6 +216,10 @@ err_enable:
 
 	return ret;
 }
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_REGULATOR
 static int wm8994_ldo_in_use(struct wm8994_pdata *pdata, int ldo)
@@ -279,11 +287,28 @@ static int wm8994_set_pdata_from_of(struct wm8994 *wm8994)
 	of_property_read_u32_array(np, "wlf,micbias-cfg", pdata->micbias,
 				   ARRAY_SIZE(pdata->micbias));
 
+<<<<<<< HEAD
 	pdata->lineout1_diff = !of_property_read_bool(np, "wlf,lineout1-se");
 	pdata->lineout2_diff = !of_property_read_bool(np, "wlf,lineout2-se");
 	pdata->lineout1fb = of_property_read_bool(np, "wlf,lineout1-feedback");
 	pdata->lineout2fb = of_property_read_bool(np, "wlf,lineout2-feedback") ||
 		of_property_read_bool(np, "wlf,ldoena-always-driven");
+=======
+	pdata->lineout1_diff = true;
+	pdata->lineout2_diff = true;
+	if (of_find_property(np, "wlf,lineout1-se", NULL))
+		pdata->lineout1_diff = false;
+	if (of_find_property(np, "wlf,lineout2-se", NULL))
+		pdata->lineout2_diff = false;
+
+	if (of_find_property(np, "wlf,lineout1-feedback", NULL))
+		pdata->lineout1fb = true;
+	if (of_find_property(np, "wlf,lineout2-feedback", NULL))
+		pdata->lineout2fb = true;
+
+	if (of_find_property(np, "wlf,ldoena-always-driven", NULL))
+		pdata->lineout2fb = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pdata->spkmode_pu = of_property_read_bool(np, "wlf,spkmode-pu");
 
@@ -612,9 +637,15 @@ static const struct of_device_id wm8994_of_match[] = {
 };
 MODULE_DEVICE_TABLE(of, wm8994_of_match);
 
+<<<<<<< HEAD
 static int wm8994_i2c_probe(struct i2c_client *i2c)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(i2c);
+=======
+static int wm8994_i2c_probe(struct i2c_client *i2c,
+				      const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	const struct of_device_id *of_id;
 	struct wm8994 *wm8994;
 	int ret;
@@ -663,16 +694,27 @@ static const struct i2c_device_id wm8994_i2c_id[] = {
 MODULE_DEVICE_TABLE(i2c, wm8994_i2c_id);
 
 static const struct dev_pm_ops wm8994_pm_ops = {
+<<<<<<< HEAD
 	RUNTIME_PM_OPS(wm8994_suspend, wm8994_resume, NULL)
+=======
+	SET_RUNTIME_PM_OPS(wm8994_suspend, wm8994_resume, NULL)
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct i2c_driver wm8994_i2c_driver = {
 	.driver = {
 		.name = "wm8994",
+<<<<<<< HEAD
 		.pm = pm_ptr(&wm8994_pm_ops),
 		.of_match_table = wm8994_of_match,
 	},
 	.probe_new = wm8994_i2c_probe,
+=======
+		.pm = &wm8994_pm_ops,
+		.of_match_table = wm8994_of_match,
+	},
+	.probe = wm8994_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = wm8994_i2c_remove,
 	.id_table = wm8994_i2c_id,
 };

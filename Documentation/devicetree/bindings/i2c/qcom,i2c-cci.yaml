@@ -12,6 +12,7 @@ maintainers:
 
 properties:
   compatible:
+<<<<<<< HEAD
     oneOf:
       - enum:
           - qcom,msm8226-cci
@@ -30,6 +31,15 @@ properties:
               - qcom,sm8250-cci
               - qcom,sm8450-cci
           - const: qcom,msm8996-cci # CCI v2
+=======
+    enum:
+      - qcom,msm8916-cci
+      - qcom,msm8974-cci
+      - qcom,msm8996-cci
+      - qcom,sdm845-cci
+      - qcom,sm8250-cci
+      - qcom,sm8450-cci
+>>>>>>> b7ba80a49124 (Commit)
 
   "#address-cells":
     const: 1
@@ -38,11 +48,19 @@ properties:
     const: 0
 
   clocks:
+<<<<<<< HEAD
     minItems: 3
     maxItems: 6
 
   clock-names:
     minItems: 3
+=======
+    minItems: 4
+    maxItems: 6
+
+  clock-names:
+    minItems: 4
+>>>>>>> b7ba80a49124 (Commit)
     maxItems: 6
 
   interrupts:
@@ -89,7 +107,10 @@ allOf:
         compatible:
           contains:
             enum:
+<<<<<<< HEAD
               - qcom,msm8226-cci
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,msm8916-cci
     then:
       properties:
@@ -98,6 +119,7 @@ allOf:
   - if:
       properties:
         compatible:
+<<<<<<< HEAD
           oneOf:
             - contains:
                 enum:
@@ -123,6 +145,12 @@ allOf:
                   - qcom,msm8916-cci
 
             - const: qcom,msm8996-cci
+=======
+          contains:
+            enum:
+              - qcom,msm8916-cci
+              - qcom,msm8996-cci
+>>>>>>> b7ba80a49124 (Commit)
     then:
       properties:
         clocks:
@@ -140,7 +168,10 @@ allOf:
           contains:
             enum:
               - qcom,sdm845-cci
+<<<<<<< HEAD
               - qcom,sm6350-cci
+=======
+>>>>>>> b7ba80a49124 (Commit)
     then:
       properties:
         clocks:
@@ -184,7 +215,11 @@ examples:
 
     cci@ac4a000 {
         reg = <0x0ac4a000 0x4000>;
+<<<<<<< HEAD
         compatible = "qcom,sdm845-cci", "qcom,msm8996-cci";
+=======
+        compatible = "qcom,sdm845-cci";
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 

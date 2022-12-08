@@ -82,4 +82,8 @@ define_machine(ppc44x_simple) {
 	.init_IRQ = uic_init_tree,
 	.get_irq = uic_get_irq,
 	.restart = ppc4xx_reset_system,
+<<<<<<< HEAD
+=======
+	.calibrate_decr = generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 };

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0+
 /*
+<<<<<<< HEAD
  * Motorcomm 8511/8521/8531/8531S PHY driver.
  *
  * Author: Peter Geis <pgwipeout@gmail.com>
@@ -104,6 +105,18 @@
 /* FIBER Auto-Negotiation link partner ability */
 #define YTPHY_FLPA_PAUSE			(0x3 << 7)
 #define YTPHY_FLPA_ASYM_PAUSE			(0x2 << 7)
+=======
+ * Driver for Motorcomm PHYs
+ *
+ * Author: Peter Geis <pgwipeout@gmail.com>
+ */
+
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/phy.h>
+
+#define PHY_ID_YT8511		0x0000010a
+>>>>>>> b7ba80a49124 (Commit)
 
 #define YT8511_PAGE_SELECT	0x1e
 #define YT8511_PAGE		0x1f
@@ -132,6 +145,7 @@
 #define YT8511_DELAY_FE_TX_EN	(0xf << 12)
 #define YT8511_DELAY_FE_TX_DIS	(0x2 << 12)
 
+<<<<<<< HEAD
 /* Extended register is different from MMD Register and MII Register.
  * We can use ytphy_read_ext/ytphy_write_ext/ytphy_modify_ext function to
  * operate extended register.
@@ -573,6 +587,8 @@ static int yt8531_set_wol(struct phy_device *phydev,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int yt8511_read_page(struct phy_device *phydev)
 {
 	return __phy_read(phydev, YT8511_PAGE_SELECT);
@@ -646,6 +662,7 @@ err_restore_page:
 	return phy_restore_page(phydev, oldpage, ret);
 }
 
+<<<<<<< HEAD
 /**
  * yt8521_read_page() - read reg page
  * @phydev: a pointer to a &struct phy_device
@@ -2134,6 +2151,8 @@ static int yt8521_get_features(struct phy_device *phydev)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct phy_driver motorcomm_phy_drvs[] = {
 	{
 		PHY_ID_MATCH_EXACT(PHY_ID_YT8511),
@@ -2144,6 +2163,7 @@ static struct phy_driver motorcomm_phy_drvs[] = {
 		.read_page	= yt8511_read_page,
 		.write_page	= yt8511_write_page,
 	},
+<<<<<<< HEAD
 	{
 		PHY_ID_MATCH_EXACT(PHY_ID_YT8521),
 		.name		= "YT8521 Gigabit Ethernet",
@@ -2189,21 +2209,32 @@ static struct phy_driver motorcomm_phy_drvs[] = {
 		.suspend	= yt8521_suspend,
 		.resume		= yt8521_resume,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_phy_driver(motorcomm_phy_drvs);
 
+<<<<<<< HEAD
 MODULE_DESCRIPTION("Motorcomm 8511/8521/8531/8531S PHY driver");
 MODULE_AUTHOR("Peter Geis");
 MODULE_AUTHOR("Frank");
+=======
+MODULE_DESCRIPTION("Motorcomm PHY driver");
+MODULE_AUTHOR("Peter Geis");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_LICENSE("GPL");
 
 static const struct mdio_device_id __maybe_unused motorcomm_tbl[] = {
 	{ PHY_ID_MATCH_EXACT(PHY_ID_YT8511) },
+<<<<<<< HEAD
 	{ PHY_ID_MATCH_EXACT(PHY_ID_YT8521) },
 	{ PHY_ID_MATCH_EXACT(PHY_ID_YT8531) },
 	{ PHY_ID_MATCH_EXACT(PHY_ID_YT8531S) },
 	{ /* sentinel */ }
+=======
+	{ /* sentinal */ }
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 MODULE_DEVICE_TABLE(mdio, motorcomm_tbl);

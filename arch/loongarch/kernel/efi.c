@@ -28,11 +28,15 @@ static unsigned long efi_nr_tables;
 static unsigned long efi_config_table;
 
 static unsigned long __initdata boot_memmap = EFI_INVALID_TABLE_ADDR;
+<<<<<<< HEAD
 static unsigned long __initdata fdt_pointer = EFI_INVALID_TABLE_ADDR;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static efi_system_table_t *efi_systab;
 static efi_config_table_type_t arch_tables[] __initdata = {
 	{LINUX_EFI_BOOT_MEMMAP_GUID,	&boot_memmap,	"MEMMAP" },
+<<<<<<< HEAD
 	{DEVICE_TREE_GUID,		&fdt_pointer,	"FDTPTR" },
 	{},
 };
@@ -51,6 +55,14 @@ void __init *efi_fdt_pointer(void)
 void __init efi_runtime_init(void)
 {
 	if (!efi_enabled(EFI_BOOT) || !efi_systab->runtime)
+=======
+	{},
+};
+
+void __init efi_runtime_init(void)
+{
+	if (!efi_enabled(EFI_BOOT))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	if (efi_runtime_disabled()) {
@@ -65,6 +77,7 @@ void __init efi_runtime_init(void)
 	set_bit(EFI_RUNTIME_SERVICES, &efi.flags);
 }
 
+<<<<<<< HEAD
 unsigned long __initdata screen_info_table = EFI_INVALID_TABLE_ADDR;
 
 static void __init init_screen_info(void)
@@ -86,6 +99,8 @@ static void __init init_screen_info(void)
 	memblock_reserve(screen_info.lfb_base, screen_info.lfb_size);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void __init efi_init(void)
 {
 	int size;
@@ -114,7 +129,12 @@ void __init efi_init(void)
 
 	set_bit(EFI_CONFIG_TABLES, &efi.flags);
 
+<<<<<<< HEAD
 	init_screen_info();
+=======
+	if (screen_info.orig_video_isVGA == VIDEO_TYPE_EFI)
+		memblock_reserve(screen_info.lfb_base, screen_info.lfb_size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (boot_memmap == EFI_INVALID_TABLE_ADDR)
 		return;

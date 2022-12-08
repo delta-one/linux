@@ -8,6 +8,7 @@
 #define LINUX_APPLE_GMUX_H
 
 #include <linux/acpi.h>
+<<<<<<< HEAD
 #include <linux/io.h>
 #include <linux/pnp.h>
 
@@ -151,11 +152,24 @@ out:
 
 /**
  * apple_gmux_present() - check if gmux ACPI device is present
+=======
+
+#define GMUX_ACPI_HID "APP000B"
+
+#if IS_ENABLED(CONFIG_APPLE_GMUX)
+
+/**
+ * apple_gmux_present() - detect if gmux is built into the machine
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Drivers may use this to activate quirks specific to dual GPU MacBook Pros
  * and Mac Pros, e.g. for deferred probing, runtime pm and backlight.
  *
+<<<<<<< HEAD
  * Return: %true if gmux ACPI device is present and the kernel was configured
+=======
+ * Return: %true if gmux is present and the kernel was configured
+>>>>>>> b7ba80a49124 (Commit)
  * with CONFIG_APPLE_GMUX, %false otherwise.
  */
 static inline bool apple_gmux_present(void)
@@ -170,11 +184,14 @@ static inline bool apple_gmux_present(void)
 	return false;
 }
 
+<<<<<<< HEAD
 static inline bool apple_gmux_detect(struct pnp_dev *pnp_dev, bool *indexed_ret)
 {
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* !CONFIG_APPLE_GMUX */
 
 #endif /* LINUX_APPLE_GMUX_H */

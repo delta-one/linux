@@ -760,6 +760,15 @@ static int maple_match_bus_driver(struct device *devptr,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int maple_bus_uevent(struct device *dev,
+			    struct kobj_uevent_env *env)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void maple_bus_release(struct device *dev)
 {
 }
@@ -776,6 +785,10 @@ static struct maple_driver maple_unsupported_device = {
 struct bus_type maple_bus_type = {
 	.name = "maple",
 	.match = maple_match_bus_driver,
+<<<<<<< HEAD
+=======
+	.uevent = maple_bus_uevent,
+>>>>>>> b7ba80a49124 (Commit)
 };
 EXPORT_SYMBOL_GPL(maple_bus_type);
 

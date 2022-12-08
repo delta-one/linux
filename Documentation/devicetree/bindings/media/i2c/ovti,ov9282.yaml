@@ -16,6 +16,7 @@ description:
   sensor with an active array size of 1296H x 816V. It is programmable through
   I2C interface. The I2C client address is fixed to 0x60/0x70 as per sensor data
   sheet. Image data is sent through MIPI CSI-2.
+<<<<<<< HEAD
   OV9281 has a different lens chief ray angle.
 
 properties:
@@ -23,6 +24,12 @@ properties:
     enum:
       - ovti,ov9281
       - ovti,ov9282
+=======
+
+properties:
+  compatible:
+    const: ovti,ov9282
+>>>>>>> b7ba80a49124 (Commit)
   reg:
     description: I2C address
     maxItems: 1
@@ -39,6 +46,7 @@ properties:
     description: Reference to the GPIO connected to the XCLR pin, if any.
     maxItems: 1
 
+<<<<<<< HEAD
   avdd-supply:
     description: Analog voltage supply, 2.8 volts
 
@@ -48,6 +56,8 @@ properties:
   dovdd-supply:
     description: Digital I/O voltage supply, 1.8 volts
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   port:
     additionalProperties: false
     $ref: /schemas/graph.yaml#/$defs/port-base
@@ -78,7 +88,11 @@ additionalProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     i2c {
+=======
+    i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 

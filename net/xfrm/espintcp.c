@@ -6,7 +6,10 @@
 #include <net/espintcp.h>
 #include <linux/skmsg.h>
 #include <net/inet_common.h>
+<<<<<<< HEAD
 #include <trace/events/sock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if IS_ENABLED(CONFIG_IPV6)
 #include <net/ipv6_stubs.h>
 #endif
@@ -92,7 +95,11 @@ static void espintcp_rcv(struct strparser *strp, struct sk_buff *skb)
 	}
 
 	/* remove header, leave non-ESP marker/SPI */
+<<<<<<< HEAD
 	if (!pskb_pull(skb, rxm->offset + 2)) {
+=======
+	if (!__pskb_pull(skb, rxm->offset + 2)) {
+>>>>>>> b7ba80a49124 (Commit)
 		XFRM_INC_STATS(sock_net(strp->sk), LINUX_MIB_XFRMINERROR);
 		kfree_skb(skb);
 		return;
@@ -355,7 +362,11 @@ static int espintcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
 	*((__be16 *)buf) = cpu_to_be16(msglen);
 	pfx_iov.iov_base = buf;
 	pfx_iov.iov_len = sizeof(buf);
+<<<<<<< HEAD
 	iov_iter_kvec(&pfx_iter, ITER_SOURCE, &pfx_iov, 1, pfx_iov.iov_len);
+=======
+	iov_iter_kvec(&pfx_iter, WRITE, &pfx_iov, 1, pfx_iov.iov_len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = sk_msg_memcopy_from_iter(sk, &pfx_iter, &emsg->skmsg,
 				       pfx_iov.iov_len);
@@ -398,8 +409,11 @@ static void espintcp_data_ready(struct sock *sk)
 {
 	struct espintcp_ctx *ctx = espintcp_getctx(sk);
 
+<<<<<<< HEAD
 	trace_sk_data_ready(sk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	strp_data_ready(&ctx->strp);
 }
 
@@ -492,7 +506,10 @@ static int espintcp_init_sk(struct sock *sk)
 
 	/* avoid using task_frag */
 	sk->sk_allocation = GFP_ATOMIC;
+<<<<<<< HEAD
 	sk->sk_use_task_frag = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 

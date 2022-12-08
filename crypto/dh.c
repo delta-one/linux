@@ -318,9 +318,12 @@ static int dh_safe_prime_init_tfm(struct crypto_kpp *tfm)
 	if (IS_ERR(tfm_ctx->dh_tfm))
 		return PTR_ERR(tfm_ctx->dh_tfm);
 
+<<<<<<< HEAD
 	kpp_set_reqsize(tfm, sizeof(struct kpp_request) +
 			     crypto_kpp_reqsize(tfm_ctx->dh_tfm));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -503,9 +506,16 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static void dh_safe_prime_complete_req(void *data, int err)
 {
 	struct kpp_request *req = data;
+=======
+static void dh_safe_prime_complete_req(struct crypto_async_request *dh_req,
+				       int err)
+{
+	struct kpp_request *req = dh_req->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	kpp_request_complete(req, err);
 }
@@ -595,6 +605,10 @@ static int __maybe_unused __dh_safe_prime_create(
 	inst->alg.max_size = dh_safe_prime_max_size;
 	inst->alg.init = dh_safe_prime_init_tfm;
 	inst->alg.exit = dh_safe_prime_exit_tfm;
+<<<<<<< HEAD
+=======
+	inst->alg.reqsize = sizeof(struct kpp_request) + dh_alg->reqsize;
+>>>>>>> b7ba80a49124 (Commit)
 	inst->alg.base.cra_priority = dh_alg->base.cra_priority;
 	inst->alg.base.cra_module = THIS_MODULE;
 	inst->alg.base.cra_ctxsize = sizeof(struct dh_safe_prime_tfm_ctx);
@@ -894,7 +908,11 @@ static struct crypto_template crypto_ffdhe_templates[] = {};
 #endif /* CONFIG_CRYPTO_DH_RFC7919_GROUPS */
 
 
+<<<<<<< HEAD
 static int __init dh_init(void)
+=======
+static int dh_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 
@@ -912,7 +930,11 @@ static int __init dh_init(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void __exit dh_exit(void)
+=======
+static void dh_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	crypto_unregister_templates(crypto_ffdhe_templates,
 				    ARRAY_SIZE(crypto_ffdhe_templates));

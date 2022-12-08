@@ -205,10 +205,17 @@ enum sam_status {
 };
 
 #define STATUS_MASK         0xfe
+<<<<<<< HEAD
 
 /*
  *  SENSE KEYS
  */
+=======
+/*
+ *  SENSE KEYS
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 #define NO_SENSE            0x00
 #define RECOVERED_ERROR     0x01
 #define NOT_READY           0x02
@@ -223,7 +230,11 @@ enum sam_status {
 #define ABORTED_COMMAND     0x0b
 #define VOLUME_OVERFLOW     0x0d
 #define MISCOMPARE          0x0e
+<<<<<<< HEAD
 #define COMPLETED	    0x0f
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  *  DEVICE TYPES
@@ -342,6 +353,7 @@ enum scsi_version_descriptor {
 	SCSI_VERSION_DESCRIPTOR_SRP	= 0x0940
 };
 
+<<<<<<< HEAD
 enum scsi_support_opcode {
 	SCSI_SUPPORT_NO_INFO		= 0,
 	SCSI_SUPPORT_NOT_SUPPORTED	= 1,
@@ -352,4 +364,6 @@ enum scsi_support_opcode {
 #define SCSI_CONTROL_MASK 0
 #define SCSI_GROUP_NUMBER_MASK 0
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _SCSI_PROTO_H_ */

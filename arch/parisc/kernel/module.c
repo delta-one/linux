@@ -27,9 +27,15 @@
  *      We are not doing SEGREL32 handling correctly. According to the ABI, we
  *      should do a value offset, like this:
  *			if (in_init(me, (void *)val))
+<<<<<<< HEAD
  *				val -= (uint32_t)me->mem[MOD_INIT_TEXT].base;
  *			else
  *				val -= (uint32_t)me->mem[MOD_TEXT].base;
+=======
+ *				val -= (uint32_t)me->init_layout.base;
+ *			else
+ *				val -= (uint32_t)me->core_layout.base;
+>>>>>>> b7ba80a49124 (Commit)
  *	However, SEGREL32 is used only for PARISC unwind entries, and we want
  *	those entries to have an absolute address, and not just an offset.
  *
@@ -76,6 +82,28 @@
  * allows us to allocate up to 4095 GOT entries. */
 #define MAX_GOTS	4095
 
+<<<<<<< HEAD
+=======
+/* three functions to determine where in the module core
+ * or init pieces the location is */
+static inline int in_init(struct module *me, void *loc)
+{
+	return (loc >= me->init_layout.base &&
+		loc <= (me->init_layout.base + me->init_layout.size));
+}
+
+static inline int in_core(struct module *me, void *loc)
+{
+	return (loc >= me->core_layout.base &&
+		loc <= (me->core_layout.base + me->core_layout.size));
+}
+
+static inline int in_local(struct module *me, void *loc)
+{
+	return in_init(me, loc) || in_core(me, loc);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef CONFIG_64BIT
 struct got_entry {
 	Elf32_Addr addr;
@@ -283,7 +311,10 @@ int module_frob_arch_sections(CONST Elf_Ehdr *hdr,
 {
 	unsigned long gots = 0, fdescs = 0, len;
 	unsigned int i;
+<<<<<<< HEAD
 	struct module_memory *mod_mem;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	len = hdr->e_shnum * sizeof(me->arch.section[0]);
 	me->arch.section = kzalloc(len, GFP_KERNEL);
@@ -328,6 +359,7 @@ int module_frob_arch_sections(CONST Elf_Ehdr *hdr,
 		me->arch.section[s].stub_entries += count;
 	}
 
+<<<<<<< HEAD
 	mod_mem = &me->mem[MOD_TEXT];
 	/* align things a bit */
 	mod_mem->size = ALIGN(mod_mem->size, 16);
@@ -337,6 +369,16 @@ int module_frob_arch_sections(CONST Elf_Ehdr *hdr,
 	mod_mem->size = ALIGN(mod_mem->size, 16);
 	me->arch.fdesc_offset = mod_mem->size;
 	mod_mem->size += fdescs * sizeof(Elf_Fdesc);
+=======
+	/* align things a bit */
+	me->core_layout.size = ALIGN(me->core_layout.size, 16);
+	me->arch.got_offset = me->core_layout.size;
+	me->core_layout.size += gots * sizeof(struct got_entry);
+
+	me->core_layout.size = ALIGN(me->core_layout.size, 16);
+	me->arch.fdesc_offset = me->core_layout.size;
+	me->core_layout.size += fdescs * sizeof(Elf_Fdesc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	me->arch.got_max = gots;
 	me->arch.fdesc_max = fdescs;
@@ -354,7 +396,11 @@ static Elf64_Word get_got(struct module *me, unsigned long value, long addend)
 
 	BUG_ON(value == 0);
 
+<<<<<<< HEAD
 	got = me->mem[MOD_TEXT].base + me->arch.got_offset;
+=======
+	got = me->core_layout.base + me->arch.got_offset;
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; got[i].addr; i++)
 		if (got[i].addr == value)
 			goto out;
@@ -372,7 +418,11 @@ static Elf64_Word get_got(struct module *me, unsigned long value, long addend)
 #ifdef CONFIG_64BIT
 static Elf_Addr get_fdesc(struct module *me, unsigned long value)
 {
+<<<<<<< HEAD
 	Elf_Fdesc *fdesc = me->mem[MOD_TEXT].base + me->arch.fdesc_offset;
+=======
+	Elf_Fdesc *fdesc = me->core_layout.base + me->arch.fdesc_offset;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!value) {
 		printk(KERN_ERR "%s: zero OPD requested!\n", me->name);
@@ -390,7 +440,11 @@ static Elf_Addr get_fdesc(struct module *me, unsigned long value)
 
 	/* Create new one */
 	fdesc->addr = value;
+<<<<<<< HEAD
 	fdesc->gp = (Elf_Addr)me->mem[MOD_TEXT].base + me->arch.got_offset;
+=======
+	fdesc->gp = (Elf_Addr)me->core_layout.base + me->arch.got_offset;
+>>>>>>> b7ba80a49124 (Commit)
 	return (Elf_Addr)fdesc;
 }
 #endif /* CONFIG_64BIT */
@@ -725,7 +779,11 @@ int apply_relocate_add(Elf_Shdr *sechdrs,
 			       loc, val);
 			val += addend;
 			/* can we reach it locally? */
+<<<<<<< HEAD
 			if (within_module(val, me)) {
+=======
+			if (in_local(me, (void *)val)) {
+>>>>>>> b7ba80a49124 (Commit)
 				/* this is the case where the symbol is local
 				 * to the module, but in a different section,
 				 * so stub the jump in case it's more than 22
@@ -784,7 +842,11 @@ int apply_relocate_add(Elf_Shdr *sechdrs,
 			break;
 		case R_PARISC_FPTR64:
 			/* 64-bit function address */
+<<<<<<< HEAD
 			if (within_module(val + addend, me)) {
+=======
+			if(in_local(me, (void *)(val + addend))) {
+>>>>>>> b7ba80a49124 (Commit)
 				*loc64 = get_fdesc(me, val+addend);
 				pr_debug("FDESC for %s at %llx points to %llx\n",
 				       strtab + sym->st_name, *loc64,
@@ -822,7 +884,11 @@ register_unwind_table(struct module *me,
 
 	table = (unsigned char *)sechdrs[me->arch.unwind_section].sh_addr;
 	end = table + sechdrs[me->arch.unwind_section].sh_size;
+<<<<<<< HEAD
 	gp = (Elf_Addr)me->mem[MOD_TEXT].base + me->arch.got_offset;
+=======
+	gp = (Elf_Addr)me->core_layout.base + me->arch.got_offset;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_debug("register_unwind_table(), sect = %d at 0x%p - 0x%p (gp=0x%lx)\n",
 	       me->arch.unwind_section, table, end, gp);
@@ -960,7 +1026,11 @@ void module_arch_cleanup(struct module *mod)
 #ifdef CONFIG_64BIT
 void *dereference_module_function_descriptor(struct module *mod, void *ptr)
 {
+<<<<<<< HEAD
 	unsigned long start_opd = (Elf64_Addr)mod->mem[MOD_TEXT].base +
+=======
+	unsigned long start_opd = (Elf64_Addr)mod->core_layout.base +
+>>>>>>> b7ba80a49124 (Commit)
 				   mod->arch.fdesc_offset;
 	unsigned long end_opd = start_opd +
 				mod->arch.fdesc_count * sizeof(Elf64_Fdesc);

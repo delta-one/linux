@@ -118,7 +118,11 @@ static int lmp91000_read(struct lmp91000_data *data, int channel, int *val)
 
 	data->chan_select = channel != LMP91000_REG_MODECN_3LEAD;
 
+<<<<<<< HEAD
 	iio_trigger_poll_nested(data->trig);
+=======
+	iio_trigger_poll_chained(data->trig);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = wait_for_completion_timeout(&data->completion, HZ);
 	reinit_completion(&data->completion);
@@ -292,7 +296,12 @@ static const struct iio_buffer_setup_ops lmp91000_buffer_setup_ops = {
 	.predisable = lmp91000_buffer_predisable,
 };
 
+<<<<<<< HEAD
 static int lmp91000_probe(struct i2c_client *client)
+=======
+static int lmp91000_probe(struct i2c_client *client,
+			  const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &client->dev;
 	struct lmp91000_data *data;
@@ -416,7 +425,11 @@ static struct i2c_driver lmp91000_driver = {
 		.name = LMP91000_DRV_NAME,
 		.of_match_table = lmp91000_of_match,
 	},
+<<<<<<< HEAD
 	.probe_new = lmp91000_probe,
+=======
+	.probe = lmp91000_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = lmp91000_remove,
 	.id_table = lmp91000_id,
 };

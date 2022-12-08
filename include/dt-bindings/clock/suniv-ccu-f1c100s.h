@@ -67,6 +67,9 @@
 #define CLK_CODEC		65
 #define CLK_AVS			66
 
+<<<<<<< HEAD
 #define CLK_IR			67
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

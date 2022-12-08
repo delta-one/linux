@@ -10,6 +10,7 @@
 
 #include <asm/loongarch.h>
 
+<<<<<<< HEAD
 /* cache_desc->flags */
 enum {
 	CACHE_PRESENT	= (1 << 0),
@@ -17,10 +18,13 @@ enum {
 	CACHE_INCLUSIVE	= (1 << 2),	/* include the inner level caches */
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Descriptor for a cache
  */
 struct cache_desc {
+<<<<<<< HEAD
 	unsigned char type;
 	unsigned char level;
 	unsigned short sets;	/* Number of lines per set */
@@ -32,6 +36,16 @@ struct cache_desc {
 #define CACHE_LEVEL_MAX		3
 #define CACHE_LEAVES_MAX	6
 
+=======
+	unsigned int waysize;	/* Bytes per way */
+	unsigned short sets;	/* Number of lines per set */
+	unsigned char ways;	/* Number of ways */
+	unsigned char linesz;	/* Size of line in bytes */
+	unsigned char waybit;	/* Bits to select in a cache set */
+	unsigned char flags;	/* Flags describing cache properties */
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct cpuinfo_loongarch {
 	u64			asid_cache;
 	unsigned long		asid_mask;
@@ -50,8 +64,16 @@ struct cpuinfo_loongarch {
 	int			tlbsizemtlb;
 	int			tlbsizestlbsets;
 	int			tlbsizestlbways;
+<<<<<<< HEAD
 	int			cache_leaves_present; /* number of cache_leaves[] elements */
 	struct cache_desc	cache_leaves[CACHE_LEAVES_MAX];
+=======
+	struct cache_desc	icache; /* Primary I-cache */
+	struct cache_desc	dcache; /* Primary D or combined I/D cache */
+	struct cache_desc	vcache; /* Victim cache, between pcache and scache */
+	struct cache_desc	scache; /* Secondary cache */
+	struct cache_desc	tcache; /* Tertiary/split secondary cache */
+>>>>>>> b7ba80a49124 (Commit)
 	int			core;   /* physical core number in package */
 	int			package;/* physical package number */
 	int			vabits; /* Virtual Address size in bits */

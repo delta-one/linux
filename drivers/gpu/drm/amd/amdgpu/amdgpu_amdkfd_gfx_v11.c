@@ -111,7 +111,11 @@ static int init_interrupts_v11(struct amdgpu_device *adev, uint32_t pipe_id)
 
 	lock_srbm(adev, mec, pipe, 0, 0);
 
+<<<<<<< HEAD
 	WREG32_SOC15(GC, 0, regCPC_INT_CNTL,
+=======
+	WREG32(SOC15_REG_OFFSET(GC, 0, regCPC_INT_CNTL),
+>>>>>>> b7ba80a49124 (Commit)
 		CP_INT_CNTL_RING0__TIME_STAMP_INT_ENABLE_MASK |
 		CP_INT_CNTL_RING0__OPCODE_ERROR_INT_ENABLE_MASK);
 

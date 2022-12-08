@@ -207,11 +207,19 @@ static void efx_skb_copy_bits_to_pio(struct efx_nic *efx, struct sk_buff *skb,
 		skb_frag_t *f = &skb_shinfo(skb)->frags[i];
 		u8 *vaddr;
 
+<<<<<<< HEAD
 		vaddr = kmap_local_page(skb_frag_page(f));
 
 		efx_memcpy_toio_aligned_cb(efx, piobuf, vaddr + skb_frag_off(f),
 					   skb_frag_size(f), copy_buf);
 		kunmap_local(vaddr);
+=======
+		vaddr = kmap_atomic(skb_frag_page(f));
+
+		efx_memcpy_toio_aligned_cb(efx, piobuf, vaddr + skb_frag_off(f),
+					   skb_frag_size(f), copy_buf);
+		kunmap_atomic(vaddr);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	EFX_WARN_ON_ONCE_PARANOID(skb_shinfo(skb)->frag_list);

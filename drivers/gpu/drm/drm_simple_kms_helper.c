@@ -102,6 +102,7 @@ static int drm_simple_kms_crtc_check(struct drm_crtc *crtc,
 	struct drm_crtc_state *crtc_state = drm_atomic_get_new_crtc_state(state, crtc);
 	int ret;
 
+<<<<<<< HEAD
 	if (!crtc_state->enable)
 		goto out;
 
@@ -110,6 +111,12 @@ static int drm_simple_kms_crtc_check(struct drm_crtc *crtc,
 		return ret;
 
 out:
+=======
+	ret = drm_atomic_helper_check_crtc_state(crtc_state, false);
+	if (ret)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return drm_atomic_add_affected_planes(state, crtc);
 }
 
@@ -267,7 +274,11 @@ static int drm_simple_kms_plane_prepare_fb(struct drm_plane *plane,
 
 		WARN_ON_ONCE(pipe->funcs && pipe->funcs->cleanup_fb);
 
+<<<<<<< HEAD
 		return drm_gem_plane_helper_prepare_fb(plane, state);
+=======
+		return drm_gem_simple_display_pipe_prepare_fb(pipe, state);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return pipe->funcs->prepare_fb(pipe, state);
@@ -285,6 +296,7 @@ static void drm_simple_kms_plane_cleanup_fb(struct drm_plane *plane,
 	pipe->funcs->cleanup_fb(pipe, state);
 }
 
+<<<<<<< HEAD
 static int drm_simple_kms_plane_begin_fb_access(struct drm_plane *plane,
 						struct drm_plane_state *new_plane_state)
 {
@@ -309,6 +321,8 @@ static void drm_simple_kms_plane_end_fb_access(struct drm_plane *plane,
 	pipe->funcs->end_fb_access(pipe, new_plane_state);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool drm_simple_kms_format_mod_supported(struct drm_plane *plane,
 						uint32_t format,
 						uint64_t modifier)
@@ -319,8 +333,11 @@ static bool drm_simple_kms_format_mod_supported(struct drm_plane *plane,
 static const struct drm_plane_helper_funcs drm_simple_kms_plane_helper_funcs = {
 	.prepare_fb = drm_simple_kms_plane_prepare_fb,
 	.cleanup_fb = drm_simple_kms_plane_cleanup_fb,
+<<<<<<< HEAD
 	.begin_fb_access = drm_simple_kms_plane_begin_fb_access,
 	.end_fb_access = drm_simple_kms_plane_end_fb_access,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.atomic_check = drm_simple_kms_plane_atomic_check,
 	.atomic_update = drm_simple_kms_plane_atomic_update,
 };

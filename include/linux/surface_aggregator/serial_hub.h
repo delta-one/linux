@@ -83,6 +83,7 @@ enum ssh_payload_type {
 
 /**
  * struct ssh_command - Payload of a command-type frame.
+<<<<<<< HEAD
  * @type: The type of the payload. See &enum ssh_payload_type. Should be
  *        SSH_PLD_TYPE_CMD for this struct.
  * @tc:   Command target category.
@@ -92,12 +93,30 @@ enum ssh_payload_type {
  * @rqid: Request ID. Used to match requests with responses and differentiate
  *        between responses and events.
  * @cid:  Command ID.
+=======
+ * @type:    The type of the payload. See &enum ssh_payload_type. Should be
+ *           SSH_PLD_TYPE_CMD for this struct.
+ * @tc:      Command target category.
+ * @tid_out: Output target ID. Should be zero if this an incoming (EC to host)
+ *           message.
+ * @tid_in:  Input target ID. Should be zero if this is an outgoing (host to
+ *           EC) message.
+ * @iid:     Instance ID.
+ * @rqid:    Request ID. Used to match requests with responses and differentiate
+ *           between responses and events.
+ * @cid:     Command ID.
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct ssh_command {
 	u8 type;
 	u8 tc;
+<<<<<<< HEAD
 	u8 tid;
 	u8 sid;
+=======
+	u8 tid_out;
+	u8 tid_in;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 iid;
 	__le16 rqid;
 	u8 cid;
@@ -278,6 +297,7 @@ struct ssam_span {
 	size_t len;
 };
 
+<<<<<<< HEAD
 /**
  * enum ssam_ssh_tid - Target/source IDs for Serial Hub messages.
  * @SSAM_SSH_TID_HOST:     We as the kernel Serial Hub driver.
@@ -294,6 +314,8 @@ enum ssam_ssh_tid {
 	SSAM_SSH_TID_SURFLINK = 0x04,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Known SSH/EC target categories.
  *

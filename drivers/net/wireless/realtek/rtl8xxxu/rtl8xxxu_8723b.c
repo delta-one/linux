@@ -32,7 +32,11 @@
 #include "rtl8xxxu.h"
 #include "rtl8xxxu_regs.h"
 
+<<<<<<< HEAD
 static const struct rtl8xxxu_reg8val rtl8723b_mac_init_table[] = {
+=======
+static struct rtl8xxxu_reg8val rtl8723b_mac_init_table[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{0x02f, 0x30}, {0x035, 0x00}, {0x039, 0x08}, {0x04e, 0xe0},
 	{0x064, 0x00}, {0x067, 0x20}, {0x428, 0x0a}, {0x429, 0x10},
 	{0x430, 0x00}, {0x431, 0x00},
@@ -63,7 +67,11 @@ static const struct rtl8xxxu_reg8val rtl8723b_mac_init_table[] = {
 	{0xffff, 0xff},
 };
 
+<<<<<<< HEAD
 static const struct rtl8xxxu_reg32val rtl8723b_phy_1t_init_table[] = {
+=======
+static struct rtl8xxxu_reg32val rtl8723b_phy_1t_init_table[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{0x800, 0x80040000}, {0x804, 0x00000003},
 	{0x808, 0x0000fc00}, {0x80c, 0x0000000a},
 	{0x810, 0x10001331}, {0x814, 0x020c3d10},
@@ -164,7 +172,11 @@ static const struct rtl8xxxu_reg32val rtl8723b_phy_1t_init_table[] = {
 	{0xffff, 0xffffffff},
 };
 
+<<<<<<< HEAD
 static const struct rtl8xxxu_reg32val rtl8xxx_agc_8723bu_table[] = {
+=======
+static struct rtl8xxxu_reg32val rtl8xxx_agc_8723bu_table[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{0xc78, 0xfd000001}, {0xc78, 0xfc010001},
 	{0xc78, 0xfb020001}, {0xc78, 0xfa030001},
 	{0xc78, 0xf9040001}, {0xc78, 0xf8050001},
@@ -235,7 +247,11 @@ static const struct rtl8xxxu_reg32val rtl8xxx_agc_8723bu_table[] = {
 	{0xffff, 0xffffffff}
 };
 
+<<<<<<< HEAD
 static const struct rtl8xxxu_rfregval rtl8723bu_radioa_1t_init_table[] = {
+=======
+static struct rtl8xxxu_rfregval rtl8723bu_radioa_1t_init_table[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{0x00, 0x00010000}, {0xb0, 0x000dffe0},
 	{0xfe, 0x00000000}, {0xfe, 0x00000000},
 	{0xfe, 0x00000000}, {0xb1, 0x00000018},
@@ -304,6 +320,7 @@ static const struct rtl8xxxu_rfregval rtl8723bu_radioa_1t_init_table[] = {
 	{0xff, 0xffffffff}
 };
 
+<<<<<<< HEAD
 static int rtl8723bu_identify_chip(struct rtl8xxxu_priv *priv)
 {
 	struct device *dev = &priv->udev->dev;
@@ -351,6 +368,8 @@ out:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void rtl8723bu_write_btreg(struct rtl8xxxu_priv *priv, u8 reg, u8 data)
 {
 	struct h2c_cmd h2c;
@@ -492,17 +511,40 @@ static int rtl8723bu_parse_efuse(struct rtl8xxxu_priv *priv)
 			efuse->tx_power_index_B.pwr_diff[i - 1].ht40;
 	}
 
+<<<<<<< HEAD
 	priv->default_crystal_cap = priv->efuse_wifi.efuse8723bu.xtal_k & 0x3f;
+=======
+	priv->has_xtalk = 1;
+	priv->xtalk = priv->efuse_wifi.efuse8723bu.xtal_k & 0x3f;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_info(&priv->udev->dev, "Vendor: %.7s\n", efuse->vendor_name);
 	dev_info(&priv->udev->dev, "Product: %.41s\n", efuse->device_name);
 
+<<<<<<< HEAD
+=======
+	if (rtl8xxxu_debug & RTL8XXXU_DEBUG_EFUSE) {
+		int i;
+		unsigned char *raw = priv->efuse_wifi.raw;
+
+		dev_info(&priv->udev->dev,
+			 "%s: dumping efuse (0x%02zx bytes):\n",
+			 __func__, sizeof(struct rtl8723bu_efuse));
+		for (i = 0; i < sizeof(struct rtl8723bu_efuse); i += 8)
+			dev_info(&priv->udev->dev, "%02x: %8ph\n", i, &raw[i]);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static int rtl8723bu_load_firmware(struct rtl8xxxu_priv *priv)
 {
+<<<<<<< HEAD
 	const char *fw_name;
+=======
+	char *fw_name;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (priv->enable_bluetooth)
@@ -553,7 +595,11 @@ static int rtl8723bu_init_phy_rf(struct rtl8xxxu_priv *priv)
 	return ret;
 }
 
+<<<<<<< HEAD
 void rtl8723bu_phy_init_antenna_selection(struct rtl8xxxu_priv *priv)
+=======
+static void rtl8723bu_phy_init_antenna_selection(struct rtl8xxxu_priv *priv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 val32;
 
@@ -1675,6 +1721,7 @@ static void rtl8723bu_init_statistics(struct rtl8xxxu_priv *priv)
 	rtl8xxxu_write32(priv, REG_OFDM0_FA_RSTC, val32);
 }
 
+<<<<<<< HEAD
 static s8 rtl8723b_cck_rssi(struct rtl8xxxu_priv *priv, struct rtl8723au_phy_stats *phy_stats)
 {
 	u8 cck_agc_rpt = phy_stats->cck_agc_rpt_ofdm_cfosho_a;
@@ -1706,16 +1753,23 @@ static s8 rtl8723b_cck_rssi(struct rtl8xxxu_priv *priv, struct rtl8723au_phy_sta
 
 struct rtl8xxxu_fileops rtl8723bu_fops = {
 	.identify_chip = rtl8723bu_identify_chip,
+=======
+struct rtl8xxxu_fileops rtl8723bu_fops = {
+>>>>>>> b7ba80a49124 (Commit)
 	.parse_efuse = rtl8723bu_parse_efuse,
 	.load_firmware = rtl8723bu_load_firmware,
 	.power_on = rtl8723bu_power_on,
 	.power_off = rtl8723bu_power_off,
+<<<<<<< HEAD
 	.read_efuse = rtl8xxxu_read_efuse,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.reset_8051 = rtl8723bu_reset_8051,
 	.llt_init = rtl8xxxu_auto_llt_table,
 	.init_phy_bb = rtl8723bu_init_phy_bb,
 	.init_phy_rf = rtl8723bu_init_phy_rf,
 	.phy_init_antenna_selection = rtl8723bu_phy_init_antenna_selection,
+<<<<<<< HEAD
 	.phy_lc_calibrate = rtl8723a_phy_lc_calibrate,
 	.phy_iq_calibrate = rtl8723bu_phy_iq_calibrate,
 	.config_channel = rtl8xxxu_gen2_config_channel,
@@ -1724,16 +1778,27 @@ struct rtl8xxxu_fileops rtl8723bu_fops = {
 	.init_aggregation = rtl8723bu_init_aggregation,
 	.init_statistics = rtl8723bu_init_statistics,
 	.init_burst = rtl8xxxu_init_burst,
+=======
+	.phy_iq_calibrate = rtl8723bu_phy_iq_calibrate,
+	.config_channel = rtl8xxxu_gen2_config_channel,
+	.parse_rx_desc = rtl8xxxu_parse_rxdesc24,
+	.init_aggregation = rtl8723bu_init_aggregation,
+	.init_statistics = rtl8723bu_init_statistics,
+>>>>>>> b7ba80a49124 (Commit)
 	.enable_rf = rtl8723b_enable_rf,
 	.disable_rf = rtl8xxxu_gen2_disable_rf,
 	.usb_quirks = rtl8xxxu_gen2_usb_quirks,
 	.set_tx_power = rtl8723b_set_tx_power,
 	.update_rate_mask = rtl8xxxu_gen2_update_rate_mask,
 	.report_connect = rtl8xxxu_gen2_report_connect,
+<<<<<<< HEAD
 	.report_rssi = rtl8xxxu_gen2_report_rssi,
 	.fill_txdesc = rtl8xxxu_fill_txdesc_v2,
 	.set_crystal_cap = rtl8723a_set_crystal_cap,
 	.cck_rssi = rtl8723b_cck_rssi,
+=======
+	.fill_txdesc = rtl8xxxu_fill_txdesc_v2,
+>>>>>>> b7ba80a49124 (Commit)
 	.writeN_block_size = 1024,
 	.tx_desc_size = sizeof(struct rtl8xxxu_txdesc40),
 	.rx_desc_size = sizeof(struct rtl8xxxu_rxdesc24),

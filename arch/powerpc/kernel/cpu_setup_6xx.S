@@ -4,8 +4,11 @@
  *    Copyright (C) 2003 Benjamin Herrenschmidt (benh@kernel.crashing.org)
  */
 
+<<<<<<< HEAD
 #include <linux/linkage.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/processor.h>
 #include <asm/page.h>
 #include <asm/cputable.h>
@@ -83,7 +86,11 @@ _GLOBAL(__setup_cpu_745x)
 	blr
 
 /* Enable caches for 603's, 604, 750 & 7400 */
+<<<<<<< HEAD
 SYM_FUNC_START_LOCAL(setup_common_caches)
+=======
+setup_common_caches:
+>>>>>>> b7ba80a49124 (Commit)
 	mfspr	r11,SPRN_HID0
 	andi.	r0,r11,HID0_DCE
 	ori	r11,r11,HID0_ICE|HID0_DCE
@@ -97,12 +104,19 @@ SYM_FUNC_START_LOCAL(setup_common_caches)
 	sync
 	isync
 	blr
+<<<<<<< HEAD
 SYM_FUNC_END(setup_common_caches)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* 604, 604e, 604ev, ...
  * Enable superscalar execution & branch history table
  */
+<<<<<<< HEAD
 SYM_FUNC_START_LOCAL(setup_604_hid0)
+=======
+setup_604_hid0:
+>>>>>>> b7ba80a49124 (Commit)
 	mfspr	r11,SPRN_HID0
 	ori	r11,r11,HID0_SIED|HID0_BHTE
 	ori	r8,r11,HID0_BTCD
@@ -113,7 +127,10 @@ SYM_FUNC_START_LOCAL(setup_604_hid0)
 	sync
 	isync
 	blr
+<<<<<<< HEAD
 SYM_FUNC_END(setup_604_hid0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* 7400 <= rev 2.7 and 7410 rev = 1.0 suffer from some
  * erratas we work around here.
@@ -129,14 +146,22 @@ SYM_FUNC_END(setup_604_hid0)
  * needed once we have applied workaround #5 (though it's
  * not set by Apple's firmware at least).
  */
+<<<<<<< HEAD
 SYM_FUNC_START_LOCAL(setup_7400_workarounds)
+=======
+setup_7400_workarounds:
+>>>>>>> b7ba80a49124 (Commit)
 	mfpvr	r3
 	rlwinm	r3,r3,0,20,31
 	cmpwi	0,r3,0x0207
 	ble	1f
 	blr
+<<<<<<< HEAD
 SYM_FUNC_END(setup_7400_workarounds)
 SYM_FUNC_START_LOCAL(setup_7410_workarounds)
+=======
+setup_7410_workarounds:
+>>>>>>> b7ba80a49124 (Commit)
 	mfpvr	r3
 	rlwinm	r3,r3,0,20,31
 	cmpwi	0,r3,0x0100
@@ -156,7 +181,10 @@ SYM_FUNC_START_LOCAL(setup_7410_workarounds)
 	sync
 	isync
 	blr
+<<<<<<< HEAD
 SYM_FUNC_END(setup_7410_workarounds)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* 740/750/7400/7410
  * Enable Store Gathering (SGE), Address Broadcast (ABE),
@@ -164,7 +192,11 @@ SYM_FUNC_END(setup_7410_workarounds)
  * Dynamic Power Management (DPM), Speculative (SPD)
  * Clear Instruction cache throttling (ICTC)
  */
+<<<<<<< HEAD
 SYM_FUNC_START_LOCAL(setup_750_7400_hid0)
+=======
+setup_750_7400_hid0:
+>>>>>>> b7ba80a49124 (Commit)
 	mfspr	r11,SPRN_HID0
 	ori	r11,r11,HID0_SGE | HID0_ABE | HID0_BHTE | HID0_BTIC
 	oris	r11,r11,HID0_DPM@h
@@ -183,13 +215,20 @@ END_FTR_SECTION_IFSET(CPU_FTR_NO_DPM)
 	sync
 	isync
 	blr
+<<<<<<< HEAD
 SYM_FUNC_END(setup_750_7400_hid0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* 750cx specific
  * Looks like we have to disable NAP feature for some PLL settings...
  * (waiting for confirmation)
  */
+<<<<<<< HEAD
 SYM_FUNC_START_LOCAL(setup_750cx)
+=======
+setup_750cx:
+>>>>>>> b7ba80a49124 (Commit)
 	mfspr	r10, SPRN_HID1
 	rlwinm	r10,r10,4,28,31
 	cmpwi	cr0,r10,7
@@ -203,6 +242,7 @@ SYM_FUNC_START_LOCAL(setup_750cx)
 	andc	r6,r6,r7
 	stw	r6,CPU_SPEC_FEATURES(r4)
 	blr
+<<<<<<< HEAD
 SYM_FUNC_END(setup_750cx)
 
 /* 750fx specific
@@ -210,6 +250,13 @@ SYM_FUNC_END(setup_750cx)
 SYM_FUNC_START_LOCAL(setup_750fx)
 	blr
 SYM_FUNC_END(setup_750fx)
+=======
+
+/* 750fx specific
+ */
+setup_750fx:
+	blr
+>>>>>>> b7ba80a49124 (Commit)
 
 /* MPC 745x
  * Enable Store Gathering (SGE), Branch Folding (FOLD)
@@ -221,7 +268,11 @@ SYM_FUNC_END(setup_750fx)
  * Clear Instruction cache throttling (ICTC)
  * Enable L2 HW prefetch
  */
+<<<<<<< HEAD
 SYM_FUNC_START_LOCAL(setup_745x_specifics)
+=======
+setup_745x_specifics:
+>>>>>>> b7ba80a49124 (Commit)
 	/* We check for the presence of an L3 cache setup by
 	 * the firmware. If any, we disable NAP capability as
 	 * it's known to be bogus on rev 2.1 and earlier
@@ -279,7 +330,10 @@ END_FTR_SECTION_IFSET(CPU_FTR_NO_DPM)
 	sync
 	isync
 	blr
+<<<<<<< HEAD
 SYM_FUNC_END(setup_745x_specifics)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Initialize the FPU registers. This is needed to work around an errata

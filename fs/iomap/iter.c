@@ -7,6 +7,7 @@
 #include <linux/iomap.h>
 #include "trace.h"
 
+<<<<<<< HEAD
 /*
  * Advance to the next range we need to map.
  *
@@ -29,6 +30,14 @@ static inline int iomap_iter_advance(struct iomap_iter *iter)
 			return iter->processed;
 		if (!iter->processed && !stale)
 			return 0;
+=======
+static inline int iomap_iter_advance(struct iomap_iter *iter)
+{
+	/* handle the previous iteration (if any) */
+	if (iter->iomap.length) {
+		if (iter->processed <= 0)
+			return iter->processed;
+>>>>>>> b7ba80a49124 (Commit)
 		if (WARN_ON_ONCE(iter->processed > iomap_length(iter)))
 			return -EIO;
 		iter->pos += iter->processed;
@@ -49,7 +58,10 @@ static inline void iomap_iter_done(struct iomap_iter *iter)
 	WARN_ON_ONCE(iter->iomap.offset > iter->pos);
 	WARN_ON_ONCE(iter->iomap.length == 0);
 	WARN_ON_ONCE(iter->iomap.offset + iter->iomap.length <= iter->pos);
+<<<<<<< HEAD
 	WARN_ON_ONCE(iter->iomap.flags & IOMAP_F_STALE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	trace_iomap_iter_dstmap(iter->inode, &iter->iomap);
 	if (iter->srcmap.type != IOMAP_HOLE)

@@ -82,7 +82,10 @@ mtk_ppe_debugfs_foe_show(struct seq_file *m, void *private, bool bind)
 		struct mtk_foe_entry *entry = mtk_foe_get_entry(ppe, i);
 		struct mtk_foe_mac_info *l2;
 		struct mtk_flow_addr_info ai = {};
+<<<<<<< HEAD
 		struct mtk_foe_accounting *acct;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned char h_source[ETH_ALEN];
 		unsigned char h_dest[ETH_ALEN];
 		int type, state;
@@ -96,8 +99,11 @@ mtk_ppe_debugfs_foe_show(struct seq_file *m, void *private, bool bind)
 		if (bind && state != MTK_FOE_STATE_BIND)
 			continue;
 
+<<<<<<< HEAD
 		acct = mtk_foe_entry_get_mib(ppe, i, NULL);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		type = FIELD_GET(MTK_FOE_IB1_PACKET_TYPE, entry->ib1);
 		seq_printf(m, "%05x %s %7s", i,
 			   mtk_foe_entry_state_str(state),
@@ -156,17 +162,24 @@ mtk_ppe_debugfs_foe_show(struct seq_file *m, void *private, bool bind)
 		*((__be16 *)&h_dest[4]) = htons(l2->dest_mac_lo);
 
 		seq_printf(m, " eth=%pM->%pM etype=%04x"
+<<<<<<< HEAD
 			      " vlan=%d,%d ib1=%08x ib2=%08x"
 			      " packets=%llu bytes=%llu\n",
 			   h_source, h_dest, ntohs(l2->etype),
 			   l2->vlan1, l2->vlan2, entry->ib1, ib2,
 			   acct ? acct->packets : 0, acct ? acct->bytes : 0);
+=======
+			      " vlan=%d,%d ib1=%08x ib2=%08x\n",
+			   h_source, h_dest, ntohs(l2->etype),
+			   l2->vlan1, l2->vlan2, entry->ib1, ib2);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
 }
 
 static int
+<<<<<<< HEAD
 mtk_ppe_debugfs_foe_all_show(struct seq_file *m, void *private)
 {
 	return mtk_ppe_debugfs_foe_show(m, private, false);
@@ -182,13 +195,59 @@ DEFINE_SHOW_ATTRIBUTE(mtk_ppe_debugfs_foe_bind);
 
 int mtk_ppe_debugfs_init(struct mtk_ppe *ppe, int index)
 {
+=======
+mtk_ppe_debugfs_foe_show_all(struct seq_file *m, void *private)
+{
+	return mtk_ppe_debugfs_foe_show(m, private, false);
+}
+
+static int
+mtk_ppe_debugfs_foe_show_bind(struct seq_file *m, void *private)
+{
+	return mtk_ppe_debugfs_foe_show(m, private, true);
+}
+
+static int
+mtk_ppe_debugfs_foe_open_all(struct inode *inode, struct file *file)
+{
+	return single_open(file, mtk_ppe_debugfs_foe_show_all,
+			   inode->i_private);
+}
+
+static int
+mtk_ppe_debugfs_foe_open_bind(struct inode *inode, struct file *file)
+{
+	return single_open(file, mtk_ppe_debugfs_foe_show_bind,
+			   inode->i_private);
+}
+
+int mtk_ppe_debugfs_init(struct mtk_ppe *ppe, int index)
+{
+	static const struct file_operations fops_all = {
+		.open = mtk_ppe_debugfs_foe_open_all,
+		.read = seq_read,
+		.llseek = seq_lseek,
+		.release = single_release,
+	};
+	static const struct file_operations fops_bind = {
+		.open = mtk_ppe_debugfs_foe_open_bind,
+		.read = seq_read,
+		.llseek = seq_lseek,
+		.release = single_release,
+	};
+>>>>>>> b7ba80a49124 (Commit)
 	struct dentry *root;
 
 	snprintf(ppe->dirname, sizeof(ppe->dirname), "ppe%d", index);
 
 	root = debugfs_create_dir(ppe->dirname, NULL);
+<<<<<<< HEAD
 	debugfs_create_file("entries", S_IRUGO, root, ppe, &mtk_ppe_debugfs_foe_all_fops);
 	debugfs_create_file("bind", S_IRUGO, root, ppe, &mtk_ppe_debugfs_foe_bind_fops);
+=======
+	debugfs_create_file("entries", S_IRUGO, root, ppe, &fops_all);
+	debugfs_create_file("bind", S_IRUGO, root, ppe, &fops_bind);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

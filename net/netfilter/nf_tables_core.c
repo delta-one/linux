@@ -21,6 +21,7 @@
 #include <net/netfilter/nf_log.h>
 #include <net/netfilter/nft_meta.h>
 
+<<<<<<< HEAD
 #if defined(CONFIG_RETPOLINE) && defined(CONFIG_X86)
 
 static struct static_key_false nf_tables_skip_direct_calls;
@@ -41,6 +42,8 @@ static inline bool nf_skip_indirect_calls(void) { return false; }
 static inline void nf_skip_indirect_calls_enable(void) { }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static noinline void __nft_trace_packet(struct nft_traceinfo *info,
 					const struct nft_chain *chain,
 					enum nft_trace_types type)
@@ -213,12 +216,16 @@ static void expr_call_ops_eval(const struct nft_expr *expr,
 			       struct nft_pktinfo *pkt)
 {
 #ifdef CONFIG_RETPOLINE
+<<<<<<< HEAD
 	unsigned long e;
 
 	if (nf_skip_indirect_calls())
 		goto indirect_call;
 
 	e = (unsigned long)expr->ops->eval;
+=======
+	unsigned long e = (unsigned long)expr->ops->eval;
+>>>>>>> b7ba80a49124 (Commit)
 #define X(e, fun) \
 	do { if ((e) == (unsigned long)(fun)) \
 		return fun(expr, regs, pkt); } while (0)
@@ -228,19 +235,26 @@ static void expr_call_ops_eval(const struct nft_expr *expr,
 	X(e, nft_counter_eval);
 	X(e, nft_meta_get_eval);
 	X(e, nft_lookup_eval);
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_NFT_CT)
 	X(e, nft_ct_get_fast_eval);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	X(e, nft_range_eval);
 	X(e, nft_immediate_eval);
 	X(e, nft_byteorder_eval);
 	X(e, nft_dynset_eval);
 	X(e, nft_rt_get_eval);
 	X(e, nft_bitwise_eval);
+<<<<<<< HEAD
 	X(e, nft_objref_eval);
 	X(e, nft_objref_map_eval);
 #undef  X
 indirect_call:
+=======
+#undef  X
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_RETPOLINE */
 	expr->ops->eval(expr, regs, pkt);
 }
@@ -371,8 +385,11 @@ static struct nft_expr_type *nft_basic_types[] = {
 	&nft_exthdr_type,
 	&nft_last_type,
 	&nft_counter_type,
+<<<<<<< HEAD
 	&nft_objref_type,
 	&nft_inner_type,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct nft_object_type *nft_basic_objects[] = {
@@ -400,8 +417,11 @@ int __init nf_tables_core_module_init(void)
 			goto err;
 	}
 
+<<<<<<< HEAD
 	nf_skip_indirect_calls_enable();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err:

@@ -215,7 +215,10 @@ static int sifive_gpio_probe(struct platform_device *pdev)
 		return -ENODEV;
 	}
 	parent = irq_find_host(irq_parent);
+<<<<<<< HEAD
 	of_node_put(irq_parent);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!parent) {
 		dev_err(dev, "no IRQ parent domain\n");
 		return -ENODEV;
@@ -270,7 +273,11 @@ static struct platform_driver sifive_gpio_driver = {
 	.probe		= sifive_gpio_probe,
 	.driver = {
 		.name	= "sifive_gpio",
+<<<<<<< HEAD
 		.of_match_table = sifive_gpio_match,
+=======
+		.of_match_table = of_match_ptr(sifive_gpio_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 builtin_platform_driver(sifive_gpio_driver)

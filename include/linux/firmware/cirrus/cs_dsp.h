@@ -156,7 +156,10 @@ struct cs_dsp {
 	unsigned int sysclk_reg;
 	unsigned int sysclk_mask;
 	unsigned int sysclk_shift;
+<<<<<<< HEAD
 	bool no_core_startstop;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct list_head alg_regions;
 

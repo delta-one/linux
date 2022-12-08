@@ -55,7 +55,10 @@
 #include <linux/rcupdate.h>
 #include <linux/kprobes.h>
 #include <linux/lockdep.h>
+<<<<<<< HEAD
 #include <linux/context_tracking.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/sections.h>
 
@@ -1881,8 +1884,11 @@ print_circular_lock_scenario(struct held_lock *src,
 	struct lock_class *source = hlock_class(src);
 	struct lock_class *target = hlock_class(tgt);
 	struct lock_class *parent = prt->class;
+<<<<<<< HEAD
 	int src_read = src->read;
 	int tgt_read = tgt->read;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * A direct locking problem where unsafe_class lock is taken
@@ -1910,10 +1916,14 @@ print_circular_lock_scenario(struct held_lock *src,
 	printk(" Possible unsafe locking scenario:\n\n");
 	printk("       CPU0                    CPU1\n");
 	printk("       ----                    ----\n");
+<<<<<<< HEAD
 	if (tgt_read != 0)
 		printk("  rlock(");
 	else
 		printk("  lock(");
+=======
+	printk("  lock(");
+>>>>>>> b7ba80a49124 (Commit)
 	__print_lock_name(target);
 	printk(KERN_CONT ");\n");
 	printk("                               lock(");
@@ -1922,12 +1932,16 @@ print_circular_lock_scenario(struct held_lock *src,
 	printk("                               lock(");
 	__print_lock_name(target);
 	printk(KERN_CONT ");\n");
+<<<<<<< HEAD
 	if (src_read != 0)
 		printk("  rlock(");
 	else if (src->sync)
 		printk("  sync(");
 	else
 		printk("  lock(");
+=======
+	printk("  lock(");
+>>>>>>> b7ba80a49124 (Commit)
 	__print_lock_name(source);
 	printk(KERN_CONT ");\n");
 	printk("\n *** DEADLOCK ***\n\n");
@@ -4541,6 +4555,7 @@ mark_usage(struct task_struct *curr, struct held_lock *hlock, int check)
 					return 0;
 		}
 	}
+<<<<<<< HEAD
 
 	/*
 	 * For lock_sync(), don't mark the ENABLED usage, since lock_sync()
@@ -4548,6 +4563,9 @@ mark_usage(struct task_struct *curr, struct held_lock *hlock, int check)
 	 * by interrupts
 	 */
 	if (!hlock->hardirqs_off && !hlock->sync) {
+=======
+	if (!hlock->hardirqs_off) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (hlock->read) {
 			if (!mark_lock(curr, hlock,
 					LOCK_ENABLED_HARDIRQ_READ))
@@ -4926,7 +4944,11 @@ static int __lock_is_held(const struct lockdep_map *lock, int read);
 static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
 			  int trylock, int read, int check, int hardirqs_off,
 			  struct lockdep_map *nest_lock, unsigned long ip,
+<<<<<<< HEAD
 			  int references, int pin_count, int sync)
+=======
+			  int references, int pin_count)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct task_struct *curr = current;
 	struct lock_class *class = NULL;
@@ -4977,8 +4999,12 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
 
 	class_idx = class - lock_classes;
 
+<<<<<<< HEAD
 	if (depth && !sync) {
 		/* we're holding locks and the new held lock is not a sync */
+=======
+	if (depth) { /* we're holding locks */
+>>>>>>> b7ba80a49124 (Commit)
 		hlock = curr->held_locks + depth - 1;
 		if (hlock->class_idx == class_idx && nest_lock) {
 			if (!references)
@@ -5012,7 +5038,10 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
 	hlock->trylock = trylock;
 	hlock->read = read;
 	hlock->check = check;
+<<<<<<< HEAD
 	hlock->sync = !!sync;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hlock->hardirqs_off = !!hardirqs_off;
 	hlock->references = references;
 #ifdef CONFIG_LOCK_STAT
@@ -5074,10 +5103,13 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
 	if (!validate_chain(curr, hlock, chain_head, chain_key))
 		return 0;
 
+<<<<<<< HEAD
 	/* For lock_sync(), we are done here since no actual critical section */
 	if (hlock->sync)
 		return 1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	curr->curr_chain_key = chain_key;
 	curr->lockdep_depth++;
 	check_chain_key(curr);
@@ -5219,7 +5251,11 @@ static int reacquire_held_locks(struct task_struct *curr, unsigned int depth,
 				    hlock->read, hlock->check,
 				    hlock->hardirqs_off,
 				    hlock->nest_lock, hlock->acquire_ip,
+<<<<<<< HEAD
 				    hlock->references, hlock->pin_count, 0)) {
+=======
+				    hlock->references, hlock->pin_count)) {
+>>>>>>> b7ba80a49124 (Commit)
 		case 0:
 			return 1;
 		case 1:
@@ -5689,7 +5725,11 @@ void lock_acquire(struct lockdep_map *lock, unsigned int subclass,
 
 	lockdep_recursion_inc();
 	__lock_acquire(lock, subclass, trylock, read, check,
+<<<<<<< HEAD
 		       irqs_disabled_flags(flags), nest_lock, ip, 0, 0, 0);
+=======
+		       irqs_disabled_flags(flags), nest_lock, ip, 0, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	lockdep_recursion_finish();
 	raw_local_irq_restore(flags);
 }
@@ -5715,6 +5755,7 @@ void lock_release(struct lockdep_map *lock, unsigned long ip)
 }
 EXPORT_SYMBOL_GPL(lock_release);
 
+<<<<<<< HEAD
 /*
  * lock_sync() - A special annotation for synchronize_{s,}rcu()-like API.
  *
@@ -5743,6 +5784,8 @@ void lock_sync(struct lockdep_map *lock, unsigned subclass, int read,
 }
 EXPORT_SYMBOL_GPL(lock_sync);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 noinstr int lock_is_held_type(const struct lockdep_map *lock, int read)
 {
 	unsigned long flags;
@@ -6606,7 +6649,10 @@ void lockdep_rcu_suspicious(const char *file, const int line, const char *s)
 {
 	struct task_struct *curr = current;
 	int dl = READ_ONCE(debug_locks);
+<<<<<<< HEAD
 	bool rcu = warn_rcu_enter();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Note: the following can be executed concurrently, so be careful. */
 	pr_warn("\n");
@@ -6647,6 +6693,9 @@ void lockdep_rcu_suspicious(const char *file, const int line, const char *s)
 	lockdep_print_held_locks(curr);
 	pr_warn("\nstack backtrace:\n");
 	dump_stack();
+<<<<<<< HEAD
 	warn_rcu_exit(rcu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(lockdep_rcu_suspicious);

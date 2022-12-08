@@ -43,7 +43,10 @@ struct xencons_info {
 	int irq;
 	int vtermno;
 	grant_ref_t gntref;
+<<<<<<< HEAD
 	spinlock_t ring_lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static LIST_HEAD(xenconsoles);
@@ -53,6 +56,7 @@ static DEFINE_SPINLOCK(xencons_lock);
 
 static struct xencons_info *vtermno_to_xencons(int vtermno)
 {
+<<<<<<< HEAD
 	struct xencons_info *entry, *ret = NULL;
 	unsigned long flags;
 
@@ -63,12 +67,23 @@ static struct xencons_info *vtermno_to_xencons(int vtermno)
 	}
 
 	list_for_each_entry(entry, &xenconsoles, list) {
+=======
+	struct xencons_info *entry, *n, *ret = NULL;
+
+	if (list_empty(&xenconsoles))
+			return NULL;
+
+	list_for_each_entry_safe(entry, n, &xenconsoles, list) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (entry->vtermno == vtermno) {
 			ret  = entry;
 			break;
 		}
 	}
+<<<<<<< HEAD
 	spin_unlock_irqrestore(&xencons_lock, flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -90,15 +105,22 @@ static int __write_console(struct xencons_info *xencons,
 	XENCONS_RING_IDX cons, prod;
 	struct xencons_interface *intf = xencons->intf;
 	int sent = 0;
+<<<<<<< HEAD
 	unsigned long flags;
 
 	spin_lock_irqsave(&xencons->ring_lock, flags);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	cons = intf->out_cons;
 	prod = intf->out_prod;
 	mb();			/* update queue values before going on */
 
 	if ((prod - cons) > sizeof(intf->out)) {
+<<<<<<< HEAD
 		spin_unlock_irqrestore(&xencons->ring_lock, flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pr_err_once("xencons: Illegal ring page indices");
 		return -EINVAL;
 	}
@@ -108,7 +130,10 @@ static int __write_console(struct xencons_info *xencons,
 
 	wmb();			/* write ring before updating pointer */
 	intf->out_prod = prod;
+<<<<<<< HEAD
 	spin_unlock_irqrestore(&xencons->ring_lock, flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (sent)
 		notify_daemon(xencons);
@@ -151,19 +176,28 @@ static int domU_read_console(uint32_t vtermno, char *buf, int len)
 	int recv = 0;
 	struct xencons_info *xencons = vtermno_to_xencons(vtermno);
 	unsigned int eoiflag = 0;
+<<<<<<< HEAD
 	unsigned long flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (xencons == NULL)
 		return -EINVAL;
 	intf = xencons->intf;
 
+<<<<<<< HEAD
 	spin_lock_irqsave(&xencons->ring_lock, flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cons = intf->in_cons;
 	prod = intf->in_prod;
 	mb();			/* get pointers before reading ring */
 
 	if ((prod - cons) > sizeof(intf->in)) {
+<<<<<<< HEAD
 		spin_unlock_irqrestore(&xencons->ring_lock, flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pr_err_once("xencons: Illegal ring page indices");
 		return -EINVAL;
 	}
@@ -187,6 +221,7 @@ static int domU_read_console(uint32_t vtermno, char *buf, int len)
 		xencons->out_cons = intf->out_cons;
 		xencons->out_cons_same = 0;
 	}
+<<<<<<< HEAD
 	if (!recv && xencons->out_cons_same++ > 1) {
 		eoiflag = XEN_EOI_FLAG_SPURIOUS;
 	}
@@ -194,6 +229,12 @@ static int domU_read_console(uint32_t vtermno, char *buf, int len)
 
 	if (recv) {
 		notify_daemon(xencons);
+=======
+	if (recv) {
+		notify_daemon(xencons);
+	} else if (xencons->out_cons_same++ > 1) {
+		eoiflag = XEN_EOI_FLAG_SPURIOUS;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	xen_irq_lateeoi(xencons->irq, eoiflag);
@@ -239,7 +280,11 @@ static int xen_hvm_console_init(void)
 {
 	int r;
 	uint64_t v = 0;
+<<<<<<< HEAD
 	unsigned long gfn, flags;
+=======
+	unsigned long gfn;
+>>>>>>> b7ba80a49124 (Commit)
 	struct xencons_info *info;
 
 	if (!xen_hvm_domain())
@@ -250,7 +295,10 @@ static int xen_hvm_console_init(void)
 		info = kzalloc(sizeof(struct xencons_info), GFP_KERNEL);
 		if (!info)
 			return -ENOMEM;
+<<<<<<< HEAD
 		spin_lock_init(&info->ring_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (info->intf != NULL) {
 		/* already configured */
 		return 0;
@@ -275,9 +323,15 @@ static int xen_hvm_console_init(void)
 		goto err;
 	info->vtermno = HVC_COOKIE;
 
+<<<<<<< HEAD
 	spin_lock_irqsave(&xencons_lock, flags);
 	list_add_tail(&info->list, &xenconsoles);
 	spin_unlock_irqrestore(&xencons_lock, flags);
+=======
+	spin_lock(&xencons_lock);
+	list_add_tail(&info->list, &xenconsoles);
+	spin_unlock(&xencons_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 err:
@@ -287,7 +341,10 @@ err:
 
 static int xencons_info_pv_init(struct xencons_info *info, int vtermno)
 {
+<<<<<<< HEAD
 	spin_lock_init(&info->ring_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	info->evtchn = xen_start_info->console.domU.evtchn;
 	/* GFN == MFN for PV guest */
 	info->intf = gfn_to_virt(xen_start_info->console.domU.mfn);
@@ -301,7 +358,10 @@ static int xencons_info_pv_init(struct xencons_info *info, int vtermno)
 static int xen_pv_console_init(void)
 {
 	struct xencons_info *info;
+<<<<<<< HEAD
 	unsigned long flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!xen_pv_domain())
 		return -ENODEV;
@@ -318,9 +378,15 @@ static int xen_pv_console_init(void)
 		/* already configured */
 		return 0;
 	}
+<<<<<<< HEAD
 	spin_lock_irqsave(&xencons_lock, flags);
 	xencons_info_pv_init(info, HVC_COOKIE);
 	spin_unlock_irqrestore(&xencons_lock, flags);
+=======
+	spin_lock(&xencons_lock);
+	xencons_info_pv_init(info, HVC_COOKIE);
+	spin_unlock(&xencons_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -328,7 +394,10 @@ static int xen_pv_console_init(void)
 static int xen_initial_domain_console_init(void)
 {
 	struct xencons_info *info;
+<<<<<<< HEAD
 	unsigned long flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!xen_initial_domain())
 		return -ENODEV;
@@ -338,15 +407,24 @@ static int xen_initial_domain_console_init(void)
 		info = kzalloc(sizeof(struct xencons_info), GFP_KERNEL);
 		if (!info)
 			return -ENOMEM;
+<<<<<<< HEAD
 		spin_lock_init(&info->ring_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	info->irq = bind_virq_to_irq(VIRQ_CONSOLE, 0, false);
 	info->vtermno = HVC_COOKIE;
 
+<<<<<<< HEAD
 	spin_lock_irqsave(&xencons_lock, flags);
 	list_add_tail(&info->list, &xenconsoles);
 	spin_unlock_irqrestore(&xencons_lock, flags);
+=======
+	spin_lock(&xencons_lock);
+	list_add_tail(&info->list, &xenconsoles);
+	spin_unlock(&xencons_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -401,12 +479,19 @@ static void xencons_free(struct xencons_info *info)
 
 static int xen_console_remove(struct xencons_info *info)
 {
+<<<<<<< HEAD
 	unsigned long flags;
 
 	xencons_disconnect_backend(info);
 	spin_lock_irqsave(&xencons_lock, flags);
 	list_del(&info->list);
 	spin_unlock_irqrestore(&xencons_lock, flags);
+=======
+	xencons_disconnect_backend(info);
+	spin_lock(&xencons_lock);
+	list_del(&info->list);
+	spin_unlock(&xencons_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	if (info->xbdev != NULL)
 		xencons_free(info);
 	else {
@@ -417,9 +502,15 @@ static int xen_console_remove(struct xencons_info *info)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void xencons_remove(struct xenbus_device *dev)
 {
 	xen_console_remove(dev_get_drvdata(&dev->dev));
+=======
+static int xencons_remove(struct xenbus_device *dev)
+{
+	return xen_console_remove(dev_get_drvdata(&dev->dev));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int xencons_connect_backend(struct xenbus_device *dev,
@@ -487,7 +578,10 @@ static int xencons_probe(struct xenbus_device *dev,
 {
 	int ret, devid;
 	struct xencons_info *info;
+<<<<<<< HEAD
 	unsigned long flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	devid = dev->nodename[strlen(dev->nodename) - 1] - '0';
 	if (devid == 0)
@@ -496,7 +590,10 @@ static int xencons_probe(struct xenbus_device *dev,
 	info = kzalloc(sizeof(struct xencons_info), GFP_KERNEL);
 	if (!info)
 		return -ENOMEM;
+<<<<<<< HEAD
 	spin_lock_init(&info->ring_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev_set_drvdata(&dev->dev, info);
 	info->xbdev = dev;
 	info->vtermno = xenbus_devid_to_vtermno(devid);
@@ -507,9 +604,15 @@ static int xencons_probe(struct xenbus_device *dev,
 	ret = xencons_connect_backend(dev, info);
 	if (ret < 0)
 		goto error;
+<<<<<<< HEAD
 	spin_lock_irqsave(&xencons_lock, flags);
 	list_add_tail(&info->list, &xenconsoles);
 	spin_unlock_irqrestore(&xencons_lock, flags);
+=======
+	spin_lock(&xencons_lock);
+	list_add_tail(&info->list, &xenconsoles);
+	spin_unlock(&xencons_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -609,12 +712,19 @@ static int __init xen_hvc_init(void)
 
 	info->hvc = hvc_alloc(HVC_COOKIE, info->irq, ops, 256);
 	if (IS_ERR(info->hvc)) {
+<<<<<<< HEAD
 		unsigned long flags;
 
 		r = PTR_ERR(info->hvc);
 		spin_lock_irqsave(&xencons_lock, flags);
 		list_del(&info->list);
 		spin_unlock_irqrestore(&xencons_lock, flags);
+=======
+		r = PTR_ERR(info->hvc);
+		spin_lock(&xencons_lock);
+		list_del(&info->list);
+		spin_unlock(&xencons_lock);
+>>>>>>> b7ba80a49124 (Commit)
 		if (info->irq)
 			unbind_from_irqhandler(info->irq, NULL);
 		kfree(info);

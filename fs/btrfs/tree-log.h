@@ -6,13 +6,17 @@
 #ifndef BTRFS_TREE_LOG_H
 #define BTRFS_TREE_LOG_H
 
+<<<<<<< HEAD
 #include "messages.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "ctree.h"
 #include "transaction.h"
 
 /* return value for btrfs_log_dentry_safe that means we don't need to log it at all */
 #define BTRFS_NO_LOG_SYNC 256
 
+<<<<<<< HEAD
 /*
  * We can't use the tree log for whatever reason, force a transaction commit.
  * We use a negative value because there are functions through the logging code
@@ -20,6 +24,10 @@
  * value will do, as it will cause the log to be marked for a full sync.
  */
 #define BTRFS_LOG_FORCE_COMMIT				(-(MAX_ERRNO + 1))
+=======
+/* We can't use the tree log for whatever reason, force a transaction commit */
+#define BTRFS_LOG_FORCE_COMMIT				(1)
+>>>>>>> b7ba80a49124 (Commit)
 
 struct btrfs_log_ctx {
 	int log_ret;
@@ -29,6 +37,11 @@ struct btrfs_log_ctx {
 	bool logging_new_delayed_dentries;
 	/* Indicate if the inode being logged was logged before. */
 	bool logged_before;
+<<<<<<< HEAD
+=======
+	/* Tracks the last logged dir item/index key offset. */
+	u64 last_dir_item_offset;
+>>>>>>> b7ba80a49124 (Commit)
 	struct inode *inode;
 	struct list_head list;
 	/* Only used for fast fsyncs. */
@@ -90,11 +103,19 @@ int btrfs_log_dentry_safe(struct btrfs_trans_handle *trans,
 			  struct btrfs_log_ctx *ctx);
 void btrfs_del_dir_entries_in_log(struct btrfs_trans_handle *trans,
 				  struct btrfs_root *root,
+<<<<<<< HEAD
 				  const struct fscrypt_str *name,
 				  struct btrfs_inode *dir, u64 index);
 void btrfs_del_inode_ref_in_log(struct btrfs_trans_handle *trans,
 				struct btrfs_root *root,
 				const struct fscrypt_str *name,
+=======
+				  const char *name, int name_len,
+				  struct btrfs_inode *dir, u64 index);
+void btrfs_del_inode_ref_in_log(struct btrfs_trans_handle *trans,
+				struct btrfs_root *root,
+				const char *name, int name_len,
+>>>>>>> b7ba80a49124 (Commit)
 				struct btrfs_inode *inode, u64 dirid);
 void btrfs_end_log_trans(struct btrfs_root *root);
 void btrfs_pin_log_trans(struct btrfs_root *root);

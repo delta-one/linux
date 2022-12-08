@@ -599,7 +599,10 @@ typedef struct {
   uint16_t Fmax;
 } UclkDpmChangeRange_t;
 
+<<<<<<< HEAD
 #pragma pack(push, 1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 typedef struct {
   // MAJOR SECTION: SKU PARAMETERS
 
@@ -958,7 +961,10 @@ typedef struct {
   uint32_t     MmHubPadding[8]; // SMU internal use
 
 } PPTable_t;
+<<<<<<< HEAD
 #pragma pack(pop)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 typedef struct {
   // MAJOR SECTION: SKU PARAMETERS

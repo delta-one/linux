@@ -25,7 +25,10 @@
 #include <linux/version.h>
 #include <linux/usb/ch9.h>
 #include <linux/usb/gadget.h>
+<<<<<<< HEAD
 #include <linux/usb/webusb.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/log2.h>
 #include <linux/configfs.h>
 
@@ -432,10 +435,13 @@ static inline struct usb_composite_driver *to_cdriver(
  * @qw_sign: qwSignature part of the OS string
  * @b_vendor_code: bMS_VendorCode part of the OS string
  * @use_os_string: false by default, interested gadgets set it
+<<<<<<< HEAD
  * @bcd_webusb_version: 0x0100 by default, WebUSB specification version
  * @b_webusb_vendor_code: 0x0 by default, vendor code for WebUSB
  * @landing_page: empty by default, landing page to announce in WebUSB
  * @use_webusb:: false by default, interested gadgets set it
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @os_desc_config: the configuration to be used with OS descriptors
  * @setup_pending: true when setup request is queued but not completed
  * @os_desc_pending: true when os_desc request is queued but not completed
@@ -479,12 +485,15 @@ struct usb_composite_dev {
 	struct usb_configuration	*os_desc_config;
 	unsigned int			use_os_string:1;
 
+<<<<<<< HEAD
 	/* WebUSB */
 	u16				bcd_webusb_version;
 	u8				b_webusb_vendor_code;
 	char				landing_page[WEBUSB_URL_RAW_MAX_LENGTH];
 	unsigned int			use_webusb:1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* private: */
 	/* internals */
 	unsigned int			suspended:1;
@@ -494,7 +503,10 @@ struct usb_composite_dev {
 	struct usb_composite_driver	*driver;
 	u8				next_string_id;
 	char				*def_manufacturer;
+<<<<<<< HEAD
 	struct usb_string		*usb_strings;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* the gadget driver won't enable the data pullup
 	 * while the deactivation count is nonzero.

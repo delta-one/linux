@@ -10,12 +10,21 @@
 
 #include "autofs_i.h"
 
+<<<<<<< HEAD
 static int autofs_dir_permission(struct mnt_idmap *, struct inode *, int);
 static int autofs_dir_symlink(struct mnt_idmap *, struct inode *,
 			      struct dentry *, const char *);
 static int autofs_dir_unlink(struct inode *, struct dentry *);
 static int autofs_dir_rmdir(struct inode *, struct dentry *);
 static int autofs_dir_mkdir(struct mnt_idmap *, struct inode *,
+=======
+static int autofs_dir_permission(struct user_namespace *, struct inode *, int);
+static int autofs_dir_symlink(struct user_namespace *, struct inode *,
+			      struct dentry *, const char *);
+static int autofs_dir_unlink(struct inode *, struct dentry *);
+static int autofs_dir_rmdir(struct inode *, struct dentry *);
+static int autofs_dir_mkdir(struct user_namespace *, struct inode *,
+>>>>>>> b7ba80a49124 (Commit)
 			    struct dentry *, umode_t);
 static long autofs_root_ioctl(struct file *, unsigned int, unsigned long);
 #ifdef CONFIG_COMPAT
@@ -543,7 +552,11 @@ static struct dentry *autofs_lookup(struct inode *dir,
 	return NULL;
 }
 
+<<<<<<< HEAD
 static int autofs_dir_permission(struct mnt_idmap *idmap,
+=======
+static int autofs_dir_permission(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				 struct inode *inode, int mask)
 {
 	if (mask & MAY_WRITE) {
@@ -560,10 +573,17 @@ static int autofs_dir_permission(struct mnt_idmap *idmap,
 			return -EACCES;
 	}
 
+<<<<<<< HEAD
 	return generic_permission(idmap, inode, mask);
 }
 
 static int autofs_dir_symlink(struct mnt_idmap *idmap,
+=======
+	return generic_permission(mnt_userns, inode, mask);
+}
+
+static int autofs_dir_symlink(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			      struct inode *dir, struct dentry *dentry,
 			      const char *symname)
 {
@@ -720,7 +740,11 @@ static int autofs_dir_rmdir(struct inode *dir, struct dentry *dentry)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int autofs_dir_mkdir(struct mnt_idmap *idmap,
+=======
+static int autofs_dir_mkdir(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			    struct inode *dir, struct dentry *dentry,
 			    umode_t mode)
 {

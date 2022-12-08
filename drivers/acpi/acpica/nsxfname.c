@@ -44,7 +44,11 @@ static char *acpi_ns_copy_device_id(struct acpi_pnp_device_id *dest,
 
 acpi_status
 acpi_get_handle(acpi_handle parent,
+<<<<<<< HEAD
 		const char *pathname, acpi_handle *ret_handle)
+=======
+		acpi_string pathname, acpi_handle *ret_handle)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	acpi_status status;
 	struct acpi_namespace_node *node = NULL;

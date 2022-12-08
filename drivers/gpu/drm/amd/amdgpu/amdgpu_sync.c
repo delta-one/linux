@@ -259,6 +259,7 @@ int amdgpu_sync_resv(struct amdgpu_device *adev, struct amdgpu_sync *sync,
 	return 0;
 }
 
+<<<<<<< HEAD
 /* Free the entry back to the slab */
 static void amdgpu_sync_entry_free(struct amdgpu_sync_entry *e)
 {
@@ -267,6 +268,8 @@ static void amdgpu_sync_entry_free(struct amdgpu_sync_entry *e)
 	kmem_cache_free(amdgpu_sync_slab, e);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * amdgpu_sync_peek_fence - get the next fence not signaled yet
  *
@@ -288,7 +291,13 @@ struct dma_fence *amdgpu_sync_peek_fence(struct amdgpu_sync *sync,
 		struct drm_sched_fence *s_fence = to_drm_sched_fence(f);
 
 		if (dma_fence_is_signaled(f)) {
+<<<<<<< HEAD
 			amdgpu_sync_entry_free(e);
+=======
+			hash_del(&e->node);
+			dma_fence_put(f);
+			kmem_cache_free(amdgpu_sync_slab, e);
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		}
 		if (ring && s_fence) {
@@ -361,6 +370,7 @@ int amdgpu_sync_clone(struct amdgpu_sync *source, struct amdgpu_sync *clone)
 			if (r)
 				return r;
 		} else {
+<<<<<<< HEAD
 			amdgpu_sync_entry_free(e);
 		}
 	}
@@ -396,6 +406,14 @@ int amdgpu_sync_push_to_job(struct amdgpu_sync *sync, struct amdgpu_job *job)
 			return r;
 		}
 	}
+=======
+			hash_del(&e->node);
+			dma_fence_put(f);
+			kmem_cache_free(amdgpu_sync_slab, e);
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -410,7 +428,13 @@ int amdgpu_sync_wait(struct amdgpu_sync *sync, bool intr)
 		if (r)
 			return r;
 
+<<<<<<< HEAD
 		amdgpu_sync_entry_free(e);
+=======
+		hash_del(&e->node);
+		dma_fence_put(e->fence);
+		kmem_cache_free(amdgpu_sync_slab, e);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -429,8 +453,16 @@ void amdgpu_sync_free(struct amdgpu_sync *sync)
 	struct hlist_node *tmp;
 	unsigned int i;
 
+<<<<<<< HEAD
 	hash_for_each_safe(sync->fences, i, tmp, e, node)
 		amdgpu_sync_entry_free(e);
+=======
+	hash_for_each_safe(sync->fences, i, tmp, e, node) {
+		hash_del(&e->node);
+		dma_fence_put(e->fence);
+		kmem_cache_free(amdgpu_sync_slab, e);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

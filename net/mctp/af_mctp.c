@@ -295,12 +295,20 @@ __must_hold(&net->mctp.keys_lock)
 	mctp_dev_release_key(key->dev, key);
 	spin_unlock_irqrestore(&key->lock, flags);
 
+<<<<<<< HEAD
 	if (!hlist_unhashed(&key->hlist)) {
 		hlist_del_init(&key->hlist);
 		hlist_del_init(&key->sklist);
 		/* unref for the lists */
 		mctp_key_unref(key);
 	}
+=======
+	hlist_del(&key->hlist);
+	hlist_del(&key->sklist);
+
+	/* unref for the lists */
+	mctp_key_unref(key);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree_skb(skb);
 }
@@ -374,6 +382,7 @@ static int mctp_ioctl_alloctag(struct mctp_sock *msk, unsigned long arg)
 
 	ctl.tag = tag | MCTP_TAG_OWNER | MCTP_TAG_PREALLOC;
 	if (copy_to_user((void __user *)arg, &ctl, sizeof(ctl))) {
+<<<<<<< HEAD
 		unsigned long fl2;
 		/* Unwind our key allocation: the keys list lock needs to be
 		 * taken before the individual key locks, and we need a valid
@@ -385,6 +394,11 @@ static int mctp_ioctl_alloctag(struct mctp_sock *msk, unsigned long arg)
 		__mctp_key_remove(key, net, fl2, MCTP_TRACE_KEY_DROPPED);
 		mctp_key_unref(key);
 		spin_unlock_irqrestore(&net->mctp.keys_lock, flags);
+=======
+		spin_lock_irqsave(&key->lock, flags);
+		__mctp_key_remove(key, net, flags, MCTP_TRACE_KEY_DROPPED);
+		mctp_key_unref(key);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EFAULT;
 	}
 
@@ -544,6 +558,12 @@ static int mctp_sk_init(struct sock *sk)
 
 static void mctp_sk_close(struct sock *sk, long timeout)
 {
+<<<<<<< HEAD
+=======
+	struct mctp_sock *msk = container_of(sk, struct mctp_sock, sk);
+
+	del_timer_sync(&msk->key_expiry);
+>>>>>>> b7ba80a49124 (Commit)
 	sk_common_release(sk);
 }
 
@@ -577,6 +597,7 @@ static void mctp_sk_unhash(struct sock *sk)
 		spin_lock_irqsave(&key->lock, fl2);
 		__mctp_key_remove(key, net, fl2, MCTP_TRACE_KEY_CLOSED);
 	}
+<<<<<<< HEAD
 	sock_set_flag(sk, SOCK_DEAD);
 	spin_unlock_irqrestore(&net->mctp.keys_lock, flags);
 
@@ -590,6 +611,9 @@ static void mctp_sk_unhash(struct sock *sk)
 static void mctp_sk_destruct(struct sock *sk)
 {
 	skb_queue_purge(&sk->sk_receive_queue);
+=======
+	spin_unlock_irqrestore(&net->mctp.keys_lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct proto mctp_proto = {
@@ -628,7 +652,10 @@ static int mctp_pf_create(struct net *net, struct socket *sock,
 		return -ENOMEM;
 
 	sock_init_data(sock, sk);
+<<<<<<< HEAD
 	sk->sk_destruct = mctp_sk_destruct;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = 0;
 	if (sk->sk_prot->init)
@@ -675,14 +702,21 @@ static __init int mctp_init(void)
 
 	rc = mctp_neigh_init();
 	if (rc)
+<<<<<<< HEAD
 		goto err_unreg_routes;
+=======
+		goto err_unreg_proto;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mctp_device_init();
 
 	return 0;
 
+<<<<<<< HEAD
 err_unreg_routes:
 	mctp_routes_exit();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_unreg_proto:
 	proto_unregister(&mctp_proto);
 err_unreg_sock:
@@ -704,6 +738,10 @@ subsys_initcall(mctp_init);
 module_exit(mctp_exit);
 
 MODULE_DESCRIPTION("MCTP core");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("Jeremy Kerr <jk@codeconstruct.com.au>");
 
 MODULE_ALIAS_NETPROTO(PF_MCTP);

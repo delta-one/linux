@@ -103,14 +103,29 @@ static void __init twr_p1025_setup_arch(void)
 
 machine_arch_initcall(twr_p1025, mpc85xx_common_publish_devices);
 
+<<<<<<< HEAD
 define_machine(twr_p1025) {
 	.name			= "TWR-P1025",
 	.compatible		= "fsl,TWR-P1025",
+=======
+static int __init twr_p1025_probe(void)
+{
+	return of_machine_is_compatible("fsl,TWR-P1025");
+}
+
+define_machine(twr_p1025) {
+	.name			= "TWR-P1025",
+	.probe			= twr_p1025_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.setup_arch		= twr_p1025_setup_arch,
 	.init_IRQ		= twr_p1025_pic_init,
 #ifdef CONFIG_PCI
 	.pcibios_fixup_bus	= fsl_pcibios_fixup_bus,
 #endif
 	.get_irq		= mpic_get_irq,
+<<<<<<< HEAD
+=======
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.progress		= udbg_progress,
 };

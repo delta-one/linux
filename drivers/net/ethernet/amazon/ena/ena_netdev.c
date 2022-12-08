@@ -374,9 +374,15 @@ static int ena_xdp_xmit(struct net_device *dev, int n,
 
 static int ena_xdp_execute(struct ena_ring *rx_ring, struct xdp_buff *xdp)
 {
+<<<<<<< HEAD
 	u32 verdict = ENA_XDP_PASS;
 	struct bpf_prog *xdp_prog;
 	struct ena_ring *xdp_ring;
+=======
+	struct bpf_prog *xdp_prog;
+	struct ena_ring *xdp_ring;
+	u32 verdict = XDP_PASS;
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdp_frame *xdpf;
 	u64 *xdp_stat;
 
@@ -393,7 +399,11 @@ static int ena_xdp_execute(struct ena_ring *rx_ring, struct xdp_buff *xdp)
 		if (unlikely(!xdpf)) {
 			trace_xdp_exception(rx_ring->netdev, xdp_prog, verdict);
 			xdp_stat = &rx_ring->rx_stats.xdp_aborted;
+<<<<<<< HEAD
 			verdict = ENA_XDP_DROP;
+=======
+			verdict = XDP_ABORTED;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 
@@ -409,21 +419,32 @@ static int ena_xdp_execute(struct ena_ring *rx_ring, struct xdp_buff *xdp)
 
 		spin_unlock(&xdp_ring->xdp_tx_lock);
 		xdp_stat = &rx_ring->rx_stats.xdp_tx;
+<<<<<<< HEAD
 		verdict = ENA_XDP_TX;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case XDP_REDIRECT:
 		if (likely(!xdp_do_redirect(rx_ring->netdev, xdp, xdp_prog))) {
 			xdp_stat = &rx_ring->rx_stats.xdp_redirect;
+<<<<<<< HEAD
 			verdict = ENA_XDP_REDIRECT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 		trace_xdp_exception(rx_ring->netdev, xdp_prog, verdict);
 		xdp_stat = &rx_ring->rx_stats.xdp_aborted;
+<<<<<<< HEAD
 		verdict = ENA_XDP_DROP;
+=======
+		verdict = XDP_ABORTED;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case XDP_ABORTED:
 		trace_xdp_exception(rx_ring->netdev, xdp_prog, verdict);
 		xdp_stat = &rx_ring->rx_stats.xdp_aborted;
+<<<<<<< HEAD
 		verdict = ENA_XDP_DROP;
 		break;
 	case XDP_DROP:
@@ -433,11 +454,22 @@ static int ena_xdp_execute(struct ena_ring *rx_ring, struct xdp_buff *xdp)
 	case XDP_PASS:
 		xdp_stat = &rx_ring->rx_stats.xdp_pass;
 		verdict = ENA_XDP_PASS;
+=======
+		break;
+	case XDP_DROP:
+		xdp_stat = &rx_ring->rx_stats.xdp_drop;
+		break;
+	case XDP_PASS:
+		xdp_stat = &rx_ring->rx_stats.xdp_pass;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		bpf_warn_invalid_xdp_action(rx_ring->netdev, xdp_prog, verdict);
 		xdp_stat = &rx_ring->rx_stats.xdp_invalid;
+<<<<<<< HEAD
 		verdict = ENA_XDP_DROP;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ena_increase_stat(xdp_stat, 1, &rx_ring->syncp);
@@ -518,18 +550,29 @@ static void ena_xdp_exchange_program_rx_in_range(struct ena_adapter *adapter,
 						 struct bpf_prog *prog,
 						 int first, int count)
 {
+<<<<<<< HEAD
 	struct bpf_prog *old_bpf_prog;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct ena_ring *rx_ring;
 	int i = 0;
 
 	for (i = first; i < count; i++) {
 		rx_ring = &adapter->rx_ring[i];
+<<<<<<< HEAD
 		old_bpf_prog = xchg(&rx_ring->xdp_bpf_prog, prog);
 
 		if (!old_bpf_prog && prog) {
 			ena_xdp_register_rxq_info(rx_ring);
 			rx_ring->rx_headroom = XDP_PACKET_HEADROOM;
 		} else if (old_bpf_prog && !prog) {
+=======
+		xchg(&rx_ring->xdp_bpf_prog, prog);
+		if (prog) {
+			ena_xdp_register_rxq_info(rx_ring);
+			rx_ring->rx_headroom = XDP_PACKET_HEADROOM;
+		} else {
+>>>>>>> b7ba80a49124 (Commit)
 			ena_xdp_unregister_rxq_info(rx_ring);
 			rx_ring->rx_headroom = NET_SKB_PAD;
 		}
@@ -597,9 +640,13 @@ static int ena_xdp_set(struct net_device *netdev, struct netdev_bpf *bpf)
 				if (rc)
 					return rc;
 			}
+<<<<<<< HEAD
 			xdp_features_set_redirect_target(netdev, false);
 		} else if (old_bpf_prog) {
 			xdp_features_clear_redirect_target(netdev);
+=======
+		} else if (old_bpf_prog) {
+>>>>>>> b7ba80a49124 (Commit)
 			rc = ena_destroy_and_free_all_xdp_queues(adapter);
 			if (rc)
 				return rc;
@@ -682,7 +729,10 @@ static void ena_init_io_rings_common(struct ena_adapter *adapter,
 	ring->ena_dev = adapter->ena_dev;
 	ring->per_napi_packets = 0;
 	ring->cpu = 0;
+<<<<<<< HEAD
 	ring->numa_node = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ring->no_interrupt_event_cnt = 0;
 	u64_stats_init(&ring->syncp);
 }
@@ -786,7 +836,10 @@ static int ena_setup_tx_resources(struct ena_adapter *adapter, int qid)
 	tx_ring->next_to_use = 0;
 	tx_ring->next_to_clean = 0;
 	tx_ring->cpu = ena_irq->cpu;
+<<<<<<< HEAD
 	tx_ring->numa_node = node;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_push_buf_intermediate_buf:
@@ -919,7 +972,10 @@ static int ena_setup_rx_resources(struct ena_adapter *adapter,
 	rx_ring->next_to_clean = 0;
 	rx_ring->next_to_use = 0;
 	rx_ring->cpu = ena_irq->cpu;
+<<<<<<< HEAD
 	rx_ring->numa_node = node;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1632,12 +1688,20 @@ static int ena_xdp_handle_buff(struct ena_ring *rx_ring, struct xdp_buff *xdp)
 	 * we expect, then we simply drop it
 	 */
 	if (unlikely(rx_ring->ena_bufs[0].len > ENA_XDP_MAX_MTU))
+<<<<<<< HEAD
 		return ENA_XDP_DROP;
+=======
+		return XDP_DROP;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = ena_xdp_execute(rx_ring, xdp);
 
 	/* The xdp program might expand the headers */
+<<<<<<< HEAD
 	if (ret == ENA_XDP_PASS) {
+=======
+	if (ret == XDP_PASS) {
+>>>>>>> b7ba80a49124 (Commit)
 		rx_info->page_offset = xdp->data - xdp->data_hard_start;
 		rx_ring->ena_bufs[0].len = xdp->data_end - xdp->data;
 	}
@@ -1676,7 +1740,11 @@ static int ena_clean_rx_irq(struct ena_ring *rx_ring, struct napi_struct *napi,
 	xdp_init_buff(&xdp, ENA_PAGE_SIZE, &rx_ring->xdp_rxq);
 
 	do {
+<<<<<<< HEAD
 		xdp_verdict = ENA_XDP_PASS;
+=======
+		xdp_verdict = XDP_PASS;
+>>>>>>> b7ba80a49124 (Commit)
 		skb = NULL;
 		ena_rx_ctx.ena_bufs = rx_ring->ena_bufs;
 		ena_rx_ctx.max_bufs = rx_ring->sgl_size;
@@ -1704,7 +1772,11 @@ static int ena_clean_rx_irq(struct ena_ring *rx_ring, struct napi_struct *napi,
 			xdp_verdict = ena_xdp_handle_buff(rx_ring, &xdp);
 
 		/* allocate skb and fill it */
+<<<<<<< HEAD
 		if (xdp_verdict == ENA_XDP_PASS)
+=======
+		if (xdp_verdict == XDP_PASS)
+>>>>>>> b7ba80a49124 (Commit)
 			skb = ena_rx_skb(rx_ring,
 					 rx_ring->ena_bufs,
 					 ena_rx_ctx.descs,
@@ -1722,15 +1794,24 @@ static int ena_clean_rx_irq(struct ena_ring *rx_ring, struct napi_struct *napi,
 				/* Packets was passed for transmission, unmap it
 				 * from RX side.
 				 */
+<<<<<<< HEAD
 				if (xdp_verdict & ENA_XDP_FORWARDED) {
+=======
+				if (xdp_verdict == XDP_TX || xdp_verdict == XDP_REDIRECT) {
+>>>>>>> b7ba80a49124 (Commit)
 					ena_unmap_rx_buff(rx_ring,
 							  &rx_ring->rx_buffer_info[req_id]);
 					rx_ring->rx_buffer_info[req_id].page = NULL;
 				}
 			}
+<<<<<<< HEAD
 			if (xdp_verdict != ENA_XDP_PASS) {
 				xdp_flags |= xdp_verdict;
 				total_len += ena_rx_ctx.ena_bufs[0].len;
+=======
+			if (xdp_verdict != XDP_PASS) {
+				xdp_flags |= xdp_verdict;
+>>>>>>> b7ba80a49124 (Commit)
 				res_budget--;
 				continue;
 			}
@@ -1774,7 +1855,11 @@ static int ena_clean_rx_irq(struct ena_ring *rx_ring, struct napi_struct *napi,
 		ena_refill_rx_bufs(rx_ring, refill_required);
 	}
 
+<<<<<<< HEAD
 	if (xdp_flags & ENA_XDP_REDIRECT)
+=======
+	if (xdp_flags & XDP_REDIRECT)
+>>>>>>> b7ba80a49124 (Commit)
 		xdp_do_flush_map();
 
 	return work_done;
@@ -1828,9 +1913,14 @@ static void ena_adjust_adaptive_rx_intr_moderation(struct ena_napi *ena_napi)
 static void ena_unmask_interrupt(struct ena_ring *tx_ring,
 					struct ena_ring *rx_ring)
 {
+<<<<<<< HEAD
 	u32 rx_interval = tx_ring->smoothed_interval;
 	struct ena_eth_io_intr_reg intr_reg;
 
+=======
+	struct ena_eth_io_intr_reg intr_reg;
+	u32 rx_interval = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	/* Rx ring can be NULL when for XDP tx queues which don't have an
 	 * accompanying rx_ring pair.
 	 */
@@ -1868,6 +1958,7 @@ static void ena_update_ring_numa_node(struct ena_ring *tx_ring,
 	if (likely(tx_ring->cpu == cpu))
 		goto out;
 
+<<<<<<< HEAD
 	tx_ring->cpu = cpu;
 	if (rx_ring)
 		rx_ring->cpu = cpu;
@@ -1877,10 +1968,14 @@ static void ena_update_ring_numa_node(struct ena_ring *tx_ring,
 	if (likely(tx_ring->numa_node == numa_node))
 		goto out;
 
+=======
+	numa_node = cpu_to_node(cpu);
+>>>>>>> b7ba80a49124 (Commit)
 	put_cpu();
 
 	if (numa_node != NUMA_NO_NODE) {
 		ena_com_update_numa_node(tx_ring->ena_com_io_cq, numa_node);
+<<<<<<< HEAD
 		tx_ring->numa_node = numa_node;
 		if (rx_ring) {
 			rx_ring->numa_node = numa_node;
@@ -1889,6 +1984,17 @@ static void ena_update_ring_numa_node(struct ena_ring *tx_ring,
 		}
 	}
 
+=======
+		if (rx_ring)
+			ena_com_update_numa_node(rx_ring->ena_com_io_cq,
+						 numa_node);
+	}
+
+	tx_ring->cpu = cpu;
+	if (rx_ring)
+		rx_ring->cpu = cpu;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return;
 out:
 	put_cpu();
@@ -2009,10 +2115,18 @@ static int ena_io_poll(struct napi_struct *napi, int budget)
 			if (ena_com_get_adaptive_moderation_enabled(rx_ring->ena_dev))
 				ena_adjust_adaptive_rx_intr_moderation(ena_napi);
 
+<<<<<<< HEAD
 			ena_update_ring_numa_node(tx_ring, rx_ring);
 			ena_unmask_interrupt(tx_ring, rx_ring);
 		}
 
+=======
+			ena_unmask_interrupt(tx_ring, rx_ring);
+		}
+
+		ena_update_ring_numa_node(tx_ring, rx_ring);
+
+>>>>>>> b7ba80a49124 (Commit)
 		ret = rx_work_done;
 	} else {
 		ret = budget;
@@ -2286,8 +2400,15 @@ static void ena_init_napi_in_range(struct ena_adapter *adapter,
 	for (i = first_index; i < first_index + count; i++) {
 		struct ena_napi *napi = &adapter->ena_napi[i];
 
+<<<<<<< HEAD
 		netif_napi_add(adapter->netdev, &napi->napi,
 			       ENA_IS_XDP_INDEX(adapter, i) ? ena_xdp_io_poll : ena_io_poll);
+=======
+		netif_napi_add(adapter->netdev,
+			       &napi->napi,
+			       ENA_IS_XDP_INDEX(adapter, i) ? ena_xdp_io_poll : ena_io_poll,
+			       NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!ENA_IS_XDP_INDEX(adapter, i)) {
 			napi->rx_ring = &adapter->rx_ring[i];
@@ -2397,7 +2518,11 @@ static int ena_create_io_tx_queue(struct ena_adapter *adapter, int qid)
 	ctx.mem_queue_type = ena_dev->tx_mem_queue_type;
 	ctx.msix_vector = msix_vector;
 	ctx.queue_size = tx_ring->ring_size;
+<<<<<<< HEAD
 	ctx.numa_node = tx_ring->numa_node;
+=======
+	ctx.numa_node = cpu_to_node(tx_ring->cpu);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = ena_com_create_io_queue(ena_dev, &ctx);
 	if (rc) {
@@ -2465,7 +2590,11 @@ static int ena_create_io_rx_queue(struct ena_adapter *adapter, int qid)
 	ctx.mem_queue_type = ENA_ADMIN_PLACEMENT_POLICY_HOST;
 	ctx.msix_vector = msix_vector;
 	ctx.queue_size = rx_ring->ring_size;
+<<<<<<< HEAD
 	ctx.numa_node = rx_ring->numa_node;
+=======
+	ctx.numa_node = cpu_to_node(rx_ring->cpu);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = ena_com_create_io_queue(ena_dev, &ctx);
 	if (rc) {
@@ -2826,6 +2955,7 @@ int ena_update_queue_sizes(struct ena_adapter *adapter,
 	return dev_was_up ? ena_up(adapter) : 0;
 }
 
+<<<<<<< HEAD
 int ena_set_rx_copybreak(struct ena_adapter *adapter, u32 rx_copybreak)
 {
 	struct ena_ring *rx_ring;
@@ -2844,6 +2974,8 @@ int ena_set_rx_copybreak(struct ena_adapter *adapter, u32 rx_copybreak)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ena_update_queue_count(struct ena_adapter *adapter, u32 new_channel_count)
 {
 	struct ena_com_dev *ena_dev = adapter->ena_dev;
@@ -3307,10 +3439,17 @@ static void ena_get_stats64(struct net_device *netdev,
 		tx_ring = &adapter->tx_ring[i];
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&tx_ring->syncp);
 			packets = tx_ring->tx_stats.cnt;
 			bytes = tx_ring->tx_stats.bytes;
 		} while (u64_stats_fetch_retry(&tx_ring->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&tx_ring->syncp);
+			packets = tx_ring->tx_stats.cnt;
+			bytes = tx_ring->tx_stats.bytes;
+		} while (u64_stats_fetch_retry_irq(&tx_ring->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		stats->tx_packets += packets;
 		stats->tx_bytes += bytes;
@@ -3318,20 +3457,34 @@ static void ena_get_stats64(struct net_device *netdev,
 		rx_ring = &adapter->rx_ring[i];
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&rx_ring->syncp);
 			packets = rx_ring->rx_stats.cnt;
 			bytes = rx_ring->rx_stats.bytes;
 		} while (u64_stats_fetch_retry(&rx_ring->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&rx_ring->syncp);
+			packets = rx_ring->rx_stats.cnt;
+			bytes = rx_ring->rx_stats.bytes;
+		} while (u64_stats_fetch_retry_irq(&rx_ring->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		stats->rx_packets += packets;
 		stats->rx_bytes += bytes;
 	}
 
 	do {
+<<<<<<< HEAD
 		start = u64_stats_fetch_begin(&adapter->syncp);
 		rx_drops = adapter->dev_stats.rx_drops;
 		tx_drops = adapter->dev_stats.tx_drops;
 	} while (u64_stats_fetch_retry(&adapter->syncp, start));
+=======
+		start = u64_stats_fetch_begin_irq(&adapter->syncp);
+		rx_drops = adapter->dev_stats.rx_drops;
+		tx_drops = adapter->dev_stats.tx_drops;
+	} while (u64_stats_fetch_retry_irq(&adapter->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 	stats->rx_dropped = rx_drops;
 	stats->tx_dropped = tx_drops;
@@ -4391,10 +4544,13 @@ static int ena_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 
 	ena_config_debug_area(adapter);
 
+<<<<<<< HEAD
 	if (ena_xdp_legal_queue_count(adapter, adapter->num_io_queues))
 		netdev->xdp_features = NETDEV_XDP_ACT_BASIC |
 				       NETDEV_XDP_ACT_REDIRECT;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(adapter->netdev->perm_addr, adapter->mac_addr, netdev->addr_len);
 
 	netif_carrier_off(netdev);
@@ -4586,19 +4742,26 @@ static struct pci_driver ena_pci_driver = {
 
 static int __init ena_init(void)
 {
+<<<<<<< HEAD
 	int ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ena_wq = create_singlethread_workqueue(DRV_MODULE_NAME);
 	if (!ena_wq) {
 		pr_err("Failed to create workqueue\n");
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	ret = pci_register_driver(&ena_pci_driver);
 	if (ret)
 		destroy_workqueue(ena_wq);
 
 	return ret;
+=======
+	return pci_register_driver(&ena_pci_driver);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __exit ena_cleanup(void)

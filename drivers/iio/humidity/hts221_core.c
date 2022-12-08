@@ -14,7 +14,10 @@
 #include <linux/delay.h>
 #include <linux/pm.h>
 #include <linux/regmap.h>
+<<<<<<< HEAD
 #include <linux/regulator/consumer.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/bitfield.h>
 
 #include "hts221.h"
@@ -550,17 +553,44 @@ static const unsigned long hts221_scan_masks[] = {0x3, 0x0};
 
 static int hts221_init_regulators(struct device *dev)
 {
+<<<<<<< HEAD
 	int err;
 
 	err = devm_regulator_get_enable(dev, "vdd");
 	if (err)
 		return dev_err_probe(dev, err, "failed to get vdd regulator\n");
+=======
+	struct iio_dev *iio_dev = dev_get_drvdata(dev);
+	struct hts221_hw *hw = iio_priv(iio_dev);
+	int err;
+
+	hw->vdd = devm_regulator_get(dev, "vdd");
+	if (IS_ERR(hw->vdd))
+		return dev_err_probe(dev, PTR_ERR(hw->vdd),
+				     "failed to get vdd regulator\n");
+
+	err = regulator_enable(hw->vdd);
+	if (err) {
+		dev_err(dev, "failed to enable vdd regulator: %d\n", err);
+		return err;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	msleep(50);
 
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void hts221_chip_uninit(void *data)
+{
+	struct hts221_hw *hw = data;
+
+	regulator_disable(hw->vdd);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int hts221_probe(struct device *dev, int irq, const char *name,
 		 struct regmap *regmap)
 {
@@ -585,6 +615,13 @@ int hts221_probe(struct device *dev, int irq, const char *name,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
+=======
+	err = devm_add_action_or_reset(dev, hts221_chip_uninit, hw);
+	if (err)
+		return err;
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = hts221_check_whoami(hw);
 	if (err < 0)
 		return err;

@@ -3712,7 +3712,11 @@ static int ucc_geth_probe(struct platform_device* ofdev)
 	dev->netdev_ops = &ucc_geth_netdev_ops;
 	dev->watchdog_timeo = TX_TIMEOUT;
 	INIT_WORK(&ugeth->timeout_work, ucc_geth_timeout_work);
+<<<<<<< HEAD
 	netif_napi_add(dev, &ugeth->napi, ucc_geth_poll);
+=======
+	netif_napi_add(dev, &ugeth->napi, ucc_geth_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 	dev->mtu = 1500;
 	dev->max_mtu = 1518;
 

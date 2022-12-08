@@ -6851,7 +6851,11 @@ static int pcidev_init(struct pci_dev *pdev, const struct pci_device_id *id)
 	char banner[sizeof(version)];
 	struct ksz_switch *sw = NULL;
 
+<<<<<<< HEAD
 	result = pcim_enable_device(pdev);
+=======
+	result = pci_enable_device(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (result)
 		return result;
 

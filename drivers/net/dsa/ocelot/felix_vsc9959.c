@@ -6,7 +6,10 @@
 #include <soc/mscc/ocelot_qsys.h>
 #include <soc/mscc/ocelot_vcap.h>
 #include <soc/mscc/ocelot_ana.h>
+<<<<<<< HEAD
 #include <soc/mscc/ocelot_dev.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <soc/mscc/ocelot_ptp.h>
 #include <soc/mscc/ocelot_sys.h>
 #include <net/tc_act/tc_gate.h>
@@ -319,6 +322,7 @@ static const u32 vsc9959_sys_regmap[] = {
 	REG(SYS_COUNT_RX_GREEN_PRIO_5,		0x0000a4),
 	REG(SYS_COUNT_RX_GREEN_PRIO_6,		0x0000a8),
 	REG(SYS_COUNT_RX_GREEN_PRIO_7,		0x0000ac),
+<<<<<<< HEAD
 	REG(SYS_COUNT_RX_ASSEMBLY_ERRS,		0x0000b0),
 	REG(SYS_COUNT_RX_SMD_ERRS,		0x0000b4),
 	REG(SYS_COUNT_RX_ASSEMBLY_OK,		0x0000b8),
@@ -342,6 +346,8 @@ static const u32 vsc9959_sys_regmap[] = {
 	REG(SYS_COUNT_RX_PMAC_PAUSE,		0x000100),
 	REG(SYS_COUNT_RX_PMAC_CONTROL,		0x000104),
 	REG(SYS_COUNT_RX_PMAC_LONGS,		0x000108),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	REG(SYS_COUNT_TX_OCTETS,		0x000200),
 	REG(SYS_COUNT_TX_UNICAST,		0x000204),
 	REG(SYS_COUNT_TX_MULTICAST,		0x000208),
@@ -373,6 +379,7 @@ static const u32 vsc9959_sys_regmap[] = {
 	REG(SYS_COUNT_TX_GREEN_PRIO_6,		0x000270),
 	REG(SYS_COUNT_TX_GREEN_PRIO_7,		0x000274),
 	REG(SYS_COUNT_TX_AGED,			0x000278),
+<<<<<<< HEAD
 	REG(SYS_COUNT_TX_MM_HOLD,		0x00027c),
 	REG(SYS_COUNT_TX_MERGE_FRAGMENTS,	0x000280),
 	REG(SYS_COUNT_TX_PMAC_OCTETS,		0x000284),
@@ -387,6 +394,8 @@ static const u32 vsc9959_sys_regmap[] = {
 	REG(SYS_COUNT_TX_PMAC_512_1023,		0x0002a8),
 	REG(SYS_COUNT_TX_PMAC_1024_1526,	0x0002ac),
 	REG(SYS_COUNT_TX_PMAC_1527_MAX,		0x0002b0),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	REG(SYS_COUNT_DROP_LOCAL,		0x000400),
 	REG(SYS_COUNT_DROP_TAIL,		0x000404),
 	REG(SYS_COUNT_DROP_YELLOW_PRIO_0,	0x000408),
@@ -477,9 +486,12 @@ static const u32 vsc9959_dev_gmii_regmap[] = {
 	REG(DEV_MAC_FC_MAC_LOW_CFG,		0x3c),
 	REG(DEV_MAC_FC_MAC_HIGH_CFG,		0x40),
 	REG(DEV_MAC_STICKY,			0x44),
+<<<<<<< HEAD
 	REG(DEV_MM_ENABLE_CONFIG,		0x48),
 	REG(DEV_MM_VERIF_CONFIG,		0x4C),
 	REG(DEV_MM_STATUS,			0x50),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	REG_RESERVED(PCS1G_CFG),
 	REG_RESERVED(PCS1G_MODE_CFG),
 	REG_RESERVED(PCS1G_SD_CFG),
@@ -518,6 +530,7 @@ static const u32 *vsc9959_regmap[TARGET_MAX] = {
 };
 
 /* Addresses are relative to the PCI device's base address */
+<<<<<<< HEAD
 static const struct resource vsc9959_resources[] = {
 	DEFINE_RES_MEM_NAMED(0x0010000, 0x0010000, "sys"),
 	DEFINE_RES_MEM_NAMED(0x0030000, 0x0010000, "rew"),
@@ -548,13 +561,107 @@ static const char * const vsc9959_resource_names[TARGET_MAX] = {
 	[PTP] = "ptp",
 	[QSYS] = "qsys",
 	[ANA] = "ana",
+=======
+static const struct resource vsc9959_target_io_res[TARGET_MAX] = {
+	[ANA] = {
+		.start	= 0x0280000,
+		.end	= 0x028ffff,
+		.name	= "ana",
+	},
+	[QS] = {
+		.start	= 0x0080000,
+		.end	= 0x00800ff,
+		.name	= "qs",
+	},
+	[QSYS] = {
+		.start	= 0x0200000,
+		.end	= 0x021ffff,
+		.name	= "qsys",
+	},
+	[REW] = {
+		.start	= 0x0030000,
+		.end	= 0x003ffff,
+		.name	= "rew",
+	},
+	[SYS] = {
+		.start	= 0x0010000,
+		.end	= 0x001ffff,
+		.name	= "sys",
+	},
+	[S0] = {
+		.start	= 0x0040000,
+		.end	= 0x00403ff,
+		.name	= "s0",
+	},
+	[S1] = {
+		.start	= 0x0050000,
+		.end	= 0x00503ff,
+		.name	= "s1",
+	},
+	[S2] = {
+		.start	= 0x0060000,
+		.end	= 0x00603ff,
+		.name	= "s2",
+	},
+	[PTP] = {
+		.start	= 0x0090000,
+		.end	= 0x00900cb,
+		.name	= "ptp",
+	},
+	[GCB] = {
+		.start	= 0x0070000,
+		.end	= 0x00701ff,
+		.name	= "devcpu_gcb",
+	},
+};
+
+static const struct resource vsc9959_port_io_res[] = {
+	{
+		.start	= 0x0100000,
+		.end	= 0x010ffff,
+		.name	= "port0",
+	},
+	{
+		.start	= 0x0110000,
+		.end	= 0x011ffff,
+		.name	= "port1",
+	},
+	{
+		.start	= 0x0120000,
+		.end	= 0x012ffff,
+		.name	= "port2",
+	},
+	{
+		.start	= 0x0130000,
+		.end	= 0x013ffff,
+		.name	= "port3",
+	},
+	{
+		.start	= 0x0140000,
+		.end	= 0x014ffff,
+		.name	= "port4",
+	},
+	{
+		.start	= 0x0150000,
+		.end	= 0x015ffff,
+		.name	= "port5",
+	},
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Port MAC 0 Internal MDIO bus through which the SerDes acting as an
  * SGMII/QSGMII MAC PCS can be found.
  */
+<<<<<<< HEAD
 static const struct resource vsc9959_imdio_res =
 	DEFINE_RES_MEM_NAMED(0x8030, 0x10, "imdio");
+=======
+static const struct resource vsc9959_imdio_res = {
+	.start		= 0x8030,
+	.end		= 0x8040,
+	.name		= "imdio",
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct reg_field vsc9959_regfields[REGFIELD_MAX] = {
 	[ANA_ADVLEARN_VLAN_CHK] = REG_FIELD(ANA_ADVLEARN, 6, 6),
@@ -606,6 +713,13 @@ static const struct reg_field vsc9959_regfields[REGFIELD_MAX] = {
 	[SYS_PAUSE_CFG_PAUSE_ENA] = REG_FIELD_ID(SYS_PAUSE_CFG, 0, 1, 7, 4),
 };
 
+<<<<<<< HEAD
+=======
+static const struct ocelot_stat_layout vsc9959_stats_layout[OCELOT_NUM_STATS] = {
+	OCELOT_COMMON_STATS,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct vcap_field vsc9959_vcap_es0_keys[] = {
 	[VCAP_ES0_EGR_PORT]			= {  0,  3},
 	[VCAP_ES0_IGR_PORT]			= {  3,  3},
@@ -922,6 +1036,38 @@ static int vsc9959_reset(struct ocelot *ocelot)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void vsc9959_phylink_validate(struct ocelot *ocelot, int port,
+				     unsigned long *supported,
+				     struct phylink_link_state *state)
+{
+	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+
+	phylink_set_port_modes(mask);
+	phylink_set(mask, Autoneg);
+	phylink_set(mask, Pause);
+	phylink_set(mask, Asym_Pause);
+	phylink_set(mask, 10baseT_Half);
+	phylink_set(mask, 10baseT_Full);
+	phylink_set(mask, 100baseT_Half);
+	phylink_set(mask, 100baseT_Full);
+	phylink_set(mask, 1000baseT_Half);
+	phylink_set(mask, 1000baseT_Full);
+	phylink_set(mask, 1000baseX_Full);
+
+	if (state->interface == PHY_INTERFACE_MODE_INTERNAL ||
+	    state->interface == PHY_INTERFACE_MODE_2500BASEX ||
+	    state->interface == PHY_INTERFACE_MODE_USXGMII) {
+		phylink_set(mask, 2500baseT_Full);
+		phylink_set(mask, 2500baseX_Full);
+	}
+
+	linkmode_and(supported, supported, mask);
+	linkmode_and(state->advertising, state->advertising, mask);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Watermark encode
  * Bit 8:   Unit; 0:1, 1:16
  * Bit 7-0: Value to be multiplied with unit
@@ -954,11 +1100,17 @@ static void vsc9959_wm_stat(u32 val, u32 *inuse, u32 *maxuse)
 
 static int vsc9959_mdio_bus_alloc(struct ocelot *ocelot)
 {
+<<<<<<< HEAD
 	struct pci_dev *pdev = to_pci_dev(ocelot->dev);
 	struct felix *felix = ocelot_to_felix(ocelot);
 	struct enetc_mdio_priv *mdio_priv;
 	struct device *dev = ocelot->dev;
 	resource_size_t imdio_base;
+=======
+	struct felix *felix = ocelot_to_felix(ocelot);
+	struct enetc_mdio_priv *mdio_priv;
+	struct device *dev = ocelot->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem *imdio_regs;
 	struct resource res;
 	struct enetc_hw *hw;
@@ -974,11 +1126,18 @@ static int vsc9959_mdio_bus_alloc(struct ocelot *ocelot)
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	imdio_base = pci_resource_start(pdev, VSC9959_IMDIO_PCI_BAR);
 
 	memcpy(&res, &vsc9959_imdio_res, sizeof(res));
 	res.start += imdio_base;
 	res.end += imdio_base;
+=======
+	memcpy(&res, felix->info->imdio_res, sizeof(res));
+	res.flags = IORESOURCE_MEM;
+	res.start += felix->imdio_base;
+	res.end += felix->imdio_base;
+>>>>>>> b7ba80a49124 (Commit)
 
 	imdio_regs = devm_ioremap_resource(dev, &res);
 	if (IS_ERR(imdio_regs))
@@ -995,10 +1154,15 @@ static int vsc9959_mdio_bus_alloc(struct ocelot *ocelot)
 		return -ENOMEM;
 
 	bus->name = "VSC9959 internal MDIO bus";
+<<<<<<< HEAD
 	bus->read = enetc_mdio_read_c22;
 	bus->write = enetc_mdio_write_c22;
 	bus->read_c45 = enetc_mdio_read_c45;
 	bus->write_c45 = enetc_mdio_write_c45;
+=======
+	bus->read = enetc_mdio_read;
+	bus->write = enetc_mdio_write;
+>>>>>>> b7ba80a49124 (Commit)
 	bus->parent = dev;
 	mdio_priv = bus->priv;
 	mdio_priv->hw = hw;
@@ -1204,6 +1368,7 @@ static u32 vsc9959_port_qmaxsdu_get(struct ocelot *ocelot, int port, int tc)
 	}
 }
 
+<<<<<<< HEAD
 static u32 vsc9959_tas_tc_max_sdu(struct tc_taprio_qopt_offload *taprio, int tc)
 {
 	if (!taprio || !taprio->max_sdu[tc])
@@ -1212,6 +1377,8 @@ static u32 vsc9959_tas_tc_max_sdu(struct tc_taprio_qopt_offload *taprio, int tc)
 	return taprio->max_sdu[tc] + ETH_HLEN + 2 * VLAN_HLEN + ETH_FCS_LEN;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Update QSYS_PORT_MAX_SDU to make sure the static guard bands added by the
  * switch (see the ALWAYS_GUARD_BAND_SCH_Q comment) are correct at all MTU
  * values (the default value is 1518). Also, for traffic class windows smaller
@@ -1221,7 +1388,10 @@ static u32 vsc9959_tas_tc_max_sdu(struct tc_taprio_qopt_offload *taprio, int tc)
 static void vsc9959_tas_guard_bands_update(struct ocelot *ocelot, int port)
 {
 	struct ocelot_port *ocelot_port = ocelot->ports[port];
+<<<<<<< HEAD
 	struct tc_taprio_qopt_offload *taprio;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 min_gate_len[OCELOT_NUM_TC];
 	int speed, picos_per_byte;
 	u64 needed_bit_time_ps;
@@ -1231,8 +1401,11 @@ static void vsc9959_tas_guard_bands_update(struct ocelot *ocelot, int port)
 
 	lockdep_assert_held(&ocelot->tas_lock);
 
+<<<<<<< HEAD
 	taprio = ocelot_port->taprio;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	val = ocelot_read_rix(ocelot, QSYS_TAG_CONFIG, port);
 	tas_speed = QSYS_TAG_CONFIG_LINK_SPEED_X(val);
 
@@ -1269,12 +1442,19 @@ static void vsc9959_tas_guard_bands_update(struct ocelot *ocelot, int port)
 		"port %d: max frame size %d needs %llu ps at speed %d\n",
 		port, maxlen, needed_bit_time_ps, speed);
 
+<<<<<<< HEAD
 	vsc9959_tas_min_gate_lengths(taprio, min_gate_len);
+=======
+	vsc9959_tas_min_gate_lengths(ocelot_port->taprio, min_gate_len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&ocelot->fwd_domain_lock);
 
 	for (tc = 0; tc < OCELOT_NUM_TC; tc++) {
+<<<<<<< HEAD
 		u32 requested_max_sdu = vsc9959_tas_tc_max_sdu(taprio, tc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		u64 remaining_gate_len_ps;
 		u32 max_sdu;
 
@@ -1285,7 +1465,11 @@ static void vsc9959_tas_guard_bands_update(struct ocelot *ocelot, int port)
 			/* Setting QMAXSDU_CFG to 0 disables oversized frame
 			 * dropping.
 			 */
+<<<<<<< HEAD
 			max_sdu = requested_max_sdu;
+=======
+			max_sdu = 0;
+>>>>>>> b7ba80a49124 (Commit)
 			dev_dbg(ocelot->dev,
 				"port %d tc %d min gate len %llu"
 				", sending all frames\n",
@@ -1316,10 +1500,13 @@ static void vsc9959_tas_guard_bands_update(struct ocelot *ocelot, int port)
 			 */
 			if (max_sdu > 20)
 				max_sdu -= 20;
+<<<<<<< HEAD
 
 			if (requested_max_sdu && requested_max_sdu < max_sdu)
 				max_sdu = requested_max_sdu;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			dev_info(ocelot->dev,
 				 "port %d tc %d min gate length %llu"
 				 " ns not enough for max frame size %d at %d"
@@ -1609,6 +1796,7 @@ static int vsc9959_qos_port_cbs_set(struct dsa_switch *ds, int port,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int vsc9959_qos_query_caps(struct tc_query_caps_base *base)
 {
 	switch (base->type) {
@@ -1624,6 +1812,8 @@ static int vsc9959_qos_query_caps(struct tc_query_caps_base *base)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int vsc9959_port_setup_tc(struct dsa_switch *ds, int port,
 				 enum tc_setup_type type,
 				 void *type_data)
@@ -1631,8 +1821,11 @@ static int vsc9959_port_setup_tc(struct dsa_switch *ds, int port,
 	struct ocelot *ocelot = ds->priv;
 
 	switch (type) {
+<<<<<<< HEAD
 	case TC_QUERY_CAPS:
 		return vsc9959_qos_query_caps(type_data);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case TC_SETUP_QDISC_TAPRIO:
 		return vsc9959_qos_port_tas_set(ocelot, port, type_data);
 	case TC_SETUP_QDISC_CBS:
@@ -2579,12 +2772,22 @@ static const struct ocelot_ops vsc9959_ops = {
 };
 
 static const struct felix_info felix_info_vsc9959 = {
+<<<<<<< HEAD
 	.resources		= vsc9959_resources,
 	.num_resources		= ARRAY_SIZE(vsc9959_resources),
 	.resource_names		= vsc9959_resource_names,
 	.regfields		= vsc9959_regfields,
 	.map			= vsc9959_regmap,
 	.ops			= &vsc9959_ops,
+=======
+	.target_io_res		= vsc9959_target_io_res,
+	.port_io_res		= vsc9959_port_io_res,
+	.imdio_res		= &vsc9959_imdio_res,
+	.regfields		= vsc9959_regfields,
+	.map			= vsc9959_regmap,
+	.ops			= &vsc9959_ops,
+	.stats_layout		= vsc9959_stats_layout,
+>>>>>>> b7ba80a49124 (Commit)
 	.vcap			= vsc9959_vcap_props,
 	.vcap_pol_base		= VSC9959_VCAP_POLICER_BASE,
 	.vcap_pol_max		= VSC9959_VCAP_POLICER_MAX,
@@ -2593,15 +2796,23 @@ static const struct felix_info felix_info_vsc9959 = {
 	.num_mact_rows		= 2048,
 	.num_ports		= VSC9959_NUM_PORTS,
 	.num_tx_queues		= OCELOT_NUM_TC,
+<<<<<<< HEAD
 	.quirks			= FELIX_MAC_QUIRKS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.quirk_no_xtr_irq	= true,
 	.ptp_caps		= &vsc9959_ptp_caps,
 	.mdio_bus_alloc		= vsc9959_mdio_bus_alloc,
 	.mdio_bus_free		= vsc9959_mdio_bus_free,
+<<<<<<< HEAD
+=======
+	.phylink_validate	= vsc9959_phylink_validate,
+>>>>>>> b7ba80a49124 (Commit)
 	.port_modes		= vsc9959_port_modes,
 	.port_setup_tc		= vsc9959_port_setup_tc,
 	.port_sched_speed_set	= vsc9959_sched_speed_set,
 	.tas_guard_bands_update	= vsc9959_tas_guard_bands_update,
+<<<<<<< HEAD
 };
 
 /* The INTB interrupt is shared between for PTP TX timestamp availability
@@ -2617,6 +2828,25 @@ static irqreturn_t felix_irq_handler(int irq, void *data)
 	for (port = 0; port < ocelot->num_phys_ports; port++)
 		ocelot_port_mm_irq(ocelot, port);
 
+=======
+	.init_regmap		= ocelot_regmap_init,
+};
+
+static irqreturn_t felix_irq_handler(int irq, void *data)
+{
+	struct ocelot *ocelot = (struct ocelot *)data;
+
+	/* The INTB interrupt is used for both PTP TX timestamp interrupt
+	 * and preemption status change interrupt on each port.
+	 *
+	 * - Get txtstamp if have
+	 * - TODO: handle preemption. Without handling it, driver may get
+	 *   interrupt storm.
+	 */
+
+	ocelot_get_txtstamp(ocelot);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return IRQ_HANDLED;
 }
 
@@ -2652,6 +2882,10 @@ static int felix_pci_probe(struct pci_dev *pdev,
 	ocelot->num_flooding_pgids = OCELOT_NUM_TC;
 	felix->info = &felix_info_vsc9959;
 	felix->switch_base = pci_resource_start(pdev, VSC9959_SWITCH_PCI_BAR);
+<<<<<<< HEAD
+=======
+	felix->imdio_base = pci_resource_start(pdev, VSC9959_IMDIO_PCI_BAR);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pci_set_master(pdev);
 
@@ -2664,7 +2898,10 @@ static int felix_pci_probe(struct pci_dev *pdev,
 	}
 
 	ocelot->ptp = 1;
+<<<<<<< HEAD
 	ocelot->mm_supported = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ds = kzalloc(sizeof(struct dsa_switch), GFP_KERNEL);
 	if (!ds) {
@@ -2713,6 +2950,11 @@ static void felix_pci_remove(struct pci_dev *pdev)
 	kfree(felix);
 
 	pci_disable_device(pdev);
+<<<<<<< HEAD
+=======
+
+	pci_set_drvdata(pdev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void felix_pci_shutdown(struct pci_dev *pdev)

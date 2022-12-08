@@ -40,7 +40,10 @@
 #include "smu_v13_0_0_ppt.h"
 #include "smu_v13_0_4_ppt.h"
 #include "smu_v13_0_5_ppt.h"
+<<<<<<< HEAD
 #include "smu_v13_0_6_ppt.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "smu_v13_0_7_ppt.h"
 #include "amd_pcie.h"
 
@@ -162,7 +165,11 @@ int smu_get_dpm_freq_range(struct smu_context *smu,
 
 int smu_set_gfx_power_up_by_imu(struct smu_context *smu)
 {
+<<<<<<< HEAD
 	if (!smu->ppt_funcs || !smu->ppt_funcs->set_gfx_power_up_by_imu)
+=======
+	if (!smu->ppt_funcs && !smu->ppt_funcs->set_gfx_power_up_by_imu)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOPNOTSUPP;
 
 	return smu->ppt_funcs->set_gfx_power_up_by_imu(smu);
@@ -586,7 +593,10 @@ static int smu_set_funcs(struct amdgpu_device *adev)
 		yellow_carp_set_ppt_funcs(smu);
 		break;
 	case IP_VERSION(13, 0, 4):
+<<<<<<< HEAD
 	case IP_VERSION(13, 0, 11):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		smu_v13_0_4_set_ppt_funcs(smu);
 		break;
 	case IP_VERSION(13, 0, 5):
@@ -610,11 +620,14 @@ static int smu_set_funcs(struct amdgpu_device *adev)
 	case IP_VERSION(13, 0, 10):
 		smu_v13_0_0_set_ppt_funcs(smu);
 		break;
+<<<<<<< HEAD
 	case IP_VERSION(13, 0, 6):
 		smu_v13_0_6_set_ppt_funcs(smu);
 		/* Enable pp_od_clk_voltage node */
 		smu->od_enabled = true;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case IP_VERSION(13, 0, 7):
 		smu_v13_0_7_set_ppt_funcs(smu);
 		break;
@@ -629,7 +642,10 @@ static int smu_early_init(void *handle)
 {
 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
 	struct smu_context *smu;
+<<<<<<< HEAD
 	int r;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	smu = kzalloc(sizeof(struct smu_context), GFP_KERNEL);
 	if (!smu)
@@ -647,10 +663,14 @@ static int smu_early_init(void *handle)
 	adev->powerplay.pp_handle = smu;
 	adev->powerplay.pp_funcs = &swsmu_pm_funcs;
 
+<<<<<<< HEAD
 	r = smu_set_funcs(adev);
 	if (r)
 		return r;
 	return smu_init_microcode(smu);
+=======
+	return smu_set_funcs(adev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int smu_set_default_dpm_table(struct smu_context *smu)
@@ -910,8 +930,14 @@ static int smu_alloc_dummy_read_table(struct smu_context *smu)
 	struct amdgpu_device *adev = smu->adev;
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (!dummy_read_1_table->size)
 		return 0;
+=======
+	dummy_read_1_table->size = 0x40000;
+	dummy_read_1_table->align = PAGE_SIZE;
+	dummy_read_1_table->domain = AMDGPU_GEM_DOMAIN_VRAM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = amdgpu_bo_create_kernel(adev,
 				      dummy_read_1_table->size,
@@ -1076,6 +1102,15 @@ static int smu_sw_init(void *handle)
 	smu->smu_dpm.dpm_level = AMD_DPM_FORCED_LEVEL_AUTO;
 	smu->smu_dpm.requested_dpm_level = AMD_DPM_FORCED_LEVEL_AUTO;
 
+<<<<<<< HEAD
+=======
+	ret = smu_init_microcode(smu);
+	if (ret) {
+		dev_err(adev->dev, "Failed to load smu firmware!\n");
+		return ret;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = smu_smc_table_sw_init(smu);
 	if (ret) {
 		dev_err(adev->dev, "Failed to sw init smc table!\n");
@@ -1160,6 +1195,7 @@ static int smu_smc_hw_setup(struct smu_context *smu)
 	uint64_t features_supported;
 	int ret = 0;
 
+<<<<<<< HEAD
 	switch (adev->ip_versions[MP1_HWIP][0]) {
 	case IP_VERSION(11, 0, 7):
 	case IP_VERSION(11, 0, 11):
@@ -1175,6 +1211,24 @@ static int smu_smc_hw_setup(struct smu_context *smu)
 		break;
 	default:
 		break;
+=======
+	if (adev->in_suspend && smu_is_dpm_running(smu)) {
+		dev_info(adev->dev, "dpm has been enabled\n");
+		/* this is needed specifically */
+		switch (adev->ip_versions[MP1_HWIP][0]) {
+		case IP_VERSION(11, 0, 7):
+		case IP_VERSION(11, 0, 11):
+		case IP_VERSION(11, 5, 0):
+		case IP_VERSION(11, 0, 12):
+			ret = smu_system_features_control(smu, true);
+			if (ret)
+				dev_err(adev->dev, "Failed system features control!\n");
+			break;
+		default:
+			break;
+		}
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = smu_init_display_count(smu, 0);
@@ -1208,6 +1262,7 @@ static int smu_smc_hw_setup(struct smu_context *smu)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * It is assumed the pptable used before runpm is same as
 	 * the one used afterwards. Thus, we can reuse the stored
@@ -1219,6 +1274,12 @@ static int smu_smc_hw_setup(struct smu_context *smu)
 			dev_err(adev->dev, "Failed to setup pptable!\n");
 			return ret;
 		}
+=======
+	ret = smu_setup_pptable(smu);
+	if (ret) {
+		dev_err(adev->dev, "Failed to setup pptable!\n");
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* smu_dump_pptable(smu); */
@@ -1324,8 +1385,13 @@ static int smu_smc_hw_setup(struct smu_context *smu)
 
 	ret = smu_enable_thermal_alert(smu);
 	if (ret) {
+<<<<<<< HEAD
 	  dev_err(adev->dev, "Failed to enable thermal alert!\n");
 	  return ret;
+=======
+		dev_err(adev->dev, "Failed to enable thermal alert!\n");
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = smu_notify_display_change(smu);
@@ -1459,7 +1525,10 @@ static int smu_disable_dpms(struct smu_context *smu)
 	switch (adev->ip_versions[MP1_HWIP][0]) {
 	case IP_VERSION(13, 0, 0):
 	case IP_VERSION(13, 0, 7):
+<<<<<<< HEAD
 	case IP_VERSION(13, 0, 10):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	default:
 		break;
@@ -1510,6 +1579,7 @@ static int smu_disable_dpms(struct smu_context *smu)
 	}
 
 	/*
+<<<<<<< HEAD
 	 * For SMU 13.0.4/11, PMFW will handle the features disablement properly
 	 * for gpu reset case. Driver involvement is unnecessary.
 	 */
@@ -1524,6 +1594,8 @@ static int smu_disable_dpms(struct smu_context *smu)
 	}
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * For gpu reset, runpm and hibernation through BACO,
 	 * BACO feature has to be kept enabled.
 	 */
@@ -1542,7 +1614,11 @@ static int smu_disable_dpms(struct smu_context *smu)
 	}
 
 	if (adev->ip_versions[GC_HWIP][0] >= IP_VERSION(9, 4, 2) &&
+<<<<<<< HEAD
 	    !amdgpu_sriov_vf(adev) && adev->gfx.rlc.funcs->stop)
+=======
+	    adev->gfx.rlc.funcs->stop)
+>>>>>>> b7ba80a49124 (Commit)
 		adev->gfx.rlc.funcs->stop(adev);
 
 	return ret;
@@ -2497,6 +2573,7 @@ static int smu_read_sensor(void *handle,
 		*((uint32_t *)data) = pstate_table->uclk_pstate.standard * 100;
 		*size = 4;
 		break;
+<<<<<<< HEAD
 	case AMDGPU_PP_SENSOR_PEAK_PSTATE_SCLK:
 		*((uint32_t *)data) = pstate_table->gfxclk_pstate.peak * 100;
 		*size = 4;
@@ -2505,6 +2582,8 @@ static int smu_read_sensor(void *handle,
 		*((uint32_t *)data) = pstate_table->uclk_pstate.peak * 100;
 		*size = 4;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case AMDGPU_PP_SENSOR_ENABLED_SMC_FEATURES_MASK:
 		ret = smu_feature_get_enabled_mask(smu, (uint64_t *)data);
 		*size = 8;
@@ -2538,6 +2617,7 @@ unlock:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int smu_get_apu_thermal_limit(void *handle, uint32_t *limit)
 {
 	int ret = -EINVAL;
@@ -2560,6 +2640,8 @@ static int smu_set_apu_thermal_limit(void *handle, uint32_t limit)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int smu_get_power_profile_mode(void *handle, char *buf)
 {
 	struct smu_context *smu = handle;
@@ -2893,6 +2975,7 @@ static int smu_mode2_reset(void *handle)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int smu_enable_gfx_features(void *handle)
 {
 	struct smu_context *smu = handle;
@@ -2910,6 +2993,8 @@ static int smu_enable_gfx_features(void *handle)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int smu_get_max_sustainable_clocks_by_dc(void *handle,
 						struct pp_smu_nv_clock_table *max_clocks)
 {
@@ -3061,8 +3146,11 @@ static const struct amd_pm_funcs swsmu_pm_funcs = {
 	.emit_clock_levels       = smu_emit_ppclk_levels,
 	.force_performance_level = smu_force_performance_level,
 	.read_sensor             = smu_read_sensor,
+<<<<<<< HEAD
 	.get_apu_thermal_limit       = smu_get_apu_thermal_limit,
 	.set_apu_thermal_limit       = smu_set_apu_thermal_limit,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.get_performance_level   = smu_get_performance_level,
 	.get_current_power_state = smu_get_current_power_state,
 	.get_fan_speed_rpm       = smu_get_fan_speed_rpm,
@@ -3096,7 +3184,10 @@ static const struct amd_pm_funcs swsmu_pm_funcs = {
 	.get_ppfeature_status             = smu_sys_get_pp_feature_mask,
 	.set_ppfeature_status             = smu_sys_set_pp_feature_mask,
 	.asic_reset_mode_2                = smu_mode2_reset,
+<<<<<<< HEAD
 	.asic_reset_enable_gfx_features   = smu_enable_gfx_features,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.set_df_cstate                    = smu_set_df_cstate,
 	.set_xgmi_pstate                  = smu_set_xgmi_pstate,
 	.get_gpu_metrics                  = smu_sys_get_gpu_metrics,

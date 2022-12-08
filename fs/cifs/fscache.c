@@ -143,12 +143,23 @@ static int fscache_fallback_read_page(struct inode *inode, struct page *page)
 	struct netfs_cache_resources cres;
 	struct fscache_cookie *cookie = cifs_inode_cookie(inode);
 	struct iov_iter iter;
+<<<<<<< HEAD
 	struct bio_vec bvec;
 	int ret;
 
 	memset(&cres, 0, sizeof(cres));
 	bvec_set_page(&bvec, page, PAGE_SIZE, 0);
 	iov_iter_bvec(&iter, ITER_DEST, &bvec, 1, PAGE_SIZE);
+=======
+	struct bio_vec bvec[1];
+	int ret;
+
+	memset(&cres, 0, sizeof(cres));
+	bvec[0].bv_page		= page;
+	bvec[0].bv_offset	= 0;
+	bvec[0].bv_len		= PAGE_SIZE;
+	iov_iter_bvec(&iter, READ, bvec, ARRAY_SIZE(bvec), PAGE_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = fscache_begin_read_operation(&cres, cookie);
 	if (ret < 0)
@@ -163,16 +174,34 @@ static int fscache_fallback_read_page(struct inode *inode, struct page *page)
 /*
  * Fallback page writing interface.
  */
+<<<<<<< HEAD
 static int fscache_fallback_write_pages(struct inode *inode, loff_t start, size_t len,
 					bool no_space_allocated_yet)
+=======
+static int fscache_fallback_write_page(struct inode *inode, struct page *page,
+				       bool no_space_allocated_yet)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct netfs_cache_resources cres;
 	struct fscache_cookie *cookie = cifs_inode_cookie(inode);
 	struct iov_iter iter;
+<<<<<<< HEAD
 	int ret;
 
 	memset(&cres, 0, sizeof(cres));
 	iov_iter_xarray(&iter, ITER_SOURCE, &inode->i_mapping->i_pages, start, len);
+=======
+	struct bio_vec bvec[1];
+	loff_t start = page_offset(page);
+	size_t len = PAGE_SIZE;
+	int ret;
+
+	memset(&cres, 0, sizeof(cres));
+	bvec[0].bv_page		= page;
+	bvec[0].bv_offset	= 0;
+	bvec[0].bv_len		= PAGE_SIZE;
+	iov_iter_bvec(&iter, WRITE, bvec, ARRAY_SIZE(bvec), PAGE_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = fscache_begin_write_operation(&cres, cookie);
 	if (ret < 0)
@@ -181,7 +210,11 @@ static int fscache_fallback_write_pages(struct inode *inode, loff_t start, size_
 	ret = cres.ops->prepare_write(&cres, &start, &len, i_size_read(inode),
 				      no_space_allocated_yet);
 	if (ret == 0)
+<<<<<<< HEAD
 		ret = fscache_write(&cres, start, &iter, NULL, NULL);
+=======
+		ret = fscache_write(&cres, page_offset(page), &iter, NULL, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	fscache_end_operation(&cres);
 	return ret;
 }
@@ -205,12 +238,21 @@ int __cifs_readpage_from_fscache(struct inode *inode, struct page *page)
 	return 0;
 }
 
+<<<<<<< HEAD
 void __cifs_readahead_to_fscache(struct inode *inode, loff_t pos, size_t len)
 {
 	cifs_dbg(FYI, "%s: (fsc: %p, p: %llx, l: %zx, i: %p)\n",
 		 __func__, cifs_inode_cookie(inode), pos, len, inode);
 
 	fscache_fallback_write_pages(inode, pos, len, true);
+=======
+void __cifs_readpage_to_fscache(struct inode *inode, struct page *page)
+{
+	cifs_dbg(FYI, "%s: (fsc: %p, p: %p, i: %p)\n",
+		 __func__, cifs_inode_cookie(inode), page, inode);
+
+	fscache_fallback_write_page(inode, page, true);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*

@@ -136,6 +136,10 @@ struct sun6i_rtc_clk_data {
 	unsigned int fixed_prescaler : 16;
 	unsigned int has_prescaler : 1;
 	unsigned int has_out_clk : 1;
+<<<<<<< HEAD
+=======
+	unsigned int export_iosc : 1;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int has_losc_en : 1;
 	unsigned int has_auto_swt : 1;
 };
@@ -260,7 +264,11 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
 	}
 
 	/* Switch to the external, more precise, oscillator, if present */
+<<<<<<< HEAD
 	if (of_property_present(node, "clocks")) {
+=======
+	if (of_get_property(node, "clocks", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		reg |= SUN6I_LOSC_CTRL_EXT_OSC;
 		if (rtc->data->has_losc_en)
 			reg |= SUN6I_LOSC_CTRL_EXT_LOSC_EN;
@@ -270,8 +278,15 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
 	/* Yes, I know, this is ugly. */
 	sun6i_rtc = rtc;
 
+<<<<<<< HEAD
 	of_property_read_string_index(node, "clock-output-names", 2,
 				      &iosc_name);
+=======
+	/* Only read IOSC name from device tree if it is exported */
+	if (rtc->data->export_iosc)
+		of_property_read_string_index(node, "clock-output-names", 2,
+					      &iosc_name);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rtc->int_osc = clk_hw_register_fixed_rate_with_accuracy(NULL,
 								iosc_name,
@@ -312,10 +327,20 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
 		goto err_register;
 	}
 
+<<<<<<< HEAD
 	clk_data->num = 3;
 	clk_data->hws[0] = &rtc->hw;
 	clk_data->hws[1] = __clk_get_hw(rtc->ext_losc);
 	clk_data->hws[2] = rtc->int_osc;
+=======
+	clk_data->num = 2;
+	clk_data->hws[0] = &rtc->hw;
+	clk_data->hws[1] = __clk_get_hw(rtc->ext_losc);
+	if (rtc->data->export_iosc) {
+		clk_data->hws[2] = rtc->int_osc;
+		clk_data->num = 3;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
 	return;
 
@@ -355,6 +380,10 @@ static const struct sun6i_rtc_clk_data sun8i_h3_rtc_data = {
 	.fixed_prescaler = 32,
 	.has_prescaler = 1,
 	.has_out_clk = 1,
+<<<<<<< HEAD
+=======
+	.export_iosc = 1,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void __init sun8i_h3_rtc_clk_init(struct device_node *node)
@@ -372,6 +401,10 @@ static const struct sun6i_rtc_clk_data sun50i_h6_rtc_data = {
 	.fixed_prescaler = 32,
 	.has_prescaler = 1,
 	.has_out_clk = 1,
+<<<<<<< HEAD
+=======
+	.export_iosc = 1,
+>>>>>>> b7ba80a49124 (Commit)
 	.has_losc_en = 1,
 	.has_auto_swt = 1,
 };

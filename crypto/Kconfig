@@ -175,6 +175,12 @@ config CRYPTO_MANAGER_EXTRA_TESTS
 	  This is intended for developer use only, as these tests take much
 	  longer to run than the normal self tests.
 
+<<<<<<< HEAD
+=======
+config CRYPTO_GF128MUL
+	tristate
+
+>>>>>>> b7ba80a49124 (Commit)
 config CRYPTO_NULL
 	tristate "Null algorithms"
 	select CRYPTO_NULL2
@@ -711,9 +717,15 @@ config CRYPTO_KEYWRAP
 
 config CRYPTO_LRW
 	tristate "LRW (Liskov Rivest Wagner)"
+<<<<<<< HEAD
 	select CRYPTO_LIB_GF128MUL
 	select CRYPTO_SKCIPHER
 	select CRYPTO_MANAGER
+=======
+	select CRYPTO_SKCIPHER
+	select CRYPTO_MANAGER
+	select CRYPTO_GF128MUL
+>>>>>>> b7ba80a49124 (Commit)
 	select CRYPTO_ECB
 	help
 	  LRW (Liskov Rivest Wagner) mode
@@ -913,6 +925,30 @@ config CRYPTO_BLAKE2B
 
 	  See https://blake2.net for further information.
 
+<<<<<<< HEAD
+=======
+ config CRYPTO_BLAKE2S
+	tristate "BLAKE2s"
+        select CRYPTO_LIB_BLAKE2S_GENERIC
+        select CRYPTO_HASH
+        help
+	  BLAKE2s cryptographic hash function (RFC 7693)
+
+	  BLAKE2s is optimized for 8 to 32-bit platforms and can produce
+	  digests of any size between 1 and 32 bytes. The keyed hash is
+	  also implemented.
+
+	  This module provides the following algorithms:
+          - blake2s-128
+          - blake2s-160
+          - blake2s-224
+          - blake2s-256
+
+	  Used by Wireguard.
+
+          See https://blake2.net for further information.
+
+>>>>>>> b7ba80a49124 (Commit)
 config CRYPTO_CMAC
 	tristate "CMAC (Cipher-based MAC)"
 	select CRYPTO_HASH
@@ -923,8 +959,13 @@ config CRYPTO_CMAC
 
 config CRYPTO_GHASH
 	tristate "GHASH"
+<<<<<<< HEAD
 	select CRYPTO_HASH
 	select CRYPTO_LIB_GF128MUL
+=======
+	select CRYPTO_GF128MUL
+	select CRYPTO_HASH
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  GCM GHASH function (NIST SP800-38D)
 
@@ -964,8 +1005,13 @@ config CRYPTO_MICHAEL_MIC
 
 config CRYPTO_POLYVAL
 	tristate
+<<<<<<< HEAD
 	select CRYPTO_HASH
 	select CRYPTO_LIB_GF128MUL
+=======
+	select CRYPTO_GF128MUL
+	select CRYPTO_HASH
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  POLYVAL hash function for HCTR2
 
@@ -1388,7 +1434,10 @@ endmenu
 config CRYPTO_HASH_INFO
 	bool
 
+<<<<<<< HEAD
 if !KMSAN # avoid false positives from assembly
+=======
+>>>>>>> b7ba80a49124 (Commit)
 if ARM
 source "arch/arm/crypto/Kconfig"
 endif
@@ -1407,10 +1456,18 @@ endif
 if SPARC
 source "arch/sparc/crypto/Kconfig"
 endif
+<<<<<<< HEAD
 if X86
 source "arch/x86/crypto/Kconfig"
 endif
 endif
+=======
+# KMSAN is unable to understand when initialized values come from assembly.
+# Disable accelerated configs to prevent false positive reports.
+if X86 && !KMSAN
+source "arch/x86/crypto/Kconfig"
+endif
+>>>>>>> b7ba80a49124 (Commit)
 
 source "drivers/crypto/Kconfig"
 source "crypto/asymmetric_keys/Kconfig"

@@ -82,14 +82,26 @@
 #define __noscs __attribute__((__no_sanitize__("shadow-call-stack")))
 #endif
 
+<<<<<<< HEAD
 #define __no_sanitize_address __attribute__((__no_sanitize_address__))
 
 #if defined(__SANITIZE_THREAD__)
 #define __no_sanitize_thread __attribute__((__no_sanitize_thread__))
+=======
+#if __has_attribute(__no_sanitize_address__)
+#define __no_sanitize_address __attribute__((no_sanitize_address))
+#else
+#define __no_sanitize_address
+#endif
+
+#if defined(__SANITIZE_THREAD__) && __has_attribute(__no_sanitize_thread__)
+#define __no_sanitize_thread __attribute__((no_sanitize_thread))
+>>>>>>> b7ba80a49124 (Commit)
 #else
 #define __no_sanitize_thread
 #endif
 
+<<<<<<< HEAD
 #define __no_sanitize_undefined __attribute__((__no_sanitize_undefined__))
 
 /*
@@ -97,6 +109,16 @@
  */
 #if defined(CONFIG_KCOV) && __has_attribute(__no_sanitize_coverage__)
 #define __no_sanitize_coverage __attribute__((__no_sanitize_coverage__))
+=======
+#if __has_attribute(__no_sanitize_undefined__)
+#define __no_sanitize_undefined __attribute__((no_sanitize_undefined))
+#else
+#define __no_sanitize_undefined
+#endif
+
+#if defined(CONFIG_KCOV) && __has_attribute(__no_sanitize_coverage__)
+#define __no_sanitize_coverage __attribute__((no_sanitize_coverage))
+>>>>>>> b7ba80a49124 (Commit)
 #else
 #define __no_sanitize_coverage
 #endif

@@ -174,7 +174,11 @@ xchk_teardown(
 	if (sc->flags & XCHK_REAPING_DISABLED)
 		xchk_start_reaping(sc);
 	if (sc->buf) {
+<<<<<<< HEAD
 		kvfree(sc->buf);
+=======
+		kmem_free(sc->buf);
+>>>>>>> b7ba80a49124 (Commit)
 		sc->buf = NULL;
 	}
 	return error;
@@ -467,7 +471,11 @@ xfs_scrub_metadata(
 	xfs_warn_mount(mp, XFS_OPSTATE_WARNED_SCRUB,
  "EXPERIMENTAL online scrub feature in use. Use at your own risk!");
 
+<<<<<<< HEAD
 	sc = kzalloc(sizeof(struct xfs_scrub), XCHK_GFP_FLAGS);
+=======
+	sc = kmem_zalloc(sizeof(struct xfs_scrub), KM_NOFS | KM_MAYFAIL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!sc) {
 		error = -ENOMEM;
 		goto out;
@@ -557,7 +565,11 @@ out_nofix:
 out_teardown:
 	error = xchk_teardown(sc, error);
 out_sc:
+<<<<<<< HEAD
 	kfree(sc);
+=======
+	kmem_free(sc);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	trace_xchk_done(XFS_I(file_inode(file)), sm, error);
 	if (error == -EFSCORRUPTED || error == -EFSBADCRC) {

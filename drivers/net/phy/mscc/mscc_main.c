@@ -280,9 +280,18 @@ static int vsc85xx_wol_set(struct phy_device *phydev,
 	u16 pwd[3] = {0, 0, 0};
 	struct ethtool_wolinfo *wol_conf = wol;
 
+<<<<<<< HEAD
 	rc = phy_select_page(phydev, MSCC_PHY_PAGE_EXTENDED_2);
 	if (rc < 0)
 		return phy_restore_page(phydev, rc, rc);
+=======
+	mutex_lock(&phydev->lock);
+	rc = phy_select_page(phydev, MSCC_PHY_PAGE_EXTENDED_2);
+	if (rc < 0) {
+		rc = phy_restore_page(phydev, rc, rc);
+		goto out_unlock;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (wol->wolopts & WAKE_MAGIC) {
 		/* Store the device address for the magic packet */
@@ -320,7 +329,11 @@ static int vsc85xx_wol_set(struct phy_device *phydev,
 
 	rc = phy_restore_page(phydev, rc, rc > 0 ? 0 : rc);
 	if (rc < 0)
+<<<<<<< HEAD
 		return rc;
+=======
+		goto out_unlock;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (wol->wolopts & WAKE_MAGIC) {
 		/* Enable the WOL interrupt */
@@ -328,19 +341,34 @@ static int vsc85xx_wol_set(struct phy_device *phydev,
 		reg_val |= MII_VSC85XX_INT_MASK_WOL;
 		rc = phy_write(phydev, MII_VSC85XX_INT_MASK, reg_val);
 		if (rc)
+<<<<<<< HEAD
 			return rc;
+=======
+			goto out_unlock;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		/* Disable the WOL interrupt */
 		reg_val = phy_read(phydev, MII_VSC85XX_INT_MASK);
 		reg_val &= (~MII_VSC85XX_INT_MASK_WOL);
 		rc = phy_write(phydev, MII_VSC85XX_INT_MASK, reg_val);
 		if (rc)
+<<<<<<< HEAD
 			return rc;
+=======
+			goto out_unlock;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	/* Clear WOL iterrupt status */
 	reg_val = phy_read(phydev, MII_VSC85XX_INT_STATUS);
 
+<<<<<<< HEAD
 	return 0;
+=======
+out_unlock:
+	mutex_unlock(&phydev->lock);
+
+	return rc;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void vsc85xx_wol_get(struct phy_device *phydev,
@@ -352,9 +380,16 @@ static void vsc85xx_wol_get(struct phy_device *phydev,
 	u16 pwd[3] = {0, 0, 0};
 	struct ethtool_wolinfo *wol_conf = wol;
 
+<<<<<<< HEAD
 	rc = phy_select_page(phydev, MSCC_PHY_PAGE_EXTENDED_2);
 	if (rc < 0)
 		goto out_restore_page;
+=======
+	mutex_lock(&phydev->lock);
+	rc = phy_select_page(phydev, MSCC_PHY_PAGE_EXTENDED_2);
+	if (rc < 0)
+		goto out_unlock;
+>>>>>>> b7ba80a49124 (Commit)
 
 	reg_val = __phy_read(phydev, MSCC_PHY_WOL_MAC_CONTROL);
 	if (reg_val & SECURE_ON_ENABLE)
@@ -370,8 +405,14 @@ static void vsc85xx_wol_get(struct phy_device *phydev,
 		}
 	}
 
+<<<<<<< HEAD
 out_restore_page:
 	phy_restore_page(phydev, rc, rc > 0 ? 0 : rc);
+=======
+out_unlock:
+	phy_restore_page(phydev, rc, rc > 0 ? 0 : rc);
+	mutex_unlock(&phydev->lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #if IS_ENABLED(CONFIG_OF_MDIO)

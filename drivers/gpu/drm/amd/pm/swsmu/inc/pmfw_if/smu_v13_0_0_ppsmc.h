@@ -94,7 +94,10 @@
 //Resets
 #define PPSMC_MSG_PrepareMp1ForUnload            0x2E
 #define PPSMC_MSG_Mode1Reset                     0x2F
+<<<<<<< HEAD
 #define PPSMC_MSG_Mode2Reset					 0x4F
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 //Set SystemVirtual DramAddrHigh
 #define PPSMC_MSG_SetSystemVirtualDramAddrHigh   0x30
@@ -132,6 +135,7 @@
 #define PPSMC_MSG_EnableAudioStutterWA           0x44
 #define PPSMC_MSG_PowerUpUmsch                   0x45
 #define PPSMC_MSG_PowerDownUmsch                 0x46
+<<<<<<< HEAD
 #define PPSMC_MSG_SetDcsArch                     0x47
 #define PPSMC_MSG_TriggerVFFLR                   0x48
 #define PPSMC_MSG_SetNumBadMemoryPagesRetired    0x49
@@ -139,6 +143,9 @@
 #define PPSMC_MSG_SetPriorityDeltaGain           0x4B
 #define PPSMC_MSG_AllowIHHostInterrupt           0x4C
 #define PPSMC_Message_Count                      0x4D
+=======
+#define PPSMC_Message_Count                      0x47
+>>>>>>> b7ba80a49124 (Commit)
 
 //Debug Dump Message
 #define DEBUGSMC_MSG_TestMessage                    0x1

@@ -135,7 +135,10 @@ virtio_vdpa_setup_vq(struct virtio_device *vdev, unsigned int index,
 {
 	struct virtio_vdpa_device *vd_dev = to_virtio_vdpa_device(vdev);
 	struct vdpa_device *vdpa = vd_get_vdpa(vdev);
+<<<<<<< HEAD
 	struct device *dma_dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const struct vdpa_config_ops *ops = vdpa->config;
 	struct virtio_vdpa_vq_info *info;
 	struct vdpa_callback cb;
@@ -176,6 +179,7 @@ virtio_vdpa_setup_vq(struct virtio_device *vdev, unsigned int index,
 
 	/* Create the vring */
 	align = ops->get_vq_align(vdpa);
+<<<<<<< HEAD
 
 	if (ops->get_vq_dma_dev)
 		dma_dev = ops->get_vq_dma_dev(vdpa, index);
@@ -185,6 +189,11 @@ virtio_vdpa_setup_vq(struct virtio_device *vdev, unsigned int index,
 					true, may_reduce_num, ctx,
 					virtio_vdpa_notify, callback,
 					name, dma_dev);
+=======
+	vq = vring_create_virtqueue(index, max_num, align, vdev,
+				    true, may_reduce_num, ctx,
+				    virtio_vdpa_notify, callback, name);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!vq) {
 		err = -ENOMEM;
 		goto error_new_virtqueue;

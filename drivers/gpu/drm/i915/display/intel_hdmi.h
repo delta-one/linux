@@ -6,6 +6,7 @@
 #ifndef __INTEL_HDMI_H__
 #define __INTEL_HDMI_H__
 
+<<<<<<< HEAD
 #include <linux/types.h>
 
 enum hdmi_infoframe_type;
@@ -20,6 +21,22 @@ struct intel_digital_port;
 struct intel_encoder;
 struct intel_hdmi;
 union hdmi_infoframe;
+=======
+#include <linux/hdmi.h>
+#include <linux/types.h>
+
+struct drm_connector;
+struct drm_encoder;
+struct drm_i915_private;
+struct intel_connector;
+struct intel_digital_port;
+struct intel_encoder;
+struct intel_crtc_state;
+struct intel_hdmi;
+struct drm_connector_state;
+union hdmi_infoframe;
+enum port;
+>>>>>>> b7ba80a49124 (Commit)
 
 void intel_hdmi_init_connector(struct intel_digital_port *dig_port,
 			       struct intel_connector *intel_connector);

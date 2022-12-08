@@ -50,6 +50,7 @@ static struct sctp_association *__sctp_rcv_lookup(struct net *net,
 				      struct sk_buff *skb,
 				      const union sctp_addr *paddr,
 				      const union sctp_addr *laddr,
+<<<<<<< HEAD
 				      struct sctp_transport **transportp,
 				      int dif, int sdif);
 static struct sctp_endpoint *__sctp_rcv_lookup_endpoint(
@@ -57,12 +58,23 @@ static struct sctp_endpoint *__sctp_rcv_lookup_endpoint(
 					const union sctp_addr *laddr,
 					const union sctp_addr *daddr,
 					int dif, int sdif);
+=======
+				      struct sctp_transport **transportp);
+static struct sctp_endpoint *__sctp_rcv_lookup_endpoint(
+					struct net *net, struct sk_buff *skb,
+					const union sctp_addr *laddr,
+					const union sctp_addr *daddr);
+>>>>>>> b7ba80a49124 (Commit)
 static struct sctp_association *__sctp_lookup_association(
 					struct net *net,
 					const union sctp_addr *local,
 					const union sctp_addr *peer,
+<<<<<<< HEAD
 					struct sctp_transport **pt,
 					int dif, int sdif);
+=======
+					struct sctp_transport **pt);
+>>>>>>> b7ba80a49124 (Commit)
 
 static int sctp_add_backlog(struct sock *sk, struct sk_buff *skb);
 
@@ -95,11 +107,18 @@ int sctp_rcv(struct sk_buff *skb)
 	struct sctp_chunk *chunk;
 	union sctp_addr src;
 	union sctp_addr dest;
+<<<<<<< HEAD
+=======
+	int bound_dev_if;
+>>>>>>> b7ba80a49124 (Commit)
 	int family;
 	struct sctp_af *af;
 	struct net *net = dev_net(skb->dev);
 	bool is_gso = skb_is_gso(skb) && skb_is_gso_sctp(skb);
+<<<<<<< HEAD
 	int dif, sdif;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (skb->pkt_type != PACKET_HOST)
 		goto discard_it;
@@ -144,8 +163,11 @@ int sctp_rcv(struct sk_buff *skb)
 	/* Initialize local addresses for lookups. */
 	af->from_skb(&src, skb, 1);
 	af->from_skb(&dest, skb, 0);
+<<<<<<< HEAD
 	dif = af->skb_iif(skb);
 	sdif = af->skb_sdif(skb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* If the packet is to or from a non-unicast address,
 	 * silently discard the packet.
@@ -162,16 +184,46 @@ int sctp_rcv(struct sk_buff *skb)
 	    !af->addr_valid(&dest, NULL, skb))
 		goto discard_it;
 
+<<<<<<< HEAD
 	asoc = __sctp_rcv_lookup(net, skb, &src, &dest, &transport, dif, sdif);
 
 	if (!asoc)
 		ep = __sctp_rcv_lookup_endpoint(net, skb, &dest, &src, dif, sdif);
+=======
+	asoc = __sctp_rcv_lookup(net, skb, &src, &dest, &transport);
+
+	if (!asoc)
+		ep = __sctp_rcv_lookup_endpoint(net, skb, &dest, &src);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Retrieve the common input handling substructure. */
 	rcvr = asoc ? &asoc->base : &ep->base;
 	sk = rcvr->sk;
 
 	/*
+<<<<<<< HEAD
+=======
+	 * If a frame arrives on an interface and the receiving socket is
+	 * bound to another interface, via SO_BINDTODEVICE, treat it as OOTB
+	 */
+	bound_dev_if = READ_ONCE(sk->sk_bound_dev_if);
+	if (bound_dev_if && (bound_dev_if != af->skb_iif(skb))) {
+		if (transport) {
+			sctp_transport_put(transport);
+			asoc = NULL;
+			transport = NULL;
+		} else {
+			sctp_endpoint_put(ep);
+			ep = NULL;
+		}
+		sk = net->sctp.ctl_sock;
+		ep = sctp_sk(sk)->ep;
+		sctp_endpoint_hold(ep);
+		rcvr = &ep->base;
+	}
+
+	/*
+>>>>>>> b7ba80a49124 (Commit)
 	 * RFC 2960, 8.4 - Handle "Out of the blue" Packets.
 	 * An SCTP packet is called an "out of the blue" (OOTB)
 	 * packet if it is correctly formed, i.e., passed the
@@ -470,8 +522,11 @@ struct sock *sctp_err_lookup(struct net *net, int family, struct sk_buff *skb,
 	struct sctp_association *asoc;
 	struct sctp_transport *transport = NULL;
 	__u32 vtag = ntohl(sctphdr->vtag);
+<<<<<<< HEAD
 	int sdif = inet_sdif(skb);
 	int dif = inet_iif(skb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	*app = NULL; *tpp = NULL;
 
@@ -487,7 +542,11 @@ struct sock *sctp_err_lookup(struct net *net, int family, struct sk_buff *skb,
 	/* Look for an association that matches the incoming ICMP error
 	 * packet.
 	 */
+<<<<<<< HEAD
 	asoc = __sctp_lookup_association(net, &saddr, &daddr, &transport, dif, sdif);
+=======
+	asoc = __sctp_lookup_association(net, &saddr, &daddr, &transport);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!asoc)
 		return NULL;
 
@@ -585,7 +644,11 @@ static void sctp_v4_err_handle(struct sctp_transport *t, struct sk_buff *skb,
 		sk->sk_err = err;
 		sk_error_report(sk);
 	} else {  /* Only an error on timeout */
+<<<<<<< HEAD
 		WRITE_ONCE(sk->sk_err_soft, err);
+=======
+		sk->sk_err_soft = err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -837,8 +900,12 @@ static inline __u32 sctp_hashfn(const struct net *net, __be16 lport,
 static struct sctp_endpoint *__sctp_rcv_lookup_endpoint(
 					struct net *net, struct sk_buff *skb,
 					const union sctp_addr *laddr,
+<<<<<<< HEAD
 					const union sctp_addr *paddr,
 					int dif, int sdif)
+=======
+					const union sctp_addr *paddr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sctp_hashbucket *head;
 	struct sctp_endpoint *ep;
@@ -851,7 +918,11 @@ static struct sctp_endpoint *__sctp_rcv_lookup_endpoint(
 	head = &sctp_ep_hashtable[hash];
 	read_lock(&head->lock);
 	sctp_for_each_hentry(ep, &head->chain) {
+<<<<<<< HEAD
 		if (sctp_endpoint_is_match(ep, net, laddr, dif, sdif))
+=======
+		if (sctp_endpoint_is_match(ep, net, laddr))
+>>>>>>> b7ba80a49124 (Commit)
 			goto hit;
 	}
 
@@ -978,6 +1049,7 @@ void sctp_unhash_transport(struct sctp_transport *t)
 			sctp_hash_params);
 }
 
+<<<<<<< HEAD
 bool sctp_sk_bound_dev_eq(struct net *net, int bound_dev_if, int dif, int sdif)
 {
 	bool l3mdev_accept = true;
@@ -988,16 +1060,25 @@ bool sctp_sk_bound_dev_eq(struct net *net, int bound_dev_if, int dif, int sdif)
 	return inet_bound_dev_eq(l3mdev_accept, bound_dev_if, dif, sdif);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* return a transport with holding it */
 struct sctp_transport *sctp_addrs_lookup_transport(
 				struct net *net,
 				const union sctp_addr *laddr,
+<<<<<<< HEAD
 				const union sctp_addr *paddr,
 				int dif, int sdif)
 {
 	struct rhlist_head *tmp, *list;
 	struct sctp_transport *t;
 	int bound_dev_if;
+=======
+				const union sctp_addr *paddr)
+{
+	struct rhlist_head *tmp, *list;
+	struct sctp_transport *t;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sctp_hash_cmp_arg arg = {
 		.paddr = paddr,
 		.net   = net,
@@ -1011,9 +1092,13 @@ struct sctp_transport *sctp_addrs_lookup_transport(
 		if (!sctp_transport_hold(t))
 			continue;
 
+<<<<<<< HEAD
 		bound_dev_if = READ_ONCE(t->asoc->base.sk->sk_bound_dev_if);
 		if (sctp_sk_bound_dev_eq(net, bound_dev_if, dif, sdif) &&
 		    sctp_bind_addr_match(&t->asoc->base.bind_addr,
+=======
+		if (sctp_bind_addr_match(&t->asoc->base.bind_addr,
+>>>>>>> b7ba80a49124 (Commit)
 					 laddr, sctp_sk(t->asoc->base.sk)))
 			return t;
 		sctp_transport_put(t);
@@ -1050,13 +1135,21 @@ static struct sctp_association *__sctp_lookup_association(
 					struct net *net,
 					const union sctp_addr *local,
 					const union sctp_addr *peer,
+<<<<<<< HEAD
 					struct sctp_transport **pt,
 					int dif, int sdif)
+=======
+					struct sctp_transport **pt)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sctp_transport *t;
 	struct sctp_association *asoc = NULL;
 
+<<<<<<< HEAD
 	t = sctp_addrs_lookup_transport(net, local, peer, dif, sdif);
+=======
+	t = sctp_addrs_lookup_transport(net, local, peer);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!t)
 		goto out;
 
@@ -1072,13 +1165,21 @@ static
 struct sctp_association *sctp_lookup_association(struct net *net,
 						 const union sctp_addr *laddr,
 						 const union sctp_addr *paddr,
+<<<<<<< HEAD
 						 struct sctp_transport **transportp,
 						 int dif, int sdif)
+=======
+						 struct sctp_transport **transportp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sctp_association *asoc;
 
 	rcu_read_lock();
+<<<<<<< HEAD
 	asoc = __sctp_lookup_association(net, laddr, paddr, transportp, dif, sdif);
+=======
+	asoc = __sctp_lookup_association(net, laddr, paddr, transportp);
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_read_unlock();
 
 	return asoc;
@@ -1087,12 +1188,20 @@ struct sctp_association *sctp_lookup_association(struct net *net,
 /* Is there an association matching the given local and peer addresses? */
 bool sctp_has_association(struct net *net,
 			  const union sctp_addr *laddr,
+<<<<<<< HEAD
 			  const union sctp_addr *paddr,
 			  int dif, int sdif)
 {
 	struct sctp_transport *transport;
 
 	if (sctp_lookup_association(net, laddr, paddr, &transport, dif, sdif)) {
+=======
+			  const union sctp_addr *paddr)
+{
+	struct sctp_transport *transport;
+
+	if (sctp_lookup_association(net, laddr, paddr, &transport)) {
+>>>>>>> b7ba80a49124 (Commit)
 		sctp_transport_put(transport);
 		return true;
 	}
@@ -1120,8 +1229,12 @@ bool sctp_has_association(struct net *net,
  */
 static struct sctp_association *__sctp_rcv_init_lookup(struct net *net,
 	struct sk_buff *skb,
+<<<<<<< HEAD
 	const union sctp_addr *laddr, struct sctp_transport **transportp,
 	int dif, int sdif)
+=======
+	const union sctp_addr *laddr, struct sctp_transport **transportp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sctp_association *asoc;
 	union sctp_addr addr;
@@ -1160,7 +1273,11 @@ static struct sctp_association *__sctp_rcv_init_lookup(struct net *net,
 		if (!af->from_addr_param(paddr, params.addr, sh->source, 0))
 			continue;
 
+<<<<<<< HEAD
 		asoc = __sctp_lookup_association(net, laddr, paddr, transportp, dif, sdif);
+=======
+		asoc = __sctp_lookup_association(net, laddr, paddr, transportp);
+>>>>>>> b7ba80a49124 (Commit)
 		if (asoc)
 			return asoc;
 	}
@@ -1187,8 +1304,12 @@ static struct sctp_association *__sctp_rcv_asconf_lookup(
 					struct sctp_chunkhdr *ch,
 					const union sctp_addr *laddr,
 					__be16 peer_port,
+<<<<<<< HEAD
 					struct sctp_transport **transportp,
 					int dif, int sdif)
+=======
+					struct sctp_transport **transportp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sctp_addip_chunk *asconf = (struct sctp_addip_chunk *)ch;
 	struct sctp_af *af;
@@ -1208,7 +1329,11 @@ static struct sctp_association *__sctp_rcv_asconf_lookup(
 	if (!af->from_addr_param(&paddr, param, peer_port, 0))
 		return NULL;
 
+<<<<<<< HEAD
 	return __sctp_lookup_association(net, laddr, &paddr, transportp, dif, sdif);
+=======
+	return __sctp_lookup_association(net, laddr, &paddr, transportp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 
@@ -1224,8 +1349,12 @@ static struct sctp_association *__sctp_rcv_asconf_lookup(
 static struct sctp_association *__sctp_rcv_walk_lookup(struct net *net,
 				      struct sk_buff *skb,
 				      const union sctp_addr *laddr,
+<<<<<<< HEAD
 				      struct sctp_transport **transportp,
 				      int dif, int sdif)
+=======
+				      struct sctp_transport **transportp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sctp_association *asoc = NULL;
 	struct sctp_chunkhdr *ch;
@@ -1268,7 +1397,11 @@ static struct sctp_association *__sctp_rcv_walk_lookup(struct net *net,
 				asoc = __sctp_rcv_asconf_lookup(
 						net, ch, laddr,
 						sctp_hdr(skb)->source,
+<<<<<<< HEAD
 						transportp, dif, sdif);
+=======
+						transportp);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		default:
 			break;
@@ -1293,8 +1426,12 @@ static struct sctp_association *__sctp_rcv_walk_lookup(struct net *net,
 static struct sctp_association *__sctp_rcv_lookup_harder(struct net *net,
 				      struct sk_buff *skb,
 				      const union sctp_addr *laddr,
+<<<<<<< HEAD
 				      struct sctp_transport **transportp,
 				      int dif, int sdif)
+=======
+				      struct sctp_transport **transportp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sctp_chunkhdr *ch;
 
@@ -1318,9 +1455,15 @@ static struct sctp_association *__sctp_rcv_lookup_harder(struct net *net,
 
 	/* If this is INIT/INIT-ACK look inside the chunk too. */
 	if (ch->type == SCTP_CID_INIT || ch->type == SCTP_CID_INIT_ACK)
+<<<<<<< HEAD
 		return __sctp_rcv_init_lookup(net, skb, laddr, transportp, dif, sdif);
 
 	return __sctp_rcv_walk_lookup(net, skb, laddr, transportp, dif, sdif);
+=======
+		return __sctp_rcv_init_lookup(net, skb, laddr, transportp);
+
+	return __sctp_rcv_walk_lookup(net, skb, laddr, transportp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Lookup an association for an inbound skb. */
@@ -1328,12 +1471,20 @@ static struct sctp_association *__sctp_rcv_lookup(struct net *net,
 				      struct sk_buff *skb,
 				      const union sctp_addr *paddr,
 				      const union sctp_addr *laddr,
+<<<<<<< HEAD
 				      struct sctp_transport **transportp,
 				      int dif, int sdif)
 {
 	struct sctp_association *asoc;
 
 	asoc = __sctp_lookup_association(net, laddr, paddr, transportp, dif, sdif);
+=======
+				      struct sctp_transport **transportp)
+{
+	struct sctp_association *asoc;
+
+	asoc = __sctp_lookup_association(net, laddr, paddr, transportp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (asoc)
 		goto out;
 
@@ -1341,7 +1492,11 @@ static struct sctp_association *__sctp_rcv_lookup(struct net *net,
 	 * SCTP Implementors Guide, 2.18 Handling of address
 	 * parameters within the INIT or INIT-ACK.
 	 */
+<<<<<<< HEAD
 	asoc = __sctp_rcv_lookup_harder(net, skb, laddr, transportp, dif, sdif);
+=======
+	asoc = __sctp_rcv_lookup_harder(net, skb, laddr, transportp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (asoc)
 		goto out;
 

@@ -12,8 +12,13 @@
 
 struct acpi_battery_hook {
 	const char *name;
+<<<<<<< HEAD
 	int (*add_battery)(struct power_supply *battery, struct acpi_battery_hook *hook);
 	int (*remove_battery)(struct power_supply *battery, struct acpi_battery_hook *hook);
+=======
+	int (*add_battery)(struct power_supply *battery);
+	int (*remove_battery)(struct power_supply *battery);
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head list;
 };
 

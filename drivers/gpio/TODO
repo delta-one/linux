@@ -59,6 +59,14 @@ the device tree back-end. It is legacy and should not be used in new code.
 
 Work items:
 
+<<<<<<< HEAD
+=======
+- Get rid of struct of_mm_gpio_chip altogether: use the generic  MMIO
+  GPIO for all current users (see below). Delete struct of_mm_gpio_chip,
+  to_of_mm_gpio_chip(), of_mm_gpiochip_add_data(), of_mm_gpiochip_add()
+  of_mm_gpiochip_remove() from the kernel.
+
+>>>>>>> b7ba80a49124 (Commit)
 - Change all consumer drivers that #include <linux/of_gpio.h> to
   #include <linux/gpio/consumer.h> and stop doing custom parsing of the
   GPIO lines from the device tree. This can be tricky and often ivolves
@@ -76,6 +84,7 @@ Work items:
   uses <linux/gpio/consumer.h> or <linux/gpio/driver.h> instead.
 
 
+<<<<<<< HEAD
 Get rid of <linux/gpio/legacy-of-mm-gpiochip.h>
 
 Work items:
@@ -86,6 +95,8 @@ Work items:
   CONFIG_OF_GPIO_MM_GPIOCHIP from the kernel.
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Get rid of <linux/gpio.h>
 
 This legacy header is a one stop shop for anything GPIO is closely tied
@@ -129,6 +140,7 @@ Work items:
   this with dry-coding and sending to maintainers to test
 
 
+<<<<<<< HEAD
 Generic regmap GPIO
 
 In the very similar way to Generic MMIO GPIO convert the users which can
@@ -136,6 +148,8 @@ take advantage of using regmap over direct IO accessors. Note, even in
 MMIO case the regmap MMIO with gpio-regmap.c is preferable over gpio-mmio.c.
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 GPIOLIB irqchip
 
 The GPIOLIB irqchip is a helper irqchip for "simple cases" that should

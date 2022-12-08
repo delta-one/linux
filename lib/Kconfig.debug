@@ -231,11 +231,14 @@ config DEBUG_INFO
 	  in the "Debug information" choice below, indicating that debug
 	  information will be generated for build targets.
 
+<<<<<<< HEAD
 # Clang is known to generate .{s,u}leb128 with symbol deltas with DWARF5, which
 # some targets may not support: https://sourceware.org/bugzilla/show_bug.cgi?id=27215
 config AS_HAS_NON_CONST_LEB128
 	def_bool $(as-instr,.uleb128 .Lexpr_end4 - .Lexpr_start3\n.Lexpr_start3:\n.Lexpr_end4:)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 choice
 	prompt "Debug information"
 	depends on DEBUG_KERNEL
@@ -258,7 +261,10 @@ config DEBUG_INFO_NONE
 config DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
 	bool "Rely on the toolchain's implicit default DWARF version"
 	select DEBUG_INFO
+<<<<<<< HEAD
 	depends on !CC_IS_CLANG || AS_IS_LLVM || CLANG_VERSION < 140000 || (AS_IS_GNU && AS_VERSION >= 23502 && AS_HAS_NON_CONST_LEB128)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  The implicit default version of DWARF debug info produced by a
 	  toolchain changes over time.
@@ -270,10 +276,15 @@ config DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
 config DEBUG_INFO_DWARF4
 	bool "Generate DWARF Version 4 debuginfo"
 	select DEBUG_INFO
+<<<<<<< HEAD
 	depends on !CC_IS_CLANG || AS_IS_LLVM || (AS_IS_GNU && AS_VERSION >= 23502)
 	help
 	  Generate DWARF v4 debug info. This requires gcc 4.5+, binutils 2.35.2
 	  if using clang without clang's integrated assembler, and gdb 7.0+.
+=======
+	help
+	  Generate DWARF v4 debug info. This requires gcc 4.5+ and gdb 7.0+.
+>>>>>>> b7ba80a49124 (Commit)
 
 	  If you have consumers of DWARF debug info that are not ready for
 	  newer revisions of DWARF, you may wish to choose this or have your
@@ -282,7 +293,11 @@ config DEBUG_INFO_DWARF4
 config DEBUG_INFO_DWARF5
 	bool "Generate DWARF Version 5 debuginfo"
 	select DEBUG_INFO
+<<<<<<< HEAD
 	depends on !CC_IS_CLANG || AS_IS_LLVM || (AS_IS_GNU && AS_VERSION >= 23502 && AS_HAS_NON_CONST_LEB128)
+=======
+	depends on !CC_IS_CLANG || (CC_IS_CLANG && (AS_IS_LLVM || (AS_IS_GNU && AS_VERSION >= 23502)))
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Generate DWARF v5 debug info. Requires binutils 2.35.2, gcc 5.0+ (gcc
 	  5.0+ accepts the -gdwarf-5 flag but only had partial support for some
@@ -312,6 +327,7 @@ config DEBUG_INFO_REDUCED
 	  DEBUG_INFO build and compile times are reduced too.
 	  Only works with newer gcc versions.
 
+<<<<<<< HEAD
 choice
 	prompt "Compressed Debug information"
 	help
@@ -327,6 +343,30 @@ config DEBUG_INFO_COMPRESSED_NONE
 
 config DEBUG_INFO_COMPRESSED_ZLIB
 	bool "Compress debugging information with zlib"
+=======
+config DEBUG_INFO_LEVEL
+	int "Debug info level"
+	range 1 3
+	default "2"
+	help
+	  Sets the level of how much debug information to generate (-glevel).
+	  Level 1 produces minimal debug information without including information
+	  about local variables. Level 3 includes extra information like macro
+	  definitions. Setting up level 3 will require significantly more disk
+	  space and increase built time.
+
+config DEBUG_MACRO_DEFINITIONS
+	bool "Add macro definitions to debug info"
+	default n
+	help
+	  Generates macro definitions to provide a way to expand macros right
+	  in the debugging session. This information can be used with macro expand,
+	  info macro in gdb. This option is equivalent to setting -g3 in GCC and
+	  -fdebug-macro in Clang.
+
+config DEBUG_INFO_COMPRESSED
+	bool "Compressed debugging information"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on $(cc-option,-gz=zlib)
 	depends on $(ld-option,--compress-debug-sections=zlib)
 	help
@@ -340,6 +380,7 @@ config DEBUG_INFO_COMPRESSED_ZLIB
 	  preferable to setting $KDEB_COMPRESS to "none" which would be even
 	  larger.
 
+<<<<<<< HEAD
 config DEBUG_INFO_COMPRESSED_ZSTD
 	bool "Compress debugging information with zstd"
 	depends on $(cc-option,-gz=zstd)
@@ -352,6 +393,8 @@ config DEBUG_INFO_COMPRESSED_ZSTD
 
 endchoice # "Compressed Debug information"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config DEBUG_INFO_SPLIT
 	bool "Produce split debuginfo in .dwo files"
 	depends on $(cc-option,-gsplit-dwarf)
@@ -389,6 +432,7 @@ config PAHOLE_HAS_BTF_TAG
 	  btf_decl_tag) or not. Currently only clang compiler implements
 	  these attributes, so make the config depend on CC_IS_CLANG.
 
+<<<<<<< HEAD
 config PAHOLE_HAS_LANG_EXCLUDE
 	def_bool PAHOLE_VERSION >= 124
 	help
@@ -398,6 +442,8 @@ config PAHOLE_HAS_LANG_EXCLUDE
 	  otherwise it would emit malformed kernel and module binaries when
 	  using DEBUG_INFO_BTF_MODULES.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config DEBUG_INFO_BTF_MODULES
 	def_bool y
 	depends on DEBUG_INFO_BTF && MODULES && PAHOLE_HAS_SPLIT_BTF
@@ -429,6 +475,7 @@ endif # DEBUG_INFO
 config FRAME_WARN
 	int "Warn for stack frames larger than"
 	range 0 8192
+<<<<<<< HEAD
 	default 0 if KMSAN
 	default 2048 if GCC_PLUGIN_LATENT_ENTROPY
 	default 2048 if PARISC
@@ -438,6 +485,15 @@ config FRAME_WARN
 	default 2048 if 64BIT
 	help
 	  Tell the compiler to warn at build time for stack frames larger than this.
+=======
+	default 2048 if GCC_PLUGIN_LATENT_ENTROPY
+	default 2048 if PARISC
+	default 1536 if (!64BIT && XTENSA)
+	default 1024 if !64BIT
+	default 2048 if 64BIT
+	help
+	  Tell gcc to warn at build time for stack frames larger than this.
+>>>>>>> b7ba80a49124 (Commit)
 	  Setting this too low will cause a lot of warnings.
 	  Setting it to 0 disables the warning.
 
@@ -502,8 +558,12 @@ config SECTION_MISMATCH_WARN_ONLY
 
 config DEBUG_FORCE_FUNCTION_ALIGN_64B
 	bool "Force all function address 64B aligned"
+<<<<<<< HEAD
 	depends on EXPERT && (X86_64 || ARM64 || PPC32 || PPC64 || ARC || S390)
 	select FUNCTION_ALIGNMENT_64B
+=======
+	depends on EXPERT && (X86_64 || ARM64 || PPC32 || PPC64 || ARC)
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  There are cases that a commit from one domain changes the function
 	  address alignment of other domains, and cause magic performance
@@ -752,6 +812,78 @@ config SHRINKER_DEBUG
 	  visibility into the kernel memory shrinkers subsystem.
 	  Disable it to avoid an extra memory footprint.
 
+<<<<<<< HEAD
+=======
+config HAVE_DEBUG_KMEMLEAK
+	bool
+
+config DEBUG_KMEMLEAK
+	bool "Kernel memory leak detector"
+	depends on DEBUG_KERNEL && HAVE_DEBUG_KMEMLEAK
+	select DEBUG_FS
+	select STACKTRACE if STACKTRACE_SUPPORT
+	select KALLSYMS
+	select CRC32
+	help
+	  Say Y here if you want to enable the memory leak
+	  detector. The memory allocation/freeing is traced in a way
+	  similar to the Boehm's conservative garbage collector, the
+	  difference being that the orphan objects are not freed but
+	  only shown in /sys/kernel/debug/kmemleak. Enabling this
+	  feature will introduce an overhead to memory
+	  allocations. See Documentation/dev-tools/kmemleak.rst for more
+	  details.
+
+	  Enabling DEBUG_SLAB or SLUB_DEBUG may increase the chances
+	  of finding leaks due to the slab objects poisoning.
+
+	  In order to access the kmemleak file, debugfs needs to be
+	  mounted (usually at /sys/kernel/debug).
+
+config DEBUG_KMEMLEAK_MEM_POOL_SIZE
+	int "Kmemleak memory pool size"
+	depends on DEBUG_KMEMLEAK
+	range 200 1000000
+	default 16000
+	help
+	  Kmemleak must track all the memory allocations to avoid
+	  reporting false positives. Since memory may be allocated or
+	  freed before kmemleak is fully initialised, use a static pool
+	  of metadata objects to track such callbacks. After kmemleak is
+	  fully initialised, this memory pool acts as an emergency one
+	  if slab allocations fail.
+
+config DEBUG_KMEMLEAK_TEST
+	tristate "Simple test for the kernel memory leak detector"
+	depends on DEBUG_KMEMLEAK && m
+	help
+	  This option enables a module that explicitly leaks memory.
+
+	  If unsure, say N.
+
+config DEBUG_KMEMLEAK_DEFAULT_OFF
+	bool "Default kmemleak to off"
+	depends on DEBUG_KMEMLEAK
+	help
+	  Say Y here to disable kmemleak by default. It can then be enabled
+	  on the command line via kmemleak=on.
+
+config DEBUG_KMEMLEAK_AUTO_SCAN
+	bool "Enable kmemleak auto scan thread on boot up"
+	default y
+	depends on DEBUG_KMEMLEAK
+	help
+	  Depending on the cpu, kmemleak scan may be cpu intensive and can
+	  stall user tasks at times. This option enables/disables automatic
+	  kmemleak scan at boot up.
+
+	  Say N here to disable kmemleak auto scan thread to stop automatic
+	  scanning. Disabling this option disables automatic reporting of
+	  memory leaks.
+
+	  If unsure, say Y.
+
+>>>>>>> b7ba80a49124 (Commit)
 config DEBUG_STACK_USAGE
 	bool "Stack utilization instrumentation"
 	depends on DEBUG_KERNEL && !IA64
@@ -791,6 +923,7 @@ config DEBUG_VM
 
 	  If unsure, say N.
 
+<<<<<<< HEAD
 config DEBUG_VM_SHOOT_LAZIES
 	bool "Debug MMU_LAZY_TLB_SHOOTDOWN implementation"
 	depends on DEBUG_VM
@@ -801,6 +934,8 @@ config DEBUG_VM_SHOOT_LAZIES
 
 	  If unsure, say N.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config DEBUG_VM_MAPLE_TREE
 	bool "Debug VM maple trees"
 	depends on DEBUG_VM
@@ -1153,10 +1288,17 @@ menu "Scheduler Debugging"
 
 config SCHED_DEBUG
 	bool "Collect scheduler debugging info"
+<<<<<<< HEAD
 	depends on DEBUG_KERNEL && DEBUG_FS
 	default y
 	help
 	  If you say Y here, the /sys/kernel/debug/sched file will be provided
+=======
+	depends on DEBUG_KERNEL && PROC_FS
+	default y
+	help
+	  If you say Y here, the /proc/sched_debug file will be provided
+>>>>>>> b7ba80a49124 (Commit)
 	  that can help debug the scheduler. The runtime overhead of this
 	  option is minimal.
 
@@ -1195,16 +1337,23 @@ config DEBUG_TIMEKEEPING
 config DEBUG_PREEMPT
 	bool "Debug preemptible kernel"
 	depends on DEBUG_KERNEL && PREEMPTION && TRACE_IRQFLAGS_SUPPORT
+<<<<<<< HEAD
+=======
+	default y
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  If you say Y here then the kernel will use a debug variant of the
 	  commonly used smp_processor_id() function and will print warnings
 	  if kernel code uses it in a preemption-unsafe way. Also, the kernel
 	  will detect preemption count underflows.
 
+<<<<<<< HEAD
 	  This option has potential to introduce high runtime overhead,
 	  depending on workload as it triggers debugging routines for each
 	  this_cpu operation. It should only be used for debugging purposes.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 menu "Lock Debugging (spinlocks, mutexes, etc...)"
 
 config LOCK_DEBUGGING_SUPPORT
@@ -1402,7 +1551,11 @@ config LOCKDEP_STACK_TRACE_HASH_BITS
 	range 10 30
 	default 14
 	help
+<<<<<<< HEAD
 	  Try increasing this value if you need large STACK_TRACE_HASH_SIZE.
+=======
+	  Try increasing this value if you need large MAX_STACK_TRACE_ENTRIES.
+>>>>>>> b7ba80a49124 (Commit)
 
 config LOCKDEP_CIRCULAR_QUEUE_BITS
 	int "Bitsize for elements in circular_queue struct"
@@ -1490,6 +1643,7 @@ config CSD_LOCK_WAIT_DEBUG
 	  include the IPI handler function currently executing (if any)
 	  and relevant stack traces.
 
+<<<<<<< HEAD
 config CSD_LOCK_WAIT_DEBUG_DEFAULT
 	bool "Default csd_lock_wait() debugging on at boot time"
 	depends on CSD_LOCK_WAIT_DEBUG
@@ -1499,6 +1653,8 @@ config CSD_LOCK_WAIT_DEBUG_DEFAULT
 	  This option causes the csdlock_debug= kernel boot parameter to
 	  default to 1 (basic debugging) instead of 0 (no debugging).
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endmenu # lock debugging
 
 config TRACE_IRQFLAGS
@@ -1513,6 +1669,7 @@ config TRACE_IRQFLAGS_NMI
 	depends on TRACE_IRQFLAGS
 	depends on TRACE_IRQFLAGS_NMI_SUPPORT
 
+<<<<<<< HEAD
 config NMI_CHECK_CPU
 	bool "Debugging for CPUs failing to respond to backtrace requests"
 	depends on DEBUG_KERNEL
@@ -1524,6 +1681,8 @@ config NMI_CHECK_CPU
 	  might legitimately be failing to respond, for example, if it
 	  is offline of if ignore_nmis is set.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config DEBUG_IRQFLAGS
 	bool "Debug IRQ flag manipulation"
 	help
@@ -1716,6 +1875,7 @@ config LATENCYTOP
 	  Enable this option if you want to use the LatencyTOP tool
 	  to find out which userspace is blocking on what kernel operations.
 
+<<<<<<< HEAD
 config DEBUG_CGROUP_REF
 	bool "Disable inlining of cgroup css reference count functions"
 	depends on DEBUG_KERNEL
@@ -1726,6 +1886,8 @@ config DEBUG_CGROUP_REF
 	  Force cgroup css reference count functions to not be inlined so
 	  that they can be kprobed for debugging.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 source "kernel/trace/Kconfig"
 
 config PROVIDE_OHCI1394_DMA_INIT
@@ -1884,6 +2046,7 @@ config NETDEV_NOTIFIER_ERROR_INJECT
 	  If unsure, say N.
 
 config FUNCTION_ERROR_INJECTION
+<<<<<<< HEAD
 	bool "Fault-injections of functions"
 	depends on HAVE_FUNCTION_ERROR_INJECTION && KPROBES
 	help
@@ -1892,6 +2055,10 @@ config FUNCTION_ERROR_INJECTION
 	  value of these functions. This is useful to test error paths of code.
 
 	  If unsure, say N
+=======
+	def_bool y
+	depends on HAVE_FUNCTION_ERROR_INJECTION && KPROBES
+>>>>>>> b7ba80a49124 (Commit)
 
 config FAULT_INJECTION
 	bool "Fault-injection framework"
@@ -2051,6 +2218,7 @@ menuconfig RUNTIME_TESTING_MENU
 
 if RUNTIME_TESTING_MENU
 
+<<<<<<< HEAD
 config TEST_DHRY
 	tristate "Dhrystone benchmark test"
 	help
@@ -2086,6 +2254,8 @@ config TEST_DHRY
 
 	  If unsure, say N.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config LKDTM
 	tristate "Linux Kernel Dump Test Tool Module"
 	depends on DEBUG_FS
@@ -2157,7 +2327,10 @@ config KPROBES_SANITY_TEST
 	depends on DEBUG_KERNEL
 	depends on KPROBES
 	depends on KUNIT
+<<<<<<< HEAD
 	select STACKTRACE if ARCH_CORRECT_STACKTRACE_ON_KRETPROBE
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default KUNIT_ALL_TESTS
 	help
 	  This option provides for testing basic kprobes functionality on
@@ -2267,6 +2440,12 @@ config STRING_SELFTEST
 config TEST_STRING_HELPERS
 	tristate "Test functions located in the string_helpers module at runtime"
 
+<<<<<<< HEAD
+=======
+config TEST_STRSCPY
+	tristate "Test strscpy*() family of functions at runtime"
+
+>>>>>>> b7ba80a49124 (Commit)
 config TEST_KSTRTOX
 	tristate "Test kstrto*() family of functions at runtime"
 
@@ -2289,11 +2468,14 @@ config TEST_UUID
 config TEST_XARRAY
 	tristate "Test the XArray code at runtime"
 
+<<<<<<< HEAD
 config TEST_MAPLE_TREE
 	depends on DEBUG_KERNEL
 	select DEBUG_MAPLE_TREE
 	tristate "Test the Maple Tree code at runtime"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config TEST_RHASHTABLE
 	tristate "Perform selftest on resizable hash table"
 	help
@@ -2301,6 +2483,18 @@ config TEST_RHASHTABLE
 
 	  If unsure, say N.
 
+<<<<<<< HEAD
+=======
+config TEST_SIPHASH
+	tristate "Perform selftest on siphash functions"
+	help
+	  Enable this option to test the kernel's siphash (<linux/siphash.h>) hash
+	  functions on boot (or module load).
+
+	  This is intended to help people writing architecture-specific
+	  optimized versions.  If unsure, say N.
+
+>>>>>>> b7ba80a49124 (Commit)
 config TEST_IDA
 	tristate "Perform selftest on IDA functions"
 
@@ -2503,6 +2697,7 @@ config LIST_KUNIT_TEST
 
 	  If unsure, say N.
 
+<<<<<<< HEAD
 config HASHTABLE_KUNIT_TEST
 	tristate "KUnit Test for Kernel Hashtable structures" if !KUNIT_ALL_TESTS
 	depends on KUNIT
@@ -2516,6 +2711,8 @@ config HASHTABLE_KUNIT_TEST
 
 	  If unsure, say N.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config LINEAR_RANGES_TEST
 	tristate "KUnit test for linear_ranges"
 	depends on KUNIT
@@ -2586,6 +2783,7 @@ config MEMCPY_KUNIT_TEST
 
 	  If unsure, say N.
 
+<<<<<<< HEAD
 config MEMCPY_SLOW_KUNIT_TEST
 	bool "Include exhaustive memcpy tests"
 	depends on MEMCPY_KUNIT_TEST
@@ -2595,6 +2793,8 @@ config MEMCPY_SLOW_KUNIT_TEST
 	  and bit ranges. These can be very slow, so they are split out
 	  as a separate config, in case they need to be disabled.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config IS_SIGNED_TYPE_KUNIT_TEST
 	tristate "Test is_signed_type() macro" if !KUNIT_ALL_TESTS
 	depends on KUNIT
@@ -2631,6 +2831,7 @@ config STACKINIT_KUNIT_TEST
 	  CONFIG_GCC_PLUGIN_STRUCTLEAK, CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF,
 	  or CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL.
 
+<<<<<<< HEAD
 config FORTIFY_KUNIT_TEST
 	tristate "Test fortified str*() and mem*() function internals at runtime" if !KUNIT_ALL_TESTS
 	depends on KUNIT && FORTIFY_SOURCE
@@ -2640,6 +2841,8 @@ config FORTIFY_KUNIT_TEST
 	  by the str*() and mem*() family of functions. For testing runtime
 	  traps of FORTIFY_SOURCE, see LKDTM's "FORTIFY_*" tests.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config HW_BREAKPOINT_KUNIT_TEST
 	bool "Test hw_breakpoint constraints accounting" if !KUNIT_ALL_TESTS
 	depends on HAVE_HW_BREAKPOINT
@@ -2650,6 +2853,7 @@ config HW_BREAKPOINT_KUNIT_TEST
 
 	  If unsure, say N.
 
+<<<<<<< HEAD
 config STRSCPY_KUNIT_TEST
 	tristate "Test strscpy*() family of functions at runtime" if !KUNIT_ALL_TESTS
 	depends on KUNIT
@@ -2665,6 +2869,16 @@ config SIPHASH_KUNIT_TEST
 
 	  This is intended to help people writing architecture-specific
 	  optimized versions.  If unsure, say N.
+=======
+config FORTIFY_KUNIT_TEST
+	tristate "Test fortified str*() and mem*() function internals at runtime" if !KUNIT_ALL_TESTS
+	depends on KUNIT && FORTIFY_SOURCE
+	default KUNIT_ALL_TESTS
+	help
+	  Builds unit tests for checking internals of FORTIFY_SOURCE as used
+	  by the str*() and mem*() family of functions. For testing runtime
+	  traps of FORTIFY_SOURCE, see LKDTM's "FORTIFY_*" tests.
+>>>>>>> b7ba80a49124 (Commit)
 
 config TEST_UDELAY
 	tristate "udelay test driver"
@@ -2883,6 +3097,7 @@ config RUST_OVERFLOW_CHECKS
 
 	  If unsure, say Y.
 
+<<<<<<< HEAD
 config RUST_BUILD_ASSERT_ALLOW
 	bool "Allow unoptimized build-time assertions"
 	depends on RUST
@@ -2901,4 +3116,10 @@ config RUST_BUILD_ASSERT_ALLOW
 
 endmenu # "Rust"
 
+=======
+endmenu # "Rust"
+
+source "Documentation/Kconfig"
+
+>>>>>>> b7ba80a49124 (Commit)
 endmenu # Kernel hacking

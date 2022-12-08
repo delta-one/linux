@@ -92,6 +92,7 @@ struct bridge_mcast_stats {
 	struct br_mcast_stats mstats;
 	struct u64_stats_sync syncp;
 };
+<<<<<<< HEAD
 
 struct br_mdb_src_entry {
 	struct br_ip			addr;
@@ -109,6 +110,8 @@ struct br_mdb_config {
 	int				num_src_entries;
 	u8				rt_protocol;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 /* net_bridge_mcast_port must be always defined due to forwarding stubs */
@@ -126,8 +129,11 @@ struct net_bridge_mcast_port {
 	struct hlist_node		ip6_rlist;
 #endif /* IS_ENABLED(CONFIG_IPV6) */
 	unsigned char			multicast_router;
+<<<<<<< HEAD
 	u32				mdb_n_entries;
 	u32				mdb_max_entries;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_BRIDGE_IGMP_SNOOPING */
 };
 
@@ -270,8 +276,12 @@ enum {
 	BR_FDB_ADDED_BY_EXT_LEARN,
 	BR_FDB_OFFLOADED,
 	BR_FDB_NOTIFY,
+<<<<<<< HEAD
 	BR_FDB_NOTIFY_INACTIVE,
 	BR_FDB_LOCKED,
+=======
+	BR_FDB_NOTIFY_INACTIVE
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct net_bridge_fdb_key {
@@ -312,7 +322,10 @@ struct net_bridge_fdb_flush_desc {
 #define BR_SGRP_F_DELETE	BIT(0)
 #define BR_SGRP_F_SEND		BIT(1)
 #define BR_SGRP_F_INSTALLED	BIT(2)
+<<<<<<< HEAD
 #define BR_SGRP_F_USER_ADDED	BIT(3)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct net_bridge_mcast_gc {
 	struct hlist_node		gc_node;
@@ -831,7 +844,11 @@ int br_fdb_sync_static(struct net_bridge *br, struct net_bridge_port *p);
 void br_fdb_unsync_static(struct net_bridge *br, struct net_bridge_port *p);
 int br_fdb_external_learn_add(struct net_bridge *br, struct net_bridge_port *p,
 			      const unsigned char *addr, u16 vid,
+<<<<<<< HEAD
 			      bool locked, bool swdev_notify);
+=======
+			      bool swdev_notify);
+>>>>>>> b7ba80a49124 (Commit)
 int br_fdb_external_learn_del(struct net_bridge *br, struct net_bridge_port *p,
 			      const unsigned char *addr, u16 vid,
 			      bool swdev_notify);
@@ -954,6 +971,7 @@ br_mdb_ip_get(struct net_bridge *br, struct br_ip *dst);
 struct net_bridge_mdb_entry *
 br_multicast_new_group(struct net_bridge *br, struct br_ip *group);
 struct net_bridge_port_group *
+<<<<<<< HEAD
 br_multicast_new_port_group(struct net_bridge_port *port,
 			    const struct br_ip *group,
 			    struct net_bridge_port_group __rcu *next,
@@ -961,6 +979,12 @@ br_multicast_new_port_group(struct net_bridge_port *port,
 			    u8 filter_mode, u8 rt_protocol,
 			    struct netlink_ext_ack *extack);
 void br_multicast_del_port_group(struct net_bridge_port_group *p);
+=======
+br_multicast_new_port_group(struct net_bridge_port *port, struct br_ip *group,
+			    struct net_bridge_port_group __rcu *next,
+			    unsigned char flags, const unsigned char *src,
+			    u8 filter_mode, u8 rt_protocol);
+>>>>>>> b7ba80a49124 (Commit)
 int br_mdb_hash_init(struct net_bridge *br);
 void br_mdb_hash_fini(struct net_bridge *br);
 void br_mdb_notify(struct net_device *dev, struct net_bridge_mdb_entry *mp,
@@ -978,6 +1002,7 @@ void br_multicast_uninit_stats(struct net_bridge *br);
 void br_multicast_get_stats(const struct net_bridge *br,
 			    const struct net_bridge_port *p,
 			    struct br_mcast_stats *dest);
+<<<<<<< HEAD
 u32 br_multicast_ngroups_get(const struct net_bridge_mcast_port *pmctx);
 void br_multicast_ngroups_set_max(struct net_bridge_mcast_port *pmctx, u32 max);
 u32 br_multicast_ngroups_get_max(const struct net_bridge_mcast_port *pmctx);
@@ -987,6 +1012,10 @@ int br_mdb_del(struct net_device *dev, struct nlattr *tb[],
 	       struct netlink_ext_ack *extack);
 int br_mdb_dump(struct net_device *dev, struct sk_buff *skb,
 		struct netlink_callback *cb);
+=======
+void br_mdb_init(void);
+void br_mdb_uninit(void);
+>>>>>>> b7ba80a49124 (Commit)
 void br_multicast_host_join(const struct net_bridge_mcast *brmctx,
 			    struct net_bridge_mdb_entry *mp, bool notify);
 void br_multicast_host_leave(struct net_bridge_mdb_entry *mp, bool notify);
@@ -996,10 +1025,13 @@ void br_multicast_sg_add_exclude_ports(struct net_bridge_mdb_entry *star_mp,
 				       struct net_bridge_port_group *sg);
 struct net_bridge_group_src *
 br_multicast_find_group_src(struct net_bridge_port_group *pg, struct br_ip *ip);
+<<<<<<< HEAD
 struct net_bridge_group_src *
 br_multicast_new_group_src(struct net_bridge_port_group *pg,
 			   struct br_ip *src_ip);
 void __br_multicast_del_group_src(struct net_bridge_group_src *src);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void br_multicast_del_group_src(struct net_bridge_group_src *src,
 				bool fastleave);
 void br_multicast_ctx_init(struct net_bridge *br,
@@ -1378,6 +1410,7 @@ static inline bool br_multicast_querier_exists(struct net_bridge_mcast *brmctx,
 	return false;
 }
 
+<<<<<<< HEAD
 static inline int br_mdb_add(struct net_device *dev, struct nlattr *tb[],
 			     u16 nlmsg_flags, struct netlink_ext_ack *extack)
 {
@@ -1394,6 +1427,14 @@ static inline int br_mdb_dump(struct net_device *dev, struct sk_buff *skb,
 			      struct netlink_callback *cb)
 {
 	return 0;
+=======
+static inline void br_mdb_init(void)
+{
+}
+
+static inline void br_mdb_uninit(void)
+{
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline int br_mdb_hash_init(struct net_bridge *br)
@@ -1778,8 +1819,12 @@ static inline u16 br_vlan_flags(const struct net_bridge_vlan *v, u16 pvid)
 #ifdef CONFIG_BRIDGE_VLAN_FILTERING
 bool br_vlan_opts_eq_range(const struct net_bridge_vlan *v_curr,
 			   const struct net_bridge_vlan *range_end);
+<<<<<<< HEAD
 bool br_vlan_opts_fill(struct sk_buff *skb, const struct net_bridge_vlan *v,
 		       const struct net_bridge_port *p);
+=======
+bool br_vlan_opts_fill(struct sk_buff *skb, const struct net_bridge_vlan *v);
+>>>>>>> b7ba80a49124 (Commit)
 size_t br_vlan_opts_nl_size(void);
 int br_vlan_process_options(const struct net_bridge *br,
 			    const struct net_bridge_port *p,

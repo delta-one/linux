@@ -655,7 +655,11 @@ struct page *get_signal_page(void)
 		 PAGE_SIZE / sizeof(u32));
 
 	/* Give the signal return code some randomness */
+<<<<<<< HEAD
 	offset = 0x200 + (get_random_u16() & 0x7fc);
+=======
+	offset = 0x200 + (get_random_int() & 0x7fc);
+>>>>>>> b7ba80a49124 (Commit)
 	signal_return_offset = offset;
 
 	/* Copy signal return handlers into the page */
@@ -681,7 +685,11 @@ asmlinkage void do_rseq_syscall(struct pt_regs *regs)
  */
 static_assert(NSIGILL	== 11);
 static_assert(NSIGFPE	== 15);
+<<<<<<< HEAD
 static_assert(NSIGSEGV	== 10);
+=======
+static_assert(NSIGSEGV	== 9);
+>>>>>>> b7ba80a49124 (Commit)
 static_assert(NSIGBUS	== 5);
 static_assert(NSIGTRAP	== 6);
 static_assert(NSIGCHLD	== 6);

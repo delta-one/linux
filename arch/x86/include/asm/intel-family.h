@@ -107,11 +107,14 @@
 
 #define INTEL_FAM6_SAPPHIRERAPIDS_X	0x8F	/* Golden Cove */
 
+<<<<<<< HEAD
 #define INTEL_FAM6_EMERALDRAPIDS_X	0xCF
 
 #define INTEL_FAM6_GRANITERAPIDS_X	0xAD
 #define INTEL_FAM6_GRANITERAPIDS_D	0xAE
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define INTEL_FAM6_ALDERLAKE		0x97	/* Golden Cove / Gracemont */
 #define INTEL_FAM6_ALDERLAKE_L		0x9A	/* Golden Cove / Gracemont */
 #define INTEL_FAM6_ALDERLAKE_N		0xBE
@@ -123,9 +126,13 @@
 #define INTEL_FAM6_METEORLAKE		0xAC
 #define INTEL_FAM6_METEORLAKE_L		0xAA
 
+<<<<<<< HEAD
 #define INTEL_FAM6_LUNARLAKE_M		0xBD
 
 /* "Small Core" Processors (Atom/E-Core) */
+=======
+/* "Small Core" Processors (Atom) */
+>>>>>>> b7ba80a49124 (Commit)
 
 #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
 #define INTEL_FAM6_ATOM_BONNELL_MID	0x26 /* Silverthorne, Lincroft */
@@ -152,10 +159,13 @@
 #define INTEL_FAM6_ATOM_TREMONT		0x96 /* Elkhart Lake */
 #define INTEL_FAM6_ATOM_TREMONT_L	0x9C /* Jasper Lake */
 
+<<<<<<< HEAD
 #define INTEL_FAM6_SIERRAFOREST_X	0xAF
 
 #define INTEL_FAM6_GRANDRIDGE		0xB6
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Xeon Phi */
 
 #define INTEL_FAM6_XEON_PHI_KNL		0x57 /* Knights Landing */

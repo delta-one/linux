@@ -319,7 +319,11 @@ static int mtk_iommu_v1_attach_device(struct iommu_domain *domain, struct device
 	return 0;
 }
 
+<<<<<<< HEAD
 static void mtk_iommu_v1_set_platform_dma(struct device *dev)
+=======
+static void mtk_iommu_v1_detach_device(struct iommu_domain *domain, struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mtk_iommu_v1_data *data = dev_iommu_priv_get(dev);
 
@@ -327,14 +331,22 @@ static void mtk_iommu_v1_set_platform_dma(struct device *dev)
 }
 
 static int mtk_iommu_v1_map(struct iommu_domain *domain, unsigned long iova,
+<<<<<<< HEAD
 			    phys_addr_t paddr, size_t pgsize, size_t pgcount,
 			    int prot, gfp_t gfp, size_t *mapped)
 {
 	struct mtk_iommu_v1_domain *dom = to_mtk_domain(domain);
+=======
+			    phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+{
+	struct mtk_iommu_v1_domain *dom = to_mtk_domain(domain);
+	unsigned int page_num = size >> MT2701_IOMMU_PAGE_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flags;
 	unsigned int i;
 	u32 *pgt_base_iova = dom->pgt_va + (iova  >> MT2701_IOMMU_PAGE_SHIFT);
 	u32 pabase = (u32)paddr;
+<<<<<<< HEAD
 
 	spin_lock_irqsave(&dom->pgtlock, flags);
 	for (i = 0; i < pgcount; i++) {
@@ -342,10 +354,24 @@ static int mtk_iommu_v1_map(struct iommu_domain *domain, unsigned long iova,
 			break;
 		pgt_base_iova[i] = pabase | F_DESC_VALID | F_DESC_NONSEC;
 		pabase += MT2701_IOMMU_PAGE_SIZE;
+=======
+	int map_size = 0;
+
+	spin_lock_irqsave(&dom->pgtlock, flags);
+	for (i = 0; i < page_num; i++) {
+		if (pgt_base_iova[i]) {
+			memset(pgt_base_iova, 0, i * sizeof(u32));
+			break;
+		}
+		pgt_base_iova[i] = pabase | F_DESC_VALID | F_DESC_NONSEC;
+		pabase += MT2701_IOMMU_PAGE_SIZE;
+		map_size += MT2701_IOMMU_PAGE_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	spin_unlock_irqrestore(&dom->pgtlock, flags);
 
+<<<<<<< HEAD
 	*mapped = i * MT2701_IOMMU_PAGE_SIZE;
 	mtk_iommu_v1_tlb_flush_range(dom->data, iova, *mapped);
 
@@ -355,14 +381,30 @@ static int mtk_iommu_v1_map(struct iommu_domain *domain, unsigned long iova,
 static size_t mtk_iommu_v1_unmap(struct iommu_domain *domain, unsigned long iova,
 				 size_t pgsize, size_t pgcount,
 				 struct iommu_iotlb_gather *gather)
+=======
+	mtk_iommu_v1_tlb_flush_range(dom->data, iova, size);
+
+	return map_size == size ? 0 : -EEXIST;
+}
+
+static size_t mtk_iommu_v1_unmap(struct iommu_domain *domain, unsigned long iova,
+				 size_t size, struct iommu_iotlb_gather *gather)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mtk_iommu_v1_domain *dom = to_mtk_domain(domain);
 	unsigned long flags;
 	u32 *pgt_base_iova = dom->pgt_va + (iova  >> MT2701_IOMMU_PAGE_SHIFT);
+<<<<<<< HEAD
 	size_t size = pgcount * MT2701_IOMMU_PAGE_SIZE;
 
 	spin_lock_irqsave(&dom->pgtlock, flags);
 	memset(pgt_base_iova, 0, pgcount * sizeof(u32));
+=======
+	unsigned int page_num = size >> MT2701_IOMMU_PAGE_SHIFT;
+
+	spin_lock_irqsave(&dom->pgtlock, flags);
+	memset(pgt_base_iova, 0, page_num * sizeof(u32));
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irqrestore(&dom->pgtlock, flags);
 
 	mtk_iommu_v1_tlb_flush_range(dom->data, iova, size);
@@ -584,6 +626,7 @@ static const struct iommu_ops mtk_iommu_v1_ops = {
 	.release_device	= mtk_iommu_v1_release_device,
 	.def_domain_type = mtk_iommu_v1_def_domain_type,
 	.device_group	= generic_device_group,
+<<<<<<< HEAD
 	.pgsize_bitmap	= MT2701_IOMMU_PAGE_SIZE,
 	.set_platform_dma_ops = mtk_iommu_v1_set_platform_dma,
 	.owner          = THIS_MODULE,
@@ -591,6 +634,15 @@ static const struct iommu_ops mtk_iommu_v1_ops = {
 		.attach_dev	= mtk_iommu_v1_attach_device,
 		.map_pages	= mtk_iommu_v1_map,
 		.unmap_pages	= mtk_iommu_v1_unmap,
+=======
+	.pgsize_bitmap	= ~0UL << MT2701_IOMMU_PAGE_SHIFT,
+	.owner          = THIS_MODULE,
+	.default_domain_ops = &(const struct iommu_domain_ops) {
+		.attach_dev	= mtk_iommu_v1_attach_device,
+		.detach_dev	= mtk_iommu_v1_detach_device,
+		.map		= mtk_iommu_v1_map,
+		.unmap		= mtk_iommu_v1_unmap,
+>>>>>>> b7ba80a49124 (Commit)
 		.iova_to_phys	= mtk_iommu_v1_iova_to_phys,
 		.free		= mtk_iommu_v1_domain_free,
 	}
@@ -683,7 +735,11 @@ static int mtk_iommu_v1_probe(struct platform_device *pdev)
 	ret = iommu_device_sysfs_add(&data->iommu, &pdev->dev, NULL,
 				     dev_name(&pdev->dev));
 	if (ret)
+<<<<<<< HEAD
 		goto out_clk_unprepare;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = iommu_device_register(&data->iommu, &mtk_iommu_v1_ops, dev);
 	if (ret)
@@ -698,8 +754,11 @@ out_dev_unreg:
 	iommu_device_unregister(&data->iommu);
 out_sysfs_remove:
 	iommu_device_sysfs_remove(&data->iommu);
+<<<<<<< HEAD
 out_clk_unprepare:
 	clk_disable_unprepare(data->bclk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

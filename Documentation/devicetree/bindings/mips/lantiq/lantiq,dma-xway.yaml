@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/mips/lantiq/lantiq,dma-xway.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Lantiq Xway SoCs DMA Controller
+=======
+title: Lantiq Xway SoCs DMA Controller DT bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - John Crispin <john@phrozen.org>

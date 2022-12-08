@@ -27,8 +27,11 @@
 #define ACPI_SIG_AGDI           "AGDI"	/* Arm Generic Diagnostic Dump and Reset Device Interface */
 #define ACPI_SIG_APMT           "APMT"	/* Arm Performance Monitoring Unit table */
 #define ACPI_SIG_BDAT           "BDAT"	/* BIOS Data ACPI Table */
+<<<<<<< HEAD
 #define ACPI_SIG_CCEL           "CCEL"	/* CC Event Log Table */
 #define ACPI_SIG_CDAT           "CDAT"	/* Coherent Device Attribute Table */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ACPI_SIG_IORT           "IORT"	/* IO Remapping Table */
 #define ACPI_SIG_IVRS           "IVRS"	/* I/O Virtualization Reporting Structure */
 #define ACPI_SIG_LPIT           "LPIT"	/* Low Power Idle Table */
@@ -36,6 +39,10 @@
 #define ACPI_SIG_MCFG           "MCFG"	/* PCI Memory Mapped Configuration table */
 #define ACPI_SIG_MCHI           "MCHI"	/* Management Controller Host Interface table */
 #define ACPI_SIG_MPST           "MPST"	/* Memory Power State Table */
+<<<<<<< HEAD
+=======
+#define ACPI_SIG_MSCT           "MSCT"	/* Maximum System Characteristics Table */
+>>>>>>> b7ba80a49124 (Commit)
 #define ACPI_SIG_MSDM           "MSDM"	/* Microsoft Data Management Table */
 #define ACPI_SIG_NFIT           "NFIT"	/* NVDIMM Firmware Interface Table */
 #define ACPI_SIG_NHLT           "NHLT"	/* Non HD Audio Link Table */
@@ -355,6 +362,7 @@ struct acpi_table_bdat {
 
 /*******************************************************************************
  *
+<<<<<<< HEAD
  * CCEL - CC-Event Log
  *        From: "Guest-Host-Communication Interface (GHCI) for Intel
  *        Trust Domain Extensions (Intel TDX)". Feb 2022
@@ -376,6 +384,12 @@ struct acpi_table_ccel {
  *
  * Conforms to "IO Remapping Table System Software on ARM Platforms",
  * Document number: ARM DEN 0049E.e, Sep 2022
+=======
+ * IORT - IO Remapping Table
+ *
+ * Conforms to "IO Remapping Table System Software on ARM Platforms",
+ * Document number: ARM DEN 0049E.d, Feb 2022
+>>>>>>> b7ba80a49124 (Commit)
  *
  ******************************************************************************/
 
@@ -546,7 +560,10 @@ struct acpi_iort_smmu_v3 {
 #define ACPI_IORT_SMMU_V3_COHACC_OVERRIDE   (1)
 #define ACPI_IORT_SMMU_V3_HTTU_OVERRIDE     (3<<1)
 #define ACPI_IORT_SMMU_V3_PXM_VALID         (1<<3)
+<<<<<<< HEAD
 #define ACPI_IORT_SMMU_V3_DEVICEID_VALID    (1<<4)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct acpi_iort_pmcg {
 	u64 page0_base_address;
@@ -884,6 +901,7 @@ enum acpi_madt_type {
 	ACPI_MADT_TYPE_GENERIC_REDISTRIBUTOR = 14,
 	ACPI_MADT_TYPE_GENERIC_TRANSLATOR = 15,
 	ACPI_MADT_TYPE_MULTIPROC_WAKEUP = 16,
+<<<<<<< HEAD
 	ACPI_MADT_TYPE_CORE_PIC = 17,
 	ACPI_MADT_TYPE_LIO_PIC = 18,
 	ACPI_MADT_TYPE_HT_PIC = 19,
@@ -892,6 +910,9 @@ enum acpi_madt_type {
 	ACPI_MADT_TYPE_BIO_PIC = 22,
 	ACPI_MADT_TYPE_LPC_PIC = 23,
 	ACPI_MADT_TYPE_RESERVED = 24,	/* 24 to 0x7F are reserved */
+=======
+	ACPI_MADT_TYPE_RESERVED = 17,	/* 17 to 0x7F are reserved */
+>>>>>>> b7ba80a49124 (Commit)
 	ACPI_MADT_TYPE_OEM_RESERVED = 0x80	/* 0x80 to 0xFF are reserved for OEM use */
 };
 
@@ -1122,6 +1143,7 @@ struct acpi_madt_multiproc_wakeup_mailbox {
 
 #define ACPI_MP_WAKE_COMMAND_WAKEUP    1
 
+<<<<<<< HEAD
 /* 17: CPU Core Interrupt Controller (ACPI 6.5) */
 
 struct acpi_madt_core_pic {
@@ -1251,6 +1273,9 @@ enum acpi_madt_lpc_pic_version {
 };
 
 /* 80: OEM data */
+=======
+/* 17: OEM data */
+>>>>>>> b7ba80a49124 (Commit)
 
 struct acpi_madt_oem_data {
 	u8 oem_data[0];

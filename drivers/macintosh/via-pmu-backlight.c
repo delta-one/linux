@@ -71,7 +71,16 @@ static int pmu_backlight_get_level_brightness(int level)
 static int __pmu_backlight_update_status(struct backlight_device *bd)
 {
 	struct adb_request req;
+<<<<<<< HEAD
 	int level = backlight_get_brightness(bd);
+=======
+	int level = bd->props.brightness;
+
+
+	if (bd->props.power != FB_BLANK_UNBLANK ||
+	    bd->props.fb_blank != FB_BLANK_UNBLANK)
+		level = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (level > 0) {
 		int pmulevel = pmu_backlight_get_level_brightness(level);

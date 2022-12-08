@@ -30,7 +30,10 @@ config IOSCHED_BFQ
 config BFQ_GROUP_IOSCHED
        bool "BFQ hierarchical scheduling support"
        depends on IOSCHED_BFQ && BLK_CGROUP
+<<<<<<< HEAD
        default y
+=======
+>>>>>>> b7ba80a49124 (Commit)
        select BLK_CGROUP_RWSTAT
 	help
 

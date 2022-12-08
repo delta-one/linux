@@ -88,17 +88,36 @@ static int ravb_ptp_update_compare(struct ravb_private *priv, u32 ns)
 }
 
 /* PTP clock operations */
+<<<<<<< HEAD
 static int ravb_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
+=======
+static int ravb_ptp_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ravb_private *priv = container_of(ptp, struct ravb_private,
 						 ptp.info);
 	struct net_device *ndev = priv->ndev;
 	unsigned long flags;
+<<<<<<< HEAD
 	u32 addend;
 	u32 gccr;
 
 	addend = (u32)adjust_by_scaled_ppm(priv->ptp.default_addend,
 					   scaled_ppm);
+=======
+	u32 diff, addend;
+	bool neg_adj = false;
+	u32 gccr;
+
+	if (ppb < 0) {
+		neg_adj = true;
+		ppb = -ppb;
+	}
+	addend = priv->ptp.default_addend;
+	diff = div_u64((u64)addend * ppb, NSEC_PER_SEC);
+
+	addend = neg_adj ? addend - diff : addend + diff;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irqsave(&priv->lock, flags);
 
@@ -288,7 +307,11 @@ static const struct ptp_clock_info ravb_ptp_info = {
 	.max_adj	= 50000000,
 	.n_ext_ts	= N_EXT_TS,
 	.n_per_out	= N_PER_OUT,
+<<<<<<< HEAD
 	.adjfine	= ravb_ptp_adjfine,
+=======
+	.adjfreq	= ravb_ptp_adjfreq,
+>>>>>>> b7ba80a49124 (Commit)
 	.adjtime	= ravb_ptp_adjtime,
 	.gettime64	= ravb_ptp_gettime64,
 	.settime64	= ravb_ptp_settime64,

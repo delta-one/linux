@@ -18,15 +18,21 @@ static const unsigned int node_fractions[] = {
 	 625, /* 1/16 */
 };
 
+<<<<<<< HEAD
 static inline const char * const get_memblock_alloc_nid_name(int flags)
 {
 	if (flags & TEST_F_EXACT)
 		return "memblock_alloc_exact_nid_raw";
+=======
+static inline const char * const get_memblock_alloc_try_nid_name(int flags)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	if (flags & TEST_F_RAW)
 		return "memblock_alloc_try_nid_raw";
 	return "memblock_alloc_try_nid";
 }
 
+<<<<<<< HEAD
 static inline void *run_memblock_alloc_nid(phys_addr_t size,
 					   phys_addr_t align,
 					   phys_addr_t min_addr,
@@ -41,6 +47,13 @@ static inline void *run_memblock_alloc_nid(phys_addr_t size,
 	if (alloc_nid_test_flags & TEST_F_EXACT)
 		return memblock_alloc_exact_nid_raw(size, align, min_addr,
 						    max_addr, nid);
+=======
+static inline void *run_memblock_alloc_try_nid(phys_addr_t size,
+					       phys_addr_t align,
+					       phys_addr_t min_addr,
+					       phys_addr_t max_addr, int nid)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	if (alloc_nid_test_flags & TEST_F_RAW)
 		return memblock_alloc_try_nid_raw(size, align, min_addr,
 						  max_addr, nid);
@@ -61,7 +74,11 @@ static inline void *run_memblock_alloc_nid(phys_addr_t size,
  *
  * Expect to allocate a region that ends at max_addr.
  */
+<<<<<<< HEAD
 static int alloc_nid_top_down_simple_check(void)
+=======
+static int alloc_try_nid_top_down_simple_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn = &memblock.reserved.regions[0];
 	void *allocated_ptr = NULL;
@@ -76,9 +93,15 @@ static int alloc_nid_top_down_simple_check(void)
 	min_addr = memblock_start_of_DRAM() + SMP_CACHE_BYTES * 2;
 	max_addr = min_addr + SZ_512;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 	rgn_end = rgn->base + rgn->size;
 
 	ASSERT_NE(allocated_ptr, NULL);
@@ -113,7 +136,11 @@ static int alloc_nid_top_down_simple_check(void)
  *
  * Expect to allocate an aligned region that ends before max_addr.
  */
+<<<<<<< HEAD
 static int alloc_nid_top_down_end_misaligned_check(void)
+=======
+static int alloc_try_nid_top_down_end_misaligned_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn = &memblock.reserved.regions[0];
 	void *allocated_ptr = NULL;
@@ -129,9 +156,15 @@ static int alloc_nid_top_down_end_misaligned_check(void)
 	min_addr = memblock_start_of_DRAM() + SMP_CACHE_BYTES * 2;
 	max_addr = min_addr + SZ_512 + misalign;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 	rgn_end = rgn->base + rgn->size;
 
 	ASSERT_NE(allocated_ptr, NULL);
@@ -164,7 +197,11 @@ static int alloc_nid_top_down_end_misaligned_check(void)
  * Expect to allocate a region that starts at min_addr and ends at
  * max_addr, given that min_addr is aligned.
  */
+<<<<<<< HEAD
 static int alloc_nid_exact_address_generic_check(void)
+=======
+static int alloc_try_nid_exact_address_generic_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn = &memblock.reserved.regions[0];
 	void *allocated_ptr = NULL;
@@ -179,9 +216,15 @@ static int alloc_nid_exact_address_generic_check(void)
 	min_addr = memblock_start_of_DRAM() + SMP_CACHE_BYTES;
 	max_addr = min_addr + size;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 	rgn_end = rgn->base + rgn->size;
 
 	ASSERT_NE(allocated_ptr, NULL);
@@ -216,7 +259,11 @@ static int alloc_nid_exact_address_generic_check(void)
  * Expect to drop the lower limit and allocate a memory region which
  * ends at max_addr (if the address is aligned).
  */
+<<<<<<< HEAD
 static int alloc_nid_top_down_narrow_range_check(void)
+=======
+static int alloc_try_nid_top_down_narrow_range_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn = &memblock.reserved.regions[0];
 	void *allocated_ptr = NULL;
@@ -230,9 +277,15 @@ static int alloc_nid_top_down_narrow_range_check(void)
 	min_addr = memblock_start_of_DRAM() + SZ_512;
 	max_addr = min_addr + SMP_CACHE_BYTES;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -268,7 +321,11 @@ static int alloc_nid_top_down_narrow_range_check(void)
  *
  * Expect no allocation to happen.
  */
+<<<<<<< HEAD
 static int alloc_nid_low_max_generic_check(void)
+=======
+static int alloc_try_nid_low_max_generic_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	void *allocated_ptr = NULL;
 	phys_addr_t size = SZ_1K;
@@ -281,9 +338,15 @@ static int alloc_nid_low_max_generic_check(void)
 	min_addr = memblock_start_of_DRAM();
 	max_addr = min_addr + SMP_CACHE_BYTES;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_EQ(allocated_ptr, NULL);
 
@@ -306,7 +369,11 @@ static int alloc_nid_low_max_generic_check(void)
  *
  * Expect a merge of both regions. Only the region size gets updated.
  */
+<<<<<<< HEAD
 static int alloc_nid_min_reserved_generic_check(void)
+=======
+static int alloc_try_nid_min_reserved_generic_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn = &memblock.reserved.regions[0];
 	void *allocated_ptr = NULL;
@@ -326,9 +393,15 @@ static int alloc_nid_min_reserved_generic_check(void)
 
 	memblock_reserve(reserved_base, r1_size);
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(r2_size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(r2_size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, r2_size, alloc_nid_test_flags);
@@ -358,7 +431,11 @@ static int alloc_nid_min_reserved_generic_check(void)
  *
  * Expect a merge of regions. Only the region size gets updated.
  */
+<<<<<<< HEAD
 static int alloc_nid_max_reserved_generic_check(void)
+=======
+static int alloc_try_nid_max_reserved_generic_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn = &memblock.reserved.regions[0];
 	void *allocated_ptr = NULL;
@@ -376,9 +453,15 @@ static int alloc_nid_max_reserved_generic_check(void)
 
 	memblock_reserve(max_addr, r1_size);
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(r2_size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(r2_size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, r2_size, alloc_nid_test_flags);
@@ -411,7 +494,11 @@ static int alloc_nid_max_reserved_generic_check(void)
  * updated. The total size field gets updated.
  */
 
+<<<<<<< HEAD
 static int alloc_nid_top_down_reserved_with_space_check(void)
+=======
+static int alloc_try_nid_top_down_reserved_with_space_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn1 = &memblock.reserved.regions[1];
 	struct memblock_region *rgn2 = &memblock.reserved.regions[0];
@@ -439,9 +526,15 @@ static int alloc_nid_top_down_reserved_with_space_check(void)
 	memblock_reserve(r1.base, r1.size);
 	memblock_reserve(r2.base, r2.size);
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(r3_size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(r3_size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, r3_size, alloc_nid_test_flags);
@@ -476,7 +569,11 @@ static int alloc_nid_top_down_reserved_with_space_check(void)
  * Expect to merge all of the regions into one. The region counter and total
  * size fields get updated.
  */
+<<<<<<< HEAD
 static int alloc_nid_reserved_full_merge_generic_check(void)
+=======
+static int alloc_try_nid_reserved_full_merge_generic_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn = &memblock.reserved.regions[0];
 	void *allocated_ptr = NULL;
@@ -502,9 +599,15 @@ static int alloc_nid_reserved_full_merge_generic_check(void)
 	memblock_reserve(r1.base, r1.size);
 	memblock_reserve(r2.base, r2.size);
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(r3_size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(r3_size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, r3_size, alloc_nid_test_flags);
@@ -538,7 +641,11 @@ static int alloc_nid_reserved_full_merge_generic_check(void)
  * Expect to merge the new region with r2. The second region does not get
  * updated. The total size counter gets updated.
  */
+<<<<<<< HEAD
 static int alloc_nid_top_down_reserved_no_space_check(void)
+=======
+static int alloc_try_nid_top_down_reserved_no_space_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn1 = &memblock.reserved.regions[1];
 	struct memblock_region *rgn2 = &memblock.reserved.regions[0];
@@ -566,9 +673,15 @@ static int alloc_nid_top_down_reserved_no_space_check(void)
 	memblock_reserve(r1.base, r1.size);
 	memblock_reserve(r2.base, r2.size);
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(r3_size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(r3_size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, r3_size, alloc_nid_test_flags);
@@ -607,7 +720,11 @@ static int alloc_nid_top_down_reserved_no_space_check(void)
  * Expect no allocation to happen.
  */
 
+<<<<<<< HEAD
 static int alloc_nid_reserved_all_generic_check(void)
+=======
+static int alloc_try_nid_reserved_all_generic_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	void *allocated_ptr = NULL;
 	struct region r1, r2;
@@ -631,9 +748,15 @@ static int alloc_nid_reserved_all_generic_check(void)
 	memblock_reserve(r1.base, r1.size);
 	memblock_reserve(r2.base, r2.size);
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(r3_size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(r3_size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_EQ(allocated_ptr, NULL);
 
@@ -647,7 +770,11 @@ static int alloc_nid_reserved_all_generic_check(void)
  * bigger than the end address of the available memory. Expect to allocate
  * a region that ends before the end of the memory.
  */
+<<<<<<< HEAD
 static int alloc_nid_top_down_cap_max_check(void)
+=======
+static int alloc_try_nid_top_down_cap_max_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn = &memblock.reserved.regions[0];
 	void *allocated_ptr = NULL;
@@ -661,9 +788,15 @@ static int alloc_nid_top_down_cap_max_check(void)
 	min_addr = memblock_end_of_DRAM() - SZ_1K;
 	max_addr = memblock_end_of_DRAM() + SZ_256;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -684,7 +817,11 @@ static int alloc_nid_top_down_cap_max_check(void)
  * smaller than the start address of the available memory. Expect to allocate
  * a region that ends before the end of the memory.
  */
+<<<<<<< HEAD
 static int alloc_nid_top_down_cap_min_check(void)
+=======
+static int alloc_try_nid_top_down_cap_min_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn = &memblock.reserved.regions[0];
 	void *allocated_ptr = NULL;
@@ -698,9 +835,15 @@ static int alloc_nid_top_down_cap_min_check(void)
 	min_addr = memblock_start_of_DRAM() - SZ_256;
 	max_addr = memblock_end_of_DRAM();
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -730,7 +873,11 @@ static int alloc_nid_top_down_cap_min_check(void)
  *
  * Expect to allocate a region that ends before max_addr.
  */
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_simple_check(void)
+=======
+static int alloc_try_nid_bottom_up_simple_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn = &memblock.reserved.regions[0];
 	void *allocated_ptr = NULL;
@@ -745,9 +892,15 @@ static int alloc_nid_bottom_up_simple_check(void)
 	min_addr = memblock_start_of_DRAM() + SMP_CACHE_BYTES * 2;
 	max_addr = min_addr + SZ_512;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 	rgn_end = rgn->base + rgn->size;
 
 	ASSERT_NE(allocated_ptr, NULL);
@@ -782,7 +935,11 @@ static int alloc_nid_bottom_up_simple_check(void)
  *
  * Expect to allocate an aligned region that ends before max_addr.
  */
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_start_misaligned_check(void)
+=======
+static int alloc_try_nid_bottom_up_start_misaligned_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn = &memblock.reserved.regions[0];
 	void *allocated_ptr = NULL;
@@ -798,9 +955,15 @@ static int alloc_nid_bottom_up_start_misaligned_check(void)
 	min_addr = memblock_start_of_DRAM() + misalign;
 	max_addr = min_addr + SZ_512;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 	rgn_end = rgn->base + rgn->size;
 
 	ASSERT_NE(allocated_ptr, NULL);
@@ -835,7 +998,11 @@ static int alloc_nid_bottom_up_start_misaligned_check(void)
  * Expect to drop the lower limit and allocate a memory region which
  * starts at the beginning of the available memory.
  */
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_narrow_range_check(void)
+=======
+static int alloc_try_nid_bottom_up_narrow_range_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn = &memblock.reserved.regions[0];
 	void *allocated_ptr = NULL;
@@ -849,9 +1016,15 @@ static int alloc_nid_bottom_up_narrow_range_check(void)
 	min_addr = memblock_start_of_DRAM() + SZ_512;
 	max_addr = min_addr + SMP_CACHE_BYTES;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -884,7 +1057,11 @@ static int alloc_nid_bottom_up_narrow_range_check(void)
  * updated. The total size field gets updated.
  */
 
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_reserved_with_space_check(void)
+=======
+static int alloc_try_nid_bottom_up_reserved_with_space_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn1 = &memblock.reserved.regions[1];
 	struct memblock_region *rgn2 = &memblock.reserved.regions[0];
@@ -912,9 +1089,15 @@ static int alloc_nid_bottom_up_reserved_with_space_check(void)
 	memblock_reserve(r1.base, r1.size);
 	memblock_reserve(r2.base, r2.size);
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(r3_size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(r3_size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, r3_size, alloc_nid_test_flags);
@@ -953,7 +1136,11 @@ static int alloc_nid_bottom_up_reserved_with_space_check(void)
  * Other regions are not modified.
  */
 
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_reserved_no_space_check(void)
+=======
+static int alloc_try_nid_bottom_up_reserved_no_space_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn1 = &memblock.reserved.regions[2];
 	struct memblock_region *rgn2 = &memblock.reserved.regions[1];
@@ -982,9 +1169,15 @@ static int alloc_nid_bottom_up_reserved_no_space_check(void)
 	memblock_reserve(r1.base, r1.size);
 	memblock_reserve(r2.base, r2.size);
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(r3_size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(r3_size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, r3_size, alloc_nid_test_flags);
@@ -1011,7 +1204,11 @@ static int alloc_nid_bottom_up_reserved_no_space_check(void)
  * bigger than the end address of the available memory. Expect to allocate
  * a region that starts at the min_addr.
  */
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_cap_max_check(void)
+=======
+static int alloc_try_nid_bottom_up_cap_max_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn = &memblock.reserved.regions[0];
 	void *allocated_ptr = NULL;
@@ -1025,9 +1222,15 @@ static int alloc_nid_bottom_up_cap_max_check(void)
 	min_addr = memblock_start_of_DRAM() + SZ_1K;
 	max_addr = memblock_end_of_DRAM() + SZ_256;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -1048,7 +1251,11 @@ static int alloc_nid_bottom_up_cap_max_check(void)
  * smaller than the start address of the available memory. Expect to allocate
  * a region at the beginning of the available memory.
  */
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_cap_min_check(void)
+=======
+static int alloc_try_nid_bottom_up_cap_min_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct memblock_region *rgn = &memblock.reserved.regions[0];
 	void *allocated_ptr = NULL;
@@ -1062,9 +1269,15 @@ static int alloc_nid_bottom_up_cap_min_check(void)
 	min_addr = memblock_start_of_DRAM();
 	max_addr = memblock_end_of_DRAM() - SZ_256;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -1081,6 +1294,7 @@ static int alloc_nid_bottom_up_cap_min_check(void)
 }
 
 /* Test case wrappers for range tests */
+<<<<<<< HEAD
 static int alloc_nid_simple_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -1088,10 +1302,20 @@ static int alloc_nid_simple_check(void)
 	alloc_nid_top_down_simple_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_simple_check();
+=======
+static int alloc_try_nid_simple_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_simple_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_simple_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_misaligned_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -1099,10 +1323,20 @@ static int alloc_nid_misaligned_check(void)
 	alloc_nid_top_down_end_misaligned_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_start_misaligned_check();
+=======
+static int alloc_try_nid_misaligned_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_end_misaligned_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_start_misaligned_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_narrow_range_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -1110,10 +1344,20 @@ static int alloc_nid_narrow_range_check(void)
 	alloc_nid_top_down_narrow_range_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_narrow_range_check();
+=======
+static int alloc_try_nid_narrow_range_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_narrow_range_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_narrow_range_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_reserved_with_space_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -1121,10 +1365,20 @@ static int alloc_nid_reserved_with_space_check(void)
 	alloc_nid_top_down_reserved_with_space_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_reserved_with_space_check();
+=======
+static int alloc_try_nid_reserved_with_space_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_reserved_with_space_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_reserved_with_space_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_reserved_no_space_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -1132,10 +1386,20 @@ static int alloc_nid_reserved_no_space_check(void)
 	alloc_nid_top_down_reserved_no_space_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_reserved_no_space_check();
+=======
+static int alloc_try_nid_reserved_no_space_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_reserved_no_space_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_reserved_no_space_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_cap_max_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -1143,10 +1407,20 @@ static int alloc_nid_cap_max_check(void)
 	alloc_nid_top_down_cap_max_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_cap_max_check();
+=======
+static int alloc_try_nid_cap_max_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_cap_max_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_cap_max_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_cap_min_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -1154,60 +1428,117 @@ static int alloc_nid_cap_min_check(void)
 	alloc_nid_top_down_cap_min_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_cap_min_check();
+=======
+static int alloc_try_nid_cap_min_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_cap_min_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_cap_min_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_min_reserved_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
 	run_top_down(alloc_nid_min_reserved_generic_check);
 	run_bottom_up(alloc_nid_min_reserved_generic_check);
+=======
+static int alloc_try_nid_min_reserved_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	run_top_down(alloc_try_nid_min_reserved_generic_check);
+	run_bottom_up(alloc_try_nid_min_reserved_generic_check);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_max_reserved_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
 	run_top_down(alloc_nid_max_reserved_generic_check);
 	run_bottom_up(alloc_nid_max_reserved_generic_check);
+=======
+static int alloc_try_nid_max_reserved_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	run_top_down(alloc_try_nid_max_reserved_generic_check);
+	run_bottom_up(alloc_try_nid_max_reserved_generic_check);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_exact_address_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
 	run_top_down(alloc_nid_exact_address_generic_check);
 	run_bottom_up(alloc_nid_exact_address_generic_check);
+=======
+static int alloc_try_nid_exact_address_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	run_top_down(alloc_try_nid_exact_address_generic_check);
+	run_bottom_up(alloc_try_nid_exact_address_generic_check);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_reserved_full_merge_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
 	run_top_down(alloc_nid_reserved_full_merge_generic_check);
 	run_bottom_up(alloc_nid_reserved_full_merge_generic_check);
+=======
+static int alloc_try_nid_reserved_full_merge_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	run_top_down(alloc_try_nid_reserved_full_merge_generic_check);
+	run_bottom_up(alloc_try_nid_reserved_full_merge_generic_check);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_reserved_all_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
 	run_top_down(alloc_nid_reserved_all_generic_check);
 	run_bottom_up(alloc_nid_reserved_all_generic_check);
+=======
+static int alloc_try_nid_reserved_all_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	run_top_down(alloc_try_nid_reserved_all_generic_check);
+	run_bottom_up(alloc_try_nid_reserved_all_generic_check);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_low_max_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
 	run_top_down(alloc_nid_low_max_generic_check);
 	run_bottom_up(alloc_nid_low_max_generic_check);
+=======
+static int alloc_try_nid_low_max_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	run_top_down(alloc_try_nid_low_max_generic_check);
+	run_bottom_up(alloc_try_nid_low_max_generic_check);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1215,6 +1546,7 @@ static int alloc_nid_low_max_check(void)
 static int memblock_alloc_nid_range_checks(void)
 {
 	test_print("Running %s range tests...\n",
+<<<<<<< HEAD
 		   get_memblock_alloc_nid_name(alloc_nid_test_flags));
 
 	alloc_nid_simple_check();
@@ -1231,6 +1563,24 @@ static int memblock_alloc_nid_range_checks(void)
 	alloc_nid_reserved_full_merge_check();
 	alloc_nid_reserved_all_check();
 	alloc_nid_low_max_check();
+=======
+		   get_memblock_alloc_try_nid_name(alloc_nid_test_flags));
+
+	alloc_try_nid_simple_check();
+	alloc_try_nid_misaligned_check();
+	alloc_try_nid_narrow_range_check();
+	alloc_try_nid_reserved_with_space_check();
+	alloc_try_nid_reserved_no_space_check();
+	alloc_try_nid_cap_max_check();
+	alloc_try_nid_cap_min_check();
+
+	alloc_try_nid_min_reserved_check();
+	alloc_try_nid_max_reserved_check();
+	alloc_try_nid_exact_address_check();
+	alloc_try_nid_reserved_full_merge_check();
+	alloc_try_nid_reserved_all_check();
+	alloc_try_nid_low_max_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1240,7 +1590,11 @@ static int memblock_alloc_nid_range_checks(void)
  * has enough memory to allocate a region of the requested size.
  * Expect to allocate an aligned region at the end of the requested node.
  */
+<<<<<<< HEAD
 static int alloc_nid_top_down_numa_simple_check(void)
+=======
+static int alloc_try_nid_top_down_numa_simple_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 3;
 	struct memblock_region *new_rgn = &memblock.reserved.regions[0];
@@ -1258,8 +1612,13 @@ static int alloc_nid_top_down_numa_simple_check(void)
 	min_addr = memblock_start_of_DRAM();
 	max_addr = memblock_end_of_DRAM();
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -1291,7 +1650,11 @@ static int alloc_nid_top_down_numa_simple_check(void)
  * Expect to allocate an aligned region at the end of the last node that has
  * enough memory (in this case, nid = 6) after falling back to NUMA_NO_NODE.
  */
+<<<<<<< HEAD
 static int alloc_nid_top_down_numa_small_node_check(void)
+=======
+static int alloc_try_nid_top_down_numa_small_node_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 1;
 	int nid_exp = 6;
@@ -1310,8 +1673,13 @@ static int alloc_nid_top_down_numa_small_node_check(void)
 	min_addr = memblock_start_of_DRAM();
 	max_addr = memblock_end_of_DRAM();
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -1344,7 +1712,11 @@ static int alloc_nid_top_down_numa_small_node_check(void)
  * large enough and has enough unreserved memory (in this case, nid = 6) after
  * falling back to NUMA_NO_NODE. The region count and total size get updated.
  */
+<<<<<<< HEAD
 static int alloc_nid_top_down_numa_node_reserved_check(void)
+=======
+static int alloc_try_nid_top_down_numa_node_reserved_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 2;
 	int nid_exp = 6;
@@ -1364,8 +1736,13 @@ static int alloc_nid_top_down_numa_node_reserved_check(void)
 	max_addr = memblock_end_of_DRAM();
 
 	memblock_reserve(req_node->base, req_node->size);
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -1397,7 +1774,11 @@ static int alloc_nid_top_down_numa_node_reserved_check(void)
  * Expect to allocate an aligned region at the end of the requested node. The
  * region count and total size get updated.
  */
+<<<<<<< HEAD
 static int alloc_nid_top_down_numa_part_reserved_check(void)
+=======
+static int alloc_try_nid_top_down_numa_part_reserved_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 4;
 	struct memblock_region *new_rgn = &memblock.reserved.regions[1];
@@ -1419,8 +1800,13 @@ static int alloc_nid_top_down_numa_part_reserved_check(void)
 	max_addr = memblock_end_of_DRAM();
 
 	memblock_reserve(r1.base, r1.size);
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -1455,7 +1841,11 @@ static int alloc_nid_top_down_numa_part_reserved_check(void)
  * nid = NUMA_NODES - 1) after falling back to NUMA_NO_NODE. The region count
  * and total size get updated.
  */
+<<<<<<< HEAD
 static int alloc_nid_top_down_numa_part_reserved_fallback_check(void)
+=======
+static int alloc_try_nid_top_down_numa_part_reserved_fallback_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 4;
 	int nid_exp = NUMA_NODES - 1;
@@ -1480,8 +1870,13 @@ static int alloc_nid_top_down_numa_part_reserved_fallback_check(void)
 	max_addr = memblock_end_of_DRAM();
 
 	memblock_reserve(r1.base, r1.size);
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -1518,7 +1913,11 @@ static int alloc_nid_top_down_numa_part_reserved_fallback_check(void)
  * Expect to drop the lower limit and allocate a memory region that ends at
  * the end of the requested node.
  */
+<<<<<<< HEAD
 static int alloc_nid_top_down_numa_split_range_low_check(void)
+=======
+static int alloc_try_nid_top_down_numa_split_range_low_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 2;
 	struct memblock_region *new_rgn = &memblock.reserved.regions[0];
@@ -1536,8 +1935,13 @@ static int alloc_nid_top_down_numa_split_range_low_check(void)
 	min_addr = req_node_end - SZ_256;
 	max_addr = min_addr + size;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -1574,7 +1978,11 @@ static int alloc_nid_top_down_numa_split_range_low_check(void)
  * Expect to drop the lower limit and allocate a memory region that
  * ends at the end of the first node that overlaps with the range.
  */
+<<<<<<< HEAD
 static int alloc_nid_top_down_numa_split_range_high_check(void)
+=======
+static int alloc_try_nid_top_down_numa_split_range_high_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 3;
 	int nid_exp = nid_req - 1;
@@ -1593,8 +2001,13 @@ static int alloc_nid_top_down_numa_split_range_high_check(void)
 	min_addr = exp_node_end - SZ_256;
 	max_addr = min_addr + size;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -1631,7 +2044,11 @@ static int alloc_nid_top_down_numa_split_range_high_check(void)
  * Expect to drop the lower limit and allocate a memory region that ends at
  * the end of the requested node.
  */
+<<<<<<< HEAD
 static int alloc_nid_top_down_numa_no_overlap_split_check(void)
+=======
+static int alloc_try_nid_top_down_numa_no_overlap_split_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 2;
 	struct memblock_region *new_rgn = &memblock.reserved.regions[0];
@@ -1649,8 +2066,13 @@ static int alloc_nid_top_down_numa_no_overlap_split_check(void)
 	min_addr = node2->base - SZ_256;
 	max_addr = min_addr + size;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -1688,7 +2110,11 @@ static int alloc_nid_top_down_numa_no_overlap_split_check(void)
  * Expect to allocate a memory region at the end of the final node in
  * the range after falling back to NUMA_NO_NODE.
  */
+<<<<<<< HEAD
 static int alloc_nid_top_down_numa_no_overlap_low_check(void)
+=======
+static int alloc_try_nid_top_down_numa_no_overlap_low_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 0;
 	struct memblock_region *new_rgn = &memblock.reserved.regions[0];
@@ -1705,8 +2131,13 @@ static int alloc_nid_top_down_numa_no_overlap_low_check(void)
 	min_addr = min_node->base;
 	max_addr = region_end(max_node);
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -1744,7 +2175,11 @@ static int alloc_nid_top_down_numa_no_overlap_low_check(void)
  * Expect to allocate a memory region at the end of the final node in
  * the range after falling back to NUMA_NO_NODE.
  */
+<<<<<<< HEAD
 static int alloc_nid_top_down_numa_no_overlap_high_check(void)
+=======
+static int alloc_try_nid_top_down_numa_no_overlap_high_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 7;
 	struct memblock_region *new_rgn = &memblock.reserved.regions[0];
@@ -1761,8 +2196,13 @@ static int alloc_nid_top_down_numa_no_overlap_high_check(void)
 	min_addr = min_node->base;
 	max_addr = region_end(max_node);
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -1784,7 +2224,11 @@ static int alloc_nid_top_down_numa_no_overlap_high_check(void)
  * has enough memory to allocate a region of the requested size.
  * Expect to allocate an aligned region at the beginning of the requested node.
  */
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_numa_simple_check(void)
+=======
+static int alloc_try_nid_bottom_up_numa_simple_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 3;
 	struct memblock_region *new_rgn = &memblock.reserved.regions[0];
@@ -1802,8 +2246,13 @@ static int alloc_nid_bottom_up_numa_simple_check(void)
 	min_addr = memblock_start_of_DRAM();
 	max_addr = memblock_end_of_DRAM();
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -1835,7 +2284,11 @@ static int alloc_nid_bottom_up_numa_simple_check(void)
  * Expect to allocate an aligned region at the beginning of the first node that
  * has enough memory (in this case, nid = 0) after falling back to NUMA_NO_NODE.
  */
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_numa_small_node_check(void)
+=======
+static int alloc_try_nid_bottom_up_numa_small_node_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 1;
 	int nid_exp = 0;
@@ -1854,8 +2307,13 @@ static int alloc_nid_bottom_up_numa_small_node_check(void)
 	min_addr = memblock_start_of_DRAM();
 	max_addr = memblock_end_of_DRAM();
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -1889,7 +2347,11 @@ static int alloc_nid_bottom_up_numa_small_node_check(void)
  * after falling back to NUMA_NO_NODE. The region count and total size get
  * updated.
  */
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_numa_node_reserved_check(void)
+=======
+static int alloc_try_nid_bottom_up_numa_node_reserved_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 2;
 	int nid_exp = 0;
@@ -1909,8 +2371,13 @@ static int alloc_nid_bottom_up_numa_node_reserved_check(void)
 	max_addr = memblock_end_of_DRAM();
 
 	memblock_reserve(req_node->base, req_node->size);
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -1942,7 +2409,11 @@ static int alloc_nid_bottom_up_numa_node_reserved_check(void)
  * Expect to allocate an aligned region in the requested node that merges with
  * the existing reserved region. The total size gets updated.
  */
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_numa_part_reserved_check(void)
+=======
+static int alloc_try_nid_bottom_up_numa_part_reserved_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 4;
 	struct memblock_region *new_rgn = &memblock.reserved.regions[0];
@@ -1966,8 +2437,13 @@ static int alloc_nid_bottom_up_numa_part_reserved_check(void)
 	total_size = size + r1.size;
 
 	memblock_reserve(r1.base, r1.size);
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -2002,7 +2478,11 @@ static int alloc_nid_bottom_up_numa_part_reserved_check(void)
  * nid = 0) after falling back to NUMA_NO_NODE. The region count and total size
  * get updated.
  */
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_numa_part_reserved_fallback_check(void)
+=======
+static int alloc_try_nid_bottom_up_numa_part_reserved_fallback_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 4;
 	int nid_exp = 0;
@@ -2027,8 +2507,13 @@ static int alloc_nid_bottom_up_numa_part_reserved_fallback_check(void)
 	max_addr = memblock_end_of_DRAM();
 
 	memblock_reserve(r1.base, r1.size);
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -2065,7 +2550,11 @@ static int alloc_nid_bottom_up_numa_part_reserved_fallback_check(void)
  * Expect to drop the lower limit and allocate a memory region at the beginning
  * of the requested node.
  */
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_numa_split_range_low_check(void)
+=======
+static int alloc_try_nid_bottom_up_numa_split_range_low_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 2;
 	struct memblock_region *new_rgn = &memblock.reserved.regions[0];
@@ -2083,8 +2572,13 @@ static int alloc_nid_bottom_up_numa_split_range_low_check(void)
 	min_addr = req_node_end - SZ_256;
 	max_addr = min_addr + size;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -2121,7 +2615,11 @@ static int alloc_nid_bottom_up_numa_split_range_low_check(void)
  * Expect to drop the lower limit and allocate a memory region at the beginning
  * of the first node that has enough memory.
  */
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_numa_split_range_high_check(void)
+=======
+static int alloc_try_nid_bottom_up_numa_split_range_high_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 3;
 	int nid_exp = 0;
@@ -2141,8 +2639,13 @@ static int alloc_nid_bottom_up_numa_split_range_high_check(void)
 	min_addr = req_node->base - SZ_256;
 	max_addr = min_addr + size;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -2179,7 +2682,11 @@ static int alloc_nid_bottom_up_numa_split_range_high_check(void)
  * Expect to drop the lower limit and allocate a memory region that starts at
  * the beginning of the requested node.
  */
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_numa_no_overlap_split_check(void)
+=======
+static int alloc_try_nid_bottom_up_numa_no_overlap_split_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 2;
 	struct memblock_region *new_rgn = &memblock.reserved.regions[0];
@@ -2197,8 +2704,13 @@ static int alloc_nid_bottom_up_numa_no_overlap_split_check(void)
 	min_addr = node2->base - SZ_256;
 	max_addr = min_addr + size;
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -2236,7 +2748,11 @@ static int alloc_nid_bottom_up_numa_no_overlap_split_check(void)
  * Expect to allocate a memory region at the beginning of the first node
  * in the range after falling back to NUMA_NO_NODE.
  */
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_numa_no_overlap_low_check(void)
+=======
+static int alloc_try_nid_bottom_up_numa_no_overlap_low_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 0;
 	struct memblock_region *new_rgn = &memblock.reserved.regions[0];
@@ -2253,8 +2769,13 @@ static int alloc_nid_bottom_up_numa_no_overlap_low_check(void)
 	min_addr = min_node->base;
 	max_addr = region_end(max_node);
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -2292,7 +2813,11 @@ static int alloc_nid_bottom_up_numa_no_overlap_low_check(void)
  * Expect to allocate a memory region at the beginning of the first node
  * in the range after falling back to NUMA_NO_NODE.
  */
+<<<<<<< HEAD
 static int alloc_nid_bottom_up_numa_no_overlap_high_check(void)
+=======
+static int alloc_try_nid_bottom_up_numa_no_overlap_high_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 7;
 	struct memblock_region *new_rgn = &memblock.reserved.regions[0];
@@ -2309,8 +2834,13 @@ static int alloc_nid_bottom_up_numa_no_overlap_high_check(void)
 	min_addr = min_node->base;
 	max_addr = region_end(max_node);
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -2341,7 +2871,11 @@ static int alloc_nid_bottom_up_numa_no_overlap_high_check(void)
  *
  * Expect no allocation to happen.
  */
+<<<<<<< HEAD
 static int alloc_nid_numa_large_region_generic_check(void)
+=======
+static int alloc_try_nid_numa_large_region_generic_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 3;
 	void *allocated_ptr = NULL;
@@ -2355,8 +2889,13 @@ static int alloc_nid_numa_large_region_generic_check(void)
 	min_addr = memblock_start_of_DRAM();
 	max_addr = memblock_end_of_DRAM();
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 	ASSERT_EQ(allocated_ptr, NULL);
 
 	test_pass_pop();
@@ -2385,7 +2924,11 @@ static int alloc_nid_numa_large_region_generic_check(void)
  * Expect to merge all of the regions into one. The region counter and total
  * size fields get updated.
  */
+<<<<<<< HEAD
 static int alloc_nid_numa_reserved_full_merge_generic_check(void)
+=======
+static int alloc_try_nid_numa_reserved_full_merge_generic_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int nid_req = 6;
 	int nid_next = nid_req + 1;
@@ -2415,8 +2958,13 @@ static int alloc_nid_numa_reserved_full_merge_generic_check(void)
 	memblock_reserve(r1.base, r1.size);
 	memblock_reserve(r2.base, r2.size);
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr, nid_req);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr, nid_req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_NE(allocated_ptr, NULL);
 	assert_mem_content(allocated_ptr, size, alloc_nid_test_flags);
@@ -2459,7 +3007,11 @@ static int alloc_nid_numa_reserved_full_merge_generic_check(void)
  *
  * Expect no allocation to happen.
  */
+<<<<<<< HEAD
 static int alloc_nid_numa_split_all_reserved_generic_check(void)
+=======
+static int alloc_try_nid_numa_split_all_reserved_generic_check(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	void *allocated_ptr = NULL;
 	struct memblock_region *next_node = &memblock.memory.regions[7];
@@ -2483,9 +3035,15 @@ static int alloc_nid_numa_split_all_reserved_generic_check(void)
 	memblock_reserve(r1.base, r1.size);
 	memblock_reserve(r2.base, r2.size);
 
+<<<<<<< HEAD
 	allocated_ptr = run_memblock_alloc_nid(size, SMP_CACHE_BYTES,
 					       min_addr, max_addr,
 					       NUMA_NO_NODE);
+=======
+	allocated_ptr = run_memblock_alloc_try_nid(size, SMP_CACHE_BYTES,
+						   min_addr, max_addr,
+						   NUMA_NO_NODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_EQ(allocated_ptr, NULL);
 
@@ -2494,6 +3052,7 @@ static int alloc_nid_numa_split_all_reserved_generic_check(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 /*
  * A simple test that tries to allocate a memory region through the
  * memblock_alloc_node() on a NUMA node with id `nid`. Expected to have the
@@ -2531,10 +3090,21 @@ static int alloc_nid_numa_simple_check(void)
 	alloc_nid_top_down_numa_simple_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_numa_simple_check();
+=======
+/* Test case wrappers for NUMA tests */
+static int alloc_try_nid_numa_simple_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_numa_simple_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_numa_simple_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_numa_small_node_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -2542,10 +3112,20 @@ static int alloc_nid_numa_small_node_check(void)
 	alloc_nid_top_down_numa_small_node_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_numa_small_node_check();
+=======
+static int alloc_try_nid_numa_small_node_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_numa_small_node_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_numa_small_node_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_numa_node_reserved_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -2553,10 +3133,20 @@ static int alloc_nid_numa_node_reserved_check(void)
 	alloc_nid_top_down_numa_node_reserved_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_numa_node_reserved_check();
+=======
+static int alloc_try_nid_numa_node_reserved_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_numa_node_reserved_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_numa_node_reserved_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_numa_part_reserved_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -2564,10 +3154,20 @@ static int alloc_nid_numa_part_reserved_check(void)
 	alloc_nid_top_down_numa_part_reserved_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_numa_part_reserved_check();
+=======
+static int alloc_try_nid_numa_part_reserved_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_numa_part_reserved_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_numa_part_reserved_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_numa_part_reserved_fallback_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -2575,10 +3175,20 @@ static int alloc_nid_numa_part_reserved_fallback_check(void)
 	alloc_nid_top_down_numa_part_reserved_fallback_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_numa_part_reserved_fallback_check();
+=======
+static int alloc_try_nid_numa_part_reserved_fallback_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_numa_part_reserved_fallback_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_numa_part_reserved_fallback_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_numa_split_range_low_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -2586,10 +3196,20 @@ static int alloc_nid_numa_split_range_low_check(void)
 	alloc_nid_top_down_numa_split_range_low_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_numa_split_range_low_check();
+=======
+static int alloc_try_nid_numa_split_range_low_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_numa_split_range_low_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_numa_split_range_low_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_numa_split_range_high_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -2597,10 +3217,20 @@ static int alloc_nid_numa_split_range_high_check(void)
 	alloc_nid_top_down_numa_split_range_high_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_numa_split_range_high_check();
+=======
+static int alloc_try_nid_numa_split_range_high_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_numa_split_range_high_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_numa_split_range_high_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_numa_no_overlap_split_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -2608,10 +3238,20 @@ static int alloc_nid_numa_no_overlap_split_check(void)
 	alloc_nid_top_down_numa_no_overlap_split_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_numa_no_overlap_split_check();
+=======
+static int alloc_try_nid_numa_no_overlap_split_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_numa_no_overlap_split_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_numa_no_overlap_split_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_numa_no_overlap_low_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -2619,10 +3259,20 @@ static int alloc_nid_numa_no_overlap_low_check(void)
 	alloc_nid_top_down_numa_no_overlap_low_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_numa_no_overlap_low_check();
+=======
+static int alloc_try_nid_numa_no_overlap_low_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_numa_no_overlap_low_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_numa_no_overlap_low_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_numa_no_overlap_high_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -2630,28 +3280,54 @@ static int alloc_nid_numa_no_overlap_high_check(void)
 	alloc_nid_top_down_numa_no_overlap_high_check();
 	memblock_set_bottom_up(true);
 	alloc_nid_bottom_up_numa_no_overlap_high_check();
+=======
+static int alloc_try_nid_numa_no_overlap_high_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	memblock_set_bottom_up(false);
+	alloc_try_nid_top_down_numa_no_overlap_high_check();
+	memblock_set_bottom_up(true);
+	alloc_try_nid_bottom_up_numa_no_overlap_high_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_numa_large_region_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
 	run_top_down(alloc_nid_numa_large_region_generic_check);
 	run_bottom_up(alloc_nid_numa_large_region_generic_check);
+=======
+static int alloc_try_nid_numa_large_region_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	run_top_down(alloc_try_nid_numa_large_region_generic_check);
+	run_bottom_up(alloc_try_nid_numa_large_region_generic_check);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_numa_reserved_full_merge_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
 	run_top_down(alloc_nid_numa_reserved_full_merge_generic_check);
 	run_bottom_up(alloc_nid_numa_reserved_full_merge_generic_check);
+=======
+static int alloc_try_nid_numa_reserved_full_merge_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	run_top_down(alloc_try_nid_numa_reserved_full_merge_generic_check);
+	run_bottom_up(alloc_try_nid_numa_reserved_full_merge_generic_check);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int alloc_nid_numa_split_all_reserved_check(void)
 {
 	test_print("\tRunning %s...\n", __func__);
@@ -2666,6 +3342,13 @@ static int alloc_node_numa_on_correct_nid(void)
 	test_print("\tRunning %s...\n", __func__);
 	run_top_down(alloc_node_on_correct_nid);
 	run_bottom_up(alloc_node_on_correct_nid);
+=======
+static int alloc_try_nid_numa_split_all_reserved_check(void)
+{
+	test_print("\tRunning %s...\n", __func__);
+	run_top_down(alloc_try_nid_numa_split_all_reserved_generic_check);
+	run_bottom_up(alloc_try_nid_numa_split_all_reserved_generic_check);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -2673,6 +3356,7 @@ static int alloc_node_numa_on_correct_nid(void)
 int __memblock_alloc_nid_numa_checks(void)
 {
 	test_print("Running %s NUMA tests...\n",
+<<<<<<< HEAD
 		   get_memblock_alloc_nid_name(alloc_nid_test_flags));
 
 	alloc_nid_numa_simple_check();
@@ -2691,6 +3375,24 @@ int __memblock_alloc_nid_numa_checks(void)
 	alloc_nid_numa_split_all_reserved_check();
 
 	alloc_node_numa_on_correct_nid();
+=======
+		   get_memblock_alloc_try_nid_name(alloc_nid_test_flags));
+
+	alloc_try_nid_numa_simple_check();
+	alloc_try_nid_numa_small_node_check();
+	alloc_try_nid_numa_node_reserved_check();
+	alloc_try_nid_numa_part_reserved_check();
+	alloc_try_nid_numa_part_reserved_fallback_check();
+	alloc_try_nid_numa_split_range_low_check();
+	alloc_try_nid_numa_split_range_high_check();
+
+	alloc_try_nid_numa_no_overlap_split_check();
+	alloc_try_nid_numa_no_overlap_low_check();
+	alloc_try_nid_numa_no_overlap_high_check();
+	alloc_try_nid_numa_large_region_check();
+	alloc_try_nid_numa_reserved_full_merge_check();
+	alloc_try_nid_numa_split_all_reserved_check();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -2700,7 +3402,11 @@ static int memblock_alloc_nid_checks_internal(int flags)
 	alloc_nid_test_flags = flags;
 
 	prefix_reset();
+<<<<<<< HEAD
 	prefix_push(get_memblock_alloc_nid_name(flags));
+=======
+	prefix_push(get_memblock_alloc_try_nid_name(flags));
+>>>>>>> b7ba80a49124 (Commit)
 
 	reset_memblock_attributes();
 	dummy_physical_memory_init();
@@ -2722,6 +3428,7 @@ int memblock_alloc_nid_checks(void)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 int memblock_alloc_exact_nid_range_checks(void)
 {
@@ -2731,3 +3438,5 @@ int memblock_alloc_exact_nid_range_checks(void)
 
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

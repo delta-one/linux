@@ -3,8 +3,11 @@
  * Copyright (c) 2021, Konrad Dybcio <konrad.dybcio@somainline.org>
  */
 
+<<<<<<< HEAD
 #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
 #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "sm8350.dtsi"
 #include "pm8350.dtsi"
 #include "pm8350b.dtsi"
@@ -49,6 +52,7 @@
 	gpio-keys {
 		compatible = "gpio-keys";
 
+<<<<<<< HEAD
 		pinctrl-names = "default";
 		pinctrl-0 = <&focus_n &snapshot_n &vol_down_n &g_assist_n>;
 
@@ -78,6 +82,9 @@
 			linux,can-disable;
 			wakeup-source;
 		};
+=======
+		/* For reasons still unknown, GAssist key and Camera Focus/Shutter don't work.. */
+>>>>>>> b7ba80a49124 (Commit)
 
 		key-vol-down {
 			label = "Volume Down";
@@ -85,7 +92,11 @@
 			gpios = <&pmk8350_gpios 3 GPIO_ACTIVE_LOW>;
 			debounce-interval = <15>;
 			linux,can-disable;
+<<<<<<< HEAD
 			wakeup-source;
+=======
+			gpio-key,wakeup;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -103,6 +114,7 @@
 			no-map;
 		};
 	};
+<<<<<<< HEAD
 
 	vph_pwr: vph-pwr-regulator {
 		compatible = "regulator-fixed";
@@ -113,10 +125,13 @@
 		regulator-always-on;
 		regulator-boot-on;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &adsp {
 	status = "okay";
+<<<<<<< HEAD
 	firmware-name = "qcom/sm8350/Sony/sagami/adsp.mbn";
 };
 
@@ -466,11 +481,18 @@
 			regulator-max-microvolt = <2800000>;
 		};
 	};
+=======
+	firmware-name = "qcom/adsp.mbn";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &cdsp {
 	status = "okay";
+<<<<<<< HEAD
 	firmware-name = "qcom/sm8350/Sony/sagami/cdsp.mbn";
+=======
+	firmware-name = "qcom/cdsp.mbn";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &i2c1 {
@@ -480,6 +502,16 @@
 	/* Some subset of SONY IMX663 camera sensor @ 38 */
 };
 
+<<<<<<< HEAD
+=======
+&i2c2 {
+	status = "okay";
+	clock-frequency = <400000>;
+
+	/* Richwave RTC6226 FM Radio Receiver @ 64 */
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &i2c4 {
 	status = "okay";
 	clock-frequency = <400000>;
@@ -491,7 +523,11 @@
 	status = "okay";
 	clock-frequency = <1000000>;
 
+<<<<<<< HEAD
 	cs35l41_l: speaker-amp@40 {
+=======
+	cs35l41_l: cs35l41@40 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "cirrus,cs35l41";
 		reg = <0x40>;
 		interrupt-parent = <&tlmm>;
@@ -506,7 +542,11 @@
 		#sound-dai-cells = <1>;
 	};
 
+<<<<<<< HEAD
 	cs35l41_r: speaker-amp@41 {
+=======
+	cs35l41_r: cs35l41@41 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "cirrus,cs35l41";
 		reg = <0x41>;
 		interrupt-parent = <&tlmm>;
@@ -536,6 +576,10 @@
 	clock-frequency = <100000>;
 
 	/* Qualcomm PM8008i/PM8008j (?) @ 8, 9, c, d */
+<<<<<<< HEAD
+=======
+	/* Dialog SLG51000 CMIC @ 75 */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &i2c15 {
@@ -553,14 +597,21 @@
 };
 
 &ipa {
+<<<<<<< HEAD
 	qcom,gsi-loader = "self";
 	memory-region = <&pil_ipa_fw_mem>;
 	firmware-name = "qcom/sm8350/Sony/sagami/ipa_fws.mbn";
 	status = "okay";
+=======
+	status = "okay";
+	memory-region = <&pil_ipa_fw_mem>;
+	firmware-name = "qcom/ipa_fws.mbn";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &mpss {
 	status = "okay";
+<<<<<<< HEAD
 	firmware-name = "qcom/sm8350/Sony/sagami/modem.mbn";
 };
 
@@ -616,6 +667,9 @@
 		bias-pull-up;
 		input-enable;
 	};
+=======
+	firmware-name = "qcom/modem.mbn";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &pmk8350_rtc {
@@ -643,6 +697,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &sdhc_2 {
 	cd-gpios = <&tlmm 92 GPIO_ACTIVE_HIGH>;
 	pinctrl-names = "default", "sleep";
@@ -658,6 +713,11 @@
 &slpi {
 	status = "okay";
 	firmware-name = "qcom/sm8350/Sony/sagami/slpi.mbn";
+=======
+&slpi {
+	status = "okay";
+	firmware-name = "qcom/slpi.mbn";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &spi14 {
@@ -668,6 +728,7 @@
 
 &tlmm {
 	gpio-reserved-ranges = <44 4>;
+<<<<<<< HEAD
 	gpio-line-names = "APPS_I2C_0_SDA", /* GPIO_0 */
 			  "APPS_I2C_0_SCL",
 			  "UWIDEC_PWR_EN",
@@ -871,6 +932,8 @@
 			  "HST_BLE_UART_RX", /* GPIO_200 */
 			  "HST_WLAN_UART_TX",
 			  "HST_WLAN_UART_RX";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ts_int_default: ts-int-default-state {
 		pins = "gpio23";
@@ -879,6 +942,7 @@
 		bias-disable;
 		input-enable;
 	};
+<<<<<<< HEAD
 
 	sdc2_card_det_active: sd-card-det-active-state {
 		pins = "gpio92";
@@ -893,31 +957,54 @@
 		drive-strength = <2>;
 		bias-disable;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* BIG WARNING! DO NOT TOUCH UFS, YOUR DEVICE WILL DIE! */
 &ufs_mem_hc { status = "disabled"; };
 &ufs_mem_phy { status = "disabled"; };
 
+<<<<<<< HEAD
 &usb_1 {
 	status = "okay";
+=======
+/* TODO: Make USB3 work (perhaps needs regulators for higher-current operation?) */
+&usb_1 {
+	status = "okay";
+
+	qcom,select-utmi-as-pipe-clk;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &usb_1_dwc3 {
 	dr_mode = "peripheral";
+<<<<<<< HEAD
+=======
+
+	maximum-speed = "high-speed";
+	phys = <&usb_1_hsphy>;
+	phy-names = "usb2-phy";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &usb_1_hsphy {
 	status = "okay";
+<<<<<<< HEAD
 
 	vdda-pll-supply = <&pm8350_l5>;
 	vdda18-supply = <&pm8350c_l1>;
 	vdda33-supply = <&pm8350_l2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &usb_1_qmpphy {
 	status = "okay";
+<<<<<<< HEAD
 
 	vdda-phy-supply = <&pm8350_l6>;
 	vdda-pll-supply = <&pm8350_l1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

@@ -49,7 +49,11 @@ xchk_setup_xattr_buf(
 	if (ab) {
 		if (sz <= ab->sz)
 			return 0;
+<<<<<<< HEAD
 		kvfree(ab);
+=======
+		kmem_free(ab);
+>>>>>>> b7ba80a49124 (Commit)
 		sc->buf = NULL;
 	}
 
@@ -79,8 +83,12 @@ xchk_setup_xattr(
 	 * without the inode lock held, which means we can sleep.
 	 */
 	if (sc->flags & XCHK_TRY_HARDER) {
+<<<<<<< HEAD
 		error = xchk_setup_xattr_buf(sc, XATTR_SIZE_MAX,
 				XCHK_GFP_FLAGS);
+=======
+		error = xchk_setup_xattr_buf(sc, XATTR_SIZE_MAX, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (error)
 			return error;
 	}
@@ -139,7 +147,12 @@ xchk_xattr_listent(
 	 * doesn't work, we overload the seen_enough variable to convey
 	 * the error message back to the main scrub function.
 	 */
+<<<<<<< HEAD
 	error = xchk_setup_xattr_buf(sx->sc, valuelen, XCHK_GFP_FLAGS);
+=======
+	error = xchk_setup_xattr_buf(sx->sc, valuelen,
+			GFP_KERNEL | __GFP_RETRY_MAYFAIL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error == -ENOMEM)
 		error = -EDEADLOCK;
 	if (error) {
@@ -324,7 +337,12 @@ xchk_xattr_block(
 		return 0;
 
 	/* Allocate memory for block usage checking. */
+<<<<<<< HEAD
 	error = xchk_setup_xattr_buf(ds->sc, 0, XCHK_GFP_FLAGS);
+=======
+	error = xchk_setup_xattr_buf(ds->sc, 0,
+			GFP_KERNEL | __GFP_RETRY_MAYFAIL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error == -ENOMEM)
 		return -EDEADLOCK;
 	if (error)

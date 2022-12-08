@@ -29,7 +29,11 @@ void rmnet_vnd_rx_fixup(struct sk_buff *skb, struct net_device *dev)
 	u64_stats_update_end(&pcpu_ptr->syncp);
 }
 
+<<<<<<< HEAD
 void rmnet_vnd_tx_fixup_len(unsigned int len, struct net_device *dev)
+=======
+void rmnet_vnd_tx_fixup(struct sk_buff *skb, struct net_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rmnet_priv *priv = netdev_priv(dev);
 	struct rmnet_pcpu_stats *pcpu_ptr;
@@ -38,6 +42,7 @@ void rmnet_vnd_tx_fixup_len(unsigned int len, struct net_device *dev)
 
 	u64_stats_update_begin(&pcpu_ptr->syncp);
 	pcpu_ptr->stats.tx_pkts++;
+<<<<<<< HEAD
 	pcpu_ptr->stats.tx_bytes += len;
 	u64_stats_update_end(&pcpu_ptr->syncp);
 }
@@ -47,6 +52,12 @@ void rmnet_vnd_tx_fixup(struct sk_buff *skb, struct net_device *dev)
 	rmnet_vnd_tx_fixup_len(skb->len, dev);
 }
 
+=======
+	pcpu_ptr->stats.tx_bytes += skb->len;
+	u64_stats_update_end(&pcpu_ptr->syncp);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Network Device Operations */
 
 static netdev_tx_t rmnet_vnd_start_xmit(struct sk_buff *skb,
@@ -140,9 +151,15 @@ static void rmnet_get_stats64(struct net_device *dev,
 		pcpu_ptr = per_cpu_ptr(priv->pcpu_stats, cpu);
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&pcpu_ptr->syncp);
 			snapshot = pcpu_ptr->stats;	/* struct assignment */
 		} while (u64_stats_fetch_retry(&pcpu_ptr->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&pcpu_ptr->syncp);
+			snapshot = pcpu_ptr->stats;	/* struct assignment */
+		} while (u64_stats_fetch_retry_irq(&pcpu_ptr->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		total_stats.rx_pkts += snapshot.rx_pkts;
 		total_stats.rx_bytes += snapshot.rx_bytes;
@@ -215,6 +232,7 @@ static void rmnet_get_ethtool_stats(struct net_device *dev,
 	memcpy(data, st, ARRAY_SIZE(rmnet_gstrings_stats) * sizeof(u64));
 }
 
+<<<<<<< HEAD
 static int rmnet_get_coalesce(struct net_device *dev,
 			      struct ethtool_coalesce *coal,
 			      struct kernel_ethtool_coalesce *kernel_coal,
@@ -261,6 +279,9 @@ static const struct ethtool_ops rmnet_ethtool_ops = {
 	.supported_coalesce_params = ETHTOOL_COALESCE_TX_AGGR,
 	.get_coalesce = rmnet_get_coalesce,
 	.set_coalesce = rmnet_set_coalesce,
+=======
+static const struct ethtool_ops rmnet_ethtool_ops = {
+>>>>>>> b7ba80a49124 (Commit)
 	.get_ethtool_stats = rmnet_get_ethtool_stats,
 	.get_strings = rmnet_get_strings,
 	.get_sset_count = rmnet_get_sset_count,

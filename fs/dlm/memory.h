@@ -20,14 +20,21 @@ struct dlm_lkb *dlm_allocate_lkb(struct dlm_ls *ls);
 void dlm_free_lkb(struct dlm_lkb *l);
 char *dlm_allocate_lvb(struct dlm_ls *ls);
 void dlm_free_lvb(char *l);
+<<<<<<< HEAD
 struct dlm_mhandle *dlm_allocate_mhandle(gfp_t allocation);
+=======
+struct dlm_mhandle *dlm_allocate_mhandle(void);
+>>>>>>> b7ba80a49124 (Commit)
 void dlm_free_mhandle(struct dlm_mhandle *mhandle);
 struct writequeue_entry *dlm_allocate_writequeue(void);
 void dlm_free_writequeue(struct writequeue_entry *writequeue);
 struct dlm_msg *dlm_allocate_msg(gfp_t allocation);
 void dlm_free_msg(struct dlm_msg *msg);
+<<<<<<< HEAD
 struct dlm_callback *dlm_allocate_cb(void);
 void dlm_free_cb(struct dlm_callback *cb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif		/* __MEMORY_DOT_H__ */
 

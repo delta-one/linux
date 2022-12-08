@@ -94,7 +94,10 @@ static inline struct cred *nsset_cred(struct nsset *set)
 int copy_namespaces(unsigned long flags, struct task_struct *tsk);
 void exit_task_namespaces(struct task_struct *tsk);
 void switch_task_namespaces(struct task_struct *tsk, struct nsproxy *new);
+<<<<<<< HEAD
 int exec_task_namespaces(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void free_nsproxy(struct nsproxy *ns);
 int unshare_nsproxy_namespaces(unsigned long, struct nsproxy **,
 	struct cred *, struct fs_struct *);

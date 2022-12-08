@@ -9,8 +9,11 @@ title: ARM Firmware Suite (AFS) Partitions
 maintainers:
   - Linus Walleij <linus.walleij@linaro.org>
 
+<<<<<<< HEAD
 select: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 description: |
   The ARM Firmware Suite is a flash partitioning system found on the
   ARM reference designs: Integrator AP, Integrator CP, Versatile AB,

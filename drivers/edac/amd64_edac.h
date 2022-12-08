@@ -114,6 +114,25 @@
 #define PCI_DEVICE_ID_AMD_16H_NB_F2	0x1532
 #define PCI_DEVICE_ID_AMD_16H_M30H_NB_F1 0x1581
 #define PCI_DEVICE_ID_AMD_16H_M30H_NB_F2 0x1582
+<<<<<<< HEAD
+=======
+#define PCI_DEVICE_ID_AMD_17H_DF_F0	0x1460
+#define PCI_DEVICE_ID_AMD_17H_DF_F6	0x1466
+#define PCI_DEVICE_ID_AMD_17H_M10H_DF_F0 0x15e8
+#define PCI_DEVICE_ID_AMD_17H_M10H_DF_F6 0x15ee
+#define PCI_DEVICE_ID_AMD_17H_M30H_DF_F0 0x1490
+#define PCI_DEVICE_ID_AMD_17H_M30H_DF_F6 0x1496
+#define PCI_DEVICE_ID_AMD_17H_M60H_DF_F0 0x1448
+#define PCI_DEVICE_ID_AMD_17H_M60H_DF_F6 0x144e
+#define PCI_DEVICE_ID_AMD_17H_M70H_DF_F0 0x1440
+#define PCI_DEVICE_ID_AMD_17H_M70H_DF_F6 0x1446
+#define PCI_DEVICE_ID_AMD_19H_DF_F0	0x1650
+#define PCI_DEVICE_ID_AMD_19H_DF_F6	0x1656
+#define PCI_DEVICE_ID_AMD_19H_M10H_DF_F0 0x14ad
+#define PCI_DEVICE_ID_AMD_19H_M10H_DF_F6 0x14b3
+#define PCI_DEVICE_ID_AMD_19H_M50H_DF_F0 0x166a
+#define PCI_DEVICE_ID_AMD_19H_M50H_DF_F6 0x1670
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Function 1 - Address Map
@@ -199,6 +218,11 @@
 #define DCT_SEL_HI			0x114
 
 #define F15H_M60H_SCRCTRL		0x1C8
+<<<<<<< HEAD
+=======
+#define F17H_SCR_BASE_ADDR		0x48
+#define F17H_SCR_LIMIT_ADDR		0x4C
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Function 3 - Misc Control
@@ -273,6 +297,28 @@
 
 #define UMC_SDP_INIT			BIT(31)
 
+<<<<<<< HEAD
+=======
+enum amd_families {
+	K8_CPUS = 0,
+	F10_CPUS,
+	F15_CPUS,
+	F15_M30H_CPUS,
+	F15_M60H_CPUS,
+	F16_CPUS,
+	F16_M30H_CPUS,
+	F17_CPUS,
+	F17_M10H_CPUS,
+	F17_M30H_CPUS,
+	F17_M60H_CPUS,
+	F17_M70H_CPUS,
+	F19_CPUS,
+	F19_M10H_CPUS,
+	F19_M50H_CPUS,
+	NUM_FAMILIES,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Error injection control structure */
 struct error_injection {
 	u32	 section;
@@ -315,6 +361,7 @@ struct amd64_umc {
 	enum mem_type dram_type;
 };
 
+<<<<<<< HEAD
 struct amd64_family_flags {
 	/*
 	 * Indicates that the system supports the new register offsets, etc.
@@ -325,11 +372,17 @@ struct amd64_family_flags {
 	      __reserved	: 63;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct amd64_pvt {
 	struct low_ops *ops;
 
 	/* pci_device handles which we utilize */
+<<<<<<< HEAD
 	struct pci_dev *F1, *F2, *F3;
+=======
+	struct pci_dev *F0, *F1, *F2, *F3, *F6;
+>>>>>>> b7ba80a49124 (Commit)
 
 	u16 mc_node_id;		/* MC index of this MC node */
 	u8 fam;			/* CPU family */
@@ -337,6 +390,10 @@ struct amd64_pvt {
 	u8 stepping;		/* ... stepping */
 
 	int ext_model;		/* extended model value of this node */
+<<<<<<< HEAD
+=======
+	int channel_count;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Raw registers */
 	u32 dclr0;		/* DRAM Configuration Low DCT0 reg */
@@ -366,12 +423,15 @@ struct amd64_pvt {
 	/* x4, x8, or x16 syndromes in use */
 	u8 ecc_sym_sz;
 
+<<<<<<< HEAD
 	const char *ctl_name;
 	u16 f1_id, f2_id;
 	/* Maximum number of memory controllers per die/node. */
 	u8 max_mcs;
 
 	struct amd64_family_flags flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* place to store error injection parameters prior to issue */
 	struct error_injection injection;
 
@@ -462,6 +522,7 @@ struct ecc_settings {
  * functions and per device encoding/decoding logic.
  */
 struct low_ops {
+<<<<<<< HEAD
 	void (*map_sysaddr_to_csrow)(struct mem_ctl_info *mci, u64 sys_addr,
 				     struct err_info *err);
 	int  (*dbam_to_cs)(struct amd64_pvt *pvt, u8 dct,
@@ -471,6 +532,32 @@ struct low_ops {
 	void (*setup_mci_misc_attrs)(struct mem_ctl_info *mci);
 	void (*dump_misc_regs)(struct amd64_pvt *pvt);
 	void (*get_err_info)(struct mce *m, struct err_info *err);
+=======
+	int (*early_channel_count)	(struct amd64_pvt *pvt);
+	void (*map_sysaddr_to_csrow)	(struct mem_ctl_info *mci, u64 sys_addr,
+					 struct err_info *);
+	int (*dbam_to_cs)		(struct amd64_pvt *pvt, u8 dct,
+					 unsigned cs_mode, int cs_mask_nr);
+};
+
+struct amd64_family_flags {
+	/*
+	 * Indicates that the system supports the new register offsets, etc.
+	 * first introduced with Family 19h Model 10h.
+	 */
+	__u64 zn_regs_v2	: 1,
+
+	      __reserved	: 63;
+};
+
+struct amd64_family_type {
+	const char *ctl_name;
+	u16 f0_id, f1_id, f2_id, f6_id;
+	/* Maximum number of memory controllers per die/node. */
+	u8 max_mcs;
+	struct amd64_family_flags flags;
+	struct low_ops ops;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int __amd64_read_pci_cfg_dword(struct pci_dev *pdev, int offset,

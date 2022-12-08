@@ -98,7 +98,10 @@ enum fetch_op {
 	FETCH_OP_ST_UMEM,	/* Mem: .offset, .size */
 	FETCH_OP_ST_STRING,	/* String: .offset, .size */
 	FETCH_OP_ST_USTRING,	/* User String: .offset, .size */
+<<<<<<< HEAD
 	FETCH_OP_ST_SYMSTR,	/* Kernel Symbol String: .offset, .size */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	// Stage 4 (modify) op
 	FETCH_OP_MOD_BF,	/* Bitfield: .basesize, .lshift, .rshift */
 	// Stage 5 (loop) op
@@ -134,8 +137,12 @@ struct fetch_insn {
 struct fetch_type {
 	const char		*name;		/* Name of type */
 	size_t			size;		/* Byte size of type */
+<<<<<<< HEAD
 	bool			is_signed;	/* Signed flag */
 	bool			is_string;	/* String flag */
+=======
+	int			is_signed;	/* Signed flag */
+>>>>>>> b7ba80a49124 (Commit)
 	print_type_func_t	print;		/* Print functions */
 	const char		*fmt;		/* Format string */
 	const char		*fmttype;	/* Name in format file */
@@ -166,7 +173,10 @@ DECLARE_BASIC_PRINT_TYPE_FUNC(x16);
 DECLARE_BASIC_PRINT_TYPE_FUNC(x32);
 DECLARE_BASIC_PRINT_TYPE_FUNC(x64);
 
+<<<<<<< HEAD
 DECLARE_BASIC_PRINT_TYPE_FUNC(char);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 DECLARE_BASIC_PRINT_TYPE_FUNC(string);
 DECLARE_BASIC_PRINT_TYPE_FUNC(symbol);
 
@@ -180,19 +190,31 @@ DECLARE_BASIC_PRINT_TYPE_FUNC(symbol);
 #define _ADDR_FETCH_TYPE(t) __ADDR_FETCH_TYPE(t)
 #define ADDR_FETCH_TYPE _ADDR_FETCH_TYPE(BITS_PER_LONG)
 
+<<<<<<< HEAD
 #define __ASSIGN_FETCH_TYPE(_name, ptype, ftype, _size, sign, str, _fmttype)	\
 	{.name = _name,					\
 	 .size = _size,					\
 	 .is_signed = (bool)sign,			\
 	 .is_string = (bool)str,			\
+=======
+#define __ASSIGN_FETCH_TYPE(_name, ptype, ftype, _size, sign, _fmttype)	\
+	{.name = _name,				\
+	 .size = _size,					\
+	 .is_signed = sign,				\
+>>>>>>> b7ba80a49124 (Commit)
 	 .print = PRINT_TYPE_FUNC_NAME(ptype),		\
 	 .fmt = PRINT_TYPE_FMT_NAME(ptype),		\
 	 .fmttype = _fmttype,				\
 	}
+<<<<<<< HEAD
 
 /* Non string types can use these macros */
 #define _ASSIGN_FETCH_TYPE(_name, ptype, ftype, _size, sign, _fmttype)	\
 	__ASSIGN_FETCH_TYPE(_name, ptype, ftype, _size, sign, 0, #_fmttype)
+=======
+#define _ASSIGN_FETCH_TYPE(_name, ptype, ftype, _size, sign, _fmttype)	\
+	__ASSIGN_FETCH_TYPE(_name, ptype, ftype, _size, sign, #_fmttype)
+>>>>>>> b7ba80a49124 (Commit)
 #define ASSIGN_FETCH_TYPE(ptype, ftype, sign)			\
 	_ASSIGN_FETCH_TYPE(#ptype, ptype, ftype, sizeof(ftype), sign, ptype)
 
@@ -349,8 +371,11 @@ int trace_probe_compare_arg_type(struct trace_probe *a, struct trace_probe *b);
 bool trace_probe_match_command_args(struct trace_probe *tp,
 				    int argc, const char **argv);
 int trace_probe_create(const char *raw_command, int (*createfn)(int, const char **));
+<<<<<<< HEAD
 int trace_probe_print_args(struct trace_seq *s, struct probe_arg *args, int nr_args,
 		 u8 *data, void *field);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define trace_probe_for_each_link(pos, tp)	\
 	list_for_each_entry(pos, &(tp)->event->files, list)
@@ -361,8 +386,12 @@ int trace_probe_print_args(struct trace_seq *s, struct probe_arg *args, int nr_a
 #define TPARG_FL_KERNEL BIT(1)
 #define TPARG_FL_FENTRY BIT(2)
 #define TPARG_FL_TPOINT BIT(3)
+<<<<<<< HEAD
 #define TPARG_FL_USER   BIT(4)
 #define TPARG_FL_MASK	GENMASK(4, 0)
+=======
+#define TPARG_FL_MASK	GENMASK(3, 0)
+>>>>>>> b7ba80a49124 (Commit)
 
 extern int traceprobe_parse_probe_arg(struct trace_probe *tp, int i,
 				const char *argv, unsigned int flags);
@@ -440,7 +469,10 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
 	C(ARRAY_TOO_BIG,	"Array number is too big"),		\
 	C(BAD_TYPE,		"Unknown type is specified"),		\
 	C(BAD_STRING,		"String accepts only memory argument"),	\
+<<<<<<< HEAD
 	C(BAD_SYMSTRING,	"Symbol String doesn't accept data/userdata"),	\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	C(BAD_BITFIELD,		"Invalid bitfield"),			\
 	C(ARG_NAME_TOO_LONG,	"Argument name is too long"),		\
 	C(NO_ARG_NAME,		"Argument name is not specified"),	\
@@ -455,8 +487,12 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
 	C(SAME_PROBE,		"There is already the exact same probe event"),\
 	C(NO_EVENT_INFO,	"This requires both group and event name to attach"),\
 	C(BAD_ATTACH_EVENT,	"Attached event does not exist"),\
+<<<<<<< HEAD
 	C(BAD_ATTACH_ARG,	"Attached event does not have this field"),\
 	C(NO_EP_FILTER,		"No filter rule after 'if'"),
+=======
+	C(BAD_ATTACH_ARG,	"Attached event does not have this field"),
+>>>>>>> b7ba80a49124 (Commit)
 
 #undef C
 #define C(a, b)		TP_ERR_##a

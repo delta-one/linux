@@ -948,6 +948,7 @@ struct usb_ss_container_id_descriptor {
 #define USB_DT_USB_SS_CONTN_ID_SIZE	20
 
 /*
+<<<<<<< HEAD
  * Platform Device Capability descriptor: Defines platform specific device
  * capabilities
  */
@@ -964,6 +965,8 @@ struct usb_plat_dev_cap_descriptor {
 #define USB_DT_USB_PLAT_DEV_CAP_SIZE(capability_data_size)	(20 + capability_data_size)
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * SuperSpeed Plus USB Capability descriptor: Defines the set of
  * SuperSpeed Plus USB specific device level capabilities
  */

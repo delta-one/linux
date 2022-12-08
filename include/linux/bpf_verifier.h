@@ -19,7 +19,11 @@
  */
 #define BPF_MAX_VAR_SIZ	(1 << 29)
 /* size of type_str_buf in bpf_verifier. */
+<<<<<<< HEAD
 #define TYPE_STR_BUF_LEN 128
+=======
+#define TYPE_STR_BUF_LEN 64
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Liveness marks, used for registers and spilled-regs (in stack slots).
  * Read marks propagate upwards until they find a write mark; they record that
@@ -43,6 +47,7 @@ enum bpf_reg_liveness {
 	REG_LIVE_DONE = 0x8, /* liveness won't be updating this register anymore */
 };
 
+<<<<<<< HEAD
 /* For every reg representing a map value or allocated object pointer,
  * we consider the tuple of (ptr, id) for them to be unique in verifier
  * context and conside them to not alias each other for the purposes of
@@ -67,6 +72,8 @@ enum bpf_iter_state {
 	BPF_ITER_STATE_DRAINED,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct bpf_reg_state {
 	/* Ordering of fields matters.  See states_equal() */
 	enum bpf_reg_type type;
@@ -94,10 +101,14 @@ struct bpf_reg_state {
 			u32 btf_id;
 		};
 
+<<<<<<< HEAD
 		struct { /* for PTR_TO_MEM | PTR_TO_MEM_OR_NULL */
 			u32 mem_size;
 			u32 dynptr_id; /* for dynptr slices */
 		};
+=======
+		u32 mem_size; /* for PTR_TO_MEM | PTR_TO_MEM_OR_NULL */
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* For dynptr stack slots */
 		struct {
@@ -111,6 +122,7 @@ struct bpf_reg_state {
 			bool first_slot;
 		} dynptr;
 
+<<<<<<< HEAD
 		/* For bpf_iter stack slots */
 		struct {
 			/* BTF container and BTF type ID describing
@@ -123,6 +135,8 @@ struct bpf_reg_state {
 			int depth:30;
 		} iter;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Max size from any of the above. */
 		struct {
 			unsigned long raw1;
@@ -131,6 +145,7 @@ struct bpf_reg_state {
 
 		u32 subprogno; /* for PTR_TO_FUNC */
 	};
+<<<<<<< HEAD
 	/* For scalar types (SCALAR_VALUE), this represents our knowledge of
 	 * the actual value.
 	 * For pointer types, this represents the variable part of the offset
@@ -151,6 +166,8 @@ struct bpf_reg_state {
 	s32 s32_max_value; /* maximum possible (s32)value */
 	u32 u32_min_value; /* minimum possible (u32)value */
 	u32 u32_max_value; /* maximum possible (u32)value */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* For PTR_TO_PACKET, used to find other pointers with the same variable
 	 * offset, so they can share range knowledge.
 	 * For PTR_TO_MAP_VALUE_OR_NULL this is used to share which map value we
@@ -161,8 +178,11 @@ struct bpf_reg_state {
 	 * same reference to the socket, to determine proper reference freeing.
 	 * For stack slots that are dynptrs, this is used to track references to
 	 * the dynptr to determine proper reference freeing.
+<<<<<<< HEAD
 	 * Similarly to dynptrs, we use ID to track "belonging" of a reference
 	 * to a specific instance of bpf_iter.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	u32 id;
 	/* PTR_TO_SOCKET and PTR_TO_TCP_SOCK could be a ptr returned
@@ -205,6 +225,29 @@ struct bpf_reg_state {
 	 * allowed and has the same effect as bpf_sk_release(sk).
 	 */
 	u32 ref_obj_id;
+<<<<<<< HEAD
+=======
+	/* For scalar types (SCALAR_VALUE), this represents our knowledge of
+	 * the actual value.
+	 * For pointer types, this represents the variable part of the offset
+	 * from the pointed-to object, and is shared with all bpf_reg_states
+	 * with the same id as us.
+	 */
+	struct tnum var_off;
+	/* Used to determine if any memory access using this register will
+	 * result in a bad access.
+	 * These refer to the same value as var_off, not necessarily the actual
+	 * contents of the register.
+	 */
+	s64 smin_value; /* minimum possible (s64)value */
+	s64 smax_value; /* maximum possible (s64)value */
+	u64 umin_value; /* minimum possible (u64)value */
+	u64 umax_value; /* maximum possible (u64)value */
+	s32 s32_min_value; /* minimum possible (s32)value */
+	s32 s32_max_value; /* maximum possible (s32)value */
+	u32 u32_min_value; /* minimum possible (u32)value */
+	u32 u32_max_value; /* maximum possible (u32)value */
+>>>>>>> b7ba80a49124 (Commit)
 	/* parentage chain for liveness checking */
 	struct bpf_reg_state *parent;
 	/* Inside the callee two registers can be both PTR_TO_STACK like
@@ -233,11 +276,17 @@ enum bpf_stack_slot_type {
 	 * is stored in bpf_stack_state->spilled_ptr.dynptr.type
 	 */
 	STACK_DYNPTR,
+<<<<<<< HEAD
 	STACK_ITER,
 };
 
 #define BPF_REG_SIZE 8	/* size of eBPF register in bytes */
 
+=======
+};
+
+#define BPF_REG_SIZE 8	/* size of eBPF register in bytes */
+>>>>>>> b7ba80a49124 (Commit)
 #define BPF_DYNPTR_SIZE		sizeof(struct bpf_dynptr_kern)
 #define BPF_DYNPTR_NR_SLOTS		(BPF_DYNPTR_SIZE / BPF_REG_SIZE)
 
@@ -311,9 +360,15 @@ struct bpf_id_pair {
 	u32 cur;
 };
 
+<<<<<<< HEAD
 #define MAX_CALL_FRAMES 8
 /* Maximum number of register states that can exist at once */
 #define BPF_ID_MAP_SIZE ((MAX_BPF_REG + MAX_BPF_STACK / BPF_REG_SIZE) * MAX_CALL_FRAMES)
+=======
+/* Maximum number of register states that can exist at once */
+#define BPF_ID_MAP_SIZE (MAX_BPF_REG + MAX_BPF_STACK / BPF_REG_SIZE)
+#define MAX_CALL_FRAMES 8
+>>>>>>> b7ba80a49124 (Commit)
 struct bpf_verifier_state {
 	/* call stack tracking */
 	struct bpf_func_state *frame[MAX_CALL_FRAMES];
@@ -366,10 +421,15 @@ struct bpf_verifier_state {
 	u32 branches;
 	u32 insn_idx;
 	u32 curframe;
+<<<<<<< HEAD
 
 	struct bpf_active_lock active_lock;
 	bool speculative;
 	bool active_rcu_lock;
+=======
+	u32 active_spin_lock;
+	bool speculative;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* first and last insn idx of this verifier state */
 	u32 first_insn_idx;
@@ -464,25 +524,35 @@ struct bpf_insn_aux_data {
 		 */
 		struct bpf_loop_inline_state loop_inline_state;
 	};
+<<<<<<< HEAD
 	u64 obj_new_size; /* remember the size of type passed to bpf_obj_new to rewrite R1 */
 	struct btf_struct_meta *kptr_struct_meta;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 map_key_state; /* constant (32 bit) key tracking for maps */
 	int ctx_field_size; /* the ctx field size for load insn, maybe 0 */
 	u32 seen; /* this insn was processed by the verifier at env->pass_cnt */
 	bool sanitize_stack_spill; /* subject to Spectre v4 sanitation */
 	bool zext_dst; /* this insn zero extends dst reg */
+<<<<<<< HEAD
 	bool storage_get_func_atomic; /* bpf_*_storage_get() with atomic memory alloc */
 	bool is_iter_next; /* bpf_iter_<type>_next() kfunc call */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8 alu_state; /* used in combination with alu_limit */
 
 	/* below fields are initialized once */
 	unsigned int orig_idx; /* original instruction index */
+<<<<<<< HEAD
 	bool jmp_point;
 	bool prune_point;
 	/* ensure we check state equivalence and save state checkpoint and
 	 * this instruction, regardless of any heuristics
 	 */
 	bool force_checkpoint;
+=======
+	bool prune_point;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define MAX_USED_MAPS 64 /* max number of maps accessed by one eBPF program */
@@ -562,6 +632,10 @@ struct bpf_verifier_env {
 	bool explore_alu_limits;
 	bool allow_ptr_leaks;
 	bool allow_uninit_stack;
+<<<<<<< HEAD
+=======
+	bool allow_ptr_to_map_access;
+>>>>>>> b7ba80a49124 (Commit)
 	bool bpf_capable;
 	bool bypass_spec_v1;
 	bool bypass_spec_v4;
@@ -642,8 +716,20 @@ int check_ptr_off_reg(struct bpf_verifier_env *env,
 int check_func_arg_reg_off(struct bpf_verifier_env *env,
 			   const struct bpf_reg_state *reg, int regno,
 			   enum bpf_arg_type arg_type);
+<<<<<<< HEAD
 int check_mem_reg(struct bpf_verifier_env *env, struct bpf_reg_state *reg,
 		   u32 regno, u32 mem_size);
+=======
+int check_kfunc_mem_size_reg(struct bpf_verifier_env *env, struct bpf_reg_state *reg,
+			     u32 regno);
+int check_mem_reg(struct bpf_verifier_env *env, struct bpf_reg_state *reg,
+		   u32 regno, u32 mem_size);
+bool is_dynptr_reg_valid_init(struct bpf_verifier_env *env,
+			      struct bpf_reg_state *reg);
+bool is_dynptr_type_expected(struct bpf_verifier_env *env,
+			     struct bpf_reg_state *reg,
+			     enum bpf_arg_type arg_type);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* this lives here instead of in bpf.h because it needs to dereference tgt_prog */
 static inline u64 bpf_trampoline_compute_key(const struct bpf_prog *tgt_prog,
@@ -688,12 +774,17 @@ static inline u32 type_flag(u32 type)
 }
 
 /* only use after check_attach_btf_id() */
+<<<<<<< HEAD
 static inline enum bpf_prog_type resolve_prog_type(const struct bpf_prog *prog)
+=======
+static inline enum bpf_prog_type resolve_prog_type(struct bpf_prog *prog)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return prog->type == BPF_PROG_TYPE_EXT ?
 		prog->aux->dst_prog->type : prog->type;
 }
 
+<<<<<<< HEAD
 static inline bool bpf_prog_check_recur(const struct bpf_prog *prog)
 {
 	switch (resolve_prog_type(prog)) {
@@ -714,4 +805,6 @@ static inline bool bpf_type_has_unsafe_modifiers(u32 type)
 	return type_flag(type) & ~BPF_REG_TRUSTED_MODIFIERS;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _LINUX_BPF_VERIFIER_H */

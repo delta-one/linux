@@ -69,13 +69,22 @@ fail:
 	return err;
 }
 
+<<<<<<< HEAD
 static void octeon_spi_remove(struct platform_device *pdev)
+=======
+static int octeon_spi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct octeon_spi *p = spi_master_get_devdata(master);
 
 	/* Clear the CSENA* and put everything in a known state. */
 	writeq(0, p->register_base + OCTEON_SPI_CFG(p));
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id octeon_spi_match[] = {
@@ -90,7 +99,11 @@ static struct platform_driver octeon_spi_driver = {
 		.of_match_table = octeon_spi_match,
 	},
 	.probe		= octeon_spi_probe,
+<<<<<<< HEAD
 	.remove_new	= octeon_spi_remove,
+=======
+	.remove		= octeon_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(octeon_spi_driver);

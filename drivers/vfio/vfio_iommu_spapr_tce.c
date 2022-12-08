@@ -4,7 +4,10 @@
  *
  * Copyright (C) 2013 IBM Corp.  All rights reserved.
  *     Author: Alexey Kardashevskiy <aik@ozlabs.ru>
+<<<<<<< HEAD
  * Copyright Gavin Shan, IBM Corporation 2014.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Derived from original vfio_iommu_type1.c:
  * Copyright (C) 2012 Red Hat, Inc.  All rights reserved.
@@ -774,6 +777,7 @@ static long tce_iommu_create_default_window(struct tce_container *container)
 	return ret;
 }
 
+<<<<<<< HEAD
 static long vfio_spapr_ioctl_eeh_pe_op(struct iommu_group *group,
 				       unsigned long arg)
 {
@@ -825,6 +829,8 @@ static long vfio_spapr_ioctl_eeh_pe_op(struct iommu_group *group,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static long tce_iommu_ioctl(void *iommu_data,
 				 unsigned int cmd, unsigned long arg)
 {
@@ -837,12 +843,23 @@ static long tce_iommu_ioctl(void *iommu_data,
 		switch (arg) {
 		case VFIO_SPAPR_TCE_IOMMU:
 		case VFIO_SPAPR_TCE_v2_IOMMU:
+<<<<<<< HEAD
 			return 1;
 		case VFIO_EEH:
 			return eeh_enabled();
 		default:
 			return 0;
 		}
+=======
+			ret = 1;
+			break;
+		default:
+			ret = vfio_spapr_iommu_eeh_ioctl(NULL, cmd, arg);
+			break;
+		}
+
+		return (ret < 0) ? 0 : ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -1096,7 +1113,12 @@ static long tce_iommu_ioctl(void *iommu_data,
 
 		ret = 0;
 		list_for_each_entry(tcegrp, &container->group_list, next) {
+<<<<<<< HEAD
 			ret = vfio_spapr_ioctl_eeh_pe_op(tcegrp->grp, arg);
+=======
+			ret = vfio_spapr_iommu_eeh_ioctl(tcegrp->grp,
+					cmd, arg);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret)
 				return ret;
 		}
@@ -1190,6 +1212,55 @@ static long tce_iommu_ioctl(void *iommu_data,
 static void tce_iommu_release_ownership(struct tce_container *container,
 		struct iommu_table_group *table_group)
 {
+<<<<<<< HEAD
+=======
+	int i;
+
+	for (i = 0; i < IOMMU_TABLE_GROUP_MAX_TABLES; ++i) {
+		struct iommu_table *tbl = container->tables[i];
+
+		if (!tbl)
+			continue;
+
+		tce_iommu_clear(container, tbl, tbl->it_offset, tbl->it_size);
+		if (tbl->it_map)
+			iommu_release_ownership(tbl);
+
+		container->tables[i] = NULL;
+	}
+}
+
+static int tce_iommu_take_ownership(struct tce_container *container,
+		struct iommu_table_group *table_group)
+{
+	int i, j, rc = 0;
+
+	for (i = 0; i < IOMMU_TABLE_GROUP_MAX_TABLES; ++i) {
+		struct iommu_table *tbl = table_group->tables[i];
+
+		if (!tbl || !tbl->it_map)
+			continue;
+
+		rc = iommu_take_ownership(tbl);
+		if (rc) {
+			for (j = 0; j < i; ++j)
+				iommu_release_ownership(
+						table_group->tables[j]);
+
+			return rc;
+		}
+	}
+
+	for (i = 0; i < IOMMU_TABLE_GROUP_MAX_TABLES; ++i)
+		container->tables[i] = table_group->tables[i];
+
+	return 0;
+}
+
+static void tce_iommu_release_ownership_ddw(struct tce_container *container,
+		struct iommu_table_group *table_group)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	long i;
 
 	if (!table_group->ops->unset_window) {
@@ -1200,13 +1271,32 @@ static void tce_iommu_release_ownership(struct tce_container *container,
 	for (i = 0; i < IOMMU_TABLE_GROUP_MAX_TABLES; ++i)
 		if (container->tables[i])
 			table_group->ops->unset_window(table_group, i);
+<<<<<<< HEAD
 }
 
 static long tce_iommu_take_ownership(struct tce_container *container,
+=======
+
+	table_group->ops->release_ownership(table_group);
+}
+
+static long tce_iommu_take_ownership_ddw(struct tce_container *container,
+>>>>>>> b7ba80a49124 (Commit)
 		struct iommu_table_group *table_group)
 {
 	long i, ret = 0;
 
+<<<<<<< HEAD
+=======
+	if (!table_group->ops->create_table || !table_group->ops->set_window ||
+			!table_group->ops->release_ownership) {
+		WARN_ON_ONCE(1);
+		return -EFAULT;
+	}
+
+	table_group->ops->take_ownership(table_group);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Set all windows to the new group */
 	for (i = 0; i < IOMMU_TABLE_GROUP_MAX_TABLES; ++i) {
 		struct iommu_table *tbl = container->tables[i];
@@ -1225,6 +1315,11 @@ release_exit:
 	for (i = 0; i < IOMMU_TABLE_GROUP_MAX_TABLES; ++i)
 		table_group->ops->unset_window(table_group, i);
 
+<<<<<<< HEAD
+=======
+	table_group->ops->release_ownership(table_group);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -1249,6 +1344,7 @@ static int tce_iommu_attach_group(void *iommu_data,
 		goto unlock_exit;
 	}
 
+<<<<<<< HEAD
 	/* v2 requires full support of dynamic DMA windows */
 	if (container->v2 && table_group->max_dynamic_windows_supported == 0) {
 		ret = -EINVAL;
@@ -1257,6 +1353,11 @@ static int tce_iommu_attach_group(void *iommu_data,
 
 	/* v1 reuses TCE tables and does not share them among PEs */
 	if (!container->v2 && tce_groups_attached(container)) {
+=======
+	if (tce_groups_attached(container) && (!table_group->ops ||
+			!table_group->ops->take_ownership ||
+			!table_group->ops->release_ownership)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EBUSY;
 		goto unlock_exit;
 	}
@@ -1291,15 +1392,38 @@ static int tce_iommu_attach_group(void *iommu_data,
 		goto unlock_exit;
 	}
 
+<<<<<<< HEAD
 	ret = tce_iommu_take_ownership(container, table_group);
 	if (!tce_groups_attached(container) && !container->tables[0])
 		container->def_window_pending = true;
+=======
+	if (!table_group->ops || !table_group->ops->take_ownership ||
+			!table_group->ops->release_ownership) {
+		if (container->v2) {
+			ret = -EPERM;
+			goto free_exit;
+		}
+		ret = tce_iommu_take_ownership(container, table_group);
+	} else {
+		if (!container->v2) {
+			ret = -EPERM;
+			goto free_exit;
+		}
+		ret = tce_iommu_take_ownership_ddw(container, table_group);
+		if (!tce_groups_attached(container) && !container->tables[0])
+			container->def_window_pending = true;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!ret) {
 		tcegrp->grp = iommu_group;
 		list_add(&tcegrp->next, &container->group_list);
 	}
 
+<<<<<<< HEAD
+=======
+free_exit:
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret && tcegrp)
 		kfree(tcegrp);
 
@@ -1338,7 +1462,14 @@ static void tce_iommu_detach_group(void *iommu_data,
 	table_group = iommu_group_get_iommudata(iommu_group);
 	BUG_ON(!table_group);
 
+<<<<<<< HEAD
 	tce_iommu_release_ownership(container, table_group);
+=======
+	if (!table_group->ops || !table_group->ops->release_ownership)
+		tce_iommu_release_ownership(container, table_group);
+	else
+		tce_iommu_release_ownership_ddw(container, table_group);
+>>>>>>> b7ba80a49124 (Commit)
 
 unlock_exit:
 	mutex_unlock(&container->lock);

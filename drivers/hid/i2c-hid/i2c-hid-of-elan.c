@@ -68,7 +68,12 @@ static void elan_i2c_hid_power_down(struct i2chid_ops *ops)
 	regulator_disable(ihid_elan->vcc33);
 }
 
+<<<<<<< HEAD
 static int i2c_hid_of_elan_probe(struct i2c_client *client)
+=======
+static int i2c_hid_of_elan_probe(struct i2c_client *client,
+				 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_hid_of_elan *ihid_elan;
 
@@ -118,7 +123,11 @@ static struct i2c_driver elan_i2c_hid_ts_driver = {
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 		.of_match_table = of_match_ptr(elan_i2c_hid_of_match),
 	},
+<<<<<<< HEAD
 	.probe_new	= i2c_hid_of_elan_probe,
+=======
+	.probe		= i2c_hid_of_elan_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= i2c_hid_core_remove,
 	.shutdown	= i2c_hid_core_shutdown,
 };

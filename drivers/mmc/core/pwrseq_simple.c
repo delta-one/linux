@@ -119,14 +119,22 @@ static int mmc_pwrseq_simple_probe(struct platform_device *pdev)
 
 	pwrseq->ext_clk = devm_clk_get(dev, "ext_clock");
 	if (IS_ERR(pwrseq->ext_clk) && PTR_ERR(pwrseq->ext_clk) != -ENOENT)
+<<<<<<< HEAD
 		return dev_err_probe(dev, PTR_ERR(pwrseq->ext_clk), "external clock not ready\n");
+=======
+		return PTR_ERR(pwrseq->ext_clk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pwrseq->reset_gpios = devm_gpiod_get_array(dev, "reset",
 							GPIOD_OUT_HIGH);
 	if (IS_ERR(pwrseq->reset_gpios) &&
 	    PTR_ERR(pwrseq->reset_gpios) != -ENOENT &&
 	    PTR_ERR(pwrseq->reset_gpios) != -ENOSYS) {
+<<<<<<< HEAD
 		return dev_err_probe(dev, PTR_ERR(pwrseq->reset_gpios), "reset GPIOs not ready\n");
+=======
+		return PTR_ERR(pwrseq->reset_gpios);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	device_property_read_u32(dev, "post-power-on-delay-ms",

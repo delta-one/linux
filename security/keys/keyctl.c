@@ -1251,7 +1251,11 @@ long keyctl_instantiate_key(key_serial_t id,
 		struct iov_iter from;
 		int ret;
 
+<<<<<<< HEAD
 		ret = import_single_range(ITER_SOURCE, (void __user *)_payload, plen,
+=======
+		ret = import_single_range(WRITE, (void __user *)_payload, plen,
+>>>>>>> b7ba80a49124 (Commit)
 					  &iov, &from);
 		if (unlikely(ret))
 			return ret;
@@ -1283,7 +1287,11 @@ long keyctl_instantiate_key_iov(key_serial_t id,
 	if (!_payload_iov)
 		ioc = 0;
 
+<<<<<<< HEAD
 	ret = import_iovec(ITER_SOURCE, _payload_iov, ioc,
+=======
+	ret = import_iovec(WRITE, _payload_iov, ioc,
+>>>>>>> b7ba80a49124 (Commit)
 				    ARRAY_SIZE(iovstack), &iov, &from);
 	if (ret < 0)
 		return ret;

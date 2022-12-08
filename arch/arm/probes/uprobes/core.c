@@ -9,7 +9,10 @@
 #include <linux/highmem.h>
 #include <linux/sched.h>
 #include <linux/uprobes.h>
+<<<<<<< HEAD
 #include <linux/non-atomic/xchg.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/notifier.h>
 
 #include <asm/opcodes.h>
@@ -62,7 +65,16 @@ unsigned long
 arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
 				  struct pt_regs *regs)
 {
+<<<<<<< HEAD
 	return __xchg(&regs->ARM_lr, trampoline_vaddr);
+=======
+	unsigned long orig_ret_vaddr;
+
+	orig_ret_vaddr = regs->ARM_lr;
+	/* Replace the return addr with trampoline addr */
+	regs->ARM_lr = trampoline_vaddr;
+	return orig_ret_vaddr;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe, struct mm_struct *mm,

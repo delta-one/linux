@@ -2,7 +2,10 @@
 #include <linux/cred.h>
 #include <linux/device.h>
 #include <linux/dma-buf.h>
+<<<<<<< HEAD
 #include <linux/dma-resv.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/highmem.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
@@ -13,8 +16,11 @@
 #include <linux/slab.h>
 #include <linux/udmabuf.h>
 #include <linux/hugetlb.h>
+<<<<<<< HEAD
 #include <linux/vmalloc.h>
 #include <linux/iosys-map.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int list_limit = 1024;
 module_param(list_limit, int, 0644);
@@ -52,8 +58,11 @@ static int mmap_udmabuf(struct dma_buf *buf, struct vm_area_struct *vma)
 {
 	struct udmabuf *ubuf = buf->priv;
 
+<<<<<<< HEAD
 	dma_resv_assert_held(buf->resv);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if ((vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) == 0)
 		return -EINVAL;
 
@@ -62,6 +71,7 @@ static int mmap_udmabuf(struct dma_buf *buf, struct vm_area_struct *vma)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int vmap_udmabuf(struct dma_buf *buf, struct iosys_map *map)
 {
 	struct udmabuf *ubuf = buf->priv;
@@ -86,6 +96,8 @@ static void vunmap_udmabuf(struct dma_buf *buf, struct iosys_map *map)
 	vm_unmap_ram(map->vaddr, ubuf->pagecount);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct sg_table *get_sg_table(struct device *dev, struct dma_buf *buf,
 				     enum dma_data_direction direction)
 {
@@ -188,8 +200,11 @@ static const struct dma_buf_ops udmabuf_ops = {
 	.unmap_dma_buf	   = unmap_udmabuf,
 	.release	   = release_udmabuf,
 	.mmap		   = mmap_udmabuf,
+<<<<<<< HEAD
 	.vmap		   = vmap_udmabuf,
 	.vunmap		   = vunmap_udmabuf,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.begin_cpu_access  = begin_cpu_udmabuf,
 	.end_cpu_access    = end_cpu_udmabuf,
 };
@@ -430,3 +445,7 @@ module_init(udmabuf_dev_init)
 module_exit(udmabuf_dev_exit)
 
 MODULE_AUTHOR("Gerd Hoffmann <kraxel@redhat.com>");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

@@ -29,6 +29,10 @@ select:
       contains:
         enum:
           - rockchip,rk3328-dwc3
+<<<<<<< HEAD
+=======
+          - rockchip,rk3399-dwc3
+>>>>>>> b7ba80a49124 (Commit)
           - rockchip,rk3568-dwc3
   required:
     - compatible
@@ -38,6 +42,10 @@ properties:
     items:
       - enum:
           - rockchip,rk3328-dwc3
+<<<<<<< HEAD
+=======
+          - rockchip,rk3399-dwc3
+>>>>>>> b7ba80a49124 (Commit)
           - rockchip,rk3568-dwc3
       - const: snps,dwc3
 
@@ -88,7 +96,11 @@ required:
 
 examples:
   - |
+<<<<<<< HEAD
     #include <dt-bindings/clock/rk3328-cru.h>
+=======
+    #include <dt-bindings/clock/rk3399-cru.h>
+>>>>>>> b7ba80a49124 (Commit)
     #include <dt-bindings/interrupt-controller/arm-gic.h>
 
     bus {
@@ -96,11 +108,19 @@ examples:
       #size-cells = <2>;
 
       usbdrd3_0: usb@fe800000 {
+<<<<<<< HEAD
         compatible = "rockchip,rk3328-dwc3", "snps,dwc3";
         reg = <0x0 0xfe800000 0x0 0x100000>;
         interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
         clocks = <&cru SCLK_USB3OTG_REF>, <&cru SCLK_USB3OTG_SUSPEND>,
                  <&cru ACLK_USB3OTG>;
+=======
+        compatible = "rockchip,rk3399-dwc3", "snps,dwc3";
+        reg = <0x0 0xfe800000 0x0 0x100000>;
+        interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
+        clocks = <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
+                 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_GRF>;
+>>>>>>> b7ba80a49124 (Commit)
         clock-names = "ref_clk", "suspend_clk",
                       "bus_clk", "grf_clk";
         dr_mode = "otg";

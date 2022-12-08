@@ -235,7 +235,11 @@ static int musb_softconnect_show(struct seq_file *s, void *unused)
 	u8		reg;
 	int		connect;
 
+<<<<<<< HEAD
 	switch (musb_get_state(musb)) {
+=======
+	switch (musb->xceiv->otg->state) {
+>>>>>>> b7ba80a49124 (Commit)
 	case OTG_STATE_A_HOST:
 	case OTG_STATE_A_WAIT_BCON:
 		pm_runtime_get_sync(musb->controller);
@@ -275,7 +279,11 @@ static ssize_t musb_softconnect_write(struct file *file,
 
 	pm_runtime_get_sync(musb->controller);
 	if (!strncmp(buf, "0", 1)) {
+<<<<<<< HEAD
 		switch (musb_get_state(musb)) {
+=======
+		switch (musb->xceiv->otg->state) {
+>>>>>>> b7ba80a49124 (Commit)
 		case OTG_STATE_A_HOST:
 			musb_root_disconnect(musb);
 			reg = musb_readb(musb->mregs, MUSB_DEVCTL);
@@ -286,7 +294,11 @@ static ssize_t musb_softconnect_write(struct file *file,
 			break;
 		}
 	} else if (!strncmp(buf, "1", 1)) {
+<<<<<<< HEAD
 		switch (musb_get_state(musb)) {
+=======
+		switch (musb->xceiv->otg->state) {
+>>>>>>> b7ba80a49124 (Commit)
 		case OTG_STATE_A_WAIT_BCON:
 			/*
 			 * musb_save_context() called in musb_runtime_suspend()

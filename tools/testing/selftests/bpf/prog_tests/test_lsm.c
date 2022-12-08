@@ -75,8 +75,12 @@ static int test_lsm(struct lsm *skel)
 	skel->bss->monitored_pid = getpid();
 
 	err = stack_mprotect();
+<<<<<<< HEAD
 	if (!ASSERT_EQ(err, -1, "stack_mprotect") ||
 	    !ASSERT_EQ(errno, EPERM, "stack_mprotect"))
+=======
+	if (!ASSERT_EQ(errno, EPERM, "stack_mprotect"))
+>>>>>>> b7ba80a49124 (Commit)
 		return err;
 
 	ASSERT_EQ(skel->bss->mprotect_count, 1, "mprotect_count");

@@ -361,7 +361,12 @@ again:
 		 * huge or device mapping one and compute corresponding pfn
 		 * values.
 		 */
+<<<<<<< HEAD
 		pmd = pmdp_get_lockless(pmdp);
+=======
+		pmd = pmd_read_atomic(pmdp);
+		barrier();
+>>>>>>> b7ba80a49124 (Commit)
 		if (!pmd_devmap(pmd) && !pmd_trans_huge(pmd))
 			goto again;
 
@@ -492,6 +497,7 @@ static int hmm_vma_walk_hugetlb_entry(pte_t *pte, unsigned long hmask,
 	required_fault =
 		hmm_pte_need_fault(hmm_vma_walk, pfn_req_flags, cpu_flags);
 	if (required_fault) {
+<<<<<<< HEAD
 		int ret;
 
 		spin_unlock(ptl);
@@ -507,6 +513,10 @@ static int hmm_vma_walk_hugetlb_entry(pte_t *pte, unsigned long hmask,
 		ret = hmm_vma_fault(addr, end, required_fault, walk);
 		hugetlb_vma_lock_read(vma);
 		return ret;
+=======
+		spin_unlock(ptl);
+		return hmm_vma_fault(addr, end, required_fault, walk);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	pfn = pte_pfn(entry) + ((start & ~hmask) >> PAGE_SHIFT);

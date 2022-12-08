@@ -61,7 +61,10 @@ int parse_bw(struct rdt_parse_data *data, struct resctrl_schema *s,
 	     struct rdt_domain *d)
 {
 	struct resctrl_staged_config *cfg;
+<<<<<<< HEAD
 	u32 closid = data->rdtgrp->closid;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct rdt_resource *r = s->res;
 	unsigned long bw_val;
 
@@ -73,12 +76,15 @@ int parse_bw(struct rdt_parse_data *data, struct resctrl_schema *s,
 
 	if (!bw_validate(data->buf, &bw_val, r))
 		return -EINVAL;
+<<<<<<< HEAD
 
 	if (is_mba_sc(r)) {
 		d->mbps_val[closid] = bw_val;
 		return 0;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cfg->new_ctrl = bw_val;
 	cfg->have_new_ctrl = true;
 
@@ -105,7 +111,12 @@ static bool cbm_validate(char *buf, u32 *data, struct rdt_resource *r)
 		return false;
 	}
 
+<<<<<<< HEAD
 	if ((r->cache.min_cbm_bits > 0 && val == 0) || val > r->default_ctrl) {
+=======
+	if ((!r->cache.arch_has_empty_bitmaps && val == 0) ||
+	    val > r->default_ctrl) {
+>>>>>>> b7ba80a49124 (Commit)
 		rdt_last_cmd_puts("Mask out of range\n");
 		return false;
 	}
@@ -209,7 +220,11 @@ static int parse_line(char *line, struct resctrl_schema *s,
 	unsigned long dom_id;
 
 	if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP &&
+<<<<<<< HEAD
 	    (r->rid == RDT_RESOURCE_MBA || r->rid == RDT_RESOURCE_SMBA)) {
+=======
+	    r->rid == RDT_RESOURCE_MBA) {
+>>>>>>> b7ba80a49124 (Commit)
 		rdt_last_cmd_puts("Cannot pseudo-lock MBA resource\n");
 		return -EINVAL;
 	}
@@ -267,6 +282,7 @@ static u32 get_config_index(u32 closid, enum resctrl_conf_type type)
 
 static bool apply_config(struct rdt_hw_domain *hw_dom,
 			 struct resctrl_staged_config *cfg, u32 idx,
+<<<<<<< HEAD
 			 cpumask_var_t cpu_mask)
 {
 	struct rdt_domain *dom = &hw_dom->d_resctrl;
@@ -274,6 +290,16 @@ static bool apply_config(struct rdt_hw_domain *hw_dom,
 	if (cfg->new_ctrl != hw_dom->ctrl_val[idx]) {
 		cpumask_set_cpu(cpumask_any(&dom->cpu_mask), cpu_mask);
 		hw_dom->ctrl_val[idx] = cfg->new_ctrl;
+=======
+			 cpumask_var_t cpu_mask, bool mba_sc)
+{
+	struct rdt_domain *dom = &hw_dom->d_resctrl;
+	u32 *dc = !mba_sc ? hw_dom->ctrl_val : hw_dom->mbps_val;
+
+	if (cfg->new_ctrl != dc[idx]) {
+		cpumask_set_cpu(cpumask_any(&dom->cpu_mask), cpu_mask);
+		dc[idx] = cfg->new_ctrl;
+>>>>>>> b7ba80a49124 (Commit)
 
 		return true;
 	}
@@ -281,6 +307,7 @@ static bool apply_config(struct rdt_hw_domain *hw_dom,
 	return false;
 }
 
+<<<<<<< HEAD
 int resctrl_arch_update_one(struct rdt_resource *r, struct rdt_domain *d,
 			    u32 closid, enum resctrl_conf_type t, u32 cfg_val)
 {
@@ -302,6 +329,8 @@ int resctrl_arch_update_one(struct rdt_resource *r, struct rdt_domain *d,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid)
 {
 	struct resctrl_staged_config *cfg;
@@ -310,11 +339,20 @@ int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid)
 	enum resctrl_conf_type t;
 	cpumask_var_t cpu_mask;
 	struct rdt_domain *d;
+<<<<<<< HEAD
+=======
+	bool mba_sc;
+	int cpu;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 idx;
 
 	if (!zalloc_cpumask_var(&cpu_mask, GFP_KERNEL))
 		return -ENOMEM;
 
+<<<<<<< HEAD
+=======
+	mba_sc = is_mba_sc(r);
+>>>>>>> b7ba80a49124 (Commit)
 	msr_param.res = NULL;
 	list_for_each_entry(d, &r->domains, list) {
 		hw_dom = resctrl_to_arch_dom(d);
@@ -324,7 +362,11 @@ int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid)
 				continue;
 
 			idx = get_config_index(closid, t);
+<<<<<<< HEAD
 			if (!apply_config(hw_dom, cfg, idx, cpu_mask))
+=======
+			if (!apply_config(hw_dom, cfg, idx, cpu_mask, mba_sc))
+>>>>>>> b7ba80a49124 (Commit)
 				continue;
 
 			if (!msr_param.res) {
@@ -338,11 +380,27 @@ int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid)
 		}
 	}
 
+<<<<<<< HEAD
 	if (cpumask_empty(cpu_mask))
 		goto done;
 
 	/* Update resource control msr on all the CPUs. */
 	on_each_cpu_mask(cpu_mask, rdt_ctrl_update, &msr_param, 1);
+=======
+	/*
+	 * Avoid writing the control msr with control values when
+	 * MBA software controller is enabled
+	 */
+	if (cpumask_empty(cpu_mask) || mba_sc)
+		goto done;
+	cpu = get_cpu();
+	/* Update resource control msr on this CPU if it's in cpu_mask. */
+	if (cpumask_test_cpu(cpu, cpu_mask))
+		rdt_ctrl_update(&msr_param);
+	/* Update resource control msr on other CPUs. */
+	smp_call_function_many(cpu_mask, rdt_ctrl_update, &msr_param, 1);
+	put_cpu();
+>>>>>>> b7ba80a49124 (Commit)
 
 done:
 	free_cpumask_var(cpu_mask);
@@ -368,6 +426,10 @@ ssize_t rdtgroup_schemata_write(struct kernfs_open_file *of,
 {
 	struct resctrl_schema *s;
 	struct rdtgroup *rdtgrp;
+<<<<<<< HEAD
+=======
+	struct rdt_domain *dom;
+>>>>>>> b7ba80a49124 (Commit)
 	struct rdt_resource *r;
 	char *tok, *resname;
 	int ret = 0;
@@ -396,7 +458,14 @@ ssize_t rdtgroup_schemata_write(struct kernfs_open_file *of,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	rdt_staged_configs_clear();
+=======
+	list_for_each_entry(s, &resctrl_schema_all, list) {
+		list_for_each_entry(dom, &s->res->domains, list)
+			memset(dom->staged_config, 0, sizeof(dom->staged_config));
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	while ((tok = strsep(&buf, "\n")) != NULL) {
 		resname = strim(strsep(&tok, ":"));
@@ -417,6 +486,7 @@ ssize_t rdtgroup_schemata_write(struct kernfs_open_file *of,
 
 	list_for_each_entry(s, &resctrl_schema_all, list) {
 		r = s->res;
+<<<<<<< HEAD
 
 		/*
 		 * Writes to mba_sc resources update the software controller,
@@ -425,6 +495,8 @@ ssize_t rdtgroup_schemata_write(struct kernfs_open_file *of,
 		if (is_mba_sc(r))
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ret = resctrl_arch_update_domains(r, rdtgrp->closid);
 		if (ret)
 			goto out;
@@ -441,7 +513,10 @@ ssize_t rdtgroup_schemata_write(struct kernfs_open_file *of,
 	}
 
 out:
+<<<<<<< HEAD
 	rdt_staged_configs_clear();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rdtgroup_kn_unlock(of->kn);
 	cpus_read_unlock();
 	return ret ?: nbytes;
@@ -453,7 +528,13 @@ u32 resctrl_arch_get_config(struct rdt_resource *r, struct rdt_domain *d,
 	struct rdt_hw_domain *hw_dom = resctrl_to_arch_dom(d);
 	u32 idx = get_config_index(closid, type);
 
+<<<<<<< HEAD
 	return hw_dom->ctrl_val[idx];
+=======
+	if (!is_mba_sc(r))
+		return hw_dom->ctrl_val[idx];
+	return hw_dom->mbps_val[idx];
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void show_doms(struct seq_file *s, struct resctrl_schema *schema, int closid)
@@ -468,12 +549,17 @@ static void show_doms(struct seq_file *s, struct resctrl_schema *schema, int clo
 		if (sep)
 			seq_puts(s, ";");
 
+<<<<<<< HEAD
 		if (is_mba_sc(r))
 			ctrl_val = dom->mbps_val[closid];
 		else
 			ctrl_val = resctrl_arch_get_config(r, dom, closid,
 							   schema->conf_type);
 
+=======
+		ctrl_val = resctrl_arch_get_config(r, dom, closid,
+						   schema->conf_type);
+>>>>>>> b7ba80a49124 (Commit)
 		seq_printf(s, r->format_str, dom->id, max_data_width,
 			   ctrl_val);
 		sep = true;
@@ -540,6 +626,10 @@ void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
 int rdtgroup_mondata_show(struct seq_file *m, void *arg)
 {
 	struct kernfs_open_file *of = m->private;
+<<<<<<< HEAD
+=======
+	struct rdt_hw_resource *hw_res;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 resid, evtid, domid;
 	struct rdtgroup *rdtgrp;
 	struct rdt_resource *r;
@@ -559,7 +649,12 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
 	domid = md.u.domid;
 	evtid = md.u.evtid;
 
+<<<<<<< HEAD
 	r = &rdt_resources_all[resid].r_resctrl;
+=======
+	hw_res = &rdt_resources_all[resid];
+	r = &hw_res->r_resctrl;
+>>>>>>> b7ba80a49124 (Commit)
 	d = rdt_find_domain(r, domid, NULL);
 	if (IS_ERR_OR_NULL(d)) {
 		ret = -ENOENT;
@@ -568,12 +663,21 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
 
 	mon_event_read(&rr, r, d, rdtgrp, evtid, false);
 
+<<<<<<< HEAD
 	if (rr.err == -EIO)
 		seq_puts(m, "Error\n");
 	else if (rr.err == -EINVAL)
 		seq_puts(m, "Unavailable\n");
 	else
 		seq_printf(m, "%llu\n", rr.val);
+=======
+	if (rr.val & RMID_VAL_ERROR)
+		seq_puts(m, "Error\n");
+	else if (rr.val & RMID_VAL_UNAVAIL)
+		seq_puts(m, "Unavailable\n");
+	else
+		seq_printf(m, "%llu\n", rr.val * hw_res->mon_scale);
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	rdtgroup_kn_unlock(of->kn);

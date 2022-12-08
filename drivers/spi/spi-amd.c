@@ -65,7 +65,11 @@ enum amd_spi_speed {
 	F_16_66MHz,
 	F_100MHz,
 	F_800KHz,
+<<<<<<< HEAD
 	SPI_SPD7 = 0x7,
+=======
+	SPI_SPD7,
+>>>>>>> b7ba80a49124 (Commit)
 	F_50MHz = 0x4,
 	F_4MHz = 0x32,
 	F_3_17MHz = 0x3F
@@ -347,7 +351,11 @@ fin_msg:
 	case AMD_SPI_V1:
 		break;
 	case AMD_SPI_V2:
+<<<<<<< HEAD
 		amd_spi_clear_chip(amd_spi, spi_get_chipselect(message->spi, 0));
+=======
+		amd_spi_clear_chip(amd_spi, message->spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		return -ENODEV;
@@ -364,7 +372,11 @@ static int amd_spi_master_transfer(struct spi_master *master,
 	struct amd_spi *amd_spi = spi_master_get_devdata(master);
 	struct spi_device *spi = msg->spi;
 
+<<<<<<< HEAD
 	amd_spi_select_chip(amd_spi, spi_get_chipselect(spi, 0));
+=======
+	amd_spi_select_chip(amd_spi, spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Extract spi_transfers from the spi message and

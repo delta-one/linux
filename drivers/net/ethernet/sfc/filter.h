@@ -162,9 +162,15 @@ struct efx_filter_spec {
 	u32	priority:2;
 	u32	flags:6;
 	u32	dmaq_id:12;
+<<<<<<< HEAD
 	u32	rss_context;
 	u32	vport_id;
 	__be16	outer_vid;
+=======
+	u32	vport_id;
+	u32	rss_context;
+	__be16	outer_vid __aligned(4); /* allow jhash2() of match values */
+>>>>>>> b7ba80a49124 (Commit)
 	__be16	inner_vid;
 	u8	loc_mac[ETH_ALEN];
 	u8	rem_mac[ETH_ALEN];

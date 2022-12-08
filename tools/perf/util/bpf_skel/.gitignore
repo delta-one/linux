@@ -1,4 +1,8 @@
 # SPDX-License-Identifier: GPL-2.0-only
 .tmp
+<<<<<<< HEAD
 *.skel.h
 vmlinux.h
+=======
+*.skel.h
+>>>>>>> b7ba80a49124 (Commit)

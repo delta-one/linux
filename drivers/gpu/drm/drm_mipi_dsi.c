@@ -62,9 +62,15 @@ static int mipi_dsi_device_match(struct device *dev, struct device_driver *drv)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mipi_dsi_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct mipi_dsi_device *dsi = to_mipi_dsi_device(dev);
+=======
+static int mipi_dsi_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	err = of_device_uevent_modalias(dev, env);
@@ -160,7 +166,11 @@ of_mipi_dsi_device_add(struct mipi_dsi_host *host, struct device_node *node)
 	int ret;
 	u32 reg;
 
+<<<<<<< HEAD
 	if (of_alias_from_compatible(node, info.type, sizeof(info.type)) < 0) {
+=======
+	if (of_modalias_node(node, info.type, sizeof(info.type)) < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		drm_err(host, "modalias failure on %pOF\n", node);
 		return ERR_PTR(-EINVAL);
 	}
@@ -606,7 +616,11 @@ int mipi_dsi_turn_on_peripheral(struct mipi_dsi_device *dsi)
 EXPORT_SYMBOL(mipi_dsi_turn_on_peripheral);
 
 /*
+<<<<<<< HEAD
  * mipi_dsi_set_maximum_return_packet_size() - specify the maximum size of
+=======
+ * mipi_dsi_set_maximum_return_packet_size() - specify the maximum size of the
+>>>>>>> b7ba80a49124 (Commit)
  *    the payload in a long packet transmitted from the peripheral back to the
  *    host processor
  * @dsi: DSI peripheral device
@@ -1224,6 +1238,7 @@ int mipi_dsi_dcs_get_display_brightness(struct mipi_dsi_device *dsi,
 }
 EXPORT_SYMBOL(mipi_dsi_dcs_get_display_brightness);
 
+<<<<<<< HEAD
 /**
  * mipi_dsi_dcs_set_display_brightness_large() - sets the 16-bit brightness value
  *    of the display
@@ -1276,6 +1291,8 @@ int mipi_dsi_dcs_get_display_brightness_large(struct mipi_dsi_device *dsi,
 }
 EXPORT_SYMBOL(mipi_dsi_dcs_get_display_brightness_large);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mipi_dsi_drv_probe(struct device *dev)
 {
 	struct mipi_dsi_driver *drv = to_mipi_dsi_driver(dev->driver);
@@ -1346,3 +1363,7 @@ postcore_initcall(mipi_dsi_bus_init);
 
 MODULE_AUTHOR("Andrzej Hajda <a.hajda@samsung.com>");
 MODULE_DESCRIPTION("MIPI DSI Bus");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL and additional rights");
+>>>>>>> b7ba80a49124 (Commit)

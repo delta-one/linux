@@ -415,7 +415,11 @@
 &aemif {
 	pinctrl-names = "default";
 	pinctrl-0 = <&nand_pins>;
+<<<<<<< HEAD
 	status = "okay";
+=======
+	status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 	cs3 {
 		#address-cells = <2>;
 		#size-cells = <1>;

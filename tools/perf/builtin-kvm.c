@@ -23,8 +23,11 @@
 #include "util/data.h"
 #include "util/ordered-events.h"
 #include "util/kvm-stat.h"
+<<<<<<< HEAD
 #include "ui/browsers/hists.h"
 #include "ui/progress.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "ui/ui.h"
 #include "util/string2.h"
 
@@ -51,6 +54,7 @@
 #include <math.h>
 #include <perf/mmap.h>
 
+<<<<<<< HEAD
 #if defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
 #define GET_EVENT_KEY(func, field)					\
 static u64 get_event_ ##func(struct kvm_event *event, int vcpu)		\
@@ -598,6 +602,8 @@ static void kvm_display(struct perf_kvm_stat *kvm)
 
 #endif // defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const char *get_filename_for_perf_kvm(void)
 {
 	const char *filename;
@@ -612,7 +618,11 @@ static const char *get_filename_for_perf_kvm(void)
 	return filename;
 }
 
+<<<<<<< HEAD
 #if defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+=======
+#ifdef HAVE_KVM_STAT_SUPPORT
+>>>>>>> b7ba80a49124 (Commit)
 
 void exit_event_get_key(struct evsel *evsel,
 			struct perf_sample *sample,
@@ -672,7 +682,11 @@ void exit_event_decode_key(struct perf_kvm_stat *kvm,
 	const char *exit_reason = get_exit_reason(kvm, key->exit_reasons,
 						  key->key);
 
+<<<<<<< HEAD
 	scnprintf(decode, KVM_EVENT_NAME_LEN, "%s", exit_reason);
+=======
+	scnprintf(decode, decode_str_len, "%s", exit_reason);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool register_kvm_events_ops(struct perf_kvm_stat *kvm)
@@ -695,6 +709,7 @@ struct vcpu_event_record {
 	struct kvm_event *last_event;
 };
 
+<<<<<<< HEAD
 #ifdef HAVE_TIMERFD_SUPPORT
 static void clear_events_cache_stats(void)
 {
@@ -721,11 +736,49 @@ static void clear_events_cache_stats(void)
 		for (i = 0; i < event->max_vcpu; ++i) {
 			event->vcpu[i].time = 0;
 			init_stats(&event->vcpu[i].stats);
+=======
+
+static void init_kvm_event_record(struct perf_kvm_stat *kvm)
+{
+	unsigned int i;
+
+	for (i = 0; i < EVENTS_CACHE_SIZE; i++)
+		INIT_LIST_HEAD(&kvm->kvm_events_cache[i]);
+}
+
+#ifdef HAVE_TIMERFD_SUPPORT
+static void clear_events_cache_stats(struct list_head *kvm_events_cache)
+{
+	struct list_head *head;
+	struct kvm_event *event;
+	unsigned int i;
+	int j;
+
+	for (i = 0; i < EVENTS_CACHE_SIZE; i++) {
+		head = &kvm_events_cache[i];
+		list_for_each_entry(event, head, hash_entry) {
+			/* reset stats for event */
+			event->total.time = 0;
+			init_stats(&event->total.stats);
+
+			for (j = 0; j < event->max_vcpu; ++j) {
+				event->vcpu[j].time = 0;
+				init_stats(&event->vcpu[j].stats);
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }
 #endif
 
+<<<<<<< HEAD
+=======
+static int kvm_events_hash_fn(u64 key)
+{
+	return key & (EVENTS_CACHE_SIZE - 1);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static bool kvm_event_expand(struct kvm_event *event, int vcpu_id)
 {
 	int old_max_vcpu = event->max_vcpu;
@@ -751,6 +804,7 @@ static bool kvm_event_expand(struct kvm_event *event, int vcpu_id)
 	return true;
 }
 
+<<<<<<< HEAD
 static void *kvm_he_zalloc(size_t size)
 {
 	struct kvm_event *kvm_ev;
@@ -809,21 +863,68 @@ static struct kvm_event *find_create_kvm_event(struct perf_kvm_stat *kvm,
 		event->key = *key;
 	}
 
+=======
+static struct kvm_event *kvm_alloc_init_event(struct event_key *key)
+{
+	struct kvm_event *event;
+
+	event = zalloc(sizeof(*event));
+	if (!event) {
+		pr_err("Not enough memory\n");
+		return NULL;
+	}
+
+	event->key = *key;
+	init_stats(&event->total.stats);
+	return event;
+}
+
+static struct kvm_event *find_create_kvm_event(struct perf_kvm_stat *kvm,
+					       struct event_key *key)
+{
+	struct kvm_event *event;
+	struct list_head *head;
+
+	BUG_ON(key->key == INVALID_KEY);
+
+	head = &kvm->kvm_events_cache[kvm_events_hash_fn(key->key)];
+	list_for_each_entry(event, head, hash_entry) {
+		if (event->key.key == key->key && event->key.info == key->info)
+			return event;
+	}
+
+	event = kvm_alloc_init_event(key);
+	if (!event)
+		return NULL;
+
+	list_add(&event->hash_entry, head);
+>>>>>>> b7ba80a49124 (Commit)
 	return event;
 }
 
 static bool handle_begin_event(struct perf_kvm_stat *kvm,
 			       struct vcpu_event_record *vcpu_record,
+<<<<<<< HEAD
 			       struct event_key *key,
 			       struct perf_sample *sample)
+=======
+			       struct event_key *key, u64 timestamp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct kvm_event *event = NULL;
 
 	if (key->key != INVALID_KEY)
+<<<<<<< HEAD
 		event = find_create_kvm_event(kvm, key, sample);
 
 	vcpu_record->last_event = event;
 	vcpu_record->start_time = sample->time;
+=======
+		event = find_create_kvm_event(kvm, key);
+
+	vcpu_record->last_event = event;
+	vcpu_record->start_time = timestamp;
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -845,6 +946,7 @@ static double kvm_event_rel_stddev(int vcpu_id, struct kvm_event *event)
 				avg_stats(&kvm_stats->stats));
 }
 
+<<<<<<< HEAD
 static bool update_kvm_event(struct perf_kvm_stat *kvm,
 			     struct kvm_event *event, int vcpu_id,
 			     u64 time_diff)
@@ -853,6 +955,11 @@ static bool update_kvm_event(struct perf_kvm_stat *kvm,
 	kvm->total_count++;
 	kvm->total_time += time_diff;
 
+=======
+static bool update_kvm_event(struct kvm_event *event, int vcpu_id,
+			     u64 time_diff)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	if (vcpu_id == -1) {
 		kvm_update_event_stats(&event->total, time_diff);
 		return true;
@@ -890,12 +997,20 @@ static bool is_child_event(struct perf_kvm_stat *kvm,
 static bool handle_child_event(struct perf_kvm_stat *kvm,
 			       struct vcpu_event_record *vcpu_record,
 			       struct event_key *key,
+<<<<<<< HEAD
 			       struct perf_sample *sample)
+=======
+			       struct perf_sample *sample __maybe_unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct kvm_event *event = NULL;
 
 	if (key->key != INVALID_KEY)
+<<<<<<< HEAD
 		event = find_create_kvm_event(kvm, key, sample);
+=======
+		event = find_create_kvm_event(kvm, key);
+>>>>>>> b7ba80a49124 (Commit)
 
 	vcpu_record->last_event = event;
 
@@ -944,7 +1059,11 @@ static bool handle_end_event(struct perf_kvm_stat *kvm,
 		return true;
 
 	if (!event)
+<<<<<<< HEAD
 		event = find_create_kvm_event(kvm, key, sample);
+=======
+		event = find_create_kvm_event(kvm, key);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!event)
 		return false;
@@ -961,7 +1080,11 @@ static bool handle_end_event(struct perf_kvm_stat *kvm,
 	time_diff = sample->time - time_begin;
 
 	if (kvm->duration && time_diff > kvm->duration) {
+<<<<<<< HEAD
 		char decode[KVM_EVENT_NAME_LEN];
+=======
+		char decode[decode_str_len];
+>>>>>>> b7ba80a49124 (Commit)
 
 		kvm->events_ops->decode_key(kvm, &event->key, decode);
 		if (!skip_event(decode)) {
@@ -971,7 +1094,11 @@ static bool handle_end_event(struct perf_kvm_stat *kvm,
 		}
 	}
 
+<<<<<<< HEAD
 	return update_kvm_event(kvm, event, vcpu, time_diff);
+=======
+	return update_kvm_event(event, vcpu, time_diff);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static
@@ -1015,7 +1142,11 @@ static bool handle_kvm_event(struct perf_kvm_stat *kvm,
 		return true;
 
 	if (kvm->events_ops->is_begin_event(evsel, sample, &key))
+<<<<<<< HEAD
 		return handle_begin_event(kvm, vcpu_record, &key, sample);
+=======
+		return handle_begin_event(kvm, vcpu_record, &key, sample->time);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (is_child_event(kvm, evsel, sample, &key))
 		return handle_child_event(kvm, vcpu_record, &key, sample);
@@ -1026,6 +1157,7 @@ static bool handle_kvm_event(struct perf_kvm_stat *kvm,
 	return true;
 }
 
+<<<<<<< HEAD
 static bool is_valid_key(struct perf_kvm_stat *kvm)
 {
 	static const char *key_array[] = {
@@ -1041,11 +1173,95 @@ static bool is_valid_key(struct perf_kvm_stat *kvm)
 	return false;
 }
 
+=======
+#define GET_EVENT_KEY(func, field)					\
+static u64 get_event_ ##func(struct kvm_event *event, int vcpu)		\
+{									\
+	if (vcpu == -1)							\
+		return event->total.field;				\
+									\
+	if (vcpu >= event->max_vcpu)					\
+		return 0;						\
+									\
+	return event->vcpu[vcpu].field;					\
+}
+
+#define COMPARE_EVENT_KEY(func, field)					\
+GET_EVENT_KEY(func, field)						\
+static int compare_kvm_event_ ## func(struct kvm_event *one,		\
+					struct kvm_event *two, int vcpu)\
+{									\
+	return get_event_ ##func(one, vcpu) >				\
+				get_event_ ##func(two, vcpu);		\
+}
+
+GET_EVENT_KEY(time, time);
+COMPARE_EVENT_KEY(count, stats.n);
+COMPARE_EVENT_KEY(mean, stats.mean);
+GET_EVENT_KEY(max, stats.max);
+GET_EVENT_KEY(min, stats.min);
+
+#define DEF_SORT_NAME_KEY(name, compare_key)				\
+	{ #name, compare_kvm_event_ ## compare_key }
+
+static struct kvm_event_key keys[] = {
+	DEF_SORT_NAME_KEY(sample, count),
+	DEF_SORT_NAME_KEY(time, mean),
+	{ NULL, NULL }
+};
+
+static bool select_key(struct perf_kvm_stat *kvm)
+{
+	int i;
+
+	for (i = 0; keys[i].name; i++) {
+		if (!strcmp(keys[i].name, kvm->sort_key)) {
+			kvm->compare = keys[i].key;
+			return true;
+		}
+	}
+
+	pr_err("Unknown compare key:%s\n", kvm->sort_key);
+	return false;
+}
+
+static void insert_to_result(struct rb_root *result, struct kvm_event *event,
+			     key_cmp_fun bigger, int vcpu)
+{
+	struct rb_node **rb = &result->rb_node;
+	struct rb_node *parent = NULL;
+	struct kvm_event *p;
+
+	while (*rb) {
+		p = container_of(*rb, struct kvm_event, rb);
+		parent = *rb;
+
+		if (bigger(event, p, vcpu))
+			rb = &(*rb)->rb_left;
+		else
+			rb = &(*rb)->rb_right;
+	}
+
+	rb_link_node(&event->rb, parent, rb);
+	rb_insert_color(&event->rb, result);
+}
+
+static void
+update_total_count(struct perf_kvm_stat *kvm, struct kvm_event *event)
+{
+	int vcpu = kvm->trace_vcpu;
+
+	kvm->total_count += get_event_count(event, vcpu);
+	kvm->total_time += get_event_time(event, vcpu);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static bool event_is_valid(struct kvm_event *event, int vcpu)
 {
 	return !!get_event_count(event, vcpu);
 }
 
+<<<<<<< HEAD
 static int filter_cb(struct hist_entry *he, void *arg __maybe_unused)
 {
 	struct kvm_event *event;
@@ -1071,6 +1287,35 @@ static void sort_result(struct perf_kvm_stat *kvm)
 	hists__collapse_resort(&kvm_hists.hists, NULL);
 	hists__output_resort_cb(&kvm_hists.hists, NULL, filter_cb);
 	ui_progress__finish();
+=======
+static void sort_result(struct perf_kvm_stat *kvm)
+{
+	unsigned int i;
+	int vcpu = kvm->trace_vcpu;
+	struct kvm_event *event;
+
+	for (i = 0; i < EVENTS_CACHE_SIZE; i++) {
+		list_for_each_entry(event, &kvm->kvm_events_cache[i], hash_entry) {
+			if (event_is_valid(event, vcpu)) {
+				update_total_count(kvm, event);
+				insert_to_result(&kvm->result, event,
+						 kvm->compare, vcpu);
+			}
+		}
+	}
+}
+
+/* returns left most element of result, and erase it */
+static struct kvm_event *pop_from_result(struct rb_root *result)
+{
+	struct rb_node *node = rb_first(result);
+
+	if (!node)
+		return NULL;
+
+	rb_erase(node, result);
+	return container_of(node, struct kvm_event, rb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void print_vcpu_info(struct perf_kvm_stat *kvm)
@@ -1110,10 +1355,16 @@ static void show_timeofday(void)
 
 static void print_result(struct perf_kvm_stat *kvm)
 {
+<<<<<<< HEAD
 	char decode[KVM_EVENT_NAME_LEN];
 	struct kvm_event *event;
 	int vcpu = kvm->trace_vcpu;
 	struct rb_node *nd;
+=======
+	char decode[decode_str_len];
+	struct kvm_event *event;
+	int vcpu = kvm->trace_vcpu;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (kvm->live) {
 		puts(CONSOLE_CLEAR);
@@ -1122,7 +1373,11 @@ static void print_result(struct perf_kvm_stat *kvm)
 
 	pr_info("\n\n");
 	print_vcpu_info(kvm);
+<<<<<<< HEAD
 	pr_info("%*s ", KVM_EVENT_NAME_LEN, kvm->events_ops->name);
+=======
+	pr_info("%*s ", decode_str_len, kvm->events_ops->name);
+>>>>>>> b7ba80a49124 (Commit)
 	pr_info("%10s ", "Samples");
 	pr_info("%9s ", "Samples%");
 
@@ -1132,6 +1387,7 @@ static void print_result(struct perf_kvm_stat *kvm)
 	pr_info("%16s ", "Avg time");
 	pr_info("\n\n");
 
+<<<<<<< HEAD
 	for (nd = rb_first_cached(&kvm_hists.hists.entries); nd; nd = rb_next(nd)) {
 		struct hist_entry *he;
 		u64 ecount, etime, max, min;
@@ -1141,13 +1397,22 @@ static void print_result(struct perf_kvm_stat *kvm)
 			continue;
 
 		event = container_of(he, struct kvm_event, he);
+=======
+	while ((event = pop_from_result(&kvm->result))) {
+		u64 ecount, etime, max, min;
+
+>>>>>>> b7ba80a49124 (Commit)
 		ecount = get_event_count(event, vcpu);
 		etime = get_event_time(event, vcpu);
 		max = get_event_max(event, vcpu);
 		min = get_event_min(event, vcpu);
 
 		kvm->events_ops->decode_key(kvm, &event->key, decode);
+<<<<<<< HEAD
 		pr_info("%*s ", KVM_EVENT_NAME_LEN, decode);
+=======
+		pr_info("%*s ", decode_str_len, decode);
+>>>>>>> b7ba80a49124 (Commit)
 		pr_info("%10llu ", (unsigned long long)ecount);
 		pr_info("%8.2f%% ", (double)ecount / kvm->total_count * 100);
 		pr_info("%8.2f%% ", (double)etime / kvm->total_time * 100);
@@ -1165,7 +1430,11 @@ static void print_result(struct perf_kvm_stat *kvm)
 		pr_info("\nLost events: %" PRIu64 "\n\n", kvm->lost_events);
 }
 
+<<<<<<< HEAD
 #if defined(HAVE_TIMERFD_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+=======
+#ifdef HAVE_TIMERFD_SUPPORT
+>>>>>>> b7ba80a49124 (Commit)
 static int process_lost_event(struct perf_tool *tool,
 			      union perf_event *event __maybe_unused,
 			      struct perf_sample *sample __maybe_unused,
@@ -1201,11 +1470,14 @@ static int process_sample_event(struct perf_tool *tool,
 	if (skip_sample(kvm, sample))
 		return 0;
 
+<<<<<<< HEAD
 	if (machine__resolve(machine, &kvm->al, sample) < 0) {
 		pr_warning("Fail to resolve address location, skip sample.\n");
 		return 0;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
 	if (thread == NULL) {
 		pr_debug("problem processing %d event, skipping it.\n",
@@ -1258,7 +1530,11 @@ static bool verify_vcpu(int vcpu)
 	return true;
 }
 
+<<<<<<< HEAD
 #if defined(HAVE_TIMERFD_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+=======
+#ifdef HAVE_TIMERFD_SUPPORT
+>>>>>>> b7ba80a49124 (Commit)
 /* keeping the max events to a modest level to keep
  * the processing of samples per mmap smooth.
  */
@@ -1417,11 +1693,16 @@ static int perf_kvm__handle_timerfd(struct perf_kvm_stat *kvm)
 	sort_result(kvm);
 	print_result(kvm);
 
+<<<<<<< HEAD
 	/* Reset sort list to "ev_name" */
 	kvm_hists__reinit(NULL, "ev_name");
 
 	/* reset counts */
 	clear_events_cache_stats();
+=======
+	/* reset counts */
+	clear_events_cache_stats(kvm->kvm_events_cache);
+>>>>>>> b7ba80a49124 (Commit)
 	kvm->total_count = 0;
 	kvm->total_time = 0;
 	kvm->lost_events = 0;
@@ -1471,14 +1752,22 @@ static int kvm_events_live_report(struct perf_kvm_stat *kvm)
 		return ret;
 
 	if (!verify_vcpu(kvm->trace_vcpu) ||
+<<<<<<< HEAD
 	    !is_valid_key(kvm) ||
+=======
+	    !select_key(kvm) ||
+>>>>>>> b7ba80a49124 (Commit)
 	    !register_kvm_events_ops(kvm)) {
 		goto out;
 	}
 
 	set_term_quiet_input(&save);
+<<<<<<< HEAD
 
 	kvm_hists__init();
+=======
+	init_kvm_event_record(kvm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	signal(SIGINT, sig_handler);
 	signal(SIGTERM, sig_handler);
@@ -1666,12 +1955,17 @@ static int kvm_events_report_vcpu(struct perf_kvm_stat *kvm)
 	if (!verify_vcpu(vcpu))
 		goto exit;
 
+<<<<<<< HEAD
 	if (!is_valid_key(kvm))
+=======
+	if (!select_key(kvm))
+>>>>>>> b7ba80a49124 (Commit)
 		goto exit;
 
 	if (!register_kvm_events_ops(kvm))
 		goto exit;
 
+<<<<<<< HEAD
 	if (kvm->use_stdio) {
 		use_browser = 0;
 		setup_pager();
@@ -1682,13 +1976,21 @@ static int kvm_events_report_vcpu(struct perf_kvm_stat *kvm)
 	setup_browser(false);
 
 	kvm_hists__init();
+=======
+	init_kvm_event_record(kvm);
+	setup_pager();
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = read_events(kvm);
 	if (ret)
 		goto exit;
 
 	sort_result(kvm);
+<<<<<<< HEAD
 	kvm_display(kvm);
+=======
+	print_result(kvm);
+>>>>>>> b7ba80a49124 (Commit)
 
 exit:
 	return ret;
@@ -1795,7 +2097,10 @@ kvm_events_report(struct perf_kvm_stat *kvm, int argc, const char **argv)
 		OPT_STRING('p', "pid", &kvm->opts.target.pid, "pid",
 			   "analyze events only for given process id(s)"),
 		OPT_BOOLEAN('f', "force", &kvm->force, "don't complain, do it"),
+<<<<<<< HEAD
 		OPT_BOOLEAN(0, "stdio", &kvm->use_stdio, "use the stdio interface"),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		OPT_END()
 	};
 
@@ -1813,17 +2118,24 @@ kvm_events_report(struct perf_kvm_stat *kvm, int argc, const char **argv)
 					   kvm_events_report_options);
 	}
 
+<<<<<<< HEAD
 #ifndef HAVE_SLANG_SUPPORT
 	kvm->use_stdio = true;
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!kvm->opts.target.pid)
 		kvm->opts.target.system_wide = true;
 
 	return kvm_events_report_vcpu(kvm);
 }
 
+<<<<<<< HEAD
 #if defined(HAVE_TIMERFD_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+=======
+#ifdef HAVE_TIMERFD_SUPPORT
+>>>>>>> b7ba80a49124 (Commit)
 static struct evlist *kvm_live_event_list(void)
 {
 	struct evlist *evlist;
@@ -2040,7 +2352,11 @@ static int kvm_cmd_stat(const char *file_name, int argc, const char **argv)
 	if (strlen(argv[1]) > 2 && strstarts("report", argv[1]))
 		return kvm_events_report(&kvm, argc - 1 , argv + 1);
 
+<<<<<<< HEAD
 #if defined(HAVE_TIMERFD_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+=======
+#ifdef HAVE_TIMERFD_SUPPORT
+>>>>>>> b7ba80a49124 (Commit)
 	if (!strncmp(argv[1], "live", 4))
 		return kvm_events_live(&kvm, argc - 1 , argv + 1);
 #endif
@@ -2177,7 +2493,11 @@ int cmd_kvm(int argc, const char **argv)
 		return cmd_top(argc, argv);
 	else if (strlen(argv[0]) > 2 && strstarts("buildid-list", argv[0]))
 		return __cmd_buildid_list(file_name, argc, argv);
+<<<<<<< HEAD
 #if defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+=======
+#ifdef HAVE_KVM_STAT_SUPPORT
+>>>>>>> b7ba80a49124 (Commit)
 	else if (strlen(argv[0]) > 2 && strstarts("stat", argv[0]))
 		return kvm_cmd_stat(file_name, argc, argv);
 #endif

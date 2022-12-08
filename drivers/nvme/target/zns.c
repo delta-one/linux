@@ -254,7 +254,12 @@ static unsigned long nvmet_req_nr_zones_from_slba(struct nvmet_req *req)
 {
 	unsigned int sect = nvmet_lba_to_sect(req->ns, req->cmd->zmr.slba);
 
+<<<<<<< HEAD
 	return bdev_nr_zones(req->ns->bdev) - bdev_zone_no(req->ns->bdev, sect);
+=======
+	return bdev_nr_zones(req->ns->bdev) -
+		(sect >> ilog2(bdev_zone_sectors(req->ns->bdev)));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static unsigned long get_nr_zones_from_buf(struct nvmet_req *req, u32 bufsize)
@@ -399,6 +404,10 @@ static u16 nvmet_bdev_zone_mgmt_emulate_all(struct nvmet_req *req)
 {
 	struct block_device *bdev = req->ns->bdev;
 	unsigned int nr_zones = bdev_nr_zones(bdev);
+<<<<<<< HEAD
+=======
+	struct request_queue *q = bdev_get_queue(bdev);
+>>>>>>> b7ba80a49124 (Commit)
 	struct bio *bio = NULL;
 	sector_t sector = 0;
 	int ret;
@@ -407,7 +416,11 @@ static u16 nvmet_bdev_zone_mgmt_emulate_all(struct nvmet_req *req)
 	};
 
 	d.zbitmap = kcalloc_node(BITS_TO_LONGS(nr_zones), sizeof(*(d.zbitmap)),
+<<<<<<< HEAD
 				 GFP_NOIO, bdev->bd_disk->node_id);
+=======
+				 GFP_NOIO, q->node);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!d.zbitmap) {
 		ret = -ENOMEM;
 		goto out;

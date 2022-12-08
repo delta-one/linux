@@ -246,7 +246,10 @@ struct _vcs_dpi_soc_bounding_box_st {
 	bool disable_dram_clock_change_vactive_support;
 	bool allow_dram_clock_one_display_vactive;
 	enum self_refresh_affinity allow_dram_self_refresh_or_dram_clock_change_in_vblank;
+<<<<<<< HEAD
 	double max_vratio_pre;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -365,10 +368,13 @@ struct _vcs_dpi_ip_params_st {
 	unsigned int max_num_dp2p0_outputs;
 	unsigned int max_num_dp2p0_streams;
 	unsigned int VBlankNomDefaultUS;
+<<<<<<< HEAD
 
 	/* DM workarounds */
 	double dsc_delay_factor_wa; // TODO: Remove after implementing root cause fix
 	double min_prefetch_in_strobe_us;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct _vcs_dpi_display_xfc_params_st {

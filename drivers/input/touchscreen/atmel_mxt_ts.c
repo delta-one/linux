@@ -3129,7 +3129,11 @@ static const struct dmi_system_id chromebook_T9_suspend_dmi[] = {
 	{ }
 };
 
+<<<<<<< HEAD
 static int mxt_probe(struct i2c_client *client)
+=======
+static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mxt_data *data;
 	int error;
@@ -3296,7 +3300,11 @@ static void mxt_remove(struct i2c_client *client)
 			       data->regulators);
 }
 
+<<<<<<< HEAD
 static int mxt_suspend(struct device *dev)
+=======
+static int __maybe_unused mxt_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct mxt_data *data = i2c_get_clientdata(client);
@@ -3317,7 +3325,11 @@ static int mxt_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mxt_resume(struct device *dev)
+=======
+static int __maybe_unused mxt_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct mxt_data *data = i2c_get_clientdata(client);
@@ -3338,7 +3350,11 @@ static int mxt_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(mxt_pm_ops, mxt_suspend, mxt_resume);
+=======
+static SIMPLE_DEV_PM_OPS(mxt_pm_ops, mxt_suspend, mxt_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct of_device_id mxt_of_match[] = {
 	{ .compatible = "atmel,maxtouch", },
@@ -3375,9 +3391,15 @@ static struct i2c_driver mxt_driver = {
 		.name	= "atmel_mxt_ts",
 		.of_match_table = mxt_of_match,
 		.acpi_match_table = ACPI_PTR(mxt_acpi_id),
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&mxt_pm_ops),
 	},
 	.probe_new	= mxt_probe,
+=======
+		.pm	= &mxt_pm_ops,
+	},
+	.probe		= mxt_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= mxt_remove,
 	.id_table	= mxt_id,
 };

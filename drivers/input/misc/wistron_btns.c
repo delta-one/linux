@@ -1295,6 +1295,10 @@ static int wistron_remove(struct platform_device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM
+>>>>>>> b7ba80a49124 (Commit)
 static int wistron_suspend(struct device *dev)
 {
 	if (have_wifi)
@@ -1329,11 +1333,21 @@ static const struct dev_pm_ops wistron_pm_ops = {
 	.poweroff	= wistron_suspend,
 	.restore	= wistron_resume,
 };
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_driver wistron_driver = {
 	.driver		= {
 		.name	= "wistron-bios",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&wistron_pm_ops),
+=======
+#ifdef CONFIG_PM
+		.pm	= &wistron_pm_ops,
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe		= wistron_probe,
 	.remove		= wistron_remove,

@@ -47,7 +47,11 @@ static __noinline int sub5(int v)
 	return sub1(v) - 1; /* compensates sub1()'s + 1 */
 }
 
+<<<<<<< HEAD
 /* unfortunately verifier rejects `struct task_struct *t` as an unknown pointer
+=======
+/* unfortunately verifier rejects `struct task_struct *t` as an unkown pointer
+>>>>>>> b7ba80a49124 (Commit)
  * type, so we need to accept pointer as integer and then cast it inside the
  * function
  */

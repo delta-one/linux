@@ -30,7 +30,11 @@
  *   Based on QEMU and Xen.
  */
 
+<<<<<<< HEAD
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+=======
+#define pr_fmt(fmt) "pit: " fmt
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/kvm_host.h>
 #include <linux/slab.h>
@@ -351,7 +355,11 @@ static void create_pit_timer(struct kvm_pit *pit, u32 val, int is_period)
 
 		if (ps->period < min_period) {
 			pr_info_ratelimited(
+<<<<<<< HEAD
 			    "requested %lld ns "
+=======
+			    "kvm: requested %lld ns "
+>>>>>>> b7ba80a49124 (Commit)
 			    "i8254 timer period limited to %lld ns\n",
 			    ps->period, min_period);
 			ps->period = min_period;

@@ -74,7 +74,11 @@ CLK_MGR_DCE120 = dce120_clk_mgr.o
 AMD_DAL_CLK_MGR_DCE120 = $(addprefix $(AMDDALPATH)/dc/clk_mgr/dce120/,$(CLK_MGR_DCE120))
 
 AMD_DISPLAY_FILES += $(AMD_DAL_CLK_MGR_DCE120)
+<<<<<<< HEAD
 ifdef CONFIG_DRM_AMD_DC_FP
+=======
+ifdef CONFIG_DRM_AMD_DC_DCN
+>>>>>>> b7ba80a49124 (Commit)
 ###############################################################################
 # DCN10
 ###############################################################################

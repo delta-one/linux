@@ -31,6 +31,7 @@ struct prestera_ip_addr {
 		PRESTERA_IPV4 = 0,
 		PRESTERA_IPV6
 	} v;
+<<<<<<< HEAD
 #define PRESTERA_IP_ADDR_PLEN(V) ((V) == PRESTERA_IPV4 ? 32 : \
 				  /* (V) == PRESTERA_IPV6 ? */ 128 /* : 0 */)
 };
@@ -88,6 +89,8 @@ struct prestera_nexthop_group {
 	struct rhash_head ht_node; /* node of prestera_vr */
 	refcount_t refcount;
 	u32 grp_id; /* hw */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct prestera_fib_key {
@@ -101,16 +104,22 @@ struct prestera_fib_info {
 	struct list_head vr_node;
 	enum prestera_fib_type {
 		PRESTERA_FIB_TYPE_INVALID = 0,
+<<<<<<< HEAD
 		/* must be pointer to nh_grp id */
 		PRESTERA_FIB_TYPE_UC_NH,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* It can be connected route
 		 * and will be overlapped with neighbours
 		 */
 		PRESTERA_FIB_TYPE_TRAP,
 		PRESTERA_FIB_TYPE_DROP
 	} type;
+<<<<<<< HEAD
 	/* Valid only if type = UC_NH*/
 	struct prestera_nexthop_group *nh_grp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct prestera_fib_node {
@@ -128,6 +137,7 @@ struct prestera_rif_entry *
 prestera_rif_entry_create(struct prestera_switch *sw,
 			  struct prestera_rif_entry_key *k,
 			  u32 tb_id, const unsigned char *addr);
+<<<<<<< HEAD
 struct prestera_nh_neigh *
 prestera_nh_neigh_find(struct prestera_switch *sw,
 		       struct prestera_nh_neigh_key *key);
@@ -140,6 +150,8 @@ int prestera_nh_neigh_set(struct prestera_switch *sw,
 			  struct prestera_nh_neigh *neigh);
 bool prestera_nh_neigh_util_hw_state(struct prestera_switch *sw,
 				     struct prestera_nh_neigh *nh_neigh);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct prestera_fib_node *prestera_fib_node_find(struct prestera_switch *sw,
 						 struct prestera_fib_key *key);
 void prestera_fib_node_destroy(struct prestera_switch *sw,
@@ -147,8 +159,12 @@ void prestera_fib_node_destroy(struct prestera_switch *sw,
 struct prestera_fib_node *
 prestera_fib_node_create(struct prestera_switch *sw,
 			 struct prestera_fib_key *key,
+<<<<<<< HEAD
 			 enum prestera_fib_type fib_type,
 			 struct prestera_nexthop_group_key *nh_grp_key);
+=======
+			 enum prestera_fib_type fib_type);
+>>>>>>> b7ba80a49124 (Commit)
 int prestera_router_hw_init(struct prestera_switch *sw);
 void prestera_router_hw_fini(struct prestera_switch *sw);
 

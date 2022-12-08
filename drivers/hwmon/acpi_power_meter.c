@@ -910,12 +910,20 @@ exit:
 	return res;
 }
 
+<<<<<<< HEAD
 static void acpi_power_meter_remove(struct acpi_device *device)
+=======
+static int acpi_power_meter_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct acpi_power_meter_resource *resource;
 
 	if (!device || !acpi_driver_data(device))
+<<<<<<< HEAD
 		return;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	resource = acpi_driver_data(device);
 	hwmon_device_unregister(resource->hwmon_dev);
@@ -924,8 +932,16 @@ static void acpi_power_meter_remove(struct acpi_device *device)
 	free_capabilities(resource);
 
 	kfree(resource);
+<<<<<<< HEAD
 }
 
+=======
+	return 0;
+}
+
+#ifdef CONFIG_PM_SLEEP
+
+>>>>>>> b7ba80a49124 (Commit)
 static int acpi_power_meter_resume(struct device *dev)
 {
 	struct acpi_power_meter_resource *resource;
@@ -943,8 +959,14 @@ static int acpi_power_meter_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(acpi_power_meter_pm, NULL,
 				acpi_power_meter_resume);
+=======
+#endif /* CONFIG_PM_SLEEP */
+
+static SIMPLE_DEV_PM_OPS(acpi_power_meter_pm, NULL, acpi_power_meter_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct acpi_driver acpi_power_meter_driver = {
 	.name = "power_meter",
@@ -955,7 +977,11 @@ static struct acpi_driver acpi_power_meter_driver = {
 		.remove = acpi_power_meter_remove,
 		.notify = acpi_power_meter_notify,
 		},
+<<<<<<< HEAD
 	.drv.pm = pm_sleep_ptr(&acpi_power_meter_pm),
+=======
+	.drv.pm = &acpi_power_meter_pm,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Module init/exit routines */

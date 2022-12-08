@@ -20,10 +20,32 @@
 
 enum intel_region_id;
 
+<<<<<<< HEAD
+=======
+/*
+ * XXX: There is a prevalence of the assumption that we fit the
+ * object's page count inside a 32bit _signed_ variable. Let's document
+ * this and catch if we ever need to fix it. In the meantime, if you do
+ * spot such a local variable, please consider fixing!
+ *
+ * Aside from our own locals (for which we have no excuse!):
+ * - sg_table embeds unsigned int for num_pages
+ * - get_user_pages*() mixed ints with longs
+ */
+#define GEM_CHECK_SIZE_OVERFLOW(sz) \
+	GEM_WARN_ON((sz) >> PAGE_SHIFT > INT_MAX)
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool i915_gem_object_size_2big(u64 size)
 {
 	struct drm_i915_gem_object *obj;
 
+<<<<<<< HEAD
+=======
+	if (GEM_CHECK_SIZE_OVERFLOW(size))
+		return true;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (overflows_type(size, obj->base.size))
 		return true;
 
@@ -347,6 +369,7 @@ i915_gem_object_get_tile_row_size(const struct drm_i915_gem_object *obj)
 int i915_gem_object_set_tiling(struct drm_i915_gem_object *obj,
 			       unsigned int tiling, unsigned int stride);
 
+<<<<<<< HEAD
 /**
  * __i915_gem_object_page_iter_get_sg - helper to find the target scatterlist
  * pointer and the target page position using pgoff_t n input argument and
@@ -633,6 +656,50 @@ __i915_gem_object_get_dma_address(struct drm_i915_gem_object *obj, pgoff_t n);
 
 void __i915_gem_object_set_pages(struct drm_i915_gem_object *obj,
 				 struct sg_table *pages);
+=======
+struct scatterlist *
+__i915_gem_object_get_sg(struct drm_i915_gem_object *obj,
+			 struct i915_gem_object_page_iter *iter,
+			 unsigned int n,
+			 unsigned int *offset, bool dma);
+
+static inline struct scatterlist *
+i915_gem_object_get_sg(struct drm_i915_gem_object *obj,
+		       unsigned int n,
+		       unsigned int *offset)
+{
+	return __i915_gem_object_get_sg(obj, &obj->mm.get_page, n, offset, false);
+}
+
+static inline struct scatterlist *
+i915_gem_object_get_sg_dma(struct drm_i915_gem_object *obj,
+			   unsigned int n,
+			   unsigned int *offset)
+{
+	return __i915_gem_object_get_sg(obj, &obj->mm.get_dma_page, n, offset, true);
+}
+
+struct page *
+i915_gem_object_get_page(struct drm_i915_gem_object *obj,
+			 unsigned int n);
+
+struct page *
+i915_gem_object_get_dirty_page(struct drm_i915_gem_object *obj,
+			       unsigned int n);
+
+dma_addr_t
+i915_gem_object_get_dma_address_len(struct drm_i915_gem_object *obj,
+				    unsigned long n,
+				    unsigned int *len);
+
+dma_addr_t
+i915_gem_object_get_dma_address(struct drm_i915_gem_object *obj,
+				unsigned long n);
+
+void __i915_gem_object_set_pages(struct drm_i915_gem_object *obj,
+				 struct sg_table *pages,
+				 unsigned int sg_page_sizes);
+>>>>>>> b7ba80a49124 (Commit)
 
 int ____i915_gem_object_get_pages(struct drm_i915_gem_object *obj);
 int __i915_gem_object_get_pages(struct drm_i915_gem_object *obj);
@@ -710,10 +777,13 @@ void *__must_check i915_gem_object_pin_map(struct drm_i915_gem_object *obj,
 void *__must_check i915_gem_object_pin_map_unlocked(struct drm_i915_gem_object *obj,
 						    enum i915_map_type type);
 
+<<<<<<< HEAD
 enum i915_map_type i915_coherent_map_type(struct drm_i915_private *i915,
 					  struct drm_i915_gem_object *obj,
 					  bool always_coherent);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void __i915_gem_object_flush_map(struct drm_i915_gem_object *obj,
 				 unsigned long offset,
 				 unsigned long size);
@@ -840,10 +910,13 @@ bool i915_gem_object_migratable(struct drm_i915_gem_object *obj);
 int i915_gem_object_migrate(struct drm_i915_gem_object *obj,
 			    struct i915_gem_ww_ctx *ww,
 			    enum intel_region_id id);
+<<<<<<< HEAD
 int __i915_gem_object_migrate(struct drm_i915_gem_object *obj,
 			      struct i915_gem_ww_ctx *ww,
 			      enum intel_region_id id,
 			      unsigned int flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 bool i915_gem_object_can_migrate(struct drm_i915_gem_object *obj,
 				 enum intel_region_id id);

@@ -26,6 +26,14 @@ struct blk_flush_queue {
 	spinlock_t		mq_flush_lock;
 };
 
+<<<<<<< HEAD
+=======
+extern struct kmem_cache *blk_requestq_cachep;
+extern struct kmem_cache *blk_requestq_srcu_cachep;
+extern struct kobj_type blk_queue_ktype;
+extern struct ida blk_queue_ida;
+
+>>>>>>> b7ba80a49124 (Commit)
 bool is_flush_rq(struct request *req);
 
 struct blk_flush_queue *blk_alloc_flush_queue(int node, int cmd_size,
@@ -99,7 +107,11 @@ static inline bool biovec_phys_mergeable(struct request_queue *q,
 	return true;
 }
 
+<<<<<<< HEAD
 static inline bool __bvec_gap_to_prev(const struct queue_limits *lim,
+=======
+static inline bool __bvec_gap_to_prev(struct queue_limits *lim,
+>>>>>>> b7ba80a49124 (Commit)
 		struct bio_vec *bprv, unsigned int offset)
 {
 	return (offset & lim->virt_boundary_mask) ||
@@ -110,7 +122,11 @@ static inline bool __bvec_gap_to_prev(const struct queue_limits *lim,
  * Check if adding a bio_vec after bprv with offset would create a gap in
  * the SG list. Most drivers don't care about this, but some do.
  */
+<<<<<<< HEAD
 static inline bool bvec_gap_to_prev(const struct queue_limits *lim,
+=======
+static inline bool bvec_gap_to_prev(struct queue_limits *lim,
+>>>>>>> b7ba80a49124 (Commit)
 		struct bio_vec *bprv, unsigned int offset)
 {
 	if (!lim->virt_boundary_mask)
@@ -156,6 +172,7 @@ static inline bool blk_discard_mergable(struct request *req)
 	return false;
 }
 
+<<<<<<< HEAD
 static inline unsigned int blk_rq_get_max_segments(struct request *rq)
 {
 	if (req_op(rq) == REQ_OP_DISCARD)
@@ -163,6 +180,8 @@ static inline unsigned int blk_rq_get_max_segments(struct request *rq)
 	return queue_max_segments(rq->q);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline unsigned int blk_queue_get_max_sectors(struct request_queue *q,
 						     enum req_op op)
 {
@@ -279,8 +298,13 @@ bool blk_bio_list_merge(struct request_queue *q, struct list_head *list,
 
 void blk_insert_flush(struct request *rq);
 
+<<<<<<< HEAD
 int elevator_switch(struct request_queue *q, struct elevator_type *new_e);
 void elevator_disable(struct request_queue *q);
+=======
+int elevator_switch_mq(struct request_queue *q,
+			      struct elevator_type *new_e);
+>>>>>>> b7ba80a49124 (Commit)
 void elevator_exit(struct request_queue *q);
 int elv_register_queue(struct request_queue *q, bool uevent);
 void elv_unregister_queue(struct request_queue *q);
@@ -300,7 +324,11 @@ ssize_t part_timeout_store(struct device *, struct device_attribute *,
 				const char *, size_t);
 
 static inline bool bio_may_exceed_limits(struct bio *bio,
+<<<<<<< HEAD
 					 const struct queue_limits *lim)
+=======
+		struct queue_limits *lim)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (bio_op(bio)) {
 	case REQ_OP_DISCARD:
@@ -323,9 +351,14 @@ static inline bool bio_may_exceed_limits(struct bio *bio,
 		bio->bi_io_vec->bv_len + bio->bi_io_vec->bv_offset > PAGE_SIZE;
 }
 
+<<<<<<< HEAD
 struct bio *__bio_split_to_limits(struct bio *bio,
 				  const struct queue_limits *lim,
 				  unsigned int *nr_segs);
+=======
+struct bio *__bio_split_to_limits(struct bio *bio, struct queue_limits *lim,
+		       unsigned int *nr_segs);
+>>>>>>> b7ba80a49124 (Commit)
 int ll_back_merge_fn(struct request *req, struct bio *bio,
 		unsigned int nr_segs);
 bool blk_attempt_req_merge(struct request_queue *q, struct request *rq,
@@ -335,7 +368,10 @@ void blk_rq_set_mixed_merge(struct request *rq);
 bool blk_rq_merge_ok(struct request *rq, struct bio *bio);
 enum elv_merge blk_try_merge(struct request *rq, struct bio *bio);
 
+<<<<<<< HEAD
 void blk_set_default_limits(struct queue_limits *lim);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int blk_dev_init(void);
 
 /*
@@ -400,9 +436,15 @@ static inline struct bio *blk_queue_bounce(struct bio *bio,
 }
 
 #ifdef CONFIG_BLK_CGROUP_IOLATENCY
+<<<<<<< HEAD
 int blk_iolatency_init(struct gendisk *disk);
 #else
 static inline int blk_iolatency_init(struct gendisk *disk) { return 0; };
+=======
+extern int blk_iolatency_init(struct request_queue *q);
+#else
+static inline int blk_iolatency_init(struct request_queue *q) { return 0; }
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #ifdef CONFIG_BLK_DEV_ZONED
@@ -432,6 +474,7 @@ int bio_add_hw_page(struct request_queue *q, struct bio *bio,
 		struct page *page, unsigned int len, unsigned int offset,
 		unsigned int max_sectors, bool *same_page);
 
+<<<<<<< HEAD
 /*
  * Clean up a page appropriately, where the page may be pinned, may have a
  * ref taken on it or neither.
@@ -445,6 +488,15 @@ static inline void bio_release_page(struct bio *bio, struct page *page)
 }
 
 struct request_queue *blk_alloc_queue(int node_id);
+=======
+static inline struct kmem_cache *blk_get_queue_kmem_cache(bool srcu)
+{
+	if (srcu)
+		return blk_requestq_srcu_cachep;
+	return blk_requestq_cachep;
+}
+struct request_queue *blk_alloc_queue(int node_id, bool alloc_srcu);
+>>>>>>> b7ba80a49124 (Commit)
 
 int disk_scan_partitions(struct gendisk *disk, fmode_t mode);
 

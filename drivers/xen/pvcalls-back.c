@@ -14,7 +14,10 @@
 #include <net/inet_common.h>
 #include <net/inet_connection_sock.h>
 #include <net/request_sock.h>
+<<<<<<< HEAD
 #include <trace/events/sock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <xen/events.h>
 #include <xen/grant_table.h>
@@ -130,13 +133,21 @@ static bool pvcalls_conn_back_read(void *opaque)
 	if (masked_prod < masked_cons) {
 		vec[0].iov_base = data->in + masked_prod;
 		vec[0].iov_len = wanted;
+<<<<<<< HEAD
 		iov_iter_kvec(&msg.msg_iter, ITER_DEST, vec, 1, wanted);
+=======
+		iov_iter_kvec(&msg.msg_iter, WRITE, vec, 1, wanted);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		vec[0].iov_base = data->in + masked_prod;
 		vec[0].iov_len = array_size - masked_prod;
 		vec[1].iov_base = data->in;
 		vec[1].iov_len = wanted - vec[0].iov_len;
+<<<<<<< HEAD
 		iov_iter_kvec(&msg.msg_iter, ITER_DEST, vec, 2, wanted);
+=======
+		iov_iter_kvec(&msg.msg_iter, WRITE, vec, 2, wanted);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	atomic_set(&map->read, 0);
@@ -174,8 +185,11 @@ static bool pvcalls_conn_back_write(struct sock_mapping *map)
 	RING_IDX cons, prod, size, array_size;
 	int ret;
 
+<<<<<<< HEAD
 	atomic_set(&map->write, 0);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cons = intf->out_cons;
 	prod = intf->out_prod;
 	/* read the indexes before dealing with the data */
@@ -191,15 +205,26 @@ static bool pvcalls_conn_back_write(struct sock_mapping *map)
 	if (pvcalls_mask(prod, array_size) > pvcalls_mask(cons, array_size)) {
 		vec[0].iov_base = data->out + pvcalls_mask(cons, array_size);
 		vec[0].iov_len = size;
+<<<<<<< HEAD
 		iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, vec, 1, size);
+=======
+		iov_iter_kvec(&msg.msg_iter, READ, vec, 1, size);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		vec[0].iov_base = data->out + pvcalls_mask(cons, array_size);
 		vec[0].iov_len = array_size - pvcalls_mask(cons, array_size);
 		vec[1].iov_base = data->out;
 		vec[1].iov_len = size - vec[0].iov_len;
+<<<<<<< HEAD
 		iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, vec, 2, size);
 	}
 
+=======
+		iov_iter_kvec(&msg.msg_iter, READ, vec, 2, size);
+	}
+
+	atomic_set(&map->write, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = inet_sendmsg(map->sock, &msg, size);
 	if (ret == -EAGAIN) {
 		atomic_inc(&map->write);
@@ -302,8 +327,11 @@ static void pvcalls_sk_data_ready(struct sock *sock)
 	struct sock_mapping *map = sock->sk_user_data;
 	struct pvcalls_ioworker *iow;
 
+<<<<<<< HEAD
 	trace_sk_data_ready(sock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (map == NULL)
 		return;
 
@@ -592,8 +620,11 @@ static void pvcalls_pass_sk_data_ready(struct sock *sock)
 	unsigned long flags;
 	int notify;
 
+<<<<<<< HEAD
 	trace_sk_data_ready(sock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (mappass == NULL)
 		return;
 
@@ -1187,11 +1218,20 @@ static void pvcalls_back_changed(struct xenbus_device *dev,
 	}
 }
 
+<<<<<<< HEAD
 static void pvcalls_back_remove(struct xenbus_device *dev)
 {
 }
 
 static int pvcalls_back_uevent(const struct xenbus_device *xdev,
+=======
+static int pvcalls_back_remove(struct xenbus_device *dev)
+{
+	return 0;
+}
+
+static int pvcalls_back_uevent(struct xenbus_device *xdev,
+>>>>>>> b7ba80a49124 (Commit)
 			       struct kobj_uevent_env *env)
 {
 	return 0;

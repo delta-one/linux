@@ -283,7 +283,10 @@ static int __init imx_gpcv2_irqchip_init(struct device_node *node,
 	 * later the GPC power domain driver will not be skipped.
 	 */
 	of_node_clear_flag(node, OF_POPULATED);
+<<<<<<< HEAD
 	fwnode_dev_initialized(domain->fwnode, false);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

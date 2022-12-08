@@ -10,7 +10,11 @@ maintainers:
   - Mathias Nyman <mathias.nyman@intel.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: usb-hcd.yaml#
+=======
+  - $ref: "usb-hcd.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   usb2-lpm-disable:

@@ -12,14 +12,26 @@
 static struct {
 	__u32 nr_procs;
 	__u32 kthread_pid;
+<<<<<<< HEAD
 } args = {
 	.nr_procs = 1000,
 	.kthread_pid = 0,
+=======
+	bool quiet;
+} args = {
+	.nr_procs = 1000,
+	.kthread_pid = 0,
+	.quiet = false,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum {
 	ARG_NR_PROCS = 7000,
 	ARG_KTHREAD_PID = 7001,
+<<<<<<< HEAD
+=======
+	ARG_QUIET = 7002,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct argp_option opts[] = {
@@ -27,6 +39,11 @@ static const struct argp_option opts[] = {
 		"Set number of user processes to spin up"},
 	{ "kthread_pid", ARG_KTHREAD_PID, "PID", 0,
 		"Pid of rcu_tasks_trace kthread for ticks tracking"},
+<<<<<<< HEAD
+=======
+	{ "quiet", ARG_QUIET, "{0,1}", 0,
+		"If true, don't report progress"},
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 
@@ -51,6 +68,17 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 		}
 		args.kthread_pid = ret;
 		break;
+<<<<<<< HEAD
+=======
+	case ARG_QUIET:
+		ret = strtol(arg, NULL, 10);
+		if (ret < 0 || ret > 1) {
+			fprintf(stderr, "invalid quiet %ld\n", ret);
+			argp_usage(state);
+		}
+		args.quiet = ret;
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 break;
 	default:
 		return ARGP_ERR_UNKNOWN;
@@ -217,7 +245,11 @@ static void report_progress(int iter, struct bench_res *res, long delta_ns)
 		exit(1);
 	}
 
+<<<<<<< HEAD
 	if (env.quiet)
+=======
+	if (args.quiet)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	printf("Iter %d\t avg tasks_trace grace period latency\t%lf ns\n",
@@ -258,7 +290,10 @@ static void report_final(struct bench_res res[], int res_cnt)
  */
 const struct bench bench_local_storage_tasks_trace = {
 	.name = "local-storage-tasks-trace",
+<<<<<<< HEAD
 	.argp = &bench_local_storage_rcu_tasks_trace_argp,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.validate = validate,
 	.setup = local_storage_tasks_trace_setup,
 	.producer_thread = producer,

@@ -3,13 +3,21 @@
  * Copyright 2022 Toradex
  */
 
+<<<<<<< HEAD
+=======
+#include "imx8mm-verdin-dahlia.dtsi"
+
+>>>>>>> b7ba80a49124 (Commit)
 / {
 	sound_card: sound-card {
 		compatible = "simple-audio-card";
 		simple-audio-card,bitclock-master = <&dailink_master>;
 		simple-audio-card,format = "i2s";
 		simple-audio-card,frame-master = <&dailink_master>;
+<<<<<<< HEAD
 		simple-audio-card,mclk-fs = <256>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		simple-audio-card,name = "imx8mm-nau8822";
 		simple-audio-card,routing =
 			"Headphones", "LHP",
@@ -40,6 +48,7 @@
 	};
 };
 
+<<<<<<< HEAD
 /* Verdin SPI_1 */
 &ecspi2 {
 	status = "okay";
@@ -78,18 +87,24 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &gpio_expander_21 {
 	status = "okay";
 };
 
 /* Verdin I2C_1 */
 &i2c4 {
+<<<<<<< HEAD
 	status = "okay";
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Audio Codec */
 	nau8822_1a: audio-codec@1a {
 		compatible = "nuvoton,nau8822";
 		reg = <0x1a>;
+<<<<<<< HEAD
 		#sound-dai-cells = <0>;
 	};
 };
@@ -128,11 +143,17 @@
 	status = "okay";
 };
 
+=======
+	};
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Verdin UART_1, connector X50 through RS485 transceiver */
 &uart2 {
 	linux,rs485-enabled-at-boot-time;
 	rs485-rts-active-low;
 	rs485-rx-during-tx;
+<<<<<<< HEAD
 	status = "okay";
 };
 
@@ -151,10 +172,15 @@
 &usbotg2 {
 	disable-over-current;
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Limit frequency on dev board due to long traces and bad signal integrity */
 &usdhc2 {
 	max-frequency = <100000000>;
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

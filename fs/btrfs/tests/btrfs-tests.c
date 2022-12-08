@@ -16,7 +16,10 @@
 #include "../disk-io.h"
 #include "../qgroup.h"
 #include "../block-group.h"
+<<<<<<< HEAD
 #include "../fs.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct vfsmount *test_mnt = NULL;
 
@@ -64,7 +67,11 @@ struct inode *btrfs_new_test_inode(void)
 	BTRFS_I(inode)->location.type = BTRFS_INODE_ITEM_KEY;
 	BTRFS_I(inode)->location.objectid = BTRFS_FIRST_FREE_OBJECTID;
 	BTRFS_I(inode)->location.offset = 0;
+<<<<<<< HEAD
 	inode_init_owner(&nop_mnt_idmap, inode, NULL, S_IFREG);
+=======
+	inode_init_owner(&init_user_ns, inode, NULL, S_IFREG);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return inode;
 }
@@ -102,7 +109,11 @@ struct btrfs_device *btrfs_alloc_dummy_device(struct btrfs_fs_info *fs_info)
 	if (!dev)
 		return ERR_PTR(-ENOMEM);
 
+<<<<<<< HEAD
 	extent_io_tree_init(NULL, &dev->alloc_state, 0);
+=======
+	extent_io_tree_init(NULL, &dev->alloc_state, 0, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_LIST_HEAD(&dev->dev_list);
 	list_add(&dev->dev_list, &fs_info->fs_devices->devices);
 
@@ -201,7 +212,11 @@ void btrfs_free_dummy_fs_info(struct btrfs_fs_info *fs_info)
 
 void btrfs_free_dummy_root(struct btrfs_root *root)
 {
+<<<<<<< HEAD
 	if (IS_ERR_OR_NULL(root))
+=======
+	if (!root)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	/* Will be freed by btrfs_free_fs_roots */
 	if (WARN_ON(test_bit(BTRFS_ROOT_IN_RADIX, &root->state)))

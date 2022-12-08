@@ -19,7 +19,10 @@
 #include <linux/module.h>
 #include <linux/platform_device.h>
 #include <linux/property.h>
+<<<<<<< HEAD
 #include <linux/seq_file.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/string_helpers.h>
 #include <linux/uaccess.h>

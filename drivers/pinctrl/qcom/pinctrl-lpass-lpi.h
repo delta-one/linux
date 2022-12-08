@@ -6,6 +6,7 @@
 #ifndef __PINCTRL_LPASS_LPI_H__
 #define __PINCTRL_LPASS_LPI_H__
 
+<<<<<<< HEAD
 #include <linux/bits.h>
 #include <linux/kernel.h>
 
@@ -15,6 +16,12 @@ struct platform_device;
 
 struct pinctrl_pin_desc;
 
+=======
+#include <linux/bitops.h>
+#include <linux/bitfield.h>
+#include "../core.h"
+
+>>>>>>> b7ba80a49124 (Commit)
 #define LPI_SLEW_RATE_CTL_REG	0xa000
 #define LPI_TLMM_REG_OFFSET		0x1000
 #define LPI_SLEW_RATE_MAX		0x03

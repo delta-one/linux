@@ -4,7 +4,10 @@
  */
 
 #include "i915_drv.h"
+<<<<<<< HEAD
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_atomic.h"
 #include "intel_de.h"
 #include "intel_display_types.h"
@@ -68,6 +71,7 @@ intel_drrs_set_refresh_rate_pipeconf(struct intel_crtc *crtc,
 {
 	struct drm_i915_private *dev_priv = to_i915(crtc->base.dev);
 	enum transcoder cpu_transcoder = crtc->drrs.cpu_transcoder;
+<<<<<<< HEAD
 	u32 bit;
 
 	if (IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv))
@@ -77,6 +81,23 @@ intel_drrs_set_refresh_rate_pipeconf(struct intel_crtc *crtc,
 
 	intel_de_rmw(dev_priv, TRANSCONF(cpu_transcoder),
 		     bit, refresh_rate == DRRS_REFRESH_RATE_LOW ? bit : 0);
+=======
+	u32 val, bit;
+
+	if (IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv))
+		bit = PIPECONF_REFRESH_RATE_ALT_VLV;
+	else
+		bit = PIPECONF_REFRESH_RATE_ALT_ILK;
+
+	val = intel_de_read(dev_priv, PIPECONF(cpu_transcoder));
+
+	if (refresh_rate == DRRS_REFRESH_RATE_LOW)
+		val |= bit;
+	else
+		val &= ~bit;
+
+	intel_de_write(dev_priv, PIPECONF(cpu_transcoder), val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -279,19 +300,28 @@ void intel_drrs_flush(struct drm_i915_private *dev_priv,
 }
 
 /**
+<<<<<<< HEAD
  * intel_drrs_crtc_init - Init DRRS for CRTC
+=======
+ * intel_crtc_drrs_init - Init DRRS for CRTC
+>>>>>>> b7ba80a49124 (Commit)
  * @crtc: crtc
  *
  * This function is called only once at driver load to initialize basic
  * DRRS stuff.
  *
  */
+<<<<<<< HEAD
 void intel_drrs_crtc_init(struct intel_crtc *crtc)
+=======
+void intel_crtc_drrs_init(struct intel_crtc *crtc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	INIT_DELAYED_WORK(&crtc->drrs.work, intel_drrs_downclock_work);
 	mutex_init(&crtc->drrs.mutex);
 	crtc->drrs.cpu_transcoder = INVALID_TRANSCODER;
 }
+<<<<<<< HEAD
 
 static int intel_drrs_debugfs_status_show(struct seq_file *m, void *unused)
 {
@@ -400,3 +430,5 @@ void intel_drrs_connector_debugfs_add(struct intel_connector *connector)
 	debugfs_create_file("i915_drrs_type", 0444, connector->base.debugfs_entry,
 			    connector, &intel_drrs_debugfs_type_fops);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

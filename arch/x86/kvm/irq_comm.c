@@ -8,7 +8,10 @@
  *
  * Copyright 2010 Red Hat, Inc. and/or its affiliates.
  */
+<<<<<<< HEAD
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/kvm_host.h>
 #include <linux/slab.h>
@@ -57,7 +60,11 @@ int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kvm_lapic *src,
 
 	if (irq->dest_mode == APIC_DEST_PHYSICAL &&
 	    irq->dest_id == 0xff && kvm_lowest_prio_delivery(irq)) {
+<<<<<<< HEAD
 		pr_info("apic: phys broadcast and lowest prio\n");
+=======
+		printk(KERN_INFO "kvm: apic: phys broadcast and lowest prio\n");
+>>>>>>> b7ba80a49124 (Commit)
 		irq->delivery_mode = APIC_DM_FIXED;
 	}
 
@@ -200,7 +207,11 @@ int kvm_request_irq_source_id(struct kvm *kvm)
 	irq_source_id = find_first_zero_bit(bitmap, BITS_PER_LONG);
 
 	if (irq_source_id >= BITS_PER_LONG) {
+<<<<<<< HEAD
 		pr_warn("exhausted allocatable IRQ sources!\n");
+=======
+		printk(KERN_WARNING "kvm: exhaust allocatable IRQ sources!\n");
+>>>>>>> b7ba80a49124 (Commit)
 		irq_source_id = -EFAULT;
 		goto unlock;
 	}
@@ -222,7 +233,11 @@ void kvm_free_irq_source_id(struct kvm *kvm, int irq_source_id)
 	mutex_lock(&kvm->irq_lock);
 	if (irq_source_id < 0 ||
 	    irq_source_id >= BITS_PER_LONG) {
+<<<<<<< HEAD
 		pr_err("IRQ source ID out of range!\n");
+=======
+		printk(KERN_ERR "kvm: IRQ source ID out of range!\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto unlock;
 	}
 	clear_bit(irq_source_id, &kvm->arch.irq_sources_bitmap);
@@ -427,9 +442,14 @@ void kvm_scan_ioapic_routes(struct kvm_vcpu *vcpu,
 			kvm_set_msi_irq(vcpu->kvm, entry, &irq);
 
 			if (irq.trig_mode &&
+<<<<<<< HEAD
 			    (kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
 						 irq.dest_id, irq.dest_mode) ||
 			     kvm_apic_pending_eoi(vcpu, irq.vector)))
+=======
+			    kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
+						irq.dest_id, irq.dest_mode))
+>>>>>>> b7ba80a49124 (Commit)
 				__set_bit(irq.vector, ioapic_handled_vectors);
 		}
 	}

@@ -156,7 +156,11 @@ static bool increase_address_space(struct protection_domain *domain,
 	bool ret = true;
 	u64 *pte;
 
+<<<<<<< HEAD
 	pte = alloc_pgtable_page(domain->nid, gfp);
+=======
+	pte = (void *)get_zeroed_page(gfp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!pte)
 		return false;
 
@@ -250,7 +254,11 @@ static u64 *alloc_pte(struct protection_domain *domain,
 
 		if (!IOMMU_PTE_PRESENT(__pte) ||
 		    pte_level == PAGE_MODE_NONE) {
+<<<<<<< HEAD
 			page = alloc_pgtable_page(domain->nid, gfp);
+=======
+			page = (u64 *)get_zeroed_page(gfp);
+>>>>>>> b7ba80a49124 (Commit)
 
 			if (!page)
 				return NULL;

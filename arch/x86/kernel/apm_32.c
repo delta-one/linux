@@ -609,7 +609,11 @@ static long __apm_bios_call(void *_call)
 
 	apm_irq_save(flags);
 	firmware_restrict_branch_speculation_start();
+<<<<<<< HEAD
 	ibt = ibt_save(true);
+=======
+	ibt = ibt_save();
+>>>>>>> b7ba80a49124 (Commit)
 	APM_DO_SAVE_SEGS;
 	apm_bios_call_asm(call->func, call->ebx, call->ecx,
 			  &call->eax, &call->ebx, &call->ecx, &call->edx,
@@ -690,7 +694,11 @@ static long __apm_bios_call_simple(void *_call)
 
 	apm_irq_save(flags);
 	firmware_restrict_branch_speculation_start();
+<<<<<<< HEAD
 	ibt = ibt_save(true);
+=======
+	ibt = ibt_save();
+>>>>>>> b7ba80a49124 (Commit)
 	APM_DO_SAVE_SEGS;
 	error = apm_bios_call_simple_asm(call->func, call->ebx, call->ecx,
 					 &call->eax);

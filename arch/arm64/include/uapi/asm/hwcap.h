@@ -93,6 +93,7 @@
 #define HWCAP2_WFXT		(1UL << 31)
 #define HWCAP2_EBF16		(1UL << 32)
 #define HWCAP2_SVE_EBF16	(1UL << 33)
+<<<<<<< HEAD
 #define HWCAP2_CSSC		(1UL << 34)
 #define HWCAP2_RPRFM		(1UL << 35)
 #define HWCAP2_SVE2P1		(1UL << 36)
@@ -102,5 +103,7 @@
 #define HWCAP2_SME_BI32I32	(1UL << 40)
 #define HWCAP2_SME_B16B16	(1UL << 41)
 #define HWCAP2_SME_F16F16	(1UL << 42)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _UAPI__ASM_HWCAP_H */

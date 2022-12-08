@@ -19,7 +19,10 @@
 #include "kvm_util.h"
 #include "asm/kvm.h"
 #include "linux/kvm.h"
+<<<<<<< HEAD
 #include "kselftest.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void stats_test(int stats_fd)
 {
@@ -52,7 +55,11 @@ static void stats_test(int stats_fd)
 
 	/* Sanity check for other fields in header */
 	if (header.num_desc == 0) {
+<<<<<<< HEAD
 		ksft_print_msg("No KVM stats defined!\n");
+=======
+		printf("No KVM stats defined!");
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 	/*
@@ -134,7 +141,11 @@ static void stats_test(int stats_fd)
 				    "Bucket size of stats (%s) is not zero",
 				    pdesc->name);
 		}
+<<<<<<< HEAD
 		size_data = max(size_data, pdesc->offset + pdesc->size * sizeof(*stats_data));
+=======
+		size_data += pdesc->size * sizeof(*stats_data);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -149,6 +160,17 @@ static void stats_test(int stats_fd)
 	TEST_ASSERT(size_data >= header.num_desc * sizeof(*stats_data),
 		    "Data size is not correct");
 
+<<<<<<< HEAD
+=======
+	/* Check stats offset */
+	for (i = 0; i < header.num_desc; ++i) {
+		pdesc = get_stats_descriptor(stats_desc, i, &header);
+		TEST_ASSERT(pdesc->offset < size_data,
+			    "Invalid offset (%u) for stats: %s",
+			    pdesc->offset, pdesc->name);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Allocate memory for stats data */
 	stats_data = malloc(size_data);
 	TEST_ASSERT(stats_data, "Allocate memory for stats data");
@@ -217,6 +239,7 @@ int main(int argc, char *argv[])
 			max_vcpu = DEFAULT_NUM_VCPU;
 	}
 
+<<<<<<< HEAD
 	ksft_print_header();
 
 	/* Check the extension for binary stats */
@@ -224,6 +247,11 @@ int main(int argc, char *argv[])
 
 	ksft_set_plan(max_vm);
 
+=======
+	/* Check the extension for binary stats */
+	TEST_REQUIRE(kvm_has_cap(KVM_CAP_BINARY_STATS_FD));
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Create VMs and VCPUs */
 	vms = malloc(sizeof(vms[0]) * max_vm);
 	TEST_ASSERT(vms, "Allocate memory for storing VM pointers");
@@ -242,12 +270,19 @@ int main(int argc, char *argv[])
 		vm_stats_test(vms[i]);
 		for (j = 0; j < max_vcpu; ++j)
 			vcpu_stats_test(vcpus[i * max_vcpu + j]);
+<<<<<<< HEAD
 		ksft_test_result_pass("vm%i\n", i);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (i = 0; i < max_vm; ++i)
 		kvm_vm_free(vms[i]);
 	free(vms);
+<<<<<<< HEAD
 
 	ksft_finished();	/* Print results and exit() accordingly */
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }

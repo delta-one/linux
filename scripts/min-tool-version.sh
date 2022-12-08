@@ -14,14 +14,28 @@ fi
 
 case "$1" in
 binutils)
+<<<<<<< HEAD
 	echo 2.25.0
+=======
+	echo 2.23.0
+>>>>>>> b7ba80a49124 (Commit)
 	;;
 gcc)
 	echo 5.1.0
 	;;
+<<<<<<< HEAD
 llvm)
 	if [ "$SRCARCH" = s390 ]; then
 		echo 15.0.0
+=======
+icc)
+	# temporary
+	echo 16.0.3
+	;;
+llvm)
+	if [ "$SRCARCH" = s390 ]; then
+		echo 14.0.0
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		echo 11.0.0
 	fi

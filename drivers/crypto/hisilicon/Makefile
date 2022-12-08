@@ -3,6 +3,10 @@ obj-$(CONFIG_CRYPTO_DEV_HISI_HPRE) += hpre/
 obj-$(CONFIG_CRYPTO_DEV_HISI_SEC) += sec/
 obj-$(CONFIG_CRYPTO_DEV_HISI_SEC2) += sec2/
 obj-$(CONFIG_CRYPTO_DEV_HISI_QM) += hisi_qm.o
+<<<<<<< HEAD
 hisi_qm-objs = qm.o sgl.o debugfs.o
+=======
+hisi_qm-objs = qm.o sgl.o
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_CRYPTO_DEV_HISI_ZIP) += zip/
 obj-$(CONFIG_CRYPTO_DEV_HISI_TRNG) += trng/

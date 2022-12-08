@@ -318,6 +318,17 @@ struct dac_info
 	void *data;
 };
 
+<<<<<<< HEAD
+=======
+
+static inline u8 dac_read_reg(struct dac_info *info, u8 reg)
+{
+	u8 code[2] = {reg, 0};
+	info->dac_read_regs(info->data, code, 1);
+	return code[1];
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void dac_read_regs(struct dac_info *info, u8 *code, int count)
 {
 	info->dac_read_regs(info->data, code, count);
@@ -1187,12 +1198,16 @@ static int __init arkfb_init(void)
 
 #ifndef MODULE
 	char *option = NULL;
+<<<<<<< HEAD
 #endif
 
 	if (fb_modesetting_disabled("arkfb"))
 		return -ENODEV;
 
 #ifndef MODULE
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (fb_get_options("arkfb", &option))
 		return -ENODEV;
 

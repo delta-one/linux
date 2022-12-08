@@ -11,6 +11,7 @@
 #include <linux/types.h>
 #include <linux/uuid.h>
 
+<<<<<<< HEAD
 #define FFA_SMC(calling_convention, func_num)				\
 	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL, (calling_convention),	\
 			   ARM_SMCCC_OWNER_STANDARD, (func_num))
@@ -94,6 +95,8 @@
  */
 #define FFA_PAGE_SIZE		SZ_4K
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* FFA Bus/Device/Driver related */
 struct ffa_device {
 	int vm_id;
@@ -244,11 +247,18 @@ struct ffa_mem_region_attributes {
 	 */
 #define FFA_MEM_RETRIEVE_SELF_BORROWER	BIT(0)
 	u8 flag;
+<<<<<<< HEAD
+=======
+	u32 composite_off;
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Offset in bytes from the start of the outer `ffa_memory_region` to
 	 * an `struct ffa_mem_region_addr_range`.
 	 */
+<<<<<<< HEAD
 	u32 composite_off;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 reserved;
 };
 

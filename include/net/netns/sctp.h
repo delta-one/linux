@@ -175,10 +175,13 @@ struct netns_sctp {
 
 	/* Threshold for autoclose timeout, in seconds. */
 	unsigned long max_autoclose;
+<<<<<<< HEAD
 
 #ifdef CONFIG_NET_L3_MASTER_DEV
 	int l3mdev_accept;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #endif /* __NETNS_SCTP_H__ */

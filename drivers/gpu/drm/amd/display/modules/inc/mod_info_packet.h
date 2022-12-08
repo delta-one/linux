@@ -35,12 +35,17 @@ struct mod_vrr_params;
 
 void mod_build_vsc_infopacket(const struct dc_stream_state *stream,
 		struct dc_info_packet *info_packet,
+<<<<<<< HEAD
 		enum dc_color_space cs,
 		enum color_transfer_func tf);
+=======
+		enum dc_color_space cs);
+>>>>>>> b7ba80a49124 (Commit)
 
 void mod_build_hf_vsif_infopacket(const struct dc_stream_state *stream,
 		struct dc_info_packet *info_packet);
 
+<<<<<<< HEAD
 enum adaptive_sync_type {
 	ADAPTIVE_SYNC_TYPE_NONE                  = 0,
 	ADAPTIVE_SYNC_TYPE_DP                    = 1,
@@ -77,4 +82,6 @@ void mod_build_adaptive_sync_infopacket_v2(const struct dc_stream_state *stream,
 
 void mod_build_adaptive_sync_infopacket_v1(struct dc_info_packet *info_packet);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

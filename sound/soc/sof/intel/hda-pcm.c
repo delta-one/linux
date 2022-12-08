@@ -142,6 +142,10 @@ int hda_dsp_pcm_hw_params(struct snd_sof_dev *sdev,
 int hda_dsp_pcm_ack(struct snd_sof_dev *sdev, struct snd_pcm_substream *substream)
 {
 	struct hdac_stream *hstream = substream->runtime->private_data;
+<<<<<<< HEAD
+=======
+	struct hdac_ext_stream *hext_stream = stream_to_hdac_ext_stream(hstream);
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_pcm_runtime *runtime = substream->runtime;
 	ssize_t appl_pos, buf_size;
 	u32 spib;
@@ -155,7 +159,11 @@ int hda_dsp_pcm_ack(struct snd_sof_dev *sdev, struct snd_pcm_substream *substrea
 	if (!spib)
 		spib = buf_size;
 
+<<<<<<< HEAD
 	sof_io_write(sdev, hstream->spib_addr, spib);
+=======
+	sof_io_write(sdev, hext_stream->spib_addr, spib);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

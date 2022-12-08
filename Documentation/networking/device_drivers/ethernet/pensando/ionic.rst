@@ -83,7 +83,11 @@ Configuring the Driver
 MTU
 ---
 
+<<<<<<< HEAD
 Jumbo frame support is available with a maximum size of 9194 bytes.
+=======
+Jumbo frame support is available with a maximim size of 9194 bytes.
+>>>>>>> b7ba80a49124 (Commit)
 
 Interrupt coalescing
 --------------------

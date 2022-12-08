@@ -555,11 +555,19 @@
 };
 
 &usb0 {
+<<<<<<< HEAD
 	dr_mode = "host";
 };
 
 &usb1 {
 	dr_mode = "host";
+=======
+        dr_mode = "host";
+};
+
+&usb1 {
+        dr_mode = "host";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &am33xx_pinmux {

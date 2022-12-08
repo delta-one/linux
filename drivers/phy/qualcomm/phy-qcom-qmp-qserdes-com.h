@@ -135,6 +135,10 @@
 #define QSERDES_COM_CMN_MISC2				0x1b8
 #define QSERDES_COM_CORECLK_DIV_MODE1			0x1bc
 #define QSERDES_COM_CORECLK_DIV_MODE2			0x1c0
+<<<<<<< HEAD
 #define QSERDES_COM_CMN_RSVD5				0x1c4
+=======
+#define QSERDES_COM_CMN_RSVD5				0x1c0
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

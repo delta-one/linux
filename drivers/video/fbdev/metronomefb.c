@@ -744,7 +744,11 @@ err:
 	return retval;
 }
 
+<<<<<<< HEAD
 static void metronomefb_remove(struct platform_device *dev)
+=======
+static int metronomefb_remove(struct platform_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = platform_get_drvdata(dev);
 
@@ -761,11 +765,19 @@ static void metronomefb_remove(struct platform_device *dev)
 		dev_dbg(&dev->dev, "calling release\n");
 		framebuffer_release(info);
 	}
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver metronomefb_driver = {
 	.probe	= metronomefb_probe,
+<<<<<<< HEAD
 	.remove_new = metronomefb_remove,
+=======
+	.remove = metronomefb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name	= "metronomefb",
 	},

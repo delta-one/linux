@@ -7,7 +7,11 @@
 #include <linux/io.h>
 #include <linux/module.h>
 #include <linux/gpio/driver.h>
+<<<<<<< HEAD
 #include <linux/gpio/legacy-of-mm-gpiochip.h>
+=======
+#include <linux/of_gpio.h> /* For of_mm_gpio_chip */
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 
 #define ALTERA_GPIO_MAX_NGPIO		32
@@ -24,12 +28,20 @@
 * @interrupt_trigger	: specifies the hardware configured IRQ trigger type
 *			  (rising, falling, both, high)
 * @mapped_irq		: kernel mapped irq number.
+<<<<<<< HEAD
+=======
+* @irq_chip		: IRQ chip configuration
+>>>>>>> b7ba80a49124 (Commit)
 */
 struct altera_gpio_chip {
 	struct of_mm_gpio_chip mmchip;
 	raw_spinlock_t gpio_lock;
 	int interrupt_trigger;
 	int mapped_irq;
+<<<<<<< HEAD
+=======
+	struct irq_chip irq_chip;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void altera_gpio_irq_unmask(struct irq_data *d)
@@ -41,7 +53,10 @@ static void altera_gpio_irq_unmask(struct irq_data *d)
 
 	altera_gc = gpiochip_get_data(irq_data_get_irq_chip_data(d));
 	mm_gc = &altera_gc->mmchip;
+<<<<<<< HEAD
 	gpiochip_enable_irq(&mm_gc->gc, irqd_to_hwirq(d));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	raw_spin_lock_irqsave(&altera_gc->gpio_lock, flags);
 	intmask = readl(mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
@@ -67,7 +82,10 @@ static void altera_gpio_irq_mask(struct irq_data *d)
 	intmask &= ~BIT(irqd_to_hwirq(d));
 	writel(intmask, mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
 	raw_spin_unlock_irqrestore(&altera_gc->gpio_lock, flags);
+<<<<<<< HEAD
 	gpiochip_disable_irq(&mm_gc->gc, irqd_to_hwirq(d));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -233,6 +251,7 @@ static void altera_gpio_irq_leveL_high_handler(struct irq_desc *desc)
 	chained_irq_exit(chip, desc);
 }
 
+<<<<<<< HEAD
 static const struct irq_chip altera_gpio_irq_chip = {
 	.name = "altera-gpio",
 	.irq_mask = altera_gpio_irq_mask,
@@ -244,6 +263,8 @@ static const struct irq_chip altera_gpio_irq_chip = {
 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int altera_gpio_probe(struct platform_device *pdev)
 {
 	struct device_node *node = pdev->dev.of_node;
@@ -289,9 +310,21 @@ static int altera_gpio_probe(struct platform_device *pdev)
 	}
 	altera_gc->interrupt_trigger = reg;
 
+<<<<<<< HEAD
 	girq = &altera_gc->mmchip.gc.irq;
 	gpio_irq_chip_set_chip(girq, &altera_gpio_irq_chip);
 
+=======
+	altera_gc->irq_chip.name = "altera-gpio";
+	altera_gc->irq_chip.irq_mask     = altera_gpio_irq_mask;
+	altera_gc->irq_chip.irq_unmask   = altera_gpio_irq_unmask;
+	altera_gc->irq_chip.irq_set_type = altera_gpio_irq_set_type;
+	altera_gc->irq_chip.irq_startup  = altera_gpio_irq_startup;
+	altera_gc->irq_chip.irq_shutdown = altera_gpio_irq_mask;
+
+	girq = &altera_gc->mmchip.gc.irq;
+	girq->chip = &altera_gc->irq_chip;
+>>>>>>> b7ba80a49124 (Commit)
 	if (altera_gc->interrupt_trigger == IRQ_TYPE_LEVEL_HIGH)
 		girq->parent_handler = altera_gpio_irq_leveL_high_handler;
 	else
@@ -335,7 +368,11 @@ MODULE_DEVICE_TABLE(of, altera_gpio_of_match);
 static struct platform_driver altera_gpio_driver = {
 	.driver = {
 		.name	= "altera_gpio",
+<<<<<<< HEAD
 		.of_match_table = altera_gpio_of_match,
+=======
+		.of_match_table = of_match_ptr(altera_gpio_of_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe		= altera_gpio_probe,
 	.remove		= altera_gpio_remove,

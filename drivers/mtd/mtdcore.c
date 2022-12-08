@@ -28,7 +28,10 @@
 #include <linux/leds.h>
 #include <linux/debugfs.h>
 #include <linux/nvmem-provider.h>
+<<<<<<< HEAD
 #include <linux/root_dev.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/mtd/mtd.h>
 #include <linux/mtd/partitions.h>
@@ -63,6 +66,10 @@ static SIMPLE_DEV_PM_OPS(mtd_cls_pm_ops, mtd_cls_suspend, mtd_cls_resume);
 
 static struct class mtd_class = {
 	.name = "mtd",
+<<<<<<< HEAD
+=======
+	.owner = THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.pm = MTD_CLS_PM_OPS,
 };
 
@@ -518,7 +525,11 @@ static int mtd_nvmem_add(struct mtd_info *mtd)
 	struct device_node *node = mtd_get_of_node(mtd);
 	struct nvmem_config config = {};
 
+<<<<<<< HEAD
 	config.id = NVMEM_DEVID_NONE;
+=======
+	config.id = -1;
+>>>>>>> b7ba80a49124 (Commit)
 	config.dev = &mtd->dev;
 	config.name = dev_name(&mtd->dev);
 	config.owner = THIS_MODULE;
@@ -535,11 +546,20 @@ static int mtd_nvmem_add(struct mtd_info *mtd)
 	mtd->nvmem = nvmem_register(&config);
 	if (IS_ERR(mtd->nvmem)) {
 		/* Just ignore if there is no NVMEM support in the kernel */
+<<<<<<< HEAD
 		if (PTR_ERR(mtd->nvmem) == -EOPNOTSUPP)
 			mtd->nvmem = NULL;
 		else
 			return dev_err_probe(&mtd->dev, PTR_ERR(mtd->nvmem),
 					     "Failed to register NVMEM device\n");
+=======
+		if (PTR_ERR(mtd->nvmem) == -EOPNOTSUPP) {
+			mtd->nvmem = NULL;
+		} else {
+			dev_err(&mtd->dev, "Failed to register NVMEM device\n");
+			return PTR_ERR(mtd->nvmem);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -550,6 +570,7 @@ static void mtd_check_of_node(struct mtd_info *mtd)
 	struct device_node *partitions, *parent_dn, *mtd_dn = NULL;
 	const char *pname, *prefix = "partition-";
 	int plen, mtd_name_len, offset, prefix_len;
+<<<<<<< HEAD
 
 	/* Check if MTD already has a device node */
 	if (mtd_get_of_node(mtd))
@@ -566,6 +587,24 @@ static void mtd_check_of_node(struct mtd_info *mtd)
 		partitions = of_node_get(parent_dn);
 	else
 		partitions = of_get_child_by_name(parent_dn, "partitions");
+=======
+	struct mtd_info *parent;
+	bool found = false;
+
+	/* Check if MTD already has a device node */
+	if (dev_of_node(&mtd->dev))
+		return;
+
+	/* Check if a partitions node exist */
+	if (!mtd_is_partition(mtd))
+		return;
+	parent = mtd->parent;
+	parent_dn = dev_of_node(&parent->dev);
+	if (!parent_dn)
+		return;
+
+	partitions = of_get_child_by_name(parent_dn, "partitions");
+>>>>>>> b7ba80a49124 (Commit)
 	if (!partitions)
 		goto exit_parent;
 
@@ -574,6 +613,7 @@ static void mtd_check_of_node(struct mtd_info *mtd)
 
 	/* Search if a partition is defined with the same name */
 	for_each_child_of_node(partitions, mtd_dn) {
+<<<<<<< HEAD
 		/* Skip partition with no/wrong prefix */
 		if (!of_node_name_prefix(mtd_dn, prefix))
 			continue;
@@ -583,17 +623,43 @@ static void mtd_check_of_node(struct mtd_info *mtd)
 			offset = 0;
 		} else {
 			pname = mtd_dn->name;
+=======
+		offset = 0;
+
+		/* Skip partition with no/wrong prefix */
+		if (!of_node_name_prefix(mtd_dn, "partition-"))
+			continue;
+
+		/* Label have priority. Check that first */
+		if (of_property_read_string(mtd_dn, "label", &pname)) {
+			of_property_read_string(mtd_dn, "name", &pname);
+>>>>>>> b7ba80a49124 (Commit)
 			offset = prefix_len;
 		}
 
 		plen = strlen(pname) - offset;
 		if (plen == mtd_name_len &&
 		    !strncmp(mtd->name, pname + offset, plen)) {
+<<<<<<< HEAD
 			mtd_set_of_node(mtd, mtd_dn);
+=======
+			found = true;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	if (!found)
+		goto exit_partitions;
+
+	/* Set of_node only for nvmem */
+	if (of_device_is_compatible(mtd_dn, "nvmem-cells"))
+		mtd_set_of_node(mtd, mtd_dn);
+
+exit_partitions:
+>>>>>>> b7ba80a49124 (Commit)
 	of_node_put(partitions);
 exit_parent:
 	of_node_put(parent_dn);
@@ -714,10 +780,15 @@ int add_mtd_device(struct mtd_info *mtd)
 	mtd_check_of_node(mtd);
 	of_node_get(mtd_get_of_node(mtd));
 	error = device_register(&mtd->dev);
+<<<<<<< HEAD
 	if (error) {
 		put_device(&mtd->dev);
 		goto fail_added;
 	}
+=======
+	if (error)
+		goto fail_added;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Add the nvmem provider */
 	error = mtd_nvmem_add(mtd);
@@ -736,6 +807,7 @@ int add_mtd_device(struct mtd_info *mtd)
 		not->add(mtd);
 
 	mutex_unlock(&mtd_table_mutex);
+<<<<<<< HEAD
 
 	if (of_property_read_bool(mtd_get_of_node(mtd), "linux,rootfs")) {
 		if (IS_BUILTIN(CONFIG_MTD)) {
@@ -747,6 +819,8 @@ int add_mtd_device(struct mtd_info *mtd)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* We _know_ we aren't being removed, because
 	   our caller is still holding us here. So none
 	   of this try_ nonsense, and no bitching about it
@@ -778,7 +852,10 @@ int del_mtd_device(struct mtd_info *mtd)
 {
 	int ret;
 	struct mtd_notifier *not;
+<<<<<<< HEAD
 	struct device_node *mtd_of_node;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&mtd_table_mutex);
 
@@ -797,7 +874,10 @@ int del_mtd_device(struct mtd_info *mtd)
 		       mtd->index, mtd->name, mtd->usecount);
 		ret = -EBUSY;
 	} else {
+<<<<<<< HEAD
 		mtd_of_node = mtd_get_of_node(mtd);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		debugfs_remove_recursive(mtd->dbg.dfs_dir);
 
 		/* Try to remove the NVMEM provider */
@@ -809,7 +889,11 @@ int del_mtd_device(struct mtd_info *mtd)
 		memset(&mtd->dev, 0, sizeof(mtd->dev));
 
 		idr_remove(&mtd_idr, mtd->index);
+<<<<<<< HEAD
 		of_node_put(mtd_of_node);
+=======
+		of_node_put(mtd_get_of_node(mtd));
+>>>>>>> b7ba80a49124 (Commit)
 
 		module_put(THIS_MODULE);
 		ret = 0;
@@ -886,8 +970,13 @@ static struct nvmem_device *mtd_otp_nvmem_register(struct mtd_info *mtd,
 
 	/* OTP nvmem will be registered on the physical device */
 	config.dev = mtd->dev.parent;
+<<<<<<< HEAD
 	config.name = compatible;
 	config.id = NVMEM_DEVID_AUTO;
+=======
+	config.name = kasprintf(GFP_KERNEL, "%s-%s", dev_name(&mtd->dev), compatible);
+	config.id = NVMEM_DEVID_NONE;
+>>>>>>> b7ba80a49124 (Commit)
 	config.owner = THIS_MODULE;
 	config.type = NVMEM_TYPE_OTP;
 	config.root_only = true;
@@ -903,6 +992,10 @@ static struct nvmem_device *mtd_otp_nvmem_register(struct mtd_info *mtd,
 		nvmem = NULL;
 
 	of_node_put(np);
+<<<<<<< HEAD
+=======
+	kfree(config.name);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return nvmem;
 }
@@ -937,7 +1030,10 @@ static int mtd_nvmem_fact_otp_reg_read(void *priv, unsigned int offset,
 
 static int mtd_otp_nvmem_add(struct mtd_info *mtd)
 {
+<<<<<<< HEAD
 	struct device *dev = mtd->dev.parent;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct nvmem_device *nvmem;
 	ssize_t size;
 	int err;
@@ -951,8 +1047,13 @@ static int mtd_otp_nvmem_add(struct mtd_info *mtd)
 			nvmem = mtd_otp_nvmem_register(mtd, "user-otp", size,
 						       mtd_nvmem_user_otp_reg_read);
 			if (IS_ERR(nvmem)) {
+<<<<<<< HEAD
 				err = PTR_ERR(nvmem);
 				goto err;
+=======
+				dev_err(&mtd->dev, "Failed to register OTP NVMEM device\n");
+				return PTR_ERR(nvmem);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			mtd->otp_user_nvmem = nvmem;
 		}
@@ -969,6 +1070,10 @@ static int mtd_otp_nvmem_add(struct mtd_info *mtd)
 			nvmem = mtd_otp_nvmem_register(mtd, "factory-otp", size,
 						       mtd_nvmem_fact_otp_reg_read);
 			if (IS_ERR(nvmem)) {
+<<<<<<< HEAD
+=======
+				dev_err(&mtd->dev, "Failed to register OTP NVMEM device\n");
+>>>>>>> b7ba80a49124 (Commit)
 				err = PTR_ERR(nvmem);
 				goto err;
 			}
@@ -980,7 +1085,11 @@ static int mtd_otp_nvmem_add(struct mtd_info *mtd)
 
 err:
 	nvmem_unregister(mtd->otp_user_nvmem);
+<<<<<<< HEAD
 	return dev_err_probe(dev, err, "Failed to register OTP NVMEM device\n");
+=======
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1020,6 +1129,7 @@ int mtd_device_parse_register(struct mtd_info *mtd, const char * const *types,
 
 	mtd_set_dev_defaults(mtd);
 
+<<<<<<< HEAD
 	ret = mtd_otp_nvmem_add(mtd);
 	if (ret)
 		goto out;
@@ -1028,6 +1138,12 @@ int mtd_device_parse_register(struct mtd_info *mtd, const char * const *types,
 		ret = add_mtd_device(mtd);
 		if (ret)
 			goto out;
+=======
+	if (IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER)) {
+		ret = add_mtd_device(mtd);
+		if (ret)
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Prefer parsed partitions over driver-provided fallback */
@@ -1062,12 +1178,18 @@ int mtd_device_parse_register(struct mtd_info *mtd, const char * const *types,
 		register_reboot_notifier(&mtd->reboot_notifier);
 	}
 
+<<<<<<< HEAD
 out:
 	if (ret) {
 		nvmem_unregister(mtd->otp_user_nvmem);
 		nvmem_unregister(mtd->otp_factory_nvmem);
 	}
 
+=======
+	ret = mtd_otp_nvmem_add(mtd);
+
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret && device_is_registered(&mtd->dev))
 		del_mtd_device(mtd);
 
@@ -2495,7 +2617,10 @@ static int __init init_mtd(void)
 out_procfs:
 	if (proc_mtd)
 		remove_proc_entry("mtd", NULL);
+<<<<<<< HEAD
 	bdi_unregister(mtd_bdi);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bdi_put(mtd_bdi);
 err_bdi:
 	class_unregister(&mtd_class);

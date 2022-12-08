@@ -368,7 +368,10 @@ struct nfs4_client {
 #define NFSD4_CLIENT_UPCALL_LOCK	(5)	/* upcall serialization */
 #define NFSD4_CLIENT_CB_FLAG_MASK	(1 << NFSD4_CLIENT_CB_UPDATE | \
 					 1 << NFSD4_CLIENT_CB_KILL)
+<<<<<<< HEAD
 #define NFSD4_CLIENT_CB_RECALL_ANY	(6)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long		cl_flags;
 	const struct cred	*cl_cb_cred;
 	struct rpc_clnt		*cl_cb_client;
@@ -412,10 +415,13 @@ struct nfs4_client {
 
 	unsigned int		cl_state;
 	atomic_t		cl_delegs_in_recall;
+<<<<<<< HEAD
 
 	struct nfsd4_cb_recall_any	*cl_ra;
 	time64_t		cl_ra_time;
 	struct list_head	cl_ra_cblist;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* struct nfs4_client_reset
@@ -541,13 +547,23 @@ struct nfs4_clnt_odstate {
  * inode can have multiple filehandles associated with it, so there is
  * (potentially) a many to one relationship between this struct and struct
  * inode.
+<<<<<<< HEAD
+=======
+ *
+ * These are hashed by filehandle in the file_hashtbl, which is protected by
+ * the global state_lock spinlock.
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct nfs4_file {
 	refcount_t		fi_ref;
 	struct inode *		fi_inode;
 	bool			fi_aliased;
 	spinlock_t		fi_lock;
+<<<<<<< HEAD
 	struct rhlist_head	fi_rlist;
+=======
+	struct hlist_node       fi_hash;	/* hash on fi_fhandle */
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head        fi_stateids;
 	union {
 		struct list_head	fi_delegations;
@@ -641,7 +657,10 @@ enum nfsd4_cb_op {
 	NFSPROC4_CLNT_CB_OFFLOAD,
 	NFSPROC4_CLNT_CB_SEQUENCE,
 	NFSPROC4_CLNT_CB_NOTIFY_LOCK,
+<<<<<<< HEAD
 	NFSPROC4_CLNT_CB_RECALL_ANY,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Returns true iff a is later than b: */
@@ -695,7 +714,11 @@ extern void nfsd4_probe_callback_sync(struct nfs4_client *clp);
 extern void nfsd4_change_callback(struct nfs4_client *clp, struct nfs4_cb_conn *);
 extern void nfsd4_init_cb(struct nfsd4_callback *cb, struct nfs4_client *clp,
 		const struct nfsd4_callback_ops *ops, enum nfsd4_cb_op op);
+<<<<<<< HEAD
 extern bool nfsd4_run_cb(struct nfsd4_callback *cb);
+=======
+extern void nfsd4_run_cb(struct nfsd4_callback *cb);
+>>>>>>> b7ba80a49124 (Commit)
 extern int nfsd4_create_callback_queue(void);
 extern void nfsd4_destroy_callback_queue(void);
 extern void nfsd4_shutdown_callback(struct nfs4_client *);
@@ -705,6 +728,11 @@ extern struct nfs4_client_reclaim *nfs4_client_to_reclaim(struct xdr_netobj name
 extern bool nfs4_has_reclaimed_state(struct xdr_netobj name, struct nfsd_net *nn);
 
 void put_nfs4_file(struct nfs4_file *fi);
+<<<<<<< HEAD
+=======
+extern struct nfsd4_copy *
+find_async_copy(struct nfs4_client *clp, stateid_t *staetid);
+>>>>>>> b7ba80a49124 (Commit)
 extern void nfs4_put_cpntf_state(struct nfsd_net *nn,
 				 struct nfs4_cpntf_state *cps);
 extern __be32 manage_cpntf_state(struct nfsd_net *nn, stateid_t *st,

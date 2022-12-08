@@ -14,9 +14,13 @@ properties:
     oneOf:
       - const: nxp,nxp-nci-i2c
       - items:
+<<<<<<< HEAD
           - enum:
               - nxp,nq310
               - nxp,pn547
+=======
+          - const: nxp,pn547
+>>>>>>> b7ba80a49124 (Commit)
           - const: nxp,nxp-nci-i2c
 
   enable-gpios:

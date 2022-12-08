@@ -773,7 +773,11 @@ config HIGHMEM
 
 config ARCH_FORCE_MAX_ORDER
 	int "Maximum zone order"
+<<<<<<< HEAD
 	default "10"
+=======
+	default "11"
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  The kernel memory allocator divides physically contiguous memory
 	  blocks into "zones", where each zone is a power of two number of
@@ -782,6 +786,12 @@ config ARCH_FORCE_MAX_ORDER
 	  blocks of physically contiguous memory, then you may need to
 	  increase this value.
 
+<<<<<<< HEAD
+=======
+	  This config option is actually maximum order plus one. For example,
+	  a value of 11 means that the largest free memory block is 2^10 pages.
+
+>>>>>>> b7ba80a49124 (Commit)
 endmenu
 
 menu "Power management options"

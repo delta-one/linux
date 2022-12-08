@@ -37,6 +37,10 @@ representation onto this fixed set.
 If there is no good match when mapping then a new profile name may be
 added. Drivers which wish to introduce new profile names must:
 
+<<<<<<< HEAD
  1. Explain why the existing profile names cannot be used.
+=======
+ 1. Explain why the existing profile names canot be used.
+>>>>>>> b7ba80a49124 (Commit)
  2. Add the new profile name, along with a clear description of the
     expected behaviour, to the sysfs-platform_profile ABI documentation.

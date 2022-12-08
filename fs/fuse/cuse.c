@@ -256,7 +256,11 @@ static int cuse_parse_one(char **pp, char *end, char **keyp, char **valp)
 }
 
 /**
+<<<<<<< HEAD
  * cuse_parse_devinfo - parse device info
+=======
+ * cuse_parse_dev_info - parse device info
+>>>>>>> b7ba80a49124 (Commit)
  * @p: device info string
  * @len: length of device info string
  * @devinfo: out parameter for parsed device info
@@ -545,6 +549,10 @@ static int cuse_channel_release(struct inode *inode, struct file *file)
 {
 	struct fuse_dev *fud = file->private_data;
 	struct cuse_conn *cc = fc_to_cc(fud->fc);
+<<<<<<< HEAD
+=======
+	int rc;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* remove from the conntbl, no more access from this point on */
 	mutex_lock(&cuse_lock);
@@ -559,7 +567,13 @@ static int cuse_channel_release(struct inode *inode, struct file *file)
 		cdev_del(cc->cdev);
 	}
 
+<<<<<<< HEAD
 	return fuse_dev_release(inode, file);
+=======
+	rc = fuse_dev_release(inode, file);	/* puts the base reference */
+
+	return rc;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct file_operations cuse_channel_fops; /* initialized during init */
@@ -623,7 +637,11 @@ static int __init cuse_init(void)
 	/* CUSE is not prepared for FUSE_DEV_IOC_CLONE */
 	cuse_channel_fops.unlocked_ioctl	= NULL;
 
+<<<<<<< HEAD
 	cuse_class = class_create("cuse");
+=======
+	cuse_class = class_create(THIS_MODULE, "cuse");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(cuse_class))
 		return PTR_ERR(cuse_class);
 

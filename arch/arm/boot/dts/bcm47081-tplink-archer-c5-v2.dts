@@ -23,50 +23,86 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-2ghz {
+=======
+		2ghz {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:2ghz";
 			gpios = <&chipcommon 0 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-lan {
+=======
+		lan {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:lan";
 			gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-usb2-port1 {
+=======
+		usb2-port1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:usb2-port1";
 			gpios = <&chipcommon 2 GPIO_ACTIVE_HIGH>;
 			trigger-sources = <&ohci_port1>, <&ehci_port1>;
 			linux,default-trigger = "usbport";
 		};
 
+<<<<<<< HEAD
 		led-power {
+=======
+		power {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:power";
 			gpios = <&chipcommon 4 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "default-on";
 		};
 
+<<<<<<< HEAD
 		led-wan-green {
+=======
+		wan-green {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:wan";
 			gpios = <&chipcommon 5 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-wps {
+=======
+		wps {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:wps";
 			gpios = <&chipcommon 6 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-wan-amber {
+=======
+		wan-amber {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:amber:wan";
 			gpios = <&chipcommon 8 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-5ghz {
+=======
+		5ghz {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:5ghz";
 			gpios = <&chipcommon 12 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-usb2-port2 {
+=======
+		usb2-port2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:usb2-port2";
 			gpios = <&chipcommon 13 GPIO_ACTIVE_HIGH>;
 			trigger-sources = <&ohci_port2>, <&ehci_port2>;
@@ -95,6 +131,7 @@
 	status = "okay";
 
 	partitions {
+<<<<<<< HEAD
 		compatible = "tplink,safeloader-partitions";
 		partitions-table-offset = <0xe50000>;
 
@@ -104,6 +141,32 @@
 
 		partition-file-system {
 			linux,rootfs;
+=======
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		boot@0 {
+			label = "boot";
+			reg = <0x000000 0x040000>;
+			read-only;
+		};
+
+		os-image@100000 {
+			label = "os-image";
+			reg = <0x040000 0x200000>;
+			compatible = "brcm,trx";
+		};
+
+		rootfs@240000 {
+			label = "rootfs";
+			reg = <0x240000 0xc00000>;
+		};
+
+		nvram@ff0000 {
+			label = "nvram";
+			reg = <0xff0000 0x010000>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };

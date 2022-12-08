@@ -202,6 +202,7 @@ const char link_mode_names[][ETH_GSTRING_LEN] = {
 	__DEFINE_LINK_MODE_NAME(100, FX, Half),
 	__DEFINE_LINK_MODE_NAME(100, FX, Full),
 	__DEFINE_LINK_MODE_NAME(10, T1L, Full),
+<<<<<<< HEAD
 	__DEFINE_LINK_MODE_NAME(800000, CR8, Full),
 	__DEFINE_LINK_MODE_NAME(800000, KR8, Full),
 	__DEFINE_LINK_MODE_NAME(800000, DR8, Full),
@@ -211,6 +212,8 @@ const char link_mode_names[][ETH_GSTRING_LEN] = {
 	__DEFINE_LINK_MODE_NAME(10, T1S, Full),
 	__DEFINE_LINK_MODE_NAME(10, T1S, Half),
 	__DEFINE_LINK_MODE_NAME(10, T1S_P2MP, Half),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 static_assert(ARRAY_SIZE(link_mode_names) == __ETHTOOL_LINK_MODE_MASK_NBITS);
 
@@ -247,10 +250,13 @@ static_assert(ARRAY_SIZE(link_mode_names) == __ETHTOOL_LINK_MODE_MASK_NBITS);
 #define __LINK_MODE_LANES_X		1
 #define __LINK_MODE_LANES_FX		1
 #define __LINK_MODE_LANES_T1L		1
+<<<<<<< HEAD
 #define __LINK_MODE_LANES_T1S		1
 #define __LINK_MODE_LANES_T1S_P2MP	1
 #define __LINK_MODE_LANES_VR8		8
 #define __LINK_MODE_LANES_DR8_2		8
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define __DEFINE_LINK_MODE_PARAMS(_speed, _type, _duplex)	\
 	[ETHTOOL_LINK_MODE(_speed, _type, _duplex)] = {		\
@@ -365,6 +371,7 @@ const struct link_mode_info link_mode_params[] = {
 	__DEFINE_LINK_MODE_PARAMS(100, FX, Half),
 	__DEFINE_LINK_MODE_PARAMS(100, FX, Full),
 	__DEFINE_LINK_MODE_PARAMS(10, T1L, Full),
+<<<<<<< HEAD
 	__DEFINE_LINK_MODE_PARAMS(800000, CR8, Full),
 	__DEFINE_LINK_MODE_PARAMS(800000, KR8, Full),
 	__DEFINE_LINK_MODE_PARAMS(800000, DR8, Full),
@@ -374,6 +381,8 @@ const struct link_mode_info link_mode_params[] = {
 	__DEFINE_LINK_MODE_PARAMS(10, T1S, Full),
 	__DEFINE_LINK_MODE_PARAMS(10, T1S, Half),
 	__DEFINE_LINK_MODE_PARAMS(10, T1S_P2MP, Half),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 static_assert(ARRAY_SIZE(link_mode_params) == __ETHTOOL_LINK_MODE_MASK_NBITS);
 
@@ -425,7 +434,10 @@ const char sof_timestamping_names[][ETH_GSTRING_LEN] = {
 	[const_ilog2(SOF_TIMESTAMPING_OPT_PKTINFO)]  = "option-pktinfo",
 	[const_ilog2(SOF_TIMESTAMPING_OPT_TX_SWHW)]  = "option-tx-swhw",
 	[const_ilog2(SOF_TIMESTAMPING_BIND_PHC)]     = "bind-phc",
+<<<<<<< HEAD
 	[const_ilog2(SOF_TIMESTAMPING_OPT_ID_TCP)]   = "option-id-tcp",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 static_assert(ARRAY_SIZE(sof_timestamping_names) == __SOF_TIMESTAMPING_CNT);
 
@@ -521,6 +533,7 @@ int __ethtool_get_link(struct net_device *dev)
 	return netif_running(dev) && dev->ethtool_ops->get_link(dev);
 }
 
+<<<<<<< HEAD
 static int ethtool_get_rxnfc_rule_count(struct net_device *dev)
 {
 	const struct ethtool_ops *ops = dev->ethtool_ops;
@@ -587,6 +600,8 @@ err_free_info:
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ethtool_get_max_rxfh_channel(struct net_device *dev, u32 *max)
 {
 	u32 dev_size, current_max = 0;

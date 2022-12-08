@@ -164,8 +164,11 @@ EXPORT_SYMBOL(otx2_alloc_mcam_entries);
 static int otx2_mcam_entry_init(struct otx2_nic *pfvf)
 {
 	struct otx2_flow_config *flow_cfg = pfvf->flow_cfg;
+<<<<<<< HEAD
 	struct npc_get_field_status_req *freq;
 	struct npc_get_field_status_rsp *frsp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct npc_mcam_alloc_entry_req *req;
 	struct npc_mcam_alloc_entry_rsp *rsp;
 	int vf_vlan_max_flows;
@@ -216,6 +219,7 @@ static int otx2_mcam_entry_init(struct otx2_nic *pfvf)
 	flow_cfg->rx_vlan_offset = flow_cfg->unicast_offset +
 					OTX2_MAX_UNICAST_FLOWS;
 	pfvf->flags |= OTX2_FLAG_UCAST_FLTR_SUPPORT;
+<<<<<<< HEAD
 
 	/* Check if NPC_DMAC field is supported
 	 * by the mkex profile before setting VLAN support flag.
@@ -239,6 +243,10 @@ static int otx2_mcam_entry_init(struct otx2_nic *pfvf)
 		pfvf->flags |= OTX2_FLAG_RX_VLAN_SUPPORT;
 		pfvf->flags |= OTX2_FLAG_VF_VLAN_SUPPORT;
 	}
+=======
+	pfvf->flags |= OTX2_FLAG_RX_VLAN_SUPPORT;
+	pfvf->flags |= OTX2_FLAG_VF_VLAN_SUPPORT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pfvf->flags |= OTX2_FLAG_MCAM_ENTRIES_ALLOC;
 	mutex_unlock(&pfvf->mbox.lock);
@@ -711,11 +719,14 @@ static int otx2_prepare_ipv6_flow(struct ethtool_rx_flow_spec *fsp,
 			       sizeof(pmask->ip6dst));
 			req->features |= BIT_ULL(NPC_DIP_IPV6);
 		}
+<<<<<<< HEAD
 		if (ipv6_usr_hdr->l4_proto == IPPROTO_FRAGMENT) {
 			pkt->next_header = ipv6_usr_hdr->l4_proto;
 			pmask->next_header = ipv6_usr_mask->l4_proto;
 			req->features |= BIT_ULL(NPC_IPFRAG_IPV6);
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pkt->etype = cpu_to_be16(ETH_P_IPV6);
 		pmask->etype = cpu_to_be16(0xFFFF);
 		req->features |= BIT_ULL(NPC_ETYPE);
@@ -793,7 +804,11 @@ static int otx2_prepare_ipv6_flow(struct ethtool_rx_flow_spec *fsp,
 
 		/* NPC profile doesn't extract AH/ESP header fields */
 		if ((ah_esp_mask->spi & ah_esp_hdr->spi) ||
+<<<<<<< HEAD
 		    (ah_esp_mask->tclass & ah_esp_hdr->tclass))
+=======
+		    (ah_esp_mask->tclass & ah_esp_mask->tclass))
+>>>>>>> b7ba80a49124 (Commit)
 			return -EOPNOTSUPP;
 
 		if (flow_type == AH_V6_FLOW)
@@ -896,6 +911,7 @@ static int otx2_prepare_flow_request(struct ethtool_rx_flow_spec *fsp,
 			req->features |= BIT_ULL(NPC_OUTER_VID);
 		}
 
+<<<<<<< HEAD
 		if (fsp->m_ext.data[1]) {
 			if (flow_type == IP_USER_FLOW) {
 				if (be32_to_cpu(fsp->h_ext.data[1]) != IPV4_FLAG_MORE)
@@ -912,6 +928,12 @@ static int otx2_prepare_flow_request(struct ethtool_rx_flow_spec *fsp,
 				req->op = NIX_RX_ACTION_DEFAULT;
 			}
 		}
+=======
+		/* Not Drop/Direct to queue but use action in default entry */
+		if (fsp->m_ext.data[1] &&
+		    fsp->h_ext.data[1] == cpu_to_be32(OTX2_DEFAULT_ACTION))
+			req->op = NIX_RX_ACTION_DEFAULT;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (fsp->flow_type & FLOW_MAC_EXT &&

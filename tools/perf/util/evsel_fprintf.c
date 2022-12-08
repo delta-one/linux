@@ -2,6 +2,10 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdbool.h>
+<<<<<<< HEAD
+=======
+#include <traceevent/event-parse.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include "evsel.h"
 #include "util/evsel_fprintf.h"
 #include "util/event.h"
@@ -12,10 +16,13 @@
 #include "srcline.h"
 #include "dso.h"
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 #include <traceevent/event-parse.h>
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int comma_fprintf(FILE *fp, bool *first, const char *fmt, ...)
 {
 	va_list args;
@@ -77,7 +84,10 @@ int evsel__fprintf(struct evsel *evsel, struct perf_attr_details *details, FILE 
 					 term, (u64)evsel->core.attr.sample_freq);
 	}
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (details->trace_fields) {
 		struct tep_format_field *field;
 
@@ -100,7 +110,10 @@ int evsel__fprintf(struct evsel *evsel, struct perf_attr_details *details, FILE 
 			field = field->next;
 		}
 	}
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	fputc('\n', fp);
 	return ++printed;

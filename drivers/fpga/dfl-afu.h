@@ -41,7 +41,11 @@ struct dfl_afu_mmio_region {
 };
 
 /**
+<<<<<<< HEAD
  * struct dfl_afu_dma_region - afu DMA region data structure
+=======
+ * struct fpga_afu_dma_region - afu DMA region data structure
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @user_addr: region userspace virtual address.
  * @length: region length.

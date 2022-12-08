@@ -13,7 +13,10 @@
 #include <linux/blkdev.h>
 #include <linux/blk-crypto-profile.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/ratelimit.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 
 #include "blk-crypto-internal.h"
@@ -37,12 +40,15 @@ const struct blk_crypto_mode blk_crypto_modes[] = {
 		.keysize = 32,
 		.ivsize = 32,
 	},
+<<<<<<< HEAD
 	[BLK_ENCRYPTION_MODE_SM4_XTS] = {
 		.name = "SM4-XTS",
 		.cipher_str = "xts(sm4)",
 		.keysize = 32,
 		.ivsize = 16,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -225,13 +231,18 @@ static bool bio_crypt_check_alignment(struct bio *bio)
 	return true;
 }
 
+<<<<<<< HEAD
 blk_status_t __blk_crypto_rq_get_keyslot(struct request *rq)
+=======
+blk_status_t __blk_crypto_init_request(struct request *rq)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return blk_crypto_get_keyslot(rq->q->crypto_profile,
 				      rq->crypt_ctx->bc_key,
 				      &rq->crypt_keyslot);
 }
 
+<<<<<<< HEAD
 void __blk_crypto_rq_put_keyslot(struct request *rq)
 {
 	blk_crypto_put_keyslot(rq->crypt_keyslot);
@@ -246,6 +257,22 @@ void __blk_crypto_free_request(struct request *rq)
 
 	mempool_free(rq->crypt_ctx, bio_crypt_ctx_pool);
 	rq->crypt_ctx = NULL;
+=======
+/**
+ * __blk_crypto_free_request - Uninitialize the crypto fields of a request.
+ *
+ * @rq: The request whose crypto fields to uninitialize.
+ *
+ * Completely uninitializes the crypto fields of a request. If a keyslot has
+ * been programmed into some inline encryption hardware, that keyslot is
+ * released. The rq->crypt_ctx is also freed.
+ */
+void __blk_crypto_free_request(struct request *rq)
+{
+	blk_crypto_put_keyslot(rq->crypt_keyslot);
+	mempool_free(rq->crypt_ctx, bio_crypt_ctx_pool);
+	blk_crypto_rq_set_defaults(rq);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -274,6 +301,10 @@ bool __blk_crypto_bio_prep(struct bio **bio_ptr)
 {
 	struct bio *bio = *bio_ptr;
 	const struct blk_crypto_key *bc_key = bio->bi_crypt_context->bc_key;
+<<<<<<< HEAD
+=======
+	struct blk_crypto_profile *profile;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Error if bio has no data. */
 	if (WARN_ON_ONCE(!bio_has_data(bio))) {
@@ -290,9 +321,16 @@ bool __blk_crypto_bio_prep(struct bio **bio_ptr)
 	 * Success if device supports the encryption context, or if we succeeded
 	 * in falling back to the crypto API.
 	 */
+<<<<<<< HEAD
 	if (blk_crypto_config_supported_natively(bio->bi_bdev,
 						 &bc_key->crypto_cfg))
 		return true;
+=======
+	profile = bdev_get_queue(bio->bi_bdev)->crypto_profile;
+	if (__blk_crypto_cfg_supported(profile, &bc_key->crypto_cfg))
+		return true;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (blk_crypto_fallback_bio_prep(bio_ptr))
 		return true;
 fail:
@@ -357,6 +395,7 @@ int blk_crypto_init_key(struct blk_crypto_key *blk_key, const u8 *raw_key,
 	return 0;
 }
 
+<<<<<<< HEAD
 bool blk_crypto_config_supported_natively(struct block_device *bdev,
 					  const struct blk_crypto_config *cfg)
 {
@@ -374,12 +413,29 @@ bool blk_crypto_config_supported(struct block_device *bdev,
 {
 	return IS_ENABLED(CONFIG_BLK_INLINE_ENCRYPTION_FALLBACK) ||
 	       blk_crypto_config_supported_natively(bdev, cfg);
+=======
+/*
+ * Check if bios with @cfg can be en/decrypted by blk-crypto (i.e. either the
+ * request queue it's submitted to supports inline crypto, or the
+ * blk-crypto-fallback is enabled and supports the cfg).
+ */
+bool blk_crypto_config_supported(struct request_queue *q,
+				 const struct blk_crypto_config *cfg)
+{
+	return IS_ENABLED(CONFIG_BLK_INLINE_ENCRYPTION_FALLBACK) ||
+	       __blk_crypto_cfg_supported(q->crypto_profile, cfg);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
  * blk_crypto_start_using_key() - Start using a blk_crypto_key on a device
+<<<<<<< HEAD
  * @bdev: block device to operate on
  * @key: A key to use on the device
+=======
+ * @key: A key to use on the device
+ * @q: the request queue for the device
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Upper layers must call this function to ensure that either the hardware
  * supports the key's crypto settings, or the crypto API fallback has transforms
@@ -391,15 +447,23 @@ bool blk_crypto_config_supported(struct block_device *bdev,
  *	   blk-crypto-fallback is either disabled or the needed algorithm
  *	   is disabled in the crypto API; or another -errno code.
  */
+<<<<<<< HEAD
 int blk_crypto_start_using_key(struct block_device *bdev,
 			       const struct blk_crypto_key *key)
 {
 	if (blk_crypto_config_supported_natively(bdev, &key->crypto_cfg))
+=======
+int blk_crypto_start_using_key(const struct blk_crypto_key *key,
+			       struct request_queue *q)
+{
+	if (__blk_crypto_cfg_supported(q->crypto_profile, &key->crypto_cfg))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	return blk_crypto_fallback_start_using_mode(key->crypto_cfg.crypto_mode);
 }
 
 /**
+<<<<<<< HEAD
  * blk_crypto_evict_key() - Evict a blk_crypto_key from a block_device
  * @bdev: a block_device on which I/O using the key may have been done
  * @key: the key to evict
@@ -434,5 +498,30 @@ void blk_crypto_evict_key(struct block_device *bdev,
 	 */
 	if (err)
 		pr_warn_ratelimited("%pg: error %d evicting key\n", bdev, err);
+=======
+ * blk_crypto_evict_key() - Evict a key from any inline encryption hardware
+ *			    it may have been programmed into
+ * @q: The request queue who's associated inline encryption hardware this key
+ *     might have been programmed into
+ * @key: The key to evict
+ *
+ * Upper layers (filesystems) must call this function to ensure that a key is
+ * evicted from any hardware that it might have been programmed into.  The key
+ * must not be in use by any in-flight IO when this function is called.
+ *
+ * Return: 0 on success or if the key wasn't in any keyslot; -errno on error.
+ */
+int blk_crypto_evict_key(struct request_queue *q,
+			 const struct blk_crypto_key *key)
+{
+	if (__blk_crypto_cfg_supported(q->crypto_profile, &key->crypto_cfg))
+		return __blk_crypto_evict_key(q->crypto_profile, key);
+
+	/*
+	 * If the request_queue didn't support the key, then blk-crypto-fallback
+	 * may have been used, so try to evict the key from blk-crypto-fallback.
+	 */
+	return blk_crypto_fallback_evict_key(key);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(blk_crypto_evict_key);

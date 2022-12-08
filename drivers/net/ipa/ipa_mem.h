@@ -1,7 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 
 /* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (C) 2019-2023 Linaro Ltd.
+=======
+ * Copyright (C) 2019-2021 Linaro Ltd.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #ifndef _IPA_MEM_H_
 #define _IPA_MEM_H_
@@ -62,15 +66,24 @@ enum ipa_mem_id {
 	IPA_MEM_PDN_CONFIG,		/* 0/2 canaries (IPA v4.0+) */
 	IPA_MEM_STATS_QUOTA_MODEM,	/* 2/4 canaries (IPA v4.0+) */
 	IPA_MEM_STATS_QUOTA_AP,		/* 0 canaries, optional (IPA v4.0+) */
+<<<<<<< HEAD
 	IPA_MEM_STATS_TETHERING,	/* 0 canaries, optional (IPA v4.0+) */
 	IPA_MEM_STATS_DROP,		/* 0 canaries, optional (IPA v4.0+) */
 	/* The next 7 filter and route statistics regions are optional */
+=======
+	IPA_MEM_STATS_TETHERING,	/* 0 canaries (IPA v4.0+) */
+	IPA_MEM_STATS_DROP,		/* 0 canaries, optional (IPA v4.0+) */
+	/* The next 5 filter and route statistics regions are optional */
+>>>>>>> b7ba80a49124 (Commit)
 	IPA_MEM_STATS_V4_FILTER,	/* 0 canaries (IPA v4.0-v4.2) */
 	IPA_MEM_STATS_V6_FILTER,	/* 0 canaries (IPA v4.0-v4.2) */
 	IPA_MEM_STATS_V4_ROUTE,		/* 0 canaries (IPA v4.0-v4.2) */
 	IPA_MEM_STATS_V6_ROUTE,		/* 0 canaries (IPA v4.0-v4.2) */
+<<<<<<< HEAD
 	IPA_MEM_AP_V4_FILTER,		/* 2 canaries (IPA v5.0) */
 	IPA_MEM_AP_V6_FILTER,		/* 0 canaries (IPA v5.0) */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	IPA_MEM_STATS_FILTER_ROUTE,	/* 0 canaries (IPA v4.5+) */
 	IPA_MEM_NAT_TABLE,		/* 4 canaries, optional (IPA v4.5+) */
 	IPA_MEM_END_MARKER,		/* 1 canary (not a real region) */

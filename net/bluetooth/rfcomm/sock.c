@@ -391,7 +391,10 @@ static int rfcomm_sock_connect(struct socket *sock, struct sockaddr *addr, int a
 	    addr->sa_family != AF_BLUETOOTH)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	sock_hold(sk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	lock_sock(sk);
 
 	if (sk->sk_state != BT_OPEN && sk->sk_state != BT_BOUND) {
@@ -411,18 +414,27 @@ static int rfcomm_sock_connect(struct socket *sock, struct sockaddr *addr, int a
 	d->sec_level = rfcomm_pi(sk)->sec_level;
 	d->role_switch = rfcomm_pi(sk)->role_switch;
 
+<<<<<<< HEAD
 	/* Drop sock lock to avoid potential deadlock with the RFCOMM lock */
 	release_sock(sk);
 	err = rfcomm_dlc_open(d, &rfcomm_pi(sk)->src, &sa->rc_bdaddr,
 			      sa->rc_channel);
 	lock_sock(sk);
 	if (!err && !sock_flag(sk, SOCK_ZAPPED))
+=======
+	err = rfcomm_dlc_open(d, &rfcomm_pi(sk)->src, &sa->rc_bdaddr,
+			      sa->rc_channel);
+	if (!err)
+>>>>>>> b7ba80a49124 (Commit)
 		err = bt_sock_wait_state(sk, BT_CONNECTED,
 				sock_sndtimeo(sk, flags & O_NONBLOCK));
 
 done:
 	release_sock(sk);
+<<<<<<< HEAD
 	sock_put(sk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 

@@ -133,11 +133,15 @@ EXPORT_SYMBOL(zstd_init_cstream);
 size_t zstd_reset_cstream(zstd_cstream *cstream,
 	unsigned long long pledged_src_size)
 {
+<<<<<<< HEAD
 	if (pledged_src_size == 0)
 		pledged_src_size = ZSTD_CONTENTSIZE_UNKNOWN;
 	ZSTD_FORWARD_IF_ERR( ZSTD_CCtx_reset(cstream, ZSTD_reset_session_only) );
 	ZSTD_FORWARD_IF_ERR( ZSTD_CCtx_setPledgedSrcSize(cstream, pledged_src_size) );
 	return 0;
+=======
+	return ZSTD_resetCStream(cstream, pledged_src_size);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(zstd_reset_cstream);
 

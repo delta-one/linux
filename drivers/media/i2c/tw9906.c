@@ -157,7 +157,12 @@ static const struct v4l2_subdev_ops tw9906_ops = {
 	.video = &tw9906_video_ops,
 };
 
+<<<<<<< HEAD
 static int tw9906_probe(struct i2c_client *client)
+=======
+static int tw9906_probe(struct i2c_client *client,
+			     const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tw9906 *dec;
 	struct v4l2_subdev *sd;
@@ -222,7 +227,11 @@ static struct i2c_driver tw9906_driver = {
 	.driver = {
 		.name	= "tw9906",
 	},
+<<<<<<< HEAD
 	.probe_new = tw9906_probe,
+=======
+	.probe = tw9906_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = tw9906_remove,
 	.id_table = tw9906_id,
 };

@@ -139,7 +139,11 @@ static inline void hlist_nulls_add_tail_rcu(struct hlist_nulls_node *n,
 	if (last) {
 		n->next = last->next;
 		n->pprev = &last->next;
+<<<<<<< HEAD
 		rcu_assign_pointer(hlist_nulls_next_rcu(last), n);
+=======
+		rcu_assign_pointer(hlist_next_rcu(last), n);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		hlist_nulls_add_head_rcu(n, h);
 	}

@@ -1838,6 +1838,7 @@ static int rt5640_set_dai_sysclk(struct snd_soc_dai *dai,
 	struct rt5640_priv *rt5640 = snd_soc_component_get_drvdata(component);
 	unsigned int reg_val = 0;
 	unsigned int pll_bit = 0;
+<<<<<<< HEAD
 	int ret;
 
 	switch (clk_id) {
@@ -1846,6 +1847,11 @@ static int rt5640_set_dai_sysclk(struct snd_soc_dai *dai,
 		if (ret)
 			return ret;
 
+=======
+
+	switch (clk_id) {
+	case RT5640_SCLK_S_MCLK:
+>>>>>>> b7ba80a49124 (Commit)
 		reg_val |= RT5640_SCLK_SRC_MCLK;
 		break;
 	case RT5640_SCLK_S_PLL1:
@@ -2722,10 +2728,13 @@ static int rt5640_probe(struct snd_soc_component *component)
 		snd_soc_component_update_bits(component, RT5640_IN1_IN2,
 					      RT5640_IN_DF2, RT5640_IN_DF2);
 
+<<<<<<< HEAD
 	if (device_property_read_bool(component->dev, "realtek,lout-differential"))
 		snd_soc_component_update_bits(component, RT5640_DUMMY1,
 					      RT5640_EN_LOUT_DF, RT5640_EN_LOUT_DF);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (device_property_read_u32(component->dev, "realtek,dmic1-data-pin",
 				     &val) == 0 && val) {
 		dmic1_data_pin = val - 1;
@@ -2801,11 +2810,14 @@ static int rt5640_suspend(struct snd_soc_component *component)
 {
 	struct rt5640_priv *rt5640 = snd_soc_component_get_drvdata(component);
 
+<<<<<<< HEAD
 	if (rt5640->irq) {
 		/* disable jack interrupts during system suspend */
 		disable_irq(rt5640->irq);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rt5640_cancel_work(rt5640);
 	snd_soc_component_force_bias_level(component, SND_SOC_BIAS_OFF);
 	rt5640_reset(component);
@@ -2829,9 +2841,12 @@ static int rt5640_resume(struct snd_soc_component *component)
 	regcache_cache_only(rt5640->regmap, false);
 	regcache_sync(rt5640->regmap);
 
+<<<<<<< HEAD
 	if (rt5640->irq)
 		enable_irq(rt5640->irq);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (rt5640->jack) {
 		if (rt5640->jd_src == RT5640_JD_SRC_HDA_HEADER) {
 			snd_soc_component_update_bits(component,

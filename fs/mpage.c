@@ -198,7 +198,11 @@ static struct bio *do_mpage_readpage(struct mpage_readpage_args *args)
 	/*
 	 * Then do more get_blocks calls until we are done with this folio.
 	 */
+<<<<<<< HEAD
 	map_bh->b_folio = folio;
+=======
+	map_bh->b_page = &folio->page;
+>>>>>>> b7ba80a49124 (Commit)
 	while (page_block < blocks_per_page) {
 		map_bh->b_state = 0;
 		map_bh->b_size = 0;
@@ -269,6 +273,14 @@ static struct bio *do_mpage_readpage(struct mpage_readpage_args *args)
 
 alloc_new:
 	if (args->bio == NULL) {
+<<<<<<< HEAD
+=======
+		if (first_hole == blocks_per_page) {
+			if (!bdev_read_page(bdev, blocks[0] << (blkbits - 9),
+								&folio->page))
+				goto out;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		args->bio = bio_alloc(bdev, bio_max_segs(args->nr_pages), opf,
 				      gfp);
 		if (args->bio == NULL)
@@ -440,14 +452,25 @@ void clean_page_buffers(struct page *page)
 	clean_buffers(page, ~0U);
 }
 
+<<<<<<< HEAD
 static int __mpage_writepage(struct folio *folio, struct writeback_control *wbc,
+=======
+static int __mpage_writepage(struct page *page, struct writeback_control *wbc,
+>>>>>>> b7ba80a49124 (Commit)
 		      void *data)
 {
 	struct mpage_data *mpd = data;
 	struct bio *bio = mpd->bio;
+<<<<<<< HEAD
 	struct address_space *mapping = folio->mapping;
 	struct inode *inode = mapping->host;
 	const unsigned blkbits = inode->i_blkbits;
+=======
+	struct address_space *mapping = page->mapping;
+	struct inode *inode = page->mapping->host;
+	const unsigned blkbits = inode->i_blkbits;
+	unsigned long end_index;
+>>>>>>> b7ba80a49124 (Commit)
 	const unsigned blocks_per_page = PAGE_SIZE >> blkbits;
 	sector_t last_block;
 	sector_t block_in_file;
@@ -458,6 +481,7 @@ static int __mpage_writepage(struct folio *folio, struct writeback_control *wbc,
 	int boundary = 0;
 	sector_t boundary_block = 0;
 	struct block_device *boundary_bdev = NULL;
+<<<<<<< HEAD
 	size_t length;
 	struct buffer_head map_bh;
 	loff_t i_size = i_size_read(inode);
@@ -465,6 +489,15 @@ static int __mpage_writepage(struct folio *folio, struct writeback_control *wbc,
 	struct buffer_head *head = folio_buffers(folio);
 
 	if (head) {
+=======
+	int length;
+	struct buffer_head map_bh;
+	loff_t i_size = i_size_read(inode);
+	int ret = 0;
+
+	if (page_has_buffers(page)) {
+		struct buffer_head *head = page_buffers(page);
+>>>>>>> b7ba80a49124 (Commit)
 		struct buffer_head *bh = head;
 
 		/* If they're all mapped and dirty, do it */
@@ -516,6 +549,7 @@ static int __mpage_writepage(struct folio *folio, struct writeback_control *wbc,
 	/*
 	 * The page has no buffers: map it to disk
 	 */
+<<<<<<< HEAD
 	BUG_ON(!folio_test_uptodate(folio));
 	block_in_file = (sector_t)folio->index << (PAGE_SHIFT - blkbits);
 	/*
@@ -526,14 +560,23 @@ static int __mpage_writepage(struct folio *folio, struct writeback_control *wbc,
 		goto page_is_mapped;
 	last_block = (i_size - 1) >> blkbits;
 	map_bh.b_folio = folio;
+=======
+	BUG_ON(!PageUptodate(page));
+	block_in_file = (sector_t)page->index << (PAGE_SHIFT - blkbits);
+	last_block = (i_size - 1) >> blkbits;
+	map_bh.b_page = page;
+>>>>>>> b7ba80a49124 (Commit)
 	for (page_block = 0; page_block < blocks_per_page; ) {
 
 		map_bh.b_state = 0;
 		map_bh.b_size = 1 << blkbits;
 		if (mpd->get_block(inode, block_in_file, &map_bh, 1))
 			goto confused;
+<<<<<<< HEAD
 		if (!buffer_mapped(&map_bh))
 			goto confused;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (buffer_new(&map_bh))
 			clean_bdev_bh_alias(&map_bh);
 		if (buffer_boundary(&map_bh)) {
@@ -556,11 +599,16 @@ static int __mpage_writepage(struct folio *folio, struct writeback_control *wbc,
 	first_unmapped = page_block;
 
 page_is_mapped:
+<<<<<<< HEAD
 	/* Don't bother writing beyond EOF, truncate will discard the folio */
 	if (folio_pos(folio) >= i_size)
 		goto confused;
 	length = folio_size(folio);
 	if (folio_pos(folio) + length > i_size) {
+=======
+	end_index = i_size >> PAGE_SHIFT;
+	if (page->index >= end_index) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * The page straddles i_size.  It must be zeroed out on each
 		 * and every writepage invocation because it may be mmapped.
@@ -569,8 +617,16 @@ page_is_mapped:
 		 * is zeroed when mapped, and writes to that region are not
 		 * written out to the file."
 		 */
+<<<<<<< HEAD
 		length = i_size - folio_pos(folio);
 		folio_zero_segment(folio, length, folio_size(folio));
+=======
+		unsigned offset = i_size & (PAGE_SIZE - 1);
+
+		if (page->index > end_index || !offset)
+			goto confused;
+		zero_user_segment(page, offset, PAGE_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -581,6 +637,14 @@ page_is_mapped:
 
 alloc_new:
 	if (bio == NULL) {
+<<<<<<< HEAD
+=======
+		if (first_unmapped == blocks_per_page) {
+			if (!bdev_write_page(bdev, blocks[0] << (blkbits - 9),
+								page, wbc))
+				goto out;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		bio = bio_alloc(bdev, BIO_MAX_VECS,
 				REQ_OP_WRITE | wbc_to_write_flags(wbc),
 				GFP_NOFS);
@@ -593,18 +657,32 @@ alloc_new:
 	 * the confused fail path above (OOM) will be very confused when
 	 * it finds all bh marked clean (i.e. it will not write anything)
 	 */
+<<<<<<< HEAD
 	wbc_account_cgroup_owner(wbc, &folio->page, folio_size(folio));
 	length = first_unmapped << blkbits;
 	if (!bio_add_folio(bio, folio, length, 0)) {
+=======
+	wbc_account_cgroup_owner(wbc, page, PAGE_SIZE);
+	length = first_unmapped << blkbits;
+	if (bio_add_page(bio, page, length, 0) < length) {
+>>>>>>> b7ba80a49124 (Commit)
 		bio = mpage_bio_submit(bio);
 		goto alloc_new;
 	}
 
+<<<<<<< HEAD
 	clean_buffers(&folio->page, first_unmapped);
 
 	BUG_ON(folio_test_writeback(folio));
 	folio_start_writeback(folio);
 	folio_unlock(folio);
+=======
+	clean_buffers(page, first_unmapped);
+
+	BUG_ON(PageWriteback(page));
+	set_page_writeback(page);
+	unlock_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 	if (boundary || (first_unmapped != blocks_per_page)) {
 		bio = mpage_bio_submit(bio);
 		if (boundary_block) {
@@ -623,7 +701,11 @@ confused:
 	/*
 	 * The caller has a ref on the inode, so *mapping is stable
 	 */
+<<<<<<< HEAD
 	ret = block_write_full_page(&folio->page, mpd->get_block, wbc);
+=======
+	ret = block_write_full_page(page, mpd->get_block, wbc);
+>>>>>>> b7ba80a49124 (Commit)
 	mapping_set_error(mapping, ret);
 out:
 	mpd->bio = bio;
@@ -638,6 +720,17 @@ out:
  *
  * This is a library function, which implements the writepages()
  * address_space_operation.
+<<<<<<< HEAD
+=======
+ *
+ * If a page is already under I/O, generic_writepages() skips it, even
+ * if it's dirty.  This is desirable behaviour for memory-cleaning writeback,
+ * but it is INCORRECT for data-integrity system calls such as fsync().  fsync()
+ * and msync() need to guarantee that all the data which was dirty at the time
+ * the call was made get new I/O started against them.  If wbc->sync_mode is
+ * WB_SYNC_ALL then we were called for data integrity and we must wait for
+ * existing IO to complete.
+>>>>>>> b7ba80a49124 (Commit)
  */
 int
 mpage_writepages(struct address_space *mapping,

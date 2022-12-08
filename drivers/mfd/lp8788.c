@@ -166,7 +166,11 @@ static const struct regmap_config lp8788_regmap_config = {
 	.max_register = MAX_LP8788_REGISTERS,
 };
 
+<<<<<<< HEAD
 static int lp8788_probe(struct i2c_client *cl)
+=======
+static int lp8788_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lp8788 *lp;
 	struct lp8788_platform_data *pdata = dev_get_platdata(&cl->dev);
@@ -225,7 +229,11 @@ static struct i2c_driver lp8788_driver = {
 	.driver = {
 		.name = "lp8788",
 	},
+<<<<<<< HEAD
 	.probe_new = lp8788_probe,
+=======
+	.probe = lp8788_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = lp8788_remove,
 	.id_table = lp8788_ids,
 };
@@ -244,3 +252,7 @@ module_exit(lp8788_exit);
 
 MODULE_DESCRIPTION("TI LP8788 MFD Driver");
 MODULE_AUTHOR("Milo Kim");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

@@ -2977,7 +2977,11 @@ static int atl1_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 
 	netdev->netdev_ops = &atl1_netdev_ops;
 	netdev->watchdog_timeo = 5 * HZ;
+<<<<<<< HEAD
 	netif_napi_add(netdev, &adapter->napi, atl1_rings_clean);
+=======
+	netif_napi_add(netdev, &adapter->napi, atl1_rings_clean, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	netdev->ethtool_ops = &atl1_ethtool_ops;
 	adapter->bd_number = cards_found;

@@ -15,16 +15,24 @@
 #include <net/netlink.h>
 #include <net/pkt_sched.h>
 #include <net/pkt_cls.h>
+<<<<<<< HEAD
 #include <net/tc_wrapper.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/tc_act/tc_skbmod.h>
 #include <net/tc_act/tc_skbmod.h>
 
 static struct tc_action_ops act_skbmod_ops;
 
+<<<<<<< HEAD
 TC_INDIRECT_SCOPE int tcf_skbmod_act(struct sk_buff *skb,
 				     const struct tc_action *a,
 				     struct tcf_result *res)
+=======
+static int tcf_skbmod_act(struct sk_buff *skb, const struct tc_action *a,
+			  struct tcf_result *res)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tcf_skbmod *d = to_skbmod(a);
 	int action, max_edit_len, err;

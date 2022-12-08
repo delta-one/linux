@@ -91,7 +91,11 @@ static int relay_mmap_buf(struct rchan_buf *buf, struct vm_area_struct *vma)
 		return -EINVAL;
 
 	vma->vm_ops = &relay_file_mmap_ops;
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_DONTEXPAND);
+=======
+	vma->vm_flags |= VM_DONTEXPAND;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_private_data = buf;
 
 	return 0;
@@ -148,13 +152,21 @@ static struct rchan_buf *relay_create_buf(struct rchan *chan)
 {
 	struct rchan_buf *buf;
 
+<<<<<<< HEAD
 	if (chan->n_subbufs > KMALLOC_MAX_SIZE / sizeof(size_t))
+=======
+	if (chan->n_subbufs > KMALLOC_MAX_SIZE / sizeof(size_t *))
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	buf = kzalloc(sizeof(struct rchan_buf), GFP_KERNEL);
 	if (!buf)
 		return NULL;
+<<<<<<< HEAD
 	buf->padding = kmalloc_array(chan->n_subbufs, sizeof(size_t),
+=======
+	buf->padding = kmalloc_array(chan->n_subbufs, sizeof(size_t *),
+>>>>>>> b7ba80a49124 (Commit)
 				     GFP_KERNEL);
 	if (!buf->padding)
 		goto free_buf;
@@ -507,7 +519,11 @@ struct rchan *relay_open(const char *base_filename,
 	chan->private_data = private_data;
 	if (base_filename) {
 		chan->has_base_filename = 1;
+<<<<<<< HEAD
 		strscpy(chan->base_filename, base_filename, NAME_MAX);
+=======
+		strlcpy(chan->base_filename, base_filename, NAME_MAX);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	chan->cb = cb;
 	kref_init(&chan->kref);
@@ -578,7 +594,11 @@ int relay_late_setup_files(struct rchan *chan,
 	if (!chan || !base_filename)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	strscpy(chan->base_filename, base_filename, NAME_MAX);
+=======
+	strlcpy(chan->base_filename, base_filename, NAME_MAX);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&relay_channels_mutex);
 	/* Is chan already set up? */

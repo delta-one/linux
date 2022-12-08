@@ -235,7 +235,10 @@ struct fsl_sai_soc_data {
 	unsigned int reg_offset;
 	unsigned int flags;
 	unsigned int max_register;
+<<<<<<< HEAD
 	unsigned int max_burst[2];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**

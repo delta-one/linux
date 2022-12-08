@@ -148,10 +148,17 @@ PRIME Buffer Sharing
 MMU Notifier
 ============
 
+<<<<<<< HEAD
 .. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_hmm.c
    :doc: MMU Notifier
 
 .. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_hmm.c
+=======
+.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c
+   :doc: MMU Notifier
+
+.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c
+>>>>>>> b7ba80a49124 (Commit)
    :internal:
 
 AMDGPU Virtual Memory

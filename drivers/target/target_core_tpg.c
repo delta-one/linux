@@ -31,7 +31,10 @@
 #include "target_core_ua.h"
 
 extern struct se_device *g_lun0_dev;
+<<<<<<< HEAD
 static DEFINE_XARRAY_ALLOC(tpg_xa);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*	__core_tpg_get_initiator_node_acl():
  *
@@ -440,6 +443,7 @@ static void core_tpg_lun_ref_release(struct percpu_ref *ref)
 	complete(&lun->lun_shutdown_comp);
 }
 
+<<<<<<< HEAD
 static int target_tpg_register_rtpi(struct se_portal_group *se_tpg)
 {
 	u32 val;
@@ -502,6 +506,8 @@ int target_tpg_disable(struct se_portal_group *se_tpg)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Does not change se_wwn->priv. */
 int core_tpg_register(
 	struct se_wwn *se_wwn,
@@ -598,8 +604,11 @@ int core_tpg_deregister(struct se_portal_group *se_tpg)
 		kfree_rcu(se_tpg->tpg_virt_lun0, rcu_head);
 	}
 
+<<<<<<< HEAD
 	target_tpg_deregister_rtpi(se_tpg);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 EXPORT_SYMBOL(core_tpg_deregister);
@@ -643,6 +652,13 @@ int core_tpg_add_lun(
 	if (ret < 0)
 		goto out;
 
+<<<<<<< HEAD
+=======
+	ret = core_alloc_rtpi(lun, dev);
+	if (ret)
+		goto out_kill_ref;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!(dev->transport_flags & TRANSPORT_FLAG_PASSTHROUGH_ALUA) &&
 	    !(dev->se_hba->hba_flags & HBA_FLAGS_INTERNAL_USE))
 		target_attach_tg_pt_gp(lun, dev->t10_alua.default_tg_pt_gp);
@@ -666,6 +682,11 @@ int core_tpg_add_lun(
 
 	return 0;
 
+<<<<<<< HEAD
+=======
+out_kill_ref:
+	percpu_ref_exit(&lun->lun_ref);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	return ret;
 }

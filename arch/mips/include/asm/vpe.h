@@ -102,6 +102,10 @@ struct vpe_control {
 	struct list_head tc_list;       /* Thread contexts */
 };
 
+<<<<<<< HEAD
+=======
+extern unsigned long physical_memsize;
+>>>>>>> b7ba80a49124 (Commit)
 extern struct vpe_control vpecontrol;
 extern const struct file_operations vpe_fops;
 

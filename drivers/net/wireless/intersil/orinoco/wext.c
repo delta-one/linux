@@ -154,10 +154,16 @@ static struct iw_statistics *orinoco_get_wireless_stats(struct net_device *dev)
 
 static int orinoco_ioctl_setwap(struct net_device *dev,
 				struct iw_request_info *info,
+<<<<<<< HEAD
 				union iwreq_data *wrqu,
 				char *extra)
 {
 	struct sockaddr *ap_addr = &wrqu->ap_addr;
+=======
+				struct sockaddr *ap_addr,
+				char *extra)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct orinoco_private *priv = ndev_priv(dev);
 	int err = -EINPROGRESS;		/* Call commit handler */
 	unsigned long flags;
@@ -214,10 +220,16 @@ static int orinoco_ioctl_setwap(struct net_device *dev,
 
 static int orinoco_ioctl_getwap(struct net_device *dev,
 				struct iw_request_info *info,
+<<<<<<< HEAD
 				union iwreq_data *wrqu,
 				char *extra)
 {
 	struct sockaddr *ap_addr = &wrqu->ap_addr;
+=======
+				struct sockaddr *ap_addr,
+				char *extra)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct orinoco_private *priv = ndev_priv(dev);
 
 	int err = 0;
@@ -236,10 +248,16 @@ static int orinoco_ioctl_getwap(struct net_device *dev,
 
 static int orinoco_ioctl_setiwencode(struct net_device *dev,
 				     struct iw_request_info *info,
+<<<<<<< HEAD
 				     union iwreq_data *wrqu,
 				     char *keybuf)
 {
 	struct iw_point *erq = &wrqu->encoding;
+=======
+				     struct iw_point *erq,
+				     char *keybuf)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct orinoco_private *priv = ndev_priv(dev);
 	int index = (erq->flags & IW_ENCODE_INDEX) - 1;
 	int setindex = priv->tx_key;
@@ -328,10 +346,16 @@ static int orinoco_ioctl_setiwencode(struct net_device *dev,
 
 static int orinoco_ioctl_getiwencode(struct net_device *dev,
 				     struct iw_request_info *info,
+<<<<<<< HEAD
 				     union iwreq_data *wrqu,
 				     char *keybuf)
 {
 	struct iw_point *erq = &wrqu->encoding;
+=======
+				     struct iw_point *erq,
+				     char *keybuf)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct orinoco_private *priv = ndev_priv(dev);
 	int index = (erq->flags & IW_ENCODE_INDEX) - 1;
 	unsigned long flags;
@@ -365,10 +389,16 @@ static int orinoco_ioctl_getiwencode(struct net_device *dev,
 
 static int orinoco_ioctl_setessid(struct net_device *dev,
 				  struct iw_request_info *info,
+<<<<<<< HEAD
 				  union iwreq_data *wrqu,
 				  char *essidbuf)
 {
 	struct iw_point *erq = &wrqu->essid;
+=======
+				  struct iw_point *erq,
+				  char *essidbuf)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct orinoco_private *priv = ndev_priv(dev);
 	unsigned long flags;
 
@@ -397,10 +427,16 @@ static int orinoco_ioctl_setessid(struct net_device *dev,
 
 static int orinoco_ioctl_getessid(struct net_device *dev,
 				  struct iw_request_info *info,
+<<<<<<< HEAD
 				  union iwreq_data *wrqu,
 				  char *essidbuf)
 {
 	struct iw_point *erq = &wrqu->essid;
+=======
+				  struct iw_point *erq,
+				  char *essidbuf)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct orinoco_private *priv = ndev_priv(dev);
 	int active;
 	int err = 0;
@@ -426,10 +462,16 @@ static int orinoco_ioctl_getessid(struct net_device *dev,
 
 static int orinoco_ioctl_setfreq(struct net_device *dev,
 				 struct iw_request_info *info,
+<<<<<<< HEAD
 				 union iwreq_data *wrqu,
 				 char *extra)
 {
 	struct iw_freq *frq = &wrqu->freq;
+=======
+				 struct iw_freq *frq,
+				 char *extra)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct orinoco_private *priv = ndev_priv(dev);
 	int chan = -1;
 	unsigned long flags;
@@ -476,10 +518,16 @@ static int orinoco_ioctl_setfreq(struct net_device *dev,
 
 static int orinoco_ioctl_getfreq(struct net_device *dev,
 				 struct iw_request_info *info,
+<<<<<<< HEAD
 				 union iwreq_data *wrqu,
 				 char *extra)
 {
 	struct iw_freq *frq = &wrqu->freq;
+=======
+				 struct iw_freq *frq,
+				 char *extra)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct orinoco_private *priv = ndev_priv(dev);
 	int tmp;
 
@@ -496,10 +544,16 @@ static int orinoco_ioctl_getfreq(struct net_device *dev,
 
 static int orinoco_ioctl_getsens(struct net_device *dev,
 				 struct iw_request_info *info,
+<<<<<<< HEAD
 				 union iwreq_data *wrqu,
 				 char *extra)
 {
 	struct iw_param *srq = &wrqu->sens;
+=======
+				 struct iw_param *srq,
+				 char *extra)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct orinoco_private *priv = ndev_priv(dev);
 	struct hermes *hw = &priv->hw;
 	u16 val;
@@ -526,10 +580,16 @@ static int orinoco_ioctl_getsens(struct net_device *dev,
 
 static int orinoco_ioctl_setsens(struct net_device *dev,
 				 struct iw_request_info *info,
+<<<<<<< HEAD
 				 union iwreq_data *wrqu,
 				 char *extra)
 {
 	struct iw_param *srq = &wrqu->sens;
+=======
+				 struct iw_param *srq,
+				 char *extra)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct orinoco_private *priv = ndev_priv(dev);
 	int val = srq->value;
 	unsigned long flags;
@@ -550,10 +610,16 @@ static int orinoco_ioctl_setsens(struct net_device *dev,
 
 static int orinoco_ioctl_setrate(struct net_device *dev,
 				 struct iw_request_info *info,
+<<<<<<< HEAD
 				 union iwreq_data *wrqu,
 				 char *extra)
 {
 	struct iw_param *rrq = &wrqu->bitrate;
+=======
+				 struct iw_param *rrq,
+				 char *extra)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct orinoco_private *priv = ndev_priv(dev);
 	int ratemode;
 	int bitrate; /* 100s of kilobits */
@@ -585,10 +651,16 @@ static int orinoco_ioctl_setrate(struct net_device *dev,
 
 static int orinoco_ioctl_getrate(struct net_device *dev,
 				 struct iw_request_info *info,
+<<<<<<< HEAD
 				 union iwreq_data *wrqu,
 				 char *extra)
 {
 	struct iw_param *rrq = &wrqu->bitrate;
+=======
+				 struct iw_param *rrq,
+				 char *extra)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct orinoco_private *priv = ndev_priv(dev);
 	int err = 0;
 	int bitrate, automatic;
@@ -622,10 +694,16 @@ static int orinoco_ioctl_getrate(struct net_device *dev,
 
 static int orinoco_ioctl_setpower(struct net_device *dev,
 				  struct iw_request_info *info,
+<<<<<<< HEAD
 				  union iwreq_data *wrqu,
 				  char *extra)
 {
 	struct iw_param *prq = &wrqu->power;
+=======
+				  struct iw_param *prq,
+				  char *extra)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct orinoco_private *priv = ndev_priv(dev);
 	int err = -EINPROGRESS;		/* Call commit handler */
 	unsigned long flags;
@@ -677,10 +755,16 @@ static int orinoco_ioctl_setpower(struct net_device *dev,
 
 static int orinoco_ioctl_getpower(struct net_device *dev,
 				  struct iw_request_info *info,
+<<<<<<< HEAD
 				  union iwreq_data *wrqu,
 				  char *extra)
 {
 	struct iw_param *prq = &wrqu->power;
+=======
+				  struct iw_param *prq,
+				  char *extra)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct orinoco_private *priv = ndev_priv(dev);
 	struct hermes *hw = &priv->hw;
 	int err = 0;
@@ -1111,7 +1195,11 @@ static int orinoco_ioctl_set_mlme(struct net_device *dev,
 
 static int orinoco_ioctl_reset(struct net_device *dev,
 			       struct iw_request_info *info,
+<<<<<<< HEAD
 			       union iwreq_data *wrqu,
+=======
+			       void *wrqu,
+>>>>>>> b7ba80a49124 (Commit)
 			       char *extra)
 {
 	struct orinoco_private *priv = ndev_priv(dev);
@@ -1135,7 +1223,11 @@ static int orinoco_ioctl_reset(struct net_device *dev,
 
 static int orinoco_ioctl_setibssport(struct net_device *dev,
 				     struct iw_request_info *info,
+<<<<<<< HEAD
 				     union iwreq_data *wrqu,
+=======
+				     void *wrqu,
+>>>>>>> b7ba80a49124 (Commit)
 				     char *extra)
 
 {
@@ -1157,7 +1249,11 @@ static int orinoco_ioctl_setibssport(struct net_device *dev,
 
 static int orinoco_ioctl_getibssport(struct net_device *dev,
 				     struct iw_request_info *info,
+<<<<<<< HEAD
 				     union iwreq_data *wrqu,
+=======
+				     void *wrqu,
+>>>>>>> b7ba80a49124 (Commit)
 				     char *extra)
 {
 	struct orinoco_private *priv = ndev_priv(dev);
@@ -1169,7 +1265,11 @@ static int orinoco_ioctl_getibssport(struct net_device *dev,
 
 static int orinoco_ioctl_setport3(struct net_device *dev,
 				  struct iw_request_info *info,
+<<<<<<< HEAD
 				  union iwreq_data *wrqu,
+=======
+				  void *wrqu,
+>>>>>>> b7ba80a49124 (Commit)
 				  char *extra)
 {
 	struct orinoco_private *priv = ndev_priv(dev);
@@ -1215,7 +1315,11 @@ static int orinoco_ioctl_setport3(struct net_device *dev,
 
 static int orinoco_ioctl_getport3(struct net_device *dev,
 				  struct iw_request_info *info,
+<<<<<<< HEAD
 				  union iwreq_data *wrqu,
+=======
+				  void *wrqu,
+>>>>>>> b7ba80a49124 (Commit)
 				  char *extra)
 {
 	struct orinoco_private *priv = ndev_priv(dev);
@@ -1227,7 +1331,11 @@ static int orinoco_ioctl_getport3(struct net_device *dev,
 
 static int orinoco_ioctl_setpreamble(struct net_device *dev,
 				     struct iw_request_info *info,
+<<<<<<< HEAD
 				     union iwreq_data *wrqu,
+=======
+				     void *wrqu,
+>>>>>>> b7ba80a49124 (Commit)
 				     char *extra)
 {
 	struct orinoco_private *priv = ndev_priv(dev);
@@ -1259,7 +1367,11 @@ static int orinoco_ioctl_setpreamble(struct net_device *dev,
 
 static int orinoco_ioctl_getpreamble(struct net_device *dev,
 				     struct iw_request_info *info,
+<<<<<<< HEAD
 				     union iwreq_data *wrqu,
+=======
+				     void *wrqu,
+>>>>>>> b7ba80a49124 (Commit)
 				     char *extra)
 {
 	struct orinoco_private *priv = ndev_priv(dev);
@@ -1279,10 +1391,16 @@ static int orinoco_ioctl_getpreamble(struct net_device *dev,
  * For Wireless Tools 25 and 26 append "dummy" are the end. */
 static int orinoco_ioctl_getrid(struct net_device *dev,
 				struct iw_request_info *info,
+<<<<<<< HEAD
 				union iwreq_data *wrqu,
 				char *extra)
 {
 	struct iw_point *data = &wrqu->data;
+=======
+				struct iw_point *data,
+				char *extra)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct orinoco_private *priv = ndev_priv(dev);
 	struct hermes *hw = &priv->hw;
 	int rid = data->flags;
@@ -1318,7 +1436,11 @@ static int orinoco_ioctl_getrid(struct net_device *dev,
 /* Commit handler, called after set operations */
 static int orinoco_ioctl_commit(struct net_device *dev,
 				struct iw_request_info *info,
+<<<<<<< HEAD
 				union iwreq_data *wrqu,
+=======
+				void *wrqu,
+>>>>>>> b7ba80a49124 (Commit)
 				char *extra)
 {
 	struct orinoco_private *priv = ndev_priv(dev);
@@ -1362,6 +1484,7 @@ static const struct iw_priv_args orinoco_privtab[] = {
  */
 
 static const iw_handler	orinoco_handler[] = {
+<<<<<<< HEAD
 	IW_HANDLER(SIOCSIWCOMMIT,	orinoco_ioctl_commit),
 	IW_HANDLER(SIOCGIWNAME,		cfg80211_wext_giwname),
 	IW_HANDLER(SIOCSIWFREQ,		orinoco_ioctl_setfreq),
@@ -1371,10 +1494,22 @@ static const iw_handler	orinoco_handler[] = {
 	IW_HANDLER(SIOCSIWSENS,		orinoco_ioctl_setsens),
 	IW_HANDLER(SIOCGIWSENS,		orinoco_ioctl_getsens),
 	IW_HANDLER(SIOCGIWRANGE,	cfg80211_wext_giwrange),
+=======
+	IW_HANDLER(SIOCSIWCOMMIT,	(iw_handler)orinoco_ioctl_commit),
+	IW_HANDLER(SIOCGIWNAME,		(iw_handler)cfg80211_wext_giwname),
+	IW_HANDLER(SIOCSIWFREQ,		(iw_handler)orinoco_ioctl_setfreq),
+	IW_HANDLER(SIOCGIWFREQ,		(iw_handler)orinoco_ioctl_getfreq),
+	IW_HANDLER(SIOCSIWMODE,		(iw_handler)cfg80211_wext_siwmode),
+	IW_HANDLER(SIOCGIWMODE,		(iw_handler)cfg80211_wext_giwmode),
+	IW_HANDLER(SIOCSIWSENS,		(iw_handler)orinoco_ioctl_setsens),
+	IW_HANDLER(SIOCGIWSENS,		(iw_handler)orinoco_ioctl_getsens),
+	IW_HANDLER(SIOCGIWRANGE,	(iw_handler)cfg80211_wext_giwrange),
+>>>>>>> b7ba80a49124 (Commit)
 	IW_HANDLER(SIOCSIWSPY,		iw_handler_set_spy),
 	IW_HANDLER(SIOCGIWSPY,		iw_handler_get_spy),
 	IW_HANDLER(SIOCSIWTHRSPY,	iw_handler_set_thrspy),
 	IW_HANDLER(SIOCGIWTHRSPY,	iw_handler_get_thrspy),
+<<<<<<< HEAD
 	IW_HANDLER(SIOCSIWAP,		orinoco_ioctl_setwap),
 	IW_HANDLER(SIOCGIWAP,		orinoco_ioctl_getwap),
 	IW_HANDLER(SIOCSIWSCAN,		cfg80211_wext_siwscan),
@@ -1392,6 +1527,25 @@ static const iw_handler	orinoco_handler[] = {
 	IW_HANDLER(SIOCGIWENCODE,	orinoco_ioctl_getiwencode),
 	IW_HANDLER(SIOCSIWPOWER,	orinoco_ioctl_setpower),
 	IW_HANDLER(SIOCGIWPOWER,	orinoco_ioctl_getpower),
+=======
+	IW_HANDLER(SIOCSIWAP,		(iw_handler)orinoco_ioctl_setwap),
+	IW_HANDLER(SIOCGIWAP,		(iw_handler)orinoco_ioctl_getwap),
+	IW_HANDLER(SIOCSIWSCAN,		(iw_handler)cfg80211_wext_siwscan),
+	IW_HANDLER(SIOCGIWSCAN,		(iw_handler)cfg80211_wext_giwscan),
+	IW_HANDLER(SIOCSIWESSID,	(iw_handler)orinoco_ioctl_setessid),
+	IW_HANDLER(SIOCGIWESSID,	(iw_handler)orinoco_ioctl_getessid),
+	IW_HANDLER(SIOCSIWRATE,		(iw_handler)orinoco_ioctl_setrate),
+	IW_HANDLER(SIOCGIWRATE,		(iw_handler)orinoco_ioctl_getrate),
+	IW_HANDLER(SIOCSIWRTS,		(iw_handler)cfg80211_wext_siwrts),
+	IW_HANDLER(SIOCGIWRTS,		(iw_handler)cfg80211_wext_giwrts),
+	IW_HANDLER(SIOCSIWFRAG,		(iw_handler)cfg80211_wext_siwfrag),
+	IW_HANDLER(SIOCGIWFRAG,		(iw_handler)cfg80211_wext_giwfrag),
+	IW_HANDLER(SIOCGIWRETRY,	(iw_handler)cfg80211_wext_giwretry),
+	IW_HANDLER(SIOCSIWENCODE,	(iw_handler)orinoco_ioctl_setiwencode),
+	IW_HANDLER(SIOCGIWENCODE,	(iw_handler)orinoco_ioctl_getiwencode),
+	IW_HANDLER(SIOCSIWPOWER,	(iw_handler)orinoco_ioctl_setpower),
+	IW_HANDLER(SIOCGIWPOWER,	(iw_handler)orinoco_ioctl_getpower),
+>>>>>>> b7ba80a49124 (Commit)
 	IW_HANDLER(SIOCSIWGENIE,	orinoco_ioctl_set_genie),
 	IW_HANDLER(SIOCGIWGENIE,	orinoco_ioctl_get_genie),
 	IW_HANDLER(SIOCSIWMLME,		orinoco_ioctl_set_mlme),
@@ -1406,6 +1560,7 @@ static const iw_handler	orinoco_handler[] = {
   Added typecasting since we no longer use iwreq_data -- Moustafa
  */
 static const iw_handler	orinoco_private_handler[] = {
+<<<<<<< HEAD
 	[0] = orinoco_ioctl_reset,
 	[1] = orinoco_ioctl_reset,
 	[2] = orinoco_ioctl_setport3,
@@ -1415,6 +1570,17 @@ static const iw_handler	orinoco_private_handler[] = {
 	[6] = orinoco_ioctl_setibssport,
 	[7] = orinoco_ioctl_getibssport,
 	[9] = orinoco_ioctl_getrid,
+=======
+	[0] = (iw_handler)orinoco_ioctl_reset,
+	[1] = (iw_handler)orinoco_ioctl_reset,
+	[2] = (iw_handler)orinoco_ioctl_setport3,
+	[3] = (iw_handler)orinoco_ioctl_getport3,
+	[4] = (iw_handler)orinoco_ioctl_setpreamble,
+	[5] = (iw_handler)orinoco_ioctl_getpreamble,
+	[6] = (iw_handler)orinoco_ioctl_setibssport,
+	[7] = (iw_handler)orinoco_ioctl_getibssport,
+	[9] = (iw_handler)orinoco_ioctl_getrid,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 const struct iw_handler_def orinoco_handler_def = {

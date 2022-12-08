@@ -300,12 +300,17 @@ static struct device_attribute attr_percpu_deactivate_hint =
 static int __init pseries_energy_init(void)
 {
 	int cpu, err;
+<<<<<<< HEAD
 	struct device *cpu_dev, *dev_root;
+=======
+	struct device *cpu_dev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!firmware_has_feature(FW_FEATURE_BEST_ENERGY))
 		return 0; /* H_BEST_ENERGY hcall not supported */
 
 	/* Create the sysfs files */
+<<<<<<< HEAD
 	dev_root = bus_get_dev_root(&cpu_subsys);
 	if (dev_root) {
 		err = device_create_file(dev_root, &attr_cpu_activate_hint_list);
@@ -316,6 +321,16 @@ static int __init pseries_energy_init(void)
 			return err;
 	}
 
+=======
+	err = device_create_file(cpu_subsys.dev_root,
+				&attr_cpu_activate_hint_list);
+	if (!err)
+		err = device_create_file(cpu_subsys.dev_root,
+				&attr_cpu_deactivate_hint_list);
+
+	if (err)
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 	for_each_possible_cpu(cpu) {
 		cpu_dev = get_cpu_device(cpu);
 		err = device_create_file(cpu_dev,
@@ -339,18 +354,27 @@ static int __init pseries_energy_init(void)
 static void __exit pseries_energy_cleanup(void)
 {
 	int cpu;
+<<<<<<< HEAD
 	struct device *cpu_dev, *dev_root;
+=======
+	struct device *cpu_dev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!sysfs_entries)
 		return;
 
 	/* Remove the sysfs files */
+<<<<<<< HEAD
 	dev_root = bus_get_dev_root(&cpu_subsys);
 	if (dev_root) {
 		device_remove_file(dev_root, &attr_cpu_activate_hint_list);
 		device_remove_file(dev_root, &attr_cpu_deactivate_hint_list);
 		put_device(dev_root);
 	}
+=======
+	device_remove_file(cpu_subsys.dev_root, &attr_cpu_activate_hint_list);
+	device_remove_file(cpu_subsys.dev_root, &attr_cpu_deactivate_hint_list);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for_each_possible_cpu(cpu) {
 		cpu_dev = get_cpu_device(cpu);

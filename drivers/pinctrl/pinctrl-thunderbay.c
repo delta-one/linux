@@ -808,7 +808,11 @@ static int thunderbay_add_functions(struct thunderbay_pinctrl *tpc, struct funct
 					    funcs[i].num_group_names,
 					    funcs[i].data);
 	}
+<<<<<<< HEAD
 
+=======
+	kfree(funcs);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -817,7 +821,10 @@ static int thunderbay_build_functions(struct thunderbay_pinctrl *tpc)
 	struct function_desc *thunderbay_funcs;
 	void *ptr;
 	int pin;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Allocate maximum possible number of functions. Assume every pin
@@ -861,10 +868,14 @@ static int thunderbay_build_functions(struct thunderbay_pinctrl *tpc)
 		return -ENOMEM;
 
 	thunderbay_funcs = ptr;
+<<<<<<< HEAD
 	ret = thunderbay_add_functions(tpc, thunderbay_funcs);
 
 	kfree(thunderbay_funcs);
 	return ret;
+=======
+	return thunderbay_add_functions(tpc, thunderbay_funcs);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int thunderbay_pinconf_set_tristate(struct thunderbay_pinctrl *tpc,
@@ -1278,12 +1289,25 @@ static int thunderbay_pinctrl_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int thunderbay_pinctrl_remove(struct platform_device *pdev)
+{
+	/* thunderbay_pinctrl_remove function to clear the assigned memory */
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver thunderbay_pinctrl_driver = {
 	.driver = {
 		.name = "thunderbay-pinctrl",
 		.of_match_table = thunderbay_pinctrl_match,
 	},
 	.probe = thunderbay_pinctrl_probe,
+<<<<<<< HEAD
+=======
+	.remove = thunderbay_pinctrl_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 builtin_platform_driver(thunderbay_pinctrl_driver);

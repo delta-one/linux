@@ -17,6 +17,10 @@ static const struct regmap_config sprdclk_regmap_config = {
 	.reg_bits	= 32,
 	.reg_stride	= 4,
 	.val_bits	= 32,
+<<<<<<< HEAD
+=======
+	.max_register	= 0xffff,
+>>>>>>> b7ba80a49124 (Commit)
 	.fast_io	= true,
 };
 
@@ -42,10 +46,15 @@ int sprd_clk_regmap_init(struct platform_device *pdev,
 	struct device *dev = &pdev->dev;
 	struct device_node *node = dev->of_node, *np;
 	struct regmap *regmap;
+<<<<<<< HEAD
 	struct resource *res;
 	struct regmap_config reg_config = sprdclk_regmap_config;
 
 	if (of_property_present(node, "sprd,syscon")) {
+=======
+
+	if (of_find_property(node, "sprd,syscon", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		regmap = syscon_regmap_lookup_by_phandle(node, "sprd,syscon");
 		if (IS_ERR(regmap)) {
 			pr_err("%s: failed to get syscon regmap\n", __func__);
@@ -60,6 +69,7 @@ int sprd_clk_regmap_init(struct platform_device *pdev,
 			return PTR_ERR(regmap);
 		}
 	} else {
+<<<<<<< HEAD
 		base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
 		if (IS_ERR(base))
 			return PTR_ERR(base);
@@ -68,6 +78,14 @@ int sprd_clk_regmap_init(struct platform_device *pdev,
 
 		regmap = devm_regmap_init_mmio(&pdev->dev, base,
 					       &reg_config);
+=======
+		base = devm_platform_ioremap_resource(pdev, 0);
+		if (IS_ERR(base))
+			return PTR_ERR(base);
+
+		regmap = devm_regmap_init_mmio(&pdev->dev, base,
+					       &sprdclk_regmap_config);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(regmap)) {
 			pr_err("failed to init regmap\n");
 			return PTR_ERR(regmap);

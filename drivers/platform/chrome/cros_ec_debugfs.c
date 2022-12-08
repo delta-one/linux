@@ -38,8 +38,11 @@ static DECLARE_WAIT_QUEUE_HEAD(cros_ec_debugfs_log_wq);
  * @log_mutex: mutex to protect circular buffer
  * @log_poll_work: recurring task to poll EC for new console log data
  * @panicinfo_blob: panicinfo debugfs blob
+<<<<<<< HEAD
  * @notifier_panic: notifier_block to let kernel to flush buffered log
  *                  when EC panic
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct cros_ec_debugfs {
 	struct cros_ec_dev *ec;
@@ -51,7 +54,10 @@ struct cros_ec_debugfs {
 	struct delayed_work log_poll_work;
 	/* EC panicinfo */
 	struct debugfs_blob_wrapper panicinfo_blob;
+<<<<<<< HEAD
 	struct notifier_block notifier_panic;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -440,6 +446,7 @@ free:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int cros_ec_debugfs_panic_event(struct notifier_block *nb,
 				       unsigned long queued_during_suspend, void *_notify)
 {
@@ -456,6 +463,8 @@ static int cros_ec_debugfs_panic_event(struct notifier_block *nb,
 	return NOTIFY_DONE;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int cros_ec_debugfs_probe(struct platform_device *pd)
 {
 	struct cros_ec_dev *ec = dev_get_drvdata(pd->dev.parent);
@@ -492,12 +501,15 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
 	debugfs_create_u16("suspend_timeout_ms", 0664, debug_info->dir,
 			   &ec->ec_dev->suspend_timeout_ms);
 
+<<<<<<< HEAD
 	debug_info->notifier_panic.notifier_call = cros_ec_debugfs_panic_event;
 	ret = blocking_notifier_chain_register(&ec->ec_dev->panic_notifier,
 					       &debug_info->notifier_panic);
 	if (ret)
 		goto remove_debugfs;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ec->debug_info = debug_info;
 
 	dev_set_drvdata(&pd->dev, ec);
@@ -546,7 +558,10 @@ static struct platform_driver cros_ec_debugfs_driver = {
 	.driver = {
 		.name = DRV_NAME,
 		.pm = &cros_ec_debugfs_pm_ops,
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = cros_ec_debugfs_probe,
 	.remove = cros_ec_debugfs_remove,

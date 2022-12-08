@@ -2,7 +2,11 @@
 /*
  * Driver for Broadcom MPI3 Storage Controllers
  *
+<<<<<<< HEAD
  * Copyright (C) 2017-2023 Broadcom Inc.
+=======
+ * Copyright (C) 2017-2022 Broadcom Inc.
+>>>>>>> b7ba80a49124 (Commit)
  *  (mailto: mpi3mr-linuxdrv.pdl@broadcom.com)
  *
  */
@@ -29,6 +33,10 @@
 #include <linux/types.h>
 #include <linux/uaccess.h>
 #include <linux/utsname.h>
+<<<<<<< HEAD
+=======
+#include <linux/version.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/workqueue.h>
 #include <asm/unaligned.h>
 #include <scsi/scsi.h>
@@ -55,8 +63,13 @@ extern struct list_head mrioc_list;
 extern int prot_mask;
 extern atomic64_t event_counter;
 
+<<<<<<< HEAD
 #define MPI3MR_DRIVER_VERSION	"8.4.1.0.0"
 #define MPI3MR_DRIVER_RELDATE	"16-March-2023"
+=======
+#define MPI3MR_DRIVER_VERSION	"8.0.0.69.0"
+#define MPI3MR_DRIVER_RELDATE	"16-March-2022"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MPI3MR_DRIVER_NAME	"mpi3mr"
 #define MPI3MR_DRIVER_LICENSE	"GPL"
@@ -117,7 +130,10 @@ extern atomic64_t event_counter;
 /* command/controller interaction timeout definitions in seconds */
 #define MPI3MR_INTADMCMD_TIMEOUT		60
 #define MPI3MR_PORTENABLE_TIMEOUT		300
+<<<<<<< HEAD
 #define MPI3MR_PORTENABLE_POLL_INTERVAL		5
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MPI3MR_ABORTTM_TIMEOUT			60
 #define MPI3MR_RESETTM_TIMEOUT			60
 #define MPI3MR_RESET_HOST_IOWAIT_TIMEOUT	5
@@ -126,14 +142,20 @@ extern atomic64_t event_counter;
 #define	MPI3MR_RAID_ERRREC_RESET_TIMEOUT	180
 #define MPI3MR_PREPARE_FOR_RESET_TIMEOUT	180
 #define MPI3MR_RESET_ACK_TIMEOUT		30
+<<<<<<< HEAD
 #define MPI3MR_MUR_TIMEOUT			120
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MPI3MR_WATCHDOG_INTERVAL		1000 /* in milli seconds */
 
 #define MPI3MR_DEFAULT_CFG_PAGE_SZ		1024 /* in bytes */
 
+<<<<<<< HEAD
 #define MPI3MR_RESET_TOPOLOGY_SETTLE_TIME	10
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MPI3MR_SCMD_TIMEOUT    (60 * HZ)
 #define MPI3MR_EH_SCMD_TIMEOUT (60 * HZ)
 
@@ -431,14 +453,20 @@ struct op_reply_qinfo {
  * struct mpi3mr_intr_info -  Interrupt cookie information
  *
  * @mrioc: Adapter instance reference
+<<<<<<< HEAD
  * @os_irq: irq number
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @msix_index: MSIx index
  * @op_reply_q: Associated operational reply queue
  * @name: Dev name for the irq claiming device
  */
 struct mpi3mr_intr_info {
 	struct mpi3mr_ioc *mrioc;
+<<<<<<< HEAD
 	int os_irq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 msix_index;
 	struct op_reply_qinfo *op_reply_q;
 	char name[MPI3MR_NAME_LENGTH];
@@ -653,11 +681,15 @@ union _form_spec_inf {
 	struct tgt_dev_vd vd_inf;
 };
 
+<<<<<<< HEAD
 enum mpi3mr_dev_state {
 	MPI3MR_DEV_CREATED = 1,
 	MPI3MR_DEV_REMOVE_HS_STARTED = 2,
 	MPI3MR_DEV_DELETED = 3,
 };
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct mpi3mr_tgt_dev - target device data structure
@@ -681,7 +713,10 @@ enum mpi3mr_dev_state {
  * @enclosure_logical_id: Enclosure logical identifier
  * @dev_spec: Device type specific information
  * @ref_count: Reference count
+<<<<<<< HEAD
  * @state: device state
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct mpi3mr_tgt_dev {
 	struct list_head list;
@@ -703,7 +738,10 @@ struct mpi3mr_tgt_dev {
 	u64 enclosure_logical_id;
 	union _form_spec_inf dev_spec;
 	struct kref ref_count;
+<<<<<<< HEAD
 	enum mpi3mr_dev_state state;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -909,7 +947,10 @@ struct scmd_priv {
  * @admin_reply_ephase:Admin reply queue expected phase
  * @admin_reply_base: Admin reply queue base virtual address
  * @admin_reply_dma: Admin reply queue base dma address
+<<<<<<< HEAD
  * @admin_reply_q_in_use: Queue is handled by poll/ISR
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @ready_timeout: Controller ready timeout
  * @intr_info: Interrupt cookie pointer
  * @intr_info_count: Number of interrupt cookies
@@ -962,16 +1003,29 @@ struct scmd_priv {
  * @chain_buf_count: Chain buffer count
  * @chain_buf_pool: Chain buffer pool
  * @chain_sgl_list: Chain SGL list
+<<<<<<< HEAD
+=======
+ * @chain_bitmap_sz: Chain buffer allocator bitmap size
+>>>>>>> b7ba80a49124 (Commit)
  * @chain_bitmap: Chain buffer allocator bitmap
  * @chain_buf_lock: Chain buffer list lock
  * @bsg_cmds: Command tracker for BSG command
  * @host_tm_cmds: Command tracker for task management commands
  * @dev_rmhs_cmds: Command tracker for device removal commands
  * @evtack_cmds: Command tracker for event ack commands
+<<<<<<< HEAD
  * @devrem_bitmap: Device removal bitmap
  * @dev_handle_bitmap_bits: Number of bits in device handle bitmap
  * @removepend_bitmap: Remove pending bitmap
  * @delayed_rmhs_list: Delayed device removal list
+=======
+ * @devrem_bitmap_sz: Device removal bitmap size
+ * @devrem_bitmap: Device removal bitmap
+ * @dev_handle_bitmap_sz: Device handle bitmap size
+ * @removepend_bitmap: Remove pending bitmap
+ * @delayed_rmhs_list: Delayed device removal list
+ * @evtack_cmds_bitmap_sz: Event Ack bitmap size
+>>>>>>> b7ba80a49124 (Commit)
  * @evtack_cmds_bitmap: Event Ack bitmap
  * @delayed_evtack_cmds_list: Delayed event acknowledgment list
  * @ts_update_counter: Timestamp update counter
@@ -1063,7 +1117,10 @@ struct mpi3mr_ioc {
 	u8 admin_reply_ephase;
 	void *admin_reply_base;
 	dma_addr_t admin_reply_dma;
+<<<<<<< HEAD
 	atomic_t admin_reply_q_in_use;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	u32 ready_timeout;
 
@@ -1133,6 +1190,10 @@ struct mpi3mr_ioc {
 	u32 chain_buf_count;
 	struct dma_pool *chain_buf_pool;
 	struct chain_element *chain_sgl_list;
+<<<<<<< HEAD
+=======
+	u16  chain_bitmap_sz;
+>>>>>>> b7ba80a49124 (Commit)
 	void *chain_bitmap;
 	spinlock_t chain_buf_lock;
 
@@ -1140,10 +1201,19 @@ struct mpi3mr_ioc {
 	struct mpi3mr_drv_cmd host_tm_cmds;
 	struct mpi3mr_drv_cmd dev_rmhs_cmds[MPI3MR_NUM_DEVRMCMD];
 	struct mpi3mr_drv_cmd evtack_cmds[MPI3MR_NUM_EVTACKCMD];
+<<<<<<< HEAD
 	void *devrem_bitmap;
 	u16 dev_handle_bitmap_bits;
 	void *removepend_bitmap;
 	struct list_head delayed_rmhs_list;
+=======
+	u16 devrem_bitmap_sz;
+	void *devrem_bitmap;
+	u16 dev_handle_bitmap_sz;
+	void *removepend_bitmap;
+	struct list_head delayed_rmhs_list;
+	u16 evtack_cmds_bitmap_sz;
+>>>>>>> b7ba80a49124 (Commit)
 	void *evtack_cmds_bitmap;
 	struct list_head delayed_evtack_cmds_list;
 
@@ -1396,10 +1466,13 @@ void mpi3mr_print_device_event_notice(struct mpi3mr_ioc *mrioc,
 void mpi3mr_refresh_sas_ports(struct mpi3mr_ioc *mrioc);
 void mpi3mr_refresh_expanders(struct mpi3mr_ioc *mrioc);
 void mpi3mr_add_event_wait_for_device_refresh(struct mpi3mr_ioc *mrioc);
+<<<<<<< HEAD
 void mpi3mr_flush_drv_cmds(struct mpi3mr_ioc *mrioc);
 void mpi3mr_flush_cmds_for_unrecovered_controller(struct mpi3mr_ioc *mrioc);
 void mpi3mr_free_enclosure_list(struct mpi3mr_ioc *mrioc);
 int mpi3mr_process_admin_reply_q(struct mpi3mr_ioc *mrioc);
 void mpi3mr_expander_node_remove(struct mpi3mr_ioc *mrioc,
 	struct mpi3mr_sas_node *sas_expander);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /*MPI3MR_H_INCLUDED*/

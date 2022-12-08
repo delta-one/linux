@@ -463,7 +463,11 @@ static ssize_t bq24190_sysfs_show(struct device *dev,
 	if (ret)
 		count = ret;
 	else
+<<<<<<< HEAD
 		count = sysfs_emit(buf, "%hhx\n", v);
+=======
+		count = scnprintf(buf, PAGE_SIZE, "%hhx\n", v);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pm_runtime_mark_last_busy(bdi->dev);
 	pm_runtime_put_autosuspend(bdi->dev);
@@ -1767,9 +1771,15 @@ static int bq24190_get_config(struct bq24190_dev_info *bdi)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int bq24190_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int bq24190_probe(struct i2c_client *client,
+		const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct i2c_adapter *adapter = client->adapter;
 	struct device *dev = &client->dev;
 	struct power_supply_config charger_cfg = {}, battery_cfg = {};
@@ -1906,7 +1916,10 @@ static void bq24190_remove(struct i2c_client *client)
 	struct bq24190_dev_info *bdi = i2c_get_clientdata(client);
 	int error;
 
+<<<<<<< HEAD
 	cancel_delayed_work_sync(&bdi->input_current_limit_work);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	error = pm_runtime_resume_and_get(bdi->dev);
 	if (error < 0)
 		dev_warn(bdi->dev, "pm_runtime_get failed: %i\n", error);
@@ -2033,7 +2046,11 @@ static const struct of_device_id bq24190_of_match[] = {
 MODULE_DEVICE_TABLE(of, bq24190_of_match);
 
 static struct i2c_driver bq24190_driver = {
+<<<<<<< HEAD
 	.probe_new	= bq24190_probe,
+=======
+	.probe		= bq24190_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= bq24190_remove,
 	.shutdown	= bq24190_shutdown,
 	.id_table	= bq24190_i2c_ids,

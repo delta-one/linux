@@ -57,7 +57,11 @@ static int gc_thread_func(void *data)
 
 		/* give it a try one time */
 		if (gc_th->gc_wake)
+<<<<<<< HEAD
 			gc_th->gc_wake = false;
+=======
+			gc_th->gc_wake = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (try_to_freeze()) {
 			stat_other_skip_bggc_count(sbi);
@@ -72,9 +76,16 @@ static int gc_thread_func(void *data)
 			continue;
 		}
 
+<<<<<<< HEAD
 		if (time_to_inject(sbi, FAULT_CHECKPOINT))
 			f2fs_stop_checkpoint(sbi, false,
 					STOP_CP_REASON_FAULT_INJECT);
+=======
+		if (time_to_inject(sbi, FAULT_CHECKPOINT)) {
+			f2fs_show_injection_info(sbi, FAULT_CHECKPOINT);
+			f2fs_stop_checkpoint(sbi, false);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!sb_start_write_trylock(sbi->sb)) {
 			stat_other_skip_bggc_count(sbi);
@@ -94,6 +105,19 @@ static int gc_thread_func(void *data)
 		 * invalidated soon after by user update or deletion.
 		 * So, I'd like to wait some time to collect dirty segments.
 		 */
+<<<<<<< HEAD
+=======
+		if (sbi->gc_mode == GC_URGENT_HIGH) {
+			spin_lock(&sbi->gc_urgent_high_lock);
+			if (sbi->gc_urgent_high_remaining) {
+				sbi->gc_urgent_high_remaining--;
+				if (!sbi->gc_urgent_high_remaining)
+					sbi->gc_mode = GC_NORMAL;
+			}
+			spin_unlock(&sbi->gc_urgent_high_lock);
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (sbi->gc_mode == GC_URGENT_HIGH ||
 				sbi->gc_mode == GC_URGENT_MID) {
 			wait_ms = gc_th->urgent_sleep_time;
@@ -139,10 +163,13 @@ do_gc:
 			/* don't bother wait_ms by foreground gc */
 			if (!foreground)
 				wait_ms = gc_th->no_gc_sleep_time;
+<<<<<<< HEAD
 		} else {
 			/* reset wait_ms to default sleep time */
 			if (wait_ms == gc_th->no_gc_sleep_time)
 				wait_ms = gc_th->min_sleep_time;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (foreground)
@@ -154,6 +181,7 @@ do_gc:
 		/* balancing f2fs's metadata periodically */
 		f2fs_balance_fs_bg(sbi, true);
 next:
+<<<<<<< HEAD
 		if (sbi->gc_mode != GC_NORMAL) {
 			spin_lock(&sbi->gc_remaining_trials_lock);
 			if (sbi->gc_remaining_trials) {
@@ -163,6 +191,8 @@ next:
 			}
 			spin_unlock(&sbi->gc_remaining_trials_lock);
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		sb_end_write(sbi->sb);
 
 	} while (!kthread_should_stop());
@@ -173,17 +203,31 @@ int f2fs_start_gc_thread(struct f2fs_sb_info *sbi)
 {
 	struct f2fs_gc_kthread *gc_th;
 	dev_t dev = sbi->sb->s_bdev->bd_dev;
+<<<<<<< HEAD
 
 	gc_th = f2fs_kmalloc(sbi, sizeof(struct f2fs_gc_kthread), GFP_KERNEL);
 	if (!gc_th)
 		return -ENOMEM;
+=======
+	int err = 0;
+
+	gc_th = f2fs_kmalloc(sbi, sizeof(struct f2fs_gc_kthread), GFP_KERNEL);
+	if (!gc_th) {
+		err = -ENOMEM;
+		goto out;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	gc_th->urgent_sleep_time = DEF_GC_THREAD_URGENT_SLEEP_TIME;
 	gc_th->min_sleep_time = DEF_GC_THREAD_MIN_SLEEP_TIME;
 	gc_th->max_sleep_time = DEF_GC_THREAD_MAX_SLEEP_TIME;
 	gc_th->no_gc_sleep_time = DEF_GC_THREAD_NOGC_SLEEP_TIME;
 
+<<<<<<< HEAD
 	gc_th->gc_wake = false;
+=======
+	gc_th->gc_wake = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	sbi->gc_thread = gc_th;
 	init_waitqueue_head(&sbi->gc_thread->gc_wait_queue_head);
@@ -191,6 +235,7 @@ int f2fs_start_gc_thread(struct f2fs_sb_info *sbi)
 	sbi->gc_thread->f2fs_gc_task = kthread_run(gc_thread_func, sbi,
 			"f2fs_gc-%u:%u", MAJOR(dev), MINOR(dev));
 	if (IS_ERR(gc_th->f2fs_gc_task)) {
+<<<<<<< HEAD
 		int err = PTR_ERR(gc_th->f2fs_gc_task);
 
 		kfree(gc_th);
@@ -199,6 +244,14 @@ int f2fs_start_gc_thread(struct f2fs_sb_info *sbi)
 	}
 
 	return 0;
+=======
+		err = PTR_ERR(gc_th->f2fs_gc_task);
+		kfree(gc_th);
+		sbi->gc_thread = NULL;
+	}
+out:
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void f2fs_stop_gc_thread(struct f2fs_sb_info *sbi)
@@ -282,7 +335,11 @@ static void select_policy(struct f2fs_sb_info *sbi, int gc_type,
 
 	/* let's select beginning hot/small space first in no_heap mode*/
 	if (f2fs_need_rand_seg(sbi))
+<<<<<<< HEAD
 		p->offset = get_random_u32_below(MAIN_SECS(sbi) * sbi->segs_per_sec);
+=======
+		p->offset = prandom_u32() % (MAIN_SECS(sbi) * sbi->segs_per_sec);
+>>>>>>> b7ba80a49124 (Commit)
 	else if (test_opt(sbi, NOHEAP) &&
 		(type == CURSEG_HOT_DATA || IS_NODESEG(type)))
 		p->offset = 0;
@@ -390,6 +447,7 @@ static unsigned int count_bits(const unsigned long *addr,
 	return sum;
 }
 
+<<<<<<< HEAD
 static bool f2fs_check_victim_tree(struct f2fs_sb_info *sbi,
 				struct rb_root_cached *root)
 {
@@ -437,21 +495,41 @@ static struct victim_entry *__lookup_victim_entry(struct f2fs_sb_info *sbi,
 
 static struct victim_entry *__create_victim_entry(struct f2fs_sb_info *sbi,
 		unsigned long long mtime, unsigned int segno)
+=======
+static struct victim_entry *attach_victim_entry(struct f2fs_sb_info *sbi,
+				unsigned long long mtime, unsigned int segno,
+				struct rb_node *parent, struct rb_node **p,
+				bool left_most)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct atgc_management *am = &sbi->am;
 	struct victim_entry *ve;
 
+<<<<<<< HEAD
 	ve =  f2fs_kmem_cache_alloc(victim_entry_slab, GFP_NOFS, true, NULL);
+=======
+	ve =  f2fs_kmem_cache_alloc(victim_entry_slab,
+				GFP_NOFS, true, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ve->mtime = mtime;
 	ve->segno = segno;
 
+<<<<<<< HEAD
 	list_add_tail(&ve->list, &am->victim_list);
+=======
+	rb_link_node(&ve->rb_node, parent, p);
+	rb_insert_color_cached(&ve->rb_node, &am->root, left_most);
+
+	list_add_tail(&ve->list, &am->victim_list);
+
+>>>>>>> b7ba80a49124 (Commit)
 	am->victim_count++;
 
 	return ve;
 }
 
+<<<<<<< HEAD
 static void __insert_victim_entry(struct f2fs_sb_info *sbi,
 				unsigned long long mtime, unsigned int segno)
 {
@@ -479,6 +557,18 @@ static void __insert_victim_entry(struct f2fs_sb_info *sbi,
 
 	rb_link_node(&ve->rb_node, parent, p);
 	rb_insert_color_cached(&ve->rb_node, root, left_most);
+=======
+static void insert_victim_entry(struct f2fs_sb_info *sbi,
+				unsigned long long mtime, unsigned int segno)
+{
+	struct atgc_management *am = &sbi->am;
+	struct rb_node **p;
+	struct rb_node *parent = NULL;
+	bool left_most = true;
+
+	p = f2fs_lookup_rb_tree_ext(sbi, &am->root, &parent, mtime, &left_most);
+	attach_victim_entry(sbi, mtime, segno, parent, p, left_most);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void add_victim_entry(struct f2fs_sb_info *sbi,
@@ -514,7 +604,23 @@ static void add_victim_entry(struct f2fs_sb_info *sbi,
 	if (sit_i->dirty_max_mtime - mtime < p->age_threshold)
 		return;
 
+<<<<<<< HEAD
 	__insert_victim_entry(sbi, mtime, segno);
+=======
+	insert_victim_entry(sbi, mtime, segno);
+}
+
+static struct rb_node *lookup_central_victim(struct f2fs_sb_info *sbi,
+						struct victim_sel_policy *p)
+{
+	struct atgc_management *am = &sbi->am;
+	struct rb_node *parent = NULL;
+	bool left_most;
+
+	f2fs_lookup_rb_tree_ext(sbi, &am->root, &parent, p->age, &left_most);
+
+	return parent;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void atgc_lookup_victim(struct f2fs_sb_info *sbi,
@@ -524,6 +630,10 @@ static void atgc_lookup_victim(struct f2fs_sb_info *sbi,
 	struct atgc_management *am = &sbi->am;
 	struct rb_root_cached *root = &am->root;
 	struct rb_node *node;
+<<<<<<< HEAD
+=======
+	struct rb_entry *re;
+>>>>>>> b7ba80a49124 (Commit)
 	struct victim_entry *ve;
 	unsigned long long total_time;
 	unsigned long long age, u, accu;
@@ -550,10 +660,19 @@ static void atgc_lookup_victim(struct f2fs_sb_info *sbi,
 
 	node = rb_first_cached(root);
 next:
+<<<<<<< HEAD
 	ve = rb_entry_safe(node, struct victim_entry, rb_node);
 	if (!ve)
 		return;
 
+=======
+	re = rb_entry_safe(node, struct rb_entry, rb_node);
+	if (!re)
+		return;
+
+	ve = (struct victim_entry *)re;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (ve->mtime >= max_mtime || ve->mtime < min_mtime)
 		goto skip;
 
@@ -595,6 +714,11 @@ static void atssr_lookup_victim(struct f2fs_sb_info *sbi,
 {
 	struct sit_info *sit_i = SIT_I(sbi);
 	struct atgc_management *am = &sbi->am;
+<<<<<<< HEAD
+=======
+	struct rb_node *node;
+	struct rb_entry *re;
+>>>>>>> b7ba80a49124 (Commit)
 	struct victim_entry *ve;
 	unsigned long long age;
 	unsigned long long max_mtime = sit_i->dirty_max_mtime;
@@ -604,13 +728,19 @@ static void atssr_lookup_victim(struct f2fs_sb_info *sbi,
 	unsigned int dirty_threshold = max(am->max_candidate_count,
 					am->candidate_ratio *
 					am->victim_count / 100);
+<<<<<<< HEAD
 	unsigned int cost, iter;
+=======
+	unsigned int cost;
+	unsigned int iter = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int stage = 0;
 
 	if (max_mtime < min_mtime)
 		return;
 	max_mtime += 1;
 next_stage:
+<<<<<<< HEAD
 	iter = 0;
 	ve = __lookup_victim_entry(sbi, p->age);
 next_node:
@@ -620,6 +750,19 @@ next_node:
 		return;
 	}
 
+=======
+	node = lookup_central_victim(sbi, p);
+next_node:
+	re = rb_entry_safe(node, struct rb_entry, rb_node);
+	if (!re) {
+		if (stage == 0)
+			goto skip_stage;
+		return;
+	}
+
+	ve = (struct victim_entry *)re;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (ve->mtime >= max_mtime || ve->mtime < min_mtime)
 		goto skip_node;
 
@@ -645,6 +788,7 @@ next_node:
 	}
 skip_node:
 	if (iter < dirty_threshold) {
+<<<<<<< HEAD
 		ve = rb_entry(stage == 0 ? rb_prev(&ve->rb_node) :
 					rb_next(&ve->rb_node),
 					struct victim_entry, rb_node);
@@ -659,6 +803,26 @@ static void lookup_victim_by_age(struct f2fs_sb_info *sbi,
 						struct victim_sel_policy *p)
 {
 	f2fs_bug_on(sbi, !f2fs_check_victim_tree(sbi, &sbi->am.root));
+=======
+		if (stage == 0)
+			node = rb_prev(node);
+		else if (stage == 1)
+			node = rb_next(node);
+		goto next_node;
+	}
+skip_stage:
+	if (stage < 1) {
+		stage++;
+		iter = 0;
+		goto next_stage;
+	}
+}
+static void lookup_victim_by_age(struct f2fs_sb_info *sbi,
+						struct victim_sel_policy *p)
+{
+	f2fs_bug_on(sbi, !f2fs_check_rb_tree_consistence(sbi,
+						&sbi->am.root, true));
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (p->gc_mode == GC_AT)
 		atgc_lookup_victim(sbi, p);
@@ -1110,7 +1274,11 @@ static bool is_alive(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
 {
 	struct page *node_page;
 	nid_t nid;
+<<<<<<< HEAD
 	unsigned int ofs_in_node, max_addrs, base;
+=======
+	unsigned int ofs_in_node, max_addrs;
+>>>>>>> b7ba80a49124 (Commit)
 	block_t source_blkaddr;
 
 	nid = le32_to_cpu(sum->nid);
@@ -1136,6 +1304,7 @@ static bool is_alive(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
 		return false;
 	}
 
+<<<<<<< HEAD
 	if (IS_INODE(node_page)) {
 		base = offset_in_addr(F2FS_INODE(node_page));
 		max_addrs = DEF_ADDRS_PER_INODE;
@@ -1148,6 +1317,13 @@ static bool is_alive(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
 		f2fs_err(sbi, "Inconsistent blkaddr offset: base:%u, ofs_in_node:%u, max:%u, ino:%u, nid:%u",
 			base, ofs_in_node, max_addrs, dni->ino, dni->nid);
 		f2fs_put_page(node_page, 1);
+=======
+	max_addrs = IS_INODE(node_page) ? DEF_ADDRS_PER_INODE :
+						DEF_ADDRS_PER_BLOCK;
+	if (ofs_in_node >= max_addrs) {
+		f2fs_err(sbi, "Inconsistent ofs_in_node:%u in summary, ino:%u, nid:%u, max:%u",
+			ofs_in_node, dni->ino, dni->nid, max_addrs);
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 	}
 
@@ -1179,6 +1355,10 @@ static int ra_data_block(struct inode *inode, pgoff_t index)
 	struct address_space *mapping = inode->i_mapping;
 	struct dnode_of_data dn;
 	struct page *page;
+<<<<<<< HEAD
+=======
+	struct extent_info ei = {0, 0, 0};
+>>>>>>> b7ba80a49124 (Commit)
 	struct f2fs_io_info fio = {
 		.sbi = sbi,
 		.ino = inode->i_ino,
@@ -1187,8 +1367,13 @@ static int ra_data_block(struct inode *inode, pgoff_t index)
 		.op = REQ_OP_READ,
 		.op_flags = 0,
 		.encrypted_page = NULL,
+<<<<<<< HEAD
 		.in_list = 0,
 		.retry = 0,
+=======
+		.in_list = false,
+		.retry = false,
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	int err;
 
@@ -1196,12 +1381,20 @@ static int ra_data_block(struct inode *inode, pgoff_t index)
 	if (!page)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	if (f2fs_lookup_read_extent_cache_block(inode, index,
 						&dn.data_blkaddr)) {
 		if (unlikely(!f2fs_is_valid_blkaddr(sbi, dn.data_blkaddr,
 						DATA_GENERIC_ENHANCE_READ))) {
 			err = -EFSCORRUPTED;
 			f2fs_handle_error(sbi, ERROR_INVALID_BLKADDR);
+=======
+	if (f2fs_lookup_extent_cache(inode, index, &ei)) {
+		dn.data_blkaddr = ei.blk + index - ei.fofs;
+		if (unlikely(!f2fs_is_valid_blkaddr(sbi, dn.data_blkaddr,
+						DATA_GENERIC_ENHANCE_READ))) {
+			err = -EFSCORRUPTED;
+>>>>>>> b7ba80a49124 (Commit)
 			goto put_page;
 		}
 		goto got_it;
@@ -1220,7 +1413,10 @@ static int ra_data_block(struct inode *inode, pgoff_t index)
 	if (unlikely(!f2fs_is_valid_blkaddr(sbi, dn.data_blkaddr,
 						DATA_GENERIC_ENHANCE))) {
 		err = -EFSCORRUPTED;
+<<<<<<< HEAD
 		f2fs_handle_error(sbi, ERROR_INVALID_BLKADDR);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto put_page;
 	}
 got_it:
@@ -1276,8 +1472,13 @@ static int move_data_block(struct inode *inode, block_t bidx,
 		.op = REQ_OP_READ,
 		.op_flags = 0,
 		.encrypted_page = NULL,
+<<<<<<< HEAD
 		.in_list = 0,
 		.retry = 0,
+=======
+		.in_list = false,
+		.retry = false,
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	struct dnode_of_data dn;
 	struct f2fs_summary sum;
@@ -1393,6 +1594,10 @@ static int move_data_block(struct inode *inode, block_t bidx,
 		dec_page_count(fio.sbi, F2FS_DIRTY_META);
 
 	set_page_writeback(fio.encrypted_page);
+<<<<<<< HEAD
+=======
+	ClearPageError(page);
+>>>>>>> b7ba80a49124 (Commit)
 
 	fio.op = REQ_OP_WRITE;
 	fio.op_flags = REQ_SYNC;
@@ -1599,8 +1804,13 @@ next_step:
 				continue;
 			}
 
+<<<<<<< HEAD
 			data_page = f2fs_get_read_data_page(inode, start_bidx,
 							REQ_RAHEAD, true, NULL);
+=======
+			data_page = f2fs_get_read_data_page(inode,
+						start_bidx, REQ_RAHEAD, true);
+>>>>>>> b7ba80a49124 (Commit)
 			f2fs_up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
 			if (IS_ERR(data_page)) {
 				iput(inode);
@@ -1751,8 +1961,12 @@ static int do_garbage_collect(struct f2fs_sb_info *sbi,
 			f2fs_err(sbi, "Inconsistent segment (%u) type [%d, %d] in SSA and SIT",
 				 segno, type, GET_SUM_TYPE((&sum->footer)));
 			set_sbi_flag(sbi, SBI_NEED_FSCK);
+<<<<<<< HEAD
 			f2fs_stop_checkpoint(sbi, false,
 				STOP_CP_REASON_CORRUPTED_SUMMARY);
+=======
+			f2fs_stop_checkpoint(sbi, false);
+>>>>>>> b7ba80a49124 (Commit)
 			goto skip;
 		}
 
@@ -1780,9 +1994,14 @@ freed:
 				get_valid_blocks(sbi, segno, false) == 0)
 			seg_freed++;
 
+<<<<<<< HEAD
 		if (__is_large_section(sbi))
 			sbi->next_victim_seg[gc_type] =
 				(segno + 1 < end_segno) ? segno + 1 : NULL_SEGNO;
+=======
+		if (__is_large_section(sbi) && segno + 1 < end_segno)
+			sbi->next_victim_seg[gc_type] = segno + 1;
+>>>>>>> b7ba80a49124 (Commit)
 skip:
 		f2fs_put_page(sum_page, 0);
 	}
@@ -1822,8 +2041,13 @@ int f2fs_gc(struct f2fs_sb_info *sbi, struct f2fs_gc_control *gc_control)
 				prefree_segments(sbi));
 
 	cpc.reason = __get_cp_reason(sbi);
+<<<<<<< HEAD
 gc_more:
 	sbi->skipped_gc_rwsem = 0;
+=======
+	sbi->skipped_gc_rwsem = 0;
+gc_more:
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(!(sbi->sb->s_flags & SB_ACTIVE))) {
 		ret = -EINVAL;
 		goto stop;
@@ -1935,7 +2159,13 @@ int __init f2fs_create_garbage_collection_cache(void)
 {
 	victim_entry_slab = f2fs_kmem_cache_create("f2fs_victim_entry",
 					sizeof(struct victim_entry));
+<<<<<<< HEAD
 	return victim_entry_slab ? 0 : -ENOMEM;
+=======
+	if (!victim_entry_slab)
+		return -ENOMEM;
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void f2fs_destroy_garbage_collection_cache(void)
@@ -2168,6 +2398,11 @@ out_unlock:
 	if (err)
 		return err;
 
+<<<<<<< HEAD
+=======
+	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
+
+>>>>>>> b7ba80a49124 (Commit)
 	freeze_super(sbi->sb);
 	f2fs_down_write(&sbi->gc_lock);
 	f2fs_down_write(&sbi->cp_global_sem);
@@ -2183,7 +2418,10 @@ out_unlock:
 	if (err)
 		goto out_err;
 
+<<<<<<< HEAD
 	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = free_segment_range(sbi, secs, false);
 	if (err)
 		goto recover_out;
@@ -2207,7 +2445,10 @@ out_unlock:
 		f2fs_commit_super(sbi, false);
 	}
 recover_out:
+<<<<<<< HEAD
 	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		set_sbi_flag(sbi, SBI_NEED_FSCK);
 		f2fs_err(sbi, "resize_fs failed, should run fsck to repair!");
@@ -2220,5 +2461,9 @@ out_err:
 	f2fs_up_write(&sbi->cp_global_sem);
 	f2fs_up_write(&sbi->gc_lock);
 	thaw_super(sbi->sb);
+<<<<<<< HEAD
+=======
+	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }

@@ -608,7 +608,11 @@ static int zl38_spi_probe(struct spi_device *spi)
 					       &zl38_dai, 1);
 }
 
+<<<<<<< HEAD
 static const struct of_device_id zl38_dt_ids[] __maybe_unused = {
+=======
+static const struct of_device_id zl38_dt_ids[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "mscc,zl38060", },
 	{ /* sentinel */ }
 };

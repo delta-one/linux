@@ -8,6 +8,10 @@
 #include <linux/backlight.h>
 
 struct platform_pwm_backlight_data {
+<<<<<<< HEAD
+=======
+	int pwm_id;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int max_brightness;
 	unsigned int dft_brightness;
 	unsigned int lth_brightness;

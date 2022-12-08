@@ -1093,6 +1093,7 @@ static void rt2x00lib_remove_hw(struct rt2x00_dev *rt2x00dev)
 	kfree(rt2x00dev->spec.channels_info);
 }
 
+<<<<<<< HEAD
 static const struct ieee80211_tpt_blink rt2x00_tpt_blink[] = {
 	{ .throughput = 0 * 1024, .blink_time = 334 },
 	{ .throughput = 1 * 1024, .blink_time = 260 },
@@ -1106,6 +1107,8 @@ static const struct ieee80211_tpt_blink rt2x00_tpt_blink[] = {
 	{ .throughput = 586 * 1024, .blink_time = 50 },
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int rt2x00lib_probe_hw(struct rt2x00_dev *rt2x00dev)
 {
 	struct hw_mode_spec *spec = &rt2x00dev->spec;
@@ -1187,11 +1190,14 @@ static int rt2x00lib_probe_hw(struct rt2x00_dev *rt2x00dev)
 
 #undef RT2X00_TASKLET_INIT
 
+<<<<<<< HEAD
 	ieee80211_create_tpt_led_trigger(rt2x00dev->hw,
 					 IEEE80211_TPT_LEDTRIG_FL_RADIO,
 					 rt2x00_tpt_blink,
 					 ARRAY_SIZE(rt2x00_tpt_blink));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Register HW.
 	 */

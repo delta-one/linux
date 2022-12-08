@@ -27,5 +27,8 @@ tc_act_parse_drop(struct mlx5e_tc_act_parse_state *parse_state,
 struct mlx5e_tc_act mlx5e_tc_act_drop = {
 	.can_offload = tc_act_can_offload_drop,
 	.parse_action = tc_act_parse_drop,
+<<<<<<< HEAD
 	.is_terminating_action = true,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

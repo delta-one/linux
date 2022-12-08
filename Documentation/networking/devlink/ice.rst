@@ -189,21 +189,29 @@ device data.
     * - ``nvm-flash``
       - The contents of the entire flash chip, sometimes referred to as
         the device's Non Volatile Memory.
+<<<<<<< HEAD
     * - ``shadow-ram``
       - The contents of the Shadow RAM, which is loaded from the beginning
         of the flash. Although the contents are primarily from the flash,
         this area also contains data generated during device boot which is
         not stored in flash.
+=======
+>>>>>>> b7ba80a49124 (Commit)
     * - ``device-caps``
       - The contents of the device firmware's capabilities buffer. Useful to
         determine the current state and configuration of the device.
 
+<<<<<<< HEAD
 Both the ``nvm-flash`` and ``shadow-ram`` regions can be accessed without a
 snapshot. The ``device-caps`` region requires a snapshot as the contents are
 sent by firmware and can't be split into separate reads.
 
 Users can request an immediate capture of a snapshot for all three regions
 via the ``DEVLINK_CMD_REGION_NEW`` command.
+=======
+Users can request an immediate capture of a snapshot via the
+``DEVLINK_CMD_REGION_NEW``
+>>>>>>> b7ba80a49124 (Commit)
 
 .. code:: shell
 
@@ -263,6 +271,7 @@ via the ``DEVLINK_CMD_REGION_NEW`` command.
     0000000000000210 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 
     $ devlink region delete pci/0000:01:00.0/device-caps snapshot 1
+<<<<<<< HEAD
 
 Devlink Rate
 ============
@@ -378,3 +387,5 @@ and arbitration among them is based on assigned weights.
 
     # assign tx_share to the VF
     $ devlink port function rate set pci/0000:4b:00.0/2 tx_share 500Mbps
+=======
+>>>>>>> b7ba80a49124 (Commit)

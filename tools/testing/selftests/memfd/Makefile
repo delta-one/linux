@@ -1,6 +1,12 @@
 # SPDX-License-Identifier: GPL-2.0
 CFLAGS += -D_FILE_OFFSET_BITS=64
+<<<<<<< HEAD
 CFLAGS += $(KHDR_INCLUDES)
+=======
+CFLAGS += -I../../../../include/uapi/
+CFLAGS += -I../../../../include/
+CFLAGS += -I../../../../usr/include/
+>>>>>>> b7ba80a49124 (Commit)
 
 TEST_GEN_PROGS := memfd_test
 TEST_PROGS := run_fuse_test.sh run_hugetlbfs_test.sh

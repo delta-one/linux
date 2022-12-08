@@ -547,7 +547,11 @@ static int tegra210_vi_start_streaming(struct vb2_queue *vq, u32 count)
 		       VI_INCR_SYNCPT_NO_STALL);
 
 	/* start the pipeline */
+<<<<<<< HEAD
 	ret = video_device_pipeline_start(&chan->video, pipe);
+=======
+	ret = media_pipeline_start(&chan->video.entity, pipe);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		goto error_pipeline_start;
 
@@ -595,7 +599,11 @@ error_kthread_done:
 error_kthread_start:
 	tegra_channel_set_stream(chan, false);
 error_set_stream:
+<<<<<<< HEAD
 	video_device_pipeline_stop(&chan->video);
+=======
+	media_pipeline_stop(&chan->video.entity);
+>>>>>>> b7ba80a49124 (Commit)
 error_pipeline_start:
 	tegra_channel_release_buffers(chan, VB2_BUF_STATE_QUEUED);
 	return ret;
@@ -617,7 +625,11 @@ static void tegra210_vi_stop_streaming(struct vb2_queue *vq)
 
 	tegra_channel_release_buffers(chan, VB2_BUF_STATE_ERROR);
 	tegra_channel_set_stream(chan, false);
+<<<<<<< HEAD
 	video_device_pipeline_stop(&chan->video);
+=======
+	media_pipeline_stop(&chan->video.entity);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*

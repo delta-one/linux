@@ -10,4 +10,8 @@ obj-y =
 obj-$(CONFIG_UML_NET_ETHERTAP) += ethertap.o
 obj-$(CONFIG_UML_NET_TUNTAP) += tuntap.o
 
+<<<<<<< HEAD
 include $(srctree)/arch/um/scripts/Makefile.rules
+=======
+include arch/um/scripts/Makefile.rules
+>>>>>>> b7ba80a49124 (Commit)

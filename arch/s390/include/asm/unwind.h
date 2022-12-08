@@ -4,7 +4,11 @@
 
 #include <linux/sched.h>
 #include <linux/ftrace.h>
+<<<<<<< HEAD
 #include <linux/rethook.h>
+=======
+#include <linux/kprobes.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/llist.h>
 #include <asm/ptrace.h>
 #include <asm/stacktrace.h>
@@ -43,15 +47,24 @@ struct unwind_state {
 	bool error;
 };
 
+<<<<<<< HEAD
 /* Recover the return address modified by rethook and ftrace_graph. */
+=======
+/* Recover the return address modified by kretprobe and ftrace_graph. */
+>>>>>>> b7ba80a49124 (Commit)
 static inline unsigned long unwind_recover_ret_addr(struct unwind_state *state,
 						    unsigned long ip)
 {
 	ip = ftrace_graph_ret_addr(state->task, &state->graph_idx, ip, (void *)state->sp);
+<<<<<<< HEAD
 #ifdef CONFIG_RETHOOK
 	if (is_rethook_trampoline(ip))
 		ip = rethook_find_ret_addr(state->task, state->sp, &state->kr_cur);
 #endif
+=======
+	if (is_kretprobe_trampoline(ip))
+		ip = kretprobe_find_ret_addr(state->task, (void *)state->sp, &state->kr_cur);
+>>>>>>> b7ba80a49124 (Commit)
 	return ip;
 }
 

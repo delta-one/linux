@@ -331,7 +331,11 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void pm860x_rtc_remove(struct platform_device *pdev)
+=======
+static int pm860x_rtc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pm860x_rtc_info *info = platform_get_drvdata(pdev);
 
@@ -340,6 +344,11 @@ static void pm860x_rtc_remove(struct platform_device *pdev)
 	/* disable measurement */
 	pm860x_set_bits(info->i2c, PM8607_MEAS_EN2, MEAS2_VRTC, 0);
 #endif	/* VRTC_CALIBRATION */
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -371,7 +380,11 @@ static struct platform_driver pm860x_rtc_driver = {
 		.pm	= &pm860x_rtc_pm_ops,
 	},
 	.probe		= pm860x_rtc_probe,
+<<<<<<< HEAD
 	.remove_new	= pm860x_rtc_remove,
+=======
+	.remove		= pm860x_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(pm860x_rtc_driver);

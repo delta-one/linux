@@ -8,8 +8,13 @@
 #include <asm/system_misc.h>
 #include "cpuidle.h"
 
+<<<<<<< HEAD
 static __cpuidle int imx5_cpuidle_enter(struct cpuidle_device *dev,
 					struct cpuidle_driver *drv, int index)
+=======
+static int imx5_cpuidle_enter(struct cpuidle_device *dev,
+			      struct cpuidle_driver *drv, int index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	arm_pm_idle();
 	return index;

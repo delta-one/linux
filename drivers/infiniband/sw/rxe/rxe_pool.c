@@ -23,16 +23,26 @@ static const struct rxe_type_info {
 		.size		= sizeof(struct rxe_ucontext),
 		.elem_offset	= offsetof(struct rxe_ucontext, elem),
 		.min_index	= 1,
+<<<<<<< HEAD
 		.max_index	= RXE_MAX_UCONTEXT,
 		.max_elem	= RXE_MAX_UCONTEXT,
+=======
+		.max_index	= UINT_MAX,
+		.max_elem	= UINT_MAX,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	[RXE_TYPE_PD] = {
 		.name		= "pd",
 		.size		= sizeof(struct rxe_pd),
 		.elem_offset	= offsetof(struct rxe_pd, elem),
 		.min_index	= 1,
+<<<<<<< HEAD
 		.max_index	= RXE_MAX_PD,
 		.max_elem	= RXE_MAX_PD,
+=======
+		.max_index	= UINT_MAX,
+		.max_elem	= UINT_MAX,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	[RXE_TYPE_AH] = {
 		.name		= "ah",
@@ -40,7 +50,11 @@ static const struct rxe_type_info {
 		.elem_offset	= offsetof(struct rxe_ah, elem),
 		.min_index	= RXE_MIN_AH_INDEX,
 		.max_index	= RXE_MAX_AH_INDEX,
+<<<<<<< HEAD
 		.max_elem	= RXE_MAX_AH,
+=======
+		.max_elem	= RXE_MAX_AH_INDEX - RXE_MIN_AH_INDEX + 1,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	[RXE_TYPE_SRQ] = {
 		.name		= "srq",
@@ -49,7 +63,11 @@ static const struct rxe_type_info {
 		.cleanup	= rxe_srq_cleanup,
 		.min_index	= RXE_MIN_SRQ_INDEX,
 		.max_index	= RXE_MAX_SRQ_INDEX,
+<<<<<<< HEAD
 		.max_elem	= RXE_MAX_SRQ,
+=======
+		.max_elem	= RXE_MAX_SRQ_INDEX - RXE_MIN_SRQ_INDEX + 1,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	[RXE_TYPE_QP] = {
 		.name		= "qp",
@@ -58,7 +76,11 @@ static const struct rxe_type_info {
 		.cleanup	= rxe_qp_cleanup,
 		.min_index	= RXE_MIN_QP_INDEX,
 		.max_index	= RXE_MAX_QP_INDEX,
+<<<<<<< HEAD
 		.max_elem	= RXE_MAX_QP,
+=======
+		.max_elem	= RXE_MAX_QP_INDEX - RXE_MIN_QP_INDEX + 1,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	[RXE_TYPE_CQ] = {
 		.name		= "cq",
@@ -66,8 +88,13 @@ static const struct rxe_type_info {
 		.elem_offset	= offsetof(struct rxe_cq, elem),
 		.cleanup	= rxe_cq_cleanup,
 		.min_index	= 1,
+<<<<<<< HEAD
 		.max_index	= RXE_MAX_CQ,
 		.max_elem	= RXE_MAX_CQ,
+=======
+		.max_index	= UINT_MAX,
+		.max_elem	= UINT_MAX,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	[RXE_TYPE_MR] = {
 		.name		= "mr",
@@ -76,7 +103,11 @@ static const struct rxe_type_info {
 		.cleanup	= rxe_mr_cleanup,
 		.min_index	= RXE_MIN_MR_INDEX,
 		.max_index	= RXE_MAX_MR_INDEX,
+<<<<<<< HEAD
 		.max_elem	= RXE_MAX_MR,
+=======
+		.max_elem	= RXE_MAX_MR_INDEX - RXE_MIN_MR_INDEX + 1,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	[RXE_TYPE_MW] = {
 		.name		= "mw",
@@ -85,7 +116,11 @@ static const struct rxe_type_info {
 		.cleanup	= rxe_mw_cleanup,
 		.min_index	= RXE_MIN_MW_INDEX,
 		.max_index	= RXE_MAX_MW_INDEX,
+<<<<<<< HEAD
 		.max_elem	= RXE_MAX_MW,
+=======
+		.max_elem	= RXE_MAX_MW_INDEX - RXE_MIN_MW_INDEX + 1,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 
@@ -116,12 +151,61 @@ void rxe_pool_cleanup(struct rxe_pool *pool)
 	WARN_ON(!xa_empty(&pool->xa));
 }
 
+<<<<<<< HEAD
+=======
+void *rxe_alloc(struct rxe_pool *pool)
+{
+	struct rxe_pool_elem *elem;
+	void *obj;
+	int err;
+
+	if (WARN_ON(!(pool->type == RXE_TYPE_MR)))
+		return NULL;
+
+	if (atomic_inc_return(&pool->num_elem) > pool->max_elem)
+		goto err_cnt;
+
+	obj = kzalloc(pool->elem_size, GFP_KERNEL);
+	if (!obj)
+		goto err_cnt;
+
+	elem = (struct rxe_pool_elem *)((u8 *)obj + pool->elem_offset);
+
+	elem->pool = pool;
+	elem->obj = obj;
+	kref_init(&elem->ref_cnt);
+	init_completion(&elem->complete);
+
+	/* allocate index in array but leave pointer as NULL so it
+	 * can't be looked up until rxe_finalize() is called
+	 */
+	err = xa_alloc_cyclic(&pool->xa, &elem->index, NULL, pool->limit,
+			      &pool->next, GFP_KERNEL);
+	if (err < 0)
+		goto err_free;
+
+	return obj;
+
+err_free:
+	kfree(obj);
+err_cnt:
+	atomic_dec(&pool->num_elem);
+	return NULL;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int __rxe_add_to_pool(struct rxe_pool *pool, struct rxe_pool_elem *elem,
 				bool sleepable)
 {
 	int err;
 	gfp_t gfp_flags;
 
+<<<<<<< HEAD
+=======
+	if (WARN_ON(pool->type == RXE_TYPE_MR))
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (atomic_inc_return(&pool->num_elem) > pool->max_elem)
 		goto err_cnt;
 
@@ -232,6 +316,12 @@ int __rxe_cleanup(struct rxe_pool_elem *elem, bool sleepable)
 	if (pool->cleanup)
 		pool->cleanup(elem);
 
+<<<<<<< HEAD
+=======
+	if (pool->type == RXE_TYPE_MR)
+		kfree_rcu(elem->obj);
+
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_dec(&pool->num_elem);
 
 	return err;

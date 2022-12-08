@@ -15,7 +15,10 @@
 #include <linux/io.h>
 #include <linux/module.h>
 #include <linux/mod_devicetable.h>
+<<<<<<< HEAD
 #include <linux/mutex.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <linux/regulator/consumer.h>
 
@@ -50,8 +53,11 @@ struct lpc32xx_adc_state {
 	struct clk *clk;
 	struct completion completion;
 	struct regulator *vref;
+<<<<<<< HEAD
 	/* lock to protect against multiple access to the device */
 	struct mutex lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	u32 value;
 };
@@ -67,10 +73,17 @@ static int lpc32xx_read_raw(struct iio_dev *indio_dev,
 
 	switch (mask) {
 	case IIO_CHAN_INFO_RAW:
+<<<<<<< HEAD
 		mutex_lock(&st->lock);
 		ret = clk_prepare_enable(st->clk);
 		if (ret) {
 			mutex_unlock(&st->lock);
+=======
+		mutex_lock(&indio_dev->mlock);
+		ret = clk_prepare_enable(st->clk);
+		if (ret) {
+			mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 			return ret;
 		}
 		/* Measurement setup */
@@ -83,7 +96,11 @@ static int lpc32xx_read_raw(struct iio_dev *indio_dev,
 		wait_for_completion(&st->completion); /* set by ISR */
 		clk_disable_unprepare(st->clk);
 		*val = st->value;
+<<<<<<< HEAD
 		mutex_unlock(&st->lock);
+=======
+		mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 
 		return IIO_VAL_INT;
 
@@ -204,8 +221,11 @@ static int lpc32xx_adc_probe(struct platform_device *pdev)
 	iodev->modes = INDIO_DIRECT_MODE;
 	iodev->num_channels = ARRAY_SIZE(lpc32xx_adc_iio_channels);
 
+<<<<<<< HEAD
 	mutex_init(&st->lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	retval = devm_iio_device_register(&pdev->dev, iodev);
 	if (retval)
 		return retval;

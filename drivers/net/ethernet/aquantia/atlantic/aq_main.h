@@ -16,7 +16,10 @@ DECLARE_STATIC_KEY_FALSE(aq_xdp_locking_key);
 
 void aq_ndev_schedule_work(struct work_struct *work);
 struct net_device *aq_ndev_alloc(void);
+<<<<<<< HEAD
 int aq_ndev_open(struct net_device *ndev);
 int aq_ndev_close(struct net_device *ndev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* AQ_MAIN_H */

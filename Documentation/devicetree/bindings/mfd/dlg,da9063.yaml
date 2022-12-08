@@ -73,7 +73,11 @@ properties:
     type: object
     additionalProperties: false
     patternProperties:
+<<<<<<< HEAD
       "^(ldo([1-9]|1[01])|bcore([1-2]|s-merged)|b(pro|mem|io|peri)|bmem-bio-merged)$":
+=======
+      "^(ldo([1-9]|1[01])|bcore[1-2]|bpro|bmem|bio|bperi)$":
+>>>>>>> b7ba80a49124 (Commit)
         $ref: /schemas/regulator/regulator.yaml
         unevaluatedProperties: false
 

@@ -447,7 +447,10 @@ MODULE_DEVICE_TABLE(i2c, lp3971_i2c_id);
 static struct i2c_driver lp3971_i2c_driver = {
 	.driver = {
 		.name = "LP3971",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe_new = lp3971_i2c_probe,
 	.id_table = lp3971_i2c_id,

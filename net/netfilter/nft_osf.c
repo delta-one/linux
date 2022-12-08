@@ -92,8 +92,12 @@ static int nft_osf_init(const struct nft_ctx *ctx,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int nft_osf_dump(struct sk_buff *skb,
 			const struct nft_expr *expr, bool reset)
+=======
+static int nft_osf_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_osf *priv = nft_expr_priv(expr);
 

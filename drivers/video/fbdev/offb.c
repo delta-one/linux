@@ -12,7 +12,10 @@
  *  more details.
  */
 
+<<<<<<< HEAD
 #include <linux/aperture.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/errno.h>
@@ -54,11 +57,18 @@ struct offb_par {
 	volatile void __iomem *cmap_data;
 	int cmap_type;
 	int blanked;
+<<<<<<< HEAD
 	u32 pseudo_palette[16];
 	resource_size_t base;
 	resource_size_t size;
 };
 
+=======
+};
+
+struct offb_par default_par;
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PPC32
 extern boot_infos_t *boot_infos;
 #endif
@@ -282,11 +292,17 @@ static int offb_set_par(struct fb_info *info)
 
 static void offb_destroy(struct fb_info *info)
 {
+<<<<<<< HEAD
 	struct offb_par *par = info->par;
 
 	if (info->screen_base)
 		iounmap(info->screen_base);
 	release_mem_region(par->base, par->size);
+=======
+	if (info->screen_base)
+		iounmap(info->screen_base);
+	release_mem_region(info->apertures->ranges[0].base, info->apertures->ranges[0].size);
+>>>>>>> b7ba80a49124 (Commit)
 	fb_dealloc_cmap(&info->cmap);
 	framebuffer_release(info);
 }
@@ -397,11 +413,18 @@ static void offb_init_fb(struct platform_device *parent, const char *name,
 			 int foreign_endian, struct device_node *dp)
 {
 	unsigned long res_size = pitch * height;
+<<<<<<< HEAD
+=======
+	struct offb_par *par = &default_par;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long res_start = address;
 	struct fb_fix_screeninfo *fix;
 	struct fb_var_screeninfo *var;
 	struct fb_info *info;
+<<<<<<< HEAD
 	struct offb_par *par;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!request_mem_region(res_start, res_size, "offb"))
 		return;
@@ -415,15 +438,27 @@ static void offb_init_fb(struct platform_device *parent, const char *name,
 		return;
 	}
 
+<<<<<<< HEAD
 	info = framebuffer_alloc(sizeof(*par), &parent->dev);
+=======
+	info = framebuffer_alloc(sizeof(u32) * 16, &parent->dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!info) {
 		release_mem_region(res_start, res_size);
 		return;
 	}
 	platform_set_drvdata(parent, info);
+<<<<<<< HEAD
 	par = info->par;
 	fix = &info->fix;
 	var = &info->var;
+=======
+
+	fix = &info->fix;
+	var = &info->var;
+	info->par = par;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (name) {
 		strcpy(fix->id, "OFfb ");
@@ -508,6 +543,7 @@ static void offb_init_fb(struct platform_device *parent, const char *name,
 	var->sync = 0;
 	var->vmode = FB_VMODE_NONINTERLACED;
 
+<<<<<<< HEAD
 	par->base = address;
 	par->size = fix->smem_len;
 
@@ -520,6 +556,22 @@ static void offb_init_fb(struct platform_device *parent, const char *name,
 
 	if (devm_aperture_acquire_for_platform_device(parent, par->base, par->size) < 0)
 		goto out_err;
+=======
+	/* set offb aperture size for generic probing */
+	info->apertures = alloc_apertures(1);
+	if (!info->apertures)
+		goto out_aper;
+	info->apertures->ranges[0].base = address;
+	info->apertures->ranges[0].size = fix->smem_len;
+
+	info->fbops = &offb_ops;
+	info->screen_base = ioremap(address, fix->smem_len);
+	info->pseudo_palette = (void *) (info + 1);
+	info->flags = FBINFO_DEFAULT | FBINFO_MISC_FIRMWARE | foreign_endian;
+
+	fb_alloc_cmap(&info->cmap, 256, 0);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (register_framebuffer(info) < 0)
 		goto out_err;
 
@@ -529,6 +581,10 @@ static void offb_init_fb(struct platform_device *parent, const char *name,
 out_err:
 	fb_dealloc_cmap(&info->cmap);
 	iounmap(info->screen_base);
+<<<<<<< HEAD
+=======
+out_aper:
+>>>>>>> b7ba80a49124 (Commit)
 	iounmap(par->cmap_adr);
 	par->cmap_adr = NULL;
 	framebuffer_release(info);
@@ -549,10 +605,17 @@ static void offb_init_nodriver(struct platform_device *parent, struct device_nod
 	int foreign_endian = 0;
 
 #ifdef __BIG_ENDIAN
+<<<<<<< HEAD
 	if (of_property_read_bool(dp, "little-endian"))
 		foreign_endian = FBINFO_FOREIGN_ENDIAN;
 #else
 	if (of_property_read_bool(dp, "big-endian"))
+=======
+	if (of_get_property(dp, "little-endian", NULL))
+		foreign_endian = FBINFO_FOREIGN_ENDIAN;
+#else
+	if (of_get_property(dp, "big-endian", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		foreign_endian = FBINFO_FOREIGN_ENDIAN;
 #endif
 
@@ -658,12 +721,21 @@ static void offb_init_nodriver(struct platform_device *parent, struct device_nod
 	}
 }
 
+<<<<<<< HEAD
 static void offb_remove(struct platform_device *pdev)
+=======
+static int offb_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = platform_get_drvdata(pdev);
 
 	if (info)
 		unregister_framebuffer(info);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int offb_probe_bootx_noscreen(struct platform_device *pdev)
@@ -678,7 +750,11 @@ static struct platform_driver offb_driver_bootx_noscreen = {
 		.name = "bootx-noscreen",
 	},
 	.probe = offb_probe_bootx_noscreen,
+<<<<<<< HEAD
 	.remove_new = offb_remove,
+=======
+	.remove = offb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int offb_probe_display(struct platform_device *pdev)
@@ -700,7 +776,11 @@ static struct platform_driver offb_driver_display = {
 		.of_match_table = offb_of_match_display,
 	},
 	.probe = offb_probe_display,
+<<<<<<< HEAD
 	.remove_new = offb_remove,
+=======
+	.remove = offb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init offb_init(void)

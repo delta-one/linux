@@ -2,6 +2,11 @@
 // ff-protocol-former.c - a part of driver for RME Fireface series
 //
 // Copyright (c) 2019 Takashi Sakamoto
+<<<<<<< HEAD
+=======
+//
+// Licensed under the terms of the GNU General Public License, version 2.
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/delay.h>
 
@@ -402,8 +407,13 @@ static void ff800_finish_session(struct snd_ff *ff)
 // address.
 // A write transaction to clear registered higher 4 bytes of destination address
 // has an effect to suppress asynchronous transaction from device.
+<<<<<<< HEAD
 static void ff800_handle_midi_msg(struct snd_ff *ff, unsigned int offset, const __le32 *buf,
 				  size_t length, u32 tstamp)
+=======
+static void ff800_handle_midi_msg(struct snd_ff *ff, unsigned int offset,
+				  __le32 *buf, size_t length)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 
@@ -418,7 +428,11 @@ static void ff800_handle_midi_msg(struct snd_ff *ff, unsigned int offset, const 
 }
 
 const struct snd_ff_protocol snd_ff_protocol_ff800 = {
+<<<<<<< HEAD
 	.handle_msg		= ff800_handle_midi_msg,
+=======
+	.handle_midi_msg	= ff800_handle_midi_msg,
+>>>>>>> b7ba80a49124 (Commit)
 	.fill_midi_msg		= former_fill_midi_msg,
 	.get_clock		= former_get_clock,
 	.switch_fetching_mode	= former_switch_fetching_mode,
@@ -534,6 +548,7 @@ static void ff400_finish_session(struct snd_ff *ff)
 			   FF400_ISOC_COMM_STOP, &reg, sizeof(reg), 0);
 }
 
+<<<<<<< HEAD
 static void parse_midi_msg(struct snd_ff *ff, u32 quad, unsigned int port)
 {
 	struct snd_rawmidi_substream *substream = READ_ONCE(ff->tx_midi_substreams[port]);
@@ -563,6 +578,8 @@ static bool ff400_has_msg(struct snd_ff *ff)
 	return (parser->push_pos != parser->pull_pos);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 // For Fireface 400, lower 4 bytes of destination address is configured by bit
 // flag in quadlet register (little endian) at 0x'0000'801'0051c. Drivers can
 // select one of 4 options:
@@ -582,6 +599,7 @@ static bool ff400_has_msg(struct snd_ff *ff)
 // input attenuation. This driver allocates destination address with '0000'0000
 // in its lower offset and expects userspace application to configure the
 // register for it.
+<<<<<<< HEAD
 
 // When the message is for signal level operation, the upper 4 bits in MSB expresses the pair of
 // stereo physical port.
@@ -649,10 +667,16 @@ static void ff400_handle_msg(struct snd_ff *ff, unsigned int offset, const __le3
 			     size_t length, u32 tstamp)
 {
 	bool need_hwdep_wake_up = false;
+=======
+static void ff400_handle_midi_msg(struct snd_ff *ff, unsigned int offset,
+				  __le32 *buf, size_t length)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	for (i = 0; i < length / 4; i++) {
 		u32 quad = le32_to_cpu(buf[i]);
+<<<<<<< HEAD
 
 		if (quad & FF400_MSG_FLAG_IS_SIGNAL_LEVEL) {
 			struct ff400_msg_parser *parser = ff->msg_parser;
@@ -723,6 +747,41 @@ const struct snd_ff_protocol snd_ff_protocol_ff400 = {
 	.has_msg		= ff400_has_msg,
 	.copy_msg_to_user	= ff400_copy_msg_to_user,
 	.handle_msg		= ff400_handle_msg,
+=======
+		u8 byte;
+		unsigned int index;
+		struct snd_rawmidi_substream *substream;
+
+		/* Message in first port. */
+		/*
+		 * This value may represent the index of this unit when the same
+		 * units are on the same IEEE 1394 bus. This driver doesn't use
+		 * it.
+		 */
+		index = (quad >> 8) & 0xff;
+		if (index > 0) {
+			substream = READ_ONCE(ff->tx_midi_substreams[0]);
+			if (substream != NULL) {
+				byte = quad & 0xff;
+				snd_rawmidi_receive(substream, &byte, 1);
+			}
+		}
+
+		/* Message in second port. */
+		index = (quad >> 24) & 0xff;
+		if (index > 0) {
+			substream = READ_ONCE(ff->tx_midi_substreams[1]);
+			if (substream != NULL) {
+				byte = (quad >> 16) & 0xff;
+				snd_rawmidi_receive(substream, &byte, 1);
+			}
+		}
+	}
+}
+
+const struct snd_ff_protocol snd_ff_protocol_ff400 = {
+	.handle_midi_msg	= ff400_handle_midi_msg,
+>>>>>>> b7ba80a49124 (Commit)
 	.fill_midi_msg		= former_fill_midi_msg,
 	.get_clock		= former_get_clock,
 	.switch_fetching_mode	= former_switch_fetching_mode,

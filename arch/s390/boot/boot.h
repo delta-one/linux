@@ -8,6 +8,7 @@
 
 #ifndef __ASSEMBLY__
 
+<<<<<<< HEAD
 #include <asm/physmem_info.h>
 
 struct machine_info {
@@ -60,12 +61,19 @@ bool is_ipl_block_dump(void);
 void store_ipl_parmblock(void);
 int read_ipl_report(void);
 void save_ipl_cert_comp_list(void);
+=======
+void startup_kernel(void);
+unsigned long detect_memory(void);
+bool is_ipl_block_dump(void);
+void store_ipl_parmblock(void);
+>>>>>>> b7ba80a49124 (Commit)
 void setup_boot_command_line(void);
 void parse_boot_command_line(void);
 void verify_facilities(void);
 void print_missing_facilities(void);
 void sclp_early_setup_buffer(void);
 void print_pgm_check_info(void);
+<<<<<<< HEAD
 unsigned long get_random_base(void);
 void setup_vmem(unsigned long asce_limit);
 void __printf(1, 2) decompressor_printk(const char *fmt, ...);
@@ -73,6 +81,10 @@ void print_stacktrace(unsigned long sp);
 void error(char *m);
 
 extern struct machine_info machine;
+=======
+unsigned long get_random_base(unsigned long safe_addr);
+void __printf(1, 2) decompressor_printk(const char *fmt, ...);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Symbols defined by linker scripts */
 extern const char kernel_version[];
@@ -84,6 +96,7 @@ extern char __boot_data_start[], __boot_data_end[];
 extern char __boot_data_preserved_start[], __boot_data_preserved_end[];
 extern char _decompressor_syms_start[], _decompressor_syms_end[];
 extern char _stack_start[], _stack_end[];
+<<<<<<< HEAD
 extern char _end[], _decompressor_end[];
 extern unsigned char _compressed_start[];
 extern unsigned char _compressed_end[];
@@ -97,5 +110,10 @@ static inline bool intersects(unsigned long addr0, unsigned long size0,
 {
 	return addr0 + size0 > addr1 && addr1 + size1 > addr0;
 }
+=======
+
+unsigned long read_ipl_report(unsigned long safe_offset);
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __ASSEMBLY__ */
 #endif /* BOOT_BOOT_H */

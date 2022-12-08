@@ -150,7 +150,11 @@ static int mxs_sgtl5000_probe(struct platform_device *pdev)
 
 	card->dev = &pdev->dev;
 
+<<<<<<< HEAD
 	if (of_property_present(np, "audio-routing")) {
+=======
+	if (of_find_property(np, "audio-routing", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		card->dapm_widgets = mxs_sgtl5000_dapm_widgets;
 		card->num_dapm_widgets = ARRAY_SIZE(mxs_sgtl5000_dapm_widgets);
 
@@ -169,9 +173,17 @@ static int mxs_sgtl5000_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void mxs_sgtl5000_remove(struct platform_device *pdev)
 {
 	mxs_saif_put_mclk(0);
+=======
+static int mxs_sgtl5000_remove(struct platform_device *pdev)
+{
+	mxs_saif_put_mclk(0);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id mxs_sgtl5000_dt_ids[] = {
@@ -186,7 +198,11 @@ static struct platform_driver mxs_sgtl5000_audio_driver = {
 		.of_match_table = mxs_sgtl5000_dt_ids,
 	},
 	.probe = mxs_sgtl5000_probe,
+<<<<<<< HEAD
 	.remove_new = mxs_sgtl5000_remove,
+=======
+	.remove = mxs_sgtl5000_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(mxs_sgtl5000_audio_driver);

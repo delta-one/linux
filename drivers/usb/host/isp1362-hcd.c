@@ -2170,7 +2170,11 @@ static void create_debug_file(struct isp1362_hcd *isp1362_hcd)
 
 static void remove_debug_file(struct isp1362_hcd *isp1362_hcd)
 {
+<<<<<<< HEAD
 	debugfs_lookup_and_remove("isp1362", usb_debug_root);
+=======
+	debugfs_remove(debugfs_lookup("isp1362", usb_debug_root));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*-------------------------------------------------------------------------*/

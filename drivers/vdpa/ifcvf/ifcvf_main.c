@@ -69,9 +69,16 @@ static void ifcvf_free_irq_vectors(void *data)
 	pci_free_irq_vectors(data);
 }
 
+<<<<<<< HEAD
 static void ifcvf_free_per_vq_irq(struct ifcvf_hw *vf)
 {
 	struct pci_dev *pdev = vf->pdev;
+=======
+static void ifcvf_free_per_vq_irq(struct ifcvf_adapter *adapter)
+{
+	struct pci_dev *pdev = adapter->pdev;
+	struct ifcvf_hw *vf = &adapter->vf;
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	for (i = 0; i < vf->nr_vring; i++) {
@@ -82,9 +89,16 @@ static void ifcvf_free_per_vq_irq(struct ifcvf_hw *vf)
 	}
 }
 
+<<<<<<< HEAD
 static void ifcvf_free_vqs_reused_irq(struct ifcvf_hw *vf)
 {
 	struct pci_dev *pdev = vf->pdev;
+=======
+static void ifcvf_free_vqs_reused_irq(struct ifcvf_adapter *adapter)
+{
+	struct pci_dev *pdev = adapter->pdev;
+	struct ifcvf_hw *vf = &adapter->vf;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (vf->vqs_reused_irq != -EINVAL) {
 		devm_free_irq(&pdev->dev, vf->vqs_reused_irq, vf);
@@ -93,6 +107,7 @@ static void ifcvf_free_vqs_reused_irq(struct ifcvf_hw *vf)
 
 }
 
+<<<<<<< HEAD
 static void ifcvf_free_vq_irq(struct ifcvf_hw *vf)
 {
 	if (vf->msix_vector_status == MSIX_VECTOR_PER_VQ_AND_CONFIG)
@@ -104,6 +119,22 @@ static void ifcvf_free_vq_irq(struct ifcvf_hw *vf)
 static void ifcvf_free_config_irq(struct ifcvf_hw *vf)
 {
 	struct pci_dev *pdev = vf->pdev;
+=======
+static void ifcvf_free_vq_irq(struct ifcvf_adapter *adapter)
+{
+	struct ifcvf_hw *vf = &adapter->vf;
+
+	if (vf->msix_vector_status == MSIX_VECTOR_PER_VQ_AND_CONFIG)
+		ifcvf_free_per_vq_irq(adapter);
+	else
+		ifcvf_free_vqs_reused_irq(adapter);
+}
+
+static void ifcvf_free_config_irq(struct ifcvf_adapter *adapter)
+{
+	struct pci_dev *pdev = adapter->pdev;
+	struct ifcvf_hw *vf = &adapter->vf;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (vf->config_irq == -EINVAL)
 		return;
@@ -118,12 +149,21 @@ static void ifcvf_free_config_irq(struct ifcvf_hw *vf)
 	}
 }
 
+<<<<<<< HEAD
 static void ifcvf_free_irq(struct ifcvf_hw *vf)
 {
 	struct pci_dev *pdev = vf->pdev;
 
 	ifcvf_free_vq_irq(vf);
 	ifcvf_free_config_irq(vf);
+=======
+static void ifcvf_free_irq(struct ifcvf_adapter *adapter)
+{
+	struct pci_dev *pdev = adapter->pdev;
+
+	ifcvf_free_vq_irq(adapter);
+	ifcvf_free_config_irq(adapter);
+>>>>>>> b7ba80a49124 (Commit)
 	ifcvf_free_irq_vectors(pdev);
 }
 
@@ -132,9 +172,16 @@ static void ifcvf_free_irq(struct ifcvf_hw *vf)
  * It returns the number of allocated vectors, negative
  * return value when fails.
  */
+<<<<<<< HEAD
 static int ifcvf_alloc_vectors(struct ifcvf_hw *vf)
 {
 	struct pci_dev *pdev = vf->pdev;
+=======
+static int ifcvf_alloc_vectors(struct ifcvf_adapter *adapter)
+{
+	struct pci_dev *pdev = adapter->pdev;
+	struct ifcvf_hw *vf = &adapter->vf;
+>>>>>>> b7ba80a49124 (Commit)
 	int max_intr, ret;
 
 	/* all queues and config interrupt  */
@@ -154,9 +201,16 @@ static int ifcvf_alloc_vectors(struct ifcvf_hw *vf)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int ifcvf_request_per_vq_irq(struct ifcvf_hw *vf)
 {
 	struct pci_dev *pdev = vf->pdev;
+=======
+static int ifcvf_request_per_vq_irq(struct ifcvf_adapter *adapter)
+{
+	struct pci_dev *pdev = adapter->pdev;
+	struct ifcvf_hw *vf = &adapter->vf;
+>>>>>>> b7ba80a49124 (Commit)
 	int i, vector, ret, irq;
 
 	vf->vqs_reused_irq = -EINVAL;
@@ -183,14 +237,25 @@ static int ifcvf_request_per_vq_irq(struct ifcvf_hw *vf)
 
 	return 0;
 err:
+<<<<<<< HEAD
 	ifcvf_free_irq(vf);
+=======
+	ifcvf_free_irq(adapter);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return -EFAULT;
 }
 
+<<<<<<< HEAD
 static int ifcvf_request_vqs_reused_irq(struct ifcvf_hw *vf)
 {
 	struct pci_dev *pdev = vf->pdev;
+=======
+static int ifcvf_request_vqs_reused_irq(struct ifcvf_adapter *adapter)
+{
+	struct pci_dev *pdev = adapter->pdev;
+	struct ifcvf_hw *vf = &adapter->vf;
+>>>>>>> b7ba80a49124 (Commit)
 	int i, vector, ret, irq;
 
 	vector = 0;
@@ -216,14 +281,25 @@ static int ifcvf_request_vqs_reused_irq(struct ifcvf_hw *vf)
 
 	return 0;
 err:
+<<<<<<< HEAD
 	ifcvf_free_irq(vf);
+=======
+	ifcvf_free_irq(adapter);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return -EFAULT;
 }
 
+<<<<<<< HEAD
 static int ifcvf_request_dev_irq(struct ifcvf_hw *vf)
 {
 	struct pci_dev *pdev = vf->pdev;
+=======
+static int ifcvf_request_dev_irq(struct ifcvf_adapter *adapter)
+{
+	struct pci_dev *pdev = adapter->pdev;
+	struct ifcvf_hw *vf = &adapter->vf;
+>>>>>>> b7ba80a49124 (Commit)
 	int i, vector, ret, irq;
 
 	vector = 0;
@@ -256,12 +332,17 @@ static int ifcvf_request_dev_irq(struct ifcvf_hw *vf)
 
 	return 0;
 err:
+<<<<<<< HEAD
 	ifcvf_free_irq(vf);
+=======
+	ifcvf_free_irq(adapter);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return -EFAULT;
 
 }
 
+<<<<<<< HEAD
 static int ifcvf_request_vq_irq(struct ifcvf_hw *vf)
 {
 	int ret;
@@ -270,13 +351,31 @@ static int ifcvf_request_vq_irq(struct ifcvf_hw *vf)
 		ret = ifcvf_request_per_vq_irq(vf);
 	else
 		ret = ifcvf_request_vqs_reused_irq(vf);
+=======
+static int ifcvf_request_vq_irq(struct ifcvf_adapter *adapter)
+{
+	struct ifcvf_hw *vf = &adapter->vf;
+	int ret;
+
+	if (vf->msix_vector_status == MSIX_VECTOR_PER_VQ_AND_CONFIG)
+		ret = ifcvf_request_per_vq_irq(adapter);
+	else
+		ret = ifcvf_request_vqs_reused_irq(adapter);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
 
+<<<<<<< HEAD
 static int ifcvf_request_config_irq(struct ifcvf_hw *vf)
 {
 	struct pci_dev *pdev = vf->pdev;
+=======
+static int ifcvf_request_config_irq(struct ifcvf_adapter *adapter)
+{
+	struct pci_dev *pdev = adapter->pdev;
+	struct ifcvf_hw *vf = &adapter->vf;
+>>>>>>> b7ba80a49124 (Commit)
 	int config_vector, ret;
 
 	if (vf->msix_vector_status == MSIX_VECTOR_PER_VQ_AND_CONFIG)
@@ -309,16 +408,29 @@ static int ifcvf_request_config_irq(struct ifcvf_hw *vf)
 
 	return 0;
 err:
+<<<<<<< HEAD
 	ifcvf_free_irq(vf);
+=======
+	ifcvf_free_irq(adapter);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return -EFAULT;
 }
 
+<<<<<<< HEAD
 static int ifcvf_request_irq(struct ifcvf_hw *vf)
 {
 	int nvectors, ret, max_intr;
 
 	nvectors = ifcvf_alloc_vectors(vf);
+=======
+static int ifcvf_request_irq(struct ifcvf_adapter *adapter)
+{
+	struct ifcvf_hw *vf = &adapter->vf;
+	int nvectors, ret, max_intr;
+
+	nvectors = ifcvf_alloc_vectors(adapter);
+>>>>>>> b7ba80a49124 (Commit)
 	if (nvectors <= 0)
 		return -EFAULT;
 
@@ -329,16 +441,28 @@ static int ifcvf_request_irq(struct ifcvf_hw *vf)
 
 	if (nvectors == 1) {
 		vf->msix_vector_status = MSIX_VECTOR_DEV_SHARED;
+<<<<<<< HEAD
 		ret = ifcvf_request_dev_irq(vf);
+=======
+		ret = ifcvf_request_dev_irq(adapter);
+>>>>>>> b7ba80a49124 (Commit)
 
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = ifcvf_request_vq_irq(vf);
 	if (ret)
 		return ret;
 
 	ret = ifcvf_request_config_irq(vf);
+=======
+	ret = ifcvf_request_vq_irq(adapter);
+	if (ret)
+		return ret;
+
+	ret = ifcvf_request_config_irq(adapter);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ret)
 		return ret;
@@ -346,9 +470,15 @@ static int ifcvf_request_irq(struct ifcvf_hw *vf)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ifcvf_start_datapath(struct ifcvf_adapter *adapter)
 {
 	struct ifcvf_hw *vf = adapter->vf;
+=======
+static int ifcvf_start_datapath(void *private)
+{
+	struct ifcvf_hw *vf = ifcvf_private_to_vf(private);
+>>>>>>> b7ba80a49124 (Commit)
 	u8 status;
 	int ret;
 
@@ -362,9 +492,15 @@ static int ifcvf_start_datapath(struct ifcvf_adapter *adapter)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int ifcvf_stop_datapath(struct ifcvf_adapter *adapter)
 {
 	struct ifcvf_hw *vf = adapter->vf;
+=======
+static int ifcvf_stop_datapath(void *private)
+{
+	struct ifcvf_hw *vf = ifcvf_private_to_vf(private);
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	for (i = 0; i < vf->nr_vring; i++)
@@ -377,7 +513,11 @@ static int ifcvf_stop_datapath(struct ifcvf_adapter *adapter)
 
 static void ifcvf_reset_vring(struct ifcvf_adapter *adapter)
 {
+<<<<<<< HEAD
 	struct ifcvf_hw *vf = adapter->vf;
+=======
+	struct ifcvf_hw *vf = ifcvf_private_to_vf(adapter);
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	for (i = 0; i < vf->nr_vring; i++) {
@@ -402,7 +542,11 @@ static struct ifcvf_hw *vdpa_to_vf(struct vdpa_device *vdpa_dev)
 {
 	struct ifcvf_adapter *adapter = vdpa_to_adapter(vdpa_dev);
 
+<<<<<<< HEAD
 	return adapter->vf;
+=======
+	return &adapter->vf;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static u64 ifcvf_vdpa_get_device_features(struct vdpa_device *vdpa_dev)
@@ -467,7 +611,11 @@ static void ifcvf_vdpa_set_status(struct vdpa_device *vdpa_dev, u8 status)
 
 	if ((status & VIRTIO_CONFIG_S_DRIVER_OK) &&
 	    !(status_old & VIRTIO_CONFIG_S_DRIVER_OK)) {
+<<<<<<< HEAD
 		ret = ifcvf_request_irq(vf);
+=======
+		ret = ifcvf_request_irq(adapter);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret) {
 			status = ifcvf_get_status(vf);
 			status |= VIRTIO_CONFIG_S_FAILED;
@@ -499,7 +647,11 @@ static int ifcvf_vdpa_reset(struct vdpa_device *vdpa_dev)
 
 	if (status_old & VIRTIO_CONFIG_S_DRIVER_OK) {
 		ifcvf_stop_datapath(adapter);
+<<<<<<< HEAD
 		ifcvf_free_irq(vf);
+=======
+		ifcvf_free_irq(adapter);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ifcvf_reset_vring(adapter);
@@ -743,6 +895,7 @@ static int ifcvf_vdpa_dev_add(struct vdpa_mgmt_dev *mdev, const char *name,
 	struct vdpa_device *vdpa_dev;
 	struct pci_dev *pdev;
 	struct ifcvf_hw *vf;
+<<<<<<< HEAD
 	u64 device_features;
 	int ret;
 
@@ -774,6 +927,19 @@ static int ifcvf_vdpa_dev_add(struct vdpa_mgmt_dev *mdev, const char *name,
 	}
 	vf->dev_features = device_features;
 
+=======
+	int ret;
+
+	ifcvf_mgmt_dev = container_of(mdev, struct ifcvf_vdpa_mgmt_dev, mdev);
+	if (!ifcvf_mgmt_dev->adapter)
+		return -EOPNOTSUPP;
+
+	adapter = ifcvf_mgmt_dev->adapter;
+	vf = &adapter->vf;
+	pdev = adapter->pdev;
+	vdpa_dev = &adapter->vdpa;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (name)
 		ret = dev_set_name(&vdpa_dev->dev, "%s", name);
 	else
@@ -789,6 +955,10 @@ static int ifcvf_vdpa_dev_add(struct vdpa_mgmt_dev *mdev, const char *name,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static void ifcvf_vdpa_dev_del(struct vdpa_mgmt_dev *mdev, struct vdpa_device *dev)
 {
 	struct ifcvf_vdpa_mgmt_dev *ifcvf_mgmt_dev;
@@ -807,6 +977,10 @@ static int ifcvf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 {
 	struct ifcvf_vdpa_mgmt_dev *ifcvf_mgmt_dev;
 	struct device *dev = &pdev->dev;
+<<<<<<< HEAD
+=======
+	struct ifcvf_adapter *adapter;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ifcvf_hw *vf;
 	u32 dev_type;
 	int ret, i;
@@ -837,6 +1011,7 @@ static int ifcvf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	}
 
 	pci_set_master(pdev);
+<<<<<<< HEAD
 	ifcvf_mgmt_dev = kzalloc(sizeof(struct ifcvf_vdpa_mgmt_dev), GFP_KERNEL);
 	if (!ifcvf_mgmt_dev) {
 		IFCVF_ERR(pdev, "Failed to alloc memory for the vDPA management device\n");
@@ -847,11 +1022,31 @@ static int ifcvf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	vf->dev_type = get_dev_type(pdev);
 	vf->base = pcim_iomap_table(pdev);
 	vf->pdev = pdev;
+=======
+
+	adapter = vdpa_alloc_device(struct ifcvf_adapter, vdpa,
+				    dev, &ifc_vdpa_ops, 1, 1, NULL, false);
+	if (IS_ERR(adapter)) {
+		IFCVF_ERR(pdev, "Failed to allocate vDPA structure");
+		return PTR_ERR(adapter);
+	}
+
+	vf = &adapter->vf;
+	vf->dev_type = get_dev_type(pdev);
+	vf->base = pcim_iomap_table(pdev);
+
+	adapter->pdev = pdev;
+	adapter->vdpa.dma_dev = &pdev->dev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = ifcvf_init_hw(vf, pdev);
 	if (ret) {
 		IFCVF_ERR(pdev, "Failed to init IFCVF hw\n");
+<<<<<<< HEAD
 		goto err;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (i = 0; i < vf->nr_vring; i++)
@@ -860,6 +1055,19 @@ static int ifcvf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	vf->hw_features = ifcvf_get_hw_features(vf);
 	vf->config_size = ifcvf_get_config_size(vf);
 
+<<<<<<< HEAD
+=======
+	ifcvf_mgmt_dev = kzalloc(sizeof(struct ifcvf_vdpa_mgmt_dev), GFP_KERNEL);
+	if (!ifcvf_mgmt_dev) {
+		IFCVF_ERR(pdev, "Failed to alloc memory for the vDPA management device\n");
+		return -ENOMEM;
+	}
+
+	ifcvf_mgmt_dev->mdev.ops = &ifcvf_vdpa_mgmt_dev_ops;
+	ifcvf_mgmt_dev->mdev.device = dev;
+	ifcvf_mgmt_dev->adapter = adapter;
+
+>>>>>>> b7ba80a49124 (Commit)
 	dev_type = get_dev_type(pdev);
 	switch (dev_type) {
 	case VIRTIO_ID_NET:
@@ -874,11 +1082,19 @@ static int ifcvf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 		goto err;
 	}
 
+<<<<<<< HEAD
 	ifcvf_mgmt_dev->mdev.ops = &ifcvf_vdpa_mgmt_dev_ops;
 	ifcvf_mgmt_dev->mdev.device = dev;
 	ifcvf_mgmt_dev->mdev.max_supported_vqs = vf->nr_vring;
 	ifcvf_mgmt_dev->mdev.supported_features = vf->hw_features;
 	ifcvf_mgmt_dev->mdev.config_attr_mask = (1 << VDPA_ATTR_DEV_FEATURES);
+=======
+	ifcvf_mgmt_dev->mdev.max_supported_vqs = vf->nr_vring;
+	ifcvf_mgmt_dev->mdev.supported_features = vf->hw_features;
+
+	adapter->vdpa.mdev = &ifcvf_mgmt_dev->mdev;
+
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = vdpa_mgmtdev_register(&ifcvf_mgmt_dev->mdev);
 	if (ret) {

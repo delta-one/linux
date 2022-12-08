@@ -7,7 +7,11 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
 title: NUVOTON NCT3018Y Real Time Clock
 
 allOf:
+<<<<<<< HEAD
   - $ref: rtc.yaml#
+=======
+  - $ref: "rtc.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Medad CChien <ctcchien@nuvoton.com>

@@ -252,6 +252,15 @@ static enum power_supply_property ab8500_chargalg_props[] = {
 	POWER_SUPPLY_PROP_HEALTH,
 };
 
+<<<<<<< HEAD
+=======
+struct ab8500_chargalg_sysfs_entry {
+	struct attribute attr;
+	ssize_t (*show)(struct ab8500_chargalg *di, char *buf);
+	ssize_t (*store)(struct ab8500_chargalg *di, const char *buf, size_t length);
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * ab8500_chargalg_safety_timer_expired() - Expiration of the safety timer
  * @timer:     pointer to the hrtimer structure

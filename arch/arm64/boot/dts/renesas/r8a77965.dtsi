@@ -75,11 +75,19 @@
 			opp-hz = /bits/ 64 <1600000000>;
 			opp-microvolt = <900000>;
 			clock-latency-ns = <300000>;
+<<<<<<< HEAD
+=======
+			turbo-mode;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 		opp-1700000000 {
 			opp-hz = /bits/ 64 <1700000000>;
 			opp-microvolt = <900000>;
 			clock-latency-ns = <300000>;
+<<<<<<< HEAD
+=======
+			turbo-mode;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 		opp-1800000000 {
 			opp-hz = /bits/ 64 <1800000000>;
@@ -1731,7 +1739,11 @@
 
 		rcar_sound: sound@ec500000 {
 			/*
+<<<<<<< HEAD
 			 * #sound-dai-cells is required if simple-card
+=======
+			 * #sound-dai-cells is required
+>>>>>>> b7ba80a49124 (Commit)
 			 *
 			 * Single DAI : #sound-dai-cells = <0>;	<&rcar_sound>;
 			 * Multi  DAI : #sound-dai-cells = <1>;	<&rcar_sound N>;

@@ -137,7 +137,11 @@ macro :c:func:`in_softirq()` (``include/linux/preempt.h``).
 .. warning::
 
     State attenti che questa macro ritornerà un falso positivo
+<<<<<<< HEAD
     se :ref:`bottom half lock <it_local_bh_disable>` è bloccato.
+=======
+    se :ref:`botton half lock <it_local_bh_disable>` è bloccato.
+>>>>>>> b7ba80a49124 (Commit)
 
 Alcune regole basilari
 ======================

@@ -90,7 +90,11 @@ static int sclp_ftp_et7(const struct hmcdrv_ftp_cmdspec *ftp)
 	struct completion completion;
 	struct sclp_diag_sccb *sccb;
 	struct sclp_req *req;
+<<<<<<< HEAD
 	ssize_t len;
+=======
+	size_t len;
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	req = kzalloc(sizeof(*req), GFP_KERNEL);
@@ -117,9 +121,15 @@ static int sclp_ftp_et7(const struct hmcdrv_ftp_cmdspec *ftp)
 	sccb->evbuf.mdd.ftp.length = ftp->len;
 	sccb->evbuf.mdd.ftp.bufaddr = virt_to_phys(ftp->buf);
 
+<<<<<<< HEAD
 	len = strscpy(sccb->evbuf.mdd.ftp.fident, ftp->fname,
 		      HMCDRV_FTP_FIDENT_MAX);
 	if (len < 0) {
+=======
+	len = strlcpy(sccb->evbuf.mdd.ftp.fident, ftp->fname,
+		      HMCDRV_FTP_FIDENT_MAX);
+	if (len >= HMCDRV_FTP_FIDENT_MAX) {
+>>>>>>> b7ba80a49124 (Commit)
 		rc = -EINVAL;
 		goto out_free;
 	}

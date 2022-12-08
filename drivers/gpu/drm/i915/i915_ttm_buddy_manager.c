@@ -5,8 +5,13 @@
 
 #include <linux/slab.h>
 
+<<<<<<< HEAD
 #include <drm/ttm/ttm_placement.h>
 #include <drm/ttm/ttm_bo.h>
+=======
+#include <drm/ttm/ttm_bo_driver.h>
+#include <drm/ttm/ttm_placement.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <drm/drm_buddy.h>
 
@@ -62,8 +67,13 @@ static int i915_ttm_buddy_man_alloc(struct ttm_resource_manager *man,
 	if (place->fpfn || lpfn != man->size)
 		bman_res->flags |= DRM_BUDDY_RANGE_ALLOCATION;
 
+<<<<<<< HEAD
 	GEM_BUG_ON(!bman_res->base.size);
 	size = bman_res->base.size;
+=======
+	GEM_BUG_ON(!bman_res->base.num_pages);
+	size = bman_res->base.num_pages << PAGE_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	min_page_size = bman->default_page_size;
 	if (bo->page_alignment)
@@ -72,7 +82,11 @@ static int i915_ttm_buddy_man_alloc(struct ttm_resource_manager *man,
 	GEM_BUG_ON(min_page_size < mm->chunk_size);
 	GEM_BUG_ON(!IS_ALIGNED(size, min_page_size));
 
+<<<<<<< HEAD
 	if (place->fpfn + PFN_UP(bman_res->base.size) != place->lpfn &&
+=======
+	if (place->fpfn + bman_res->base.num_pages != place->lpfn &&
+>>>>>>> b7ba80a49124 (Commit)
 	    place->flags & TTM_PL_FLAG_CONTIGUOUS) {
 		unsigned long pages;
 
@@ -108,7 +122,11 @@ static int i915_ttm_buddy_man_alloc(struct ttm_resource_manager *man,
 		goto err_free_blocks;
 
 	if (place->flags & TTM_PL_FLAG_CONTIGUOUS) {
+<<<<<<< HEAD
 		u64 original_size = (u64)bman_res->base.size;
+=======
+		u64 original_size = (u64)bman_res->base.num_pages << PAGE_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 
 		drm_buddy_block_trim(mm,
 				     original_size,
@@ -116,7 +134,11 @@ static int i915_ttm_buddy_man_alloc(struct ttm_resource_manager *man,
 	}
 
 	if (lpfn <= bman->visible_size) {
+<<<<<<< HEAD
 		bman_res->used_visible_size = PFN_UP(bman_res->base.size);
+=======
+		bman_res->used_visible_size = bman_res->base.num_pages;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		struct drm_buddy_block *block;
 
@@ -139,6 +161,16 @@ static int i915_ttm_buddy_man_alloc(struct ttm_resource_manager *man,
 
 	mutex_unlock(&bman->lock);
 
+<<<<<<< HEAD
+=======
+	if (place->lpfn - place->fpfn == n_pages)
+		bman_res->base.start = place->fpfn;
+	else if (lpfn <= bman->visible_size)
+		bman_res->base.start = 0;
+	else
+		bman_res->base.start = bman->visible_size;
+
+>>>>>>> b7ba80a49124 (Commit)
 	*res = &bman_res->base;
 	return 0;
 
@@ -221,7 +253,11 @@ static bool i915_ttm_buddy_man_compatible(struct ttm_resource_manager *man,
 
 	if (!place->fpfn &&
 	    place->lpfn == i915_ttm_buddy_man_visible_size(man))
+<<<<<<< HEAD
 		return bman_res->used_visible_size == PFN_UP(res->size);
+=======
+		return bman_res->used_visible_size == res->num_pages;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Check each drm buddy block individually */
 	list_for_each_entry(block, &bman_res->blocks, link) {

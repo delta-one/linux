@@ -45,7 +45,11 @@ unsigned int udf_get_last_session(struct super_block *sb)
 	return 0;
 }
 
+<<<<<<< HEAD
 udf_pblk_t udf_get_last_block(struct super_block *sb)
+=======
+unsigned long udf_get_last_block(struct super_block *sb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cdrom_device_info *cdi = disk_to_cdi(sb->s_bdev->bd_disk);
 	unsigned long lblock = 0;
@@ -54,11 +58,16 @@ udf_pblk_t udf_get_last_block(struct super_block *sb)
 	 * The cdrom layer call failed or returned obviously bogus value?
 	 * Try using the device size...
 	 */
+<<<<<<< HEAD
 	if (!cdi || cdrom_get_last_written(cdi, &lblock) || lblock == 0) {
 		if (sb_bdev_nr_blocks(sb) > ~(udf_pblk_t)0)
 			return 0;
 		lblock = sb_bdev_nr_blocks(sb);
 	}
+=======
+	if (!cdi || cdrom_get_last_written(cdi, &lblock) || lblock == 0)
+		lblock = sb_bdev_nr_blocks(sb);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (lblock)
 		return lblock - 1;

@@ -366,7 +366,11 @@
 #define CDC_RX_DSD1_CFG2			(0x0F8C)
 #define RX_MAX_OFFSET				(0x0F8C)
 
+<<<<<<< HEAD
 #define MCLK_FREQ		19200000
+=======
+#define MCLK_FREQ		9600000
+>>>>>>> b7ba80a49124 (Commit)
 
 #define RX_MACRO_RATES (SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000 |\
 			SNDRV_PCM_RATE_32000 | SNDRV_PCM_RATE_48000 |\
@@ -596,6 +600,10 @@ struct rx_macro {
 	int rx_port_value[RX_MACRO_PORTS_MAX];
 	u16 prim_int_users[INTERP_MAX];
 	int rx_mclk_users;
+<<<<<<< HEAD
+=======
+	bool reset_swr;
+>>>>>>> b7ba80a49124 (Commit)
 	int clsh_users;
 	int rx_mclk_cnt;
 	bool is_ear_mode_on;
@@ -2296,8 +2304,15 @@ static int rx_macro_mux_put(struct snd_kcontrol *kcontrol,
 
 	aif_rst = rx->rx_port_value[widget->shift];
 	if (!rx_port_value) {
+<<<<<<< HEAD
 		if (aif_rst == 0)
 			return 0;
+=======
+		if (aif_rst == 0) {
+			dev_err(component->dev, "%s:AIF reset already\n", __func__);
+			return 0;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		if (aif_rst > RX_MACRO_AIF4_PB) {
 			dev_err(component->dev, "%s: Invalid AIF reset\n", __func__);
 			return 0;
@@ -3439,10 +3454,25 @@ static int swclk_gate_enable(struct clk_hw *hw)
 	}
 
 	rx_macro_mclk_enable(rx, true);
+<<<<<<< HEAD
+=======
+	if (rx->reset_swr)
+		regmap_update_bits(rx->regmap, CDC_RX_CLK_RST_CTRL_SWR_CONTROL,
+				   CDC_RX_SWR_RESET_MASK,
+				   CDC_RX_SWR_RESET);
+>>>>>>> b7ba80a49124 (Commit)
 
 	regmap_update_bits(rx->regmap, CDC_RX_CLK_RST_CTRL_SWR_CONTROL,
 			   CDC_RX_SWR_CLK_EN_MASK, 1);
 
+<<<<<<< HEAD
+=======
+	if (rx->reset_swr)
+		regmap_update_bits(rx->regmap, CDC_RX_CLK_RST_CTRL_SWR_CONTROL,
+				   CDC_RX_SWR_RESET_MASK, 0);
+	rx->reset_swr = false;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -3567,11 +3597,19 @@ static int rx_macro_probe(struct platform_device *pdev)
 
 	dev_set_drvdata(dev, rx);
 
+<<<<<<< HEAD
+=======
+	rx->reset_swr = true;
+>>>>>>> b7ba80a49124 (Commit)
 	rx->dev = dev;
 
 	/* set MCLK and NPL rates */
 	clk_set_rate(rx->mclk, MCLK_FREQ);
+<<<<<<< HEAD
 	clk_set_rate(rx->npl, MCLK_FREQ);
+=======
+	clk_set_rate(rx->npl, 2 * MCLK_FREQ);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = clk_prepare_enable(rx->macro);
 	if (ret)
@@ -3593,6 +3631,7 @@ static int rx_macro_probe(struct platform_device *pdev)
 	if (ret)
 		goto err_fsgen;
 
+<<<<<<< HEAD
 	/* reset swr block  */
 	regmap_update_bits(rx->regmap, CDC_RX_CLK_RST_CTRL_SWR_CONTROL,
 			   CDC_RX_SWR_RESET_MASK,
@@ -3603,6 +3642,11 @@ static int rx_macro_probe(struct platform_device *pdev)
 
 	regmap_update_bits(rx->regmap, CDC_RX_CLK_RST_CTRL_SWR_CONTROL,
 			   CDC_RX_SWR_RESET_MASK, 0);
+=======
+	ret = rx_macro_register_mclk_output(rx);
+	if (ret)
+		goto err_clkout;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = devm_snd_soc_register_component(dev, &rx_macro_component_drv,
 					      rx_macro_dai,
@@ -3617,10 +3661,13 @@ static int rx_macro_probe(struct platform_device *pdev)
 	pm_runtime_set_active(dev);
 	pm_runtime_enable(dev);
 
+<<<<<<< HEAD
 	ret = rx_macro_register_mclk_output(rx);
 	if (ret)
 		goto err_clkout;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_clkout:
@@ -3639,7 +3686,11 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void rx_macro_remove(struct platform_device *pdev)
+=======
+static int rx_macro_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rx_macro *rx = dev_get_drvdata(&pdev->dev);
 
@@ -3650,13 +3701,21 @@ static void rx_macro_remove(struct platform_device *pdev)
 	clk_disable_unprepare(rx->dcodec);
 
 	lpass_macro_pds_exit(rx->pds);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id rx_macro_dt_match[] = {
 	{ .compatible = "qcom,sc7280-lpass-rx-macro" },
 	{ .compatible = "qcom,sm8250-lpass-rx-macro" },
+<<<<<<< HEAD
 	{ .compatible = "qcom,sm8450-lpass-rx-macro" },
 	{ .compatible = "qcom,sc8280xp-lpass-rx-macro" },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(of, rx_macro_dt_match);
@@ -3668,9 +3727,15 @@ static int __maybe_unused rx_macro_runtime_suspend(struct device *dev)
 	regcache_cache_only(rx->regmap, true);
 	regcache_mark_dirty(rx->regmap);
 
+<<<<<<< HEAD
 	clk_disable_unprepare(rx->fsgen);
 	clk_disable_unprepare(rx->npl);
 	clk_disable_unprepare(rx->mclk);
+=======
+	clk_disable_unprepare(rx->mclk);
+	clk_disable_unprepare(rx->npl);
+	clk_disable_unprepare(rx->fsgen);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -3699,6 +3764,10 @@ static int __maybe_unused rx_macro_runtime_resume(struct device *dev)
 	}
 	regcache_cache_only(rx->regmap, false);
 	regcache_sync(rx->regmap);
+<<<<<<< HEAD
+=======
+	rx->reset_swr = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 err_fsgen:
@@ -3721,7 +3790,11 @@ static struct platform_driver rx_macro_driver = {
 		.pm = &rx_macro_pm_ops,
 	},
 	.probe = rx_macro_probe,
+<<<<<<< HEAD
 	.remove_new = rx_macro_remove,
+=======
+	.remove = rx_macro_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(rx_macro_driver);

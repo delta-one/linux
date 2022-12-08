@@ -97,6 +97,7 @@ enum nft_verdicts {
  * @NFT_MSG_NEWFLOWTABLE: add new flow table (enum nft_flowtable_attributes)
  * @NFT_MSG_GETFLOWTABLE: get flow table (enum nft_flowtable_attributes)
  * @NFT_MSG_DELFLOWTABLE: delete flow table (enum nft_flowtable_attributes)
+<<<<<<< HEAD
  * @NFT_MSG_GETRULE_RESET: get rules and reset stateful expressions (enum nft_obj_attributes)
  * @NFT_MSG_DESTROYTABLE: destroy a table (enum nft_table_attributes)
  * @NFT_MSG_DESTROYCHAIN: destroy a chain (enum nft_chain_attributes)
@@ -105,6 +106,8 @@ enum nft_verdicts {
  * @NFT_MSG_DESTROYSETELEM: destroy a set element (enum nft_set_elem_attributes)
  * @NFT_MSG_DESTROYOBJ: destroy a stateful object (enum nft_object_attributes)
  * @NFT_MSG_DESTROYFLOWTABLE: destroy flow table (enum nft_flowtable_attributes)
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum nf_tables_msg_types {
 	NFT_MSG_NEWTABLE,
@@ -132,6 +135,7 @@ enum nf_tables_msg_types {
 	NFT_MSG_NEWFLOWTABLE,
 	NFT_MSG_GETFLOWTABLE,
 	NFT_MSG_DELFLOWTABLE,
+<<<<<<< HEAD
 	NFT_MSG_GETRULE_RESET,
 	NFT_MSG_DESTROYTABLE,
 	NFT_MSG_DESTROYCHAIN,
@@ -140,6 +144,8 @@ enum nf_tables_msg_types {
 	NFT_MSG_DESTROYSETELEM,
 	NFT_MSG_DESTROYOBJ,
 	NFT_MSG_DESTROYFLOWTABLE,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	NFT_MSG_MAX,
 };
 
@@ -776,7 +782,10 @@ enum nft_payload_bases {
 	NFT_PAYLOAD_NETWORK_HEADER,
 	NFT_PAYLOAD_TRANSPORT_HEADER,
 	NFT_PAYLOAD_INNER_HEADER,
+<<<<<<< HEAD
 	NFT_PAYLOAD_TUN_HEADER,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -796,6 +805,7 @@ enum nft_payload_csum_flags {
 	NFT_PAYLOAD_L4CSUM_PSEUDOHDR = (1 << 0),
 };
 
+<<<<<<< HEAD
 enum nft_inner_type {
 	NFT_INNER_UNSPEC	= 0,
 	NFT_INNER_VXLAN,
@@ -822,6 +832,8 @@ enum nft_inner_attributes {
 };
 #define NFTA_INNER_MAX	(__NFTA_INNER_MAX - 1)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * enum nft_payload_attributes - nf_tables payload expression netlink attributes
  *
@@ -931,7 +943,10 @@ enum nft_exthdr_attributes {
  * @NFT_META_TIME_HOUR: hour of day (in seconds)
  * @NFT_META_SDIF: slave device interface index
  * @NFT_META_SDIFNAME: slave device interface name
+<<<<<<< HEAD
  * @NFT_META_BRI_BROUTE: packet br_netfilter_broute bit
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum nft_meta_keys {
 	NFT_META_LEN,
@@ -970,7 +985,10 @@ enum nft_meta_keys {
 	NFT_META_TIME_HOUR,
 	NFT_META_SDIF,
 	NFT_META_SDIFNAME,
+<<<<<<< HEAD
 	NFT_META_BRI_BROUTE,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__NFT_META_IIFTYPE,
 };
 

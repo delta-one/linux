@@ -2,6 +2,7 @@
 #ifndef _LIB_UBSAN_H
 #define _LIB_UBSAN_H
 
+<<<<<<< HEAD
 /*
  * ABI defined by Clang's UBSAN enum SanitizerHandler:
  * https://github.com/llvm/llvm-project/blob/release/16.x/clang/lib/CodeGen/CodeGenFunction.h#L113
@@ -34,6 +35,8 @@ enum ubsan_checks {
 	ubsan_vla_bound_not_positive,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum {
 	type_kind_int = 0,
 	type_kind_float = 1,

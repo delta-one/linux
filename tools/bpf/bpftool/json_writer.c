@@ -80,6 +80,12 @@ static void jsonw_puts(json_writer_t *self, const char *str)
 		case '"':
 			fputs("\\\"", self->out);
 			break;
+<<<<<<< HEAD
+=======
+		case '\'':
+			fputs("\\\'", self->out);
+			break;
+>>>>>>> b7ba80a49124 (Commit)
 		default:
 			putc(*str, self->out);
 		}

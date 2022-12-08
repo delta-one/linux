@@ -90,6 +90,16 @@ config LCD_PLATFORM
 	  This driver provides a platform-device registered LCD power
 	  control interface.
 
+<<<<<<< HEAD
+=======
+config LCD_TOSA
+	tristate "Sharp SL-6000 LCD Driver"
+	depends on I2C && SPI && MACH_TOSA
+	help
+	  If you have an Sharp SL-6000 Zaurus say Y to enable a driver
+	  for its LCD.
+
+>>>>>>> b7ba80a49124 (Commit)
 config LCD_HP700
 	tristate "HP Jornada 700 series LCD Driver"
 	depends on SA1100_JORNADA720_SSP && !PREEMPTION
@@ -183,6 +193,7 @@ config BACKLIGHT_KTD253
 	  which is a 1-wire GPIO-controlled backlight found in some mobile
 	  phones.
 
+<<<<<<< HEAD
 config BACKLIGHT_KTZ8866
 	tristate "Backlight Driver for Kinetic KTZ8866"
 	depends on I2C
@@ -191,6 +202,8 @@ config BACKLIGHT_KTZ8866
 		Say Y to enable the backlight driver for the Kinetic KTZ8866
 		found in Xiaomi Mi Pad 5 series.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config BACKLIGHT_LM3533
 	tristate "Backlight Driver for LM3533"
 	depends on MFD_LM3533
@@ -285,11 +298,24 @@ config BACKLIGHT_MT6370
 config BACKLIGHT_APPLE
 	tristate "Apple Backlight Driver"
 	depends on X86 && ACPI
+<<<<<<< HEAD
 	depends on ACPI_VIDEO=n || ACPI_VIDEO
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  If you have an Intel-based Apple say Y to enable a driver for its
 	  backlight.
 
+<<<<<<< HEAD
+=======
+config BACKLIGHT_TOSA
+	tristate "Sharp SL-6000 Backlight Driver"
+	depends on I2C && MACH_TOSA && LCD_TOSA
+	help
+	  If you have an Sharp SL-6000 Zaurus say Y to enable a driver
+	  for its backlight
+
+>>>>>>> b7ba80a49124 (Commit)
 config BACKLIGHT_QCOM_WLED
 	tristate "Qualcomm PMIC WLED Driver"
 	select REGMAP

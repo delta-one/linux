@@ -403,6 +403,7 @@ int trace_seq_hex_dump(struct trace_seq *s, const char *prefix_str,
 	return 1;
 }
 EXPORT_SYMBOL(trace_seq_hex_dump);
+<<<<<<< HEAD
 
 /*
  * trace_seq_acquire - acquire seq buffer with size len
@@ -426,3 +427,5 @@ char *trace_seq_acquire(struct trace_seq *s, unsigned int len)
 	return ret;
 }
 EXPORT_SYMBOL(trace_seq_acquire);
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -84,7 +84,11 @@ static struct shash_alg sm3_alg = {
 	.base.cra_driver_name	= "sm3-ce",
 	.base.cra_blocksize	= SM3_BLOCK_SIZE,
 	.base.cra_module	= THIS_MODULE,
+<<<<<<< HEAD
 	.base.cra_priority	= 400,
+=======
+	.base.cra_priority	= 200,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init sm3_ce_mod_init(void)

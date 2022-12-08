@@ -486,7 +486,11 @@ xchk_da_btree(
 		return 0;
 
 	/* Set up initial da state. */
+<<<<<<< HEAD
 	ds = kzalloc(sizeof(struct xchk_da_btree), XCHK_GFP_FLAGS);
+=======
+	ds = kmem_zalloc(sizeof(struct xchk_da_btree), KM_NOFS | KM_MAYFAIL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ds)
 		return -ENOMEM;
 	ds->dargs.dp = sc->ip;
@@ -591,6 +595,10 @@ out:
 
 out_state:
 	xfs_da_state_free(ds->state);
+<<<<<<< HEAD
 	kfree(ds);
+=======
+	kmem_free(ds);
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }

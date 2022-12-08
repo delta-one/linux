@@ -15,7 +15,10 @@
 #include <linux/gfp.h>
 #include <linux/hwmon.h>
 #include <linux/idr.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/list.h>
 #include <linux/module.h>
 #include <linux/pci.h>
@@ -138,6 +141,10 @@ static void hwmon_dev_release(struct device *dev)
 
 static struct class hwmon_class = {
 	.name = "hwmon",
+<<<<<<< HEAD
+=======
+	.owner = THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.dev_groups = hwmon_dev_attr_groups,
 	.dev_release = hwmon_dev_release,
 };
@@ -153,7 +160,11 @@ static DEFINE_IDA(hwmon_ida);
 #ifdef CONFIG_THERMAL_OF
 static int hwmon_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	struct hwmon_thermal_data *tdata = thermal_zone_device_priv(tz);
+=======
+	struct hwmon_thermal_data *tdata = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct hwmon_device *hwdev = to_hwmon_device(tdata->dev);
 	int ret;
 	long t;
@@ -170,7 +181,11 @@ static int hwmon_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
 
 static int hwmon_thermal_set_trips(struct thermal_zone_device *tz, int low, int high)
 {
+<<<<<<< HEAD
 	struct hwmon_thermal_data *tdata = thermal_zone_device_priv(tz);
+=======
+	struct hwmon_thermal_data *tdata = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	struct hwmon_device *hwdev = to_hwmon_device(tdata->dev);
 	const struct hwmon_chip_info *chip = hwdev->chip;
 	const struct hwmon_channel_info **info = chip->info;
@@ -756,7 +771,10 @@ __hwmon_device_register(struct device *dev, const char *name, void *drvdata,
 	struct hwmon_device *hwdev;
 	const char *label;
 	struct device *hdev;
+<<<<<<< HEAD
 	struct device *tdev = dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i, err, id;
 
 	/* Complain about invalid characters in hwmon name attribute */
@@ -826,9 +844,13 @@ __hwmon_device_register(struct device *dev, const char *name, void *drvdata,
 	hwdev->name = name;
 	hdev->class = &hwmon_class;
 	hdev->parent = dev;
+<<<<<<< HEAD
 	while (tdev && !tdev->of_node)
 		tdev = tdev->parent;
 	hdev->of_node = tdev ? tdev->of_node : NULL;
+=======
+	hdev->of_node = dev ? dev->of_node : NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	hwdev->chip = chip;
 	dev_set_drvdata(hdev, drvdata);
 	dev_set_name(hdev, HWMON_ID_FORMAT, id);
@@ -840,7 +862,11 @@ __hwmon_device_register(struct device *dev, const char *name, void *drvdata,
 
 	INIT_LIST_HEAD(&hwdev->tzdata);
 
+<<<<<<< HEAD
 	if (hdev->of_node && chip && chip->ops->read &&
+=======
+	if (dev && dev->of_node && chip && chip->ops->read &&
+>>>>>>> b7ba80a49124 (Commit)
 	    chip->info[0]->type == hwmon_chip &&
 	    (chip->info[0]->config[0] & HWMON_C_REGISTER_TZ)) {
 		err = hwmon_thermal_register_sensors(hdev);

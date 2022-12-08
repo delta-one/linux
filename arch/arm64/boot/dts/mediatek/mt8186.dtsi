@@ -7,7 +7,10 @@
 #include <dt-bindings/clock/mt8186-clk.h>
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/interrupt-controller/irq.h>
+<<<<<<< HEAD
 #include <dt-bindings/memory/mt8186-memory-port.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <dt-bindings/pinctrl/mt8186-pinfunc.h>
 #include <dt-bindings/power/mt8186-power.h>
 #include <dt-bindings/phy/phy.h>
@@ -48,12 +51,23 @@
 				core5 {
 					cpu = <&cpu5>;
 				};
+<<<<<<< HEAD
 
 				core6 {
 					cpu = <&cpu6>;
 				};
 
 				core7 {
+=======
+			};
+
+			cluster1 {
+				core0 {
+					cpu = <&cpu6>;
+				};
+
+				core1 {
+>>>>>>> b7ba80a49124 (Commit)
 					cpu = <&cpu7>;
 				};
 			};
@@ -66,6 +80,7 @@
 			enable-method = "psci";
 			clock-frequency = <2000000000>;
 			capacity-dmips-mhz = <382>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_l &cpu_off_l>;
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
@@ -73,6 +88,9 @@
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+			cpu-idle-states = <&cpu_off_l &cluster_off_l>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 			#cooling-cells = <2>;
 		};
@@ -84,6 +102,7 @@
 			enable-method = "psci";
 			clock-frequency = <2000000000>;
 			capacity-dmips-mhz = <382>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_l &cpu_off_l>;
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
@@ -91,6 +110,9 @@
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+			cpu-idle-states = <&cpu_off_l &cluster_off_l>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 			#cooling-cells = <2>;
 		};
@@ -102,6 +124,7 @@
 			enable-method = "psci";
 			clock-frequency = <2000000000>;
 			capacity-dmips-mhz = <382>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_l &cpu_off_l>;
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
@@ -109,6 +132,9 @@
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+			cpu-idle-states = <&cpu_off_l &cluster_off_l>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 			#cooling-cells = <2>;
 		};
@@ -120,6 +146,7 @@
 			enable-method = "psci";
 			clock-frequency = <2000000000>;
 			capacity-dmips-mhz = <382>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_l &cpu_off_l>;
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
@@ -127,6 +154,9 @@
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+			cpu-idle-states = <&cpu_off_l &cluster_off_l>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 			#cooling-cells = <2>;
 		};
@@ -138,6 +168,7 @@
 			enable-method = "psci";
 			clock-frequency = <2000000000>;
 			capacity-dmips-mhz = <382>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_l &cpu_off_l>;
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
@@ -145,6 +176,9 @@
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+			cpu-idle-states = <&cpu_off_l &cluster_off_l>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 			#cooling-cells = <2>;
 		};
@@ -156,6 +190,7 @@
 			enable-method = "psci";
 			clock-frequency = <2000000000>;
 			capacity-dmips-mhz = <382>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_l &cpu_off_l>;
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
@@ -163,6 +198,9 @@
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+			cpu-idle-states = <&cpu_off_l &cluster_off_l>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 			#cooling-cells = <2>;
 		};
@@ -174,6 +212,7 @@
 			enable-method = "psci";
 			clock-frequency = <2050000000>;
 			capacity-dmips-mhz = <1024>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_b &cpu_off_b>;
 			i-cache-size = <65536>;
 			i-cache-line-size = <64>;
@@ -181,6 +220,9 @@
 			d-cache-size = <65536>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <256>;
+=======
+			cpu-idle-states = <&cpu_off_b &cluster_off_b>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_1>;
 			#cooling-cells = <2>;
 		};
@@ -192,6 +234,7 @@
 			enable-method = "psci";
 			clock-frequency = <2050000000>;
 			capacity-dmips-mhz = <1024>;
+<<<<<<< HEAD
 			cpu-idle-states = <&cpu_ret_b &cpu_off_b>;
 			i-cache-size = <65536>;
 			i-cache-line-size = <64>;
@@ -199,6 +242,9 @@
 			d-cache-size = <65536>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <256>;
+=======
+			cpu-idle-states = <&cpu_off_b &cluster_off_b>;
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_1>;
 			#cooling-cells = <2>;
 		};
@@ -206,7 +252,11 @@
 		idle-states {
 			entry-method = "psci";
 
+<<<<<<< HEAD
 			cpu_ret_l: cpu-retention-l {
+=======
+			cpu_off_l: cpu-off-l {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "arm,idle-state";
 				arm,psci-suspend-param = <0x00010001>;
 				local-timer-stop;
@@ -215,7 +265,11 @@
 				min-residency-us = <1600>;
 			};
 
+<<<<<<< HEAD
 			cpu_ret_b: cpu-retention-b {
+=======
+			cpu_off_b: cpu-off-b {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "arm,idle-state";
 				arm,psci-suspend-param = <0x00010001>;
 				local-timer-stop;
@@ -224,7 +278,11 @@
 				min-residency-us = <1400>;
 			};
 
+<<<<<<< HEAD
 			cpu_off_l: cpu-off-l {
+=======
+			cluster_off_l: cluster-off-l {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "arm,idle-state";
 				arm,psci-suspend-param = <0x01010001>;
 				local-timer-stop;
@@ -233,7 +291,11 @@
 				min-residency-us = <2100>;
 			};
 
+<<<<<<< HEAD
 			cpu_off_b: cpu-off-b {
+=======
+			cluster_off_b: cluster-off-b {
+>>>>>>> b7ba80a49124 (Commit)
 				compatible = "arm,idle-state";
 				arm,psci-suspend-param = <0x01010001>;
 				local-timer-stop;
@@ -245,24 +307,31 @@
 
 		l2_0: l2-cache0 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
 			cache-size = <131072>;
 			cache-line-size = <64>;
 			cache-sets = <512>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l3_0>;
 		};
 
 		l2_1: l2-cache1 {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <2>;
 			cache-size = <262144>;
 			cache-line-size = <64>;
 			cache-sets = <512>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l3_0>;
 		};
 
 		l3_0: l3-cache {
 			compatible = "cache";
+<<<<<<< HEAD
 			cache-level = <3>;
 			cache-size = <1048576>;
 			cache-line-size = <64>;
@@ -277,6 +346,15 @@
 		clocks = <&clk26m>;
 		clock-div = <2>;
 		clock-mult = <1>;
+=======
+		};
+	};
+
+	clk13m: oscillator-13m {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <13000000>;
+>>>>>>> b7ba80a49124 (Commit)
 		clock-output-names = "clk13m";
 	};
 
@@ -391,6 +469,7 @@
 			#interrupt-cells = <2>;
 		};
 
+<<<<<<< HEAD
 		scpsys: syscon@10006000 {
 			compatible = "mediatek,mt8186-scpsys", "syscon", "simple-mfd";
 			reg = <0 0x10006000 0 0x1000>;
@@ -581,6 +660,11 @@
 
 		watchdog: watchdog@10007000 {
 			compatible = "mediatek,mt8186-wdt";
+=======
+		watchdog: watchdog@10007000 {
+			compatible = "mediatek,mt8186-wdt",
+				     "mediatek,mt6589-wdt";
+>>>>>>> b7ba80a49124 (Commit)
 			mediatek,disable-extrst;
 			reg = <0 0x10007000 0 0x1000>;
 			#reset-cells = <1>;
@@ -618,6 +702,7 @@
 			interrupts = <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH 0>;
 		};
 
+<<<<<<< HEAD
 		adsp_mailbox0: mailbox@10686000 {
 			compatible = "mediatek,mt8186-adsp-mbox";
 			#mbox-cells = <0>;
@@ -632,6 +717,8 @@
 			interrupts = <GIC_SPI 362 IRQ_TYPE_LEVEL_HIGH 0>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		nor_flash: spi@11000000 {
 			compatible = "mediatek,mt8186-nor";
 			reg = <0 0x11000000 0 0x1000>;
@@ -919,6 +1006,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		afe: audio-controller@11210000 {
 			compatible = "mediatek,mt8186-sound";
 			reg = <0 0x11210000 0 0x2000>;
@@ -991,6 +1079,17 @@
 				 <&infracfg_ao CLK_INFRA_AO_MSDC0_SRC>,
 				 <&infracfg_ao CLK_INFRA_AO_MSDCFDE>;
 			clock-names = "source", "hclk", "source_cg", "crypto";
+=======
+		mmc0: mmc@11230000 {
+			compatible = "mediatek,mt8186-mmc",
+				     "mediatek,mt8183-mmc";
+			reg = <0 0x11230000 0 0x1000>,
+			      <0 0x11cd0000 0 0x1000>;
+			clocks = <&topckgen CLK_TOP_MSDC50_0>,
+				 <&infracfg_ao CLK_INFRA_AO_MSDC0>,
+				 <&infracfg_ao CLK_INFRA_AO_MSDC0_SRC>;
+			clock-names = "source", "hclk", "source_cg";
+>>>>>>> b7ba80a49124 (Commit)
 			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH 0>;
 			assigned-clocks = <&topckgen CLK_TOP_MSDC50_0>;
 			assigned-clock-parents = <&apmixedsys CLK_APMIXED_MSDCPLL>;
@@ -1082,6 +1181,7 @@
 			#reset-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		smi_common: smi@14002000 {
 			compatible = "mediatek,mt8186-smi-common";
 			reg = <0 0x14002000 0 0x1000>;
@@ -1163,12 +1263,15 @@
 			#iommu-cells = <1>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		wpesys: clock-controller@14020000 {
 			compatible = "mediatek,mt8186-wpesys";
 			reg = <0 0x14020000 0 0x1000>;
 			#clock-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		larb8: smi@14023000 {
 			compatible = "mediatek,mt8186-smi-larb";
 			reg = <0 0x14023000 0 0x1000>;
@@ -1180,12 +1283,15 @@
 			power-domains = <&spm MT8186_POWER_DOMAIN_WPE>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		imgsys1: clock-controller@15020000 {
 			compatible = "mediatek,mt8186-imgsys1";
 			reg = <0 0x15020000 0 0x1000>;
 			#clock-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		larb9: smi@1502e000 {
 			compatible = "mediatek,mt8186-smi-larb";
 			reg = <0 0x1502e000 0 0x1000>;
@@ -1197,12 +1303,15 @@
 			power-domains = <&spm MT8186_POWER_DOMAIN_IMG>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		imgsys2: clock-controller@15820000 {
 			compatible = "mediatek,mt8186-imgsys2";
 			reg = <0 0x15820000 0 0x1000>;
 			#clock-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		larb11: smi@1582e000 {
 			compatible = "mediatek,mt8186-smi-larb";
 			reg = <0 0x1582e000 0 0x1000>;
@@ -1225,6 +1334,8 @@
 			power-domains = <&spm MT8186_POWER_DOMAIN_VDEC>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		vdecsys: clock-controller@1602f000 {
 			compatible = "mediatek,mt8186-vdecsys";
 			reg = <0 0x1602f000 0 0x1000>;
@@ -1237,6 +1348,7 @@
 			#clock-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		larb7: smi@17010000 {
 			compatible = "mediatek,mt8186-smi-larb";
 			reg = <0 0x17010000 0 0x1000>;
@@ -1248,12 +1360,15 @@
 			power-domains = <&spm MT8186_POWER_DOMAIN_VENC>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		camsys: clock-controller@1a000000 {
 			compatible = "mediatek,mt8186-camsys";
 			reg = <0 0x1a000000 0 0x1000>;
 			#clock-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		larb13: smi@1a001000 {
 			compatible = "mediatek,mt8186-smi-larb";
 			reg = <0 0x1a001000 0 0x1000>;
@@ -1296,6 +1411,8 @@
 			power-domains = <&spm MT8186_POWER_DOMAIN_CAM_RAWB>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		camsys_rawa: clock-controller@1a04f000 {
 			compatible = "mediatek,mt8186-camsys_rawa";
 			reg = <0 0x1a04f000 0 0x1000>;
@@ -1314,6 +1431,7 @@
 			#clock-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		larb2: smi@1b002000 {
 			compatible = "mediatek,mt8186-smi-larb";
 			reg = <0 0x1b002000 0 0x1000>;
@@ -1324,11 +1442,14 @@
 			power-domains = <&spm MT8186_POWER_DOMAIN_DIS>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ipesys: clock-controller@1c000000 {
 			compatible = "mediatek,mt8186-ipesys";
 			reg = <0 0x1c000000 0 0x1000>;
 			#clock-cells = <1>;
 		};
+<<<<<<< HEAD
 
 		larb20: smi@1c00f000 {
 			compatible = "mediatek,mt8186-smi-larb";
@@ -1349,5 +1470,7 @@
 			mediatek,smi = <&smi_common>;
 			power-domains = <&spm MT8186_POWER_DOMAIN_IPE>;
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };

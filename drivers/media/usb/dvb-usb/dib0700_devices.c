@@ -2024,6 +2024,16 @@ static struct dib0090_config tfe8096p_dib0090_config = {
 	.force_cband_input		= 0,
 };
 
+<<<<<<< HEAD
+=======
+struct dibx090p_adc {
+	u32 freq;			/* RF freq MHz */
+	u32 timf;			/* New Timf */
+	u32 pll_loopdiv;	/* New prediv */
+	u32 pll_prediv;		/* New loopdiv */
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct dibx090p_best_adc {
 	u32 timf;
 	u32 pll_loopdiv;

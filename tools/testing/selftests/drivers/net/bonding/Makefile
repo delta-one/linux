@@ -4,6 +4,7 @@
 TEST_PROGS := \
 	bond-arp-interval-causes-panic.sh \
 	bond-break-lacpdu-tx.sh \
+<<<<<<< HEAD
 	bond-lladdr-target.sh \
 	dev_addr_lists.sh \
 	mode-1-recovery-updelay.sh \
@@ -14,5 +15,10 @@ TEST_PROGS := \
 TEST_FILES := \
 	lag_lib.sh \
 	net_forwarding_lib.sh
+=======
+	dev_addr_lists.sh
+
+TEST_FILES := lag_lib.sh
+>>>>>>> b7ba80a49124 (Commit)
 
 include ../../../lib.mk

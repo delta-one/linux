@@ -15,6 +15,7 @@
 		#address-cells = <2>;
 		#size-cells = <0>;
 
+<<<<<<< HEAD
 		cpu-map {
 			cluster0 {
 				core0 {
@@ -56,18 +57,23 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		cpu_e00: cpu@0 {
 			compatible = "apple,icestorm";
 			device_type = "cpu";
 			reg = <0x0 0x0>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			next-level-cache = <&l2_cache_0>;
 			i-cache-size = <0x20000>;
 			d-cache-size = <0x10000>;
 			operating-points-v2 = <&icestorm_opp>;
 			capacity-dmips-mhz = <714>;
 			performance-domains = <&cpufreq_e>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		cpu_e01: cpu@1 {
@@ -76,12 +82,15 @@
 			reg = <0x0 0x1>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			next-level-cache = <&l2_cache_0>;
 			i-cache-size = <0x20000>;
 			d-cache-size = <0x10000>;
 			operating-points-v2 = <&icestorm_opp>;
 			capacity-dmips-mhz = <714>;
 			performance-domains = <&cpufreq_e>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		cpu_p00: cpu@10100 {
@@ -90,12 +99,15 @@
 			reg = <0x0 0x10100>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			next-level-cache = <&l2_cache_1>;
 			i-cache-size = <0x30000>;
 			d-cache-size = <0x20000>;
 			operating-points-v2 = <&firestorm_opp>;
 			capacity-dmips-mhz = <1024>;
 			performance-domains = <&cpufreq_p0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		cpu_p01: cpu@10101 {
@@ -104,12 +116,15 @@
 			reg = <0x0 0x10101>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			next-level-cache = <&l2_cache_1>;
 			i-cache-size = <0x30000>;
 			d-cache-size = <0x20000>;
 			operating-points-v2 = <&firestorm_opp>;
 			capacity-dmips-mhz = <1024>;
 			performance-domains = <&cpufreq_p0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		cpu_p02: cpu@10102 {
@@ -118,12 +133,15 @@
 			reg = <0x0 0x10102>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			next-level-cache = <&l2_cache_1>;
 			i-cache-size = <0x30000>;
 			d-cache-size = <0x20000>;
 			operating-points-v2 = <&firestorm_opp>;
 			capacity-dmips-mhz = <1024>;
 			performance-domains = <&cpufreq_p0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		cpu_p03: cpu@10103 {
@@ -132,12 +150,15 @@
 			reg = <0x0 0x10103>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			next-level-cache = <&l2_cache_1>;
 			i-cache-size = <0x30000>;
 			d-cache-size = <0x20000>;
 			operating-points-v2 = <&firestorm_opp>;
 			capacity-dmips-mhz = <1024>;
 			performance-domains = <&cpufreq_p0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		cpu_p10: cpu@10200 {
@@ -146,12 +167,15 @@
 			reg = <0x0 0x10200>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			next-level-cache = <&l2_cache_2>;
 			i-cache-size = <0x30000>;
 			d-cache-size = <0x20000>;
 			operating-points-v2 = <&firestorm_opp>;
 			capacity-dmips-mhz = <1024>;
 			performance-domains = <&cpufreq_p1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		cpu_p11: cpu@10201 {
@@ -160,12 +184,15 @@
 			reg = <0x0 0x10201>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			next-level-cache = <&l2_cache_2>;
 			i-cache-size = <0x30000>;
 			d-cache-size = <0x20000>;
 			operating-points-v2 = <&firestorm_opp>;
 			capacity-dmips-mhz = <1024>;
 			performance-domains = <&cpufreq_p1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		cpu_p12: cpu@10202 {
@@ -174,12 +201,15 @@
 			reg = <0x0 0x10202>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			next-level-cache = <&l2_cache_2>;
 			i-cache-size = <0x30000>;
 			d-cache-size = <0x20000>;
 			operating-points-v2 = <&firestorm_opp>;
 			capacity-dmips-mhz = <1024>;
 			performance-domains = <&cpufreq_p1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		cpu_p13: cpu@10203 {
@@ -188,6 +218,7 @@
 			reg = <0x0 0x10203>;
 			enable-method = "spin-table";
 			cpu-release-addr = <0 0>; /* To be filled by loader */
+<<<<<<< HEAD
 			next-level-cache = <&l2_cache_2>;
 			i-cache-size = <0x30000>;
 			d-cache-size = <0x20000>;
@@ -331,6 +362,9 @@
 			turbo-mode;
 		};
 		*/
+=======
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	pmu-e {

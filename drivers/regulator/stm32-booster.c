@@ -117,7 +117,10 @@ static struct platform_driver stm32_booster_driver = {
 	.probe = stm32_booster_probe,
 	.driver = {
 		.name  = "stm32-booster",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = of_match_ptr(stm32_booster_of_match),
 	},
 };

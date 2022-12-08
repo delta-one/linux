@@ -249,9 +249,14 @@ struct fuse_page_desc {
 struct fuse_args {
 	uint64_t nodeid;
 	uint32_t opcode;
+<<<<<<< HEAD
 	uint8_t in_numargs;
 	uint8_t out_numargs;
 	uint8_t ext_idx;
+=======
+	unsigned short in_numargs;
+	unsigned short out_numargs;
+>>>>>>> b7ba80a49124 (Commit)
 	bool force:1;
 	bool noreply:1;
 	bool nocreds:1;
@@ -262,7 +267,10 @@ struct fuse_args {
 	bool page_zeroing:1;
 	bool page_replace:1;
 	bool may_block:1;
+<<<<<<< HEAD
 	bool is_ext:1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct fuse_in_arg in_args[3];
 	struct fuse_arg out_args[2];
 	void (*end)(struct fuse_mount *fm, struct fuse_args *args, int error);
@@ -292,6 +300,10 @@ struct fuse_io_priv {
 	struct kiocb *iocb;
 	struct completion *done;
 	bool blocking;
+<<<<<<< HEAD
+=======
+	bool is_user_or_bvec;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define FUSE_IO_PRIV_SYNC(i) \
@@ -783,6 +795,7 @@ struct fuse_conn {
 	/* Initialize security xattrs when creating a new inode */
 	unsigned int init_security:1;
 
+<<<<<<< HEAD
 	/* Add supplementary group info when creating a new inode */
 	unsigned int create_supp_group:1;
 
@@ -792,6 +805,11 @@ struct fuse_conn {
 	/* Is tmpfile not implemented by fs? */
 	unsigned int no_tmpfile:1;
 
+=======
+	/* Does the filesystem support per inode DAX? */
+	unsigned int inode_dax:1;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/** The number of requests waiting for completion */
 	atomic_t num_waiting;
 
@@ -1184,7 +1202,11 @@ bool fuse_invalid_attr(struct fuse_attr *attr);
 /**
  * Is current process allowed to perform filesystem operation?
  */
+<<<<<<< HEAD
 bool fuse_allow_current_process(struct fuse_conn *fc);
+=======
+int fuse_allow_current_process(struct fuse_conn *fc);
+>>>>>>> b7ba80a49124 (Commit)
 
 u64 fuse_lock_owner_id(struct fuse_conn *fc, fl_owner_t id);
 
@@ -1225,7 +1247,11 @@ int fuse_reverse_inval_inode(struct fuse_conn *fc, u64 nodeid,
  * then the dentry is unhashed (d_delete()).
  */
 int fuse_reverse_inval_entry(struct fuse_conn *fc, u64 parent_nodeid,
+<<<<<<< HEAD
 			     u64 child_nodeid, struct qstr *name, u32 flags);
+=======
+			     u64 child_nodeid, struct qstr *name);
+>>>>>>> b7ba80a49124 (Commit)
 
 int fuse_do_open(struct fuse_mount *fm, u64 nodeid, struct file *file,
 		 bool isdir);
@@ -1269,12 +1295,21 @@ ssize_t fuse_getxattr(struct inode *inode, const char *name, void *value,
 ssize_t fuse_listxattr(struct dentry *entry, char *list, size_t size);
 int fuse_removexattr(struct inode *inode, const char *name);
 extern const struct xattr_handler *fuse_xattr_handlers[];
+<<<<<<< HEAD
 
 struct posix_acl;
 struct posix_acl *fuse_get_inode_acl(struct inode *inode, int type, bool rcu);
 struct posix_acl *fuse_get_acl(struct mnt_idmap *idmap,
 			       struct dentry *dentry, int type);
 int fuse_set_acl(struct mnt_idmap *, struct dentry *dentry,
+=======
+extern const struct xattr_handler *fuse_acl_xattr_handlers[];
+extern const struct xattr_handler *fuse_no_acl_xattr_handlers[];
+
+struct posix_acl;
+struct posix_acl *fuse_get_acl(struct inode *inode, int type, bool rcu);
+int fuse_set_acl(struct user_namespace *mnt_userns, struct inode *inode,
+>>>>>>> b7ba80a49124 (Commit)
 		 struct posix_acl *acl, int type);
 
 /* readdir.c */
@@ -1314,7 +1349,11 @@ long fuse_file_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
 long fuse_file_compat_ioctl(struct file *file, unsigned int cmd,
 			    unsigned long arg);
 int fuse_fileattr_get(struct dentry *dentry, struct fileattr *fa);
+<<<<<<< HEAD
 int fuse_fileattr_set(struct mnt_idmap *idmap,
+=======
+int fuse_fileattr_set(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *dentry, struct fileattr *fa);
 
 /* file.c */

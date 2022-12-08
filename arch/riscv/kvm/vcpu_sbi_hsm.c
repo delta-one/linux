@@ -9,6 +9,10 @@
 #include <linux/errno.h>
 #include <linux/err.h>
 #include <linux/kvm_host.h>
+<<<<<<< HEAD
+=======
+#include <asm/csr.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/sbi.h>
 #include <asm/kvm_vcpu_sbi.h>
 
@@ -21,9 +25,15 @@ static int kvm_sbi_hsm_vcpu_start(struct kvm_vcpu *vcpu)
 
 	target_vcpu = kvm_get_vcpu_by_id(vcpu->kvm, target_vcpuid);
 	if (!target_vcpu)
+<<<<<<< HEAD
 		return SBI_ERR_INVALID_PARAM;
 	if (!target_vcpu->arch.power_off)
 		return SBI_ERR_ALREADY_AVAILABLE;
+=======
+		return -EINVAL;
+	if (!target_vcpu->arch.power_off)
+		return -EALREADY;
+>>>>>>> b7ba80a49124 (Commit)
 
 	reset_cntx = &target_vcpu->arch.guest_reset_context;
 	/* start address */
@@ -42,7 +52,11 @@ static int kvm_sbi_hsm_vcpu_start(struct kvm_vcpu *vcpu)
 static int kvm_sbi_hsm_vcpu_stop(struct kvm_vcpu *vcpu)
 {
 	if (vcpu->arch.power_off)
+<<<<<<< HEAD
 		return SBI_ERR_FAILURE;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	kvm_riscv_vcpu_power_off(vcpu);
 
@@ -57,7 +71,11 @@ static int kvm_sbi_hsm_vcpu_get_status(struct kvm_vcpu *vcpu)
 
 	target_vcpu = kvm_get_vcpu_by_id(vcpu->kvm, target_vcpuid);
 	if (!target_vcpu)
+<<<<<<< HEAD
 		return SBI_ERR_INVALID_PARAM;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	if (!target_vcpu->arch.power_off)
 		return SBI_HSM_STATE_STARTED;
 	else if (vcpu->stat.generic.blocking)
@@ -67,7 +85,13 @@ static int kvm_sbi_hsm_vcpu_get_status(struct kvm_vcpu *vcpu)
 }
 
 static int kvm_sbi_ext_hsm_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
+<<<<<<< HEAD
 				   struct kvm_vcpu_sbi_return *retdata)
+=======
+				   unsigned long *out_val,
+				   struct kvm_cpu_trap *utrap,
+				   bool *exit)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret = 0;
 	struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
@@ -86,16 +110,24 @@ static int kvm_sbi_ext_hsm_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
 	case SBI_EXT_HSM_HART_STATUS:
 		ret = kvm_sbi_hsm_vcpu_get_status(vcpu);
 		if (ret >= 0) {
+<<<<<<< HEAD
 			retdata->out_val = ret;
 			retdata->err_val = 0;
 		}
 		return 0;
+=======
+			*out_val = ret;
+			ret = 0;
+		}
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	case SBI_EXT_HSM_HART_SUSPEND:
 		switch (cp->a0) {
 		case SBI_HSM_SUSPEND_RET_DEFAULT:
 			kvm_riscv_vcpu_wfi(vcpu);
 			break;
 		case SBI_HSM_SUSPEND_NON_RET_DEFAULT:
+<<<<<<< HEAD
 			ret = SBI_ERR_NOT_SUPPORTED;
 			break;
 		default:
@@ -109,6 +141,19 @@ static int kvm_sbi_ext_hsm_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
 	retdata->err_val = ret;
 
 	return 0;
+=======
+			ret = -EOPNOTSUPP;
+			break;
+		default:
+			ret = -EINVAL;
+		}
+		break;
+	default:
+		ret = -EOPNOTSUPP;
+	}
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_hsm = {

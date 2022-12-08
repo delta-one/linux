@@ -8,7 +8,10 @@
 
 #include <linux/kvm_host.h>
 #include <asm/csr.h>
+<<<<<<< HEAD
 #include <asm/insn-def.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int gstage_page_fault(struct kvm_vcpu *vcpu, struct kvm_run *run,
 			     struct kvm_cpu_trap *trap)
@@ -63,7 +66,15 @@ unsigned long kvm_riscv_vcpu_unpriv_read(struct kvm_vcpu *vcpu,
 {
 	register unsigned long taddr asm("a0") = (unsigned long)trap;
 	register unsigned long ttmp asm("a1");
+<<<<<<< HEAD
 	unsigned long flags, val, tmp, old_stvec, old_hstatus;
+=======
+	register unsigned long val asm("t0");
+	register unsigned long tmp asm("t1");
+	register unsigned long addr asm("t2") = guest_addr;
+	unsigned long flags;
+	unsigned long old_stvec, old_hstatus;
+>>>>>>> b7ba80a49124 (Commit)
 
 	local_irq_save(flags);
 
@@ -79,19 +90,41 @@ unsigned long kvm_riscv_vcpu_unpriv_read(struct kvm_vcpu *vcpu,
 			".option push\n"
 			".option norvc\n"
 			"add %[ttmp], %[taddr], 0\n"
+<<<<<<< HEAD
 			HLVX_HU(%[val], %[addr])
+=======
+			/*
+			 * HLVX.HU %[val], (%[addr])
+			 * HLVX.HU t0, (t2)
+			 * 0110010 00011 00111 100 00101 1110011
+			 */
+			".word 0x6433c2f3\n"
+>>>>>>> b7ba80a49124 (Commit)
 			"andi %[tmp], %[val], 3\n"
 			"addi %[tmp], %[tmp], -3\n"
 			"bne %[tmp], zero, 2f\n"
 			"addi %[addr], %[addr], 2\n"
+<<<<<<< HEAD
 			HLVX_HU(%[tmp], %[addr])
+=======
+			/*
+			 * HLVX.HU %[tmp], (%[addr])
+			 * HLVX.HU t1, (t2)
+			 * 0110010 00011 00111 100 00110 1110011
+			 */
+			".word 0x6433c373\n"
+>>>>>>> b7ba80a49124 (Commit)
 			"sll %[tmp], %[tmp], 16\n"
 			"add %[val], %[val], %[tmp]\n"
 			"2:\n"
 			".option pop"
 		: [val] "=&r" (val), [tmp] "=&r" (tmp),
 		  [taddr] "+&r" (taddr), [ttmp] "+&r" (ttmp),
+<<<<<<< HEAD
 		  [addr] "+&r" (guest_addr) : : "memory");
+=======
+		  [addr] "+&r" (addr) : : "memory");
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (trap->scause == EXC_LOAD_PAGE_FAULT)
 			trap->scause = EXC_INST_PAGE_FAULT;
@@ -108,14 +141,34 @@ unsigned long kvm_riscv_vcpu_unpriv_read(struct kvm_vcpu *vcpu,
 			".option norvc\n"
 			"add %[ttmp], %[taddr], 0\n"
 #ifdef CONFIG_64BIT
+<<<<<<< HEAD
 			HLV_D(%[val], %[addr])
 #else
 			HLV_W(%[val], %[addr])
+=======
+			/*
+			 * HLV.D %[val], (%[addr])
+			 * HLV.D t0, (t2)
+			 * 0110110 00000 00111 100 00101 1110011
+			 */
+			".word 0x6c03c2f3\n"
+#else
+			/*
+			 * HLV.W %[val], (%[addr])
+			 * HLV.W t0, (t2)
+			 * 0110100 00000 00111 100 00101 1110011
+			 */
+			".word 0x6803c2f3\n"
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 			".option pop"
 		: [val] "=&r" (val),
 		  [taddr] "+&r" (taddr), [ttmp] "+&r" (ttmp)
+<<<<<<< HEAD
 		: [addr] "r" (guest_addr) : "memory");
+=======
+		: [addr] "r" (addr) : "memory");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	csr_write(CSR_STVEC, old_stvec);
@@ -160,9 +213,12 @@ void kvm_riscv_vcpu_trap_redirect(struct kvm_vcpu *vcpu,
 
 	/* Set Guest PC to Guest exception vector */
 	vcpu->arch.guest_context.sepc = csr_read(CSR_VSTVEC);
+<<<<<<< HEAD
 
 	/* Set Guest privilege mode to supervisor */
 	vcpu->arch.guest_context.sstatus |= SR_SPP;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -182,12 +238,15 @@ int kvm_riscv_vcpu_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
 	ret = -EFAULT;
 	run->exit_reason = KVM_EXIT_UNKNOWN;
 	switch (trap->scause) {
+<<<<<<< HEAD
 	case EXC_INST_ILLEGAL:
 		if (vcpu->arch.guest_context.hstatus & HSTATUS_SPV) {
 			kvm_riscv_vcpu_trap_redirect(vcpu, trap);
 			ret = 1;
 		}
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case EXC_VIRTUAL_INST_FAULT:
 		if (vcpu->arch.guest_context.hstatus & HSTATUS_SPV)
 			ret = kvm_riscv_vcpu_virtual_insn(vcpu, run, trap);

@@ -6,22 +6,35 @@
 #include <bpf/bpf_core_read.h>
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_tracing.h>
+<<<<<<< HEAD
 #include "bpf_misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int uprobe_byname_parm1 = 0;
 int uprobe_byname_ran = 0;
 int uretprobe_byname_rc = 0;
+<<<<<<< HEAD
 int uretprobe_byname_ret = 0;
 int uretprobe_byname_ran = 0;
 u64 uprobe_byname2_parm1 = 0;
 int uprobe_byname2_ran = 0;
 u64 uretprobe_byname2_rc = 0;
+=======
+int uretprobe_byname_ran = 0;
+size_t uprobe_byname2_parm1 = 0;
+int uprobe_byname2_ran = 0;
+char *uretprobe_byname2_rc = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 int uretprobe_byname2_ran = 0;
 
 int test_pid;
 
+<<<<<<< HEAD
 int a[8];
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* This program cannot auto-attach, but that should not stop other
  * programs from attaching.
  */
@@ -32,6 +45,7 @@ int handle_uprobe_noautoattach(struct pt_regs *ctx)
 }
 
 SEC("uprobe//proc/self/exe:autoattach_trigger_func")
+<<<<<<< HEAD
 int BPF_UPROBE(handle_uprobe_byname
 	       , int arg1
 	       , int arg2
@@ -74,42 +88,73 @@ int BPF_UPROBE(handle_uprobe_byname
 #if FUNC_REG_ARG_CNT > 7
 	a[7] = arg8;
 #endif
+=======
+int handle_uprobe_byname(struct pt_regs *ctx)
+{
+	uprobe_byname_parm1 = PT_REGS_PARM1_CORE(ctx);
+	uprobe_byname_ran = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 SEC("uretprobe//proc/self/exe:autoattach_trigger_func")
+<<<<<<< HEAD
 int BPF_URETPROBE(handle_uretprobe_byname, int ret)
 {
 	uretprobe_byname_rc = PT_REGS_RC_CORE(ctx);
 	uretprobe_byname_ret = ret;
 	uretprobe_byname_ran = 2;
 
+=======
+int handle_uretprobe_byname(struct pt_regs *ctx)
+{
+	uretprobe_byname_rc = PT_REGS_RC_CORE(ctx);
+	uretprobe_byname_ran = 2;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 
+<<<<<<< HEAD
 SEC("uprobe/libc.so.6:fopen")
 int BPF_UPROBE(handle_uprobe_byname2, const char *pathname, const char *mode)
+=======
+SEC("uprobe/libc.so.6:malloc")
+int handle_uprobe_byname2(struct pt_regs *ctx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int pid = bpf_get_current_pid_tgid() >> 32;
 
 	/* ignore irrelevant invocations */
 	if (test_pid != pid)
 		return 0;
+<<<<<<< HEAD
 	uprobe_byname2_parm1 = (u64)(long)pathname;
+=======
+	uprobe_byname2_parm1 = PT_REGS_PARM1_CORE(ctx);
+>>>>>>> b7ba80a49124 (Commit)
 	uprobe_byname2_ran = 3;
 	return 0;
 }
 
+<<<<<<< HEAD
 SEC("uretprobe/libc.so.6:fopen")
 int BPF_URETPROBE(handle_uretprobe_byname2, void *ret)
+=======
+SEC("uretprobe/libc.so.6:malloc")
+int handle_uretprobe_byname2(struct pt_regs *ctx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int pid = bpf_get_current_pid_tgid() >> 32;
 
 	/* ignore irrelevant invocations */
 	if (test_pid != pid)
 		return 0;
+<<<<<<< HEAD
 	uretprobe_byname2_rc = (u64)(long)ret;
+=======
+	uretprobe_byname2_rc = (char *)PT_REGS_RC_CORE(ctx);
+>>>>>>> b7ba80a49124 (Commit)
 	uretprobe_byname2_ran = 4;
 	return 0;
 }

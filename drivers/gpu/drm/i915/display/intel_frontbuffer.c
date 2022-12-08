@@ -88,7 +88,11 @@ static void frontbuffer_flush(struct drm_i915_private *i915,
 	if (!frontbuffer_bits)
 		return;
 
+<<<<<<< HEAD
 	trace_intel_frontbuffer_flush(i915, frontbuffer_bits, origin);
+=======
+	trace_intel_frontbuffer_flush(frontbuffer_bits, origin);
+>>>>>>> b7ba80a49124 (Commit)
 
 	might_sleep();
 	intel_drrs_flush(i915, frontbuffer_bits);
@@ -176,7 +180,11 @@ void __intel_fb_invalidate(struct intel_frontbuffer *front,
 		spin_unlock(&i915->display.fb_tracking.lock);
 	}
 
+<<<<<<< HEAD
 	trace_intel_frontbuffer_invalidate(i915, frontbuffer_bits, origin);
+=======
+	trace_intel_frontbuffer_invalidate(frontbuffer_bits, origin);
+>>>>>>> b7ba80a49124 (Commit)
 
 	might_sleep();
 	intel_psr_invalidate(i915, frontbuffer_bits, origin);

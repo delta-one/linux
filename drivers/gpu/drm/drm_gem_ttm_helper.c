@@ -3,8 +3,11 @@
 #include <linux/module.h>
 
 #include <drm/drm_gem_ttm_helper.h>
+<<<<<<< HEAD
 #include <drm/ttm/ttm_placement.h>
 #include <drm/ttm/ttm_tt.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * DOC: overview
@@ -66,8 +69,18 @@ int drm_gem_ttm_vmap(struct drm_gem_object *gem,
 		     struct iosys_map *map)
 {
 	struct ttm_buffer_object *bo = drm_gem_ttm_of_gem(gem);
+<<<<<<< HEAD
 
 	return ttm_bo_vmap(bo, map);
+=======
+	int ret;
+
+	dma_resv_lock(gem->resv, NULL);
+	ret = ttm_bo_vmap(bo, map);
+	dma_resv_unlock(gem->resv);
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(drm_gem_ttm_vmap);
 
@@ -84,7 +97,13 @@ void drm_gem_ttm_vunmap(struct drm_gem_object *gem,
 {
 	struct ttm_buffer_object *bo = drm_gem_ttm_of_gem(gem);
 
+<<<<<<< HEAD
 	ttm_bo_vunmap(bo, map);
+=======
+	dma_resv_lock(gem->resv, NULL);
+	ttm_bo_vunmap(bo, map);
+	dma_resv_unlock(gem->resv);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(drm_gem_ttm_vunmap);
 

@@ -442,7 +442,11 @@ err_clk:
 /*
  * Disable and remove the RTC driver
  */
+<<<<<<< HEAD
 static void at91_rtc_remove(struct platform_device *pdev)
+=======
+static int at91_rtc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sam9_rtc	*rtc = platform_get_drvdata(pdev);
 	u32		mr = rtt_readl(rtc, MR);
@@ -451,6 +455,11 @@ static void at91_rtc_remove(struct platform_device *pdev)
 	rtt_writel(rtc, MR, mr & ~(AT91_RTT_ALMIEN | AT91_RTT_RTTINCIEN));
 
 	clk_disable_unprepare(rtc->sclk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void at91_rtc_shutdown(struct platform_device *pdev)
@@ -529,7 +538,11 @@ MODULE_DEVICE_TABLE(of, at91_rtc_dt_ids);
 
 static struct platform_driver at91_rtc_driver = {
 	.probe		= at91_rtc_probe,
+<<<<<<< HEAD
 	.remove_new	= at91_rtc_remove,
+=======
+	.remove		= at91_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.shutdown	= at91_rtc_shutdown,
 	.driver		= {
 		.name	= "rtc-at91sam9",

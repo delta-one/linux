@@ -23,6 +23,7 @@
 实现支持，EM框架作为一个抽象层介入，它在内核中对功率成本表的格式进行标准化，
 因此能够避免多余的工作。
 
+<<<<<<< HEAD
 功率值可以用微瓦或“抽象刻度”表示。多个子系统可能使用EM，由系统集成商来检查
 功率值刻度类型的要求是否满足。可以在能量感知调度器的文档中找到一个例子
 Documentation/scheduler/sched-energy.rst。对于一些子系统，比如热能或
@@ -32,6 +33,17 @@ Documentation/driver-api/thermal/power_allocator.rst文档中找到。
 
 内核子系统可能（基于EM内部标志位）实现了对EM注册设备是否具有不一致刻度的自动
 检查。要记住的重要事情是，当功率值以“抽象刻度”表示时，从中推导以微焦耳为单位
+=======
+功率值可以用毫瓦或“抽象刻度”表示。多个子系统可能使用EM，由系统集成商来检查
+功率值刻度类型的要求是否满足。可以在能量感知调度器的文档中找到一个例子
+Documentation/scheduler/sched-energy.rst。对于一些子系统，比如热能或
+powercap，用“抽象刻度”描述功率值可能会导致问题。这些子系统对过去使用的功率的
+估算值更感兴趣，因此可能需要真实的毫瓦。这些要求的一个例子可以在智能功率分配
+Documentation/driver-api/thermal/power_allocator.rst文档中找到。
+
+内核子系统可能（基于EM内部标志位）实现了对EM注册设备是否具有不一致刻度的自动
+检查。要记住的重要事情是，当功率值以“抽象刻度”表示时，从中推导以毫焦耳为单位
+>>>>>>> b7ba80a49124 (Commit)
 的真实能量消耗是不可能的。
 
 下图描述了一个驱动的例子（这里是针对Arm的，但该方法适用于任何体系结构），它
@@ -89,20 +101,31 @@ Documentation/driver-api/thermal/power_allocator.rst文档中找到。
 驱动程序应通过以下API将性能域注册到EM框架中::
 
   int em_dev_register_perf_domain(struct device *dev, unsigned int nr_states,
+<<<<<<< HEAD
 		struct em_data_callback *cb, cpumask_t *cpus, bool microwatts);
+=======
+		struct em_data_callback *cb, cpumask_t *cpus, bool milliwatts);
+>>>>>>> b7ba80a49124 (Commit)
 
 驱动程序必须提供一个回调函数，为每个性能状态返回<频率,功率>元组。驱动程序
 提供的回调函数可以自由地从任何相关位置（DT、固件......）以及以任何被认为是
 必要的方式获取数据。只有对于CPU设备，驱动程序必须使用cpumask指定性能域的CPU。
 对于CPU以外的其他设备，最后一个参数必须被设置为NULL。
 
+<<<<<<< HEAD
 最后一个参数“microwatts”（微瓦）设置成正确的值是很重要的，使用EM的内核
 子系统可能会依赖这个标志来检查所有的EM设备是否使用相同的刻度。如果有不同的
 刻度，这些子系统可能决定返回警告/错误，停止工作或崩溃（panic）。
+=======
+最后一个参数“milliwatts”（毫瓦）设置成正确的值是很重要的，使用EM的内核
+子系统可能会依赖这个标志来检查所有的EM设备是否使用相同的刻度。如果有不同的
+刻度，这些子系统可能决定：返回警告/错误，停止工作或崩溃（panic）。
+>>>>>>> b7ba80a49124 (Commit)
 
 关于实现这个回调函数的驱动程序的例子，参见第3节。或者在第2.4节阅读这个API
 的更多文档。
 
+<<<<<<< HEAD
 使用DT的EM注册
 ==============
 
@@ -123,6 +146,8 @@ EM也可以使用OPP框架和DT "操作点-v2 "中的信息注册。DT中的每�
 将标志“microwatts”设置为0，提供.get_power()回调和.get_cost()回调。EM
 框架会在注册过程中正确处理这样的平台。这种平台会被设置EM_PERF_DOMAIN_ARTIFICIAL
 标志。其他使用EM的框架应该特别注意测试和正确对待这个标志。
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 “简单”EM的注册
 ~~~~~~~~~~~~~~~~
@@ -167,8 +192,13 @@ cpufreq_driver::register_em()。这个回调必须为每个特定的驱动程序
 
   -> drivers/cpufreq/foo_cpufreq.c
 
+<<<<<<< HEAD
   01   static int est_power(struct device *dev, unsigned long *mW,
   02                   unsigned long *KHz)
+=======
+  01	static int est_power(unsigned long *mW, unsigned long *KHz,
+  02			struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
   03	{
   04		long freq, power;
   05

@@ -34,11 +34,15 @@ endif
 
 BOOTCFLAGS    := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		 -fno-strict-aliasing -O2 -msoft-float -mno-altivec -mno-vsx \
+<<<<<<< HEAD
 		 $(call cc-option,-mno-spe) $(call cc-option,-mspe=no) \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		 -pipe -fomit-frame-pointer -fno-builtin -fPIC -nostdinc \
 		 $(LINUXINCLUDE)
 
 ifdef CONFIG_PPC64_BOOT_WRAPPER
+<<<<<<< HEAD
 BOOTCFLAGS	+= -m64
 ifdef CONFIG_PPC64_ELF_ABI_V2
 BOOTCFLAGS	+= $(call cc-option,-mabi=elfv2)
@@ -55,6 +59,15 @@ BOOTCFLAGS	+= -mcpu=powerpc64le
 else
 BOOTCFLAGS	+= -mcpu=powerpc64
 endif
+=======
+ifdef CONFIG_CPU_LITTLE_ENDIAN
+BOOTCFLAGS	+= -m64 -mcpu=powerpc64le
+else
+BOOTCFLAGS	+= -m64 -mcpu=powerpc64
+endif
+else
+BOOTCFLAGS	+= -m32 -mcpu=powerpc
+>>>>>>> b7ba80a49124 (Commit)
 endif
 
 BOOTCFLAGS	+= -isystem $(shell $(BOOTCC) -print-file-name=include)
@@ -64,6 +77,12 @@ BOOTCFLAGS	+= -mbig-endian
 else
 BOOTCFLAGS	+= -mlittle-endian
 endif
+<<<<<<< HEAD
+=======
+ifdef CONFIG_PPC64_ELF_ABI_V2
+BOOTCFLAGS	+= $(call cc-option,-mabi=elfv2)
+endif
+>>>>>>> b7ba80a49124 (Commit)
 
 BOOTAFLAGS	:= -D__ASSEMBLY__ $(BOOTCFLAGS) -nostdinc
 

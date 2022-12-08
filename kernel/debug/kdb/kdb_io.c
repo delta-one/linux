@@ -545,7 +545,10 @@ static void kdb_msg_write(const char *msg, int msg_len)
 {
 	struct console *c;
 	const char *cp;
+<<<<<<< HEAD
 	int cookie;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int len;
 
 	if (msg_len == 0)
@@ -559,6 +562,7 @@ static void kdb_msg_write(const char *msg, int msg_len)
 		cp++;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * The console_srcu_read_lock() only provides safe console list
 	 * traversal. The use of the ->write() callback relies on all other
@@ -573,6 +577,10 @@ static void kdb_msg_write(const char *msg, int msg_len)
 	cookie = console_srcu_read_lock();
 	for_each_console_srcu(c) {
 		if (!(console_srcu_read_flags(c) & CON_ENABLED))
+=======
+	for_each_console(c) {
+		if (!(c->flags & CON_ENABLED))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		if (c == dbg_io_ops->cons)
 			continue;
@@ -590,7 +598,10 @@ static void kdb_msg_write(const char *msg, int msg_len)
 		--oops_in_progress;
 		touch_nmi_watchdog();
 	}
+<<<<<<< HEAD
 	console_srcu_read_unlock(cookie);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int vkdb_printf(enum kdb_msgsrc src, const char *fmt, va_list ap)

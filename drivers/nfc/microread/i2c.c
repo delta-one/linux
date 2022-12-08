@@ -231,7 +231,12 @@ static const struct nfc_phy_ops i2c_phy_ops = {
 	.disable = microread_i2c_disable,
 };
 
+<<<<<<< HEAD
 static int microread_i2c_probe(struct i2c_client *client)
+=======
+static int microread_i2c_probe(struct i2c_client *client,
+			       const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct microread_i2c_phy *phy;
 	int r;
@@ -286,7 +291,11 @@ static struct i2c_driver microread_i2c_driver = {
 	.driver = {
 		.name = MICROREAD_I2C_DRIVER_NAME,
 	},
+<<<<<<< HEAD
 	.probe_new	= microread_i2c_probe,
+=======
+	.probe		= microread_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= microread_i2c_remove,
 	.id_table	= microread_i2c_id,
 };

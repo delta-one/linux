@@ -34,6 +34,7 @@
 #define SYNAPTICS_RC_OFFSET        0x4BC
 #define SYNAPTICS_RC_DATA          0x4C0
 
+<<<<<<< HEAD
 #define DP_BRANCH_VENDOR_SPECIFIC_START 0x50C
 
 /**
@@ -49,6 +50,8 @@
 #define PBN_FEC_OVERHEAD_MULTIPLIER_8B_10B	1031
 #define PBN_FEC_OVERHEAD_MULTIPLIER_128B_132B	1000
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct amdgpu_display_manager;
 struct amdgpu_dm_connector;
 
@@ -68,6 +71,7 @@ struct dsc_mst_fairness_vars {
 	struct amdgpu_dm_connector *aconnector;
 };
 
+<<<<<<< HEAD
 int compute_mst_dsc_configs_for_state(struct drm_atomic_state *state,
 				      struct dc_state *dc_state,
 				      struct dsc_mst_fairness_vars *vars);
@@ -77,6 +81,17 @@ bool needs_dsc_aux_workaround(struct dc_link *link);
 int pre_validate_dsc(struct drm_atomic_state *state,
 		     struct dm_atomic_state **dm_state_ptr,
 		     struct dsc_mst_fairness_vars *vars);
+=======
+bool compute_mst_dsc_configs_for_state(struct drm_atomic_state *state,
+				       struct dc_state *dc_state,
+				       struct dsc_mst_fairness_vars *vars);
+
+bool needs_dsc_aux_workaround(struct dc_link *link);
+
+bool pre_validate_dsc(struct drm_atomic_state *state,
+		      struct dm_atomic_state **dm_state_ptr,
+		      struct dsc_mst_fairness_vars *vars);
+>>>>>>> b7ba80a49124 (Commit)
 
 enum dc_status dm_dp_mst_is_port_support_mode(
 	struct amdgpu_dm_connector *aconnector,

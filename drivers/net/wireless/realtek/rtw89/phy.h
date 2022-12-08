@@ -64,9 +64,12 @@
 #define MAX_CFO_TOLERANCE 30
 #define CFO_TF_CNT_TH 300
 
+<<<<<<< HEAD
 #define UL_TB_TF_CNT_L2H_TH 100
 #define UL_TB_TF_CNT_H2L_TH 70
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CCX_MAX_PERIOD 2097
 #define CCX_MAX_PERIOD_UNIT 32
 #define MS_TO_4US_RATIO 250
@@ -117,6 +120,7 @@ enum rtw89_phy_c2h_ra_func {
 	RTW89_PHY_C2H_FUNC_RA_MAX,
 };
 
+<<<<<<< HEAD
 enum rtw89_phy_c2h_dm_func {
 	RTW89_PHY_C2H_DM_FUNC_FW_TEST,
 	RTW89_PHY_C2H_DM_FUNC_FW_TRIG_TX_RPT,
@@ -126,6 +130,8 @@ enum rtw89_phy_c2h_dm_func {
 	RTW89_PHY_C2H_DM_FUNC_NUM,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum rtw89_phy_c2h_class {
 	RTW89_PHY_C2H_CLASS_RUA,
 	RTW89_PHY_C2H_CLASS_RA,
@@ -329,6 +335,12 @@ struct rtw89_nbi_reg_def {
 	struct rtw89_reg_def notch2_en;
 };
 
+<<<<<<< HEAD
+=======
+extern const u8 rtw89_rs_idx_max[RTW89_RS_MAX];
+extern const u8 rtw89_rs_nss_max[RTW89_RS_MAX];
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void rtw89_phy_write8(struct rtw89_dev *rtwdev,
 				    u32 addr, u8 data)
 {
@@ -386,6 +398,7 @@ static inline u32 rtw89_phy_read32_mask(struct rtw89_dev *rtwdev,
 	return rtw89_read32_mask(rtwdev, addr | RTW89_PHY_ADDR_OFFSET, mask);
 }
 
+<<<<<<< HEAD
 static inline
 enum rtw89_gain_offset rtw89_subband_to_gain_offset_band_of_ofdm(enum rtw89_subband subband)
 {
@@ -430,6 +443,8 @@ enum rtw89_phy_bb_gain_band rtw89_subband_to_bb_gain_band(enum rtw89_subband sub
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum rtw89_rfk_flag {
 	RTW89_RFK_F_WRF = 0,
 	RTW89_RFK_F_WM = 1,
@@ -503,7 +518,11 @@ bool rtw89_phy_write_rf(struct rtw89_dev *rtwdev, enum rtw89_rf_path rf_path,
 bool rtw89_phy_write_rf_v1(struct rtw89_dev *rtwdev, enum rtw89_rf_path rf_path,
 			   u32 addr, u32 mask, u32 data);
 void rtw89_phy_init_bb_reg(struct rtw89_dev *rtwdev);
+<<<<<<< HEAD
 void rtw89_phy_init_rf_reg(struct rtw89_dev *rtwdev, bool noio);
+=======
+void rtw89_phy_init_rf_reg(struct rtw89_dev *rtwdev);
+>>>>>>> b7ba80a49124 (Commit)
 void rtw89_phy_config_rf_reg_v1(struct rtw89_dev *rtwdev,
 				const struct rtw89_reg2_def *reg,
 				enum rtw89_rf_path rf_path,
@@ -511,6 +530,7 @@ void rtw89_phy_config_rf_reg_v1(struct rtw89_dev *rtwdev,
 void rtw89_phy_dm_init(struct rtw89_dev *rtwdev);
 void rtw89_phy_write32_idx(struct rtw89_dev *rtwdev, u32 addr, u32 mask,
 			   u32 data, enum rtw89_phy_idx phy_idx);
+<<<<<<< HEAD
 u32 rtw89_phy_read32_idx(struct rtw89_dev *rtwdev, u32 addr, u32 mask,
 			 enum rtw89_phy_idx phy_idx);
 void rtw89_phy_load_txpwr_byrate(struct rtw89_dev *rtwdev,
@@ -529,6 +549,22 @@ void rtw89_phy_set_txpwr_limit(struct rtw89_dev *rtwdev,
 void rtw89_phy_set_txpwr_limit_ru(struct rtw89_dev *rtwdev,
 				  const struct rtw89_chan *chan,
 				  enum rtw89_phy_idx phy_idx);
+=======
+void rtw89_phy_load_txpwr_byrate(struct rtw89_dev *rtwdev,
+				 const struct rtw89_txpwr_table *tbl);
+s8 rtw89_phy_read_txpwr_byrate(struct rtw89_dev *rtwdev, u8 band,
+			       const struct rtw89_rate_desc *rate_desc);
+void rtw89_phy_fill_txpwr_limit(struct rtw89_dev *rtwdev,
+				const struct rtw89_chan *chan,
+				struct rtw89_txpwr_limit *lmt,
+				u8 ntx);
+void rtw89_phy_fill_txpwr_limit_ru(struct rtw89_dev *rtwdev,
+				   const struct rtw89_chan *chan,
+				   struct rtw89_txpwr_limit_ru *lmt_ru,
+				   u8 ntx);
+s8 rtw89_phy_read_txpwr_limit(struct rtw89_dev *rtwdev, u8 band,
+			      u8 bw, u8 ntx, u8 rs, u8 bf, u8 ch);
+>>>>>>> b7ba80a49124 (Commit)
 void rtw89_phy_ra_assoc(struct rtw89_dev *rtwdev, struct ieee80211_sta *sta);
 void rtw89_phy_ra_update(struct rtw89_dev *rtwdev);
 void rtw89_phy_ra_updata_sta(struct rtw89_dev *rtwdev, struct ieee80211_sta *sta,
@@ -553,10 +589,13 @@ void rtw89_phy_set_bss_color(struct rtw89_dev *rtwdev, struct ieee80211_vif *vif
 void rtw89_phy_tssi_ctrl_set_bandedge_cfg(struct rtw89_dev *rtwdev,
 					  enum rtw89_mac_idx mac_idx,
 					  enum rtw89_tssi_bandedge_cfg bandedge_cfg);
+<<<<<<< HEAD
 void rtw89_phy_ul_tb_assoc(struct rtw89_dev *rtwdev, struct rtw89_vif *rtwvif);
 void rtw89_phy_ul_tb_ctrl_track(struct rtw89_dev *rtwdev);
 u8 rtw89_encode_chan_idx(struct rtw89_dev *rtwdev, u8 central_ch, u8 band);
 void rtw89_decode_chan_idx(struct rtw89_dev *rtwdev, u8 chan_idx,
 			   u8 *ch, enum nl80211_band *band);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

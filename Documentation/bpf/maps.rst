@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 ========
 BPF maps
 ========
@@ -14,6 +15,50 @@ BPF maps are accessed from user space via the ``bpf`` syscall, which provides
 commands to create maps, lookup elements, update elements and delete elements.
 More details of the BPF syscall are available in `ebpf-syscall`_ and in the
 `man-pages`_ for `bpf(2)`_.
+=======
+=========
+eBPF maps
+=========
+
+'maps' is a generic storage of different types for sharing data between kernel
+and userspace.
+
+The maps are accessed from user space via BPF syscall, which has commands:
+
+- create a map with given type and attributes
+  ``map_fd = bpf(BPF_MAP_CREATE, union bpf_attr *attr, u32 size)``
+  using attr->map_type, attr->key_size, attr->value_size, attr->max_entries
+  returns process-local file descriptor or negative error
+
+- lookup key in a given map
+  ``err = bpf(BPF_MAP_LOOKUP_ELEM, union bpf_attr *attr, u32 size)``
+  using attr->map_fd, attr->key, attr->value
+  returns zero and stores found elem into value or negative error
+
+- create or update key/value pair in a given map
+  ``err = bpf(BPF_MAP_UPDATE_ELEM, union bpf_attr *attr, u32 size)``
+  using attr->map_fd, attr->key, attr->value
+  returns zero or negative error
+
+- find and delete element by key in a given map
+  ``err = bpf(BPF_MAP_DELETE_ELEM, union bpf_attr *attr, u32 size)``
+  using attr->map_fd, attr->key
+
+- to delete map: close(fd)
+  Exiting process will delete maps automatically
+
+userspace programs use this syscall to create/access maps that eBPF programs
+are concurrently updating.
+
+maps can have different types: hash, array, bloom filter, radix-tree, etc.
+
+The map is defined by:
+
+  - type
+  - max number of elements
+  - key size in bytes
+  - value size in bytes
+>>>>>>> b7ba80a49124 (Commit)
 
 Map Types
 =========
@@ -22,6 +67,7 @@ Map Types
    :maxdepth: 1
    :glob:
 
+<<<<<<< HEAD
    map_*
 
 Usage Notes
@@ -80,3 +126,6 @@ Find and delete element by key in a given map using ``attr->map_fd``,
 .. _bpf(2): https://man7.org/linux/man-pages/man2/bpf.2.html
 .. _bpf-helpers(7): https://man7.org/linux/man-pages/man7/bpf-helpers.7.html
 .. _ebpf-syscall: https://docs.kernel.org/userspace-api/ebpf/syscall.html
+=======
+   map_*
+>>>>>>> b7ba80a49124 (Commit)

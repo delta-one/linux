@@ -157,7 +157,11 @@ static int test_nodelta_obj_get(struct world *world, struct objagg *objagg,
 	int err;
 
 	if (should_create_root)
+<<<<<<< HEAD
 		get_random_bytes(world->next_root_buf,
+=======
+		prandom_bytes(world->next_root_buf,
+>>>>>>> b7ba80a49124 (Commit)
 			      sizeof(world->next_root_buf));
 
 	objagg_obj = world_obj_get(world, objagg, key_id);

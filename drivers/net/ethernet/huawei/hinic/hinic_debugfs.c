@@ -85,7 +85,10 @@ static int hinic_dbg_get_func_table(struct hinic_dev *nic_dev, int idx)
 	struct tag_sml_funcfg_tbl *funcfg_table_elem;
 	struct hinic_cmd_lt_rd *read_data;
 	u16 out_size = sizeof(*read_data);
+<<<<<<< HEAD
 	int ret = ~0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	read_data = kzalloc(sizeof(*read_data), GFP_KERNEL);
@@ -112,6 +115,7 @@ static int hinic_dbg_get_func_table(struct hinic_dev *nic_dev, int idx)
 
 	switch (idx) {
 	case VALID:
+<<<<<<< HEAD
 		ret = funcfg_table_elem->dw0.bs.valid;
 		break;
 	case RX_MODE:
@@ -126,11 +130,26 @@ static int hinic_dbg_get_func_table(struct hinic_dev *nic_dev, int idx)
 	case QUEUE_NUM:
 		ret = funcfg_table_elem->dw13.bs.cfg_q_num;
 		break;
+=======
+		return funcfg_table_elem->dw0.bs.valid;
+	case RX_MODE:
+		return funcfg_table_elem->dw0.bs.nic_rx_mode;
+	case MTU:
+		return funcfg_table_elem->dw1.bs.mtu;
+	case RQ_DEPTH:
+		return funcfg_table_elem->dw13.bs.cfg_rq_depth;
+	case QUEUE_NUM:
+		return funcfg_table_elem->dw13.bs.cfg_q_num;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	kfree(read_data);
 
+<<<<<<< HEAD
 	return ret;
+=======
+	return ~0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t hinic_dbg_cmd_read(struct file *filp, char __user *buffer, size_t count,

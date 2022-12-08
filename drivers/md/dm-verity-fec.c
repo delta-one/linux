@@ -59,14 +59,22 @@ static int fec_decode_rs8(struct dm_verity *v, struct dm_verity_fec_io *fio,
  * to the data block. Caller is responsible for releasing buf.
  */
 static u8 *fec_read_parity(struct dm_verity *v, u64 rsb, int index,
+<<<<<<< HEAD
 			   unsigned int *offset, struct dm_buffer **buf)
+=======
+			   unsigned *offset, struct dm_buffer **buf)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u64 position, block, rem;
 	u8 *res;
 
 	position = (index + rsb) * v->fec->roots;
 	block = div64_u64_rem(position, v->fec->io_size, &rem);
+<<<<<<< HEAD
 	*offset = (unsigned int)rem;
+=======
+	*offset = (unsigned)rem;
+>>>>>>> b7ba80a49124 (Commit)
 
 	res = dm_bufio_read(v->fec->bufio, block, buf);
 	if (IS_ERR(res)) {
@@ -102,7 +110,11 @@ static u8 *fec_read_parity(struct dm_verity *v, u64 rsb, int index,
  */
 static inline u8 *fec_buffer_rs_block(struct dm_verity *v,
 				      struct dm_verity_fec_io *fio,
+<<<<<<< HEAD
 				      unsigned int i, unsigned int j)
+=======
+				      unsigned i, unsigned j)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return &fio->bufs[i][j * v->fec->rsn];
 }
@@ -111,7 +123,11 @@ static inline u8 *fec_buffer_rs_block(struct dm_verity *v,
  * Return an index to the current RS block when called inside
  * fec_for_each_buffer_rs_block.
  */
+<<<<<<< HEAD
 static inline unsigned int fec_buffer_rs_index(unsigned int i, unsigned int j)
+=======
+static inline unsigned fec_buffer_rs_index(unsigned i, unsigned j)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return (i << DM_VERITY_FEC_BUF_RS_BITS) + j;
 }
@@ -121,12 +137,20 @@ static inline unsigned int fec_buffer_rs_index(unsigned int i, unsigned int j)
  * starting from block_offset.
  */
 static int fec_decode_bufs(struct dm_verity *v, struct dm_verity_fec_io *fio,
+<<<<<<< HEAD
 			   u64 rsb, int byte_index, unsigned int block_offset,
+=======
+			   u64 rsb, int byte_index, unsigned block_offset,
+>>>>>>> b7ba80a49124 (Commit)
 			   int neras)
 {
 	int r, corrected = 0, res;
 	struct dm_buffer *buf;
+<<<<<<< HEAD
 	unsigned int n, i, offset;
+=======
+	unsigned n, i, offset;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 *par, *block;
 
 	par = fec_read_parity(v, rsb, block_offset, &offset, &buf);
@@ -197,7 +221,11 @@ static int fec_is_erasure(struct dm_verity *v, struct dm_verity_io *io,
  * fits into buffers. Check for erasure locations if @neras is non-NULL.
  */
 static int fec_read_bufs(struct dm_verity *v, struct dm_verity_io *io,
+<<<<<<< HEAD
 			 u64 rsb, u64 target, unsigned int block_offset,
+=======
+			 u64 rsb, u64 target, unsigned block_offset,
+>>>>>>> b7ba80a49124 (Commit)
 			 int *neras)
 {
 	bool is_zero;
@@ -208,7 +236,11 @@ static int fec_read_bufs(struct dm_verity *v, struct dm_verity_io *io,
 	u64 block, ileaved;
 	u8 *bbuf, *rs_block;
 	u8 want_digest[HASH_MAX_DIGESTSIZE];
+<<<<<<< HEAD
 	unsigned int n, k;
+=======
+	unsigned n, k;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (neras)
 		*neras = 0;
@@ -304,7 +336,11 @@ done:
  */
 static int fec_alloc_bufs(struct dm_verity *v, struct dm_verity_fec_io *fio)
 {
+<<<<<<< HEAD
 	unsigned int n;
+=======
+	unsigned n;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!fio->rs)
 		fio->rs = mempool_alloc(&v->fec->rs_pool, GFP_NOIO);
@@ -344,7 +380,11 @@ static int fec_alloc_bufs(struct dm_verity *v, struct dm_verity_fec_io *fio)
  */
 static void fec_init_bufs(struct dm_verity *v, struct dm_verity_fec_io *fio)
 {
+<<<<<<< HEAD
 	unsigned int n;
+=======
+	unsigned n;
+>>>>>>> b7ba80a49124 (Commit)
 
 	fec_for_each_buffer(fio, n)
 		memset(fio->bufs[n], 0, v->fec->rsn << DM_VERITY_FEC_BUF_RS_BITS);
@@ -362,7 +402,11 @@ static int fec_decode_rsb(struct dm_verity *v, struct dm_verity_io *io,
 			  bool use_erasures)
 {
 	int r, neras = 0;
+<<<<<<< HEAD
 	unsigned int pos;
+=======
+	unsigned pos;
+>>>>>>> b7ba80a49124 (Commit)
 
 	r = fec_alloc_bufs(v, fio);
 	if (unlikely(r < 0))
@@ -484,7 +528,11 @@ done:
  */
 void verity_fec_finish_io(struct dm_verity_io *io)
 {
+<<<<<<< HEAD
 	unsigned int n;
+=======
+	unsigned n;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_verity_fec *f = io->v->fec;
 	struct dm_verity_fec_io *fio = fec_io(io);
 
@@ -522,8 +570,13 @@ void verity_fec_init_io(struct dm_verity_io *io)
 /*
  * Append feature arguments and values to the status table.
  */
+<<<<<<< HEAD
 unsigned int verity_fec_status_table(struct dm_verity *v, unsigned int sz,
 				 char *result, unsigned int maxlen)
+=======
+unsigned verity_fec_status_table(struct dm_verity *v, unsigned sz,
+				 char *result, unsigned maxlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!verity_fec_is_enabled(v))
 		return sz;
@@ -589,7 +642,11 @@ bool verity_is_fec_opt_arg(const char *arg_name)
 }
 
 int verity_fec_parse_opt_args(struct dm_arg_set *as, struct dm_verity *v,
+<<<<<<< HEAD
 			      unsigned int *argc, const char *arg_name)
+=======
+			      unsigned *argc, const char *arg_name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r;
 	struct dm_target *ti = v->ti;

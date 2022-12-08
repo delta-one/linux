@@ -39,6 +39,10 @@ static DECLARE_COMPLETION(cpu_running);
 
 void __init smp_prepare_boot_cpu(void)
 {
+<<<<<<< HEAD
+=======
+	init_cpu_topology();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void __init smp_prepare_cpus(unsigned int max_cpus)
@@ -47,8 +51,11 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
 	int ret;
 	unsigned int curr_cpuid;
 
+<<<<<<< HEAD
 	init_cpu_topology();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	curr_cpuid = smp_processor_id();
 	store_cpu_topology(curr_cpuid);
 	numa_store_cpu_info(curr_cpuid);

@@ -76,10 +76,13 @@ static const struct renesas_family fam_rzv2l __initconst __maybe_unused = {
 	.name	= "RZ/V2L",
 };
 
+<<<<<<< HEAD
 static const struct renesas_family fam_rzv2m __initconst __maybe_unused = {
 	.name	= "RZ/V2M",
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct renesas_family fam_shmobile __initconst __maybe_unused = {
 	.name	= "SH-Mobile",
 	.reg	= 0xe600101c,		/* CCCR (Common Chip Code Register) */
@@ -175,10 +178,13 @@ static const struct renesas_soc soc_rz_v2l __initconst __maybe_unused = {
 	.id     = 0x8447447,
 };
 
+<<<<<<< HEAD
 static const struct renesas_soc soc_rz_v2m __initconst __maybe_unused = {
 	.family = &fam_rzv2m,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct renesas_soc soc_rcar_m1a __initconst __maybe_unused = {
 	.family	= &fam_rcar_gen1,
 };
@@ -269,7 +275,11 @@ static const struct renesas_soc soc_shmobile_ag5 __initconst __maybe_unused = {
 };
 
 
+<<<<<<< HEAD
 static const struct of_device_id renesas_socs[] __initconst __maybe_unused = {
+=======
+static const struct of_device_id renesas_socs[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_ARCH_R7S72100
 	{ .compatible = "renesas,r7s72100",	.data = &soc_rz_a1h },
 #endif
@@ -330,8 +340,15 @@ static const struct of_device_id renesas_socs[] __initconst __maybe_unused = {
 #ifdef CONFIG_ARCH_R8A7794
 	{ .compatible = "renesas,r8a7794",	.data = &soc_rcar_e2 },
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_R8A77951
 	{ .compatible = "renesas,r8a7795",	.data = &soc_rcar_h3 },
+=======
+#if defined(CONFIG_ARCH_R8A77950) || defined(CONFIG_ARCH_R8A77951)
+	{ .compatible = "renesas,r8a7795",	.data = &soc_rcar_h3 },
+#endif
+#ifdef CONFIG_ARCH_R8A77951
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "renesas,r8a779m0",	.data = &soc_rcar_h3 },
 	{ .compatible = "renesas,r8a779m1",	.data = &soc_rcar_h3 },
 	{ .compatible = "renesas,r8a779m8",	.data = &soc_rcar_h3 },
@@ -373,13 +390,18 @@ static const struct of_device_id renesas_socs[] __initconst __maybe_unused = {
 #ifdef CONFIG_ARCH_R8A779G0
 	{ .compatible = "renesas,r8a779g0",	.data = &soc_rcar_v4h },
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_R9A07G043
+=======
+#if defined(CONFIG_ARCH_R9A07G043)
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_RISCV
 	{ .compatible = "renesas,r9a07g043",	.data = &soc_rz_five },
 #else
 	{ .compatible = "renesas,r9a07g043",	.data = &soc_rz_g2ul },
 #endif
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_R9A07G044
 	{ .compatible = "renesas,r9a07g044",	.data = &soc_rz_g2l },
 #endif
@@ -389,6 +411,14 @@ static const struct of_device_id renesas_socs[] __initconst __maybe_unused = {
 #ifdef CONFIG_ARCH_R9A09G011
 	{ .compatible = "renesas,r9a09g011",	.data = &soc_rz_v2m },
 #endif
+=======
+#if defined(CONFIG_ARCH_R9A07G044)
+	{ .compatible = "renesas,r9a07g044",	.data = &soc_rz_g2l },
+#endif
+#if defined(CONFIG_ARCH_R9A07G054)
+	{ .compatible = "renesas,r9a07g054",	.data = &soc_rz_v2l },
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_ARCH_SH73A0
 	{ .compatible = "renesas,sh73a0",	.data = &soc_shmobile_ag5 },
 #endif
@@ -414,11 +444,14 @@ static const struct renesas_id id_rzg2l __initconst = {
 	.mask = 0xfffffff,
 };
 
+<<<<<<< HEAD
 static const struct renesas_id id_rzv2m __initconst = {
 	.offset = 0x104,
 	.mask = 0xff,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct renesas_id id_prr __initconst = {
 	.offset = 0,
 	.mask = 0xff00,
@@ -429,7 +462,10 @@ static const struct of_device_id renesas_ids[] __initconst = {
 	{ .compatible = "renesas,r9a07g043-sysc",	.data = &id_rzg2l },
 	{ .compatible = "renesas,r9a07g044-sysc",	.data = &id_rzg2l },
 	{ .compatible = "renesas,r9a07g054-sysc",	.data = &id_rzg2l },
+<<<<<<< HEAD
 	{ .compatible = "renesas,r9a09g011-sys",	.data = &id_rzv2m },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "renesas,prr",			.data = &id_prr },
 	{ /* sentinel */ }
 };
@@ -500,11 +536,14 @@ static int __init renesas_soc_init(void)
 			soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%u",
 							   eshi);
 			rev_prefix = "Rev ";
+<<<<<<< HEAD
 		} else if (id == &id_rzv2m) {
 			eshi = ((product >> 4) & 0x0f);
 			eslo = product & 0xf;
 			soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%u.%u",
 							   eshi, eslo);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (soc->id &&

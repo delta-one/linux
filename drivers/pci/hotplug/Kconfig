@@ -6,14 +6,20 @@
 menuconfig HOTPLUG_PCI
 	bool "Support for PCI Hotplug"
 	depends on PCI && SYSFS
+<<<<<<< HEAD
 	default y if USB4
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Say Y here if you have a motherboard with a PCI Hotplug controller.
 	  This allows you to add and remove PCI cards while the machine is
 	  powered up and running.
 
+<<<<<<< HEAD
 	  Thunderbolt/USB4 PCIe tunneling depends on native PCIe hotplug.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	  When in doubt, say N.
 
 if HOTPLUG_PCI

@@ -10,7 +10,10 @@
 #include <linux/init.h>
 #include <linux/linkage.h>
 #include <linux/pgtable.h>
+<<<<<<< HEAD
 #include <linux/cfi_types.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/assembler.h>
 #include <asm/asm-offsets.h>
 #include <asm/asm_pointer_auth.h>
@@ -110,6 +113,10 @@ SYM_FUNC_END(cpu_do_suspend)
  *
  * x0: Address of context pointer
  */
+<<<<<<< HEAD
+=======
+	.pushsection ".idmap.text", "awx"
+>>>>>>> b7ba80a49124 (Commit)
 SYM_FUNC_START(cpu_do_resume)
 	ldp	x2, x3, [x0]
 	ldp	x4, x5, [x0, #16]
@@ -165,6 +172,10 @@ alternative_else_nop_endif
 	isb
 	ret
 SYM_FUNC_END(cpu_do_resume)
+<<<<<<< HEAD
+=======
+	.popsection
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	.pushsection ".idmap.text", "awx"
@@ -186,13 +197,24 @@ SYM_FUNC_END(cpu_do_resume)
  * This is the low-level counterpart to cpu_replace_ttbr1, and should not be
  * called by anything else. It can only be executed from a TTBR0 mapping.
  */
+<<<<<<< HEAD
 SYM_TYPED_FUNC_START(idmap_cpu_replace_ttbr1)
+=======
+SYM_FUNC_START(idmap_cpu_replace_ttbr1)
+	save_and_disable_daif flags=x2
+
+>>>>>>> b7ba80a49124 (Commit)
 	__idmap_cpu_set_reserved_ttbr1 x1, x3
 
 	offset_ttbr1 x0, x3
 	msr	ttbr1_el1, x0
 	isb
 
+<<<<<<< HEAD
+=======
+	restore_daif x2
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret
 SYM_FUNC_END(idmap_cpu_replace_ttbr1)
 	.popsection
@@ -250,7 +272,11 @@ SYM_FUNC_END(idmap_cpu_replace_ttbr1)
 SYM_DATA(__idmap_kpti_flag, .long 1)
 	.popsection
 
+<<<<<<< HEAD
 SYM_TYPED_FUNC_START(idmap_kpti_install_ng_mappings)
+=======
+SYM_FUNC_START(idmap_kpti_install_ng_mappings)
+>>>>>>> b7ba80a49124 (Commit)
 	cpu		.req	w0
 	temp_pte	.req	x0
 	num_cpus	.req	w1

@@ -172,7 +172,11 @@ void ovs_netdev_tunnel_destroy(struct vport *vport)
 	 * if it's not already shutting down.
 	 */
 	if (vport->dev->reg_state == NETREG_REGISTERED)
+<<<<<<< HEAD
 		rtnl_delete_link(vport->dev, 0, NULL);
+=======
+		rtnl_delete_link(vport->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	netdev_put(vport->dev, &vport->dev_tracker);
 	vport->dev = NULL;
 	rtnl_unlock();

@@ -19,6 +19,7 @@ static inline bool kfence_protect_page(unsigned long addr, bool protect)
 	return true;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_KFENCE
 extern bool kfence_early_init;
 static inline bool arm64_kfence_can_set_direct_map(void)
@@ -29,4 +30,6 @@ static inline bool arm64_kfence_can_set_direct_map(void)
 static inline bool arm64_kfence_can_set_direct_map(void) { return false; }
 #endif /* CONFIG_KFENCE */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __ASM_KFENCE_H */

@@ -10,6 +10,10 @@
 #include <linux/sizes.h>
 #include <linux/delay.h>
 #include <linux/firmware.h>
+<<<<<<< HEAD
+=======
+#include <linux/gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/i2c.h>
 #include <linux/init.h>
 #include <linux/media.h>
@@ -23,6 +27,10 @@
 #include <media/v4l2-device.h>
 #include <media/v4l2-subdev.h>
 #include <media/v4l2-mediabus.h>
+<<<<<<< HEAD
+=======
+#include <media/i2c/s5c73m3.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "s5c73m3.h"
 

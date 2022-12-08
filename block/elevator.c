@@ -57,7 +57,11 @@ static LIST_HEAD(elv_list);
  * Query io scheduler to see if the current process issuing bio may be
  * merged with rq.
  */
+<<<<<<< HEAD
 static bool elv_iosched_allow_bio_merge(struct request *rq, struct bio *bio)
+=======
+static int elv_iosched_allow_bio_merge(struct request *rq, struct bio *bio)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct request_queue *q = rq->q;
 	struct elevator_queue *e = q->elevator;
@@ -65,7 +69,11 @@ static bool elv_iosched_allow_bio_merge(struct request *rq, struct bio *bio)
 	if (e->type->ops.allow_merge)
 		return e->type->ops.allow_merge(q, rq, bio);
 
+<<<<<<< HEAD
 	return true;
+=======
+	return 1;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -83,6 +91,7 @@ bool elv_bio_merge_ok(struct request *rq, struct bio *bio)
 }
 EXPORT_SYMBOL(elv_bio_merge_ok);
 
+<<<<<<< HEAD
 static inline bool elv_support_features(struct request_queue *q,
 		const struct elevator_type *e)
 {
@@ -115,18 +124,95 @@ static struct elevator_type *__elevator_find(const char *name)
 
 static struct elevator_type *elevator_find_get(struct request_queue *q,
 		const char *name)
+=======
+static inline bool elv_support_features(unsigned int elv_features,
+					unsigned int required_features)
+{
+	return (required_features & elv_features) == required_features;
+}
+
+/**
+ * elevator_match - Test an elevator name and features
+ * @e: Scheduler to test
+ * @name: Elevator name to test
+ * @required_features: Features that the elevator must provide
+ *
+ * Return true if the elevator @e name matches @name and if @e provides all
+ * the features specified by @required_features.
+ */
+static bool elevator_match(const struct elevator_type *e, const char *name,
+			   unsigned int required_features)
+{
+	if (!elv_support_features(e->elevator_features, required_features))
+		return false;
+	if (!strcmp(e->elevator_name, name))
+		return true;
+	if (e->elevator_alias && !strcmp(e->elevator_alias, name))
+		return true;
+
+	return false;
+}
+
+/**
+ * elevator_find - Find an elevator
+ * @name: Name of the elevator to find
+ * @required_features: Features that the elevator must provide
+ *
+ * Return the first registered scheduler with name @name and supporting the
+ * features @required_features and NULL otherwise.
+ */
+static struct elevator_type *elevator_find(const char *name,
+					   unsigned int required_features)
+{
+	struct elevator_type *e;
+
+	list_for_each_entry(e, &elv_list, list) {
+		if (elevator_match(e, name, required_features))
+			return e;
+	}
+
+	return NULL;
+}
+
+static void elevator_put(struct elevator_type *e)
+{
+	module_put(e->elevator_owner);
+}
+
+static struct elevator_type *elevator_get(struct request_queue *q,
+					  const char *name, bool try_loading)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct elevator_type *e;
 
 	spin_lock(&elv_list_lock);
+<<<<<<< HEAD
 	e = __elevator_find(name);
 	if (e && (!elv_support_features(q, e) || !elevator_tryget(e)))
 		e = NULL;
+=======
+
+	e = elevator_find(name, q->required_elevator_features);
+	if (!e && try_loading) {
+		spin_unlock(&elv_list_lock);
+		request_module("%s-iosched", name);
+		spin_lock(&elv_list_lock);
+		e = elevator_find(name, q->required_elevator_features);
+	}
+
+	if (e && !try_module_get(e->elevator_owner))
+		e = NULL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock(&elv_list_lock);
 	return e;
 }
 
+<<<<<<< HEAD
 static const struct kobj_type elv_ktype;
+=======
+static struct kobj_type elv_ktype;
+>>>>>>> b7ba80a49124 (Commit)
 
 struct elevator_queue *elevator_alloc(struct request_queue *q,
 				  struct elevator_type *e)
@@ -137,7 +223,10 @@ struct elevator_queue *elevator_alloc(struct request_queue *q,
 	if (unlikely(!eq))
 		return NULL;
 
+<<<<<<< HEAD
 	__elevator_get(e);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	eq->type = e;
 	kobject_init(&eq->kobj, &elv_ktype);
 	mutex_init(&eq->sysfs_lock);
@@ -455,7 +544,11 @@ static const struct sysfs_ops elv_sysfs_ops = {
 	.store	= elv_attr_store,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type elv_ktype = {
+=======
+static struct kobj_type elv_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops	= &elv_sysfs_ops,
 	.release	= elevator_release,
 };
@@ -467,7 +560,11 @@ int elv_register_queue(struct request_queue *q, bool uevent)
 
 	lockdep_assert_held(&q->sysfs_lock);
 
+<<<<<<< HEAD
 	error = kobject_add(&e->kobj, &q->disk->queue_kobj, "iosched");
+=======
+	error = kobject_add(&e->kobj, &q->kobj, "%s", "iosched");
+>>>>>>> b7ba80a49124 (Commit)
 	if (!error) {
 		struct elv_fs_entry *attr = e->type->elevator_attrs;
 		if (attr) {
@@ -480,7 +577,11 @@ int elv_register_queue(struct request_queue *q, bool uevent)
 		if (uevent)
 			kobject_uevent(&e->kobj, KOBJ_ADD);
 
+<<<<<<< HEAD
 		set_bit(ELEVATOR_FLAG_REGISTERED, &e->flags);
+=======
+		e->registered = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return error;
 }
@@ -491,9 +592,19 @@ void elv_unregister_queue(struct request_queue *q)
 
 	lockdep_assert_held(&q->sysfs_lock);
 
+<<<<<<< HEAD
 	if (e && test_and_clear_bit(ELEVATOR_FLAG_REGISTERED, &e->flags)) {
 		kobject_uevent(&e->kobj, KOBJ_REMOVE);
 		kobject_del(&e->kobj);
+=======
+	if (e && e->registered) {
+		struct elevator_queue *e = q->elevator;
+
+		kobject_uevent(&e->kobj, KOBJ_REMOVE);
+		kobject_del(&e->kobj);
+
+		e->registered = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -519,7 +630,11 @@ int elv_register(struct elevator_type *e)
 
 	/* register, don't allow duplicate names */
 	spin_lock(&elv_list_lock);
+<<<<<<< HEAD
 	if (__elevator_find(e->elevator_name)) {
+=======
+	if (elevator_find(e->elevator_name, 0)) {
+>>>>>>> b7ba80a49124 (Commit)
 		spin_unlock(&elv_list_lock);
 		kmem_cache_destroy(e->icq_cache);
 		return -EBUSY;
@@ -552,6 +667,42 @@ void elv_unregister(struct elevator_type *e)
 }
 EXPORT_SYMBOL_GPL(elv_unregister);
 
+<<<<<<< HEAD
+=======
+int elevator_switch_mq(struct request_queue *q,
+			      struct elevator_type *new_e)
+{
+	int ret;
+
+	lockdep_assert_held(&q->sysfs_lock);
+
+	if (q->elevator) {
+		elv_unregister_queue(q);
+		elevator_exit(q);
+	}
+
+	ret = blk_mq_init_sched(q, new_e);
+	if (ret)
+		goto out;
+
+	if (new_e) {
+		ret = elv_register_queue(q, true);
+		if (ret) {
+			elevator_exit(q);
+			goto out;
+		}
+	}
+
+	if (new_e)
+		blk_add_trace_msg(q, "elv switch: %s", new_e->elevator_name);
+	else
+		blk_add_trace_msg(q, "elv switch: none");
+
+out:
+	return ret;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool elv_support_iosched(struct request_queue *q)
 {
 	if (!queue_is_mq(q) ||
@@ -573,7 +724,11 @@ static struct elevator_type *elevator_get_default(struct request_queue *q)
 	    !blk_mq_is_shared_tags(q->tag_set->flags))
 		return NULL;
 
+<<<<<<< HEAD
 	return elevator_find_get(q, "mq-deadline");
+=======
+	return elevator_get(q, "mq-deadline", false);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -587,13 +742,22 @@ static struct elevator_type *elevator_get_by_features(struct request_queue *q)
 	spin_lock(&elv_list_lock);
 
 	list_for_each_entry(e, &elv_list, list) {
+<<<<<<< HEAD
 		if (elv_support_features(q, e)) {
+=======
+		if (elv_support_features(e->elevator_features,
+					 q->required_elevator_features)) {
+>>>>>>> b7ba80a49124 (Commit)
 			found = e;
 			break;
 		}
 	}
 
+<<<<<<< HEAD
 	if (found && !elevator_tryget(found))
+=======
+	if (found && !try_module_get(found->elevator_owner))
+>>>>>>> b7ba80a49124 (Commit)
 		found = NULL;
 
 	spin_unlock(&elv_list_lock);
@@ -643,6 +807,7 @@ void elevator_init_mq(struct request_queue *q)
 	if (err) {
 		pr_warn("\"%s\" elevator initialization failed, "
 			"falling back to \"none\"\n", e->elevator_name);
+<<<<<<< HEAD
 	}
 
 	elevator_put(e);
@@ -657,12 +822,28 @@ void elevator_init_mq(struct request_queue *q)
 int elevator_switch(struct request_queue *q, struct elevator_type *new_e)
 {
 	int ret;
+=======
+		elevator_put(e);
+	}
+}
+
+/*
+ * switch to new_e io scheduler. be careful not to introduce deadlocks -
+ * we don't free the old io scheduler, before we have allocated what we
+ * need for the new one. this way we have a chance of going back to the old
+ * one, if the new one fails init for some reason.
+ */
+static int elevator_switch(struct request_queue *q, struct elevator_type *new_e)
+{
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	lockdep_assert_held(&q->sysfs_lock);
 
 	blk_mq_freeze_queue(q);
 	blk_mq_quiesce_queue(q);
 
+<<<<<<< HEAD
 	if (q->elevator) {
 		elv_unregister_queue(q);
 		elevator_exit(q);
@@ -707,20 +888,36 @@ void elevator_disable(struct request_queue *q)
 
 	blk_mq_unquiesce_queue(q);
 	blk_mq_unfreeze_queue(q);
+=======
+	err = elevator_switch_mq(q, new_e);
+
+	blk_mq_unquiesce_queue(q);
+	blk_mq_unfreeze_queue(q);
+
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
  * Switch this queue to the given IO scheduler.
  */
+<<<<<<< HEAD
 static int elevator_change(struct request_queue *q, const char *elevator_name)
 {
 	struct elevator_type *e;
 	int ret;
+=======
+static int __elevator_change(struct request_queue *q, const char *name)
+{
+	char elevator_name[ELV_NAME_MAX];
+	struct elevator_type *e;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Make sure queue is not in the middle of being removed */
 	if (!blk_queue_registered(q))
 		return -ENOENT;
 
+<<<<<<< HEAD
 	if (!strncmp(elevator_name, "none", 4)) {
 		if (q->elevator)
 			elevator_disable(q);
@@ -746,20 +943,56 @@ ssize_t elv_iosched_store(struct request_queue *q, const char *buf,
 			  size_t count)
 {
 	char elevator_name[ELV_NAME_MAX];
+=======
+	/*
+	 * Special case for mq, turn off scheduling
+	 */
+	if (!strncmp(name, "none", 4)) {
+		if (!q->elevator)
+			return 0;
+		return elevator_switch(q, NULL);
+	}
+
+	strlcpy(elevator_name, name, sizeof(elevator_name));
+	e = elevator_get(q, strstrip(elevator_name), true);
+	if (!e)
+		return -EINVAL;
+
+	if (q->elevator &&
+	    elevator_match(q->elevator->type, elevator_name, 0)) {
+		elevator_put(e);
+		return 0;
+	}
+
+	return elevator_switch(q, e);
+}
+
+ssize_t elv_iosched_store(struct request_queue *q, const char *name,
+			  size_t count)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (!elv_support_iosched(q))
 		return count;
 
+<<<<<<< HEAD
 	strlcpy(elevator_name, buf, sizeof(elevator_name));
 	ret = elevator_change(q, strstrip(elevator_name));
 	if (!ret)
 		return count;
+=======
+	ret = __elevator_change(q, name);
+	if (!ret)
+		return count;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
 ssize_t elv_iosched_show(struct request_queue *q, char *name)
 {
+<<<<<<< HEAD
 	struct elevator_queue *eq = q->elevator;
 	struct elevator_type *cur = NULL, *e;
 	int len = 0;
@@ -784,6 +1017,38 @@ ssize_t elv_iosched_show(struct request_queue *q, char *name)
 	spin_unlock(&elv_list_lock);
 
 	len += sprintf(name+len, "\n");
+=======
+	struct elevator_queue *e = q->elevator;
+	struct elevator_type *elv = NULL;
+	struct elevator_type *__e;
+	int len = 0;
+
+	if (!queue_is_mq(q))
+		return sprintf(name, "none\n");
+
+	if (!q->elevator)
+		len += sprintf(name+len, "[none] ");
+	else
+		elv = e->type;
+
+	spin_lock(&elv_list_lock);
+	list_for_each_entry(__e, &elv_list, list) {
+		if (elv && elevator_match(elv, __e->elevator_name, 0)) {
+			len += sprintf(name+len, "[%s] ", elv->elevator_name);
+			continue;
+		}
+		if (elv_support_iosched(q) &&
+		    elevator_match(__e, __e->elevator_name,
+				   q->required_elevator_features))
+			len += sprintf(name+len, "%s ", __e->elevator_name);
+	}
+	spin_unlock(&elv_list_lock);
+
+	if (q->elevator)
+		len += sprintf(name+len, "none");
+
+	len += sprintf(len+name, "\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return len;
 }
 

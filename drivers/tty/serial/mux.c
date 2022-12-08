@@ -171,6 +171,7 @@ static void mux_break_ctl(struct uart_port *port, int break_state)
 {
 }
 
+<<<<<<< HEAD
 static void mux_tx_done(struct uart_port *port)
 {
 	/* FIXME js: really needs to wait? */
@@ -178,6 +179,8 @@ static void mux_tx_done(struct uart_port *port)
 		udelay(1);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * mux_write - Write chars to the mux fifo.
  * @port: Ptr to the uart_port.
@@ -187,6 +190,7 @@ static void mux_tx_done(struct uart_port *port)
  */
 static void mux_write(struct uart_port *port)
 {
+<<<<<<< HEAD
 	u8 ch;
 
 	uart_port_tx_limited(port, ch,
@@ -194,6 +198,41 @@ static void mux_write(struct uart_port *port)
 		true,
 		UART_PUT_CHAR(port, ch),
 		mux_tx_done(port));
+=======
+	int count;
+	struct circ_buf *xmit = &port->state->xmit;
+
+	if(port->x_char) {
+		UART_PUT_CHAR(port, port->x_char);
+		port->icount.tx++;
+		port->x_char = 0;
+		return;
+	}
+
+	if(uart_circ_empty(xmit) || uart_tx_stopped(port)) {
+		mux_stop_tx(port);
+		return;
+	}
+
+	count = (port->fifosize) - UART_GET_FIFO_CNT(port);
+	do {
+		UART_PUT_CHAR(port, xmit->buf[xmit->tail]);
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+		port->icount.tx++;
+		if(uart_circ_empty(xmit))
+			break;
+
+	} while(--count > 0);
+
+	while(UART_GET_FIFO_CNT(port)) 
+		udelay(1);
+
+	if(uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+		uart_write_wakeup(port);
+
+	if (uart_circ_empty(xmit))
+		mux_stop_tx(port);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

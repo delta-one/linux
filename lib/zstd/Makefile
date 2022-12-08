@@ -10,10 +10,21 @@
 # ################################################################
 obj-$(CONFIG_ZSTD_COMPRESS) += zstd_compress.o
 obj-$(CONFIG_ZSTD_DECOMPRESS) += zstd_decompress.o
+<<<<<<< HEAD
 obj-$(CONFIG_ZSTD_COMMON) += zstd_common.o
 
 zstd_compress-y := \
 		zstd_compress_module.o \
+=======
+
+zstd_compress-y := \
+		zstd_compress_module.o \
+		common/debug.o \
+		common/entropy_common.o \
+		common/error_private.o \
+		common/fse_decompress.o \
+		common/zstd_common.o \
+>>>>>>> b7ba80a49124 (Commit)
 		compress/fse_compress.o \
 		compress/hist.o \
 		compress/huf_compress.o \
@@ -29,6 +40,7 @@ zstd_compress-y := \
 
 zstd_decompress-y := \
 		zstd_decompress_module.o \
+<<<<<<< HEAD
 		decompress/huf_decompress.o \
 		decompress/zstd_ddict.o \
 		decompress/zstd_decompress.o \
@@ -36,8 +48,17 @@ zstd_decompress-y := \
 
 zstd_common-y := \
 		zstd_common_module.o \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		common/debug.o \
 		common/entropy_common.o \
 		common/error_private.o \
 		common/fse_decompress.o \
 		common/zstd_common.o \
+<<<<<<< HEAD
+=======
+		decompress/huf_decompress.o \
+		decompress/zstd_ddict.o \
+		decompress/zstd_decompress.o \
+		decompress/zstd_decompress_block.o \
+>>>>>>> b7ba80a49124 (Commit)

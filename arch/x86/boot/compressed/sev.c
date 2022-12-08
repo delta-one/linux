@@ -208,6 +208,7 @@ void sev_es_shutdown_ghcb(void)
 		error("Can't unmap GHCB page");
 }
 
+<<<<<<< HEAD
 static void __noreturn sev_es_ghcb_terminate(struct ghcb *ghcb, unsigned int set,
 					     unsigned int reason, u64 exit_info_2)
 {
@@ -225,6 +226,8 @@ static void __noreturn sev_es_ghcb_terminate(struct ghcb *ghcb, unsigned int set
 		asm volatile("hlt\n" : : : "memory");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool sev_es_check_ghcb_fault(unsigned long address)
 {
 	/* Check whether the fault was on the GHCB page */
@@ -287,6 +290,7 @@ static void enforce_vmpl0(void)
 		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_NOT_VMPL0);
 }
 
+<<<<<<< HEAD
 /*
  * SNP_FEATURES_IMPL_REQ is the mask of SNP features that will need
  * guest side implementation for proper functioning of the guest. If any
@@ -340,6 +344,8 @@ void snp_check_features(void)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void sev_enable(struct boot_params *bp)
 {
 	unsigned int eax, ebx, ecx, edx;

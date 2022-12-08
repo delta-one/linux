@@ -7,14 +7,20 @@
  */
 
 #include <linux/atomic.h>
+<<<<<<< HEAD
 #include <linux/bits.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/gpio/consumer.h>
 #include <linux/kernel.h>
 #include <linux/list.h>
 #include <linux/module.h>
 #include <linux/slab.h>
 #include <linux/usb.h>
+<<<<<<< HEAD
 #include <linux/usb/uvc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/videodev2.h>
 #include <linux/vmalloc.h>
 #include <linux/wait.h>
@@ -37,6 +43,201 @@ unsigned int uvc_dbg_param;
 unsigned int uvc_timeout_param = UVC_CTRL_STREAMING_TIMEOUT;
 
 /* ------------------------------------------------------------------------
+<<<<<<< HEAD
+=======
+ * Video formats
+ */
+
+static struct uvc_format_desc uvc_fmts[] = {
+	{
+		.name		= "YUV 4:2:2 (YUYV)",
+		.guid		= UVC_GUID_FORMAT_YUY2,
+		.fcc		= V4L2_PIX_FMT_YUYV,
+	},
+	{
+		.name		= "YUV 4:2:2 (YUYV)",
+		.guid		= UVC_GUID_FORMAT_YUY2_ISIGHT,
+		.fcc		= V4L2_PIX_FMT_YUYV,
+	},
+	{
+		.name		= "YUV 4:2:0 (NV12)",
+		.guid		= UVC_GUID_FORMAT_NV12,
+		.fcc		= V4L2_PIX_FMT_NV12,
+	},
+	{
+		.name		= "MJPEG",
+		.guid		= UVC_GUID_FORMAT_MJPEG,
+		.fcc		= V4L2_PIX_FMT_MJPEG,
+	},
+	{
+		.name		= "YVU 4:2:0 (YV12)",
+		.guid		= UVC_GUID_FORMAT_YV12,
+		.fcc		= V4L2_PIX_FMT_YVU420,
+	},
+	{
+		.name		= "YUV 4:2:0 (I420)",
+		.guid		= UVC_GUID_FORMAT_I420,
+		.fcc		= V4L2_PIX_FMT_YUV420,
+	},
+	{
+		.name		= "YUV 4:2:0 (M420)",
+		.guid		= UVC_GUID_FORMAT_M420,
+		.fcc		= V4L2_PIX_FMT_M420,
+	},
+	{
+		.name		= "YUV 4:2:2 (UYVY)",
+		.guid		= UVC_GUID_FORMAT_UYVY,
+		.fcc		= V4L2_PIX_FMT_UYVY,
+	},
+	{
+		.name		= "Greyscale 8-bit (Y800)",
+		.guid		= UVC_GUID_FORMAT_Y800,
+		.fcc		= V4L2_PIX_FMT_GREY,
+	},
+	{
+		.name		= "Greyscale 8-bit (Y8  )",
+		.guid		= UVC_GUID_FORMAT_Y8,
+		.fcc		= V4L2_PIX_FMT_GREY,
+	},
+	{
+		.name		= "Greyscale 8-bit (D3DFMT_L8)",
+		.guid		= UVC_GUID_FORMAT_D3DFMT_L8,
+		.fcc		= V4L2_PIX_FMT_GREY,
+	},
+	{
+		.name		= "IR 8-bit (L8_IR)",
+		.guid		= UVC_GUID_FORMAT_KSMEDIA_L8_IR,
+		.fcc		= V4L2_PIX_FMT_GREY,
+	},
+	{
+		.name		= "Greyscale 10-bit (Y10 )",
+		.guid		= UVC_GUID_FORMAT_Y10,
+		.fcc		= V4L2_PIX_FMT_Y10,
+	},
+	{
+		.name		= "Greyscale 12-bit (Y12 )",
+		.guid		= UVC_GUID_FORMAT_Y12,
+		.fcc		= V4L2_PIX_FMT_Y12,
+	},
+	{
+		.name		= "Greyscale 16-bit (Y16 )",
+		.guid		= UVC_GUID_FORMAT_Y16,
+		.fcc		= V4L2_PIX_FMT_Y16,
+	},
+	{
+		.name		= "BGGR Bayer (BY8 )",
+		.guid		= UVC_GUID_FORMAT_BY8,
+		.fcc		= V4L2_PIX_FMT_SBGGR8,
+	},
+	{
+		.name		= "BGGR Bayer (BA81)",
+		.guid		= UVC_GUID_FORMAT_BA81,
+		.fcc		= V4L2_PIX_FMT_SBGGR8,
+	},
+	{
+		.name		= "GBRG Bayer (GBRG)",
+		.guid		= UVC_GUID_FORMAT_GBRG,
+		.fcc		= V4L2_PIX_FMT_SGBRG8,
+	},
+	{
+		.name		= "GRBG Bayer (GRBG)",
+		.guid		= UVC_GUID_FORMAT_GRBG,
+		.fcc		= V4L2_PIX_FMT_SGRBG8,
+	},
+	{
+		.name		= "RGGB Bayer (RGGB)",
+		.guid		= UVC_GUID_FORMAT_RGGB,
+		.fcc		= V4L2_PIX_FMT_SRGGB8,
+	},
+	{
+		.name		= "RGB565",
+		.guid		= UVC_GUID_FORMAT_RGBP,
+		.fcc		= V4L2_PIX_FMT_RGB565,
+	},
+	{
+		.name		= "BGR 8:8:8 (BGR3)",
+		.guid		= UVC_GUID_FORMAT_BGR3,
+		.fcc		= V4L2_PIX_FMT_BGR24,
+	},
+	{
+		.name		= "H.264",
+		.guid		= UVC_GUID_FORMAT_H264,
+		.fcc		= V4L2_PIX_FMT_H264,
+	},
+	{
+		.name		= "H.265",
+		.guid		= UVC_GUID_FORMAT_H265,
+		.fcc		= V4L2_PIX_FMT_HEVC,
+	},
+	{
+		.name		= "Greyscale 8 L/R (Y8I)",
+		.guid		= UVC_GUID_FORMAT_Y8I,
+		.fcc		= V4L2_PIX_FMT_Y8I,
+	},
+	{
+		.name		= "Greyscale 12 L/R (Y12I)",
+		.guid		= UVC_GUID_FORMAT_Y12I,
+		.fcc		= V4L2_PIX_FMT_Y12I,
+	},
+	{
+		.name		= "Depth data 16-bit (Z16)",
+		.guid		= UVC_GUID_FORMAT_Z16,
+		.fcc		= V4L2_PIX_FMT_Z16,
+	},
+	{
+		.name		= "Bayer 10-bit (SRGGB10P)",
+		.guid		= UVC_GUID_FORMAT_RW10,
+		.fcc		= V4L2_PIX_FMT_SRGGB10P,
+	},
+	{
+		.name		= "Bayer 16-bit (SBGGR16)",
+		.guid		= UVC_GUID_FORMAT_BG16,
+		.fcc		= V4L2_PIX_FMT_SBGGR16,
+	},
+	{
+		.name		= "Bayer 16-bit (SGBRG16)",
+		.guid		= UVC_GUID_FORMAT_GB16,
+		.fcc		= V4L2_PIX_FMT_SGBRG16,
+	},
+	{
+		.name		= "Bayer 16-bit (SRGGB16)",
+		.guid		= UVC_GUID_FORMAT_RG16,
+		.fcc		= V4L2_PIX_FMT_SRGGB16,
+	},
+	{
+		.name		= "Bayer 16-bit (SGRBG16)",
+		.guid		= UVC_GUID_FORMAT_GR16,
+		.fcc		= V4L2_PIX_FMT_SGRBG16,
+	},
+	{
+		.name		= "Depth data 16-bit (Z16)",
+		.guid		= UVC_GUID_FORMAT_INVZ,
+		.fcc		= V4L2_PIX_FMT_Z16,
+	},
+	{
+		.name		= "Greyscale 10-bit (Y10 )",
+		.guid		= UVC_GUID_FORMAT_INVI,
+		.fcc		= V4L2_PIX_FMT_Y10,
+	},
+	{
+		.name		= "IR:Depth 26-bit (INZI)",
+		.guid		= UVC_GUID_FORMAT_INZI,
+		.fcc		= V4L2_PIX_FMT_INZI,
+	},
+	{
+		.name		= "4-bit Depth Confidence (Packed)",
+		.guid		= UVC_GUID_FORMAT_CNF4,
+		.fcc		= V4L2_PIX_FMT_CNF4,
+	},
+	{
+		.name		= "HEVC",
+		.guid		= UVC_GUID_FORMAT_HEVC,
+		.fcc		= V4L2_PIX_FMT_HEVC,
+	},
+};
+
+/* ------------------------------------------------------------------------
+>>>>>>> b7ba80a49124 (Commit)
  * Utility functions
  */
 
@@ -55,6 +256,22 @@ struct usb_host_endpoint *uvc_find_endpoint(struct usb_host_interface *alts,
 	return NULL;
 }
 
+<<<<<<< HEAD
+=======
+static struct uvc_format_desc *uvc_format_by_guid(const u8 guid[16])
+{
+	unsigned int len = ARRAY_SIZE(uvc_fmts);
+	unsigned int i;
+
+	for (i = 0; i < len; ++i) {
+		if (memcmp(guid, uvc_fmts[i].guid, 16) == 0)
+			return &uvc_fmts[i];
+	}
+
+	return NULL;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static enum v4l2_colorspace uvc_colorspace(const u8 primaries)
 {
 	static const enum v4l2_colorspace colorprimaries[] = {
@@ -126,6 +343,93 @@ static enum v4l2_ycbcr_encoding uvc_ycbcr_enc(const u8 matrix_coefficients)
 	return V4L2_YCBCR_ENC_DEFAULT;  /* Reserved */
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * Simplify a fraction using a simple continued fraction decomposition. The
+ * idea here is to convert fractions such as 333333/10000000 to 1/30 using
+ * 32 bit arithmetic only. The algorithm is not perfect and relies upon two
+ * arbitrary parameters to remove non-significative terms from the simple
+ * continued fraction decomposition. Using 8 and 333 for n_terms and threshold
+ * respectively seems to give nice results.
+ */
+void uvc_simplify_fraction(u32 *numerator, u32 *denominator,
+		unsigned int n_terms, unsigned int threshold)
+{
+	u32 *an;
+	u32 x, y, r;
+	unsigned int i, n;
+
+	an = kmalloc_array(n_terms, sizeof(*an), GFP_KERNEL);
+	if (an == NULL)
+		return;
+
+	/*
+	 * Convert the fraction to a simple continued fraction. See
+	 * https://en.wikipedia.org/wiki/Continued_fraction
+	 * Stop if the current term is bigger than or equal to the given
+	 * threshold.
+	 */
+	x = *numerator;
+	y = *denominator;
+
+	for (n = 0; n < n_terms && y != 0; ++n) {
+		an[n] = x / y;
+		if (an[n] >= threshold) {
+			if (n < 2)
+				n++;
+			break;
+		}
+
+		r = x - an[n] * y;
+		x = y;
+		y = r;
+	}
+
+	/* Expand the simple continued fraction back to an integer fraction. */
+	x = 0;
+	y = 1;
+
+	for (i = n; i > 0; --i) {
+		r = y;
+		y = an[i-1] * y + x;
+		x = r;
+	}
+
+	*numerator = y;
+	*denominator = x;
+	kfree(an);
+}
+
+/*
+ * Convert a fraction to a frame interval in 100ns multiples. The idea here is
+ * to compute numerator / denominator * 10000000 using 32 bit fixed point
+ * arithmetic only.
+ */
+u32 uvc_fraction_to_interval(u32 numerator, u32 denominator)
+{
+	u32 multiplier;
+
+	/* Saturate the result if the operation would overflow. */
+	if (denominator == 0 ||
+	    numerator/denominator >= ((u32)-1)/10000000)
+		return (u32)-1;
+
+	/*
+	 * Divide both the denominator and the multiplier by two until
+	 * numerator * multiplier doesn't overflow. If anyone knows a better
+	 * algorithm please let me know.
+	 */
+	multiplier = 10000000;
+	while (numerator > ((u32)-1)/multiplier) {
+		multiplier /= 2;
+		denominator /= 2;
+	}
+
+	return denominator ? numerator * multiplier / denominator : 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* ------------------------------------------------------------------------
  * Terminal and unit management
  */
@@ -225,7 +529,11 @@ static int uvc_parse_format(struct uvc_device *dev,
 {
 	struct usb_interface *intf = streaming->intf;
 	struct usb_host_interface *alts = intf->cur_altsetting;
+<<<<<<< HEAD
 	const struct uvc_format_desc *fmtdesc;
+=======
+	struct uvc_format_desc *fmtdesc;
+>>>>>>> b7ba80a49124 (Commit)
 	struct uvc_frame *frame;
 	const unsigned char *start = buffer;
 	unsigned int width_multiplier = 1;
@@ -252,10 +560,20 @@ static int uvc_parse_format(struct uvc_device *dev,
 		fmtdesc = uvc_format_by_guid(&buffer[5]);
 
 		if (fmtdesc != NULL) {
+<<<<<<< HEAD
+=======
+			strscpy(format->name, fmtdesc->name,
+				sizeof(format->name));
+>>>>>>> b7ba80a49124 (Commit)
 			format->fcc = fmtdesc->fcc;
 		} else {
 			dev_info(&streaming->intf->dev,
 				 "Unknown video format %pUl\n", &buffer[5]);
+<<<<<<< HEAD
+=======
+			snprintf(format->name, sizeof(format->name), "%pUl\n",
+				&buffer[5]);
+>>>>>>> b7ba80a49124 (Commit)
 			format->fcc = 0;
 		}
 
@@ -267,6 +585,11 @@ static int uvc_parse_format(struct uvc_device *dev,
 		 */
 		if (dev->quirks & UVC_QUIRK_FORCE_Y8) {
 			if (format->fcc == V4L2_PIX_FMT_YUYV) {
+<<<<<<< HEAD
+=======
+				strscpy(format->name, "Greyscale 8-bit (Y8  )",
+					sizeof(format->name));
+>>>>>>> b7ba80a49124 (Commit)
 				format->fcc = V4L2_PIX_FMT_GREY;
 				format->bpp = 8;
 				width_multiplier = 2;
@@ -307,6 +630,10 @@ static int uvc_parse_format(struct uvc_device *dev,
 			return -EINVAL;
 		}
 
+<<<<<<< HEAD
+=======
+		strscpy(format->name, "MJPEG", sizeof(format->name));
+>>>>>>> b7ba80a49124 (Commit)
 		format->fcc = V4L2_PIX_FMT_MJPEG;
 		format->flags = UVC_FMT_FLAG_COMPRESSED;
 		format->bpp = 0;
@@ -322,7 +649,21 @@ static int uvc_parse_format(struct uvc_device *dev,
 			return -EINVAL;
 		}
 
+<<<<<<< HEAD
 		if ((buffer[8] & 0x7f) > 2) {
+=======
+		switch (buffer[8] & 0x7f) {
+		case 0:
+			strscpy(format->name, "SD-DV", sizeof(format->name));
+			break;
+		case 1:
+			strscpy(format->name, "SDL-DV", sizeof(format->name));
+			break;
+		case 2:
+			strscpy(format->name, "HD-DV", sizeof(format->name));
+			break;
+		default:
+>>>>>>> b7ba80a49124 (Commit)
 			uvc_dbg(dev, DESCR,
 				"device %d videostreaming interface %d: unknown DV format %u\n",
 				dev->udev->devnum,
@@ -330,6 +671,12 @@ static int uvc_parse_format(struct uvc_device *dev,
 			return -EINVAL;
 		}
 
+<<<<<<< HEAD
+=======
+		strlcat(format->name, buffer[8] & (1 << 7) ? " 60Hz" : " 50Hz",
+			sizeof(format->name));
+
+>>>>>>> b7ba80a49124 (Commit)
 		format->fcc = V4L2_PIX_FMT_DV;
 		format->flags = UVC_FMT_FLAG_COMPRESSED | UVC_FMT_FLAG_STREAM;
 		format->bpp = 0;
@@ -356,7 +703,11 @@ static int uvc_parse_format(struct uvc_device *dev,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	uvc_dbg(dev, DESCR, "Found format %p4cc", &format->fcc);
+=======
+	uvc_dbg(dev, DESCR, "Found format %s\n", format->name);
+>>>>>>> b7ba80a49124 (Commit)
 
 	buflen -= buffer[0];
 	buffer += buffer[0];
@@ -713,7 +1064,10 @@ static int uvc_parse_streaming(struct uvc_device *dev,
 	/* Parse the alternate settings to find the maximum bandwidth. */
 	for (i = 0; i < intf->num_altsetting; ++i) {
 		struct usb_host_endpoint *ep;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		alts = &intf->altsetting[i];
 		ep = uvc_find_endpoint(alts,
 				streaming->header.bEndpointAddress);
@@ -795,6 +1149,7 @@ static struct uvc_entity *uvc_alloc_entity(u16 type, u16 id,
 	return entity;
 }
 
+<<<<<<< HEAD
 static void uvc_entity_set_name(struct uvc_device *dev, struct uvc_entity *entity,
 				const char *type_name, u8 string_id)
 {
@@ -816,6 +1171,8 @@ static void uvc_entity_set_name(struct uvc_device *dev, struct uvc_entity *entit
 	sprintf(entity->name, "%s %u", type_name, entity->id);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Parse vendor-specific extensions. */
 static int uvc_parse_vendor_control(struct uvc_device *dev,
 	const unsigned char *buffer, int buflen)
@@ -882,7 +1239,15 @@ static int uvc_parse_vendor_control(struct uvc_device *dev,
 					       + n;
 		memcpy(unit->extension.bmControls, &buffer[23+p], 2*n);
 
+<<<<<<< HEAD
 		uvc_entity_set_name(dev, unit, "Extension", buffer[24+p+2*n]);
+=======
+		if (buffer[24+p+2*n] != 0)
+			usb_string(udev, buffer[24+p+2*n], unit->name,
+				   sizeof(unit->name));
+		else
+			sprintf(unit->name, "Extension %u", buffer[3]);
+>>>>>>> b7ba80a49124 (Commit)
 
 		list_add_tail(&unit->list, &dev->entities);
 		handled = 1;
@@ -900,7 +1265,10 @@ static int uvc_parse_standard_control(struct uvc_device *dev,
 	struct usb_interface *intf;
 	struct usb_host_interface *alts = dev->intf->cur_altsetting;
 	unsigned int i, n, p, len;
+<<<<<<< HEAD
 	const char *type_name;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 type;
 
 	switch (buffer[2]) {
@@ -1006,6 +1374,7 @@ static int uvc_parse_standard_control(struct uvc_device *dev,
 			memcpy(term->media.bmTransportModes, &buffer[10+n], p);
 		}
 
+<<<<<<< HEAD
 		if (UVC_ENTITY_TYPE(term) == UVC_ITT_CAMERA)
 			type_name = "Camera";
 		else if (UVC_ENTITY_TYPE(term) == UVC_ITT_MEDIA_TRANSPORT_INPUT)
@@ -1014,6 +1383,17 @@ static int uvc_parse_standard_control(struct uvc_device *dev,
 			type_name = "Input";
 
 		uvc_entity_set_name(dev, term, type_name, buffer[7]);
+=======
+		if (buffer[7] != 0)
+			usb_string(udev, buffer[7], term->name,
+				   sizeof(term->name));
+		else if (UVC_ENTITY_TYPE(term) == UVC_ITT_CAMERA)
+			sprintf(term->name, "Camera %u", buffer[3]);
+		else if (UVC_ENTITY_TYPE(term) == UVC_ITT_MEDIA_TRANSPORT_INPUT)
+			sprintf(term->name, "Media %u", buffer[3]);
+		else
+			sprintf(term->name, "Input %u", buffer[3]);
+>>>>>>> b7ba80a49124 (Commit)
 
 		list_add_tail(&term->list, &dev->entities);
 		break;
@@ -1046,7 +1426,15 @@ static int uvc_parse_standard_control(struct uvc_device *dev,
 
 		memcpy(term->baSourceID, &buffer[7], 1);
 
+<<<<<<< HEAD
 		uvc_entity_set_name(dev, term, "Output", buffer[8]);
+=======
+		if (buffer[8] != 0)
+			usb_string(udev, buffer[8], term->name,
+				   sizeof(term->name));
+		else
+			sprintf(term->name, "Output %u", buffer[3]);
+>>>>>>> b7ba80a49124 (Commit)
 
 		list_add_tail(&term->list, &dev->entities);
 		break;
@@ -1067,7 +1455,15 @@ static int uvc_parse_standard_control(struct uvc_device *dev,
 
 		memcpy(unit->baSourceID, &buffer[5], p);
 
+<<<<<<< HEAD
 		uvc_entity_set_name(dev, unit, "Selector", buffer[5+p]);
+=======
+		if (buffer[5+p] != 0)
+			usb_string(udev, buffer[5+p], unit->name,
+				   sizeof(unit->name));
+		else
+			sprintf(unit->name, "Selector %u", buffer[3]);
+>>>>>>> b7ba80a49124 (Commit)
 
 		list_add_tail(&unit->list, &dev->entities);
 		break;
@@ -1096,7 +1492,15 @@ static int uvc_parse_standard_control(struct uvc_device *dev,
 		if (dev->uvc_version >= 0x0110)
 			unit->processing.bmVideoStandards = buffer[9+n];
 
+<<<<<<< HEAD
 		uvc_entity_set_name(dev, unit, "Processing", buffer[8+n]);
+=======
+		if (buffer[8+n] != 0)
+			usb_string(udev, buffer[8+n], unit->name,
+				   sizeof(unit->name));
+		else
+			sprintf(unit->name, "Processing %u", buffer[3]);
+>>>>>>> b7ba80a49124 (Commit)
 
 		list_add_tail(&unit->list, &dev->entities);
 		break;
@@ -1123,7 +1527,15 @@ static int uvc_parse_standard_control(struct uvc_device *dev,
 		unit->extension.bmControls = (u8 *)unit + sizeof(*unit);
 		memcpy(unit->extension.bmControls, &buffer[23+p], n);
 
+<<<<<<< HEAD
 		uvc_entity_set_name(dev, unit, "Extension", buffer[23+p+n]);
+=======
+		if (buffer[23+p+n] != 0)
+			usb_string(udev, buffer[23+p+n], unit->name,
+				   sizeof(unit->name));
+		else
+			sprintf(unit->name, "Extension %u", buffer[3]);
+>>>>>>> b7ba80a49124 (Commit)
 
 		list_add_tail(&unit->list, &dev->entities);
 		break;
@@ -1156,8 +1568,12 @@ static int uvc_parse_control(struct uvc_device *dev)
 		    buffer[1] != USB_DT_CS_INTERFACE)
 			goto next_descriptor;
 
+<<<<<<< HEAD
 		ret = uvc_parse_standard_control(dev, buffer, buflen);
 		if (ret < 0)
+=======
+		if ((ret = uvc_parse_standard_control(dev, buffer, buflen)) < 0)
+>>>>>>> b7ba80a49124 (Commit)
 			return ret;
 
 next_descriptor:
@@ -1250,9 +1666,18 @@ static int uvc_gpio_parse(struct uvc_device *dev)
 		return PTR_ERR_OR_ZERO(gpio_privacy);
 
 	irq = gpiod_to_irq(gpio_privacy);
+<<<<<<< HEAD
 	if (irq < 0)
 		return dev_err_probe(&dev->udev->dev, irq,
 				     "No IRQ for privacy GPIO\n");
+=======
+	if (irq < 0) {
+		if (irq != EPROBE_DEFER)
+			dev_err(&dev->udev->dev,
+				"No IRQ for privacy GPIO (%d)\n", irq);
+		return irq;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	unit = uvc_alloc_entity(UVC_EXT_GPIO_UNIT, UVC_EXT_GPIO_UNIT_ID, 0, 1);
 	if (!unit)
@@ -1840,14 +2265,20 @@ static void uvc_delete(struct kref *kref)
 
 	list_for_each_safe(p, n, &dev->chains) {
 		struct uvc_video_chain *chain;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		chain = list_entry(p, struct uvc_video_chain, list);
 		kfree(chain);
 	}
 
 	list_for_each_safe(p, n, &dev->entities) {
 		struct uvc_entity *entity;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		entity = list_entry(p, struct uvc_entity, list);
 #ifdef CONFIG_MEDIA_CONTROLLER
 		uvc_mc_cleanup_entity(entity);
@@ -1857,7 +2288,10 @@ static void uvc_delete(struct kref *kref)
 
 	list_for_each_safe(p, n, &dev->streams) {
 		struct uvc_streaming *streaming;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		streaming = list_entry(p, struct uvc_streaming, list);
 		usb_driver_release_interface(&uvc_driver.driver,
 			streaming->intf);
@@ -2193,8 +2627,12 @@ static int uvc_probe(struct usb_interface *intf,
 	usb_set_intfdata(intf, dev);
 
 	/* Initialize the interrupt URB. */
+<<<<<<< HEAD
 	ret = uvc_status_init(dev);
 	if (ret < 0) {
+=======
+	if ((ret = uvc_status_init(dev)) < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_info(&dev->udev->dev,
 			 "Unable to initialize the status endpoint (%d), status interrupt will not be supported.\n",
 			 ret);
@@ -2341,6 +2779,7 @@ static int uvc_clock_param_set(const char *val, const struct kernel_param *kp)
 }
 
 module_param_call(clock, uvc_clock_param_set, uvc_clock_param_get,
+<<<<<<< HEAD
 		  &uvc_clock_param, 0644);
 MODULE_PARM_DESC(clock, "Video buffers timestamp clock");
 module_param_named(hwtimestamps, uvc_hw_timestamps_param, uint, 0644);
@@ -2352,12 +2791,45 @@ MODULE_PARM_DESC(quirks, "Forced device quirks");
 module_param_named(trace, uvc_dbg_param, uint, 0644);
 MODULE_PARM_DESC(trace, "Trace level bitmask");
 module_param_named(timeout, uvc_timeout_param, uint, 0644);
+=======
+		  &uvc_clock_param, S_IRUGO|S_IWUSR);
+MODULE_PARM_DESC(clock, "Video buffers timestamp clock");
+module_param_named(hwtimestamps, uvc_hw_timestamps_param, uint, S_IRUGO|S_IWUSR);
+MODULE_PARM_DESC(hwtimestamps, "Use hardware timestamps");
+module_param_named(nodrop, uvc_no_drop_param, uint, S_IRUGO|S_IWUSR);
+MODULE_PARM_DESC(nodrop, "Don't drop incomplete frames");
+module_param_named(quirks, uvc_quirks_param, uint, S_IRUGO|S_IWUSR);
+MODULE_PARM_DESC(quirks, "Forced device quirks");
+module_param_named(trace, uvc_dbg_param, uint, S_IRUGO|S_IWUSR);
+MODULE_PARM_DESC(trace, "Trace level bitmask");
+module_param_named(timeout, uvc_timeout_param, uint, S_IRUGO|S_IWUSR);
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_PARM_DESC(timeout, "Streaming control requests timeout");
 
 /* ------------------------------------------------------------------------
  * Driver initialization and cleanup
  */
 
+<<<<<<< HEAD
+=======
+static const struct uvc_menu_info power_line_frequency_controls_limited[] = {
+	{ 1, "50 Hz" },
+	{ 2, "60 Hz" },
+};
+
+static const struct uvc_control_mapping uvc_ctrl_power_line_mapping_limited = {
+	.id		= V4L2_CID_POWER_LINE_FREQUENCY,
+	.entity		= UVC_GUID_UVC_PROCESSING,
+	.selector	= UVC_PU_POWER_LINE_FREQUENCY_CONTROL,
+	.size		= 2,
+	.offset		= 0,
+	.v4l2_type	= V4L2_CTRL_TYPE_MENU,
+	.data_type	= UVC_CTRL_DATA_TYPE_ENUM,
+	.menu_info	= power_line_frequency_controls_limited,
+	.menu_count	= ARRAY_SIZE(power_line_frequency_controls_limited),
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct uvc_device_info uvc_ctrl_power_line_limited = {
 	.mappings = (const struct uvc_control_mapping *[]) {
 		&uvc_ctrl_power_line_mapping_limited,
@@ -2365,6 +2837,7 @@ static const struct uvc_device_info uvc_ctrl_power_line_limited = {
 	},
 };
 
+<<<<<<< HEAD
 static const struct uvc_device_info uvc_ctrl_power_line_uvc11 = {
 	.mappings = (const struct uvc_control_mapping *[]) {
 		&uvc_ctrl_power_line_mapping_uvc11,
@@ -2372,6 +2845,8 @@ static const struct uvc_device_info uvc_ctrl_power_line_uvc11 = {
 	},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct uvc_device_info uvc_quirk_probe_minmax = {
 	.quirks = UVC_QUIRK_PROBE_MINMAX,
 };
@@ -2474,6 +2949,7 @@ static const struct usb_device_id uvc_ids[] = {
 	  .bInterfaceSubClass	= 1,
 	  .bInterfaceProtocol	= 0,
 	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax },
+<<<<<<< HEAD
 	/* Logitech, Webcam C910 */
 	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
 				| USB_DEVICE_ID_MATCH_INT_INFO,
@@ -2492,6 +2968,8 @@ static const struct usb_device_id uvc_ids[] = {
 	  .bInterfaceSubClass	= 1,
 	  .bInterfaceProtocol	= 0,
 	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_WAKE_AUTOSUSPEND)},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Logitech Quickcam Fusion */
 	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
 				| USB_DEVICE_ID_MATCH_INT_INFO,
@@ -2969,6 +3447,7 @@ static const struct usb_device_id uvc_ids[] = {
 	  .bInterfaceSubClass	= 1,
 	  .bInterfaceProtocol	= 0,
 	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_FORCE_BPP) },
+<<<<<<< HEAD
 	/* Lenovo Integrated Camera */
 	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
 				| USB_DEVICE_ID_MATCH_INT_INFO,
@@ -2978,6 +3457,8 @@ static const struct usb_device_id uvc_ids[] = {
 	  .bInterfaceSubClass	= 1,
 	  .bInterfaceProtocol	= UVC_PC_PROTOCOL_15,
 	  .driver_info		= (kernel_ulong_t)&uvc_ctrl_power_line_uvc11 },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Sonix Technology USB 2.0 Camera */
 	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
 				| USB_DEVICE_ID_MATCH_INT_INFO,
@@ -2996,6 +3477,7 @@ static const struct usb_device_id uvc_ids[] = {
 	  .bInterfaceSubClass	= 1,
 	  .bInterfaceProtocol	= 0,
 	  .driver_info		= (kernel_ulong_t)&uvc_ctrl_power_line_limited },
+<<<<<<< HEAD
 	/* Acer EasyCamera */
 	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
 				| USB_DEVICE_ID_MATCH_INT_INFO,
@@ -3014,6 +3496,8 @@ static const struct usb_device_id uvc_ids[] = {
 	  .bInterfaceSubClass	= 1,
 	  .bInterfaceProtocol	= 0,
 	  .driver_info		= (kernel_ulong_t)&uvc_ctrl_power_line_limited },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Intel RealSense D4M */
 	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
 				| USB_DEVICE_ID_MATCH_INT_INFO,

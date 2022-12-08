@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/opp/opp-v1.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Generic OPP (Operating Performance Points) v1
+=======
+title: Generic OPP (Operating Performance Points) v1 Bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Viresh Kumar <viresh.kumar@linaro.org>

@@ -82,7 +82,10 @@ struct mount_kattr {
 	unsigned int lookup_flags;
 	bool recurse;
 	struct user_namespace *mnt_userns;
+<<<<<<< HEAD
 	struct mnt_idmap *mnt_idmap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* /sys/fs */
@@ -233,7 +236,11 @@ static struct mount *alloc_vfsmnt(const char *name)
 		INIT_HLIST_NODE(&mnt->mnt_mp_list);
 		INIT_LIST_HEAD(&mnt->mnt_umounting);
 		INIT_HLIST_HEAD(&mnt->mnt_stuck_children);
+<<<<<<< HEAD
 		mnt->mnt.mnt_idmap = &nop_mnt_idmap;
+=======
+		mnt->mnt.mnt_userns = &init_user_ns;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return mnt;
 
@@ -603,7 +610,15 @@ int sb_prepare_remount_readonly(struct super_block *sb)
 
 static void free_vfsmnt(struct mount *mnt)
 {
+<<<<<<< HEAD
 	mnt_idmap_put(mnt_idmap(&mnt->mnt));
+=======
+	struct user_namespace *mnt_userns;
+
+	mnt_userns = mnt_user_ns(&mnt->mnt);
+	if (!initial_idmapping(mnt_userns))
+		put_user_ns(mnt_userns);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree_const(mnt->mnt_devname);
 #ifdef CONFIG_SMP
 	free_percpu(mnt->mnt_pcp);
@@ -1006,6 +1021,10 @@ static struct mount *skip_mnt_tree(struct mount *p)
 struct vfsmount *vfs_create_mount(struct fs_context *fc)
 {
 	struct mount *mnt;
+<<<<<<< HEAD
+=======
+	struct user_namespace *fs_userns;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!fc->root)
 		return ERR_PTR(-EINVAL);
@@ -1023,6 +1042,13 @@ struct vfsmount *vfs_create_mount(struct fs_context *fc)
 	mnt->mnt_mountpoint	= mnt->mnt.mnt_root;
 	mnt->mnt_parent		= mnt;
 
+<<<<<<< HEAD
+=======
+	fs_userns = mnt->mnt.mnt_sb->s_user_ns;
+	if (!initial_idmapping(fs_userns))
+		mnt->mnt.mnt_userns = get_user_ns(fs_userns);
+
+>>>>>>> b7ba80a49124 (Commit)
 	lock_mount_hash();
 	list_add_tail(&mnt->mnt_instance, &mnt->mnt.mnt_sb->s_mounts);
 	unlock_mount_hash();
@@ -1112,8 +1138,14 @@ static struct mount *clone_mnt(struct mount *old, struct dentry *root,
 	mnt->mnt.mnt_flags &= ~(MNT_WRITE_HOLD|MNT_MARKED|MNT_INTERNAL);
 
 	atomic_inc(&sb->s_active);
+<<<<<<< HEAD
 	mnt->mnt.mnt_idmap = mnt_idmap_get(mnt_idmap(&old->mnt));
 
+=======
+	mnt->mnt.mnt_userns = mnt_user_ns(&old->mnt);
+	if (!initial_idmapping(mnt->mnt.mnt_userns))
+		mnt->mnt.mnt_userns = get_user_ns(mnt->mnt.mnt_userns);
+>>>>>>> b7ba80a49124 (Commit)
 	mnt->mnt.mnt_sb = sb;
 	mnt->mnt.mnt_root = dget(root);
 	mnt->mnt_mountpoint = mnt->mnt.mnt_root;
@@ -1283,6 +1315,7 @@ struct vfsmount *mntget(struct vfsmount *mnt)
 }
 EXPORT_SYMBOL(mntget);
 
+<<<<<<< HEAD
 /*
  * Make a mount point inaccessible to new lookups.
  * Because there may still be current users, the caller MUST WAIT
@@ -1294,6 +1327,8 @@ void mnt_make_shortterm(struct vfsmount *mnt)
 		real_mount(mnt)->mnt_ns = NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * path_is_mountpoint() - Check if path is a mount in the current namespace.
  * @path: path to check
@@ -2617,12 +2652,24 @@ static void mnt_warn_timestamp_expiry(struct path *mountpoint, struct vfsmount *
 	   (ktime_get_real_seconds() + TIME_UPTIME_SEC_MAX > sb->s_time_max)) {
 		char *buf = (char *)__get_free_page(GFP_KERNEL);
 		char *mntpath = buf ? d_path(mountpoint, buf, PAGE_SIZE) : ERR_PTR(-ENOMEM);
+<<<<<<< HEAD
 
 		pr_warn("%s filesystem being %s at %s supports timestamps until %ptTd (0x%llx)\n",
 			sb->s_type->name,
 			is_mounted(mnt) ? "remounted" : "mounted",
 			mntpath, &sb->s_time_max,
 			(unsigned long long)sb->s_time_max);
+=======
+		struct tm tm;
+
+		time64_to_tm(sb->s_time_max, 0, &tm);
+
+		pr_warn("%s filesystem being %s at %s supports timestamps until %04ld (0x%llx)\n",
+			sb->s_type->name,
+			is_mounted(mnt) ? "remounted" : "mounted",
+			mntpath,
+			tm.tm_year+1900, (unsigned long long)sb->s_time_max);
+>>>>>>> b7ba80a49124 (Commit)
 
 		free_page((unsigned long)buf);
 		sb->s_iflags |= SB_I_TS_EXPIRY_WARNED;
@@ -3514,9 +3561,14 @@ struct mnt_namespace *copy_mnt_ns(unsigned long flags, struct mnt_namespace *ns,
 		q = next_mnt(q, new);
 		if (!q)
 			break;
+<<<<<<< HEAD
 		// an mntns binding we'd skipped?
 		while (p->mnt.mnt_root != q->mnt.mnt_root)
 			p = next_mnt(skip_mnt_tree(p), old);
+=======
+		while (p->mnt.mnt_root != q->mnt.mnt_root)
+			p = next_mnt(p, old);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	namespace_unlock();
 
@@ -3981,14 +4033,22 @@ static int can_idmap_mount(const struct mount_kattr *kattr, struct mount *mnt)
 	struct vfsmount *m = &mnt->mnt;
 	struct user_namespace *fs_userns = m->mnt_sb->s_user_ns;
 
+<<<<<<< HEAD
 	if (!kattr->mnt_idmap)
+=======
+	if (!kattr->mnt_userns)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	/*
 	 * Creating an idmapped mount with the filesystem wide idmapping
 	 * doesn't make sense so block that. We don't allow mushy semantics.
 	 */
+<<<<<<< HEAD
 	if (!check_fsmapping(kattr->mnt_idmap, m->mnt_sb))
+=======
+	if (kattr->mnt_userns == fs_userns)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	/*
@@ -4028,7 +4088,11 @@ static inline bool mnt_allow_writers(const struct mount_kattr *kattr,
 {
 	return (!(kattr->attr_set & MNT_READONLY) ||
 		(mnt->mnt.mnt_flags & MNT_READONLY)) &&
+<<<<<<< HEAD
 	       !kattr->mnt_idmap;
+=======
+	       !kattr->mnt_userns;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mount_setattr_prepare(struct mount_kattr *kattr, struct mount *mnt)
@@ -4082,6 +4146,7 @@ static int mount_setattr_prepare(struct mount_kattr *kattr, struct mount *mnt)
 
 static void do_idmap_mount(const struct mount_kattr *kattr, struct mount *mnt)
 {
+<<<<<<< HEAD
 	if (!kattr->mnt_idmap)
 		return;
 
@@ -4094,6 +4159,29 @@ static void do_idmap_mount(const struct mount_kattr *kattr, struct mount *mnt)
 	 * references.
 	 */
 	smp_store_release(&mnt->mnt.mnt_idmap, mnt_idmap_get(kattr->mnt_idmap));
+=======
+	struct user_namespace *mnt_userns, *old_mnt_userns;
+
+	if (!kattr->mnt_userns)
+		return;
+
+	/*
+	 * We're the only ones able to change the mount's idmapping. So
+	 * mnt->mnt.mnt_userns is stable and we can retrieve it directly.
+	 */
+	old_mnt_userns = mnt->mnt.mnt_userns;
+
+	mnt_userns = get_user_ns(kattr->mnt_userns);
+	/* Pairs with smp_load_acquire() in mnt_user_ns(). */
+	smp_store_release(&mnt->mnt.mnt_userns, mnt_userns);
+
+	/*
+	 * If this is an idmapped filesystem drop the reference we've taken
+	 * in vfs_create_mount() before.
+	 */
+	if (!initial_idmapping(old_mnt_userns))
+		put_user_ns(old_mnt_userns);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mount_setattr_commit(struct mount_kattr *kattr, struct mount *mnt)
@@ -4127,6 +4215,7 @@ static int do_mount_setattr(struct path *path, struct mount_kattr *kattr)
 	if (path->dentry != mnt->mnt.mnt_root)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (kattr->mnt_userns) {
 		struct mnt_idmap *mnt_idmap;
 
@@ -4136,6 +4225,8 @@ static int do_mount_setattr(struct path *path, struct mount_kattr *kattr)
 		kattr->mnt_idmap = mnt_idmap;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (kattr->propagation) {
 		/*
 		 * Only take namespace_lock() if we're actually changing
@@ -4194,7 +4285,11 @@ static int build_mount_idmapped(const struct mount_attr *attr, size_t usize,
 	int err = 0;
 	struct ns_common *ns;
 	struct user_namespace *mnt_userns;
+<<<<<<< HEAD
 	struct fd f;
+=======
+	struct file *file;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!((attr->attr_set | attr->attr_clr) & MOUNT_ATTR_IDMAP))
 		return 0;
@@ -4210,16 +4305,28 @@ static int build_mount_idmapped(const struct mount_attr *attr, size_t usize,
 	if (attr->userns_fd > INT_MAX)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	f = fdget(attr->userns_fd);
 	if (!f.file)
 		return -EBADF;
 
 	if (!proc_ns_file(f.file)) {
+=======
+	file = fget(attr->userns_fd);
+	if (!file)
+		return -EBADF;
+
+	if (!proc_ns_file(file)) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EINVAL;
 		goto out_fput;
 	}
 
+<<<<<<< HEAD
 	ns = get_proc_ns(file_inode(f.file));
+=======
+	ns = get_proc_ns(file_inode(file));
+>>>>>>> b7ba80a49124 (Commit)
 	if (ns->ops->type != CLONE_NEWUSER) {
 		err = -EINVAL;
 		goto out_fput;
@@ -4234,7 +4341,11 @@ static int build_mount_idmapped(const struct mount_attr *attr, size_t usize,
 	 * result.
 	 */
 	mnt_userns = container_of(ns, struct user_namespace, ns);
+<<<<<<< HEAD
 	if (mnt_userns == &init_user_ns) {
+=======
+	if (initial_idmapping(mnt_userns)) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EPERM;
 		goto out_fput;
 	}
@@ -4248,7 +4359,11 @@ static int build_mount_idmapped(const struct mount_attr *attr, size_t usize,
 	kattr->mnt_userns = get_user_ns(mnt_userns);
 
 out_fput:
+<<<<<<< HEAD
 	fdput(f);
+=======
+	fput(file);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -4323,9 +4438,12 @@ static void finish_mount_kattr(struct mount_kattr *kattr)
 {
 	put_user_ns(kattr->mnt_userns);
 	kattr->mnt_userns = NULL;
+<<<<<<< HEAD
 
 	if (kattr->mnt_idmap)
 		mnt_idmap_put(kattr->mnt_idmap);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 SYSCALL_DEFINE5(mount_setattr, int, dfd, const char __user *, path,
@@ -4467,8 +4585,13 @@ EXPORT_SYMBOL_GPL(kern_mount);
 void kern_unmount(struct vfsmount *mnt)
 {
 	/* release long term mount so mount point can be released */
+<<<<<<< HEAD
 	if (!IS_ERR(mnt)) {
 		mnt_make_shortterm(mnt);
+=======
+	if (!IS_ERR_OR_NULL(mnt)) {
+		real_mount(mnt)->mnt_ns = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 		synchronize_rcu();	/* yecchhh... */
 		mntput(mnt);
 	}
@@ -4480,7 +4603,12 @@ void kern_unmount_array(struct vfsmount *mnt[], unsigned int num)
 	unsigned int i;
 
 	for (i = 0; i < num; i++)
+<<<<<<< HEAD
 		mnt_make_shortterm(mnt[i]);
+=======
+		if (mnt[i])
+			real_mount(mnt[i])->mnt_ns = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	synchronize_rcu_expedited();
 	for (i = 0; i < num; i++)
 		mntput(mnt[i]);

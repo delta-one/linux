@@ -199,7 +199,11 @@ static int nft_socket_init(const struct nft_ctx *ctx,
 }
 
 static int nft_socket_dump(struct sk_buff *skb,
+<<<<<<< HEAD
 			   const struct nft_expr *expr, bool reset)
+=======
+			   const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_socket *priv = nft_expr_priv(expr);
 

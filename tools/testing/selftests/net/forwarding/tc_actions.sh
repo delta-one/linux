@@ -3,8 +3,12 @@
 
 ALL_TESTS="gact_drop_and_ok_test mirred_egress_redirect_test \
 	mirred_egress_mirror_test matchall_mirred_egress_mirror_test \
+<<<<<<< HEAD
 	gact_trap_test mirred_egress_to_ingress_test \
 	mirred_egress_to_ingress_tcp_test"
+=======
+	gact_trap_test mirred_egress_to_ingress_test"
+>>>>>>> b7ba80a49124 (Commit)
 NUM_NETIFS=4
 source tc_common.sh
 source lib.sh
@@ -199,6 +203,7 @@ mirred_egress_to_ingress_test()
 	log_test "mirred_egress_to_ingress ($tcflags)"
 }
 
+<<<<<<< HEAD
 mirred_egress_to_ingress_tcp_test()
 {
 	mirred_e2i_tf1=$(mktemp) mirred_e2i_tf2=$(mktemp)
@@ -245,6 +250,8 @@ mirred_egress_to_ingress_tcp_test()
 	log_test "mirred_egress_to_ingress_tcp ($tcflags)"
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 setup_prepare()
 {
 	h1=${NETIFS[p1]}
@@ -270,8 +277,11 @@ setup_prepare()
 
 cleanup()
 {
+<<<<<<< HEAD
 	local tf
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pre_cleanup
 
 	switch_destroy
@@ -282,8 +292,11 @@ cleanup()
 
 	ip link set $swp2 address $swp2origmac
 	ip link set $swp1 address $swp1origmac
+<<<<<<< HEAD
 
 	for tf in $mirred_e2i_tf1 $mirred_e2i_tf2; do rm -f $tf; done
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 mirred_egress_redirect_test()

@@ -268,7 +268,11 @@ static u64 ionic_hwstamp_read(struct ionic *ionic,
 	u32 tick_high_before, tick_high, tick_low;
 
 	/* read and discard low part to defeat hw staging of high part */
+<<<<<<< HEAD
 	ioread32(&ionic->idev.hwstamp_regs->tick_low);
+=======
+	(void)ioread32(&ionic->idev.hwstamp_regs->tick_low);
+>>>>>>> b7ba80a49124 (Commit)
 
 	tick_high_before = ioread32(&ionic->idev.hwstamp_regs->tick_high);
 

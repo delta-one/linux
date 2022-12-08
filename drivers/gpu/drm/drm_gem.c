@@ -170,6 +170,7 @@ void drm_gem_private_object_init(struct drm_device *dev,
 EXPORT_SYMBOL(drm_gem_private_object_init);
 
 /**
+<<<<<<< HEAD
  * drm_gem_private_object_fini - Finalize a failed drm_gem_object
  * @obj: drm_gem_object
  *
@@ -184,6 +185,8 @@ void drm_gem_private_object_fini(struct drm_gem_object *obj)
 EXPORT_SYMBOL(drm_gem_private_object_fini);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * drm_gem_object_handle_free - release resources bound to userspace handles
  * @obj: GEM object to clean up.
  *
@@ -336,6 +339,16 @@ out:
 }
 EXPORT_SYMBOL_GPL(drm_gem_dumb_map_offset);
 
+<<<<<<< HEAD
+=======
+int drm_gem_dumb_destroy(struct drm_file *file,
+			 struct drm_device *dev,
+			 u32 handle)
+{
+	return drm_gem_handle_delete(file, handle);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * drm_gem_handle_create_tail - internal functions to create a handle
  * @file_priv: drm file-private structure to register the handle for
@@ -937,11 +950,20 @@ drm_gem_release(struct drm_device *dev, struct drm_file *file_private)
 void
 drm_gem_object_release(struct drm_gem_object *obj)
 {
+<<<<<<< HEAD
 	if (obj->filp)
 		fput(obj->filp);
 
 	drm_gem_private_object_fini(obj);
 
+=======
+	WARN_ON(obj->dma_buf);
+
+	if (obj->filp)
+		fput(obj->filp);
+
+	dma_resv_fini(&obj->_resv);
+>>>>>>> b7ba80a49124 (Commit)
 	drm_gem_free_mmap_offset(obj);
 	drm_gem_lru_remove(obj);
 }
@@ -1053,7 +1075,11 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, unsigned long obj_size,
 			goto err_drm_gem_object_put;
 		}
 
+<<<<<<< HEAD
 		vm_flags_set(vma, VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP);
+=======
+		vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
+>>>>>>> b7ba80a49124 (Commit)
 		vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
 		vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
 	}
@@ -1164,8 +1190,11 @@ int drm_gem_vmap(struct drm_gem_object *obj, struct iosys_map *map)
 {
 	int ret;
 
+<<<<<<< HEAD
 	dma_resv_assert_held(obj->resv);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!obj->funcs->vmap)
 		return -EOPNOTSUPP;
 
@@ -1181,8 +1210,11 @@ EXPORT_SYMBOL(drm_gem_vmap);
 
 void drm_gem_vunmap(struct drm_gem_object *obj, struct iosys_map *map)
 {
+<<<<<<< HEAD
 	dma_resv_assert_held(obj->resv);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (iosys_map_is_null(map))
 		return;
 
@@ -1194,6 +1226,7 @@ void drm_gem_vunmap(struct drm_gem_object *obj, struct iosys_map *map)
 }
 EXPORT_SYMBOL(drm_gem_vunmap);
 
+<<<<<<< HEAD
 int drm_gem_vmap_unlocked(struct drm_gem_object *obj, struct iosys_map *map)
 {
 	int ret;
@@ -1214,6 +1247,8 @@ void drm_gem_vunmap_unlocked(struct drm_gem_object *obj, struct iosys_map *map)
 }
 EXPORT_SYMBOL(drm_gem_vunmap_unlocked);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * drm_gem_lock_reservations - Sets up the ww context and acquires
  * the lock on an array of GEM objects.
@@ -1381,6 +1416,7 @@ EXPORT_SYMBOL(drm_gem_lru_move_tail);
  *
  * @lru: The LRU to scan
  * @nr_to_scan: The number of pages to try to reclaim
+<<<<<<< HEAD
  * @remaining: The number of pages left to reclaim, should be initialized by caller
  * @shrink: Callback to try to shrink/reclaim the object.
  */
@@ -1388,6 +1424,12 @@ unsigned long
 drm_gem_lru_scan(struct drm_gem_lru *lru,
 		 unsigned int nr_to_scan,
 		 unsigned long *remaining,
+=======
+ * @shrink: Callback to try to shrink/reclaim the object.
+ */
+unsigned long
+drm_gem_lru_scan(struct drm_gem_lru *lru, unsigned nr_to_scan,
+>>>>>>> b7ba80a49124 (Commit)
 		 bool (*shrink)(struct drm_gem_object *obj))
 {
 	struct drm_gem_lru still_in_lru;
@@ -1426,10 +1468,15 @@ drm_gem_lru_scan(struct drm_gem_lru *lru,
 		 * hit shrinker in response to trying to get backing pages
 		 * for this obj (ie. while it's lock is already held)
 		 */
+<<<<<<< HEAD
 		if (!dma_resv_trylock(obj->resv)) {
 			*remaining += obj->size >> PAGE_SHIFT;
 			goto tail;
 		}
+=======
+		if (!dma_resv_trylock(obj->resv))
+			goto tail;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (shrink(obj)) {
 			freed += obj->size >> PAGE_SHIFT;
@@ -1464,6 +1511,7 @@ tail:
 	return freed;
 }
 EXPORT_SYMBOL(drm_gem_lru_scan);
+<<<<<<< HEAD
 
 /**
  * drm_gem_evict - helper to evict backing pages for a GEM object
@@ -1482,3 +1530,5 @@ int drm_gem_evict(struct drm_gem_object *obj)
 	return 0;
 }
 EXPORT_SYMBOL(drm_gem_evict);
+=======
+>>>>>>> b7ba80a49124 (Commit)

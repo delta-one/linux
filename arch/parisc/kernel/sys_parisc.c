@@ -239,14 +239,22 @@ static unsigned long mmap_rnd(void)
 	unsigned long rnd = 0;
 
 	if (current->flags & PF_RANDOMIZE)
+<<<<<<< HEAD
 		rnd = get_random_u32() & MMAP_RND_MASK;
+=======
+		rnd = get_random_int() & MMAP_RND_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return rnd << PAGE_SHIFT;
 }
 
 unsigned long arch_mmap_rnd(void)
 {
+<<<<<<< HEAD
 	return (get_random_u32() & MMAP_RND_MASK) << PAGE_SHIFT;
+=======
+	return (get_random_int() & MMAP_RND_MASK) << PAGE_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static unsigned long mmap_legacy_base(void)
@@ -465,6 +473,7 @@ asmlinkage long parisc_inotify_init1(int flags)
 	flags = FIX_O_NONBLOCK(flags);
 	return sys_inotify_init1(flags);
 }
+<<<<<<< HEAD
 
 /*
  * madvise() wrapper
@@ -493,3 +502,5 @@ asmlinkage notrace long parisc_madvise(unsigned long start, size_t len_in, int b
 
 	return sys_madvise(start, len_in, behavior);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

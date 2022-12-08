@@ -59,7 +59,10 @@
 	SRI(LB_DATA_FORMAT, DSCL, id), \
 	SRI(LB_MEMORY_CTRL, DSCL, id), \
 	SRI(DSCL_AUTOCAL, DSCL, id), \
+<<<<<<< HEAD
 	SRI(DSCL_CONTROL, DSCL, id), \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SRI(SCL_BLACK_OFFSET, DSCL, id), \
 	SRI(SCL_TAP_CONTROL, DSCL, id), \
 	SRI(SCL_COEF_RAM_TAP_SELECT, DSCL, id), \
@@ -210,7 +213,10 @@
 	TF_SF(DSCL0_DSCL_AUTOCAL, AUTOCAL_MODE, mask_sh),\
 	TF_SF(DSCL0_DSCL_AUTOCAL, AUTOCAL_NUM_PIPE, mask_sh),\
 	TF_SF(DSCL0_DSCL_AUTOCAL, AUTOCAL_PIPE_ID, mask_sh),\
+<<<<<<< HEAD
 	TF_SF(DSCL0_DSCL_CONTROL, SCL_BOUNDARY_MODE, mask_sh),\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	TF_SF(DSCL0_SCL_BLACK_OFFSET, SCL_BLACK_OFFSET_RGB_Y, mask_sh),\
 	TF_SF(DSCL0_SCL_BLACK_OFFSET, SCL_BLACK_OFFSET_CBCR, mask_sh),\
 	TF_SF(DSCL0_SCL_TAP_CONTROL, SCL_V_NUM_TAPS, mask_sh),\
@@ -497,7 +503,10 @@
 	type AUTOCAL_MODE; \
 	type AUTOCAL_NUM_PIPE; \
 	type AUTOCAL_PIPE_ID; \
+<<<<<<< HEAD
 	type SCL_BOUNDARY_MODE; \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	type SCL_BLACK_OFFSET_RGB_Y; \
 	type SCL_BLACK_OFFSET_CBCR; \
 	type SCL_V_NUM_TAPS; \
@@ -1111,7 +1120,10 @@ struct dcn_dpp_mask {
 	uint32_t LB_DATA_FORMAT; \
 	uint32_t LB_MEMORY_CTRL; \
 	uint32_t DSCL_AUTOCAL; \
+<<<<<<< HEAD
 	uint32_t DSCL_CONTROL; \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t SCL_BLACK_OFFSET; \
 	uint32_t SCL_TAP_CONTROL; \
 	uint32_t SCL_COEF_RAM_TAP_SELECT; \

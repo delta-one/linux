@@ -15,7 +15,11 @@ description: |
   settings, chip identifiers) or user specific data could be stored.
 
 allOf:
+<<<<<<< HEAD
   - $ref: nvmem.yaml#
+=======
+  - $ref: "nvmem.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

@@ -20,7 +20,10 @@
 #include <linux/kernel.h>
 #include <linux/slab.h>
 #include <linux/fs.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/namei.h>
 #include <linux/pagemap.h>
 #include <linux/sched/mm.h>
@@ -274,7 +277,11 @@ void putname(struct filename *name)
 
 /**
  * check_acl - perform ACL permission checking
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the inode was found from
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @inode:	inode to check permissions on
  * @mask:	right to check for (%MAY_READ, %MAY_WRITE, %MAY_EXEC ...)
  *
@@ -282,6 +289,7 @@ void putname(struct filename *name)
  * retrieve POSIX acls it needs to know whether it is called from a blocking or
  * non-blocking context and thus cares about the MAY_NOT_BLOCK bit.
  *
+<<<<<<< HEAD
  * If the inode has been found through an idmapped mount the idmap of
  * the vfsmount must be passed through @idmap. This function will then take
  * care to map the inode according to @idmap before checking permissions.
@@ -289,6 +297,15 @@ void putname(struct filename *name)
  * raw inode simply passs @nop_mnt_idmap.
  */
 static int check_acl(struct mnt_idmap *idmap,
+=======
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ */
+static int check_acl(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		     struct inode *inode, int mask)
 {
 #ifdef CONFIG_FS_POSIX_ACL
@@ -298,6 +315,7 @@ static int check_acl(struct mnt_idmap *idmap,
 		acl = get_cached_acl_rcu(inode, ACL_TYPE_ACCESS);
 	        if (!acl)
 	                return -EAGAIN;
+<<<<<<< HEAD
 		/* no ->get_inode_acl() calls in RCU mode... */
 		if (is_uncached_acl(acl))
 			return -ECHILD;
@@ -309,6 +327,19 @@ static int check_acl(struct mnt_idmap *idmap,
 		return PTR_ERR(acl);
 	if (acl) {
 	        int error = posix_acl_permission(idmap, inode, acl, mask);
+=======
+		/* no ->get_acl() calls in RCU mode... */
+		if (is_uncached_acl(acl))
+			return -ECHILD;
+	        return posix_acl_permission(mnt_userns, inode, acl, mask);
+	}
+
+	acl = get_acl(inode, ACL_TYPE_ACCESS);
+	if (IS_ERR(acl))
+		return PTR_ERR(acl);
+	if (acl) {
+	        int error = posix_acl_permission(mnt_userns, inode, acl, mask);
+>>>>>>> b7ba80a49124 (Commit)
 	        posix_acl_release(acl);
 	        return error;
 	}
@@ -319,7 +350,11 @@ static int check_acl(struct mnt_idmap *idmap,
 
 /**
  * acl_permission_check - perform basic UNIX permission checking
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the inode was found from
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @inode:	inode to check permissions on
  * @mask:	right to check for (%MAY_READ, %MAY_WRITE, %MAY_EXEC ...)
  *
@@ -327,6 +362,7 @@ static int check_acl(struct mnt_idmap *idmap,
  * function may retrieve POSIX acls it needs to know whether it is called from a
  * blocking or non-blocking context and thus cares about the MAY_NOT_BLOCK bit.
  *
+<<<<<<< HEAD
  * If the inode has been found through an idmapped mount the idmap of
  * the vfsmount must be passed through @idmap. This function will then take
  * care to map the inode according to @idmap before checking permissions.
@@ -342,6 +378,23 @@ static int acl_permission_check(struct mnt_idmap *idmap,
 	/* Are we the owner? If so, ACL's don't matter */
 	vfsuid = i_uid_into_vfsuid(idmap, inode);
 	if (likely(vfsuid_eq_kuid(vfsuid, current_fsuid()))) {
+=======
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ */
+static int acl_permission_check(struct user_namespace *mnt_userns,
+				struct inode *inode, int mask)
+{
+	unsigned int mode = inode->i_mode;
+	kuid_t i_uid;
+
+	/* Are we the owner? If so, ACL's don't matter */
+	i_uid = i_uid_into_mnt(mnt_userns, inode);
+	if (likely(uid_eq(current_fsuid(), i_uid))) {
+>>>>>>> b7ba80a49124 (Commit)
 		mask &= 7;
 		mode >>= 6;
 		return (mask & ~mode) ? -EACCES : 0;
@@ -349,7 +402,11 @@ static int acl_permission_check(struct mnt_idmap *idmap,
 
 	/* Do we have ACL's? */
 	if (IS_POSIXACL(inode) && (mode & S_IRWXG)) {
+<<<<<<< HEAD
 		int error = check_acl(idmap, inode, mask);
+=======
+		int error = check_acl(mnt_userns, inode, mask);
+>>>>>>> b7ba80a49124 (Commit)
 		if (error != -EAGAIN)
 			return error;
 	}
@@ -363,8 +420,13 @@ static int acl_permission_check(struct mnt_idmap *idmap,
 	 * about? Need to check group ownership if so.
 	 */
 	if (mask & (mode ^ (mode >> 3))) {
+<<<<<<< HEAD
 		vfsgid_t vfsgid = i_gid_into_vfsgid(idmap, inode);
 		if (vfsgid_in_group_p(vfsgid))
+=======
+		kgid_t kgid = i_gid_into_mnt(mnt_userns, inode);
+		if (in_group_p(kgid))
+>>>>>>> b7ba80a49124 (Commit)
 			mode >>= 3;
 	}
 
@@ -374,7 +436,11 @@ static int acl_permission_check(struct mnt_idmap *idmap,
 
 /**
  * generic_permission -  check for access rights on a Posix-like filesystem
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the inode was found from
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @inode:	inode to check access rights for
  * @mask:	right to check for (%MAY_READ, %MAY_WRITE, %MAY_EXEC,
  *		%MAY_NOT_BLOCK ...)
@@ -388,6 +454,7 @@ static int acl_permission_check(struct mnt_idmap *idmap,
  * request cannot be satisfied (eg. requires blocking or too much complexity).
  * It would then be called again in ref-walk mode.
  *
+<<<<<<< HEAD
  * If the inode has been found through an idmapped mount the idmap of
  * the vfsmount must be passed through @idmap. This function will then take
  * care to map the inode according to @idmap before checking permissions.
@@ -395,6 +462,15 @@ static int acl_permission_check(struct mnt_idmap *idmap,
  * raw inode simply passs @nop_mnt_idmap.
  */
 int generic_permission(struct mnt_idmap *idmap, struct inode *inode,
+=======
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ */
+int generic_permission(struct user_namespace *mnt_userns, struct inode *inode,
+>>>>>>> b7ba80a49124 (Commit)
 		       int mask)
 {
 	int ret;
@@ -402,17 +478,28 @@ int generic_permission(struct mnt_idmap *idmap, struct inode *inode,
 	/*
 	 * Do the basic permission checks.
 	 */
+<<<<<<< HEAD
 	ret = acl_permission_check(idmap, inode, mask);
+=======
+	ret = acl_permission_check(mnt_userns, inode, mask);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret != -EACCES)
 		return ret;
 
 	if (S_ISDIR(inode->i_mode)) {
 		/* DACs are overridable for directories */
 		if (!(mask & MAY_WRITE))
+<<<<<<< HEAD
 			if (capable_wrt_inode_uidgid(idmap, inode,
 						     CAP_DAC_READ_SEARCH))
 				return 0;
 		if (capable_wrt_inode_uidgid(idmap, inode,
+=======
+			if (capable_wrt_inode_uidgid(mnt_userns, inode,
+						     CAP_DAC_READ_SEARCH))
+				return 0;
+		if (capable_wrt_inode_uidgid(mnt_userns, inode,
+>>>>>>> b7ba80a49124 (Commit)
 					     CAP_DAC_OVERRIDE))
 			return 0;
 		return -EACCES;
@@ -423,7 +510,11 @@ int generic_permission(struct mnt_idmap *idmap, struct inode *inode,
 	 */
 	mask &= MAY_READ | MAY_WRITE | MAY_EXEC;
 	if (mask == MAY_READ)
+<<<<<<< HEAD
 		if (capable_wrt_inode_uidgid(idmap, inode,
+=======
+		if (capable_wrt_inode_uidgid(mnt_userns, inode,
+>>>>>>> b7ba80a49124 (Commit)
 					     CAP_DAC_READ_SEARCH))
 			return 0;
 	/*
@@ -432,7 +523,11 @@ int generic_permission(struct mnt_idmap *idmap, struct inode *inode,
 	 * at least one exec bit set.
 	 */
 	if (!(mask & MAY_EXEC) || (inode->i_mode & S_IXUGO))
+<<<<<<< HEAD
 		if (capable_wrt_inode_uidgid(idmap, inode,
+=======
+		if (capable_wrt_inode_uidgid(mnt_userns, inode,
+>>>>>>> b7ba80a49124 (Commit)
 					     CAP_DAC_OVERRIDE))
 			return 0;
 
@@ -442,7 +537,11 @@ EXPORT_SYMBOL(generic_permission);
 
 /**
  * do_inode_permission - UNIX permission checking
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the inode was found from
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @inode:	inode to check permissions on
  * @mask:	right to check for (%MAY_READ, %MAY_WRITE, %MAY_EXEC ...)
  *
@@ -451,19 +550,31 @@ EXPORT_SYMBOL(generic_permission);
  * flag in inode->i_opflags, that says "this has not special
  * permission function, use the fast case".
  */
+<<<<<<< HEAD
 static inline int do_inode_permission(struct mnt_idmap *idmap,
+=======
+static inline int do_inode_permission(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				      struct inode *inode, int mask)
 {
 	if (unlikely(!(inode->i_opflags & IOP_FASTPERM))) {
 		if (likely(inode->i_op->permission))
+<<<<<<< HEAD
 			return inode->i_op->permission(idmap, inode, mask);
+=======
+			return inode->i_op->permission(mnt_userns, inode, mask);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* This gets set once for the inode lifetime */
 		spin_lock(&inode->i_lock);
 		inode->i_opflags |= IOP_FASTPERM;
 		spin_unlock(&inode->i_lock);
 	}
+<<<<<<< HEAD
 	return generic_permission(idmap, inode, mask);
+=======
+	return generic_permission(mnt_userns, inode, mask);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -488,7 +599,11 @@ static int sb_permission(struct super_block *sb, struct inode *inode, int mask)
 
 /**
  * inode_permission - Check for access rights to a given inode
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the inode was found from
+=======
+ * @mnt_userns:	User namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @inode:	Inode to check permission on
  * @mask:	Right to check for (%MAY_READ, %MAY_WRITE, %MAY_EXEC)
  *
@@ -498,7 +613,11 @@ static int sb_permission(struct super_block *sb, struct inode *inode, int mask)
  *
  * When checking for MAY_APPEND, MAY_WRITE must also be set in @mask.
  */
+<<<<<<< HEAD
 int inode_permission(struct mnt_idmap *idmap,
+=======
+int inode_permission(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		     struct inode *inode, int mask)
 {
 	int retval;
@@ -519,11 +638,19 @@ int inode_permission(struct mnt_idmap *idmap,
 		 * written back improperly if their true value is unknown
 		 * to the vfs.
 		 */
+<<<<<<< HEAD
 		if (HAS_UNMAPPED_ID(idmap, inode))
 			return -EACCES;
 	}
 
 	retval = do_inode_permission(idmap, inode, mask);
+=======
+		if (HAS_UNMAPPED_ID(mnt_userns, inode))
+			return -EACCES;
+	}
+
+	retval = do_inode_permission(mnt_userns, inode, mask);
+>>>>>>> b7ba80a49124 (Commit)
 	if (retval)
 		return retval;
 
@@ -582,7 +709,11 @@ struct nameidata {
 	struct nameidata *saved;
 	unsigned	root_seq;
 	int		dfd;
+<<<<<<< HEAD
 	vfsuid_t	dir_vfsuid;
+=======
+	kuid_t		dir_uid;
+>>>>>>> b7ba80a49124 (Commit)
 	umode_t		dir_mode;
 } __randomize_layout;
 
@@ -1095,16 +1226,28 @@ fs_initcall(init_fs_namei_sysctls);
  */
 static inline int may_follow_link(struct nameidata *nd, const struct inode *inode)
 {
+<<<<<<< HEAD
 	struct mnt_idmap *idmap;
 	vfsuid_t vfsuid;
+=======
+	struct user_namespace *mnt_userns;
+	kuid_t i_uid;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!sysctl_protected_symlinks)
 		return 0;
 
+<<<<<<< HEAD
 	idmap = mnt_idmap(nd->path.mnt);
 	vfsuid = i_uid_into_vfsuid(idmap, inode);
 	/* Allowed if owner and follower match. */
 	if (vfsuid_eq_kuid(vfsuid, current_fsuid()))
+=======
+	mnt_userns = mnt_user_ns(nd->path.mnt);
+	i_uid = i_uid_into_mnt(mnt_userns, inode);
+	/* Allowed if owner and follower match. */
+	if (uid_eq(current_cred()->fsuid, i_uid))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	/* Allowed if parent directory not sticky and world-writable. */
@@ -1112,7 +1255,11 @@ static inline int may_follow_link(struct nameidata *nd, const struct inode *inod
 		return 0;
 
 	/* Allowed if parent directory and link owner match. */
+<<<<<<< HEAD
 	if (vfsuid_valid(nd->dir_vfsuid) && vfsuid_eq(nd->dir_vfsuid, vfsuid))
+=======
+	if (uid_valid(nd->dir_uid) && uid_eq(nd->dir_uid, i_uid))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	if (nd->flags & LOOKUP_RCU)
@@ -1125,7 +1272,11 @@ static inline int may_follow_link(struct nameidata *nd, const struct inode *inod
 
 /**
  * safe_hardlink_source - Check for safe hardlink conditions
+<<<<<<< HEAD
  * @idmap: idmap of the mount the inode was found from
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @inode: the source inode to hardlink from
  *
  * Return false if at least one of the following conditions:
@@ -1136,7 +1287,11 @@ static inline int may_follow_link(struct nameidata *nd, const struct inode *inod
  *
  * Otherwise returns true.
  */
+<<<<<<< HEAD
 static bool safe_hardlink_source(struct mnt_idmap *idmap,
+=======
+static bool safe_hardlink_source(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				 struct inode *inode)
 {
 	umode_t mode = inode->i_mode;
@@ -1154,7 +1309,11 @@ static bool safe_hardlink_source(struct mnt_idmap *idmap,
 		return false;
 
 	/* Hardlinking to unreadable or unwritable sources is dangerous. */
+<<<<<<< HEAD
 	if (inode_permission(idmap, inode, MAY_READ | MAY_WRITE))
+=======
+	if (inode_permission(mnt_userns, inode, MAY_READ | MAY_WRITE))
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	return true;
@@ -1162,8 +1321,13 @@ static bool safe_hardlink_source(struct mnt_idmap *idmap,
 
 /**
  * may_linkat - Check permissions for creating a hardlink
+<<<<<<< HEAD
  * @idmap: idmap of the mount the inode was found from
  * @link:  the source to hardlink from
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+ * @link: the source to hardlink from
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Block hardlink when all of:
  *  - sysctl_protected_hardlinks enabled
@@ -1171,6 +1335,7 @@ static bool safe_hardlink_source(struct mnt_idmap *idmap,
  *  - hardlink source is unsafe (see safe_hardlink_source() above)
  *  - not CAP_FOWNER in a namespace with the inode owner uid mapped
  *
+<<<<<<< HEAD
  * If the inode has been found through an idmapped mount the idmap of
  * the vfsmount must be passed through @idmap. This function will then take
  * care to map the inode according to @idmap before checking permissions.
@@ -1180,12 +1345,28 @@ static bool safe_hardlink_source(struct mnt_idmap *idmap,
  * Returns 0 if successful, -ve on error.
  */
 int may_linkat(struct mnt_idmap *idmap, const struct path *link)
+=======
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ *
+ * Returns 0 if successful, -ve on error.
+ */
+int may_linkat(struct user_namespace *mnt_userns, const struct path *link)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct inode *inode = link->dentry->d_inode;
 
 	/* Inode writeback is not safe when the uid or gid are invalid. */
+<<<<<<< HEAD
 	if (!vfsuid_valid(i_uid_into_vfsuid(idmap, inode)) ||
 	    !vfsgid_valid(i_gid_into_vfsgid(idmap, inode)))
+=======
+	if (!uid_valid(i_uid_into_mnt(mnt_userns, inode)) ||
+	    !gid_valid(i_gid_into_mnt(mnt_userns, inode)))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOVERFLOW;
 
 	if (!sysctl_protected_hardlinks)
@@ -1194,8 +1375,13 @@ int may_linkat(struct mnt_idmap *idmap, const struct path *link)
 	/* Source inode owner (or CAP_FOWNER) can hardlink all they like,
 	 * otherwise, it must be a safe source.
 	 */
+<<<<<<< HEAD
 	if (safe_hardlink_source(idmap, inode) ||
 	    inode_owner_or_capable(idmap, inode))
+=======
+	if (safe_hardlink_source(mnt_userns, inode) ||
+	    inode_owner_or_capable(mnt_userns, inode))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	audit_log_path_denied(AUDIT_ANOM_LINK, "linkat");
@@ -1206,7 +1392,11 @@ int may_linkat(struct mnt_idmap *idmap, const struct path *link)
  * may_create_in_sticky - Check whether an O_CREAT open in a sticky directory
  *			  should be allowed, or not, on files that already
  *			  exist.
+<<<<<<< HEAD
  * @idmap: idmap of the mount the inode was found from
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @nd: nameidata pathwalk data
  * @inode: the inode of the file to open
  *
@@ -1221,6 +1411,7 @@ int may_linkat(struct mnt_idmap *idmap, const struct path *link)
  * the directory doesn't have to be world writable: being group writable will
  * be enough.
  *
+<<<<<<< HEAD
  * If the inode has been found through an idmapped mount the idmap of
  * the vfsmount must be passed through @idmap. This function will then take
  * care to map the inode according to @idmap before checking permissions.
@@ -1234,12 +1425,32 @@ static int may_create_in_sticky(struct mnt_idmap *idmap,
 {
 	umode_t dir_mode = nd->dir_mode;
 	vfsuid_t dir_vfsuid = nd->dir_vfsuid;
+=======
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ *
+ * Returns 0 if the open is allowed, -ve on error.
+ */
+static int may_create_in_sticky(struct user_namespace *mnt_userns,
+				struct nameidata *nd, struct inode *const inode)
+{
+	umode_t dir_mode = nd->dir_mode;
+	kuid_t dir_uid = nd->dir_uid;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if ((!sysctl_protected_fifos && S_ISFIFO(inode->i_mode)) ||
 	    (!sysctl_protected_regular && S_ISREG(inode->i_mode)) ||
 	    likely(!(dir_mode & S_ISVTX)) ||
+<<<<<<< HEAD
 	    vfsuid_eq(i_uid_into_vfsuid(idmap, inode), dir_vfsuid) ||
 	    vfsuid_eq_kuid(i_uid_into_vfsuid(idmap, inode), current_fsuid()))
+=======
+	    uid_eq(i_uid_into_mnt(mnt_userns, inode), dir_uid) ||
+	    uid_eq(current_fsuid(), i_uid_into_mnt(mnt_userns, inode)))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	if (likely(dir_mode & 0002) ||
@@ -1459,11 +1670,19 @@ EXPORT_SYMBOL(follow_down_one);
  * point, the filesystem owning that dentry may be queried as to whether the
  * caller is permitted to proceed or not.
  */
+<<<<<<< HEAD
 int follow_down(struct path *path, unsigned int flags)
 {
 	struct vfsmount *mnt = path->mnt;
 	bool jumped;
 	int ret = traverse_mounts(path, &jumped, NULL, flags);
+=======
+int follow_down(struct path *path)
+{
+	struct vfsmount *mnt = path->mnt;
+	bool jumped;
+	int ret = traverse_mounts(path, &jumped, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (path->mnt != mnt)
 		mntput(mnt);
@@ -1705,6 +1924,7 @@ static struct dentry *lookup_slow(const struct qstr *name,
 	return res;
 }
 
+<<<<<<< HEAD
 static inline int may_lookup(struct mnt_idmap *idmap,
 			     struct nameidata *nd)
 {
@@ -1714,6 +1934,17 @@ static inline int may_lookup(struct mnt_idmap *idmap,
 			return err;
 	}
 	return inode_permission(idmap, nd->inode, MAY_EXEC);
+=======
+static inline int may_lookup(struct user_namespace *mnt_userns,
+			     struct nameidata *nd)
+{
+	if (nd->flags & LOOKUP_RCU) {
+		int err = inode_permission(mnt_userns, nd->inode, MAY_EXEC|MAY_NOT_BLOCK);
+		if (err != -ECHILD || !try_to_unlazy(nd))
+			return err;
+	}
+	return inode_permission(mnt_userns, nd->inode, MAY_EXEC);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int reserve_stack(struct nameidata *nd, struct path *link)
@@ -2254,13 +2485,22 @@ static int link_path_walk(const char *name, struct nameidata *nd)
 
 	/* At this point we know we have a real path component. */
 	for(;;) {
+<<<<<<< HEAD
 		struct mnt_idmap *idmap;
+=======
+		struct user_namespace *mnt_userns;
+>>>>>>> b7ba80a49124 (Commit)
 		const char *link;
 		u64 hash_len;
 		int type;
 
+<<<<<<< HEAD
 		idmap = mnt_idmap(nd->path.mnt);
 		err = may_lookup(idmap, nd);
+=======
+		mnt_userns = mnt_user_ns(nd->path.mnt);
+		err = may_lookup(mnt_userns, nd);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			return err;
 
@@ -2308,7 +2548,11 @@ static int link_path_walk(const char *name, struct nameidata *nd)
 OK:
 			/* pathname or trailing symlink, done */
 			if (!depth) {
+<<<<<<< HEAD
 				nd->dir_vfsuid = i_uid_into_vfsuid(idmap, nd->inode);
+=======
+				nd->dir_uid = i_uid_into_mnt(mnt_userns, nd->inode);
+>>>>>>> b7ba80a49124 (Commit)
 				nd->dir_mode = nd->inode->i_mode;
 				nd->flags &= ~LOOKUP_PARENT;
 				return 0;
@@ -2623,7 +2867,11 @@ int vfs_path_lookup(struct dentry *dentry, struct vfsmount *mnt,
 }
 EXPORT_SYMBOL(vfs_path_lookup);
 
+<<<<<<< HEAD
 static int lookup_one_common(struct mnt_idmap *idmap,
+=======
+static int lookup_one_common(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			     const char *name, struct dentry *base, int len,
 			     struct qstr *this)
 {
@@ -2653,7 +2901,11 @@ static int lookup_one_common(struct mnt_idmap *idmap,
 			return err;
 	}
 
+<<<<<<< HEAD
 	return inode_permission(idmap, base->d_inode, MAY_EXEC);
+=======
+	return inode_permission(mnt_userns, base->d_inode, MAY_EXEC);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -2677,7 +2929,11 @@ struct dentry *try_lookup_one_len(const char *name, struct dentry *base, int len
 
 	WARN_ON_ONCE(!inode_is_locked(base->d_inode));
 
+<<<<<<< HEAD
 	err = lookup_one_common(&nop_mnt_idmap, name, base, len, &this);
+=======
+	err = lookup_one_common(&init_user_ns, name, base, len, &this);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return ERR_PTR(err);
 
@@ -2704,7 +2960,11 @@ struct dentry *lookup_one_len(const char *name, struct dentry *base, int len)
 
 	WARN_ON_ONCE(!inode_is_locked(base->d_inode));
 
+<<<<<<< HEAD
 	err = lookup_one_common(&nop_mnt_idmap, name, base, len, &this);
+=======
+	err = lookup_one_common(&init_user_ns, name, base, len, &this);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return ERR_PTR(err);
 
@@ -2715,7 +2975,11 @@ EXPORT_SYMBOL(lookup_one_len);
 
 /**
  * lookup_one - filesystem helper to lookup single pathname component
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the lookup is performed from
+=======
+ * @mnt_userns:	user namespace of the mount the lookup is performed from
+>>>>>>> b7ba80a49124 (Commit)
  * @name:	pathname component to lookup
  * @base:	base directory to lookup from
  * @len:	maximum length @len should be interpreted to
@@ -2725,7 +2989,11 @@ EXPORT_SYMBOL(lookup_one_len);
  *
  * The caller must hold base->i_mutex.
  */
+<<<<<<< HEAD
 struct dentry *lookup_one(struct mnt_idmap *idmap, const char *name,
+=======
+struct dentry *lookup_one(struct user_namespace *mnt_userns, const char *name,
+>>>>>>> b7ba80a49124 (Commit)
 			  struct dentry *base, int len)
 {
 	struct dentry *dentry;
@@ -2734,7 +3002,11 @@ struct dentry *lookup_one(struct mnt_idmap *idmap, const char *name,
 
 	WARN_ON_ONCE(!inode_is_locked(base->d_inode));
 
+<<<<<<< HEAD
 	err = lookup_one_common(idmap, name, base, len, &this);
+=======
+	err = lookup_one_common(mnt_userns, name, base, len, &this);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return ERR_PTR(err);
 
@@ -2745,7 +3017,11 @@ EXPORT_SYMBOL(lookup_one);
 
 /**
  * lookup_one_unlocked - filesystem helper to lookup single pathname component
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the lookup is performed from
+=======
+ * @mnt_userns:	idmapping of the mount the lookup is performed from
+>>>>>>> b7ba80a49124 (Commit)
  * @name:	pathname component to lookup
  * @base:	base directory to lookup from
  * @len:	maximum length @len should be interpreted to
@@ -2756,7 +3032,11 @@ EXPORT_SYMBOL(lookup_one);
  * Unlike lookup_one_len, it should be called without the parent
  * i_mutex held, and will take the i_mutex itself if necessary.
  */
+<<<<<<< HEAD
 struct dentry *lookup_one_unlocked(struct mnt_idmap *idmap,
+=======
+struct dentry *lookup_one_unlocked(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				   const char *name, struct dentry *base,
 				   int len)
 {
@@ -2764,7 +3044,11 @@ struct dentry *lookup_one_unlocked(struct mnt_idmap *idmap,
 	int err;
 	struct dentry *ret;
 
+<<<<<<< HEAD
 	err = lookup_one_common(idmap, name, base, len, &this);
+=======
+	err = lookup_one_common(mnt_userns, name, base, len, &this);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return ERR_PTR(err);
 
@@ -2778,7 +3062,11 @@ EXPORT_SYMBOL(lookup_one_unlocked);
 /**
  * lookup_one_positive_unlocked - filesystem helper to lookup single
  *				  pathname component
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the lookup is performed from
+=======
+ * @mnt_userns:	idmapping of the mount the lookup is performed from
+>>>>>>> b7ba80a49124 (Commit)
  * @name:	pathname component to lookup
  * @base:	base directory to lookup from
  * @len:	maximum length @len should be interpreted to
@@ -2795,11 +3083,19 @@ EXPORT_SYMBOL(lookup_one_unlocked);
  *
  * The helper should be called without i_mutex held.
  */
+<<<<<<< HEAD
 struct dentry *lookup_one_positive_unlocked(struct mnt_idmap *idmap,
 					    const char *name,
 					    struct dentry *base, int len)
 {
 	struct dentry *ret = lookup_one_unlocked(idmap, name, base, len);
+=======
+struct dentry *lookup_one_positive_unlocked(struct user_namespace *mnt_userns,
+					    const char *name,
+					    struct dentry *base, int len)
+{
+	struct dentry *ret = lookup_one_unlocked(mnt_userns, name, base, len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!IS_ERR(ret) && d_flags_negative(smp_load_acquire(&ret->d_flags))) {
 		dput(ret);
@@ -2824,7 +3120,11 @@ EXPORT_SYMBOL(lookup_one_positive_unlocked);
 struct dentry *lookup_one_len_unlocked(const char *name,
 				       struct dentry *base, int len)
 {
+<<<<<<< HEAD
 	return lookup_one_unlocked(&nop_mnt_idmap, name, base, len);
+=======
+	return lookup_one_unlocked(&init_user_ns, name, base, len);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(lookup_one_len_unlocked);
 
@@ -2839,7 +3139,11 @@ EXPORT_SYMBOL(lookup_one_len_unlocked);
 struct dentry *lookup_positive_unlocked(const char *name,
 				       struct dentry *base, int len)
 {
+<<<<<<< HEAD
 	return lookup_one_positive_unlocked(&nop_mnt_idmap, name, base, len);
+=======
+	return lookup_one_positive_unlocked(&init_user_ns, name, base, len);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(lookup_positive_unlocked);
 
@@ -2865,7 +3169,11 @@ int path_pts(struct path *path)
 
 	path->dentry = child;
 	dput(parent);
+<<<<<<< HEAD
 	follow_down(path, 0);
+=======
+	follow_down(path);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 #endif
@@ -2881,16 +3189,28 @@ int user_path_at_empty(int dfd, const char __user *name, unsigned flags,
 }
 EXPORT_SYMBOL(user_path_at_empty);
 
+<<<<<<< HEAD
 int __check_sticky(struct mnt_idmap *idmap, struct inode *dir,
+=======
+int __check_sticky(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		   struct inode *inode)
 {
 	kuid_t fsuid = current_fsuid();
 
+<<<<<<< HEAD
 	if (vfsuid_eq_kuid(i_uid_into_vfsuid(idmap, inode), fsuid))
 		return 0;
 	if (vfsuid_eq_kuid(i_uid_into_vfsuid(idmap, dir), fsuid))
 		return 0;
 	return !capable_wrt_inode_uidgid(idmap, inode, CAP_FOWNER);
+=======
+	if (uid_eq(i_uid_into_mnt(mnt_userns, inode), fsuid))
+		return 0;
+	if (uid_eq(i_uid_into_mnt(mnt_userns, dir), fsuid))
+		return 0;
+	return !capable_wrt_inode_uidgid(mnt_userns, inode, CAP_FOWNER);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(__check_sticky);
 
@@ -2914,7 +3234,11 @@ EXPORT_SYMBOL(__check_sticky);
  * 11. We don't allow removal of NFS sillyrenamed files; it's handled by
  *     nfs_async_unlink().
  */
+<<<<<<< HEAD
 static int may_delete(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int may_delete(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *victim, bool isdir)
 {
 	struct inode *inode = d_backing_inode(victim);
@@ -2927,21 +3251,36 @@ static int may_delete(struct mnt_idmap *idmap, struct inode *dir,
 	BUG_ON(victim->d_parent->d_inode != dir);
 
 	/* Inode writeback is not safe when the uid or gid are invalid. */
+<<<<<<< HEAD
 	if (!vfsuid_valid(i_uid_into_vfsuid(idmap, inode)) ||
 	    !vfsgid_valid(i_gid_into_vfsgid(idmap, inode)))
+=======
+	if (!uid_valid(i_uid_into_mnt(mnt_userns, inode)) ||
+	    !gid_valid(i_gid_into_mnt(mnt_userns, inode)))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOVERFLOW;
 
 	audit_inode_child(dir, victim, AUDIT_TYPE_CHILD_DELETE);
 
+<<<<<<< HEAD
 	error = inode_permission(idmap, dir, MAY_WRITE | MAY_EXEC);
+=======
+	error = inode_permission(mnt_userns, dir, MAY_WRITE | MAY_EXEC);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		return error;
 	if (IS_APPEND(dir))
 		return -EPERM;
 
+<<<<<<< HEAD
 	if (check_sticky(idmap, dir, inode) || IS_APPEND(inode) ||
 	    IS_IMMUTABLE(inode) || IS_SWAPFILE(inode) ||
 	    HAS_UNMAPPED_ID(idmap, inode))
+=======
+	if (check_sticky(mnt_userns, dir, inode) || IS_APPEND(inode) ||
+	    IS_IMMUTABLE(inode) || IS_SWAPFILE(inode) ||
+	    HAS_UNMAPPED_ID(mnt_userns, inode))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EPERM;
 	if (isdir) {
 		if (!d_is_dir(victim))
@@ -2966,7 +3305,11 @@ static int may_delete(struct mnt_idmap *idmap, struct inode *dir,
  *  4. We should have write and exec permissions on dir
  *  5. We can't do it if dir is immutable (done in permission())
  */
+<<<<<<< HEAD
 static inline int may_create(struct mnt_idmap *idmap,
+=======
+static inline int may_create(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			     struct inode *dir, struct dentry *child)
 {
 	audit_inode_child(dir, child, AUDIT_TYPE_CHILD_CREATE);
@@ -2974,10 +3317,17 @@ static inline int may_create(struct mnt_idmap *idmap,
 		return -EEXIST;
 	if (IS_DEADDIR(dir))
 		return -ENOENT;
+<<<<<<< HEAD
 	if (!fsuidgid_has_mapping(dir->i_sb, idmap))
 		return -EOVERFLOW;
 
 	return inode_permission(idmap, dir, MAY_WRITE | MAY_EXEC);
+=======
+	if (!fsuidgid_has_mapping(dir->i_sb, mnt_userns))
+		return -EOVERFLOW;
+
+	return inode_permission(mnt_userns, dir, MAY_WRITE | MAY_EXEC);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -3045,7 +3395,11 @@ static inline umode_t mode_strip_umask(const struct inode *dir, umode_t mode)
 
 /**
  * vfs_prepare_mode - prepare the mode to be used for a new inode
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the inode was found from
+=======
+ * @mnt_userns:		user namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @dir:	parent directory of the new inode
  * @mode:	mode of the new inode
  * @mask_perms:	allowed permission by the vfs
@@ -3066,11 +3420,19 @@ static inline umode_t mode_strip_umask(const struct inode *dir, umode_t mode)
  *
  * Returns: mode to be passed to the filesystem
  */
+<<<<<<< HEAD
 static inline umode_t vfs_prepare_mode(struct mnt_idmap *idmap,
 				       const struct inode *dir, umode_t mode,
 				       umode_t mask_perms, umode_t type)
 {
 	mode = mode_strip_sgid(idmap, dir, mode);
+=======
+static inline umode_t vfs_prepare_mode(struct user_namespace *mnt_userns,
+				       const struct inode *dir, umode_t mode,
+				       umode_t mask_perms, umode_t type)
+{
+	mode = mode_strip_sgid(mnt_userns, dir, mode);
+>>>>>>> b7ba80a49124 (Commit)
 	mode = mode_strip_umask(dir, mode);
 
 	/*
@@ -3085,7 +3447,11 @@ static inline umode_t vfs_prepare_mode(struct mnt_idmap *idmap,
 
 /**
  * vfs_create - create new file
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the inode was found from
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @dir:	inode of @dentry
  * @dentry:	pointer to dentry of the base directory
  * @mode:	mode of the new file
@@ -3093,6 +3459,7 @@ static inline umode_t vfs_prepare_mode(struct mnt_idmap *idmap,
  *
  * Create a new file.
  *
+<<<<<<< HEAD
  * If the inode has been found through an idmapped mount the idmap of
  * the vfsmount must be passed through @idmap. This function will then take
  * care to map the inode according to @idmap before checking permissions.
@@ -3105,17 +3472,37 @@ int vfs_create(struct mnt_idmap *idmap, struct inode *dir,
 	int error;
 
 	error = may_create(idmap, dir, dentry);
+=======
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ */
+int vfs_create(struct user_namespace *mnt_userns, struct inode *dir,
+	       struct dentry *dentry, umode_t mode, bool want_excl)
+{
+	int error = may_create(mnt_userns, dir, dentry);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		return error;
 
 	if (!dir->i_op->create)
 		return -EACCES;	/* shouldn't it be ENOSYS? */
 
+<<<<<<< HEAD
 	mode = vfs_prepare_mode(idmap, dir, mode, S_IALLUGO, S_IFREG);
 	error = security_inode_create(dir, dentry, mode);
 	if (error)
 		return error;
 	error = dir->i_op->create(idmap, dir, dentry, mode, want_excl);
+=======
+	mode = vfs_prepare_mode(mnt_userns, dir, mode, S_IALLUGO, S_IFREG);
+	error = security_inode_create(dir, dentry, mode);
+	if (error)
+		return error;
+	error = dir->i_op->create(mnt_userns, dir, dentry, mode, want_excl);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!error)
 		fsnotify_create(dir, dentry);
 	return error;
@@ -3127,7 +3514,11 @@ int vfs_mkobj(struct dentry *dentry, umode_t mode,
 		void *arg)
 {
 	struct inode *dir = dentry->d_parent->d_inode;
+<<<<<<< HEAD
 	int error = may_create(&nop_mnt_idmap, dir, dentry);
+=======
+	int error = may_create(&init_user_ns, dir, dentry);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		return error;
 
@@ -3149,7 +3540,11 @@ bool may_open_dev(const struct path *path)
 		!(path->mnt->mnt_sb->s_iflags & SB_I_NODEV);
 }
 
+<<<<<<< HEAD
 static int may_open(struct mnt_idmap *idmap, const struct path *path,
+=======
+static int may_open(struct user_namespace *mnt_userns, const struct path *path,
+>>>>>>> b7ba80a49124 (Commit)
 		    int acc_mode, int flag)
 {
 	struct dentry *dentry = path->dentry;
@@ -3185,7 +3580,11 @@ static int may_open(struct mnt_idmap *idmap, const struct path *path,
 		break;
 	}
 
+<<<<<<< HEAD
 	error = inode_permission(idmap, inode, MAY_OPEN | acc_mode);
+=======
+	error = inode_permission(mnt_userns, inode, MAY_OPEN | acc_mode);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		return error;
 
@@ -3200,13 +3599,21 @@ static int may_open(struct mnt_idmap *idmap, const struct path *path,
 	}
 
 	/* O_NOATIME can only be set by the owner or superuser */
+<<<<<<< HEAD
 	if (flag & O_NOATIME && !inode_owner_or_capable(idmap, inode))
+=======
+	if (flag & O_NOATIME && !inode_owner_or_capable(mnt_userns, inode))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EPERM;
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int handle_truncate(struct mnt_idmap *idmap, struct file *filp)
+=======
+static int handle_truncate(struct user_namespace *mnt_userns, struct file *filp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct path *path = &filp->f_path;
 	struct inode *inode = path->dentry->d_inode;
@@ -3214,9 +3621,15 @@ static int handle_truncate(struct mnt_idmap *idmap, struct file *filp)
 	if (error)
 		return error;
 
+<<<<<<< HEAD
 	error = security_file_truncate(filp);
 	if (!error) {
 		error = do_truncate(idmap, path->dentry, 0,
+=======
+	error = security_path_truncate(path);
+	if (!error) {
+		error = do_truncate(mnt_userns, path->dentry, 0,
+>>>>>>> b7ba80a49124 (Commit)
 				    ATTR_MTIME|ATTR_CTIME|ATTR_OPEN,
 				    filp);
 	}
@@ -3231,7 +3644,11 @@ static inline int open_to_namei_flags(int flag)
 	return flag;
 }
 
+<<<<<<< HEAD
 static int may_o_create(struct mnt_idmap *idmap,
+=======
+static int may_o_create(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			const struct path *dir, struct dentry *dentry,
 			umode_t mode)
 {
@@ -3239,10 +3656,17 @@ static int may_o_create(struct mnt_idmap *idmap,
 	if (error)
 		return error;
 
+<<<<<<< HEAD
 	if (!fsuidgid_has_mapping(dir->dentry->d_sb, idmap))
 		return -EOVERFLOW;
 
 	error = inode_permission(idmap, dir->dentry->d_inode,
+=======
+	if (!fsuidgid_has_mapping(dir->dentry->d_sb, mnt_userns))
+		return -EOVERFLOW;
+
+	error = inode_permission(mnt_userns, dir->dentry->d_inode,
+>>>>>>> b7ba80a49124 (Commit)
 				 MAY_WRITE | MAY_EXEC);
 	if (error)
 		return error;
@@ -3322,7 +3746,11 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
 				  const struct open_flags *op,
 				  bool got_write)
 {
+<<<<<<< HEAD
 	struct mnt_idmap *idmap;
+=======
+	struct user_namespace *mnt_userns;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dentry *dir = nd->path.dentry;
 	struct inode *dir_inode = dir->d_inode;
 	int open_flag = op->open_flag;
@@ -3370,6 +3798,7 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
 	 */
 	if (unlikely(!got_write))
 		open_flag &= ~O_TRUNC;
+<<<<<<< HEAD
 	idmap = mnt_idmap(nd->path.mnt);
 	if (open_flag & O_CREAT) {
 		if (open_flag & O_EXCL)
@@ -3377,6 +3806,15 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
 		mode = vfs_prepare_mode(idmap, dir->d_inode, mode, mode, mode);
 		if (likely(got_write))
 			create_error = may_o_create(idmap, &nd->path,
+=======
+	mnt_userns = mnt_user_ns(nd->path.mnt);
+	if (open_flag & O_CREAT) {
+		if (open_flag & O_EXCL)
+			open_flag &= ~O_TRUNC;
+		mode = vfs_prepare_mode(mnt_userns, dir->d_inode, mode, mode, mode);
+		if (likely(got_write))
+			create_error = may_o_create(mnt_userns, &nd->path,
+>>>>>>> b7ba80a49124 (Commit)
 						    dentry, mode);
 		else
 			create_error = -EROFS;
@@ -3413,7 +3851,11 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
 			goto out_dput;
 		}
 
+<<<<<<< HEAD
 		error = dir_inode->i_op->create(idmap, dir_inode, dentry,
+=======
+		error = dir_inode->i_op->create(mnt_userns, dir_inode, dentry,
+>>>>>>> b7ba80a49124 (Commit)
 						mode, open_flag & O_EXCL);
 		if (error)
 			goto out_dput;
@@ -3516,7 +3958,11 @@ finish_lookup:
 static int do_open(struct nameidata *nd,
 		   struct file *file, const struct open_flags *op)
 {
+<<<<<<< HEAD
 	struct mnt_idmap *idmap;
+=======
+	struct user_namespace *mnt_userns;
+>>>>>>> b7ba80a49124 (Commit)
 	int open_flag = op->open_flag;
 	bool do_truncate;
 	int acc_mode;
@@ -3529,13 +3975,21 @@ static int do_open(struct nameidata *nd,
 	}
 	if (!(file->f_mode & FMODE_CREATED))
 		audit_inode(nd->name, nd->path.dentry, 0);
+<<<<<<< HEAD
 	idmap = mnt_idmap(nd->path.mnt);
+=======
+	mnt_userns = mnt_user_ns(nd->path.mnt);
+>>>>>>> b7ba80a49124 (Commit)
 	if (open_flag & O_CREAT) {
 		if ((open_flag & O_EXCL) && !(file->f_mode & FMODE_CREATED))
 			return -EEXIST;
 		if (d_is_dir(nd->path.dentry))
 			return -EISDIR;
+<<<<<<< HEAD
 		error = may_create_in_sticky(idmap, nd,
+=======
+		error = may_create_in_sticky(mnt_userns, nd,
+>>>>>>> b7ba80a49124 (Commit)
 					     d_backing_inode(nd->path.dentry));
 		if (unlikely(error))
 			return error;
@@ -3555,13 +4009,21 @@ static int do_open(struct nameidata *nd,
 			return error;
 		do_truncate = true;
 	}
+<<<<<<< HEAD
 	error = may_open(idmap, &nd->path, acc_mode, open_flag);
+=======
+	error = may_open(mnt_userns, &nd->path, acc_mode, open_flag);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!error && !(file->f_mode & FMODE_OPENED))
 		error = vfs_open(&nd->path, file);
 	if (!error)
 		error = ima_file_check(file, op->acc_mode);
 	if (!error && do_truncate)
+<<<<<<< HEAD
 		error = handle_truncate(idmap, file);
+=======
+		error = handle_truncate(mnt_userns, file);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(error > 0)) {
 		WARN_ON(1);
 		error = -EINVAL;
@@ -3573,6 +4035,7 @@ static int do_open(struct nameidata *nd,
 
 /**
  * vfs_tmpfile - create tmpfile
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the inode was found from
  * @parentpath:	pointer to the path of the base directory
  * @file:	file descriptor of the new tmpfile
@@ -3617,11 +4080,54 @@ static int vfs_tmpfile(struct mnt_idmap *idmap,
 	if (error)
 		return error;
 	inode = file_inode(file);
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+ * @dentry:	pointer to dentry of the base directory
+ * @mode:	mode of the new tmpfile
+ * @open_flag:	flags
+ *
+ * Create a temporary file.
+ *
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ */
+struct dentry *vfs_tmpfile(struct user_namespace *mnt_userns,
+			   struct dentry *dentry, umode_t mode, int open_flag)
+{
+	struct dentry *child = NULL;
+	struct inode *dir = dentry->d_inode;
+	struct inode *inode;
+	int error;
+
+	/* we want directory to be writable */
+	error = inode_permission(mnt_userns, dir, MAY_WRITE | MAY_EXEC);
+	if (error)
+		goto out_err;
+	error = -EOPNOTSUPP;
+	if (!dir->i_op->tmpfile)
+		goto out_err;
+	error = -ENOMEM;
+	child = d_alloc(dentry, &slash_name);
+	if (unlikely(!child))
+		goto out_err;
+	mode = vfs_prepare_mode(mnt_userns, dir, mode, mode, mode);
+	error = dir->i_op->tmpfile(mnt_userns, dir, child, mode);
+	if (error)
+		goto out_err;
+	error = -ENOENT;
+	inode = child->d_inode;
+	if (unlikely(!inode))
+		goto out_err;
+>>>>>>> b7ba80a49124 (Commit)
 	if (!(open_flag & O_EXCL)) {
 		spin_lock(&inode->i_lock);
 		inode->i_state |= I_LINKABLE;
 		spin_unlock(&inode->i_lock);
 	}
+<<<<<<< HEAD
 	ima_post_create_tmpfile(idmap, inode);
 	return 0;
 }
@@ -3656,23 +4162,55 @@ struct file *vfs_tmpfile_open(struct mnt_idmap *idmap,
 	return file;
 }
 EXPORT_SYMBOL(vfs_tmpfile_open);
+=======
+	ima_post_create_tmpfile(mnt_userns, inode);
+	return child;
+
+out_err:
+	dput(child);
+	return ERR_PTR(error);
+}
+EXPORT_SYMBOL(vfs_tmpfile);
+>>>>>>> b7ba80a49124 (Commit)
 
 static int do_tmpfile(struct nameidata *nd, unsigned flags,
 		const struct open_flags *op,
 		struct file *file)
 {
+<<<<<<< HEAD
 	struct path path;
 	int error = path_lookupat(nd, flags | LOOKUP_DIRECTORY, &path);
 
+=======
+	struct user_namespace *mnt_userns;
+	struct dentry *child;
+	struct path path;
+	int error = path_lookupat(nd, flags | LOOKUP_DIRECTORY, &path);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(error))
 		return error;
 	error = mnt_want_write(path.mnt);
 	if (unlikely(error))
 		goto out;
+<<<<<<< HEAD
 	error = vfs_tmpfile(mnt_idmap(path.mnt), &path, file, op->mode);
 	if (error)
 		goto out2;
 	audit_inode(nd->name, file->f_path.dentry, 0);
+=======
+	mnt_userns = mnt_user_ns(path.mnt);
+	child = vfs_tmpfile(mnt_userns, path.dentry, op->mode, op->open_flag);
+	error = PTR_ERR(child);
+	if (IS_ERR(child))
+		goto out2;
+	dput(path.dentry);
+	path.dentry = child;
+	audit_inode(nd->name, child, 0);
+	/* Don't check for other permissions, the inode was just created */
+	error = may_open(mnt_userns, &path, 0, op->open_flag);
+	if (!error)
+		error = vfs_open(&path, file);
+>>>>>>> b7ba80a49124 (Commit)
 out2:
 	mnt_drop_write(path.mnt);
 out:
@@ -3874,7 +4412,11 @@ EXPORT_SYMBOL(user_path_create);
 
 /**
  * vfs_mknod - create device node or file
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the inode was found from
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @dir:	inode of @dentry
  * @dentry:	pointer to dentry of the base directory
  * @mode:	mode of the new device node or file
@@ -3882,6 +4424,7 @@ EXPORT_SYMBOL(user_path_create);
  *
  * Create a device node or file.
  *
+<<<<<<< HEAD
  * If the inode has been found through an idmapped mount the idmap of
  * the vfsmount must be passed through @idmap. This function will then take
  * care to map the inode according to @idmap before checking permissions.
@@ -3893,6 +4436,19 @@ int vfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
 {
 	bool is_whiteout = S_ISCHR(mode) && dev == WHITEOUT_DEV;
 	int error = may_create(idmap, dir, dentry);
+=======
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ */
+int vfs_mknod(struct user_namespace *mnt_userns, struct inode *dir,
+	      struct dentry *dentry, umode_t mode, dev_t dev)
+{
+	bool is_whiteout = S_ISCHR(mode) && dev == WHITEOUT_DEV;
+	int error = may_create(mnt_userns, dir, dentry);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (error)
 		return error;
@@ -3904,7 +4460,11 @@ int vfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
 	if (!dir->i_op->mknod)
 		return -EPERM;
 
+<<<<<<< HEAD
 	mode = vfs_prepare_mode(idmap, dir, mode, mode, mode);
+=======
+	mode = vfs_prepare_mode(mnt_userns, dir, mode, mode, mode);
+>>>>>>> b7ba80a49124 (Commit)
 	error = devcgroup_inode_mknod(mode, dev);
 	if (error)
 		return error;
@@ -3913,7 +4473,11 @@ int vfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
 	if (error)
 		return error;
 
+<<<<<<< HEAD
 	error = dir->i_op->mknod(idmap, dir, dentry, mode, dev);
+=======
+	error = dir->i_op->mknod(mnt_userns, dir, dentry, mode, dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!error)
 		fsnotify_create(dir, dentry);
 	return error;
@@ -3940,7 +4504,11 @@ static int may_mknod(umode_t mode)
 static int do_mknodat(int dfd, struct filename *name, umode_t mode,
 		unsigned int dev)
 {
+<<<<<<< HEAD
 	struct mnt_idmap *idmap;
+=======
+	struct user_namespace *mnt_userns;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dentry *dentry;
 	struct path path;
 	int error;
@@ -3960,6 +4528,7 @@ retry:
 	if (error)
 		goto out2;
 
+<<<<<<< HEAD
 	idmap = mnt_idmap(path.mnt);
 	switch (mode & S_IFMT) {
 		case 0: case S_IFREG:
@@ -3974,6 +4543,22 @@ retry:
 			break;
 		case S_IFIFO: case S_IFSOCK:
 			error = vfs_mknod(idmap, path.dentry->d_inode,
+=======
+	mnt_userns = mnt_user_ns(path.mnt);
+	switch (mode & S_IFMT) {
+		case 0: case S_IFREG:
+			error = vfs_create(mnt_userns, path.dentry->d_inode,
+					   dentry, mode, true);
+			if (!error)
+				ima_post_path_mknod(mnt_userns, dentry);
+			break;
+		case S_IFCHR: case S_IFBLK:
+			error = vfs_mknod(mnt_userns, path.dentry->d_inode,
+					  dentry, mode, new_decode_dev(dev));
+			break;
+		case S_IFIFO: case S_IFSOCK:
+			error = vfs_mknod(mnt_userns, path.dentry->d_inode,
+>>>>>>> b7ba80a49124 (Commit)
 					  dentry, mode, 0);
 			break;
 	}
@@ -4001,13 +4586,18 @@ SYSCALL_DEFINE3(mknod, const char __user *, filename, umode_t, mode, unsigned, d
 
 /**
  * vfs_mkdir - create directory
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the inode was found from
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @dir:	inode of @dentry
  * @dentry:	pointer to dentry of the base directory
  * @mode:	mode of the new directory
  *
  * Create a directory.
  *
+<<<<<<< HEAD
  * If the inode has been found through an idmapped mount the idmap of
  * the vfsmount must be passed through @idmap. This function will then take
  * care to map the inode according to @idmap before checking permissions.
@@ -4021,13 +4611,31 @@ int vfs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
 	unsigned max_links = dir->i_sb->s_max_links;
 
 	error = may_create(idmap, dir, dentry);
+=======
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ */
+int vfs_mkdir(struct user_namespace *mnt_userns, struct inode *dir,
+	      struct dentry *dentry, umode_t mode)
+{
+	int error = may_create(mnt_userns, dir, dentry);
+	unsigned max_links = dir->i_sb->s_max_links;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		return error;
 
 	if (!dir->i_op->mkdir)
 		return -EPERM;
 
+<<<<<<< HEAD
 	mode = vfs_prepare_mode(idmap, dir, mode, S_IRWXUGO | S_ISVTX, 0);
+=======
+	mode = vfs_prepare_mode(mnt_userns, dir, mode, S_IRWXUGO | S_ISVTX, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	error = security_inode_mkdir(dir, dentry, mode);
 	if (error)
 		return error;
@@ -4035,7 +4643,11 @@ int vfs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
 	if (max_links && dir->i_nlink >= max_links)
 		return -EMLINK;
 
+<<<<<<< HEAD
 	error = dir->i_op->mkdir(idmap, dir, dentry, mode);
+=======
+	error = dir->i_op->mkdir(mnt_userns, dir, dentry, mode);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!error)
 		fsnotify_mkdir(dir, dentry);
 	return error;
@@ -4058,8 +4670,15 @@ retry:
 	error = security_path_mkdir(&path, dentry,
 			mode_strip_umask(path.dentry->d_inode, mode));
 	if (!error) {
+<<<<<<< HEAD
 		error = vfs_mkdir(mnt_idmap(path.mnt), path.dentry->d_inode,
 				  dentry, mode);
+=======
+		struct user_namespace *mnt_userns;
+		mnt_userns = mnt_user_ns(path.mnt);
+		error = vfs_mkdir(mnt_userns, path.dentry->d_inode, dentry,
+				  mode);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	done_path_create(&path, dentry);
 	if (retry_estale(error, lookup_flags)) {
@@ -4083,12 +4702,17 @@ SYSCALL_DEFINE2(mkdir, const char __user *, pathname, umode_t, mode)
 
 /**
  * vfs_rmdir - remove directory
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the inode was found from
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @dir:	inode of @dentry
  * @dentry:	pointer to dentry of the base directory
  *
  * Remove a directory.
  *
+<<<<<<< HEAD
  * If the inode has been found through an idmapped mount the idmap of
  * the vfsmount must be passed through @idmap. This function will then take
  * care to map the inode according to @idmap before checking permissions.
@@ -4099,6 +4723,18 @@ int vfs_rmdir(struct mnt_idmap *idmap, struct inode *dir,
 		     struct dentry *dentry)
 {
 	int error = may_delete(idmap, dir, dentry, 1);
+=======
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ */
+int vfs_rmdir(struct user_namespace *mnt_userns, struct inode *dir,
+		     struct dentry *dentry)
+{
+	int error = may_delete(mnt_userns, dir, dentry, 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (error)
 		return error;
@@ -4138,6 +4774,10 @@ EXPORT_SYMBOL(vfs_rmdir);
 
 int do_rmdir(int dfd, struct filename *name)
 {
+<<<<<<< HEAD
+=======
+	struct user_namespace *mnt_userns;
+>>>>>>> b7ba80a49124 (Commit)
 	int error;
 	struct dentry *dentry;
 	struct path path;
@@ -4177,7 +4817,12 @@ retry:
 	error = security_path_rmdir(&path, dentry);
 	if (error)
 		goto exit4;
+<<<<<<< HEAD
 	error = vfs_rmdir(mnt_idmap(path.mnt), path.dentry->d_inode, dentry);
+=======
+	mnt_userns = mnt_user_ns(path.mnt);
+	error = vfs_rmdir(mnt_userns, path.dentry->d_inode, dentry);
+>>>>>>> b7ba80a49124 (Commit)
 exit4:
 	dput(dentry);
 exit3:
@@ -4201,7 +4846,11 @@ SYSCALL_DEFINE1(rmdir, const char __user *, pathname)
 
 /**
  * vfs_unlink - unlink a filesystem object
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the inode was found from
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @dir:	parent directory
  * @dentry:	victim
  * @delegated_inode: returns victim inode, if the inode is delegated.
@@ -4218,6 +4867,7 @@ SYSCALL_DEFINE1(rmdir, const char __user *, pathname)
  * be appropriate for callers that expect the underlying filesystem not
  * to be NFS exported.
  *
+<<<<<<< HEAD
  * If the inode has been found through an idmapped mount the idmap of
  * the vfsmount must be passed through @idmap. This function will then take
  * care to map the inode according to @idmap before checking permissions.
@@ -4229,6 +4879,19 @@ int vfs_unlink(struct mnt_idmap *idmap, struct inode *dir,
 {
 	struct inode *target = dentry->d_inode;
 	int error = may_delete(idmap, dir, dentry, 0);
+=======
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ */
+int vfs_unlink(struct user_namespace *mnt_userns, struct inode *dir,
+	       struct dentry *dentry, struct inode **delegated_inode)
+{
+	struct inode *target = dentry->d_inode;
+	int error = may_delete(mnt_userns, dir, dentry, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (error)
 		return error;
@@ -4302,6 +4965,10 @@ retry_deleg:
 	dentry = __lookup_hash(&last, path.dentry, lookup_flags);
 	error = PTR_ERR(dentry);
 	if (!IS_ERR(dentry)) {
+<<<<<<< HEAD
+=======
+		struct user_namespace *mnt_userns;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Why not before? Because we want correct error value */
 		if (last.name[last.len])
@@ -4313,8 +4980,14 @@ retry_deleg:
 		error = security_path_unlink(&path, dentry);
 		if (error)
 			goto exit3;
+<<<<<<< HEAD
 		error = vfs_unlink(mnt_idmap(path.mnt), path.dentry->d_inode,
 				   dentry, &delegated_inode);
+=======
+		mnt_userns = mnt_user_ns(path.mnt);
+		error = vfs_unlink(mnt_userns, path.dentry->d_inode, dentry,
+				   &delegated_inode);
+>>>>>>> b7ba80a49124 (Commit)
 exit3:
 		dput(dentry);
 	}
@@ -4366,13 +5039,18 @@ SYSCALL_DEFINE1(unlink, const char __user *, pathname)
 
 /**
  * vfs_symlink - create symlink
+<<<<<<< HEAD
  * @idmap:	idmap of the mount the inode was found from
+=======
+ * @mnt_userns:	user namespace of the mount the inode was found from
+>>>>>>> b7ba80a49124 (Commit)
  * @dir:	inode of @dentry
  * @dentry:	pointer to dentry of the base directory
  * @oldname:	name of the file to link to
  *
  * Create a symlink.
  *
+<<<<<<< HEAD
  * If the inode has been found through an idmapped mount the idmap of
  * the vfsmount must be passed through @idmap. This function will then take
  * care to map the inode according to @idmap before checking permissions.
@@ -4385,6 +5063,19 @@ int vfs_symlink(struct mnt_idmap *idmap, struct inode *dir,
 	int error;
 
 	error = may_create(idmap, dir, dentry);
+=======
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ */
+int vfs_symlink(struct user_namespace *mnt_userns, struct inode *dir,
+		struct dentry *dentry, const char *oldname)
+{
+	int error = may_create(mnt_userns, dir, dentry);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		return error;
 
@@ -4395,7 +5086,11 @@ int vfs_symlink(struct mnt_idmap *idmap, struct inode *dir,
 	if (error)
 		return error;
 
+<<<<<<< HEAD
 	error = dir->i_op->symlink(idmap, dir, dentry, oldname);
+=======
+	error = dir->i_op->symlink(mnt_userns, dir, dentry, oldname);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!error)
 		fsnotify_create(dir, dentry);
 	return error;
@@ -4420,9 +5115,19 @@ retry:
 		goto out_putnames;
 
 	error = security_path_symlink(&path, dentry, from->name);
+<<<<<<< HEAD
 	if (!error)
 		error = vfs_symlink(mnt_idmap(path.mnt), path.dentry->d_inode,
 				    dentry, from->name);
+=======
+	if (!error) {
+		struct user_namespace *mnt_userns;
+
+		mnt_userns = mnt_user_ns(path.mnt);
+		error = vfs_symlink(mnt_userns, path.dentry->d_inode, dentry,
+				    from->name);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	done_path_create(&path, dentry);
 	if (retry_estale(error, lookup_flags)) {
 		lookup_flags |= LOOKUP_REVAL;
@@ -4448,7 +5153,11 @@ SYSCALL_DEFINE2(symlink, const char __user *, oldname, const char __user *, newn
 /**
  * vfs_link - create a new link
  * @old_dentry:	object to be linked
+<<<<<<< HEAD
  * @idmap:	idmap of the mount
+=======
+ * @mnt_userns:	the user namespace of the mount
+>>>>>>> b7ba80a49124 (Commit)
  * @dir:	new parent
  * @new_dentry:	where to create the new link
  * @delegated_inode: returns inode needing a delegation break
@@ -4465,6 +5174,7 @@ SYSCALL_DEFINE2(symlink, const char __user *, oldname, const char __user *, newn
  * be appropriate for callers that expect the underlying filesystem not
  * to be NFS exported.
  *
+<<<<<<< HEAD
  * If the inode has been found through an idmapped mount the idmap of
  * the vfsmount must be passed through @idmap. This function will then take
  * care to map the inode according to @idmap before checking permissions.
@@ -4472,6 +5182,15 @@ SYSCALL_DEFINE2(symlink, const char __user *, oldname, const char __user *, newn
  * raw inode simply passs @nop_mnt_idmap.
  */
 int vfs_link(struct dentry *old_dentry, struct mnt_idmap *idmap,
+=======
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ */
+int vfs_link(struct dentry *old_dentry, struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 	     struct inode *dir, struct dentry *new_dentry,
 	     struct inode **delegated_inode)
 {
@@ -4482,7 +5201,11 @@ int vfs_link(struct dentry *old_dentry, struct mnt_idmap *idmap,
 	if (!inode)
 		return -ENOENT;
 
+<<<<<<< HEAD
 	error = may_create(idmap, dir, new_dentry);
+=======
+	error = may_create(mnt_userns, dir, new_dentry);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		return error;
 
@@ -4499,7 +5222,11 @@ int vfs_link(struct dentry *old_dentry, struct mnt_idmap *idmap,
 	 * be writen back improperly if their true value is unknown to
 	 * the vfs.
 	 */
+<<<<<<< HEAD
 	if (HAS_UNMAPPED_ID(idmap, inode))
+=======
+	if (HAS_UNMAPPED_ID(mnt_userns, inode))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EPERM;
 	if (!dir->i_op->link)
 		return -EPERM;
@@ -4546,7 +5273,11 @@ EXPORT_SYMBOL(vfs_link);
 int do_linkat(int olddfd, struct filename *old, int newdfd,
 	      struct filename *new, int flags)
 {
+<<<<<<< HEAD
 	struct mnt_idmap *idmap;
+=======
+	struct user_namespace *mnt_userns;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dentry *new_dentry;
 	struct path old_path, new_path;
 	struct inode *delegated_inode = NULL;
@@ -4583,14 +5314,23 @@ retry:
 	error = -EXDEV;
 	if (old_path.mnt != new_path.mnt)
 		goto out_dput;
+<<<<<<< HEAD
 	idmap = mnt_idmap(new_path.mnt);
 	error = may_linkat(idmap, &old_path);
+=======
+	mnt_userns = mnt_user_ns(new_path.mnt);
+	error = may_linkat(mnt_userns, &old_path);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(error))
 		goto out_dput;
 	error = security_path_link(old_path.dentry, &new_path, new_dentry);
 	if (error)
 		goto out_dput;
+<<<<<<< HEAD
 	error = vfs_link(old_path.dentry, idmap, new_path.dentry->d_inode,
+=======
+	error = vfs_link(old_path.dentry, mnt_userns, new_path.dentry->d_inode,
+>>>>>>> b7ba80a49124 (Commit)
 			 new_dentry, &delegated_inode);
 out_dput:
 	done_path_create(&new_path, new_dentry);
@@ -4690,20 +5430,35 @@ int vfs_rename(struct renamedata *rd)
 	if (source == target)
 		return 0;
 
+<<<<<<< HEAD
 	error = may_delete(rd->old_mnt_idmap, old_dir, old_dentry, is_dir);
+=======
+	error = may_delete(rd->old_mnt_userns, old_dir, old_dentry, is_dir);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		return error;
 
 	if (!target) {
+<<<<<<< HEAD
 		error = may_create(rd->new_mnt_idmap, new_dir, new_dentry);
+=======
+		error = may_create(rd->new_mnt_userns, new_dir, new_dentry);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		new_is_dir = d_is_dir(new_dentry);
 
 		if (!(flags & RENAME_EXCHANGE))
+<<<<<<< HEAD
 			error = may_delete(rd->new_mnt_idmap, new_dir,
 					   new_dentry, is_dir);
 		else
 			error = may_delete(rd->new_mnt_idmap, new_dir,
+=======
+			error = may_delete(rd->new_mnt_userns, new_dir,
+					   new_dentry, is_dir);
+		else
+			error = may_delete(rd->new_mnt_userns, new_dir,
+>>>>>>> b7ba80a49124 (Commit)
 					   new_dentry, new_is_dir);
 	}
 	if (error)
@@ -4718,13 +5473,21 @@ int vfs_rename(struct renamedata *rd)
 	 */
 	if (new_dir != old_dir) {
 		if (is_dir) {
+<<<<<<< HEAD
 			error = inode_permission(rd->old_mnt_idmap, source,
+=======
+			error = inode_permission(rd->old_mnt_userns, source,
+>>>>>>> b7ba80a49124 (Commit)
 						 MAY_WRITE);
 			if (error)
 				return error;
 		}
 		if ((flags & RENAME_EXCHANGE) && new_is_dir) {
+<<<<<<< HEAD
 			error = inode_permission(rd->new_mnt_idmap, target,
+=======
+			error = inode_permission(rd->new_mnt_userns, target,
+>>>>>>> b7ba80a49124 (Commit)
 						 MAY_WRITE);
 			if (error)
 				return error;
@@ -4769,7 +5532,11 @@ int vfs_rename(struct renamedata *rd)
 		if (error)
 			goto out;
 	}
+<<<<<<< HEAD
 	error = old_dir->i_op->rename(rd->new_mnt_idmap, old_dir, old_dentry,
+=======
+	error = old_dir->i_op->rename(rd->new_mnt_userns, old_dir, old_dentry,
+>>>>>>> b7ba80a49124 (Commit)
 				      new_dir, new_dentry, flags);
 	if (error)
 		goto out;
@@ -4914,10 +5681,17 @@ retry_deleg:
 
 	rd.old_dir	   = old_path.dentry->d_inode;
 	rd.old_dentry	   = old_dentry;
+<<<<<<< HEAD
 	rd.old_mnt_idmap   = mnt_idmap(old_path.mnt);
 	rd.new_dir	   = new_path.dentry->d_inode;
 	rd.new_dentry	   = new_dentry;
 	rd.new_mnt_idmap   = mnt_idmap(new_path.mnt);
+=======
+	rd.old_mnt_userns  = mnt_user_ns(old_path.mnt);
+	rd.new_dir	   = new_path.dentry->d_inode;
+	rd.new_dentry	   = new_dentry;
+	rd.new_mnt_userns  = mnt_user_ns(new_path.mnt);
+>>>>>>> b7ba80a49124 (Commit)
 	rd.delegated_inode = &delegated_inode;
 	rd.flags	   = flags;
 	error = vfs_rename(&rd);

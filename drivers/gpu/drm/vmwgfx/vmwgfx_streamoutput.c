@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0 OR MIT
 /**************************************************************************
  *
+<<<<<<< HEAD
  * Copyright © 2018-2023 VMware, Inc., Palo Alto, CA., USA
+=======
+ * Copyright © 2018-2019 VMware, Inc., Palo Alto, CA., USA
+>>>>>>> b7ba80a49124 (Commit)
  * All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -26,12 +30,20 @@
  *
  **************************************************************************/
 
+<<<<<<< HEAD
 #include "vmwgfx_binding.h"
 #include "vmwgfx_bo.h"
 #include "vmwgfx_drv.h"
 #include "vmwgfx_resource_priv.h"
 
 #include <drm/ttm/ttm_placement.h>
+=======
+#include <drm/ttm/ttm_placement.h>
+
+#include "vmwgfx_drv.h"
+#include "vmwgfx_resource_priv.h"
+#include "vmwgfx_binding.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct vmw_dx_streamoutput - Streamoutput resource metadata.
@@ -63,11 +75,18 @@ static void vmw_dx_streamoutput_commit_notify(struct vmw_resource *res,
 
 static const struct vmw_res_func vmw_dx_streamoutput_func = {
 	.res_type = vmw_res_streamoutput,
+<<<<<<< HEAD
 	.needs_guest_memory = true,
 	.may_evict = false,
 	.type_name = "DX streamoutput",
 	.domain = VMW_BO_DOMAIN_MOB,
 	.busy_domain = VMW_BO_DOMAIN_MOB,
+=======
+	.needs_backup = true,
+	.may_evict = false,
+	.type_name = "DX streamoutput",
+	.backup_placement = &vmw_mob_placement,
+>>>>>>> b7ba80a49124 (Commit)
 	.create = vmw_dx_streamoutput_create,
 	.destroy = NULL, /* Command buffer managed resource. */
 	.bind = vmw_dx_streamoutput_bind,
@@ -106,8 +125,13 @@ static int vmw_dx_streamoutput_unscrub(struct vmw_resource *res)
 	cmd->header.id = SVGA_3D_CMD_DX_BIND_STREAMOUTPUT;
 	cmd->header.size = sizeof(cmd->body);
 	cmd->body.soid = so->id;
+<<<<<<< HEAD
 	cmd->body.mobid = res->guest_memory_bo->tbo.resource->start;
 	cmd->body.offsetInBytes = res->guest_memory_offset;
+=======
+	cmd->body.mobid = res->backup->base.resource->start;
+	cmd->body.offsetInBytes = res->backup_offset;
+>>>>>>> b7ba80a49124 (Commit)
 	cmd->body.sizeInBytes = so->size;
 	vmw_cmd_commit(dev_priv, sizeof(*cmd));
 
@@ -197,7 +221,11 @@ static int vmw_dx_streamoutput_unbind(struct vmw_resource *res, bool readback,
 	struct vmw_fence_obj *fence;
 	int ret;
 
+<<<<<<< HEAD
 	if (WARN_ON(res->guest_memory_bo->tbo.resource->mem_type != VMW_PL_MOB))
+=======
+	if (WARN_ON(res->backup->base.resource->mem_type != VMW_PL_MOB))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	mutex_lock(&dev_priv->binding_mutex);

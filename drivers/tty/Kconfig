@@ -149,6 +149,7 @@ config LEGACY_PTY_COUNT
 	  When not in use, each legacy PTY occupies 12 bytes on 32-bit
 	  architectures and 24 bytes on 64-bit architectures.
 
+<<<<<<< HEAD
 config LEGACY_TIOCSTI
 	bool "Allow legacy TIOCSTI usage"
 	default y
@@ -168,6 +169,8 @@ config LEGACY_TIOCSTI
 	  dev.tty.legacy_tiocsti sysctl. This configuration option sets
 	  the default value of the sysctl.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config LDISC_AUTOLOAD
 	bool "Automatically load TTY Line Disciplines"
 	default y
@@ -301,6 +304,7 @@ config GOLDFISH_TTY_EARLY_CONSOLE
 	default y if GOLDFISH_TTY=y
 	select SERIAL_EARLYCON
 
+<<<<<<< HEAD
 config IPWIRELESS
 	tristate "IPWireless 3G UMTS PCMCIA card support"
 	depends on PCMCIA && NETDEVICES
@@ -310,6 +314,8 @@ config IPWIRELESS
 	  some countries (for example Czech Republic, T-Mobile ISP) this card
 	  is shipped for service called UMTS 4G.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config N_GSM
 	tristate "GSM MUX line discipline support (EXPERIMENTAL)"
 	depends on NET

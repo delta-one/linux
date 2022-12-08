@@ -339,7 +339,11 @@ out_iput:
 	return dentry;
 }
 
+<<<<<<< HEAD
 /* Get the upper or lower dentry in stack whose on layer @idx */
+=======
+/* Get the upper or lower dentry in stach whose on layer @idx */
+>>>>>>> b7ba80a49124 (Commit)
 static struct dentry *ovl_dentry_real_at(struct dentry *dentry, int idx)
 {
 	struct ovl_entry *oe = dentry->d_fsdata;
@@ -392,8 +396,13 @@ static struct dentry *ovl_lookup_real_one(struct dentry *connected,
 	 */
 	take_dentry_name_snapshot(&name, real);
 	/*
+<<<<<<< HEAD
 	 * No idmap handling here: it's an internal lookup.  Could skip
 	 * permission checking altogether, but for now just use non-idmap
+=======
+	 * No mnt_userns handling here: it's an internal lookup.  Could skip
+	 * permission checking altogether, but for now just use non-mnt_userns
+>>>>>>> b7ba80a49124 (Commit)
 	 * transformed ids.
 	 */
 	this = lookup_one_len(name.name.name, connected, name.name.len);
@@ -463,7 +472,11 @@ static struct dentry *ovl_lookup_real_inode(struct super_block *sb,
 
 	/* Get connected upper overlay dir from index */
 	if (index) {
+<<<<<<< HEAD
 		struct dentry *upper = ovl_index_upper(ofs, index, true);
+=======
+		struct dentry *upper = ovl_index_upper(ofs, index);
+>>>>>>> b7ba80a49124 (Commit)
 
 		dput(index);
 		if (IS_ERR_OR_NULL(upper))
@@ -739,7 +752,11 @@ static struct dentry *ovl_lower_fh_to_d(struct super_block *sb,
 
 	/* Then try to get a connected upper dir by index */
 	if (index && d_is_dir(index)) {
+<<<<<<< HEAD
 		struct dentry *upper = ovl_index_upper(ofs, index, true);
+=======
+		struct dentry *upper = ovl_index_upper(ofs, index);
+>>>>>>> b7ba80a49124 (Commit)
 
 		err = PTR_ERR(upper);
 		if (IS_ERR_OR_NULL(upper))
@@ -796,7 +813,11 @@ static struct ovl_fh *ovl_fid_to_fh(struct fid *fid, int buflen, int fh_type)
 		return ERR_PTR(-ENOMEM);
 
 	/* Copy unaligned inner fh into aligned buffer */
+<<<<<<< HEAD
 	memcpy(fh->buf, fid, buflen - OVL_FH_WIRE_OFFSET);
+=======
+	memcpy(&fh->fb, fid, buflen - OVL_FH_WIRE_OFFSET);
+>>>>>>> b7ba80a49124 (Commit)
 	return fh;
 }
 

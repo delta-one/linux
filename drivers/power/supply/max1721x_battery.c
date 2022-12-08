@@ -384,7 +384,11 @@ static int devm_w1_max1721x_add_device(struct w1_slave *sl)
 	}
 
 	if (!info->ManufacturerName[0])
+<<<<<<< HEAD
 		strscpy(info->ManufacturerName, DEF_MFG_NAME,
+=======
+		strncpy(info->ManufacturerName, DEF_MFG_NAME,
+>>>>>>> b7ba80a49124 (Commit)
 			2 * MAX1721X_REG_MFG_NUMB);
 
 	if (get_string(info, MAX1721X_REG_DEV_STR,
@@ -403,6 +407,7 @@ static int devm_w1_max1721x_add_device(struct w1_slave *sl)
 
 		switch (dev_name & MAX172XX_DEV_MASK) {
 		case MAX172X1_DEV:
+<<<<<<< HEAD
 			strscpy(info->DeviceName, DEF_DEV_NAME_MAX17211,
 				2 * MAX1721X_REG_DEV_NUMB);
 			break;
@@ -412,6 +417,17 @@ static int devm_w1_max1721x_add_device(struct w1_slave *sl)
 			break;
 		default:
 			strscpy(info->DeviceName, DEF_DEV_NAME_UNKNOWN,
+=======
+			strncpy(info->DeviceName, DEF_DEV_NAME_MAX17211,
+				2 * MAX1721X_REG_DEV_NUMB);
+			break;
+		case MAX172X5_DEV:
+			strncpy(info->DeviceName, DEF_DEV_NAME_MAX17215,
+				2 * MAX1721X_REG_DEV_NUMB);
+			break;
+		default:
+			strncpy(info->DeviceName, DEF_DEV_NAME_UNKNOWN,
+>>>>>>> b7ba80a49124 (Commit)
 				2 * MAX1721X_REG_DEV_NUMB);
 		}
 	}
@@ -444,5 +460,9 @@ module_w1_family(w1_max1721x_family);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Alex A. Mihaylov <minimumlaw@rambler.ru>");
+<<<<<<< HEAD
 MODULE_DESCRIPTION("Maxim MAX17211/MAX17215 Fuel Gauge IC driver");
+=======
+MODULE_DESCRIPTION("Maxim MAX17211/MAX17215 Fuel Gauage IC driver");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_ALIAS("w1-family-" __stringify(W1_MAX1721X_FAMILY_ID));

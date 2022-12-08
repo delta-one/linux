@@ -749,6 +749,10 @@ int bnxt_cfg_hw_sriov(struct bnxt *bp, int *num_vfs, bool reset)
 		*num_vfs = rc;
 	}
 
+<<<<<<< HEAD
+=======
+	bnxt_ulp_sriov_cfg(bp, *num_vfs);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -822,8 +826,15 @@ static int bnxt_sriov_enable(struct bnxt *bp, int *num_vfs)
 		goto err_out2;
 
 	rc = pci_enable_sriov(bp->pdev, *num_vfs);
+<<<<<<< HEAD
 	if (rc)
 		goto err_out2;
+=======
+	if (rc) {
+		bnxt_ulp_sriov_cfg(bp, 0);
+		goto err_out2;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -869,6 +880,11 @@ void bnxt_sriov_disable(struct bnxt *bp)
 	rtnl_lock();
 	bnxt_restore_pf_fw_resources(bp);
 	rtnl_unlock();
+<<<<<<< HEAD
+=======
+
+	bnxt_ulp_sriov_cfg(bp, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int bnxt_sriov_configure(struct pci_dev *pdev, int num_vfs)

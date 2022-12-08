@@ -260,7 +260,11 @@ static int zinitix_init_regulators(struct bt541_ts_data *bt541)
 	 * so check if "vddo" is present and in that case use these names.
 	 * Else use the proper supply names on the component.
 	 */
+<<<<<<< HEAD
 	if (of_property_present(dev->of_node, "vddo-supply")) {
+=======
+	if (of_find_property(dev->of_node, "vddo-supply", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		bt541->supplies[0].supply = "vdd";
 		bt541->supplies[1].supply = "vddo";
 	} else {
@@ -562,7 +566,11 @@ static int zinitix_ts_probe(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int zinitix_suspend(struct device *dev)
+=======
+static int __maybe_unused zinitix_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct bt541_ts_data *bt541 = i2c_get_clientdata(client);
@@ -577,7 +585,11 @@ static int zinitix_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int zinitix_resume(struct device *dev)
+=======
+static int __maybe_unused zinitix_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct bt541_ts_data *bt541 = i2c_get_clientdata(client);
@@ -593,7 +605,11 @@ static int zinitix_resume(struct device *dev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(zinitix_pm_ops, zinitix_suspend, zinitix_resume);
+=======
+static SIMPLE_DEV_PM_OPS(zinitix_pm_ops, zinitix_suspend, zinitix_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_OF
 static const struct of_device_id zinitix_of_match[] = {
@@ -620,7 +636,11 @@ static struct i2c_driver zinitix_ts_driver = {
 	.probe_new = zinitix_ts_probe,
 	.driver = {
 		.name = "Zinitix-TS",
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&zinitix_pm_ops),
+=======
+		.pm = &zinitix_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = of_match_ptr(zinitix_of_match),
 	},
 };

@@ -228,6 +228,7 @@ nfp_net_get_drvinfo(struct net_device *netdev, struct ethtool_drvinfo *drvinfo)
 	nfp_get_drvinfo(nn->app, nn->pdev, vnic_version, drvinfo);
 }
 
+<<<<<<< HEAD
 static int
 nfp_net_nway_reset(struct net_device *netdev)
 {
@@ -259,6 +260,8 @@ nfp_net_nway_reset(struct net_device *netdev)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void
 nfp_app_get_drvinfo(struct net_device *netdev, struct ethtool_drvinfo *drvinfo)
 {
@@ -293,6 +296,7 @@ nfp_net_set_fec_link_mode(struct nfp_eth_table_port *eth_port,
 	}
 }
 
+<<<<<<< HEAD
 static const struct nfp_eth_media_link_mode {
 	u16 ethtool_link_mode;
 	u16 speed;
@@ -481,6 +485,8 @@ static void nfp_add_media_link_mode(struct nfp_port *port,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * nfp_net_get_link_ksettings - Get Link Speed settings
  * @netdev:	network interface device structure
@@ -499,8 +505,11 @@ nfp_net_get_link_ksettings(struct net_device *netdev,
 	u16 sts;
 
 	/* Init to unknowns */
+<<<<<<< HEAD
 	ethtool_link_ksettings_zero_link_mode(cmd, supported);
 	ethtool_link_ksettings_zero_link_mode(cmd, advertising);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ethtool_link_ksettings_add_link_mode(cmd, supported, FIBRE);
 	cmd->base.port = PORT_OTHER;
 	cmd->base.speed = SPEED_UNKNOWN;
@@ -511,6 +520,7 @@ nfp_net_get_link_ksettings(struct net_device *netdev,
 	if (eth_port) {
 		ethtool_link_ksettings_add_link_mode(cmd, supported, Pause);
 		ethtool_link_ksettings_add_link_mode(cmd, advertising, Pause);
+<<<<<<< HEAD
 		nfp_add_media_link_mode(port, eth_port, cmd);
 		if (eth_port->supp_aneg) {
 			ethtool_link_ksettings_add_link_mode(cmd, supported, Autoneg);
@@ -519,6 +529,10 @@ nfp_net_get_link_ksettings(struct net_device *netdev,
 				cmd->base.autoneg = AUTONEG_ENABLE;
 			}
 		}
+=======
+		cmd->base.autoneg = eth_port->aneg != NFP_ANEG_DISABLED ?
+			AUTONEG_ENABLE : AUTONEG_DISABLE;
+>>>>>>> b7ba80a49124 (Commit)
 		nfp_net_set_fec_link_mode(eth_port, cmd);
 	}
 
@@ -554,7 +568,10 @@ static int
 nfp_net_set_link_ksettings(struct net_device *netdev,
 			   const struct ethtool_link_ksettings *cmd)
 {
+<<<<<<< HEAD
 	bool req_aneg = (cmd->base.autoneg == AUTONEG_ENABLE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct nfp_eth_table_port *eth_port;
 	struct nfp_port *port;
 	struct nfp_nsp *nsp;
@@ -574,6 +591,7 @@ nfp_net_set_link_ksettings(struct net_device *netdev,
 	if (IS_ERR(nsp))
 		return PTR_ERR(nsp);
 
+<<<<<<< HEAD
 	if (req_aneg && !eth_port->supp_aneg) {
 		netdev_warn(netdev, "Autoneg is not supported.\n");
 		err = -EOPNOTSUPP;
@@ -608,6 +626,14 @@ nfp_net_set_link_ksettings(struct net_device *netdev,
 			err = -EINVAL;
 			goto err_bad_set;
 		}
+=======
+	err = __nfp_eth_set_aneg(nsp, cmd->base.autoneg == AUTONEG_ENABLE ?
+				 NFP_ANEG_AUTO : NFP_ANEG_DISABLED);
+	if (err)
+		goto err_bad_set;
+	if (cmd->base.speed != SPEED_UNKNOWN) {
+		u32 speed = cmd->base.speed / eth_port->lanes;
+>>>>>>> b7ba80a49124 (Commit)
 
 		err = __nfp_eth_set_speed(nsp, speed);
 		if (err)
@@ -893,7 +919,11 @@ static u64 *nfp_vnic_get_sw_stats(struct net_device *netdev, u64 *data)
 		unsigned int start;
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&nn->r_vecs[i].rx_sync);
+=======
+			start = u64_stats_fetch_begin_irq(&nn->r_vecs[i].rx_sync);
+>>>>>>> b7ba80a49124 (Commit)
 			data[0] = nn->r_vecs[i].rx_pkts;
 			tmp[0] = nn->r_vecs[i].hw_csum_rx_ok;
 			tmp[1] = nn->r_vecs[i].hw_csum_rx_inner_ok;
@@ -901,10 +931,17 @@ static u64 *nfp_vnic_get_sw_stats(struct net_device *netdev, u64 *data)
 			tmp[3] = nn->r_vecs[i].hw_csum_rx_error;
 			tmp[4] = nn->r_vecs[i].rx_replace_buf_alloc_fail;
 			tmp[5] = nn->r_vecs[i].hw_tls_rx;
+<<<<<<< HEAD
 		} while (u64_stats_fetch_retry(&nn->r_vecs[i].rx_sync, start));
 
 		do {
 			start = u64_stats_fetch_begin(&nn->r_vecs[i].tx_sync);
+=======
+		} while (u64_stats_fetch_retry_irq(&nn->r_vecs[i].rx_sync, start));
+
+		do {
+			start = u64_stats_fetch_begin_irq(&nn->r_vecs[i].tx_sync);
+>>>>>>> b7ba80a49124 (Commit)
 			data[1] = nn->r_vecs[i].tx_pkts;
 			data[2] = nn->r_vecs[i].tx_busy;
 			tmp[6] = nn->r_vecs[i].hw_csum_tx;
@@ -914,7 +951,11 @@ static u64 *nfp_vnic_get_sw_stats(struct net_device *netdev, u64 *data)
 			tmp[10] = nn->r_vecs[i].hw_tls_tx;
 			tmp[11] = nn->r_vecs[i].tls_tx_fallback;
 			tmp[12] = nn->r_vecs[i].tls_tx_no_fallback;
+<<<<<<< HEAD
 		} while (u64_stats_fetch_retry(&nn->r_vecs[i].tx_sync, start));
+=======
+		} while (u64_stats_fetch_retry_irq(&nn->r_vecs[i].tx_sync, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		data += NN_RVEC_PER_Q_STATS;
 
@@ -1252,7 +1293,11 @@ nfp_port_get_fecparam(struct net_device *netdev,
 		return 0;
 
 	param->fec = nfp_port_fec_nsp_to_ethtool(eth_port->fec_modes_supported);
+<<<<<<< HEAD
 	param->active_fec = nfp_port_fec_nsp_to_ethtool(BIT(eth_port->act_fec));
+=======
+	param->active_fec = nfp_port_fec_nsp_to_ethtool(eth_port->fec);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1639,9 +1684,12 @@ nfp_port_get_module_info(struct net_device *netdev,
 	u8 data;
 
 	port = nfp_port_from_netdev(netdev);
+<<<<<<< HEAD
 	if (!port)
 		return -EOPNOTSUPP;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* update port state to get latest interface */
 	set_bit(NFP_PORT_CHANGED, &port->flags);
 	eth_port = nfp_port_get_eth_port(port);
@@ -1687,15 +1735,26 @@ nfp_port_get_module_info(struct net_device *netdev,
 
 		if (data < 0x3) {
 			modinfo->type = ETH_MODULE_SFF_8436;
+<<<<<<< HEAD
 			modinfo->eeprom_len = ETH_MODULE_SFF_8436_MAX_LEN;
 		} else {
 			modinfo->type = ETH_MODULE_SFF_8636;
 			modinfo->eeprom_len = ETH_MODULE_SFF_8636_MAX_LEN;
+=======
+			modinfo->eeprom_len = ETH_MODULE_SFF_8436_LEN;
+		} else {
+			modinfo->type = ETH_MODULE_SFF_8636;
+			modinfo->eeprom_len = ETH_MODULE_SFF_8636_LEN;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		break;
 	case NFP_INTERFACE_QSFP28:
 		modinfo->type = ETH_MODULE_SFF_8636;
+<<<<<<< HEAD
 		modinfo->eeprom_len = ETH_MODULE_SFF_8636_MAX_LEN;
+=======
+		modinfo->eeprom_len = ETH_MODULE_SFF_8636_LEN;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		netdev_err(netdev, "Unsupported module 0x%x detected\n",
@@ -2039,6 +2098,7 @@ static int
 nfp_net_get_eeprom(struct net_device *netdev,
 		   struct ethtool_eeprom *eeprom, u8 *bytes)
 {
+<<<<<<< HEAD
 	struct nfp_app *app = nfp_app_from_netdev(netdev);
 	u8 buf[NFP_EEPROM_LEN] = {};
 
@@ -2049,6 +2109,18 @@ nfp_net_get_eeprom(struct net_device *netdev,
 		return -EINVAL;
 
 	eeprom->magic = app->pdev->vendor | (app->pdev->device << 16);
+=======
+	struct nfp_net *nn = netdev_priv(netdev);
+	u8 buf[NFP_EEPROM_LEN] = {};
+
+	if (eeprom->len == 0)
+		return -EINVAL;
+
+	if (nfp_net_get_port_mac_by_hwinfo(netdev, buf))
+		return -EOPNOTSUPP;
+
+	eeprom->magic = nn->pdev->vendor | (nn->pdev->device << 16);
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(bytes, buf + eeprom->offset, eeprom->len);
 
 	return 0;
@@ -2058,6 +2130,7 @@ static int
 nfp_net_set_eeprom(struct net_device *netdev,
 		   struct ethtool_eeprom *eeprom, u8 *bytes)
 {
+<<<<<<< HEAD
 	struct nfp_app *app = nfp_app_from_netdev(netdev);
 	u8 buf[NFP_EEPROM_LEN] = {};
 
@@ -2070,6 +2143,20 @@ nfp_net_set_eeprom(struct net_device *netdev,
 	if (eeprom->magic != (app->pdev->vendor | app->pdev->device << 16))
 		return -EINVAL;
 
+=======
+	struct nfp_net *nn = netdev_priv(netdev);
+	u8 buf[NFP_EEPROM_LEN] = {};
+
+	if (eeprom->len == 0)
+		return -EINVAL;
+
+	if (eeprom->magic != (nn->pdev->vendor | nn->pdev->device << 16))
+		return -EINVAL;
+
+	if (nfp_net_get_port_mac_by_hwinfo(netdev, buf))
+		return -EOPNOTSUPP;
+
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(buf + eeprom->offset, bytes, eeprom->len);
 	if (nfp_net_set_port_mac_by_hwinfo(netdev, buf))
 		return -EOPNOTSUPP;
@@ -2082,7 +2169,10 @@ static const struct ethtool_ops nfp_net_ethtool_ops = {
 				     ETHTOOL_COALESCE_MAX_FRAMES |
 				     ETHTOOL_COALESCE_USE_ADAPTIVE,
 	.get_drvinfo		= nfp_net_get_drvinfo,
+<<<<<<< HEAD
 	.nway_reset             = nfp_net_nway_reset,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.get_link		= ethtool_op_get_link,
 	.get_ringparam		= nfp_net_get_ringparam,
 	.set_ringparam		= nfp_net_set_ringparam,
@@ -2120,7 +2210,10 @@ static const struct ethtool_ops nfp_net_ethtool_ops = {
 
 const struct ethtool_ops nfp_port_ethtool_ops = {
 	.get_drvinfo		= nfp_app_get_drvinfo,
+<<<<<<< HEAD
 	.nway_reset             = nfp_net_nway_reset,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.get_link		= ethtool_op_get_link,
 	.get_strings		= nfp_port_get_strings,
 	.get_ethtool_stats	= nfp_port_get_stats,
@@ -2129,9 +2222,12 @@ const struct ethtool_ops nfp_port_ethtool_ops = {
 	.set_dump		= nfp_app_set_dump,
 	.get_dump_flag		= nfp_app_get_dump_flag,
 	.get_dump_data		= nfp_app_get_dump_data,
+<<<<<<< HEAD
 	.get_eeprom_len         = nfp_net_get_eeprom_len,
 	.get_eeprom             = nfp_net_get_eeprom,
 	.set_eeprom             = nfp_net_set_eeprom,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.get_module_info	= nfp_port_get_module_info,
 	.get_module_eeprom	= nfp_port_get_module_eeprom,
 	.get_link_ksettings	= nfp_net_get_link_ksettings,

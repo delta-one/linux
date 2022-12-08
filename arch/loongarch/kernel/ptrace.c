@@ -20,9 +20,13 @@
 #include <linux/context_tracking.h>
 #include <linux/elf.h>
 #include <linux/errno.h>
+<<<<<<< HEAD
 #include <linux/hw_breakpoint.h>
 #include <linux/mm.h>
 #include <linux/nospec.h>
+=======
+#include <linux/mm.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/ptrace.h>
 #include <linux/regset.h>
 #include <linux/sched.h>
@@ -31,7 +35,10 @@
 #include <linux/smp.h>
 #include <linux/stddef.h>
 #include <linux/seccomp.h>
+<<<<<<< HEAD
 #include <linux/thread_info.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/uaccess.h>
 
 #include <asm/byteorder.h>
@@ -42,7 +49,10 @@
 #include <asm/page.h>
 #include <asm/pgtable.h>
 #include <asm/processor.h>
+<<<<<<< HEAD
 #include <asm/ptrace.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/reg.h>
 #include <asm/syscall.h>
 
@@ -250,6 +260,7 @@ static int cfg_set(struct task_struct *target,
 	return 0;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_HAVE_HW_BREAKPOINT
 
 /*
@@ -628,6 +639,8 @@ static int hw_break_set(struct task_struct *target,
 
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct pt_regs_offset {
 	const char *name;
 	int offset;
@@ -701,10 +714,13 @@ enum loongarch_regset {
 	REGSET_GPR,
 	REGSET_FPR,
 	REGSET_CPUCFG,
+<<<<<<< HEAD
 #ifdef CONFIG_HAVE_HW_BREAKPOINT
 	REGSET_HW_BREAK,
 	REGSET_HW_WATCH,
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct user_regset loongarch64_regsets[] = {
@@ -732,6 +748,7 @@ static const struct user_regset loongarch64_regsets[] = {
 		.regset_get	= cfg_get,
 		.set		= cfg_set,
 	},
+<<<<<<< HEAD
 #ifdef CONFIG_HAVE_HW_BREAKPOINT
 	[REGSET_HW_BREAK] = {
 		.core_note_type = NT_LOONGARCH_HW_BREAK,
@@ -750,6 +767,8 @@ static const struct user_regset loongarch64_regsets[] = {
 		.set = hw_break_set,
 	},
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct user_regset_view user_loongarch64_view = {
@@ -835,6 +854,7 @@ long arch_ptrace(struct task_struct *child, long request,
 
 	return ret;
 }
+<<<<<<< HEAD
 
 #ifdef CONFIG_HAVE_HW_BREAKPOINT
 static void ptrace_triggered(struct perf_event *bp,
@@ -903,3 +923,5 @@ void user_disable_single_step(struct task_struct *task)
 	clear_tsk_thread_flag(task, TIF_SINGLESTEP);
 }
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)

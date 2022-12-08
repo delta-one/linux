@@ -11,6 +11,7 @@
 enum test_type {
 	VARY_MIN,
 	VARY_MAX,
+<<<<<<< HEAD
 	MAX_GRANTED,
 	SLPC_POWER,
 	TILE_INTERACTION,
@@ -21,6 +22,9 @@ struct slpc_thread {
 	struct kthread_work work;
 	struct intel_gt *gt;
 	int result;
+=======
+	MAX_GRANTED
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int slpc_set_min_freq(struct intel_guc_slpc *slpc, u32 freq)
@@ -50,6 +54,7 @@ static int slpc_set_max_freq(struct intel_guc_slpc *slpc, u32 freq)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int slpc_set_freq(struct intel_gt *gt, u32 freq)
 {
 	int err;
@@ -83,6 +88,8 @@ static u64 measure_power_at_freq(struct intel_gt *gt, int *freq, u64 *power)
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int vary_max_freq(struct intel_guc_slpc *slpc, struct intel_rps *rps,
 			 u32 *max_act_freq)
 {
@@ -155,6 +162,7 @@ static int vary_min_freq(struct intel_guc_slpc *slpc, struct intel_rps *rps,
 	return err;
 }
 
+<<<<<<< HEAD
 static int slpc_power(struct intel_gt *gt, struct intel_engine_cs *engine)
 {
 	struct intel_guc_slpc *slpc = &gt->uc.guc.slpc;
@@ -207,6 +215,8 @@ static int slpc_power(struct intel_gt *gt, struct intel_engine_cs *engine)
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int max_granted_freq(struct intel_guc_slpc *slpc, struct intel_rps *rps, u32 *max_act_freq)
 {
 	struct intel_gt *gt = rps_to_gt(rps);
@@ -220,8 +230,12 @@ static int max_granted_freq(struct intel_guc_slpc *slpc, struct intel_rps *rps, 
 	*max_act_freq =  intel_rps_read_actual_frequency(rps);
 	if (*max_act_freq != slpc->rp0_freq) {
 		/* Check if there was some throttling by pcode */
+<<<<<<< HEAD
 		perf_limit_reasons = intel_uncore_read(gt->uncore,
 						       intel_gt_perf_limit_reasons_reg(gt));
+=======
+		perf_limit_reasons = intel_uncore_read(gt->uncore, GT0_PERF_LIMIT_REASONS);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* If not, this is an error */
 		if (!(perf_limit_reasons & GT0_PERF_LIMIT_REASONS_MASK)) {
@@ -248,11 +262,14 @@ static int run_test(struct intel_gt *gt, int test_type)
 	if (!intel_uc_uses_guc_slpc(&gt->uc))
 		return 0;
 
+<<<<<<< HEAD
 	if (slpc->min_freq == slpc->rp0_freq) {
 		pr_err("Min/Max are fused to the same value\n");
 		return -EINVAL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (igt_spinner_init(&spin, gt))
 		return -ENOMEM;
 
@@ -267,6 +284,7 @@ static int run_test(struct intel_gt *gt, int test_type)
 	}
 
 	/*
+<<<<<<< HEAD
 	 * Set min frequency to RPn so that we can test the whole
 	 * range of RPn-RP0. This also turns off efficient freq
 	 * usage and makes results more predictable.
@@ -275,6 +293,19 @@ static int run_test(struct intel_gt *gt, int test_type)
 	if (err) {
 		pr_err("Unable to update min freq!");
 		return err;
+=======
+	 * FIXME: With efficient frequency enabled, GuC can request
+	 * frequencies higher than the SLPC max. While this is fixed
+	 * in GuC, we level set these tests with RPn as min.
+	 */
+	err = slpc_set_min_freq(slpc, slpc->min_freq);
+	if (err)
+		return err;
+
+	if (slpc->min_freq == slpc->rp0_freq) {
+		pr_err("Min/Max are fused to the same value\n");
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	intel_gt_pm_wait_for_idle(gt);
@@ -319,10 +350,16 @@ static int run_test(struct intel_gt *gt, int test_type)
 			break;
 
 		case MAX_GRANTED:
+<<<<<<< HEAD
 		case TILE_INTERACTION:
 			/* Media engines have a different RP0 */
 			if (gt->type != GT_MEDIA && (engine->class == VIDEO_DECODE_CLASS ||
 						     engine->class == VIDEO_ENHANCEMENT_CLASS)) {
+=======
+			/* Media engines have a different RP0 */
+			if (engine->class == VIDEO_DECODE_CLASS ||
+			    engine->class == VIDEO_ENHANCEMENT_CLASS) {
+>>>>>>> b7ba80a49124 (Commit)
 				igt_spinner_end(&spin);
 				st_engine_heartbeat_enable(engine);
 				err = 0;
@@ -331,6 +368,7 @@ static int run_test(struct intel_gt *gt, int test_type)
 
 			err = max_granted_freq(slpc, rps, &max_act_freq);
 			break;
+<<<<<<< HEAD
 
 		case SLPC_POWER:
 			err = slpc_power(gt, engine);
@@ -349,6 +387,19 @@ static int run_test(struct intel_gt *gt, int test_type)
 							 intel_gt_perf_limit_reasons_reg(gt)));
 				err = -EINVAL;
 			}
+=======
+		}
+
+		pr_info("Max actual frequency for %s was %d\n",
+			engine->name, max_act_freq);
+
+		/* Actual frequency should rise above min */
+		if (max_act_freq <= slpc_min_freq) {
+			pr_err("Actual freq did not rise above min\n");
+			pr_err("Perf Limit Reasons: 0x%x\n",
+			       intel_uncore_read(gt->uncore, GT0_PERF_LIMIT_REASONS));
+			err = -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		igt_spinner_end(&spin);
@@ -375,6 +426,7 @@ static int run_test(struct intel_gt *gt, int test_type)
 static int live_slpc_vary_min(void *arg)
 {
 	struct drm_i915_private *i915 = arg;
+<<<<<<< HEAD
 	struct intel_gt *gt;
 	unsigned int i;
 	int ret;
@@ -386,11 +438,17 @@ static int live_slpc_vary_min(void *arg)
 	}
 
 	return ret;
+=======
+	struct intel_gt *gt = to_gt(i915);
+
+	return run_test(gt, VARY_MIN);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int live_slpc_vary_max(void *arg)
 {
 	struct drm_i915_private *i915 = arg;
+<<<<<<< HEAD
 	struct intel_gt *gt;
 	unsigned int i;
 	int ret;
@@ -402,12 +460,18 @@ static int live_slpc_vary_max(void *arg)
 	}
 
 	return ret;
+=======
+	struct intel_gt *gt = to_gt(i915);
+
+	return run_test(gt, VARY_MAX);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* check if pcode can grant RP0 */
 static int live_slpc_max_granted(void *arg)
 {
 	struct drm_i915_private *i915 = arg;
+<<<<<<< HEAD
 	struct intel_gt *gt;
 	unsigned int i;
 	int ret;
@@ -485,6 +549,11 @@ static int live_slpc_tile_interaction(void *arg)
 
 	kfree(threads);
 	return ret;
+=======
+	struct intel_gt *gt = to_gt(i915);
+
+	return run_test(gt, MAX_GRANTED);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int intel_slpc_live_selftests(struct drm_i915_private *i915)
@@ -493,6 +562,7 @@ int intel_slpc_live_selftests(struct drm_i915_private *i915)
 		SUBTEST(live_slpc_vary_max),
 		SUBTEST(live_slpc_vary_min),
 		SUBTEST(live_slpc_max_granted),
+<<<<<<< HEAD
 		SUBTEST(live_slpc_power),
 		SUBTEST(live_slpc_tile_interaction),
 	};
@@ -504,6 +574,12 @@ int intel_slpc_live_selftests(struct drm_i915_private *i915)
 		if (intel_gt_is_wedged(gt))
 			return 0;
 	}
+=======
+	};
+
+	if (intel_gt_is_wedged(to_gt(i915)))
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return i915_live_subtests(tests, i915);
 }

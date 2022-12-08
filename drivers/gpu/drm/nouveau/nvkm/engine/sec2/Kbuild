@@ -3,4 +3,7 @@ nvkm-y += nvkm/engine/sec2/base.o
 nvkm-y += nvkm/engine/sec2/gp102.o
 nvkm-y += nvkm/engine/sec2/gp108.o
 nvkm-y += nvkm/engine/sec2/tu102.o
+<<<<<<< HEAD
 nvkm-y += nvkm/engine/sec2/ga102.o
+=======
+>>>>>>> b7ba80a49124 (Commit)

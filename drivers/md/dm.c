@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2001, 2002 Sistina Software (UK) Limited.
  * Copyright (C) 2004-2008 Red Hat, Inc. All rights reserved.
@@ -50,8 +53,13 @@
 
 static const char *_name = DM_NAME;
 
+<<<<<<< HEAD
 static unsigned int major;
 static unsigned int _major;
+=======
+static unsigned int major = 0;
+static unsigned int _major = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 static DEFINE_IDR(_minor_idr);
 
@@ -84,7 +92,11 @@ struct clone_info {
 	struct bio *bio;
 	struct dm_io *io;
 	sector_t sector;
+<<<<<<< HEAD
 	unsigned int sector_count;
+=======
+	unsigned sector_count;
+>>>>>>> b7ba80a49124 (Commit)
 	bool is_abnormal_io:1;
 	bool submit_as_polled:1;
 };
@@ -105,7 +117,10 @@ EXPORT_SYMBOL_GPL(dm_per_bio_data);
 struct bio *dm_bio_from_per_bio_data(void *data, size_t data_size)
 {
 	struct dm_io *io = (struct dm_io *)((char *)data + data_size);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (io->magic == DM_IO_MAGIC)
 		return (struct bio *)((char *)io + DM_IO_BIO_OFFSET);
 	BUG_ON(io->magic != DM_TIO_MAGIC);
@@ -113,7 +128,11 @@ struct bio *dm_bio_from_per_bio_data(void *data, size_t data_size)
 }
 EXPORT_SYMBOL_GPL(dm_bio_from_per_bio_data);
 
+<<<<<<< HEAD
 unsigned int dm_bio_get_target_bio_nr(const struct bio *bio)
+=======
+unsigned dm_bio_get_target_bio_nr(const struct bio *bio)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return container_of(bio, struct dm_target_io, clone)->target_bio_nr;
 }
@@ -129,7 +148,10 @@ static int swap_bios = DEFAULT_SWAP_BIOS;
 static int get_swap_bios(void)
 {
 	int latch = READ_ONCE(swap_bios);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(latch <= 0))
 		latch = DEFAULT_SWAP_BIOS;
 	return latch;
@@ -145,7 +167,11 @@ struct table_device {
  * Bio-based DM's mempools' reserved IOs set by the user.
  */
 #define RESERVED_BIO_BASED_IOS		16
+<<<<<<< HEAD
 static unsigned int reserved_bio_based_ios = RESERVED_BIO_BASED_IOS;
+=======
+static unsigned reserved_bio_based_ios = RESERVED_BIO_BASED_IOS;
+>>>>>>> b7ba80a49124 (Commit)
 
 static int __dm_get_module_param_int(int *module_param, int min, int max)
 {
@@ -168,10 +194,18 @@ static int __dm_get_module_param_int(int *module_param, int min, int max)
 	return param;
 }
 
+<<<<<<< HEAD
 unsigned int __dm_get_module_param(unsigned int *module_param, unsigned int def, unsigned int max)
 {
 	unsigned int param = READ_ONCE(*module_param);
 	unsigned int modified_param = 0;
+=======
+unsigned __dm_get_module_param(unsigned *module_param,
+			       unsigned def, unsigned max)
+{
+	unsigned param = READ_ONCE(*module_param);
+	unsigned modified_param = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!param)
 		modified_param = def;
@@ -186,14 +220,22 @@ unsigned int __dm_get_module_param(unsigned int *module_param, unsigned int def,
 	return param;
 }
 
+<<<<<<< HEAD
 unsigned int dm_get_reserved_bio_based_ios(void)
+=======
+unsigned dm_get_reserved_bio_based_ios(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return __dm_get_module_param(&reserved_bio_based_ios,
 				     RESERVED_BIO_BASED_IOS, DM_RESERVED_MAX_IOS);
 }
 EXPORT_SYMBOL_GPL(dm_get_reserved_bio_based_ios);
 
+<<<<<<< HEAD
 static unsigned int dm_get_numa_node(void)
+=======
+static unsigned dm_get_numa_node(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return __dm_get_module_param_int(&dm_numa_node,
 					 DM_NUMA_NODE, num_online_nodes() - 1);
@@ -233,6 +275,10 @@ out_uevent_exit:
 
 static void local_exit(void)
 {
+<<<<<<< HEAD
+=======
+	flush_scheduled_work();
+>>>>>>> b7ba80a49124 (Commit)
 	destroy_workqueue(deferred_remove_workqueue);
 
 	unregister_blkdev(_major, _name);
@@ -436,7 +482,11 @@ retry:
 	r = ti->type->prepare_ioctl(ti, bdev);
 	if (r == -ENOTCONN && !fatal_signal_pending(current)) {
 		dm_put_live_table(md, *srcu_idx);
+<<<<<<< HEAD
 		fsleep(10000);
+=======
+		msleep(10);
+>>>>>>> b7ba80a49124 (Commit)
 		goto retry;
 	}
 
@@ -512,10 +562,17 @@ static void dm_io_acct(struct dm_io *io, bool end)
 		sectors = io->sectors;
 
 	if (!end)
+<<<<<<< HEAD
 		bdev_start_io_acct(bio->bi_bdev, bio_op(bio), start_time);
 	else
 		bdev_end_io_acct(bio->bi_bdev, bio_op(bio), sectors,
 				 start_time);
+=======
+		bdev_start_io_acct(bio->bi_bdev, sectors, bio_op(bio),
+				   start_time);
+	else
+		bdev_end_io_acct(bio->bi_bdev, bio_op(bio), start_time);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (static_branch_unlikely(&stats_enabled) &&
 	    unlikely(dm_stats_used(&md->stats))) {
@@ -605,7 +662,11 @@ static void free_io(struct dm_io *io)
 }
 
 static struct bio *alloc_tio(struct clone_info *ci, struct dm_target *ti,
+<<<<<<< HEAD
 			     unsigned int target_bio_nr, unsigned int *len, gfp_t gfp_mask)
+=======
+			     unsigned target_bio_nr, unsigned *len, gfp_t gfp_mask)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mapped_device *md = ci->io->md;
 	struct dm_target_io *tio;
@@ -733,14 +794,21 @@ static char *_dm_claim_ptr = "I belong to device-mapper";
 /*
  * Open a table device so we can use it as a map destination.
  */
+<<<<<<< HEAD
 static struct table_device *open_table_device(struct mapped_device *md,
 		dev_t dev, fmode_t mode)
 {
 	struct table_device *td;
+=======
+static int open_table_device(struct table_device *td, dev_t dev,
+			     struct mapped_device *md)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct block_device *bdev;
 	u64 part_off;
 	int r;
 
+<<<<<<< HEAD
 	td = kmalloc_node(sizeof(*td), GFP_KERNEL, md->numa_node_id);
 	if (!td)
 		return ERR_PTR(-ENOMEM);
@@ -775,6 +843,23 @@ out_blkdev_put:
 out_free_td:
 	kfree(td);
 	return ERR_PTR(r);
+=======
+	BUG_ON(td->dm_dev.bdev);
+
+	bdev = blkdev_get_by_dev(dev, td->dm_dev.mode | FMODE_EXCL, _dm_claim_ptr);
+	if (IS_ERR(bdev))
+		return PTR_ERR(bdev);
+
+	r = bd_link_disk_holder(bdev, dm_disk(md));
+	if (r) {
+		blkdev_put(bdev, td->dm_dev.mode | FMODE_EXCL);
+		return r;
+	}
+
+	td->dm_dev.bdev = bdev;
+	td->dm_dev.dax_dev = fs_dax_get_by_bdev(bdev, &part_off, NULL, NULL);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -782,12 +867,23 @@ out_free_td:
  */
 static void close_table_device(struct table_device *td, struct mapped_device *md)
 {
+<<<<<<< HEAD
 	if (md->disk->slave_dir)
 		bd_unlink_disk_holder(td->dm_dev.bdev, md->disk);
 	blkdev_put(td->dm_dev.bdev, td->dm_dev.mode | FMODE_EXCL);
 	put_dax(td->dm_dev.dax_dev);
 	list_del(&td->list);
 	kfree(td);
+=======
+	if (!td->dm_dev.bdev)
+		return;
+
+	bd_unlink_disk_holder(td->dm_dev.bdev, dm_disk(md));
+	blkdev_put(td->dm_dev.bdev, td->dm_dev.mode | FMODE_EXCL);
+	put_dax(td->dm_dev.dax_dev);
+	td->dm_dev.bdev = NULL;
+	td->dm_dev.dax_dev = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct table_device *find_table_device(struct list_head *l, dev_t dev,
@@ -805,16 +901,42 @@ static struct table_device *find_table_device(struct list_head *l, dev_t dev,
 int dm_get_table_device(struct mapped_device *md, dev_t dev, fmode_t mode,
 			struct dm_dev **result)
 {
+<<<<<<< HEAD
+=======
+	int r;
+>>>>>>> b7ba80a49124 (Commit)
 	struct table_device *td;
 
 	mutex_lock(&md->table_devices_lock);
 	td = find_table_device(&md->table_devices, dev, mode);
 	if (!td) {
+<<<<<<< HEAD
 		td = open_table_device(md, dev, mode);
 		if (IS_ERR(td)) {
 			mutex_unlock(&md->table_devices_lock);
 			return PTR_ERR(td);
 		}
+=======
+		td = kmalloc_node(sizeof(*td), GFP_KERNEL, md->numa_node_id);
+		if (!td) {
+			mutex_unlock(&md->table_devices_lock);
+			return -ENOMEM;
+		}
+
+		td->dm_dev.mode = mode;
+		td->dm_dev.bdev = NULL;
+
+		if ((r = open_table_device(td, dev, md))) {
+			mutex_unlock(&md->table_devices_lock);
+			kfree(td);
+			return r;
+		}
+
+		format_dev_t(td->dm_dev.name, dev);
+
+		refcount_set(&td->count, 1);
+		list_add(&td->list, &md->table_devices);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		refcount_inc(&td->count);
 	}
@@ -829,11 +951,35 @@ void dm_put_table_device(struct mapped_device *md, struct dm_dev *d)
 	struct table_device *td = container_of(d, struct table_device, dm_dev);
 
 	mutex_lock(&md->table_devices_lock);
+<<<<<<< HEAD
 	if (refcount_dec_and_test(&td->count))
 		close_table_device(td, md);
 	mutex_unlock(&md->table_devices_lock);
 }
 
+=======
+	if (refcount_dec_and_test(&td->count)) {
+		close_table_device(td, md);
+		list_del(&td->list);
+		kfree(td);
+	}
+	mutex_unlock(&md->table_devices_lock);
+}
+
+static void free_table_devices(struct list_head *devices)
+{
+	struct list_head *tmp, *next;
+
+	list_for_each_safe(tmp, next, devices) {
+		struct table_device *td = list_entry(tmp, struct table_device, list);
+
+		DMWARN("dm_destroy: %s still exists with %d references",
+		       td->dm_dev.name, refcount_read(&td->count));
+		kfree(td);
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Get the geometry associated with a dm device
  */
@@ -1009,7 +1155,10 @@ static void dm_wq_requeue_work(struct work_struct *work)
 		io->next = NULL;
 		__dm_io_complete(io, false);
 		io = next;
+<<<<<<< HEAD
 		cond_resched();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -1117,7 +1266,10 @@ static void clone_endio(struct bio *bio)
 
 	if (endio) {
 		int r = endio(ti, bio, &error);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		switch (r) {
 		case DM_ENDIO_REQUEUE:
 			if (static_branch_unlikely(&zoned_enabled)) {
@@ -1317,11 +1469,19 @@ out:
  * the partially processed part (the sum of regions 1+2) must be the same for all
  * copies of the bio.
  */
+<<<<<<< HEAD
 void dm_accept_partial_bio(struct bio *bio, unsigned int n_sectors)
 {
 	struct dm_target_io *tio = clone_to_tio(bio);
 	struct dm_io *io = tio->io;
 	unsigned int bio_sectors = bio_sectors(bio);
+=======
+void dm_accept_partial_bio(struct bio *bio, unsigned n_sectors)
+{
+	struct dm_target_io *tio = clone_to_tio(bio);
+	struct dm_io *io = tio->io;
+	unsigned bio_sectors = bio_sectors(bio);
+>>>>>>> b7ba80a49124 (Commit)
 
 	BUG_ON(dm_tio_flagged(tio, DM_TIO_IS_DUPLICATE_BIO));
 	BUG_ON(op_is_zone_mgmt(bio_op(bio)));
@@ -1406,7 +1566,10 @@ static void __map_bio(struct bio *clone)
 	if (static_branch_unlikely(&swap_bios_enabled) &&
 	    unlikely(swap_bios_limit(ti, clone))) {
 		int latch = get_swap_bios();
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (unlikely(latch != md->swap_bios))
 			__set_swap_bios_limit(md, latch);
 		down(&md->swap_bios_semaphore);
@@ -1451,7 +1614,11 @@ static void __map_bio(struct bio *clone)
 	}
 }
 
+<<<<<<< HEAD
 static void setup_split_accounting(struct clone_info *ci, unsigned int len)
+=======
+static void setup_split_accounting(struct clone_info *ci, unsigned len)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dm_io *io = ci->io;
 
@@ -1467,7 +1634,11 @@ static void setup_split_accounting(struct clone_info *ci, unsigned int len)
 }
 
 static void alloc_multiple_bios(struct bio_list *blist, struct clone_info *ci,
+<<<<<<< HEAD
 				struct dm_target *ti, unsigned int num_bios)
+=======
+				struct dm_target *ti, unsigned num_bios)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bio *bio;
 	int try;
@@ -1496,7 +1667,11 @@ static void alloc_multiple_bios(struct bio_list *blist, struct clone_info *ci,
 }
 
 static int __send_duplicate_bios(struct clone_info *ci, struct dm_target *ti,
+<<<<<<< HEAD
 				 unsigned int num_bios, unsigned int *len)
+=======
+				 unsigned int num_bios, unsigned *len)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bio_list blist = BIO_EMPTY_LIST;
 	struct bio *clone;
@@ -1562,9 +1737,16 @@ static void __send_empty_flush(struct clone_info *ci)
 }
 
 static void __send_changing_extent_only(struct clone_info *ci, struct dm_target *ti,
+<<<<<<< HEAD
 					unsigned int num_bios)
 {
 	unsigned int len, bios;
+=======
+					unsigned num_bios)
+{
+	unsigned len;
+	unsigned int bios;
+>>>>>>> b7ba80a49124 (Commit)
 
 	len = min_t(sector_t, ci->sector_count,
 		    max_io_len_target_boundary(ti, dm_target_offset(ti, ci->sector)));
@@ -1602,7 +1784,11 @@ static bool is_abnormal_io(struct bio *bio)
 static blk_status_t __process_abnormal_io(struct clone_info *ci,
 					  struct dm_target *ti)
 {
+<<<<<<< HEAD
 	unsigned int num_bios = 0;
+=======
+	unsigned num_bios = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (bio_op(ci->bio)) {
 	case REQ_OP_DISCARD:
@@ -1680,7 +1866,11 @@ static blk_status_t __split_and_process_bio(struct clone_info *ci)
 {
 	struct bio *clone;
 	struct dm_target *ti;
+<<<<<<< HEAD
 	unsigned int len;
+=======
+	unsigned len;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ti = dm_table_find_target(ci->map, ci->sector);
 	if (unlikely(!ti))
@@ -1745,8 +1935,11 @@ static void dm_split_and_process_bio(struct mapped_device *md,
 		 * otherwise associated queue_limits won't be imposed.
 		 */
 		bio = bio_split_to_limits(bio);
+<<<<<<< HEAD
 		if (!bio)
 			return;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	init_clone_info(&ci, md, map, bio, is_abnormal);
@@ -1877,11 +2070,17 @@ static int dm_poll_bio(struct bio *bio, struct io_comp_batch *iob,
 	return 1;
 }
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
  * An IDR is used to keep track of allocated minor numbers.
  *---------------------------------------------------------------
  */
+=======
+/*-----------------------------------------------------------------
+ * An IDR is used to keep track of allocated minor numbers.
+ *---------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 static void free_minor(int minor)
 {
 	spin_lock(&_minor_lock);
@@ -1966,6 +2165,7 @@ static void cleanup_mapped_device(struct mapped_device *md)
 		md->disk->private_data = NULL;
 		spin_unlock(&_minor_lock);
 		if (dm_get_md_type(md) != DM_TYPE_NONE) {
+<<<<<<< HEAD
 			struct table_device *td;
 
 			dm_sysfs_exit(md);
@@ -1981,6 +2181,10 @@ static void cleanup_mapped_device(struct mapped_device *md)
 			mutex_lock(&md->table_devices_lock);
 			del_gendisk(md->disk);
 			mutex_unlock(&md->table_devices_lock);
+=======
+			dm_sysfs_exit(md);
+			del_gendisk(md->disk);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		dm_queue_destroy_crypto_profile(md->queue);
 		put_disk(md->disk);
@@ -2072,6 +2276,10 @@ static struct mapped_device *alloc_dev(int minor)
 	md->disk->minors = 1;
 	md->disk->flags |= GENHD_FL_NO_PART;
 	md->disk->fops = &dm_blk_dops;
+<<<<<<< HEAD
+=======
+	md->disk->queue = md->queue;
+>>>>>>> b7ba80a49124 (Commit)
 	md->disk->private_data = md;
 	sprintf(md->disk->disk_name, "dm-%d", minor);
 
@@ -2097,9 +2305,13 @@ static struct mapped_device *alloc_dev(int minor)
 	if (!md->pending_io)
 		goto bad;
 
+<<<<<<< HEAD
 	r = dm_stats_init(&md->stats);
 	if (r < 0)
 		goto bad;
+=======
+	dm_stats_init(&md->stats);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Populate the mapping, nobody knows we exist yet */
 	spin_lock(&_minor_lock);
@@ -2131,7 +2343,11 @@ static void free_dev(struct mapped_device *md)
 
 	cleanup_mapped_device(md);
 
+<<<<<<< HEAD
 	WARN_ON_ONCE(!list_empty(&md->table_devices));
+=======
+	free_table_devices(&md->table_devices);
+>>>>>>> b7ba80a49124 (Commit)
 	dm_stats_cleanup(&md->stats);
 	free_minor(minor);
 
@@ -2146,7 +2362,11 @@ static void event_callback(void *context)
 {
 	unsigned long flags;
 	LIST_HEAD(uevents);
+<<<<<<< HEAD
 	struct mapped_device *md = context;
+=======
+	struct mapped_device *md = (struct mapped_device *) context;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irqsave(&md->uevent_lock, flags);
 	list_splice_init(&md->uevent_list, &uevents);
@@ -2179,7 +2399,14 @@ static struct dm_table *__bind(struct mapped_device *md, struct dm_table *t,
 	if (size != dm_get_size(md))
 		memset(&md->geometry, 0, sizeof(md->geometry));
 
+<<<<<<< HEAD
 	set_capacity(md->disk, size);
+=======
+	if (!get_capacity(md->disk))
+		set_capacity(md->disk, size);
+	else
+		set_capacity_and_notify(md->disk, size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dm_table_event_callback(t, event_callback, md);
 
@@ -2311,7 +2538,10 @@ int dm_setup_md_queue(struct mapped_device *md, struct dm_table *t)
 {
 	enum dm_queue_mode type = dm_table_get_type(t);
 	struct queue_limits limits;
+<<<<<<< HEAD
 	struct table_device *td;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int r;
 
 	switch (type) {
@@ -2340,6 +2570,7 @@ int dm_setup_md_queue(struct mapped_device *md, struct dm_table *t)
 	if (r)
 		return r;
 
+<<<<<<< HEAD
 	/*
 	 * Hold lock to make sure add_disk() and del_gendisk() won't concurrent
 	 * with open_table_device() and close_table_device().
@@ -2374,12 +2605,29 @@ out_undo_holders:
 	del_gendisk(md->disk);
 	mutex_unlock(&md->table_devices_lock);
 	return r;
+=======
+	r = add_disk(md->disk);
+	if (r)
+		return r;
+
+	r = dm_sysfs_init(md);
+	if (r) {
+		del_gendisk(md->disk);
+		return r;
+	}
+	md->type = type;
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct mapped_device *dm_get_md(dev_t dev)
 {
 	struct mapped_device *md;
+<<<<<<< HEAD
 	unsigned int minor = MINOR(dev);
+=======
+	unsigned minor = MINOR(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (MAJOR(dev) != _major || minor >= (1 << MINORBITS))
 		return NULL;
@@ -2461,7 +2709,11 @@ static void __dm_destroy(struct mapped_device *md, bool wait)
 		set_bit(DMF_POST_SUSPENDING, &md->flags);
 		dm_table_postsuspend_targets(map);
 	}
+<<<<<<< HEAD
 	/* dm_put_live_table must be before fsleep, otherwise deadlock is possible */
+=======
+	/* dm_put_live_table must be before msleep, otherwise deadlock is possible */
+>>>>>>> b7ba80a49124 (Commit)
 	dm_put_live_table(md, srcu_idx);
 	mutex_unlock(&md->suspend_lock);
 
@@ -2473,7 +2725,11 @@ static void __dm_destroy(struct mapped_device *md, bool wait)
 	 */
 	if (wait)
 		while (atomic_read(&md->holders))
+<<<<<<< HEAD
 			fsleep(1000);
+=======
+			msleep(1);
+>>>>>>> b7ba80a49124 (Commit)
 	else if (atomic_read(&md->holders))
 		DMWARN("%s: Forcibly removing mapped_device still in use! (%d users)",
 		       dm_device_name(md), atomic_read(&md->holders));
@@ -2550,7 +2806,11 @@ static int dm_wait_for_completion(struct mapped_device *md, unsigned int task_st
 			break;
 		}
 
+<<<<<<< HEAD
 		fsleep(5000);
+=======
+		msleep(5);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return r;
@@ -2573,7 +2833,10 @@ static void dm_wq_work(struct work_struct *work)
 			break;
 
 		submit_bio_noacct(bio);
+<<<<<<< HEAD
 		cond_resched();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -2662,7 +2925,11 @@ static void unlock_fs(struct mapped_device *md)
  * are being added to md->deferred list.
  */
 static int __dm_suspend(struct mapped_device *md, struct dm_table *map,
+<<<<<<< HEAD
 			unsigned int suspend_flags, unsigned int task_state,
+=======
+			unsigned suspend_flags, unsigned int task_state,
+>>>>>>> b7ba80a49124 (Commit)
 			int dmf_suspended_flag)
 {
 	bool do_lockfs = suspend_flags & DM_SUSPEND_LOCKFS_FLAG;
@@ -2769,7 +3036,11 @@ static int __dm_suspend(struct mapped_device *md, struct dm_table *map,
  *
  * To abort suspend, start the request_queue.
  */
+<<<<<<< HEAD
 int dm_suspend(struct mapped_device *md, unsigned int suspend_flags)
+=======
+int dm_suspend(struct mapped_device *md, unsigned suspend_flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dm_table *map = NULL;
 	int r = 0;
@@ -2810,7 +3081,10 @@ static int __dm_resume(struct mapped_device *md, struct dm_table *map)
 {
 	if (map) {
 		int r = dm_table_resume_targets(map);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (r)
 			return r;
 	}
@@ -2872,7 +3146,11 @@ out:
  * It may be used only from the kernel.
  */
 
+<<<<<<< HEAD
 static void __dm_internal_suspend(struct mapped_device *md, unsigned int suspend_flags)
+=======
+static void __dm_internal_suspend(struct mapped_device *md, unsigned suspend_flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dm_table *map = NULL;
 
@@ -2970,6 +3248,7 @@ done:
 }
 EXPORT_SYMBOL_GPL(dm_internal_resume_fast);
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
  * Event notification.
@@ -2995,6 +3274,29 @@ int dm_kobject_uevent(struct mapped_device *md, enum kobject_action action,
 	noio_flag = memalloc_noio_save();
 
 	r = kobject_uevent_env(&disk_to_dev(md->disk)->kobj, action, envp);
+=======
+/*-----------------------------------------------------------------
+ * Event notification.
+ *---------------------------------------------------------------*/
+int dm_kobject_uevent(struct mapped_device *md, enum kobject_action action,
+		       unsigned cookie)
+{
+	int r;
+	unsigned noio_flag;
+	char udev_cookie[DM_COOKIE_LENGTH];
+	char *envp[] = { udev_cookie, NULL };
+
+	noio_flag = memalloc_noio_save();
+
+	if (!cookie)
+		r = kobject_uevent(&disk_to_dev(md->disk)->kobj, action);
+	else {
+		snprintf(udev_cookie, DM_COOKIE_LENGTH, "%s=%u",
+			 DM_COOKIE_ENV_VAR_NAME, cookie);
+		r = kobject_uevent_env(&disk_to_dev(md->disk)->kobj,
+				       action, envp);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	memalloc_noio_restore(noio_flag);
 
@@ -3392,6 +3694,7 @@ module_exit(dm_exit);
 module_param(major, uint, 0);
 MODULE_PARM_DESC(major, "The major number of the device mapper");
 
+<<<<<<< HEAD
 module_param(reserved_bio_based_ios, uint, 0644);
 MODULE_PARM_DESC(reserved_bio_based_ios, "Reserved IOs in bio-based mempools");
 
@@ -3399,6 +3702,15 @@ module_param(dm_numa_node, int, 0644);
 MODULE_PARM_DESC(dm_numa_node, "NUMA node for DM device memory allocations");
 
 module_param(swap_bios, int, 0644);
+=======
+module_param(reserved_bio_based_ios, uint, S_IRUGO | S_IWUSR);
+MODULE_PARM_DESC(reserved_bio_based_ios, "Reserved IOs in bio-based mempools");
+
+module_param(dm_numa_node, int, S_IRUGO | S_IWUSR);
+MODULE_PARM_DESC(dm_numa_node, "NUMA node for DM device memory allocations");
+
+module_param(swap_bios, int, S_IRUGO | S_IWUSR);
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_PARM_DESC(swap_bios, "Maximum allowed inflight swap IOs");
 
 MODULE_DESCRIPTION(DM_NAME " driver");

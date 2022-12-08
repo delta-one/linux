@@ -62,6 +62,7 @@ properties:
   power-domains:
     maxItems: 1
 
+<<<<<<< HEAD
 # Child node's properties
 patternProperties:
   '^interconnect-[a-z0-9]+$':
@@ -93,6 +94,8 @@ patternProperties:
       - clock-names
       - clocks
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg
@@ -115,6 +118,10 @@ allOf:
               - qcom,msm8939-pcnoc
               - qcom,msm8939-snoc
               - qcom,msm8996-a1noc
+<<<<<<< HEAD
+=======
+              - qcom,msm8996-a2noc
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,msm8996-bimc
               - qcom,msm8996-cnoc
               - qcom,msm8996-pnoc
@@ -139,6 +146,40 @@ allOf:
             - description: Bus Clock
             - description: Bus A Clock
 
+<<<<<<< HEAD
+=======
+      # Child node's properties
+      patternProperties:
+        '^interconnect-[a-z0-9]+$':
+          type: object
+          description:
+            snoc-mm is a child of snoc, sharing snoc's register address space.
+
+          properties:
+            compatible:
+              enum:
+                - qcom,msm8939-snoc-mm
+
+            '#interconnect-cells':
+              const: 1
+
+            clock-names:
+              items:
+                - const: bus
+                - const: bus_a
+
+            clocks:
+              items:
+                - description: Bus Clock
+                - description: Bus A Clock
+
+          required:
+            - compatible
+            - '#interconnect-cells'
+            - clock-names
+            - clocks
+
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -190,6 +231,7 @@ allOf:
         compatible:
           contains:
             enum:
+<<<<<<< HEAD
               - qcom,msm8996-a2noc
 
     then:
@@ -213,6 +255,8 @@ allOf:
         compatible:
           contains:
             enum:
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,sdm660-a2noc
 
     then:
@@ -237,6 +281,7 @@ allOf:
             - description: Aggregate2 USB3 AXI Clock.
             - description: Config NoC USB2 AXI Clock.
 
+<<<<<<< HEAD
   - if:
       not:
         properties:
@@ -248,6 +293,8 @@ allOf:
       patternProperties:
         '^interconnect-[a-z0-9]+$': false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 examples:
   - |
       #include <dt-bindings/clock/qcom,rpmcc.h>

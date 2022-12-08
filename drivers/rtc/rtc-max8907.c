@@ -9,6 +9,10 @@
  */
 
 #include <linux/bcd.h>
+<<<<<<< HEAD
+=======
+#include <linux/i2c.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mfd/max8907.h>
 #include <linux/module.h>
 #include <linux/platform_device.h>

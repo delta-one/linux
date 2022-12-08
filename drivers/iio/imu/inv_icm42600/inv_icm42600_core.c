@@ -41,7 +41,11 @@ const struct regmap_config inv_icm42600_regmap_config = {
 	.ranges = inv_icm42600_regmap_ranges,
 	.num_ranges = ARRAY_SIZE(inv_icm42600_regmap_ranges),
 };
+<<<<<<< HEAD
 EXPORT_SYMBOL_NS_GPL(inv_icm42600_regmap_config, IIO_ICM42600);
+=======
+EXPORT_SYMBOL_GPL(inv_icm42600_regmap_config);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct inv_icm42600_hw {
 	uint8_t whoami;
@@ -87,11 +91,14 @@ static const struct inv_icm42600_hw inv_icm42600_hw[INV_CHIP_NB] = {
 		.name = "icm42622",
 		.conf = &inv_icm42600_default_conf,
 	},
+<<<<<<< HEAD
 	[INV_CHIP_ICM42631] = {
 		.whoami = INV_ICM42600_WHOAMI_ICM42631,
 		.name = "icm42631",
 		.conf = &inv_icm42600_default_conf,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 const struct iio_mount_matrix *
@@ -665,13 +672,21 @@ int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
 
 	return devm_add_action_or_reset(dev, inv_icm42600_disable_pm, dev);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_NS_GPL(inv_icm42600_core_probe, IIO_ICM42600);
+=======
+EXPORT_SYMBOL_GPL(inv_icm42600_core_probe);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Suspend saves sensors state and turns everything off.
  * Check first if runtime suspend has not already done the job.
  */
+<<<<<<< HEAD
 static int inv_icm42600_suspend(struct device *dev)
+=======
+static int __maybe_unused inv_icm42600_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct inv_icm42600_state *st = dev_get_drvdata(dev);
 	int ret;
@@ -711,7 +726,11 @@ out_unlock:
  * System resume gets the system back on and restores the sensors state.
  * Manually put runtime power management in system active state.
  */
+<<<<<<< HEAD
 static int inv_icm42600_resume(struct device *dev)
+=======
+static int __maybe_unused inv_icm42600_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct inv_icm42600_state *st = dev_get_drvdata(dev);
 	int ret;
@@ -744,7 +763,11 @@ out_unlock:
 }
 
 /* Runtime suspend will turn off sensors that are enabled by iio devices. */
+<<<<<<< HEAD
 static int inv_icm42600_runtime_suspend(struct device *dev)
+=======
+static int __maybe_unused inv_icm42600_runtime_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct inv_icm42600_state *st = dev_get_drvdata(dev);
 	int ret;
@@ -766,7 +789,11 @@ error_unlock:
 }
 
 /* Sensors are enabled by iio devices, no need to turn them back on here. */
+<<<<<<< HEAD
 static int inv_icm42600_runtime_resume(struct device *dev)
+=======
+static int __maybe_unused inv_icm42600_runtime_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct inv_icm42600_state *st = dev_get_drvdata(dev);
 	int ret;
@@ -779,11 +806,20 @@ static int inv_icm42600_runtime_resume(struct device *dev)
 	return ret;
 }
 
+<<<<<<< HEAD
 EXPORT_NS_GPL_DEV_PM_OPS(inv_icm42600_pm_ops, IIO_ICM42600) = {
 	SYSTEM_SLEEP_PM_OPS(inv_icm42600_suspend, inv_icm42600_resume)
 	RUNTIME_PM_OPS(inv_icm42600_runtime_suspend,
 		       inv_icm42600_runtime_resume, NULL)
 };
+=======
+const struct dev_pm_ops inv_icm42600_pm_ops = {
+	SET_SYSTEM_SLEEP_PM_OPS(inv_icm42600_suspend, inv_icm42600_resume)
+	SET_RUNTIME_PM_OPS(inv_icm42600_runtime_suspend,
+			   inv_icm42600_runtime_resume, NULL)
+};
+EXPORT_SYMBOL_GPL(inv_icm42600_pm_ops);
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_AUTHOR("InvenSense, Inc.");
 MODULE_DESCRIPTION("InvenSense ICM-426xx device driver");

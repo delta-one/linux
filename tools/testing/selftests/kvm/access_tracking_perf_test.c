@@ -31,9 +31,14 @@
  * These limitations are worked around in this test by using a large enough
  * region of memory for each vCPU such that the number of translations cached in
  * the TLB and the number of pages held in pagevecs are a small fraction of the
+<<<<<<< HEAD
  * overall workload. And if either of those conditions are not true (for example
  * in nesting, where TLB size is unlimited) this test will print a warning
  * rather than silently passing.
+=======
+ * overall workload. And if either of those conditions are not true this test
+ * will fail rather than silently passing.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #include <inttypes.h>
 #include <limits.h>
@@ -44,9 +49,14 @@
 
 #include "kvm_util.h"
 #include "test_util.h"
+<<<<<<< HEAD
 #include "memstress.h"
 #include "guest_modes.h"
 #include "processor.h"
+=======
+#include "perf_test_util.h"
+#include "guest_modes.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Global variable used to synchronize all of the vCPU threads. */
 static int iteration;
@@ -59,6 +69,12 @@ static enum {
 	ITERATION_MARK_IDLE,
 } iteration_work;
 
+<<<<<<< HEAD
+=======
+/* Set to true when vCPU threads should exit. */
+static bool done;
+
+>>>>>>> b7ba80a49124 (Commit)
 /* The iteration that was last completed by each vCPU. */
 static int vcpu_last_completed_iteration[KVM_MAX_VCPUS];
 
@@ -124,7 +140,11 @@ static void mark_page_idle(int page_idle_fd, uint64_t pfn)
 }
 
 static void mark_vcpu_memory_idle(struct kvm_vm *vm,
+<<<<<<< HEAD
 				  struct memstress_vcpu_args *vcpu_args)
+=======
+				  struct perf_test_vcpu_args *vcpu_args)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int vcpu_idx = vcpu_args->vcpu_idx;
 	uint64_t base_gva = vcpu_args->gva;
@@ -146,7 +166,11 @@ static void mark_vcpu_memory_idle(struct kvm_vm *vm,
 	TEST_ASSERT(pagemap_fd > 0, "Failed to open pagemap.");
 
 	for (page = 0; page < pages; page++) {
+<<<<<<< HEAD
 		uint64_t gva = base_gva + page * memstress_args.guest_page_size;
+=======
+		uint64_t gva = base_gva + page * perf_test_args.guest_page_size;
+>>>>>>> b7ba80a49124 (Commit)
 		uint64_t pfn = lookup_pfn(pagemap_fd, vm, gva);
 
 		if (!pfn) {
@@ -171,6 +195,7 @@ static void mark_vcpu_memory_idle(struct kvm_vm *vm,
 		    vcpu_idx, no_pfn, pages);
 
 	/*
+<<<<<<< HEAD
 	 * Check that at least 90% of memory has been marked idle (the rest
 	 * might not be marked idle because the pages have not yet made it to an
 	 * LRU list or the translations are still cached in the TLB). 90% is
@@ -193,6 +218,19 @@ static void mark_vcpu_memory_idle(struct kvm_vm *vm,
 		       "this will affect performance results.\n",
 		       vcpu_idx, still_idle, pages);
 	}
+=======
+	 * Test that at least 90% of memory has been marked idle (the rest might
+	 * not be marked idle because the pages have not yet made it to an LRU
+	 * list or the translations are still cached in the TLB). 90% is
+	 * arbitrary; high enough that we ensure most memory access went through
+	 * access tracking but low enough as to not make the test too brittle
+	 * over time and across architectures.
+	 */
+	TEST_ASSERT(still_idle < pages / 10,
+		    "vCPU%d: Too many pages still idle (%"PRIu64 " out of %"
+		    PRIu64 ").\n",
+		    vcpu_idx, still_idle, pages);
+>>>>>>> b7ba80a49124 (Commit)
 
 	close(page_idle_fd);
 	close(pagemap_fd);
@@ -214,7 +252,11 @@ static bool spin_wait_for_next_iteration(int *current_iteration)
 	int last_iteration = *current_iteration;
 
 	do {
+<<<<<<< HEAD
 		if (READ_ONCE(memstress_args.stop_vcpus))
+=======
+		if (READ_ONCE(done))
+>>>>>>> b7ba80a49124 (Commit)
 			return false;
 
 		*current_iteration = READ_ONCE(iteration);
@@ -223,10 +265,17 @@ static bool spin_wait_for_next_iteration(int *current_iteration)
 	return true;
 }
 
+<<<<<<< HEAD
 static void vcpu_thread_main(struct memstress_vcpu_args *vcpu_args)
 {
 	struct kvm_vcpu *vcpu = vcpu_args->vcpu;
 	struct kvm_vm *vm = memstress_args.vm;
+=======
+static void vcpu_thread_main(struct perf_test_vcpu_args *vcpu_args)
+{
+	struct kvm_vcpu *vcpu = vcpu_args->vcpu;
+	struct kvm_vm *vm = perf_test_args.vm;
+>>>>>>> b7ba80a49124 (Commit)
 	int vcpu_idx = vcpu_args->vcpu_idx;
 	int current_iteration = 0;
 
@@ -282,7 +331,11 @@ static void run_iteration(struct kvm_vm *vm, int nr_vcpus, const char *descripti
 static void access_memory(struct kvm_vm *vm, int nr_vcpus,
 			  enum access_type access, const char *description)
 {
+<<<<<<< HEAD
 	memstress_set_write_percent(vm, (access == ACCESS_READ) ? 0 : 100);
+=======
+	perf_test_set_wr_fract(vm, (access == ACCESS_READ) ? INT_MAX : 1);
+>>>>>>> b7ba80a49124 (Commit)
 	iteration_work = ITERATION_ACCESS_MEMORY;
 	run_iteration(vm, nr_vcpus, description);
 }
@@ -306,10 +359,17 @@ static void run_test(enum vm_guest_mode mode, void *arg)
 	struct kvm_vm *vm;
 	int nr_vcpus = params->nr_vcpus;
 
+<<<<<<< HEAD
 	vm = memstress_create_vm(mode, nr_vcpus, params->vcpu_memory_bytes, 1,
 				 params->backing_src, !overlap_memory_access);
 
 	memstress_start_vcpu_threads(nr_vcpus, vcpu_thread_main);
+=======
+	vm = perf_test_create_vm(mode, nr_vcpus, params->vcpu_memory_bytes, 1,
+				 params->backing_src, !overlap_memory_access);
+
+	perf_test_start_vcpu_threads(nr_vcpus, vcpu_thread_main);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_info("\n");
 	access_memory(vm, nr_vcpus, ACCESS_WRITE, "Populating memory");
@@ -324,8 +384,16 @@ static void run_test(enum vm_guest_mode mode, void *arg)
 	mark_memory_idle(vm, nr_vcpus);
 	access_memory(vm, nr_vcpus, ACCESS_READ, "Reading from idle memory");
 
+<<<<<<< HEAD
 	memstress_join_vcpu_threads(nr_vcpus);
 	memstress_destroy_vm(vm);
+=======
+	/* Set done to signal the vCPU threads to exit */
+	done = true;
+
+	perf_test_join_vcpu_threads(nr_vcpus);
+	perf_test_destroy_vm(vm);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void help(char *name)
@@ -368,7 +436,11 @@ int main(int argc, char *argv[])
 			params.vcpu_memory_bytes = parse_size(optarg);
 			break;
 		case 'v':
+<<<<<<< HEAD
 			params.nr_vcpus = atoi_positive("Number of vCPUs", optarg);
+=======
+			params.nr_vcpus = atoi(optarg);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case 'o':
 			overlap_memory_access = true;

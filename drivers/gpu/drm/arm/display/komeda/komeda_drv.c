@@ -6,11 +6,18 @@
  */
 #include <linux/module.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/of.h>
 #include <linux/platform_device.h>
 #include <linux/component.h>
 #include <linux/pm_runtime.h>
 #include <drm/drm_fbdev_generic.h>
+=======
+#include <linux/platform_device.h>
+#include <linux/component.h>
+#include <linux/pm_runtime.h>
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_module.h>
 #include <drm/drm_of.h>
 #include "komeda_dev.h"

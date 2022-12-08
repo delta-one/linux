@@ -654,6 +654,7 @@
 	.result = ACCEPT,
 	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
 },
+<<<<<<< HEAD
 {
 	"direct packet access: test30 (check_id() in regsafe(), bad access)",
 	.insns = {
@@ -708,3 +709,5 @@
 	.errstr = "invalid access to packet, off=0 size=1, R2",
 	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
 },
+=======
+>>>>>>> b7ba80a49124 (Commit)

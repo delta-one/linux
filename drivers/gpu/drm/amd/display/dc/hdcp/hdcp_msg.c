@@ -27,12 +27,22 @@
 
 #include "dm_services.h"
 #include "dm_helpers.h"
+<<<<<<< HEAD
 #include "include/hdcp_msg_types.h"
 #include "include/signal_types.h"
 #include "core_types.h"
 #include "link.h"
 #include "link_hwss.h"
 #include "link/protocols/link_dpcd.h"
+=======
+#include "include/hdcp_types.h"
+#include "include/i2caux_interface.h"
+#include "include/signal_types.h"
+#include "core_types.h"
+#include "dc_link_ddc.h"
+#include "link_hwss.h"
+#include "inc/link_dpcd.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DC_LOGGER \
 	link->ctx->logger

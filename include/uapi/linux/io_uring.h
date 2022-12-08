@@ -10,6 +10,7 @@
 
 #include <linux/fs.h>
 #include <linux/types.h>
+<<<<<<< HEAD
 /*
  * this file is shared with liburing and that has to autodetect
  * if linux/time_types.h is available or not, it can
@@ -19,6 +20,9 @@
 #ifndef UAPI_LINUX_IO_URING_H_SKIP_LINUX_TIME_TYPES_H
 #include <linux/time_types.h>
 #endif
+=======
+#include <linux/time_types.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef __cplusplus
 extern "C" {
@@ -64,7 +68,10 @@ struct io_uring_sqe {
 		__u32		hardlink_flags;
 		__u32		xattr_flags;
 		__u32		msg_ring_flags;
+<<<<<<< HEAD
 		__u32		uring_cmd_flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	__u64	user_data;	/* data to be passed back at completion time */
 	/* pack this to avoid bogus arm OABI complaints */
@@ -229,6 +236,7 @@ enum io_uring_op {
 };
 
 /*
+<<<<<<< HEAD
  * sqe->uring_cmd_flags
  * IORING_URING_CMD_FIXED	use registered buffer; pass this flag
  *				along with setting sqe->buf_index.
@@ -237,6 +245,8 @@ enum io_uring_op {
 
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * sqe->fsync_flags
  */
 #define IORING_FSYNC_DATASYNC	(1U << 0)
@@ -304,6 +314,7 @@ enum io_uring_op {
  *
  * IORING_RECVSEND_FIXED_BUF	Use registered buffers, the index is stored in
  *				the buf_index field.
+<<<<<<< HEAD
  *
  * IORING_SEND_ZC_REPORT_USAGE
  *				If set, SEND[MSG]_ZC should report
@@ -312,10 +323,13 @@ enum io_uring_op {
  *				0 is reported if zerocopy was actually possible.
  *				IORING_NOTIF_USAGE_ZC_COPIED if data was copied
  *				(at least partially).
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 #define IORING_RECVSEND_POLL_FIRST	(1U << 0)
 #define IORING_RECV_MULTISHOT		(1U << 1)
 #define IORING_RECVSEND_FIXED_BUF	(1U << 2)
+<<<<<<< HEAD
 #define IORING_SEND_ZC_REPORT_USAGE	(1U << 3)
 
 /*
@@ -326,6 +340,8 @@ enum io_uring_op {
  * bits of cqe.res should be treated as reserved!
  */
 #define IORING_NOTIF_USAGE_ZC_COPIED    (1U << 31)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * accept flags stored in sqe->ioprio
@@ -347,8 +363,11 @@ enum {
  *				applicable for IORING_MSG_DATA, obviously.
  */
 #define IORING_MSG_RING_CQE_SKIP	(1U << 0)
+<<<<<<< HEAD
 /* Pass through the flags from sqe->file_index to cqe->flags */
 #define IORING_MSG_RING_FLAGS_PASS	(1U << 1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * IO completion data structure (Completion Queue Entry)
@@ -389,9 +408,12 @@ enum {
 #define IORING_OFF_SQ_RING		0ULL
 #define IORING_OFF_CQ_RING		0x8000000ULL
 #define IORING_OFF_SQES			0x10000000ULL
+<<<<<<< HEAD
 #define IORING_OFF_PBUF_RING		0x80000000ULL
 #define IORING_OFF_PBUF_SHIFT		16
 #define IORING_OFF_MMAP_MASK		0xf8000000ULL
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Filled with the offset for mmap(2)
@@ -475,7 +497,10 @@ struct io_uring_params {
 #define IORING_FEAT_RSRC_TAGS		(1U << 10)
 #define IORING_FEAT_CQE_SKIP		(1U << 11)
 #define IORING_FEAT_LINKED_FILE		(1U << 12)
+<<<<<<< HEAD
 #define IORING_FEAT_REG_REG_RING	(1U << 13)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * io_uring_register(2) opcodes and arguments
@@ -523,10 +548,14 @@ enum {
 	IORING_REGISTER_FILE_ALLOC_RANGE	= 25,
 
 	/* this goes last */
+<<<<<<< HEAD
 	IORING_REGISTER_LAST,
 
 	/* flag added to the opcode to use a registered ring fd */
 	IORING_REGISTER_USE_REGISTERED_RING	= 1U << 31
+=======
+	IORING_REGISTER_LAST
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* io-wq worker categories */
@@ -634,6 +663,7 @@ struct io_uring_buf_ring {
 			__u16	resv3;
 			__u16	tail;
 		};
+<<<<<<< HEAD
 		__DECLARE_FLEX_ARRAY(struct io_uring_buf, bufs);
 	};
 };
@@ -652,12 +682,22 @@ enum {
 	IOU_PBUF_RING_MMAP	= 1,
 };
 
+=======
+		struct io_uring_buf	bufs[0];
+	};
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* argument for IORING_(UN)REGISTER_PBUF_RING */
 struct io_uring_buf_reg {
 	__u64	ring_addr;
 	__u32	ring_entries;
 	__u16	bgid;
+<<<<<<< HEAD
 	__u16	flags;
+=======
+	__u16	pad;
+>>>>>>> b7ba80a49124 (Commit)
 	__u64	resv[3];
 };
 

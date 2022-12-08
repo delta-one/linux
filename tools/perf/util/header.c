@@ -6,7 +6,10 @@
 #include <sys/types.h>
 #include <byteswap.h>
 #include <unistd.h>
+<<<<<<< HEAD
 #include <regex.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <stdio.h>
 #include <stdlib.h>
 #include <linux/compiler.h>
@@ -56,10 +59,13 @@
 #include <linux/ctype.h>
 #include <internal/lib.h>
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 #include <traceevent/event-parse.h>
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * magic2 = "PERFILE2"
  * must be a numerical value to let the endianness
@@ -84,12 +90,20 @@ struct perf_file_attr {
 
 void perf_header__set_feat(struct perf_header *header, int feat)
 {
+<<<<<<< HEAD
 	__set_bit(feat, header->adds_features);
+=======
+	set_bit(feat, header->adds_features);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void perf_header__clear_feat(struct perf_header *header, int feat)
 {
+<<<<<<< HEAD
 	__clear_bit(feat, header->adds_features);
+=======
+	clear_bit(feat, header->adds_features);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 bool perf_header__has_feat(const struct perf_header *header, int feat)
@@ -303,7 +317,10 @@ static int do_read_bitmap(struct feat_fd *ff, unsigned long **pset, u64 *psize)
 	return 0;
 }
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int write_tracing_data(struct feat_fd *ff,
 			      struct evlist *evlist)
 {
@@ -312,7 +329,10 @@ static int write_tracing_data(struct feat_fd *ff,
 
 	return read_tracing_data(ff->fd, &evlist->core.entries);
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int write_build_id(struct feat_fd *ff,
 			  struct evlist *evlist __maybe_unused)
@@ -786,7 +806,11 @@ static int write_pmu_mappings(struct feat_fd *ff,
 static int write_group_desc(struct feat_fd *ff,
 			    struct evlist *evlist)
 {
+<<<<<<< HEAD
 	u32 nr_groups = evlist__nr_groups(evlist);
+=======
+	u32 nr_groups = evlist->core.nr_groups;
+>>>>>>> b7ba80a49124 (Commit)
 	struct evsel *evsel;
 	int ret;
 
@@ -1365,7 +1389,11 @@ static int memory_node__read(struct memory_node *n, unsigned long idx)
 	rewinddir(dir);
 
 	for_each_memory(phys, dir) {
+<<<<<<< HEAD
 		__set_bit(phys, n->set);
+=======
+		set_bit(phys, n->set);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	closedir(dir);
@@ -2401,14 +2429,20 @@ FEAT_PROCESS_STR_FUN(arch, arch);
 FEAT_PROCESS_STR_FUN(cpudesc, cpu_desc);
 FEAT_PROCESS_STR_FUN(cpuid, cpuid);
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int process_tracing_data(struct feat_fd *ff, void *data)
 {
 	ssize_t ret = trace_report(ff->fd, data, false);
 
 	return ret < 0 ? -1 : 0;
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int process_build_id(struct feat_fd *ff, void *data __maybe_unused)
 {
@@ -2807,6 +2841,10 @@ static int process_group_desc(struct feat_fd *ff, void *data __maybe_unused)
 	 * Rebuild group relationship based on the group_desc
 	 */
 	session = container_of(ff->ph, struct perf_session, header);
+<<<<<<< HEAD
+=======
+	session->evlist->core.nr_groups = nr_groups;
+>>>>>>> b7ba80a49124 (Commit)
 
 	i = nr = 0;
 	evlist__for_each_entry(session->evlist, evsel) {
@@ -3374,9 +3412,13 @@ err:
 const struct perf_header_feature_ops feat_ops[HEADER_LAST_FEATURE];
 
 const struct perf_header_feature_ops feat_ops[HEADER_LAST_FEATURE] = {
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 	FEAT_OPN(TRACING_DATA,	tracing_data,	false),
 #endif
+=======
+	FEAT_OPN(TRACING_DATA,	tracing_data,	false),
+>>>>>>> b7ba80a49124 (Commit)
 	FEAT_OPN(BUILD_ID,	build_id,	false),
 	FEAT_OPR(HOSTNAME,	hostname,	false),
 	FEAT_OPR(OSRELEASE,	osrelease,	false),
@@ -3962,7 +4004,11 @@ int perf_file_header__read(struct perf_file_header *header,
 
 		if (!test_bit(HEADER_HOSTNAME, header->adds_features)) {
 			bitmap_zero(header->adds_features, HEADER_FEAT_BITS);
+<<<<<<< HEAD
 			__set_bit(HEADER_BUILD_ID, header->adds_features);
+=======
+			set_bit(HEADER_BUILD_ID, header->adds_features);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -4092,7 +4138,10 @@ static int read_attr(int fd, struct perf_header *ph,
 	return ret <= 0 ? -1 : 0;
 }
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int evsel__prepare_tracepoint_event(struct evsel *evsel, struct tep_handle *pevent)
 {
 	struct tep_event *event;
@@ -4136,7 +4185,10 @@ static int evlist__prepare_tracepoint_events(struct evlist *evlist, struct tep_h
 
 	return 0;
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int perf_session__read_header(struct perf_session *session, int repipe_fd)
 {
@@ -4242,15 +4294,21 @@ int perf_session__read_header(struct perf_session *session, int repipe_fd)
 		lseek(fd, tmp, SEEK_SET);
 	}
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	perf_header__process_sections(header, fd, &session->tevent,
 				      perf_file_section__process);
 
 	if (evlist__prepare_tracepoint_events(session->evlist, session->tevent.pevent))
 		goto out_delete_evlist;
+<<<<<<< HEAD
 #else
 	perf_header__process_sections(header, fd, NULL, perf_file_section__process);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 out_errno:
@@ -4428,7 +4486,10 @@ int perf_event__process_event_update(struct perf_tool *tool __maybe_unused,
 	return 0;
 }
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int perf_event__process_tracing_data(struct perf_session *session,
 				     union perf_event *event)
 {
@@ -4476,7 +4537,10 @@ int perf_event__process_tracing_data(struct perf_session *session,
 
 	return size_read + padding;
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int perf_event__process_build_id(struct perf_session *session,
 				 union perf_event *event)

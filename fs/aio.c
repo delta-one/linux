@@ -361,9 +361,12 @@ static int aio_ring_mremap(struct vm_area_struct *vma)
 	spin_lock(&mm->ioctx_lock);
 	rcu_read_lock();
 	table = rcu_dereference(mm->ioctx_table);
+<<<<<<< HEAD
 	if (!table)
 		goto out_unlock;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < table->nr; i++) {
 		struct kioctx *ctx;
 
@@ -377,7 +380,10 @@ static int aio_ring_mremap(struct vm_area_struct *vma)
 		}
 	}
 
+<<<<<<< HEAD
 out_unlock:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_read_unlock();
 	spin_unlock(&mm->ioctx_lock);
 	return res;
@@ -394,7 +400,11 @@ static const struct vm_operations_struct aio_ring_vm_ops = {
 
 static int aio_ring_mmap(struct file *file, struct vm_area_struct *vma)
 {
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_DONTEXPAND);
+=======
+	vma->vm_flags |= VM_DONTEXPAND;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_ops = &aio_ring_vm_ops;
 	return 0;
 }
@@ -558,7 +568,11 @@ static int aio_setup_ring(struct kioctx *ctx, unsigned int nr_events)
 
 	ctx->mmap_base = do_mmap(ctx->aio_ring_file, 0, ctx->mmap_size,
 				 PROT_READ | PROT_WRITE,
+<<<<<<< HEAD
 				 MAP_SHARED, 0, 0, &unused, NULL);
+=======
+				 MAP_SHARED, 0, &unused, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	mmap_write_unlock(mm);
 	if (IS_ERR((void *)ctx->mmap_base)) {
 		ctx->mmap_size = 0;
@@ -1556,7 +1570,11 @@ static int aio_read(struct kiocb *req, const struct iocb *iocb,
 	if (unlikely(!file->f_op->read_iter))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	ret = aio_setup_rw(ITER_DEST, iocb, &iovec, vectored, compat, &iter);
+=======
+	ret = aio_setup_rw(READ, iocb, &iovec, vectored, compat, &iter);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 	ret = rw_verify_area(READ, file, &req->ki_pos, iov_iter_count(&iter));
@@ -1584,7 +1602,11 @@ static int aio_write(struct kiocb *req, const struct iocb *iocb,
 	if (unlikely(!file->f_op->write_iter))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	ret = aio_setup_rw(ITER_SOURCE, iocb, &iovec, vectored, compat, &iter);
+=======
+	ret = aio_setup_rw(WRITE, iocb, &iovec, vectored, compat, &iter);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 	ret = rw_verify_area(WRITE, file, &req->ki_pos, iov_iter_count(&iter));

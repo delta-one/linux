@@ -2,7 +2,10 @@
 generated-y += syscall_table_32.h
 generated-y += syscall_table_64.h
 generated-y += syscall_table_spu.h
+<<<<<<< HEAD
 generic-y += agp.h
+=======
+>>>>>>> b7ba80a49124 (Commit)
 generic-y += export.h
 generic-y += kvm_types.h
 generic-y += mcs_spinlock.h

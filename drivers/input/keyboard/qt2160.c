@@ -338,7 +338,12 @@ static bool qt2160_identify(struct i2c_client *client)
 	return true;
 }
 
+<<<<<<< HEAD
 static int qt2160_probe(struct i2c_client *client)
+=======
+static int qt2160_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct qt2160_data *qt2160;
 	struct input_dev *input;
@@ -460,7 +465,11 @@ static struct i2c_driver qt2160_driver = {
 	},
 
 	.id_table	= qt2160_idtable,
+<<<<<<< HEAD
 	.probe_new	= qt2160_probe,
+=======
+	.probe		= qt2160_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= qt2160_remove,
 };
 

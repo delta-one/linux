@@ -33,7 +33,10 @@
 #include <linux/jiffies.h>
 #include <linux/completion.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/pm_wakeirq.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/property.h>
 #include <linux/regulator/consumer.h>
 #include <asm/unaligned.h>
@@ -87,6 +90,11 @@ struct elan_tp_data {
 	u16			fw_page_size;
 	u32			fw_signature_address;
 
+<<<<<<< HEAD
+=======
+	bool			irq_wake;
+
+>>>>>>> b7ba80a49124 (Commit)
 	u8			min_baseline;
 	u8			max_baseline;
 	bool			baseline_ready;
@@ -1187,7 +1195,12 @@ static void elan_disable_regulator(void *_data)
 	regulator_disable(data->vcc);
 }
 
+<<<<<<< HEAD
 static int elan_probe(struct i2c_client *client)
+=======
+static int elan_probe(struct i2c_client *client,
+		      const struct i2c_device_id *dev_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct elan_transport_ops *transport_ops;
 	struct device *dev = &client->dev;
@@ -1325,10 +1338,24 @@ static int elan_probe(struct i2c_client *client)
 		}
 	}
 
+<<<<<<< HEAD
 	return 0;
 }
 
 static int elan_suspend(struct device *dev)
+=======
+	/*
+	 * Systems using device tree should set up wakeup via DTS,
+	 * the rest will configure device as wakeup source by default.
+	 */
+	if (!dev->of_node)
+		device_init_wakeup(dev, true);
+
+	return 0;
+}
+
+static int __maybe_unused elan_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct elan_tp_data *data = i2c_get_clientdata(client);
@@ -1347,6 +1374,11 @@ static int elan_suspend(struct device *dev)
 
 	if (device_may_wakeup(dev)) {
 		ret = elan_sleep(data);
+<<<<<<< HEAD
+=======
+		/* Enable wake from IRQ */
+		data->irq_wake = (enable_irq_wake(client->irq) == 0);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		ret = elan_set_power(data, false);
 		if (ret)
@@ -1365,7 +1397,11 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int elan_resume(struct device *dev)
+=======
+static int __maybe_unused elan_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct elan_tp_data *data = i2c_get_clientdata(client);
@@ -1377,6 +1413,12 @@ static int elan_resume(struct device *dev)
 			dev_err(dev, "error %d enabling regulator\n", error);
 			goto err;
 		}
+<<<<<<< HEAD
+=======
+	} else if (data->irq_wake) {
+		disable_irq_wake(client->irq);
+		data->irq_wake = false;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	error = elan_set_power(data, true);
@@ -1394,7 +1436,11 @@ err:
 	return error;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(elan_pm_ops, elan_suspend, elan_resume);
+=======
+static SIMPLE_DEV_PM_OPS(elan_pm_ops, elan_suspend, elan_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id elan_id[] = {
 	{ DRIVER_NAME, 0 },
@@ -1418,13 +1464,21 @@ MODULE_DEVICE_TABLE(of, elan_of_match);
 static struct i2c_driver elan_driver = {
 	.driver = {
 		.name	= DRIVER_NAME,
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&elan_pm_ops),
+=======
+		.pm	= &elan_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.acpi_match_table = ACPI_PTR(elan_acpi_id),
 		.of_match_table = of_match_ptr(elan_of_match),
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 		.dev_groups = elan_sysfs_groups,
 	},
+<<<<<<< HEAD
 	.probe_new	= elan_probe,
+=======
+	.probe		= elan_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= elan_id,
 };
 

@@ -49,7 +49,11 @@ extern void cifs_sb_deactive(struct super_block *sb);
 /* Functions related to inodes */
 extern const struct inode_operations cifs_dir_inode_ops;
 extern struct inode *cifs_root_iget(struct super_block *);
+<<<<<<< HEAD
 extern int cifs_create(struct mnt_idmap *, struct inode *,
+=======
+extern int cifs_create(struct user_namespace *, struct inode *,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct dentry *, umode_t, bool excl);
 extern int cifs_atomic_open(struct inode *, struct dentry *,
 			    struct file *, unsigned, umode_t);
@@ -57,12 +61,21 @@ extern struct dentry *cifs_lookup(struct inode *, struct dentry *,
 				  unsigned int);
 extern int cifs_unlink(struct inode *dir, struct dentry *dentry);
 extern int cifs_hardlink(struct dentry *, struct inode *, struct dentry *);
+<<<<<<< HEAD
 extern int cifs_mknod(struct mnt_idmap *, struct inode *, struct dentry *,
 		      umode_t, dev_t);
 extern int cifs_mkdir(struct mnt_idmap *, struct inode *, struct dentry *,
 		      umode_t);
 extern int cifs_rmdir(struct inode *, struct dentry *);
 extern int cifs_rename2(struct mnt_idmap *, struct inode *,
+=======
+extern int cifs_mknod(struct user_namespace *, struct inode *, struct dentry *,
+		      umode_t, dev_t);
+extern int cifs_mkdir(struct user_namespace *, struct inode *, struct dentry *,
+		      umode_t);
+extern int cifs_rmdir(struct inode *, struct dentry *);
+extern int cifs_rename2(struct user_namespace *, struct inode *,
+>>>>>>> b7ba80a49124 (Commit)
 			struct dentry *, struct inode *, struct dentry *,
 			unsigned int);
 extern int cifs_revalidate_file_attr(struct file *filp);
@@ -72,9 +85,15 @@ extern int cifs_revalidate_dentry(struct dentry *);
 extern int cifs_invalidate_mapping(struct inode *inode);
 extern int cifs_revalidate_mapping(struct inode *inode);
 extern int cifs_zap_mapping(struct inode *inode);
+<<<<<<< HEAD
 extern int cifs_getattr(struct mnt_idmap *, const struct path *,
 			struct kstat *, u32, unsigned int);
 extern int cifs_setattr(struct mnt_idmap *, struct dentry *,
+=======
+extern int cifs_getattr(struct user_namespace *, const struct path *,
+			struct kstat *, u32, unsigned int);
+extern int cifs_setattr(struct user_namespace *, struct dentry *,
+>>>>>>> b7ba80a49124 (Commit)
 			struct iattr *);
 extern int cifs_fiemap(struct inode *, struct fiemap_extent_info *, u64 start,
 		       u64 len);
@@ -105,6 +124,7 @@ extern int cifs_lock(struct file *, int, struct file_lock *);
 extern int cifs_fsync(struct file *, loff_t, loff_t, int);
 extern int cifs_strict_fsync(struct file *, loff_t, loff_t, int);
 extern int cifs_flush(struct file *, fl_owner_t id);
+<<<<<<< HEAD
 extern int cifs_file_mmap(struct file *file, struct vm_area_struct *vma);
 extern int cifs_file_strict_mmap(struct file *file, struct vm_area_struct *vma);
 extern const struct file_operations cifs_dir_ops;
@@ -113,6 +133,13 @@ extern int cifs_readdir(struct file *file, struct dir_context *ctx);
 extern void cifs_pages_written_back(struct inode *inode, loff_t start, unsigned int len);
 extern void cifs_pages_write_failed(struct inode *inode, loff_t start, unsigned int len);
 extern void cifs_pages_write_redirty(struct inode *inode, loff_t start, unsigned int len);
+=======
+extern int cifs_file_mmap(struct file * , struct vm_area_struct *);
+extern int cifs_file_strict_mmap(struct file * , struct vm_area_struct *);
+extern const struct file_operations cifs_dir_ops;
+extern int cifs_dir_open(struct inode *inode, struct file *file);
+extern int cifs_readdir(struct file *file, struct dir_context *ctx);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Functions related to dir entries */
 extern const struct dentry_operations cifs_dentry_ops;
@@ -127,7 +154,11 @@ extern struct vfsmount *cifs_dfs_d_automount(struct path *path);
 /* Functions related to symlinks */
 extern const char *cifs_get_link(struct dentry *, struct inode *,
 			struct delayed_call *);
+<<<<<<< HEAD
 extern int cifs_symlink(struct mnt_idmap *idmap, struct inode *inode,
+=======
+extern int cifs_symlink(struct user_namespace *mnt_userns, struct inode *inode,
+>>>>>>> b7ba80a49124 (Commit)
 			struct dentry *direntry, const char *symname);
 
 #ifdef CONFIG_CIFS_XATTR
@@ -156,6 +187,11 @@ extern const struct export_operations cifs_export_ops;
 #endif /* CONFIG_CIFS_NFSD_EXPORT */
 
 /* when changing internal version - update following two lines at same time */
+<<<<<<< HEAD
 #define SMB3_PRODUCT_BUILD 41
 #define CIFS_VERSION   "2.42"
+=======
+#define SMB3_PRODUCT_BUILD 39
+#define CIFS_VERSION   "2.39"
+>>>>>>> b7ba80a49124 (Commit)
 #endif				/* _CIFSFS_H */

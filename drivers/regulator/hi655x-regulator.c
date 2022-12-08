@@ -206,7 +206,10 @@ static struct platform_driver hi655x_regulator_driver = {
 	.id_table = hi655x_regulator_table,
 	.driver = {
 		.name	= "hi655x-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe	= hi655x_regulator_probe,
 };

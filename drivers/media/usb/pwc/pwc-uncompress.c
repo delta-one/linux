@@ -39,7 +39,11 @@ int pwc_decompress(struct pwc_device *pdev, struct pwc_frame_buf *fbuf)
 			 * first 3 bytes is filled (Nala case). We can
 			 * determine this using the type of the webcam */
 		memcpy(raw_frame->cmd, pdev->cmd_buf, 4);
+<<<<<<< HEAD
 		memcpy(raw_frame->rawframe, yuv, pdev->frame_size);
+=======
+		memcpy(raw_frame+1, yuv, pdev->frame_size);
+>>>>>>> b7ba80a49124 (Commit)
 		vb2_set_plane_payload(&fbuf->vb.vb2_buf, 0,
 			struct_size(raw_frame, rawframe, pdev->frame_size));
 		return 0;

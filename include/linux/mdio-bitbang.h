@@ -38,10 +38,15 @@ struct mdiobb_ctrl {
 	u8 op_c22_write;
 };
 
+<<<<<<< HEAD
 int mdiobb_read_c22(struct mii_bus *bus, int phy, int reg);
 int mdiobb_write_c22(struct mii_bus *bus, int phy, int reg, u16 val);
 int mdiobb_read_c45(struct mii_bus *bus, int devad, int phy, int reg);
 int mdiobb_write_c45(struct mii_bus *bus, int devad, int phy, int reg, u16 val);
+=======
+int mdiobb_read(struct mii_bus *bus, int phy, int reg);
+int mdiobb_write(struct mii_bus *bus, int phy, int reg, u16 val);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* The returned bus is not yet registered with the phy layer. */
 struct mii_bus *alloc_mdio_bitbang(struct mdiobb_ctrl *ctrl);

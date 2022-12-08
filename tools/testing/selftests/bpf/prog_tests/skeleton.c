@@ -2,7 +2,10 @@
 /* Copyright (c) 2019 Facebook */
 
 #include <test_progs.h>
+<<<<<<< HEAD
 #include <sys/mman.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct s {
 	int a;
@@ -23,8 +26,12 @@ void test_skeleton(void)
 	struct test_skeleton__kconfig *kcfg;
 	const void *elf_bytes;
 	size_t elf_bytes_sz = 0;
+<<<<<<< HEAD
 	void *m;
 	int i, fd;
+=======
+	int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	skel = test_skeleton__open();
 	if (CHECK(!skel, "skel_open", "failed to open skeleton\n"))
@@ -126,6 +133,7 @@ void test_skeleton(void)
 
 	ASSERT_EQ(bss->huge_arr[ARRAY_SIZE(bss->huge_arr) - 1], 123, "huge_arr");
 
+<<<<<<< HEAD
 	fd = bpf_map__fd(skel->maps.data_non_mmapable);
 	m = mmap(NULL, getpagesize(), PROT_READ, MAP_SHARED, fd, 0);
 	if (!ASSERT_EQ(m, MAP_FAILED, "unexpected_mmap_success"))
@@ -133,6 +141,8 @@ void test_skeleton(void)
 
 	ASSERT_EQ(bpf_map__map_flags(skel->maps.data_non_mmapable), 0, "non_mmap_flags");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	elf_bytes = test_skeleton__elf_bytes(&elf_bytes_sz);
 	ASSERT_OK_PTR(elf_bytes, "elf_bytes");
 	ASSERT_GE(elf_bytes_sz, 0, "elf_bytes_sz");

@@ -356,7 +356,11 @@ The lowmem_reserve_ratio is an array. You can see them by reading this file::
 
 But, these values are not used directly. The kernel calculates # of protection
 pages for each zones from them. These are shown as array of protection pages
+<<<<<<< HEAD
 in /proc/zoneinfo like the following. (This is an example of x86-64 box).
+=======
+in /proc/zoneinfo like followings. (This is an example of x86-64 box).
+>>>>>>> b7ba80a49124 (Commit)
 Each zone has an array of protection pages like this::
 
   Node 0, zone      DMA
@@ -433,7 +437,11 @@ a 2bit error in a memory module) is detected in the background by hardware
 that cannot be handled by the kernel. In some cases (like the page
 still having a valid copy on disk) the kernel will handle the failure
 transparently without affecting any applications. But if there is
+<<<<<<< HEAD
 no other up-to-date copy of the data it will kill to prevent any data
+=======
+no other uptodate copy of the data it will kill to prevent any data
+>>>>>>> b7ba80a49124 (Commit)
 corruptions from propagating.
 
 1: Kill all processes that have the corrupted and not reloadable page mapped

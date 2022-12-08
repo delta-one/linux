@@ -29,22 +29,38 @@
 
 	leds {
 		compatible = "gpio-leds";
+<<<<<<< HEAD
 		led-hps0 {
+=======
+		hps0 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "hps_led0";
 			gpios = <&portb 15 1>;
 		};
 
+<<<<<<< HEAD
 		led-hps1 {
+=======
+		hps1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "hps_led1";
 			gpios = <&portb 14 1>;
 		};
 
+<<<<<<< HEAD
 		led-hps2 {
+=======
+		hps2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "hps_led2";
 			gpios = <&portb 13 1>;
 		};
 
+<<<<<<< HEAD
 		led-hps3 {
+=======
+		hps3 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "hps_led3";
 			gpios = <&portb 12 1>;
 		};

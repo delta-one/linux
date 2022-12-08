@@ -2,7 +2,11 @@
 #
 # Makefile for PCI Express features and port driver
 
+<<<<<<< HEAD
 pcieportdrv-y			:= portdrv.o rcec.o
+=======
+pcieportdrv-y			:= portdrv_core.o portdrv_pci.o rcec.o
+>>>>>>> b7ba80a49124 (Commit)
 
 obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o
 

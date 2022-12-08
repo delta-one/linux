@@ -17,7 +17,10 @@ properties:
   compatible:
     oneOf:
       - enum:
+<<<<<<< HEAD
           - fsl,imx93-flexcan
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - fsl,imx8qm-flexcan
           - fsl,imx8mp-flexcan
           - fsl,imx6q-flexcan

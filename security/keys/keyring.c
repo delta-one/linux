@@ -79,7 +79,11 @@ static void keyring_revoke(struct key *keyring);
 static void keyring_destroy(struct key *keyring);
 static void keyring_describe(const struct key *keyring, struct seq_file *m);
 static long keyring_read(const struct key *keyring,
+<<<<<<< HEAD
 			 char *buffer, size_t buflen);
+=======
+			 char __user *buffer, size_t buflen);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct key_type key_type_keyring = {
 	.name		= "keyring",

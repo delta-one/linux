@@ -44,10 +44,17 @@ static LIST_HEAD(entries);
 static int enabled = 1;
 
 enum {Enabled, Magic};
+<<<<<<< HEAD
 #define MISC_FMT_PRESERVE_ARGV0 (1UL << 31)
 #define MISC_FMT_OPEN_BINARY (1UL << 30)
 #define MISC_FMT_CREDENTIALS (1UL << 29)
 #define MISC_FMT_OPEN_FILE (1UL << 28)
+=======
+#define MISC_FMT_PRESERVE_ARGV0 (1 << 31)
+#define MISC_FMT_OPEN_BINARY (1 << 30)
+#define MISC_FMT_CREDENTIALS (1 << 29)
+#define MISC_FMT_OPEN_FILE (1 << 28)
+>>>>>>> b7ba80a49124 (Commit)
 
 typedef struct {
 	struct list_head list;

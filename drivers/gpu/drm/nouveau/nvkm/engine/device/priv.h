@@ -27,7 +27,10 @@
 #include <subdev/therm.h>
 #include <subdev/timer.h>
 #include <subdev/top.h>
+<<<<<<< HEAD
 #include <subdev/vfn.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <subdev/volt.h>
 
 #include <engine/bsp.h>

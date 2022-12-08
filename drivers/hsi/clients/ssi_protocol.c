@@ -968,7 +968,11 @@ static void ssip_xmit_work(struct work_struct *work)
 	ssip_xmit(cl);
 }
 
+<<<<<<< HEAD
 static netdev_tx_t ssip_pn_xmit(struct sk_buff *skb, struct net_device *dev)
+=======
+static int ssip_pn_xmit(struct sk_buff *skb, struct net_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hsi_client *cl = to_hsi_client(dev->dev.parent);
 	struct ssi_protocol *ssi = hsi_client_drvdata(cl);
@@ -1027,7 +1031,11 @@ static netdev_tx_t ssip_pn_xmit(struct sk_buff *skb, struct net_device *dev)
 	dev->stats.tx_packets++;
 	dev->stats.tx_bytes += skb->len;
 
+<<<<<<< HEAD
 	return NETDEV_TX_OK;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 drop2:
 	hsi_free_msg(msg);
 drop:
@@ -1035,7 +1043,11 @@ drop:
 inc_dropped:
 	dev->stats.tx_dropped++;
 
+<<<<<<< HEAD
 	return NETDEV_TX_OK;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* CMT reset event handler */

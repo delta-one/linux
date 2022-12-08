@@ -13,7 +13,11 @@
     |        csky: | TODO |
     |     hexagon: | TODO |
     |        ia64: | TODO |
+<<<<<<< HEAD
     |   loongarch: | TODO |
+=======
+    |       loong: | TODO |
+>>>>>>> b7ba80a49124 (Commit)
     |        m68k: | TODO |
     |  microblaze: | TODO |
     |        mips: | TODO |
@@ -21,7 +25,11 @@
     |    openrisc: | TODO |
     |      parisc: | TODO |
     |     powerpc: |  ok  |
+<<<<<<< HEAD
     |       riscv: |  ok  |
+=======
+    |       riscv: | TODO |
+>>>>>>> b7ba80a49124 (Commit)
     |        s390: | TODO |
     |          sh: | TODO |
     |       sparc: | TODO |

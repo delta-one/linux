@@ -18,7 +18,11 @@ maintainers:
   - Martin Povišer <povik+lin@cutebit.org>
 
 allOf:
+<<<<<<< HEAD
   - $ref: dma-controller.yaml#
+=======
+  - $ref: "dma-controller.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -26,7 +30,10 @@ properties:
       - enum:
           - apple,t6000-admac
           - apple,t8103-admac
+<<<<<<< HEAD
           - apple,t8112-admac
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - const: apple,admac
 
   reg:

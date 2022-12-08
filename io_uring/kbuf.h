@@ -23,11 +23,14 @@ struct io_buffer_list {
 	__u16 nr_entries;
 	__u16 head;
 	__u16 mask;
+<<<<<<< HEAD
 
 	/* ring mapped provided buffers */
 	__u8 is_mapped;
 	/* ring mapped provided buffers, but mmap'ed by application */
 	__u8 is_mmap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct io_buffer {
@@ -55,8 +58,11 @@ unsigned int __io_put_kbuf(struct io_kiocb *req, unsigned issue_flags);
 
 void io_kbuf_recycle_legacy(struct io_kiocb *req, unsigned issue_flags);
 
+<<<<<<< HEAD
 void *io_pbuf_get_address(struct io_ring_ctx *ctx, unsigned long bgid);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void io_kbuf_recycle_ring(struct io_kiocb *req)
 {
 	/*

@@ -10,7 +10,11 @@ maintainers:
   - Jerome Brunet <jbrunet@baylibre.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: dai-common.yaml#
+=======
+  - $ref: name-prefix.yaml#
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   $nodename:

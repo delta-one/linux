@@ -20,6 +20,7 @@
 #include "rseq-abi.h"
 #include "compiler.h"
 
+<<<<<<< HEAD
 #ifndef rseq_sizeof_field
 #define rseq_sizeof_field(TYPE, MEMBER) sizeof((((TYPE *)0)->MEMBER))
 #endif
@@ -29,6 +30,8 @@
 	(offsetof(TYPE, MEMBER)	+ rseq_sizeof_field(TYPE, MEMBER))
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Empty code injection macros, override when testing.
  * It is important to consider that the ASM injection macros need to be
@@ -56,6 +59,7 @@
 
 #include "rseq-thread-pointer.h"
 
+<<<<<<< HEAD
 /* Offset from the thread pointer to the rseq area. */
 extern ptrdiff_t rseq_offset;
 
@@ -88,6 +92,16 @@ enum rseq_percpu_mode {
 	RSEQ_PERCPU_MM_CID = 1,
 };
 
+=======
+/* Offset from the thread pointer to the rseq area.  */
+extern ptrdiff_t rseq_offset;
+/* Size of the registered rseq area.  0 if the registration was
+   unsuccessful.  */
+extern unsigned int rseq_size;
+/* Flags used during rseq registration.  */
+extern unsigned int rseq_flags;
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct rseq_abi *rseq_get_abi(void)
 {
 	return (struct rseq_abi *) ((uintptr_t) rseq_thread_pointer() + rseq_offset);
@@ -152,11 +166,14 @@ int rseq_unregister_current_thread(void);
 int32_t rseq_fallback_current_cpu(void);
 
 /*
+<<<<<<< HEAD
  * Restartable sequence fallback for reading the current node number.
  */
 int32_t rseq_fallback_current_node(void);
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Values returned can be either the current CPU number, -1 (rseq is
  * uninitialized), or -2 (rseq initialization has failed).
  */
@@ -191,6 +208,7 @@ static inline uint32_t rseq_current_cpu(void)
 	return cpu;
 }
 
+<<<<<<< HEAD
 static inline bool rseq_node_id_available(void)
 {
 	return (int) rseq_feature_size >= rseq_offsetofend(struct rseq_abi, node_id);
@@ -215,6 +233,8 @@ static inline uint32_t rseq_current_mm_cid(void)
 	return RSEQ_ACCESS_ONCE(rseq_get_abi()->mm_cid);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void rseq_clear_rseq_cs(void)
 {
 	RSEQ_WRITE_ONCE(rseq_get_abi()->rseq_cs.arch.ptr, 0);
@@ -236,6 +256,7 @@ static inline void rseq_prepare_unload(void)
 	rseq_clear_rseq_cs();
 }
 
+<<<<<<< HEAD
 static inline __attribute__((always_inline))
 int rseq_cmpeqv_storev(enum rseq_mo rseq_mo, enum rseq_percpu_mode percpu_mode,
 		       intptr_t *v, intptr_t expect,
@@ -381,4 +402,6 @@ int rseq_cmpeqv_trymemcpy_storev(enum rseq_mo rseq_mo, enum rseq_percpu_mode per
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif  /* RSEQ_H_ */

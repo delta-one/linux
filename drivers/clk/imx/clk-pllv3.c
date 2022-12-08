@@ -6,7 +6,10 @@
 
 #include <linux/clk-provider.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
 #include <linux/export.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/io.h>
 #include <linux/iopoll.h>
 #include <linux/slab.h>
@@ -487,4 +490,7 @@ struct clk_hw *imx_clk_hw_pllv3(enum imx_pllv3_type type, const char *name,
 
 	return hw;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(imx_clk_hw_pllv3);
+=======
+>>>>>>> b7ba80a49124 (Commit)

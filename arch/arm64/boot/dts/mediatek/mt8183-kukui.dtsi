@@ -221,6 +221,14 @@
 	};
 };
 
+<<<<<<< HEAD
+=======
+&afe {
+	i2s3-share = "I2S2";
+	i2s0-share = "I2S5";
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &auxadc {
 	status = "okay";
 };
@@ -373,6 +381,10 @@
 	mmc-pwrseq = <&wifi_pwrseq>;
 	bus-width = <4>;
 	max-frequency = <200000000>;
+<<<<<<< HEAD
+=======
+	drv-type = <2>;
+>>>>>>> b7ba80a49124 (Commit)
 	cap-sd-highspeed;
 	sd-uhs-sdr50;
 	sd-uhs-sdr104;
@@ -963,7 +975,10 @@
 	pinctrl-0 = <&uart1_pins_default>;
 	pinctrl-1 = <&uart1_pins_sleep>;
 	status = "okay";
+<<<<<<< HEAD
 	/delete-property/ interrupts;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	interrupts-extended = <&sysirq GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>,
 			      <&pio 121 IRQ_TYPE_EDGE_FALLING>;
 
@@ -990,4 +1005,8 @@
 	};
 };
 
+<<<<<<< HEAD
+=======
+#include <arm/cros-ec-keyboard.dtsi>
+>>>>>>> b7ba80a49124 (Commit)
 #include <arm/cros-ec-sbs.dtsi>

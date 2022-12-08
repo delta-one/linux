@@ -994,7 +994,11 @@ static void ssam_handle_event(struct ssh_rtl *rtl,
 
 	item->rqid = get_unaligned_le16(&cmd->rqid);
 	item->event.target_category = cmd->tc;
+<<<<<<< HEAD
 	item->event.target_id = cmd->sid;
+=======
+	item->event.target_id = cmd->tid_in;
+>>>>>>> b7ba80a49124 (Commit)
 	item->event.command_id = cmd->cid;
 	item->event.instance_id = cmd->iid;
 	memcpy(&item->event.data[0], data->ptr, data->len);
@@ -1674,7 +1678,11 @@ int ssam_request_sync_submit(struct ssam_controller *ctrl,
 EXPORT_SYMBOL_GPL(ssam_request_sync_submit);
 
 /**
+<<<<<<< HEAD
  * ssam_request_do_sync() - Execute a synchronous request.
+=======
+ * ssam_request_sync() - Execute a synchronous request.
+>>>>>>> b7ba80a49124 (Commit)
  * @ctrl: The controller via which the request will be submitted.
  * @spec: The request specification and payload.
  * @rsp:  The response buffer.
@@ -1686,9 +1694,15 @@ EXPORT_SYMBOL_GPL(ssam_request_sync_submit);
  *
  * Return: Returns the status of the request or any failure during setup.
  */
+<<<<<<< HEAD
 int ssam_request_do_sync(struct ssam_controller *ctrl,
 			 const struct ssam_request *spec,
 			 struct ssam_response *rsp)
+=======
+int ssam_request_sync(struct ssam_controller *ctrl,
+		      const struct ssam_request *spec,
+		      struct ssam_response *rsp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ssam_request_sync *rqst;
 	struct ssam_span buf;
@@ -1700,10 +1714,15 @@ int ssam_request_do_sync(struct ssam_controller *ctrl,
 		return status;
 
 	status = ssam_request_sync_init(rqst, spec->flags);
+<<<<<<< HEAD
 	if (status) {
 		ssam_request_sync_free(rqst);
 		return status;
 	}
+=======
+	if (status)
+		return status;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ssam_request_sync_set_resp(rqst, rsp);
 
@@ -1722,10 +1741,17 @@ int ssam_request_do_sync(struct ssam_controller *ctrl,
 	ssam_request_sync_free(rqst);
 	return status;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(ssam_request_do_sync);
 
 /**
  * ssam_request_do_sync_with_buffer() - Execute a synchronous request with the
+=======
+EXPORT_SYMBOL_GPL(ssam_request_sync);
+
+/**
+ * ssam_request_sync_with_buffer() - Execute a synchronous request with the
+>>>>>>> b7ba80a49124 (Commit)
  * provided buffer as back-end for the message buffer.
  * @ctrl: The controller via which the request will be submitted.
  * @spec: The request specification and payload.
@@ -1738,6 +1764,7 @@ EXPORT_SYMBOL_GPL(ssam_request_do_sync);
  * SSH_COMMAND_MESSAGE_LENGTH() macro can be used to compute the required
  * message buffer size.
  *
+<<<<<<< HEAD
  * This function does essentially the same as ssam_request_do_sync(), but
  * instead of dynamically allocating the request and message data buffer, it
  * uses the provided message data buffer and stores the (small) request struct
@@ -1749,6 +1776,19 @@ int ssam_request_do_sync_with_buffer(struct ssam_controller *ctrl,
 				     const struct ssam_request *spec,
 				     struct ssam_response *rsp,
 				     struct ssam_span *buf)
+=======
+ * This function does essentially the same as ssam_request_sync(), but instead
+ * of dynamically allocating the request and message data buffer, it uses the
+ * provided message data buffer and stores the (small) request struct on the
+ * heap.
+ *
+ * Return: Returns the status of the request or any failure during setup.
+ */
+int ssam_request_sync_with_buffer(struct ssam_controller *ctrl,
+				  const struct ssam_request *spec,
+				  struct ssam_response *rsp,
+				  struct ssam_span *buf)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ssam_request_sync rqst;
 	ssize_t len;
@@ -1772,42 +1812,66 @@ int ssam_request_do_sync_with_buffer(struct ssam_controller *ctrl,
 
 	return status;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(ssam_request_do_sync_with_buffer);
+=======
+EXPORT_SYMBOL_GPL(ssam_request_sync_with_buffer);
+>>>>>>> b7ba80a49124 (Commit)
 
 
 /* -- Internal SAM requests. ------------------------------------------------ */
 
 SSAM_DEFINE_SYNC_REQUEST_R(ssam_ssh_get_firmware_version, __le32, {
 	.target_category = SSAM_SSH_TC_SAM,
+<<<<<<< HEAD
 	.target_id       = SSAM_SSH_TID_SAM,
+=======
+	.target_id       = 0x01,
+>>>>>>> b7ba80a49124 (Commit)
 	.command_id      = 0x13,
 	.instance_id     = 0x00,
 });
 
 SSAM_DEFINE_SYNC_REQUEST_R(ssam_ssh_notif_display_off, u8, {
 	.target_category = SSAM_SSH_TC_SAM,
+<<<<<<< HEAD
 	.target_id       = SSAM_SSH_TID_SAM,
+=======
+	.target_id       = 0x01,
+>>>>>>> b7ba80a49124 (Commit)
 	.command_id      = 0x15,
 	.instance_id     = 0x00,
 });
 
 SSAM_DEFINE_SYNC_REQUEST_R(ssam_ssh_notif_display_on, u8, {
 	.target_category = SSAM_SSH_TC_SAM,
+<<<<<<< HEAD
 	.target_id       = SSAM_SSH_TID_SAM,
+=======
+	.target_id       = 0x01,
+>>>>>>> b7ba80a49124 (Commit)
 	.command_id      = 0x16,
 	.instance_id     = 0x00,
 });
 
 SSAM_DEFINE_SYNC_REQUEST_R(ssam_ssh_notif_d0_exit, u8, {
 	.target_category = SSAM_SSH_TC_SAM,
+<<<<<<< HEAD
 	.target_id       = SSAM_SSH_TID_SAM,
+=======
+	.target_id       = 0x01,
+>>>>>>> b7ba80a49124 (Commit)
 	.command_id      = 0x33,
 	.instance_id     = 0x00,
 });
 
 SSAM_DEFINE_SYNC_REQUEST_R(ssam_ssh_notif_d0_entry, u8, {
 	.target_category = SSAM_SSH_TC_SAM,
+<<<<<<< HEAD
 	.target_id       = SSAM_SSH_TID_SAM,
+=======
+	.target_id       = 0x01,
+>>>>>>> b7ba80a49124 (Commit)
 	.command_id      = 0x34,
 	.instance_id     = 0x00,
 });
@@ -1864,7 +1928,11 @@ static int __ssam_ssh_event_request(struct ssam_controller *ctrl,
 	result.length = 0;
 	result.pointer = &buf;
 
+<<<<<<< HEAD
 	status = ssam_retry(ssam_request_do_sync_onstack, ctrl, &rqst, &result,
+=======
+	status = ssam_retry(ssam_request_sync_onstack, ctrl, &rqst, &result,
+>>>>>>> b7ba80a49124 (Commit)
 			    sizeof(params));
 
 	return status < 0 ? status : buf;

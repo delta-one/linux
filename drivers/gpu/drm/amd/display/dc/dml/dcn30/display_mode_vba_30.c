@@ -23,7 +23,13 @@
  *
  */
 
+<<<<<<< HEAD
 #include "dc.h"
+=======
+#ifdef CONFIG_DRM_AMD_DC_DCN
+#include "dc.h"
+#include "dc_link.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "../display_mode_lib.h"
 #include "display_mode_vba_30.h"
 #include "../dml_inline_defs.h"
@@ -1800,10 +1806,14 @@ static unsigned int CalculateVMAndRowBytes(
 	}
 
 	if (SurfaceTiling == dm_sw_linear) {
+<<<<<<< HEAD
 		if (PTEBufferSizeInRequests == 0)
 			*dpte_row_height = 1;
 		else
 			*dpte_row_height = dml_min(128, 1 << (unsigned int) dml_floor(dml_log2(PTEBufferSizeInRequests * *PixelPTEReqWidth / Pitch), 1));
+=======
+		*dpte_row_height = dml_min(128, 1 << (unsigned int) dml_floor(dml_log2(PTEBufferSizeInRequests * *PixelPTEReqWidth / Pitch), 1));
+>>>>>>> b7ba80a49124 (Commit)
 		*dpte_row_width_ub = (dml_ceil(((double) SwathWidth - 1) / *PixelPTEReqWidth, 1) + 1) * *PixelPTEReqWidth;
 		*PixelPTEBytesPerRow = *dpte_row_width_ub / *PixelPTEReqWidth * *PTERequestSize;
 	} else if (ScanDirection != dm_vert) {
@@ -4852,7 +4862,11 @@ void dml30_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_l
 							v->SwathHeightYThisState[k],
 							v->SwathHeightCThisState[k],
 							v->HTotal[k] / v->PixelClock[k],
+<<<<<<< HEAD
 							v->UrgLatency[i],
+=======
+							v->UrgentLatency,
+>>>>>>> b7ba80a49124 (Commit)
 							v->CursorBufferSize,
 							v->CursorWidth[k][0],
 							v->CursorBPP[k][0],
@@ -6633,3 +6647,7 @@ static noinline_for_stack void UseMinimumDCFCLK(
 	}
 }
 
+<<<<<<< HEAD
+=======
+#endif /* CONFIG_DRM_AMD_DC_DCN */
+>>>>>>> b7ba80a49124 (Commit)

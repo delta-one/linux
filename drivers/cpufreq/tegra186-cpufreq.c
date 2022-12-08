@@ -65,8 +65,13 @@ struct tegra186_cpufreq_cluster {
 
 struct tegra186_cpufreq_data {
 	void __iomem *regs;
+<<<<<<< HEAD
 	const struct tegra186_cpufreq_cpu *cpus;
 	struct tegra186_cpufreq_cluster clusters[];
+=======
+	struct tegra186_cpufreq_cluster *clusters;
+	const struct tegra186_cpufreq_cpu *cpus;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int tegra186_cpufreq_init(struct cpufreq_policy *policy)
@@ -221,12 +226,24 @@ static int tegra186_cpufreq_probe(struct platform_device *pdev)
 	struct tegra_bpmp *bpmp;
 	unsigned int i = 0, err;
 
+<<<<<<< HEAD
 	data = devm_kzalloc(&pdev->dev,
 			    struct_size(data, clusters, TEGRA186_NUM_CLUSTERS),
 			    GFP_KERNEL);
 	if (!data)
 		return -ENOMEM;
 
+=======
+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+	if (!data)
+		return -ENOMEM;
+
+	data->clusters = devm_kcalloc(&pdev->dev, TEGRA186_NUM_CLUSTERS,
+				      sizeof(*data->clusters), GFP_KERNEL);
+	if (!data->clusters)
+		return -ENOMEM;
+
+>>>>>>> b7ba80a49124 (Commit)
 	data->cpus = tegra186_cpus;
 
 	bpmp = tegra_bpmp_get(&pdev->dev);

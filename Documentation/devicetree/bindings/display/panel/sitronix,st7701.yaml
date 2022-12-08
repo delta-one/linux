@@ -28,7 +28,10 @@ properties:
     items:
       - enum:
           - densitron,dmt028vghmcmi-1a
+<<<<<<< HEAD
           - elida,kd50t048a
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - techstar,ts8550b
       - const: sitronix,st7701
 

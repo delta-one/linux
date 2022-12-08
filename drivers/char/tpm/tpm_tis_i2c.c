@@ -49,7 +49,11 @@
 
 /* Masks with bits that must be read zero */
 #define TPM_ACCESS_READ_ZERO 0x48
+<<<<<<< HEAD
 #define TPM_INT_ENABLE_ZERO 0x7FFFFF60
+=======
+#define TPM_INT_ENABLE_ZERO 0x7FFFFF6
+>>>>>>> b7ba80a49124 (Commit)
 #define TPM_STS_READ_ZERO 0x23
 #define TPM_INTF_CAPABILITY_ZERO 0x0FFFF000
 #define TPM_I2C_INTERFACE_CAPABILITY_ZERO 0x80000000
@@ -312,7 +316,12 @@ static const struct tpm_tis_phy_ops tpm_i2c_phy_ops = {
 	.verify_crc = tpm_tis_i2c_verify_crc,
 };
 
+<<<<<<< HEAD
 static int tpm_tis_i2c_probe(struct i2c_client *dev)
+=======
+static int tpm_tis_i2c_probe(struct i2c_client *dev,
+			     const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tpm_tis_i2c_phy *phy;
 	const u8 crc_enable = 1;
@@ -328,7 +337,10 @@ static int tpm_tis_i2c_probe(struct i2c_client *dev)
 	if (!phy->io_buf)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	set_bit(TPM_TIS_DEFAULT_CANCELLATION, &phy->priv.flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	phy->i2c_client = dev;
 
 	/* must precede all communication with the tpm */
@@ -379,7 +391,11 @@ static struct i2c_driver tpm_tis_i2c_driver = {
 		.pm = &tpm_tis_pm,
 		.of_match_table = of_match_ptr(of_tis_i2c_match),
 	},
+<<<<<<< HEAD
 	.probe_new = tpm_tis_i2c_probe,
+=======
+	.probe = tpm_tis_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = tpm_tis_i2c_remove,
 	.id_table = tpm_tis_i2c_id,
 };

@@ -38,13 +38,27 @@
  * data to the routine.
  */
 
+<<<<<<< HEAD
+=======
+struct v4l2_clip32 {
+	struct v4l2_rect        c;
+	compat_caddr_t		next;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct v4l2_window32 {
 	struct v4l2_rect        w;
 	__u32			field;	/* enum v4l2_field */
 	__u32			chromakey;
+<<<<<<< HEAD
 	compat_caddr_t		clips; /* always NULL */
 	__u32			clipcount; /* always 0 */
 	compat_caddr_t		bitmap; /* always NULL */
+=======
+	compat_caddr_t		clips; /* actually struct v4l2_clip32 * */
+	__u32			clipcount;
+	compat_caddr_t		bitmap;
+>>>>>>> b7ba80a49124 (Commit)
 	__u8                    global_alpha;
 };
 
@@ -60,12 +74,26 @@ static int get_v4l2_window32(struct v4l2_window *p64,
 		.w		= w32.w,
 		.field		= w32.field,
 		.chromakey	= w32.chromakey,
+<<<<<<< HEAD
 		.clips		= NULL,
 		.clipcount	= 0,
 		.bitmap		= NULL,
 		.global_alpha	= w32.global_alpha,
 	};
 
+=======
+		.clips		= (void __force *)compat_ptr(w32.clips),
+		.clipcount	= w32.clipcount,
+		.bitmap		= compat_ptr(w32.bitmap),
+		.global_alpha	= w32.global_alpha,
+	};
+
+	if (p64->clipcount > 2048)
+		return -EINVAL;
+	if (!p64->clipcount)
+		p64->clips = NULL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -79,6 +107,7 @@ static int put_v4l2_window32(struct v4l2_window *p64,
 		.w		= p64->w,
 		.field		= p64->field,
 		.chromakey	= p64->chromakey,
+<<<<<<< HEAD
 		.clips		= 0,
 		.clipcount	= 0,
 		.bitmap		= 0,
@@ -86,6 +115,18 @@ static int put_v4l2_window32(struct v4l2_window *p64,
 	};
 
 	if (copy_to_user(p32, &w32, sizeof(w32)))
+=======
+		.clips		= (uintptr_t)p64->clips,
+		.clipcount	= p64->clipcount,
+		.bitmap		= ptr_to_compat(p64->bitmap),
+		.global_alpha	= p64->global_alpha,
+	};
+
+	/* copy everything except the clips pointer */
+	if (copy_to_user(p32, &w32, offsetof(struct v4l2_window32, clips)) ||
+	    copy_to_user(&p32->clipcount, &w32.clipcount,
+			 sizeof(w32) - offsetof(struct v4l2_window32, clipcount)))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EFAULT;
 
 	return 0;
@@ -587,11 +628,22 @@ struct v4l2_framebuffer32 {
 static int get_v4l2_framebuffer32(struct v4l2_framebuffer *p64,
 				  struct v4l2_framebuffer32 __user *p32)
 {
+<<<<<<< HEAD
 	if (get_user(p64->capability, &p32->capability) ||
 	    get_user(p64->flags, &p32->flags) ||
 	    copy_from_user(&p64->fmt, &p32->fmt, sizeof(p64->fmt)))
 		return -EFAULT;
 	p64->base = NULL;
+=======
+	compat_caddr_t tmp;
+
+	if (get_user(tmp, &p32->base) ||
+	    get_user(p64->capability, &p32->capability) ||
+	    get_user(p64->flags, &p32->flags) ||
+	    copy_from_user(&p64->fmt, &p32->fmt, sizeof(p64->fmt)))
+		return -EFAULT;
+	p64->base = (void __force *)compat_ptr(tmp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1024,9 +1076,36 @@ int v4l2_compat_get_array_args(struct file *file, void *mbuf,
 {
 	int err = 0;
 
+<<<<<<< HEAD
 	memset(mbuf, 0, array_size);
 
 	switch (cmd) {
+=======
+	switch (cmd) {
+	case VIDIOC_G_FMT32:
+	case VIDIOC_S_FMT32:
+	case VIDIOC_TRY_FMT32: {
+		struct v4l2_format *f64 = arg;
+		struct v4l2_clip *c64 = mbuf;
+		struct v4l2_clip32 __user *c32 = user_ptr;
+		u32 clipcount = f64->fmt.win.clipcount;
+
+		if ((f64->type != V4L2_BUF_TYPE_VIDEO_OVERLAY &&
+		     f64->type != V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY) ||
+		    clipcount == 0)
+			return 0;
+		if (clipcount > 2048)
+			return -EINVAL;
+		while (clipcount--) {
+			if (copy_from_user(c64, c32, sizeof(c64->c)))
+				return -EFAULT;
+			c64->next = NULL;
+			c64++;
+			c32++;
+		}
+		break;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_COMPAT_32BIT_TIME
 	case VIDIOC_QUERYBUF32_TIME32:
 	case VIDIOC_QBUF32_TIME32:
@@ -1097,6 +1176,31 @@ int v4l2_compat_put_array_args(struct file *file, void __user *user_ptr,
 	int err = 0;
 
 	switch (cmd) {
+<<<<<<< HEAD
+=======
+	case VIDIOC_G_FMT32:
+	case VIDIOC_S_FMT32:
+	case VIDIOC_TRY_FMT32: {
+		struct v4l2_format *f64 = arg;
+		struct v4l2_clip *c64 = mbuf;
+		struct v4l2_clip32 __user *c32 = user_ptr;
+		u32 clipcount = f64->fmt.win.clipcount;
+
+		if ((f64->type != V4L2_BUF_TYPE_VIDEO_OVERLAY &&
+		     f64->type != V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY) ||
+		    clipcount == 0)
+			return 0;
+		if (clipcount > 2048)
+			return -EINVAL;
+		while (clipcount--) {
+			if (copy_to_user(c32, c64, sizeof(c64->c)))
+				return -EFAULT;
+			c64++;
+			c32++;
+		}
+		break;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_COMPAT_32BIT_TIME
 	case VIDIOC_QUERYBUF32_TIME32:
 	case VIDIOC_QBUF32_TIME32:

@@ -284,9 +284,12 @@ struct usb4_port *usb4_port_device_add(struct tb_port *port)
 		}
 	}
 
+<<<<<<< HEAD
 	if (!tb_is_upstream_port(port))
 		device_set_wakeup_capable(&usb4->dev, true);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_no_callbacks(&usb4->dev);
 	pm_runtime_set_active(&usb4->dev);
 	pm_runtime_enable(&usb4->dev);

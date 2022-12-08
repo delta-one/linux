@@ -522,6 +522,10 @@ Description:	These files allow to each of ASICs by writing 1.
 
 		The files are write only.
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/comm_chnl_ready
 Date:		July 2022
 KernelVersion:	5.20
@@ -541,6 +545,7 @@ Description:	The file indicates COME module hardware configuration.
 		The purpose is to expose some minor BOM changes for the same system SKU.
 
 		The file is read only.
+<<<<<<< HEAD
 
 What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_pwr_converter_fail
 Date:		February 2023
@@ -662,3 +667,5 @@ Description:	This file shows the system reset cause due to AC power failure.
 		Value 1 in file means this is reset cause, 0 - otherwise.
 
 		The file is read only.
+=======
+>>>>>>> b7ba80a49124 (Commit)

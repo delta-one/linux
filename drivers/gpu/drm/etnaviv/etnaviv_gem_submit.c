@@ -393,11 +393,18 @@ static void submit_cleanup(struct kref *kref)
 	wake_up_all(&submit->gpu->fence_event);
 
 	if (submit->out_fence) {
+<<<<<<< HEAD
 		/*
 		 * Remove from user fence array before dropping the reference,
 		 * so fence can not be found in lookup anymore.
 		 */
 		xa_erase(&submit->gpu->user_fences, submit->out_fence_id);
+=======
+		/* first remove from IDR, so fence can not be found anymore */
+		mutex_lock(&submit->gpu->fence_lock);
+		idr_remove(&submit->gpu->fence_idr, submit->out_fence_id);
+		mutex_unlock(&submit->gpu->fence_lock);
+>>>>>>> b7ba80a49124 (Commit)
 		dma_fence_put(submit->out_fence);
 	}
 

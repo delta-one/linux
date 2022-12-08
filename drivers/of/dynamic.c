@@ -329,6 +329,7 @@ void of_node_release(struct kobject *kobj)
 {
 	struct device_node *node = kobj_to_device_node(kobj);
 
+<<<<<<< HEAD
 	/*
 	 * can not use '"%pOF", node' in pr_err() calls from this function
 	 * because an of_node_get(node) when refcount is already zero
@@ -353,6 +354,12 @@ void of_node_release(struct kobject *kobj)
 			pr_err("ERROR: next of_node_put() on this node will result in a kobject warning 'refcount_t: underflow; use-after-free.'\n");
 		}
 
+=======
+	/* We should never be releasing nodes that haven't been detached. */
+	if (!of_node_check_flag(node, OF_DETACHED)) {
+		pr_err("ERROR: Bad of_node_put() on %pOF\n", node);
+		dump_stack();
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 	if (!of_node_check_flag(node, OF_DYNAMIC))
@@ -377,10 +384,13 @@ void of_node_release(struct kobject *kobj)
 			       __func__, node);
 	}
 
+<<<<<<< HEAD
 	if (node->child)
 		pr_err("ERROR: %s() unexpected children for %pOF/%s\n",
 			__func__, node->parent, node->full_name);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	property_list_free(node->properties);
 	property_list_free(node->deadprops);
 	fwnode_links_purge(of_fwnode_handle(node));
@@ -443,8 +453,12 @@ struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags)
  * another node.  The node data are dynamically allocated and all the node
  * flags have the OF_DYNAMIC & OF_DETACHED bits set.
  *
+<<<<<<< HEAD
  * Return: The newly allocated node or NULL on out of memory error.  Use
  * of_node_put() on it when done to free the memory allocated for it.
+=======
+ * Return: The newly allocated node or NULL on out of memory error.
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct device_node *__of_node_dup(const struct device_node *np,
 				  const char *full_name)

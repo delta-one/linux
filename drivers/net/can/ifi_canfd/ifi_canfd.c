@@ -860,7 +860,11 @@ static netdev_tx_t ifi_canfd_start_xmit(struct sk_buff *skb,
 	u32 txst, txid, txdlc;
 	int i;
 
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(ndev, skb))
+=======
+	if (can_dropped_invalid_skb(ndev, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	/* Check if the TX buffer is full */
@@ -973,7 +977,11 @@ static int ifi_canfd_plat_probe(struct platform_device *pdev)
 	priv->ndev = ndev;
 	priv->base = addr;
 
+<<<<<<< HEAD
 	netif_napi_add(ndev, &priv->napi, ifi_canfd_poll);
+=======
+	netif_napi_add(ndev, &priv->napi, ifi_canfd_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	priv->can.state = CAN_STATE_STOPPED;
 

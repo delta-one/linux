@@ -11,9 +11,12 @@
 #include <linux/module.h>
 #include <linux/nvmem-provider.h>
 #include <linux/of_device.h>
+<<<<<<< HEAD
 #include <linux/tee_drv.h>
 
 #include "stm32-bsec-optee-ta.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* BSEC secure service access from non-secure */
 #define STM32_SMC_BSEC			0x82001003
@@ -22,6 +25,7 @@
 #define STM32_SMC_WRITE_SHADOW		0x03
 #define STM32_SMC_READ_OTP		0x04
 
+<<<<<<< HEAD
 /* shadow registers offset */
 #define STM32MP15_BSEC_DATA0		0x200
 
@@ -29,13 +33,26 @@ struct stm32_romem_cfg {
 	int size;
 	u8 lower;
 	bool ta;
+=======
+/* shadow registers offest */
+#define STM32MP15_BSEC_DATA0		0x200
+
+/* 32 (x 32-bits) lower shadow registers */
+#define STM32MP15_BSEC_NUM_LOWER	32
+
+struct stm32_romem_cfg {
+	int size;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct stm32_romem_priv {
 	void __iomem *base;
 	struct nvmem_config cfg;
+<<<<<<< HEAD
 	u8 lower;
 	struct tee_context *ctx;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int stm32_romem_read(void *context, unsigned int offset, void *buf,
@@ -89,7 +106,11 @@ static int stm32_bsec_read(void *context, unsigned int offset, void *buf,
 	for (i = roffset; (i < roffset + rbytes); i += 4) {
 		u32 otp = i >> 2;
 
+<<<<<<< HEAD
 		if (otp < priv->lower) {
+=======
+		if (otp < STM32MP15_BSEC_NUM_LOWER) {
+>>>>>>> b7ba80a49124 (Commit)
 			/* read lower data from shadow registers */
 			val = readl_relaxed(
 				priv->base + STM32MP15_BSEC_DATA0 + i);
@@ -137,6 +158,7 @@ static int stm32_bsec_write(void *context, unsigned int offset, void *buf,
 		}
 	}
 
+<<<<<<< HEAD
 	if (offset + bytes >= priv->lower * 4)
 		dev_warn(dev, "Update of upper OTPs with ECC protection (word programming, only once)\n");
 
@@ -184,13 +206,21 @@ static bool optee_presence_check(void)
 	return tee_detected;
 }
 
+=======
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int stm32_romem_probe(struct platform_device *pdev)
 {
 	const struct stm32_romem_cfg *cfg;
 	struct device *dev = &pdev->dev;
 	struct stm32_romem_priv *priv;
 	struct resource *res;
+<<<<<<< HEAD
 	int rc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
 	if (!priv)
@@ -207,9 +237,12 @@ static int stm32_romem_probe(struct platform_device *pdev)
 	priv->cfg.dev = dev;
 	priv->cfg.priv = priv;
 	priv->cfg.owner = THIS_MODULE;
+<<<<<<< HEAD
 	priv->cfg.type = NVMEM_TYPE_OTP;
 
 	priv->lower = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	cfg = (const struct stm32_romem_cfg *)
 		of_match_device(dev->driver->of_match_table, dev)->data;
@@ -219,6 +252,7 @@ static int stm32_romem_probe(struct platform_device *pdev)
 		priv->cfg.reg_read = stm32_romem_read;
 	} else {
 		priv->cfg.size = cfg->size;
+<<<<<<< HEAD
 		priv->lower = cfg->lower;
 		if (cfg->ta || optee_presence_check()) {
 			rc = stm32_bsec_optee_ta_open(&priv->ctx);
@@ -243,11 +277,16 @@ static int stm32_romem_probe(struct platform_device *pdev)
 			priv->cfg.reg_read = stm32_bsec_read;
 			priv->cfg.reg_write = stm32_bsec_write;
 		}
+=======
+		priv->cfg.reg_read = stm32_bsec_read;
+		priv->cfg.reg_write = stm32_bsec_write;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return PTR_ERR_OR_ZERO(devm_nvmem_register(dev, &priv->cfg));
 }
 
+<<<<<<< HEAD
 /*
  * STM32MP15/13 BSEC OTP regions: 4096 OTP bits (with 3072 effective bits)
  * => 96 x 32-bits data words
@@ -269,14 +308,25 @@ static const struct stm32_romem_cfg stm32mp13_bsec_cfg = {
 };
 
 static const struct of_device_id stm32_romem_of_match[] __maybe_unused = {
+=======
+static const struct stm32_romem_cfg stm32mp15_bsec_cfg = {
+	.size = 384, /* 96 x 32-bits data words */
+};
+
+static const struct of_device_id stm32_romem_of_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "st,stm32f4-otp", }, {
 		.compatible = "st,stm32mp15-bsec",
 		.data = (void *)&stm32mp15_bsec_cfg,
 	}, {
+<<<<<<< HEAD
 		.compatible = "st,stm32mp13-bsec",
 		.data = (void *)&stm32mp13_bsec_cfg,
 	},
 	{ /* sentinel */ },
+=======
+	},
+>>>>>>> b7ba80a49124 (Commit)
 };
 MODULE_DEVICE_TABLE(of, stm32_romem_of_match);
 

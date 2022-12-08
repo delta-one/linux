@@ -35,6 +35,17 @@
 #define CEDRUS_CAPABILITY_VP8_DEC	BIT(4)
 #define CEDRUS_CAPABILITY_H265_10_DEC	BIT(5)
 
+<<<<<<< HEAD
+=======
+enum cedrus_codec {
+	CEDRUS_CODEC_MPEG2,
+	CEDRUS_CODEC_H264,
+	CEDRUS_CODEC_H265,
+	CEDRUS_CODEC_VP8,
+	CEDRUS_CODEC_LAST,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 enum cedrus_irq_status {
 	CEDRUS_IRQ_NONE,
 	CEDRUS_IRQ_ERROR,
@@ -49,7 +60,11 @@ enum cedrus_h264_pic_type {
 
 struct cedrus_control {
 	struct v4l2_ctrl_config cfg;
+<<<<<<< HEAD
 	unsigned int		capabilities;
+=======
+	enum cedrus_codec	codec;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct cedrus_h264_run {
@@ -100,6 +115,7 @@ struct cedrus_buffer {
 		struct {
 			unsigned int			position;
 			enum cedrus_h264_pic_type	pic_type;
+<<<<<<< HEAD
 			void				*mv_col_buf;
 			dma_addr_t			mv_col_buf_dma;
 			ssize_t				mv_col_buf_size;
@@ -109,6 +125,9 @@ struct cedrus_buffer {
 			dma_addr_t	mv_col_buf_dma;
 			ssize_t		mv_col_buf_size;
 		} h265;
+=======
+		} h264;
+>>>>>>> b7ba80a49124 (Commit)
 	} codec;
 };
 
@@ -118,14 +137,25 @@ struct cedrus_ctx {
 
 	struct v4l2_pix_format		src_fmt;
 	struct v4l2_pix_format		dst_fmt;
+<<<<<<< HEAD
 	struct cedrus_dec_ops		*current_codec;
 	unsigned int			bit_depth;
+=======
+	enum cedrus_codec		current_codec;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct v4l2_ctrl_handler	hdl;
 	struct v4l2_ctrl		**ctrls;
 
 	union {
 		struct {
+<<<<<<< HEAD
+=======
+			void		*mv_col_buf;
+			dma_addr_t	mv_col_buf_dma;
+			ssize_t		mv_col_buf_field_size;
+			ssize_t		mv_col_buf_size;
+>>>>>>> b7ba80a49124 (Commit)
 			void		*pic_info_buf;
 			dma_addr_t	pic_info_buf_dma;
 			ssize_t		pic_info_buf_size;
@@ -139,6 +169,13 @@ struct cedrus_ctx {
 			ssize_t		intra_pred_buf_size;
 		} h264;
 		struct {
+<<<<<<< HEAD
+=======
+			void		*mv_col_buf;
+			dma_addr_t	mv_col_buf_addr;
+			ssize_t		mv_col_buf_size;
+			ssize_t		mv_col_buf_unit_size;
+>>>>>>> b7ba80a49124 (Commit)
 			void		*neighbor_info_buf;
 			dma_addr_t	neighbor_info_buf_addr;
 			void		*entry_points_buf;
@@ -163,8 +200,11 @@ struct cedrus_dec_ops {
 	int (*start)(struct cedrus_ctx *ctx);
 	void (*stop)(struct cedrus_ctx *ctx);
 	void (*trigger)(struct cedrus_ctx *ctx);
+<<<<<<< HEAD
 	unsigned int (*extra_cap_size)(struct cedrus_ctx *ctx,
 				       struct v4l2_pix_format *pix_fmt);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct cedrus_variant {
@@ -180,6 +220,10 @@ struct cedrus_dev {
 	struct platform_device	*pdev;
 	struct device		*dev;
 	struct v4l2_m2m_dev	*m2m_dev;
+<<<<<<< HEAD
+=======
+	struct cedrus_dec_ops	*dec_ops[CEDRUS_CODEC_LAST];
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Device file mutex */
 	struct mutex		dev_mutex;
@@ -262,12 +306,15 @@ vb2_to_cedrus_buffer(const struct vb2_buffer *p)
 	return vb2_v4l2_to_cedrus_buffer(to_vb2_v4l2_buffer(p));
 }
 
+<<<<<<< HEAD
 static inline bool
 cedrus_is_capable(struct cedrus_ctx *ctx, unsigned int capabilities)
 {
 	return (ctx->dev->capabilities & capabilities) == capabilities;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void *cedrus_find_control_data(struct cedrus_ctx *ctx, u32 id);
 u32 cedrus_get_num_of_controls(struct cedrus_ctx *ctx, u32 id);
 

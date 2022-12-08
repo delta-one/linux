@@ -6,8 +6,14 @@
 #include <asm/pgtable_types.h>
 
 extern bool pat_enabled(void);
+<<<<<<< HEAD
 extern void pat_bp_init(void);
 extern void pat_cpu_init(void);
+=======
+extern void pat_disable(const char *reason);
+extern void pat_init(void);
+extern void init_cache_modes(void);
+>>>>>>> b7ba80a49124 (Commit)
 
 extern int memtype_reserve(u64 start, u64 end,
 		enum page_cache_mode req_pcm, enum page_cache_mode *ret_pcm);

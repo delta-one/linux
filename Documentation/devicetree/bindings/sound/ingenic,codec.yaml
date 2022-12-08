@@ -4,14 +4,21 @@
 $id: http://devicetree.org/schemas/sound/ingenic,codec.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Ingenic JZ47xx internal codec
+=======
+title: Ingenic JZ47xx internal codec DT bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Paul Cercueil <paul@crapouillou.net>
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   $nodename:
     pattern: '^audio-codec@.*'
@@ -40,7 +47,11 @@ properties:
   '#sound-dai-cells':
     const: 0
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible

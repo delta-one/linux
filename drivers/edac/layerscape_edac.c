@@ -38,9 +38,12 @@ static int __init fsl_ddr_mc_init(void)
 {
 	int res;
 
+<<<<<<< HEAD
 	if (ghes_get_devices())
 		return -EBUSY;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* make sure error reporting method is sane */
 	switch (edac_op_state) {
 	case EDAC_OPSTATE_POLL:

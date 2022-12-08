@@ -41,7 +41,11 @@ static u32 hash(struct bpf_bloom_filter *bloom, void *value,
 	return h & bloom->bitset_mask;
 }
 
+<<<<<<< HEAD
 static long bloom_map_peek_elem(struct bpf_map *map, void *value)
+=======
+static int bloom_map_peek_elem(struct bpf_map *map, void *value)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_bloom_filter *bloom =
 		container_of(map, struct bpf_bloom_filter, map);
@@ -56,7 +60,11 @@ static long bloom_map_peek_elem(struct bpf_map *map, void *value)
 	return 0;
 }
 
+<<<<<<< HEAD
 static long bloom_map_push_elem(struct bpf_map *map, void *value, u64 flags)
+=======
+static int bloom_map_push_elem(struct bpf_map *map, void *value, u64 flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_bloom_filter *bloom =
 		container_of(map, struct bpf_bloom_filter, map);
@@ -73,12 +81,20 @@ static long bloom_map_push_elem(struct bpf_map *map, void *value, u64 flags)
 	return 0;
 }
 
+<<<<<<< HEAD
 static long bloom_map_pop_elem(struct bpf_map *map, void *value)
+=======
+static int bloom_map_pop_elem(struct bpf_map *map, void *value)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return -EOPNOTSUPP;
 }
 
+<<<<<<< HEAD
 static long bloom_map_delete_elem(struct bpf_map *map, void *value)
+=======
+static int bloom_map_delete_elem(struct bpf_map *map, void *value)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return -EOPNOTSUPP;
 }
@@ -158,7 +174,11 @@ static struct bpf_map *bloom_map_alloc(union bpf_attr *attr)
 			attr->value_size / sizeof(u32);
 
 	if (!(attr->map_flags & BPF_F_ZERO_SEED))
+<<<<<<< HEAD
 		bloom->hash_seed = get_random_u32();
+=======
+		bloom->hash_seed = get_random_int();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return &bloom->map;
 }
@@ -177,8 +197,13 @@ static void *bloom_map_lookup_elem(struct bpf_map *map, void *key)
 	return ERR_PTR(-EINVAL);
 }
 
+<<<<<<< HEAD
 static long bloom_map_update_elem(struct bpf_map *map, void *key,
 				  void *value, u64 flags)
+=======
+static int bloom_map_update_elem(struct bpf_map *map, void *key,
+				 void *value, u64 flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* The eBPF program should use map_push_elem instead */
 	return -EINVAL;
@@ -193,6 +218,7 @@ static int bloom_map_check_btf(const struct bpf_map *map,
 	return btf_type_is_void(key_type) ? 0 : -EINVAL;
 }
 
+<<<<<<< HEAD
 static u64 bloom_map_mem_usage(const struct bpf_map *map)
 {
 	struct bpf_bloom_filter *bloom;
@@ -204,6 +230,8 @@ static u64 bloom_map_mem_usage(const struct bpf_map *map)
 	return sizeof(*bloom) + bitset_bytes;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 BTF_ID_LIST_SINGLE(bpf_bloom_map_btf_ids, struct, bpf_bloom_filter)
 const struct bpf_map_ops bloom_filter_map_ops = {
 	.map_meta_equal = bpf_map_meta_equal,
@@ -217,6 +245,9 @@ const struct bpf_map_ops bloom_filter_map_ops = {
 	.map_update_elem = bloom_map_update_elem,
 	.map_delete_elem = bloom_map_delete_elem,
 	.map_check_btf = bloom_map_check_btf,
+<<<<<<< HEAD
 	.map_mem_usage = bloom_map_mem_usage,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.map_btf_id = &bpf_bloom_map_btf_ids[0],
 };

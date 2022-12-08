@@ -55,10 +55,17 @@ enum ta_securedisplay_status {
 	TA_SECUREDISPLAY_STATUS__MAX                     = 0x7FFFFFFF,/* Maximum Value for status*/
 };
 
+<<<<<<< HEAD
 /** @enum ta_securedisplay_phy_ID
  *    Physical ID number to use for reading corresponding DIO Scratch register for ROI
  */
 enum  ta_securedisplay_phy_ID {
+=======
+/** @enum ta_securedisplay_max_phy
+ *    Physical ID number to use for reading corresponding DIO Scratch register for ROI
+ */
+enum  ta_securedisplay_max_phy {
+>>>>>>> b7ba80a49124 (Commit)
 	TA_SECUREDISPLAY_PHY0                           = 0,
 	TA_SECUREDISPLAY_PHY1                           = 1,
 	TA_SECUREDISPLAY_PHY2                           = 2,
@@ -139,6 +146,7 @@ union ta_securedisplay_cmd_output {
 	uint32_t                                           reserved[4];
 };
 
+<<<<<<< HEAD
 /** @struct ta_securedisplay_cmd
 *    Secure display command which is shared buffer memory
 */
@@ -149,6 +157,18 @@ struct ta_securedisplay_cmd {
     union ta_securedisplay_cmd_input                   securedisplay_in_message;       /**< +16 Bytes Command input buffer */
     union ta_securedisplay_cmd_output                  securedisplay_out_message;      /**< +32 Bytes Command output buffer */
     /**@note Total 48 Bytes */
+=======
+/** @struct securedisplay_cmd
+ *    Secure Display Command which is shared buffer memory
+ */
+struct securedisplay_cmd {
+	uint32_t                             cmd_id;                    /* +0  Bytes Command ID */
+	enum ta_securedisplay_status         status;     /* +4  Bytes Status of Secure Display TA */
+	uint32_t                             reserved[2];               /* +8  Bytes Reserved */
+	union ta_securedisplay_cmd_input     securedisplay_in_message;  /* +16 Bytes Input Buffer */
+	union ta_securedisplay_cmd_output    securedisplay_out_message;/* +32 Bytes Output Buffer */
+	/**@note Total 48 Bytes */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #endif   //_TA_SECUREDISPLAY_IF_H

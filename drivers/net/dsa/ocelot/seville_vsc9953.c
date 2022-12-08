@@ -458,6 +458,7 @@ static const u32 *vsc9953_regmap[TARGET_MAX] = {
 };
 
 /* Addresses are relative to the device's base address */
+<<<<<<< HEAD
 static const struct resource vsc9953_resources[] = {
 	DEFINE_RES_MEM_NAMED(0x0010000, 0x0010000, "sys"),
 	DEFINE_RES_MEM_NAMED(0x0030000, 0x0010000, "rew"),
@@ -492,6 +493,112 @@ static const char * const vsc9953_resource_names[TARGET_MAX] = {
 	[PTP] = "ptp",
 	[QSYS] = "qsys",
 	[ANA] = "ana",
+=======
+static const struct resource vsc9953_target_io_res[TARGET_MAX] = {
+	[ANA] = {
+		.start	= 0x0280000,
+		.end	= 0x028ffff,
+		.name	= "ana",
+	},
+	[QS] = {
+		.start	= 0x0080000,
+		.end	= 0x00800ff,
+		.name	= "qs",
+	},
+	[QSYS] = {
+		.start	= 0x0200000,
+		.end	= 0x021ffff,
+		.name	= "qsys",
+	},
+	[REW] = {
+		.start	= 0x0030000,
+		.end	= 0x003ffff,
+		.name	= "rew",
+	},
+	[SYS] = {
+		.start	= 0x0010000,
+		.end	= 0x001ffff,
+		.name	= "sys",
+	},
+	[S0] = {
+		.start	= 0x0040000,
+		.end	= 0x00403ff,
+		.name	= "s0",
+	},
+	[S1] = {
+		.start	= 0x0050000,
+		.end	= 0x00503ff,
+		.name	= "s1",
+	},
+	[S2] = {
+		.start	= 0x0060000,
+		.end	= 0x00603ff,
+		.name	= "s2",
+	},
+	[PTP] = {
+		.start	= 0x0090000,
+		.end	= 0x00900cb,
+		.name	= "ptp",
+	},
+	[GCB] = {
+		.start	= 0x0070000,
+		.end	= 0x00701ff,
+		.name	= "devcpu_gcb",
+	},
+};
+
+static const struct resource vsc9953_port_io_res[] = {
+	{
+		.start	= 0x0100000,
+		.end	= 0x010ffff,
+		.name	= "port0",
+	},
+	{
+		.start	= 0x0110000,
+		.end	= 0x011ffff,
+		.name	= "port1",
+	},
+	{
+		.start	= 0x0120000,
+		.end	= 0x012ffff,
+		.name	= "port2",
+	},
+	{
+		.start	= 0x0130000,
+		.end	= 0x013ffff,
+		.name	= "port3",
+	},
+	{
+		.start	= 0x0140000,
+		.end	= 0x014ffff,
+		.name	= "port4",
+	},
+	{
+		.start	= 0x0150000,
+		.end	= 0x015ffff,
+		.name	= "port5",
+	},
+	{
+		.start	= 0x0160000,
+		.end	= 0x016ffff,
+		.name	= "port6",
+	},
+	{
+		.start	= 0x0170000,
+		.end	= 0x017ffff,
+		.name	= "port7",
+	},
+	{
+		.start	= 0x0180000,
+		.end	= 0x018ffff,
+		.name	= "port8",
+	},
+	{
+		.start	= 0x0190000,
+		.end	= 0x019ffff,
+		.name	= "port9",
+	},
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct reg_field vsc9953_regfields[REGFIELD_MAX] = {
@@ -543,6 +650,13 @@ static const struct reg_field vsc9953_regfields[REGFIELD_MAX] = {
 	[SYS_PAUSE_CFG_PAUSE_ENA] = REG_FIELD_ID(SYS_PAUSE_CFG, 0, 1, 11, 4),
 };
 
+<<<<<<< HEAD
+=======
+static const struct ocelot_stat_layout vsc9953_stats_layout[OCELOT_NUM_STATS] = {
+	OCELOT_COMMON_STATS,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct vcap_field vsc9953_vcap_es0_keys[] = {
 	[VCAP_ES0_EGR_PORT]			= {  0,  4},
 	[VCAP_ES0_IGR_PORT]			= {  4,  4},
@@ -836,6 +950,35 @@ static int vsc9953_reset(struct ocelot *ocelot)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void vsc9953_phylink_validate(struct ocelot *ocelot, int port,
+				     unsigned long *supported,
+				     struct phylink_link_state *state)
+{
+	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+
+	phylink_set_port_modes(mask);
+	phylink_set(mask, Autoneg);
+	phylink_set(mask, Pause);
+	phylink_set(mask, Asym_Pause);
+	phylink_set(mask, 10baseT_Full);
+	phylink_set(mask, 10baseT_Half);
+	phylink_set(mask, 100baseT_Full);
+	phylink_set(mask, 100baseT_Half);
+	phylink_set(mask, 1000baseT_Full);
+	phylink_set(mask, 1000baseX_Full);
+
+	if (state->interface == PHY_INTERFACE_MODE_INTERNAL) {
+		phylink_set(mask, 2500baseT_Full);
+		phylink_set(mask, 2500baseX_Full);
+	}
+
+	linkmode_and(supported, supported, mask);
+	linkmode_and(state->advertising, state->advertising, mask);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Watermark encode
  * Bit 9:   Unit; 0:1, 1:16
  * Bit 8-0: Value to be multiplied with unit
@@ -893,8 +1036,13 @@ static int vsc9953_mdio_bus_alloc(struct ocelot *ocelot)
 
 	rc = mscc_miim_setup(dev, &bus, "VSC9953 internal MDIO bus",
 			     ocelot->targets[GCB],
+<<<<<<< HEAD
 			     ocelot->map[GCB][GCB_MIIM_MII_STATUS & REG_MASK],
 			     true);
+=======
+			     ocelot->map[GCB][GCB_MIIM_MII_STATUS & REG_MASK]);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		dev_err(dev, "failed to setup MDIO bus\n");
 		return rc;
@@ -960,24 +1108,42 @@ static void vsc9953_mdio_bus_free(struct ocelot *ocelot)
 }
 
 static const struct felix_info seville_info_vsc9953 = {
+<<<<<<< HEAD
 	.resources		= vsc9953_resources,
 	.num_resources		= ARRAY_SIZE(vsc9953_resources),
 	.resource_names		= vsc9953_resource_names,
 	.regfields		= vsc9953_regfields,
 	.map			= vsc9953_regmap,
 	.ops			= &vsc9953_ops,
+=======
+	.target_io_res		= vsc9953_target_io_res,
+	.port_io_res		= vsc9953_port_io_res,
+	.regfields		= vsc9953_regfields,
+	.map			= vsc9953_regmap,
+	.ops			= &vsc9953_ops,
+	.stats_layout		= vsc9953_stats_layout,
+>>>>>>> b7ba80a49124 (Commit)
 	.vcap			= vsc9953_vcap_props,
 	.vcap_pol_base		= VSC9953_VCAP_POLICER_BASE,
 	.vcap_pol_max		= VSC9953_VCAP_POLICER_MAX,
 	.vcap_pol_base2		= VSC9953_VCAP_POLICER_BASE2,
 	.vcap_pol_max2		= VSC9953_VCAP_POLICER_MAX2,
+<<<<<<< HEAD
 	.quirks			= FELIX_MAC_QUIRKS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.num_mact_rows		= 2048,
 	.num_ports		= VSC9953_NUM_PORTS,
 	.num_tx_queues		= OCELOT_NUM_TC,
 	.mdio_bus_alloc		= vsc9953_mdio_bus_alloc,
 	.mdio_bus_free		= vsc9953_mdio_bus_free,
+<<<<<<< HEAD
 	.port_modes		= vsc9953_port_modes,
+=======
+	.phylink_validate	= vsc9953_phylink_validate,
+	.port_modes		= vsc9953_port_modes,
+	.init_regmap		= ocelot_regmap_init,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int seville_probe(struct platform_device *pdev)
@@ -1052,6 +1218,11 @@ static int seville_remove(struct platform_device *pdev)
 	kfree(felix->ds);
 	kfree(felix);
 
+<<<<<<< HEAD
+=======
+	platform_set_drvdata(pdev, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1079,7 +1250,11 @@ static struct platform_driver seville_vsc9953_driver = {
 	.shutdown	= seville_shutdown,
 	.driver = {
 		.name		= "mscc_seville",
+<<<<<<< HEAD
 		.of_match_table	= seville_of_match,
+=======
+		.of_match_table	= of_match_ptr(seville_of_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 module_platform_driver(seville_vsc9953_driver);

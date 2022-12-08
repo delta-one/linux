@@ -488,7 +488,11 @@ static void run_test(struct migrate_reuseport_test_case *test_case,
 			goto close_servers;
 	}
 
+<<<<<<< HEAD
 	/* Tie requests to the first four listeners */
+=======
+	/* Tie requests to the first four listners */
+>>>>>>> b7ba80a49124 (Commit)
 	err = start_clients(test_case);
 	if (!ASSERT_OK(err, "start_clients"))
 		goto close_clients;

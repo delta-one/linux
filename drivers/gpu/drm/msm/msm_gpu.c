@@ -16,6 +16,10 @@
 #include <generated/utsrelease.h>
 #include <linux/string_helpers.h>
 #include <linux/devcoredump.h>
+<<<<<<< HEAD
+=======
+#include <linux/reset.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sched/task.h>
 
 /*
@@ -58,7 +62,11 @@ static int disable_pwrrail(struct msm_gpu *gpu)
 static int enable_clk(struct msm_gpu *gpu)
 {
 	if (gpu->core_clk && gpu->fast_rate)
+<<<<<<< HEAD
 		dev_pm_opp_set_rate(&gpu->pdev->dev, gpu->fast_rate);
+=======
+		clk_set_rate(gpu->core_clk, gpu->fast_rate);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Set the RBBM timer rate to 19.2Mhz */
 	if (gpu->rbbmtimer_clk)
@@ -77,7 +85,11 @@ static int disable_clk(struct msm_gpu *gpu)
 	 * will be rounded down to zero anyway so it all works out.
 	 */
 	if (gpu->core_clk)
+<<<<<<< HEAD
 		dev_pm_opp_set_rate(&gpu->pdev->dev, 27000000);
+=======
+		clk_set_rate(gpu->core_clk, 27000000);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (gpu->rbbmtimer_clk)
 		clk_set_rate(gpu->rbbmtimer_clk, 0);
@@ -334,8 +346,11 @@ static void get_comm_cmdline(struct msm_gem_submit *submit, char **comm, char **
 	struct msm_file_private *ctx = submit->queue->ctx;
 	struct task_struct *task;
 
+<<<<<<< HEAD
 	WARN_ON(!mutex_is_locked(&submit->gpu->lock));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Note that kstrdup will return NULL if argument is NULL: */
 	*comm = kstrdup(ctx->comm, GFP_KERNEL);
 	*cmd  = kstrdup(ctx->cmdline, GFP_KERNEL);
@@ -493,6 +508,7 @@ static void hangcheck_timer_reset(struct msm_gpu *gpu)
 			round_jiffies_up(jiffies + msecs_to_jiffies(priv->hangcheck_period)));
 }
 
+<<<<<<< HEAD
 static bool made_progress(struct msm_gpu *gpu, struct msm_ringbuffer *ring)
 {
 	if (ring->hangcheck_progress_retries >= DRM_MSM_HANGCHECK_PROGRESS_RETRIES)
@@ -508,6 +524,8 @@ static bool made_progress(struct msm_gpu *gpu, struct msm_ringbuffer *ring)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void hangcheck_handler(struct timer_list *t)
 {
 	struct msm_gpu *gpu = from_timer(gpu, t, hangcheck_timer);
@@ -518,12 +536,18 @@ static void hangcheck_handler(struct timer_list *t)
 	if (fence != ring->hangcheck_fence) {
 		/* some progress has been made.. ya! */
 		ring->hangcheck_fence = fence;
+<<<<<<< HEAD
 		ring->hangcheck_progress_retries = 0;
 	} else if (fence_before(fence, ring->fctx->last_fence) &&
 			!made_progress(gpu, ring)) {
 		/* no progress and not done.. hung! */
 		ring->hangcheck_fence = fence;
 		ring->hangcheck_progress_retries = 0;
+=======
+	} else if (fence_before(fence, ring->fctx->last_fence)) {
+		/* no progress and not done.. hung! */
+		ring->hangcheck_fence = fence;
+>>>>>>> b7ba80a49124 (Commit)
 		DRM_DEV_ERROR(dev->dev, "%s: hangcheck detected gpu lockup rb %d!\n",
 				gpu->name, ring->id);
 		DRM_DEV_ERROR(dev->dev, "%s:     completed fence: %u\n",
@@ -849,7 +873,10 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
 		struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
 		const char *name, struct msm_gpu_config *config)
 {
+<<<<<<< HEAD
 	struct msm_drm_private *priv = drm->dev_private;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i, ret, nr_rings = config->nr_rings;
 	void *memptrs;
 	uint64_t memptrs_iova;
@@ -877,6 +904,7 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
 	kthread_init_work(&gpu->recover_work, recover_worker);
 	kthread_init_work(&gpu->fault_work, fault_worker);
 
+<<<<<<< HEAD
 	priv->hangcheck_period = DRM_MSM_HANGCHECK_DEFAULT_PERIOD;
 
 	/*
@@ -887,6 +915,8 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
 	if (funcs->progress)
 		priv->hangcheck_period /= 2;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	timer_setup(&gpu->hangcheck_timer, hangcheck_handler, 0);
 
 	spin_lock_init(&gpu->perf_lock);
@@ -934,6 +964,12 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
 	if (IS_ERR(gpu->gpu_cx))
 		gpu->gpu_cx = NULL;
 
+<<<<<<< HEAD
+=======
+	gpu->cx_collapse = devm_reset_control_get_optional_exclusive(&pdev->dev,
+			"cx_collapse");
+
+>>>>>>> b7ba80a49124 (Commit)
 	gpu->pdev = pdev;
 	platform_set_drvdata(pdev, &gpu->adreno_smmu);
 
@@ -1024,6 +1060,9 @@ void msm_gpu_cleanup(struct msm_gpu *gpu)
 	}
 
 	msm_devfreq_cleanup(gpu);
+<<<<<<< HEAD
 
 	platform_set_drvdata(gpu->pdev, NULL);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

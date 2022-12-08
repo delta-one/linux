@@ -913,9 +913,15 @@ static void ili210x_stop(void *data)
 	priv->stop = true;
 }
 
+<<<<<<< HEAD
 static int ili210x_i2c_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int ili210x_i2c_probe(struct i2c_client *client,
+			     const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = &client->dev;
 	const struct ili2xxx_chip *chip;
 	struct ili210x *priv;
@@ -1043,7 +1049,11 @@ static struct i2c_driver ili210x_ts_driver = {
 		.of_match_table = ili210x_dt_ids,
 	},
 	.id_table = ili210x_i2c_id,
+<<<<<<< HEAD
 	.probe_new = ili210x_i2c_probe,
+=======
+	.probe = ili210x_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_i2c_driver(ili210x_ts_driver);

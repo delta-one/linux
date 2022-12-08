@@ -27,7 +27,15 @@
  **************************************************************************/
 
 #include <drm/ttm/ttm_execbuf_util.h>
+<<<<<<< HEAD
 #include <drm/ttm/ttm_bo.h>
+=======
+#include <drm/ttm/ttm_bo_driver.h>
+#include <drm/ttm/ttm_placement.h>
+#include <linux/wait.h>
+#include <linux/sched.h>
+#include <linux/module.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 static void ttm_eu_backoff_reservation_reverse(struct list_head *list,
 					      struct ttm_validate_buffer *entry)

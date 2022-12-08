@@ -87,7 +87,11 @@ gm200_grctx_generate_dist_skip_table(struct gf100_gr *gr)
 	int gpc, ppc, i;
 
 	for (gpc = 0; gpc < gr->gpc_nr; gpc++) {
+<<<<<<< HEAD
 		for (ppc = 0; ppc < gr->func->ppc_nr; ppc++) {
+=======
+		for (ppc = 0; ppc < gr->ppc_nr[gpc]; ppc++) {
+>>>>>>> b7ba80a49124 (Commit)
 			u8 ppc_tpcs = gr->ppc_tpc_nr[gpc][ppc];
 			u8 ppc_tpcm = gr->ppc_tpc_mask[gpc][ppc];
 			while (ppc_tpcs-- > gr->ppc_tpc_min)
@@ -111,8 +115,11 @@ gm200_grctx = {
 	.bundle_token_limit = 0x780,
 	.pagepool = gm107_grctx_generate_pagepool,
 	.pagepool_size = 0x20000,
+<<<<<<< HEAD
 	.attrib_cb_size = gf100_grctx_generate_attrib_cb_size,
 	.attrib_cb = gm107_grctx_generate_attrib_cb,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.attrib = gm107_grctx_generate_attrib,
 	.attrib_nr_max = 0x600,
 	.attrib_nr = 0x400,

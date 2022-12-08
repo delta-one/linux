@@ -75,7 +75,10 @@ enum ad_link_speed_type {
 	AD_LINK_SPEED_100000MBPS,
 	AD_LINK_SPEED_200000MBPS,
 	AD_LINK_SPEED_400000MBPS,
+<<<<<<< HEAD
 	AD_LINK_SPEED_800000MBPS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* compare MAC addresses */
@@ -252,7 +255,10 @@ static inline int __check_agg_selection_timer(struct port *port)
  *     %AD_LINK_SPEED_100000MBPS
  *     %AD_LINK_SPEED_200000MBPS
  *     %AD_LINK_SPEED_400000MBPS
+<<<<<<< HEAD
  *     %AD_LINK_SPEED_800000MBPS
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 static u16 __get_link_speed(struct port *port)
 {
@@ -328,10 +334,13 @@ static u16 __get_link_speed(struct port *port)
 			speed = AD_LINK_SPEED_400000MBPS;
 			break;
 
+<<<<<<< HEAD
 		case SPEED_800000:
 			speed = AD_LINK_SPEED_800000MBPS;
 			break;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		default:
 			/* unknown speed value from ethtool. shouldn't happen */
 			if (slave->speed != SPEED_UNKNOWN)
@@ -759,9 +768,12 @@ static u32 __get_agg_bandwidth(struct aggregator *aggregator)
 		case AD_LINK_SPEED_400000MBPS:
 			bandwidth = nports * 400000;
 			break;
+<<<<<<< HEAD
 		case AD_LINK_SPEED_800000MBPS:
 			bandwidth = nports * 800000;
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		default:
 			bandwidth = 0; /* to silence the compiler */
 		}
@@ -1549,7 +1561,10 @@ static void ad_port_selection_logic(struct port *port, bool *update_slave_arr)
 			slave_err(bond->dev, port->slave->dev,
 				  "Port %d did not find a suitable aggregator\n",
 				  port->actor_port_number);
+<<<<<<< HEAD
 			return;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 	/* if all aggregator's ports are READY_N == TRUE, set ready=TRUE

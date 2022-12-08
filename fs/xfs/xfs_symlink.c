@@ -144,7 +144,11 @@ xfs_readlink(
 
 int
 xfs_symlink(
+<<<<<<< HEAD
 	struct mnt_idmap	*idmap,
+=======
+	struct user_namespace	*mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfs_inode	*dp,
 	struct xfs_name		*link_name,
 	const char		*target_path,
@@ -193,8 +197,13 @@ xfs_symlink(
 	/*
 	 * Make sure that we have allocated dquot(s) on disk.
 	 */
+<<<<<<< HEAD
 	error = xfs_qm_vop_dqalloc(dp, mapped_fsuid(idmap, &init_user_ns),
 			mapped_fsgid(idmap, &init_user_ns), prid,
+=======
+	error = xfs_qm_vop_dqalloc(dp, mapped_fsuid(mnt_userns, &init_user_ns),
+			mapped_fsgid(mnt_userns, &init_user_ns), prid,
+>>>>>>> b7ba80a49124 (Commit)
 			XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
 			&udqp, &gdqp, &pdqp);
 	if (error)
@@ -231,7 +240,11 @@ xfs_symlink(
 	 */
 	error = xfs_dialloc(&tp, dp->i_ino, S_IFLNK, &ino);
 	if (!error)
+<<<<<<< HEAD
 		error = xfs_init_new_inode(idmap, tp, dp, ino,
+=======
+		error = xfs_init_new_inode(mnt_userns, tp, dp, ino,
+>>>>>>> b7ba80a49124 (Commit)
 				S_IFLNK | (mode & ~S_IFMT), 1, 0, prid,
 				false, &ip);
 	if (error)

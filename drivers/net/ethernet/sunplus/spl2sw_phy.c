@@ -84,7 +84,14 @@ void spl2sw_phy_remove(struct spl2sw_common *comm)
 	for (i = 0; i < MAX_NETDEV_NUM; i++)
 		if (comm->ndev[i]) {
 			ndev = comm->ndev[i];
+<<<<<<< HEAD
 			if (ndev)
 				phy_disconnect(ndev->phydev);
+=======
+			if (ndev) {
+				phy_disconnect(ndev->phydev);
+				ndev->phydev = NULL;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 }

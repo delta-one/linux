@@ -114,9 +114,12 @@ int smc_cdc_msg_send(struct smc_connection *conn,
 	union smc_host_cursor cfed;
 	int rc;
 
+<<<<<<< HEAD
 	if (unlikely(!READ_ONCE(conn->sndbuf_desc)))
 		return -ENOBUFS;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	smc_cdc_add_pending_send(conn, pend);
 
 	conn->tx_cdc_seq++;

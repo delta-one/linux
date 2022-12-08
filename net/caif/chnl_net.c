@@ -310,6 +310,12 @@ static int chnl_net_open(struct net_device *dev)
 
 	if (result == 0) {
 		pr_debug("connect timeout\n");
+<<<<<<< HEAD
+=======
+		caif_disconnect_client(dev_net(dev), &priv->chnl);
+		priv->state = CAIF_DISCONNECTED;
+		pr_debug("state disconnected\n");
+>>>>>>> b7ba80a49124 (Commit)
 		result = -ETIMEDOUT;
 		goto error;
 	}

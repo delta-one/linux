@@ -25,6 +25,7 @@
 #define ZYNQMP_DISP_MAX_DMA_BIT				44
 
 struct device;
+<<<<<<< HEAD
 struct drm_format_info;
 struct drm_plane_state;
 struct platform_device;
@@ -71,6 +72,20 @@ int zynqmp_disp_layer_update(struct zynqmp_disp_layer *layer,
 			     struct drm_plane_state *state);
 
 int zynqmp_disp_probe(struct zynqmp_dpsub *dpsub);
+=======
+struct drm_device;
+struct platform_device;
+struct zynqmp_disp;
+struct zynqmp_dpsub;
+
+void zynqmp_disp_handle_vblank(struct zynqmp_disp *disp);
+bool zynqmp_disp_audio_enabled(struct zynqmp_disp *disp);
+unsigned int zynqmp_disp_get_audio_clk_rate(struct zynqmp_disp *disp);
+uint32_t zynqmp_disp_get_crtc_mask(struct zynqmp_disp *disp);
+
+int zynqmp_disp_drm_init(struct zynqmp_dpsub *dpsub);
+int zynqmp_disp_probe(struct zynqmp_dpsub *dpsub, struct drm_device *drm);
+>>>>>>> b7ba80a49124 (Commit)
 void zynqmp_disp_remove(struct zynqmp_dpsub *dpsub);
 
 #endif /* _ZYNQMP_DISP_H_ */

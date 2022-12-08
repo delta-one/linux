@@ -47,12 +47,20 @@ config USB_XHCI_PCI_RENESAS
 	tristate "Support for additional Renesas xHCI controller with firmware"
 	help
 	  Say 'Y' to enable the support for the Renesas xHCI controller with
+<<<<<<< HEAD
 	  firmware. Make sure you have the firmware for the device and
+=======
+	  firmware. Make sure you have the firwmare for the device and
+>>>>>>> b7ba80a49124 (Commit)
 	  installed on your system for this device to work.
 	  If unsure, say 'N'.
 
 config USB_XHCI_PLATFORM
 	tristate "Generic xHCI driver for a platform device"
+<<<<<<< HEAD
+=======
+	select USB_XHCI_RCAR if ARCH_RENESAS
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Adds an xHCI host driver for a generic platform device, which
 	  provides a memory space and an irq.
@@ -90,11 +98,15 @@ config USB_XHCI_RCAR
 	tristate "xHCI support for Renesas R-Car SoCs"
 	depends on USB_XHCI_PLATFORM
 	depends on ARCH_RENESAS || COMPILE_TEST
+<<<<<<< HEAD
 	default ARCH_RENESAS
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Say 'Y' to enable the support for the xHCI host controller
 	  found in Renesas R-Car ARM SoCs.
 
+<<<<<<< HEAD
 config USB_XHCI_RZV2M
 	bool "xHCI support for Renesas RZ/V2M SoC"
 	depends on USB_XHCI_RCAR
@@ -104,6 +116,8 @@ config USB_XHCI_RZV2M
 	  Say 'Y' to enable the support for the xHCI host controller
 	  found in Renesas RZ/V2M SoC.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config USB_XHCI_TEGRA
 	tristate "xHCI support for NVIDIA Tegra SoCs"
 	depends on PHY_TEGRA_XUSB
@@ -325,6 +339,21 @@ config USB_OCTEON_HCD
 	  To compile this driver as a module, choose M here. The module
 	  will be called octeon-hcd.
 
+<<<<<<< HEAD
+=======
+config USB_CNS3XXX_EHCI
+	bool "Cavium CNS3XXX EHCI Module (DEPRECATED)"
+	depends on ARCH_CNS3XXX || COMPILE_TEST
+	select USB_EHCI_HCD_PLATFORM
+	help
+	  This option is deprecated now and the driver was removed, use
+	  USB_EHCI_HCD_PLATFORM instead.
+
+	  Enable support for the CNS3XXX SOC's on-chip EHCI controller.
+	  It is needed for high-speed (480Mbit/sec) USB 2.0 device
+	  support.
+
+>>>>>>> b7ba80a49124 (Commit)
 config USB_EHCI_HCD_PLATFORM
 	tristate "Generic EHCI driver for a platform device"
 	help
@@ -386,6 +415,20 @@ config USB_ISP1362_HCD
 	  To compile this driver as a module, choose M here: the
 	  module will be called isp1362-hcd.
 
+<<<<<<< HEAD
+=======
+config USB_FOTG210_HCD
+	tristate "FOTG210 HCD support"
+	depends on USB && HAS_DMA && HAS_IOMEM
+	help
+	  Faraday FOTG210 is an OTG controller which can be configured as
+	  an USB2.0 host. It is designed to meet USB2.0 EHCI specification
+	  with minor modification.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called fotg210-hcd.
+
+>>>>>>> b7ba80a49124 (Commit)
 config USB_MAX3421_HCD
 	tristate "MAX3421 HCD (USB-over-SPI) support"
 	depends on USB && SPI
@@ -418,6 +461,10 @@ if USB_OHCI_HCD
 config USB_OHCI_HCD_OMAP1
 	tristate "OHCI support for OMAP1/2 chips"
 	depends on ARCH_OMAP1
+<<<<<<< HEAD
+=======
+	depends on ISP1301_OMAP || !(MACH_OMAP_H2 || MACH_OMAP_H3)
+>>>>>>> b7ba80a49124 (Commit)
 	default y
 	help
 	  Enables support for the OHCI controller on OMAP1/2 chips.
@@ -440,12 +487,21 @@ config USB_OHCI_HCD_STI
 	  STMicroelectronics consumer electronics SoC's.
 
 config USB_OHCI_HCD_S3C2410
+<<<<<<< HEAD
 	tristate "OHCI support for Samsung S3C64xx SoC series"
 	depends on USB_OHCI_HCD && (ARCH_S3C64XX || COMPILE_TEST)
 	default ARCH_S3C64XX
 	help
 	  Enables support for the on-chip OHCI controller on
 	  S3C64xx chips.
+=======
+	tristate "OHCI support for Samsung S3C24xx/S3C64xx SoC series"
+	depends on USB_OHCI_HCD && (ARCH_S3C24XX || ARCH_S3C64XX || COMPILE_TEST)
+	default y if (ARCH_S3C24XX || ARCH_S3C64XX)
+	help
+	  Enables support for the on-chip OHCI controller on
+	  S3C24xx/S3C64xx chips.
+>>>>>>> b7ba80a49124 (Commit)
 
 config USB_OHCI_HCD_LPC32XX
 	tristate "Support for LPC on-chip OHCI USB controller"
@@ -544,6 +600,20 @@ config USB_OHCI_HCD_SSB
 
 	  If unsure, say N.
 
+<<<<<<< HEAD
+=======
+config USB_OHCI_SH
+	bool "OHCI support for SuperH USB controller (DEPRECATED)"
+	depends on SUPERH || COMPILE_TEST
+	select USB_OHCI_HCD_PLATFORM
+	help
+	  This option is deprecated now and the driver was removed, use
+	  USB_OHCI_HCD_PLATFORM instead.
+
+	  Enables support for the on-chip OHCI controller on the SuperH.
+	  If you use the PCI OHCI controller, this option is not necessary.
+
+>>>>>>> b7ba80a49124 (Commit)
 config USB_OHCI_EXYNOS
 	tristate "OHCI support for Samsung S5P/Exynos SoC Series"
 	depends on ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
@@ -551,6 +621,20 @@ config USB_OHCI_EXYNOS
 	  Enable support for the Samsung S5Pv210 and Exynos SOC's on-chip OHCI
 	  controller.
 
+<<<<<<< HEAD
+=======
+config USB_CNS3XXX_OHCI
+	bool "Cavium CNS3XXX OHCI Module (DEPRECATED)"
+	depends on ARCH_CNS3XXX || COMPILE_TEST
+	select USB_OHCI_HCD_PLATFORM
+	help
+	  This option is deprecated now and the driver was removed, use
+	  USB_OHCI_HCD_PLATFORM instead.
+
+	  Enable support for the CNS3XXX SOC's on-chip OHCI controller.
+	  It is needed for low-speed USB 1.0 device support.
+
+>>>>>>> b7ba80a49124 (Commit)
 config USB_OHCI_HCD_PLATFORM
 	tristate "Generic OHCI driver for a platform device"
 	help
@@ -622,6 +706,36 @@ config FHCI_DEBUG
 	  Say "y" to see some FHCI debug information and statistics
 	  through debugfs.
 
+<<<<<<< HEAD
+=======
+config USB_U132_HCD
+	tristate "Elan U132 Adapter Host Controller"
+	depends on USB_FTDI_ELAN
+	help
+	  The U132 adapter is a USB to CardBus adapter specifically designed
+	  for PC cards that contain an OHCI host controller. Typical PC cards
+	  are the Orange Mobile 3G Option GlobeTrotter Fusion card. The U132
+	  adapter will *NOT* work with PC cards that do not contain an OHCI
+	  controller.
+
+	  For those PC cards that contain multiple OHCI controllers only the
+	  first one is used.
+
+	  The driver consists of two modules, the "ftdi-elan" module is a
+	  USB client driver that interfaces to the FTDI chip within ELAN's
+	  USB-to-PCMCIA adapter, and this "u132-hcd" module is a USB host
+	  controller driver that talks to the OHCI controller within the
+	  CardBus cards that are inserted in the U132 adapter.
+
+	  This driver has been tested with a CardBus OHCI USB adapter, and
+	  worked with a USB PEN Drive inserted into the first USB port of
+	  the PCCARD. A rather pointless thing to do, but useful for testing.
+
+	  It is safe to say M here.
+
+	  See also <http://www.elandigitalsystems.com/support/ufaq/u132linux.php>
+
+>>>>>>> b7ba80a49124 (Commit)
 config USB_SL811_HCD
 	tristate "SL811HS HCD support"
 	depends on HAS_IOMEM

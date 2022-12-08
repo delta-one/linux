@@ -17,8 +17,11 @@
 #define NUMREGBYTES			sizeof(struct parisc_gdb_regs)
 #define BUFMAX				4096
 
+<<<<<<< HEAD
 #define KGDB_MAX_BREAKPOINTS		40
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define CACHE_FLUSH_IS_SAFE		1
 
 #ifndef __ASSEMBLY__

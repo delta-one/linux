@@ -100,16 +100,24 @@ static void page_cache_pipe_buf_release(struct pipe_inode_info *pipe,
  * is a page cache page, IO may be in flight.
  */
 static int page_cache_pipe_buf_confirm(struct pipe_inode_info *pipe,
+<<<<<<< HEAD
 				       struct pipe_buffer *buf, bool nonblock)
+=======
+				       struct pipe_buffer *buf)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct page *page = buf->page;
 	int err;
 
 	if (!PageUptodate(page)) {
+<<<<<<< HEAD
 		if (nonblock && !trylock_page(page))
 			return -EAGAIN;
 		else
 			lock_page(page);
+=======
+		lock_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * Page got truncated/unhashed. This will cause a 0-byte
@@ -285,6 +293,7 @@ void splice_shrink_spd(struct splice_pipe_desc *spd)
 	kfree(spd->partial);
 }
 
+<<<<<<< HEAD
 /*
  * Splice data from an O_DIRECT file into pages and then add them to the output
  * pipe.
@@ -373,6 +382,8 @@ ssize_t direct_splice_read(struct file *in, loff_t *ppos,
 }
 EXPORT_SYMBOL(direct_splice_read);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * generic_file_splice_read - splice data from file to a pipe
  * @in:		file to splice from
@@ -390,6 +401,7 @@ ssize_t generic_file_splice_read(struct file *in, loff_t *ppos,
 				 struct pipe_inode_info *pipe, size_t len,
 				 unsigned int flags)
 {
+<<<<<<< HEAD
 	if (unlikely(*ppos >= file_inode(in)->i_sb->s_maxbytes))
 		return 0;
 	if (unlikely(!len))
@@ -397,6 +409,31 @@ ssize_t generic_file_splice_read(struct file *in, loff_t *ppos,
 	if (in->f_flags & O_DIRECT)
 		return direct_splice_read(in, ppos, pipe, len, flags);
 	return filemap_splice_read(in, ppos, pipe, len, flags);
+=======
+	struct iov_iter to;
+	struct kiocb kiocb;
+	int ret;
+
+	iov_iter_pipe(&to, READ, pipe, len);
+	init_sync_kiocb(&kiocb, in);
+	kiocb.ki_pos = *ppos;
+	ret = call_read_iter(in, &kiocb, &to);
+	if (ret > 0) {
+		*ppos = kiocb.ki_pos;
+		file_accessed(in);
+	} else if (ret < 0) {
+		/* free what was emitted */
+		pipe_discard_from(pipe, to.start_head);
+		/*
+		 * callers of ->splice_read() expect -EAGAIN on
+		 * "can't put anything in there", rather than -EFAULT.
+		 */
+		if (ret == -EFAULT)
+			ret = -EAGAIN;
+	}
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(generic_file_splice_read);
 
@@ -480,7 +517,11 @@ static int splice_from_pipe_feed(struct pipe_inode_info *pipe, struct splice_des
 		if (sd->len > sd->total_len)
 			sd->len = sd->total_len;
 
+<<<<<<< HEAD
 		ret = pipe_buf_confirm(pipe, buf, false);
+=======
+		ret = pipe_buf_confirm(pipe, buf);
+>>>>>>> b7ba80a49124 (Commit)
 		if (unlikely(ret)) {
 			if (ret == -ENODATA)
 				ret = 0;
@@ -743,20 +784,34 @@ iter_file_splice_write(struct pipe_inode_info *pipe, struct file *out,
 				continue;
 			this_len = min(this_len, left);
 
+<<<<<<< HEAD
 			ret = pipe_buf_confirm(pipe, buf, false);
+=======
+			ret = pipe_buf_confirm(pipe, buf);
+>>>>>>> b7ba80a49124 (Commit)
 			if (unlikely(ret)) {
 				if (ret == -ENODATA)
 					ret = 0;
 				goto done;
 			}
 
+<<<<<<< HEAD
 			bvec_set_page(&array[n], buf->page, this_len,
 				      buf->offset);
+=======
+			array[n].bv_page = buf->page;
+			array[n].bv_len = this_len;
+			array[n].bv_offset = buf->offset;
+>>>>>>> b7ba80a49124 (Commit)
 			left -= this_len;
 			n++;
 		}
 
+<<<<<<< HEAD
 		iov_iter_bvec(&from, ITER_SOURCE, array, n, sd.total_len - left);
+=======
+		iov_iter_bvec(&from, WRITE, array, n, sd.total_len - left);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = vfs_iter_write(out, &from, &sd.pos, 0);
 		if (ret <= 0)
 			break;
@@ -838,6 +893,7 @@ static long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
 	return out->f_op->splice_write(pipe, out, ppos, len, flags);
 }
 
+<<<<<<< HEAD
 /**
  * vfs_splice_read - Read data from a file and splice it into a pipe
  * @in:		File to splice from
@@ -856,6 +912,14 @@ static long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
 long vfs_splice_read(struct file *in, loff_t *ppos,
 		     struct pipe_inode_info *pipe, size_t len,
 		     unsigned int flags)
+=======
+/*
+ * Attempt to initiate a splice from a file to a pipe.
+ */
+static long do_splice_to(struct file *in, loff_t *ppos,
+			 struct pipe_inode_info *pipe, size_t len,
+			 unsigned int flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int p_space;
 	int ret;
@@ -878,7 +942,10 @@ long vfs_splice_read(struct file *in, loff_t *ppos,
 		return warn_unsupported(in, "read");
 	return in->f_op->splice_read(in, ppos, pipe, len, flags);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(vfs_splice_read);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * splice_direct_to_actor - splices data directly between two non-pipes
@@ -932,6 +999,10 @@ ssize_t splice_direct_to_actor(struct file *in, struct splice_desc *sd,
 	/*
 	 * Do the splice.
 	 */
+<<<<<<< HEAD
+=======
+	ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	bytes = 0;
 	len = sd->total_len;
 	flags = sd->flags;
@@ -948,7 +1019,11 @@ ssize_t splice_direct_to_actor(struct file *in, struct splice_desc *sd,
 		size_t read_len;
 		loff_t pos = sd->pos, prev_pos = pos;
 
+<<<<<<< HEAD
 		ret = vfs_splice_read(in, &pos, pipe, len, flags);
+=======
+		ret = do_splice_to(in, &pos, pipe, len, flags);
+>>>>>>> b7ba80a49124 (Commit)
 		if (unlikely(ret <= 0))
 			goto out_release;
 
@@ -1096,7 +1171,11 @@ long splice_file_to_pipe(struct file *in,
 	pipe_lock(opipe);
 	ret = wait_for_space(opipe, flags);
 	if (!ret)
+<<<<<<< HEAD
 		ret = vfs_splice_read(in, offset, opipe, len, flags);
+=======
+		ret = do_splice_to(in, offset, opipe, len, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	pipe_unlock(opipe);
 	if (ret > 0)
 		wakeup_pipe_readers(opipe);
@@ -1349,9 +1428,15 @@ static int vmsplice_type(struct fd f, int *type)
 	if (!f.file)
 		return -EBADF;
 	if (f.file->f_mode & FMODE_WRITE) {
+<<<<<<< HEAD
 		*type = ITER_SOURCE;
 	} else if (f.file->f_mode & FMODE_READ) {
 		*type = ITER_DEST;
+=======
+		*type = WRITE;
+	} else if (f.file->f_mode & FMODE_READ) {
+		*type = READ;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		fdput(f);
 		return -EBADF;
@@ -1400,7 +1485,11 @@ SYSCALL_DEFINE4(vmsplice, int, fd, const struct iovec __user *, uiov,
 
 	if (!iov_iter_count(&iter))
 		error = 0;
+<<<<<<< HEAD
 	else if (type == ITER_SOURCE)
+=======
+	else if (iov_iter_rw(&iter) == WRITE)
+>>>>>>> b7ba80a49124 (Commit)
 		error = vmsplice_to_pipe(f.file, &iter, flags);
 	else
 		error = vmsplice_to_user(f.file, &iter, flags);

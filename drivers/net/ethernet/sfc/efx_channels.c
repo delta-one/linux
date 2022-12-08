@@ -1119,8 +1119,11 @@ void efx_start_channels(struct efx_nic *efx)
 	struct efx_channel *channel;
 
 	efx_for_each_channel_rev(channel, efx) {
+<<<<<<< HEAD
 		if (channel->type->start)
 			channel->type->start(channel);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		efx_for_each_channel_tx_queue(tx_queue, channel) {
 			efx_init_tx_queue(tx_queue);
 			atomic_inc(&efx->active_queues);
@@ -1145,6 +1148,7 @@ void efx_stop_channels(struct efx_nic *efx)
 	struct efx_channel *channel;
 	int rc = 0;
 
+<<<<<<< HEAD
 	/* Stop special channels and RX refill.
 	 * The channel's stop has to be called first, since it might wait
 	 * for a sentinel RX to indicate the channel has fully drained.
@@ -1152,6 +1156,10 @@ void efx_stop_channels(struct efx_nic *efx)
 	efx_for_each_channel(channel, efx) {
 		if (channel->type->stop)
 			channel->type->stop(channel);
+=======
+	/* Stop RX refill */
+	efx_for_each_channel(channel, efx) {
+>>>>>>> b7ba80a49124 (Commit)
 		efx_for_each_channel_rx_queue(rx_queue, channel)
 			rx_queue->refill_enabled = false;
 	}
@@ -1320,7 +1328,11 @@ void efx_init_napi_channel(struct efx_channel *channel)
 	struct efx_nic *efx = channel->efx;
 
 	channel->napi_dev = efx->net_dev;
+<<<<<<< HEAD
 	netif_napi_add(channel->napi_dev, &channel->napi_str, efx_poll);
+=======
+	netif_napi_add(channel->napi_dev, &channel->napi_str, efx_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void efx_init_napi(struct efx_nic *efx)

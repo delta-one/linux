@@ -518,7 +518,10 @@ static void *perfbuf_custom_consumer(void *input)
 
 const struct bench bench_rb_libbpf = {
 	.name = "rb-libbpf",
+<<<<<<< HEAD
 	.argp = &bench_ringbufs_argp,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.validate = bufs_validate,
 	.setup = ringbuf_libbpf_setup,
 	.producer_thread = bufs_sample_producer,
@@ -530,7 +533,10 @@ const struct bench bench_rb_libbpf = {
 
 const struct bench bench_rb_custom = {
 	.name = "rb-custom",
+<<<<<<< HEAD
 	.argp = &bench_ringbufs_argp,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.validate = bufs_validate,
 	.setup = ringbuf_custom_setup,
 	.producer_thread = bufs_sample_producer,
@@ -542,7 +548,10 @@ const struct bench bench_rb_custom = {
 
 const struct bench bench_pb_libbpf = {
 	.name = "pb-libbpf",
+<<<<<<< HEAD
 	.argp = &bench_ringbufs_argp,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.validate = bufs_validate,
 	.setup = perfbuf_libbpf_setup,
 	.producer_thread = bufs_sample_producer,
@@ -554,7 +563,10 @@ const struct bench bench_pb_libbpf = {
 
 const struct bench bench_pb_custom = {
 	.name = "pb-custom",
+<<<<<<< HEAD
 	.argp = &bench_ringbufs_argp,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.validate = bufs_validate,
 	.setup = perfbuf_libbpf_setup,
 	.producer_thread = bufs_sample_producer,

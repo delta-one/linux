@@ -284,13 +284,22 @@ static void pic32_rtc_enable(struct pic32_rtc_dev *pdata, int en)
 	clk_disable(pdata->clk);
 }
 
+<<<<<<< HEAD
 static void pic32_rtc_remove(struct platform_device *pdev)
+=======
+static int pic32_rtc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pic32_rtc_dev *pdata = platform_get_drvdata(pdev);
 
 	pic32_rtc_setaie(&pdev->dev, 0);
 	clk_unprepare(pdata->clk);
 	pdata->clk = NULL;
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int pic32_rtc_probe(struct platform_device *pdev)
@@ -322,16 +331,26 @@ static int pic32_rtc_probe(struct platform_device *pdev)
 
 	spin_lock_init(&pdata->alarm_lock);
 
+<<<<<<< HEAD
 	pdata->rtc = devm_rtc_allocate_device(&pdev->dev);
 	if (IS_ERR(pdata->rtc))
 		return PTR_ERR(pdata->rtc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	clk_prepare_enable(pdata->clk);
 
 	pic32_rtc_enable(pdata, 1);
 
 	device_init_wakeup(&pdev->dev, 1);
 
+<<<<<<< HEAD
+=======
+	pdata->rtc = devm_rtc_allocate_device(&pdev->dev);
+	if (IS_ERR(pdata->rtc))
+		return PTR_ERR(pdata->rtc);
+
+>>>>>>> b7ba80a49124 (Commit)
 	pdata->rtc->ops = &pic32_rtcops;
 	pdata->rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
 	pdata->rtc->range_max = RTC_TIMESTAMP_END_2099;
@@ -371,7 +390,11 @@ MODULE_DEVICE_TABLE(of, pic32_rtc_dt_ids);
 
 static struct platform_driver pic32_rtc_driver = {
 	.probe		= pic32_rtc_probe,
+<<<<<<< HEAD
 	.remove_new	= pic32_rtc_remove,
+=======
+	.remove		= pic32_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "pic32-rtc",
 		.of_match_table	= of_match_ptr(pic32_rtc_dt_ids),

@@ -12,10 +12,14 @@
 #include <linux/interrupt.h>
 #include <linux/bcma/bcma.h>
 #include <linux/sched.h>
+<<<<<<< HEAD
 #include <linux/sched/signal.h>
 #include <linux/kthread.h>
 #include <linux/io.h>
 #include <linux/random.h>
+=======
+#include <linux/io.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/unaligned.h>
 
 #include <soc.h>
@@ -52,24 +56,35 @@ enum brcmf_pcie_state {
 BRCMF_FW_DEF(43602, "brcmfmac43602-pcie");
 BRCMF_FW_DEF(4350, "brcmfmac4350-pcie");
 BRCMF_FW_DEF(4350C, "brcmfmac4350c2-pcie");
+<<<<<<< HEAD
 BRCMF_FW_CLM_DEF(4355, "brcmfmac4355-pcie");
 BRCMF_FW_CLM_DEF(4355C1, "brcmfmac4355c1-pcie");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 BRCMF_FW_CLM_DEF(4356, "brcmfmac4356-pcie");
 BRCMF_FW_CLM_DEF(43570, "brcmfmac43570-pcie");
 BRCMF_FW_DEF(4358, "brcmfmac4358-pcie");
 BRCMF_FW_DEF(4359, "brcmfmac4359-pcie");
+<<<<<<< HEAD
 BRCMF_FW_DEF(4359C, "brcmfmac4359c-pcie");
 BRCMF_FW_CLM_DEF(4364B2, "brcmfmac4364b2-pcie");
 BRCMF_FW_CLM_DEF(4364B3, "brcmfmac4364b3-pcie");
+=======
+BRCMF_FW_DEF(4364, "brcmfmac4364-pcie");
+>>>>>>> b7ba80a49124 (Commit)
 BRCMF_FW_DEF(4365B, "brcmfmac4365b-pcie");
 BRCMF_FW_DEF(4365C, "brcmfmac4365c-pcie");
 BRCMF_FW_DEF(4366B, "brcmfmac4366b-pcie");
 BRCMF_FW_DEF(4366C, "brcmfmac4366c-pcie");
 BRCMF_FW_DEF(4371, "brcmfmac4371-pcie");
+<<<<<<< HEAD
 BRCMF_FW_CLM_DEF(4377B3, "brcmfmac4377b3-pcie");
 BRCMF_FW_CLM_DEF(4378B1, "brcmfmac4378b1-pcie");
 BRCMF_FW_CLM_DEF(4378B3, "brcmfmac4378b3-pcie");
 BRCMF_FW_CLM_DEF(4387C2, "brcmfmac4387c2-pcie");
+=======
+BRCMF_FW_CLM_DEF(4378B1, "brcmfmac4378b1-pcie");
+>>>>>>> b7ba80a49124 (Commit)
 
 /* firmware config files */
 MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcmfmac*-pcie.txt");
@@ -78,7 +93,10 @@ MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcmfmac*-pcie.*.txt");
 /* per-board firmware binaries */
 MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcmfmac*-pcie.*.bin");
 MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcmfmac*-pcie.*.clm_blob");
+<<<<<<< HEAD
 MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcmfmac*-pcie.*.txcap_blob");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct brcmf_firmware_mapping brcmf_pcie_fwnames[] = {
 	BRCMF_FW_ENTRY(BRCM_CC_43602_CHIP_ID, 0xFFFFFFFF, 43602),
@@ -86,17 +104,25 @@ static const struct brcmf_firmware_mapping brcmf_pcie_fwnames[] = {
 	BRCMF_FW_ENTRY(BRCM_CC_4350_CHIP_ID, 0x000000FF, 4350C),
 	BRCMF_FW_ENTRY(BRCM_CC_4350_CHIP_ID, 0xFFFFFF00, 4350),
 	BRCMF_FW_ENTRY(BRCM_CC_43525_CHIP_ID, 0xFFFFFFF0, 4365C),
+<<<<<<< HEAD
 	BRCMF_FW_ENTRY(BRCM_CC_4355_CHIP_ID, 0x000007FF, 4355),
 	BRCMF_FW_ENTRY(BRCM_CC_4355_CHIP_ID, 0xFFFFF800, 4355C1), /* rev ID 12/C2 seen */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BRCMF_FW_ENTRY(BRCM_CC_4356_CHIP_ID, 0xFFFFFFFF, 4356),
 	BRCMF_FW_ENTRY(BRCM_CC_43567_CHIP_ID, 0xFFFFFFFF, 43570),
 	BRCMF_FW_ENTRY(BRCM_CC_43569_CHIP_ID, 0xFFFFFFFF, 43570),
 	BRCMF_FW_ENTRY(BRCM_CC_43570_CHIP_ID, 0xFFFFFFFF, 43570),
 	BRCMF_FW_ENTRY(BRCM_CC_4358_CHIP_ID, 0xFFFFFFFF, 4358),
+<<<<<<< HEAD
 	BRCMF_FW_ENTRY(BRCM_CC_4359_CHIP_ID, 0x000001FF, 4359),
 	BRCMF_FW_ENTRY(BRCM_CC_4359_CHIP_ID, 0xFFFFFE00, 4359C),
 	BRCMF_FW_ENTRY(BRCM_CC_4364_CHIP_ID, 0x0000000F, 4364B2), /* 3 */
 	BRCMF_FW_ENTRY(BRCM_CC_4364_CHIP_ID, 0xFFFFFFF0, 4364B3), /* 4 */
+=======
+	BRCMF_FW_ENTRY(BRCM_CC_4359_CHIP_ID, 0xFFFFFFFF, 4359),
+	BRCMF_FW_ENTRY(BRCM_CC_4364_CHIP_ID, 0xFFFFFFFF, 4364),
+>>>>>>> b7ba80a49124 (Commit)
 	BRCMF_FW_ENTRY(BRCM_CC_4365_CHIP_ID, 0x0000000F, 4365B),
 	BRCMF_FW_ENTRY(BRCM_CC_4365_CHIP_ID, 0xFFFFFFF0, 4365C),
 	BRCMF_FW_ENTRY(BRCM_CC_4366_CHIP_ID, 0x0000000F, 4366B),
@@ -104,10 +130,14 @@ static const struct brcmf_firmware_mapping brcmf_pcie_fwnames[] = {
 	BRCMF_FW_ENTRY(BRCM_CC_43664_CHIP_ID, 0xFFFFFFF0, 4366C),
 	BRCMF_FW_ENTRY(BRCM_CC_43666_CHIP_ID, 0xFFFFFFF0, 4366C),
 	BRCMF_FW_ENTRY(BRCM_CC_4371_CHIP_ID, 0xFFFFFFFF, 4371),
+<<<<<<< HEAD
 	BRCMF_FW_ENTRY(BRCM_CC_4377_CHIP_ID, 0xFFFFFFFF, 4377B3), /* revision ID 4 */
 	BRCMF_FW_ENTRY(BRCM_CC_4378_CHIP_ID, 0x0000000F, 4378B1), /* revision ID 3 */
 	BRCMF_FW_ENTRY(BRCM_CC_4378_CHIP_ID, 0xFFFFFFE0, 4378B3), /* revision ID 5 */
 	BRCMF_FW_ENTRY(BRCM_CC_4387_CHIP_ID, 0xFFFFFFFF, 4387C2), /* revision ID 7 */
+=======
+	BRCMF_FW_ENTRY(BRCM_CC_4378_CHIP_ID, 0xFFFFFFFF, 4378B1), /* revision ID 3 */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define BRCMF_PCIE_FW_UP_TIMEOUT		5000 /* msec */
@@ -334,9 +364,13 @@ struct brcmf_pciedev_info {
 	char fw_name[BRCMF_FW_NAME_LEN];
 	char nvram_name[BRCMF_FW_NAME_LEN];
 	char clm_name[BRCMF_FW_NAME_LEN];
+<<<<<<< HEAD
 	char txcap_name[BRCMF_FW_NAME_LEN];
 	const struct firmware *clm_fw;
 	const struct firmware *txcap_fw;
+=======
+	const struct firmware *clm_fw;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct brcmf_pcie_reginfo *reginfo;
 	void __iomem *regs;
 	void __iomem *tcm;
@@ -358,11 +392,14 @@ struct brcmf_pciedev_info {
 			  u16 value);
 	struct brcmf_mp_device *settings;
 	struct brcmf_otp_params otp;
+<<<<<<< HEAD
 #ifdef DEBUG
 	u32 console_interval;
 	bool console_active;
 	struct timer_list timer;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct brcmf_pcie_ringbuf {
@@ -463,9 +500,12 @@ static void brcmf_pcie_setup(struct device *dev, int ret,
 			     struct brcmf_fw_request *fwreq);
 static struct brcmf_fw_request *
 brcmf_pcie_prepare_fw_request(struct brcmf_pciedev_info *devinfo);
+<<<<<<< HEAD
 static void
 brcmf_pcie_fwcon_timer(struct brcmf_pciedev_info *devinfo, bool active);
 static void brcmf_pcie_debugfs_create(struct device *dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static u16
 brcmf_pcie_read_reg16(struct brcmf_pciedev_info *devinfo, u32 reg_offset)
@@ -752,7 +792,11 @@ static int brcmf_pcie_exit_download_state(struct brcmf_pciedev_info *devinfo,
 	}
 
 	if (!brcmf_chip_set_active(devinfo->ci, resetintr))
+<<<<<<< HEAD
 		return -EIO;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1244,10 +1288,13 @@ static int brcmf_pcie_init_ringbuffers(struct brcmf_pciedev_info *devinfo)
 				BRCMF_NROF_H2D_COMMON_MSGRINGS;
 		max_completionrings = BRCMF_NROF_D2H_COMMON_MSGRINGS;
 	}
+<<<<<<< HEAD
 	if (max_flowrings > 512) {
 		brcmf_err(bus, "invalid max_flowrings(%d)\n", max_flowrings);
 		return -EIO;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (devinfo->dma_idx_sz != 0) {
 		bufsz = (max_submissionrings + max_completionrings) *
@@ -1443,11 +1490,14 @@ fail:
 
 static void brcmf_pcie_down(struct device *dev)
 {
+<<<<<<< HEAD
 	struct brcmf_bus *bus_if = dev_get_drvdata(dev);
 	struct brcmf_pciedev *pcie_bus_dev = bus_if->bus_priv.pcie;
 	struct brcmf_pciedev_info *devinfo = pcie_bus_dev->devinfo;
 
 	brcmf_pcie_fwcon_timer(devinfo, false);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int brcmf_pcie_preinit(struct device *dev)
@@ -1527,10 +1577,13 @@ static int brcmf_pcie_get_blob(struct device *dev, const struct firmware **fw,
 		*fw = devinfo->clm_fw;
 		devinfo->clm_fw = NULL;
 		break;
+<<<<<<< HEAD
 	case BRCMF_BLOB_TXCAP:
 		*fw = devinfo->txcap_fw;
 		devinfo->txcap_fw = NULL;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -ENOENT;
 	}
@@ -1586,7 +1639,10 @@ static const struct brcmf_bus_ops brcmf_pcie_bus_ops = {
 	.get_memdump = brcmf_pcie_get_memdump,
 	.get_blob = brcmf_pcie_get_blob,
 	.reset = brcmf_pcie_reset,
+<<<<<<< HEAD
 	.debugfs_create = brcmf_pcie_debugfs_create,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 
@@ -1667,6 +1723,7 @@ brcmf_pcie_init_share_ram_info(struct brcmf_pciedev_info *devinfo,
 	return 0;
 }
 
+<<<<<<< HEAD
 struct brcmf_random_seed_footer {
 	__le32 length;
 	__le32 magic;
@@ -1674,6 +1731,8 @@ struct brcmf_random_seed_footer {
 
 #define BRCMF_RANDOM_SEED_MAGIC		0xfeedc0de
 #define BRCMF_RANDOM_SEED_LENGTH	0x100
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int brcmf_pcie_download_fw_nvram(struct brcmf_pciedev_info *devinfo,
 					const struct firmware *fw, void *nvram,
@@ -1710,6 +1769,7 @@ static int brcmf_pcie_download_fw_nvram(struct brcmf_pciedev_info *devinfo,
 			  nvram_len;
 		memcpy_toio(devinfo->tcm + address, nvram, nvram_len);
 		brcmf_fw_nvram_free(nvram);
+<<<<<<< HEAD
 
 		if (devinfo->otp.valid) {
 			size_t rand_len = BRCMF_RANDOM_SEED_LENGTH;
@@ -1734,6 +1794,8 @@ static int brcmf_pcie_download_fw_nvram(struct brcmf_pciedev_info *devinfo,
 			memcpy_toio(devinfo->tcm + address, randbuf, rand_len);
 			kfree(randbuf);
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		brcmf_dbg(PCIE, "No matching NVRAM file found %s\n",
 			  devinfo->nvram_name);
@@ -2045,6 +2107,7 @@ static int brcmf_pcie_read_otp(struct brcmf_pciedev_info *devinfo)
 	int ret;
 
 	switch (devinfo->ci->chip) {
+<<<<<<< HEAD
 	case BRCM_CC_4355_CHIP_ID:
 		coreid = BCMA_CORE_CHIPCOMMON;
 		base = 0x8c0;
@@ -2056,16 +2119,21 @@ static int brcmf_pcie_read_otp(struct brcmf_pciedev_info *devinfo)
 		words = 0x1a0;
 		break;
 	case BRCM_CC_4377_CHIP_ID:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case BRCM_CC_4378_CHIP_ID:
 		coreid = BCMA_CORE_GCI;
 		base = 0x1120;
 		words = 0x170;
 		break;
+<<<<<<< HEAD
 	case BRCM_CC_4387_CHIP_ID:
 		coreid = BCMA_CORE_GCI;
 		base = 0x113c;
 		words = 0x170;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		/* OTP not supported on this chip */
 		return 0;
@@ -2123,7 +2191,10 @@ static int brcmf_pcie_read_otp(struct brcmf_pciedev_info *devinfo)
 #define BRCMF_PCIE_FW_CODE	0
 #define BRCMF_PCIE_FW_NVRAM	1
 #define BRCMF_PCIE_FW_CLM	2
+<<<<<<< HEAD
 #define BRCMF_PCIE_FW_TXCAP	3
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void brcmf_pcie_setup(struct device *dev, int ret,
 			     struct brcmf_fw_request *fwreq)
@@ -2136,21 +2207,33 @@ static void brcmf_pcie_setup(struct device *dev, int ret,
 	struct brcmf_commonring **flowrings;
 	u32 i, nvram_len;
 
+<<<<<<< HEAD
 	bus = dev_get_drvdata(dev);
 	pcie_bus_dev = bus->bus_priv.pcie;
 	devinfo = pcie_bus_dev->devinfo;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* check firmware loading result */
 	if (ret)
 		goto fail;
 
+<<<<<<< HEAD
+=======
+	bus = dev_get_drvdata(dev);
+	pcie_bus_dev = bus->bus_priv.pcie;
+	devinfo = pcie_bus_dev->devinfo;
+>>>>>>> b7ba80a49124 (Commit)
 	brcmf_pcie_attach(devinfo);
 
 	fw = fwreq->items[BRCMF_PCIE_FW_CODE].binary;
 	nvram = fwreq->items[BRCMF_PCIE_FW_NVRAM].nv_data.data;
 	nvram_len = fwreq->items[BRCMF_PCIE_FW_NVRAM].nv_data.len;
 	devinfo->clm_fw = fwreq->items[BRCMF_PCIE_FW_CLM].binary;
+<<<<<<< HEAD
 	devinfo->txcap_fw = fwreq->items[BRCMF_PCIE_FW_TXCAP].binary;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(fwreq);
 
 	ret = brcmf_chip_get_raminfo(devinfo->ci);
@@ -2213,6 +2296,7 @@ static void brcmf_pcie_setup(struct device *dev, int ret,
 
 	brcmf_pcie_bus_console_read(devinfo, false);
 
+<<<<<<< HEAD
 	brcmf_pcie_fwcon_timer(devinfo, true);
 
 	return;
@@ -2221,6 +2305,11 @@ fail:
 	brcmf_err(bus, "Dongle setup failed\n");
 	brcmf_pcie_bus_console_read(devinfo, true);
 	brcmf_fw_crashed(dev);
+=======
+	return;
+
+fail:
+>>>>>>> b7ba80a49124 (Commit)
 	device_release_driver(dev);
 }
 
@@ -2232,7 +2321,10 @@ brcmf_pcie_prepare_fw_request(struct brcmf_pciedev_info *devinfo)
 		{ ".bin", devinfo->fw_name },
 		{ ".txt", devinfo->nvram_name },
 		{ ".clm_blob", devinfo->clm_name },
+<<<<<<< HEAD
 		{ ".txcap_blob", devinfo->txcap_name },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	fwreq = brcmf_fw_alloc_request(devinfo->ci->chip, devinfo->ci->chiprev,
@@ -2247,8 +2339,11 @@ brcmf_pcie_prepare_fw_request(struct brcmf_pciedev_info *devinfo)
 	fwreq->items[BRCMF_PCIE_FW_NVRAM].flags = BRCMF_FW_REQF_OPTIONAL;
 	fwreq->items[BRCMF_PCIE_FW_CLM].type = BRCMF_FW_TYPE_BINARY;
 	fwreq->items[BRCMF_PCIE_FW_CLM].flags = BRCMF_FW_REQF_OPTIONAL;
+<<<<<<< HEAD
 	fwreq->items[BRCMF_PCIE_FW_TXCAP].type = BRCMF_FW_TYPE_BINARY;
 	fwreq->items[BRCMF_PCIE_FW_TXCAP].flags = BRCMF_FW_REQF_OPTIONAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* NVRAM reserves PCI domain 0 for Broadcom's SDK faked bus */
 	fwreq->domain_nr = pci_domain_nr(devinfo->pdev->bus) + 1;
 	fwreq->bus_nr = devinfo->pdev->bus->number;
@@ -2295,6 +2390,7 @@ brcmf_pcie_prepare_fw_request(struct brcmf_pciedev_info *devinfo)
 	return fwreq;
 }
 
+<<<<<<< HEAD
 #ifdef DEBUG
 static void
 brcmf_pcie_fwcon_timer(struct brcmf_pciedev_info *devinfo, bool active)
@@ -2394,6 +2490,8 @@ static void brcmf_pcie_debugfs_create(struct device *dev)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int
 brcmf_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 {
@@ -2461,7 +2559,10 @@ brcmf_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	bus->bus_priv.pcie = pcie_bus_dev;
 	bus->ops = &brcmf_pcie_bus_ops;
 	bus->proto_type = BRCMF_PROTO_MSGBUF;
+<<<<<<< HEAD
 	bus->fwvid = id->driver_data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bus->chip = devinfo->coreid;
 	bus->wowl_supported = pci_pme_capable(pdev, PCI_D3hot);
 	dev_set_drvdata(&pdev->dev, bus);
@@ -2476,11 +2577,14 @@ brcmf_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 		goto fail_brcmf;
 	}
 
+<<<<<<< HEAD
 #ifdef DEBUG
 	/* Set up the fwcon timer */
 	timer_setup(&devinfo->timer, brcmf_pcie_fwcon, 0);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	fwreq = brcmf_pcie_prepare_fw_request(devinfo);
 	if (!fwreq) {
 		ret = -ENOMEM;
@@ -2526,7 +2630,10 @@ brcmf_pcie_remove(struct pci_dev *pdev)
 
 	devinfo = bus->bus_priv.pcie->devinfo;
 	brcmf_pcie_bus_console_read(devinfo, false);
+<<<<<<< HEAD
 	brcmf_pcie_fwcon_timer(devinfo, false);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	devinfo->state = BRCMFMAC_PCIE_STATE_DOWN;
 	if (devinfo->ci)
@@ -2546,7 +2653,10 @@ brcmf_pcie_remove(struct pci_dev *pdev)
 	brcmf_pcie_reset_device(devinfo);
 	brcmf_pcie_release_resource(devinfo);
 	release_firmware(devinfo->clm_fw);
+<<<<<<< HEAD
 	release_firmware(devinfo->txcap_fw);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (devinfo->ci)
 		brcmf_chip_detach(devinfo->ci);
@@ -2571,7 +2681,10 @@ static int brcmf_pcie_pm_enter_D3(struct device *dev)
 	bus = dev_get_drvdata(dev);
 	devinfo = bus->bus_priv.pcie->devinfo;
 
+<<<<<<< HEAD
 	brcmf_pcie_fwcon_timer(devinfo, false);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	brcmf_bus_change_state(bus, BRCMF_BUS_DOWN);
 
 	devinfo->mbdata_completed = false;
@@ -2615,7 +2728,10 @@ static int brcmf_pcie_pm_leave_D3(struct device *dev)
 		brcmf_bus_change_state(bus, BRCMF_BUS_UP);
 		brcmf_pcie_intr_enable(devinfo);
 		brcmf_pcie_hostready(devinfo);
+<<<<<<< HEAD
 		brcmf_pcie_fwcon_timer(devinfo, true);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
@@ -2644,6 +2760,7 @@ static const struct dev_pm_ops brcmf_pciedrvr_pm = {
 #endif /* CONFIG_PM */
 
 
+<<<<<<< HEAD
 #define BRCMF_PCIE_DEVICE(dev_id, fw_vend) \
 	{ \
 		BRCM_PCIE_VENDOR_ID_BROADCOM, (dev_id), \
@@ -2688,6 +2805,38 @@ static const struct pci_device_id brcmf_pcie_devid_table[] = {
 	BRCMF_PCIE_DEVICE(BRCM_PCIE_4378_DEVICE_ID, WCC),
 	BRCMF_PCIE_DEVICE(BRCM_PCIE_4387_DEVICE_ID, WCC),
 
+=======
+#define BRCMF_PCIE_DEVICE(dev_id)	{ BRCM_PCIE_VENDOR_ID_BROADCOM, dev_id,\
+	PCI_ANY_ID, PCI_ANY_ID, PCI_CLASS_NETWORK_OTHER << 8, 0xffff00, 0 }
+#define BRCMF_PCIE_DEVICE_SUB(dev_id, subvend, subdev)	{ \
+	BRCM_PCIE_VENDOR_ID_BROADCOM, dev_id,\
+	subvend, subdev, PCI_CLASS_NETWORK_OTHER << 8, 0xffff00, 0 }
+
+static const struct pci_device_id brcmf_pcie_devid_table[] = {
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_4350_DEVICE_ID),
+	BRCMF_PCIE_DEVICE_SUB(0x4355, BRCM_PCIE_VENDOR_ID_BROADCOM, 0x4355),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_4354_RAW_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_4356_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_43567_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_43570_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_43570_RAW_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_4358_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_4359_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_43602_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_43602_2G_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_43602_5G_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_43602_RAW_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_4364_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_4365_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_4365_2G_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_4365_5G_DEVICE_ID),
+	BRCMF_PCIE_DEVICE_SUB(0x4365, BRCM_PCIE_VENDOR_ID_BROADCOM, 0x4365),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_4366_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_4366_2G_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_4366_5G_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_4371_DEVICE_ID),
+	BRCMF_PCIE_DEVICE(BRCM_PCIE_4378_DEVICE_ID),
+>>>>>>> b7ba80a49124 (Commit)
 	{ /* end: all zeroes */ }
 };
 

@@ -105,7 +105,10 @@ Code  Seq#    Include File                                           Comments
 '8'   all                                                            SNP8023 advanced NIC card
                                                                      <mailto:mcr@solidum.com>
 ';'   64-7F  linux/vfio.h
+<<<<<<< HEAD
 ';'   80-FF  linux/iommufd.h
+=======
+>>>>>>> b7ba80a49124 (Commit)
 '='   00-3f  uapi/linux/ptp_clock.h                                  <mailto:richardcochran@gmail.com>
 '@'   00-0F  linux/radeonfb.h                                        conflict!
 '@'   00-0F  drivers/video/aty/aty128fb.c                            conflict!
@@ -201,6 +204,10 @@ Code  Seq#    Include File                                           Comments
 'V'   all    linux/videodev2.h                                       conflict!
 'V'   C0     linux/ivtvfb.h                                          conflict!
 'V'   C0     linux/ivtv.h                                            conflict!
+<<<<<<< HEAD
+=======
+'V'   C0     media/davinci/vpfe_capture.h                            conflict!
+>>>>>>> b7ba80a49124 (Commit)
 'V'   C0     media/si4713.h                                          conflict!
 'W'   00-1F  linux/watchdog.h                                        conflict!
 'W'   00-1F  linux/wanrouter.h                                       conflict! (pre 3.9)
@@ -221,7 +228,11 @@ Code  Seq#    Include File                                           Comments
 'a'   00-0F  drivers/crypto/qat/qat_common/adf_cfg_common.h          conflict! qat driver
 'b'   00-FF                                                          conflict! bit3 vme host bridge
                                                                      <mailto:natalia@nikhefk.nikhef.nl>
+<<<<<<< HEAD
 'b'   00-0F  linux/dma-buf.h                                         conflict!
+=======
+'c'   all    linux/cm4000_cs.h                                       conflict!
+>>>>>>> b7ba80a49124 (Commit)
 'c'   00-7F  linux/comstats.h                                        conflict!
 'c'   00-7F  linux/coda.h                                            conflict!
 'c'   00-1F  linux/chio.h                                            conflict!

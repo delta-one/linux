@@ -30,7 +30,10 @@
 
 enum tas572x_type {
 	TAS5720,
+<<<<<<< HEAD
 	TAS5720A_Q1,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	TAS5722,
 };
 
@@ -167,6 +170,7 @@ static int tas5720_set_dai_tdm_slot(struct snd_soc_dai *dai,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Enable manual TDM slot selection (instead of I2C ID based).
 	 * This is not applicable to TAS5720A-Q1.
@@ -187,6 +191,19 @@ static int tas5720_set_dai_tdm_slot(struct snd_soc_dai *dai,
 			goto error_snd_soc_component_update_bits;
 		break;
 	}
+=======
+	/* Enable manual TDM slot selection (instead of I2C ID based) */
+	ret = snd_soc_component_update_bits(component, TAS5720_DIGITAL_CTRL1_REG,
+				  TAS5720_TDM_CFG_SRC, TAS5720_TDM_CFG_SRC);
+	if (ret < 0)
+		goto error_snd_soc_component_update_bits;
+
+	/* Configure the TDM slot to process audio from */
+	ret = snd_soc_component_update_bits(component, TAS5720_DIGITAL_CTRL2_REG,
+				  TAS5720_TDM_SLOT_SEL_MASK, first_slot);
+	if (ret < 0)
+		goto error_snd_soc_component_update_bits;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Configure TDM slot width. This is only applicable to TAS5722. */
 	switch (tas5720->devtype) {
@@ -209,6 +226,7 @@ error_snd_soc_component_update_bits:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int tas5720_mute_soc_component(struct snd_soc_component *component, int mute)
 {
 	struct tas5720_data *tas5720 = snd_soc_component_get_drvdata(component);
@@ -227,6 +245,15 @@ static int tas5720_mute_soc_component(struct snd_soc_component *component, int m
 	}
 
 	ret = snd_soc_component_update_bits(component, reg, mask, mute ? mask : 0);
+=======
+static int tas5720_mute(struct snd_soc_dai *dai, int mute, int direction)
+{
+	struct snd_soc_component *component = dai->component;
+	int ret;
+
+	ret = snd_soc_component_update_bits(component, TAS5720_DIGITAL_CTRL2_REG,
+				  TAS5720_MUTE, mute ? TAS5720_MUTE : 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0) {
 		dev_err(component->dev, "error (un-)muting device: %d\n", ret);
 		return ret;
@@ -235,11 +262,14 @@ static int tas5720_mute_soc_component(struct snd_soc_component *component, int m
 	return 0;
 }
 
+<<<<<<< HEAD
 static int tas5720_mute(struct snd_soc_dai *dai, int mute, int direction)
 {
 	return tas5720_mute_soc_component(dai->component, mute);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void tas5720_fault_check_work(struct work_struct *work)
 {
 	struct tas5720_data *tas5720 = container_of(work, struct tas5720_data,
@@ -331,9 +361,12 @@ static int tas5720_codec_probe(struct snd_soc_component *component)
 	case TAS5720:
 		expected_device_id = TAS5720_DEVICE_ID;
 		break;
+<<<<<<< HEAD
 	case TAS5720A_Q1:
 		expected_device_id = TAS5720A_Q1_DEVICE_ID;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case TAS5722:
 		expected_device_id = TAS5722_DEVICE_ID;
 		break;
@@ -347,6 +380,7 @@ static int tas5720_codec_probe(struct snd_soc_component *component)
 			 expected_device_id, device_id);
 
 	/* Set device to mute */
+<<<<<<< HEAD
 	ret = tas5720_mute_soc_component(component, 1);
 	if (ret < 0)
 		goto error_snd_soc_component_update_bits;
@@ -361,6 +395,10 @@ static int tas5720_codec_probe(struct snd_soc_component *component)
 	default:
 		break;
 	}
+=======
+	ret = snd_soc_component_update_bits(component, TAS5720_DIGITAL_CTRL2_REG,
+				  TAS5720_MUTE, TAS5720_MUTE);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		goto error_snd_soc_component_update_bits;
 
@@ -512,6 +550,7 @@ static const struct regmap_config tas5720_regmap_config = {
 	.volatile_reg = tas5720_is_volatile_reg,
 };
 
+<<<<<<< HEAD
 static const struct regmap_config tas5720a_q1_regmap_config = {
 	.reg_bits = 8,
 	.val_bits = 8,
@@ -521,6 +560,8 @@ static const struct regmap_config tas5720a_q1_regmap_config = {
 	.volatile_reg = tas5720_is_volatile_reg,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct regmap_config tas5722_regmap_config = {
 	.reg_bits = 8,
 	.val_bits = 8,
@@ -542,6 +583,7 @@ static const DECLARE_TLV_DB_RANGE(dac_analog_tlv,
 );
 
 /*
+<<<<<<< HEAD
  * DAC analog gain for TAS5720A-Q1. There are three discrete values to select from, ranging
  * from 19.2 dB to 25.0dB.
  */
@@ -552,6 +594,8 @@ static const DECLARE_TLV_DB_RANGE(dac_analog_tlv_a_q1,
 );
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * DAC digital volumes. From -103.5 to 24 dB in 0.5 dB or 0.25 dB steps
  * depending on the device. Note that setting the gain below -100 dB
  * (register value <0x7) is effectively a MUTE as per device datasheet.
@@ -597,6 +641,7 @@ static const struct snd_kcontrol_new tas5720_snd_controls[] = {
 		       TAS5720_ANALOG_GAIN_SHIFT, 3, 0, dac_analog_tlv),
 };
 
+<<<<<<< HEAD
 static const struct snd_kcontrol_new tas5720a_q1_snd_controls[] = {
 	SOC_DOUBLE_R_TLV("Speaker Driver Playback Volume",
 				TAS5720_Q1_VOLUME_CTRL_LEFT_REG,
@@ -606,6 +651,8 @@ static const struct snd_kcontrol_new tas5720a_q1_snd_controls[] = {
 				TAS5720_ANALOG_GAIN_SHIFT, 3, 0, dac_analog_tlv_a_q1),
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_kcontrol_new tas5722_snd_controls[] = {
 	SOC_SINGLE_EXT_TLV("Speaker Driver Playback Volume",
 			   0, 0, 511, 0,
@@ -643,6 +690,7 @@ static const struct snd_soc_component_driver soc_component_dev_tas5720 = {
 	.endianness		= 1,
 };
 
+<<<<<<< HEAD
 static const struct snd_soc_component_driver soc_component_dev_tas5720_a_q1 = {
 	.probe			= tas5720_codec_probe,
 	.remove			= tas5720_codec_remove,
@@ -659,6 +707,8 @@ static const struct snd_soc_component_driver soc_component_dev_tas5720_a_q1 = {
 	.endianness		= 1,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_soc_component_driver soc_component_dev_tas5722 = {
 	.probe = tas5720_codec_probe,
 	.remove = tas5720_codec_remove,
@@ -718,7 +768,10 @@ static struct snd_soc_dai_driver tas5720_dai[] = {
 
 static const struct i2c_device_id tas5720_id[] = {
 	{ "tas5720", TAS5720 },
+<<<<<<< HEAD
 	{ "tas5720a-q1", TAS5720A_Q1 },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ "tas5722", TAS5722 },
 	{ }
 };
@@ -745,9 +798,12 @@ static int tas5720_probe(struct i2c_client *client)
 	case TAS5720:
 		regmap_config = &tas5720_regmap_config;
 		break;
+<<<<<<< HEAD
 	case TAS5720A_Q1:
 		regmap_config = &tas5720a_q1_regmap_config;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case TAS5722:
 		regmap_config = &tas5722_regmap_config;
 		break;
@@ -781,12 +837,15 @@ static int tas5720_probe(struct i2c_client *client)
 					tas5720_dai,
 					ARRAY_SIZE(tas5720_dai));
 		break;
+<<<<<<< HEAD
 	case TAS5720A_Q1:
 		ret = devm_snd_soc_register_component(&client->dev,
 					&soc_component_dev_tas5720_a_q1,
 					tas5720_dai,
 					ARRAY_SIZE(tas5720_dai));
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case TAS5722:
 		ret = devm_snd_soc_register_component(&client->dev,
 					&soc_component_dev_tas5722,
@@ -808,7 +867,10 @@ static int tas5720_probe(struct i2c_client *client)
 #if IS_ENABLED(CONFIG_OF)
 static const struct of_device_id tas5720_of_match[] = {
 	{ .compatible = "ti,tas5720", },
+<<<<<<< HEAD
 	{ .compatible = "ti,tas5720a-q1", },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "ti,tas5722", },
 	{ },
 };

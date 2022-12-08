@@ -119,16 +119,29 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void qcom_apcs_msm8916_clk_remove(struct platform_device *pdev)
+=======
+static int qcom_apcs_msm8916_clk_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct clk_regmap_mux_div *a53cc = platform_get_drvdata(pdev);
 
 	clk_notifier_unregister(a53cc->pclk, &a53cc->clk_nb);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver qcom_apcs_msm8916_clk_driver = {
 	.probe = qcom_apcs_msm8916_clk_probe,
+<<<<<<< HEAD
 	.remove_new = qcom_apcs_msm8916_clk_remove,
+=======
+	.remove = qcom_apcs_msm8916_clk_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "qcom-apcs-msm8916-clk",
 	},

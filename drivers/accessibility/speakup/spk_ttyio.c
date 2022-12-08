@@ -354,9 +354,12 @@ void spk_ttyio_release(struct spk_synth *in_synth)
 {
 	struct tty_struct *tty = in_synth->dev;
 
+<<<<<<< HEAD
 	if (tty == NULL)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tty_lock(tty);
 
 	if (tty->ops->close)

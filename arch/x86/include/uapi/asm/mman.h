@@ -3,7 +3,10 @@
 #define _ASM_X86_MMAN_H
 
 #define MAP_32BIT	0x40		/* only give out 32bit addresses */
+<<<<<<< HEAD
 #define MAP_ABOVE4G	0x80		/* only map above 4GB */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
 #define arch_calc_vm_prot_bits(prot, key) (		\
@@ -13,9 +16,12 @@
 		((key) & 0x8 ? VM_PKEY_BIT3 : 0))
 #endif
 
+<<<<<<< HEAD
 /* Flags for map_shadow_stack(2) */
 #define SHADOW_STACK_SET_TOKEN	(1ULL << 0)	/* Set up a restore token in the shadow stack */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm-generic/mman.h>
 
 #endif /* _ASM_X86_MMAN_H */

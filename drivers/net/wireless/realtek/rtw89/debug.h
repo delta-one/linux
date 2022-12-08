@@ -25,10 +25,13 @@ enum rtw89_debug_mask {
 	RTW89_DBG_BF = BIT(14),
 	RTW89_DBG_HW_SCAN = BIT(15),
 	RTW89_DBG_SAR = BIT(16),
+<<<<<<< HEAD
 	RTW89_DBG_STATE = BIT(17),
 	RTW89_DBG_WOW = BIT(18),
 	RTW89_DBG_UL_TB = BIT(19),
 	RTW89_DBG_CHAN = BIT(20),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	RTW89_DBG_UNEXP = BIT(31),
 };

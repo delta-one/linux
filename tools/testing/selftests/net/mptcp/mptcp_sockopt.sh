@@ -10,19 +10,26 @@ ksft_skip=4
 timeout_poll=30
 timeout_test=$((timeout_poll * 2 + 1))
 mptcp_connect=""
+<<<<<<< HEAD
 
 sec=$(date +%s)
 rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
 ns1="ns1-$rndh"
 ns2="ns2-$rndh"
 ns_sbox="ns_sbox-$rndh"
+=======
+do_all_tests=1
+>>>>>>> b7ba80a49124 (Commit)
 
 add_mark_rules()
 {
 	local ns=$1
 	local m=$2
 
+<<<<<<< HEAD
 	local t
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for t in iptables ip6tables; do
 		# just to debug: check we have multiple subflows connection requests
 		ip netns exec $ns $t -A OUTPUT -p tcp --syn -m mark --mark $m -j ACCEPT
@@ -37,8 +44,17 @@ add_mark_rules()
 
 init()
 {
+<<<<<<< HEAD
 	local netns
 	for netns in "$ns1" "$ns2" "$ns_sbox";do
+=======
+	rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
+
+	ns1="ns1-$rndh"
+	ns2="ns2-$rndh"
+
+	for netns in "$ns1" "$ns2";do
+>>>>>>> b7ba80a49124 (Commit)
 		ip netns add $netns || exit $ksft_skip
 		ip -net $netns link set lo up
 		ip netns exec $netns sysctl -q net.mptcp.enabled=1
@@ -46,7 +62,10 @@ init()
 		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
 	done
 
+<<<<<<< HEAD
 	local i
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for i in `seq 1 4`; do
 		ip link add ns1eth$i netns "$ns1" type veth peer name ns2eth$i netns "$ns2"
 		ip -net "$ns1" addr add 10.0.$i.1/24 dev ns1eth$i
@@ -76,8 +95,12 @@ init()
 
 cleanup()
 {
+<<<<<<< HEAD
 	local netns
 	for netns in "$ns1" "$ns2" "$ns_sbox"; do
+=======
+	for netns in "$ns1" "$ns2"; do
+>>>>>>> b7ba80a49124 (Commit)
 		ip netns del $netns
 	done
 	rm -f "$cin" "$cout"
@@ -107,17 +130,27 @@ check_mark()
 	local ns=$1
 	local af=$2
 
+<<<<<<< HEAD
 	local tables=iptables
+=======
+	tables=iptables
+>>>>>>> b7ba80a49124 (Commit)
 
 	if [ $af -eq 6 ];then
 		tables=ip6tables
 	fi
 
+<<<<<<< HEAD
 	local counters values
 	counters=$(ip netns exec $ns $tables -v -L OUTPUT | grep DROP)
 	values=${counters%DROP*}
 
 	local v
+=======
+	counters=$(ip netns exec $ns $tables -v -L OUTPUT | grep DROP)
+	values=${counters%DROP*}
+
+>>>>>>> b7ba80a49124 (Commit)
 	for v in $values; do
 		if [ $v -ne 0 ]; then
 			echo "FAIL: got $tables $values in ns $ns , not 0 - not all expected packets marked" 1>&2
@@ -137,9 +170,15 @@ print_file_err()
 
 check_transfer()
 {
+<<<<<<< HEAD
 	local in=$1
 	local out=$2
 	local what=$3
+=======
+	in=$1
+	out=$2
+	what=$3
+>>>>>>> b7ba80a49124 (Commit)
 
 	cmp "$in" "$out" > /dev/null 2>&1
 	if [ $? -ne 0 ] ;then
@@ -162,6 +201,7 @@ is_v6()
 
 do_transfer()
 {
+<<<<<<< HEAD
 	local listener_ns="$1"
 	local connector_ns="$2"
 	local cl_proto="$3"
@@ -169,11 +209,24 @@ do_transfer()
 	local connect_addr="$5"
 
 	local port=12001
+=======
+	listener_ns="$1"
+	connector_ns="$2"
+	cl_proto="$3"
+	srv_proto="$4"
+	connect_addr="$5"
+
+	port=12001
+>>>>>>> b7ba80a49124 (Commit)
 
 	:> "$cout"
 	:> "$sout"
 
+<<<<<<< HEAD
 	local mptcp_connect="./mptcp_connect -r 20"
+=======
+	mptcp_connect="./mptcp_connect -r 20"
+>>>>>>> b7ba80a49124 (Commit)
 
 	local local_addr
 	if is_v6 "${connect_addr}"; then
@@ -186,7 +239,11 @@ do_transfer()
 		ip netns exec ${listener_ns} \
 			$mptcp_connect -t ${timeout_poll} -l -M 1 -p $port -s ${srv_proto} -c TIMESTAMPNS,TCPINQ \
 				${local_addr} < "$sin" > "$sout" &
+<<<<<<< HEAD
 	local spid=$!
+=======
+	spid=$!
+>>>>>>> b7ba80a49124 (Commit)
 
 	sleep 1
 
@@ -195,12 +252,21 @@ do_transfer()
 			$mptcp_connect -t ${timeout_poll} -M 2 -p $port -s ${cl_proto} -c TIMESTAMPNS,TCPINQ \
 				$connect_addr < "$cin" > "$cout" &
 
+<<<<<<< HEAD
 	local cpid=$!
 
 	wait $cpid
 	local retc=$?
 	wait $spid
 	local rets=$?
+=======
+	cpid=$!
+
+	wait $cpid
+	retc=$?
+	wait $spid
+	rets=$?
+>>>>>>> b7ba80a49124 (Commit)
 
 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
 		echo " client exit code $retc, server $rets" 1>&2
@@ -235,9 +301,15 @@ do_transfer()
 
 make_file()
 {
+<<<<<<< HEAD
 	local name=$1
 	local who=$2
 	local size=$3
+=======
+	name=$1
+	who=$2
+	size=$3
+>>>>>>> b7ba80a49124 (Commit)
 
 	dd if=/dev/urandom of="$name" bs=1024 count=$size 2> /dev/null
 	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
@@ -249,7 +321,11 @@ do_mptcp_sockopt_tests()
 {
 	local lret=0
 
+<<<<<<< HEAD
 	ip netns exec "$ns_sbox" ./mptcp_sockopt
+=======
+	./mptcp_sockopt
+>>>>>>> b7ba80a49124 (Commit)
 	lret=$?
 
 	if [ $lret -ne 0 ]; then
@@ -258,7 +334,11 @@ do_mptcp_sockopt_tests()
 		return
 	fi
 
+<<<<<<< HEAD
 	ip netns exec "$ns_sbox" ./mptcp_sockopt -6
+=======
+	./mptcp_sockopt -6
+>>>>>>> b7ba80a49124 (Commit)
 	lret=$?
 
 	if [ $lret -ne 0 ]; then
@@ -270,9 +350,15 @@ do_mptcp_sockopt_tests()
 
 run_tests()
 {
+<<<<<<< HEAD
 	local listener_ns="$1"
 	local connector_ns="$2"
 	local connect_addr="$3"
+=======
+	listener_ns="$1"
+	connector_ns="$2"
+	connect_addr="$3"
+>>>>>>> b7ba80a49124 (Commit)
 	local lret=0
 
 	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr}
@@ -287,8 +373,13 @@ run_tests()
 
 do_tcpinq_test()
 {
+<<<<<<< HEAD
 	ip netns exec "$ns_sbox" ./mptcp_inq "$@"
 	local lret=$?
+=======
+	ip netns exec "$ns1" ./mptcp_inq "$@"
+	lret=$?
+>>>>>>> b7ba80a49124 (Commit)
 	if [ $lret -ne 0 ];then
 		ret=$lret
 		echo "FAIL: mptcp_inq $@" 1>&2
@@ -303,7 +394,13 @@ do_tcpinq_tests()
 {
 	local lret=0
 
+<<<<<<< HEAD
 	local args
+=======
+	ip netns exec "$ns1" iptables -F
+	ip netns exec "$ns1" ip6tables -F
+
+>>>>>>> b7ba80a49124 (Commit)
 	for args in "-t tcp" "-r tcp"; do
 		do_tcpinq_test $args
 		lret=$?

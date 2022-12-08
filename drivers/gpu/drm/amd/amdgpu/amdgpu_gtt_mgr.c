@@ -144,7 +144,11 @@ static int amdgpu_gtt_mgr_new(struct ttm_resource_manager *man,
 		node->base.start = node->mm_nodes[0].start;
 	} else {
 		node->mm_nodes[0].start = 0;
+<<<<<<< HEAD
 		node->mm_nodes[0].size = PFN_UP(node->base.size);
+=======
+		node->mm_nodes[0].size = node->base.num_pages;
+>>>>>>> b7ba80a49124 (Commit)
 		node->base.start = AMDGPU_BO_INVALID_OFFSET;
 	}
 

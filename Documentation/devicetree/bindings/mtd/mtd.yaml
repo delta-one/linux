@@ -12,7 +12,11 @@ maintainers:
 
 properties:
   $nodename:
+<<<<<<< HEAD
     pattern: "^(flash|.*sram)(@.*)?$"
+=======
+    pattern: "^flash(@.*)?$"
+>>>>>>> b7ba80a49124 (Commit)
 
   label:
     description:
@@ -21,6 +25,7 @@ properties:
       based name) in order to ease flash device identification and/or
       describe what they are used for.
 
+<<<<<<< HEAD
   '#address-cells':
     deprecated: true
 
@@ -43,6 +48,11 @@ patternProperties:
     deprecated: true
 
   "^otp(-[0-9]+)?$":
+=======
+patternProperties:
+  "^otp(-[0-9]+)?$":
+    type: object
+>>>>>>> b7ba80a49124 (Commit)
     $ref: ../nvmem/nvmem.yaml#
 
     description: |
@@ -59,7 +69,10 @@ patternProperties:
     required:
       - compatible
 
+<<<<<<< HEAD
 # This is a generic file other binding inherit from
+=======
+>>>>>>> b7ba80a49124 (Commit)
 additionalProperties: true
 
 examples:

@@ -41,6 +41,7 @@ struct rtw8723de_efuse {
 	u8 sub_device_id[2];
 };
 
+<<<<<<< HEAD
 struct rtw8723du_efuse {
 	u8 res4[48];                    /* 0xd0 */
 	u8 vender_id[2];                /* 0x100 */
@@ -49,6 +50,8 @@ struct rtw8723du_efuse {
 	u8 mac_addr[ETH_ALEN];          /* 0x107 */
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct rtw8723d_efuse {
 	__le16 rtl_id;
 	u8 rsvd[2];
@@ -77,10 +80,14 @@ struct rtw8723d_efuse {
 	u8 rfe_option;
 	u8 country_code[2];
 	u8 res[3];
+<<<<<<< HEAD
 	union {
 		struct rtw8723de_efuse e;
 		struct rtw8723du_efuse u;
 	};
+=======
+	struct rtw8723de_efuse e;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 extern const struct rtw_chip_info rtw8723d_hw_spec;

@@ -221,6 +221,7 @@ ice_receive_skb(struct ice_rx_ring *rx_ring, struct sk_buff *skb, u16 vlan_tag)
 }
 
 /**
+<<<<<<< HEAD
  * ice_clean_xdp_tx_buf - Free and unmap XDP Tx buffer
  * @dev: device for DMA mapping
  * @tx_buf: Tx buffer to clean
@@ -432,6 +433,130 @@ busy:
 	xdp_ring->ring_stats->tx_stats.tx_busy++;
 
 	return ICE_XDP_CONSUMED;
+=======
+ * ice_clean_xdp_irq - Reclaim resources after transmit completes on XDP ring
+ * @xdp_ring: XDP ring to clean
+ */
+static void ice_clean_xdp_irq(struct ice_tx_ring *xdp_ring)
+{
+	unsigned int total_bytes = 0, total_pkts = 0;
+	u16 tx_thresh = ICE_RING_QUARTER(xdp_ring);
+	u16 ntc = xdp_ring->next_to_clean;
+	struct ice_tx_desc *next_dd_desc;
+	u16 next_dd = xdp_ring->next_dd;
+	struct ice_tx_buf *tx_buf;
+	int i;
+
+	next_dd_desc = ICE_TX_DESC(xdp_ring, next_dd);
+	if (!(next_dd_desc->cmd_type_offset_bsz &
+	    cpu_to_le64(ICE_TX_DESC_DTYPE_DESC_DONE)))
+		return;
+
+	for (i = 0; i < tx_thresh; i++) {
+		tx_buf = &xdp_ring->tx_buf[ntc];
+
+		total_bytes += tx_buf->bytecount;
+		/* normally tx_buf->gso_segs was taken but at this point
+		 * it's always 1 for us
+		 */
+		total_pkts++;
+
+		page_frag_free(tx_buf->raw_buf);
+		dma_unmap_single(xdp_ring->dev, dma_unmap_addr(tx_buf, dma),
+				 dma_unmap_len(tx_buf, len), DMA_TO_DEVICE);
+		dma_unmap_len_set(tx_buf, len, 0);
+		tx_buf->raw_buf = NULL;
+
+		ntc++;
+		if (ntc >= xdp_ring->count)
+			ntc = 0;
+	}
+
+	next_dd_desc->cmd_type_offset_bsz = 0;
+	xdp_ring->next_dd = xdp_ring->next_dd + tx_thresh;
+	if (xdp_ring->next_dd > xdp_ring->count)
+		xdp_ring->next_dd = tx_thresh - 1;
+	xdp_ring->next_to_clean = ntc;
+	ice_update_tx_ring_stats(xdp_ring, total_pkts, total_bytes);
+}
+
+/**
+ * ice_xmit_xdp_ring - submit single packet to XDP ring for transmission
+ * @data: packet data pointer
+ * @size: packet data size
+ * @xdp_ring: XDP ring for transmission
+ */
+int ice_xmit_xdp_ring(void *data, u16 size, struct ice_tx_ring *xdp_ring)
+{
+	u16 tx_thresh = ICE_RING_QUARTER(xdp_ring);
+	u16 i = xdp_ring->next_to_use;
+	struct ice_tx_desc *tx_desc;
+	struct ice_tx_buf *tx_buf;
+	dma_addr_t dma;
+
+	if (ICE_DESC_UNUSED(xdp_ring) < tx_thresh)
+		ice_clean_xdp_irq(xdp_ring);
+
+	if (!unlikely(ICE_DESC_UNUSED(xdp_ring))) {
+		xdp_ring->tx_stats.tx_busy++;
+		return ICE_XDP_CONSUMED;
+	}
+
+	dma = dma_map_single(xdp_ring->dev, data, size, DMA_TO_DEVICE);
+	if (dma_mapping_error(xdp_ring->dev, dma))
+		return ICE_XDP_CONSUMED;
+
+	tx_buf = &xdp_ring->tx_buf[i];
+	tx_buf->bytecount = size;
+	tx_buf->gso_segs = 1;
+	tx_buf->raw_buf = data;
+
+	/* record length, and DMA address */
+	dma_unmap_len_set(tx_buf, len, size);
+	dma_unmap_addr_set(tx_buf, dma, dma);
+
+	tx_desc = ICE_TX_DESC(xdp_ring, i);
+	tx_desc->buf_addr = cpu_to_le64(dma);
+	tx_desc->cmd_type_offset_bsz = ice_build_ctob(ICE_TX_DESC_CMD_EOP, 0,
+						      size, 0);
+
+	xdp_ring->xdp_tx_active++;
+	i++;
+	if (i == xdp_ring->count) {
+		i = 0;
+		tx_desc = ICE_TX_DESC(xdp_ring, xdp_ring->next_rs);
+		tx_desc->cmd_type_offset_bsz |=
+			cpu_to_le64(ICE_TX_DESC_CMD_RS << ICE_TXD_QW1_CMD_S);
+		xdp_ring->next_rs = tx_thresh - 1;
+	}
+	xdp_ring->next_to_use = i;
+
+	if (i > xdp_ring->next_rs) {
+		tx_desc = ICE_TX_DESC(xdp_ring, xdp_ring->next_rs);
+		tx_desc->cmd_type_offset_bsz |=
+			cpu_to_le64(ICE_TX_DESC_CMD_RS << ICE_TXD_QW1_CMD_S);
+		xdp_ring->next_rs += tx_thresh;
+	}
+
+	return ICE_XDP_TX;
+}
+
+/**
+ * ice_xmit_xdp_buff - convert an XDP buffer to an XDP frame and send it
+ * @xdp: XDP buffer
+ * @xdp_ring: XDP Tx ring
+ *
+ * Returns negative on failure, 0 on success.
+ */
+int ice_xmit_xdp_buff(struct xdp_buff *xdp, struct ice_tx_ring *xdp_ring)
+{
+	struct xdp_frame *xdpf = xdp_convert_buff_to_frame(xdp);
+
+	if (unlikely(!xdpf))
+		return ICE_XDP_CONSUMED;
+
+	return ice_xmit_xdp_ring(xdpf->data, xdpf->len, xdp_ring);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -443,21 +568,29 @@ busy:
  * should be called when a batch of packets has been processed in the
  * napi loop.
  */
+<<<<<<< HEAD
 void ice_finalize_xdp_rx(struct ice_tx_ring *xdp_ring, unsigned int xdp_res,
 			 u32 first_idx)
 {
 	struct ice_tx_buf *tx_buf = &xdp_ring->tx_buf[first_idx];
 
+=======
+void ice_finalize_xdp_rx(struct ice_tx_ring *xdp_ring, unsigned int xdp_res)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	if (xdp_res & ICE_XDP_REDIR)
 		xdp_do_flush_map();
 
 	if (xdp_res & ICE_XDP_TX) {
 		if (static_branch_unlikely(&ice_xdp_locking_key))
 			spin_lock(&xdp_ring->tx_lock);
+<<<<<<< HEAD
 		/* store index of descriptor with RS bit set in the first
 		 * ice_tx_buf of given NAPI batch
 		 */
 		tx_buf->rs_idx = ice_set_rs_bit(xdp_ring);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ice_xdp_ring_update_tail(xdp_ring);
 		if (static_branch_unlikely(&ice_xdp_locking_key))
 			spin_unlock(&xdp_ring->tx_lock);

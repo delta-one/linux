@@ -245,7 +245,11 @@ static void read_ehdr(FILE *fp)
 		die("Unknown ELF version\n");
 
 	if (ehdr.e_ehsize != sizeof(Elf_Ehdr))
+<<<<<<< HEAD
 		die("Bad ELF header size\n");
+=======
+		die("Bad Elf header size\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ehdr.e_phentsize != sizeof(Elf_Phdr))
 		die("Bad program header entry\n");

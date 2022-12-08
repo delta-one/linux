@@ -255,6 +255,10 @@ static int mcp_sa11x0_remove(struct platform_device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int mcp_sa11x0_suspend(struct device *dev)
 {
 	struct mcp_sa11x0 *m = priv(dev_get_drvdata(dev));
@@ -276,14 +280,25 @@ static int mcp_sa11x0_resume(struct device *dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 static const struct dev_pm_ops mcp_sa11x0_pm_ops = {
+=======
+#endif
+
+static const struct dev_pm_ops mcp_sa11x0_pm_ops = {
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 	.suspend = mcp_sa11x0_suspend,
 	.freeze = mcp_sa11x0_suspend,
 	.poweroff = mcp_sa11x0_suspend,
 	.resume_noirq = mcp_sa11x0_resume,
 	.thaw_noirq = mcp_sa11x0_resume,
 	.restore_noirq = mcp_sa11x0_resume,
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct platform_driver mcp_sa11x0_driver = {
@@ -291,7 +306,11 @@ static struct platform_driver mcp_sa11x0_driver = {
 	.remove		= mcp_sa11x0_remove,
 	.driver		= {
 		.name	= DRIVER_NAME,
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&mcp_sa11x0_pm_ops),
+=======
+		.pm	= &mcp_sa11x0_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

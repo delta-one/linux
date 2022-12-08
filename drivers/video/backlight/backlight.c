@@ -501,7 +501,11 @@ EXPORT_SYMBOL(backlight_device_get_by_type);
  *
  * This function looks up a backlight device by its name. It obtains a reference
  * on the backlight device and it is the caller's responsibility to drop the
+<<<<<<< HEAD
  * reference by calling put_device().
+=======
+ * reference by calling backlight_put().
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Returns:
  * A pointer to the backlight device if found, otherwise NULL.
@@ -751,7 +755,11 @@ static void __exit backlight_class_exit(void)
 
 static int __init backlight_class_init(void)
 {
+<<<<<<< HEAD
 	backlight_class = class_create("backlight");
+=======
+	backlight_class = class_create(THIS_MODULE, "backlight");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(backlight_class)) {
 		pr_warn("Unable to create backlight class; errno = %ld\n",
 			PTR_ERR(backlight_class));

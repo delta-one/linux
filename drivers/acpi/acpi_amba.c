@@ -21,7 +21,10 @@
 
 static const struct acpi_device_id amba_id_list[] = {
 	{"ARMH0061", 0}, /* PL061 GPIO Device */
+<<<<<<< HEAD
 	{"ARMH0330", 0}, /* ARM DMA Controller DMA-330 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{"ARMHC500", 0}, /* ARM CoreSight ETM4x */
 	{"ARMHC501", 0}, /* ARM CoreSight ETR */
 	{"ARMHC502", 0}, /* ARM CoreSight STM */

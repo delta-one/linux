@@ -18,7 +18,10 @@
 #include <linux/of_device.h>
 #include <linux/platform_device.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/seq_file.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/irqdomain.h>
 #include <linux/irqchip/chained_irq.h>
 #include <linux/pinctrl/consumer.h>
@@ -95,6 +98,10 @@ struct tegra_gpio_info {
 	struct tegra_gpio_bank			*bank_info;
 	const struct tegra_gpio_soc_config	*soc;
 	struct gpio_chip			gc;
+<<<<<<< HEAD
+=======
+	struct irq_chip				ic;
+>>>>>>> b7ba80a49124 (Commit)
 	u32					bank_count;
 	unsigned int				*irqs;
 };
@@ -288,7 +295,10 @@ static void tegra_gpio_irq_mask(struct irq_data *d)
 	unsigned int gpio = d->hwirq;
 
 	tegra_gpio_mask_write(tgi, GPIO_MSK_INT_ENB(tgi, gpio), gpio, 0);
+<<<<<<< HEAD
 	gpiochip_disable_irq(chip, gpio);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void tegra_gpio_irq_unmask(struct irq_data *d)
@@ -297,7 +307,10 @@ static void tegra_gpio_irq_unmask(struct irq_data *d)
 	struct tegra_gpio_info *tgi = gpiochip_get_data(chip);
 	unsigned int gpio = d->hwirq;
 
+<<<<<<< HEAD
 	gpiochip_enable_irq(chip, gpio);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tegra_gpio_mask_write(tgi, GPIO_MSK_INT_ENB(tgi, gpio), gpio, 1);
 }
 
@@ -600,6 +613,7 @@ static void tegra_gpio_irq_release_resources(struct irq_data *d)
 	tegra_gpio_enable(tgi, d->hwirq);
 }
 
+<<<<<<< HEAD
 static void tegra_gpio_irq_print_chip(struct irq_data *d, struct seq_file *s)
 {
 	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
@@ -641,6 +655,12 @@ static const struct irq_chip tegra210_gpio_irq_chip = {
 #ifdef	CONFIG_DEBUG_FS
 
 #include <linux/debugfs.h>
+=======
+#ifdef	CONFIG_DEBUG_FS
+
+#include <linux/debugfs.h>
+#include <linux/seq_file.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 static int tegra_dbg_gpio_show(struct seq_file *s, void *unused)
 {
@@ -728,6 +748,21 @@ static int tegra_gpio_probe(struct platform_device *pdev)
 	tgi->gc.ngpio			= tgi->bank_count * 32;
 	tgi->gc.parent			= &pdev->dev;
 
+<<<<<<< HEAD
+=======
+	tgi->ic.name			= "GPIO";
+	tgi->ic.irq_ack			= tegra_gpio_irq_ack;
+	tgi->ic.irq_mask		= tegra_gpio_irq_mask;
+	tgi->ic.irq_unmask		= tegra_gpio_irq_unmask;
+	tgi->ic.irq_set_type		= tegra_gpio_irq_set_type;
+	tgi->ic.irq_shutdown		= tegra_gpio_irq_shutdown;
+#ifdef CONFIG_PM_SLEEP
+	tgi->ic.irq_set_wake		= tegra_gpio_irq_set_wake;
+#endif
+	tgi->ic.irq_request_resources	= tegra_gpio_irq_request_resources;
+	tgi->ic.irq_release_resources	= tegra_gpio_irq_release_resources;
+
+>>>>>>> b7ba80a49124 (Commit)
 	platform_set_drvdata(pdev, tgi);
 
 	if (tgi->soc->debounce_supported)
@@ -760,6 +795,10 @@ static int tegra_gpio_probe(struct platform_device *pdev)
 	}
 
 	irq = &tgi->gc.irq;
+<<<<<<< HEAD
+=======
+	irq->chip = &tgi->ic;
+>>>>>>> b7ba80a49124 (Commit)
 	irq->fwnode = of_node_to_fwnode(pdev->dev.of_node);
 	irq->child_to_parent_hwirq = tegra_gpio_child_to_parent_hwirq;
 	irq->populate_parent_alloc_arg = tegra_gpio_populate_parent_fwspec;
@@ -778,9 +817,13 @@ static int tegra_gpio_probe(struct platform_device *pdev)
 		if (!irq->parent_domain)
 			return -EPROBE_DEFER;
 
+<<<<<<< HEAD
 		gpio_irq_chip_set_chip(irq, &tegra210_gpio_irq_chip);
 	} else {
 		gpio_irq_chip_set_chip(irq, &tegra_gpio_irq_chip);
+=======
+		tgi->ic.irq_set_affinity = tegra_gpio_irq_set_affinity;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	tgi->regs = devm_platform_ioremap_resource(pdev, 0);

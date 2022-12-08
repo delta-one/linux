@@ -201,7 +201,11 @@ __setup("nohalt", nohalt_setup);
 
 #ifdef CONFIG_HOTPLUG_CPU
 /* We don't actually take CPU down, just spin without interrupts. */
+<<<<<<< HEAD
 static inline void __noreturn play_dead(void)
+=======
+static inline void play_dead(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int this_cpu = smp_processor_id();
 
@@ -219,13 +223,21 @@ static inline void __noreturn play_dead(void)
 	BUG();
 }
 #else
+<<<<<<< HEAD
 static inline void __noreturn play_dead(void)
+=======
+static inline void play_dead(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	BUG();
 }
 #endif /* CONFIG_HOTPLUG_CPU */
 
+<<<<<<< HEAD
 void __noreturn arch_cpu_idle_dead(void)
+=======
+void arch_cpu_idle_dead(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	play_dead();
 }
@@ -242,7 +254,10 @@ void arch_cpu_idle(void)
 		(*mark_idle)(1);
 
 	raw_safe_halt();
+<<<<<<< HEAD
 	raw_local_irq_disable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (mark_idle)
 		(*mark_idle)(0);

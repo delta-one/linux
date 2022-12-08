@@ -29,7 +29,11 @@ nv35_gr_chan_new(struct nvkm_gr *base, struct nvkm_fifo_chan *fifoch,
 		return -ENOMEM;
 	nvkm_object_ctor(&nv35_gr_chan, oclass, &chan->object);
 	chan->gr = gr;
+<<<<<<< HEAD
 	chan->chid = fifoch->id;
+=======
+	chan->chid = fifoch->chid;
+>>>>>>> b7ba80a49124 (Commit)
 	*pobject = &chan->object;
 
 	ret = nvkm_memory_new(gr->base.engine.subdev.device,

@@ -283,7 +283,11 @@ static const struct of_device_id rcar_gyroadc_match[] = {
 
 MODULE_DEVICE_TABLE(of, rcar_gyroadc_match);
 
+<<<<<<< HEAD
 static const struct of_device_id rcar_gyroadc_child_match[] __maybe_unused = {
+=======
+static const struct of_device_id rcar_gyroadc_child_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	/* Mode 1 ADCs */
 	{
 		.compatible	= "fujitsu,mb88101a",

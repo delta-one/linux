@@ -115,7 +115,11 @@ static int fpga_bridge_dev_match(struct device *dev, const void *data)
 /**
  * fpga_bridge_get - get an exclusive reference to an fpga bridge
  * @dev:	parent device that fpga bridge was registered with
+<<<<<<< HEAD
  * @info:	fpga image specific information
+=======
+ * @info:	fpga manager info
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Given a device, get an exclusive reference to an fpga bridge.
  *
@@ -293,6 +297,7 @@ static ssize_t state_show(struct device *dev,
 			  struct device_attribute *attr, char *buf)
 {
 	struct fpga_bridge *bridge = to_fpga_bridge(dev);
+<<<<<<< HEAD
 	int state = 1;
 
 	if (bridge->br_ops && bridge->br_ops->enable_show) {
@@ -302,6 +307,14 @@ static ssize_t state_show(struct device *dev,
 	}
 
 	return sysfs_emit(buf, "%s\n", state ? "enabled" : "disabled");
+=======
+	int enable = 1;
+
+	if (bridge->br_ops && bridge->br_ops->enable_show)
+		enable = bridge->br_ops->enable_show(bridge);
+
+	return sprintf(buf, "%s\n", enable ? "enabled" : "disabled");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR_RO(name);
@@ -416,7 +429,11 @@ static void fpga_bridge_dev_release(struct device *dev)
 
 static int __init fpga_bridge_dev_init(void)
 {
+<<<<<<< HEAD
 	fpga_bridge_class = class_create("fpga_bridge");
+=======
+	fpga_bridge_class = class_create(THIS_MODULE, "fpga_bridge");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(fpga_bridge_class))
 		return PTR_ERR(fpga_bridge_class);
 

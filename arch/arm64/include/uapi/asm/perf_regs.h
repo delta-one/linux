@@ -39,7 +39,11 @@ enum perf_event_arm_regs {
 	PERF_REG_ARM64_MAX,
 
 	/* Extended/pseudo registers */
+<<<<<<< HEAD
 	PERF_REG_ARM64_VG = 46,				/* SVE Vector Granule */
+=======
+	PERF_REG_ARM64_VG = 46, // SVE Vector Granule
+>>>>>>> b7ba80a49124 (Commit)
 	PERF_REG_ARM64_EXTENDED_MAX
 };
 

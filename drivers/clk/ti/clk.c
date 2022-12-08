@@ -140,12 +140,20 @@ static struct device_node *ti_find_clock_provider(struct device_node *from,
 			break;
 		}
 	}
+<<<<<<< HEAD
 	kfree(tmp);
 
 	if (found) {
 		of_node_put(from);
 		return np;
 	}
+=======
+	of_node_put(from);
+	kfree(tmp);
+
+	if (found)
+		return np;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Fall back to using old node name base provider name */
 	return of_find_node_by_name(from, name);
@@ -263,7 +271,11 @@ static LIST_HEAD(retry_list);
 
 /**
  * ti_clk_retry_init - retries a failed clock init at later phase
+<<<<<<< HEAD
  * @node: device node for the clock
+=======
+ * @node: device not for the clock
+>>>>>>> b7ba80a49124 (Commit)
  * @user: user data pointer
  * @func: init function to be called for the clock
  *
@@ -475,7 +487,11 @@ void __init ti_clk_add_aliases(void)
 		clkspec.np = np;
 		clk = of_clk_get_from_provider(&clkspec);
 
+<<<<<<< HEAD
 		ti_clk_add_alias(clk, ti_dt_clk_name(np));
+=======
+		ti_clk_add_alias(NULL, clk, ti_dt_clk_name(np));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -528,6 +544,10 @@ void omap2_clk_enable_init_clocks(const char **clk_names, u8 num_clocks)
 
 /**
  * ti_clk_add_alias - add a clock alias for a TI clock
+<<<<<<< HEAD
+=======
+ * @dev: device alias for this clock
+>>>>>>> b7ba80a49124 (Commit)
  * @clk: clock handle to create alias for
  * @con: connection ID for this clock
  *
@@ -535,7 +555,11 @@ void omap2_clk_enable_init_clocks(const char **clk_names, u8 num_clocks)
  * and assigns the data to it. Returns 0 if successful, negative error
  * value otherwise.
  */
+<<<<<<< HEAD
 int ti_clk_add_alias(struct clk *clk, const char *con)
+=======
+int ti_clk_add_alias(struct device *dev, struct clk *clk, const char *con)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct clk_lookup *cl;
 
@@ -549,6 +573,11 @@ int ti_clk_add_alias(struct clk *clk, const char *con)
 	if (!cl)
 		return -ENOMEM;
 
+<<<<<<< HEAD
+=======
+	if (dev)
+		cl->dev_id = dev_name(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	cl->con_id = con;
 	cl->clk = clk;
 
@@ -558,8 +587,13 @@ int ti_clk_add_alias(struct clk *clk, const char *con)
 }
 
 /**
+<<<<<<< HEAD
  * of_ti_clk_register - register a TI clock to the common clock framework
  * @node: device node for this clock
+=======
+ * ti_clk_register - register a TI clock to the common clock framework
+ * @dev: device for this clock
+>>>>>>> b7ba80a49124 (Commit)
  * @hw: hardware clock handle
  * @con: connection ID for this clock
  *
@@ -567,18 +601,31 @@ int ti_clk_add_alias(struct clk *clk, const char *con)
  * alias for it. Returns a handle to the registered clock if successful,
  * ERR_PTR value in failure.
  */
+<<<<<<< HEAD
 struct clk *of_ti_clk_register(struct device_node *node, struct clk_hw *hw,
 			       const char *con)
+=======
+struct clk *ti_clk_register(struct device *dev, struct clk_hw *hw,
+			    const char *con)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct clk *clk;
 	int ret;
 
+<<<<<<< HEAD
 	ret = of_clk_hw_register(node, hw);
 	if (ret)
 		return ERR_PTR(ret);
 
 	clk = hw->clk;
 	ret = ti_clk_add_alias(clk, con);
+=======
+	clk = clk_register(dev, hw);
+	if (IS_ERR(clk))
+		return clk;
+
+	ret = ti_clk_add_alias(dev, clk, con);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		clk_unregister(clk);
 		return ERR_PTR(ret);
@@ -588,8 +635,13 @@ struct clk *of_ti_clk_register(struct device_node *node, struct clk_hw *hw,
 }
 
 /**
+<<<<<<< HEAD
  * of_ti_clk_register_omap_hw - register a clk_hw_omap to the clock framework
  * @node: device node for this clock
+=======
+ * ti_clk_register_omap_hw - register a clk_hw_omap to the clock framework
+ * @dev: device for this clock
+>>>>>>> b7ba80a49124 (Commit)
  * @hw: hardware clock handle
  * @con: connection ID for this clock
  *
@@ -598,13 +650,22 @@ struct clk *of_ti_clk_register(struct device_node *node, struct clk_hw *hw,
  * Returns a handle to the registered clock if successful, ERR_PTR value
  * in failure.
  */
+<<<<<<< HEAD
 struct clk *of_ti_clk_register_omap_hw(struct device_node *node,
 				       struct clk_hw *hw, const char *con)
+=======
+struct clk *ti_clk_register_omap_hw(struct device *dev, struct clk_hw *hw,
+				    const char *con)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct clk *clk;
 	struct clk_hw_omap *oclk;
 
+<<<<<<< HEAD
 	clk = of_ti_clk_register(node, hw, con);
+=======
+	clk = ti_clk_register(dev, hw, con);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(clk))
 		return clk;
 

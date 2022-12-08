@@ -291,7 +291,11 @@ static int __init test_rhltable(unsigned int entries)
 	if (WARN_ON(err))
 		goto out_free;
 
+<<<<<<< HEAD
 	k = get_random_u32();
+=======
+	k = prandom_u32();
+>>>>>>> b7ba80a49124 (Commit)
 	ret = 0;
 	for (i = 0; i < entries; i++) {
 		rhl_test_objects[i].value.id = k;
@@ -368,11 +372,27 @@ static int __init test_rhltable(unsigned int entries)
 
 	pr_info("test %d random rhlist add/delete operations\n", entries);
 	for (j = 0; j < entries; j++) {
+<<<<<<< HEAD
 		u32 i = get_random_u32_below(entries);
 		u32 prand = get_random_u32_below(4);
 
 		cond_resched();
 
+=======
+		u32 i = prandom_u32_max(entries);
+		u32 prand = prandom_u32();
+
+		cond_resched();
+
+		if (prand == 0)
+			prand = prandom_u32();
+
+		if (prand & 1) {
+			prand >>= 1;
+			continue;
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		err = rhltable_remove(&rhlt, &rhl_test_objects[i].list_node, test_rht_params);
 		if (test_bit(i, obj_in_table)) {
 			clear_bit(i, obj_in_table);
@@ -385,6 +405,7 @@ static int __init test_rhltable(unsigned int entries)
 		}
 
 		if (prand & 1) {
+<<<<<<< HEAD
 			err = rhltable_insert(&rhlt, &rhl_test_objects[i].list_node, test_rht_params);
 			if (err == 0) {
 				if (WARN(test_and_set_bit(i, obj_in_table), "succeeded to insert same object %d", i))
@@ -408,6 +429,37 @@ static int __init test_rhltable(unsigned int entries)
 				if (err == 0)
 					set_bit(i, obj_in_table);
 			}
+=======
+			prand >>= 1;
+			continue;
+		}
+
+		err = rhltable_insert(&rhlt, &rhl_test_objects[i].list_node, test_rht_params);
+		if (err == 0) {
+			if (WARN(test_and_set_bit(i, obj_in_table), "succeeded to insert same object %d", i))
+				continue;
+		} else {
+			if (WARN(!test_bit(i, obj_in_table), "failed to insert object %d", i))
+				continue;
+		}
+
+		if (prand & 1) {
+			prand >>= 1;
+			continue;
+		}
+
+		i = prandom_u32_max(entries);
+		if (test_bit(i, obj_in_table)) {
+			err = rhltable_remove(&rhlt, &rhl_test_objects[i].list_node, test_rht_params);
+			WARN(err, "cannot remove element at slot %d", i);
+			if (err == 0)
+				clear_bit(i, obj_in_table);
+		} else {
+			err = rhltable_insert(&rhlt, &rhl_test_objects[i].list_node, test_rht_params);
+			WARN(err, "failed to insert object %d", i);
+			if (err == 0)
+				set_bit(i, obj_in_table);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -434,7 +486,11 @@ out_free:
 static int __init test_rhashtable_max(struct test_obj *array,
 				      unsigned int entries)
 {
+<<<<<<< HEAD
 	unsigned int i;
+=======
+	unsigned int i, insert_retries = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	test_rht_params.max_size = roundup_pow_of_two(entries / 8);
@@ -447,7 +503,13 @@ static int __init test_rhashtable_max(struct test_obj *array,
 
 		obj->value.id = i * 2;
 		err = insert_retry(&ht, obj, test_rht_params);
+<<<<<<< HEAD
 		if (err < 0)
+=======
+		if (err > 0)
+			insert_retries += err;
+		else if (err)
+>>>>>>> b7ba80a49124 (Commit)
 			return err;
 	}
 

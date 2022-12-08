@@ -12,6 +12,10 @@
 #include <linux/cacheflush.h>
 #include <linux/memblock.h>
 #include <linux/mm_types.h>
+<<<<<<< HEAD
+=======
+#include <linux/percpu-defs.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/smp.h>
 #include <linux/stddef.h>
@@ -125,7 +129,10 @@ void *kmsan_get_metadata(void *address, bool is_origin)
 {
 	u64 addr = (u64)address, pad, off;
 	struct page *page;
+<<<<<<< HEAD
 	void *ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (is_origin && !IS_ALIGNED(addr, KMSAN_ORIGIN_SIZE)) {
 		pad = addr % KMSAN_ORIGIN_SIZE;
@@ -136,10 +143,13 @@ void *kmsan_get_metadata(void *address, bool is_origin)
 	    kmsan_internal_is_module_addr(address))
 		return (void *)vmalloc_meta(address, is_origin);
 
+<<<<<<< HEAD
 	ret = arch_kmsan_get_meta_or_null(address, is_origin);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	page = virt_to_page_or_null(address);
 	if (!page)
 		return NULL;
@@ -167,7 +177,10 @@ void kmsan_copy_page_meta(struct page *dst, struct page *src)
 	__memcpy(origin_ptr_for(dst), origin_ptr_for(src), PAGE_SIZE);
 	kmsan_leave_runtime();
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(kmsan_copy_page_meta);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void kmsan_alloc_page(struct page *page, unsigned int order, gfp_t flags)
 {

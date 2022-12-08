@@ -46,16 +46,22 @@ enum vdpa_attr {
 
 	VDPA_ATTR_DEV_NEGOTIATED_FEATURES,	/* u64 */
 	VDPA_ATTR_DEV_MGMTDEV_MAX_VQS,		/* u32 */
+<<<<<<< HEAD
 	/* virtio features that are supported by the vDPA management device */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	VDPA_ATTR_DEV_SUPPORTED_FEATURES,	/* u64 */
 
 	VDPA_ATTR_DEV_QUEUE_INDEX,              /* u32 */
 	VDPA_ATTR_DEV_VENDOR_ATTR_NAME,		/* string */
 	VDPA_ATTR_DEV_VENDOR_ATTR_VALUE,        /* u64 */
 
+<<<<<<< HEAD
 	/* virtio features that are provisioned to the vDPA device */
 	VDPA_ATTR_DEV_FEATURES,                 /* u64 */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* new attributes must be added above here */
 	VDPA_ATTR_MAX,
 };

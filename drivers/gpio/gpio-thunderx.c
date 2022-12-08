@@ -354,6 +354,7 @@ static int thunderx_gpio_irq_set_type(struct irq_data *d,
 	return IRQ_SET_MASK_OK;
 }
 
+<<<<<<< HEAD
 static void thunderx_gpio_irq_enable(struct irq_data *d)
 {
 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
@@ -370,6 +371,18 @@ static void thunderx_gpio_irq_disable(struct irq_data *d)
 	thunderx_gpio_irq_mask(d);
 	irq_chip_disable_parent(d);
 	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
+=======
+static void thunderx_gpio_irq_enable(struct irq_data *data)
+{
+	irq_chip_enable_parent(data);
+	thunderx_gpio_irq_unmask(data);
+}
+
+static void thunderx_gpio_irq_disable(struct irq_data *data)
+{
+	thunderx_gpio_irq_mask(data);
+	irq_chip_disable_parent(data);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -378,7 +391,11 @@ static void thunderx_gpio_irq_disable(struct irq_data *d)
  * semantics and other acknowledgment tasks associated with the GPIO
  * mechanism.
  */
+<<<<<<< HEAD
 static const struct irq_chip thunderx_gpio_irq_chip = {
+=======
+static struct irq_chip thunderx_gpio_irq_chip = {
+>>>>>>> b7ba80a49124 (Commit)
 	.name			= "GPIO",
 	.irq_enable		= thunderx_gpio_irq_enable,
 	.irq_disable		= thunderx_gpio_irq_disable,
@@ -389,8 +406,13 @@ static const struct irq_chip thunderx_gpio_irq_chip = {
 	.irq_eoi		= irq_chip_eoi_parent,
 	.irq_set_affinity	= irq_chip_set_affinity_parent,
 	.irq_set_type		= thunderx_gpio_irq_set_type,
+<<<<<<< HEAD
 	.flags			= IRQCHIP_SET_TYPE_MASKED | IRQCHIP_IMMUTABLE,
 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+=======
+
+	.flags			= IRQCHIP_SET_TYPE_MASKED
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int thunderx_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
@@ -532,7 +554,11 @@ static int thunderx_gpio_probe(struct pci_dev *pdev,
 	chip->set_multiple = thunderx_gpio_set_multiple;
 	chip->set_config = thunderx_gpio_set_config;
 	girq = &chip->irq;
+<<<<<<< HEAD
 	gpio_irq_chip_set_chip(girq, &thunderx_gpio_irq_chip);
+=======
+	girq->chip = &thunderx_gpio_irq_chip;
+>>>>>>> b7ba80a49124 (Commit)
 	girq->fwnode = of_node_to_fwnode(dev->of_node);
 	girq->parent_domain =
 		irq_get_irq_data(txgpio->msix_entries[0].vector)->domain;

@@ -368,7 +368,11 @@ struct siw_umem *siw_umem_get(u64 start, u64 len, bool writable)
 	struct mm_struct *mm_s;
 	u64 first_page_va;
 	unsigned long mlock_limit;
+<<<<<<< HEAD
 	unsigned int foll_flags = FOLL_LONGTERM;
+=======
+	unsigned int foll_flags = FOLL_WRITE;
+>>>>>>> b7ba80a49124 (Commit)
 	int num_pages, num_chunks, i, rv = 0;
 
 	if (!can_do_mlock())
@@ -391,14 +395,23 @@ struct siw_umem *siw_umem_get(u64 start, u64 len, bool writable)
 
 	mmgrab(mm_s);
 
+<<<<<<< HEAD
 	if (writable)
 		foll_flags |= FOLL_WRITE;
+=======
+	if (!writable)
+		foll_flags |= FOLL_FORCE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mmap_read_lock(mm_s);
 
 	mlock_limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
 
+<<<<<<< HEAD
 	if (atomic64_add_return(num_pages, &mm_s->pinned_vm) > mlock_limit) {
+=======
+	if (num_pages + atomic64_read(&mm_s->pinned_vm) > mlock_limit) {
+>>>>>>> b7ba80a49124 (Commit)
 		rv = -ENOMEM;
 		goto out_sem_up;
 	}
@@ -411,6 +424,7 @@ struct siw_umem *siw_umem_get(u64 start, u64 len, bool writable)
 		goto out_sem_up;
 	}
 	for (i = 0; num_pages; i++) {
+<<<<<<< HEAD
 		int nents = min_t(int, num_pages, PAGES_PER_CHUNK);
 		struct page **plist =
 			kcalloc(nents, sizeof(struct page *), GFP_KERNEL);
@@ -422,16 +436,41 @@ struct siw_umem *siw_umem_get(u64 start, u64 len, bool writable)
 		umem->page_chunk[i].plist = plist;
 		while (nents) {
 			rv = pin_user_pages(first_page_va, nents, foll_flags,
+=======
+		int got, nents = min_t(int, num_pages, PAGES_PER_CHUNK);
+
+		umem->page_chunk[i].plist =
+			kcalloc(nents, sizeof(struct page *), GFP_KERNEL);
+		if (!umem->page_chunk[i].plist) {
+			rv = -ENOMEM;
+			goto out_sem_up;
+		}
+		got = 0;
+		while (nents) {
+			struct page **plist = &umem->page_chunk[i].plist[got];
+
+			rv = pin_user_pages(first_page_va, nents,
+					    foll_flags | FOLL_LONGTERM,
+>>>>>>> b7ba80a49124 (Commit)
 					    plist, NULL);
 			if (rv < 0)
 				goto out_sem_up;
 
 			umem->num_pages += rv;
+<<<<<<< HEAD
 			first_page_va += rv * PAGE_SIZE;
 			plist += rv;
 			nents -= rv;
 			num_pages -= rv;
 		}
+=======
+			atomic64_add(rv, &mm_s->pinned_vm);
+			first_page_va += rv * PAGE_SIZE;
+			nents -= rv;
+			got += rv;
+		}
+		num_pages -= got;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 out_sem_up:
 	mmap_read_unlock(mm_s);
@@ -439,10 +478,13 @@ out_sem_up:
 	if (rv > 0)
 		return umem;
 
+<<<<<<< HEAD
 	/* Adjust accounting for pages not pinned */
 	if (num_pages)
 		atomic64_sub(num_pages, &mm_s->pinned_vm);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	siw_umem_release(umem, false);
 
 	return ERR_PTR(rv);

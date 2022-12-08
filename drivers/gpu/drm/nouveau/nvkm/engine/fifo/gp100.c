@@ -21,14 +21,21 @@
  *
  * Authors: Ben Skeggs
  */
+<<<<<<< HEAD
 #include "priv.h"
 #include "runl.h"
 
 #include <core/gpuobj.h>
+=======
+#include "gk104.h"
+#include "changk104.h"
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <subdev/fault.h>
 
 #include <nvif/class.h>
 
+<<<<<<< HEAD
 static void
 gp100_runl_insert_chan(struct nvkm_chan *chan, struct nvkm_memory *memory, u64 offset)
 {
@@ -54,10 +61,15 @@ gp100_runl = {
 
 static const struct nvkm_enum
 gp100_fifo_mmu_fault_engine[] = {
+=======
+const struct nvkm_enum
+gp100_fifo_fault_engine[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ 0x01, "DISPLAY" },
 	{ 0x03, "IFB", NULL, NVKM_ENGINE_IFB },
 	{ 0x04, "BAR1", NULL, NVKM_SUBDEV_BAR },
 	{ 0x05, "BAR2", NULL, NVKM_SUBDEV_INSTMEM },
+<<<<<<< HEAD
 	{ 0x06, "HOST0" },
 	{ 0x07, "HOST1" },
 	{ 0x08, "HOST2" },
@@ -69,6 +81,19 @@ gp100_fifo_mmu_fault_engine[] = {
 	{ 0x0e, "HOST8" },
 	{ 0x0f, "HOST9" },
 	{ 0x10, "HOST10" },
+=======
+	{ 0x06, "HOST0", NULL, NVKM_ENGINE_FIFO },
+	{ 0x07, "HOST1", NULL, NVKM_ENGINE_FIFO },
+	{ 0x08, "HOST2", NULL, NVKM_ENGINE_FIFO },
+	{ 0x09, "HOST3", NULL, NVKM_ENGINE_FIFO },
+	{ 0x0a, "HOST4", NULL, NVKM_ENGINE_FIFO },
+	{ 0x0b, "HOST5", NULL, NVKM_ENGINE_FIFO },
+	{ 0x0c, "HOST6", NULL, NVKM_ENGINE_FIFO },
+	{ 0x0d, "HOST7", NULL, NVKM_ENGINE_FIFO },
+	{ 0x0e, "HOST8", NULL, NVKM_ENGINE_FIFO },
+	{ 0x0f, "HOST9", NULL, NVKM_ENGINE_FIFO },
+	{ 0x10, "HOST10", NULL, NVKM_ENGINE_FIFO },
+>>>>>>> b7ba80a49124 (Commit)
 	{ 0x13, "PERF" },
 	{ 0x17, "PMU" },
 	{ 0x18, "PTP" },
@@ -76,6 +101,7 @@ gp100_fifo_mmu_fault_engine[] = {
 	{}
 };
 
+<<<<<<< HEAD
 static const struct nvkm_fifo_func_mmu_fault
 gp100_fifo_mmu_fault = {
 	.recover = gf100_fifo_mmu_fault_recover,
@@ -88,6 +114,10 @@ gp100_fifo_mmu_fault = {
 
 static void
 gp100_fifo_intr_mmu_fault_unit(struct nvkm_fifo *fifo, int unit)
+=======
+void
+gp100_fifo_intr_fault(struct nvkm_fifo *fifo, int unit)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nvkm_device *device = fifo->engine.subdev.device;
 	u32 inst = nvkm_rd32(device, 0x002800 + (unit * 0x10));
@@ -110,6 +140,7 @@ gp100_fifo_intr_mmu_fault_unit(struct nvkm_fifo *fifo, int unit)
 	nvkm_fifo_fault(fifo, &info);
 }
 
+<<<<<<< HEAD
 static const struct nvkm_fifo_func
 gp100_fifo = {
 	.chid_nr = gm200_fifo_chid_nr,
@@ -129,11 +160,29 @@ gp100_fifo = {
 	.engn_ce = &gk104_engn_ce,
 	.cgrp = {{ 0, 0, KEPLER_CHANNEL_GROUP_A  }, &gk110_cgrp, .force = true },
 	.chan = {{ 0, 0, PASCAL_CHANNEL_GPFIFO_A }, &gm107_chan },
+=======
+static const struct gk104_fifo_func
+gp100_fifo = {
+	.intr.fault = gp100_fifo_intr_fault,
+	.pbdma = &gm200_fifo_pbdma,
+	.fault.access = gk104_fifo_fault_access,
+	.fault.engine = gp100_fifo_fault_engine,
+	.fault.reason = gk104_fifo_fault_reason,
+	.fault.hubclient = gk104_fifo_fault_hubclient,
+	.fault.gpcclient = gk104_fifo_fault_gpcclient,
+	.runlist = &gm107_fifo_runlist,
+	.chan = {{0,0,PASCAL_CHANNEL_GPFIFO_A}, gk104_fifo_gpfifo_new },
+	.cgrp_force = true,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int
 gp100_fifo_new(struct nvkm_device *device, enum nvkm_subdev_type type, int inst,
 	       struct nvkm_fifo **pfifo)
 {
+<<<<<<< HEAD
 	return nvkm_fifo_new_(&gp100_fifo, device, type, inst, pfifo);
+=======
+	return gk104_fifo_new_(&gp100_fifo, device, type, inst, 4096, pfifo);
+>>>>>>> b7ba80a49124 (Commit)
 }

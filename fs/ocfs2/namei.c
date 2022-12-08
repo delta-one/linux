@@ -197,8 +197,13 @@ static struct inode *ocfs2_get_init_inode(struct inode *dir, umode_t mode)
 	 * callers. */
 	if (S_ISDIR(mode))
 		set_nlink(inode, 2);
+<<<<<<< HEAD
 	mode = mode_strip_sgid(&nop_mnt_idmap, dir, mode);
 	inode_init_owner(&nop_mnt_idmap, inode, dir, mode);
+=======
+	mode = mode_strip_sgid(&init_user_ns, dir, mode);
+	inode_init_owner(&init_user_ns, inode, dir, mode);
+>>>>>>> b7ba80a49124 (Commit)
 	status = dquot_initialize(inode);
 	if (status)
 		return ERR_PTR(status);
@@ -221,7 +226,11 @@ static void ocfs2_cleanup_add_entry_failure(struct ocfs2_super *osb,
 	iput(inode);
 }
 
+<<<<<<< HEAD
 static int ocfs2_mknod(struct mnt_idmap *idmap,
+=======
+static int ocfs2_mknod(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct inode *dir,
 		       struct dentry *dentry,
 		       umode_t mode,
@@ -232,7 +241,10 @@ static int ocfs2_mknod(struct mnt_idmap *idmap,
 	handle_t *handle = NULL;
 	struct ocfs2_super *osb;
 	struct ocfs2_dinode *dirfe;
+<<<<<<< HEAD
 	struct ocfs2_dinode *fe = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct buffer_head *new_fe_bh = NULL;
 	struct inode *inode = NULL;
 	struct ocfs2_alloc_context *inode_ac = NULL;
@@ -242,7 +254,10 @@ static int ocfs2_mknod(struct mnt_idmap *idmap,
 	int want_meta = 0;
 	int xattr_credits = 0;
 	struct ocfs2_security_xattr_info si = {
+<<<<<<< HEAD
 		.name = NULL,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.enable = 1,
 	};
 	int did_quota_inode = 0;
@@ -384,7 +399,10 @@ static int ocfs2_mknod(struct mnt_idmap *idmap,
 		goto leave;
 	}
 
+<<<<<<< HEAD
 	fe = (struct ocfs2_dinode *) new_fe_bh->b_data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (S_ISDIR(mode)) {
 		status = ocfs2_fill_new_dir(osb, handle, dir, inode,
 					    new_fe_bh, data_ac, meta_ac);
@@ -458,8 +476,14 @@ leave:
 	if (status < 0 && did_quota_inode)
 		dquot_free_inode(inode);
 	if (handle) {
+<<<<<<< HEAD
 		if (status < 0 && fe)
 			ocfs2_set_links_count(fe, 0);
+=======
+		if (status < 0 && new_fe_bh != NULL)
+			ocfs2_set_links_count((struct ocfs2_dinode *)
+					new_fe_bh->b_data, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		ocfs2_commit_trans(osb, handle);
 	}
 
@@ -605,6 +629,11 @@ static int __ocfs2_mknod_locked(struct inode *dir,
 leave:
 	if (status < 0) {
 		if (*new_fe_bh) {
+<<<<<<< HEAD
+=======
+			if (fe)
+				ocfs2_set_links_count(fe, 0);
+>>>>>>> b7ba80a49124 (Commit)
 			brelse(*new_fe_bh);
 			*new_fe_bh = NULL;
 		}
@@ -638,12 +667,31 @@ static int ocfs2_mknod_locked(struct ocfs2_super *osb,
 		return status;
 	}
 
+<<<<<<< HEAD
 	return __ocfs2_mknod_locked(dir, inode, dev, new_fe_bh,
 				    parent_fe_bh, handle, inode_ac,
 				    fe_blkno, suballoc_loc, suballoc_bit);
 }
 
 static int ocfs2_mkdir(struct mnt_idmap *idmap,
+=======
+	status = __ocfs2_mknod_locked(dir, inode, dev, new_fe_bh,
+				    parent_fe_bh, handle, inode_ac,
+				    fe_blkno, suballoc_loc, suballoc_bit);
+	if (status < 0 && !(OCFS2_I(inode)->ip_inode_lockres.l_flags &
+				OCFS2_LOCK_INITIALIZED)) {
+		u64 bg_blkno = ocfs2_which_suballoc_group(fe_blkno, suballoc_bit);
+		int tmp = ocfs2_free_suballoc_bits(handle, inode_ac->ac_inode,
+				inode_ac->ac_bh, suballoc_bit, bg_blkno, 1);
+		if (tmp)
+			mlog_errno(tmp);
+	}
+
+	return status;
+}
+
+static int ocfs2_mkdir(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct inode *dir,
 		       struct dentry *dentry,
 		       umode_t mode)
@@ -652,14 +700,22 @@ static int ocfs2_mkdir(struct mnt_idmap *idmap,
 
 	trace_ocfs2_mkdir(dir, dentry, dentry->d_name.len, dentry->d_name.name,
 			  OCFS2_I(dir)->ip_blkno, mode);
+<<<<<<< HEAD
 	ret = ocfs2_mknod(&nop_mnt_idmap, dir, dentry, mode | S_IFDIR, 0);
+=======
+	ret = ocfs2_mknod(&init_user_ns, dir, dentry, mode | S_IFDIR, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		mlog_errno(ret);
 
 	return ret;
 }
 
+<<<<<<< HEAD
 static int ocfs2_create(struct mnt_idmap *idmap,
+=======
+static int ocfs2_create(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			struct inode *dir,
 			struct dentry *dentry,
 			umode_t mode,
@@ -669,7 +725,11 @@ static int ocfs2_create(struct mnt_idmap *idmap,
 
 	trace_ocfs2_create(dir, dentry, dentry->d_name.len, dentry->d_name.name,
 			   (unsigned long long)OCFS2_I(dir)->ip_blkno, mode);
+<<<<<<< HEAD
 	ret = ocfs2_mknod(&nop_mnt_idmap, dir, dentry, mode | S_IFREG, 0);
+=======
+	ret = ocfs2_mknod(&init_user_ns, dir, dentry, mode | S_IFREG, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		mlog_errno(ret);
 
@@ -1195,7 +1255,11 @@ static void ocfs2_double_unlock(struct inode *inode1, struct inode *inode2)
 		ocfs2_inode_unlock(inode2, 1);
 }
 
+<<<<<<< HEAD
 static int ocfs2_rename(struct mnt_idmap *idmap,
+=======
+static int ocfs2_rename(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			struct inode *old_dir,
 			struct dentry *old_dentry,
 			struct inode *new_dir,
@@ -1785,7 +1849,11 @@ bail:
 	return status;
 }
 
+<<<<<<< HEAD
 static int ocfs2_symlink(struct mnt_idmap *idmap,
+=======
+static int ocfs2_symlink(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			 struct inode *dir,
 			 struct dentry *dentry,
 			 const char *symname)
@@ -1806,7 +1874,10 @@ static int ocfs2_symlink(struct mnt_idmap *idmap,
 	int want_clusters = 0;
 	int xattr_credits = 0;
 	struct ocfs2_security_xattr_info si = {
+<<<<<<< HEAD
 		.name = NULL,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.enable = 1,
 	};
 	int did_quota = 0, did_quota_inode = 0;
@@ -2027,8 +2098,14 @@ bail:
 	if (status < 0 && did_quota_inode)
 		dquot_free_inode(inode);
 	if (handle) {
+<<<<<<< HEAD
 		if (status < 0 && fe)
 			ocfs2_set_links_count(fe, 0);
+=======
+		if (status < 0 && new_fe_bh != NULL)
+			ocfs2_set_links_count((struct ocfs2_dinode *)
+					new_fe_bh->b_data, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		ocfs2_commit_trans(osb, handle);
 	}
 
@@ -2491,6 +2568,10 @@ out:
 }
 
 int ocfs2_create_inode_in_orphan(struct inode *dir,
+<<<<<<< HEAD
+=======
+				 struct buffer_head **dir_bh,
+>>>>>>> b7ba80a49124 (Commit)
 				 int mode,
 				 struct inode **new_inode)
 {
@@ -2599,6 +2680,7 @@ leave:
 
 	brelse(new_di_bh);
 
+<<<<<<< HEAD
 	if (!status)
 		*new_inode = inode;
 
@@ -2606,6 +2688,18 @@ leave:
 
 	ocfs2_inode_unlock(dir, 1);
 	brelse(parent_di_bh);
+=======
+	ocfs2_free_dir_lookup_result(&orphan_insert);
+
+	if (!status) {
+		*new_inode = inode;
+		*dir_bh = parent_di_bh;
+	} else {
+		ocfs2_inode_unlock(dir, 1);
+		brelse(parent_di_bh);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return status;
 }
 
@@ -2762,11 +2856,18 @@ bail:
 }
 
 int ocfs2_mv_orphaned_inode_to_new(struct inode *dir,
+<<<<<<< HEAD
+=======
+				   struct buffer_head *dir_bh,
+>>>>>>> b7ba80a49124 (Commit)
 				   struct inode *inode,
 				   struct dentry *dentry)
 {
 	int status = 0;
+<<<<<<< HEAD
 	struct buffer_head *parent_di_bh = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	handle_t *handle = NULL;
 	struct ocfs2_super *osb = OCFS2_SB(dir->i_sb);
 	struct ocfs2_dinode *dir_di, *di;
@@ -2780,6 +2881,7 @@ int ocfs2_mv_orphaned_inode_to_new(struct inode *dir,
 				(unsigned long long)OCFS2_I(dir)->ip_blkno,
 				(unsigned long long)OCFS2_I(inode)->ip_blkno);
 
+<<<<<<< HEAD
 	status = ocfs2_inode_lock(dir, &parent_di_bh, 1);
 	if (status < 0) {
 		if (status != -ENOENT)
@@ -2788,6 +2890,9 @@ int ocfs2_mv_orphaned_inode_to_new(struct inode *dir,
 	}
 
 	dir_di = (struct ocfs2_dinode *) parent_di_bh->b_data;
+=======
+	dir_di = (struct ocfs2_dinode *) dir_bh->b_data;
+>>>>>>> b7ba80a49124 (Commit)
 	if (!dir_di->i_links_count) {
 		/* can't make a file in a deleted directory. */
 		status = -ENOENT;
@@ -2800,7 +2905,11 @@ int ocfs2_mv_orphaned_inode_to_new(struct inode *dir,
 		goto leave;
 
 	/* get a spot inside the dir. */
+<<<<<<< HEAD
 	status = ocfs2_prepare_dir_for_insert(osb, dir, parent_di_bh,
+=======
+	status = ocfs2_prepare_dir_for_insert(osb, dir, dir_bh,
+>>>>>>> b7ba80a49124 (Commit)
 					      dentry->d_name.name,
 					      dentry->d_name.len, &lookup);
 	if (status < 0) {
@@ -2864,7 +2973,11 @@ int ocfs2_mv_orphaned_inode_to_new(struct inode *dir,
 	ocfs2_journal_dirty(handle, di_bh);
 
 	status = ocfs2_add_entry(handle, dentry, inode,
+<<<<<<< HEAD
 				 OCFS2_I(inode)->ip_blkno, parent_di_bh,
+=======
+				 OCFS2_I(inode)->ip_blkno, dir_bh,
+>>>>>>> b7ba80a49124 (Commit)
 				 &lookup);
 	if (status < 0) {
 		mlog_errno(status);
@@ -2888,10 +3001,14 @@ orphan_unlock:
 	iput(orphan_dir_inode);
 leave:
 
+<<<<<<< HEAD
 	ocfs2_inode_unlock(dir, 1);
 
 	brelse(di_bh);
 	brelse(parent_di_bh);
+=======
+	brelse(di_bh);
+>>>>>>> b7ba80a49124 (Commit)
 	brelse(orphan_dir_bh);
 
 	ocfs2_free_dir_lookup_result(&lookup);
@@ -2917,7 +3034,11 @@ const struct inode_operations ocfs2_dir_iops = {
 	.permission	= ocfs2_permission,
 	.listxattr	= ocfs2_listxattr,
 	.fiemap         = ocfs2_fiemap,
+<<<<<<< HEAD
 	.get_inode_acl	= ocfs2_iop_get_acl,
+=======
+	.get_acl	= ocfs2_iop_get_acl,
+>>>>>>> b7ba80a49124 (Commit)
 	.set_acl	= ocfs2_iop_set_acl,
 	.fileattr_get	= ocfs2_fileattr_get,
 	.fileattr_set	= ocfs2_fileattr_set,

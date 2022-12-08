@@ -124,7 +124,10 @@ struct mrp_applicant {
 	struct sk_buff		*pdu;
 	struct rb_root		mad;
 	struct rcu_head		rcu;
+<<<<<<< HEAD
 	bool			active;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mrp_port {

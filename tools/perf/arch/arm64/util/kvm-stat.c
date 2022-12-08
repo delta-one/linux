@@ -11,6 +11,10 @@ define_exit_reasons_table(arm64_trap_exit_reasons, kvm_arm_exception_class);
 
 const char *kvm_trap_exit_reason = "esr_ec";
 const char *vcpu_id_str = "id";
+<<<<<<< HEAD
+=======
+const int decode_str_len = 20;
+>>>>>>> b7ba80a49124 (Commit)
 const char *kvm_exit_reason = "ret";
 const char *kvm_entry_trace = "kvm:kvm_entry";
 const char *kvm_exit_trace = "kvm:kvm_exit";

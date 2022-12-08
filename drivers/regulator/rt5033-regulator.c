@@ -124,7 +124,10 @@ MODULE_DEVICE_TABLE(platform, rt5033_regulator_id);
 static struct platform_driver rt5033_regulator_driver = {
 	.driver = {
 		.name = "rt5033-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe		= rt5033_regulator_probe,
 	.id_table	= rt5033_regulator_id,

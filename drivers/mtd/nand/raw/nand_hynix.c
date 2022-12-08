@@ -728,6 +728,7 @@ static int hynix_nand_init(struct nand_chip *chip)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void hynix_fixup_onfi_param_page(struct nand_chip *chip,
 					struct nand_onfi_params *p)
 {
@@ -740,9 +741,14 @@ static void hynix_fixup_onfi_param_page(struct nand_chip *chip,
 	p->sdr_timing_modes |= cpu_to_le16(BIT(0));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct nand_manufacturer_ops hynix_nand_manuf_ops = {
 	.detect = hynix_nand_decode_id,
 	.init = hynix_nand_init,
 	.cleanup = hynix_nand_cleanup,
+<<<<<<< HEAD
 	.fixup_onfi_param_page = hynix_fixup_onfi_param_page,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

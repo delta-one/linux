@@ -1652,6 +1652,10 @@ tegra124_usb3_port_map(struct tegra_xusb_port *port)
 
 static const struct tegra_xusb_port_ops tegra124_usb3_port_ops = {
 	.release = tegra_xusb_usb3_port_release,
+<<<<<<< HEAD
+=======
+	.remove = tegra_xusb_usb3_port_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.enable = tegra124_usb3_port_enable,
 	.disable = tegra124_usb3_port_disable,
 	.map = tegra124_usb3_port_map,

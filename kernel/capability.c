@@ -20,6 +20,16 @@
 #include <linux/user_namespace.h>
 #include <linux/uaccess.h>
 
+<<<<<<< HEAD
+=======
+/*
+ * Leveraged for setting/resetting capabilities
+ */
+
+const kernel_cap_t __cap_empty_set = CAP_EMPTY_SET;
+EXPORT_SYMBOL(__cap_empty_set);
+
+>>>>>>> b7ba80a49124 (Commit)
 int file_caps_enabled = 1;
 
 static int __init file_caps_disable(char *str)
@@ -144,7 +154,10 @@ SYSCALL_DEFINE2(capget, cap_user_header_t, header, cap_user_data_t, dataptr)
 	pid_t pid;
 	unsigned tocopy;
 	kernel_cap_t pE, pI, pP;
+<<<<<<< HEAD
 	struct __user_cap_data_struct kdata[2];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = cap_validate_magic(header, &tocopy);
 	if ((dataptr == NULL) || (ret != 0))
@@ -157,6 +170,7 @@ SYSCALL_DEFINE2(capget, cap_user_header_t, header, cap_user_data_t, dataptr)
 		return -EINVAL;
 
 	ret = cap_get_target_pid(pid, &pE, &pI, &pP);
+<<<<<<< HEAD
 	if (ret)
 		return ret;
 
@@ -197,6 +211,44 @@ SYSCALL_DEFINE2(capget, cap_user_header_t, header, cap_user_data_t, dataptr)
 static kernel_cap_t mk_kernel_cap(u32 low, u32 high)
 {
 	return (kernel_cap_t) { (low | ((u64)high << 32)) & CAP_VALID_MASK };
+=======
+	if (!ret) {
+		struct __user_cap_data_struct kdata[_KERNEL_CAPABILITY_U32S];
+		unsigned i;
+
+		for (i = 0; i < tocopy; i++) {
+			kdata[i].effective = pE.cap[i];
+			kdata[i].permitted = pP.cap[i];
+			kdata[i].inheritable = pI.cap[i];
+		}
+
+		/*
+		 * Note, in the case, tocopy < _KERNEL_CAPABILITY_U32S,
+		 * we silently drop the upper capabilities here. This
+		 * has the effect of making older libcap
+		 * implementations implicitly drop upper capability
+		 * bits when they perform a: capget/modify/capset
+		 * sequence.
+		 *
+		 * This behavior is considered fail-safe
+		 * behavior. Upgrading the application to a newer
+		 * version of libcap will enable access to the newer
+		 * capabilities.
+		 *
+		 * An alternative would be to return an error here
+		 * (-ERANGE), but that causes legacy applications to
+		 * unexpectedly fail; the capget/modify/capset aborts
+		 * before modification is attempted and the application
+		 * fails.
+		 */
+		if (copy_to_user(dataptr, kdata, tocopy
+				 * sizeof(struct __user_cap_data_struct))) {
+			return -EFAULT;
+		}
+	}
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -219,8 +271,13 @@ static kernel_cap_t mk_kernel_cap(u32 low, u32 high)
  */
 SYSCALL_DEFINE2(capset, cap_user_header_t, header, const cap_user_data_t, data)
 {
+<<<<<<< HEAD
 	struct __user_cap_data_struct kdata[2] = { { 0, }, };
 	unsigned tocopy, copybytes;
+=======
+	struct __user_cap_data_struct kdata[_KERNEL_CAPABILITY_U32S];
+	unsigned i, tocopy, copybytes;
+>>>>>>> b7ba80a49124 (Commit)
 	kernel_cap_t inheritable, permitted, effective;
 	struct cred *new;
 	int ret;
@@ -244,9 +301,27 @@ SYSCALL_DEFINE2(capset, cap_user_header_t, header, const cap_user_data_t, data)
 	if (copy_from_user(&kdata, data, copybytes))
 		return -EFAULT;
 
+<<<<<<< HEAD
 	effective   = mk_kernel_cap(kdata[0].effective,   kdata[1].effective);
 	permitted   = mk_kernel_cap(kdata[0].permitted,   kdata[1].permitted);
 	inheritable = mk_kernel_cap(kdata[0].inheritable, kdata[1].inheritable);
+=======
+	for (i = 0; i < tocopy; i++) {
+		effective.cap[i] = kdata[i].effective;
+		permitted.cap[i] = kdata[i].permitted;
+		inheritable.cap[i] = kdata[i].inheritable;
+	}
+	while (i < _KERNEL_CAPABILITY_U32S) {
+		effective.cap[i] = 0;
+		permitted.cap[i] = 0;
+		inheritable.cap[i] = 0;
+		i++;
+	}
+
+	effective.cap[CAP_LAST_U32] &= CAP_LAST_U32_VALID_MASK;
+	permitted.cap[CAP_LAST_U32] &= CAP_LAST_U32_VALID_MASK;
+	inheritable.cap[CAP_LAST_U32] &= CAP_LAST_U32_VALID_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 
 	new = prepare_creds();
 	if (!new)
@@ -472,11 +547,19 @@ EXPORT_SYMBOL(file_ns_capable);
  * Return true if the inode uid and gid are within the namespace.
  */
 bool privileged_wrt_inode_uidgid(struct user_namespace *ns,
+<<<<<<< HEAD
 				 struct mnt_idmap *idmap,
 				 const struct inode *inode)
 {
 	return vfsuid_has_mapping(ns, i_uid_into_vfsuid(idmap, inode)) &&
 	       vfsgid_has_mapping(ns, i_gid_into_vfsgid(idmap, inode));
+=======
+				 struct user_namespace *mnt_userns,
+				 const struct inode *inode)
+{
+	return kuid_has_mapping(ns, i_uid_into_mnt(mnt_userns, inode)) &&
+	       kgid_has_mapping(ns, i_gid_into_mnt(mnt_userns, inode));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -488,13 +571,21 @@ bool privileged_wrt_inode_uidgid(struct user_namespace *ns,
  * its own user namespace and that the given inode's uid and gid are
  * mapped into the current user namespace.
  */
+<<<<<<< HEAD
 bool capable_wrt_inode_uidgid(struct mnt_idmap *idmap,
+=======
+bool capable_wrt_inode_uidgid(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			      const struct inode *inode, int cap)
 {
 	struct user_namespace *ns = current_user_ns();
 
 	return ns_capable(ns, cap) &&
+<<<<<<< HEAD
 	       privileged_wrt_inode_uidgid(ns, idmap, inode);
+=======
+	       privileged_wrt_inode_uidgid(ns, mnt_userns, inode);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(capable_wrt_inode_uidgid);
 

@@ -8,6 +8,7 @@
  *
  * Many thanks to Klaus Hitschler <klaus.hitschler@gmx.de>
  */
+<<<<<<< HEAD
 #include <linux/device.h>
 #include <linux/ethtool.h>
 #include <linux/init.h>
@@ -17,6 +18,15 @@
 #include <linux/slab.h>
 #include <linux/sysfs.h>
 #include <linux/usb.h>
+=======
+#include <linux/init.h>
+#include <linux/signal.h>
+#include <linux/slab.h>
+#include <linux/module.h>
+#include <linux/netdevice.h>
+#include <linux/usb.h>
+#include <linux/ethtool.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/can.h>
 #include <linux/can/dev.h>
@@ -55,6 +65,7 @@ static const struct usb_device_id peak_usb_table[] = {
 
 MODULE_DEVICE_TABLE(usb, peak_usb_table);
 
+<<<<<<< HEAD
 static ssize_t can_channel_id_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	struct net_device *netdev = to_net_dev(dev);
@@ -75,6 +86,8 @@ static const struct attribute_group peak_usb_sysfs_group = {
 	.attrs	= peak_usb_sysfs_attrs,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * dump memory
  */
@@ -373,7 +386,11 @@ static netdev_tx_t peak_usb_ndo_start_xmit(struct sk_buff *skb,
 	int i, err;
 	size_t size = dev->adapter->tx_buffer_size;
 
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(netdev, skb))
+=======
+	if (can_dropped_invalid_skb(netdev, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	for (i = 0; i < PCAN_USB_MAX_TX_URBS; i++)
@@ -830,6 +847,7 @@ static const struct net_device_ops peak_usb_netdev_ops = {
 	.ndo_change_mtu = can_change_mtu,
 };
 
+<<<<<<< HEAD
 /* CAN-USB devices generally handle 32-bit CAN channel IDs.
  * In case one doesn't, then it have to overload this function.
  */
@@ -910,6 +928,8 @@ int peak_usb_set_eeprom(struct net_device *netdev,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int pcan_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info)
 {
 	info->so_timestamping =
@@ -983,9 +1003,12 @@ static int peak_usb_create_dev(const struct peak_usb_adapter *peak_usb_adapter,
 	/* add ethtool support */
 	netdev->ethtool_ops = peak_usb_adapter->ethtool_ops;
 
+<<<<<<< HEAD
 	/* register peak_usb sysfs files */
 	netdev->sysfs_groups[0] = &peak_usb_sysfs_group;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	init_usb_anchor(&dev->rx_submitted);
 
 	init_usb_anchor(&dev->tx_submitted);
@@ -1026,11 +1049,20 @@ static int peak_usb_create_dev(const struct peak_usb_adapter *peak_usb_adapter,
 			goto adap_dev_free;
 	}
 
+<<<<<<< HEAD
 	/* get CAN channel id early */
 	dev->adapter->dev_get_can_channel_id(dev, &dev->can_channel_id);
 
 	netdev_info(netdev, "attached to %s channel %u (device 0x%08X)\n",
 		    peak_usb_adapter->name, ctrl_idx, dev->can_channel_id);
+=======
+	/* get device number early */
+	if (dev->adapter->dev_get_device_id)
+		dev->adapter->dev_get_device_id(dev, &dev->device_number);
+
+	netdev_info(netdev, "attached to %s channel %u (device %u)\n",
+			peak_usb_adapter->name, ctrl_idx, dev->device_number);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -1068,7 +1100,11 @@ static void peak_usb_disconnect(struct usb_interface *intf)
 		dev->state &= ~PCAN_USB_STATE_CONNECTED;
 		strscpy(name, netdev->name, IFNAMSIZ);
 
+<<<<<<< HEAD
 		unregister_candev(netdev);
+=======
+		unregister_netdev(netdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 		kfree(dev->cmd_buf);
 		dev->next_siblings = NULL;

@@ -558,6 +558,7 @@ static int hcd_pci_suspend_noirq(struct device *dev)
 	return retval;
 }
 
+<<<<<<< HEAD
 static int hcd_pci_poweroff_late(struct device *dev)
 {
 	struct pci_dev		*pci_dev = to_pci_dev(dev);
@@ -569,6 +570,8 @@ static int hcd_pci_poweroff_late(struct device *dev)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int hcd_pci_resume_noirq(struct device *dev)
 {
 	powermac_set_asic(to_pci_dev(dev), 1);
@@ -589,7 +592,10 @@ static int hcd_pci_restore(struct device *dev)
 
 #define hcd_pci_suspend		NULL
 #define hcd_pci_suspend_noirq	NULL
+<<<<<<< HEAD
 #define hcd_pci_poweroff_late	NULL
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define hcd_pci_resume_noirq	NULL
 #define hcd_pci_resume		NULL
 #define hcd_pci_restore		NULL
@@ -627,7 +633,10 @@ const struct dev_pm_ops usb_hcd_pci_pm_ops = {
 	.thaw_noirq	= NULL,
 	.thaw		= hcd_pci_resume,
 	.poweroff	= hcd_pci_suspend,
+<<<<<<< HEAD
 	.poweroff_late	= hcd_pci_poweroff_late,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.poweroff_noirq	= hcd_pci_suspend_noirq,
 	.restore_noirq	= hcd_pci_resume_noirq,
 	.restore	= hcd_pci_restore,

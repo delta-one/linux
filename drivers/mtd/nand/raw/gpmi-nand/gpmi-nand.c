@@ -148,9 +148,17 @@ static int gpmi_init(struct gpmi_nand_data *this)
 	struct resources *r = &this->resources;
 	int ret;
 
+<<<<<<< HEAD
 	ret = pm_runtime_resume_and_get(this->dev);
 	if (ret < 0)
 		return ret;
+=======
+	ret = pm_runtime_get_sync(this->dev);
+	if (ret < 0) {
+		pm_runtime_put_noidle(this->dev);
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = gpmi_reset_block(r->gpmi_regs, false);
 	if (ret)
@@ -2502,9 +2510,17 @@ static int gpmi_nfc_exec_op(struct nand_chip *chip,
 	for (i = 0; i < GPMI_MAX_TRANSFERS; i++)
 		this->transfers[i].direction = DMA_NONE;
 
+<<<<<<< HEAD
 	ret = pm_runtime_resume_and_get(this->dev);
 	if (ret < 0)
 		return ret;
+=======
+	ret = pm_runtime_get_sync(this->dev);
+	if (ret < 0) {
+		pm_runtime_put_noidle(this->dev);
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * This driver currently supports only one NAND chip. Plus, dies share

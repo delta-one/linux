@@ -745,7 +745,14 @@ int show_tm_spr(pid_t child, struct tm_spr_regs *out)
 /* Analyse TEXASR after TM failure */
 inline unsigned long get_tfiar(void)
 {
+<<<<<<< HEAD
 	return mfspr(SPRN_TFIAR);
+=======
+	unsigned long ret;
+
+	asm volatile("mfspr %0,%1" : "=r" (ret) : "i" (SPRN_TFIAR));
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void analyse_texasr(unsigned long texasr)

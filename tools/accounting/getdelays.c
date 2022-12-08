@@ -198,6 +198,7 @@ static void print_delayacct(struct taskstats *t)
 	printf("\n\nCPU   %15s%15s%15s%15s%15s\n"
 	       "      %15llu%15llu%15llu%15llu%15.3fms\n"
 	       "IO    %15s%15s%15s\n"
+<<<<<<< HEAD
           "      %15llu%15llu%15.3fms\n"
 	       "SWAP  %15s%15s%15s\n"
           "      %15llu%15llu%15.3fms\n"
@@ -209,6 +210,19 @@ static void print_delayacct(struct taskstats *t)
           "      %15llu%15llu%15.3fms\n"
 	       "WPCOPY   %12s%15s%15s\n"
           "      %15llu%15llu%15.3fms\n",
+=======
+	       "      %15llu%15llu%15llums\n"
+	       "SWAP  %15s%15s%15s\n"
+	       "      %15llu%15llu%15llums\n"
+	       "RECLAIM  %12s%15s%15s\n"
+	       "      %15llu%15llu%15llums\n"
+	       "THRASHING%12s%15s%15s\n"
+	       "      %15llu%15llu%15llums\n"
+	       "COMPACT  %12s%15s%15s\n"
+	       "      %15llu%15llu%15llums\n"
+	       "WPCOPY   %12s%15s%15s\n"
+	       "      %15llu%15llu%15llums\n",
+>>>>>>> b7ba80a49124 (Commit)
 	       "count", "real total", "virtual total",
 	       "delay total", "delay average",
 	       (unsigned long long)t->cpu_count,
@@ -219,6 +233,7 @@ static void print_delayacct(struct taskstats *t)
 	       "count", "delay total", "delay average",
 	       (unsigned long long)t->blkio_count,
 	       (unsigned long long)t->blkio_delay_total,
+<<<<<<< HEAD
           average_ms((double)t->blkio_delay_total, t->blkio_count),
 	       "count", "delay total", "delay average",
 	       (unsigned long long)t->swapin_count,
@@ -240,6 +255,29 @@ static void print_delayacct(struct taskstats *t)
 	       (unsigned long long)t->wpcopy_count,
 	       (unsigned long long)t->wpcopy_delay_total,
           average_ms((double)t->wpcopy_delay_total, t->wpcopy_count));
+=======
+	       average_ms(t->blkio_delay_total, t->blkio_count),
+	       "count", "delay total", "delay average",
+	       (unsigned long long)t->swapin_count,
+	       (unsigned long long)t->swapin_delay_total,
+	       average_ms(t->swapin_delay_total, t->swapin_count),
+	       "count", "delay total", "delay average",
+	       (unsigned long long)t->freepages_count,
+	       (unsigned long long)t->freepages_delay_total,
+	       average_ms(t->freepages_delay_total, t->freepages_count),
+	       "count", "delay total", "delay average",
+	       (unsigned long long)t->thrashing_count,
+	       (unsigned long long)t->thrashing_delay_total,
+	       average_ms(t->thrashing_delay_total, t->thrashing_count),
+	       "count", "delay total", "delay average",
+	       (unsigned long long)t->compact_count,
+	       (unsigned long long)t->compact_delay_total,
+	       average_ms(t->compact_delay_total, t->compact_count),
+	       "count", "delay total", "delay average",
+	       (unsigned long long)t->wpcopy_count,
+	       (unsigned long long)t->wpcopy_delay_total,
+	       average_ms(t->wpcopy_delay_total, t->wpcopy_count));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void task_context_switch_counts(struct taskstats *t)

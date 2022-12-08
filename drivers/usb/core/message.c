@@ -1037,7 +1037,10 @@ char *usb_cache_string(struct usb_device *udev, int index)
 	}
 	return smallbuf;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(usb_cache_string);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * usb_get_device_descriptor - (re)reads the device descriptor (usbcore)
@@ -1819,11 +1822,19 @@ void usb_authorize_interface(struct usb_interface *intf)
 	}
 }
 
+<<<<<<< HEAD
 static int usb_if_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct usb_device *usb_dev;
 	const struct usb_interface *intf;
 	const struct usb_host_interface *alt;
+=======
+static int usb_if_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct usb_device *usb_dev;
+	struct usb_interface *intf;
+	struct usb_host_interface *alt;
+>>>>>>> b7ba80a49124 (Commit)
 
 	intf = to_usb_interface(dev);
 	usb_dev = interface_to_usbdev(intf);

@@ -416,6 +416,7 @@ static int lbs_add_cf_param_tlv(u8 *tlv)
 
 static int lbs_add_wpa_tlv(u8 *tlv, const u8 *ie, u8 ie_len)
 {
+<<<<<<< HEAD
 	struct mrvl_ie_data *wpatlv = (struct mrvl_ie_data *)tlv;
 	const struct element *wpaie;
 
@@ -430,6 +431,12 @@ static int lbs_add_wpa_tlv(u8 *tlv, const u8 *ie, u8 ie_len)
 
 	/*
 	 * Convert the found IE to a TLV. IEs use u8 for the header,
+=======
+	size_t tlv_len;
+
+	/*
+	 * We need just convert an IE to an TLV. IEs use u8 for the header,
+>>>>>>> b7ba80a49124 (Commit)
 	 *   u8      type
 	 *   u8      len
 	 *   u8[]    data
@@ -438,6 +445,7 @@ static int lbs_add_wpa_tlv(u8 *tlv, const u8 *ie, u8 ie_len)
 	 *   __le16  len
 	 *   u8[]    data
 	 */
+<<<<<<< HEAD
 	wpatlv->header.type = cpu_to_le16(wpaie->id);
 	wpatlv->header.len = cpu_to_le16(wpaie->datalen);
 	memcpy(wpatlv->data, wpaie->data, wpaie->datalen);
@@ -479,6 +487,16 @@ static int lbs_add_wps_enrollee_tlv(u8 *tlv, const u8 *ie, size_t ie_len)
 
 	/* Return the total number of bytes added to the TLV buffer */
 	return sizeof(struct mrvl_ie_header) + wpsie->datalen;
+=======
+	*tlv++ = *ie++;
+	*tlv++ = 0;
+	tlv_len = *tlv++ = *ie++;
+	*tlv++ = 0;
+	while (tlv_len--)
+		*tlv++ = *ie++;
+	/* the TLV is two bytes larger than the IE */
+	return ie_len + 2;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -707,15 +725,24 @@ static int lbs_ret_scan(struct lbs_private *priv, unsigned long dummy,
 
 
 /*
+<<<<<<< HEAD
  * Our scan command contains a TLV, consisting of a SSID TLV, a channel list
  * TLV, a rates TLV, and an optional WPS IE. Determine the maximum size of them:
+=======
+ * Our scan command contains a TLV, consting of a SSID TLV, a channel list
+ * TLV and a rates TLV. Determine the maximum size of them:
+>>>>>>> b7ba80a49124 (Commit)
  */
 #define LBS_SCAN_MAX_CMD_SIZE			\
 	(sizeof(struct cmd_ds_802_11_scan)	\
 	 + LBS_MAX_SSID_TLV_SIZE		\
 	 + LBS_MAX_CHANNEL_LIST_TLV_SIZE	\
+<<<<<<< HEAD
 	 + LBS_MAX_RATES_TLV_SIZE		\
 	 + LBS_MAX_WPS_ENROLLEE_TLV_SIZE)
+=======
+	 + LBS_MAX_RATES_TLV_SIZE)
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Assumes priv->scan_req is initialized and valid
@@ -764,11 +791,14 @@ static void lbs_scan_worker(struct work_struct *work)
 	/* add rates TLV */
 	tlv += lbs_add_supported_rates_tlv(tlv);
 
+<<<<<<< HEAD
 	/* add optional WPS enrollee TLV */
 	if (priv->scan_req->ie && priv->scan_req->ie_len)
 		tlv += lbs_add_wps_enrollee_tlv(tlv, priv->scan_req->ie,
 						priv->scan_req->ie_len);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (priv->scan_channel < priv->scan_req->n_channels) {
 		cancel_delayed_work(&priv->scan_work);
 		if (netif_running(priv->dev))
@@ -2155,7 +2185,10 @@ int lbs_cfg_register(struct lbs_private *priv)
 	int ret;
 
 	wdev->wiphy->max_scan_ssids = 1;
+<<<<<<< HEAD
 	wdev->wiphy->max_scan_ie_len = 256;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	wdev->wiphy->signal_type = CFG80211_SIGNAL_TYPE_MBM;
 
 	wdev->wiphy->interface_modes =

@@ -24,7 +24,11 @@ int reiserfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
 	return 0;
 }
 
+<<<<<<< HEAD
 int reiserfs_fileattr_set(struct mnt_idmap *idmap,
+=======
+int reiserfs_fileattr_set(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			  struct dentry *dentry, struct fileattr *fa)
 {
 	struct inode *inode = d_inode(dentry);
@@ -96,7 +100,11 @@ long reiserfs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		err = put_user(inode->i_generation, (int __user *)arg);
 		break;
 	case REISERFS_IOC_SETVERSION:
+<<<<<<< HEAD
 		if (!inode_owner_or_capable(&nop_mnt_idmap, inode)) {
+=======
+		if (!inode_owner_or_capable(&init_user_ns, inode)) {
+>>>>>>> b7ba80a49124 (Commit)
 			err = -EPERM;
 			break;
 		}

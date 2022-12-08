@@ -91,6 +91,7 @@ static const struct mtk_clk_desc vpp0_desc = {
 	.num_clks = ARRAY_SIZE(vpp0_clks),
 };
 
+<<<<<<< HEAD
 static const struct platform_device_id clk_mt8195_vpp0_id_table[] = {
 	{ .name = "clk-mt8195-vpp0", .driver_data = (kernel_ulong_t)&vpp0_desc },
 	{ /* sentinel */ }
@@ -107,3 +108,23 @@ static struct platform_driver clk_mt8195_vpp0_drv = {
 };
 module_platform_driver(clk_mt8195_vpp0_drv);
 MODULE_LICENSE("GPL");
+=======
+static const struct of_device_id of_match_clk_mt8195_vpp0[] = {
+	{
+		.compatible = "mediatek,mt8195-vppsys0",
+		.data = &vpp0_desc,
+	}, {
+		/* sentinel */
+	}
+};
+
+static struct platform_driver clk_mt8195_vpp0_drv = {
+	.probe = mtk_clk_simple_probe,
+	.remove = mtk_clk_simple_remove,
+	.driver = {
+		.name = "clk-mt8195-vpp0",
+		.of_match_table = of_match_clk_mt8195_vpp0,
+	},
+};
+builtin_platform_driver(clk_mt8195_vpp0_drv);
+>>>>>>> b7ba80a49124 (Commit)

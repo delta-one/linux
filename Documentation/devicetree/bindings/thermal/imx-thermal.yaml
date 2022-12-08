@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/thermal/imx-thermal.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: NXP i.MX Thermal
+=======
+title: NXP i.MX Thermal Binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Shawn Guo <shawnguo@kernel.org>

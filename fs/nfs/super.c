@@ -822,7 +822,12 @@ static int nfs_request_mount(struct fs_context *fc,
 {
 	struct nfs_fs_context *ctx = nfs_fc2context(fc);
 	struct nfs_mount_request request = {
+<<<<<<< HEAD
 		.sap		= &ctx->mount_server._address,
+=======
+		.sap		= (struct sockaddr *)
+						&ctx->mount_server.address,
+>>>>>>> b7ba80a49124 (Commit)
 		.dirpath	= ctx->nfs_server.export_path,
 		.protocol	= ctx->mount_server.protocol,
 		.fh		= root_fh,
@@ -853,7 +858,11 @@ static int nfs_request_mount(struct fs_context *fc,
 	 * Construct the mount server's address.
 	 */
 	if (ctx->mount_server.address.sa_family == AF_UNSPEC) {
+<<<<<<< HEAD
 		memcpy(request.sap, &ctx->nfs_server._address,
+=======
+		memcpy(request.sap, &ctx->nfs_server.address,
+>>>>>>> b7ba80a49124 (Commit)
 		       ctx->nfs_server.addrlen);
 		ctx->mount_server.addrlen = ctx->nfs_server.addrlen;
 	}
@@ -1274,6 +1283,12 @@ int nfs_get_tree_common(struct fs_context *fc)
 		if (ctx->clone_data.sb->s_flags & SB_SYNCHRONOUS)
 			fc->sb_flags |= SB_SYNCHRONOUS;
 
+<<<<<<< HEAD
+=======
+	if (server->caps & NFS_CAP_SECURITY_LABEL)
+		fc->lsm_flags |= SECURITY_LSM_NATIVE_LABELS;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Get a superblock - note that we may end up sharing one that already exists */
 	fc->s_fs_info = server;
 	s = sget_fc(fc, compare_super, nfs_set_super);

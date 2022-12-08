@@ -56,7 +56,11 @@ int squashfs_xattr_lookup(struct super_block *sb, unsigned int index,
  * Read uncompressed xattr id lookup table indexes from disk into memory
  */
 __le64 *squashfs_read_xattr_id_table(struct super_block *sb, u64 table_start,
+<<<<<<< HEAD
 		u64 *xattr_table_start, unsigned int *xattr_ids)
+=======
+		u64 *xattr_table_start, int *xattr_ids)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct squashfs_sb_info *msblk = sb->s_fs_info;
 	unsigned int len, indexes;

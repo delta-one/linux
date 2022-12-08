@@ -6,7 +6,11 @@
 #include <linux/dma-fence.h>
 #include <linux/slab.h>
 
+<<<<<<< HEAD
 #include <drm/ttm/ttm_bo.h>
+=======
+#include <drm/ttm/ttm_bo_api.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "i915_deps.h"
 

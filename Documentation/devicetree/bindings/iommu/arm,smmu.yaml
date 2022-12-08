@@ -28,6 +28,7 @@ properties:
           - enum:
               - qcom,msm8996-smmu-v2
               - qcom,msm8998-smmu-v2
+<<<<<<< HEAD
               - qcom,sdm630-smmu-v2
           - const: qcom,smmu-v2
 
@@ -37,22 +38,37 @@ properties:
               - qcom,qcm2290-smmu-500
               - qcom,qdu1000-smmu-500
               - qcom,sa8775p-smmu-500
+=======
+          - const: qcom,smmu-v2
+
+      - description: Qcom SoCs implementing "arm,mmu-500"
+        items:
+          - enum:
+              - qcom,qcm2290-smmu-500
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,sc7180-smmu-500
               - qcom,sc7280-smmu-500
               - qcom,sc8180x-smmu-500
               - qcom,sc8280xp-smmu-500
+<<<<<<< HEAD
               - qcom,sdm670-smmu-500
               - qcom,sdm845-smmu-500
               - qcom,sdx55-smmu-500
               - qcom,sdx65-smmu-500
               - qcom,sm6115-smmu-500
               - qcom,sm6125-smmu-500
+=======
+              - qcom,sdm845-smmu-500
+              - qcom,sdx55-smmu-500
+              - qcom,sdx65-smmu-500
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,sm6350-smmu-500
               - qcom,sm6375-smmu-500
               - qcom,sm8150-smmu-500
               - qcom,sm8250-smmu-500
               - qcom,sm8350-smmu-500
               - qcom,sm8450-smmu-500
+<<<<<<< HEAD
           - const: qcom,smmu-500
           - const: arm,mmu-500
 
@@ -83,10 +99,13 @@ properties:
               - qcom,sm8150-smmu-500
               - qcom,sm8250-smmu-500
           - const: qcom,adreno-smmu
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - const: arm,mmu-500
       - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
         items:
           - enum:
+<<<<<<< HEAD
               - qcom,msm8996-smmu-v2
               - qcom,sc7180-smmu-v2
               - qcom,sdm630-smmu-v2
@@ -98,6 +117,12 @@ properties:
         items:
           - const: qcom,sdm845-smmu-v2
           - const: qcom,smmu-v2
+=======
+              - qcom,sc7180-smmu-v2
+              - qcom,sdm845-smmu-v2
+          - const: qcom,adreno-smmu
+          - const: qcom,smmu-v2
+>>>>>>> b7ba80a49124 (Commit)
       - description: Marvell SoCs implementing "arm,mmu-500"
         items:
           - const: marvell,ap806-smmu-500
@@ -190,6 +215,7 @@ properties:
       present in such cases.
 
   clock-names:
+<<<<<<< HEAD
     minItems: 1
     maxItems: 7
 
@@ -200,6 +226,21 @@ properties:
   power-domains:
     minItems: 1
     maxItems: 3
+=======
+    items:
+      - const: bus
+      - const: iface
+
+  clocks:
+    items:
+      - description: bus clock required for downstream bus access and for the
+          smmu ptw
+      - description: interface clock required to access smmu's registers
+          through the TCU's programming interface.
+
+  power-domains:
+    maxItems: 1
+>>>>>>> b7ba80a49124 (Commit)
 
   nvidia,memory-controller:
     description: |
@@ -246,6 +287,7 @@ allOf:
         reg:
           maxItems: 1
 
+<<<<<<< HEAD
   - if:
       properties:
         compatible:
@@ -414,6 +456,8 @@ allOf:
         power-domains:
           maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 examples:
   - |+
     /* SMMU with stream matching or stream indexing */

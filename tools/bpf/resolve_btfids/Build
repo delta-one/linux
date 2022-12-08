@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 hostprogs := resolve_btfids
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 resolve_btfids-y += main.o
 resolve_btfids-y += rbtree.o
 resolve_btfids-y += zalloc.o
@@ -9,4 +12,8 @@ resolve_btfids-y += str_error_r.o
 
 $(OUTPUT)%.o: ../../lib/%.c FORCE
 	$(call rule_mkdir)
+<<<<<<< HEAD
 	$(call if_changed_dep,host_cc_o_c)
+=======
+	$(call if_changed_dep,cc_o_c)
+>>>>>>> b7ba80a49124 (Commit)

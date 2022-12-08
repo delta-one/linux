@@ -49,8 +49,11 @@ properties:
       - qcom,sc7280-ipa
       - qcom,sdm845-ipa
       - qcom,sdx55-ipa
+<<<<<<< HEAD
       - qcom,sdx65-ipa
       - qcom,sm6350-ipa
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - qcom,sm8350-ipa
 
   reg:
@@ -126,6 +129,7 @@ properties:
       - const: ipa-clock-enabled-valid
       - const: ipa-clock-enabled
 
+<<<<<<< HEAD
   qcom,gsi-loader:
     enum:
       - self
@@ -144,13 +148,25 @@ properties:
       This is the older (deprecated) way of indicating how GSI firmware
       should be loaded.  If present, the modem loads GSI firmware; if
       absent, the AP loads GSI firmware.
+=======
+  modem-init:
+    type: boolean
+    description:
+      If present, it indicates that the modem is responsible for
+      performing early IPA initialization, including loading and
+      validating firwmare used by the GSI.
+>>>>>>> b7ba80a49124 (Commit)
 
   memory-region:
     maxItems: 1
     description:
       If present, a phandle for a reserved memory area that holds
       the firmware passed to Trust Zone for authentication.  Required
+<<<<<<< HEAD
       when the AP (not the modem) performs early initialization.
+=======
+      when Trust Zone (not the modem) performs early initialization.
+>>>>>>> b7ba80a49124 (Commit)
 
   firmware-name:
     $ref: /schemas/types.yaml#/definitions/string
@@ -169,6 +185,7 @@ required:
   - interconnects
   - qcom,smem-states
 
+<<<<<<< HEAD
 allOf:
   # If qcom,gsi-loader is present, modem-init must not be present
   - if:
@@ -199,6 +216,24 @@ allOf:
       then:
         required:
           - memory-region
+=======
+# Either modem-init is present, or memory-region must be present.
+oneOf:
+  - required:
+      - modem-init
+  - required:
+      - memory-region
+
+# If memory-region is present, firmware-name may optionally be present.
+# But if modem-init is present, firmware-name must not be present.
+if:
+  required:
+    - modem-init
+then:
+  not:
+    required:
+      - firmware-name
+>>>>>>> b7ba80a49124 (Commit)
 
 additionalProperties: false
 
@@ -229,6 +264,7 @@ examples:
         };
 
         ipa@1e40000 {
+<<<<<<< HEAD
                 compatible = "qcom,sc7180-ipa";
 
                 qcom,gsi-loader = "self";
@@ -240,6 +276,16 @@ examples:
                 reg = <0x1e40000 0x7000>,
                       <0x1e47000 0x2000>,
                       <0x1e04000 0x2c000>;
+=======
+                compatible = "qcom,sdm845-ipa";
+
+                modem-init;
+
+                iommus = <&apps_smmu 0x720 0x3>;
+                reg = <0x1e40000 0x7000>,
+                        <0x1e47000 0x2000>,
+                        <0x1e04000 0x2c000>;
+>>>>>>> b7ba80a49124 (Commit)
                 reg-names = "ipa-reg",
                             "ipa-shared",
                             "gsi";
@@ -257,9 +303,15 @@ examples:
                 clock-names = "core";
 
                 interconnects =
+<<<<<<< HEAD
                         <&aggre2_noc MASTER_IPA 0 &mc_virt SLAVE_EBI1 0>,
                         <&aggre2_noc MASTER_IPA 0 &system_noc SLAVE_IMEM 0>,
                         <&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_IPA_CFG 0>;
+=======
+                        <&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_EBI1>,
+                        <&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_IMEM>,
+                        <&rsc_hlos MASTER_APPSS_PROC &rsc_hlos SLAVE_IPA_CFG>;
+>>>>>>> b7ba80a49124 (Commit)
                 interconnect-names = "memory",
                                      "imem",
                                      "config";

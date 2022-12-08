@@ -776,6 +776,7 @@ const struct bpf_func_proto bpf_loop_proto = {
 	.arg3_type	= ARG_PTR_TO_STACK_OR_NULL,
 	.arg4_type	= ARG_ANYTHING,
 };
+<<<<<<< HEAD
 
 struct bpf_iter_num_kern {
 	int cur; /* current value, inclusive */
@@ -846,3 +847,5 @@ __bpf_kfunc void bpf_iter_num_destroy(struct bpf_iter_num *it)
 }
 
 __diag_pop();
+=======
+>>>>>>> b7ba80a49124 (Commit)

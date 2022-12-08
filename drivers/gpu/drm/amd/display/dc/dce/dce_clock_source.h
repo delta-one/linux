@@ -204,17 +204,36 @@
 	type DP_DTO0_MODULO; \
 	type DP_DTO0_ENABLE;
 
+<<<<<<< HEAD
 #define CS_REG_FIELD_LIST_DCN32(type) \
 	type PIPE0_DTO_SRC_SEL;
 
 struct dce110_clk_src_shift {
 	CS_REG_FIELD_LIST(uint8_t)
 	CS_REG_FIELD_LIST_DCN32(uint8_t)
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+#define CS_REG_FIELD_LIST_DCN32(type) \
+	type PIPE0_DTO_SRC_SEL;
+#endif
+
+struct dce110_clk_src_shift {
+	CS_REG_FIELD_LIST(uint8_t)
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+	CS_REG_FIELD_LIST_DCN32(uint8_t)
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct dce110_clk_src_mask{
 	CS_REG_FIELD_LIST(uint32_t)
+<<<<<<< HEAD
 	CS_REG_FIELD_LIST_DCN32(uint32_t)
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+	CS_REG_FIELD_LIST_DCN32(uint32_t)
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct dce110_clk_src_regs {

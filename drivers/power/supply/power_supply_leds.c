@@ -13,7 +13,10 @@
 #include <linux/device.h>
 #include <linux/power_supply.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/leds.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "power_supply.h"
 

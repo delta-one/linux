@@ -40,12 +40,20 @@ enum amdgpu_dm_pipe_crc_source {
 };
 
 #ifdef CONFIG_DRM_AMD_SECURE_DISPLAY
+<<<<<<< HEAD
 struct crc_window_param {
+=======
+struct crc_window_parm {
+>>>>>>> b7ba80a49124 (Commit)
 	uint16_t x_start;
 	uint16_t y_start;
 	uint16_t x_end;
 	uint16_t y_end;
+<<<<<<< HEAD
 	/* CRC window is activated or not*/
+=======
+	/* CRC windwo is activated or not*/
+>>>>>>> b7ba80a49124 (Commit)
 	bool activated;
 	/* Update crc window during vertical blank or not */
 	bool update_win;
@@ -53,6 +61,7 @@ struct crc_window_param {
 	int skip_frame_cnt;
 };
 
+<<<<<<< HEAD
 struct secure_display_context {
 	/* work to notify PSP TA*/
 	struct work_struct notify_ta_work;
@@ -64,6 +73,14 @@ struct secure_display_context {
 
 	/* Region of Interest (ROI) */
 	struct rect rect;
+=======
+struct crc_rd_work {
+	struct work_struct notify_ta_work;
+	/* To protect crc_rd_work carried fields*/
+	spinlock_t crc_rd_work_lock;
+	struct drm_crtc *crtc;
+	uint8_t phy_inst;
+>>>>>>> b7ba80a49124 (Commit)
 };
 #endif
 
@@ -95,12 +112,20 @@ void amdgpu_dm_crtc_handle_crc_irq(struct drm_crtc *crtc);
 #ifdef CONFIG_DRM_AMD_SECURE_DISPLAY
 bool amdgpu_dm_crc_window_is_activated(struct drm_crtc *crtc);
 void amdgpu_dm_crtc_handle_crc_window_irq(struct drm_crtc *crtc);
+<<<<<<< HEAD
 struct secure_display_context *amdgpu_dm_crtc_secure_display_create_contexts(
 						struct amdgpu_device *adev);
 #else
 #define amdgpu_dm_crc_window_is_activated(x)
 #define amdgpu_dm_crtc_handle_crc_window_irq(x)
 #define amdgpu_dm_crtc_secure_display_create_contexts()
+=======
+struct crc_rd_work *amdgpu_dm_crtc_secure_display_create_work(void);
+#else
+#define amdgpu_dm_crc_window_is_activated(x)
+#define amdgpu_dm_crtc_handle_crc_window_irq(x)
+#define amdgpu_dm_crtc_secure_display_create_work()
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #endif /* AMD_DAL_DEV_AMDGPU_DM_AMDGPU_DM_CRC_H_ */

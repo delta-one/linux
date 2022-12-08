@@ -274,6 +274,7 @@
 	nor	\dst, \src, zero
 .endm
 
+<<<<<<< HEAD
 .macro la_abs reg, sym
 #ifndef CONFIG_RELOCATABLE
 	la.abs	\reg, \sym
@@ -291,4 +292,6 @@
 #endif
 .endm
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_ASMMACRO_H */

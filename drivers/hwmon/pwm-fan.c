@@ -257,10 +257,14 @@ static int pwm_fan_update_enable(struct pwm_fan_ctx *ctx, long val)
 
 	if (val == 0) {
 		/* Disable pwm-fan unconditionally */
+<<<<<<< HEAD
 		if (ctx->enabled)
 			ret = __set_pwm(ctx, 0);
 		else
 			ret = pwm_fan_switch_power(ctx, false);
+=======
+		ret = __set_pwm(ctx, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			ctx->enable_mode = old_val;
 		pwm_fan_update_state(ctx, 0);
@@ -427,7 +431,11 @@ static int pwm_fan_of_get_cooling_data(struct device *dev,
 	struct device_node *np = dev->of_node;
 	int num, i, ret;
 
+<<<<<<< HEAD
 	if (!of_property_present(np, "cooling-levels"))
+=======
+	if (!of_find_property(np, "cooling-levels", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	ret = of_property_count_u32_elems(np, "cooling-levels");
@@ -508,6 +516,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
 	pwm_init_state(ctx->pwm, &ctx->pwm_state);
 
 	/*
+<<<<<<< HEAD
 	 * PWM fans are controlled solely by the duty cycle of the PWM signal,
 	 * they do not care about the exact timing. Thus set usage_power to true
 	 * to allow less flexible hardware to work as a PWM source for fan
@@ -516,6 +525,8 @@ static int pwm_fan_probe(struct platform_device *pdev)
 	ctx->pwm_state.usage_power = true;
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * set_pwm assumes that MAX_PWM * (period - 1) fits into an unsigned
 	 * long. Check this here to prevent the fan running at a too low
 	 * frequency.
@@ -650,6 +661,10 @@ static void pwm_fan_shutdown(struct platform_device *pdev)
 	pwm_fan_cleanup(ctx);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int pwm_fan_suspend(struct device *dev)
 {
 	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
@@ -663,8 +678,14 @@ static int pwm_fan_resume(struct device *dev)
 
 	return set_pwm(ctx, ctx->pwm_value);
 }
+<<<<<<< HEAD
 
 static DEFINE_SIMPLE_DEV_PM_OPS(pwm_fan_pm, pwm_fan_suspend, pwm_fan_resume);
+=======
+#endif
+
+static SIMPLE_DEV_PM_OPS(pwm_fan_pm, pwm_fan_suspend, pwm_fan_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct of_device_id of_pwm_fan_match[] = {
 	{ .compatible = "pwm-fan", },
@@ -677,7 +698,11 @@ static struct platform_driver pwm_fan_driver = {
 	.shutdown	= pwm_fan_shutdown,
 	.driver	= {
 		.name		= "pwm-fan",
+<<<<<<< HEAD
 		.pm		= pm_sleep_ptr(&pwm_fan_pm),
+=======
+		.pm		= &pwm_fan_pm,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table	= of_pwm_fan_match,
 	},
 };

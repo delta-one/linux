@@ -1,7 +1,10 @@
 # SPDX-License-Identifier: GPL-2.0-only
 config ARM64
 	def_bool y
+<<<<<<< HEAD
 	select ACPI_APMT if ACPI
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select ACPI_CCA_REQUIRED if ACPI
 	select ACPI_GENERIC_GSI if ACPI
 	select ACPI_GTDT if ACPI
@@ -32,7 +35,10 @@ config ARM64
 	select ARCH_HAS_KCOV
 	select ARCH_HAS_KEEPINITRD
 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
+<<<<<<< HEAD
 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
 	select ARCH_HAS_PTE_DEVMAP
 	select ARCH_HAS_PTE_SPECIAL
@@ -95,12 +101,19 @@ config ARM64
 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
 	select ARCH_SUPPORTS_NUMA_BALANCING
 	select ARCH_SUPPORTS_PAGE_TABLE_CHECK
+<<<<<<< HEAD
 	select ARCH_SUPPORTS_PER_VMA_LOCK
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_WANT_COMPAT_IPC_PARSE_VERSION if COMPAT
 	select ARCH_WANT_DEFAULT_BPF_JIT
 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
 	select ARCH_WANT_FRAME_POINTERS
 	select ARCH_WANT_HUGE_PMD_SHARE if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
+<<<<<<< HEAD
+=======
+	select ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_WANT_LD_ORPHAN_WARN
 	select ARCH_WANTS_NO_INSTR
 	select ARCH_WANTS_THP_SWAP if ARM64_4K_PAGES
@@ -119,12 +132,18 @@ config ARM64
 	select CPU_PM if (SUSPEND || CPU_IDLE)
 	select CRC32
 	select DCACHE_WORD_ACCESS
+<<<<<<< HEAD
 	select DYNAMIC_FTRACE if FUNCTION_TRACER
 	select DMA_DIRECT_REMAP
 	select EDAC_SUPPORT
 	select FRAME_POINTER
 	select FUNCTION_ALIGNMENT_4B
 	select FUNCTION_ALIGNMENT_8B if DYNAMIC_FTRACE_WITH_CALL_OPS
+=======
+	select DMA_DIRECT_REMAP
+	select EDAC_SUPPORT
+	select FRAME_POINTER
+>>>>>>> b7ba80a49124 (Commit)
 	select GENERIC_ALLOCATOR
 	select GENERIC_ARCH_TOPOLOGY
 	select GENERIC_CLOCKEVENTS_BROADCAST
@@ -186,11 +205,16 @@ config ARM64
 	select HAVE_DEBUG_KMEMLEAK
 	select HAVE_DMA_CONTIGUOUS
 	select HAVE_DYNAMIC_FTRACE
+<<<<<<< HEAD
 	select HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS \
 		if (DYNAMIC_FTRACE_WITH_ARGS && !CFI_CLANG && \
 		    !CC_OPTIMIZE_FOR_SIZE)
 	select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY \
 		if DYNAMIC_FTRACE_WITH_ARGS
+=======
+	select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY \
+		if DYNAMIC_FTRACE_WITH_REGS
+>>>>>>> b7ba80a49124 (Commit)
 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
 	select HAVE_FAST_GUP
 	select HAVE_FTRACE_MCOUNT_RECORD
@@ -241,6 +265,7 @@ config ARM64
 	help
 	  ARM 64-bit (AArch64) Linux support.
 
+<<<<<<< HEAD
 config CLANG_SUPPORTS_DYNAMIC_FTRACE_WITH_ARGS
 	def_bool CC_IS_CLANG
 	# https://github.com/ClangBuiltLinux/linux/issues/1507
@@ -251,6 +276,18 @@ config GCC_SUPPORTS_DYNAMIC_FTRACE_WITH_ARGS
 	def_bool CC_IS_GCC
 	depends on $(cc-option,-fpatchable-function-entry=2)
 	select HAVE_DYNAMIC_FTRACE_WITH_ARGS
+=======
+config CLANG_SUPPORTS_DYNAMIC_FTRACE_WITH_REGS
+	def_bool CC_IS_CLANG
+	# https://github.com/ClangBuiltLinux/linux/issues/1507
+	depends on AS_IS_GNU || (AS_IS_LLVM && (LD_IS_LLD || LD_VERSION >= 23600))
+	select HAVE_DYNAMIC_FTRACE_WITH_REGS
+
+config GCC_SUPPORTS_DYNAMIC_FTRACE_WITH_REGS
+	def_bool CC_IS_GCC
+	depends on $(cc-option,-fpatchable-function-entry=2)
+	select HAVE_DYNAMIC_FTRACE_WITH_REGS
+>>>>>>> b7ba80a49124 (Commit)
 
 config 64BIT
 	def_bool y
@@ -378,9 +415,12 @@ config KASAN_SHADOW_OFFSET
 	default 0xeffffff800000000 if ARM64_VA_BITS_36 && KASAN_SW_TAGS
 	default 0xffffffffffffffff
 
+<<<<<<< HEAD
 config UNWIND_TABLES
 	bool
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 source "arch/arm64/Kconfig.platforms"
 
 menu "Kernel Features"
@@ -643,6 +683,7 @@ config ARM64_ERRATUM_1530923
 config ARM64_WORKAROUND_REPEAT_TLBI
 	bool
 
+<<<<<<< HEAD
 config ARM64_ERRATUM_2441007
 	bool "Cortex-A55: Completion of affected memory accesses might not be guaranteed by completion of a TLBI"
 	default y
@@ -660,6 +701,8 @@ config ARM64_ERRATUM_2441007
 
 	  If unsure, say Y.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config ARM64_ERRATUM_1286807
 	bool "Cortex-A76: Modification of the translation table for a virtual address might lead to read-after-read ordering violation"
 	default y
@@ -975,6 +1018,7 @@ config ARM64_ERRATUM_2457168
 
 	  If unsure, say Y.
 
+<<<<<<< HEAD
 config ARM64_ERRATUM_2645198
 	bool "Cortex-A715: 2645198: Workaround possible [ESR|FAR]_ELx corruption"
 	default y
@@ -991,6 +1035,8 @@ config ARM64_ERRATUM_2645198
 
 	  If unsure, say Y.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config CAVIUM_ERRATUM_22375
 	bool "Cavium erratum 22375, 24313"
 	default y
@@ -1475,6 +1521,7 @@ config XEN
 	help
 	  Say Y if you want to run Linux in a Virtual Machine on Xen on ARM64.
 
+<<<<<<< HEAD
 # include/linux/mmzone.h requires the following to be true:
 #
 #   MAX_ORDER + PAGE_SHIFT <= SECTION_SIZE_BITS
@@ -1493,6 +1540,13 @@ config ARCH_FORCE_MAX_ORDER
 	default "11" if ARM64_16K_PAGES
 	range 10 15 if ARM64_4K_PAGES
 	default "10"
+=======
+config ARCH_FORCE_MAX_ORDER
+	int
+	default "14" if ARM64_64K_PAGES
+	default "12" if ARM64_16K_PAGES
+	default "11"
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  The kernel memory allocator divides physically contiguous memory
 	  blocks into "zones", where each zone is a power of two number of
@@ -1501,11 +1555,22 @@ config ARCH_FORCE_MAX_ORDER
 	  blocks of physically contiguous memory, then you may need to
 	  increase this value.
 
+<<<<<<< HEAD
 	  We make sure that we can allocate up to a HugePage size for each configuration.
 	  Hence we have :
 		MAX_ORDER = PMD_SHIFT - PAGE_SHIFT  => PAGE_SHIFT - 3
 
 	  However for 4K, we choose a higher default value, 10 as opposed to 9, giving us
+=======
+	  This config option is actually maximum order plus one. For example,
+	  a value of 11 means that the largest free memory block is 2^10 pages.
+
+	  We make sure that we can allocate upto a HugePage size for each configuration.
+	  Hence we have :
+		MAX_ORDER = (PMD_SHIFT - PAGE_SHIFT) + 1 => PAGE_SHIFT - 2
+
+	  However for 4K, we choose a higher default value, 11 as opposed to 10, giving us
+>>>>>>> b7ba80a49124 (Commit)
 	  4M allocations matching the default size used by generic code.
 
 config UNMAP_KERNEL_AT_EL0
@@ -1751,6 +1816,10 @@ config ARM64_LSE_ATOMICS
 
 config ARM64_USE_LSE_ATOMICS
 	bool "Atomic instructions"
+<<<<<<< HEAD
+=======
+	depends on JUMP_LABEL
+>>>>>>> b7ba80a49124 (Commit)
 	default y
 	help
 	  As part of the Large System Extensions, ARMv8.1 introduces new
@@ -1847,12 +1916,20 @@ config ARM64_PTR_AUTH_KERNEL
 	bool "Use pointer authentication for kernel"
 	default y
 	depends on ARM64_PTR_AUTH
+<<<<<<< HEAD
 	depends on (CC_HAS_SIGN_RETURN_ADDRESS || CC_HAS_BRANCH_PROT_PAC_RET) && AS_HAS_ARMV8_3
+=======
+	depends on (CC_HAS_SIGN_RETURN_ADDRESS || CC_HAS_BRANCH_PROT_PAC_RET) && AS_HAS_PAC
+>>>>>>> b7ba80a49124 (Commit)
 	# Modern compilers insert a .note.gnu.property section note for PAC
 	# which is only understood by binutils starting with version 2.33.1.
 	depends on LD_IS_LLD || LD_VERSION >= 23301 || (CC_IS_GCC && GCC_VERSION < 90100)
 	depends on !CC_IS_CLANG || AS_HAS_CFI_NEGATE_RA_STATE
+<<<<<<< HEAD
 	depends on (!FUNCTION_GRAPH_TRACER || DYNAMIC_FTRACE_WITH_ARGS)
+=======
+	depends on (!FUNCTION_GRAPH_TRACER || DYNAMIC_FTRACE_WITH_REGS)
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  If the compiler supports the -mbranch-protection or
 	  -msign-return-address flag (e.g. GCC 7 or later), then this option
@@ -1862,7 +1939,11 @@ config ARM64_PTR_AUTH_KERNEL
 	  disabled with minimal loss of protection.
 
 	  This feature works with FUNCTION_GRAPH_TRACER option only if
+<<<<<<< HEAD
 	  DYNAMIC_FTRACE_WITH_ARGS is enabled.
+=======
+	  DYNAMIC_FTRACE_WITH_REGS is enabled.
+>>>>>>> b7ba80a49124 (Commit)
 
 config CC_HAS_BRANCH_PROT_PAC_RET
 	# GCC 9 or later, clang 8 or later
@@ -1872,7 +1953,11 @@ config CC_HAS_SIGN_RETURN_ADDRESS
 	# GCC 7, 8
 	def_bool $(cc-option,-msign-return-address=all)
 
+<<<<<<< HEAD
 config AS_HAS_ARMV8_3
+=======
+config AS_HAS_PAC
+>>>>>>> b7ba80a49124 (Commit)
 	def_bool $(cc-option,-Wa$(comma)-march=armv8.3-a)
 
 config AS_HAS_CFI_NEGATE_RA_STATE
@@ -1960,7 +2045,11 @@ config ARM64_BTI_KERNEL
 	depends on !CC_IS_GCC
 	# https://github.com/llvm/llvm-project/commit/a88c722e687e6780dcd6a58718350dc76fcc4cc9
 	depends on !CC_IS_CLANG || CLANG_VERSION >= 120000
+<<<<<<< HEAD
 	depends on (!FUNCTION_GRAPH_TRACER || DYNAMIC_FTRACE_WITH_ARGS)
+=======
+	depends on (!FUNCTION_GRAPH_TRACER || DYNAMIC_FTRACE_WITH_REGS)
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Build the kernel with Branch Target Identification annotations
 	  and enable enforcement of this for kernel code. When this option
@@ -2001,7 +2090,10 @@ config ARM64_MTE
 	depends on ARM64_PAN
 	select ARCH_HAS_SUBPAGE_FAULTS
 	select ARCH_USES_HIGH_VMA_FLAGS
+<<<<<<< HEAD
 	select ARCH_USES_PG_ARCH_X
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Memory Tagging (part of the ARMv8.5 Extensions) provides
 	  architectural support for run-time, always-on detection of
@@ -2182,6 +2274,7 @@ config STACKPROTECTOR_PER_TASK
 	def_bool y
 	depends on STACKPROTECTOR && CC_HAVE_STACKPROTECTOR_SYSREG
 
+<<<<<<< HEAD
 config UNWIND_PATCH_PAC_INTO_SCS
 	bool "Enable shadow call stack dynamically using code patching"
 	# needs Clang with https://reviews.llvm.org/D111780 incorporated
@@ -2190,6 +2283,19 @@ config UNWIND_PATCH_PAC_INTO_SCS
 	depends on SHADOW_CALL_STACK
 	select UNWIND_TABLES
 	select DYNAMIC_SCS
+=======
+# The GPIO number here must be sorted by descending number. In case of
+# a multiplatform kernel, we just want the highest value required by the
+# selected platforms.
+config ARCH_NR_GPIO
+        int
+        default 2048 if ARCH_APPLE
+        default 0
+        help
+          Maximum number of GPIOs in the system.
+
+          If unsure, leave the default value.
+>>>>>>> b7ba80a49124 (Commit)
 
 endmenu # "Kernel Features"
 

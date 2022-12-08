@@ -2,6 +2,7 @@
 #ifndef __BPF_LEGACY__
 #define __BPF_LEGACY__
 
+<<<<<<< HEAD
 #if __GNUC__ && !__clang__
 /* Functions to emit BPF_LD_ABS and BPF_LD_IND instructions.  We
  * provide the "standard" names as synonyms of the corresponding GCC
@@ -18,6 +19,17 @@ unsigned long long load_byte(void *skb, unsigned long long off) asm("llvm.bpf.lo
 unsigned long long load_half(void *skb, unsigned long long off) asm("llvm.bpf.load.half");
 unsigned long long load_word(void *skb, unsigned long long off) asm("llvm.bpf.load.word");
 #endif
+=======
+/* llvm builtin functions that eBPF C program may use to
+ * emit BPF_LD_ABS and BPF_LD_IND instructions
+ */
+unsigned long long load_byte(void *skb,
+			     unsigned long long off) asm("llvm.bpf.load.byte");
+unsigned long long load_half(void *skb,
+			     unsigned long long off) asm("llvm.bpf.load.half");
+unsigned long long load_word(void *skb,
+			     unsigned long long off) asm("llvm.bpf.load.word");
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif
 

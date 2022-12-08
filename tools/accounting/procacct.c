@@ -261,20 +261,37 @@ void handle_aggr(int mother, struct nlattr *na, int fd)
 
 int main(int argc, char *argv[])
 {
+<<<<<<< HEAD
 	int c, rc, rep_len;
+=======
+	int c, rc, rep_len, aggr_len, len2;
+	int cmd_type = TASKSTATS_CMD_ATTR_UNSPEC;
+>>>>>>> b7ba80a49124 (Commit)
 	__u16 id;
 	__u32 mypid;
 
 	struct nlattr *na;
 	int nl_sd = -1;
 	int len = 0;
+<<<<<<< HEAD
+=======
+	pid_t tid = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	int fd = 0;
 	int write_file = 0;
 	int maskset = 0;
 	char *logfile = NULL;
+<<<<<<< HEAD
 	int cfd = 0;
 	int forking = 0;
+=======
+	int containerset = 0;
+	char *containerpath = NULL;
+	int cfd = 0;
+	int forking = 0;
+	sigset_t sigset;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct msgtemplate msg;
 

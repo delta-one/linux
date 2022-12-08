@@ -54,7 +54,11 @@ that is built with ``CONFIG_DAMON_LRU_SORT=y``.
 To let sysadmins enable or disable it and tune for the given system,
 DAMON_LRU_SORT utilizes module parameters.  That is, you can put
 ``damon_lru_sort.<parameter>=<value>`` on the kernel boot command line or write
+<<<<<<< HEAD
 proper values to ``/sys/module/damon_lru_sort/parameters/<parameter>`` files.
+=======
+proper values to ``/sys/modules/damon_lru_sort/parameters/<parameter>`` files.
+>>>>>>> b7ba80a49124 (Commit)
 
 Below are the description of each parameter.
 
@@ -283,7 +287,11 @@ doesn't make progress and therefore the free memory rate becomes lower than
 20%, it asks DAMON_LRU_SORT to do nothing again, so that we can fall back to
 the LRU-list based page granularity reclamation. ::
 
+<<<<<<< HEAD
     # cd /sys/module/damon_lru_sort/parameters
+=======
+    # cd /sys/modules/damon_lru_sort/parameters
+>>>>>>> b7ba80a49124 (Commit)
     # echo 500 > hot_thres_access_freq
     # echo 120000000 > cold_min_age
     # echo 10 > quota_ms

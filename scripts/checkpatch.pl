@@ -702,6 +702,7 @@ sub find_standard_signature {
 	return "";
 }
 
+<<<<<<< HEAD
 our $obsolete_archives = qr{(?xi:
 	\Qfreedesktop.org/archives/dri-devel\E |
 	\Qlists.infradead.org\E |
@@ -713,6 +714,8 @@ our $obsolete_archives = qr{(?xi:
 	\Qspinics.net\E
 )};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 our @typeListMisordered = (
 	qr{char\s+(?:un)?signed},
 	qr{int\s+(?:(?:un)?signed\s+)?short\s},
@@ -823,9 +826,13 @@ our %deprecated_apis = (
 	"get_state_synchronize_sched"		=> "get_state_synchronize_rcu",
 	"cond_synchronize_sched"		=> "cond_synchronize_rcu",
 	"kmap"					=> "kmap_local_page",
+<<<<<<< HEAD
 	"kunmap"				=> "kunmap_local",
 	"kmap_atomic"				=> "kmap_local_page",
 	"kunmap_atomic"				=> "kunmap_local",
+=======
+	"kmap_atomic"				=> "kmap_local_page",
+>>>>>>> b7ba80a49124 (Commit)
 );
 
 #Create a search pattern for all these strings to speed up a loop below
@@ -3144,6 +3151,7 @@ sub process {
 			if ($sign_off =~ /^co-developed-by:$/i) {
 				if ($email eq $author) {
 					WARN("BAD_SIGN_OFF",
+<<<<<<< HEAD
 					      "Co-developed-by: should not be used to attribute nominal patch author '$author'\n" . $herecurr);
 				}
 				if (!defined $lines[$linenr]) {
@@ -3166,11 +3174,27 @@ sub process {
 				} elsif ($rawlines[$linenr] !~ m{^link:\s*https?://}i) {
 					WARN("BAD_REPORTED_BY_LINK",
 					     "Reported-by: should be immediately followed by Link: with a URL to the report\n" . $herecurr . $rawlines[$linenr] . "\n");
+=======
+					      "Co-developed-by: should not be used to attribute nominal patch author '$author'\n" . "$here\n" . $rawline);
+				}
+				if (!defined $lines[$linenr]) {
+					WARN("BAD_SIGN_OFF",
+					     "Co-developed-by: must be immediately followed by Signed-off-by:\n" . "$here\n" . $rawline);
+				} elsif ($rawlines[$linenr] !~ /^\s*signed-off-by:\s*(.*)/i) {
+					WARN("BAD_SIGN_OFF",
+					     "Co-developed-by: must be immediately followed by Signed-off-by:\n" . "$here\n" . $rawline . "\n" .$rawlines[$linenr]);
+				} elsif ($1 ne $email) {
+					WARN("BAD_SIGN_OFF",
+					     "Co-developed-by and Signed-off-by: name/email do not match \n" . "$here\n" . $rawline . "\n" .$rawlines[$linenr]);
+>>>>>>> b7ba80a49124 (Commit)
 				}
 			}
 		}
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # Check Fixes: styles is correct
 		if (!$in_header_lines &&
 		    $line =~ /^\s*fixes:?\s*(?:commit\s*)?[0-9a-f]{5,}\b/i) {
@@ -3264,6 +3288,7 @@ sub process {
 			$commit_log_possible_stack_dump = 0;
 		}
 
+<<<<<<< HEAD
 # Check for odd tags before a URI/URL
 		if ($in_commit_log &&
 		    $line =~ /^\s*(\w+):\s*http/ && $1 ne 'Link') {
@@ -3276,6 +3301,8 @@ sub process {
 			}
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # Check for lines starting with a #
 		if ($in_commit_log && $line =~ /^#/) {
 			if (WARN("COMMIT_COMMENT_SYMBOL",
@@ -3361,12 +3388,15 @@ sub process {
 			$last_git_commit_id_linenr = $linenr if ($line =~ /\bcommit\s*$/i);
 		}
 
+<<<<<<< HEAD
 # Check for mailing list archives other than lore.kernel.org
 		if ($rawline =~ m{http.*\b$obsolete_archives}) {
 			WARN("PREFER_LORE_ARCHIVE",
 			     "Use lore.kernel.org archive links when possible - see https://lore.kernel.org/lists.html\n" . $herecurr);
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # Check for added, moved or deleted files
 		if (!$reported_maintainer_file && !$in_commit_log &&
 		    ($line =~ /^(?:new|deleted) file mode\s*\d+\s*$/ ||
@@ -3735,9 +3765,14 @@ sub process {
 						WARN("SPDX_LICENSE_TAG",
 						     "'$spdx_license' is not supported in LICENSES/...\n" . $herecurr);
 					}
+<<<<<<< HEAD
 					if (($realfile =~ m@^Documentation/devicetree/bindings/@ ||
 					     $realfile =~ m@^include/dt-bindings/@) &&
 					    $spdx_license !~ /GPL-2\.0(?:-only|-or-later|\+)? (?:OR|or) BSD-2-Clause/) {
+=======
+					if ($realfile =~ m@^Documentation/devicetree/bindings/@ &&
+					    not $spdx_license =~ /GPL-2\.0.*BSD-2-Clause/) {
+>>>>>>> b7ba80a49124 (Commit)
 						my $msg_level = \&WARN;
 						$msg_level = \&CHK if ($file);
 						if (&{$msg_level}("SPDX_LICENSE_TAG",
@@ -3752,7 +3787,11 @@ sub process {
 		}
 
 # check for embedded filenames
+<<<<<<< HEAD
 		if ($rawline =~ /^\+.*\b\Q$realfile\E\b/) {
+=======
+		if ($rawline =~ /^\+.*\Q$realfile\E/) {
+>>>>>>> b7ba80a49124 (Commit)
 			WARN("EMBEDDED_FILENAME",
 			     "It's generally not useful to have the filename in the file\n" . $herecurr);
 		}
@@ -3845,7 +3884,11 @@ sub process {
 		if ($realfile =~ /\.S$/ &&
 		    $line =~ /^\+\s*(?:[A-Z]+_)?SYM_[A-Z]+_(?:START|END)(?:_[A-Z_]+)?\s*\(\s*\.L/) {
 			WARN("AVOID_L_PREFIX",
+<<<<<<< HEAD
 			     "Avoid using '.L' prefixed local symbol names for denoting a range of code via 'SYM_*_START/END' annotations; see Documentation/core-api/asm-annotations.rst\n" . $herecurr);
+=======
+			     "Avoid using '.L' prefixed local symbol names for denoting a range of code via 'SYM_*_START/END' annotations; see Documentation/asm-annotations.rst\n" . $herecurr);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 # check we are in a valid source file C or perl if not then ignore this hunk
@@ -4794,7 +4837,11 @@ sub process {
 			my $msg_level = \&WARN;
 			$msg_level = \&CHK if ($file);
 			&{$msg_level}("AVOID_BUG",
+<<<<<<< HEAD
 				      "Do not crash the kernel unless it is absolutely unavoidable--use WARN_ON_ONCE() plus recovery code (if feasible) instead of BUG() or variants\n" . $herecurr);
+=======
+				      "Do not crash the kernel unless it is unavoidable - use WARN_ON_ONCE & recovery code (if reasonable) rather than BUG() or variants.\n" . $herecurr);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 # avoid LINUX_VERSION_CODE
@@ -5810,8 +5857,11 @@ sub process {
 			    $var !~ /^(?:[A-Z]+_){1,5}[A-Z]{1,3}[a-z]/ &&
 #Ignore Page<foo> variants
 			    $var !~ /^(?:Clear|Set|TestClear|TestSet|)Page[A-Z]/ &&
+<<<<<<< HEAD
 #Ignore ETHTOOL_LINK_MODE_<foo> variants
 			    $var !~ /^ETHTOOL_LINK_MODE_/ &&
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #Ignore SI style variants like nS, mV and dB
 #(ie: max_uV, regulator_min_uA_show, RANGE_mA_VALUE)
 			    $var !~ /^(?:[a-z0-9_]*|[A-Z0-9_]*)?_?[a-z][A-Z](?:_[a-z0-9_]+|_[A-Z0-9_]+)?$/ &&
@@ -5947,7 +5997,10 @@ sub process {
 			    $dstat !~ /$exceptions/ &&
 			    $dstat !~ /^\.$Ident\s*=/ &&				# .foo =
 			    $dstat !~ /^(?:\#\s*$Ident|\#\s*$Constant)\s*$/ &&		# stringification #foo
+<<<<<<< HEAD
 			    $dstat !~ /^case\b/ &&					# case ...
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			    $dstat !~ /^do\s*$Constant\s*while\s*$Constant;?$/ &&	# do {...} while (...); // do {...} while (...)
 			    $dstat !~ /^while\s*$Constant\s*$Constant\s*$/ &&		# while (...) {...}
 			    $dstat !~ /^for\s*$Constant$/ &&				# for (...)
@@ -6391,6 +6444,7 @@ sub process {
 			}
 		}
 
+<<<<<<< HEAD
 # check for soon-to-be-deprecated single-argument k[v]free_rcu() API
 		if ($line =~ /\bk[v]?free_rcu\s*\([^(]+\)/) {
 			if ($line =~ /\bk[v]?free_rcu\s*\([^,]+\)/) {
@@ -6400,6 +6454,8 @@ sub process {
 		}
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # check for unnecessary "Out of Memory" messages
 		if ($line =~ /^\+.*\b$logFunctions\s*\(/ &&
 		    $prevline =~ /^[ \+]\s*if\s*\(\s*(\!\s*|NULL\s*==\s*)?($Lval)(\s*==\s*NULL\s*)?\s*\)/ &&
@@ -7184,7 +7240,11 @@ sub process {
 		}
 
 # check for alloc argument mismatch
+<<<<<<< HEAD
 		if ($line =~ /\b((?:devm_)?((?:k|kv)?(calloc|malloc_array)(?:_node)?))\s*\(\s*sizeof\b/) {
+=======
+		if ($line =~ /\b((?:devm_)?(?:kcalloc|kmalloc_array))\s*\(\s*sizeof\b/) {
+>>>>>>> b7ba80a49124 (Commit)
 			WARN("ALLOC_ARRAY_ARGS",
 			     "$1 uses number as first arg, sizeof is generally wrong\n" . $herecurr);
 		}

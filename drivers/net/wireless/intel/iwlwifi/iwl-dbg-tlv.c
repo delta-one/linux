@@ -350,9 +350,15 @@ void iwl_dbg_tlv_alloc(struct iwl_trans *trans, const struct iwl_ucode_tlv *tlv,
 
 	ret = dbg_tlv_alloc[tlv_idx](trans, tlv);
 	if (ret) {
+<<<<<<< HEAD
 		IWL_WARN(trans,
 			 "WRT: Failed to allocate TLV 0x%x, ret %d, (ext=%d)\n",
 			 type, ret, ext);
+=======
+		IWL_ERR(trans,
+			"WRT: Failed to allocate TLV 0x%x, ret %d, (ext=%d)\n",
+			type, ret, ext);
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_err;
 	}
 
@@ -371,7 +377,11 @@ void iwl_dbg_tlv_del_timers(struct iwl_trans *trans)
 	struct iwl_dbg_tlv_timer_node *node, *tmp;
 
 	list_for_each_entry_safe(node, tmp, timer_list, list) {
+<<<<<<< HEAD
 		timer_shutdown_sync(&node->timer);
+=======
+		del_timer_sync(&node->timer);
+>>>>>>> b7ba80a49124 (Commit)
 		list_del(&node->list);
 		kfree(node);
 	}
@@ -590,9 +600,12 @@ static int iwl_dbg_tlv_alloc_fragments(struct iwl_fw_runtime *fwrt,
 		if (alloc_id != IWL_FW_INI_ALLOCATION_ID_DBGC1)
 			return -EIO;
 		num_frags = 1;
+<<<<<<< HEAD
 	} else if (fwrt->trans->trans_cfg->device_family < IWL_DEVICE_FAMILY_BZ &&
 			   alloc_id > IWL_FW_INI_ALLOCATION_ID_DBGC3) {
 		return -EIO;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	remain_pages = DIV_ROUND_UP(le32_to_cpu(fw_mon_cfg->req_size),
@@ -792,7 +805,11 @@ static void iwl_dbg_tlv_update_drams(struct iwl_fw_runtime *fwrt)
 	dram_info->second_word = cpu_to_le32(DRAM_INFO_SECOND_MAGIC_WORD);
 
 	for (i = IWL_FW_INI_ALLOCATION_ID_DBGC1;
+<<<<<<< HEAD
 	     i < IWL_FW_INI_ALLOCATION_NUM; i++) {
+=======
+	     i <= IWL_FW_INI_ALLOCATION_ID_DBGC3; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = iwl_dbg_tlv_update_dram(fwrt, i, dram_info);
 		if (!ret)
 			dram_alloc = true;
@@ -1218,12 +1235,20 @@ iwl_dbg_tlv_tp_trigger(struct iwl_fw_runtime *fwrt, bool sync,
 		}
 
 		fwrt->trans->dbg.restart_required = FALSE;
+<<<<<<< HEAD
 		IWL_DEBUG_FW(fwrt, "WRT: tp %d, reset_fw %d\n",
 			     tp, dump_data.trig->reset_fw);
 		IWL_DEBUG_FW(fwrt,
 			     "WRT: restart_required %d, last_tp_resetfw %d\n",
 			     fwrt->trans->dbg.restart_required,
 			     fwrt->trans->dbg.last_tp_resetfw);
+=======
+		IWL_DEBUG_INFO(fwrt, "WRT: tp %d, reset_fw %d\n",
+			       tp, dump_data.trig->reset_fw);
+		IWL_DEBUG_INFO(fwrt, "WRT: restart_required %d, last_tp_resetfw %d\n",
+			       fwrt->trans->dbg.restart_required,
+			       fwrt->trans->dbg.last_tp_resetfw);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (fwrt->trans->trans_cfg->device_family ==
 		    IWL_DEVICE_FAMILY_9000) {
@@ -1236,19 +1261,32 @@ iwl_dbg_tlv_tp_trigger(struct iwl_fw_runtime *fwrt, bool sync,
 			IWL_DEBUG_FW(fwrt, "WRT: FW_ASSERT due to reset_fw_mode-no restart\n");
 		} else if (le32_to_cpu(dump_data.trig->reset_fw) ==
 			   IWL_FW_INI_RESET_FW_MODE_STOP_AND_RELOAD_FW) {
+<<<<<<< HEAD
 			IWL_DEBUG_FW(fwrt, "WRT: stop and reload firmware\n");
 			fwrt->trans->dbg.restart_required = TRUE;
 		} else if (le32_to_cpu(dump_data.trig->reset_fw) ==
 			   IWL_FW_INI_RESET_FW_MODE_STOP_FW_ONLY) {
 			IWL_DEBUG_FW(fwrt,
 				     "WRT: stop only and no reload firmware\n");
+=======
+			IWL_DEBUG_INFO(fwrt, "WRT: stop and reload firmware\n");
+			fwrt->trans->dbg.restart_required = TRUE;
+		} else if (le32_to_cpu(dump_data.trig->reset_fw) ==
+			   IWL_FW_INI_RESET_FW_MODE_STOP_FW_ONLY) {
+			IWL_DEBUG_INFO(fwrt, "WRT: stop only and no reload firmware\n");
+>>>>>>> b7ba80a49124 (Commit)
 			fwrt->trans->dbg.restart_required = FALSE;
 			fwrt->trans->dbg.last_tp_resetfw =
 				le32_to_cpu(dump_data.trig->reset_fw);
 		} else if (le32_to_cpu(dump_data.trig->reset_fw) ==
 			   IWL_FW_INI_RESET_FW_MODE_NOTHING) {
+<<<<<<< HEAD
 			IWL_DEBUG_FW(fwrt,
 				     "WRT: nothing need to be done after debug collection\n");
+=======
+			IWL_DEBUG_INFO(fwrt,
+				       "WRT: nothing need to be done after debug collection\n");
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			IWL_ERR(fwrt, "WRT: wrong resetfw %d\n",
 				le32_to_cpu(dump_data.trig->reset_fw));
@@ -1329,7 +1367,11 @@ static void iwl_dbg_tlv_init_cfg(struct iwl_fw_runtime *fwrt)
 			     "WRT: removing allocation id %d from region id %d\n",
 			     le32_to_cpu(reg->dram_alloc_id), i);
 
+<<<<<<< HEAD
 		failed_alloc &= ~BIT(le32_to_cpu(reg->dram_alloc_id));
+=======
+		failed_alloc &= ~le32_to_cpu(reg->dram_alloc_id);
+>>>>>>> b7ba80a49124 (Commit)
 		fwrt->trans->dbg.unsupported_region_msk |= BIT(i);
 
 		kfree(*active_reg);

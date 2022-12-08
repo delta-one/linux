@@ -14,6 +14,38 @@
 
 #include "pwm-lpss.h"
 
+<<<<<<< HEAD
+=======
+/* BayTrail */
+static const struct pwm_lpss_boardinfo pwm_lpss_byt_info = {
+	.clk_rate = 25000000,
+	.npwm = 1,
+	.base_unit_bits = 16,
+};
+
+/* Braswell */
+static const struct pwm_lpss_boardinfo pwm_lpss_bsw_info = {
+	.clk_rate = 19200000,
+	.npwm = 1,
+	.base_unit_bits = 16,
+};
+
+/* Broxton */
+static const struct pwm_lpss_boardinfo pwm_lpss_bxt_info = {
+	.clk_rate = 19200000,
+	.npwm = 4,
+	.base_unit_bits = 22,
+	.bypass = true,
+};
+
+/* Tangier */
+static const struct pwm_lpss_boardinfo pwm_lpss_tng_info = {
+	.clk_rate = 19200000,
+	.npwm = 4,
+	.base_unit_bits = 22,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static int pwm_lpss_probe_pci(struct pci_dev *pdev,
 			      const struct pci_device_id *id)
 {
@@ -25,12 +57,17 @@ static int pwm_lpss_probe_pci(struct pci_dev *pdev,
 	if (err < 0)
 		return err;
 
+<<<<<<< HEAD
 	err = pcim_iomap_regions(pdev, BIT(0), pci_name(pdev));
 	if (err)
 		return err;
 
 	info = (struct pwm_lpss_boardinfo *)id->driver_data;
 	lpwm = devm_pwm_lpss_probe(&pdev->dev, pcim_iomap_table(pdev)[0], info);
+=======
+	info = (struct pwm_lpss_boardinfo *)id->driver_data;
+	lpwm = pwm_lpss_probe(&pdev->dev, &pdev->resource[0], info);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(lpwm))
 		return PTR_ERR(lpwm);
 
@@ -48,6 +85,10 @@ static void pwm_lpss_remove_pci(struct pci_dev *pdev)
 	pm_runtime_get_sync(&pdev->dev);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM
+>>>>>>> b7ba80a49124 (Commit)
 static int pwm_lpss_runtime_suspend_pci(struct device *dev)
 {
 	/*
@@ -61,11 +102,20 @@ static int pwm_lpss_runtime_resume_pci(struct device *dev)
 {
 	return 0;
 }
+<<<<<<< HEAD
 
 static DEFINE_RUNTIME_DEV_PM_OPS(pwm_lpss_pci_pm,
 				 pwm_lpss_runtime_suspend_pci,
 				 pwm_lpss_runtime_resume_pci,
 				 NULL);
+=======
+#endif
+
+static const struct dev_pm_ops pwm_lpss_pci_pm = {
+	SET_RUNTIME_PM_OPS(pwm_lpss_runtime_suspend_pci,
+			   pwm_lpss_runtime_resume_pci, NULL)
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct pci_device_id pwm_lpss_pci_ids[] = {
 	{ PCI_VDEVICE(INTEL, 0x0ac8), (unsigned long)&pwm_lpss_bxt_info},
@@ -87,11 +137,18 @@ static struct pci_driver pwm_lpss_driver_pci = {
 	.probe = pwm_lpss_probe_pci,
 	.remove = pwm_lpss_remove_pci,
 	.driver = {
+<<<<<<< HEAD
 		.pm = pm_ptr(&pwm_lpss_pci_pm),
+=======
+		.pm = &pwm_lpss_pci_pm,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 module_pci_driver(pwm_lpss_driver_pci);
 
 MODULE_DESCRIPTION("PWM PCI driver for Intel LPSS");
 MODULE_LICENSE("GPL v2");
+<<<<<<< HEAD
 MODULE_IMPORT_NS(PWM_LPSS);
+=======
+>>>>>>> b7ba80a49124 (Commit)

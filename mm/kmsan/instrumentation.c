@@ -14,7 +14,10 @@
 
 #include "kmsan.h"
 #include <linux/gfp.h>
+<<<<<<< HEAD
 #include <linux/kmsan_string.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mm.h>
 #include <linux/uaccess.h>
 
@@ -38,6 +41,7 @@ get_shadow_origin_ptr(void *addr, u64 size, bool store)
 	return ret;
 }
 
+<<<<<<< HEAD
 /*
  * KMSAN instrumentation functions follow. They are not declared elsewhere in
  * the kernel code, so they are preceded by prototypes, to silence
@@ -48,6 +52,10 @@ get_shadow_origin_ptr(void *addr, u64 size, bool store)
 struct shadow_origin_ptr __msan_metadata_ptr_for_load_n(void *addr,
 							uintptr_t size);
 struct shadow_origin_ptr __msan_metadata_ptr_for_load_n(void *addr,
+=======
+/* Get shadow and origin pointers for a memory load with non-standard size. */
+struct shadow_origin_ptr __msan_metadata_ptr_for_load_n(void *addr,
+>>>>>>> b7ba80a49124 (Commit)
 							uintptr_t size)
 {
 	return get_shadow_origin_ptr(addr, size, /*store*/ false);
@@ -56,8 +64,11 @@ EXPORT_SYMBOL(__msan_metadata_ptr_for_load_n);
 
 /* Get shadow and origin pointers for a memory store with non-standard size. */
 struct shadow_origin_ptr __msan_metadata_ptr_for_store_n(void *addr,
+<<<<<<< HEAD
 							 uintptr_t size);
 struct shadow_origin_ptr __msan_metadata_ptr_for_store_n(void *addr,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 							 uintptr_t size)
 {
 	return get_shadow_origin_ptr(addr, size, /*store*/ true);
@@ -70,16 +81,22 @@ EXPORT_SYMBOL(__msan_metadata_ptr_for_store_n);
  */
 #define DECLARE_METADATA_PTR_GETTER(size)                                  \
 	struct shadow_origin_ptr __msan_metadata_ptr_for_load_##size(      \
+<<<<<<< HEAD
 		void *addr);                                               \
 	struct shadow_origin_ptr __msan_metadata_ptr_for_load_##size(      \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		void *addr)                                                \
 	{                                                                  \
 		return get_shadow_origin_ptr(addr, size, /*store*/ false); \
 	}                                                                  \
 	EXPORT_SYMBOL(__msan_metadata_ptr_for_load_##size);                \
 	struct shadow_origin_ptr __msan_metadata_ptr_for_store_##size(     \
+<<<<<<< HEAD
 		void *addr);                                               \
 	struct shadow_origin_ptr __msan_metadata_ptr_for_store_##size(     \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		void *addr)                                                \
 	{                                                                  \
 		return get_shadow_origin_ptr(addr, size, /*store*/ true);  \
@@ -95,17 +112,25 @@ DECLARE_METADATA_PTR_GETTER(8);
  * Handle a memory store performed by inline assembly. KMSAN conservatively
  * attempts to unpoison the outputs of asm() directives to prevent false
  * positives caused by missed stores.
+<<<<<<< HEAD
  *
  * __msan_instrument_asm_store() may be called for inline assembly code when
  * entering or leaving IRQ. We omit the check for kmsan_in_runtime() to ensure
  * the memory written to in these cases is also marked as initialized.
  */
 void __msan_instrument_asm_store(void *addr, uintptr_t size);
+=======
+ */
+>>>>>>> b7ba80a49124 (Commit)
 void __msan_instrument_asm_store(void *addr, uintptr_t size)
 {
 	unsigned long ua_flags;
 
+<<<<<<< HEAD
 	if (!kmsan_enabled)
+=======
+	if (!kmsan_enabled || kmsan_in_runtime())
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	ua_flags = user_access_save();
@@ -122,8 +147,15 @@ void __msan_instrument_asm_store(void *addr, uintptr_t size)
 		user_access_restore(ua_flags);
 		return;
 	}
+<<<<<<< HEAD
 	/* Unpoisoning the memory on best effort. */
 	kmsan_internal_unpoison_memory(addr, size, /*checked*/ false);
+=======
+	kmsan_enter_runtime();
+	/* Unpoisoning the memory on best effort. */
+	kmsan_internal_unpoison_memory(addr, size, /*checked*/ false);
+	kmsan_leave_runtime();
+>>>>>>> b7ba80a49124 (Commit)
 	user_access_restore(ua_flags);
 }
 EXPORT_SYMBOL(__msan_instrument_asm_store);
@@ -153,7 +185,10 @@ static inline void set_retval_metadata(u64 shadow, depot_stack_handle_t origin)
 }
 
 /* Handle llvm.memmove intrinsic. */
+<<<<<<< HEAD
 void *__msan_memmove(void *dst, const void *src, uintptr_t n);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void *__msan_memmove(void *dst, const void *src, uintptr_t n)
 {
 	depot_stack_handle_t origin;
@@ -178,7 +213,10 @@ void *__msan_memmove(void *dst, const void *src, uintptr_t n)
 EXPORT_SYMBOL(__msan_memmove);
 
 /* Handle llvm.memcpy intrinsic. */
+<<<<<<< HEAD
 void *__msan_memcpy(void *dst, const void *src, uintptr_t n);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void *__msan_memcpy(void *dst, const void *src, uintptr_t n)
 {
 	depot_stack_handle_t origin;
@@ -205,7 +243,10 @@ void *__msan_memcpy(void *dst, const void *src, uintptr_t n)
 EXPORT_SYMBOL(__msan_memcpy);
 
 /* Handle llvm.memset intrinsic. */
+<<<<<<< HEAD
 void *__msan_memset(void *dst, int c, uintptr_t n);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void *__msan_memset(void *dst, int c, uintptr_t n)
 {
 	depot_stack_handle_t origin;
@@ -235,7 +276,10 @@ EXPORT_SYMBOL(__msan_memset);
  * uninitialized value to memory. When reporting an error, KMSAN unrolls and
  * prints the whole chain of stores that preceded the use of this value.
  */
+<<<<<<< HEAD
 depot_stack_handle_t __msan_chain_origin(depot_stack_handle_t origin);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 depot_stack_handle_t __msan_chain_origin(depot_stack_handle_t origin)
 {
 	depot_stack_handle_t ret = 0;
@@ -256,7 +300,10 @@ depot_stack_handle_t __msan_chain_origin(depot_stack_handle_t origin)
 EXPORT_SYMBOL(__msan_chain_origin);
 
 /* Poison a local variable when entering a function. */
+<<<<<<< HEAD
 void __msan_poison_alloca(void *address, uintptr_t size, char *descr);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void __msan_poison_alloca(void *address, uintptr_t size, char *descr)
 {
 	depot_stack_handle_t handle;
@@ -292,7 +339,10 @@ void __msan_poison_alloca(void *address, uintptr_t size, char *descr)
 EXPORT_SYMBOL(__msan_poison_alloca);
 
 /* Unpoison a local variable. */
+<<<<<<< HEAD
 void __msan_unpoison_alloca(void *address, uintptr_t size);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void __msan_unpoison_alloca(void *address, uintptr_t size)
 {
 	if (!kmsan_enabled || kmsan_in_runtime())
@@ -308,7 +358,10 @@ EXPORT_SYMBOL(__msan_unpoison_alloca);
  * Report that an uninitialized value with the given origin was used in a way
  * that constituted undefined behavior.
  */
+<<<<<<< HEAD
 void __msan_warning(u32 origin);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void __msan_warning(u32 origin)
 {
 	if (!kmsan_enabled || kmsan_in_runtime())
@@ -325,7 +378,10 @@ EXPORT_SYMBOL(__msan_warning);
  * At the beginning of an instrumented function, obtain the pointer to
  * `struct kmsan_context_state` holding the metadata for function parameters.
  */
+<<<<<<< HEAD
 struct kmsan_context_state *__msan_get_context_state(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct kmsan_context_state *__msan_get_context_state(void)
 {
 	return &kmsan_get_context()->cstate;

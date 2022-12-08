@@ -42,7 +42,11 @@ static ssize_t period_show(struct device *child,
 
 	pwm_get_state(pwm, &state);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%llu\n", state.period);
+=======
+	return sprintf(buf, "%llu\n", state.period);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t period_store(struct device *child,
@@ -77,7 +81,11 @@ static ssize_t duty_cycle_show(struct device *child,
 
 	pwm_get_state(pwm, &state);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%llu\n", state.duty_cycle);
+=======
+	return sprintf(buf, "%llu\n", state.duty_cycle);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t duty_cycle_store(struct device *child,
@@ -112,7 +120,11 @@ static ssize_t enable_show(struct device *child,
 
 	pwm_get_state(pwm, &state);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", state.enabled);
+=======
+	return sprintf(buf, "%d\n", state.enabled);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t enable_store(struct device *child,
@@ -171,7 +183,11 @@ static ssize_t polarity_show(struct device *child,
 		break;
 	}
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", polarity);
+=======
+	return sprintf(buf, "%s\n", polarity);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t polarity_store(struct device *child,
@@ -212,7 +228,11 @@ static ssize_t capture_show(struct device *child,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u %u\n", result.period, result.duty_cycle);
+=======
+	return sprintf(buf, "%u %u\n", result.period, result.duty_cycle);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR_RW(period);
@@ -361,7 +381,11 @@ static ssize_t npwm_show(struct device *parent, struct device_attribute *attr,
 {
 	const struct pwm_chip *chip = dev_get_drvdata(parent);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", chip->npwm);
+=======
+	return sprintf(buf, "%u\n", chip->npwm);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(npwm);
 
@@ -433,7 +457,11 @@ static int pwm_class_resume_npwm(struct device *parent, unsigned int npwm)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int pwm_class_suspend(struct device *parent)
+=======
+static int __maybe_unused pwm_class_suspend(struct device *parent)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pwm_chip *chip = dev_get_drvdata(parent);
 	unsigned int i;
@@ -464,19 +492,33 @@ static int pwm_class_suspend(struct device *parent)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int pwm_class_resume(struct device *parent)
+=======
+static int __maybe_unused pwm_class_resume(struct device *parent)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pwm_chip *chip = dev_get_drvdata(parent);
 
 	return pwm_class_resume_npwm(parent, chip->npwm);
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(pwm_class_pm_ops, pwm_class_suspend, pwm_class_resume);
 
 static struct class pwm_class = {
 	.name = "pwm",
 	.dev_groups = pwm_chip_groups,
 	.pm = pm_sleep_ptr(&pwm_class_pm_ops),
+=======
+static SIMPLE_DEV_PM_OPS(pwm_class_pm_ops, pwm_class_suspend, pwm_class_resume);
+
+static struct class pwm_class = {
+	.name = "pwm",
+	.owner = THIS_MODULE,
+	.dev_groups = pwm_chip_groups,
+	.pm = &pwm_class_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int pwmchip_sysfs_match(struct device *parent, const void *data)

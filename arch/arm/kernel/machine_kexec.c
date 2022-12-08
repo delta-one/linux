@@ -73,12 +73,19 @@ void machine_kexec_cleanup(struct kimage *image)
 {
 }
 
+<<<<<<< HEAD
 static void machine_crash_nonpanic_core(void *unused)
 {
 	struct pt_regs regs;
 
 	local_fiq_disable();
 
+=======
+void machine_crash_nonpanic_core(void *unused)
+{
+	struct pt_regs regs;
+
+>>>>>>> b7ba80a49124 (Commit)
 	crash_setup_regs(&regs, get_irq_regs());
 	printk(KERN_DEBUG "CPU %u will stop doing anything useful since another CPU has crashed\n",
 	       smp_processor_id());

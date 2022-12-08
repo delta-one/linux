@@ -17,8 +17,11 @@
 
 #define HARVARD_TLB
 
+<<<<<<< HEAD
 .arch armv6
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  *	v6wbi_flush_user_tlb_range(start, end, vma)
  *

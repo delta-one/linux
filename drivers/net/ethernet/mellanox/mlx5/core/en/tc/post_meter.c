@@ -8,6 +8,7 @@
 #define MLX5_PACKET_COLOR_BITS MLX5_REG_MAPPING_MBITS(PACKET_COLOR_TO_REG)
 #define MLX5_PACKET_COLOR_MASK MLX5_REG_MAPPING_MASK(PACKET_COLOR_TO_REG)
 
+<<<<<<< HEAD
 struct mlx5e_post_meter_rate_table {
 	struct mlx5_flow_table *ft;
 	struct mlx5_flow_group *fg;
@@ -35,11 +36,19 @@ struct mlx5e_post_meter_priv {
 		struct mlx5e_post_meter_rate_table rate_steering_table;
 		struct mlx5e_post_meter_mtu_tables  mtu_tables;
 	};
+=======
+struct mlx5e_post_meter_priv {
+	struct mlx5_flow_table *ft;
+	struct mlx5_flow_group *fg;
+	struct mlx5_flow_handle *fwd_green_rule;
+	struct mlx5_flow_handle *drop_red_rule;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mlx5_flow_table *
 mlx5e_post_meter_get_ft(struct mlx5e_post_meter_priv *post_meter)
 {
+<<<<<<< HEAD
 	return post_meter->rate_steering_table.ft;
 }
 
@@ -58,6 +67,15 @@ mlx5e_post_meter_get_mtu_false_ft(struct mlx5e_post_meter_priv *post_meter)
 static struct mlx5_flow_table *
 mlx5e_post_meter_table_create(struct mlx5e_priv *priv,
 			      enum mlx5_flow_namespace_type ns_type)
+=======
+	return post_meter->ft;
+}
+
+static int
+mlx5e_post_meter_table_create(struct mlx5e_priv *priv,
+			      enum mlx5_flow_namespace_type ns_type,
+			      struct mlx5e_post_meter_priv *post_meter)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mlx5_flow_table_attr ft_attr = {};
 	struct mlx5_flow_namespace *root_ns;
@@ -65,7 +83,11 @@ mlx5e_post_meter_table_create(struct mlx5e_priv *priv,
 	root_ns = mlx5_get_flow_namespace(priv->mdev, ns_type);
 	if (!root_ns) {
 		mlx5_core_warn(priv->mdev, "Failed to get namespace for flow meter\n");
+<<<<<<< HEAD
 		return ERR_PTR(-EOPNOTSUPP);
+=======
+		return -EOPNOTSUPP;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ft_attr.flags = MLX5_FLOW_TABLE_UNMANAGED;
@@ -73,6 +95,7 @@ mlx5e_post_meter_table_create(struct mlx5e_priv *priv,
 	ft_attr.max_fte = 2;
 	ft_attr.level = 1;
 
+<<<<<<< HEAD
 	return mlx5_create_flow_table(root_ns, &ft_attr);
 }
 
@@ -81,6 +104,21 @@ mlx5e_post_meter_rate_fg_create(struct mlx5e_priv *priv,
 				struct mlx5e_post_meter_priv *post_meter)
 {
 	struct mlx5e_post_meter_rate_table *table = &post_meter->rate_steering_table;
+=======
+	post_meter->ft = mlx5_create_flow_table(root_ns, &ft_attr);
+	if (IS_ERR(post_meter->ft)) {
+		mlx5_core_warn(priv->mdev, "Failed to create post_meter table\n");
+		return PTR_ERR(post_meter->ft);
+	}
+
+	return 0;
+}
+
+static int
+mlx5e_post_meter_fg_create(struct mlx5e_priv *priv,
+			   struct mlx5e_post_meter_priv *post_meter)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	int inlen = MLX5_ST_SZ_BYTES(create_flow_group_in);
 	void *misc2, *match_criteria;
 	u32 *flow_group_in;
@@ -99,16 +137,24 @@ mlx5e_post_meter_rate_fg_create(struct mlx5e_priv *priv,
 	MLX5_SET(create_flow_group_in, flow_group_in, start_flow_index, 0);
 	MLX5_SET(create_flow_group_in, flow_group_in, end_flow_index, 1);
 
+<<<<<<< HEAD
 	table->fg = mlx5_create_flow_group(table->ft, flow_group_in);
 	if (IS_ERR(table->fg)) {
 		mlx5_core_warn(priv->mdev, "Failed to create post_meter flow group\n");
 		err = PTR_ERR(table->fg);
+=======
+	post_meter->fg = mlx5_create_flow_group(post_meter->ft, flow_group_in);
+	if (IS_ERR(post_meter->fg)) {
+		mlx5_core_warn(priv->mdev, "Failed to create post_meter flow group\n");
+		err = PTR_ERR(post_meter->fg);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	kvfree(flow_group_in);
 	return err;
 }
 
+<<<<<<< HEAD
 static struct mlx5_flow_handle *
 mlx5e_post_meter_add_rule(struct mlx5e_priv *priv,
 			  struct mlx5e_post_meter_priv *post_meter,
@@ -152,6 +198,17 @@ mlx5e_post_meter_rate_rules_create(struct mlx5e_priv *priv,
 				   struct mlx5_flow_attr *red_attr)
 {
 	struct mlx5e_post_meter_rate_table *table = &post_meter->rate_steering_table;
+=======
+static int
+mlx5e_post_meter_rules_create(struct mlx5e_priv *priv,
+			      struct mlx5e_post_meter_priv *post_meter,
+			      struct mlx5e_post_act *post_act,
+			      struct mlx5_fc *green_counter,
+			      struct mlx5_fc *red_counter)
+{
+	struct mlx5_flow_destination dest[2] = {};
+	struct mlx5_flow_act flow_act = {};
+>>>>>>> b7ba80a49124 (Commit)
 	struct mlx5_flow_handle *rule;
 	struct mlx5_flow_spec *spec;
 	int err;
@@ -162,6 +219,7 @@ mlx5e_post_meter_rate_rules_create(struct mlx5e_priv *priv,
 
 	mlx5e_tc_match_to_reg_match(spec, PACKET_COLOR_TO_REG,
 				    MLX5_FLOW_METER_COLOR_RED, MLX5_PACKET_COLOR_MASK);
+<<<<<<< HEAD
 	red_attr->ft = post_meter->rate_steering_table.ft;
 	rule = mlx5e_post_meter_add_rule(priv, post_meter, spec, red_attr,
 					 act_counter, drop_counter);
@@ -185,18 +243,55 @@ mlx5e_post_meter_rate_rules_create(struct mlx5e_priv *priv,
 	}
 	table->green_rule = rule;
 	table->green_attr = green_attr;
+=======
+	flow_act.action = MLX5_FLOW_CONTEXT_ACTION_DROP |
+			  MLX5_FLOW_CONTEXT_ACTION_COUNT;
+	flow_act.flags |= FLOW_ACT_IGNORE_FLOW_LEVEL;
+	dest[0].type = MLX5_FLOW_DESTINATION_TYPE_COUNTER;
+	dest[0].counter_id = mlx5_fc_id(red_counter);
+
+	rule = mlx5_add_flow_rules(post_meter->ft, spec, &flow_act, dest, 1);
+	if (IS_ERR(rule)) {
+		mlx5_core_warn(priv->mdev, "Failed to create post_meter flow drop rule\n");
+		err = PTR_ERR(rule);
+		goto err_red;
+	}
+	post_meter->drop_red_rule = rule;
+
+	mlx5e_tc_match_to_reg_match(spec, PACKET_COLOR_TO_REG,
+				    MLX5_FLOW_METER_COLOR_GREEN, MLX5_PACKET_COLOR_MASK);
+	flow_act.action = MLX5_FLOW_CONTEXT_ACTION_FWD_DEST |
+			  MLX5_FLOW_CONTEXT_ACTION_COUNT;
+	dest[0].type = MLX5_FLOW_DESTINATION_TYPE_FLOW_TABLE;
+	dest[0].ft = mlx5e_tc_post_act_get_ft(post_act);
+	dest[1].type = MLX5_FLOW_DESTINATION_TYPE_COUNTER;
+	dest[1].counter_id = mlx5_fc_id(green_counter);
+
+	rule = mlx5_add_flow_rules(post_meter->ft, spec, &flow_act, dest, 2);
+	if (IS_ERR(rule)) {
+		mlx5_core_warn(priv->mdev, "Failed to create post_meter flow fwd rule\n");
+		err = PTR_ERR(rule);
+		goto err_green;
+	}
+	post_meter->fwd_green_rule = rule;
+>>>>>>> b7ba80a49124 (Commit)
 
 	kvfree(spec);
 	return 0;
 
 err_green:
+<<<<<<< HEAD
 	mlx5_del_flow_rules(table->red_rule);
+=======
+	mlx5_del_flow_rules(post_meter->drop_red_rule);
+>>>>>>> b7ba80a49124 (Commit)
 err_red:
 	kvfree(spec);
 	return err;
 }
 
 static void
+<<<<<<< HEAD
 mlx5e_post_meter_rate_rules_destroy(struct mlx5_eswitch *esw,
 				    struct mlx5e_post_meter_priv *post_meter)
 {
@@ -387,17 +482,40 @@ err_green_rule:
 	mlx5_destroy_flow_table(mtu_tables->green_table.ft);
 err_green_ft:
 	return err;
+=======
+mlx5e_post_meter_rules_destroy(struct mlx5e_post_meter_priv *post_meter)
+{
+	mlx5_del_flow_rules(post_meter->drop_red_rule);
+	mlx5_del_flow_rules(post_meter->fwd_green_rule);
+}
+
+static void
+mlx5e_post_meter_fg_destroy(struct mlx5e_post_meter_priv *post_meter)
+{
+	mlx5_destroy_flow_group(post_meter->fg);
+}
+
+static void
+mlx5e_post_meter_table_destroy(struct mlx5e_post_meter_priv *post_meter)
+{
+	mlx5_destroy_flow_table(post_meter->ft);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct mlx5e_post_meter_priv *
 mlx5e_post_meter_init(struct mlx5e_priv *priv,
 		      enum mlx5_flow_namespace_type ns_type,
 		      struct mlx5e_post_act *post_act,
+<<<<<<< HEAD
 		      enum mlx5e_post_meter_type type,
 		      struct mlx5_fc *act_counter,
 		      struct mlx5_fc *drop_counter,
 		      struct mlx5_flow_attr *branch_true,
 		      struct mlx5_flow_attr *branch_false)
+=======
+		      struct mlx5_fc *green_counter,
+		      struct mlx5_fc *red_counter)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mlx5e_post_meter_priv *post_meter;
 	int err;
@@ -406,6 +524,7 @@ mlx5e_post_meter_init(struct mlx5e_priv *priv,
 	if (!post_meter)
 		return ERR_PTR(-ENOMEM);
 
+<<<<<<< HEAD
 	switch (type) {
 	case MLX5E_POST_METER_MTU:
 		err = mlx5e_post_meter_mtu_create(priv, ns_type, post_act,
@@ -427,10 +546,33 @@ mlx5e_post_meter_init(struct mlx5e_priv *priv,
 	return post_meter;
 
 err:
+=======
+	err = mlx5e_post_meter_table_create(priv, ns_type, post_meter);
+	if (err)
+		goto err_ft;
+
+	err = mlx5e_post_meter_fg_create(priv, post_meter);
+	if (err)
+		goto err_fg;
+
+	err = mlx5e_post_meter_rules_create(priv, post_meter, post_act, green_counter,
+					    red_counter);
+	if (err)
+		goto err_rules;
+
+	return post_meter;
+
+err_rules:
+	mlx5e_post_meter_fg_destroy(post_meter);
+err_fg:
+	mlx5e_post_meter_table_destroy(post_meter);
+err_ft:
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(post_meter);
 	return ERR_PTR(err);
 }
 
+<<<<<<< HEAD
 static void
 mlx5e_post_meter_rate_destroy(struct mlx5_eswitch *esw, struct mlx5e_post_meter_priv *post_meter)
 {
@@ -455,6 +597,14 @@ mlx5e_post_meter_cleanup(struct mlx5_eswitch *esw, struct mlx5e_post_meter_priv 
 	else
 		mlx5e_post_meter_mtu_destroy(post_meter);
 
+=======
+void
+mlx5e_post_meter_cleanup(struct mlx5e_post_meter_priv *post_meter)
+{
+	mlx5e_post_meter_rules_destroy(post_meter);
+	mlx5e_post_meter_fg_destroy(post_meter);
+	mlx5e_post_meter_table_destroy(post_meter);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(post_meter);
 }
 

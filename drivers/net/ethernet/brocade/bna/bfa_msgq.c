@@ -202,6 +202,10 @@ static void
 __cmd_copy(struct bfa_msgq_cmdq *cmdq, struct bfa_msgq_cmd_entry *cmd)
 {
 	size_t len = cmd->msg_size;
+<<<<<<< HEAD
+=======
+	int num_entries = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t to_copy;
 	u8 *src, *dst;
 
@@ -218,6 +222,10 @@ __cmd_copy(struct bfa_msgq_cmdq *cmdq, struct bfa_msgq_cmd_entry *cmd)
 		BFA_MSGQ_INDX_ADD(cmdq->producer_index, 1, cmdq->depth);
 		dst = (u8 *)cmdq->addr.kva;
 		dst += (cmdq->producer_index * BFI_MSGQ_CMD_ENTRY_SIZE);
+<<<<<<< HEAD
+=======
+		num_entries++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 }

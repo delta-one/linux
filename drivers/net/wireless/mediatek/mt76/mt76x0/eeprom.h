@@ -19,7 +19,11 @@ int mt76x0_eeprom_init(struct mt76x02_dev *dev);
 void mt76x0_read_rx_gain(struct mt76x02_dev *dev);
 void mt76x0_get_tx_power_per_rate(struct mt76x02_dev *dev,
 				  struct ieee80211_channel *chan,
+<<<<<<< HEAD
 				  struct mt76x02_rate_power *t);
+=======
+				  struct mt76_rate_power *t);
+>>>>>>> b7ba80a49124 (Commit)
 void mt76x0_get_power_info(struct mt76x02_dev *dev,
 			   struct ieee80211_channel *chan, s8 *tp);
 

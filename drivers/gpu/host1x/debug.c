@@ -77,7 +77,10 @@ static int show_channel(struct host1x_channel *ch, void *data, bool show_fifo)
 
 static void show_syncpts(struct host1x *m, struct output *o, bool show_all)
 {
+<<<<<<< HEAD
 	unsigned long irqflags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head *pos;
 	unsigned int i;
 	int err;
@@ -93,10 +96,17 @@ static void show_syncpts(struct host1x *m, struct output *o, bool show_all)
 		u32 min = host1x_syncpt_load(m->syncpt + i);
 		unsigned int waiters = 0;
 
+<<<<<<< HEAD
 		spin_lock_irqsave(&m->syncpt[i].fences.lock, irqflags);
 		list_for_each(pos, &m->syncpt[i].fences.list)
 			waiters++;
 		spin_unlock_irqrestore(&m->syncpt[i].fences.lock, irqflags);
+=======
+		spin_lock(&m->syncpt[i].intr.lock);
+		list_for_each(pos, &m->syncpt[i].intr.wait_head)
+			waiters++;
+		spin_unlock(&m->syncpt[i].intr.lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!kref_read(&m->syncpt[i].ref))
 			continue;
@@ -141,7 +151,11 @@ static void show_all(struct host1x *m, struct output *o, bool show_fifo)
 	}
 }
 
+<<<<<<< HEAD
 static int host1x_debug_all_show(struct seq_file *s, void *unused)
+=======
+static int host1x_debug_show_all(struct seq_file *s, void *unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct output o = {
 		.fn = write_to_seqfile,
@@ -152,7 +166,10 @@ static int host1x_debug_all_show(struct seq_file *s, void *unused)
 
 	return 0;
 }
+<<<<<<< HEAD
 DEFINE_SHOW_ATTRIBUTE(host1x_debug_all);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int host1x_debug_show(struct seq_file *s, void *unused)
 {
@@ -165,7 +182,34 @@ static int host1x_debug_show(struct seq_file *s, void *unused)
 
 	return 0;
 }
+<<<<<<< HEAD
 DEFINE_SHOW_ATTRIBUTE(host1x_debug);
+=======
+
+static int host1x_debug_open_all(struct inode *inode, struct file *file)
+{
+	return single_open(file, host1x_debug_show_all, inode->i_private);
+}
+
+static const struct file_operations host1x_debug_all_fops = {
+	.open = host1x_debug_open_all,
+	.read = seq_read,
+	.llseek = seq_lseek,
+	.release = single_release,
+};
+
+static int host1x_debug_open(struct inode *inode, struct file *file)
+{
+	return single_open(file, host1x_debug_show, inode->i_private);
+}
+
+static const struct file_operations host1x_debug_fops = {
+	.open = host1x_debug_open,
+	.read = seq_read,
+	.llseek = seq_lseek,
+	.release = single_release,
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static void host1x_debugfs_init(struct host1x *host1x)
 {

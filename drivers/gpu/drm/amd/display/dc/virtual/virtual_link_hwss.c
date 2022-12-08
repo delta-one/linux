@@ -37,7 +37,11 @@ void virtual_reset_stream_encoder(struct pipe_ctx *pipe_ctx)
 {
 }
 
+<<<<<<< HEAD
 static void virtual_disable_link_output(struct dc_link *link,
+=======
+void virtual_disable_link_output(struct dc_link *link,
+>>>>>>> b7ba80a49124 (Commit)
 	const struct link_resource *link_res,
 	enum signal_type signal)
 {

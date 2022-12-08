@@ -30,7 +30,15 @@
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Benjamin Tissoires <benjamin.tissoires@gmail.com>");
 MODULE_AUTHOR("Nestor Lopez Casado <nlopezcasad@logitech.com>");
+<<<<<<< HEAD
 MODULE_AUTHOR("Bastien Nocera <hadess@hadess.net>");
+=======
+
+static bool disable_raw_mode;
+module_param(disable_raw_mode, bool, 0644);
+MODULE_PARM_DESC(disable_raw_mode,
+	"Disable Raw mode reporting for touchpads and keep firmware gestures.");
+>>>>>>> b7ba80a49124 (Commit)
 
 static bool disable_tap_to_click;
 module_param(disable_tap_to_click, bool, 0644);
@@ -67,13 +75,20 @@ MODULE_PARM_DESC(disable_tap_to_click,
 /* bits 2..20 are reserved for classes */
 /* #define HIDPP_QUIRK_CONNECT_EVENTS		BIT(21) disabled */
 #define HIDPP_QUIRK_WTP_PHYSICAL_BUTTONS	BIT(22)
+<<<<<<< HEAD
 #define HIDPP_QUIRK_DELAYED_INIT		BIT(23)
+=======
+#define HIDPP_QUIRK_NO_HIDINPUT			BIT(23)
+>>>>>>> b7ba80a49124 (Commit)
 #define HIDPP_QUIRK_FORCE_OUTPUT_REPORTS	BIT(24)
 #define HIDPP_QUIRK_UNIFYING			BIT(25)
 #define HIDPP_QUIRK_HIDPP_WHEELS		BIT(26)
 #define HIDPP_QUIRK_HIDPP_EXTRA_MOUSE_BTNS	BIT(27)
 #define HIDPP_QUIRK_HIDPP_CONSUMER_VENDOR_KEYS	BIT(28)
+<<<<<<< HEAD
 #define HIDPP_QUIRK_HI_RES_SCROLL_1P0		BIT(29)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* These are just aliases for now */
 #define HIDPP_QUIRK_KBD_SCROLL_WHEEL HIDPP_QUIRK_HIDPP_WHEELS
@@ -84,6 +99,11 @@ MODULE_PARM_DESC(disable_tap_to_click,
 					 HIDPP_CAPABILITY_HIDPP20_HI_RES_SCROLL | \
 					 HIDPP_CAPABILITY_HIDPP20_HI_RES_WHEEL)
 
+<<<<<<< HEAD
+=======
+#define HIDPP_QUIRK_DELAYED_INIT		HIDPP_QUIRK_NO_HIDINPUT
+
+>>>>>>> b7ba80a49124 (Commit)
 #define HIDPP_CAPABILITY_HIDPP10_BATTERY	BIT(0)
 #define HIDPP_CAPABILITY_HIDPP20_BATTERY	BIT(1)
 #define HIDPP_CAPABILITY_BATTERY_MILEAGE	BIT(2)
@@ -220,6 +240,7 @@ struct hidpp_device {
 #define HIDPP_ERROR_INVALID_PARAM_VALUE		0x0b
 #define HIDPP_ERROR_WRONG_PIN_CODE		0x0c
 /* HID++ 2.0 error codes */
+<<<<<<< HEAD
 #define HIDPP20_ERROR_NO_ERROR			0x00
 #define HIDPP20_ERROR_UNKNOWN			0x01
 #define HIDPP20_ERROR_INVALID_ARGS		0x02
@@ -230,6 +251,8 @@ struct hidpp_device {
 #define HIDPP20_ERROR_INVALID_FUNCTION_ID	0x07
 #define HIDPP20_ERROR_BUSY			0x08
 #define HIDPP20_ERROR_UNSUPPORTED		0x09
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define HIDPP20_ERROR				0xff
 
 static void hidpp_connect_event(struct hidpp_device *hidpp_dev);
@@ -284,7 +307,10 @@ static int hidpp_send_message_sync(struct hidpp_device *hidpp,
 	struct hidpp_report *response)
 {
 	int ret;
+<<<<<<< HEAD
 	int max_retries = 3;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&hidpp->send_mutex);
 
@@ -297,6 +323,7 @@ static int hidpp_send_message_sync(struct hidpp_device *hidpp,
 	 */
 	*response = *message;
 
+<<<<<<< HEAD
 	for (; max_retries != 0; max_retries--) {
 		ret = __hidpp_send_report(hidpp->hid_dev, message);
 
@@ -330,6 +357,36 @@ static int hidpp_send_message_sync(struct hidpp_device *hidpp,
 			}
 			dbg_hid("%s:got busy hidpp 2.0 error %02X, retrying\n", __func__, ret);
 		}
+=======
+	ret = __hidpp_send_report(hidpp->hid_dev, message);
+
+	if (ret) {
+		dbg_hid("__hidpp_send_report returned err: %d\n", ret);
+		memset(response, 0, sizeof(struct hidpp_report));
+		goto exit;
+	}
+
+	if (!wait_event_timeout(hidpp->wait, hidpp->answer_available,
+				5*HZ)) {
+		dbg_hid("%s:timeout waiting for response\n", __func__);
+		memset(response, 0, sizeof(struct hidpp_report));
+		ret = -ETIMEDOUT;
+	}
+
+	if (response->report_id == REPORT_ID_HIDPP_SHORT &&
+	    response->rap.sub_id == HIDPP_ERROR) {
+		ret = response->rap.params[1];
+		dbg_hid("%s:got hidpp error %02X\n", __func__, ret);
+		goto exit;
+	}
+
+	if ((response->report_id == REPORT_ID_HIDPP_LONG ||
+			response->report_id == REPORT_ID_HIDPP_VERY_LONG) &&
+			response->fap.feature_index == HIDPP20_ERROR) {
+		ret = response->fap.params[1];
+		dbg_hid("%s:got hidpp 2.0 error %02X\n", __func__, ret);
+		goto exit;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 exit:
@@ -345,6 +402,7 @@ static int hidpp_send_fap_command_sync(struct hidpp_device *hidpp,
 	struct hidpp_report *message;
 	int ret;
 
+<<<<<<< HEAD
 	if (param_count > sizeof(message->fap.params)) {
 		hid_dbg(hidpp->hid_dev,
 			"Invalid number of parameters passed to command (%d != %llu)\n",
@@ -352,6 +410,10 @@ static int hidpp_send_fap_command_sync(struct hidpp_device *hidpp,
 			(unsigned long long) sizeof(message->fap.params));
 		return -EINVAL;
 	}
+=======
+	if (param_count > sizeof(message->fap.params))
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	message = kzalloc(sizeof(struct hidpp_report), GFP_KERNEL);
 	if (!message)
@@ -911,7 +973,11 @@ static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
 	ret = hidpp_send_rap_command_sync(hidpp,
 			REPORT_ID_HIDPP_SHORT,
 			HIDPP_PAGE_ROOT_IDX,
+<<<<<<< HEAD
 			CMD_ROOT_GET_PROTOCOL_VERSION | LINUX_KERNEL_SW_ID,
+=======
+			CMD_ROOT_GET_PROTOCOL_VERSION,
+>>>>>>> b7ba80a49124 (Commit)
 			ping_data, sizeof(ping_data), &response);
 
 	if (ret == HIDPP_ERROR_INVALID_SUBID) {
@@ -2564,17 +2630,25 @@ static int hidpp_ff_init(struct hidpp_device *hidpp,
 	struct hid_device *hid = hidpp->hid_dev;
 	struct hid_input *hidinput;
 	struct input_dev *dev;
+<<<<<<< HEAD
 	struct usb_device_descriptor *udesc;
 	u16 bcdDevice;
+=======
+	const struct usb_device_descriptor *udesc = &(hid_to_usb_dev(hid)->descriptor);
+	const u16 bcdDevice = le16_to_cpu(udesc->bcdDevice);
+>>>>>>> b7ba80a49124 (Commit)
 	struct ff_device *ff;
 	int error, j, num_slots = data->num_effects;
 	u8 version;
 
+<<<<<<< HEAD
 	if (!hid_is_usb(hid)) {
 		hid_err(hid, "device is not USB\n");
 		return -ENODEV;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (list_empty(&hid->inputs)) {
 		hid_err(hid, "no inputs found\n");
 		return -ENODEV;
@@ -2588,8 +2662,11 @@ static int hidpp_ff_init(struct hidpp_device *hidpp,
 	}
 
 	/* Get firmware release */
+<<<<<<< HEAD
 	udesc = &(hid_to_usb_dev(hid)->descriptor);
 	bcdDevice = le16_to_cpu(udesc->bcdDevice);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	version = bcdDevice & 255;
 
 	/* Set supported force feedback capabilities */
@@ -3452,6 +3529,7 @@ static int hi_res_scroll_enable(struct hidpp_device *hidpp)
 		ret = hidpp10_enable_scrolling_acceleration(hidpp);
 		multiplier = 8;
 	}
+<<<<<<< HEAD
 	if (ret) {
 		hid_dbg(hidpp->hid_dev,
 			"Could not enable hi-res scrolling: %d\n", ret);
@@ -3463,6 +3541,13 @@ static int hi_res_scroll_enable(struct hidpp_device *hidpp)
 			"Invalid multiplier 0 from device, setting it to 1\n");
 		multiplier = 1;
 	}
+=======
+	if (ret)
+		return ret;
+
+	if (multiplier == 0)
+		multiplier = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	hidpp->vertical_wheel_counter.wheel_multiplier = multiplier;
 	hid_dbg(hidpp->hid_dev, "wheel multiplier = %d\n", multiplier);
@@ -3494,8 +3579,19 @@ static int hidpp_initialize_hires_scroll(struct hidpp_device *hidpp)
 			hid_dbg(hidpp->hid_dev, "Detected HID++ 2.0 hi-res scrolling\n");
 		}
 	} else {
+<<<<<<< HEAD
 		/* We cannot detect fast scrolling support on HID++ 1.0 devices */
 		if (hidpp->quirks & HIDPP_QUIRK_HI_RES_SCROLL_1P0) {
+=======
+		struct hidpp_report response;
+
+		ret = hidpp_send_rap_command_sync(hidpp,
+						  REPORT_ID_HIDPP_SHORT,
+						  HIDPP_GET_REGISTER,
+						  HIDPP_ENABLE_FAST_SCROLL,
+						  NULL, 0, &response);
+		if (!ret) {
+>>>>>>> b7ba80a49124 (Commit)
 			hidpp->capabilities |= HIDPP_CAPABILITY_HIDPP10_FAST_SCROLL;
 			hid_dbg(hidpp->hid_dev, "Detected HID++ 1.0 fast scroll\n");
 		}
@@ -3994,8 +4090,12 @@ static void hidpp_connect_event(struct hidpp_device *hidpp)
 	}
 
 	hidpp_initialize_battery(hidpp);
+<<<<<<< HEAD
 	if (!hid_is_usb(hidpp->hid_dev))
 		hidpp_initialize_hires_scroll(hidpp);
+=======
+	hidpp_initialize_hires_scroll(hidpp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* forward current battery state */
 	if (hidpp->capabilities & HIDPP_CAPABILITY_HIDPP10_BATTERY) {
@@ -4018,7 +4118,11 @@ static void hidpp_connect_event(struct hidpp_device *hidpp)
 	if (hidpp->capabilities & HIDPP_CAPABILITY_HI_RES_SCROLL)
 		hi_res_scroll_enable(hidpp);
 
+<<<<<<< HEAD
 	if (!(hidpp->quirks & HIDPP_QUIRK_DELAYED_INIT) || hidpp->delayed_input)
+=======
+	if (!(hidpp->quirks & HIDPP_QUIRK_NO_HIDINPUT) || hidpp->delayed_input)
+>>>>>>> b7ba80a49124 (Commit)
 		/* if the input nodes are already created, we can stop now */
 		return;
 
@@ -4123,7 +4227,10 @@ static int hidpp_probe(struct hid_device *hdev, const struct hid_device_id *id)
 	bool connected;
 	unsigned int connect_mask = HID_CONNECT_DEFAULT;
 	struct hidpp_ff_private_data data;
+<<<<<<< HEAD
 	bool will_restart = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* report_fixup needs drvdata to be set before we call hid_parse */
 	hidpp = devm_kzalloc(&hdev->dev, sizeof(*hidpp), GFP_KERNEL);
@@ -4164,6 +4271,14 @@ static int hidpp_probe(struct hid_device *hdev, const struct hid_device_id *id)
 	    hidpp_application_equals(hdev, HID_GD_KEYBOARD))
 		hidpp->quirks |= HIDPP_QUIRK_HIDPP_CONSUMER_VENDOR_KEYS;
 
+<<<<<<< HEAD
+=======
+	if (disable_raw_mode) {
+		hidpp->quirks &= ~HIDPP_QUIRK_CLASS_WTP;
+		hidpp->quirks &= ~HIDPP_QUIRK_NO_HIDINPUT;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (hidpp->quirks & HIDPP_QUIRK_CLASS_WTP) {
 		ret = wtp_allocate(hdev, id);
 		if (ret)
@@ -4174,10 +4289,13 @@ static int hidpp_probe(struct hid_device *hdev, const struct hid_device_id *id)
 			return ret;
 	}
 
+<<<<<<< HEAD
 	if (hidpp->quirks & HIDPP_QUIRK_DELAYED_INIT ||
 	    hidpp->quirks & HIDPP_QUIRK_UNIFYING)
 		will_restart = true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_WORK(&hidpp->work, delayed_work_cb);
 	mutex_init(&hidpp->send_mutex);
 	init_waitqueue_head(&hidpp->wait);
@@ -4192,7 +4310,11 @@ static int hidpp_probe(struct hid_device *hdev, const struct hid_device_id *id)
 	 * Plain USB connections need to actually call start and open
 	 * on the transport driver to allow incoming data.
 	 */
+<<<<<<< HEAD
 	ret = hid_hw_start(hdev, will_restart ? 0 : connect_mask);
+=======
+	ret = hid_hw_start(hdev, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		hid_err(hdev, "hw start failed\n");
 		goto hid_hw_start_fail;
@@ -4229,7 +4351,10 @@ static int hidpp_probe(struct hid_device *hdev, const struct hid_device_id *id)
 			hidpp->wireless_feature_index = 0;
 		else if (ret)
 			goto hid_hw_init_fail;
+<<<<<<< HEAD
 		ret = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (connected && (hidpp->quirks & HIDPP_QUIRK_CLASS_WTP)) {
@@ -4244,6 +4369,7 @@ static int hidpp_probe(struct hid_device *hdev, const struct hid_device_id *id)
 
 	hidpp_connect_event(hidpp);
 
+<<<<<<< HEAD
 	if (will_restart) {
 		/* Reset the HID node state */
 		hid_device_io_stop(hdev);
@@ -4259,6 +4385,21 @@ static int hidpp_probe(struct hid_device *hdev, const struct hid_device_id *id)
 			hid_err(hdev, "%s:hid_hw_start returned error\n", __func__);
 			goto hid_hw_start_fail;
 		}
+=======
+	/* Reset the HID node state */
+	hid_device_io_stop(hdev);
+	hid_hw_close(hdev);
+	hid_hw_stop(hdev);
+
+	if (hidpp->quirks & HIDPP_QUIRK_NO_HIDINPUT)
+		connect_mask &= ~HID_CONNECT_HIDINPUT;
+
+	/* Now export the actual inputs and hidraw nodes to the world */
+	ret = hid_hw_start(hdev, connect_mask);
+	if (ret) {
+		hid_err(hdev, "%s:hid_hw_start returned error\n", __func__);
+		goto hid_hw_start_fail;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (hidpp->quirks & HIDPP_QUIRK_CLASS_G920) {
@@ -4296,6 +4437,24 @@ static void hidpp_remove(struct hid_device *hdev)
 	mutex_destroy(&hidpp->send_mutex);
 }
 
+<<<<<<< HEAD
+=======
+static const struct hid_device_id unhandled_hidpp_devices[] = {
+	/* Logitech Harmony Adapter for PS3, handled in hid-sony */
+	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_HARMONY_PS3) },
+	/* Handled in hid-generic */
+	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_DINOVO_EDGE_KBD) },
+	{}
+};
+
+static bool hidpp_match(struct hid_device *hdev,
+			bool ignore_special_driver)
+{
+	/* Refuse to handle devices handled by other HID drivers */
+	return !hid_match_id(hdev, unhandled_hidpp_devices);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #define LDJ_DEVICE(product) \
 	HID_DEVICE(BUS_USB, HID_GROUP_LOGITECH_DJ_DEVICE, \
 		   USB_VENDOR_ID_LOGITECH, (product))
@@ -4316,6 +4475,7 @@ static const struct hid_device_id hidpp_devices[] = {
 	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH,
 		USB_DEVICE_ID_LOGITECH_T651),
 	  .driver_data = HIDPP_QUIRK_CLASS_WTP },
+<<<<<<< HEAD
 	{ /* Mouse Logitech Anywhere MX */
 	  LDJ_DEVICE(0x1017), .driver_data = HIDPP_QUIRK_HI_RES_SCROLL_1P0 },
 	{ /* Mouse logitech M560 */
@@ -4325,6 +4485,11 @@ static const struct hid_device_id hidpp_devices[] = {
 	  LDJ_DEVICE(0x101b), .driver_data = HIDPP_QUIRK_HI_RES_SCROLL_1P0 },
 	{ /* Mouse Logitech Performance MX */
 	  LDJ_DEVICE(0x101a), .driver_data = HIDPP_QUIRK_HI_RES_SCROLL_1P0 },
+=======
+	{ /* Mouse logitech M560 */
+	  LDJ_DEVICE(0x402d),
+	  .driver_data = HIDPP_QUIRK_DELAYED_INIT | HIDPP_QUIRK_CLASS_M560 },
+>>>>>>> b7ba80a49124 (Commit)
 	{ /* Keyboard logitech K400 */
 	  LDJ_DEVICE(0x4024),
 	  .driver_data = HIDPP_QUIRK_CLASS_K400 },
@@ -4373,9 +4538,12 @@ static const struct hid_device_id hidpp_devices[] = {
 	{ /* Logitech G920 Wheel over USB */
 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_G920_WHEEL),
 		.driver_data = HIDPP_QUIRK_CLASS_G920 | HIDPP_QUIRK_FORCE_OUTPUT_REPORTS},
+<<<<<<< HEAD
 	{ /* Logitech G923 Wheel (Xbox version) over USB */
 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_G923_XBOX_WHEEL),
 		.driver_data = HIDPP_QUIRK_CLASS_G920 | HIDPP_QUIRK_FORCE_OUTPUT_REPORTS },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ /* Logitech G Pro Gaming Mouse over USB */
 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC088) },
 
@@ -4388,6 +4556,7 @@ static const struct hid_device_id hidpp_devices[] = {
 	{ /* MX5500 keyboard over Bluetooth */
 	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb30b),
 	  .driver_data = HIDPP_QUIRK_HIDPP_CONSUMER_VENDOR_KEYS },
+<<<<<<< HEAD
 	{ /* M-RCQ142 V470 Cordless Laser Mouse over Bluetooth */
 	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb008) },
 	{ /* MX Master mouse over Bluetooth */
@@ -4401,6 +4570,11 @@ static const struct hid_device_id hidpp_devices[] = {
 	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb023) },
 	{ /* MX Master 3S mouse over Bluetooth */
 	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb034) },
+=======
+
+	{ /* And try to enable HID++ for all the Logitech Bluetooth devices */
+	  HID_DEVICE(BUS_BLUETOOTH, HID_GROUP_ANY, USB_VENDOR_ID_LOGITECH, HID_ANY_ID) },
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 
@@ -4414,6 +4588,10 @@ static const struct hid_usage_id hidpp_usages[] = {
 static struct hid_driver hidpp_driver = {
 	.name = "logitech-hidpp-device",
 	.id_table = hidpp_devices,
+<<<<<<< HEAD
+=======
+	.match = hidpp_match,
+>>>>>>> b7ba80a49124 (Commit)
 	.report_fixup = hidpp_report_fixup,
 	.probe = hidpp_probe,
 	.remove = hidpp_remove,

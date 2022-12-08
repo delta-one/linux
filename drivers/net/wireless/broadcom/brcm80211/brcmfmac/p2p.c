@@ -1128,7 +1128,11 @@ static void brcmf_p2p_afx_handler(struct work_struct *work)
 	if (afx_hdl->is_listen && afx_hdl->my_listen_chan)
 		/* 100ms ~ 300ms */
 		err = brcmf_p2p_discover_listen(p2p, afx_hdl->my_listen_chan,
+<<<<<<< HEAD
 						100 * get_random_u32_inclusive(1, 3));
+=======
+						100 * (1 + prandom_u32() % 3));
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		err = brcmf_p2p_act_frm_search(p2p, afx_hdl->peer_listen_chan);
 
@@ -1466,8 +1470,13 @@ int brcmf_p2p_notify_action_frame_rx(struct brcmf_if *ifp,
 			       ETH_ALEN);
 	memcpy(mgmt_frame->sa, e->addr, ETH_ALEN);
 	mgmt_frame->frame_control = cpu_to_le16(IEEE80211_STYPE_ACTION);
+<<<<<<< HEAD
 	memcpy(mgmt_frame->u.body, frame, mgmt_frame_len);
 	mgmt_frame_len += offsetof(struct ieee80211_mgmt, u.body);
+=======
+	memcpy(&mgmt_frame->u, frame, mgmt_frame_len);
+	mgmt_frame_len += offsetof(struct ieee80211_mgmt, u);
+>>>>>>> b7ba80a49124 (Commit)
 
 	freq = ieee80211_channel_to_frequency(ch.control_ch_num,
 					      ch.band == BRCMU_CHAN_BAND_2G ?
@@ -2424,12 +2433,17 @@ int brcmf_p2p_del_vif(struct wiphy *wiphy, struct wireless_dev *wdev)
 	brcmf_remove_interface(vif->ifp, true);
 
 	brcmf_cfg80211_arm_vif_event(cfg, NULL);
+<<<<<<< HEAD
 	if (iftype != NL80211_IFTYPE_P2P_DEVICE) {
 		if (vif == p2p->bss_idx[P2PAPI_BSSCFG_CONNECTION].vif)
 			p2p->bss_idx[P2PAPI_BSSCFG_CONNECTION].vif = NULL;
 		if (vif == p2p->bss_idx[P2PAPI_BSSCFG_CONNECTION2].vif)
 			p2p->bss_idx[P2PAPI_BSSCFG_CONNECTION2].vif = NULL;
 	}
+=======
+	if (iftype != NL80211_IFTYPE_P2P_DEVICE)
+		p2p->bss_idx[P2PAPI_BSSCFG_CONNECTION].vif = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return err;
 }

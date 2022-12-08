@@ -30,6 +30,7 @@ extern int memcmp(const void *,const void *,__kernel_size_t);
 extern void * memchr(const void *,int,__kernel_size_t);
 void memcpy_flushcache(void *dest, const void *src, size_t size);
 
+<<<<<<< HEAD
 #ifdef CONFIG_KASAN
 /* __mem variants are used by KASAN to implement instrumented meminstrinsics. */
 #ifdef CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX
@@ -41,6 +42,13 @@ void *__memset(void *s, int c, __kernel_size_t count);
 void *__memcpy(void *to, const void *from, __kernel_size_t n);
 void *__memmove(void *to, const void *from, __kernel_size_t n);
 #ifndef __SANITIZE_ADDRESS__
+=======
+void *__memset(void *s, int c, __kernel_size_t count);
+void *__memcpy(void *to, const void *from, __kernel_size_t n);
+void *__memmove(void *to, const void *from, __kernel_size_t n);
+
+#if defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__)
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * For files that are not instrumented (e.g. mm/slub.c) we
  * should use not instrumented version of mem* functions.
@@ -52,9 +60,14 @@ void *__memmove(void *to, const void *from, __kernel_size_t n);
 #ifndef __NO_FORTIFY
 #define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
 #endif
+<<<<<<< HEAD
 #endif /* !__SANITIZE_ADDRESS__ */
 #endif /* CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX */
 #endif /* CONFIG_KASAN */
+=======
+
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_PPC64
 #ifndef CONFIG_KASAN

@@ -208,6 +208,10 @@
 
 .text
 
+<<<<<<< HEAD
+=======
+.align 16
+>>>>>>> b7ba80a49124 (Commit)
 SYM_FUNC_START_LOCAL(__cast5_enc_blk16)
 	/* input:
 	 *	%rdi: ctx
@@ -281,6 +285,10 @@ SYM_FUNC_START_LOCAL(__cast5_enc_blk16)
 	RET;
 SYM_FUNC_END(__cast5_enc_blk16)
 
+<<<<<<< HEAD
+=======
+.align 16
+>>>>>>> b7ba80a49124 (Commit)
 SYM_FUNC_START_LOCAL(__cast5_dec_blk16)
 	/* input:
 	 *	%rdi: ctx

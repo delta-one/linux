@@ -77,7 +77,10 @@ static int iqs62x_keys_parse_prop(struct platform_device *pdev,
 		if (ret) {
 			dev_err(&pdev->dev, "Failed to read switch code: %d\n",
 				ret);
+<<<<<<< HEAD
 			fwnode_handle_put(child);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			return ret;
 		}
 		iqs62x_keys->switches[i].code = val;
@@ -91,8 +94,11 @@ static int iqs62x_keys_parse_prop(struct platform_device *pdev,
 			iqs62x_keys->switches[i].flag = (i == IQS62X_SW_HALL_N ?
 							 IQS62X_EVENT_HALL_N_T :
 							 IQS62X_EVENT_HALL_S_T);
+<<<<<<< HEAD
 
 		fwnode_handle_put(child);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -320,7 +326,11 @@ static int iqs62x_keys_remove(struct platform_device *pdev)
 	if (ret)
 		dev_err(&pdev->dev, "Failed to unregister notifier: %d\n", ret);
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver iqs62x_keys_platform_driver = {

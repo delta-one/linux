@@ -106,7 +106,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	cpu0_opp_table: opp-table {
+=======
+	cpu0_opp_table: opp_table0 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "operating-points-v2";
 		opp-shared;
 
@@ -143,6 +147,10 @@
 		sleep_clk: sleep_clk {
 			compatible = "fixed-clock";
 			clock-frequency = <32000>;
+<<<<<<< HEAD
+=======
+			clock-output-names = "gcc_sleep_clk_src";
+>>>>>>> b7ba80a49124 (Commit)
 			#clock-cells = <0>;
 		};
 
@@ -189,8 +197,11 @@
 			#power-domain-cells = <1>;
 			#reset-cells = <1>;
 			reg = <0x1800000 0x60000>;
+<<<<<<< HEAD
 			clocks = <&xo>, <&sleep_clk>;
 			clock-names = "xo", "sleep_clk";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		prng: rng@22000 {
@@ -326,22 +337,38 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		acc0: power-manager@b088000 {
+=======
+		acc0: clock-controller@b088000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,kpss-acc-v2";
 			reg = <0x0b088000 0x1000>, <0xb008000 0x1000>;
 		};
 
+<<<<<<< HEAD
 		acc1: power-manager@b098000 {
+=======
+		acc1: clock-controller@b098000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,kpss-acc-v2";
 			reg = <0x0b098000 0x1000>, <0xb008000 0x1000>;
 		};
 
+<<<<<<< HEAD
 		acc2: power-manager@b0a8000 {
+=======
+		acc2: clock-controller@b0a8000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,kpss-acc-v2";
 			reg = <0x0b0a8000 0x1000>, <0xb008000 0x1000>;
 		};
 
+<<<<<<< HEAD
 		acc3: power-manager@b0b8000 {
+=======
+		acc3: clock-controller@b0b8000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,kpss-acc-v2";
 			reg = <0x0b0b8000 0x1000>, <0xb008000 0x1000>;
 		};
@@ -349,7 +376,11 @@
 		saw0: regulator@b089000 {
 			compatible = "qcom,saw2";
 			reg = <0x0b089000 0x1000>, <0x0b009000 0x1000>;
+<<<<<<< HEAD
 			regulator;
+=======
+                        regulator;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		saw1: regulator@b099000 {
@@ -401,7 +432,11 @@
 		};
 
 		watchdog: watchdog@b017000 {
+<<<<<<< HEAD
 			compatible = "qcom,kpss-wdt-ipq4019", "qcom,kpss-wdt";
+=======
+			compatible = "qcom,kpss-wdt", "qcom,kpss-wdt-ipq4019";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0xb017000 0x40>;
 			clocks = <&sleep_clk>;
 			timeout-sec = <10>;
@@ -427,8 +462,13 @@
 			#address-cells = <3>;
 			#size-cells = <2>;
 
+<<<<<<< HEAD
 			ranges = <0x81000000 0x0 0x00000000 0x40200000 0x0 0x00100000>,
 				 <0x82000000 0x0 0x40300000 0x40300000 0x0 0x00d00000>;
+=======
+			ranges = <0x81000000 0 0x40200000 0x40200000 0 0x00100000>,
+				 <0x82000000 0 0x40300000 0x40300000 0 0x00d00000>;
+>>>>>>> b7ba80a49124 (Commit)
 
 			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
 			interrupt-names = "msi";

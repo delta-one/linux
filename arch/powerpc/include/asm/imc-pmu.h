@@ -137,7 +137,11 @@ struct imc_pmu {
  * are inited.
  */
 struct imc_pmu_ref {
+<<<<<<< HEAD
 	spinlock_t lock;
+=======
+	struct mutex lock;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int id;
 	int refc;
 };

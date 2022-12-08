@@ -150,6 +150,13 @@ void hinic_unregister_pf_mbox_cb(struct hinic_hwdev *hwdev,
 void hinic_unregister_vf_mbox_cb(struct hinic_hwdev *hwdev,
 				 enum hinic_mod_type mod);
 
+<<<<<<< HEAD
+=======
+void hinic_mbox_func_aeqe_handler(void *handle, void *header, u8 size);
+
+void hinic_mbox_self_aeqe_handler(void *handle, void *header, u8 size);
+
+>>>>>>> b7ba80a49124 (Commit)
 int hinic_func_to_func_init(struct hinic_hwdev *hwdev);
 
 void hinic_func_to_func_free(struct hinic_hwdev *hwdev);

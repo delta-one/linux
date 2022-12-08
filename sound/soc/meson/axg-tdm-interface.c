@@ -37,8 +37,15 @@ int axg_tdm_set_tdm_slots(struct snd_soc_dai *dai, u32 *tx_mask,
 			  unsigned int slot_width)
 {
 	struct axg_tdm_iface *iface = snd_soc_dai_get_drvdata(dai);
+<<<<<<< HEAD
 	struct axg_tdm_stream *tx = snd_soc_dai_dma_data_get_playback(dai);
 	struct axg_tdm_stream *rx = snd_soc_dai_dma_data_get_capture(dai);
+=======
+	struct axg_tdm_stream *tx = (struct axg_tdm_stream *)
+		dai->playback_dma_data;
+	struct axg_tdm_stream *rx = (struct axg_tdm_stream *)
+		dai->capture_dma_data;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int tx_slots, rx_slots;
 	unsigned int fmt = 0;
 
@@ -360,6 +367,7 @@ static int axg_tdm_iface_prepare(struct snd_pcm_substream *substream,
 
 static int axg_tdm_iface_remove_dai(struct snd_soc_dai *dai)
 {
+<<<<<<< HEAD
 	int stream;
 
 	for_each_pcm_streams(stream) {
@@ -368,6 +376,13 @@ static int axg_tdm_iface_remove_dai(struct snd_soc_dai *dai)
 		if (ts)
 			axg_tdm_stream_free(ts);
 	}
+=======
+	if (dai->capture_dma_data)
+		axg_tdm_stream_free(dai->capture_dma_data);
+
+	if (dai->playback_dma_data)
+		axg_tdm_stream_free(dai->playback_dma_data);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -375,6 +390,7 @@ static int axg_tdm_iface_remove_dai(struct snd_soc_dai *dai)
 static int axg_tdm_iface_probe_dai(struct snd_soc_dai *dai)
 {
 	struct axg_tdm_iface *iface = snd_soc_dai_get_drvdata(dai);
+<<<<<<< HEAD
 	int stream;
 
 	for_each_pcm_streams(stream) {
@@ -389,6 +405,21 @@ static int axg_tdm_iface_probe_dai(struct snd_soc_dai *dai)
 			return -ENOMEM;
 		}
 		snd_soc_dai_dma_data_set(dai, stream, ts);
+=======
+
+	if (dai->capture_widget) {
+		dai->capture_dma_data = axg_tdm_stream_alloc(iface);
+		if (!dai->capture_dma_data)
+			return -ENOMEM;
+	}
+
+	if (dai->playback_widget) {
+		dai->playback_dma_data = axg_tdm_stream_alloc(iface);
+		if (!dai->playback_dma_data) {
+			axg_tdm_iface_remove_dai(dai);
+			return -ENOMEM;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;

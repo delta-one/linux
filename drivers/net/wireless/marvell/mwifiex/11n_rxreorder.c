@@ -33,7 +33,11 @@ static int mwifiex_11n_dispatch_amsdu_pkt(struct mwifiex_private *priv,
 		skb_trim(skb, le16_to_cpu(local_rx_pd->rx_pkt_length));
 
 		ieee80211_amsdu_to_8023s(skb, &list, priv->curr_addr,
+<<<<<<< HEAD
 					 priv->wdev.iftype, 0, NULL, NULL, false);
+=======
+					 priv->wdev.iftype, 0, NULL, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 		while (!skb_queue_empty(&list)) {
 			struct rx_packet_hdr *rx_hdr;

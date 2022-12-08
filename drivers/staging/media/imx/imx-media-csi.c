@@ -97,8 +97,13 @@ struct csi_priv {
 	/* the mipi virtual channel number at link validate */
 	int vc_num;
 
+<<<<<<< HEAD
 	/* media bus config of the upstream subdevice CSI is receiving from */
 	struct v4l2_mbus_config mbus_cfg;
+=======
+	/* the upstream endpoint CSI is receiving from */
+	struct v4l2_fwnode_endpoint upstream_ep;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spinlock_t irqlock; /* protect eof_irq handler */
 	struct timer_list eof_timeout_timer;
@@ -125,6 +130,7 @@ static inline struct csi_priv *notifier_to_dev(struct v4l2_async_notifier *n)
 	return container_of(n, struct csi_priv, notifier);
 }
 
+<<<<<<< HEAD
 static inline bool is_parallel_bus(struct v4l2_mbus_config *mbus_cfg)
 {
 	return mbus_cfg->type != V4L2_MBUS_CSI2_DPHY;
@@ -133,6 +139,16 @@ static inline bool is_parallel_bus(struct v4l2_mbus_config *mbus_cfg)
 static inline bool is_parallel_16bit_bus(struct v4l2_mbus_config *mbus_cfg)
 {
 	return is_parallel_bus(mbus_cfg) && mbus_cfg->bus.parallel.bus_width >= 16;
+=======
+static inline bool is_parallel_bus(struct v4l2_fwnode_endpoint *ep)
+{
+	return ep->bus_type != V4L2_MBUS_CSI2_DPHY;
+}
+
+static inline bool is_parallel_16bit_bus(struct v4l2_fwnode_endpoint *ep)
+{
+	return is_parallel_bus(ep) && ep->bus.parallel.bus_width >= 16;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -145,6 +161,7 @@ static inline bool is_parallel_16bit_bus(struct v4l2_mbus_config *mbus_cfg)
  * - the CSI is receiving from an 8-bit parallel bus and the incoming
  *   media bus format is other than UYVY8_2X8/YUYV8_2X8.
  */
+<<<<<<< HEAD
 static inline bool requires_passthrough(struct v4l2_mbus_config *mbus_cfg,
 					struct v4l2_mbus_framefmt *infmt,
 					const struct imx_media_pixfmt *incc)
@@ -154,11 +171,23 @@ static inline bool requires_passthrough(struct v4l2_mbus_config *mbus_cfg,
 
 	return incc->bayer || is_parallel_16bit_bus(mbus_cfg) ||
 		(is_parallel_bus(mbus_cfg) &&
+=======
+static inline bool requires_passthrough(struct v4l2_fwnode_endpoint *ep,
+					struct v4l2_mbus_framefmt *infmt,
+					const struct imx_media_pixfmt *incc)
+{
+	if (ep->bus_type == V4L2_MBUS_BT656) // including BT.1120
+		return false;
+
+	return incc->bayer || is_parallel_16bit_bus(ep) ||
+		(is_parallel_bus(ep) &&
+>>>>>>> b7ba80a49124 (Commit)
 		 infmt->code != MEDIA_BUS_FMT_UYVY8_2X8 &&
 		 infmt->code != MEDIA_BUS_FMT_YUYV8_2X8);
 }
 
 /*
+<<<<<<< HEAD
  * Queries the media bus config of the upstream entity that provides data to
  * the CSI. This will either be the entity directly upstream from the CSI-2
  * receiver, directly upstream from a video mux, or directly upstream from
@@ -170,6 +199,24 @@ static int csi_get_upstream_mbus_config(struct csi_priv *priv,
 	struct v4l2_subdev *sd, *remote_sd;
 	struct media_pad *remote_pad;
 	int ret;
+=======
+ * Parses the fwnode endpoint from the source pad of the entity
+ * connected to this CSI. This will either be the entity directly
+ * upstream from the CSI-2 receiver, directly upstream from the
+ * video mux, or directly upstream from the CSI itself. The endpoint
+ * is needed to determine the bus type and bus config coming into
+ * the CSI.
+ */
+static int csi_get_upstream_endpoint(struct csi_priv *priv,
+				     struct v4l2_fwnode_endpoint *ep)
+{
+	struct fwnode_handle *endpoint;
+	struct v4l2_subdev *sd;
+	struct media_pad *pad;
+
+	if (!IS_ENABLED(CONFIG_OF))
+		return -ENXIO;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!priv->src_sd)
 		return -EPIPE;
@@ -201,6 +248,7 @@ static int csi_get_upstream_mbus_config(struct csi_priv *priv,
 	}
 
 	/* get source pad of entity directly upstream from sd */
+<<<<<<< HEAD
 	remote_pad = media_entity_remote_pad_unique(&sd->entity,
 						    MEDIA_PAD_FL_SOURCE);
 	if (IS_ERR(remote_pad))
@@ -216,6 +264,21 @@ static int csi_get_upstream_mbus_config(struct csi_priv *priv,
 			 remote_pad->entity->name);
 
 	return ret;
+=======
+	pad = imx_media_pipeline_pad(&sd->entity, 0, 0, true);
+	if (!pad)
+		return -ENODEV;
+
+	endpoint = imx_media_get_pad_fwnode(pad);
+	if (IS_ERR(endpoint))
+		return PTR_ERR(endpoint);
+
+	v4l2_fwnode_endpoint_parse(endpoint, ep);
+
+	fwnode_handle_put(endpoint);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void csi_idmac_put_ipu_resources(struct csi_priv *priv)
@@ -432,7 +495,11 @@ static int csi_idmac_setup_channel(struct csi_priv *priv)
 	image.phys0 = phys[0];
 	image.phys1 = phys[1];
 
+<<<<<<< HEAD
 	passthrough = requires_passthrough(&priv->mbus_cfg, infmt, incc);
+=======
+	passthrough = requires_passthrough(&priv->upstream_ep, infmt, incc);
+>>>>>>> b7ba80a49124 (Commit)
 	passthrough_cycles = 1;
 
 	/*
@@ -705,6 +772,10 @@ static int csi_setup(struct csi_priv *priv)
 {
 	struct v4l2_mbus_framefmt *infmt, *outfmt;
 	const struct imx_media_pixfmt *incc;
+<<<<<<< HEAD
+=======
+	struct v4l2_mbus_config mbus_cfg;
+>>>>>>> b7ba80a49124 (Commit)
 	struct v4l2_mbus_framefmt if_fmt;
 	struct v4l2_rect crop;
 
@@ -712,6 +783,16 @@ static int csi_setup(struct csi_priv *priv)
 	incc = priv->cc[CSI_SINK_PAD];
 	outfmt = &priv->format_mbus[priv->active_output_pad];
 
+<<<<<<< HEAD
+=======
+	/* compose mbus_config from the upstream endpoint */
+	mbus_cfg.type = priv->upstream_ep.bus_type;
+	if (is_parallel_bus(&priv->upstream_ep))
+		mbus_cfg.bus.parallel = priv->upstream_ep.bus.parallel;
+	else
+		mbus_cfg.bus.mipi_csi2 = priv->upstream_ep.bus.mipi_csi2;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if_fmt = *infmt;
 	crop = priv->crop;
 
@@ -719,7 +800,11 @@ static int csi_setup(struct csi_priv *priv)
 	 * if cycles is set, we need to handle this over multiple cycles as
 	 * generic/bayer data
 	 */
+<<<<<<< HEAD
 	if (is_parallel_bus(&priv->mbus_cfg) && incc->cycles) {
+=======
+	if (is_parallel_bus(&priv->upstream_ep) && incc->cycles) {
+>>>>>>> b7ba80a49124 (Commit)
 		if_fmt.width *= incc->cycles;
 		crop.width *= incc->cycles;
 	}
@@ -730,7 +815,11 @@ static int csi_setup(struct csi_priv *priv)
 			     priv->crop.width == 2 * priv->compose.width,
 			     priv->crop.height == 2 * priv->compose.height);
 
+<<<<<<< HEAD
 	ipu_csi_init_interface(priv->csi, &priv->mbus_cfg, &if_fmt, outfmt);
+=======
+	ipu_csi_init_interface(priv->csi, &mbus_cfg, &if_fmt, outfmt);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ipu_csi_set_dest(priv->csi, priv->dest);
 
@@ -758,7 +847,11 @@ static int csi_start(struct csi_priv *priv)
 		return ret;
 
 	/* Skip first few frames from a BT.656 source */
+<<<<<<< HEAD
 	if (priv->mbus_cfg.type == V4L2_MBUS_BT656) {
+=======
+	if (priv->upstream_ep.bus_type == V4L2_MBUS_BT656) {
+>>>>>>> b7ba80a49124 (Commit)
 		u32 delay_usec, bad_frames = 20;
 
 		delay_usec = DIV_ROUND_UP_ULL((u64)USEC_PER_SEC *
@@ -779,8 +872,16 @@ static int csi_start(struct csi_priv *priv)
 		goto idmac_stop;
 
 	/* start the frame interval monitor */
+<<<<<<< HEAD
 	if (priv->fim && priv->dest == IPU_CSI_DEST_IDMAC)
 		imx_media_fim_set_stream(priv->fim, output_fi, true);
+=======
+	if (priv->fim && priv->dest == IPU_CSI_DEST_IDMAC) {
+		ret = imx_media_fim_set_stream(priv->fim, output_fi, true);
+		if (ret)
+			goto idmac_stop;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = ipu_csi_enable(priv->csi);
 	if (ret) {
@@ -1104,7 +1205,11 @@ static int csi_link_validate(struct v4l2_subdev *sd,
 			     struct v4l2_subdev_format *sink_fmt)
 {
 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
+<<<<<<< HEAD
 	struct v4l2_mbus_config mbus_cfg = { .type = 0 };
+=======
+	struct v4l2_fwnode_endpoint upstream_ep = { .bus_type = 0 };
+>>>>>>> b7ba80a49124 (Commit)
 	bool is_csi2;
 	int ret;
 
@@ -1113,17 +1218,28 @@ static int csi_link_validate(struct v4l2_subdev *sd,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = csi_get_upstream_mbus_config(priv, &mbus_cfg);
 	if (ret) {
 		v4l2_err(&priv->sd,
 			 "failed to get upstream media bus configuration\n");
+=======
+	ret = csi_get_upstream_endpoint(priv, &upstream_ep);
+	if (ret) {
+		v4l2_err(&priv->sd, "failed to find upstream endpoint\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 
 	mutex_lock(&priv->lock);
 
+<<<<<<< HEAD
 	priv->mbus_cfg = mbus_cfg;
 	is_csi2 = !is_parallel_bus(&mbus_cfg);
+=======
+	priv->upstream_ep = upstream_ep;
+	is_csi2 = !is_parallel_bus(&upstream_ep);
+>>>>>>> b7ba80a49124 (Commit)
 	if (is_csi2) {
 		/*
 		 * NOTE! It seems the virtual channels from the mipi csi-2
@@ -1179,7 +1295,11 @@ static void csi_try_crop(struct csi_priv *priv,
 			 struct v4l2_rect *crop,
 			 struct v4l2_subdev_state *sd_state,
 			 struct v4l2_mbus_framefmt *infmt,
+<<<<<<< HEAD
 			 struct v4l2_mbus_config *mbus_cfg)
+=======
+			 struct v4l2_fwnode_endpoint *upstream_ep)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 in_height;
 
@@ -1203,7 +1323,11 @@ static void csi_try_crop(struct csi_priv *priv,
 	 * sync, so fix it to NTSC/PAL active lines. NTSC contains
 	 * 2 extra lines of active video that need to be cropped.
 	 */
+<<<<<<< HEAD
 	if (mbus_cfg->type == V4L2_MBUS_BT656 &&
+=======
+	if (upstream_ep->bus_type == V4L2_MBUS_BT656 &&
+>>>>>>> b7ba80a49124 (Commit)
 	    (V4L2_FIELD_HAS_BOTH(infmt->field) ||
 	     infmt->field == V4L2_FIELD_ALTERNATE)) {
 		crop->height = in_height;
@@ -1220,7 +1344,11 @@ static int csi_enum_mbus_code(struct v4l2_subdev *sd,
 			      struct v4l2_subdev_mbus_code_enum *code)
 {
 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
+<<<<<<< HEAD
 	struct v4l2_mbus_config mbus_cfg = { .type = 0 };
+=======
+	struct v4l2_fwnode_endpoint upstream_ep = { .bus_type = 0 };
+>>>>>>> b7ba80a49124 (Commit)
 	const struct imx_media_pixfmt *incc;
 	struct v4l2_mbus_framefmt *infmt;
 	int ret = 0;
@@ -1237,6 +1365,7 @@ static int csi_enum_mbus_code(struct v4l2_subdev *sd,
 		break;
 	case CSI_SRC_PAD_DIRECT:
 	case CSI_SRC_PAD_IDMAC:
+<<<<<<< HEAD
 		ret = csi_get_upstream_mbus_config(priv, &mbus_cfg);
 		if (ret) {
 			v4l2_err(&priv->sd,
@@ -1245,6 +1374,15 @@ static int csi_enum_mbus_code(struct v4l2_subdev *sd,
 		}
 
 		if (requires_passthrough(&mbus_cfg, infmt, incc)) {
+=======
+		ret = csi_get_upstream_endpoint(priv, &upstream_ep);
+		if (ret) {
+			v4l2_err(&priv->sd, "failed to find upstream endpoint\n");
+			goto out;
+		}
+
+		if (requires_passthrough(&upstream_ep, infmt, incc)) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (code->index != 0) {
 				ret = -EINVAL;
 				goto out;
@@ -1414,7 +1552,11 @@ static void csi_try_field(struct csi_priv *priv,
 }
 
 static void csi_try_fmt(struct csi_priv *priv,
+<<<<<<< HEAD
 			struct v4l2_mbus_config *mbus_cfg,
+=======
+			struct v4l2_fwnode_endpoint *upstream_ep,
+>>>>>>> b7ba80a49124 (Commit)
 			struct v4l2_subdev_state *sd_state,
 			struct v4l2_subdev_format *sdformat,
 			struct v4l2_rect *crop,
@@ -1435,7 +1577,11 @@ static void csi_try_fmt(struct csi_priv *priv,
 		sdformat->format.width = compose->width;
 		sdformat->format.height = compose->height;
 
+<<<<<<< HEAD
 		if (requires_passthrough(mbus_cfg, infmt, incc)) {
+=======
+		if (requires_passthrough(upstream_ep, infmt, incc)) {
+>>>>>>> b7ba80a49124 (Commit)
 			sdformat->format.code = infmt->code;
 			*cc = incc;
 		} else {
@@ -1485,7 +1631,12 @@ static void csi_try_fmt(struct csi_priv *priv,
 		crop->height = sdformat->format.height;
 		if (sdformat->format.field == V4L2_FIELD_ALTERNATE)
 			crop->height *= 2;
+<<<<<<< HEAD
 		csi_try_crop(priv, crop, sd_state, &sdformat->format, mbus_cfg);
+=======
+		csi_try_crop(priv, crop, sd_state, &sdformat->format,
+			     upstream_ep);
+>>>>>>> b7ba80a49124 (Commit)
 		compose->left = 0;
 		compose->top = 0;
 		compose->width = crop->width;
@@ -1503,7 +1654,11 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
 		       struct v4l2_subdev_format *sdformat)
 {
 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
+<<<<<<< HEAD
 	struct v4l2_mbus_config mbus_cfg = { .type = 0 };
+=======
+	struct v4l2_fwnode_endpoint upstream_ep = { .bus_type = 0 };
+>>>>>>> b7ba80a49124 (Commit)
 	const struct imx_media_pixfmt *cc;
 	struct v4l2_mbus_framefmt *fmt;
 	struct v4l2_rect *crop, *compose;
@@ -1512,10 +1667,16 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
 	if (sdformat->pad >= CSI_NUM_PADS)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	ret = csi_get_upstream_mbus_config(priv, &mbus_cfg);
 	if (ret) {
 		v4l2_err(&priv->sd,
 			 "failed to get upstream media bus configuration\n");
+=======
+	ret = csi_get_upstream_endpoint(priv, &upstream_ep);
+	if (ret) {
+		v4l2_err(&priv->sd, "failed to find upstream endpoint\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 
@@ -1529,7 +1690,12 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
 	crop = __csi_get_crop(priv, sd_state, sdformat->which);
 	compose = __csi_get_compose(priv, sd_state, sdformat->which);
 
+<<<<<<< HEAD
 	csi_try_fmt(priv, &mbus_cfg, sd_state, sdformat, crop, compose, &cc);
+=======
+	csi_try_fmt(priv, &upstream_ep, sd_state, sdformat, crop, compose,
+		    &cc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	fmt = __csi_get_fmt(priv, sd_state, sdformat->pad, sdformat->which);
 	*fmt = sdformat->format;
@@ -1546,8 +1712,13 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
 			format.pad = pad;
 			format.which = sdformat->which;
 			format.format = sdformat->format;
+<<<<<<< HEAD
 			csi_try_fmt(priv, &mbus_cfg, sd_state, &format, NULL,
 				    compose, &outcc);
+=======
+			csi_try_fmt(priv, &upstream_ep, sd_state, &format,
+				    NULL, compose, &outcc);
+>>>>>>> b7ba80a49124 (Commit)
 
 			outfmt = __csi_get_fmt(priv, sd_state, pad,
 					       sdformat->which);
@@ -1635,7 +1806,11 @@ static int csi_set_selection(struct v4l2_subdev *sd,
 			     struct v4l2_subdev_selection *sel)
 {
 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
+<<<<<<< HEAD
 	struct v4l2_mbus_config mbus_cfg = { .type = 0 };
+=======
+	struct v4l2_fwnode_endpoint upstream_ep = { .bus_type = 0 };
+>>>>>>> b7ba80a49124 (Commit)
 	struct v4l2_mbus_framefmt *infmt;
 	struct v4l2_rect *crop, *compose;
 	int pad, ret;
@@ -1643,10 +1818,16 @@ static int csi_set_selection(struct v4l2_subdev *sd,
 	if (sel->pad != CSI_SINK_PAD)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	ret = csi_get_upstream_mbus_config(priv, &mbus_cfg);
 	if (ret) {
 		v4l2_err(&priv->sd,
 			 "failed to get upstream media bus configuration\n");
+=======
+	ret = csi_get_upstream_endpoint(priv, &upstream_ep);
+	if (ret) {
+		v4l2_err(&priv->sd, "failed to find upstream endpoint\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 
@@ -1675,7 +1856,11 @@ static int csi_set_selection(struct v4l2_subdev *sd,
 			goto out;
 		}
 
+<<<<<<< HEAD
 		csi_try_crop(priv, &sel->r, sd_state, infmt, &mbus_cfg);
+=======
+		csi_try_crop(priv, &sel->r, sd_state, infmt, &upstream_ep);
+>>>>>>> b7ba80a49124 (Commit)
 
 		*crop = sel->r;
 

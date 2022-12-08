@@ -25,7 +25,11 @@
 
 #include <linux/v4l2-mediabus.h>
 
+<<<<<<< HEAD
 #include <media/videobuf2-v4l2.h>
+=======
+#include <media/videobuf-core.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "atomisp_compat.h"
 
@@ -64,4 +68,11 @@ struct atomisp_fmt {
 	u32 bayer_order;
 };
 
+<<<<<<< HEAD
+=======
+struct atomisp_buffer {
+	struct videobuf_buffer	vb;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif

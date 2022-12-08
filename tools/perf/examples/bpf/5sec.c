@@ -39,6 +39,7 @@
    Copyright (C) 2018 Red Hat, Inc., Arnaldo Carvalho de Melo <acme@redhat.com>
 */
 
+<<<<<<< HEAD
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
 
@@ -46,8 +47,19 @@
 
 SEC("hrtimer_nanosleep=hrtimer_nanosleep rqtp")
 int hrtimer_nanosleep(void *ctx, int err, long long sec)
+=======
+#include <bpf.h>
+
+#define NSEC_PER_SEC	1000000000L
+
+int probe(hrtimer_nanosleep, rqtp)(void *ctx, int err, long long sec)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return sec / NSEC_PER_SEC == 5ULL;
 }
 
+<<<<<<< HEAD
 char _license[] SEC("license") = "GPL";
+=======
+license(GPL);
+>>>>>>> b7ba80a49124 (Commit)

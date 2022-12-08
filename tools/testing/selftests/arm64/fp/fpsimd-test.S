@@ -215,6 +215,10 @@ endfunction
 // Main program entry point
 .globl _start
 function _start
+<<<<<<< HEAD
+=======
+_start:
+>>>>>>> b7ba80a49124 (Commit)
 	mov	x23, #0		// signal count
 
 	mov	w0, #SIGINT

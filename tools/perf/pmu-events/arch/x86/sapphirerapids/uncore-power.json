@@ -1,6 +1,7 @@
 [
     {
         "BriefDescription": "PCU PCLK Clockticks",
+<<<<<<< HEAD
         "EventCode": "0x01",
         "EventName": "UNC_P_CLOCKTICKS",
         "PerPkg": "1",
@@ -85,6 +86,14 @@
         "EventName": "UNC_P_PROCHOT_INTERNAL_CYCLES",
         "PerPkg": "1",
         "PublicDescription": "Internal Prochot : Counts the number of cycles that we are in Internal PROCHOT mode.  This mode is triggered when a sensor on the die determines that we are too hot and must throttle to avoid damaging the chip.",
+=======
+        "Counter": "0,1,2,3",
+        "CounterType": "PGMABLE",
+        "EventCode": "0x01",
+        "EventName": "UNC_P_CLOCKTICKS",
+        "PerPkg": "1",
+        "UMaskExt": "0x00000000",
+>>>>>>> b7ba80a49124 (Commit)
         "Unit": "PCU"
     }
 ]

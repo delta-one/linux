@@ -701,15 +701,24 @@ DECLARE_EVENT_CLASS(smb3_open_enter_class,
 	TP_PROTO(unsigned int xid,
 		__u32	tid,
 		__u64	sesid,
+<<<<<<< HEAD
 		const char *full_path,
 		int	create_options,
 		int	desired_access),
 	TP_ARGS(xid, tid, sesid, full_path, create_options, desired_access),
+=======
+		int	create_options,
+		int	desired_access),
+	TP_ARGS(xid, tid, sesid, create_options, desired_access),
+>>>>>>> b7ba80a49124 (Commit)
 	TP_STRUCT__entry(
 		__field(unsigned int, xid)
 		__field(__u32, tid)
 		__field(__u64, sesid)
+<<<<<<< HEAD
 		__string(path, full_path)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		__field(int, create_options)
 		__field(int, desired_access)
 	),
@@ -717,12 +726,20 @@ DECLARE_EVENT_CLASS(smb3_open_enter_class,
 		__entry->xid = xid;
 		__entry->tid = tid;
 		__entry->sesid = sesid;
+<<<<<<< HEAD
 		__assign_str(path, full_path);
 		__entry->create_options = create_options;
 		__entry->desired_access = desired_access;
 	),
 	TP_printk("xid=%u sid=0x%llx tid=0x%x path=%s cr_opts=0x%x des_access=0x%x",
 		__entry->xid, __entry->sesid, __entry->tid, __get_str(path),
+=======
+		__entry->create_options = create_options;
+		__entry->desired_access = desired_access;
+	),
+	TP_printk("xid=%u sid=0x%llx tid=0x%x cr_opts=0x%x des_access=0x%x",
+		__entry->xid, __entry->sesid, __entry->tid,
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->create_options, __entry->desired_access)
 )
 
@@ -731,10 +748,16 @@ DEFINE_EVENT(smb3_open_enter_class, smb3_##name,  \
 	TP_PROTO(unsigned int xid,		\
 		__u32	tid,			\
 		__u64	sesid,			\
+<<<<<<< HEAD
 		const char *full_path,		\
 		int	create_options,		\
 		int	desired_access),	\
 	TP_ARGS(xid, tid, sesid, full_path, create_options, desired_access))
+=======
+		int	create_options,		\
+		int	desired_access),	\
+	TP_ARGS(xid, tid, sesid, create_options, desired_access))
+>>>>>>> b7ba80a49124 (Commit)
 
 DEFINE_SMB3_OPEN_ENTER_EVENT(open_enter);
 DEFINE_SMB3_OPEN_ENTER_EVENT(posix_mkdir_enter);

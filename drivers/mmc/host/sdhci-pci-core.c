@@ -38,7 +38,10 @@
 #include "cqhci.h"
 
 #include "sdhci.h"
+<<<<<<< HEAD
 #include "sdhci-cqhci.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "sdhci-pci.h"
 
 static void sdhci_pci_hw_reset(struct sdhci_host *host);
@@ -235,6 +238,17 @@ static void sdhci_pci_dumpregs(struct mmc_host *mmc)
 	sdhci_dumpregs(mmc_priv(mmc));
 }
 
+<<<<<<< HEAD
+=======
+static void sdhci_cqhci_reset(struct sdhci_host *host, u8 mask)
+{
+	if ((host->mmc->caps2 & MMC_CAP2_CQE) && (mask & SDHCI_RESET_ALL) &&
+	    host->mmc->cqe_private)
+		cqhci_deactivate(host->mmc);
+	sdhci_reset(host, mask);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*****************************************************************************\
  *                                                                           *
  * Hardware specific quirk handling                                          *
@@ -251,16 +265,23 @@ static int ricoh_probe(struct sdhci_pci_chip *chip)
 
 static int ricoh_mmc_probe_slot(struct sdhci_pci_slot *slot)
 {
+<<<<<<< HEAD
 	u32 caps =
+=======
+	slot->host->caps =
+>>>>>>> b7ba80a49124 (Commit)
 		FIELD_PREP(SDHCI_TIMEOUT_CLK_MASK, 0x21) |
 		FIELD_PREP(SDHCI_CLOCK_BASE_MASK, 0x21) |
 		SDHCI_TIMEOUT_CLK_UNIT |
 		SDHCI_CAN_VDD_330 |
 		SDHCI_CAN_DO_HISPD |
 		SDHCI_CAN_DO_SDMA;
+<<<<<<< HEAD
 	u32 caps1 = 0;
 
 	__sdhci_read_caps(slot->host, NULL, &caps, &caps1);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -289,6 +310,7 @@ static const struct sdhci_pci_fixes sdhci_ricoh_mmc = {
 #endif
 	.quirks		= SDHCI_QUIRK_32BIT_DMA_ADDR |
 			  SDHCI_QUIRK_CLOCK_BEFORE_RESET |
+<<<<<<< HEAD
 			  SDHCI_QUIRK_NO_CARD_NO_RESET,
 };
 
@@ -313,6 +335,12 @@ static int ene_714_probe_slot(struct sdhci_pci_slot *slot)
 	return 0;
 }
 
+=======
+			  SDHCI_QUIRK_NO_CARD_NO_RESET |
+			  SDHCI_QUIRK_MISSING_CAPS
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct sdhci_pci_fixes sdhci_ene_712 = {
 	.quirks		= SDHCI_QUIRK_SINGLE_POWER_WRITE |
 			  SDHCI_QUIRK_BROKEN_DMA,
@@ -320,8 +348,13 @@ static const struct sdhci_pci_fixes sdhci_ene_712 = {
 
 static const struct sdhci_pci_fixes sdhci_ene_714 = {
 	.quirks		= SDHCI_QUIRK_SINGLE_POWER_WRITE |
+<<<<<<< HEAD
 			  SDHCI_QUIRK_BROKEN_DMA,
 	.probe_slot	= ene_714_probe_slot,
+=======
+			  SDHCI_QUIRK_RESET_CMD_DATA_ON_IOS |
+			  SDHCI_QUIRK_BROKEN_DMA,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct sdhci_pci_fixes sdhci_cafe = {
@@ -698,7 +731,11 @@ static const struct sdhci_ops sdhci_intel_glk_ops = {
 	.set_power		= sdhci_intel_set_power,
 	.enable_dma		= sdhci_pci_enable_dma,
 	.set_bus_width		= sdhci_set_bus_width,
+<<<<<<< HEAD
 	.reset			= sdhci_and_cqhci_reset,
+=======
+	.reset			= sdhci_cqhci_reset,
+>>>>>>> b7ba80a49124 (Commit)
 	.set_uhs_signaling	= sdhci_intel_set_uhs_signaling,
 	.hw_reset		= sdhci_pci_hw_reset,
 	.irq			= sdhci_cqhci_irq,
@@ -909,12 +946,15 @@ static bool glk_broken_cqhci(struct sdhci_pci_slot *slot)
 		dmi_match(DMI_SYS_VENDOR, "IRBIS"));
 }
 
+<<<<<<< HEAD
 static bool jsl_broken_hs400es(struct sdhci_pci_slot *slot)
 {
 	return slot->chip->pdev->device == PCI_DEVICE_ID_INTEL_JSL_EMMC &&
 			dmi_match(DMI_BIOS_VENDOR, "ASUSTeK COMPUTER INC.");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int glk_emmc_probe_slot(struct sdhci_pci_slot *slot)
 {
 	int ret = byt_emmc_probe_slot(slot);
@@ -923,11 +963,17 @@ static int glk_emmc_probe_slot(struct sdhci_pci_slot *slot)
 		slot->host->mmc->caps2 |= MMC_CAP2_CQE;
 
 	if (slot->chip->pdev->device != PCI_DEVICE_ID_INTEL_GLK_EMMC) {
+<<<<<<< HEAD
 		if (!jsl_broken_hs400es(slot)) {
 			slot->host->mmc->caps2 |= MMC_CAP2_HS400_ES;
 			slot->host->mmc_host_ops.hs400_enhanced_strobe =
 							intel_hs400_enhanced_strobe;
 		}
+=======
+		slot->host->mmc->caps2 |= MMC_CAP2_HS400_ES;
+		slot->host->mmc_host_ops.hs400_enhanced_strobe =
+						intel_hs400_enhanced_strobe;
+>>>>>>> b7ba80a49124 (Commit)
 		slot->host->mmc->caps2 |= MMC_CAP2_CQE_DCMD;
 	}
 
@@ -1744,8 +1790,11 @@ static int amd_probe(struct sdhci_pci_chip *chip)
 		}
 	}
 
+<<<<<<< HEAD
 	pci_dev_put(smbus_dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (gen == AMD_CHIPSET_BEFORE_ML || gen == AMD_CHIPSET_CZ)
 		chip->quirks2 |= SDHCI_QUIRK2_CLEAR_TRANSFERMODE_REG_BEFORE_CMD;
 
@@ -2278,8 +2327,12 @@ static struct pci_driver sdhci_driver = {
 	.probe =	sdhci_pci_probe,
 	.remove =	sdhci_pci_remove,
 	.driver =	{
+<<<<<<< HEAD
 		.pm =   &sdhci_pci_pm_ops,
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+		.pm =   &sdhci_pci_pm_ops
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

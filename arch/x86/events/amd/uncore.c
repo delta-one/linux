@@ -553,7 +553,10 @@ static void uncore_clean_online(void)
 
 	hlist_for_each_entry_safe(uncore, n, &uncore_unused_list, node) {
 		hlist_del(&uncore->node);
+<<<<<<< HEAD
 		kfree(uncore->events);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(uncore);
 	}
 }

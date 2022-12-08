@@ -227,7 +227,11 @@ void ksmbd_conv_path_to_windows(char *path)
 	strreplace(path, '/', '\\');
 }
 
+<<<<<<< HEAD
 char *ksmbd_casefold_sharename(struct unicode_map *um, const char *name)
+=======
+static char *casefold_sharename(struct unicode_map *um, const char *name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	char *cf_name;
 	int cf_len;
@@ -273,7 +277,11 @@ char *ksmbd_extract_sharename(struct unicode_map *um, const char *treename)
 		name = (pos + 1);
 
 	/* caller has to free the memory */
+<<<<<<< HEAD
 	return ksmbd_casefold_sharename(um, name);
+=======
+	return casefold_sharename(um, name);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

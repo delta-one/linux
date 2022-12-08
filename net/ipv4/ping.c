@@ -49,11 +49,14 @@
 #include <net/transp_v6.h>
 #endif
 
+<<<<<<< HEAD
 #define ping_portaddr_for_each_entry(__sk, node, list) \
 	hlist_nulls_for_each_entry(__sk, node, list, sk_nulls_node)
 #define ping_portaddr_for_each_entry_rcu(__sk, node, list) \
 	hlist_nulls_for_each_entry_rcu(__sk, node, list, sk_nulls_node)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ping_table {
 	struct hlist_nulls_head	hash[PING_HTABLE_SIZE];
 	spinlock_t		lock;
@@ -143,7 +146,11 @@ next_port:
 
 fail:
 	spin_unlock(&ping_table.lock);
+<<<<<<< HEAD
 	return -EADDRINUSE;
+=======
+	return 1;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(ping_get_port);
 
@@ -197,7 +204,11 @@ static struct sock *ping_lookup(struct net *net, struct sk_buff *skb, u16 ident)
 		return NULL;
 	}
 
+<<<<<<< HEAD
 	ping_portaddr_for_each_entry_rcu(sk, hnode, hslot) {
+=======
+	ping_portaddr_for_each_entry(sk, hnode, hslot) {
+>>>>>>> b7ba80a49124 (Commit)
 		isk = inet_sk(sk);
 
 		pr_debug("iterate\n");
@@ -622,9 +633,27 @@ int ping_getfrag(void *from, char *to,
 {
 	struct pingfakehdr *pfh = from;
 
+<<<<<<< HEAD
 	if (!csum_and_copy_from_iter_full(to, fraglen, &pfh->wcheck,
 					  &pfh->msg->msg_iter))
 		return -EFAULT;
+=======
+	if (offset == 0) {
+		fraglen -= sizeof(struct icmphdr);
+		if (fraglen < 0)
+			BUG();
+		if (!csum_and_copy_from_iter_full(to + sizeof(struct icmphdr),
+			    fraglen, &pfh->wcheck,
+			    &pfh->msg->msg_iter))
+			return -EFAULT;
+	} else if (offset < sizeof(struct icmphdr)) {
+			BUG();
+	} else {
+		if (!csum_and_copy_from_iter_full(to, fraglen, &pfh->wcheck,
+					    &pfh->msg->msg_iter))
+			return -EFAULT;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 #if IS_ENABLED(CONFIG_IPV6)
 	/* For IPv6, checksum each skb as we go along, as expected by
@@ -632,7 +661,11 @@ int ping_getfrag(void *from, char *to,
 	 * wcheck, it will be finalized in ping_v4_push_pending_frames.
 	 */
 	if (pfh->family == AF_INET6) {
+<<<<<<< HEAD
 		skb->csum = csum_block_add(skb->csum, pfh->wcheck, odd);
+=======
+		skb->csum = pfh->wcheck;
+>>>>>>> b7ba80a49124 (Commit)
 		skb->ip_summed = CHECKSUM_NONE;
 		pfh->wcheck = 0;
 	}
@@ -835,8 +868,12 @@ back_from_confirm:
 	pfh.family = AF_INET;
 
 	err = ip_append_data(sk, &fl4, ping_getfrag, &pfh, len,
+<<<<<<< HEAD
 			     sizeof(struct icmphdr), &ipc, &rt,
 			     msg->msg_flags);
+=======
+			0, &ipc, &rt, msg->msg_flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		ip_flush_pending_frames(sk);
 	else

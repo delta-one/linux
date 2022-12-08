@@ -89,9 +89,15 @@ static const struct iio_info ltc2485_info = {
 	.read_raw = ltc2485_read_raw,
 };
 
+<<<<<<< HEAD
 static int ltc2485_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int ltc2485_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct iio_dev *indio_dev;
 	struct ltc2485_data *data;
 	int ret;
@@ -133,7 +139,11 @@ static struct i2c_driver ltc2485_driver = {
 	.driver = {
 		.name = "ltc2485",
 	},
+<<<<<<< HEAD
 	.probe_new = ltc2485_probe,
+=======
+	.probe = ltc2485_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = ltc2485_id,
 };
 module_i2c_driver(ltc2485_driver);

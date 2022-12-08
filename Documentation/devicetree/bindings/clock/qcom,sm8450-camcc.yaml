@@ -4,16 +4,27 @@
 $id: http://devicetree.org/schemas/clock/qcom,sm8450-camcc.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Qualcomm Camera Clock & Reset Controller on SM8450
+=======
+title: Qualcomm Camera Clock & Reset Controller Binding for SM8450
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
 
 description: |
+<<<<<<< HEAD
   Qualcomm camera clock control module provides the clocks, resets and power
   domains on SM8450.
 
   See also:: include/dt-bindings/clock/qcom,sm8450-camcc.h
+=======
+  Qualcomm camera clock control module which supports the clocks, resets and
+  power domains on SM8450.
+
+  See also include/dt-bindings/clock/qcom,sm8450-camcc.h
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -32,7 +43,10 @@ properties:
       A phandle and PM domain specifier for the MMCX power domain.
 
   required-opps:
+<<<<<<< HEAD
     maxItems: 1
+=======
+>>>>>>> b7ba80a49124 (Commit)
     description:
       A phandle to an OPP node describing required MMCX performance point.
 

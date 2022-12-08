@@ -22,7 +22,10 @@ x86-specific Documentation
    mtrr
    pat
    intel-hfi
+<<<<<<< HEAD
    shstk
+=======
+>>>>>>> b7ba80a49124 (Commit)
    iommu
    intel_txt
    amd-memory-encryption

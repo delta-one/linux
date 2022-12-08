@@ -15,7 +15,11 @@ maintainers:
   - Lala Lin <lala.lin@mediatek.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: nvmem.yaml#
+=======
+  - $ref: "nvmem.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   $nodename:

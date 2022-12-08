@@ -573,7 +573,12 @@ static const struct dvb_tuner_ops m88rs6000t_tuner_ops = {
 	.get_rf_strength = m88rs6000t_get_rf_strength,
 };
 
+<<<<<<< HEAD
 static int m88rs6000t_probe(struct i2c_client *client)
+=======
+static int m88rs6000t_probe(struct i2c_client *client,
+		const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct m88rs6000t_config *cfg = client->dev.platform_data;
 	struct dvb_frontend *fe = cfg->fe;
@@ -718,7 +723,11 @@ static struct i2c_driver m88rs6000t_driver = {
 	.driver = {
 		.name	= "m88rs6000t",
 	},
+<<<<<<< HEAD
 	.probe_new	= m88rs6000t_probe,
+=======
+	.probe		= m88rs6000t_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= m88rs6000t_remove,
 	.id_table	= m88rs6000t_id,
 };

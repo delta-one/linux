@@ -2,6 +2,10 @@
 /* Copyright (c) 2019 HiSilicon Limited. */
 
 #include <linux/acpi.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/bitops.h>
 #include <linux/debugfs.h>
 #include <linux/init.h>
@@ -54,7 +58,11 @@
 #define SEC_CONTROL_REG		0x301200
 #define SEC_DYNAMIC_GATE_REG		0x30121c
 #define SEC_CORE_AUTO_GATE		0x30212c
+<<<<<<< HEAD
 #define SEC_DYNAMIC_GATE_EN		0x7fff
+=======
+#define SEC_DYNAMIC_GATE_EN		0x7bff
+>>>>>>> b7ba80a49124 (Commit)
 #define SEC_CORE_AUTO_GATE_EN		GENMASK(3, 0)
 #define SEC_CLK_GATE_ENABLE		BIT(3)
 #define SEC_CLK_GATE_DISABLE		(~BIT(3))
@@ -426,6 +434,10 @@ static void sec_set_endian(struct hisi_qm *qm)
 	if (!IS_ENABLED(CONFIG_64BIT))
 		reg |= BIT(1);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN))
 		reg |= BIT(0);
 
@@ -897,7 +909,12 @@ static int sec_debugfs_init(struct hisi_qm *qm)
 	qm->debug.sqe_mask_offset = SEC_SQE_MASK_OFFSET;
 	qm->debug.sqe_mask_len = SEC_SQE_MASK_LEN;
 
+<<<<<<< HEAD
 	ret = hisi_qm_regs_debugfs_init(qm, sec_diff_regs, ARRAY_SIZE(sec_diff_regs));
+=======
+	ret = hisi_qm_diff_regs_init(qm, sec_diff_regs,
+				ARRAY_SIZE(sec_diff_regs));
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_warn(dev, "Failed to init SEC diff regs!\n");
 		goto debugfs_remove;
@@ -912,7 +929,11 @@ static int sec_debugfs_init(struct hisi_qm *qm)
 	return 0;
 
 failed_to_create:
+<<<<<<< HEAD
 	hisi_qm_regs_debugfs_uninit(qm, ARRAY_SIZE(sec_diff_regs));
+=======
+	hisi_qm_diff_regs_uninit(qm, ARRAY_SIZE(sec_diff_regs));
+>>>>>>> b7ba80a49124 (Commit)
 debugfs_remove:
 	debugfs_remove_recursive(sec_debugfs_root);
 	return ret;
@@ -920,7 +941,11 @@ debugfs_remove:
 
 static void sec_debugfs_exit(struct hisi_qm *qm)
 {
+<<<<<<< HEAD
 	hisi_qm_regs_debugfs_uninit(qm, ARRAY_SIZE(sec_diff_regs));
+=======
+	hisi_qm_diff_regs_uninit(qm, ARRAY_SIZE(sec_diff_regs));
+>>>>>>> b7ba80a49124 (Commit)
 
 	debugfs_remove_recursive(qm->debug.debug_root);
 }

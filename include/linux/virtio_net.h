@@ -15,7 +15,10 @@ static inline bool virtio_net_hdr_match_proto(__be16 protocol, __u8 gso_type)
 	case VIRTIO_NET_HDR_GSO_TCPV6:
 		return protocol == cpu_to_be16(ETH_P_IPV6);
 	case VIRTIO_NET_HDR_GSO_UDP:
+<<<<<<< HEAD
 	case VIRTIO_NET_HDR_GSO_UDP_L4:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return protocol == cpu_to_be16(ETH_P_IP) ||
 		       protocol == cpu_to_be16(ETH_P_IPV6);
 	default:
@@ -32,7 +35,10 @@ static inline int virtio_net_hdr_set_proto(struct sk_buff *skb,
 	switch (hdr->gso_type & ~VIRTIO_NET_HDR_GSO_ECN) {
 	case VIRTIO_NET_HDR_GSO_TCPV4:
 	case VIRTIO_NET_HDR_GSO_UDP:
+<<<<<<< HEAD
 	case VIRTIO_NET_HDR_GSO_UDP_L4:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		skb->protocol = cpu_to_be16(ETH_P_IP);
 		break;
 	case VIRTIO_NET_HDR_GSO_TCPV6:
@@ -71,11 +77,14 @@ static inline int virtio_net_hdr_to_skb(struct sk_buff *skb,
 			ip_proto = IPPROTO_UDP;
 			thlen = sizeof(struct udphdr);
 			break;
+<<<<<<< HEAD
 		case VIRTIO_NET_HDR_GSO_UDP_L4:
 			gso_type = SKB_GSO_UDP_L4;
 			ip_proto = IPPROTO_UDP;
 			thlen = sizeof(struct udphdr);
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		default:
 			return -EINVAL;
 		}
@@ -189,8 +198,11 @@ static inline int virtio_net_hdr_from_skb(const struct sk_buff *skb,
 			hdr->gso_type = VIRTIO_NET_HDR_GSO_TCPV4;
 		else if (sinfo->gso_type & SKB_GSO_TCPV6)
 			hdr->gso_type = VIRTIO_NET_HDR_GSO_TCPV6;
+<<<<<<< HEAD
 		else if (sinfo->gso_type & SKB_GSO_UDP_L4)
 			hdr->gso_type = VIRTIO_NET_HDR_GSO_UDP_L4;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		else
 			return -EINVAL;
 		if (sinfo->gso_type & SKB_GSO_TCP_ECN)

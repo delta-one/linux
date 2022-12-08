@@ -429,7 +429,11 @@ static int adis16136_initial_setup(struct iio_dev *indio_dev)
 	uint16_t prod_id;
 	int ret;
 
+<<<<<<< HEAD
 	ret = __adis_initial_startup(&adis16136->adis);
+=======
+	ret = adis_initial_startup(&adis16136->adis);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 

@@ -24,11 +24,17 @@ properties:
           - qcom,scm-apq8064
           - qcom,scm-apq8084
           - qcom,scm-ipq4019
+<<<<<<< HEAD
           - qcom,scm-ipq5332
           - qcom,scm-ipq6018
           - qcom,scm-ipq806x
           - qcom,scm-ipq8074
           - qcom,scm-ipq9574
+=======
+          - qcom,scm-ipq6018
+          - qcom,scm-ipq806x
+          - qcom,scm-ipq8074
+>>>>>>> b7ba80a49124 (Commit)
           - qcom,scm-mdm9607
           - qcom,scm-msm8226
           - qcom,scm-msm8660
@@ -40,24 +46,36 @@ properties:
           - qcom,scm-msm8994
           - qcom,scm-msm8996
           - qcom,scm-msm8998
+<<<<<<< HEAD
           - qcom,scm-qdu1000
           - qcom,scm-sa8775p
           - qcom,scm-sc7180
           - qcom,scm-sc7280
           - qcom,scm-sc8280xp
           - qcom,scm-sdm670
+=======
+          - qcom,scm-sc7180
+          - qcom,scm-sc7280
+          - qcom,scm-sc8280xp
+>>>>>>> b7ba80a49124 (Commit)
           - qcom,scm-sdm845
           - qcom,scm-sdx55
           - qcom,scm-sdx65
           - qcom,scm-sm6115
           - qcom,scm-sm6125
           - qcom,scm-sm6350
+<<<<<<< HEAD
           - qcom,scm-sm6375
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - qcom,scm-sm8150
           - qcom,scm-sm8250
           - qcom,scm-sm8350
           - qcom,scm-sm8450
+<<<<<<< HEAD
           - qcom,scm-sm8550
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - qcom,scm-qcs404
       - const: qcom,scm
 
@@ -78,12 +96,15 @@ properties:
   '#reset-cells':
     const: 1
 
+<<<<<<< HEAD
   interrupts:
     description:
       The wait-queue interrupt that firmware raises as part of handshake
       protocol to handle sleeping SCM calls.
     maxItems: 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   qcom,dload-mode:
     $ref: /schemas/types.yaml#/definitions/phandle-array
     items:
@@ -93,6 +114,7 @@ properties:
     description: TCSR hardware block
 
 allOf:
+<<<<<<< HEAD
   # Clocks
   - if:
       properties:
@@ -119,6 +141,8 @@ allOf:
         clock-names: false
         clocks: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -127,7 +151,10 @@ allOf:
               - qcom,scm-apq8064
               - qcom,scm-msm8660
               - qcom,scm-msm8960
+<<<<<<< HEAD
               - qcom,scm-sm6375
+=======
+>>>>>>> b7ba80a49124 (Commit)
     then:
       properties:
         clock-names:
@@ -137,6 +164,13 @@ allOf:
         clocks:
           maxItems: 1
 
+<<<<<<< HEAD
+=======
+      required:
+        - clocks
+        - clock-names
+
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -144,7 +178,10 @@ allOf:
             enum:
               - qcom,scm-apq8084
               - qcom,scm-mdm9607
+<<<<<<< HEAD
               - qcom,scm-msm8226
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,scm-msm8916
               - qcom,scm-msm8953
               - qcom,scm-msm8974
@@ -161,6 +198,7 @@ allOf:
           minItems: 3
           maxItems: 3
 
+<<<<<<< HEAD
   # Interconnects
   - if:
       not:
@@ -187,6 +225,11 @@ allOf:
     then:
       properties:
         interrupts: false
+=======
+      required:
+        - clocks
+        - clock-names
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible

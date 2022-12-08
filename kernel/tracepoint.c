@@ -571,8 +571,13 @@ static void for_each_tracepoint_range(
 bool trace_module_has_bad_taint(struct module *mod)
 {
 	return mod->taints & ~((1 << TAINT_OOT_MODULE) | (1 << TAINT_CRAP) |
+<<<<<<< HEAD
 				(1 << TAINT_UNSIGNED_MODULE) | (1 << TAINT_TEST) |
 				(1 << TAINT_LIVEPATCH));
+=======
+			       (1 << TAINT_UNSIGNED_MODULE) |
+			       (1 << TAINT_TEST));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static BLOCKING_NOTIFIER_HEAD(tracepoint_notify_list);
@@ -640,6 +645,10 @@ static void tp_module_going_check_quiescent(struct tracepoint *tp, void *priv)
 static int tracepoint_module_coming(struct module *mod)
 {
 	struct tp_module *tp_mod;
+<<<<<<< HEAD
+=======
+	int ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!mod->num_tracepoints)
 		return 0;
@@ -651,6 +660,7 @@ static int tracepoint_module_coming(struct module *mod)
 	 */
 	if (trace_module_has_bad_taint(mod))
 		return 0;
+<<<<<<< HEAD
 
 	tp_mod = kmalloc(sizeof(struct tp_module), GFP_KERNEL);
 	if (!tp_mod)
@@ -663,6 +673,21 @@ static int tracepoint_module_coming(struct module *mod)
 			MODULE_STATE_COMING, tp_mod);
 	mutex_unlock(&tracepoint_module_list_mutex);
 	return 0;
+=======
+	mutex_lock(&tracepoint_module_list_mutex);
+	tp_mod = kmalloc(sizeof(struct tp_module), GFP_KERNEL);
+	if (!tp_mod) {
+		ret = -ENOMEM;
+		goto end;
+	}
+	tp_mod->mod = mod;
+	list_add_tail(&tp_mod->list, &tracepoint_module_list);
+	blocking_notifier_call_chain(&tracepoint_notify_list,
+			MODULE_STATE_COMING, tp_mod);
+end:
+	mutex_unlock(&tracepoint_module_list_mutex);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void tracepoint_module_going(struct module *mod)

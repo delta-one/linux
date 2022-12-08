@@ -97,6 +97,7 @@ void flow_rule_match_cvlan(const struct flow_rule *rule,
 }
 EXPORT_SYMBOL(flow_rule_match_cvlan);
 
+<<<<<<< HEAD
 void flow_rule_match_arp(const struct flow_rule *rule,
 			 struct flow_match_arp *out)
 {
@@ -104,6 +105,8 @@ void flow_rule_match_arp(const struct flow_rule *rule,
 }
 EXPORT_SYMBOL(flow_rule_match_arp);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void flow_rule_match_ipv4_addrs(const struct flow_rule *rule,
 				struct flow_match_ipv4_addrs *out)
 {

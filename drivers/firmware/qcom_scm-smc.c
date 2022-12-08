@@ -8,7 +8,11 @@
 #include <linux/mutex.h>
 #include <linux/slab.h>
 #include <linux/types.h>
+<<<<<<< HEAD
 #include <linux/firmware/qcom/qcom_scm.h>
+=======
+#include <linux/qcom_scm.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/arm-smccc.h>
 #include <linux/dma-mapping.h>
 
@@ -52,6 +56,7 @@ static void __scm_smc_do_quirk(const struct arm_smccc_args *smc,
 	} while (res->a0 == QCOM_SCM_INTERRUPTED);
 }
 
+<<<<<<< HEAD
 static void fill_wq_resume_args(struct arm_smccc_args *resume, u32 smc_call_ctx)
 {
 	memset(resume->args, 0, sizeof(resume->args[0]) * ARRAY_SIZE(resume->args));
@@ -123,11 +128,22 @@ static int __scm_smc_do(struct device *dev, struct arm_smccc_args *smc,
 	if (atomic) {
 		__scm_smc_do_quirk(smc, res);
 		return 0;
+=======
+static void __scm_smc_do(const struct arm_smccc_args *smc,
+			 struct arm_smccc_res *res, bool atomic)
+{
+	int retry_count = 0;
+
+	if (atomic) {
+		__scm_smc_do_quirk(smc, res);
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	do {
 		mutex_lock(&qcom_scm_lock);
 
+<<<<<<< HEAD
 		ret = __scm_smc_do_quirk_handle_waitq(dev, smc, res);
 
 		mutex_unlock(&qcom_scm_lock);
@@ -135,14 +151,23 @@ static int __scm_smc_do(struct device *dev, struct arm_smccc_args *smc,
 		if (ret)
 			return ret;
 
+=======
+		__scm_smc_do_quirk(smc, res);
+
+		mutex_unlock(&qcom_scm_lock);
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (res->a0 == QCOM_SCM_V2_EBUSY) {
 			if (retry_count++ > QCOM_SCM_EBUSY_MAX_RETRY)
 				break;
 			msleep(QCOM_SCM_EBUSY_WAIT_MS);
 		}
 	}  while (res->a0 == QCOM_SCM_V2_EBUSY);
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 
@@ -151,7 +176,11 @@ int __scm_smc_call(struct device *dev, const struct qcom_scm_desc *desc,
 		   struct qcom_scm_res *res, bool atomic)
 {
 	int arglen = desc->arginfo & 0xf;
+<<<<<<< HEAD
 	int i, ret;
+=======
+	int i;
+>>>>>>> b7ba80a49124 (Commit)
 	dma_addr_t args_phys = 0;
 	void *args_virt = NULL;
 	size_t alloc_len;
@@ -203,17 +232,24 @@ int __scm_smc_call(struct device *dev, const struct qcom_scm_desc *desc,
 		smc.args[SCM_SMC_LAST_REG_IDX] = args_phys;
 	}
 
+<<<<<<< HEAD
 	/* ret error check follows after args_virt cleanup*/
 	ret = __scm_smc_do(dev, &smc, &smc_res, atomic);
+=======
+	__scm_smc_do(&smc, &smc_res, atomic);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (args_virt) {
 		dma_unmap_single(dev, args_phys, alloc_len, DMA_TO_DEVICE);
 		kfree(args_virt);
 	}
 
+<<<<<<< HEAD
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (res) {
 		res->result[0] = smc_res.a1;
 		res->result[1] = smc_res.a2;

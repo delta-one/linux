@@ -361,12 +361,26 @@ static const struct of_device_id video_cc_sm8250_match_table[] = {
 };
 MODULE_DEVICE_TABLE(of, video_cc_sm8250_match_table);
 
+<<<<<<< HEAD
+=======
+static void video_cc_sm8250_pm_runtime_disable(void *data)
+{
+	pm_runtime_disable(data);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int video_cc_sm8250_probe(struct platform_device *pdev)
 {
 	struct regmap *regmap;
 	int ret;
 
+<<<<<<< HEAD
 	ret = devm_pm_runtime_enable(&pdev->dev);
+=======
+	pm_runtime_enable(&pdev->dev);
+
+	ret = devm_add_action_or_reset(&pdev->dev, video_cc_sm8250_pm_runtime_disable, &pdev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 

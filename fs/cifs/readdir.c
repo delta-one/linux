@@ -495,7 +495,11 @@ static char *nxt_dir_entry(char *old_entry, char *end_of_smb, int level)
 		FIND_FILE_STANDARD_INFO *pfData;
 		pfData = (FIND_FILE_STANDARD_INFO *)pDirInfo;
 
+<<<<<<< HEAD
 		new_entry = old_entry + sizeof(FIND_FILE_STANDARD_INFO) + 1 +
+=======
+		new_entry = old_entry + sizeof(FIND_FILE_STANDARD_INFO) +
+>>>>>>> b7ba80a49124 (Commit)
 				pfData->FileNameLength;
 	} else {
 		u32 next_offset = le32_to_cpu(pDirInfo->NextEntryOffset);
@@ -513,9 +517,15 @@ static char *nxt_dir_entry(char *old_entry, char *end_of_smb, int level)
 			 new_entry, end_of_smb, old_entry);
 		return NULL;
 	} else if (((level == SMB_FIND_FILE_INFO_STANDARD) &&
+<<<<<<< HEAD
 		    (new_entry + sizeof(FIND_FILE_STANDARD_INFO) + 1 > end_of_smb))
 		  || ((level != SMB_FIND_FILE_INFO_STANDARD) &&
 		   (new_entry + sizeof(FILE_DIRECTORY_INFO) + 1 > end_of_smb)))  {
+=======
+		    (new_entry + sizeof(FIND_FILE_STANDARD_INFO) > end_of_smb))
+		  || ((level != SMB_FIND_FILE_INFO_STANDARD) &&
+		   (new_entry + sizeof(FILE_DIRECTORY_INFO) > end_of_smb)))  {
+>>>>>>> b7ba80a49124 (Commit)
 		cifs_dbg(VFS, "search entry %p extends after end of SMB %p\n",
 			 new_entry, end_of_smb);
 		return NULL;
@@ -844,6 +854,7 @@ static bool emit_cached_dirents(struct cached_dirents *cde,
 				struct dir_context *ctx)
 {
 	struct cached_dirent *dirent;
+<<<<<<< HEAD
 	bool rc;
 
 	list_for_each_entry(dirent, &cde->entries, entry) {
@@ -865,13 +876,23 @@ static bool emit_cached_dirents(struct cached_dirents *cde,
 		 * we now emit them with the same ->pos value as in the
 		 * initial scan.
 		 */
+=======
+	int rc;
+
+	list_for_each_entry(dirent, &cde->entries, entry) {
+		if (ctx->pos >= dirent->pos)
+			continue;
+>>>>>>> b7ba80a49124 (Commit)
 		ctx->pos = dirent->pos;
 		rc = dir_emit(ctx, dirent->name, dirent->namelen,
 			      dirent->fattr.cf_uniqueid,
 			      dirent->fattr.cf_dtype);
 		if (!rc)
 			return rc;
+<<<<<<< HEAD
 		ctx->pos++;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return true;
 }
@@ -1011,8 +1032,11 @@ static int cifs_filldir(char *find_entry, struct file *file,
 		cifs_unix_basic_to_fattr(&fattr,
 					 &((FILE_UNIX_INFO *)find_entry)->basic,
 					 cifs_sb);
+<<<<<<< HEAD
 		if (S_ISLNK(fattr.cf_mode))
 			fattr.cf_flags |= CIFS_FATTR_NEED_REVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case SMB_FIND_FILE_INFO_STANDARD:
 		cifs_std_info_to_fattr(&fattr,
@@ -1221,10 +1245,17 @@ int cifs_readdir(struct file *file, struct dir_context *ctx)
 				 ctx->pos, tmp_buf);
 			cifs_save_resume_key(current_entry, cifsFile);
 			break;
+<<<<<<< HEAD
 		}
 		current_entry =
 			nxt_dir_entry(current_entry, end_of_smb,
 				      cifsFile->srch_inf.info_level);
+=======
+		} else
+			current_entry =
+				nxt_dir_entry(current_entry, end_of_smb,
+					cifsFile->srch_inf.info_level);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	kfree(tmp_buf);
 

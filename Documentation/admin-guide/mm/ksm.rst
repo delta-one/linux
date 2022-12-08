@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _admin_guide_ksm:
+
+>>>>>>> b7ba80a49124 (Commit)
 =======================
 Kernel Samepage Merging
 =======================
@@ -20,15 +25,22 @@ content which can be replaced by a single write-protected page (which
 is automatically copied if a process later wants to update its
 content). The amount of pages that KSM daemon scans in a single pass
 and the time between the passes are configured using :ref:`sysfs
+<<<<<<< HEAD
 interface <ksm_sysfs>`
+=======
+intraface <ksm_sysfs>`
+>>>>>>> b7ba80a49124 (Commit)
 
 KSM only merges anonymous (private) pages, never pagecache (file) pages.
 KSM's merged pages were originally locked into kernel memory, but can now
 be swapped out just like other user pages (but sharing is broken when they
 are swapped back in: ksmd must rediscover their identity and merge again).
 
+<<<<<<< HEAD
 .. _ksm_madvise:
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Controlling KSM with madvise
 ============================
 
@@ -70,6 +82,7 @@ Applications should be considerate in their use of MADV_MERGEABLE,
 restricting its use to areas likely to benefit.  KSM's scans may use a lot
 of processing power: some installations will disable KSM for that reason.
 
+<<<<<<< HEAD
 Controlling KSM with prctl
 ============================
 
@@ -107,6 +120,8 @@ same security domain, there is a usecase where multiple instances of the
 same job are running inside a safe shared security domain and using the
 same sensitive data.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 .. _ksm_sysfs:
 
 KSM daemon sysfs interface
@@ -196,8 +211,11 @@ stable_node_chains_prune_millisecs
 
 The effectiveness of KSM and MADV_MERGEABLE is shown in ``/sys/kernel/mm/ksm/``:
 
+<<<<<<< HEAD
 general_profit
         how effective is KSM. The calculation is explained below.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 pages_shared
         how many shared pages are being used
 pages_sharing
@@ -212,6 +230,7 @@ stable_node_chains
         the number of KSM pages that hit the ``max_page_sharing`` limit
 stable_node_dups
         number of duplicated KSM pages
+<<<<<<< HEAD
 zero_pages_sharing
         how many empty pages are sharing kernel zero page(s) instead of
         with each other as it would happen normally. Only effective when
@@ -219,6 +238,8 @@ zero_pages_sharing
 
 When enabling ``use_zero_pages``, the sum of ``pages_sharing`` +
 ``zero_pages_sharing`` represents how much really saved by KSM.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 A high ratio of ``pages_sharing`` to ``pages_shared`` indicates good
 sharing, but a high ratio of ``pages_unshared`` to ``pages_sharing``
@@ -255,8 +276,12 @@ several times, which are unprofitable memory consumed.
 			  ksm_rmap_items * sizeof(rmap_item).
 
    where ksm_merging_pages is shown under the directory ``/proc/<pid>/``,
+<<<<<<< HEAD
    and ksm_rmap_items is shown in ``/proc/<pid>/ksm_stat``. The process profit
    is also shown in ``/proc/<pid>/ksm_stat`` as ksm_process_profit.
+=======
+   and ksm_rmap_items is shown in ``/proc/<pid>/ksm_stat``.
+>>>>>>> b7ba80a49124 (Commit)
 
 From the perspective of application, a high ratio of ``ksm_rmap_items`` to
 ``ksm_merging_pages`` means a bad madvise-applied policy, so developers or
@@ -267,9 +292,12 @@ so if the ``ksm_rmap_items/ksm_merging_pages`` ratio exceeds 64 on 64-bit CPU
 or exceeds 128 on 32-bit CPU, then the app's madvise policy should be dropped,
 because the ksm profit is approximately zero or negative.
 
+<<<<<<< HEAD
 The ksm_merge_type in ``/proc/<pid>/ksm_stat`` shows the merge type of the
 process. Valid values are ``none``, ``madvise`` and ``process``.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Monitoring KSM events
 =====================
 

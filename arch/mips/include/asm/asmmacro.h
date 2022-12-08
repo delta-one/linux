@@ -83,7 +83,11 @@
 
 	.macro	fpu_save_16even thread tmp=t0
 	.set	push
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	cfc1	\tmp, fcr31
 	sdc1	$f0,  THREAD_FPR0(\thread)
 	sdc1	$f2,  THREAD_FPR2(\thread)
@@ -109,7 +113,11 @@
 	.set	push
 	.set	mips64r2
 	.set	fp=64
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	sdc1	$f1,  THREAD_FPR1(\thread)
 	sdc1	$f3,  THREAD_FPR3(\thread)
 	sdc1	$f5,  THREAD_FPR5(\thread)
@@ -142,7 +150,11 @@
 
 	.macro	fpu_restore_16even thread tmp=t0
 	.set	push
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	lw	\tmp, THREAD_FCR31(\thread)
 	ldc1	$f0,  THREAD_FPR0(\thread)
 	ldc1	$f2,  THREAD_FPR2(\thread)
@@ -168,7 +180,11 @@
 	.set	push
 	.set	mips64r2
 	.set	fp=64
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	ldc1	$f1,  THREAD_FPR1(\thread)
 	ldc1	$f3,  THREAD_FPR3(\thread)
 	ldc1	$f5,  THREAD_FPR5(\thread)
@@ -373,7 +389,11 @@
 	.macro	_cfcmsa	rd, cs
 	.set	push
 	.set	noat
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	insn_if_mips 0x787e0059 | (\cs << 11)
 	insn32_if_mm 0x587e0056 | (\cs << 11)
 	move	\rd, $1
@@ -383,7 +403,11 @@
 	.macro	_ctcmsa	cd, rs
 	.set	push
 	.set	noat
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	move	$1, \rs
 	insn_if_mips 0x783e0819 | (\cd << 6)
 	insn32_if_mm 0x583e0816 | (\cd << 6)
@@ -393,7 +417,11 @@
 	.macro	ld_b	wd, off, base
 	.set	push
 	.set	noat
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	PTR_ADDU $1, \base, \off
 	insn_if_mips 0x78000820 | (\wd << 6)
 	insn32_if_mm 0x58000807 | (\wd << 6)
@@ -403,7 +431,11 @@
 	.macro	ld_h	wd, off, base
 	.set	push
 	.set	noat
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	PTR_ADDU $1, \base, \off
 	insn_if_mips 0x78000821 | (\wd << 6)
 	insn32_if_mm 0x58000817 | (\wd << 6)
@@ -413,7 +445,11 @@
 	.macro	ld_w	wd, off, base
 	.set	push
 	.set	noat
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	PTR_ADDU $1, \base, \off
 	insn_if_mips 0x78000822 | (\wd << 6)
 	insn32_if_mm 0x58000827 | (\wd << 6)
@@ -423,7 +459,11 @@
 	.macro	ld_d	wd, off, base
 	.set	push
 	.set	noat
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	PTR_ADDU $1, \base, \off
 	insn_if_mips 0x78000823 | (\wd << 6)
 	insn32_if_mm 0x58000837 | (\wd << 6)
@@ -433,7 +473,11 @@
 	.macro	st_b	wd, off, base
 	.set	push
 	.set	noat
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	PTR_ADDU $1, \base, \off
 	insn_if_mips 0x78000824 | (\wd << 6)
 	insn32_if_mm 0x5800080f | (\wd << 6)
@@ -443,7 +487,11 @@
 	.macro	st_h	wd, off, base
 	.set	push
 	.set	noat
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	PTR_ADDU $1, \base, \off
 	insn_if_mips 0x78000825 | (\wd << 6)
 	insn32_if_mm 0x5800081f | (\wd << 6)
@@ -453,7 +501,11 @@
 	.macro	st_w	wd, off, base
 	.set	push
 	.set	noat
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	PTR_ADDU $1, \base, \off
 	insn_if_mips 0x78000826 | (\wd << 6)
 	insn32_if_mm 0x5800082f | (\wd << 6)
@@ -463,7 +515,11 @@
 	.macro	st_d	wd, off, base
 	.set	push
 	.set	noat
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	PTR_ADDU $1, \base, \off
 	insn_if_mips 0x78000827 | (\wd << 6)
 	insn32_if_mm 0x5800083f | (\wd << 6)
@@ -473,7 +529,11 @@
 	.macro	copy_s_w	ws, n
 	.set	push
 	.set	noat
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	insn_if_mips 0x78b00059 | (\n << 16) | (\ws << 11)
 	insn32_if_mm 0x58b00056 | (\n << 16) | (\ws << 11)
 	.set	pop
@@ -482,7 +542,11 @@
 	.macro	copy_s_d	ws, n
 	.set	push
 	.set	noat
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	insn_if_mips 0x78b80059 | (\n << 16) | (\ws << 11)
 	insn32_if_mm 0x58b80056 | (\n << 16) | (\ws << 11)
 	.set	pop
@@ -491,7 +555,11 @@
 	.macro	insert_w	wd, n
 	.set	push
 	.set	noat
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	insn_if_mips 0x79300819 | (\n << 16) | (\wd << 6)
 	insn32_if_mm 0x59300816 | (\n << 16) | (\wd << 6)
 	.set	pop
@@ -500,7 +568,11 @@
 	.macro	insert_d	wd, n
 	.set	push
 	.set	noat
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	insn_if_mips 0x79380819 | (\n << 16) | (\wd << 6)
 	insn32_if_mm 0x59380816 | (\n << 16) | (\wd << 6)
 	.set	pop
@@ -553,7 +625,11 @@
 	st_d	29, THREAD_FPR29 - FPR_BASE_OFFS, FPR_BASE
 	st_d	30, THREAD_FPR30 - FPR_BASE_OFFS, FPR_BASE
 	st_d	31, THREAD_FPR31 - FPR_BASE_OFFS, FPR_BASE
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	_cfcmsa	$1, MSA_CSR
 	sw	$1, THREAD_MSA_CSR(\thread)
 	.set	pop
@@ -562,7 +638,11 @@
 	.macro	msa_restore_all	thread
 	.set	push
 	.set	noat
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	lw	$1, THREAD_MSA_CSR(\thread)
 	_ctcmsa	MSA_CSR, $1
 #ifdef TOOLCHAIN_SUPPORTS_MSA
@@ -618,7 +698,11 @@
 	.macro	msa_init_all_upper
 	.set	push
 	.set	noat
+<<<<<<< HEAD
 	.set	hardfloat
+=======
+	SET_HARDFLOAT
+>>>>>>> b7ba80a49124 (Commit)
 	not	$1, zero
 	msa_init_upper	0
 	msa_init_upper	1

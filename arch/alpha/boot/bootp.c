@@ -18,7 +18,11 @@
 #include <asm/hwrpb.h>
 #include <asm/io.h>
 
+<<<<<<< HEAD
 #include <linux/stdarg.h>
+=======
+#include <stdarg.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "ksize.h"
 

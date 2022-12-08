@@ -93,9 +93,15 @@ static int adt7316_i2c_multi_write(void *client, u8 reg, u8 count, u8 *data)
  * device probe and remove
  */
 
+<<<<<<< HEAD
 static int adt7316_i2c_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int adt7316_i2c_probe(struct i2c_client *client,
+			     const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct adt7316_bus bus = {
 		.client = client,
 		.irq = client->irq,
@@ -138,7 +144,11 @@ static struct i2c_driver adt7316_driver = {
 		.of_match_table = adt7316_of_match,
 		.pm = ADT7316_PM_OPS,
 	},
+<<<<<<< HEAD
 	.probe_new = adt7316_i2c_probe,
+=======
+	.probe = adt7316_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = adt7316_i2c_id,
 };
 module_i2c_driver(adt7316_driver);

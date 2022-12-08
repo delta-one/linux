@@ -14,21 +14,36 @@
 #include <linux/workqueue.h>
 
 #include <drm/drm_connector.h>
+<<<<<<< HEAD
 #include <drm/drm_modeset_lock.h>
 
 #include "intel_cdclk.h"
 #include "intel_display_limits.h"
 #include "intel_display_power.h"
+=======
+
+#include "intel_cdclk.h"
+#include "intel_display.h"
+#include "intel_display_power.h"
+#include "intel_dmc.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_dpll_mgr.h"
 #include "intel_fbc.h"
 #include "intel_global_state.h"
 #include "intel_gmbus.h"
 #include "intel_opregion.h"
+<<<<<<< HEAD
 #include "intel_wm_types.h"
 
 struct drm_i915_private;
 struct drm_property;
 struct drm_property_blob;
+=======
+#include "intel_pm_types.h"
+
+struct drm_i915_private;
+struct drm_property;
+>>>>>>> b7ba80a49124 (Commit)
 struct i915_audio_component;
 struct i915_hdcp_comp_master;
 struct intel_atomic_state;
@@ -39,7 +54,10 @@ struct intel_cdclk_vals;
 struct intel_color_funcs;
 struct intel_crtc;
 struct intel_crtc_state;
+<<<<<<< HEAD
 struct intel_dmc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct intel_dpll_funcs;
 struct intel_dpll_mgr;
 struct intel_fbdev;
@@ -85,12 +103,15 @@ struct intel_wm_funcs {
 	void (*optimize_watermarks)(struct intel_atomic_state *state,
 				    struct intel_crtc *crtc);
 	int (*compute_global_watermarks)(struct intel_atomic_state *state);
+<<<<<<< HEAD
 	void (*get_hw_state)(struct drm_i915_private *i915);
 };
 
 struct intel_audio_state {
 	struct intel_encoder *encoder;
 	u8 eld[MAX_ELD_BYTES];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct intel_audio {
@@ -102,8 +123,13 @@ struct intel_audio {
 	int power_refcount;
 	u32 freq_cntrl;
 
+<<<<<<< HEAD
 	/* current audio state for the audio component hooks */
 	struct intel_audio_state state[I915_MAX_TRANSCODERS];
+=======
+	/* Used to save the pipe-to-encoder mapping for audio */
+	struct intel_encoder *encoder_map[I915_MAX_PIPES];
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* necessary resource sharing with HDMI LPE audio driver. */
 	struct {
@@ -128,11 +154,14 @@ struct intel_dpll {
 		int nssc;
 		int ssc;
 	} ref_clks;
+<<<<<<< HEAD
 
 	/*
 	 * Bitmask of PLLs using the PCH SSC, indexed using enum intel_dpll_id.
 	 */
 	u8 pch_ssc_use;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct intel_frontbuffer_tracking {
@@ -183,6 +212,7 @@ struct intel_hotplug {
 	 * blocked behind the non-DP one.
 	 */
 	struct workqueue_struct *dp_wq;
+<<<<<<< HEAD
 
 	/*
 	 * Flag to track if long HPDs need not to be processed
@@ -194,6 +224,8 @@ struct intel_hotplug {
 	 * cue to ignore the long HPDs and can be set / unset using debugfs.
 	 */
 	bool ignore_long_hpd;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct intel_vbt_data {
@@ -255,7 +287,11 @@ struct intel_wm {
 		struct g4x_wm_values g4x;
 	};
 
+<<<<<<< HEAD
 	u8 num_levels;
+=======
+	u8 max_level;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Should be held around atomic WM register writing; also
@@ -333,10 +369,13 @@ struct intel_display {
 	} cdclk;
 
 	struct {
+<<<<<<< HEAD
 		struct drm_property_blob *glk_linear_degamma_lut;
 	} color;
 
 	struct {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* The current hardware dbuf configuration */
 		u8 enabled_slices;
 
@@ -344,6 +383,7 @@ struct intel_display {
 	} dbuf;
 
 	struct {
+<<<<<<< HEAD
 		/*
 		 * dkl.phy_lock protects against concurrent access of the
 		 * Dekel TypeC PHYs.
@@ -357,6 +397,8 @@ struct intel_display {
 	} dmc;
 
 	struct {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* VLV/CHV/BXT/GLK DSI MMIO register base address */
 		u32 mmio_base;
 	} dsi;
@@ -373,10 +415,13 @@ struct intel_display {
 	} fdi;
 
 	struct {
+<<<<<<< HEAD
 		struct list_head obj_list;
 	} global;
 
 	struct {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Base address of where the gmbus and gpio blocks are located
 		 * (either on PCH or on SoC for platforms without PCH).
@@ -395,6 +440,7 @@ struct intel_display {
 	} gmbus;
 
 	struct {
+<<<<<<< HEAD
 		struct i915_hdcp_master *master;
 		bool comp_added;
 
@@ -404,11 +450,17 @@ struct intel_display {
 		 * this is only populated post Meteorlake
 		 */
 		struct intel_hdcp_gsc_message *hdcp_message;
+=======
+		struct i915_hdcp_comp_master *master;
+		bool comp_added;
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* Mutex to protect the above hdcp component related values. */
 		struct mutex comp_mutex;
 	} hdcp;
 
 	struct {
+<<<<<<< HEAD
 		/*
 		 * HTI (aka HDPORT) state read during initial hw readout. Most
 		 * platforms don't have HTI, so this will just stay 0. Those
@@ -419,6 +471,8 @@ struct intel_display {
 	} hti;
 
 	struct {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		struct i915_power_domains domains;
 
 		/* Shadow for DISPLAY_PHY_CONTROL which can't be safely read */
@@ -445,12 +499,15 @@ struct intel_display {
 	} quirks;
 
 	struct {
+<<<<<<< HEAD
 		/* restore state for suspend/resume and display reset */
 		struct drm_atomic_state *modeset_state;
 		struct drm_modeset_acquire_ctx reset_ctx;
 	} restore;
 
 	struct {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		enum {
 			I915_SAGV_UNKNOWN = 0,
 			I915_SAGV_DISABLED,
@@ -462,6 +519,7 @@ struct intel_display {
 	} sagv;
 
 	struct {
+<<<<<<< HEAD
 		/*
 		 * DG2: Mask of PHYs that were not calibrated by the firmware
 		 * and should not be used.
@@ -480,6 +538,8 @@ struct intel_display {
 	} state;
 
 	struct {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* ordered wq for modesets */
 		struct workqueue_struct *modeset;
 
@@ -489,6 +549,10 @@ struct intel_display {
 
 	/* Grouping using named structs. Keep sorted. */
 	struct intel_audio audio;
+<<<<<<< HEAD
+=======
+	struct intel_dmc dmc;
+>>>>>>> b7ba80a49124 (Commit)
 	struct intel_dpll dpll;
 	struct intel_fbc *fbc[I915_MAX_FBCS];
 	struct intel_frontbuffer_tracking fb_tracking;

@@ -1171,11 +1171,18 @@ ssize_t vb2_fop_read(struct file *file, char __user *buf,
 		return -ERESTARTSYS;
 	if (vb2_queue_is_busy(vdev->queue, file))
 		goto exit;
+<<<<<<< HEAD
 	vdev->queue->owner = file->private_data;
 	err = vb2_read(vdev->queue, buf, count, ppos,
 		       file->f_flags & O_NONBLOCK);
 	if (!vdev->queue->fileio)
 		vdev->queue->owner = NULL;
+=======
+	err = vb2_read(vdev->queue, buf, count, ppos,
+		       file->f_flags & O_NONBLOCK);
+	if (vdev->queue->fileio)
+		vdev->queue->owner = file->private_data;
+>>>>>>> b7ba80a49124 (Commit)
 exit:
 	if (lock)
 		mutex_unlock(lock);

@@ -76,7 +76,10 @@ static int snooze_loop(struct cpuidle_device *dev,
 	local_irq_enable();
 
 	snooze_exit_time = get_tb() + get_snooze_timeout(dev, drv, index);
+<<<<<<< HEAD
 	dev->poll_time_limit = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ppc64_runlatch_off();
 	HMT_very_low();
 	while (!need_resched()) {
@@ -87,7 +90,10 @@ static int snooze_loop(struct cpuidle_device *dev,
 			 * cleared to order subsequent test of need_resched().
 			 */
 			clear_thread_flag(TIF_POLLING_NRFLAG);
+<<<<<<< HEAD
 			dev->poll_time_limit = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			smp_mb();
 			break;
 		}
@@ -157,8 +163,12 @@ static struct cpuidle_state powernv_states[CPUIDLE_STATE_MAX] = {
 		.desc = "snooze",
 		.exit_latency = 0,
 		.target_residency = 0,
+<<<<<<< HEAD
 		.enter = snooze_loop,
 		.flags = CPUIDLE_FLAG_POLLING },
+=======
+		.enter = snooze_loop },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int powernv_cpuidle_cpu_online(unsigned int cpu)

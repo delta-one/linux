@@ -308,6 +308,10 @@ static void test_delete_memory_region(void)
 static void test_zero_memory_regions(void)
 {
 	struct kvm_vcpu *vcpu;
+<<<<<<< HEAD
+=======
+	struct kvm_run *run;
+>>>>>>> b7ba80a49124 (Commit)
 	struct kvm_vm *vm;
 
 	pr_info("Testing KVM_RUN with zero added memory regions\n");
@@ -317,7 +321,14 @@ static void test_zero_memory_regions(void)
 
 	vm_ioctl(vm, KVM_SET_NR_MMU_PAGES, (void *)64ul);
 	vcpu_run(vcpu);
+<<<<<<< HEAD
 	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_INTERNAL_ERROR);
+=======
+
+	run = vcpu->run;
+	TEST_ASSERT(run->exit_reason == KVM_EXIT_INTERNAL_ERROR,
+		    "Unexpected exit_reason = %u\n", run->exit_reason);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kvm_vm_free(vm);
 }
@@ -388,6 +399,12 @@ int main(int argc, char *argv[])
 	int i, loops;
 #endif
 
+<<<<<<< HEAD
+=======
+	/* Tell stdout not to buffer its content */
+	setbuf(stdout, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef __x86_64__
 	/*
 	 * FIXME: the zero-memslot test fails on aarch64 and s390x because
@@ -400,7 +417,11 @@ int main(int argc, char *argv[])
 
 #ifdef __x86_64__
 	if (argc > 1)
+<<<<<<< HEAD
 		loops = atoi_positive("Number of iterations", argv[1]);
+=======
+		loops = atoi(argv[1]);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		loops = 10;
 

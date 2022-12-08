@@ -18,7 +18,11 @@
 / {
 	model = "Globalscale Marvell ESPRESSOBin Board (eMMC)";
 	compatible = "globalscale,espressobin-emmc", "globalscale,espressobin",
+<<<<<<< HEAD
 		     "marvell,armada3720", "marvell,armada3700";
+=======
+		     "marvell,armada3720", "marvell,armada3710";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &sdhci0 {

@@ -30,7 +30,10 @@ int skl_calc_main_surface_offset(const struct intel_plane_state *plane_state,
 
 bool icl_is_nv12_y_plane(struct drm_i915_private *dev_priv,
 			 enum plane_id plane_id);
+<<<<<<< HEAD
 u8 icl_hdr_plane_mask(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool icl_is_hdr_plane(struct drm_i915_private *dev_priv, enum plane_id plane_id);
 
 #endif

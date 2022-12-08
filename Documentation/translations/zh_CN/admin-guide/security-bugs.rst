@@ -1,6 +1,10 @@
 .. include:: ../disclaimer-zh_CN.rst
 
+<<<<<<< HEAD
 :Original: :doc:`../../../process/security-bugs`
+=======
+:Original: :doc:`../../../admin-guide/security-bugs`
+>>>>>>> b7ba80a49124 (Commit)
 
 :译者:
 

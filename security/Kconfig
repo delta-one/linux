@@ -32,6 +32,14 @@ config SECURITY
 
 	  If you are unsure how to answer this question, answer N.
 
+<<<<<<< HEAD
+=======
+config SECURITY_WRITABLE_HOOKS
+	depends on SECURITY
+	bool
+	default n
+
+>>>>>>> b7ba80a49124 (Commit)
 config SECURITYFS
 	bool "Enable the securityfs filesystem"
 	help
@@ -241,6 +249,7 @@ endchoice
 
 config LSM
 	string "Ordered list of enabled LSMs"
+<<<<<<< HEAD
 	default "landlock,lockdown,yama,loadpin,safesetid,smack,selinux,tomoyo,apparmor,bpf" if DEFAULT_SECURITY_SMACK
 	default "landlock,lockdown,yama,loadpin,safesetid,apparmor,selinux,smack,tomoyo,bpf" if DEFAULT_SECURITY_APPARMOR
 	default "landlock,lockdown,yama,loadpin,safesetid,tomoyo,bpf" if DEFAULT_SECURITY_TOMOYO
@@ -252,6 +261,17 @@ config LSM
 	  LSM_ORDER_FIRST and LSM_ORDER_LAST, which are always enabled
 	  if selected in the kernel configuration, will be ignored.
 	  This can be controlled at boot with the "lsm=" parameter.
+=======
+	default "landlock,lockdown,yama,loadpin,safesetid,integrity,smack,selinux,tomoyo,apparmor,bpf" if DEFAULT_SECURITY_SMACK
+	default "landlock,lockdown,yama,loadpin,safesetid,integrity,apparmor,selinux,smack,tomoyo,bpf" if DEFAULT_SECURITY_APPARMOR
+	default "landlock,lockdown,yama,loadpin,safesetid,integrity,tomoyo,bpf" if DEFAULT_SECURITY_TOMOYO
+	default "landlock,lockdown,yama,loadpin,safesetid,integrity,bpf" if DEFAULT_SECURITY_DAC
+	default "landlock,lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor,bpf"
+	help
+	  A comma-separated list of LSMs, in initialization order.
+	  Any LSMs left off this list will be ignored. This can be
+	  controlled at boot with the "lsm=" parameter.
+>>>>>>> b7ba80a49124 (Commit)
 
 	  If unsure, leave this as the default.
 

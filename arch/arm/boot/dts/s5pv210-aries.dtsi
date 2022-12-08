@@ -135,8 +135,13 @@
 					0xa101 0x0100 0x8100 0x0100 0x0100
 					0x0100>;
 
+<<<<<<< HEAD
 			wlf,ldo1ena-gpios = <&gpf3 4 GPIO_ACTIVE_HIGH>;
 			wlf,ldo2ena-gpios = <&gpf3 4 GPIO_ACTIVE_HIGH>;
+=======
+			wlf,ldo1ena = <&gpf3 4 GPIO_ACTIVE_HIGH>;
+			wlf,ldo2ena = <&gpf3 4 GPIO_ACTIVE_HIGH>;
+>>>>>>> b7ba80a49124 (Commit)
 
 			wlf,lineout1-se;
 			wlf,lineout2-se;
@@ -738,7 +743,11 @@
 		samsung,pin-pud = <S5PV210_PIN_PULL_NONE>;
 	};
 
+<<<<<<< HEAD
 	magnetometer_i2c_pins: yas529-i2c-pins {
+=======
+	magnetometer_i2c_pins: yas529-i2c-pins-pins {
+>>>>>>> b7ba80a49124 (Commit)
 		samsung,pins = "gpj0-0", "gpj0-1";
 		samsung,pin-pud = <S5PV210_PIN_PULL_NONE>;
 		samsung,pin-drv = <S5PV210_PIN_DRV_LV1>;
@@ -788,7 +797,11 @@
 		samsung,pin-drv = <S5PV210_PIN_DRV_LV1>;
 	};
 
+<<<<<<< HEAD
 	pmic_i2c_pins: pmic-i2c-pins {
+=======
+	pmic_i2c_pins: pmic-i2c-pins-pins {
+>>>>>>> b7ba80a49124 (Commit)
 		samsung,pins = "gpj4-0", "gpj4-3";
 		samsung,pin-pud = <S5PV210_PIN_PULL_NONE>;
 		samsung,pin-drv = <S5PV210_PIN_DRV_LV1>;

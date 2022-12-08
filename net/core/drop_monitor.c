@@ -1432,9 +1432,15 @@ static void net_dm_stats_read(struct net_dm_stats *stats)
 		u64 dropped;
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&cpu_stats->syncp);
 			dropped = u64_stats_read(&cpu_stats->dropped);
 		} while (u64_stats_fetch_retry(&cpu_stats->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&cpu_stats->syncp);
+			dropped = u64_stats_read(&cpu_stats->dropped);
+		} while (u64_stats_fetch_retry_irq(&cpu_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		u64_stats_add(&stats->dropped, dropped);
 	}
@@ -1476,9 +1482,15 @@ static void net_dm_hw_stats_read(struct net_dm_stats *stats)
 		u64 dropped;
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&cpu_stats->syncp);
 			dropped = u64_stats_read(&cpu_stats->dropped);
 		} while (u64_stats_fetch_retry(&cpu_stats->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&cpu_stats->syncp);
+			dropped = u64_stats_read(&cpu_stats->dropped);
+		} while (u64_stats_fetch_retry_irq(&cpu_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		u64_stats_add(&stats->dropped, dropped);
 	}
@@ -1620,7 +1632,11 @@ static const struct genl_small_ops dropmon_ops[] = {
 	},
 };
 
+<<<<<<< HEAD
 static int net_dm_nl_pre_doit(const struct genl_split_ops *ops,
+=======
+static int net_dm_nl_pre_doit(const struct genl_ops *ops,
+>>>>>>> b7ba80a49124 (Commit)
 			      struct sk_buff *skb, struct genl_info *info)
 {
 	mutex_lock(&net_dm_mutex);
@@ -1628,7 +1644,11 @@ static int net_dm_nl_pre_doit(const struct genl_split_ops *ops,
 	return 0;
 }
 
+<<<<<<< HEAD
 static void net_dm_nl_post_doit(const struct genl_split_ops *ops,
+=======
+static void net_dm_nl_post_doit(const struct genl_ops *ops,
+>>>>>>> b7ba80a49124 (Commit)
 				struct sk_buff *skb, struct genl_info *info)
 {
 	mutex_unlock(&net_dm_mutex);

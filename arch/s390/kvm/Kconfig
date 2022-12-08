@@ -31,6 +31,10 @@ config KVM
 	select HAVE_KVM_IRQ_ROUTING
 	select HAVE_KVM_INVALID_WAKEUPS
 	select HAVE_KVM_NO_POLL
+<<<<<<< HEAD
+=======
+	select SRCU
+>>>>>>> b7ba80a49124 (Commit)
 	select KVM_VFIO
 	select INTERVAL_TREE
 	select MMU_NOTIFIER

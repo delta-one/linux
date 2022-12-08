@@ -9,7 +9,14 @@ PHONY := __clean
 __clean:
 
 include $(srctree)/scripts/Kbuild.include
+<<<<<<< HEAD
 include $(kbuild-file)
+=======
+
+# The filename Kbuild has precedence over Makefile
+kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
+include $(or $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Makefile)
+>>>>>>> b7ba80a49124 (Commit)
 
 # Figure out what we need to build from the various variables
 # ==========================================================================

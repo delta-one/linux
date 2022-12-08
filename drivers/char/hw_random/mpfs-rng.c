@@ -78,6 +78,10 @@ static int mpfs_rng_probe(struct platform_device *pdev)
 
 	rng_priv->rng.read = mpfs_rng_read;
 	rng_priv->rng.name = pdev->name;
+<<<<<<< HEAD
+=======
+	rng_priv->rng.quality = 1024;
+>>>>>>> b7ba80a49124 (Commit)
 
 	platform_set_drvdata(pdev, rng_priv);
 

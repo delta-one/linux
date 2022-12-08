@@ -93,7 +93,11 @@ static int exfat_sanitize_mode(const struct exfat_sb_info *sbi,
 }
 
 /* resize the file length */
+<<<<<<< HEAD
 int __exfat_truncate(struct inode *inode)
+=======
+int __exfat_truncate(struct inode *inode, loff_t new_size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int num_clusters_new, num_clusters_phys;
 	unsigned int last_clu = EXFAT_FREE_CLUSTER;
@@ -113,7 +117,11 @@ int __exfat_truncate(struct inode *inode)
 
 	exfat_chain_set(&clu, ei->start_clu, num_clusters_phys, ei->flags);
 
+<<<<<<< HEAD
 	if (i_size_read(inode) > 0) {
+=======
+	if (new_size > 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Truncate FAT chain num_clusters after the first cluster
 		 * num_clusters = min(new, phys);
@@ -143,6 +151,11 @@ int __exfat_truncate(struct inode *inode)
 		ei->start_clu = EXFAT_EOF_CLUSTER;
 	}
 
+<<<<<<< HEAD
+=======
+	i_size_write(inode, new_size);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (ei->type == TYPE_FILE)
 		ei->attr |= ATTR_ARCHIVE;
 
@@ -187,7 +200,11 @@ int __exfat_truncate(struct inode *inode)
 	return 0;
 }
 
+<<<<<<< HEAD
 void exfat_truncate(struct inode *inode)
+=======
+void exfat_truncate(struct inode *inode, loff_t size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct super_block *sb = inode->i_sb;
 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
@@ -205,11 +222,20 @@ void exfat_truncate(struct inode *inode)
 		goto write_size;
 	}
 
+<<<<<<< HEAD
 	err = __exfat_truncate(inode);
 	if (err)
 		goto write_size;
 
 	inode->i_blocks = round_up(i_size_read(inode), sbi->cluster_size) >> 9;
+=======
+	err = __exfat_truncate(inode, i_size_read(inode));
+	if (err)
+		goto write_size;
+
+	inode->i_blocks = round_up(i_size_read(inode), sbi->cluster_size) >>
+				inode->i_blkbits;
+>>>>>>> b7ba80a49124 (Commit)
 write_size:
 	aligned_size = i_size_read(inode);
 	if (aligned_size & (blocksize - 1)) {
@@ -225,14 +251,22 @@ write_size:
 	mutex_unlock(&sbi->s_lock);
 }
 
+<<<<<<< HEAD
 int exfat_getattr(struct mnt_idmap *idmap, const struct path *path,
+=======
+int exfat_getattr(struct user_namespace *mnt_uerns, const struct path *path,
+>>>>>>> b7ba80a49124 (Commit)
 		  struct kstat *stat, unsigned int request_mask,
 		  unsigned int query_flags)
 {
 	struct inode *inode = d_backing_inode(path->dentry);
 	struct exfat_inode_info *ei = EXFAT_I(inode);
 
+<<<<<<< HEAD
 	generic_fillattr(&nop_mnt_idmap, inode, stat);
+=======
+	generic_fillattr(&init_user_ns, inode, stat);
+>>>>>>> b7ba80a49124 (Commit)
 	exfat_truncate_atime(&stat->atime);
 	stat->result_mask |= STATX_BTIME;
 	stat->btime.tv_sec = ei->i_crtime.tv_sec;
@@ -241,7 +275,11 @@ int exfat_getattr(struct mnt_idmap *idmap, const struct path *path,
 	return 0;
 }
 
+<<<<<<< HEAD
 int exfat_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+int exfat_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		  struct iattr *attr)
 {
 	struct exfat_sb_info *sbi = EXFAT_SB(dentry->d_sb);
@@ -265,7 +303,11 @@ int exfat_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 				ATTR_TIMES_SET);
 	}
 
+<<<<<<< HEAD
 	error = setattr_prepare(&nop_mnt_idmap, dentry, attr);
+=======
+	error = setattr_prepare(&init_user_ns, dentry, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	attr->ia_valid = ia_valid;
 	if (error)
 		goto out;
@@ -292,7 +334,11 @@ int exfat_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 	if (attr->ia_valid & ATTR_SIZE)
 		inode->i_mtime = inode->i_ctime = current_time(inode);
 
+<<<<<<< HEAD
 	setattr_copy(&nop_mnt_idmap, inode, attr);
+=======
+	setattr_copy(&init_user_ns, inode, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	exfat_truncate_atime(&inode->i_atime);
 
 	if (attr->ia_valid & ATTR_SIZE) {
@@ -307,7 +353,11 @@ int exfat_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 		 * __exfat_write_inode() is called from exfat_truncate(), inode
 		 * is already written by it, so mark_inode_dirty() is unneeded.
 		 */
+<<<<<<< HEAD
 		exfat_truncate(inode);
+=======
+		exfat_truncate(inode, attr->ia_size);
+>>>>>>> b7ba80a49124 (Commit)
 		up_write(&EXFAT_I(inode)->truncate_lock);
 	} else
 		mark_inode_dirty(inode);

@@ -65,7 +65,11 @@ properties:
     maxItems: 1
 
 patternProperties:
+<<<<<<< HEAD
   '^usb@[0-1],0$':
+=======
+  'usb@[0-1],0':
+>>>>>>> b7ba80a49124 (Commit)
     type: object
 
     description:

@@ -7,14 +7,22 @@ char _license[] SEC("license") = "GPL";
 
 unsigned long last_sym_value = 0;
 
+<<<<<<< HEAD
 static inline char to_lower(char c)
+=======
+static inline char tolower(char c)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (c >= 'A' && c <= 'Z')
 		c += ('a' - 'A');
 	return c;
 }
 
+<<<<<<< HEAD
 static inline char to_upper(char c)
+=======
+static inline char toupper(char c)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (c >= 'a' && c <= 'z')
 		c -= ('a' - 'A');
@@ -33,6 +41,10 @@ int dump_ksym(struct bpf_iter__ksym *ctx)
 	__u32 seq_num = ctx->meta->seq_num;
 	unsigned long value;
 	char type;
+<<<<<<< HEAD
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!iter)
 		return 0;
@@ -53,7 +65,11 @@ int dump_ksym(struct bpf_iter__ksym *ctx)
 	type = iter->type;
 
 	if (iter->module_name[0]) {
+<<<<<<< HEAD
 		type = iter->exported ? to_upper(type) : to_lower(type);
+=======
+		type = iter->exported ? toupper(type) : tolower(type);
+>>>>>>> b7ba80a49124 (Commit)
 		BPF_SEQ_PRINTF(seq, "0x%llx %c %s [ %s ] ",
 			       value, type, iter->name, iter->module_name);
 	} else {

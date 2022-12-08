@@ -623,6 +623,7 @@ Even though other protocols and Generic Netlink commands often use
 the same verbs in their message names (``GET``, ``SET``) the concept
 of request types did not find wider adoption.
 
+<<<<<<< HEAD
 Notification echo
 -----------------
 
@@ -674,6 +675,24 @@ without creating it, presumably predating ``GET`` commands.
 ``NLM_F_APPEND`` indicates that if one key can have multiple objects associated
 with it (e.g. multiple next-hop objects for a route) the new object should be
 added to the list rather than replacing the entire list.
+=======
+Message flags
+-------------
+
+The earlier section has already covered the basic request flags
+(``NLM_F_REQUEST``, ``NLM_F_ACK``, ``NLM_F_DUMP``) and the ``NLMSG_ERROR`` /
+``NLMSG_DONE`` flags (``NLM_F_CAPPED``, ``NLM_F_ACK_TLVS``).
+Dump flags were also mentioned (``NLM_F_MULTI``, ``NLM_F_DUMP_INTR``).
+
+Those are the main flags of note, with a small exception (of ``ieee802154``)
+Generic Netlink does not make use of other flags. If the protocol needs
+to communicate special constraints for a request it should use
+an attribute, not the flags in struct nlmsghdr.
+
+Classic Netlink, however, defined various flags for its ``GET``, ``NEW``
+and ``DEL`` requests. Since request types have not been generalized
+the request type specific flags should not be used either.
+>>>>>>> b7ba80a49124 (Commit)
 
 uAPI reference
 ==============

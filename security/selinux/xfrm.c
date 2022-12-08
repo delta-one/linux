@@ -98,12 +98,21 @@ static int selinux_xfrm_alloc_user(struct xfrm_sec_ctx **ctxp,
 	ctx->ctx_len = str_len;
 	memcpy(ctx->ctx_str, &uctx[1], str_len);
 	ctx->ctx_str[str_len] = '\0';
+<<<<<<< HEAD
 	rc = security_context_to_sid(ctx->ctx_str, str_len,
+=======
+	rc = security_context_to_sid(&selinux_state, ctx->ctx_str, str_len,
+>>>>>>> b7ba80a49124 (Commit)
 				     &ctx->ctx_sid, gfp);
 	if (rc)
 		goto err;
 
+<<<<<<< HEAD
 	rc = avc_has_perm(tsec->sid, ctx->ctx_sid,
+=======
+	rc = avc_has_perm(&selinux_state,
+			  tsec->sid, ctx->ctx_sid,
+>>>>>>> b7ba80a49124 (Commit)
 			  SECCLASS_ASSOCIATION, ASSOCIATION__SETCONTEXT, NULL);
 	if (rc)
 		goto err;
@@ -139,7 +148,12 @@ static int selinux_xfrm_delete(struct xfrm_sec_ctx *ctx)
 	if (!ctx)
 		return 0;
 
+<<<<<<< HEAD
 	return avc_has_perm(tsec->sid, ctx->ctx_sid,
+=======
+	return avc_has_perm(&selinux_state,
+			    tsec->sid, ctx->ctx_sid,
+>>>>>>> b7ba80a49124 (Commit)
 			    SECCLASS_ASSOCIATION, ASSOCIATION__SETCONTEXT,
 			    NULL);
 }
@@ -161,7 +175,12 @@ int selinux_xfrm_policy_lookup(struct xfrm_sec_ctx *ctx, u32 fl_secid)
 	if (!selinux_authorizable_ctx(ctx))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	rc = avc_has_perm(fl_secid, ctx->ctx_sid,
+=======
+	rc = avc_has_perm(&selinux_state,
+			  fl_secid, ctx->ctx_sid,
+>>>>>>> b7ba80a49124 (Commit)
 			  SECCLASS_ASSOCIATION, ASSOCIATION__POLMATCH, NULL);
 	return (rc == -EACCES ? -ESRCH : rc);
 }
@@ -202,7 +221,11 @@ int selinux_xfrm_state_pol_flow_match(struct xfrm_state *x,
 	/* We don't need a separate SA Vs. policy polmatch check since the SA
 	 * is now of the same label as the flow and a flow Vs. policy polmatch
 	 * check had already happened in selinux_xfrm_policy_lookup() above. */
+<<<<<<< HEAD
 	return (avc_has_perm(flic_sid, state_sid,
+=======
+	return (avc_has_perm(&selinux_state, flic_sid, state_sid,
+>>>>>>> b7ba80a49124 (Commit)
 			     SECCLASS_ASSOCIATION, ASSOCIATION__SENDTO,
 			     NULL) ? 0 : 1);
 }
@@ -352,7 +375,11 @@ int selinux_xfrm_state_alloc_acquire(struct xfrm_state *x,
 	if (secid == 0)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	rc = security_sid_to_context(secid, &ctx_str,
+=======
+	rc = security_sid_to_context(&selinux_state, secid, &ctx_str,
+>>>>>>> b7ba80a49124 (Commit)
 				     &str_len);
 	if (rc)
 		return rc;
@@ -421,7 +448,12 @@ int selinux_xfrm_sock_rcv_skb(u32 sk_sid, struct sk_buff *skb,
 	/* This check even when there's no association involved is intended,
 	 * according to Trent Jaeger, to make sure a process can't engage in
 	 * non-IPsec communication unless explicitly allowed by policy. */
+<<<<<<< HEAD
 	return avc_has_perm(sk_sid, peer_sid,
+=======
+	return avc_has_perm(&selinux_state,
+			    sk_sid, peer_sid,
+>>>>>>> b7ba80a49124 (Commit)
 			    SECCLASS_ASSOCIATION, ASSOCIATION__RECVFROM, ad);
 }
 
@@ -464,6 +496,10 @@ int selinux_xfrm_postroute_last(u32 sk_sid, struct sk_buff *skb,
 	/* This check even when there's no association involved is intended,
 	 * according to Trent Jaeger, to make sure a process can't engage in
 	 * non-IPsec communication unless explicitly allowed by policy. */
+<<<<<<< HEAD
 	return avc_has_perm(sk_sid, SECINITSID_UNLABELED,
+=======
+	return avc_has_perm(&selinux_state, sk_sid, SECINITSID_UNLABELED,
+>>>>>>> b7ba80a49124 (Commit)
 			    SECCLASS_ASSOCIATION, ASSOCIATION__SENDTO, ad);
 }

@@ -1267,8 +1267,12 @@ batadv_get_vlan_from_info(struct batadv_priv *bat_priv, struct net *net,
  *
  * Return: 0 on success or negative error number in case of failure
  */
+<<<<<<< HEAD
 static int batadv_pre_doit(const struct genl_split_ops *ops,
 			   struct sk_buff *skb,
+=======
+static int batadv_pre_doit(const struct genl_ops *ops, struct sk_buff *skb,
+>>>>>>> b7ba80a49124 (Commit)
 			   struct genl_info *info)
 {
 	struct net *net = genl_info_net(info);
@@ -1333,8 +1337,12 @@ err_put_softif:
  * @skb: Netlink message with request data
  * @info: receiver information
  */
+<<<<<<< HEAD
 static void batadv_post_doit(const struct genl_split_ops *ops,
 			     struct sk_buff *skb,
+=======
+static void batadv_post_doit(const struct genl_ops *ops, struct sk_buff *skb,
+>>>>>>> b7ba80a49124 (Commit)
 			     struct genl_info *info)
 {
 	struct batadv_hard_iface *hard_iface;

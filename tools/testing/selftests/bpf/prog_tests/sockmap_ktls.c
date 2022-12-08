@@ -15,12 +15,25 @@ static int tcp_server(int family)
 	int err, s;
 
 	s = socket(family, SOCK_STREAM, 0);
+<<<<<<< HEAD
 	if (!ASSERT_GE(s, 0, "socket"))
 		return -1;
 
 	err = listen(s, SOMAXCONN);
 	if (!ASSERT_OK(err, "listen"))
 		return -1;
+=======
+	if (CHECK_FAIL(s == -1)) {
+		perror("socket");
+		return -1;
+	}
+
+	err = listen(s, SOMAXCONN);
+	if (CHECK_FAIL(err)) {
+		perror("listen");
+		return -1;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return s;
 }
@@ -44,6 +57,7 @@ static void test_sockmap_ktls_disconnect_after_delete(int family, int map)
 		return;
 
 	err = getsockname(srv, (struct sockaddr *)&addr, &len);
+<<<<<<< HEAD
 	if (!ASSERT_OK(err, "getsockopt"))
 		goto close_srv;
 
@@ -69,6 +83,46 @@ static void test_sockmap_ktls_disconnect_after_delete(int family, int map)
 
 	err = disconnect(cli);
 	ASSERT_OK(err, "disconnect");
+=======
+	if (CHECK_FAIL(err)) {
+		perror("getsockopt");
+		goto close_srv;
+	}
+
+	cli = socket(family, SOCK_STREAM, 0);
+	if (CHECK_FAIL(cli == -1)) {
+		perror("socket");
+		goto close_srv;
+	}
+
+	err = connect(cli, (struct sockaddr *)&addr, len);
+	if (CHECK_FAIL(err)) {
+		perror("connect");
+		goto close_cli;
+	}
+
+	err = bpf_map_update_elem(map, &zero, &cli, 0);
+	if (CHECK_FAIL(err)) {
+		perror("bpf_map_update_elem");
+		goto close_cli;
+	}
+
+	err = setsockopt(cli, IPPROTO_TCP, TCP_ULP, "tls", strlen("tls"));
+	if (CHECK_FAIL(err)) {
+		perror("setsockopt(TCP_ULP)");
+		goto close_cli;
+	}
+
+	err = bpf_map_delete_elem(map, &zero);
+	if (CHECK_FAIL(err)) {
+		perror("bpf_map_delete_elem");
+		goto close_cli;
+	}
+
+	err = disconnect(cli);
+	if (CHECK_FAIL(err))
+		perror("disconnect");
+>>>>>>> b7ba80a49124 (Commit)
 
 close_cli:
 	close(cli);
@@ -151,8 +205,15 @@ static void run_tests(int family, enum bpf_map_type map_type)
 	int map;
 
 	map = bpf_map_create(map_type, NULL, sizeof(int), sizeof(int), 1, NULL);
+<<<<<<< HEAD
 	if (!ASSERT_GE(map, 0, "bpf_map_create"))
 		return;
+=======
+	if (CHECK_FAIL(map < 0)) {
+		perror("bpf_map_create");
+		return;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (test__start_subtest(fmt_test_name("disconnect_after_delete", family, map_type)))
 		test_sockmap_ktls_disconnect_after_delete(family, map);

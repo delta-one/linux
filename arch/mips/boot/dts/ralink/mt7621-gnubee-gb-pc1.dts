@@ -20,6 +20,15 @@
 		bootargs = "console=ttyS0,57600";
 	};
 
+<<<<<<< HEAD
+=======
+	palmbus: palmbus@1e000000 {
+		i2c@900 {
+			status = "okay";
+		};
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	gpio-keys {
 		compatible = "gpio-keys";
 
@@ -33,13 +42,21 @@
 	gpio-leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-power {
+=======
+		power {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "green:power";
 			gpios = <&gpio 6 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "default-on";
 		};
 
+<<<<<<< HEAD
 		led-system {
+=======
+		system {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "green:system";
 			gpios = <&gpio 8 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "disk-activity";
@@ -47,7 +64,11 @@
 	};
 };
 
+<<<<<<< HEAD
 &mmc {
+=======
+&sdhci {
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 
@@ -91,16 +112,33 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
+=======
+&gmac1 {
+	status = "okay";
+	phy-handle = <&ethphy4>;
+};
+
+&mdio {
+	ethphy4: ethernet-phy@4 {
+		reg = <4>;
+	};
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &switch0 {
 	ports {
 		port@0 {
 			status = "okay";
 			label = "ethblack";
 		};
+<<<<<<< HEAD
 
 		port@4 {
 			status = "okay";
 			label = "ethblue";
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };

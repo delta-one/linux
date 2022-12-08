@@ -2,6 +2,7 @@
 #ifndef _ASM_RISCV_HUGETLB_H
 #define _ASM_RISCV_HUGETLB_H
 
+<<<<<<< HEAD
 #include <asm/page.h>
 
 static inline void arch_clear_hugepage_flags(struct page *page)
@@ -43,4 +44,9 @@ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags);
 
 #include <asm-generic/hugetlb.h>
 
+=======
+#include <asm-generic/hugetlb.h>
+#include <asm/page.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_RISCV_HUGETLB_H */

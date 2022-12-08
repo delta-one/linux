@@ -10,7 +10,11 @@
 #include "sc7180-trogdor.dtsi"
 
 / {
+<<<<<<< HEAD
 	avdd_lcd: avdd-lcd-regulator {
+=======
+	avdd_lcd: avdd-lcd {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "avdd_lcd";
 
@@ -22,7 +26,11 @@
 		vin-supply = <&pp5000_a>;
 	};
 
+<<<<<<< HEAD
 	avee_lcd: avee-lcd-regulator {
+=======
+	avee_lcd: avee-lcd {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "avee_lcd";
 
@@ -35,7 +43,11 @@
 	};
 
 	pp1800_ts:
+<<<<<<< HEAD
 	v1p8_mipi: v1p8-mipi-regulator {
+=======
+	v1p8_mipi: v1p8-mipi {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "regulator-fixed";
 		regulator-name = "v1p8_mipi";
 
@@ -222,7 +234,17 @@ pp3300_disp_on: &pp3300_dx_edp {
  */
 
 tp_en: &en_pp3300_dx_edp {
+<<<<<<< HEAD
 	pins = "gpio85";
+=======
+	pinmux {
+		pins = "gpio85";
+	};
+
+	pinconf {
+		pins = "gpio85";
+	};
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* PINCTRL - board-specific pinctrl */
@@ -352,6 +374,7 @@ tp_en: &en_pp3300_dx_edp {
 			  "DP_HOT_PLUG_DET",
 			  "EC_IN_RW_ODL";
 
+<<<<<<< HEAD
 	avdd_lcd_en: avdd-lcd-en-state {
 		pins = "gpio88";
 		function = "gpio";
@@ -378,5 +401,57 @@ tp_en: &en_pp3300_dx_edp {
 		function = "gpio";
 		drive-strength = <2>;
 		bias-disable;
+=======
+	avdd_lcd_en: avdd-lcd-en {
+		pinmux {
+			pins = "gpio88";
+			function = "gpio";
+		};
+
+		pinconf {
+			pins = "gpio88";
+			drive-strength = <2>;
+			bias-disable;
+		};
+	};
+
+	avee_lcd_en: avee-lcd-en {
+		pinmux {
+			pins = "gpio21";
+			function = "gpio";
+		};
+
+		pinconf {
+			pins = "gpio21";
+			drive-strength = <2>;
+			bias-disable;
+		};
+	};
+
+	mipi_1800_en: mipi-1800-en {
+		pinmux {
+			pins = "gpio86";
+			function = "gpio";
+		};
+
+		pinconf {
+			pins = "gpio86";
+			drive-strength = <2>;
+			bias-disable;
+		};
+	};
+
+	vdd_reset_1800: vdd-reset-1800 {
+		pinmux {
+			pins = "gpio87";
+			function = "gpio";
+		};
+
+		pinconf {
+			pins = "gpio87";
+			drive-strength = <2>;
+			bias-disable;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };

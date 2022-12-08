@@ -53,7 +53,11 @@ struct bitfields_only_mixed_types {
  */
 /* ------ END-EXPECTED-OUTPUT ------ */
 struct bitfield_mixed_with_others {
+<<<<<<< HEAD
 	char: 4; /* char is enough as a backing field */
+=======
+	long: 4; /* char is enough as a backing field */
+>>>>>>> b7ba80a49124 (Commit)
 	int a: 4;
 	/* 8-bit implicit padding */
 	short b; /* combined with previous bitfield */

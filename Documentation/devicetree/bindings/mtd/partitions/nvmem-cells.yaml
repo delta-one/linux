@@ -17,7 +17,10 @@ maintainers:
   - Ansuel Smith <ansuelsmth@gmail.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: /schemas/mtd/partitions/partition.yaml#
+=======
+>>>>>>> b7ba80a49124 (Commit)
   - $ref: /schemas/nvmem/nvmem.yaml#
 
 properties:
@@ -27,7 +30,11 @@ properties:
 required:
   - compatible
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: true
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |
@@ -85,6 +92,10 @@ examples:
             compatible = "nvmem-cells";
             label = "calibration";
             reg = <0xf00000 0x100000>;
+<<<<<<< HEAD
+=======
+            ranges = <0 0xf00000 0x100000>;
+>>>>>>> b7ba80a49124 (Commit)
             #address-cells = <1>;
             #size-cells = <1>;
 

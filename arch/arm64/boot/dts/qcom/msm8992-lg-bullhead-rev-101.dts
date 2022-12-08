@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 /*
  * Copyright (c) Jean Thomas <virgule@jeanthomas.me>
+=======
+/* Copyright (c) Jean Thomas <virgule@jeanthomas.me>
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 /dts-v1/;

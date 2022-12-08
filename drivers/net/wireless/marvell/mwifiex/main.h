@@ -10,7 +10,10 @@
 
 #include <linux/completion.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/sched.h>
 #include <linux/semaphore.h>

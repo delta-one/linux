@@ -12,7 +12,12 @@
 
 #include "src4xxx.h"
 
+<<<<<<< HEAD
 static int src4xxx_i2c_probe(struct i2c_client *i2c)
+=======
+static int src4xxx_i2c_probe(struct i2c_client *i2c,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return src4xxx_probe(&i2c->dev,
 		devm_regmap_init_i2c(i2c, &src4xxx_regmap_config), NULL);
@@ -24,7 +29,11 @@ static const struct i2c_device_id src4xxx_i2c_ids[] = {
 };
 MODULE_DEVICE_TABLE(i2c, src4xxx_i2c_ids);
 
+<<<<<<< HEAD
 static const struct of_device_id src4xxx_of_match[] __maybe_unused = {
+=======
+static const struct of_device_id src4xxx_of_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "ti,src4392", },
 	{ }
 };
@@ -36,7 +45,11 @@ static struct i2c_driver src4xxx_i2c_driver = {
 		.name = "src4xxx",
 		.of_match_table = of_match_ptr(src4xxx_of_match),
 	},
+<<<<<<< HEAD
 	.probe_new = src4xxx_i2c_probe,
+=======
+	.probe = src4xxx_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = src4xxx_i2c_ids,
 };
 module_i2c_driver(src4xxx_i2c_driver);

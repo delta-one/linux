@@ -3,6 +3,7 @@
  * Copyright (C) 2012 Regents of the University of California
  */
 
+<<<<<<< HEAD
 #include <linux/cpu.h>
 #include <linux/init.h>
 #include <linux/seq_file.h>
@@ -10,6 +11,12 @@
 #include <asm/csr.h>
 #include <asm/hwcap.h>
 #include <asm/sbi.h>
+=======
+#include <linux/init.h>
+#include <linux/seq_file.h>
+#include <linux/of.h>
+#include <asm/hwcap.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/smp.h>
 #include <asm/pgtable.h>
 
@@ -70,6 +77,7 @@ int riscv_of_parent_hartid(struct device_node *node, unsigned long *hartid)
 	return -1;
 }
 
+<<<<<<< HEAD
 struct riscv_cpuinfo {
 	unsigned long mvendorid;
 	unsigned long marchid;
@@ -139,11 +147,15 @@ arch_initcall(riscv_cpuinfo_init);
 
 #ifdef CONFIG_PROC_FS
 
+=======
+#ifdef CONFIG_PROC_FS
+>>>>>>> b7ba80a49124 (Commit)
 #define __RISCV_ISA_EXT_DATA(UPROP, EXTID) \
 	{							\
 		.uprop = #UPROP,				\
 		.isa_ext_id = EXTID,				\
 	}
+<<<<<<< HEAD
 
 /*
  * The canonical order of ISA extension names in the ISA string is defined in
@@ -194,6 +206,31 @@ static struct riscv_isa_ext_data isa_ext_arr[] = {
 	__RISCV_ISA_EXT_DATA(svinval, RISCV_ISA_EXT_SVINVAL),
 	__RISCV_ISA_EXT_DATA(svnapot, RISCV_ISA_EXT_SVNAPOT),
 	__RISCV_ISA_EXT_DATA(svpbmt, RISCV_ISA_EXT_SVPBMT),
+=======
+/*
+ * Here are the ordering rules of extension naming defined by RISC-V
+ * specification :
+ * 1. All extensions should be separated from other multi-letter extensions
+ *    by an underscore.
+ * 2. The first letter following the 'Z' conventionally indicates the most
+ *    closely related alphabetical extension category, IMAFDQLCBKJTPVH.
+ *    If multiple 'Z' extensions are named, they should be ordered first
+ *    by category, then alphabetically within a category.
+ * 3. Standard supervisor-level extensions (starts with 'S') should be
+ *    listed after standard unprivileged extensions.  If multiple
+ *    supervisor-level extensions are listed, they should be ordered
+ *    alphabetically.
+ * 4. Non-standard extensions (starts with 'X') must be listed after all
+ *    standard extensions. They must be separated from other multi-letter
+ *    extensions by an underscore.
+ */
+static struct riscv_isa_ext_data isa_ext_arr[] = {
+	__RISCV_ISA_EXT_DATA(sscofpmf, RISCV_ISA_EXT_SSCOFPMF),
+	__RISCV_ISA_EXT_DATA(svpbmt, RISCV_ISA_EXT_SVPBMT),
+	__RISCV_ISA_EXT_DATA(zicbom, RISCV_ISA_EXT_ZICBOM),
+	__RISCV_ISA_EXT_DATA(zihintpause, RISCV_ISA_EXT_ZIHINTPAUSE),
+	__RISCV_ISA_EXT_DATA(sstc, RISCV_ISA_EXT_SSTC),
+>>>>>>> b7ba80a49124 (Commit)
 	__RISCV_ISA_EXT_DATA("", RISCV_ISA_EXT_MAX),
 };
 
@@ -263,9 +300,12 @@ static void print_mmu(struct seq_file *f)
 
 static void *c_start(struct seq_file *m, loff_t *pos)
 {
+<<<<<<< HEAD
 	if (*pos == nr_cpu_ids)
 		return NULL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	*pos = cpumask_next(*pos - 1, cpu_online_mask);
 	if ((*pos) < nr_cpu_ids)
 		return (void *)(uintptr_t)(1 + *pos);
@@ -286,7 +326,10 @@ static int c_show(struct seq_file *m, void *v)
 {
 	unsigned long cpu_id = (unsigned long)v - 1;
 	struct device_node *node = of_get_cpu_node(cpu_id, NULL);
+<<<<<<< HEAD
 	struct riscv_cpuinfo *ci = per_cpu_ptr(&riscv_cpuinfo, cpu_id);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const char *compat, *isa;
 
 	seq_printf(m, "processor\t: %lu\n", cpu_id);
@@ -297,9 +340,12 @@ static int c_show(struct seq_file *m, void *v)
 	if (!of_property_read_string(node, "compatible", &compat)
 	    && strcmp(compat, "riscv"))
 		seq_printf(m, "uarch\t\t: %s\n", compat);
+<<<<<<< HEAD
 	seq_printf(m, "mvendorid\t: 0x%lx\n", ci->mvendorid);
 	seq_printf(m, "marchid\t\t: 0x%lx\n", ci->marchid);
 	seq_printf(m, "mimpid\t\t: 0x%lx\n", ci->mimpid);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	seq_puts(m, "\n");
 	of_node_put(node);
 

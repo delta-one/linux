@@ -14,6 +14,10 @@
 
 #include <linux/delay.h>
 #include <linux/gpio.h>
+<<<<<<< HEAD
+=======
+#include <linux/i2c.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/of_device.h>
 #include <linux/of_gpio.h>
@@ -1285,10 +1289,15 @@ dt_parse_end:
 static int rk808_regulator_probe(struct platform_device *pdev)
 {
 	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
+<<<<<<< HEAD
+=======
+	struct i2c_client *client = rk808->i2c;
+>>>>>>> b7ba80a49124 (Commit)
 	struct regulator_config config = {};
 	struct regulator_dev *rk808_rdev;
 	struct rk808_regulator_data *pdata;
 	const struct regulator_desc *regulators;
+<<<<<<< HEAD
 	struct regmap *regmap;
 	int ret, i, nregulators;
 
@@ -1296,12 +1305,21 @@ static int rk808_regulator_probe(struct platform_device *pdev)
 	if (!regmap)
 		return -ENODEV;
 
+=======
+	int ret, i, nregulators;
+
+>>>>>>> b7ba80a49124 (Commit)
 	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
 	if (!pdata)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	ret = rk808_regulator_dt_parse_pdata(&pdev->dev, pdev->dev.parent,
 					     regmap, pdata);
+=======
+	ret = rk808_regulator_dt_parse_pdata(&pdev->dev, &client->dev,
+					     rk808->regmap, pdata);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -1329,23 +1347,41 @@ static int rk808_regulator_probe(struct platform_device *pdev)
 		nregulators = RK818_NUM_REGULATORS;
 		break;
 	default:
+<<<<<<< HEAD
 		dev_err(&pdev->dev, "unsupported RK8XX ID %lu\n",
+=======
+		dev_err(&client->dev, "unsupported RK8XX ID %lu\n",
+>>>>>>> b7ba80a49124 (Commit)
 			rk808->variant);
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	config.dev = &pdev->dev;
 	config.dev->of_node = pdev->dev.parent->of_node;
 	config.driver_data = pdata;
 	config.regmap = regmap;
+=======
+	config.dev = &client->dev;
+	config.driver_data = pdata;
+	config.regmap = rk808->regmap;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Instantiate the regulators */
 	for (i = 0; i < nregulators; i++) {
 		rk808_rdev = devm_regulator_register(&pdev->dev,
 						     &regulators[i], &config);
+<<<<<<< HEAD
 		if (IS_ERR(rk808_rdev))
 			return dev_err_probe(&pdev->dev, PTR_ERR(rk808_rdev),
 					     "failed to register %d regulator\n", i);
+=======
+		if (IS_ERR(rk808_rdev)) {
+			dev_err(&client->dev,
+				"failed to register %d regulator\n", i);
+			return PTR_ERR(rk808_rdev);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -1354,8 +1390,12 @@ static int rk808_regulator_probe(struct platform_device *pdev)
 static struct platform_driver rk808_regulator_driver = {
 	.probe = rk808_regulator_probe,
 	.driver = {
+<<<<<<< HEAD
 		.name = "rk808-regulator",
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+		.name = "rk808-regulator"
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

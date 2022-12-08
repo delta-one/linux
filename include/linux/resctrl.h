@@ -15,9 +15,12 @@ int proc_resctrl_show(struct seq_file *m,
 
 #endif
 
+<<<<<<< HEAD
 /* max value for struct rdt_domain's mbps_val */
 #define MBA_MAX_MBPS   U32_MAX
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * enum resctrl_conf_type - The type of configuration.
  * @CDP_NONE:	No prioritisation, both code and data are controlled or monitored.
@@ -32,6 +35,7 @@ enum resctrl_conf_type {
 
 #define CDP_NUM_TYPES	(CDP_DATA + 1)
 
+<<<<<<< HEAD
 /*
  * Event IDs, the values match those used to program IA32_QM_EVTSEL before
  * reading IA32_QM_CTR on RDT systems.
@@ -42,6 +46,8 @@ enum resctrl_event_id {
 	QOS_L3_MBM_LOCAL_EVENT_ID	= 0x03,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct resctrl_staged_config - parsed configuration to be applied
  * @new_ctrl:		new ctrl value to be loaded
@@ -66,9 +72,12 @@ struct resctrl_staged_config {
  * @cqm_work_cpu:	worker CPU for CQM h/w counters
  * @plr:		pseudo-locked region (if any) associated with domain
  * @staged_config:	parsed configuration to be applied
+<<<<<<< HEAD
  * @mbps_val:		When mba_sc is enabled, this holds the array of user
  *			specified control values for mba_sc in MBps, indexed
  *			by closid
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct rdt_domain {
 	struct list_head		list;
@@ -83,18 +92,29 @@ struct rdt_domain {
 	int				cqm_work_cpu;
 	struct pseudo_lock_region	*plr;
 	struct resctrl_staged_config	staged_config[CDP_NUM_TYPES];
+<<<<<<< HEAD
 	u32				*mbps_val;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
  * struct resctrl_cache - Cache allocation related data
  * @cbm_len:		Length of the cache bit mask
+<<<<<<< HEAD
  * @min_cbm_bits:	Minimum number of consecutive bits to be set.
  *			The value 0 means the architecture can support
  *			zero CBM.
  * @shareable_bits:	Bitmask of shareable resource with other
  *			executing entities
  * @arch_has_sparse_bitmaps:	True if a bitmap like f00f is valid.
+=======
+ * @min_cbm_bits:	Minimum number of consecutive bits to be set
+ * @shareable_bits:	Bitmask of shareable resource with other
+ *			executing entities
+ * @arch_has_sparse_bitmaps:	True if a bitmap like f00f is valid.
+ * @arch_has_empty_bitmaps:	True if the '0' bitmap is valid.
+>>>>>>> b7ba80a49124 (Commit)
  * @arch_has_per_cpu_cfg:	True if QOS_CFG register for this cache
  *				level has CPU scope.
  */
@@ -103,6 +123,10 @@ struct resctrl_cache {
 	unsigned int	min_cbm_bits;
 	unsigned int	shareable_bits;
 	bool		arch_has_sparse_bitmaps;
+<<<<<<< HEAD
+=======
+	bool		arch_has_empty_bitmaps;
+>>>>>>> b7ba80a49124 (Commit)
 	bool		arch_has_per_cpu_cfg;
 };
 
@@ -147,6 +171,11 @@ struct resctrl_schema;
 /**
  * struct rdt_resource - attributes of a resctrl resource
  * @rid:		The index of the resource
+<<<<<<< HEAD
+=======
+ * @alloc_enabled:	Is allocation enabled on this machine
+ * @mon_enabled:	Is monitoring enabled for this feature
+>>>>>>> b7ba80a49124 (Commit)
  * @alloc_capable:	Is allocation available on this machine
  * @mon_capable:	Is monitor feature available on this machine
  * @num_rmid:		Number of RMIDs available
@@ -165,6 +194,11 @@ struct resctrl_schema;
  */
 struct rdt_resource {
 	int			rid;
+<<<<<<< HEAD
+=======
+	bool			alloc_enabled;
+	bool			mon_enabled;
+>>>>>>> b7ba80a49124 (Commit)
 	bool			alloc_capable;
 	bool			mon_capable;
 	int			num_rmid;
@@ -207,6 +241,7 @@ struct resctrl_schema {
 /* The number of closid supported by this resource regardless of CDP */
 u32 resctrl_arch_get_num_closid(struct rdt_resource *r);
 int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid);
+<<<<<<< HEAD
 
 /*
  * Update the ctrl_val and apply this config right now.
@@ -263,5 +298,9 @@ void resctrl_arch_reset_rmid_all(struct rdt_resource *r, struct rdt_domain *d);
 
 extern unsigned int resctrl_rmid_realloc_threshold;
 extern unsigned int resctrl_rmid_realloc_limit;
+=======
+u32 resctrl_arch_get_config(struct rdt_resource *r, struct rdt_domain *d,
+			    u32 closid, enum resctrl_conf_type type);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _RESCTRL_H */

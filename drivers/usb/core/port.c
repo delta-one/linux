@@ -7,7 +7,10 @@
  * Author: Lan Tianyu <tianyu.lan@intel.com>
  */
 
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/pm_qos.h>
 #include <linux/component.h>
@@ -18,6 +21,7 @@ static int usb_port_block_power_off;
 
 static const struct attribute_group *port_dev_group[];
 
+<<<<<<< HEAD
 static ssize_t early_stop_show(struct device *dev,
 			    struct device_attribute *attr, char *buf)
 {
@@ -44,6 +48,8 @@ static ssize_t early_stop_store(struct device *dev, struct device_attribute *att
 }
 static DEVICE_ATTR_RW(early_stop);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t disable_show(struct device *dev,
 			      struct device_attribute *attr, char *buf)
 {
@@ -90,7 +96,11 @@ static ssize_t disable_store(struct device *dev, struct device_attribute *attr,
 	bool disabled;
 	int rc;
 
+<<<<<<< HEAD
 	rc = kstrtobool(buf, &disabled);
+=======
+	rc = strtobool(buf, &disabled);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 
@@ -263,7 +273,10 @@ static struct attribute *port_dev_attrs[] = {
 	&dev_attr_quirks.attr,
 	&dev_attr_over_current_count.attr,
 	&dev_attr_disable.attr,
+<<<<<<< HEAD
 	&dev_attr_early_stop.attr,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	NULL,
 };
 

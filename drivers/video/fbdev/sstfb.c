@@ -1503,9 +1503,12 @@ static int sstfb_init(void)
 {
 	char *option = NULL;
 
+<<<<<<< HEAD
 	if (fb_modesetting_disabled("sstfb"))
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (fb_get_options("sstfb", &option))
 		return -ENODEV;
 	sstfb_setup(option);

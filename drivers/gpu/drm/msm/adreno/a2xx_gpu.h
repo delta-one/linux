@@ -15,7 +15,10 @@
 struct a2xx_gpu {
 	struct adreno_gpu base;
 	bool pm_enabled;
+<<<<<<< HEAD
 	bool protection_disabled;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 #define to_a2xx_gpu(x) container_of(x, struct a2xx_gpu, base)
 

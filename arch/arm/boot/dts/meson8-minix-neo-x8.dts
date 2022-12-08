@@ -27,7 +27,11 @@
 	gpio-leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-blue {
+=======
+		blue {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "x8:blue:power";
 			gpios = <&gpio_ao GPIO_TEST_N GPIO_ACTIVE_HIGH>;
 		};

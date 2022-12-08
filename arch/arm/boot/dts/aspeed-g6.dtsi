@@ -36,10 +36,13 @@
 		serial4 = &uart5;
 		serial5 = &vuart1;
 		serial6 = &vuart2;
+<<<<<<< HEAD
 		mdio0 = &mdio0;
 		mdio1 = &mdio1;
 		mdio2 = &mdio2;
 		mdio3 = &mdio3;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 
@@ -98,11 +101,14 @@
 			    <0x40466000 0x2000>;
 			};
 
+<<<<<<< HEAD
 		ahbc: bus@1e600000 {
 			compatible = "aspeed,ast2600-ahbc", "syscon";
 			reg = <0x1e600000 0x100>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		fmc: spi@1e620000 {
 			reg = <0x1e620000 0xc4>, <0x20000000 0x10000000>;
 			#address-cells = <1>;
@@ -436,6 +442,7 @@
 				reg = <0x1e6f2000 0x1000>;
 			};
 
+<<<<<<< HEAD
 			acry: crypto@1e6fa000 {
 				compatible = "aspeed,ast2600-acry";
 				reg = <0x1e6fa000 0x400>, <0x1e710000 0x1800>;
@@ -444,6 +451,8 @@
 				aspeed,ahbc = <&ahbc>;
 			};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			video: video@1e700000 {
 				compatible = "aspeed,ast2600-video-engine";
 				reg = <0x1e700000 0x1000>;
@@ -781,6 +790,7 @@
 				status = "disabled";
 			};
 
+<<<<<<< HEAD
 			uart6: serial@1e790000 {
 				compatible = "ns16550a";
 				reg = <0x1e790000 0x20>;
@@ -837,6 +847,8 @@
 				status = "disabled";
 			};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			i2c: bus@1e78a000 {
 				compatible = "simple-bus";
 				#address-cells = <1>;

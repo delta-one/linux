@@ -24,6 +24,7 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
 	extcon_usbc_det: usbc-det {
 		compatible = "linux,extcon-usb-gpio";
 		id-gpio = <&gpio7 12 GPIO_ACTIVE_HIGH>; /* SODIMM 137 / USBC_DET */
@@ -31,14 +32,22 @@
 		pinctrl-0 = <&pinctrl_usbc_det>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gpio-keys {
 		compatible = "gpio-keys";
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_gpio_keys>;
 
+<<<<<<< HEAD
 		key-wakeup {
 			debounce-interval = <10>;
 			gpios = <&gpio2 22 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>; /* SODIMM 45 */
+=======
+		wakeup {
+			debounce-interval = <10>;
+			gpios = <&gpio2 22 GPIO_ACTIVE_HIGH>; /* SODIMM 45 */
+>>>>>>> b7ba80a49124 (Commit)
 			label = "Wake-Up";
 			linux,code = <KEY_WAKEUP>;
 			wakeup-source;
@@ -112,7 +121,11 @@
 
 	reg_usb_host_vbus: regulator-usb-host-vbus {
 		compatible = "regulator-fixed";
+<<<<<<< HEAD
 		gpio = <&gpio3 31 GPIO_ACTIVE_LOW>; /* SODIMM 129 / USBH_PEN */
+=======
+		gpio = <&gpio3 31 GPIO_ACTIVE_HIGH>; /* USBH_PEN */
+>>>>>>> b7ba80a49124 (Commit)
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_regulator_usbh_pwr>;
 		regulator-max-microvolt = <5000000>;
@@ -677,6 +690,7 @@
 	status = "disabled";
 };
 
+<<<<<<< HEAD
 /* Colibri USBH */
 &usbh1 {
 	vbus-supply = <&reg_usb_host_vbus>;
@@ -686,6 +700,11 @@
 &usbotg {
 	dr_mode = "otg";
 	extcon = <0>, <&extcon_usbc_det>;
+=======
+&usbotg {
+	disable-over-current;
+	dr_mode = "peripheral";
+>>>>>>> b7ba80a49124 (Commit)
 	status = "disabled";
 };
 
@@ -999,7 +1018,11 @@
 
 	pinctrl_regulator_usbh_pwr: gpioregusbhpwrgrp {
 		fsl,pins = <
+<<<<<<< HEAD
 			/* SODIMM 129 / USBH_PEN */
+=======
+			/* USBH_EN */
+>>>>>>> b7ba80a49124 (Commit)
 			MX6QDL_PAD_EIM_D31__GPIO3_IO31	0x0f058
 		>;
 	};
@@ -1068,7 +1091,11 @@
 
 	pinctrl_usbc_det: usbcdetgrp {
 		fsl,pins = <
+<<<<<<< HEAD
 			/* SODIMM 137 / USBC_DET */
+=======
+			/* USBC_DET */
+>>>>>>> b7ba80a49124 (Commit)
 			MX6QDL_PAD_GPIO_17__GPIO7_IO12		0x1b0b0
 			/* USBC_DET_OVERWRITE */
 			MX6QDL_PAD_RGMII_RXC__GPIO6_IO30	0x0f058

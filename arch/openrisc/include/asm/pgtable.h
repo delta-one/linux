@@ -154,9 +154,12 @@ extern void paging_init(void);
 #define _KERNPG_TABLE \
 	(_PAGE_BASE | _PAGE_SRE | _PAGE_SWE | _PAGE_ACCESSED | _PAGE_DIRTY)
 
+<<<<<<< HEAD
 /* We borrow bit 11 to store the exclusive marker in swap PTEs. */
 #define _PAGE_SWP_EXCLUSIVE	_PAGE_U_SHARED
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PAGE_NONE       __pgprot(_PAGE_ALL)
 #define PAGE_READONLY   __pgprot(_PAGE_ALL | _PAGE_URE | _PAGE_SRE)
 #define PAGE_READONLY_X __pgprot(_PAGE_ALL | _PAGE_URE | _PAGE_SRE | _PAGE_EXEC)
@@ -250,7 +253,11 @@ static inline pte_t pte_mkold(pte_t pte)
 	return pte;
 }
 
+<<<<<<< HEAD
 static inline pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
+=======
+static inline pte_t pte_mkwrite(pte_t pte)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pte_val(pte) |= _PAGE_WRITE;
 	return pte;
@@ -388,6 +395,7 @@ static inline void update_mmu_cache(struct vm_area_struct *vma,
 
 /* __PHX__ FIXME, SWAP, this probably doesn't work */
 
+<<<<<<< HEAD
 /*
  * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
  * are !pte_none() && !pte_present().
@@ -424,6 +432,19 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
 	pte_val(pte) &= ~_PAGE_SWP_EXCLUSIVE;
 	return pte;
 }
+=======
+/* Encode and de-code a swap entry (must be !pte_none(e) && !pte_present(e)) */
+/* Since the PAGE_PRESENT bit is bit 4, we can use the bits above */
+
+#define __swp_type(x)			(((x).val >> 5) & 0x7f)
+#define __swp_offset(x)			((x).val >> 12)
+#define __swp_entry(type, offset) \
+	((swp_entry_t) { ((type) << 5) | ((offset) << 12) })
+#define __pte_to_swp_entry(pte)		((swp_entry_t) { pte_val(pte) })
+#define __swp_entry_to_pte(x)		((pte_t) { (x).val })
+
+#define kern_addr_valid(addr)           (1)
+>>>>>>> b7ba80a49124 (Commit)
 
 typedef pte_t *pte_addr_t;
 

@@ -2,6 +2,7 @@
 #include <linux/hugetlb.h>
 #include <linux/err.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_RISCV_ISA_SVNAPOT
 pte_t *huge_pte_alloc(struct mm_struct *mm,
 		      struct vm_area_struct *vma,
@@ -301,6 +302,8 @@ static __init bool is_napot_size(unsigned long size)
 
 #endif /*CONFIG_RISCV_ISA_SVNAPOT*/
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int pud_huge(pud_t pud)
 {
 	return pud_leaf(pud);
@@ -317,8 +320,11 @@ bool __init arch_hugetlb_valid_size(unsigned long size)
 		return true;
 	else if (IS_ENABLED(CONFIG_64BIT) && size == PUD_SIZE)
 		return true;
+<<<<<<< HEAD
 	else if (is_napot_size(size))
 		return true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		return false;
 }

@@ -3012,8 +3012,11 @@
 #define PCI_DEVICE_ID_INTEL_VMD_9A0B	0x9a0b
 #define PCI_DEVICE_ID_INTEL_S21152BB	0xb152
 
+<<<<<<< HEAD
 #define PCI_VENDOR_ID_WANGXUN		0x8088
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PCI_VENDOR_ID_SCALEMP		0x8686
 #define PCI_DEVICE_ID_SCALEMP_VSMP_CTL	0x1010
 
@@ -3094,8 +3097,11 @@
 
 #define PCI_VENDOR_ID_3COM_2		0xa727
 
+<<<<<<< HEAD
 #define PCI_VENDOR_ID_SOLIDRUN		0xd063
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PCI_VENDOR_ID_DIGIUM		0xd161
 #define PCI_DEVICE_ID_DIGIUM_HFC4S	0xb410
 

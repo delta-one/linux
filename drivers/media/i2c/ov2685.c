@@ -17,7 +17,10 @@
 #include <media/media-entity.h>
 #include <media/v4l2-async.h>
 #include <media/v4l2-ctrls.h>
+<<<<<<< HEAD
 #include <media/v4l2-fwnode.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <media/v4l2-subdev.h>
 
 #define CHIP_ID				0x2685
@@ -56,9 +59,12 @@
 #define OV2685_REG_VALUE_16BIT		2
 #define OV2685_REG_VALUE_24BIT		3
 
+<<<<<<< HEAD
 #define OV2685_NATIVE_WIDTH		1616
 #define OV2685_NATIVE_HEIGHT		1216
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define OV2685_LANES			1
 #define OV2685_BITS_PER_SAMPLE		10
 
@@ -81,7 +87,10 @@ struct ov2685_mode {
 	u32 exp_def;
 	u32 hts_def;
 	u32 vts_def;
+<<<<<<< HEAD
 	const struct v4l2_rect *analog_crop;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const struct regval *reg_list;
 };
 
@@ -235,6 +244,7 @@ static const int ov2685_test_pattern_val[] = {
 	OV2685_TEST_PATTERN_COLOR_SQUARE,
 };
 
+<<<<<<< HEAD
 static const struct v4l2_rect ov2685_analog_crop = {
 	.left	= 8,
 	.top	= 8,
@@ -242,6 +252,8 @@ static const struct v4l2_rect ov2685_analog_crop = {
 	.height	= 1200,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct ov2685_mode supported_modes[] = {
 	{
 		.width = 1600,
@@ -249,7 +261,10 @@ static const struct ov2685_mode supported_modes[] = {
 		.exp_def = 0x04ee,
 		.hts_def = 0x06a4,
 		.vts_def = 0x050e,
+<<<<<<< HEAD
 		.analog_crop = &ov2685_analog_crop,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.reg_list = ov2685_1600x1200_regs,
 	},
 };
@@ -396,6 +411,7 @@ static int ov2685_enum_frame_sizes(struct v4l2_subdev *sd,
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct v4l2_rect *
 __ov2685_get_pad_crop(struct ov2685 *ov2685,
 		      struct v4l2_subdev_state *state, unsigned int pad,
@@ -443,6 +459,8 @@ static int ov2685_get_selection(struct v4l2_subdev *sd,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Calculate the delay in us by clock rate and clock cycles */
 static inline u32 ov2685_cal_delay(u32 cycles)
 {
@@ -479,10 +497,15 @@ static int __ov2685_power_on(struct ov2685 *ov2685)
 	 * writing register before .s_stream() as a workaround
 	 */
 	ret = ov2685_write_array(ov2685->client, ov2685->cur_mode->reg_list);
+<<<<<<< HEAD
 	if (ret) {
 		dev_err(dev, "Failed to set regs for power on\n");
 		goto disable_supplies;
 	}
+=======
+	if (ret)
+		goto disable_supplies;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
@@ -651,8 +674,11 @@ static const struct v4l2_subdev_pad_ops ov2685_pad_ops = {
 	.enum_frame_size = ov2685_enum_frame_sizes,
 	.get_fmt = ov2685_get_fmt,
 	.set_fmt = ov2685_set_fmt,
+<<<<<<< HEAD
 	.get_selection = ov2685_get_selection,
 	.set_selection = ov2685_get_selection,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct v4l2_subdev_ops ov2685_subdev_ops = {
@@ -675,14 +701,21 @@ static int ov2685_initialize_controls(struct ov2685 *ov2685)
 	const struct ov2685_mode *mode;
 	struct v4l2_ctrl_handler *handler;
 	struct v4l2_ctrl *ctrl;
+<<<<<<< HEAD
 	struct v4l2_fwnode_device_properties props;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 exposure_max;
 	u32 pixel_rate, h_blank;
 	int ret;
 
 	handler = &ov2685->ctrl_handler;
 	mode = ov2685->cur_mode;
+<<<<<<< HEAD
 	ret = v4l2_ctrl_handler_init(handler, 10);
+=======
+	ret = v4l2_ctrl_handler_init(handler, 8);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 	handler->lock = &ov2685->mutex;
@@ -724,6 +757,7 @@ static int ov2685_initialize_controls(struct ov2685 *ov2685)
 				ARRAY_SIZE(ov2685_test_pattern_menu) - 1,
 				0, 0, ov2685_test_pattern_menu);
 
+<<<<<<< HEAD
 	/* set properties from fwnode (e.g. rotation, orientation) */
 	ret = v4l2_fwnode_device_parse(&ov2685->client->dev, &props);
 	if (ret)
@@ -733,6 +767,8 @@ static int ov2685_initialize_controls(struct ov2685 *ov2685)
 	if (ret)
 		goto err_free_handler;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (handler->error) {
 		ret = handler->error;
 		dev_err(&ov2685->client->dev,
@@ -781,7 +817,12 @@ static int ov2685_configure_regulators(struct ov2685 *ov2685)
 				       ov2685->supplies);
 }
 
+<<<<<<< HEAD
 static int ov2685_probe(struct i2c_client *client)
+=======
+static int ov2685_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &client->dev;
 	struct ov2685 *ov2685;
@@ -903,7 +944,11 @@ static struct i2c_driver ov2685_i2c_driver = {
 		.pm = &ov2685_pm_ops,
 		.of_match_table = of_match_ptr(ov2685_of_match),
 	},
+<<<<<<< HEAD
 	.probe_new	= &ov2685_probe,
+=======
+	.probe		= &ov2685_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= &ov2685_remove,
 };
 

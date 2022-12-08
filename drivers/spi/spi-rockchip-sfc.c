@@ -346,7 +346,11 @@ static int rockchip_sfc_xfer_setup(struct rockchip_sfc *sfc,
 
 	/* set the Controller */
 	ctrl |= SFC_CTRL_PHASE_SEL_NEGETIVE;
+<<<<<<< HEAD
 	cmd |= spi_get_chipselect(mem->spi, 0) << SFC_CMD_CS_SHIFT;
+=======
+	cmd |= mem->spi->chip_select << SFC_CMD_CS_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_dbg(sfc->dev, "sfc addr.nbytes=%x(x%d) dummy.nbytes=%x(x%d)\n",
 		op->addr.nbytes, op->addr.buswidth,
@@ -656,7 +660,11 @@ err_hclk:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void rockchip_sfc_remove(struct platform_device *pdev)
+=======
+static int rockchip_sfc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct rockchip_sfc *sfc = platform_get_drvdata(pdev);
@@ -665,6 +673,11 @@ static void rockchip_sfc_remove(struct platform_device *pdev)
 
 	clk_disable_unprepare(sfc->clk);
 	clk_disable_unprepare(sfc->hclk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id rockchip_sfc_dt_ids[] = {
@@ -679,7 +692,11 @@ static struct platform_driver rockchip_sfc_driver = {
 		.of_match_table = rockchip_sfc_dt_ids,
 	},
 	.probe	= rockchip_sfc_probe,
+<<<<<<< HEAD
 	.remove_new = rockchip_sfc_remove,
+=======
+	.remove	= rockchip_sfc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(rockchip_sfc_driver);
 

@@ -582,10 +582,43 @@ static int skl_tplg_unload_pipe_modules(struct skl_dev *skl,
 	return ret;
 }
 
+<<<<<<< HEAD
 static void skl_tplg_set_pipe_config_idx(struct skl_pipe *pipe, int idx)
 {
 	pipe->cur_config_idx = idx;
 	pipe->memory_pages = pipe->configs[idx].mem_pages;
+=======
+static bool skl_tplg_is_multi_fmt(struct skl_dev *skl, struct skl_pipe *pipe)
+{
+	struct skl_pipe_fmt *cur_fmt;
+	struct skl_pipe_fmt *next_fmt;
+	int i;
+
+	if (pipe->nr_cfgs <= 1)
+		return false;
+
+	if (pipe->conn_type != SKL_PIPE_CONN_TYPE_FE)
+		return true;
+
+	for (i = 0; i < pipe->nr_cfgs - 1; i++) {
+		if (pipe->direction == SNDRV_PCM_STREAM_PLAYBACK) {
+			cur_fmt = &pipe->configs[i].out_fmt;
+			next_fmt = &pipe->configs[i + 1].out_fmt;
+		} else {
+			cur_fmt = &pipe->configs[i].in_fmt;
+			next_fmt = &pipe->configs[i + 1].in_fmt;
+		}
+
+		if (!CHECK_HW_PARAMS(cur_fmt->channels, cur_fmt->freq,
+				     cur_fmt->bps,
+				     next_fmt->channels,
+				     next_fmt->freq,
+				     next_fmt->bps))
+			return true;
+	}
+
+	return false;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -606,14 +639,32 @@ skl_tplg_get_pipe_config(struct skl_dev *skl, struct skl_module_cfg *mconfig)
 	int i;
 
 	if (pipe->nr_cfgs == 0) {
+<<<<<<< HEAD
 		skl_tplg_set_pipe_config_idx(pipe, 0);
+=======
+		pipe->cur_config_idx = 0;
+		return 0;
+	}
+
+	if (skl_tplg_is_multi_fmt(skl, pipe)) {
+		pipe->cur_config_idx = pipe->pipe_config_idx;
+		pipe->memory_pages = pconfig->mem_pages;
+		dev_dbg(skl->dev, "found pipe config idx:%d\n",
+			pipe->cur_config_idx);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
 	if (pipe->conn_type == SKL_PIPE_CONN_TYPE_NONE || pipe->nr_cfgs == 1) {
 		dev_dbg(skl->dev, "No conn_type or just 1 pathcfg, taking 0th for %d\n",
 			pipe->ppl_id);
+<<<<<<< HEAD
 		skl_tplg_set_pipe_config_idx(pipe, 0);
+=======
+		pipe->cur_config_idx = 0;
+		pipe->memory_pages = pconfig->mem_pages;
+
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
@@ -632,8 +683,15 @@ skl_tplg_get_pipe_config(struct skl_dev *skl, struct skl_module_cfg *mconfig)
 
 		if (CHECK_HW_PARAMS(params->ch, params->s_freq, params->s_fmt,
 				    fmt->channels, fmt->freq, fmt->bps)) {
+<<<<<<< HEAD
 			skl_tplg_set_pipe_config_idx(pipe, i);
 			dev_dbg(skl->dev, "Using pipe config: %d\n", i);
+=======
+			pipe->cur_config_idx = i;
+			pipe->memory_pages = pconfig->mem_pages;
+			dev_dbg(skl->dev, "Using pipe config: %d\n", i);
+
+>>>>>>> b7ba80a49124 (Commit)
 			return 0;
 		}
 	}
@@ -1353,9 +1411,15 @@ static int skl_tplg_multi_config_set_get(struct snd_kcontrol *kcontrol,
 		return -EIO;
 
 	if (is_set)
+<<<<<<< HEAD
 		skl_tplg_set_pipe_config_idx(pipe, ucontrol->value.enumerated.item[0]);
 	else
 		ucontrol->value.enumerated.item[0] = pipe->cur_config_idx;
+=======
+		pipe->pipe_config_idx = ucontrol->value.enumerated.item[0];
+	else
+		ucontrol->value.enumerated.item[0]  =  pipe->pipe_config_idx;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1663,10 +1727,18 @@ int skl_tplg_update_pipe_params(struct device *dev,
 struct skl_module_cfg *
 skl_tplg_fe_get_cpr_module(struct snd_soc_dai *dai, int stream)
 {
+<<<<<<< HEAD
 	struct snd_soc_dapm_widget *w = snd_soc_dai_get_widget(dai, stream);
 	struct snd_soc_dapm_path *p = NULL;
 
 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
+=======
+	struct snd_soc_dapm_widget *w;
+	struct snd_soc_dapm_path *p = NULL;
+
+	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
+		w = dai->playback_widget;
+>>>>>>> b7ba80a49124 (Commit)
 		snd_soc_dapm_widget_for_each_sink_path(w, p) {
 			if (p->connect && p->sink->power &&
 				!is_skl_dsp_widget_type(p->sink, dai->dev))
@@ -1679,6 +1751,10 @@ skl_tplg_fe_get_cpr_module(struct snd_soc_dai *dai, int stream)
 			}
 		}
 	} else {
+<<<<<<< HEAD
+=======
+		w = dai->capture_widget;
+>>>>>>> b7ba80a49124 (Commit)
 		snd_soc_dapm_widget_for_each_source_path(w, p) {
 			if (p->connect && p->source->power &&
 				!is_skl_dsp_widget_type(p->source, dai->dev))
@@ -1742,12 +1818,23 @@ static struct skl_module_cfg *skl_get_mconfig_cap_cpr(
 struct skl_module_cfg *
 skl_tplg_be_get_cpr_module(struct snd_soc_dai *dai, int stream)
 {
+<<<<<<< HEAD
 	struct snd_soc_dapm_widget *w = snd_soc_dai_get_widget(dai, stream);
 	struct skl_module_cfg *mconfig;
 
 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
 		mconfig = skl_get_mconfig_pb_cpr(dai, w);
 	} else {
+=======
+	struct snd_soc_dapm_widget *w;
+	struct skl_module_cfg *mconfig;
+
+	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
+		w = dai->playback_widget;
+		mconfig = skl_get_mconfig_pb_cpr(dai, w);
+	} else {
+		w = dai->capture_widget;
+>>>>>>> b7ba80a49124 (Commit)
 		mconfig = skl_get_mconfig_cap_cpr(dai, w);
 	}
 	return mconfig;
@@ -1795,18 +1882,25 @@ static int skl_tplg_be_fill_pipe_params(struct snd_soc_dai *dai,
 {
 	struct nhlt_specific_cfg *cfg;
 	struct skl_pipe *pipe = mconfig->pipe;
+<<<<<<< HEAD
 	struct skl_pipe_params save = *pipe->p_params;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct skl_pipe_fmt *pipe_fmt;
 	struct skl_dev *skl = get_skl_ctx(dai->dev);
 	int link_type = skl_tplg_be_link_type(mconfig->dev_type);
 	u8 dev_type = skl_tplg_be_dev_type(mconfig->dev_type);
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	skl_tplg_fill_dma_id(mconfig, params);
 
 	if (link_type == NHLT_LINK_HDA)
 		return 0;
 
+<<<<<<< HEAD
 	*pipe->p_params = *params;
 	ret = skl_tplg_get_pipe_config(skl, mconfig);
 	if (ret)
@@ -1817,6 +1911,12 @@ static int skl_tplg_be_fill_pipe_params(struct snd_soc_dai *dai,
 		pipe_fmt = &pipe->configs[pipe->cur_config_idx].out_fmt;
 	else
 		pipe_fmt = &pipe->configs[pipe->cur_config_idx].in_fmt;
+=======
+	if (pipe->direction == SNDRV_PCM_STREAM_PLAYBACK)
+		pipe_fmt = &pipe->configs[pipe->pipe_config_idx].out_fmt;
+	else
+		pipe_fmt = &pipe->configs[pipe->pipe_config_idx].in_fmt;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* update the blob based on virtual bus_id*/
 	cfg = intel_nhlt_get_endpoint_blob(dai->dev, skl->nhlt,
@@ -1831,6 +1931,7 @@ static int skl_tplg_be_fill_pipe_params(struct snd_soc_dai *dai,
 		dev_err(dai->dev, "Blob NULL for id:%d type:%d dirn:%d ch:%d, freq:%d, fmt:%d\n",
 			mconfig->vbus_id, link_type, params->stream,
 			params->ch, params->s_freq, params->s_fmt);
+<<<<<<< HEAD
 		ret = -EINVAL;
 		goto err;
 	}
@@ -1840,6 +1941,12 @@ static int skl_tplg_be_fill_pipe_params(struct snd_soc_dai *dai,
 err:
 	*pipe->p_params = save;
 	return ret;
+=======
+		return -EINVAL;
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int skl_tplg_be_set_src_pipe_params(struct snd_soc_dai *dai,
@@ -1901,6 +2008,7 @@ static int skl_tplg_be_set_sink_pipe_params(struct snd_soc_dai *dai,
 int skl_tplg_be_update_params(struct snd_soc_dai *dai,
 				struct skl_pipe_params *params)
 {
+<<<<<<< HEAD
 	struct snd_soc_dapm_widget *w = snd_soc_dai_get_widget(dai, params->stream);
 
 	if (params->stream == SNDRV_PCM_STREAM_PLAYBACK) {
@@ -1908,6 +2016,22 @@ int skl_tplg_be_update_params(struct snd_soc_dai *dai,
 	} else {
 		return skl_tplg_be_set_sink_pipe_params(dai, w, params);
 	}
+=======
+	struct snd_soc_dapm_widget *w;
+
+	if (params->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+		w = dai->playback_widget;
+
+		return skl_tplg_be_set_src_pipe_params(dai, w, params);
+
+	} else {
+		w = dai->capture_widget;
+
+		return skl_tplg_be_set_sink_pipe_params(dai, w, params);
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct snd_soc_tplg_widget_events skl_tplg_widget_ops[] = {
@@ -2967,7 +3091,11 @@ void skl_cleanup_resources(struct skl_dev *skl)
 		return;
 
 	card = soc_component->card;
+<<<<<<< HEAD
 	if (!snd_soc_card_is_instantiated(card))
+=======
+	if (!card || !card->instantiated)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	list_for_each_entry(w, &card->widgets, list) {

@@ -243,6 +243,7 @@ void migrate_to_reboot_cpu(void)
 	set_cpus_allowed_ptr(current, cpumask_of(cpu));
 }
 
+<<<<<<< HEAD
 /*
  *	Notifier list for kernel code which wants to be called
  *	to prepare system for restart.
@@ -254,6 +255,8 @@ static void do_kernel_restart_prepare(void)
 	blocking_notifier_call_chain(&restart_prep_handler_list, 0, NULL);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  *	kernel_restart - reboot the system
  *	@cmd: pointer to buffer containing command to execute for restart
@@ -265,7 +268,10 @@ static void do_kernel_restart_prepare(void)
 void kernel_restart(char *cmd)
 {
 	kernel_restart_prepare(cmd);
+<<<<<<< HEAD
 	do_kernel_restart_prepare();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	migrate_to_reboot_cpu();
 	syscore_shutdown();
 	if (!cmd)
@@ -408,11 +414,14 @@ register_sys_off_handler(enum sys_off_mode mode,
 		handler->list = &power_off_handler_list;
 		break;
 
+<<<<<<< HEAD
 	case SYS_OFF_MODE_RESTART_PREPARE:
 		handler->list = &restart_prep_handler_list;
 		handler->blocking = true;
 		break;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case SYS_OFF_MODE_RESTART:
 		handler->list = &restart_handler_list;
 		break;

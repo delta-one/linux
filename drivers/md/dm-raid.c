@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2010-2011 Neil Brown
  * Copyright (C) 2010-2018 Red Hat, Inc. All rights reserved.
@@ -30,10 +33,17 @@
  */
 #define	MIN_RAID456_JOURNAL_SPACE (4*2048)
 
+<<<<<<< HEAD
 static bool devices_handle_discard_safely;
 
 /*
  * The following flags are used by dm-raid to set up the array state.
+=======
+static bool devices_handle_discard_safely = false;
+
+/*
+ * The following flags are used by dm-raid.c to set up the array state.
+>>>>>>> b7ba80a49124 (Commit)
  * They must be cleared before md_run is called.
  */
 #define FirstUse 10		/* rdev flag */
@@ -363,8 +373,13 @@ static struct {
 	const int mode;
 	const char *param;
 } _raid456_journal_mode[] = {
+<<<<<<< HEAD
 	{ R5C_JOURNAL_MODE_WRITE_THROUGH, "writethrough" },
 	{ R5C_JOURNAL_MODE_WRITE_BACK,    "writeback" }
+=======
+	{ R5C_JOURNAL_MODE_WRITE_THROUGH , "writethrough" },
+	{ R5C_JOURNAL_MODE_WRITE_BACK    , "writeback" }
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Return MD raid4/5/6 journal mode for dm @journal_mode one */
@@ -1082,7 +1097,11 @@ static int validate_raid_redundancy(struct raid_set *rs)
 			if ((!rs->dev[i].rdev.sb_page ||
 			     !test_bit(In_sync, &rs->dev[i].rdev.flags)) &&
 			    (++rebuilds_per_group >= copies))
+<<<<<<< HEAD
 				goto too_many;
+=======
+					goto too_many;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		break;
 	default:
@@ -1115,7 +1134,11 @@ too_many:
  *    [stripe_cache <sectors>]		Stripe cache size for higher RAIDs
  *    [region_size <sectors>]		Defines granularity of bitmap
  *    [journal_dev <dev>]		raid4/5/6 journaling deviice
+<<<<<<< HEAD
  *					(i.e. write hole closing log)
+=======
+ *    					(i.e. write hole closing log)
+>>>>>>> b7ba80a49124 (Commit)
  *
  * RAID10-only options:
  *    [raid10_copies <# copies>]	Number of copies.  (Default: 2)
@@ -1989,7 +2012,11 @@ struct dm_raid_superblock {
 	__le64 sectors; /* Used device size in sectors */
 
 	/*
+<<<<<<< HEAD
 	 * Additional Bit field of devices indicating failures to support
+=======
+	 * Additonal Bit field of devices indicating failures to support
+>>>>>>> b7ba80a49124 (Commit)
 	 * up to 256 devices with the 1.9.0 on-disk metadata format
 	 */
 	__le64 extended_failed_devices[DISKS_ARRAY_ELEMS - 1];
@@ -2591,7 +2618,11 @@ static int analyse_superblocks(struct dm_target *ti, struct raid_set *rs)
 
 /*
  * Adjust data_offset and new_data_offset on all disk members of @rs
+<<<<<<< HEAD
  * for out of place reshaping if requested by constructor
+=======
+ * for out of place reshaping if requested by contructor
+>>>>>>> b7ba80a49124 (Commit)
  *
  * We need free space at the beginning of each raid disk for forward
  * and at the end for backward reshapes which userspace has to provide
@@ -2856,7 +2887,11 @@ static int rs_setup_reshape(struct raid_set *rs)
 	 *
 	 * - in case of adding disk(s), array size has
 	 *   to grow after the disk adding reshape,
+<<<<<<< HEAD
 	 *   which'll happen in the event handler;
+=======
+	 *   which'll hapen in the event handler;
+>>>>>>> b7ba80a49124 (Commit)
 	 *   reshape will happen forward, so space has to
 	 *   be available at the beginning of each disk
 	 *
@@ -3149,7 +3184,11 @@ static int raid_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 		 * If a takeover is needed, userspace sets any additional
 		 * devices to rebuild and we can check for a valid request here.
 		 *
+<<<<<<< HEAD
 		 * If acceptable, set the level to the new requested
+=======
+		 * If acceptible, set the level to the new requested
+>>>>>>> b7ba80a49124 (Commit)
 		 * one, prohibit requesting recovery, allow the raid
 		 * set to run and store superblocks during resume.
 		 */
@@ -3184,12 +3223,21 @@ static int raid_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 		/* Out-of-place space has to be available to allow for a reshape unless raid1! */
 		if (reshape_sectors || rs_is_raid1(rs)) {
 			/*
+<<<<<<< HEAD
 			 * We can only prepare for a reshape here, because the
 			 * raid set needs to run to provide the repective reshape
 			 * check functions via its MD personality instance.
 			 *
 			 * So do the reshape check after md_run() succeeded.
 			 */
+=======
+			  * We can only prepare for a reshape here, because the
+			  * raid set needs to run to provide the repective reshape
+			  * check functions via its MD personality instance.
+			  *
+			  * So do the reshape check after md_run() succeeded.
+			  */
+>>>>>>> b7ba80a49124 (Commit)
 			r = rs_prepare_reshape(rs);
 			if (r)
 				goto bad;
@@ -3713,7 +3761,11 @@ static void raid_status(struct dm_target *ti, status_type_t type,
 }
 
 static int raid_message(struct dm_target *ti, unsigned int argc, char **argv,
+<<<<<<< HEAD
 			char *result, unsigned int maxlen)
+=======
+			char *result, unsigned maxlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct raid_set *rs = ti->private;
 	struct mddev *mddev = &rs->md;
@@ -4002,7 +4054,11 @@ static int raid_preresume(struct dm_target *ti)
 	}
 
 	/* Resize bitmap to adjust to changed region size (aka MD bitmap chunksize) or grown device size */
+<<<<<<< HEAD
 	if (test_bit(RT_FLAG_RS_BITMAP_LOADED, &rs->runtime_flags) && mddev->bitmap &&
+=======
+        if (test_bit(RT_FLAG_RS_BITMAP_LOADED, &rs->runtime_flags) && mddev->bitmap &&
+>>>>>>> b7ba80a49124 (Commit)
 	    (test_bit(RT_FLAG_RS_GROW, &rs->runtime_flags) ||
 	     (rs->requested_bitmap_chunk_sectors &&
 	       mddev->bitmap_info.chunksize != to_bytes(rs->requested_bitmap_chunk_sectors)))) {

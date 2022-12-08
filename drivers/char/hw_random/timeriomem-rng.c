@@ -145,6 +145,11 @@ static int timeriomem_rng_probe(struct platform_device *pdev)
 		if (!of_property_read_u32(pdev->dev.of_node,
 						"quality", &i))
 			priv->rng_ops.quality = i;
+<<<<<<< HEAD
+=======
+		else
+			priv->rng_ops.quality = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		period = pdata->period;
 		priv->rng_ops.quality = pdata->quality;

@@ -355,9 +355,13 @@ static int rzn1_rtc_probe(struct platform_device *pdev)
 	set_bit(RTC_FEATURE_ALARM_RES_MINUTE, rtc->rtcdev->features);
 	clear_bit(RTC_FEATURE_UPDATE_INTERRUPT, rtc->rtcdev->features);
 
+<<<<<<< HEAD
 	ret = devm_pm_runtime_enable(&pdev->dev);
 	if (ret < 0)
 		return ret;
+=======
+	devm_pm_runtime_enable(&pdev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = pm_runtime_resume_and_get(&pdev->dev);
 	if (ret < 0)
 		return ret;
@@ -391,9 +395,17 @@ dis_runtime_pm:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void rzn1_rtc_remove(struct platform_device *pdev)
 {
 	pm_runtime_put(&pdev->dev);
+=======
+static int rzn1_rtc_remove(struct platform_device *pdev)
+{
+	pm_runtime_put(&pdev->dev);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id rzn1_rtc_of_match[] = {
@@ -404,7 +416,11 @@ MODULE_DEVICE_TABLE(of, rzn1_rtc_of_match);
 
 static struct platform_driver rzn1_rtc_driver = {
 	.probe = rzn1_rtc_probe,
+<<<<<<< HEAD
 	.remove_new = rzn1_rtc_remove,
+=======
+	.remove = rzn1_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name	= "rzn1-rtc",
 		.of_match_table = rzn1_rtc_of_match,

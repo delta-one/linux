@@ -21,12 +21,18 @@
 #include <linux/of_device.h>
 #include <linux/phy/phy.h>
 #include <linux/regmap.h>
+<<<<<<< HEAD
 #include <linux/reset.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/of.h>
 #include <linux/firmware/xlnx-zynqmp.h>
 
 #include "cqhci.h"
+<<<<<<< HEAD
 #include "sdhci-cqhci.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "sdhci-pltfm.h"
 
 #define SDHCI_ARASAN_VENDOR_REGISTER	0x78
@@ -193,6 +199,16 @@ static const struct sdhci_arasan_soc_ctl_map intel_lgm_sdxc_soc_ctl_map = {
 	.hiword_update = false,
 };
 
+<<<<<<< HEAD
+=======
+static const struct sdhci_arasan_soc_ctl_map thunderbay_soc_ctl_map = {
+	.baseclkfreq = { .reg = 0x0, .width = 8, .shift = 14 },
+	.clockmultiplier = { .reg = 0x4, .width = 8, .shift = 14 },
+	.support64b = { .reg = 0x4, .width = 1, .shift = 24 },
+	.hiword_update = false,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct sdhci_arasan_soc_ctl_map intel_keembay_soc_ctl_map = {
 	.baseclkfreq = { .reg = 0x0, .width = 8, .shift = 14 },
 	.clockmultiplier = { .reg = 0x4, .width = 8, .shift = 14 },
@@ -361,7 +377,11 @@ static void sdhci_arasan_reset(struct sdhci_host *host, u8 mask)
 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
 	struct sdhci_arasan_data *sdhci_arasan = sdhci_pltfm_priv(pltfm_host);
 
+<<<<<<< HEAD
 	sdhci_and_cqhci_reset(host, mask);
+=======
+	sdhci_reset(host, mask);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (sdhci_arasan->quirks & SDHCI_ARASAN_QUIRK_FORCE_CDTEST) {
 		ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
@@ -458,6 +478,18 @@ static const struct sdhci_pltfm_data sdhci_arasan_cqe_pdata = {
 			SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
 };
 
+<<<<<<< HEAD
+=======
+static const struct sdhci_pltfm_data sdhci_arasan_thunderbay_pdata = {
+	.ops = &sdhci_arasan_cqe_ops,
+	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN | SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC,
+	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+		SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN |
+		SDHCI_QUIRK2_STOP_WITH_TC |
+		SDHCI_QUIRK2_CAPS_BIT63_FOR_HS400,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PM_SLEEP
 /**
  * sdhci_arasan_suspend - Suspend method for the driver
@@ -1134,6 +1166,15 @@ static struct sdhci_arasan_of_data sdhci_arasan_generic_data = {
 	.clk_ops = &arasan_clk_ops,
 };
 
+<<<<<<< HEAD
+=======
+static const struct sdhci_arasan_of_data sdhci_arasan_thunderbay_data = {
+	.soc_ctl_map = &thunderbay_soc_ctl_map,
+	.pdata = &sdhci_arasan_thunderbay_pdata,
+	.clk_ops = &arasan_clk_ops,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct sdhci_pltfm_data sdhci_keembay_emmc_pdata = {
 	.ops = &sdhci_arasan_cqe_ops,
 	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
@@ -1267,6 +1308,13 @@ static const struct of_device_id sdhci_arasan_of_match[] = {
 		.compatible = "intel,keembay-sdhci-5.1-sdio",
 		.data = &intel_keembay_sdio_data,
 	},
+<<<<<<< HEAD
+=======
+	{
+		.compatible = "intel,thunderbay-sdhci-5.1",
+		.data = &sdhci_arasan_thunderbay_data,
+	},
+>>>>>>> b7ba80a49124 (Commit)
 	/* Generic compatible below here */
 	{
 		.compatible = "arasan,sdhci-8.9a",
@@ -1408,7 +1456,11 @@ static void sdhci_arasan_unregister_sdclk(struct device *dev)
 {
 	struct device_node *np = dev->of_node;
 
+<<<<<<< HEAD
 	if (!of_property_present(np, "#clock-cells"))
+=======
+	if (!of_find_property(np, "#clock-cells", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	of_clk_del_provider(dev->of_node);
@@ -1497,6 +1549,7 @@ static int sdhci_arasan_register_sdclk(struct sdhci_arasan_data *sdhci_arasan,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int sdhci_zynqmp_set_dynamic_config(struct device *dev,
 					   struct sdhci_arasan_data *sdhci_arasan)
 {
@@ -1556,6 +1609,8 @@ static int sdhci_zynqmp_set_dynamic_config(struct device *dev,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int sdhci_arasan_add_host(struct sdhci_arasan_data *sdhci_arasan)
 {
 	struct sdhci_host *host = sdhci_arasan->host;
@@ -1604,7 +1659,10 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
 	int ret;
 	struct device_node *node;
 	struct clk *clk_xin;
+<<<<<<< HEAD
 	struct clk *clk_dll;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct sdhci_host *host;
 	struct sdhci_pltfm_host *pltfm_host;
 	struct device *dev = &pdev->dev;
@@ -1678,12 +1736,15 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
 		goto clk_dis_ahb;
 	}
 
+<<<<<<< HEAD
 	clk_dll = devm_clk_get_optional_enabled(dev, "gate");
 	if (IS_ERR(clk_dll)) {
 		ret = dev_err_probe(dev, PTR_ERR(clk_dll), "failed to get dll clk\n");
 		goto clk_disable_all;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (of_property_read_bool(np, "xlnx,fails-without-test-cd"))
 		sdhci_arasan->quirks |= SDHCI_ARASAN_QUIRK_FORCE_CDTEST;
 
@@ -1697,7 +1758,12 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
 
 	if (of_device_is_compatible(np, "intel,keembay-sdhci-5.1-emmc") ||
 	    of_device_is_compatible(np, "intel,keembay-sdhci-5.1-sd") ||
+<<<<<<< HEAD
 	    of_device_is_compatible(np, "intel,keembay-sdhci-5.1-sdio")) {
+=======
+	    of_device_is_compatible(np, "intel,keembay-sdhci-5.1-sdio") ||
+	    of_device_is_compatible(np, "intel,thunderbay-sdhci-5.1")) {
+>>>>>>> b7ba80a49124 (Commit)
 		sdhci_arasan_update_clockmultiplier(host, 0x0);
 		sdhci_arasan_update_support64b(host, 0x0);
 
@@ -1726,6 +1792,7 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
 		goto unreg_clk;
 	}
 
+<<<<<<< HEAD
 	if (of_device_is_compatible(np, "xlnx,zynqmp-8.9a")) {
 		ret = zynqmp_pm_is_function_supported(PM_IOCTL, IOCTL_SET_SD_CONFIG);
 		if (!ret) {
@@ -1735,6 +1802,8 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sdhci_arasan->phy = ERR_PTR(-ENODEV);
 	if (of_device_is_compatible(np, "arasan,sdhci-5.1")) {
 		sdhci_arasan->phy = devm_phy_get(dev, "phy_arasan");

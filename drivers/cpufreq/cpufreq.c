@@ -993,7 +993,11 @@ static const struct sysfs_ops sysfs_ops = {
 	.store	= store,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type ktype_cpufreq = {
+=======
+static struct kobj_type ktype_cpufreq = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops	= &sysfs_ops,
 	.default_groups	= cpufreq_groups,
 	.release	= cpufreq_sysfs_release,
@@ -1207,7 +1211,10 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
 	if (!zalloc_cpumask_var(&policy->real_cpus, GFP_KERNEL))
 		goto err_free_rcpumask;
 
+<<<<<<< HEAD
 	init_completion(&policy->kobj_unregister);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = kobject_init_and_add(&policy->kobj, &ktype_cpufreq,
 				   cpufreq_global_kobject, "policy%u", cpu);
 	if (ret) {
@@ -1246,6 +1253,10 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
 	init_rwsem(&policy->rwsem);
 	spin_lock_init(&policy->transition_lock);
 	init_waitqueue_head(&policy->transition_wait);
+<<<<<<< HEAD
+=======
+	init_completion(&policy->kobj_unregister);
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_WORK(&policy->update, handle_update);
 
 	policy->cpu = cpu;
@@ -2904,12 +2915,21 @@ EXPORT_SYMBOL_GPL(cpufreq_register_driver);
  * Returns zero if successful, and -EINVAL if the cpufreq_driver is
  * currently not initialised.
  */
+<<<<<<< HEAD
 void cpufreq_unregister_driver(struct cpufreq_driver *driver)
 {
 	unsigned long flags;
 
 	if (WARN_ON(!cpufreq_driver || (driver != cpufreq_driver)))
 		return;
+=======
+int cpufreq_unregister_driver(struct cpufreq_driver *driver)
+{
+	unsigned long flags;
+
+	if (!cpufreq_driver || (driver != cpufreq_driver))
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_debug("unregistering driver %s\n", driver->name);
 
@@ -2926,22 +2946,34 @@ void cpufreq_unregister_driver(struct cpufreq_driver *driver)
 
 	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
 	cpus_read_unlock();
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(cpufreq_unregister_driver);
 
 static int __init cpufreq_core_init(void)
 {
 	struct cpufreq_governor *gov = cpufreq_default_governor();
+<<<<<<< HEAD
 	struct device *dev_root;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (cpufreq_disabled())
 		return -ENODEV;
 
+<<<<<<< HEAD
 	dev_root = bus_get_dev_root(&cpu_subsys);
 	if (dev_root) {
 		cpufreq_global_kobject = kobject_create_and_add("cpufreq", &dev_root->kobj);
 		put_device(dev_root);
 	}
+=======
+	cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
+>>>>>>> b7ba80a49124 (Commit)
 	BUG_ON(!cpufreq_global_kobject);
 
 	if (!strlen(default_governor))

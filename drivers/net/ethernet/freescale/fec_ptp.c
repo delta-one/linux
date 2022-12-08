@@ -88,9 +88,12 @@
 #define FEC_CHANNLE_0		0
 #define DEFAULT_PPS_CHANNEL	FEC_CHANNLE_0
 
+<<<<<<< HEAD
 #define FEC_PTP_MAX_NSEC_PERIOD		4000000000ULL
 #define FEC_PTP_MAX_NSEC_COUNTER	0x80000000ULL
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * fec_ptp_enable_pps
  * @fep: the fec_enet_private structure handle
@@ -201,6 +204,7 @@ static int fec_ptp_enable_pps(struct fec_enet_private *fep, uint enable)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int fec_ptp_pps_perout(struct fec_enet_private *fep)
 {
 	u32 compare_val, ptp_hc, temp_val;
@@ -273,6 +277,8 @@ static enum hrtimer_restart fec_ptp_pps_perout_handler(struct hrtimer *timer)
 	return HRTIMER_NORESTART;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * fec_ptp_read - read raw cycle counter (to be used by time counter)
  * @cc: the cyclecounter structure
@@ -338,6 +344,7 @@ void fec_ptp_start_cyclecounter(struct net_device *ndev)
 }
 
 /**
+<<<<<<< HEAD
  * fec_ptp_adjfine - adjust ptp cycle frequency
  * @ptp: the ptp clock structure
  * @scaled_ppm: scaled parts per million adjustment from base
@@ -346,13 +353,26 @@ void fec_ptp_start_cyclecounter(struct net_device *ndev)
  * indicated amount from the base frequency.
  *
  * Scaled parts per million is ppm with a 16-bit binary fractional field.
+=======
+ * fec_ptp_adjfreq - adjust ptp cycle frequency
+ * @ptp: the ptp clock structure
+ * @ppb: parts per billion adjustment from base
+ *
+ * Adjust the frequency of the ptp cycle counter by the
+ * indicated ppb from the base frequency.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Because ENET hardware frequency adjust is complex,
  * using software method to do that.
  */
+<<<<<<< HEAD
 static int fec_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
 {
 	s32 ppb = scaled_ppm_to_ppb(scaled_ppm);
+=======
+static int fec_ptp_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flags;
 	int neg_adj = 0;
 	u32 i, tmp;
@@ -503,6 +523,7 @@ static int fec_ptp_settime(struct ptp_clock_info *ptp,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int fec_ptp_pps_disable(struct fec_enet_private *fep, uint channel)
 {
 	unsigned long flags;
@@ -514,6 +535,8 @@ static int fec_ptp_pps_disable(struct fec_enet_private *fep, uint channel)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * fec_ptp_enable
  * @ptp: the ptp clock structure
@@ -526,16 +549,20 @@ static int fec_ptp_enable(struct ptp_clock_info *ptp,
 {
 	struct fec_enet_private *fep =
 	    container_of(ptp, struct fec_enet_private, ptp_caps);
+<<<<<<< HEAD
 	ktime_t timeout;
 	struct timespec64 start_time, period;
 	u64 curr_time, delta, period_ns;
 	unsigned long flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 
 	if (rq->type == PTP_CLK_REQ_PPS) {
 		ret = fec_ptp_enable_pps(fep, on);
 
 		return ret;
+<<<<<<< HEAD
 	} else if (rq->type == PTP_CLK_REQ_PEROUT) {
 		/* Reject requests with unsupported flags */
 		if (rq->perout.flags)
@@ -604,6 +631,10 @@ static int fec_ptp_enable(struct ptp_clock_info *ptp,
 	} else {
 		return -EOPNOTSUPP;
 	}
+=======
+	}
+	return -EOPNOTSUPP;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -742,10 +773,17 @@ void fec_ptp_init(struct platform_device *pdev, int irq_idx)
 	fep->ptp_caps.max_adj = 250000000;
 	fep->ptp_caps.n_alarm = 0;
 	fep->ptp_caps.n_ext_ts = 0;
+<<<<<<< HEAD
 	fep->ptp_caps.n_per_out = 1;
 	fep->ptp_caps.n_pins = 0;
 	fep->ptp_caps.pps = 1;
 	fep->ptp_caps.adjfine = fec_ptp_adjfine;
+=======
+	fep->ptp_caps.n_per_out = 0;
+	fep->ptp_caps.n_pins = 0;
+	fep->ptp_caps.pps = 1;
+	fep->ptp_caps.adjfreq = fec_ptp_adjfreq;
+>>>>>>> b7ba80a49124 (Commit)
 	fep->ptp_caps.adjtime = fec_ptp_adjtime;
 	fep->ptp_caps.gettime64 = fec_ptp_gettime;
 	fep->ptp_caps.settime64 = fec_ptp_settime;
@@ -764,9 +802,12 @@ void fec_ptp_init(struct platform_device *pdev, int irq_idx)
 
 	INIT_DELAYED_WORK(&fep->time_keep, fec_time_keep);
 
+<<<<<<< HEAD
 	hrtimer_init(&fep->perout_timer, CLOCK_REALTIME, HRTIMER_MODE_REL);
 	fep->perout_timer.function = fec_ptp_pps_perout_handler;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	irq = platform_get_irq_byname_optional(pdev, "pps");
 	if (irq < 0)
 		irq = platform_get_irq_optional(pdev, irq_idx);
@@ -796,7 +837,10 @@ void fec_ptp_stop(struct platform_device *pdev)
 	struct fec_enet_private *fep = netdev_priv(ndev);
 
 	cancel_delayed_work_sync(&fep->time_keep);
+<<<<<<< HEAD
 	hrtimer_cancel(&fep->perout_timer);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (fep->ptp_clock)
 		ptp_clock_unregister(fep->ptp_clock);
 }

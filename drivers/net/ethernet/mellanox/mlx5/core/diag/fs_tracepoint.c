@@ -228,6 +228,7 @@ const char *parse_fs_hdrs(struct trace_seq *p,
 	return ret;
 }
 
+<<<<<<< HEAD
 static const char
 *fs_dest_range_field_to_str(enum mlx5_flow_dest_range_field field)
 {
@@ -239,6 +240,8 @@ static const char
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const char *parse_fs_dst(struct trace_seq *p,
 			 const struct mlx5_flow_destination *dst,
 			 u32 counter_id)
@@ -270,6 +273,7 @@ const char *parse_fs_dst(struct trace_seq *p,
 	case MLX5_FLOW_DESTINATION_TYPE_PORT:
 		trace_seq_printf(p, "port\n");
 		break;
+<<<<<<< HEAD
 	case MLX5_FLOW_DESTINATION_TYPE_RANGE:
 		trace_seq_printf(p, "field=%s min=%d max=%d\n",
 				 fs_dest_range_field_to_str(dst->range.field),
@@ -279,6 +283,8 @@ const char *parse_fs_dst(struct trace_seq *p,
 		trace_seq_printf(p, "flow_table_type=%u id:%u\n", dst->ft->type,
 				 dst->ft->id);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case MLX5_FLOW_DESTINATION_TYPE_NONE:
 		trace_seq_printf(p, "none\n");
 		break;

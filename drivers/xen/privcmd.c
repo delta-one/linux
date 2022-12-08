@@ -760,7 +760,11 @@ static long privcmd_ioctl_mmap_resource(struct file *file,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	pfns = kcalloc(kdata.num, sizeof(*pfns), GFP_KERNEL | __GFP_NOWARN);
+=======
+	pfns = kcalloc(kdata.num, sizeof(*pfns), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!pfns) {
 		rc = -ENOMEM;
 		goto out;
@@ -934,8 +938,13 @@ static int privcmd_mmap(struct file *file, struct vm_area_struct *vma)
 {
 	/* DONTCOPY is essential for Xen because copy_page_range doesn't know
 	 * how to recreate these mappings */
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_IO | VM_PFNMAP | VM_DONTCOPY |
 			 VM_DONTEXPAND | VM_DONTDUMP);
+=======
+	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTCOPY |
+			 VM_DONTEXPAND | VM_DONTDUMP;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_ops = &privcmd_vm_ops;
 	vma->vm_private_data = NULL;
 

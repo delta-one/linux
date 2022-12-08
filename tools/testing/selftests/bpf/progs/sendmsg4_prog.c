@@ -21,6 +21,11 @@
 SEC("cgroup/sendmsg4")
 int sendmsg_v4_prog(struct bpf_sock_addr *ctx)
 {
+<<<<<<< HEAD
+=======
+	int prio;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (ctx->type != SOCK_DGRAM)
 		return 0;
 

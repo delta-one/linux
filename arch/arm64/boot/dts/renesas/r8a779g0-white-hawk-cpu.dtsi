@@ -96,6 +96,7 @@
 		device_type = "memory";
 		reg = <0x6 0x00000000 0x1 0x00000000>;
 	};
+<<<<<<< HEAD
 
 	mini-dp-con {
 		compatible = "dp-connector";
@@ -141,6 +142,8 @@
 		#clock-cells = <0>;
 		clock-frequency = <38400000>;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &avb0 {
@@ -161,6 +164,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &dsi0 {
 	status = "okay";
 
@@ -178,6 +182,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &extal_clk {
 	clock-frequency = <16666666>;
 };
@@ -197,6 +203,7 @@
 	status = "okay";
 	clock-frequency = <400000>;
 
+<<<<<<< HEAD
 	io_expander_a: gpio@20 {
 		compatible = "onnn,pca9654";
 		reg = <0x20>;
@@ -208,6 +215,8 @@
 		#interrupt-cells = <2>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	eeprom@50 {
 		compatible = "rohm,br24g01", "atmel,24c01";
 		label = "cpu-board";
@@ -216,6 +225,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &i2c1 {
 	pinctrl-0 = <&i2c1_pins>;
 	pinctrl-names = "default";
@@ -278,6 +288,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &pfc {
 	pinctrl-0 = <&scif_clk_pins>;
 	pinctrl-names = "default";
@@ -310,16 +322,20 @@
 		function = "i2c0";
 	};
 
+<<<<<<< HEAD
 	i2c1_pins: i2c1 {
 		groups = "i2c1";
 		function = "i2c1";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	keys_pins: keys {
 		pins = "GP_5_0", "GP_5_1", "GP_5_2";
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	mmc_pins: mmc {
 		groups = "mmc_data8", "mmc_ctrl", "mmc_ds";
 		function = "mmc";
@@ -331,12 +347,15 @@
 		function = "qspi0";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	scif_clk_pins: scif_clk {
 		groups = "scif_clk";
 		function = "scif_clk";
 	};
 };
 
+<<<<<<< HEAD
 &rpc {
 	pinctrl-0 = <&qspi0_pins>;
 	pinctrl-names = "default";
@@ -363,13 +382,20 @@
 			};
 		};
 	};
+=======
+&scif_clk {
+	clock-frequency = <24000000>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &rwdt {
 	timeout-sec = <60>;
 	status = "okay";
 };
+<<<<<<< HEAD
 
 &scif_clk {
 	clock-frequency = <24000000>;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

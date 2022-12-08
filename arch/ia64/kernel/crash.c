@@ -234,6 +234,18 @@ static struct ctl_table kdump_ctl_table[] = {
 	},
 	{ }
 };
+<<<<<<< HEAD
+=======
+
+static struct ctl_table sys_table[] = {
+	{
+	  .procname = "kernel",
+	  .mode = 0555,
+	  .child = kdump_ctl_table,
+	},
+	{ }
+};
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 static int
@@ -248,7 +260,11 @@ machine_crash_setup(void)
 	if((ret = register_die_notifier(&kdump_init_notifier_nb)) != 0)
 		return ret;
 #ifdef CONFIG_SYSCTL
+<<<<<<< HEAD
 	register_sysctl("kernel", kdump_ctl_table);
+=======
+	register_sysctl_table(sys_table);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	return 0;
 }

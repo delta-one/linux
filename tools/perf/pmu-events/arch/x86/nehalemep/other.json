@@ -1,6 +1,10 @@
 [
     {
         "BriefDescription": "ES segment renames",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xD5",
         "EventName": "ES_REG_RENAMES",
         "SampleAfterValue": "2000000",
@@ -8,6 +12,10 @@
     },
     {
         "BriefDescription": "I/O transactions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x6C",
         "EventName": "IO_TRANSACTIONS",
         "SampleAfterValue": "2000000",
@@ -15,6 +23,10 @@
     },
     {
         "BriefDescription": "L1I instruction fetch stall cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x80",
         "EventName": "L1I.CYCLES_STALLED",
         "SampleAfterValue": "2000000",
@@ -22,6 +34,10 @@
     },
     {
         "BriefDescription": "L1I instruction fetch hits",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x80",
         "EventName": "L1I.HITS",
         "SampleAfterValue": "2000000",
@@ -29,6 +45,10 @@
     },
     {
         "BriefDescription": "L1I instruction fetch misses",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x80",
         "EventName": "L1I.MISSES",
         "SampleAfterValue": "2000000",
@@ -36,6 +56,10 @@
     },
     {
         "BriefDescription": "L1I Instruction fetches",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x80",
         "EventName": "L1I.READS",
         "SampleAfterValue": "2000000",
@@ -43,6 +67,10 @@
     },
     {
         "BriefDescription": "Large ITLB hit",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x82",
         "EventName": "LARGE_ITLB.HIT",
         "SampleAfterValue": "200000",
@@ -50,6 +78,10 @@
     },
     {
         "BriefDescription": "All loads dispatched",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x13",
         "EventName": "LOAD_DISPATCH.ANY",
         "SampleAfterValue": "2000000",
@@ -57,6 +89,10 @@
     },
     {
         "BriefDescription": "Loads dispatched from the MOB",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x13",
         "EventName": "LOAD_DISPATCH.MOB",
         "SampleAfterValue": "2000000",
@@ -64,6 +100,10 @@
     },
     {
         "BriefDescription": "Loads dispatched that bypass the MOB",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x13",
         "EventName": "LOAD_DISPATCH.RS",
         "SampleAfterValue": "2000000",
@@ -71,6 +111,10 @@
     },
     {
         "BriefDescription": "Loads dispatched from stage 305",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x13",
         "EventName": "LOAD_DISPATCH.RS_DELAYED",
         "SampleAfterValue": "2000000",
@@ -78,6 +122,10 @@
     },
     {
         "BriefDescription": "False dependencies due to partial address aliasing",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x7",
         "EventName": "PARTIAL_ADDRESS_ALIAS",
         "SampleAfterValue": "200000",
@@ -85,6 +133,10 @@
     },
     {
         "BriefDescription": "All Store buffer stall cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x4",
         "EventName": "SB_DRAIN.ANY",
         "SampleAfterValue": "200000",
@@ -92,6 +144,10 @@
     },
     {
         "BriefDescription": "Segment rename stall cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xD4",
         "EventName": "SEG_RENAME_STALLS",
         "SampleAfterValue": "2000000",
@@ -99,6 +155,10 @@
     },
     {
         "BriefDescription": "Thread responded HIT to snoop",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB8",
         "EventName": "SNOOP_RESPONSE.HIT",
         "SampleAfterValue": "100000",
@@ -106,6 +166,10 @@
     },
     {
         "BriefDescription": "Thread responded HITE to snoop",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB8",
         "EventName": "SNOOP_RESPONSE.HITE",
         "SampleAfterValue": "100000",
@@ -113,6 +177,10 @@
     },
     {
         "BriefDescription": "Thread responded HITM to snoop",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB8",
         "EventName": "SNOOP_RESPONSE.HITM",
         "SampleAfterValue": "100000",
@@ -120,6 +188,10 @@
     },
     {
         "BriefDescription": "Super Queue full stall cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xF6",
         "EventName": "SQ_FULL_STALL_CYCLES",
         "SampleAfterValue": "2000000",

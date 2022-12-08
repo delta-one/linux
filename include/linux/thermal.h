@@ -17,6 +17,11 @@
 #include <linux/workqueue.h>
 #include <uapi/linux/thermal.h>
 
+<<<<<<< HEAD
+=======
+#define THERMAL_MAX_TRIPS	12
+
+>>>>>>> b7ba80a49124 (Commit)
 /* invalid cooling state */
 #define THERMAL_CSTATE_INVALID -1UL
 
@@ -100,7 +105,10 @@ struct thermal_cooling_device_ops {
 struct thermal_cooling_device {
 	int id;
 	char *type;
+<<<<<<< HEAD
 	unsigned long max_state;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct device device;
 	struct device_node *np;
 	void *devdata;
@@ -334,8 +342,11 @@ static inline void devm_thermal_of_zone_unregister(struct device *dev,
 }
 #endif
 
+<<<<<<< HEAD
 int __thermal_zone_get_trip(struct thermal_zone_device *tz, int trip_id,
 			    struct thermal_trip *trip);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int thermal_zone_get_trip(struct thermal_zone_device *tz, int trip_id,
 			  struct thermal_trip *trip);
 
@@ -346,6 +357,7 @@ int thermal_zone_get_num_trips(struct thermal_zone_device *tz);
 
 int thermal_zone_get_crit_temp(struct thermal_zone_device *tz, int *temp);
 
+<<<<<<< HEAD
 #ifdef CONFIG_THERMAL_ACPI
 int thermal_acpi_active_trip_temp(struct acpi_device *adev, int id, int *ret_temp);
 int thermal_acpi_passive_trip_temp(struct acpi_device *adev, int *ret_temp);
@@ -353,6 +365,8 @@ int thermal_acpi_hot_trip_temp(struct acpi_device *adev, int *ret_temp);
 int thermal_acpi_critical_trip_temp(struct acpi_device *adev, int *ret_temp);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_THERMAL
 struct thermal_zone_device *thermal_zone_device_register(const char *, int, int,
 		void *, struct thermal_zone_device_ops *,
@@ -365,10 +379,13 @@ thermal_zone_device_register_with_trips(const char *, struct thermal_trip *, int
 					void *, struct thermal_zone_device_ops *,
 					struct thermal_zone_params *, int, int);
 
+<<<<<<< HEAD
 void *thermal_zone_device_priv(struct thermal_zone_device *tzd);
 const char *thermal_zone_device_type(struct thermal_zone_device *tzd);
 int thermal_zone_device_id(struct thermal_zone_device *tzd);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int thermal_zone_bind_cooling_device(struct thermal_zone_device *, int,
 				     struct thermal_cooling_device *,
 				     unsigned long, unsigned long,
@@ -388,7 +405,10 @@ devm_thermal_of_cooling_device_register(struct device *dev,
 				struct device_node *np,
 				char *type, void *devdata,
 				const struct thermal_cooling_device_ops *ops);
+<<<<<<< HEAD
 void thermal_cooling_device_update(struct thermal_cooling_device *);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void thermal_cooling_device_unregister(struct thermal_cooling_device *);
 struct thermal_zone_device *thermal_zone_get_zone_by_name(const char *name);
 int thermal_zone_get_temp(struct thermal_zone_device *tz, int *temp);
@@ -441,6 +461,7 @@ static inline int thermal_zone_get_offset(
 		struct thermal_zone_device *tz)
 { return -ENODEV; }
 
+<<<<<<< HEAD
 static inline void *thermal_zone_device_priv(struct thermal_zone_device *tz)
 {
 	return NULL;
@@ -456,6 +477,8 @@ static inline int thermal_zone_device_id(struct thermal_zone_device *tzd)
 	return -ENODEV;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int thermal_zone_device_enable(struct thermal_zone_device *tz)
 { return -ENODEV; }
 

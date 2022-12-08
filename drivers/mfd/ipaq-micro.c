@@ -381,6 +381,10 @@ static int __maybe_unused micro_resume(struct device *dev)
 static int __init micro_probe(struct platform_device *pdev)
 {
 	struct ipaq_micro *micro;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 	int irq;
 
@@ -390,7 +394,12 @@ static int __init micro_probe(struct platform_device *pdev)
 
 	micro->dev = &pdev->dev;
 
+<<<<<<< HEAD
 	micro->base = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	micro->base = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(micro->base))
 		return PTR_ERR(micro->base);
 

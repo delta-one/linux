@@ -5,7 +5,10 @@
  * Copyright (C) 2021 Renesas Electronics Corp.
  */
 
+<<<<<<< HEAD
 #include <dt-bindings/gpio/gpio.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "r8a779f0.dtsi"
 
 / {
@@ -13,13 +16,21 @@
 	compatible = "renesas,spider-cpu", "renesas,r8a779f0";
 
 	aliases {
+<<<<<<< HEAD
 		serial0 = &hscif0;
+=======
+		serial0 = &scif3;
+>>>>>>> b7ba80a49124 (Commit)
 		serial1 = &scif0;
 	};
 
 	chosen {
 		bootargs = "ignore_loglevel rw root=/dev/nfs ip=on";
+<<<<<<< HEAD
 		stdout-path = "serial0:1843200n8";
+=======
+		stdout-path = "serial0:115200n8";
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	memory@48000000 {
@@ -33,12 +44,15 @@
 		reg = <0x4 0x80000000 0x0 0x80000000>;
 	};
 
+<<<<<<< HEAD
 	rc21012_ufs: clk-rc21012-ufs {
 		compatible = "fixed-clock";
 		clock-frequency = <38400000>;
 		#clock-cells = <0>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	reg_1p8v: regulator-1p8v {
 		compatible = "regulator-fixed";
 		regulator-name = "fixed-1.8V";
@@ -66,6 +80,7 @@
 	clock-frequency = <32768>;
 };
 
+<<<<<<< HEAD
 &hscif0 {
 	pinctrl-0 = <&hscif0_pins>;
 	pinctrl-names = "default";
@@ -89,6 +104,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &i2c4 {
 	pinctrl-0 = <&i2c4_pins>;
 	pinctrl-names = "default";
@@ -129,6 +146,7 @@
 	pinctrl-0 = <&scif_clk_pins>;
 	pinctrl-names = "default";
 
+<<<<<<< HEAD
 	hscif0_pins: hscif0 {
 		groups = "hscif0_data", "hscif0_ctrl";
 		function = "hscif0";
@@ -139,6 +157,8 @@
 		function = "i2c0";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	i2c4_pins: i2c4 {
 		groups = "i2c4";
 		function = "i2c4";
@@ -155,6 +175,14 @@
 		function = "scif0";
 	};
 
+<<<<<<< HEAD
+=======
+	scif3_pins: scif3 {
+		groups = "scif3_data", "scif3_ctrl";
+		function = "scif3";
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	scif_clk_pins: scif_clk {
 		groups = "scif_clk";
 		function = "scif_clk";
@@ -174,6 +202,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &scif_clk {
 	clock-frequency = <24000000>;
 };
@@ -187,4 +216,16 @@
 	clocks = <&rc21012_ufs>;
 	enable-gpios = <&gpio_exp_20 4 GPIO_ACTIVE_LOW>;
 	/delete-property/ clock-frequency;
+=======
+&scif3 {
+	pinctrl-0 = <&scif3_pins>;
+	pinctrl-names = "default";
+
+	uart-has-rtscts;
+	status = "okay";
+};
+
+&scif_clk {
+	clock-frequency = <24000000>;
+>>>>>>> b7ba80a49124 (Commit)
 };

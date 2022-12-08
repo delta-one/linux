@@ -629,7 +629,10 @@ nlm_shutdown_hosts_net(struct net *net)
 			rpc_shutdown_client(host->h_rpcclnt);
 			host->h_rpcclnt = NULL;
 		}
+<<<<<<< HEAD
 		nlmsvc_free_host_resources(host);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Then, perform a garbage collection pass */

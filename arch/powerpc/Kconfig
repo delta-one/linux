@@ -1,9 +1,12 @@
 # SPDX-License-Identifier: GPL-2.0
 source "arch/powerpc/platforms/Kconfig.cputype"
 
+<<<<<<< HEAD
 config CC_HAS_ELFV2
 	def_bool PPC64 && $(cc-option, -mabi=elfv2)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config 32BIT
 	bool
 	default y if PPC32
@@ -99,7 +102,11 @@ config LOCKDEP_SUPPORT
 config GENERIC_LOCKBREAK
 	bool
 	default y
+<<<<<<< HEAD
 	depends on SMP && PREEMPTION && !PPC_QUEUED_SPINLOCKS
+=======
+	depends on SMP && PREEMPTION
+>>>>>>> b7ba80a49124 (Commit)
 
 config GENERIC_HWEIGHT
 	bool
@@ -138,9 +145,14 @@ config PPC
 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC_BOOK3S_64
 	select ARCH_HAS_SET_MEMORY
 	select ARCH_HAS_STRICT_KERNEL_RWX	if (PPC_BOOK3S || PPC_8xx || 40x) && !HIBERNATION
+<<<<<<< HEAD
 	select ARCH_HAS_STRICT_KERNEL_RWX	if PPC_85xx && !HIBERNATION && !RANDOMIZE_BASE
 	select ARCH_HAS_STRICT_MODULE_RWX	if ARCH_HAS_STRICT_KERNEL_RWX
 	select ARCH_HAS_SYSCALL_WRAPPER		if !SPU_BASE && !COMPAT
+=======
+	select ARCH_HAS_STRICT_KERNEL_RWX	if FSL_BOOKE && !HIBERNATION && !RANDOMIZE_BASE
+	select ARCH_HAS_STRICT_MODULE_RWX	if ARCH_HAS_STRICT_KERNEL_RWX
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
 	select ARCH_HAS_UACCESS_FLUSHCACHE
 	select ARCH_HAS_UBSAN_SANITIZE_ALL
@@ -150,7 +162,10 @@ config PPC
 	select ARCH_MIGHT_HAVE_PC_SERIO
 	select ARCH_OPTIONAL_KERNEL_RWX		if ARCH_HAS_STRICT_KERNEL_RWX
 	select ARCH_OPTIONAL_KERNEL_RWX_DEFAULT
+<<<<<<< HEAD
 	select ARCH_SPLIT_ARG64			if PPC32
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_STACKWALK
 	select ARCH_SUPPORTS_ATOMIC_RMW
 	select ARCH_SUPPORTS_DEBUG_PAGEALLOC	if PPC_BOOK3S || PPC_8xx || 40x
@@ -158,11 +173,19 @@ config PPC
 	select ARCH_USE_CMPXCHG_LOCKREF		if PPC64
 	select ARCH_USE_MEMTEST
 	select ARCH_USE_QUEUED_RWLOCKS		if PPC_QUEUED_SPINLOCKS
+<<<<<<< HEAD
+=======
+	select ARCH_USE_QUEUED_SPINLOCKS	if PPC_QUEUED_SPINLOCKS
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
 	select ARCH_WANT_IPC_PARSE_VERSION
 	select ARCH_WANT_IRQS_OFF_ACTIVATE_MM
 	select ARCH_WANT_LD_ORPHAN_WARN
 	select ARCH_WANTS_MODULES_DATA_IN_VMALLOC	if PPC_BOOK3S_32 || PPC_8xx
+<<<<<<< HEAD
+=======
+	select ARCH_WANTS_NO_INSTR
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_WEAK_RELEASE_ACQUIRE
 	select BINFMT_ELF
 	select BUILDTIME_TABLE_SORT
@@ -197,8 +220,12 @@ config PPC
 	select HAVE_ARCH_KASAN			if PPC_RADIX_MMU
 	select HAVE_ARCH_KASAN			if PPC_BOOK3E_64
 	select HAVE_ARCH_KASAN_VMALLOC		if HAVE_ARCH_KASAN
+<<<<<<< HEAD
 	select HAVE_ARCH_KCSAN            	if PPC_BOOK3S_64
 	select HAVE_ARCH_KFENCE			if ARCH_SUPPORTS_DEBUG_PAGEALLOC
+=======
+	select HAVE_ARCH_KFENCE			if PPC_BOOK3S_32 || PPC_8xx || 40x
+>>>>>>> b7ba80a49124 (Commit)
 	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
 	select HAVE_ARCH_KGDB
 	select HAVE_ARCH_MMAP_RND_BITS
@@ -207,7 +234,11 @@ config PPC
 	select HAVE_ARCH_SECCOMP_FILTER
 	select HAVE_ARCH_TRACEHOOK
 	select HAVE_ASM_MODVERSIONS
+<<<<<<< HEAD
 	select HAVE_CONTEXT_TRACKING_USER
+=======
+	select HAVE_CONTEXT_TRACKING_USER		if PPC64
+>>>>>>> b7ba80a49124 (Commit)
 	select HAVE_C_RECORDMCOUNT
 	select HAVE_DEBUG_KMEMLEAK
 	select HAVE_DEBUG_STACKOVERFLOW
@@ -215,7 +246,11 @@ config PPC
 	select HAVE_DYNAMIC_FTRACE_WITH_ARGS	if MPROFILE_KERNEL || PPC32
 	select HAVE_DYNAMIC_FTRACE_WITH_REGS	if MPROFILE_KERNEL || PPC32
 	select HAVE_EBPF_JIT
+<<<<<<< HEAD
 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+=======
+	select HAVE_EFFICIENT_UNALIGNED_ACCESS	if !(CPU_LITTLE_ENDIAN && POWER7_CPU)
+>>>>>>> b7ba80a49124 (Commit)
 	select HAVE_FAST_GUP
 	select HAVE_FTRACE_MCOUNT_RECORD
 	select HAVE_FUNCTION_DESCRIPTORS	if PPC64_ELF_ABI_V1
@@ -236,13 +271,20 @@ config PPC
 	select HAVE_KPROBES
 	select HAVE_KPROBES_ON_FTRACE
 	select HAVE_KRETPROBES
+<<<<<<< HEAD
 	select HAVE_LD_DEAD_CODE_DATA_ELIMINATION if HAVE_OBJTOOL_MCOUNT
+=======
+	select HAVE_LD_DEAD_CODE_DATA_ELIMINATION
+>>>>>>> b7ba80a49124 (Commit)
 	select HAVE_LIVEPATCH			if HAVE_DYNAMIC_FTRACE_WITH_REGS
 	select HAVE_MOD_ARCH_SPECIFIC
 	select HAVE_NMI				if PERF_EVENTS || (PPC64 && PPC_BOOK3S)
 	select HAVE_OPTPROBES
+<<<<<<< HEAD
 	select HAVE_OBJTOOL			if PPC32 || MPROFILE_KERNEL
 	select HAVE_OBJTOOL_MCOUNT		if HAVE_OBJTOOL
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select HAVE_PERF_EVENTS
 	select HAVE_PERF_EVENTS_NMI		if PPC64
 	select HAVE_PERF_REGS
@@ -257,7 +299,10 @@ config PPC
 	select HAVE_STATIC_CALL			if PPC32
 	select HAVE_SYSCALL_TRACEPOINTS
 	select HAVE_VIRT_CPU_ACCOUNTING
+<<<<<<< HEAD
 	select HAVE_VIRT_CPU_ACCOUNTING_GEN
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select HUGETLB_PAGE_SIZE_VARIABLE	if PPC_BOOK3S_64 && HUGETLB_PAGE
 	select IOMMU_HELPER			if PPC64
 	select IRQ_DOMAIN
@@ -266,7 +311,10 @@ config PPC
 	select MMU_GATHER_PAGE_SIZE
 	select MMU_GATHER_RCU_TABLE_FREE
 	select MMU_GATHER_MERGE_VMAS
+<<<<<<< HEAD
 	select MMU_LAZY_TLB_SHOOTDOWN		if PPC_BOOK3S_64
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select MODULES_USE_ELF_RELA
 	select NEED_DMA_MAP_STATE		if PPC64 || NOT_COHERENT_CACHE
 	select NEED_PER_CPU_EMBED_FIRST_CHUNK	if PPC64
@@ -292,16 +340,24 @@ config PPC
 	#
 
 config PPC_LONG_DOUBLE_128
+<<<<<<< HEAD
 	depends on PPC64 && ALTIVEC
+=======
+	depends on PPC64
+>>>>>>> b7ba80a49124 (Commit)
 	def_bool $(success,test "$(shell,echo __LONG_DOUBLE_128__ | $(CC) -E -P -)" = 1)
 
 config PPC_BARRIER_NOSPEC
 	bool
 	default y
+<<<<<<< HEAD
 	depends on PPC_BOOK3S_64 || PPC_E500
 
 config PPC_HAS_LBARX_LHARX
 	bool
+=======
+	depends on PPC_BOOK3S_64 || PPC_FSL_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 
 config EARLY_PRINTK
 	bool
@@ -390,6 +446,7 @@ config PPC_DCR
 	depends on PPC_DCR_NATIVE || PPC_DCR_MMIO
 	default y
 
+<<<<<<< HEAD
 config PPC_PCI_OF_BUS_MAP
 	bool "Use pci_to_OF_bus_map (deprecated)"
 	depends on PPC32
@@ -406,6 +463,12 @@ config PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT
 	depends on !PPC_PCI_OF_BUS_MAP
 	bool "Assign PCI bus numbers from zero individually for each PCI domain"
 	default y
+=======
+config PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT
+	depends on PPC32
+	depends on !PPC_PMAC && !PPC_CHRP
+	bool "Assign PCI bus numbers from zero individually for each PCI domain"
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  By default on PPC32 were PCI bus numbers unique across all PCI domains.
 	  So system could have only 256 PCI buses independently of available
@@ -550,6 +613,7 @@ config HOTPLUG_CPU
 
 	  Say N if you are unsure.
 
+<<<<<<< HEAD
 config INTERRUPT_SANITIZE_REGISTERS
 	bool "Clear gprs on interrupt arrival"
 	depends on PPC64 && ARCH_HAS_SYSCALL_WRAPPER
@@ -559,6 +623,8 @@ config INTERRUPT_SANITIZE_REGISTERS
 	  syscalls through clearing user state from registers before handling
 	  the exception.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config PPC_QUEUED_SPINLOCKS
 	bool "Queued spinlocks" if EXPERT
 	depends on SMP
@@ -580,7 +646,11 @@ config PPC64_SUPPORTS_MEMORY_FAILURE
 
 config KEXEC
 	bool "kexec system call"
+<<<<<<< HEAD
 	depends on PPC_BOOK3S || PPC_E500 || (44x && !SMP)
+=======
+	depends on (PPC_BOOK3S || FSL_BOOKE || (44x && !SMP)) || PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	select KEXEC_CORE
 	help
 	  kexec is a system call that implements the ability to shutdown your
@@ -613,6 +683,7 @@ config KEXEC_FILE
 config ARCH_HAS_KEXEC_PURGATORY
 	def_bool KEXEC_FILE
 
+<<<<<<< HEAD
 config PPC64_BIG_ENDIAN_ELF_ABI_V2
 	bool "Build big-endian kernel using ELF ABI V2 (EXPERIMENTAL)"
 	depends on PPC64 && CPU_BIG_ENDIAN
@@ -633,6 +704,11 @@ config PPC64_BIG_ENDIAN_ELF_ABI_V2
 config RELOCATABLE
 	bool "Build a relocatable kernel"
 	depends on PPC64 || (FLATMEM && (44x || PPC_85xx))
+=======
+config RELOCATABLE
+	bool "Build a relocatable kernel"
+	depends on PPC64 || (FLATMEM && (44x || FSL_BOOKE))
+>>>>>>> b7ba80a49124 (Commit)
 	select NONSTATIC_KERNEL
 	help
 	  This builds a kernel image that is capable of running at the
@@ -655,7 +731,11 @@ config RELOCATABLE
 
 config RANDOMIZE_BASE
 	bool "Randomize the address of the kernel image"
+<<<<<<< HEAD
 	depends on PPC_85xx && FLATMEM
+=======
+	depends on (FSL_BOOKE && FLATMEM && PPC32)
+>>>>>>> b7ba80a49124 (Commit)
 	depends on RELOCATABLE
 	help
 	  Randomizes the virtual address at which the kernel image is
@@ -674,8 +754,13 @@ config RELOCATABLE_TEST
 
 config CRASH_DUMP
 	bool "Build a dump capture kernel"
+<<<<<<< HEAD
 	depends on PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
 	select RELOCATABLE if PPC64 || 44x || PPC_85xx
+=======
+	depends on PPC64 || PPC_BOOK3S_32 || FSL_BOOKE || (44x && !SMP)
+	select RELOCATABLE if PPC64 || 44x || FSL_BOOKE
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Build a kernel suitable for use as a dump capture kernel.
 	  The same kernel binary can be used as production kernel and dump
@@ -864,7 +949,11 @@ config DATA_SHIFT_BOOL
 	depends on ADVANCED_OPTIONS
 	depends on STRICT_KERNEL_RWX || DEBUG_PAGEALLOC || KFENCE
 	depends on PPC_BOOK3S_32 || (PPC_8xx && !PIN_TLB_DATA && !STRICT_KERNEL_RWX) || \
+<<<<<<< HEAD
 		   PPC_85xx
+=======
+		   FSL_BOOKE
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This option allows you to set the kernel data alignment. When
 	  RAM is mapped by blocks, the alignment needs to fit the size and
@@ -877,13 +966,21 @@ config DATA_SHIFT
 	default 24 if STRICT_KERNEL_RWX && PPC64
 	range 17 28 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC || KFENCE) && PPC_BOOK3S_32
 	range 19 23 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC || KFENCE) && PPC_8xx
+<<<<<<< HEAD
 	range 20 24 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC || KFENCE) && PPC_85xx
+=======
+	range 20 24 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC || KFENCE) && PPC_FSL_BOOKE
+>>>>>>> b7ba80a49124 (Commit)
 	default 22 if STRICT_KERNEL_RWX && PPC_BOOK3S_32
 	default 18 if (DEBUG_PAGEALLOC || KFENCE) && PPC_BOOK3S_32
 	default 23 if STRICT_KERNEL_RWX && PPC_8xx
 	default 23 if (DEBUG_PAGEALLOC || KFENCE) && PPC_8xx && PIN_TLB_DATA
 	default 19 if (DEBUG_PAGEALLOC || KFENCE) && PPC_8xx
+<<<<<<< HEAD
 	default 24 if STRICT_KERNEL_RWX && PPC_85xx
+=======
+	default 24 if STRICT_KERNEL_RWX && FSL_BOOKE
+>>>>>>> b7ba80a49124 (Commit)
 	default PPC_PAGE_SHIFT
 	help
 	  On Book3S 32 (603+), DBATs are used to map kernel text and rodata RO.
@@ -896,6 +993,7 @@ config DATA_SHIFT
 
 config ARCH_FORCE_MAX_ORDER
 	int "Maximum zone order"
+<<<<<<< HEAD
 	range 7 8 if PPC64 && PPC_64K_PAGES
 	default "8" if PPC64 && PPC_64K_PAGES
 	range 12 12 if PPC64 && !PPC_64K_PAGES
@@ -908,6 +1006,20 @@ config ARCH_FORCE_MAX_ORDER
 	default "4" if PPC32 && PPC_256K_PAGES
 	range 10 63
 	default "10"
+=======
+	range 8 9 if PPC64 && PPC_64K_PAGES
+	default "9" if PPC64 && PPC_64K_PAGES
+	range 13 13 if PPC64 && !PPC_64K_PAGES
+	default "13" if PPC64 && !PPC_64K_PAGES
+	range 9 64 if PPC32 && PPC_16K_PAGES
+	default "9" if PPC32 && PPC_16K_PAGES
+	range 7 64 if PPC32 && PPC_64K_PAGES
+	default "7" if PPC32 && PPC_64K_PAGES
+	range 5 64 if PPC32 && PPC_256K_PAGES
+	default "5" if PPC32 && PPC_256K_PAGES
+	range 11 64
+	default "11"
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  The kernel memory allocator divides physically contiguous memory
 	  blocks into "zones", where each zone is a power of two number of
@@ -916,6 +1028,12 @@ config ARCH_FORCE_MAX_ORDER
 	  blocks of physically contiguous memory, then you may need to
 	  increase this value.
 
+<<<<<<< HEAD
+=======
+	  This config option is actually maximum order plus one. For example,
+	  a value of 11 means that the largest free memory block is 2^10 pages.
+
+>>>>>>> b7ba80a49124 (Commit)
 	  The page size is not necessarily 4KB.  For example, on 64-bit
 	  systems, 64KB pages can be enabled via CONFIG_PPC_64K_PAGES.  Keep
 	  this in mind when choosing a value for this option.
@@ -1039,7 +1157,10 @@ config PPC_SECURE_BOOT
 	depends on PPC_POWERNV || PPC_PSERIES
 	depends on IMA_ARCH_POLICY
 	imply IMA_SECURE_AND_OR_TRUSTED_BOOT
+<<<<<<< HEAD
 	select PSERIES_PLPKS if PPC_PSERIES
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Systems with firmware secure boot enabled need to define security
 	  policies to extend secure boot to the OS. This config allows a user
@@ -1057,6 +1178,22 @@ config PPC_SECVAR_SYSFS
 	  read/write operations on these variables. Say Y if you have
 	  secure boot enabled and want to expose variables to userspace.
 
+<<<<<<< HEAD
+=======
+config PPC_RTAS_FILTER
+	bool "Enable filtering of RTAS syscalls"
+	default y
+	depends on PPC_RTAS
+	help
+	  The RTAS syscall API has security issues that could be used to
+	  compromise system integrity. This option enforces restrictions on the
+	  RTAS calls and arguments passed by userspace programs to mitigate
+	  these issues.
+
+	  Say Y unless you know what you are doing and the filter is causing
+	  problems for you.
+
+>>>>>>> b7ba80a49124 (Commit)
 endmenu
 
 config ISA_DMA_API
@@ -1184,7 +1321,11 @@ config LOWMEM_SIZE
 
 config LOWMEM_CAM_NUM_BOOL
 	bool "Set number of CAMs to use to map low memory"
+<<<<<<< HEAD
 	depends on ADVANCED_OPTIONS && PPC_85xx
+=======
+	depends on ADVANCED_OPTIONS && FSL_BOOKE
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This option allows you to set the maximum number of CAM slots that
 	  will be used to map low memory.  There are a limited number of slots
@@ -1195,7 +1336,11 @@ config LOWMEM_CAM_NUM_BOOL
 	  Say N here unless you know what you are doing.
 
 config LOWMEM_CAM_NUM
+<<<<<<< HEAD
 	depends on PPC_85xx
+=======
+	depends on FSL_BOOKE
+>>>>>>> b7ba80a49124 (Commit)
 	int "Number of CAMs to use to map low memory" if LOWMEM_CAM_NUM_BOOL
 	default 3 if !STRICT_KERNEL_RWX
 	default 9 if DATA_SHIFT >= 24
@@ -1204,7 +1349,11 @@ config LOWMEM_CAM_NUM
 
 config DYNAMIC_MEMSTART
 	bool "Enable page aligned dynamic load address for kernel"
+<<<<<<< HEAD
 	depends on ADVANCED_OPTIONS && FLATMEM && (PPC_85xx || 44x)
+=======
+	depends on ADVANCED_OPTIONS && FLATMEM && (FSL_BOOKE || 44x)
+>>>>>>> b7ba80a49124 (Commit)
 	select NONSTATIC_KERNEL
 	help
 	  This option enables the kernel to be loaded at any page aligned
@@ -1253,7 +1402,11 @@ config KERNEL_START
 
 config PHYSICAL_START_BOOL
 	bool "Set physical address where the kernel is loaded"
+<<<<<<< HEAD
 	depends on ADVANCED_OPTIONS && FLATMEM && PPC_85xx
+=======
+	depends on ADVANCED_OPTIONS && FLATMEM && FSL_BOOKE
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This gives the physical address where the kernel is loaded.
 
@@ -1266,7 +1419,11 @@ config PHYSICAL_START
 
 config PHYSICAL_ALIGN
 	hex
+<<<<<<< HEAD
 	default "0x04000000" if PPC_85xx
+=======
+	default "0x04000000" if FSL_BOOKE
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This value puts the alignment restrictions on physical address
 	  where kernel is loaded and run from. Kernel is compiled for an

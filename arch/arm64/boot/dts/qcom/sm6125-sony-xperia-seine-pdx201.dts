@@ -6,10 +6,16 @@
 /dts-v1/;
 
 #include "sm6125.dtsi"
+<<<<<<< HEAD
 #include "pm6125.dtsi"
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/input/gpio-keys.h>
 #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+=======
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+#include <dt-bindings/input/gpio-keys.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	/* required for bootloader to select correct board */
@@ -20,11 +26,14 @@
 	compatible = "sony,pdx201", "qcom,sm6125";
 	chassis-type = "handset";
 
+<<<<<<< HEAD
 	aliases {
 		mmc0 = &sdhc_1; /* SDC1 eMMC slot */
 		mmc1 = &sdhc_2; /* SDC2 SD card slot */
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	chosen {
 		#address-cells = <2>;
 		#size-cells = <2>;
@@ -46,6 +55,7 @@
 	};
 
 	gpio-keys {
+<<<<<<< HEAD
 		compatible = "gpio-keys";
 
 		pinctrl-0 = <&vol_down_n>;
@@ -62,6 +72,23 @@
 	};
 
 	reserved-memory {
+=======
+		status = "okay";
+		compatible = "gpio-keys";
+		autorepeat;
+
+		key-vol-dn {
+			label = "Volume Down";
+			gpios = <&tlmm 47 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <KEY_VOLUMEDOWN>;
+			gpio-key,wakeup;
+			debounce-interval = <15>;
+		};
+	};
+
+	reserved_memory {
+>>>>>>> b7ba80a49124 (Commit)
 		#address-cells = <2>;
 		#size-cells = <2>;
 		debug_mem: memory@ffb00000 {
@@ -87,6 +114,7 @@
 			no-map;
 		};
 	};
+<<<<<<< HEAD
 
 	thermal-zones {
 		rf-pa0-thermal {
@@ -424,13 +452,21 @@
 };
 
 &qupv3_id_0 {
+=======
+};
+
+&hsusb_phy1 {
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 
 &sdc2_off_state {
 	sd-cd-pins {
 		pins = "gpio98";
+<<<<<<< HEAD
 		function = "gpio";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		drive-strength = <2>;
 		bias-disable;
 	};
@@ -439,13 +475,17 @@
 &sdc2_on_state {
 	sd-cd-pins {
 		pins = "gpio98";
+<<<<<<< HEAD
 		function = "gpio";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		drive-strength = <2>;
 		bias-pull-up;
 	};
 };
 
 &sdhc_1 {
+<<<<<<< HEAD
 	vmmc-supply = <&pm6125_l24>;
 	vqmmc-supply = <&pm6125_l11>;
 	status = "okay";
@@ -457,11 +497,14 @@
 	vqmmc-supply = <&pm6125_l5>;
 	no-sdio;
 	no-mmc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 
 &tlmm {
 	gpio-reserved-ranges = <22 2>, <28 6>;
+<<<<<<< HEAD
 
 	vol_down_n: vol-down-n-state {
 		pins = "gpio47";
@@ -470,6 +513,8 @@
 		bias-disable;
 		input-enable;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &usb3 {

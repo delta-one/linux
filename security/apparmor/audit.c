@@ -36,6 +36,7 @@ static const char *const aa_audit_type[] = {
 	"AUTO"
 };
 
+<<<<<<< HEAD
 static const char *const aa_class_names[] = {
 	"none",
 	"unknown",
@@ -73,6 +74,8 @@ static const char *const aa_class_names[] = {
 };
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Currently AppArmor auditing is fed straight into the audit framework.
  *
@@ -83,7 +86,11 @@ static const char *const aa_class_names[] = {
  */
 
 /**
+<<<<<<< HEAD
  * audit_pre() - core AppArmor function.
+=======
+ * audit_base - core AppArmor function.
+>>>>>>> b7ba80a49124 (Commit)
  * @ab: audit buffer to fill (NOT NULL)
  * @ca: audit structure containing data to audit (NOT NULL)
  *
@@ -102,12 +109,15 @@ static void audit_pre(struct audit_buffer *ab, void *ca)
 		audit_log_format(ab, " operation=\"%s\"", aad(sa)->op);
 	}
 
+<<<<<<< HEAD
 	if (aad(sa)->class)
 		audit_log_format(ab, " class=\"%s\"",
 				 aad(sa)->class <= AA_CLASS_LAST ?
 				 aa_class_names[aad(sa)->class] :
 				 "unknown");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (aad(sa)->info) {
 		audit_log_format(ab, " info=\"%s\"", aad(sa)->info);
 		if (aad(sa)->error)

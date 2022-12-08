@@ -5,7 +5,10 @@
 struct iio_buffer;
 struct iio_buffer_setup_ops;
 struct iio_dev;
+<<<<<<< HEAD
 struct iio_dev_attr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct device;
 
 struct iio_buffer *iio_kfifo_allocate(void);
@@ -14,7 +17,11 @@ void iio_kfifo_free(struct iio_buffer *r);
 int devm_iio_kfifo_buffer_setup_ext(struct device *dev,
 				    struct iio_dev *indio_dev,
 				    const struct iio_buffer_setup_ops *setup_ops,
+<<<<<<< HEAD
 				    const struct iio_dev_attr **buffer_attrs);
+=======
+				    const struct attribute **buffer_attrs);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define devm_iio_kfifo_buffer_setup(dev, indio_dev, setup_ops)	\
 	devm_iio_kfifo_buffer_setup_ext((dev), (indio_dev), (setup_ops), NULL)

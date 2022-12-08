@@ -117,6 +117,7 @@ static struct spi_statistics __percpu *spi_alloc_pcpu_stats(struct device *dev)
 	return pcpu_stats;
 }
 
+<<<<<<< HEAD
 static ssize_t spi_emit_pcpu_stats(struct spi_statistics __percpu *stat,
 				   char *buf, size_t offset)
 {
@@ -139,6 +140,26 @@ static ssize_t spi_emit_pcpu_stats(struct spi_statistics __percpu *stat,
 	}
 	return sysfs_emit(buf, "%llu\n", val);
 }
+=======
+#define spi_pcpu_stats_totalize(ret, in, field)				\
+do {									\
+	int i;								\
+	ret = 0;							\
+	for_each_possible_cpu(i) {					\
+		const struct spi_statistics *pcpu_stats;		\
+		u64 inc;						\
+		unsigned int start;					\
+		pcpu_stats = per_cpu_ptr(in, i);			\
+		do {							\
+			start = u64_stats_fetch_begin_irq(		\
+					&pcpu_stats->syncp);		\
+			inc = u64_stats_read(&pcpu_stats->field);	\
+		} while (u64_stats_fetch_retry_irq(			\
+					&pcpu_stats->syncp, start));	\
+		ret += inc;						\
+	}								\
+} while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SPI_STATISTICS_ATTRS(field, file)				\
 static ssize_t spi_controller_##field##_show(struct device *dev,	\
@@ -169,8 +190,16 @@ static struct device_attribute dev_attr_spi_device_##field = {		\
 static ssize_t spi_statistics_##name##_show(struct spi_statistics __percpu *stat, \
 					    char *buf)			\
 {									\
+<<<<<<< HEAD
 	return spi_emit_pcpu_stats(stat, buf,				\
 			offsetof(struct spi_statistics, field));	\
+=======
+	ssize_t len;							\
+	u64 val;							\
+	spi_pcpu_stats_totalize(val, stat, field);			\
+	len = sysfs_emit(buf, "%llu\n", val);				\
+	return len;							\
+>>>>>>> b7ba80a49124 (Commit)
 }									\
 SPI_STATISTICS_ATTRS(name, file)
 
@@ -361,6 +390,7 @@ const struct spi_device_id *spi_get_device_id(const struct spi_device *sdev)
 }
 EXPORT_SYMBOL_GPL(spi_get_device_id);
 
+<<<<<<< HEAD
 const void *spi_get_device_match_data(const struct spi_device *sdev)
 {
 	const void *match;
@@ -373,6 +403,8 @@ const void *spi_get_device_match_data(const struct spi_device *sdev)
 }
 EXPORT_SYMBOL_GPL(spi_get_device_match_data);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int spi_match_device(struct device *dev, struct device_driver *drv)
 {
 	const struct spi_device	*spi = to_spi_device(dev);
@@ -396,7 +428,11 @@ static int spi_match_device(struct device *dev, struct device_driver *drv)
 	return strcmp(spi->modalias, drv->name) == 0;
 }
 
+<<<<<<< HEAD
 static int spi_uevent(const struct device *dev, struct kobj_uevent_env *env)
+=======
+static int spi_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct spi_device		*spi = to_spi_device(dev);
 	int rc;
@@ -605,7 +641,11 @@ static void spi_dev_set_name(struct spi_device *spi)
 	}
 
 	dev_set_name(&spi->dev, "%s.%u", dev_name(&spi->controller->dev),
+<<<<<<< HEAD
 		     spi_get_chipselect(spi, 0));
+=======
+		     spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int spi_dev_check(struct device *dev, void *data)
@@ -614,7 +654,11 @@ static int spi_dev_check(struct device *dev, void *data)
 	struct spi_device *new_spi = data;
 
 	if (spi->controller == new_spi->controller &&
+<<<<<<< HEAD
 	    spi_get_chipselect(spi, 0) == spi_get_chipselect(new_spi, 0))
+=======
+	    spi->chip_select == new_spi->chip_select)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EBUSY;
 	return 0;
 }
@@ -639,7 +683,11 @@ static int __spi_add_device(struct spi_device *spi)
 	status = bus_for_each_dev(&spi_bus_type, NULL, spi, spi_dev_check);
 	if (status) {
 		dev_err(dev, "chipselect %d already in use\n",
+<<<<<<< HEAD
 				spi_get_chipselect(spi, 0));
+=======
+				spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 		return status;
 	}
 
@@ -650,7 +698,11 @@ static int __spi_add_device(struct spi_device *spi)
 	}
 
 	if (ctlr->cs_gpiods)
+<<<<<<< HEAD
 		spi_set_csgpiod(spi, 0, ctlr->cs_gpiods[spi_get_chipselect(spi, 0)]);
+=======
+		spi->cs_gpiod = ctlr->cs_gpiods[spi->chip_select];
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Drivers may modify this initial i/o setup, but will
@@ -693,8 +745,13 @@ int spi_add_device(struct spi_device *spi)
 	int status;
 
 	/* Chipselects are numbered 0..max; validate. */
+<<<<<<< HEAD
 	if (spi_get_chipselect(spi, 0) >= ctlr->num_chipselect) {
 		dev_err(dev, "cs%d >= max %d\n", spi_get_chipselect(spi, 0),
+=======
+	if (spi->chip_select >= ctlr->num_chipselect) {
+		dev_err(dev, "cs%d >= max %d\n", spi->chip_select,
+>>>>>>> b7ba80a49124 (Commit)
 			ctlr->num_chipselect);
 		return -EINVAL;
 	}
@@ -715,8 +772,13 @@ static int spi_add_device_locked(struct spi_device *spi)
 	struct device *dev = ctlr->dev.parent;
 
 	/* Chipselects are numbered 0..max; validate. */
+<<<<<<< HEAD
 	if (spi_get_chipselect(spi, 0) >= ctlr->num_chipselect) {
 		dev_err(dev, "cs%d >= max %d\n", spi_get_chipselect(spi, 0),
+=======
+	if (spi->chip_select >= ctlr->num_chipselect) {
+		dev_err(dev, "cs%d >= max %d\n", spi->chip_select,
+>>>>>>> b7ba80a49124 (Commit)
 			ctlr->num_chipselect);
 		return -EINVAL;
 	}
@@ -762,7 +824,11 @@ struct spi_device *spi_new_device(struct spi_controller *ctlr,
 
 	WARN_ON(strlen(chip->modalias) >= sizeof(proxy->modalias));
 
+<<<<<<< HEAD
 	spi_set_chipselect(proxy, 0, chip->chip_select);
+=======
+	proxy->chip_select = chip->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 	proxy->max_speed_hz = chip->max_speed_hz;
 	proxy->mode = chip->mode;
 	proxy->irq = chip->irq;
@@ -971,23 +1037,41 @@ static void spi_set_cs(struct spi_device *spi, bool enable, bool force)
 	 * Avoid calling into the driver (or doing delays) if the chip select
 	 * isn't actually changing from the last time this was called.
 	 */
+<<<<<<< HEAD
 	if (!force && ((enable && spi->controller->last_cs == spi_get_chipselect(spi, 0)) ||
 		       (!enable && spi->controller->last_cs != spi_get_chipselect(spi, 0))) &&
+=======
+	if (!force && ((enable && spi->controller->last_cs == spi->chip_select) ||
+				(!enable && spi->controller->last_cs != spi->chip_select)) &&
+>>>>>>> b7ba80a49124 (Commit)
 	    (spi->controller->last_cs_mode_high == (spi->mode & SPI_CS_HIGH)))
 		return;
 
 	trace_spi_set_cs(spi, activate);
 
+<<<<<<< HEAD
 	spi->controller->last_cs = enable ? spi_get_chipselect(spi, 0) : -1;
 	spi->controller->last_cs_mode_high = spi->mode & SPI_CS_HIGH;
 
 	if ((spi_get_csgpiod(spi, 0) || !spi->controller->set_cs_timing) && !activate)
 		spi_delay_exec(&spi->cs_hold, NULL);
+=======
+	spi->controller->last_cs = enable ? spi->chip_select : -1;
+	spi->controller->last_cs_mode_high = spi->mode & SPI_CS_HIGH;
+
+	if ((spi->cs_gpiod || !spi->controller->set_cs_timing) && !activate) {
+		spi_delay_exec(&spi->cs_hold, NULL);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (spi->mode & SPI_CS_HIGH)
 		enable = !enable;
 
+<<<<<<< HEAD
 	if (spi_get_csgpiod(spi, 0)) {
+=======
+	if (spi->cs_gpiod) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!(spi->mode & SPI_NO_CS)) {
 			/*
 			 * Historically ACPI has no means of the GPIO polarity and
@@ -1000,10 +1084,17 @@ static void spi_set_cs(struct spi_device *spi, bool enable, bool force)
 			 * into account.
 			 */
 			if (has_acpi_companion(&spi->dev))
+<<<<<<< HEAD
 				gpiod_set_value_cansleep(spi_get_csgpiod(spi, 0), !enable);
 			else
 				/* Polarity handled by GPIO library */
 				gpiod_set_value_cansleep(spi_get_csgpiod(spi, 0), activate);
+=======
+				gpiod_set_value_cansleep(spi->cs_gpiod, !enable);
+			else
+				/* Polarity handled by GPIO library */
+				gpiod_set_value_cansleep(spi->cs_gpiod, activate);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		/* Some SPI masters need both GPIO CS & slave_select */
 		if ((spi->controller->flags & SPI_MASTER_GPIO_SS) &&
@@ -1013,7 +1104,11 @@ static void spi_set_cs(struct spi_device *spi, bool enable, bool force)
 		spi->controller->set_cs(spi, !enable);
 	}
 
+<<<<<<< HEAD
 	if (spi_get_csgpiod(spi, 0) || !spi->controller->set_cs_timing) {
+=======
+	if (spi->cs_gpiod || !spi->controller->set_cs_timing) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (activate)
 			spi_delay_exec(&spi->cs_setup, NULL);
 		else
@@ -1022,9 +1117,15 @@ static void spi_set_cs(struct spi_device *spi, bool enable, bool force)
 }
 
 #ifdef CONFIG_HAS_DMA
+<<<<<<< HEAD
 static int spi_map_buf_attrs(struct spi_controller *ctlr, struct device *dev,
 			     struct sg_table *sgt, void *buf, size_t len,
 			     enum dma_data_direction dir, unsigned long attrs)
+=======
+int spi_map_buf(struct spi_controller *ctlr, struct device *dev,
+		struct sg_table *sgt, void *buf, size_t len,
+		enum dma_data_direction dir)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const bool vmalloced_buf = is_vmalloc_addr(buf);
 	unsigned int max_seg_size = dma_get_max_seg_size(dev);
@@ -1090,12 +1191,19 @@ static int spi_map_buf_attrs(struct spi_controller *ctlr, struct device *dev,
 		sg = sg_next(sg);
 	}
 
+<<<<<<< HEAD
 	ret = dma_map_sgtable(dev, sgt, dir, attrs);
+=======
+	ret = dma_map_sg(dev, sgt->sgl, sgt->nents, dir);
+	if (!ret)
+		ret = -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0) {
 		sg_free_table(sgt);
 		return ret;
 	}
 
+<<<<<<< HEAD
 	return 0;
 }
 
@@ -1123,6 +1231,20 @@ void spi_unmap_buf(struct spi_controller *ctlr, struct device *dev,
 		   struct sg_table *sgt, enum dma_data_direction dir)
 {
 	spi_unmap_buf_attrs(ctlr, dev, sgt, dir, 0);
+=======
+	sgt->nents = ret;
+
+	return 0;
+}
+
+void spi_unmap_buf(struct spi_controller *ctlr, struct device *dev,
+		   struct sg_table *sgt, enum dma_data_direction dir)
+{
+	if (sgt->orig_nents) {
+		dma_unmap_sg(dev, sgt->sgl, sgt->orig_nents, dir);
+		sg_free_table(sgt);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __spi_map_msg(struct spi_controller *ctlr, struct spi_message *msg)
@@ -1149,22 +1271,32 @@ static int __spi_map_msg(struct spi_controller *ctlr, struct spi_message *msg)
 		rx_dev = ctlr->dev.parent;
 
 	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
+<<<<<<< HEAD
 		/* The sync is done before each transfer. */
 		unsigned long attrs = DMA_ATTR_SKIP_CPU_SYNC;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (!ctlr->can_dma(ctlr, msg->spi, xfer))
 			continue;
 
 		if (xfer->tx_buf != NULL) {
+<<<<<<< HEAD
 			ret = spi_map_buf_attrs(ctlr, tx_dev, &xfer->tx_sg,
 						(void *)xfer->tx_buf,
 						xfer->len, DMA_TO_DEVICE,
 						attrs);
+=======
+			ret = spi_map_buf(ctlr, tx_dev, &xfer->tx_sg,
+					  (void *)xfer->tx_buf, xfer->len,
+					  DMA_TO_DEVICE);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret != 0)
 				return ret;
 		}
 
 		if (xfer->rx_buf != NULL) {
+<<<<<<< HEAD
 			ret = spi_map_buf_attrs(ctlr, rx_dev, &xfer->rx_sg,
 						xfer->rx_buf, xfer->len,
 						DMA_FROM_DEVICE, attrs);
@@ -1173,13 +1305,24 @@ static int __spi_map_msg(struct spi_controller *ctlr, struct spi_message *msg)
 						&xfer->tx_sg, DMA_TO_DEVICE,
 						attrs);
 
+=======
+			ret = spi_map_buf(ctlr, rx_dev, &xfer->rx_sg,
+					  xfer->rx_buf, xfer->len,
+					  DMA_FROM_DEVICE);
+			if (ret != 0) {
+				spi_unmap_buf(ctlr, tx_dev, &xfer->tx_sg,
+					      DMA_TO_DEVICE);
+>>>>>>> b7ba80a49124 (Commit)
 				return ret;
 			}
 		}
 	}
 
+<<<<<<< HEAD
 	ctlr->cur_rx_dma_dev = rx_dev;
 	ctlr->cur_tx_dma_dev = tx_dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ctlr->cur_msg_mapped = true;
 
 	return 0;
@@ -1187,13 +1330,19 @@ static int __spi_map_msg(struct spi_controller *ctlr, struct spi_message *msg)
 
 static int __spi_unmap_msg(struct spi_controller *ctlr, struct spi_message *msg)
 {
+<<<<<<< HEAD
 	struct device *rx_dev = ctlr->cur_rx_dma_dev;
 	struct device *tx_dev = ctlr->cur_tx_dma_dev;
 	struct spi_transfer *xfer;
+=======
+	struct spi_transfer *xfer;
+	struct device *tx_dev, *rx_dev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!ctlr->cur_msg_mapped || !ctlr->can_dma)
 		return 0;
 
+<<<<<<< HEAD
 	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
 		/* The sync has already been done after each transfer. */
 		unsigned long attrs = DMA_ATTR_SKIP_CPU_SYNC;
@@ -1205,12 +1354,35 @@ static int __spi_unmap_msg(struct spi_controller *ctlr, struct spi_message *msg)
 				    DMA_FROM_DEVICE, attrs);
 		spi_unmap_buf_attrs(ctlr, tx_dev, &xfer->tx_sg,
 				    DMA_TO_DEVICE, attrs);
+=======
+	if (ctlr->dma_tx)
+		tx_dev = ctlr->dma_tx->device->dev;
+	else if (ctlr->dma_map_dev)
+		tx_dev = ctlr->dma_map_dev;
+	else
+		tx_dev = ctlr->dev.parent;
+
+	if (ctlr->dma_rx)
+		rx_dev = ctlr->dma_rx->device->dev;
+	else if (ctlr->dma_map_dev)
+		rx_dev = ctlr->dma_map_dev;
+	else
+		rx_dev = ctlr->dev.parent;
+
+	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
+		if (!ctlr->can_dma(ctlr, msg->spi, xfer))
+			continue;
+
+		spi_unmap_buf(ctlr, rx_dev, &xfer->rx_sg, DMA_FROM_DEVICE);
+		spi_unmap_buf(ctlr, tx_dev, &xfer->tx_sg, DMA_TO_DEVICE);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ctlr->cur_msg_mapped = false;
 
 	return 0;
 }
+<<<<<<< HEAD
 
 static void spi_dma_sync_for_device(struct spi_controller *ctlr,
 				    struct spi_transfer *xfer)
@@ -1241,6 +1413,8 @@ static void spi_dma_sync_for_cpu(struct spi_controller *ctlr,
 	if (xfer->tx_sg.orig_nents)
 		dma_sync_sgtable_for_cpu(tx_dev, &xfer->tx_sg, DMA_TO_DEVICE);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else /* !CONFIG_HAS_DMA */
 static inline int __spi_map_msg(struct spi_controller *ctlr,
 				struct spi_message *msg)
@@ -1253,6 +1427,7 @@ static inline int __spi_unmap_msg(struct spi_controller *ctlr,
 {
 	return 0;
 }
+<<<<<<< HEAD
 
 static void spi_dma_sync_for_device(struct spi_controller *ctrl,
 				    struct spi_transfer *xfer)
@@ -1263,6 +1438,8 @@ static void spi_dma_sync_for_cpu(struct spi_controller *ctrl,
 				 struct spi_transfer *xfer)
 {
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* !CONFIG_HAS_DMA */
 
 static inline int spi_unmap_msg(struct spi_controller *ctlr,
@@ -1484,6 +1661,7 @@ static void _spi_transfer_cs_change_delay(struct spi_message *msg,
 	}
 }
 
+<<<<<<< HEAD
 void spi_transfer_cs_change_delay_exec(struct spi_message *msg,
 						  struct spi_transfer *xfer)
 {
@@ -1491,6 +1669,8 @@ void spi_transfer_cs_change_delay_exec(struct spi_message *msg,
 }
 EXPORT_SYMBOL_GPL(spi_transfer_cs_change_delay_exec);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * spi_transfer_one_message - Default implementation of transfer_one_message()
  *
@@ -1528,11 +1708,16 @@ static int spi_transfer_one_message(struct spi_controller *ctlr,
 			reinit_completion(&ctlr->xfer_completion);
 
 fallback_pio:
+<<<<<<< HEAD
 			spi_dma_sync_for_device(ctlr, xfer);
 			ret = ctlr->transfer_one(ctlr, msg->spi, xfer);
 			if (ret < 0) {
 				spi_dma_sync_for_cpu(ctlr, xfer);
 
+=======
+			ret = ctlr->transfer_one(ctlr, msg->spi, xfer);
+			if (ret < 0) {
+>>>>>>> b7ba80a49124 (Commit)
 				if (ctlr->cur_msg_mapped &&
 				   (xfer->error & SPI_TRANS_FAIL_NO_START)) {
 					__spi_unmap_msg(ctlr, msg);
@@ -1555,8 +1740,11 @@ fallback_pio:
 				if (ret < 0)
 					msg->status = ret;
 			}
+<<<<<<< HEAD
 
 			spi_dma_sync_for_cpu(ctlr, xfer);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			if (xfer->len)
 				dev_err(&msg->spi->dev,
@@ -1670,6 +1858,7 @@ static int __spi_pump_transfer_message(struct spi_controller *ctlr,
 
 	trace_spi_message_start(msg);
 
+<<<<<<< HEAD
 	ret = spi_split_transfers_maxsize(ctlr, msg,
 					  spi_max_transfer_size(msg->spi),
 					  GFP_KERNEL | GFP_DMA);
@@ -1679,6 +1868,8 @@ static int __spi_pump_transfer_message(struct spi_controller *ctlr,
 		return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (ctlr->prepare_message) {
 		ret = ctlr->prepare_message(ctlr, msg);
 		if (ret) {
@@ -1928,7 +2119,11 @@ void spi_take_timestamp_post(struct spi_controller *ctlr,
 	/* Capture the resolution of the timestamp */
 	xfer->ptp_sts_word_post = progress;
 
+<<<<<<< HEAD
 	xfer->timestamped = 1;
+=======
+	xfer->timestamped = true;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(spi_take_timestamp_post);
 
@@ -2227,6 +2422,7 @@ void spi_flush_queue(struct spi_controller *ctlr)
 /*-------------------------------------------------------------------------*/
 
 #if defined(CONFIG_OF)
+<<<<<<< HEAD
 static void of_spi_parse_dt_cs_delay(struct device_node *nc,
 				     struct spi_delay *delay, const char *prop)
 {
@@ -2243,6 +2439,8 @@ static void of_spi_parse_dt_cs_delay(struct device_node *nc,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
 			   struct device_node *nc)
 {
@@ -2326,17 +2524,24 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
 			nc, rc);
 		return rc;
 	}
+<<<<<<< HEAD
 	spi_set_chipselect(spi, 0, value);
+=======
+	spi->chip_select = value;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Device speed */
 	if (!of_property_read_u32(nc, "spi-max-frequency", &value))
 		spi->max_speed_hz = value;
 
+<<<<<<< HEAD
 	/* Device CS delays */
 	of_spi_parse_dt_cs_delay(nc, &spi->cs_setup, "spi-cs-setup-delay-ns");
 	of_spi_parse_dt_cs_delay(nc, &spi->cs_hold, "spi-cs-hold-delay-ns");
 	of_spi_parse_dt_cs_delay(nc, &spi->cs_inactive, "spi-cs-inactive-delay-ns");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -2355,8 +2560,13 @@ of_register_spi_device(struct spi_controller *ctlr, struct device_node *nc)
 	}
 
 	/* Select device driver */
+<<<<<<< HEAD
 	rc = of_alias_from_compatible(nc, spi->modalias,
 				      sizeof(spi->modalias));
+=======
+	rc = of_modalias_node(nc, spi->modalias,
+				sizeof(spi->modalias));
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc < 0) {
 		dev_err(&ctlr->dev, "cannot find modalias for %pOF\n", nc);
 		goto err_out;
@@ -2368,8 +2578,13 @@ of_register_spi_device(struct spi_controller *ctlr, struct device_node *nc)
 
 	/* Store a pointer to the node in the device structure */
 	of_node_get(nc);
+<<<<<<< HEAD
 
 	device_set_node(&spi->dev, of_fwnode_handle(nc));
+=======
+	spi->dev.of_node = nc;
+	spi->dev.fwnode = of_fwnode_handle(nc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Register the new device */
 	rc = spi_add_device(spi);
@@ -2445,7 +2660,11 @@ struct spi_device *spi_new_ancillary_device(struct spi_device *spi,
 	strscpy(ancillary->modalias, "dummy", sizeof(ancillary->modalias));
 
 	/* Use provided chip-select for ancillary device */
+<<<<<<< HEAD
 	spi_set_chipselect(ancillary, 0, chip_select);
+=======
+	ancillary->chip_select = chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Take over SPI mode/speed from SPI main device */
 	ancillary->max_speed_hz = spi->max_speed_hz;
@@ -2692,7 +2911,11 @@ struct spi_device *acpi_spi_device_alloc(struct spi_controller *ctlr,
 	spi->mode		|= lookup.mode;
 	spi->irq		= lookup.irq;
 	spi->bits_per_word	= lookup.bits_per_word;
+<<<<<<< HEAD
 	spi_set_chipselect(spi, 0, lookup.chip_select);
+=======
+	spi->chip_select	= lookup.chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return spi;
 }
@@ -2777,6 +3000,10 @@ static void spi_controller_release(struct device *dev)
 
 static struct class spi_master_class = {
 	.name		= "spi_master",
+<<<<<<< HEAD
+=======
+	.owner		= THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.dev_release	= spi_controller_release,
 	.dev_groups	= spi_master_groups,
 };
@@ -2798,6 +3025,7 @@ int spi_slave_abort(struct spi_device *spi)
 }
 EXPORT_SYMBOL_GPL(spi_slave_abort);
 
+<<<<<<< HEAD
 int spi_target_abort(struct spi_device *spi)
 {
 	struct spi_controller *ctlr = spi->controller;
@@ -2809,6 +3037,8 @@ int spi_target_abort(struct spi_device *spi)
 }
 EXPORT_SYMBOL_GPL(spi_target_abort);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t slave_show(struct device *dev, struct device_attribute *attr,
 			  char *buf)
 {
@@ -2879,6 +3109,10 @@ static const struct attribute_group *spi_slave_groups[] = {
 
 static struct class spi_slave_class = {
 	.name		= "spi_slave",
+<<<<<<< HEAD
+=======
+	.owner		= THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.dev_release	= spi_controller_release,
 	.dev_groups	= spi_slave_groups,
 };
@@ -3071,6 +3305,7 @@ static int spi_controller_check_ops(struct spi_controller *ctlr)
 	 * The controller may implement only the high-level SPI-memory like
 	 * operations if it does not support regular SPI transfers, and this is
 	 * valid use case.
+<<<<<<< HEAD
 	 * If ->mem_ops or ->mem_ops->exec_op is NULL, we request that at least
 	 * one of the ->transfer_xxx() method be implemented.
 	 */
@@ -3079,6 +3314,17 @@ static int spi_controller_check_ops(struct spi_controller *ctlr)
 		   !ctlr->transfer_one_message) {
 			return -EINVAL;
 		}
+=======
+	 * If ->mem_ops is NULL, we request that at least one of the
+	 * ->transfer_xxx() method be implemented.
+	 */
+	if (ctlr->mem_ops) {
+		if (!ctlr->mem_ops->exec_op)
+			return -EINVAL;
+	} else if (!ctlr->transfer && !ctlr->transfer_one &&
+		   !ctlr->transfer_one_message) {
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -3620,6 +3866,7 @@ int spi_split_transfers_maxsize(struct spi_controller *ctlr,
 }
 EXPORT_SYMBOL_GPL(spi_split_transfers_maxsize);
 
+<<<<<<< HEAD
 
 /**
  * spi_split_transfers_maxwords - split spi transfers into multiple transfers
@@ -3669,6 +3916,8 @@ int spi_split_transfers_maxwords(struct spi_controller *ctlr,
 }
 EXPORT_SYMBOL_GPL(spi_split_transfers_maxwords);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*-------------------------------------------------------------------------*/
 
 /* Core methods for SPI controller protocol drivers.  Some of the
@@ -3690,6 +3939,7 @@ static int __spi_validate_bits_per_word(struct spi_controller *ctlr,
 }
 
 /**
+<<<<<<< HEAD
  * spi_set_cs_timing - configure CS setup, hold, and inactive delays
  * @spi: the device that requires specific CS timing configuration
  *
@@ -3721,6 +3971,8 @@ static int spi_set_cs_timing(struct spi_device *spi)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * spi_setup - setup SPI mode and clock rate
  * @spi: the device whose settings are being modified
  * Context: can sleep, and no requests are queued to the device
@@ -3816,12 +4068,15 @@ int spi_setup(struct spi_device *spi)
 		}
 	}
 
+<<<<<<< HEAD
 	status = spi_set_cs_timing(spi);
 	if (status) {
 		mutex_unlock(&spi->controller->io_mutex);
 		return status;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (spi->controller->auto_runtime_pm && spi->controller->set_cs) {
 		status = pm_runtime_resume_and_get(spi->controller->dev.parent);
 		if (status < 0) {
@@ -3905,7 +4160,11 @@ static int __spi_validate(struct spi_device *spi, struct spi_message *message)
 	 * cs_change is set for each transfer.
 	 */
 	if ((spi->mode & SPI_CS_WORD) && (!(ctlr->mode_bits & SPI_CS_WORD) ||
+<<<<<<< HEAD
 					  spi_get_csgpiod(spi, 0))) {
+=======
+					  spi->cs_gpiod)) {
+>>>>>>> b7ba80a49124 (Commit)
 		size_t maxsize;
 		int ret;
 

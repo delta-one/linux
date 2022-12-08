@@ -251,14 +251,22 @@ static void output_pgtable_bits_defines(void)
 }
 
 #ifdef CONFIG_NUMA
+<<<<<<< HEAD
 unsigned long pcpu_handlers[NR_CPUS];
+=======
+static unsigned long pcpu_handlers[NR_CPUS];
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 extern long exception_handlers[VECSIZE * 128 / sizeof(long)];
 
 void setup_tlb_handler(int cpu)
 {
 	setup_ptwalker();
+<<<<<<< HEAD
 	local_flush_tlb_all();
+=======
+	output_pgtable_bits_defines();
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* The tlb handlers are generated only once */
 	if (cpu == 0) {
@@ -301,7 +309,12 @@ void tlb_init(int cpu)
 	write_csr_pagesize(PS_DEFAULT_SIZE);
 	write_csr_stlbpgsize(PS_DEFAULT_SIZE);
 	write_csr_tlbrefill_pagesize(PS_DEFAULT_SIZE);
+<<<<<<< HEAD
 
 	setup_tlb_handler(cpu);
 	output_pgtable_bits_defines();
+=======
+	setup_tlb_handler(cpu);
+	local_flush_tlb_all();
+>>>>>>> b7ba80a49124 (Commit)
 }

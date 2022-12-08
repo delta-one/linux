@@ -111,7 +111,11 @@ static int sgx_encl_create(struct sgx_encl *encl, struct sgx_secs *secs)
 	encl->base = secs->base;
 	encl->size = secs->size;
 	encl->attributes = secs->attributes;
+<<<<<<< HEAD
 	encl->attributes_mask = SGX_ATTR_UNPRIV_MASK;
+=======
+	encl->attributes_mask = SGX_ATTR_DEBUG | SGX_ATTR_MODE64BIT | SGX_ATTR_KSS;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Set only after completion, as encl->lock has not been taken. */
 	set_bit(SGX_ENCL_CREATED, &encl->flags);
@@ -221,11 +225,19 @@ static int __sgx_encl_add_page(struct sgx_encl *encl,
 	pginfo.secs = (unsigned long)sgx_get_epc_virt_addr(encl->secs.epc_page);
 	pginfo.addr = encl_page->desc & PAGE_MASK;
 	pginfo.metadata = (unsigned long)secinfo;
+<<<<<<< HEAD
 	pginfo.contents = (unsigned long)kmap_local_page(src_page);
 
 	ret = __eadd(&pginfo, sgx_get_epc_virt_addr(epc_page));
 
 	kunmap_local((void *)pginfo.contents);
+=======
+	pginfo.contents = (unsigned long)kmap_atomic(src_page);
+
+	ret = __eadd(&pginfo, sgx_get_epc_virt_addr(epc_page));
+
+	kunmap_atomic((void *)pginfo.contents);
+>>>>>>> b7ba80a49124 (Commit)
 	put_page(src_page);
 
 	return ret ? -EIO : 0;
@@ -356,9 +368,12 @@ static int sgx_validate_offset_length(struct sgx_encl *encl,
 	if (!length || !IS_ALIGNED(length, PAGE_SIZE))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (offset + length < offset)
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (offset + length - PAGE_SIZE >= encl->size)
 		return -EINVAL;
 

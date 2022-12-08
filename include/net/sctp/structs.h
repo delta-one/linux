@@ -477,7 +477,10 @@ struct sctp_af {
 	int		(*available)	(union sctp_addr *,
 					 struct sctp_sock *);
 	int		(*skb_iif)	(const struct sk_buff *sk);
+<<<<<<< HEAD
 	int		(*skb_sdif)(const struct sk_buff *sk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int		(*is_ce)	(const struct sk_buff *sk);
 	void		(*seq_dump_addr)(struct seq_file *seq,
 					 union sctp_addr *addr);
@@ -1379,12 +1382,19 @@ struct sctp_association *sctp_endpoint_lookup_assoc(
 	struct sctp_transport **);
 bool sctp_endpoint_is_peeled_off(struct sctp_endpoint *ep,
 				 const union sctp_addr *paddr);
+<<<<<<< HEAD
 struct sctp_endpoint *sctp_endpoint_is_match(struct sctp_endpoint *ep,
 					     struct net *net,
 					     const union sctp_addr *laddr,
 					     int dif, int sdif);
 bool sctp_has_association(struct net *net, const union sctp_addr *laddr,
 			  const union sctp_addr *paddr, int dif, int sdif);
+=======
+struct sctp_endpoint *sctp_endpoint_is_match(struct sctp_endpoint *,
+					struct net *, const union sctp_addr *);
+bool sctp_has_association(struct net *net, const union sctp_addr *laddr,
+			  const union sctp_addr *paddr);
+>>>>>>> b7ba80a49124 (Commit)
 
 int sctp_verify_init(struct net *net, const struct sctp_endpoint *ep,
 		     const struct sctp_association *asoc,
@@ -1412,7 +1422,10 @@ struct sctp_stream_priorities {
 	/* The next stream in line */
 	struct sctp_stream_out_ext *next;
 	__u16 prio;
+<<<<<<< HEAD
 	__u16 users;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct sctp_stream_out_ext {
@@ -1429,11 +1442,14 @@ struct sctp_stream_out_ext {
 		struct {
 			struct list_head rr_list;
 		};
+<<<<<<< HEAD
 		struct {
 			struct list_head fc_list;
 			__u32 fc_length;
 			__u16 fc_weight;
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -1480,9 +1496,12 @@ struct sctp_stream {
 			/* The next stream in line */
 			struct sctp_stream_out_ext *rr_next;
 		};
+<<<<<<< HEAD
 		struct {
 			struct list_head fc_list;
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	struct sctp_stream_interleave *si;
 };

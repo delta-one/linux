@@ -27,7 +27,10 @@
 #include <drm/amdgpu_drm.h>
 #include <drm/gpu_scheduler.h>
 #include <drm/drm_print.h>
+<<<<<<< HEAD
 #include <drm/drm_suballoc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct amdgpu_device;
 struct amdgpu_ring;
@@ -40,7 +43,10 @@ struct amdgpu_vm;
 #define AMDGPU_MAX_RINGS		28
 #define AMDGPU_MAX_HWIP_RINGS		8
 #define AMDGPU_MAX_GFX_RINGS		2
+<<<<<<< HEAD
 #define AMDGPU_MAX_SW_GFX_RINGS         2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define AMDGPU_MAX_COMPUTE_RINGS	8
 #define AMDGPU_MAX_VCE_RINGS		3
 #define AMDGPU_MAX_UVD_ENC_RINGS	2
@@ -61,7 +67,10 @@ enum amdgpu_ring_priority_level {
 #define AMDGPU_FENCE_FLAG_64BIT         (1 << 0)
 #define AMDGPU_FENCE_FLAG_INT           (1 << 1)
 #define AMDGPU_FENCE_FLAG_TC_WB_ONLY    (1 << 2)
+<<<<<<< HEAD
 #define AMDGPU_FENCE_FLAG_EXEC          (1 << 3)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define to_amdgpu_ring(s) container_of((s), struct amdgpu_ring, sched)
 
@@ -93,7 +102,11 @@ enum amdgpu_ib_pool_type {
 };
 
 struct amdgpu_ib {
+<<<<<<< HEAD
 	struct drm_suballoc		*sa_bo;
+=======
+	struct amdgpu_sa_bo		*sa_bo;
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t			length_dw;
 	uint64_t			gpu_addr;
 	uint32_t			*ptr;
@@ -146,6 +159,7 @@ signed long amdgpu_fence_wait_polling(struct amdgpu_ring *ring,
 				      uint32_t wait_seq,
 				      signed long timeout);
 unsigned amdgpu_fence_count_emitted(struct amdgpu_ring *ring);
+<<<<<<< HEAD
 
 void amdgpu_fence_driver_isr_toggle(struct amdgpu_device *adev, bool stop);
 
@@ -153,6 +167,10 @@ u64 amdgpu_fence_last_unsignaled_time_us(struct amdgpu_ring *ring);
 void amdgpu_fence_update_start_timestamp(struct amdgpu_ring *ring, uint32_t seq,
 					 ktime_t timestamp);
 
+=======
+void amdgpu_fence_driver_isr_toggle(struct amdgpu_device *adev, bool stop);
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Rings.
  */
@@ -287,16 +305,23 @@ struct amdgpu_ring {
 	bool			is_mes_queue;
 	uint32_t		hw_queue_id;
 	struct amdgpu_mes_ctx_data *mes_ctx;
+<<<<<<< HEAD
 
 	bool            is_sw_ring;
 	unsigned int    entry_index;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define amdgpu_ring_parse_cs(r, p, job, ib) ((r)->funcs->parse_cs((p), (job), (ib)))
 #define amdgpu_ring_patch_cs_in_place(r, p, job, ib) ((r)->funcs->patch_cs_in_place((p), (job), (ib)))
 #define amdgpu_ring_test_ring(r) (r)->funcs->test_ring((r))
+<<<<<<< HEAD
 #define amdgpu_ring_test_ib(r, t) ((r)->funcs->test_ib ? (r)->funcs->test_ib((r), (t)) : 0)
+=======
+#define amdgpu_ring_test_ib(r, t) (r)->funcs->test_ib((r), (t))
+>>>>>>> b7ba80a49124 (Commit)
 #define amdgpu_ring_get_rptr(r) (r)->funcs->get_rptr((r))
 #define amdgpu_ring_get_wptr(r) (r)->funcs->get_wptr((r))
 #define amdgpu_ring_set_wptr(r) (r)->funcs->set_wptr((r))
@@ -319,9 +344,12 @@ struct amdgpu_ring {
 #define amdgpu_ring_preempt_ib(r) (r)->funcs->preempt_ib(r)
 
 int amdgpu_ring_alloc(struct amdgpu_ring *ring, unsigned ndw);
+<<<<<<< HEAD
 void amdgpu_ring_ib_begin(struct amdgpu_ring *ring);
 void amdgpu_ring_ib_end(struct amdgpu_ring *ring);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void amdgpu_ring_insert_nop(struct amdgpu_ring *ring, uint32_t count);
 void amdgpu_ring_generic_pad_ib(struct amdgpu_ring *ring, struct amdgpu_ib *ib);
 void amdgpu_ring_commit(struct amdgpu_ring *ring);

@@ -260,6 +260,7 @@ static const struct rcar_du_format_info rcar_du_format_infos[] = {
 		.planes = 1,
 		.hsub = 1,
 	}, {
+<<<<<<< HEAD
 		.fourcc = DRM_FORMAT_RGBX1010102,
 		.v4l2 = V4L2_PIX_FMT_RGBX1010102,
 		.bpp = 32,
@@ -278,6 +279,8 @@ static const struct rcar_du_format_info rcar_du_format_infos[] = {
 		.planes = 1,
 		.hsub = 1,
 	}, {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.fourcc = DRM_FORMAT_YVYU,
 		.v4l2 = V4L2_PIX_FMT_YVYU,
 		.bpp = 16,
@@ -325,6 +328,7 @@ static const struct rcar_du_format_info rcar_du_format_infos[] = {
 		.bpp = 24,
 		.planes = 3,
 		.hsub = 1,
+<<<<<<< HEAD
 	}, {
 		.fourcc = DRM_FORMAT_Y210,
 		.v4l2 = V4L2_PIX_FMT_Y210,
@@ -337,6 +341,8 @@ static const struct rcar_du_format_info rcar_du_format_infos[] = {
 		.bpp = 32,
 		.planes = 1,
 		.hsub = 2,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

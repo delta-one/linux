@@ -49,11 +49,15 @@
 /* Supports VFIO_DMA_UNMAP_FLAG_ALL */
 #define VFIO_UNMAP_ALL			9
 
+<<<<<<< HEAD
 /*
  * Supports the vaddr flag for DMA map and unmap.  Not supported for mediated
  * devices, so this capability is subject to change as groups are added or
  * removed.
  */
+=======
+/* Supports the vaddr flag for DMA map and unmap */
+>>>>>>> b7ba80a49124 (Commit)
 #define VFIO_UPDATE_VADDR		10
 
 /*
@@ -823,6 +827,7 @@ struct vfio_device_feature {
  * VFIO_MIGRATION_STOP_COPY | VFIO_MIGRATION_P2P means that RUNNING_P2P
  * is supported in addition to the STOP_COPY states.
  *
+<<<<<<< HEAD
  * VFIO_MIGRATION_STOP_COPY | VFIO_MIGRATION_PRE_COPY means that
  * PRE_COPY is supported in addition to the STOP_COPY states.
  *
@@ -830,13 +835,18 @@ struct vfio_device_feature {
  * means that RUNNING_P2P, PRE_COPY and PRE_COPY_P2P are supported
  * in addition to the STOP_COPY states.
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Other combinations of flags have behavior to be defined in the future.
  */
 struct vfio_device_feature_migration {
 	__aligned_u64 flags;
 #define VFIO_MIGRATION_STOP_COPY	(1 << 0)
 #define VFIO_MIGRATION_P2P		(1 << 1)
+<<<<<<< HEAD
 #define VFIO_MIGRATION_PRE_COPY		(1 << 2)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 #define VFIO_DEVICE_FEATURE_MIGRATION 1
 
@@ -887,6 +897,7 @@ struct vfio_device_feature_mig_state {
  *  RESUMING - The device is stopped and is loading a new internal state
  *  ERROR - The device has failed and must be reset
  *
+<<<<<<< HEAD
  * And optional states to support VFIO_MIGRATION_P2P:
  *  RUNNING_P2P - RUNNING, except the device cannot do peer to peer DMA
  * And VFIO_MIGRATION_PRE_COPY:
@@ -894,6 +905,10 @@ struct vfio_device_feature_mig_state {
  *             changes
  * And VFIO_MIGRATION_P2P | VFIO_MIGRATION_PRE_COPY:
  *  PRE_COPY_P2P - PRE_COPY, except the device cannot do peer to peer DMA
+=======
+ * And 1 optional state to support VFIO_MIGRATION_P2P:
+ *  RUNNING_P2P - RUNNING, except the device cannot do peer to peer DMA
+>>>>>>> b7ba80a49124 (Commit)
  *
  * The FSM takes actions on the arcs between FSM states. The driver implements
  * the following behavior for the FSM arcs:
@@ -925,20 +940,27 @@ struct vfio_device_feature_mig_state {
  *
  *   To abort a RESUMING session the device must be reset.
  *
+<<<<<<< HEAD
  * PRE_COPY -> RUNNING
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * RUNNING_P2P -> RUNNING
  *   While in RUNNING the device is fully operational, the device may generate
  *   interrupts, DMA, respond to MMIO, all vfio device regions are functional,
  *   and the device may advance its internal state.
  *
+<<<<<<< HEAD
  *   The PRE_COPY arc will terminate a data transfer session.
  *
  * PRE_COPY_P2P -> RUNNING_P2P
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * RUNNING -> RUNNING_P2P
  * STOP -> RUNNING_P2P
  *   While in RUNNING_P2P the device is partially running in the P2P quiescent
  *   state defined below.
  *
+<<<<<<< HEAD
  *   The PRE_COPY_P2P arc will terminate a data transfer session.
  *
  * RUNNING -> PRE_COPY
@@ -967,6 +989,12 @@ struct vfio_device_feature_mig_state {
  *   continuing all the behaviors of PRE_COPY.
  *
  * PRE_COPY_P2P -> STOP_COPY
+=======
+ * STOP -> STOP_COPY
+ *   This arc begin the process of saving the device state and will return a
+ *   new data_fd.
+ *
+>>>>>>> b7ba80a49124 (Commit)
  *   While in the STOP_COPY state the device has the same behavior as STOP
  *   with the addition that the data transfers session continues to stream the
  *   migration state. End of stream on the FD indicates the entire device
@@ -984,6 +1012,7 @@ struct vfio_device_feature_mig_state {
  *   device state for this arc if required to prepare the device to receive the
  *   migration data.
  *
+<<<<<<< HEAD
  * STOP_COPY -> PRE_COPY
  * STOP_COPY -> PRE_COPY_P2P
  *   These arcs are not permitted and return error if requested. Future
@@ -991,6 +1020,8 @@ struct vfio_device_feature_mig_state {
  *   support will be discoverable by a new flag in
  *   VFIO_DEVICE_FEATURE_MIGRATION.
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * any -> ERROR
  *   ERROR cannot be specified as a device state, however any transition request
  *   can be failed with an errno return and may then move the device_state into
@@ -1002,7 +1033,11 @@ struct vfio_device_feature_mig_state {
  * The optional peer to peer (P2P) quiescent state is intended to be a quiescent
  * state for the device for the purposes of managing multiple devices within a
  * user context where peer-to-peer DMA between devices may be active. The
+<<<<<<< HEAD
  * RUNNING_P2P and PRE_COPY_P2P states must prevent the device from initiating
+=======
+ * RUNNING_P2P states must prevent the device from initiating
+>>>>>>> b7ba80a49124 (Commit)
  * any new P2P DMA transactions. If the device can identify P2P transactions
  * then it can stop only P2P DMA, otherwise it must stop all DMA. The migration
  * driver must complete any such outstanding operations prior to completing the
@@ -1015,8 +1050,11 @@ struct vfio_device_feature_mig_state {
  * above FSM arcs. As there are multiple paths through the FSM arcs the path
  * should be selected based on the following rules:
  *   - Select the shortest path.
+<<<<<<< HEAD
  *   - The path cannot have saving group states as interior arcs, only
  *     starting/end states.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Refer to vfio_mig_get_next_state() for the result of the algorithm.
  *
  * The automatic transit through the FSM arcs that make up the combination
@@ -1030,9 +1068,12 @@ struct vfio_device_feature_mig_state {
  * support them. The user can discover if these states are supported by using
  * VFIO_DEVICE_FEATURE_MIGRATION. By using combination transitions the user can
  * avoid knowing about these optional states if the kernel driver supports them.
+<<<<<<< HEAD
  *
  * Arcs touching PRE_COPY and PRE_COPY_P2P are removed if support for PRE_COPY
  * is not present.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum vfio_device_mig_state {
 	VFIO_DEVICE_STATE_ERROR = 0,
@@ -1041,6 +1082,7 @@ enum vfio_device_mig_state {
 	VFIO_DEVICE_STATE_STOP_COPY = 3,
 	VFIO_DEVICE_STATE_RESUMING = 4,
 	VFIO_DEVICE_STATE_RUNNING_P2P = 5,
+<<<<<<< HEAD
 	VFIO_DEVICE_STATE_PRE_COPY = 6,
 	VFIO_DEVICE_STATE_PRE_COPY_P2P = 7,
 };
@@ -1105,6 +1147,10 @@ struct vfio_precopy_info {
 
 #define VFIO_MIG_GET_PRECOPY_INFO _IO(VFIO_TYPE, VFIO_BASE + 21)
 
+=======
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Upon VFIO_DEVICE_FEATURE_SET, allow the device to be moved into a low power
  * state with the platform-based power management.  Device use of lower power
@@ -1247,6 +1293,7 @@ struct vfio_device_feature_dma_logging_report {
 
 #define VFIO_DEVICE_FEATURE_DMA_LOGGING_REPORT 8
 
+<<<<<<< HEAD
 /*
  * Upon VFIO_DEVICE_FEATURE_GET read back the estimated data length that will
  * be required to complete stop copy.
@@ -1260,6 +1307,8 @@ struct vfio_device_feature_mig_data_size {
 
 #define VFIO_DEVICE_FEATURE_MIG_DATA_SIZE 9
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* -------- API for Type1 VFIO IOMMU -------- */
 
 /**
@@ -1347,7 +1396,12 @@ struct vfio_iommu_type1_info_dma_avail {
  * Map process virtual addresses to IO virtual addresses using the
  * provided struct vfio_dma_map. Caller sets argsz. READ &/ WRITE required.
  *
+<<<<<<< HEAD
  * If flags & VFIO_DMA_MAP_FLAG_VADDR, update the base vaddr for iova. The vaddr
+=======
+ * If flags & VFIO_DMA_MAP_FLAG_VADDR, update the base vaddr for iova, and
+ * unblock translation of host virtual addresses in the iova range.  The vaddr
+>>>>>>> b7ba80a49124 (Commit)
  * must have previously been invalidated with VFIO_DMA_UNMAP_FLAG_VADDR.  To
  * maintain memory consistency within the user application, the updated vaddr
  * must address the same memory object as originally mapped.  Failure to do so
@@ -1398,9 +1452,15 @@ struct vfio_bitmap {
  * must be 0.  This cannot be combined with the get-dirty-bitmap flag.
  *
  * If flags & VFIO_DMA_UNMAP_FLAG_VADDR, do not unmap, but invalidate host
+<<<<<<< HEAD
  * virtual addresses in the iova range.  DMA to already-mapped pages continues.
  * Groups may not be added to the container while any addresses are invalid.
  * This cannot be combined with the get-dirty-bitmap flag.
+=======
+ * virtual addresses in the iova range.  Tasks that attempt to translate an
+ * iova's vaddr will block.  DMA to already-mapped pages continues.  This
+ * cannot be combined with the get-dirty-bitmap flag.
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct vfio_iommu_type1_dma_unmap {
 	__u32	argsz;

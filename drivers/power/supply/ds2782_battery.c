@@ -368,9 +368,15 @@ static const struct ds278x_battery_ops ds278x_ops[] = {
 	}
 };
 
+<<<<<<< HEAD
 static int ds278x_battery_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int ds278x_battery_probe(struct i2c_client *client,
+				const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct ds278x_platform_data *pdata = client->dev.platform_data;
 	struct power_supply_config psy_cfg = {};
 	struct ds278x_info *info;
@@ -458,7 +464,11 @@ static struct i2c_driver ds278x_battery_driver = {
 		.name	= "ds2782-battery",
 		.pm	= &ds278x_battery_pm_ops,
 	},
+<<<<<<< HEAD
 	.probe_new	= ds278x_battery_probe,
+=======
+	.probe		= ds278x_battery_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= ds278x_battery_remove,
 	.id_table	= ds278x_id,
 };

@@ -6,6 +6,11 @@
 
 #ifndef _QEDE_H_
 #define _QEDE_H_
+<<<<<<< HEAD
+=======
+#include <linux/compiler.h>
+#include <linux/version.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/workqueue.h>
 #include <linux/netdevice.h>
 #include <linux/interrupt.h>

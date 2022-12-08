@@ -17,21 +17,35 @@
  * from the valid ranges specified in Section 6.9, Table 14, Page 41
  * of the D-PHY specification (v1.2).
  */
+<<<<<<< HEAD
 static int phy_mipi_dphy_calc_config(unsigned long pixel_clock,
 				     unsigned int bpp,
 				     unsigned int lanes,
 				     unsigned long long hs_clk_rate,
 				     struct phy_configure_opts_mipi_dphy *cfg)
 {
+=======
+int phy_mipi_dphy_get_default_config(unsigned long pixel_clock,
+				     unsigned int bpp,
+				     unsigned int lanes,
+				     struct phy_configure_opts_mipi_dphy *cfg)
+{
+	unsigned long long hs_clk_rate;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long long ui;
 
 	if (!cfg)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (!hs_clk_rate) {
 		hs_clk_rate = pixel_clock * bpp;
 		do_div(hs_clk_rate, lanes);
 	}
+=======
+	hs_clk_rate = pixel_clock * bpp;
+	do_div(hs_clk_rate, lanes);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ui = ALIGN(PSEC_PER_SEC, hs_clk_rate);
 	do_div(ui, hs_clk_rate);
@@ -77,6 +91,7 @@ static int phy_mipi_dphy_calc_config(unsigned long pixel_clock,
 
 	return 0;
 }
+<<<<<<< HEAD
 
 int phy_mipi_dphy_get_default_config(unsigned long pixel_clock,
 				     unsigned int bpp,
@@ -100,6 +115,10 @@ int phy_mipi_dphy_get_default_config_for_hsclk(unsigned long long hs_clk_rate,
 }
 EXPORT_SYMBOL(phy_mipi_dphy_get_default_config_for_hsclk);
 
+=======
+EXPORT_SYMBOL(phy_mipi_dphy_get_default_config);
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Validate D-PHY configuration according to MIPI D-PHY specification
  * (v1.2, Section Section 6.9 "Global Operation Timing Parameters").

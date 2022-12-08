@@ -24,6 +24,7 @@ static struct xdp_buff **ice_xdp_buf(struct ice_rx_ring *rx_ring, u32 idx)
  */
 static void ice_qp_reset_stats(struct ice_vsi *vsi, u16 q_idx)
 {
+<<<<<<< HEAD
 	struct ice_vsi_stats *vsi_stat;
 	struct ice_pf *pf;
 
@@ -42,6 +43,15 @@ static void ice_qp_reset_stats(struct ice_vsi *vsi, u16 q_idx)
 	if (ice_is_xdp_ena_vsi(vsi))
 		memset(&vsi->xdp_rings[q_idx]->ring_stats->stats, 0,
 		       sizeof(vsi->xdp_rings[q_idx]->ring_stats->stats));
+=======
+	memset(&vsi->rx_rings[q_idx]->rx_stats, 0,
+	       sizeof(vsi->rx_rings[q_idx]->rx_stats));
+	memset(&vsi->tx_rings[q_idx]->stats, 0,
+	       sizeof(vsi->tx_rings[q_idx]->stats));
+	if (ice_is_xdp_ena_vsi(vsi))
+		memset(&vsi->xdp_rings[q_idx]->stats, 0,
+		       sizeof(vsi->xdp_rings[q_idx]->stats));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -184,6 +194,11 @@ static int ice_qp_dis(struct ice_vsi *vsi, u16 q_idx)
 	}
 	netif_tx_stop_queue(netdev_get_tx_queue(vsi->netdev, q_idx));
 
+<<<<<<< HEAD
+=======
+	ice_qvec_dis_irq(vsi, rx_ring, q_vector);
+
+>>>>>>> b7ba80a49124 (Commit)
 	ice_fill_txq_meta(vsi, tx_ring, &txq_meta);
 	err = ice_vsi_stop_tx_ring(vsi, ICE_NO_RESET, 0, tx_ring, &txq_meta);
 	if (err)
@@ -198,11 +213,18 @@ static int ice_qp_dis(struct ice_vsi *vsi, u16 q_idx)
 		if (err)
 			return err;
 	}
+<<<<<<< HEAD
 	ice_qvec_dis_irq(vsi, rx_ring, q_vector);
 
 	err = ice_vsi_ctrl_one_rx_ring(vsi, false, q_idx, true);
 	if (err)
 		return err;
+=======
+	err = ice_vsi_ctrl_one_rx_ring(vsi, false, q_idx, true);
+	if (err)
+		return err;
+	ice_clean_rx_ring(rx_ring);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ice_qvec_toggle_napi(vsi, q_vector, false);
 	ice_qp_clean_rings(vsi, q_idx);
@@ -402,6 +424,16 @@ int ice_xsk_pool_setup(struct ice_vsi *vsi, struct xsk_buff_pool *pool, u16 qid)
 		goto failure;
 	}
 
+<<<<<<< HEAD
+=======
+	if (!is_power_of_2(vsi->rx_rings[qid]->count) ||
+	    !is_power_of_2(vsi->tx_rings[qid]->count)) {
+		netdev_err(vsi->netdev, "Please align ring sizes to power of 2\n");
+		pool_failure = -EINVAL;
+		goto failure;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if_running = netif_running(vsi->netdev) && ice_is_xdp_ena_vsi(vsi);
 
 	if (if_running) {
@@ -537,10 +569,18 @@ exit:
 bool ice_alloc_rx_bufs_zc(struct ice_rx_ring *rx_ring, u16 count)
 {
 	u16 rx_thresh = ICE_RING_QUARTER(rx_ring);
+<<<<<<< HEAD
 	u16 leftover, i, tail_bumps;
 
 	tail_bumps = count / rx_thresh;
 	leftover = count - (tail_bumps * rx_thresh);
+=======
+	u16 batched, leftover, i, tail_bumps;
+
+	batched = ALIGN_DOWN(count, rx_thresh);
+	tail_bumps = batched / rx_thresh;
+	leftover = count & (rx_thresh - 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < tail_bumps; i++)
 		if (!__ice_alloc_rx_bufs_zc(rx_ring, rx_thresh))
@@ -597,6 +637,7 @@ ice_construct_skb_zc(struct ice_rx_ring *rx_ring, struct xdp_buff *xdp)
 }
 
 /**
+<<<<<<< HEAD
  * ice_clean_xdp_irq_zc - produce AF_XDP descriptors to CQ
  * @xdp_ring: XDP Tx ring
  */
@@ -703,6 +744,8 @@ static int ice_xmit_xdp_tx_zc(struct xdp_buff *xdp,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ice_run_xdp_zc - Executes an XDP program in zero-copy path
  * @rx_ring: Rx ring
  * @xdp: xdp_buff used as input to the XDP program
@@ -735,7 +778,11 @@ ice_run_xdp_zc(struct ice_rx_ring *rx_ring, struct xdp_buff *xdp,
 	case XDP_PASS:
 		break;
 	case XDP_TX:
+<<<<<<< HEAD
 		result = ice_xmit_xdp_tx_zc(xdp, xdp_ring);
+=======
+		result = ice_xmit_xdp_buff(xdp, xdp_ring);
+>>>>>>> b7ba80a49124 (Commit)
 		if (result == ICE_XDP_CONSUMED)
 			goto out_failure;
 		break;
@@ -838,7 +885,11 @@ construct_skb:
 		/* XDP_PASS path */
 		skb = ice_construct_skb_zc(rx_ring, xdp);
 		if (!skb) {
+<<<<<<< HEAD
 			rx_ring->ring_stats->rx_stats.alloc_buf_failed++;
+=======
+			rx_ring->rx_stats.alloc_buf_failed++;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 
@@ -865,7 +916,11 @@ construct_skb:
 	if (entries_to_alloc > ICE_RING_QUARTER(rx_ring))
 		failure |= !ice_alloc_rx_bufs_zc(rx_ring, entries_to_alloc);
 
+<<<<<<< HEAD
 	ice_finalize_xdp_rx(xdp_ring, xdp_xmit, 0);
+=======
+	ice_finalize_xdp_rx(xdp_ring, xdp_xmit);
+>>>>>>> b7ba80a49124 (Commit)
 	ice_update_rx_ring_stats(rx_ring, total_rx_packets, total_rx_bytes);
 
 	if (xsk_uses_need_wakeup(rx_ring->xsk_pool)) {
@@ -881,6 +936,90 @@ construct_skb:
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * ice_clean_xdp_tx_buf - Free and unmap XDP Tx buffer
+ * @xdp_ring: XDP Tx ring
+ * @tx_buf: Tx buffer to clean
+ */
+static void
+ice_clean_xdp_tx_buf(struct ice_tx_ring *xdp_ring, struct ice_tx_buf *tx_buf)
+{
+	xdp_return_frame((struct xdp_frame *)tx_buf->raw_buf);
+	xdp_ring->xdp_tx_active--;
+	dma_unmap_single(xdp_ring->dev, dma_unmap_addr(tx_buf, dma),
+			 dma_unmap_len(tx_buf, len), DMA_TO_DEVICE);
+	dma_unmap_len_set(tx_buf, len, 0);
+}
+
+/**
+ * ice_clean_xdp_irq_zc - Reclaim resources after transmit completes on XDP ring
+ * @xdp_ring: XDP ring to clean
+ * @napi_budget: amount of descriptors that NAPI allows us to clean
+ *
+ * Returns count of cleaned descriptors
+ */
+static u16 ice_clean_xdp_irq_zc(struct ice_tx_ring *xdp_ring, int napi_budget)
+{
+	u16 tx_thresh = ICE_RING_QUARTER(xdp_ring);
+	int budget = napi_budget / tx_thresh;
+	u16 next_dd = xdp_ring->next_dd;
+	u16 ntc, cleared_dds = 0;
+
+	do {
+		struct ice_tx_desc *next_dd_desc;
+		u16 desc_cnt = xdp_ring->count;
+		struct ice_tx_buf *tx_buf;
+		u32 xsk_frames;
+		u16 i;
+
+		next_dd_desc = ICE_TX_DESC(xdp_ring, next_dd);
+		if (!(next_dd_desc->cmd_type_offset_bsz &
+		    cpu_to_le64(ICE_TX_DESC_DTYPE_DESC_DONE)))
+			break;
+
+		cleared_dds++;
+		xsk_frames = 0;
+		if (likely(!xdp_ring->xdp_tx_active)) {
+			xsk_frames = tx_thresh;
+			goto skip;
+		}
+
+		ntc = xdp_ring->next_to_clean;
+
+		for (i = 0; i < tx_thresh; i++) {
+			tx_buf = &xdp_ring->tx_buf[ntc];
+
+			if (tx_buf->raw_buf) {
+				ice_clean_xdp_tx_buf(xdp_ring, tx_buf);
+				tx_buf->raw_buf = NULL;
+			} else {
+				xsk_frames++;
+			}
+
+			ntc++;
+			if (ntc >= xdp_ring->count)
+				ntc = 0;
+		}
+skip:
+		xdp_ring->next_to_clean += tx_thresh;
+		if (xdp_ring->next_to_clean >= desc_cnt)
+			xdp_ring->next_to_clean -= desc_cnt;
+		if (xsk_frames)
+			xsk_tx_completed(xdp_ring->xsk_pool, xsk_frames);
+		next_dd_desc->cmd_type_offset_bsz = 0;
+		next_dd = next_dd + tx_thresh;
+		if (next_dd >= desc_cnt)
+			next_dd = tx_thresh - 1;
+	} while (--budget);
+
+	xdp_ring->next_dd = next_dd;
+
+	return cleared_dds * tx_thresh;
+}
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * ice_xmit_pkt - produce a single HW Tx descriptor out of AF_XDP descriptor
  * @xdp_ring: XDP ring to produce the HW Tx descriptor on
  * @desc: AF_XDP descriptor to pull the DMA address and length from
@@ -912,6 +1051,10 @@ static void ice_xmit_pkt(struct ice_tx_ring *xdp_ring, struct xdp_desc *desc,
 static void ice_xmit_pkt_batch(struct ice_tx_ring *xdp_ring, struct xdp_desc *descs,
 			       unsigned int *total_bytes)
 {
+<<<<<<< HEAD
+=======
+	u16 tx_thresh = ICE_RING_QUARTER(xdp_ring);
+>>>>>>> b7ba80a49124 (Commit)
 	u16 ntu = xdp_ring->next_to_use;
 	struct ice_tx_desc *tx_desc;
 	u32 i;
@@ -931,6 +1074,16 @@ static void ice_xmit_pkt_batch(struct ice_tx_ring *xdp_ring, struct xdp_desc *de
 	}
 
 	xdp_ring->next_to_use = ntu;
+<<<<<<< HEAD
+=======
+
+	if (xdp_ring->next_to_use > xdp_ring->next_rs) {
+		tx_desc = ICE_TX_DESC(xdp_ring, xdp_ring->next_rs);
+		tx_desc->cmd_type_offset_bsz |=
+			cpu_to_le64(ICE_TX_DESC_CMD_RS << ICE_TXD_QW1_CMD_S);
+		xdp_ring->next_rs += tx_thresh;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -943,6 +1096,10 @@ static void ice_xmit_pkt_batch(struct ice_tx_ring *xdp_ring, struct xdp_desc *de
 static void ice_fill_tx_hw_ring(struct ice_tx_ring *xdp_ring, struct xdp_desc *descs,
 				u32 nb_pkts, unsigned int *total_bytes)
 {
+<<<<<<< HEAD
+=======
+	u16 tx_thresh = ICE_RING_QUARTER(xdp_ring);
+>>>>>>> b7ba80a49124 (Commit)
 	u32 batched, leftover, i;
 
 	batched = ALIGN_DOWN(nb_pkts, PKTS_PER_BATCH);
@@ -951,11 +1108,24 @@ static void ice_fill_tx_hw_ring(struct ice_tx_ring *xdp_ring, struct xdp_desc *d
 		ice_xmit_pkt_batch(xdp_ring, &descs[i], total_bytes);
 	for (; i < batched + leftover; i++)
 		ice_xmit_pkt(xdp_ring, &descs[i], total_bytes);
+<<<<<<< HEAD
+=======
+
+	if (xdp_ring->next_to_use > xdp_ring->next_rs) {
+		struct ice_tx_desc *tx_desc;
+
+		tx_desc = ICE_TX_DESC(xdp_ring, xdp_ring->next_rs);
+		tx_desc->cmd_type_offset_bsz |=
+			cpu_to_le64(ICE_TX_DESC_CMD_RS << ICE_TXD_QW1_CMD_S);
+		xdp_ring->next_rs += tx_thresh;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
  * ice_xmit_zc - take entries from XSK Tx ring and place them onto HW Tx ring
  * @xdp_ring: XDP ring to produce the HW Tx descriptors on
+<<<<<<< HEAD
  *
  * Returns true if there is no more work that needs to be done, false otherwise
  */
@@ -970,21 +1140,51 @@ bool ice_xmit_zc(struct ice_tx_ring *xdp_ring)
 
 	budget = ICE_DESC_UNUSED(xdp_ring);
 	budget = min_t(u16, budget, ICE_RING_QUARTER(xdp_ring));
+=======
+ * @budget: number of free descriptors on HW Tx ring that can be used
+ * @napi_budget: amount of descriptors that NAPI allows us to clean
+ *
+ * Returns true if there is no more work that needs to be done, false otherwise
+ */
+bool ice_xmit_zc(struct ice_tx_ring *xdp_ring, u32 budget, int napi_budget)
+{
+	struct xdp_desc *descs = xdp_ring->xsk_pool->tx_descs;
+	u16 tx_thresh = ICE_RING_QUARTER(xdp_ring);
+	u32 nb_pkts, nb_processed = 0;
+	unsigned int total_bytes = 0;
+
+	if (budget < tx_thresh)
+		budget += ice_clean_xdp_irq_zc(xdp_ring, napi_budget);
+>>>>>>> b7ba80a49124 (Commit)
 
 	nb_pkts = xsk_tx_peek_release_desc_batch(xdp_ring->xsk_pool, budget);
 	if (!nb_pkts)
 		return true;
 
 	if (xdp_ring->next_to_use + nb_pkts >= xdp_ring->count) {
+<<<<<<< HEAD
 		nb_processed = xdp_ring->count - xdp_ring->next_to_use;
 		ice_fill_tx_hw_ring(xdp_ring, descs, nb_processed, &total_bytes);
+=======
+		struct ice_tx_desc *tx_desc;
+
+		nb_processed = xdp_ring->count - xdp_ring->next_to_use;
+		ice_fill_tx_hw_ring(xdp_ring, descs, nb_processed, &total_bytes);
+		tx_desc = ICE_TX_DESC(xdp_ring, xdp_ring->next_rs);
+		tx_desc->cmd_type_offset_bsz |=
+			cpu_to_le64(ICE_TX_DESC_CMD_RS << ICE_TXD_QW1_CMD_S);
+		xdp_ring->next_rs = tx_thresh - 1;
+>>>>>>> b7ba80a49124 (Commit)
 		xdp_ring->next_to_use = 0;
 	}
 
 	ice_fill_tx_hw_ring(xdp_ring, &descs[nb_processed], nb_pkts - nb_processed,
 			    &total_bytes);
 
+<<<<<<< HEAD
 	ice_set_rs_bit(xdp_ring);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ice_xdp_ring_update_tail(xdp_ring);
 	ice_update_tx_ring_stats(xdp_ring, nb_pkts, total_bytes);
 
@@ -1062,6 +1262,7 @@ bool ice_xsk_any_rx_ring_ena(struct ice_vsi *vsi)
  */
 void ice_xsk_clean_rx_ring(struct ice_rx_ring *rx_ring)
 {
+<<<<<<< HEAD
 	u16 ntc = rx_ring->next_to_clean;
 	u16 ntu = rx_ring->next_to_use;
 
@@ -1072,6 +1273,16 @@ void ice_xsk_clean_rx_ring(struct ice_rx_ring *rx_ring)
 		ntc++;
 		if (ntc >= rx_ring->count)
 			ntc = 0;
+=======
+	u16 count_mask = rx_ring->count - 1;
+	u16 ntc = rx_ring->next_to_clean;
+	u16 ntu = rx_ring->next_to_use;
+
+	for ( ; ntc != ntu; ntc = (ntc + 1) & count_mask) {
+		struct xdp_buff *xdp = *ice_xdp_buf(rx_ring, ntc);
+
+		xsk_buff_free(xdp);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -1087,12 +1298,21 @@ void ice_xsk_clean_xdp_ring(struct ice_tx_ring *xdp_ring)
 	while (ntc != ntu) {
 		struct ice_tx_buf *tx_buf = &xdp_ring->tx_buf[ntc];
 
+<<<<<<< HEAD
 		if (tx_buf->type == ICE_TX_BUF_XSK_TX) {
 			tx_buf->type = ICE_TX_BUF_EMPTY;
 			xsk_buff_free(tx_buf->xdp);
 		} else {
 			xsk_frames++;
 		}
+=======
+		if (tx_buf->raw_buf)
+			ice_clean_xdp_tx_buf(xdp_ring, tx_buf);
+		else
+			xsk_frames++;
+
+		tx_buf->raw_buf = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 		ntc++;
 		if (ntc >= xdp_ring->count)

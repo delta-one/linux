@@ -1,7 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 
 /* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (C) 2018-2022 Linaro Ltd.
+=======
+ * Copyright (C) 2018-2020 Linaro Ltd.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #ifndef _IPA_POWER_H_
 #define _IPA_POWER_H_
@@ -10,7 +14,10 @@ struct device;
 
 struct ipa;
 struct ipa_power_data;
+<<<<<<< HEAD
 enum ipa_irq_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* IPA device power management function block */
 extern const struct dev_pm_ops ipa_pm_ops;
@@ -49,6 +56,7 @@ void ipa_power_modem_queue_active(struct ipa *ipa);
 void ipa_power_retention(struct ipa *ipa, bool enable);
 
 /**
+<<<<<<< HEAD
  * ipa_power_suspend_handler() - Handler for SUSPEND IPA interrupts
  * @ipa:	IPA pointer
  * @irq_id:	IPA interrupt ID (unused)
@@ -60,6 +68,8 @@ void ipa_power_retention(struct ipa *ipa, bool enable);
 void ipa_power_suspend_handler(struct ipa *ipa, enum ipa_irq_id irq_id);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ipa_power_setup() - Set up IPA power management
  * @ipa:	IPA pointer
  *

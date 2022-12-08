@@ -66,9 +66,13 @@ check()
 	esac
 	echo "build id: ${id}"
 
+<<<<<<< HEAD
 	id_file=${id#??}
 	id_dir=${id%$id_file}
 	link=$build_id_dir/.build-id/$id_dir/$id_file
+=======
+	link=${build_id_dir}/.build-id/${id:0:2}/${id:2}
+>>>>>>> b7ba80a49124 (Commit)
 	echo "link: ${link}"
 
 	if [ ! -h $link ]; then
@@ -76,6 +80,7 @@ check()
 		exit 1
 	fi
 
+<<<<<<< HEAD
 	file=${build_id_dir}/.build-id/$id_dir/`readlink ${link}`/elf
 	echo "file: ${file}"
 
@@ -93,6 +98,12 @@ check()
 			exit 1
 		fi
 	elif [ ! -x $file ]; then
+=======
+	file=${build_id_dir}/.build-id/${id:0:2}/`readlink ${link}`/elf
+	echo "file: ${file}"
+
+	if [ ! -x $file ]; then
+>>>>>>> b7ba80a49124 (Commit)
 		echo "failed: file ${file} does not exist"
 		exit 1
 	fi
@@ -132,6 +143,7 @@ test_record()
 {
 	data=$(mktemp /tmp/perf.data.XXX)
 	build_id_dir=$(mktemp -d /tmp/perf.debug.XXX)
+<<<<<<< HEAD
 	log_out=$(mktemp /tmp/perf.log.out.XXX)
 	log_err=$(mktemp /tmp/perf.log.err.XXX)
 	perf="perf --buildid-dir ${build_id_dir}"
@@ -148,6 +160,22 @@ test_record()
 	check ${args##* }
 
 	rm -f ${log_out} ${log_err}
+=======
+	log=$(mktemp /tmp/perf.log.XXX)
+	perf="perf --buildid-dir ${build_id_dir}"
+
+	echo "running: perf record $@"
+	${perf} record --buildid-all -o ${data} $@ &> ${log}
+	if [ $? -ne 0 ]; then
+		echo "failed: record $@"
+		echo "see log: ${log}"
+		exit 1
+	fi
+
+	check ${@: -1}
+
+	rm -f ${log}
+>>>>>>> b7ba80a49124 (Commit)
 	rm -rf ${build_id_dir}
 	rm -rf ${data}
 }

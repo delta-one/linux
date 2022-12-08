@@ -85,6 +85,10 @@ static void l1_guest_code(struct svm_test_data *svm)
 int main(int argc, char *argv[])
 {
 	struct kvm_vcpu *vcpu;
+<<<<<<< HEAD
+=======
+	struct kvm_run *run;
+>>>>>>> b7ba80a49124 (Commit)
 	vm_vaddr_t svm_gva;
 	struct kvm_vm *vm;
 	struct ucall uc;
@@ -102,8 +106,18 @@ int main(int argc, char *argv[])
 	vcpu_alloc_svm(vm, &svm_gva);
 	vcpu_args_set(vcpu, 1, svm_gva);
 
+<<<<<<< HEAD
 	vcpu_run(vcpu);
 	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+=======
+	run = vcpu->run;
+
+	vcpu_run(vcpu);
+	TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+		    "Got exit_reason other than KVM_EXIT_IO: %u (%s)\n",
+		    run->exit_reason,
+		    exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (get_ucall(vcpu, &uc)) {
 	case UCALL_ABORT:

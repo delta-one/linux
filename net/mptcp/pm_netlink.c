@@ -152,6 +152,10 @@ static struct mptcp_pm_addr_entry *
 select_local_address(const struct pm_nl_pernet *pernet,
 		     const struct mptcp_sock *msk)
 {
+<<<<<<< HEAD
+=======
+	const struct sock *sk = (const struct sock *)msk;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mptcp_pm_addr_entry *entry, *ret = NULL;
 
 	msk_owned_by_me(msk);
@@ -164,6 +168,19 @@ select_local_address(const struct pm_nl_pernet *pernet,
 		if (!test_bit(entry->addr.id, msk->pm.id_avail_bitmap))
 			continue;
 
+<<<<<<< HEAD
+=======
+		if (entry->addr.family != sk->sk_family) {
+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+			if ((entry->addr.family == AF_INET &&
+			     !ipv6_addr_v4mapped(&sk->sk_v6_daddr)) ||
+			    (sk->sk_family == AF_INET &&
+			     !ipv6_addr_v4mapped(&entry->addr.addr6)))
+#endif
+				continue;
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		ret = entry;
 		break;
 	}
@@ -412,9 +429,13 @@ static bool lookup_address_in_vec(const struct mptcp_addr_info *addrs, unsigned 
 /* Fill all the remote addresses into the array addrs[],
  * and return the array size.
  */
+<<<<<<< HEAD
 static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk,
 					      struct mptcp_addr_info *local,
 					      bool fullmesh,
+=======
+static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullmesh,
+>>>>>>> b7ba80a49124 (Commit)
 					      struct mptcp_addr_info *addrs)
 {
 	bool deny_id0 = READ_ONCE(msk->pm.remote_deny_join_id0);
@@ -434,9 +455,12 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk,
 		if (deny_id0)
 			return 0;
 
+<<<<<<< HEAD
 		if (!mptcp_pm_addr_families_match(sk, local, &remote))
 			return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		msk->pm.subflows++;
 		addrs[i++] = remote;
 	} else {
@@ -447,9 +471,12 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk,
 			if (deny_id0 && !addrs[i].id)
 				continue;
 
+<<<<<<< HEAD
 			if (!mptcp_pm_addr_families_match(sk, local, &addrs[i]))
 				continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			if (!lookup_address_in_vec(addrs, i, &addrs[i]) &&
 			    msk->pm.subflows < subflows_max) {
 				msk->pm.subflows++;
@@ -600,11 +627,17 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
 		fullmesh = !!(local->flags & MPTCP_PM_ADDR_FLAG_FULLMESH);
 
 		msk->pm.local_addr_used++;
+<<<<<<< HEAD
 		__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
 		nr = fill_remote_addresses_vec(msk, &local->addr, fullmesh, addrs);
 		if (nr == 0)
 			continue;
 
+=======
+		nr = fill_remote_addresses_vec(msk, fullmesh, addrs);
+		if (nr)
+			__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
+>>>>>>> b7ba80a49124 (Commit)
 		spin_unlock_bh(&msk->pm.lock);
 		for (i = 0; i < nr; i++)
 			__mptcp_subflow_connect(sk, &local->addr, &addrs[i]);
@@ -627,11 +660,18 @@ static void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
  * and return the array size.
  */
 static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+<<<<<<< HEAD
 					     struct mptcp_addr_info *remote,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 					     struct mptcp_addr_info *addrs)
 {
 	struct sock *sk = (struct sock *)msk;
 	struct mptcp_pm_addr_entry *entry;
+<<<<<<< HEAD
+=======
+	struct mptcp_addr_info local;
+>>>>>>> b7ba80a49124 (Commit)
 	struct pm_nl_pernet *pernet;
 	unsigned int subflows_max;
 	int i = 0;
@@ -644,8 +684,20 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
 		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH))
 			continue;
 
+<<<<<<< HEAD
 		if (!mptcp_pm_addr_families_match(sk, &entry->addr, remote))
 			continue;
+=======
+		if (entry->addr.family != sk->sk_family) {
+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+			if ((entry->addr.family == AF_INET &&
+			     !ipv6_addr_v4mapped(&sk->sk_v6_daddr)) ||
+			    (sk->sk_family == AF_INET &&
+			     !ipv6_addr_v4mapped(&entry->addr.addr6)))
+#endif
+				continue;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (msk->pm.subflows < subflows_max) {
 			msk->pm.subflows++;
@@ -658,6 +710,7 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
 	 * 'IPADDRANY' local address
 	 */
 	if (!i) {
+<<<<<<< HEAD
 		struct mptcp_addr_info local;
 
 		memset(&local, 0, sizeof(local));
@@ -670,6 +723,10 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
 
 		if (!mptcp_pm_addr_families_match(sk, &local, remote))
 			return 0;
+=======
+		memset(&local, 0, sizeof(local));
+		local.family = msk->pm.remote.family;
+>>>>>>> b7ba80a49124 (Commit)
 
 		msk->pm.subflows++;
 		addrs[i++] = local;
@@ -708,9 +765,13 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
 	/* connect to the specified remote address, using whatever
 	 * local address the routing configuration will pick.
 	 */
+<<<<<<< HEAD
 	nr = fill_local_addresses_vec(msk, &remote, addrs);
 	if (nr == 0)
 		return;
+=======
+	nr = fill_local_addresses_vec(msk, addrs);
+>>>>>>> b7ba80a49124 (Commit)
 
 	msk->pm.add_addr_accepted++;
 	if (msk->pm.add_addr_accepted >= add_addr_accept_max ||
@@ -916,6 +977,7 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
 	 */
 	if (pernet->next_id == MPTCP_PM_MAX_ADDR_ID)
 		pernet->next_id = 1;
+<<<<<<< HEAD
 	if (pernet->addrs >= MPTCP_PM_ADDR_MAX) {
 		ret = -ERANGE;
 		goto out;
@@ -924,6 +986,12 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
 		ret = -EBUSY;
 		goto out;
 	}
+=======
+	if (pernet->addrs >= MPTCP_PM_ADDR_MAX)
+		goto out;
+	if (test_bit(entry->addr.id, pernet->id_bitmap))
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* do not insert duplicate address, differentiate on port only
 	 * singled addresses
@@ -937,10 +1005,15 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
 			 * endpoint is an implicit one and the user-space
 			 * did not provide an endpoint id
 			 */
+<<<<<<< HEAD
 			if (!(cur->flags & MPTCP_PM_ADDR_FLAG_IMPLICIT)) {
 				ret = -EEXIST;
 				goto out;
 			}
+=======
+			if (!(cur->flags & MPTCP_PM_ADDR_FLAG_IMPLICIT))
+				goto out;
+>>>>>>> b7ba80a49124 (Commit)
 			if (entry->addr.id)
 				goto out;
 
@@ -997,6 +1070,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static struct lock_class_key mptcp_slock_keys[2];
 static struct lock_class_key mptcp_keys[2];
 
@@ -1008,6 +1082,15 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
 	struct sockaddr_storage addr;
 	struct socket *ssock;
 	struct sock *newsk;
+=======
+static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+					    struct mptcp_pm_addr_entry *entry)
+{
+	int addrlen = sizeof(struct sockaddr_in);
+	struct sockaddr_storage addr;
+	struct mptcp_sock *msk;
+	struct socket *ssock;
+>>>>>>> b7ba80a49124 (Commit)
 	int backlog = 1024;
 	int err;
 
@@ -1016,6 +1099,7 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	newsk = entry->lsk->sk;
 	if (!newsk)
 		return -EINVAL;
@@ -1037,6 +1121,19 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
 	release_sock(newsk);
 	if (!ssock)
 		return -EINVAL;
+=======
+	msk = mptcp_sk(entry->lsk->sk);
+	if (!msk) {
+		err = -EINVAL;
+		goto out;
+	}
+
+	ssock = __mptcp_nmpc_socket(msk);
+	if (!ssock) {
+		err = -EINVAL;
+		goto out;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	mptcp_info2sockaddr(&entry->addr, &addr, entry->addr.family);
 #if IS_ENABLED(CONFIG_MPTCP_IPV6)
@@ -1044,6 +1141,7 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
 		addrlen = sizeof(struct sockaddr_in6);
 #endif
 	err = kernel_bind(ssock, (struct sockaddr *)&addr, addrlen);
+<<<<<<< HEAD
 	if (err)
 		return err;
 
@@ -1054,6 +1152,24 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
 	mptcp_event_pm_listener(ssock->sk, MPTCP_EVENT_LISTENER_CREATED);
 
 	return 0;
+=======
+	if (err) {
+		pr_warn("kernel_bind error, err=%d", err);
+		goto out;
+	}
+
+	err = kernel_listen(ssock, backlog);
+	if (err) {
+		pr_warn("kernel_listen error, err=%d", err);
+		goto out;
+	}
+
+	return 0;
+
+out:
+	sock_release(entry->lsk);
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
@@ -1165,7 +1281,11 @@ void mptcp_pm_nl_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ss
 			if (!tcp_rtx_and_write_queues_empty(ssk)) {
 				subflow->stale = 1;
 				__mptcp_retransmit_pending_data(sk);
+<<<<<<< HEAD
 				MPTCP_INC_STATS(net, MPTCP_MIB_SUBFLOWSTALE);
+=======
+				MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_SUBFLOWSTALE);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			unlock_sock_fast(ssk, slow);
 
@@ -1212,7 +1332,11 @@ static int mptcp_pm_parse_pm_addr_attr(struct nlattr *tb[],
 
 	if (!tb[MPTCP_PM_ADDR_ATTR_FAMILY]) {
 		if (!require_family)
+<<<<<<< HEAD
 			return 0;
+=======
+			return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 		NL_SET_ERR_MSG_ATTR(info->extack, attr,
 				    "missing family");
@@ -1246,7 +1370,11 @@ static int mptcp_pm_parse_pm_addr_attr(struct nlattr *tb[],
 	if (tb[MPTCP_PM_ADDR_ATTR_PORT])
 		addr->port = htons(nla_get_u16(tb[MPTCP_PM_ADDR_ATTR_PORT]));
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int mptcp_pm_parse_addr(struct nlattr *attr, struct genl_info *info,
@@ -1345,7 +1473,11 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	entry = kzalloc(sizeof(*entry), GFP_KERNEL_ACCOUNT);
+=======
+	entry = kmalloc(sizeof(*entry), GFP_KERNEL_ACCOUNT);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!entry) {
 		GENL_SET_ERR_MSG(info, "can't allocate addr");
 		return -ENOMEM;
@@ -1355,12 +1487,19 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
 	if (entry->addr.port) {
 		ret = mptcp_pm_nl_create_listen_socket(skb->sk, entry);
 		if (ret) {
+<<<<<<< HEAD
 			GENL_SET_ERR_MSG_FMT(info, "create listen socket error: %d", ret);
 			goto out_free;
+=======
+			GENL_SET_ERR_MSG(info, "create listen socket error");
+			kfree(entry);
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
 	if (ret < 0) {
+<<<<<<< HEAD
 		GENL_SET_ERR_MSG_FMT(info, "too many addresses or duplicate one: %d", ret);
 		goto out_free;
 	}
@@ -1371,6 +1510,18 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
 out_free:
 	__mptcp_pm_release_addr_entry(entry);
 	return ret;
+=======
+		GENL_SET_ERR_MSG(info, "too many addresses or duplicate one");
+		if (entry->lsk)
+			sock_release(entry->lsk);
+		kfree(entry);
+		return ret;
+	}
+
+	mptcp_nl_add_subflow_or_signal_addr(sock_net(skb->sk));
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int mptcp_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk, unsigned int id,
@@ -1925,7 +2076,12 @@ static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
 	}
 
 	if (token)
+<<<<<<< HEAD
 		return mptcp_userspace_pm_set_flags(net, token, &addr, &remote, bkup);
+=======
+		return mptcp_userspace_pm_set_flags(sock_net(skb->sk),
+						    token, &addr, &remote, bkup);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_bh(&pernet->lock);
 	entry = __lookup_addr(pernet, &addr.addr, lookup_by_id);
@@ -2035,7 +2191,11 @@ static int mptcp_event_put_token_and_ssk(struct sk_buff *skb,
 	    nla_put_s32(skb, MPTCP_ATTR_IF_IDX, ssk->sk_bound_dev_if))
 		return -EMSGSIZE;
 
+<<<<<<< HEAD
 	sk_err = READ_ONCE(ssk->sk_err);
+=======
+	sk_err = ssk->sk_err;
+>>>>>>> b7ba80a49124 (Commit)
 	if (sk_err && sk->sk_state == TCP_ESTABLISHED &&
 	    nla_put_u8(skb, MPTCP_ATTR_ERROR, sk_err))
 		return -EMSGSIZE;
@@ -2115,7 +2275,11 @@ void mptcp_event_addr_removed(const struct mptcp_sock *msk, uint8_t id)
 	return;
 
 nla_put_failure:
+<<<<<<< HEAD
 	nlmsg_free(skb);
+=======
+	kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void mptcp_event_addr_announced(const struct sock *ssk,
@@ -2172,6 +2336,7 @@ void mptcp_event_addr_announced(const struct sock *ssk,
 	return;
 
 nla_put_failure:
+<<<<<<< HEAD
 	nlmsg_free(skb);
 }
 
@@ -2225,6 +2390,9 @@ void mptcp_event_pm_listener(const struct sock *ssk,
 
 nla_put_failure:
 	nlmsg_free(skb);
+=======
+	kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
@@ -2272,9 +2440,12 @@ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
 		if (mptcp_event_sub_closed(skb, msk, ssk) < 0)
 			goto nla_put_failure;
 		break;
+<<<<<<< HEAD
 	case MPTCP_EVENT_LISTENER_CREATED:
 	case MPTCP_EVENT_LISTENER_CLOSED:
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	genlmsg_end(skb, nlh);
@@ -2282,7 +2453,11 @@ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
 	return;
 
 nla_put_failure:
+<<<<<<< HEAD
 	nlmsg_free(skb);
+=======
+	kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct genl_small_ops mptcp_pm_ops[] = {

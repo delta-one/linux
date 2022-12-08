@@ -136,14 +136,25 @@ static inline void clkdev_add_gptu(struct device *dev, const char *con,
 static int gptu_probe(struct platform_device *pdev)
 {
 	struct clk *clk;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (of_irq_to_resource_table(pdev->dev.of_node, irqres, 6) != 6) {
 		dev_err(&pdev->dev, "Failed to get IRQ list\n");
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	/* remap gptu register range */
 	gptu_membase = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+
+	/* remap gptu register range */
+	gptu_membase = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(gptu_membase))
 		return PTR_ERR(gptu_membase);
 

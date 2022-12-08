@@ -59,7 +59,11 @@ int snd_dice_stream_get_rate_mode(struct snd_dice *dice, unsigned int rate,
 
 static int select_clock(struct snd_dice *dice, unsigned int rate)
 {
+<<<<<<< HEAD
 	__be32 reg, new;
+=======
+	__be32 reg;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 data;
 	int i;
 	int err;
@@ -83,17 +87,28 @@ static int select_clock(struct snd_dice *dice, unsigned int rate)
 	if (completion_done(&dice->clock_accepted))
 		reinit_completion(&dice->clock_accepted);
 
+<<<<<<< HEAD
 	new = cpu_to_be32(data);
 	err = snd_dice_transaction_write_global(dice, GLOBAL_CLOCK_SELECT,
 						&new, sizeof(new));
+=======
+	reg = cpu_to_be32(data);
+	err = snd_dice_transaction_write_global(dice, GLOBAL_CLOCK_SELECT,
+						&reg, sizeof(reg));
+>>>>>>> b7ba80a49124 (Commit)
 	if (err < 0)
 		return err;
 
 	if (wait_for_completion_timeout(&dice->clock_accepted,
+<<<<<<< HEAD
 			msecs_to_jiffies(NOTIFICATION_TIMEOUT_MS)) == 0) {
 		if (reg != new)
 			return -ETIMEDOUT;
 	}
+=======
+			msecs_to_jiffies(NOTIFICATION_TIMEOUT_MS)) == 0)
+		return -ETIMEDOUT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

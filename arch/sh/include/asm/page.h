@@ -169,6 +169,12 @@ typedef struct page *pgtable_t;
 #define PFN_START		(__MEMORY_START >> PAGE_SHIFT)
 #define ARCH_PFN_OFFSET		(PFN_START)
 #define virt_to_page(kaddr)	pfn_to_page(__pa(kaddr) >> PAGE_SHIFT)
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_FLATMEM
+#define pfn_valid(pfn)		((pfn) >= min_low_pfn && (pfn) < max_low_pfn)
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #define virt_addr_valid(kaddr)	pfn_valid(__pa(kaddr) >> PAGE_SHIFT)
 
 #include <asm-generic/memory_model.h>

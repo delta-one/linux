@@ -14,7 +14,10 @@
 #include "wme.h"
 #include "ieee80211_i.h"
 #include "mesh.h"
+<<<<<<< HEAD
 #include <linux/rhashtable.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void mesh_path_free_rcu(struct mesh_table *tbl, struct mesh_path *mpath);
 
@@ -33,6 +36,7 @@ static const struct rhashtable_params mesh_rht_params = {
 	.hashfn = mesh_table_hash,
 };
 
+<<<<<<< HEAD
 static const struct rhashtable_params fast_tx_rht_params = {
 	.nelem_hint = 10,
 	.automatic_shrinking = true,
@@ -68,6 +72,8 @@ static void mesh_fast_tx_init(struct ieee80211_sub_if_data *sdata)
 	spin_lock_init(&cache->walk_lock);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool mpath_expired(struct mesh_path *mpath)
 {
 	return (mpath->flags & MESH_PATH_ACTIVE) &&
@@ -417,6 +423,7 @@ struct mesh_path *mesh_path_new(struct ieee80211_sub_if_data *sdata,
 	return new_mpath;
 }
 
+<<<<<<< HEAD
 static void mesh_fast_tx_entry_free(struct mesh_tx_cache *cache,
 				    struct ieee80211_mesh_fast_tx *entry)
 {
@@ -654,6 +661,8 @@ void mesh_fast_tx_flush_addr(struct ieee80211_sub_if_data *sdata,
 	spin_unlock_bh(&cache->walk_lock);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * mesh_path_add - allocate and add a new path to the mesh path table
  * @dst: destination address of the path (ETH_ALEN length)
@@ -737,8 +746,11 @@ int mpp_path_add(struct ieee80211_sub_if_data *sdata,
 
 	if (ret)
 		kfree(new_mpath);
+<<<<<<< HEAD
 	else
 		mesh_fast_tx_flush_addr(sdata, dst);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	sdata->u.mesh.mpp_paths_generation++;
 	return ret;
@@ -787,7 +799,11 @@ static void mesh_path_free_rcu(struct mesh_table *tbl,
 	mpath->flags |= MESH_PATH_RESOLVING | MESH_PATH_DELETED;
 	mesh_gate_del(tbl, mpath);
 	spin_unlock_bh(&mpath->state_lock);
+<<<<<<< HEAD
 	timer_shutdown_sync(&mpath->timer);
+=======
+	del_timer_sync(&mpath->timer);
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_dec(&sdata->u.mesh.mpaths);
 	atomic_dec(&tbl->entries);
 	mesh_path_flush_pending(mpath);
@@ -798,10 +814,13 @@ static void __mesh_path_del(struct mesh_table *tbl, struct mesh_path *mpath)
 {
 	hlist_del_rcu(&mpath->walk_list);
 	rhashtable_remove_fast(&tbl->rhead, &mpath->rhash, mesh_rht_params);
+<<<<<<< HEAD
 	if (tbl == &mpath->sdata->u.mesh.mpp_paths)
 		mesh_fast_tx_flush_addr(mpath->sdata, mpath->dst);
 	else
 		mesh_fast_tx_flush_mpath(mpath);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mesh_path_free_rcu(tbl, mpath);
 }
 
@@ -989,7 +1008,11 @@ int mesh_path_send_to_gates(struct mesh_path *mpath)
 void mesh_path_discard_frame(struct ieee80211_sub_if_data *sdata,
 			     struct sk_buff *skb)
 {
+<<<<<<< HEAD
 	ieee80211_free_txskb(&sdata->local->hw, skb);
+=======
+	kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 	sdata->u.mesh.mshstats.dropped_frames_no_route++;
 }
 
@@ -1026,7 +1049,10 @@ void mesh_path_fix_nexthop(struct mesh_path *mpath, struct sta_info *next_hop)
 	mpath->exp_time = 0;
 	mpath->flags = MESH_PATH_FIXED | MESH_PATH_SN_VALID;
 	mesh_path_activate(mpath);
+<<<<<<< HEAD
 	mesh_fast_tx_flush_mpath(mpath);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_bh(&mpath->state_lock);
 	ewma_mesh_fail_avg_init(&next_hop->mesh->fail_avg);
 	/* init it at a low value - 0 start is tricky */
@@ -1038,7 +1064,10 @@ void mesh_pathtbl_init(struct ieee80211_sub_if_data *sdata)
 {
 	mesh_table_init(&sdata->u.mesh.mesh_paths);
 	mesh_table_init(&sdata->u.mesh.mpp_paths);
+<<<<<<< HEAD
 	mesh_fast_tx_init(sdata);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static
@@ -1066,7 +1095,10 @@ void mesh_path_expire(struct ieee80211_sub_if_data *sdata)
 
 void mesh_pathtbl_unregister(struct ieee80211_sub_if_data *sdata)
 {
+<<<<<<< HEAD
 	mesh_fast_tx_deinit(sdata);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mesh_table_free(&sdata->u.mesh.mesh_paths);
 	mesh_table_free(&sdata->u.mesh.mpp_paths);
 }

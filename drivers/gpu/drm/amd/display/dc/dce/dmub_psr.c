@@ -33,9 +33,12 @@
 
 #define MAX_PIPES 6
 
+<<<<<<< HEAD
 static const uint8_t DP_SINK_DEVICE_STR_ID_1[] = {7, 1, 8, 7, 3};
 static const uint8_t DP_SINK_DEVICE_STR_ID_2[] = {7, 1, 8, 7, 5};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Convert dmcub psr state to dmcu psr state.
  */
@@ -218,7 +221,11 @@ static void dmub_psr_enable(struct dmub_psr *dmub, bool enable, bool wait, uint8
 					break;
 			}
 
+<<<<<<< HEAD
 			fsleep(500);
+=======
+			udelay(500);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		/* assert if max retry hit */
@@ -253,7 +260,11 @@ static void dmub_psr_set_level(struct dmub_psr *dmub, uint16_t psr_level, uint8_
 	dc_dmub_srv_wait_idle(dc->dmub_srv);
 }
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * Set PSR vtotal requirement for FreeSync PSR.
  */
 static void dmub_psr_set_sink_vtotal_in_psr_active(struct dmub_psr *dmub,
@@ -402,11 +413,15 @@ static bool dmub_psr_copy_settings(struct dmub_psr *dmub,
 		link->psr_settings.force_ffu_mode = 0;
 	copy_settings_data->force_ffu_mode = link->psr_settings.force_ffu_mode;
 
+<<<<<<< HEAD
 	if (((link->dpcd_caps.fec_cap.bits.FEC_CAPABLE &&
 		!link->dc->debug.disable_fec) &&
 		(link->dpcd_caps.dsc_caps.dsc_basic_caps.fields.dsc_support.DSC_SUPPORT &&
 		!link->panel_config.dsc.disable_dsc_edp &&
 		link->dc->caps.edp_dsc_support)) &&
+=======
+	if (link->fec_state == dc_link_fec_enabled &&
+>>>>>>> b7ba80a49124 (Commit)
 		link->dpcd_caps.sink_dev_id == DP_DEVICE_ID_38EC11 &&
 		(!memcmp(link->dpcd_caps.sink_dev_id_str, DP_SINK_DEVICE_STR_ID_1,
 			sizeof(DP_SINK_DEVICE_STR_ID_1)) ||
@@ -416,12 +431,15 @@ static bool dmub_psr_copy_settings(struct dmub_psr *dmub,
 	else
 		copy_settings_data->debug.bitfields.force_wakeup_by_tps3 = 0;
 
+<<<<<<< HEAD
 	//WA for PSR1 on specific TCON, require frame delay for frame re-lock
 	copy_settings_data->relock_delay_frame_cnt = 0;
 	if (link->dpcd_caps.sink_dev_id == DP_BRANCH_DEVICE_ID_001CF8)
 		copy_settings_data->relock_delay_frame_cnt = 2;
 	copy_settings_data->dsc_slice_height = psr_context->dsc_slice_height;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dc_dmub_srv_cmd_queue(dc->dmub_srv, &cmd);
 	dc_dmub_srv_cmd_execute(dc->dmub_srv);
 	dc_dmub_srv_wait_idle(dc->dmub_srv);

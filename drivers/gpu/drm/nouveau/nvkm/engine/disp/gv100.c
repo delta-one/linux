@@ -96,6 +96,7 @@ gv100_sor_dp = {
 	.watermark = gv100_sor_dp_watermark,
 };
 
+<<<<<<< HEAD
 static void
 gv100_sor_hdmi_infoframe_vsi(struct nvkm_ior *ior, int head, void *data, u32 size)
 {
@@ -144,6 +145,11 @@ gv100_sor_hdmi_infoframe_avi(struct nvkm_ior *ior, int head, void *data, u32 siz
 
 static void
 gv100_sor_hdmi_ctrl(struct nvkm_ior *ior, int head, bool enable, u8 max_ac_packet, u8 rekey)
+=======
+void
+gv100_sor_hdmi_ctrl(struct nvkm_ior *ior, int head, bool enable, u8 max_ac_packet,
+		    u8 rekey, u8 *avi, u8 avi_size, u8 *vendor, u8 vendor_size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nvkm_device *device = ior->disp->engine.subdev.device;
 	const u32 ctrl = 0x40000000 * enable |
@@ -151,6 +157,14 @@ gv100_sor_hdmi_ctrl(struct nvkm_ior *ior, int head, bool enable, u8 max_ac_packe
 			 rekey;
 	const u32 hoff = head * 0x800;
 	const u32 hdmi = head * 0x400;
+<<<<<<< HEAD
+=======
+	struct packed_hdmi_infoframe avi_infoframe;
+	struct packed_hdmi_infoframe vendor_infoframe;
+
+	pack_hdmi_infoframe(&avi_infoframe, avi, avi_size);
+	pack_hdmi_infoframe(&vendor_infoframe, vendor, vendor_size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!(ctrl & 0x40000000)) {
 		nvkm_mask(device, 0x6165c0 + hoff, 0x40000000, 0x00000000);
@@ -160,6 +174,35 @@ gv100_sor_hdmi_ctrl(struct nvkm_ior *ior, int head, bool enable, u8 max_ac_packe
 		return;
 	}
 
+<<<<<<< HEAD
+=======
+	/* AVI InfoFrame (AVI). */
+	nvkm_mask(device, 0x6f0000 + hdmi, 0x00000001, 0x00000000);
+	if (avi_size) {
+		nvkm_wr32(device, 0x6f0008 + hdmi, avi_infoframe.header);
+		nvkm_wr32(device, 0x6f000c + hdmi, avi_infoframe.subpack0_low);
+		nvkm_wr32(device, 0x6f0010 + hdmi, avi_infoframe.subpack0_high);
+		nvkm_wr32(device, 0x6f0014 + hdmi, avi_infoframe.subpack1_low);
+		nvkm_wr32(device, 0x6f0018 + hdmi, avi_infoframe.subpack1_high);
+		nvkm_mask(device, 0x6f0000 + hdmi, 0x00000001, 0x00000001);
+	}
+
+	/* Vendor-specific InfoFrame (VSI). */
+	nvkm_mask(device, 0x6f0100 + hdmi, 0x00010001, 0x00000000);
+	if (vendor_size) {
+		nvkm_wr32(device, 0x6f0108 + hdmi, vendor_infoframe.header);
+		nvkm_wr32(device, 0x6f010c + hdmi, vendor_infoframe.subpack0_low);
+		nvkm_wr32(device, 0x6f0110 + hdmi, vendor_infoframe.subpack0_high);
+		nvkm_wr32(device, 0x6f0114 + hdmi, 0x00000000);
+		nvkm_wr32(device, 0x6f0118 + hdmi, 0x00000000);
+		nvkm_wr32(device, 0x6f011c + hdmi, 0x00000000);
+		nvkm_wr32(device, 0x6f0120 + hdmi, 0x00000000);
+		nvkm_wr32(device, 0x6f0124 + hdmi, 0x00000000);
+		nvkm_mask(device, 0x6f0100 + hdmi, 0x00000001, 0x00000001);
+	}
+
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* General Control (GCP). */
 	nvkm_mask(device, 0x6f00c0 + hdmi, 0x00000001, 0x00000000);
 	nvkm_wr32(device, 0x6f00cc + hdmi, 0x00000010);
@@ -172,6 +215,7 @@ gv100_sor_hdmi_ctrl(struct nvkm_ior *ior, int head, bool enable, u8 max_ac_packe
 	nvkm_mask(device, 0x6165c0 + hoff, 0x401f007f, ctrl);
 }
 
+<<<<<<< HEAD
 const struct nvkm_ior_func_hdmi
 gv100_sor_hdmi = {
 	.ctrl = gv100_sor_hdmi_ctrl,
@@ -180,6 +224,8 @@ gv100_sor_hdmi = {
 	.infoframe_vsi = gv100_sor_hdmi_infoframe_vsi,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void
 gv100_sor_state(struct nvkm_ior *sor, struct nvkm_ior_state *state)
 {
@@ -212,7 +258,14 @@ gv100_sor = {
 	.state = gv100_sor_state,
 	.power = nv50_sor_power,
 	.clock = gf119_sor_clock,
+<<<<<<< HEAD
 	.hdmi = &gv100_sor_hdmi,
+=======
+	.hdmi = {
+		.ctrl = gv100_sor_hdmi_ctrl,
+		.scdc = gm200_sor_hdmi_scdc,
+	},
+>>>>>>> b7ba80a49124 (Commit)
 	.dp = &gv100_sor_dp,
 	.hda = &gv100_sor_hda,
 };

@@ -12,7 +12,10 @@
 #include "rmnet_config.h"
 #include "rmnet_map.h"
 #include "rmnet_private.h"
+<<<<<<< HEAD
 #include "rmnet_vnd.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define RMNET_MAP_DEAGGR_SPACING  64
 #define RMNET_MAP_DEAGGR_HEADROOM (RMNET_MAP_DEAGGR_SPACING / 2)
@@ -519,6 +522,7 @@ int rmnet_map_process_next_hdr_packet(struct sk_buff *skb,
 
 	return 0;
 }
+<<<<<<< HEAD
 
 #define RMNET_AGG_BYPASS_TIME_NSEC 10000000L
 
@@ -709,3 +713,5 @@ void rmnet_map_tx_aggregate_exit(struct rmnet_port *port)
 	}
 	spin_unlock_bh(&port->agg_lock);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -430,13 +430,22 @@ out_master_put:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void npcm_pspi_remove(struct platform_device *pdev)
+=======
+static int npcm_pspi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct npcm_pspi *priv = spi_master_get_devdata(master);
 
 	npcm_pspi_reset_hw(priv);
 	clk_disable_unprepare(priv->clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id npcm_pspi_match[] = {
@@ -452,7 +461,11 @@ static struct platform_driver npcm_pspi_driver = {
 		.of_match_table	= npcm_pspi_match,
 	},
 	.probe		= npcm_pspi_probe,
+<<<<<<< HEAD
 	.remove_new	= npcm_pspi_remove,
+=======
+	.remove		= npcm_pspi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(npcm_pspi_driver);
 

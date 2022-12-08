@@ -1,6 +1,10 @@
 [
     {
         "BriefDescription": "DRAM Activate Count",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x1",
         "EventName": "UNC_M_ACT_COUNT",
         "PerPkg": "1",
@@ -9,62 +13,122 @@
     },
     {
         "BriefDescription": "DRAM RD_CAS and WR_CAS Commands.; All DRAM WR_CAS (w/ and w/out auto-pre)",
+<<<<<<< HEAD
         "EventCode": "0x4",
         "EventName": "UNC_M_CAS_COUNT.ALL",
         "PerPkg": "1",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x4",
+        "EventName": "UNC_M_CAS_COUNT.ALL",
+        "PerPkg": "1",
+        "PublicDescription": "DRAM RD_CAS and WR_CAS Commands",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0xf",
         "Unit": "iMC"
     },
     {
         "BriefDescription": "DRAM RD_CAS and WR_CAS Commands.; All DRAM Reads (RD_CAS + Underfills)",
+<<<<<<< HEAD
         "EventCode": "0x4",
         "EventName": "UNC_M_CAS_COUNT.RD",
         "PerPkg": "1",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x4",
+        "EventName": "UNC_M_CAS_COUNT.RD",
+        "PerPkg": "1",
+        "PublicDescription": "DRAM RD_CAS and WR_CAS Commands",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x3",
         "Unit": "iMC"
     },
     {
         "BriefDescription": "DRAM RD_CAS and WR_CAS Commands.; All DRAM RD_CAS (w/ and w/out auto-pre)",
+<<<<<<< HEAD
         "EventCode": "0x4",
         "EventName": "UNC_M_CAS_COUNT.RD_REG",
         "PerPkg": "1",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x4",
+        "EventName": "UNC_M_CAS_COUNT.RD_REG",
+        "PerPkg": "1",
+        "PublicDescription": "DRAM RD_CAS and WR_CAS Commands",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1",
         "Unit": "iMC"
     },
     {
         "BriefDescription": "DRAM RD_CAS and WR_CAS Commands.; Underfill Read Issued",
+<<<<<<< HEAD
         "EventCode": "0x4",
         "EventName": "UNC_M_CAS_COUNT.RD_UNDERFILL",
         "PerPkg": "1",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x4",
+        "EventName": "UNC_M_CAS_COUNT.RD_UNDERFILL",
+        "PerPkg": "1",
+        "PublicDescription": "DRAM RD_CAS and WR_CAS Commands",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x2",
         "Unit": "iMC"
     },
     {
         "BriefDescription": "DRAM RD_CAS and WR_CAS Commands.; All DRAM WR_CAS (both Modes)",
+<<<<<<< HEAD
         "EventCode": "0x4",
         "EventName": "UNC_M_CAS_COUNT.WR",
         "PerPkg": "1",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x4",
+        "EventName": "UNC_M_CAS_COUNT.WR",
+        "PerPkg": "1",
+        "PublicDescription": "DRAM RD_CAS and WR_CAS Commands",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0xc",
         "Unit": "iMC"
     },
     {
         "BriefDescription": "DRAM RD_CAS and WR_CAS Commands.; DRAM WR_CAS (w/ and w/out auto-pre) in Read Major Mode",
+<<<<<<< HEAD
         "EventCode": "0x4",
         "EventName": "UNC_M_CAS_COUNT.WR_RMM",
         "PerPkg": "1",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x4",
+        "EventName": "UNC_M_CAS_COUNT.WR_RMM",
+        "PerPkg": "1",
+        "PublicDescription": "DRAM RD_CAS and WR_CAS Commands",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x8",
         "Unit": "iMC"
     },
     {
         "BriefDescription": "DRAM RD_CAS and WR_CAS Commands.; DRAM WR_CAS (w/ and w/out auto-pre) in Write Major Mode",
+<<<<<<< HEAD
         "EventCode": "0x4",
         "EventName": "UNC_M_CAS_COUNT.WR_WMM",
         "PerPkg": "1",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x4",
+        "EventName": "UNC_M_CAS_COUNT.WR_WMM",
+        "PerPkg": "1",
+        "PublicDescription": "DRAM RD_CAS and WR_CAS Commands",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x4",
         "Unit": "iMC"
     },
     {
         "BriefDescription": "uclks",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventName": "UNC_M_CLOCKTICKS",
         "PerPkg": "1",
         "PublicDescription": "Uncore Fixed Counter - uclks",
@@ -72,6 +136,10 @@
     },
     {
         "BriefDescription": "DRAM Precharge All Commands",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x6",
         "EventName": "UNC_M_DRAM_PRE_ALL",
         "PerPkg": "1",
@@ -80,6 +148,10 @@
     },
     {
         "BriefDescription": "Number of DRAM Refreshes Issued",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5",
         "EventName": "UNC_M_DRAM_REFRESH.HIGH",
         "PerPkg": "1",
@@ -89,6 +161,10 @@
     },
     {
         "BriefDescription": "Number of DRAM Refreshes Issued",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5",
         "EventName": "UNC_M_DRAM_REFRESH.PANIC",
         "PerPkg": "1",
@@ -98,14 +174,26 @@
     },
     {
         "BriefDescription": "ECC Correctable Errors",
+<<<<<<< HEAD
         "EventCode": "0x9",
         "EventName": "UNC_M_ECC_CORRECTABLE_ERRORS",
         "PerPkg": "1",
         "PublicDescription": "Counts the number of ECC errors detected and corrected by the iMC on this channel.  This counter is only useful with ECC DRAM devices.  This count will increment one time for each correction regardless of the number of bits corrected.  The iMC can correct up to 4 bit errors in independent channel mode and 8 bit errors in lockstep mode.",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x9",
+        "EventName": "UNC_M_ECC_CORRECTABLE_ERRORS",
+        "PerPkg": "1",
+        "PublicDescription": "Counts the number of ECC errors detected and corrected by the iMC on this channel.  This counter is only useful with ECC DRAM devices.  This count will increment one time for each correction regardless of the number of bits corrected.  The iMC can correct up to 4 bit errors in independent channel mode and 8 bit erros in lockstep mode.",
+>>>>>>> b7ba80a49124 (Commit)
         "Unit": "iMC"
     },
     {
         "BriefDescription": "Cycles in a Major Mode; Isoch Major Mode",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x7",
         "EventName": "UNC_M_MAJOR_MODES.ISOCH",
         "PerPkg": "1",
@@ -115,6 +203,10 @@
     },
     {
         "BriefDescription": "Cycles in a Major Mode; Partial Major Mode",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x7",
         "EventName": "UNC_M_MAJOR_MODES.PARTIAL",
         "PerPkg": "1",
@@ -124,6 +216,10 @@
     },
     {
         "BriefDescription": "Cycles in a Major Mode; Read Major Mode",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x7",
         "EventName": "UNC_M_MAJOR_MODES.READ",
         "PerPkg": "1",
@@ -133,6 +229,10 @@
     },
     {
         "BriefDescription": "Cycles in a Major Mode; Write Major Mode",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x7",
         "EventName": "UNC_M_MAJOR_MODES.WRITE",
         "PerPkg": "1",
@@ -142,6 +242,10 @@
     },
     {
         "BriefDescription": "Channel DLLOFF Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x84",
         "EventName": "UNC_M_POWER_CHANNEL_DLLOFF",
         "PerPkg": "1",
@@ -150,6 +254,10 @@
     },
     {
         "BriefDescription": "Channel PPD Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x85",
         "EventName": "UNC_M_POWER_CHANNEL_PPD",
         "PerPkg": "1",
@@ -158,6 +266,10 @@
     },
     {
         "BriefDescription": "CKE_ON_CYCLES by Rank; DIMM ID",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x83",
         "EventName": "UNC_M_POWER_CKE_CYCLES.RANK0",
         "PerPkg": "1",
@@ -167,6 +279,10 @@
     },
     {
         "BriefDescription": "CKE_ON_CYCLES by Rank; DIMM ID",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x83",
         "EventName": "UNC_M_POWER_CKE_CYCLES.RANK1",
         "PerPkg": "1",
@@ -176,6 +292,10 @@
     },
     {
         "BriefDescription": "CKE_ON_CYCLES by Rank; DIMM ID",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x83",
         "EventName": "UNC_M_POWER_CKE_CYCLES.RANK2",
         "PerPkg": "1",
@@ -185,6 +305,10 @@
     },
     {
         "BriefDescription": "CKE_ON_CYCLES by Rank; DIMM ID",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x83",
         "EventName": "UNC_M_POWER_CKE_CYCLES.RANK3",
         "PerPkg": "1",
@@ -194,6 +318,10 @@
     },
     {
         "BriefDescription": "CKE_ON_CYCLES by Rank; DIMM ID",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x83",
         "EventName": "UNC_M_POWER_CKE_CYCLES.RANK4",
         "PerPkg": "1",
@@ -203,6 +331,10 @@
     },
     {
         "BriefDescription": "CKE_ON_CYCLES by Rank; DIMM ID",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x83",
         "EventName": "UNC_M_POWER_CKE_CYCLES.RANK5",
         "PerPkg": "1",
@@ -212,6 +344,10 @@
     },
     {
         "BriefDescription": "CKE_ON_CYCLES by Rank; DIMM ID",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x83",
         "EventName": "UNC_M_POWER_CKE_CYCLES.RANK6",
         "PerPkg": "1",
@@ -221,6 +357,10 @@
     },
     {
         "BriefDescription": "CKE_ON_CYCLES by Rank; DIMM ID",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x83",
         "EventName": "UNC_M_POWER_CKE_CYCLES.RANK7",
         "PerPkg": "1",
@@ -230,6 +370,10 @@
     },
     {
         "BriefDescription": "Critical Throttle Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x86",
         "EventName": "UNC_M_POWER_CRITICAL_THROTTLE_CYCLES",
         "PerPkg": "1",
@@ -238,6 +382,10 @@
     },
     {
         "BriefDescription": "Clock-Enabled Self-Refresh",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x43",
         "EventName": "UNC_M_POWER_SELF_REFRESH",
         "PerPkg": "1",
@@ -246,6 +394,10 @@
     },
     {
         "BriefDescription": "Throttle Cycles for Rank 0; DIMM ID",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x41",
         "EventName": "UNC_M_POWER_THROTTLE_CYCLES.RANK0",
         "PerPkg": "1",
@@ -255,6 +407,10 @@
     },
     {
         "BriefDescription": "Throttle Cycles for Rank 0; DIMM ID",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x41",
         "EventName": "UNC_M_POWER_THROTTLE_CYCLES.RANK1",
         "PerPkg": "1",
@@ -264,6 +420,10 @@
     },
     {
         "BriefDescription": "Throttle Cycles for Rank 0; DIMM ID",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x41",
         "EventName": "UNC_M_POWER_THROTTLE_CYCLES.RANK2",
         "PerPkg": "1",
@@ -273,6 +433,10 @@
     },
     {
         "BriefDescription": "Throttle Cycles for Rank 0; DIMM ID",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x41",
         "EventName": "UNC_M_POWER_THROTTLE_CYCLES.RANK3",
         "PerPkg": "1",
@@ -282,6 +446,10 @@
     },
     {
         "BriefDescription": "Throttle Cycles for Rank 0; DIMM ID",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x41",
         "EventName": "UNC_M_POWER_THROTTLE_CYCLES.RANK4",
         "PerPkg": "1",
@@ -291,6 +459,10 @@
     },
     {
         "BriefDescription": "Throttle Cycles for Rank 0; DIMM ID",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x41",
         "EventName": "UNC_M_POWER_THROTTLE_CYCLES.RANK5",
         "PerPkg": "1",
@@ -300,6 +472,10 @@
     },
     {
         "BriefDescription": "Throttle Cycles for Rank 0; DIMM ID",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x41",
         "EventName": "UNC_M_POWER_THROTTLE_CYCLES.RANK6",
         "PerPkg": "1",
@@ -309,6 +485,10 @@
     },
     {
         "BriefDescription": "Throttle Cycles for Rank 0; DIMM ID",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x41",
         "EventName": "UNC_M_POWER_THROTTLE_CYCLES.RANK7",
         "PerPkg": "1",
@@ -318,6 +498,10 @@
     },
     {
         "BriefDescription": "Read Preemption Count; Read over Read Preemption",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x8",
         "EventName": "UNC_M_PREEMPTION.RD_PREEMPT_RD",
         "PerPkg": "1",
@@ -327,6 +511,10 @@
     },
     {
         "BriefDescription": "Read Preemption Count; Read over Write Preemption",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x8",
         "EventName": "UNC_M_PREEMPTION.RD_PREEMPT_WR",
         "PerPkg": "1",
@@ -336,6 +524,10 @@
     },
     {
         "BriefDescription": "DRAM Precharge commands.; Precharge due to timer expiration",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2",
         "EventName": "UNC_M_PRE_COUNT.PAGE_CLOSE",
         "PerPkg": "1",
@@ -345,6 +537,10 @@
     },
     {
         "BriefDescription": "DRAM Precharge commands.; Precharges due to page miss",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2",
         "EventName": "UNC_M_PRE_COUNT.PAGE_MISS",
         "PerPkg": "1",
@@ -354,6 +550,10 @@
     },
     {
         "BriefDescription": "Read Pending Queue Full Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x12",
         "EventName": "UNC_M_RPQ_CYCLES_FULL",
         "PerPkg": "1",
@@ -362,6 +562,10 @@
     },
     {
         "BriefDescription": "Read Pending Queue Not Empty",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x11",
         "EventName": "UNC_M_RPQ_CYCLES_NE",
         "PerPkg": "1",
@@ -370,6 +574,10 @@
     },
     {
         "BriefDescription": "Read Pending Queue Allocations",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x10",
         "EventName": "UNC_M_RPQ_INSERTS",
         "PerPkg": "1",
@@ -378,6 +586,10 @@
     },
     {
         "BriefDescription": "Read Pending Queue Occupancy",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x80",
         "EventName": "UNC_M_RPQ_OCCUPANCY",
         "PerPkg": "1",
@@ -386,6 +598,10 @@
     },
     {
         "BriefDescription": "Write Pending Queue Full Cycles",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x22",
         "EventName": "UNC_M_WPQ_CYCLES_FULL",
         "PerPkg": "1",
@@ -394,6 +610,10 @@
     },
     {
         "BriefDescription": "Write Pending Queue Not Empty",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x21",
         "EventName": "UNC_M_WPQ_CYCLES_NE",
         "PerPkg": "1",
@@ -402,6 +622,10 @@
     },
     {
         "BriefDescription": "Write Pending Queue Allocations",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x20",
         "EventName": "UNC_M_WPQ_INSERTS",
         "PerPkg": "1",
@@ -410,14 +634,26 @@
     },
     {
         "BriefDescription": "Write Pending Queue Occupancy",
+<<<<<<< HEAD
         "EventCode": "0x81",
         "EventName": "UNC_M_WPQ_OCCUPANCY",
         "PerPkg": "1",
         "PublicDescription": "Accumulates the occupancies of the Write Pending Queue each cycle.  This can then be used to calculate both the average queue occupancy (in conjunction with the number of cycles not empty) and the average latency (in conjunction with the number of allocations).  The WPQ is used to schedule write out to the memory controller and to track the writes.  Requests allocate into the WPQ soon after they enter the memory controller, and need credits for an entry in this buffer before being sent from the HA to the iMC.  They deallocate after being issued to DRAM.  Write requests themselves are able to complete (from the perspective of the rest of the system) as soon they have 'posted' to the iMC.  This is not to be confused with actually performing the write to DRAM.  Therefore, the average latency for this queue is actually not useful for deconstruction intermediate write latencies.  So, we provide filtering based on if the request has posted or not.  By using the 'not posted' filter, we can track how long writes spent in the iMC before completions were sent to the HA.  The 'posted' filter, on the other hand, provides information about how much queueing is actually happening in the iMC for writes before they are actually issued to memory.  High average occupancies will generally coincide with high write major mode counts.",
+=======
+        "Counter": "0,1,2,3",
+        "EventCode": "0x81",
+        "EventName": "UNC_M_WPQ_OCCUPANCY",
+        "PerPkg": "1",
+        "PublicDescription": "Accumulates the occupancies of the Write Pending Queue each cycle.  This can then be used to calculate both the average queue occupancy (in conjunction with the number of cycles not empty) and the average latency (in conjunction with the number of allocations).  The WPQ is used to schedule write out to the memory controller and to track the writes.  Requests allocate into the WPQ soon after they enter the memory controller, and need credits for an entry in this buffer before being sent from the HA to the iMC.  They deallocate after being issued to DRAM.  Write requests themselves are able to complete (from the perspective of the rest of the system) as soon they have 'posted' to the iMC.  This is not to be confused with actually performing the write to DRAM.  Therefore, the average latency for this queue is actually not useful for deconstruction intermediate write latencies.  So, we provide filtering based on if the request has posted or not.  By using the 'not posted' filter, we can track how long writes spent in the iMC before completions were sent to the HA.  The 'posted' filter, on the other hand, provides information about how much queueing is actually happenning in the iMC for writes before they are actually issued to memory.  High average occupancies will generally coincide with high write major mode counts.",
+>>>>>>> b7ba80a49124 (Commit)
         "Unit": "iMC"
     },
     {
         "BriefDescription": "Write Pending Queue CAM Match",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x23",
         "EventName": "UNC_M_WPQ_READ_HIT",
         "PerPkg": "1",
@@ -426,6 +662,10 @@
     },
     {
         "BriefDescription": "Write Pending Queue CAM Match",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "UNC_M_WPQ_WRITE_HIT",
         "PerPkg": "1",

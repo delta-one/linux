@@ -256,8 +256,13 @@ static int tegra20_i2s_probe(struct snd_soc_dai *dai)
 {
 	struct tegra20_i2s *i2s = snd_soc_dai_get_drvdata(dai);
 
+<<<<<<< HEAD
 	snd_soc_dai_init_dma_data(dai,	&i2s->playback_dma_data,
 					&i2s->capture_dma_data);
+=======
+	dai->capture_dma_data = &i2s->capture_dma_data;
+	dai->playback_dma_data = &i2s->playback_dma_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -475,11 +480,20 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void tegra20_i2s_platform_remove(struct platform_device *pdev)
+=======
+static int tegra20_i2s_platform_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	tegra_pcm_platform_unregister(&pdev->dev);
 	snd_soc_unregister_component(&pdev->dev);
 	pm_runtime_disable(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id tegra20_i2s_of_match[] = {
@@ -501,7 +515,11 @@ static struct platform_driver tegra20_i2s_driver = {
 		.pm = &tegra20_i2s_pm_ops,
 	},
 	.probe = tegra20_i2s_platform_probe,
+<<<<<<< HEAD
 	.remove_new = tegra20_i2s_platform_remove,
+=======
+	.remove = tegra20_i2s_platform_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(tegra20_i2s_driver);
 

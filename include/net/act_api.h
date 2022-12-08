@@ -39,7 +39,11 @@ struct tc_action {
 	struct gnet_stats_basic_sync __percpu *cpu_bstats;
 	struct gnet_stats_basic_sync __percpu *cpu_bstats_hw;
 	struct gnet_stats_queue __percpu *cpu_qstats;
+<<<<<<< HEAD
 	struct tc_cookie	__rcu *user_cookie;
+=======
+	struct tc_cookie	__rcu *act_cookie;
+>>>>>>> b7ba80a49124 (Commit)
 	struct tcf_chain	__rcu *goto_chain;
 	u32			tcfa_flags;
 	u8			hw_stats;
@@ -67,7 +71,10 @@ struct tc_action {
 #define TCA_ACT_FLAGS_BIND	(1U << (TCA_ACT_FLAGS_USER_BITS + 1))
 #define TCA_ACT_FLAGS_REPLACE	(1U << (TCA_ACT_FLAGS_USER_BITS + 2))
 #define TCA_ACT_FLAGS_NO_RTNL	(1U << (TCA_ACT_FLAGS_USER_BITS + 3))
+<<<<<<< HEAD
 #define TCA_ACT_FLAGS_AT_INGRESS	(1U << (TCA_ACT_FLAGS_USER_BITS + 4))
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Update lastuse only if needed, to avoid dirtying a cache line.
  * We use a temp variable to avoid fetching jiffies twice.
@@ -101,6 +108,14 @@ static inline enum flow_action_hw_stats tc_act_hw_stats(u8 hw_stats)
 	return hw_stats;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_NET_CLS_ACT
+
+#define ACT_P_CREATED 1
+#define ACT_P_DELETED 1
+
+>>>>>>> b7ba80a49124 (Commit)
 typedef void (*tc_action_priv_destructor)(void *priv);
 
 struct tc_action_ops {
@@ -135,11 +150,14 @@ struct tc_action_ops {
 				     struct netlink_ext_ack *extack);
 };
 
+<<<<<<< HEAD
 #ifdef CONFIG_NET_CLS_ACT
 
 #define ACT_P_CREATED 1
 #define ACT_P_DELETED 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct tc_action_net {
 	struct tcf_idrinfo *idrinfo;
 	const struct tc_action_ops *ops;

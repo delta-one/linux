@@ -1378,8 +1378,13 @@ static struct video_board vbG200 = {
 	.lowlevel = &matrox_G100
 };
 static struct video_board vbG200eW = {
+<<<<<<< HEAD
 	.maxvram = 0x1000000,
 	.maxdisplayable = 0x0800000,
+=======
+	.maxvram = 0x100000,
+	.maxdisplayable = 0x800000,
+>>>>>>> b7ba80a49124 (Commit)
 	.accelID = FB_ACCEL_MATROX_MGAG200,
 	.lowlevel = &matrox_G100
 };
@@ -2314,9 +2319,12 @@ static void __init matroxfb_init_params(void) {
 static int __init matrox_init(void) {
 	int err;
 
+<<<<<<< HEAD
 	if (fb_modesetting_disabled("matroxfb"))
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	matroxfb_init_params();
 	err = pci_register_driver(&matroxfb_driver);
 	dev = -1;	/* accept all new devices... */

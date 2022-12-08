@@ -10,6 +10,7 @@ empty   :=
 space   := $(empty) $(empty)
 space_escape := _-_SPACE_-_
 pound := \#
+<<<<<<< HEAD
 define newline
 
 
@@ -30,6 +31,8 @@ test-gt = $(shell test $(strip $1)0 -gt $(strip $2)0 && echo y)
 endif
 test-le = $(call test-ge, $2, $1)
 test-lt = $(call test-gt, $2, $1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 ###
 # Name of target with a '.' as filename prefix. foo/bar.o => foo/.bar.o
@@ -61,6 +64,7 @@ escsq = $(subst $(squote),'\$(squote)',$1)
 stringify = $(squote)$(quote)$1$(quote)$(squote)
 
 ###
+<<<<<<< HEAD
 # The path to Kbuild or Makefile. Kbuild has precedence over Makefile.
 kbuild-dir = $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file = $(or $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Makefile)
@@ -76,6 +80,8 @@ read-file = $(shell cat $1 2>/dev/null)
 endif
 
 ###
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # Easy method for doing a status message
        kecho := :
  quiet_kecho := echo
@@ -99,11 +105,19 @@ define filechk
 	$(check-FORCE)
 	$(Q)set -e;						\
 	mkdir -p $(dir $@);					\
+<<<<<<< HEAD
 	trap "rm -f $(tmp-target)" EXIT;			\
 	{ $(filechk_$(1)); } > $(tmp-target);			\
 	if [ ! -r $@ ] || ! cmp -s $@ $(tmp-target); then	\
 		$(kecho) '  UPD     $@';			\
 		mv -f $(tmp-target) $@;				\
+=======
+	trap "rm -f $(dot-target).tmp" EXIT;			\
+	{ $(filechk_$(1)); } > $(dot-target).tmp;		\
+	if [ ! -r $@ ] || ! cmp -s $@ $(dot-target).tmp; then	\
+		$(kecho) '  UPD     $@';			\
+		mv -f $(dot-target).tmp $@;			\
+>>>>>>> b7ba80a49124 (Commit)
 	fi
 endef
 
@@ -125,6 +139,7 @@ dtbinst := -f $(srctree)/scripts/Makefile.dtbinst obj
 # $(Q)$(MAKE) $(clean)=dir
 clean := -f $(srctree)/scripts/Makefile.clean obj
 
+<<<<<<< HEAD
 # pring log
 #
 # If quiet is "silent_", print nothing and sink stdout
@@ -158,6 +173,20 @@ delete-on-interrupt = \
 
 # print and execute commands
 cmd = @$(if $(cmd_$(1)),set -e; $($(quiet)log_print) $(delete-on-interrupt) $(cmd_$(1)),:)
+=======
+# echo command.
+# Short version is used, if $(quiet) equals `quiet_', otherwise full one.
+echo-cmd = $(if $($(quiet)cmd_$(1)),\
+	echo '  $(call escsq,$($(quiet)cmd_$(1)))$(echo-why)';)
+
+# sink stdout for 'make -s'
+       redirect :=
+ quiet_redirect :=
+silent_redirect := exec >/dev/null;
+
+# printing commands
+cmd = @set -e; $(echo-cmd) $($(quiet)redirect) $(cmd_$(1))
+>>>>>>> b7ba80a49124 (Commit)
 
 ###
 # if_changed      - execute command if any prerequisite is newer than
@@ -170,6 +199,7 @@ cmd = @$(if $(cmd_$(1)),set -e; $($(quiet)log_print) $(delete-on-interrupt) $(cm
 ifneq ($(KBUILD_NOCMDDEP),1)
 # Check if both commands are the same including their order. Result is empty
 # string if equal. User may override this check using make KBUILD_NOCMDDEP=1
+<<<<<<< HEAD
 # If the target does not exist, the *.cmd file should not be included so
 # $(savedcmd_$@) gets empty. Then, target will be built even if $(newer-prereqs)
 # happens to become empty.
@@ -178,6 +208,12 @@ cmd-check = $(filter-out $(subst $(space),$(space_escape),$(strip $(savedcmd_$@)
 else
 # We still need to detect missing targets.
 cmd-check = $(if $(strip $(savedcmd_$@)),,1)
+=======
+cmd-check = $(filter-out $(subst $(space),$(space_escape),$(strip $(cmd_$@))), \
+                         $(subst $(space),$(space_escape),$(strip $(cmd_$1))))
+else
+cmd-check = $(if $(strip $(cmd_$@)),,1)
+>>>>>>> b7ba80a49124 (Commit)
 endif
 
 # Replace >$< with >$$< to preserve $ when reloading the .cmd file
@@ -189,9 +225,16 @@ endif
 make-cmd = $(call escsq,$(subst $(pound),$$(pound),$(subst $$,$$$$,$(cmd_$(1)))))
 
 # Find any prerequisites that are newer than target or that do not exist.
+<<<<<<< HEAD
 # PHONY targets skipped in both cases.
 # If there is no prerequisite other than phony targets, $(newer-prereqs) becomes
 # empty even if the target does not exist. cmd-check saves this corner case.
+=======
+# (This is not true for now; $? should contain any non-existent prerequisites,
+# but it does not work as expected when .SECONDARY is present. This seems a bug
+# of GNU Make.)
+# PHONY targets skipped in both cases.
+>>>>>>> b7ba80a49124 (Commit)
 newer-prereqs = $(filter-out $(PHONY),$?)
 
 # It is a typical mistake to forget the FORCE prerequisite. Check it here so
@@ -205,7 +248,11 @@ if_changed = $(if $(if-changed-cond),$(cmd_and_savecmd),@:)
 
 cmd_and_savecmd =                                                            \
 	$(cmd);                                                              \
+<<<<<<< HEAD
 	printf '%s\n' 'savedcmd_$@ := $(make-cmd)' > $(dot-target).cmd
+=======
+	printf '%s\n' 'cmd_$@ := $(make-cmd)' > $(dot-target).cmd
+>>>>>>> b7ba80a49124 (Commit)
 
 # Execute the command and also postprocess generated .d dependencies file.
 if_changed_dep = $(if $(if-changed-cond),$(cmd_and_fixdep),@:)
@@ -239,13 +286,22 @@ if_changed_rule = $(if $(if-changed-cond),$(rule_$(1)),@:)
 # (5) No dir/.target.cmd file (used to store command line)
 # (6) No dir/.target.cmd file and target not listed in $(targets)
 #     This is a good hint that there is a bug in the kbuild file
+<<<<<<< HEAD
 ifneq ($(findstring 2, $(KBUILD_VERBOSE)),)
 _why =                                                                        \
+=======
+ifeq ($(KBUILD_VERBOSE),2)
+why =                                                                        \
+>>>>>>> b7ba80a49124 (Commit)
     $(if $(filter $@, $(PHONY)),- due to target is PHONY,                    \
         $(if $(wildcard $@),                                                 \
             $(if $(newer-prereqs),- due to: $(newer-prereqs),                \
                 $(if $(cmd-check),                                           \
+<<<<<<< HEAD
                     $(if $(savedcmd_$@),- due to command line change,        \
+=======
+                    $(if $(cmd_$@),- due to command line change,             \
+>>>>>>> b7ba80a49124 (Commit)
                         $(if $(filter $@, $(targets)),                       \
                             - due to missing .cmd file,                      \
                             - due to $(notdir $@) not in $$(targets)         \
@@ -257,7 +313,11 @@ _why =                                                                        \
          )                                                                   \
      )
 
+<<<<<<< HEAD
 why = $(space)$(strip $(_why))
+=======
+echo-why = $(call escsq, $(strip $(why)))
+>>>>>>> b7ba80a49124 (Commit)
 endif
 
 ###############################################################################
@@ -266,6 +326,7 @@ endif
 .DELETE_ON_ERROR:
 
 # do not delete intermediate files automatically
+<<<<<<< HEAD
 #
 # .NOTINTERMEDIATE is more correct, but only available on newer Make versions.
 # Make 4.4 introduced .NOTINTERMEDIATE, and it appears in .FEATURES, but the
@@ -277,3 +338,6 @@ ifneq ($(and $(filter notintermediate, $(.FEATURES)),$(filter-out 4.4,$(MAKE_VER
 else
 .SECONDARY:
 endif
+=======
+.SECONDARY:
+>>>>>>> b7ba80a49124 (Commit)

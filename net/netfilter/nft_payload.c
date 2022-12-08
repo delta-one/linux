@@ -19,7 +19,10 @@
 /* For layer 4 checksum field offset. */
 #include <linux/tcp.h>
 #include <linux/udp.h>
+<<<<<<< HEAD
 #include <net/gre.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/icmpv6.h>
 #include <linux/ip.h>
 #include <linux/ipv6.h>
@@ -63,7 +66,11 @@ nft_payload_copy_vlan(u32 *d, const struct sk_buff *skb, u8 offset, u8 len)
 			return false;
 
 		if (offset + len > VLAN_ETH_HLEN + vlan_hlen)
+<<<<<<< HEAD
 			ethlen -= offset + len - VLAN_ETH_HLEN - vlan_hlen;
+=======
+			ethlen -= offset + len - VLAN_ETH_HLEN + vlan_hlen;
+>>>>>>> b7ba80a49124 (Commit)
 
 		memcpy(dst_u8, vlanh + offset - vlan_hlen, ethlen);
 
@@ -101,6 +108,7 @@ static int __nft_payload_inner_offset(struct nft_pktinfo *pkt)
 		pkt->inneroff = thoff + __tcp_hdrlen(th);
 		}
 		break;
+<<<<<<< HEAD
 	case IPPROTO_GRE: {
 		u32 offset = sizeof(struct gre_base_hdr);
 		struct gre_base_hdr *gre, _gre;
@@ -136,6 +144,8 @@ static int __nft_payload_inner_offset(struct nft_pktinfo *pkt)
 	case IPPROTO_IPIP:
 		pkt->inneroff = thoff;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -1;
 	}
@@ -145,7 +155,11 @@ static int __nft_payload_inner_offset(struct nft_pktinfo *pkt)
 	return 0;
 }
 
+<<<<<<< HEAD
 int nft_payload_inner_offset(const struct nft_pktinfo *pkt)
+=======
+static int nft_payload_inner_offset(const struct nft_pktinfo *pkt)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!(pkt->flags & NFT_PKTINFO_INNER) &&
 	    __nft_payload_inner_offset((struct nft_pktinfo *)pkt) < 0)
@@ -209,10 +223,17 @@ static const struct nla_policy nft_payload_policy[NFTA_PAYLOAD_MAX + 1] = {
 	[NFTA_PAYLOAD_SREG]		= { .type = NLA_U32 },
 	[NFTA_PAYLOAD_DREG]		= { .type = NLA_U32 },
 	[NFTA_PAYLOAD_BASE]		= { .type = NLA_U32 },
+<<<<<<< HEAD
 	[NFTA_PAYLOAD_OFFSET]		= NLA_POLICY_MAX(NLA_BE32, 255),
 	[NFTA_PAYLOAD_LEN]		= NLA_POLICY_MAX(NLA_BE32, 255),
 	[NFTA_PAYLOAD_CSUM_TYPE]	= { .type = NLA_U32 },
 	[NFTA_PAYLOAD_CSUM_OFFSET]	= NLA_POLICY_MAX(NLA_BE32, 255),
+=======
+	[NFTA_PAYLOAD_OFFSET]		= NLA_POLICY_MAX_BE(NLA_U32, 255),
+	[NFTA_PAYLOAD_LEN]		= NLA_POLICY_MAX_BE(NLA_U32, 255),
+	[NFTA_PAYLOAD_CSUM_TYPE]	= { .type = NLA_U32 },
+	[NFTA_PAYLOAD_CSUM_OFFSET]	= NLA_POLICY_MAX_BE(NLA_U32, 255),
+>>>>>>> b7ba80a49124 (Commit)
 	[NFTA_PAYLOAD_CSUM_FLAGS]	= { .type = NLA_U32 },
 };
 
@@ -231,8 +252,12 @@ static int nft_payload_init(const struct nft_ctx *ctx,
 					priv->len);
 }
 
+<<<<<<< HEAD
 static int nft_payload_dump(struct sk_buff *skb,
 			    const struct nft_expr *expr, bool reset)
+=======
+static int nft_payload_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_payload *priv = nft_expr_priv(expr);
 
@@ -589,6 +614,7 @@ const struct nft_expr_ops nft_payload_fast_ops = {
 	.offload	= nft_payload_offload,
 };
 
+<<<<<<< HEAD
 void nft_payload_inner_eval(const struct nft_expr *expr, struct nft_regs *regs,
 			    const struct nft_pktinfo *pkt,
 			    struct nft_inner_tun_ctx *tun_ctx)
@@ -675,6 +701,8 @@ static const struct nft_expr_ops nft_payload_inner_ops = {
 	/* direct call to nft_payload_inner_eval(). */
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void nft_csum_replace(__sum16 *sum, __wsum fsum, __wsum tsum)
 {
 	*sum = csum_fold(csum_add(csum_sub(~csum_unfold(*sum), fsum), tsum));
@@ -788,6 +816,7 @@ static int nft_payload_csum_inet(struct sk_buff *skb, const u32 *src,
 	return 0;
 }
 
+<<<<<<< HEAD
 struct nft_payload_set {
 	enum nft_payload_bases	base:8;
 	u8			offset;
@@ -798,6 +827,8 @@ struct nft_payload_set {
 	u8			csum_flags;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void nft_payload_set_eval(const struct nft_expr *expr,
 				 struct nft_regs *regs,
 				 const struct nft_pktinfo *pkt)
@@ -920,8 +951,12 @@ static int nft_payload_set_init(const struct nft_ctx *ctx,
 				       priv->len);
 }
 
+<<<<<<< HEAD
 static int nft_payload_set_dump(struct sk_buff *skb,
 				const struct nft_expr *expr, bool reset)
+=======
+static int nft_payload_set_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_payload_set *priv = nft_expr_priv(expr);
 
@@ -1019,7 +1054,10 @@ nft_payload_select_ops(const struct nft_ctx *ctx,
 struct nft_expr_type nft_payload_type __read_mostly = {
 	.name		= "payload",
 	.select_ops	= nft_payload_select_ops,
+<<<<<<< HEAD
 	.inner_ops	= &nft_payload_inner_ops,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.policy		= nft_payload_policy,
 	.maxattr	= NFTA_PAYLOAD_MAX,
 	.owner		= THIS_MODULE,

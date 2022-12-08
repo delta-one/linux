@@ -12,7 +12,10 @@
 
 #include <linux/ctype.h>
 #include <linux/zalloc.h>
+<<<<<<< HEAD
 #include <internal/cpumap.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct perf_cpu max_cpu_num;
 static struct perf_cpu max_present_cpu_num;
@@ -230,12 +233,20 @@ static int aggr_cpu_id__cmp(const void *a_pointer, const void *b_pointer)
 	else if (a->core != b->core)
 		return a->core - b->core;
 	else
+<<<<<<< HEAD
 		return a->thread_idx - b->thread_idx;
+=======
+		return a->thread - b->thread;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct cpu_aggr_map *cpu_aggr_map__new(const struct perf_cpu_map *cpus,
 				       aggr_cpu_id_get_t get_id,
+<<<<<<< HEAD
 				       void *data, bool needs_sort)
+=======
+				       void *data)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int idx;
 	struct perf_cpu cpu;
@@ -271,10 +282,15 @@ struct cpu_aggr_map *cpu_aggr_map__new(const struct perf_cpu_map *cpus,
 		if (trimmed_c)
 			c = trimmed_c;
 	}
+<<<<<<< HEAD
 
 	/* ensure we process id in increasing order */
 	if (needs_sort)
 		qsort(c->map, c->nr, sizeof(struct aggr_cpu_id), aggr_cpu_id__cmp);
+=======
+	/* ensure we process id in increasing order */
+	qsort(c->map, c->nr, sizeof(struct aggr_cpu_id), aggr_cpu_id__cmp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return c;
 
@@ -357,6 +373,7 @@ struct aggr_cpu_id aggr_cpu_id__node(struct perf_cpu cpu, void *data __maybe_unu
 	return id;
 }
 
+<<<<<<< HEAD
 struct aggr_cpu_id aggr_cpu_id__global(struct perf_cpu cpu, void *data __maybe_unused)
 {
 	struct aggr_cpu_id id = aggr_cpu_id__empty();
@@ -367,6 +384,8 @@ struct aggr_cpu_id aggr_cpu_id__global(struct perf_cpu cpu, void *data __maybe_u
 	return id;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* setup simple routines to easily access node numbers given a cpu number */
 static int get_max_num(char *path, int *max)
 {
@@ -680,7 +699,11 @@ const struct perf_cpu_map *cpu_map__online(void) /* thread unsafe */
 
 bool aggr_cpu_id__equal(const struct aggr_cpu_id *a, const struct aggr_cpu_id *b)
 {
+<<<<<<< HEAD
 	return a->thread_idx == b->thread_idx &&
+=======
+	return a->thread == b->thread &&
+>>>>>>> b7ba80a49124 (Commit)
 		a->node == b->node &&
 		a->socket == b->socket &&
 		a->die == b->die &&
@@ -690,7 +713,11 @@ bool aggr_cpu_id__equal(const struct aggr_cpu_id *a, const struct aggr_cpu_id *b
 
 bool aggr_cpu_id__is_empty(const struct aggr_cpu_id *a)
 {
+<<<<<<< HEAD
 	return a->thread_idx == -1 &&
+=======
+	return a->thread == -1 &&
+>>>>>>> b7ba80a49124 (Commit)
 		a->node == -1 &&
 		a->socket == -1 &&
 		a->die == -1 &&
@@ -701,7 +728,11 @@ bool aggr_cpu_id__is_empty(const struct aggr_cpu_id *a)
 struct aggr_cpu_id aggr_cpu_id__empty(void)
 {
 	struct aggr_cpu_id ret = {
+<<<<<<< HEAD
 		.thread_idx = -1,
+=======
+		.thread = -1,
+>>>>>>> b7ba80a49124 (Commit)
 		.node = -1,
 		.socket = -1,
 		.die = -1,

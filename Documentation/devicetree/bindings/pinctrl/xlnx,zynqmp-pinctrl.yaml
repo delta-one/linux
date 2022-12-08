@@ -274,6 +274,13 @@ patternProperties:
           slew-rate:
             enum: [0, 1]
 
+<<<<<<< HEAD
+=======
+          output-enable:
+            description:
+              This will internally disable the tri-state for MIO pins.
+
+>>>>>>> b7ba80a49124 (Commit)
           drive-strength:
             description:
               Selects the drive strength for MIO pins, in mA.

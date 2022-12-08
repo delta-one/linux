@@ -113,6 +113,7 @@ static int ath_ahb_probe(struct platform_device *pdev)
 		goto err_out;
 	}
 
+<<<<<<< HEAD
 	irq = platform_get_irq(pdev, 0);
 	if (irq < 0) {
 		dev_err(&pdev->dev, "no IRQ resource found: %d\n", irq);
@@ -120,6 +121,17 @@ static int ath_ahb_probe(struct platform_device *pdev)
 		goto err_iounmap;
 	}
 
+=======
+	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+	if (res == NULL) {
+		dev_err(&pdev->dev, "no IRQ resource found\n");
+		ret = -ENXIO;
+		goto err_iounmap;
+	}
+
+	irq = res->start;
+
+>>>>>>> b7ba80a49124 (Commit)
 	hw = ieee80211_alloc_hw(sizeof(struct ath5k_hw), &ath5k_hw_ops);
 	if (hw == NULL) {
 		dev_err(&pdev->dev, "no memory for ieee80211_hw\n");

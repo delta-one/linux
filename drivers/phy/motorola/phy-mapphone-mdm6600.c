@@ -634,7 +634,11 @@ cleanup:
 	return error;
 }
 
+<<<<<<< HEAD
 static void phy_mdm6600_remove(struct platform_device *pdev)
+=======
+static int phy_mdm6600_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct phy_mdm6600 *ddata = platform_get_drvdata(pdev);
 	struct gpio_desc *reset_gpio = ddata->ctrl_gpios[PHY_MDM6600_RESET];
@@ -653,11 +657,20 @@ static void phy_mdm6600_remove(struct platform_device *pdev)
 	cancel_delayed_work_sync(&ddata->modem_wake_work);
 	cancel_delayed_work_sync(&ddata->bootup_work);
 	cancel_delayed_work_sync(&ddata->status_work);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver phy_mdm6600_driver = {
 	.probe = phy_mdm6600_probe,
+<<<<<<< HEAD
 	.remove_new = phy_mdm6600_remove,
+=======
+	.remove = phy_mdm6600_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "phy-mapphone-mdm6600",
 		.pm = &phy_mdm6600_pm_ops,

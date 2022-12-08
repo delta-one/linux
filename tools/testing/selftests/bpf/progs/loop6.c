@@ -5,7 +5,10 @@
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_tracing.h>
+<<<<<<< HEAD
 #include "bpf_misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 char _license[] SEC("license") = "GPL";
 
@@ -77,7 +80,10 @@ int BPF_KPROBE(trace_virtqueue_add_sgs, void *unused, struct scatterlist **sgs,
 		return 0;
 
 	for (i = 0; (i < VIRTIO_MAX_SGS) && (i < out_sgs); i++) {
+<<<<<<< HEAD
 		__sink(out_sgs);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		for (n = 0, sgp = get_sgp(sgs, i); sgp && (n < SG_MAX);
 		     sgp = __sg_next(sgp)) {
 			bpf_probe_read_kernel(&len, sizeof(len), &sgp->length);
@@ -87,7 +93,10 @@ int BPF_KPROBE(trace_virtqueue_add_sgs, void *unused, struct scatterlist **sgs,
 	}
 
 	for (i = 0; (i < VIRTIO_MAX_SGS) && (i < in_sgs); i++) {
+<<<<<<< HEAD
 		__sink(in_sgs);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		for (n = 0, sgp = get_sgp(sgs, i); sgp && (n < SG_MAX);
 		     sgp = __sg_next(sgp)) {
 			bpf_probe_read_kernel(&len, sizeof(len), &sgp->length);

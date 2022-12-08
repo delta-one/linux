@@ -63,11 +63,20 @@ required:
   - xlnx,use-parity
 
 allOf:
+<<<<<<< HEAD
   - $ref: serial.yaml#
   - if:
       properties:
         xlnx,use-parity:
           const: 1
+=======
+  - $ref: /schemas/serial.yaml#
+  - if:
+      properties:
+        xlnx,use-parity:
+          contains:
+            const: 1
+>>>>>>> b7ba80a49124 (Commit)
     then:
       required:
         - xlnx,odd-parity
@@ -76,7 +85,11 @@ unevaluatedProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     serial@800c0000 {
+=======
+      serial@800c0000 {
+>>>>>>> b7ba80a49124 (Commit)
         compatible = "xlnx,xps-uartlite-1.00.a";
         reg = <0x800c0000 0x10000>;
         interrupts = <0x0 0x6e 0x1>;
@@ -84,5 +97,9 @@ examples:
         current-speed = <115200>;
         xlnx,data-bits = <8>;
         xlnx,use-parity = <0>;
+<<<<<<< HEAD
     };
+=======
+      };
+>>>>>>> b7ba80a49124 (Commit)
 ...

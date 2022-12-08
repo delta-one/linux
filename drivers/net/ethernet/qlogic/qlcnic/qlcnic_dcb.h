@@ -41,6 +41,14 @@ struct qlcnic_dcb {
 	unsigned long			state;
 };
 
+<<<<<<< HEAD
+=======
+static inline void qlcnic_clear_dcb_ops(struct qlcnic_dcb *dcb)
+{
+	kfree(dcb);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline int qlcnic_dcb_get_hw_capability(struct qlcnic_dcb *dcb)
 {
 	if (dcb && dcb->ops->get_hw_capability)
@@ -107,8 +115,15 @@ static inline void qlcnic_dcb_init_dcbnl_ops(struct qlcnic_dcb *dcb)
 		dcb->ops->init_dcbnl_ops(dcb);
 }
 
+<<<<<<< HEAD
 static inline int qlcnic_dcb_enable(struct qlcnic_dcb *dcb)
 {
 	return dcb ? qlcnic_dcb_attach(dcb) : 0;
+=======
+static inline void qlcnic_dcb_enable(struct qlcnic_dcb *dcb)
+{
+	if (dcb && qlcnic_dcb_attach(dcb))
+		qlcnic_clear_dcb_ops(dcb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif

@@ -74,6 +74,7 @@ static int mtk_ppe_wait_busy(struct mtk_ppe *ppe)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int mtk_ppe_mib_wait_busy(struct mtk_ppe *ppe)
 {
 	int ret;
@@ -116,6 +117,8 @@ static int mtk_mib_entry_read(struct mtk_ppe *ppe, u16 index, u64 *bytes, u64 *p
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void mtk_ppe_cache_clear(struct mtk_ppe *ppe)
 {
 	ppe_set(ppe, MTK_PPE_CACHE_CTL, MTK_PPE_CACHE_CTL_CLEAR);
@@ -217,8 +220,11 @@ int mtk_foe_entry_prepare(struct mtk_eth *eth, struct mtk_foe_entry *entry,
 		val = FIELD_PREP(MTK_FOE_IB2_DEST_PORT_V2, pse_port) |
 		      FIELD_PREP(MTK_FOE_IB2_PORT_AG_V2, 0xf);
 	} else {
+<<<<<<< HEAD
 		int port_mg = eth->soc->offload_version > 1 ? 0 : 0x3f;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		val = FIELD_PREP(MTK_FOE_IB1_STATE, MTK_FOE_STATE_BIND) |
 		      FIELD_PREP(MTK_FOE_IB1_PACKET_TYPE, type) |
 		      FIELD_PREP(MTK_FOE_IB1_UDP, l4proto == IPPROTO_UDP) |
@@ -226,7 +232,11 @@ int mtk_foe_entry_prepare(struct mtk_eth *eth, struct mtk_foe_entry *entry,
 		entry->ib1 = val;
 
 		val = FIELD_PREP(MTK_FOE_IB2_DEST_PORT, pse_port) |
+<<<<<<< HEAD
 		      FIELD_PREP(MTK_FOE_IB2_PORT_MG, port_mg) |
+=======
+		      FIELD_PREP(MTK_FOE_IB2_PORT_MG, 0x3f) |
+>>>>>>> b7ba80a49124 (Commit)
 		      FIELD_PREP(MTK_FOE_IB2_PORT_AG, 0x1f);
 	}
 
@@ -381,7 +391,11 @@ int mtk_foe_entry_set_vlan(struct mtk_eth *eth, struct mtk_foe_entry *entry,
 {
 	struct mtk_foe_mac_info *l2 = mtk_foe_entry_l2(eth, entry);
 
+<<<<<<< HEAD
 	switch (mtk_get_ib1_vlan_layer(eth, entry->ib1)) {
+=======
+	switch (mtk_prep_ib1_vlan_layer(eth, entry->ib1)) {
+>>>>>>> b7ba80a49124 (Commit)
 	case 0:
 		entry->ib1 |= mtk_get_ib1_vlan_tag_mask(eth) |
 			      mtk_prep_ib1_vlan_layer(eth, 1);
@@ -441,6 +455,7 @@ int mtk_foe_entry_set_wdma(struct mtk_eth *eth, struct mtk_foe_entry *entry,
 	return 0;
 }
 
+<<<<<<< HEAD
 int mtk_foe_entry_set_queue(struct mtk_eth *eth, struct mtk_foe_entry *entry,
 			    unsigned int queue)
 {
@@ -457,6 +472,12 @@ int mtk_foe_entry_set_queue(struct mtk_eth *eth, struct mtk_foe_entry *entry,
 	}
 
 	return 0;
+=======
+static inline bool mtk_foe_entry_usable(struct mtk_foe_entry *entry)
+{
+	return !(entry->ib1 & MTK_FOE_IB1_STATIC) &&
+	       FIELD_GET(MTK_FOE_IB1_STATE, entry->ib1) != MTK_FOE_STATE_BIND;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool
@@ -498,6 +519,7 @@ __mtk_foe_entry_clear(struct mtk_ppe *ppe, struct mtk_flow_entry *entry)
 		struct mtk_foe_entry *hwe = mtk_foe_get_entry(ppe, entry->hash);
 
 		hwe->ib1 &= ~MTK_FOE_IB1_STATE;
+<<<<<<< HEAD
 		hwe->ib1 |= FIELD_PREP(MTK_FOE_IB1_STATE, MTK_FOE_STATE_INVALID);
 		dma_wmb();
 		if (ppe->accounting) {
@@ -507,6 +529,10 @@ __mtk_foe_entry_clear(struct mtk_ppe *ppe, struct mtk_flow_entry *entry)
 			acct->packets = 0;
 			acct->bytes = 0;
 		}
+=======
+		hwe->ib1 |= FIELD_PREP(MTK_FOE_IB1_STATE, MTK_FOE_STATE_UNBIND);
+		dma_wmb();
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	entry->hash = 0xffff;
 
@@ -610,6 +636,7 @@ __mtk_foe_entry_commit(struct mtk_ppe *ppe, struct mtk_foe_entry *entry,
 	}
 
 	hwe = mtk_foe_get_entry(ppe, hash);
+<<<<<<< HEAD
 	memcpy(&hwe->data, &entry->data, eth->soc->foe_entry_size - sizeof(hwe->ib1));
 	wmb();
 	hwe->ib1 = entry->ib1;
@@ -617,6 +644,12 @@ __mtk_foe_entry_commit(struct mtk_ppe *ppe, struct mtk_foe_entry *entry,
 	if (ppe->accounting)
 		*mtk_foe_entry_ib2(eth, hwe) |= MTK_FOE_IB2_MIB_CNT;
 
+=======
+	memcpy(&hwe->data, &entry->data, eth->soc->foe_entry_size);
+	wmb();
+	hwe->ib1 = entry->ib1;
+
+>>>>>>> b7ba80a49124 (Commit)
 	dma_wmb();
 
 	mtk_ppe_cache_clear(ppe);
@@ -667,7 +700,12 @@ mtk_foe_entry_commit_subflow(struct mtk_ppe *ppe, struct mtk_flow_entry *entry,
 	u32 ib1_mask = mtk_get_ib1_pkt_type_mask(ppe->eth) | MTK_FOE_IB1_UDP;
 	int type;
 
+<<<<<<< HEAD
 	flow_info = kzalloc(sizeof(*flow_info), GFP_ATOMIC);
+=======
+	flow_info = kzalloc(offsetof(struct mtk_flow_entry, l2_data.end),
+			    GFP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!flow_info)
 		return;
 
@@ -781,6 +819,7 @@ int mtk_foe_entry_idle_time(struct mtk_ppe *ppe, struct mtk_flow_entry *entry)
 	return __mtk_foe_entry_idle_time(ppe, entry->data.ib1);
 }
 
+<<<<<<< HEAD
 int mtk_ppe_prepare_reset(struct mtk_ppe *ppe)
 {
 	if (!ppe)
@@ -841,6 +880,13 @@ struct mtk_ppe *mtk_ppe_init(struct mtk_eth *eth, void __iomem *base, int index)
 	struct mtk_foe_accounting *acct;
 	struct device *dev = eth->dev;
 	struct mtk_mib_entry *mib;
+=======
+struct mtk_ppe *mtk_ppe_init(struct mtk_eth *eth, void __iomem *base,
+			     int version, int index)
+{
+	const struct mtk_soc_data *soc = eth->soc;
+	struct device *dev = eth->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct mtk_ppe *ppe;
 	u32 foe_flow_size;
 	void *foe;
@@ -857,14 +903,22 @@ struct mtk_ppe *mtk_ppe_init(struct mtk_eth *eth, void __iomem *base, int index)
 	ppe->base = base;
 	ppe->eth = eth;
 	ppe->dev = dev;
+<<<<<<< HEAD
 	ppe->version = eth->soc->offload_version;
 	ppe->accounting = accounting;
+=======
+	ppe->version = version;
+>>>>>>> b7ba80a49124 (Commit)
 
 	foe = dmam_alloc_coherent(ppe->dev,
 				  MTK_PPE_ENTRIES * soc->foe_entry_size,
 				  &ppe->foe_phys, GFP_KERNEL);
 	if (!foe)
+<<<<<<< HEAD
 		goto err_free_l2_flows;
+=======
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ppe->foe_table = foe;
 
@@ -872,6 +926,7 @@ struct mtk_ppe *mtk_ppe_init(struct mtk_eth *eth, void __iomem *base, int index)
 			sizeof(*ppe->foe_flow);
 	ppe->foe_flow = devm_kzalloc(dev, foe_flow_size, GFP_KERNEL);
 	if (!ppe->foe_flow)
+<<<<<<< HEAD
 		goto err_free_l2_flows;
 
 	if (accounting) {
@@ -890,10 +945,14 @@ struct mtk_ppe *mtk_ppe_init(struct mtk_eth *eth, void __iomem *base, int index)
 
 		ppe->acct_table = acct;
 	}
+=======
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mtk_ppe_debugfs_init(ppe, index);
 
 	return ppe;
+<<<<<<< HEAD
 
 err_free_l2_flows:
 	rhashtable_destroy(&ppe->l2_flows);
@@ -909,6 +968,8 @@ void mtk_ppe_deinit(struct mtk_eth *eth)
 			return;
 		rhashtable_destroy(&eth->ppe[i]->l2_flows);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mtk_ppe_init_foe_table(struct mtk_ppe *ppe)
@@ -1020,6 +1081,7 @@ void mtk_ppe_start(struct mtk_ppe *ppe)
 		ppe_w32(ppe, MTK_PPE_DEFAULT_CPU_PORT1, 0xcb777);
 		ppe_w32(ppe, MTK_PPE_SBW_CTRL, 0x7f);
 	}
+<<<<<<< HEAD
 
 	if (ppe->accounting && ppe->mib_phys) {
 		ppe_w32(ppe, MTK_PPE_MIB_TB_BASE, ppe->mib_phys);
@@ -1030,6 +1092,8 @@ void mtk_ppe_start(struct mtk_ppe *ppe)
 		ppe_m32(ppe, MTK_PPE_MIB_CACHE_CTL, MTK_PPE_MIB_CACHE_CTL_EN,
 			MTK_PPE_MIB_CFG_RD_CLR);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int mtk_ppe_stop(struct mtk_ppe *ppe)

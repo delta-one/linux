@@ -314,7 +314,10 @@ static FILE *urand_spawn(int *pid)
 
 	if (fscanf(f, "%d", pid) != 1) {
 		pclose(f);
+<<<<<<< HEAD
 		errno = EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 	}
 

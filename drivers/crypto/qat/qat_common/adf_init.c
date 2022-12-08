@@ -56,7 +56,11 @@ int adf_service_unregister(struct service_hndl *service)
  *
  * Return: 0 on success, error code otherwise.
  */
+<<<<<<< HEAD
 static int adf_dev_init(struct adf_accel_dev *accel_dev)
+=======
+int adf_dev_init(struct adf_accel_dev *accel_dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct service_hndl *service;
 	struct list_head *list_itr;
@@ -146,6 +150,10 @@ static int adf_dev_init(struct adf_accel_dev *accel_dev)
 
 	return 0;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(adf_dev_init);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * adf_dev_start() - Start acceleration service for the given accel device
@@ -157,7 +165,11 @@ static int adf_dev_init(struct adf_accel_dev *accel_dev)
  *
  * Return: 0 on success, error code otherwise.
  */
+<<<<<<< HEAD
 static int adf_dev_start(struct adf_accel_dev *accel_dev)
+=======
+int adf_dev_start(struct adf_accel_dev *accel_dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct adf_hw_device_data *hw_data = accel_dev->hw_device;
 	struct service_hndl *service;
@@ -208,6 +220,7 @@ static int adf_dev_start(struct adf_accel_dev *accel_dev)
 		clear_bit(ADF_STATUS_STARTED, &accel_dev->status);
 		return -EFAULT;
 	}
+<<<<<<< HEAD
 
 	if (!list_empty(&accel_dev->compression_list) && qat_comp_algs_register()) {
 		dev_err(&GET_DEV(accel_dev),
@@ -218,6 +231,11 @@ static int adf_dev_start(struct adf_accel_dev *accel_dev)
 	}
 	return 0;
 }
+=======
+	return 0;
+}
+EXPORT_SYMBOL_GPL(adf_dev_start);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * adf_dev_stop() - Stop acceleration service for the given accel device
@@ -229,7 +247,11 @@ static int adf_dev_start(struct adf_accel_dev *accel_dev)
  *
  * Return: void
  */
+<<<<<<< HEAD
 static void adf_dev_stop(struct adf_accel_dev *accel_dev)
+=======
+void adf_dev_stop(struct adf_accel_dev *accel_dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct service_hndl *service;
 	struct list_head *list_itr;
@@ -248,9 +270,12 @@ static void adf_dev_stop(struct adf_accel_dev *accel_dev)
 		qat_asym_algs_unregister();
 	}
 
+<<<<<<< HEAD
 	if (!list_empty(&accel_dev->compression_list))
 		qat_comp_algs_unregister();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each(list_itr, &service_table) {
 		service = list_entry(list_itr, struct service_hndl, list);
 		if (!test_bit(accel_dev->accel_id, service->start_status))
@@ -274,6 +299,10 @@ static void adf_dev_stop(struct adf_accel_dev *accel_dev)
 			clear_bit(ADF_STATUS_AE_STARTED, &accel_dev->status);
 	}
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(adf_dev_stop);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * adf_dev_shutdown() - shutdown acceleration services and data strucutures
@@ -282,7 +311,11 @@ static void adf_dev_stop(struct adf_accel_dev *accel_dev)
  * Cleanup the ring data structures and the admin comms and arbitration
  * services.
  */
+<<<<<<< HEAD
 static void adf_dev_shutdown(struct adf_accel_dev *accel_dev)
+=======
+void adf_dev_shutdown(struct adf_accel_dev *accel_dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct adf_hw_device_data *hw_data = accel_dev->hw_device;
 	struct service_hndl *service;
@@ -340,6 +373,10 @@ static void adf_dev_shutdown(struct adf_accel_dev *accel_dev)
 	adf_cleanup_etr_data(accel_dev);
 	adf_dev_restore(accel_dev);
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(adf_dev_shutdown);
+>>>>>>> b7ba80a49124 (Commit)
 
 int adf_dev_restarting_notify(struct adf_accel_dev *accel_dev)
 {
@@ -371,7 +408,11 @@ int adf_dev_restarted_notify(struct adf_accel_dev *accel_dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int adf_dev_shutdown_cache_cfg(struct adf_accel_dev *accel_dev)
+=======
+int adf_dev_shutdown_cache_cfg(struct adf_accel_dev *accel_dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	char services[ADF_CFG_MAX_VAL_LEN_IN_BYTES] = {0};
 	int ret;
@@ -396,6 +437,7 @@ static int adf_dev_shutdown_cache_cfg(struct adf_accel_dev *accel_dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 int adf_dev_down(struct adf_accel_dev *accel_dev, bool reconfig)
 {
@@ -478,3 +520,5 @@ int adf_dev_restart(struct adf_accel_dev *accel_dev)
 	return ret;
 }
 EXPORT_SYMBOL_GPL(adf_dev_restart);
+=======
+>>>>>>> b7ba80a49124 (Commit)

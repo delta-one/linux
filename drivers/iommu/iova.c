@@ -197,7 +197,11 @@ static int __alloc_and_insert_iova_range(struct iova_domain *iovad,
 
 	curr = __get_cached_rbnode(iovad, limit_pfn);
 	curr_iova = to_iova(curr);
+<<<<<<< HEAD
 	retry_pfn = curr_iova->pfn_hi;
+=======
+	retry_pfn = curr_iova->pfn_hi + 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 retry:
 	do {
@@ -211,7 +215,11 @@ retry:
 	if (high_pfn < size || new_pfn < low_pfn) {
 		if (low_pfn == iovad->start_pfn && retry_pfn < limit_pfn) {
 			high_pfn = limit_pfn;
+<<<<<<< HEAD
 			low_pfn = retry_pfn + 1;
+=======
+			low_pfn = retry_pfn;
+>>>>>>> b7ba80a49124 (Commit)
 			curr = iova_find_limit(iovad, limit_pfn);
 			curr_iova = to_iova(curr);
 			goto retry;

@@ -25,7 +25,10 @@
 #include <linux/kexec.h>
 #include <linux/panic_notifier.h>
 #include <linux/sched.h>
+<<<<<<< HEAD
 #include <linux/string_helpers.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sysrq.h>
 #include <linux/init.h>
 #include <linux/nmi.h>
@@ -33,8 +36,11 @@
 #include <linux/bug.h>
 #include <linux/ratelimit.h>
 #include <linux/debugfs.h>
+<<<<<<< HEAD
 #include <linux/sysfs.h>
 #include <linux/context_tracking.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <trace/events/error_report.h>
 #include <asm/sections.h>
 
@@ -61,7 +67,10 @@ bool crash_kexec_post_notifiers;
 int panic_on_warn __read_mostly;
 unsigned long panic_on_taint;
 bool panic_on_taint_nousertaint = false;
+<<<<<<< HEAD
 static unsigned int warn_limit __read_mostly;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int panic_timeout = CONFIG_PANIC_TIMEOUT;
 EXPORT_SYMBOL_GPL(panic_timeout);
@@ -79,9 +88,14 @@ ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
 
 EXPORT_SYMBOL(panic_notifier_list);
 
+<<<<<<< HEAD
 #ifdef CONFIG_SYSCTL
 static struct ctl_table kern_panic_table[] = {
 #ifdef CONFIG_SMP
+=======
+#if defined(CONFIG_SMP) && defined(CONFIG_SYSCTL)
+static struct ctl_table kern_panic_table[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.procname       = "oops_all_cpu_backtrace",
 		.data           = &sysctl_oops_all_cpu_backtrace,
@@ -91,6 +105,7 @@ static struct ctl_table kern_panic_table[] = {
 		.extra1         = SYSCTL_ZERO,
 		.extra2         = SYSCTL_ONE,
 	},
+<<<<<<< HEAD
 #endif
 	{
 		.procname       = "warn_limit",
@@ -99,6 +114,8 @@ static struct ctl_table kern_panic_table[] = {
 		.mode           = 0644,
 		.proc_handler   = proc_douintvec,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 
@@ -110,6 +127,7 @@ static __init int kernel_panic_sysctls_init(void)
 late_initcall(kernel_panic_sysctls_init);
 #endif
 
+<<<<<<< HEAD
 static atomic_t warn_count = ATOMIC_INIT(0);
 
 #ifdef CONFIG_SYSFS
@@ -129,6 +147,8 @@ static __init int kernel_panic_sysfs_init(void)
 late_initcall(kernel_panic_sysfs_init);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static long no_blink(int state)
 {
 	return 0;
@@ -212,6 +232,12 @@ static void panic_print_sys_info(bool console_flush)
 		return;
 	}
 
+<<<<<<< HEAD
+=======
+	if (panic_print & PANIC_PRINT_ALL_CPU_BT)
+		trigger_all_cpu_backtrace();
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (panic_print & PANIC_PRINT_TASK_INFO)
 		show_state();
 
@@ -228,6 +254,7 @@ static void panic_print_sys_info(bool console_flush)
 		ftrace_dump(DUMP_ALL);
 }
 
+<<<<<<< HEAD
 void check_panic_on_warn(const char *origin)
 {
 	unsigned int limit;
@@ -265,6 +292,8 @@ static void panic_other_cpus_shutdown(bool crash_kexec)
 		crash_smp_send_stop();
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  *	panic - halt the system
  *	@fmt: The text string to print
@@ -355,10 +384,30 @@ void panic(const char *fmt, ...)
 	 *
 	 * Bypass the panic_cpu check and call __crash_kexec directly.
 	 */
+<<<<<<< HEAD
 	if (!_crash_kexec_post_notifiers)
 		__crash_kexec(NULL);
 
 	panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
+=======
+	if (!_crash_kexec_post_notifiers) {
+		__crash_kexec(NULL);
+
+		/*
+		 * Note smp_send_stop is the usual smp shutdown function, which
+		 * unfortunately means it may not be hardened to work in a
+		 * panic situation.
+		 */
+		smp_send_stop();
+	} else {
+		/*
+		 * If we want to do crash dump after notifier calls and
+		 * kmsg_dump, we will need architecture dependent extra
+		 * works in addition to stopping other CPUs.
+		 */
+		crash_smp_send_stop();
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Run any panic handlers, including those that might need to
@@ -670,7 +719,12 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
 	if (regs)
 		show_regs(regs);
 
+<<<<<<< HEAD
 	check_panic_on_warn("kernel");
+=======
+	if (panic_on_warn)
+		panic("panic_on_warn set ...\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!regs)
 		dump_stack();
@@ -688,7 +742,10 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
 void warn_slowpath_fmt(const char *file, int line, unsigned taint,
 		       const char *fmt, ...)
 {
+<<<<<<< HEAD
 	bool rcu = warn_rcu_enter();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct warn_args args;
 
 	pr_warn(CUT_HERE);
@@ -703,13 +760,19 @@ void warn_slowpath_fmt(const char *file, int line, unsigned taint,
 	va_start(args.args, fmt);
 	__warn(file, line, __builtin_return_address(0), taint, NULL, &args);
 	va_end(args.args);
+<<<<<<< HEAD
 	warn_rcu_exit(rcu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(warn_slowpath_fmt);
 #else
 void __warn_printk(const char *fmt, ...)
 {
+<<<<<<< HEAD
 	bool rcu = warn_rcu_enter();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	va_list args;
 
 	pr_warn(CUT_HERE);
@@ -717,7 +780,10 @@ void __warn_printk(const char *fmt, ...)
 	va_start(args, fmt);
 	vprintk(fmt, args);
 	va_end(args);
+<<<<<<< HEAD
 	warn_rcu_exit(rcu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(__warn_printk);
 #endif
@@ -800,8 +866,13 @@ static int __init panic_on_taint_setup(char *s)
 	if (s && !strcmp(s, "nousertaint"))
 		panic_on_taint_nousertaint = true;
 
+<<<<<<< HEAD
 	pr_info("panic_on_taint: bitmask=0x%lx nousertaint_mode=%s\n",
 		panic_on_taint, str_enabled_disabled(panic_on_taint_nousertaint));
+=======
+	pr_info("panic_on_taint: bitmask=0x%lx nousertaint_mode=%sabled\n",
+		panic_on_taint, panic_on_taint_nousertaint ? "en" : "dis");
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

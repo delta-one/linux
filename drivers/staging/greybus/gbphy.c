@@ -71,6 +71,7 @@ static const struct device_type greybus_gbphy_dev_type = {
 	.pm	=	&gb_gbphy_pm_ops,
 };
 
+<<<<<<< HEAD
 static int gbphy_dev_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct gbphy_device *gbphy_dev = to_gbphy_dev(dev);
@@ -79,6 +80,16 @@ static int gbphy_dev_uevent(const struct device *dev, struct kobj_uevent_env *en
 	const struct gb_interface *intf = bundle->intf;
 	const struct gb_module *module = intf->module;
 	const struct gb_host_device *hd = intf->hd;
+=======
+static int gbphy_dev_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct gbphy_device *gbphy_dev = to_gbphy_dev(dev);
+	struct greybus_descriptor_cport *cport_desc = gbphy_dev->cport_desc;
+	struct gb_bundle *bundle = gbphy_dev->bundle;
+	struct gb_interface *intf = bundle->intf;
+	struct gb_module *module = intf->module;
+	struct gb_host_device *hd = intf->hd;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (add_uevent_var(env, "BUS=%u", hd->bus_id))
 		return -ENOMEM;

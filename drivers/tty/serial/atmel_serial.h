@@ -9,8 +9,11 @@
  * Based on AT91RM9200 datasheet revision E.
  */
 
+<<<<<<< HEAD
 #include <linux/bitfield.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef ATMEL_SERIAL_H
 #define ATMEL_SERIAL_H
 
@@ -41,6 +44,7 @@
 
 #define ATMEL_US_MR		0x04	/* Mode Register */
 #define	ATMEL_US_USMODE		GENMASK(3, 0)	/* Mode of the USART */
+<<<<<<< HEAD
 #define		ATMEL_US_USMODE_NORMAL		FIELD_PREP(ATMEL_US_USMODE, 0)
 #define		ATMEL_US_USMODE_RS485		FIELD_PREP(ATMEL_US_USMODE, 1)
 #define		ATMEL_US_USMODE_HWHS		FIELD_PREP(ATMEL_US_USMODE, 2)
@@ -77,6 +81,41 @@
 #define		ATMEL_US_CHMODE_ECHO		FIELD_PREP(ATMEL_US_CHMODE, 1)
 #define		ATMEL_US_CHMODE_LOC_LOOP	FIELD_PREP(ATMEL_US_CHMODE, 2)
 #define		ATMEL_US_CHMODE_REM_LOOP	FIELD_PREP(ATMEL_US_CHMODE, 3)
+=======
+#define		ATMEL_US_USMODE_NORMAL		0
+#define		ATMEL_US_USMODE_RS485		1
+#define		ATMEL_US_USMODE_HWHS		2
+#define		ATMEL_US_USMODE_MODEM		3
+#define		ATMEL_US_USMODE_ISO7816_T0	4
+#define		ATMEL_US_USMODE_ISO7816_T1	6
+#define		ATMEL_US_USMODE_IRDA		8
+#define	ATMEL_US_USCLKS		GENMASK(5, 4)	/* Clock Selection */
+#define		ATMEL_US_USCLKS_MCK		(0 <<  4)
+#define		ATMEL_US_USCLKS_MCK_DIV8	(1 <<  4)
+#define		ATMEL_US_USCLKS_SCK		(3 <<  4)
+#define	ATMEL_US_CHRL		GENMASK(7, 6)	/* Character Length */
+#define		ATMEL_US_CHRL_5			(0 <<  6)
+#define		ATMEL_US_CHRL_6			(1 <<  6)
+#define		ATMEL_US_CHRL_7			(2 <<  6)
+#define		ATMEL_US_CHRL_8			(3 <<  6)
+#define	ATMEL_US_SYNC		BIT(8)		/* Synchronous Mode Select */
+#define	ATMEL_US_PAR		GENMASK(11, 9)	/* Parity Type */
+#define		ATMEL_US_PAR_EVEN		(0 <<  9)
+#define		ATMEL_US_PAR_ODD		(1 <<  9)
+#define		ATMEL_US_PAR_SPACE		(2 <<  9)
+#define		ATMEL_US_PAR_MARK		(3 <<  9)
+#define		ATMEL_US_PAR_NONE		(4 <<  9)
+#define		ATMEL_US_PAR_MULTI_DROP		(6 <<  9)
+#define	ATMEL_US_NBSTOP		GENMASK(13, 12)	/* Number of Stop Bits */
+#define		ATMEL_US_NBSTOP_1		(0 << 12)
+#define		ATMEL_US_NBSTOP_1_5		(1 << 12)
+#define		ATMEL_US_NBSTOP_2		(2 << 12)
+#define	ATMEL_US_CHMODE		GENMASK(15, 14)	/* Channel Mode */
+#define		ATMEL_US_CHMODE_NORMAL		(0 << 14)
+#define		ATMEL_US_CHMODE_ECHO		(1 << 14)
+#define		ATMEL_US_CHMODE_LOC_LOOP	(2 << 14)
+#define		ATMEL_US_CHMODE_REM_LOOP	(3 << 14)
+>>>>>>> b7ba80a49124 (Commit)
 #define	ATMEL_US_MSBF		BIT(16)	/* Bit Order */
 #define	ATMEL_US_MODE9		BIT(17)	/* 9-bit Character Length */
 #define	ATMEL_US_CLKO		BIT(18)	/* Clock Output Select */
@@ -84,7 +123,11 @@
 #define	ATMEL_US_INACK		BIT(20)	/* Inhibit Non Acknowledge */
 #define	ATMEL_US_DSNACK		BIT(21)	/* Disable Successive NACK */
 #define	ATMEL_US_MAX_ITER_MASK	GENMASK(26, 24)	/* Max Iterations */
+<<<<<<< HEAD
 #define	ATMEL_US_MAX_ITER(n)	FIELD_PREP(ATMEL_US_MAX_ITER_MASK, (n))
+=======
+#define	ATMEL_US_MAX_ITER(n)	(((n) << 24) & ATMEL_US_MAX_ITER_MASK)
+>>>>>>> b7ba80a49124 (Commit)
 #define	ATMEL_US_FILTER		BIT(28)	/* Infrared Receive Line Filter */
 
 #define ATMEL_US_IER		0x08	/* Interrupt Enable Register */
@@ -136,12 +179,18 @@
 
 #define ATMEL_US_CMPR		0x90	/* Comparaison Register */
 #define ATMEL_US_FMR		0xa0	/* FIFO Mode Register */
+<<<<<<< HEAD
 #define	ATMEL_US_TXRDYM(data)	FIELD_PREP(GENMASK(1, 0), (data))	/* TX Ready Mode */
 #define	ATMEL_US_RXRDYM(data)	FIELD_PREP(GENMASK(5, 4), (data))	/* RX Ready Mode */
+=======
+#define	ATMEL_US_TXRDYM(data)	(((data) & 0x3) << 0)	/* TX Ready Mode */
+#define	ATMEL_US_RXRDYM(data)	(((data) & 0x3) << 4)	/* RX Ready Mode */
+>>>>>>> b7ba80a49124 (Commit)
 #define		ATMEL_US_ONE_DATA	0x0
 #define		ATMEL_US_TWO_DATA	0x1
 #define		ATMEL_US_FOUR_DATA	0x2
 #define	ATMEL_US_FRTSC		BIT(7)	/* FIFO RTS pin Control */
+<<<<<<< HEAD
 #define	ATMEL_US_TXFTHRES(thr)	FIELD_PREP(GENMASK(13, 8), (thr))	/* TX FIFO Threshold */
 #define	ATMEL_US_RXFTHRES(thr)	FIELD_PREP(GENMASK(21, 16), (thr))	/* RX FIFO Threshold */
 #define	ATMEL_US_RXFTHRES2(thr)	FIELD_PREP(GENMASK(29, 24), (thr))	/* RX FIFO Threshold2 */
@@ -149,6 +198,15 @@
 #define ATMEL_US_FLR		0xa4	/* FIFO Level Register */
 #define	ATMEL_US_TXFL(reg)	FIELD_GET(GENMASK(5, 0), (reg))		/* TX FIFO Level */
 #define	ATMEL_US_RXFL(reg)	FIELD_GET(GENMASK(21, 16), (reg))	/* RX FIFO Level */
+=======
+#define	ATMEL_US_TXFTHRES(thr)	(((thr) & 0x3f) << 8)	/* TX FIFO Threshold */
+#define	ATMEL_US_RXFTHRES(thr)	(((thr) & 0x3f) << 16)	/* RX FIFO Threshold */
+#define	ATMEL_US_RXFTHRES2(thr)	(((thr) & 0x3f) << 24)	/* RX FIFO Threshold2 */
+
+#define ATMEL_US_FLR		0xa4	/* FIFO Level Register */
+#define	ATMEL_US_TXFL(reg)	(((reg) >> 0) & 0x3f)	/* TX FIFO Level */
+#define	ATMEL_US_RXFL(reg)	(((reg) >> 16) & 0x3f)	/* RX FIFO Level */
+>>>>>>> b7ba80a49124 (Commit)
 
 #define ATMEL_US_FIER		0xa8	/* FIFO Interrupt Enable Register */
 #define ATMEL_US_FIDR		0xac	/* FIFO Interrupt Disable Register */

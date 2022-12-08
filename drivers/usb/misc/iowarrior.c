@@ -717,7 +717,11 @@ static const struct file_operations iowarrior_fops = {
 	.llseek = noop_llseek,
 };
 
+<<<<<<< HEAD
 static char *iowarrior_devnode(const struct device *dev, umode_t *mode)
+=======
+static char *iowarrior_devnode(struct device *dev, umode_t *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return kasprintf(GFP_KERNEL, "usb/%s", dev_name(dev));
 }
@@ -814,7 +818,11 @@ static int iowarrior_probe(struct usb_interface *interface,
 			break;
 
 		case USB_DEVICE_ID_CODEMERCS_IOW100:
+<<<<<<< HEAD
 			dev->report_size = 12;
+=======
+			dev->report_size = 13;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 	}

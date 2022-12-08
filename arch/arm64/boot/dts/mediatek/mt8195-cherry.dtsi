@@ -26,12 +26,15 @@
 		stdout-path = "serial0:115200n8";
 	};
 
+<<<<<<< HEAD
 	dmic-codec {
 		compatible = "dmic-codec";
 		num-channels = <2>;
 		wakeup-delay-ms = <50>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memory@40000000 {
 		device_type = "memory";
 		reg = <0 0x40000000 0 0x80000000>;
@@ -123,6 +126,7 @@
 			reg = <0 0x50000000 0 0x2900000>;
 			no-map;
 		};
+<<<<<<< HEAD
 
 		adsp_mem: memory@60000000 {
 			compatible = "shared-dma-pool";
@@ -235,6 +239,8 @@
 				data-lanes = <0 1 2 3>;
 			};
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -271,6 +277,7 @@
 	clock-frequency = <400000>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c2_pins>;
+<<<<<<< HEAD
 
 	audio_codec: codec@1a {
 		/* Realtek RT5682i or RT5682s, sharing the same configuration */
@@ -282,6 +289,8 @@
 		MICVDD-supply = <&pp3300_z2>;
 		VBAT-supply = <&pp3300_z5>;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &i2c3 {
@@ -386,11 +395,14 @@
 	vqmmc-supply = <&mt_pmic_vmc_ldo_reg>;
 };
 
+<<<<<<< HEAD
 &mt6359codec {
 	mediatek,dmic-mode = <1>;  /* one-wire */
 	mediatek,mic-type-0 = <2>; /* DMIC */
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* for CPU-L */
 &mt6359_vcore_buck_reg {
 	regulator-always-on;
@@ -598,6 +610,7 @@
 		"AP_SPI_FLASH_MOSI",
 		"AP_SPI_FLASH_MISO";
 
+<<<<<<< HEAD
 	aud_pins_default: audio-default-pins {
 		pins-cmd-dat {
 		    pinmux = <PINMUX_GPIO69__FUNC_AUD_CLK_MOSI>,
@@ -626,6 +639,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cr50_int: cr50-irq-default-pins {
 		pins-gsc-ap-int-odl {
 			pinmux = <PINMUX_GPIO88__FUNC_GPIO88>;
@@ -641,6 +656,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	edptx_pins_default: edptx-default-pins {
 		pins-cmd-dat {
 			pinmux = <PINMUX_GPIO7__FUNC_EDP_TX_HPD>;
@@ -655,6 +671,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	i2c0_pins: i2c0-default-pins {
 		pins-bus {
 			pinmux = <PINMUX_GPIO8__FUNC_SDA0>,
@@ -867,6 +885,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	rt1019p_pins_default: rt1019p-default-pins {
 		pins-amp-sdb {
 			pinmux = <PINMUX_GPIO100__FUNC_GPIO100>;
@@ -874,6 +893,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	scp_pins: scp-default-pins {
 		pins-vreq {
 			pinmux = <PINMUX_GPIO76__FUNC_SCP_VREQ_VAO>;
@@ -947,6 +968,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &sound {
 	status = "okay";
 
@@ -959,6 +981,8 @@
 	pinctrl-0 = <&aud_pins_default>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &spi0 {
 	status = "okay";
 

@@ -633,8 +633,11 @@ static struct omap_dm_timer *omap_dm_timer_request_by_node(struct device_node *n
 static int omap_dm_timer_free(struct omap_dm_timer *cookie)
 {
 	struct dmtimer *timer;
+<<<<<<< HEAD
 	struct device *dev;
 	int rc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	timer = to_dmtimer(cookie);
 	if (unlikely(!timer))
@@ -642,6 +645,7 @@ static int omap_dm_timer_free(struct omap_dm_timer *cookie)
 
 	WARN_ON(!timer->reserved);
 	timer->reserved = 0;
+<<<<<<< HEAD
 
 	dev = &timer->pdev->dev;
 	rc = pm_runtime_resume_and_get(dev);
@@ -657,6 +661,12 @@ static int omap_dm_timer_free(struct omap_dm_timer *cookie)
 }
 
 static int omap_dm_timer_get_irq(struct omap_dm_timer *cookie)
+=======
+	return 0;
+}
+
+int omap_dm_timer_get_irq(struct omap_dm_timer *cookie)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dmtimer *timer = to_dmtimer(cookie);
 	if (timer)
@@ -1148,10 +1158,13 @@ static int omap_dm_timer_probe(struct platform_device *pdev)
 			goto err_disable;
 		}
 		__omap_dm_timer_init_regs(timer);
+<<<<<<< HEAD
 
 		/* Clear timer configuration */
 		dmtimer_write(timer, OMAP_TIMER_CTRL_REG, 0);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pm_runtime_put(dev);
 	}
 
@@ -1275,7 +1288,11 @@ static struct platform_driver omap_dm_timer_driver = {
 	.remove = omap_dm_timer_remove,
 	.driver = {
 		.name   = "omap_timer",
+<<<<<<< HEAD
 		.of_match_table = omap_timer_match,
+=======
+		.of_match_table = of_match_ptr(omap_timer_match),
+>>>>>>> b7ba80a49124 (Commit)
 		.pm = &omap_dm_timer_pm_ops,
 	},
 };
@@ -1283,4 +1300,8 @@ static struct platform_driver omap_dm_timer_driver = {
 module_platform_driver(omap_dm_timer_driver);
 
 MODULE_DESCRIPTION("OMAP Dual-Mode Timer Driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("Texas Instruments Inc");

@@ -110,9 +110,12 @@ int mmc_regulator_set_ocr(struct mmc_host *mmc,
 	int			result = 0;
 	int			min_uV, max_uV;
 
+<<<<<<< HEAD
 	if (IS_ERR(supply))
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (vdd_bit) {
 		mmc_ocrbitnum_to_vdd(vdd_bit, &min_uV, &max_uV);
 
@@ -274,6 +277,7 @@ int mmc_regulator_get_supply(struct mmc_host *mmc)
 	return 0;
 }
 EXPORT_SYMBOL_GPL(mmc_regulator_get_supply);
+<<<<<<< HEAD
 
 /**
  * mmc_regulator_enable_vqmmc - enable VQMMC regulator for a host
@@ -315,3 +319,5 @@ void mmc_regulator_disable_vqmmc(struct mmc_host *mmc)
 	}
 }
 EXPORT_SYMBOL_GPL(mmc_regulator_disable_vqmmc);
+=======
+>>>>>>> b7ba80a49124 (Commit)

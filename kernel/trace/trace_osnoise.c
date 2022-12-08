@@ -49,6 +49,7 @@
 #define DEFAULT_TIMERLAT_PRIO	95			/* FIFO 95 */
 
 /*
+<<<<<<< HEAD
  * osnoise/options entries.
  */
 enum osnoise_options_index {
@@ -71,6 +72,8 @@ static const char * const osnoise_options_str[OSN_MAX] = {
 static unsigned long osnoise_options	= OSN_DEFAULT_OPTIONS;
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * trace_array of the enabled osnoise/timerlat instances.
  */
 struct osnoise_instance {
@@ -147,8 +150,14 @@ static void osnoise_unregister_instance(struct trace_array *tr)
 	 * register/unregister serialization is provided by trace's
 	 * trace_types_lock.
 	 */
+<<<<<<< HEAD
 	list_for_each_entry_rcu(inst, &osnoise_instances, list,
 				lockdep_is_held(&trace_types_lock)) {
+=======
+	lockdep_assert_held(&trace_types_lock);
+
+	list_for_each_entry_rcu(inst, &osnoise_instances, list) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (inst->tr == tr) {
 			list_del_rcu(&inst->list);
 			found = 1;
@@ -159,7 +168,11 @@ static void osnoise_unregister_instance(struct trace_array *tr)
 	if (!found)
 		return;
 
+<<<<<<< HEAD
 	kvfree_rcu_mightsleep(inst);
+=======
+	kvfree_rcu(inst);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -217,7 +230,11 @@ struct osnoise_variables {
 /*
  * Per-cpu runtime information.
  */
+<<<<<<< HEAD
 static DEFINE_PER_CPU(struct osnoise_variables, per_cpu_osnoise_var);
+=======
+DEFINE_PER_CPU(struct osnoise_variables, per_cpu_osnoise_var);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * this_cpu_osn_var - Return the per-cpu osnoise_variables on its relative CPU
@@ -240,7 +257,11 @@ struct timerlat_variables {
 	u64			count;
 };
 
+<<<<<<< HEAD
 static DEFINE_PER_CPU(struct timerlat_variables, per_cpu_timerlat_var);
+=======
+DEFINE_PER_CPU(struct timerlat_variables, per_cpu_timerlat_var);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * this_cpu_tmr_var - Return the per-cpu timerlat_variables on its relative CPU
@@ -332,7 +353,11 @@ struct timerlat_sample {
 /*
  * Protect the interface.
  */
+<<<<<<< HEAD
 static struct mutex interface_lock;
+=======
+struct mutex interface_lock;
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Tracer data.
@@ -938,7 +963,11 @@ void osnoise_trace_irq_entry(int id)
 void osnoise_trace_irq_exit(int id, const char *desc)
 {
 	struct osnoise_variables *osn_var = this_cpu_osn_var();
+<<<<<<< HEAD
 	s64 duration;
+=======
+	int duration;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!osn_var->sampling)
 		return;
@@ -1069,7 +1098,11 @@ static void trace_softirq_entry_callback(void *data, unsigned int vec_nr)
 static void trace_softirq_exit_callback(void *data, unsigned int vec_nr)
 {
 	struct osnoise_variables *osn_var = this_cpu_osn_var();
+<<<<<<< HEAD
 	s64 duration;
+=======
+	int duration;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!osn_var->sampling)
 		return;
@@ -1165,7 +1198,11 @@ thread_entry(struct osnoise_variables *osn_var, struct task_struct *t)
 static void
 thread_exit(struct osnoise_variables *osn_var, struct task_struct *t)
 {
+<<<<<<< HEAD
 	s64 duration;
+=======
+	int duration;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!osn_var->sampling)
 		return;
@@ -1194,12 +1231,20 @@ trace_sched_switch_callback(void *data, bool preempt,
 			    unsigned int prev_state)
 {
 	struct osnoise_variables *osn_var = this_cpu_osn_var();
+<<<<<<< HEAD
 	int workload = test_bit(OSN_WORKLOAD, &osnoise_options);
 
 	if ((p->pid != osn_var->pid) || !workload)
 		thread_exit(osn_var, p);
 
 	if ((n->pid != osn_var->pid) || !workload)
+=======
+
+	if (p->pid != osn_var->pid)
+		thread_exit(osn_var, p);
+
+	if (n->pid != osn_var->pid)
+>>>>>>> b7ba80a49124 (Commit)
 		thread_entry(osn_var, n);
 }
 
@@ -1277,9 +1322,12 @@ static __always_inline void osnoise_stop_tracing(void)
 		trace_array_printk_buf(tr->array_buffer.buffer, _THIS_IP_,
 				"stop tracing hit on cpu %d\n", smp_processor_id());
 
+<<<<<<< HEAD
 		if (test_bit(OSN_PANIC_ON_STOP, &osnoise_options))
 			panic("tracer hit stop condition on CPU %d\n", smp_processor_id());
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		tracer_tracing_off(tr);
 	}
 	rcu_read_unlock();
@@ -1314,14 +1362,20 @@ static void notify_new_max_latency(u64 latency)
  */
 static int run_osnoise(void)
 {
+<<<<<<< HEAD
 	bool disable_irq = test_bit(OSN_IRQ_DISABLE, &osnoise_options);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct osnoise_variables *osn_var = this_cpu_osn_var();
 	u64 start, sample, last_sample;
 	u64 last_int_count, int_count;
 	s64 noise = 0, max_noise = 0;
 	s64 total, last_total = 0;
 	struct osnoise_sample s;
+<<<<<<< HEAD
 	bool disable_preemption;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int threshold;
 	u64 runtime, stop_in;
 	u64 sum_noise = 0;
@@ -1329,12 +1383,15 @@ static int run_osnoise(void)
 	int ret = -1;
 
 	/*
+<<<<<<< HEAD
 	 * Disabling preemption is only required if IRQs are enabled,
 	 * and the options is set on.
 	 */
 	disable_preemption = !disable_irq && test_bit(OSN_PREEMPT_DISABLE, &osnoise_options);
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * Considers the current thread as the workload.
 	 */
 	osn_var->pid = current->pid;
@@ -1350,6 +1407,7 @@ static int run_osnoise(void)
 	threshold = tracing_thresh ? : 5000;
 
 	/*
+<<<<<<< HEAD
 	 * Apply PREEMPT and IRQ disabled options.
 	 */
 	if (disable_irq)
@@ -1359,6 +1417,8 @@ static int run_osnoise(void)
 		preempt_disable();
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * Make sure NMIs see sampling first
 	 */
 	osn_var->sampling = true;
@@ -1445,6 +1505,7 @@ static int run_osnoise(void)
 		 * cond_resched()
 		 */
 		if (IS_ENABLED(CONFIG_PREEMPT_RCU)) {
+<<<<<<< HEAD
 			if (!disable_irq)
 				local_irq_disable();
 
@@ -1452,14 +1513,25 @@ static int run_osnoise(void)
 
 			if (!disable_irq)
 				local_irq_enable();
+=======
+			local_irq_disable();
+			rcu_momentary_dyntick_idle();
+			local_irq_enable();
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		/*
 		 * For the non-preemptive kernel config: let threads runs, if
+<<<<<<< HEAD
 		 * they so wish, unless set not do to so.
 		 */
 		if (!disable_irq && !disable_preemption)
 			cond_resched();
+=======
+		 * they so wish.
+		 */
+		cond_resched();
+>>>>>>> b7ba80a49124 (Commit)
 
 		last_sample = sample;
 		last_int_count = int_count;
@@ -1479,6 +1551,7 @@ static int run_osnoise(void)
 	barrier();
 
 	/*
+<<<<<<< HEAD
 	 * Return to the preemptive state.
 	 */
 	if (disable_preemption)
@@ -1488,6 +1561,8 @@ static int run_osnoise(void)
 		local_irq_enable();
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * Save noise info.
 	 */
 	s.noise = time_to_us(sum_noise);
@@ -1539,7 +1614,11 @@ static void osnoise_sleep(void)
 	wake_time = ktime_add_us(ktime_get(), interval);
 	__set_current_state(TASK_INTERRUPTIBLE);
 
+<<<<<<< HEAD
 	while (schedule_hrtimeout(&wake_time, HRTIMER_MODE_ABS)) {
+=======
+	while (schedule_hrtimeout_range(&wake_time, 0, HRTIMER_MODE_ABS)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (kthread_should_stop())
 			break;
 	}
@@ -1766,6 +1845,7 @@ static void stop_kthread(unsigned int cpu)
 	struct task_struct *kthread;
 
 	kthread = per_cpu(per_cpu_osnoise_var, cpu).kthread;
+<<<<<<< HEAD
 	if (kthread) {
 		kthread_stop(kthread);
 		per_cpu(per_cpu_osnoise_var, cpu).kthread = NULL;
@@ -1776,6 +1856,11 @@ static void stop_kthread(unsigned int cpu)
 			return;
 		}
 	}
+=======
+	if (kthread)
+		kthread_stop(kthread);
+	per_cpu(per_cpu_osnoise_var, cpu).kthread = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1809,6 +1894,7 @@ static int start_kthread(unsigned int cpu)
 		snprintf(comm, 24, "timerlat/%d", cpu);
 		main = timerlat_main;
 	} else {
+<<<<<<< HEAD
 		/* if no workload, just return */
 		if (!test_bit(OSN_WORKLOAD, &osnoise_options)) {
 			per_cpu(per_cpu_osnoise_var, cpu).sampling = true;
@@ -1816,6 +1902,8 @@ static int start_kthread(unsigned int cpu)
 			return 0;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		snprintf(comm, 24, "osnoise/%d", cpu);
 	}
 
@@ -1856,9 +1944,14 @@ static int start_per_cpu_kthreads(void)
 	for_each_cpu(cpu, current_mask) {
 		retval = start_kthread(cpu);
 		if (retval) {
+<<<<<<< HEAD
 			cpus_read_unlock();
 			stop_per_cpu_kthreads();
 			return retval;
+=======
+			stop_per_cpu_kthreads();
+			break;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -1931,6 +2024,7 @@ static void osnoise_init_hotplug_support(void)
 #endif /* CONFIG_HOTPLUG_CPU */
 
 /*
+<<<<<<< HEAD
  * seq file functions for the osnoise/options file.
  */
 static void *s_options_start(struct seq_file *s, loff_t *pos)
@@ -2075,6 +2169,8 @@ static ssize_t osnoise_options_write(struct file *filp, const char __user *ubuf,
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * osnoise_cpus_read - Read function for reading the "cpus" file
  * @filp: The active open file structure
  * @ubuf: The userspace provided buffer to read value into
@@ -2239,8 +2335,13 @@ static struct trace_min_max_param osnoise_print_stack = {
 /*
  * osnoise/timerlat_period: min 100 us, max 1 s
  */
+<<<<<<< HEAD
 static u64 timerlat_min_period = 100;
 static u64 timerlat_max_period = 1000000;
+=======
+u64 timerlat_min_period = 100;
+u64 timerlat_max_period = 1000000;
+>>>>>>> b7ba80a49124 (Commit)
 static struct trace_min_max_param timerlat_period = {
 	.lock	= &interface_lock,
 	.val	= &osnoise_data.timerlat_period,
@@ -2256,6 +2357,7 @@ static const struct file_operations cpus_fops = {
 	.llseek		= generic_file_llseek,
 };
 
+<<<<<<< HEAD
 static const struct file_operations osnoise_options_fops = {
 	.open		= osnoise_options_open,
 	.read		= seq_read,
@@ -2264,6 +2366,8 @@ static const struct file_operations osnoise_options_fops = {
 	.write		= osnoise_options_write
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_TIMERLAT_TRACER
 #ifdef CONFIG_STACKTRACE
 static int init_timerlat_stack_tracefs(struct dentry *top_dir)
@@ -2350,11 +2454,14 @@ static int init_tracefs(void)
 	if (!tmp)
 		goto err;
 
+<<<<<<< HEAD
 	tmp = trace_create_file("options", TRACE_MODE_WRITE, top_dir, NULL,
 				&osnoise_options_fops);
 	if (!tmp)
 		goto err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = init_timerlat_tracefs(top_dir);
 	if (ret)
 		goto err;

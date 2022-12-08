@@ -22,10 +22,13 @@ struct bpf_testmod_test_writable_ctx {
 	int val;
 };
 
+<<<<<<< HEAD
 /* BPF iter that returns *value* *n* times in a row */
 struct bpf_iter_testmod_seq {
 	s64 value;
 	int cnt;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _BPF_TESTMOD_H */

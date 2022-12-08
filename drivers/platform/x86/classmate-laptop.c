@@ -418,11 +418,19 @@ failed_sensitivity:
 	return error;
 }
 
+<<<<<<< HEAD
 static void cmpc_accel_remove_v4(struct acpi_device *acpi)
 {
 	device_remove_file(&acpi->dev, &cmpc_accel_sensitivity_attr_v4);
 	device_remove_file(&acpi->dev, &cmpc_accel_g_select_attr_v4);
 	cmpc_remove_acpi_notify_device(acpi);
+=======
+static int cmpc_accel_remove_v4(struct acpi_device *acpi)
+{
+	device_remove_file(&acpi->dev, &cmpc_accel_sensitivity_attr_v4);
+	device_remove_file(&acpi->dev, &cmpc_accel_g_select_attr_v4);
+	return cmpc_remove_acpi_notify_device(acpi);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static SIMPLE_DEV_PM_OPS(cmpc_accel_pm, cmpc_accel_suspend_v4,
@@ -648,10 +656,17 @@ failed_file:
 	return error;
 }
 
+<<<<<<< HEAD
 static void cmpc_accel_remove(struct acpi_device *acpi)
 {
 	device_remove_file(&acpi->dev, &cmpc_accel_sensitivity_attr);
 	cmpc_remove_acpi_notify_device(acpi);
+=======
+static int cmpc_accel_remove(struct acpi_device *acpi)
+{
+	device_remove_file(&acpi->dev, &cmpc_accel_sensitivity_attr);
+	return cmpc_remove_acpi_notify_device(acpi);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id cmpc_accel_device_ids[] = {
@@ -727,9 +742,15 @@ static int cmpc_tablet_add(struct acpi_device *acpi)
 					   cmpc_tablet_idev_init);
 }
 
+<<<<<<< HEAD
 static void cmpc_tablet_remove(struct acpi_device *acpi)
 {
 	cmpc_remove_acpi_notify_device(acpi);
+=======
+static int cmpc_tablet_remove(struct acpi_device *acpi)
+{
+	return cmpc_remove_acpi_notify_device(acpi);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -974,7 +995,11 @@ out_bd:
 	return retval;
 }
 
+<<<<<<< HEAD
 static void cmpc_ipml_remove(struct acpi_device *acpi)
+=======
+static int cmpc_ipml_remove(struct acpi_device *acpi)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ipml200_dev *ipml;
 
@@ -988,6 +1013,11 @@ static void cmpc_ipml_remove(struct acpi_device *acpi)
 	}
 
 	kfree(ipml);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id cmpc_ipml_device_ids[] = {
@@ -1053,9 +1083,15 @@ static int cmpc_keys_add(struct acpi_device *acpi)
 					   cmpc_keys_idev_init);
 }
 
+<<<<<<< HEAD
 static void cmpc_keys_remove(struct acpi_device *acpi)
 {
 	cmpc_remove_acpi_notify_device(acpi);
+=======
+static int cmpc_keys_remove(struct acpi_device *acpi)
+{
+	return cmpc_remove_acpi_notify_device(acpi);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id cmpc_keys_device_ids[] = {
@@ -1134,7 +1170,11 @@ static void cmpc_exit(void)
 module_init(cmpc_init);
 module_exit(cmpc_exit);
 
+<<<<<<< HEAD
 static const struct acpi_device_id cmpc_device_ids[] __maybe_unused = {
+=======
+static const struct acpi_device_id cmpc_device_ids[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{CMPC_ACCEL_HID, 0},
 	{CMPC_ACCEL_HID_V4, 0},
 	{CMPC_TABLET_HID, 0},

@@ -18,6 +18,7 @@ endif
 ifeq ($(BUILD), 32)
 	CFLAGS += -m32
 	LDFLAGS += -m32
+<<<<<<< HEAD
 LONG_BIT := 32
 endif
 
@@ -26,6 +27,11 @@ LONG_BIT := $(shell getconf LONG_BIT)
 endif
 
 targets: generated/map-shift.h generated/bit-length.h $(TARGETS)
+=======
+endif
+
+targets: generated/map-shift.h $(TARGETS)
+>>>>>>> b7ba80a49124 (Commit)
 
 main:	$(OFILES)
 
@@ -39,11 +45,19 @@ maple: $(CORE_OFILES)
 multiorder: multiorder.o $(CORE_OFILES)
 
 clean:
+<<<<<<< HEAD
 	$(RM) $(TARGETS) *.o radix-tree.c idr.c generated/map-shift.h generated/bit-length.h
 
 vpath %.c ../../lib
 
 $(OFILES): Makefile *.h */*.h generated/map-shift.h generated/bit-length.h \
+=======
+	$(RM) $(TARGETS) *.o radix-tree.c idr.c generated/map-shift.h
+
+vpath %.c ../../lib
+
+$(OFILES): Makefile *.h */*.h generated/map-shift.h \
+>>>>>>> b7ba80a49124 (Commit)
 	../../include/linux/*.h \
 	../../include/asm/*.h \
 	../../../include/linux/xarray.h \
@@ -66,6 +80,7 @@ generated/map-shift.h:
 		echo "#define XA_CHUNK_SHIFT $(SHIFT)" >		\
 				generated/map-shift.h;			\
 	fi
+<<<<<<< HEAD
 
 generated/bit-length.h: FORCE
 	@if ! grep -qws CONFIG_$(LONG_BIT)BIT generated/bit-length.h; then   \
@@ -74,3 +89,5 @@ generated/bit-length.h: FORCE
 	fi
 
 FORCE: ;
+=======
+>>>>>>> b7ba80a49124 (Commit)

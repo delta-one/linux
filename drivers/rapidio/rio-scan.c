@@ -454,12 +454,17 @@ static struct rio_dev *rio_setup_device(struct rio_net *net,
 				   0, 0xffff);
 
 	ret = rio_add_device(rdev);
+<<<<<<< HEAD
 	if (ret) {
 		if (rswitch)
 			kfree(rswitch->route_table);
 		put_device(&rdev->dev);
 		return NULL;
 	}
+=======
+	if (ret)
+		goto cleanup;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rio_dev_get(rdev);
 

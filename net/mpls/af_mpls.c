@@ -1079,9 +1079,15 @@ static void mpls_get_stats(struct mpls_dev *mdev,
 
 		p = per_cpu_ptr(mdev->stats, i);
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&p->syncp);
 			local = p->stats;
 		} while (u64_stats_fetch_retry(&p->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&p->syncp);
+			local = p->stats;
+		} while (u64_stats_fetch_retry_irq(&p->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		stats->rx_packets	+= local.rx_packets;
 		stats->rx_bytes		+= local.rx_bytes;
@@ -1428,7 +1434,10 @@ static int mpls_dev_sysctl_register(struct net_device *dev,
 free:
 	kfree(table);
 out:
+<<<<<<< HEAD
 	mdev->sysctl = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return -ENOBUFS;
 }
 
@@ -1438,9 +1447,12 @@ static void mpls_dev_sysctl_unregister(struct net_device *dev,
 	struct net *net = dev_net(dev);
 	struct ctl_table *table;
 
+<<<<<<< HEAD
 	if (!mdev->sysctl)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	table = mdev->sysctl->ctl_table_arg;
 	unregister_net_sysctl_table(mdev->sysctl);
 	kfree(table);

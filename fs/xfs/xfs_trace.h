@@ -74,7 +74,10 @@ struct xfs_inobt_rec_incore;
 union xfs_btree_ptr;
 struct xfs_dqtrx;
 struct xfs_icwalk;
+<<<<<<< HEAD
 struct xfs_perag;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define XFS_ATTR_FILTER_FLAGS \
 	{ XFS_ATTR_ROOT,	"ROOT" }, \
@@ -160,12 +163,19 @@ TRACE_EVENT(xlog_intent_recovery_failed,
 );
 
 DECLARE_EVENT_CLASS(xfs_perag_class,
+<<<<<<< HEAD
 	TP_PROTO(struct xfs_perag *pag, unsigned long caller_ip),
 	TP_ARGS(pag, caller_ip),
+=======
+	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, int refcount,
+		 unsigned long caller_ip),
+	TP_ARGS(mp, agno, refcount, caller_ip),
+>>>>>>> b7ba80a49124 (Commit)
 	TP_STRUCT__entry(
 		__field(dev_t, dev)
 		__field(xfs_agnumber_t, agno)
 		__field(int, refcount)
+<<<<<<< HEAD
 		__field(int, active_refcount)
 		__field(unsigned long, caller_ip)
 	),
@@ -181,11 +191,26 @@ DECLARE_EVENT_CLASS(xfs_perag_class,
 		  __entry->agno,
 		  __entry->refcount,
 		  __entry->active_refcount,
+=======
+		__field(unsigned long, caller_ip)
+	),
+	TP_fast_assign(
+		__entry->dev = mp->m_super->s_dev;
+		__entry->agno = agno;
+		__entry->refcount = refcount;
+		__entry->caller_ip = caller_ip;
+	),
+	TP_printk("dev %d:%d agno 0x%x refcount %d caller %pS",
+		  MAJOR(__entry->dev), MINOR(__entry->dev),
+		  __entry->agno,
+		  __entry->refcount,
+>>>>>>> b7ba80a49124 (Commit)
 		  (char *)__entry->caller_ip)
 );
 
 #define DEFINE_PERAG_REF_EVENT(name)	\
 DEFINE_EVENT(xfs_perag_class, name,	\
+<<<<<<< HEAD
 	TP_PROTO(struct xfs_perag *pag, unsigned long caller_ip), \
 	TP_ARGS(pag, caller_ip))
 DEFINE_PERAG_REF_EVENT(xfs_perag_get);
@@ -194,6 +219,14 @@ DEFINE_PERAG_REF_EVENT(xfs_perag_put);
 DEFINE_PERAG_REF_EVENT(xfs_perag_grab);
 DEFINE_PERAG_REF_EVENT(xfs_perag_grab_tag);
 DEFINE_PERAG_REF_EVENT(xfs_perag_rele);
+=======
+	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, int refcount,	\
+		 unsigned long caller_ip),					\
+	TP_ARGS(mp, agno, refcount, caller_ip))
+DEFINE_PERAG_REF_EVENT(xfs_perag_get);
+DEFINE_PERAG_REF_EVENT(xfs_perag_get_tag);
+DEFINE_PERAG_REF_EVENT(xfs_perag_put);
+>>>>>>> b7ba80a49124 (Commit)
 DEFINE_PERAG_REF_EVENT(xfs_perag_set_inode_tag);
 DEFINE_PERAG_REF_EVENT(xfs_perag_clear_inode_tag);
 
@@ -639,8 +672,13 @@ DEFINE_BUF_ITEM_EVENT(xfs_trans_bhold_release);
 DEFINE_BUF_ITEM_EVENT(xfs_trans_binval);
 
 DECLARE_EVENT_CLASS(xfs_filestream_class,
+<<<<<<< HEAD
 	TP_PROTO(struct xfs_perag *pag, xfs_ino_t ino),
 	TP_ARGS(pag, ino),
+=======
+	TP_PROTO(struct xfs_mount *mp, xfs_ino_t ino, xfs_agnumber_t agno),
+	TP_ARGS(mp, ino, agno),
+>>>>>>> b7ba80a49124 (Commit)
 	TP_STRUCT__entry(
 		__field(dev_t, dev)
 		__field(xfs_ino_t, ino)
@@ -648,10 +686,17 @@ DECLARE_EVENT_CLASS(xfs_filestream_class,
 		__field(int, streams)
 	),
 	TP_fast_assign(
+<<<<<<< HEAD
 		__entry->dev = pag->pag_mount->m_super->s_dev;
 		__entry->ino = ino;
 		__entry->agno = pag->pag_agno;
 		__entry->streams = atomic_read(&pag->pagf_fstrms);
+=======
+		__entry->dev = mp->m_super->s_dev;
+		__entry->ino = ino;
+		__entry->agno = agno;
+		__entry->streams = xfs_filestream_peek_ag(mp, agno);
+>>>>>>> b7ba80a49124 (Commit)
 	),
 	TP_printk("dev %d:%d ino 0x%llx agno 0x%x streams %d",
 		  MAJOR(__entry->dev), MINOR(__entry->dev),
@@ -661,21 +706,33 @@ DECLARE_EVENT_CLASS(xfs_filestream_class,
 )
 #define DEFINE_FILESTREAM_EVENT(name) \
 DEFINE_EVENT(xfs_filestream_class, name, \
+<<<<<<< HEAD
 	TP_PROTO(struct xfs_perag *pag, xfs_ino_t ino), \
 	TP_ARGS(pag, ino))
+=======
+	TP_PROTO(struct xfs_mount *mp, xfs_ino_t ino, xfs_agnumber_t agno), \
+	TP_ARGS(mp, ino, agno))
+>>>>>>> b7ba80a49124 (Commit)
 DEFINE_FILESTREAM_EVENT(xfs_filestream_free);
 DEFINE_FILESTREAM_EVENT(xfs_filestream_lookup);
 DEFINE_FILESTREAM_EVENT(xfs_filestream_scan);
 
 TRACE_EVENT(xfs_filestream_pick,
+<<<<<<< HEAD
 	TP_PROTO(struct xfs_perag *pag, xfs_ino_t ino, xfs_extlen_t free),
 	TP_ARGS(pag, ino, free),
+=======
+	TP_PROTO(struct xfs_inode *ip, xfs_agnumber_t agno,
+		 xfs_extlen_t free, int nscan),
+	TP_ARGS(ip, agno, free, nscan),
+>>>>>>> b7ba80a49124 (Commit)
 	TP_STRUCT__entry(
 		__field(dev_t, dev)
 		__field(xfs_ino_t, ino)
 		__field(xfs_agnumber_t, agno)
 		__field(int, streams)
 		__field(xfs_extlen_t, free)
+<<<<<<< HEAD
 	),
 	TP_fast_assign(
 		__entry->dev = pag->pag_mount->m_super->s_dev;
@@ -690,11 +747,29 @@ TRACE_EVENT(xfs_filestream_pick,
 		__entry->free = free;
 	),
 	TP_printk("dev %d:%d ino 0x%llx agno 0x%x streams %d free %d",
+=======
+		__field(int, nscan)
+	),
+	TP_fast_assign(
+		__entry->dev = VFS_I(ip)->i_sb->s_dev;
+		__entry->ino = ip->i_ino;
+		__entry->agno = agno;
+		__entry->streams = xfs_filestream_peek_ag(ip->i_mount, agno);
+		__entry->free = free;
+		__entry->nscan = nscan;
+	),
+	TP_printk("dev %d:%d ino 0x%llx agno 0x%x streams %d free %d nscan %d",
+>>>>>>> b7ba80a49124 (Commit)
 		  MAJOR(__entry->dev), MINOR(__entry->dev),
 		  __entry->ino,
 		  __entry->agno,
 		  __entry->streams,
+<<<<<<< HEAD
 		  __entry->free)
+=======
+		  __entry->free,
+		  __entry->nscan)
+>>>>>>> b7ba80a49124 (Commit)
 );
 
 DECLARE_EVENT_CLASS(xfs_lock_class,
@@ -805,9 +880,12 @@ TRACE_DEFINE_ENUM(PE_SIZE_PTE);
 TRACE_DEFINE_ENUM(PE_SIZE_PMD);
 TRACE_DEFINE_ENUM(PE_SIZE_PUD);
 
+<<<<<<< HEAD
 TRACE_DEFINE_ENUM(XFS_REFC_DOMAIN_SHARED);
 TRACE_DEFINE_ENUM(XFS_REFC_DOMAIN_COW);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 TRACE_EVENT(xfs_filemap_fault,
 	TP_PROTO(struct xfs_inode *ip, enum page_entry_size pe_size,
 		 bool write_fault),
@@ -1801,11 +1879,20 @@ DECLARE_EVENT_CLASS(xfs_alloc_class,
 		__field(xfs_extlen_t, alignment)
 		__field(xfs_extlen_t, minalignslop)
 		__field(xfs_extlen_t, len)
+<<<<<<< HEAD
+=======
+		__field(short, type)
+		__field(short, otype)
+>>>>>>> b7ba80a49124 (Commit)
 		__field(char, wasdel)
 		__field(char, wasfromfl)
 		__field(int, resv)
 		__field(int, datatype)
+<<<<<<< HEAD
 		__field(xfs_agnumber_t, highest_agno)
+=======
+		__field(xfs_fsblock_t, firstblock)
+>>>>>>> b7ba80a49124 (Commit)
 	),
 	TP_fast_assign(
 		__entry->dev = args->mp->m_super->s_dev;
@@ -1820,16 +1907,30 @@ DECLARE_EVENT_CLASS(xfs_alloc_class,
 		__entry->alignment = args->alignment;
 		__entry->minalignslop = args->minalignslop;
 		__entry->len = args->len;
+<<<<<<< HEAD
+=======
+		__entry->type = args->type;
+		__entry->otype = args->otype;
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->wasdel = args->wasdel;
 		__entry->wasfromfl = args->wasfromfl;
 		__entry->resv = args->resv;
 		__entry->datatype = args->datatype;
+<<<<<<< HEAD
 		__entry->highest_agno = args->tp->t_highest_agno;
 	),
 	TP_printk("dev %d:%d agno 0x%x agbno 0x%x minlen %u maxlen %u mod %u "
 		  "prod %u minleft %u total %u alignment %u minalignslop %u "
 		  "len %u wasdel %d wasfromfl %d resv %d "
 		  "datatype 0x%x highest_agno 0x%x",
+=======
+		__entry->firstblock = args->tp->t_firstblock;
+	),
+	TP_printk("dev %d:%d agno 0x%x agbno 0x%x minlen %u maxlen %u mod %u "
+		  "prod %u minleft %u total %u alignment %u minalignslop %u "
+		  "len %u type %s otype %s wasdel %d wasfromfl %d resv %d "
+		  "datatype 0x%x firstblock 0x%llx",
+>>>>>>> b7ba80a49124 (Commit)
 		  MAJOR(__entry->dev), MINOR(__entry->dev),
 		  __entry->agno,
 		  __entry->agbno,
@@ -1842,11 +1943,20 @@ DECLARE_EVENT_CLASS(xfs_alloc_class,
 		  __entry->alignment,
 		  __entry->minalignslop,
 		  __entry->len,
+<<<<<<< HEAD
+=======
+		  __print_symbolic(__entry->type, XFS_ALLOC_TYPES),
+		  __print_symbolic(__entry->otype, XFS_ALLOC_TYPES),
+>>>>>>> b7ba80a49124 (Commit)
 		  __entry->wasdel,
 		  __entry->wasfromfl,
 		  __entry->resv,
 		  __entry->datatype,
+<<<<<<< HEAD
 		  __entry->highest_agno)
+=======
+		  (unsigned long long)__entry->firstblock)
+>>>>>>> b7ba80a49124 (Commit)
 )
 
 #define DEFINE_ALLOC_EVENT(name) \
@@ -1877,12 +1987,16 @@ DEFINE_ALLOC_EVENT(xfs_alloc_small_notenough);
 DEFINE_ALLOC_EVENT(xfs_alloc_small_done);
 DEFINE_ALLOC_EVENT(xfs_alloc_small_error);
 DEFINE_ALLOC_EVENT(xfs_alloc_vextent_badargs);
+<<<<<<< HEAD
 DEFINE_ALLOC_EVENT(xfs_alloc_vextent_skip_deadlock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 DEFINE_ALLOC_EVENT(xfs_alloc_vextent_nofix);
 DEFINE_ALLOC_EVENT(xfs_alloc_vextent_noagbp);
 DEFINE_ALLOC_EVENT(xfs_alloc_vextent_loopfailed);
 DEFINE_ALLOC_EVENT(xfs_alloc_vextent_allfailed);
 
+<<<<<<< HEAD
 DEFINE_ALLOC_EVENT(xfs_alloc_vextent_this_ag);
 DEFINE_ALLOC_EVENT(xfs_alloc_vextent_start_ag);
 DEFINE_ALLOC_EVENT(xfs_alloc_vextent_first_ag);
@@ -1890,6 +2004,8 @@ DEFINE_ALLOC_EVENT(xfs_alloc_vextent_exact_bno);
 DEFINE_ALLOC_EVENT(xfs_alloc_vextent_near_bno);
 DEFINE_ALLOC_EVENT(xfs_alloc_vextent_finish);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 TRACE_EVENT(xfs_alloc_cur_check,
 	TP_PROTO(struct xfs_mount *mp, xfs_btnum_t btnum, xfs_agblock_t bno,
 		 xfs_extlen_t len, xfs_extlen_t diff, bool new),
@@ -2936,7 +3052,10 @@ DECLARE_EVENT_CLASS(xfs_refcount_extent_class,
 	TP_STRUCT__entry(
 		__field(dev_t, dev)
 		__field(xfs_agnumber_t, agno)
+<<<<<<< HEAD
 		__field(enum xfs_refc_domain, domain)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		__field(xfs_agblock_t, startblock)
 		__field(xfs_extlen_t, blockcount)
 		__field(xfs_nlink_t, refcount)
@@ -2944,15 +3063,24 @@ DECLARE_EVENT_CLASS(xfs_refcount_extent_class,
 	TP_fast_assign(
 		__entry->dev = mp->m_super->s_dev;
 		__entry->agno = agno;
+<<<<<<< HEAD
 		__entry->domain = irec->rc_domain;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->startblock = irec->rc_startblock;
 		__entry->blockcount = irec->rc_blockcount;
 		__entry->refcount = irec->rc_refcount;
 	),
+<<<<<<< HEAD
 	TP_printk("dev %d:%d agno 0x%x dom %s agbno 0x%x fsbcount 0x%x refcount %u",
 		  MAJOR(__entry->dev), MINOR(__entry->dev),
 		  __entry->agno,
 		  __print_symbolic(__entry->domain, XFS_REFC_DOMAIN_STRINGS),
+=======
+	TP_printk("dev %d:%d agno 0x%x agbno 0x%x fsbcount 0x%x refcount %u",
+		  MAJOR(__entry->dev), MINOR(__entry->dev),
+		  __entry->agno,
+>>>>>>> b7ba80a49124 (Commit)
 		  __entry->startblock,
 		  __entry->blockcount,
 		  __entry->refcount)
@@ -2972,7 +3100,10 @@ DECLARE_EVENT_CLASS(xfs_refcount_extent_at_class,
 	TP_STRUCT__entry(
 		__field(dev_t, dev)
 		__field(xfs_agnumber_t, agno)
+<<<<<<< HEAD
 		__field(enum xfs_refc_domain, domain)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		__field(xfs_agblock_t, startblock)
 		__field(xfs_extlen_t, blockcount)
 		__field(xfs_nlink_t, refcount)
@@ -2981,16 +3112,25 @@ DECLARE_EVENT_CLASS(xfs_refcount_extent_at_class,
 	TP_fast_assign(
 		__entry->dev = mp->m_super->s_dev;
 		__entry->agno = agno;
+<<<<<<< HEAD
 		__entry->domain = irec->rc_domain;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->startblock = irec->rc_startblock;
 		__entry->blockcount = irec->rc_blockcount;
 		__entry->refcount = irec->rc_refcount;
 		__entry->agbno = agbno;
 	),
+<<<<<<< HEAD
 	TP_printk("dev %d:%d agno 0x%x dom %s agbno 0x%x fsbcount 0x%x refcount %u @ agbno 0x%x",
 		  MAJOR(__entry->dev), MINOR(__entry->dev),
 		  __entry->agno,
 		  __print_symbolic(__entry->domain, XFS_REFC_DOMAIN_STRINGS),
+=======
+	TP_printk("dev %d:%d agno 0x%x agbno 0x%x fsbcount 0x%x refcount %u @ agbno 0x%x",
+		  MAJOR(__entry->dev), MINOR(__entry->dev),
+		  __entry->agno,
+>>>>>>> b7ba80a49124 (Commit)
 		  __entry->startblock,
 		  __entry->blockcount,
 		  __entry->refcount,
@@ -3011,11 +3151,17 @@ DECLARE_EVENT_CLASS(xfs_refcount_double_extent_class,
 	TP_STRUCT__entry(
 		__field(dev_t, dev)
 		__field(xfs_agnumber_t, agno)
+<<<<<<< HEAD
 		__field(enum xfs_refc_domain, i1_domain)
 		__field(xfs_agblock_t, i1_startblock)
 		__field(xfs_extlen_t, i1_blockcount)
 		__field(xfs_nlink_t, i1_refcount)
 		__field(enum xfs_refc_domain, i2_domain)
+=======
+		__field(xfs_agblock_t, i1_startblock)
+		__field(xfs_extlen_t, i1_blockcount)
+		__field(xfs_nlink_t, i1_refcount)
+>>>>>>> b7ba80a49124 (Commit)
 		__field(xfs_agblock_t, i2_startblock)
 		__field(xfs_extlen_t, i2_blockcount)
 		__field(xfs_nlink_t, i2_refcount)
@@ -3023,15 +3169,22 @@ DECLARE_EVENT_CLASS(xfs_refcount_double_extent_class,
 	TP_fast_assign(
 		__entry->dev = mp->m_super->s_dev;
 		__entry->agno = agno;
+<<<<<<< HEAD
 		__entry->i1_domain = i1->rc_domain;
 		__entry->i1_startblock = i1->rc_startblock;
 		__entry->i1_blockcount = i1->rc_blockcount;
 		__entry->i1_refcount = i1->rc_refcount;
 		__entry->i2_domain = i2->rc_domain;
+=======
+		__entry->i1_startblock = i1->rc_startblock;
+		__entry->i1_blockcount = i1->rc_blockcount;
+		__entry->i1_refcount = i1->rc_refcount;
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->i2_startblock = i2->rc_startblock;
 		__entry->i2_blockcount = i2->rc_blockcount;
 		__entry->i2_refcount = i2->rc_refcount;
 	),
+<<<<<<< HEAD
 	TP_printk("dev %d:%d agno 0x%x dom %s agbno 0x%x fsbcount 0x%x refcount %u -- "
 		  "dom %s agbno 0x%x fsbcount 0x%x refcount %u",
 		  MAJOR(__entry->dev), MINOR(__entry->dev),
@@ -3041,6 +3194,15 @@ DECLARE_EVENT_CLASS(xfs_refcount_double_extent_class,
 		  __entry->i1_blockcount,
 		  __entry->i1_refcount,
 		  __print_symbolic(__entry->i2_domain, XFS_REFC_DOMAIN_STRINGS),
+=======
+	TP_printk("dev %d:%d agno 0x%x agbno 0x%x fsbcount 0x%x refcount %u -- "
+		  "agbno 0x%x fsbcount 0x%x refcount %u",
+		  MAJOR(__entry->dev), MINOR(__entry->dev),
+		  __entry->agno,
+		  __entry->i1_startblock,
+		  __entry->i1_blockcount,
+		  __entry->i1_refcount,
+>>>>>>> b7ba80a49124 (Commit)
 		  __entry->i2_startblock,
 		  __entry->i2_blockcount,
 		  __entry->i2_refcount)
@@ -3061,11 +3223,17 @@ DECLARE_EVENT_CLASS(xfs_refcount_double_extent_at_class,
 	TP_STRUCT__entry(
 		__field(dev_t, dev)
 		__field(xfs_agnumber_t, agno)
+<<<<<<< HEAD
 		__field(enum xfs_refc_domain, i1_domain)
 		__field(xfs_agblock_t, i1_startblock)
 		__field(xfs_extlen_t, i1_blockcount)
 		__field(xfs_nlink_t, i1_refcount)
 		__field(enum xfs_refc_domain, i2_domain)
+=======
+		__field(xfs_agblock_t, i1_startblock)
+		__field(xfs_extlen_t, i1_blockcount)
+		__field(xfs_nlink_t, i1_refcount)
+>>>>>>> b7ba80a49124 (Commit)
 		__field(xfs_agblock_t, i2_startblock)
 		__field(xfs_extlen_t, i2_blockcount)
 		__field(xfs_nlink_t, i2_refcount)
@@ -3074,16 +3242,23 @@ DECLARE_EVENT_CLASS(xfs_refcount_double_extent_at_class,
 	TP_fast_assign(
 		__entry->dev = mp->m_super->s_dev;
 		__entry->agno = agno;
+<<<<<<< HEAD
 		__entry->i1_domain = i1->rc_domain;
 		__entry->i1_startblock = i1->rc_startblock;
 		__entry->i1_blockcount = i1->rc_blockcount;
 		__entry->i1_refcount = i1->rc_refcount;
 		__entry->i2_domain = i2->rc_domain;
+=======
+		__entry->i1_startblock = i1->rc_startblock;
+		__entry->i1_blockcount = i1->rc_blockcount;
+		__entry->i1_refcount = i1->rc_refcount;
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->i2_startblock = i2->rc_startblock;
 		__entry->i2_blockcount = i2->rc_blockcount;
 		__entry->i2_refcount = i2->rc_refcount;
 		__entry->agbno = agbno;
 	),
+<<<<<<< HEAD
 	TP_printk("dev %d:%d agno 0x%x dom %s agbno 0x%x fsbcount 0x%x refcount %u -- "
 		  "dom %s agbno 0x%x fsbcount 0x%x refcount %u @ agbno 0x%x",
 		  MAJOR(__entry->dev), MINOR(__entry->dev),
@@ -3093,6 +3268,15 @@ DECLARE_EVENT_CLASS(xfs_refcount_double_extent_at_class,
 		  __entry->i1_blockcount,
 		  __entry->i1_refcount,
 		  __print_symbolic(__entry->i2_domain, XFS_REFC_DOMAIN_STRINGS),
+=======
+	TP_printk("dev %d:%d agno 0x%x agbno 0x%x fsbcount 0x%x refcount %u -- "
+		  "agbno 0x%x fsbcount 0x%x refcount %u @ agbno 0x%x",
+		  MAJOR(__entry->dev), MINOR(__entry->dev),
+		  __entry->agno,
+		  __entry->i1_startblock,
+		  __entry->i1_blockcount,
+		  __entry->i1_refcount,
+>>>>>>> b7ba80a49124 (Commit)
 		  __entry->i2_startblock,
 		  __entry->i2_blockcount,
 		  __entry->i2_refcount,
@@ -3115,6 +3299,7 @@ DECLARE_EVENT_CLASS(xfs_refcount_triple_extent_class,
 	TP_STRUCT__entry(
 		__field(dev_t, dev)
 		__field(xfs_agnumber_t, agno)
+<<<<<<< HEAD
 		__field(enum xfs_refc_domain, i1_domain)
 		__field(xfs_agblock_t, i1_startblock)
 		__field(xfs_extlen_t, i1_blockcount)
@@ -3124,6 +3309,14 @@ DECLARE_EVENT_CLASS(xfs_refcount_triple_extent_class,
 		__field(xfs_extlen_t, i2_blockcount)
 		__field(xfs_nlink_t, i2_refcount)
 		__field(enum xfs_refc_domain, i3_domain)
+=======
+		__field(xfs_agblock_t, i1_startblock)
+		__field(xfs_extlen_t, i1_blockcount)
+		__field(xfs_nlink_t, i1_refcount)
+		__field(xfs_agblock_t, i2_startblock)
+		__field(xfs_extlen_t, i2_blockcount)
+		__field(xfs_nlink_t, i2_refcount)
+>>>>>>> b7ba80a49124 (Commit)
 		__field(xfs_agblock_t, i3_startblock)
 		__field(xfs_extlen_t, i3_blockcount)
 		__field(xfs_nlink_t, i3_refcount)
@@ -3131,6 +3324,7 @@ DECLARE_EVENT_CLASS(xfs_refcount_triple_extent_class,
 	TP_fast_assign(
 		__entry->dev = mp->m_super->s_dev;
 		__entry->agno = agno;
+<<<<<<< HEAD
 		__entry->i1_domain = i1->rc_domain;
 		__entry->i1_startblock = i1->rc_startblock;
 		__entry->i1_blockcount = i1->rc_blockcount;
@@ -3140,10 +3334,19 @@ DECLARE_EVENT_CLASS(xfs_refcount_triple_extent_class,
 		__entry->i2_blockcount = i2->rc_blockcount;
 		__entry->i2_refcount = i2->rc_refcount;
 		__entry->i3_domain = i3->rc_domain;
+=======
+		__entry->i1_startblock = i1->rc_startblock;
+		__entry->i1_blockcount = i1->rc_blockcount;
+		__entry->i1_refcount = i1->rc_refcount;
+		__entry->i2_startblock = i2->rc_startblock;
+		__entry->i2_blockcount = i2->rc_blockcount;
+		__entry->i2_refcount = i2->rc_refcount;
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->i3_startblock = i3->rc_startblock;
 		__entry->i3_blockcount = i3->rc_blockcount;
 		__entry->i3_refcount = i3->rc_refcount;
 	),
+<<<<<<< HEAD
 	TP_printk("dev %d:%d agno 0x%x dom %s agbno 0x%x fsbcount 0x%x refcount %u -- "
 		  "dom %s agbno 0x%x fsbcount 0x%x refcount %u -- "
 		  "dom %s agbno 0x%x fsbcount 0x%x refcount %u",
@@ -3158,6 +3361,19 @@ DECLARE_EVENT_CLASS(xfs_refcount_triple_extent_class,
 		  __entry->i2_blockcount,
 		  __entry->i2_refcount,
 		  __print_symbolic(__entry->i3_domain, XFS_REFC_DOMAIN_STRINGS),
+=======
+	TP_printk("dev %d:%d agno 0x%x agbno 0x%x fsbcount 0x%x refcount %u -- "
+		  "agbno 0x%x fsbcount 0x%x refcount %u -- "
+		  "agbno 0x%x fsbcount 0x%x refcount %u",
+		  MAJOR(__entry->dev), MINOR(__entry->dev),
+		  __entry->agno,
+		  __entry->i1_startblock,
+		  __entry->i1_blockcount,
+		  __entry->i1_refcount,
+		  __entry->i2_startblock,
+		  __entry->i2_blockcount,
+		  __entry->i2_refcount,
+>>>>>>> b7ba80a49124 (Commit)
 		  __entry->i3_startblock,
 		  __entry->i3_blockcount,
 		  __entry->i3_refcount)
@@ -3215,14 +3431,25 @@ DEFINE_REFCOUNT_DEFERRED_EVENT(xfs_refcount_deferred);
 
 TRACE_EVENT(xfs_refcount_finish_one_leftover,
 	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
+<<<<<<< HEAD
 		 int type, xfs_agblock_t agbno, xfs_extlen_t len),
 	TP_ARGS(mp, agno, type, agbno, len),
+=======
+		 int type, xfs_agblock_t agbno, xfs_extlen_t len,
+		 xfs_agblock_t new_agbno, xfs_extlen_t new_len),
+	TP_ARGS(mp, agno, type, agbno, len, new_agbno, new_len),
+>>>>>>> b7ba80a49124 (Commit)
 	TP_STRUCT__entry(
 		__field(dev_t, dev)
 		__field(xfs_agnumber_t, agno)
 		__field(int, type)
 		__field(xfs_agblock_t, agbno)
 		__field(xfs_extlen_t, len)
+<<<<<<< HEAD
+=======
+		__field(xfs_agblock_t, new_agbno)
+		__field(xfs_extlen_t, new_len)
+>>>>>>> b7ba80a49124 (Commit)
 	),
 	TP_fast_assign(
 		__entry->dev = mp->m_super->s_dev;
@@ -3230,13 +3457,26 @@ TRACE_EVENT(xfs_refcount_finish_one_leftover,
 		__entry->type = type;
 		__entry->agbno = agbno;
 		__entry->len = len;
+<<<<<<< HEAD
 	),
 	TP_printk("dev %d:%d type %d agno 0x%x agbno 0x%x fsbcount 0x%x",
+=======
+		__entry->new_agbno = new_agbno;
+		__entry->new_len = new_len;
+	),
+	TP_printk("dev %d:%d type %d agno 0x%x agbno 0x%x fsbcount 0x%x new_agbno 0x%x new_fsbcount 0x%x",
+>>>>>>> b7ba80a49124 (Commit)
 		  MAJOR(__entry->dev), MINOR(__entry->dev),
 		  __entry->type,
 		  __entry->agno,
 		  __entry->agbno,
+<<<<<<< HEAD
 		  __entry->len)
+=======
+		  __entry->len,
+		  __entry->new_agbno,
+		  __entry->new_len)
+>>>>>>> b7ba80a49124 (Commit)
 );
 
 /* simple inode-based error/%ip tracepoint class */
@@ -3353,6 +3593,7 @@ DEFINE_EVENT(xfs_inode_irec_class, name, \
 	TP_PROTO(struct xfs_inode *ip, struct xfs_bmbt_irec *irec), \
 	TP_ARGS(ip, irec))
 
+<<<<<<< HEAD
 /* inode iomap invalidation events */
 DECLARE_EVENT_CLASS(xfs_wb_invalid_class,
 	TP_PROTO(struct xfs_inode *ip, const struct iomap *iomap, unsigned int wpcseq, int whichfork),
@@ -3439,6 +3680,8 @@ DEFINE_EVENT(xfs_iomap_invalid_class, name, \
 	TP_ARGS(ip, iomap))
 DEFINE_IOMAP_INVALID_EVENT(xfs_iomap_invalid);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* refcount/reflink tracepoint definitions */
 
 /* reflink tracepoints */

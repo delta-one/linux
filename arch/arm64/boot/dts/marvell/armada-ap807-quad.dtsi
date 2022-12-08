@@ -81,7 +81,10 @@
 			cache-size = <0x80000>;
 			cache-line-size = <64>;
 			cache-sets = <512>;
+<<<<<<< HEAD
 			cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		l2_1: l2-cache1 {
@@ -89,7 +92,10 @@
 			cache-size = <0x80000>;
 			cache-line-size = <64>;
 			cache-sets = <512>;
+<<<<<<< HEAD
 			cache-level = <2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };

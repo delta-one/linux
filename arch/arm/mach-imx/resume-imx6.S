@@ -9,8 +9,11 @@
 #include <asm/hardware/cache-l2x0.h>
 #include "hardware.h"
 
+<<<<<<< HEAD
 .arch armv7-a
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The following code must assume it is running from physical address
  * where absolute virtual addresses to the data section have to be

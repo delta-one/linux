@@ -2,9 +2,13 @@
 // Copyright (C) 2018 Facebook
 // Author: Yonghong Song <yhs@fb.com>
 
+<<<<<<< HEAD
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
+=======
+#define _GNU_SOURCE
+>>>>>>> b7ba80a49124 (Commit)
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>

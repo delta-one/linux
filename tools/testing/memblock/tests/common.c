@@ -5,6 +5,11 @@
 #include <linux/memory_hotplug.h>
 #include <linux/build_bug.h>
 
+<<<<<<< HEAD
+=======
+#define INIT_MEMBLOCK_REGIONS			128
+#define INIT_MEMBLOCK_RESERVED_REGIONS		INIT_MEMBLOCK_REGIONS
+>>>>>>> b7ba80a49124 (Commit)
 #define PREFIXES_MAX				15
 #define DELIM					": "
 #define BASIS					10000
@@ -113,11 +118,14 @@ void dummy_physical_memory_cleanup(void)
 	free(memory_block.base);
 }
 
+<<<<<<< HEAD
 phys_addr_t dummy_physical_memory_base(void)
 {
 	return (phys_addr_t)memory_block.base;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void usage(const char *prog)
 {
 	BUILD_BUG_ON(ARRAY_SIZE(help_opts) != ARRAY_SIZE(long_opts) - 1);

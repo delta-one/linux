@@ -95,7 +95,11 @@ static int __start_server(int type, int protocol, const struct sockaddr *addr,
 	if (reuseport &&
 	    setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &on, sizeof(on))) {
 		log_err("Failed to set SO_REUSEPORT");
+<<<<<<< HEAD
 		goto error_close;
+=======
+		return -1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (bind(fd, addr, addrlen) < 0) {
@@ -390,6 +394,48 @@ struct nstoken {
 	int orig_netns_fd;
 };
 
+<<<<<<< HEAD
+=======
+static int setns_by_fd(int nsfd)
+{
+	int err;
+
+	err = setns(nsfd, CLONE_NEWNET);
+	close(nsfd);
+
+	if (!ASSERT_OK(err, "setns"))
+		return err;
+
+	/* Switch /sys to the new namespace so that e.g. /sys/class/net
+	 * reflects the devices in the new namespace.
+	 */
+	err = unshare(CLONE_NEWNS);
+	if (!ASSERT_OK(err, "unshare"))
+		return err;
+
+	/* Make our /sys mount private, so the following umount won't
+	 * trigger the global umount in case it's shared.
+	 */
+	err = mount("none", "/sys", NULL, MS_PRIVATE, NULL);
+	if (!ASSERT_OK(err, "remount private /sys"))
+		return err;
+
+	err = umount2("/sys", MNT_DETACH);
+	if (!ASSERT_OK(err, "umount2 /sys"))
+		return err;
+
+	err = mount("sysfs", "/sys", "sysfs", 0, NULL);
+	if (!ASSERT_OK(err, "mount /sys"))
+		return err;
+
+	err = mount("bpffs", "/sys/fs/bpf", "bpf", 0, NULL);
+	if (!ASSERT_OK(err, "mount /sys/fs/bpf"))
+		return err;
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 struct nstoken *open_netns(const char *name)
 {
 	int nsfd;
@@ -410,9 +456,14 @@ struct nstoken *open_netns(const char *name)
 	if (!ASSERT_GE(nsfd, 0, "open netns fd"))
 		goto fail;
 
+<<<<<<< HEAD
 	err = setns(nsfd, CLONE_NEWNET);
 	close(nsfd);
 	if (!ASSERT_OK(err, "setns"))
+=======
+	err = setns_by_fd(nsfd);
+	if (!ASSERT_OK(err, "setns_by_fd"))
+>>>>>>> b7ba80a49124 (Commit)
 		goto fail;
 
 	return token;
@@ -423,7 +474,11 @@ fail:
 
 void close_netns(struct nstoken *token)
 {
+<<<<<<< HEAD
 	ASSERT_OK(setns(token->orig_netns_fd, CLONE_NEWNET), "setns");
 	close(token->orig_netns_fd);
+=======
+	ASSERT_OK(setns_by_fd(token->orig_netns_fd), "setns_by_fd");
+>>>>>>> b7ba80a49124 (Commit)
 	free(token);
 }

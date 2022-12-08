@@ -6,12 +6,18 @@
 #include <linux/kernel.h>
 #include <linux/string_helpers.h>
 
+<<<<<<< HEAD
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_crtc.h"
 #include "intel_de.h"
 #include "intel_display.h"
 #include "intel_display_types.h"
+<<<<<<< HEAD
 #include "intel_dpio_phy.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_dpll.h"
 #include "intel_lvds.h"
 #include "intel_panel.h"
@@ -1910,7 +1916,11 @@ void chv_enable_pll(const struct intel_crtc_state *crtc_state)
 		intel_de_write(dev_priv, DPLL_MD(PIPE_B),
 			       crtc_state->dpll_hw_state.dpll_md);
 		intel_de_write(dev_priv, CBR4_VLV, 0);
+<<<<<<< HEAD
 		dev_priv->display.state.chv_dpll_md[pipe] = crtc_state->dpll_hw_state.dpll_md;
+=======
+		dev_priv->chv_dpll_md[pipe] = crtc_state->dpll_hw_state.dpll_md;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * DPLLB VGA mode also seems to cause problems.

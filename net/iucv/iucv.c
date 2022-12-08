@@ -83,7 +83,11 @@ struct iucv_irq_data {
 	u16 ippathid;
 	u8  ipflags1;
 	u8  iptype;
+<<<<<<< HEAD
 	u32 res2[9];
+=======
+	u32 res2[8];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct iucv_irq_list {

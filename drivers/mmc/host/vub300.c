@@ -2049,7 +2049,10 @@ static void vub300_enable_sdio_irq(struct mmc_host *mmc, int enable)
 		return;
 	kref_get(&vub300->kref);
 	if (enable) {
+<<<<<<< HEAD
 		set_current_state(TASK_RUNNING);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		mutex_lock(&vub300->irq_mutex);
 		if (vub300->irqs_queued) {
 			vub300->irqs_queued -= 1;
@@ -2065,7 +2068,10 @@ static void vub300_enable_sdio_irq(struct mmc_host *mmc, int enable)
 			vub300_queue_poll_work(vub300, 0);
 		}
 		mutex_unlock(&vub300->irq_mutex);
+<<<<<<< HEAD
 		set_current_state(TASK_INTERRUPTIBLE);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		vub300->irq_enabled = 0;
 	}
@@ -2301,14 +2307,22 @@ static int vub300_probe(struct usb_interface *interface,
 				0x0000, 0x0000, &vub300->system_port_status,
 				sizeof(vub300->system_port_status), 1000);
 	if (retval < 0) {
+<<<<<<< HEAD
 		goto error5;
+=======
+		goto error4;
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (sizeof(vub300->system_port_status) == retval) {
 		vub300->card_present =
 			(0x0001 & vub300->system_port_status.port_flags) ? 1 : 0;
 		vub300->read_only =
 			(0x0010 & vub300->system_port_status.port_flags) ? 1 : 0;
 	} else {
+<<<<<<< HEAD
 		goto error5;
+=======
+		goto error4;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	usb_set_intfdata(interface, vub300);
 	INIT_DELAYED_WORK(&vub300->pollwork, vub300_pollwork_thread);
@@ -2331,6 +2345,7 @@ static int vub300_probe(struct usb_interface *interface,
 			 "USB vub300 remote SDIO host controller[%d]"
 			 "connected with no SD/SDIO card inserted\n",
 			 interface_to_InterfaceNumber(interface));
+<<<<<<< HEAD
 	retval = mmc_add_host(mmc);
 	if (retval)
 		goto error6;
@@ -2338,6 +2353,10 @@ static int vub300_probe(struct usb_interface *interface,
 	return 0;
 error6:
 	del_timer_sync(&vub300->inactivity_timer);
+=======
+	mmc_add_host(mmc);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 error5:
 	mmc_free_host(mmc);
 	/*

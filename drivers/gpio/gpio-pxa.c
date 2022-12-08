@@ -171,6 +171,14 @@ static inline struct pxa_gpio_bank *gpio_to_pxabank(struct gpio_chip *c,
 	return chip_to_pxachip(c)->banks + gpio / 32;
 }
 
+<<<<<<< HEAD
+=======
+static inline int gpio_is_pxa_type(int type)
+{
+	return (type & MMP_GPIO) == 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline int gpio_is_mmp_type(int type)
 {
 	return (type & MMP_GPIO) != 0;

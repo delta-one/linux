@@ -25,6 +25,10 @@
 #include <linux/sched/task_stack.h>
 
 #include <linux/delay.h>
+<<<<<<< HEAD
+=======
+#include <linux/notifier.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/panic_notifier.h>
 #include <linux/ptrace.h>
 #include <linux/screen_info.h>
@@ -36,7 +40,10 @@
 #include <linux/dma-map-ops.h>
 #include <linux/pci.h>
 #include <clocksource/hyperv_timer.h>
+<<<<<<< HEAD
 #include <asm/mshyperv.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "hyperv_vmbus.h"
 
 struct vmbus_dynid {
@@ -46,6 +53,11 @@ struct vmbus_dynid {
 
 static struct acpi_device  *hv_acpi_dev;
 
+<<<<<<< HEAD
+=======
+static struct completion probe_event;
+
+>>>>>>> b7ba80a49124 (Commit)
 static int hyperv_cpuhp_online;
 
 static void *hv_panic_page;
@@ -68,6 +80,7 @@ static int hyperv_report_reg(void)
 	return !sysctl_record_panic_msg || !hv_panic_page;
 }
 
+<<<<<<< HEAD
 /*
  * The panic notifier below is responsible solely for unloading the
  * vmbus connection, which is necessary in a panic event.
@@ -136,6 +149,55 @@ static int hv_die_panic_notify_crash(struct notifier_block *self,
 	return NOTIFY_DONE;
 }
 
+=======
+static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
+			      void *args)
+{
+	struct pt_regs *regs;
+
+	vmbus_initiate_unload(true);
+
+	/*
+	 * Hyper-V should be notified only once about a panic.  If we will be
+	 * doing hv_kmsg_dump() with kmsg data later, don't do the notification
+	 * here.
+	 */
+	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
+	    && hyperv_report_reg()) {
+		regs = current_pt_regs();
+		hyperv_report_panic(regs, val, false);
+	}
+	return NOTIFY_DONE;
+}
+
+static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
+			    void *args)
+{
+	struct die_args *die = args;
+	struct pt_regs *regs = die->regs;
+
+	/* Don't notify Hyper-V if the die event is other than oops */
+	if (val != DIE_OOPS)
+		return NOTIFY_DONE;
+
+	/*
+	 * Hyper-V should be notified only once about a panic.  If we will be
+	 * doing hv_kmsg_dump() with kmsg data later, don't do the notification
+	 * here.
+	 */
+	if (hyperv_report_reg())
+		hyperv_report_panic(regs, val, true);
+	return NOTIFY_DONE;
+}
+
+static struct notifier_block hyperv_die_block = {
+	.notifier_call = hyperv_die_event,
+};
+static struct notifier_block hyperv_panic_block = {
+	.notifier_call = hyperv_panic_event,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static const char *fb_mmio_name = "fb_range";
 static struct resource *fb_mmio;
 static struct resource *hyperv_mmio;
@@ -711,9 +773,15 @@ __ATTRIBUTE_GROUPS(vmbus_bus);
  * representation of the device guid (each byte of the guid will be
  * represented with two hex characters.
  */
+<<<<<<< HEAD
 static int vmbus_uevent(const struct device *device, struct kobj_uevent_env *env)
 {
 	const struct hv_device *dev = device_to_hv_device(device);
+=======
+static int vmbus_uevent(struct device *device, struct kobj_uevent_env *env)
+{
+	struct hv_device *dev = device_to_hv_device(device);
+>>>>>>> b7ba80a49124 (Commit)
 	const char *format = "MODALIAS=vmbus:%*phN";
 
 	return add_uevent_var(env, format, UUID_SIZE, &dev->dev_type);
@@ -1151,8 +1219,12 @@ void vmbus_on_msg_dpc(unsigned long data)
 			return;
 
 		INIT_WORK(&ctx->work, vmbus_onmessage_work);
+<<<<<<< HEAD
 		ctx->msg.header = msg_copy.header;
 		memcpy(&ctx->msg.payload, msg_copy.u.payload, payload_size);
+=======
+		memcpy(&ctx->msg, &msg_copy, sizeof(msg->header) + payload_size);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * The host can generate a rescind message while we
@@ -1460,6 +1532,18 @@ static struct ctl_table hv_ctl_table[] = {
 	{}
 };
 
+<<<<<<< HEAD
+=======
+static struct ctl_table hv_root_table[] = {
+	{
+		.procname	= "kernel",
+		.mode		= 0555,
+		.child		= hv_ctl_table
+	},
+	{}
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * vmbus_bus_init -Main vmbus driver initialization routine.
  *
@@ -1538,7 +1622,11 @@ static int vmbus_bus_init(void)
 		 * message recording won't be available in isolated
 		 * guests should the following registration fail.
 		 */
+<<<<<<< HEAD
 		hv_ctl_table_hdr = register_sysctl("kernel", hv_ctl_table);
+=======
+		hv_ctl_table_hdr = register_sysctl_table(hv_root_table);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!hv_ctl_table_hdr)
 			pr_err("Hyper-V: sysctl table register error");
 
@@ -1550,6 +1638,7 @@ static int vmbus_bus_init(void)
 		if (hyperv_crash_ctl & HV_CRASH_CTL_CRASH_NOTIFY_MSG)
 			hv_kmsg_dump_register();
 
+<<<<<<< HEAD
 		register_die_notifier(&hyperv_die_report_block);
 		atomic_notifier_chain_register(&panic_notifier_list,
 						&hyperv_panic_report_block);
@@ -1561,6 +1650,18 @@ static int vmbus_bus_init(void)
 	 */
 	atomic_notifier_chain_register(&panic_notifier_list,
 			       &hyperv_panic_vmbus_unload_block);
+=======
+		register_die_notifier(&hyperv_die_block);
+	}
+
+	/*
+	 * Always register the panic notifier because we need to unload
+	 * the VMbus channel connection to prevent any VMbus
+	 * activity after the VM panics.
+	 */
+	atomic_notifier_chain_register(&panic_notifier_list,
+			       &hyperv_panic_block);
+>>>>>>> b7ba80a49124 (Commit)
 
 	vmbus_request_offers();
 
@@ -1585,7 +1686,11 @@ err_setup:
 }
 
 /**
+<<<<<<< HEAD
  * __vmbus_driver_register() - Register a vmbus's driver
+=======
+ * __vmbus_child_driver_register() - Register a vmbus's driver
+>>>>>>> b7ba80a49124 (Commit)
  * @hv_driver: Pointer to driver structure you want to register
  * @owner: owner module of the drv
  * @mod_name: module name string
@@ -2064,7 +2169,11 @@ struct hv_device *vmbus_device_create(const guid_t *type,
 	child_device_obj->channel = channel;
 	guid_copy(&child_device_obj->dev_type, type);
 	guid_copy(&child_device_obj->dev_instance, instance);
+<<<<<<< HEAD
 	child_device_obj->vendor_id = PCI_VENDOR_ID_MICROSOFT;
+=======
+	child_device_obj->vendor_id = 0x1414; /* MSFT vendor ID */
+>>>>>>> b7ba80a49124 (Commit)
 
 	return child_device_obj;
 }
@@ -2095,7 +2204,10 @@ int vmbus_device_register(struct hv_device *child_device_obj)
 	ret = device_register(&child_device_obj->device);
 	if (ret) {
 		pr_err("Unable to register child device\n");
+<<<<<<< HEAD
 		put_device(&child_device_obj->device);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 
@@ -2253,7 +2365,11 @@ static acpi_status vmbus_walk_resources(struct acpi_resource *res, void *ctx)
 	return AE_OK;
 }
 
+<<<<<<< HEAD
 static void vmbus_acpi_remove(struct acpi_device *device)
+=======
+static int vmbus_acpi_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct resource *cur_res;
 	struct resource *next_res;
@@ -2270,6 +2386,11 @@ static void vmbus_acpi_remove(struct acpi_device *device)
 			kfree(cur_res);
 		}
 	}
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void vmbus_reserve_fb(void)
@@ -2479,6 +2600,10 @@ static int vmbus_acpi_add(struct acpi_device *device)
 	ret_val = 0;
 
 acpi_walk_err:
+<<<<<<< HEAD
+=======
+	complete(&probe_event);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret_val)
 		vmbus_acpi_remove(device);
 	return ret_val;
@@ -2657,7 +2782,10 @@ static struct acpi_driver vmbus_acpi_driver = {
 		.remove = vmbus_acpi_remove,
 	},
 	.drv.pm = &vmbus_bus_pm,
+<<<<<<< HEAD
 	.drv.probe_type = PROBE_FORCE_SYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void hv_kexec_handler(void)
@@ -2730,14 +2858,26 @@ static struct syscore_ops hv_synic_syscore_ops = {
 
 static int __init hv_acpi_init(void)
 {
+<<<<<<< HEAD
 	int ret;
+=======
+	int ret, t;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!hv_is_hyperv_initialized())
 		return -ENODEV;
 
+<<<<<<< HEAD
 	if (hv_root_partition && !hv_nested)
 		return 0;
 
+=======
+	if (hv_root_partition)
+		return 0;
+
+	init_completion(&probe_event);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Get ACPI resources first.
 	 */
@@ -2746,8 +2886,14 @@ static int __init hv_acpi_init(void)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (!hv_acpi_dev) {
 		ret = -ENODEV;
+=======
+	t = wait_for_completion_timeout(&probe_event, 5*HZ);
+	if (t == 0) {
+		ret = -ETIMEDOUT;
+>>>>>>> b7ba80a49124 (Commit)
 		goto cleanup;
 	}
 
@@ -2811,6 +2957,7 @@ static void __exit vmbus_exit(void)
 
 	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
 		kmsg_dump_unregister(&hv_kmsg_dumper);
+<<<<<<< HEAD
 		unregister_die_notifier(&hyperv_die_report_block);
 		atomic_notifier_chain_unregister(&panic_notifier_list,
 						&hyperv_panic_report_block);
@@ -2822,6 +2969,17 @@ static void __exit vmbus_exit(void)
 	 */
 	atomic_notifier_chain_unregister(&panic_notifier_list,
 					&hyperv_panic_vmbus_unload_block);
+=======
+		unregister_die_notifier(&hyperv_die_block);
+	}
+
+	/*
+	 * The panic notifier is always registered, hence we should
+	 * also unconditionally unregister it here as well.
+	 */
+	atomic_notifier_chain_unregister(&panic_notifier_list,
+					 &hyperv_panic_block);
+>>>>>>> b7ba80a49124 (Commit)
 
 	free_page((unsigned long)hv_panic_page);
 	unregister_sysctl_table(hv_ctl_table_hdr);

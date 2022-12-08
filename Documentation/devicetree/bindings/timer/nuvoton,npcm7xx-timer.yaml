@@ -25,6 +25,7 @@ properties:
       - description: The timer interrupt of timer 0
 
   clocks:
+<<<<<<< HEAD
     items:
       - description: The reference clock for timer 0
       - description: The reference clock for timer 1
@@ -32,6 +33,9 @@ properties:
       - description: The reference clock for timer 3
       - description: The reference clock for timer 4
     minItems: 1
+=======
+    maxItems: 1
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible

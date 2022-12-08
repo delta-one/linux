@@ -9,7 +9,10 @@
 #include <linux/module.h>
 #include <linux/firmware.h>
 #include <linux/regmap.h>
+<<<<<<< HEAD
 #include <linux/acpi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/unaligned.h>
 
 #include <net/bluetooth/bluetooth.h>
@@ -25,6 +28,7 @@
 #define ECDSA_OFFSET		644
 #define ECDSA_HEADER_LEN	320
 
+<<<<<<< HEAD
 #define BTINTEL_PPAG_NAME   "PPAG"
 
 /* structure to store the PPAG data read from ACPI table */
@@ -38,6 +42,11 @@ struct btintel_ppag {
 #define CMD_WRITE_BOOT_PARAMS	0xfc0e
 struct cmd_write_boot_params {
 	__le32 boot_addr;
+=======
+#define CMD_WRITE_BOOT_PARAMS	0xfc0e
+struct cmd_write_boot_params {
+	u32 boot_addr;
+>>>>>>> b7ba80a49124 (Commit)
 	u8  fw_build_num;
 	u8  fw_build_ww;
 	u8  fw_build_yy;
@@ -1289,6 +1298,7 @@ static int btintel_read_debug_features(struct hci_dev *hdev,
 	return 0;
 }
 
+<<<<<<< HEAD
 static acpi_status btintel_ppag_callback(acpi_handle handle, u32 lvl, void *data,
 					 void **ret)
 {
@@ -1348,6 +1358,8 @@ static acpi_status btintel_ppag_callback(acpi_handle handle, u32 lvl, void *data
 	return AE_CTRL_TERMINATE;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int btintel_set_debug_features(struct hci_dev *hdev,
 			       const struct intel_debug_features *features)
 {
@@ -1853,19 +1865,32 @@ static int btintel_get_fw_name(struct intel_version *ver,
 	case 0x0b:	/* SfP */
 	case 0x0c:	/* WsP */
 		snprintf(fw_name, len, "intel/ibt-%u-%u.%s",
+<<<<<<< HEAD
 			 ver->hw_variant,
 			 le16_to_cpu(params->dev_revid),
 			 suffix);
+=======
+			le16_to_cpu(ver->hw_variant),
+			le16_to_cpu(params->dev_revid),
+			suffix);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case 0x11:	/* JfP */
 	case 0x12:	/* ThP */
 	case 0x13:	/* HrP */
 	case 0x14:	/* CcP */
 		snprintf(fw_name, len, "intel/ibt-%u-%u-%u.%s",
+<<<<<<< HEAD
 			 ver->hw_variant,
 			 ver->hw_revision,
 			 ver->fw_revision,
 			 suffix);
+=======
+			le16_to_cpu(ver->hw_variant),
+			le16_to_cpu(ver->hw_revision),
+			le16_to_cpu(ver->fw_revision),
+			suffix);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		return -EINVAL;
@@ -2321,6 +2346,7 @@ error:
 	return err;
 }
 
+<<<<<<< HEAD
 static void btintel_set_ppag(struct hci_dev *hdev, struct intel_version_tlv *ver)
 {
 	struct btintel_ppag ppag;
@@ -2379,6 +2405,8 @@ static void btintel_set_ppag(struct hci_dev *hdev, struct intel_version_tlv *ver
 	kfree_skb(skb);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int btintel_bootloader_setup_tlv(struct hci_dev *hdev,
 					struct intel_version_tlv *ver)
 {
@@ -2425,9 +2453,12 @@ static int btintel_bootloader_setup_tlv(struct hci_dev *hdev,
 
 	hci_dev_clear_flag(hdev, HCI_QUALITY_REPORT);
 
+<<<<<<< HEAD
 	/* Set PPAG feature */
 	btintel_set_ppag(hdev, ver);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Read the Intel version information after loading the FW  */
 	err = btintel_read_version_tlv(hdev, &new_ver);
 	if (err)
@@ -2655,7 +2686,11 @@ static int btintel_setup_combined(struct hci_dev *hdev)
 		 */
 		err = btintel_read_version(hdev, &ver);
 		if (err)
+<<<<<<< HEAD
 			break;
+=======
+			return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Apply the device specific HCI quirks
 		 *
@@ -2697,8 +2732,12 @@ static int btintel_setup_combined(struct hci_dev *hdev)
 	default:
 		bt_dev_err(hdev, "Unsupported Intel hw variant (%u)",
 			   INTEL_HW_VARIANT(ver_tlv.cnvi_bt));
+<<<<<<< HEAD
 		err = -EINVAL;
 		break;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 exit_error:

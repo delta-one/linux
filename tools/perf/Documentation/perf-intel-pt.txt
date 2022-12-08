@@ -101,12 +101,20 @@ data is available you can use the 'perf script' tool with all itrace sampling
 options, which will list all the samples.
 
 	perf record -e intel_pt//u ls
+<<<<<<< HEAD
 	perf script --itrace=iybxwpe
+=======
+	perf script --itrace=ibxwpe
+>>>>>>> b7ba80a49124 (Commit)
 
 An interesting field that is not printed by default is 'flags' which can be
 displayed as follows:
 
+<<<<<<< HEAD
 	perf script --itrace=iybxwpe -F+flags
+=======
+	perf script --itrace=ibxwpe -F+flags
+>>>>>>> b7ba80a49124 (Commit)
 
 The flags are "bcrosyiABExghDt" which stand for branch, call, return, conditional,
 system, asynchronous, interrupt, transaction abort, trace begin, trace end,
@@ -147,17 +155,29 @@ displayed as follows:
 There are two ways that instructions-per-cycle (IPC) can be calculated depending
 on the recording.
 
+<<<<<<< HEAD
 If the 'cyc' config term (see config terms section below) was used, then IPC
 and cycle events are calculated using the cycle count from CYC packets, otherwise
 MTC packets are used - refer to the 'mtc' config term.  When MTC is used, however,
 the values are less accurate because the timing is less accurate.
+=======
+If the 'cyc' config term (see config terms section below) was used, then IPC is
+calculated using the cycle count from CYC packets, otherwise MTC packets are
+used - refer to the 'mtc' config term.  When MTC is used, however, the values
+are less accurate because the timing is less accurate.
+>>>>>>> b7ba80a49124 (Commit)
 
 Because Intel PT does not update the cycle count on every branch or instruction,
 the values will often be zero.  When there are values, they will be the number
 of instructions and number of cycles since the last update, and thus represent
+<<<<<<< HEAD
 the average IPC cycle count since the last IPC for that event type.
 Note IPC for "branches" events is calculated separately from IPC for "instructions"
 events.
+=======
+the average IPC since the last IPC for that event type.  Note IPC for "branches"
+events is calculated separately from IPC for "instructions" events.
+>>>>>>> b7ba80a49124 (Commit)
 
 Even with the 'cyc' config term, it is possible to produce IPC information for
 every change of timestamp, but at the expense of accuracy.  That is selected by
@@ -190,6 +210,7 @@ There is also script intel-pt-events.py which provides an example of how to
 unpack the raw data for power events and PTWRITE. The script also displays
 branches, and supports 2 additional modes selected by option:
 
+<<<<<<< HEAD
  - --insn-trace - instruction trace
  - --src-trace - source trace
 
@@ -200,6 +221,10 @@ The intel-pt-events.py script also has options:
  no more than n samples for a CPU are displayed in a row. 'n' defaults to 4.
  Note this only affects the order of output, and only when the timestamp is the
  same.
+=======
+ --insn-trace - instruction trace
+ --src-trace - source trace
+>>>>>>> b7ba80a49124 (Commit)
 
 As mentioned above, it is easy to capture too much data.  One way to limit the
 data captured is to use 'snapshot' mode which is explained further below.
@@ -901,12 +926,19 @@ Having no option is the same as
 
 which, in turn, is the same as
 
+<<<<<<< HEAD
 	--itrace=cepwxy
+=======
+	--itrace=cepwx
+>>>>>>> b7ba80a49124 (Commit)
 
 The letters are:
 
 	i	synthesize "instructions" events
+<<<<<<< HEAD
 	y	synthesize "cycles" events
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	b	synthesize "branches" events
 	x	synthesize "transactions" events
 	w	synthesize "ptwrite" events
@@ -929,6 +961,7 @@ The letters are:
 "Instructions" events look like they were recorded by "perf record -e
 instructions".
 
+<<<<<<< HEAD
 "Cycles" events look like they were recorded by "perf record -e cycles"
 (ie., the default). Note that even with CYC packets enabled and no sampling,
 these are not fully accurate, since CYC packets are not emitted for each
@@ -939,6 +972,8 @@ be emitted. Thus, it is more effective for attributing cycles to functions
 is not even perfect for functions (although it becomes better if the noretcomp
 option is active).
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 "Branches" events look like they were recorded by "perf record -e branches". "c"
 and "r" can be combined to get calls and returns.
 
@@ -946,9 +981,15 @@ and "r" can be combined to get calls and returns.
 'flags' field can be used in perf script to determine whether the event is a
 transaction start, commit or abort.
 
+<<<<<<< HEAD
 Note that "instructions", "cycles", "branches" and "transactions" events
 depend on code flow packets which can be disabled by using the config term
 "branch=0".  Refer to the config terms section above.
+=======
+Note that "instructions", "branches" and "transactions" events depend on code
+flow packets which can be disabled by using the config term "branch=0".  Refer
+to the config terms section above.
+>>>>>>> b7ba80a49124 (Commit)
 
 "ptwrite" events record the payload of the ptwrite instruction and whether
 "fup_on_ptw" was used.  "ptwrite" events depend on PTWRITE packets which are
@@ -1833,6 +1874,7 @@ Can be compiled and traced:
  $
 
 
+<<<<<<< HEAD
 Pipe mode
 ---------
 Pipe mode is a problem for Intel PT and possibly other auxtrace users.
@@ -1863,6 +1905,8 @@ For pipe mode, the order of events and timestamps can presumably
 be messed up.
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 EXAMPLE
 -------
 

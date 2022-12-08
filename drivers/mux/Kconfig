@@ -47,7 +47,11 @@ config MUX_GPIO
 
 config MUX_MMIO
 	tristate "MMIO/Regmap register bitfield-controlled Multiplexer"
+<<<<<<< HEAD
 	depends on OF
+=======
+	depends on OF || COMPILE_TEST
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  MMIO/Regmap register bitfield-controlled Multiplexer controller.
 

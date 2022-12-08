@@ -47,8 +47,12 @@
 #define GUC_VIDEOENHANCE_CLASS		2
 #define GUC_BLITTER_CLASS		3
 #define GUC_COMPUTE_CLASS		4
+<<<<<<< HEAD
 #define GUC_GSC_OTHER_CLASS		5
 #define GUC_LAST_ENGINE_CLASS		GUC_GSC_OTHER_CLASS
+=======
+#define GUC_LAST_ENGINE_CLASS		GUC_COMPUTE_CLASS
+>>>>>>> b7ba80a49124 (Commit)
 #define GUC_MAX_ENGINE_CLASSES		16
 #define GUC_MAX_INSTANCES_PER_CLASS	32
 
@@ -170,7 +174,10 @@ static u8 engine_class_guc_class_map[] = {
 	[COPY_ENGINE_CLASS]       = GUC_BLITTER_CLASS,
 	[VIDEO_DECODE_CLASS]      = GUC_VIDEO_CLASS,
 	[VIDEO_ENHANCEMENT_CLASS] = GUC_VIDEOENHANCE_CLASS,
+<<<<<<< HEAD
 	[OTHER_CLASS]             = GUC_GSC_OTHER_CLASS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	[COMPUTE_CLASS]           = GUC_COMPUTE_CLASS,
 };
 
@@ -180,13 +187,20 @@ static u8 guc_class_engine_class_map[] = {
 	[GUC_VIDEO_CLASS]        = VIDEO_DECODE_CLASS,
 	[GUC_VIDEOENHANCE_CLASS] = VIDEO_ENHANCEMENT_CLASS,
 	[GUC_COMPUTE_CLASS]      = COMPUTE_CLASS,
+<<<<<<< HEAD
 	[GUC_GSC_OTHER_CLASS]    = OTHER_CLASS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline u8 engine_class_to_guc_class(u8 class)
 {
 	BUILD_BUG_ON(ARRAY_SIZE(engine_class_guc_class_map) != MAX_ENGINE_CLASS + 1);
+<<<<<<< HEAD
 	GEM_BUG_ON(class > MAX_ENGINE_CLASS);
+=======
+	GEM_BUG_ON(class > MAX_ENGINE_CLASS || class == OTHER_CLASS);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return engine_class_guc_class_map[class];
 }
@@ -293,6 +307,7 @@ struct guc_update_context_policy {
 	struct guc_klv_generic_dw_t klv[GUC_CONTEXT_POLICIES_KLV_NUM_IDS];
 } __packed;
 
+<<<<<<< HEAD
 /* Format of the UPDATE_SCHEDULING_POLICIES H2G data packet */
 struct guc_update_scheduling_policy_header {
 	u32 action;
@@ -312,6 +327,8 @@ struct guc_update_scheduling_policy {
 	u32 data[MAX_SCHEDULING_POLICY_SIZE];
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define GUC_POWER_UNSPECIFIED	0
 #define GUC_POWER_D0		1
 #define GUC_POWER_D1		2
@@ -320,9 +337,12 @@ struct guc_update_scheduling_policy {
 
 /* Scheduling policy settings */
 
+<<<<<<< HEAD
 #define GLOBAL_SCHEDULE_POLICY_RC_YIELD_DURATION	100	/* in ms */
 #define GLOBAL_SCHEDULE_POLICY_RC_YIELD_RATIO		50	/* in percent */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define GLOBAL_POLICY_MAX_NUM_WI 15
 
 /* Don't reset an engine upon preemption failure */
@@ -330,6 +350,7 @@ struct guc_update_scheduling_policy {
 
 #define GLOBAL_POLICY_DEFAULT_DPC_PROMOTE_TIME_US 500000
 
+<<<<<<< HEAD
 /*
  * GuC converts the timeout to clock ticks internally. Different platforms have
  * different GuC clocks. Thus, the maximum value before overflow is platform
@@ -351,6 +372,8 @@ static inline u32 guc_policy_max_preempt_timeout_ms(void)
 	return GUC_POLICY_MAX_PREEMPT_TIMEOUT_US / 1000;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct guc_policies {
 	u32 submission_queue_depth[GUC_MAX_ENGINE_CLASSES];
 	/* In micro seconds. How much time to allow before DPC processing is

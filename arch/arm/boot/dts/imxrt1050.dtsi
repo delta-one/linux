@@ -93,7 +93,11 @@
 			bus-width = <4>;
 			fsl,wp-controller;
 			no-1-8-v;
+<<<<<<< HEAD
 			max-frequency = <200000000>;
+=======
+			max-frequency = <4000000>;
+>>>>>>> b7ba80a49124 (Commit)
 			fsl,tuning-start-tap = <20>;
 			fsl,tuning-step = <2>;
 			status = "disabled";

@@ -80,22 +80,33 @@ struct cpu_cacheinfo {
 
 struct cpu_cacheinfo *get_cpu_cacheinfo(unsigned int cpu);
 int init_cache_level(unsigned int cpu);
+<<<<<<< HEAD
 int init_of_cache_level(unsigned int cpu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int populate_cache_leaves(unsigned int cpu);
 int cache_setup_acpi(unsigned int cpu);
 bool last_level_cache_is_valid(unsigned int cpu);
 bool last_level_cache_is_shared(unsigned int cpu_x, unsigned int cpu_y);
+<<<<<<< HEAD
 int fetch_cache_info(unsigned int cpu);
 int detect_cache_attributes(unsigned int cpu);
 #ifndef CONFIG_ACPI_PPTT
 /*
  * acpi_get_cache_info() is only called on ACPI enabled
+=======
+int detect_cache_attributes(unsigned int cpu);
+#ifndef CONFIG_ACPI_PPTT
+/*
+ * acpi_find_last_cache_level is only called on ACPI enabled
+>>>>>>> b7ba80a49124 (Commit)
  * platforms using the PPTT for topology. This means that if
  * the platform supports other firmware configuration methods
  * we need to stub out the call when ACPI is disabled.
  * ACPI enabled platforms not using PPTT won't be making calls
  * to this function so we need not worry about them.
  */
+<<<<<<< HEAD
 static inline
 int acpi_get_cache_info(unsigned int cpu,
 			unsigned int *levels, unsigned int *split_levels)
@@ -105,6 +116,14 @@ int acpi_get_cache_info(unsigned int cpu,
 #else
 int acpi_get_cache_info(unsigned int cpu,
 			unsigned int *levels, unsigned int *split_levels);
+=======
+static inline int acpi_find_last_cache_level(unsigned int cpu)
+{
+	return 0;
+}
+#else
+int acpi_find_last_cache_level(unsigned int cpu);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 const struct attribute_group *cache_get_priv_group(struct cacheinfo *this_leaf);

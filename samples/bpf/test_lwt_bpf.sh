@@ -19,10 +19,14 @@ IPVETH3="192.168.111.2"
 
 IP_LOCAL="192.168.99.1"
 
+<<<<<<< HEAD
 PROG_SRC="test_lwt_bpf.c"
 BPF_PROG="test_lwt_bpf.o"
 TRACE_ROOT=/sys/kernel/tracing
 CONTEXT_INFO=$(cat ${TRACE_ROOT}/trace_options | grep context)
+=======
+TRACE_ROOT=/sys/kernel/debug/tracing
+>>>>>>> b7ba80a49124 (Commit)
 
 function lookup_mac()
 {
@@ -39,7 +43,11 @@ function lookup_mac()
 
 function cleanup {
 	set +ex
+<<<<<<< HEAD
 	rm $BPF_PROG 2> /dev/null
+=======
+	rm test_lwt_bpf.o 2> /dev/null
+>>>>>>> b7ba80a49124 (Commit)
 	ip link del $VETH0 2> /dev/null
 	ip link del $VETH1 2> /dev/null
 	ip link del $VETH2 2> /dev/null
@@ -79,7 +87,11 @@ function install_test {
 	cleanup_routes
 	cp /dev/null ${TRACE_ROOT}/trace
 
+<<<<<<< HEAD
 	OPTS="encap bpf headroom 14 $1 obj $BPF_PROG section $2 $VERBOSE"
+=======
+	OPTS="encap bpf headroom 14 $1 obj test_lwt_bpf.o section $2 $VERBOSE"
+>>>>>>> b7ba80a49124 (Commit)
 
 	if [ "$1" == "in" ];  then
 		ip route add table local local ${IP_LOCAL}/32 $OPTS dev lo
@@ -99,7 +111,11 @@ function remove_prog {
 function filter_trace {
 	# Add newline to allow starting EXPECT= variables on newline
 	NL=$'\n'
+<<<<<<< HEAD
 	echo "${NL}$*" | sed -e 's/bpf_trace_printk: //g'
+=======
+	echo "${NL}$*" | sed -e 's/^.*: : //g'
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 function expect_fail {
@@ -163,11 +179,19 @@ function test_ctx_out {
 		failure "test_ctx out: packets are dropped"
 	}
 	match_trace "$(get_trace)" "
+<<<<<<< HEAD
 len 84 hash 0 protocol 8
 cb 1234 ingress_ifindex 0 ifindex 0
 len 84 hash 0 protocol 8
 cb 1234 ingress_ifindex 0 ifindex 0
 len 84 hash 0 protocol 8
+=======
+len 84 hash 0 protocol 0
+cb 1234 ingress_ifindex 0 ifindex 0
+len 84 hash 0 protocol 0
+cb 1234 ingress_ifindex 0 ifindex 0
+len 84 hash 0 protocol 0
+>>>>>>> b7ba80a49124 (Commit)
 cb 1234 ingress_ifindex 0 ifindex 0" || exit 1
 	remove_prog out
 }
@@ -370,7 +394,10 @@ setup_one_veth $NS1 $VETH0 $VETH1 $IPVETH0 $IPVETH1 $IPVETH1b
 setup_one_veth $NS2 $VETH2 $VETH3 $IPVETH2 $IPVETH3
 ip netns exec $NS1 netserver
 echo 1 > ${TRACE_ROOT}/tracing_on
+<<<<<<< HEAD
 echo nocontext-info > ${TRACE_ROOT}/trace_options
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 DST_MAC=$(lookup_mac $VETH1 $NS1)
 SRC_MAC=$(lookup_mac $VETH0)
@@ -378,7 +405,11 @@ DST_IFINDEX=$(cat /sys/class/net/$VETH0/ifindex)
 
 CLANG_OPTS="-O2 -target bpf -I ../include/"
 CLANG_OPTS+=" -DSRC_MAC=$SRC_MAC -DDST_MAC=$DST_MAC -DDST_IFINDEX=$DST_IFINDEX"
+<<<<<<< HEAD
 clang $CLANG_OPTS -c $PROG_SRC -o $BPF_PROG
+=======
+clang $CLANG_OPTS -c test_lwt_bpf.c -o test_lwt_bpf.o
+>>>>>>> b7ba80a49124 (Commit)
 
 test_ctx_xmit
 test_ctx_out
@@ -401,5 +432,8 @@ test_netperf_redirect
 
 cleanup
 echo 0 > ${TRACE_ROOT}/tracing_on
+<<<<<<< HEAD
 echo $CONTEXT_INFO > ${TRACE_ROOT}/trace_options
+=======
+>>>>>>> b7ba80a49124 (Commit)
 exit 0

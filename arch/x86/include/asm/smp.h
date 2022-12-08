@@ -3,10 +3,17 @@
 #define _ASM_X86_SMP_H
 #ifndef __ASSEMBLY__
 #include <linux/cpumask.h>
+<<<<<<< HEAD
 
 #include <asm/cpumask.h>
 #include <asm/current.h>
 #include <asm/thread_info.h>
+=======
+#include <asm/percpu.h>
+
+#include <asm/thread_info.h>
+#include <asm/cpumask.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 extern int smp_num_siblings;
 extern unsigned int num_processors;
@@ -19,6 +26,20 @@ DECLARE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_llc_shared_map);
 DECLARE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_l2c_shared_map);
 DECLARE_PER_CPU_READ_MOSTLY(u16, cpu_llc_id);
 DECLARE_PER_CPU_READ_MOSTLY(u16, cpu_l2c_id);
+<<<<<<< HEAD
+=======
+DECLARE_PER_CPU_READ_MOSTLY(int, cpu_number);
+
+static inline struct cpumask *cpu_llc_shared_mask(int cpu)
+{
+	return per_cpu(cpu_llc_shared_map, cpu);
+}
+
+static inline struct cpumask *cpu_l2c_shared_mask(int cpu)
+{
+	return per_cpu(cpu_l2c_shared_map, cpu);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 DECLARE_EARLY_PER_CPU_READ_MOSTLY(u16, x86_cpu_to_apicid);
 DECLARE_EARLY_PER_CPU_READ_MOSTLY(u32, x86_cpu_to_acpiid);
@@ -93,10 +114,16 @@ static inline void __cpu_die(unsigned int cpu)
 	smp_ops.cpu_die(cpu);
 }
 
+<<<<<<< HEAD
 static inline void __noreturn play_dead(void)
 {
 	smp_ops.play_dead();
 	BUG();
+=======
+static inline void play_dead(void)
+{
+	smp_ops.play_dead();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void smp_send_reschedule(int cpu)
@@ -150,10 +177,18 @@ __visible void smp_call_function_single_interrupt(struct pt_regs *r);
 
 /*
  * This function is needed by all SMP systems. It must _always_ be valid
+<<<<<<< HEAD
  * from the initial startup.
  */
 #define raw_smp_processor_id()  this_cpu_read(pcpu_hot.cpu_number)
 #define __smp_processor_id() __this_cpu_read(pcpu_hot.cpu_number)
+=======
+ * from the initial startup. We map APIC_BASE very early in page_setup(),
+ * so this is correct in the x86 case.
+ */
+#define raw_smp_processor_id()  this_cpu_read(cpu_number)
+#define __smp_processor_id() __this_cpu_read(cpu_number)
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_X86_32
 extern int safe_smp_processor_id(void);
@@ -161,6 +196,7 @@ extern int safe_smp_processor_id(void);
 # define safe_smp_processor_id()	smp_processor_id()
 #endif
 
+<<<<<<< HEAD
 static inline struct cpumask *cpu_llc_shared_mask(int cpu)
 {
 	return per_cpu(cpu_llc_shared_map, cpu);
@@ -171,6 +207,8 @@ static inline struct cpumask *cpu_l2c_shared_mask(int cpu)
 	return per_cpu(cpu_l2c_shared_map, cpu);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else /* !CONFIG_SMP */
 #define wbinvd_on_cpu(cpu)     wbinvd()
 static inline int wbinvd_on_all_cpus(void)
@@ -178,11 +216,14 @@ static inline int wbinvd_on_all_cpus(void)
 	wbinvd();
 	return 0;
 }
+<<<<<<< HEAD
 
 static inline struct cpumask *cpu_llc_shared_mask(int cpu)
 {
 	return (struct cpumask *)cpumask_of(0);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_SMP */
 
 extern unsigned disabled_cpus;
@@ -200,8 +241,12 @@ extern void nmi_selftest(void);
 #define nmi_selftest() do { } while (0)
 #endif
 
+<<<<<<< HEAD
 extern unsigned int smpboot_control;
 
 #endif /* !__ASSEMBLY__ */
 
+=======
+#endif /* __ASSEMBLY__ */
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_X86_SMP_H */

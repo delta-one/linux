@@ -6,7 +6,10 @@
 #include <linux/hugetlb.h>
 #include <linux/mman.h>
 #include <linux/mmzone.h>
+<<<<<<< HEAD
 #include <linux/memblock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/proc_fs.h>
 #include <linux/percpu.h>
 #include <linux/seq_file.h>
@@ -116,8 +119,11 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 #endif
 	show_val_kb(m, "PageTables:     ",
 		    global_node_page_state(NR_PAGETABLE));
+<<<<<<< HEAD
 	show_val_kb(m, "SecPageTables:  ",
 		    global_node_page_state(NR_SECONDARY_PAGETABLE));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	show_val_kb(m, "NFS_Unstable:   ", 0);
 	show_val_kb(m, "Bounce:         ",
@@ -132,6 +138,7 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 	show_val_kb(m, "VmallocChunk:   ", 0ul);
 	show_val_kb(m, "Percpu:         ", pcpu_nr_pages());
 
+<<<<<<< HEAD
 #ifdef CONFIG_MEMTEST
 	if (early_memtest_done) {
 		unsigned long early_memtest_bad_size_kb;
@@ -144,6 +151,8 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 	}
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_MEMORY_FAILURE
 	seq_printf(m, "HardwareCorrupted: %5lu kB\n",
 		   atomic_long_read(&num_poisoned_pages) << (PAGE_SHIFT - 10));

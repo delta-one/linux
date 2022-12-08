@@ -33,12 +33,15 @@
  */
 typedef void (*sigill_fn)(void);
 
+<<<<<<< HEAD
 static void cssc_sigill(void)
 {
 	/* CNT x0, x0 */
 	asm volatile(".inst 0xdac01c00" : : : "x0");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void rng_sigill(void)
 {
 	asm volatile("mrs x0, S3_3_C2_C4_0" : : : "x0");
@@ -50,6 +53,7 @@ static void sme_sigill(void)
 	asm volatile(".inst 0x04bf5800" : : : "x0");
 }
 
+<<<<<<< HEAD
 static void sme2_sigill(void)
 {
 	/* SMSTART ZA */
@@ -122,6 +126,8 @@ static void smef16f16_sigill(void)
 	asm volatile("msr S0_3_C4_C6_3, xzr" : : : );
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void sve_sigill(void)
 {
 	/* RDVL x0, #0 */
@@ -134,12 +140,15 @@ static void sve2_sigill(void)
 	asm volatile(".inst 0x4408A000" : : : "z0");
 }
 
+<<<<<<< HEAD
 static void sve2p1_sigill(void)
 {
 	/* BFADD Z0.H, Z0.H, Z0.H */
 	asm volatile(".inst 0x65000000" : : : "z0");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void sveaes_sigill(void)
 {
 	/* AESD z0.b, z0.b, z0.b */
@@ -203,6 +212,7 @@ static const struct hwcap_data {
 	bool sigill_reliable;
 } hwcaps[] = {
 	{
+<<<<<<< HEAD
 		.name = "CSSC",
 		.at_hwcap = AT_HWCAP2,
 		.hwcap_bit = HWCAP2_CSSC,
@@ -210,6 +220,8 @@ static const struct hwcap_data {
 		.sigill_fn = cssc_sigill,
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.name = "RNG",
 		.at_hwcap = AT_HWCAP2,
 		.hwcap_bit = HWCAP2_RNG,
@@ -217,12 +229,15 @@ static const struct hwcap_data {
 		.sigill_fn = rng_sigill,
 	},
 	{
+<<<<<<< HEAD
 		.name = "RPRFM",
 		.at_hwcap = AT_HWCAP2,
 		.hwcap_bit = HWCAP2_RPRFM,
 		.cpuinfo = "rprfm",
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.name = "SME",
 		.at_hwcap = AT_HWCAP2,
 		.hwcap_bit = HWCAP2_SME,
@@ -231,6 +246,7 @@ static const struct hwcap_data {
 		.sigill_reliable = true,
 	},
 	{
+<<<<<<< HEAD
 		.name = "SME2",
 		.at_hwcap = AT_HWCAP2,
 		.hwcap_bit = HWCAP2_SME2,
@@ -274,6 +290,8 @@ static const struct hwcap_data {
 		.sigill_fn = smef16f16_sigill,
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.name = "SVE",
 		.at_hwcap = AT_HWCAP,
 		.hwcap_bit = HWCAP_SVE,
@@ -289,6 +307,7 @@ static const struct hwcap_data {
 		.sigill_fn = sve2_sigill,
 	},
 	{
+<<<<<<< HEAD
 		.name = "SVE 2.1",
 		.at_hwcap = AT_HWCAP2,
 		.hwcap_bit = HWCAP2_SVE2P1,
@@ -296,6 +315,8 @@ static const struct hwcap_data {
 		.sigill_fn = sve2p1_sigill,
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.name = "SVE AES",
 		.at_hwcap = AT_HWCAP2,
 		.hwcap_bit = HWCAP2_SVEAES,

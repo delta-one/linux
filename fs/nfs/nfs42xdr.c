@@ -47,6 +47,7 @@
 #define decode_deallocate_maxsz		(op_decode_hdr_maxsz)
 #define encode_read_plus_maxsz		(op_encode_hdr_maxsz + \
 					 encode_stateid_maxsz + 3)
+<<<<<<< HEAD
 #define NFS42_READ_PLUS_DATA_SEGMENT_SIZE \
 					(1 /* data_content4 */ + \
 					 2 /* data_info4.di_offset */ + \
@@ -55,6 +56,15 @@
 					 1 /* rpr_eof */ + \
 					 1 /* rpr_contents count */ + \
 					 NFS42_READ_PLUS_DATA_SEGMENT_SIZE)
+=======
+#define NFS42_READ_PLUS_SEGMENT_SIZE	(1 /* data_content4 */ + \
+					 2 /* data_info4.di_offset */ + \
+					 2 /* data_info4.di_length */)
+#define decode_read_plus_maxsz		(op_decode_hdr_maxsz + \
+					 1 /* rpr_eof */ + \
+					 1 /* rpr_contents count */ + \
+					 2 * NFS42_READ_PLUS_SEGMENT_SIZE)
+>>>>>>> b7ba80a49124 (Commit)
 #define encode_seek_maxsz		(op_encode_hdr_maxsz + \
 					 encode_stateid_maxsz + \
 					 2 /* offset */ + \
@@ -570,6 +580,7 @@ static int decode_listxattrs(struct xdr_stream *xdr,
 		 */
 		if (status == -ETOOSMALL)
 			status = -ERANGE;
+<<<<<<< HEAD
 		/*
 		 * Special case: for LISTXATTRS, NFS4ERR_NOXATTR
 		 * should be translated to success with zero-length reply.
@@ -578,6 +589,8 @@ static int decode_listxattrs(struct xdr_stream *xdr,
 			res->eof = true;
 			status = 0;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -1143,7 +1156,11 @@ static int decode_read_plus(struct xdr_stream *xdr, struct nfs_pgio_res *res)
 	if (!segs)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	xdr_set_scratch_buffer(xdr, &scratch_buf, sizeof(scratch_buf));
+=======
+	xdr_set_scratch_buffer(xdr, &scratch_buf, 32);
+>>>>>>> b7ba80a49124 (Commit)
 	status = -EIO;
 	for (i = 0; i < segments; i++) {
 		status = decode_read_plus_segment(xdr, &segs[i]);

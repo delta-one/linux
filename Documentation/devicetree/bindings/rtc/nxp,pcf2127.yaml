@@ -7,17 +7,25 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
 title: NXP PCF2127 Real Time Clock
 
 allOf:
+<<<<<<< HEAD
   - $ref: rtc.yaml#
+=======
+  - $ref: "rtc.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Alexandre Belloni <alexandre.belloni@bootlin.com>
 
 properties:
   compatible:
+<<<<<<< HEAD
     enum:
       - nxp,pca2129
       - nxp,pcf2127
       - nxp,pcf2129
+=======
+    const: nxp,pcf2127
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1

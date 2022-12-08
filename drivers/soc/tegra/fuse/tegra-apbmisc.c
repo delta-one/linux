@@ -156,7 +156,10 @@ void __init tegra_init_revision(void)
 	}
 
 	tegra_sku_info.sku_id = tegra_fuse_read_early(FUSE_SKU_INFO);
+<<<<<<< HEAD
 	tegra_sku_info.platform = tegra_get_platform();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void __init tegra_init_apbmisc(void)

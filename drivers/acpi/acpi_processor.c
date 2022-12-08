@@ -15,7 +15,10 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/pci.h>
+<<<<<<< HEAD
 #include <linux/platform_device.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <acpi/processor.h>
 
@@ -149,6 +152,7 @@ static int acpi_processor_errata(void)
 	return result;
 }
 
+<<<<<<< HEAD
 /* Create a platform device to represent a CPU frequency control mechanism. */
 static void cpufreq_add_device(const char *name)
 {
@@ -177,6 +181,8 @@ static void __init acpi_pcc_cpufreq_init(void)
 static void __init acpi_pcc_cpufreq_init(void) {}
 #endif /* CONFIG_X86 */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Initialization */
 #ifdef CONFIG_ACPI_HOTPLUG_CPU
 int __weak acpi_map_cpu(acpi_handle handle,
@@ -309,12 +315,17 @@ static int acpi_processor_get_info(struct acpi_device *device)
 		dev_dbg(&device->dev, "Failed to get CPU physical ID.\n");
 
 	pr->id = acpi_map_cpuid(pr->phys_id, pr->acpi_id);
+<<<<<<< HEAD
 	if (!cpu0_initialized) {
+=======
+	if (!cpu0_initialized && !acpi_has_cpu_in_madt()) {
+>>>>>>> b7ba80a49124 (Commit)
 		cpu0_initialized = 1;
 		/*
 		 * Handle UP system running SMP kernel, with no CPU
 		 * entry in MADT
 		 */
+<<<<<<< HEAD
 		if (!acpi_has_cpu_in_madt() && invalid_logical_cpuid(pr->id) &&
 		    (num_online_cpus() == 1))
 			pr->id = 0;
@@ -325,6 +336,10 @@ static int acpi_processor_get_info(struct acpi_device *device)
 		 */
 		if (acpi_has_method(pr->handle, "_PCT"))
 			cpufreq_add_device("acpi-cpufreq");
+=======
+		if (invalid_logical_cpuid(pr->id) && (num_online_cpus() == 1))
+			pr->id = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -723,7 +738,10 @@ void __init acpi_processor_init(void)
 	acpi_processor_check_duplicates();
 	acpi_scan_add_handler_with_hotplug(&processor_handler, "processor");
 	acpi_scan_add_handler(&processor_container_handler);
+<<<<<<< HEAD
 	acpi_pcc_cpufreq_init();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_ACPI_PROCESSOR_CSTATE

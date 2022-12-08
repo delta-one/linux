@@ -114,10 +114,13 @@ static inline u32 omap_cs3_phys(void)
 
 #define OMAP_IH1_BASE		0xfffecb00
 #define OMAP_IH2_BASE		0xfffe0000
+<<<<<<< HEAD
 #define OMAP_IH2_0_BASE		(0xfffe0000)
 #define OMAP_IH2_1_BASE		(0xfffe0100)
 #define OMAP_IH2_2_BASE		(0xfffe0200)
 #define OMAP_IH2_3_BASE		(0xfffe0300)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define OMAP_IH1_ITR		(OMAP_IH1_BASE + 0x00)
 #define OMAP_IH1_MIR		(OMAP_IH1_BASE + 0x04)
@@ -135,6 +138,7 @@ static inline u32 omap_cs3_phys(void)
 #define OMAP_IH2_ILR0		(OMAP_IH2_BASE + 0x1c)
 #define OMAP_IH2_ISR		(OMAP_IH2_BASE + 0x9c)
 
+<<<<<<< HEAD
 #define OMAP_IH2_0_ITR		(OMAP_IH2_0_BASE + 0x00)
 #define OMAP_IH2_0_MIR		(OMAP_IH2_0_BASE + 0x04)
 #define OMAP_IH2_0_SIR_IRQ	(OMAP_IH2_0_BASE + 0x10)
@@ -167,6 +171,8 @@ static inline u32 omap_cs3_phys(void)
 #define OMAP_IH2_3_ILR3		(OMAP_IH2_3_BASE + 0x1c)
 #define OMAP_IH2_3_ISR		(OMAP_IH2_3_BASE + 0x9c)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define IRQ_ITR_REG_OFFSET	0x00
 #define IRQ_MIR_REG_OFFSET	0x04
 #define IRQ_SIR_IRQ_REG_OFFSET	0x10
@@ -220,6 +226,7 @@ static inline u32 omap_cs3_phys(void)
 
 /*
  * ---------------------------------------------------------------------------
+<<<<<<< HEAD
  * DSP
  * ---------------------------------------------------------------------------
  */
@@ -231,5 +238,14 @@ static inline u32 omap_cs3_phys(void)
 #define OMAP1_DSPREG_BASE	0xE1000000
 #define OMAP1_DSPREG_SIZE	SZ_128K
 #define OMAP1_DSPREG_START	0xE1000000
+=======
+ * Processor specific defines
+ * ---------------------------------------------------------------------------
+ */
+
+#include "omap7xx.h"
+#include "omap1510.h"
+#include "omap16xx.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif	/* __ASM_ARCH_OMAP_HARDWARE_H */

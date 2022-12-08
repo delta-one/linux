@@ -257,8 +257,13 @@ int fscrypt_encrypt_block_inplace(const struct inode *inode, struct page *page,
 				  unsigned int len, unsigned int offs,
 				  u64 lblk_num, gfp_t gfp_flags);
 
+<<<<<<< HEAD
 int fscrypt_decrypt_pagecache_blocks(struct folio *folio, size_t len,
 				     size_t offs);
+=======
+int fscrypt_decrypt_pagecache_blocks(struct page *page, unsigned int len,
+				     unsigned int offs);
+>>>>>>> b7ba80a49124 (Commit)
 int fscrypt_decrypt_block_inplace(const struct inode *inode, struct page *page,
 				  unsigned int len, unsigned int offs,
 				  u64 lblk_num);
@@ -307,8 +312,15 @@ fscrypt_free_dummy_policy(struct fscrypt_dummy_policy *dummy_policy)
 }
 
 /* keyring.c */
+<<<<<<< HEAD
 void fscrypt_destroy_keyring(struct super_block *sb);
 int fscrypt_ioctl_add_key(struct file *filp, void __user *arg);
+=======
+void fscrypt_sb_delete(struct super_block *sb);
+int fscrypt_ioctl_add_key(struct file *filp, void __user *arg);
+int fscrypt_add_test_dummy_key(struct super_block *sb,
+			       const struct fscrypt_dummy_policy *dummy_policy);
+>>>>>>> b7ba80a49124 (Commit)
 int fscrypt_ioctl_remove_key(struct file *filp, void __user *arg);
 int fscrypt_ioctl_remove_key_all_users(struct file *filp, void __user *arg);
 int fscrypt_ioctl_get_key_status(struct file *filp, void __user *arg);
@@ -359,7 +371,10 @@ int __fscrypt_prepare_rename(struct inode *old_dir, struct dentry *old_dentry,
 			     unsigned int flags);
 int __fscrypt_prepare_lookup(struct inode *dir, struct dentry *dentry,
 			     struct fscrypt_name *fname);
+<<<<<<< HEAD
 int fscrypt_prepare_lookup_partial(struct inode *dir, struct dentry *dentry);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int __fscrypt_prepare_readdir(struct inode *dir);
 int __fscrypt_prepare_setattr(struct dentry *dentry, struct iattr *attr);
 int fscrypt_prepare_setflags(struct inode *inode,
@@ -421,8 +436,14 @@ static inline int fscrypt_encrypt_block_inplace(const struct inode *inode,
 	return -EOPNOTSUPP;
 }
 
+<<<<<<< HEAD
 static inline int fscrypt_decrypt_pagecache_blocks(struct folio *folio,
 						   size_t len, size_t offs)
+=======
+static inline int fscrypt_decrypt_pagecache_blocks(struct page *page,
+						   unsigned int len,
+						   unsigned int offs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return -EOPNOTSUPP;
 }
@@ -519,7 +540,11 @@ fscrypt_free_dummy_policy(struct fscrypt_dummy_policy *dummy_policy)
 }
 
 /* keyring.c */
+<<<<<<< HEAD
 static inline void fscrypt_destroy_keyring(struct super_block *sb)
+=======
+static inline void fscrypt_sb_delete(struct super_block *sb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 
@@ -528,6 +553,16 @@ static inline int fscrypt_ioctl_add_key(struct file *filp, void __user *arg)
 	return -EOPNOTSUPP;
 }
 
+<<<<<<< HEAD
+=======
+static inline int
+fscrypt_add_test_dummy_key(struct super_block *sb,
+			   const struct fscrypt_dummy_policy *dummy_policy)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline int fscrypt_ioctl_remove_key(struct file *filp, void __user *arg)
 {
 	return -EOPNOTSUPP;
@@ -674,12 +709,15 @@ static inline int __fscrypt_prepare_lookup(struct inode *dir,
 	return -EOPNOTSUPP;
 }
 
+<<<<<<< HEAD
 static inline int fscrypt_prepare_lookup_partial(struct inode *dir,
 						 struct dentry *dentry)
 {
 	return -EOPNOTSUPP;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int __fscrypt_prepare_readdir(struct inode *dir)
 {
 	return -EOPNOTSUPP;

@@ -34,7 +34,11 @@
 #define ACP_ERROR_STAT 29
 #define PDM_DECIMATION_FACTOR 0x2
 #define ACP_PDM_CLK_FREQ_MASK 0x07
+<<<<<<< HEAD
 #define ACP_WOV_GAIN_CONTROL	GENMASK(4, 3)
+=======
+#define ACP_WOV_MISC_CTRL_MASK 0x10
+>>>>>>> b7ba80a49124 (Commit)
 #define ACP_PDM_ENABLE 0x01
 #define ACP_PDM_DISABLE 0x00
 #define ACP_PDM_DMA_EN_STATUS 0x02

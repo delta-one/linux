@@ -199,7 +199,11 @@ static void davinci_spi_chipselect(struct spi_device *spi, int value)
 {
 	struct davinci_spi *dspi;
 	struct davinci_spi_config *spicfg = spi->controller_data;
+<<<<<<< HEAD
 	u8 chip_sel = spi_get_chipselect(spi, 0);
+=======
+	u8 chip_sel = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 	u16 spidat1 = CS_DEFAULT;
 
 	dspi = spi_master_get_devdata(spi->master);
@@ -212,11 +216,19 @@ static void davinci_spi_chipselect(struct spi_device *spi, int value)
 	 * Board specific chip select logic decides the polarity and cs
 	 * line for the controller
 	 */
+<<<<<<< HEAD
 	if (spi_get_csgpiod(spi, 0)) {
 		if (value == BITBANG_CS_ACTIVE)
 			gpiod_set_value(spi_get_csgpiod(spi, 0), 1);
 		else
 			gpiod_set_value(spi_get_csgpiod(spi, 0), 0);
+=======
+	if (spi->cs_gpiod) {
+		if (value == BITBANG_CS_ACTIVE)
+			gpiod_set_value(spi->cs_gpiod, 1);
+		else
+			gpiod_set_value(spi->cs_gpiod, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		if (value == BITBANG_CS_ACTIVE) {
 			if (!(spi->mode & SPI_CS_WORD))
@@ -293,11 +305,19 @@ static int davinci_spi_setup_transfer(struct spi_device *spi,
 	if (bits_per_word <= 8) {
 		dspi->get_rx = davinci_spi_rx_buf_u8;
 		dspi->get_tx = davinci_spi_tx_buf_u8;
+<<<<<<< HEAD
 		dspi->bytes_per_word[spi_get_chipselect(spi, 0)] = 1;
 	} else {
 		dspi->get_rx = davinci_spi_rx_buf_u16;
 		dspi->get_tx = davinci_spi_tx_buf_u16;
 		dspi->bytes_per_word[spi_get_chipselect(spi, 0)] = 2;
+=======
+		dspi->bytes_per_word[spi->chip_select] = 1;
+	} else {
+		dspi->get_rx = davinci_spi_rx_buf_u16;
+		dspi->get_tx = davinci_spi_tx_buf_u16;
+		dspi->bytes_per_word[spi->chip_select] = 2;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (!hz)
@@ -415,11 +435,19 @@ static int davinci_spi_setup(struct spi_device *spi)
 	dspi = spi_master_get_devdata(spi->master);
 
 	if (!(spi->mode & SPI_NO_CS)) {
+<<<<<<< HEAD
 		if (np && spi_get_csgpiod(spi, 0))
 			internal_cs = false;
 
 		if (internal_cs)
 			set_io_bits(dspi->base + SPIPC0, 1 << spi_get_chipselect(spi, 0));
+=======
+		if (np && spi->cs_gpiod)
+			internal_cs = false;
+
+		if (internal_cs)
+			set_io_bits(dspi->base + SPIPC0, 1 << spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (spi->mode & SPI_READY)
@@ -579,7 +607,11 @@ static int davinci_spi_bufs(struct spi_device *spi, struct spi_transfer *t)
 		spicfg = &davinci_spi_default_cfg;
 
 	/* convert len to words based on bits_per_word */
+<<<<<<< HEAD
 	data_type = dspi->bytes_per_word[spi_get_chipselect(spi, 0)];
+=======
+	data_type = dspi->bytes_per_word[spi->chip_select];
+>>>>>>> b7ba80a49124 (Commit)
 
 	dspi->tx = t->tx_buf;
 	dspi->rx = t->rx_buf;
@@ -1018,7 +1050,11 @@ err:
  * It will also call spi_bitbang_stop to destroy the work queue which was
  * created by spi_bitbang_start.
  */
+<<<<<<< HEAD
 static void davinci_spi_remove(struct platform_device *pdev)
+=======
+static int davinci_spi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct davinci_spi *dspi;
 	struct spi_master *master;
@@ -1036,6 +1072,10 @@ static void davinci_spi_remove(struct platform_device *pdev)
 	}
 
 	spi_master_put(master);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver davinci_spi_driver = {
@@ -1044,7 +1084,11 @@ static struct platform_driver davinci_spi_driver = {
 		.of_match_table = of_match_ptr(davinci_spi_of_match),
 	},
 	.probe = davinci_spi_probe,
+<<<<<<< HEAD
 	.remove_new = davinci_spi_remove,
+=======
+	.remove = davinci_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(davinci_spi_driver);
 

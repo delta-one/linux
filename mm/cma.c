@@ -33,7 +33,10 @@
 #include <linux/kmemleak.h>
 #include <trace/events/cma.h>
 
+<<<<<<< HEAD
 #include "internal.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "cma.h"
 
 struct cma cma_areas[MAX_CMA_AREAS];
@@ -323,6 +326,21 @@ int __init cma_declare_contiguous_nid(phys_addr_t base,
 		phys_addr_t addr = 0;
 
 		/*
+<<<<<<< HEAD
+=======
+		 * All pages in the reserved area must come from the same zone.
+		 * If the requested region crosses the low/high memory boundary,
+		 * try allocating from high memory first and fall back to low
+		 * memory in case of failure.
+		 */
+		if (base < highmem_start && limit > highmem_start) {
+			addr = memblock_alloc_range_nid(size, alignment,
+					highmem_start, limit, nid, true);
+			limit = highmem_start;
+		}
+
+		/*
+>>>>>>> b7ba80a49124 (Commit)
 		 * If there is enough memory, try a bottom-up allocation first.
 		 * It will place the new cma area close to the start of the node
 		 * and guarantee that the compaction is moving pages out of the
@@ -339,6 +357,7 @@ int __init cma_declare_contiguous_nid(phys_addr_t base,
 		}
 #endif
 
+<<<<<<< HEAD
 		/*
 		 * All pages in the reserved area must come from the same zone.
 		 * If the requested region crosses the low/high memory boundary,
@@ -351,6 +370,8 @@ int __init cma_declare_contiguous_nid(phys_addr_t base,
 			limit = highmem_start;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (!addr) {
 			addr = memblock_alloc_range_nid(size, alignment, base,
 					limit, nid, true);
@@ -492,7 +513,11 @@ struct page *cma_alloc(struct cma *cma, unsigned long count,
 		start = bitmap_no + mask + 1;
 	}
 
+<<<<<<< HEAD
 	trace_cma_alloc_finish(cma->name, pfn, page, count, align, ret);
+=======
+	trace_cma_alloc_finish(cma->name, pfn, page, count, align);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * CMA can allocate multiple page blocks, which results in different

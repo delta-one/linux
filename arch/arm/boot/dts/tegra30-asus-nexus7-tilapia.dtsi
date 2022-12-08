@@ -6,6 +6,25 @@
 / {
 	compatible = "asus,tilapia", "asus,grouper", "nvidia,tegra30";
 
+<<<<<<< HEAD
+=======
+	display-panel {
+		enable-gpios = <&gpio TEGRA_GPIO(V, 6) GPIO_ACTIVE_HIGH>;
+
+		panel-timing {
+			clock-frequency = <81750000>;
+			hactive = <800>;
+			vactive = <1280>;
+			hfront-porch = <64>;
+			hback-porch = <128>;
+			hsync-len = <64>;
+			vsync-len = <1>;
+			vfront-porch = <5>;
+			vback-porch = <2>;
+		};
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	gpio@6000d000 {
 		init-mode-3g-hog {
 			gpio-hog;
@@ -214,6 +233,7 @@
 			firmware-gpios = <&gpio TEGRA_GPIO(P, 3) GPIO_ACTIVE_HIGH>;
 		};
 	};
+<<<<<<< HEAD
 
 	display-panel {
 		enable-gpios = <&gpio TEGRA_GPIO(V, 6) GPIO_ACTIVE_HIGH>;
@@ -230,4 +250,6 @@
 			vback-porch = <2>;
 		};
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

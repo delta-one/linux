@@ -170,6 +170,13 @@ extern int max1111_read_channel(int);
  */
 int sharpsl_pm_pxa_read_max1111(int channel)
 {
+<<<<<<< HEAD
+=======
+	/* Ugly, better move this function into another module */
+	if (machine_is_tosa())
+	    return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* max1111 accepts channels from 0-3, however,
 	 * it is encoded from 0-7 here in the code.
 	 */
@@ -890,7 +897,11 @@ static int sharpsl_pm_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void sharpsl_pm_remove(struct platform_device *pdev)
+=======
+static int sharpsl_pm_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	suspend_set_ops(NULL);
 
@@ -917,11 +928,20 @@ static void sharpsl_pm_remove(struct platform_device *pdev)
 
 	del_timer_sync(&sharpsl_pm.chrg_full_timer);
 	del_timer_sync(&sharpsl_pm.ac_timer);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver sharpsl_pm_driver = {
 	.probe		= sharpsl_pm_probe,
+<<<<<<< HEAD
 	.remove_new	= sharpsl_pm_remove,
+=======
+	.remove		= sharpsl_pm_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.suspend	= sharpsl_pm_suspend,
 	.resume		= sharpsl_pm_resume,
 	.driver		= {

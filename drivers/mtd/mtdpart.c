@@ -577,7 +577,10 @@ static int mtd_part_of_parse(struct mtd_info *master,
 {
 	struct mtd_part_parser *parser;
 	struct device_node *np;
+<<<<<<< HEAD
 	struct device_node *child;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct property *prop;
 	struct device *dev;
 	const char *compat;
@@ -595,6 +598,7 @@ static int mtd_part_of_parse(struct mtd_info *master,
 	else
 		np = of_get_child_by_name(np, "partitions");
 
+<<<<<<< HEAD
 	/*
 	 * Don't create devices that are added to a bus but will never get
 	 * probed. That'll cause fw_devlink to block probing of consumers of
@@ -604,6 +608,8 @@ static int mtd_part_of_parse(struct mtd_info *master,
 		if (of_device_is_compatible(child, "nvmem-cells"))
 			of_node_set_flag(child, OF_POPULATED);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	of_property_for_each_string(np, "compatible", prop, compat) {
 		parser = mtd_part_get_compatible_parser(compat);
 		if (!parser)

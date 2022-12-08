@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/mfd/st,stmfx.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: STMicroelectonics Multi-Function eXpander (STMFX)
+=======
+title: STMicroelectonics Multi-Function eXpander (STMFX) bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 description: ST Multi-Function eXpander (STMFX) is a slave controller using I2C for
                communication with the main MCU. Its main features are GPIO expansion,

@@ -26,6 +26,10 @@
 #include <linux/serial_core.h>
 #include <linux/sysfs.h>
 #include <linux/random.h>
+<<<<<<< HEAD
+=======
+#include <linux/kmemleak.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
 #include <asm/page.h>
@@ -524,9 +528,18 @@ static int __init __reserved_mem_reserve_reg(unsigned long node,
 		size = dt_mem_next_cell(dt_root_size_cells, &prop);
 
 		if (size &&
+<<<<<<< HEAD
 		    early_init_dt_reserve_memory(base, size, nomap) == 0)
 			pr_debug("Reserved memory: reserved region for node '%s': base %pa, size %lu MiB\n",
 				uname, &base, (unsigned long)(size / SZ_1M));
+=======
+		    early_init_dt_reserve_memory(base, size, nomap) == 0) {
+			pr_debug("Reserved memory: reserved region for node '%s': base %pa, size %lu MiB\n",
+				uname, &base, (unsigned long)(size / SZ_1M));
+			if (!nomap)
+				kmemleak_alloc_phys(base, size, 0);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		else
 			pr_err("Reserved memory: failed to reserve memory for node '%s': base %pa, size %lu MiB\n",
 			       uname, &base, (unsigned long)(size / SZ_1M));
@@ -824,6 +837,18 @@ uint32_t __init of_get_flat_dt_phandle(unsigned long node)
 	return fdt_get_phandle(initial_boot_params, node);
 }
 
+<<<<<<< HEAD
+=======
+struct fdt_scan_status {
+	const char *name;
+	int namelen;
+	int depth;
+	int found;
+	int (*iterator)(unsigned long node, const char *uname, int depth, void *data);
+	void *data;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 const char * __init of_flat_dt_get_machine_name(void)
 {
 	const char *name;
@@ -1095,7 +1120,11 @@ u64 __init dt_mem_next_cell(int s, const __be32 **cellp)
  */
 int __init early_init_dt_scan_memory(void)
 {
+<<<<<<< HEAD
 	int node, found_memory = 0;
+=======
+	int node;
+>>>>>>> b7ba80a49124 (Commit)
 	const void *fdt = initial_boot_params;
 
 	fdt_for_each_subnode(node, fdt, 0) {
@@ -1135,8 +1164,11 @@ int __init early_init_dt_scan_memory(void)
 
 			early_init_dt_add_memory_arch(base, size);
 
+<<<<<<< HEAD
 			found_memory = 1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			if (!hotpluggable)
 				continue;
 
@@ -1145,7 +1177,11 @@ int __init early_init_dt_scan_memory(void)
 					base, base + size);
 		}
 	}
+<<<<<<< HEAD
 	return found_memory;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int __init early_init_dt_scan_chosen(char *cmdline)
@@ -1159,14 +1195,19 @@ int __init early_init_dt_scan_chosen(char *cmdline)
 	if (node < 0)
 		node = fdt_path_offset(fdt, "/chosen@0");
 	if (node < 0)
+<<<<<<< HEAD
 		/* Handle the cmdline config options even if no /chosen node */
 		goto handle_cmdline;
+=======
+		return -ENOENT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	chosen_node_offset = node;
 
 	early_init_dt_check_for_initrd(node);
 	early_init_dt_check_for_elfcorehdr(node);
 
+<<<<<<< HEAD
 	rng_seed = of_get_flat_dt_prop(node, "rng-seed", &l);
 	if (rng_seed && l > 0) {
 		add_bootloader_randomness(rng_seed, l);
@@ -1179,12 +1220,17 @@ int __init early_init_dt_scan_chosen(char *cmdline)
 				fdt_totalsize(initial_boot_params));
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Retrieve command line */
 	p = of_get_flat_dt_prop(node, "bootargs", &l);
 	if (p != NULL && l > 0)
 		strscpy(cmdline, p, min(l, COMMAND_LINE_SIZE));
 
+<<<<<<< HEAD
 handle_cmdline:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * CONFIG_CMDLINE is meant to be a default in case nothing else
 	 * managed to set the command line, unless CONFIG_CMDLINE_FORCE
@@ -1205,6 +1251,21 @@ handle_cmdline:
 
 	pr_debug("Command line is: %s\n", (char *)cmdline);
 
+<<<<<<< HEAD
+=======
+	rng_seed = of_get_flat_dt_prop(node, "rng-seed", &l);
+	if (rng_seed && l > 0) {
+		add_bootloader_randomness(rng_seed, l);
+
+		/* try to clear seed so it won't be found. */
+		fdt_nop_property(initial_boot_params, node, "rng-seed");
+
+		/* update CRC check value */
+		of_fdt_crc32 = crc32_be(~0, initial_boot_params,
+				fdt_totalsize(initial_boot_params));
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

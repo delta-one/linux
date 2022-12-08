@@ -93,6 +93,7 @@ struct ice_perout_channel {
  * we discard old requests that were not fulfilled within a 2 second time
  * window.
  * Timestamp values in the PHY are read only and do not get cleared except at
+<<<<<<< HEAD
  * hardware reset or when a new timestamp value is captured.
  *
  * Some PHY types do not provide a "ready" bitmap indicating which timestamp
@@ -101,6 +102,11 @@ struct ice_perout_channel {
  * value is the same as the cached value, we assume a new timestamp hasn't
  * been captured. This avoids reporting stale timestamps to the stack. This is
  * only done if the verify_cached flag is set in ice_ptp_tx structure.
+=======
+ * hardware reset or when a new timestamp value is captured. The cached_tstamp
+ * field is used to detect the case where a new timestamp has not yet been
+ * captured, ensuring that we avoid sending stale timestamp data to the stack.
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct ice_tx_tstamp {
 	struct sk_buff *skb;
@@ -110,22 +116,34 @@ struct ice_tx_tstamp {
 
 /**
  * struct ice_ptp_tx - Tracking structure for all Tx timestamp requests on a port
+<<<<<<< HEAD
  * @lock: lock to prevent concurrent access to fields of this struct
  * @tstamps: array of len to store outstanding requests
  * @in_use: bitmap of len to indicate which slots are in use
  * @stale: bitmap of len to indicate slots which have stale timestamps
  * @block: which memory block (quad or port) the timestamps are captured in
  * @offset: offset into timestamp block to get the real index
+=======
+ * @lock: lock to prevent concurrent write to in_use bitmap
+ * @tstamps: array of len to store outstanding requests
+ * @in_use: bitmap of len to indicate which slots are in use
+ * @quad: which quad the timestamps are captured in
+ * @quad_offset: offset into timestamp block of the quad to get the real index
+>>>>>>> b7ba80a49124 (Commit)
  * @len: length of the tstamps and in_use fields.
  * @init: if true, the tracker is initialized;
  * @calibrating: if true, the PHY is calibrating the Tx offset. During this
  *               window, timestamps are temporarily disabled.
+<<<<<<< HEAD
  * @verify_cached: if true, verify new timestamp differs from last read value
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct ice_ptp_tx {
 	spinlock_t lock; /* lock protecting in_use bitmap */
 	struct ice_tx_tstamp *tstamps;
 	unsigned long *in_use;
+<<<<<<< HEAD
 	unsigned long *stale;
 	u8 block;
 	u8 offset;
@@ -133,12 +151,23 @@ struct ice_ptp_tx {
 	u8 init : 1;
 	u8 calibrating : 1;
 	u8 verify_cached : 1;
+=======
+	u8 quad;
+	u8 quad_offset;
+	u8 len;
+	u8 init;
+	u8 calibrating;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Quad and port information for initializing timestamp blocks */
 #define INDEX_PER_QUAD			64
+<<<<<<< HEAD
 #define INDEX_PER_PORT_E822		16
 #define INDEX_PER_PORT_E810		64
+=======
+#define INDEX_PER_PORT			(INDEX_PER_QUAD / ICE_PORTS_PER_QUAD)
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct ice_ptp_port - data used to initialize an external port for PTP
@@ -245,8 +274,13 @@ struct ice_ptp {
 #define N_EXT_TS_E810			3
 #define N_PER_OUT_E810			4
 #define N_PER_OUT_E810T			3
+<<<<<<< HEAD
 #define N_PER_OUT_NO_SMA_E810T		2
 #define N_EXT_TS_NO_SMA_E810T		2
+=======
+#define N_PER_OUT_E810T_NO_SMA		2
+#define N_EXT_TS_E810_NO_SMA		2
+>>>>>>> b7ba80a49124 (Commit)
 #define ETH_GLTSYN_ENA(_i)		(0x03000348 + ((_i) * 4))
 
 #if IS_ENABLED(CONFIG_PTP_1588_CLOCK)
@@ -266,7 +300,11 @@ void ice_ptp_reset(struct ice_pf *pf);
 void ice_ptp_prepare_for_reset(struct ice_pf *pf);
 void ice_ptp_init(struct ice_pf *pf);
 void ice_ptp_release(struct ice_pf *pf);
+<<<<<<< HEAD
 void ice_ptp_link_change(struct ice_pf *pf, u8 port, bool linkup);
+=======
+int ice_ptp_link_change(struct ice_pf *pf, u8 port, bool linkup);
+>>>>>>> b7ba80a49124 (Commit)
 #else /* IS_ENABLED(CONFIG_PTP_1588_CLOCK) */
 static inline int ice_ptp_set_ts_config(struct ice_pf *pf, struct ifreq *ifr)
 {
@@ -301,8 +339,13 @@ static inline void ice_ptp_reset(struct ice_pf *pf) { }
 static inline void ice_ptp_prepare_for_reset(struct ice_pf *pf) { }
 static inline void ice_ptp_init(struct ice_pf *pf) { }
 static inline void ice_ptp_release(struct ice_pf *pf) { }
+<<<<<<< HEAD
 static inline void ice_ptp_link_change(struct ice_pf *pf, u8 port, bool linkup)
 {
 }
+=======
+static inline int ice_ptp_link_change(struct ice_pf *pf, u8 port, bool linkup)
+{ return 0; }
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* IS_ENABLED(CONFIG_PTP_1588_CLOCK) */
 #endif /* _ICE_PTP_H_ */

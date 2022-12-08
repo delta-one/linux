@@ -18,6 +18,10 @@
  * the same memory tier.
  */
 #define MEMTIER_ADISTANCE_DRAM	((4 * MEMTIER_CHUNK_SIZE) + (MEMTIER_CHUNK_SIZE >> 1))
+<<<<<<< HEAD
+=======
+#define MEMTIER_HOTPLUG_PRIO	100
+>>>>>>> b7ba80a49124 (Commit)
 
 struct memory_tier;
 struct memory_dev_type {

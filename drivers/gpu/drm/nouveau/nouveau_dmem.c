@@ -33,6 +33,10 @@
 #include <nvif/if000c.h>
 #include <nvif/if500b.h>
 #include <nvif/if900b.h>
+<<<<<<< HEAD
+=======
+#include <nvif/if000c.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <nvhw/class/cla0b5.h>
 
@@ -138,15 +142,34 @@ static void nouveau_dmem_fence_done(struct nouveau_fence **fence)
 	}
 }
 
+<<<<<<< HEAD
 static int nouveau_dmem_copy_one(struct nouveau_drm *drm, struct page *spage,
 				struct page *dpage, dma_addr_t *dma_addr)
 {
 	struct device *dev = drm->dev->dev;
 
+=======
+static vm_fault_t nouveau_dmem_fault_copy_one(struct nouveau_drm *drm,
+		struct vm_fault *vmf, struct migrate_vma *args,
+		dma_addr_t *dma_addr)
+{
+	struct device *dev = drm->dev->dev;
+	struct page *dpage, *spage;
+	struct nouveau_svmm *svmm;
+
+	spage = migrate_pfn_to_page(args->src[0]);
+	if (!spage || !(args->src[0] & MIGRATE_PFN_MIGRATE))
+		return 0;
+
+	dpage = alloc_page_vma(GFP_HIGHUSER, vmf->vma, vmf->address);
+	if (!dpage)
+		return VM_FAULT_SIGBUS;
+>>>>>>> b7ba80a49124 (Commit)
 	lock_page(dpage);
 
 	*dma_addr = dma_map_page(dev, dpage, 0, PAGE_SIZE, DMA_BIDIRECTIONAL);
 	if (dma_mapping_error(dev, *dma_addr))
+<<<<<<< HEAD
 		return -EIO;
 
 	if (drm->dmem->migrate.copy_func(drm, 1, NOUVEAU_APER_HOST, *dma_addr,
@@ -156,6 +179,27 @@ static int nouveau_dmem_copy_one(struct nouveau_drm *drm, struct page *spage,
 	}
 
 	return 0;
+=======
+		goto error_free_page;
+
+	svmm = spage->zone_device_data;
+	mutex_lock(&svmm->mutex);
+	nouveau_svmm_invalidate(svmm, args->start, args->end);
+	if (drm->dmem->migrate.copy_func(drm, 1, NOUVEAU_APER_HOST, *dma_addr,
+			NOUVEAU_APER_VRAM, nouveau_dmem_page_addr(spage)))
+		goto error_dma_unmap;
+	mutex_unlock(&svmm->mutex);
+
+	args->dst[0] = migrate_pfn(page_to_pfn(dpage));
+	return 0;
+
+error_dma_unmap:
+	mutex_unlock(&svmm->mutex);
+	dma_unmap_page(dev, *dma_addr, PAGE_SIZE, DMA_BIDIRECTIONAL);
+error_free_page:
+	__free_page(dpage);
+	return VM_FAULT_SIGBUS;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static vm_fault_t nouveau_dmem_migrate_to_ram(struct vm_fault *vmf)
@@ -163,11 +207,17 @@ static vm_fault_t nouveau_dmem_migrate_to_ram(struct vm_fault *vmf)
 	struct nouveau_drm *drm = page_to_drm(vmf->page);
 	struct nouveau_dmem *dmem = drm->dmem;
 	struct nouveau_fence *fence;
+<<<<<<< HEAD
 	struct nouveau_svmm *svmm;
 	struct page *spage, *dpage;
 	unsigned long src = 0, dst = 0;
 	dma_addr_t dma_addr = 0;
 	vm_fault_t ret = 0;
+=======
+	unsigned long src = 0, dst = 0;
+	dma_addr_t dma_addr = 0;
+	vm_fault_t ret;
+>>>>>>> b7ba80a49124 (Commit)
 	struct migrate_vma args = {
 		.vma		= vmf->vma,
 		.start		= vmf->address,
@@ -175,7 +225,10 @@ static vm_fault_t nouveau_dmem_migrate_to_ram(struct vm_fault *vmf)
 		.src		= &src,
 		.dst		= &dst,
 		.pgmap_owner	= drm->dev,
+<<<<<<< HEAD
 		.fault_page	= vmf->page,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.flags		= MIGRATE_VMA_SELECT_DEVICE_PRIVATE,
 	};
 
@@ -189,6 +242,7 @@ static vm_fault_t nouveau_dmem_migrate_to_ram(struct vm_fault *vmf)
 	if (!args.cpages)
 		return 0;
 
+<<<<<<< HEAD
 	spage = migrate_pfn_to_page(src);
 	if (!spage || !(src & MIGRATE_PFN_MIGRATE))
 		goto done;
@@ -209,6 +263,12 @@ static vm_fault_t nouveau_dmem_migrate_to_ram(struct vm_fault *vmf)
 		goto done;
 	}
 
+=======
+	ret = nouveau_dmem_fault_copy_one(drm, vmf, &args, &dma_addr);
+	if (ret || dst == 0)
+		goto done;
+
+>>>>>>> b7ba80a49124 (Commit)
 	nouveau_fence_new(dmem->migrate.chan, false, &fence);
 	migrate_vma_pages(&args);
 	nouveau_dmem_fence_done(&fence);
@@ -324,7 +384,11 @@ nouveau_dmem_page_alloc_locked(struct nouveau_drm *drm)
 			return NULL;
 	}
 
+<<<<<<< HEAD
 	zone_device_page_init(page);
+=======
+	lock_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 	return page;
 }
 
@@ -367,6 +431,7 @@ nouveau_dmem_suspend(struct nouveau_drm *drm)
 	mutex_unlock(&drm->dmem->mutex);
 }
 
+<<<<<<< HEAD
 /*
  * Evict all pages mapping a chunk.
  */
@@ -413,6 +478,8 @@ nouveau_dmem_evict_chunk(struct nouveau_dmem_chunk *chunk)
 	kfree(dma_addrs);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void
 nouveau_dmem_fini(struct nouveau_drm *drm)
 {
@@ -424,10 +491,15 @@ nouveau_dmem_fini(struct nouveau_drm *drm)
 	mutex_lock(&drm->dmem->mutex);
 
 	list_for_each_entry_safe(chunk, tmp, &drm->dmem->chunks, list) {
+<<<<<<< HEAD
 		nouveau_dmem_evict_chunk(chunk);
 		nouveau_bo_unpin(chunk->bo);
 		nouveau_bo_ref(NULL, &chunk->bo);
 		WARN_ON(chunk->callocated);
+=======
+		nouveau_bo_unpin(chunk->bo);
+		nouveau_bo_ref(NULL, &chunk->bo);
+>>>>>>> b7ba80a49124 (Commit)
 		list_del(&chunk->list);
 		memunmap_pages(&chunk->pagemap);
 		release_mem_region(chunk->pagemap.range.start,

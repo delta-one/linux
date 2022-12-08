@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
 /* Copyright 2017-2019 NXP */
 
+<<<<<<< HEAD
 #include <linux/ethtool_netlink.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/net_tstamp.h>
 #include <linux/module.h>
 #include "enetc.h"
@@ -198,6 +201,10 @@ static const char rx_ring_stats[][ETH_GSTRING_LEN] = {
 	"Rx ring %2d recycle failures",
 	"Rx ring %2d redirects",
 	"Rx ring %2d redirect failures",
+<<<<<<< HEAD
+=======
+	"Rx ring %2d redirect S/G",
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const char tx_ring_stats[][ETH_GSTRING_LEN] = {
@@ -291,6 +298,10 @@ static void enetc_get_ethtool_stats(struct net_device *ndev,
 		data[o++] = priv->rx_ring[i]->stats.recycle_failures;
 		data[o++] = priv->rx_ring[i]->stats.xdp_redirect;
 		data[o++] = priv->rx_ring[i]->stats.xdp_redirect_failures;
+<<<<<<< HEAD
+=======
+		data[o++] = priv->rx_ring[i]->stats.xdp_redirect_sg;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (!enetc_si_is_pf(priv->si))
@@ -300,6 +311,7 @@ static void enetc_get_ethtool_stats(struct net_device *ndev,
 		data[o++] = enetc_port_rd(hw, enetc_port_counters[i].reg);
 }
 
+<<<<<<< HEAD
 static void enetc_pause_stats(struct enetc_hw *hw, int mac,
 			      struct ethtool_pause_stats *pause_stats)
 {
@@ -307,11 +319,14 @@ static void enetc_pause_stats(struct enetc_hw *hw, int mac,
 	pause_stats->rx_pause_frames = enetc_port_rd(hw, ENETC_PM_RXPF(mac));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void enetc_get_pause_stats(struct net_device *ndev,
 				  struct ethtool_pause_stats *pause_stats)
 {
 	struct enetc_ndev_priv *priv = netdev_priv(ndev);
 	struct enetc_hw *hw = &priv->si->hw;
+<<<<<<< HEAD
 	struct enetc_si *si = priv->si;
 
 	switch (pause_stats->src) {
@@ -326,6 +341,11 @@ static void enetc_get_pause_stats(struct net_device *ndev,
 		ethtool_aggregate_pause_stats(ndev, pause_stats);
 		break;
 	}
+=======
+
+	pause_stats->tx_pause_frames = enetc_port_rd(hw, ENETC_PM_TXPF(0));
+	pause_stats->rx_pause_frames = enetc_port_rd(hw, ENETC_PM_RXPF(0));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void enetc_mac_stats(struct enetc_hw *hw, int mac,
@@ -370,7 +390,12 @@ static const struct ethtool_rmon_hist_range enetc_rmon_ranges[] = {
 };
 
 static void enetc_rmon_stats(struct enetc_hw *hw, int mac,
+<<<<<<< HEAD
 			     struct ethtool_rmon_stats *s)
+=======
+			     struct ethtool_rmon_stats *s,
+			     const struct ethtool_rmon_hist_range **ranges)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	s->undersize_pkts = enetc_port_rd(hw, ENETC_PM_RUND(mac));
 	s->oversize_pkts = enetc_port_rd(hw, ENETC_PM_ROVR(mac));
@@ -392,6 +417,11 @@ static void enetc_rmon_stats(struct enetc_hw *hw, int mac,
 	s->hist_tx[4] = enetc_port_rd(hw, ENETC_PM_T1023(mac));
 	s->hist_tx[5] = enetc_port_rd(hw, ENETC_PM_T1522(mac));
 	s->hist_tx[6] = enetc_port_rd(hw, ENETC_PM_T1523X(mac));
+<<<<<<< HEAD
+=======
+
+	*ranges = enetc_rmon_ranges;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void enetc_get_eth_mac_stats(struct net_device *ndev,
@@ -399,6 +429,7 @@ static void enetc_get_eth_mac_stats(struct net_device *ndev,
 {
 	struct enetc_ndev_priv *priv = netdev_priv(ndev);
 	struct enetc_hw *hw = &priv->si->hw;
+<<<<<<< HEAD
 	struct enetc_si *si = priv->si;
 
 	switch (mac_stats->src) {
@@ -413,6 +444,10 @@ static void enetc_get_eth_mac_stats(struct net_device *ndev,
 		ethtool_aggregate_mac_stats(ndev, mac_stats);
 		break;
 	}
+=======
+
+	enetc_mac_stats(hw, 0, mac_stats);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void enetc_get_eth_ctrl_stats(struct net_device *ndev,
@@ -420,6 +455,7 @@ static void enetc_get_eth_ctrl_stats(struct net_device *ndev,
 {
 	struct enetc_ndev_priv *priv = netdev_priv(ndev);
 	struct enetc_hw *hw = &priv->si->hw;
+<<<<<<< HEAD
 	struct enetc_si *si = priv->si;
 
 	switch (ctrl_stats->src) {
@@ -434,6 +470,10 @@ static void enetc_get_eth_ctrl_stats(struct net_device *ndev,
 		ethtool_aggregate_ctrl_stats(ndev, ctrl_stats);
 		break;
 	}
+=======
+
+	enetc_ctrl_stats(hw, 0, ctrl_stats);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void enetc_get_rmon_stats(struct net_device *ndev,
@@ -442,6 +482,7 @@ static void enetc_get_rmon_stats(struct net_device *ndev,
 {
 	struct enetc_ndev_priv *priv = netdev_priv(ndev);
 	struct enetc_hw *hw = &priv->si->hw;
+<<<<<<< HEAD
 	struct enetc_si *si = priv->si;
 
 	*ranges = enetc_rmon_ranges;
@@ -458,6 +499,10 @@ static void enetc_get_rmon_stats(struct net_device *ndev,
 		ethtool_aggregate_rmon_stats(ndev, rmon_stats);
 		break;
 	}
+=======
+
+	enetc_rmon_stats(hw, 0, rmon_stats, ranges);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define ENETC_RSSHASH_L3 (RXH_L2DA | RXH_VLAN | RXH_L3_PROTO | RXH_IP_SRC | \
@@ -703,7 +748,10 @@ void enetc_set_rss_key(struct enetc_hw *hw, const u8 *bytes)
 	for (i = 0; i < ENETC_RSSHASH_KEY_SIZE / 4; i++)
 		enetc_port_wr(hw, ENETC_PRSSK(i), ((u32 *)bytes)[i]);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(enetc_set_rss_key);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int enetc_set_rxfh(struct net_device *ndev, const u32 *indir,
 			  const u8 *key, const u8 hfunc)
@@ -917,6 +965,7 @@ static int enetc_set_link_ksettings(struct net_device *dev,
 	return phylink_ethtool_ksettings_set(priv->phylink, cmd);
 }
 
+<<<<<<< HEAD
 static void enetc_get_mm_stats(struct net_device *ndev,
 			       struct ethtool_mm_stats *s)
 {
@@ -1077,6 +1126,8 @@ void enetc_mm_link_state_update(struct enetc_ndev_priv *priv, bool link)
 }
 EXPORT_SYMBOL_GPL(enetc_mm_link_state_update);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct ethtool_ops enetc_pf_ethtool_ops = {
 	.supported_coalesce_params = ETHTOOL_COALESCE_USECS |
 				     ETHTOOL_COALESCE_MAX_FRAMES |
@@ -1107,9 +1158,12 @@ static const struct ethtool_ops enetc_pf_ethtool_ops = {
 	.set_wol = enetc_set_wol,
 	.get_pauseparam = enetc_get_pauseparam,
 	.set_pauseparam = enetc_set_pauseparam,
+<<<<<<< HEAD
 	.get_mm = enetc_get_mm,
 	.set_mm = enetc_set_mm,
 	.get_mm_stats = enetc_get_mm_stats,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct ethtool_ops enetc_vf_ethtool_ops = {
@@ -1142,4 +1196,7 @@ void enetc_set_ethtool_ops(struct net_device *ndev)
 	else
 		ndev->ethtool_ops = &enetc_vf_ethtool_ops;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(enetc_set_ethtool_ops);
+=======
+>>>>>>> b7ba80a49124 (Commit)

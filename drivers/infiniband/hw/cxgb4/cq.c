@@ -767,7 +767,11 @@ static int __c4iw_poll_cq_one(struct c4iw_cq *chp, struct c4iw_qp *qhp,
 		goto out;
 
 	wc->wr_id = cookie;
+<<<<<<< HEAD
 	wc->qp = &qhp->ibqp;
+=======
+	wc->qp = qhp ? &qhp->ibqp : NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	wc->vendor_err = CQE_STATUS(&cqe);
 	wc->wc_flags = 0;
 

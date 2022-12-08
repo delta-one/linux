@@ -157,8 +157,13 @@ static int wwan_hwsim_port_tx(struct wwan_port *wport, struct sk_buff *in)
 			if ((i + 1) < in->len && in->data[i + 1] == '\n')
 				i++;
 			n = i - s + 1;
+<<<<<<< HEAD
 			skb_put_data(out, &in->data[s], n);/* Echo */
 			skb_put_data(out, "\r\nOK\r\n", 6);
+=======
+			memcpy(skb_put(out, n), &in->data[s], n);/* Echo */
+			memcpy(skb_put(out, 6), "\r\nOK\r\n", 6);
+>>>>>>> b7ba80a49124 (Commit)
 			s = i + 1;
 			port->pstate = AT_PARSER_WAIT_A;
 		} else if (port->pstate == AT_PARSER_SKIP_LINE) {
@@ -171,7 +176,11 @@ static int wwan_hwsim_port_tx(struct wwan_port *wport, struct sk_buff *in)
 	if (i > s) {
 		/* Echo the processed portion of a not yet completed command */
 		n = i - s;
+<<<<<<< HEAD
 		skb_put_data(out, &in->data[s], n);
+=======
+		memcpy(skb_put(out, n), &in->data[s], n);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	consume_skb(in);
@@ -205,7 +214,11 @@ static struct wwan_hwsim_port *wwan_hwsim_port_new(struct wwan_hwsim_dev *dev)
 
 	port->wwan = wwan_create_port(&dev->dev, WWAN_PORT_AT,
 				      &wwan_hwsim_port_ops,
+<<<<<<< HEAD
 				      NULL, port);
+=======
+				      port);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(port->wwan)) {
 		err = PTR_ERR(port->wwan);
 		goto err_free_port;
@@ -311,7 +324,11 @@ err_unreg_dev:
 	return ERR_PTR(err);
 
 err_free_dev:
+<<<<<<< HEAD
 	put_device(&dev->dev);
+=======
+	kfree(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ERR_PTR(err);
 }
@@ -511,7 +528,11 @@ static int __init wwan_hwsim_init(void)
 	if (!wwan_wq)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	wwan_hwsim_class = class_create("wwan_hwsim");
+=======
+	wwan_hwsim_class = class_create(THIS_MODULE, "wwan_hwsim");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(wwan_hwsim_class)) {
 		err = PTR_ERR(wwan_hwsim_class);
 		goto err_wq_destroy;

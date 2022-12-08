@@ -4,8 +4,11 @@
 #include <network_helpers.h>
 #include <bpf/btf.h>
 #include "bind4_prog.skel.h"
+<<<<<<< HEAD
 #include "freplace_progmap.skel.h"
 #include "xdp_dummy.skel.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 typedef int (*test_cb)(struct bpf_object *obj);
 
@@ -79,7 +82,11 @@ static void test_fexit_bpf2bpf_common(const char *obj_file,
 		return;
 
 	info_len = sizeof(prog_info);
+<<<<<<< HEAD
 	err = bpf_prog_get_info_by_fd(tgt_fd, &prog_info, &info_len);
+=======
+	err = bpf_obj_get_info_by_fd(tgt_fd, &prog_info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ASSERT_OK(err, "tgt_fd_get_info"))
 		goto close_prog;
 
@@ -136,8 +143,13 @@ static void test_fexit_bpf2bpf_common(const char *obj_file,
 
 		info_len = sizeof(link_info);
 		memset(&link_info, 0, sizeof(link_info));
+<<<<<<< HEAD
 		err = bpf_link_get_info_by_fd(bpf_link__fd(link[i]),
 					      &link_info, &info_len);
+=======
+		err = bpf_obj_get_info_by_fd(bpf_link__fd(link[i]),
+					     &link_info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 		ASSERT_OK(err, "link_fd_get_info");
 		ASSERT_EQ(link_info.tracing.attach_type,
 			  bpf_program__expected_attach_type(prog[i]),
@@ -417,7 +429,11 @@ static int find_prog_btf_id(const char *name, __u32 attach_prog_fd)
 	struct btf *btf;
 	int ret;
 
+<<<<<<< HEAD
 	ret = bpf_prog_get_info_by_fd(attach_prog_fd, &info, &info_len);
+=======
+	ret = bpf_obj_get_info_by_fd(attach_prog_fd, &info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -483,12 +499,21 @@ static void test_fentry_to_cgroup_bpf(void)
 	if (!ASSERT_GE(fentry_fd, 0, "load_fentry"))
 		goto cleanup;
 
+<<<<<<< HEAD
 	/* Make sure bpf_prog_get_info_by_fd works correctly when attaching
 	 * to another BPF program.
 	 */
 
 	ASSERT_OK(bpf_prog_get_info_by_fd(fentry_fd, &info, &info_len),
 		  "bpf_prog_get_info_by_fd");
+=======
+	/* Make sure bpf_obj_get_info_by_fd works correctly when attaching
+	 * to another BPF program.
+	 */
+
+	ASSERT_OK(bpf_obj_get_info_by_fd(fentry_fd, &info, &info_len),
+		  "bpf_obj_get_info_by_fd");
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_EQ(info.btf_id, 0, "info.btf_id");
 	ASSERT_EQ(info.attach_btf_id, btf_id, "info.attach_btf_id");
@@ -502,6 +527,7 @@ cleanup:
 	bind4_prog__destroy(skel);
 }
 
+<<<<<<< HEAD
 static void test_func_replace_progmap(void)
 {
 	struct bpf_cpumap_val value = { .qsize = 1 };
@@ -546,6 +572,8 @@ out:
 	freplace_progmap__destroy(skel);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* NOTE: affect other tests, must run in serial mode */
 void serial_test_fexit_bpf2bpf(void)
 {
@@ -571,6 +599,9 @@ void serial_test_fexit_bpf2bpf(void)
 		test_func_replace_global_func();
 	if (test__start_subtest("fentry_to_cgroup_bpf"))
 		test_fentry_to_cgroup_bpf();
+<<<<<<< HEAD
 	if (test__start_subtest("func_replace_progmap"))
 		test_func_replace_progmap();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

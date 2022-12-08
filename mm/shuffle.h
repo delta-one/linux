@@ -4,7 +4,11 @@
 #define _MM_SHUFFLE_H
 #include <linux/jump_label.h>
 
+<<<<<<< HEAD
 #define SHUFFLE_ORDER MAX_ORDER
+=======
+#define SHUFFLE_ORDER (MAX_ORDER-1)
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_SHUFFLE_PAGE_ALLOCATOR
 DECLARE_STATIC_KEY_FALSE(page_alloc_shuffle_key);

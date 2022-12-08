@@ -165,7 +165,11 @@ examples:
   - |
     #include <dt-bindings/clock/starfive-jh7100.h>
     #include <dt-bindings/reset/starfive-jh7100.h>
+<<<<<<< HEAD
     #include <dt-bindings/pinctrl/pinctrl-starfive-jh7100.h>
+=======
+    #include <dt-bindings/pinctrl/pinctrl-starfive.h>
+>>>>>>> b7ba80a49124 (Commit)
 
     soc {
         #address-cells = <2>;
@@ -293,7 +297,11 @@ examples:
             pinctrl-names = "default";
         };
 
+<<<<<<< HEAD
         i2c {
+=======
+        i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
             pinctrl-0 = <&i2c0_pins_default>;
             pinctrl-names = "default";
         };

@@ -109,14 +109,20 @@ static void inet_bind2_bucket_init(struct inet_bind2_bucket *tb,
 	tb->l3mdev    = l3mdev;
 	tb->port      = port;
 #if IS_ENABLED(CONFIG_IPV6)
+<<<<<<< HEAD
 	tb->family    = sk->sk_family;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (sk->sk_family == AF_INET6)
 		tb->v6_rcv_saddr = sk->sk_v6_rcv_saddr;
 	else
 #endif
 		tb->rcv_saddr = sk->sk_rcv_saddr;
 	INIT_HLIST_HEAD(&tb->owners);
+<<<<<<< HEAD
 	INIT_HLIST_HEAD(&tb->deathrow);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hlist_add_head(&tb->node, &head->chain);
 }
 
@@ -138,7 +144,11 @@ struct inet_bind2_bucket *inet_bind2_bucket_create(struct kmem_cache *cachep,
 /* Caller must hold hashbucket lock for this tb with local BH disabled */
 void inet_bind2_bucket_destroy(struct kmem_cache *cachep, struct inet_bind2_bucket *tb)
 {
+<<<<<<< HEAD
 	if (hlist_empty(&tb->owners) && hlist_empty(&tb->deathrow)) {
+=======
+	if (hlist_empty(&tb->owners)) {
+>>>>>>> b7ba80a49124 (Commit)
 		__hlist_del(&tb->node);
 		kmem_cache_free(cachep, tb);
 	}
@@ -148,9 +158,12 @@ static bool inet_bind2_bucket_addr_match(const struct inet_bind2_bucket *tb2,
 					 const struct sock *sk)
 {
 #if IS_ENABLED(CONFIG_IPV6)
+<<<<<<< HEAD
 	if (sk->sk_family != tb2->family)
 		return false;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (sk->sk_family == AF_INET6)
 		return ipv6_addr_equal(&tb2->v6_rcv_saddr,
 				       &sk->sk_v6_rcv_saddr);
@@ -650,6 +663,7 @@ bool inet_ehash_insert(struct sock *sk, struct sock *osk, bool *found_dup_sk)
 	spin_lock(lock);
 	if (osk) {
 		WARN_ON_ONCE(sk->sk_hash != osk->sk_hash);
+<<<<<<< HEAD
 		ret = sk_hashed(osk);
 		if (ret) {
 			/* Before deleting the node, we insert a new one to make
@@ -664,6 +678,10 @@ bool inet_ehash_insert(struct sock *sk, struct sock *osk, bool *found_dup_sk)
 		goto unlock;
 	}
 	if (found_dup_sk) {
+=======
+		ret = sk_nulls_del_node_init_rcu(osk);
+	} else if (found_dup_sk) {
+>>>>>>> b7ba80a49124 (Commit)
 		*found_dup_sk = inet_ehash_lookup_by_sk(sk, list);
 		if (*found_dup_sk)
 			ret = false;
@@ -672,7 +690,10 @@ bool inet_ehash_insert(struct sock *sk, struct sock *osk, bool *found_dup_sk)
 	if (ret)
 		__sk_nulls_add_node_rcu(sk, list);
 
+<<<<<<< HEAD
 unlock:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock(lock);
 
 	return ret;
@@ -809,9 +830,12 @@ static bool inet_bind2_bucket_match(const struct inet_bind2_bucket *tb,
 				    int l3mdev, const struct sock *sk)
 {
 #if IS_ENABLED(CONFIG_IPV6)
+<<<<<<< HEAD
 	if (sk->sk_family != tb->family)
 		return false;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (sk->sk_family == AF_INET6)
 		return net_eq(ib2_net(tb), net) && tb->port == port &&
 			tb->l3mdev == l3mdev &&
@@ -828,6 +852,7 @@ bool inet_bind2_bucket_match_addr_any(const struct inet_bind2_bucket *tb, const 
 #if IS_ENABLED(CONFIG_IPV6)
 	struct in6_addr addr_any = {};
 
+<<<<<<< HEAD
 	if (sk->sk_family != tb->family) {
 		if (sk->sk_family == AF_INET)
 			return net_eq(ib2_net(tb), net) && tb->port == port &&
@@ -837,6 +862,8 @@ bool inet_bind2_bucket_match_addr_any(const struct inet_bind2_bucket *tb, const 
 		return false;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (sk->sk_family == AF_INET6)
 		return net_eq(ib2_net(tb), net) && tb->port == port &&
 			tb->l3mdev == l3mdev &&
@@ -878,6 +905,7 @@ inet_bhash2_addr_any_hashbucket(const struct sock *sk, const struct net *net, in
 	return &hinfo->bhash2[hash & (hinfo->bhash_size - 1)];
 }
 
+<<<<<<< HEAD
 static void inet_update_saddr(struct sock *sk, void *saddr, int family)
 {
 	if (family == AF_INET) {
@@ -910,12 +938,23 @@ static int __inet_bhash2_update_saddr(struct sock *sk, void *saddr, int family, 
 
 		return 0;
 	}
+=======
+int inet_bhash2_update_saddr(struct inet_bind_hashbucket *prev_saddr, struct sock *sk)
+{
+	struct inet_hashinfo *hinfo = tcp_or_dccp_get_hashinfo(sk);
+	struct inet_bind2_bucket *tb2, *new_tb2;
+	int l3mdev = inet_sk_bound_l3mdev(sk);
+	struct inet_bind_hashbucket *head2;
+	int port = inet_sk(sk)->inet_num;
+	struct net *net = sock_net(sk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Allocate a bind2 bucket ahead of time to avoid permanently putting
 	 * the bhash2 table in an inconsistent state if a new tb2 bucket
 	 * allocation fails.
 	 */
 	new_tb2 = kmem_cache_alloc(hinfo->bind2_bucket_cachep, GFP_ATOMIC);
+<<<<<<< HEAD
 	if (!new_tb2) {
 		if (reset) {
 			/* The (INADDR_ANY, port) bucket might have already
@@ -952,6 +991,22 @@ static int __inet_bhash2_update_saddr(struct sock *sk, void *saddr, int family, 
 	head2 = inet_bhashfn_portaddr(hinfo, sk, net, port);
 
 	spin_lock(&head2->lock);
+=======
+	if (!new_tb2)
+		return -ENOMEM;
+
+	head2 = inet_bhashfn_portaddr(hinfo, sk, net, port);
+
+	if (prev_saddr) {
+		spin_lock_bh(&prev_saddr->lock);
+		__sk_del_bind2_node(sk);
+		inet_bind2_bucket_destroy(hinfo->bind2_bucket_cachep,
+					  inet_csk(sk)->icsk_bind2_hash);
+		spin_unlock_bh(&prev_saddr->lock);
+	}
+
+	spin_lock_bh(&head2->lock);
+>>>>>>> b7ba80a49124 (Commit)
 	tb2 = inet_bind2_bucket_find(head2, net, port, l3mdev, sk);
 	if (!tb2) {
 		tb2 = new_tb2;
@@ -959,15 +1014,20 @@ static int __inet_bhash2_update_saddr(struct sock *sk, void *saddr, int family, 
 	}
 	sk_add_bind2_node(sk, &tb2->owners);
 	inet_csk(sk)->icsk_bind2_hash = tb2;
+<<<<<<< HEAD
 	spin_unlock(&head2->lock);
 
 	spin_unlock_bh(&head->lock);
+=======
+	spin_unlock_bh(&head2->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (tb2 != new_tb2)
 		kmem_cache_free(hinfo->bind2_bucket_cachep, new_tb2);
 
 	return 0;
 }
+<<<<<<< HEAD
 
 int inet_bhash2_update_saddr(struct sock *sk, void *saddr, int family)
 {
@@ -982,10 +1042,15 @@ void inet_bhash2_reset_saddr(struct sock *sk)
 }
 EXPORT_SYMBOL_GPL(inet_bhash2_reset_saddr);
 
+=======
+EXPORT_SYMBOL_GPL(inet_bhash2_update_saddr);
+
+>>>>>>> b7ba80a49124 (Commit)
 /* RFC 6056 3.3.4.  Algorithm 4: Double-Hash Port Selection Algorithm
  * Note that we use 32bit integers (vs RFC 'short integers')
  * because 2^16 is not a multiple of num_ephemeral and this
  * property might be used by clever attacker.
+<<<<<<< HEAD
  *
  * RFC claims using TABLE_LENGTH=10 buckets gives an improvement, though
  * attacks were since demonstrated, thus we use 65536 by default instead
@@ -993,6 +1058,15 @@ EXPORT_SYMBOL_GPL(inet_bhash2_reset_saddr);
  * of kernel memory.
  */
 #define INET_TABLE_PERTURB_SIZE (1 << CONFIG_INET_TABLE_PERTURB_ORDER)
+=======
+ * RFC claims using TABLE_LENGTH=10 buckets gives an improvement, though
+ * attacks were since demonstrated, thus we use 65536 instead to really
+ * give more isolation and privacy, at the expense of 256kB of kernel
+ * memory.
+ */
+#define INET_TABLE_PERTURB_SHIFT 16
+#define INET_TABLE_PERTURB_SIZE (1 << INET_TABLE_PERTURB_SHIFT)
+>>>>>>> b7ba80a49124 (Commit)
 static u32 *table_perturb;
 
 int __inet_hash_connect(struct inet_timewait_death_row *death_row,
@@ -1014,7 +1088,21 @@ int __inet_hash_connect(struct inet_timewait_death_row *death_row,
 	u32 index;
 
 	if (port) {
+<<<<<<< HEAD
 		local_bh_disable();
+=======
+		head = &hinfo->bhash[inet_bhashfn(net, port,
+						  hinfo->bhash_size)];
+		tb = inet_csk(sk)->icsk_bind_hash;
+		spin_lock_bh(&head->lock);
+		if (sk_head(&tb->owners) == sk && !sk->sk_bind_node.next) {
+			inet_ehash_nolisten(sk, NULL, NULL);
+			spin_unlock_bh(&head->lock);
+			return 0;
+		}
+		spin_unlock(&head->lock);
+		/* No definite answer... Walk to established hash table */
+>>>>>>> b7ba80a49124 (Commit)
 		ret = check_established(death_row, sk, port, NULL);
 		local_bh_enable();
 		return ret;
@@ -1022,14 +1110,23 @@ int __inet_hash_connect(struct inet_timewait_death_row *death_row,
 
 	l3mdev = inet_sk_bound_l3mdev(sk);
 
+<<<<<<< HEAD
 	inet_sk_get_local_port_range(sk, &low, &high);
+=======
+	inet_get_local_port_range(net, &low, &high);
+>>>>>>> b7ba80a49124 (Commit)
 	high++; /* [32768, 60999] -> [32768, 61000[ */
 	remaining = high - low;
 	if (likely(remaining > 1))
 		remaining &= ~1U;
 
+<<<<<<< HEAD
 	get_random_sleepable_once(table_perturb,
 				  INET_TABLE_PERTURB_SIZE * sizeof(*table_perturb));
+=======
+	net_get_random_once(table_perturb,
+			    INET_TABLE_PERTURB_SIZE * sizeof(*table_perturb));
+>>>>>>> b7ba80a49124 (Commit)
 	index = port_offset & (INET_TABLE_PERTURB_SIZE - 1);
 
 	offset = READ_ONCE(table_perturb[index]) + (port_offset >> 32);
@@ -1107,22 +1204,35 @@ ok:
 	 * on low contention the randomness is maximal and on high contention
 	 * it may be inexistent.
 	 */
+<<<<<<< HEAD
 	i = max_t(int, i, get_random_u32_below(8) * 2);
+=======
+	i = max_t(int, i, (prandom_u32() & 7) * 2);
+>>>>>>> b7ba80a49124 (Commit)
 	WRITE_ONCE(table_perturb[index], READ_ONCE(table_perturb[index]) + i + 2);
 
 	/* Head lock still held and bh's disabled */
 	inet_bind_hash(sk, tb, tb2, port);
 
+<<<<<<< HEAD
+=======
+	spin_unlock(&head2->lock);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (sk_unhashed(sk)) {
 		inet_sk(sk)->inet_sport = htons(port);
 		inet_ehash_nolisten(sk, (struct sock *)tw, NULL);
 	}
 	if (tw)
 		inet_twsk_bind_unhash(tw, hinfo);
+<<<<<<< HEAD
 
 	spin_unlock(&head2->lock);
 	spin_unlock(&head->lock);
 
+=======
+	spin_unlock(&head->lock);
+>>>>>>> b7ba80a49124 (Commit)
 	if (tw)
 		inet_twsk_deschedule_put(tw);
 	local_bh_enable();

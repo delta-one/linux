@@ -438,7 +438,11 @@ static int transmit(struct baycom_state *bc, int cnt, unsigned char stat)
 			if ((--bc->hdlctx.slotcnt) > 0)
 				return 0;
 			bc->hdlctx.slotcnt = bc->ch_params.slottime;
+<<<<<<< HEAD
 			if (get_random_u8() > bc->ch_params.ppersist)
+=======
+			if ((prandom_u32() % 256) > bc->ch_params.ppersist)
+>>>>>>> b7ba80a49124 (Commit)
 				return 0;
 		}
 	}
@@ -623,10 +627,23 @@ static int receive(struct net_device *dev, int cnt)
 
 /* --------------------------------------------------------------------- */
 
+<<<<<<< HEAD
 #define GETTICK(x)						\
 ({								\
 	x = (unsigned int)get_cycles();				\
 })
+=======
+#if defined(__i386__) && !defined(CONFIG_UML)
+#include <asm/msr.h>
+#define GETTICK(x)						\
+({								\
+	if (boot_cpu_has(X86_FEATURE_TSC))			\
+		x = (unsigned int)rdtsc();			\
+})
+#else /* __i386__  && !CONFIG_UML */
+#define GETTICK(x)
+#endif /* __i386__  && !CONFIG_UML */
+>>>>>>> b7ba80a49124 (Commit)
 
 static void epp_bh(struct work_struct *work)
 {
@@ -752,7 +769,11 @@ static void epp_bh(struct work_struct *work)
  * ===================== network driver interface =========================
  */
 
+<<<<<<< HEAD
 static netdev_tx_t baycom_send_packet(struct sk_buff *skb, struct net_device *dev)
+=======
+static int baycom_send_packet(struct sk_buff *skb, struct net_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct baycom_state *bc = netdev_priv(dev);
 

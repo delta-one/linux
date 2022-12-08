@@ -46,12 +46,21 @@ DEFINE_DEBUGFS_ATTRIBUTE(fops_implicit_txbf, mt7915_implicit_txbf_get,
 
 /* test knob of system error recovery */
 static ssize_t
+<<<<<<< HEAD
 mt7915_sys_recovery_set(struct file *file, const char __user *user_buf,
 			size_t count, loff_t *ppos)
 {
 	struct mt7915_phy *phy = file->private_data;
 	struct mt7915_dev *dev = phy->dev;
 	bool band = phy->mt76->band_idx;
+=======
+mt7915_fw_ser_set(struct file *file, const char __user *user_buf,
+		  size_t count, loff_t *ppos)
+{
+	struct mt7915_phy *phy = file->private_data;
+	struct mt7915_dev *dev = phy->dev;
+	bool ext_phy = phy != &dev->phy;
+>>>>>>> b7ba80a49124 (Commit)
 	char buf[16];
 	int ret = 0;
 	u16 val;
@@ -71,6 +80,7 @@ mt7915_sys_recovery_set(struct file *file, const char __user *user_buf,
 		return -EINVAL;
 
 	switch (val) {
+<<<<<<< HEAD
 	/*
 	 * 0: grab firmware current SER state.
 	 * 1: trigger & enable system error L1 recovery.
@@ -84,6 +94,11 @@ mt7915_sys_recovery_set(struct file *file, const char __user *user_buf,
 	 */
 	case SER_QUERY:
 		ret = mt7915_mcu_set_ser(dev, 0, 0, band);
+=======
+	case SER_QUERY:
+		/* grab firmware SER stats */
+		ret = mt7915_mcu_set_ser(dev, 0, 0, ext_phy);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case SER_SET_RECOVER_L1:
 	case SER_SET_RECOVER_L2:
@@ -91,6 +106,7 @@ mt7915_sys_recovery_set(struct file *file, const char __user *user_buf,
 	case SER_SET_RECOVER_L3_TX_ABORT:
 	case SER_SET_RECOVER_L3_TX_DISABLE:
 	case SER_SET_RECOVER_L3_BF:
+<<<<<<< HEAD
 		ret = mt7915_mcu_set_ser(dev, SER_ENABLE, BIT(val), band);
 		if (ret)
 			return ret;
@@ -113,6 +129,13 @@ mt7915_sys_recovery_set(struct file *file, const char __user *user_buf,
 	case SER_SET_SYSTEM_ASSERT:
 		mt76_wr(dev, MT_MCU_WM_CIRQ_EINT_MASK_CLR_ADDR, BIT(18));
 		mt76_wr(dev, MT_MCU_WM_CIRQ_EINT_SOFT_ADDR, BIT(18));
+=======
+		ret = mt7915_mcu_set_ser(dev, SER_ENABLE, BIT(val), ext_phy);
+		if (ret)
+			return ret;
+
+		ret = mt7915_mcu_set_ser(dev, SER_RECOVER, val, ext_phy);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		break;
@@ -122,20 +145,30 @@ mt7915_sys_recovery_set(struct file *file, const char __user *user_buf,
 }
 
 static ssize_t
+<<<<<<< HEAD
 mt7915_sys_recovery_get(struct file *file, char __user *user_buf,
 			size_t count, loff_t *ppos)
+=======
+mt7915_fw_ser_get(struct file *file, char __user *user_buf,
+		  size_t count, loff_t *ppos)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mt7915_phy *phy = file->private_data;
 	struct mt7915_dev *dev = phy->dev;
 	char *buff;
 	int desc = 0;
 	ssize_t ret;
+<<<<<<< HEAD
 	static const size_t bufsz = 1024;
+=======
+	static const size_t bufsz = 400;
+>>>>>>> b7ba80a49124 (Commit)
 
 	buff = kmalloc(bufsz, GFP_KERNEL);
 	if (!buff)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	/* HELP */
 	desc += scnprintf(buff + desc, bufsz - desc,
 			  "Please echo the correct value ...\n");
@@ -161,6 +194,8 @@ mt7915_sys_recovery_get(struct file *file, char __user *user_buf,
 	/* SER statistics */
 	desc += scnprintf(buff + desc, bufsz - desc,
 			  "\nlet's dump firmware SER statistics...\n");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	desc += scnprintf(buff + desc, bufsz - desc,
 			  "::E  R , SER_STATUS        = 0x%08x\n",
 			  mt76_rr(dev, MT_SWDEF_SER_STATS));
@@ -191,19 +226,28 @@ mt7915_sys_recovery_get(struct file *file, char __user *user_buf,
 	desc += scnprintf(buff + desc, bufsz - desc,
 			  "::E  R , SER_LMAC_WISR7_B1 = 0x%08x\n",
 			  mt76_rr(dev, MT_SWDEF_LAMC_WISR7_BN1_STATS));
+<<<<<<< HEAD
 	desc += scnprintf(buff + desc, bufsz - desc,
 			  "\nSYS_RESET_COUNT: WM %d, WA %d\n",
 			  dev->recovery.wm_reset_count,
 			  dev->recovery.wa_reset_count);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = simple_read_from_buffer(user_buf, count, ppos, buff, desc);
 	kfree(buff);
 	return ret;
 }
 
+<<<<<<< HEAD
 static const struct file_operations mt7915_sys_recovery_ops = {
 	.write = mt7915_sys_recovery_set,
 	.read = mt7915_sys_recovery_get,
+=======
+static const struct file_operations mt7915_fw_ser_ops = {
+	.write = mt7915_fw_ser_set,
+	.read = mt7915_fw_ser_get,
+>>>>>>> b7ba80a49124 (Commit)
 	.open = simple_open,
 	.llseek = default_llseek,
 };
@@ -654,6 +698,13 @@ mt7915_fw_util_wm_show(struct seq_file *file, void *data)
 	struct mt7915_dev *dev = file->private;
 
 	seq_printf(file, "Program counter: 0x%x\n", mt76_rr(dev, MT_WM_MCU_PC));
+<<<<<<< HEAD
+=======
+	seq_printf(file, "Exception state: 0x%x\n",
+		   is_mt7915(&dev->mt76) ?
+		   (u32)mt76_get_field(dev, MT_FW_EXCEPTION, GENMASK(15, 8)) :
+		   (u32)mt76_get_field(dev, MT_FW_EXCEPTION, GENMASK(7, 0)));
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dev->fw.debug_wm) {
 		seq_printf(file, "Busy: %u%%  Peak busy: %u%%\n",
@@ -691,17 +742,29 @@ mt7915_ampdu_stat_read_phy(struct mt7915_phy *phy,
 {
 	struct mt7915_dev *dev = phy->dev;
 	bool ext_phy = phy != &dev->phy;
+<<<<<<< HEAD
 	int bound[15], range[4], i;
 	u8 band = phy->mt76->band_idx;
 
 	/* Tx ampdu stat */
 	for (i = 0; i < ARRAY_SIZE(range); i++)
 		range[i] = mt76_rr(dev, MT_MIB_ARNG(band, i));
+=======
+	int bound[15], range[4], i, n;
+
+	/* Tx ampdu stat */
+	for (i = 0; i < ARRAY_SIZE(range); i++)
+		range[i] = mt76_rr(dev, MT_MIB_ARNG(phy->band_idx, i));
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < ARRAY_SIZE(bound); i++)
 		bound[i] = MT_MIB_ARNCR_RANGE(range[i / 4], i % 4) + 1;
 
+<<<<<<< HEAD
 	seq_printf(file, "\nPhy %d, Phy band %d\n", ext_phy, band);
+=======
+	seq_printf(file, "\nPhy %d, Phy band %d\n", ext_phy, phy->band_idx);
+>>>>>>> b7ba80a49124 (Commit)
 
 	seq_printf(file, "Length: %8d | ", bound[0]);
 	for (i = 0; i < ARRAY_SIZE(bound) - 1; i++)
@@ -709,8 +772,14 @@ mt7915_ampdu_stat_read_phy(struct mt7915_phy *phy,
 			   bound[i] + 1, bound[i + 1]);
 
 	seq_puts(file, "\nCount:  ");
+<<<<<<< HEAD
 	for (i = 0; i < ARRAY_SIZE(bound); i++)
 		seq_printf(file, "%8d | ", phy->mt76->aggr_stats[i]);
+=======
+	n = phy->band_idx ? ARRAY_SIZE(dev->mt76.aggr_stats) / 2 : 0;
+	for (i = 0; i < ARRAY_SIZE(bound); i++)
+		seq_printf(file, "%8d | ", dev->mt76.aggr_stats[i + n]);
+>>>>>>> b7ba80a49124 (Commit)
 	seq_puts(file, "\n");
 
 	seq_printf(file, "BA miss count: %d\n", phy->mib.ba_miss_cnt);
@@ -811,7 +880,11 @@ mt7915_hw_queue_read(struct seq_file *s, u32 size,
 		if (val & BIT(map[i].index))
 			continue;
 
+<<<<<<< HEAD
 		ctrl = BIT(31) | (map[i].pid << 10) | ((u32)map[i].qid << 24);
+=======
+		ctrl = BIT(31) | (map[i].pid << 10) | (map[i].qid << 24);
+>>>>>>> b7ba80a49124 (Commit)
 		mt76_wr(dev, MT_FL_Q0_CTRL, ctrl);
 
 		head = mt76_get_field(dev, MT_FL_Q2_CTRL,
@@ -958,6 +1031,7 @@ mt7915_xmit_queues_show(struct seq_file *file, void *data)
 
 DEFINE_SHOW_ATTRIBUTE(mt7915_xmit_queues);
 
+<<<<<<< HEAD
 #define mt7915_txpower_puts(prefix, rate)					\
 ({										\
 	len += scnprintf(buf + len, sz - len, "%-16s:", #prefix " (tmac)");	\
@@ -1153,6 +1227,37 @@ static const struct file_operations mt7915_rate_txpower_fops = {
 	.owner = THIS_MODULE,
 	.llseek = default_llseek,
 };
+=======
+static int
+mt7915_rate_txpower_show(struct seq_file *file, void *data)
+{
+	static const char * const sku_group_name[] = {
+		"CCK", "OFDM", "HT20", "HT40",
+		"VHT20", "VHT40", "VHT80", "VHT160",
+		"RU26", "RU52", "RU106", "RU242/SU20",
+		"RU484/SU40", "RU996/SU80", "RU2x996/SU160"
+	};
+	struct mt7915_phy *phy = file->private;
+	s8 txpower[MT7915_SKU_RATE_NUM], *buf;
+	int i;
+
+	seq_printf(file, "\nBand %d\n", phy != &phy->dev->phy);
+	mt7915_mcu_get_txpower_sku(phy, txpower, sizeof(txpower));
+	for (i = 0, buf = txpower; i < ARRAY_SIZE(mt7915_sku_group_len); i++) {
+		u8 mcs_num = mt7915_sku_group_len[i];
+
+		if (i >= SKU_VHT_BW20 && i <= SKU_VHT_BW160)
+			mcs_num = 10;
+
+		mt76_seq_puts_array(file, sku_group_name[i], buf, mcs_num);
+		buf += mt7915_sku_group_len[i];
+	}
+
+	return 0;
+}
+
+DEFINE_SHOW_ATTRIBUTE(mt7915_rate_txpower);
+>>>>>>> b7ba80a49124 (Commit)
 
 static int
 mt7915_twt_stats(struct seq_file *s, void *data)
@@ -1181,7 +1286,11 @@ mt7915_twt_stats(struct seq_file *s, void *data)
 }
 
 /* The index of RF registers use the generic regidx, combined with two parts:
+<<<<<<< HEAD
  * WF selection [31:24] and offset [23:0].
+=======
+ * WF selection [31:28] and offset [27:0].
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int
 mt7915_rf_regval_get(void *data, u64 *val)
@@ -1228,8 +1337,12 @@ int mt7915_init_debugfs(struct mt7915_phy *phy)
 	debugfs_create_file("xmit-queues", 0400, dir, phy,
 			    &mt7915_xmit_queues_fops);
 	debugfs_create_file("tx_stats", 0400, dir, phy, &mt7915_tx_stats_fops);
+<<<<<<< HEAD
 	debugfs_create_file("sys_recovery", 0600, dir, phy,
 			    &mt7915_sys_recovery_ops);
+=======
+	debugfs_create_file("fw_ser", 0600, dir, phy, &mt7915_fw_ser_ops);
+>>>>>>> b7ba80a49124 (Commit)
 	debugfs_create_file("fw_debug_wm", 0600, dir, dev, &fops_fw_debug_wm);
 	debugfs_create_file("fw_debug_wa", 0600, dir, dev, &fops_fw_debug_wa);
 	debugfs_create_file("fw_debug_bin", 0600, dir, dev, &fops_fw_debug_bin);
@@ -1245,7 +1358,11 @@ int mt7915_init_debugfs(struct mt7915_phy *phy)
 				    mt7915_twt_stats);
 	debugfs_create_file("rf_regval", 0600, dir, dev, &fops_rf_regval);
 
+<<<<<<< HEAD
 	if (!dev->dbdc_support || phy->mt76->band_idx) {
+=======
+	if (!dev->dbdc_support || phy->band_idx) {
+>>>>>>> b7ba80a49124 (Commit)
 		debugfs_create_u32("dfs_hw_pattern", 0400, dir,
 				   &dev->hw_pattern);
 		debugfs_create_file("radar_trigger", 0200, dir, dev,

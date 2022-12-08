@@ -380,7 +380,12 @@ static const struct v4l2_subdev_ops bt819_ops = {
 
 /* ----------------------------------------------------------------------- */
 
+<<<<<<< HEAD
 static int bt819_probe(struct i2c_client *client)
+=======
+static int bt819_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i, ver;
 	struct bt819 *decoder;
@@ -468,7 +473,11 @@ static struct i2c_driver bt819_driver = {
 	.driver = {
 		.name	= "bt819",
 	},
+<<<<<<< HEAD
 	.probe_new	= bt819_probe,
+=======
+	.probe		= bt819_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= bt819_remove,
 	.id_table	= bt819_id,
 };

@@ -22,7 +22,11 @@
 
 extern void __xchg_called_with_bad_pointer(void);
 
+<<<<<<< HEAD
 #define __arch_xchg(ptr, x, size)				\
+=======
+#define __xchg(ptr, x, size)				\
+>>>>>>> b7ba80a49124 (Commit)
 ({							\
 	unsigned long __xchg__res;			\
 	volatile void *__xchg_ptr = (ptr);		\
@@ -46,7 +50,11 @@ extern void __xchg_called_with_bad_pointer(void);
 })
 
 #define arch_xchg(ptr,x)	\
+<<<<<<< HEAD
 	((__typeof__(*(ptr)))__arch_xchg((ptr),(unsigned long)(x), sizeof(*(ptr))))
+=======
+	((__typeof__(*(ptr)))__xchg((ptr),(unsigned long)(x), sizeof(*(ptr))))
+>>>>>>> b7ba80a49124 (Commit)
 
 /* This function doesn't exist, so you'll get a linker error
  * if something tries to do an invalid cmpxchg(). */

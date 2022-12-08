@@ -826,6 +826,7 @@ static int pci_epf_test_core_init(struct pci_epf *epf)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int pci_epf_test_link_up(struct pci_epf *epf)
 {
 	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
@@ -841,6 +842,35 @@ static const struct pci_epc_event_ops pci_epf_test_event_ops = {
 	.link_up = pci_epf_test_link_up,
 };
 
+=======
+static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+				 void *data)
+{
+	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+	int ret;
+
+	switch (val) {
+	case CORE_INIT:
+		ret = pci_epf_test_core_init(epf);
+		if (ret)
+			return NOTIFY_BAD;
+		break;
+
+	case LINK_UP:
+		queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+				   msecs_to_jiffies(1));
+		break;
+
+	default:
+		dev_err(&epf->dev, "Invalid EPF test notifier event\n");
+		return NOTIFY_BAD;
+	}
+
+	return NOTIFY_OK;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int pci_epf_test_alloc_space(struct pci_epf *epf)
 {
 	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
@@ -967,8 +997,17 @@ static int pci_epf_test_bind(struct pci_epf *epf)
 	if (ret)
 		epf_test->dma_supported = false;
 
+<<<<<<< HEAD
 	if (!linkup_notifier && !core_init_notifier)
 		queue_work(kpcitest_workqueue, &epf_test->cmd_handler.work);
+=======
+	if (linkup_notifier) {
+		epf->nb.notifier_call = pci_epf_test_notifier;
+		pci_epc_register_notifier(epc, &epf->nb);
+	} else {
+		queue_work(kpcitest_workqueue, &epf_test->cmd_handler.work);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -994,8 +1033,11 @@ static int pci_epf_test_probe(struct pci_epf *epf)
 
 	INIT_DELAYED_WORK(&epf_test->cmd_handler, pci_epf_test_cmd_handler);
 
+<<<<<<< HEAD
 	epf->event_ops = &pci_epf_test_event_ops;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	epf_set_drvdata(epf, epf_test);
 	return 0;
 }

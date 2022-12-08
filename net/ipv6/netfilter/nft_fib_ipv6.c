@@ -41,8 +41,11 @@ static int nft_fib6_flowi_init(struct flowi6 *fl6, const struct nft_fib *priv,
 	if (ipv6_addr_type(&fl6->daddr) & IPV6_ADDR_LINKLOCAL) {
 		lookup_flags |= RT6_LOOKUP_F_IFACE;
 		fl6->flowi6_oif = get_ifindex(dev ? dev : pkt->skb->dev);
+<<<<<<< HEAD
 	} else if (priv->flags & NFTA_FIB_F_IIF) {
 		fl6->flowi6_l3mdev = l3mdev_master_ifindex_rcu(dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (ipv6_addr_type(&fl6->saddr) & IPV6_ADDR_UNICAST)
@@ -66,7 +69,10 @@ static u32 __nft_fib6_eval_type(const struct nft_fib *priv,
 	struct flowi6 fl6 = {
 		.flowi6_iif = LOOPBACK_IFINDEX,
 		.flowi6_proto = pkt->tprot,
+<<<<<<< HEAD
 		.flowi6_uid = sock_net_uid(nft_net(pkt), NULL),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	u32 ret = 0;
 
@@ -164,7 +170,10 @@ void nft_fib6_eval(const struct nft_expr *expr, struct nft_regs *regs,
 	struct flowi6 fl6 = {
 		.flowi6_iif = LOOPBACK_IFINDEX,
 		.flowi6_proto = pkt->tprot,
+<<<<<<< HEAD
 		.flowi6_uid = sock_net_uid(nft_net(pkt), NULL),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	struct rt6_info *rt;
 	int lookup_flags;
@@ -201,8 +210,12 @@ void nft_fib6_eval(const struct nft_expr *expr, struct nft_regs *regs,
 	if (rt->rt6i_flags & (RTF_REJECT | RTF_ANYCAST | RTF_LOCAL))
 		goto put_rt_err;
 
+<<<<<<< HEAD
 	if (oif && oif != rt->rt6i_idev->dev &&
 	    l3mdev_master_ifindex_rcu(rt->rt6i_idev->dev) != oif->ifindex)
+=======
+	if (oif && oif != rt->rt6i_idev->dev)
+>>>>>>> b7ba80a49124 (Commit)
 		goto put_rt_err;
 
 	nft_fib_store_result(dest, priv, rt->rt6i_idev->dev);

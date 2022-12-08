@@ -222,16 +222,22 @@ extern void tlb_remove_table(struct mmu_gather *tlb, void *table);
 #define tlb_needs_table_invalidate() (true)
 #endif
 
+<<<<<<< HEAD
 void tlb_remove_table_sync_one(void);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 
 #ifdef tlb_needs_table_invalidate
 #error tlb_needs_table_invalidate() requires MMU_GATHER_RCU_TABLE_FREE
 #endif
 
+<<<<<<< HEAD
 static inline void tlb_remove_table_sync_one(void) { }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_MMU_GATHER_RCU_TABLE_FREE */
 
 
@@ -246,7 +252,11 @@ struct mmu_gather_batch {
 	struct mmu_gather_batch	*next;
 	unsigned int		nr;
 	unsigned int		max;
+<<<<<<< HEAD
 	struct encoded_page	*encoded_pages[];
+=======
+	struct page		*pages[];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define MAX_GATHER_BATCH	\
@@ -260,6 +270,7 @@ struct mmu_gather_batch {
  */
 #define MAX_GATHER_BATCH_COUNT	(10000UL/MAX_GATHER_BATCH)
 
+<<<<<<< HEAD
 extern bool __tlb_remove_page_size(struct mmu_gather *tlb,
 				   struct encoded_page *page,
 				   int page_size);
@@ -285,6 +296,10 @@ extern void tlb_flush_rmaps(struct mmu_gather *tlb, struct vm_area_struct *vma);
 #ifndef tlb_delay_rmap
 #define tlb_delay_rmap(tlb) (false)
 static inline void tlb_flush_rmaps(struct mmu_gather *tlb, struct vm_area_struct *vma) { }
+=======
+extern bool __tlb_remove_page_size(struct mmu_gather *tlb, struct page *page,
+				   int page_size);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 /*
@@ -318,11 +333,14 @@ struct mmu_gather {
 	unsigned int		freed_tables : 1;
 
 	/*
+<<<<<<< HEAD
 	 * Do we have pending delayed rmap removals?
 	 */
 	unsigned int		delayed_rmap : 1;
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * at which levels have we cleared entries?
 	 */
 	unsigned int		cleared_ptes : 1;
@@ -463,6 +481,7 @@ static inline void tlb_flush_mmu_tlbonly(struct mmu_gather *tlb)
 static inline void tlb_remove_page_size(struct mmu_gather *tlb,
 					struct page *page, int page_size)
 {
+<<<<<<< HEAD
 	if (__tlb_remove_page_size(tlb, encode_page(page, 0), page_size))
 		tlb_flush_mmu(tlb);
 }
@@ -470,6 +489,15 @@ static inline void tlb_remove_page_size(struct mmu_gather *tlb,
 static __always_inline bool __tlb_remove_page(struct mmu_gather *tlb, struct page *page, unsigned int flags)
 {
 	return __tlb_remove_page_size(tlb, encode_page(page, flags), PAGE_SIZE);
+=======
+	if (__tlb_remove_page_size(tlb, page, page_size))
+		tlb_flush_mmu(tlb);
+}
+
+static inline bool __tlb_remove_page(struct mmu_gather *tlb, struct page *page)
+{
+	return __tlb_remove_page_size(tlb, page, PAGE_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* tlb_remove_page

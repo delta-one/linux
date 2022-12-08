@@ -251,16 +251,25 @@ The tags in common use are:
  - Reported-by: names a user who reported a problem which is fixed by this
    patch; this tag is used to give credit to the (often underappreciated)
    people who test our code and let us know when things do not work
+<<<<<<< HEAD
    correctly. Note, this tag should be followed by a Link: tag pointing to the
    report, unless the report is not available on the web.
+=======
+   correctly.
+>>>>>>> b7ba80a49124 (Commit)
 
  - Cc: the named person received a copy of the patch and had the
    opportunity to comment on it.
 
+<<<<<<< HEAD
 Be careful in the addition of tags to your patches, as only Cc: is appropriate
 for addition without the explicit permission of the person named; using
 Reported-by: is fine most of the time as well, but ask for permission if
 the bug was reported in private.
+=======
+Be careful in the addition of tags to your patches: only Cc: is appropriate
+for addition without the explicit permission of the person named.
+>>>>>>> b7ba80a49124 (Commit)
 
 
 Sending the patch

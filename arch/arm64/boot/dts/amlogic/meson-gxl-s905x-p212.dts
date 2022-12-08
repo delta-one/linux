@@ -7,12 +7,16 @@
 /dts-v1/;
 
 #include "meson-gxl-s905x-p212.dtsi"
+<<<<<<< HEAD
 #include <dt-bindings/sound/meson-aiu.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	compatible = "amlogic,p212", "amlogic,s905x", "amlogic,meson-gxl";
 	model = "Amlogic Meson GXL (S905X) P212 Development Board";
 
+<<<<<<< HEAD
 	dio2133: analog-amplifier {
 		compatible = "simple-audio-amplifier";
 		sound-name-prefix = "AU2";
@@ -20,6 +24,8 @@
 		enable-gpios = <&gpio GPIOH_5 GPIO_ACTIVE_HIGH>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cvbs-connector {
 		compatible = "composite-video-connector";
 
@@ -40,6 +46,7 @@
 			};
 		};
 	};
+<<<<<<< HEAD
 
 	sound {
 		compatible = "amlogic,gx-sound-card";
@@ -100,6 +107,8 @@
 
 &aiu {
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &cec_AO {

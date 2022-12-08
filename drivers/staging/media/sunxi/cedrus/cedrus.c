@@ -45,13 +45,17 @@ static int cedrus_try_ctrl(struct v4l2_ctrl *ctrl)
 	} else if (ctrl->id == V4L2_CID_STATELESS_HEVC_SPS) {
 		const struct v4l2_ctrl_hevc_sps *sps = ctrl->p_new.p_hevc_sps;
 		struct cedrus_ctx *ctx = container_of(ctrl->handler, struct cedrus_ctx, hdl);
+<<<<<<< HEAD
 		unsigned int bit_depth, max_depth;
 		struct vb2_queue *vq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (sps->chroma_format_idc != 1)
 			/* Only 4:2:0 is supported */
 			return -EINVAL;
 
+<<<<<<< HEAD
 		bit_depth = max(sps->bit_depth_luma_minus8,
 				sps->bit_depth_chroma_minus8) + 8;
 
@@ -76,6 +80,20 @@ static int cedrus_try_ctrl(struct v4l2_ctrl *ctrl)
 		} else {
 			ctx->bit_depth = bit_depth;
 			cedrus_reset_cap_format(ctx);
+=======
+		if (sps->bit_depth_luma_minus8 != sps->bit_depth_chroma_minus8)
+			/* Luma and chroma bit depth mismatch */
+			return -EINVAL;
+
+		if (ctx->dev->capabilities & CEDRUS_CAPABILITY_H265_10_DEC) {
+			if (sps->bit_depth_luma_minus8 != 0 && sps->bit_depth_luma_minus8 != 2)
+				/* Only 8-bit and 10-bit are supported */
+				return -EINVAL;
+		} else {
+			if (sps->bit_depth_luma_minus8 != 0)
+				/* Only 8-bit is supported */
+				return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -91,56 +109,92 @@ static const struct cedrus_control cedrus_controls[] = {
 		.cfg = {
 			.id	= V4L2_CID_STATELESS_MPEG2_SEQUENCE,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_MPEG2_DEC,
+=======
+		.codec		= CEDRUS_CODEC_MPEG2,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
 			.id	= V4L2_CID_STATELESS_MPEG2_PICTURE,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_MPEG2_DEC,
+=======
+		.codec		= CEDRUS_CODEC_MPEG2,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
 			.id	= V4L2_CID_STATELESS_MPEG2_QUANTISATION,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_MPEG2_DEC,
+=======
+		.codec		= CEDRUS_CODEC_MPEG2,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
 			.id	= V4L2_CID_STATELESS_H264_DECODE_PARAMS,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H264_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H264,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
 			.id	= V4L2_CID_STATELESS_H264_SLICE_PARAMS,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H264_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H264,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
 			.id	= V4L2_CID_STATELESS_H264_SPS,
 			.ops	= &cedrus_ctrl_ops,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H264_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H264,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
 			.id	= V4L2_CID_STATELESS_H264_PPS,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H264_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H264,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
 			.id	= V4L2_CID_STATELESS_H264_SCALING_MATRIX,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H264_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H264,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
 			.id	= V4L2_CID_STATELESS_H264_PRED_WEIGHTS,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H264_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H264,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
@@ -148,7 +202,11 @@ static const struct cedrus_control cedrus_controls[] = {
 			.max	= V4L2_STATELESS_H264_DECODE_MODE_SLICE_BASED,
 			.def	= V4L2_STATELESS_H264_DECODE_MODE_SLICE_BASED,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H264_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H264,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
@@ -156,7 +214,11 @@ static const struct cedrus_control cedrus_controls[] = {
 			.max	= V4L2_STATELESS_H264_START_CODE_NONE,
 			.def	= V4L2_STATELESS_H264_START_CODE_NONE,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H264_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H264,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	/*
 	 * We only expose supported profiles information,
@@ -174,20 +236,32 @@ static const struct cedrus_control cedrus_controls[] = {
 			.menu_skip_mask =
 				BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H264_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H264,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
 			.id	= V4L2_CID_STATELESS_HEVC_SPS,
 			.ops	= &cedrus_ctrl_ops,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H265_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H265,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
 			.id	= V4L2_CID_STATELESS_HEVC_PPS,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H265_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H265,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
@@ -195,13 +269,21 @@ static const struct cedrus_control cedrus_controls[] = {
 			/* The driver can only handle 1 entry per slice for now */
 			.dims   = { 1 },
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H265_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H265,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
 			.id	= V4L2_CID_STATELESS_HEVC_SCALING_MATRIX,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H265_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H265,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
@@ -211,7 +293,11 @@ static const struct cedrus_control cedrus_controls[] = {
 			.max = 0xffffffff,
 			.step = 1,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H265_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H265,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
@@ -219,7 +305,11 @@ static const struct cedrus_control cedrus_controls[] = {
 			.max	= V4L2_STATELESS_HEVC_DECODE_MODE_SLICE_BASED,
 			.def	= V4L2_STATELESS_HEVC_DECODE_MODE_SLICE_BASED,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H265_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H265,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
@@ -227,19 +317,31 @@ static const struct cedrus_control cedrus_controls[] = {
 			.max	= V4L2_STATELESS_HEVC_START_CODE_NONE,
 			.def	= V4L2_STATELESS_HEVC_START_CODE_NONE,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H265_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H265,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
 			.id	= V4L2_CID_STATELESS_VP8_FRAME,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_VP8_DEC,
+=======
+		.codec		= CEDRUS_CODEC_VP8,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.cfg = {
 			.id = V4L2_CID_STATELESS_HEVC_DECODE_PARAMS,
 		},
+<<<<<<< HEAD
 		.capabilities	= CEDRUS_CAPABILITY_H265_DEC,
+=======
+		.codec		= CEDRUS_CODEC_H265,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 
@@ -272,7 +374,11 @@ static int cedrus_init_ctrls(struct cedrus_dev *dev, struct cedrus_ctx *ctx)
 	struct v4l2_ctrl_handler *hdl = &ctx->hdl;
 	struct v4l2_ctrl *ctrl;
 	unsigned int ctrl_size;
+<<<<<<< HEAD
 	unsigned int i, j;
+=======
+	unsigned int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	v4l2_ctrl_handler_init(hdl, CEDRUS_CONTROLS_COUNT);
 	if (hdl->error) {
@@ -288,11 +394,15 @@ static int cedrus_init_ctrls(struct cedrus_dev *dev, struct cedrus_ctx *ctx)
 	if (!ctx->ctrls)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	j = 0;
 	for (i = 0; i < CEDRUS_CONTROLS_COUNT; i++) {
 		if (!cedrus_is_capable(ctx, cedrus_controls[i].capabilities))
 			continue;
 
+=======
+	for (i = 0; i < CEDRUS_CONTROLS_COUNT; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		ctrl = v4l2_ctrl_new_custom(hdl, &cedrus_controls[i].cfg,
 					    NULL);
 		if (hdl->error) {
@@ -307,7 +417,11 @@ static int cedrus_init_ctrls(struct cedrus_dev *dev, struct cedrus_ctx *ctx)
 			return hdl->error;
 		}
 
+<<<<<<< HEAD
 		ctx->ctrls[j++] = ctrl;
+=======
+		ctx->ctrls[i] = ctrl;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ctx->fh.ctrl_handler = hdl;
@@ -368,12 +482,20 @@ static int cedrus_open(struct file *file)
 	v4l2_fh_init(&ctx->fh, video_devdata(file));
 	file->private_data = &ctx->fh;
 	ctx->dev = dev;
+<<<<<<< HEAD
 	ctx->bit_depth = 8;
+=======
+
+	ret = cedrus_init_ctrls(dev, ctx);
+	if (ret)
+		goto err_free;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctx->fh.m2m_ctx = v4l2_m2m_ctx_init(dev->m2m_dev, ctx,
 					    &cedrus_queue_init);
 	if (IS_ERR(ctx->fh.m2m_ctx)) {
 		ret = PTR_ERR(ctx->fh.m2m_ctx);
+<<<<<<< HEAD
 		goto err_free;
 	}
 
@@ -382,6 +504,20 @@ static int cedrus_open(struct file *file)
 	ret = cedrus_init_ctrls(dev, ctx);
 	if (ret)
 		goto err_m2m_release;
+=======
+		goto err_ctrls;
+	}
+	ctx->dst_fmt.pixelformat = V4L2_PIX_FMT_NV12_32L32;
+	cedrus_prepare_format(&ctx->dst_fmt);
+	ctx->src_fmt.pixelformat = V4L2_PIX_FMT_MPEG2_SLICE;
+	/*
+	 * TILED_NV12 has more strict requirements, so copy the width and
+	 * height to src_fmt to ensure that is matches the dst_fmt resolution.
+	 */
+	ctx->src_fmt.width = ctx->dst_fmt.width;
+	ctx->src_fmt.height = ctx->dst_fmt.height;
+	cedrus_prepare_format(&ctx->src_fmt);
+>>>>>>> b7ba80a49124 (Commit)
 
 	v4l2_fh_add(&ctx->fh);
 
@@ -389,8 +525,13 @@ static int cedrus_open(struct file *file)
 
 	return 0;
 
+<<<<<<< HEAD
 err_m2m_release:
 	v4l2_m2m_ctx_release(ctx->fh.m2m_ctx);
+=======
+err_ctrls:
+	v4l2_ctrl_handler_free(&ctx->hdl);
+>>>>>>> b7ba80a49124 (Commit)
 err_free:
 	kfree(ctx);
 	mutex_unlock(&dev->dev_mutex);
@@ -471,6 +612,14 @@ static int cedrus_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+<<<<<<< HEAD
+=======
+	dev->dec_ops[CEDRUS_CODEC_MPEG2] = &cedrus_dec_ops_mpeg2;
+	dev->dec_ops[CEDRUS_CODEC_H264] = &cedrus_dec_ops_h264;
+	dev->dec_ops[CEDRUS_CODEC_H265] = &cedrus_dec_ops_h265;
+	dev->dec_ops[CEDRUS_CODEC_VP8] = &cedrus_dec_ops_vp8;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&dev->dev_mutex);
 
 	INIT_DELAYED_WORK(&dev->watchdog_work, cedrus_watchdog);

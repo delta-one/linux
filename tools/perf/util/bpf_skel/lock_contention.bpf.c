@@ -5,11 +5,17 @@
 #include <bpf/bpf_tracing.h>
 #include <bpf/bpf_core_read.h>
 
+<<<<<<< HEAD
 #include "lock_data.h"
+=======
+/* maximum stack trace depth */
+#define MAX_STACKS   8
+>>>>>>> b7ba80a49124 (Commit)
 
 /* default buffer size */
 #define MAX_ENTRIES  10240
 
+<<<<<<< HEAD
 /* for collect_lock_syms().  4096 was rejected by the verifier */
 #define MAX_CPUS  1024
 
@@ -20,6 +26,19 @@
 #define LCB_F_RT	(1U << 3)
 #define LCB_F_PERCPU	(1U << 4)
 #define LCB_F_MUTEX	(1U << 5)
+=======
+struct contention_key {
+	__s32 stack_id;
+};
+
+struct contention_data {
+	__u64 total_time;
+	__u64 min_time;
+	__u64 max_time;
+	__u32 count;
+	__u32 flags;
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 struct tstamp_data {
 	__u64 timestamp;
@@ -32,16 +51,27 @@ struct tstamp_data {
 struct {
 	__uint(type, BPF_MAP_TYPE_STACK_TRACE);
 	__uint(key_size, sizeof(__u32));
+<<<<<<< HEAD
 	__uint(value_size, sizeof(__u64));
+=======
+	__uint(value_size, MAX_STACKS * sizeof(__u64));
+>>>>>>> b7ba80a49124 (Commit)
 	__uint(max_entries, MAX_ENTRIES);
 } stacks SEC(".maps");
 
 /* maintain timestamp at the beginning of contention */
 struct {
+<<<<<<< HEAD
 	__uint(type, BPF_MAP_TYPE_HASH);
 	__type(key, int);
 	__type(value, struct tstamp_data);
 	__uint(max_entries, MAX_ENTRIES);
+=======
+	__uint(type, BPF_MAP_TYPE_TASK_STORAGE);
+	__uint(map_flags, BPF_F_NO_PREALLOC);
+	__type(key, int);
+	__type(value, struct tstamp_data);
+>>>>>>> b7ba80a49124 (Commit)
 } tstamp SEC(".maps");
 
 /* actual lock contention statistics */
@@ -55,6 +85,7 @@ struct {
 struct {
 	__uint(type, BPF_MAP_TYPE_HASH);
 	__uint(key_size, sizeof(__u32));
+<<<<<<< HEAD
 	__uint(value_size, sizeof(struct contention_task_data));
 	__uint(max_entries, MAX_ENTRIES);
 } task_data SEC(".maps");
@@ -69,6 +100,8 @@ struct {
 struct {
 	__uint(type, BPF_MAP_TYPE_HASH);
 	__uint(key_size, sizeof(__u32));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__uint(value_size, sizeof(__u8));
 	__uint(max_entries, 1);
 } cpu_filter SEC(".maps");
@@ -80,6 +113,7 @@ struct {
 	__uint(max_entries, 1);
 } task_filter SEC(".maps");
 
+<<<<<<< HEAD
 struct {
 	__uint(type, BPF_MAP_TYPE_HASH);
 	__uint(key_size, sizeof(__u32));
@@ -110,10 +144,13 @@ struct mm_struct___new {
 	struct rw_semaphore mmap_lock;
 } __attribute__((preserve_access_index));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* control flags */
 int enabled;
 int has_cpu;
 int has_task;
+<<<<<<< HEAD
 int has_type;
 int has_addr;
 int needs_callstack;
@@ -127,6 +164,13 @@ int aggr_mode;
 int lost;
 
 static inline int can_record(u64 *ctx)
+=======
+
+/* error stat */
+unsigned long lost;
+
+static inline int can_record(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (has_cpu) {
 		__u32 cpu = bpf_get_smp_processor_id();
@@ -146,6 +190,7 @@ static inline int can_record(u64 *ctx)
 			return 0;
 	}
 
+<<<<<<< HEAD
 	if (has_type) {
 		__u8 *ok;
 		__u32 flags = (__u32)ctx[1];
@@ -319,28 +364,67 @@ int contention_begin(u64 *ctx)
 		}
 	}
 
+=======
+	return 1;
+}
+
+SEC("tp_btf/contention_begin")
+int contention_begin(u64 *ctx)
+{
+	struct task_struct *curr;
+	struct tstamp_data *pelem;
+
+	if (!enabled || !can_record())
+		return 0;
+
+	curr = bpf_get_current_task_btf();
+	pelem = bpf_task_storage_get(&tstamp, curr, NULL,
+				     BPF_LOCAL_STORAGE_GET_F_CREATE);
+	if (!pelem || pelem->lock)
+		return 0;
+
+	pelem->timestamp = bpf_ktime_get_ns();
+	pelem->lock = (__u64)ctx[0];
+	pelem->flags = (__u32)ctx[1];
+	pelem->stack_id = bpf_get_stackid(ctx, &stacks, BPF_F_FAST_STACK_CMP);
+
+	if (pelem->stack_id < 0)
+		lost++;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 SEC("tp_btf/contention_end")
 int contention_end(u64 *ctx)
 {
+<<<<<<< HEAD
 	__u32 pid;
 	struct tstamp_data *pelem;
 	struct contention_key key = {};
+=======
+	struct task_struct *curr;
+	struct tstamp_data *pelem;
+	struct contention_key key;
+>>>>>>> b7ba80a49124 (Commit)
 	struct contention_data *data;
 	__u64 duration;
 
 	if (!enabled)
 		return 0;
 
+<<<<<<< HEAD
 	pid = bpf_get_current_pid_tgid();
 	pelem = bpf_map_lookup_elem(&tstamp, &pid);
+=======
+	curr = bpf_get_current_task_btf();
+	pelem = bpf_task_storage_get(&tstamp, curr, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!pelem || pelem->lock != ctx[0])
 		return 0;
 
 	duration = bpf_ktime_get_ns() - pelem->timestamp;
 
+<<<<<<< HEAD
 	switch (aggr_mode) {
 	case LOCK_AGGR_CALLER:
 		key.stack_id = pelem->stack_id;
@@ -363,6 +447,9 @@ int contention_end(u64 *ctx)
 		return 0;
 	}
 
+=======
+	key.stack_id = pelem->stack_id;
+>>>>>>> b7ba80a49124 (Commit)
 	data = bpf_map_lookup_elem(&lock_stat, &key);
 	if (!data) {
 		struct contention_data first = {
@@ -373,11 +460,16 @@ int contention_end(u64 *ctx)
 			.flags = pelem->flags,
 		};
 
+<<<<<<< HEAD
 		if (aggr_mode == LOCK_AGGR_ADDR)
 			first.flags |= check_lock_type(pelem->lock, pelem->flags);
 
 		bpf_map_update_elem(&lock_stat, &key, &first, BPF_NOEXIST);
 		bpf_map_delete_elem(&tstamp, &pid);
+=======
+		bpf_map_update_elem(&lock_stat, &key, &first, BPF_NOEXIST);
+		pelem->lock = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
@@ -390,6 +482,7 @@ int contention_end(u64 *ctx)
 	if (data->min_time > duration)
 		data->min_time = duration;
 
+<<<<<<< HEAD
 	bpf_map_delete_elem(&tstamp, &pid);
 	return 0;
 }
@@ -412,6 +505,9 @@ int BPF_PROG(collect_lock_syms)
 		lock_flag = LOCK_CLASS_RQLOCK;
 		bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
 	}
+=======
+	pelem->lock = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

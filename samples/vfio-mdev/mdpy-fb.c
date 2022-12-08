@@ -109,7 +109,11 @@ static int mdpy_fb_probe(struct pci_dev *pdev,
 
 	ret = pci_request_regions(pdev, "mdpy-fb");
 	if (ret < 0)
+<<<<<<< HEAD
 		goto err_disable_dev;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pci_read_config_dword(pdev, MDPY_FORMAT_OFFSET, &format);
 	pci_read_config_dword(pdev, MDPY_WIDTH_OFFSET,	&width);
@@ -161,6 +165,17 @@ static int mdpy_fb_probe(struct pci_dev *pdev,
 		goto err_release_fb;
 	}
 
+<<<<<<< HEAD
+=======
+	info->apertures = alloc_apertures(1);
+	if (!info->apertures) {
+		ret = -ENOMEM;
+		goto err_unmap;
+	}
+	info->apertures->ranges[0].base = info->fix.smem_start;
+	info->apertures->ranges[0].size = info->fix.smem_len;
+
+>>>>>>> b7ba80a49124 (Commit)
 	info->fbops = &mdpy_fb_ops;
 	info->flags = FBINFO_DEFAULT;
 	info->pseudo_palette = par->palette;
@@ -183,9 +198,12 @@ err_release_fb:
 err_release_regions:
 	pci_release_regions(pdev);
 
+<<<<<<< HEAD
 err_disable_dev:
 	pci_disable_device(pdev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -194,10 +212,14 @@ static void mdpy_fb_remove(struct pci_dev *pdev)
 	struct fb_info *info = pci_get_drvdata(pdev);
 
 	unregister_framebuffer(info);
+<<<<<<< HEAD
 	iounmap(info->screen_base);
 	framebuffer_release(info);
 	pci_release_regions(pdev);
 	pci_disable_device(pdev);
+=======
+	framebuffer_release(info);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct pci_device_id mdpy_fb_pci_table[] = {

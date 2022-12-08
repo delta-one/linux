@@ -126,7 +126,11 @@
 				     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
 		};
 
+<<<<<<< HEAD
 		uart0: serial@fd883000 {
+=======
+		uart0: uart@fd883000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "ns16550a";
 			reg = <0x0 0xfd883000 0x0 0x1000>;
 			clock-frequency = <375000000>;
@@ -135,7 +139,11 @@
 			reg-io-width = <4>;
 		};
 
+<<<<<<< HEAD
 		uart1: serial@fd884000 {
+=======
+		uart1: uart@fd884000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "ns16550a";
 			reg = <0x0 0xfd884000 0x0 0x1000>;
 			clock-frequency = <375000000>;

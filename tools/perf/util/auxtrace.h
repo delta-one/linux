@@ -15,7 +15,11 @@
 #include <linux/list.h>
 #include <linux/perf_event.h>
 #include <linux/types.h>
+<<<<<<< HEAD
 #include <perf/cpumap.h>
+=======
+#include <internal/cpumap.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/bitsperlong.h>
 #include <asm/barrier.h>
 
@@ -48,7 +52,10 @@ enum auxtrace_type {
 	PERF_AUXTRACE_CS_ETM,
 	PERF_AUXTRACE_ARM_SPE,
 	PERF_AUXTRACE_S390_CPUMSF,
+<<<<<<< HEAD
 	PERF_AUXTRACE_HISI_PTT,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum itrace_period_type {
@@ -71,9 +78,12 @@ enum itrace_period_type {
  * @inject: indicates the event (not just the sample) must be fully synthesized
  *          because 'perf inject' will write it out
  * @instructions: whether to synthesize 'instructions' events
+<<<<<<< HEAD
  * @cycles: whether to synthesize 'cycles' events
  *          (not fully accurate, since CYC packets are only emitted
  *          together with other events, such as branches)
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @branches: whether to synthesize 'branches' events
  *            (branch misses only for Arm SPE)
  * @transactions: whether to synthesize events for transactions
@@ -122,7 +132,10 @@ struct itrace_synth_opts {
 	bool			default_no_sample;
 	bool			inject;
 	bool			instructions;
+<<<<<<< HEAD
 	bool			cycles;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool			branches;
 	bool			transactions;
 	bool			ptwrites;
@@ -647,7 +660,10 @@ bool auxtrace__evsel_is_auxtrace(struct perf_session *session,
 
 #define ITRACE_HELP \
 "				i[period]:    		synthesize instructions events\n" \
+<<<<<<< HEAD
 "				y[period]:    		synthesize cycles events (same period as i)\n" \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 "				b:	    		synthesize branches events (branch misses for Arm SPE)\n" \
 "				c:	    		synthesize branches events (calls only)\n"	\
 "				r:	    		synthesize branches events (returns only)\n" \
@@ -679,7 +695,11 @@ bool auxtrace__evsel_is_auxtrace(struct perf_session *session,
 "				A:			approximate IPC\n" \
 "				Z:			prefer to ignore timestamps (so-called \"timeless\" decoding)\n" \
 "				PERIOD[ns|us|ms|i|t]:   specify period to sample stream\n" \
+<<<<<<< HEAD
 "				concatenate multiple options. Default is iybxwpe or cewp\n"
+=======
+"				concatenate multiple options. Default is ibxwpe or cewp\n"
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline
 void itrace_synth_opts__set_time_range(struct itrace_synth_opts *opts,

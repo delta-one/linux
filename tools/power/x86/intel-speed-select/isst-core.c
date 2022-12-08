@@ -156,6 +156,7 @@ void isst_get_uncore_p0_p1_info(struct isst_id *id, int config_index,
 {
 	unsigned int resp;
 	int ret;
+<<<<<<< HEAD
 
 	ctdp_level->uncore_pm = 0;
 	ctdp_level->uncore_p0 = 0;
@@ -179,6 +180,8 @@ void isst_get_uncore_p0_p1_info(struct isst_id *id, int config_index,
 	return;
 
 try_uncore_mbox:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = isst_send_mbox_command(id->cpu, CONFIG_TDP,
 				     CONFIG_TDP_GET_UNCORE_P0_P1_INFO, 0,
 				     config_index, &resp);

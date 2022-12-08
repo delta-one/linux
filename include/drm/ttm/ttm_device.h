@@ -141,7 +141,11 @@ struct ttm_device_funcs {
 	 * the graphics address space
 	 * @ctx: context for this move with parameters
 	 * @new_mem: the new memory region receiving the buffer
+<<<<<<< HEAD
 	 * @hop: placement for driver directed intermediate hop
+=======
+	 @ @hop: placement for driver directed intermediate hop
+>>>>>>> b7ba80a49124 (Commit)
 	 *
 	 * Move a buffer between two memory regions.
 	 * Returns errno -EMULTIHOP if driver requests a hop
@@ -252,6 +256,14 @@ struct ttm_device {
 	spinlock_t lru_lock;
 
 	/**
+<<<<<<< HEAD
+=======
+	 * @ddestroy: Destroyed but not yet cleaned up buffer objects.
+	 */
+	struct list_head ddestroy;
+
+	/**
+>>>>>>> b7ba80a49124 (Commit)
 	 * @pinned: Buffer objects which are pinned and so not on any LRU list.
 	 */
 	struct list_head pinned;
@@ -265,7 +277,11 @@ struct ttm_device {
 	/**
 	 * @wq: Work queue structure for the delayed delete workqueue.
 	 */
+<<<<<<< HEAD
 	struct workqueue_struct *wq;
+=======
+	struct delayed_work wq;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int ttm_global_swapout(struct ttm_operation_ctx *ctx, gfp_t gfp_flags);

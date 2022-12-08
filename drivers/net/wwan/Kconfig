@@ -94,7 +94,11 @@ config RPMSG_WWAN_CTRL
 
 config IOSM
 	tristate "IOSM Driver for Intel M.2 WWAN Device"
+<<<<<<< HEAD
 	depends on PCI
+=======
+	depends on INTEL_IOMMU
+>>>>>>> b7ba80a49124 (Commit)
 	select NET_DEVLINK
 	select RELAY if WWAN_DEBUGFS
 	help
@@ -108,7 +112,10 @@ config IOSM
 config MTK_T7XX
 	tristate "MediaTek PCIe 5G WWAN modem T7xx device"
 	depends on PCI
+<<<<<<< HEAD
 	select RELAY if WWAN_DEBUGFS
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Enables MediaTek PCIe based 5G WWAN modem (T7xx series) device.
 	  Adapts WWAN framework and provides network interface like wwan0

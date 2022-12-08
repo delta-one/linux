@@ -62,6 +62,12 @@ enum {
 	SRP_DEFAULT_CMD_SQ_SIZE = SRP_DEFAULT_QUEUE_SIZE - SRP_RSP_SQ_SIZE -
 				  SRP_TSK_MGMT_SQ_SIZE,
 
+<<<<<<< HEAD
+=======
+	SRP_TAG_NO_REQ		= ~0U,
+	SRP_TAG_TSK_MGMT	= 1U << 31,
+
+>>>>>>> b7ba80a49124 (Commit)
 	SRP_MAX_PAGES_PER_MR	= 512,
 
 	SRP_MAX_ADD_CDB_LEN	= 16,
@@ -76,11 +82,14 @@ enum {
 				  sizeof(struct srp_imm_buf),
 };
 
+<<<<<<< HEAD
 enum {
 	SRP_TAG_NO_REQ		= ~0U,
 	SRP_TAG_TSK_MGMT	= BIT(31),
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum srp_target_state {
 	SRP_TARGET_SCANNING,
 	SRP_TARGET_LIVE,
@@ -122,7 +131,11 @@ struct srp_device {
  */
 struct srp_host {
 	struct srp_device      *srp_dev;
+<<<<<<< HEAD
 	u32			port;
+=======
+	u8			port;
+>>>>>>> b7ba80a49124 (Commit)
 	struct device		dev;
 	struct list_head	target_list;
 	spinlock_t		target_lock;

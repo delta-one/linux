@@ -1561,10 +1561,17 @@ int irq_chip_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct device *irq_get_pm_device(struct irq_data *data)
 {
 	if (data->domain)
 		return data->domain->pm_dev;
+=======
+static struct device *irq_get_parent_device(struct irq_data *data)
+{
+	if (data->domain)
+		return data->domain->dev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return NULL;
 }
@@ -1578,7 +1585,11 @@ static struct device *irq_get_pm_device(struct irq_data *data)
  */
 int irq_chip_pm_get(struct irq_data *data)
 {
+<<<<<<< HEAD
 	struct device *dev = irq_get_pm_device(data);
+=======
+	struct device *dev = irq_get_parent_device(data);
+>>>>>>> b7ba80a49124 (Commit)
 	int retval = 0;
 
 	if (IS_ENABLED(CONFIG_PM) && dev)
@@ -1597,7 +1608,11 @@ int irq_chip_pm_get(struct irq_data *data)
  */
 int irq_chip_pm_put(struct irq_data *data)
 {
+<<<<<<< HEAD
 	struct device *dev = irq_get_pm_device(data);
+=======
+	struct device *dev = irq_get_parent_device(data);
+>>>>>>> b7ba80a49124 (Commit)
 	int retval = 0;
 
 	if (IS_ENABLED(CONFIG_PM) && dev)

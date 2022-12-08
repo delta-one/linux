@@ -122,6 +122,7 @@ static inline int get_pci_sbdf_id(struct pci_dev *pdev)
 	return PCI_SEG_DEVID_TO_SBDF(seg, devid);
 }
 
+<<<<<<< HEAD
 static inline void *alloc_pgtable_page(int nid, gfp_t gfp)
 {
 	struct page *page;
@@ -130,6 +131,8 @@ static inline void *alloc_pgtable_page(int nid, gfp_t gfp)
 	return page ? page_address(page) : NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern bool translation_pre_enabled(struct amd_iommu *iommu);
 extern bool amd_iommu_is_attach_deferred(struct device *dev);
 extern int __init add_special_device(u8 type, u8 id, u32 *devid,

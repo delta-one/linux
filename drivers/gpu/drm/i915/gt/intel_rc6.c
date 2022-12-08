@@ -301,7 +301,11 @@ static int chv_rc6_init(struct intel_rc6 *rc6)
 	pcbr = intel_uncore_read(uncore, VLV_PCBR);
 	if ((pcbr >> VLV_PCBR_ADDR_SHIFT) == 0) {
 		drm_dbg(&i915->drm, "BIOS didn't set up PCBR, fixing up\n");
+<<<<<<< HEAD
 		paddr = i915->dsm.stolen.end + 1 - pctx_size;
+=======
+		paddr = i915->dsm.end + 1 - pctx_size;
+>>>>>>> b7ba80a49124 (Commit)
 		GEM_BUG_ON(paddr > U32_MAX);
 
 		pctx_paddr = (paddr & ~4095);
@@ -325,7 +329,11 @@ static int vlv_rc6_init(struct intel_rc6 *rc6)
 		/* BIOS set it up already, grab the pre-alloc'd space */
 		resource_size_t pcbr_offset;
 
+<<<<<<< HEAD
 		pcbr_offset = (pcbr & ~4095) - i915->dsm.stolen.start;
+=======
+		pcbr_offset = (pcbr & ~4095) - i915->dsm.start;
+>>>>>>> b7ba80a49124 (Commit)
 		pctx = i915_gem_object_create_region_at(i915->mm.stolen_region,
 							pcbr_offset,
 							pctx_size,
@@ -354,10 +362,17 @@ static int vlv_rc6_init(struct intel_rc6 *rc6)
 	}
 
 	GEM_BUG_ON(range_overflows_end_t(u64,
+<<<<<<< HEAD
 					 i915->dsm.stolen.start,
 					 pctx->stolen->start,
 					 U32_MAX));
 	pctx_paddr = i915->dsm.stolen.start + pctx->stolen->start;
+=======
+					 i915->dsm.start,
+					 pctx->stolen->start,
+					 U32_MAX));
+	pctx_paddr = i915->dsm.start + pctx->stolen->start;
+>>>>>>> b7ba80a49124 (Commit)
 	intel_uncore_write(uncore, VLV_PCBR, pctx_paddr);
 
 out:
@@ -448,8 +463,13 @@ static bool bxt_check_bios_rc6_setup(struct intel_rc6 *rc6)
 	 */
 	rc6_ctx_base =
 		intel_uncore_read(uncore, RC6_CTX_BASE) & RC6_CTX_BASE_MASK;
+<<<<<<< HEAD
 	if (!(rc6_ctx_base >= i915->dsm.reserved.start &&
 	      rc6_ctx_base + PAGE_SIZE < i915->dsm.reserved.end)) {
+=======
+	if (!(rc6_ctx_base >= i915->dsm_reserved.start &&
+	      rc6_ctx_base + PAGE_SIZE < i915->dsm_reserved.end)) {
+>>>>>>> b7ba80a49124 (Commit)
 		drm_dbg(&i915->drm, "RC6 Base address not as expected.\n");
 		enable_rc6 = false;
 	}
@@ -486,7 +506,10 @@ static bool bxt_check_bios_rc6_setup(struct intel_rc6 *rc6)
 static bool rc6_supported(struct intel_rc6 *rc6)
 {
 	struct drm_i915_private *i915 = rc6_to_i915(rc6);
+<<<<<<< HEAD
 	struct intel_gt *gt = rc6_to_gt(rc6);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!HAS_RC6(i915))
 		return false;
@@ -503,6 +526,7 @@ static bool rc6_supported(struct intel_rc6 *rc6)
 		return false;
 	}
 
+<<<<<<< HEAD
 	if (IS_MTL_MEDIA_STEP(gt->i915, STEP_A0, STEP_B0) &&
 	    gt->type == GT_MEDIA) {
 		drm_notice(&i915->drm,
@@ -510,6 +534,8 @@ static bool rc6_supported(struct intel_rc6 *rc6)
 		return false;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -559,6 +585,7 @@ static void __intel_rc6_disable(struct intel_rc6 *rc6)
 	intel_uncore_forcewake_put(uncore, FORCEWAKE_ALL);
 }
 
+<<<<<<< HEAD
 static void rc6_res_reg_init(struct intel_rc6 *rc6)
 {
 	memset(rc6->res_reg, INVALID_MMIO_REG.reg, sizeof(rc6->res_reg));
@@ -576,6 +603,8 @@ static void rc6_res_reg_init(struct intel_rc6 *rc6)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void intel_rc6_init(struct intel_rc6 *rc6)
 {
 	struct drm_i915_private *i915 = rc6_to_i915(rc6);
@@ -587,8 +616,11 @@ void intel_rc6_init(struct intel_rc6 *rc6)
 	if (!rc6_supported(rc6))
 		return;
 
+<<<<<<< HEAD
 	rc6_res_reg_init(rc6);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_CHERRYVIEW(i915))
 		err = chv_rc6_init(rc6);
 	else if (IS_VALLEYVIEW(i915))
@@ -710,7 +742,11 @@ void intel_rc6_fini(struct intel_rc6 *rc6)
 
 	intel_rc6_disable(rc6);
 
+<<<<<<< HEAD
 	pctx = __xchg(&rc6->pctx, 0);
+=======
+	pctx = fetch_and_zero(&rc6->pctx);
+>>>>>>> b7ba80a49124 (Commit)
 	if (pctx)
 		i915_gem_object_put(pctx);
 
@@ -763,19 +799,44 @@ static u64 vlv_residency_raw(struct intel_uncore *uncore, const i915_reg_t reg)
 	return lower | (u64)upper << 8;
 }
 
+<<<<<<< HEAD
 u64 intel_rc6_residency_ns(struct intel_rc6 *rc6, enum intel_rc6_res_type id)
+=======
+u64 intel_rc6_residency_ns(struct intel_rc6 *rc6, const i915_reg_t reg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drm_i915_private *i915 = rc6_to_i915(rc6);
 	struct intel_uncore *uncore = rc6_to_uncore(rc6);
 	u64 time_hw, prev_hw, overflow_hw;
+<<<<<<< HEAD
 	i915_reg_t reg = rc6->res_reg[id];
 	unsigned int fw_domains;
 	unsigned long flags;
+=======
+	unsigned int fw_domains;
+	unsigned long flags;
+	unsigned int i;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 mul, div;
 
 	if (!rc6->supported)
 		return 0;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Store previous hw counter values for counter wrap-around handling.
+	 *
+	 * There are only four interesting registers and they live next to each
+	 * other so we can use the relative address, compared to the smallest
+	 * one as the index into driver storage.
+	 */
+	i = (i915_mmio_reg_offset(reg) -
+	     i915_mmio_reg_offset(GEN6_GT_GFX_RC6_LOCKED)) / sizeof(u32);
+	if (drm_WARN_ON_ONCE(&i915->drm, i >= ARRAY_SIZE(rc6->cur_residency)))
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	fw_domains = intel_uncore_forcewake_for_reg(uncore, reg, FW_REG_READ);
 
 	spin_lock_irqsave(&uncore->lock, flags);
@@ -804,11 +865,19 @@ u64 intel_rc6_residency_ns(struct intel_rc6 *rc6, enum intel_rc6_res_type id)
 	/*
 	 * Counter wrap handling.
 	 *
+<<<<<<< HEAD
 	 * Store previous hw counter values for counter wrap-around handling. But
 	 * relying on a sufficient frequency of queries otherwise counters can still wrap.
 	 */
 	prev_hw = rc6->prev_hw_residency[id];
 	rc6->prev_hw_residency[id] = time_hw;
+=======
+	 * But relying on a sufficient frequency of queries otherwise counters
+	 * can still wrap.
+	 */
+	prev_hw = rc6->prev_hw_residency[i];
+	rc6->prev_hw_residency[i] = time_hw;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* RC6 delta from last sample. */
 	if (time_hw >= prev_hw)
@@ -817,8 +886,13 @@ u64 intel_rc6_residency_ns(struct intel_rc6 *rc6, enum intel_rc6_res_type id)
 		time_hw += overflow_hw - prev_hw;
 
 	/* Add delta to RC6 extended raw driver copy. */
+<<<<<<< HEAD
 	time_hw += rc6->cur_residency[id];
 	rc6->cur_residency[id] = time_hw;
+=======
+	time_hw += rc6->cur_residency[i];
+	rc6->cur_residency[i] = time_hw;
+>>>>>>> b7ba80a49124 (Commit)
 
 	intel_uncore_forcewake_put__locked(uncore, fw_domains);
 	spin_unlock_irqrestore(&uncore->lock, flags);
@@ -826,6 +900,7 @@ u64 intel_rc6_residency_ns(struct intel_rc6 *rc6, enum intel_rc6_res_type id)
 	return mul_u64_u32_div(time_hw, mul, div);
 }
 
+<<<<<<< HEAD
 u64 intel_rc6_residency_us(struct intel_rc6 *rc6, enum intel_rc6_res_type id)
 {
 	return DIV_ROUND_UP_ULL(intel_rc6_residency_ns(rc6, id), 1000);
@@ -842,6 +917,11 @@ void intel_rc6_print_residency(struct seq_file *m, const char *title,
 		seq_printf(m, "%s %u (%llu us)\n", title,
 			   intel_uncore_read(gt->uncore, reg),
 			   intel_rc6_residency_us(&gt->rc6, id));
+=======
+u64 intel_rc6_residency_us(struct intel_rc6 *rc6, i915_reg_t reg)
+{
+	return DIV_ROUND_UP_ULL(intel_rc6_residency_ns(rc6, reg), 1000);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #if IS_ENABLED(CONFIG_DRM_I915_SELFTEST)

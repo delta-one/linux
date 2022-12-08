@@ -17,7 +17,10 @@
 #include <sound/core.h>
 #include <sound/pcm.h>
 #include <sound/pcm_params.h>
+<<<<<<< HEAD
 #include <sound/sdw.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <sound/soc.h>
 #include <sound/soc-dapm.h>
 #include <sound/initval.h>
@@ -51,7 +54,10 @@ static bool rt1308_volatile_register(struct device *dev, unsigned int reg)
 	case 0x3008:
 	case 0x300a:
 	case 0xc000:
+<<<<<<< HEAD
 	case 0xc710:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case 0xc860 ... 0xc863:
 	case 0xc870 ... 0xc873:
 		return true;
@@ -198,6 +204,7 @@ static void rt1308_apply_calib_params(struct rt1308_sdw_priv *rt1308)
 		efuse_c_btl_l, efuse_c_btl_r);
 }
 
+<<<<<<< HEAD
 static void rt1308_apply_bq_params(struct rt1308_sdw_priv *rt1308)
 {
 	unsigned int i, reg, data;
@@ -209,11 +216,16 @@ static void rt1308_apply_bq_params(struct rt1308_sdw_priv *rt1308)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int rt1308_io_init(struct device *dev, struct sdw_slave *slave)
 {
 	struct rt1308_sdw_priv *rt1308 = dev_get_drvdata(dev);
 	int ret = 0;
+<<<<<<< HEAD
 	unsigned int tmp;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rt1308->hw_init)
 		return 0;
@@ -245,10 +257,13 @@ static int rt1308_io_init(struct device *dev, struct sdw_slave *slave)
 	/* sw reset */
 	regmap_write(rt1308->regmap, RT1308_SDW_RESET, 0);
 
+<<<<<<< HEAD
 	regmap_read(rt1308->regmap, 0xc710, &tmp);
 	rt1308->hw_ver = tmp;
 	dev_dbg(dev, "%s, hw_ver=0x%x\n", __func__, rt1308->hw_ver);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* initial settings */
 	regmap_write(rt1308->regmap, 0xc103, 0xc0);
 	regmap_write(rt1308->regmap, 0xc030, 0x17);
@@ -264,6 +279,7 @@ static int rt1308_io_init(struct device *dev, struct sdw_slave *slave)
 	regmap_write(rt1308->regmap, 0xc062, 0x05);
 	regmap_write(rt1308->regmap, 0xc171, 0x07);
 	regmap_write(rt1308->regmap, 0xc173, 0x0d);
+<<<<<<< HEAD
 	if (rt1308->hw_ver == RT1308_VER_C) {
 		regmap_write(rt1308->regmap, 0xc311, 0x7f);
 		regmap_write(rt1308->regmap, 0xc300, 0x09);
@@ -272,6 +288,10 @@ static int rt1308_io_init(struct device *dev, struct sdw_slave *slave)
 		regmap_write(rt1308->regmap, 0xc300, 0x0b);
 	}
 	regmap_write(rt1308->regmap, 0xc900, 0x5a);
+=======
+	regmap_write(rt1308->regmap, 0xc311, 0x7f);
+	regmap_write(rt1308->regmap, 0xc900, 0x90);
+>>>>>>> b7ba80a49124 (Commit)
 	regmap_write(rt1308->regmap, 0xc1a0, 0x84);
 	regmap_write(rt1308->regmap, 0xc1a1, 0x01);
 	regmap_write(rt1308->regmap, 0xc360, 0x78);
@@ -281,6 +301,10 @@ static int rt1308_io_init(struct device *dev, struct sdw_slave *slave)
 	regmap_write(rt1308->regmap, 0xc070, 0x00);
 	regmap_write(rt1308->regmap, 0xc100, 0xd7);
 	regmap_write(rt1308->regmap, 0xc101, 0xd7);
+<<<<<<< HEAD
+=======
+	regmap_write(rt1308->regmap, 0xc300, 0x09);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rt1308->first_hw_init) {
 		regcache_cache_bypass(rt1308->regmap, false);
@@ -508,7 +532,14 @@ static int rt1308_set_sdw_stream(struct snd_soc_dai *dai, void *sdw_stream,
 	stream->sdw_stream = sdw_stream;
 
 	/* Use tx_mask or rx_mask to configure stream tag and set dma_data */
+<<<<<<< HEAD
 	snd_soc_dai_dma_data_set(dai, direction, stream);
+=======
+	if (direction == SNDRV_PCM_STREAM_PLAYBACK)
+		dai->playback_dma_data = stream;
+	else
+		dai->capture_dma_data = stream;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -551,10 +582,18 @@ static int rt1308_sdw_hw_params(struct snd_pcm_substream *substream,
 	struct snd_soc_component *component = dai->component;
 	struct rt1308_sdw_priv *rt1308 =
 		snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
 	struct sdw_stream_config stream_config = {0};
 	struct sdw_port_config port_config = {0};
 	struct sdw_stream_data *stream;
 	int retval;
+=======
+	struct sdw_stream_config stream_config;
+	struct sdw_port_config port_config;
+	enum sdw_data_direction direction;
+	struct sdw_stream_data *stream;
+	int retval, port, num_channels, ch_mask;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_dbg(dai->dev, "%s %s", __func__, dai->name);
 	stream = snd_soc_dai_get_dma_data(dai, substream);
@@ -566,6 +605,7 @@ static int rt1308_sdw_hw_params(struct snd_pcm_substream *substream,
 		return -EINVAL;
 
 	/* SoundWire specific configuration */
+<<<<<<< HEAD
 	snd_sdw_params_to_config(substream, params, &stream_config, &port_config);
 
 	/* port 1 for playback */
@@ -579,6 +619,32 @@ static int rt1308_sdw_hw_params(struct snd_pcm_substream *substream,
 		port_config.ch_mask = rt1308->rx_mask;
 	}
 
+=======
+	/* port 1 for playback */
+	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+		direction = SDW_DATA_DIR_RX;
+		port = 1;
+	} else {
+		return -EINVAL;
+	}
+
+	if (rt1308->slots) {
+		num_channels = rt1308->slots;
+		ch_mask = rt1308->rx_mask;
+	} else {
+		num_channels = params_channels(params);
+		ch_mask = (1 << num_channels) - 1;
+	}
+
+	stream_config.frame_rate = params_rate(params);
+	stream_config.ch_count = num_channels;
+	stream_config.bps = snd_pcm_format_width(params_format(params));
+	stream_config.direction = direction;
+
+	port_config.ch_mask = ch_mask;
+	port_config.num = port;
+
+>>>>>>> b7ba80a49124 (Commit)
 	retval = sdw_stream_add_slave(rt1308->sdw_slave, &stream_config,
 				&port_config, 1, stream->sdw_stream);
 	if (retval) {
@@ -616,6 +682,7 @@ static const struct sdw_slave_ops rt1308_slave_ops = {
 	.bus_config = rt1308_bus_config,
 };
 
+<<<<<<< HEAD
 static int rt1308_sdw_parse_dt(struct rt1308_sdw_priv *rt1308, struct device *dev)
 {
 	int ret = 0;
@@ -645,13 +712,22 @@ static int rt1308_sdw_component_probe(struct snd_soc_component *component)
 	rt1308->component = component;
 	rt1308_sdw_parse_dt(rt1308, &rt1308->sdw_slave->dev);
 
+=======
+static int rt1308_sdw_component_probe(struct snd_soc_component *component)
+{
+	int ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = pm_runtime_resume(component->dev);
 	if (ret < 0 && ret != -EACCES)
 		return ret;
 
+<<<<<<< HEAD
 	/* apply BQ params */
 	rt1308_apply_bq_params(rt1308);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

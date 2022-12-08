@@ -38,7 +38,10 @@ struct v4l2_subdev;
 struct v4l2_subdev_fh;
 struct tuner_setup;
 struct v4l2_mbus_frame_desc;
+<<<<<<< HEAD
 struct led_classdev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct v4l2_decode_vbi_line - used to decode_vbi_line
@@ -177,10 +180,14 @@ struct v4l2_subdev_io_pin_config {
  * @s_register: callback for VIDIOC_DBG_S_REGISTER() ioctl handler code.
  *
  * @s_power: puts subdevice in power saving mode (on == 0) or normal operation
+<<<<<<< HEAD
  *	mode (on == 1). DEPRECATED. See
  *	Documentation/driver-api/media/camera-sensor.rst . pre_streamon and
  *	post_streamoff callbacks can be used for e.g. setting the bus to LP-11
  *	mode before s_stream is called.
+=======
+ *	mode (on == 1).
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @interrupt_service_routine: Called by the bridge chip's interrupt service
  *	handler, when an interrupt status has be raised due to this subdev,
@@ -346,7 +353,10 @@ enum v4l2_mbus_frame_desc_flags {
  * struct v4l2_mbus_frame_desc_entry - media bus frame description structure
  *
  * @flags:	bitmask flags, as defined by &enum v4l2_mbus_frame_desc_flags.
+<<<<<<< HEAD
  * @stream:	stream in routing configuration
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @pixelcode:	media bus pixel code, valid if @flags
  *		%FRAME_DESC_FL_BLOB is not set.
  * @length:	number of octets per frame, valid if @flags
@@ -356,7 +366,10 @@ enum v4l2_mbus_frame_desc_flags {
  */
 struct v4l2_mbus_frame_desc_entry {
 	enum v4l2_mbus_frame_desc_flags flags;
+<<<<<<< HEAD
 	u32 stream;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 pixelcode;
 	u32 length;
 	union {
@@ -364,11 +377,15 @@ struct v4l2_mbus_frame_desc_entry {
 	} bus;
 };
 
+<<<<<<< HEAD
  /*
   * If this number is too small, it should be dropped altogether and the
   * API switched to a dynamic number of frame descriptor entries.
   */
 #define V4L2_FRAME_DESC_ENTRY_MAX	8
+=======
+#define V4L2_FRAME_DESC_ENTRY_MAX	4
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * enum v4l2_mbus_frame_desc_type - media bus frame description type
@@ -443,10 +460,15 @@ enum v4l2_subdev_pre_streamon_flags {
  * @g_input_status: get input status. Same as the status field in the
  *	&struct v4l2_input
  *
+<<<<<<< HEAD
  * @s_stream: start (enabled == 1) or stop (enabled == 0) streaming on the
  *	sub-device. Failure on stop will remove any resources acquired in
  *	streaming start, while the error code is still returned by the driver.
  *	Also see call_s_stream wrapper in v4l2-subdev.c.
+=======
+ * @s_stream: used to notify the driver that a video stream will start or has
+ *	stopped.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @g_pixelaspect: callback to return the pixelaspect ratio.
  *
@@ -704,6 +726,7 @@ struct v4l2_subdev_pad_config {
 };
 
 /**
+<<<<<<< HEAD
  * struct v4l2_subdev_stream_config - Used for storing stream configuration.
  *
  * @pad: pad number
@@ -750,13 +773,18 @@ struct v4l2_subdev_krouting {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct v4l2_subdev_state - Used for storing subdev state information.
  *
  * @_lock: default for 'lock'
  * @lock: mutex for the state. May be replaced by the user.
  * @pads: &struct v4l2_subdev_pad_config array
+<<<<<<< HEAD
  * @routing: routing table for the subdev
  * @stream_configs: stream configurations (only for V4L2_SUBDEV_FL_STREAMS)
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This structure only needs to be passed to the pad op if the 'which' field
  * of the main argument is set to %V4L2_SUBDEV_FORMAT_TRY. For
@@ -767,8 +795,11 @@ struct v4l2_subdev_state {
 	struct mutex _lock;
 	struct mutex *lock;
 	struct v4l2_subdev_pad_config *pads;
+<<<<<<< HEAD
 	struct v4l2_subdev_krouting routing;
 	struct v4l2_subdev_stream_configs stream_configs;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -821,6 +852,7 @@ struct v4l2_subdev_state {
  *		     this operation as close as possible to stream on time. The
  *		     operation shall fail if the pad index it has been called on
  *		     is not valid or in case of unrecoverable failures.
+<<<<<<< HEAD
  *
  * @set_routing: enable or disable data connection routes described in the
  *		 subdevice routing table.
@@ -836,6 +868,8 @@ struct v4l2_subdev_state {
  *	state management provided by the subdev core (enabled through a call to
  *	v4l2_subdev_init_finalize() at initialization time). Do not call
  *	directly, use v4l2_subdev_disable_streams() instead.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct v4l2_subdev_pad_ops {
 	int (*init_cfg)(struct v4l2_subdev *sd,
@@ -878,6 +912,7 @@ struct v4l2_subdev_pad_ops {
 			      struct v4l2_mbus_frame_desc *fd);
 	int (*get_mbus_config)(struct v4l2_subdev *sd, unsigned int pad,
 			       struct v4l2_mbus_config *config);
+<<<<<<< HEAD
 	int (*set_routing)(struct v4l2_subdev *sd,
 			   struct v4l2_subdev_state *state,
 			   enum v4l2_subdev_format_whence which,
@@ -888,6 +923,8 @@ struct v4l2_subdev_pad_ops {
 	int (*disable_streams)(struct v4l2_subdev *sd,
 			       struct v4l2_subdev_state *state, u32 pad,
 			       u64 streams_mask);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -962,6 +999,7 @@ struct v4l2_subdev_internal_ops {
  * should set this flag.
  */
 #define V4L2_SUBDEV_FL_HAS_EVENTS		(1U << 3)
+<<<<<<< HEAD
 /*
  * Set this flag if this subdev supports multiplexed streams. This means
  * that the driver supports routing and handles the stream parameter in its
@@ -973,6 +1011,8 @@ struct v4l2_subdev_internal_ops {
  * - Multiple streams per pad are supported
  */
 #define V4L2_SUBDEV_FL_STREAMS			(1U << 4)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct regulator_bulk_data;
 
@@ -1030,6 +1070,7 @@ struct v4l2_subdev_platform_data {
  * @state_lock: A pointer to a lock used for all the subdev's states, set by the
  *		driver. This is	optional. If NULL, each state instance will get
  *		a lock of its own.
+<<<<<<< HEAD
  * @privacy_led: Optional pointer to a LED classdev for the privacy LED for sensors.
  * @active_state: Active state for the subdev (NULL for subdevs tracking the
  *		  state internally). Initialized by calling
@@ -1038,6 +1079,11 @@ struct v4l2_subdev_platform_data {
  *		     v4l2_subdev_enable_streams() and
  *		     v4l2_subdev_disable_streams() helper functions for fallback
  *		     cases.
+=======
+ * @active_state: Active state for the subdev (NULL for subdevs tracking the
+ *		  state internally). Initialized by calling
+ *		  v4l2_subdev_init_finalize().
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Each instance of a subdev driver should create this struct, either
  * stand-alone or embedded in a larger struct.
@@ -1076,8 +1122,11 @@ struct v4l2_subdev {
 	 * appropriate functions.
 	 */
 
+<<<<<<< HEAD
 	struct led_classdev *privacy_led;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * TODO: active_state should most likely be changed from a pointer to an
 	 * embedded field. For the time being it's kept as a pointer to more
@@ -1085,7 +1134,10 @@ struct v4l2_subdev {
 	 * doesn't support it.
 	 */
 	struct v4l2_subdev_state *active_state;
+<<<<<<< HEAD
 	u64 enabled_streams;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 
@@ -1152,8 +1204,11 @@ v4l2_subdev_get_pad_format(struct v4l2_subdev *sd,
 			   struct v4l2_subdev_state *state,
 			   unsigned int pad)
 {
+<<<<<<< HEAD
 	if (WARN_ON(!state))
 		return NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (WARN_ON(pad >= sd->entity.num_pads))
 		pad = 0;
 	return &state->pads[pad].try_fmt;
@@ -1172,8 +1227,11 @@ v4l2_subdev_get_pad_crop(struct v4l2_subdev *sd,
 			 struct v4l2_subdev_state *state,
 			 unsigned int pad)
 {
+<<<<<<< HEAD
 	if (WARN_ON(!state))
 		return NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (WARN_ON(pad >= sd->entity.num_pads))
 		pad = 0;
 	return &state->pads[pad].try_crop;
@@ -1192,8 +1250,11 @@ v4l2_subdev_get_pad_compose(struct v4l2_subdev *sd,
 			    struct v4l2_subdev_state *state,
 			    unsigned int pad)
 {
+<<<<<<< HEAD
 	if (WARN_ON(!state))
 		return NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (WARN_ON(pad >= sd->entity.num_pads))
 		pad = 0;
 	return &state->pads[pad].try_compose;
@@ -1311,6 +1372,7 @@ int v4l2_subdev_link_validate_default(struct v4l2_subdev *sd,
 int v4l2_subdev_link_validate(struct media_link *link);
 
 /**
+<<<<<<< HEAD
  * v4l2_subdev_has_pad_interdep - MC has_pad_interdep implementation for subdevs
  *
  * @entity: pointer to &struct media_entity
@@ -1329,6 +1391,8 @@ bool v4l2_subdev_has_pad_interdep(struct media_entity *entity,
 				  unsigned int pad0, unsigned int pad1);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * __v4l2_subdev_state_alloc - allocate v4l2_subdev_state
  *
  * @sd: pointer to &struct v4l2_subdev for which the state is being allocated.
@@ -1488,6 +1552,7 @@ v4l2_subdev_lock_and_get_active_state(struct v4l2_subdev *sd)
 int v4l2_subdev_get_fmt(struct v4l2_subdev *sd, struct v4l2_subdev_state *state,
 			struct v4l2_subdev_format *format);
 
+<<<<<<< HEAD
 /**
  * v4l2_subdev_set_routing() - Set given routing to subdev state
  * @sd: The subdevice
@@ -1776,6 +1841,8 @@ int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
  */
 int v4l2_subdev_s_stream_helper(struct v4l2_subdev *sd, int enable);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_VIDEO_V4L2_SUBDEV_API */
 
 #endif /* CONFIG_MEDIA_CONTROLLER */

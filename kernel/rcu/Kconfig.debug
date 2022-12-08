@@ -27,6 +27,10 @@ config RCU_SCALE_TEST
 	tristate "performance tests for RCU"
 	depends on DEBUG_KERNEL
 	select TORTURE_TEST
+<<<<<<< HEAD
+=======
+	select SRCU
+>>>>>>> b7ba80a49124 (Commit)
 	default n
 	help
 	  This option provides a kernel module that runs performance
@@ -42,6 +46,10 @@ config RCU_TORTURE_TEST
 	tristate "torture tests for RCU"
 	depends on DEBUG_KERNEL
 	select TORTURE_TEST
+<<<<<<< HEAD
+=======
+	select SRCU
+>>>>>>> b7ba80a49124 (Commit)
 	default n
 	help
 	  This option provides a kernel module that runs torture tests
@@ -57,6 +65,10 @@ config RCU_REF_SCALE_TEST
 	tristate "Scalability tests for read-side synchronization (RCU and others)"
 	depends on DEBUG_KERNEL
 	select TORTURE_TEST
+<<<<<<< HEAD
+=======
+	select SRCU
+>>>>>>> b7ba80a49124 (Commit)
 	default n
 	help
 	  This option provides a kernel module that runs performance tests
@@ -82,7 +94,11 @@ config RCU_CPU_STALL_TIMEOUT
 config RCU_EXP_CPU_STALL_TIMEOUT
 	int "Expedited RCU CPU stall timeout in milliseconds"
 	depends on RCU_STALL_COMMON
+<<<<<<< HEAD
 	range 0 300000
+=======
+	range 0 21000
+>>>>>>> b7ba80a49124 (Commit)
 	default 0
 	help
 	  If a given expedited RCU grace period extends more than the
@@ -92,6 +108,7 @@ config RCU_EXP_CPU_STALL_TIMEOUT
 	  says to use the RCU_CPU_STALL_TIMEOUT value converted from
 	  seconds to milliseconds.
 
+<<<<<<< HEAD
 config RCU_CPU_STALL_CPUTIME
 	bool "Provide additional RCU stall debug information"
 	depends on RCU_STALL_COMMON
@@ -105,6 +122,8 @@ config RCU_CPU_STALL_CPUTIME
 	  The boot option rcupdate.rcu_cpu_stall_cputime has the same function
 	  as this one, but will override this if it exists.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config RCU_TRACE
 	bool "Enable tracing for RCU"
 	depends on DEBUG_KERNEL

@@ -7,8 +7,11 @@
 
 #include <linux/compiler.h>
 #include <linux/export.h>
+<<<<<<< HEAD
 #include <linux/preempt.h>
 #include <asm/thread_info.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #if defined(CONFIG_ALPHA_EV6) || defined(CONFIG_ALPHA_EV67)
 #define STT(reg,val)  asm volatile ("ftoit $f"#reg",%0" : "=r"(val));
@@ -21,12 +24,16 @@ alpha_read_fp_reg (unsigned long reg)
 {
 	unsigned long val;
 
+<<<<<<< HEAD
 	if (unlikely(reg >= 32))
 		return 0;
 	preempt_disable();
 	if (current_thread_info()->status & TS_SAVED_FP)
 		val = current_thread_info()->fp[reg];
 	else switch (reg) {
+=======
+	switch (reg) {
+>>>>>>> b7ba80a49124 (Commit)
 	      case  0: STT( 0, val); break;
 	      case  1: STT( 1, val); break;
 	      case  2: STT( 2, val); break;
@@ -59,8 +66,13 @@ alpha_read_fp_reg (unsigned long reg)
 	      case 29: STT(29, val); break;
 	      case 30: STT(30, val); break;
 	      case 31: STT(31, val); break;
+<<<<<<< HEAD
 	}
 	preempt_enable();
+=======
+	      default: return 0;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return val;
 }
 EXPORT_SYMBOL(alpha_read_fp_reg);
@@ -74,6 +86,7 @@ EXPORT_SYMBOL(alpha_read_fp_reg);
 void
 alpha_write_fp_reg (unsigned long reg, unsigned long val)
 {
+<<<<<<< HEAD
 	if (unlikely(reg >= 32))
 		return;
 
@@ -82,6 +95,9 @@ alpha_write_fp_reg (unsigned long reg, unsigned long val)
 		current_thread_info()->status |= TS_RESTORE_FP;
 		current_thread_info()->fp[reg] = val;
 	} else switch (reg) {
+=======
+	switch (reg) {
+>>>>>>> b7ba80a49124 (Commit)
 	      case  0: LDT( 0, val); break;
 	      case  1: LDT( 1, val); break;
 	      case  2: LDT( 2, val); break;
@@ -115,7 +131,10 @@ alpha_write_fp_reg (unsigned long reg, unsigned long val)
 	      case 30: LDT(30, val); break;
 	      case 31: LDT(31, val); break;
 	}
+<<<<<<< HEAD
 	preempt_enable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(alpha_write_fp_reg);
 
@@ -130,6 +149,7 @@ alpha_read_fp_reg_s (unsigned long reg)
 {
 	unsigned long val;
 
+<<<<<<< HEAD
 	if (unlikely(reg >= 32))
 		return 0;
 
@@ -138,6 +158,9 @@ alpha_read_fp_reg_s (unsigned long reg)
 		LDT(0, current_thread_info()->fp[reg]);
 		STS(0, val);
 	} else switch (reg) {
+=======
+	switch (reg) {
+>>>>>>> b7ba80a49124 (Commit)
 	      case  0: STS( 0, val); break;
 	      case  1: STS( 1, val); break;
 	      case  2: STS( 2, val); break;
@@ -170,8 +193,13 @@ alpha_read_fp_reg_s (unsigned long reg)
 	      case 29: STS(29, val); break;
 	      case 30: STS(30, val); break;
 	      case 31: STS(31, val); break;
+<<<<<<< HEAD
 	}
 	preempt_enable();
+=======
+	      default: return 0;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return val;
 }
 EXPORT_SYMBOL(alpha_read_fp_reg_s);
@@ -185,6 +213,7 @@ EXPORT_SYMBOL(alpha_read_fp_reg_s);
 void
 alpha_write_fp_reg_s (unsigned long reg, unsigned long val)
 {
+<<<<<<< HEAD
 	if (unlikely(reg >= 32))
 		return;
 
@@ -194,6 +223,9 @@ alpha_write_fp_reg_s (unsigned long reg, unsigned long val)
 		LDS(0, val);
 		STT(0, current_thread_info()->fp[reg]);
 	} else switch (reg) {
+=======
+	switch (reg) {
+>>>>>>> b7ba80a49124 (Commit)
 	      case  0: LDS( 0, val); break;
 	      case  1: LDS( 1, val); break;
 	      case  2: LDS( 2, val); break;
@@ -227,6 +259,9 @@ alpha_write_fp_reg_s (unsigned long reg, unsigned long val)
 	      case 30: LDS(30, val); break;
 	      case 31: LDS(31, val); break;
 	}
+<<<<<<< HEAD
 	preempt_enable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(alpha_write_fp_reg_s);

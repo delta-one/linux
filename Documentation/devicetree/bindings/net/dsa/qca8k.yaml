@@ -66,11 +66,23 @@ properties:
                  With the legacy mapping the reg corresponding to the internal
                  mdio is the switch reg with an offset of -1.
 
+<<<<<<< HEAD
 $ref: dsa.yaml#
 
 patternProperties:
   "^(ethernet-)?ports$":
     type: object
+=======
+patternProperties:
+  "^(ethernet-)?ports$":
+    type: object
+    properties:
+      '#address-cells':
+        const: 1
+      '#size-cells':
+        const: 0
+
+>>>>>>> b7ba80a49124 (Commit)
     patternProperties:
       "^(ethernet-)?port@[0-6]$":
         type: object
@@ -112,7 +124,11 @@ required:
   - compatible
   - reg
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: true
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |
@@ -144,6 +160,11 @@ examples:
 
         switch@10 {
             compatible = "qca,qca8337";
+<<<<<<< HEAD
+=======
+            #address-cells = <1>;
+            #size-cells = <0>;
+>>>>>>> b7ba80a49124 (Commit)
             reset-gpios = <&gpio 42 GPIO_ACTIVE_LOW>;
             reg = <0x10>;
 
@@ -203,6 +224,11 @@ examples:
 
         switch@10 {
             compatible = "qca,qca8337";
+<<<<<<< HEAD
+=======
+            #address-cells = <1>;
+            #size-cells = <0>;
+>>>>>>> b7ba80a49124 (Commit)
             reset-gpios = <&gpio 42 GPIO_ACTIVE_LOW>;
             reg = <0x10>;
 

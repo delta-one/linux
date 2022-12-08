@@ -221,7 +221,10 @@ static int mvebu_gicp_probe(struct platform_device *pdev)
 	}
 
 	parent_domain = irq_find_host(irq_parent_dn);
+<<<<<<< HEAD
 	of_node_put(irq_parent_dn);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!parent_domain) {
 		dev_err(&pdev->dev, "failed to find parent IRQ domain\n");
 		return -ENODEV;

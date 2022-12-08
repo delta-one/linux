@@ -55,7 +55,11 @@ identifier fname6 =~ ".*call_rcu.*";
 p1 << r1.p1;
 p2 << r1.p2;
 @@
+<<<<<<< HEAD
 msg = "WARNING: atomic_dec_and_test variation before object free at line %s."
+=======
+msg = "atomic_dec_and_test variation before object free at line %s."
+>>>>>>> b7ba80a49124 (Commit)
 coccilib.report.print_report(p1[0], msg % (p2[0].line))
 
 @r4 exists@
@@ -88,7 +92,11 @@ fname@p2(y, ...);
 p1 << r4.p1;
 p2 << r4.p2;
 @@
+<<<<<<< HEAD
 msg = "WARNING: atomic_dec_and_test variation before object free at line %s."
+=======
+msg = "atomic_dec_and_test variation before object free at line %s."
+>>>>>>> b7ba80a49124 (Commit)
 coccilib.report.print_report(p1[0], msg % (p2[0].line))
 
 @r2 exists@
@@ -107,7 +115,11 @@ atomic64_add_unless(&(a)->x,-1,1)@p1
 @script:python depends on report@
 p1 << r2.p1;
 @@
+<<<<<<< HEAD
 msg = "WARNING: atomic_add_unless"
+=======
+msg = "atomic_add_unless"
+>>>>>>> b7ba80a49124 (Commit)
 coccilib.report.print_report(p1[0], msg)
 
 @r3 exists@
@@ -126,5 +138,9 @@ x = atomic64_add_return@p1(-1, ...);
 @script:python depends on report@
 p1 << r3.p1;
 @@
+<<<<<<< HEAD
 msg = "WARNING: x = atomic_add_return(-1, ...)"
+=======
+msg = "x = atomic_add_return(-1, ...)"
+>>>>>>> b7ba80a49124 (Commit)
 coccilib.report.print_report(p1[0], msg)

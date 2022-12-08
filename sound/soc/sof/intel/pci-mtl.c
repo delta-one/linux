@@ -34,19 +34,29 @@ static const struct sof_dev_desc mtl_desc = {
 	.default_fw_path = {
 		[SOF_INTEL_IPC4] = "intel/sof-ipc4/mtl",
 	},
+<<<<<<< HEAD
 	.default_lib_path = {
 		[SOF_INTEL_IPC4] = "intel/sof-ipc4-lib/mtl",
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.default_tplg_path = {
 		[SOF_INTEL_IPC4] = "intel/sof-ace-tplg",
 	},
 	.default_fw_filename = {
+<<<<<<< HEAD
 		[SOF_INTEL_IPC4] = "sof-mtl.ri",
+=======
+		[SOF_INTEL_IPC4] = "dsp_basefw.bin",
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.nocodec_tplg_filename = "sof-mtl-nocodec.tplg",
 	.ops = &sof_mtl_ops,
 	.ops_init = sof_mtl_ops_init,
+<<<<<<< HEAD
 	.ops_free = hda_ops_free,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* PCI IDs */

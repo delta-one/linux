@@ -29,14 +29,21 @@ static inline int __nft_set_pktinfo_ipv4_validate(struct nft_pktinfo *pkt)
 	if (iph->ihl < 5 || iph->version != 4)
 		return -1;
 
+<<<<<<< HEAD
 	len = iph_totlen(pkt->skb, iph);
+=======
+	len = ntohs(iph->tot_len);
+>>>>>>> b7ba80a49124 (Commit)
 	thoff = iph->ihl * 4;
 	if (pkt->skb->len < len)
 		return -1;
 	else if (len < thoff)
 		return -1;
+<<<<<<< HEAD
 	else if (thoff < sizeof(*iph))
 		return -1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	pkt->flags = NFT_PKTINFO_L4PROTO;
 	pkt->tprot = iph->protocol;
@@ -64,15 +71,22 @@ static inline int nft_set_pktinfo_ipv4_ingress(struct nft_pktinfo *pkt)
 	if (iph->ihl < 5 || iph->version != 4)
 		goto inhdr_error;
 
+<<<<<<< HEAD
 	len = iph_totlen(pkt->skb, iph);
+=======
+	len = ntohs(iph->tot_len);
+>>>>>>> b7ba80a49124 (Commit)
 	thoff = iph->ihl * 4;
 	if (pkt->skb->len < len) {
 		__IP_INC_STATS(nft_net(pkt), IPSTATS_MIB_INTRUNCATEDPKTS);
 		return -1;
 	} else if (len < thoff) {
 		goto inhdr_error;
+<<<<<<< HEAD
 	} else if (thoff < sizeof(*iph)) {
 		return -1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	pkt->flags = NFT_PKTINFO_L4PROTO;

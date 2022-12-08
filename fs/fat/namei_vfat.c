@@ -200,7 +200,11 @@ static const struct dentry_operations vfat_dentry_ops = {
 
 /* Characters that are undesirable in an MS-DOS file name */
 
+<<<<<<< HEAD
 static inline bool vfat_bad_char(wchar_t w)
+=======
+static inline wchar_t vfat_bad_char(wchar_t w)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return (w < 0x0020)
 	    || (w == '*') || (w == '?') || (w == '<') || (w == '>')
@@ -208,7 +212,11 @@ static inline bool vfat_bad_char(wchar_t w)
 	    || (w == '\\');
 }
 
+<<<<<<< HEAD
 static inline bool vfat_replace_char(wchar_t w)
+=======
+static inline wchar_t vfat_replace_char(wchar_t w)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return (w == '[') || (w == ']') || (w == ';') || (w == ',')
 	    || (w == '+') || (w == '=');
@@ -756,7 +764,11 @@ error:
 	return ERR_PTR(err);
 }
 
+<<<<<<< HEAD
 static int vfat_create(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int vfat_create(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct dentry *dentry, umode_t mode, bool excl)
 {
 	struct super_block *sb = dir->i_sb;
@@ -844,7 +856,11 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static int vfat_mkdir(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int vfat_mkdir(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *dentry, umode_t mode)
 {
 	struct super_block *sb = dir->i_sb;
@@ -1158,7 +1174,11 @@ error_exchange:
 	goto out;
 }
 
+<<<<<<< HEAD
 static int vfat_rename2(struct mnt_idmap *idmap, struct inode *old_dir,
+=======
+static int vfat_rename2(struct user_namespace *mnt_userns, struct inode *old_dir,
+>>>>>>> b7ba80a49124 (Commit)
 			struct dentry *old_dentry, struct inode *new_dir,
 			struct dentry *new_dentry, unsigned int flags)
 {

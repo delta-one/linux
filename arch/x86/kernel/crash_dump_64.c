@@ -57,7 +57,11 @@ ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
 	struct kvec kvec = { .iov_base = buf, .iov_len = count };
 	struct iov_iter iter;
 
+<<<<<<< HEAD
 	iov_iter_kvec(&iter, ITER_DEST, &kvec, 1, count);
+=======
+	iov_iter_kvec(&iter, READ, &kvec, 1, count);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return read_from_oldmem(&iter, count, ppos,
 				cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT));

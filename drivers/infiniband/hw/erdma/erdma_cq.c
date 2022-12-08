@@ -11,7 +11,11 @@ static void *get_next_valid_cqe(struct erdma_cq *cq)
 	__be32 *cqe = get_queue_entry(cq->kern_cq.qbuf, cq->kern_cq.ci,
 				      cq->depth, CQE_SHIFT);
 	u32 owner = FIELD_GET(ERDMA_CQE_HDR_OWNER_MASK,
+<<<<<<< HEAD
 			      be32_to_cpu(READ_ONCE(*cqe)));
+=======
+			      __be32_to_cpu(READ_ONCE(*cqe)));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return owner ^ !!(cq->kern_cq.ci & cq->depth) ? cqe : NULL;
 }
@@ -64,8 +68,11 @@ static const enum ib_wc_opcode wc_mapping_table[ERDMA_NUM_OPCODES] = {
 	[ERDMA_OP_REG_MR] = IB_WC_REG_MR,
 	[ERDMA_OP_LOCAL_INV] = IB_WC_LOCAL_INV,
 	[ERDMA_OP_READ_WITH_INV] = IB_WC_RDMA_READ,
+<<<<<<< HEAD
 	[ERDMA_OP_ATOMIC_CAS] = IB_WC_COMP_SWAP,
 	[ERDMA_OP_ATOMIC_FAA] = IB_WC_FETCH_ADD,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct {

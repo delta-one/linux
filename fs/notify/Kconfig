@@ -1,6 +1,10 @@
 # SPDX-License-Identifier: GPL-2.0-only
 config FSNOTIFY
 	def_bool n
+<<<<<<< HEAD
+=======
+	select SRCU
+>>>>>>> b7ba80a49124 (Commit)
 
 source "fs/notify/dnotify/Kconfig"
 source "fs/notify/inotify/Kconfig"

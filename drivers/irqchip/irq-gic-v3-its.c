@@ -2440,8 +2440,13 @@ static bool its_parse_indirect_baser(struct its_node *its,
 	 * feature is not supported by hardware.
 	 */
 	new_order = max_t(u32, get_order(esz << ids), new_order);
+<<<<<<< HEAD
 	if (new_order > MAX_ORDER) {
 		new_order = MAX_ORDER;
+=======
+	if (new_order >= MAX_ORDER) {
+		new_order = MAX_ORDER - 1;
+>>>>>>> b7ba80a49124 (Commit)
 		ids = ilog2(PAGE_ORDER_TO_SIZE(new_order) / (int)esz);
 		pr_warn("ITS@%pa: %s Table too large, reduce ids %llu->%u\n",
 			&its->phys_base, its_base_type_string[type],
@@ -4692,7 +4697,11 @@ static bool __maybe_unused its_enable_quirk_socionext_synquacer(void *data)
 		}
 
 		/* the pre-ITS breaks isolation, so disable MSI remapping */
+<<<<<<< HEAD
 		its->msi_domain_flags &= ~IRQ_DOMAIN_FLAG_ISOLATED_MSI;
+=======
+		its->msi_domain_flags &= ~IRQ_DOMAIN_FLAG_MSI_REMAP;
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 	}
 	return false;
@@ -4909,6 +4918,7 @@ static int its_init_domain(struct fwnode_handle *handle, struct its_node *its)
 	if (!info)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	info->ops = &its_msi_domain_ops;
 	info->data = its;
 
@@ -4916,12 +4926,24 @@ static int its_init_domain(struct fwnode_handle *handle, struct its_node *its)
 						   its->msi_domain_flags, 0,
 						   handle, &its_domain_ops,
 						   info);
+=======
+	inner_domain = irq_domain_create_tree(handle, &its_domain_ops, its);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!inner_domain) {
 		kfree(info);
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_NEXUS);
+=======
+	inner_domain->parent = its_parent;
+	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_NEXUS);
+	inner_domain->flags |= its->msi_domain_flags;
+	info->ops = &its_msi_domain_ops;
+	info->data = its;
+	inner_domain->host_data = info;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -5075,7 +5097,11 @@ static int __init its_probe_one(struct resource *res,
 	its->cmd_write = its->cmd_base;
 	its->fwnode_handle = handle;
 	its->get_msi_base = its_irq_get_msi_base;
+<<<<<<< HEAD
 	its->msi_domain_flags = IRQ_DOMAIN_FLAG_ISOLATED_MSI;
+=======
+	its->msi_domain_flags = IRQ_DOMAIN_FLAG_MSI_REMAP;
+>>>>>>> b7ba80a49124 (Commit)
 
 	its_enable_quirks(its);
 

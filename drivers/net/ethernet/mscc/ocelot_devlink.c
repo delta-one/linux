@@ -487,6 +487,7 @@ static void ocelot_watermark_init(struct ocelot *ocelot)
 	ocelot_setup_sharing_watermarks(ocelot);
 }
 
+<<<<<<< HEAD
 /* Watermark encode
  * Bit 8:   Unit; 0:1, 1:16
  * Bit 7-0: Value to be multiplied with unit
@@ -518,6 +519,8 @@ void ocelot_wm_stat(u32 val, u32 *inuse, u32 *maxuse)
 }
 EXPORT_SYMBOL(ocelot_wm_stat);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Pool size and type are fixed up at runtime. Keeping this structure to
  * look up the cell size multipliers.
  */

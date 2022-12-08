@@ -287,6 +287,7 @@ int __init xfrm6_init(void)
 	if (ret)
 		goto out_state;
 
+<<<<<<< HEAD
 	ret = register_pernet_subsys(&xfrm6_net_ops);
 	if (ret)
 		goto out_protocol;
@@ -294,6 +295,11 @@ out:
 	return ret;
 out_protocol:
 	xfrm6_protocol_fini();
+=======
+	register_pernet_subsys(&xfrm6_net_ops);
+out:
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 out_state:
 	xfrm6_state_fini();
 out_policy:

@@ -24,6 +24,10 @@ int ocfs2_orphan_del(struct ocfs2_super *osb,
 		     struct buffer_head *orphan_dir_bh,
 		     bool dio);
 int ocfs2_create_inode_in_orphan(struct inode *dir,
+<<<<<<< HEAD
+=======
+				 struct buffer_head **dir_bh,
+>>>>>>> b7ba80a49124 (Commit)
 				 int mode,
 				 struct inode **new_inode);
 int ocfs2_add_inode_to_orphan(struct ocfs2_super *osb,
@@ -32,6 +36,10 @@ int ocfs2_del_inode_from_orphan(struct ocfs2_super *osb,
 		struct inode *inode, struct buffer_head *di_bh,
 		int update_isize, loff_t end);
 int ocfs2_mv_orphaned_inode_to_new(struct inode *dir,
+<<<<<<< HEAD
+=======
+				   struct buffer_head *dir_bh,
+>>>>>>> b7ba80a49124 (Commit)
 				   struct inode *new_inode,
 				   struct dentry *new_dentry);
 

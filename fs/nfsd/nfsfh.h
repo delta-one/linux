@@ -220,7 +220,11 @@ __be32	fh_update(struct svc_fh *);
 void	fh_put(struct svc_fh *);
 
 static __inline__ struct svc_fh *
+<<<<<<< HEAD
 fh_copy(struct svc_fh *dst, const struct svc_fh *src)
+=======
+fh_copy(struct svc_fh *dst, struct svc_fh *src)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	WARN_ON(src->fh_dentry);
 
@@ -229,7 +233,11 @@ fh_copy(struct svc_fh *dst, const struct svc_fh *src)
 }
 
 static inline void
+<<<<<<< HEAD
 fh_copy_shallow(struct knfsd_fh *dst, const struct knfsd_fh *src)
+=======
+fh_copy_shallow(struct knfsd_fh *dst, struct knfsd_fh *src)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	dst->fh_size = src->fh_size;
 	memcpy(&dst->fh_raw, &src->fh_raw, src->fh_size);
@@ -243,8 +251,12 @@ fh_init(struct svc_fh *fhp, int maxsize)
 	return fhp;
 }
 
+<<<<<<< HEAD
 static inline bool fh_match(const struct knfsd_fh *fh1,
 			    const struct knfsd_fh *fh2)
+=======
+static inline bool fh_match(struct knfsd_fh *fh1, struct knfsd_fh *fh2)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (fh1->fh_size != fh2->fh_size)
 		return false;
@@ -253,8 +265,12 @@ static inline bool fh_match(const struct knfsd_fh *fh1,
 	return true;
 }
 
+<<<<<<< HEAD
 static inline bool fh_fsid_match(const struct knfsd_fh *fh1,
 				 const struct knfsd_fh *fh2)
+=======
+static inline bool fh_fsid_match(struct knfsd_fh *fh1, struct knfsd_fh *fh2)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (fh1->fh_fsid_type != fh2->fh_fsid_type)
 		return false;
@@ -293,7 +309,38 @@ static inline void fh_clear_pre_post_attrs(struct svc_fh *fhp)
 	fhp->fh_pre_saved = false;
 }
 
+<<<<<<< HEAD
 u64 nfsd4_change_attribute(struct kstat *stat, struct inode *inode);
+=======
+/*
+ * We could use i_version alone as the change attribute.  However,
+ * i_version can go backwards after a reboot.  On its own that doesn't
+ * necessarily cause a problem, but if i_version goes backwards and then
+ * is incremented again it could reuse a value that was previously used
+ * before boot, and a client who queried the two values might
+ * incorrectly assume nothing changed.
+ *
+ * By using both ctime and the i_version counter we guarantee that as
+ * long as time doesn't go backwards we never reuse an old value.
+ */
+static inline u64 nfsd4_change_attribute(struct kstat *stat,
+					 struct inode *inode)
+{
+	if (inode->i_sb->s_export_op->fetch_iversion)
+		return inode->i_sb->s_export_op->fetch_iversion(inode);
+	else if (IS_I_VERSION(inode)) {
+		u64 chattr;
+
+		chattr =  stat->ctime.tv_sec;
+		chattr <<= 30;
+		chattr += stat->ctime.tv_nsec;
+		chattr += inode_query_iversion(inode);
+		return chattr;
+	} else
+		return time_to_chattr(&stat->ctime);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 extern void fh_fill_pre_attrs(struct svc_fh *fhp);
 extern void fh_fill_post_attrs(struct svc_fh *fhp);
 extern void fh_fill_both_attrs(struct svc_fh *fhp);

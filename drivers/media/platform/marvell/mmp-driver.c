@@ -254,7 +254,11 @@ static int mmpcam_probe(struct platform_device *pdev)
 	 */
 	ret = mccic_register(mcam);
 	if (ret)
+<<<<<<< HEAD
 		goto out;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Add OF clock provider.

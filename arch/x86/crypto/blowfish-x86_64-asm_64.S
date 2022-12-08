@@ -99,11 +99,23 @@
 	bswapq 			RX0; \
 	movq RX0, 		(RIO);
 
+<<<<<<< HEAD
 SYM_FUNC_START(blowfish_enc_blk)
+=======
+#define xor_block() \
+	bswapq 			RX0; \
+	xorq RX0, 		(RIO);
+
+SYM_FUNC_START(__blowfish_enc_blk)
+>>>>>>> b7ba80a49124 (Commit)
 	/* input:
 	 *	%rdi: ctx
 	 *	%rsi: dst
 	 *	%rdx: src
+<<<<<<< HEAD
+=======
+	 *	%rcx: bool, if true: xor output
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	movq %r12, %r11;
 
@@ -124,11 +136,25 @@ SYM_FUNC_START(blowfish_enc_blk)
 	add_roundkey_enc(16);
 
 	movq %r11, %r12;
+<<<<<<< HEAD
 	movq %r10, RIO;
 
 	write_block();
 	RET;
 SYM_FUNC_END(blowfish_enc_blk)
+=======
+
+	movq %r10, RIO;
+	test %cl, %cl;
+	jnz .L__enc_xor;
+
+	write_block();
+	RET;
+.L__enc_xor:
+	xor_block();
+	RET;
+SYM_FUNC_END(__blowfish_enc_blk)
+>>>>>>> b7ba80a49124 (Commit)
 
 SYM_FUNC_START(blowfish_dec_blk)
 	/* input:
@@ -260,6 +286,7 @@ SYM_FUNC_END(blowfish_dec_blk)
 	movq RX3,		24(RIO);
 
 #define xor_block4() \
+<<<<<<< HEAD
 	movq (RIO),		RT0; \
 	bswapq			RT0; \
 	xorq RT0,		RX1; \
@@ -273,13 +300,36 @@ SYM_FUNC_END(blowfish_dec_blk)
 	xorq RT3,		RX3;
 
 SYM_FUNC_START(blowfish_enc_blk_4way)
+=======
+	bswapq 			RX0; \
+	xorq RX0,		(RIO); \
+	\
+	bswapq 			RX1; \
+	xorq RX1,		8(RIO); \
+	\
+	bswapq 			RX2; \
+	xorq RX2,		16(RIO); \
+	\
+	bswapq 			RX3; \
+	xorq RX3,		24(RIO);
+
+SYM_FUNC_START(__blowfish_enc_blk_4way)
+>>>>>>> b7ba80a49124 (Commit)
 	/* input:
 	 *	%rdi: ctx
 	 *	%rsi: dst
 	 *	%rdx: src
+<<<<<<< HEAD
 	 */
 	pushq %r12;
 	pushq %rbx;
+=======
+	 *	%rcx: bool, if true: xor output
+	 */
+	pushq %r12;
+	pushq %rbx;
+	pushq %rcx;
+>>>>>>> b7ba80a49124 (Commit)
 
 	movq %rdi, CTX
 	movq %rsi, %r11;
@@ -299,19 +349,42 @@ SYM_FUNC_START(blowfish_enc_blk_4way)
 	round_enc4(14);
 	add_preloaded_roundkey4();
 
+<<<<<<< HEAD
 	movq %r11, RIO;
+=======
+	popq %r12;
+	movq %r11, RIO;
+
+	test %r12b, %r12b;
+	jnz .L__enc_xor4;
+
+>>>>>>> b7ba80a49124 (Commit)
 	write_block4();
 
 	popq %rbx;
 	popq %r12;
 	RET;
+<<<<<<< HEAD
 SYM_FUNC_END(blowfish_enc_blk_4way)
 
 SYM_FUNC_START(__blowfish_dec_blk_4way)
+=======
+
+.L__enc_xor4:
+	xor_block4();
+
+	popq %rbx;
+	popq %r12;
+	RET;
+SYM_FUNC_END(__blowfish_enc_blk_4way)
+
+SYM_FUNC_START(blowfish_dec_blk_4way)
+>>>>>>> b7ba80a49124 (Commit)
 	/* input:
 	 *	%rdi: ctx
 	 *	%rsi: dst
 	 *	%rdx: src
+<<<<<<< HEAD
 	 *	%rcx: cbc (bool)
 	 */
 	pushq %r12;
@@ -321,6 +394,14 @@ SYM_FUNC_START(__blowfish_dec_blk_4way)
 
 	movq %rdi, CTX;
 	movq %rsi, %r11;
+=======
+	 */
+	pushq %r12;
+	pushq %rbx;
+
+	movq %rdi, CTX;
+	movq %rsi, %r11
+>>>>>>> b7ba80a49124 (Commit)
 	movq %rdx, RIO;
 
 	preload_roundkey_dec(17);
@@ -336,6 +417,7 @@ SYM_FUNC_START(__blowfish_dec_blk_4way)
 	round_dec4(3);
 	add_preloaded_roundkey4();
 
+<<<<<<< HEAD
 	popq RIO;
 	popq %r12;
 	testq %r12, %r12;
@@ -344,6 +426,8 @@ SYM_FUNC_START(__blowfish_dec_blk_4way)
 	xor_block4();
 
 .L_no_cbc_xor:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	movq %r11, RIO;
 	write_block4();
 
@@ -351,4 +435,8 @@ SYM_FUNC_START(__blowfish_dec_blk_4way)
 	popq %r12;
 
 	RET;
+<<<<<<< HEAD
 SYM_FUNC_END(__blowfish_dec_blk_4way)
+=======
+SYM_FUNC_END(blowfish_dec_blk_4way)
+>>>>>>> b7ba80a49124 (Commit)

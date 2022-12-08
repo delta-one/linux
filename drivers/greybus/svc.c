@@ -7,7 +7,10 @@
  */
 
 #include <linux/debugfs.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/workqueue.h>
 #include <linux/greybus.h>
 
@@ -84,7 +87,11 @@ static ssize_t watchdog_store(struct device *dev,
 	int retval;
 	bool user_request;
 
+<<<<<<< HEAD
 	retval = kstrtobool(buf, &user_request);
+=======
+	retval = strtobool(buf, &user_request);
+>>>>>>> b7ba80a49124 (Commit)
 	if (retval)
 		return retval;
 

@@ -375,7 +375,11 @@ static void arp_solicit(struct neighbour *neigh, struct sk_buff *skb)
 
 	probes -= NEIGH_VAR(neigh->parms, UCAST_PROBES);
 	if (probes < 0) {
+<<<<<<< HEAD
 		if (!(READ_ONCE(neigh->nud_state) & NUD_VALID))
+=======
+		if (!(neigh->nud_state & NUD_VALID))
+>>>>>>> b7ba80a49124 (Commit)
 			pr_debug("trying to ucast probe in NUD_INVALID\n");
 		neigh_ha_snapshot(dst_ha, neigh, dev);
 		dst_hw = dst_ha;
@@ -1123,7 +1127,11 @@ static int arp_req_get(struct arpreq *r, struct net_device *dev)
 
 	neigh = neigh_lookup(&arp_tbl, &ip, dev);
 	if (neigh) {
+<<<<<<< HEAD
 		if (!(READ_ONCE(neigh->nud_state) & NUD_NOARP)) {
+=======
+		if (!(neigh->nud_state & NUD_NOARP)) {
+>>>>>>> b7ba80a49124 (Commit)
 			read_lock_bh(&neigh->lock);
 			memcpy(r->arp_ha.sa_data, neigh->ha, dev->addr_len);
 			r->arp_flags = arp_state_to_flags(neigh);
@@ -1144,12 +1152,20 @@ int arp_invalidate(struct net_device *dev, __be32 ip, bool force)
 	struct neigh_table *tbl = &arp_tbl;
 
 	if (neigh) {
+<<<<<<< HEAD
 		if ((READ_ONCE(neigh->nud_state) & NUD_VALID) && !force) {
+=======
+		if ((neigh->nud_state & NUD_VALID) && !force) {
+>>>>>>> b7ba80a49124 (Commit)
 			neigh_release(neigh);
 			return 0;
 		}
 
+<<<<<<< HEAD
 		if (READ_ONCE(neigh->nud_state) & ~NUD_NOARP)
+=======
+		if (neigh->nud_state & ~NUD_NOARP)
+>>>>>>> b7ba80a49124 (Commit)
 			err = neigh_update(neigh, NULL, NUD_FAILED,
 					   NEIGH_UPDATE_F_OVERRIDE|
 					   NEIGH_UPDATE_F_ADMIN, 0);

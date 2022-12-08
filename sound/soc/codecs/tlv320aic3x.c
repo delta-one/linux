@@ -32,12 +32,21 @@
 #include <linux/moduleparam.h>
 #include <linux/init.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
 #include <linux/err.h>
 #include <linux/pm.h>
 #include <linux/i2c.h>
 #include <linux/gpio/consumer.h>
 #include <linux/regulator/consumer.h>
 #include <linux/of.h>
+=======
+#include <linux/pm.h>
+#include <linux/i2c.h>
+#include <linux/gpio.h>
+#include <linux/regulator/consumer.h>
+#include <linux/of.h>
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <sound/core.h>
 #include <sound/pcm.h>
@@ -45,6 +54,10 @@
 #include <sound/soc.h>
 #include <sound/initval.h>
 #include <sound/tlv.h>
+<<<<<<< HEAD
+=======
+#include <sound/tlv320aic3x.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "tlv320aic3x.h"
 
@@ -56,6 +69,11 @@ static const char *aic3x_supply_names[AIC3X_NUM_SUPPLIES] = {
 	"DRVDD",	/* ADC Analog and Output Driver Voltage */
 };
 
+<<<<<<< HEAD
+=======
+static LIST_HEAD(reset_list);
+
+>>>>>>> b7ba80a49124 (Commit)
 struct aic3x_priv;
 
 struct aic3x_disable_nb {
@@ -63,10 +81,13 @@ struct aic3x_disable_nb {
 	struct aic3x_priv *aic3x;
 };
 
+<<<<<<< HEAD
 struct aic3x_setup_data {
 	unsigned int gpio_func[2];
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* codec private data */
 struct aic3x_priv {
 	struct snd_soc_component *component;
@@ -78,9 +99,15 @@ struct aic3x_priv {
 	unsigned int dai_fmt;
 	unsigned int tdm_delay;
 	unsigned int slot_width;
+<<<<<<< HEAD
 	int master;
 	struct gpio_desc *gpio_reset;
 	bool shared_reset;
+=======
+	struct list_head list;
+	int master;
+	int gpio_reset;
+>>>>>>> b7ba80a49124 (Commit)
 	int power;
 	u16 model;
 
@@ -1367,8 +1394,13 @@ static int aic3x_regulator_event(struct notifier_block *nb,
 		 * Put codec to reset and require cache sync as at least one
 		 * of the supplies was disabled
 		 */
+<<<<<<< HEAD
 		if (aic3x->gpio_reset)
 			gpiod_set_value(aic3x->gpio_reset, 1);
+=======
+		if (gpio_is_valid(aic3x->gpio_reset))
+			gpio_set_value(aic3x->gpio_reset, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		regcache_mark_dirty(aic3x->regmap);
 	}
 
@@ -1388,9 +1420,15 @@ static int aic3x_set_power(struct snd_soc_component *component, int power)
 			goto out;
 		aic3x->power = 1;
 
+<<<<<<< HEAD
 		if (aic3x->gpio_reset) {
 			udelay(1);
 			gpiod_set_value(aic3x->gpio_reset, 0);
+=======
+		if (gpio_is_valid(aic3x->gpio_reset)) {
+			udelay(1);
+			gpio_set_value(aic3x->gpio_reset, 1);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		/* Sync reg_cache with the hardware */
@@ -1596,6 +1634,22 @@ static int aic3x_init(struct snd_soc_component *component)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static bool aic3x_is_shared_reset(struct aic3x_priv *aic3x)
+{
+	struct aic3x_priv *a;
+
+	list_for_each_entry(a, &reset_list, list) {
+		if (gpio_is_valid(aic3x->gpio_reset) &&
+		    aic3x->gpio_reset == a->gpio_reset)
+			return true;
+	}
+
+	return false;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int aic3x_component_probe(struct snd_soc_component *component)
 {
 	struct aic3x_priv *aic3x = snd_soc_component_get_drvdata(component);
@@ -1736,6 +1790,10 @@ static const struct reg_sequence aic3007_class_d[] = {
 
 int aic3x_probe(struct device *dev, struct regmap *regmap, kernel_ulong_t driver_data)
 {
+<<<<<<< HEAD
+=======
+	struct aic3x_pdata *pdata = dev->platform_data;
+>>>>>>> b7ba80a49124 (Commit)
 	struct aic3x_priv *aic3x;
 	struct aic3x_setup_data *ai3x_setup;
 	struct device_node *np = dev->of_node;
@@ -1755,11 +1813,35 @@ int aic3x_probe(struct device *dev, struct regmap *regmap, kernel_ulong_t driver
 	regcache_cache_only(aic3x->regmap, true);
 
 	dev_set_drvdata(dev, aic3x);
+<<<<<<< HEAD
 	if (np) {
+=======
+	if (pdata) {
+		aic3x->gpio_reset = pdata->gpio_reset;
+		aic3x->setup = pdata->setup;
+		aic3x->micbias_vg = pdata->micbias_vg;
+	} else if (np) {
+>>>>>>> b7ba80a49124 (Commit)
 		ai3x_setup = devm_kzalloc(dev, sizeof(*ai3x_setup), GFP_KERNEL);
 		if (!ai3x_setup)
 			return -ENOMEM;
 
+<<<<<<< HEAD
+=======
+		ret = of_get_named_gpio(np, "reset-gpios", 0);
+		if (ret >= 0) {
+			aic3x->gpio_reset = ret;
+		} else {
+			ret = of_get_named_gpio(np, "gpio-reset", 0);
+			if (ret > 0) {
+				dev_warn(dev, "Using deprecated property \"gpio-reset\", please update your DT");
+				aic3x->gpio_reset = ret;
+			} else {
+				aic3x->gpio_reset = -1;
+			}
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (of_property_read_u32_array(np, "ai3x-gpio-func",
 					ai3x_setup->gpio_func, 2) >= 0) {
 			aic3x->setup = ai3x_setup;
@@ -1784,10 +1866,17 @@ int aic3x_probe(struct device *dev, struct regmap *regmap, kernel_ulong_t driver
 		} else {
 			aic3x->micbias_vg = AIC3X_MICBIAS_OFF;
 		}
+<<<<<<< HEAD
+=======
+
+	} else {
+		aic3x->gpio_reset = -1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	aic3x->model = driver_data;
 
+<<<<<<< HEAD
 	aic3x->gpio_reset = devm_gpiod_get_optional(dev, "reset",
 						    GPIOD_OUT_HIGH);
 	ret = PTR_ERR_OR_ZERO(aic3x->gpio_reset);
@@ -1813,14 +1902,30 @@ int aic3x_probe(struct device *dev, struct regmap *regmap, kernel_ulong_t driver
 
 	gpiod_set_consumer_name(aic3x->gpio_reset, "tlv320aic3x reset");
 
+=======
+	if (gpio_is_valid(aic3x->gpio_reset) &&
+	    !aic3x_is_shared_reset(aic3x)) {
+		ret = gpio_request(aic3x->gpio_reset, "tlv320aic3x reset");
+		if (ret != 0)
+			goto err;
+		gpio_direction_output(aic3x->gpio_reset, 0);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < ARRAY_SIZE(aic3x->supplies); i++)
 		aic3x->supplies[i].supply = aic3x_supply_names[i];
 
 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(aic3x->supplies),
 				      aic3x->supplies);
+<<<<<<< HEAD
 	if (ret) {
 		dev_err(dev, "Failed to request supplies: %d\n", ret);
 		return ret;
+=======
+	if (ret != 0) {
+		dev_err(dev, "Failed to request supplies: %d\n", ret);
+		goto err_gpio;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	aic3x_configure_ocmv(dev, aic3x);
@@ -1829,6 +1934,7 @@ int aic3x_probe(struct device *dev, struct regmap *regmap, kernel_ulong_t driver
 		ret = regmap_register_patch(aic3x->regmap, aic3007_class_d,
 					    ARRAY_SIZE(aic3007_class_d));
 		if (ret != 0)
+<<<<<<< HEAD
 			dev_err(dev, "Failed to init class D: %d\n", ret);
 	}
 
@@ -1837,6 +1943,28 @@ int aic3x_probe(struct device *dev, struct regmap *regmap, kernel_ulong_t driver
 		return ret;
 
 	return 0;
+=======
+			dev_err(dev, "Failed to init class D: %d\n",
+				ret);
+	}
+
+	ret = devm_snd_soc_register_component(dev, &soc_component_dev_aic3x, &aic3x_dai, 1);
+
+	if (ret != 0)
+		goto err_gpio;
+
+	INIT_LIST_HEAD(&aic3x->list);
+	list_add(&aic3x->list, &reset_list);
+
+	return 0;
+
+err_gpio:
+	if (gpio_is_valid(aic3x->gpio_reset) &&
+	    !aic3x_is_shared_reset(aic3x))
+		gpio_free(aic3x->gpio_reset);
+err:
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(aic3x_probe);
 
@@ -1844,9 +1972,19 @@ void aic3x_remove(struct device *dev)
 {
 	struct aic3x_priv *aic3x = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	/* Leave the codec in reset state */
 	if (aic3x->gpio_reset && !aic3x->shared_reset)
 		gpiod_set_value(aic3x->gpio_reset, 1);
+=======
+	list_del(&aic3x->list);
+
+	if (gpio_is_valid(aic3x->gpio_reset) &&
+	    !aic3x_is_shared_reset(aic3x)) {
+		gpio_set_value(aic3x->gpio_reset, 0);
+		gpio_free(aic3x->gpio_reset);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(aic3x_remove);
 

@@ -128,8 +128,11 @@ struct seccomp_data {
 #  define __NR_seccomp 277
 # elif defined(__csky__)
 #  define __NR_seccomp 277
+<<<<<<< HEAD
 # elif defined(__loongarch__)
 #  define __NR_seccomp 277
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # elif defined(__hppa__)
 #  define __NR_seccomp 338
 # elif defined(__powerpc__)
@@ -140,8 +143,11 @@ struct seccomp_data {
 #  define __NR_seccomp 337
 # elif defined(__sh__)
 #  define __NR_seccomp 372
+<<<<<<< HEAD
 # elif defined(__mc68000__)
 #  define __NR_seccomp 380
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # else
 #  warning "seccomp syscall number unknown for this architecture"
 #  define __NR_seccomp 0xffff
@@ -1757,10 +1763,13 @@ TEST_F(TRACE_poke, getpid_runs_normally)
 				    NT_ARM_SYSTEM_CALL, &__v));	\
 	} while (0)
 # define SYSCALL_RET(_regs)	(_regs).regs[0]
+<<<<<<< HEAD
 #elif defined(__loongarch__)
 # define ARCH_REGS		struct user_pt_regs
 # define SYSCALL_NUM(_regs)	(_regs).regs[11]
 # define SYSCALL_RET(_regs)	(_regs).regs[4]
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #elif defined(__riscv) && __riscv_xlen == 64
 # define ARCH_REGS		struct user_regs_struct
 # define SYSCALL_NUM(_regs)	(_regs).a7
@@ -1846,10 +1855,13 @@ TEST_F(TRACE_poke, getpid_runs_normally)
 # define ARCH_REGS		struct pt_regs
 # define SYSCALL_NUM(_regs)	(_regs).regs[3]
 # define SYSCALL_RET(_regs)	(_regs).regs[0]
+<<<<<<< HEAD
 #elif defined(__mc68000__)
 # define ARCH_REGS		struct user_regs_struct
 # define SYSCALL_NUM(_regs)	(_regs).orig_d0
 # define SYSCALL_RET(_regs)	(_regs).d0
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 # error "Do not know how to find your architecture's registers and syscalls"
 #endif
@@ -1914,7 +1926,11 @@ const bool ptrace_entry_set_syscall_ret =
  * Use PTRACE_GETREGS and PTRACE_SETREGS when available. This is useful for
  * architectures without HAVE_ARCH_TRACEHOOK (e.g. User-mode Linux).
  */
+<<<<<<< HEAD
 #if defined(__x86_64__) || defined(__i386__) || defined(__mips__) || defined(__mc68000__)
+=======
+#if defined(__x86_64__) || defined(__i386__) || defined(__mips__)
+>>>>>>> b7ba80a49124 (Commit)
 # define ARCH_GETREGS(_regs)	ptrace(PTRACE_GETREGS, tracee, 0, &(_regs))
 # define ARCH_SETREGS(_regs)	ptrace(PTRACE_SETREGS, tracee, 0, &(_regs))
 #else

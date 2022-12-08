@@ -238,6 +238,7 @@ static int get_key_knc1(struct IR_i2c *ir, enum rc_proto *protocol,
 	return 1;
 }
 
+<<<<<<< HEAD
 static int get_key_geniatech(struct IR_i2c *ir, enum rc_proto *protocol,
 			     u32 *scancode, u8 *toggle)
 {
@@ -275,6 +276,8 @@ static int get_key_geniatech(struct IR_i2c *ir, enum rc_proto *protocol,
 	return 1;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int get_key_avermedia_cardbus(struct IR_i2c *ir, enum rc_proto *protocol,
 				     u32 *scancode, u8 *toggle)
 {
@@ -757,9 +760,14 @@ static int zilog_tx_duty_cycle(struct rc_dev *dev, u32 duty_cycle)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ir_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int ir_probe(struct i2c_client *client, const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	char *ir_codes = NULL;
 	const char *name = NULL;
 	u64 rc_proto = RC_PROTO_BIT_UNKNOWN;
@@ -804,6 +812,7 @@ static int ir_probe(struct i2c_client *client)
 		rc_proto    = RC_PROTO_BIT_OTHER;
 		ir_codes    = RC_MAP_EMPTY;
 		break;
+<<<<<<< HEAD
 	case 0x33:
 		name        = "Geniatech";
 		ir->get_key = get_key_geniatech;
@@ -811,6 +820,8 @@ static int ir_probe(struct i2c_client *client)
 		ir_codes    = RC_MAP_TOTAL_MEDIA_IN_HAND_02;
 		ir->old     = 0xfc;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case 0x6b:
 		name        = "FusionHDTV";
 		ir->get_key = get_key_fusionhdtv;
@@ -870,9 +881,12 @@ static int ir_probe(struct i2c_client *client)
 		case IR_KBD_GET_KEY_KNC1:
 			ir->get_key = get_key_knc1;
 			break;
+<<<<<<< HEAD
 		case IR_KBD_GET_KEY_GENIATECH:
 			ir->get_key = get_key_geniatech;
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		case IR_KBD_GET_KEY_FUSIONHDTV:
 			ir->get_key = get_key_fusionhdtv;
 			break;
@@ -988,7 +1002,11 @@ static struct i2c_driver ir_kbd_driver = {
 	.driver = {
 		.name   = "ir-kbd-i2c",
 	},
+<<<<<<< HEAD
 	.probe_new      = ir_probe,
+=======
+	.probe          = ir_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove         = ir_remove,
 	.id_table       = ir_kbd_id,
 };

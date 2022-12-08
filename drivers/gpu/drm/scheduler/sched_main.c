@@ -53,7 +53,10 @@
 
 #include <drm/drm_print.h>
 #include <drm/drm_gem.h>
+<<<<<<< HEAD
 #include <drm/drm_syncobj.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/gpu_scheduler.h>
 #include <drm/spsc_queue.h>
 
@@ -63,6 +66,7 @@
 #define to_drm_sched_job(sched_job)		\
 		container_of((sched_job), struct drm_sched_job, queue_node)
 
+<<<<<<< HEAD
 int drm_sched_policy = DRM_SCHED_POLICY_FIFO;
 
 /**
@@ -112,6 +116,8 @@ void drm_sched_rq_update_fifo(struct drm_sched_entity *entity, ktime_t ts)
 	spin_unlock(&entity->rq_lock);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * drm_sched_rq_init - initialize a given run queue struct
  *
@@ -125,7 +131,10 @@ static void drm_sched_rq_init(struct drm_gpu_scheduler *sched,
 {
 	spin_lock_init(&rq->lock);
 	INIT_LIST_HEAD(&rq->entities);
+<<<<<<< HEAD
 	rq->rb_tree_root = RB_ROOT_CACHED;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rq->current_entity = NULL;
 	rq->sched = sched;
 }
@@ -143,12 +152,18 @@ void drm_sched_rq_add_entity(struct drm_sched_rq *rq,
 {
 	if (!list_empty(&entity->list))
 		return;
+<<<<<<< HEAD
 
 	spin_lock(&rq->lock);
 
 	atomic_inc(rq->sched->score);
 	list_add_tail(&entity->list, &rq->entities);
 
+=======
+	spin_lock(&rq->lock);
+	atomic_inc(rq->sched->score);
+	list_add_tail(&entity->list, &rq->entities);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock(&rq->lock);
 }
 
@@ -165,6 +180,7 @@ void drm_sched_rq_remove_entity(struct drm_sched_rq *rq,
 {
 	if (list_empty(&entity->list))
 		return;
+<<<<<<< HEAD
 
 	spin_lock(&rq->lock);
 
@@ -177,18 +193,33 @@ void drm_sched_rq_remove_entity(struct drm_sched_rq *rq,
 	if (drm_sched_policy == DRM_SCHED_POLICY_FIFO)
 		drm_sched_rq_remove_fifo_locked(entity);
 
+=======
+	spin_lock(&rq->lock);
+	atomic_dec(rq->sched->score);
+	list_del_init(&entity->list);
+	if (rq->current_entity == entity)
+		rq->current_entity = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock(&rq->lock);
 }
 
 /**
+<<<<<<< HEAD
  * drm_sched_rq_select_entity_rr - Select an entity which could provide a job to run
+=======
+ * drm_sched_rq_select_entity - Select an entity which could provide a job to run
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @rq: scheduler run queue to check.
  *
  * Try to find a ready entity, returns NULL if none found.
  */
 static struct drm_sched_entity *
+<<<<<<< HEAD
 drm_sched_rq_select_entity_rr(struct drm_sched_rq *rq)
+=======
+drm_sched_rq_select_entity(struct drm_sched_rq *rq)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drm_sched_entity *entity;
 
@@ -225,6 +256,7 @@ drm_sched_rq_select_entity_rr(struct drm_sched_rq *rq)
 }
 
 /**
+<<<<<<< HEAD
  * drm_sched_rq_select_entity_fifo - Select an entity which provides a job to run
  *
  * @rq: scheduler run queue to check.
@@ -253,6 +285,8 @@ drm_sched_rq_select_entity_fifo(struct drm_sched_rq *rq)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * drm_sched_job_done - complete a job
  * @s_job: pointer to the job which is done
  *
@@ -287,6 +321,35 @@ static void drm_sched_job_done_cb(struct dma_fence *f, struct dma_fence_cb *cb)
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * drm_sched_dependency_optimized - test if the dependency can be optimized
+ *
+ * @fence: the dependency fence
+ * @entity: the entity which depends on the above fence
+ *
+ * Returns true if the dependency can be optimized and false otherwise
+ */
+bool drm_sched_dependency_optimized(struct dma_fence* fence,
+				    struct drm_sched_entity *entity)
+{
+	struct drm_gpu_scheduler *sched = entity->rq->sched;
+	struct drm_sched_fence *s_fence;
+
+	if (!fence || dma_fence_is_signaled(fence))
+		return false;
+	if (fence->context == entity->fence_context)
+		return true;
+	s_fence = to_drm_sched_fence(fence);
+	if (s_fence && s_fence->sched == sched)
+		return true;
+
+	return false;
+}
+EXPORT_SYMBOL(drm_sched_dependency_optimized);
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * drm_sched_start_timeout - start timeout for reset worker
  *
  * @sched: scheduler instance to start the worker for
@@ -418,6 +481,30 @@ static void drm_sched_job_timedout(struct work_struct *work)
 	}
 }
 
+<<<<<<< HEAD
+=======
+ /**
+  * drm_sched_increase_karma - Update sched_entity guilty flag
+  *
+  * @bad: The job guilty of time out
+  *
+  * Increment on every hang caused by the 'bad' job. If this exceeds the hang
+  * limit of the scheduler then the respective sched entity is marked guilty and
+  * jobs from it will not be scheduled further
+  */
+void drm_sched_increase_karma(struct drm_sched_job *bad)
+{
+	drm_sched_increase_karma_ext(bad, 1);
+}
+EXPORT_SYMBOL(drm_sched_increase_karma);
+
+void drm_sched_reset_karma(struct drm_sched_job *bad)
+{
+	drm_sched_increase_karma_ext(bad, 0);
+}
+EXPORT_SYMBOL(drm_sched_reset_karma);
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * drm_sched_stop - stop the scheduler
  *
@@ -552,6 +639,7 @@ void drm_sched_start(struct drm_gpu_scheduler *sched, bool full_recovery)
 EXPORT_SYMBOL(drm_sched_start);
 
 /**
+<<<<<<< HEAD
  * drm_sched_resubmit_jobs - Deprecated, don't use in new code!
  *
  * @sched: scheduler instance
@@ -570,14 +658,46 @@ EXPORT_SYMBOL(drm_sched_start);
  */
 void drm_sched_resubmit_jobs(struct drm_gpu_scheduler *sched)
 {
+=======
+ * drm_sched_resubmit_jobs - helper to relaunch jobs from the pending list
+ *
+ * @sched: scheduler instance
+ *
+ */
+void drm_sched_resubmit_jobs(struct drm_gpu_scheduler *sched)
+{
+	drm_sched_resubmit_jobs_ext(sched, INT_MAX);
+}
+EXPORT_SYMBOL(drm_sched_resubmit_jobs);
+
+/**
+ * drm_sched_resubmit_jobs_ext - helper to relunch certain number of jobs from mirror ring list
+ *
+ * @sched: scheduler instance
+ * @max: job numbers to relaunch
+ *
+ */
+void drm_sched_resubmit_jobs_ext(struct drm_gpu_scheduler *sched, int max)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_sched_job *s_job, *tmp;
 	uint64_t guilty_context;
 	bool found_guilty = false;
 	struct dma_fence *fence;
+<<<<<<< HEAD
+=======
+	int i = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	list_for_each_entry_safe(s_job, tmp, &sched->pending_list, list) {
 		struct drm_sched_fence *s_fence = s_job->s_fence;
 
+<<<<<<< HEAD
+=======
+		if (i >= max)
+			break;
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (!found_guilty && atomic_read(&s_job->karma) > sched->hang_limit) {
 			found_guilty = true;
 			guilty_context = s_job->s_fence->scheduled.context;
@@ -587,6 +707,10 @@ void drm_sched_resubmit_jobs(struct drm_gpu_scheduler *sched)
 			dma_fence_set_error(&s_fence->finished, -ECANCELED);
 
 		fence = sched->ops->run_job(s_job);
+<<<<<<< HEAD
+=======
+		i++;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (IS_ERR_OR_NULL(fence)) {
 			if (IS_ERR(fence))
@@ -602,7 +726,11 @@ void drm_sched_resubmit_jobs(struct drm_gpu_scheduler *sched)
 		}
 	}
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(drm_sched_resubmit_jobs);
+=======
+EXPORT_SYMBOL(drm_sched_resubmit_jobs_ext);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * drm_sched_job_init - init a scheduler job
@@ -720,6 +848,7 @@ int drm_sched_job_add_dependency(struct drm_sched_job *job,
 EXPORT_SYMBOL(drm_sched_job_add_dependency);
 
 /**
+<<<<<<< HEAD
  * drm_sched_job_add_syncobj_dependency - adds a syncobj's fence as a job dependency
  * @job: scheduler job to add the dependencies to
  * @file_private: drm file private pointer
@@ -783,6 +912,8 @@ int drm_sched_job_add_resv_dependencies(struct drm_sched_job *job,
 EXPORT_SYMBOL(drm_sched_job_add_resv_dependencies);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * drm_sched_job_add_implicit_dependencies - adds implicit dependencies as job
  *   dependencies
  * @job: scheduler job to add the dependencies to
@@ -801,11 +932,35 @@ int drm_sched_job_add_implicit_dependencies(struct drm_sched_job *job,
 					    struct drm_gem_object *obj,
 					    bool write)
 {
+<<<<<<< HEAD
 	return drm_sched_job_add_resv_dependencies(job, obj->resv,
 						   dma_resv_usage_rw(write));
 }
 EXPORT_SYMBOL(drm_sched_job_add_implicit_dependencies);
 
+=======
+	struct dma_resv_iter cursor;
+	struct dma_fence *fence;
+	int ret;
+
+	dma_resv_assert_held(obj->resv);
+
+	dma_resv_for_each_fence(&cursor, obj->resv, dma_resv_usage_rw(write),
+				fence) {
+		/* Make sure to grab an additional ref on the added fence */
+		dma_fence_get(fence);
+		ret = drm_sched_job_add_dependency(job, fence);
+		if (ret) {
+			dma_fence_put(fence);
+			return ret;
+		}
+	}
+	return 0;
+}
+EXPORT_SYMBOL(drm_sched_job_add_implicit_dependencies);
+
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * drm_sched_job_cleanup - clean up scheduler job resources
  * @job: scheduler job to clean up
@@ -885,9 +1040,13 @@ drm_sched_select_entity(struct drm_gpu_scheduler *sched)
 
 	/* Kernel run queue has higher priority than normal run queue*/
 	for (i = DRM_SCHED_PRIORITY_COUNT - 1; i >= DRM_SCHED_PRIORITY_MIN; i--) {
+<<<<<<< HEAD
 		entity = drm_sched_policy == DRM_SCHED_POLICY_FIFO ?
 			drm_sched_rq_select_entity_fifo(&sched->sched_rq[i]) :
 			drm_sched_rq_select_entity_rr(&sched->sched_rq[i]);
+=======
+		entity = drm_sched_rq_select_entity(&sched->sched_rq[i]);
+>>>>>>> b7ba80a49124 (Commit)
 		if (entity)
 			break;
 	}
@@ -913,7 +1072,11 @@ drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
 	job = list_first_entry_or_null(&sched->pending_list,
 				       struct drm_sched_job, list);
 
+<<<<<<< HEAD
 	if (job && dma_fence_is_signaled(&job->s_fence->finished)) {
+=======
+	if (job && dma_fence_is_signaled(job->s_fence->parent)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* remove job from pending_list */
 		list_del_init(&job->list);
 
@@ -925,7 +1088,11 @@ drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
 
 		if (next) {
 			next->s_fence->scheduled.timestamp =
+<<<<<<< HEAD
 				job->s_fence->finished.timestamp;
+=======
+				job->s_fence->parent->timestamp;
+>>>>>>> b7ba80a49124 (Commit)
 			/* start TO timer for next job */
 			drm_sched_start_timeout(sched);
 		}
@@ -935,12 +1102,15 @@ drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
 
 	spin_unlock(&sched->job_list_lock);
 
+<<<<<<< HEAD
 	if (job) {
 		job->entity->elapsed_ns += ktime_to_ns(
 			ktime_sub(job->s_fence->finished.timestamp,
 				  job->s_fence->scheduled.timestamp));
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return job;
 }
 
@@ -1033,7 +1203,11 @@ static int drm_sched_main(void *param)
 		sched_job = drm_sched_entity_pop_job(entity);
 
 		if (!sched_job) {
+<<<<<<< HEAD
 			complete_all(&entity->entity_idle);
+=======
+			complete(&entity->entity_idle);
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		}
 
@@ -1044,7 +1218,11 @@ static int drm_sched_main(void *param)
 
 		trace_drm_run_job(sched_job, entity);
 		fence = sched->ops->run_job(sched_job);
+<<<<<<< HEAD
 		complete_all(&entity->entity_idle);
+=======
+		complete(&entity->entity_idle);
+>>>>>>> b7ba80a49124 (Commit)
 		drm_sched_fence_scheduled(s_fence);
 
 		if (!IS_ERR_OR_NULL(fence)) {
@@ -1172,6 +1350,7 @@ void drm_sched_fini(struct drm_gpu_scheduler *sched)
 EXPORT_SYMBOL(drm_sched_fini);
 
 /**
+<<<<<<< HEAD
  * drm_sched_increase_karma - Update sched_entity guilty flag
  *
  * @bad: The job guilty of time out
@@ -1181,6 +1360,15 @@ EXPORT_SYMBOL(drm_sched_fini);
  * jobs from it will not be scheduled further
  */
 void drm_sched_increase_karma(struct drm_sched_job *bad)
+=======
+ * drm_sched_increase_karma_ext - Update sched_entity guilty flag
+ *
+ * @bad: The job guilty of time out
+ * @type: type for increase/reset karma
+ *
+ */
+void drm_sched_increase_karma_ext(struct drm_sched_job *bad, int type)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 	struct drm_sched_entity *tmp;
@@ -1192,7 +1380,14 @@ void drm_sched_increase_karma(struct drm_sched_job *bad)
 	 * corrupt but keep in mind that kernel jobs always considered good.
 	 */
 	if (bad->s_priority != DRM_SCHED_PRIORITY_KERNEL) {
+<<<<<<< HEAD
 		atomic_inc(&bad->karma);
+=======
+		if (type == 0)
+			atomic_set(&bad->karma, 0);
+		else if (type == 1)
+			atomic_inc(&bad->karma);
+>>>>>>> b7ba80a49124 (Commit)
 
 		for (i = DRM_SCHED_PRIORITY_MIN; i < DRM_SCHED_PRIORITY_KERNEL;
 		     i++) {
@@ -1203,7 +1398,11 @@ void drm_sched_increase_karma(struct drm_sched_job *bad)
 				if (bad->s_fence->scheduled.context ==
 				    entity->fence_context) {
 					if (entity->guilty)
+<<<<<<< HEAD
 						atomic_set(entity->guilty, 1);
+=======
+						atomic_set(entity->guilty, type);
+>>>>>>> b7ba80a49124 (Commit)
 					break;
 				}
 			}
@@ -1213,4 +1412,8 @@ void drm_sched_increase_karma(struct drm_sched_job *bad)
 		}
 	}
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(drm_sched_increase_karma);
+=======
+EXPORT_SYMBOL(drm_sched_increase_karma_ext);
+>>>>>>> b7ba80a49124 (Commit)

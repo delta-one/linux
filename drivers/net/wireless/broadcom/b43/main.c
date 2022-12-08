@@ -5171,7 +5171,10 @@ static int b43_op_get_survey(struct ieee80211_hw *hw, int idx,
 
 static const struct ieee80211_ops b43_hw_ops = {
 	.tx			= b43_op_tx,
+<<<<<<< HEAD
 	.wake_tx_queue		= ieee80211_handle_wake_tx_queue,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.conf_tx		= b43_op_conf_tx,
 	.add_interface		= b43_op_add_interface,
 	.remove_interface	= b43_op_remove_interface,
@@ -5784,12 +5787,22 @@ void b43_controller_restart(struct b43_wldev *dev, const char *reason)
 
 static void b43_print_driverinfo(void)
 {
+<<<<<<< HEAD
 	const char *feat_pci = "", *feat_nphy = "",
+=======
+	const char *feat_pci = "", *feat_pcmcia = "", *feat_nphy = "",
+>>>>>>> b7ba80a49124 (Commit)
 		   *feat_leds = "", *feat_sdio = "";
 
 #ifdef CONFIG_B43_PCI_AUTOSELECT
 	feat_pci = "P";
 #endif
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_B43_PCMCIA
+	feat_pcmcia = "M";
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_B43_PHY_N
 	feat_nphy = "N";
 #endif
@@ -5800,8 +5813,14 @@ static void b43_print_driverinfo(void)
 	feat_sdio = "S";
 #endif
 	printk(KERN_INFO "Broadcom 43xx driver loaded "
+<<<<<<< HEAD
 	       "[ Features: %s%s%s%s ]\n",
 	       feat_pci, feat_nphy, feat_leds, feat_sdio);
+=======
+	       "[ Features: %s%s%s%s%s ]\n",
+	       feat_pci, feat_pcmcia, feat_nphy,
+	       feat_leds, feat_sdio);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __init b43_init(void)

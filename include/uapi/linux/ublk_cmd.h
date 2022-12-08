@@ -17,9 +17,12 @@
 #define	UBLK_CMD_STOP_DEV	0x07
 #define	UBLK_CMD_SET_PARAMS	0x08
 #define	UBLK_CMD_GET_PARAMS	0x09
+<<<<<<< HEAD
 #define	UBLK_CMD_START_USER_RECOVERY	0x10
 #define	UBLK_CMD_END_USER_RECOVERY	0x11
 #define	UBLK_CMD_GET_DEV_INFO2		0x12
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * IO commands, issued by ublk server, and handled by ublk driver.
@@ -77,6 +80,7 @@
  */
 #define UBLK_F_NEED_GET_DATA (1UL << 2)
 
+<<<<<<< HEAD
 #define UBLK_F_USER_RECOVERY	(1UL << 3)
 
 #define UBLK_F_USER_RECOVERY_REISSUE	(1UL << 4)
@@ -106,6 +110,11 @@
 #define UBLK_S_DEV_DEAD	0
 #define UBLK_S_DEV_LIVE	1
 #define UBLK_S_DEV_QUIESCED	2
+=======
+/* device state */
+#define UBLK_S_DEV_DEAD	0
+#define UBLK_S_DEV_LIVE	1
+>>>>>>> b7ba80a49124 (Commit)
 
 /* shipped via sqe->cmd of io_uring command */
 struct ublksrv_ctrl_cmd {
@@ -121,6 +130,7 @@ struct ublksrv_ctrl_cmd {
 	__u64	addr;
 
 	/* inline data */
+<<<<<<< HEAD
 	__u64	data[1];
 
 	/*
@@ -130,6 +140,9 @@ struct ublksrv_ctrl_cmd {
 	__u16	dev_path_len;
 	__u16	pad;
 	__u32	reserved;
+=======
+	__u64	data[2];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ublksrv_ctrl_dev_info {
@@ -149,8 +162,12 @@ struct ublksrv_ctrl_dev_info {
 	/* For ublksrv internal use, invisible to ublk driver */
 	__u64	ublksrv_flags;
 
+<<<<<<< HEAD
 	__u32	owner_uid;	/* store by kernel */
 	__u32	owner_gid;	/* store by kernel */
+=======
+	__u64	reserved0;
+>>>>>>> b7ba80a49124 (Commit)
 	__u64	reserved1;
 	__u64   reserved2;
 };
@@ -246,6 +263,7 @@ struct ublk_param_discard {
 	__u16	reserved0;
 };
 
+<<<<<<< HEAD
 /*
  * read-only, can't set via UBLK_CMD_SET_PARAMS, disk_devt is available
  * after device is started
@@ -257,6 +275,8 @@ struct ublk_param_devt {
 	__u32   disk_minor;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ublk_params {
 	/*
 	 * Total length of parameters, userspace has to set 'len' for both
@@ -267,12 +287,18 @@ struct ublk_params {
 	__u32	len;
 #define UBLK_PARAM_TYPE_BASIC           (1 << 0)
 #define UBLK_PARAM_TYPE_DISCARD         (1 << 1)
+<<<<<<< HEAD
 #define UBLK_PARAM_TYPE_DEVT            (1 << 2)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__u32	types;			/* types of parameter included */
 
 	struct ublk_param_basic		basic;
 	struct ublk_param_discard	discard;
+<<<<<<< HEAD
 	struct ublk_param_devt		devt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #endif

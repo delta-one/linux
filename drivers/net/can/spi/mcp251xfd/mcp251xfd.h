@@ -504,11 +504,14 @@ union mcp251xfd_write_reg_buf {
 		u8 data[4];
 		__be16 crc;
 	} crc;
+<<<<<<< HEAD
 	struct __packed {
 		struct mcp251xfd_buf_cmd cmd;
 		u8 data[1];
 		__be16 crc;
 	} safe;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } ____cacheline_aligned;
 
 struct mcp251xfd_tx_obj {
@@ -764,6 +767,7 @@ mcp251xfd_spi_cmd_write_crc_set_addr(struct mcp251xfd_buf_cmd_crc *cmd,
 }
 
 static inline void
+<<<<<<< HEAD
 mcp251xfd_spi_cmd_write_safe_set_addr(struct mcp251xfd_buf_cmd *cmd,
 				     u16 addr)
 {
@@ -771,6 +775,8 @@ mcp251xfd_spi_cmd_write_safe_set_addr(struct mcp251xfd_buf_cmd *cmd,
 }
 
 static inline void
+=======
+>>>>>>> b7ba80a49124 (Commit)
 mcp251xfd_spi_cmd_write_crc(struct mcp251xfd_buf_cmd_crc *cmd,
 			    u16 addr, u16 len)
 {
@@ -781,11 +787,16 @@ mcp251xfd_spi_cmd_write_crc(struct mcp251xfd_buf_cmd_crc *cmd,
 static inline u8 *
 mcp251xfd_spi_cmd_write(const struct mcp251xfd_priv *priv,
 			union mcp251xfd_write_reg_buf *write_reg_buf,
+<<<<<<< HEAD
 			u16 addr, u8 len)
+=======
+			u16 addr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u8 *data;
 
 	if (priv->devtype_data.quirks & MCP251XFD_QUIRK_CRC_REG) {
+<<<<<<< HEAD
 		if (len == 1) {
 			mcp251xfd_spi_cmd_write_safe_set_addr(&write_reg_buf->safe.cmd,
 							     addr);
@@ -795,6 +806,11 @@ mcp251xfd_spi_cmd_write(const struct mcp251xfd_priv *priv,
 							     addr);
 			data = write_reg_buf->crc.data;
 		}
+=======
+		mcp251xfd_spi_cmd_write_crc_set_addr(&write_reg_buf->crc.cmd,
+						     addr);
+		data = write_reg_buf->crc.data;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		mcp251xfd_spi_cmd_write_nocrc(&write_reg_buf->nocrc.cmd,
 					      addr);

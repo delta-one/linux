@@ -50,7 +50,11 @@ static struct page *module_get_next_page(struct load_info *info)
 	return page;
 }
 
+<<<<<<< HEAD
 #if defined(CONFIG_MODULE_COMPRESS_GZIP)
+=======
+#ifdef CONFIG_MODULE_COMPRESS_GZIP
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/zlib.h>
 #define MODULE_COMPRESSION	gzip
 #define MODULE_DECOMPRESS_FN	module_gzip_decompress
@@ -114,8 +118,13 @@ static ssize_t module_gzip_decompress(struct load_info *info,
 	do {
 		struct page *page = module_get_next_page(info);
 
+<<<<<<< HEAD
 		if (IS_ERR(page)) {
 			retval = PTR_ERR(page);
+=======
+		if (!page) {
+			retval = -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 			goto out_inflate_end;
 		}
 
@@ -141,7 +150,11 @@ out:
 	kfree(s.workspace);
 	return retval;
 }
+<<<<<<< HEAD
 #elif defined(CONFIG_MODULE_COMPRESS_XZ)
+=======
+#elif CONFIG_MODULE_COMPRESS_XZ
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/xz.h>
 #define MODULE_COMPRESSION	xz
 #define MODULE_DECOMPRESS_FN	module_xz_decompress
@@ -173,8 +186,13 @@ static ssize_t module_xz_decompress(struct load_info *info,
 	do {
 		struct page *page = module_get_next_page(info);
 
+<<<<<<< HEAD
 		if (IS_ERR(page)) {
 			retval = PTR_ERR(page);
+=======
+		if (!page) {
+			retval = -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 		}
 
@@ -199,6 +217,7 @@ static ssize_t module_xz_decompress(struct load_info *info,
 	xz_dec_end(xz_dec);
 	return retval;
 }
+<<<<<<< HEAD
 #elif defined(CONFIG_MODULE_COMPRESS_ZSTD)
 #include <linux/zstd.h>
 #define MODULE_COMPRESSION	zstd
@@ -287,6 +306,8 @@ static ssize_t module_zstd_decompress(struct load_info *info,
 	kfree(wksp);
 	return retval;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 #error "Unexpected configuration for CONFIG_MODULE_DECOMPRESS"
 #endif

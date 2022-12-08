@@ -52,7 +52,11 @@ static inline char *cc_dma_buf_type(enum cc_req_dma_buf_type type)
 static void cc_copy_mac(struct device *dev, struct aead_request *req,
 			enum cc_sg_cpy_direct dir)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	u32 skip = req->assoclen + req->cryptlen;
 
 	cc_copy_sg_portion(dev, areq_ctx->backup_mac, req->src,
@@ -456,7 +460,11 @@ cipher_exit:
 
 void cc_unmap_aead_request(struct device *dev, struct aead_request *req)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int hw_iv_size = areq_ctx->hw_iv_size;
 	struct cc_drvdata *drvdata = dev_get_drvdata(dev);
 	int src_direction = (req->src != req->dst ? DMA_TO_DEVICE : DMA_BIDIRECTIONAL);
@@ -546,7 +554,11 @@ static int cc_aead_chain_iv(struct cc_drvdata *drvdata,
 			    struct buffer_array *sg_data,
 			    bool is_last, bool do_chain)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int hw_iv_size = areq_ctx->hw_iv_size;
 	struct device *dev = drvdata_to_dev(drvdata);
 	gfp_t flags = cc_gfp_flags(&req->base);
@@ -586,7 +598,11 @@ static int cc_aead_chain_assoc(struct cc_drvdata *drvdata,
 			       struct buffer_array *sg_data,
 			       bool is_last, bool do_chain)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	int rc = 0;
 	int mapped_nents = 0;
 	struct device *dev = drvdata_to_dev(drvdata);
@@ -652,7 +668,11 @@ chain_assoc_exit:
 static void cc_prepare_aead_data_dlli(struct aead_request *req,
 				      u32 *src_last_bytes, u32 *dst_last_bytes)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	enum drv_crypto_direction direct = areq_ctx->gen_ctx.op_type;
 	unsigned int authsize = areq_ctx->req_authsize;
 	struct scatterlist *sg;
@@ -678,7 +698,11 @@ static void cc_prepare_aead_data_mlli(struct cc_drvdata *drvdata,
 				      u32 *src_last_bytes, u32 *dst_last_bytes,
 				      bool is_last_table)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	enum drv_crypto_direction direct = areq_ctx->gen_ctx.op_type;
 	unsigned int authsize = areq_ctx->req_authsize;
 	struct device *dev = drvdata_to_dev(drvdata);
@@ -790,7 +814,11 @@ static int cc_aead_chain_data(struct cc_drvdata *drvdata,
 			      struct buffer_array *sg_data,
 			      bool is_last_table, bool do_chain)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = drvdata_to_dev(drvdata);
 	enum drv_crypto_direction direct = areq_ctx->gen_ctx.op_type;
 	unsigned int authsize = areq_ctx->req_authsize;
@@ -895,7 +923,11 @@ chain_data_exit:
 static void cc_update_aead_mlli_nents(struct cc_drvdata *drvdata,
 				      struct aead_request *req)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	u32 curr_mlli_size = 0;
 
 	if (areq_ctx->assoc_buff_type == CC_DMA_BUF_MLLI) {
@@ -945,7 +977,11 @@ static void cc_update_aead_mlli_nents(struct cc_drvdata *drvdata,
 
 int cc_map_aead_request(struct cc_drvdata *drvdata, struct aead_request *req)
 {
+<<<<<<< HEAD
 	struct aead_req_ctx *areq_ctx = aead_request_ctx_dma(req);
+=======
+	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct mlli_params *mlli_params = &areq_ctx->mlli_params;
 	struct device *dev = drvdata_to_dev(drvdata);
 	struct buffer_array sg_data;

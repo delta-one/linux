@@ -5,7 +5,10 @@
 
 #include <dt-bindings/interrupt-controller/irq.h>
 #include <dt-bindings/interrupt-controller/arm-gic.h>
+<<<<<<< HEAD
 #include <dt-bindings/clock/ste-db8500-clkout.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <dt-bindings/reset/stericsson,db8500-prcc-reset.h>
 #include <dt-bindings/mfd/dbx500-prcmu.h>
 #include <dt-bindings/arm/ux500_pm_domains.h>
@@ -313,11 +316,14 @@
 			smp_twd_clk: smp-twd-clock {
 				#clock-cells = <0>;
 			};
+<<<<<<< HEAD
 
 			clkout_clk: clkout-clock {
 				/* Cell 1 id, cell 2 source, cell 3 div */
 				#clock-cells = <3>;
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		mtu@a03c6000 {
@@ -1155,15 +1161,27 @@
 			compatible = "stericsson,ux500-cryp";
 			reg = <0xa03cb000 0x1000>;
 			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 			clocks = <&prcc_pclk 6 1>;
 			power-domains = <&pm_domains DOMAIN_VAPE>;
+=======
+
+			v-ape-supply = <&db8500_vape_reg>;
+			clocks = <&prcc_pclk 6 1>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		hash@a03c2000 {
 			compatible = "stericsson,ux500-hash";
 			reg = <0xa03c2000 0x1000>;
+<<<<<<< HEAD
 			clocks = <&prcc_pclk 6 2>;
 			power-domains = <&pm_domains DOMAIN_VAPE>;
+=======
+
+			v-ape-supply = <&db8500_vape_reg>;
+			clocks = <&prcc_pclk 6 2>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };

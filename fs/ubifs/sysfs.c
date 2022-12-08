@@ -74,13 +74,21 @@ static const struct sysfs_ops ubifs_attr_ops = {
 	.show	= ubifs_attr_show,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type ubifs_sb_ktype = {
+=======
+static struct kobj_type ubifs_sb_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.default_groups	= ubifs_groups,
 	.sysfs_ops	= &ubifs_attr_ops,
 	.release	= ubifs_sb_release,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type ubifs_ktype = {
+=======
+static struct kobj_type ubifs_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops	= &ubifs_attr_ops,
 };
 
@@ -144,8 +152,11 @@ int __init ubifs_sysfs_init(void)
 	kobject_set_name(&ubifs_kset.kobj, "ubifs");
 	ubifs_kset.kobj.parent = fs_kobj;
 	ret = kset_register(&ubifs_kset);
+<<<<<<< HEAD
 	if (ret)
 		kset_put(&ubifs_kset);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }

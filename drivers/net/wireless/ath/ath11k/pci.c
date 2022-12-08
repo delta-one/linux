@@ -543,8 +543,11 @@ static int ath11k_pci_claim(struct ath11k_pci *ab_pci, struct pci_dev *pdev)
 		goto clear_master;
 	}
 
+<<<<<<< HEAD
 	ab->mem_ce = ab->mem;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ath11k_dbg(ab, ATH11K_DBG_BOOT, "boot pci_mem 0x%pK\n", ab->mem);
 	return 0;
 
@@ -687,7 +690,10 @@ static const struct ath11k_hif_ops ath11k_pci_hif_ops = {
 	.stop = ath11k_pcic_stop,
 	.read32 = ath11k_pcic_read32,
 	.write32 = ath11k_pcic_write32,
+<<<<<<< HEAD
 	.read = ath11k_pcic_read,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.power_down = ath11k_pci_power_down,
 	.power_up = ath11k_pci_power_up,
 	.suspend = ath11k_pci_hif_suspend,
@@ -981,7 +987,11 @@ static __maybe_unused int ath11k_pci_pm_suspend(struct device *dev)
 	if (ret)
 		ath11k_warn(ab, "failed to suspend core: %d\n", ret);
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static __maybe_unused int ath11k_pci_pm_resume(struct device *dev)

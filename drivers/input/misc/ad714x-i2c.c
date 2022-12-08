@@ -12,6 +12,21 @@
 #include <linux/pm.h>
 #include "ad714x.h"
 
+<<<<<<< HEAD
+=======
+static int __maybe_unused ad714x_i2c_suspend(struct device *dev)
+{
+	return ad714x_disable(i2c_get_clientdata(to_i2c_client(dev)));
+}
+
+static int __maybe_unused ad714x_i2c_resume(struct device *dev)
+{
+	return ad714x_enable(i2c_get_clientdata(to_i2c_client(dev)));
+}
+
+static SIMPLE_DEV_PM_OPS(ad714x_i2c_pm, ad714x_i2c_suspend, ad714x_i2c_resume);
+
+>>>>>>> b7ba80a49124 (Commit)
 static int ad714x_i2c_write(struct ad714x_chip *chip,
 			    unsigned short reg, unsigned short data)
 {
@@ -57,7 +72,12 @@ static int ad714x_i2c_read(struct ad714x_chip *chip,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ad714x_i2c_probe(struct i2c_client *client)
+=======
+static int ad714x_i2c_probe(struct i2c_client *client,
+					const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ad714x_chip *chip;
 
@@ -84,9 +104,15 @@ MODULE_DEVICE_TABLE(i2c, ad714x_id);
 static struct i2c_driver ad714x_i2c_driver = {
 	.driver = {
 		.name = "ad714x_captouch",
+<<<<<<< HEAD
 		.pm   = pm_sleep_ptr(&ad714x_pm),
 	},
 	.probe_new = ad714x_i2c_probe,
+=======
+		.pm   = &ad714x_i2c_pm,
+	},
+	.probe    = ad714x_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = ad714x_id,
 };
 

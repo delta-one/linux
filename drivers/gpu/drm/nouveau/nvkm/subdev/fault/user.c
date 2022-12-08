@@ -22,13 +22,17 @@
 #include "priv.h"
 
 #include <core/memory.h>
+<<<<<<< HEAD
 #include <core/event.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <subdev/mmu.h>
 
 #include <nvif/clb069.h>
 #include <nvif/unpack.h>
 
 static int
+<<<<<<< HEAD
 nvkm_ufault_uevent(struct nvkm_object *object, void *argv, u32 argc, struct nvkm_uevent *uevent)
 {
 	struct nvkm_fault_buffer *buffer = nvkm_fault_buffer(object);
@@ -44,6 +48,8 @@ nvkm_ufault_uevent(struct nvkm_object *object, void *argv, u32 argc, struct nvkm
 }
 
 static int
+=======
+>>>>>>> b7ba80a49124 (Commit)
 nvkm_ufault_map(struct nvkm_object *object, void *argv, u32 argc,
 		enum nvkm_object_map *type, u64 *addr, u64 *size)
 {
@@ -56,6 +62,21 @@ nvkm_ufault_map(struct nvkm_object *object, void *argv, u32 argc,
 }
 
 static int
+<<<<<<< HEAD
+=======
+nvkm_ufault_ntfy(struct nvkm_object *object, u32 type,
+		 struct nvkm_event **pevent)
+{
+	struct nvkm_fault_buffer *buffer = nvkm_fault_buffer(object);
+	if (type == NVB069_V0_NTFY_FAULT) {
+		*pevent = &buffer->fault->event;
+		return 0;
+	}
+	return -EINVAL;
+}
+
+static int
+>>>>>>> b7ba80a49124 (Commit)
 nvkm_ufault_fini(struct nvkm_object *object, bool suspend)
 {
 	struct nvkm_fault_buffer *buffer = nvkm_fault_buffer(object);
@@ -82,8 +103,13 @@ nvkm_ufault = {
 	.dtor = nvkm_ufault_dtor,
 	.init = nvkm_ufault_init,
 	.fini = nvkm_ufault_fini,
+<<<<<<< HEAD
 	.map = nvkm_ufault_map,
 	.uevent = nvkm_ufault_uevent,
+=======
+	.ntfy = nvkm_ufault_ntfy,
+	.map = nvkm_ufault_map,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int

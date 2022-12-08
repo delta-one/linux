@@ -27,14 +27,26 @@ static int kirkwood_get_temp(struct thermal_zone_device *thermal,
 			  int *temp)
 {
 	unsigned long reg;
+<<<<<<< HEAD
 	struct kirkwood_thermal_priv *priv = thermal_zone_device_priv(thermal);
+=======
+	struct kirkwood_thermal_priv *priv = thermal->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 
 	reg = readl_relaxed(priv->sensor);
 
 	/* Valid check */
 	if (!((reg >> KIRKWOOD_THERMAL_VALID_OFFSET) &
+<<<<<<< HEAD
 	    KIRKWOOD_THERMAL_VALID_MASK))
 		return -EIO;
+=======
+	    KIRKWOOD_THERMAL_VALID_MASK)) {
+		dev_err(&thermal->device,
+			"Temperature sensor reading not valid\n");
+		return -EIO;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Calculate temperature. According to Marvell internal
@@ -61,13 +73,22 @@ static int kirkwood_thermal_probe(struct platform_device *pdev)
 {
 	struct thermal_zone_device *thermal = NULL;
 	struct kirkwood_thermal_priv *priv;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
 	if (!priv)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	priv->sensor = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	priv->sensor = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(priv->sensor))
 		return PTR_ERR(priv->sensor);
 

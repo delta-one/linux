@@ -68,8 +68,13 @@ static void iproc_pwmc_disable(struct iproc_pwmc *ip, unsigned int channel)
 	ndelay(400);
 }
 
+<<<<<<< HEAD
 static int iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 				struct pwm_state *state)
+=======
+static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+				 struct pwm_state *state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct iproc_pwmc *ip = to_iproc_pwmc(chip);
 	u64 tmp, multi, rate;
@@ -91,7 +96,11 @@ static int iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 	if (rate == 0) {
 		state->period = 0;
 		state->duty_cycle = 0;
+<<<<<<< HEAD
 		return 0;
+=======
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
@@ -107,8 +116,11 @@ static int iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 	value = readl(ip->base + IPROC_PWM_DUTY_CYCLE_OFFSET(pwm->hwpwm));
 	tmp = (value & IPROC_PWM_PERIOD_MAX) * multi;
 	state->duty_cycle = div64_u64(tmp, rate);
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int iproc_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,

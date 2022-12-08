@@ -91,6 +91,7 @@ void ipc_imem_wwan_channel_init(struct iosm_imem *ipc_imem,
 	}
 
 	ipc_chnl_cfg_get(&chnl_cfg, ipc_imem->nr_of_channels);
+<<<<<<< HEAD
 
 	if (ipc_imem->mmio->mux_protocol == MUX_AGGREGATION &&
 	    ipc_imem->nr_of_channels == IPC_MEM_IP_CHL_ID_0) {
@@ -99,6 +100,8 @@ void ipc_imem_wwan_channel_init(struct iosm_imem *ipc_imem,
 		chnl_cfg.dl_buf_size = IPC_MEM_MAX_ADB_BUF_SIZE;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ipc_imem_channel_init(ipc_imem, IPC_CTYPE_WWAN, chnl_cfg,
 			      IRQ_MOD_OFF);
 
@@ -598,7 +601,11 @@ int ipc_imem_sys_devlink_write(struct iosm_devlink *ipc_devlink,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	skb_put_data(skb, buf, count);
+=======
+	memcpy(skb_put(skb, count), buf, count);
+>>>>>>> b7ba80a49124 (Commit)
 
 	IPC_CB(skb)->op_type = UL_USR_OP_BLOCKED;
 

@@ -10,9 +10,12 @@
 #include "transaction.h"
 #include "block-group.h"
 #include "zoned.h"
+<<<<<<< HEAD
 #include "fs.h"
 #include "accessors.h"
 #include "extent-tree.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * HOW DOES SPACE RESERVATION WORK
@@ -308,6 +311,11 @@ void btrfs_add_bg_to_space_info(struct btrfs_fs_info *info,
 	ASSERT(found);
 	spin_lock(&found->lock);
 	found->total_bytes += block_group->length;
+<<<<<<< HEAD
+=======
+	if (test_bit(BLOCK_GROUP_FLAG_ZONE_IS_ACTIVE, &block_group->runtime_flags))
+		found->active_total_bytes += block_group->length;
+>>>>>>> b7ba80a49124 (Commit)
 	found->disk_total += block_group->length * factor;
 	found->bytes_used += block_group->used;
 	found->disk_used += block_group->used * factor;
@@ -377,6 +385,25 @@ static u64 calc_available_free_space(struct btrfs_fs_info *fs_info,
 	return avail;
 }
 
+<<<<<<< HEAD
+=======
+static inline u64 writable_total_bytes(struct btrfs_fs_info *fs_info,
+				       struct btrfs_space_info *space_info)
+{
+	/*
+	 * On regular filesystem, all total_bytes are always writable. On zoned
+	 * filesystem, there may be a limitation imposed by max_active_zones.
+	 * For metadata allocation, we cannot finish an existing active block
+	 * group to avoid a deadlock. Thus, we need to consider only the active
+	 * groups to be writable for metadata space.
+	 */
+	if (!btrfs_is_zoned(fs_info) || (space_info->flags & BTRFS_BLOCK_GROUP_DATA))
+		return space_info->total_bytes;
+
+	return space_info->active_total_bytes;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int btrfs_can_overcommit(struct btrfs_fs_info *fs_info,
 			 struct btrfs_space_info *space_info, u64 bytes,
 			 enum btrfs_reserve_flush_enum flush)
@@ -389,13 +416,21 @@ int btrfs_can_overcommit(struct btrfs_fs_info *fs_info,
 		return 0;
 
 	used = btrfs_space_info_used(space_info, true);
+<<<<<<< HEAD
 	if (test_bit(BTRFS_FS_ACTIVE_ZONE_TRACKING, &fs_info->flags) &&
 	    (space_info->flags & BTRFS_BLOCK_GROUP_METADATA))
+=======
+	if (btrfs_is_zoned(fs_info) && (space_info->flags & BTRFS_BLOCK_GROUP_METADATA))
+>>>>>>> b7ba80a49124 (Commit)
 		avail = 0;
 	else
 		avail = calc_available_free_space(fs_info, space_info, flush);
 
+<<<<<<< HEAD
 	if (used + bytes < space_info->total_bytes + avail)
+=======
+	if (used + bytes < writable_total_bytes(fs_info, space_info) + avail)
+>>>>>>> b7ba80a49124 (Commit)
 		return 1;
 	return 0;
 }
@@ -431,7 +466,11 @@ again:
 		ticket = list_first_entry(head, struct reserve_ticket, list);
 
 		/* Check and see if our ticket can be satisfied now. */
+<<<<<<< HEAD
 		if ((used + ticket->bytes <= space_info->total_bytes) ||
+=======
+		if ((used + ticket->bytes <= writable_total_bytes(fs_info, space_info)) ||
+>>>>>>> b7ba80a49124 (Commit)
 		    btrfs_can_overcommit(fs_info, space_info, ticket->bytes,
 					 flush)) {
 			btrfs_space_info_update_bytes_may_use(fs_info,
@@ -811,6 +850,10 @@ btrfs_calc_reclaim_metadata_size(struct btrfs_fs_info *fs_info,
 {
 	u64 used;
 	u64 avail;
+<<<<<<< HEAD
+=======
+	u64 total;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 to_reclaim = space_info->reclaim_size;
 
 	lockdep_assert_held(&space_info->lock);
@@ -825,8 +868,14 @@ btrfs_calc_reclaim_metadata_size(struct btrfs_fs_info *fs_info,
 	 * space.  If that's the case add in our overage so we make sure to put
 	 * appropriate pressure on the flushing state machine.
 	 */
+<<<<<<< HEAD
 	if (space_info->total_bytes + avail < used)
 		to_reclaim += used - (space_info->total_bytes + avail);
+=======
+	total = writable_total_bytes(fs_info, space_info);
+	if (total + avail < used)
+		to_reclaim += used - (total + avail);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return to_reclaim;
 }
@@ -836,10 +885,18 @@ static bool need_preemptive_reclaim(struct btrfs_fs_info *fs_info,
 {
 	u64 global_rsv_size = fs_info->global_block_rsv.reserved;
 	u64 ordered, delalloc;
+<<<<<<< HEAD
 	u64 thresh;
 	u64 used;
 
 	thresh = mult_perc(space_info->total_bytes, 90);
+=======
+	u64 total = writable_total_bytes(fs_info, space_info);
+	u64 thresh;
+	u64 used;
+
+	thresh = div_factor_fine(total, 90);
+>>>>>>> b7ba80a49124 (Commit)
 
 	lockdep_assert_held(&space_info->lock);
 
@@ -902,8 +959,13 @@ static bool need_preemptive_reclaim(struct btrfs_fs_info *fs_info,
 					   BTRFS_RESERVE_FLUSH_ALL);
 	used = space_info->bytes_used + space_info->bytes_reserved +
 	       space_info->bytes_readonly + global_rsv_size;
+<<<<<<< HEAD
 	if (used < space_info->total_bytes)
 		thresh += space_info->total_bytes - used;
+=======
+	if (used < total)
+		thresh += total - used;
+>>>>>>> b7ba80a49124 (Commit)
 	thresh >>= space_info->clamp;
 
 	used = space_info->bytes_pinned;
@@ -957,7 +1019,11 @@ static bool steal_from_global_rsv(struct btrfs_fs_info *fs_info,
 		return false;
 
 	spin_lock(&global_rsv->lock);
+<<<<<<< HEAD
 	min_bytes = mult_perc(global_rsv->size, 10);
+=======
+	min_bytes = div_factor(global_rsv->size, 1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (global_rsv->reserved < min_bytes + ticket->bytes) {
 		spin_unlock(&global_rsv->lock);
 		return false;
@@ -1473,8 +1539,13 @@ static void wait_reserve_ticket(struct btrfs_fs_info *fs_info,
 	spin_unlock(&space_info->lock);
 }
 
+<<<<<<< HEAD
 /*
  * Do the appropriate flushing and waiting for a ticket.
+=======
+/**
+ * Do the appropriate flushing and waiting for a ticket
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @fs_info:    the filesystem
  * @space_info: space info for the reservation
@@ -1566,6 +1637,7 @@ static inline bool can_steal(enum btrfs_reserve_flush_enum flush)
 		flush == BTRFS_RESERVE_FLUSH_EVICT);
 }
 
+<<<<<<< HEAD
 /*
  * NO_FLUSH and FLUSH_EMERGENCY don't want to create a ticket, they just want to
  * fail as quickly as possible.
@@ -1578,6 +1650,10 @@ static inline bool can_ticket(enum btrfs_reserve_flush_enum flush)
 
 /*
  * Try to reserve bytes from the block_rsv's space.
+=======
+/**
+ * Try to reserve bytes from the block_rsv's space
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @fs_info:    the filesystem
  * @space_info: space info we want to allocate from
@@ -1630,7 +1706,11 @@ static int __reserve_bytes(struct btrfs_fs_info *fs_info,
 	 * can_overcommit() to ensure we can overcommit to continue.
 	 */
 	if (!pending_tickets &&
+<<<<<<< HEAD
 	    ((used + orig_bytes <= space_info->total_bytes) ||
+=======
+	    ((used + orig_bytes <= writable_total_bytes(fs_info, space_info)) ||
+>>>>>>> b7ba80a49124 (Commit)
 	     btrfs_can_overcommit(fs_info, space_info, orig_bytes, flush))) {
 		btrfs_space_info_update_bytes_may_use(fs_info, space_info,
 						      orig_bytes);
@@ -1638,6 +1718,7 @@ static int __reserve_bytes(struct btrfs_fs_info *fs_info,
 	}
 
 	/*
+<<<<<<< HEAD
 	 * Things are dire, we need to make a reservation so we don't abort.  We
 	 * will let this reservation go through as long as we have actual space
 	 * left to allocate for the block.
@@ -1652,13 +1733,19 @@ static int __reserve_bytes(struct btrfs_fs_info *fs_info,
 	}
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * If we couldn't make a reservation then setup our reservation ticket
 	 * and kick the async worker if it's not already running.
 	 *
 	 * If we are a priority flusher then we just need to add our ticket to
 	 * the list and we will do our own flushing further down.
 	 */
+<<<<<<< HEAD
 	if (ret && can_ticket(flush)) {
+=======
+	if (ret && flush != BTRFS_RESERVE_NO_FLUSH) {
+>>>>>>> b7ba80a49124 (Commit)
 		ticket.bytes = orig_bytes;
 		ticket.error = 0;
 		space_info->reclaim_size += ticket.bytes;
@@ -1708,15 +1795,24 @@ static int __reserve_bytes(struct btrfs_fs_info *fs_info,
 		}
 	}
 	spin_unlock(&space_info->lock);
+<<<<<<< HEAD
 	if (!ret || !can_ticket(flush))
+=======
+	if (!ret || flush == BTRFS_RESERVE_NO_FLUSH)
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 
 	return handle_reserve_ticket(fs_info, space_info, &ticket, start_ns,
 				     orig_bytes, flush);
 }
 
+<<<<<<< HEAD
 /*
  * Try to reserve metadata bytes from the block_rsv's space.
+=======
+/**
+ * Trye to reserve metadata bytes from the block_rsv's space
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @fs_info:    the filesystem
  * @block_rsv:  block_rsv we're allocating for
@@ -1750,8 +1846,13 @@ int btrfs_reserve_metadata_bytes(struct btrfs_fs_info *fs_info,
 	return ret;
 }
 
+<<<<<<< HEAD
 /*
  * Try to reserve data bytes for an allocation.
+=======
+/**
+ * Try to reserve data bytes for an allocation
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @fs_info: the filesystem
  * @bytes:   number of bytes we need
@@ -1794,6 +1895,7 @@ __cold void btrfs_dump_space_info_for_trans_abort(struct btrfs_fs_info *fs_info)
 	}
 	dump_global_block_rsv(fs_info);
 }
+<<<<<<< HEAD
 
 /*
  * Account the unused space of all the readonly block group in the space_info.
@@ -1828,3 +1930,5 @@ u64 btrfs_account_ro_block_groups_free_space(struct btrfs_space_info *sinfo)
 
 	return free_bytes;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

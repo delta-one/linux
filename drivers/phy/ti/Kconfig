@@ -23,7 +23,11 @@ config PHY_DM816X_USB
 
 config PHY_AM654_SERDES
 	tristate "TI AM654 SERDES support"
+<<<<<<< HEAD
 	depends on OF && (ARCH_K3 || COMPILE_TEST)
+=======
+	depends on OF && ARCH_K3 || COMPILE_TEST
+>>>>>>> b7ba80a49124 (Commit)
 	depends on COMMON_CLK
 	select GENERIC_PHY
 	select MULTIPLEXER
@@ -35,7 +39,11 @@ config PHY_AM654_SERDES
 
 config PHY_J721E_WIZ
 	tristate "TI J721E WIZ (SERDES Wrapper) support"
+<<<<<<< HEAD
 	depends on OF && (ARCH_K3 || COMPILE_TEST)
+=======
+	depends on OF && ARCH_K3 || COMPILE_TEST
+>>>>>>> b7ba80a49124 (Commit)
 	depends on HAS_IOMEM && OF_ADDRESS
 	depends on COMMON_CLK
 	select GENERIC_PHY

@@ -282,7 +282,11 @@ err_pm_disable:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void img_prl_out_dev_remove(struct platform_device *pdev)
+=======
+static int img_prl_out_dev_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct img_prl_out *prl = platform_get_drvdata(pdev);
 
@@ -291,6 +295,11 @@ static void img_prl_out_dev_remove(struct platform_device *pdev)
 		img_prl_out_suspend(&pdev->dev);
 
 	clk_disable_unprepare(prl->clk_sys);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id img_prl_out_of_match[] = {
@@ -311,7 +320,11 @@ static struct platform_driver img_prl_out_driver = {
 		.pm = &img_prl_out_pm_ops
 	},
 	.probe = img_prl_out_probe,
+<<<<<<< HEAD
 	.remove_new = img_prl_out_dev_remove
+=======
+	.remove = img_prl_out_dev_remove
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(img_prl_out_driver);
 

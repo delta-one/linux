@@ -10,12 +10,15 @@
 
 struct mb_cache;
 
+<<<<<<< HEAD
 /* Cache entry flags */
 enum {
 	MBE_REFERENCED_B = 0,
 	MBE_REUSABLE_B
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mb_cache_entry {
 	/* List of entries in cache - protected by cache->c_list_lock */
 	struct list_head	e_list;
@@ -32,7 +35,12 @@ struct mb_cache_entry {
 	atomic_t		e_refcnt;
 	/* Key in hash - stable during lifetime of the entry */
 	u32			e_key;
+<<<<<<< HEAD
 	unsigned long		e_flags;
+=======
+	u32			e_referenced:1;
+	u32			e_reusable:1;
+>>>>>>> b7ba80a49124 (Commit)
 	/* User provided value - stable during lifetime of the entry */
 	u64			e_value;
 };

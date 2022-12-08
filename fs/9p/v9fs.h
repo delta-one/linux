@@ -36,11 +36,15 @@ enum p9_session_flags {
 	V9FS_ACCESS_SINGLE	= 0x04,
 	V9FS_ACCESS_USER	= 0x08,
 	V9FS_ACCESS_CLIENT	= 0x10,
+<<<<<<< HEAD
 	V9FS_POSIX_ACL		= 0x20,
 	V9FS_NO_XATTR		= 0x40,
 	V9FS_IGNORE_QV		= 0x80, /* ignore qid.version for cache hints */
 	V9FS_DIRECT_IO		= 0x100,
 	V9FS_SYNC     		= 0x200
+=======
+	V9FS_POSIX_ACL		= 0x20
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* possible values of ->cache */
@@ -54,8 +58,11 @@ enum p9_session_flags {
 
 enum p9_cache_modes {
 	CACHE_NONE,
+<<<<<<< HEAD
 	CACHE_READAHEAD,
 	CACHE_WRITEBACK,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	CACHE_MMAP,
 	CACHE_LOOSE,
 	CACHE_FSCACHE,
@@ -157,7 +164,11 @@ extern struct dentry *v9fs_vfs_lookup(struct inode *dir, struct dentry *dentry,
 				      unsigned int flags);
 extern int v9fs_vfs_unlink(struct inode *i, struct dentry *d);
 extern int v9fs_vfs_rmdir(struct inode *i, struct dentry *d);
+<<<<<<< HEAD
 extern int v9fs_vfs_rename(struct mnt_idmap *idmap,
+=======
+extern int v9fs_vfs_rename(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			   struct inode *old_dir, struct dentry *old_dentry,
 			   struct inode *new_dir, struct dentry *new_dentry,
 			   unsigned int flags);

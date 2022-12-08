@@ -16,7 +16,11 @@
 
 static int ns_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	void __iomem *pvtmon = thermal_zone_device_priv(tz);
+=======
+	void __iomem *pvtmon = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	int offset = thermal_zone_get_offset(tz);
 	int slope = thermal_zone_get_slope(tz);
 	u32 val;

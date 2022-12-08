@@ -50,6 +50,10 @@ struct netlink_kernel_cfg {
 	struct mutex	*cb_mutex;
 	int		(*bind)(struct net *net, int group);
 	void		(*unbind)(struct net *net, int group);
+<<<<<<< HEAD
+=======
+	bool		(*compare)(struct net *net, struct sock *sk);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct sock *__netlink_kernel_create(struct net *net, int unit,
@@ -63,7 +67,10 @@ netlink_kernel_create(struct net *net, int unit, struct netlink_kernel_cfg *cfg)
 
 /* this can be increased when necessary - don't expose to userland */
 #define NETLINK_MAX_COOKIE_LEN	20
+<<<<<<< HEAD
 #define NETLINK_MAX_FMTMSG_LEN	80
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct netlink_ext_ack - netlink extended ACK report struct
@@ -75,8 +82,11 @@ netlink_kernel_create(struct net *net, int unit, struct netlink_kernel_cfg *cfg)
  * @miss_nest: nest missing an attribute (%NULL if missing top level attr)
  * @cookie: cookie data to return to userspace (for success)
  * @cookie_len: actual cookie data length
+<<<<<<< HEAD
  * @_msg_buf: output buffer for formatted message strings - don't access
  *	directly, use %NL_SET_ERR_MSG_FMT
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct netlink_ext_ack {
 	const char *_msg;
@@ -86,13 +96,21 @@ struct netlink_ext_ack {
 	u16 miss_type;
 	u8 cookie[NETLINK_MAX_COOKIE_LEN];
 	u8 cookie_len;
+<<<<<<< HEAD
 	char _msg_buf[NETLINK_MAX_FMTMSG_LEN];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Always use this macro, this allows later putting the
  * message into a separate section or such for things
  * like translation or listing all possible messages.
+<<<<<<< HEAD
  * If string formatting is needed use NL_SET_ERR_MSG_FMT.
+=======
+ * Currently string formatting is not supported (due
+ * to the lack of an output buffer.)
+>>>>>>> b7ba80a49124 (Commit)
  */
 #define NL_SET_ERR_MSG(extack, msg) do {		\
 	static const char __msg[] = msg;		\
@@ -104,6 +122,7 @@ struct netlink_ext_ack {
 		__extack->_msg = __msg;			\
 } while (0)
 
+<<<<<<< HEAD
 /* We splice fmt with %s at each end even in the snprintf so that both calls
  * can use the same string constant, avoiding its duplication in .ro
  */
@@ -139,6 +158,11 @@ struct netlink_ext_ack {
 		NL_SET_ERR_MSG_MOD((extack), msg);	\
 } while (0)
 
+=======
+#define NL_SET_ERR_MSG_MOD(extack, msg)			\
+	NL_SET_ERR_MSG((extack), KBUILD_MODNAME ": " msg)
+
+>>>>>>> b7ba80a49124 (Commit)
 #define NL_SET_BAD_ATTR_POLICY(extack, attr, pol) do {	\
 	if ((extack)) {					\
 		(extack)->bad_attr = (attr);		\
@@ -272,10 +296,13 @@ struct netlink_callback {
 	};
 };
 
+<<<<<<< HEAD
 #define NL_ASSERT_DUMP_CTX_FITS(type_name)				\
 	BUILD_BUG_ON(sizeof(type_name) >				\
 		     sizeof_field(struct netlink_callback, ctx))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct netlink_notify {
 	struct net *net;
 	u32 portid;

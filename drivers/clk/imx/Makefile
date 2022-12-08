@@ -22,7 +22,10 @@ mxc-clk-objs += clk-pllv3.o
 mxc-clk-objs += clk-pllv4.o
 mxc-clk-objs += clk-pll14xx.o
 mxc-clk-objs += clk-sscg-pll.o
+<<<<<<< HEAD
 mxc-clk-objs += clk-gpr-mux.o
+=======
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_MXC_CLK) += mxc-clk.o
 
 obj-$(CONFIG_CLK_IMX8MM) += clk-imx8mm.o

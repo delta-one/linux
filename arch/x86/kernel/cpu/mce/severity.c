@@ -203,11 +203,14 @@ static struct severity {
 		BITSET(MCI_STATUS_OVER|MCI_STATUS_UC)
 		),
 	MCESEV(
+<<<<<<< HEAD
 		PANIC, "Uncorrected in kernel",
 		BITSET(MCI_STATUS_UC),
 		KERNEL
 		),
 	MCESEV(
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		UC, "Uncorrected",
 		BITSET(MCI_STATUS_UC)
 		),
@@ -396,6 +399,12 @@ static noinstr int mce_severity_intel(struct mce *m, struct pt_regs *regs, char 
 			*msg = s->msg;
 		s->covered = 1;
 
+<<<<<<< HEAD
+=======
+		if (s->sev >= MCE_UC_SEVERITY && ctx == IN_KERNEL)
+			return MCE_PANIC_SEVERITY;
+
+>>>>>>> b7ba80a49124 (Commit)
 		return s->sev;
 	}
 }

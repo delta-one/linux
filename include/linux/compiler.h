@@ -203,6 +203,19 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
 	__v;								\
 })
 
+<<<<<<< HEAD
+=======
+/*
+ * With CONFIG_CFI_CLANG, the compiler replaces function addresses in
+ * instrumented C code with jump table addresses. Architectures that
+ * support CFI can define this macro to return the actual function address
+ * when needed.
+ */
+#ifndef function_nocfi
+#define function_nocfi(x) (x)
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __KERNEL__ */
 
 /*
@@ -211,11 +224,17 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
  * otherwise, or eliminated entirely due to lack of references that are
  * visible to the compiler.
  */
+<<<<<<< HEAD
 #define ___ADDRESSABLE(sym, __attrs) \
 	static void * __used __attrs \
 		__UNIQUE_ID(__PASTE(__addressable_,sym)) = (void *)&sym;
 #define __ADDRESSABLE(sym) \
 	___ADDRESSABLE(sym, __section(".discard.addressable"))
+=======
+#define __ADDRESSABLE(sym) \
+	static void * __section(".discard.addressable") __used \
+		__UNIQUE_ID(__PASTE(__addressable_,sym)) = (void *)&sym;
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * offset_to_ptr - convert a relative memory offset to an absolute pointer
@@ -236,7 +255,10 @@ static inline void *offset_to_ptr(const int *off)
  * bool and also pointer types.
  */
 #define is_signed_type(type) (((type)(-1)) < (__force type)1)
+<<<<<<< HEAD
 #define is_unsigned_type(type) (!is_signed_type(type))
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * This is needed in functions which generate the stack canary, see

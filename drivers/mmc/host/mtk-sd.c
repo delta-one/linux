@@ -452,7 +452,10 @@ struct msdc_host {
 	struct clk *bus_clk;	/* bus clock which used to access register */
 	struct clk *src_clk_cg; /* msdc source clock control gate */
 	struct clk *sys_clk_cg;	/* msdc subsys clock control gate */
+<<<<<<< HEAD
 	struct clk *crypto_clk; /* msdc crypto clock control gate */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct clk_bulk_data bulk_clks[MSDC_NR_CLOCKS];
 	u32 mclk;		/* mmc subsystem clock frequency */
 	u32 src_clk_freq;	/* source clock frequency */
@@ -553,6 +556,7 @@ static const struct mtk_mmc_compatible mt7622_compat = {
 	.support_64g = false,
 };
 
+<<<<<<< HEAD
 static const struct mtk_mmc_compatible mt7986_compat = {
 	.clk_div_bits = 12,
 	.recheck_sdio_irq = true,
@@ -566,6 +570,8 @@ static const struct mtk_mmc_compatible mt7986_compat = {
 	.support_64g = true,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct mtk_mmc_compatible mt8135_compat = {
 	.clk_div_bits = 8,
 	.recheck_sdio_irq = true,
@@ -623,7 +629,10 @@ static const struct of_device_id msdc_of_ids[] = {
 	{ .compatible = "mediatek,mt6795-mmc", .data = &mt6795_compat},
 	{ .compatible = "mediatek,mt7620-mmc", .data = &mt7620_compat},
 	{ .compatible = "mediatek,mt7622-mmc", .data = &mt7622_compat},
+<<<<<<< HEAD
 	{ .compatible = "mediatek,mt7986-mmc", .data = &mt7986_compat},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "mediatek,mt8135-mmc", .data = &mt8135_compat},
 	{ .compatible = "mediatek,mt8173-mmc", .data = &mt8173_compat},
 	{ .compatible = "mediatek,mt8183-mmc", .data = &mt8183_compat},
@@ -750,7 +759,11 @@ static inline void msdc_dma_setup(struct msdc_host *host, struct msdc_dma *dma,
 		else
 			bd[j].bd_info &= ~BDMA_DESC_EOL;
 
+<<<<<<< HEAD
 		/* checksum need to clear first */
+=======
+		/* checksume need to clear first */
+>>>>>>> b7ba80a49124 (Commit)
 		bd[j].bd_info &= ~BDMA_DESC_CHECKSUM;
 		bd[j].bd_info |= msdc_dma_calcs((u8 *)(&bd[j]), 16) << 8;
 	}
@@ -841,7 +854,10 @@ static void msdc_set_busy_timeout(struct msdc_host *host, u64 ns, u64 clks)
 static void msdc_gate_clock(struct msdc_host *host)
 {
 	clk_bulk_disable_unprepare(MSDC_NR_CLOCKS, host->bulk_clks);
+<<<<<<< HEAD
 	clk_disable_unprepare(host->crypto_clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	clk_disable_unprepare(host->src_clk_cg);
 	clk_disable_unprepare(host->src_clk);
 	clk_disable_unprepare(host->bus_clk);
@@ -857,7 +873,10 @@ static int msdc_ungate_clock(struct msdc_host *host)
 	clk_prepare_enable(host->bus_clk);
 	clk_prepare_enable(host->src_clk);
 	clk_prepare_enable(host->src_clk_cg);
+<<<<<<< HEAD
 	clk_prepare_enable(host->crypto_clk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = clk_bulk_prepare_enable(MSDC_NR_CLOCKS, host->bulk_clks);
 	if (ret) {
 		dev_err(host->dev, "Cannot enable pclk/axi/ahb clock gates\n");
@@ -1224,10 +1243,19 @@ static bool msdc_cmd_done(struct msdc_host *host, int events,
 
 	if (!sbc_error && !(events & MSDC_INT_CMDRDY)) {
 		if (events & MSDC_INT_CMDTMO ||
+<<<<<<< HEAD
 		    (!mmc_op_tuning(cmd->opcode) && !host->hs400_tuning))
 			/*
 			 * should not clear fifo/interrupt as the tune data
 			 * may have already come when cmd19/cmd21 gets response
+=======
+		    (cmd->opcode != MMC_SEND_TUNING_BLOCK &&
+		     cmd->opcode != MMC_SEND_TUNING_BLOCK_HS200 &&
+		     !host->hs400_tuning))
+			/*
+			 * should not clear fifo/interrupt as the tune data
+			 * may have alreay come when cmd19/cmd21 gets response
+>>>>>>> b7ba80a49124 (Commit)
 			 * CRC error.
 			 */
 			msdc_reset_hw(host);
@@ -1318,7 +1346,13 @@ static void msdc_cmd_next(struct msdc_host *host,
 {
 	if ((cmd->error &&
 	    !(cmd->error == -EILSEQ &&
+<<<<<<< HEAD
 	      (mmc_op_tuning(cmd->opcode) || host->hs400_tuning))) ||
+=======
+	      (cmd->opcode == MMC_SEND_TUNING_BLOCK ||
+	       cmd->opcode == MMC_SEND_TUNING_BLOCK_HS200 ||
+	       host->hs400_tuning))) ||
+>>>>>>> b7ba80a49124 (Commit)
 	    (mrq->sbc && mrq->sbc->error))
 		msdc_request_done(host, mrq);
 	else if (cmd == mrq->sbc)
@@ -2601,11 +2635,21 @@ static int msdc_of_clock_parse(struct platform_device *pdev,
 			return PTR_ERR(host->src_clk_cg);
 	}
 
+<<<<<<< HEAD
 	/* If present, always enable for this clock gate */
 	host->sys_clk_cg = devm_clk_get_optional_enabled(&pdev->dev, "sys_cg");
 	if (IS_ERR(host->sys_clk_cg))
 		host->sys_clk_cg = NULL;
 
+=======
+	host->sys_clk_cg = devm_clk_get_optional(&pdev->dev, "sys_cg");
+	if (IS_ERR(host->sys_clk_cg))
+		host->sys_clk_cg = NULL;
+
+	/* If present, always enable for this clock gate */
+	clk_prepare_enable(host->sys_clk_cg);
+
+>>>>>>> b7ba80a49124 (Commit)
 	host->bulk_clks[0].id = "pclk_cg";
 	host->bulk_clks[1].id = "axi_cg";
 	host->bulk_clks[2].id = "ahb_cg";
@@ -2669,6 +2713,7 @@ static int msdc_drv_probe(struct platform_device *pdev)
 		goto host_free;
 	}
 
+<<<<<<< HEAD
 	/* only eMMC has crypto property */
 	if (!(mmc->caps2 & MMC_CAP2_NO_MMC)) {
 		host->crypto_clk = devm_clk_get_optional(&pdev->dev, "crypto");
@@ -2678,6 +2723,8 @@ static int msdc_drv_probe(struct platform_device *pdev)
 			mmc->caps2 |= MMC_CAP2_CRYPTO;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	host->irq = platform_get_irq(pdev, 0);
 	if (host->irq < 0) {
 		ret = -EINVAL;

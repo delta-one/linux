@@ -28,7 +28,10 @@
 #include <net/netns/generic.h>
 #include <net/sock.h>
 #include <uapi/linux/kcm.h>
+<<<<<<< HEAD
 #include <trace/events/sock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 unsigned int kcm_net_id;
 
@@ -163,8 +166,12 @@ static void kcm_rcv_ready(struct kcm_sock *kcm)
 	/* Buffer limit is okay now, add to ready list */
 	list_add_tail(&kcm->wait_rx_list,
 		      &kcm->mux->kcm_rx_waiters);
+<<<<<<< HEAD
 	/* paired with lockless reads in kcm_rfree() */
 	WRITE_ONCE(kcm->rx_wait, true);
+=======
+	kcm->rx_wait = true;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void kcm_rfree(struct sk_buff *skb)
@@ -180,7 +187,11 @@ static void kcm_rfree(struct sk_buff *skb)
 	/* For reading rx_wait and rx_psock without holding lock */
 	smp_mb__after_atomic();
 
+<<<<<<< HEAD
 	if (!READ_ONCE(kcm->rx_wait) && !READ_ONCE(kcm->rx_psock) &&
+=======
+	if (!kcm->rx_wait && !kcm->rx_psock &&
+>>>>>>> b7ba80a49124 (Commit)
 	    sk_rmem_alloc_get(sk) < sk->sk_rcvlowat) {
 		spin_lock_bh(&mux->rx_lock);
 		kcm_rcv_ready(kcm);
@@ -223,7 +234,11 @@ static void requeue_rx_msgs(struct kcm_mux *mux, struct sk_buff_head *head)
 	struct sk_buff *skb;
 	struct kcm_sock *kcm;
 
+<<<<<<< HEAD
 	while ((skb = skb_dequeue(head))) {
+=======
+	while ((skb = __skb_dequeue(head))) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Reset destructor to avoid calling kcm_rcv_ready */
 		skb->destructor = sock_rfree;
 		skb_orphan(skb);
@@ -239,8 +254,12 @@ try_again:
 		if (kcm_queue_rcv_skb(&kcm->sk, skb)) {
 			/* Should mean socket buffer full */
 			list_del(&kcm->wait_rx_list);
+<<<<<<< HEAD
 			/* paired with lockless reads in kcm_rfree() */
 			WRITE_ONCE(kcm->rx_wait, false);
+=======
+			kcm->rx_wait = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 			/* Commit rx_wait to read in kcm_free */
 			smp_wmb();
@@ -283,12 +302,19 @@ static struct kcm_sock *reserve_rx_kcm(struct kcm_psock *psock,
 	kcm = list_first_entry(&mux->kcm_rx_waiters,
 			       struct kcm_sock, wait_rx_list);
 	list_del(&kcm->wait_rx_list);
+<<<<<<< HEAD
 	/* paired with lockless reads in kcm_rfree() */
 	WRITE_ONCE(kcm->rx_wait, false);
 
 	psock->rx_kcm = kcm;
 	/* paired with lockless reads in kcm_rfree() */
 	WRITE_ONCE(kcm->rx_psock, psock);
+=======
+	kcm->rx_wait = false;
+
+	psock->rx_kcm = kcm;
+	kcm->rx_psock = psock;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_unlock_bh(&mux->rx_lock);
 
@@ -315,8 +341,12 @@ static void unreserve_rx_kcm(struct kcm_psock *psock,
 	spin_lock_bh(&mux->rx_lock);
 
 	psock->rx_kcm = NULL;
+<<<<<<< HEAD
 	/* paired with lockless reads in kcm_rfree() */
 	WRITE_ONCE(kcm->rx_psock, NULL);
+=======
+	kcm->rx_psock = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Commit kcm->rx_psock before sk_rmem_alloc_get to sync with
 	 * kcm_rfree
@@ -350,8 +380,11 @@ static void psock_data_ready(struct sock *sk)
 {
 	struct kcm_psock *psock;
 
+<<<<<<< HEAD
 	trace_sk_data_ready(sk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	read_lock_bh(&sk->sk_callback_lock);
 
 	psock = (struct kcm_psock *)sk->sk_user_data;
@@ -842,7 +875,11 @@ static ssize_t kcm_sendpage(struct socket *sock, struct page *page,
 	}
 
 	get_page(page);
+<<<<<<< HEAD
 	skb_fill_page_desc_noacc(skb, i, page, offset, size);
+=======
+	skb_fill_page_desc(skb, i, page, offset, size);
+>>>>>>> b7ba80a49124 (Commit)
 	skb_shinfo(skb)->flags |= SKBFL_SHARED_FRAG;
 
 coalesced:
@@ -1088,17 +1125,63 @@ out_error:
 	return err;
 }
 
+<<<<<<< HEAD
+=======
+static struct sk_buff *kcm_wait_data(struct sock *sk, int flags,
+				     long timeo, int *err)
+{
+	struct sk_buff *skb;
+
+	while (!(skb = skb_peek(&sk->sk_receive_queue))) {
+		if (sk->sk_err) {
+			*err = sock_error(sk);
+			return NULL;
+		}
+
+		if (sock_flag(sk, SOCK_DONE))
+			return NULL;
+
+		if ((flags & MSG_DONTWAIT) || !timeo) {
+			*err = -EAGAIN;
+			return NULL;
+		}
+
+		sk_wait_data(sk, &timeo, NULL);
+
+		/* Handle signals */
+		if (signal_pending(current)) {
+			*err = sock_intr_errno(timeo);
+			return NULL;
+		}
+	}
+
+	return skb;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int kcm_recvmsg(struct socket *sock, struct msghdr *msg,
 		       size_t len, int flags)
 {
 	struct sock *sk = sock->sk;
 	struct kcm_sock *kcm = kcm_sk(sk);
 	int err = 0;
+<<<<<<< HEAD
+=======
+	long timeo;
+>>>>>>> b7ba80a49124 (Commit)
 	struct strp_msg *stm;
 	int copied = 0;
 	struct sk_buff *skb;
 
+<<<<<<< HEAD
 	skb = skb_recv_datagram(sk, flags, &err);
+=======
+	timeo = sock_rcvtimeo(sk, flags & MSG_DONTWAIT);
+
+	lock_sock(sk);
+
+	skb = kcm_wait_data(sk, flags, timeo, &err);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!skb)
 		goto out;
 
@@ -1129,11 +1212,21 @@ msg_finished:
 			/* Finished with message */
 			msg->msg_flags |= MSG_EOR;
 			KCM_STATS_INCR(kcm->stats.rx_msgs);
+<<<<<<< HEAD
+=======
+			skb_unlink(skb, &sk->sk_receive_queue);
+			kfree_skb(skb);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
 out:
+<<<<<<< HEAD
 	skb_free_datagram(sk, skb);
+=======
+	release_sock(sk);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return copied ? : err;
 }
 
@@ -1143,6 +1236,10 @@ static ssize_t kcm_splice_read(struct socket *sock, loff_t *ppos,
 {
 	struct sock *sk = sock->sk;
 	struct kcm_sock *kcm = kcm_sk(sk);
+<<<<<<< HEAD
+=======
+	long timeo;
+>>>>>>> b7ba80a49124 (Commit)
 	struct strp_msg *stm;
 	int err = 0;
 	ssize_t copied;
@@ -1150,7 +1247,15 @@ static ssize_t kcm_splice_read(struct socket *sock, loff_t *ppos,
 
 	/* Only support splice for SOCKSEQPACKET */
 
+<<<<<<< HEAD
 	skb = skb_recv_datagram(sk, flags, &err);
+=======
+	timeo = sock_rcvtimeo(sk, flags & MSG_DONTWAIT);
+
+	lock_sock(sk);
+
+	skb = kcm_wait_data(sk, flags, timeo, &err);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!skb)
 		goto err_out;
 
@@ -1178,11 +1283,21 @@ static ssize_t kcm_splice_read(struct socket *sock, loff_t *ppos,
 	 * finish reading the message.
 	 */
 
+<<<<<<< HEAD
 	skb_free_datagram(sk, skb);
 	return copied;
 
 err_out:
 	skb_free_datagram(sk, skb);
+=======
+	release_sock(sk);
+
+	return copied;
+
+err_out:
+	release_sock(sk);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -1202,8 +1317,12 @@ static void kcm_recv_disable(struct kcm_sock *kcm)
 	if (!kcm->rx_psock) {
 		if (kcm->rx_wait) {
 			list_del(&kcm->wait_rx_list);
+<<<<<<< HEAD
 			/* paired with lockless reads in kcm_rfree() */
 			WRITE_ONCE(kcm->rx_wait, false);
+=======
+			kcm->rx_wait = false;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		requeue_rx_msgs(mux, &kcm->sk.sk_receive_queue);
@@ -1756,8 +1875,12 @@ static void kcm_done(struct kcm_sock *kcm)
 
 	if (kcm->rx_wait) {
 		list_del(&kcm->wait_rx_list);
+<<<<<<< HEAD
 		/* paired with lockless reads in kcm_rfree() */
 		WRITE_ONCE(kcm->rx_wait, false);
+=======
+		kcm->rx_wait = false;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	/* Move any pending receive messages to other kcm sockets */
 	requeue_rx_msgs(mux, &sk->sk_receive_queue);
@@ -1802,10 +1925,17 @@ static int kcm_release(struct socket *sock)
 	kcm = kcm_sk(sk);
 	mux = kcm->mux;
 
+<<<<<<< HEAD
 	lock_sock(sk);
 	sock_orphan(sk);
 	kfree_skb(kcm->seq_skb);
 
+=======
+	sock_orphan(sk);
+	kfree_skb(kcm->seq_skb);
+
+	lock_sock(sk);
+>>>>>>> b7ba80a49124 (Commit)
 	/* Purge queue under lock to avoid race condition with tx_work trying
 	 * to act when queue is nonempty. If tx_work runs after this point
 	 * it will just return.

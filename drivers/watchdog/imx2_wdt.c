@@ -27,7 +27,10 @@
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <linux/of_address.h>
+<<<<<<< HEAD
 #include <linux/of_device.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <linux/regmap.h>
 #include <linux/watchdog.h>
@@ -36,7 +39,10 @@
 
 #define IMX2_WDT_WCR		0x00		/* Control Register */
 #define IMX2_WDT_WCR_WT		(0xFF << 8)	/* -> Watchdog Timeout Field */
+<<<<<<< HEAD
 #define IMX2_WDT_WCR_WDW	BIT(7)		/* -> Watchdog disable for WAIT */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define IMX2_WDT_WCR_WDA	BIT(5)		/* -> External Reset WDOG_B */
 #define IMX2_WDT_WCR_SRS	BIT(4)		/* -> Software Reset Signal */
 #define IMX2_WDT_WCR_WRE	BIT(3)		/* -> WDOG Reset Enable */
@@ -62,19 +68,28 @@
 
 #define WDOG_SEC_TO_COUNT(s)	((s * 2 - 1) << 8)
 
+<<<<<<< HEAD
 struct imx2_wdt_data {
 	bool wdw_supported;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct imx2_wdt_device {
 	struct clk *clk;
 	struct regmap *regmap;
 	struct watchdog_device wdog;
+<<<<<<< HEAD
 	const struct imx2_wdt_data *data;
 	bool ext_reset;
 	bool clk_is_on;
 	bool no_ping;
 	bool sleep_wait;
+=======
+	bool ext_reset;
+	bool clk_is_on;
+	bool no_ping;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static bool nowayout = WATCHDOG_NOWAYOUT;
@@ -137,9 +152,12 @@ static inline void imx2_wdt_setup(struct watchdog_device *wdog)
 
 	/* Suspend timer in low power mode, write once-only */
 	val |= IMX2_WDT_WCR_WDZST;
+<<<<<<< HEAD
 	/* Suspend timer in low power WAIT mode, write once-only */
 	if (wdev->sleep_wait)
 		val |= IMX2_WDT_WCR_WDW;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Strip the old watchdog Time-Out value */
 	val &= ~IMX2_WDT_WCR_WT;
 	/* Generate internal chip-level reset if WDOG times out */
@@ -303,8 +321,11 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
 	wdog->max_hw_heartbeat_ms = IMX2_WDT_MAX_TIME * 1000;
 	wdog->parent		= dev;
 
+<<<<<<< HEAD
 	wdev->data = of_device_get_match_data(dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = platform_get_irq(pdev, 0);
 	if (ret > 0)
 		if (!devm_request_irq(dev, ret, imx2_wdt_isr, 0,
@@ -326,6 +347,7 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
 
 	wdev->ext_reset = of_property_read_bool(dev->of_node,
 						"fsl,ext-reset-output");
+<<<<<<< HEAD
 
 	if (of_property_read_bool(dev->of_node, "fsl,suspend-in-wait")) {
 		if (!wdev->data->wdw_supported) {
@@ -338,6 +360,11 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
 	/*
 	 * The i.MX7D doesn't support low power mode, so we need to ping the watchdog
 	 * during suspend. Interaction with "fsl,suspend-in-wait" is unknown!
+=======
+	/*
+	 * The i.MX7D doesn't support low power mode, so we need to ping the watchdog
+	 * during suspend.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	wdev->no_ping = !of_device_is_compatible(dev->of_node, "fsl,imx7d-wdt");
 	platform_set_drvdata(pdev, wdog);
@@ -439,6 +466,7 @@ static int __maybe_unused imx2_wdt_resume(struct device *dev)
 static SIMPLE_DEV_PM_OPS(imx2_wdt_pm_ops, imx2_wdt_suspend,
 			 imx2_wdt_resume);
 
+<<<<<<< HEAD
 struct imx2_wdt_data imx_wdt = {
 	.wdw_supported = true,
 };
@@ -469,6 +497,11 @@ static const struct of_device_id imx2_wdt_dt_ids[] = {
 	{ .compatible = "fsl,ls1012a-wdt", .data = &imx_wdt_legacy },
 	{ .compatible = "fsl,ls1043a-wdt", .data = &imx_wdt_legacy },
 	{ .compatible = "fsl,vf610-wdt", .data = &imx_wdt },
+=======
+static const struct of_device_id imx2_wdt_dt_ids[] = {
+	{ .compatible = "fsl,imx21-wdt", },
+	{ .compatible = "fsl,imx7d-wdt", },
+>>>>>>> b7ba80a49124 (Commit)
 	{ /* sentinel */ }
 };
 MODULE_DEVICE_TABLE(of, imx2_wdt_dt_ids);

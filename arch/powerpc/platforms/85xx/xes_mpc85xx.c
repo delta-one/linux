@@ -136,9 +136,33 @@ machine_arch_initcall(xes_mpc8572, mpc85xx_common_publish_devices);
 machine_arch_initcall(xes_mpc8548, mpc85xx_common_publish_devices);
 machine_arch_initcall(xes_mpc8540, mpc85xx_common_publish_devices);
 
+<<<<<<< HEAD
 define_machine(xes_mpc8572) {
 	.name			= "X-ES MPC8572",
 	.compatible		= "xes,MPC8572",
+=======
+/*
+ * Called very early, device-tree isn't unflattened
+ */
+static int __init xes_mpc8572_probe(void)
+{
+	return of_machine_is_compatible("xes,MPC8572");
+}
+
+static int __init xes_mpc8548_probe(void)
+{
+	return of_machine_is_compatible("xes,MPC8548");
+}
+
+static int __init xes_mpc8540_probe(void)
+{
+	return of_machine_is_compatible("xes,MPC8540");
+}
+
+define_machine(xes_mpc8572) {
+	.name			= "X-ES MPC8572",
+	.probe			= xes_mpc8572_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.setup_arch		= xes_mpc85xx_setup_arch,
 	.init_IRQ		= xes_mpc85xx_pic_init,
 #ifdef CONFIG_PCI
@@ -146,12 +170,20 @@ define_machine(xes_mpc8572) {
 	.pcibios_fixup_phb      = fsl_pcibios_fixup_phb,
 #endif
 	.get_irq		= mpic_get_irq,
+<<<<<<< HEAD
+=======
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.progress		= udbg_progress,
 };
 
 define_machine(xes_mpc8548) {
 	.name			= "X-ES MPC8548",
+<<<<<<< HEAD
 	.compatible		= "xes,MPC8548",
+=======
+	.probe			= xes_mpc8548_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.setup_arch		= xes_mpc85xx_setup_arch,
 	.init_IRQ		= xes_mpc85xx_pic_init,
 #ifdef CONFIG_PCI
@@ -159,12 +191,20 @@ define_machine(xes_mpc8548) {
 	.pcibios_fixup_phb      = fsl_pcibios_fixup_phb,
 #endif
 	.get_irq		= mpic_get_irq,
+<<<<<<< HEAD
+=======
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.progress		= udbg_progress,
 };
 
 define_machine(xes_mpc8540) {
 	.name			= "X-ES MPC8540",
+<<<<<<< HEAD
 	.compatible		= "xes,MPC8540",
+=======
+	.probe			= xes_mpc8540_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.setup_arch		= xes_mpc85xx_setup_arch,
 	.init_IRQ		= xes_mpc85xx_pic_init,
 #ifdef CONFIG_PCI
@@ -172,5 +212,9 @@ define_machine(xes_mpc8540) {
 	.pcibios_fixup_phb      = fsl_pcibios_fixup_phb,
 #endif
 	.get_irq		= mpic_get_irq,
+<<<<<<< HEAD
+=======
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.progress		= udbg_progress,
 };

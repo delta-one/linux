@@ -310,8 +310,13 @@ int diRead(struct inode *ip)
 	iagno = INOTOIAG(ip->i_ino);
 
 	/* read the iag */
+<<<<<<< HEAD
 	IREAD_LOCK(ipimap, RDWRLOCK_IMAP);
 	imap = JFS_IP(ipimap)->i_imap;
+=======
+	imap = JFS_IP(ipimap)->i_imap;
+	IREAD_LOCK(ipimap, RDWRLOCK_IMAP);
+>>>>>>> b7ba80a49124 (Commit)
 	rc = diIAGRead(imap, iagno, &mp);
 	IREAD_UNLOCK(ipimap);
 	if (rc) {

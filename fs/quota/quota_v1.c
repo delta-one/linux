@@ -206,7 +206,11 @@ static int v1_write_file_info(struct super_block *sb, int type)
 	      sizeof(struct v1_disk_dqblk), v1_dqoff(0));
 	if (ret == sizeof(struct v1_disk_dqblk))
 		ret = 0;
+<<<<<<< HEAD
 	else if (ret >= 0)
+=======
+	else if (ret > 0)
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EIO;
 out:
 	up_write(&dqopt->dqio_sem);

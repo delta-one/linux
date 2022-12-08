@@ -244,13 +244,21 @@
 			clock-names = "apb_pclk";
 		};
 
+<<<<<<< HEAD
 		serial@16000000 {
+=======
+		uart@16000000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "arm,pl011", "arm,primecell";
 			clocks = <&uartclk>, <&pclk>;
 			clock-names = "uartclk", "apb_pclk";
 		};
 
+<<<<<<< HEAD
 		serial@17000000 {
+=======
+		uart@17000000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "arm,pl011", "arm,primecell";
 			clocks = <&uartclk>, <&pclk>;
 			clock-names = "uartclk", "apb_pclk";

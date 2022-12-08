@@ -6,8 +6,12 @@ TEST_PROGS := \
 	test-callbacks.sh \
 	test-shadow-vars.sh \
 	test-state.sh \
+<<<<<<< HEAD
 	test-ftrace.sh \
 	test-sysfs.sh
+=======
+	test-ftrace.sh
+>>>>>>> b7ba80a49124 (Commit)
 
 TEST_FILES := settings
 

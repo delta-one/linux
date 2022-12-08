@@ -181,8 +181,11 @@ enum {
 	NLA_S64,
 	NLA_BITFIELD32,
 	NLA_REJECT,
+<<<<<<< HEAD
 	NLA_BE16,
 	NLA_BE32,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__NLA_TYPE_MAX,
 };
 
@@ -233,7 +236,10 @@ enum nla_policy_validation {
  *    NLA_U32, NLA_U64,
  *    NLA_S8, NLA_S16,
  *    NLA_S32, NLA_S64,
+<<<<<<< HEAD
  *    NLA_BE16, NLA_BE32,
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *    NLA_MSECS            Leaving the length field zero will verify the
  *                         given type fits, using it verifies minimum length
  *                         just like "All other"
@@ -264,8 +270,11 @@ enum nla_policy_validation {
  *    NLA_U16,
  *    NLA_U32,
  *    NLA_U64,
+<<<<<<< HEAD
  *    NLA_BE16,
  *    NLA_BE32,
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *    NLA_S8,
  *    NLA_S16,
  *    NLA_S32,
@@ -276,8 +285,12 @@ enum nla_policy_validation {
  *                         Note that in the interest of code simplicity and
  *                         struct size both limits are s16, so you cannot
  *                         enforce a range that doesn't fall within the range
+<<<<<<< HEAD
  *                         of s16 - do that using the NLA_POLICY_FULL_RANGE()
  *                         or NLA_POLICY_FULL_RANGE_SIGNED() macros instead.
+=======
+ *                         of s16 - do that as usual in the code instead.
+>>>>>>> b7ba80a49124 (Commit)
  *                         Use the NLA_POLICY_MIN(), NLA_POLICY_MAX() and
  *                         NLA_POLICY_RANGE() macros.
  *    NLA_U8,
@@ -323,10 +336,26 @@ struct nla_policy {
 	u8		validation_type;
 	u16		len;
 	union {
+<<<<<<< HEAD
 		/**
 		 * @strict_start_type: first attribute to validate strictly
 		 *
 		 * This entry is special, and used for the attribute at index 0
+=======
+		const u32 bitfield32_valid;
+		const u32 mask;
+		const char *reject_message;
+		const struct nla_policy *nested_policy;
+		struct netlink_range_validation *range;
+		struct netlink_range_validation_signed *range_signed;
+		struct {
+			s16 min, max;
+			u8 network_byte_order:1;
+		};
+		int (*validate)(const struct nlattr *attr,
+				struct netlink_ext_ack *extack);
+		/* This entry is special, and used for the attribute at index 0
+>>>>>>> b7ba80a49124 (Commit)
 		 * only, and specifies special data about the policy, namely it
 		 * specifies the "boundary type" where strict length validation
 		 * starts for any attribute types >= this value, also, strict
@@ -345,6 +374,7 @@ struct nla_policy {
 		 * was added to enforce strict validation from thereon.
 		 */
 		u16 strict_start_type;
+<<<<<<< HEAD
 
 		/* private: use NLA_POLICY_*() to set */
 		const u32 bitfield32_valid;
@@ -358,6 +388,8 @@ struct nla_policy {
 		};
 		int (*validate)(const struct nlattr *attr,
 				struct netlink_ext_ack *extack);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -379,8 +411,11 @@ struct nla_policy {
 	(tp == NLA_U8 || tp == NLA_U16 || tp == NLA_U32 || tp == NLA_U64)
 #define __NLA_IS_SINT_TYPE(tp)						\
 	(tp == NLA_S8 || tp == NLA_S16 || tp == NLA_S32 || tp == NLA_S64)
+<<<<<<< HEAD
 #define __NLA_IS_BEINT_TYPE(tp)						\
 	(tp == NLA_BE16 || tp == NLA_BE32)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define __NLA_ENSURE(condition) BUILD_BUG_ON_ZERO(!(condition))
 #define NLA_ENSURE_UINT_TYPE(tp)			\
@@ -394,7 +429,10 @@ struct nla_policy {
 #define NLA_ENSURE_INT_OR_BINARY_TYPE(tp)		\
 	(__NLA_ENSURE(__NLA_IS_UINT_TYPE(tp) ||		\
 		      __NLA_IS_SINT_TYPE(tp) ||		\
+<<<<<<< HEAD
 		      __NLA_IS_BEINT_TYPE(tp) ||	\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		      tp == NLA_MSECS ||		\
 		      tp == NLA_BINARY) + tp)
 #define NLA_ENSURE_NO_VALIDATION_PTR(tp)		\
@@ -402,8 +440,11 @@ struct nla_policy {
 		      tp != NLA_REJECT &&		\
 		      tp != NLA_NESTED &&		\
 		      tp != NLA_NESTED_ARRAY) + tp)
+<<<<<<< HEAD
 #define NLA_ENSURE_BEINT_TYPE(tp)			\
 	(__NLA_ENSURE(__NLA_IS_BEINT_TYPE(tp)) + tp)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define NLA_POLICY_RANGE(tp, _min, _max) {		\
 	.type = NLA_ENSURE_INT_OR_BINARY_TYPE(tp),	\
@@ -434,6 +475,17 @@ struct nla_policy {
 	.type = NLA_ENSURE_INT_OR_BINARY_TYPE(tp),	\
 	.validation_type = NLA_VALIDATE_MAX,		\
 	.max = _max,					\
+<<<<<<< HEAD
+=======
+	.network_byte_order = 0,			\
+}
+
+#define NLA_POLICY_MAX_BE(tp, _max) {			\
+	.type = NLA_ENSURE_UINT_TYPE(tp),		\
+	.validation_type = NLA_VALIDATE_MAX,		\
+	.max = _max,					\
+	.network_byte_order = 1,			\
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define NLA_POLICY_MASK(tp, _mask) {			\
@@ -907,6 +959,7 @@ static inline int nlmsg_report(const struct nlmsghdr *nlh)
 }
 
 /**
+<<<<<<< HEAD
  * nlmsg_seq - return the seq number of netlink message
  * @nlh: netlink message header
  *
@@ -918,6 +971,8 @@ static inline u32 nlmsg_seq(const struct nlmsghdr *nlh)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * nlmsg_for_each_attr - iterate over a stream of attributes
  * @pos: loop counter, set to current attribute
  * @nlh: netlink message header
@@ -950,6 +1005,7 @@ static inline struct nlmsghdr *nlmsg_put(struct sk_buff *skb, u32 portid, u32 se
 }
 
 /**
+<<<<<<< HEAD
  * nlmsg_append - Add more data to a nlmsg in a skb
  * @skb: socket buffer to store message in
  * @size: length of message payload
@@ -971,6 +1027,8 @@ static inline void *nlmsg_append(struct sk_buff *skb, u32 size)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * nlmsg_put_answer - Add a new callback based netlink message to an skb
  * @skb: socket buffer to store message in
  * @cb: netlink callback

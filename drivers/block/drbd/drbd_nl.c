@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+// SPDX-License-Identifier: GPL-2.0-or-later
+>>>>>>> b7ba80a49124 (Commit)
 /*
    drbd_nl.c
 
@@ -1210,7 +1214,10 @@ static void decide_on_discard_support(struct drbd_device *device,
 	struct drbd_connection *connection =
 		first_peer_device(device)->connection;
 	struct request_queue *q = device->rq_queue;
+<<<<<<< HEAD
 	unsigned int max_discard_sectors;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (bdev && !bdev_max_discard_sectors(bdev->backing_bdev))
 		goto not_supported;
@@ -1231,14 +1238,25 @@ static void decide_on_discard_support(struct drbd_device *device,
 	 * topology on all peers.
 	 */
 	blk_queue_discard_granularity(q, 512);
+<<<<<<< HEAD
 	max_discard_sectors = drbd_max_discard_sectors(connection);
 	blk_queue_max_discard_sectors(q, max_discard_sectors);
 	blk_queue_max_write_zeroes_sectors(q, max_discard_sectors);
+=======
+	q->limits.max_discard_sectors = drbd_max_discard_sectors(connection);
+	q->limits.max_write_zeroes_sectors =
+		drbd_max_discard_sectors(connection);
+>>>>>>> b7ba80a49124 (Commit)
 	return;
 
 not_supported:
 	blk_queue_discard_granularity(q, 0);
+<<<<<<< HEAD
 	blk_queue_max_discard_sectors(q, 0);
+=======
+	q->limits.max_discard_sectors = 0;
+	q->limits.max_write_zeroes_sectors = 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void fixup_write_zeroes(struct drbd_device *device, struct request_queue *q)
@@ -1256,6 +1274,7 @@ static void fixup_write_zeroes(struct drbd_device *device, struct request_queue 
 		q->limits.max_write_zeroes_sectors = 0;
 }
 
+<<<<<<< HEAD
 static void fixup_discard_support(struct drbd_device *device, struct request_queue *q)
 {
 	unsigned int max_discard = device->rq_queue->limits.max_discard_sectors;
@@ -1268,6 +1287,8 @@ static void fixup_discard_support(struct drbd_device *device, struct request_que
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void drbd_setup_queue_param(struct drbd_device *device, struct drbd_backing_dev *bdev,
 				   unsigned int max_bio_size, struct o_qlim *o)
 {
@@ -1300,7 +1321,10 @@ static void drbd_setup_queue_param(struct drbd_device *device, struct drbd_backi
 		disk_update_readahead(device->vdisk);
 	}
 	fixup_write_zeroes(device, q);
+<<<<<<< HEAD
 	fixup_discard_support(device, q);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void drbd_reconsider_queue_parameters(struct drbd_device *device, struct drbd_backing_dev *bdev, struct o_qlim *o)
@@ -1543,7 +1567,11 @@ int drbd_adm_disk_opts(struct sk_buff *skb, struct genl_info *info)
 		goto fail_unlock;
 	}
 
+<<<<<<< HEAD
 	if (!expect(device, new_disk_conf->resync_rate >= 1))
+=======
+	if (!expect(new_disk_conf->resync_rate >= 1))
+>>>>>>> b7ba80a49124 (Commit)
 		new_disk_conf->resync_rate = 1;
 
 	sanitize_disk_conf(device, new_disk_conf, device->ldev);
@@ -1615,7 +1643,11 @@ int drbd_adm_disk_opts(struct sk_buff *skb, struct genl_info *info)
 			drbd_send_sync_param(peer_device);
 	}
 
+<<<<<<< HEAD
 	kvfree_rcu_mightsleep(old_disk_conf);
+=======
+	kvfree_rcu(old_disk_conf);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(old_plan);
 	mod_timer(&device->request_timer, jiffies + HZ);
 	goto success;
@@ -2446,7 +2478,11 @@ int drbd_adm_net_opts(struct sk_buff *skb, struct genl_info *info)
 
 	mutex_unlock(&connection->resource->conf_update);
 	mutex_unlock(&connection->data.mutex);
+<<<<<<< HEAD
 	kvfree_rcu_mightsleep(old_net_conf);
+=======
+	kvfree_rcu(old_net_conf);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (connection->cstate >= C_WF_REPORT_PARAMS) {
 		struct drbd_peer_device *peer_device;
@@ -2860,7 +2896,11 @@ int drbd_adm_resize(struct sk_buff *skb, struct genl_info *info)
 		new_disk_conf->disk_size = (sector_t)rs.resize_size;
 		rcu_assign_pointer(device->ldev->disk_conf, new_disk_conf);
 		mutex_unlock(&device->resource->conf_update);
+<<<<<<< HEAD
 		kvfree_rcu_mightsleep(old_disk_conf);
+=======
+		kvfree_rcu(old_disk_conf);
+>>>>>>> b7ba80a49124 (Commit)
 		new_disk_conf = NULL;
 	}
 

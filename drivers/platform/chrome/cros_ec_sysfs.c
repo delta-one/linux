@@ -27,9 +27,16 @@ static ssize_t reboot_show(struct device *dev,
 {
 	int count = 0;
 
+<<<<<<< HEAD
 	count += sysfs_emit_at(buf, count,
 			       "ro|rw|cancel|cold|disable-jump|hibernate|cold-ap-off");
 	count += sysfs_emit_at(buf, count, " [at-shutdown]\n");
+=======
+	count += scnprintf(buf + count, PAGE_SIZE - count,
+			   "ro|rw|cancel|cold|disable-jump|hibernate|cold-ap-off");
+	count += scnprintf(buf + count, PAGE_SIZE - count,
+			   " [at-shutdown]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return count;
 }
 
@@ -137,9 +144,18 @@ static ssize_t version_show(struct device *dev,
 	/* Strings should be null-terminated, but let's be sure. */
 	r_ver->version_string_ro[sizeof(r_ver->version_string_ro) - 1] = '\0';
 	r_ver->version_string_rw[sizeof(r_ver->version_string_rw) - 1] = '\0';
+<<<<<<< HEAD
 	count += sysfs_emit_at(buf, count, "RO version:    %s\n", r_ver->version_string_ro);
 	count += sysfs_emit_at(buf, count, "RW version:    %s\n", r_ver->version_string_rw);
 	count += sysfs_emit_at(buf, count, "Firmware copy: %s\n",
+=======
+	count += scnprintf(buf + count, PAGE_SIZE - count,
+			   "RO version:    %s\n", r_ver->version_string_ro);
+	count += scnprintf(buf + count, PAGE_SIZE - count,
+			   "RW version:    %s\n", r_ver->version_string_rw);
+	count += scnprintf(buf + count, PAGE_SIZE - count,
+			   "Firmware copy: %s\n",
+>>>>>>> b7ba80a49124 (Commit)
 			   (r_ver->current_image < ARRAY_SIZE(image_names) ?
 			    image_names[r_ver->current_image] : "?"));
 
@@ -148,12 +164,21 @@ static ssize_t version_show(struct device *dev,
 	msg->insize = EC_HOST_PARAM_SIZE;
 	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
 	if (ret < 0) {
+<<<<<<< HEAD
 		count += sysfs_emit_at(buf, count,
+=======
+		count += scnprintf(buf + count, PAGE_SIZE - count,
+>>>>>>> b7ba80a49124 (Commit)
 				   "Build info:    XFER / EC ERROR %d / %d\n",
 				   ret, msg->result);
 	} else {
 		msg->data[EC_HOST_PARAM_SIZE - 1] = '\0';
+<<<<<<< HEAD
 		count += sysfs_emit_at(buf, count, "Build info:    %s\n", msg->data);
+=======
+		count += scnprintf(buf + count, PAGE_SIZE - count,
+				   "Build info:    %s\n", msg->data);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Get chip info. */
@@ -161,7 +186,11 @@ static ssize_t version_show(struct device *dev,
 	msg->insize = sizeof(*r_chip);
 	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
 	if (ret < 0) {
+<<<<<<< HEAD
 		count += sysfs_emit_at(buf, count,
+=======
+		count += scnprintf(buf + count, PAGE_SIZE - count,
+>>>>>>> b7ba80a49124 (Commit)
 				   "Chip info:     XFER / EC ERROR %d / %d\n",
 				   ret, msg->result);
 	} else {
@@ -170,9 +199,18 @@ static ssize_t version_show(struct device *dev,
 		r_chip->vendor[sizeof(r_chip->vendor) - 1] = '\0';
 		r_chip->name[sizeof(r_chip->name) - 1] = '\0';
 		r_chip->revision[sizeof(r_chip->revision) - 1] = '\0';
+<<<<<<< HEAD
 		count += sysfs_emit_at(buf, count, "Chip vendor:   %s\n", r_chip->vendor);
 		count += sysfs_emit_at(buf, count, "Chip name:     %s\n", r_chip->name);
 		count += sysfs_emit_at(buf, count, "Chip revision: %s\n", r_chip->revision);
+=======
+		count += scnprintf(buf + count, PAGE_SIZE - count,
+				   "Chip vendor:   %s\n", r_chip->vendor);
+		count += scnprintf(buf + count, PAGE_SIZE - count,
+				   "Chip name:     %s\n", r_chip->name);
+		count += scnprintf(buf + count, PAGE_SIZE - count,
+				   "Chip revision: %s\n", r_chip->revision);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Get board version */
@@ -180,13 +218,21 @@ static ssize_t version_show(struct device *dev,
 	msg->insize = sizeof(*r_board);
 	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
 	if (ret < 0) {
+<<<<<<< HEAD
 		count += sysfs_emit_at(buf, count,
+=======
+		count += scnprintf(buf + count, PAGE_SIZE - count,
+>>>>>>> b7ba80a49124 (Commit)
 				   "Board version: XFER / EC ERROR %d / %d\n",
 				   ret, msg->result);
 	} else {
 		r_board = (struct ec_response_board_version *)msg->data;
 
+<<<<<<< HEAD
 		count += sysfs_emit_at(buf, count,
+=======
+		count += scnprintf(buf + count, PAGE_SIZE - count,
+>>>>>>> b7ba80a49124 (Commit)
 				   "Board version: %d\n",
 				   r_board->board_version);
 	}
@@ -219,7 +265,11 @@ static ssize_t flashinfo_show(struct device *dev,
 
 	resp = (struct ec_response_flash_info *)msg->data;
 
+<<<<<<< HEAD
 	ret = sysfs_emit(buf,
+=======
+	ret = scnprintf(buf, PAGE_SIZE,
+>>>>>>> b7ba80a49124 (Commit)
 			"FlashSize %d\nWriteSize %d\n"
 			"EraseSize %d\nProtectSize %d\n",
 			resp->flash_size, resp->write_block_size,
@@ -256,7 +306,11 @@ static ssize_t kb_wake_angle_show(struct device *dev,
 		goto exit;
 
 	resp = (struct ec_response_motion_sense *)msg->data;
+<<<<<<< HEAD
 	ret = sysfs_emit(buf, "%d\n", resp->kb_wake_angle.ret);
+=======
+	ret = scnprintf(buf, PAGE_SIZE, "%d\n", resp->kb_wake_angle.ret);
+>>>>>>> b7ba80a49124 (Commit)
 exit:
 	kfree(msg);
 	return ret;

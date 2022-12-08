@@ -71,12 +71,19 @@ static int amdgpu_ih_clientid_vcns[] = {
 };
 
 /**
+<<<<<<< HEAD
  * vcn_v2_5_early_init - set function pointers and load microcode
+=======
+ * vcn_v2_5_early_init - set function pointers
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @handle: amdgpu_device pointer
  *
  * Set ring and irq function pointers
+<<<<<<< HEAD
  * Load microcode from filesystem
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int vcn_v2_5_early_init(void *handle)
 {
@@ -108,7 +115,11 @@ static int vcn_v2_5_early_init(void *handle)
 	vcn_v2_5_set_irq_funcs(adev);
 	vcn_v2_5_set_ras_funcs(adev);
 
+<<<<<<< HEAD
 	return amdgpu_vcn_early_init(adev);
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -225,10 +236,13 @@ static int vcn_v2_5_sw_init(void *handle)
 	if (adev->pg_flags & AMD_PG_SUPPORT_VCN_DPG)
 		adev->vcn.pause_dpg_mode = vcn_v2_5_pause_dpg_mode;
 
+<<<<<<< HEAD
 	r = amdgpu_vcn_ras_sw_init(adev);
 	if (r)
 		return r;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -775,6 +789,7 @@ static void vcn_v2_5_enable_clock_gating(struct amdgpu_device *adev)
 	}
 }
 
+<<<<<<< HEAD
 static void vcn_v2_6_enable_ras(struct amdgpu_device *adev, int inst_idx,
 				bool indirect)
 {
@@ -802,6 +817,8 @@ static void vcn_v2_6_enable_ras(struct amdgpu_device *adev, int inst_idx,
 			      tmp, 0, indirect);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int vcn_v2_5_start_dpg_mode(struct amdgpu_device *adev, int inst_idx, bool indirect)
 {
 	volatile struct amdgpu_fw_shared *fw_shared = adev->vcn.inst[inst_idx].fw_shared.cpu_addr;
@@ -881,8 +898,11 @@ static int vcn_v2_5_start_dpg_mode(struct amdgpu_device *adev, int inst_idx, boo
 	WREG32_SOC15_DPG_MODE(inst_idx, SOC15_DPG_MODE_OFFSET(
 		VCN, 0, mmUVD_LMI_CTRL2), 0, 0, indirect);
 
+<<<<<<< HEAD
 	vcn_v2_6_enable_ras(adev, inst_idx, indirect);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* unblock VCPU register access */
 	WREG32_SOC15_DPG_MODE(inst_idx, SOC15_DPG_MODE_OFFSET(
 		VCN, 0, mmUVD_RB_ARB_CTRL), 0, 0, indirect);
@@ -2035,4 +2055,20 @@ static void vcn_v2_5_set_ras_funcs(struct amdgpu_device *adev)
 	default:
 		break;
 	}
+<<<<<<< HEAD
+=======
+
+	if (adev->vcn.ras) {
+		amdgpu_ras_register_ras_block(adev, &adev->vcn.ras->ras_block);
+
+		strcpy(adev->vcn.ras->ras_block.ras_comm.name, "vcn");
+		adev->vcn.ras->ras_block.ras_comm.block = AMDGPU_RAS_BLOCK__VCN;
+		adev->vcn.ras->ras_block.ras_comm.type = AMDGPU_RAS_ERROR__POISON;
+		adev->vcn.ras_if = &adev->vcn.ras->ras_block.ras_comm;
+
+		/* If don't define special ras_late_init function, use default ras_late_init */
+		if (!adev->vcn.ras->ras_block.ras_late_init)
+			adev->vcn.ras->ras_block.ras_late_init = amdgpu_ras_block_late_init;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }

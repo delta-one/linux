@@ -55,7 +55,11 @@ MAP COMMANDS
 |		| **devmap** | **devmap_hash** | **sockmap** | **cpumap** | **xskmap** | **sockhash**
 |		| **cgroup_storage** | **reuseport_sockarray** | **percpu_cgroup_storage**
 |		| **queue** | **stack** | **sk_storage** | **struct_ops** | **ringbuf** | **inode_storage**
+<<<<<<< HEAD
 |		| **task_storage** | **bloom_filter** | **user_ringbuf** | **cgrp_storage** }
+=======
+|		| **task_storage** | **bloom_filter** | **user_ringbuf** }
+>>>>>>> b7ba80a49124 (Commit)
 
 DESCRIPTION
 ===========

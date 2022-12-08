@@ -37,7 +37,11 @@ Accelerated Processing Units (APU) Info
 
 .. csv-table::
    :header-rows: 1
+<<<<<<< HEAD
    :widths: 3, 2, 2, 1, 1, 1, 1
+=======
+   :widths: 3, 2, 2, 1, 1, 1
+>>>>>>> b7ba80a49124 (Commit)
    :file: ./apu-asic-info-table.csv
 
 Discrete GPU Info

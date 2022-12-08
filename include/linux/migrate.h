@@ -18,7 +18,10 @@ struct migration_target_control;
  * - zero on page migration success;
  */
 #define MIGRATEPAGE_SUCCESS		0
+<<<<<<< HEAD
 #define MIGRATEPAGE_UNMAP		1
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct movable_operations - Driver page migration
@@ -62,6 +65,7 @@ extern const char *migrate_reason_names[MR_TYPES];
 
 #ifdef CONFIG_MIGRATION
 
+<<<<<<< HEAD
 void putback_movable_pages(struct list_head *l);
 int migrate_folio_extra(struct address_space *mapping, struct folio *dst,
 		struct folio *src, enum migrate_mode mode, int extra_count);
@@ -72,6 +76,16 @@ int migrate_pages(struct list_head *l, new_page_t new, free_page_t free,
 		  unsigned int *ret_succeeded);
 struct page *alloc_migration_target(struct page *page, unsigned long private);
 bool isolate_movable_page(struct page *page, isolate_mode_t mode);
+=======
+extern void putback_movable_pages(struct list_head *l);
+int migrate_folio(struct address_space *mapping, struct folio *dst,
+		struct folio *src, enum migrate_mode mode);
+extern int migrate_pages(struct list_head *l, new_page_t new, free_page_t free,
+		unsigned long private, enum migrate_mode mode, int reason,
+		unsigned int *ret_succeeded);
+extern struct page *alloc_migration_target(struct page *page, unsigned long private);
+extern int isolate_movable_page(struct page *page, isolate_mode_t mode);
+>>>>>>> b7ba80a49124 (Commit)
 
 int migrate_huge_page_move_mapping(struct address_space *mapping,
 		struct folio *dst, struct folio *src);
@@ -92,8 +106,13 @@ static inline int migrate_pages(struct list_head *l, new_page_t new,
 static inline struct page *alloc_migration_target(struct page *page,
 		unsigned long private)
 	{ return NULL; }
+<<<<<<< HEAD
 static inline bool isolate_movable_page(struct page *page, isolate_mode_t mode)
 	{ return false; }
+=======
+static inline int isolate_movable_page(struct page *page, isolate_mode_t mode)
+	{ return -EBUSY; }
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline int migrate_huge_page_move_mapping(struct address_space *mapping,
 				  struct folio *dst, struct folio *src)
@@ -124,6 +143,7 @@ static inline bool folio_test_movable(struct folio *folio)
 }
 
 static inline
+<<<<<<< HEAD
 const struct movable_operations *folio_movable_ops(struct folio *folio)
 {
 	VM_BUG_ON(!__folio_test_movable(folio));
@@ -133,6 +153,8 @@ const struct movable_operations *folio_movable_ops(struct folio *folio)
 }
 
 static inline
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct movable_operations *page_movable_ops(struct page *page)
 {
 	VM_BUG_ON(!__PageMovable(page));
@@ -142,8 +164,13 @@ const struct movable_operations *page_movable_ops(struct page *page)
 }
 
 #ifdef CONFIG_NUMA_BALANCING
+<<<<<<< HEAD
 int migrate_misplaced_page(struct page *page, struct vm_area_struct *vma,
 			   int node);
+=======
+extern int migrate_misplaced_page(struct page *page,
+				  struct vm_area_struct *vma, int node);
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline int migrate_misplaced_page(struct page *page,
 					 struct vm_area_struct *vma, int node)
@@ -209,17 +236,21 @@ struct migrate_vma {
 	 */
 	void			*pgmap_owner;
 	unsigned long		flags;
+<<<<<<< HEAD
 
 	/*
 	 * Set to vmf->page if this is being called to migrate a page as part of
 	 * a migrate_to_ram() callback.
 	 */
 	struct page		*fault_page;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int migrate_vma_setup(struct migrate_vma *args);
 void migrate_vma_pages(struct migrate_vma *migrate);
 void migrate_vma_finalize(struct migrate_vma *migrate);
+<<<<<<< HEAD
 int migrate_device_range(unsigned long *src_pfns, unsigned long start,
 			unsigned long npages);
 void migrate_device_pages(unsigned long *src_pfns, unsigned long *dst_pfns,
@@ -227,6 +258,8 @@ void migrate_device_pages(unsigned long *src_pfns, unsigned long *dst_pfns,
 void migrate_device_finalize(unsigned long *src_pfns,
 			unsigned long *dst_pfns, unsigned long npages);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_MIGRATION */
 
 #endif /* _LINUX_MIGRATE_H */

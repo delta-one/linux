@@ -429,7 +429,11 @@ static netdev_tx_t cc770_start_xmit(struct sk_buff *skb, struct net_device *dev)
 	struct cc770_priv *priv = netdev_priv(dev);
 	unsigned int mo = obj2msgobj(CC770_OBJ_TX);
 
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(dev, skb))
+=======
+	if (can_dropped_invalid_skb(dev, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	netif_stop_queue(dev);

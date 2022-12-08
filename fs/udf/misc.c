@@ -28,6 +28,25 @@
 #include "udf_i.h"
 #include "udf_sb.h"
 
+<<<<<<< HEAD
+=======
+struct buffer_head *udf_tgetblk(struct super_block *sb, udf_pblk_t block)
+{
+	if (UDF_QUERY_FLAG(sb, UDF_FLAG_VARCONV))
+		return sb_getblk(sb, udf_fixed_to_variable(block));
+	else
+		return sb_getblk(sb, block);
+}
+
+struct buffer_head *udf_tread(struct super_block *sb, udf_pblk_t block)
+{
+	if (UDF_QUERY_FLAG(sb, UDF_FLAG_VARCONV))
+		return sb_bread(sb, udf_fixed_to_variable(block));
+	else
+		return sb_bread(sb, block);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 struct genericFormat *udf_add_extendedattr(struct inode *inode, uint32_t size,
 					   uint32_t type, uint8_t loc)
 {
@@ -200,7 +219,11 @@ struct buffer_head *udf_read_tagged(struct super_block *sb, uint32_t block,
 	if (block == 0xFFFFFFFF)
 		return NULL;
 
+<<<<<<< HEAD
 	bh = sb_bread(sb, block);
+=======
+	bh = udf_tread(sb, block);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!bh) {
 		udf_err(sb, "read failed, block=%u, location=%u\n",
 			block, location);

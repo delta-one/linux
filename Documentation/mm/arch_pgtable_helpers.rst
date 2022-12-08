@@ -1,5 +1,10 @@
 .. SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
+=======
+.. _arch_page_table_helpers:
+
+>>>>>>> b7ba80a49124 (Commit)
 ===============================
 Architecture Page Table Helpers
 ===============================
@@ -46,8 +51,12 @@ PTE Page Table Helpers
 +---------------------------+--------------------------------------------------+
 | pte_mkclean               | Creates a clean PTE                              |
 +---------------------------+--------------------------------------------------+
+<<<<<<< HEAD
 | pte_mkwrite               | Creates a writable PTE of the type specified by  |
 |                           | the VMA.                                         |
+=======
+| pte_mkwrite               | Creates a writable PTE                           |
+>>>>>>> b7ba80a49124 (Commit)
 +---------------------------+--------------------------------------------------+
 | pte_wrprotect             | Creates a write protected PTE                    |
 +---------------------------+--------------------------------------------------+
@@ -93,7 +102,11 @@ PMD Page Table Helpers
 +---------------------------+--------------------------------------------------+
 | pmd_trans_huge            | Tests a Transparent Huge Page (THP) at PMD       |
 +---------------------------+--------------------------------------------------+
+<<<<<<< HEAD
 | pmd_present               | Tests whether pmd_page() points to valid memory  |
+=======
+| pmd_present               | Tests a valid mapped PMD                         |
+>>>>>>> b7ba80a49124 (Commit)
 +---------------------------+--------------------------------------------------+
 | pmd_young                 | Tests a young PMD                                |
 +---------------------------+--------------------------------------------------+
@@ -119,8 +132,12 @@ PMD Page Table Helpers
 +---------------------------+--------------------------------------------------+
 | pmd_mkclean               | Creates a clean PMD                              |
 +---------------------------+--------------------------------------------------+
+<<<<<<< HEAD
 | pmd_mkwrite               | Creates a writable PMD of the type specified by  |
 |                           | the VMA.                                         |
+=======
+| pmd_mkwrite               | Creates a writable PMD                           |
+>>>>>>> b7ba80a49124 (Commit)
 +---------------------------+--------------------------------------------------+
 | pmd_wrprotect             | Creates a write protected PMD                    |
 +---------------------------+--------------------------------------------------+
@@ -216,7 +233,11 @@ HugeTLB Page Table Helpers
 +---------------------------+--------------------------------------------------+
 | pte_huge                  | Tests a HugeTLB                                  |
 +---------------------------+--------------------------------------------------+
+<<<<<<< HEAD
 | arch_make_huge_pte        | Creates a HugeTLB                                |
+=======
+| pte_mkhuge                | Creates a HugeTLB                                |
+>>>>>>> b7ba80a49124 (Commit)
 +---------------------------+--------------------------------------------------+
 | huge_pte_dirty            | Tests a dirty HugeTLB                            |
 +---------------------------+--------------------------------------------------+
@@ -224,8 +245,12 @@ HugeTLB Page Table Helpers
 +---------------------------+--------------------------------------------------+
 | huge_pte_mkdirty          | Creates a dirty HugeTLB                          |
 +---------------------------+--------------------------------------------------+
+<<<<<<< HEAD
 | huge_pte_mkwrite          | Creates a writable HugeTLB of the type specified |
 |                           | by the VMA.                                      |
+=======
+| huge_pte_mkwrite          | Creates a writable HugeTLB                       |
+>>>>>>> b7ba80a49124 (Commit)
 +---------------------------+--------------------------------------------------+
 | huge_pte_wrprotect        | Creates a write protected HugeTLB                |
 +---------------------------+--------------------------------------------------+

@@ -17,9 +17,13 @@ properties:
       - items:
           - enum:
               - rockchip,rv1108-timer
+<<<<<<< HEAD
               - rockchip,rv1126-timer
               - rockchip,rk3036-timer
               - rockchip,rk3128-timer
+=======
+              - rockchip,rk3036-timer
+>>>>>>> b7ba80a49124 (Commit)
               - rockchip,rk3188-timer
               - rockchip,rk3228-timer
               - rockchip,rk3229-timer

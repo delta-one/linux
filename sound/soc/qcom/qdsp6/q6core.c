@@ -339,7 +339,11 @@ static int q6core_probe(struct apr_device *adev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void q6core_exit(struct apr_device *adev)
+=======
+static int q6core_exit(struct apr_device *adev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct q6core *core = dev_get_drvdata(&adev->dev);
 
@@ -350,6 +354,11 @@ static void q6core_exit(struct apr_device *adev)
 
 	g_core = NULL;
 	kfree(core);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_OF

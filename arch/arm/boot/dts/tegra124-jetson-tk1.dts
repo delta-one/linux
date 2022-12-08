@@ -68,6 +68,13 @@
 		};
 	};
 
+<<<<<<< HEAD
+=======
+	cec@70015000 {
+		status = "okay";
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	gpu@57000000 {
 		/*
 		 * Node left disabled on purpose - the bootloader will enable
@@ -1679,10 +1686,13 @@
 		};
 	};
 
+<<<<<<< HEAD
 	cec@70015000 {
 		status = "okay";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Serial ATA */
 	sata@70020000 {
 		status = "okay";

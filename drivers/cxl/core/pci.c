@@ -9,7 +9,10 @@
 #include <cxlmem.h>
 #include <cxl.h>
 #include "core.h"
+<<<<<<< HEAD
 #include "trace.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * DOC: cxl core pci
@@ -55,13 +58,23 @@ static int match_add_dports(struct pci_dev *pdev, void *data)
 		dev_dbg(&port->dev, "failed to find component registers\n");
 
 	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
+<<<<<<< HEAD
 	dport = devm_cxl_add_dport(port, &pdev->dev, port_num, map.resource);
+=======
+	dport = devm_cxl_add_dport(port, &pdev->dev, port_num,
+				   cxl_regmap_to_base(pdev, &map));
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(dport)) {
 		ctx->error = PTR_ERR(dport);
 		return PTR_ERR(dport);
 	}
 	ctx->count++;
 
+<<<<<<< HEAD
+=======
+	dev_dbg(&port->dev, "add dport%d: %s\n", port_num, dev_name(&pdev->dev));
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -142,10 +155,18 @@ int cxl_await_media_ready(struct cxl_dev_state *cxlds)
 }
 EXPORT_SYMBOL_NS_GPL(cxl_await_media_ready, CXL);
 
+<<<<<<< HEAD
 static int wait_for_valid(struct pci_dev *pdev, int d)
 {
 	u32 val;
 	int rc;
+=======
+static int wait_for_valid(struct cxl_dev_state *cxlds)
+{
+	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+	int d = cxlds->cxl_dvsec, rc;
+	u32 val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Memory_Info_Valid: When set, indicates that the CXL Range 1 Size high
@@ -213,6 +234,14 @@ static int devm_cxl_enable_mem(struct device *host, struct cxl_dev_state *cxlds)
 	return devm_add_action_or_reset(host, clear_mem_enable, cxlds);
 }
 
+<<<<<<< HEAD
+=======
+static bool range_contains(struct range *r1, struct range *r2)
+{
+	return r1->start <= r2->start && r1->end >= r2->end;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* require dvsec ranges to be covered by a locked platform window */
 static int dvsec_range_allowed(struct device *dev, void *arg)
 {
@@ -224,6 +253,11 @@ static int dvsec_range_allowed(struct device *dev, void *arg)
 
 	cxld = to_cxl_decoder(dev);
 
+<<<<<<< HEAD
+=======
+	if (!(cxld->flags & CXL_DECODER_F_LOCK))
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 	if (!(cxld->flags & CXL_DECODER_F_RAM))
 		return 0;
 
@@ -253,6 +287,7 @@ static int devm_cxl_enable_hdm(struct device *host, struct cxl_hdm *cxlhdm)
 	return devm_add_action_or_reset(host, disable_hdm, cxlhdm);
 }
 
+<<<<<<< HEAD
 int cxl_dvsec_rr_decode(struct device *dev, int d,
 			struct cxl_endpoint_dvsec_info *info)
 {
@@ -366,32 +401,56 @@ EXPORT_SYMBOL_NS_GPL(cxl_dvsec_rr_decode, CXL);
  */
 int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
 			struct cxl_endpoint_dvsec_info *info)
+=======
+static bool __cxl_hdm_decode_init(struct cxl_dev_state *cxlds,
+				  struct cxl_hdm *cxlhdm,
+				  struct cxl_endpoint_dvsec_info *info)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
 	struct cxl_port *port = cxlhdm->port;
 	struct device *dev = cxlds->dev;
 	struct cxl_port *root;
 	int i, rc, allowed;
+<<<<<<< HEAD
 	u32 global_ctrl = 0;
 
 	if (hdm)
 		global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
+=======
+	u32 global_ctrl;
+
+	global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * If the HDM Decoder Capability is already enabled then assume
 	 * that some other agent like platform firmware set it up.
 	 */
+<<<<<<< HEAD
 	if (global_ctrl & CXL_HDM_DECODER_ENABLE || (!hdm && info->mem_enabled))
 		return devm_cxl_enable_mem(&port->dev, cxlds);
 	else if (!hdm)
 		return -ENODEV;
+=======
+	if (global_ctrl & CXL_HDM_DECODER_ENABLE) {
+		rc = devm_cxl_enable_mem(&port->dev, cxlds);
+		if (rc)
+			return false;
+		return true;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	root = to_cxl_port(port->dev.parent);
 	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
 		root = to_cxl_port(root->dev.parent);
 	if (!is_cxl_root(root)) {
 		dev_err(dev, "Failed to acquire root port for HDM enable\n");
+<<<<<<< HEAD
 		return -ENODEV;
+=======
+		return false;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (i = 0, allowed = 0; info->mem_enabled && i < info->ranges; i++) {
@@ -423,6 +482,7 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
 	 * Decoder Capability Enable.
 	 */
 	if (info->mem_enabled)
+<<<<<<< HEAD
 		return 0;
 
 	rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
@@ -430,6 +490,135 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
 		return rc;
 
 	return devm_cxl_enable_mem(&port->dev, cxlds);
+=======
+		return false;
+
+	rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
+	if (rc)
+		return false;
+
+	rc = devm_cxl_enable_mem(&port->dev, cxlds);
+	if (rc)
+		return false;
+
+	return true;
+}
+
+/**
+ * cxl_hdm_decode_init() - Setup HDM decoding for the endpoint
+ * @cxlds: Device state
+ * @cxlhdm: Mapped HDM decoder Capability
+ *
+ * Try to enable the endpoint's HDM Decoder Capability
+ */
+int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm)
+{
+	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+	struct cxl_endpoint_dvsec_info info = { 0 };
+	int hdm_count, rc, i, ranges = 0;
+	struct device *dev = &pdev->dev;
+	int d = cxlds->cxl_dvsec;
+	u16 cap, ctrl;
+
+	if (!d) {
+		dev_dbg(dev, "No DVSEC Capability\n");
+		return -ENXIO;
+	}
+
+	rc = pci_read_config_word(pdev, d + CXL_DVSEC_CAP_OFFSET, &cap);
+	if (rc)
+		return rc;
+
+	rc = pci_read_config_word(pdev, d + CXL_DVSEC_CTRL_OFFSET, &ctrl);
+	if (rc)
+		return rc;
+
+	if (!(cap & CXL_DVSEC_MEM_CAPABLE)) {
+		dev_dbg(dev, "Not MEM Capable\n");
+		return -ENXIO;
+	}
+
+	/*
+	 * It is not allowed by spec for MEM.capable to be set and have 0 legacy
+	 * HDM decoders (values > 2 are also undefined as of CXL 2.0). As this
+	 * driver is for a spec defined class code which must be CXL.mem
+	 * capable, there is no point in continuing to enable CXL.mem.
+	 */
+	hdm_count = FIELD_GET(CXL_DVSEC_HDM_COUNT_MASK, cap);
+	if (!hdm_count || hdm_count > 2)
+		return -EINVAL;
+
+	rc = wait_for_valid(cxlds);
+	if (rc) {
+		dev_dbg(dev, "Failure awaiting MEM_INFO_VALID (%d)\n", rc);
+		return rc;
+	}
+
+	/*
+	 * The current DVSEC values are moot if the memory capability is
+	 * disabled, and they will remain moot after the HDM Decoder
+	 * capability is enabled.
+	 */
+	info.mem_enabled = FIELD_GET(CXL_DVSEC_MEM_ENABLE, ctrl);
+	if (!info.mem_enabled)
+		goto hdm_init;
+
+	for (i = 0; i < hdm_count; i++) {
+		u64 base, size;
+		u32 temp;
+
+		rc = pci_read_config_dword(
+			pdev, d + CXL_DVSEC_RANGE_SIZE_HIGH(i), &temp);
+		if (rc)
+			return rc;
+
+		size = (u64)temp << 32;
+
+		rc = pci_read_config_dword(
+			pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(i), &temp);
+		if (rc)
+			return rc;
+
+		size |= temp & CXL_DVSEC_MEM_SIZE_LOW_MASK;
+
+		rc = pci_read_config_dword(
+			pdev, d + CXL_DVSEC_RANGE_BASE_HIGH(i), &temp);
+		if (rc)
+			return rc;
+
+		base = (u64)temp << 32;
+
+		rc = pci_read_config_dword(
+			pdev, d + CXL_DVSEC_RANGE_BASE_LOW(i), &temp);
+		if (rc)
+			return rc;
+
+		base |= temp & CXL_DVSEC_MEM_BASE_LOW_MASK;
+
+		info.dvsec_range[i] = (struct range) {
+			.start = base,
+			.end = base + size - 1
+		};
+
+		if (size)
+			ranges++;
+	}
+
+	info.ranges = ranges;
+
+	/*
+	 * If DVSEC ranges are being used instead of HDM decoder registers there
+	 * is no use in trying to manage those.
+	 */
+hdm_init:
+	if (!__cxl_hdm_decode_init(cxlds, cxlhdm, &info)) {
+		dev_err(dev,
+			"Legacy range registers configuration prevents HDM operation.\n");
+		return -EBUSY;
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_NS_GPL(cxl_hdm_decode_init, CXL);
 
@@ -604,6 +793,7 @@ void read_cdat_data(struct cxl_port *port)
 	}
 }
 EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
+<<<<<<< HEAD
 
 void cxl_cor_error_detected(struct pci_dev *pdev)
 {
@@ -714,3 +904,5 @@ pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
 	return PCI_ERS_RESULT_NEED_RESET;
 }
 EXPORT_SYMBOL_NS_GPL(cxl_error_detected, CXL);
+=======
+>>>>>>> b7ba80a49124 (Commit)

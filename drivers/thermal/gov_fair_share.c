@@ -25,7 +25,11 @@ static int get_trip_level(struct thermal_zone_device *tz)
 	int count;
 
 	for (count = 0; count < tz->num_trips; count++) {
+<<<<<<< HEAD
 		__thermal_zone_get_trip(tz, count, &trip);
+=======
+		thermal_zone_get_trip(tz, count, &trip);
+>>>>>>> b7ba80a49124 (Commit)
 		if (tz->temperature < trip.temperature)
 			break;
 	}
@@ -43,7 +47,15 @@ static int get_trip_level(struct thermal_zone_device *tz)
 static long get_target_state(struct thermal_zone_device *tz,
 		struct thermal_cooling_device *cdev, int percentage, int level)
 {
+<<<<<<< HEAD
 	return (long)(percentage * level * cdev->max_state) / (100 * tz->num_trips);
+=======
+	unsigned long max_state;
+
+	cdev->ops->get_max_state(cdev, &max_state);
+
+	return (long)(percentage * level * max_state) / (100 * tz->num_trips);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

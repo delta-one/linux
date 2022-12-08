@@ -28,6 +28,7 @@
 			polling-delay = <0>;
 			polling-delay-passive = <0>;
 			thermal-sensors = <&bat_therm>;
+<<<<<<< HEAD
 
 			trips {
 				battery-crit-hi {
@@ -36,6 +37,8 @@
 					type = "critical";
 				};
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 

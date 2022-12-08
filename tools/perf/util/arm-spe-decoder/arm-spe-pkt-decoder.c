@@ -422,18 +422,28 @@ static int arm_spe_pkt_desc_addr(const struct arm_spe_pkt *packet,
 	int ch, pat;
 	u64 payload = packet->payload;
 	int err = 0;
+<<<<<<< HEAD
 	static const char *idx_name[] = {"PC", "TGT", "VA", "PA", "PBT"};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (idx) {
 	case SPE_ADDR_PKT_HDR_INDEX_INS:
 	case SPE_ADDR_PKT_HDR_INDEX_BRANCH:
+<<<<<<< HEAD
 	case SPE_ADDR_PKT_HDR_INDEX_PREV_BRANCH:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ns = !!SPE_ADDR_PKT_GET_NS(payload);
 		el = SPE_ADDR_PKT_GET_EL(payload);
 		payload = SPE_ADDR_PKT_ADDR_GET_BYTES_0_6(payload);
 		arm_spe_pkt_out_string(&err, &buf, &buf_len,
 				"%s 0x%llx el%d ns=%d",
+<<<<<<< HEAD
 				idx_name[idx], payload, el, ns);
+=======
+				(idx == 1) ? "TGT" : "PC", payload, el, ns);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case SPE_ADDR_PKT_HDR_INDEX_DATA_VIRT:
 		arm_spe_pkt_out_string(&err, &buf, &buf_len,

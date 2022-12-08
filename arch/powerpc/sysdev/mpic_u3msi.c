@@ -108,7 +108,10 @@ static void u3msi_teardown_msi_irqs(struct pci_dev *pdev)
 		hwirq = virq_to_hw(entry->irq);
 		irq_set_msi_desc(entry->irq, NULL);
 		irq_dispose_mapping(entry->irq);
+<<<<<<< HEAD
 		entry->irq = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		msi_bitmap_free_hwirqs(&msi_mpic->msi_bitmap, hwirq, 1);
 	}
 }

@@ -23,6 +23,7 @@
 
 #define SOF_AUDIO_PCM_DRV_NAME	"sof-audio-component"
 
+<<<<<<< HEAD
 /*
  * The ipc4 firmware only supports up to 8 sink or source pins
  * per widget, because only 3 bits are used for queue(pin) ID
@@ -34,6 +35,8 @@
 #define SOF_PIN_TYPE_INPUT	0
 #define SOF_PIN_TYPE_OUTPUT	1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* max number of FE PCMs before BEs */
 #define SOF_BE_PCM_BASE		16
 
@@ -42,7 +45,10 @@
 #define WIDGET_IS_DAI(id) ((id) == snd_soc_dapm_dai_in || (id) == snd_soc_dapm_dai_out)
 #define WIDGET_IS_AIF(id) ((id) == snd_soc_dapm_aif_in || (id) == snd_soc_dapm_aif_out)
 #define WIDGET_IS_AIF_OR_DAI(id) (WIDGET_IS_DAI(id) || WIDGET_IS_AIF(id))
+<<<<<<< HEAD
 #define WIDGET_IS_COPIER(id) (WIDGET_IS_AIF_OR_DAI(id) || (id) == snd_soc_dapm_buffer)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SOF_DAI_CLK_INTEL_SSP_MCLK	0
 #define SOF_DAI_CLK_INTEL_SSP_BCLK	1
@@ -86,7 +92,10 @@ struct snd_sof_widget;
 struct snd_sof_route;
 struct snd_sof_control;
 struct snd_sof_dai;
+<<<<<<< HEAD
 struct snd_sof_pcm;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct snd_sof_dai_config_data {
 	int dai_index;
@@ -99,6 +108,7 @@ struct snd_sof_dai_config_data {
  * @hw_free: Function pointer for hw_free
  * @trigger: Function pointer for trigger
  * @dai_link_fixup: Function pointer for DAI link fixup
+<<<<<<< HEAD
  * @pcm_setup: Function pointer for IPC-specific PCM set up that can be used for allocating
  *	       additional memory in the SOF PCM stream structure
  * @pcm_free: Function pointer for PCM free that can be used for freeing any
@@ -108,6 +118,8 @@ struct snd_sof_dai_config_data {
  *				 STOP pcm trigger
  * @ipc_first_on_start: Send IPC before invoking platform trigger during
  *				START/PAUSE_RELEASE triggers
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct sof_ipc_pcm_ops {
 	int (*hw_params)(struct snd_soc_component *component, struct snd_pcm_substream *substream,
@@ -117,12 +129,15 @@ struct sof_ipc_pcm_ops {
 	int (*trigger)(struct snd_soc_component *component,  struct snd_pcm_substream *substream,
 		       int cmd);
 	int (*dai_link_fixup)(struct snd_soc_pcm_runtime *rtd, struct snd_pcm_hw_params *params);
+<<<<<<< HEAD
 	int (*pcm_setup)(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm);
 	void (*pcm_free)(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm);
 	snd_pcm_sframes_t (*delay)(struct snd_soc_component *component,
 				   struct snd_pcm_substream *substream);
 	bool reset_hw_params_during_stop;
 	bool ipc_first_on_start;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -183,7 +198,11 @@ struct sof_ipc_tplg_widget_ops {
  *	    initialized to 0.
  * @control: Pointer to the IPC-specific ops for topology kcontrol IO
  * @route_setup: Function pointer for setting up pipeline connections
+<<<<<<< HEAD
  * @route_free: Function pointer for freeing pipeline connections.
+=======
+ * @route_free: Optional op for freeing pipeline connections.
+>>>>>>> b7ba80a49124 (Commit)
  * @token_list: List of all tokens supported by the IPC version. The size of the token_list
  *		array should be SOF_TOKEN_COUNT. The unused elements in the array will be
  *		initialized to 0.
@@ -196,10 +215,14 @@ struct sof_ipc_tplg_widget_ops {
  * @dai_get_clk: Function pointer for getting the DAI clock setting
  * @set_up_all_pipelines: Function pointer for setting up all topology pipelines
  * @tear_down_all_pipelines: Function pointer for tearing down all topology pipelines
+<<<<<<< HEAD
  * @parse_manifest: Function pointer for ipc4 specific parsing of topology manifest
  * @link_setup: Function pointer for IPC-specific DAI link set up
  *
  * Note: function pointers (ops) are optional
+=======
+ * @parse_manifest: Optional function pointer for ipc4 specific parsing of topology manifest
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct sof_ipc_tplg_ops {
 	const struct sof_ipc_tplg_widget_ops *widget;
@@ -219,7 +242,10 @@ struct sof_ipc_tplg_ops {
 	int (*tear_down_all_pipelines)(struct snd_sof_dev *sdev, bool verify);
 	int (*parse_manifest)(struct snd_soc_component *scomp, int index,
 			      struct snd_soc_tplg_manifest *man);
+<<<<<<< HEAD
 	int (*link_setup)(struct snd_sof_dev *sdev, struct snd_soc_dai_link *link);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /** struct snd_sof_tuple - Tuple info
@@ -262,13 +288,21 @@ enum sof_tokens {
 	SOF_COMP_EXT_TOKENS,
 	SOF_IN_AUDIO_FORMAT_TOKENS,
 	SOF_OUT_AUDIO_FORMAT_TOKENS,
+<<<<<<< HEAD
 	SOF_COPIER_DEEP_BUFFER_TOKENS,
+=======
+	SOF_AUDIO_FORMAT_BUFFER_SIZE_TOKENS,
+	SOF_COPIER_GATEWAY_CFG_TOKENS,
+>>>>>>> b7ba80a49124 (Commit)
 	SOF_COPIER_TOKENS,
 	SOF_AUDIO_FMT_NUM_TOKENS,
 	SOF_COPIER_FORMAT_TOKENS,
 	SOF_GAIN_TOKENS,
 	SOF_ACPDMIC_TOKENS,
+<<<<<<< HEAD
 	SOF_ACPI2S_TOKENS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* this should be the last */
 	SOF_TOKEN_COUNT,
@@ -294,6 +328,7 @@ struct sof_token_info {
 	int count;
 };
 
+<<<<<<< HEAD
 /**
  * struct snd_sof_pcm_stream_pipeline_list - List of pipelines associated with a PCM stream
  * @count: number of pipeline widgets in the @pipe_widgets array
@@ -304,6 +339,8 @@ struct snd_sof_pcm_stream_pipeline_list {
 	struct snd_sof_pipeline **pipelines;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* PCM stream, mapped to FW component  */
 struct snd_sof_pcm_stream {
 	u32 comp_id;
@@ -319,10 +356,13 @@ struct snd_sof_pcm_stream {
 	 * active or not while suspending the stream
 	 */
 	bool suspend_ignored;
+<<<<<<< HEAD
 	struct snd_sof_pcm_stream_pipeline_list pipeline_list;
 
 	/* used by IPC implementation and core does not touch it */
 	void *private;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* ALSA SOF PCM device */
@@ -395,10 +435,19 @@ struct snd_sof_widget {
 	int comp_id;
 	int pipeline_id;
 	/*
+<<<<<<< HEAD
+=======
+	 * complete flag is used to indicate that pipeline set up is complete for scheduler type
+	 * widgets. It is unused for all other widget types.
+	 */
+	int complete;
+	/*
+>>>>>>> b7ba80a49124 (Commit)
 	 * the prepared flag is used to indicate that a widget has been prepared for getting set
 	 * up in the DSP.
 	 */
 	bool prepared;
+<<<<<<< HEAD
 
 	struct mutex setup_mutex; /* to protect the swidget setup and free operations */
 
@@ -409,6 +458,9 @@ struct snd_sof_widget {
 	 */
 	int use_count;
 
+=======
+	int use_count; /* use_count will be protected by the PCM mutex held by the core */
+>>>>>>> b7ba80a49124 (Commit)
 	int core;
 	int id; /* id is the DAPM widget type */
 	/*
@@ -429,7 +481,11 @@ struct snd_sof_widget {
 
 	struct snd_soc_dapm_widget *widget;
 	struct list_head list;	/* list in sdev widget list */
+<<<<<<< HEAD
 	struct snd_sof_pipeline *spipe;
+=======
+	struct snd_sof_widget *pipe_widget;
+>>>>>>> b7ba80a49124 (Commit)
 	void *module_info;
 
 	const guid_t uuid;
@@ -437,6 +493,7 @@ struct snd_sof_widget {
 	int num_tuples;
 	struct snd_sof_tuple *tuples;
 
+<<<<<<< HEAD
 	/*
 	 * The allowed range for num_input/output_pins is [0, SOF_WIDGET_MAX_NUM_PINS].
 	 * Widgets may have zero input or output pins, for example the tone widget has
@@ -483,6 +540,11 @@ struct snd_sof_pipeline {
 	struct list_head list;
 };
 
+=======
+	void *private;		/* core does not touch this */
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* ASoC SOF DAPM route */
 struct snd_sof_route {
 	struct snd_soc_component *scomp;
@@ -493,9 +555,12 @@ struct snd_sof_route {
 	struct snd_sof_widget *sink_widget;
 	bool setup;
 
+<<<<<<< HEAD
 	int src_queue_id;
 	int dst_queue_id;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void *private;
 };
 
@@ -507,8 +572,11 @@ struct snd_sof_dai {
 	int number_configs;
 	int current_config;
 	struct list_head list;	/* list in sdev dai list */
+<<<<<<< HEAD
 	/* core should not touch this */
 	const void *platform_private;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void *private;
 };
 
@@ -629,7 +697,10 @@ int get_token_u16(void *elem, void *object, u32 offset);
 int get_token_comp_format(void *elem, void *object, u32 offset);
 int get_token_dai_type(void *elem, void *object, u32 offset);
 int get_token_uuid(void *elem, void *object, u32 offset);
+<<<<<<< HEAD
 int get_token_string(void *elem, void *object, u32 offset);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int sof_update_ipc_object(struct snd_soc_component *scomp, void *object, enum sof_tokens token_id,
 			  struct snd_sof_tuple *tuples, int num_tuples,
 			  size_t object_size, int token_instance_num);

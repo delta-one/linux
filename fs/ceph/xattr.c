@@ -1285,7 +1285,11 @@ static int ceph_get_xattr_handler(const struct xattr_handler *handler,
 }
 
 static int ceph_set_xattr_handler(const struct xattr_handler *handler,
+<<<<<<< HEAD
 				  struct mnt_idmap *idmap,
+=======
+				  struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				  struct dentry *unused, struct inode *inode,
 				  const char *name, const void *value,
 				  size_t size, int flags)
@@ -1411,6 +1415,13 @@ void ceph_release_acl_sec_ctx(struct ceph_acl_sec_ctx *as_ctx)
  * attributes are handled directly.
  */
 const struct xattr_handler *ceph_xattr_handlers[] = {
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_CEPH_FS_POSIX_ACL
+	&posix_acl_access_xattr_handler,
+	&posix_acl_default_xattr_handler,
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	&ceph_other_xattr_handler,
 	NULL,
 };

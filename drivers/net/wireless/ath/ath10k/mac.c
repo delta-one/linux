@@ -4051,7 +4051,11 @@ static int ath10k_mac_tx(struct ath10k *ar,
 		ath10k_tx_h_seq_no(vif, skb);
 		break;
 	case ATH10K_HW_TXRX_ETHERNET:
+<<<<<<< HEAD
 		/* Convert 802.11->802.3 header only if the frame was earlier
+=======
+		/* Convert 802.11->802.3 header only if the frame was erlier
+>>>>>>> b7ba80a49124 (Commit)
 		 * encapsulated to 802.11 by mac80211. Otherwise pass it as is.
 		 */
 		if (!(info->flags & IEEE80211_TX_CTL_HW_80211_ENCAP))
@@ -6030,6 +6034,10 @@ static void ath10k_configure_filter(struct ieee80211_hw *hw,
 
 	mutex_lock(&ar->conf_mutex);
 
+<<<<<<< HEAD
+=======
+	changed_flags &= SUPPORTED_FILTERS;
+>>>>>>> b7ba80a49124 (Commit)
 	*total_flags &= SUPPORTED_FILTERS;
 	ar->filter_flags = *total_flags;
 
@@ -8096,7 +8104,11 @@ static void ath10k_flush(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 
 /* TODO: Implement this function properly
  * For now it is needed to reply to Probe Requests in IBSS mode.
+<<<<<<< HEAD
  * Probably we need this information from FW.
+=======
+ * Propably we need this information from FW.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int ath10k_tx_last_beacon(struct ieee80211_hw *hw)
 {
@@ -9685,7 +9697,11 @@ static const struct ieee80211_iface_limit ath10k_tlv_if_limit_ibss[] = {
 	},
 };
 
+<<<<<<< HEAD
 /* FIXME: This is not thoroughly tested. These combinations may over- or
+=======
+/* FIXME: This is not thouroughly tested. These combinations may over- or
+>>>>>>> b7ba80a49124 (Commit)
  * underestimate hw/fw capabilities.
  */
 static struct ieee80211_iface_combination ath10k_tlv_if_comb[] = {
@@ -9925,7 +9941,11 @@ int ath10k_mac_register(struct ath10k *ar)
 		WLAN_CIPHER_SUITE_BIP_GMAC_128,
 		WLAN_CIPHER_SUITE_BIP_GMAC_256,
 
+<<<<<<< HEAD
 		/* Only QCA99x0 and QCA4019 variants support GCMP-128, GCMP-256
+=======
+		/* Only QCA99x0 and QCA4019 varients support GCMP-128, GCMP-256
+>>>>>>> b7ba80a49124 (Commit)
 		 * and CCMP-256 in hardware.
 		 */
 		WLAN_CIPHER_SUITE_GCMP,

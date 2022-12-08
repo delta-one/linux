@@ -16,9 +16,13 @@ maintainers:
 
 properties:
   compatible:
+<<<<<<< HEAD
     enum:
       - nuvoton,npcm750-rng
       - nuvoton,npcm845-rng
+=======
+    const: nuvoton,npcm750-rng
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1

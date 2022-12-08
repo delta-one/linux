@@ -875,9 +875,15 @@ err:
 	dev_dbg(&client->dev, "failed=%d\n", ret);
 }
 
+<<<<<<< HEAD
 static int si2157_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int si2157_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct si2157_config *cfg = client->dev.platform_data;
 	struct dvb_frontend *fe = cfg->fe;
 	struct si2157_dev *dev;
@@ -990,7 +996,11 @@ static struct i2c_driver si2157_driver = {
 		.name		     = "si2157",
 		.suppress_bind_attrs = true,
 	},
+<<<<<<< HEAD
 	.probe_new	= si2157_probe,
+=======
+	.probe		= si2157_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= si2157_remove,
 	.id_table	= si2157_id_table,
 };

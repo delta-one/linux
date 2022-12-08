@@ -50,7 +50,10 @@
 &sata_phy {
 	status = "okay";
 };
+<<<<<<< HEAD
 
 &hsspi {
 	status = "okay";
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

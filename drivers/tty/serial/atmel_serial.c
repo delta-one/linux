@@ -15,7 +15,10 @@
 #include <linux/init.h>
 #include <linux/serial.h>
 #include <linux/clk.h>
+<<<<<<< HEAD
 #include <linux/clk-provider.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/console.h>
 #include <linux/sysrq.h>
 #include <linux/tty_flip.h>
@@ -111,7 +114,10 @@ struct atmel_uart_char {
 struct atmel_uart_port {
 	struct uart_port	uart;		/* uart */
 	struct clk		*clk;		/* uart clock */
+<<<<<<< HEAD
 	struct clk		*gclk;		/* uart generic clock */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int			may_wakeup;	/* cached value of device_may_wakeup for times we need to disable it */
 	u32			backup_imr;	/* IMR saved during suspend */
 	int			break_active;	/* break being received */
@@ -152,7 +158,10 @@ struct atmel_uart_port {
 	u32			rts_low;
 	bool			ms_irq_enabled;
 	u32			rtor;	/* address of receiver timeout register if it exists */
+<<<<<<< HEAD
 	bool			is_usart;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool			has_frac_baudrate;
 	bool			has_hw_timer;
 	struct timer_list	uart_timer;
@@ -231,11 +240,14 @@ static inline int atmel_uart_is_half_duplex(struct uart_port *port)
 		(port->iso7816.flags & SER_ISO7816_ENABLED);
 }
 
+<<<<<<< HEAD
 static inline int atmel_error_rate(int desired_value, int actual_value)
 {
 	return 100 - (desired_value * 100) / actual_value;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SERIAL_ATMEL_PDC
 static bool atmel_use_pdc_rx(struct uart_port *port)
 {
@@ -552,14 +564,20 @@ static u_int atmel_get_mctrl(struct uart_port *port)
 static void atmel_stop_tx(struct uart_port *port)
 {
 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+<<<<<<< HEAD
 	bool is_pdc = atmel_use_pdc_tx(port);
 	bool is_dma = is_pdc || atmel_use_dma_tx(port);
 
 	if (is_pdc) {
+=======
+
+	if (atmel_use_pdc_tx(port)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* disable PDC transmit */
 		atmel_uart_writel(port, ATMEL_PDC_PTCR, ATMEL_PDC_TXTDIS);
 	}
 
+<<<<<<< HEAD
 	if (is_dma) {
 		/*
 		 * Disable the transmitter.
@@ -569,6 +587,15 @@ static void atmel_stop_tx(struct uart_port *port)
 		atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_TXDIS);
 		atmel_port->tx_stopped = true;
 	}
+=======
+	/*
+	 * Disable the transmitter.
+	 * This is mandatory when DMA is used, otherwise the DMA buffer
+	 * is fully transmitted.
+	 */
+	atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_TXDIS);
+	atmel_port->tx_stopped = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Disable interrupts */
 	atmel_uart_writel(port, ATMEL_US_IDR, atmel_port->tx_done_mask);
@@ -576,6 +603,10 @@ static void atmel_stop_tx(struct uart_port *port)
 	if (atmel_uart_is_half_duplex(port))
 		if (!atomic_read(&atmel_port->tasklet_shutdown))
 			atmel_start_rx(port);
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -584,15 +615,21 @@ static void atmel_stop_tx(struct uart_port *port)
 static void atmel_start_tx(struct uart_port *port)
 {
 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+<<<<<<< HEAD
 	bool is_pdc = atmel_use_pdc_tx(port);
 	bool is_dma = is_pdc || atmel_use_dma_tx(port);
 
 	if (is_pdc && (atmel_uart_readl(port, ATMEL_PDC_PTSR)
+=======
+
+	if (atmel_use_pdc_tx(port) && (atmel_uart_readl(port, ATMEL_PDC_PTSR)
+>>>>>>> b7ba80a49124 (Commit)
 				       & ATMEL_PDC_TXTEN))
 		/* The transmitter is already running.  Yes, we
 		   really need this.*/
 		return;
 
+<<<<<<< HEAD
 	if (is_dma && atmel_uart_is_half_duplex(port))
 		atmel_stop_rx(port);
 
@@ -600,15 +637,30 @@ static void atmel_start_tx(struct uart_port *port)
 		/* re-enable PDC transmit */
 		atmel_uart_writel(port, ATMEL_PDC_PTCR, ATMEL_PDC_TXTEN);
 	}
+=======
+	if (atmel_use_pdc_tx(port) || atmel_use_dma_tx(port))
+		if (atmel_uart_is_half_duplex(port))
+			atmel_stop_rx(port);
+
+	if (atmel_use_pdc_tx(port))
+		/* re-enable PDC transmit */
+		atmel_uart_writel(port, ATMEL_PDC_PTCR, ATMEL_PDC_TXTEN);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Enable interrupts */
 	atmel_uart_writel(port, ATMEL_US_IER, atmel_port->tx_done_mask);
 
+<<<<<<< HEAD
 	if (is_dma) {
 		/* re-enable the transmitter */
 		atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_TXEN);
 		atmel_port->tx_stopped = false;
 	}
+=======
+	/* re-enable the transmitter */
+	atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_TXEN);
+	atmel_port->tx_stopped = false;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -831,6 +883,7 @@ static void atmel_rx_chars(struct uart_port *port)
  */
 static void atmel_tx_chars(struct uart_port *port)
 {
+<<<<<<< HEAD
 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
 	bool pending;
 	u8 ch;
@@ -839,6 +892,32 @@ static void atmel_tx_chars(struct uart_port *port)
 		atmel_uart_readl(port, ATMEL_US_CSR) & ATMEL_US_TXRDY,
 		atmel_uart_write_char(port, ch));
 	if (pending) {
+=======
+	struct circ_buf *xmit = &port->state->xmit;
+	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+
+	if (port->x_char &&
+	    (atmel_uart_readl(port, ATMEL_US_CSR) & ATMEL_US_TXRDY)) {
+		atmel_uart_write_char(port, port->x_char);
+		port->icount.tx++;
+		port->x_char = 0;
+	}
+	if (uart_circ_empty(xmit) || uart_tx_stopped(port))
+		return;
+
+	while (atmel_uart_readl(port, ATMEL_US_CSR) & ATMEL_US_TXRDY) {
+		atmel_uart_write_char(port, xmit->buf[xmit->tail]);
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+		port->icount.tx++;
+		if (uart_circ_empty(xmit))
+			break;
+	}
+
+	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+		uart_write_wakeup(port);
+
+	if (!uart_circ_empty(xmit)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* we still have characters to transmit, so we should continue
 		 * transmitting them when TX is ready, regardless of
 		 * mode or duplexity
@@ -866,7 +945,14 @@ static void atmel_complete_tx_dma(void *arg)
 
 	if (chan)
 		dmaengine_terminate_all(chan);
+<<<<<<< HEAD
 	uart_xmit_advance(port, atmel_port->tx_len);
+=======
+	xmit->tail += atmel_port->tx_len;
+	xmit->tail &= UART_XMIT_SIZE - 1;
+
+	port->icount.tx += atmel_port->tx_len;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irq(&atmel_port->lock_tx);
 	async_tx_ack(atmel_port->desc_tx);
@@ -1459,7 +1545,15 @@ static void atmel_tx_pdc(struct uart_port *port)
 	/* nothing left to transmit? */
 	if (atmel_uart_readl(port, ATMEL_PDC_TCR))
 		return;
+<<<<<<< HEAD
 	uart_xmit_advance(port, pdc->ofs);
+=======
+
+	xmit->tail += pdc->ofs;
+	xmit->tail &= UART_XMIT_SIZE - 1;
+
+	port->icount.tx += pdc->ofs;
+>>>>>>> b7ba80a49124 (Commit)
 	pdc->ofs = 0;
 
 	/* more to transmit - setup next transfer */
@@ -1817,7 +1911,10 @@ static void atmel_get_ip_name(struct uart_port *port)
 	 */
 	atmel_port->has_frac_baudrate = false;
 	atmel_port->has_hw_timer = false;
+<<<<<<< HEAD
 	atmel_port->is_usart = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (name == new_uart) {
 		dev_dbg(port->dev, "Uart with hw timer");
@@ -1827,7 +1924,10 @@ static void atmel_get_ip_name(struct uart_port *port)
 		dev_dbg(port->dev, "Usart\n");
 		atmel_port->has_frac_baudrate = true;
 		atmel_port->has_hw_timer = true;
+<<<<<<< HEAD
 		atmel_port->is_usart = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		atmel_port->rtor = ATMEL_US_RTOR;
 		version = atmel_uart_readl(port, ATMEL_US_VERSION);
 		switch (version) {
@@ -1857,7 +1957,10 @@ static void atmel_get_ip_name(struct uart_port *port)
 			dev_dbg(port->dev, "This version is usart\n");
 			atmel_port->has_frac_baudrate = true;
 			atmel_port->has_hw_timer = true;
+<<<<<<< HEAD
 			atmel_port->is_usart = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			atmel_port->rtor = ATMEL_US_RTOR;
 			break;
 		case 0x203:
@@ -2108,8 +2211,11 @@ static void atmel_serial_pm(struct uart_port *port, unsigned int state,
 		 * This is called on uart_close() or a suspend event.
 		 */
 		clk_disable_unprepare(atmel_port->clk);
+<<<<<<< HEAD
 		if (__clk_is_enabled(atmel_port->gclk))
 			clk_disable_unprepare(atmel_port->gclk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		dev_err(port->dev, "atmel_serial: unknown pm %d\n", state);
@@ -2125,19 +2231,28 @@ static void atmel_set_termios(struct uart_port *port,
 {
 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
 	unsigned long flags;
+<<<<<<< HEAD
 	unsigned int old_mode, mode, imr, quot, div, cd, fp = 0;
 	unsigned int baud, actual_baud, gclk_rate;
 	int ret;
+=======
+	unsigned int old_mode, mode, imr, quot, baud, div, cd, fp = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* save the current mode register */
 	mode = old_mode = atmel_uart_readl(port, ATMEL_US_MR);
 
 	/* reset the mode, clock divisor, parity, stop bits and data size */
+<<<<<<< HEAD
 	if (atmel_port->is_usart)
 		mode &= ~(ATMEL_US_NBSTOP | ATMEL_US_PAR | ATMEL_US_CHRL |
 			  ATMEL_US_USCLKS | ATMEL_US_USMODE);
 	else
 		mode &= ~(ATMEL_UA_BRSRCCK | ATMEL_US_PAR | ATMEL_UA_FILTER);
+=======
+	mode &= ~(ATMEL_US_USCLKS | ATMEL_US_CHRL | ATMEL_US_NBSTOP |
+		  ATMEL_US_PAR | ATMEL_US_USMODE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	baud = uart_get_baud_rate(port, termios, old, 0, port->uartclk / 16);
 
@@ -2285,6 +2400,7 @@ static void atmel_set_termios(struct uart_port *port,
 		cd = uart_get_divisor(port, baud);
 	}
 
+<<<<<<< HEAD
 	/*
 	 * If the current value of the Clock Divisor surpasses the 16 bit
 	 * ATMEL_US_CD mask and the IP is USART, switch to the Peripheral
@@ -2339,6 +2455,12 @@ static void atmel_set_termios(struct uart_port *port,
 	}
 
 gclk_fail:
+=======
+	if (cd > 65535) {	/* BRGR is 16-bit, so switch to slower clock */
+		cd /= 8;
+		mode |= ATMEL_US_USCLKS_MCK_DIV8;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	quot = cd | fp << ATMEL_US_FP_OFFSET;
 
 	if (!(port->iso7816.flags & SER_ISO7816_ENABLED))
@@ -2657,7 +2779,17 @@ static void __init atmel_console_get_options(struct uart_port *port, int *baud,
 	else if (mr == ATMEL_US_PAR_ODD)
 		*parity = 'o';
 
+<<<<<<< HEAD
 	*baud = port->uartclk / (16 * quot);
+=======
+	/*
+	 * The serial core only rounds down when matching this to a
+	 * supported baud rate. Make sure we don't end up slightly
+	 * lower than one of those, as it would make us fall through
+	 * to a much lower baud rate than we really want.
+	 */
+	*baud = port->uartclk / (16 * (quot - 1));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __init atmel_console_setup(struct console *co, char *options)
@@ -2928,12 +3060,15 @@ static int atmel_serial_probe(struct platform_device *pdev)
 	if (ret)
 		goto err;
 
+<<<<<<< HEAD
 	atmel_port->gclk = devm_clk_get_optional(&pdev->dev, "gclk");
 	if (IS_ERR(atmel_port->gclk)) {
 		ret = PTR_ERR(atmel_port->gclk);
 		goto err_clk_disable_unprepare;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = atmel_init_port(atmel_port, pdev);
 	if (ret)
 		goto err_clk_disable_unprepare;

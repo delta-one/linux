@@ -27,6 +27,7 @@
 #include <nvif/if0004.h>
 
 static int
+<<<<<<< HEAD
 nvkm_nvsw_uevent(struct nvkm_object *object, void *argv, u32 argc, struct nvkm_uevent *uevent)
 {
 	union nv04_nvsw_event_args *args = argv;
@@ -49,12 +50,40 @@ nvkm_nvsw_mthd(struct nvkm_object *object, u32 mthd, void *data, u32 size)
 		return nvsw->func->mthd(nvsw, mthd, data, size);
 
 	return -ENODEV;
+=======
+nvkm_nvsw_mthd_(struct nvkm_object *object, u32 mthd, void *data, u32 size)
+{
+	struct nvkm_nvsw *nvsw = nvkm_nvsw(object);
+	if (nvsw->func->mthd)
+		return nvsw->func->mthd(nvsw, mthd, data, size);
+	return -ENODEV;
+}
+
+static int
+nvkm_nvsw_ntfy_(struct nvkm_object *object, u32 mthd,
+		struct nvkm_event **pevent)
+{
+	struct nvkm_nvsw *nvsw = nvkm_nvsw(object);
+	switch (mthd) {
+	case NV04_NVSW_NTFY_UEVENT:
+		*pevent = &nvsw->chan->event;
+		return 0;
+	default:
+		break;
+	}
+	return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct nvkm_object_func
 nvkm_nvsw_ = {
+<<<<<<< HEAD
 	.mthd = nvkm_nvsw_mthd,
 	.uevent = nvkm_nvsw_uevent,
+=======
+	.mthd = nvkm_nvsw_mthd_,
+	.ntfy = nvkm_nvsw_ntfy_,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int

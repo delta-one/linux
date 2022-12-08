@@ -18,10 +18,19 @@
 #include <linux/sched.h>
 #include <linux/backlight.h>
 #include <linux/fb.h>
+<<<<<<< HEAD
 #include <linux/gpio/consumer.h>
 #include <linux/of.h>
 
 #include <video/omapfb_dss.h>
+=======
+#include <linux/gpio.h>
+#include <linux/of.h>
+#include <linux/of_gpio.h>
+
+#include <video/omapfb_dss.h>
+#include <video/omap-panel-data.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MIPID_CMD_READ_DISP_ID		0x04
 #define MIPID_CMD_READ_RED		0x06
@@ -55,8 +64,12 @@ struct panel_drv_data {
 	struct omap_dss_device	dssdev;
 	struct omap_dss_device *in;
 
+<<<<<<< HEAD
 	struct gpio_desc *reset_gpio;
 
+=======
+	int reset_gpio;
+>>>>>>> b7ba80a49124 (Commit)
 	int datapairs;
 
 	struct omap_video_timings videomode;
@@ -545,6 +558,7 @@ static int acx565akm_panel_power_on(struct omap_dss_device *dssdev)
 	/*FIXME tweak me */
 	msleep(50);
 
+<<<<<<< HEAD
 	/*
 	 * Note that we appear to activate the reset line here. However
 	 * existing DTSes specified incorrect polarity for it (active high),
@@ -552,6 +566,10 @@ static int acx565akm_panel_power_on(struct omap_dss_device *dssdev)
 	 */
 	if (ddata->reset_gpio)
 		gpiod_set_value_cansleep(ddata->reset_gpio, 1);
+=======
+	if (gpio_is_valid(ddata->reset_gpio))
+		gpio_set_value(ddata->reset_gpio, 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ddata->enabled) {
 		dev_dbg(&ddata->spi->dev, "panel already enabled\n");
@@ -600,9 +618,14 @@ static void acx565akm_panel_power_off(struct omap_dss_device *dssdev)
 	 */
 	msleep(50);
 
+<<<<<<< HEAD
 	/* see comment in acx565akm_panel_power_on() */
 	if (ddata->reset_gpio)
 		gpiod_set_value_cansleep(ddata->reset_gpio, 0);
+=======
+	if (gpio_is_valid(ddata->reset_gpio))
+		gpio_set_value(ddata->reset_gpio, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* FIXME need to tweak this delay */
 	msleep(100);
@@ -693,6 +716,51 @@ static struct omap_dss_driver acx565akm_ops = {
 	.get_resolution	= omapdss_default_get_resolution,
 };
 
+<<<<<<< HEAD
+=======
+static int acx565akm_probe_pdata(struct spi_device *spi)
+{
+	const struct panel_acx565akm_platform_data *pdata;
+	struct panel_drv_data *ddata = dev_get_drvdata(&spi->dev);
+	struct omap_dss_device *dssdev, *in;
+
+	pdata = dev_get_platdata(&spi->dev);
+
+	ddata->reset_gpio = pdata->reset_gpio;
+
+	in = omap_dss_find_output(pdata->source);
+	if (in == NULL) {
+		dev_err(&spi->dev, "failed to find video source '%s'\n",
+				pdata->source);
+		return -EPROBE_DEFER;
+	}
+	ddata->in = in;
+
+	ddata->datapairs = pdata->datapairs;
+
+	dssdev = &ddata->dssdev;
+	dssdev->name = pdata->name;
+
+	return 0;
+}
+
+static int acx565akm_probe_of(struct spi_device *spi)
+{
+	struct panel_drv_data *ddata = dev_get_drvdata(&spi->dev);
+	struct device_node *np = spi->dev.of_node;
+
+	ddata->reset_gpio = of_get_named_gpio(np, "reset-gpios", 0);
+
+	ddata->in = omapdss_of_find_source_for_first_ep(np);
+	if (IS_ERR(ddata->in)) {
+		dev_err(&spi->dev, "failed to find video source\n");
+		return PTR_ERR(ddata->in);
+	}
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int acx565akm_probe(struct spi_device *spi)
 {
 	struct panel_drv_data *ddata;
@@ -704,9 +772,12 @@ static int acx565akm_probe(struct spi_device *spi)
 
 	dev_dbg(&spi->dev, "%s\n", __func__);
 
+<<<<<<< HEAD
 	if (!spi->dev.of_node)
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spi->mode = SPI_MODE_3;
 
 	ddata = devm_kzalloc(&spi->dev, sizeof(*ddata), GFP_KERNEL);
@@ -719,6 +790,7 @@ static int acx565akm_probe(struct spi_device *spi)
 
 	mutex_init(&ddata->mutex);
 
+<<<<<<< HEAD
 	ddata->in = omapdss_of_find_source_for_first_ep(spi->dev.of_node);
 	r = PTR_ERR_OR_ZERO(ddata->in);
 	if (r) {
@@ -739,6 +811,31 @@ static int acx565akm_probe(struct spi_device *spi)
 		gpiod_set_value_cansleep(ddata->reset_gpio, 1);
 	}
 
+=======
+	if (dev_get_platdata(&spi->dev)) {
+		r = acx565akm_probe_pdata(spi);
+		if (r)
+			return r;
+	} else if (spi->dev.of_node) {
+		r = acx565akm_probe_of(spi);
+		if (r)
+			return r;
+	} else {
+		dev_err(&spi->dev, "platform data missing!\n");
+		return -ENODEV;
+	}
+
+	if (gpio_is_valid(ddata->reset_gpio)) {
+		r = devm_gpio_request_one(&spi->dev, ddata->reset_gpio,
+				GPIOF_OUT_INIT_LOW, "lcd reset");
+		if (r)
+			goto err_gpio;
+	}
+
+	if (gpio_is_valid(ddata->reset_gpio))
+		gpio_set_value(ddata->reset_gpio, 1);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * After reset we have to wait 5 msec before the first
 	 * command can be sent.
@@ -749,8 +846,13 @@ static int acx565akm_probe(struct spi_device *spi)
 
 	r = panel_detect(ddata);
 
+<<<<<<< HEAD
 	if (!ddata->enabled && ddata->reset_gpio)
 		gpiod_set_value_cansleep(ddata->reset_gpio, 0);
+=======
+	if (!ddata->enabled && gpio_is_valid(ddata->reset_gpio))
+		gpio_set_value(ddata->reset_gpio, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (r) {
 		dev_err(&spi->dev, "%s panel detect error\n", __func__);

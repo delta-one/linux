@@ -45,8 +45,14 @@ static int rand_eb(void)
 	unsigned int eb;
 
 again:
+<<<<<<< HEAD
 	/* Read or write up 2 eraseblocks at a time - hence 'ebcnt - 1' */
 	eb = get_random_u32_below(ebcnt - 1);
+=======
+	eb = prandom_u32();
+	/* Read or write up 2 eraseblocks at a time - hence 'ebcnt - 1' */
+	eb %= (ebcnt - 1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (bbt[eb])
 		goto again;
 	return eb;
@@ -54,12 +60,28 @@ again:
 
 static int rand_offs(void)
 {
+<<<<<<< HEAD
 	return get_random_u32_below(bufsize);
+=======
+	unsigned int offs;
+
+	offs = prandom_u32();
+	offs %= bufsize;
+	return offs;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int rand_len(int offs)
 {
+<<<<<<< HEAD
 	return get_random_u32_below(bufsize - offs);
+=======
+	unsigned int len;
+
+	len = prandom_u32();
+	len %= (bufsize - offs);
+	return len;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int do_read(void)
@@ -118,7 +140,11 @@ static int do_write(void)
 
 static int do_operation(void)
 {
+<<<<<<< HEAD
 	if (get_random_u32_below(2))
+=======
+	if (prandom_u32() & 1)
+>>>>>>> b7ba80a49124 (Commit)
 		return do_read();
 	else
 		return do_write();
@@ -183,7 +209,11 @@ static int __init mtd_stresstest_init(void)
 		goto out;
 	for (i = 0; i < ebcnt; i++)
 		offsets[i] = mtd->erasesize;
+<<<<<<< HEAD
 	get_random_bytes(writebuf, bufsize);
+=======
+	prandom_bytes(writebuf, bufsize);
+>>>>>>> b7ba80a49124 (Commit)
 
 	bbt = kzalloc(ebcnt, GFP_KERNEL);
 	if (!bbt)

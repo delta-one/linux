@@ -29,16 +29,23 @@
 #include "df/df_3_6_offset.h"
 #include "xgmi/xgmi_4_0_0_smn.h"
 #include "xgmi/xgmi_4_0_0_sh_mask.h"
+<<<<<<< HEAD
 #include "xgmi/xgmi_6_1_0_sh_mask.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "wafl/wafl2_4_0_0_smn.h"
 #include "wafl/wafl2_4_0_0_sh_mask.h"
 
 #include "amdgpu_reset.h"
 
 #define smnPCS_XGMI3X16_PCS_ERROR_STATUS 0x11a0020c
+<<<<<<< HEAD
 #define smnPCS_XGMI3X16_PCS_ERROR_NONCORRECTABLE_MASK   0x11a00218
 #define smnPCS_GOPX1_PCS_ERROR_STATUS    0x12200210
 #define smnPCS_GOPX1_PCS_ERROR_NONCORRECTABLE_MASK      0x12200218
+=======
+#define smnPCS_GOPX1_PCS_ERROR_STATUS    0x12200210
+>>>>>>> b7ba80a49124 (Commit)
 
 static DEFINE_MUTEX(xgmi_mutex);
 
@@ -82,6 +89,7 @@ static const int xgmi3x16_pcs_err_status_reg_aldebaran[] = {
 	smnPCS_XGMI3X16_PCS_ERROR_STATUS + 0x700000
 };
 
+<<<<<<< HEAD
 static const int xgmi3x16_pcs_err_noncorrectable_mask_reg_aldebaran[] = {
 	smnPCS_XGMI3X16_PCS_ERROR_NONCORRECTABLE_MASK,
 	smnPCS_XGMI3X16_PCS_ERROR_NONCORRECTABLE_MASK + 0x100000,
@@ -93,16 +101,21 @@ static const int xgmi3x16_pcs_err_noncorrectable_mask_reg_aldebaran[] = {
 	smnPCS_XGMI3X16_PCS_ERROR_NONCORRECTABLE_MASK + 0x700000
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const int walf_pcs_err_status_reg_aldebaran[] = {
 	smnPCS_GOPX1_PCS_ERROR_STATUS,
 	smnPCS_GOPX1_PCS_ERROR_STATUS + 0x100000
 };
 
+<<<<<<< HEAD
 static const int walf_pcs_err_noncorrectable_mask_reg_aldebaran[] = {
 	smnPCS_GOPX1_PCS_ERROR_NONCORRECTABLE_MASK,
 	smnPCS_GOPX1_PCS_ERROR_NONCORRECTABLE_MASK + 0x100000
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct amdgpu_pcs_ras_field xgmi_pcs_ras_fields[] = {
 	{"XGMI PCS DataLossErr",
 	 SOC15_REG_FIELD(XGMI0_PCS_GOPX16_PCS_ERROR_STATUS, DataLossErr)},
@@ -181,6 +194,7 @@ static const struct amdgpu_pcs_ras_field wafl_pcs_ras_fields[] = {
 	 SOC15_REG_FIELD(PCS_GOPX1_0_PCS_GOPX1_PCS_ERROR_STATUS, RecoveryRelockAttemptErr)},
 };
 
+<<<<<<< HEAD
 static const struct amdgpu_pcs_ras_field xgmi3x16_pcs_ras_fields[] = {
 	{"XGMI3X16 PCS DataLossErr",
 	 SOC15_REG_FIELD(PCS_XGMI3X16_PCS_ERROR_STATUS, DataLossErr)},
@@ -242,6 +256,8 @@ static const struct amdgpu_pcs_ras_field xgmi3x16_pcs_ras_fields[] = {
 	 SOC15_REG_FIELD(PCS_XGMI3X16_PCS_ERROR_STATUS, RxCMDPktErr)},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * DOC: AMDGPU XGMI Support
  *
@@ -308,7 +324,11 @@ static const struct sysfs_ops amdgpu_xgmi_hive_ops = {
 	.show = amdgpu_xgmi_show_attrs,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type amdgpu_xgmi_hive_type = {
+=======
+struct kobj_type amdgpu_xgmi_hive_type = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = amdgpu_xgmi_hive_release,
 	.sysfs_ops = &amdgpu_xgmi_hive_ops,
 	.default_groups = amdgpu_xgmi_hive_groups,
@@ -466,6 +486,10 @@ struct amdgpu_hive_info *amdgpu_get_xgmi_hive(struct amdgpu_device *adev)
 	if (ret) {
 		dev_err(adev->dev, "XGMI: failed initializing kobject for xgmi hive\n");
 		kobject_put(&hive->kobj);
+<<<<<<< HEAD
+=======
+		kfree(hive);
+>>>>>>> b7ba80a49124 (Commit)
 		hive = NULL;
 		goto pro_end;
 	}
@@ -489,6 +513,10 @@ struct amdgpu_hive_info *amdgpu_get_xgmi_hive(struct amdgpu_device *adev)
 				dev_err(adev->dev, "XGMI: failed initializing reset domain for xgmi hive\n");
 				ret = -ENOMEM;
 				kobject_put(&hive->kobj);
+<<<<<<< HEAD
+=======
+				kfree(hive);
+>>>>>>> b7ba80a49124 (Commit)
 				hive = NULL;
 				goto pro_end;
 			}
@@ -889,6 +917,7 @@ static void amdgpu_xgmi_reset_ras_error_count(struct amdgpu_device *adev)
 
 static int amdgpu_xgmi_query_pcs_error_status(struct amdgpu_device *adev,
 					      uint32_t value,
+<<<<<<< HEAD
 						  uint32_t mask_value,
 					      uint32_t *ue_count,
 					      uint32_t *ce_count,
@@ -930,6 +959,41 @@ static int amdgpu_xgmi_query_pcs_error_status(struct amdgpu_device *adev,
 
 		/* reset bit value if the bit is checked */
 		value &= ~(pcs_ras_fields[i].pcs_err_mask);
+=======
+					      uint32_t *ue_count,
+					      uint32_t *ce_count,
+					      bool is_xgmi_pcs)
+{
+	int i;
+	int ue_cnt;
+
+	if (is_xgmi_pcs) {
+		/* query xgmi pcs error status,
+		 * only ue is supported */
+		for (i = 0; i < ARRAY_SIZE(xgmi_pcs_ras_fields); i ++) {
+			ue_cnt = (value &
+				  xgmi_pcs_ras_fields[i].pcs_err_mask) >>
+				  xgmi_pcs_ras_fields[i].pcs_err_shift;
+			if (ue_cnt) {
+				dev_info(adev->dev, "%s detected\n",
+					 xgmi_pcs_ras_fields[i].err_name);
+				*ue_count += ue_cnt;
+			}
+		}
+	} else {
+		/* query wafl pcs error status,
+		 * only ue is supported */
+		for (i = 0; i < ARRAY_SIZE(wafl_pcs_ras_fields); i++) {
+			ue_cnt = (value &
+				  wafl_pcs_ras_fields[i].pcs_err_mask) >>
+				  wafl_pcs_ras_fields[i].pcs_err_shift;
+			if (ue_cnt) {
+				dev_info(adev->dev, "%s detected\n",
+					 wafl_pcs_ras_fields[i].err_name);
+				*ue_count += ue_cnt;
+			}
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -940,7 +1004,11 @@ static void amdgpu_xgmi_query_ras_error_count(struct amdgpu_device *adev,
 {
 	struct ras_err_data *err_data = (struct ras_err_data *)ras_error_status;
 	int i;
+<<<<<<< HEAD
 	uint32_t data, mask_data = 0;
+=======
+	uint32_t data;
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t ue_cnt = 0, ce_cnt = 0;
 
 	if (!amdgpu_ras_is_supported(adev, AMDGPU_RAS_BLOCK__XGMI_WAFL))
@@ -955,15 +1023,25 @@ static void amdgpu_xgmi_query_ras_error_count(struct amdgpu_device *adev,
 		for (i = 0; i < ARRAY_SIZE(xgmi_pcs_err_status_reg_arct); i++) {
 			data = RREG32_PCIE(xgmi_pcs_err_status_reg_arct[i]);
 			if (data)
+<<<<<<< HEAD
 				amdgpu_xgmi_query_pcs_error_status(adev, data,
 						mask_data, &ue_cnt, &ce_cnt, true, false);
+=======
+				amdgpu_xgmi_query_pcs_error_status(adev,
+						data, &ue_cnt, &ce_cnt, true);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		/* check wafl pcs error */
 		for (i = 0; i < ARRAY_SIZE(wafl_pcs_err_status_reg_arct); i++) {
 			data = RREG32_PCIE(wafl_pcs_err_status_reg_arct[i]);
 			if (data)
+<<<<<<< HEAD
 				amdgpu_xgmi_query_pcs_error_status(adev, data,
 						mask_data, &ue_cnt, &ce_cnt, false, false);
+=======
+				amdgpu_xgmi_query_pcs_error_status(adev,
+						data, &ue_cnt, &ce_cnt, false);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		break;
 	case CHIP_VEGA20:
@@ -971,35 +1049,57 @@ static void amdgpu_xgmi_query_ras_error_count(struct amdgpu_device *adev,
 		for (i = 0; i < ARRAY_SIZE(xgmi_pcs_err_status_reg_vg20); i++) {
 			data = RREG32_PCIE(xgmi_pcs_err_status_reg_vg20[i]);
 			if (data)
+<<<<<<< HEAD
 				amdgpu_xgmi_query_pcs_error_status(adev, data,
 						mask_data, &ue_cnt, &ce_cnt, true, false);
+=======
+				amdgpu_xgmi_query_pcs_error_status(adev,
+						data, &ue_cnt, &ce_cnt, true);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		/* check wafl pcs error */
 		for (i = 0; i < ARRAY_SIZE(wafl_pcs_err_status_reg_vg20); i++) {
 			data = RREG32_PCIE(wafl_pcs_err_status_reg_vg20[i]);
 			if (data)
+<<<<<<< HEAD
 				amdgpu_xgmi_query_pcs_error_status(adev, data,
 						mask_data, &ue_cnt, &ce_cnt, false, false);
+=======
+				amdgpu_xgmi_query_pcs_error_status(adev,
+						data, &ue_cnt, &ce_cnt, false);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		break;
 	case CHIP_ALDEBARAN:
 		/* check xgmi3x16 pcs error */
 		for (i = 0; i < ARRAY_SIZE(xgmi3x16_pcs_err_status_reg_aldebaran); i++) {
 			data = RREG32_PCIE(xgmi3x16_pcs_err_status_reg_aldebaran[i]);
+<<<<<<< HEAD
 			mask_data =
 				RREG32_PCIE(xgmi3x16_pcs_err_noncorrectable_mask_reg_aldebaran[i]);
 			if (data)
 				amdgpu_xgmi_query_pcs_error_status(adev, data,
 						mask_data, &ue_cnt, &ce_cnt, true, true);
+=======
+			if (data)
+				amdgpu_xgmi_query_pcs_error_status(adev,
+						data, &ue_cnt, &ce_cnt, true);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		/* check wafl pcs error */
 		for (i = 0; i < ARRAY_SIZE(walf_pcs_err_status_reg_aldebaran); i++) {
 			data = RREG32_PCIE(walf_pcs_err_status_reg_aldebaran[i]);
+<<<<<<< HEAD
 			mask_data =
 				RREG32_PCIE(walf_pcs_err_noncorrectable_mask_reg_aldebaran[i]);
 			if (data)
 				amdgpu_xgmi_query_pcs_error_status(adev, data,
 						mask_data, &ue_cnt, &ce_cnt, false, true);
+=======
+			if (data)
+				amdgpu_xgmi_query_pcs_error_status(adev,
+						data, &ue_cnt, &ce_cnt, false);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		break;
 	default:
@@ -1048,10 +1148,19 @@ struct amdgpu_ras_block_hw_ops  xgmi_ras_hw_ops = {
 
 struct amdgpu_xgmi_ras xgmi_ras = {
 	.ras_block = {
+<<<<<<< HEAD
+=======
+		.ras_comm = {
+			.name = "xgmi_wafl",
+			.block = AMDGPU_RAS_BLOCK__XGMI_WAFL,
+			.type = AMDGPU_RAS_ERROR__MULTI_UNCORRECTABLE,
+		},
+>>>>>>> b7ba80a49124 (Commit)
 		.hw_ops = &xgmi_ras_hw_ops,
 		.ras_late_init = amdgpu_xgmi_ras_late_init,
 	},
 };
+<<<<<<< HEAD
 
 int amdgpu_xgmi_ras_sw_init(struct amdgpu_device *adev)
 {
@@ -1075,3 +1184,5 @@ int amdgpu_xgmi_ras_sw_init(struct amdgpu_device *adev)
 
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -149,5 +149,9 @@ static struct platform_driver a64fx_diag_driver = {
 
 module_platform_driver(a64fx_diag_driver);
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>");
 MODULE_DESCRIPTION("A64FX diag driver");

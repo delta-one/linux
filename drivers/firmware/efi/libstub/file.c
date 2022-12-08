@@ -43,6 +43,7 @@ static efi_status_t efi_open_file(efi_file_protocol_t *volume,
 	efi_file_protocol_t *fh;
 	unsigned long info_sz;
 	efi_status_t status;
+<<<<<<< HEAD
 	efi_char16_t *c;
 
 	/* Replace UNIX dir separators with EFI standard ones */
@@ -53,16 +54,27 @@ static efi_status_t efi_open_file(efi_file_protocol_t *volume,
 
 	status = efi_call_proto(volume, open, &fh, fi->filename,
 				EFI_FILE_MODE_READ, 0);
+=======
+
+	status = volume->open(volume, &fh, fi->filename, EFI_FILE_MODE_READ, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (status != EFI_SUCCESS) {
 		efi_err("Failed to open file: %ls\n", fi->filename);
 		return status;
 	}
 
 	info_sz = sizeof(struct finfo);
+<<<<<<< HEAD
 	status = efi_call_proto(fh, get_info, &info_guid, &info_sz, fi);
 	if (status != EFI_SUCCESS) {
 		efi_err("Failed to get file info\n");
 		efi_call_proto(fh, close);
+=======
+	status = fh->get_info(fh, &info_guid, &info_sz, fi);
+	if (status != EFI_SUCCESS) {
+		efi_err("Failed to get file info\n");
+		fh->close(fh);
+>>>>>>> b7ba80a49124 (Commit)
 		return status;
 	}
 
@@ -74,18 +86,48 @@ static efi_status_t efi_open_file(efi_file_protocol_t *volume,
 static efi_status_t efi_open_volume(efi_loaded_image_t *image,
 				    efi_file_protocol_t **fh)
 {
+<<<<<<< HEAD
+=======
+	struct efi_vendor_dev_path *dp = image->file_path;
+	efi_guid_t li_proto = LOADED_IMAGE_PROTOCOL_GUID;
+>>>>>>> b7ba80a49124 (Commit)
 	efi_guid_t fs_proto = EFI_FILE_SYSTEM_GUID;
 	efi_simple_file_system_protocol_t *io;
 	efi_status_t status;
 
+<<<<<<< HEAD
 	status = efi_bs_call(handle_protocol, efi_table_attr(image, device_handle),
 			     &fs_proto, (void **)&io);
+=======
+	// If we are using EFI zboot, we should look for the file system
+	// protocol on the parent image's handle instead
+	if (IS_ENABLED(CONFIG_EFI_ZBOOT) &&
+	    image->parent_handle != NULL &&
+	    dp != NULL &&
+	    dp->header.type == EFI_DEV_MEDIA &&
+	    dp->header.sub_type == EFI_DEV_MEDIA_VENDOR &&
+	    !efi_guidcmp(dp->vendorguid, LINUX_EFI_ZBOOT_MEDIA_GUID)) {
+		status = efi_bs_call(handle_protocol, image->parent_handle,
+				     &li_proto, (void *)&image);
+		if (status != EFI_SUCCESS) {
+			efi_err("Failed to locate parent image handle\n");
+			return status;
+		}
+	}
+
+	status = efi_bs_call(handle_protocol, image->device_handle, &fs_proto,
+			     (void **)&io);
+>>>>>>> b7ba80a49124 (Commit)
 	if (status != EFI_SUCCESS) {
 		efi_err("Failed to handle fs_proto\n");
 		return status;
 	}
 
+<<<<<<< HEAD
 	status = efi_call_proto(io, open_volume, fh);
+=======
+	status = io->open_volume(io, fh);
+>>>>>>> b7ba80a49124 (Commit)
 	if (status != EFI_SUCCESS)
 		efi_err("Failed to open volume\n");
 
@@ -119,12 +161,21 @@ static int find_file_option(const efi_char16_t *cmdline, int cmdline_len,
 
 		if (c == L'\0' || c == L'\n' || c == L' ')
 			break;
+<<<<<<< HEAD
 		*result++ = c;
+=======
+		else if (c == L'/')
+			/* Replace UNIX dir separators with EFI standard ones */
+			*result++ = L'\\';
+		else
+			*result++ = c;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	*result = L'\0';
 	return i;
 }
 
+<<<<<<< HEAD
 static efi_status_t efi_open_device_path(efi_file_protocol_t **volume,
 					 struct finfo *fi)
 {
@@ -175,6 +226,8 @@ static efi_status_t efi_open_device_path(efi_file_protocol_t **volume,
 	return status;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Check the cmdline for a LILO-style file= arguments.
  *
@@ -189,8 +242,13 @@ efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
 				  unsigned long *load_addr,
 				  unsigned long *load_size)
 {
+<<<<<<< HEAD
 	const efi_char16_t *cmdline = efi_table_attr(image, load_options);
 	u32 cmdline_len = efi_table_attr(image, load_options_size);
+=======
+	const efi_char16_t *cmdline = image->load_options;
+	u32 cmdline_len = image->load_options_size;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long efi_chunk_size = ULONG_MAX;
 	efi_file_protocol_t *volume = NULL;
 	efi_file_protocol_t *file;
@@ -224,6 +282,7 @@ efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
 		cmdline += offset;
 		cmdline_len -= offset;
 
+<<<<<<< HEAD
 		status = efi_open_device_path(&volume, &fi);
 		if (status == EFI_UNSUPPORTED || status == EFI_NOT_FOUND)
 			/* try the volume that holds the kernel itself */
@@ -231,6 +290,13 @@ efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
 
 		if (status != EFI_SUCCESS)
 			goto err_free_alloc;
+=======
+		if (!volume) {
+			status = efi_open_volume(image, &volume);
+			if (status != EFI_SUCCESS)
+				return status;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		status = efi_open_file(volume, &fi, &file, &size);
 		if (status != EFI_SUCCESS)
@@ -278,7 +344,11 @@ efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
 		while (size) {
 			unsigned long chunksize = min(size, efi_chunk_size);
 
+<<<<<<< HEAD
 			status = efi_call_proto(file, read, &chunksize, addr);
+=======
+			status = file->read(file, &chunksize, addr);
+>>>>>>> b7ba80a49124 (Commit)
 			if (status != EFI_SUCCESS) {
 				efi_err("Failed to read file\n");
 				goto err_close_file;
@@ -286,13 +356,18 @@ efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
 			addr += chunksize;
 			size -= chunksize;
 		}
+<<<<<<< HEAD
 		efi_call_proto(file, close);
 		efi_call_proto(volume, close);
+=======
+		file->close(file);
+>>>>>>> b7ba80a49124 (Commit)
 	} while (offset > 0);
 
 	*load_addr = alloc_addr;
 	*load_size = alloc_size;
 
+<<<<<<< HEAD
 	if (*load_size == 0)
 		return EFI_NOT_READY;
 	return EFI_SUCCESS;
@@ -304,6 +379,17 @@ err_close_volume:
 	efi_call_proto(volume, close);
 
 err_free_alloc:
+=======
+	if (volume)
+		volume->close(volume);
+	return EFI_SUCCESS;
+
+err_close_file:
+	file->close(file);
+
+err_close_volume:
+	volume->close(volume);
+>>>>>>> b7ba80a49124 (Commit)
 	efi_free(alloc_size, alloc_addr);
 	return status;
 }

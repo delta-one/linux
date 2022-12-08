@@ -31,6 +31,15 @@
 #include "dcn30/dcn30_hubp.h"
 #include "dcn31/dcn31_hubp.h"
 
+<<<<<<< HEAD
+=======
+#define HUBP_REG_LIST_DCN32(id)\
+	HUBP_REG_LIST_DCN30(id),\
+	SRI(DCHUBP_MALL_CONFIG, HUBP, id),\
+	SRI(DCHUBP_VMPG_CONFIG, HUBP, id),\
+	SRI(UCLK_PSTATE_FORCE, HUBPREQ, id)
+
+>>>>>>> b7ba80a49124 (Commit)
 #define HUBP_MASK_SH_LIST_DCN32(mask_sh)\
 	HUBP_MASK_SH_LIST_DCN31(mask_sh),\
 	HUBP_SF(HUBP0_DCHUBP_MALL_CONFIG, USE_MALL_SEL, mask_sh),\
@@ -55,8 +64,11 @@ void hubp32_phantom_hubp_post_enable(struct hubp *hubp);
 void hubp32_cursor_set_attributes(struct hubp *hubp,
 		const struct dc_cursor_attributes *attr);
 
+<<<<<<< HEAD
 void hubp32_init(struct hubp *hubp);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool hubp32_construct(
 	struct dcn20_hubp *hubp2,
 	struct dc_context *ctx,

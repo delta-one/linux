@@ -8,8 +8,11 @@
 
 #include <linux/completion.h>
 #include <crypto/internal/rng.h>
+<<<<<<< HEAD
 #include <linux/dma-mapping.h>
 #include <linux/kernel.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "compat.h"
 #include "regs.h"
 #include "intern.h"
@@ -77,7 +80,10 @@ static int caam_prng_generate(struct crypto_rng *tfm,
 			     const u8 *src, unsigned int slen,
 			     u8 *dst, unsigned int dlen)
 {
+<<<<<<< HEAD
 	unsigned int aligned_dlen = ALIGN(dlen, dma_get_cache_alignment());
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct caam_prng_ctx ctx;
 	struct device *jrdev;
 	dma_addr_t dst_dma;
@@ -85,10 +91,14 @@ static int caam_prng_generate(struct crypto_rng *tfm,
 	u8 *buf;
 	int ret;
 
+<<<<<<< HEAD
 	if (aligned_dlen < dlen)
 		return -EOVERFLOW;
 
 	buf = kzalloc(aligned_dlen, GFP_KERNEL);
+=======
+	buf = kzalloc(dlen, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!buf)
 		return -ENOMEM;
 
@@ -100,7 +110,11 @@ static int caam_prng_generate(struct crypto_rng *tfm,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	desc = kzalloc(CAAM_PRNG_MAX_DESC_LEN, GFP_KERNEL);
+=======
+	desc = kzalloc(CAAM_PRNG_MAX_DESC_LEN, GFP_KERNEL | GFP_DMA);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!desc) {
 		ret = -ENOMEM;
 		goto out1;
@@ -162,7 +176,11 @@ static int caam_prng_seed(struct crypto_rng *tfm,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	desc = kzalloc(CAAM_PRNG_MAX_DESC_LEN, GFP_KERNEL);
+=======
+	desc = kzalloc(CAAM_PRNG_MAX_DESC_LEN, GFP_KERNEL | GFP_DMA);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!desc) {
 		caam_jr_free(jrdev);
 		return -ENOMEM;

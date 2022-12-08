@@ -14,7 +14,10 @@
 #include <linux/slab.h>
 #include <linux/usb/typec.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
 #include <linux/workqueue.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define HD3SS3220_REG_CN_STAT_CTRL	0x09
 #define HD3SS3220_REG_GEN_CTRL		0x0A
@@ -38,9 +41,12 @@ struct hd3ss3220 {
 	struct regmap *regmap;
 	struct usb_role_switch	*role_sw;
 	struct typec_port *port;
+<<<<<<< HEAD
 	struct delayed_work output_poll_work;
 	enum usb_role role_state;
 	bool poll;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int hd3ss3220_set_source_pref(struct hd3ss3220 *hd3ss3220, int src_pref)
@@ -122,6 +128,7 @@ static void hd3ss3220_set_role(struct hd3ss3220 *hd3ss3220)
 	default:
 		break;
 	}
+<<<<<<< HEAD
 
 	hd3ss3220->role_state = role_state;
 }
@@ -138,6 +145,8 @@ static void output_poll_execute(struct work_struct *work)
 		hd3ss3220_set_role(hd3ss3220);
 
 	schedule_delayed_work(&hd3ss3220->output_poll_work, HZ);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static irqreturn_t hd3ss3220_irq(struct hd3ss3220 *hd3ss3220)
@@ -168,7 +177,12 @@ static const struct regmap_config config = {
 	.max_register = 0x0A,
 };
 
+<<<<<<< HEAD
 static int hd3ss3220_probe(struct i2c_client *client)
+=======
+static int hd3ss3220_probe(struct i2c_client *client,
+		const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct typec_capability typec_cap = { };
 	struct hd3ss3220 *hd3ss3220;
@@ -243,9 +257,12 @@ static int hd3ss3220_probe(struct i2c_client *client)
 					"hd3ss3220", &client->dev);
 		if (ret)
 			goto err_unreg_port;
+<<<<<<< HEAD
 	} else {
 		INIT_DELAYED_WORK(&hd3ss3220->output_poll_work, output_poll_execute);
 		hd3ss3220->poll = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = i2c_smbus_read_byte_data(client, HD3SS3220_REG_DEV_REV);
@@ -254,9 +271,12 @@ static int hd3ss3220_probe(struct i2c_client *client)
 
 	fwnode_handle_put(connector);
 
+<<<<<<< HEAD
 	if (hd3ss3220->poll)
 		schedule_delayed_work(&hd3ss3220->output_poll_work, HZ);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev_info(&client->dev, "probed revision=0x%x\n", ret);
 
 	return 0;
@@ -274,9 +294,12 @@ static void hd3ss3220_remove(struct i2c_client *client)
 {
 	struct hd3ss3220 *hd3ss3220 = i2c_get_clientdata(client);
 
+<<<<<<< HEAD
 	if (hd3ss3220->poll)
 		cancel_delayed_work_sync(&hd3ss3220->output_poll_work);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	typec_unregister_port(hd3ss3220->port);
 	usb_role_switch_put(hd3ss3220->role_sw);
 }
@@ -290,9 +313,15 @@ MODULE_DEVICE_TABLE(of, dev_ids);
 static struct i2c_driver hd3ss3220_driver = {
 	.driver = {
 		.name = "hd3ss3220",
+<<<<<<< HEAD
 		.of_match_table = dev_ids,
 	},
 	.probe_new = hd3ss3220_probe,
+=======
+		.of_match_table = of_match_ptr(dev_ids),
+	},
+	.probe = hd3ss3220_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove =  hd3ss3220_remove,
 };
 

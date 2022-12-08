@@ -52,10 +52,13 @@ properties:
       immune to paired-pages corruptions
     type: boolean
 
+<<<<<<< HEAD
   linux,rootfs:
     description: Marks partition that contains root filesystem to mount and boot
       user space from
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 if:
   not:
     required: [ reg ]
@@ -64,5 +67,8 @@ then:
     $nodename:
       pattern: '^partition-.*$'
 
+<<<<<<< HEAD
 # This is a generic file other binding inherit from and extend
+=======
+>>>>>>> b7ba80a49124 (Commit)
 additionalProperties: true

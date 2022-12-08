@@ -20,27 +20,47 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-usb1 {
+=======
+		usb1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "usb1";
 			gpios = <&gpio 9 GPIO_ACTIVE_LOW>;
 		};
 
+<<<<<<< HEAD
 		led-usb2 {
+=======
+		usb2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "usb2";
 			gpios = <&gpio 10 GPIO_ACTIVE_LOW>;
 		};
 
+<<<<<<< HEAD
 		led-wps {
+=======
+		wps {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "wps";
 			gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
 		};
 
+<<<<<<< HEAD
 		led-wireless1 {
+=======
+		wireless1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "5g";
 			gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
 		};
 
+<<<<<<< HEAD
 		led-wireless2 {
+=======
+		wireless2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "2.4g";
 			gpios = <&gpio 18 GPIO_ACTIVE_LOW>;
 		};

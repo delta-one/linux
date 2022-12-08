@@ -532,6 +532,7 @@ static int msc313_gpio_direction_output(struct gpio_chip *chip, unsigned int off
 	return 0;
 }
 
+<<<<<<< HEAD
 static void msc313_gpio_irq_mask(struct irq_data *d)
 {
 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
@@ -548,10 +549,13 @@ static void msc313_gpio_irq_unmask(struct irq_data *d)
 	irq_chip_unmask_parent(d);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The interrupt handling happens in the parent interrupt controller,
  * we don't do anything here.
  */
+<<<<<<< HEAD
 static const struct irq_chip msc313_gpio_irqchip = {
 	.name = "GPIO",
 	.irq_eoi = irq_chip_eoi_parent,
@@ -561,6 +565,15 @@ static const struct irq_chip msc313_gpio_irqchip = {
 	.irq_set_affinity = irq_chip_set_affinity_parent,
 	.flags = IRQCHIP_IMMUTABLE,
 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+=======
+static struct irq_chip msc313_gpio_irqchip = {
+	.name = "GPIO",
+	.irq_eoi = irq_chip_eoi_parent,
+	.irq_mask = irq_chip_mask_parent,
+	.irq_unmask = irq_chip_unmask_parent,
+	.irq_set_type = irq_chip_set_type_parent,
+	.irq_set_affinity = irq_chip_set_affinity_parent,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -662,7 +675,11 @@ static int msc313_gpio_probe(struct platform_device *pdev)
 	gpiochip->names = gpio->gpio_data->names;
 
 	gpioirqchip = &gpiochip->irq;
+<<<<<<< HEAD
 	gpio_irq_chip_set_chip(gpioirqchip, &msc313_gpio_irqchip);
+=======
+	gpioirqchip->chip = &msc313_gpio_irqchip;
+>>>>>>> b7ba80a49124 (Commit)
 	gpioirqchip->fwnode = of_node_to_fwnode(dev->of_node);
 	gpioirqchip->parent_domain = parent_domain;
 	gpioirqchip->child_to_parent_hwirq = msc313e_gpio_child_to_parent_hwirq;
@@ -673,6 +690,14 @@ static int msc313_gpio_probe(struct platform_device *pdev)
 	return devm_gpiochip_add_data(dev, gpiochip, gpio);
 }
 
+<<<<<<< HEAD
+=======
+static int msc313_gpio_remove(struct platform_device *pdev)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id msc313_gpio_of_match[] = {
 #ifdef CONFIG_MACH_INFINITY
 	{
@@ -723,5 +748,9 @@ static struct platform_driver msc313_gpio_driver = {
 		.pm = &msc313_gpio_ops,
 	},
 	.probe = msc313_gpio_probe,
+<<<<<<< HEAD
+=======
+	.remove = msc313_gpio_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 builtin_platform_driver(msc313_gpio_driver);

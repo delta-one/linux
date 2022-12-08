@@ -36,11 +36,20 @@ struct videobuf_dma_contig_memory {
 
 static int __videobuf_dc_alloc(struct device *dev,
 			       struct videobuf_dma_contig_memory *mem,
+<<<<<<< HEAD
 			       unsigned long size)
 {
 	mem->size = size;
 	mem->vaddr = dma_alloc_coherent(dev, mem->size, &mem->dma_handle,
 					GFP_KERNEL);
+=======
+			       unsigned long size, gfp_t flags)
+{
+	mem->size = size;
+	mem->vaddr = dma_alloc_coherent(dev, mem->size,
+					&mem->dma_handle, flags);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!mem->vaddr) {
 		dev_err(dev, "memory alloc size %ld failed\n", mem->size);
 		return -ENOMEM;
@@ -257,7 +266,12 @@ static int __videobuf_iolock(struct videobuf_queue *q,
 			return videobuf_dma_contig_user_get(mem, vb);
 
 		/* allocate memory for the read() method */
+<<<<<<< HEAD
 		if (__videobuf_dc_alloc(q->dev, mem, PAGE_ALIGN(vb->size)))
+=======
+		if (__videobuf_dc_alloc(q->dev, mem, PAGE_ALIGN(vb->size),
+					GFP_KERNEL))
+>>>>>>> b7ba80a49124 (Commit)
 			return -ENOMEM;
 		break;
 	case V4L2_MEMORY_OVERLAY:
@@ -293,18 +307,36 @@ static int __videobuf_mmap_mapper(struct videobuf_queue *q,
 	BUG_ON(!mem);
 	MAGIC_CHECK(mem->magic, MAGIC_DC_MEM);
 
+<<<<<<< HEAD
 	if (__videobuf_dc_alloc(q->dev, mem, PAGE_ALIGN(buf->bsize)))
 		goto error;
 
+=======
+	if (__videobuf_dc_alloc(q->dev, mem, PAGE_ALIGN(buf->bsize),
+				GFP_KERNEL | __GFP_COMP))
+		goto error;
+
+	/* Try to remap memory */
+	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* the "vm_pgoff" is just used in v4l2 to find the
 	 * corresponding buffer data structure which is allocated
 	 * earlier and it does not mean the offset from the physical
 	 * buffer start address as usual. So set it to 0 to pass
+<<<<<<< HEAD
 	 * the sanity check in dma_mmap_coherent().
 	 */
 	vma->vm_pgoff = 0;
 	retval = dma_mmap_coherent(q->dev, vma, mem->vaddr, mem->dma_handle,
 				   mem->size);
+=======
+	 * the sanity check in vm_iomap_memory().
+	 */
+	vma->vm_pgoff = 0;
+
+	retval = vm_iomap_memory(vma, mem->dma_handle, mem->size);
+>>>>>>> b7ba80a49124 (Commit)
 	if (retval) {
 		dev_err(q->dev, "mmap: remap failed with error %d. ",
 			retval);
@@ -314,7 +346,11 @@ static int __videobuf_mmap_mapper(struct videobuf_queue *q,
 	}
 
 	vma->vm_ops = &videobuf_vm_ops;
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_DONTEXPAND);
+=======
+	vma->vm_flags |= VM_DONTEXPAND;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_private_data = map;
 
 	dev_dbg(q->dev, "mmap %p: q=%p %08lx-%08lx (%lx) pgoff %08lx buf %d\n",

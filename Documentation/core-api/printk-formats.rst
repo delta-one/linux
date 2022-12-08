@@ -575,18 +575,27 @@ The field width is passed by value, the bitmap is passed by reference.
 Helper macros cpumask_pr_args() and nodemask_pr_args() are available to ease
 printing cpumask and nodemask.
 
+<<<<<<< HEAD
 Flags bitfields such as page flags, page_type, gfp_flags
 --------------------------------------------------------
+=======
+Flags bitfields such as page flags, gfp_flags
+---------------------------------------------
+>>>>>>> b7ba80a49124 (Commit)
 
 ::
 
 	%pGp	0x17ffffc0002036(referenced|uptodate|lru|active|private|node=0|zone=2|lastcpupid=0x1fffff)
+<<<<<<< HEAD
 	%pGt	0xffffff7f(buddy)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	%pGg	GFP_USER|GFP_DMA32|GFP_NOWARN
 	%pGv	read|exec|mayread|maywrite|mayexec|denywrite
 
 For printing flags bitfields as a collection of symbolic constants that
 would construct the value. The type of flags is given by the third
+<<<<<<< HEAD
 character. Currently supported are:
 
         - p - [p]age flags, expects value of type (``unsigned long *``)
@@ -595,6 +604,11 @@ character. Currently supported are:
         - g - [g]fp_flags, expects value of type (``gfp_t *``)
 
 The flag names and print order depends on the particular type.
+=======
+character. Currently supported are [p]age flags, [v]ma_flags (both
+expect ``unsigned long *``) and [g]fp_flags (expects ``gfp_t *``). The flag
+names and print order depends on the particular	type.
+>>>>>>> b7ba80a49124 (Commit)
 
 Note that this format should not be used directly in the
 :c:func:`TP_printk()` part of a tracepoint. Instead, use the show_*_flags()

@@ -547,7 +547,12 @@ static struct dvb_frontend *cxd2820r_get_dvb_frontend(struct i2c_client *client)
 	return &priv->fe;
 }
 
+<<<<<<< HEAD
 static int cxd2820r_probe(struct i2c_client *client)
+=======
+static int cxd2820r_probe(struct i2c_client *client,
+			  const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cxd2820r_platform_data *pdata = client->dev.platform_data;
 	struct cxd2820r_priv *priv;
@@ -628,7 +633,11 @@ static int cxd2820r_probe(struct i2c_client *client)
 
 	/*
 	 * Chip has two I2C addresses for different register banks. We register
+<<<<<<< HEAD
 	 * one dummy I2C client in order to get own I2C client for each
+=======
+	 * one dummy I2C client in in order to get own I2C client for each
+>>>>>>> b7ba80a49124 (Commit)
 	 * register bank.
 	 */
 	priv->client[1] = i2c_new_dummy_device(client->adapter, client->addr | (1 << 1));
@@ -733,7 +742,11 @@ static struct i2c_driver cxd2820r_driver = {
 		.name                = "cxd2820r",
 		.suppress_bind_attrs = true,
 	},
+<<<<<<< HEAD
 	.probe_new = cxd2820r_probe,
+=======
+	.probe    = cxd2820r_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove   = cxd2820r_remove,
 	.id_table = cxd2820r_id_table,
 };

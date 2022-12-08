@@ -774,7 +774,12 @@ static int adux1020_chip_init(struct adux1020_data *data)
 			   ADUX1020_MODE_INT_MASK, ADUX1020_MODE_INT_DISABLE);
 }
 
+<<<<<<< HEAD
 static int adux1020_probe(struct i2c_client *client)
+=======
+static int adux1020_probe(struct i2c_client *client,
+			  const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct adux1020_data *data;
 	struct iio_dev *indio_dev;
@@ -837,7 +842,11 @@ static struct i2c_driver adux1020_driver = {
 		.name	= ADUX1020_DRV_NAME,
 		.of_match_table = adux1020_of_match,
 	},
+<<<<<<< HEAD
 	.probe_new	= adux1020_probe,
+=======
+	.probe		= adux1020_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= adux1020_id,
 };
 module_i2c_driver(adux1020_driver);

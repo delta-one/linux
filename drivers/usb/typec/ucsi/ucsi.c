@@ -183,11 +183,27 @@ out:
 }
 EXPORT_SYMBOL_GPL(ucsi_send_command);
 
+<<<<<<< HEAD
+=======
+int ucsi_resume(struct ucsi *ucsi)
+{
+	u64 command;
+
+	/* Restore UCSI notification enable mask after system resume */
+	command = UCSI_SET_NOTIFICATION_ENABLE | ucsi->ntfy;
+
+	return ucsi_send_command(ucsi, command, NULL, 0);
+}
+EXPORT_SYMBOL_GPL(ucsi_resume);
+>>>>>>> b7ba80a49124 (Commit)
 /* -------------------------------------------------------------------------- */
 
 struct ucsi_work {
 	struct delayed_work work;
+<<<<<<< HEAD
 	struct list_head node;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long delay;
 	unsigned int count;
 	struct ucsi_connector *con;
@@ -203,7 +219,10 @@ static void ucsi_poll_worker(struct work_struct *work)
 	mutex_lock(&con->lock);
 
 	if (!con->partner) {
+<<<<<<< HEAD
 		list_del(&uwork->node);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		mutex_unlock(&con->lock);
 		kfree(uwork);
 		return;
@@ -211,12 +230,19 @@ static void ucsi_poll_worker(struct work_struct *work)
 
 	ret = uwork->cb(con);
 
+<<<<<<< HEAD
 	if (uwork->count-- && (ret == -EBUSY || ret == -ETIMEDOUT)) {
 		queue_delayed_work(con->wq, &uwork->work, uwork->delay);
 	} else {
 		list_del(&uwork->node);
 		kfree(uwork);
 	}
+=======
+	if (uwork->count-- && (ret == -EBUSY || ret == -ETIMEDOUT))
+		queue_delayed_work(con->wq, &uwork->work, uwork->delay);
+	else
+		kfree(uwork);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&con->lock);
 }
@@ -240,7 +266,10 @@ static int ucsi_partner_task(struct ucsi_connector *con,
 	uwork->con = con;
 	uwork->cb = cb;
 
+<<<<<<< HEAD
 	list_add_tail(&uwork->node, &con->partner_tasks);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	queue_delayed_work(con->wq, &uwork->work, delay);
 
 	return 0;
@@ -567,9 +596,14 @@ static void ucsi_unregister_altmodes(struct ucsi_connector *con, u8 recipient)
 	}
 }
 
+<<<<<<< HEAD
 static int ucsi_read_pdos(struct ucsi_connector *con,
 			  enum typec_role role, int is_partner,
 			  u32 *pdos, int offset, int num_pdos)
+=======
+static int ucsi_get_pdos(struct ucsi_connector *con, int is_partner,
+			 u32 *pdos, int offset, int num_pdos)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ucsi *ucsi = con->ucsi;
 	u64 command;
@@ -579,15 +613,25 @@ static int ucsi_read_pdos(struct ucsi_connector *con,
 	command |= UCSI_GET_PDOS_PARTNER_PDO(is_partner);
 	command |= UCSI_GET_PDOS_PDO_OFFSET(offset);
 	command |= UCSI_GET_PDOS_NUM_PDOS(num_pdos - 1);
+<<<<<<< HEAD
 	command |= is_source(role) ? UCSI_GET_PDOS_SRC_PDOS : 0;
+=======
+	command |= UCSI_GET_PDOS_SRC_PDOS;
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ucsi_send_command(ucsi, command, pdos + offset,
 				num_pdos * sizeof(u32));
 	if (ret < 0 && ret != -ETIMEDOUT)
 		dev_err(ucsi->dev, "UCSI_GET_PDOS failed (%d)\n", ret);
+<<<<<<< HEAD
+=======
+	if (ret == 0 && offset == 0)
+		dev_warn(ucsi->dev, "UCSI_GET_PDOS returned 0 bytes\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
 
+<<<<<<< HEAD
 static int ucsi_get_pdos(struct ucsi_connector *con, enum typec_role role,
 			 int is_partner, u32 *pdos)
 {
@@ -612,10 +656,13 @@ static int ucsi_get_pdos(struct ucsi_connector *con, enum typec_role role,
 	return ret / sizeof(u32) + num_pdos;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ucsi_get_src_pdos(struct ucsi_connector *con)
 {
 	int ret;
 
+<<<<<<< HEAD
 	ret = ucsi_get_pdos(con, TYPEC_SOURCE, 1, con->src_pdos);
 	if (ret < 0)
 		return ret;
@@ -625,6 +672,28 @@ static int ucsi_get_src_pdos(struct ucsi_connector *con)
 	ucsi_port_psy_changed(con);
 
 	return ret;
+=======
+	/* UCSI max payload means only getting at most 4 PDOs at a time */
+	ret = ucsi_get_pdos(con, 1, con->src_pdos, 0, UCSI_MAX_PDOS);
+	if (ret < 0)
+		return ret;
+
+	con->num_pdos = ret / sizeof(u32); /* number of bytes to 32-bit PDOs */
+	if (con->num_pdos < UCSI_MAX_PDOS)
+		return 0;
+
+	/* get the remaining PDOs, if any */
+	ret = ucsi_get_pdos(con, 1, con->src_pdos, UCSI_MAX_PDOS,
+			    PDO_MAX_OBJECTS - UCSI_MAX_PDOS);
+	if (ret < 0)
+		return ret;
+
+	con->num_pdos += ret / sizeof(u32);
+
+	ucsi_port_psy_changed(con);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ucsi_check_altmodes(struct ucsi_connector *con)
@@ -649,6 +718,7 @@ static int ucsi_check_altmodes(struct ucsi_connector *con)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int ucsi_register_partner_pdos(struct ucsi_connector *con)
 {
 	struct usb_power_delivery_desc desc = { con->ucsi->cap.pd_version };
@@ -715,6 +785,8 @@ static void ucsi_unregister_partner_pdos(struct ucsi_connector *con)
 	con->partner_pd = NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void ucsi_pwr_opmode_change(struct ucsi_connector *con)
 {
 	switch (UCSI_CONSTAT_PWR_OPMODE(con->status.flags)) {
@@ -723,7 +795,10 @@ static void ucsi_pwr_opmode_change(struct ucsi_connector *con)
 		typec_set_pwr_opmode(con->port, TYPEC_PWR_MODE_PD);
 		ucsi_partner_task(con, ucsi_get_src_pdos, 30, 0);
 		ucsi_partner_task(con, ucsi_check_altmodes, 30, 0);
+<<<<<<< HEAD
 		ucsi_partner_task(con, ucsi_register_partner_pdos, 1, HZ);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case UCSI_CONSTAT_PWR_OPMODE_TYPEC1_5:
 		con->rdo = 0;
@@ -782,7 +857,10 @@ static void ucsi_unregister_partner(struct ucsi_connector *con)
 	if (!con->partner)
 		return;
 
+<<<<<<< HEAD
 	ucsi_unregister_partner_pdos(con);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ucsi_unregister_altmodes(con, UCSI_RECIPIENT_SOP);
 	typec_unregister_partner(con->partner);
 	con->partner = NULL;
@@ -821,7 +899,10 @@ static void ucsi_partner_change(struct ucsi_connector *con)
 
 static int ucsi_check_connection(struct ucsi_connector *con)
 {
+<<<<<<< HEAD
 	u8 prev_flags = con->status.flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 command;
 	int ret;
 
@@ -832,6 +913,7 @@ static int ucsi_check_connection(struct ucsi_connector *con)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	if (con->status.flags == prev_flags)
 		return 0;
 
@@ -839,6 +921,12 @@ static int ucsi_check_connection(struct ucsi_connector *con)
 		ucsi_register_partner(con);
 		ucsi_pwr_opmode_change(con);
 		ucsi_partner_change(con);
+=======
+	if (con->status.flags & UCSI_CONSTAT_CONNECTED) {
+		if (UCSI_CONSTAT_PWR_OPMODE(con->status.flags) ==
+		    UCSI_CONSTAT_PWR_OPMODE_PD)
+			ucsi_partner_task(con, ucsi_check_altmodes, 30, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		ucsi_partner_change(con);
 		ucsi_port_psy_changed(con);
@@ -887,10 +975,13 @@ static void ucsi_handle_connector_change(struct work_struct *work)
 		if (con->status.flags & UCSI_CONSTAT_CONNECTED) {
 			ucsi_register_partner(con);
 			ucsi_partner_task(con, ucsi_check_connection, 1, HZ);
+<<<<<<< HEAD
 
 			if (UCSI_CONSTAT_PWR_OPMODE(con->status.flags) ==
 			    UCSI_CONSTAT_PWR_OPMODE_PD)
 				ucsi_partner_task(con, ucsi_register_partner_pdos, 1, HZ);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			ucsi_unregister_partner(con);
 		}
@@ -1125,11 +1216,17 @@ static struct fwnode_handle *ucsi_find_fwnode(struct ucsi_connector *con)
 	return NULL;
 }
 
+<<<<<<< HEAD
 static int ucsi_register_port(struct ucsi *ucsi, struct ucsi_connector *con)
 {
 	struct usb_power_delivery_desc desc = { ucsi->cap.pd_version};
 	struct usb_power_delivery_capabilities_desc pd_caps;
 	struct usb_power_delivery_capabilities *pd_cap;
+=======
+static int ucsi_register_port(struct ucsi *ucsi, int index)
+{
+	struct ucsi_connector *con = &ucsi->connector[index];
+>>>>>>> b7ba80a49124 (Commit)
 	struct typec_capability *cap = &con->typec_cap;
 	enum typec_accessory *accessory = cap->accessory;
 	enum usb_role u_role = USB_ROLE_NONE;
@@ -1149,14 +1246,26 @@ static int ucsi_register_port(struct ucsi *ucsi, struct ucsi_connector *con)
 	INIT_WORK(&con->work, ucsi_handle_connector_change);
 	init_completion(&con->complete);
 	mutex_init(&con->lock);
+<<<<<<< HEAD
 	INIT_LIST_HEAD(&con->partner_tasks);
+=======
+	con->num = index + 1;
+>>>>>>> b7ba80a49124 (Commit)
 	con->ucsi = ucsi;
 
 	cap->fwnode = ucsi_find_fwnode(con);
 	con->usb_role_sw = fwnode_usb_role_switch_get(cap->fwnode);
+<<<<<<< HEAD
 	if (IS_ERR(con->usb_role_sw))
 		return dev_err_probe(ucsi->dev, PTR_ERR(con->usb_role_sw),
 			"con%d: failed to get usb role switch\n", con->num);
+=======
+	if (IS_ERR(con->usb_role_sw)) {
+		dev_err(ucsi->dev, "con%d: failed to get usb role switch\n",
+			con->num);
+		return PTR_ERR(con->usb_role_sw);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Delay other interactions with the con until registration is complete */
 	mutex_lock(&con->lock);
@@ -1207,6 +1316,7 @@ static int ucsi_register_port(struct ucsi *ucsi, struct ucsi_connector *con)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	con->pd = usb_power_delivery_register(ucsi->dev, &desc);
 
 	ret = ucsi_get_pdos(con, TYPEC_SOURCE, 0, pd_caps.pdo);
@@ -1242,6 +1352,8 @@ static int ucsi_register_port(struct ucsi *ucsi, struct ucsi_connector *con)
 		typec_port_set_usb_power_delivery(con->port, con->pd);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Alternate modes */
 	ret = ucsi_register_altmodes(con, UCSI_RECIPIENT_CON);
 	if (ret) {
@@ -1280,8 +1392,13 @@ static int ucsi_register_port(struct ucsi *ucsi, struct ucsi_connector *con)
 	if (con->status.flags & UCSI_CONSTAT_CONNECTED) {
 		typec_set_pwr_role(con->port,
 				  !!(con->status.flags & UCSI_CONSTAT_PWR_DIR));
+<<<<<<< HEAD
 		ucsi_register_partner(con);
 		ucsi_pwr_opmode_change(con);
+=======
+		ucsi_pwr_opmode_change(con);
+		ucsi_register_partner(con);
+>>>>>>> b7ba80a49124 (Commit)
 		ucsi_port_psy_changed(con);
 	}
 
@@ -1326,8 +1443,13 @@ out_unlock:
  */
 static int ucsi_init(struct ucsi *ucsi)
 {
+<<<<<<< HEAD
 	struct ucsi_connector *con, *connector;
 	u64 command, ntfy;
+=======
+	struct ucsi_connector *con;
+	u64 command;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 	int i;
 
@@ -1339,8 +1461,13 @@ static int ucsi_init(struct ucsi *ucsi)
 	}
 
 	/* Enable basic notifications */
+<<<<<<< HEAD
 	ntfy = UCSI_ENABLE_NTFY_CMD_COMPLETE | UCSI_ENABLE_NTFY_ERROR;
 	command = UCSI_SET_NOTIFICATION_ENABLE | ntfy;
+=======
+	ucsi->ntfy = UCSI_ENABLE_NTFY_CMD_COMPLETE | UCSI_ENABLE_NTFY_ERROR;
+	command = UCSI_SET_NOTIFICATION_ENABLE | ucsi->ntfy;
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ucsi_send_command(ucsi, command, NULL, 0);
 	if (ret < 0)
 		goto err_reset;
@@ -1357,38 +1484,61 @@ static int ucsi_init(struct ucsi *ucsi)
 	}
 
 	/* Allocate the connectors. Released in ucsi_unregister() */
+<<<<<<< HEAD
 	connector = kcalloc(ucsi->cap.num_connectors + 1, sizeof(*connector), GFP_KERNEL);
 	if (!connector) {
+=======
+	ucsi->connector = kcalloc(ucsi->cap.num_connectors + 1,
+				  sizeof(*ucsi->connector), GFP_KERNEL);
+	if (!ucsi->connector) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -ENOMEM;
 		goto err_reset;
 	}
 
 	/* Register all connectors */
 	for (i = 0; i < ucsi->cap.num_connectors; i++) {
+<<<<<<< HEAD
 		connector[i].num = i + 1;
 		ret = ucsi_register_port(ucsi, &connector[i]);
+=======
+		ret = ucsi_register_port(ucsi, i);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			goto err_unregister;
 	}
 
 	/* Enable all notifications */
+<<<<<<< HEAD
 	ntfy = UCSI_ENABLE_NTFY_ALL;
 	command = UCSI_SET_NOTIFICATION_ENABLE | ntfy;
+=======
+	ucsi->ntfy = UCSI_ENABLE_NTFY_ALL;
+	command = UCSI_SET_NOTIFICATION_ENABLE | ucsi->ntfy;
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ucsi_send_command(ucsi, command, NULL, 0);
 	if (ret < 0)
 		goto err_unregister;
 
+<<<<<<< HEAD
 	ucsi->connector = connector;
 	ucsi->ntfy = ntfy;
 	return 0;
 
 err_unregister:
 	for (con = connector; con->port; con++) {
+=======
+	return 0;
+
+err_unregister:
+	for (con = ucsi->connector; con->port; con++) {
+>>>>>>> b7ba80a49124 (Commit)
 		ucsi_unregister_partner(con);
 		ucsi_unregister_altmodes(con, UCSI_RECIPIENT_CON);
 		ucsi_unregister_port_psy(con);
 		if (con->wq)
 			destroy_workqueue(con->wq);
+<<<<<<< HEAD
 
 		usb_power_delivery_unregister_capabilities(con->port_sink_caps);
 		con->port_sink_caps = NULL;
@@ -1400,6 +1550,12 @@ err_unregister:
 		con->port = NULL;
 	}
 	kfree(connector);
+=======
+		typec_unregister_port(con->port);
+		con->port = NULL;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 err_reset:
 	memset(&ucsi->cap, 0, sizeof(ucsi->cap));
 	ucsi_reset_ppm(ucsi);
@@ -1407,6 +1563,7 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void ucsi_resume_work(struct work_struct *work)
 {
 	struct ucsi *ucsi = container_of(work, struct ucsi, resume_work);
@@ -1437,6 +1594,8 @@ int ucsi_resume(struct ucsi *ucsi)
 }
 EXPORT_SYMBOL_GPL(ucsi_resume);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void ucsi_init_work(struct work_struct *work)
 {
 	struct ucsi *ucsi = container_of(work, struct ucsi, work.work);
@@ -1492,7 +1651,10 @@ struct ucsi *ucsi_create(struct device *dev, const struct ucsi_operations *ops)
 	if (!ucsi)
 		return ERR_PTR(-ENOMEM);
 
+<<<<<<< HEAD
 	INIT_WORK(&ucsi->resume_work, ucsi_resume_work);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_DELAYED_WORK(&ucsi->work, ucsi_init_work);
 	mutex_init(&ucsi->ppm_lock);
 	ucsi->dev = dev;
@@ -1547,20 +1709,27 @@ void ucsi_unregister(struct ucsi *ucsi)
 
 	/* Make sure that we are not in the middle of driver initialization */
 	cancel_delayed_work_sync(&ucsi->work);
+<<<<<<< HEAD
 	cancel_work_sync(&ucsi->resume_work);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Disable notifications */
 	ucsi->ops->async_write(ucsi, UCSI_CONTROL, &cmd, sizeof(cmd));
 
+<<<<<<< HEAD
 	if (!ucsi->connector)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < ucsi->cap.num_connectors; i++) {
 		cancel_work_sync(&ucsi->connector[i].work);
 		ucsi_unregister_partner(&ucsi->connector[i]);
 		ucsi_unregister_altmodes(&ucsi->connector[i],
 					 UCSI_RECIPIENT_CON);
 		ucsi_unregister_port_psy(&ucsi->connector[i]);
+<<<<<<< HEAD
 
 		if (ucsi->connector[i].wq) {
 			struct ucsi_work *uwork;
@@ -1582,6 +1751,10 @@ void ucsi_unregister(struct ucsi *ucsi)
 		ucsi->connector[i].port_source_caps = NULL;
 		usb_power_delivery_unregister(ucsi->connector[i].pd);
 		ucsi->connector[i].pd = NULL;
+=======
+		if (ucsi->connector[i].wq)
+			destroy_workqueue(ucsi->connector[i].wq);
+>>>>>>> b7ba80a49124 (Commit)
 		typec_unregister_port(ucsi->connector[i].port);
 	}
 

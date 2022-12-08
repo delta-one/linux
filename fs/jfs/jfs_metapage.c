@@ -691,6 +691,7 @@ void grab_metapage(struct metapage * mp)
 	unlock_page(mp->page);
 }
 
+<<<<<<< HEAD
 static int metapage_write_one(struct page *page)
 {
 	struct folio *folio = page_folio(page);
@@ -720,6 +721,8 @@ static int metapage_write_one(struct page *page)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void force_metapage(struct metapage *mp)
 {
 	struct page *page = mp->page;
@@ -729,8 +732,13 @@ void force_metapage(struct metapage *mp)
 	get_page(page);
 	lock_page(page);
 	set_page_dirty(page);
+<<<<<<< HEAD
 	if (metapage_write_one(page))
 		jfs_error(mp->sb, "metapage_write_one() failed\n");
+=======
+	if (write_one_page(page))
+		jfs_error(mp->sb, "write_one_page() failed\n");
+>>>>>>> b7ba80a49124 (Commit)
 	clear_bit(META_forcewrite, &mp->flag);
 	put_page(page);
 }
@@ -775,9 +783,15 @@ void release_metapage(struct metapage * mp)
 		set_page_dirty(page);
 		if (test_bit(META_sync, &mp->flag)) {
 			clear_bit(META_sync, &mp->flag);
+<<<<<<< HEAD
 			if (metapage_write_one(page))
 				jfs_error(mp->sb, "metapage_write_one() failed\n");
 			lock_page(page);
+=======
+			if (write_one_page(page))
+				jfs_error(mp->sb, "write_one_page() failed\n");
+			lock_page(page); /* write_one_page unlocks the page */
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	} else if (mp->lsn)	/* discard_metapage doesn't remove it */
 		remove_from_logsync(mp);

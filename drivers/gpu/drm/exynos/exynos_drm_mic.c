@@ -340,6 +340,10 @@ static const struct component_ops exynos_mic_component_ops = {
 	.unbind	= exynos_mic_unbind,
 };
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM
+>>>>>>> b7ba80a49124 (Commit)
 static int exynos_mic_suspend(struct device *dev)
 {
 	struct exynos_mic *mic = dev_get_drvdata(dev);
@@ -368,9 +372,19 @@ static int exynos_mic_resume(struct device *dev)
 	}
 	return 0;
 }
+<<<<<<< HEAD
 
 static DEFINE_RUNTIME_DEV_PM_OPS(exynos_mic_pm_ops, exynos_mic_suspend,
 				 exynos_mic_resume, NULL);
+=======
+#endif
+
+static const struct dev_pm_ops exynos_mic_pm_ops = {
+	SET_RUNTIME_PM_OPS(exynos_mic_suspend, exynos_mic_resume, NULL)
+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+				pm_runtime_force_resume)
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static int exynos_mic_probe(struct platform_device *pdev)
 {
@@ -465,7 +479,11 @@ struct platform_driver mic_driver = {
 	.remove		= exynos_mic_remove,
 	.driver		= {
 		.name	= "exynos-mic",
+<<<<<<< HEAD
 		.pm	= pm_ptr(&exynos_mic_pm_ops),
+=======
+		.pm	= &exynos_mic_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.owner	= THIS_MODULE,
 		.of_match_table = exynos_mic_of_match,
 	},

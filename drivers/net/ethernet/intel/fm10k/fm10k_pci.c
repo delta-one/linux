@@ -3,6 +3,10 @@
 
 #include <linux/module.h>
 #include <linux/interrupt.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "fm10k.h"
 
@@ -2126,6 +2130,11 @@ static int fm10k_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 		goto err_pci_reg;
 	}
 
+<<<<<<< HEAD
+=======
+	pci_enable_pcie_error_reporting(pdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	pci_set_master(pdev);
 	pci_save_state(pdev);
 
@@ -2224,6 +2233,10 @@ err_sw_init:
 err_ioremap:
 	free_netdev(netdev);
 err_alloc_netdev:
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_release_mem_regions(pdev);
 err_pci_reg:
 err_dma:
@@ -2277,6 +2290,11 @@ static void fm10k_remove(struct pci_dev *pdev)
 
 	pci_release_mem_regions(pdev);
 
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	pci_disable_device(pdev);
 }
 

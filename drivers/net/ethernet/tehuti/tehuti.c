@@ -1994,7 +1994,11 @@ bdx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 		priv->nic = nic;
 		priv->msg_enable = BDX_DEF_MSG_ENABLE;
 
+<<<<<<< HEAD
 		netif_napi_add(ndev, &priv->napi, bdx_poll);
+=======
+		netif_napi_add(ndev, &priv->napi, bdx_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if ((readl(nic->regs + FPGA_VER) & 0xFFF) == 308) {
 			DBG("HW statistics not supported\n");

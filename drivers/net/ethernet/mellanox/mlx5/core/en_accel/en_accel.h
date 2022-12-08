@@ -124,7 +124,11 @@ static inline bool mlx5e_accel_tx_begin(struct net_device *dev,
 		mlx5e_udp_gso_handle_tx_skb(skb);
 
 #ifdef CONFIG_MLX5_EN_TLS
+<<<<<<< HEAD
 	/* May send WQEs. */
+=======
+	/* May send SKBs and WQEs. */
+>>>>>>> b7ba80a49124 (Commit)
 	if (mlx5e_ktls_skb_offloaded(skb))
 		if (unlikely(!mlx5e_ktls_handle_tx_skb(dev, sq, skb,
 						       &state->tls)))

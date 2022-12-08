@@ -18,7 +18,10 @@
 #include <linux/pci.h>
 #include <linux/interrupt.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/gpio/consumer.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/gpio.h>
 #include <linux/i2c.h>
 #include <linux/delay.h>
@@ -890,7 +893,10 @@ static int sta2x11_vip_init_controls(struct sta2x11_vip *vip)
 static int vip_gpio_reserve(struct device *dev, int pin, int dir,
 			    const char *name)
 {
+<<<<<<< HEAD
 	struct gpio_desc *desc = gpio_to_desc(pin);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = -ENODEV;
 
 	if (!gpio_is_valid(pin))
@@ -902,7 +908,11 @@ static int vip_gpio_reserve(struct device *dev, int pin, int dir,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = gpiod_direction_output(desc, dir);
+=======
+	ret = gpio_direction_output(pin, dir);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(dev, "Failed to set direction for pin %d (%s)\n",
 			pin, name);
@@ -910,7 +920,11 @@ static int vip_gpio_reserve(struct device *dev, int pin, int dir,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = gpiod_export(desc, false);
+=======
+	ret = gpio_export(pin, false);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(dev, "Failed to export pin %d (%s)\n", pin, name);
 		gpio_free(pin);
@@ -930,10 +944,15 @@ static int vip_gpio_reserve(struct device *dev, int pin, int dir,
 static void vip_gpio_release(struct device *dev, int pin, const char *name)
 {
 	if (gpio_is_valid(pin)) {
+<<<<<<< HEAD
 		struct gpio_desc *desc = gpio_to_desc(pin);
 
 		dev_dbg(dev, "releasing pin %d (%s)\n",	pin, name);
 		gpiod_unexport(desc);
+=======
+		dev_dbg(dev, "releasing pin %d (%s)\n",	pin, name);
+		gpio_unexport(pin);
+>>>>>>> b7ba80a49124 (Commit)
 		gpio_free(pin);
 	}
 }

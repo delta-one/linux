@@ -6,8 +6,11 @@
  * Copyright (c) 2016 Akinobu Mita <akinobu.mita@gmail.com>
  */
 
+<<<<<<< HEAD
 #include <linux/pm_runtime.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef _MPL115_H_
 #define _MPL115_H_
 
@@ -20,7 +23,10 @@ struct mpl115_ops {
 int mpl115_probe(struct device *dev, const char *name,
 			const struct mpl115_ops *ops);
 
+<<<<<<< HEAD
 /*PM ops */
 extern const struct dev_pm_ops mpl115_dev_pm_ops;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

@@ -6,6 +6,7 @@
  */
 /* Modem setup is different on Chrome setups than typical Qualcomm setup */
 
+<<<<<<< HEAD
 / {
 	reserved-memory {
 		mpss_mem: memory@8b800000 {
@@ -62,3 +63,14 @@
 &rmtfs_mem {
 	reg = <0x0 0x9c900000 0x0 0x800000>;
 };
+=======
+&remoteproc_mpss {
+	compatible = "qcom,sc7280-mss-pil";
+	iommus = <&apps_smmu 0x124 0x0>, <&apps_smmu 0x488 0x7>;
+	interconnects = <&mc_virt MASTER_LLCC 0 &mc_virt SLAVE_EBI1 0>;
+	memory-region = <&mba_mem>, <&mpss_mem>;
+	firmware-name = "qcom/sc7280-herobrine/modem/mba.mbn",
+			"qcom/sc7280-herobrine/modem/qdsp6sw.mbn";
+	status = "okay";
+};
+>>>>>>> b7ba80a49124 (Commit)

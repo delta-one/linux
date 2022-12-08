@@ -21,7 +21,11 @@
 #include "tty.h"
 
 #define MIN_TTYB_SIZE	256
+<<<<<<< HEAD
 #define TTYB_ALIGN_MASK	0xff
+=======
+#define TTYB_ALIGN_MASK	255
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Byte threshold to limit memory consumption for flip buffers.
@@ -37,7 +41,11 @@
  * logic this must match.
  */
 
+<<<<<<< HEAD
 #define TTY_BUFFER_PAGE	(((PAGE_SIZE - sizeof(struct tty_buffer)) / 2) & ~TTYB_ALIGN_MASK)
+=======
+#define TTY_BUFFER_PAGE	(((PAGE_SIZE - sizeof(struct tty_buffer)) / 2) & ~0xFF)
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * tty_buffer_lock_exclusive	-	gain exclusive access to buffer
@@ -107,7 +115,11 @@ static void tty_buffer_reset(struct tty_buffer *p, size_t size)
 	p->commit = 0;
 	p->lookahead = 0;
 	p->read = 0;
+<<<<<<< HEAD
 	p->flags = true;
+=======
+	p->flags = 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -249,7 +261,11 @@ void tty_buffer_flush(struct tty_struct *tty, struct tty_ldisc *ld)
  * __tty_buffer_request_room	-	grow tty buffer if needed
  * @port: tty port
  * @size: size desired
+<<<<<<< HEAD
  * @flags: buffer has to store flags along character data
+=======
+ * @flags: buffer flags if new buffer allocated (default = 0)
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Make at least @size bytes of linear space available for the tty buffer.
  *
@@ -260,19 +276,31 @@ void tty_buffer_flush(struct tty_struct *tty, struct tty_ldisc *ld)
  * Returns: the size we managed to find.
  */
 static int __tty_buffer_request_room(struct tty_port *port, size_t size,
+<<<<<<< HEAD
 				     bool flags)
+=======
+				     int flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tty_bufhead *buf = &port->buf;
 	struct tty_buffer *b, *n;
 	int left, change;
 
 	b = buf->tail;
+<<<<<<< HEAD
 	if (!b->flags)
+=======
+	if (b->flags & TTYB_NORMAL)
+>>>>>>> b7ba80a49124 (Commit)
 		left = 2 * b->size - b->used;
 	else
 		left = b->size - b->used;
 
+<<<<<<< HEAD
 	change = !b->flags && flags;
+=======
+	change = (b->flags & TTYB_NORMAL) && (~flags & TTYB_NORMAL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (change || left < size) {
 		/* This is the slow path - looking for new buffers to use */
 		n = tty_buffer_alloc(port, size);
@@ -300,7 +328,11 @@ static int __tty_buffer_request_room(struct tty_port *port, size_t size,
 
 int tty_buffer_request_room(struct tty_port *port, size_t size)
 {
+<<<<<<< HEAD
 	return __tty_buffer_request_room(port, size, true);
+=======
+	return __tty_buffer_request_room(port, size, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(tty_buffer_request_room);
 
@@ -320,17 +352,28 @@ int tty_insert_flip_string_fixed_flag(struct tty_port *port,
 		const unsigned char *chars, char flag, size_t size)
 {
 	int copied = 0;
+<<<<<<< HEAD
 	bool flags = flag != TTY_NORMAL;
 
 	do {
 		int goal = min_t(size_t, size - copied, TTY_BUFFER_PAGE);
+=======
+
+	do {
+		int goal = min_t(size_t, size - copied, TTY_BUFFER_PAGE);
+		int flags = (flag == TTY_NORMAL) ? TTYB_NORMAL : 0;
+>>>>>>> b7ba80a49124 (Commit)
 		int space = __tty_buffer_request_room(port, goal, flags);
 		struct tty_buffer *tb = port->buf.tail;
 
 		if (unlikely(space == 0))
 			break;
 		memcpy(char_buf_ptr(tb, tb->used), chars, space);
+<<<<<<< HEAD
 		if (tb->flags)
+=======
+		if (~tb->flags & TTYB_NORMAL)
+>>>>>>> b7ba80a49124 (Commit)
 			memset(flag_buf_ptr(tb, tb->used), flag, space);
 		tb->used += space;
 		copied += space;
@@ -393,13 +436,21 @@ EXPORT_SYMBOL(tty_insert_flip_string_flags);
 int __tty_insert_flip_char(struct tty_port *port, unsigned char ch, char flag)
 {
 	struct tty_buffer *tb;
+<<<<<<< HEAD
 	bool flags = flag != TTY_NORMAL;
+=======
+	int flags = (flag == TTY_NORMAL) ? TTYB_NORMAL : 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!__tty_buffer_request_room(port, 1, flags))
 		return 0;
 
 	tb = port->buf.tail;
+<<<<<<< HEAD
 	if (tb->flags)
+=======
+	if (~tb->flags & TTYB_NORMAL)
+>>>>>>> b7ba80a49124 (Commit)
 		*flag_buf_ptr(tb, tb->used) = flag;
 	*char_buf_ptr(tb, tb->used++) = ch;
 
@@ -424,13 +475,21 @@ EXPORT_SYMBOL(__tty_insert_flip_char);
 int tty_prepare_flip_string(struct tty_port *port, unsigned char **chars,
 		size_t size)
 {
+<<<<<<< HEAD
 	int space = __tty_buffer_request_room(port, size, false);
+=======
+	int space = __tty_buffer_request_room(port, size, TTYB_NORMAL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (likely(space)) {
 		struct tty_buffer *tb = port->buf.tail;
 
 		*chars = char_buf_ptr(tb, tb->used);
+<<<<<<< HEAD
 		if (tb->flags)
+=======
+		if (~tb->flags & TTYB_NORMAL)
+>>>>>>> b7ba80a49124 (Commit)
 			memset(flag_buf_ptr(tb, tb->used), TTY_NORMAL, space);
 		tb->used += space;
 	}
@@ -492,7 +551,11 @@ static void lookahead_bufs(struct tty_port *port, struct tty_buffer *head)
 			unsigned char *p, *f = NULL;
 
 			p = char_buf_ptr(head, head->lookahead);
+<<<<<<< HEAD
 			if (head->flags)
+=======
+			if (~head->flags & TTYB_NORMAL)
+>>>>>>> b7ba80a49124 (Commit)
 				f = flag_buf_ptr(head, head->lookahead);
 
 			port->client_ops->lookahead_buf(port, p, f, count);
@@ -509,7 +572,11 @@ receive_buf(struct tty_port *port, struct tty_buffer *head, int count)
 	const char *f = NULL;
 	int n;
 
+<<<<<<< HEAD
 	if (head->flags)
+=======
+	if (~head->flags & TTYB_NORMAL)
+>>>>>>> b7ba80a49124 (Commit)
 		f = flag_buf_ptr(head, head->read);
 
 	n = port->client_ops->receive_buf(port, p, f, count);

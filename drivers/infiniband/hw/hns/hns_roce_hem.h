@@ -111,7 +111,12 @@ void *hns_roce_table_find(struct hns_roce_dev *hr_dev,
 			  dma_addr_t *dma_handle);
 int hns_roce_init_hem_table(struct hns_roce_dev *hr_dev,
 			    struct hns_roce_hem_table *table, u32 type,
+<<<<<<< HEAD
 			    unsigned long obj_size, unsigned long nobj);
+=======
+			    unsigned long obj_size, unsigned long nobj,
+			    int use_lowmem);
+>>>>>>> b7ba80a49124 (Commit)
 void hns_roce_cleanup_hem_table(struct hns_roce_dev *hr_dev,
 				struct hns_roce_hem_table *table);
 void hns_roce_cleanup_hem(struct hns_roce_dev *hr_dev);
@@ -131,7 +136,11 @@ void hns_roce_hem_list_release(struct hns_roce_dev *hr_dev,
 			       struct hns_roce_hem_list *hem_list);
 void *hns_roce_hem_list_find_mtt(struct hns_roce_dev *hr_dev,
 				 struct hns_roce_hem_list *hem_list,
+<<<<<<< HEAD
 				 int offset, int *mtt_cnt);
+=======
+				 int offset, int *mtt_cnt, u64 *phy_addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void hns_roce_hem_first(struct hns_roce_hem *hem,
 				      struct hns_roce_hem_iter *iter)

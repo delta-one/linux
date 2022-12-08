@@ -18,8 +18,11 @@
 #include <linux/module.h>
 #include <sound/soc.h>
 
+<<<<<<< HEAD
 #define TDM_CHANNELS	8
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum be_id {
 	HEADSET_BE_ID = 0,
 	AMP_BE_ID,
@@ -60,11 +63,17 @@ struct acp_card_drvdata {
 	struct clk *wclk;
 	struct clk *bclk;
 	bool soc_mclk;
+<<<<<<< HEAD
 	bool tdm_mode;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int acp_sofdsp_dai_links_create(struct snd_soc_card *card);
 int acp_legacy_dai_links_create(struct snd_soc_card *card);
+<<<<<<< HEAD
 extern const struct dmi_system_id acp_quirk_table[];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

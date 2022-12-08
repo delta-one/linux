@@ -22,6 +22,10 @@
 
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_bridge.h>
+<<<<<<< HEAD
+=======
+#include <drm/drm_crtc_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_edid.h>
 #include <drm/drm_modes.h>
 #include <drm/drm_print.h>
@@ -34,6 +38,13 @@
 #define IT66121_DEVICE_ID0_REG			0x02
 #define IT66121_DEVICE_ID1_REG			0x03
 
+<<<<<<< HEAD
+=======
+#define IT66121_VENDOR_ID0			0x54
+#define IT66121_VENDOR_ID1			0x49
+#define IT66121_DEVICE_ID0			0x12
+#define IT66121_DEVICE_ID1			0x06
+>>>>>>> b7ba80a49124 (Commit)
 #define IT66121_REVISION_MASK			GENMASK(7, 4)
 #define IT66121_DEVICE_ID1_MASK			GENMASK(3, 0)
 
@@ -67,7 +78,10 @@
 #define IT66121_AFE_XP_ENO			BIT(4)
 #define IT66121_AFE_XP_RESETB			BIT(3)
 #define IT66121_AFE_XP_PWDI			BIT(2)
+<<<<<<< HEAD
 #define IT6610_AFE_XP_BYPASS			BIT(0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define IT66121_AFE_IP_REG			0x64
 #define IT66121_AFE_IP_GAINBIT			BIT(7)
@@ -282,6 +296,7 @@
 #define IT66121_AUD_SWL_16BIT			0x2
 #define IT66121_AUD_SWL_NOT_INDICATED		0x0
 
+<<<<<<< HEAD
 #define IT66121_AFE_CLK_HIGH			80000 /* Khz */
 
 enum chip_id {
@@ -294,6 +309,15 @@ struct it66121_chip_info {
 	u16 vid, pid;
 };
 
+=======
+#define IT66121_VENDOR_ID0			0x54
+#define IT66121_VENDOR_ID1			0x49
+#define IT66121_DEVICE_ID0			0x12
+#define IT66121_DEVICE_ID1			0x06
+#define IT66121_DEVICE_MASK			0x0F
+#define IT66121_AFE_CLK_HIGH			80000 /* Khz */
+
+>>>>>>> b7ba80a49124 (Commit)
 struct it66121_ctx {
 	struct regmap *regmap;
 	struct drm_bridge bridge;
@@ -302,6 +326,10 @@ struct it66121_ctx {
 	struct device *dev;
 	struct gpio_desc *gpio_reset;
 	struct i2c_client *client;
+<<<<<<< HEAD
+=======
+	struct regulator_bulk_data supplies[3];
+>>>>>>> b7ba80a49124 (Commit)
 	u32 bus_width;
 	struct mutex lock; /* Protects fields below and device registers */
 	struct hdmi_avi_infoframe hdmi_avi_infoframe;
@@ -312,7 +340,10 @@ struct it66121_ctx {
 		u8 swl;
 		bool auto_cts;
 	} audio;
+<<<<<<< HEAD
 	const struct it66121_chip_info *info;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct regmap_range_cfg it66121_regmap_banks[] = {
@@ -343,6 +374,19 @@ static void it66121_hw_reset(struct it66121_ctx *ctx)
 	gpiod_set_value(ctx->gpio_reset, 0);
 }
 
+<<<<<<< HEAD
+=======
+static inline int ite66121_power_on(struct it66121_ctx *ctx)
+{
+	return regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+}
+
+static inline int ite66121_power_off(struct it66121_ctx *ctx)
+{
+	return regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline int it66121_preamble_ddc(struct it66121_ctx *ctx)
 {
 	return regmap_write(ctx->regmap, IT66121_MASTER_SEL_REG, IT66121_MASTER_SEL_HOST);
@@ -397,11 +441,17 @@ static int it66121_configure_afe(struct it66121_ctx *ctx,
 
 		ret = regmap_write_bits(ctx->regmap, IT66121_AFE_IP_REG,
 					IT66121_AFE_IP_GAINBIT |
+<<<<<<< HEAD
 					IT66121_AFE_IP_ER0,
+=======
+					IT66121_AFE_IP_ER0 |
+					IT66121_AFE_IP_EC1,
+>>>>>>> b7ba80a49124 (Commit)
 					IT66121_AFE_IP_GAINBIT);
 		if (ret)
 			return ret;
 
+<<<<<<< HEAD
 		if (ctx->info->id == ID_IT66121) {
 			ret = regmap_write_bits(ctx->regmap, IT66121_AFE_IP_REG,
 						IT66121_AFE_IP_EC1, 0);
@@ -413,6 +463,12 @@ static int it66121_configure_afe(struct it66121_ctx *ctx,
 			if (ret)
 				return ret;
 		}
+=======
+		ret = regmap_write_bits(ctx->regmap, IT66121_AFE_XP_EC1_REG,
+					IT66121_AFE_XP_EC1_LOWCLK, 0x80);
+		if (ret)
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		ret = regmap_write_bits(ctx->regmap, IT66121_AFE_XP_REG,
 					IT66121_AFE_XP_GAINBIT |
@@ -423,6 +479,7 @@ static int it66121_configure_afe(struct it66121_ctx *ctx,
 
 		ret = regmap_write_bits(ctx->regmap, IT66121_AFE_IP_REG,
 					IT66121_AFE_IP_GAINBIT |
+<<<<<<< HEAD
 					IT66121_AFE_IP_ER0,
 					IT66121_AFE_IP_ER0);
 		if (ret)
@@ -441,6 +498,19 @@ static int it66121_configure_afe(struct it66121_ctx *ctx,
 			if (ret)
 				return ret;
 		}
+=======
+					IT66121_AFE_IP_ER0 |
+					IT66121_AFE_IP_EC1, IT66121_AFE_IP_ER0 |
+					IT66121_AFE_IP_EC1);
+		if (ret)
+			return ret;
+
+		ret = regmap_write_bits(ctx->regmap, IT66121_AFE_XP_EC1_REG,
+					IT66121_AFE_XP_EC1_LOWCLK,
+					IT66121_AFE_XP_EC1_LOWCLK);
+		if (ret)
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Clear reset flags */
@@ -449,6 +519,7 @@ static int it66121_configure_afe(struct it66121_ctx *ctx,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (ctx->info->id == ID_IT6610) {
 		ret = regmap_write_bits(ctx->regmap, IT66121_AFE_XP_REG,
 					IT6610_AFE_XP_BYPASS,
@@ -457,12 +528,15 @@ static int it66121_configure_afe(struct it66121_ctx *ctx,
 			return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return it66121_fire_afe(ctx);
 }
 
 static inline int it66121_wait_ddc_ready(struct it66121_ctx *ctx)
 {
 	int ret, val;
+<<<<<<< HEAD
 	u32 error = IT66121_DDC_STATUS_NOACK | IT66121_DDC_STATUS_WAIT_BUS |
 		    IT66121_DDC_STATUS_ARBI_LOSE;
 	u32 done = IT66121_DDC_STATUS_TX_DONE;
@@ -474,11 +548,37 @@ static inline int it66121_wait_ddc_ready(struct it66121_ctx *ctx)
 		return ret;
 
 	if (val & error)
+=======
+	u32 busy = IT66121_DDC_STATUS_NOACK | IT66121_DDC_STATUS_WAIT_BUS |
+		   IT66121_DDC_STATUS_ARBI_LOSE;
+
+	ret = regmap_read_poll_timeout(ctx->regmap, IT66121_DDC_STATUS_REG, val, true,
+				       IT66121_EDID_SLEEP_US, IT66121_EDID_TIMEOUT_US);
+	if (ret)
+		return ret;
+
+	if (val & busy)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EAGAIN;
 
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int it66121_clear_ddc_fifo(struct it66121_ctx *ctx)
+{
+	int ret;
+
+	ret = it66121_preamble_ddc(ctx);
+	if (ret)
+		return ret;
+
+	return regmap_write(ctx->regmap, IT66121_DDC_COMMAND_REG,
+			    IT66121_DDC_COMMAND_FIFO_CLR);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int it66121_abort_ddc_ops(struct it66121_ctx *ctx)
 {
 	int ret;
@@ -518,6 +618,10 @@ static int it66121_get_edid_block(void *context, u8 *buf,
 				  unsigned int block, size_t len)
 {
 	struct it66121_ctx *ctx = context;
+<<<<<<< HEAD
+=======
+	unsigned int val;
+>>>>>>> b7ba80a49124 (Commit)
 	int remain = len;
 	int offset = 0;
 	int ret, cnt;
@@ -525,9 +629,32 @@ static int it66121_get_edid_block(void *context, u8 *buf,
 	offset = (block % 2) * len;
 	block = block / 2;
 
+<<<<<<< HEAD
 	while (remain > 0) {
 		cnt = (remain > IT66121_EDID_FIFO_SIZE) ?
 				IT66121_EDID_FIFO_SIZE : remain;
+=======
+	ret = regmap_read(ctx->regmap, IT66121_INT_STATUS1_REG, &val);
+	if (ret)
+		return ret;
+
+	if (val & IT66121_INT_STATUS1_DDC_BUSHANG) {
+		ret = it66121_abort_ddc_ops(ctx);
+		if (ret)
+			return ret;
+	}
+
+	ret = it66121_clear_ddc_fifo(ctx);
+	if (ret)
+		return ret;
+
+	while (remain > 0) {
+		cnt = (remain > IT66121_EDID_FIFO_SIZE) ?
+				IT66121_EDID_FIFO_SIZE : remain;
+		ret = it66121_preamble_ddc(ctx);
+		if (ret)
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 		ret = regmap_write(ctx->regmap, IT66121_DDC_COMMAND_REG,
 				   IT66121_DDC_COMMAND_FIFO_CLR);
@@ -538,6 +665,28 @@ static int it66121_get_edid_block(void *context, u8 *buf,
 		if (ret)
 			return ret;
 
+<<<<<<< HEAD
+=======
+		ret = regmap_read(ctx->regmap, IT66121_INT_STATUS1_REG, &val);
+		if (ret)
+			return ret;
+
+		if (val & IT66121_INT_STATUS1_DDC_BUSHANG) {
+			ret = it66121_abort_ddc_ops(ctx);
+			if (ret)
+				return ret;
+		}
+
+		ret = it66121_preamble_ddc(ctx);
+		if (ret)
+			return ret;
+
+		ret = regmap_write(ctx->regmap, IT66121_DDC_HEADER_REG,
+				   IT66121_DDC_HEADER_EDID);
+		if (ret)
+			return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 		ret = regmap_write(ctx->regmap, IT66121_DDC_OFFSET_REG, offset);
 		if (ret)
 			return ret;
@@ -558,6 +707,7 @@ static int it66121_get_edid_block(void *context, u8 *buf,
 		offset += cnt;
 		remain -= cnt;
 
+<<<<<<< HEAD
 		ret = it66121_wait_ddc_ready(ctx);
 		if (ret) {
 			it66121_abort_ddc_ops(ctx);
@@ -570,6 +720,22 @@ static int it66121_get_edid_block(void *context, u8 *buf,
 			return ret;
 
 		buf += cnt;
+=======
+		/* Per programming manual, sleep here before emptying the FIFO */
+		msleep(20);
+
+		ret = it66121_wait_ddc_ready(ctx);
+		if (ret)
+			return ret;
+
+		do {
+			ret = regmap_read(ctx->regmap, IT66121_DDC_RD_FIFO_REG, &val);
+			if (ret)
+				return ret;
+			*(buf++) = val;
+			cnt--;
+		} while (cnt > 0);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -598,12 +764,19 @@ static int it66121_bridge_attach(struct drm_bridge *bridge,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (ctx->info->id == ID_IT66121) {
 		ret = regmap_write_bits(ctx->regmap, IT66121_CLK_BANK_REG,
 					IT66121_CLK_BANK_PWROFF_RCLK, 0);
 		if (ret)
 			return ret;
 	}
+=======
+	ret = regmap_write_bits(ctx->regmap, IT66121_CLK_BANK_REG,
+				IT66121_CLK_BANK_PWROFF_RCLK, 0);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = regmap_write_bits(ctx->regmap, IT66121_INT_REG,
 				IT66121_INT_TX_CLK_OFF, 0);
@@ -649,7 +822,15 @@ static int it66121_bridge_attach(struct drm_bridge *bridge,
 	/* Per programming manual, sleep here for bridge to settle */
 	msleep(50);
 
+<<<<<<< HEAD
 	return 0;
+=======
+	/* Start interrupts */
+	return regmap_write_bits(ctx->regmap, IT66121_INT_MASK1_REG,
+				 IT66121_INT_MASK1_DDC_NOACK |
+				 IT66121_INT_MASK1_DDC_FIFOERR |
+				 IT66121_INT_MASK1_DDC_BUSHANG, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int it66121_set_mute(struct it66121_ctx *ctx, bool mute)
@@ -741,6 +922,7 @@ static void it66121_bridge_disable(struct drm_bridge *bridge,
 	ctx->connector = NULL;
 }
 
+<<<<<<< HEAD
 static int it66121_bridge_check(struct drm_bridge *bridge,
 				struct drm_bridge_state *bridge_state,
 				struct drm_crtc_state *crtc_state,
@@ -759,14 +941,37 @@ static int it66121_bridge_check(struct drm_bridge *bridge,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static
 void it66121_bridge_mode_set(struct drm_bridge *bridge,
 			     const struct drm_display_mode *mode,
 			     const struct drm_display_mode *adjusted_mode)
 {
+<<<<<<< HEAD
 	u8 buf[HDMI_INFOFRAME_SIZE(AVI)];
 	struct it66121_ctx *ctx = container_of(bridge, struct it66121_ctx, bridge);
 	int ret;
+=======
+	int ret, i;
+	u8 buf[HDMI_INFOFRAME_SIZE(AVI)];
+	struct it66121_ctx *ctx = container_of(bridge, struct it66121_ctx, bridge);
+	const u16 aviinfo_reg[HDMI_AVI_INFOFRAME_SIZE] = {
+		IT66121_AVIINFO_DB1_REG,
+		IT66121_AVIINFO_DB2_REG,
+		IT66121_AVIINFO_DB3_REG,
+		IT66121_AVIINFO_DB4_REG,
+		IT66121_AVIINFO_DB5_REG,
+		IT66121_AVIINFO_DB6_REG,
+		IT66121_AVIINFO_DB7_REG,
+		IT66121_AVIINFO_DB8_REG,
+		IT66121_AVIINFO_DB9_REG,
+		IT66121_AVIINFO_DB10_REG,
+		IT66121_AVIINFO_DB11_REG,
+		IT66121_AVIINFO_DB12_REG,
+		IT66121_AVIINFO_DB13_REG
+	};
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&ctx->lock);
 
@@ -786,12 +991,19 @@ void it66121_bridge_mode_set(struct drm_bridge *bridge,
 	}
 
 	/* Write new AVI infoframe packet */
+<<<<<<< HEAD
 	ret = regmap_bulk_write(ctx->regmap, IT66121_AVIINFO_DB1_REG,
 				&buf[HDMI_INFOFRAME_HEADER_SIZE],
 				HDMI_AVI_INFOFRAME_SIZE);
 	if (ret)
 		goto unlock;
 
+=======
+	for (i = 0; i < HDMI_AVI_INFOFRAME_SIZE; i++) {
+		if (regmap_write(ctx->regmap, aviinfo_reg[i], buf[i + HDMI_INFOFRAME_HEADER_SIZE]))
+			goto unlock;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (regmap_write(ctx->regmap, IT66121_AVIINFO_CSUM_REG, buf[3]))
 		goto unlock;
 
@@ -804,12 +1016,18 @@ void it66121_bridge_mode_set(struct drm_bridge *bridge,
 	if (regmap_write(ctx->regmap, IT66121_HDMI_MODE_REG, IT66121_HDMI_MODE_HDMI))
 		goto unlock;
 
+<<<<<<< HEAD
 	if (ctx->info->id == ID_IT66121 &&
 	    regmap_write_bits(ctx->regmap, IT66121_CLK_BANK_REG,
 			      IT66121_CLK_BANK_PWROFF_TXCLK,
 			      IT66121_CLK_BANK_PWROFF_TXCLK)) {
 		goto unlock;
 	}
+=======
+	if (regmap_write_bits(ctx->regmap, IT66121_CLK_BANK_REG,
+			      IT66121_CLK_BANK_PWROFF_TXCLK, IT66121_CLK_BANK_PWROFF_TXCLK))
+		goto unlock;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (it66121_configure_input(ctx))
 		goto unlock;
@@ -817,11 +1035,15 @@ void it66121_bridge_mode_set(struct drm_bridge *bridge,
 	if (it66121_configure_afe(ctx, adjusted_mode))
 		goto unlock;
 
+<<<<<<< HEAD
 	if (ctx->info->id == ID_IT66121 &&
 	    regmap_write_bits(ctx->regmap, IT66121_CLK_BANK_REG,
 			      IT66121_CLK_BANK_PWROFF_TXCLK, 0)) {
 		goto unlock;
 	}
+=======
+	regmap_write_bits(ctx->regmap, IT66121_CLK_BANK_REG, IT66121_CLK_BANK_PWROFF_TXCLK, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 unlock:
 	mutex_unlock(&ctx->lock);
@@ -879,6 +1101,7 @@ static struct edid *it66121_bridge_get_edid(struct drm_bridge *bridge,
 {
 	struct it66121_ctx *ctx = container_of(bridge, struct it66121_ctx, bridge);
 	struct edid *edid;
+<<<<<<< HEAD
 	int ret;
 
 	mutex_lock(&ctx->lock);
@@ -898,6 +1121,11 @@ static struct edid *it66121_bridge_get_edid(struct drm_bridge *bridge,
 	edid = drm_do_get_edid(connector, it66121_get_edid_block, ctx);
 
 out_unlock:
+=======
+
+	mutex_lock(&ctx->lock);
+	edid = drm_do_get_edid(connector, it66121_get_edid_block, ctx);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&ctx->lock);
 
 	return edid;
@@ -912,7 +1140,10 @@ static const struct drm_bridge_funcs it66121_bridge_funcs = {
 	.atomic_get_input_bus_fmts = it66121_bridge_atomic_get_input_bus_fmts,
 	.atomic_enable = it66121_bridge_enable,
 	.atomic_disable = it66121_bridge_disable,
+<<<<<<< HEAD
 	.atomic_check = it66121_bridge_check,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.mode_set = it66121_bridge_mode_set,
 	.mode_valid = it66121_bridge_mode_valid,
 	.detect = it66121_bridge_detect,
@@ -942,6 +1173,7 @@ static irqreturn_t it66121_irq_threaded_handler(int irq, void *dev_id)
 	ret = regmap_read(ctx->regmap, IT66121_INT_STATUS1_REG, &val);
 	if (ret) {
 		dev_err(dev, "Cannot read STATUS1_REG %d\n", ret);
+<<<<<<< HEAD
 	} else if (val & IT66121_INT_STATUS1_HPD_STATUS) {
 		regmap_write_bits(ctx->regmap, IT66121_INT_CLR1_REG,
 				  IT66121_INT_CLR1_HPD, IT66121_INT_CLR1_HPD);
@@ -950,6 +1182,23 @@ static irqreturn_t it66121_irq_threaded_handler(int irq, void *dev_id)
 			: connector_status_disconnected;
 
 		event = true;
+=======
+	} else {
+		if (val & IT66121_INT_STATUS1_DDC_FIFOERR)
+			it66121_clear_ddc_fifo(ctx);
+		if (val & (IT66121_INT_STATUS1_DDC_BUSHANG |
+			   IT66121_INT_STATUS1_DDC_NOACK))
+			it66121_abort_ddc_ops(ctx);
+		if (val & IT66121_INT_STATUS1_HPD_STATUS) {
+			regmap_write_bits(ctx->regmap, IT66121_INT_CLR1_REG,
+					  IT66121_INT_CLR1_HPD, IT66121_INT_CLR1_HPD);
+
+			status = it66121_is_hpd_detect(ctx) ? connector_status_connected
+							    : connector_status_disconnected;
+
+			event = true;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	regmap_write_bits(ctx->regmap, IT66121_SYS_STATUS_REG,
@@ -1495,6 +1744,7 @@ static int it66121_audio_codec_init(struct it66121_ctx *ctx, struct device *dev)
 	return PTR_ERR_OR_ZERO(ctx->audio.pdev);
 }
 
+<<<<<<< HEAD
 static const char * const it66121_supplies[] = {
 	"vcn33", "vcn18", "vrf12"
 };
@@ -1502,6 +1752,11 @@ static const char * const it66121_supplies[] = {
 static int it66121_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int it66121_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	u32 revision_id, vendor_ids[2] = { 0 }, device_ids[2] = { 0 };
 	struct device_node *ep;
 	int ret;
@@ -1523,7 +1778,10 @@ static int it66121_probe(struct i2c_client *client)
 
 	ctx->dev = dev;
 	ctx->client = client;
+<<<<<<< HEAD
 	ctx->info = (const struct it66121_chip_info *) id->driver_data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	of_property_read_u32(ep, "bus-width", &ctx->bus_width);
 	of_node_put(ep);
@@ -1553,6 +1811,7 @@ static int it66121_probe(struct i2c_client *client)
 	i2c_set_clientdata(client, ctx);
 	mutex_init(&ctx->lock);
 
+<<<<<<< HEAD
 	ret = devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(it66121_supplies),
 					     it66121_supplies);
 	if (ret) {
@@ -1565,6 +1824,28 @@ static int it66121_probe(struct i2c_client *client)
 	ctx->regmap = devm_regmap_init_i2c(client, &it66121_regmap_config);
 	if (IS_ERR(ctx->regmap))
 		return PTR_ERR(ctx->regmap);
+=======
+	ctx->supplies[0].supply = "vcn33";
+	ctx->supplies[1].supply = "vcn18";
+	ctx->supplies[2].supply = "vrf12";
+	ret = devm_regulator_bulk_get(ctx->dev, 3, ctx->supplies);
+	if (ret) {
+		dev_err(ctx->dev, "regulator_bulk failed\n");
+		return ret;
+	}
+
+	ret = ite66121_power_on(ctx);
+	if (ret)
+		return ret;
+
+	it66121_hw_reset(ctx);
+
+	ctx->regmap = devm_regmap_init_i2c(client, &it66121_regmap_config);
+	if (IS_ERR(ctx->regmap)) {
+		ite66121_power_off(ctx);
+		return PTR_ERR(ctx->regmap);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	regmap_read(ctx->regmap, IT66121_VENDOR_ID0_REG, &vendor_ids[0]);
 	regmap_read(ctx->regmap, IT66121_VENDOR_ID1_REG, &vendor_ids[1]);
@@ -1575,8 +1856,14 @@ static int it66121_probe(struct i2c_client *client)
 	revision_id = FIELD_GET(IT66121_REVISION_MASK, device_ids[1]);
 	device_ids[1] &= IT66121_DEVICE_ID1_MASK;
 
+<<<<<<< HEAD
 	if ((vendor_ids[1] << 8 | vendor_ids[0]) != ctx->info->vid ||
 	    (device_ids[1] << 8 | device_ids[0]) != ctx->info->pid) {
+=======
+	if (vendor_ids[0] != IT66121_VENDOR_ID0 || vendor_ids[1] != IT66121_VENDOR_ID1 ||
+	    device_ids[0] != IT66121_DEVICE_ID0 || device_ids[1] != IT66121_DEVICE_ID1) {
+		ite66121_power_off(ctx);
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODEV;
 	}
 
@@ -1589,6 +1876,10 @@ static int it66121_probe(struct i2c_client *client)
 					IRQF_ONESHOT, dev_name(dev), ctx);
 	if (ret < 0) {
 		dev_err(dev, "Failed to request irq %d:%d\n", client->irq, ret);
+<<<<<<< HEAD
+=======
+		ite66121_power_off(ctx);
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 
@@ -1605,17 +1896,25 @@ static void it66121_remove(struct i2c_client *client)
 {
 	struct it66121_ctx *ctx = i2c_get_clientdata(client);
 
+<<<<<<< HEAD
+=======
+	ite66121_power_off(ctx);
+>>>>>>> b7ba80a49124 (Commit)
 	drm_bridge_remove(&ctx->bridge);
 	mutex_destroy(&ctx->lock);
 }
 
 static const struct of_device_id it66121_dt_match[] = {
 	{ .compatible = "ite,it66121" },
+<<<<<<< HEAD
 	{ .compatible = "ite,it6610" },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(of, it66121_dt_match);
 
+<<<<<<< HEAD
 static const struct it66121_chip_info it66121_chip_info = {
 	.id = ID_IT66121,
 	.vid = 0x4954,
@@ -1631,6 +1930,10 @@ static const struct it66121_chip_info it6610_chip_info = {
 static const struct i2c_device_id it66121_id[] = {
 	{ "it66121", (kernel_ulong_t) &it66121_chip_info },
 	{ "it6610", (kernel_ulong_t) &it6610_chip_info },
+=======
+static const struct i2c_device_id it66121_id[] = {
+	{ "it66121", 0 },
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(i2c, it66121_id);
@@ -1640,7 +1943,11 @@ static struct i2c_driver it66121_driver = {
 		.name	= "it66121",
 		.of_match_table = it66121_dt_match,
 	},
+<<<<<<< HEAD
 	.probe_new = it66121_probe,
+=======
+	.probe = it66121_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = it66121_remove,
 	.id_table = it66121_id,
 };

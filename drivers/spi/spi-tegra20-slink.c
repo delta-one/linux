@@ -758,9 +758,15 @@ static int tegra_slink_setup(struct spi_device *spi)
 	spin_lock_irqsave(&tspi->lock, flags);
 	val = tspi->def_command_reg;
 	if (spi->mode & SPI_CS_HIGH)
+<<<<<<< HEAD
 		val |= cs_pol_bit[spi_get_chipselect(spi, 0)];
 	else
 		val &= ~cs_pol_bit[spi_get_chipselect(spi, 0)];
+=======
+		val |= cs_pol_bit[spi->chip_select];
+	else
+		val &= ~cs_pol_bit[spi->chip_select];
+>>>>>>> b7ba80a49124 (Commit)
 	tspi->def_command_reg = val;
 	tegra_slink_writel(tspi, tspi->def_command_reg, SLINK_COMMAND);
 	spin_unlock_irqrestore(&tspi->lock, flags);
@@ -781,7 +787,11 @@ static int tegra_slink_prepare_message(struct spi_master *master,
 	tspi->command_reg |= SLINK_CS_SW | SLINK_CS_VALUE;
 
 	tspi->command2_reg = tspi->def_command2_reg;
+<<<<<<< HEAD
 	tspi->command2_reg |= SLINK_SS_EN_CS(spi_get_chipselect(spi, 0));
+=======
+	tspi->command2_reg |= SLINK_SS_EN_CS(spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	tspi->command_reg &= ~SLINK_MODES;
 	if (spi->mode & SPI_CPHA)
@@ -1134,7 +1144,11 @@ exit_free_master:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void tegra_slink_remove(struct platform_device *pdev)
+=======
+static int tegra_slink_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = spi_master_get(platform_get_drvdata(pdev));
 	struct tegra_slink_data	*tspi = spi_master_get_devdata(master);
@@ -1152,6 +1166,10 @@ static void tegra_slink_remove(struct platform_device *pdev)
 		tegra_slink_deinit_dma_param(tspi, true);
 
 	spi_master_put(master);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -1219,7 +1237,11 @@ static struct platform_driver tegra_slink_driver = {
 		.of_match_table	= tegra_slink_of_match,
 	},
 	.probe =	tegra_slink_probe,
+<<<<<<< HEAD
 	.remove_new =	tegra_slink_remove,
+=======
+	.remove =	tegra_slink_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(tegra_slink_driver);
 

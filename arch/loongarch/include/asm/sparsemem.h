@@ -11,6 +11,7 @@
 #define SECTION_SIZE_BITS	29 /* 2^29 = Largest Huge Page Size */
 #define MAX_PHYSMEM_BITS	48
 
+<<<<<<< HEAD
 #ifdef CONFIG_SPARSEMEM_VMEMMAP
 #define VMEMMAP_SIZE	(sizeof(struct page) * (1UL << (cpu_pabits + 1 - PAGE_SHIFT)))
 #endif
@@ -21,6 +22,10 @@
 #define VMEMMAP_SIZE	0	/* 1, For FLATMEM; 2, For SPARSEMEM without VMEMMAP. */
 #endif
 
+=======
+#endif /* CONFIG_SPARSEMEM */
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_MEMORY_HOTPLUG
 int memory_add_physaddr_to_nid(u64 addr);
 #define memory_add_physaddr_to_nid memory_add_physaddr_to_nid

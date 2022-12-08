@@ -1,8 +1,14 @@
 .. SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
 ================
 Watchdog Support
 ================
+=======
+======================
+Linux Watchdog Support
+======================
+>>>>>>> b7ba80a49124 (Commit)
 
 .. toctree::
     :maxdepth: 1

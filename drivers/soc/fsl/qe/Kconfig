@@ -33,6 +33,7 @@ config UCC
 	bool
 	default y if UCC_FAST || UCC_SLOW
 
+<<<<<<< HEAD
 config CPM_TSA
 	tristate "CPM TSA support"
 	depends on OF && HAS_IOMEM
@@ -56,6 +57,8 @@ config CPM_QMC
 	  This option enables support for this
 	  controller
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config QE_TDM
 	bool
 	default y if FSL_UCC_HDLC

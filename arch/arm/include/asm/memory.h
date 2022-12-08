@@ -386,4 +386,9 @@ static inline unsigned long __virt_to_idmap(unsigned long x)
 
 #endif
 
+<<<<<<< HEAD
+=======
+#include <asm-generic/memory_model.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif

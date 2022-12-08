@@ -125,7 +125,11 @@
 			#interrupt-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		pci2_root@0,0 {
+=======
+		pci2_root@0,0,0 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "pci10ee,7021";
 			reg = <0x00000000 0 0 0 0>;
 

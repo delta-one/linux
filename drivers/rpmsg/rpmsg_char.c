@@ -75,7 +75,10 @@ int rpmsg_chrdev_eptdev_destroy(struct device *dev, void *data)
 	struct rpmsg_eptdev *eptdev = dev_to_eptdev(dev);
 
 	mutex_lock(&eptdev->ept_lock);
+<<<<<<< HEAD
 	eptdev->rpdev = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (eptdev->ept) {
 		/* The default endpoint is released by the rpmsg core */
 		if (!eptdev->default_ept)
@@ -129,11 +132,14 @@ static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
 		return -EBUSY;
 	}
 
+<<<<<<< HEAD
 	if (!eptdev->rpdev) {
 		mutex_unlock(&eptdev->ept_lock);
 		return -ENETRESET;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	get_device(dev);
 
 	/*
@@ -285,9 +291,13 @@ static __poll_t rpmsg_eptdev_poll(struct file *filp, poll_table *wait)
 	if (!skb_queue_empty(&eptdev->queue))
 		mask |= EPOLLIN | EPOLLRDNORM;
 
+<<<<<<< HEAD
 	mutex_lock(&eptdev->ept_lock);
 	mask |= rpmsg_poll(eptdev->ept, filp, wait);
 	mutex_unlock(&eptdev->ept_lock);
+=======
+	mask |= rpmsg_poll(eptdev->ept, filp, wait);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return mask;
 }

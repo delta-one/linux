@@ -606,7 +606,12 @@ static const struct dvb_frontend_ops mn88473_ops = {
 	.read_status = mn88473_read_status,
 };
 
+<<<<<<< HEAD
 static int mn88473_probe(struct i2c_client *client)
+=======
+static int mn88473_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mn88473_config *config = client->dev.platform_data;
 	struct mn88473_dev *dev;
@@ -753,7 +758,11 @@ static struct i2c_driver mn88473_driver = {
 		.name		     = "mn88473",
 		.suppress_bind_attrs = true,
 	},
+<<<<<<< HEAD
 	.probe_new	= mn88473_probe,
+=======
+	.probe		= mn88473_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= mn88473_remove,
 	.id_table	= mn88473_id_table,
 };

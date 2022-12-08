@@ -245,7 +245,11 @@ static const struct file_operations tower_fops = {
 	.llseek =	tower_llseek,
 };
 
+<<<<<<< HEAD
 static char *legousbtower_devnode(const struct device *dev, umode_t *mode)
+=======
+static char *legousbtower_devnode(struct device *dev, umode_t *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return kasprintf(GFP_KERNEL, "usb/%s", dev_name(dev));
 }

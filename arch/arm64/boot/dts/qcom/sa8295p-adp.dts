@@ -11,19 +11,27 @@
 #include <dt-bindings/spmi/spmi.h>
 
 #include "sa8540p.dtsi"
+<<<<<<< HEAD
 #include "sa8540p-pmics.dtsi"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	model = "Qualcomm SA8295P ADP";
 	compatible = "qcom,sa8295p-adp", "qcom,sa8540p";
 
 	aliases {
+<<<<<<< HEAD
 		serial0 = &uart17;
+=======
+		serial0 = &qup2_uart17;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	chosen {
 		stdout-path = "serial0:115200n8";
 	};
+<<<<<<< HEAD
 
 	dp2-connector {
 		compatible = "dp-connector";
@@ -112,6 +120,12 @@
 
 &apps_rsc {
 	regulators-0 {
+=======
+};
+
+&apps_rsc {
+	pmm8540-a-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8150-rpmh-regulators";
 		qcom,pmic-id = "a";
 
@@ -142,6 +156,7 @@
 			regulator-max-microvolt = <3072000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
+<<<<<<< HEAD
 
 		vreg_l11a: ldo11 {
 			regulator-name = "vreg_l11a";
@@ -152,6 +167,11 @@
 	};
 
 	regulators-1 {
+=======
+	};
+
+	pmm8540-c-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8150-rpmh-regulators";
 		qcom,pmic-id = "c";
 
@@ -175,8 +195,11 @@
 			regulator-max-microvolt = <1200000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 			regulator-allow-set-load;
+<<<<<<< HEAD
 			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
 						   RPMH_REGULATOR_MODE_HPM>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		vreg_l4c: ldo4 {
@@ -192,8 +215,11 @@
 			regulator-max-microvolt = <1200000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 			regulator-allow-set-load;
+<<<<<<< HEAD
 			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
 						   RPMH_REGULATOR_MODE_HPM>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		vreg_l7c: ldo7 {
@@ -209,8 +235,11 @@
 			regulator-max-microvolt = <2504000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 			regulator-allow-set-load;
+<<<<<<< HEAD
 			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
 						   RPMH_REGULATOR_MODE_HPM>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		vreg_l17c: ldo17 {
@@ -219,12 +248,19 @@
 			regulator-max-microvolt = <2504000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 			regulator-allow-set-load;
+<<<<<<< HEAD
 			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
 						   RPMH_REGULATOR_MODE_HPM>;
 		};
 	};
 
 	regulators-2 {
+=======
+		};
+	};
+
+	pmm8540-g-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8150-rpmh-regulators";
 		qcom,pmic-id = "g";
 
@@ -244,6 +280,7 @@
 
 		vreg_l8g: ldo8 {
 			regulator-name = "vreg_l8g";
+<<<<<<< HEAD
 			regulator-min-microvolt = <912000>;
 			regulator-max-microvolt = <912000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
@@ -253,11 +290,16 @@
 			regulator-name = "vreg_l11g";
 			regulator-min-microvolt = <912000>;
 			regulator-max-microvolt = <912000>;
+=======
+			regulator-min-microvolt = <880000>;
+			regulator-max-microvolt = <880000>;
+>>>>>>> b7ba80a49124 (Commit)
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 	};
 };
 
+<<<<<<< HEAD
 &dispcc0 {
 	status = "okay";
 };
@@ -476,10 +518,20 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &qup2 {
 	status = "okay";
 };
 
+<<<<<<< HEAD
+=======
+&qup2_uart17 {
+	compatible = "qcom,geni-debug-uart";
+	status = "okay";
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &remoteproc_adsp {
 	firmware-name = "qcom/sa8540p/adsp.mbn";
 	status = "okay";
@@ -495,9 +547,80 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &uart17 {
 	compatible = "qcom,geni-debug-uart";
 	status = "okay";
+=======
+&spmi_bus {
+	pm8450a: pmic@0 {
+		compatible = "qcom,pm8150", "qcom,spmi-pmic";
+		reg = <0x0 SPMI_USID>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		pm8450a_gpios: gpio@c000 {
+			compatible = "qcom,pm8150-gpio", "qcom,spmi-gpio";
+			reg = <0xc000>;
+			gpio-controller;
+			gpio-ranges = <&pm8450a_gpios 0 0 10>;
+			#gpio-cells = <2>;
+			interrupt-controller;
+			#interrupt-cells = <2>;
+		};
+	};
+
+	pm8450c: pmic@4 {
+		compatible = "qcom,pm8150", "qcom,spmi-pmic";
+		reg = <0x4 SPMI_USID>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		pm8450c_gpios: gpio@c000 {
+			compatible = "qcom,pm8150-gpio", "qcom,spmi-gpio";
+			reg = <0xc000>;
+			gpio-controller;
+			gpio-ranges = <&pm8450c_gpios 0 0 10>;
+			#gpio-cells = <2>;
+			interrupt-controller;
+			#interrupt-cells = <2>;
+		};
+	};
+
+	pm8450e: pmic@8 {
+		compatible = "qcom,pm8150", "qcom,spmi-pmic";
+		reg = <0x8 SPMI_USID>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		pm8450e_gpios: gpio@c000 {
+			compatible = "qcom,pm8150-gpio", "qcom,spmi-gpio";
+			reg = <0xc000>;
+			gpio-controller;
+			gpio-ranges = <&pm8450e_gpios 0 0 10>;
+			#gpio-cells = <2>;
+			interrupt-controller;
+			#interrupt-cells = <2>;
+		};
+	};
+
+	pm8450g: pmic@c {
+		compatible = "qcom,pm8150", "qcom,spmi-pmic";
+		reg = <0xc SPMI_USID>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		pm8450g_gpios: gpio@c000 {
+			compatible = "qcom,pm8150-gpio", "qcom,spmi-gpio";
+			reg = <0xc000>;
+			gpio-controller;
+			gpio-ranges = <&pm8450g_gpios 0 0 10>;
+			#gpio-cells = <2>;
+			interrupt-controller;
+			#interrupt-cells = <2>;
+		};
+	};
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &ufs_mem_hc {
@@ -635,6 +758,7 @@
 };
 
 /* PINCTRL */
+<<<<<<< HEAD
 
 &tlmm {
 	pcie2a_default: pcie2a-default-state {
@@ -729,3 +853,5 @@
 		};
 	};
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

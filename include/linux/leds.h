@@ -10,10 +10,16 @@
 
 #include <dt-bindings/leds/common.h>
 #include <linux/device.h>
+<<<<<<< HEAD
+=======
+#include <linux/kernfs.h>
+#include <linux/list.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mutex.h>
 #include <linux/rwsem.h>
 #include <linux/spinlock.h>
 #include <linux/timer.h>
+<<<<<<< HEAD
 #include <linux/types.h>
 #include <linux/workqueue.h>
 
@@ -25,6 +31,13 @@ struct kernfs_node;
 struct led_pattern;
 struct platform_device;
 
+=======
+#include <linux/workqueue.h>
+
+struct device;
+struct led_pattern;
+struct device_node;
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * LED Core
  */
@@ -43,6 +56,7 @@ enum led_default_state {
 	LEDS_DEFSTATE_KEEP	= 2,
 };
 
+<<<<<<< HEAD
 /**
  * struct led_lookup_data - represents a single LED lookup entry
  *
@@ -58,6 +72,8 @@ struct led_lookup_data {
 	const char *con_id;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct led_init_data {
 	/* device fwnode handle */
 	struct fwnode_handle *fwnode;
@@ -82,8 +98,11 @@ struct led_init_data {
 	bool devname_mandatory;
 };
 
+<<<<<<< HEAD
 enum led_default_state led_init_default_state_get(struct fwnode_handle *fwnode);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct led_hw_trigger_type {
 	int dummy;
 };
@@ -232,12 +251,15 @@ void devm_led_classdev_unregister(struct device *parent,
 void led_classdev_suspend(struct led_classdev *led_cdev);
 void led_classdev_resume(struct led_classdev *led_cdev);
 
+<<<<<<< HEAD
 void led_add_lookup(struct led_lookup_data *led_lookup);
 void led_remove_lookup(struct led_lookup_data *led_lookup);
 
 struct led_classdev *__must_check led_get(struct device *dev, char *con_id);
 struct led_classdev *__must_check devm_led_get(struct device *dev, char *con_id);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern struct led_classdev *of_led_get(struct device_node *np, int index);
 extern void led_put(struct led_classdev *led_cdev);
 struct led_classdev *__must_check devm_of_led_get(struct device *dev,
@@ -256,7 +278,11 @@ struct led_classdev *__must_check devm_of_led_get(struct device *dev,
  *
  * Note that if software blinking is active, simply calling
  * led_cdev->brightness_set() will not stop the blinking,
+<<<<<<< HEAD
  * use led_set_brightness() instead.
+=======
+ * use led_classdev_brightness_set() instead.
+>>>>>>> b7ba80a49124 (Commit)
  */
 void led_blink_set(struct led_classdev *led_cdev, unsigned long *delay_on,
 		   unsigned long *delay_off);
@@ -535,6 +561,10 @@ struct led_properties {
 	const char	*label;
 };
 
+<<<<<<< HEAD
+=======
+struct gpio_desc;
+>>>>>>> b7ba80a49124 (Commit)
 typedef int (*gpio_blink_set_t)(struct gpio_desc *desc, int state,
 				unsigned long *delay_on,
 				unsigned long *delay_off);

@@ -41,7 +41,11 @@
 #define TCP_OPTIONS_PADDING	3
 
 #define IRDMA_DEFAULT_RETRYS	64
+<<<<<<< HEAD
 #define IRDMA_DEFAULT_RETRANS	32
+=======
+#define IRDMA_DEFAULT_RETRANS	8
+>>>>>>> b7ba80a49124 (Commit)
 #define IRDMA_DEFAULT_TTL		0x40
 #define IRDMA_DEFAULT_RTT_VAR		6
 #define IRDMA_DEFAULT_SS_THRESH		0x3fffffff

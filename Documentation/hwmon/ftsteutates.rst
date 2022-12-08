@@ -22,6 +22,7 @@ enhancements. It can monitor up to 4 voltages, 16 temperatures and
 8 fans. It also contains an integrated watchdog which is currently
 implemented in this driver.
 
+<<<<<<< HEAD
 The ``pwmX_auto_channels_temp`` attributes show which temperature sensor
 is currently driving which fan channel. This value might dynamically change
 during runtime depending on the temperature sensor selected by
@@ -31,12 +32,21 @@ The 4 voltages require a board-specific multiplier, since the BMC can
 only measure voltages up to 3.3V and thus relies on voltage dividers.
 Consult your motherboard manual for details.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 To clear a temperature or fan alarm, execute the following command with the
 correct path to the alarm file::
 
 	echo 0 >XXXX_alarm
 
+<<<<<<< HEAD
 Specifications of the chip can be found at the `Kontron FTP Server <http://ftp.kontron.com/>`_ (username = "anonymous", no password required)
 under the following path:
 
   /Services/Software_Tools/Linux_SystemMonitoring_Watchdog_GPIO/BMC-Teutates_Specification_V1.21.pdf
+=======
+Specification of the chip can be found here:
+
+- ftp://ftp.ts.fujitsu.com/pub/Mainboard-OEM-Sales/Services/Software&Tools/Linux_SystemMonitoring&Watchdog&GPIO/BMC-Teutates_Specification_V1.21.pdf
+- ftp://ftp.ts.fujitsu.com/pub/Mainboard-OEM-Sales/Services/Software&Tools/Linux_SystemMonitoring&Watchdog&GPIO/Fujitsu_mainboards-1-Sensors_HowTo-en-US.pdf
+>>>>>>> b7ba80a49124 (Commit)

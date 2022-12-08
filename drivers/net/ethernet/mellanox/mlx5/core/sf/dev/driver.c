@@ -74,7 +74,11 @@ static void mlx5_sf_dev_shutdown(struct auxiliary_device *adev)
 {
 	struct mlx5_sf_dev *sf_dev = container_of(adev, struct mlx5_sf_dev, adev);
 
+<<<<<<< HEAD
 	mlx5_unload_one(sf_dev->mdev, false);
+=======
+	mlx5_unload_one(sf_dev->mdev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct auxiliary_device_id mlx5_sf_dev_id_table[] = {

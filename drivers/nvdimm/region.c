@@ -2,7 +2,10 @@
 /*
  * Copyright(c) 2013-2015 Intel Corporation. All rights reserved.
  */
+<<<<<<< HEAD
 #include <linux/memregion.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/cpumask.h>
 #include <linux/module.h>
 #include <linux/device.h>
@@ -101,6 +104,7 @@ static void nd_region_remove(struct device *dev)
 	 */
 	sysfs_put(nd_region->bb_state);
 	nd_region->bb_state = NULL;
+<<<<<<< HEAD
 
 	/*
 	 * Try to flush caches here since a disabled region may be subject to
@@ -111,6 +115,8 @@ static void nd_region_remove(struct device *dev)
 	 */
 	if (cpu_cache_has_invalidate_memregion())
 		cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int child_notify(struct device *dev, void *data)

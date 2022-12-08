@@ -191,6 +191,7 @@ config ZSMALLOC_STAT
 	  information to userspace via debugfs.
 	  If unsure, say N.
 
+<<<<<<< HEAD
 config ZSMALLOC_CHAIN_SIZE
 	int "Maximum number of physical pages per-zspage"
 	default 8
@@ -210,6 +211,8 @@ config ZSMALLOC_CHAIN_SIZE
 
 	  For more information, see zsmalloc documentation.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 menu "SLAB allocator options"
 
 choice
@@ -238,6 +241,7 @@ config SLUB
 	   and has enhanced diagnostics. SLUB is the default choice for
 	   a slab allocator.
 
+<<<<<<< HEAD
 endchoice
 
 config SLUB_TINY
@@ -252,6 +256,18 @@ config SLUB_TINY
 	   16MB RAM.
 
 	   If unsure, say N.
+=======
+config SLOB
+	depends on EXPERT
+	bool "SLOB (Simple Allocator)"
+	depends on !PREEMPT_RT
+	help
+	   SLOB replaces the stock allocator with a drastically simpler
+	   allocator. SLOB is generally more space efficient but
+	   does not perform as well on large systems.
+
+endchoice
+>>>>>>> b7ba80a49124 (Commit)
 
 config SLAB_MERGE_DEFAULT
 	bool "Allow slab caches to be merged"
@@ -270,7 +286,11 @@ config SLAB_MERGE_DEFAULT
 
 config SLAB_FREELIST_RANDOM
 	bool "Randomize slab freelist"
+<<<<<<< HEAD
 	depends on SLAB || (SLUB && !SLUB_TINY)
+=======
+	depends on SLAB || SLUB
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Randomizes the freelist order used on creating new pages. This
 	  security feature reduces the predictability of the kernel slab
@@ -278,7 +298,11 @@ config SLAB_FREELIST_RANDOM
 
 config SLAB_FREELIST_HARDENED
 	bool "Harden slab freelist metadata"
+<<<<<<< HEAD
 	depends on SLAB || (SLUB && !SLUB_TINY)
+=======
+	depends on SLAB || SLUB
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Many kernel heap attacks try to target slab cache metadata and
 	  other infrastructure. This options makes minor performance
@@ -290,7 +314,11 @@ config SLAB_FREELIST_HARDENED
 config SLUB_STATS
 	default n
 	bool "Enable SLUB performance statistics"
+<<<<<<< HEAD
 	depends on SLUB && SYSFS && !SLUB_TINY
+=======
+	depends on SLUB && SYSFS
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  SLUB statistics are useful to debug SLUBs allocation behavior in
 	  order find ways to optimize the allocator. This should never be
@@ -302,7 +330,11 @@ config SLUB_STATS
 
 config SLUB_CPU_PARTIAL
 	default y
+<<<<<<< HEAD
 	depends on SLUB && SMP && !SLUB_TINY
+=======
+	depends on SLUB && SMP
+>>>>>>> b7ba80a49124 (Commit)
 	bool "SLUB per cpu partial cache"
 	help
 	  Per cpu partial caches accelerate objects allocation and freeing
@@ -324,9 +356,15 @@ config SHUFFLE_PAGE_ALLOCATOR
 	  the presence of a memory-side-cache. There are also incidental
 	  security benefits as it reduces the predictability of page
 	  allocations to compliment SLAB_FREELIST_RANDOM, but the
+<<<<<<< HEAD
 	  default granularity of shuffling on the MAX_ORDER i.e, 10th
 	  order of pages is selected based on cache utilization benefits
 	  on x86.
+=======
+	  default granularity of shuffling on the "MAX_ORDER - 1" i.e,
+	  10th order of pages is selected based on cache utilization
+	  benefits on x86.
+>>>>>>> b7ba80a49124 (Commit)
 
 	  While the randomization improves cache utilization it may
 	  negatively impact workloads on platforms without a cache. For
@@ -644,8 +682,13 @@ config HUGETLB_PAGE_SIZE_VARIABLE
 	  HUGETLB_PAGE_ORDER when there are multiple HugeTLB page sizes available
 	  on a platform.
 
+<<<<<<< HEAD
 	  Note that the pageblock_order cannot exceed MAX_ORDER and will be
 	  clamped down to MAX_ORDER.
+=======
+	  Note that the pageblock_order cannot exceed MAX_ORDER - 1 and will be
+	  clamped down to MAX_ORDER - 1.
+>>>>>>> b7ba80a49124 (Commit)
 
 config CONTIG_ALLOC
 	def_bool (MEMORY_ISOLATION && COMPACTION) || CMA
@@ -664,6 +707,10 @@ config BOUNCE
 
 config MMU_NOTIFIER
 	bool
+<<<<<<< HEAD
+=======
+	select SRCU
+>>>>>>> b7ba80a49124 (Commit)
 	select INTERVAL_TREE
 
 config KSM
@@ -797,7 +844,11 @@ endchoice
 
 config THP_SWAP
 	def_bool y
+<<<<<<< HEAD
 	depends on TRANSPARENT_HUGEPAGE && ARCH_WANTS_THP_SWAP && SWAP && 64BIT
+=======
+	depends on TRANSPARENT_HUGEPAGE && ARCH_WANTS_THP_SWAP && SWAP
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Swap transparent huge pages in one piece, without splitting.
 	  XXX: For now, swap cluster backing transparent huge page
@@ -1027,6 +1078,7 @@ config ARCH_USES_HIGH_VMA_FLAGS
 config ARCH_HAS_PKEYS
 	bool
 
+<<<<<<< HEAD
 config ARCH_USES_PG_ARCH_X
 	bool
 	help
@@ -1035,6 +1087,8 @@ config ARCH_USES_PG_ARCH_X
 	  CONFIG_SPARSEMEM_VMEMMAP enabled, otherwise there may not be
 	  enough room for additional bits in page->flags.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config VM_EVENT_COUNTERS
 	default y
 	bool "Enable VM event counters for /proc/vmstat" if EXPERT
@@ -1069,11 +1123,16 @@ config GUP_TEST
 	  pin_user_pages*(), or pinned via get_user_pages*(), as specified
 	  by other command line arguments.
 
+<<<<<<< HEAD
 	  See tools/testing/selftests/mm/gup_test.c
+=======
+	  See tools/testing/selftests/vm/gup_test.c
+>>>>>>> b7ba80a49124 (Commit)
 
 comment "GUP_TEST needs to have DEBUG_FS enabled"
 	depends on !GUP_TEST && !DEBUG_FS
 
+<<<<<<< HEAD
 config GUP_GET_PXX_LOW_HIGH
 	bool
 
@@ -1086,6 +1145,11 @@ config DMAPOOL_TEST
 	  provide a consistent way to measure how changes to the
 	  dma_pool_alloc/free routines affect performance.
 
+=======
+config GUP_GET_PTE_LOW_HIGH
+	bool
+
+>>>>>>> b7ba80a49124 (Commit)
 config ARCH_HAS_PTE_SPECIAL
 	bool
 
@@ -1113,6 +1177,7 @@ config IO_MAPPING
 	bool
 
 config SECRETMEM
+<<<<<<< HEAD
 	default y
 	bool "Enable memfd_secret() system call" if EXPERT
 	depends on ARCH_HAS_SET_DIRECT_MAP
@@ -1120,6 +1185,9 @@ config SECRETMEM
 	  Enable the memfd_secret() system call with the ability to create
 	  memory areas visible only in the context of the owning process and
 	  not mapped to other processes and other kernel page tables.
+=======
+	def_bool ARCH_HAS_SET_DIRECT_MAP && !EMBEDDED
+>>>>>>> b7ba80a49124 (Commit)
 
 config ANON_VMA_NAME
 	bool "Anonymous VMA name support"
@@ -1152,10 +1220,23 @@ config HAVE_ARCH_USERFAULTFD_MINOR
 	help
 	  Arch has userfaultfd minor fault support
 
+<<<<<<< HEAD
+=======
+config PTE_MARKER
+	bool
+
+	help
+	  Allows to create marker PTEs for file-backed memory.
+
+>>>>>>> b7ba80a49124 (Commit)
 config PTE_MARKER_UFFD_WP
 	bool "Userfaultfd write protection support for shmem/hugetlbfs"
 	default y
 	depends on HAVE_ARCH_USERFAULTFD_WP
+<<<<<<< HEAD
+=======
+	select PTE_MARKER
+>>>>>>> b7ba80a49124 (Commit)
 
 	help
 	  Allows to create marker PTEs for userfaultfd write protection
@@ -1188,6 +1269,7 @@ config LRU_GEN_STATS
 	  This option has a per-memcg and per-node memory overhead.
 # }
 
+<<<<<<< HEAD
 config ARCH_SUPPORTS_PER_VMA_LOCK
        def_bool n
 
@@ -1200,6 +1282,8 @@ config PER_VMA_LOCK
 	  This feature allows locking each virtual memory area separately when
 	  handling page faults instead of taking mmap_lock.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 source "mm/damon/Kconfig"
 
 endmenu

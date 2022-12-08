@@ -45,6 +45,10 @@ obj-$(CONFIG_PARAVIRT_SPINLOCKS)+= spinlock.o
 
 obj-$(CONFIG_XEN_DEBUG_FS)	+= debugfs.o
 
+<<<<<<< HEAD
 obj-$(CONFIG_XEN_DOM0)		+= vga.o
+=======
+obj-$(CONFIG_XEN_PV_DOM0)	+= vga.o
+>>>>>>> b7ba80a49124 (Commit)
 
 obj-$(CONFIG_XEN_EFI)		+= efi.o

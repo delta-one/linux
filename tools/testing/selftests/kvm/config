@@ -1,4 +1,7 @@
 CONFIG_KVM=y
 CONFIG_KVM_INTEL=y
 CONFIG_KVM_AMD=y
+<<<<<<< HEAD
 CONFIG_USERFAULTFD=y
+=======
+>>>>>>> b7ba80a49124 (Commit)

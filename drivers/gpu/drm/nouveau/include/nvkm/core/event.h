@@ -2,6 +2,7 @@
 #ifndef __NVKM_EVENT_H__
 #define __NVKM_EVENT_H__
 #include <core/os.h>
+<<<<<<< HEAD
 struct nvkm_object;
 struct nvkm_oclass;
 struct nvkm_uevent;
@@ -9,22 +10,41 @@ struct nvkm_uevent;
 struct nvkm_event {
 	const struct nvkm_event_func *func;
 	struct nvkm_subdev *subdev;
+=======
+struct nvkm_notify;
+struct nvkm_object;
+
+struct nvkm_event {
+	const struct nvkm_event_func *func;
+>>>>>>> b7ba80a49124 (Commit)
 
 	int types_nr;
 	int index_nr;
 
 	spinlock_t refs_lock;
 	spinlock_t list_lock;
+<<<<<<< HEAD
 	int *refs;
 
 	struct list_head ntfy;
 };
 
 struct nvkm_event_func {
+=======
+	struct list_head list;
+	int *refs;
+};
+
+struct nvkm_event_func {
+	int  (*ctor)(struct nvkm_object *, void *data, u32 size,
+		     struct nvkm_notify *);
+	void (*send)(void *data, u32 size, struct nvkm_notify *);
+>>>>>>> b7ba80a49124 (Commit)
 	void (*init)(struct nvkm_event *, int type, int index);
 	void (*fini)(struct nvkm_event *, int type, int index);
 };
 
+<<<<<<< HEAD
 int  __nvkm_event_init(const struct nvkm_event_func *func, struct nvkm_subdev *, int types_nr,
 		       int index_nr, struct nvkm_event *);
 
@@ -74,4 +94,13 @@ typedef int (*nvkm_uevent_func)(struct nvkm_object *, u64 token, u32 bits);
 
 int nvkm_uevent_new(const struct nvkm_oclass *, void *argv, u32 argc, struct nvkm_object **);
 int nvkm_uevent_add(struct nvkm_uevent *, struct nvkm_event *, int id, u32 bits, nvkm_uevent_func);
+=======
+int  nvkm_event_init(const struct nvkm_event_func *func, int types_nr,
+		     int index_nr, struct nvkm_event *);
+void nvkm_event_fini(struct nvkm_event *);
+void nvkm_event_get(struct nvkm_event *, u32 types, int index);
+void nvkm_event_put(struct nvkm_event *, u32 types, int index);
+void nvkm_event_send(struct nvkm_event *, u32 types, int index,
+		     void *data, u32 size);
+>>>>>>> b7ba80a49124 (Commit)
 #endif

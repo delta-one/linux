@@ -21,6 +21,10 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/of_gpio.h>
+<<<<<<< HEAD
+=======
+#include <linux/of_irq.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/of_pci.h>
 #include <linux/pci.h>
 #include <linux/phy/phy.h>
@@ -286,7 +290,10 @@ struct tegra_pcie_dw {
 	struct gpio_desc *pex_refclk_sel_gpiod;
 	unsigned int pex_rst_irq;
 	int ep_state;
+<<<<<<< HEAD
 	long link_status;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
@@ -450,6 +457,7 @@ static void pex_ep_event_hot_rst_done(struct tegra_pcie_dw *pcie)
 static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
 {
 	struct tegra_pcie_dw *pcie = arg;
+<<<<<<< HEAD
 	struct dw_pcie_ep *ep = &pcie->pci.ep;
 	struct dw_pcie *pci = &pcie->pci;
 	u32 val, speed;
@@ -457,6 +465,11 @@ static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
 	if (test_and_clear_bit(0, &pcie->link_status))
 		dw_pcie_ep_linkup(ep);
 
+=======
+	struct dw_pcie *pci = &pcie->pci;
+	u32 val, speed;
+
+>>>>>>> b7ba80a49124 (Commit)
 	speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
 		PCI_EXP_LNKSTA_CLS;
 	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
@@ -503,6 +516,10 @@ static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
 static irqreturn_t tegra_pcie_ep_hard_irq(int irq, void *arg)
 {
 	struct tegra_pcie_dw *pcie = arg;
+<<<<<<< HEAD
+=======
+	struct dw_pcie_ep *ep = &pcie->pci.ep;
+>>>>>>> b7ba80a49124 (Commit)
 	int spurious = 1;
 	u32 status_l0, status_l1, link_status;
 
@@ -518,8 +535,12 @@ static irqreturn_t tegra_pcie_ep_hard_irq(int irq, void *arg)
 			link_status = appl_readl(pcie, APPL_LINK_STATUS);
 			if (link_status & APPL_LINK_STATUS_RDLH_LINK_UP) {
 				dev_dbg(pcie->dev, "Link is up with Host\n");
+<<<<<<< HEAD
 				set_bit(0, &pcie->link_status);
 				return IRQ_WAKE_THREAD;
+=======
+				dw_pcie_ep_linkup(ep);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 

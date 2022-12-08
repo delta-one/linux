@@ -31,7 +31,11 @@
 #define PTRS_PER_PTE    (PAGE_SIZE / sizeof(pte_t))
 
 /*
+<<<<<<< HEAD
  * Half of the kernel address space (1/4 of the entries of the page global
+=======
+ * Half of the kernel address space (half of the entries of the page global
+>>>>>>> b7ba80a49124 (Commit)
  * directory) is for the direct mapping.
  */
 #define KERN_VIRT_SIZE          ((PTRS_PER_PGD / 2 * PGDIR_SIZE) / 2)
@@ -264,6 +268,7 @@ static inline pte_t pud_pte(pud_t pud)
 	return __pte(pud_val(pud));
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_RISCV_ISA_SVNAPOT
 
 static __always_inline bool has_svnapot(void)
@@ -305,6 +310,12 @@ static inline unsigned long pte_pfn(pte_t pte)
 		res = res & (res - 1UL);
 
 	return res;
+=======
+/* Yields the page frame number (PFN) of a page table entry */
+static inline unsigned long pte_pfn(pte_t pte)
+{
+	return __page_val_to_pfn(pte_val(pte));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define pte_page(x)     pfn_to_page(pte_pfn(x))
@@ -375,7 +386,11 @@ static inline pte_t pte_wrprotect(pte_t pte)
 
 /* static inline pte_t pte_mkread(pte_t pte) */
 
+<<<<<<< HEAD
 static inline pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
+=======
+static inline pte_t pte_mkwrite(pte_t pte)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return __pte(pte_val(pte) | _PAGE_WRITE);
 }
@@ -455,9 +470,12 @@ static inline void update_mmu_cache(struct vm_area_struct *vma,
 	local_flush_tlb_page(address);
 }
 
+<<<<<<< HEAD
 #define __HAVE_ARCH_UPDATE_MMU_TLB
 #define update_mmu_tlb update_mmu_cache
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
 		unsigned long address, pmd_t *pmdp)
 {
@@ -640,7 +658,10 @@ static inline int pmd_dirty(pmd_t pmd)
 	return pte_dirty(pmd_pte(pmd));
 }
 
+<<<<<<< HEAD
 #define pmd_young pmd_young
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int pmd_young(pmd_t pmd)
 {
 	return pte_young(pmd_pte(pmd));
@@ -661,9 +682,15 @@ static inline pmd_t pmd_mkyoung(pmd_t pmd)
 	return pte_pmd(pte_mkyoung(pmd_pte(pmd)));
 }
 
+<<<<<<< HEAD
 static inline pmd_t pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma)
 {
 	return pte_pmd(pte_mkwrite(pmd_pte(pmd), vma));
+=======
+static inline pmd_t pmd_mkwrite(pmd_t pmd)
+{
+	return pte_pmd(pte_mkwrite(pmd_pte(pmd)));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline pmd_t pmd_wrprotect(pmd_t pmd)
@@ -758,6 +785,7 @@ static inline pmd_t pmdp_establish(struct vm_area_struct *vma,
 	page_table_check_pmd_set(vma->vm_mm, address, pmdp, pmd);
 	return __pmd(atomic_long_xchg((atomic_long_t *)pmdp, pmd_val(pmd)));
 }
+<<<<<<< HEAD
 
 #define pmdp_collapse_flush pmdp_collapse_flush
 extern pmd_t pmdp_collapse_flush(struct vm_area_struct *vma,
@@ -767,16 +795,29 @@ extern pmd_t pmdp_collapse_flush(struct vm_area_struct *vma,
 /*
  * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
  * are !pte_none() && !pte_present().
+=======
+#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+
+/*
+ * Encode and decode a swap entry
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Format of swap PTE:
  *	bit            0:	_PAGE_PRESENT (zero)
  *	bit       1 to 3:       _PAGE_LEAF (zero)
  *	bit            5:	_PAGE_PROT_NONE (zero)
+<<<<<<< HEAD
  *	bit            6:	exclusive marker
  *	bits      7 to 11:	swap type
  *	bits 11 to XLEN-1:	swap offset
  */
 #define __SWP_TYPE_SHIFT	7
+=======
+ *	bits      6 to 10:	swap type
+ *	bits 10 to XLEN-1:	swap offset
+ */
+#define __SWP_TYPE_SHIFT	6
+>>>>>>> b7ba80a49124 (Commit)
 #define __SWP_TYPE_BITS		5
 #define __SWP_TYPE_MASK		((1UL << __SWP_TYPE_BITS) - 1)
 #define __SWP_OFFSET_SHIFT	(__SWP_TYPE_BITS + __SWP_TYPE_SHIFT)
@@ -787,12 +828,17 @@ extern pmd_t pmdp_collapse_flush(struct vm_area_struct *vma,
 #define __swp_type(x)	(((x).val >> __SWP_TYPE_SHIFT) & __SWP_TYPE_MASK)
 #define __swp_offset(x)	((x).val >> __SWP_OFFSET_SHIFT)
 #define __swp_entry(type, offset) ((swp_entry_t) \
+<<<<<<< HEAD
 	{ (((type) & __SWP_TYPE_MASK) << __SWP_TYPE_SHIFT) | \
 	  ((offset) << __SWP_OFFSET_SHIFT) })
+=======
+	{ ((type) << __SWP_TYPE_SHIFT) | ((offset) << __SWP_OFFSET_SHIFT) })
+>>>>>>> b7ba80a49124 (Commit)
 
 #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
 #define __swp_entry_to_pte(x)	((pte_t) { (x).val })
 
+<<<<<<< HEAD
 static inline int pte_swp_exclusive(pte_t pte)
 {
 	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
@@ -808,6 +854,8 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
 	return __pte(pte_val(pte) & ~_PAGE_SWP_EXCLUSIVE);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
 #define __pmd_to_swp_entry(pmd) ((swp_entry_t) { pmd_val(pmd) })
 #define __swp_entry_to_pmd(swp) __pmd((swp).val)
@@ -864,6 +912,11 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
 
 #endif /* !CONFIG_MMU */
 
+<<<<<<< HEAD
+=======
+#define kern_addr_valid(addr)   (1) /* FIXME */
+
+>>>>>>> b7ba80a49124 (Commit)
 extern char _start[];
 extern void *_dtb_early_va;
 extern uintptr_t _dtb_early_pa;

@@ -1552,6 +1552,11 @@ void rtl92se_set_beacon_related_registers(struct ieee80211_hw *hw)
 {
 	struct rtl_priv *rtlpriv = rtl_priv(hw);
 	struct rtl_mac *mac = rtl_mac(rtl_priv(hw));
+<<<<<<< HEAD
+=======
+	u16 bcntime_cfg = 0;
+	u16 bcn_cw = 6, bcn_ifs = 0xf;
+>>>>>>> b7ba80a49124 (Commit)
 	u16 atim_window = 2;
 
 	/* ATIM Window (in unit of TU). */
@@ -1574,6 +1579,16 @@ void rtl92se_set_beacon_related_registers(struct ieee80211_hw *hw)
 	 * other ad hoc STA */
 	rtl_write_byte(rtlpriv, BCN_ERR_THRESH, 100);
 
+<<<<<<< HEAD
+=======
+	/* Beacon Time Configuration */
+	if (mac->opmode == NL80211_IFTYPE_ADHOC)
+		bcntime_cfg |= (bcn_cw << BCN_TCFG_CW_SHIFT);
+
+	/* TODO: bcn_ifs may required to be changed on ASIC */
+	bcntime_cfg |= bcn_ifs << BCN_TCFG_IFS;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*for beacon changed */
 	rtl92s_phy_set_beacon_hwreg(hw, mac->beacon_interval);
 }

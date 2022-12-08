@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2003 Sistina Software Limited.
  * Copyright (C) 2004-2005 Red Hat, Inc. All rights reserved.
@@ -28,11 +31,17 @@
 #include <linux/atomic.h>
 #include <linux/blk-mq.h>
 
+<<<<<<< HEAD
 static struct workqueue_struct *dm_mpath_wq;
 
 #define DM_MSG_PREFIX "multipath"
 #define DM_PG_INIT_DELAY_MSECS 2000
 #define DM_PG_INIT_DELAY_DEFAULT ((unsigned int) -1)
+=======
+#define DM_MSG_PREFIX "multipath"
+#define DM_PG_INIT_DELAY_MSECS 2000
+#define DM_PG_INIT_DELAY_DEFAULT ((unsigned) -1)
+>>>>>>> b7ba80a49124 (Commit)
 #define QUEUE_IF_NO_PATH_TIMEOUT_DEFAULT 0
 
 static unsigned long queue_if_no_path_timeout_secs = QUEUE_IF_NO_PATH_TIMEOUT_DEFAULT;
@@ -42,7 +51,11 @@ struct pgpath {
 	struct list_head list;
 
 	struct priority_group *pg;	/* Owning PG */
+<<<<<<< HEAD
 	unsigned int fail_count;		/* Cumulative failure count */
+=======
+	unsigned fail_count;		/* Cumulative failure count */
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct dm_path path;
 	struct delayed_work activate_path;
@@ -62,8 +75,13 @@ struct priority_group {
 	struct multipath *m;		/* Owning multipath instance */
 	struct path_selector ps;
 
+<<<<<<< HEAD
 	unsigned int pg_num;		/* Reference number */
 	unsigned int nr_pgpaths;		/* Number of paths in PG */
+=======
+	unsigned pg_num;		/* Reference number */
+	unsigned nr_pgpaths;		/* Number of paths in PG */
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head pgpaths;
 
 	bool bypassed:1;		/* Temporarily bypass this PG? */
@@ -81,14 +99,23 @@ struct multipath {
 	struct priority_group *next_pg;	/* Switch to this PG if set */
 
 	atomic_t nr_valid_paths;	/* Total number of usable paths */
+<<<<<<< HEAD
 	unsigned int nr_priority_groups;
+=======
+	unsigned nr_priority_groups;
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head priority_groups;
 
 	const char *hw_handler_name;
 	char *hw_handler_params;
 	wait_queue_head_t pg_init_wait;	/* Wait for pg_init completion */
+<<<<<<< HEAD
 	unsigned int pg_init_retries;	/* Number of times to retry pg_init */
 	unsigned int pg_init_delay_msecs;	/* Number of msecs before pg_init retry */
+=======
+	unsigned pg_init_retries;	/* Number of times to retry pg_init */
+	unsigned pg_init_delay_msecs;	/* Number of msecs before pg_init retry */
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_t pg_init_in_progress;	/* Only one pg_init allowed at once */
 	atomic_t pg_init_count;		/* Number of times pg_init called */
 
@@ -120,11 +147,18 @@ static void activate_path_work(struct work_struct *work);
 static void process_queued_bios(struct work_struct *work);
 static void queue_if_no_path_timeout_work(struct timer_list *t);
 
+<<<<<<< HEAD
 /*
  *-----------------------------------------------
  * Multipath state flags.
  *-----------------------------------------------
  */
+=======
+/*-----------------------------------------------
+ * Multipath state flags.
+ *-----------------------------------------------*/
+
+>>>>>>> b7ba80a49124 (Commit)
 #define MPATHF_QUEUE_IO 0			/* Must we queue all I/O? */
 #define MPATHF_QUEUE_IF_NO_PATH 1		/* Queue I/O if last path fails? */
 #define MPATHF_SAVED_QUEUE_IF_NO_PATH 2		/* Saved state during suspension */
@@ -139,7 +173,10 @@ static bool mpath_double_check_test_bit(int MPATHF_bit, struct multipath *m)
 
 	if (r) {
 		unsigned long flags;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		spin_lock_irqsave(&m->lock, flags);
 		r = test_bit(MPATHF_bit, &m->flags);
 		spin_unlock_irqrestore(&m->lock, flags);
@@ -148,11 +185,18 @@ static bool mpath_double_check_test_bit(int MPATHF_bit, struct multipath *m)
 	return r;
 }
 
+<<<<<<< HEAD
 /*
  *-----------------------------------------------
  * Allocation routines
  *-----------------------------------------------
  */
+=======
+/*-----------------------------------------------
+ * Allocation routines
+ *-----------------------------------------------*/
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct pgpath *alloc_pgpath(void)
 {
 	struct pgpath *pgpath = kzalloc(sizeof(*pgpath), GFP_KERNEL);
@@ -308,11 +352,18 @@ static void multipath_init_per_bio_data(struct bio *bio, struct dm_mpath_io **mp
 	dm_bio_record(bio_details, bio);
 }
 
+<<<<<<< HEAD
 /*
  *-----------------------------------------------
  * Path selection
  *-----------------------------------------------
  */
+=======
+/*-----------------------------------------------
+ * Path selection
+ *-----------------------------------------------*/
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __pg_init_all_paths(struct multipath *m)
 {
 	struct pgpath *pgpath;
@@ -404,7 +455,11 @@ static struct pgpath *choose_pgpath(struct multipath *m, size_t nr_bytes)
 	unsigned long flags;
 	struct priority_group *pg;
 	struct pgpath *pgpath;
+<<<<<<< HEAD
 	unsigned int bypassed = 1;
+=======
+	unsigned bypassed = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!atomic_read(&m->nr_valid_paths)) {
 		spin_lock_irqsave(&m->lock, flags);
@@ -474,11 +529,20 @@ failed:
  * it has been invoked.
  */
 #define dm_report_EIO(m)						\
+<<<<<<< HEAD
+=======
+do {									\
+>>>>>>> b7ba80a49124 (Commit)
 	DMDEBUG_LIMIT("%s: returning EIO; QIFNP = %d; SQIFNP = %d; DNFS = %d", \
 		      dm_table_device_name((m)->ti->table),		\
 		      test_bit(MPATHF_QUEUE_IF_NO_PATH, &(m)->flags),	\
 		      test_bit(MPATHF_SAVED_QUEUE_IF_NO_PATH, &(m)->flags), \
+<<<<<<< HEAD
 		      dm_noflush_suspending((m)->ti))
+=======
+		      dm_noflush_suspending((m)->ti));			\
+} while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Check whether bios must be queued in the device-mapper core rather
@@ -712,7 +776,10 @@ static void process_queued_bios(struct work_struct *work)
 	blk_start_plug(&plug);
 	while ((bio = bio_list_pop(&bios))) {
 		struct dm_mpath_io *mpio = get_mpio_from_bio(bio);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		dm_bio_restore(get_bio_details_from_mpio(mpio), bio);
 		r = __multipath_map_bio(m, bio, mpio);
 		switch (r) {
@@ -739,15 +806,24 @@ static void process_queued_bios(struct work_struct *work)
 /*
  * If we run out of usable paths, should we queue I/O or error it?
  */
+<<<<<<< HEAD
 static int queue_if_no_path(struct multipath *m, bool f_queue_if_no_path,
+=======
+static int queue_if_no_path(struct multipath *m, bool queue_if_no_path,
+>>>>>>> b7ba80a49124 (Commit)
 			    bool save_old_value, const char *caller)
 {
 	unsigned long flags;
 	bool queue_if_no_path_bit, saved_queue_if_no_path_bit;
 	const char *dm_dev_name = dm_table_device_name(m->ti->table);
 
+<<<<<<< HEAD
 	DMDEBUG("%s: %s caller=%s f_queue_if_no_path=%d save_old_value=%d",
 		dm_dev_name, __func__, caller, f_queue_if_no_path, save_old_value);
+=======
+	DMDEBUG("%s: %s caller=%s queue_if_no_path=%d save_old_value=%d",
+		dm_dev_name, __func__, caller, queue_if_no_path, save_old_value);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irqsave(&m->lock, flags);
 
@@ -760,11 +836,19 @@ static int queue_if_no_path(struct multipath *m, bool f_queue_if_no_path,
 			      dm_dev_name);
 		} else
 			assign_bit(MPATHF_SAVED_QUEUE_IF_NO_PATH, &m->flags, queue_if_no_path_bit);
+<<<<<<< HEAD
 	} else if (!f_queue_if_no_path && saved_queue_if_no_path_bit) {
 		/* due to "fail_if_no_path" message, need to honor it. */
 		clear_bit(MPATHF_SAVED_QUEUE_IF_NO_PATH, &m->flags);
 	}
 	assign_bit(MPATHF_QUEUE_IF_NO_PATH, &m->flags, f_queue_if_no_path);
+=======
+	} else if (!queue_if_no_path && saved_queue_if_no_path_bit) {
+		/* due to "fail_if_no_path" message, need to honor it. */
+		clear_bit(MPATHF_SAVED_QUEUE_IF_NO_PATH, &m->flags);
+	}
+	assign_bit(MPATHF_QUEUE_IF_NO_PATH, &m->flags, queue_if_no_path);
+>>>>>>> b7ba80a49124 (Commit)
 
 	DMDEBUG("%s: after %s changes; QIFNP = %d; SQIFNP = %d; DNFS = %d",
 		dm_dev_name, __func__,
@@ -774,7 +858,11 @@ static int queue_if_no_path(struct multipath *m, bool f_queue_if_no_path,
 
 	spin_unlock_irqrestore(&m->lock, flags);
 
+<<<<<<< HEAD
 	if (!f_queue_if_no_path) {
+=======
+	if (!queue_if_no_path) {
+>>>>>>> b7ba80a49124 (Commit)
 		dm_table_run_md_queue_async(m->ti->table);
 		process_queued_io_list(m);
 	}
@@ -831,8 +919,12 @@ static void trigger_event(struct work_struct *work)
 	dm_table_event(m->ti->table);
 }
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
+=======
+/*-----------------------------------------------------------------
+>>>>>>> b7ba80a49124 (Commit)
  * Constructor/argument parsing:
  * <#multipath feature args> [<arg>]*
  * <#hw_handler args> [hw_handler [<arg>]*]
@@ -841,14 +933,22 @@ static void trigger_event(struct work_struct *work)
  *     [<selector> <#selector args> [<arg>]*
  *      <#paths> <#per-path selector args>
  *         [<path> [<arg>]* ]+ ]+
+<<<<<<< HEAD
  *---------------------------------------------------------------
  */
+=======
+ *---------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 static int parse_path_selector(struct dm_arg_set *as, struct priority_group *pg,
 			       struct dm_target *ti)
 {
 	int r;
 	struct path_selector_type *pst;
+<<<<<<< HEAD
 	unsigned int ps_argc;
+=======
+	unsigned ps_argc;
+>>>>>>> b7ba80a49124 (Commit)
 
 	static const struct dm_arg _args[] = {
 		{0, 1024, "invalid number of path selector args"},
@@ -991,7 +1091,11 @@ static struct priority_group *parse_priority_group(struct dm_arg_set *as,
 	};
 
 	int r;
+<<<<<<< HEAD
 	unsigned int i, nr_selector_args, nr_args;
+=======
+	unsigned i, nr_selector_args, nr_args;
+>>>>>>> b7ba80a49124 (Commit)
 	struct priority_group *pg;
 	struct dm_target *ti = m->ti;
 
@@ -1057,7 +1161,11 @@ static struct priority_group *parse_priority_group(struct dm_arg_set *as,
 
 static int parse_hw_handler(struct dm_arg_set *as, struct multipath *m)
 {
+<<<<<<< HEAD
 	unsigned int hw_argc;
+=======
+	unsigned hw_argc;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 	struct dm_target *ti = m->ti;
 
@@ -1094,7 +1202,11 @@ static int parse_hw_handler(struct dm_arg_set *as, struct multipath *m)
 			goto fail;
 		}
 		j = sprintf(p, "%d", hw_argc - 1);
+<<<<<<< HEAD
 		for (i = 0, p += j + 1; i <= hw_argc - 2; i++, p += j + 1)
+=======
+		for (i = 0, p+=j+1; i <= hw_argc - 2; i++, p+=j+1)
+>>>>>>> b7ba80a49124 (Commit)
 			j = sprintf(p, "%s", as->argv[i]);
 	}
 	dm_consume_args(as, hw_argc - 1);
@@ -1109,7 +1221,11 @@ fail:
 static int parse_features(struct dm_arg_set *as, struct multipath *m)
 {
 	int r;
+<<<<<<< HEAD
 	unsigned int argc;
+=======
+	unsigned argc;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_target *ti = m->ti;
 	const char *arg_name;
 
@@ -1178,7 +1294,11 @@ static int parse_features(struct dm_arg_set *as, struct multipath *m)
 	return r;
 }
 
+<<<<<<< HEAD
 static int multipath_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+=======
+static int multipath_ctr(struct dm_target *ti, unsigned argc, char **argv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* target arguments */
 	static const struct dm_arg _args[] = {
@@ -1189,8 +1309,13 @@ static int multipath_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 	int r;
 	struct multipath *m;
 	struct dm_arg_set as;
+<<<<<<< HEAD
 	unsigned int pg_count = 0;
 	unsigned int next_pg_num;
+=======
+	unsigned pg_count = 0;
+	unsigned next_pg_num;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flags;
 
 	as.argc = argc;
@@ -1232,7 +1357,11 @@ static int multipath_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 	/* parse the priority groups */
 	while (as.argc) {
 		struct priority_group *pg;
+<<<<<<< HEAD
 		unsigned int nr_valid_paths = atomic_read(&m->nr_valid_paths);
+=======
+		unsigned nr_valid_paths = atomic_read(&m->nr_valid_paths);
+>>>>>>> b7ba80a49124 (Commit)
 
 		pg = parse_priority_group(&as, m);
 		if (IS_ERR(pg)) {
@@ -1355,7 +1484,11 @@ static int fail_path(struct pgpath *pgpath)
 	dm_path_uevent(DM_UEVENT_PATH_FAILED, m->ti,
 		       pgpath->path.dev->name, atomic_read(&m->nr_valid_paths));
 
+<<<<<<< HEAD
 	queue_work(dm_mpath_wq, &m->trigger_event);
+=======
+	schedule_work(&m->trigger_event);
+>>>>>>> b7ba80a49124 (Commit)
 
 	enable_nopath_timeout(m);
 
@@ -1373,7 +1506,11 @@ static int reinstate_path(struct pgpath *pgpath)
 	int r = 0, run_queue = 0;
 	unsigned long flags;
 	struct multipath *m = pgpath->pg->m;
+<<<<<<< HEAD
 	unsigned int nr_valid_paths;
+=======
+	unsigned nr_valid_paths;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irqsave(&m->lock, flags);
 
@@ -1462,13 +1599,21 @@ static void bypass_pg(struct multipath *m, struct priority_group *pg,
 static int switch_pg_num(struct multipath *m, const char *pgstr)
 {
 	struct priority_group *pg;
+<<<<<<< HEAD
 	unsigned int pgnum;
+=======
+	unsigned pgnum;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flags;
 	char dummy;
 
 	if (!pgstr || (sscanf(pgstr, "%u%c", &pgnum, &dummy) != 1) || !pgnum ||
 	    !m->nr_priority_groups || (pgnum > m->nr_priority_groups)) {
+<<<<<<< HEAD
 		DMWARN("invalid PG number supplied to %s", __func__);
+=======
+		DMWARN("invalid PG number supplied to switch_pg_num");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -1495,7 +1640,11 @@ static int switch_pg_num(struct multipath *m, const char *pgstr)
 static int bypass_pg_num(struct multipath *m, const char *pgstr, bool bypassed)
 {
 	struct priority_group *pg;
+<<<<<<< HEAD
 	unsigned int pgnum;
+=======
+	unsigned pgnum;
+>>>>>>> b7ba80a49124 (Commit)
 	char dummy;
 
 	if (!pgstr || (sscanf(pgstr, "%u%c", &pgnum, &dummy) != 1) || !pgnum ||
@@ -1797,14 +1946,22 @@ static void multipath_resume(struct dm_target *ti)
  *      num_paths num_selector_args [path_dev [selector_args]* ]+ ]+
  */
 static void multipath_status(struct dm_target *ti, status_type_t type,
+<<<<<<< HEAD
 			     unsigned int status_flags, char *result, unsigned int maxlen)
+=======
+			     unsigned status_flags, char *result, unsigned maxlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int sz = 0, pg_counter, pgpath_counter;
 	unsigned long flags;
 	struct multipath *m = ti->private;
 	struct priority_group *pg;
 	struct pgpath *p;
+<<<<<<< HEAD
 	unsigned int pg_num;
+=======
+	unsigned pg_num;
+>>>>>>> b7ba80a49124 (Commit)
 	char state;
 
 	spin_lock_irqsave(&m->lock, flags);
@@ -1829,7 +1986,11 @@ static void multipath_status(struct dm_target *ti, status_type_t type,
 		if (test_bit(MPATHF_RETAIN_ATTACHED_HW_HANDLER, &m->flags))
 			DMEMIT("retain_attached_hw_handler ");
 		if (m->queue_mode != DM_TYPE_REQUEST_BASED) {
+<<<<<<< HEAD
 			switch (m->queue_mode) {
+=======
+			switch(m->queue_mode) {
+>>>>>>> b7ba80a49124 (Commit)
 			case DM_TYPE_BIO_BASED:
 				DMEMIT("queue_mode bio ");
 				break;
@@ -1956,8 +2117,13 @@ static void multipath_status(struct dm_target *ti, status_type_t type,
 	spin_unlock_irqrestore(&m->lock, flags);
 }
 
+<<<<<<< HEAD
 static int multipath_message(struct dm_target *ti, unsigned int argc, char **argv,
 			     char *result, unsigned int maxlen)
+=======
+static int multipath_message(struct dm_target *ti, unsigned argc, char **argv,
+			     char *result, unsigned maxlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r = -EINVAL;
 	struct dm_dev *dev;
@@ -2124,7 +2290,10 @@ static int multipath_busy(struct dm_target *ti)
 	/* no paths available, for blk-mq: rely on IO mapping to delay requeue */
 	if (!atomic_read(&m->nr_valid_paths)) {
 		unsigned long flags;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		spin_lock_irqsave(&m->lock, flags);
 		if (test_bit(MPATHF_QUEUE_IF_NO_PATH, &m->flags)) {
 			spin_unlock_irqrestore(&m->lock, flags);
@@ -2177,11 +2346,17 @@ static int multipath_busy(struct dm_target *ti)
 	return busy;
 }
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
  * Module setup
  *---------------------------------------------------------------
  */
+=======
+/*-----------------------------------------------------------------
+ * Module setup
+ *---------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 static struct target_type multipath_target = {
 	.name = "multipath",
 	.version = {1, 14, 0},
@@ -2207,11 +2382,19 @@ static struct target_type multipath_target = {
 
 static int __init dm_multipath_init(void)
 {
+<<<<<<< HEAD
 	int r = -ENOMEM;
+=======
+	int r;
+>>>>>>> b7ba80a49124 (Commit)
 
 	kmultipathd = alloc_workqueue("kmpathd", WQ_MEM_RECLAIM, 0);
 	if (!kmultipathd) {
 		DMERR("failed to create workqueue kmpathd");
+<<<<<<< HEAD
+=======
+		r = -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 		goto bad_alloc_kmultipathd;
 	}
 
@@ -2225,6 +2408,7 @@ static int __init dm_multipath_init(void)
 						  WQ_MEM_RECLAIM);
 	if (!kmpath_handlerd) {
 		DMERR("failed to create workqueue kmpath_handlerd");
+<<<<<<< HEAD
 		goto bad_alloc_kmpath_handlerd;
 	}
 
@@ -2234,6 +2418,12 @@ static int __init dm_multipath_init(void)
 		goto bad_alloc_dm_mpath_wq;
 	}
 
+=======
+		r = -ENOMEM;
+		goto bad_alloc_kmpath_handlerd;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	r = dm_register_target(&multipath_target);
 	if (r < 0) {
 		DMERR("request-based register failed %d", r);
@@ -2244,8 +2434,11 @@ static int __init dm_multipath_init(void)
 	return 0;
 
 bad_register_target:
+<<<<<<< HEAD
 	destroy_workqueue(dm_mpath_wq);
 bad_alloc_dm_mpath_wq:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	destroy_workqueue(kmpath_handlerd);
 bad_alloc_kmpath_handlerd:
 	destroy_workqueue(kmultipathd);
@@ -2255,7 +2448,10 @@ bad_alloc_kmultipathd:
 
 static void __exit dm_multipath_exit(void)
 {
+<<<<<<< HEAD
 	destroy_workqueue(dm_mpath_wq);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	destroy_workqueue(kmpath_handlerd);
 	destroy_workqueue(kmultipathd);
 
@@ -2265,7 +2461,12 @@ static void __exit dm_multipath_exit(void)
 module_init(dm_multipath_init);
 module_exit(dm_multipath_exit);
 
+<<<<<<< HEAD
 module_param_named(queue_if_no_path_timeout_secs, queue_if_no_path_timeout_secs, ulong, 0644);
+=======
+module_param_named(queue_if_no_path_timeout_secs,
+		   queue_if_no_path_timeout_secs, ulong, S_IRUGO | S_IWUSR);
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_PARM_DESC(queue_if_no_path_timeout_secs, "No available paths queue IO timeout in seconds");
 
 MODULE_DESCRIPTION(DM_NAME " multipath target");

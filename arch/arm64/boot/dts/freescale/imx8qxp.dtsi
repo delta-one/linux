@@ -127,7 +127,10 @@
 		A35_L2: l2-cache0 {
 			compatible = "cache";
 			cache-level = <2>;
+<<<<<<< HEAD
 			cache-unified;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			cache-size = <0x80000>;
 			cache-line-size = <64>;
 			cache-sets = <1024>;

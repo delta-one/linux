@@ -127,7 +127,11 @@ struct ioam6_trace_hdr {
 #endif
 
 #define IOAM6_TRACE_DATA_SIZE_MAX 244
+<<<<<<< HEAD
 	__u8	data[];
+=======
+	__u8	data[0];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed));
 
 #endif /* _UAPI_LINUX_IOAM6_H */

@@ -13,7 +13,10 @@
 #include <linux/init.h>
 #include <linux/interrupt.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/iopoll.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/ioport.h>
 #include <linux/irq.h>
 #include <linux/module.h>
@@ -117,7 +120,10 @@ struct sh_cmt_device {
 	void __iomem *mapbase;
 	struct clk *clk;
 	unsigned long rate;
+<<<<<<< HEAD
 	unsigned int reg_delay;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	raw_spinlock_t lock; /* Protect the shared start/stop register */
 
@@ -249,6 +255,7 @@ static inline u32 sh_cmt_read_cmstr(struct sh_cmt_channel *ch)
 
 static inline void sh_cmt_write_cmstr(struct sh_cmt_channel *ch, u32 value)
 {
+<<<<<<< HEAD
 	u32 old_value = sh_cmt_read_cmstr(ch);
 
 	if (value != old_value) {
@@ -260,6 +267,12 @@ static inline void sh_cmt_write_cmstr(struct sh_cmt_channel *ch, u32 value)
 			udelay(ch->cmt->reg_delay);
 		}
 	}
+=======
+	if (ch->iostart)
+		ch->cmt->info->write_control(ch->iostart, 0, value);
+	else
+		ch->cmt->info->write_control(ch->cmt->mapbase, 0, value);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline u32 sh_cmt_read_cmcsr(struct sh_cmt_channel *ch)
@@ -269,12 +282,16 @@ static inline u32 sh_cmt_read_cmcsr(struct sh_cmt_channel *ch)
 
 static inline void sh_cmt_write_cmcsr(struct sh_cmt_channel *ch, u32 value)
 {
+<<<<<<< HEAD
 	u32 old_value = sh_cmt_read_cmcsr(ch);
 
 	if (value != old_value) {
 		ch->cmt->info->write_control(ch->ioctrl, CMCSR, value);
 		udelay(ch->cmt->reg_delay);
 	}
+=======
+	ch->cmt->info->write_control(ch->ioctrl, CMCSR, value);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline u32 sh_cmt_read_cmcnt(struct sh_cmt_channel *ch)
@@ -282,6 +299,7 @@ static inline u32 sh_cmt_read_cmcnt(struct sh_cmt_channel *ch)
 	return ch->cmt->info->read_count(ch->ioctrl, CMCNT);
 }
 
+<<<<<<< HEAD
 static inline int sh_cmt_write_cmcnt(struct sh_cmt_channel *ch, u32 value)
 {
 	/* Tests showed that we need to wait 3 clocks here */
@@ -299,16 +317,25 @@ static inline int sh_cmt_write_cmcnt(struct sh_cmt_channel *ch, u32 value)
 	ch->cmt->info->write_count(ch->ioctrl, CMCNT, value);
 	udelay(cmcnt_delay);
 	return 0;
+=======
+static inline void sh_cmt_write_cmcnt(struct sh_cmt_channel *ch, u32 value)
+{
+	ch->cmt->info->write_count(ch->ioctrl, CMCNT, value);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void sh_cmt_write_cmcor(struct sh_cmt_channel *ch, u32 value)
 {
+<<<<<<< HEAD
 	u32 old_value = ch->cmt->info->read_count(ch->ioctrl, CMCOR);
 
 	if (value != old_value) {
 		ch->cmt->info->write_count(ch->ioctrl, CMCOR, value);
 		udelay(ch->cmt->reg_delay);
 	}
+=======
+	ch->cmt->info->write_count(ch->ioctrl, CMCOR, value);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static u32 sh_cmt_get_counter(struct sh_cmt_channel *ch, u32 *has_wrapped)
@@ -352,7 +379,11 @@ static void sh_cmt_start_stop_ch(struct sh_cmt_channel *ch, int start)
 
 static int sh_cmt_enable(struct sh_cmt_channel *ch)
 {
+<<<<<<< HEAD
 	int ret;
+=======
+	int k, ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_pm_syscore_device(&ch->cmt->pdev->dev, true);
 
@@ -380,9 +411,32 @@ static int sh_cmt_enable(struct sh_cmt_channel *ch)
 	}
 
 	sh_cmt_write_cmcor(ch, 0xffffffff);
+<<<<<<< HEAD
 	ret = sh_cmt_write_cmcnt(ch, 0);
 
 	if (ret || sh_cmt_read_cmcnt(ch)) {
+=======
+	sh_cmt_write_cmcnt(ch, 0);
+
+	/*
+	 * According to the sh73a0 user's manual, as CMCNT can be operated
+	 * only by the RCLK (Pseudo 32 kHz), there's one restriction on
+	 * modifying CMCNT register; two RCLK cycles are necessary before
+	 * this register is either read or any modification of the value
+	 * it holds is reflected in the LSI's actual operation.
+	 *
+	 * While at it, we're supposed to clear out the CMCNT as of this
+	 * moment, so make sure it's processed properly here.  This will
+	 * take RCLKx2 at maximum.
+	 */
+	for (k = 0; k < 100; k++) {
+		if (!sh_cmt_read_cmcnt(ch))
+			break;
+		udelay(1);
+	}
+
+	if (sh_cmt_read_cmcnt(ch)) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(&ch->cmt->pdev->dev, "ch%u: cannot clear CMCNT\n",
 			ch->index);
 		ret = -ETIMEDOUT;
@@ -1011,8 +1065,13 @@ MODULE_DEVICE_TABLE(of, sh_cmt_of_table);
 
 static int sh_cmt_setup(struct sh_cmt_device *cmt, struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	unsigned int mask, i;
 	unsigned long rate;
+=======
+	unsigned int mask;
+	unsigned int i;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	cmt->pdev = pdev;
@@ -1048,6 +1107,7 @@ static int sh_cmt_setup(struct sh_cmt_device *cmt, struct platform_device *pdev)
 	if (ret < 0)
 		goto err_clk_unprepare;
 
+<<<<<<< HEAD
 	rate = clk_get_rate(cmt->clk);
 	if (!rate) {
 		ret = -EINVAL;
@@ -1058,6 +1118,12 @@ static int sh_cmt_setup(struct sh_cmt_device *cmt, struct platform_device *pdev)
 	if (cmt->info->model >= SH_CMT_48BIT)
 		cmt->reg_delay = DIV_ROUND_UP(2UL * USEC_PER_SEC, rate);
 	cmt->rate = rate / (cmt->info->width == 16 ? 512 : 8);
+=======
+	if (cmt->info->width == 16)
+		cmt->rate = clk_get_rate(cmt->clk) / 512;
+	else
+		cmt->rate = clk_get_rate(cmt->clk) / 8;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Map the memory resource(s). */
 	ret = sh_cmt_map_memory(cmt);
@@ -1145,12 +1211,26 @@ static int sh_cmt_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct platform_driver sh_cmt_device_driver = {
 	.probe		= sh_cmt_probe,
 	.driver		= {
 		.name	= "sh_cmt",
 		.of_match_table = of_match_ptr(sh_cmt_of_table),
 		.suppress_bind_attrs = true,
+=======
+static int sh_cmt_remove(struct platform_device *pdev)
+{
+	return -EBUSY; /* cannot unregister clockevent and clocksource */
+}
+
+static struct platform_driver sh_cmt_device_driver = {
+	.probe		= sh_cmt_probe,
+	.remove		= sh_cmt_remove,
+	.driver		= {
+		.name	= "sh_cmt",
+		.of_match_table = of_match_ptr(sh_cmt_of_table),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.id_table	= sh_cmt_id_table,
 };
@@ -1174,3 +1254,7 @@ module_exit(sh_cmt_exit);
 
 MODULE_AUTHOR("Magnus Damm");
 MODULE_DESCRIPTION("SuperH CMT Timer Driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

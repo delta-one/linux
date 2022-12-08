@@ -441,12 +441,20 @@ static struct akcipher_alg sm2 = {
 	},
 };
 
+<<<<<<< HEAD
 static int __init sm2_init(void)
+=======
+static int sm2_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return crypto_register_akcipher(&sm2);
 }
 
+<<<<<<< HEAD
 static void __exit sm2_exit(void)
+=======
+static void sm2_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	crypto_unregister_akcipher(&sm2);
 }

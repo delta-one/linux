@@ -7,8 +7,11 @@
 
 /dts-v1/;
 
+<<<<<<< HEAD
 /include/ "fsl/e500v1_power_isa.dtsi"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 / {
 	model = "stx,gp3";
 	compatible = "stx,gp3-8560", "stx,gp3";

@@ -54,6 +54,7 @@ static int tls_enc_record(struct aead_request *aead_req,
 			  struct scatter_walk *out, int *in_len,
 			  struct tls_prot_info *prot)
 {
+<<<<<<< HEAD
 	unsigned char buf[TLS_HEADER_SIZE + MAX_IV_SIZE];
 	const struct tls_cipher_size_desc *cipher_sz;
 	struct scatterlist sg_in[3];
@@ -73,6 +74,15 @@ static int tls_enc_record(struct aead_request *aead_req,
 
 	buf_size = TLS_HEADER_SIZE + cipher_sz->iv;
 	len = min_t(int, *in_len, buf_size);
+=======
+	unsigned char buf[TLS_HEADER_SIZE + TLS_CIPHER_AES_GCM_128_IV_SIZE];
+	struct scatterlist sg_in[3];
+	struct scatterlist sg_out[3];
+	u16 len;
+	int rc;
+
+	len = min_t(int, *in_len, ARRAY_SIZE(buf));
+>>>>>>> b7ba80a49124 (Commit)
 
 	scatterwalk_copychunks(buf, in, len, 0);
 	scatterwalk_copychunks(buf, out, len, 1);
@@ -85,11 +95,21 @@ static int tls_enc_record(struct aead_request *aead_req,
 	scatterwalk_pagedone(out, 1, 1);
 
 	len = buf[4] | (buf[3] << 8);
+<<<<<<< HEAD
 	len -= cipher_sz->iv;
 
 	tls_make_aad(aad, len - cipher_sz->tag, (char *)&rcd_sn, buf[0], prot);
 
 	memcpy(iv + cipher_sz->salt, buf + TLS_HEADER_SIZE, cipher_sz->iv);
+=======
+	len -= TLS_CIPHER_AES_GCM_128_IV_SIZE;
+
+	tls_make_aad(aad, len - TLS_CIPHER_AES_GCM_128_TAG_SIZE,
+		(char *)&rcd_sn, buf[0], prot);
+
+	memcpy(iv + TLS_CIPHER_AES_GCM_128_SALT_SIZE, buf + TLS_HEADER_SIZE,
+	       TLS_CIPHER_AES_GCM_128_IV_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	sg_init_table(sg_in, ARRAY_SIZE(sg_in));
 	sg_init_table(sg_out, ARRAY_SIZE(sg_out));
@@ -100,7 +120,11 @@ static int tls_enc_record(struct aead_request *aead_req,
 
 	*in_len -= len;
 	if (*in_len < 0) {
+<<<<<<< HEAD
 		*in_len += cipher_sz->tag;
+=======
+		*in_len += TLS_CIPHER_AES_GCM_128_TAG_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 		/* the input buffer doesn't contain the entire record.
 		 * trim len accordingly. The resulting authentication tag
 		 * will contain garbage, but we don't care, so we won't
@@ -121,7 +145,11 @@ static int tls_enc_record(struct aead_request *aead_req,
 		scatterwalk_pagedone(out, 1, 1);
 	}
 
+<<<<<<< HEAD
 	len -= cipher_sz->tag;
+=======
+	len -= TLS_CIPHER_AES_GCM_128_TAG_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 	aead_request_set_crypt(aead_req, sg_in, sg_out, len, iv);
 
 	rc = crypto_aead_encrypt(aead_req);
@@ -309,14 +337,21 @@ static void fill_sg_out(struct scatterlist sg_out[3], void *buf,
 			int sync_size,
 			void *dummy_buf)
 {
+<<<<<<< HEAD
 	const struct tls_cipher_size_desc *cipher_sz =
 		&tls_cipher_size_desc[tls_ctx->crypto_send.info.cipher_type];
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sg_set_buf(&sg_out[0], dummy_buf, sync_size);
 	sg_set_buf(&sg_out[1], nskb->data + tcp_payload_offset, payload_len);
 	/* Add room for authentication tag produced by crypto */
 	dummy_buf += sync_size;
+<<<<<<< HEAD
 	sg_set_buf(&sg_out[2], dummy_buf, cipher_sz->tag);
+=======
+	sg_set_buf(&sg_out[2], dummy_buf, TLS_CIPHER_AES_GCM_128_TAG_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct sk_buff *tls_enc_skb(struct tls_context *tls_ctx,
@@ -328,8 +363,12 @@ static struct sk_buff *tls_enc_skb(struct tls_context *tls_ctx,
 	struct tls_offload_context_tx *ctx = tls_offload_ctx_tx(tls_ctx);
 	int tcp_payload_offset = skb_tcp_all_headers(skb);
 	int payload_len = skb->len - tcp_payload_offset;
+<<<<<<< HEAD
 	const struct tls_cipher_size_desc *cipher_sz;
 	void *buf, *iv, *aad, *dummy_buf, *salt;
+=======
+	void *buf, *iv, *aad, *dummy_buf;
+>>>>>>> b7ba80a49124 (Commit)
 	struct aead_request *aead_req;
 	struct sk_buff *nskb = NULL;
 	int buf_len;
@@ -338,6 +377,7 @@ static struct sk_buff *tls_enc_skb(struct tls_context *tls_ctx,
 	if (!aead_req)
 		return NULL;
 
+<<<<<<< HEAD
 	switch (tls_ctx->crypto_send.info.cipher_type) {
 	case TLS_CIPHER_AES_GCM_128:
 		salt = tls_ctx->crypto_send.aes_gcm_128.salt;
@@ -351,13 +391,27 @@ static struct sk_buff *tls_enc_skb(struct tls_context *tls_ctx,
 	cipher_sz = &tls_cipher_size_desc[tls_ctx->crypto_send.info.cipher_type];
 	buf_len = cipher_sz->salt + cipher_sz->iv + TLS_AAD_SPACE_SIZE +
 		  sync_size + cipher_sz->tag;
+=======
+	buf_len = TLS_CIPHER_AES_GCM_128_SALT_SIZE +
+		  TLS_CIPHER_AES_GCM_128_IV_SIZE +
+		  TLS_AAD_SPACE_SIZE +
+		  sync_size +
+		  TLS_CIPHER_AES_GCM_128_TAG_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 	buf = kmalloc(buf_len, GFP_ATOMIC);
 	if (!buf)
 		goto free_req;
 
 	iv = buf;
+<<<<<<< HEAD
 	memcpy(iv, salt, cipher_sz->salt);
 	aad = buf + cipher_sz->salt + cipher_sz->iv;
+=======
+	memcpy(iv, tls_ctx->crypto_send.aes_gcm_128.salt,
+	       TLS_CIPHER_AES_GCM_128_SALT_SIZE);
+	aad = buf + TLS_CIPHER_AES_GCM_128_SALT_SIZE +
+	      TLS_CIPHER_AES_GCM_128_IV_SIZE;
+>>>>>>> b7ba80a49124 (Commit)
 	dummy_buf = aad + TLS_AAD_SPACE_SIZE;
 
 	nskb = alloc_skb(skb_headroom(skb) + skb->len, GFP_ATOMIC);
@@ -471,7 +525,10 @@ int tls_sw_fallback_init(struct sock *sk,
 			 struct tls_offload_context_tx *offload_ctx,
 			 struct tls_crypto_info *crypto_info)
 {
+<<<<<<< HEAD
 	const struct tls_cipher_size_desc *cipher_sz;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const u8 *key;
 	int rc;
 
@@ -484,6 +541,7 @@ int tls_sw_fallback_init(struct sock *sk,
 		goto err_out;
 	}
 
+<<<<<<< HEAD
 	switch (crypto_info->cipher_type) {
 	case TLS_CIPHER_AES_GCM_128:
 		key = ((struct tls12_crypto_info_aes_gcm_128 *)crypto_info)->key;
@@ -502,6 +560,17 @@ int tls_sw_fallback_init(struct sock *sk,
 		goto free_aead;
 
 	rc = crypto_aead_setauthsize(offload_ctx->aead_send, cipher_sz->tag);
+=======
+	key = ((struct tls12_crypto_info_aes_gcm_128 *)crypto_info)->key;
+
+	rc = crypto_aead_setkey(offload_ctx->aead_send, key,
+				TLS_CIPHER_AES_GCM_128_KEY_SIZE);
+	if (rc)
+		goto free_aead;
+
+	rc = crypto_aead_setauthsize(offload_ctx->aead_send,
+				     TLS_CIPHER_AES_GCM_128_TAG_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		goto free_aead;
 

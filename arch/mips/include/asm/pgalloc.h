@@ -33,7 +33,11 @@ static inline void pmd_populate(struct mm_struct *mm, pmd_t *pmd,
 /*
  * Initialize a new pmd table with invalid pointers.
  */
+<<<<<<< HEAD
 extern void pmd_init(void *addr);
+=======
+extern void pmd_init(unsigned long page, unsigned long pagetable);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifndef __PAGETABLE_PMD_FOLDED
 
@@ -44,9 +48,15 @@ static inline void pud_populate(struct mm_struct *mm, pud_t *pud, pmd_t *pmd)
 #endif
 
 /*
+<<<<<<< HEAD
  * Initialize a new pgd table with invalid pointers.
  */
 extern void pgd_init(void *addr);
+=======
+ * Initialize a new pgd / pmd table with invalid pointers.
+ */
+extern void pgd_init(unsigned long page);
+>>>>>>> b7ba80a49124 (Commit)
 extern pgd_t *pgd_alloc(struct mm_struct *mm);
 
 static inline void pgd_free(struct mm_struct *mm, pgd_t *pgd)
@@ -77,7 +87,11 @@ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long address)
 	}
 
 	pmd = (pmd_t *)page_address(pg);
+<<<<<<< HEAD
 	pmd_init(pmd);
+=======
+	pmd_init((unsigned long)pmd, (unsigned long)invalid_pte_table);
+>>>>>>> b7ba80a49124 (Commit)
 	return pmd;
 }
 
@@ -93,7 +107,11 @@ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
 
 	pud = (pud_t *) __get_free_pages(GFP_KERNEL, PUD_TABLE_ORDER);
 	if (pud)
+<<<<<<< HEAD
 		pud_init(pud);
+=======
+		pud_init((unsigned long)pud, (unsigned long)invalid_pmd_table);
+>>>>>>> b7ba80a49124 (Commit)
 	return pud;
 }
 

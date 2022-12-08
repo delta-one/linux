@@ -197,9 +197,12 @@ alternative_cb_end
 	.endm
 
 	.macro	kernel_entry, el, regsize = 64
+<<<<<<< HEAD
 	.if	\el == 0
 	alternative_insn nop, SET_PSTATE_DIT(1), ARM64_HAS_DIT
 	.endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.if	\regsize == 32
 	mov	w0, w0				// zero upper 32 bits of x0
 	.endif
@@ -275,7 +278,11 @@ alternative_if ARM64_HAS_ADDRESS_AUTH
 alternative_else_nop_endif
 1:
 
+<<<<<<< HEAD
 	scs_load_current
+=======
+	scs_load tsk
+>>>>>>> b7ba80a49124 (Commit)
 	.else
 	add	x21, sp, #PT_REGS_SIZE
 	get_current_task tsk
@@ -311,16 +318,25 @@ alternative_else_nop_endif
 	.endif
 
 #ifdef CONFIG_ARM64_PSEUDO_NMI
+<<<<<<< HEAD
 alternative_if_not ARM64_HAS_GIC_PRIO_MASKING
 	b	.Lskip_pmr_save\@
 alternative_else_nop_endif
 
+=======
+	/* Save pmr */
+alternative_if ARM64_HAS_IRQ_PRIO_MASKING
+>>>>>>> b7ba80a49124 (Commit)
 	mrs_s	x20, SYS_ICC_PMR_EL1
 	str	x20, [sp, #S_PMR_SAVE]
 	mov	x20, #GIC_PRIO_IRQON | GIC_PRIO_PSR_I_SET
 	msr_s	SYS_ICC_PMR_EL1, x20
+<<<<<<< HEAD
 
 .Lskip_pmr_save\@:
+=======
+alternative_else_nop_endif
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	/*
@@ -339,6 +355,7 @@ alternative_else_nop_endif
 	.endif
 
 #ifdef CONFIG_ARM64_PSEUDO_NMI
+<<<<<<< HEAD
 alternative_if_not ARM64_HAS_GIC_PRIO_MASKING
 	b	.Lskip_pmr_restore\@
 alternative_else_nop_endif
@@ -352,6 +369,17 @@ alternative_if_not ARM64_HAS_GIC_PRIO_RELAXED_SYNC
 alternative_else_nop_endif
 
 .Lskip_pmr_restore\@:
+=======
+	/* Restore pmr */
+alternative_if ARM64_HAS_IRQ_PRIO_MASKING
+	ldr	x20, [sp, #S_PMR_SAVE]
+	msr_s	SYS_ICC_PMR_EL1, x20
+	mrs_s	x21, SYS_ICC_CTLR_EL1
+	tbz	x21, #6, .L__skip_pmr_sync\@	// Check for ICC_CTLR_EL1.PMHE
+	dsb	sy				// Ensure priority change is seen by redistributor
+.L__skip_pmr_sync\@:
+alternative_else_nop_endif
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	ldp	x21, x22, [sp, #S_PC]		// load ELR, SPSR
@@ -855,7 +883,11 @@ SYM_FUNC_START(cpu_switch_to)
 	msr	sp_el0, x1
 	ptrauth_keys_install_kernel x1, x8, x9, x10
 	scs_save x0
+<<<<<<< HEAD
 	scs_load_current
+=======
+	scs_load x1
+>>>>>>> b7ba80a49124 (Commit)
 	ret
 SYM_FUNC_END(cpu_switch_to)
 NOKPROBE(cpu_switch_to)
@@ -883,19 +915,33 @@ NOKPROBE(ret_from_fork)
  */
 SYM_FUNC_START(call_on_irq_stack)
 #ifdef CONFIG_SHADOW_CALL_STACK
+<<<<<<< HEAD
 	get_current_task x16
 	scs_save x16
 	ldr_this_cpu scs_sp, irq_shadow_call_stack_ptr, x17
 #endif
 
+=======
+	stp	scs_sp, xzr, [sp, #-16]!
+	ldr_this_cpu scs_sp, irq_shadow_call_stack_ptr, x17
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	/* Create a frame record to save our LR and SP (implicit in FP) */
 	stp	x29, x30, [sp, #-16]!
 	mov	x29, sp
 
 	ldr_this_cpu x16, irq_stack_ptr, x17
+<<<<<<< HEAD
 
 	/* Move to the new stack and call the function there */
 	add	sp, x16, #IRQ_STACK_SIZE
+=======
+	mov	x15, #IRQ_STACK_SIZE
+	add	x16, x16, x15
+
+	/* Move to the new stack and call the function there */
+	mov	sp, x16
+>>>>>>> b7ba80a49124 (Commit)
 	blr	x1
 
 	/*
@@ -904,7 +950,13 @@ SYM_FUNC_START(call_on_irq_stack)
 	 */
 	mov	sp, x29
 	ldp	x29, x30, [sp], #16
+<<<<<<< HEAD
 	scs_load_current
+=======
+#ifdef CONFIG_SHADOW_CALL_STACK
+	ldp	scs_sp, xzr, [sp], #16
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	ret
 SYM_FUNC_END(call_on_irq_stack)
 NOKPROBE(call_on_irq_stack)

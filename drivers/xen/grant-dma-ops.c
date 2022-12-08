@@ -10,7 +10,10 @@
 #include <linux/module.h>
 #include <linux/dma-map-ops.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/pci.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pfn.h>
 #include <linux/xarray.h>
 #include <linux/virtio_anchor.h>
@@ -26,32 +29,52 @@ struct xen_grant_dma_data {
 	bool broken;
 };
 
+<<<<<<< HEAD
 static DEFINE_XARRAY_FLAGS(xen_grant_dma_devices, XA_FLAGS_LOCK_IRQ);
+=======
+static DEFINE_XARRAY(xen_grant_dma_devices);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define XEN_GRANT_DMA_ADDR_OFF	(1ULL << 63)
 
 static inline dma_addr_t grant_to_dma(grant_ref_t grant)
 {
+<<<<<<< HEAD
 	return XEN_GRANT_DMA_ADDR_OFF | ((dma_addr_t)grant << XEN_PAGE_SHIFT);
+=======
+	return XEN_GRANT_DMA_ADDR_OFF | ((dma_addr_t)grant << PAGE_SHIFT);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline grant_ref_t dma_to_grant(dma_addr_t dma)
 {
+<<<<<<< HEAD
 	return (grant_ref_t)((dma & ~XEN_GRANT_DMA_ADDR_OFF) >> XEN_PAGE_SHIFT);
+=======
+	return (grant_ref_t)((dma & ~XEN_GRANT_DMA_ADDR_OFF) >> PAGE_SHIFT);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct xen_grant_dma_data *find_xen_grant_dma_data(struct device *dev)
 {
 	struct xen_grant_dma_data *data;
+<<<<<<< HEAD
 	unsigned long flags;
 
 	xa_lock_irqsave(&xen_grant_dma_devices, flags);
 	data = xa_load(&xen_grant_dma_devices, (unsigned long)dev);
 	xa_unlock_irqrestore(&xen_grant_dma_devices, flags);
+=======
+
+	xa_lock(&xen_grant_dma_devices);
+	data = xa_load(&xen_grant_dma_devices, (unsigned long)dev);
+	xa_unlock(&xen_grant_dma_devices);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return data;
 }
 
+<<<<<<< HEAD
 static int store_xen_grant_dma_data(struct device *dev,
 				    struct xen_grant_dma_data *data)
 {
@@ -66,6 +89,8 @@ static int store_xen_grant_dma_data(struct device *dev,
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * DMA ops for Xen frontends (e.g. virtio).
  *
@@ -80,7 +105,11 @@ static void *xen_grant_dma_alloc(struct device *dev, size_t size,
 				 unsigned long attrs)
 {
 	struct xen_grant_dma_data *data;
+<<<<<<< HEAD
 	unsigned int i, n_pages = XEN_PFN_UP(size);
+=======
+	unsigned int i, n_pages = PFN_UP(size);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long pfn;
 	grant_ref_t grant;
 	void *ret;
@@ -92,14 +121,22 @@ static void *xen_grant_dma_alloc(struct device *dev, size_t size,
 	if (unlikely(data->broken))
 		return NULL;
 
+<<<<<<< HEAD
 	ret = alloc_pages_exact(n_pages * XEN_PAGE_SIZE, gfp);
+=======
+	ret = alloc_pages_exact(n_pages * PAGE_SIZE, gfp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ret)
 		return NULL;
 
 	pfn = virt_to_pfn(ret);
 
 	if (gnttab_alloc_grant_reference_seq(n_pages, &grant)) {
+<<<<<<< HEAD
 		free_pages_exact(ret, n_pages * XEN_PAGE_SIZE);
+=======
+		free_pages_exact(ret, n_pages * PAGE_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 	}
 
@@ -117,7 +154,11 @@ static void xen_grant_dma_free(struct device *dev, size_t size, void *vaddr,
 			       dma_addr_t dma_handle, unsigned long attrs)
 {
 	struct xen_grant_dma_data *data;
+<<<<<<< HEAD
 	unsigned int i, n_pages = XEN_PFN_UP(size);
+=======
+	unsigned int i, n_pages = PFN_UP(size);
+>>>>>>> b7ba80a49124 (Commit)
 	grant_ref_t grant;
 
 	data = find_xen_grant_dma_data(dev);
@@ -139,7 +180,11 @@ static void xen_grant_dma_free(struct device *dev, size_t size, void *vaddr,
 
 	gnttab_free_grant_reference_seq(grant, n_pages);
 
+<<<<<<< HEAD
 	free_pages_exact(vaddr, n_pages * XEN_PAGE_SIZE);
+=======
+	free_pages_exact(vaddr, n_pages * PAGE_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct page *xen_grant_dma_alloc_pages(struct device *dev, size_t size,
@@ -169,9 +214,13 @@ static dma_addr_t xen_grant_dma_map_page(struct device *dev, struct page *page,
 					 unsigned long attrs)
 {
 	struct xen_grant_dma_data *data;
+<<<<<<< HEAD
 	unsigned long dma_offset = xen_offset_in_page(offset),
 			pfn_offset = XEN_PFN_DOWN(offset);
 	unsigned int i, n_pages = XEN_PFN_UP(dma_offset + size);
+=======
+	unsigned int i, n_pages = PFN_UP(size);
+>>>>>>> b7ba80a49124 (Commit)
 	grant_ref_t grant;
 	dma_addr_t dma_handle;
 
@@ -190,11 +239,18 @@ static dma_addr_t xen_grant_dma_map_page(struct device *dev, struct page *page,
 
 	for (i = 0; i < n_pages; i++) {
 		gnttab_grant_foreign_access_ref(grant + i, data->backend_domid,
+<<<<<<< HEAD
 				pfn_to_gfn(page_to_xen_pfn(page) + i + pfn_offset),
 				dir == DMA_TO_DEVICE);
 	}
 
 	dma_handle = grant_to_dma(grant) + dma_offset;
+=======
+				xen_page_to_gfn(page) + i, dir == DMA_TO_DEVICE);
+	}
+
+	dma_handle = grant_to_dma(grant) + offset;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return dma_handle;
 }
@@ -204,8 +260,12 @@ static void xen_grant_dma_unmap_page(struct device *dev, dma_addr_t dma_handle,
 				     unsigned long attrs)
 {
 	struct xen_grant_dma_data *data;
+<<<<<<< HEAD
 	unsigned long dma_offset = xen_offset_in_page(dma_handle);
 	unsigned int i, n_pages = XEN_PFN_UP(dma_offset + size);
+=======
+	unsigned int i, n_pages = PFN_UP(size);
+>>>>>>> b7ba80a49124 (Commit)
 	grant_ref_t grant;
 
 	if (WARN_ON(dir == DMA_NONE))
@@ -293,6 +353,7 @@ static const struct dma_map_ops xen_grant_dma_ops = {
 	.dma_supported = xen_grant_dma_supported,
 };
 
+<<<<<<< HEAD
 static struct device_node *xen_dt_get_node(struct device *dev)
 {
 	if (dev_is_pci(dev)) {
@@ -372,6 +433,36 @@ static int xen_grant_init_backend_domid(struct device *dev,
 static void xen_grant_setup_dma_ops(struct device *dev, domid_t backend_domid)
 {
 	struct xen_grant_dma_data *data;
+=======
+bool xen_is_grant_dma_device(struct device *dev)
+{
+	struct device_node *iommu_np;
+	bool has_iommu;
+
+	/* XXX Handle only DT devices for now */
+	if (!dev->of_node)
+		return false;
+
+	iommu_np = of_parse_phandle(dev->of_node, "iommus", 0);
+	has_iommu = iommu_np && of_device_is_compatible(iommu_np, "xen,grant-dma");
+	of_node_put(iommu_np);
+
+	return has_iommu;
+}
+
+bool xen_virtio_mem_acc(struct virtio_device *dev)
+{
+	if (IS_ENABLED(CONFIG_XEN_VIRTIO_FORCE_GRANT))
+		return true;
+
+	return xen_is_grant_dma_device(dev->dev.parent);
+}
+
+void xen_grant_setup_dma_ops(struct device *dev)
+{
+	struct xen_grant_dma_data *data;
+	struct of_phandle_args iommu_spec;
+>>>>>>> b7ba80a49124 (Commit)
 
 	data = find_xen_grant_dma_data(dev);
 	if (data) {
@@ -379,13 +470,46 @@ static void xen_grant_setup_dma_ops(struct device *dev, domid_t backend_domid)
 		return;
 	}
 
+<<<<<<< HEAD
+=======
+	/* XXX ACPI device unsupported for now */
+	if (!dev->of_node)
+		goto err;
+
+	if (of_parse_phandle_with_args(dev->of_node, "iommus", "#iommu-cells",
+			0, &iommu_spec)) {
+		dev_err(dev, "Cannot parse iommus property\n");
+		goto err;
+	}
+
+	if (!of_device_is_compatible(iommu_spec.np, "xen,grant-dma") ||
+			iommu_spec.args_count != 1) {
+		dev_err(dev, "Incompatible IOMMU node\n");
+		of_node_put(iommu_spec.np);
+		goto err;
+	}
+
+	of_node_put(iommu_spec.np);
+
+>>>>>>> b7ba80a49124 (Commit)
 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
 	if (!data)
 		goto err;
 
+<<<<<<< HEAD
 	data->backend_domid = backend_domid;
 
 	if (store_xen_grant_dma_data(dev, data)) {
+=======
+	/*
+	 * The endpoint ID here means the ID of the domain where the corresponding
+	 * backend is running
+	 */
+	data->backend_domid = iommu_spec.args[0];
+
+	if (xa_err(xa_store(&xen_grant_dma_devices, (unsigned long)dev, data,
+			GFP_KERNEL))) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(dev, "Cannot store Xen grant DMA data\n");
 		goto err;
 	}
@@ -395,6 +519,7 @@ static void xen_grant_setup_dma_ops(struct device *dev, domid_t backend_domid)
 	return;
 
 err:
+<<<<<<< HEAD
 	devm_kfree(dev, data);
 	dev_err(dev, "Cannot set up Xen grant DMA ops, retain platform DMA ops\n");
 }
@@ -413,3 +538,11 @@ bool xen_virtio_restricted_mem_acc(struct virtio_device *dev)
 
 MODULE_DESCRIPTION("Xen grant DMA-mapping layer");
 MODULE_AUTHOR("Juergen Gross <jgross@suse.com>");
+=======
+	dev_err(dev, "Cannot set up Xen grant DMA ops, retain platform DMA ops\n");
+}
+
+MODULE_DESCRIPTION("Xen grant DMA-mapping layer");
+MODULE_AUTHOR("Juergen Gross <jgross@suse.com>");
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

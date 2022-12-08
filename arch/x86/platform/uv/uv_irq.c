@@ -166,9 +166,16 @@ static struct irq_domain *uv_get_irq_domain(void)
 	if (!fn)
 		goto out;
 
+<<<<<<< HEAD
 	uv_domain = irq_domain_create_hierarchy(x86_vector_domain, 0, 0, fn,
 						&uv_domain_ops, NULL);
 	if (!uv_domain)
+=======
+	uv_domain = irq_domain_create_tree(fn, &uv_domain_ops, NULL);
+	if (uv_domain)
+		uv_domain->parent = x86_vector_domain;
+	else
+>>>>>>> b7ba80a49124 (Commit)
 		irq_domain_free_fwnode(fn);
 out:
 	mutex_unlock(&uv_lock);

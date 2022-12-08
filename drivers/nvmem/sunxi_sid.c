@@ -41,6 +41,7 @@ static int sunxi_sid_read(void *context, unsigned int offset,
 			  void *val, size_t bytes)
 {
 	struct sunxi_sid *sid = context;
+<<<<<<< HEAD
 	u32 word;
 
 	/* .stride = 4 so offset is guaranteed to be aligned */
@@ -56,6 +57,10 @@ static int sunxi_sid_read(void *context, unsigned int offset,
 	/* Handle any trailing bytes */
 	word = readl_relaxed(sid->base + sid->value_offset + offset);
 	memcpy(val, &word, bytes);
+=======
+
+	memcpy_fromio(val, sid->base + sid->value_offset + offset, bytes);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -197,9 +202,21 @@ static const struct sunxi_sid_cfg sun8i_h3_cfg = {
 	.need_register_readout = true,
 };
 
+<<<<<<< HEAD
 static const struct sunxi_sid_cfg sun50i_a64_cfg = {
 	.value_offset = 0x200,
 	.size = 0x100,
+=======
+static const struct sunxi_sid_cfg sun20i_d1_cfg = {
+	.value_offset = 0x200,
+	.size = 0x100,
+};
+
+static const struct sunxi_sid_cfg sun50i_a64_cfg = {
+	.value_offset = 0x200,
+	.size = 0x100,
+	.need_register_readout = true,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct sunxi_sid_cfg sun50i_h6_cfg = {
@@ -212,7 +229,11 @@ static const struct of_device_id sunxi_sid_of_match[] = {
 	{ .compatible = "allwinner,sun7i-a20-sid", .data = &sun7i_a20_cfg },
 	{ .compatible = "allwinner,sun8i-a83t-sid", .data = &sun50i_a64_cfg },
 	{ .compatible = "allwinner,sun8i-h3-sid", .data = &sun8i_h3_cfg },
+<<<<<<< HEAD
 	{ .compatible = "allwinner,sun20i-d1-sid", .data = &sun50i_a64_cfg },
+=======
+	{ .compatible = "allwinner,sun20i-d1-sid", .data = &sun20i_d1_cfg },
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "allwinner,sun50i-a64-sid", .data = &sun50i_a64_cfg },
 	{ .compatible = "allwinner,sun50i-h5-sid", .data = &sun50i_a64_cfg },
 	{ .compatible = "allwinner,sun50i-h6-sid", .data = &sun50i_h6_cfg },

@@ -369,7 +369,11 @@ struct vcpu_vmx {
 	struct lbr_desc lbr_desc;
 
 	/* Save desired MSR intercept (read: pass-through) state */
+<<<<<<< HEAD
 #define MAX_POSSIBLE_PASSTHROUGH_MSRS	16
+=======
+#define MAX_POSSIBLE_PASSTHROUGH_MSRS	15
+>>>>>>> b7ba80a49124 (Commit)
 	struct {
 		DECLARE_BITMAP(read, MAX_POSSIBLE_PASSTHROUGH_MSRS);
 		DECLARE_BITMAP(write, MAX_POSSIBLE_PASSTHROUGH_MSRS);
@@ -477,6 +481,7 @@ static inline u8 vmx_get_rvi(void)
 	return vmcs_read16(GUEST_INTR_STATUS) & 0xff;
 }
 
+<<<<<<< HEAD
 #define __KVM_REQUIRED_VMX_VM_ENTRY_CONTROLS				\
 	(VM_ENTRY_LOAD_DEBUG_CONTROLS)
 #ifdef CONFIG_X86_64
@@ -616,6 +621,31 @@ static __always_inline void lname##_controls_clearbit(struct vcpu_vmx *vmx, u##b
 {												\
 	BUILD_BUG_ON(!(val & (KVM_REQUIRED_VMX_##uname | KVM_OPTIONAL_VMX_##uname)));		\
 	lname##_controls_set(vmx, lname##_controls_get(vmx) & ~val);				\
+=======
+#define BUILD_CONTROLS_SHADOW(lname, uname, bits)				\
+static inline void lname##_controls_set(struct vcpu_vmx *vmx, u##bits val)	\
+{										\
+	if (vmx->loaded_vmcs->controls_shadow.lname != val) {			\
+		vmcs_write##bits(uname, val);					\
+		vmx->loaded_vmcs->controls_shadow.lname = val;			\
+	}									\
+}										\
+static inline u##bits __##lname##_controls_get(struct loaded_vmcs *vmcs)	\
+{										\
+	return vmcs->controls_shadow.lname;					\
+}										\
+static inline u##bits lname##_controls_get(struct vcpu_vmx *vmx)		\
+{										\
+	return __##lname##_controls_get(vmx->loaded_vmcs);			\
+}										\
+static inline void lname##_controls_setbit(struct vcpu_vmx *vmx, u##bits val)	\
+{										\
+	lname##_controls_set(vmx, lname##_controls_get(vmx) | val);		\
+}										\
+static inline void lname##_controls_clearbit(struct vcpu_vmx *vmx, u##bits val)	\
+{										\
+	lname##_controls_set(vmx, lname##_controls_get(vmx) & ~val);		\
+>>>>>>> b7ba80a49124 (Commit)
 }
 BUILD_CONTROLS_SHADOW(vm_entry, VM_ENTRY_CONTROLS, 32)
 BUILD_CONTROLS_SHADOW(vm_exit, VM_EXIT_CONTROLS, 32)
@@ -640,6 +670,7 @@ BUILD_CONTROLS_SHADOW(tertiary_exec, TERTIARY_VM_EXEC_CONTROL, 64)
 				(1 << VCPU_EXREG_EXIT_INFO_1) | \
 				(1 << VCPU_EXREG_EXIT_INFO_2))
 
+<<<<<<< HEAD
 static inline unsigned long vmx_l1_guest_owned_cr0_bits(void)
 {
 	unsigned long bits = KVM_POSSIBLE_CR0_GUEST_BITS;
@@ -659,11 +690,18 @@ static inline unsigned long vmx_l1_guest_owned_cr0_bits(void)
 }
 
 static __always_inline struct kvm_vmx *to_kvm_vmx(struct kvm *kvm)
+=======
+static inline struct kvm_vmx *to_kvm_vmx(struct kvm *kvm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return container_of(kvm, struct kvm_vmx, kvm);
 }
 
+<<<<<<< HEAD
 static __always_inline struct vcpu_vmx *to_vmx(struct kvm_vcpu *vcpu)
+=======
+static inline struct vcpu_vmx *to_vmx(struct kvm_vcpu *vcpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return container_of(vcpu, struct vcpu_vmx, vcpu);
 }
@@ -687,6 +725,7 @@ void intel_pmu_cross_mapped_check(struct kvm_pmu *pmu);
 int intel_pmu_create_guest_lbr_event(struct kvm_vcpu *vcpu);
 void vmx_passthrough_lbr_msrs(struct kvm_vcpu *vcpu);
 
+<<<<<<< HEAD
 static __always_inline unsigned long vmx_get_exit_qual(struct kvm_vcpu *vcpu)
 {
 	struct vcpu_vmx *vmx = to_vmx(vcpu);
@@ -704,6 +743,27 @@ static __always_inline u32 vmx_get_intr_info(struct kvm_vcpu *vcpu)
 	if (!kvm_register_test_and_mark_available(vcpu, VCPU_EXREG_EXIT_INFO_2))
 		vmx->exit_intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
 
+=======
+static inline unsigned long vmx_get_exit_qual(struct kvm_vcpu *vcpu)
+{
+	struct vcpu_vmx *vmx = to_vmx(vcpu);
+
+	if (!kvm_register_is_available(vcpu, VCPU_EXREG_EXIT_INFO_1)) {
+		kvm_register_mark_available(vcpu, VCPU_EXREG_EXIT_INFO_1);
+		vmx->exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
+	}
+	return vmx->exit_qualification;
+}
+
+static inline u32 vmx_get_intr_info(struct kvm_vcpu *vcpu)
+{
+	struct vcpu_vmx *vmx = to_vmx(vcpu);
+
+	if (!kvm_register_is_available(vcpu, VCPU_EXREG_EXIT_INFO_2)) {
+		kvm_register_mark_available(vcpu, VCPU_EXREG_EXIT_INFO_2);
+		vmx->exit_intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return vmx->exit_intr_info;
 }
 
@@ -758,6 +818,7 @@ static inline bool vmx_can_use_ipiv(struct kvm_vcpu *vcpu)
 	return  lapic_in_kernel(vcpu) && enable_ipiv;
 }
 
+<<<<<<< HEAD
 static inline bool guest_cpuid_has_evmcs(struct kvm_vcpu *vcpu)
 {
 	/*
@@ -768,4 +829,6 @@ static inline bool guest_cpuid_has_evmcs(struct kvm_vcpu *vcpu)
 	       to_vmx(vcpu)->nested.enlightened_vmcs_enabled;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __KVM_X86_VMX_H */

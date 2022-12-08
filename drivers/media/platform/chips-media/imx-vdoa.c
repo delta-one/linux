@@ -324,6 +324,14 @@ static int vdoa_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int vdoa_remove(struct platform_device *pdev)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id vdoa_dt_ids[] = {
 	{ .compatible = "fsl,imx6q-vdoa" },
 	{}
@@ -332,6 +340,10 @@ MODULE_DEVICE_TABLE(of, vdoa_dt_ids);
 
 static struct platform_driver vdoa_driver = {
 	.probe		= vdoa_probe,
+<<<<<<< HEAD
+=======
+	.remove		= vdoa_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= VDOA_NAME,
 		.of_match_table = vdoa_dt_ids,

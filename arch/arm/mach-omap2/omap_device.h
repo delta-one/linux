@@ -25,6 +25,12 @@
 
 #include "omap_hwmod.h"
 
+<<<<<<< HEAD
+=======
+extern struct dev_pm_domain omap_device_pm_domain;
+extern struct dev_pm_domain omap_device_fail_pm_domain;
+
+>>>>>>> b7ba80a49124 (Commit)
 /* omap_device._state values */
 #define OMAP_DEVICE_STATE_UNKNOWN	0
 #define OMAP_DEVICE_STATE_ENABLED	1
@@ -63,6 +69,20 @@ struct omap_device {
 int omap_device_enable(struct platform_device *pdev);
 int omap_device_idle(struct platform_device *pdev);
 
+<<<<<<< HEAD
+=======
+/* Core code interface */
+
+struct omap_device *omap_device_alloc(struct platform_device *pdev,
+				      struct omap_hwmod **ohs, int oh_cnt);
+void omap_device_delete(struct omap_device *od);
+
+struct device *omap_device_get_by_hwmod_name(const char *oh_name);
+
+/* OMAP PM interface */
+int omap_device_get_context_loss_count(struct platform_device *pdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Other */
 
 int omap_device_assert_hardreset(struct platform_device *pdev,

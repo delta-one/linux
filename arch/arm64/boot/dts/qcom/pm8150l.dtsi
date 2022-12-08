@@ -116,12 +116,15 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
+<<<<<<< HEAD
 		pm8150l_flash: led-controller@d300 {
 			compatible = "qcom,pm8150l-flash-led", "qcom,spmi-flash-led";
 			reg = <0xd300>;
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pm8150l_lpg: pwm {
 			compatible = "qcom,pm8150l-lpg";
 

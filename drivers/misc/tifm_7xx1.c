@@ -190,7 +190,11 @@ static void tifm_7xx1_switch_media(struct work_struct *work)
 				spin_unlock_irqrestore(&fm->lock, flags);
 			}
 			if (sock)
+<<<<<<< HEAD
 				put_device(&sock->dev);
+=======
+				tifm_free_device(&sock->dev);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		spin_lock_irqsave(&fm->lock, flags);
 	}

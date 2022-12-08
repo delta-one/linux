@@ -233,6 +233,10 @@ static int io_sq_thread(void *data)
 		set_cpus_allowed_ptr(current, cpumask_of(sqd->sq_cpu));
 	else
 		set_cpus_allowed_ptr(current, cpu_online_mask);
+<<<<<<< HEAD
+=======
+	current->flags |= PF_NO_SETAFFINITY;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&sqd->lock);
 	while (1) {
@@ -311,7 +315,11 @@ static int io_sq_thread(void *data)
 	do_exit(0);
 }
 
+<<<<<<< HEAD
 void io_sqpoll_wait_sq(struct io_ring_ctx *ctx)
+=======
+int io_sqpoll_wait_sq(struct io_ring_ctx *ctx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	DEFINE_WAIT(wait);
 
@@ -326,6 +334,10 @@ void io_sqpoll_wait_sq(struct io_ring_ctx *ctx)
 	} while (!signal_pending(current));
 
 	finish_wait(&ctx->sqo_sq_wait, &wait);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 __cold int io_sq_offload_create(struct io_ring_ctx *ctx,

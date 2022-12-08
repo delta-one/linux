@@ -6,9 +6,13 @@
 
 #include <dt-bindings/interrupt-controller/irq.h>
 #include <dt-bindings/interrupt-controller/arm-gic.h>
+<<<<<<< HEAD
 #include <dt-bindings/clock/mediatek,mt6795-clk.h>
 #include <dt-bindings/pinctrl/mt6795-pinfunc.h>
 #include <dt-bindings/reset/mediatek,mt6795-resets.h>
+=======
+#include <dt-bindings/pinctrl/mt6795-pinfunc.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	compatible = "mediatek,mt6795";
@@ -40,12 +44,15 @@
 			enable-method = "psci";
 			reg = <0x001>;
 			cci-control-port = <&cci_control2>;
+<<<<<<< HEAD
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
 			i-cache-sets = <256>;
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 		};
 
@@ -55,12 +62,15 @@
 			enable-method = "psci";
 			reg = <0x002>;
 			cci-control-port = <&cci_control2>;
+<<<<<<< HEAD
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
 			i-cache-sets = <256>;
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 		};
 
@@ -70,12 +80,15 @@
 			enable-method = "psci";
 			reg = <0x003>;
 			cci-control-port = <&cci_control2>;
+<<<<<<< HEAD
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
 			i-cache-sets = <256>;
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_0>;
 		};
 
@@ -85,12 +98,15 @@
 			enable-method = "psci";
 			reg = <0x100>;
 			cci-control-port = <&cci_control1>;
+<<<<<<< HEAD
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
 			i-cache-sets = <256>;
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_1>;
 		};
 
@@ -100,12 +116,15 @@
 			enable-method = "psci";
 			reg = <0x101>;
 			cci-control-port = <&cci_control1>;
+<<<<<<< HEAD
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
 			i-cache-sets = <256>;
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_1>;
 		};
 
@@ -115,12 +134,15 @@
 			enable-method = "psci";
 			reg = <0x102>;
 			cci-control-port = <&cci_control1>;
+<<<<<<< HEAD
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
 			i-cache-sets = <256>;
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_1>;
 		};
 
@@ -130,12 +152,15 @@
 			enable-method = "psci";
 			reg = <0x103>;
 			cci-control-port = <&cci_control1>;
+<<<<<<< HEAD
 			i-cache-size = <32768>;
 			i-cache-line-size = <64>;
 			i-cache-sets = <256>;
 			d-cache-size = <32768>;
 			d-cache-line-size = <64>;
 			d-cache-sets = <128>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			next-level-cache = <&l2_1>;
 		};
 
@@ -180,19 +205,25 @@
 		l2_0: l2-cache0 {
 			compatible = "cache";
 			cache-level = <2>;
+<<<<<<< HEAD
 			cache-size = <1048576>;
 			cache-line-size = <64>;
 			cache-sets = <1024>;
 			cache-unified;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		l2_1: l2-cache1 {
 			compatible = "cache";
 			cache-level = <2>;
+<<<<<<< HEAD
 			cache-size = <1048576>;
 			cache-line-size = <64>;
 			cache-sets = <1024>;
 			cache-unified;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 
@@ -244,6 +275,7 @@
 		compatible = "simple-bus";
 		ranges;
 
+<<<<<<< HEAD
 		topckgen: syscon@10000000 {
 			compatible = "mediatek,mt6795-topckgen", "syscon";
 			reg = <0 0x10000000 0 0x1000>;
@@ -264,6 +296,8 @@
 			#reset-cells = <1>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pio: pinctrl@10005000 {
 			compatible = "mediatek,mt6795-pinctrl";
 			reg = <0 0x10005000 0 0x1000>, <0 0x1000b000 0 0x1000>;
@@ -364,10 +398,14 @@
 				     "mediatek,mt6577-uart";
 			reg = <0 0x11002000 0 0x400>;
 			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+<<<<<<< HEAD
 			clocks = <&pericfg CLK_PERI_UART0_SEL>, <&pericfg CLK_PERI_UART0>;
 			clock-names = "baud", "bus";
 			dmas = <&apdma 0>, <&apdma 1>;
 			dma-names = "tx", "rx";
+=======
+			clocks = <&clk26m>;
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 		};
 
@@ -376,6 +414,7 @@
 				     "mediatek,mt6577-uart";
 			reg = <0 0x11003000 0 0x400>;
 			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
+<<<<<<< HEAD
 			clocks = <&pericfg CLK_PERI_UART1_SEL>, <&pericfg CLK_PERI_UART1>;
 			clock-names = "baud", "bus";
 			dmas = <&apdma 2>, <&apdma 3>;
@@ -409,15 +448,25 @@
 			#dma-cells = <1>;
 		};
 
+=======
+			clocks = <&clk26m>;
+			status = "disabled";
+		};
+
+>>>>>>> b7ba80a49124 (Commit)
 		uart2: serial@11004000 {
 			compatible = "mediatek,mt6795-uart",
 				     "mediatek,mt6577-uart";
 			reg = <0 0x11004000 0 0x400>;
 			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
+<<<<<<< HEAD
 			clocks = <&pericfg CLK_PERI_UART2_SEL>, <&pericfg CLK_PERI_UART2>;
 			clock-names = "baud", "bus";
 			dmas = <&apdma 4>, <&apdma 5>;
 			dma-names = "tx", "rx";
+=======
+			clocks = <&clk26m>;
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 		};
 
@@ -426,6 +475,7 @@
 				     "mediatek,mt6577-uart";
 			reg = <0 0x11005000 0 0x400>;
 			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_LOW>;
+<<<<<<< HEAD
 			clocks = <&pericfg CLK_PERI_UART3_SEL>, <&pericfg CLK_PERI_UART3>;
 			clock-names = "baud", "bus";
 			dmas = <&apdma 6>, <&apdma 7>;
@@ -471,6 +521,9 @@
 			clocks = <&pericfg CLK_PERI_MSDC30_3>,
 				 <&topckgen CLK_TOP_AXI_SEL>;
 			clock-names = "source", "hclk";
+=======
+			clocks = <&clk26m>;
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 		};
 	};

@@ -46,7 +46,12 @@ properties:
   interconnect-names:
     maxItems: 4
 
+<<<<<<< HEAD
   operating-points-v2: true
+=======
+  operating-points-v2:
+    $ref: "/schemas/types.yaml#/definitions/phandle"
+>>>>>>> b7ba80a49124 (Commit)
 
   power-domains:
     items:

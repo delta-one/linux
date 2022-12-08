@@ -16,7 +16,10 @@
 #include <linux/irqbypass.h>
 
 struct vhost_work;
+<<<<<<< HEAD
 struct vhost_task;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 typedef void (*vhost_work_fn_t)(struct vhost_work *work);
 
 #define VHOST_WORK_QUEUED 1
@@ -26,12 +29,15 @@ struct vhost_work {
 	unsigned long		flags;
 };
 
+<<<<<<< HEAD
 struct vhost_worker {
 	struct vhost_task	*vtsk;
 	struct llist_head	work_list;
 	u64			kcov_handle;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Poll a file (eventfd or socket) */
 /* Note: there's nothing vhost specific about this structure. */
 struct vhost_poll {
@@ -154,7 +160,12 @@ struct vhost_dev {
 	struct vhost_virtqueue **vqs;
 	int nvqs;
 	struct eventfd_ctx *log_ctx;
+<<<<<<< HEAD
 	struct vhost_worker *worker;
+=======
+	struct llist_head work_list;
+	struct task_struct *worker;
+>>>>>>> b7ba80a49124 (Commit)
 	struct vhost_iotlb *umem;
 	struct vhost_iotlb *iotlb;
 	spinlock_t iotlb_lock;
@@ -164,6 +175,10 @@ struct vhost_dev {
 	int iov_limit;
 	int weight;
 	int byte_weight;
+<<<<<<< HEAD
+=======
+	u64 kcov_handle;
+>>>>>>> b7ba80a49124 (Commit)
 	bool use_worker;
 	int (*msg_handler)(struct vhost_dev *dev, u32 asid,
 			   struct vhost_iotlb_msg *msg);
@@ -186,7 +201,10 @@ long vhost_dev_ioctl(struct vhost_dev *, unsigned int ioctl, void __user *argp);
 long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp);
 bool vhost_vq_access_ok(struct vhost_virtqueue *vq);
 bool vhost_log_access_ok(struct vhost_dev *);
+<<<<<<< HEAD
 void vhost_clear_msg(struct vhost_dev *dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int vhost_get_vq_desc(struct vhost_virtqueue *,
 		      struct iovec iov[], unsigned int iov_count,
@@ -227,7 +245,11 @@ ssize_t vhost_chr_read_iter(struct vhost_dev *dev, struct iov_iter *to,
 			    int noblock);
 ssize_t vhost_chr_write_iter(struct vhost_dev *dev,
 			     struct iov_iter *from);
+<<<<<<< HEAD
 int vhost_init_device_iotlb(struct vhost_dev *d);
+=======
+int vhost_init_device_iotlb(struct vhost_dev *d, bool enabled);
+>>>>>>> b7ba80a49124 (Commit)
 
 void vhost_iotlb_map_free(struct vhost_iotlb *iotlb,
 			  struct vhost_iotlb_map *map);

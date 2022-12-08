@@ -43,7 +43,11 @@
 };
 
 &apps_rsc {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pm8350-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8350-rpmh-regulators";
 		qcom,pmic-id = "b";
 
@@ -134,7 +138,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-1 {
+=======
+	pm8350c-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8350c-rpmh-regulators";
 		qcom,pmic-id = "c";
 
@@ -376,7 +384,13 @@
 };
 
 &ipa {
+<<<<<<< HEAD
 	qcom,gsi-loader = "self";
 	memory-region = <&pil_ipa_fw_mem>;
 	status = "okay";
+=======
+	status = "okay";
+
+	memory-region = <&pil_ipa_fw_mem>;
+>>>>>>> b7ba80a49124 (Commit)
 };

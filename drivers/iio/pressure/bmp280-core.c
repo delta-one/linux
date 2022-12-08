@@ -13,7 +13,10 @@
  * https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmp280-ds001.pdf
  * https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme280-ds002.pdf
  * https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmp388-ds001.pdf
+<<<<<<< HEAD
  * https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmp581-ds004.pdf
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Notice:
  * The link to the bmp180 datasheet points to an outdated version missing these changes:
@@ -28,7 +31,10 @@
 #include <linux/bitfield.h>
 #include <linux/device.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/nvmem-provider.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regmap.h>
 #include <linux/delay.h>
 #include <linux/iio/iio.h>
@@ -51,6 +57,68 @@
  */
 enum { AC1, AC2, AC3, AC4, AC5, AC6, B1, B2, MB, MC, MD };
 
+<<<<<<< HEAD
+=======
+struct bmp180_calib {
+	s16 AC1;
+	s16 AC2;
+	s16 AC3;
+	u16 AC4;
+	u16 AC5;
+	u16 AC6;
+	s16 B1;
+	s16 B2;
+	s16 MB;
+	s16 MC;
+	s16 MD;
+};
+
+/* See datasheet Section 4.2.2. */
+struct bmp280_calib {
+	u16 T1;
+	s16 T2;
+	s16 T3;
+	u16 P1;
+	s16 P2;
+	s16 P3;
+	s16 P4;
+	s16 P5;
+	s16 P6;
+	s16 P7;
+	s16 P8;
+	s16 P9;
+	u8  H1;
+	s16 H2;
+	u8  H3;
+	s16 H4;
+	s16 H5;
+	s8  H6;
+};
+
+/* See datasheet Section 3.11.1. */
+struct bmp380_calib {
+	u16 T1;
+	u16 T2;
+	s8  T3;
+	s16 P1;
+	s16 P2;
+	s8  P3;
+	s8  P4;
+	u16 P5;
+	u16 P6;
+	s8  P7;
+	s8  P8;
+	s16 P9;
+	s8  P10;
+	s8  P11;
+};
+
+static const char *const bmp280_supply_names[] = {
+	"vddd", "vdda"
+};
+
+#define BMP280_NUM_SUPPLIES ARRAY_SIZE(bmp280_supply_names)
+>>>>>>> b7ba80a49124 (Commit)
 
 enum bmp380_odr {
 	BMP380_ODR_200HZ,
@@ -73,6 +141,7 @@ enum bmp380_odr {
 	BMP380_ODR_0_0015HZ,
 };
 
+<<<<<<< HEAD
 enum bmp580_odr {
 	BMP580_ODR_240HZ,
 	BMP580_ODR_218HZ,
@@ -106,6 +175,94 @@ enum bmp580_odr {
 	BMP580_ODR_0_5HZ,
 	BMP580_ODR_0_25HZ,
 	BMP580_ODR_0_125HZ,
+=======
+struct bmp280_data {
+	struct device *dev;
+	struct mutex lock;
+	struct regmap *regmap;
+	struct completion done;
+	bool use_eoc;
+	const struct bmp280_chip_info *chip_info;
+	union {
+		struct bmp180_calib bmp180;
+		struct bmp280_calib bmp280;
+		struct bmp380_calib bmp380;
+	} calib;
+	struct regulator_bulk_data supplies[BMP280_NUM_SUPPLIES];
+	unsigned int start_up_time; /* in microseconds */
+
+	/* log of base 2 of oversampling rate */
+	u8 oversampling_press;
+	u8 oversampling_temp;
+	u8 oversampling_humid;
+	u8 iir_filter_coeff;
+
+	/*
+	 * BMP380 devices introduce sampling frequency configuration. See
+	 * datasheet sections 3.3.3. and 4.3.19 for more details.
+	 *
+	 * BMx280 devices allowed indirect configuration of sampling frequency
+	 * changing the t_standby duration between measurements, as detailed on
+	 * section 3.6.3 of the datasheet.
+	 */
+	int sampling_freq;
+
+	/*
+	 * Carryover value from temperature conversion, used in pressure
+	 * calculation.
+	 */
+	s32 t_fine;
+
+	/*
+	 * DMA (thus cache coherency maintenance) may require the
+	 * transfer buffers to live in their own cache lines.
+	 */
+	union {
+		/* Sensor data buffer */
+		u8 buf[3];
+		/* Calibration data buffers */
+		__le16 bmp280_cal_buf[BMP280_CONTIGUOUS_CALIB_REGS / 2];
+		__be16 bmp180_cal_buf[BMP180_REG_CALIB_COUNT / 2];
+		u8 bmp380_cal_buf[BMP380_CALIB_REG_COUNT];
+		/* Miscellaneous, endianess-aware data buffers */
+		__le16 le16;
+		__be16 be16;
+	} __aligned(IIO_DMA_MINALIGN);
+};
+
+struct bmp280_chip_info {
+	unsigned int id_reg;
+
+	const struct iio_chan_spec *channels;
+	int num_channels;
+	unsigned int start_up_time;
+
+	const int *oversampling_temp_avail;
+	int num_oversampling_temp_avail;
+	int oversampling_temp_default;
+
+	const int *oversampling_press_avail;
+	int num_oversampling_press_avail;
+	int oversampling_press_default;
+
+	const int *oversampling_humid_avail;
+	int num_oversampling_humid_avail;
+	int oversampling_humid_default;
+
+	const int *iir_filter_coeffs_avail;
+	int num_iir_filter_coeffs_avail;
+	int iir_filter_coeff_default;
+
+	const int (*sampling_freq_avail)[2];
+	int num_sampling_freq_avail;
+	int sampling_freq_default;
+
+	int (*chip_config)(struct bmp280_data *);
+	int (*read_temp)(struct bmp280_data *, int *);
+	int (*read_press)(struct bmp280_data *, int *, int *);
+	int (*read_humid)(struct bmp280_data *, int *, int *);
+	int (*read_calib)(struct bmp280_data *);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -363,7 +520,11 @@ static u32 bmp280_compensate_press(struct bmp280_data *data,
 }
 
 static int bmp280_read_temp(struct bmp280_data *data,
+<<<<<<< HEAD
 			    int *val, int *val2)
+=======
+			    int *val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	s32 adc_temp, comp_temp;
 	int ret;
@@ -403,7 +564,11 @@ static int bmp280_read_press(struct bmp280_data *data,
 	int ret;
 
 	/* Read and compensate temperature so we get a reading of t_fine. */
+<<<<<<< HEAD
 	ret = bmp280_read_temp(data, NULL, NULL);
+=======
+	ret = bmp280_read_temp(data, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -435,7 +600,11 @@ static int bmp280_read_humid(struct bmp280_data *data, int *val, int *val2)
 	int ret;
 
 	/* Read and compensate temperature so we get a reading of t_fine. */
+<<<<<<< HEAD
 	ret = bmp280_read_temp(data, NULL, NULL);
+=======
+	ret = bmp280_read_temp(data, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -479,7 +648,11 @@ static int bmp280_read_raw(struct iio_dev *indio_dev,
 			ret = data->chip_info->read_press(data, val, val2);
 			break;
 		case IIO_TEMP:
+<<<<<<< HEAD
 			ret = data->chip_info->read_temp(data, val, val2);
+=======
+			ret = data->chip_info->read_temp(data, val);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		default:
 			ret = -EINVAL;
@@ -795,10 +968,15 @@ static int bmp280_chip_config(struct bmp280_data *data)
 
 static const int bmp280_oversampling_avail[] = { 1, 2, 4, 8, 16 };
 
+<<<<<<< HEAD
 const struct bmp280_chip_info bmp280_chip_info = {
 	.id_reg = BMP280_REG_ID,
 	.chip_id = BMP280_CHIP_ID,
 	.regmap_config = &bmp280_regmap_config,
+=======
+static const struct bmp280_chip_info bmp280_chip_info = {
+	.id_reg = BMP280_REG_ID,
+>>>>>>> b7ba80a49124 (Commit)
 	.start_up_time = 2000,
 	.channels = bmp280_channels,
 	.num_channels = 2,
@@ -826,7 +1004,10 @@ const struct bmp280_chip_info bmp280_chip_info = {
 	.read_press = bmp280_read_press,
 	.read_calib = bmp280_read_calib,
 };
+<<<<<<< HEAD
 EXPORT_SYMBOL_NS(bmp280_chip_info, IIO_BMP280);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int bme280_chip_config(struct bmp280_data *data)
 {
@@ -846,10 +1027,15 @@ static int bme280_chip_config(struct bmp280_data *data)
 	return bmp280_chip_config(data);
 }
 
+<<<<<<< HEAD
 const struct bmp280_chip_info bme280_chip_info = {
 	.id_reg = BMP280_REG_ID,
 	.chip_id = BME280_CHIP_ID,
 	.regmap_config = &bmp280_regmap_config,
+=======
+static const struct bmp280_chip_info bme280_chip_info = {
+	.id_reg = BMP280_REG_ID,
+>>>>>>> b7ba80a49124 (Commit)
 	.start_up_time = 2000,
 	.channels = bmp280_channels,
 	.num_channels = 3,
@@ -872,7 +1058,10 @@ const struct bmp280_chip_info bme280_chip_info = {
 	.read_humid = bmp280_read_humid,
 	.read_calib = bme280_read_calib,
 };
+<<<<<<< HEAD
 EXPORT_SYMBOL_NS(bme280_chip_info, IIO_BMP280);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Helper function to send a command to BMP3XX sensors.
@@ -991,7 +1180,11 @@ static u32 bmp380_compensate_press(struct bmp280_data *data, u32 adc_press)
 	return comp_press;
 }
 
+<<<<<<< HEAD
 static int bmp380_read_temp(struct bmp280_data *data, int *val, int *val2)
+=======
+static int bmp380_read_temp(struct bmp280_data *data, int *val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	s32 comp_temp;
 	u32 adc_temp;
@@ -1031,7 +1224,11 @@ static int bmp380_read_press(struct bmp280_data *data, int *val, int *val2)
 	int ret;
 
 	/* Read and compensate for temperature so we get a reading of t_fine */
+<<<<<<< HEAD
 	ret = bmp380_read_temp(data, NULL, NULL);
+=======
+	ret = bmp380_read_temp(data, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -1113,12 +1310,15 @@ static const int bmp380_odr_table[][2] = {
 	[BMP380_ODR_0_0015HZ]	= {0, 1526},
 };
 
+<<<<<<< HEAD
 static int bmp380_preinit(struct bmp280_data *data)
 {
 	/* BMP3xx requires soft-reset as part of initialization */
 	return bmp380_cmd(data, BMP380_CMD_SOFT_RESET);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int bmp380_chip_config(struct bmp280_data *data)
 {
 	bool change = false, aux;
@@ -1221,10 +1421,15 @@ static int bmp380_chip_config(struct bmp280_data *data)
 static const int bmp380_oversampling_avail[] = { 1, 2, 4, 8, 16, 32 };
 static const int bmp380_iir_filter_coeffs_avail[] = { 1, 2, 4, 8, 16, 32, 64, 128};
 
+<<<<<<< HEAD
 const struct bmp280_chip_info bmp380_chip_info = {
 	.id_reg = BMP380_REG_ID,
 	.chip_id = BMP380_CHIP_ID,
 	.regmap_config = &bmp380_regmap_config,
+=======
+static const struct bmp280_chip_info bmp380_chip_info = {
+	.id_reg = BMP380_REG_ID,
+>>>>>>> b7ba80a49124 (Commit)
 	.start_up_time = 2000,
 	.channels = bmp380_channels,
 	.num_channels = 2,
@@ -1249,6 +1454,7 @@ const struct bmp280_chip_info bmp380_chip_info = {
 	.read_temp = bmp380_read_temp,
 	.read_press = bmp380_read_press,
 	.read_calib = bmp380_read_calib,
+<<<<<<< HEAD
 	.preinit = bmp380_preinit,
 };
 EXPORT_SYMBOL_NS(bmp380_chip_info, IIO_BMP280);
@@ -1751,6 +1957,9 @@ const struct bmp280_chip_info bmp580_chip_info = {
 	.preinit = bmp580_preinit,
 };
 EXPORT_SYMBOL_NS(bmp580_chip_info, IIO_BMP280);
+=======
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 static int bmp180_measure(struct bmp280_data *data, u8 ctrl_meas)
 {
@@ -1872,7 +2081,11 @@ static s32 bmp180_compensate_temp(struct bmp280_data *data, s32 adc_temp)
 	return (data->t_fine + 8) >> 4;
 }
 
+<<<<<<< HEAD
 static int bmp180_read_temp(struct bmp280_data *data, int *val, int *val2)
+=======
+static int bmp180_read_temp(struct bmp280_data *data, int *val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	s32 adc_temp, comp_temp;
 	int ret;
@@ -1960,7 +2173,11 @@ static int bmp180_read_press(struct bmp280_data *data,
 	int ret;
 
 	/* Read and compensate temperature so we get a reading of t_fine. */
+<<<<<<< HEAD
 	ret = bmp180_read_temp(data, NULL, NULL);
+=======
+	ret = bmp180_read_temp(data, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -1984,10 +2201,15 @@ static int bmp180_chip_config(struct bmp280_data *data)
 static const int bmp180_oversampling_temp_avail[] = { 1 };
 static const int bmp180_oversampling_press_avail[] = { 1, 2, 4, 8 };
 
+<<<<<<< HEAD
 const struct bmp280_chip_info bmp180_chip_info = {
 	.id_reg = BMP280_REG_ID,
 	.chip_id = BMP180_CHIP_ID,
 	.regmap_config = &bmp180_regmap_config,
+=======
+static const struct bmp280_chip_info bmp180_chip_info = {
+	.id_reg = BMP280_REG_ID,
+>>>>>>> b7ba80a49124 (Commit)
 	.start_up_time = 2000,
 	.channels = bmp280_channels,
 	.num_channels = 2,
@@ -2007,7 +2229,10 @@ const struct bmp280_chip_info bmp180_chip_info = {
 	.read_press = bmp180_read_press,
 	.read_calib = bmp180_read_calib,
 };
+<<<<<<< HEAD
 EXPORT_SYMBOL_NS(bmp180_chip_info, IIO_BMP280);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static irqreturn_t bmp085_eoc_irq(int irq, void *d)
 {
@@ -2069,10 +2294,18 @@ static void bmp280_regulators_disable(void *data)
 
 int bmp280_common_probe(struct device *dev,
 			struct regmap *regmap,
+<<<<<<< HEAD
 			const struct bmp280_chip_info *chip_info,
 			const char *name,
 			int irq)
 {
+=======
+			unsigned int chip,
+			const char *name,
+			int irq)
+{
+	const struct bmp280_chip_info *chip_info;
+>>>>>>> b7ba80a49124 (Commit)
 	struct iio_dev *indio_dev;
 	struct bmp280_data *data;
 	struct gpio_desc *gpiod;
@@ -2091,6 +2324,25 @@ int bmp280_common_probe(struct device *dev,
 	indio_dev->info = &bmp280_info;
 	indio_dev->modes = INDIO_DIRECT_MODE;
 
+<<<<<<< HEAD
+=======
+	switch (chip) {
+	case BMP180_CHIP_ID:
+		chip_info = &bmp180_chip_info;
+		break;
+	case BMP280_CHIP_ID:
+		chip_info = &bmp280_chip_info;
+		break;
+	case BME280_CHIP_ID:
+		chip_info = &bme280_chip_info;
+		break;
+	case BMP380_CHIP_ID:
+		chip_info = &bmp380_chip_info;
+		break;
+	default:
+		return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	data->chip_info = chip_info;
 
 	/* Apply initial values from chip info structure */
@@ -2142,6 +2394,7 @@ int bmp280_common_probe(struct device *dev,
 	ret = regmap_read(regmap, data->chip_info->id_reg, &chip_id);
 	if (ret < 0)
 		return ret;
+<<<<<<< HEAD
 	if (chip_id != data->chip_info->chip_id) {
 		dev_err(dev, "bad chip id: expected %x got %x\n",
 			data->chip_info->chip_id, chip_id);
@@ -2153,6 +2406,19 @@ int bmp280_common_probe(struct device *dev,
 		if (ret)
 			return dev_err_probe(data->dev, ret,
 					     "error running preinit tasks\n");
+=======
+	if (chip_id != chip) {
+		dev_err(dev, "bad chip id: expected %x got %x\n",
+			chip, chip_id);
+		return -EINVAL;
+	}
+
+	/* BMP3xx requires soft-reset as part of initialization */
+	if (chip_id == BMP380_CHIP_ID) {
+		ret = bmp380_cmd(data, BMP380_CMD_SOFT_RESET);
+		if (ret < 0)
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = data->chip_info->chip_config(data);
@@ -2167,12 +2433,19 @@ int bmp280_common_probe(struct device *dev,
 	 * time once. They will not change.
 	 */
 
+<<<<<<< HEAD
 	if (data->chip_info->read_calib) {
 		ret = data->chip_info->read_calib(data);
 		if (ret < 0)
 			return dev_err_probe(data->dev, ret,
 					     "failed to read calibration coefficients\n");
 	}
+=======
+	ret = data->chip_info->read_calib(data);
+	if (ret < 0)
+		return dev_err_probe(data->dev, ret,
+				     "failed to read calibration coefficients\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Attempt to grab an optional EOC IRQ - only the BMP085 has this

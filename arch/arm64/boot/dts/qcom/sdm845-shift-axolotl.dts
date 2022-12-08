@@ -23,7 +23,10 @@
 	aliases {
 		display0 = &framebuffer0;
 		serial0 = &uart9;
+<<<<<<< HEAD
 		serial1 = &uart6;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	chosen {
@@ -54,7 +57,11 @@
 		key-vol-up {
 			label = "volume_up";
 			linux,code = <KEY_VOLUMEUP>;
+<<<<<<< HEAD
 			gpios = <&pm8998_gpios 6 GPIO_ACTIVE_LOW>;
+=======
+			gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
+>>>>>>> b7ba80a49124 (Commit)
 			debounce-interval = <15>;
 		};
 	};
@@ -111,7 +118,11 @@
 };
 
 &apps_rsc {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pm8998-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8998-rpmh-regulators";
 		qcom,pmic-id = "a";
 
@@ -376,7 +387,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-1 {
+=======
+	pmi8998-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pmi8998-rpmh-regulators";
 		qcom,pmic-id = "b";
 
@@ -390,7 +405,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-2 {
+=======
+	pm8005-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8005-rpmh-regulators";
 		qcom,pmic-id = "c";
 
@@ -495,10 +514,17 @@
 };
 
 &ipa {
+<<<<<<< HEAD
 	qcom,gsi-loader = "self";
 	memory-region = <&ipa_fw_mem>;
 	firmware-name = "qcom/sdm845/axolotl/ipa_fws.mbn";
 	status = "okay";
+=======
+	status = "okay";
+
+	memory-region = <&ipa_fw_mem>;
+	firmware-name = "qcom/sdm845/axolotl/ipa_fws.mbn";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &mdss {
@@ -510,7 +536,11 @@
 	firmware-name = "qcom/sdm845/axolotl/mba.mbn", "qcom/sdm845/axolotl/modem.mbn";
 };
 
+<<<<<<< HEAD
 &pm8998_gpios {
+=======
+&pm8998_gpio {
+>>>>>>> b7ba80a49124 (Commit)
 	volume_up_gpio: pm8998-gpio6-state {
 		pinconf {
 			pins = "gpio6";
@@ -522,9 +552,20 @@
 	};
 };
 
+<<<<<<< HEAD
 &pm8998_resin {
 	linux,code = <KEY_VOLUMEDOWN>;
 	status = "okay";
+=======
+&pm8998_pon {
+	volume_down_resin: resin {
+		compatible = "qcom,pm8941-resin";
+		interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
+		debounce = <15625>;
+		bias-pull-up;
+		linux,code = <KEY_VOLUMEDOWN>;
+	};
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &pmi8998_lpg {
@@ -554,6 +595,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &qup_uart9_rx {
 	drive-strength = <2>;
 	bias-pull-up;
@@ -562,6 +604,20 @@
 &qup_uart9_tx {
 	drive-strength = <2>;
 	bias-disable;
+=======
+&qup_uart9_default {
+	pinconf-rx {
+		pins = "gpio5";
+		drive-strength = <2>;
+		bias-pull-up;
+	};
+
+	pinconf-tx {
+		pins = "gpio4";
+		drive-strength = <2>;
+		bias-disable;
+	};
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &qupv3_id_0 {
@@ -575,6 +631,7 @@
 &tlmm {
 	gpio-reserved-ranges = <0 4>, <81 4>;
 
+<<<<<<< HEAD
 	sde_dsi_active: sde-dsi-active-state {
 		pins = "gpio6", "gpio11";
 		function = "gpio";
@@ -631,12 +688,119 @@
 		function = "gpio";
 		drive-strength = <2>;
 		bias-pull-down;
+=======
+	sde_dsi_active: sde-dsi-active {
+		mux {
+			pins = "gpio6", "gpio11";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio6", "gpio11";
+			drive-strength = <8>;
+			bias-disable;
+		};
+	};
+
+	sde_dsi_suspend: sde-dsi-suspend {
+		mux {
+			pins = "gpio6", "gpio11";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio6", "gpio11";
+			drive-strength = <2>;
+			bias-pull-down;
+		};
+	};
+
+	sde_te_active: sde-te-active {
+		mux {
+			pins = "gpio10";
+			function = "mdp_vsync";
+		};
+
+		config {
+			pins = "gpio10";
+			drive-strength = <2>;
+			bias-pull-down;
+		};
+	};
+
+	sde_te_suspend: sde-te-suspend {
+		mux {
+			pins = "gpio10";
+			function = "mdp_vsync";
+		};
+
+		config {
+			pins = "gpio10";
+			drive-strength = <2>;
+			bias-pull-down;
+		};
+	};
+
+	ts_int_active: ts-int-active {
+		mux {
+			pins = "gpio125";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio125";
+			drive-strength = <8>;
+			bias-pull-up;
+			input-enable;
+		};
+	};
+
+	ts_int_suspend: ts-int-suspend {
+		mux {
+			pins = "gpio125";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio125";
+			drive-strength = <2>;
+			bias-pull-down;
+			input-enable;
+		};
+	};
+
+	ts_reset_active: ts-reset-active {
+		mux {
+			pins = "gpio99";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio99";
+			drive-strength = <8>;
+			bias-pull-up;
+		};
+	};
+
+	ts_reset_suspend: ts-reset-suspend {
+		mux {
+			pins = "gpio99";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio99";
+			drive-strength = <2>;
+			bias-pull-down;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
 &uart6 {
 	status = "okay";
 
+<<<<<<< HEAD
 	pinctrl-0 = <&qup_uart6_4pin>;
 
 	bluetooth {
@@ -648,6 +812,11 @@
 		 */
 		firmware-name = "axolotl/crnv21.bin";
 
+=======
+	bluetooth {
+		compatible = "qcom,wcn3990-bt";
+
+>>>>>>> b7ba80a49124 (Commit)
 		vddio-supply = <&vreg_s4a_1p8>;
 		vddxo-supply = <&vreg_l7a_1p8>;
 		vddrf-supply = <&vreg_l17a_1p3>;

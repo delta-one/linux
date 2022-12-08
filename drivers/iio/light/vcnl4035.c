@@ -89,7 +89,11 @@ static irqreturn_t vcnl4035_drdy_irq_thread(int irq, void *private)
 							IIO_EV_TYPE_THRESH,
 							IIO_EV_DIR_EITHER),
 				iio_get_time_ns(indio_dev));
+<<<<<<< HEAD
 		iio_trigger_poll_nested(data->drdy_trigger0);
+=======
+		iio_trigger_poll_chained(data->drdy_trigger0);
+>>>>>>> b7ba80a49124 (Commit)
 		return IRQ_HANDLED;
 	}
 
@@ -539,7 +543,12 @@ static int vcnl4035_probe_trigger(struct iio_dev *indio_dev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int vcnl4035_probe(struct i2c_client *client)
+=======
+static int vcnl4035_probe(struct i2c_client *client,
+				const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vcnl4035_data *data;
 	struct iio_dev *indio_dev;
@@ -667,7 +676,11 @@ static struct i2c_driver vcnl4035_driver = {
 		.pm	= pm_ptr(&vcnl4035_pm_ops),
 		.of_match_table = vcnl4035_of_match,
 	},
+<<<<<<< HEAD
 	.probe_new = vcnl4035_probe,
+=======
+	.probe  = vcnl4035_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove	= vcnl4035_remove,
 	.id_table = vcnl4035_id,
 };

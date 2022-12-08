@@ -70,7 +70,10 @@
 struct vring_desc_state_split {
 	void *data;			/* Data for callback. */
 	struct vring_desc *indir_desc;	/* Indirect descriptor, if any. */
+<<<<<<< HEAD
 	bool map_inter;			/* Do dma map internally. */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct vring_desc_state_packed {
@@ -78,7 +81,10 @@ struct vring_desc_state_packed {
 	struct vring_packed_desc *indir_desc; /* Indirect descriptor, if any. */
 	u16 num;			/* Descriptor list length. */
 	u16 last;			/* The last desc state in a list. */
+<<<<<<< HEAD
 	bool map_inter;			/* Do dma map internally. */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct vring_desc_extra {
@@ -204,9 +210,12 @@ struct vring_virtqueue {
 	/* DMA, allocation, and size information */
 	bool we_own_ring;
 
+<<<<<<< HEAD
 	/* Device used for doing DMA */
 	struct device *dma_dev;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef DEBUG
 	/* They're supposed to lock for us. */
 	unsigned int in_use;
@@ -224,8 +233,12 @@ static struct virtqueue *__vring_new_virtqueue(unsigned int index,
 					       bool context,
 					       bool (*notify)(struct virtqueue *),
 					       void (*callback)(struct virtqueue *),
+<<<<<<< HEAD
 					       const char *name,
 					       struct device *dma_dev);
+=======
+					       const char *name);
+>>>>>>> b7ba80a49124 (Commit)
 static struct vring_desc_extra *vring_alloc_desc_extra(unsigned int num);
 static void vring_free(struct virtqueue *_vq);
 
@@ -233,10 +246,17 @@ static void vring_free(struct virtqueue *_vq);
  * Helpers.
  */
 
+<<<<<<< HEAD
 #define to_vvq(_vq) container_of_const(_vq, struct vring_virtqueue, vq)
 
 static bool virtqueue_use_indirect(const struct vring_virtqueue *vq,
 				   unsigned int total_sg)
+=======
+#define to_vvq(_vq) container_of(_vq, struct vring_virtqueue, vq)
+
+static inline bool virtqueue_use_indirect(struct vring_virtqueue *vq,
+					  unsigned int total_sg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/*
 	 * If the host supports indirect descriptor tables, and we have multiple
@@ -271,7 +291,11 @@ static bool virtqueue_use_indirect(const struct vring_virtqueue *vq,
  * unconditionally on data path.
  */
 
+<<<<<<< HEAD
 static bool vring_use_dma_api(const struct virtio_device *vdev)
+=======
+static bool vring_use_dma_api(struct virtio_device *vdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!virtio_has_dma_quirk(vdev))
 		return true;
@@ -291,7 +315,11 @@ static bool vring_use_dma_api(const struct virtio_device *vdev)
 	return false;
 }
 
+<<<<<<< HEAD
 size_t virtio_max_dma_size(const struct virtio_device *vdev)
+=======
+size_t virtio_max_dma_size(struct virtio_device *vdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	size_t max_segment_size = SIZE_MAX;
 
@@ -303,11 +331,18 @@ size_t virtio_max_dma_size(const struct virtio_device *vdev)
 EXPORT_SYMBOL_GPL(virtio_max_dma_size);
 
 static void *vring_alloc_queue(struct virtio_device *vdev, size_t size,
+<<<<<<< HEAD
 			       dma_addr_t *dma_handle, gfp_t flag,
 			       struct device *dma_dev)
 {
 	if (vring_use_dma_api(vdev)) {
 		return dma_alloc_coherent(dma_dev, size,
+=======
+			      dma_addr_t *dma_handle, gfp_t flag)
+{
+	if (vring_use_dma_api(vdev)) {
+		return dma_alloc_coherent(vdev->dev.parent, size,
+>>>>>>> b7ba80a49124 (Commit)
 					  dma_handle, flag);
 	} else {
 		void *queue = alloc_pages_exact(PAGE_ALIGN(size), flag);
@@ -337,11 +372,18 @@ static void *vring_alloc_queue(struct virtio_device *vdev, size_t size,
 }
 
 static void vring_free_queue(struct virtio_device *vdev, size_t size,
+<<<<<<< HEAD
 			     void *queue, dma_addr_t dma_handle,
 			     struct device *dma_dev)
 {
 	if (vring_use_dma_api(vdev))
 		dma_free_coherent(dma_dev, size, queue, dma_handle);
+=======
+			     void *queue, dma_addr_t dma_handle)
+{
+	if (vring_use_dma_api(vdev))
+		dma_free_coherent(vdev->dev.parent, size, queue, dma_handle);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		free_pages_exact(queue, PAGE_ALIGN(size));
 }
@@ -349,11 +391,19 @@ static void vring_free_queue(struct virtio_device *vdev, size_t size,
 /*
  * The DMA ops on various arches are rather gnarly right now, and
  * making all of the arch DMA ops work on the vring device itself
+<<<<<<< HEAD
  * is a mess.
  */
 static struct device *vring_dma_dev(const struct vring_virtqueue *vq)
 {
 	return vq->dma_dev;
+=======
+ * is a mess.  For now, we use the parent device for DMA ops.
+ */
+static inline struct device *vring_dma_dev(const struct vring_virtqueue *vq)
+{
+	return vq->vq.vdev->dev.parent;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Map one sg entry. */
@@ -381,6 +431,7 @@ static dma_addr_t vring_map_one_sg(const struct vring_virtqueue *vq,
 			    direction);
 }
 
+<<<<<<< HEAD
 static dma_addr_t vring_sg_address(struct scatterlist *sg)
 {
 	if (sg->dma_address)
@@ -389,6 +440,8 @@ static dma_addr_t vring_sg_address(struct scatterlist *sg)
 	return (dma_addr_t)sg_phys(sg);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static dma_addr_t vring_map_single(const struct vring_virtqueue *vq,
 				   void *cpu_addr, size_t size,
 				   enum dma_data_direction direction)
@@ -433,7 +486,11 @@ static void virtqueue_init(struct vring_virtqueue *vq, u32 num)
  */
 
 static void vring_unmap_one_split_indirect(const struct vring_virtqueue *vq,
+<<<<<<< HEAD
 					   const struct vring_desc *desc)
+=======
+					   struct vring_desc *desc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u16 flags;
 
@@ -450,7 +507,11 @@ static void vring_unmap_one_split_indirect(const struct vring_virtqueue *vq,
 }
 
 static unsigned int vring_unmap_one_split(const struct vring_virtqueue *vq,
+<<<<<<< HEAD
 					  unsigned int i, bool map_inter)
+=======
+					  unsigned int i)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vring_desc_extra *extra = vq->split.desc_extra;
 	u16 flags;
@@ -467,9 +528,12 @@ static unsigned int vring_unmap_one_split(const struct vring_virtqueue *vq,
 				 (flags & VRING_DESC_F_WRITE) ?
 				 DMA_FROM_DEVICE : DMA_TO_DEVICE);
 	} else {
+<<<<<<< HEAD
 		if (!map_inter)
 			goto out;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		dma_unmap_page(vring_dma_dev(vq),
 			       extra[i].addr,
 			       extra[i].len,
@@ -533,6 +597,7 @@ static inline unsigned int virtqueue_add_desc_split(struct virtqueue *vq,
 	return next;
 }
 
+<<<<<<< HEAD
 static void virtqueue_unmap_sgs(struct vring_virtqueue *vq,
 				struct scatterlist *sgs[],
 				unsigned int total_sg,
@@ -607,6 +672,8 @@ err:
 	return -ENOMEM;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int virtqueue_add_split(struct virtqueue *_vq,
 				      struct scatterlist *sgs[],
 				      unsigned int total_sg,
@@ -619,9 +686,15 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
 	struct vring_virtqueue *vq = to_vvq(_vq);
 	struct scatterlist *sg;
 	struct vring_desc *desc;
+<<<<<<< HEAD
 	unsigned int i, n, avail, descs_used, prev;
 	bool indirect, map_inter;
 	int head;
+=======
+	unsigned int i, n, avail, descs_used, prev, err_idx;
+	int head;
+	bool indirect;
+>>>>>>> b7ba80a49124 (Commit)
 
 	START_USE(vq);
 
@@ -673,31 +746,55 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
 		return -ENOSPC;
 	}
 
+<<<<<<< HEAD
 	map_inter = !sgs[0]->dma_address;
 	if (map_inter && virtqueue_map_sgs(vq, sgs, total_sg, out_sgs, in_sgs))
 		return -ENOMEM;
 
 	for (n = 0; n < out_sgs; n++) {
 		for (sg = sgs[n]; sg; sg = sg_next(sg)) {
+=======
+	for (n = 0; n < out_sgs; n++) {
+		for (sg = sgs[n]; sg; sg = sg_next(sg)) {
+			dma_addr_t addr = vring_map_one_sg(vq, sg, DMA_TO_DEVICE);
+			if (vring_mapping_error(vq, addr))
+				goto unmap_release;
+
+>>>>>>> b7ba80a49124 (Commit)
 			prev = i;
 			/* Note that we trust indirect descriptor
 			 * table since it use stream DMA mapping.
 			 */
+<<<<<<< HEAD
 			i = virtqueue_add_desc_split(_vq, desc, i,
 						     vring_sg_address(sg),
 						     sg->length,
+=======
+			i = virtqueue_add_desc_split(_vq, desc, i, addr, sg->length,
+>>>>>>> b7ba80a49124 (Commit)
 						     VRING_DESC_F_NEXT,
 						     indirect);
 		}
 	}
 	for (; n < (out_sgs + in_sgs); n++) {
 		for (sg = sgs[n]; sg; sg = sg_next(sg)) {
+<<<<<<< HEAD
+=======
+			dma_addr_t addr = vring_map_one_sg(vq, sg, DMA_FROM_DEVICE);
+			if (vring_mapping_error(vq, addr))
+				goto unmap_release;
+
+>>>>>>> b7ba80a49124 (Commit)
 			prev = i;
 			/* Note that we trust indirect descriptor
 			 * table since it use stream DMA mapping.
 			 */
+<<<<<<< HEAD
 			i = virtqueue_add_desc_split(_vq, desc, i,
 						     vring_sg_address(sg),
+=======
+			i = virtqueue_add_desc_split(_vq, desc, i, addr,
+>>>>>>> b7ba80a49124 (Commit)
 						     sg->length,
 						     VRING_DESC_F_NEXT |
 						     VRING_DESC_F_WRITE,
@@ -740,7 +837,10 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
 		vq->split.desc_state[head].indir_desc = desc;
 	else
 		vq->split.desc_state[head].indir_desc = ctx;
+<<<<<<< HEAD
 	vq->split.desc_state[head].map_inter = map_inter;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Put entry in available array (but don't update avail->idx until they
 	 * do sync). */
@@ -766,8 +866,27 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
 	return 0;
 
 unmap_release:
+<<<<<<< HEAD
 	if (map_inter)
 		virtqueue_unmap_sgs(vq, sgs, total_sg, out_sgs, in_sgs);
+=======
+	err_idx = i;
+
+	if (indirect)
+		i = 0;
+	else
+		i = head;
+
+	for (n = 0; n < total_sg; n++) {
+		if (i == err_idx)
+			break;
+		if (indirect) {
+			vring_unmap_one_split_indirect(vq, &desc[i]);
+			i = virtio16_to_cpu(_vq->vdev, desc[i].next);
+		} else
+			i = vring_unmap_one_split(vq, i);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (indirect)
 		kfree(desc);
@@ -812,22 +931,36 @@ static void detach_buf_split(struct vring_virtqueue *vq, unsigned int head,
 {
 	unsigned int i, j;
 	__virtio16 nextflag = cpu_to_virtio16(vq->vq.vdev, VRING_DESC_F_NEXT);
+<<<<<<< HEAD
 	bool map_inter;
 
 	/* Clear data ptr. */
 	vq->split.desc_state[head].data = NULL;
 	map_inter = vq->split.desc_state[head].map_inter;
+=======
+
+	/* Clear data ptr. */
+	vq->split.desc_state[head].data = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Put back on free list: unmap first-level descriptors and find end */
 	i = head;
 
 	while (vq->split.vring.desc[i].flags & nextflag) {
+<<<<<<< HEAD
 		vring_unmap_one_split(vq, i, map_inter);
+=======
+		vring_unmap_one_split(vq, i);
+>>>>>>> b7ba80a49124 (Commit)
 		i = vq->split.desc_extra[i].next;
 		vq->vq.num_free++;
 	}
 
+<<<<<<< HEAD
 	vring_unmap_one_split(vq, i, map_inter);
+=======
+	vring_unmap_one_split(vq, i);
+>>>>>>> b7ba80a49124 (Commit)
 	vq->split.desc_extra[i].next = vq->free_head;
 	vq->free_head = head;
 
@@ -849,10 +982,15 @@ static void detach_buf_split(struct vring_virtqueue *vq, unsigned int head,
 				VRING_DESC_F_INDIRECT));
 		BUG_ON(len == 0 || len % sizeof(struct vring_desc));
 
+<<<<<<< HEAD
 		if (map_inter) {
 			for (j = 0; j < len / sizeof(struct vring_desc); j++)
 				vring_unmap_one_split_indirect(vq, &indir_desc[j]);
 		}
+=======
+		for (j = 0; j < len / sizeof(struct vring_desc); j++)
+			vring_unmap_one_split_indirect(vq, &indir_desc[j]);
+>>>>>>> b7ba80a49124 (Commit)
 
 		kfree(indir_desc);
 		vq->split.desc_state[head].indir_desc = NULL;
@@ -861,7 +999,11 @@ static void detach_buf_split(struct vring_virtqueue *vq, unsigned int head,
 	}
 }
 
+<<<<<<< HEAD
 static bool more_used_split(const struct vring_virtqueue *vq)
+=======
+static inline bool more_used_split(const struct vring_virtqueue *vq)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return vq->last_used_idx != virtio16_to_cpu(vq->vq.vdev,
 			vq->split.vring.used->idx);
@@ -1115,12 +1257,20 @@ err_state:
 }
 
 static void vring_free_split(struct vring_virtqueue_split *vring_split,
+<<<<<<< HEAD
 			     struct virtio_device *vdev, struct device *dma_dev)
 {
 	vring_free_queue(vdev, vring_split->queue_size_in_bytes,
 			 vring_split->vring.desc,
 			 vring_split->queue_dma_addr,
 			 dma_dev);
+=======
+			     struct virtio_device *vdev)
+{
+	vring_free_queue(vdev, vring_split->queue_size_in_bytes,
+			 vring_split->vring.desc,
+			 vring_split->queue_dma_addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(vring_split->desc_state);
 	kfree(vring_split->desc_extra);
@@ -1130,14 +1280,22 @@ static int vring_alloc_queue_split(struct vring_virtqueue_split *vring_split,
 				   struct virtio_device *vdev,
 				   u32 num,
 				   unsigned int vring_align,
+<<<<<<< HEAD
 				   bool may_reduce_num,
 				   struct device *dma_dev)
+=======
+				   bool may_reduce_num)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	void *queue = NULL;
 	dma_addr_t dma_addr;
 
 	/* We assume num is a power of 2. */
+<<<<<<< HEAD
 	if (!is_power_of_2(num)) {
+=======
+	if (num & (num - 1)) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_warn(&vdev->dev, "Bad virtqueue length %u\n", num);
 		return -EINVAL;
 	}
@@ -1146,8 +1304,12 @@ static int vring_alloc_queue_split(struct vring_virtqueue_split *vring_split,
 	for (; num && vring_size(num, vring_align) > PAGE_SIZE; num /= 2) {
 		queue = vring_alloc_queue(vdev, vring_size(num, vring_align),
 					  &dma_addr,
+<<<<<<< HEAD
 					  GFP_KERNEL | __GFP_NOWARN | __GFP_ZERO,
 					  dma_dev);
+=======
+					  GFP_KERNEL | __GFP_NOWARN | __GFP_ZERO);
+>>>>>>> b7ba80a49124 (Commit)
 		if (queue)
 			break;
 		if (!may_reduce_num)
@@ -1160,8 +1322,12 @@ static int vring_alloc_queue_split(struct vring_virtqueue_split *vring_split,
 	if (!queue) {
 		/* Try to get a single page. You are my only hope! */
 		queue = vring_alloc_queue(vdev, vring_size(num, vring_align),
+<<<<<<< HEAD
 					  &dma_addr, GFP_KERNEL | __GFP_ZERO,
 					  dma_dev);
+=======
+					  &dma_addr, GFP_KERNEL|__GFP_ZERO);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (!queue)
 		return -ENOMEM;
@@ -1187,22 +1353,36 @@ static struct virtqueue *vring_create_virtqueue_split(
 	bool context,
 	bool (*notify)(struct virtqueue *),
 	void (*callback)(struct virtqueue *),
+<<<<<<< HEAD
 	const char *name,
 	struct device *dma_dev)
+=======
+	const char *name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vring_virtqueue_split vring_split = {};
 	struct virtqueue *vq;
 	int err;
 
 	err = vring_alloc_queue_split(&vring_split, vdev, num, vring_align,
+<<<<<<< HEAD
 				      may_reduce_num, dma_dev);
+=======
+				      may_reduce_num);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return NULL;
 
 	vq = __vring_new_virtqueue(index, &vring_split, vdev, weak_barriers,
+<<<<<<< HEAD
 				   context, notify, callback, name, dma_dev);
 	if (!vq) {
 		vring_free_split(&vring_split, vdev, dma_dev);
+=======
+				   context, notify, callback, name);
+	if (!vq) {
+		vring_free_split(&vring_split, vdev);
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 	}
 
@@ -1220,8 +1400,12 @@ static int virtqueue_resize_split(struct virtqueue *_vq, u32 num)
 
 	err = vring_alloc_queue_split(&vring_split, vdev, num,
 				      vq->split.vring_align,
+<<<<<<< HEAD
 				      vq->split.may_reduce_num,
 				      vring_dma_dev(vq));
+=======
+				      vq->split.may_reduce_num);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto err;
 
@@ -1239,7 +1423,11 @@ static int virtqueue_resize_split(struct virtqueue *_vq, u32 num)
 	return 0;
 
 err_state_extra:
+<<<<<<< HEAD
 	vring_free_split(&vring_split, vdev, vring_dma_dev(vq));
+=======
+	vring_free_split(&vring_split, vdev);
+>>>>>>> b7ba80a49124 (Commit)
 err:
 	virtqueue_reinit_split(vq);
 	return -ENOMEM;
@@ -1249,19 +1437,31 @@ err:
 /*
  * Packed ring specific functions - *_packed().
  */
+<<<<<<< HEAD
 static bool packed_used_wrap_counter(u16 last_used_idx)
+=======
+static inline bool packed_used_wrap_counter(u16 last_used_idx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return !!(last_used_idx & (1 << VRING_PACKED_EVENT_F_WRAP_CTR));
 }
 
+<<<<<<< HEAD
 static u16 packed_last_used(u16 last_used_idx)
+=======
+static inline u16 packed_last_used(u16 last_used_idx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return last_used_idx & ~(-(1 << VRING_PACKED_EVENT_F_WRAP_CTR));
 }
 
 static void vring_unmap_extra_packed(const struct vring_virtqueue *vq,
+<<<<<<< HEAD
 				     const struct vring_desc_extra *extra,
 				     bool map_inter)
+=======
+				     struct vring_desc_extra *extra)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u16 flags;
 
@@ -1276,9 +1476,12 @@ static void vring_unmap_extra_packed(const struct vring_virtqueue *vq,
 				 (flags & VRING_DESC_F_WRITE) ?
 				 DMA_FROM_DEVICE : DMA_TO_DEVICE);
 	} else {
+<<<<<<< HEAD
 		if (!map_inter)
 			return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		dma_unmap_page(vring_dma_dev(vq),
 			       extra->addr, extra->len,
 			       (flags & VRING_DESC_F_WRITE) ?
@@ -1287,7 +1490,11 @@ static void vring_unmap_extra_packed(const struct vring_virtqueue *vq,
 }
 
 static void vring_unmap_desc_packed(const struct vring_virtqueue *vq,
+<<<<<<< HEAD
 				    const struct vring_packed_desc *desc)
+=======
+				   struct vring_packed_desc *desc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u16 flags;
 
@@ -1330,10 +1537,16 @@ static int virtqueue_add_indirect_packed(struct vring_virtqueue *vq,
 {
 	struct vring_packed_desc *desc;
 	struct scatterlist *sg;
+<<<<<<< HEAD
 	unsigned int i, n;
 	u16 head, id;
 	dma_addr_t addr;
 	bool map_inter;
+=======
+	unsigned int i, n, err_idx;
+	u16 head, id;
+	dma_addr_t addr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	head = vq->packed.next_avail_idx;
 	desc = alloc_indirect_packed(total_sg, gfp);
@@ -1351,6 +1564,7 @@ static int virtqueue_add_indirect_packed(struct vring_virtqueue *vq,
 	id = vq->free_head;
 	BUG_ON(id == vq->packed.vring.num);
 
+<<<<<<< HEAD
 	map_inter = !sgs[0]->dma_address;
 	if (map_inter && virtqueue_map_sgs(vq, sgs, total_sg, out_sgs, in_sgs))
 		return -ENOMEM;
@@ -1360,6 +1574,18 @@ static int virtqueue_add_indirect_packed(struct vring_virtqueue *vq,
 			desc[i].flags = cpu_to_le16(n < out_sgs ?
 						0 : VRING_DESC_F_WRITE);
 			desc[i].addr = cpu_to_le64(vring_sg_address(sg));
+=======
+	for (n = 0; n < out_sgs + in_sgs; n++) {
+		for (sg = sgs[n]; sg; sg = sg_next(sg)) {
+			addr = vring_map_one_sg(vq, sg, n < out_sgs ?
+					DMA_TO_DEVICE : DMA_FROM_DEVICE);
+			if (vring_mapping_error(vq, addr))
+				goto unmap_release;
+
+			desc[i].flags = cpu_to_le16(n < out_sgs ?
+						0 : VRING_DESC_F_WRITE);
+			desc[i].addr = cpu_to_le64(addr);
+>>>>>>> b7ba80a49124 (Commit)
 			desc[i].len = cpu_to_le32(sg->length);
 			i++;
 		}
@@ -1414,8 +1640,11 @@ static int virtqueue_add_indirect_packed(struct vring_virtqueue *vq,
 	vq->packed.desc_state[id].data = data;
 	vq->packed.desc_state[id].indir_desc = desc;
 	vq->packed.desc_state[id].last = id;
+<<<<<<< HEAD
 	vq->packed.desc_state[id].map_inter = map_inter;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	vq->num_added += 1;
 
@@ -1425,8 +1654,15 @@ static int virtqueue_add_indirect_packed(struct vring_virtqueue *vq,
 	return 0;
 
 unmap_release:
+<<<<<<< HEAD
 	if (map_inter)
 		virtqueue_unmap_sgs(vq, sgs, total_sg, out_sgs, in_sgs);
+=======
+	err_idx = i;
+
+	for (i = 0; i < err_idx; i++)
+		vring_unmap_desc_packed(vq, &desc[i]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(desc);
 
@@ -1446,10 +1682,16 @@ static inline int virtqueue_add_packed(struct virtqueue *_vq,
 	struct vring_virtqueue *vq = to_vvq(_vq);
 	struct vring_packed_desc *desc;
 	struct scatterlist *sg;
+<<<<<<< HEAD
 	unsigned int i, n, c, descs_used;
 	__le16 head_flags, flags;
 	u16 head, id, prev, curr;
 	bool map_inter;
+=======
+	unsigned int i, n, c, descs_used, err_idx;
+	__le16 head_flags, flags;
+	u16 head, id, prev, curr, avail_used_flags;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	START_USE(vq);
@@ -1478,6 +1720,10 @@ static inline int virtqueue_add_packed(struct virtqueue *_vq,
 	}
 
 	head = vq->packed.next_avail_idx;
+<<<<<<< HEAD
+=======
+	avail_used_flags = vq->packed.avail_used_flags;
+>>>>>>> b7ba80a49124 (Commit)
 
 	WARN_ON_ONCE(total_sg > vq->packed.vring.num && !vq->indirect);
 
@@ -1495,14 +1741,25 @@ static inline int virtqueue_add_packed(struct virtqueue *_vq,
 	id = vq->free_head;
 	BUG_ON(id == vq->packed.vring.num);
 
+<<<<<<< HEAD
 	map_inter = !sgs[0]->dma_address;
 	if (map_inter && virtqueue_map_sgs(vq, sgs, total_sg, out_sgs, in_sgs))
 		return -ENOMEM;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	curr = id;
 	c = 0;
 	for (n = 0; n < out_sgs + in_sgs; n++) {
 		for (sg = sgs[n]; sg; sg = sg_next(sg)) {
+<<<<<<< HEAD
+=======
+			dma_addr_t addr = vring_map_one_sg(vq, sg, n < out_sgs ?
+					DMA_TO_DEVICE : DMA_FROM_DEVICE);
+			if (vring_mapping_error(vq, addr))
+				goto unmap_release;
+
+>>>>>>> b7ba80a49124 (Commit)
 			flags = cpu_to_le16(vq->packed.avail_used_flags |
 				    (++c == total_sg ? 0 : VRING_DESC_F_NEXT) |
 				    (n < out_sgs ? 0 : VRING_DESC_F_WRITE));
@@ -1511,12 +1768,20 @@ static inline int virtqueue_add_packed(struct virtqueue *_vq,
 			else
 				desc[i].flags = flags;
 
+<<<<<<< HEAD
 			desc[i].addr = cpu_to_le64(vring_sg_address(sg));
+=======
+			desc[i].addr = cpu_to_le64(addr);
+>>>>>>> b7ba80a49124 (Commit)
 			desc[i].len = cpu_to_le32(sg->length);
 			desc[i].id = cpu_to_le16(id);
 
 			if (unlikely(vq->use_dma_api)) {
+<<<<<<< HEAD
 				vq->packed.desc_extra[curr].addr = vring_sg_address(sg);
+=======
+				vq->packed.desc_extra[curr].addr = addr;
+>>>>>>> b7ba80a49124 (Commit)
 				vq->packed.desc_extra[curr].len = sg->length;
 				vq->packed.desc_extra[curr].flags =
 					le16_to_cpu(flags);
@@ -1548,7 +1813,10 @@ static inline int virtqueue_add_packed(struct virtqueue *_vq,
 	vq->packed.desc_state[id].data = data;
 	vq->packed.desc_state[id].indir_desc = ctx;
 	vq->packed.desc_state[id].last = prev;
+<<<<<<< HEAD
 	vq->packed.desc_state[id].map_inter = map_inter;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * A driver MUST NOT make the first descriptor in the list
@@ -1563,6 +1831,29 @@ static inline int virtqueue_add_packed(struct virtqueue *_vq,
 	END_USE(vq);
 
 	return 0;
+<<<<<<< HEAD
+=======
+
+unmap_release:
+	err_idx = i;
+	i = head;
+	curr = vq->free_head;
+
+	vq->packed.avail_used_flags = avail_used_flags;
+
+	for (n = 0; n < total_sg; n++) {
+		if (i == err_idx)
+			break;
+		vring_unmap_extra_packed(vq, &vq->packed.desc_extra[curr]);
+		curr = vq->packed.desc_extra[curr].next;
+		i++;
+		if (i >= vq->packed.vring.num)
+			i = 0;
+	}
+
+	END_USE(vq);
+	return -EIO;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool virtqueue_kick_prepare_packed(struct virtqueue *_vq)
@@ -1634,8 +1925,12 @@ static void detach_buf_packed(struct vring_virtqueue *vq,
 		curr = id;
 		for (i = 0; i < state->num; i++) {
 			vring_unmap_extra_packed(vq,
+<<<<<<< HEAD
 						 &vq->packed.desc_extra[curr],
 						 state->map_inter);
+=======
+						 &vq->packed.desc_extra[curr]);
+>>>>>>> b7ba80a49124 (Commit)
 			curr = vq->packed.desc_extra[curr].next;
 		}
 	}
@@ -1648,7 +1943,11 @@ static void detach_buf_packed(struct vring_virtqueue *vq,
 		if (!desc)
 			return;
 
+<<<<<<< HEAD
 		if (vq->use_dma_api && state->map_inter) {
+=======
+		if (vq->use_dma_api) {
+>>>>>>> b7ba80a49124 (Commit)
 			len = vq->packed.desc_extra[id].len;
 			for (i = 0; i < len / sizeof(struct vring_packed_desc);
 					i++)
@@ -1674,7 +1973,11 @@ static inline bool is_used_desc_packed(const struct vring_virtqueue *vq,
 	return avail == used && used == used_wrap_counter;
 }
 
+<<<<<<< HEAD
 static bool more_used_packed(const struct vring_virtqueue *vq)
+=======
+static inline bool more_used_packed(const struct vring_virtqueue *vq)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u16 last_used;
 	u16 last_used_idx;
@@ -1915,26 +2218,42 @@ static struct vring_desc_extra *vring_alloc_desc_extra(unsigned int num)
 }
 
 static void vring_free_packed(struct vring_virtqueue_packed *vring_packed,
+<<<<<<< HEAD
 			      struct virtio_device *vdev,
 			      struct device *dma_dev)
+=======
+			      struct virtio_device *vdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (vring_packed->vring.desc)
 		vring_free_queue(vdev, vring_packed->ring_size_in_bytes,
 				 vring_packed->vring.desc,
+<<<<<<< HEAD
 				 vring_packed->ring_dma_addr,
 				 dma_dev);
+=======
+				 vring_packed->ring_dma_addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (vring_packed->vring.driver)
 		vring_free_queue(vdev, vring_packed->event_size_in_bytes,
 				 vring_packed->vring.driver,
+<<<<<<< HEAD
 				 vring_packed->driver_event_dma_addr,
 				 dma_dev);
+=======
+				 vring_packed->driver_event_dma_addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (vring_packed->vring.device)
 		vring_free_queue(vdev, vring_packed->event_size_in_bytes,
 				 vring_packed->vring.device,
+<<<<<<< HEAD
 				 vring_packed->device_event_dma_addr,
 				 dma_dev);
+=======
+				 vring_packed->device_event_dma_addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(vring_packed->desc_state);
 	kfree(vring_packed->desc_extra);
@@ -1942,7 +2261,11 @@ static void vring_free_packed(struct vring_virtqueue_packed *vring_packed,
 
 static int vring_alloc_queue_packed(struct vring_virtqueue_packed *vring_packed,
 				    struct virtio_device *vdev,
+<<<<<<< HEAD
 				    u32 num, struct device *dma_dev)
+=======
+				    u32 num)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vring_packed_desc *ring;
 	struct vring_packed_desc_event *driver, *device;
@@ -1953,8 +2276,12 @@ static int vring_alloc_queue_packed(struct vring_virtqueue_packed *vring_packed,
 
 	ring = vring_alloc_queue(vdev, ring_size_in_bytes,
 				 &ring_dma_addr,
+<<<<<<< HEAD
 				 GFP_KERNEL | __GFP_NOWARN | __GFP_ZERO,
 				 dma_dev);
+=======
+				 GFP_KERNEL|__GFP_NOWARN|__GFP_ZERO);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ring)
 		goto err;
 
@@ -1966,8 +2293,12 @@ static int vring_alloc_queue_packed(struct vring_virtqueue_packed *vring_packed,
 
 	driver = vring_alloc_queue(vdev, event_size_in_bytes,
 				   &driver_event_dma_addr,
+<<<<<<< HEAD
 				   GFP_KERNEL | __GFP_NOWARN | __GFP_ZERO,
 				   dma_dev);
+=======
+				   GFP_KERNEL|__GFP_NOWARN|__GFP_ZERO);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!driver)
 		goto err;
 
@@ -1977,8 +2308,12 @@ static int vring_alloc_queue_packed(struct vring_virtqueue_packed *vring_packed,
 
 	device = vring_alloc_queue(vdev, event_size_in_bytes,
 				   &device_event_dma_addr,
+<<<<<<< HEAD
 				   GFP_KERNEL | __GFP_NOWARN | __GFP_ZERO,
 				   dma_dev);
+=======
+				   GFP_KERNEL|__GFP_NOWARN|__GFP_ZERO);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!device)
 		goto err;
 
@@ -1990,7 +2325,11 @@ static int vring_alloc_queue_packed(struct vring_virtqueue_packed *vring_packed,
 	return 0;
 
 err:
+<<<<<<< HEAD
 	vring_free_packed(vring_packed, vdev, dma_dev);
+=======
+	vring_free_packed(vring_packed, vdev);
+>>>>>>> b7ba80a49124 (Commit)
 	return -ENOMEM;
 }
 
@@ -2068,14 +2407,22 @@ static struct virtqueue *vring_create_virtqueue_packed(
 	bool context,
 	bool (*notify)(struct virtqueue *),
 	void (*callback)(struct virtqueue *),
+<<<<<<< HEAD
 	const char *name,
 	struct device *dma_dev)
+=======
+	const char *name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vring_virtqueue_packed vring_packed = {};
 	struct vring_virtqueue *vq;
 	int err;
 
+<<<<<<< HEAD
 	if (vring_alloc_queue_packed(&vring_packed, vdev, num, dma_dev))
+=======
+	if (vring_alloc_queue_packed(&vring_packed, vdev, num))
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_ring;
 
 	vq = kmalloc(sizeof(*vq), GFP_KERNEL);
@@ -2096,7 +2443,10 @@ static struct virtqueue *vring_create_virtqueue_packed(
 	vq->broken = false;
 #endif
 	vq->packed_ring = true;
+<<<<<<< HEAD
 	vq->dma_dev = dma_dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vq->use_dma_api = vring_use_dma_api(vdev);
 
 	vq->indirect = virtio_has_feature(vdev, VIRTIO_RING_F_INDIRECT_DESC) &&
@@ -2123,7 +2473,11 @@ static struct virtqueue *vring_create_virtqueue_packed(
 err_state_extra:
 	kfree(vq);
 err_vq:
+<<<<<<< HEAD
 	vring_free_packed(&vring_packed, vdev, dma_dev);
+=======
+	vring_free_packed(&vring_packed, vdev);
+>>>>>>> b7ba80a49124 (Commit)
 err_ring:
 	return NULL;
 }
@@ -2135,7 +2489,11 @@ static int virtqueue_resize_packed(struct virtqueue *_vq, u32 num)
 	struct virtio_device *vdev = _vq->vdev;
 	int err;
 
+<<<<<<< HEAD
 	if (vring_alloc_queue_packed(&vring_packed, vdev, num, vring_dma_dev(vq)))
+=======
+	if (vring_alloc_queue_packed(&vring_packed, vdev, num))
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_ring;
 
 	err = vring_alloc_state_extra_packed(&vring_packed);
@@ -2152,12 +2510,17 @@ static int virtqueue_resize_packed(struct virtqueue *_vq, u32 num)
 	return 0;
 
 err_state_extra:
+<<<<<<< HEAD
 	vring_free_packed(&vring_packed, vdev, vring_dma_dev(vq));
+=======
+	vring_free_packed(&vring_packed, vdev);
+>>>>>>> b7ba80a49124 (Commit)
 err_ring:
 	virtqueue_reinit_packed(vq);
 	return -ENOMEM;
 }
 
+<<<<<<< HEAD
 static int virtqueue_disable_and_recycle(struct virtqueue *_vq,
 					 void (*recycle)(struct virtqueue *vq, void *buf))
 {
@@ -2195,6 +2558,8 @@ static int virtqueue_enable_after_reset(struct virtqueue *_vq)
 
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Generic functions and exported symbols.
@@ -2229,10 +2594,13 @@ static inline int virtqueue_add(struct virtqueue *_vq,
  * Caller must ensure we don't call this with other virtqueue operations
  * at the same time (except where noted).
  *
+<<<<<<< HEAD
  * If the caller has done dma map then use sg->dma_address to pass dma address.
  * If one sg->dma_address is used, then all sgs must use sg->dma_address;
  * otherwise all sg->dma_address must be NULL.
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Returns zero or a negative error (ie. ENOSPC, ENOMEM, EIO).
  */
 int virtqueue_add_sgs(struct virtqueue *_vq,
@@ -2267,10 +2635,13 @@ EXPORT_SYMBOL_GPL(virtqueue_add_sgs);
  * Caller must ensure we don't call this with other virtqueue operations
  * at the same time (except where noted).
  *
+<<<<<<< HEAD
  * If the caller has done dma map then use sg->dma_address to pass dma address.
  * If one sg->dma_address is used, then all sgs must use sg->dma_address;
  * otherwise all sg->dma_address must be NULL.
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Returns zero or a negative error (ie. ENOSPC, ENOMEM, EIO).
  */
 int virtqueue_add_outbuf(struct virtqueue *vq,
@@ -2293,10 +2664,13 @@ EXPORT_SYMBOL_GPL(virtqueue_add_outbuf);
  * Caller must ensure we don't call this with other virtqueue operations
  * at the same time (except where noted).
  *
+<<<<<<< HEAD
  * If the caller has done dma map then use sg->dma_address to pass dma address.
  * If one sg->dma_address is used, then all sgs must use sg->dma_address;
  * otherwise all sg->dma_address must be NULL.
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Returns zero or a negative error (ie. ENOSPC, ENOMEM, EIO).
  */
 int virtqueue_add_inbuf(struct virtqueue *vq,
@@ -2320,10 +2694,13 @@ EXPORT_SYMBOL_GPL(virtqueue_add_inbuf);
  * Caller must ensure we don't call this with other virtqueue operations
  * at the same time (except where noted).
  *
+<<<<<<< HEAD
  * If the caller has done dma map then use sg->dma_address to pass dma address.
  * If one sg->dma_address is used, then all sgs must use sg->dma_address;
  * otherwise all sg->dma_address must be NULL.
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Returns zero or a negative error (ie. ENOSPC, ENOMEM, EIO).
  */
 int virtqueue_add_inbuf_ctx(struct virtqueue *vq,
@@ -2337,6 +2714,7 @@ int virtqueue_add_inbuf_ctx(struct virtqueue *vq,
 EXPORT_SYMBOL_GPL(virtqueue_add_inbuf_ctx);
 
 /**
+<<<<<<< HEAD
  * virtqueue_dma_dev - get the dma dev
  * @_vq: the struct virtqueue we're talking about.
  *
@@ -2354,6 +2732,8 @@ struct device *virtqueue_dma_dev(struct virtqueue *_vq)
 EXPORT_SYMBOL_GPL(virtqueue_dma_dev);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * virtqueue_kick_prepare - first half of split virtqueue_kick call.
  * @_vq: the struct virtqueue
  *
@@ -2634,8 +3014,12 @@ static struct virtqueue *__vring_new_virtqueue(unsigned int index,
 					       bool context,
 					       bool (*notify)(struct virtqueue *),
 					       void (*callback)(struct virtqueue *),
+<<<<<<< HEAD
 					       const char *name,
 					       struct device *dma_dev)
+=======
+					       const char *name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vring_virtqueue *vq;
 	int err;
@@ -2661,7 +3045,10 @@ static struct virtqueue *__vring_new_virtqueue(unsigned int index,
 #else
 	vq->broken = false;
 #endif
+<<<<<<< HEAD
 	vq->dma_dev = dma_dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vq->use_dma_api = vring_use_dma_api(vdev);
 
 	vq->indirect = virtio_has_feature(vdev, VIRTIO_RING_F_INDIRECT_DESC) &&
@@ -2704,6 +3091,7 @@ struct virtqueue *vring_create_virtqueue(
 	if (virtio_has_feature(vdev, VIRTIO_F_RING_PACKED))
 		return vring_create_virtqueue_packed(index, num, vring_align,
 				vdev, weak_barriers, may_reduce_num,
+<<<<<<< HEAD
 				context, notify, callback, name, vdev->dev.parent);
 
 	return vring_create_virtqueue_split(index, num, vring_align,
@@ -2737,11 +3125,25 @@ struct virtqueue *vring_create_virtqueue_dma(
 }
 EXPORT_SYMBOL_GPL(vring_create_virtqueue_dma);
 
+=======
+				context, notify, callback, name);
+
+	return vring_create_virtqueue_split(index, num, vring_align,
+			vdev, weak_barriers, may_reduce_num,
+			context, notify, callback, name);
+}
+EXPORT_SYMBOL_GPL(vring_create_virtqueue);
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * virtqueue_resize - resize the vring of vq
  * @_vq: the struct virtqueue we're talking about.
  * @num: new ring num
+<<<<<<< HEAD
  * @recycle: callback to recycle unused buffers
+=======
+ * @recycle: callback for recycle the useless buffer
+>>>>>>> b7ba80a49124 (Commit)
  *
  * When it is really necessary to create a new vring, it will set the current vq
  * into the reset state. Then call the passed callback to recycle the buffer
@@ -2765,8 +3167,18 @@ int virtqueue_resize(struct virtqueue *_vq, u32 num,
 		     void (*recycle)(struct virtqueue *vq, void *buf))
 {
 	struct vring_virtqueue *vq = to_vvq(_vq);
+<<<<<<< HEAD
 	int err;
 
+=======
+	struct virtio_device *vdev = vq->vq.vdev;
+	void *buf;
+	int err;
+
+	if (!vq->we_own_ring)
+		return -EPERM;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (num > vq->vq.num_max)
 		return -E2BIG;
 
@@ -2776,15 +3188,32 @@ int virtqueue_resize(struct virtqueue *_vq, u32 num,
 	if ((vq->packed_ring ? vq->packed.vring.num : vq->split.vring.num) == num)
 		return 0;
 
+<<<<<<< HEAD
 	err = virtqueue_disable_and_recycle(_vq, recycle);
 	if (err)
 		return err;
 
+=======
+	if (!vdev->config->disable_vq_and_reset)
+		return -ENOENT;
+
+	if (!vdev->config->enable_vq_after_reset)
+		return -ENOENT;
+
+	err = vdev->config->disable_vq_and_reset(_vq);
+	if (err)
+		return err;
+
+	while ((buf = virtqueue_detach_unused_buf(_vq)) != NULL)
+		recycle(_vq, buf);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (vq->packed_ring)
 		err = virtqueue_resize_packed(_vq, num);
 	else
 		err = virtqueue_resize_split(_vq, num);
 
+<<<<<<< HEAD
 	return virtqueue_enable_after_reset(_vq);
 }
 EXPORT_SYMBOL_GPL(virtqueue_resize);
@@ -2822,6 +3251,15 @@ int virtqueue_reset(struct virtqueue *_vq,
 }
 EXPORT_SYMBOL_GPL(virtqueue_reset);
 
+=======
+	if (vdev->config->enable_vq_after_reset(_vq))
+		return -EBUSY;
+
+	return err;
+}
+EXPORT_SYMBOL_GPL(virtqueue_resize);
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Only available for split ring */
 struct virtqueue *vring_new_virtqueue(unsigned int index,
 				      unsigned int num,
@@ -2841,8 +3279,12 @@ struct virtqueue *vring_new_virtqueue(unsigned int index,
 
 	vring_init(&vring_split.vring, num, pages, vring_align);
 	return __vring_new_virtqueue(index, &vring_split, vdev, weak_barriers,
+<<<<<<< HEAD
 				     context, notify, callback, name,
 				     vdev->dev.parent);
+=======
+				     context, notify, callback, name);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(vring_new_virtqueue);
 
@@ -2855,20 +3297,32 @@ static void vring_free(struct virtqueue *_vq)
 			vring_free_queue(vq->vq.vdev,
 					 vq->packed.ring_size_in_bytes,
 					 vq->packed.vring.desc,
+<<<<<<< HEAD
 					 vq->packed.ring_dma_addr,
 					 vring_dma_dev(vq));
+=======
+					 vq->packed.ring_dma_addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 			vring_free_queue(vq->vq.vdev,
 					 vq->packed.event_size_in_bytes,
 					 vq->packed.vring.driver,
+<<<<<<< HEAD
 					 vq->packed.driver_event_dma_addr,
 					 vring_dma_dev(vq));
+=======
+					 vq->packed.driver_event_dma_addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 			vring_free_queue(vq->vq.vdev,
 					 vq->packed.event_size_in_bytes,
 					 vq->packed.vring.device,
+<<<<<<< HEAD
 					 vq->packed.device_event_dma_addr,
 					 vring_dma_dev(vq));
+=======
+					 vq->packed.device_event_dma_addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 			kfree(vq->packed.desc_state);
 			kfree(vq->packed.desc_extra);
@@ -2876,8 +3330,12 @@ static void vring_free(struct virtqueue *_vq)
 			vring_free_queue(vq->vq.vdev,
 					 vq->split.queue_size_in_bytes,
 					 vq->split.vring.desc,
+<<<<<<< HEAD
 					 vq->split.queue_dma_addr,
 					 vring_dma_dev(vq));
+=======
+					 vq->split.queue_dma_addr);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 	if (!vq->packed_ring) {
@@ -2934,10 +3392,17 @@ EXPORT_SYMBOL_GPL(vring_transport_features);
  * Returns the size of the vring.  This is mainly used for boasting to
  * userspace.  Unlike other operations, this need not be serialized.
  */
+<<<<<<< HEAD
 unsigned int virtqueue_get_vring_size(const struct virtqueue *_vq)
 {
 
 	const struct vring_virtqueue *vq = to_vvq(_vq);
+=======
+unsigned int virtqueue_get_vring_size(struct virtqueue *_vq)
+{
+
+	struct vring_virtqueue *vq = to_vvq(_vq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return vq->packed_ring ? vq->packed.vring.num : vq->split.vring.num;
 }
@@ -2967,9 +3432,15 @@ void __virtqueue_unbreak(struct virtqueue *_vq)
 }
 EXPORT_SYMBOL_GPL(__virtqueue_unbreak);
 
+<<<<<<< HEAD
 bool virtqueue_is_broken(const struct virtqueue *_vq)
 {
 	const struct vring_virtqueue *vq = to_vvq(_vq);
+=======
+bool virtqueue_is_broken(struct virtqueue *_vq)
+{
+	struct vring_virtqueue *vq = to_vvq(_vq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return READ_ONCE(vq->broken);
 }
@@ -3016,9 +3487,15 @@ void __virtio_unbreak_device(struct virtio_device *dev)
 }
 EXPORT_SYMBOL_GPL(__virtio_unbreak_device);
 
+<<<<<<< HEAD
 dma_addr_t virtqueue_get_desc_addr(const struct virtqueue *_vq)
 {
 	const struct vring_virtqueue *vq = to_vvq(_vq);
+=======
+dma_addr_t virtqueue_get_desc_addr(struct virtqueue *_vq)
+{
+	struct vring_virtqueue *vq = to_vvq(_vq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	BUG_ON(!vq->we_own_ring);
 
@@ -3029,9 +3506,15 @@ dma_addr_t virtqueue_get_desc_addr(const struct virtqueue *_vq)
 }
 EXPORT_SYMBOL_GPL(virtqueue_get_desc_addr);
 
+<<<<<<< HEAD
 dma_addr_t virtqueue_get_avail_addr(const struct virtqueue *_vq)
 {
 	const struct vring_virtqueue *vq = to_vvq(_vq);
+=======
+dma_addr_t virtqueue_get_avail_addr(struct virtqueue *_vq)
+{
+	struct vring_virtqueue *vq = to_vvq(_vq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	BUG_ON(!vq->we_own_ring);
 
@@ -3043,9 +3526,15 @@ dma_addr_t virtqueue_get_avail_addr(const struct virtqueue *_vq)
 }
 EXPORT_SYMBOL_GPL(virtqueue_get_avail_addr);
 
+<<<<<<< HEAD
 dma_addr_t virtqueue_get_used_addr(const struct virtqueue *_vq)
 {
 	const struct vring_virtqueue *vq = to_vvq(_vq);
+=======
+dma_addr_t virtqueue_get_used_addr(struct virtqueue *_vq)
+{
+	struct vring_virtqueue *vq = to_vvq(_vq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	BUG_ON(!vq->we_own_ring);
 
@@ -3058,7 +3547,11 @@ dma_addr_t virtqueue_get_used_addr(const struct virtqueue *_vq)
 EXPORT_SYMBOL_GPL(virtqueue_get_used_addr);
 
 /* Only available for split ring */
+<<<<<<< HEAD
 const struct vring *virtqueue_get_vring(const struct virtqueue *vq)
+=======
+const struct vring *virtqueue_get_vring(struct virtqueue *vq)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return &to_vvq(vq)->split.vring;
 }

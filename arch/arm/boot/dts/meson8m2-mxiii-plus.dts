@@ -19,6 +19,10 @@
 		ethernet0 = &ethmac;
 		i2c0 = &i2c_AO;
 		serial0 = &uart_AO;
+<<<<<<< HEAD
+=======
+		serial1 = &uart_A;
+>>>>>>> b7ba80a49124 (Commit)
 		mmc0 = &sd_card_slot;
 	};
 
@@ -44,6 +48,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	sdio_pwrseq: sdio-pwrseq {
 		compatible = "mmc-pwrseq-simple";
 
@@ -57,12 +62,15 @@
 		clock-names = "ext_clock";
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vcc_3v3: regulator-vcc3v3 {
 		compatible = "regulator-fixed";
 		regulator-name = "VCC3V3";
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
 	};
+<<<<<<< HEAD
 
 	xtal_32k_out: xtal-32k-out-clk {
 		compatible = "fixed-clock";
@@ -70,6 +78,8 @@
 		clock-frequency = <32768>;
 		clock-output-names = "xtal_32k_out";
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &cpu0 {
@@ -211,6 +221,7 @@
 	vref-supply = <&vddio_ao1v8>;
 };
 
+<<<<<<< HEAD
 /* SDIO wifi */
 &sdhc {
 	status = "okay";
@@ -232,6 +243,8 @@
 	vqmmc-supply = <&vcc_3v3>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &sdio {
 	status = "okay";
 
@@ -262,12 +275,15 @@
 	pinctrl-0 = <&uart_a1_pins>, <&uart_a1_cts_rts_pins>;
 	pinctrl-names = "default";
 	uart-has-rtscts;
+<<<<<<< HEAD
 
 	bluetooth {
 		compatible = "brcm,bcm20702a1";
 		shutdown-gpios = <&gpio GPIOX_20 GPIO_ACTIVE_HIGH>;
 		max-speed = <2000000>;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &uart_AO {

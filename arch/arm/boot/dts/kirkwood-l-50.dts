@@ -223,6 +223,7 @@
 			};
 
 			port@1 {
+<<<<<<< HEAD
 				reg = <1>;
 				label = "lan1";
 			};
@@ -235,6 +236,20 @@
 			port@3 {
 				reg = <3>;
 				label = "lan2";
+=======
+			       reg = <1>;
+			       label = "lan1";
+			};
+
+			port@2 {
+			       reg = <2>;
+			       label = "lan6";
+			};
+
+			port@3 {
+			       reg = <3>;
+			       label = "lan2";
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			port@4 {
@@ -282,6 +297,7 @@
 			};
 
 			port@1 {
+<<<<<<< HEAD
 				reg = <1>;
 				label = "lan8";
 			};
@@ -294,6 +310,20 @@
 			port@3 {
 				reg = <3>;
 				label = "dmz";
+=======
+			       reg = <1>;
+			       label = "lan8";
+			};
+
+			port@2 {
+			       reg = <2>;
+			       label = "lan4";
+			};
+
+			port@3 {
+			       reg = <3>;
+			       label = "dmz";
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			switch1port5: port@5 {

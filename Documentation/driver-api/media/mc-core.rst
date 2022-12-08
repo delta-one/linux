@@ -214,6 +214,7 @@ Link properties can be modified at runtime by calling
 Pipelines and media streams
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+<<<<<<< HEAD
 A media stream is a stream of pixels or metadata originating from one or more
 source devices (such as a sensors) and flowing through media entity pads
 towards the final sinks. The stream can be modified on the route by the
@@ -226,16 +227,30 @@ stream cannot be changed if the first stream has been enabled) or by the driver
 due to the software design. Most commonly a media pipeline consists of a single
 stream which does not branch.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 When starting streaming, drivers must notify all entities in the pipeline to
 prevent link states from being modified during streaming by calling
 :c:func:`media_pipeline_start()`.
 
+<<<<<<< HEAD
 The function will mark all the pads which are part of the pipeline as streaming.
 
 The struct media_pipeline instance pointed to by the pipe argument will be
 stored in every pad in the pipeline. Drivers should embed the struct
 media_pipeline in higher-level pipeline structures and can then access the
 pipeline through the struct media_pad pipe field.
+=======
+The function will mark all entities connected to the given entity through
+enabled links, either directly or indirectly, as streaming.
+
+The struct media_pipeline instance pointed to by
+the pipe argument will be stored in every entity in the pipeline.
+Drivers should embed the struct media_pipeline
+in higher-level pipeline structures and can then access the
+pipeline through the struct media_entity
+pipe field.
+>>>>>>> b7ba80a49124 (Commit)
 
 Calls to :c:func:`media_pipeline_start()` can be nested.
 The pipeline pointer must be identical for all nested calls to the function.

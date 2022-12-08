@@ -937,8 +937,15 @@ static int isp_pipeline_is_last(struct media_entity *me)
 	struct isp_pipeline *pipe;
 	struct media_pad *pad;
 
+<<<<<<< HEAD
 	pipe = to_isp_pipeline(me);
 	if (!pipe || pipe->stream_state == ISP_PIPELINE_STREAM_STOPPED)
+=======
+	if (!me->pipe)
+		return 0;
+	pipe = to_isp_pipeline(me);
+	if (pipe->stream_state == ISP_PIPELINE_STREAM_STOPPED)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	pad = media_pad_remote_pad_first(&pipe->output->pad);
 	return pad->entity == me;
@@ -1884,7 +1891,12 @@ static int isp_initialize_modules(struct isp_device *isp)
 
 	ret = omap3isp_ccp2_init(isp);
 	if (ret < 0) {
+<<<<<<< HEAD
 		dev_err_probe(isp->dev, ret, "CCP2 initialization failed\n");
+=======
+		if (ret != -EPROBE_DEFER)
+			dev_err(isp->dev, "CCP2 initialization failed\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto error_ccp2;
 	}
 
@@ -2307,6 +2319,7 @@ static int isp_probe(struct platform_device *pdev)
 
 	/* Regulators */
 	isp->isp_csiphy1.vdd = devm_regulator_get(&pdev->dev, "vdd-csiphy1");
+<<<<<<< HEAD
 	if (IS_ERR(isp->isp_csiphy1.vdd)) {
 		ret = PTR_ERR(isp->isp_csiphy1.vdd);
 		goto error;
@@ -2317,6 +2330,9 @@ static int isp_probe(struct platform_device *pdev)
 		ret = PTR_ERR(isp->isp_csiphy2.vdd);
 		goto error;
 	}
+=======
+	isp->isp_csiphy2.vdd = devm_regulator_get(&pdev->dev, "vdd-csiphy2");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Clocks
 	 *

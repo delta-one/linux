@@ -58,6 +58,7 @@ enum wiz_lane_standard_mode {
 	LANE_MODE_GEN4,
 };
 
+<<<<<<< HEAD
 /*
  * List of master lanes used for lane swapping
  */
@@ -66,6 +67,8 @@ enum wiz_typec_master_lane {
 	LANE2 = 2,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum wiz_refclk_mux_sel {
 	PLL0_REFCLK,
 	PLL1_REFCLK,
@@ -89,20 +92,28 @@ static const struct reg_field phy_reset_n = REG_FIELD(WIZ_SERDES_RST, 31, 31);
 static const struct reg_field phy_en_refclk = REG_FIELD(WIZ_SERDES_RST, 30, 30);
 static const struct reg_field pll1_refclk_mux_sel =
 					REG_FIELD(WIZ_SERDES_RST, 29, 29);
+<<<<<<< HEAD
 static const struct reg_field pll1_refclk_mux_sel_2 =
 					REG_FIELD(WIZ_SERDES_RST, 22, 23);
 static const struct reg_field pll0_refclk_mux_sel =
 					REG_FIELD(WIZ_SERDES_RST, 28, 28);
 static const struct reg_field pll0_refclk_mux_sel_2 =
 					REG_FIELD(WIZ_SERDES_RST, 28, 29);
+=======
+static const struct reg_field pll0_refclk_mux_sel =
+					REG_FIELD(WIZ_SERDES_RST, 28, 28);
+>>>>>>> b7ba80a49124 (Commit)
 static const struct reg_field refclk_dig_sel_16g =
 					REG_FIELD(WIZ_SERDES_RST, 24, 25);
 static const struct reg_field refclk_dig_sel_10g =
 					REG_FIELD(WIZ_SERDES_RST, 24, 24);
 static const struct reg_field pma_cmn_refclk_int_mode =
 					REG_FIELD(WIZ_SERDES_TOP_CTRL, 28, 29);
+<<<<<<< HEAD
 static const struct reg_field pma_cmn_refclk1_int_mode =
 					REG_FIELD(WIZ_SERDES_TOP_CTRL, 20, 21);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct reg_field pma_cmn_refclk_mode =
 					REG_FIELD(WIZ_SERDES_TOP_CTRL, 30, 31);
 static const struct reg_field pma_cmn_refclk_dig_div =
@@ -202,9 +213,12 @@ static const struct reg_field p_mac_div_sel1[WIZ_MAX_LANES] = {
 static const struct reg_field typec_ln10_swap =
 					REG_FIELD(WIZ_SERDES_TYPEC, 30, 30);
 
+<<<<<<< HEAD
 static const struct reg_field typec_ln23_swap =
 					REG_FIELD(WIZ_SERDES_TYPEC, 31, 31);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct wiz_clk_mux {
 	struct clk_hw		hw;
 	struct regmap_field	*field;
@@ -332,8 +346,11 @@ enum wiz_type {
 	J721E_WIZ_10G,	/* Also for J7200 SR1.0 */
 	AM64_WIZ_10G,
 	J7200_WIZ_10G,  /* J7200 SR2.0 */
+<<<<<<< HEAD
 	J784S4_WIZ_10G,
 	J721S2_WIZ_10G,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct wiz_data {
@@ -378,7 +395,10 @@ struct wiz {
 	struct regmap_field	*mux_sel_field[WIZ_MUX_NUM_CLOCKS];
 	struct regmap_field	*div_sel_field[WIZ_DIV_NUM_CLOCKS_16G];
 	struct regmap_field	*typec_ln10_swap;
+<<<<<<< HEAD
 	struct regmap_field	*typec_ln23_swap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct regmap_field	*sup_legacy_clk_override;
 
 	struct device		*dev;
@@ -388,7 +408,10 @@ struct wiz {
 	struct gpio_desc	*gpio_typec_dir;
 	int			typec_dir_delay;
 	u32 lane_phy_type[WIZ_MAX_LANES];
+<<<<<<< HEAD
 	u32 master_lane_num[WIZ_MAX_LANES];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct clk		*input_clks[WIZ_MAX_INPUT_CLOCKS];
 	struct clk		*output_clks[WIZ_MAX_OUTPUT_CLOCKS];
 	struct clk_onecell_data	clk_data;
@@ -688,6 +711,7 @@ static int wiz_regfield_init(struct wiz *wiz)
 		return PTR_ERR(wiz->typec_ln10_swap);
 	}
 
+<<<<<<< HEAD
 	wiz->typec_ln23_swap = devm_regmap_field_alloc(dev, regmap,
 						       typec_ln23_swap);
 	if (IS_ERR(wiz->typec_ln23_swap)) {
@@ -695,6 +719,8 @@ static int wiz_regfield_init(struct wiz *wiz)
 		return PTR_ERR(wiz->typec_ln23_swap);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	wiz->phy_en_refclk = devm_regmap_field_alloc(dev, regmap, phy_en_refclk);
 	if (IS_ERR(wiz->phy_en_refclk)) {
 		dev_err(dev, "PHY_EN_REFCLK reg field init failed\n");
@@ -1020,8 +1046,11 @@ static void wiz_clock_cleanup(struct wiz *wiz, struct device_node *node)
 	switch (wiz->type) {
 	case AM64_WIZ_10G:
 	case J7200_WIZ_10G:
+<<<<<<< HEAD
 	case J784S4_WIZ_10G:
 	case J721S2_WIZ_10G:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		of_clk_del_provider(dev->of_node);
 		return;
 	default:
@@ -1153,8 +1182,11 @@ static int wiz_clock_init(struct wiz *wiz, struct device_node *node)
 	switch (wiz->type) {
 	case AM64_WIZ_10G:
 	case J7200_WIZ_10G:
+<<<<<<< HEAD
 	case J784S4_WIZ_10G:
 	case J721S2_WIZ_10G:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ret = wiz_clock_register(wiz);
 		if (ret)
 			dev_err(dev, "Failed to register wiz clocks\n");
@@ -1237,7 +1269,10 @@ static int wiz_phy_fullrt_div(struct wiz *wiz, int lane)
 		break;
 	case J721E_WIZ_10G:
 	case J7200_WIZ_10G:
+<<<<<<< HEAD
 	case J721S2_WIZ_10G:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (wiz->lane_phy_type[lane] == PHY_TYPE_SGMII)
 			return regmap_field_write(wiz->p0_fullrt_div[lane], 0x2);
 		break;
@@ -1254,6 +1289,7 @@ static int wiz_phy_reset_deassert(struct reset_controller_dev *rcdev,
 	struct wiz *wiz = dev_get_drvdata(dev);
 	int ret;
 
+<<<<<<< HEAD
 	if (id == 0) {
 		/* if typec-dir gpio was specified, set LN10 SWAP bit based on that */
 		if (wiz->gpio_typec_dir) {
@@ -1287,6 +1323,17 @@ static int wiz_phy_reset_deassert(struct reset_controller_dev *rcdev,
 				}
 			}
 		}
+=======
+	/* if typec-dir gpio was specified, set LN10 SWAP bit based on that */
+	if (id == 0 && wiz->gpio_typec_dir) {
+		if (wiz->typec_dir_delay)
+			msleep_interruptible(wiz->typec_dir_delay);
+
+		if (gpiod_get_value_cansleep(wiz->gpio_typec_dir))
+			regmap_field_write(wiz->typec_ln10_swap, 1);
+		else
+			regmap_field_write(wiz->typec_ln10_swap, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (id == 0) {
@@ -1356,6 +1403,7 @@ static struct wiz_data j7200_pg2_10g_data = {
 	.clk_div_sel_num = WIZ_DIV_NUM_CLOCKS_10G,
 };
 
+<<<<<<< HEAD
 static struct wiz_data j784s4_10g_data = {
 	.type = J784S4_WIZ_10G,
 	.pll0_refclk_mux_sel = &pll0_refclk_mux_sel_2,
@@ -1375,6 +1423,8 @@ static struct wiz_data j721s2_10g_data = {
 	.clk_div_sel_num = WIZ_DIV_NUM_CLOCKS_10G,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id wiz_id_table[] = {
 	{
 		.compatible = "ti,j721e-wiz-16g", .data = &j721e_16g_data,
@@ -1388,12 +1438,15 @@ static const struct of_device_id wiz_id_table[] = {
 	{
 		.compatible = "ti,j7200-wiz-10g", .data = &j7200_pg2_10g_data,
 	},
+<<<<<<< HEAD
 	{
 		.compatible = "ti,j784s4-wiz-10g", .data = &j784s4_10g_data,
 	},
 	{
 		.compatible = "ti,j721s2-wiz-10g", .data = &j721s2_10g_data,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 MODULE_DEVICE_TABLE(of, wiz_id_table);
@@ -1430,10 +1483,15 @@ static int wiz_get_lane_phy_types(struct device *dev, struct wiz *wiz)
 		dev_dbg(dev, "%s: Lanes %u-%u have phy-type %u\n", __func__,
 			reg, reg + num_lanes - 1, phy_type);
 
+<<<<<<< HEAD
 		for (i = reg; i < reg + num_lanes; i++) {
 			wiz->master_lane_num[i] = reg;
 			wiz->lane_phy_type[i] = phy_type;
 		}
+=======
+		for (i = reg; i < reg + num_lanes; i++)
+			wiz->lane_phy_type[i] = phy_type;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -1497,8 +1555,12 @@ static int wiz_probe(struct platform_device *pdev)
 	if (IS_ERR(wiz->scm_regmap)) {
 		if (wiz->type == J7200_WIZ_10G) {
 			dev_err(dev, "Couldn't get ti,scm regmap\n");
+<<<<<<< HEAD
 			ret = -ENODEV;
 			goto err_addr_to_resource;
+=======
+			return -ENODEV;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		wiz->scm_regmap = NULL;
@@ -1548,7 +1610,11 @@ static int wiz_probe(struct platform_device *pdev)
 
 	ret = wiz_get_lane_phy_types(dev, wiz);
 	if (ret)
+<<<<<<< HEAD
 		goto err_addr_to_resource;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	wiz->dev = dev;
 	wiz->regmap = regmap;
@@ -1636,7 +1702,11 @@ err_addr_to_resource:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void wiz_remove(struct platform_device *pdev)
+=======
+static int wiz_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &pdev->dev;
 	struct device_node *node = dev->of_node;
@@ -1650,11 +1720,20 @@ static void wiz_remove(struct platform_device *pdev)
 	wiz_clock_cleanup(wiz, node);
 	pm_runtime_put(dev);
 	pm_runtime_disable(dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver wiz_driver = {
 	.probe		= wiz_probe,
+<<<<<<< HEAD
 	.remove_new	= wiz_remove,
+=======
+	.remove		= wiz_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "wiz",
 		.of_match_table = wiz_id_table,

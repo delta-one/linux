@@ -120,8 +120,13 @@ int mlx5e_rep_bond_enslave(struct mlx5_eswitch *esw, struct net_device *netdev,
 	priv = netdev_priv(netdev);
 	rpriv = priv->ppriv;
 
+<<<<<<< HEAD
 	err = mlx5_esw_acl_ingress_vport_metadata_update(esw, rpriv->rep->vport,
 							 mdata->metadata_reg_c_0);
+=======
+	err = mlx5_esw_acl_ingress_vport_bond_update(esw, rpriv->rep->vport,
+						     mdata->metadata_reg_c_0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto ingress_err;
 
@@ -167,7 +172,11 @@ void mlx5e_rep_bond_unslave(struct mlx5_eswitch *esw,
 	/* Reset bond_metadata to zero first then reset all ingress/egress
 	 * acls and rx rules of unslave representor's vport
 	 */
+<<<<<<< HEAD
 	mlx5_esw_acl_ingress_vport_metadata_update(esw, rpriv->rep->vport, 0);
+=======
+	mlx5_esw_acl_ingress_vport_bond_update(esw, rpriv->rep->vport, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5_esw_acl_egress_vport_unbond(esw, rpriv->rep->vport);
 	mlx5e_rep_bond_update(priv, false);
 

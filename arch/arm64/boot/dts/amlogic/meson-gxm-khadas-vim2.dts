@@ -52,11 +52,18 @@
 		gpios = <&gpio GPIODV_14 GPIO_ACTIVE_HIGH
 			 &gpio GPIODV_15 GPIO_ACTIVE_HIGH>;
 		/* Dummy RPM values since fan is optional */
+<<<<<<< HEAD
 		gpio-fan,speed-map =
 				<0 0>,
 				<1 1>,
 				<2 2>,
 				<3 3>;
+=======
+		gpio-fan,speed-map = <0 0
+				      1 1
+				      2 2
+				      3 3>;
+>>>>>>> b7ba80a49124 (Commit)
 		#cooling-cells = <2>;
 	};
 
@@ -271,6 +278,10 @@
 		compatible = "haoyu,hym8563";
 		reg = <0x51>;
 		#clock-cells = <0>;
+<<<<<<< HEAD
+=======
+		clock-frequency = <32768>;
+>>>>>>> b7ba80a49124 (Commit)
 		clock-output-names = "xin32k";
 	};
 };

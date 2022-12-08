@@ -395,6 +395,7 @@ void skip_test(struct test_case *test_cases, size_t test_cases_len,
 
 	test_cases[test_id].skip = true;
 }
+<<<<<<< HEAD
 
 unsigned long hash_djb2(const void *data, size_t len)
 {
@@ -408,3 +409,5 @@ unsigned long hash_djb2(const void *data, size_t len)
 
 	return hash;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

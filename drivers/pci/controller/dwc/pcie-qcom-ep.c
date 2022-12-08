@@ -10,11 +10,17 @@
  */
 
 #include <linux/clk.h>
+<<<<<<< HEAD
 #include <linux/debugfs.h>
 #include <linux/delay.h>
 #include <linux/gpio/consumer.h>
 #include <linux/mfd/syscon.h>
 #include <linux/phy/pcie.h>
+=======
+#include <linux/delay.h>
+#include <linux/gpio/consumer.h>
+#include <linux/mfd/syscon.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/phy/phy.h>
 #include <linux/platform_device.h>
 #include <linux/pm_domain.h>
@@ -28,7 +34,10 @@
 #define PARF_SYS_CTRL				0x00
 #define PARF_DB_CTRL				0x10
 #define PARF_PM_CTRL				0x20
+<<<<<<< HEAD
 #define PARF_MHI_CLOCK_RESET_CTRL		0x174
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PARF_MHI_BASE_ADDR_LOWER		0x178
 #define PARF_MHI_BASE_ADDR_UPPER		0x17c
 #define PARF_DEBUG_INT_EN			0x190
@@ -48,11 +57,14 @@
 #define PARF_ATU_BASE_ADDR			0x634
 #define PARF_ATU_BASE_ADDR_HI			0x638
 #define PARF_SRIS_MODE				0x644
+<<<<<<< HEAD
 #define PARF_DEBUG_CNT_PM_LINKST_IN_L2		0xc04
 #define PARF_DEBUG_CNT_PM_LINKST_IN_L1		0xc0c
 #define PARF_DEBUG_CNT_PM_LINKST_IN_L0S		0xc10
 #define PARF_DEBUG_CNT_AUX_CLK_IN_L1SUB_L1	0xc84
 #define PARF_DEBUG_CNT_AUX_CLK_IN_L1SUB_L2	0xc88
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PARF_DEVICE_TYPE			0x1000
 #define PARF_BDF_TO_SID_CFG			0x2c00
 
@@ -91,9 +103,12 @@
 #define PARF_PM_CTRL_READY_ENTR_L23		BIT(2)
 #define PARF_PM_CTRL_REQ_NOT_ENTR_L1		BIT(5)
 
+<<<<<<< HEAD
 /* PARF_MHI_CLOCK_RESET_CTRL fields */
 #define PARF_MSTR_AXI_CLK_EN			BIT(1)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* PARF_AXI_MSTR_RD_HALT_NO_WRITES register fields */
 #define PARF_AXI_MSTR_RD_HALT_NO_WRITE_EN	BIT(0)
 
@@ -106,7 +121,10 @@
 /* PARF_SYS_CTRL register fields */
 #define PARF_SYS_CTRL_AUX_PWR_DET		BIT(4)
 #define PARF_SYS_CTRL_CORE_CLK_CGC_DIS		BIT(6)
+<<<<<<< HEAD
 #define PARF_SYS_CTRL_MSTR_ACLK_CGC_DIS		BIT(10)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PARF_SYS_CTRL_SLV_DBI_WAKE_DISABLE	BIT(11)
 
 /* PARF_DB_CTRL register fields */
@@ -142,6 +160,7 @@ enum qcom_pcie_ep_link_status {
 	QCOM_PCIE_EP_LINK_DOWN,
 };
 
+<<<<<<< HEAD
 /**
  * struct qcom_pcie_ep - Qualcomm PCIe Endpoint Controller
  * @pci: Designware PCIe controller struct
@@ -163,12 +182,27 @@ enum qcom_pcie_ep_link_status {
  * @global_irq: Qualcomm PCIe specific Global IRQ
  * @perst_irq: PERST# IRQ
  */
+=======
+static struct clk_bulk_data qcom_pcie_ep_clks[] = {
+	{ .id = "cfg" },
+	{ .id = "aux" },
+	{ .id = "bus_master" },
+	{ .id = "bus_slave" },
+	{ .id = "ref" },
+	{ .id = "sleep" },
+	{ .id = "slave_q2a" },
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 struct qcom_pcie_ep {
 	struct dw_pcie pci;
 
 	void __iomem *parf;
 	void __iomem *elbi;
+<<<<<<< HEAD
 	void __iomem *mmio;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct regmap *perst_map;
 	struct resource *mmio_res;
 
@@ -176,10 +210,13 @@ struct qcom_pcie_ep {
 	struct gpio_desc *reset;
 	struct gpio_desc *wake;
 	struct phy *phy;
+<<<<<<< HEAD
 	struct dentry *debugfs;
 
 	struct clk_bulk_data *clks;
 	int num_clks;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	u32 perst_en;
 	u32 perst_sep_en;
@@ -221,10 +258,15 @@ static int qcom_pcie_ep_core_reset(struct qcom_pcie_ep *pcie_ep)
  */
 static void qcom_pcie_ep_configure_tcsr(struct qcom_pcie_ep *pcie_ep)
 {
+<<<<<<< HEAD
 	if (pcie_ep->perst_map) {
 		regmap_write(pcie_ep->perst_map, pcie_ep->perst_en, 0);
 		regmap_write(pcie_ep->perst_map, pcie_ep->perst_sep_en, 0);
 	}
+=======
+	regmap_write(pcie_ep->perst_map, pcie_ep->perst_en, 0);
+	regmap_write(pcie_ep->perst_map, pcie_ep->perst_sep_en, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int qcom_pcie_dw_link_up(struct dw_pcie *pci)
@@ -257,7 +299,12 @@ static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
 {
 	int ret;
 
+<<<<<<< HEAD
 	ret = clk_bulk_prepare_enable(pcie_ep->num_clks, pcie_ep->clks);
+=======
+	ret = clk_bulk_prepare_enable(ARRAY_SIZE(qcom_pcie_ep_clks),
+				      qcom_pcie_ep_clks);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -269,10 +316,13 @@ static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
 	if (ret)
 		goto err_disable_clk;
 
+<<<<<<< HEAD
 	ret = phy_set_mode_ext(pcie_ep->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_EP);
 	if (ret)
 		goto err_phy_exit;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = phy_power_on(pcie_ep->phy);
 	if (ret)
 		goto err_phy_exit;
@@ -282,7 +332,12 @@ static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
 err_phy_exit:
 	phy_exit(pcie_ep->phy);
 err_disable_clk:
+<<<<<<< HEAD
 	clk_bulk_disable_unprepare(pcie_ep->num_clks, pcie_ep->clks);
+=======
+	clk_bulk_disable_unprepare(ARRAY_SIZE(qcom_pcie_ep_clks),
+				   qcom_pcie_ep_clks);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -291,7 +346,12 @@ static void qcom_pcie_disable_resources(struct qcom_pcie_ep *pcie_ep)
 {
 	phy_power_off(pcie_ep->phy);
 	phy_exit(pcie_ep->phy);
+<<<<<<< HEAD
 	clk_bulk_disable_unprepare(pcie_ep->num_clks, pcie_ep->clks);
+=======
+	clk_bulk_disable_unprepare(ARRAY_SIZE(qcom_pcie_ep_clks),
+				   qcom_pcie_ep_clks);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
@@ -349,6 +409,7 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
 	val &= ~PARF_Q2A_FLUSH_EN;
 	writel_relaxed(val, pcie_ep->parf + PARF_Q2A_FLUSH);
 
+<<<<<<< HEAD
 	/*
 	 * Disable Master AXI clock during idle.  Do not allow DBI access
 	 * to take the core out of L1.  Disable core clock gating that
@@ -357,6 +418,10 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
 	 */
 	val = readl_relaxed(pcie_ep->parf + PARF_SYS_CTRL);
 	val &= ~PARF_SYS_CTRL_MSTR_ACLK_CGC_DIS;
+=======
+	/* Disable DBI Wakeup, core clock CGC and enable AUX power */
+	val = readl_relaxed(pcie_ep->parf + PARF_SYS_CTRL);
+>>>>>>> b7ba80a49124 (Commit)
 	val |= PARF_SYS_CTRL_SLV_DBI_WAKE_DISABLE |
 	       PARF_SYS_CTRL_CORE_CLK_CGC_DIS |
 	       PARF_SYS_CTRL_AUX_PWR_DET;
@@ -412,11 +477,14 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
 		       pcie_ep->parf + PARF_MHI_BASE_ADDR_LOWER);
 	writel_relaxed(0, pcie_ep->parf + PARF_MHI_BASE_ADDR_UPPER);
 
+<<<<<<< HEAD
 	/* Gate Master AXI clock to MHI bus during L1SS */
 	val = readl_relaxed(pcie_ep->parf + PARF_MHI_CLOCK_RESET_CTRL);
 	val &= ~PARF_MSTR_AXI_CLK_EN;
 	val = readl_relaxed(pcie_ep->parf + PARF_MHI_CLOCK_RESET_CTRL);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dw_pcie_ep_init_notify(&pcie_ep->pci.ep);
 
 	/* Enable LTSSM */
@@ -484,6 +552,7 @@ static int qcom_pcie_ep_get_io_resources(struct platform_device *pdev,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	pcie_ep->mmio = devm_pci_remap_cfg_resource(dev, pcie_ep->mmio_res);
 	if (IS_ERR(pcie_ep->mmio))
 		return PTR_ERR(pcie_ep->mmio);
@@ -492,6 +561,12 @@ static int qcom_pcie_ep_get_io_resources(struct platform_device *pdev,
 	if (!syscon) {
 		dev_dbg(dev, "PERST separation not available\n");
 		return 0;
+=======
+	syscon = of_parse_phandle(dev->of_node, "qcom,perst-regs", 0);
+	if (!syscon) {
+		dev_err(dev, "Failed to parse qcom,perst-regs\n");
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	pcie_ep->perst_map = syscon_node_to_regmap(syscon);
@@ -524,6 +599,7 @@ static int qcom_pcie_ep_get_resources(struct platform_device *pdev,
 
 	ret = qcom_pcie_ep_get_io_resources(pdev, pcie_ep);
 	if (ret) {
+<<<<<<< HEAD
 		dev_err(dev, "Failed to get io resources %d\n", ret);
 		return ret;
 	}
@@ -533,6 +609,16 @@ static int qcom_pcie_ep_get_resources(struct platform_device *pdev,
 		dev_err(dev, "Failed to get clocks\n");
 		return pcie_ep->num_clks;
 	}
+=======
+		dev_err(&pdev->dev, "Failed to get io resources %d\n", ret);
+		return ret;
+	}
+
+	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(qcom_pcie_ep_clks),
+				qcom_pcie_ep_clks);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pcie_ep->core_reset = devm_reset_control_get_exclusive(dev, "core");
 	if (IS_ERR(pcie_ep->core_reset))
@@ -546,7 +632,11 @@ static int qcom_pcie_ep_get_resources(struct platform_device *pdev,
 	if (IS_ERR(pcie_ep->wake))
 		return PTR_ERR(pcie_ep->wake);
 
+<<<<<<< HEAD
 	pcie_ep->phy = devm_phy_optional_get(dev, "pciephy");
+=======
+	pcie_ep->phy = devm_phy_optional_get(&pdev->dev, "pciephy");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(pcie_ep->phy))
 		ret = PTR_ERR(pcie_ep->phy);
 
@@ -622,6 +712,7 @@ static irqreturn_t qcom_pcie_ep_perst_irq_thread(int irq, void *data)
 static int qcom_pcie_ep_enable_irq_resources(struct platform_device *pdev,
 					     struct qcom_pcie_ep *pcie_ep)
 {
+<<<<<<< HEAD
 	int ret;
 
 	pcie_ep->global_irq = platform_get_irq_byname(pdev, "global");
@@ -629,6 +720,15 @@ static int qcom_pcie_ep_enable_irq_resources(struct platform_device *pdev,
 		return pcie_ep->global_irq;
 
 	ret = devm_request_threaded_irq(&pdev->dev, pcie_ep->global_irq, NULL,
+=======
+	int irq, ret;
+
+	irq = platform_get_irq_byname(pdev, "global");
+	if (irq < 0)
+		return irq;
+
+	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
+>>>>>>> b7ba80a49124 (Commit)
 					qcom_pcie_ep_global_irq_thread,
 					IRQF_ONESHOT,
 					"global_irq", pcie_ep);
@@ -645,7 +745,11 @@ static int qcom_pcie_ep_enable_irq_resources(struct platform_device *pdev,
 					"perst_irq", pcie_ep);
 	if (ret) {
 		dev_err(&pdev->dev, "Failed to request PERST IRQ\n");
+<<<<<<< HEAD
 		disable_irq(pcie_ep->global_irq);
+=======
+		disable_irq(irq);
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 
@@ -668,6 +772,7 @@ static int qcom_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
 	}
 }
 
+<<<<<<< HEAD
 static int qcom_pcie_ep_link_transition_count(struct seq_file *s, void *data)
 {
 	struct qcom_pcie_ep *pcie_ep = (struct qcom_pcie_ep *)
@@ -699,6 +804,8 @@ static void qcom_pcie_ep_init_debugfs(struct qcom_pcie_ep *pcie_ep)
 				    qcom_pcie_ep_link_transition_count);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct pci_epc_features qcom_pcie_epc_features = {
 	.linkup_notifier = true,
 	.core_init_notifier = true,
@@ -731,7 +838,10 @@ static int qcom_pcie_ep_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 	struct qcom_pcie_ep *pcie_ep;
+<<<<<<< HEAD
 	char *name;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	pcie_ep = devm_kzalloc(dev, sizeof(*pcie_ep), GFP_KERNEL);
@@ -763,6 +873,7 @@ static int qcom_pcie_ep_probe(struct platform_device *pdev)
 	if (ret)
 		goto err_disable_resources;
 
+<<<<<<< HEAD
 	name = devm_kasprintf(dev, GFP_KERNEL, "%pOFP", dev->of_node);
 	if (!name) {
 		ret = -ENOMEM;
@@ -778,6 +889,10 @@ err_disable_irqs:
 	disable_irq(pcie_ep->global_irq);
 	disable_irq(pcie_ep->perst_irq);
 
+=======
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 err_disable_resources:
 	qcom_pcie_disable_resources(pcie_ep);
 
@@ -788,11 +903,14 @@ static int qcom_pcie_ep_remove(struct platform_device *pdev)
 {
 	struct qcom_pcie_ep *pcie_ep = platform_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	disable_irq(pcie_ep->global_irq);
 	disable_irq(pcie_ep->perst_irq);
 
 	debugfs_remove_recursive(pcie_ep->debugfs);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (pcie_ep->link_status == QCOM_PCIE_EP_LINK_DISABLED)
 		return 0;
 
@@ -803,7 +921,10 @@ static int qcom_pcie_ep_remove(struct platform_device *pdev)
 
 static const struct of_device_id qcom_pcie_ep_match[] = {
 	{ .compatible = "qcom,sdx55-pcie-ep", },
+<<<<<<< HEAD
 	{ .compatible = "qcom,sm8450-pcie-ep", },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(of, qcom_pcie_ep_match);

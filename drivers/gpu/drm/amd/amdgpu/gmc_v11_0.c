@@ -64,6 +64,7 @@ gmc_v11_0_vm_fault_interrupt_state(struct amdgpu_device *adev,
 		/* MM HUB */
 		amdgpu_gmc_set_vm_fault_masks(adev, AMDGPU_MMHUB_0, false);
 		/* GFX HUB */
+<<<<<<< HEAD
 		/* This works because this interrupt is only
 		 * enabled at init/resume and disabled in
 		 * fini/suspend, so the overall state doesn't
@@ -71,11 +72,15 @@ gmc_v11_0_vm_fault_interrupt_state(struct amdgpu_device *adev,
 		 */
 		if (!adev->in_s0ix)
 			amdgpu_gmc_set_vm_fault_masks(adev, AMDGPU_GFXHUB_0, false);
+=======
+		amdgpu_gmc_set_vm_fault_masks(adev, AMDGPU_GFXHUB_0, false);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case AMDGPU_IRQ_STATE_ENABLE:
 		/* MM HUB */
 		amdgpu_gmc_set_vm_fault_masks(adev, AMDGPU_MMHUB_0, true);
 		/* GFX HUB */
+<<<<<<< HEAD
 		/* This works because this interrupt is only
 		 * enabled at init/resume and disabled in
 		 * fini/suspend, so the overall state doesn't
@@ -83,6 +88,9 @@ gmc_v11_0_vm_fault_interrupt_state(struct amdgpu_device *adev,
 		 */
 		if (!adev->in_s0ix)
 			amdgpu_gmc_set_vm_fault_masks(adev, AMDGPU_GFXHUB_0, true);
+=======
+		amdgpu_gmc_set_vm_fault_masks(adev, AMDGPU_GFXHUB_0, true);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		break;
@@ -198,10 +206,13 @@ static void gmc_v11_0_flush_vm_hub(struct amdgpu_device *adev, uint32_t vmid,
 	/* Use register 17 for GART */
 	const unsigned eng = 17;
 	unsigned int i;
+<<<<<<< HEAD
 	unsigned char hub_ip = 0;
 
 	hub_ip = (vmhub == AMDGPU_GFXHUB_0) ?
 		   GC_HWIP : MMHUB_HWIP;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock(&adev->gmc.invalidate_lock);
 	/*
@@ -215,8 +226,13 @@ static void gmc_v11_0_flush_vm_hub(struct amdgpu_device *adev, uint32_t vmid,
 	if (use_semaphore) {
 		for (i = 0; i < adev->usec_timeout; i++) {
 			/* a read return value of 1 means semaphore acuqire */
+<<<<<<< HEAD
 			tmp = RREG32_RLC_NO_KIQ(hub->vm_inv_eng0_sem +
 					    hub->eng_distance * eng, hub_ip);
+=======
+			tmp = RREG32_NO_KIQ(hub->vm_inv_eng0_sem +
+					    hub->eng_distance * eng);
+>>>>>>> b7ba80a49124 (Commit)
 			if (tmp & 0x1)
 				break;
 			udelay(1);
@@ -226,12 +242,21 @@ static void gmc_v11_0_flush_vm_hub(struct amdgpu_device *adev, uint32_t vmid,
 			DRM_ERROR("Timeout waiting for sem acquire in VM flush!\n");
 	}
 
+<<<<<<< HEAD
 	WREG32_RLC_NO_KIQ(hub->vm_inv_eng0_req + hub->eng_distance * eng, inv_req, hub_ip);
 
 	/* Wait for ACK with a delay.*/
 	for (i = 0; i < adev->usec_timeout; i++) {
 		tmp = RREG32_RLC_NO_KIQ(hub->vm_inv_eng0_ack +
 				    hub->eng_distance * eng, hub_ip);
+=======
+	WREG32_NO_KIQ(hub->vm_inv_eng0_req + hub->eng_distance * eng, inv_req);
+
+	/* Wait for ACK with a delay.*/
+	for (i = 0; i < adev->usec_timeout; i++) {
+		tmp = RREG32_NO_KIQ(hub->vm_inv_eng0_ack +
+				    hub->eng_distance * eng);
+>>>>>>> b7ba80a49124 (Commit)
 		tmp &= 1 << vmid;
 		if (tmp)
 			break;
@@ -245,8 +270,13 @@ static void gmc_v11_0_flush_vm_hub(struct amdgpu_device *adev, uint32_t vmid,
 		 * add semaphore release after invalidation,
 		 * write with 0 means semaphore release
 		 */
+<<<<<<< HEAD
 		WREG32_RLC_NO_KIQ(hub->vm_inv_eng0_sem +
 			      hub->eng_distance * eng, 0, hub_ip);
+=======
+		WREG32_NO_KIQ(hub->vm_inv_eng0_sem +
+			      hub->eng_distance * eng, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Issue additional private vm invalidation to MMHUB */
 	if ((vmhub != AMDGPU_GFXHUB_0) &&
@@ -274,8 +304,11 @@ static void gmc_v11_0_flush_vm_hub(struct amdgpu_device *adev, uint32_t vmid,
  *
  * @adev: amdgpu_device pointer
  * @vmid: vm instance to flush
+<<<<<<< HEAD
  * @vmhub: which hub to flush
  * @flush_type: the flush type
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Flush the TLB for the requested page table.
  */
@@ -315,8 +348,11 @@ static void gmc_v11_0_flush_gpu_tlb(struct amdgpu_device *adev, uint32_t vmid,
  *
  * @adev: amdgpu_device pointer
  * @pasid: pasid to be flush
+<<<<<<< HEAD
  * @flush_type: the flush type
  * @all_hub: flush all hubs
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Flush the TLB for the requested pasid.
  */
@@ -519,8 +555,11 @@ static void gmc_v11_0_get_vm_pte(struct amdgpu_device *adev,
 				 struct amdgpu_bo_va_mapping *mapping,
 				 uint64_t *flags)
 {
+<<<<<<< HEAD
 	struct amdgpu_bo *bo = mapping->bo_va->base.bo;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	*flags &= ~AMDGPU_PTE_EXECUTABLE;
 	*flags |= mapping->flags & AMDGPU_PTE_EXECUTABLE;
 
@@ -537,11 +576,14 @@ static void gmc_v11_0_get_vm_pte(struct amdgpu_device *adev,
 		*flags |= AMDGPU_PTE_SYSTEM;
 		*flags &= ~AMDGPU_PTE_VALID;
 	}
+<<<<<<< HEAD
 
 	if (bo && bo->flags & (AMDGPU_GEM_CREATE_COHERENT |
 			       AMDGPU_GEM_CREATE_UNCACHED))
 		*flags = (*flags & ~AMDGPU_PTE_MTYPE_NV10_MASK) |
 			 AMDGPU_PTE_MTYPE_NV10(MTYPE_UC);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static unsigned gmc_v11_0_get_vbios_fb_size(struct amdgpu_device *adev)
@@ -571,6 +613,7 @@ static void gmc_v11_0_set_umc_funcs(struct amdgpu_device *adev)
 	case IP_VERSION(8, 10, 0):
 		adev->umc.channel_inst_num = UMC_V8_10_CHANNEL_INSTANCE_NUM;
 		adev->umc.umc_inst_num = UMC_V8_10_UMC_INSTANCE_NUM;
+<<<<<<< HEAD
 		adev->umc.max_ras_err_cnt_per_query = UMC_V8_10_TOTAL_CHANNEL_NUM(adev);
 		adev->umc.channel_offs = UMC_V8_10_PER_CHANNEL_OFFSET;
 		adev->umc.retire_unit = UMC_V8_10_NA_COL_2BITS_POWER_OF_2_NUM;
@@ -578,6 +621,12 @@ static void gmc_v11_0_set_umc_funcs(struct amdgpu_device *adev)
 			adev->umc.channel_idx_tbl = &umc_v8_10_channel_idx_tbl_ext0[0][0][0];
 		else
 			adev->umc.channel_idx_tbl = &umc_v8_10_channel_idx_tbl[0][0][0];
+=======
+		adev->umc.node_inst_num = adev->gmc.num_umc;
+		adev->umc.max_ras_err_cnt_per_query = UMC_V8_10_TOTAL_CHANNEL_NUM(adev);
+		adev->umc.channel_offs = UMC_V8_10_PER_CHANNEL_OFFSET;
+		adev->umc.channel_idx_tbl = &umc_v8_10_channel_idx_tbl[0][0][0];
+>>>>>>> b7ba80a49124 (Commit)
 		adev->umc.ras = &umc_v8_10_ras;
 		break;
 	case IP_VERSION(8, 11, 0):
@@ -585,6 +634,26 @@ static void gmc_v11_0_set_umc_funcs(struct amdgpu_device *adev)
 	default:
 		break;
 	}
+<<<<<<< HEAD
+=======
+
+	if (adev->umc.ras) {
+		amdgpu_ras_register_ras_block(adev, &adev->umc.ras->ras_block);
+
+		strcpy(adev->umc.ras->ras_block.ras_comm.name, "umc");
+		adev->umc.ras->ras_block.ras_comm.block = AMDGPU_RAS_BLOCK__UMC;
+		adev->umc.ras->ras_block.ras_comm.type = AMDGPU_RAS_ERROR__MULTI_UNCORRECTABLE;
+		adev->umc.ras_if = &adev->umc.ras->ras_block.ras_comm;
+
+		/* If don't define special ras_late_init function, use default ras_late_init */
+		if (!adev->umc.ras->ras_block.ras_late_init)
+			adev->umc.ras->ras_block.ras_late_init = amdgpu_umc_ras_late_init;
+
+		/* If not define special ras_cb function, use default ras_cb */
+		if (!adev->umc.ras->ras_block.ras_cb)
+			adev->umc.ras->ras_block.ras_cb = amdgpu_umc_process_ras_data_cb;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 
@@ -660,7 +729,10 @@ static void gmc_v11_0_vram_gtt_location(struct amdgpu_device *adev,
 
 	amdgpu_gmc_vram_location(adev, &adev->gmc, base);
 	amdgpu_gmc_gart_location(adev, mc);
+<<<<<<< HEAD
 	amdgpu_gmc_agp_location(adev, mc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* base offset of vram pages */
 	if (amdgpu_sriov_vf(adev))
@@ -759,7 +831,10 @@ static int gmc_v11_0_sw_init(void *handle)
 	case IP_VERSION(11, 0, 1):
 	case IP_VERSION(11, 0, 2):
 	case IP_VERSION(11, 0, 3):
+<<<<<<< HEAD
 	case IP_VERSION(11, 0, 4):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		adev->num_vmhubs = 2;
 		/*
 		 * To fulfill 4-level page support,
@@ -833,10 +908,13 @@ static int gmc_v11_0_sw_init(void *handle)
 
 	amdgpu_vm_manager_init(adev);
 
+<<<<<<< HEAD
 	r = amdgpu_gmc_ras_sw_init(adev);
 	if (r)
 		return r;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -866,12 +944,15 @@ static int gmc_v11_0_sw_fini(void *handle)
 
 static void gmc_v11_0_init_golden_registers(struct amdgpu_device *adev)
 {
+<<<<<<< HEAD
 	if (amdgpu_sriov_vf(adev)) {
 		struct amdgpu_vmhub *hub = &adev->vmhub[AMDGPU_MMHUB_0];
 
 		WREG32(hub->vm_contexts_disable, 0);
 		return;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

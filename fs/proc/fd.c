@@ -7,12 +7,18 @@
 #include <linux/namei.h>
 #include <linux/pid.h>
 #include <linux/ptrace.h>
+<<<<<<< HEAD
 #include <linux/bitmap.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/security.h>
 #include <linux/file.h>
 #include <linux/seq_file.h>
 #include <linux/fs.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/proc_fs.h>
 
@@ -281,6 +287,7 @@ out:
 	return 0;
 }
 
+<<<<<<< HEAD
 static int proc_readfd_count(struct inode *inode, loff_t *count)
 {
 	struct task_struct *p = get_proc_task(inode);
@@ -305,6 +312,8 @@ static int proc_readfd_count(struct inode *inode, loff_t *count)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int proc_readfd(struct file *file, struct dir_context *ctx)
 {
 	return proc_readfd_common(file, ctx, proc_fd_instantiate);
@@ -326,13 +335,21 @@ static struct dentry *proc_lookupfd(struct inode *dir, struct dentry *dentry,
  * /proc/pid/fd needs a special permission handler so that a process can still
  * access /proc/self/fd after it has executed a setuid().
  */
+<<<<<<< HEAD
 int proc_fd_permission(struct mnt_idmap *idmap,
+=======
+int proc_fd_permission(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct inode *inode, int mask)
 {
 	struct task_struct *p;
 	int rv;
 
+<<<<<<< HEAD
 	rv = generic_permission(&nop_mnt_idmap, inode, mask);
+=======
+	rv = generic_permission(&init_user_ns, inode, mask);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rv == 0)
 		return rv;
 
@@ -345,6 +362,7 @@ int proc_fd_permission(struct mnt_idmap *idmap,
 	return rv;
 }
 
+<<<<<<< HEAD
 static int proc_fd_getattr(struct mnt_idmap *idmap,
 			const struct path *path, struct kstat *stat,
 			u32 request_mask, unsigned int query_flags)
@@ -368,6 +386,11 @@ const struct inode_operations proc_fd_inode_operations = {
 	.lookup		= proc_lookupfd,
 	.permission	= proc_fd_permission,
 	.getattr	= proc_fd_getattr,
+=======
+const struct inode_operations proc_fd_inode_operations = {
+	.lookup		= proc_lookupfd,
+	.permission	= proc_fd_permission,
+>>>>>>> b7ba80a49124 (Commit)
 	.setattr	= proc_setattr,
 };
 

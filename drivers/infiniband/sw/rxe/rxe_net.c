@@ -20,10 +20,16 @@
 
 static struct rxe_recv_sockets recv_sockets;
 
+<<<<<<< HEAD
 static struct dst_entry *rxe_find_route4(struct rxe_qp *qp,
 					 struct net_device *ndev,
 					 struct in_addr *saddr,
 					 struct in_addr *daddr)
+=======
+static struct dst_entry *rxe_find_route4(struct net_device *ndev,
+				  struct in_addr *saddr,
+				  struct in_addr *daddr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rtable *rt;
 	struct flowi4 fl = { { 0 } };
@@ -36,7 +42,11 @@ static struct dst_entry *rxe_find_route4(struct rxe_qp *qp,
 
 	rt = ip_route_output_key(&init_net, &fl);
 	if (IS_ERR(rt)) {
+<<<<<<< HEAD
 		rxe_dbg_qp(qp, "no route to %pI4\n", &daddr->s_addr);
+=======
+		pr_err_ratelimited("no route to %pI4\n", &daddr->s_addr);
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 	}
 
@@ -44,8 +54,12 @@ static struct dst_entry *rxe_find_route4(struct rxe_qp *qp,
 }
 
 #if IS_ENABLED(CONFIG_IPV6)
+<<<<<<< HEAD
 static struct dst_entry *rxe_find_route6(struct rxe_qp *qp,
 					 struct net_device *ndev,
+=======
+static struct dst_entry *rxe_find_route6(struct net_device *ndev,
+>>>>>>> b7ba80a49124 (Commit)
 					 struct in6_addr *saddr,
 					 struct in6_addr *daddr)
 {
@@ -62,12 +76,20 @@ static struct dst_entry *rxe_find_route6(struct rxe_qp *qp,
 					       recv_sockets.sk6->sk, &fl6,
 					       NULL);
 	if (IS_ERR(ndst)) {
+<<<<<<< HEAD
 		rxe_dbg_qp(qp, "no route to %pI6\n", daddr);
+=======
+		pr_err_ratelimited("no route to %pI6\n", daddr);
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 	}
 
 	if (unlikely(ndst->error)) {
+<<<<<<< HEAD
 		rxe_dbg_qp(qp, "no route to %pI6\n", daddr);
+=======
+		pr_err("no route to %pI6\n", daddr);
+>>>>>>> b7ba80a49124 (Commit)
 		goto put;
 	}
 
@@ -79,8 +101,12 @@ put:
 
 #else
 
+<<<<<<< HEAD
 static struct dst_entry *rxe_find_route6(struct rxe_qp *qp,
 					 struct net_device *ndev,
+=======
+static struct dst_entry *rxe_find_route6(struct net_device *ndev,
+>>>>>>> b7ba80a49124 (Commit)
 					 struct in6_addr *saddr,
 					 struct in6_addr *daddr)
 {
@@ -108,14 +134,22 @@ static struct dst_entry *rxe_find_route(struct net_device *ndev,
 
 			saddr = &av->sgid_addr._sockaddr_in.sin_addr;
 			daddr = &av->dgid_addr._sockaddr_in.sin_addr;
+<<<<<<< HEAD
 			dst = rxe_find_route4(qp, ndev, saddr, daddr);
+=======
+			dst = rxe_find_route4(ndev, saddr, daddr);
+>>>>>>> b7ba80a49124 (Commit)
 		} else if (av->network_type == RXE_NETWORK_TYPE_IPV6) {
 			struct in6_addr *saddr6;
 			struct in6_addr *daddr6;
 
 			saddr6 = &av->sgid_addr._sockaddr_in6.sin6_addr;
 			daddr6 = &av->dgid_addr._sockaddr_in6.sin6_addr;
+<<<<<<< HEAD
 			dst = rxe_find_route6(qp, ndev, saddr6, daddr6);
+=======
+			dst = rxe_find_route6(ndev, saddr6, daddr6);
+>>>>>>> b7ba80a49124 (Commit)
 #if IS_ENABLED(CONFIG_IPV6)
 			if (dst)
 				qp->dst_cookie =
@@ -148,6 +182,10 @@ static int rxe_udp_encap_recv(struct sock *sk, struct sk_buff *skb)
 		goto drop;
 
 	if (skb_linearize(skb)) {
+<<<<<<< HEAD
+=======
+		pr_err("skb_linearize failed\n");
+>>>>>>> b7ba80a49124 (Commit)
 		ib_device_put(&rxe->ib_dev);
 		goto drop;
 	}
@@ -285,7 +323,11 @@ static int prepare4(struct rxe_av *av, struct rxe_pkt_info *pkt,
 
 	dst = rxe_find_route(skb->dev, qp, av);
 	if (!dst) {
+<<<<<<< HEAD
 		rxe_dbg_qp(qp, "Host not reachable\n");
+=======
+		pr_err("Host not reachable\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EHOSTUNREACH;
 	}
 
@@ -309,7 +351,11 @@ static int prepare6(struct rxe_av *av, struct rxe_pkt_info *pkt,
 
 	dst = rxe_find_route(skb->dev, qp, av);
 	if (!dst) {
+<<<<<<< HEAD
 		rxe_dbg_qp(qp, "Host not reachable\n");
+=======
+		pr_err("Host not reachable\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EHOSTUNREACH;
 	}
 
@@ -348,7 +394,11 @@ static void rxe_skb_tx_dtor(struct sk_buff *skb)
 
 	if (unlikely(qp->need_req_skb &&
 		     skb_out < RXE_INFLIGHT_SKBS_PER_QP_LOW))
+<<<<<<< HEAD
 		rxe_sched_task(&qp->req.task);
+=======
+		rxe_run_task(&qp->req.task, 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rxe_put(qp);
 }
@@ -368,8 +418,12 @@ static int rxe_send(struct sk_buff *skb, struct rxe_pkt_info *pkt)
 	} else if (skb->protocol == htons(ETH_P_IPV6)) {
 		err = ip6_local_out(dev_net(skb_dst(skb)->dev), skb->sk, skb);
 	} else {
+<<<<<<< HEAD
 		rxe_dbg_qp(pkt->qp, "Unknown layer 3 protocol: %d\n",
 				skb->protocol);
+=======
+		pr_err("Unknown layer 3 protocol: %d\n", skb->protocol);
+>>>>>>> b7ba80a49124 (Commit)
 		atomic_dec(&pkt->qp->skb_out);
 		rxe_put(pkt->qp);
 		kfree_skb(skb);
@@ -377,7 +431,11 @@ static int rxe_send(struct sk_buff *skb, struct rxe_pkt_info *pkt)
 	}
 
 	if (unlikely(net_xmit_eval(err))) {
+<<<<<<< HEAD
 		rxe_dbg_qp(pkt->qp, "error sending packet: %d\n", err);
+=======
+		pr_debug("error sending packet: %d\n", err);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EAGAIN;
 	}
 
@@ -415,7 +473,11 @@ int rxe_xmit_packet(struct rxe_qp *qp, struct rxe_pkt_info *pkt,
 
 	if ((is_request && (qp->req.state != QP_STATE_READY)) ||
 	    (!is_request && (qp->resp.state != QP_STATE_READY))) {
+<<<<<<< HEAD
 		rxe_dbg_qp(qp, "Packet dropped. QP is not in ready state\n");
+=======
+		pr_info("Packet dropped. QP is not in ready state\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto drop;
 	}
 
@@ -433,7 +495,11 @@ int rxe_xmit_packet(struct rxe_qp *qp, struct rxe_pkt_info *pkt,
 	if ((qp_type(qp) != IB_QPT_RC) &&
 	    (pkt->mask & RXE_END_MASK)) {
 		pkt->wqe->state = wqe_state_done;
+<<<<<<< HEAD
 		rxe_sched_task(&qp->comp.task);
+=======
+		rxe_run_task(&qp->comp.task, 1);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	rxe_counter_inc(rxe, RXE_CNT_SENT_PKTS);
@@ -596,7 +662,11 @@ static int rxe_notify(struct notifier_block *not_blk,
 		rxe_port_down(rxe);
 		break;
 	case NETDEV_CHANGEMTU:
+<<<<<<< HEAD
 		rxe_dbg(rxe, "%s changed mtu to %d\n", ndev->name, ndev->mtu);
+=======
+		pr_info("%s changed mtu to %d\n", ndev->name, ndev->mtu);
+>>>>>>> b7ba80a49124 (Commit)
 		rxe_set_mtu(rxe, ndev->mtu);
 		break;
 	case NETDEV_CHANGE:
@@ -608,7 +678,11 @@ static int rxe_notify(struct notifier_block *not_blk,
 	case NETDEV_CHANGENAME:
 	case NETDEV_FEAT_CHANGE:
 	default:
+<<<<<<< HEAD
 		rxe_dbg(rxe, "ignoring netdev event = %ld for %s\n",
+=======
+		pr_info("ignoring netdev event = %ld for %s\n",
+>>>>>>> b7ba80a49124 (Commit)
 			event, ndev->name);
 		break;
 	}

@@ -7,7 +7,11 @@
 
 #include <linux/dma-mapping.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+#include <linux/init.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/platform_device.h>
@@ -336,9 +340,12 @@ struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
 
 	mutex_lock(&ringacc->req_lock);
 
+<<<<<<< HEAD
 	if (!try_module_get(ringacc->dev->driver->owner))
 		goto err_module_get;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (id == K3_RINGACC_RING_ID_ANY) {
 		/* Request for any general purpose ring */
 		struct ti_sci_resource_desc *gp_rings =
@@ -383,9 +390,12 @@ out:
 	return &ringacc->rings[id];
 
 error:
+<<<<<<< HEAD
 	module_put(ringacc->dev->driver->owner);
 
 err_module_get:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&ringacc->req_lock);
 	return NULL;
 }
@@ -406,11 +416,14 @@ static int k3_dmaring_request_dual_ring(struct k3_ringacc *ringacc, int fwd_id,
 
 	mutex_lock(&ringacc->req_lock);
 
+<<<<<<< HEAD
 	if (!try_module_get(ringacc->dev->driver->owner)) {
 		ret = -EINVAL;
 		goto err_module_get;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (test_bit(fwd_id, ringacc->rings_inuse)) {
 		ret = -EBUSY;
 		goto error;
@@ -426,8 +439,11 @@ static int k3_dmaring_request_dual_ring(struct k3_ringacc *ringacc, int fwd_id,
 	return 0;
 
 error:
+<<<<<<< HEAD
 	module_put(ringacc->dev->driver->owner);
 err_module_get:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&ringacc->req_lock);
 	return ret;
 }
@@ -629,8 +645,11 @@ int k3_ringacc_ring_free(struct k3_ring *ring)
 no_init:
 	clear_bit(ring->ring_id, ringacc->rings_inuse);
 
+<<<<<<< HEAD
 	module_put(ringacc->dev->driver->owner);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	mutex_unlock(&ringacc->req_lock);
 	return 0;
@@ -1465,7 +1484,10 @@ static const struct of_device_id k3_ringacc_of_match[] = {
 	{ .compatible = "ti,am654-navss-ringacc", .data = &k3_ringacc_data, },
 	{},
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(of, k3_ringacc_of_match);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct k3_ringacc *k3_ringacc_dmarings_init(struct platform_device *pdev,
 					    struct k3_ringacc_init_data *data)
@@ -1560,6 +1582,7 @@ static int k3_ringacc_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int k3_ringacc_remove(struct platform_device *pdev)
 {
 	struct k3_ringacc *ringacc = dev_get_drvdata(&pdev->dev);
@@ -1573,14 +1596,22 @@ static int k3_ringacc_remove(struct platform_device *pdev)
 static struct platform_driver k3_ringacc_driver = {
 	.probe		= k3_ringacc_probe,
 	.remove		= k3_ringacc_remove,
+=======
+static struct platform_driver k3_ringacc_driver = {
+	.probe		= k3_ringacc_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "k3-ringacc",
 		.of_match_table = k3_ringacc_of_match,
 		.suppress_bind_attrs = true,
 	},
 };
+<<<<<<< HEAD
 module_platform_driver(k3_ringacc_driver);
 
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("TI Ringacc driver for K3 SOCs");
 MODULE_AUTHOR("Grygorii Strashko <grygorii.strashko@ti.com>");
+=======
+builtin_platform_driver(k3_ringacc_driver);
+>>>>>>> b7ba80a49124 (Commit)

@@ -412,7 +412,11 @@ void ext4_orphan_cleanup(struct super_block *sb, struct ext4_super_block *es)
 		/* don't clear list on RO mount w/ errors */
 		if (es->s_last_orphan && !(s_flags & SB_RDONLY)) {
 			ext4_msg(sb, KERN_INFO, "Errors on filesystem, "
+<<<<<<< HEAD
 				  "clearing orphan list.");
+=======
+				  "clearing orphan list.\n");
+>>>>>>> b7ba80a49124 (Commit)
 			es->s_last_orphan = 0;
 		}
 		ext4_debug("Skipping orphan recovery on fs with errors.\n");

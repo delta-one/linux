@@ -203,7 +203,11 @@ int nfs_idmap_init(void)
 	printk(KERN_NOTICE "NFS: Registering the %s key type\n",
 		key_type_id_resolver.name);
 
+<<<<<<< HEAD
 	cred = prepare_kernel_cred(&init_task);
+=======
+	cred = prepare_kernel_cred(NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!cred)
 		return -ENOMEM;
 
@@ -583,7 +587,11 @@ static int nfs_idmap_legacy_upcall(struct key *authkey, void *aux)
 	struct request_key_auth *rka = get_request_key_auth(authkey);
 	struct rpc_pipe_msg *msg;
 	struct idmap_msg *im;
+<<<<<<< HEAD
 	struct idmap *idmap = aux;
+=======
+	struct idmap *idmap = (struct idmap *)aux;
+>>>>>>> b7ba80a49124 (Commit)
 	struct key *key = rka->target_key;
 	int ret = -ENOKEY;
 

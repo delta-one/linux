@@ -154,7 +154,10 @@ static const uint32_t tas5805m_volume[] = {
 #define TAS5805M_VOLUME_MIN	0
 
 struct tas5805m_priv {
+<<<<<<< HEAD
 	struct i2c_client		*i2c;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct regulator		*pvdd;
 	struct gpio_desc		*gpio_pdn_n;
 
@@ -166,9 +169,12 @@ struct tas5805m_priv {
 	int				vol[2];
 	bool				is_powered;
 	bool				is_muted;
+<<<<<<< HEAD
 
 	struct work_struct		work;
 	struct mutex			lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void set_dsp_scale(struct regmap *rm, int offset, int vol)
@@ -185,11 +191,21 @@ static void set_dsp_scale(struct regmap *rm, int offset, int vol)
 	regmap_bulk_write(rm, offset, v, ARRAY_SIZE(v));
 }
 
+<<<<<<< HEAD
 static void tas5805m_refresh(struct tas5805m_priv *tas5805m)
 {
 	struct regmap *rm = tas5805m->regmap;
 
 	dev_dbg(&tas5805m->i2c->dev, "refresh: is_muted=%d, vol=%d/%d\n",
+=======
+static void tas5805m_refresh(struct snd_soc_component *component)
+{
+	struct tas5805m_priv *tas5805m =
+		snd_soc_component_get_drvdata(component);
+	struct regmap *rm = tas5805m->regmap;
+
+	dev_dbg(component->dev, "refresh: is_muted=%d, vol=%d/%d\n",
+>>>>>>> b7ba80a49124 (Commit)
 		tas5805m->is_muted, tas5805m->vol[0], tas5805m->vol[1]);
 
 	regmap_write(rm, REG_PAGE, 0x00);
@@ -203,9 +219,12 @@ static void tas5805m_refresh(struct tas5805m_priv *tas5805m)
 	set_dsp_scale(rm, 0x24, tas5805m->vol[0]);
 	set_dsp_scale(rm, 0x28, tas5805m->vol[1]);
 
+<<<<<<< HEAD
 	regmap_write(rm, REG_PAGE, 0x00);
 	regmap_write(rm, REG_BOOK, 0x00);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Set/clear digital soft-mute */
 	regmap_write(rm, REG_DEVICE_CTRL_2,
 		(tas5805m->is_muted ? DCTRL2_MUTE : 0) |
@@ -231,11 +250,16 @@ static int tas5805m_vol_get(struct snd_kcontrol *kcontrol,
 	struct tas5805m_priv *tas5805m =
 		snd_soc_component_get_drvdata(component);
 
+<<<<<<< HEAD
 	mutex_lock(&tas5805m->lock);
 	ucontrol->value.integer.value[0] = tas5805m->vol[0];
 	ucontrol->value.integer.value[1] = tas5805m->vol[1];
 	mutex_unlock(&tas5805m->lock);
 
+=======
+	ucontrol->value.integer.value[0] = tas5805m->vol[0];
+	ucontrol->value.integer.value[1] = tas5805m->vol[1];
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -251,13 +275,19 @@ static int tas5805m_vol_put(struct snd_kcontrol *kcontrol,
 		snd_soc_kcontrol_component(kcontrol);
 	struct tas5805m_priv *tas5805m =
 		snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
 	int ret = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!(volume_is_valid(ucontrol->value.integer.value[0]) &&
 	      volume_is_valid(ucontrol->value.integer.value[1])))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	mutex_lock(&tas5805m->lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (tas5805m->vol[0] != ucontrol->value.integer.value[0] ||
 	    tas5805m->vol[1] != ucontrol->value.integer.value[1]) {
 		tas5805m->vol[0] = ucontrol->value.integer.value[0];
@@ -266,12 +296,20 @@ static int tas5805m_vol_put(struct snd_kcontrol *kcontrol,
 			tas5805m->vol[0], tas5805m->vol[1],
 			tas5805m->is_powered);
 		if (tas5805m->is_powered)
+<<<<<<< HEAD
 			tas5805m_refresh(tas5805m);
 		ret = 1;
 	}
 	mutex_unlock(&tas5805m->lock);
 
 	return ret;
+=======
+			tas5805m_refresh(component);
+		return 1;
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct snd_kcontrol_new tas5805m_snd_controls[] = {
@@ -305,18 +343,61 @@ static int tas5805m_trigger(struct snd_pcm_substream *substream, int cmd,
 	struct snd_soc_component *component = dai->component;
 	struct tas5805m_priv *tas5805m =
 		snd_soc_component_get_drvdata(component);
+<<<<<<< HEAD
+=======
+	struct regmap *rm = tas5805m->regmap;
+	unsigned int chan, global1, global2;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (cmd) {
 	case SNDRV_PCM_TRIGGER_START:
 	case SNDRV_PCM_TRIGGER_RESUME:
 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+<<<<<<< HEAD
 		dev_dbg(component->dev, "clock start\n");
 		schedule_work(&tas5805m->work);
+=======
+		dev_dbg(component->dev, "DSP startup\n");
+
+		/* We mustn't issue any I2C transactions until the I2S
+		 * clock is stable. Furthermore, we must allow a 5ms
+		 * delay after the first set of register writes to
+		 * allow the DSP to boot before configuring it.
+		 */
+		usleep_range(5000, 10000);
+		send_cfg(rm, dsp_cfg_preboot,
+			ARRAY_SIZE(dsp_cfg_preboot));
+		usleep_range(5000, 15000);
+		send_cfg(rm, tas5805m->dsp_cfg_data,
+			tas5805m->dsp_cfg_len);
+
+		tas5805m->is_powered = true;
+		tas5805m_refresh(component);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case SNDRV_PCM_TRIGGER_STOP:
 	case SNDRV_PCM_TRIGGER_SUSPEND:
 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+<<<<<<< HEAD
+=======
+		dev_dbg(component->dev, "DSP shutdown\n");
+
+		tas5805m->is_powered = false;
+
+		regmap_write(rm, REG_PAGE, 0x00);
+		regmap_write(rm, REG_BOOK, 0x00);
+
+		regmap_read(rm, REG_CHAN_FAULT, &chan);
+		regmap_read(rm, REG_GLOBAL_FAULT1, &global1);
+		regmap_read(rm, REG_GLOBAL_FAULT2, &global2);
+
+		dev_dbg(component->dev,
+			"fault regs: CHAN=%02x, GLOBAL1=%02x, GLOBAL2=%02x\n",
+			chan, global1, global2);
+
+		regmap_write(rm, REG_DEVICE_CTRL_2, DCTRL2_MODE_HIZ);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	default:
@@ -326,6 +407,7 @@ static int tas5805m_trigger(struct snd_pcm_substream *substream, int cmd,
 	return 0;
 }
 
+<<<<<<< HEAD
 static void do_work(struct work_struct *work)
 {
 	struct tas5805m_priv *tas5805m =
@@ -387,6 +469,8 @@ static int tas5805m_dac_event(struct snd_soc_dapm_widget *w,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_soc_dapm_route tas5805m_audio_map[] = {
 	{ "DAC", NULL, "DAC IN" },
 	{ "OUT", NULL, "DAC" },
@@ -394,8 +478,12 @@ static const struct snd_soc_dapm_route tas5805m_audio_map[] = {
 
 static const struct snd_soc_dapm_widget tas5805m_dapm_widgets[] = {
 	SND_SOC_DAPM_AIF_IN("DAC IN", "Playback", 0, SND_SOC_NOPM, 0, 0),
+<<<<<<< HEAD
 	SND_SOC_DAPM_DAC_E("DAC", NULL, SND_SOC_NOPM, 0, 0,
 		tas5805m_dac_event, SND_SOC_DAPM_PRE_PMD),
+=======
+	SND_SOC_DAPM_DAC("DAC", NULL, SND_SOC_NOPM, 0, 0),
+>>>>>>> b7ba80a49124 (Commit)
 	SND_SOC_DAPM_OUTPUT("OUT")
 };
 
@@ -416,6 +504,7 @@ static int tas5805m_mute(struct snd_soc_dai *dai, int mute, int direction)
 	struct tas5805m_priv *tas5805m =
 		snd_soc_component_get_drvdata(component);
 
+<<<<<<< HEAD
 	mutex_lock(&tas5805m->lock);
 	dev_dbg(component->dev, "set mute=%d (is_powered=%d)\n",
 		mute, tas5805m->is_powered);
@@ -424,6 +513,13 @@ static int tas5805m_mute(struct snd_soc_dai *dai, int mute, int direction)
 	if (tas5805m->is_powered)
 		tas5805m_refresh(tas5805m);
 	mutex_unlock(&tas5805m->lock);
+=======
+	dev_dbg(component->dev, "set mute=%d (is_powered=%d)\n",
+		mute, tas5805m->is_powered);
+	tas5805m->is_muted = mute;
+	if (tas5805m->is_powered)
+		tas5805m_refresh(component);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -478,7 +574,10 @@ static int tas5805m_i2c_probe(struct i2c_client *i2c)
 	if (!tas5805m)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	tas5805m->i2c = i2c;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tas5805m->pvdd = devm_regulator_get(dev, "pvdd");
 	if (IS_ERR(tas5805m->pvdd)) {
 		dev_err(dev, "failed to get pvdd supply: %ld\n",
@@ -552,9 +651,12 @@ static int tas5805m_i2c_probe(struct i2c_client *i2c)
 	gpiod_set_value(tas5805m->gpio_pdn_n, 1);
 	usleep_range(10000, 15000);
 
+<<<<<<< HEAD
 	INIT_WORK(&tas5805m->work, do_work);
 	mutex_init(&tas5805m->lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Don't register through devm. We need to be able to unregister
 	 * the component prior to deasserting PDN#
 	 */
@@ -575,7 +677,10 @@ static void tas5805m_i2c_remove(struct i2c_client *i2c)
 	struct device *dev = &i2c->dev;
 	struct tas5805m_priv *tas5805m = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	cancel_work_sync(&tas5805m->work);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	snd_soc_unregister_component(dev);
 	gpiod_set_value(tas5805m->gpio_pdn_n, 0);
 	usleep_range(10000, 15000);

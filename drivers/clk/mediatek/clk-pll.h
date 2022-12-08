@@ -7,7 +7,10 @@
 #ifndef __DRV_CLK_MTK_PLL_H
 #define __DRV_CLK_MTK_PLL_H
 
+<<<<<<< HEAD
 #include <linux/clk-provider.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/types.h>
 
 struct clk_ops;
@@ -21,7 +24,10 @@ struct mtk_pll_div_table {
 
 #define HAVE_RST_BAR	BIT(0)
 #define PLL_AO		BIT(1)
+<<<<<<< HEAD
 #define POSTDIV_MASK	GENMASK(2, 0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct mtk_pll_data {
 	int id;
@@ -50,6 +56,7 @@ struct mtk_pll_data {
 	u8 pll_en_bit; /* Assume 0, indicates BIT(0) by default */
 };
 
+<<<<<<< HEAD
 /*
  * MediaTek PLLs are configured through their pcw value. The pcw value describes
  * a divider in the PLL feedback loop which consists of 7 bits for the integer
@@ -70,12 +77,15 @@ struct mtk_clk_pll {
 	const struct mtk_pll_data *data;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int mtk_clk_register_plls(struct device_node *node,
 			  const struct mtk_pll_data *plls, int num_plls,
 			  struct clk_hw_onecell_data *clk_data);
 void mtk_clk_unregister_plls(const struct mtk_pll_data *plls, int num_plls,
 			     struct clk_hw_onecell_data *clk_data);
 
+<<<<<<< HEAD
 extern const struct clk_ops mtk_pll_ops;
 
 static inline struct mtk_clk_pll *to_mtk_clk_pll(struct clk_hw *hw)
@@ -109,4 +119,6 @@ void mtk_clk_unregister_pll(struct clk_hw *hw);
 __iomem void *mtk_clk_pll_get_base(struct clk_hw *hw,
 				   const struct mtk_pll_data *data);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __DRV_CLK_MTK_PLL_H */

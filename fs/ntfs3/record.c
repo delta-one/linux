@@ -220,11 +220,14 @@ struct ATTRIB *mi_enum_attr(struct mft_inode *mi, struct ATTRIB *attr)
 			return NULL;
 		}
 
+<<<<<<< HEAD
 		if (off + asize < off) {
 			/* Overflow check. */
 			return NULL;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		attr = Add2Ptr(attr, asize);
 		off += asize;
 	}
@@ -247,8 +250,13 @@ struct ATTRIB *mi_enum_attr(struct mft_inode *mi, struct ATTRIB *attr)
 	if ((t32 & 0xf) || (t32 > 0x100))
 		return NULL;
 
+<<<<<<< HEAD
 	/* Check overflow and boundary. */
 	if (off + asize < off || off + asize > used)
+=======
+	/* Check boundary. */
+	if (off + asize > used)
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	/* Check size of attribute. */
@@ -265,10 +273,13 @@ struct ATTRIB *mi_enum_attr(struct mft_inode *mi, struct ATTRIB *attr)
 		if (t16 + t32 > asize)
 			return NULL;
 
+<<<<<<< HEAD
 		t32 = sizeof(short) * attr->name_len;
 		if (t32 && le16_to_cpu(attr->name_off) + t32 > t16)
 			return NULL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return attr;
 	}
 
@@ -419,9 +430,16 @@ struct ATTRIB *mi_insert_attr(struct mft_inode *mi, enum ATTR_TYPE type,
 	struct ntfs_sb_info *sbi = mi->sbi;
 	u32 used = le32_to_cpu(rec->used);
 	const u16 *upcase = sbi->upcase;
+<<<<<<< HEAD
 
 	/* Can we insert mi attribute? */
 	if (used + asize > sbi->record_size)
+=======
+	int diff;
+
+	/* Can we insert mi attribute? */
+	if (used + asize > mi->sbi->record_size)
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	/*
@@ -430,7 +448,11 @@ struct ATTRIB *mi_insert_attr(struct mft_inode *mi, enum ATTR_TYPE type,
 	 */
 	attr = NULL;
 	while ((attr = mi_enum_attr(mi, attr))) {
+<<<<<<< HEAD
 		int diff = compare_attr(attr, type, name, name_len, upcase);
+=======
+		diff = compare_attr(attr, type, name, name_len, upcase);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (diff < 0)
 			continue;
@@ -441,11 +463,17 @@ struct ATTRIB *mi_insert_attr(struct mft_inode *mi, enum ATTR_TYPE type,
 	}
 
 	if (!attr) {
+<<<<<<< HEAD
 		/* Append. */
 		tail = 8;
 		attr = Add2Ptr(rec, used - 8);
 	} else {
 		/* Insert before 'attr'. */
+=======
+		tail = 8; /* Not used, just to suppress warning. */
+		attr = Add2Ptr(rec, used - 8);
+	} else {
+>>>>>>> b7ba80a49124 (Commit)
 		tail = used - PtrOffset(rec, attr);
 	}
 
@@ -547,10 +575,13 @@ bool mi_resize_attr(struct mft_inode *mi, struct ATTRIB *attr, int bytes)
 	return true;
 }
 
+<<<<<<< HEAD
 /*
  * Pack runs in MFT record.
  * If failed record is not changed.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int mi_pack_runs(struct mft_inode *mi, struct ATTRIB *attr,
 		 struct runs_tree *run, CLST len)
 {

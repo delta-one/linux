@@ -1830,6 +1830,10 @@ static int bcm63xx_udc_start(struct usb_gadget *gadget,
 	bcm63xx_select_phy_mode(udc, true);
 
 	udc->driver = driver;
+<<<<<<< HEAD
+=======
+	driver->driver.bus = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	udc->gadget.dev.of_node = udc->dev->of_node;
 
 	spin_unlock_irqrestore(&udc->lock, flags);
@@ -2171,6 +2175,10 @@ static int bcm63xx_iudma_dbg_show(struct seq_file *s, void *p)
 
 	for (ch_idx = 0; ch_idx < BCM63XX_NUM_IUDMA; ch_idx++) {
 		struct iudma_ch *iudma = &udc->iudma[ch_idx];
+<<<<<<< HEAD
+=======
+		struct list_head *pos;
+>>>>>>> b7ba80a49124 (Commit)
 
 		seq_printf(s, "IUDMA channel %d -- ", ch_idx);
 		switch (iudma_defaults[ch_idx].ep_type) {
@@ -2203,10 +2211,21 @@ static int bcm63xx_iudma_dbg_show(struct seq_file *s, void *p)
 		seq_printf(s, "  desc: %d/%d used", iudma->n_bds_used,
 			   iudma->n_bds);
 
+<<<<<<< HEAD
 		if (iudma->bep)
 			seq_printf(s, "; %zu queued\n", list_count_nodes(&iudma->bep->queue));
 		else
 			seq_printf(s, "\n");
+=======
+		if (iudma->bep) {
+			i = 0;
+			list_for_each(pos, &iudma->bep->queue)
+				i++;
+			seq_printf(s, "; %d queued\n", i);
+		} else {
+			seq_printf(s, "\n");
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		for (i = 0; i < iudma->n_bds; i++) {
 			struct bcm_enet_desc *d = &iudma->bd_ring[i];
@@ -2253,7 +2272,11 @@ static void bcm63xx_udc_init_debugfs(struct bcm63xx_udc *udc)
  */
 static void bcm63xx_udc_cleanup_debugfs(struct bcm63xx_udc *udc)
 {
+<<<<<<< HEAD
 	debugfs_lookup_and_remove(udc->gadget.name, usb_debug_root);
+=======
+	debugfs_remove(debugfs_lookup(udc->gadget.name, usb_debug_root));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /***********************************************************************

@@ -386,6 +386,7 @@ extern int wait_for_key_construction(struct key *key, bool intr);
 
 extern int key_validate(const struct key *key);
 
+<<<<<<< HEAD
 extern key_ref_t key_create(key_ref_t keyring,
 			    const char *type,
 			    const char *description,
@@ -394,6 +395,8 @@ extern key_ref_t key_create(key_ref_t keyring,
 			    key_perm_t perm,
 			    unsigned long flags);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern key_ref_t key_create_or_update(key_ref_t keyring,
 				      const char *type,
 				      const char *description,

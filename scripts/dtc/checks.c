@@ -1382,10 +1382,17 @@ struct provider {
 };
 
 static void check_property_phandle_args(struct check *c,
+<<<<<<< HEAD
 					struct dt_info *dti,
 					struct node *node,
 					struct property *prop,
 					const struct provider *provider)
+=======
+					  struct dt_info *dti,
+				          struct node *node,
+				          struct property *prop,
+				          const struct provider *provider)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct node *root = dti->dt;
 	unsigned int cell, cellsize = 0;
@@ -1401,7 +1408,10 @@ static void check_property_phandle_args(struct check *c,
 		struct node *provider_node;
 		struct property *cellprop;
 		cell_t phandle;
+<<<<<<< HEAD
 		unsigned int expected;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		phandle = propval_cell_n(prop, cell);
 		/*
@@ -1451,12 +1461,19 @@ static void check_property_phandle_args(struct check *c,
 			break;
 		}
 
+<<<<<<< HEAD
 		expected = (cell + cellsize + 1) * sizeof(cell_t);
 		if ((expected <= cell) || prop->val.len < expected) {
 			FAIL_PROP(c, dti, node, prop,
 				  "property size (%d) too small for cell size %u",
 				  prop->val.len, cellsize);
 			break;
+=======
+		if (prop->val.len < ((cell + cellsize + 1) * sizeof(cell_t))) {
+			FAIL_PROP(c, dti, node, prop,
+				  "property size (%d) too small for cell size %d",
+				  prop->val.len, cellsize);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }

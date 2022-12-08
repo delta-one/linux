@@ -6,18 +6,26 @@
  */
 #include <linux/dsa/ocelot.h>
 #include <linux/if_bridge.h>
+<<<<<<< HEAD
 #include <linux/iopoll.h>
 #include <linux/phy/phy.h>
 #include <soc/mscc/ocelot_hsio.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <soc/mscc/ocelot_vcap.h>
 #include "ocelot.h"
 #include "ocelot_vcap.h"
 
+<<<<<<< HEAD
 #define TABLE_UPDATE_SLEEP_US	10
 #define TABLE_UPDATE_TIMEOUT_US	100000
 #define MEM_INIT_SLEEP_US	1000
 #define MEM_INIT_TIMEOUT_US	100000
 
+=======
+#define TABLE_UPDATE_SLEEP_US 10
+#define TABLE_UPDATE_TIMEOUT_US 100000
+>>>>>>> b7ba80a49124 (Commit)
 #define OCELOT_RSV_VLAN_RANGE_START 4000
 
 struct ocelot_mact_entry {
@@ -213,6 +221,7 @@ static void ocelot_mact_init(struct ocelot *ocelot)
 	ocelot_write(ocelot, MACACCESS_CMD_INIT, ANA_TABLES_MACACCESS);
 }
 
+<<<<<<< HEAD
 void ocelot_pll5_init(struct ocelot *ocelot)
 {
 	/* Configure PLL5. This will need a proper CCF driver
@@ -243,6 +252,8 @@ void ocelot_pll5_init(struct ocelot *ocelot)
 }
 EXPORT_SYMBOL(ocelot_pll5_init);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void ocelot_vcap_enable(struct ocelot *ocelot, int port)
 {
 	ocelot_write_gix(ocelot, ANA_PORT_VCAP_S2_CFG_S2_ENA |
@@ -325,6 +336,7 @@ static int ocelot_port_num_untagged_vlans(struct ocelot *ocelot, int port)
 		if (!(vlan->portmask & BIT(port)))
 			continue;
 
+<<<<<<< HEAD
 		/* Ignore the VLAN added by ocelot_add_vlan_unaware_pvid(),
 		 * because this is never active in hardware at the same time as
 		 * the bridge VLANs, which only matter in VLAN-aware mode.
@@ -332,6 +344,8 @@ static int ocelot_port_num_untagged_vlans(struct ocelot *ocelot, int port)
 		if (vlan->vid >= OCELOT_RSV_VLAN_RANGE_START)
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (vlan->untagged & BIT(port))
 			num_untagged++;
 	}
@@ -810,6 +824,7 @@ static int ocelot_port_flush(struct ocelot *ocelot, int port)
 	return err;
 }
 
+<<<<<<< HEAD
 int ocelot_port_configure_serdes(struct ocelot *ocelot, int port,
 				 struct device_node *portnp)
 {
@@ -875,6 +890,8 @@ void ocelot_phylink_mac_config(struct ocelot *ocelot, int port,
 }
 EXPORT_SYMBOL_GPL(ocelot_phylink_mac_config);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void ocelot_phylink_mac_link_down(struct ocelot *ocelot, int port,
 				  unsigned int link_an_mode,
 				  phy_interface_t interface,
@@ -973,8 +990,15 @@ void ocelot_phylink_mac_link_up(struct ocelot *ocelot, int port,
 		return;
 	}
 
+<<<<<<< HEAD
 	if (rx_pause)
 		mac_fc_cfg |= SYS_MAC_FC_CFG_RX_FC_ENA;
+=======
+	/* Handle RX pause in all cases, with 2500base-X this is used for rate
+	 * adaptation.
+	 */
+	mac_fc_cfg |= SYS_MAC_FC_CFG_RX_FC_ENA;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (tx_pause)
 		mac_fc_cfg |= SYS_MAC_FC_CFG_TX_FC_ENA |
@@ -2814,6 +2838,7 @@ static void ocelot_detect_features(struct ocelot *ocelot)
 	ocelot->num_frame_refs = QSYS_MMGT_EQ_CTRL_FP_FREE_CNT(eq_ctrl);
 }
 
+<<<<<<< HEAD
 static int ocelot_mem_init_status(struct ocelot *ocelot)
 {
 	unsigned int val;
@@ -2854,6 +2879,8 @@ int ocelot_reset(struct ocelot *ocelot)
 }
 EXPORT_SYMBOL(ocelot_reset);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ocelot_init(struct ocelot *ocelot)
 {
 	int i, ret;
@@ -2879,8 +2906,15 @@ int ocelot_init(struct ocelot *ocelot)
 		return -ENOMEM;
 
 	ret = ocelot_stats_init(ocelot);
+<<<<<<< HEAD
 	if (ret)
 		goto err_stats_init;
+=======
+	if (ret) {
+		destroy_workqueue(ocelot->owq);
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	INIT_LIST_HEAD(&ocelot->multicast);
 	INIT_LIST_HEAD(&ocelot->pgids);
@@ -2895,12 +2929,15 @@ int ocelot_init(struct ocelot *ocelot)
 	if (ocelot->ops->psfp_init)
 		ocelot->ops->psfp_init(ocelot);
 
+<<<<<<< HEAD
 	if (ocelot->mm_supported) {
 		ret = ocelot_mm_init(ocelot);
 		if (ret)
 			goto err_mm_init;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (port = 0; port < ocelot->num_phys_ports; port++) {
 		/* Clear all counters (5 groups) */
 		ocelot_write(ocelot, SYS_STAT_CFG_STAT_VIEW(port) |
@@ -2998,12 +3035,15 @@ int ocelot_init(struct ocelot *ocelot)
 				 ANA_CPUQ_8021_CFG, i);
 
 	return 0;
+<<<<<<< HEAD
 
 err_mm_init:
 	ocelot_stats_deinit(ocelot);
 err_stats_init:
 	destroy_workqueue(ocelot->owq);
 	return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(ocelot_init);
 

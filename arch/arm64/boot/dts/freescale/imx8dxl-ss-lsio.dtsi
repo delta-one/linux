@@ -3,6 +3,7 @@
  * Copyright 2019~2020, 2022 NXP
  */
 
+<<<<<<< HEAD
 &flexspi0 {
 	compatible = "nxp,imx8dxl-fspi";
 	interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
@@ -15,26 +16,38 @@
 		      <&iomuxc 13 61 4>,
 		      <&iomuxc 19 67 4>,
 		      <&iomuxc 24 72 1>;
+=======
+&lsio_gpio0 {
+	compatible = "fsl,imx8dxl-gpio", "fsl,imx35-gpio";
+	interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lsio_gpio1 {
 	compatible = "fsl,imx8dxl-gpio", "fsl,imx35-gpio";
 	interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 	gpio-ranges = <&iomuxc 4 74 5>,
 		      <&iomuxc 9 80 16>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lsio_gpio2 {
 	compatible = "fsl,imx8dxl-gpio", "fsl,imx35-gpio";
 	interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 	gpio-ranges = <&iomuxc 1 98 2>,
 		      <&iomuxc 3 101 1>,
 		      <&iomuxc 5 107 8>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lsio_gpio3 {
 	compatible = "fsl,imx8dxl-gpio", "fsl,imx35-gpio";
 	interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 	gpio-ranges = <&iomuxc 0 115 4>,
 		      <&iomuxc 9 121 1>,
 		      <&iomuxc 10 120 1>,
@@ -50,43 +63,57 @@
 		      <&iomuxc 21 132 1>,
 		      <&iomuxc 22 129 1>,
 		      <&iomuxc 23 134 1>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lsio_gpio4 {
 	compatible = "fsl,imx8dxl-gpio", "fsl,imx35-gpio";
 	interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 	gpio-ranges = <&iomuxc 0 0 3>,
 		      <&iomuxc 3 4 4>,
 		      <&iomuxc 7 9 12>,
 		      <&iomuxc 19 22 2>,
 		      <&iomuxc 21 25 2>,
 		      <&iomuxc 29 29 3>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lsio_gpio5 {
 	compatible = "fsl,imx8dxl-gpio", "fsl,imx35-gpio";
 	interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 	gpio-ranges = <&iomuxc 0 32 3>,
 		      <&iomuxc 3 36 6>,
 		      <&iomuxc 9 43 3>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lsio_gpio6 {
 	compatible = "fsl,imx8dxl-gpio", "fsl,imx35-gpio";
 	interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 	gpio-ranges = <&iomuxc 0 53 7>,
 		      <&iomuxc 8 86 10>,
 		      <&iomuxc 19 107 8>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lsio_gpio7 {
 	compatible = "fsl,imx8dxl-gpio", "fsl,imx35-gpio";
 	interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 	gpio-ranges = <&iomuxc 0 0 3>,
 		      <&iomuxc 3 4 4>,
 		      <&iomuxc 8 22 2>,
 		      <&iomuxc 10 25 2>,
 		      <&iomuxc 16 44 2>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &lsio_mu0 {

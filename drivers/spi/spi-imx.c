@@ -77,6 +77,10 @@ struct spi_imx_devtype_data {
 	void (*reset)(struct spi_imx_data *spi_imx);
 	void (*setup_wml)(struct spi_imx_data *spi_imx);
 	void (*disable)(struct spi_imx_data *spi_imx);
+<<<<<<< HEAD
+=======
+	void (*disable_dma)(struct spi_imx_data *spi_imx);
+>>>>>>> b7ba80a49124 (Commit)
 	bool has_dmamode;
 	bool has_slavemode;
 	unsigned int fifo_size;
@@ -443,7 +447,12 @@ static unsigned int mx51_ecspi_clkdiv(struct spi_imx_data *spi_imx,
 	unsigned int pre, post;
 	unsigned int fin = spi_imx->spi_clk;
 
+<<<<<<< HEAD
 	fspi = min(fspi, fin);
+=======
+	if (unlikely(fspi > fin))
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	post = fls(fin) - fls(fspi);
 	if (fin > fspi << post)
@@ -495,6 +504,14 @@ static void mx51_ecspi_trigger(struct spi_imx_data *spi_imx)
 	writel(reg, spi_imx->base + MX51_ECSPI_CTRL);
 }
 
+<<<<<<< HEAD
+=======
+static void mx51_disable_dma(struct spi_imx_data *spi_imx)
+{
+	writel(0, spi_imx->base + MX51_ECSPI_DMA);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void mx51_ecspi_disable(struct spi_imx_data *spi_imx)
 {
 	u32 ctrl;
@@ -528,7 +545,11 @@ static int mx51_ecspi_prepare_message(struct spi_imx_data *spi_imx,
 		ctrl |= MX51_ECSPI_CTRL_DRCTL(spi_imx->spi_drctl);
 
 	/* set chip select to use */
+<<<<<<< HEAD
 	ctrl |= MX51_ECSPI_CTRL_CS(spi_get_chipselect(spi, 0));
+=======
+	ctrl |= MX51_ECSPI_CTRL_CS(spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * The ctrl register must be written first, with the EN bit set other
@@ -549,6 +570,7 @@ static int mx51_ecspi_prepare_message(struct spi_imx_data *spi_imx,
 	 * BURST_LENGTH + 1 bits are received
 	 */
 	if (spi_imx->slave_mode && is_imx53_ecspi(spi_imx))
+<<<<<<< HEAD
 		cfg &= ~MX51_ECSPI_CONFIG_SBBCTRL(spi_get_chipselect(spi, 0));
 	else
 		cfg |= MX51_ECSPI_CONFIG_SBBCTRL(spi_get_chipselect(spi, 0));
@@ -565,6 +587,24 @@ static int mx51_ecspi_prepare_message(struct spi_imx_data *spi_imx,
 		cfg |= MX51_ECSPI_CONFIG_SSBPOL(spi_get_chipselect(spi, 0));
 	else
 		cfg &= ~MX51_ECSPI_CONFIG_SSBPOL(spi_get_chipselect(spi, 0));
+=======
+		cfg &= ~MX51_ECSPI_CONFIG_SBBCTRL(spi->chip_select);
+	else
+		cfg |= MX51_ECSPI_CONFIG_SBBCTRL(spi->chip_select);
+
+	if (spi->mode & SPI_CPOL) {
+		cfg |= MX51_ECSPI_CONFIG_SCLKPOL(spi->chip_select);
+		cfg |= MX51_ECSPI_CONFIG_SCLKCTL(spi->chip_select);
+	} else {
+		cfg &= ~MX51_ECSPI_CONFIG_SCLKPOL(spi->chip_select);
+		cfg &= ~MX51_ECSPI_CONFIG_SCLKCTL(spi->chip_select);
+	}
+
+	if (spi->mode & SPI_CS_HIGH)
+		cfg |= MX51_ECSPI_CONFIG_SSBPOL(spi->chip_select);
+	else
+		cfg &= ~MX51_ECSPI_CONFIG_SSBPOL(spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (cfg == current_cfg)
 		return 0;
@@ -614,9 +654,15 @@ static void mx51_configure_cpha(struct spi_imx_data *spi_imx,
 	cpha ^= flip_cpha;
 
 	if (cpha)
+<<<<<<< HEAD
 		cfg |= MX51_ECSPI_CONFIG_SCLKPHA(spi_get_chipselect(spi, 0));
 	else
 		cfg &= ~MX51_ECSPI_CONFIG_SCLKPHA(spi_get_chipselect(spi, 0));
+=======
+		cfg |= MX51_ECSPI_CONFIG_SCLKPHA(spi->chip_select);
+	else
+		cfg &= ~MX51_ECSPI_CONFIG_SCLKPHA(spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	writel(cfg, spi_imx->base + MX51_ECSPI_CONFIG);
 }
@@ -768,8 +814,13 @@ static int mx31_prepare_transfer(struct spi_imx_data *spi_imx,
 		reg |= MX31_CSPICTRL_POL;
 	if (spi->mode & SPI_CS_HIGH)
 		reg |= MX31_CSPICTRL_SSPOL;
+<<<<<<< HEAD
 	if (!spi_get_csgpiod(spi, 0))
 		reg |= (spi_get_chipselect(spi, 0)) <<
+=======
+	if (!spi->cs_gpiod)
+		reg |= (spi->chip_select) <<
+>>>>>>> b7ba80a49124 (Commit)
 			(is_imx35_cspi(spi_imx) ? MX35_CSPICTRL_CS_SHIFT :
 						  MX31_CSPICTRL_CS_SHIFT);
 
@@ -868,8 +919,13 @@ static int mx21_prepare_transfer(struct spi_imx_data *spi_imx,
 		reg |= MX21_CSPICTRL_POL;
 	if (spi->mode & SPI_CS_HIGH)
 		reg |= MX21_CSPICTRL_SSPOL;
+<<<<<<< HEAD
 	if (!spi_get_csgpiod(spi, 0))
 		reg |= spi_get_chipselect(spi, 0) << MX21_CSPICTRL_CS_SHIFT;
+=======
+	if (!spi->cs_gpiod)
+		reg |= spi->chip_select << MX21_CSPICTRL_CS_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	writel(reg, spi_imx->base + MXC_CSPICTRL);
 
@@ -1036,6 +1092,10 @@ static struct spi_imx_devtype_data imx51_ecspi_devtype_data = {
 	.rx_available = mx51_ecspi_rx_available,
 	.reset = mx51_ecspi_reset,
 	.setup_wml = mx51_setup_wml,
+<<<<<<< HEAD
+=======
+	.disable_dma = mx51_disable_dma,
+>>>>>>> b7ba80a49124 (Commit)
 	.fifo_size = 64,
 	.has_dmamode = true,
 	.dynamic_burst = true,
@@ -1050,6 +1110,10 @@ static struct spi_imx_devtype_data imx53_ecspi_devtype_data = {
 	.prepare_transfer = mx51_ecspi_prepare_transfer,
 	.trigger = mx51_ecspi_trigger,
 	.rx_available = mx51_ecspi_rx_available,
+<<<<<<< HEAD
+=======
+	.disable_dma = mx51_disable_dma,
+>>>>>>> b7ba80a49124 (Commit)
 	.reset = mx51_ecspi_reset,
 	.fifo_size = 64,
 	.has_dmamode = true,
@@ -1599,6 +1663,7 @@ static int spi_imx_transfer_one(struct spi_controller *controller,
 		return spi_imx_pio_transfer_slave(spi, transfer);
 
 	/*
+<<<<<<< HEAD
 	 * If we decided in spi_imx_can_dma() that we want to do a DMA
 	 * transfer, the SPI transfer has already been mapped, so we
 	 * have to do the DMA transfer here.
@@ -1606,6 +1671,8 @@ static int spi_imx_transfer_one(struct spi_controller *controller,
 	if (spi_imx->usedma)
 		return spi_imx_dma_transfer(spi_imx, transfer);
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * Calculate the estimated time in us the transfer runs. Find
 	 * the number of Hz per byte per polling limit.
 	 */
@@ -1616,6 +1683,12 @@ static int spi_imx_transfer_one(struct spi_controller *controller,
 	if (transfer->len < byte_limit)
 		return spi_imx_poll_transfer(spi, transfer);
 
+<<<<<<< HEAD
+=======
+	if (spi_imx->usedma)
+		return spi_imx_dma_transfer(spi_imx, transfer);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return spi_imx_pio_transfer(spi, transfer);
 }
 
@@ -1848,7 +1921,11 @@ out_controller_put:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void spi_imx_remove(struct platform_device *pdev)
+=======
+static int spi_imx_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_controller *controller = platform_get_drvdata(pdev);
 	struct spi_imx_data *spi_imx = spi_controller_get_devdata(controller);
@@ -1856,17 +1933,32 @@ static void spi_imx_remove(struct platform_device *pdev)
 
 	spi_unregister_controller(controller);
 
+<<<<<<< HEAD
 	ret = pm_runtime_get_sync(spi_imx->dev);
 	if (ret >= 0)
 		writel(0, spi_imx->base + MXC_CSPICTRL);
 	else
 		dev_warn(spi_imx->dev, "failed to enable clock, skip hw disable\n");
+=======
+	ret = pm_runtime_resume_and_get(spi_imx->dev);
+	if (ret < 0) {
+		dev_err(spi_imx->dev, "failed to enable clock\n");
+		return ret;
+	}
+
+	writel(0, spi_imx->base + MXC_CSPICTRL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pm_runtime_dont_use_autosuspend(spi_imx->dev);
 	pm_runtime_put_sync(spi_imx->dev);
 	pm_runtime_disable(spi_imx->dev);
 
 	spi_imx_sdma_exit(spi_imx);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused spi_imx_runtime_resume(struct device *dev)
@@ -1928,7 +2020,11 @@ static struct platform_driver spi_imx_driver = {
 		   .pm = &imx_spi_pm,
 	},
 	.probe = spi_imx_probe,
+<<<<<<< HEAD
 	.remove_new = spi_imx_remove,
+=======
+	.remove = spi_imx_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(spi_imx_driver);
 

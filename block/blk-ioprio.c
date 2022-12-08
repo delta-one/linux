@@ -116,7 +116,11 @@ static ssize_t ioprio_set_prio_policy(struct kernfs_open_file *of, char *buf,
 }
 
 static struct blkg_policy_data *
+<<<<<<< HEAD
 ioprio_alloc_pd(struct gendisk *disk, struct blkcg *blkcg, gfp_t gfp)
+=======
+ioprio_alloc_pd(gfp_t gfp, struct request_queue *q, struct blkcg *blkcg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ioprio_blkg *ioprio_blkg;
 
@@ -202,6 +206,7 @@ void blkcg_set_ioprio(struct bio *bio)
 		bio->bi_ioprio = prio;
 }
 
+<<<<<<< HEAD
 void blk_ioprio_exit(struct gendisk *disk)
 {
 	blkcg_deactivate_policy(disk, &ioprio_policy);
@@ -210,6 +215,16 @@ void blk_ioprio_exit(struct gendisk *disk)
 int blk_ioprio_init(struct gendisk *disk)
 {
 	return blkcg_activate_policy(disk, &ioprio_policy);
+=======
+void blk_ioprio_exit(struct request_queue *q)
+{
+	blkcg_deactivate_policy(q, &ioprio_policy);
+}
+
+int blk_ioprio_init(struct request_queue *q)
+{
+	return blkcg_activate_policy(q, &ioprio_policy);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __init ioprio_init(void)

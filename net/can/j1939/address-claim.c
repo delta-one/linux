@@ -165,6 +165,7 @@ static void j1939_ac_process(struct j1939_priv *priv, struct sk_buff *skb)
 	 * leaving this function.
 	 */
 	ecu = j1939_ecu_get_by_name_locked(priv, name);
+<<<<<<< HEAD
 
 	if (ecu && ecu->addr == skcb->addr.sa) {
 		/* The ISO 11783-5 standard, in "4.5.2 - Address claim
@@ -205,6 +206,8 @@ static void j1939_ac_process(struct j1939_priv *priv, struct sk_buff *skb)
 		goto out_ecu_put;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ecu && j1939_address_is_unicast(skcb->addr.sa))
 		ecu = j1939_ecu_create_locked(priv, name);
 

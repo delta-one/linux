@@ -11,7 +11,11 @@ maintainers:
   - Chunfeng Yun <chunfeng.yun@mediatek.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: usb-xhci.yaml
+=======
+  - $ref: "usb-xhci.yaml"
+>>>>>>> b7ba80a49124 (Commit)
 
 description: |
   There are two scenarios:
@@ -28,14 +32,20 @@ properties:
           - mediatek,mt7622-xhci
           - mediatek,mt7623-xhci
           - mediatek,mt7629-xhci
+<<<<<<< HEAD
           - mediatek,mt7986-xhci
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - mediatek,mt8173-xhci
           - mediatek,mt8183-xhci
           - mediatek,mt8186-xhci
           - mediatek,mt8188-xhci
           - mediatek,mt8192-xhci
           - mediatek,mt8195-xhci
+<<<<<<< HEAD
           - mediatek,mt8365-xhci
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - const: mediatek,mtk-xhci
 
   reg:

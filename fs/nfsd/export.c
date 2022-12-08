@@ -123,11 +123,19 @@ static int expkey_parse(struct cache_detail *cd, char *mesg, int mlen)
 
 	/* OK, we seem to have a valid key */
 	key.h.flags = 0;
+<<<<<<< HEAD
 	err = get_expiry(&mesg, &key.h.expiry_time);
 	if (err)
 		goto out;
 
 	key.ek_client = dom;
+=======
+	key.h.expiry_time = get_expiry(&mesg);
+	if (key.h.expiry_time == 0)
+		goto out;
+
+	key.ek_client = dom;	
+>>>>>>> b7ba80a49124 (Commit)
 	key.ek_fsidtype = fsidtype;
 	memcpy(key.ek_fsid, buf, len);
 
@@ -610,8 +618,14 @@ static int svc_export_parse(struct cache_detail *cd, char *mesg, int mlen)
 	exp.ex_devid_map = NULL;
 
 	/* expiry */
+<<<<<<< HEAD
 	err = get_expiry(&mesg, &exp.h.expiry_time);
 	if (err)
+=======
+	err = -EINVAL;
+	exp.h.expiry_time = get_expiry(&mesg);
+	if (exp.h.expiry_time == 0)
+>>>>>>> b7ba80a49124 (Commit)
 		goto out3;
 
 	/* flags */
@@ -623,7 +637,11 @@ static int svc_export_parse(struct cache_detail *cd, char *mesg, int mlen)
 		if (err || an_int < 0)
 			goto out3;
 		exp.ex_flags= an_int;
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> b7ba80a49124 (Commit)
 		/* anon uid */
 		err = get_int(&mesg, &an_int);
 		if (err)

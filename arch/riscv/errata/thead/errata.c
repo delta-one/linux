@@ -5,7 +5,10 @@
 
 #include <linux/bug.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/memory.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/string.h>
 #include <linux/uaccess.h>
@@ -18,9 +21,12 @@
 static bool errata_probe_pbmt(unsigned int stage,
 			      unsigned long arch_id, unsigned long impid)
 {
+<<<<<<< HEAD
 	if (!IS_ENABLED(CONFIG_ERRATA_THEAD_PBMT))
 		return false;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (arch_id != 0 || impid != 0)
 		return false;
 
@@ -34,9 +40,13 @@ static bool errata_probe_pbmt(unsigned int stage,
 static bool errata_probe_cmo(unsigned int stage,
 			     unsigned long arch_id, unsigned long impid)
 {
+<<<<<<< HEAD
 	if (!IS_ENABLED(CONFIG_ERRATA_THEAD_CMO))
 		return false;
 
+=======
+#ifdef CONFIG_ERRATA_THEAD_CMO
+>>>>>>> b7ba80a49124 (Commit)
 	if (arch_id != 0 || impid != 0)
 		return false;
 
@@ -46,6 +56,7 @@ static bool errata_probe_cmo(unsigned int stage,
 	riscv_cbom_block_size = L1_CACHE_BYTES;
 	riscv_noncoherent_supported();
 	return true;
+<<<<<<< HEAD
 }
 
 static bool errata_probe_pmu(unsigned int stage,
@@ -62,6 +73,11 @@ static bool errata_probe_pmu(unsigned int stage,
 		return false;
 
 	return true;
+=======
+#else
+	return false;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static u32 thead_errata_probe(unsigned int stage,
@@ -70,6 +86,7 @@ static u32 thead_errata_probe(unsigned int stage,
 	u32 cpu_req_errata = 0;
 
 	if (errata_probe_pbmt(stage, archid, impid))
+<<<<<<< HEAD
 		cpu_req_errata |= BIT(ERRATA_THEAD_PBMT);
 
 	if (errata_probe_cmo(stage, archid, impid))
@@ -77,6 +94,12 @@ static u32 thead_errata_probe(unsigned int stage,
 
 	if (errata_probe_pmu(stage, archid, impid))
 		cpu_req_errata |= BIT(ERRATA_THEAD_PMU);
+=======
+		cpu_req_errata |= (1U << ERRATA_THEAD_PBMT);
+
+	if (errata_probe_cmo(stage, archid, impid))
+		cpu_req_errata |= (1U << ERRATA_THEAD_CMO);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return cpu_req_errata;
 }
@@ -88,11 +111,15 @@ void __init_or_module thead_errata_patch_func(struct alt_entry *begin, struct al
 	struct alt_entry *alt;
 	u32 cpu_req_errata = thead_errata_probe(stage, archid, impid);
 	u32 tmp;
+<<<<<<< HEAD
 	void *oldptr, *altptr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (alt = begin; alt < end; alt++) {
 		if (alt->vendor_id != THEAD_VENDOR_ID)
 			continue;
+<<<<<<< HEAD
 		if (alt->patch_id >= ERRATA_THEAD_NUMBER)
 			continue;
 
@@ -109,6 +136,19 @@ void __init_or_module thead_errata_patch_func(struct alt_entry *begin, struct al
 				patch_text_nosync(oldptr, altptr, alt->alt_len);
 				mutex_unlock(&text_mutex);
 			}
+=======
+		if (alt->errata_id >= ERRATA_THEAD_NUMBER)
+			continue;
+
+		tmp = (1U << alt->errata_id);
+		if (cpu_req_errata & tmp) {
+			/* On vm-alternatives, the mmu isn't running yet */
+			if (stage == RISCV_ALTERNATIVES_EARLY_BOOT)
+				memcpy((void *)__pa_symbol(alt->old_ptr),
+				       (void *)__pa_symbol(alt->alt_ptr), alt->alt_len);
+			else
+				patch_text_nosync(alt->old_ptr, alt->alt_ptr, alt->alt_len);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 

@@ -50,17 +50,37 @@ static void guest_code(void)
 int main(int argc, char *argv[])
 {
 	struct kvm_vcpu *vcpu;
+<<<<<<< HEAD
+=======
+	struct kvm_run *run;
+>>>>>>> b7ba80a49124 (Commit)
 	struct kvm_vm *vm;
 	struct kvm_sregs sregs;
 	struct ucall uc;
 
 	TEST_REQUIRE(kvm_cpu_has(X86_FEATURE_XSAVE));
 
+<<<<<<< HEAD
 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
 
 	while (1) {
 		vcpu_run(vcpu);
 		TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+=======
+	/* Tell stdout not to buffer its content */
+	setbuf(stdout, NULL);
+
+	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
+	run = vcpu->run;
+
+	while (1) {
+		vcpu_run(vcpu);
+
+		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+			    "Unexpected exit reason: %u (%s),\n",
+			    run->exit_reason,
+			    exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 
 		switch (get_ucall(vcpu, &uc)) {
 		case UCALL_SYNC:

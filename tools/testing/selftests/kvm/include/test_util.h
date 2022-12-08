@@ -63,6 +63,7 @@ void test_assert(bool exp, const char *exp_str,
 		    #a, #b, #a, (unsigned long) __a, #b, (unsigned long) __b); \
 } while (0)
 
+<<<<<<< HEAD
 #define TEST_ASSERT_KVM_EXIT_REASON(vcpu, expected) do {		\
 	__u32 exit_reason = (vcpu)->run->exit_reason;			\
 									\
@@ -76,6 +77,10 @@ void test_assert(bool exp, const char *exp_str,
 	TEST_ASSERT(false, fmt, ##__VA_ARGS__); \
 	__builtin_unreachable(); \
 } while (0)
+=======
+#define TEST_FAIL(fmt, ...) \
+	TEST_ASSERT(false, fmt, ##__VA_ARGS__)
+>>>>>>> b7ba80a49124 (Commit)
 
 size_t parse_size(const char *size);
 
@@ -86,6 +91,7 @@ struct timespec timespec_sub(struct timespec ts1, struct timespec ts2);
 struct timespec timespec_elapsed(struct timespec start);
 struct timespec timespec_div(struct timespec ts, int divisor);
 
+<<<<<<< HEAD
 struct guest_random_state {
 	uint32_t seed;
 };
@@ -93,6 +99,8 @@ struct guest_random_state {
 struct guest_random_state new_guest_random_state(uint32_t seed);
 uint32_t guest_random_u32(struct guest_random_state *state);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum vm_mem_backing_src_type {
 	VM_MEM_SRC_ANONYMOUS,
 	VM_MEM_SRC_ANONYMOUS_THP,
@@ -168,6 +176,7 @@ static inline void *align_ptr_up(void *x, size_t size)
 	return (void *)align_up((unsigned long)x, size);
 }
 
+<<<<<<< HEAD
 int atoi_paranoid(const char *num_str);
 
 static inline uint32_t atoi_positive(const char *name, const char *num_str)
@@ -186,4 +195,6 @@ static inline uint32_t atoi_non_negative(const char *name, const char *num_str)
 	return num;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* SELFTEST_KVM_TEST_UTIL_H */

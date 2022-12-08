@@ -50,6 +50,7 @@ void __init setup_cmdline(char **cmdline_p)
 	extern unsigned int boot_args[];
 	char *p;
 
+<<<<<<< HEAD
 	*cmdline_p = command_line;
 
 	/* boot_args[0] is free-mem start, boot_args[1] is ptr to command line */
@@ -59,6 +60,17 @@ void __init setup_cmdline(char **cmdline_p)
 	/* Collect stuff passed in from the boot loader */
 	strscpy(boot_command_line, (char *)__va(boot_args[1]),
 		COMMAND_LINE_SIZE);
+=======
+	/* Collect stuff passed in from the boot loader */
+
+	/* boot_args[0] is free-mem start, boot_args[1] is ptr to command line */
+	if (boot_args[0] < 64) {
+		/* called from hpux boot loader */
+		boot_command_line[0] = '\0';
+	} else {
+		strscpy(boot_command_line, (char *)__va(boot_args[1]),
+			COMMAND_LINE_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* autodetect console type (if not done by palo yet) */
 	p = boot_command_line;
@@ -70,6 +82,7 @@ void __init setup_cmdline(char **cmdline_p)
 			strlcat(p, "tty0", COMMAND_LINE_SIZE);
 	}
 
+<<<<<<< HEAD
 	/* default to use early console */
 	if (!strstr(p, "earlycon"))
 		strlcat(p, " earlycon=pdc", COMMAND_LINE_SIZE);
@@ -83,6 +96,19 @@ void __init setup_cmdline(char **cmdline_p)
 #endif
 
 	strscpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
+=======
+#ifdef CONFIG_BLK_DEV_INITRD
+		if (boot_args[2] != 0) /* did palo pass us a ramdisk? */
+		{
+		    initrd_start = (unsigned long)__va(boot_args[2]);
+		    initrd_end = (unsigned long)__va(boot_args[3]);
+		}
+#endif
+	}
+
+	strscpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
+	*cmdline_p = command_line;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PA11
@@ -141,6 +167,11 @@ void __init setup_arch(char **cmdline_p)
 	if (__pa((unsigned long) &_end) >= KERNEL_INITIAL_SIZE)
 		panic("KERNEL_INITIAL_ORDER too small!");
 
+<<<<<<< HEAD
+=======
+	pdc_console_init();
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_64BIT
 	if(parisc_narrow_firmware) {
 		printk(KERN_INFO "Kernel is using PDC in 32-bit mode.\n");

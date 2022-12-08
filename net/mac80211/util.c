@@ -288,6 +288,7 @@ __le16 ieee80211_ctstoself_duration(struct ieee80211_hw *hw,
 }
 EXPORT_SYMBOL(ieee80211_ctstoself_duration);
 
+<<<<<<< HEAD
 static void wake_tx_push_queue(struct ieee80211_local *local,
 			       struct ieee80211_sub_if_data *sdata,
 			       struct ieee80211_txq *queue)
@@ -327,6 +328,8 @@ void ieee80211_handle_wake_tx_queue(struct ieee80211_hw *hw,
 }
 EXPORT_SYMBOL(ieee80211_handle_wake_tx_queue);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void __ieee80211_wake_txqs(struct ieee80211_sub_if_data *sdata, int ac)
 {
 	struct ieee80211_local *local = sdata->local;
@@ -346,6 +349,11 @@ static void __ieee80211_wake_txqs(struct ieee80211_sub_if_data *sdata, int ac)
 	if (sdata->vif.type == NL80211_IFTYPE_AP)
 		ps = &sdata->bss->ps;
 
+<<<<<<< HEAD
+=======
+	sdata->vif.txqs_stopped[ac] = false;
+
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry_rcu(sta, &local->sta_list, list) {
 		if (sdata != sta->sdata)
 			continue;
@@ -361,7 +369,11 @@ static void __ieee80211_wake_txqs(struct ieee80211_sub_if_data *sdata, int ac)
 			if (ac != txq->ac)
 				continue;
 
+<<<<<<< HEAD
 			if (!test_and_clear_bit(IEEE80211_TXQ_DIRTY,
+=======
+			if (!test_and_clear_bit(IEEE80211_TXQ_STOP_NETIF_TX,
+>>>>>>> b7ba80a49124 (Commit)
 						&txqi->flags))
 				continue;
 
@@ -376,7 +388,11 @@ static void __ieee80211_wake_txqs(struct ieee80211_sub_if_data *sdata, int ac)
 
 	txqi = to_txq_info(vif->txq);
 
+<<<<<<< HEAD
 	if (!test_and_clear_bit(IEEE80211_TXQ_DIRTY, &txqi->flags) ||
+=======
+	if (!test_and_clear_bit(IEEE80211_TXQ_STOP_NETIF_TX, &txqi->flags) ||
+>>>>>>> b7ba80a49124 (Commit)
 	    (ps && atomic_read(&ps->num_sta_ps)) || ac != vif->txq->ac)
 		goto out;
 
@@ -437,6 +453,42 @@ void ieee80211_wake_txqs(struct tasklet_struct *t)
 	spin_unlock_irqrestore(&local->queue_stop_reason_lock, flags);
 }
 
+<<<<<<< HEAD
+=======
+void ieee80211_propagate_queue_wake(struct ieee80211_local *local, int queue)
+{
+	struct ieee80211_sub_if_data *sdata;
+	int n_acs = IEEE80211_NUM_ACS;
+
+	if (local->ops->wake_tx_queue)
+		return;
+
+	if (local->hw.queues < IEEE80211_NUM_ACS)
+		n_acs = 1;
+
+	list_for_each_entry_rcu(sdata, &local->interfaces, list) {
+		int ac;
+
+		if (!sdata->dev)
+			continue;
+
+		if (sdata->vif.cab_queue != IEEE80211_INVAL_HW_QUEUE &&
+		    local->queue_stop_reasons[sdata->vif.cab_queue] != 0)
+			continue;
+
+		for (ac = 0; ac < n_acs; ac++) {
+			int ac_queue = sdata->vif.hw_queue[ac];
+
+			if (ac_queue == queue ||
+			    (sdata->vif.cab_queue == queue &&
+			     local->queue_stop_reasons[ac_queue] == 0 &&
+			     skb_queue_empty(&local->pending[ac_queue])))
+				netif_wake_subqueue(sdata->dev, ac);
+		}
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void __ieee80211_wake_queue(struct ieee80211_hw *hw, int queue,
 				   enum queue_stop_reason reason,
 				   bool refcounted,
@@ -467,7 +519,15 @@ static void __ieee80211_wake_queue(struct ieee80211_hw *hw, int queue,
 		/* someone still has this queue stopped */
 		return;
 
+<<<<<<< HEAD
 	if (!skb_queue_empty(&local->pending[queue]))
+=======
+	if (skb_queue_empty(&local->pending[queue])) {
+		rcu_read_lock();
+		ieee80211_propagate_queue_wake(local, queue);
+		rcu_read_unlock();
+	} else
+>>>>>>> b7ba80a49124 (Commit)
 		tasklet_schedule(&local->tx_pending_tasklet);
 
 	/*
@@ -477,10 +537,19 @@ static void __ieee80211_wake_queue(struct ieee80211_hw *hw, int queue,
 	 * release someone's lock, but it is fine because all the callers of
 	 * __ieee80211_wake_queue call it right before releasing the lock.
 	 */
+<<<<<<< HEAD
 	if (reason == IEEE80211_QUEUE_STOP_REASON_DRIVER)
 		tasklet_schedule(&local->wake_txqs_tasklet);
 	else
 		_ieee80211_wake_txqs(local, flags);
+=======
+	if (local->ops->wake_tx_queue) {
+		if (reason == IEEE80211_QUEUE_STOP_REASON_DRIVER)
+			tasklet_schedule(&local->wake_txqs_tasklet);
+		else
+			_ieee80211_wake_txqs(local, flags);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void ieee80211_wake_queue_by_reason(struct ieee80211_hw *hw, int queue,
@@ -508,6 +577,11 @@ static void __ieee80211_stop_queue(struct ieee80211_hw *hw, int queue,
 				   bool refcounted)
 {
 	struct ieee80211_local *local = hw_to_local(hw);
+<<<<<<< HEAD
+=======
+	struct ieee80211_sub_if_data *sdata;
+	int n_acs = IEEE80211_NUM_ACS;
+>>>>>>> b7ba80a49124 (Commit)
 
 	trace_stop_queue(local, queue, reason);
 
@@ -519,7 +593,37 @@ static void __ieee80211_stop_queue(struct ieee80211_hw *hw, int queue,
 	else
 		local->q_stop_reasons[queue][reason]++;
 
+<<<<<<< HEAD
 	set_bit(reason, &local->queue_stop_reasons[queue]);
+=======
+	if (__test_and_set_bit(reason, &local->queue_stop_reasons[queue]))
+		return;
+
+	if (local->hw.queues < IEEE80211_NUM_ACS)
+		n_acs = 1;
+
+	rcu_read_lock();
+	list_for_each_entry_rcu(sdata, &local->interfaces, list) {
+		int ac;
+
+		if (!sdata->dev)
+			continue;
+
+		for (ac = 0; ac < n_acs; ac++) {
+			if (sdata->vif.hw_queue[ac] == queue ||
+			    sdata->vif.cab_queue == queue) {
+				if (!local->ops->wake_tx_queue) {
+					netif_stop_subqueue(sdata->dev, ac);
+					continue;
+				}
+				spin_lock(&local->fq.lock);
+				sdata->vif.txqs_stopped[ac] = true;
+				spin_unlock(&local->fq.lock);
+			}
+		}
+	}
+	rcu_read_unlock();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void ieee80211_stop_queue_by_reason(struct ieee80211_hw *hw, int queue,
@@ -835,6 +939,22 @@ static void __iterate_stations(struct ieee80211_local *local,
 	}
 }
 
+<<<<<<< HEAD
+=======
+void ieee80211_iterate_stations(struct ieee80211_hw *hw,
+				void (*iterator)(void *data,
+						 struct ieee80211_sta *sta),
+				void *data)
+{
+	struct ieee80211_local *local = hw_to_local(hw);
+
+	mutex_lock(&local->sta_mtx);
+	__iterate_stations(local, iterator, data);
+	mutex_unlock(&local->sta_mtx);
+}
+EXPORT_SYMBOL_GPL(ieee80211_iterate_stations);
+
+>>>>>>> b7ba80a49124 (Commit)
 void ieee80211_iterate_stations_atomic(struct ieee80211_hw *hw,
 			void (*iterator)(void *data,
 					 struct ieee80211_sta *sta),
@@ -983,10 +1103,15 @@ ieee80211_parse_extension_element(u32 *crc,
 			elems->eht_operation = data;
 		break;
 	case WLAN_EID_EXT_EHT_MULTI_LINK:
+<<<<<<< HEAD
 		if (ieee80211_mle_size_ok(data, len)) {
 			elems->multi_link = (void *)data;
 			elems->multi_link_len = len;
 		}
+=======
+		if (ieee80211_mle_size_ok(data, len))
+			elems->multi_link = (void *)data;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 }
@@ -1404,8 +1529,11 @@ static size_t ieee802_11_find_bssid_profile(const u8 *start, size_t len,
 	for_each_element_id(elem, WLAN_EID_MULTIPLE_BSSID, start, len) {
 		if (elem->datalen < 2)
 			continue;
+<<<<<<< HEAD
 		if (elem->data[0] < 1 || elem->data[0] > 8)
 			continue;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		for_each_element(sub, elem->data + 1, elem->datalen - 1) {
 			u8 new_bssid[ETH_ALEN];
@@ -1458,6 +1586,7 @@ static size_t ieee802_11_find_bssid_profile(const u8 *start, size_t len,
 	return found ? profile_len : 0;
 }
 
+<<<<<<< HEAD
 static void ieee80211_defragment_element(struct ieee802_11_elems *elems,
 					 void **elem_ptr, size_t *len,
 					 size_t total_len, u8 frag_id)
@@ -1597,6 +1726,8 @@ static void ieee80211_mle_parse_link(struct ieee802_11_elems *elems,
 	_ieee802_11_parse_elems_full(&sub, elems, non_inherit);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ieee802_11_elems *
 ieee802_11_parse_elems_full(struct ieee80211_elems_parse_params *params)
 {
@@ -1604,13 +1735,19 @@ ieee802_11_parse_elems_full(struct ieee80211_elems_parse_params *params)
 	const struct element *non_inherit = NULL;
 	u8 *nontransmitted_profile;
 	int nontransmitted_profile_len = 0;
+<<<<<<< HEAD
 	size_t scratch_len = params->scratch_len ?: 3 * params->len;
 
 	elems = kzalloc(sizeof(*elems) + scratch_len, GFP_ATOMIC);
+=======
+
+	elems = kzalloc(sizeof(*elems), GFP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!elems)
 		return NULL;
 	elems->ie_start = params->start;
 	elems->total_len = params->len;
+<<<<<<< HEAD
 	elems->scratch_len = scratch_len;
 	elems->scratch_pos = elems->scratch;
 
@@ -1624,6 +1761,20 @@ ieee802_11_parse_elems_full(struct ieee80211_elems_parse_params *params)
 	non_inherit = cfg80211_find_ext_elem(WLAN_EID_EXT_NON_INHERITANCE,
 					     nontransmitted_profile,
 					     nontransmitted_profile_len);
+=======
+
+	nontransmitted_profile = kmalloc(params->len, GFP_ATOMIC);
+	if (nontransmitted_profile) {
+		nontransmitted_profile_len =
+			ieee802_11_find_bssid_profile(params->start, params->len,
+						      elems, params->bss,
+						      nontransmitted_profile);
+		non_inherit =
+			cfg80211_find_ext_elem(WLAN_EID_EXT_NON_INHERITANCE,
+					       nontransmitted_profile,
+					       nontransmitted_profile_len);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	elems->crc = _ieee802_11_parse_elems_full(params, elems, non_inherit);
 
@@ -1639,8 +1790,11 @@ ieee802_11_parse_elems_full(struct ieee80211_elems_parse_params *params)
 		_ieee802_11_parse_elems_full(&sub, elems, NULL);
 	}
 
+<<<<<<< HEAD
 	ieee80211_mle_parse_link(elems, params);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (elems->tim && !elems->parse_error) {
 		const struct ieee80211_tim_ie *tim_ie = elems->tim;
 
@@ -1659,6 +1813,11 @@ ieee802_11_parse_elems_full(struct ieee80211_elems_parse_params *params)
 	    offsetofend(struct ieee80211_bssid_index, dtim_count))
 		elems->dtim_count = elems->bssid_index->dtim_count;
 
+<<<<<<< HEAD
+=======
+	kfree(nontransmitted_profile);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return elems;
 }
 
@@ -2148,7 +2307,11 @@ static int ieee80211_build_preq_ies_band(struct ieee80211_sub_if_data *sdata,
 		if (he_cap) {
 			enum nl80211_iftype iftype =
 				ieee80211_vif_type_p2p(&sdata->vif);
+<<<<<<< HEAD
 			__le16 cap = ieee80211_get_he_6ghz_capa(sband6, iftype);
+=======
+			__le16 cap = ieee80211_get_he_6ghz_capa(sband, iftype);
+>>>>>>> b7ba80a49124 (Commit)
 
 			pos = ieee80211_write_he_6ghz_cap(pos, cap, end);
 		}
@@ -4023,6 +4186,7 @@ u64 ieee80211_calculate_rx_timestamp(struct ieee80211_local *local,
 
 	/* Fill cfg80211 rate info */
 	switch (status->encoding) {
+<<<<<<< HEAD
 	case RX_ENC_EHT:
 		ri.flags |= RATE_INFO_FLAGS_EHT_MCS;
 		ri.mcs = status->rate_idx;
@@ -4036,6 +4200,8 @@ u64 ieee80211_calculate_rx_timestamp(struct ieee80211_local *local,
 			ts += 36;
 		}
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case RX_ENC_HE:
 		ri.flags |= RATE_INFO_FLAGS_HE_MCS;
 		ri.mcs = status->rate_idx;

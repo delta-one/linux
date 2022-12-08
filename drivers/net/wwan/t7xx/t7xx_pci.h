@@ -78,9 +78,12 @@ struct t7xx_pci_dev {
 	spinlock_t		md_pm_lock;		/* Protects PCI resource lock */
 	unsigned int		sleep_disable_count;
 	struct completion	sleep_lock_acquire;
+<<<<<<< HEAD
 #ifdef CONFIG_WWAN_DEBUGFS
 	struct dentry		*debugfs_dir;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum t7xx_pm_id {

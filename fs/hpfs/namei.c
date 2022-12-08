@@ -20,7 +20,11 @@ static void hpfs_update_directory_times(struct inode *dir)
 	hpfs_write_inode_nolock(dir);
 }
 
+<<<<<<< HEAD
 static int hpfs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int hpfs_mkdir(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *dentry, umode_t mode)
 {
 	const unsigned char *name = dentry->d_name.name;
@@ -129,7 +133,11 @@ bail:
 	return err;
 }
 
+<<<<<<< HEAD
 static int hpfs_create(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int hpfs_create(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct dentry *dentry, umode_t mode, bool excl)
 {
 	const unsigned char *name = dentry->d_name.name;
@@ -217,7 +225,11 @@ bail:
 	return err;
 }
 
+<<<<<<< HEAD
 static int hpfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int hpfs_mknod(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *dentry, umode_t mode, dev_t rdev)
 {
 	const unsigned char *name = dentry->d_name.name;
@@ -292,7 +304,11 @@ bail:
 	return err;
 }
 
+<<<<<<< HEAD
 static int hpfs_symlink(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int hpfs_symlink(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 			struct dentry *dentry, const char *symlink)
 {
 	const unsigned char *name = dentry->d_name.name;
@@ -512,7 +528,11 @@ const struct address_space_operations hpfs_symlink_aops = {
 	.read_folio	= hpfs_symlink_read_folio
 };
 
+<<<<<<< HEAD
 static int hpfs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
+=======
+static int hpfs_rename(struct user_namespace *mnt_userns, struct inode *old_dir,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct dentry *old_dentry, struct inode *new_dir,
 		       struct dentry *new_dentry, unsigned int flags)
 {

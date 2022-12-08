@@ -1,5 +1,8 @@
 # SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 generated/bit-length.h
+=======
+>>>>>>> b7ba80a49124 (Commit)
 generated/map-shift.h
 idr.c
 idr-test

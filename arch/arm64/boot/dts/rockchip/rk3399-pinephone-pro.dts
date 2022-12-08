@@ -81,6 +81,7 @@
 		regulator-max-microvolt = <1800000>;
 		vin-supply = <&vcc3v3_sys>;
 	};
+<<<<<<< HEAD
 
 	wifi_pwrseq: sdio-wifi-pwrseq {
 		compatible = "mmc-pwrseq-simple";
@@ -109,6 +110,8 @@
 };
 &cpu_alert1 {
 	temperature = <68000>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &cpu_l0 {
@@ -388,17 +391,21 @@
 		};
 	};
 
+<<<<<<< HEAD
 	sdio-pwrseq {
 		wifi_enable_h_pin: wifi-enable-h-pin {
 			rockchip,pins = <0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sound {
 		vcc1v8_codec_en: vcc1v8-codec-en {
 			rockchip,pins = <3 RK_PA4 RK_FUNC_GPIO &pcfg_pull_down>;
 		};
 	};
+<<<<<<< HEAD
 
 	wireless-bluetooth {
 		bt_wake_pin: bt-wake-pin {
@@ -427,6 +434,8 @@
 	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
 	sd-uhs-sdr104;
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &sdmmc {
@@ -455,6 +464,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &uart0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
@@ -476,6 +486,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &uart2 {
 	status = "okay";
 };

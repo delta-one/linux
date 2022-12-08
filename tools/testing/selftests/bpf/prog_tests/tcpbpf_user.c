@@ -8,6 +8,11 @@
 #define LO_ADDR6 "::1"
 #define CG_NAME "/tcpbpf-user-test"
 
+<<<<<<< HEAD
+=======
+static __u32 duration;
+
+>>>>>>> b7ba80a49124 (Commit)
 static void verify_result(struct tcpbpf_globals *result)
 {
 	__u32 expected_events = ((1 << BPF_SOCK_OPS_TIMEOUT_INIT) |
@@ -20,7 +25,13 @@ static void verify_result(struct tcpbpf_globals *result)
 				 (1 << BPF_SOCK_OPS_TCP_LISTEN_CB));
 
 	/* check global map */
+<<<<<<< HEAD
 	ASSERT_EQ(expected_events, result->event_map, "event_map");
+=======
+	CHECK(expected_events != result->event_map, "event_map",
+	      "unexpected event_map: actual 0x%08x != expected 0x%08x\n",
+	      result->event_map, expected_events);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT_EQ(result->bytes_received, 501, "bytes_received");
 	ASSERT_EQ(result->bytes_acked, 1002, "bytes_acked");
@@ -52,6 +63,7 @@ static void run_test(struct tcpbpf_globals *result)
 	int i, rv;
 
 	listen_fd = start_server(AF_INET6, SOCK_STREAM, LO_ADDR6, 0, 0);
+<<<<<<< HEAD
 	if (!ASSERT_NEQ(listen_fd, -1, "start_server"))
 		goto done;
 
@@ -61,6 +73,20 @@ static void run_test(struct tcpbpf_globals *result)
 
 	accept_fd = accept(listen_fd, NULL, NULL);
 	if (!ASSERT_NEQ(accept_fd, -1, "accept(listen_fd)"))
+=======
+	if (CHECK(listen_fd == -1, "start_server", "listen_fd:%d errno:%d\n",
+		  listen_fd, errno))
+		goto done;
+
+	cli_fd = connect_to_fd(listen_fd, 0);
+	if (CHECK(cli_fd == -1, "connect_to_fd(listen_fd)",
+		  "cli_fd:%d errno:%d\n", cli_fd, errno))
+		goto done;
+
+	accept_fd = accept(listen_fd, NULL, NULL);
+	if (CHECK(accept_fd == -1, "accept(listen_fd)",
+		  "accept_fd:%d errno:%d\n", accept_fd, errno))
+>>>>>>> b7ba80a49124 (Commit)
 		goto done;
 
 	/* Send 1000B of '+'s from cli_fd -> accept_fd */
@@ -68,11 +94,19 @@ static void run_test(struct tcpbpf_globals *result)
 		buf[i] = '+';
 
 	rv = send(cli_fd, buf, 1000, 0);
+<<<<<<< HEAD
 	if (!ASSERT_EQ(rv, 1000, "send(cli_fd)"))
 		goto done;
 
 	rv = recv(accept_fd, buf, 1000, 0);
 	if (!ASSERT_EQ(rv, 1000, "recv(accept_fd)"))
+=======
+	if (CHECK(rv != 1000, "send(cli_fd)", "rv:%d errno:%d\n", rv, errno))
+		goto done;
+
+	rv = recv(accept_fd, buf, 1000, 0);
+	if (CHECK(rv != 1000, "recv(accept_fd)", "rv:%d errno:%d\n", rv, errno))
+>>>>>>> b7ba80a49124 (Commit)
 		goto done;
 
 	/* Send 500B of '.'s from accept_fd ->cli_fd */
@@ -80,11 +114,19 @@ static void run_test(struct tcpbpf_globals *result)
 		buf[i] = '.';
 
 	rv = send(accept_fd, buf, 500, 0);
+<<<<<<< HEAD
 	if (!ASSERT_EQ(rv, 500, "send(accept_fd)"))
 		goto done;
 
 	rv = recv(cli_fd, buf, 500, 0);
 	if (!ASSERT_EQ(rv, 500, "recv(cli_fd)"))
+=======
+	if (CHECK(rv != 500, "send(accept_fd)", "rv:%d errno:%d\n", rv, errno))
+		goto done;
+
+	rv = recv(cli_fd, buf, 500, 0);
+	if (CHECK(rv != 500, "recv(cli_fd)", "rv:%d errno:%d\n", rv, errno))
+>>>>>>> b7ba80a49124 (Commit)
 		goto done;
 
 	/*
@@ -93,12 +135,20 @@ static void run_test(struct tcpbpf_globals *result)
 	 */
 	shutdown(accept_fd, SHUT_WR);
 	err = recv(cli_fd, buf, 1, 0);
+<<<<<<< HEAD
 	if (!ASSERT_OK(err, "recv(cli_fd) for fin"))
+=======
+	if (CHECK(err, "recv(cli_fd) for fin", "err:%d errno:%d\n", err, errno))
+>>>>>>> b7ba80a49124 (Commit)
 		goto done;
 
 	shutdown(cli_fd, SHUT_WR);
 	err = recv(accept_fd, buf, 1, 0);
+<<<<<<< HEAD
 	ASSERT_OK(err, "recv(accept_fd) for fin");
+=======
+	CHECK(err, "recv(accept_fd) for fin", "err:%d errno:%d\n", err, errno);
+>>>>>>> b7ba80a49124 (Commit)
 done:
 	if (accept_fd != -1)
 		close(accept_fd);
@@ -117,11 +167,20 @@ void test_tcpbpf_user(void)
 	int cg_fd = -1;
 
 	skel = test_tcpbpf_kern__open_and_load();
+<<<<<<< HEAD
 	if (!ASSERT_OK_PTR(skel, "open and load skel"))
 		return;
 
 	cg_fd = test__join_cgroup(CG_NAME);
 	if (!ASSERT_GE(cg_fd, 0, "test__join_cgroup(" CG_NAME ")"))
+=======
+	if (CHECK(!skel, "open and load skel", "failed"))
+		return;
+
+	cg_fd = test__join_cgroup(CG_NAME);
+	if (CHECK(cg_fd < 0, "test__join_cgroup(" CG_NAME ")",
+		  "cg_fd:%d errno:%d", cg_fd, errno))
+>>>>>>> b7ba80a49124 (Commit)
 		goto err;
 
 	skel->links.bpf_testcb = bpf_program__attach_cgroup(skel->progs.bpf_testcb, cg_fd);

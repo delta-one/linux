@@ -37,7 +37,10 @@
 #include <drm/drm_framebuffer.h>
 #include <drm/drm_encoder.h>
 #include <drm/drm_atomic.h>
+<<<<<<< HEAD
 #include "dcn10/dcn10_optc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "dc/inc/core_types.h"
 
@@ -663,6 +666,7 @@ TRACE_EVENT(dcn_fpu,
 	    )
 );
 
+<<<<<<< HEAD
 TRACE_EVENT(dcn_optc_lock_unlock_state,
 	    TP_PROTO(const struct optc *optc_state, int instance, bool lock, const char *function, const int line),
 	    TP_ARGS(optc_state, instance, lock, function, line),
@@ -726,6 +730,8 @@ TRACE_EVENT(dcn_optc_lock_unlock_state,
 	    )
 );
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _AMDGPU_DM_TRACE_H_ */
 
 #undef TRACE_INCLUDE_PATH

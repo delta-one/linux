@@ -56,7 +56,11 @@ int handle_legacy(void *ctx)
 SEC("tp/raw_syscalls/sys_enter")
 int handle_modern(void *ctx)
 {
+<<<<<<< HEAD
 	int cur_pid;
+=======
+	int zero = 0, cur_pid;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cur_pid = bpf_get_current_pid_tgid() >> 32;
 	if (cur_pid != my_pid_var)

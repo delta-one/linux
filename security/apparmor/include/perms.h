@@ -65,6 +65,7 @@ extern const char *aa_file_perm_names[];
 
 struct aa_perms {
 	u32 allow;
+<<<<<<< HEAD
 	u32 deny;	/* explicit deny, or conflict if allow also set */
 
 	u32 subtree;	/* allow perm on full subtree only when allow is set */
@@ -92,10 +93,32 @@ struct aa_perms {
 #define AA_INDEX_FLAG_MASK		0xff000000
 #define AA_INDEX_NONE			0
 
+=======
+	u32 audit;	/* set only when allow is set */
+
+	u32 deny;	/* explicit deny, or conflict if allow also set */
+	u32 quiet;	/* set only when ~allow | deny */
+	u32 kill;	/* set only when ~allow | deny */
+	u32 stop;	/* set only when ~allow | deny */
+
+	u32 complain;	/* accumulates only used when ~allow & ~deny */
+	u32 cond;	/* set only when ~allow and ~deny */
+
+	u32 hide;	/* set only when  ~allow | deny */
+	u32 prompt;	/* accumulates only used when ~allow & ~deny */
+
+	/* Reserved:
+	 * u32 subtree;	/ * set only when allow is set * /
+	 */
+	u16 xindex;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 #define ALL_PERMS_MASK 0xffffffff
 extern struct aa_perms nullperms;
 extern struct aa_perms allperms;
 
+<<<<<<< HEAD
 /**
  * aa_perms_accum_raw - accumulate perms with out masking off overlapping perms
  * @accum - perms struct to accumulate into
@@ -149,6 +172,8 @@ static inline void aa_perms_accum(struct aa_perms *accum,
 	if (!accum->label)
 		accum->label = addend->label;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define xcheck(FN1, FN2)	\
 ({				\
@@ -194,9 +219,12 @@ static inline void aa_perms_accum(struct aa_perms *accum,
 	xcheck(fn_for_each((L1), (P), (FN1)), fn_for_each((L2), (P), (FN2)))
 
 
+<<<<<<< HEAD
 extern struct aa_perms default_perms;
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void aa_perm_mask_to_str(char *str, size_t str_size, const char *chrs,
 			 u32 mask);
 void aa_audit_perm_names(struct audit_buffer *ab, const char * const *names,
@@ -205,10 +233,18 @@ void aa_audit_perm_mask(struct audit_buffer *ab, u32 mask, const char *chrs,
 			u32 chrsmask, const char * const *names, u32 namesmask);
 void aa_apply_modes_to_perms(struct aa_profile *profile,
 			     struct aa_perms *perms);
+<<<<<<< HEAD
 void aa_perms_accum(struct aa_perms *accum, struct aa_perms *addend);
 void aa_perms_accum_raw(struct aa_perms *accum, struct aa_perms *addend);
 void aa_profile_match_label(struct aa_profile *profile,
 			    struct aa_ruleset *rules, struct aa_label *label,
+=======
+void aa_compute_perms(struct aa_dfa *dfa, unsigned int state,
+		      struct aa_perms *perms);
+void aa_perms_accum(struct aa_perms *accum, struct aa_perms *addend);
+void aa_perms_accum_raw(struct aa_perms *accum, struct aa_perms *addend);
+void aa_profile_match_label(struct aa_profile *profile, struct aa_label *label,
+>>>>>>> b7ba80a49124 (Commit)
 			    int type, u32 request, struct aa_perms *perms);
 int aa_profile_label_perm(struct aa_profile *profile, struct aa_profile *target,
 			  u32 request, int type, u32 *deny,

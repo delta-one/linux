@@ -120,6 +120,7 @@ Contact:	xen-devel@lists.xenproject.org
 Description:	If running under Xen:
 		The Xen version is in the format <major>.<minor><extra>
 		This is the <minor> part of it.
+<<<<<<< HEAD
 
 What:		/sys/hypervisor/start_flags/*
 Date:		March 2023
@@ -133,3 +134,5 @@ Description:	If running under Xen:
 		otherwise.  This flag is now exposed as "initdomain" in
 		addition to the "privileged" flag; all other possible flags
 		are accessible as "unknownXX".
+=======
+>>>>>>> b7ba80a49124 (Commit)

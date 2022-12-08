@@ -79,7 +79,10 @@ struct sg_list {
 struct otx2_snd_queue {
 	u8			aura_id;
 	u16			head;
+<<<<<<< HEAD
 	u16			cons_head;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16			sqe_size;
 	u32			sqe_cnt;
 	u16			num_sqbs;

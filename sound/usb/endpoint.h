@@ -14,8 +14,12 @@ struct snd_usb_endpoint *
 snd_usb_endpoint_open(struct snd_usb_audio *chip,
 		      const struct audioformat *fp,
 		      const struct snd_pcm_hw_params *params,
+<<<<<<< HEAD
 		      bool is_sync_ep,
 		      bool fixed_rate);
+=======
+		      bool is_sync_ep);
+>>>>>>> b7ba80a49124 (Commit)
 void snd_usb_endpoint_close(struct snd_usb_audio *chip,
 			    struct snd_usb_endpoint *ep);
 int snd_usb_endpoint_set_params(struct snd_usb_audio *chip,
@@ -52,7 +56,12 @@ int snd_usb_endpoint_implicit_feedback_sink(struct snd_usb_endpoint *ep);
 int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep,
 				      struct snd_urb_ctx *ctx, int idx,
 				      unsigned int avail);
+<<<<<<< HEAD
 int snd_usb_queue_pending_output_urbs(struct snd_usb_endpoint *ep,
 				      bool in_stream_lock);
+=======
+void snd_usb_queue_pending_output_urbs(struct snd_usb_endpoint *ep,
+				       bool in_stream_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __USBAUDIO_ENDPOINT_H */

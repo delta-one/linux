@@ -41,6 +41,18 @@
 
 #define DASD_DIAG_MOD		"dasd_diag_mod"
 
+<<<<<<< HEAD
+=======
+static unsigned int queue_depth = 32;
+static unsigned int nr_hw_queues = 4;
+
+module_param(queue_depth, uint, 0444);
+MODULE_PARM_DESC(queue_depth, "Default queue depth for new DASD devices");
+
+module_param(nr_hw_queues, uint, 0444);
+MODULE_PARM_DESC(nr_hw_queues, "Default number of hardware queues for new DASD devices");
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * SECTION: exported variables of dasd.c
  */
@@ -59,6 +71,11 @@ MODULE_LICENSE("GPL");
 /*
  * SECTION: prototypes for static functions of dasd.c
  */
+<<<<<<< HEAD
+=======
+static int  dasd_alloc_queue(struct dasd_block *);
+static void dasd_free_queue(struct dasd_block *);
+>>>>>>> b7ba80a49124 (Commit)
 static int dasd_flush_block_queue(struct dasd_block *);
 static void dasd_device_tasklet(unsigned long);
 static void dasd_block_tasklet(unsigned long);
@@ -187,11 +204,27 @@ EXPORT_SYMBOL_GPL(dasd_free_block);
  */
 static int dasd_state_new_to_known(struct dasd_device *device)
 {
+<<<<<<< HEAD
+=======
+	int rc;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * As long as the device is not in state DASD_STATE_NEW we want to
 	 * keep the reference count > 0.
 	 */
 	dasd_get_device(device);
+<<<<<<< HEAD
+=======
+
+	if (device->block) {
+		rc = dasd_alloc_queue(device->block);
+		if (rc) {
+			dasd_put_device(device);
+			return rc;
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	device->state = DASD_STATE_KNOWN;
 	return 0;
 }
@@ -205,6 +238,12 @@ static int dasd_state_known_to_new(struct dasd_device *device)
 	dasd_eer_disable(device);
 	device->state = DASD_STATE_NEW;
 
+<<<<<<< HEAD
+=======
+	if (device->block)
+		dasd_free_queue(device->block);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Give up reference we took in dasd_state_new_to_known. */
 	dasd_put_device(device);
 	return 0;
@@ -1567,8 +1606,14 @@ void dasd_generic_handle_state_change(struct dasd_device *device)
 	dasd_schedule_device_bh(device);
 	if (device->block) {
 		dasd_schedule_block_bh(device->block);
+<<<<<<< HEAD
 		if (device->block->gdp)
 			blk_mq_run_hw_queues(device->block->gdp->queue, true);
+=======
+		if (device->block->request_queue)
+			blk_mq_run_hw_queues(device->block->request_queue,
+					     true);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 EXPORT_SYMBOL_GPL(dasd_generic_handle_state_change);
@@ -2666,7 +2711,11 @@ static void dasd_block_timeout(struct timer_list *t)
 	dasd_device_remove_stop_bits(block->base, DASD_STOPPED_PENDING);
 	spin_unlock_irqrestore(get_ccwdev_lock(block->base->cdev), flags);
 	dasd_schedule_block_bh(block);
+<<<<<<< HEAD
 	blk_mq_run_hw_queues(block->gdp->queue, true);
+=======
+	blk_mq_run_hw_queues(block->request_queue, true);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -3214,7 +3263,11 @@ static void dasd_request_done(struct request *req)
 	blk_mq_run_hw_queues(req->q, true);
 }
 
+<<<<<<< HEAD
 struct blk_mq_ops dasd_mq_ops = {
+=======
+static struct blk_mq_ops dasd_mq_ops = {
+>>>>>>> b7ba80a49124 (Commit)
 	.queue_rq = do_dasd_request,
 	.complete = dasd_request_done,
 	.timeout = dasd_times_out,
@@ -3222,6 +3275,48 @@ struct blk_mq_ops dasd_mq_ops = {
 	.exit_hctx = dasd_exit_hctx,
 };
 
+<<<<<<< HEAD
+=======
+/*
+ * Allocate and initialize request queue and default I/O scheduler.
+ */
+static int dasd_alloc_queue(struct dasd_block *block)
+{
+	int rc;
+
+	block->tag_set.ops = &dasd_mq_ops;
+	block->tag_set.cmd_size = sizeof(struct dasd_ccw_req);
+	block->tag_set.nr_hw_queues = nr_hw_queues;
+	block->tag_set.queue_depth = queue_depth;
+	block->tag_set.flags = BLK_MQ_F_SHOULD_MERGE;
+	block->tag_set.numa_node = NUMA_NO_NODE;
+
+	rc = blk_mq_alloc_tag_set(&block->tag_set);
+	if (rc)
+		return rc;
+
+	block->request_queue = blk_mq_init_queue(&block->tag_set);
+	if (IS_ERR(block->request_queue))
+		return PTR_ERR(block->request_queue);
+
+	block->request_queue->queuedata = block;
+
+	return 0;
+}
+
+/*
+ * Deactivate and free request queue.
+ */
+static void dasd_free_queue(struct dasd_block *block)
+{
+	if (block->request_queue) {
+		blk_mq_destroy_queue(block->request_queue);
+		blk_mq_free_tag_set(&block->tag_set);
+		block->request_queue = NULL;
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int dasd_open(struct block_device *bdev, fmode_t mode)
 {
 	struct dasd_device *base;
@@ -3698,9 +3793,16 @@ int dasd_generic_path_operational(struct dasd_device *device)
 	dasd_schedule_device_bh(device);
 	if (device->block) {
 		dasd_schedule_block_bh(device->block);
+<<<<<<< HEAD
 		if (device->block->gdp)
 			blk_mq_run_hw_queues(device->block->gdp->queue, true);
 	}
+=======
+		if (device->block->request_queue)
+			blk_mq_run_hw_queues(device->block->request_queue,
+					     true);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!device->stopped)
 		wake_up(&generic_waitq);
@@ -3851,8 +3953,13 @@ void dasd_generic_space_avail(struct dasd_device *device)
 
 	if (device->block) {
 		dasd_schedule_block_bh(device->block);
+<<<<<<< HEAD
 		if (device->block->gdp)
 			blk_mq_run_hw_queues(device->block->gdp->queue, true);
+=======
+		if (device->block->request_queue)
+			blk_mq_run_hw_queues(device->block->request_queue, true);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (!device->stopped)
 		wake_up(&generic_waitq);
@@ -3978,7 +4085,11 @@ static struct dasd_ccw_req *dasd_generic_build_rdc(struct dasd_device *device,
 
 	ccw = cqr->cpaddr;
 	ccw->cmd_code = CCW_CMD_RDC;
+<<<<<<< HEAD
 	ccw->cda = (__u32)virt_to_phys(cqr->data);
+=======
+	ccw->cda = (__u32)(addr_t) cqr->data;
+>>>>>>> b7ba80a49124 (Commit)
 	ccw->flags = 0;
 	ccw->count = rdc_buffer_size;
 	cqr->startdev = device;
@@ -4022,7 +4133,12 @@ char *dasd_get_sense(struct irb *irb)
 
 	if (scsw_is_tm(&irb->scsw) && (irb->scsw.tm.fcxs == 0x01)) {
 		if (irb->scsw.tm.tcw)
+<<<<<<< HEAD
 			tsb = tcw_get_tsb(phys_to_virt(irb->scsw.tm.tcw));
+=======
+			tsb = tcw_get_tsb((struct tcw *)(unsigned long)
+					  irb->scsw.tm.tcw);
+>>>>>>> b7ba80a49124 (Commit)
 		if (tsb && tsb->length == 64 && tsb->flags)
 			switch (tsb->flags & 0x07) {
 			case 1:	/* tsa_iostat */

@@ -70,9 +70,12 @@
 #define BQ25611D_VBATREG_THRESH_uV	4290000
 #define BQ25618_VBATREG_THRESH_uV	4300000
 
+<<<<<<< HEAD
 #define BQ256XX_CHG_CONFIG_MASK		BIT(4)
 #define BQ256XX_CHG_CONFIG_BIT_SHIFT	4
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define BQ256XX_ITERM_MASK		GENMASK(3, 0)
 #define BQ256XX_ITERM_STEP_uA		60000
 #define BQ256XX_ITERM_OFFSET_uA		60000
@@ -262,7 +265,10 @@ struct bq256xx_device {
  * @bq256xx_set_iterm: pointer to instance specific set_iterm function
  * @bq256xx_set_iprechg: pointer to instance specific set_iprechg function
  * @bq256xx_set_vindpm: pointer to instance specific set_vindpm function
+<<<<<<< HEAD
  * @bq256xx_set_charge_type: pointer to instance specific set_charge_type function
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * @bq256xx_def_ichg: default ichg value in microamps
  * @bq256xx_def_iindpm: default iindpm value in microamps
@@ -294,7 +300,10 @@ struct bq256xx_chip_info {
 	int (*bq256xx_set_iterm)(struct bq256xx_device *bq, int iterm);
 	int (*bq256xx_set_iprechg)(struct bq256xx_device *bq, int iprechg);
 	int (*bq256xx_set_vindpm)(struct bq256xx_device *bq, int vindpm);
+<<<<<<< HEAD
 	int (*bq256xx_set_charge_type)(struct bq256xx_device *bq, int type);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	int bq256xx_def_ichg;
 	int bq256xx_def_iindpm;
@@ -454,6 +463,7 @@ static int bq256xx_get_state(struct bq256xx_device *bq,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int bq256xx_set_charge_type(struct bq256xx_device *bq, int type)
 {
 	int chg_config = 0;
@@ -475,6 +485,8 @@ static int bq256xx_set_charge_type(struct bq256xx_device *bq, int type)
 				(chg_config ? 1 : 0) << BQ256XX_CHG_CONFIG_BIT_SHIFT);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int bq256xx_get_ichg_curr(struct bq256xx_device *bq)
 {
 	unsigned int charge_current_limit;
@@ -941,12 +953,15 @@ static int bq256xx_set_charger_property(struct power_supply *psy,
 			return ret;
 		break;
 
+<<<<<<< HEAD
 	case POWER_SUPPLY_PROP_CHARGE_TYPE:
 		ret = bq->chip_info->bq256xx_set_charge_type(bq, val->intval);
 		if (ret)
 			return ret;
 		break;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		break;
 	}
@@ -1229,7 +1244,10 @@ static int bq256xx_property_is_writeable(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT:
 	case POWER_SUPPLY_PROP_STATUS:
 	case POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT:
+<<<<<<< HEAD
 	case POWER_SUPPLY_PROP_CHARGE_TYPE:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 	default:
 		return false;
@@ -1319,7 +1337,10 @@ static const struct bq256xx_chip_info bq256xx_chip_info_tbl[] = {
 		.bq256xx_set_iterm = bq256xx_set_term_curr,
 		.bq256xx_set_iprechg = bq256xx_set_prechrg_curr,
 		.bq256xx_set_vindpm = bq256xx_set_input_volt_lim,
+<<<<<<< HEAD
 		.bq256xx_set_charge_type = bq256xx_set_charge_type,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		.bq256xx_def_ichg = BQ2560X_ICHG_DEF_uA,
 		.bq256xx_def_iindpm = BQ256XX_IINDPM_DEF_uA,
@@ -1350,7 +1371,10 @@ static const struct bq256xx_chip_info bq256xx_chip_info_tbl[] = {
 		.bq256xx_set_iterm = bq256xx_set_term_curr,
 		.bq256xx_set_iprechg = bq256xx_set_prechrg_curr,
 		.bq256xx_set_vindpm = bq256xx_set_input_volt_lim,
+<<<<<<< HEAD
 		.bq256xx_set_charge_type = bq256xx_set_charge_type,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		.bq256xx_def_ichg = BQ2560X_ICHG_DEF_uA,
 		.bq256xx_def_iindpm = BQ256XX_IINDPM_DEF_uA,
@@ -1381,7 +1405,10 @@ static const struct bq256xx_chip_info bq256xx_chip_info_tbl[] = {
 		.bq256xx_set_iterm = bq256xx_set_term_curr,
 		.bq256xx_set_iprechg = bq256xx_set_prechrg_curr,
 		.bq256xx_set_vindpm = bq256xx_set_input_volt_lim,
+<<<<<<< HEAD
 		.bq256xx_set_charge_type = bq256xx_set_charge_type,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		.bq256xx_def_ichg = BQ2560X_ICHG_DEF_uA,
 		.bq256xx_def_iindpm = BQ256XX_IINDPM_DEF_uA,
@@ -1412,7 +1439,10 @@ static const struct bq256xx_chip_info bq256xx_chip_info_tbl[] = {
 		.bq256xx_set_iterm = bq256xx_set_term_curr,
 		.bq256xx_set_iprechg = bq256xx_set_prechrg_curr,
 		.bq256xx_set_vindpm = bq256xx_set_input_volt_lim,
+<<<<<<< HEAD
 		.bq256xx_set_charge_type = bq256xx_set_charge_type,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		.bq256xx_def_ichg = BQ2560X_ICHG_DEF_uA,
 		.bq256xx_def_iindpm = BQ256XX_IINDPM_DEF_uA,
@@ -1443,7 +1473,10 @@ static const struct bq256xx_chip_info bq256xx_chip_info_tbl[] = {
 		.bq256xx_set_iterm = bq256xx_set_term_curr,
 		.bq256xx_set_iprechg = bq256xx_set_prechrg_curr,
 		.bq256xx_set_vindpm = bq256xx_set_input_volt_lim,
+<<<<<<< HEAD
 		.bq256xx_set_charge_type = bq256xx_set_charge_type,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		.bq256xx_def_ichg = BQ25611D_ICHG_DEF_uA,
 		.bq256xx_def_iindpm = BQ256XX_IINDPM_DEF_uA,
@@ -1474,7 +1507,10 @@ static const struct bq256xx_chip_info bq256xx_chip_info_tbl[] = {
 		.bq256xx_set_iterm = bq25618_619_set_term_curr,
 		.bq256xx_set_iprechg = bq25618_619_set_prechrg_curr,
 		.bq256xx_set_vindpm = bq256xx_set_input_volt_lim,
+<<<<<<< HEAD
 		.bq256xx_set_charge_type = bq256xx_set_charge_type,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		.bq256xx_def_ichg = BQ25618_ICHG_DEF_uA,
 		.bq256xx_def_iindpm = BQ256XX_IINDPM_DEF_uA,
@@ -1505,7 +1541,10 @@ static const struct bq256xx_chip_info bq256xx_chip_info_tbl[] = {
 		.bq256xx_set_iterm = bq25618_619_set_term_curr,
 		.bq256xx_set_iprechg = bq25618_619_set_prechrg_curr,
 		.bq256xx_set_vindpm = bq256xx_set_input_volt_lim,
+<<<<<<< HEAD
 		.bq256xx_set_charge_type = bq256xx_set_charge_type,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		.bq256xx_def_ichg = BQ25618_ICHG_DEF_uA,
 		.bq256xx_def_iindpm = BQ256XX_IINDPM_DEF_uA,
@@ -1603,7 +1642,11 @@ static int bq256xx_hw_init(struct bq256xx_device *bq)
 		return ret;
 
 	ret = bq->chip_info->bq256xx_set_ichg(bq,
+<<<<<<< HEAD
 				bq->chip_info->bq256xx_def_ichg);
+=======
+				bat_info->constant_charge_current_max_ua);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -1613,7 +1656,11 @@ static int bq256xx_hw_init(struct bq256xx_device *bq)
 		return ret;
 
 	ret = bq->chip_info->bq256xx_set_vbatreg(bq,
+<<<<<<< HEAD
 				bq->chip_info->bq256xx_def_vbatreg);
+=======
+				bat_info->constant_charge_voltage_max_uv);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -1659,9 +1706,15 @@ static int bq256xx_parse_dt(struct bq256xx_device *bq,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int bq256xx_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int bq256xx_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = &client->dev;
 	struct bq256xx_device *bq;
 	struct power_supply_config psy_cfg = { };
@@ -1784,7 +1837,11 @@ static struct i2c_driver bq256xx_driver = {
 		.of_match_table = bq256xx_of_match,
 		.acpi_match_table = bq256xx_acpi_match,
 	},
+<<<<<<< HEAD
 	.probe_new = bq256xx_probe,
+=======
+	.probe = bq256xx_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = bq256xx_i2c_ids,
 };
 module_i2c_driver(bq256xx_driver);

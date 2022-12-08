@@ -1576,6 +1576,11 @@ static int setup_feedback_loop(struct device *dev, struct device_node *np,
 		if (!of_node_name_eq(np, desc->of_match))
 			continue;
 
+<<<<<<< HEAD
+=======
+		pr_info("Looking at node '%s'\n", desc->of_match);
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* The feedback loop connection does not make sense for LDOs */
 		if (desc->id >= BD718XX_LDO1)
 			return -EINVAL;
@@ -1706,17 +1711,32 @@ static int bd718xx_probe(struct platform_device *pdev)
 		break;
 	default:
 		dev_err(&pdev->dev, "Unsupported chip type\n");
+<<<<<<< HEAD
 		return -EINVAL;
+=======
+		err = -EINVAL;
+		goto err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Register LOCK release */
 	err = regmap_update_bits(regmap, BD718XX_REG_REGLOCK,
 				 (REGLOCK_PWRSEQ | REGLOCK_VREG), 0);
+<<<<<<< HEAD
 	if (err)
 		return dev_err_probe(&pdev->dev, err, "Failed to unlock PMIC\n");
 
 	dev_dbg(&pdev->dev, "Unlocked lock register 0x%x\n",
 		BD718XX_REG_REGLOCK);
+=======
+	if (err) {
+		dev_err(&pdev->dev, "Failed to unlock PMIC (%d)\n", err);
+		goto err;
+	} else {
+		dev_dbg(&pdev->dev, "Unlocked lock register 0x%x\n",
+			BD718XX_REG_REGLOCK);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	use_snvs = of_property_read_bool(pdev->dev.parent->of_node,
 					 "rohm,reset-snvs-powered");
@@ -1733,11 +1753,21 @@ static int bd718xx_probe(struct platform_device *pdev)
 					 BD718XX_WDOG_POWEROFF_MASK |
 					 BD718XX_KEY_L_POWEROFF_MASK,
 					 BD718XX_POWOFF_TO_RDY);
+<<<<<<< HEAD
 		if (err)
 			return dev_err_probe(&pdev->dev, err,
 					     "Failed to change reset target\n");
 
 		dev_dbg(&pdev->dev, "Changed all resets from SVNS to READY\n");
+=======
+		if (err) {
+			dev_err(&pdev->dev, "Failed to change reset target\n");
+			goto err;
+		} else {
+			dev_dbg(&pdev->dev,
+				"Changed all resets from SVNS to READY\n");
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	config.dev = pdev->dev.parent;
@@ -1773,10 +1803,20 @@ static int bd718xx_probe(struct platform_device *pdev)
 			desc->ops = swops[i];
 
 		rdev = devm_regulator_register(&pdev->dev, desc, &config);
+<<<<<<< HEAD
 		if (IS_ERR(rdev))
 			return dev_err_probe(&pdev->dev, PTR_ERR(rdev),
 					     "failed to register %s regulator\n",
 					     desc->name);
+=======
+		if (IS_ERR(rdev)) {
+			dev_err(&pdev->dev,
+				"failed to register %s regulator\n",
+				desc->name);
+			err = PTR_ERR(rdev);
+			goto err;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * Regulator register gets the regulator constraints and
@@ -1799,16 +1839,26 @@ static int bd718xx_probe(struct platform_device *pdev)
 		    !rdev->constraints->boot_on)) {
 			err = regmap_update_bits(regmap, r->init.reg,
 						 r->init.mask, r->init.val);
+<<<<<<< HEAD
 			if (err)
 				return dev_err_probe(&pdev->dev, err,
 					"Failed to take control for (%s)\n",
 					desc->name);
+=======
+			if (err) {
+				dev_err(&pdev->dev,
+					"Failed to take control for (%s)\n",
+					desc->name);
+				goto err;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		for (j = 0; j < r->additional_init_amnt; j++) {
 			err = regmap_update_bits(regmap,
 						 r->additional_inits[j].reg,
 						 r->additional_inits[j].mask,
 						 r->additional_inits[j].val);
+<<<<<<< HEAD
 			if (err)
 				return dev_err_probe(&pdev->dev, err,
 					"Buck (%s) initialization failed\n",
@@ -1816,6 +1866,18 @@ static int bd718xx_probe(struct platform_device *pdev)
 		}
 	}
 
+=======
+			if (err) {
+				dev_err(&pdev->dev,
+					"Buck (%s) initialization failed\n",
+					desc->name);
+				goto err;
+			}
+		}
+	}
+
+err:
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -1829,7 +1891,10 @@ MODULE_DEVICE_TABLE(platform, bd718x7_pmic_id);
 static struct platform_driver bd718xx_regulator = {
 	.driver = {
 		.name = "bd718xx-pmic",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = bd718xx_probe,
 	.id_table = bd718x7_pmic_id,

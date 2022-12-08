@@ -452,9 +452,12 @@ static u32 ieee80211_get_rate_duration(struct ieee80211_hw *hw,
 			 (status->encoding == RX_ENC_HE && streams > 8)))
 		return 0;
 
+<<<<<<< HEAD
 	if (idx >= MCS_GROUP_RATES)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	duration = airtime_mcs_groups[group].duration[idx];
 	duration <<= airtime_mcs_groups[group].shift;
 	*overhead = 36 + (streams << 2);

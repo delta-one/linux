@@ -9,8 +9,11 @@
 #include "intel_guc_submission.h"
 #include "intel_guc_slpc_types.h"
 
+<<<<<<< HEAD
 #define SLPC_MAX_FREQ_MHZ 4250
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct intel_gt;
 struct drm_printer;
 
@@ -44,7 +47,10 @@ int intel_guc_slpc_set_media_ratio_mode(struct intel_guc_slpc *slpc, u32 val);
 void intel_guc_pm_intrmsk_enable(struct intel_gt *gt);
 void intel_guc_slpc_boost(struct intel_guc_slpc *slpc);
 void intel_guc_slpc_dec_waiters(struct intel_guc_slpc *slpc);
+<<<<<<< HEAD
 int intel_guc_slpc_unset_gucrc_mode(struct intel_guc_slpc *slpc);
 int intel_guc_slpc_override_gucrc_mode(struct intel_guc_slpc *slpc, u32 mode);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

@@ -25,7 +25,10 @@ static unsigned long my_ip = (unsigned long)schedule;
 #ifdef CONFIG_X86_64
 
 #include <asm/ibt.h>
+<<<<<<< HEAD
 #include <asm/nospec-branch.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 asm (
 "	.pushsection    .text, \"ax\", @progbits\n"
@@ -35,7 +38,10 @@ asm (
 	ASM_ENDBR
 "	pushq %rbp\n"
 "	movq %rsp, %rbp\n"
+<<<<<<< HEAD
 	CALL_DEPTH_ACCOUNT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 "	call my_direct_func1\n"
 "	leave\n"
 "	.size		my_tramp1, .-my_tramp1\n"
@@ -47,7 +53,10 @@ asm (
 	ASM_ENDBR
 "	pushq %rbp\n"
 "	movq %rsp, %rbp\n"
+<<<<<<< HEAD
 	CALL_DEPTH_ACCOUNT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 "	call my_direct_func2\n"
 "	leave\n"
 	ASM_RET
@@ -96,8 +105,11 @@ asm (
 
 #endif /* CONFIG_S390 */
 
+<<<<<<< HEAD
 static struct ftrace_ops direct;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned long my_tramp = (unsigned long)my_tramp1;
 static unsigned long tramps[2] = {
 	(unsigned long)my_tramp1,
@@ -116,7 +128,11 @@ static int simple_thread(void *arg)
 		if (ret)
 			continue;
 		t ^= 1;
+<<<<<<< HEAD
 		ret = modify_ftrace_direct(&direct, tramps[t]);
+=======
+		ret = modify_ftrace_direct(my_ip, my_tramp, tramps[t]);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!ret)
 			my_tramp = tramps[t];
 		WARN_ON_ONCE(ret);
@@ -131,9 +147,13 @@ static int __init ftrace_direct_init(void)
 {
 	int ret;
 
+<<<<<<< HEAD
 	ftrace_set_filter_ip(&direct, (unsigned long) my_ip, 0, 0);
 	ret = register_ftrace_direct(&direct, my_tramp);
 
+=======
+	ret = register_ftrace_direct(my_ip, my_tramp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ret)
 		simple_tsk = kthread_run(simple_thread, NULL, "event-sample-fn");
 	return ret;
@@ -142,7 +162,11 @@ static int __init ftrace_direct_init(void)
 static void __exit ftrace_direct_exit(void)
 {
 	kthread_stop(simple_tsk);
+<<<<<<< HEAD
 	unregister_ftrace_direct(&direct, my_tramp, true);
+=======
+	unregister_ftrace_direct(my_ip, my_tramp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 module_init(ftrace_direct_init);

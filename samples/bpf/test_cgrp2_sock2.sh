@@ -2,14 +2,19 @@
 # SPDX-License-Identifier: GPL-2.0
 
 BPFFS=/sys/fs/bpf
+<<<<<<< HEAD
 MY_DIR=$(dirname $0)
 TEST=$MY_DIR/test_cgrp2_sock2
 LINK_PIN=$BPFFS/test_cgrp2_sock2
 BPF_PROG=$MY_DIR/sock_flags.bpf.o
+=======
+LINK_PIN=$BPFFS/test_cgrp2_sock2
+>>>>>>> b7ba80a49124 (Commit)
 
 function config_device {
 	ip netns add at_ns0
 	ip link add veth0 type veth peer name veth0b
+<<<<<<< HEAD
 	ip link set veth0 netns at_ns0
 	ip netns exec at_ns0 sysctl -q net.ipv6.conf.veth0.disable_ipv6=0
 	ip netns exec at_ns0 ip addr add 172.16.1.100/24 dev veth0
@@ -19,6 +24,15 @@ function config_device {
 	ip addr add 172.16.1.101/24 dev veth0b
 	ip addr add 2401:db00::2/64 dev veth0b nodad
 	ip link set veth0b up
+=======
+	ip link set veth0b up
+	ip link set veth0 netns at_ns0
+	ip netns exec at_ns0 ip addr add 172.16.1.100/24 dev veth0
+	ip netns exec at_ns0 ip addr add 2401:db00::1/64 dev veth0 nodad
+	ip netns exec at_ns0 ip link set dev veth0 up
+	ip addr add 172.16.1.101/24 dev veth0b
+	ip addr add 2401:db00::2/64 dev veth0b nodad
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 function config_cgroup {
@@ -39,7 +53,11 @@ function config_bpffs {
 }
 
 function attach_bpf {
+<<<<<<< HEAD
 	$TEST /tmp/cgroupv2/foo $BPF_PROG $1
+=======
+	./test_cgrp2_sock2 /tmp/cgroupv2/foo sock_flags_kern.o $1
+>>>>>>> b7ba80a49124 (Commit)
 	[ $? -ne 0 ] && exit 1
 }
 

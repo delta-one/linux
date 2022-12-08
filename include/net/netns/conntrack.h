@@ -95,6 +95,10 @@ struct nf_ip_net {
 
 struct netns_ct {
 #ifdef CONFIG_NF_CONNTRACK_EVENTS
+<<<<<<< HEAD
+=======
+	u8 ctnetlink_has_listener;
+>>>>>>> b7ba80a49124 (Commit)
 	bool ecache_dwork_pending;
 #endif
 	u8			sysctl_log_invalid; /* Log invalid packets */

@@ -116,9 +116,12 @@ fbdev Helper Functions Reference
 .. kernel-doc:: drivers/gpu/drm/drm_fb_helper.c
    :export:
 
+<<<<<<< HEAD
 .. kernel-doc:: drivers/gpu/drm/drm_fbdev_generic.c
    :export:
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 format Helper Functions Reference
 =================================
 
@@ -188,6 +191,7 @@ Bridge Helper Reference
 .. kernel-doc:: drivers/gpu/drm/drm_bridge.c
    :export:
 
+<<<<<<< HEAD
 MIPI-DSI bridge operation
 -------------------------
 
@@ -195,6 +199,8 @@ MIPI-DSI bridge operation
    :doc: dsi bridge operations
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Bridge Connector Helper Reference
 ---------------------------------
 

@@ -189,6 +189,7 @@ static void test_walk_self_only(struct cgroup_iter *skel)
 			      BPF_CGROUP_ITER_SELF_ONLY, "self_only");
 }
 
+<<<<<<< HEAD
 static void test_walk_dead_self_only(struct cgroup_iter *skel)
 {
 	DECLARE_LIBBPF_OPTS(bpf_iter_attach_opts, opts);
@@ -263,6 +264,8 @@ close_cgrp:
 	close(cgrp_fd);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void test_cgroup_iter(void)
 {
 	struct cgroup_iter *skel = NULL;
@@ -291,8 +294,11 @@ void test_cgroup_iter(void)
 		test_early_termination(skel);
 	if (test__start_subtest("cgroup_iter__self_only"))
 		test_walk_self_only(skel);
+<<<<<<< HEAD
 	if (test__start_subtest("cgroup_iter__dead_self_only"))
 		test_walk_dead_self_only(skel);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	cgroup_iter__destroy(skel);
 	cleanup_cgroups();

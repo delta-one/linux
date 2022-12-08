@@ -71,8 +71,11 @@
 #include <drm/intel_lpe_audio.h>
 
 #include "i915_drv.h"
+<<<<<<< HEAD
 #include "i915_irq.h"
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_de.h"
 #include "intel_lpe_audio.h"
 #include "intel_pci_config.h"
@@ -82,7 +85,12 @@
 static struct platform_device *
 lpe_audio_platdev_create(struct drm_i915_private *dev_priv)
 {
+<<<<<<< HEAD
 	struct pci_dev *pdev = to_pci_dev(dev_priv->drm.dev);
+=======
+	struct drm_device *dev = &dev_priv->drm;
+	struct pci_dev *pdev = to_pci_dev(dev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	struct platform_device_info pinfo = {};
 	struct resource *rsc;
 	struct platform_device *platdev;
@@ -102,14 +110,24 @@ lpe_audio_platdev_create(struct drm_i915_private *dev_priv)
 	rsc[0].flags    = IORESOURCE_IRQ;
 	rsc[0].name     = "hdmi-lpe-audio-irq";
 
+<<<<<<< HEAD
 	rsc[1].start    = pci_resource_start(pdev, GEN4_GTTMMADR_BAR) +
 		I915_HDMI_LPE_AUDIO_BASE;
 	rsc[1].end      = pci_resource_start(pdev, GEN4_GTTMMADR_BAR) +
+=======
+	rsc[1].start    = pci_resource_start(pdev, GTTMMADR_BAR) +
+		I915_HDMI_LPE_AUDIO_BASE;
+	rsc[1].end      = pci_resource_start(pdev, GTTMMADR_BAR) +
+>>>>>>> b7ba80a49124 (Commit)
 		I915_HDMI_LPE_AUDIO_BASE + I915_HDMI_LPE_AUDIO_SIZE - 1;
 	rsc[1].flags    = IORESOURCE_MEM;
 	rsc[1].name     = "hdmi-lpe-audio-mmio";
 
+<<<<<<< HEAD
 	pinfo.parent = dev_priv->drm.dev;
+=======
+	pinfo.parent = dev->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	pinfo.name = "hdmi-lpe-audio";
 	pinfo.id = -1;
 	pinfo.res = rsc;
@@ -315,7 +333,11 @@ void intel_lpe_audio_teardown(struct drm_i915_private *dev_priv)
  * intel_lpe_audio_notify() - notify lpe audio event
  * audio driver and i915
  * @dev_priv: the i915 drm device private data
+<<<<<<< HEAD
  * @cpu_transcoder: CPU transcoder
+=======
+ * @pipe: pipe
+>>>>>>> b7ba80a49124 (Commit)
  * @port: port
  * @eld : ELD data
  * @ls_clock: Link symbol clock in kHz
@@ -324,7 +346,11 @@ void intel_lpe_audio_teardown(struct drm_i915_private *dev_priv)
  * Notify lpe audio driver of eld change.
  */
 void intel_lpe_audio_notify(struct drm_i915_private *dev_priv,
+<<<<<<< HEAD
 			    enum transcoder cpu_transcoder, enum port port,
+=======
+			    enum pipe pipe, enum port port,
+>>>>>>> b7ba80a49124 (Commit)
 			    const void *eld, int ls_clock, bool dp_output)
 {
 	unsigned long irqflags;
@@ -344,7 +370,11 @@ void intel_lpe_audio_notify(struct drm_i915_private *dev_priv,
 
 	if (eld != NULL) {
 		memcpy(ppdata->eld, eld, HDMI_MAX_ELD_BYTES);
+<<<<<<< HEAD
 		ppdata->pipe = cpu_transcoder;
+=======
+		ppdata->pipe = pipe;
+>>>>>>> b7ba80a49124 (Commit)
 		ppdata->ls_clock = ls_clock;
 		ppdata->dp_output = dp_output;
 

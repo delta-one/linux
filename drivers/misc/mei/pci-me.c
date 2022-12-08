@@ -118,8 +118,11 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
 
 	{MEI_PCI_DEVICE(MEI_DEV_ID_RPL_S, MEI_ME_PCH15_CFG)},
 
+<<<<<<< HEAD
 	{MEI_PCI_DEVICE(MEI_DEV_ID_MTL_M, MEI_ME_PCH15_CFG)},
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* required last entry */
 	{0, }
 };
@@ -342,12 +345,15 @@ static void mei_me_remove(struct pci_dev *pdev)
 }
 
 #ifdef CONFIG_PM_SLEEP
+<<<<<<< HEAD
 static int mei_me_pci_prepare(struct device *device)
 {
 	pm_runtime_resume(device);
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mei_me_pci_suspend(struct device *device)
 {
 	struct pci_dev *pdev = to_pci_dev(device);
@@ -404,6 +410,7 @@ static int mei_me_pci_resume(struct device *device)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 static void mei_me_pci_complete(struct device *device)
 {
@@ -415,6 +422,9 @@ static void mei_me_pci_complete(struct device *device)
 #define mei_me_pci_complete NULL
 
 #endif /* !CONFIG_PM_SLEEP */
+=======
+#endif /* CONFIG_PM_SLEEP */
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_PM
 static int mei_me_pm_runtime_idle(struct device *device)
@@ -517,8 +527,11 @@ static inline void mei_me_unset_pm_domain(struct mei_device *dev)
 }
 
 static const struct dev_pm_ops mei_me_pm_ops = {
+<<<<<<< HEAD
 	.prepare = mei_me_pci_prepare,
 	.complete = mei_me_pci_complete,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SET_SYSTEM_SLEEP_PM_OPS(mei_me_pci_suspend,
 				mei_me_pci_resume)
 	SET_RUNTIME_PM_OPS(

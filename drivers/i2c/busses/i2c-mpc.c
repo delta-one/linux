@@ -842,7 +842,11 @@ static int fsl_i2c_probe(struct platform_device *op)
 		data->setup(op->dev.of_node, i2c, clock);
 	} else {
 		/* Backwards compatibility */
+<<<<<<< HEAD
 		if (of_property_read_bool(op->dev.of_node, "dfsrr"))
+=======
+		if (of_get_property(op->dev.of_node, "dfsrr", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 			mpc_i2c_setup_8xxx(op->dev.of_node, i2c, clock);
 	}
 

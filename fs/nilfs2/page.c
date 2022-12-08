@@ -240,11 +240,16 @@ static void nilfs_copy_page(struct page *dst, struct page *src, int copy_dirty)
 int nilfs_copy_dirty_pages(struct address_space *dmap,
 			   struct address_space *smap)
 {
+<<<<<<< HEAD
 	struct folio_batch fbatch;
+=======
+	struct pagevec pvec;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int i;
 	pgoff_t index = 0;
 	int err = 0;
 
+<<<<<<< HEAD
 	folio_batch_init(&fbatch);
 repeat:
 	if (!filemap_get_folios_tag(smap, &index, (pgoff_t)-1,
@@ -277,6 +282,39 @@ repeat:
 		folio_unlock(folio);
 	}
 	folio_batch_release(&fbatch);
+=======
+	pagevec_init(&pvec);
+repeat:
+	if (!pagevec_lookup_tag(&pvec, smap, &index, PAGECACHE_TAG_DIRTY))
+		return 0;
+
+	for (i = 0; i < pagevec_count(&pvec); i++) {
+		struct page *page = pvec.pages[i], *dpage;
+
+		lock_page(page);
+		if (unlikely(!PageDirty(page)))
+			NILFS_PAGE_BUG(page, "inconsistent dirty state");
+
+		dpage = grab_cache_page(dmap, page->index);
+		if (unlikely(!dpage)) {
+			/* No empty page is added to the page cache */
+			err = -ENOMEM;
+			unlock_page(page);
+			break;
+		}
+		if (unlikely(!page_has_buffers(page)))
+			NILFS_PAGE_BUG(page,
+				       "found empty page in dat page cache");
+
+		nilfs_copy_page(dpage, page, 1);
+		__set_page_dirty_nobuffers(dpage);
+
+		unlock_page(dpage);
+		put_page(dpage);
+		unlock_page(page);
+	}
+	pagevec_release(&pvec);
+>>>>>>> b7ba80a49124 (Commit)
 	cond_resched();
 
 	if (likely(!err))
@@ -311,7 +349,11 @@ repeat:
 
 		folio_lock(folio);
 		dfolio = filemap_lock_folio(dmap, index);
+<<<<<<< HEAD
 		if (!IS_ERR(dfolio)) {
+=======
+		if (dfolio) {
+>>>>>>> b7ba80a49124 (Commit)
 			/* overwrite existing folio in the destination cache */
 			WARN_ON(folio_test_dirty(dfolio));
 			nilfs_copy_page(&dfolio->page, &folio->page, 0);
@@ -358,6 +400,7 @@ repeat:
  */
 void nilfs_clear_dirty_pages(struct address_space *mapping, bool silent)
 {
+<<<<<<< HEAD
 	struct folio_batch fbatch;
 	unsigned int i;
 	pgoff_t index = 0;
@@ -374,6 +417,24 @@ void nilfs_clear_dirty_pages(struct address_space *mapping, bool silent)
 			folio_unlock(folio);
 		}
 		folio_batch_release(&fbatch);
+=======
+	struct pagevec pvec;
+	unsigned int i;
+	pgoff_t index = 0;
+
+	pagevec_init(&pvec);
+
+	while (pagevec_lookup_tag(&pvec, mapping, &index,
+					PAGECACHE_TAG_DIRTY)) {
+		for (i = 0; i < pagevec_count(&pvec); i++) {
+			struct page *page = pvec.pages[i];
+
+			lock_page(page);
+			nilfs_clear_dirty_page(page, silent);
+			unlock_page(page);
+		}
+		pagevec_release(&pvec);
+>>>>>>> b7ba80a49124 (Commit)
 		cond_resched();
 	}
 }

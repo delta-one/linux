@@ -339,7 +339,11 @@
 	bus-width = <4>;
 	non-removable;
 	no-sd;
+<<<<<<< HEAD
 	no-mmc;
+=======
+	no-emmc;
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 
 	brcmf: wifi@1 {
@@ -359,7 +363,11 @@
 	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
 	bus-width = <4>;
 	no-sdio;
+<<<<<<< HEAD
 	no-mmc;
+=======
+	no-emmc;
+>>>>>>> b7ba80a49124 (Commit)
 	disable-wp;
 	status = "okay";
 };

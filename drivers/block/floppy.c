@@ -3108,7 +3108,11 @@ loop:
 	ptr->resultcode = 0;
 
 	if (ptr->flags & (FD_RAW_READ | FD_RAW_WRITE)) {
+<<<<<<< HEAD
 		if (ptr->length <= 0 || ptr->length > MAX_LEN)
+=======
+		if (ptr->length <= 0 || ptr->length >= MAX_LEN)
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		ptr->kernel_data = (char *)fd_dma_mem_alloc(ptr->length);
 		fallback_on_nodma_alloc(&ptr->kernel_data, ptr->length);
@@ -4593,10 +4597,15 @@ static int __init do_floppy_init(void)
 			goto out_put_disk;
 
 		err = floppy_alloc_disk(drive, 0);
+<<<<<<< HEAD
 		if (err) {
 			blk_mq_free_tag_set(&tag_sets[drive]);
 			goto out_put_disk;
 		}
+=======
+		if (err)
+			goto out_put_disk;
+>>>>>>> b7ba80a49124 (Commit)
 
 		timer_setup(&motor_off_timer[drive], motor_off_callback, 0);
 	}

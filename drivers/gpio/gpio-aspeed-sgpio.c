@@ -14,7 +14,10 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/seq_file.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/spinlock.h>
 #include <linux/string.h>
 
@@ -30,7 +33,11 @@ struct aspeed_sgpio_pdata {
 
 struct aspeed_sgpio {
 	struct gpio_chip chip;
+<<<<<<< HEAD
 	struct device *dev;
+=======
+	struct irq_chip intc;
+>>>>>>> b7ba80a49124 (Commit)
 	struct clk *pclk;
 	raw_spinlock_t lock;
 	void __iomem *base;
@@ -297,10 +304,13 @@ static void aspeed_sgpio_irq_set_mask(struct irq_data *d, bool set)
 	irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
 	addr = bank_reg(gpio, bank, reg_irq_enable);
 
+<<<<<<< HEAD
 	/* Unmasking the IRQ */
 	if (set)
 		gpiochip_enable_irq(&gpio->chip, irqd_to_hwirq(d));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	raw_spin_lock_irqsave(&gpio->lock, flags);
 
 	reg = ioread32(addr);
@@ -312,12 +322,15 @@ static void aspeed_sgpio_irq_set_mask(struct irq_data *d, bool set)
 	iowrite32(reg, addr);
 
 	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+<<<<<<< HEAD
 
 	/* Masking the IRQ */
 	if (!set)
 		gpiochip_disable_irq(&gpio->chip, irqd_to_hwirq(d));
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void aspeed_sgpio_irq_mask(struct irq_data *d)
@@ -412,6 +425,7 @@ static void aspeed_sgpio_irq_handler(struct irq_desc *desc)
 	chained_irq_exit(ic, desc);
 }
 
+<<<<<<< HEAD
 static void aspeed_sgpio_irq_print_chip(struct irq_data *d, struct seq_file *p)
 {
 	const struct aspeed_sgpio_bank *bank;
@@ -433,6 +447,8 @@ static const struct irq_chip aspeed_sgpio_irq_chip = {
 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int aspeed_sgpio_setup_irqs(struct aspeed_sgpio *gpio,
 				   struct platform_device *pdev)
 {
@@ -455,8 +471,19 @@ static int aspeed_sgpio_setup_irqs(struct aspeed_sgpio *gpio,
 		iowrite32(0xffffffff, bank_reg(gpio, bank, reg_irq_status));
 	}
 
+<<<<<<< HEAD
 	irq = &gpio->chip.irq;
 	gpio_irq_chip_set_chip(irq, &aspeed_sgpio_irq_chip);
+=======
+	gpio->intc.name = dev_name(&pdev->dev);
+	gpio->intc.irq_ack = aspeed_sgpio_irq_ack;
+	gpio->intc.irq_mask = aspeed_sgpio_irq_mask;
+	gpio->intc.irq_unmask = aspeed_sgpio_irq_unmask;
+	gpio->intc.irq_set_type = aspeed_sgpio_set_type;
+
+	irq = &gpio->chip.irq;
+	irq->chip = &gpio->intc;
+>>>>>>> b7ba80a49124 (Commit)
 	irq->init_valid_mask = aspeed_sgpio_irq_init_valid_mask;
 	irq->handler = handle_bad_irq;
 	irq->default_type = IRQ_TYPE_NONE;
@@ -550,8 +577,11 @@ static int __init aspeed_sgpio_probe(struct platform_device *pdev)
 	if (IS_ERR(gpio->base))
 		return PTR_ERR(gpio->base);
 
+<<<<<<< HEAD
 	gpio->dev = &pdev->dev;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pdata = device_get_match_data(&pdev->dev);
 	if (!pdata)
 		return -EINVAL;
@@ -637,3 +667,7 @@ static struct platform_driver aspeed_sgpio_driver = {
 
 module_platform_driver_probe(aspeed_sgpio_driver, aspeed_sgpio_probe);
 MODULE_DESCRIPTION("Aspeed Serial GPIO Driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

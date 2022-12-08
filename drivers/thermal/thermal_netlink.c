@@ -472,10 +472,17 @@ static int thermal_genl_cmd_tz_get_trip(struct param *p)
 
 	for (i = 0; i < tz->num_trips; i++) {
 
+<<<<<<< HEAD
 		ret = __thermal_zone_get_trip(tz, i, &trip);
 		if (ret)
 			goto out_cancel_nest;
 
+=======
+		ret = thermal_zone_get_trip(tz, i, &trip);
+		if (ret)
+			goto out_cancel_nest;
+		
+>>>>>>> b7ba80a49124 (Commit)
 		if (nla_put_u32(msg, THERMAL_GENL_ATTR_TZ_TRIP_ID, i) ||
 		    nla_put_u32(msg, THERMAL_GENL_ATTR_TZ_TRIP_TYPE, trip.type) ||
 		    nla_put_u32(msg, THERMAL_GENL_ATTR_TZ_TRIP_TEMP, trip.temperature) ||
@@ -699,8 +706,11 @@ int __init thermal_netlink_init(void)
 {
 	return genl_register_family(&thermal_gnl_family);
 }
+<<<<<<< HEAD
 
 void __init thermal_netlink_exit(void)
 {
 	genl_unregister_family(&thermal_gnl_family);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

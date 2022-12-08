@@ -11,6 +11,10 @@
 #include <linux/module.h>
 #include <linux/device.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/sched.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/blkdev.h>
 #include <linux/vringh.h>
 #include <linux/vdpa.h>
@@ -285,12 +289,22 @@ err:
 	return handled;
 }
 
+<<<<<<< HEAD
 static void vdpasim_blk_work(struct vdpasim *vdpasim)
 {
 	bool reschedule = false;
 	int i;
 
 	mutex_lock(&vdpasim->mutex);
+=======
+static void vdpasim_blk_work(struct work_struct *work)
+{
+	struct vdpasim *vdpasim = container_of(work, struct vdpasim, work);
+	bool reschedule = false;
+	int i;
+
+	spin_lock(&vdpasim->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!(vdpasim->status & VIRTIO_CONFIG_S_DRIVER_OK))
 		goto out;
@@ -321,10 +335,17 @@ static void vdpasim_blk_work(struct vdpasim *vdpasim)
 		}
 	}
 out:
+<<<<<<< HEAD
 	mutex_unlock(&vdpasim->mutex);
 
 	if (reschedule)
 		vdpasim_schedule_work(vdpasim);
+=======
+	spin_unlock(&vdpasim->lock);
+
+	if (reschedule)
+		schedule_work(&vdpasim->work);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void vdpasim_blk_get_config(struct vdpasim *vdpasim, void *config)
@@ -376,13 +397,20 @@ static int vdpasim_blk_dev_add(struct vdpa_mgmt_dev *mdev, const char *name,
 	dev_attr.nvqs = VDPASIM_BLK_VQ_NUM;
 	dev_attr.ngroups = VDPASIM_BLK_GROUP_NUM;
 	dev_attr.nas = VDPASIM_BLK_AS_NUM;
+<<<<<<< HEAD
 	dev_attr.alloc_size = sizeof(struct vdpasim);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev_attr.config_size = sizeof(struct virtio_blk_config);
 	dev_attr.get_config = vdpasim_blk_get_config;
 	dev_attr.work_fn = vdpasim_blk_work;
 	dev_attr.buffer_size = VDPASIM_BLK_CAPACITY << SECTOR_SHIFT;
 
+<<<<<<< HEAD
 	simdev = vdpasim_create(&dev_attr, config);
+=======
+	simdev = vdpasim_create(&dev_attr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(simdev))
 		return PTR_ERR(simdev);
 
@@ -426,10 +454,15 @@ static int __init vdpasim_blk_init(void)
 	int ret;
 
 	ret = device_register(&vdpasim_blk_mgmtdev);
+<<<<<<< HEAD
 	if (ret) {
 		put_device(&vdpasim_blk_mgmtdev);
 		return ret;
 	}
+=======
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = vdpa_mgmtdev_register(&mgmt_dev);
 	if (ret)

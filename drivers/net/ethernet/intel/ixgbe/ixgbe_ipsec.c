@@ -557,10 +557,15 @@ static int ixgbe_ipsec_check_mgmt_ip(struct xfrm_state *xs)
 /**
  * ixgbe_ipsec_add_sa - program device with a security association
  * @xs: pointer to transformer state struct
+<<<<<<< HEAD
  * @extack: extack point to fill failure reason
  **/
 static int ixgbe_ipsec_add_sa(struct xfrm_state *xs,
 			      struct netlink_ext_ack *extack)
+=======
+ **/
+static int ixgbe_ipsec_add_sa(struct xfrm_state *xs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct net_device *dev = xs->xso.real_dev;
 	struct ixgbe_adapter *adapter = netdev_priv(dev);
@@ -572,22 +577,35 @@ static int ixgbe_ipsec_add_sa(struct xfrm_state *xs,
 	int i;
 
 	if (xs->id.proto != IPPROTO_ESP && xs->id.proto != IPPROTO_AH) {
+<<<<<<< HEAD
 		NL_SET_ERR_MSG_MOD(extack, "Unsupported protocol for ipsec offload");
+=======
+		netdev_err(dev, "Unsupported protocol 0x%04x for ipsec offload\n",
+			   xs->id.proto);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
 	if (xs->props.mode != XFRM_MODE_TRANSPORT) {
+<<<<<<< HEAD
 		NL_SET_ERR_MSG_MOD(extack, "Unsupported mode for ipsec offload");
+=======
+		netdev_err(dev, "Unsupported mode for ipsec offload\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
 	if (ixgbe_ipsec_check_mgmt_ip(xs)) {
+<<<<<<< HEAD
 		NL_SET_ERR_MSG_MOD(extack, "IPsec IP addr clash with mgmt filters");
 		return -EINVAL;
 	}
 
 	if (xs->xso.type != XFRM_DEV_OFFLOAD_CRYPTO) {
 		NL_SET_ERR_MSG_MOD(extack, "Unsupported ipsec offload type");
+=======
+		netdev_err(dev, "IPsec IP addr clash with mgmt filters\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -595,14 +613,22 @@ static int ixgbe_ipsec_add_sa(struct xfrm_state *xs,
 		struct rx_sa rsa;
 
 		if (xs->calg) {
+<<<<<<< HEAD
 			NL_SET_ERR_MSG_MOD(extack, "Compression offload not supported");
+=======
+			netdev_err(dev, "Compression offload not supported\n");
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		}
 
 		/* find the first unused index */
 		ret = ixgbe_ipsec_find_empty_idx(ipsec, true);
 		if (ret < 0) {
+<<<<<<< HEAD
 			NL_SET_ERR_MSG_MOD(extack, "No space for SA in Rx table!");
+=======
+			netdev_err(dev, "No space for SA in Rx table!\n");
+>>>>>>> b7ba80a49124 (Commit)
 			return ret;
 		}
 		sa_idx = (u16)ret;
@@ -617,7 +643,11 @@ static int ixgbe_ipsec_add_sa(struct xfrm_state *xs,
 		/* get the key and salt */
 		ret = ixgbe_ipsec_parse_proto_keys(xs, rsa.key, &rsa.salt);
 		if (ret) {
+<<<<<<< HEAD
 			NL_SET_ERR_MSG_MOD(extack, "Failed to get key data for Rx SA table");
+=======
+			netdev_err(dev, "Failed to get key data for Rx SA table\n");
+>>>>>>> b7ba80a49124 (Commit)
 			return ret;
 		}
 
@@ -677,7 +707,11 @@ static int ixgbe_ipsec_add_sa(struct xfrm_state *xs,
 
 		} else {
 			/* no match and no empty slot */
+<<<<<<< HEAD
 			NL_SET_ERR_MSG_MOD(extack, "No space for SA in Rx IP SA table");
+=======
+			netdev_err(dev, "No space for SA in Rx IP SA table\n");
+>>>>>>> b7ba80a49124 (Commit)
 			memset(&rsa, 0, sizeof(rsa));
 			return -ENOSPC;
 		}
@@ -712,7 +746,11 @@ static int ixgbe_ipsec_add_sa(struct xfrm_state *xs,
 		/* find the first unused index */
 		ret = ixgbe_ipsec_find_empty_idx(ipsec, false);
 		if (ret < 0) {
+<<<<<<< HEAD
 			NL_SET_ERR_MSG_MOD(extack, "No space for SA in Tx table");
+=======
+			netdev_err(dev, "No space for SA in Tx table\n");
+>>>>>>> b7ba80a49124 (Commit)
 			return ret;
 		}
 		sa_idx = (u16)ret;
@@ -726,7 +764,11 @@ static int ixgbe_ipsec_add_sa(struct xfrm_state *xs,
 
 		ret = ixgbe_ipsec_parse_proto_keys(xs, tsa.key, &tsa.salt);
 		if (ret) {
+<<<<<<< HEAD
 			NL_SET_ERR_MSG_MOD(extack, "Failed to get key data for Tx SA table");
+=======
+			netdev_err(dev, "Failed to get key data for Tx SA table\n");
+>>>>>>> b7ba80a49124 (Commit)
 			memset(&tsa, 0, sizeof(tsa));
 			return ret;
 		}
@@ -951,7 +993,11 @@ int ixgbe_ipsec_vf_add_sa(struct ixgbe_adapter *adapter, u32 *msgbuf, u32 vf)
 	memcpy(xs->aead->alg_name, aes_gcm_name, sizeof(aes_gcm_name));
 
 	/* set up the HW offload */
+<<<<<<< HEAD
 	err = ixgbe_ipsec_add_sa(xs, NULL);
+=======
+	err = ixgbe_ipsec_add_sa(xs);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto err_aead;
 

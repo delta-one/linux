@@ -98,7 +98,10 @@ struct asus_kbd_leds {
 	struct hid_device *hdev;
 	struct work_struct work;
 	unsigned int brightness;
+<<<<<<< HEAD
 	spinlock_t lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool removed;
 };
 
@@ -220,13 +223,21 @@ static void asus_report_tool_width(struct asus_drvdata *drvdat)
 {
 	struct input_mt *mt = drvdat->input->mt;
 	struct input_mt_slot *oldest;
+<<<<<<< HEAD
 	int oldid, i;
+=======
+	int oldid, count, i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (drvdat->tp->contact_size < 5)
 		return;
 
 	oldest = NULL;
 	oldid = mt->trkid;
+<<<<<<< HEAD
+=======
+	count = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < mt->num_slots; ++i) {
 		struct input_mt_slot *ps = &mt->slots[i];
@@ -238,6 +249,10 @@ static void asus_report_tool_width(struct asus_drvdata *drvdat)
 			oldest = ps;
 			oldid = id;
 		}
+<<<<<<< HEAD
+=======
+		count++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (oldest) {
@@ -491,6 +506,7 @@ static int rog_nkey_led_init(struct hid_device *hdev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void asus_schedule_work(struct asus_kbd_leds *led)
 {
 	unsigned long flags;
@@ -501,11 +517,14 @@ static void asus_schedule_work(struct asus_kbd_leds *led)
 	spin_unlock_irqrestore(&led->lock, flags);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void asus_kbd_backlight_set(struct led_classdev *led_cdev,
 				   enum led_brightness brightness)
 {
 	struct asus_kbd_leds *led = container_of(led_cdev, struct asus_kbd_leds,
 						 cdev);
+<<<<<<< HEAD
 	unsigned long flags;
 
 	spin_lock_irqsave(&led->lock, flags);
@@ -513,12 +532,17 @@ static void asus_kbd_backlight_set(struct led_classdev *led_cdev,
 	spin_unlock_irqrestore(&led->lock, flags);
 
 	asus_schedule_work(led);
+=======
+	led->brightness = brightness;
+	schedule_work(&led->work);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static enum led_brightness asus_kbd_backlight_get(struct led_classdev *led_cdev)
 {
 	struct asus_kbd_leds *led = container_of(led_cdev, struct asus_kbd_leds,
 						 cdev);
+<<<<<<< HEAD
 	enum led_brightness brightness;
 	unsigned long flags;
 
@@ -527,6 +551,10 @@ static enum led_brightness asus_kbd_backlight_get(struct led_classdev *led_cdev)
 	spin_unlock_irqrestore(&led->lock, flags);
 
 	return brightness;
+=======
+
+	return led->brightness;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void asus_kbd_backlight_work(struct work_struct *work)
@@ -534,11 +562,19 @@ static void asus_kbd_backlight_work(struct work_struct *work)
 	struct asus_kbd_leds *led = container_of(work, struct asus_kbd_leds, work);
 	u8 buf[] = { FEATURE_KBD_REPORT_ID, 0xba, 0xc5, 0xc4, 0x00 };
 	int ret;
+<<<<<<< HEAD
 	unsigned long flags;
 
 	spin_lock_irqsave(&led->lock, flags);
 	buf[4] = led->brightness;
 	spin_unlock_irqrestore(&led->lock, flags);
+=======
+
+	if (led->removed)
+		return;
+
+	buf[4] = led->brightness;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = asus_kbd_set_report(led->hdev, buf, sizeof(buf));
 	if (ret < 0)
@@ -606,7 +642,10 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
 	drvdata->kbd_backlight->cdev.brightness_set = asus_kbd_backlight_set;
 	drvdata->kbd_backlight->cdev.brightness_get = asus_kbd_backlight_get;
 	INIT_WORK(&drvdata->kbd_backlight->work, asus_kbd_backlight_work);
+<<<<<<< HEAD
 	spin_lock_init(&drvdata->kbd_backlight->lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = devm_led_classdev_register(&hdev->dev, &drvdata->kbd_backlight->cdev);
 	if (ret < 0) {
@@ -1142,6 +1181,7 @@ err_stop_hw:
 static void asus_remove(struct hid_device *hdev)
 {
 	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
+<<<<<<< HEAD
 	unsigned long flags;
 
 	if (drvdata->kbd_backlight) {
@@ -1149,6 +1189,11 @@ static void asus_remove(struct hid_device *hdev)
 		drvdata->kbd_backlight->removed = true;
 		spin_unlock_irqrestore(&drvdata->kbd_backlight->lock, flags);
 
+=======
+
+	if (drvdata->kbd_backlight) {
+		drvdata->kbd_backlight->removed = true;
+>>>>>>> b7ba80a49124 (Commit)
 		cancel_work_sync(&drvdata->kbd_backlight->work);
 	}
 

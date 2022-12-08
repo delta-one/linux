@@ -15,7 +15,10 @@
 
 #include "flexfilelayoutxdr.h"
 #include "pnfs.h"
+<<<<<<< HEAD
 #include "vfs.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define NFSDDBG_FACILITY	NFSDDBG_PNFS
 

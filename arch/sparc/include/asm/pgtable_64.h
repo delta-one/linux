@@ -187,9 +187,12 @@ bool kern_addr_valid(unsigned long addr);
 #define _PAGE_SZHUGE_4U	_PAGE_SZ4MB_4U
 #define _PAGE_SZHUGE_4V	_PAGE_SZ4MB_4V
 
+<<<<<<< HEAD
 /* We borrow bit 20 to store the exclusive marker in swap PTEs. */
 #define _PAGE_SWP_EXCLUSIVE	_AC(0x0000000000100000, UL)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef __ASSEMBLY__
 
 pte_t mk_pte_io(unsigned long, pgprot_t, int, unsigned long);
@@ -466,7 +469,11 @@ static inline pte_t pte_mkclean(pte_t pte)
 	return __pte(val);
 }
 
+<<<<<<< HEAD
 static inline pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
+=======
+static inline pte_t pte_mkwrite(pte_t pte)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long val = pte_val(pte), mask;
 
@@ -696,7 +703,10 @@ static inline unsigned long pmd_dirty(pmd_t pmd)
 	return pte_dirty(pte);
 }
 
+<<<<<<< HEAD
 #define pmd_young pmd_young
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline unsigned long pmd_young(pmd_t pmd)
 {
 	pte_t pte = __pte(pmd_val(pmd));
@@ -756,11 +766,19 @@ static inline pmd_t pmd_mkyoung(pmd_t pmd)
 	return __pmd(pte_val(pte));
 }
 
+<<<<<<< HEAD
 static inline pmd_t pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma)
 {
 	pte_t pte = __pte(pmd_val(pmd));
 
 	pte = pte_mkwrite(pte, vma);
+=======
+static inline pmd_t pmd_mkwrite(pmd_t pmd)
+{
+	pte_t pte = __pte(pmd_val(pmd));
+
+	pte = pte_mkwrite(pte);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return __pmd(pte_val(pte));
 }
@@ -964,6 +982,7 @@ void pgtable_trans_huge_deposit(struct mm_struct *mm, pmd_t *pmdp,
 pgtable_t pgtable_trans_huge_withdraw(struct mm_struct *mm, pmd_t *pmdp);
 #endif
 
+<<<<<<< HEAD
 /*
  * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
  * are !pte_none() && !pte_present().
@@ -979,16 +998,25 @@ pgtable_t pgtable_trans_huge_withdraw(struct mm_struct *mm, pmd_t *pmdp);
  *   --------------------> E <-- type ---> <------- zeroes -------->
  */
 #define __swp_type(entry)	(((entry).val >> PAGE_SHIFT) & 0x7fUL)
+=======
+/* Encode and de-code a swap entry */
+#define __swp_type(entry)	(((entry).val >> PAGE_SHIFT) & 0xffUL)
+>>>>>>> b7ba80a49124 (Commit)
 #define __swp_offset(entry)	((entry).val >> (PAGE_SHIFT + 8UL))
 #define __swp_entry(type, offset)	\
 	( (swp_entry_t) \
 	  { \
+<<<<<<< HEAD
 		((((long)(type) & 0x7fUL) << PAGE_SHIFT) | \
+=======
+		(((long)(type) << PAGE_SHIFT) | \
+>>>>>>> b7ba80a49124 (Commit)
                  ((long)(offset) << (PAGE_SHIFT + 8UL))) \
 	  } )
 #define __pte_to_swp_entry(pte)		((swp_entry_t) { pte_val(pte) })
 #define __swp_entry_to_pte(x)		((pte_t) { (x).val })
 
+<<<<<<< HEAD
 static inline int pte_swp_exclusive(pte_t pte)
 {
 	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
@@ -1004,6 +1032,8 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
 	return __pte(pte_val(pte) & ~_PAGE_SWP_EXCLUSIVE);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int page_in_phys_avail(unsigned long paddr);
 
 /*

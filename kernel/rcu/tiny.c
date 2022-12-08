@@ -44,7 +44,11 @@ static struct rcu_ctrlblk rcu_ctrlblk = {
 
 void rcu_barrier(void)
 {
+<<<<<<< HEAD
 	wait_rcu_gp(call_rcu_hurry);
+=======
+	wait_rcu_gp(call_rcu);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(rcu_barrier);
 
@@ -246,12 +250,24 @@ bool poll_state_synchronize_rcu(unsigned long oldstate)
 EXPORT_SYMBOL_GPL(poll_state_synchronize_rcu);
 
 #ifdef CONFIG_KASAN_GENERIC
+<<<<<<< HEAD
 void kvfree_call_rcu(struct rcu_head *head, void *ptr)
 {
 	if (head)
 		kasan_record_aux_stack_noalloc(ptr);
 
 	__kvfree_call_rcu(head, ptr);
+=======
+void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+{
+	if (head) {
+		void *ptr = (void *) head - (unsigned long) func;
+
+		kasan_record_aux_stack_noalloc(ptr);
+	}
+
+	__kvfree_call_rcu(head, func);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(kvfree_call_rcu);
 #endif

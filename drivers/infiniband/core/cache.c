@@ -1422,7 +1422,11 @@ int rdma_read_gid_l2_fields(const struct ib_gid_attr *attr,
 			*vlan_id = vlan_dev_vlan_id(ndev);
 		} else {
 			/* If the netdev is upper device and if it's lower
+<<<<<<< HEAD
 			 * device is vlan device, consider vlan id of
+=======
+			 * device is vlan device, consider vlan id of the
+>>>>>>> b7ba80a49124 (Commit)
 			 * the lower vlan device for this gid entry.
 			 */
 			netdev_walk_all_lower_dev_rcu(attr->ndev,

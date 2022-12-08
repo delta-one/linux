@@ -25,7 +25,10 @@
 #include <linux/module.h>
 #include <linux/nvram.h>
 #include <linux/initrd.h>
+<<<<<<< HEAD
 #include <linux/random.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/bootinfo.h>
 #include <asm/byteorder.h>
@@ -110,9 +113,16 @@ extern void paging_init(void);
 
 static void __init m68k_parse_bootinfo(const struct bi_record *record)
 {
+<<<<<<< HEAD
 	const struct bi_record *first_record = record;
 	uint16_t tag;
 
+=======
+	uint16_t tag;
+
+	save_bootinfo(record);
+
+>>>>>>> b7ba80a49124 (Commit)
 	while ((tag = be16_to_cpu(record->tag)) != BI_LAST) {
 		int unknown = 0;
 		const void *data = record->data;
@@ -152,6 +162,7 @@ static void __init m68k_parse_bootinfo(const struct bi_record *record)
 				sizeof(m68k_command_line));
 			break;
 
+<<<<<<< HEAD
 		case BI_RNG_SEED: {
 			u16 len = be16_to_cpup(data);
 			add_bootloader_randomness(data + 2, len);
@@ -163,6 +174,8 @@ static void __init m68k_parse_bootinfo(const struct bi_record *record)
 			break;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		default:
 			if (MACH_IS_AMIGA)
 				unknown = amiga_parse_bootinfo(record);
@@ -193,8 +206,11 @@ static void __init m68k_parse_bootinfo(const struct bi_record *record)
 		record = (struct bi_record *)((unsigned long)record + size);
 	}
 
+<<<<<<< HEAD
 	save_bootinfo(first_record);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	m68k_realnum_memory = m68k_num_memory;
 #ifdef CONFIG_SINGLE_MEMORY_CHUNK
 	if (m68k_num_memory > 1) {
@@ -326,16 +342,28 @@ void __init setup_arch(char **cmdline_p)
 		panic("No configuration setup");
 	}
 
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && m68k_ramdisk.size)
 		memblock_reserve(m68k_ramdisk.addr, m68k_ramdisk.size);
 
 	paging_init();
 
 	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && m68k_ramdisk.size) {
+=======
+#ifdef CONFIG_BLK_DEV_INITRD
+	if (m68k_ramdisk.size) {
+		memblock_reserve(m68k_ramdisk.addr, m68k_ramdisk.size);
+>>>>>>> b7ba80a49124 (Commit)
 		initrd_start = (unsigned long)phys_to_virt(m68k_ramdisk.addr);
 		initrd_end = initrd_start + m68k_ramdisk.size;
 		pr_info("initrd: %08lx - %08lx\n", initrd_start, initrd_end);
 	}
+<<<<<<< HEAD
+=======
+#endif
+
+	paging_init();
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_NATFEAT
 	nf_init();

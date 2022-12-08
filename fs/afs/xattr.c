@@ -97,7 +97,11 @@ static const struct afs_operation_ops afs_store_acl_operation = {
  * Set a file's AFS3 ACL.
  */
 static int afs_xattr_set_acl(const struct xattr_handler *handler,
+<<<<<<< HEAD
 			     struct mnt_idmap *idmap,
+=======
+			     struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
                              struct dentry *dentry,
                              struct inode *inode, const char *name,
                              const void *buffer, size_t size, int flags)
@@ -228,7 +232,11 @@ static const struct afs_operation_ops yfs_store_opaque_acl2_operation = {
  * Set a file's YFS ACL.
  */
 static int afs_xattr_set_yfs(const struct xattr_handler *handler,
+<<<<<<< HEAD
 			     struct mnt_idmap *idmap,
+=======
+			     struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
                              struct dentry *dentry,
                              struct inode *inode, const char *name,
                              const void *buffer, size_t size, int flags)

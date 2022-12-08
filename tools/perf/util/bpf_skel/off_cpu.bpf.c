@@ -94,8 +94,11 @@ const volatile bool has_prev_state = false;
 const volatile bool needs_cgroup = false;
 const volatile bool uses_cgroup_v1 = false;
 
+<<<<<<< HEAD
 int perf_subsys_id = -1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Old kernel used to call it task_struct->state and now it's '__state'.
  * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
@@ -121,6 +124,7 @@ static inline __u64 get_cgroup_id(struct task_struct *t)
 {
 	struct cgroup *cgrp;
 
+<<<<<<< HEAD
 	if (!uses_cgroup_v1)
 		return BPF_CORE_READ(t, cgroups, dfl_cgrp, kn, id);
 
@@ -134,6 +138,13 @@ static inline __u64 get_cgroup_id(struct task_struct *t)
 	}
 
 	cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_subsys_id], cgroup);
+=======
+	if (uses_cgroup_v1)
+		cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_event_cgrp_id], cgroup);
+	else
+		cgrp = BPF_CORE_READ(t, cgroups, dfl_cgrp);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return BPF_CORE_READ(cgrp, kn, id);
 }
 
@@ -277,7 +288,11 @@ int on_switch(u64 *ctx)
 	else
 		prev_state = get_task_state(prev);
 
+<<<<<<< HEAD
 	return off_cpu_stat(ctx, prev, next, prev_state & 0xff);
+=======
+	return off_cpu_stat(ctx, prev, next, prev_state);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 char LICENSE[] SEC("license") = "Dual BSD/GPL";

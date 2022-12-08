@@ -27,7 +27,11 @@ static const struct file_operations bad_file_ops =
 	.open		= bad_file_open,
 };
 
+<<<<<<< HEAD
 static int bad_inode_create(struct mnt_idmap *idmap,
+=======
+static int bad_inode_create(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			    struct inode *dir, struct dentry *dentry,
 			    umode_t mode, bool excl)
 {
@@ -51,14 +55,22 @@ static int bad_inode_unlink(struct inode *dir, struct dentry *dentry)
 	return -EIO;
 }
 
+<<<<<<< HEAD
 static int bad_inode_symlink(struct mnt_idmap *idmap,
+=======
+static int bad_inode_symlink(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			     struct inode *dir, struct dentry *dentry,
 			     const char *symname)
 {
 	return -EIO;
 }
 
+<<<<<<< HEAD
 static int bad_inode_mkdir(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int bad_inode_mkdir(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 			   struct dentry *dentry, umode_t mode)
 {
 	return -EIO;
@@ -69,13 +81,21 @@ static int bad_inode_rmdir (struct inode *dir, struct dentry *dentry)
 	return -EIO;
 }
 
+<<<<<<< HEAD
 static int bad_inode_mknod(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int bad_inode_mknod(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 			   struct dentry *dentry, umode_t mode, dev_t rdev)
 {
 	return -EIO;
 }
 
+<<<<<<< HEAD
 static int bad_inode_rename2(struct mnt_idmap *idmap,
+=======
+static int bad_inode_rename2(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			     struct inode *old_dir, struct dentry *old_dentry,
 			     struct inode *new_dir, struct dentry *new_dentry,
 			     unsigned int flags)
@@ -89,20 +109,32 @@ static int bad_inode_readlink(struct dentry *dentry, char __user *buffer,
 	return -EIO;
 }
 
+<<<<<<< HEAD
 static int bad_inode_permission(struct mnt_idmap *idmap,
+=======
+static int bad_inode_permission(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				struct inode *inode, int mask)
 {
 	return -EIO;
 }
 
+<<<<<<< HEAD
 static int bad_inode_getattr(struct mnt_idmap *idmap,
+=======
+static int bad_inode_getattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			     const struct path *path, struct kstat *stat,
 			     u32 request_mask, unsigned int query_flags)
 {
 	return -EIO;
 }
 
+<<<<<<< HEAD
 static int bad_inode_setattr(struct mnt_idmap *idmap,
+=======
+static int bad_inode_setattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			     struct dentry *direntry, struct iattr *attrs)
 {
 	return -EIO;
@@ -146,15 +178,25 @@ static int bad_inode_atomic_open(struct inode *inode, struct dentry *dentry,
 	return -EIO;
 }
 
+<<<<<<< HEAD
 static int bad_inode_tmpfile(struct mnt_idmap *idmap,
 			     struct inode *inode, struct file *file,
+=======
+static int bad_inode_tmpfile(struct user_namespace *mnt_userns,
+			     struct inode *inode, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 			     umode_t mode)
 {
 	return -EIO;
 }
 
+<<<<<<< HEAD
 static int bad_inode_set_acl(struct mnt_idmap *idmap,
 			     struct dentry *dentry, struct posix_acl *acl,
+=======
+static int bad_inode_set_acl(struct user_namespace *mnt_userns,
+			     struct inode *inode, struct posix_acl *acl,
+>>>>>>> b7ba80a49124 (Commit)
 			     int type)
 {
 	return -EIO;
@@ -177,7 +219,11 @@ static const struct inode_operations bad_inode_ops =
 	.setattr	= bad_inode_setattr,
 	.listxattr	= bad_inode_listxattr,
 	.get_link	= bad_inode_get_link,
+<<<<<<< HEAD
 	.get_inode_acl	= bad_inode_get_acl,
+=======
+	.get_acl	= bad_inode_get_acl,
+>>>>>>> b7ba80a49124 (Commit)
 	.fiemap		= bad_inode_fiemap,
 	.update_time	= bad_inode_update_time,
 	.atomic_open	= bad_inode_atomic_open,

@@ -9,7 +9,15 @@
 
 #include "local.h"
 
+<<<<<<< HEAD
 #define apic_cluster(apicid) ((apicid) >> 4)
+=======
+struct cluster_mask {
+	unsigned int	clusterid;
+	int		node;
+	struct cpumask	mask;
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * __x2apic_send_IPI_mask() possibly needs to read
@@ -19,7 +27,12 @@
 static u32 *x86_cpu_to_logical_apicid __read_mostly;
 
 static DEFINE_PER_CPU(cpumask_var_t, ipi_mask);
+<<<<<<< HEAD
 static DEFINE_PER_CPU_READ_MOSTLY(struct cpumask *, cluster_masks);
+=======
+static DEFINE_PER_CPU_READ_MOSTLY(struct cluster_mask *, cluster_masks);
+static struct cluster_mask *cluster_hotplug_mask;
+>>>>>>> b7ba80a49124 (Commit)
 
 static int x2apic_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
 {
@@ -55,10 +68,17 @@ __x2apic_send_IPI_mask(const struct cpumask *mask, int vector, int apic_dest)
 
 	/* Collapse cpus in a cluster so a single IPI per cluster is sent */
 	for_each_cpu(cpu, tmpmsk) {
+<<<<<<< HEAD
 		struct cpumask *cmsk = per_cpu(cluster_masks, cpu);
 
 		dest = 0;
 		for_each_cpu_and(clustercpu, tmpmsk, cmsk)
+=======
+		struct cluster_mask *cmsk = per_cpu(cluster_masks, cpu);
+
+		dest = 0;
+		for_each_cpu_and(clustercpu, tmpmsk, &cmsk->mask)
+>>>>>>> b7ba80a49124 (Commit)
 			dest |= x86_cpu_to_logical_apicid[clustercpu];
 
 		if (!dest)
@@ -66,7 +86,11 @@ __x2apic_send_IPI_mask(const struct cpumask *mask, int vector, int apic_dest)
 
 		__x2apic_send_IPI_dest(dest, vector, APIC_DEST_LOGICAL);
 		/* Remove cluster CPUs from tmpmask */
+<<<<<<< HEAD
 		cpumask_andnot(tmpmsk, tmpmsk, cmsk);
+=======
+		cpumask_andnot(tmpmsk, tmpmsk, &cmsk->mask);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	local_irq_restore(flags);
@@ -100,6 +124,7 @@ static u32 x2apic_calc_apicid(unsigned int cpu)
 
 static void init_x2apic_ldr(void)
 {
+<<<<<<< HEAD
 	struct cpumask *cmsk = this_cpu_read(cluster_masks);
 
 	BUG_ON(!cmsk);
@@ -180,11 +205,57 @@ alloc:
 	per_cpu(cluster_masks, cpu) = cmsk;
 	prefill_clustermask(cmsk, cpu, cluster);
 
+=======
+	struct cluster_mask *cmsk = this_cpu_read(cluster_masks);
+	u32 cluster, apicid = apic_read(APIC_LDR);
+	unsigned int cpu;
+
+	x86_cpu_to_logical_apicid[smp_processor_id()] = apicid;
+
+	if (cmsk)
+		goto update;
+
+	cluster = apicid >> 16;
+	for_each_online_cpu(cpu) {
+		cmsk = per_cpu(cluster_masks, cpu);
+		/* Matching cluster found. Link and update it. */
+		if (cmsk && cmsk->clusterid == cluster)
+			goto update;
+	}
+	cmsk = cluster_hotplug_mask;
+	cmsk->clusterid = cluster;
+	cluster_hotplug_mask = NULL;
+update:
+	this_cpu_write(cluster_masks, cmsk);
+	cpumask_set_cpu(smp_processor_id(), &cmsk->mask);
+}
+
+static int alloc_clustermask(unsigned int cpu, int node)
+{
+	if (per_cpu(cluster_masks, cpu))
+		return 0;
+	/*
+	 * If a hotplug spare mask exists, check whether it's on the right
+	 * node. If not, free it and allocate a new one.
+	 */
+	if (cluster_hotplug_mask) {
+		if (cluster_hotplug_mask->node == node)
+			return 0;
+		kfree(cluster_hotplug_mask);
+	}
+
+	cluster_hotplug_mask = kzalloc_node(sizeof(*cluster_hotplug_mask),
+					    GFP_KERNEL, node);
+	if (!cluster_hotplug_mask)
+		return -ENOMEM;
+	cluster_hotplug_mask->node = node;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static int x2apic_prepare_cpu(unsigned int cpu)
 {
+<<<<<<< HEAD
 	u32 phys_apicid = apic->cpu_present_to_apicid(cpu);
 	u32 cluster = apic_cluster(phys_apicid);
 	u32 logical_apicid = (cluster << 16) | (1 << (phys_apicid & 0xf));
@@ -192,6 +263,9 @@ static int x2apic_prepare_cpu(unsigned int cpu)
 	x86_cpu_to_logical_apicid[cpu] = logical_apicid;
 
 	if (alloc_clustermask(cpu, cluster, cpu_to_node(cpu)) < 0)
+=======
+	if (alloc_clustermask(cpu, cpu_to_node(cpu)) < 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOMEM;
 	if (!zalloc_cpumask_var(&per_cpu(ipi_mask, cpu), GFP_KERNEL))
 		return -ENOMEM;
@@ -200,10 +274,17 @@ static int x2apic_prepare_cpu(unsigned int cpu)
 
 static int x2apic_dead_cpu(unsigned int dead_cpu)
 {
+<<<<<<< HEAD
 	struct cpumask *cmsk = per_cpu(cluster_masks, dead_cpu);
 
 	if (cmsk)
 		cpumask_clear_cpu(dead_cpu, cmsk);
+=======
+	struct cluster_mask *cmsk = per_cpu(cluster_masks, dead_cpu);
+
+	if (cmsk)
+		cpumask_clear_cpu(dead_cpu, &cmsk->mask);
+>>>>>>> b7ba80a49124 (Commit)
 	free_cpumask_var(per_cpu(ipi_mask, dead_cpu));
 	return 0;
 }

@@ -48,7 +48,11 @@
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_bridge.h>
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_dma.h>
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_fourcc.h>
 #include <drm/drm_gem_dma_helper.h>
 #include <drm/drm_gem_framebuffer_helper.h>
@@ -308,7 +312,11 @@ static int pl111_amba_probe(struct amba_device *amba_dev,
 	if (ret < 0)
 		goto dev_put;
 
+<<<<<<< HEAD
 	drm_fbdev_dma_setup(drm, priv->variant->fb_bpp);
+=======
+	drm_fbdev_generic_setup(drm, priv->variant->fb_bpp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 

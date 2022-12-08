@@ -23,6 +23,10 @@
 #include <drm/display/drm_dp_helper.h>
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_bridge.h>
+<<<<<<< HEAD
+=======
+#include <drm/drm_crtc_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_mipi_dsi.h>
 #include <drm/drm_of.h>
 #include <drm/drm_panel.h>
@@ -407,7 +411,11 @@ static void tc_bridge_enable(struct drm_bridge *bridge)
 		 (val >> 8) & 0xFF, val & 0xFF);
 
 	d2l_write(tc->i2c, SYSRST, SYS_RST_REG | SYS_RST_DSIRX | SYS_RST_BM |
+<<<<<<< HEAD
 		  SYS_RST_LCD | SYS_RST_I2CM);
+=======
+		  SYS_RST_LCD | SYS_RST_I2CM | SYS_RST_I2CS);
+>>>>>>> b7ba80a49124 (Commit)
 	usleep_range(30000, 40000);
 
 	d2l_write(tc->i2c, PPI_TX_RX_TA, TTA_GET | TTA_SURE);
@@ -636,7 +644,11 @@ static int tc_attach_host(struct tc_data *tc)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int tc_probe(struct i2c_client *client)
+=======
+static int tc_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &client->dev;
 	struct tc_data *tc;
@@ -728,7 +740,11 @@ static struct i2c_driver tc358775_driver = {
 		.of_match_table = tc358775_of_ids,
 	},
 	.id_table = tc358775_i2c_ids,
+<<<<<<< HEAD
 	.probe_new = tc_probe,
+=======
+	.probe = tc_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove	= tc_remove,
 };
 module_i2c_driver(tc358775_driver);

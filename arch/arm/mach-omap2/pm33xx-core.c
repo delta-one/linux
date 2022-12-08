@@ -16,6 +16,10 @@
 #include <linux/clk.h>
 #include <linux/cpu.h>
 #include <linux/platform_data/gpio-omap.h>
+<<<<<<< HEAD
+=======
+#include <linux/pinctrl/pinmux.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/wkup_m3_ipc.h>
 #include <linux/of.h>
 #include <linux/rtc.h>

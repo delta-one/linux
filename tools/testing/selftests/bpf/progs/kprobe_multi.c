@@ -36,13 +36,22 @@ __u64 kretprobe_test6_result = 0;
 __u64 kretprobe_test7_result = 0;
 __u64 kretprobe_test8_result = 0;
 
+<<<<<<< HEAD
+=======
+extern bool CONFIG_X86_KERNEL_IBT __kconfig __weak;
+
+>>>>>>> b7ba80a49124 (Commit)
 static void kprobe_multi_check(void *ctx, bool is_return)
 {
 	if (bpf_get_current_pid_tgid() >> 32 != pid)
 		return;
 
 	__u64 cookie = test_cookie ? bpf_get_attach_cookie(ctx) : 0;
+<<<<<<< HEAD
 	__u64 addr = bpf_get_func_ip(ctx);
+=======
+	__u64 addr = bpf_get_func_ip(ctx) - (CONFIG_X86_KERNEL_IBT ? 4 : 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SET(__var, __addr, __cookie) ({			\
 	if (((const void *) addr == __addr) &&		\
@@ -110,6 +119,7 @@ int test_kretprobe_manual(struct pt_regs *ctx)
 	kprobe_multi_check(ctx, true);
 	return 0;
 }
+<<<<<<< HEAD
 
 extern const void bpf_testmod_fentry_test1 __ksym;
 extern const void bpf_testmod_fentry_test2 __ksym;
@@ -160,3 +170,5 @@ int test_kretprobe_testmod(struct pt_regs *ctx)
 	kprobe_multi_testmod_check(ctx, true);
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

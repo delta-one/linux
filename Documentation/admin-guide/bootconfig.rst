@@ -201,8 +201,11 @@ To remove the config from the image, you can use -d option as below::
 
 Then add "bootconfig" on the normal kernel command line to tell the
 kernel to look for the bootconfig at the end of the initrd file.
+<<<<<<< HEAD
 Alternatively, build your kernel with the ``CONFIG_BOOT_CONFIG_FORCE``
 Kconfig option selected.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 Embedding a Boot Config into Kernel
 -----------------------------------
@@ -219,9 +222,13 @@ path to the bootconfig file from source tree or object tree.
 The kernel will embed it as the default bootconfig.
 
 Just as when attaching the bootconfig to the initrd, you need ``bootconfig``
+<<<<<<< HEAD
 option on the kernel command line to enable the embedded bootconfig, or,
 alternatively, build your kernel with the ``CONFIG_BOOT_CONFIG_FORCE``
 Kconfig option selected.
+=======
+option on the kernel command line to enable the embedded bootconfig.
+>>>>>>> b7ba80a49124 (Commit)
 
 Note that even if you set this option, you can override the embedded
 bootconfig by another bootconfig which attached to the initrd.
@@ -233,7 +240,11 @@ In addition to the kernel command line, the boot config can be used for
 passing the kernel parameters. All the key-value pairs under ``kernel``
 key will be passed to kernel cmdline directly. Moreover, the key-value
 pairs under ``init`` will be passed to init process via the cmdline.
+<<<<<<< HEAD
 The parameters are concatenated with user-given kernel cmdline string
+=======
+The parameters are concatinated with user-given kernel cmdline string
+>>>>>>> b7ba80a49124 (Commit)
 as the following order, so that the command line parameter can override
 bootconfig parameters (this depends on how the subsystem handles parameters
 but in general, earlier parameter will be overwritten by later one.)::

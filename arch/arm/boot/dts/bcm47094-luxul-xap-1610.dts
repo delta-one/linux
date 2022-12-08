@@ -23,18 +23,30 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-status {
+=======
+		status	{
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:green:status";
 			gpios = <&chipcommon 0 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "timer";
 		};
 
+<<<<<<< HEAD
 		led-2ghz {
+=======
+		2ghz {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:blue:2ghz";
 			gpios = <&chipcommon 13 GPIO_ACTIVE_LOW>;
 		};
 
+<<<<<<< HEAD
 		led-5ghz {
+=======
+		5ghz {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "bcm53xx:blue:5ghz";
 			gpios = <&chipcommon 14 GPIO_ACTIVE_LOW>;
 		};

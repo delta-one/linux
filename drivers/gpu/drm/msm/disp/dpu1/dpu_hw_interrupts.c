@@ -35,9 +35,12 @@
 #define MDP_INTF_3_OFF_REV_7xxx             0x37000
 #define MDP_INTF_4_OFF_REV_7xxx             0x38000
 #define MDP_INTF_5_OFF_REV_7xxx             0x39000
+<<<<<<< HEAD
 #define MDP_INTF_6_OFF_REV_7xxx             0x3a000
 #define MDP_INTF_7_OFF_REV_7xxx             0x3b000
 #define MDP_INTF_8_OFF_REV_7xxx             0x3c000
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct dpu_intr_reg - array of DPU register sets
@@ -142,6 +145,7 @@ static const struct dpu_intr_reg dpu_intr_set[] = {
 		MDP_INTF_5_OFF_REV_7xxx+INTF_INTR_EN,
 		MDP_INTF_5_OFF_REV_7xxx+INTF_INTR_STATUS
 	},
+<<<<<<< HEAD
 	[MDP_INTF6_7xxx_INTR] = {
 		MDP_INTF_6_OFF_REV_7xxx+INTF_INTR_CLEAR,
 		MDP_INTF_6_OFF_REV_7xxx+INTF_INTR_EN,
@@ -157,6 +161,8 @@ static const struct dpu_intr_reg dpu_intr_set[] = {
 		MDP_INTF_8_OFF_REV_7xxx+INTF_INTR_EN,
 		MDP_INTF_8_OFF_REV_7xxx+INTF_INTR_STATUS
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define DPU_IRQ_REG(irq_idx)	(irq_idx / 32)
@@ -270,9 +276,15 @@ static int dpu_hw_intr_enable_irq_locked(struct dpu_hw_intr *intr, int irq_idx)
 
 	cache_irq_mask = intr->cache_irq_mask[reg_idx];
 	if (cache_irq_mask & DPU_IRQ_MASK(irq_idx)) {
+<<<<<<< HEAD
 		dbgstr = "already ";
 	} else {
 		dbgstr = "";
+=======
+		dbgstr = "DPU IRQ already set:";
+	} else {
+		dbgstr = "DPU IRQ enabled:";
+>>>>>>> b7ba80a49124 (Commit)
 
 		cache_irq_mask |= DPU_IRQ_MASK(irq_idx);
 		/* Cleaning any pending interrupt */
@@ -286,7 +298,11 @@ static int dpu_hw_intr_enable_irq_locked(struct dpu_hw_intr *intr, int irq_idx)
 		intr->cache_irq_mask[reg_idx] = cache_irq_mask;
 	}
 
+<<<<<<< HEAD
 	pr_debug("DPU IRQ %d %senabled: MASK:0x%.8lx, CACHE-MASK:0x%.8x\n", irq_idx, dbgstr,
+=======
+	pr_debug("%s MASK:0x%.8lx, CACHE-MASK:0x%.8x\n", dbgstr,
+>>>>>>> b7ba80a49124 (Commit)
 			DPU_IRQ_MASK(irq_idx), cache_irq_mask);
 
 	return 0;
@@ -319,9 +335,15 @@ static int dpu_hw_intr_disable_irq_locked(struct dpu_hw_intr *intr, int irq_idx)
 
 	cache_irq_mask = intr->cache_irq_mask[reg_idx];
 	if ((cache_irq_mask & DPU_IRQ_MASK(irq_idx)) == 0) {
+<<<<<<< HEAD
 		dbgstr = "already ";
 	} else {
 		dbgstr = "";
+=======
+		dbgstr = "DPU IRQ is already cleared:";
+	} else {
+		dbgstr = "DPU IRQ mask disable:";
+>>>>>>> b7ba80a49124 (Commit)
 
 		cache_irq_mask &= ~DPU_IRQ_MASK(irq_idx);
 		/* Disable interrupts based on the new mask */
@@ -335,7 +357,11 @@ static int dpu_hw_intr_disable_irq_locked(struct dpu_hw_intr *intr, int irq_idx)
 		intr->cache_irq_mask[reg_idx] = cache_irq_mask;
 	}
 
+<<<<<<< HEAD
 	pr_debug("DPU IRQ %d %sdisabled: MASK:0x%.8lx, CACHE-MASK:0x%.8x\n", irq_idx, dbgstr,
+=======
+	pr_debug("%s MASK:0x%.8lx, CACHE-MASK:0x%.8x\n", dbgstr,
+>>>>>>> b7ba80a49124 (Commit)
 			DPU_IRQ_MASK(irq_idx), cache_irq_mask);
 
 	return 0;

@@ -76,13 +76,22 @@ allOf:
 required:
   - compatible
   - rockchip,grf
+<<<<<<< HEAD
+=======
+  - "#address-cells"
+  - "#size-cells"
+  - ranges
+>>>>>>> b7ba80a49124 (Commit)
 
 patternProperties:
   "gpio@[0-9a-f]+$":
     type: object
 
     $ref: "/schemas/gpio/rockchip,gpio-bank.yaml#"
+<<<<<<< HEAD
     deprecated: true
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
     unevaluatedProperties: false
 
@@ -130,7 +139,11 @@ additionalProperties:
               description:
                 Pin bank index.
             - minimum: 0
+<<<<<<< HEAD
               maximum: 13
+=======
+              maximum: 10
+>>>>>>> b7ba80a49124 (Commit)
               description:
                 Mux 0 means GPIO and mux 1 to N means
                 the specific device function.

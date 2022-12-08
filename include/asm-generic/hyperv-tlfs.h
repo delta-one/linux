@@ -102,6 +102,7 @@ struct ms_hyperv_tsc_page {
 	volatile s64 tsc_offset;
 } __packed;
 
+<<<<<<< HEAD
 union hv_reference_tsc_msr {
 	u64 as_uint64;
 	struct {
@@ -111,6 +112,8 @@ union hv_reference_tsc_msr {
 	} __packed;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The guest OS needs to register the guest ID with the hypervisor.
  * The guest ID is a 64 bit entity and the structure of this ID is
@@ -194,7 +197,10 @@ enum HV_GENERIC_SET_FORMAT {
 #define HV_HYPERCALL_VARHEAD_OFFSET	17
 #define HV_HYPERCALL_VARHEAD_MASK	GENMASK_ULL(26, 17)
 #define HV_HYPERCALL_RSVD0_MASK		GENMASK_ULL(31, 27)
+<<<<<<< HEAD
 #define HV_HYPERCALL_NESTED		BIT_ULL(31)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define HV_HYPERCALL_REP_COMP_OFFSET	32
 #define HV_HYPERCALL_REP_COMP_1		BIT_ULL(32)
 #define HV_HYPERCALL_REP_COMP_MASK	GENMASK_ULL(43, 32)
@@ -409,11 +415,14 @@ struct hv_vpset {
 	u64 bank_contents[];
 } __packed;
 
+<<<<<<< HEAD
 /* The maximum number of sparse vCPU banks which can be encoded by 'struct hv_vpset' */
 #define HV_MAX_SPARSE_VCPU_BANKS (64)
 /* The number of vCPUs in one sparse bank */
 #define HV_VCPUS_PER_SPARSE_BANK (64)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* HvCallSendSyntheticClusterIpi hypercall */
 struct hv_send_ipi {
 	u32 vector;

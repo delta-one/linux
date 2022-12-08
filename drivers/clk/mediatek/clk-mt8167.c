@@ -11,16 +11,27 @@
 #include <linux/of_address.h>
 #include <linux/slab.h>
 #include <linux/mfd/syscon.h>
+<<<<<<< HEAD
 #include <linux/platform_device.h>
 
 #include "clk-gate.h"
 #include "clk-mtk.h"
+=======
+
+#include "clk-gate.h"
+#include "clk-mtk.h"
+#include "clk-pll.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <dt-bindings/clock/mt8167-clk.h>
 
 static DEFINE_SPINLOCK(mt8167_clk_lock);
 
+<<<<<<< HEAD
 static const struct mtk_fixed_clk fixed_clks[] = {
+=======
+static const struct mtk_fixed_clk fixed_clks[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	FIXED_CLK(CLK_TOP_CLK_NULL, "clk_null", NULL, 0),
 	FIXED_CLK(CLK_TOP_I2S_INFRA_BCK, "i2s_infra_bck", "clk_null", 26000000),
 	FIXED_CLK(CLK_TOP_MEMPLL, "mempll", "clk26m", 800000000),
@@ -29,7 +40,11 @@ static const struct mtk_fixed_clk fixed_clks[] = {
 	FIXED_CLK(CLK_TOP_LVDSTX_CLKDIG_CTS, "lvdstx_dig_cts", "clk26m", 52500000),
 };
 
+<<<<<<< HEAD
 static const struct mtk_fixed_factor top_divs[] = {
+=======
+static const struct mtk_fixed_factor top_divs[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	FACTOR(CLK_TOP_DMPLL, "dmpll_ck", "mempll", 1, 1),
 	FACTOR(CLK_TOP_MAINPLL_D2, "mainpll_d2", "mainpll", 1, 2),
 	FACTOR(CLK_TOP_MAINPLL_D4, "mainpll_d4", "mainpll", 1, 4),
@@ -85,22 +100,38 @@ static const struct mtk_fixed_factor top_divs[] = {
 	FACTOR(CLK_TOP_ETH_D2, "eth_d2_ck", "eth_sel", 1, 2),
 };
 
+<<<<<<< HEAD
 static const char * const uart0_parents[] = {
+=======
+static const char * const uart0_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"univpll_d24"
 };
 
+<<<<<<< HEAD
 static const char * const gfmux_emi1x_parents[] = {
+=======
+static const char * const gfmux_emi1x_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"dmpll_ck"
 };
 
+<<<<<<< HEAD
 static const char * const emi_ddrphy_parents[] = {
+=======
+static const char * const emi_ddrphy_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"gfmux_emi1x_sel",
 	"gfmux_emi1x_sel"
 };
 
+<<<<<<< HEAD
 static const char * const ahb_infra_parents[] = {
+=======
+static const char * const ahb_infra_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk_null",
 	"clk26m_ck",
 	"mainpll_d11",
@@ -116,7 +147,11 @@ static const char * const ahb_infra_parents[] = {
 	"mainpll_d10"
 };
 
+<<<<<<< HEAD
 static const char * const csw_mux_mfg_parents[] = {
+=======
+static const char * const csw_mux_mfg_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk_null",
 	"clk_null",
 	"univpll_d3",
@@ -127,7 +162,11 @@ static const char * const csw_mux_mfg_parents[] = {
 	"mmpll380m"
 };
 
+<<<<<<< HEAD
 static const char * const msdc0_parents[] = {
+=======
+static const char * const msdc0_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"univpll_d6",
 	"mainpll_d8",
@@ -138,7 +177,11 @@ static const char * const msdc0_parents[] = {
 	"mmpll_d2"
 };
 
+<<<<<<< HEAD
 static const char * const camtg_mm_parents[] = {
+=======
+static const char * const camtg_mm_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk_null",
 	"clk26m_ck",
 	"usb_phy48m_ck",
@@ -146,17 +189,29 @@ static const char * const camtg_mm_parents[] = {
 	"univpll_d6"
 };
 
+<<<<<<< HEAD
 static const char * const pwm_mm_parents[] = {
+=======
+static const char * const pwm_mm_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"univpll_d12"
 };
 
+<<<<<<< HEAD
 static const char * const uart1_parents[] = {
+=======
+static const char * const uart1_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"univpll_d24"
 };
 
+<<<<<<< HEAD
 static const char * const msdc1_parents[] = {
+=======
+static const char * const msdc1_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"univpll_d6",
 	"mainpll_d8",
@@ -167,24 +222,40 @@ static const char * const msdc1_parents[] = {
 	"mmpll_d2"
 };
 
+<<<<<<< HEAD
 static const char * const spm_52m_parents[] = {
+=======
+static const char * const spm_52m_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"univpll_d24"
 };
 
+<<<<<<< HEAD
 static const char * const pmicspi_parents[] = {
+=======
+static const char * const pmicspi_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"univpll_d20",
 	"usb_phy48m_ck",
 	"univpll_d16",
 	"clk26m_ck"
 };
 
+<<<<<<< HEAD
 static const char * const qaxi_aud26m_parents[] = {
+=======
+static const char * const qaxi_aud26m_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"ahb_infra_sel"
 };
 
+<<<<<<< HEAD
 static const char * const aud_intbus_parents[] = {
+=======
+static const char * const aud_intbus_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk_null",
 	"clk26m_ck",
 	"mainpll_d22",
@@ -192,7 +263,11 @@ static const char * const aud_intbus_parents[] = {
 	"mainpll_d11"
 };
 
+<<<<<<< HEAD
 static const char * const nfi2x_pad_parents[] = {
+=======
+static const char * const nfi2x_pad_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk_null",
 	"clk_null",
 	"clk_null",
@@ -280,12 +355,20 @@ static const char * const nfi2x_pad_parents[] = {
 	"mainpll_d5"
 };
 
+<<<<<<< HEAD
 static const char * const nfi1x_pad_parents[] = {
+=======
+static const char * const nfi1x_pad_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"ahb_infra_sel",
 	"nfi1x_ck"
 };
 
+<<<<<<< HEAD
 static const char * const mfg_mm_parents[] = {
+=======
+static const char * const mfg_mm_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk_null",
 	"clk_null",
 	"clk_null",
@@ -325,12 +408,20 @@ static const char * const mfg_mm_parents[] = {
 	"mainpll_d14"
 };
 
+<<<<<<< HEAD
 static const char * const ddrphycfg_parents[] = {
+=======
+static const char * const ddrphycfg_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"mainpll_d16"
 };
 
+<<<<<<< HEAD
 static const char * const smi_mm_parents[] = {
+=======
+static const char * const smi_mm_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"clk_null",
 	"clk_null",
@@ -346,7 +437,11 @@ static const char * const smi_mm_parents[] = {
 	"mainpll_d14"
 };
 
+<<<<<<< HEAD
 static const char * const usb_78m_parents[] = {
+=======
+static const char * const usb_78m_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk_null",
 	"clk26m_ck",
 	"univpll_d16",
@@ -354,7 +449,11 @@ static const char * const usb_78m_parents[] = {
 	"mainpll_d20"
 };
 
+<<<<<<< HEAD
 static const char * const scam_mm_parents[] = {
+=======
+static const char * const scam_mm_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk_null",
 	"clk26m_ck",
 	"mainpll_d14",
@@ -362,7 +461,11 @@ static const char * const scam_mm_parents[] = {
 	"mainpll_d12"
 };
 
+<<<<<<< HEAD
 static const char * const spinor_parents[] = {
+=======
+static const char * const spinor_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_d2",
 	"clk26m_ck",
 	"mainpll_d40",
@@ -373,7 +476,11 @@ static const char * const spinor_parents[] = {
 	"univpll_d12"
 };
 
+<<<<<<< HEAD
 static const char * const msdc2_parents[] = {
+=======
+static const char * const msdc2_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"univpll_d6",
 	"mainpll_d8",
@@ -384,7 +491,11 @@ static const char * const msdc2_parents[] = {
 	"mmpll_d2"
 };
 
+<<<<<<< HEAD
 static const char * const eth_parents[] = {
+=======
+static const char * const eth_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"mainpll_d40",
 	"univpll_d24",
@@ -392,7 +503,11 @@ static const char * const eth_parents[] = {
 	"mainpll_d20"
 };
 
+<<<<<<< HEAD
 static const char * const vdec_mm_parents[] = {
+=======
+static const char * const vdec_mm_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"univpll_d4",
 	"mainpll_d4",
@@ -401,7 +516,11 @@ static const char * const vdec_mm_parents[] = {
 	"mainpll_d6"
 };
 
+<<<<<<< HEAD
 static const char * const dpi0_mm_parents[] = {
+=======
+static const char * const dpi0_mm_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"lvdspll_ck",
 	"lvdspll_d2",
@@ -409,7 +528,11 @@ static const char * const dpi0_mm_parents[] = {
 	"lvdspll_d8"
 };
 
+<<<<<<< HEAD
 static const char * const dpi1_mm_parents[] = {
+=======
+static const char * const dpi1_mm_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"tvdpll_d2",
 	"tvdpll_d4",
@@ -417,85 +540,141 @@ static const char * const dpi1_mm_parents[] = {
 	"tvdpll_d16"
 };
 
+<<<<<<< HEAD
 static const char * const axi_mfg_in_parents[] = {
+=======
+static const char * const axi_mfg_in_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"mainpll_d11",
 	"univpll_d24",
 	"mmpll380m"
 };
 
+<<<<<<< HEAD
 static const char * const slow_mfg_parents[] = {
+=======
+static const char * const slow_mfg_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"univpll_d12",
 	"univpll_d24"
 };
 
+<<<<<<< HEAD
 static const char * const aud1_parents[] = {
+=======
+static const char * const aud1_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"apll1_ck"
 };
 
+<<<<<<< HEAD
 static const char * const aud2_parents[] = {
+=======
+static const char * const aud2_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"apll2_ck"
 };
 
+<<<<<<< HEAD
 static const char * const aud_engen1_parents[] = {
+=======
+static const char * const aud_engen1_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"rg_apll1_d2_en",
 	"rg_apll1_d4_en",
 	"rg_apll1_d8_en"
 };
 
+<<<<<<< HEAD
 static const char * const aud_engen2_parents[] = {
+=======
+static const char * const aud_engen2_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"rg_apll2_d2_en",
 	"rg_apll2_d4_en",
 	"rg_apll2_d8_en"
 };
 
+<<<<<<< HEAD
 static const char * const i2c_parents[] = {
+=======
+static const char * const i2c_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"univpll_d20",
 	"univpll_d16",
 	"univpll_d12"
 };
 
+<<<<<<< HEAD
 static const char * const aud_i2s0_m_parents[] = {
+=======
+static const char * const aud_i2s0_m_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"rg_aud1",
 	"rg_aud2"
 };
 
+<<<<<<< HEAD
 static const char * const pwm_parents[] = {
+=======
+static const char * const pwm_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"univpll_d12"
 };
 
+<<<<<<< HEAD
 static const char * const spi_parents[] = {
+=======
+static const char * const spi_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"univpll_d12",
 	"univpll_d8",
 	"univpll_d6"
 };
 
+<<<<<<< HEAD
 static const char * const aud_spdifin_parents[] = {
+=======
+static const char * const aud_spdifin_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"univpll_d2"
 };
 
+<<<<<<< HEAD
 static const char * const uart2_parents[] = {
+=======
+static const char * const uart2_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"univpll_d24"
 };
 
+<<<<<<< HEAD
 static const char * const bsi_parents[] = {
+=======
+static const char * const bsi_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"mainpll_d10",
 	"mainpll_d12",
 	"mainpll_d20"
 };
 
+<<<<<<< HEAD
 static const char * const dbg_atclk_parents[] = {
+=======
+static const char * const dbg_atclk_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk_null",
 	"clk26m_ck",
 	"mainpll_d5",
@@ -503,7 +682,11 @@ static const char * const dbg_atclk_parents[] = {
 	"univpll_d5"
 };
 
+<<<<<<< HEAD
 static const char * const csw_nfiecc_parents[] = {
+=======
+static const char * const csw_nfiecc_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk_null",
 	"mainpll_d7",
 	"mainpll_d6",
@@ -511,7 +694,11 @@ static const char * const csw_nfiecc_parents[] = {
 	"mainpll_d5"
 };
 
+<<<<<<< HEAD
 static const char * const nfiecc_parents[] = {
+=======
+static const char * const nfiecc_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk_null",
 	"nfi2x_pad_sel",
 	"mainpll_d4",
@@ -625,24 +812,40 @@ static struct mtk_composite top_muxes[] __initdata = {
 		0x07c, 13, 3),
 };
 
+<<<<<<< HEAD
 static const char * const ifr_mux1_parents[] = {
+=======
+static const char * const ifr_mux1_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"clk26m_ck",
 	"armpll",
 	"univpll",
 	"mainpll_d2"
 };
 
+<<<<<<< HEAD
 static const char * const ifr_eth_25m_parents[] = {
+=======
+static const char * const ifr_eth_25m_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"eth_d2_ck",
 	"rg_eth"
 };
 
+<<<<<<< HEAD
 static const char * const ifr_i2c0_parents[] = {
+=======
+static const char * const ifr_i2c0_parents[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	"ahb_infra_d2",
 	"rg_i2c"
 };
 
+<<<<<<< HEAD
 static const struct mtk_composite ifr_muxes[] = {
+=======
+static const struct mtk_composite ifr_muxes[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	MUX(CLK_IFR_MUX1_SEL, "ifr_mux1_sel", ifr_mux1_parents, 0x000,
 		2, 2),
 	MUX(CLK_IFR_ETH_25M_SEL, "ifr_eth_25m_sel", ifr_eth_25m_parents, 0x080,
@@ -685,6 +888,24 @@ static const struct mtk_clk_divider top_adj_divs[] = {
 		0x0078, 0, 8),
 };
 
+<<<<<<< HEAD
+=======
+#define DIV_ADJ_FLAG(_id, _name, _parent, _reg, _shift, _width, _flag) {	\
+		.id = _id,					\
+		.name = _name,					\
+		.parent_name = _parent,				\
+		.div_reg = _reg,				\
+		.div_shift = _shift,				\
+		.div_width = _width,				\
+		.clk_divider_flags = _flag,				\
+}
+
+static const struct mtk_clk_divider apmixed_adj_divs[] = {
+	DIV_ADJ_FLAG(CLK_APMIXED_HDMI_REF, "hdmi_ref", "tvdpll",
+		0x1c4, 24, 3, CLK_DIVIDER_POWER_OF_TWO),
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct mtk_gate_regs top0_cg_regs = {
 	.set_ofs = 0x50,
 	.clr_ofs = 0x80,
@@ -721,6 +942,7 @@ static const struct mtk_gate_regs top5_cg_regs = {
 	.sta_ofs = 0x44,
 };
 
+<<<<<<< HEAD
 #define GATE_TOP0(_id, _name, _parent, _shift) \
 	GATE_MTK(_id, _name, _parent, &top0_cg_regs, _shift, &mtk_clk_gate_ops_setclr)
 
@@ -746,6 +968,81 @@ static const struct mtk_gate_regs top5_cg_regs = {
 	GATE_MTK(_id, _name, _parent, &top5_cg_regs, _shift, &mtk_clk_gate_ops_no_setclr)
 
 static const struct mtk_gate top_clks[] = {
+=======
+#define GATE_TOP0(_id, _name, _parent, _shift) {	\
+		.id = _id,				\
+		.name = _name,				\
+		.parent_name = _parent,			\
+		.regs = &top0_cg_regs,			\
+		.shift = _shift,			\
+		.ops = &mtk_clk_gate_ops_setclr,	\
+	}
+
+#define GATE_TOP0_I(_id, _name, _parent, _shift) {	\
+		.id = _id,				\
+		.name = _name,				\
+		.parent_name = _parent,			\
+		.regs = &top0_cg_regs,			\
+		.shift = _shift,			\
+		.ops = &mtk_clk_gate_ops_setclr_inv,	\
+	}
+
+#define GATE_TOP1(_id, _name, _parent, _shift) {	\
+		.id = _id,				\
+		.name = _name,				\
+		.parent_name = _parent,			\
+		.regs = &top1_cg_regs,			\
+		.shift = _shift,			\
+		.ops = &mtk_clk_gate_ops_setclr,	\
+	}
+
+#define GATE_TOP2(_id, _name, _parent, _shift) {	\
+		.id = _id,				\
+		.name = _name,				\
+		.parent_name = _parent,			\
+		.regs = &top2_cg_regs,			\
+		.shift = _shift,			\
+		.ops = &mtk_clk_gate_ops_setclr,	\
+	}
+
+#define GATE_TOP2_I(_id, _name, _parent, _shift) {	\
+		.id = _id,				\
+		.name = _name,				\
+		.parent_name = _parent,			\
+		.regs = &top2_cg_regs,			\
+		.shift = _shift,			\
+		.ops = &mtk_clk_gate_ops_setclr_inv,	\
+	}
+
+#define GATE_TOP3(_id, _name, _parent, _shift) {	\
+		.id = _id,				\
+		.name = _name,				\
+		.parent_name = _parent,			\
+		.regs = &top3_cg_regs,			\
+		.shift = _shift,			\
+		.ops = &mtk_clk_gate_ops_setclr,	\
+	}
+
+#define GATE_TOP4_I(_id, _name, _parent, _shift) {	\
+		.id = _id,				\
+		.name = _name,				\
+		.parent_name = _parent,			\
+		.regs = &top4_cg_regs,			\
+		.shift = _shift,			\
+		.ops = &mtk_clk_gate_ops_setclr_inv,	\
+	}
+
+#define GATE_TOP5(_id, _name, _parent, _shift) {	\
+		.id = _id,				\
+		.name = _name,				\
+		.parent_name = _parent,			\
+		.regs = &top5_cg_regs,			\
+		.shift = _shift,			\
+		.ops = &mtk_clk_gate_ops_no_setclr,	\
+	}
+
+static const struct mtk_gate top_clks[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	/* TOP0 */
 	GATE_TOP0(CLK_TOP_PWM_MM, "pwm_mm", "pwm_mm_sel", 0),
 	GATE_TOP0(CLK_TOP_CAM_MM, "cam_mm", "camtg_mm_sel", 1),
@@ -858,6 +1155,7 @@ static const struct mtk_gate top_clks[] = {
 	GATE_TOP5(CLK_TOP_APLL12_DIV6, "apll12_div6", "apll12_ck_div6", 8),
 };
 
+<<<<<<< HEAD
 static const struct mtk_clk_desc topck_desc = {
 	.clks = top_clks,
 	.num_clks = ARRAY_SIZE(top_clks),
@@ -895,3 +1193,145 @@ static struct platform_driver clk_mt8167_drv = {
 };
 module_platform_driver(clk_mt8167_drv);
 MODULE_LICENSE("GPL");
+=======
+static void __init mtk_topckgen_init(struct device_node *node)
+{
+	struct clk_hw_onecell_data *clk_data;
+	int r;
+	void __iomem *base;
+
+	base = of_iomap(node, 0);
+	if (!base) {
+		pr_err("%s(): ioremap failed\n", __func__);
+		return;
+	}
+
+	clk_data = mtk_alloc_clk_data(MT8167_CLK_TOP_NR_CLK);
+
+	mtk_clk_register_fixed_clks(fixed_clks, ARRAY_SIZE(fixed_clks),
+				    clk_data);
+	mtk_clk_register_gates(node, top_clks, ARRAY_SIZE(top_clks), clk_data);
+
+	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
+	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
+		&mt8167_clk_lock, clk_data);
+	mtk_clk_register_dividers(top_adj_divs, ARRAY_SIZE(top_adj_divs),
+				base, &mt8167_clk_lock, clk_data);
+
+	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+	if (r)
+		pr_err("%s(): could not register clock provider: %d\n",
+			__func__, r);
+}
+CLK_OF_DECLARE(mtk_topckgen, "mediatek,mt8167-topckgen", mtk_topckgen_init);
+
+static void __init mtk_infracfg_init(struct device_node *node)
+{
+	struct clk_hw_onecell_data *clk_data;
+	int r;
+	void __iomem *base;
+
+	base = of_iomap(node, 0);
+	if (!base) {
+		pr_err("%s(): ioremap failed\n", __func__);
+		return;
+	}
+
+	clk_data = mtk_alloc_clk_data(CLK_IFR_NR_CLK);
+
+	mtk_clk_register_composites(ifr_muxes, ARRAY_SIZE(ifr_muxes), base,
+		&mt8167_clk_lock, clk_data);
+
+	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+	if (r)
+		pr_err("%s(): could not register clock provider: %d\n",
+			__func__, r);
+}
+CLK_OF_DECLARE(mtk_infracfg, "mediatek,mt8167-infracfg", mtk_infracfg_init);
+
+#define MT8167_PLL_FMAX		(2500UL * MHZ)
+
+#define CON0_MT8167_RST_BAR	BIT(27)
+
+#define PLL_B(_id, _name, _reg, _pwr_reg, _en_mask, _flags, _pcwbits,	\
+			_pd_reg, _pd_shift, _tuner_reg, _pcw_reg,	\
+			_pcw_shift, _div_table) {			\
+		.id = _id,						\
+		.name = _name,						\
+		.reg = _reg,						\
+		.pwr_reg = _pwr_reg,					\
+		.en_mask = _en_mask,					\
+		.flags = _flags,					\
+		.rst_bar_mask = CON0_MT8167_RST_BAR,			\
+		.fmax = MT8167_PLL_FMAX,				\
+		.pcwbits = _pcwbits,					\
+		.pd_reg = _pd_reg,					\
+		.pd_shift = _pd_shift,					\
+		.tuner_reg = _tuner_reg,				\
+		.pcw_reg = _pcw_reg,					\
+		.pcw_shift = _pcw_shift,				\
+		.div_table = _div_table,				\
+	}
+
+#define PLL(_id, _name, _reg, _pwr_reg, _en_mask, _flags, _pcwbits,	\
+			_pd_reg, _pd_shift, _tuner_reg, _pcw_reg,	\
+			_pcw_shift)					\
+		PLL_B(_id, _name, _reg, _pwr_reg, _en_mask, _flags, _pcwbits, \
+			_pd_reg, _pd_shift, _tuner_reg, _pcw_reg, _pcw_shift, \
+			NULL)
+
+static const struct mtk_pll_div_table mmpll_div_table[] = {
+	{ .div = 0, .freq = MT8167_PLL_FMAX },
+	{ .div = 1, .freq = 1000000000 },
+	{ .div = 2, .freq = 604500000 },
+	{ .div = 3, .freq = 253500000 },
+	{ .div = 4, .freq = 126750000 },
+	{ } /* sentinel */
+};
+
+static const struct mtk_pll_data plls[] = {
+	PLL(CLK_APMIXED_ARMPLL, "armpll", 0x0100, 0x0110, 0, 0,
+		21, 0x0104, 24, 0, 0x0104, 0),
+	PLL(CLK_APMIXED_MAINPLL, "mainpll", 0x0120, 0x0130, 0,
+		HAVE_RST_BAR, 21, 0x0124, 24, 0, 0x0124, 0),
+	PLL(CLK_APMIXED_UNIVPLL, "univpll", 0x0140, 0x0150, 0x30000000,
+		HAVE_RST_BAR, 7, 0x0144, 24, 0, 0x0144, 0),
+	PLL_B(CLK_APMIXED_MMPLL, "mmpll", 0x0160, 0x0170, 0, 0,
+		21, 0x0164, 24, 0, 0x0164, 0, mmpll_div_table),
+	PLL(CLK_APMIXED_APLL1, "apll1", 0x0180, 0x0190, 0, 0,
+		31, 0x0180, 1, 0x0194, 0x0184, 0),
+	PLL(CLK_APMIXED_APLL2, "apll2", 0x01A0, 0x01B0, 0, 0,
+		31, 0x01A0, 1, 0x01B4, 0x01A4, 0),
+	PLL(CLK_APMIXED_TVDPLL, "tvdpll", 0x01C0, 0x01D0, 0, 0,
+		21, 0x01C4, 24, 0, 0x01C4, 0),
+	PLL(CLK_APMIXED_LVDSPLL, "lvdspll", 0x01E0, 0x01F0, 0, 0,
+		21, 0x01E4, 24, 0, 0x01E4, 0),
+};
+
+static void __init mtk_apmixedsys_init(struct device_node *node)
+{
+	struct clk_hw_onecell_data *clk_data;
+	void __iomem *base;
+	int r;
+
+	base = of_iomap(node, 0);
+	if (!base) {
+		pr_err("%s(): ioremap failed\n", __func__);
+		return;
+	}
+
+	clk_data = mtk_alloc_clk_data(MT8167_CLK_APMIXED_NR_CLK);
+
+	mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
+	mtk_clk_register_dividers(apmixed_adj_divs, ARRAY_SIZE(apmixed_adj_divs),
+		base, &mt8167_clk_lock, clk_data);
+
+	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+	if (r)
+		pr_err("%s(): could not register clock provider: %d\n",
+			__func__, r);
+
+}
+CLK_OF_DECLARE(mtk_apmixedsys, "mediatek,mt8167-apmixedsys",
+		mtk_apmixedsys_init);
+>>>>>>> b7ba80a49124 (Commit)

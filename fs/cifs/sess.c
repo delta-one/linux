@@ -292,10 +292,16 @@ cifs_chan_update_iface(struct cifs_ses *ses, struct TCP_Server_Info *server)
 			continue;
 		}
 		kref_get(&iface->refcount);
+<<<<<<< HEAD
 		break;
 	}
 
 	if (list_entry_is_head(iface, &ses->iface_list, iface_head)) {
+=======
+	}
+
+	if (!list_entry_is_head(iface, &ses->iface_list, iface_head)) {
+>>>>>>> b7ba80a49124 (Commit)
 		rc = 1;
 		iface = NULL;
 		cifs_dbg(FYI, "unable to find a suitable iface\n");
@@ -303,6 +309,7 @@ cifs_chan_update_iface(struct cifs_ses *ses, struct TCP_Server_Info *server)
 
 	/* now drop the ref to the current iface */
 	if (old_iface && iface) {
+<<<<<<< HEAD
 		cifs_dbg(FYI, "replacing iface: %pIS with %pIS\n",
 			 &old_iface->sockaddr,
 			 &iface->sockaddr);
@@ -311,6 +318,16 @@ cifs_chan_update_iface(struct cifs_ses *ses, struct TCP_Server_Info *server)
 		cifs_dbg(FYI, "releasing ref to iface: %pIS\n",
 			 &old_iface->sockaddr);
 		kref_put(&old_iface->refcount, release_iface);
+=======
+		kref_put(&old_iface->refcount, release_iface);
+		cifs_dbg(FYI, "replacing iface: %pIS with %pIS\n",
+			 &old_iface->sockaddr,
+			 &iface->sockaddr);
+	} else if (old_iface) {
+		kref_put(&old_iface->refcount, release_iface);
+		cifs_dbg(FYI, "releasing ref to iface: %pIS\n",
+			 &old_iface->sockaddr);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		WARN_ON(!iface);
 		cifs_dbg(FYI, "adding new iface: %pIS\n", &iface->sockaddr);
@@ -480,6 +497,10 @@ out:
 		 * remove this channel
 		 */
 		cancel_delayed_work_sync(&chan->server->echo);
+<<<<<<< HEAD
+=======
+		cancel_delayed_work_sync(&chan->server->resolve);
+>>>>>>> b7ba80a49124 (Commit)
 		cancel_delayed_work_sync(&chan->server->reconnect);
 
 		spin_lock(&ses->chan_lock);
@@ -496,7 +517,10 @@ out:
 		cifs_put_tcp_session(chan->server, 0);
 	}
 
+<<<<<<< HEAD
 	free_xid(xid);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -602,6 +626,14 @@ static void unicode_ssetup_strings(char **pbcc_area, struct cifs_ses *ses,
 	/* BB FIXME add check that strings total less
 	than 335 or will need to send them as arrays */
 
+<<<<<<< HEAD
+=======
+	/* unicode strings, must be word aligned before the call */
+/*	if ((long) bcc_ptr % 2)	{
+		*bcc_ptr = 0;
+		bcc_ptr++;
+	} */
+>>>>>>> b7ba80a49124 (Commit)
 	/* copy user */
 	if (ses->user_name == NULL) {
 		/* null user mount */
@@ -814,7 +846,10 @@ int decode_ntlmssp_challenge(char *bcc_ptr, int blob_len,
 		return -EINVAL;
 	}
 	if (tilen) {
+<<<<<<< HEAD
 		kfree_sensitive(ses->auth_key.response);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ses->auth_key.response = kmemdup(bcc_ptr + tioffset, tilen,
 						 GFP_KERNEL);
 		if (!ses->auth_key.response) {
@@ -1210,6 +1245,7 @@ out_free_smb_buf:
 static void
 sess_free_buffer(struct sess_data *sess_data)
 {
+<<<<<<< HEAD
 	struct kvec *iov = sess_data->iov;
 
 	/*
@@ -1222,6 +1258,12 @@ sess_free_buffer(struct sess_data *sess_data)
 	free_rsp_buf(sess_data->buf0_type, iov[0].iov_base);
 	sess_data->buf0_type = CIFS_NO_BUFFER;
 	kfree_sensitive(iov[2].iov_base);
+=======
+
+	free_rsp_buf(sess_data->buf0_type, sess_data->iov[0].iov_base);
+	sess_data->buf0_type = CIFS_NO_BUFFER;
+	kfree(sess_data->iov[2].iov_base);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int
@@ -1323,7 +1365,11 @@ sess_auth_ntlmv2(struct sess_data *sess_data)
 	}
 
 	if (ses->capabilities & CAP_UNICODE) {
+<<<<<<< HEAD
 		if (!IS_ALIGNED(sess_data->iov[0].iov_len, 2)) {
+=======
+		if (sess_data->iov[0].iov_len % 2) {
+>>>>>>> b7ba80a49124 (Commit)
 			*bcc_ptr = 0;
 			bcc_ptr++;
 		}
@@ -1363,7 +1409,11 @@ sess_auth_ntlmv2(struct sess_data *sess_data)
 		/* no string area to decode, do nothing */
 	} else if (smb_buf->Flags2 & SMBFLG2_UNICODE) {
 		/* unicode string area must be word-aligned */
+<<<<<<< HEAD
 		if (!IS_ALIGNED((unsigned long)bcc_ptr - (unsigned long)smb_buf, 2)) {
+=======
+		if (((unsigned long) bcc_ptr - (unsigned long) smb_buf) % 2) {
+>>>>>>> b7ba80a49124 (Commit)
 			++bcc_ptr;
 			--bytes_remaining;
 		}
@@ -1379,7 +1429,11 @@ out:
 	sess_data->result = rc;
 	sess_data->func = NULL;
 	sess_free_buffer(sess_data);
+<<<<<<< HEAD
 	kfree_sensitive(ses->auth_key.response);
+=======
+	kfree(ses->auth_key.response);
+>>>>>>> b7ba80a49124 (Commit)
 	ses->auth_key.response = NULL;
 }
 
@@ -1428,7 +1482,10 @@ sess_auth_kerberos(struct sess_data *sess_data)
 		goto out_put_spnego_key;
 	}
 
+<<<<<<< HEAD
 	kfree_sensitive(ses->auth_key.response);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ses->auth_key.response = kmemdup(msg->data, msg->sesskey_len,
 					 GFP_KERNEL);
 	if (!ses->auth_key.response) {
@@ -1448,7 +1505,12 @@ sess_auth_kerberos(struct sess_data *sess_data)
 
 	if (ses->capabilities & CAP_UNICODE) {
 		/* unicode strings must be word aligned */
+<<<<<<< HEAD
 		if (!IS_ALIGNED(sess_data->iov[0].iov_len + sess_data->iov[1].iov_len, 2)) {
+=======
+		if ((sess_data->iov[0].iov_len
+			+ sess_data->iov[1].iov_len) % 2) {
+>>>>>>> b7ba80a49124 (Commit)
 			*bcc_ptr = 0;
 			bcc_ptr++;
 		}
@@ -1499,7 +1561,11 @@ sess_auth_kerberos(struct sess_data *sess_data)
 		/* no string area to decode, do nothing */
 	} else if (smb_buf->Flags2 & SMBFLG2_UNICODE) {
 		/* unicode string area must be word-aligned */
+<<<<<<< HEAD
 		if (!IS_ALIGNED((unsigned long)bcc_ptr - (unsigned long)smb_buf, 2)) {
+=======
+		if (((unsigned long) bcc_ptr - (unsigned long) smb_buf) % 2) {
+>>>>>>> b7ba80a49124 (Commit)
 			++bcc_ptr;
 			--bytes_remaining;
 		}
@@ -1518,7 +1584,11 @@ out:
 	sess_data->result = rc;
 	sess_data->func = NULL;
 	sess_free_buffer(sess_data);
+<<<<<<< HEAD
 	kfree_sensitive(ses->auth_key.response);
+=======
+	kfree(ses->auth_key.response);
+>>>>>>> b7ba80a49124 (Commit)
 	ses->auth_key.response = NULL;
 }
 
@@ -1551,7 +1621,11 @@ _sess_auth_rawntlmssp_assemble_req(struct sess_data *sess_data)
 
 	bcc_ptr = sess_data->iov[2].iov_base;
 	/* unicode strings must be word aligned */
+<<<<<<< HEAD
 	if (!IS_ALIGNED(sess_data->iov[0].iov_len + sess_data->iov[1].iov_len, 2)) {
+=======
+	if ((sess_data->iov[0].iov_len + sess_data->iov[1].iov_len) % 2) {
+>>>>>>> b7ba80a49124 (Commit)
 		*bcc_ptr = 0;
 		bcc_ptr++;
 	}
@@ -1653,7 +1727,11 @@ sess_auth_rawntlmssp_negotiate(struct sess_data *sess_data)
 	rc = decode_ntlmssp_challenge(bcc_ptr, blob_len, ses);
 
 out_free_ntlmsspblob:
+<<<<<<< HEAD
 	kfree_sensitive(ntlmsspblob);
+=======
+	kfree(ntlmsspblob);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	sess_free_buffer(sess_data);
 
@@ -1663,9 +1741,15 @@ out:
 	}
 
 	/* Else error. Cleanup */
+<<<<<<< HEAD
 	kfree_sensitive(ses->auth_key.response);
 	ses->auth_key.response = NULL;
 	kfree_sensitive(ses->ntlmssp);
+=======
+	kfree(ses->auth_key.response);
+	ses->auth_key.response = NULL;
+	kfree(ses->ntlmssp);
+>>>>>>> b7ba80a49124 (Commit)
 	ses->ntlmssp = NULL;
 
 	sess_data->func = NULL;
@@ -1752,7 +1836,11 @@ sess_auth_rawntlmssp_authenticate(struct sess_data *sess_data)
 		/* no string area to decode, do nothing */
 	} else if (smb_buf->Flags2 & SMBFLG2_UNICODE) {
 		/* unicode string area must be word-aligned */
+<<<<<<< HEAD
 		if (!IS_ALIGNED((unsigned long)bcc_ptr - (unsigned long)smb_buf, 2)) {
+=======
+		if (((unsigned long) bcc_ptr - (unsigned long) smb_buf) % 2) {
+>>>>>>> b7ba80a49124 (Commit)
 			++bcc_ptr;
 			--bytes_remaining;
 		}
@@ -1764,7 +1852,11 @@ sess_auth_rawntlmssp_authenticate(struct sess_data *sess_data)
 	}
 
 out_free_ntlmsspblob:
+<<<<<<< HEAD
 	kfree_sensitive(ntlmsspblob);
+=======
+	kfree(ntlmsspblob);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	sess_free_buffer(sess_data);
 
@@ -1772,9 +1864,15 @@ out:
 		rc = sess_establish_session(sess_data);
 
 	/* Cleanup */
+<<<<<<< HEAD
 	kfree_sensitive(ses->auth_key.response);
 	ses->auth_key.response = NULL;
 	kfree_sensitive(ses->ntlmssp);
+=======
+	kfree(ses->auth_key.response);
+	ses->auth_key.response = NULL;
+	kfree(ses->ntlmssp);
+>>>>>>> b7ba80a49124 (Commit)
 	ses->ntlmssp = NULL;
 
 	sess_data->func = NULL;
@@ -1850,7 +1948,11 @@ int CIFS_SessSetup(const unsigned int xid, struct cifs_ses *ses,
 	rc = sess_data->result;
 
 out:
+<<<<<<< HEAD
 	kfree_sensitive(sess_data);
+=======
+	kfree(sess_data);
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 #endif /* CONFIG_CIFS_ALLOW_INSECURE_LEGACY */

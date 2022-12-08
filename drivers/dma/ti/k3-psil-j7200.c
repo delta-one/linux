@@ -143,6 +143,7 @@ static struct psil_ep j7200_src_ep_map[] = {
 
 /* PSI-L destination thread IDs, used for TX (DMA_MEM_TO_DEV) */
 static struct psil_ep j7200_dst_ep_map[] = {
+<<<<<<< HEAD
 	/* PDMA_MCASP - McASP0-2 */
 	PSIL_PDMA_MCASP(0xc400),
 	PSIL_PDMA_MCASP(0xc401),
@@ -194,6 +195,8 @@ static struct psil_ep j7200_dst_ep_map[] = {
 	PSIL_PDMA_XY_PKT(0xc707),
 	PSIL_PDMA_XY_PKT(0xc708),
 	PSIL_PDMA_XY_PKT(0xc709),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* CPSW5 */
 	PSIL_ETHERNET(0xca00),
 	PSIL_ETHERNET(0xca01),
@@ -212,6 +215,7 @@ static struct psil_ep j7200_dst_ep_map[] = {
 	PSIL_ETHERNET(0xf005),
 	PSIL_ETHERNET(0xf006),
 	PSIL_ETHERNET(0xf007),
+<<<<<<< HEAD
 	/* MCU_PDMA_MISC_G0 - SPI0 */
 	PSIL_PDMA_XY_PKT(0xf100),
 	PSIL_PDMA_XY_PKT(0xf101),
@@ -228,6 +232,8 @@ static struct psil_ep j7200_dst_ep_map[] = {
 	PSIL_PDMA_XY_PKT(0xf207),
 	/* MCU_PDMA_MISC_G2 - UART0 */
 	PSIL_PDMA_XY_PKT(0xf300),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* SA2UL */
 	PSIL_SA2UL(0xf500, 1),
 	PSIL_SA2UL(0xf501, 1),

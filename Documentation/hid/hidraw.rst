@@ -163,7 +163,11 @@ HIDIOCGOUTPUT(len):
 	Get an Output Report
 
 This ioctl will request an output report from the device using the control
+<<<<<<< HEAD
 endpoint.  Typically, this is used to retrieve the initial state of
+=======
+endpoint.  Typically, this is used to retrive the initial state of
+>>>>>>> b7ba80a49124 (Commit)
 an output report of a device, before an application updates it as necessary either
 via a HIDIOCSOUTPUT request, or the regular device write() interface.  The format
 of the buffer issued with this report is identical to that of HIDIOCGFEATURE.

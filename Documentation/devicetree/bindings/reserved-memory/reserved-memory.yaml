@@ -31,17 +31,29 @@ properties:
   reg: true
 
   size:
+<<<<<<< HEAD
     oneOf:
       - $ref: /schemas/types.yaml#/definitions/uint32
       - $ref: /schemas/types.yaml#/definitions/uint64
+=======
+    $ref: /schemas/types.yaml#/definitions/uint32-array
+    minItems: 1
+    maxItems: 2
+>>>>>>> b7ba80a49124 (Commit)
     description: >
       Length based on parent's \#size-cells. Size in bytes of memory to
       reserve.
 
   alignment:
+<<<<<<< HEAD
     oneOf:
       - $ref: /schemas/types.yaml#/definitions/uint32
       - $ref: /schemas/types.yaml#/definitions/uint64
+=======
+    $ref: /schemas/types.yaml#/definitions/uint32-array
+    minItems: 1
+    maxItems: 2
+>>>>>>> b7ba80a49124 (Commit)
     description: >
       Length based on parent's \#size-cells. Address boundary for
       alignment of allocation.
@@ -52,6 +64,7 @@ properties:
       Address and Length pairs. Specifies regions of memory that are
       acceptable to allocate from.
 
+<<<<<<< HEAD
   iommu-addresses:
     $ref: /schemas/types.yaml#/definitions/phandle-array
     description: >
@@ -76,6 +89,8 @@ properties:
       can be useful if a certain memory region should not be mapped through
       the IOMMU.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   no-map:
     type: boolean
     description: >
@@ -113,6 +128,7 @@ allOf:
           - no-map
 
 oneOf:
+<<<<<<< HEAD
   - oneOf:
       - required:
           - reg
@@ -178,4 +194,14 @@ examples:
         };
       };
     };
+=======
+  - required:
+      - reg
+
+  - required:
+      - size
+
+additionalProperties: true
+
+>>>>>>> b7ba80a49124 (Commit)
 ...

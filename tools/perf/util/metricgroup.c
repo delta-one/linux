@@ -12,8 +12,11 @@
 #include "strbuf.h"
 #include "pmu.h"
 #include "pmu-hybrid.h"
+<<<<<<< HEAD
 #include "print-events.h"
 #include "smt.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "expr.h"
 #include "rblist.h"
 #include <string.h>
@@ -30,7 +33,10 @@
 #include "util.h"
 #include <asm/bug.h>
 #include "cgroup.h"
+<<<<<<< HEAD
 #include "util/hashmap.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct metric_event *metricgroup__lookup(struct rblist *metric_events,
 					 struct evsel *evsel,
@@ -112,6 +118,20 @@ void metricgroup__rblist_exit(struct rblist *metric_events)
 	rblist__exit(metric_events);
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * A node in the list of referenced metrics. metric_expr
+ * is held as a convenience to avoid a search through the
+ * metric list.
+ */
+struct metric_ref_node {
+	const char *metric_name;
+	const char *metric_expr;
+	struct list_head list;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * The metric under construction. The data held here will be placed in a
  * metric_expr.
@@ -129,8 +149,11 @@ struct metric {
 	const char *modifier;
 	/** The expression to parse, for example, "instructions/cycles". */
 	const char *metric_expr;
+<<<<<<< HEAD
 	/** Optional threshold expression where zero value is green, otherwise red. */
 	const char *metric_threshold;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/**
 	 * The "ScaleUnit" that scales and adds a unit to the metric during
 	 * output.
@@ -139,9 +162,16 @@ struct metric {
 	/** Optional null terminated array of referenced metrics. */
 	struct metric_ref *metric_refs;
 	/**
+<<<<<<< HEAD
 	 * Should events of the metric be grouped?
 	 */
 	bool group_events;
+=======
+	 * Is there a constraint on the group of events? In which case the
+	 * events won't be grouped.
+	 */
+	bool has_constraint;
+>>>>>>> b7ba80a49124 (Commit)
 	/**
 	 * Parsed events for the metric. Optional as events may be taken from a
 	 * different metric whose group contains all the IDs necessary for this
@@ -150,12 +180,20 @@ struct metric {
 	struct evlist *evlist;
 };
 
+<<<<<<< HEAD
 static void metric__watchdog_constraint_hint(const char *name, bool foot)
+=======
+static void metricgroup___watchdog_constraint_hint(const char *name, bool foot)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	static bool violate_nmi_constraint;
 
 	if (!foot) {
+<<<<<<< HEAD
 		pr_warning("Not grouping metric %s's events.\n", name);
+=======
+		pr_warning("Splitting metric group %s into standalone metrics.\n", name);
+>>>>>>> b7ba80a49124 (Commit)
 		violate_nmi_constraint = true;
 		return;
 	}
@@ -169,6 +207,7 @@ static void metric__watchdog_constraint_hint(const char *name, bool foot)
 		   "    echo 1 > /proc/sys/kernel/nmi_watchdog\n");
 }
 
+<<<<<<< HEAD
 static bool metric__group_events(const struct pmu_metric *pm)
 {
 	switch (pm->event_grouping) {
@@ -185,6 +224,20 @@ static bool metric__group_events(const struct pmu_metric *pm)
 	default:
 		return true;
 	}
+=======
+static bool metricgroup__has_constraint(const struct pmu_event *pe)
+{
+	if (!pe->metric_constraint)
+		return false;
+
+	if (!strcmp(pe->metric_constraint, "NO_NMI_WATCHDOG") &&
+	    sysctl__nmi_watchdog_enabled()) {
+		metricgroup___watchdog_constraint_hint(pe->metric_name, false);
+		return true;
+	}
+
+	return false;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void metric__free(struct metric *m)
@@ -199,7 +252,11 @@ static void metric__free(struct metric *m)
 	free(m);
 }
 
+<<<<<<< HEAD
 static struct metric *metric__new(const struct pmu_metric *pm,
+=======
+static struct metric *metric__new(const struct pmu_event *pe,
+>>>>>>> b7ba80a49124 (Commit)
 				  const char *modifier,
 				  bool metric_no_group,
 				  int runtime,
@@ -216,16 +273,25 @@ static struct metric *metric__new(const struct pmu_metric *pm,
 	if (!m->pctx)
 		goto out_err;
 
+<<<<<<< HEAD
 	m->metric_name = pm->metric_name;
+=======
+	m->metric_name = pe->metric_name;
+>>>>>>> b7ba80a49124 (Commit)
 	m->modifier = NULL;
 	if (modifier) {
 		m->modifier = strdup(modifier);
 		if (!m->modifier)
 			goto out_err;
 	}
+<<<<<<< HEAD
 	m->metric_expr = pm->metric_expr;
 	m->metric_threshold = pm->metric_threshold;
 	m->metric_unit = pm->unit;
+=======
+	m->metric_expr = pe->metric_expr;
+	m->metric_unit = pe->unit;
+>>>>>>> b7ba80a49124 (Commit)
 	m->pctx->sctx.user_requested_cpu_list = NULL;
 	if (user_requested_cpu_list) {
 		m->pctx->sctx.user_requested_cpu_list = strdup(user_requested_cpu_list);
@@ -234,7 +300,11 @@ static struct metric *metric__new(const struct pmu_metric *pm,
 	}
 	m->pctx->sctx.runtime = runtime;
 	m->pctx->sctx.system_wide = system_wide;
+<<<<<<< HEAD
 	m->group_events = !metric_no_group && metric__group_events(pm);
+=======
+	m->has_constraint = metric_no_group || metricgroup__has_constraint(pe);
+>>>>>>> b7ba80a49124 (Commit)
 	m->metric_refs = NULL;
 	m->evlist = NULL;
 
@@ -297,7 +367,11 @@ static int setup_metric_events(struct hashmap *ids,
 		 * combined or shared groups, this metric may not care
 		 * about this event.
 		 */
+<<<<<<< HEAD
 		if (hashmap__find(ids, metric_id, &val_ptr)) {
+=======
+		if (hashmap__find(ids, metric_id, (void **)&val_ptr)) {
+>>>>>>> b7ba80a49124 (Commit)
 			metric_events[matched_events++] = ev;
 
 			if (matched_events >= ids_size)
@@ -355,6 +429,7 @@ static bool match_metric(const char *n, const char *list)
 	return false;
 }
 
+<<<<<<< HEAD
 static bool match_pm_metric(const struct pmu_metric *pm, const char *metric)
 {
 	return match_metric(pm->metric_group, metric) ||
@@ -373,12 +448,25 @@ struct mep {
 	const char *metric_expr;
 	const char *metric_threshold;
 	const char *metric_unit;
+=======
+static bool match_pe_metric(const struct pmu_event *pe, const char *metric)
+{
+	return match_metric(pe->metric_group, metric) ||
+	       match_metric(pe->metric_name, metric);
+}
+
+struct mep {
+	struct rb_node nd;
+	const char *name;
+	struct strlist *metrics;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int mep_cmp(struct rb_node *rb_node, const void *entry)
 {
 	struct mep *a = container_of(rb_node, struct mep, nd);
 	struct mep *b = (struct mep *)entry;
+<<<<<<< HEAD
 	int ret;
 
 	ret = strcmp(a->metric_group, b->metric_group);
@@ -389,11 +477,20 @@ static int mep_cmp(struct rb_node *rb_node, const void *entry)
 }
 
 static struct rb_node *mep_new(struct rblist *rl __maybe_unused, const void *entry)
+=======
+
+	return strcmp(a->name, b->name);
+}
+
+static struct rb_node *mep_new(struct rblist *rl __maybe_unused,
+					const void *entry)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mep *me = malloc(sizeof(struct mep));
 
 	if (!me)
 		return NULL;
+<<<<<<< HEAD
 
 	memcpy(me, entry, sizeof(struct mep));
 	return &me->nd;
@@ -421,6 +518,32 @@ static struct mep *mep_lookup(struct rblist *groups, const char *metric_group,
 		free(me.metric_group);
 		return container_of(nd, struct mep, nd);
 	}
+=======
+	memcpy(me, entry, sizeof(struct mep));
+	me->name = strdup(me->name);
+	if (!me->name)
+		goto out_me;
+	me->metrics = strlist__new(NULL, NULL);
+	if (!me->metrics)
+		goto out_name;
+	return &me->nd;
+out_name:
+	zfree(&me->name);
+out_me:
+	free(me);
+	return NULL;
+}
+
+static struct mep *mep_lookup(struct rblist *groups, const char *name)
+{
+	struct rb_node *nd;
+	struct mep me = {
+		.name = name
+	};
+	nd = rblist__find(groups, &me);
+	if (nd)
+		return container_of(nd, struct mep, nd);
+>>>>>>> b7ba80a49124 (Commit)
 	rblist__add_node(groups, &me);
 	nd = rblist__find(groups, &me);
 	if (nd)
@@ -428,18 +551,68 @@ static struct mep *mep_lookup(struct rblist *groups, const char *metric_group,
 	return NULL;
 }
 
+<<<<<<< HEAD
 static int metricgroup__add_to_mep_groups(const struct pmu_metric *pm,
 					struct rblist *groups)
+=======
+static void mep_delete(struct rblist *rl __maybe_unused,
+		       struct rb_node *nd)
+{
+	struct mep *me = container_of(nd, struct mep, nd);
+
+	strlist__delete(me->metrics);
+	zfree(&me->name);
+	free(me);
+}
+
+static void metricgroup__print_strlist(struct strlist *metrics, bool raw)
+{
+	struct str_node *sn;
+	int n = 0;
+
+	strlist__for_each_entry (sn, metrics) {
+		if (raw)
+			printf("%s%s", n > 0 ? " " : "", sn->s);
+		else
+			printf("  %s\n", sn->s);
+		n++;
+	}
+	if (raw)
+		putchar('\n');
+}
+
+static int metricgroup__print_pmu_event(const struct pmu_event *pe,
+					bool metricgroups, char *filter,
+					bool raw, bool details,
+					struct rblist *groups,
+					struct strlist *metriclist)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const char *g;
 	char *omg, *mg;
 
+<<<<<<< HEAD
 	mg = strdup(pm->metric_group ?: "No_group");
+=======
+	g = pe->metric_group;
+	if (!g && pe->metric_name) {
+		if (pe->name)
+			return 0;
+		g = "No_group";
+	}
+
+	if (!g)
+		return 0;
+
+	mg = strdup(g);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!mg)
 		return -ENOMEM;
 	omg = mg;
 	while ((g = strsep(&mg, ";")) != NULL) {
 		struct mep *me;
+<<<<<<< HEAD
 
 		g = skip_spaces(g);
 		if (strlen(g))
@@ -454,12 +627,49 @@ static int metricgroup__add_to_mep_groups(const struct pmu_metric *pm,
 			me->metric_threshold = pm->metric_threshold;
 			me->metric_unit = pm->unit;
 		}
+=======
+		char *s;
+
+		g = skip_spaces(g);
+		if (*g == 0)
+			g = "No_group";
+		if (filter && !strstr(g, filter))
+			continue;
+		if (raw)
+			s = (char *)pe->metric_name;
+		else {
+			if (asprintf(&s, "%s\n%*s%s]",
+				     pe->metric_name, 8, "[", pe->desc) < 0)
+				return -1;
+			if (details) {
+				if (asprintf(&s, "%s\n%*s%s]",
+					     s, 8, "[", pe->metric_expr) < 0)
+					return -1;
+			}
+		}
+
+		if (!s)
+			continue;
+
+		if (!metricgroups) {
+			strlist__add(metriclist, s);
+		} else {
+			me = mep_lookup(groups, g);
+			if (!me)
+				continue;
+			strlist__add(me->metrics, s);
+		}
+
+		if (!raw)
+			free(s);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	free(omg);
 
 	return 0;
 }
 
+<<<<<<< HEAD
 struct metricgroup_iter_data {
 	pmu_metric_iter_fn fn;
 	void *data;
@@ -467,16 +677,39 @@ struct metricgroup_iter_data {
 
 static int metricgroup__sys_event_iter(const struct pmu_metric *pm,
 				       const struct pmu_metrics_table *table,
+=======
+struct metricgroup_print_sys_idata {
+	struct strlist *metriclist;
+	char *filter;
+	struct rblist *groups;
+	bool metricgroups;
+	bool raw;
+	bool details;
+};
+
+struct metricgroup_iter_data {
+	pmu_event_iter_fn fn;
+	void *data;
+};
+
+static int metricgroup__sys_event_iter(const struct pmu_event *pe,
+				       const struct pmu_events_table *table,
+>>>>>>> b7ba80a49124 (Commit)
 				       void *data)
 {
 	struct metricgroup_iter_data *d = data;
 	struct perf_pmu *pmu = NULL;
 
+<<<<<<< HEAD
 	if (!pm->metric_expr || !pm->compat)
+=======
+	if (!pe->metric_expr || !pe->compat)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	while ((pmu = perf_pmu__scan(pmu))) {
 
+<<<<<<< HEAD
 		if (!pmu->id || strcmp(pmu->id, pm->compat))
 			continue;
 
@@ -499,11 +732,73 @@ void metricgroup__print(const struct print_callbacks *print_cb, void *print_stat
 	struct rblist groups;
 	const struct pmu_metrics_table *table;
 	struct rb_node *node, *next;
+=======
+		if (!pmu->id || strcmp(pmu->id, pe->compat))
+			continue;
+
+		return d->fn(pe, table, d->data);
+	}
+
+	return 0;
+}
+
+static int metricgroup__print_sys_event_iter(const struct pmu_event *pe,
+					     const struct pmu_events_table *table __maybe_unused,
+					     void *data)
+{
+	struct metricgroup_print_sys_idata *d = data;
+
+	return metricgroup__print_pmu_event(pe, d->metricgroups, d->filter, d->raw,
+				     d->details, d->groups, d->metriclist);
+}
+
+struct metricgroup_print_data {
+	const char *pmu_name;
+	struct strlist *metriclist;
+	char *filter;
+	struct rblist *groups;
+	bool metricgroups;
+	bool raw;
+	bool details;
+};
+
+static int metricgroup__print_callback(const struct pmu_event *pe,
+				       const struct pmu_events_table *table __maybe_unused,
+				       void *vdata)
+{
+	struct metricgroup_print_data *data = vdata;
+
+	if (!pe->metric_expr)
+		return 0;
+
+	if (data->pmu_name && perf_pmu__is_hybrid(pe->pmu) && strcmp(data->pmu_name, pe->pmu))
+		return 0;
+
+	return metricgroup__print_pmu_event(pe, data->metricgroups, data->filter,
+					    data->raw, data->details, data->groups,
+					    data->metriclist);
+}
+
+void metricgroup__print(bool metrics, bool metricgroups, char *filter,
+			bool raw, bool details, const char *pmu_name)
+{
+	struct rblist groups;
+	struct rb_node *node, *next;
+	struct strlist *metriclist = NULL;
+	const struct pmu_events_table *table;
+
+	if (!metricgroups) {
+		metriclist = strlist__new(NULL, NULL);
+		if (!metriclist)
+			return;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	rblist__init(&groups);
 	groups.node_new = mep_new;
 	groups.node_cmp = mep_cmp;
 	groups.node_delete = mep_delete;
+<<<<<<< HEAD
 	table = pmu_metrics_table__find();
 	if (table) {
 		pmu_metrics_table_for_each_metric(table,
@@ -516,11 +811,51 @@ void metricgroup__print(const struct print_callbacks *print_cb, void *print_stat
 			.data = &groups,
 		};
 		pmu_for_each_sys_metric(metricgroup__sys_event_iter, &data);
+=======
+	table = pmu_events_table__find();
+	if (table) {
+		struct metricgroup_print_data data = {
+			.pmu_name = pmu_name,
+			.metriclist = metriclist,
+			.metricgroups = metricgroups,
+			.filter = filter,
+			.raw = raw,
+			.details = details,
+			.groups = &groups,
+		};
+
+		pmu_events_table_for_each_event(table,
+						metricgroup__print_callback,
+						&data);
+	}
+	{
+		struct metricgroup_iter_data data = {
+			.fn = metricgroup__print_sys_event_iter,
+			.data = (void *) &(struct metricgroup_print_sys_idata){
+				.metriclist = metriclist,
+				.metricgroups = metricgroups,
+				.filter = filter,
+				.raw = raw,
+				.details = details,
+				.groups = &groups,
+			},
+		};
+
+		pmu_for_each_sys_event(metricgroup__sys_event_iter, &data);
+	}
+
+	if (!filter || !rblist__empty(&groups)) {
+		if (metricgroups && !raw)
+			printf("\nMetric Groups:\n\n");
+		else if (metrics && !raw)
+			printf("\nMetrics:\n\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	for (node = rb_first_cached(&groups.entries); node; node = next) {
 		struct mep *me = container_of(node, struct mep, nd);
 
+<<<<<<< HEAD
 		print_cb->print_metric(print_state,
 				me->metric_group,
 				me->metric_name,
@@ -532,6 +867,18 @@ void metricgroup__print(const struct print_callbacks *print_cb, void *print_stat
 		next = rb_next(node);
 		rblist__remove_node(&groups, node);
 	}
+=======
+		if (metricgroups)
+			printf("%s%s%s", me->name, metrics && !raw ? ":" : "", raw ? " " : "\n");
+		if (metrics)
+			metricgroup__print_strlist(me->metrics, raw);
+		next = rb_next(node);
+		rblist__remove_node(&groups, node);
+	}
+	if (!metricgroups)
+		metricgroup__print_strlist(metriclist, raw);
+	strlist__delete(metriclist);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const char *code_characters = ",-=@";
@@ -647,7 +994,11 @@ static int decode_all_metric_ids(struct evlist *perf_evlist, const char *modifie
 static int metricgroup__build_event_string(struct strbuf *events,
 					   const struct expr_parse_ctx *ctx,
 					   const char *modifier,
+<<<<<<< HEAD
 					   bool group_events)
+=======
+					   bool has_constraint)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hashmap_entry *cur;
 	size_t bkt;
@@ -658,7 +1009,11 @@ static int metricgroup__build_event_string(struct strbuf *events,
 #define RETURN_IF_NON_ZERO(x) do { if (x) return x; } while (0)
 
 	hashmap__for_each_entry(ctx->ids, cur, bkt) {
+<<<<<<< HEAD
 		const char *sep, *rsep, *id = cur->pkey;
+=======
+		const char *sep, *rsep, *id = cur->key;
+>>>>>>> b7ba80a49124 (Commit)
 		enum perf_tool_event ev;
 
 		pr_debug("found event %s\n", id);
@@ -672,7 +1027,11 @@ static int metricgroup__build_event_string(struct strbuf *events,
 		}
 		/* Separate events with commas and open the group if necessary. */
 		if (no_group) {
+<<<<<<< HEAD
 			if (group_events) {
+=======
+			if (!has_constraint) {
+>>>>>>> b7ba80a49124 (Commit)
 				ret = strbuf_addch(events, '{');
 				RETURN_IF_NON_ZERO(ret);
 			}
@@ -726,7 +1085,11 @@ static int metricgroup__build_event_string(struct strbuf *events,
 			RETURN_IF_NON_ZERO(ret);
 		}
 	}
+<<<<<<< HEAD
 	if (!no_group && group_events) {
+=======
+	if (!no_group && !has_constraint) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = strbuf_addf(events, "}:W");
 		RETURN_IF_NON_ZERO(ret);
 	}
@@ -750,7 +1113,11 @@ static int metricgroup__build_event_string(struct strbuf *events,
 #undef RETURN_IF_NON_ZERO
 }
 
+<<<<<<< HEAD
 int __weak arch_get_runtimeparam(const struct pmu_metric *pm __maybe_unused)
+=======
+int __weak arch_get_runtimeparam(const struct pmu_event *pe __maybe_unused)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return 1;
 }
@@ -771,11 +1138,15 @@ struct metricgroup_add_iter_data {
 	int *ret;
 	bool *has_match;
 	bool metric_no_group;
+<<<<<<< HEAD
 	bool metric_no_threshold;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const char *user_requested_cpu_list;
 	bool system_wide;
 	struct metric *root_metric;
 	const struct visited_metric *visited;
+<<<<<<< HEAD
 	const struct pmu_metrics_table *table;
 };
 
@@ -788,11 +1159,28 @@ static int add_metric(struct list_head *metric_list,
 		      const char *modifier,
 		      bool metric_no_group,
 		      bool metric_no_threshold,
+=======
+	const struct pmu_events_table *table;
+};
+
+static bool metricgroup__find_metric(const char *metric,
+				     const struct pmu_events_table *table,
+				     struct pmu_event *pe);
+
+static int add_metric(struct list_head *metric_list,
+		      const struct pmu_event *pe,
+		      const char *modifier,
+		      bool metric_no_group,
+>>>>>>> b7ba80a49124 (Commit)
 		      const char *user_requested_cpu_list,
 		      bool system_wide,
 		      struct metric *root_metric,
 		      const struct visited_metric *visited,
+<<<<<<< HEAD
 		      const struct pmu_metrics_table *table);
+=======
+		      const struct pmu_events_table *table);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * resolve_metric - Locate metrics within the root metric and recursively add
@@ -815,21 +1203,35 @@ static int add_metric(struct list_head *metric_list,
 static int resolve_metric(struct list_head *metric_list,
 			  const char *modifier,
 			  bool metric_no_group,
+<<<<<<< HEAD
 			  bool metric_no_threshold,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			  const char *user_requested_cpu_list,
 			  bool system_wide,
 			  struct metric *root_metric,
 			  const struct visited_metric *visited,
+<<<<<<< HEAD
 			  const struct pmu_metrics_table *table)
+=======
+			  const struct pmu_events_table *table)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hashmap_entry *cur;
 	size_t bkt;
 	struct to_resolve {
 		/* The metric to resolve. */
+<<<<<<< HEAD
 		struct pmu_metric pm;
 		/*
 		 * The key in the IDs map, this may differ from in case,
 		 * etc. from pm->metric_name.
+=======
+		struct pmu_event pe;
+		/*
+		 * The key in the IDs map, this may differ from in case,
+		 * etc. from pe->metric_name.
+>>>>>>> b7ba80a49124 (Commit)
 		 */
 		const char *key;
 	} *pending = NULL;
@@ -840,16 +1242,27 @@ static int resolve_metric(struct list_head *metric_list,
 	 * the pending array.
 	 */
 	hashmap__for_each_entry(root_metric->pctx->ids, cur, bkt) {
+<<<<<<< HEAD
 		struct pmu_metric pm;
 
 		if (metricgroup__find_metric(cur->pkey, table, &pm)) {
+=======
+		struct pmu_event pe;
+
+		if (metricgroup__find_metric(cur->key, table, &pe)) {
+>>>>>>> b7ba80a49124 (Commit)
 			pending = realloc(pending,
 					(pending_cnt + 1) * sizeof(struct to_resolve));
 			if (!pending)
 				return -ENOMEM;
 
+<<<<<<< HEAD
 			memcpy(&pending[pending_cnt].pm, &pm, sizeof(pm));
 			pending[pending_cnt].key = cur->pkey;
+=======
+			memcpy(&pending[pending_cnt].pe, &pe, sizeof(pe));
+			pending[pending_cnt].key = cur->key;
+>>>>>>> b7ba80a49124 (Commit)
 			pending_cnt++;
 		}
 	}
@@ -863,9 +1276,15 @@ static int resolve_metric(struct list_head *metric_list,
 	 * context.
 	 */
 	for (i = 0; i < pending_cnt; i++) {
+<<<<<<< HEAD
 		ret = add_metric(metric_list, &pending[i].pm, modifier, metric_no_group,
 				 metric_no_threshold, user_requested_cpu_list, system_wide,
 				 root_metric, visited, table);
+=======
+		ret = add_metric(metric_list, &pending[i].pe, modifier, metric_no_group,
+				 user_requested_cpu_list, system_wide, root_metric, visited,
+				 table);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			break;
 	}
@@ -877,12 +1296,19 @@ static int resolve_metric(struct list_head *metric_list,
 /**
  * __add_metric - Add a metric to metric_list.
  * @metric_list: The list the metric is added to.
+<<<<<<< HEAD
  * @pm: The pmu_metric containing the metric to be added.
+=======
+ * @pe: The pmu_event containing the metric to be added.
+>>>>>>> b7ba80a49124 (Commit)
  * @modifier: if non-null event modifiers like "u".
  * @metric_no_group: Should events written to events be grouped "{}" or
  *                   global. Grouping is the default but due to multiplexing the
  *                   user may override.
+<<<<<<< HEAD
  * @metric_no_threshold: Should threshold expressions be ignored?
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @runtime: A special argument for the parser only known at runtime.
  * @user_requested_cpu_list: Command line specified CPUs to record on.
  * @system_wide: Are events for all processes recorded.
@@ -895,29 +1321,49 @@ static int resolve_metric(struct list_head *metric_list,
  *       architecture perf is running upon.
  */
 static int __add_metric(struct list_head *metric_list,
+<<<<<<< HEAD
 			const struct pmu_metric *pm,
 			const char *modifier,
 			bool metric_no_group,
 			bool metric_no_threshold,
+=======
+			const struct pmu_event *pe,
+			const char *modifier,
+			bool metric_no_group,
+>>>>>>> b7ba80a49124 (Commit)
 			int runtime,
 			const char *user_requested_cpu_list,
 			bool system_wide,
 			struct metric *root_metric,
 			const struct visited_metric *visited,
+<<<<<<< HEAD
 			const struct pmu_metrics_table *table)
+=======
+			const struct pmu_events_table *table)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct visited_metric *vm;
 	int ret;
 	bool is_root = !root_metric;
+<<<<<<< HEAD
 	const char *expr;
 	struct visited_metric visited_node = {
 		.name = pm->metric_name,
+=======
+	struct visited_metric visited_node = {
+		.name = pe->metric_name,
+>>>>>>> b7ba80a49124 (Commit)
 		.parent = visited,
 	};
 
 	for (vm = visited; vm; vm = vm->parent) {
+<<<<<<< HEAD
 		if (!strcmp(pm->metric_name, vm->name)) {
 			pr_err("failed: recursion detected for %s\n", pm->metric_name);
+=======
+		if (!strcmp(pe->metric_name, vm->name)) {
+			pr_err("failed: recursion detected for %s\n", pe->metric_name);
+>>>>>>> b7ba80a49124 (Commit)
 			return -1;
 		}
 	}
@@ -927,7 +1373,11 @@ static int __add_metric(struct list_head *metric_list,
 		 * This metric is the root of a tree and may reference other
 		 * metrics that are added recursively.
 		 */
+<<<<<<< HEAD
 		root_metric = metric__new(pm, modifier, metric_no_group, runtime,
+=======
+		root_metric = metric__new(pe, modifier, metric_no_group, runtime,
+>>>>>>> b7ba80a49124 (Commit)
 					  user_requested_cpu_list, system_wide);
 		if (!root_metric)
 			return -ENOMEM;
@@ -942,7 +1392,11 @@ static int __add_metric(struct list_head *metric_list,
 		 */
 		if (root_metric->metric_refs) {
 			for (; root_metric->metric_refs[cnt].metric_name; cnt++) {
+<<<<<<< HEAD
 				if (!strcmp(pm->metric_name,
+=======
+				if (!strcmp(pe->metric_name,
+>>>>>>> b7ba80a49124 (Commit)
 					    root_metric->metric_refs[cnt].metric_name))
 					return 0;
 			}
@@ -960,8 +1414,13 @@ static int __add_metric(struct list_head *metric_list,
 		 * need to change them, so there's no need to create
 		 * our own copy.
 		 */
+<<<<<<< HEAD
 		root_metric->metric_refs[cnt].metric_name = pm->metric_name;
 		root_metric->metric_refs[cnt].metric_expr = pm->metric_expr;
+=======
+		root_metric->metric_refs[cnt].metric_name = pe->metric_name;
+		root_metric->metric_refs[cnt].metric_expr = pe->metric_expr;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Null terminate array. */
 		root_metric->metric_refs[cnt+1].metric_name = NULL;
@@ -972,6 +1431,7 @@ static int __add_metric(struct list_head *metric_list,
 	 * For both the parent and referenced metrics, we parse
 	 * all the metric's IDs and add it to the root context.
 	 */
+<<<<<<< HEAD
 	ret = 0;
 	expr = pm->metric_expr;
 	if (is_root && pm->metric_threshold) {
@@ -997,6 +1457,18 @@ static int __add_metric(struct list_head *metric_list,
 				     metric_no_threshold, user_requested_cpu_list,
 				     system_wide, root_metric, &visited_node, table);
 	}
+=======
+	if (expr__find_ids(pe->metric_expr, NULL, root_metric->pctx) < 0) {
+		/* Broken metric. */
+		ret = -EINVAL;
+	} else {
+		/* Resolve referenced metrics. */
+		ret = resolve_metric(metric_list, modifier, metric_no_group,
+				     user_requested_cpu_list, system_wide,
+				     root_metric, &visited_node, table);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		if (is_root)
 			metric__free(root_metric);
@@ -1009,23 +1481,39 @@ static int __add_metric(struct list_head *metric_list,
 
 struct metricgroup__find_metric_data {
 	const char *metric;
+<<<<<<< HEAD
 	struct pmu_metric *pm;
 };
 
 static int metricgroup__find_metric_callback(const struct pmu_metric *pm,
 					     const struct pmu_metrics_table *table  __maybe_unused,
+=======
+	struct pmu_event *pe;
+};
+
+static int metricgroup__find_metric_callback(const struct pmu_event *pe,
+					     const struct pmu_events_table *table  __maybe_unused,
+>>>>>>> b7ba80a49124 (Commit)
 					     void *vdata)
 {
 	struct metricgroup__find_metric_data *data = vdata;
 
+<<<<<<< HEAD
 	if (!match_metric(pm->metric_name, data->metric))
 		return 0;
 
 	memcpy(data->pm, pm, sizeof(*pm));
+=======
+	if (!match_metric(pe->metric_name, data->metric))
+		return 0;
+
+	memcpy(data->pe, pe, sizeof(*pe));
+>>>>>>> b7ba80a49124 (Commit)
 	return 1;
 }
 
 static bool metricgroup__find_metric(const char *metric,
+<<<<<<< HEAD
 				     const struct pmu_metrics_table *table,
 				     struct pmu_metric *pm)
 {
@@ -1035,18 +1523,36 @@ static bool metricgroup__find_metric(const char *metric,
 	};
 
 	return pmu_metrics_table_for_each_metric(table, metricgroup__find_metric_callback, &data)
+=======
+				     const struct pmu_events_table *table,
+				     struct pmu_event *pe)
+{
+	struct metricgroup__find_metric_data data = {
+		.metric = metric,
+		.pe = pe,
+	};
+
+	return pmu_events_table_for_each_event(table, metricgroup__find_metric_callback, &data)
+>>>>>>> b7ba80a49124 (Commit)
 		? true : false;
 }
 
 static int add_metric(struct list_head *metric_list,
+<<<<<<< HEAD
 		      const struct pmu_metric *pm,
 		      const char *modifier,
 		      bool metric_no_group,
 		      bool metric_no_threshold,
+=======
+		      const struct pmu_event *pe,
+		      const char *modifier,
+		      bool metric_no_group,
+>>>>>>> b7ba80a49124 (Commit)
 		      const char *user_requested_cpu_list,
 		      bool system_wide,
 		      struct metric *root_metric,
 		      const struct visited_metric *visited,
+<<<<<<< HEAD
 		      const struct pmu_metrics_table *table)
 {
 	int ret = 0;
@@ -1061,6 +1567,22 @@ static int add_metric(struct list_head *metric_list,
 		int j, count;
 
 		count = arch_get_runtimeparam(pm);
+=======
+		      const struct pmu_events_table *table)
+{
+	int ret = 0;
+
+	pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+
+	if (!strstr(pe->metric_expr, "?")) {
+		ret = __add_metric(metric_list, pe, modifier, metric_no_group, 0,
+				   user_requested_cpu_list, system_wide, root_metric,
+				   visited, table);
+	} else {
+		int j, count;
+
+		count = arch_get_runtimeparam(pe);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* This loop is added to create multiple
 		 * events depend on count value and add
@@ -1068,27 +1590,48 @@ static int add_metric(struct list_head *metric_list,
 		 */
 
 		for (j = 0; j < count && !ret; j++)
+<<<<<<< HEAD
 			ret = __add_metric(metric_list, pm, modifier, metric_no_group,
 					   metric_no_threshold, j, user_requested_cpu_list,
 					   system_wide, root_metric, visited, table);
+=======
+			ret = __add_metric(metric_list, pe, modifier, metric_no_group, j,
+					   user_requested_cpu_list, system_wide,
+					   root_metric, visited, table);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;
 }
 
+<<<<<<< HEAD
 static int metricgroup__add_metric_sys_event_iter(const struct pmu_metric *pm,
 					const struct pmu_metrics_table *table __maybe_unused,
 					void *data)
+=======
+static int metricgroup__add_metric_sys_event_iter(const struct pmu_event *pe,
+						const struct pmu_events_table *table __maybe_unused,
+						void *data)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct metricgroup_add_iter_data *d = data;
 	int ret;
 
+<<<<<<< HEAD
 	if (!match_pm_metric(pm, d->metric_name))
 		return 0;
 
 	ret = add_metric(d->metric_list, pm, d->modifier, d->metric_no_group,
 			 d->metric_no_threshold, d->user_requested_cpu_list,
 			 d->system_wide, d->root_metric, d->visited, d->table);
+=======
+	if (!match_pe_metric(pe, d->metric_name))
+		return 0;
+
+	ret = add_metric(d->metric_list, pe, d->modifier, d->metric_no_group,
+			 d->user_requested_cpu_list, d->system_wide,
+			 d->root_metric, d->visited, d->table);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto out;
 
@@ -1132,18 +1675,27 @@ struct metricgroup__add_metric_data {
 	const char *modifier;
 	const char *user_requested_cpu_list;
 	bool metric_no_group;
+<<<<<<< HEAD
 	bool metric_no_threshold;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool system_wide;
 	bool has_match;
 };
 
+<<<<<<< HEAD
 static int metricgroup__add_metric_callback(const struct pmu_metric *pm,
 					    const struct pmu_metrics_table *table,
+=======
+static int metricgroup__add_metric_callback(const struct pmu_event *pe,
+					    const struct pmu_events_table *table,
+>>>>>>> b7ba80a49124 (Commit)
 					    void *vdata)
 {
 	struct metricgroup__add_metric_data *data = vdata;
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (pm->metric_expr &&
 		(match_metric(pm->metric_group, data->metric_name) ||
 		 match_metric(pm->metric_name, data->metric_name))) {
@@ -1153,6 +1705,16 @@ static int metricgroup__add_metric_callback(const struct pmu_metric *pm,
 				 data->metric_no_threshold, data->user_requested_cpu_list,
 				 data->system_wide, /*root_metric=*/NULL,
 				 /*visited_metrics=*/NULL, table);
+=======
+	if (pe->metric_expr &&
+		(match_metric(pe->metric_group, data->metric_name) ||
+		 match_metric(pe->metric_name, data->metric_name))) {
+
+		data->has_match = true;
+		ret = add_metric(data->list, pe, data->modifier, data->metric_no_group,
+				 data->user_requested_cpu_list, data->system_wide,
+				 /*root_metric=*/NULL, /*visited_metrics=*/NULL, table);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret;
 }
@@ -1173,11 +1735,19 @@ static int metricgroup__add_metric_callback(const struct pmu_metric *pm,
  *       architecture perf is running upon.
  */
 static int metricgroup__add_metric(const char *metric_name, const char *modifier,
+<<<<<<< HEAD
 				   bool metric_no_group, bool metric_no_threshold,
 				   const char *user_requested_cpu_list,
 				   bool system_wide,
 				   struct list_head *metric_list,
 				   const struct pmu_metrics_table *table)
+=======
+				   bool metric_no_group,
+				   const char *user_requested_cpu_list,
+				   bool system_wide,
+				   struct list_head *metric_list,
+				   const struct pmu_events_table *table)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	LIST_HEAD(list);
 	int ret;
@@ -1189,7 +1759,10 @@ static int metricgroup__add_metric(const char *metric_name, const char *modifier
 			.metric_name = metric_name,
 			.modifier = modifier,
 			.metric_no_group = metric_no_group,
+<<<<<<< HEAD
 			.metric_no_threshold = metric_no_threshold,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			.user_requested_cpu_list = user_requested_cpu_list,
 			.system_wide = system_wide,
 			.has_match = false,
@@ -1198,8 +1771,13 @@ static int metricgroup__add_metric(const char *metric_name, const char *modifier
 		 * Iterate over all metrics seeing if metric matches either the
 		 * name or group. When it does add the metric to the list.
 		 */
+<<<<<<< HEAD
 		ret = pmu_metrics_table_for_each_metric(table, metricgroup__add_metric_callback,
 						       &data);
+=======
+		ret = pmu_events_table_for_each_event(table, metricgroup__add_metric_callback,
+						      &data);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			goto out;
 
@@ -1221,7 +1799,11 @@ static int metricgroup__add_metric(const char *metric_name, const char *modifier
 			},
 		};
 
+<<<<<<< HEAD
 		pmu_for_each_sys_metric(metricgroup__sys_event_iter, &data);
+=======
+		pmu_for_each_sys_event(metricgroup__sys_event_iter, &data);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	/* End of pmu events. */
 	if (!has_match)
@@ -1252,10 +1834,16 @@ out:
  *       architecture perf is running upon.
  */
 static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
+<<<<<<< HEAD
 					bool metric_no_threshold,
 					const char *user_requested_cpu_list,
 					bool system_wide, struct list_head *metric_list,
 					const struct pmu_metrics_table *table)
+=======
+					const char *user_requested_cpu_list,
+					bool system_wide, struct list_head *metric_list,
+					const struct pmu_events_table *table)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	char *list_itr, *list_copy, *metric_name, *modifier;
 	int ret, count = 0;
@@ -1271,8 +1859,12 @@ static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
 			*modifier++ = '\0';
 
 		ret = metricgroup__add_metric(metric_name, modifier,
+<<<<<<< HEAD
 					      metric_no_group, metric_no_threshold,
 					      user_requested_cpu_list,
+=======
+					      metric_no_group, user_requested_cpu_list,
+>>>>>>> b7ba80a49124 (Commit)
 					      system_wide, metric_list, table);
 		if (ret == -EINVAL)
 			pr_err("Cannot find metric or group `%s'\n", metric_name);
@@ -1289,7 +1881,11 @@ static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
 		 * Warn about nmi_watchdog if any parsed metrics had the
 		 * NO_NMI_WATCHDOG constraint.
 		 */
+<<<<<<< HEAD
 		metric__watchdog_constraint_hint(NULL, /*foot=*/true);
+=======
+		metricgroup___watchdog_constraint_hint(NULL, true);
+>>>>>>> b7ba80a49124 (Commit)
 		/* No metrics. */
 		if (count == 0)
 			return -EINVAL;
@@ -1332,7 +1928,11 @@ static void find_tool_events(const struct list_head *metric_list,
 }
 
 /**
+<<<<<<< HEAD
  * build_combined_expr_ctx - Make an expr_parse_ctx with all !group_events
+=======
+ * build_combined_expr_ctx - Make an expr_parse_ctx with all has_constraint
+>>>>>>> b7ba80a49124 (Commit)
  *                           metric IDs, as the IDs are held in a set,
  *                           duplicates will be removed.
  * @metric_list: List to take metrics from.
@@ -1352,9 +1952,15 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
 		return -ENOMEM;
 
 	list_for_each_entry(m, metric_list, nd) {
+<<<<<<< HEAD
 		if (!m->group_events && !m->modifier) {
 			hashmap__for_each_entry(m->pctx->ids, cur, bkt) {
 				dup = strdup(cur->pkey);
+=======
+		if (m->has_constraint && !m->modifier) {
+			hashmap__for_each_entry(m->pctx->ids, cur, bkt) {
+				dup = strdup(cur->key);
+>>>>>>> b7ba80a49124 (Commit)
 				if (!dup) {
 					ret = -ENOMEM;
 					goto err_out;
@@ -1379,14 +1985,22 @@ err_out:
  * @fake_pmu: used when testing metrics not supported by the current CPU.
  * @ids: the event identifiers parsed from a metric.
  * @modifier: any modifiers added to the events.
+<<<<<<< HEAD
  * @group_events: should events be placed in a weak group.
+=======
+ * @has_constraint: false if events should be placed in a weak group.
+>>>>>>> b7ba80a49124 (Commit)
  * @tool_events: entries set true if the tool event of index could be present in
  *               the overall list of metrics.
  * @out_evlist: the created list of events.
  */
 static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
 		     struct expr_parse_ctx *ids, const char *modifier,
+<<<<<<< HEAD
 		     bool group_events, const bool tool_events[PERF_TOOL_MAX],
+=======
+		     bool has_constraint, const bool tool_events[PERF_TOOL_MAX],
+>>>>>>> b7ba80a49124 (Commit)
 		     struct evlist **out_evlist)
 {
 	struct parse_events_error parse_error;
@@ -1430,7 +2044,11 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
 		}
 	}
 	ret = metricgroup__build_event_string(&events, ids, modifier,
+<<<<<<< HEAD
 					      group_events);
+=======
+					      has_constraint);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -1441,8 +2059,12 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
 	}
 	pr_debug("Parsing metric events '%s'\n", events.buf);
 	parse_events_error__init(&parse_error);
+<<<<<<< HEAD
 	ret = __parse_events(parsed_evlist, events.buf, &parse_error, fake_pmu,
 			     /*warn_if_reordered=*/false);
+=======
+	ret = __parse_events(parsed_evlist, events.buf, &parse_error, fake_pmu);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		parse_events_error__print(&parse_error, events.buf);
 		goto err_out;
@@ -1463,12 +2085,19 @@ err_out:
 static int parse_groups(struct evlist *perf_evlist, const char *str,
 			bool metric_no_group,
 			bool metric_no_merge,
+<<<<<<< HEAD
 			bool metric_no_threshold,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			const char *user_requested_cpu_list,
 			bool system_wide,
 			struct perf_pmu *fake_pmu,
 			struct rblist *metric_events_list,
+<<<<<<< HEAD
 			const struct pmu_metrics_table *table)
+=======
+			const struct pmu_events_table *table)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct evlist *combined_evlist = NULL;
 	LIST_HEAD(metric_list);
@@ -1478,7 +2107,11 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
 
 	if (metric_events_list->nr_entries == 0)
 		metricgroup__rblist_init(metric_events_list);
+<<<<<<< HEAD
 	ret = metricgroup__add_metric_list(str, metric_no_group, metric_no_threshold,
+=======
+	ret = metricgroup__add_metric_list(str, metric_no_group,
+>>>>>>> b7ba80a49124 (Commit)
 					   user_requested_cpu_list,
 					   system_wide, &metric_list, table);
 	if (ret)
@@ -1497,7 +2130,11 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
 		if (!ret && combined && hashmap__size(combined->ids)) {
 			ret = parse_ids(metric_no_merge, fake_pmu, combined,
 					/*modifier=*/NULL,
+<<<<<<< HEAD
 					/*group_events=*/false,
+=======
+					/*has_constraint=*/true,
+>>>>>>> b7ba80a49124 (Commit)
 					tool_events,
 					&combined_evlist);
 		}
@@ -1515,7 +2152,11 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
 		struct metric *n;
 		struct metric_expr *expr;
 
+<<<<<<< HEAD
 		if (combined_evlist && !m->group_events) {
+=======
+		if (combined_evlist && m->has_constraint) {
+>>>>>>> b7ba80a49124 (Commit)
 			metric_evlist = combined_evlist;
 		} else if (!metric_no_merge) {
 			/*
@@ -1546,7 +2187,11 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
 		}
 		if (!metric_evlist) {
 			ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
+<<<<<<< HEAD
 					m->group_events, tool_events, &m->evlist);
+=======
+					m->has_constraint, tool_events, &m->evlist);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret)
 				goto out;
 
@@ -1586,7 +2231,10 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
 			free(metric_events);
 			goto out;
 		}
+<<<<<<< HEAD
 		expr->metric_threshold = m->metric_threshold;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		expr->metric_unit = m->metric_unit;
 		expr->metric_events = metric_events;
 		expr->runtime = m->pctx->sctx.runtime;
@@ -1613,22 +2261,34 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
 			      const char *str,
 			      bool metric_no_group,
 			      bool metric_no_merge,
+<<<<<<< HEAD
 			      bool metric_no_threshold,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			      const char *user_requested_cpu_list,
 			      bool system_wide,
 			      struct rblist *metric_events)
 {
+<<<<<<< HEAD
 	const struct pmu_metrics_table *table = pmu_metrics_table__find();
+=======
+	const struct pmu_events_table *table = pmu_events_table__find();
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!table)
 		return -EINVAL;
 
 	return parse_groups(perf_evlist, str, metric_no_group, metric_no_merge,
+<<<<<<< HEAD
 			    metric_no_threshold, user_requested_cpu_list, system_wide,
+=======
+			    user_requested_cpu_list, system_wide,
+>>>>>>> b7ba80a49124 (Commit)
 			    /*fake_pmu=*/NULL, metric_events, table);
 }
 
 int metricgroup__parse_groups_test(struct evlist *evlist,
+<<<<<<< HEAD
 				   const struct pmu_metrics_table *table,
 				   const char *str,
 				   struct rblist *metric_events)
@@ -1637,19 +2297,40 @@ int metricgroup__parse_groups_test(struct evlist *evlist,
 			    /*metric_no_group=*/false,
 			    /*metric_no_merge=*/false,
 			    /*metric_no_threshold=*/false,
+=======
+				   const struct pmu_events_table *table,
+				   const char *str,
+				   bool metric_no_group,
+				   bool metric_no_merge,
+				   struct rblist *metric_events)
+{
+	return parse_groups(evlist, str, metric_no_group, metric_no_merge,
+>>>>>>> b7ba80a49124 (Commit)
 			    /*user_requested_cpu_list=*/NULL,
 			    /*system_wide=*/false,
 			    &perf_pmu__fake, metric_events, table);
 }
 
+<<<<<<< HEAD
 static int metricgroup__has_metric_callback(const struct pmu_metric *pm,
 					    const struct pmu_metrics_table *table __maybe_unused,
+=======
+static int metricgroup__has_metric_callback(const struct pmu_event *pe,
+					    const struct pmu_events_table *table __maybe_unused,
+>>>>>>> b7ba80a49124 (Commit)
 					    void *vdata)
 {
 	const char *metric = vdata;
 
+<<<<<<< HEAD
 	if (match_metric(pm->metric_name, metric) ||
 	    match_metric(pm->metric_group, metric))
+=======
+	if (!pe->metric_expr)
+		return 0;
+
+	if (match_metric(pe->metric_name, metric))
+>>>>>>> b7ba80a49124 (Commit)
 		return 1;
 
 	return 0;
@@ -1657,11 +2338,16 @@ static int metricgroup__has_metric_callback(const struct pmu_metric *pm,
 
 bool metricgroup__has_metric(const char *metric)
 {
+<<<<<<< HEAD
 	const struct pmu_metrics_table *table = pmu_metrics_table__find();
+=======
+	const struct pmu_events_table *table = pmu_events_table__find();
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!table)
 		return false;
 
+<<<<<<< HEAD
 	return pmu_metrics_table_for_each_metric(table, metricgroup__has_metric_callback,
 						(void *)metric) ? true : false;
 }
@@ -1695,6 +2381,10 @@ unsigned int metricgroups__topdown_max_level(void)
 	pmu_metrics_table_for_each_metric(table, metricgroup__topdown_max_level_callback,
 					  &max_level);
 	return max_level;
+=======
+	return pmu_events_table_for_each_event(table, metricgroup__has_metric_callback,
+					       (void *)metric) ? true : false;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,

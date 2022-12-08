@@ -15,7 +15,11 @@
 		compatible = "gpio-leds";
 		pinctrl-names = "default";
 		pinctrl-0 = <&led_pins>;
+<<<<<<< HEAD
 		led-heartbeat {
+=======
+		heartbeat {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "overo:red:gpio21";
 			gpios = <&gpio1 21 GPIO_ACTIVE_LOW>;		/* gpio_21 */
 			linux,default-trigger = "heartbeat";

@@ -27,6 +27,10 @@
 #include <nvif/ioctl.h>
 #include <nvif/class.h>
 #include <nvif/cl0002.h>
+<<<<<<< HEAD
+=======
+#include <nvif/cla06f.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <nvif/unpack.h>
 
 #include "nouveau_drv.h"
@@ -252,7 +256,11 @@ nouveau_abi16_ioctl_channel_alloc(ABI16_IOCTL_ARGS)
 	struct nouveau_abi16 *abi16 = nouveau_abi16_get(file_priv);
 	struct nouveau_abi16_chan *chan;
 	struct nvif_device *device;
+<<<<<<< HEAD
 	u64 engine, runm;
+=======
+	u64 engine;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (unlikely(!abi16))
@@ -262,7 +270,10 @@ nouveau_abi16_ioctl_channel_alloc(ABI16_IOCTL_ARGS)
 		return nouveau_abi16_put(abi16, -ENODEV);
 
 	device = &abi16->device;
+<<<<<<< HEAD
 	engine = NV_DEVICE_HOST_RUNLIST_ENGINES_GR;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* hack to allow channel engine type specification on kepler */
 	if (device->info.family >= NV_DEVICE_INFO_V0_KEPLER) {
@@ -276,6 +287,7 @@ nouveau_abi16_ioctl_channel_alloc(ABI16_IOCTL_ARGS)
 			default:
 				return nouveau_abi16_put(abi16, -ENOSYS);
 			}
+<<<<<<< HEAD
 
 			init->fb_ctxdma_handle = 0;
 			init->tt_ctxdma_handle = 0;
@@ -288,6 +300,21 @@ nouveau_abi16_ioctl_channel_alloc(ABI16_IOCTL_ARGS)
 		runm = nvif_fifo_runlist_ce(device);
 
 	if (!runm || init->fb_ctxdma_handle == ~0 || init->tt_ctxdma_handle == ~0)
+=======
+		} else {
+			engine = NV_DEVICE_HOST_RUNLIST_ENGINES_GR;
+		}
+
+		if (engine != NV_DEVICE_HOST_RUNLIST_ENGINES_CE)
+			engine = nvif_fifo_runlist(device, engine);
+		else
+			engine = nvif_fifo_runlist_ce(device);
+		init->fb_ctxdma_handle = engine;
+		init->tt_ctxdma_handle = 0;
+	}
+
+	if (init->fb_ctxdma_handle == ~0 || init->tt_ctxdma_handle == ~0)
+>>>>>>> b7ba80a49124 (Commit)
 		return nouveau_abi16_put(abi16, -EINVAL);
 
 	/* allocate "abi16 channel" data and make up a handle for it */
@@ -299,8 +326,13 @@ nouveau_abi16_ioctl_channel_alloc(ABI16_IOCTL_ARGS)
 	list_add(&chan->head, &abi16->channels);
 
 	/* create channel object and initialise dma and fence management */
+<<<<<<< HEAD
 	ret = nouveau_channel_new(drm, device, false, runm, init->fb_ctxdma_handle,
 				  init->tt_ctxdma_handle, &chan->chan);
+=======
+	ret = nouveau_channel_new(drm, device, init->fb_ctxdma_handle,
+				  init->tt_ctxdma_handle, false, &chan->chan);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto done;
 

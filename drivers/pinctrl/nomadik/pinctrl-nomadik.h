@@ -2,11 +2,14 @@
 #ifndef PINCTRL_PINCTRL_NOMADIK_H
 #define PINCTRL_PINCTRL_NOMADIK_H
 
+<<<<<<< HEAD
 #include <linux/kernel.h>
 #include <linux/types.h>
 
 #include <linux/pinctrl/pinctrl.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Package definitions */
 #define PINCTRL_NMK_STN8815	0
 #define PINCTRL_NMK_DB8500	1

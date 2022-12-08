@@ -10,7 +10,11 @@ maintainers:
   - Fabio Estevam <festevam@gmail.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: serial.yaml#
+=======
+  - $ref: "serial.yaml"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

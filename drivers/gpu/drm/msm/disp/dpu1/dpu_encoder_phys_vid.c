@@ -237,13 +237,20 @@ static void dpu_encoder_phys_vid_setup_timing_engine(
 	unsigned long lock_flags;
 	struct dpu_hw_intf_cfg intf_cfg = { 0 };
 
+<<<<<<< HEAD
 	drm_mode_init(&mode, &phys_enc->cached_mode);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!phys_enc->hw_ctl->ops.setup_intf_cfg) {
 		DPU_ERROR("invalid encoder %d\n", phys_enc != NULL);
 		return;
 	}
 
+<<<<<<< HEAD
+=======
+	mode = phys_enc->cached_mode;
+>>>>>>> b7ba80a49124 (Commit)
 	if (!phys_enc->hw_intf->ops.setup_timing_gen) {
 		DPU_ERROR("timing engine setup is not supported\n");
 		return;
@@ -274,7 +281,10 @@ static void dpu_encoder_phys_vid_setup_timing_engine(
 	intf_cfg.intf_mode_sel = DPU_CTL_MODE_SEL_VID;
 	intf_cfg.stream_sel = 0; /* Don't care value for video mode */
 	intf_cfg.mode_3d = dpu_encoder_helper_get_3d_blend_mode(phys_enc);
+<<<<<<< HEAD
 	intf_cfg.dsc = dpu_encoder_helper_get_dsc(phys_enc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (phys_enc->hw_pp->merge_3d)
 		intf_cfg.merge_3d = phys_enc->hw_pp->merge_3d->idx;
 
@@ -309,7 +319,13 @@ static void dpu_encoder_phys_vid_vblank_irq(void *arg, int irq_idx)
 
 	DPU_ATRACE_BEGIN("vblank_irq");
 
+<<<<<<< HEAD
 	dpu_encoder_vblank_callback(phys_enc->parent, phys_enc);
+=======
+	if (phys_enc->parent_ops->handle_vblank_virt)
+		phys_enc->parent_ops->handle_vblank_virt(phys_enc->parent,
+				phys_enc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	atomic_read(&phys_enc->pending_kickoff_cnt);
 
@@ -329,7 +345,11 @@ static void dpu_encoder_phys_vid_vblank_irq(void *arg, int irq_idx)
 	/* Signal any waiting atomic commit thread */
 	wake_up_all(&phys_enc->pending_kickoff_wq);
 
+<<<<<<< HEAD
 	dpu_encoder_frame_done_callback(phys_enc->parent, phys_enc,
+=======
+	phys_enc->parent_ops->handle_frame_done(phys_enc->parent, phys_enc,
+>>>>>>> b7ba80a49124 (Commit)
 			DPU_ENCODER_FRAME_EVENT_DONE);
 
 	DPU_ATRACE_END("vblank_irq");
@@ -339,7 +359,13 @@ static void dpu_encoder_phys_vid_underrun_irq(void *arg, int irq_idx)
 {
 	struct dpu_encoder_phys *phys_enc = arg;
 
+<<<<<<< HEAD
 	dpu_encoder_underrun_callback(phys_enc->parent, phys_enc);
+=======
+	if (phys_enc->parent_ops->handle_underrun_virt)
+		phys_enc->parent_ops->handle_underrun_virt(phys_enc->parent,
+			phys_enc);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool dpu_encoder_phys_vid_needs_single_flush(
@@ -523,7 +549,10 @@ static void dpu_encoder_phys_vid_disable(struct dpu_encoder_phys *phys_enc)
 {
 	unsigned long lock_flags;
 	int ret;
+<<<<<<< HEAD
 	struct intf_status intf_status = {0};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!phys_enc->parent || !phys_enc->parent->dev) {
 		DPU_ERROR("invalid encoder/device\n");
@@ -568,6 +597,7 @@ static void dpu_encoder_phys_vid_disable(struct dpu_encoder_phys *phys_enc)
 		}
 	}
 
+<<<<<<< HEAD
 	if (phys_enc->hw_intf && phys_enc->hw_intf->ops.get_status)
 		phys_enc->hw_intf->ops.get_status(phys_enc->hw_intf, &intf_status);
 
@@ -589,6 +619,8 @@ static void dpu_encoder_phys_vid_disable(struct dpu_encoder_phys *phys_enc)
 	}
 
 	dpu_encoder_helper_phys_cleanup(phys_enc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	phys_enc->enable_state = DPU_ENC_DISABLED;
 }
 
@@ -654,9 +686,13 @@ static int dpu_encoder_phys_vid_get_frame_count(
 {
 	struct intf_status s = {0};
 	u32 fetch_start = 0;
+<<<<<<< HEAD
 	struct drm_display_mode mode;
 
 	drm_mode_init(&mode, &phys_enc->cached_mode);
+=======
+	struct drm_display_mode mode = phys_enc->cached_mode;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!dpu_encoder_phys_vid_is_master(phys_enc))
 		return -EINVAL;
@@ -719,6 +755,10 @@ struct dpu_encoder_phys *dpu_encoder_phys_vid_init(
 
 	dpu_encoder_phys_vid_init_ops(&phys_enc->ops);
 	phys_enc->parent = p->parent;
+<<<<<<< HEAD
+=======
+	phys_enc->parent_ops = p->parent_ops;
+>>>>>>> b7ba80a49124 (Commit)
 	phys_enc->dpu_kms = p->dpu_kms;
 	phys_enc->split_role = p->split_role;
 	phys_enc->intf_mode = INTF_MODE_VIDEO;

@@ -44,7 +44,10 @@
 #define	UART_HAS_EFR2			BIT(4)
 #define UART_HAS_RHR_IT_DIS		BIT(5)
 #define UART_RX_TIMEOUT_QUIRK		BIT(6)
+<<<<<<< HEAD
 #define UART_HAS_NATIVE_RS485		BIT(7)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define OMAP_UART_FCR_RX_TRIG		6
 #define OMAP_UART_FCR_TX_TRIG		4
@@ -102,11 +105,14 @@
 #define UART_OMAP_IER2			0x1B
 #define UART_OMAP_IER2_RHR_IT_DIS	BIT(2)
 
+<<<<<<< HEAD
 /* Mode Definition Register 3 */
 #define UART_OMAP_MDR3			0x20
 #define UART_OMAP_MDR3_DIR_POL		BIT(3)
 #define UART_OMAP_MDR3_DIR_EN		BIT(4)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Enhanced features register 2 */
 #define UART_OMAP_EFR2			0x23
 #define UART_OMAP_EFR2_TIMEOUT_BEHAVE	BIT(6)
@@ -118,7 +124,10 @@ struct omap8250_priv {
 	int line;
 	u8 habit;
 	u8 mdr1;
+<<<<<<< HEAD
 	u8 mdr3;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8 efr;
 	u8 scr;
 	u8 wer;
@@ -164,11 +173,15 @@ static u32 uart_read(struct uart_8250_port *up, u32 reg)
 	return readl(up->port.membase + (reg << up->port.regshift));
 }
 
+<<<<<<< HEAD
 /*
  * Called on runtime PM resume path from omap8250_restore_regs(), and
  * omap8250_set_mctrl().
  */
 static void __omap8250_set_mctrl(struct uart_port *port, unsigned int mctrl)
+=======
+static void omap8250_set_mctrl(struct uart_port *port, unsigned int mctrl)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct uart_8250_port *up = up_to_u8250p(port);
 	struct omap8250_priv *priv = up->port.private_data;
@@ -192,6 +205,7 @@ static void __omap8250_set_mctrl(struct uart_port *port, unsigned int mctrl)
 	}
 }
 
+<<<<<<< HEAD
 static void omap8250_set_mctrl(struct uart_port *port, unsigned int mctrl)
 {
 	int err;
@@ -206,6 +220,8 @@ static void omap8250_set_mctrl(struct uart_port *port, unsigned int mctrl)
 	pm_runtime_put_autosuspend(port->dev);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Work Around for Errata i202 (2430, 3430, 3630, 4430 and 4460)
  * The access to uart register after MDR1 Access
@@ -218,10 +234,33 @@ static void omap8250_set_mctrl(struct uart_port *port, unsigned int mctrl)
 static void omap_8250_mdr1_errataset(struct uart_8250_port *up,
 				     struct omap8250_priv *priv)
 {
+<<<<<<< HEAD
+=======
+	u8 timeout = 255;
+
+>>>>>>> b7ba80a49124 (Commit)
 	serial_out(up, UART_OMAP_MDR1, priv->mdr1);
 	udelay(2);
 	serial_out(up, UART_FCR, up->fcr | UART_FCR_CLEAR_XMIT |
 			UART_FCR_CLEAR_RCVR);
+<<<<<<< HEAD
+=======
+	/*
+	 * Wait for FIFO to empty: when empty, RX_FIFO_E bit is 0 and
+	 * TX_FIFO_E bit is 1.
+	 */
+	while (UART_LSR_THRE != (serial_in(up, UART_LSR) &
+				(UART_LSR_THRE | UART_LSR_DR))) {
+		timeout--;
+		if (!timeout) {
+			/* Should *never* happen. we warn and carry on */
+			dev_crit(up->port.dev, "Errata i202: timedout %x\n",
+				 serial_in(up, UART_LSR));
+			break;
+		}
+		udelay(1);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void omap_8250_get_divisor(struct uart_port *port, unsigned int baud,
@@ -300,7 +339,10 @@ static void omap8250_restore_regs(struct uart_8250_port *up)
 {
 	struct omap8250_priv *priv = up->port.private_data;
 	struct uart_8250_dma	*dma = up->dma;
+<<<<<<< HEAD
 	u8 mcr = serial8250_in_MCR(up);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dma && dma->tx_running) {
 		/*
@@ -317,7 +359,11 @@ static void omap8250_restore_regs(struct uart_8250_port *up)
 	serial_out(up, UART_EFR, UART_EFR_ECB);
 
 	serial_out(up, UART_LCR, UART_LCR_CONF_MODE_A);
+<<<<<<< HEAD
 	serial8250_out_MCR(up, mcr | UART_MCR_TCRTLR);
+=======
+	serial8250_out_MCR(up, UART_MCR_TCRTLR);
+>>>>>>> b7ba80a49124 (Commit)
 	serial_out(up, UART_FCR, up->fcr);
 
 	omap8250_update_scr(up, priv);
@@ -333,8 +379,12 @@ static void omap8250_restore_regs(struct uart_8250_port *up)
 	serial_out(up, UART_LCR, 0);
 
 	/* drop TCR + TLR access, we setup XON/XOFF later */
+<<<<<<< HEAD
 	serial8250_out_MCR(up, mcr);
 
+=======
+	serial8250_out_MCR(up, up->mcr);
+>>>>>>> b7ba80a49124 (Commit)
 	serial_out(up, UART_IER, up->ier);
 
 	serial_out(up, UART_LCR, UART_LCR_CONF_MODE_B);
@@ -351,6 +401,7 @@ static void omap8250_restore_regs(struct uart_8250_port *up)
 
 	omap8250_update_mdr1(up, priv);
 
+<<<<<<< HEAD
 	__omap8250_set_mctrl(&up->port, up->port.mctrl);
 
 	serial_out(up, UART_OMAP_MDR3, priv->mdr3);
@@ -358,6 +409,9 @@ static void omap8250_restore_regs(struct uart_8250_port *up)
 	if (up->port.rs485.flags & SER_RS485_ENABLED &&
 	    up->port.rs485_config == serial8250_em485_config)
 		serial8250_em485_stop_tx(up);
+=======
+	up->port.ops->set_mctrl(&up->port, up->port.mctrl);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -682,6 +736,10 @@ static int omap_8250_startup(struct uart_port *port)
 
 	pm_runtime_get_sync(port->dev);
 
+<<<<<<< HEAD
+=======
+	up->mcr = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	serial_out(up, UART_FCR, UART_FCR_CLEAR_RCVR | UART_FCR_CLEAR_XMIT);
 
 	serial_out(up, UART_LCR, UART_LCR_WLEN8);
@@ -804,6 +862,7 @@ static void omap_8250_unthrottle(struct uart_port *port)
 	pm_runtime_put_autosuspend(port->dev);
 }
 
+<<<<<<< HEAD
 static int omap8250_rs485_config(struct uart_port *port,
 				 struct ktermios *termios,
 				 struct serial_rs485 *rs485)
@@ -872,6 +931,8 @@ static int omap8250_rs485_config(struct uart_port *port,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SERIAL_8250_DMA
 static int omap_8250_rx_dma(struct uart_8250_port *p);
 
@@ -1067,7 +1128,13 @@ static void omap_8250_dma_tx_complete(void *param)
 
 	dma->tx_running = 0;
 
+<<<<<<< HEAD
 	uart_xmit_advance(&p->port, dma->tx_size);
+=======
+	xmit->tail += dma->tx_size;
+	xmit->tail &= UART_XMIT_SIZE - 1;
+	p->port.icount.tx += dma->tx_size;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (priv->delayed_restore) {
 		priv->delayed_restore = 0;
@@ -1321,7 +1388,11 @@ static struct omap8250_dma_params am33xx_dma = {
 static struct omap8250_platdata am654_platdata = {
 	.dma_params	= &am654_dma,
 	.habit		= UART_HAS_EFR2 | UART_HAS_RHR_IT_DIS |
+<<<<<<< HEAD
 			  UART_RX_TIMEOUT_QUIRK | UART_HAS_NATIVE_RS485,
+=======
+			  UART_RX_TIMEOUT_QUIRK,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct omap8250_platdata am33xx_platdata = {
@@ -1414,8 +1485,12 @@ static int omap8250_probe(struct platform_device *pdev)
 	up.port.shutdown = omap_8250_shutdown;
 	up.port.throttle = omap_8250_throttle;
 	up.port.unthrottle = omap_8250_unthrottle;
+<<<<<<< HEAD
 	up.port.rs485_config = omap8250_rs485_config;
 	/* same rs485_supported for software emulation and native RS485 */
+=======
+	up.port.rs485_config = serial8250_em485_config;
+>>>>>>> b7ba80a49124 (Commit)
 	up.port.rs485_supported = serial8250_em485_supported;
 	up.rs485_start_tx = serial8250_em485_start_tx;
 	up.rs485_stop_tx = serial8250_em485_stop_tx;
@@ -1539,6 +1614,7 @@ err:
 static int omap8250_remove(struct platform_device *pdev)
 {
 	struct omap8250_priv *priv = platform_get_drvdata(pdev);
+<<<<<<< HEAD
 	int err;
 
 	err = pm_runtime_resume_and_get(&pdev->dev);
@@ -1548,6 +1624,11 @@ static int omap8250_remove(struct platform_device *pdev)
 	pm_runtime_dont_use_autosuspend(&pdev->dev);
 	pm_runtime_put_sync(&pdev->dev);
 	flush_work(&priv->qos_work);
+=======
+
+	pm_runtime_dont_use_autosuspend(&pdev->dev);
+	pm_runtime_put_sync(&pdev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_disable(&pdev->dev);
 	serial8250_unregister_port(priv->line);
 	cpu_latency_qos_remove_request(&priv->pm_qos_request);

@@ -264,6 +264,14 @@ int jfs_get_block(struct inode *ip, sector_t lblock,
 	return rc;
 }
 
+<<<<<<< HEAD
+=======
+static int jfs_writepage(struct page *page, struct writeback_control *wbc)
+{
+	return block_write_full_page(page, jfs_get_block, wbc);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int jfs_writepages(struct address_space *mapping,
 			struct writeback_control *wbc)
 {
@@ -350,12 +358,19 @@ const struct address_space_operations jfs_aops = {
 	.invalidate_folio = block_invalidate_folio,
 	.read_folio	= jfs_read_folio,
 	.readahead	= jfs_readahead,
+<<<<<<< HEAD
+=======
+	.writepage	= jfs_writepage,
+>>>>>>> b7ba80a49124 (Commit)
 	.writepages	= jfs_writepages,
 	.write_begin	= jfs_write_begin,
 	.write_end	= jfs_write_end,
 	.bmap		= jfs_bmap,
 	.direct_IO	= jfs_direct_IO,
+<<<<<<< HEAD
 	.migrate_folio	= buffer_migrate_folio,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*

@@ -489,7 +489,13 @@ static void agp_via_remove(struct pci_dev *pdev)
 	agp_put_bridge(bridge);
 }
 
+<<<<<<< HEAD
 static int agp_via_resume(struct device *dev)
+=======
+#define agp_via_suspend NULL
+
+static int __maybe_unused agp_via_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct agp_bridge_data *bridge = dev_get_drvdata(dev);
 
@@ -549,7 +555,11 @@ static const struct pci_device_id agp_via_pci_table[] = {
 
 MODULE_DEVICE_TABLE(pci, agp_via_pci_table);
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(agp_via_pm_ops, NULL, agp_via_resume);
+=======
+static SIMPLE_DEV_PM_OPS(agp_via_pm_ops, agp_via_suspend, agp_via_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct pci_driver agp_via_pci_driver = {
 	.name		= "agpgart-via",

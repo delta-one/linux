@@ -9,7 +9,11 @@
 extern unsigned long __invalid_xchg_size(unsigned long, volatile void *, int);
 
 #ifndef CONFIG_RMW_INSNS
+<<<<<<< HEAD
 static inline unsigned long __arch_xchg(unsigned long x, volatile void * ptr, int size)
+=======
+static inline unsigned long __xchg(unsigned long x, volatile void * ptr, int size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long flags, tmp;
 
@@ -40,7 +44,11 @@ static inline unsigned long __arch_xchg(unsigned long x, volatile void * ptr, in
 	return x;
 }
 #else
+<<<<<<< HEAD
 static inline unsigned long __arch_xchg(unsigned long x, volatile void * ptr, int size)
+=======
+static inline unsigned long __xchg(unsigned long x, volatile void * ptr, int size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (size) {
 	case 1:
@@ -75,7 +83,11 @@ static inline unsigned long __arch_xchg(unsigned long x, volatile void * ptr, in
 }
 #endif
 
+<<<<<<< HEAD
 #define arch_xchg(ptr,x) ({(__typeof__(*(ptr)))__arch_xchg((unsigned long)(x),(ptr),sizeof(*(ptr)));})
+=======
+#define arch_xchg(ptr,x) ({(__typeof__(*(ptr)))__xchg((unsigned long)(x),(ptr),sizeof(*(ptr)));})
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm-generic/cmpxchg-local.h>
 

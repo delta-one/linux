@@ -187,7 +187,11 @@ struct atk_acpi_input_buf {
 };
 
 static int atk_add(struct acpi_device *device);
+<<<<<<< HEAD
 static void atk_remove(struct acpi_device *device);
+=======
+static int atk_remove(struct acpi_device *device);
+>>>>>>> b7ba80a49124 (Commit)
 static void atk_print_sensor(struct atk_data *data, union acpi_object *obj);
 static int atk_read_value(struct atk_sensor_data *sensor, u64 *value);
 
@@ -1344,7 +1348,11 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static void atk_remove(struct acpi_device *device)
+=======
+static int atk_remove(struct acpi_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct atk_data *data = device->driver_data;
 	dev_dbg(&device->dev, "removing...\n");
@@ -1359,6 +1367,11 @@ static void atk_remove(struct acpi_device *device)
 		if (atk_ec_ctl(data, 0))
 			dev_err(&device->dev, "Failed to disable EC\n");
 	}
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __init atk0110_init(void)

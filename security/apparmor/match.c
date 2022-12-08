@@ -31,7 +31,11 @@ static char stacksplitdfa_src[] = {
 };
 struct aa_dfa *stacksplitdfa;
 
+<<<<<<< HEAD
 int __init aa_setup_dfa_engine(void)
+=======
+int aa_setup_dfa_engine(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int error;
 
@@ -59,7 +63,11 @@ int __init aa_setup_dfa_engine(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 void __init aa_teardown_dfa_engine(void)
+=======
+void aa_teardown_dfa_engine(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	aa_put_dfa(stacksplitdfa);
 	aa_put_dfa(nulldfa);
@@ -436,17 +444,29 @@ do {							\
  *
  * Returns: final state reached after input is consumed
  */
+<<<<<<< HEAD
 aa_state_t aa_dfa_match_len(struct aa_dfa *dfa, aa_state_t start,
 			    const char *str, int len)
+=======
+unsigned int aa_dfa_match_len(struct aa_dfa *dfa, unsigned int start,
+			      const char *str, int len)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u16 *def = DEFAULT_TABLE(dfa);
 	u32 *base = BASE_TABLE(dfa);
 	u16 *next = NEXT_TABLE(dfa);
 	u16 *check = CHECK_TABLE(dfa);
+<<<<<<< HEAD
 	aa_state_t state = start;
 
 	if (state == DFA_NOMATCH)
 		return DFA_NOMATCH;
+=======
+	unsigned int state = start;
+
+	if (state == 0)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* current state is <state>, matching character *str */
 	if (dfa->tables[YYTD_ID_EC]) {
@@ -476,16 +496,28 @@ aa_state_t aa_dfa_match_len(struct aa_dfa *dfa, aa_state_t start,
  *
  * Returns: final state reached after input is consumed
  */
+<<<<<<< HEAD
 aa_state_t aa_dfa_match(struct aa_dfa *dfa, aa_state_t start, const char *str)
+=======
+unsigned int aa_dfa_match(struct aa_dfa *dfa, unsigned int start,
+			  const char *str)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u16 *def = DEFAULT_TABLE(dfa);
 	u32 *base = BASE_TABLE(dfa);
 	u16 *next = NEXT_TABLE(dfa);
 	u16 *check = CHECK_TABLE(dfa);
+<<<<<<< HEAD
 	aa_state_t state = start;
 
 	if (state == DFA_NOMATCH)
 		return DFA_NOMATCH;
+=======
+	unsigned int state = start;
+
+	if (state == 0)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* current state is <state>, matching character *str */
 	if (dfa->tables[YYTD_ID_EC]) {
@@ -514,7 +546,12 @@ aa_state_t aa_dfa_match(struct aa_dfa *dfa, aa_state_t start, const char *str)
  *
  * Returns: state reach after input @c
  */
+<<<<<<< HEAD
 aa_state_t aa_dfa_next(struct aa_dfa *dfa, aa_state_t state, const char c)
+=======
+unsigned int aa_dfa_next(struct aa_dfa *dfa, unsigned int state,
+			  const char c)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u16 *def = DEFAULT_TABLE(dfa);
 	u32 *base = BASE_TABLE(dfa);
@@ -532,7 +569,11 @@ aa_state_t aa_dfa_next(struct aa_dfa *dfa, aa_state_t state, const char c)
 	return state;
 }
 
+<<<<<<< HEAD
 aa_state_t aa_dfa_outofband_transition(struct aa_dfa *dfa, aa_state_t state)
+=======
+unsigned int aa_dfa_outofband_transition(struct aa_dfa *dfa, unsigned int state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u16 *def = DEFAULT_TABLE(dfa);
 	u32 *base = BASE_TABLE(dfa);
@@ -562,7 +603,11 @@ aa_state_t aa_dfa_outofband_transition(struct aa_dfa *dfa, aa_state_t state)
  *
  * Returns: final state reached after input is consumed
  */
+<<<<<<< HEAD
 aa_state_t aa_dfa_match_until(struct aa_dfa *dfa, aa_state_t start,
+=======
+unsigned int aa_dfa_match_until(struct aa_dfa *dfa, unsigned int start,
+>>>>>>> b7ba80a49124 (Commit)
 				const char *str, const char **retpos)
 {
 	u16 *def = DEFAULT_TABLE(dfa);
@@ -570,10 +615,17 @@ aa_state_t aa_dfa_match_until(struct aa_dfa *dfa, aa_state_t start,
 	u16 *next = NEXT_TABLE(dfa);
 	u16 *check = CHECK_TABLE(dfa);
 	u32 *accept = ACCEPT_TABLE(dfa);
+<<<<<<< HEAD
 	aa_state_t state = start, pos;
 
 	if (state == DFA_NOMATCH)
 		return DFA_NOMATCH;
+=======
+	unsigned int state = start, pos;
+
+	if (state == 0)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* current state is <state>, matching character *str */
 	if (dfa->tables[YYTD_ID_EC]) {
@@ -623,7 +675,11 @@ aa_state_t aa_dfa_match_until(struct aa_dfa *dfa, aa_state_t start,
  *
  * Returns: final state reached after input is consumed
  */
+<<<<<<< HEAD
 aa_state_t aa_dfa_matchn_until(struct aa_dfa *dfa, aa_state_t start,
+=======
+unsigned int aa_dfa_matchn_until(struct aa_dfa *dfa, unsigned int start,
+>>>>>>> b7ba80a49124 (Commit)
 				 const char *str, int n, const char **retpos)
 {
 	u16 *def = DEFAULT_TABLE(dfa);
@@ -631,11 +687,19 @@ aa_state_t aa_dfa_matchn_until(struct aa_dfa *dfa, aa_state_t start,
 	u16 *next = NEXT_TABLE(dfa);
 	u16 *check = CHECK_TABLE(dfa);
 	u32 *accept = ACCEPT_TABLE(dfa);
+<<<<<<< HEAD
 	aa_state_t state = start, pos;
 
 	*retpos = NULL;
 	if (state == DFA_NOMATCH)
 		return DFA_NOMATCH;
+=======
+	unsigned int state = start, pos;
+
+	*retpos = NULL;
+	if (state == 0)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* current state is <state>, matching character *str */
 	if (dfa->tables[YYTD_ID_EC]) {
@@ -675,11 +739,19 @@ do {								\
 } while (0)
 
 /* For DFAs that don't support extended tagging of states */
+<<<<<<< HEAD
 static bool is_loop(struct match_workbuf *wb, aa_state_t state,
 		    unsigned int *adjust)
 {
 	aa_state_t pos = wb->pos;
 	aa_state_t i;
+=======
+static bool is_loop(struct match_workbuf *wb, unsigned int state,
+		    unsigned int *adjust)
+{
+	unsigned int pos = wb->pos;
+	unsigned int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (wb->history[pos] < state)
 		return false;
@@ -698,7 +770,11 @@ static bool is_loop(struct match_workbuf *wb, aa_state_t state,
 	return true;
 }
 
+<<<<<<< HEAD
 static aa_state_t leftmatch_fb(struct aa_dfa *dfa, aa_state_t start,
+=======
+static unsigned int leftmatch_fb(struct aa_dfa *dfa, unsigned int start,
+>>>>>>> b7ba80a49124 (Commit)
 				 const char *str, struct match_workbuf *wb,
 				 unsigned int *count)
 {
@@ -706,7 +782,11 @@ static aa_state_t leftmatch_fb(struct aa_dfa *dfa, aa_state_t start,
 	u32 *base = BASE_TABLE(dfa);
 	u16 *next = NEXT_TABLE(dfa);
 	u16 *check = CHECK_TABLE(dfa);
+<<<<<<< HEAD
 	aa_state_t state = start, pos;
+=======
+	unsigned int state = start, pos;
+>>>>>>> b7ba80a49124 (Commit)
 
 	AA_BUG(!dfa);
 	AA_BUG(!str);
@@ -714,8 +794,13 @@ static aa_state_t leftmatch_fb(struct aa_dfa *dfa, aa_state_t start,
 	AA_BUG(!count);
 
 	*count = 0;
+<<<<<<< HEAD
 	if (state == DFA_NOMATCH)
 		return DFA_NOMATCH;
+=======
+	if (state == 0)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* current state is <state>, matching character *str */
 	if (dfa->tables[YYTD_ID_EC]) {
@@ -779,8 +864,13 @@ out:
  *
  * Returns: final state reached after input is consumed
  */
+<<<<<<< HEAD
 aa_state_t aa_dfa_leftmatch(struct aa_dfa *dfa, aa_state_t start,
 			    const char *str, unsigned int *count)
+=======
+unsigned int aa_dfa_leftmatch(struct aa_dfa *dfa, unsigned int start,
+			      const char *str, unsigned int *count)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	DEFINE_MATCH_WB(wb);
 

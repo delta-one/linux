@@ -11,7 +11,10 @@
 #include <linux/string.h>
 #include <asm/page.h>
 #include "decompressor.h"
+<<<<<<< HEAD
 #include "boot.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * gzip declarations
@@ -24,9 +27,15 @@
 #define memmove memmove
 #define memzero(s, n) memset((s), 0, (n))
 
+<<<<<<< HEAD
 #if defined(CONFIG_KERNEL_BZIP2)
 #define BOOT_HEAP_SIZE	0x400000
 #elif defined(CONFIG_KERNEL_ZSTD)
+=======
+#ifdef CONFIG_KERNEL_BZIP2
+#define BOOT_HEAP_SIZE	0x400000
+#elif CONFIG_KERNEL_ZSTD
+>>>>>>> b7ba80a49124 (Commit)
 #define BOOT_HEAP_SIZE	0x30000
 #else
 #define BOOT_HEAP_SIZE	0x10000
@@ -81,6 +90,10 @@ void *decompress_kernel(void)
 	void *output = (void *)decompress_offset;
 
 	__decompress(_compressed_start, _compressed_end - _compressed_start,
+<<<<<<< HEAD
 		     NULL, NULL, output, vmlinux.image_size, NULL, error);
+=======
+		     NULL, NULL, output, 0, NULL, error);
+>>>>>>> b7ba80a49124 (Commit)
 	return output;
 }

@@ -55,6 +55,7 @@ static int simple_mux_control_put(struct snd_kcontrol *kcontrol,
 					     e, NULL);
 }
 
+<<<<<<< HEAD
 static unsigned int simple_mux_read(struct snd_soc_component *component,
 				    unsigned int reg)
 {
@@ -63,6 +64,8 @@ static unsigned int simple_mux_read(struct snd_soc_component *component,
 	return priv->mux;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_kcontrol_new simple_mux_mux =
 	SOC_DAPM_ENUM_EXT("Muxer", simple_mux_enum, simple_mux_control_get, simple_mux_control_put);
 
@@ -84,7 +87,10 @@ static const struct snd_soc_component_driver simple_mux_component_driver = {
 	.num_dapm_widgets	= ARRAY_SIZE(simple_mux_dapm_widgets),
 	.dapm_routes		= simple_mux_dapm_routes,
 	.num_dapm_routes	= ARRAY_SIZE(simple_mux_dapm_routes),
+<<<<<<< HEAD
 	.read			= simple_mux_read,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int simple_mux_probe(struct platform_device *pdev)

@@ -35,8 +35,11 @@ description: |
 maintainers:
   - Rafał Miłecki <rafal@milecki.pl>
 
+<<<<<<< HEAD
 select: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     const: brcm,bcm947xx-cfe-partitions

@@ -50,7 +50,10 @@
 #define SR_FD		0x00008000
 #define SR_MD		0x40000000
 
+<<<<<<< HEAD
 #define SR_USER_MASK	0x00000303	// M, Q, S, T bits
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * DSP structure and data
  */

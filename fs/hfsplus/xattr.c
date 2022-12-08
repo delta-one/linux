@@ -257,7 +257,11 @@ end_attr_file_creation:
 int __hfsplus_setxattr(struct inode *inode, const char *name,
 			const void *value, size_t size, int flags)
 {
+<<<<<<< HEAD
 	int err;
+=======
+	int err = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct hfs_find_data cat_fd;
 	hfsplus_cat_entry entry;
 	u16 cat_entry_flags, cat_entry_type;
@@ -494,7 +498,11 @@ ssize_t __hfsplus_getxattr(struct inode *inode, const char *name,
 	__be32 xattr_record_type;
 	u32 record_type;
 	u16 record_length = 0;
+<<<<<<< HEAD
 	ssize_t res;
+=======
+	ssize_t res = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if ((!S_ISREG(inode->i_mode) &&
 			!S_ISDIR(inode->i_mode)) ||
@@ -606,7 +614,11 @@ static inline int can_list(const char *xattr_name)
 static ssize_t hfsplus_listxattr_finder_info(struct dentry *dentry,
 						char *buffer, size_t size)
 {
+<<<<<<< HEAD
 	ssize_t res;
+=======
+	ssize_t res = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct inode *inode = d_inode(dentry);
 	struct hfs_find_data fd;
 	u16 entry_type;
@@ -674,9 +686,16 @@ end_listxattr_finder_info:
 ssize_t hfsplus_listxattr(struct dentry *dentry, char *buffer, size_t size)
 {
 	ssize_t err;
+<<<<<<< HEAD
 	ssize_t res;
 	struct inode *inode = d_inode(dentry);
 	struct hfs_find_data fd;
+=======
+	ssize_t res = 0;
+	struct inode *inode = d_inode(dentry);
+	struct hfs_find_data fd;
+	u16 key_len = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct hfsplus_attr_key attr_key;
 	char *strbuf;
 	int xattr_name_len;
@@ -718,8 +737,12 @@ ssize_t hfsplus_listxattr(struct dentry *dentry, char *buffer, size_t size)
 	}
 
 	for (;;) {
+<<<<<<< HEAD
 		u16 key_len = hfs_bnode_read_u16(fd.bnode, fd.keyoffset);
 
+=======
+		key_len = hfs_bnode_read_u16(fd.bnode, fd.keyoffset);
+>>>>>>> b7ba80a49124 (Commit)
 		if (key_len == 0 || key_len > fd.tree->max_key_len) {
 			pr_err("invalid xattr key length: %d\n", key_len);
 			res = -EIO;
@@ -766,12 +789,21 @@ out:
 
 static int hfsplus_removexattr(struct inode *inode, const char *name)
 {
+<<<<<<< HEAD
 	int err;
 	struct hfs_find_data cat_fd;
 	u16 flags;
 	u16 cat_entry_type;
 	int is_xattr_acl_deleted;
 	int is_all_xattrs_deleted;
+=======
+	int err = 0;
+	struct hfs_find_data cat_fd;
+	u16 flags;
+	u16 cat_entry_type;
+	int is_xattr_acl_deleted = 0;
+	int is_all_xattrs_deleted = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!HFSPLUS_SB(inode->i_sb)->attr_tree)
 		return -EOPNOTSUPP;
@@ -857,7 +889,11 @@ static int hfsplus_osx_getxattr(const struct xattr_handler *handler,
 }
 
 static int hfsplus_osx_setxattr(const struct xattr_handler *handler,
+<<<<<<< HEAD
 				struct mnt_idmap *idmap,
+=======
+				struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				struct dentry *unused, struct inode *inode,
 				const char *name, const void *buffer,
 				size_t size, int flags)

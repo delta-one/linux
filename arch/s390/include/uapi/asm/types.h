@@ -12,6 +12,7 @@
 
 #ifndef __ASSEMBLY__
 
+<<<<<<< HEAD
 typedef unsigned long addr_t;
 typedef __signed__ long saddr_t;
 
@@ -24,6 +25,17 @@ typedef struct {
 		__u32 u[4];
 	};
 } __attribute__((packed, aligned(4))) __vector128;
+=======
+/* A address type so that arithmetic can be done on it & it can be upgraded to
+   64 bit when necessary 
+*/
+typedef unsigned long addr_t; 
+typedef __signed__ long saddr_t;
+
+typedef struct {
+	__u32 u[4];
+} __vector128;
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __ASSEMBLY__ */
 

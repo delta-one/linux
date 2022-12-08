@@ -11,7 +11,11 @@ int balancer_ingress(struct __sk_buff *ctx)
 	void *data_end = (void *)(long)ctx->data_end;
 	void *data = (void *)(long)ctx->data;
 	void *ptr;
+<<<<<<< HEAD
 	int nh_off, i = 0;
+=======
+	int ret = 0, nh_off, i = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	nh_off = 32;
 

@@ -28,10 +28,16 @@ Explanation of the Linux-Kernel Memory Consistency Model
   20. THE HAPPENS-BEFORE RELATION: hb
   21. THE PROPAGATES-BEFORE RELATION: pb
   22. RCU RELATIONS: rcu-link, rcu-gp, rcu-rscsi, rcu-order, rcu-fence, and rb
+<<<<<<< HEAD
   23. SRCU READ-SIDE CRITICAL SECTIONS
   24. LOCKING
   25. PLAIN ACCESSES AND DATA RACES
   26. ODDS AND ENDS
+=======
+  23. LOCKING
+  24. PLAIN ACCESSES AND DATA RACES
+  25. ODDS AND ENDS
+>>>>>>> b7ba80a49124 (Commit)
 
 
 
@@ -1008,6 +1014,7 @@ order.  Equivalently,
 where the rmw relation links the read and write events making up each
 atomic update.  This is what the LKMM's "atomic" axiom says.
 
+<<<<<<< HEAD
 Atomic rmw updates play one more role in the LKMM: They can form "rmw
 sequences".  An rmw sequence is simply a bunch of atomic updates where
 each update reads from the previous one.  Written using events, it
@@ -1038,6 +1045,8 @@ were added to the LKMM to fix an obscure bug; without them, atomic
 updates with full-barrier semantics did not always guarantee ordering
 at least as strong as atomic updates with release-barrier semantics.)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 THE PRESERVED PROGRAM ORDER RELATION: ppo
 -----------------------------------------
@@ -1849,6 +1858,7 @@ section in P0 both starts before P1's grace period does and ends
 before it does, and the critical section in P2 both starts after P1's
 grace period does and ends after it does.
 
+<<<<<<< HEAD
 The LKMM supports SRCU (Sleepable Read-Copy-Update) in addition to
 normal RCU.  The ideas involved are much the same as above, with new
 relations srcu-gp and srcu-rscsi added to represent SRCU grace periods
@@ -2012,6 +2022,16 @@ dependency from A to D, giving the impression that D was the
 srcu-unlock event matching A's srcu-lock.  To avoid such problems,
 carry-srcu-data does not accept sequences in which the ends of any of
 the intermediate ->data links (B above) is an srcu-unlock event.
+=======
+Addendum: The LKMM now supports SRCU (Sleepable Read-Copy-Update) in
+addition to normal RCU.  The ideas involved are much the same as
+above, with new relations srcu-gp and srcu-rscsi added to represent
+SRCU grace periods and read-side critical sections.  There is a
+restriction on the srcu-gp and srcu-rscsi links that can appear in an
+rcu-order sequence (the srcu-rscsi links must be paired with srcu-gp
+links having the same SRCU domain with proper nesting); the details
+are relatively unimportant.
+>>>>>>> b7ba80a49124 (Commit)
 
 
 LOCKING
@@ -2731,7 +2751,11 @@ smp_store_release() -- which is basically how the Linux kernel treats
 them.
 
 Although we said that plain accesses are not linked by the ppo
+<<<<<<< HEAD
 relation, they do contribute to it indirectly.  Firstly, when there is
+=======
+relation, they do contribute to it indirectly.  Namely, when there is
+>>>>>>> b7ba80a49124 (Commit)
 an address dependency from a marked load R to a plain store W,
 followed by smp_wmb() and then a marked store W', the LKMM creates a
 ppo link from R to W'.  The reasoning behind this is perhaps a little
@@ -2740,6 +2764,7 @@ for this source code in which W' could execute before R.  Just as with
 pre-bounding by address dependencies, it is possible for the compiler
 to undermine this relation if sufficient care is not taken.
 
+<<<<<<< HEAD
 Secondly, plain accesses can carry dependencies: If a data dependency
 links a marked load R to a store W, and the store is read by a load R'
 from the same thread, then the data loaded by R' depends on the data
@@ -2747,6 +2772,8 @@ loaded originally by R. Thus, if R' is linked to any access X by a
 dependency, R is also linked to access X by the same dependency, even
 if W' or R' (or both!) are plain.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 There are a few oddball fences which need special treatment:
 smp_mb__before_atomic(), smp_mb__after_atomic(), and
 smp_mb__after_spinlock().  The LKMM uses fence events with special

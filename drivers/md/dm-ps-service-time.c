@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2007-2009 NEC Corporation.  All Rights Reserved.
  *
@@ -31,8 +34,13 @@ struct selector {
 struct path_info {
 	struct list_head list;
 	struct dm_path *path;
+<<<<<<< HEAD
 	unsigned int repeat_count;
 	unsigned int relative_throughput;
+=======
+	unsigned repeat_count;
+	unsigned relative_throughput;
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_t in_flight_size;	/* Total size of in-flight I/Os */
 };
 
@@ -49,7 +57,11 @@ static struct selector *alloc_selector(void)
 	return s;
 }
 
+<<<<<<< HEAD
 static int st_create(struct path_selector *ps, unsigned int argc, char **argv)
+=======
+static int st_create(struct path_selector *ps, unsigned argc, char **argv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct selector *s = alloc_selector();
 
@@ -81,9 +93,15 @@ static void st_destroy(struct path_selector *ps)
 }
 
 static int st_status(struct path_selector *ps, struct dm_path *path,
+<<<<<<< HEAD
 		     status_type_t type, char *result, unsigned int maxlen)
 {
 	unsigned int sz = 0;
+=======
+		     status_type_t type, char *result, unsigned maxlen)
+{
+	unsigned sz = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct path_info *pi;
 
 	if (!path)
@@ -114,13 +132,19 @@ static int st_add_path(struct path_selector *ps, struct dm_path *path,
 {
 	struct selector *s = ps->context;
 	struct path_info *pi;
+<<<<<<< HEAD
 	unsigned int repeat_count = ST_MIN_IO;
 	unsigned int relative_throughput = 1;
+=======
+	unsigned repeat_count = ST_MIN_IO;
+	unsigned relative_throughput = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	char dummy;
 	unsigned long flags;
 
 	/*
 	 * Arguments: [<repeat_count> [<relative_throughput>]]
+<<<<<<< HEAD
 	 *	<repeat_count>: The number of I/Os before switching path.
 	 *			If not given, default (ST_MIN_IO) is used.
 	 *	<relative_throughput>: The relative throughput value of
@@ -129,6 +153,17 @@ static int st_add_path(struct path_selector *ps, struct dm_path *path,
 	 *			If not given, minimum value '1' is used.
 	 *			If '0' is given, the path isn't selected while
 	 *			other paths having a positive value are	available.
+=======
+	 * 	<repeat_count>: The number of I/Os before switching path.
+	 * 			If not given, default (ST_MIN_IO) is used.
+	 * 	<relative_throughput>: The relative throughput value of
+	 *			the path among all paths in the path-group.
+	 * 			The valid range: 0-<ST_MAX_RELATIVE_THROUGHPUT>
+	 *			If not given, minimum value '1' is used.
+	 *			If '0' is given, the path isn't selected while
+	 * 			other paths having a positive value are
+	 * 			available.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	if (argc > 2) {
 		*error = "service-time ps: incorrect number of arguments";

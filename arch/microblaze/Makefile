@@ -67,12 +67,20 @@ linux.bin.ub linux.bin.gz: linux.bin
 linux.bin: vmlinux
 linux.bin linux.bin.gz linux.bin.ub:
 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
+<<<<<<< HEAD
 	@echo 'Kernel: $(boot)/$@ is ready' ' (#'$(or $(KBUILD_BUILD_VERSION),`cat .version`)')'
+=======
+	@echo 'Kernel: $(boot)/$@ is ready' ' (#'`cat .version`')'
+>>>>>>> b7ba80a49124 (Commit)
 
 PHONY += simpleImage.$(DTB)
 simpleImage.$(DTB): vmlinux
 	$(Q)$(MAKE) $(build)=$(boot) $(addprefix $(boot)/$@., ub unstrip strip)
+<<<<<<< HEAD
 	@echo 'Kernel: $(boot)/$@ is ready' ' (#'$(or $(KBUILD_BUILD_VERSION),`cat .version`)')'
+=======
+	@echo 'Kernel: $(boot)/$@ is ready' ' (#'`cat .version`')'
+>>>>>>> b7ba80a49124 (Commit)
 
 define archhelp
   echo '* linux.bin    - Create raw binary'

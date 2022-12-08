@@ -83,7 +83,10 @@ static int ipvlan_port_create(struct net_device *dev)
 	if (err)
 		goto err;
 
+<<<<<<< HEAD
 	netdev_hold(dev, &port->dev_tracker, GFP_KERNEL);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err:
@@ -96,7 +99,10 @@ static void ipvlan_port_destroy(struct net_device *dev)
 	struct ipvl_port *port = ipvlan_port_get_rtnl(dev);
 	struct sk_buff *skb;
 
+<<<<<<< HEAD
 	netdev_put(dev, &port->dev_tracker);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (port->mode == IPVLAN_MODE_L3S)
 		ipvlan_l3s_unregister(port);
 	netdev_rx_handler_unregister(dev);
@@ -301,13 +307,21 @@ static void ipvlan_get_stats64(struct net_device *dev,
 		for_each_possible_cpu(idx) {
 			pcptr = per_cpu_ptr(ipvlan->pcpu_stats, idx);
 			do {
+<<<<<<< HEAD
 				strt = u64_stats_fetch_begin(&pcptr->syncp);
+=======
+				strt= u64_stats_fetch_begin_irq(&pcptr->syncp);
+>>>>>>> b7ba80a49124 (Commit)
 				rx_pkts = u64_stats_read(&pcptr->rx_pkts);
 				rx_bytes = u64_stats_read(&pcptr->rx_bytes);
 				rx_mcast = u64_stats_read(&pcptr->rx_mcast);
 				tx_pkts = u64_stats_read(&pcptr->tx_pkts);
 				tx_bytes = u64_stats_read(&pcptr->tx_bytes);
+<<<<<<< HEAD
 			} while (u64_stats_fetch_retry(&pcptr->syncp,
+=======
+			} while (u64_stats_fetch_retry_irq(&pcptr->syncp,
+>>>>>>> b7ba80a49124 (Commit)
 							   strt));
 
 			s->rx_packets += rx_pkts;

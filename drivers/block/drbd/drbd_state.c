@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+// SPDX-License-Identifier: GPL-2.0-or-later
+>>>>>>> b7ba80a49124 (Commit)
 /*
    drbd_state.c
 
@@ -2071,7 +2075,11 @@ static int w_after_conn_state_ch(struct drbd_work *w, int unused)
 		conn_free_crypto(connection);
 		mutex_unlock(&connection->resource->conf_update);
 
+<<<<<<< HEAD
 		kvfree_rcu_mightsleep(old_conf);
+=======
+		kvfree_rcu(old_conf);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (ns_max.susp_fen) {

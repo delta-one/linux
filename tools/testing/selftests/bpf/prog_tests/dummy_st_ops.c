@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0
 /* Copyright (C) 2021. Huawei Technologies Co., Ltd */
 #include <test_progs.h>
+<<<<<<< HEAD
 #include "dummy_st_ops_success.skel.h"
 #include "dummy_st_ops_fail.skel.h"
+=======
+#include "dummy_st_ops.skel.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "trace_dummy_st_ops.skel.h"
 
 /* Need to keep consistent with definition in include/linux/bpf.h */
@@ -12,17 +16,28 @@ struct bpf_dummy_ops_state {
 
 static void test_dummy_st_ops_attach(void)
 {
+<<<<<<< HEAD
 	struct dummy_st_ops_success *skel;
 	struct bpf_link *link;
 
 	skel = dummy_st_ops_success__open_and_load();
+=======
+	struct dummy_st_ops *skel;
+	struct bpf_link *link;
+
+	skel = dummy_st_ops__open_and_load();
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ASSERT_OK_PTR(skel, "dummy_st_ops_load"))
 		return;
 
 	link = bpf_map__attach_struct_ops(skel->maps.dummy_1);
 	ASSERT_EQ(libbpf_get_error(link), -EOPNOTSUPP, "dummy_st_ops_attach");
 
+<<<<<<< HEAD
 	dummy_st_ops_success__destroy(skel);
+=======
+	dummy_st_ops__destroy(skel);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void test_dummy_init_ret_value(void)
@@ -32,10 +47,17 @@ static void test_dummy_init_ret_value(void)
 		.ctx_in = args,
 		.ctx_size_in = sizeof(args),
 	);
+<<<<<<< HEAD
 	struct dummy_st_ops_success *skel;
 	int fd, err;
 
 	skel = dummy_st_ops_success__open_and_load();
+=======
+	struct dummy_st_ops *skel;
+	int fd, err;
+
+	skel = dummy_st_ops__open_and_load();
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ASSERT_OK_PTR(skel, "dummy_st_ops_load"))
 		return;
 
@@ -44,7 +66,11 @@ static void test_dummy_init_ret_value(void)
 	ASSERT_OK(err, "test_run");
 	ASSERT_EQ(attr.retval, 0xf2f3f4f5, "test_ret");
 
+<<<<<<< HEAD
 	dummy_st_ops_success__destroy(skel);
+=======
+	dummy_st_ops__destroy(skel);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void test_dummy_init_ptr_arg(void)
@@ -59,10 +85,17 @@ static void test_dummy_init_ptr_arg(void)
 		.ctx_size_in = sizeof(args),
 	);
 	struct trace_dummy_st_ops *trace_skel;
+<<<<<<< HEAD
 	struct dummy_st_ops_success *skel;
 	int fd, err;
 
 	skel = dummy_st_ops_success__open_and_load();
+=======
+	struct dummy_st_ops *skel;
+	int fd, err;
+
+	skel = dummy_st_ops__open_and_load();
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ASSERT_OK_PTR(skel, "dummy_st_ops_load"))
 		return;
 
@@ -92,7 +125,11 @@ static void test_dummy_init_ptr_arg(void)
 	ASSERT_EQ(trace_skel->bss->val, exp_retval, "fentry_val");
 
 done:
+<<<<<<< HEAD
 	dummy_st_ops_success__destroy(skel);
+=======
+	dummy_st_ops__destroy(skel);
+>>>>>>> b7ba80a49124 (Commit)
 	trace_dummy_st_ops__destroy(trace_skel);
 }
 
@@ -103,12 +140,20 @@ static void test_dummy_multiple_args(void)
 		.ctx_in = args,
 		.ctx_size_in = sizeof(args),
 	);
+<<<<<<< HEAD
 	struct dummy_st_ops_success *skel;
+=======
+	struct dummy_st_ops *skel;
+>>>>>>> b7ba80a49124 (Commit)
 	int fd, err;
 	size_t i;
 	char name[8];
 
+<<<<<<< HEAD
 	skel = dummy_st_ops_success__open_and_load();
+=======
+	skel = dummy_st_ops__open_and_load();
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ASSERT_OK_PTR(skel, "dummy_st_ops_load"))
 		return;
 
@@ -120,6 +165,7 @@ static void test_dummy_multiple_args(void)
 		ASSERT_EQ(skel->bss->test_2_args[i], args[i], name);
 	}
 
+<<<<<<< HEAD
 	dummy_st_ops_success__destroy(skel);
 }
 
@@ -142,6 +188,9 @@ static void test_dummy_sleepable(void)
 	ASSERT_OK(err, "test_run");
 
 	dummy_st_ops_success__destroy(skel);
+=======
+	dummy_st_ops__destroy(skel);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void test_dummy_st_ops(void)
@@ -154,8 +203,11 @@ void test_dummy_st_ops(void)
 		test_dummy_init_ptr_arg();
 	if (test__start_subtest("dummy_multiple_args"))
 		test_dummy_multiple_args();
+<<<<<<< HEAD
 	if (test__start_subtest("dummy_sleepable"))
 		test_dummy_sleepable();
 
 	RUN_TESTS(dummy_st_ops_fail);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

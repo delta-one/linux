@@ -32,8 +32,11 @@
 
 #include <drm/amdgpu_drm.h>
 #include <drm/drm_syncobj.h>
+<<<<<<< HEAD
 #include <drm/ttm/ttm_tt.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "amdgpu_cs.h"
 #include "amdgpu.h"
 #include "amdgpu_trace.h"
@@ -63,8 +66,11 @@ static int amdgpu_cs_parser_init(struct amdgpu_cs_parser *p,
 		amdgpu_ctx_put(p->ctx);
 		return -ECANCELED;
 	}
+<<<<<<< HEAD
 
 	amdgpu_sync_create(&p->sync);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -113,7 +119,10 @@ static int amdgpu_cs_p1_ib(struct amdgpu_cs_parser *p,
 		return r;
 
 	++(num_ibs[r]);
+<<<<<<< HEAD
 	p->gang_leader_idx = r;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -292,6 +301,7 @@ static int amdgpu_cs_pass1(struct amdgpu_cs_parser *p,
 		}
 	}
 
+<<<<<<< HEAD
 	if (!p->gang_size) {
 		ret = -EINVAL;
 		goto free_partial_kdata;
@@ -304,6 +314,22 @@ static int amdgpu_cs_pass1(struct amdgpu_cs_parser *p,
 			goto free_all_kdata;
 	}
 	p->gang_leader = p->jobs[p->gang_leader_idx];
+=======
+	if (!p->gang_size)
+		return -EINVAL;
+
+	for (i = 0; i < p->gang_size; ++i) {
+		ret = amdgpu_job_alloc(p->adev, num_ibs[i], &p->jobs[i], vm);
+		if (ret)
+			goto free_all_kdata;
+
+		ret = drm_sched_job_init(&p->jobs[i]->base, p->entities[i],
+					 &fpriv->vm);
+		if (ret)
+			goto free_all_kdata;
+	}
+	p->gang_leader = p->jobs[p->gang_size - 1];
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (p->ctx->vram_lost_counter != p->gang_leader->vram_lost_counter) {
 		ret = -ECANCELED;
@@ -433,7 +459,11 @@ static int amdgpu_cs_p2_dependencies(struct amdgpu_cs_parser *p,
 			dma_fence_put(old);
 		}
 
+<<<<<<< HEAD
 		r = amdgpu_sync_fence(&p->sync, fence);
+=======
+		r = amdgpu_sync_fence(&p->gang_leader->sync, fence);
+>>>>>>> b7ba80a49124 (Commit)
 		dma_fence_put(fence);
 		if (r)
 			return r;
@@ -455,8 +485,14 @@ static int amdgpu_syncobj_lookup_and_add(struct amdgpu_cs_parser *p,
 		return r;
 	}
 
+<<<<<<< HEAD
 	r = amdgpu_sync_fence(&p->sync, fence);
 	dma_fence_put(fence);
+=======
+	r = amdgpu_sync_fence(&p->gang_leader->sync, fence);
+	dma_fence_put(fence);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return r;
 }
 
@@ -912,7 +948,11 @@ static int amdgpu_cs_parser_bos(struct amdgpu_cs_parser *p,
 			goto out_free_user_pages;
 		}
 
+<<<<<<< HEAD
 		r = amdgpu_ttm_tt_get_user_pages(bo, e->user_pages, &e->range);
+=======
+		r = amdgpu_ttm_tt_get_user_pages(bo, e->user_pages);
+>>>>>>> b7ba80a49124 (Commit)
 		if (r) {
 			kvfree(e->user_pages);
 			e->user_pages = NULL;
@@ -990,12 +1030,19 @@ out_free_user_pages:
 
 		if (!e->user_pages)
 			continue;
+<<<<<<< HEAD
 		amdgpu_ttm_tt_get_user_pages_done(bo->tbo.ttm, e->range);
 		kvfree(e->user_pages);
 		e->user_pages = NULL;
 		e->range = NULL;
 	}
 	mutex_unlock(&p->bo_list->bo_list_mutex);
+=======
+		amdgpu_ttm_tt_get_user_pages_done(bo->tbo.ttm);
+		kvfree(e->user_pages);
+		e->user_pages = NULL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return r;
 }
 
@@ -1105,7 +1152,11 @@ static int amdgpu_cs_vm_handling(struct amdgpu_cs_parser *p)
 	if (r)
 		return r;
 
+<<<<<<< HEAD
 	r = amdgpu_sync_fence(&p->sync, fpriv->prt_va->last_pt_update);
+=======
+	r = amdgpu_sync_fence(&job->sync, fpriv->prt_va->last_pt_update);
+>>>>>>> b7ba80a49124 (Commit)
 	if (r)
 		return r;
 
@@ -1116,7 +1167,11 @@ static int amdgpu_cs_vm_handling(struct amdgpu_cs_parser *p)
 		if (r)
 			return r;
 
+<<<<<<< HEAD
 		r = amdgpu_sync_fence(&p->sync, bo_va->last_pt_update);
+=======
+		r = amdgpu_sync_fence(&job->sync, bo_va->last_pt_update);
+>>>>>>> b7ba80a49124 (Commit)
 		if (r)
 			return r;
 	}
@@ -1135,7 +1190,11 @@ static int amdgpu_cs_vm_handling(struct amdgpu_cs_parser *p)
 		if (r)
 			return r;
 
+<<<<<<< HEAD
 		r = amdgpu_sync_fence(&p->sync, bo_va->last_pt_update);
+=======
+		r = amdgpu_sync_fence(&job->sync, bo_va->last_pt_update);
+>>>>>>> b7ba80a49124 (Commit)
 		if (r)
 			return r;
 	}
@@ -1148,7 +1207,11 @@ static int amdgpu_cs_vm_handling(struct amdgpu_cs_parser *p)
 	if (r)
 		return r;
 
+<<<<<<< HEAD
 	r = amdgpu_sync_fence(&p->sync, vm->last_update);
+=======
+	r = amdgpu_sync_fence(&job->sync, vm->last_update);
+>>>>>>> b7ba80a49124 (Commit)
 	if (r)
 		return r;
 
@@ -1180,6 +1243,7 @@ static int amdgpu_cs_vm_handling(struct amdgpu_cs_parser *p)
 static int amdgpu_cs_sync_rings(struct amdgpu_cs_parser *p)
 {
 	struct amdgpu_fpriv *fpriv = p->filp->driver_priv;
+<<<<<<< HEAD
 	struct drm_gpu_scheduler *sched;
 	struct amdgpu_bo_list_entry *e;
 	struct dma_fence *fence;
@@ -1193,6 +1257,13 @@ static int amdgpu_cs_sync_rings(struct amdgpu_cs_parser *p)
 		return r;
 	}
 
+=======
+	struct amdgpu_job *leader = p->gang_leader;
+	struct amdgpu_bo_list_entry *e;
+	unsigned int i;
+	int r;
+
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry(e, &p->validated, tv.head) {
 		struct amdgpu_bo *bo = ttm_to_amdgpu_bo(e->tv.bo);
 		struct dma_resv *resv = bo->tbo.base.resv;
@@ -1200,18 +1271,28 @@ static int amdgpu_cs_sync_rings(struct amdgpu_cs_parser *p)
 
 		sync_mode = amdgpu_bo_explicit_sync(bo) ?
 			AMDGPU_SYNC_EXPLICIT : AMDGPU_SYNC_NE_OWNER;
+<<<<<<< HEAD
 		r = amdgpu_sync_resv(p->adev, &p->sync, resv, sync_mode,
+=======
+		r = amdgpu_sync_resv(p->adev, &leader->sync, resv, sync_mode,
+>>>>>>> b7ba80a49124 (Commit)
 				     &fpriv->vm);
 		if (r)
 			return r;
 	}
 
+<<<<<<< HEAD
 	for (i = 0; i < p->gang_size; ++i) {
 		r = amdgpu_sync_push_to_job(&p->sync, p->jobs[i]);
+=======
+	for (i = 0; i < p->gang_size - 1; ++i) {
+		r = amdgpu_sync_clone(&leader->sync, &p->jobs[i]->sync);
+>>>>>>> b7ba80a49124 (Commit)
 		if (r)
 			return r;
 	}
 
+<<<<<<< HEAD
 	sched = p->gang_leader->base.entity->rq->sched;
 	while ((fence = amdgpu_sync_get_fence(&p->sync))) {
 		struct drm_sched_fence *s_fence = to_drm_sched_fence(fence);
@@ -1233,6 +1314,13 @@ static int amdgpu_cs_sync_rings(struct amdgpu_cs_parser *p)
 			return r;
 	}
 	return 0;
+=======
+	r = amdgpu_ctx_wait_prev_fence(p->ctx, p->entities[p->gang_size - 1]);
+	if (r && r != -ERESTARTSYS)
+		DRM_ERROR("amdgpu_ctx_wait_prev_fence failed.\n");
+
+	return r;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void amdgpu_cs_post_dependencies(struct amdgpu_cs_parser *p)
@@ -1265,6 +1353,7 @@ static int amdgpu_cs_submit(struct amdgpu_cs_parser *p,
 	for (i = 0; i < p->gang_size; ++i)
 		drm_sched_job_arm(&p->jobs[i]->base);
 
+<<<<<<< HEAD
 	for (i = 0; i < p->gang_size; ++i) {
 		struct dma_fence *fence;
 
@@ -1278,6 +1367,15 @@ static int amdgpu_cs_submit(struct amdgpu_cs_parser *p,
 			dma_fence_put(fence);
 			goto error_cleanup;
 		}
+=======
+	for (i = 0; i < (p->gang_size - 1); ++i) {
+		struct dma_fence *fence;
+
+		fence = &p->jobs[i]->base.s_fence->scheduled;
+		r = amdgpu_sync_fence(&leader->sync, fence);
+		if (r)
+			goto error_cleanup;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (p->gang_size > 1) {
@@ -1298,8 +1396,12 @@ static int amdgpu_cs_submit(struct amdgpu_cs_parser *p,
 	amdgpu_bo_list_for_each_userptr_entry(e, p->bo_list) {
 		struct amdgpu_bo *bo = ttm_to_amdgpu_bo(e->tv.bo);
 
+<<<<<<< HEAD
 		r |= !amdgpu_ttm_tt_get_user_pages_done(bo->tbo.ttm, e->range);
 		e->range = NULL;
+=======
+		r |= !amdgpu_ttm_tt_get_user_pages_done(bo->tbo.ttm);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (r) {
 		r = -EAGAIN;
@@ -1310,10 +1412,14 @@ static int amdgpu_cs_submit(struct amdgpu_cs_parser *p,
 	list_for_each_entry(e, &p->validated, tv.head) {
 
 		/* Everybody except for the gang leader uses READ */
+<<<<<<< HEAD
 		for (i = 0; i < p->gang_size; ++i) {
 			if (p->jobs[i] == leader)
 				continue;
 
+=======
+		for (i = 0; i < (p->gang_size - 1); ++i) {
+>>>>>>> b7ba80a49124 (Commit)
 			dma_resv_add_fence(e->tv.bo->base.resv,
 					   &p->jobs[i]->base.s_fence->finished,
 					   DMA_RESV_USAGE_READ);
@@ -1323,7 +1429,11 @@ static int amdgpu_cs_submit(struct amdgpu_cs_parser *p,
 		e->tv.num_shared = 0;
 	}
 
+<<<<<<< HEAD
 	seq = amdgpu_ctx_add_fence(p->ctx, p->entities[p->gang_leader_idx],
+=======
+	seq = amdgpu_ctx_add_fence(p->ctx, p->entities[p->gang_size - 1],
+>>>>>>> b7ba80a49124 (Commit)
 				   p->fence);
 	amdgpu_cs_post_dependencies(p);
 
@@ -1365,7 +1475,10 @@ static void amdgpu_cs_parser_fini(struct amdgpu_cs_parser *parser)
 {
 	unsigned i;
 
+<<<<<<< HEAD
 	amdgpu_sync_free(&parser->sync);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < parser->num_post_deps; i++) {
 		drm_syncobj_put(parser->post_deps[i].syncobj);
 		kfree(parser->post_deps[i].chain);

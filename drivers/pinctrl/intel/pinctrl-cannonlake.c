@@ -15,6 +15,7 @@
 
 #include "pinctrl-intel.h"
 
+<<<<<<< HEAD
 #define CNL_LP_PAD_OWN		0x020
 #define CNL_LP_PADCFGLOCK	0x080
 #define CNL_LP_HOSTSW_OWN	0x0b0
@@ -26,6 +27,14 @@
 #define CNL_H_HOSTSW_OWN	0x0c0
 #define CNL_H_GPI_IS		0x100
 #define CNL_H_GPI_IE		0x120
+=======
+#define CNL_PAD_OWN		0x020
+#define CNL_PADCFGLOCK		0x080
+#define CNL_LP_HOSTSW_OWN	0x0b0
+#define CNL_H_HOSTSW_OWN	0x0c0
+#define CNL_GPI_IS		0x100
+#define CNL_GPI_IE		0x120
+>>>>>>> b7ba80a49124 (Commit)
 
 #define CNL_GPP(r, s, e, g)				\
 	{						\
@@ -35,11 +44,33 @@
 		.gpio_base = (g),			\
 	}
 
+<<<<<<< HEAD
 #define CNL_LP_COMMUNITY(b, s, e, g)			\
 	INTEL_COMMUNITY_GPPS(b, s, e, g, CNL_LP)
 
 #define CNL_H_COMMUNITY(b, s, e, g)			\
 	INTEL_COMMUNITY_GPPS(b, s, e, g, CNL_H)
+=======
+#define CNL_COMMUNITY(b, s, e, ho, g)			\
+	{						\
+		.barno = (b),				\
+		.padown_offset = CNL_PAD_OWN,		\
+		.padcfglock_offset = CNL_PADCFGLOCK,	\
+		.hostown_offset = (ho),			\
+		.is_offset = CNL_GPI_IS,		\
+		.ie_offset = CNL_GPI_IE,		\
+		.pin_base = (s),			\
+		.npins = ((e) - (s) + 1),		\
+		.gpps = (g),				\
+		.ngpps = ARRAY_SIZE(g),			\
+	}
+
+#define CNL_LP_COMMUNITY(b, s, e, g)			\
+	CNL_COMMUNITY(b, s, e, CNL_LP_HOSTSW_OWN, g)
+
+#define CNL_H_COMMUNITY(b, s, e, g)			\
+	CNL_COMMUNITY(b, s, e, CNL_H_HOSTSW_OWN, g)
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Cannon Lake-H */
 static const struct pinctrl_pin_desc cnlh_pins[] = {

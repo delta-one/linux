@@ -59,7 +59,11 @@ static int aat2870_bl_update_status(struct backlight_device *bd)
 	struct aat2870_bl_driver_data *aat2870_bl = bl_get_data(bd);
 	struct aat2870_data *aat2870 =
 			dev_get_drvdata(aat2870_bl->pdev->dev.parent);
+<<<<<<< HEAD
 	int brightness = backlight_get_brightness(bd);
+=======
+	int brightness = bd->props.brightness;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if ((brightness < 0) || (bd->props.max_brightness < brightness)) {
@@ -70,6 +74,14 @@ static int aat2870_bl_update_status(struct backlight_device *bd)
 	dev_dbg(&bd->dev, "brightness=%d, power=%d, state=%d\n",
 		 bd->props.brightness, bd->props.power, bd->props.state);
 
+<<<<<<< HEAD
+=======
+	if ((bd->props.power != FB_BLANK_UNBLANK) ||
+			(bd->props.state & BL_CORE_FBBLANK) ||
+			(bd->props.state & BL_CORE_SUSPENDED))
+		brightness = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = aat2870->write(aat2870, AAT2870_BLM,
 			     (u8)aat2870_brightness(aat2870_bl, brightness));
 	if (ret < 0)
@@ -178,7 +190,11 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void aat2870_bl_remove(struct platform_device *pdev)
+=======
+static int aat2870_bl_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct aat2870_bl_driver_data *aat2870_bl = platform_get_drvdata(pdev);
 	struct backlight_device *bd = aat2870_bl->bd;
@@ -186,6 +202,11 @@ static void aat2870_bl_remove(struct platform_device *pdev)
 	bd->props.power = FB_BLANK_POWERDOWN;
 	bd->props.brightness = 0;
 	backlight_update_status(bd);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver aat2870_bl_driver = {
@@ -193,7 +214,11 @@ static struct platform_driver aat2870_bl_driver = {
 		.name	= "aat2870-backlight",
 	},
 	.probe		= aat2870_bl_probe,
+<<<<<<< HEAD
 	.remove_new	= aat2870_bl_remove,
+=======
+	.remove		= aat2870_bl_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init aat2870_bl_init(void)

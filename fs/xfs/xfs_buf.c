@@ -1945,7 +1945,10 @@ xfs_free_buftarg(
 	list_lru_destroy(&btp->bt_lru);
 
 	blkdev_issue_flush(btp->bt_bdev);
+<<<<<<< HEAD
 	invalidate_bdev(btp->bt_bdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	fs_put_dax(btp->bt_daxdev, btp->bt_mount);
 
 	kmem_free(btp);

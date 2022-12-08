@@ -1,6 +1,19 @@
 #include <dt-bindings/power/raspberrypi-power.h>
 
 / {
+<<<<<<< HEAD
+=======
+	leds {
+		compatible = "gpio-leds";
+
+		led-act {
+			label = "ACT";
+			default-state = "keep";
+			linux,default-trigger = "heartbeat";
+		};
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	soc {
 		firmware: firmware {
 			compatible = "raspberrypi,bcm2835-firmware", "simple-mfd";

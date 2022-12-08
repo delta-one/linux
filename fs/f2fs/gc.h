@@ -41,7 +41,11 @@ struct f2fs_gc_kthread {
 	unsigned int no_gc_sleep_time;
 
 	/* for changing gc mode */
+<<<<<<< HEAD
 	bool gc_wake;
+=======
+	unsigned int gc_wake;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* for GC_MERGE mount option */
 	wait_queue_head_t fggc_wq;		/*
@@ -55,10 +59,27 @@ struct gc_inode_list {
 	struct radix_tree_root iroot;
 };
 
+<<<<<<< HEAD
 struct victim_entry {
 	struct rb_node rb_node;		/* rb node located in rb-tree */
 	unsigned long long mtime;	/* mtime of section */
 	unsigned int segno;		/* segment No. */
+=======
+struct victim_info {
+	unsigned long long mtime;	/* mtime of section */
+	unsigned int segno;		/* section No. */
+};
+
+struct victim_entry {
+	struct rb_node rb_node;		/* rb node located in rb-tree */
+	union {
+		struct {
+			unsigned long long mtime;	/* mtime of section */
+			unsigned int segno;		/* segment No. */
+		};
+		struct victim_info vi;	/* victim info */
+	};
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head list;
 };
 

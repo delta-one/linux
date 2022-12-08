@@ -30,4 +30,7 @@ obj-$(CONFIG_LOOPBACK_TARGET)	+= loopback/
 obj-$(CONFIG_TCM_FC)		+= tcm_fc/
 obj-$(CONFIG_ISCSI_TARGET)	+= iscsi/
 obj-$(CONFIG_SBP_TARGET)	+= sbp/
+<<<<<<< HEAD
 obj-$(CONFIG_REMOTE_TARGET)	+= tcm_remote/
+=======
+>>>>>>> b7ba80a49124 (Commit)

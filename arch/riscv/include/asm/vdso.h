@@ -10,7 +10,11 @@
 
 /*
  * All systems with an MMU have a VDSO, but systems without an MMU don't
+<<<<<<< HEAD
  * support shared libraries and therefore don't have one.
+=======
+ * support shared libraries and therefor don't have one.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #ifdef CONFIG_MMU
 
@@ -28,12 +32,17 @@
 #define COMPAT_VDSO_SYMBOL(base, name)						\
 	(void __user *)((unsigned long)(base) + compat__vdso_##name##_offset)
 
+<<<<<<< HEAD
 extern char compat_vdso_start[], compat_vdso_end[];
 
 #endif /* CONFIG_COMPAT */
 
 extern char vdso_start[], vdso_end[];
 
+=======
+#endif /* CONFIG_COMPAT */
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* !__ASSEMBLY__ */
 
 #endif /* CONFIG_MMU */

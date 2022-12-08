@@ -31,11 +31,18 @@
  */
 
 #include <linux/ctype.h>
+<<<<<<< HEAD
 #include <linux/export.h>
 #include <linux/fb.h> /* for KHZ2PICOS() */
 #include <linux/list.h>
 #include <linux/list_sort.h>
 #include <linux/of.h>
+=======
+#include <linux/list.h>
+#include <linux/list_sort.h>
+#include <linux/export.h>
+#include <linux/fb.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <video/of_display_timing.h>
 #include <video/of_videomode.h>
@@ -117,6 +124,7 @@ void drm_mode_probed_add(struct drm_connector *connector,
 }
 EXPORT_SYMBOL(drm_mode_probed_add);
 
+<<<<<<< HEAD
 enum drm_mode_analog {
 	DRM_MODE_ANALOG_NTSC, /* 525 lines, 60Hz */
 	DRM_MODE_ANALOG_PAL, /* 625 lines, 50Hz */
@@ -593,6 +601,8 @@ err_free_mode:
 }
 EXPORT_SYMBOL(drm_analog_tv_mode);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * drm_cvt_mode -create a modeline based on the CVT algorithm
  * @dev: drm device
@@ -2136,6 +2146,7 @@ static int drm_mode_parse_panel_orientation(const char *delim,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int drm_mode_parse_tv_mode(const char *delim,
 				  struct drm_cmdline_mode *mode)
 {
@@ -2160,6 +2171,8 @@ static int drm_mode_parse_tv_mode(const char *delim,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int drm_mode_parse_cmdline_options(const char *str,
 					  bool freestanding,
 					  const struct drm_connector *connector,
@@ -2229,9 +2242,12 @@ static int drm_mode_parse_cmdline_options(const char *str,
 		} else if (!strncmp(option, "panel_orientation", delim - option)) {
 			if (drm_mode_parse_panel_orientation(delim, mode))
 				return -EINVAL;
+<<<<<<< HEAD
 		} else if (!strncmp(option, "tv_mode", delim - option)) {
 			if (drm_mode_parse_tv_mode(delim, mode))
 				return -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			return -EINVAL;
 		}
@@ -2254,6 +2270,7 @@ static int drm_mode_parse_cmdline_options(const char *str,
 	return 0;
 }
 
+<<<<<<< HEAD
 struct drm_named_mode {
 	const char *name;
 	unsigned int pixel_clock_khz;
@@ -2332,6 +2349,13 @@ static int drm_mode_parse_cmdline_named_mode(const char *name,
 	return -EINVAL;
 }
 
+=======
+static const char * const drm_named_modes_whitelist[] = {
+	"NTSC",
+	"PAL",
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * drm_mode_parse_command_line_for_connector - parse command line modeline for connector
  * @mode_option: optional per connector mode option
@@ -2339,7 +2363,12 @@ static int drm_mode_parse_cmdline_named_mode(const char *name,
  * @mode: preallocated drm_cmdline_mode structure to fill out
  *
  * This parses @mode_option command line modeline for modes and options to
+<<<<<<< HEAD
  * configure the connector.
+=======
+ * configure the connector. If @mode_option is NULL the default command line
+ * modeline in fb_mode_option will be parsed instead.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This uses the same parameters as the fb modedb.c, except for an extra
  * force-enable, force-enable-digital and force-disable bit at the end::
@@ -2367,7 +2396,11 @@ bool drm_mode_parse_command_line_for_connector(const char *mode_option,
 	const char *bpp_ptr = NULL, *refresh_ptr = NULL, *extra_ptr = NULL;
 	const char *options_ptr = NULL;
 	char *bpp_end_ptr = NULL, *refresh_end_ptr = NULL;
+<<<<<<< HEAD
 	int len, ret;
+=======
+	int i, len, ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(mode, 0, sizeof(*mode));
 	mode->panel_orientation = DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
@@ -2377,10 +2410,23 @@ bool drm_mode_parse_command_line_for_connector(const char *mode_option,
 
 	name = mode_option;
 
+<<<<<<< HEAD
+=======
+	/* Try to locate the bpp and refresh specifiers, if any */
+	bpp_ptr = strchr(name, '-');
+	if (bpp_ptr)
+		bpp_off = bpp_ptr - name;
+
+	refresh_ptr = strchr(name, '@');
+	if (refresh_ptr)
+		refresh_off = refresh_ptr - name;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Locate the start of named options */
 	options_ptr = strchr(name, ',');
 	if (options_ptr)
 		options_off = options_ptr - name;
+<<<<<<< HEAD
 	else
 		options_off = strlen(name);
 
@@ -2394,6 +2440,8 @@ bool drm_mode_parse_command_line_for_connector(const char *mode_option,
 	refresh_ptr = strnchr(name, options_off, '@');
 	if (refresh_ptr)
 		refresh_off = refresh_ptr - name;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Locate the end of the name / resolution, and parse it */
 	if (bpp_ptr) {
@@ -2408,6 +2456,7 @@ bool drm_mode_parse_command_line_for_connector(const char *mode_option,
 		parse_extras = true;
 	}
 
+<<<<<<< HEAD
 	if (!mode_end)
 		return false;
 
@@ -2421,6 +2470,20 @@ bool drm_mode_parse_command_line_for_connector(const char *mode_option,
 	 */
 	if (ret && refresh_ptr)
 		return false;
+=======
+	/* First check for a named mode */
+	for (i = 0; i < ARRAY_SIZE(drm_named_modes_whitelist); i++) {
+		ret = str_has_prefix(name, drm_named_modes_whitelist[i]);
+		if (ret == mode_end) {
+			if (refresh_ptr)
+				return false; /* named + refresh is invalid */
+
+			strcpy(mode->name, drm_named_modes_whitelist[i]);
+			mode->specified = true;
+			break;
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* No named mode? Check for a normal mode argument, e.g. 1024x768 */
 	if (!mode->specified && isdigit(name[0])) {
@@ -2501,6 +2564,7 @@ bool drm_mode_parse_command_line_for_connector(const char *mode_option,
 }
 EXPORT_SYMBOL(drm_mode_parse_command_line_for_connector);
 
+<<<<<<< HEAD
 static struct drm_display_mode *drm_named_mode(struct drm_device *dev,
 					       struct drm_cmdline_mode *cmd)
 {
@@ -2526,6 +2590,8 @@ static struct drm_display_mode *drm_named_mode(struct drm_device *dev,
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * drm_mode_create_from_cmdline_mode - convert a command line modeline into a DRM display mode
  * @dev: DRM device to create the new mode for
@@ -2543,9 +2609,13 @@ drm_mode_create_from_cmdline_mode(struct drm_device *dev,
 	if (cmd->xres == 0 || cmd->yres == 0)
 		return NULL;
 
+<<<<<<< HEAD
 	if (strlen(cmd->name))
 		mode = drm_named_mode(dev, cmd);
 	else if (cmd->cvt)
+=======
+	if (cmd->cvt)
+>>>>>>> b7ba80a49124 (Commit)
 		mode = drm_cvt_mode(dev,
 				    cmd->xres, cmd->yres,
 				    cmd->refresh_specified ? cmd->refresh : 60,

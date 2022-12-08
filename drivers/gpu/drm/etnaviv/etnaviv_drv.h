@@ -6,15 +6,23 @@
 #ifndef __ETNAVIV_DRV_H__
 #define __ETNAVIV_DRV_H__
 
+<<<<<<< HEAD
 #include <linux/io.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/list.h>
 #include <linux/mm_types.h>
 #include <linux/sizes.h>
 #include <linux/time64.h>
 #include <linux/types.h>
+<<<<<<< HEAD
 #include <linux/xarray.h>
 
 #include <drm/drm_drv.h>
+=======
+
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_gem.h>
 #include <drm/etnaviv_drm.h>
 #include <drm/gpu_scheduler.h>
@@ -29,7 +37,10 @@ struct etnaviv_iommu_global;
 #define ETNAVIV_SOFTPIN_START_ADDRESS	SZ_4M /* must be >= SUBALLOC_SIZE */
 
 struct etnaviv_file_private {
+<<<<<<< HEAD
 	int id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct etnaviv_iommu_context	*mmu;
 	struct drm_sched_entity		sched_entity[ETNA_MAX_PIPES];
 };
@@ -42,9 +53,12 @@ struct etnaviv_drm_private {
 	struct etnaviv_cmdbuf_suballoc *cmdbuf_suballoc;
 	struct etnaviv_iommu_global *mmu_global;
 
+<<<<<<< HEAD
 	struct xarray active_contexts;
 	u32 next_context_id;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* list of GEM objects: */
 	struct mutex gem_lock;
 	struct list_head gem_list;

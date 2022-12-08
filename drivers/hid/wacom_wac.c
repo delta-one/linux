@@ -708,14 +708,20 @@ static int wacom_intuos_get_tool_type(int tool_id)
 	case 0x802: /* Intuos4/5 13HD/24HD General Pen */
 	case 0x8e2: /* IntuosHT2 pen */
 	case 0x022:
+<<<<<<< HEAD
 	case 0x200: /* Pro Pen 3 */
 	case 0x04200: /* Pro Pen 3 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case 0x10842: /* MobileStudio Pro Pro Pen slim */
 	case 0x14802: /* Intuos4/5 13HD/24HD Classic Pen */
 	case 0x16802: /* Cintiq 13HD Pro Pen */
 	case 0x18802: /* DTH2242 Pen */
 	case 0x10802: /* Intuos4/5 13HD/24HD General Pen */
+<<<<<<< HEAD
 	case 0x80842: /* Intuos Pro and Cintiq Pro 3D Pen */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		tool_type = BTN_TOOL_PEN;
 		break;
 
@@ -1308,9 +1314,12 @@ static void wacom_intuos_pro2_bt_pen(struct wacom_wac *wacom)
 
 	struct input_dev *pen_input = wacom->pen_input;
 	unsigned char *data = wacom->data;
+<<<<<<< HEAD
 	int number_of_valid_frames = 0;
 	int time_interval = 15000000;
 	ktime_t time_packet_received = ktime_get();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	if (wacom->features.type == INTUOSP2_BT ||
@@ -1331,6 +1340,7 @@ static void wacom_intuos_pro2_bt_pen(struct wacom_wac *wacom)
 		wacom->id[0] |= (wacom->serial[0] >> 32) & 0xFFFFF;
 	}
 
+<<<<<<< HEAD
 	/* number of valid frames */
 	for (i = 0; i < pen_frames; i++) {
 		unsigned char *frame = &data[i*pen_frame_len + 1];
@@ -1355,6 +1365,14 @@ static void wacom_intuos_pro2_bt_pen(struct wacom_wac *wacom)
 		bool invert = frame[0] & 0x10;
 		int frames_number_reversed = number_of_valid_frames - i - 1;
 		int event_timestamp = time_packet_received - frames_number_reversed * time_interval;
+=======
+	for (i = 0; i < pen_frames; i++) {
+		unsigned char *frame = &data[i*pen_frame_len + 1];
+		bool valid = frame[0] & 0x80;
+		bool prox = frame[0] & 0x40;
+		bool range = frame[0] & 0x20;
+		bool invert = frame[0] & 0x10;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!valid)
 			continue;
@@ -1367,7 +1385,10 @@ static void wacom_intuos_pro2_bt_pen(struct wacom_wac *wacom)
 			wacom->tool[0] = 0;
 			wacom->id[0] = 0;
 			wacom->serial[0] = 0;
+<<<<<<< HEAD
 			wacom->hid_data.time_delayed = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			return;
 		}
 
@@ -1404,7 +1425,10 @@ static void wacom_intuos_pro2_bt_pen(struct wacom_wac *wacom)
 						 get_unaligned_le16(&frame[11]));
 			}
 		}
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (wacom->tool[0]) {
 			input_report_abs(pen_input, ABS_PRESSURE, get_unaligned_le16(&frame[5]));
 			if (wacom->features.type == INTUOSP2_BT ||
@@ -1428,9 +1452,12 @@ static void wacom_intuos_pro2_bt_pen(struct wacom_wac *wacom)
 
 		wacom->shared->stylus_in_proximity = prox;
 
+<<<<<<< HEAD
 		/* add timestamp to unpack the frames */
 		input_set_timestamp(pen_input, event_timestamp);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		input_sync(pen_input);
 	}
 }
@@ -2546,12 +2573,20 @@ static void wacom_wac_pen_report(struct hid_device *hdev,
 
 	if (!delay_pen_events(wacom_wac) && wacom_wac->tool[0]) {
 		int id = wacom_wac->id[0];
+<<<<<<< HEAD
 		if (wacom_wac->features.quirks & WACOM_QUIRK_PEN_BUTTON3) {
 			int sw_state = wacom_wac->hid_data.barrelswitch |
 				       (wacom_wac->hid_data.barrelswitch2 << 1);
 			wacom_wac->hid_data.barrelswitch = sw_state == 1;
 			wacom_wac->hid_data.barrelswitch2 = sw_state == 2;
 			wacom_wac->hid_data.barrelswitch3 = sw_state == 3;
+=======
+		if (wacom_wac->features.quirks & WACOM_QUIRK_PEN_BUTTON3 &&
+		    wacom_wac->hid_data.barrelswitch & wacom_wac->hid_data.barrelswitch2) {
+			wacom_wac->hid_data.barrelswitch = 0;
+			wacom_wac->hid_data.barrelswitch2 = 0;
+			wacom_wac->hid_data.barrelswitch3 = 1;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		input_report_key(input, BTN_STYLUS, wacom_wac->hid_data.barrelswitch);
 		input_report_key(input, BTN_STYLUS2, wacom_wac->hid_data.barrelswitch2);
@@ -4908,9 +4943,12 @@ static const struct wacom_features wacom_features_0x3dd =
 static const struct wacom_features wacom_features_HID_ANY_ID =
 	{ "Wacom HID", .type = HID_GENERIC, .oVid = HID_ANY_ID, .oPid = HID_ANY_ID };
 
+<<<<<<< HEAD
 static const struct wacom_features wacom_features_0x94 =
 	{ "Wacom Bootloader", .type = BOOTLOADER };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define USB_DEVICE_WACOM(prod)						\
 	HID_DEVICE(BUS_USB, HID_GROUP_WACOM, USB_VENDOR_ID_WACOM, prod),\
 	.driver_data = (kernel_ulong_t)&wacom_features_##prod
@@ -4984,7 +5022,10 @@ const struct hid_device_id wacom_ids[] = {
 	{ USB_DEVICE_WACOM(0x84) },
 	{ USB_DEVICE_WACOM(0x90) },
 	{ USB_DEVICE_WACOM(0x93) },
+<<<<<<< HEAD
 	{ USB_DEVICE_WACOM(0x94) },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ USB_DEVICE_WACOM(0x97) },
 	{ USB_DEVICE_WACOM(0x9A) },
 	{ USB_DEVICE_WACOM(0x9F) },

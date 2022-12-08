@@ -13,6 +13,7 @@ cpu_thermal: cpu_thermal {
 	polling-delay = <1000>; /* milliseconds */
 
 			/* sensor       ID */
+<<<<<<< HEAD
 	thermal-sensors = <&bandgap     0>;
 
 	cpu_trips: trips {
@@ -27,6 +28,22 @@ cpu_thermal: cpu_thermal {
 			type = "critical";
 		};
 	};
+=======
+        thermal-sensors = <&bandgap     0>;
+
+	cpu_trips: trips {
+                cpu_alert0: cpu_alert {
+                        temperature = <100000>; /* millicelsius */
+                        hysteresis = <2000>; /* millicelsius */
+                        type = "passive";
+                };
+                cpu_crit: cpu_crit {
+                        temperature = <125000>; /* millicelsius */
+                        hysteresis = <2000>; /* millicelsius */
+                        type = "critical";
+                };
+        };
+>>>>>>> b7ba80a49124 (Commit)
 
 	cpu_cooling_maps: cooling-maps {
 		map0 {

@@ -65,6 +65,7 @@ gfp_t rpc_task_gfp_mask(void)
 }
 EXPORT_SYMBOL_GPL(rpc_task_gfp_mask);
 
+<<<<<<< HEAD
 bool rpc_task_set_rpc_status(struct rpc_task *task, int rpc_status)
 {
 	if (cmpxchg(&task->tk_rpc_status, 0, rpc_status) == 0)
@@ -72,6 +73,8 @@ bool rpc_task_set_rpc_status(struct rpc_task *task, int rpc_status)
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long
 rpc_task_timeout(const struct rpc_task *task)
 {
@@ -860,13 +863,17 @@ void rpc_signal_task(struct rpc_task *task)
 	if (!RPC_IS_ACTIVATED(task))
 		return;
 
+<<<<<<< HEAD
 	if (!rpc_task_set_rpc_status(task, -ERESTARTSYS))
 		return;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	trace_rpc_task_signalled(task, task->tk_action);
 	set_bit(RPC_TASK_SIGNALLED, &task->tk_runstate);
 	smp_mb__after_atomic();
 	queue = READ_ONCE(task->tk_waitqueue);
 	if (queue)
+<<<<<<< HEAD
 		rpc_wake_up_queued_task(queue, task);
 }
 
@@ -879,6 +886,9 @@ void rpc_task_try_cancel(struct rpc_task *task, int error)
 	queue = READ_ONCE(task->tk_waitqueue);
 	if (queue)
 		rpc_wake_up_queued_task(queue, task);
+=======
+		rpc_wake_up_queued_task_set_status(queue, task, -ERESTARTSYS);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void rpc_exit(struct rpc_task *task, int status)
@@ -925,6 +935,7 @@ static void __rpc_execute(struct rpc_task *task)
 		 * Perform the next FSM step or a pending callback.
 		 *
 		 * tk_action may be NULL if the task has been killed.
+<<<<<<< HEAD
 		 */
 		do_action = task->tk_action;
 		/* Tasks with an RPC error status should exit */
@@ -935,6 +946,12 @@ static void __rpc_execute(struct rpc_task *task)
 				do_action = rpc_exit_task;
 		}
 		/* Callbacks override all actions */
+=======
+		 * In particular, note that rpc_killall_tasks may
+		 * do this at any time, so beware when dereferencing.
+		 */
+		do_action = task->tk_action;
+>>>>>>> b7ba80a49124 (Commit)
 		if (task->tk_callback) {
 			do_action = task->tk_callback;
 			task->tk_callback = NULL;
@@ -957,6 +974,17 @@ static void __rpc_execute(struct rpc_task *task)
 		}
 
 		/*
+<<<<<<< HEAD
+=======
+		 * Signalled tasks should exit rather than sleep.
+		 */
+		if (RPC_SIGNALLED(task)) {
+			task->tk_rpc_status = -ERESTARTSYS;
+			rpc_exit(task, -ERESTARTSYS);
+		}
+
+		/*
+>>>>>>> b7ba80a49124 (Commit)
 		 * The queue->lock protects against races with
 		 * rpc_make_runnable().
 		 *
@@ -971,12 +999,15 @@ static void __rpc_execute(struct rpc_task *task)
 			spin_unlock(&queue->lock);
 			continue;
 		}
+<<<<<<< HEAD
 		/* Wake up any task that has an exit status */
 		if (READ_ONCE(task->tk_rpc_status) != 0) {
 			rpc_wake_up_task_queue_locked(queue, task);
 			spin_unlock(&queue->lock);
 			continue;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		rpc_clear_running(task);
 		spin_unlock(&queue->lock);
 		if (task_is_async)
@@ -994,7 +1025,14 @@ static void __rpc_execute(struct rpc_task *task)
 			 * clean up after sleeping on some queue, we don't
 			 * break the loop here, but go around once more.
 			 */
+<<<<<<< HEAD
 			rpc_signal_task(task);
+=======
+			trace_rpc_task_signalled(task, task->tk_action);
+			set_bit(RPC_TASK_SIGNALLED, &task->tk_runstate);
+			task->tk_rpc_status = -ERESTARTSYS;
+			rpc_exit(task, -ERESTARTSYS);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		trace_rpc_task_sync_wake(task, task->tk_action);
 	}

@@ -483,7 +483,11 @@ put_bcc(__u16 count, struct smb_hdr *hdr)
 typedef struct negotiate_req {
 	struct smb_hdr hdr;	/* wct = 0 */
 	__le16 ByteCount;
+<<<<<<< HEAD
 	unsigned char DialectsArray[];
+=======
+	unsigned char DialectsArray[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) NEGOTIATE_REQ;
 
 #define MIN_TZ_ADJ (15 * 60) /* minimum grid for timezones in seconds */
@@ -508,14 +512,22 @@ typedef struct negotiate_rsp {
 	__u8 EncryptionKeyLength;
 	__u16 ByteCount;
 	union {
+<<<<<<< HEAD
 		/* cap extended security off */
 		DECLARE_FLEX_ARRAY(unsigned char, EncryptionKey);
+=======
+		unsigned char EncryptionKey[1];	/* cap extended security off */
+>>>>>>> b7ba80a49124 (Commit)
 		/* followed by Domain name - if extended security is off */
 		/* followed by 16 bytes of server GUID */
 		/* then security blob if cap_extended_security negotiated */
 		struct {
 			unsigned char GUID[SMB1_CLIENT_GUID_SIZE];
+<<<<<<< HEAD
 			unsigned char SecurityBlob[];
+=======
+			unsigned char SecurityBlob[1];
+>>>>>>> b7ba80a49124 (Commit)
 		} __attribute__((packed)) extended_response;
 	} __attribute__((packed)) u;
 } __attribute__((packed)) NEGOTIATE_RSP;
@@ -562,7 +574,11 @@ typedef union smb_com_session_setup_andx {
 		__u32 Reserved;
 		__le32 Capabilities;	/* see below */
 		__le16 ByteCount;
+<<<<<<< HEAD
 		unsigned char SecurityBlob[];	/* followed by */
+=======
+		unsigned char SecurityBlob[1];	/* followed by */
+>>>>>>> b7ba80a49124 (Commit)
 		/* STRING NativeOS */
 		/* STRING NativeLanMan */
 	} __attribute__((packed)) req;	/* NTLM request format (with
@@ -582,7 +598,11 @@ typedef union smb_com_session_setup_andx {
 		__u32 Reserved;	/* see below */
 		__le32 Capabilities;
 		__le16 ByteCount;
+<<<<<<< HEAD
 		unsigned char CaseInsensitivePassword[];     /* followed by: */
+=======
+		unsigned char CaseInsensitivePassword[1];     /* followed by: */
+>>>>>>> b7ba80a49124 (Commit)
 		/* unsigned char * CaseSensitivePassword; */
 		/* STRING AccountName */
 		/* STRING PrimaryDomain */
@@ -599,7 +619,11 @@ typedef union smb_com_session_setup_andx {
 		__le16 Action;	/* see below */
 		__le16 SecurityBlobLength;
 		__u16 ByteCount;
+<<<<<<< HEAD
 		unsigned char SecurityBlob[];	/* followed by */
+=======
+		unsigned char SecurityBlob[1];	/* followed by */
+>>>>>>> b7ba80a49124 (Commit)
 /*      unsigned char  * NativeOS;      */
 /*	unsigned char  * NativeLanMan;  */
 /*      unsigned char  * PrimaryDomain; */
@@ -618,7 +642,11 @@ typedef union smb_com_session_setup_andx {
 		__le16 PasswordLength;
 		__u32 Reserved; /* encrypt key len and offset */
 		__le16 ByteCount;
+<<<<<<< HEAD
 		unsigned char AccountPassword[];	/* followed by */
+=======
+		unsigned char AccountPassword[1];	/* followed by */
+>>>>>>> b7ba80a49124 (Commit)
 		/* STRING AccountName */
 		/* STRING PrimaryDomain */
 		/* STRING NativeOS */
@@ -632,7 +660,11 @@ typedef union smb_com_session_setup_andx {
 		__le16 AndXOffset;
 		__le16 Action;	/* see below */
 		__u16 ByteCount;
+<<<<<<< HEAD
 		unsigned char NativeOS[];	/* followed by */
+=======
+		unsigned char NativeOS[1];	/* followed by */
+>>>>>>> b7ba80a49124 (Commit)
 /*	unsigned char * NativeLanMan; */
 /*      unsigned char * PrimaryDomain; */
 	} __attribute__((packed)) old_resp; /* pre-NTLM (LANMAN2.1) response */
@@ -693,7 +725,11 @@ typedef struct smb_com_tconx_req {
 	__le16 Flags;		/* see below */
 	__le16 PasswordLength;
 	__le16 ByteCount;
+<<<<<<< HEAD
 	unsigned char Password[];	/* followed by */
+=======
+	unsigned char Password[1];	/* followed by */
+>>>>>>> b7ba80a49124 (Commit)
 /* STRING Path    *//* \\server\share name */
 	/* STRING Service */
 } __attribute__((packed)) TCONX_REQ;
@@ -705,7 +741,11 @@ typedef struct smb_com_tconx_rsp {
 	__le16 AndXOffset;
 	__le16 OptionalSupport;	/* see below */
 	__u16 ByteCount;
+<<<<<<< HEAD
 	unsigned char Service[];	/* always ASCII, not Unicode */
+=======
+	unsigned char Service[1];	/* always ASCII, not Unicode */
+>>>>>>> b7ba80a49124 (Commit)
 	/* STRING NativeFileSystem */
 } __attribute__((packed)) TCONX_RSP;
 
@@ -718,7 +758,11 @@ typedef struct smb_com_tconx_rsp_ext {
 	__le32 MaximalShareAccessRights;
 	__le32 GuestMaximalShareAccessRights;
 	__u16 ByteCount;
+<<<<<<< HEAD
 	unsigned char Service[];	/* always ASCII, not Unicode */
+=======
+	unsigned char Service[1];	/* always ASCII, not Unicode */
+>>>>>>> b7ba80a49124 (Commit)
 	/* STRING NativeFileSystem */
 } __attribute__((packed)) TCONX_RSP_EXT;
 
@@ -755,14 +799,22 @@ typedef struct smb_com_echo_req {
 	struct	smb_hdr hdr;
 	__le16	EchoCount;
 	__le16	ByteCount;
+<<<<<<< HEAD
 	char	Data[];
+=======
+	char	Data[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) ECHO_REQ;
 
 typedef struct smb_com_echo_rsp {
 	struct	smb_hdr hdr;
 	__le16	SequenceNumber;
 	__le16	ByteCount;
+<<<<<<< HEAD
 	char	Data[];
+=======
+	char	Data[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) ECHO_RSP;
 
 typedef struct smb_com_logoff_andx_req {
@@ -862,7 +914,11 @@ typedef struct smb_com_open_req {	/* also handles create */
 	__le32 ImpersonationLevel;
 	__u8 SecurityFlags;
 	__le16 ByteCount;
+<<<<<<< HEAD
 	char fileName[];
+=======
+	char fileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) OPEN_REQ;
 
 /* open response: oplock levels */
@@ -937,7 +993,11 @@ typedef struct smb_com_openx_req {
 	__le32 Timeout;
 	__le32 Reserved;
 	__le16  ByteCount;  /* file name follows */
+<<<<<<< HEAD
 	char   fileName[];
+=======
+	char   fileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) OPENX_REQ;
 
 typedef struct smb_com_openx_rsp {
@@ -1085,7 +1145,11 @@ typedef struct smb_com_lock_req {
 	__le16 NumberOfUnlocks;
 	__le16 NumberOfLocks;
 	__le16 ByteCount;
+<<<<<<< HEAD
 	LOCKING_ANDX_RANGE Locks[];
+=======
+	LOCKING_ANDX_RANGE Locks[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) LOCK_REQ;
 
 /* lock type */
@@ -1114,7 +1178,11 @@ typedef struct smb_com_rename_req {
 	__le16 SearchAttributes;	/* target file attributes */
 	__le16 ByteCount;
 	__u8 BufferFormat;	/* 4 = ASCII or Unicode */
+<<<<<<< HEAD
 	unsigned char OldFileName[];
+=======
+	unsigned char OldFileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 	/* followed by __u8 BufferFormat2 */
 	/* followed by NewFileName */
 } __attribute__((packed)) RENAME_REQ;
@@ -1134,7 +1202,11 @@ typedef struct smb_com_copy_req {
 	__le16 Flags;
 	__le16 ByteCount;
 	__u8 BufferFormat;	/* 4 = ASCII or Unicode */
+<<<<<<< HEAD
 	unsigned char OldFileName[];
+=======
+	unsigned char OldFileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 	/* followed by __u8 BufferFormat2 */
 	/* followed by NewFileName string */
 } __attribute__((packed)) COPY_REQ;
@@ -1144,7 +1216,11 @@ typedef struct smb_com_copy_rsp {
 	__le16 CopyCount;    /* number of files copied */
 	__u16 ByteCount;    /* may be zero */
 	__u8 BufferFormat;  /* 0x04 - only present if errored file follows */
+<<<<<<< HEAD
 	unsigned char ErrorFileName[]; /* only present if error in copy */
+=======
+	unsigned char ErrorFileName[1]; /* only present if error in copy */
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) COPY_RSP;
 
 #define CREATE_HARD_LINK		0x103
@@ -1158,7 +1234,11 @@ typedef struct smb_com_nt_rename_req {	/* A5 - also used for create hardlink */
 	__le32 ClusterCount;
 	__le16 ByteCount;
 	__u8 BufferFormat;	/* 4 = ASCII or Unicode */
+<<<<<<< HEAD
 	unsigned char OldFileName[];
+=======
+	unsigned char OldFileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 	/* followed by __u8 BufferFormat2 */
 	/* followed by NewFileName */
 } __attribute__((packed)) NT_RENAME_REQ;
@@ -1173,7 +1253,11 @@ typedef struct smb_com_delete_file_req {
 	__le16 SearchAttributes;
 	__le16 ByteCount;
 	__u8 BufferFormat;	/* 4 = ASCII */
+<<<<<<< HEAD
 	unsigned char fileName[];
+=======
+	unsigned char fileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) DELETE_FILE_REQ;
 
 typedef struct smb_com_delete_file_rsp {
@@ -1185,7 +1269,11 @@ typedef struct smb_com_delete_directory_req {
 	struct smb_hdr hdr;	/* wct = 0 */
 	__le16 ByteCount;
 	__u8 BufferFormat;	/* 4 = ASCII */
+<<<<<<< HEAD
 	unsigned char DirName[];
+=======
+	unsigned char DirName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) DELETE_DIRECTORY_REQ;
 
 typedef struct smb_com_delete_directory_rsp {
@@ -1197,7 +1285,11 @@ typedef struct smb_com_create_directory_req {
 	struct smb_hdr hdr;	/* wct = 0 */
 	__le16 ByteCount;
 	__u8 BufferFormat;	/* 4 = ASCII */
+<<<<<<< HEAD
 	unsigned char DirName[];
+=======
+	unsigned char DirName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) CREATE_DIRECTORY_REQ;
 
 typedef struct smb_com_create_directory_rsp {
@@ -1209,7 +1301,11 @@ typedef struct smb_com_query_information_req {
 	struct smb_hdr hdr;     /* wct = 0 */
 	__le16 ByteCount;	/* 1 + namelen + 1 */
 	__u8 BufferFormat;      /* 4 = ASCII */
+<<<<<<< HEAD
 	unsigned char FileName[];
+=======
+	unsigned char FileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) QUERY_INFORMATION_REQ;
 
 typedef struct smb_com_query_information_rsp {
@@ -1229,7 +1325,11 @@ typedef struct smb_com_setattr_req {
 	__le16 reserved[5]; /* must be zero */
 	__u16  ByteCount;
 	__u8   BufferFormat; /* 4 = ASCII */
+<<<<<<< HEAD
 	unsigned char fileName[];
+=======
+	unsigned char fileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) SETATTR_REQ;
 
 typedef struct smb_com_setattr_rsp {
@@ -1311,7 +1411,11 @@ typedef struct smb_com_transaction_ioctl_req {
 	__u8 IsRootFlag; /* 1 = apply command to root of share (must be DFS) */
 	__le16 ByteCount;
 	__u8 Pad[3];
+<<<<<<< HEAD
 	__u8 Data[];
+=======
+	__u8 Data[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) TRANSACT_IOCTL_REQ;
 
 typedef struct smb_com_transaction_compr_ioctl_req {
@@ -1429,8 +1533,13 @@ typedef struct smb_com_transaction_change_notify_req {
 	__u8 WatchTree;  /* 1 = Monitor subdirectories */
 	__u8 Reserved2;
 	__le16 ByteCount;
+<<<<<<< HEAD
 /*	__u8 Pad[3];*/
 /*	__u8 Data[];*/
+=======
+/* 	__u8 Pad[3];*/
+/*	__u8 Data[1];*/
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) TRANSACT_CHANGE_NOTIFY_REQ;
 
 /* BB eventually change to use generic ntransact rsp struct
@@ -1519,7 +1628,11 @@ struct cifs_quota_data {
 	__u64	space_used;
 	__u64	soft_limit;
 	__u64	hard_limit;
+<<<<<<< HEAD
 	char	sid[];  /* variable size? */
+=======
+	char	sid[1];  /* variable size? */
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed));
 
 /* quota sub commands */
@@ -1671,7 +1784,11 @@ typedef struct smb_com_transaction2_qpi_req {
 	__u8 Pad;
 	__le16 InformationLevel;
 	__u32 Reserved4;
+<<<<<<< HEAD
 	char FileName[];
+=======
+	char FileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) TRANSACTION2_QPI_REQ;
 
 typedef struct smb_com_transaction2_qpi_rsp {
@@ -1704,7 +1821,11 @@ typedef struct smb_com_transaction2_spi_req {
 	__u16 Pad1;
 	__le16 InformationLevel;
 	__u32 Reserved4;
+<<<<<<< HEAD
 	char FileName[];
+=======
+	char FileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) TRANSACTION2_SPI_REQ;
 
 typedef struct smb_com_transaction2_spi_rsp {
@@ -1752,7 +1873,12 @@ struct smb_com_transaction2_sfi_rsp {
 	struct smb_hdr hdr;	/* wct = 10 + SetupCount */
 	struct trans2_resp t2;
 	__u16 ByteCount;
+<<<<<<< HEAD
 	__u16 Reserved2; /* parameter word reserved - present for infolevels > 100 */
+=======
+	__u16 Reserved2;	/* parameter word reserved -
+					present for infolevels > 100 */
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed));
 
 struct smb_t2_qfi_req {
@@ -1767,7 +1893,12 @@ struct smb_t2_qfi_rsp {
 	struct smb_hdr hdr;     /* wct = 10 + SetupCount */
 	struct trans2_resp t2;
 	__u16 ByteCount;
+<<<<<<< HEAD
 	__u16 Reserved2; /* parameter word reserved - present for infolevels > 100 */
+=======
+	__u16 Reserved2;        /* parameter word reserved -
+				   present for infolevels > 100 */
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed));
 
 /*
@@ -1809,7 +1940,11 @@ typedef struct smb_com_transaction2_ffirst_req {
 	__le16 SearchFlags;
 	__le16 InformationLevel;
 	__le32 SearchStorageType;
+<<<<<<< HEAD
 	char FileName[];
+=======
+	char FileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) TRANSACTION2_FFIRST_REQ;
 
 typedef struct smb_com_transaction2_ffirst_rsp {
@@ -2020,7 +2155,11 @@ typedef struct smb_com_transaction2_get_dfs_refer_req {
 				   perhaps?) followed by one byte pad - doesn't
 				   seem to matter though */
 	__le16 MaxReferralLevel;
+<<<<<<< HEAD
 	char RequestFileName[];
+=======
+	char RequestFileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) TRANSACTION2_GET_DFS_REFER_REQ;
 
 #define DFS_VERSION cpu_to_le16(0x0003)
@@ -2049,7 +2188,11 @@ struct get_dfs_referral_rsp {
 	__le16 PathConsumed;
 	__le16 NumberOfReferrals;
 	__le32 DFSFlags;
+<<<<<<< HEAD
 	REFERRAL3 referrals[];	/* array of level 3 dfs_referral structures */
+=======
+	REFERRAL3 referrals[1];	/* array of level 3 dfs_referral structures */
+>>>>>>> b7ba80a49124 (Commit)
 	/* followed by the strings pointed to by the referral structures */
 } __packed;
 
@@ -2144,11 +2287,21 @@ typedef struct {
 #define CIFS_UNIX_POSIX_PATH_OPS_CAP    0x00000020 /* Allow new POSIX path based
 						      calls including posix open
 						      and posix unlink */
+<<<<<<< HEAD
 #define CIFS_UNIX_LARGE_READ_CAP        0x00000040 /* support reads >128K (up to 0xFFFF00 */
 #define CIFS_UNIX_LARGE_WRITE_CAP       0x00000080
 #define CIFS_UNIX_TRANSPORT_ENCRYPTION_CAP 0x00000100 /* can do SPNEGO crypt */
 #define CIFS_UNIX_TRANSPORT_ENCRYPTION_MANDATORY_CAP  0x00000200 /* must do  */
 #define CIFS_UNIX_PROXY_CAP             0x00000400 /* Proxy cap: 0xACE ioctl and QFS PROXY call */
+=======
+#define CIFS_UNIX_LARGE_READ_CAP        0x00000040 /* support reads >128K (up
+						      to 0xFFFF00 */
+#define CIFS_UNIX_LARGE_WRITE_CAP       0x00000080
+#define CIFS_UNIX_TRANSPORT_ENCRYPTION_CAP 0x00000100 /* can do SPNEGO crypt */
+#define CIFS_UNIX_TRANSPORT_ENCRYPTION_MANDATORY_CAP  0x00000200 /* must do  */
+#define CIFS_UNIX_PROXY_CAP             0x00000400 /* Proxy cap: 0xACE ioctl and
+						      QFS PROXY call */
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_CIFS_POSIX
 /* presumably don't need the 0x20 POSIX_PATH_OPS_CAP since we never send
    LockingX instead of posix locking call on unix sess (and we do not expect
@@ -2284,10 +2437,14 @@ typedef struct { /* data block encoding of response to level 263 QPathInfo */
 	__le32 Mode;
 	__le32 AlignmentRequirement;
 	__le32 FileNameLength;
+<<<<<<< HEAD
 	union {
 		char __pad;
 		DECLARE_FLEX_ARRAY(char, FileName);
 	};
+=======
+	char FileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) FILE_ALL_INFO;	/* level 0x107 QPathInfo */
 
 typedef struct {
@@ -2325,7 +2482,11 @@ typedef struct {
 } __attribute__((packed)) FILE_UNIX_BASIC_INFO;	/* level 0x200 QPathInfo */
 
 typedef struct {
+<<<<<<< HEAD
 	DECLARE_FLEX_ARRAY(char, LinkDest);
+=======
+	char LinkDest[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) FILE_UNIX_LINK_INFO;	/* level 0x201 QPathInfo */
 
 /* The following three structures are needed only for
@@ -2367,14 +2528,23 @@ typedef struct {
 
 struct file_allocation_info {
 	__le64 AllocationSize; /* Note old Samba srvr rounds this up too much */
+<<<<<<< HEAD
 } __packed; /* size used on disk, for level 0x103 for set, 0x105 for query */
+=======
+} __attribute__((packed));	/* size used on disk, for level 0x103 for set,
+				   0x105 for query */
+>>>>>>> b7ba80a49124 (Commit)
 
 struct file_end_of_file_info {
 	__le64 FileSize;		/* offset to end of file */
 } __attribute__((packed)); /* size info, level 0x104 for set, 0x106 for query */
 
 struct file_alt_name_info {
+<<<<<<< HEAD
 	DECLARE_FLEX_ARRAY(__u8, alt_name);
+=======
+	__u8   alt_name[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed));      /* level 0x0108 */
 
 struct file_stream_info {
@@ -2407,7 +2577,12 @@ struct cifs_posix_acl { /* access conrol list  (ACL) */
 	__le16	access_entry_count;  /* access ACL - count of entries */
 	__le16	default_entry_count; /* default ACL - count of entries */
 	struct cifs_posix_ace ace_array[];
+<<<<<<< HEAD
 	/* followed by struct cifs_posix_ace default_ace_array[] */
+=======
+	/* followed by
+	struct cifs_posix_ace default_ace_arraay[] */
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed));  /* level 0x204 */
 
 /* types of access control entries already defined in posix_acl.h */
@@ -2426,6 +2601,7 @@ struct cifs_posix_acl { /* access conrol list  (ACL) */
 /* end of POSIX ACL definitions */
 
 /* POSIX Open Flags */
+<<<<<<< HEAD
 #define SMB_O_RDONLY	0x1
 #define SMB_O_WRONLY	0x2
 #define SMB_O_RDWR	0x4
@@ -2437,6 +2613,19 @@ struct cifs_posix_acl { /* access conrol list  (ACL) */
 #define SMB_O_DIRECTORY	0x200
 #define SMB_O_NOFOLLOW	0x400
 #define SMB_O_DIRECT	0x800
+=======
+#define SMB_O_RDONLY 	 0x1
+#define SMB_O_WRONLY 	0x2
+#define SMB_O_RDWR 	0x4
+#define SMB_O_CREAT 	0x10
+#define SMB_O_EXCL 	0x20
+#define SMB_O_TRUNC 	0x40
+#define SMB_O_APPEND 	0x80
+#define SMB_O_SYNC 	0x100
+#define SMB_O_DIRECTORY 0x200
+#define SMB_O_NOFOLLOW 	0x400
+#define SMB_O_DIRECT 	0x800
+>>>>>>> b7ba80a49124 (Commit)
 
 typedef struct {
 	__le32 OpenFlags; /* same as NT CreateX */
@@ -2483,10 +2672,14 @@ typedef struct {
 	__le32 NextEntryOffset;
 	__u32 ResumeKey; /* as with FileIndex - no need to convert */
 	FILE_UNIX_BASIC_INFO basic;
+<<<<<<< HEAD
 	union {
 		char __pad;
 		DECLARE_FLEX_ARRAY(char, FileName);
 	};
+=======
+	char FileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) FILE_UNIX_INFO; /* level 0x202 */
 
 typedef struct {
@@ -2500,7 +2693,11 @@ typedef struct {
 	__le64 AllocationSize;
 	__le32 ExtFileAttributes;
 	__le32 FileNameLength;
+<<<<<<< HEAD
 	char FileName[];
+=======
+	char FileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) FILE_DIRECTORY_INFO;   /* level 0x101 FF resp data */
 
 typedef struct {
@@ -2515,7 +2712,11 @@ typedef struct {
 	__le32 ExtFileAttributes;
 	__le32 FileNameLength;
 	__le32 EaSize; /* length of the xattrs */
+<<<<<<< HEAD
 	char FileName[];
+=======
+	char FileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) FILE_FULL_DIRECTORY_INFO; /* level 0x102 rsp data */
 
 typedef struct {
@@ -2532,7 +2733,11 @@ typedef struct {
 	__le32 EaSize; /* EA size */
 	__le32 Reserved;
 	__le64 UniqueId; /* inode num - le since Samba puts ino in low 32 bit*/
+<<<<<<< HEAD
 	char FileName[];
+=======
+	char FileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) SEARCH_ID_FULL_DIR_INFO; /* level 0x105 FF rsp data */
 
 typedef struct {
@@ -2550,7 +2755,11 @@ typedef struct {
 	__u8   ShortNameLength;
 	__u8   Reserved;
 	__u8   ShortName[24];
+<<<<<<< HEAD
 	char FileName[];
+=======
+	char FileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) FILE_BOTH_DIRECTORY_INFO; /* level 0x104 FFrsp data */
 
 typedef struct {
@@ -2565,7 +2774,11 @@ typedef struct {
 	__le32 AllocationSize;
 	__le16 Attributes; /* verify not u32 */
 	__u8   FileNameLength;
+<<<<<<< HEAD
 	char FileName[];
+=======
+	char FileName[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed)) FIND_FILE_STANDARD_INFO; /* level 0x1 FF resp data */
 
 
@@ -2575,11 +2788,28 @@ struct win_dev {
 	__le64 minor;
 } __attribute__((packed));
 
+<<<<<<< HEAD
+=======
+struct gea {
+	unsigned char name_len;
+	char name[1];
+} __attribute__((packed));
+
+struct gealist {
+	unsigned long list_len;
+	struct gea list[1];
+} __attribute__((packed));
+
+>>>>>>> b7ba80a49124 (Commit)
 struct fea {
 	unsigned char EA_flags;
 	__u8 name_len;
 	__le16 value_len;
+<<<<<<< HEAD
 	char name[];
+=======
+	char name[1];
+>>>>>>> b7ba80a49124 (Commit)
 	/* optionally followed by value */
 } __attribute__((packed));
 /* flags for _FEA.fEA */
@@ -2587,7 +2817,11 @@ struct fea {
 
 struct fealist {
 	__le32 list_len;
+<<<<<<< HEAD
 	struct fea list;
+=======
+	struct fea list[1];
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((packed));
 
 /* used to hold an arbitrary blob of data */
@@ -2706,13 +2940,24 @@ typedef struct file_xattr_info {
 	__u32 xattr_value_len;
 	char  xattr_name[];
 	/* followed by xattr_value[xattr_value_len], no pad */
+<<<<<<< HEAD
 } __packed FILE_XATTR_INFO; /* extended attribute info level 0x205 */
+=======
+} __attribute__((packed)) FILE_XATTR_INFO; /* extended attribute info
+					      level 0x205 */
+>>>>>>> b7ba80a49124 (Commit)
 
 /* flags for lsattr and chflags commands removed arein uapi/linux/fs.h */
 
 typedef struct file_chattr_info {
 	__le64	mask; /* list of all possible attribute bits */
 	__le64	mode; /* list of actual attribute bits on this inode */
+<<<<<<< HEAD
 } __packed FILE_CHATTR_INFO;  /* ext attributes (chattr, chflags) level 0x206 */
 #endif				/* POSIX */
+=======
+} __attribute__((packed)) FILE_CHATTR_INFO;  /* ext attributes
+						(chattr, chflags) level 0x206 */
+#endif 				/* POSIX */
+>>>>>>> b7ba80a49124 (Commit)
 #endif				/* _CIFSPDU_H */

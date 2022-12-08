@@ -64,7 +64,12 @@ struct readdir_cd {
 
 
 extern struct svc_program	nfsd_program;
+<<<<<<< HEAD
 extern const struct svc_version	nfsd_version2, nfsd_version3, nfsd_version4;
+=======
+extern const struct svc_version	nfsd_version2, nfsd_version3,
+				nfsd_version4;
+>>>>>>> b7ba80a49124 (Commit)
 extern struct mutex		nfsd_mutex;
 extern spinlock_t		nfsd_drc_lock;
 extern unsigned long		nfsd_drc_max_mem;
@@ -86,7 +91,11 @@ bool		nfssvc_encode_voidres(struct svc_rqst *rqstp,
  * Function prototypes.
  */
 int		nfsd_svc(int nrservs, struct net *net, const struct cred *cred);
+<<<<<<< HEAD
 int		nfsd_dispatch(struct svc_rqst *rqstp);
+=======
+int		nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp);
+>>>>>>> b7ba80a49124 (Commit)
 
 int		nfsd_nrthreads(struct net *);
 int		nfsd_nrpools(struct net *);
@@ -504,7 +513,12 @@ extern void unregister_cld_notifier(void);
 extern void nfsd4_ssc_init_umount_work(struct nfsd_net *nn);
 #endif
 
+<<<<<<< HEAD
 extern void nfsd4_init_leases_net(struct nfsd_net *nn);
+=======
+extern int nfsd4_init_leases_net(struct nfsd_net *nn);
+extern void nfsd4_leases_net_shutdown(struct nfsd_net *nn);
+>>>>>>> b7ba80a49124 (Commit)
 
 #else /* CONFIG_NFSD_V4 */
 static inline int nfsd4_is_junction(struct dentry *dentry)
@@ -512,7 +526,12 @@ static inline int nfsd4_is_junction(struct dentry *dentry)
 	return 0;
 }
 
+<<<<<<< HEAD
 static inline void nfsd4_init_leases_net(struct nfsd_net *nn) { };
+=======
+static inline int nfsd4_init_leases_net(struct nfsd_net *nn) { return 0; };
+static inline void nfsd4_leases_net_shutdown(struct nfsd_net *nn) {};
+>>>>>>> b7ba80a49124 (Commit)
 
 #define register_cld_notifier() 0
 #define unregister_cld_notifier() do { } while(0)

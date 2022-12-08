@@ -430,3 +430,7 @@ module_platform_driver(ls_scfg_msi_driver);
 
 MODULE_AUTHOR("Minghuan Lian <Minghuan.Lian@nxp.com>");
 MODULE_DESCRIPTION("Freescale Layerscape SCFG MSI controller driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

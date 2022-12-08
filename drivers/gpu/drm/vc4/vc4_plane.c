@@ -65,89 +65,132 @@ static const struct hvs_format {
 		.drm = DRM_FORMAT_RGB565,
 		.hvs = HVS_PIXEL_FORMAT_RGB565,
 		.pixel_order = HVS_PIXEL_ORDER_XRGB,
+<<<<<<< HEAD
 		.pixel_order_hvs5 = HVS_PIXEL_ORDER_XRGB,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.drm = DRM_FORMAT_BGR565,
 		.hvs = HVS_PIXEL_FORMAT_RGB565,
 		.pixel_order = HVS_PIXEL_ORDER_XBGR,
+<<<<<<< HEAD
 		.pixel_order_hvs5 = HVS_PIXEL_ORDER_XBGR,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.drm = DRM_FORMAT_ARGB1555,
 		.hvs = HVS_PIXEL_FORMAT_RGBA5551,
 		.pixel_order = HVS_PIXEL_ORDER_ABGR,
+<<<<<<< HEAD
 		.pixel_order_hvs5 = HVS_PIXEL_ORDER_ARGB,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.drm = DRM_FORMAT_XRGB1555,
 		.hvs = HVS_PIXEL_FORMAT_RGBA5551,
 		.pixel_order = HVS_PIXEL_ORDER_ABGR,
+<<<<<<< HEAD
 		.pixel_order_hvs5 = HVS_PIXEL_ORDER_ARGB,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.drm = DRM_FORMAT_RGB888,
 		.hvs = HVS_PIXEL_FORMAT_RGB888,
 		.pixel_order = HVS_PIXEL_ORDER_XRGB,
+<<<<<<< HEAD
 		.pixel_order_hvs5 = HVS_PIXEL_ORDER_XRGB,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.drm = DRM_FORMAT_BGR888,
 		.hvs = HVS_PIXEL_FORMAT_RGB888,
 		.pixel_order = HVS_PIXEL_ORDER_XBGR,
+<<<<<<< HEAD
 		.pixel_order_hvs5 = HVS_PIXEL_ORDER_XBGR,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.drm = DRM_FORMAT_YUV422,
 		.hvs = HVS_PIXEL_FORMAT_YCBCR_YUV422_3PLANE,
 		.pixel_order = HVS_PIXEL_ORDER_XYCBCR,
+<<<<<<< HEAD
 		.pixel_order_hvs5 = HVS_PIXEL_ORDER_XYCBCR,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.drm = DRM_FORMAT_YVU422,
 		.hvs = HVS_PIXEL_FORMAT_YCBCR_YUV422_3PLANE,
 		.pixel_order = HVS_PIXEL_ORDER_XYCRCB,
+<<<<<<< HEAD
 		.pixel_order_hvs5 = HVS_PIXEL_ORDER_XYCRCB,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.drm = DRM_FORMAT_YUV420,
 		.hvs = HVS_PIXEL_FORMAT_YCBCR_YUV420_3PLANE,
 		.pixel_order = HVS_PIXEL_ORDER_XYCBCR,
+<<<<<<< HEAD
 		.pixel_order_hvs5 = HVS_PIXEL_ORDER_XYCBCR,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.drm = DRM_FORMAT_YVU420,
 		.hvs = HVS_PIXEL_FORMAT_YCBCR_YUV420_3PLANE,
 		.pixel_order = HVS_PIXEL_ORDER_XYCRCB,
+<<<<<<< HEAD
 		.pixel_order_hvs5 = HVS_PIXEL_ORDER_XYCRCB,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.drm = DRM_FORMAT_NV12,
 		.hvs = HVS_PIXEL_FORMAT_YCBCR_YUV420_2PLANE,
 		.pixel_order = HVS_PIXEL_ORDER_XYCBCR,
+<<<<<<< HEAD
 		.pixel_order_hvs5 = HVS_PIXEL_ORDER_XYCBCR,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.drm = DRM_FORMAT_NV21,
 		.hvs = HVS_PIXEL_FORMAT_YCBCR_YUV420_2PLANE,
 		.pixel_order = HVS_PIXEL_ORDER_XYCRCB,
+<<<<<<< HEAD
 		.pixel_order_hvs5 = HVS_PIXEL_ORDER_XYCRCB,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.drm = DRM_FORMAT_NV16,
 		.hvs = HVS_PIXEL_FORMAT_YCBCR_YUV422_2PLANE,
 		.pixel_order = HVS_PIXEL_ORDER_XYCBCR,
+<<<<<<< HEAD
 		.pixel_order_hvs5 = HVS_PIXEL_ORDER_XYCBCR,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.drm = DRM_FORMAT_NV61,
 		.hvs = HVS_PIXEL_FORMAT_YCBCR_YUV422_2PLANE,
 		.pixel_order = HVS_PIXEL_ORDER_XYCRCB,
+<<<<<<< HEAD
 		.pixel_order_hvs5 = HVS_PIXEL_ORDER_XYCRCB,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		.drm = DRM_FORMAT_P030,
 		.hvs = HVS_PIXEL_FORMAT_YCBCR_10BIT,
+<<<<<<< HEAD
 		.pixel_order_hvs5 = HVS_PIXEL_ORDER_XYCBCR,
 		.hvs5_only = true,
 	},
@@ -235,6 +278,11 @@ static const struct hvs_format {
 		.pixel_order = HVS_PIXEL_ORDER_BGRA,
 		.pixel_order_hvs5 = HVS_PIXEL_ORDER_RGBA,
 	},
+=======
+		.pixel_order = HVS_PIXEL_ORDER_XYCBCR,
+		.hvs5_only = true,
+	},
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct hvs_format *vc4_get_hvs_format(u32 drm_format)
@@ -438,7 +486,11 @@ static int vc4_plane_setup_clipping_and_scaling(struct drm_plane_state *state)
 {
 	struct vc4_plane_state *vc4_state = to_vc4_plane_state(state);
 	struct drm_framebuffer *fb = state->fb;
+<<<<<<< HEAD
 	struct drm_gem_dma_object *bo;
+=======
+	struct drm_gem_dma_object *bo = drm_fb_dma_get_gem_obj(fb, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	int num_planes = fb->format->num_planes;
 	struct drm_crtc_state *crtc_state;
 	u32 h_subsample = fb->format->hsub;
@@ -457,10 +509,15 @@ static int vc4_plane_setup_clipping_and_scaling(struct drm_plane_state *state)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	for (i = 0; i < num_planes; i++) {
 		bo = drm_fb_dma_get_gem_obj(fb, i);
 		vc4_state->offsets[i] = bo->dma_addr + fb->offsets[i];
 	}
+=======
+	for (i = 0; i < num_planes; i++)
+		vc4_state->offsets[i] = bo->dma_addr + fb->offsets[i];
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * We don't support subpixel source positioning for scaling,
@@ -1101,10 +1158,22 @@ static int vc4_plane_mode_set(struct drm_plane *plane,
 		vc4_dlist_write(vc4_state, 0xc0c0c0c0);
 
 	} else {
+<<<<<<< HEAD
 		/* Control word */
 		vc4_dlist_write(vc4_state,
 				SCALER_CTL0_VALID |
 				(format->pixel_order_hvs5 << SCALER_CTL0_ORDER_SHIFT) |
+=======
+		u32 hvs_pixel_order = format->pixel_order;
+
+		if (format->pixel_order_hvs5)
+			hvs_pixel_order = format->pixel_order_hvs5;
+
+		/* Control word */
+		vc4_dlist_write(vc4_state,
+				SCALER_CTL0_VALID |
+				(hvs_pixel_order << SCALER_CTL0_ORDER_SHIFT) |
+>>>>>>> b7ba80a49124 (Commit)
 				(hvs_format << SCALER_CTL0_PIXEL_FORMAT_SHIFT) |
 				VC4_SET_FIELD(tiling, SCALER_CTL0_TILING) |
 				(vc4_state->is_unity ?
@@ -1583,6 +1652,7 @@ static bool vc4_format_mod_supported(struct drm_plane *plane,
 	case DRM_FORMAT_BGRX1010102:
 	case DRM_FORMAT_RGBA1010102:
 	case DRM_FORMAT_BGRA1010102:
+<<<<<<< HEAD
 	case DRM_FORMAT_XRGB4444:
 	case DRM_FORMAT_ARGB4444:
 	case DRM_FORMAT_XBGR4444:
@@ -1593,6 +1663,8 @@ static bool vc4_format_mod_supported(struct drm_plane *plane,
 	case DRM_FORMAT_BGRA4444:
 	case DRM_FORMAT_RGB332:
 	case DRM_FORMAT_BGR233:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case DRM_FORMAT_YUV422:
 	case DRM_FORMAT_YVU422:
 	case DRM_FORMAT_YUV420:
@@ -1673,6 +1745,7 @@ struct drm_plane *vc4_plane_init(struct drm_device *dev,
 					  DRM_COLOR_YCBCR_BT709,
 					  DRM_COLOR_YCBCR_LIMITED_RANGE);
 
+<<<<<<< HEAD
 	if (type == DRM_PLANE_TYPE_PRIMARY)
 		drm_plane_create_zpos_immutable_property(plane, 0);
 
@@ -1681,6 +1754,11 @@ struct drm_plane *vc4_plane_init(struct drm_device *dev,
 
 #define VC4_NUM_OVERLAY_PLANES	16
 
+=======
+	return plane;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int vc4_plane_create_additional_planes(struct drm_device *drm)
 {
 	struct drm_plane *cursor_plane;
@@ -1696,35 +1774,50 @@ int vc4_plane_create_additional_planes(struct drm_device *drm)
 	 * modest number of planes to expose, that should hopefully
 	 * still cover any sane usecase.
 	 */
+<<<<<<< HEAD
 	for (i = 0; i < VC4_NUM_OVERLAY_PLANES; i++) {
+=======
+	for (i = 0; i < 16; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct drm_plane *plane =
 			vc4_plane_init(drm, DRM_PLANE_TYPE_OVERLAY,
 				       GENMASK(drm->mode_config.num_crtc - 1, 0));
 
 		if (IS_ERR(plane))
 			continue;
+<<<<<<< HEAD
 
 		/* Create zpos property. Max of all the overlays + 1 primary +
 		 * 1 cursor plane on a crtc.
 		 */
 		drm_plane_create_zpos_property(plane, i + 1, 1,
 					       VC4_NUM_OVERLAY_PLANES + 1);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	drm_for_each_crtc(crtc, drm) {
 		/* Set up the legacy cursor after overlay initialization,
+<<<<<<< HEAD
 		 * since the zpos fallback is that planes are rendered by plane
 		 * ID order, and that then puts the cursor on top.
+=======
+		 * since we overlay planes on the CRTC in the order they were
+		 * initialized.
+>>>>>>> b7ba80a49124 (Commit)
 		 */
 		cursor_plane = vc4_plane_init(drm, DRM_PLANE_TYPE_CURSOR,
 					      drm_crtc_mask(crtc));
 		if (!IS_ERR(cursor_plane)) {
 			crtc->cursor = cursor_plane;
+<<<<<<< HEAD
 
 			drm_plane_create_zpos_property(cursor_plane,
 						       VC4_NUM_OVERLAY_PLANES + 1,
 						       1,
 						       VC4_NUM_OVERLAY_PLANES + 1);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 

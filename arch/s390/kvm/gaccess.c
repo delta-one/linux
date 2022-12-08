@@ -1162,6 +1162,7 @@ int access_guest_real(struct kvm_vcpu *vcpu, unsigned long gra,
 }
 
 /**
+<<<<<<< HEAD
  * cmpxchg_guest_abs_with_key() - Perform cmpxchg on guest absolute address.
  * @kvm: Virtual machine instance.
  * @gpa: Absolute guest address of the location to be changed.
@@ -1271,6 +1272,8 @@ int cmpxchg_guest_abs_with_key(struct kvm *kvm, gpa_t gpa, int len,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * guest_translate_address_with_key - translate guest logical into guest absolute address
  * @vcpu: virtual cpu
  * @gva: Guest virtual address

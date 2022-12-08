@@ -8,6 +8,26 @@
 
 #define XTS_BLOCK_SIZE 16
 
+<<<<<<< HEAD
+=======
+static inline int xts_check_key(struct crypto_tfm *tfm,
+				const u8 *key, unsigned int keylen)
+{
+	/*
+	 * key consists of keys of equal size concatenated, therefore
+	 * the length must be even.
+	 */
+	if (keylen % 2)
+		return -EINVAL;
+
+	/* ensure that the AES and tweak key are not identical */
+	if (fips_enabled && !crypto_memneq(key, key + (keylen / 2), keylen / 2))
+		return -EINVAL;
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline int xts_verify_key(struct crypto_skcipher *tfm,
 				 const u8 *key, unsigned int keylen)
 {
@@ -18,6 +38,7 @@ static inline int xts_verify_key(struct crypto_skcipher *tfm,
 	if (keylen % 2)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/*
 	 * In FIPS mode only a combined key length of either 256 or
 	 * 512 bits is allowed, c.f. FIPS 140-3 IG C.I.
@@ -29,6 +50,9 @@ static inline int xts_verify_key(struct crypto_skcipher *tfm,
 	 * Ensure that the AES and tweak key are not identical when
 	 * in FIPS mode or the FORBID_WEAK_KEYS flag is set.
 	 */
+=======
+	/* ensure that the AES and tweak key are not identical */
+>>>>>>> b7ba80a49124 (Commit)
 	if ((fips_enabled || (crypto_skcipher_get_flags(tfm) &
 			      CRYPTO_TFM_REQ_FORBID_WEAK_KEYS)) &&
 	    !crypto_memneq(key, key + (keylen / 2), keylen / 2))

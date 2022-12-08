@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0-only */
+=======
+// SPDX-License-Identifier: GPL-2.0-only
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2021 Intel Corporation
  */
@@ -13,7 +17,11 @@
 /**
  * DOC: Introduction
  *
+<<<<<<< HEAD
  * iwlmei is the kernel module that is in charge of the communication between
+=======
+ * iwlmei is the kernel module that is in charge of the commnunication between
+>>>>>>> b7ba80a49124 (Commit)
  * the iwlwifi driver and the CSME firmware's WLAN driver. This communication
  * uses the SAP protocol defined in another file.
  * iwlwifi can request or release ownership on the WiFi device through iwlmei.
@@ -220,7 +228,10 @@ struct iwl_mei_nvm {
 /**
  * enum iwl_mei_pairwise_cipher - cipher for UCAST key
  * @IWL_MEI_CIPHER_NONE: none
+<<<<<<< HEAD
  * @IWL_MEI_CIPHER_TKIP: tkip
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @IWL_MEI_CIPHER_CCMP: ccmp
  * @IWL_MEI_CIPHER_GCMP: gcmp
  * @IWL_MEI_CIPHER_GCMP_256: gcmp 256
@@ -229,7 +240,10 @@ struct iwl_mei_nvm {
  */
 enum iwl_mei_pairwise_cipher {
 	IWL_MEI_CIPHER_NONE	= 0,
+<<<<<<< HEAD
 	IWL_MEI_CIPHER_TKIP	= 2,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	IWL_MEI_CIPHER_CCMP	= 4,
 	IWL_MEI_CIPHER_GCMP	= 8,
 	IWL_MEI_CIPHER_GCMP_256 = 9,
@@ -348,7 +362,11 @@ void iwl_mei_set_rfkill_state(bool hw_rfkill, bool sw_rfkill);
 /**
  * iwl_mei_set_nic_info() - set mac address
  * @mac_address: mac address to set
+<<<<<<< HEAD
  * @nvm_address: NVM mac address to set
+=======
+ * @nvm_address: NVM mac adsress to set
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This function must be called upon mac address change.
  */
@@ -448,6 +466,7 @@ void iwl_mei_host_associated(const struct iwl_mei_conn_info *conn_info,
 void iwl_mei_host_disassociated(void);
 
 /**
+<<<<<<< HEAD
  * iwl_mei_device_state() - must be called when the device changes up/down state
  * @up: true if the device is up, false otherwise.
  */
@@ -467,6 +486,11 @@ int iwl_mei_pldr_req(void);
  *	notificaiton timed out.
  */
 void iwl_mei_alive_notif(bool success);
+=======
+ * iwl_mei_device_down() - must be called when the device is down
+ */
+void iwl_mei_device_down(void);
+>>>>>>> b7ba80a49124 (Commit)
 
 #else
 
@@ -515,6 +539,7 @@ static inline void iwl_mei_host_associated(const struct iwl_mei_conn_info *conn_
 static inline void iwl_mei_host_disassociated(void)
 {}
 
+<<<<<<< HEAD
 static inline void iwl_mei_device_state(bool up)
 {}
 
@@ -522,6 +547,9 @@ static inline int iwl_mei_pldr_req(void)
 { return 0; }
 
 static inline void iwl_mei_alive_notif(bool success)
+=======
+static inline void iwl_mei_device_down(void)
+>>>>>>> b7ba80a49124 (Commit)
 {}
 
 #endif /* CONFIG_IWLMEI */

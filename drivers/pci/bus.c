@@ -76,6 +76,7 @@ struct resource *pci_bus_resource_n(const struct pci_bus *bus, int n)
 }
 EXPORT_SYMBOL_GPL(pci_bus_resource_n);
 
+<<<<<<< HEAD
 void pci_bus_remove_resource(struct pci_bus *bus, struct resource *res)
 {
 	struct pci_bus_resource *bus_res, *tmp;
@@ -97,6 +98,8 @@ void pci_bus_remove_resource(struct pci_bus *bus, struct resource *res)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void pci_bus_remove_resources(struct pci_bus *bus)
 {
 	int i;
@@ -218,10 +221,13 @@ static int pci_bus_alloc_from_region(struct pci_bus *bus, struct resource *res,
 
 		max = avail.end;
 
+<<<<<<< HEAD
 		/* Don't bother if available space isn't large enough */
 		if (size > max - min_used + 1)
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Ok, try it out.. */
 		ret = allocate_resource(r, res, size, min_used, max,
 					align, alignf, alignf_data);

@@ -11,7 +11,11 @@ for m in $(perf list --raw-dump metrics); do
     continue
   fi
   # Failed so try system wide.
+<<<<<<< HEAD
   result=$(perf stat -M "$m" -a sleep 0.01 2>&1)
+=======
+  result=$(perf stat -M "$m" -a true 2>&1)
+>>>>>>> b7ba80a49124 (Commit)
   if [[ "$result" =~ "${m:0:50}" ]]
   then
     continue

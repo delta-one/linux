@@ -96,7 +96,11 @@
  *
  *  26 - ESPFIX small SS
  *  27 - per-cpu			[ offset to per-cpu data area ]
+<<<<<<< HEAD
  *  28 - VDSO getcpu
+=======
+ *  28 - unused
+>>>>>>> b7ba80a49124 (Commit)
  *  29 - unused
  *  30 - unused
  *  31 - TSS for double fault handler
@@ -119,7 +123,10 @@
 
 #define GDT_ENTRY_ESPFIX_SS		26
 #define GDT_ENTRY_PERCPU		27
+<<<<<<< HEAD
 #define GDT_ENTRY_CPUNODE		28
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define GDT_ENTRY_DOUBLEFAULT_TSS	31
 
@@ -136,7 +143,10 @@
 #define __KERNEL_DS			(GDT_ENTRY_KERNEL_DS*8)
 #define __USER_DS			(GDT_ENTRY_DEFAULT_USER_DS*8 + 3)
 #define __USER_CS			(GDT_ENTRY_DEFAULT_USER_CS*8 + 3)
+<<<<<<< HEAD
 #define __USER32_CS			__USER_CS
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define __ESPFIX_SS			(GDT_ENTRY_ESPFIX_SS*8)
 
 /* segment for calling fn: */
@@ -160,8 +170,11 @@
 # define __KERNEL_PERCPU		0
 #endif
 
+<<<<<<< HEAD
 #define __CPUNODE_SEG			(GDT_ENTRY_CPUNODE*8 + 3)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else /* 64-bit: */
 
 #include <asm/cache.h>
@@ -214,6 +227,10 @@
 #define __KERNEL_DS			(GDT_ENTRY_KERNEL_DS*8)
 #define __USER32_CS			(GDT_ENTRY_DEFAULT_USER32_CS*8 + 3)
 #define __USER_DS			(GDT_ENTRY_DEFAULT_USER_DS*8 + 3)
+<<<<<<< HEAD
+=======
+#define __USER32_DS			__USER_DS
+>>>>>>> b7ba80a49124 (Commit)
 #define __USER_CS			(GDT_ENTRY_DEFAULT_USER_CS*8 + 3)
 #define __CPUNODE_SEG			(GDT_ENTRY_CPUNODE*8 + 3)
 
@@ -229,6 +246,11 @@
 #define GDT_ENTRY_TLS_ENTRIES		3
 #define TLS_SIZE			(GDT_ENTRY_TLS_ENTRIES* 8)
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_X86_64
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Bit size and mask of CPU number stored in the per CPU data (and TSC_AUX) */
 #define VDSO_CPUNODE_BITS		12
 #define VDSO_CPUNODE_MASK		0xfff
@@ -266,6 +288,10 @@ static inline void vdso_read_cpunode(unsigned *cpu, unsigned *node)
 }
 
 #endif /* !__ASSEMBLY__ */
+<<<<<<< HEAD
+=======
+#endif /* CONFIG_X86_64 */
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef __KERNEL__
 

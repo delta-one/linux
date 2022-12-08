@@ -406,7 +406,10 @@ out:
 
 const struct ieee80211_ops mt7601u_ops = {
 	.tx = mt7601u_tx,
+<<<<<<< HEAD
 	.wake_tx_queue = ieee80211_handle_wake_tx_queue,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.start = mt7601u_start,
 	.stop = mt7601u_stop,
 	.add_interface = mt7601u_add_interface,

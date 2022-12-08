@@ -32,7 +32,11 @@ static const struct btf *get_btf_vmlinux(void)
 		return btf_vmlinux;
 
 	btf_vmlinux = libbpf_find_kernel_btf();
+<<<<<<< HEAD
 	if (!btf_vmlinux)
+=======
+	if (libbpf_get_error(btf_vmlinux))
+>>>>>>> b7ba80a49124 (Commit)
 		p_err("struct_ops requires kernel CONFIG_DEBUG_INFO_BTF=y");
 
 	return btf_vmlinux;
@@ -45,7 +49,11 @@ static const char *get_kern_struct_ops_name(const struct bpf_map_info *info)
 	const char *st_ops_name;
 
 	kern_btf = get_btf_vmlinux();
+<<<<<<< HEAD
 	if (!kern_btf)
+=======
+	if (libbpf_get_error(kern_btf))
+>>>>>>> b7ba80a49124 (Commit)
 		return "<btf_vmlinux_not_found>";
 
 	t = btf__type_by_id(kern_btf, info->btf_vmlinux_value_type_id);
@@ -63,8 +71,15 @@ static __s32 get_map_info_type_id(void)
 		return map_info_type_id;
 
 	kern_btf = get_btf_vmlinux();
+<<<<<<< HEAD
 	if (!kern_btf)
 		return 0;
+=======
+	if (libbpf_get_error(kern_btf)) {
+		map_info_type_id = PTR_ERR(kern_btf);
+		return map_info_type_id;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	map_info_type_id = btf__find_by_name_kind(kern_btf, "bpf_map_info",
 						  BTF_KIND_STRUCT);
@@ -151,7 +166,11 @@ static int get_next_struct_ops_map(const char *name, int *res_fd,
 			return -1;
 		}
 
+<<<<<<< HEAD
 		err = bpf_map_get_info_by_fd(fd, info, &info_len);
+=======
+		err = bpf_obj_get_info_by_fd(fd, info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err) {
 			p_err("can't get map info: %s", strerror(errno));
 			close(fd);
@@ -262,7 +281,11 @@ static struct res do_one_id(const char *id_str, work_func func, void *data,
 		goto done;
 	}
 
+<<<<<<< HEAD
 	if (bpf_map_get_info_by_fd(fd, info, &info_len)) {
+=======
+	if (bpf_obj_get_info_by_fd(fd, info, &info_len)) {
+>>>>>>> b7ba80a49124 (Commit)
 		p_err("can't get map info: %s", strerror(errno));
 		res.nr_errs++;
 		goto done;
@@ -413,7 +436,11 @@ static int do_dump(int argc, char **argv)
 	}
 
 	kern_btf = get_btf_vmlinux();
+<<<<<<< HEAD
 	if (!kern_btf)
+=======
+	if (libbpf_get_error(kern_btf))
+>>>>>>> b7ba80a49124 (Commit)
 		return -1;
 
 	if (!json_output) {
@@ -496,7 +523,11 @@ static int do_register(int argc, char **argv)
 		open_opts.kernel_log_level = 1 + 2 + 4;
 
 	obj = bpf_object__open_file(file, &open_opts);
+<<<<<<< HEAD
 	if (!obj)
+=======
+	if (libbpf_get_error(obj))
+>>>>>>> b7ba80a49124 (Commit)
 		return -1;
 
 	set_max_rlimit();
@@ -511,9 +542,16 @@ static int do_register(int argc, char **argv)
 			continue;
 
 		link = bpf_map__attach_struct_ops(map);
+<<<<<<< HEAD
 		if (!link) {
 			p_err("can't register struct_ops %s: %s",
 			      bpf_map__name(map), strerror(errno));
+=======
+		if (libbpf_get_error(link)) {
+			p_err("can't register struct_ops %s: %s",
+			      bpf_map__name(map),
+			      strerror(-PTR_ERR(link)));
+>>>>>>> b7ba80a49124 (Commit)
 			nr_errs++;
 			continue;
 		}
@@ -522,7 +560,11 @@ static int do_register(int argc, char **argv)
 		bpf_link__disconnect(link);
 		bpf_link__destroy(link);
 
+<<<<<<< HEAD
 		if (!bpf_map_get_info_by_fd(bpf_map__fd(map), &info,
+=======
+		if (!bpf_obj_get_info_by_fd(bpf_map__fd(map), &info,
+>>>>>>> b7ba80a49124 (Commit)
 					    &info_len))
 			p_info("Registered %s %s id %u",
 			       get_kern_struct_ops_name(&info),
@@ -590,7 +632,12 @@ int do_struct_ops(int argc, char **argv)
 
 	err = cmd_select(cmds, argc, argv, do_help);
 
+<<<<<<< HEAD
 	btf__free(btf_vmlinux);
+=======
+	if (!libbpf_get_error(btf_vmlinux))
+		btf__free(btf_vmlinux);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return err;
 }

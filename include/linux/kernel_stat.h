@@ -52,7 +52,10 @@ DECLARE_PER_CPU(struct kernel_cpustat, kernel_cpustat);
 #define kstat_cpu(cpu) per_cpu(kstat, cpu)
 #define kcpustat_cpu(cpu) per_cpu(kernel_cpustat, cpu)
 
+<<<<<<< HEAD
 extern unsigned long long nr_context_switches_cpu(int cpu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern unsigned long long nr_context_switches(void);
 
 extern unsigned int kstat_irqs_cpu(unsigned int irq, int cpu);
@@ -68,6 +71,7 @@ static inline unsigned int kstat_softirqs_cpu(unsigned int irq, int cpu)
        return kstat_cpu(cpu).softirqs[irq];
 }
 
+<<<<<<< HEAD
 static inline unsigned int kstat_cpu_softirqs_sum(int cpu)
 {
 	int i;
@@ -79,6 +83,8 @@ static inline unsigned int kstat_cpu_softirqs_sum(int cpu)
 	return sum;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Number of interrupts per specific IRQ source, since bootup
  */
@@ -87,7 +93,11 @@ extern unsigned int kstat_irqs_usr(unsigned int irq);
 /*
  * Number of interrupts per cpu, since bootup
  */
+<<<<<<< HEAD
 static inline unsigned long kstat_cpu_irqs_sum(unsigned int cpu)
+=======
+static inline unsigned int kstat_cpu_irqs_sum(unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return kstat_cpu(cpu).irqs_sum;
 }

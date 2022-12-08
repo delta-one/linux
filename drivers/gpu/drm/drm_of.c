@@ -10,7 +10,10 @@
 #include <drm/drm_crtc.h>
 #include <drm/drm_device.h>
 #include <drm/drm_encoder.h>
+<<<<<<< HEAD
 #include <drm/drm_mipi_dsi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_of.h>
 #include <drm/drm_panel.h>
 
@@ -494,6 +497,7 @@ int drm_of_get_data_lanes_count_ep(const struct device_node *port,
 	return ret;
 }
 EXPORT_SYMBOL_GPL(drm_of_get_data_lanes_count_ep);
+<<<<<<< HEAD
 
 #if IS_ENABLED(CONFIG_DRM_MIPI_DSI)
 
@@ -544,3 +548,5 @@ struct mipi_dsi_host *drm_of_get_dsi_bus(struct device *dev)
 EXPORT_SYMBOL_GPL(drm_of_get_dsi_bus);
 
 #endif /* CONFIG_DRM_MIPI_DSI */
+=======
+>>>>>>> b7ba80a49124 (Commit)

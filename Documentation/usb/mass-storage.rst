@@ -150,7 +150,11 @@ Module parameters
   - bcdDevice     -- USB Device version (BCD) (16 bit integer)
   - iManufacturer -- USB Manufacturer string (string)
   - iProduct      -- USB Product string (string)
+<<<<<<< HEAD
   - iSerialNumber -- SerialNumber string (string)
+=======
+  - iSerialNumber -- SerialNumber string (sting)
+>>>>>>> b7ba80a49124 (Commit)
 
 sysfs entries
 =============

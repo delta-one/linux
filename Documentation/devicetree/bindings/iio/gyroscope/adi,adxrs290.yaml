@@ -38,10 +38,14 @@ required:
   - spi-cpol
   - spi-cpha
 
+<<<<<<< HEAD
 allOf:
   - $ref: /schemas/spi/spi-peripheral-props.yaml#
 
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |
@@ -50,6 +54,7 @@ examples:
         #address-cells = <1>;
         #size-cells = <0>;
         gyro@0 {
+<<<<<<< HEAD
             compatible = "adi,adxrs290";
             reg = <0>;
             spi-max-frequency = <5000000>;
@@ -57,6 +62,15 @@ examples:
             spi-cpha;
             interrupt-parent = <&gpio>;
             interrupts = <25 IRQ_TYPE_EDGE_RISING>;
+=======
+                   compatible = "adi,adxrs290";
+                   reg = <0>;
+                   spi-max-frequency = <5000000>;
+                   spi-cpol;
+                   spi-cpha;
+                   interrupt-parent = <&gpio>;
+                   interrupts = <25 IRQ_TYPE_EDGE_RISING>;
+>>>>>>> b7ba80a49124 (Commit)
         };
     };
 ...

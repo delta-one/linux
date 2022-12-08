@@ -1173,6 +1173,10 @@ int be_cmd_iscsi_post_sgl_pages(struct be_ctrl_info *ctrl,
 	struct beiscsi_hba *phba = pci_get_drvdata(ctrl->pdev);
 	int status;
 	unsigned int curr_pages;
+<<<<<<< HEAD
+=======
+	u32 internal_page_offset = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 temp_num_pages = num_pages;
 
 	if (num_pages == 0xff)
@@ -1191,6 +1195,10 @@ int be_cmd_iscsi_post_sgl_pages(struct be_ctrl_info *ctrl,
 		req->page_offset = page_offset;
 		be_cmd_page_addrs_prepare(req->pages, req->num_pages, q_mem);
 		q_mem->dma = q_mem->dma + (req->num_pages * PAGE_SIZE);
+<<<<<<< HEAD
+=======
+		internal_page_offset += req->num_pages;
+>>>>>>> b7ba80a49124 (Commit)
 		page_offset += req->num_pages;
 		num_pages -= req->num_pages;
 

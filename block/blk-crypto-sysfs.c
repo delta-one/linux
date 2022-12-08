@@ -116,7 +116,11 @@ static void blk_crypto_release(struct kobject *kobj)
 	kfree(container_of(kobj, struct blk_crypto_kobj, kobj));
 }
 
+<<<<<<< HEAD
 static const struct kobj_type blk_crypto_ktype = {
+=======
+static struct kobj_type blk_crypto_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.default_groups = blk_crypto_attr_groups,
 	.sysfs_ops	= &blk_crypto_attr_ops,
 	.release	= blk_crypto_release,
@@ -126,9 +130,14 @@ static const struct kobj_type blk_crypto_ktype = {
  * If the request_queue has a blk_crypto_profile, create the "crypto"
  * subdirectory in sysfs (/sys/block/$disk/queue/crypto/).
  */
+<<<<<<< HEAD
 int blk_crypto_sysfs_register(struct gendisk *disk)
 {
 	struct request_queue *q = disk->queue;
+=======
+int blk_crypto_sysfs_register(struct request_queue *q)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct blk_crypto_kobj *obj;
 	int err;
 
@@ -140,8 +149,13 @@ int blk_crypto_sysfs_register(struct gendisk *disk)
 		return -ENOMEM;
 	obj->profile = q->crypto_profile;
 
+<<<<<<< HEAD
 	err = kobject_init_and_add(&obj->kobj, &blk_crypto_ktype,
 				   &disk->queue_kobj, "crypto");
+=======
+	err = kobject_init_and_add(&obj->kobj, &blk_crypto_ktype, &q->kobj,
+				   "crypto");
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		kobject_put(&obj->kobj);
 		return err;
@@ -150,9 +164,15 @@ int blk_crypto_sysfs_register(struct gendisk *disk)
 	return 0;
 }
 
+<<<<<<< HEAD
 void blk_crypto_sysfs_unregister(struct gendisk *disk)
 {
 	kobject_put(disk->queue->crypto_kobject);
+=======
+void blk_crypto_sysfs_unregister(struct request_queue *q)
+{
+	kobject_put(q->crypto_kobject);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __init blk_crypto_sysfs_init(void)

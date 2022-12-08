@@ -5,7 +5,10 @@
 
 #include "aspeed-g5.dtsi"
 #include <dt-bindings/gpio/aspeed-gpio.h>
+<<<<<<< HEAD
 #include <dt-bindings/interrupt-controller/irq.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	model = "AMD EthanolX BMC";
@@ -59,11 +62,15 @@
 	flash@0 {
 		status = "okay";
 		m25p,fast-read;
+<<<<<<< HEAD
 		label = "bmc";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		#include "openbmc-flash-layout.dtsi"
 	};
 };
 
+<<<<<<< HEAD
 &spi1 {
 	status = "okay";
 	pinctrl-names = "default";
@@ -75,6 +82,8 @@
 		spi-max-frequency = <100000000>;
 	};
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 &mac0 {
 	status = "okay";
@@ -91,9 +100,13 @@
 	status = "okay";
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_txd1_default
+<<<<<<< HEAD
 		     &pinctrl_rxd1_default
 		     &pinctrl_nrts1_default
 		     &pinctrl_ncts1_default>;
+=======
+		     &pinctrl_rxd1_default>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &uart5 {
@@ -175,7 +188,11 @@
 &i2c3 {
 	status = "okay";
 	eeprom@50 {
+<<<<<<< HEAD
 		compatible = "atmel,24c128";
+=======
+		compatible = "atmel,24c256";
+>>>>>>> b7ba80a49124 (Commit)
 		reg = <0x50>;
 		pagesize = <64>;
 	};
@@ -276,12 +293,15 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &vuart {
 	status = "okay";
 	aspeed,lpc-io-reg = <0x3f8>;
 	aspeed,lpc-interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &pwm_tacho {
 	status = "okay";
 	pinctrl-names = "default";

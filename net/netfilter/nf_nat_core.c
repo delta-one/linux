@@ -16,7 +16,11 @@
 #include <linux/siphash.h>
 #include <linux/rtnetlink.h>
 
+<<<<<<< HEAD
 #include <net/netfilter/nf_conntrack_bpf.h>
+=======
+#include <net/netfilter/nf_conntrack.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/netfilter/nf_conntrack_core.h>
 #include <net/netfilter/nf_conntrack_helper.h>
 #include <net/netfilter/nf_conntrack_seqadj.h>
@@ -468,7 +472,11 @@ find_free_id:
 	if (range->flags & NF_NAT_RANGE_PROTO_OFFSET)
 		off = (ntohs(*keyptr) - ntohs(range->base_proto.all));
 	else
+<<<<<<< HEAD
 		off = get_random_u16();
+=======
+		off = prandom_u32();
+>>>>>>> b7ba80a49124 (Commit)
 
 	attempts = range_size;
 	if (attempts > max_attempts)
@@ -490,7 +498,11 @@ another_round:
 	if (attempts >= range_size || attempts < 16)
 		return;
 	attempts /= 2;
+<<<<<<< HEAD
 	off = get_random_u16();
+=======
+	off = prandom_u32();
+>>>>>>> b7ba80a49124 (Commit)
 	goto another_round;
 }
 
@@ -549,8 +561,13 @@ get_unique_tuple(struct nf_conntrack_tuple *tuple,
 		if (range->flags & NF_NAT_RANGE_PROTO_SPECIFIED) {
 			if (!(range->flags & NF_NAT_RANGE_PROTO_OFFSET) &&
 			    l4proto_in_range(tuple, maniptype,
+<<<<<<< HEAD
 					     &range->min_proto,
 					     &range->max_proto) &&
+=======
+			          &range->min_proto,
+			          &range->max_proto) &&
+>>>>>>> b7ba80a49124 (Commit)
 			    (range->min_proto.all == range->max_proto.all ||
 			     !nf_nat_used_tuple(tuple, ct)))
 				return;
@@ -1152,6 +1169,7 @@ static int __init nf_nat_init(void)
 	WARN_ON(nf_nat_hook != NULL);
 	RCU_INIT_POINTER(nf_nat_hook, &nat_hook);
 
+<<<<<<< HEAD
 	ret = register_nf_nat_bpf();
 	if (ret < 0) {
 		RCU_INIT_POINTER(nf_nat_hook, NULL);
@@ -1162,6 +1180,9 @@ static int __init nf_nat_init(void)
 	}
 
 	return ret;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __exit nf_nat_cleanup(void)

@@ -41,18 +41,30 @@ static DEFINE_MUTEX(reading_mutex);
 static int data_avail;
 static u8 *rng_buffer, *rng_fillbuf;
 static unsigned short current_quality;
+<<<<<<< HEAD
 static unsigned short default_quality = 1024; /* default to maximum */
+=======
+static unsigned short default_quality; /* = 0; default to "off" */
+>>>>>>> b7ba80a49124 (Commit)
 
 module_param(current_quality, ushort, 0644);
 MODULE_PARM_DESC(current_quality,
 		 "current hwrng entropy estimation per 1024 bits of input -- obsolete, use rng_quality instead");
 module_param(default_quality, ushort, 0644);
 MODULE_PARM_DESC(default_quality,
+<<<<<<< HEAD
 		 "default maximum entropy content of hwrng per 1024 bits of input");
 
 static void drop_current_rng(void);
 static int hwrng_init(struct hwrng *rng);
 static int hwrng_fillfn(void *unused);
+=======
+		 "default entropy content of hwrng per 1024 bits of input");
+
+static void drop_current_rng(void);
+static int hwrng_init(struct hwrng *rng);
+static void hwrng_manage_rngd(struct hwrng *rng);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline int rng_get_data(struct hwrng *rng, u8 *buffer, size_t size,
 			       int wait);
@@ -69,10 +81,15 @@ static void add_early_randomness(struct hwrng *rng)
 	mutex_lock(&reading_mutex);
 	bytes_read = rng_get_data(rng, rng_fillbuf, 32, 0);
 	mutex_unlock(&reading_mutex);
+<<<<<<< HEAD
 	if (bytes_read > 0) {
 		size_t entropy = bytes_read * 8 * rng->quality / 1024;
 		add_hwgenerator_randomness(rng_fillbuf, bytes_read, entropy, false);
 	}
+=======
+	if (bytes_read > 0)
+		add_device_randomness(rng_fillbuf, bytes_read);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void cleanup_rng(struct kref *kref)
@@ -98,6 +115,7 @@ static int set_current_rng(struct hwrng *rng)
 	drop_current_rng();
 	current_rng = rng;
 
+<<<<<<< HEAD
 	/* if necessary, start hwrng thread */
 	if (!hwrng_fill) {
 		hwrng_fill = kthread_run(hwrng_fillfn, NULL, "hwrng");
@@ -107,6 +125,8 @@ static int set_current_rng(struct hwrng *rng)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -172,9 +192,20 @@ static int hwrng_init(struct hwrng *rng)
 	reinit_completion(&rng->cleanup_done);
 
 skip_init:
+<<<<<<< HEAD
 	rng->quality = min_t(u16, min_t(u16, default_quality, 1024), rng->quality ?: 1024);
 	current_quality = rng->quality; /* obsolete */
 
+=======
+	if (!rng->quality)
+		rng->quality = default_quality;
+	if (rng->quality > 1024)
+		rng->quality = 1024;
+	current_quality = rng->quality; /* obsolete */
+
+	hwrng_manage_rngd(rng);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -460,6 +491,13 @@ static ssize_t rng_quality_store(struct device *dev,
 	/* the best available RNG may have changed */
 	ret = enable_best_rng();
 
+<<<<<<< HEAD
+=======
+	/* start/stop rngd if necessary */
+	if (current_rng)
+		hwrng_manage_rngd(current_rng);
+
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	mutex_unlock(&rng_mutex);
 	return ret ? ret : len;
@@ -515,6 +553,12 @@ static int hwrng_fillfn(void *unused)
 
 		put_rng(rng);
 
+<<<<<<< HEAD
+=======
+		if (!quality)
+			break;
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (rc <= 0)
 			continue;
 
@@ -527,12 +571,35 @@ static int hwrng_fillfn(void *unused)
 
 		/* Outside lock, sure, but y'know: randomness. */
 		add_hwgenerator_randomness((void *)rng_fillbuf, rc,
+<<<<<<< HEAD
 					   entropy >> 10, true);
+=======
+					   entropy >> 10);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	hwrng_fill = NULL;
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void hwrng_manage_rngd(struct hwrng *rng)
+{
+	if (WARN_ON(!mutex_is_locked(&rng_mutex)))
+		return;
+
+	if (rng->quality == 0 && hwrng_fill)
+		kthread_stop(hwrng_fill);
+	if (rng->quality > 0 && !hwrng_fill) {
+		hwrng_fill = kthread_run(hwrng_fillfn, NULL, "hwrng");
+		if (IS_ERR(hwrng_fill)) {
+			pr_err("hwrng_fill thread creation failed\n");
+			hwrng_fill = NULL;
+		}
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int hwrng_register(struct hwrng *rng)
 {
 	int err = -EINVAL;

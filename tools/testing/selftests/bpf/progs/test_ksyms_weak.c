@@ -20,8 +20,11 @@ __u64 out__non_existent_typed = -1;
 /* test existing weak symbols can be resolved. */
 extern const struct rq runqueues __ksym __weak; /* typed */
 extern const void bpf_prog_active __ksym __weak; /* typeless */
+<<<<<<< HEAD
 struct task_struct *bpf_task_acquire(struct task_struct *p) __ksym __weak;
 void bpf_testmod_test_mod_kfunc(int i) __ksym __weak;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 
 /* non-existent weak symbols. */
@@ -31,7 +34,10 @@ extern const void bpf_link_fops1 __ksym __weak;
 
 /* typed symbols, default to zero. */
 extern const int bpf_link_fops2 __ksym __weak;
+<<<<<<< HEAD
 void invalid_kfunc(void) __ksym __weak;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 SEC("raw_tp/sys_enter")
 int pass_handler(const void *ctx)
@@ -40,7 +46,11 @@ int pass_handler(const void *ctx)
 
 	/* tests existing symbols. */
 	rq = (struct rq *)bpf_per_cpu_ptr(&runqueues, 0);
+<<<<<<< HEAD
 	if (rq && bpf_ksym_exists(&runqueues))
+=======
+	if (rq)
+>>>>>>> b7ba80a49124 (Commit)
 		out__existing_typed = rq->cpu;
 	out__existing_typeless = (__u64)&bpf_prog_active;
 
@@ -53,6 +63,7 @@ int pass_handler(const void *ctx)
 	if (&bpf_link_fops2) /* can't happen */
 		out__non_existent_typed = (__u64)bpf_per_cpu_ptr(&bpf_link_fops2, 0);
 
+<<<<<<< HEAD
 	if (!bpf_ksym_exists(bpf_task_acquire))
 		/* dead code won't be seen by the verifier */
 		bpf_task_acquire(0);
@@ -65,6 +76,8 @@ int pass_handler(const void *ctx)
 		/* dead code won't be seen by the verifier */
 		invalid_kfunc();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

@@ -529,7 +529,11 @@ ath5k_eeprom_read_freq_list(struct ath5k_hw *ah, int *offset, int max,
 		ee->ee_n_piers[mode]++;
 
 		freq2 = (val >> 8) & 0xff;
+<<<<<<< HEAD
 		if (!freq2 || i >= max)
+=======
+		if (!freq2)
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		pc[i++].freq = ath5k_eeprom_bin2freq(ee,

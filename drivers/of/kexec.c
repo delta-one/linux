@@ -281,7 +281,11 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
 				   const char *cmdline, size_t extra_fdt_size)
 {
 	void *fdt;
+<<<<<<< HEAD
 	int ret, chosen_node, len;
+=======
+	int ret, chosen_node;
+>>>>>>> b7ba80a49124 (Commit)
 	const void *prop;
 	size_t fdt_size;
 
@@ -324,6 +328,7 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
 		goto out;
 
 	/* Did we boot using an initrd? */
+<<<<<<< HEAD
 	prop = fdt_getprop(fdt, chosen_node, "linux,initrd-start", &len);
 	if (prop) {
 		u64 tmp_start, tmp_end, tmp_size;
@@ -331,12 +336,25 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
 		tmp_start = of_read_number(prop, len / 4);
 
 		prop = fdt_getprop(fdt, chosen_node, "linux,initrd-end", &len);
+=======
+	prop = fdt_getprop(fdt, chosen_node, "linux,initrd-start", NULL);
+	if (prop) {
+		u64 tmp_start, tmp_end, tmp_size;
+
+		tmp_start = fdt64_to_cpu(*((const fdt64_t *) prop));
+
+		prop = fdt_getprop(fdt, chosen_node, "linux,initrd-end", NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!prop) {
 			ret = -EINVAL;
 			goto out;
 		}
 
+<<<<<<< HEAD
 		tmp_end = of_read_number(prop, len / 4);
+=======
+		tmp_end = fdt64_to_cpu(*((const fdt64_t *) prop));
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * kexec reserves exact initrd size, while firmware may

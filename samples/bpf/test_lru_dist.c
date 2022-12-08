@@ -42,6 +42,14 @@ static inline void INIT_LIST_HEAD(struct list_head *list)
 	list->prev = list;
 }
 
+<<<<<<< HEAD
+=======
+static inline int list_empty(const struct list_head *head)
+{
+	return head->next == head;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void __list_add(struct list_head *new,
 			      struct list_head *prev,
 			      struct list_head *next)

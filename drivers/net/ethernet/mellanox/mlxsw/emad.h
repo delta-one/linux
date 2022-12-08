@@ -21,7 +21,10 @@ enum {
 	MLXSW_EMAD_TLV_TYPE_OP,
 	MLXSW_EMAD_TLV_TYPE_STRING,
 	MLXSW_EMAD_TLV_TYPE_REG,
+<<<<<<< HEAD
 	MLXSW_EMAD_TLV_TYPE_LATENCY,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* OP TLV */
@@ -91,9 +94,12 @@ enum {
 /* STRING TLV */
 #define MLXSW_EMAD_STRING_TLV_LEN 33	/* Length in u32 */
 
+<<<<<<< HEAD
 /* LATENCY TLV */
 #define MLXSW_EMAD_LATENCY_TLV_LEN 7	/* Length in u32 */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* END TLV */
 #define MLXSW_EMAD_END_TLV_LEN 1	/* Length in u32 */
 

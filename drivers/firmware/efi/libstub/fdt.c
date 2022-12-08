@@ -199,8 +199,14 @@ static efi_status_t exit_boot_func(struct efi_boot_memmap *map, void *priv)
 	 * populate @runtime_map with copies of just the EFI_MEMORY_RUNTIME
 	 * entries so that we can pass it straight to SetVirtualAddressMap()
 	 */
+<<<<<<< HEAD
 	efi_get_virtmap(map->map, map->map_size, map->desc_size,
 			p->runtime_map, &p->runtime_entry_count);
+=======
+	if (!efi_novamap)
+		efi_get_virtmap(map->map, map->map_size, map->desc_size,
+				p->runtime_map, &p->runtime_entry_count);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return update_fdt_memmap(p->new_fdt_addr, map);
 }
@@ -253,7 +259,11 @@ efi_status_t allocate_new_fdt_and_exit_boot(void *handle,
 	} else {
 		status = efi_load_dtb(image, &fdt_addr, &fdt_size);
 
+<<<<<<< HEAD
 		if (status != EFI_SUCCESS && status != EFI_NOT_READY) {
+=======
+		if (status != EFI_SUCCESS) {
+>>>>>>> b7ba80a49124 (Commit)
 			efi_err("Failed to load device tree!\n");
 			goto fail;
 		}
@@ -313,16 +323,26 @@ efi_status_t allocate_new_fdt_and_exit_boot(void *handle,
 
 			/*
 			 * Set the virtual address field of all
+<<<<<<< HEAD
 			 * EFI_MEMORY_RUNTIME entries to U64_MAX. This will
 			 * signal the incoming kernel that no virtual
 			 * translation has been installed.
+=======
+			 * EFI_MEMORY_RUNTIME entries to 0. This will signal
+			 * the incoming kernel that no virtual translation has
+			 * been installed.
+>>>>>>> b7ba80a49124 (Commit)
 			 */
 			for (l = 0; l < priv.boot_memmap->map_size;
 			     l += priv.boot_memmap->desc_size) {
 				p = (void *)priv.boot_memmap->map + l;
 
 				if (p->attribute & EFI_MEMORY_RUNTIME)
+<<<<<<< HEAD
 					p->virt_addr = U64_MAX;
+=======
+					p->virt_addr = 0;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 		return EFI_SUCCESS;

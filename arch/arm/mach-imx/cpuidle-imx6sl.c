@@ -11,8 +11,13 @@
 #include "common.h"
 #include "cpuidle.h"
 
+<<<<<<< HEAD
 static __cpuidle int imx6sl_enter_wait(struct cpuidle_device *dev,
 				       struct cpuidle_driver *drv, int index)
+=======
+static int imx6sl_enter_wait(struct cpuidle_device *dev,
+			    struct cpuidle_driver *drv, int index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	imx6_set_lpm(WAIT_UNCLOCKED);
 	/*

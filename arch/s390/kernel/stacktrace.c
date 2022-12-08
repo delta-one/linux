@@ -40,12 +40,21 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
 		if (!addr)
 			return -EINVAL;
 
+<<<<<<< HEAD
 #ifdef CONFIG_RETHOOK
 		/*
 		 * Mark stacktraces with krethook functions on them
 		 * as unreliable.
 		 */
 		if (state.ip == (unsigned long)arch_rethook_trampoline)
+=======
+#ifdef CONFIG_KPROBES
+		/*
+		 * Mark stacktraces with kretprobed functions on them
+		 * as unreliable.
+		 */
+		if (state.ip == (unsigned long)__kretprobe_trampoline)
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 #endif
 

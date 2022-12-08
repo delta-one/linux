@@ -67,5 +67,9 @@ static int __init blake2s_mod_init(void)
 }
 
 module_init(blake2s_mod_init);
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_DESCRIPTION("BLAKE2s hash function");
 MODULE_AUTHOR("Jason A. Donenfeld <Jason@zx2c4.com>");

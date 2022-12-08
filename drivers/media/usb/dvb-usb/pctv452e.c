@@ -26,8 +26,11 @@
 #include <media/dvb_ca_en50221.h>
 #include "ttpci-eeprom.h"
 
+<<<<<<< HEAD
 #include <linux/etherdevice.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int debug;
 module_param(debug, int, 0644);
 MODULE_PARM_DESC(debug, "Turn on/off debugging (default:off).");

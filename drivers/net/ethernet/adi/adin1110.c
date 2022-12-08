@@ -196,7 +196,11 @@ static int adin1110_read_reg(struct adin1110_priv *priv, u16 reg, u32 *val)
 {
 	u32 header_len = ADIN1110_RD_HEADER_LEN;
 	u32 read_len = ADIN1110_REG_LEN;
+<<<<<<< HEAD
 	struct spi_transfer t = {0};
+=======
+	struct spi_transfer t[2] = {0};
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	priv->data[0] = ADIN1110_CD | FIELD_GET(GENMASK(12, 8), reg);
@@ -209,15 +213,28 @@ static int adin1110_read_reg(struct adin1110_priv *priv, u16 reg, u32 *val)
 		header_len++;
 	}
 
+<<<<<<< HEAD
+=======
+	t[0].tx_buf = &priv->data[0];
+	t[0].len = header_len;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (priv->append_crc)
 		read_len++;
 
 	memset(&priv->data[header_len], 0, read_len);
+<<<<<<< HEAD
 	t.tx_buf = &priv->data[0];
 	t.rx_buf = &priv->data[0];
 	t.len = read_len + header_len;
 
 	ret = spi_sync_transfer(priv->spidev, &t, 1);
+=======
+	t[1].rx_buf = &priv->data[header_len];
+	t[1].len = read_len;
+
+	ret = spi_sync_transfer(priv->spidev, t, 2);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -294,7 +311,11 @@ static int adin1110_read_fifo(struct adin1110_port_priv *port_priv)
 {
 	struct adin1110_priv *priv = port_priv->priv;
 	u32 header_len = ADIN1110_RD_HEADER_LEN;
+<<<<<<< HEAD
 	struct spi_transfer t;
+=======
+	struct spi_transfer t[2] = {0};
+>>>>>>> b7ba80a49124 (Commit)
 	u32 frame_size_no_fcs;
 	struct sk_buff *rxb;
 	u32 frame_size;
@@ -325,7 +346,16 @@ static int adin1110_read_fifo(struct adin1110_port_priv *port_priv)
 		return ret;
 
 	frame_size_no_fcs = frame_size - ADIN1110_FRAME_HEADER_LEN - ADIN1110_FEC_LEN;
+<<<<<<< HEAD
 	memset(priv->data, 0, ADIN1110_RD_HEADER_LEN);
+=======
+
+	rxb = netdev_alloc_skb(port_priv->netdev, round_len);
+	if (!rxb)
+		return -ENOMEM;
+
+	memset(priv->data, 0, round_len + ADIN1110_RD_HEADER_LEN);
+>>>>>>> b7ba80a49124 (Commit)
 
 	priv->data[0] = ADIN1110_CD | FIELD_GET(GENMASK(12, 8), reg);
 	priv->data[1] = FIELD_GET(GENMASK(7, 0), reg);
@@ -335,6 +365,7 @@ static int adin1110_read_fifo(struct adin1110_port_priv *port_priv)
 		header_len++;
 	}
 
+<<<<<<< HEAD
 	rxb = netdev_alloc_skb(port_priv->netdev, round_len + header_len);
 	if (!rxb)
 		return -ENOMEM;
@@ -346,17 +377,36 @@ static int adin1110_read_fifo(struct adin1110_port_priv *port_priv)
 	t.len = header_len + round_len;
 
 	ret = spi_sync_transfer(priv->spidev, &t, 1);
+=======
+	skb_put(rxb, frame_size_no_fcs + ADIN1110_FRAME_HEADER_LEN);
+
+	t[0].tx_buf = &priv->data[0];
+	t[0].len = header_len;
+
+	t[1].rx_buf = &rxb->data[0];
+	t[1].len = round_len;
+
+	ret = spi_sync_transfer(priv->spidev, t, 2);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		kfree_skb(rxb);
 		return ret;
 	}
 
+<<<<<<< HEAD
 	skb_pull(rxb, header_len + ADIN1110_FRAME_HEADER_LEN);
+=======
+	skb_pull(rxb, ADIN1110_FRAME_HEADER_LEN);
+>>>>>>> b7ba80a49124 (Commit)
 	rxb->protocol = eth_type_trans(rxb, port_priv->netdev);
 
 	if ((port_priv->flags & IFF_ALLMULTI && rxb->pkt_type == PACKET_MULTICAST) ||
 	    (port_priv->flags & IFF_BROADCAST && rxb->pkt_type == PACKET_BROADCAST))
+<<<<<<< HEAD
 		rxb->offload_fwd_mark = port_priv->priv->forwarding;
+=======
+		rxb->offload_fwd_mark = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	netif_rx(rxb);
 
@@ -515,7 +565,11 @@ static int adin1110_register_mdiobus(struct adin1110_priv *priv,
 		return -ENOMEM;
 
 	snprintf(priv->mii_bus_name, MII_BUS_ID_SIZE, "%s-%u",
+<<<<<<< HEAD
 		 priv->cfg->name, spi_get_chipselect(priv->spidev, 0));
+=======
+		 priv->cfg->name, priv->spidev->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mii_bus->name = priv->mii_bus_name;
 	mii_bus->read = adin1110_mdio_read;
@@ -523,6 +577,10 @@ static int adin1110_register_mdiobus(struct adin1110_priv *priv,
 	mii_bus->priv = priv;
 	mii_bus->parent = dev;
 	mii_bus->phy_mask = ~((u32)GENMASK(2, 0));
+<<<<<<< HEAD
+=======
+	mii_bus->probe_capabilities = MDIOBUS_C22;
+>>>>>>> b7ba80a49124 (Commit)
 	snprintf(mii_bus->id, MII_BUS_ID_SIZE, "%s", dev_name(dev));
 
 	ret = devm_mdiobus_register(dev, mii_bus);
@@ -1081,6 +1139,7 @@ static void adin1110_adjust_link(struct net_device *dev)
  */
 static int adin1110_check_spi(struct adin1110_priv *priv)
 {
+<<<<<<< HEAD
 	struct gpio_desc *reset_gpio;
 	int ret;
 	u32 val;
@@ -1105,6 +1164,11 @@ static int adin1110_check_spi(struct adin1110_priv *priv)
 		spi_bus_unlock(priv->spidev->controller);
 	}
 
+=======
+	int ret;
+	u32 val;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = adin1110_read_reg(priv, ADIN1110_PHY_ID, &val);
 	if (ret < 0)
 		return ret;
@@ -1184,11 +1248,14 @@ static int adin1110_port_bridge_leave(struct adin1110_port_priv *port_priv,
 	return ret;
 }
 
+<<<<<<< HEAD
 static bool adin1110_port_dev_check(const struct net_device *dev)
 {
 	return dev->netdev_ops == &adin1110_netdev_ops;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int adin1110_netdevice_event(struct notifier_block *unused,
 				    unsigned long event, void *ptr)
 {
@@ -1197,9 +1264,12 @@ static int adin1110_netdevice_event(struct notifier_block *unused,
 	struct netdev_notifier_changeupper_info *info = ptr;
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (!adin1110_port_dev_check(dev))
 		return NOTIFY_DONE;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	switch (event) {
 	case NETDEV_CHANGEUPPER:
 		if (netif_is_bridge_master(info->upper_dev)) {
@@ -1225,6 +1295,14 @@ static void adin1110_disconnect_phy(void *data)
 	phy_disconnect(data);
 }
 
+<<<<<<< HEAD
+=======
+static bool adin1110_port_dev_check(const struct net_device *dev)
+{
+	return dev->netdev_ops == &adin1110_netdev_ops;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int adin1110_port_set_forwarding_state(struct adin1110_port_priv *port_priv)
 {
 	struct adin1110_priv *priv = port_priv->priv;
@@ -1527,15 +1605,25 @@ static struct notifier_block adin1110_switchdev_notifier = {
 	.notifier_call = adin1110_switchdev_event,
 };
 
+<<<<<<< HEAD
 static void adin1110_unregister_notifiers(void)
+=======
+static void adin1110_unregister_notifiers(void *data)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unregister_switchdev_blocking_notifier(&adin1110_switchdev_blocking_notifier);
 	unregister_switchdev_notifier(&adin1110_switchdev_notifier);
 	unregister_netdevice_notifier(&adin1110_netdevice_nb);
 }
 
+<<<<<<< HEAD
 static int adin1110_setup_notifiers(void)
 {
+=======
+static int adin1110_setup_notifiers(struct adin1110_priv *priv)
+{
+	struct device *dev = &priv->spidev->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	ret = register_netdevice_notifier(&adin1110_netdevice_nb);
@@ -1550,14 +1638,21 @@ static int adin1110_setup_notifiers(void)
 	if (ret < 0)
 		goto err_sdev;
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return devm_add_action_or_reset(dev, adin1110_unregister_notifiers, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 err_sdev:
 	unregister_switchdev_notifier(&adin1110_switchdev_notifier);
 
 err_netdev:
 	unregister_netdevice_notifier(&adin1110_netdevice_nb);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -1600,9 +1695,15 @@ static int adin1110_probe_netdevs(struct adin1110_priv *priv)
 		netdev->features |= NETIF_F_NETNS_LOCAL;
 
 		port_priv->phydev = get_phy_device(priv->mii_bus, i + 1, false);
+<<<<<<< HEAD
 		if (IS_ERR(port_priv->phydev)) {
 			netdev_err(netdev, "Could not find PHY with device address: %d.\n", i);
 			return PTR_ERR(port_priv->phydev);
+=======
+		if (!port_priv->phydev) {
+			netdev_err(netdev, "Could not find PHY with device address: %d.\n", i);
+			return -ENODEV;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		port_priv->phydev = phy_connect(netdev,
@@ -1628,6 +1729,13 @@ static int adin1110_probe_netdevs(struct adin1110_priv *priv)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
+=======
+	ret = adin1110_setup_notifiers(priv);
+	if (ret < 0)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < priv->cfg->ports_nr; i++) {
 		ret = devm_register_netdev(dev, priv->ports[i]->netdev);
 		if (ret < 0) {
@@ -1694,7 +1802,10 @@ static const struct spi_device_id adin1110_spi_id[] = {
 	{ .name = "adin2111", .driver_data = ADIN2111_MAC },
 	{ }
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(spi, adin1110_spi_id);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct spi_driver adin1110_driver = {
 	.driver = {
@@ -1704,6 +1815,7 @@ static struct spi_driver adin1110_driver = {
 	.probe = adin1110_probe,
 	.id_table = adin1110_spi_id,
 };
+<<<<<<< HEAD
 
 static int __init adin1110_driver_init(void)
 {
@@ -1729,6 +1841,9 @@ static void __exit adin1110_exit(void)
 }
 module_init(adin1110_driver_init);
 module_exit(adin1110_exit);
+=======
+module_spi_driver(adin1110_driver);
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_DESCRIPTION("ADIN1110 Network driver");
 MODULE_AUTHOR("Alexandru Tachici <alexandru.tachici@analog.com>");

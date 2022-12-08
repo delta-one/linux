@@ -83,11 +83,16 @@ static int exynos_dp_video_phy_probe(struct platform_device *pdev)
 	if (!state)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	state->regs = syscon_node_to_regmap(dev->parent->of_node);
 	if (IS_ERR(state->regs))
 		/* Backwards compatible way */
 		state->regs = syscon_regmap_lookup_by_phandle(dev->of_node,
 							      "samsung,pmu-syscon");
+=======
+	state->regs = syscon_regmap_lookup_by_phandle(dev->of_node,
+						      "samsung,pmu-syscon");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(state->regs)) {
 		dev_err(dev, "Failed to lookup PMU regmap\n");
 		return PTR_ERR(state->regs);

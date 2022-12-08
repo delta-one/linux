@@ -644,6 +644,7 @@ xfs_log_mount(
 	int		min_logfsbs;
 
 	if (!xfs_has_norecovery(mp)) {
+<<<<<<< HEAD
 		xfs_notice(mp, "Mounting V%d Filesystem %pU",
 			   XFS_SB_VERSION_NUM(&mp->m_sb),
 			   &mp->m_sb.sb_uuid);
@@ -652,6 +653,14 @@ xfs_log_mount(
 "Mounting V%d filesystem %pU in no-recovery mode. Filesystem will be inconsistent.",
 			   XFS_SB_VERSION_NUM(&mp->m_sb),
 			   &mp->m_sb.sb_uuid);
+=======
+		xfs_notice(mp, "Mounting V%d Filesystem",
+			   XFS_SB_VERSION_NUM(&mp->m_sb));
+	} else {
+		xfs_notice(mp,
+"Mounting V%d filesystem in no-recovery mode. Filesystem will be inconsistent.",
+			   XFS_SB_VERSION_NUM(&mp->m_sb));
+>>>>>>> b7ba80a49124 (Commit)
 		ASSERT(xfs_is_readonly(mp));
 	}
 
@@ -889,6 +898,7 @@ xlog_force_iclog(
 }
 
 /*
+<<<<<<< HEAD
  * Cycle all the iclogbuf locks to make sure all log IO completion
  * is done before we tear down these buffers.
  */
@@ -906,6 +916,8 @@ xlog_wait_iclog_completion(struct xlog *log)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Wait for the iclog and all prior iclogs to be written disk as required by the
  * log force state machine. Waiting on ic_force_wait ensures iclog completions
  * have been ordered and callbacks run before we are woken here, hence
@@ -1130,6 +1142,7 @@ xfs_log_unmount(
 {
 	xfs_log_clean(mp);
 
+<<<<<<< HEAD
 	/*
 	 * If shutdown has come from iclog IO context, the log
 	 * cleaning will have been skipped and so we need to wait
@@ -1138,6 +1151,8 @@ xfs_log_unmount(
 	 */
 	xlog_wait_iclog_completion(mp->m_log);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	xfs_buftarg_drain(mp->m_ddev_targp);
 
 	xfs_trans_ail_destroy(mp);
@@ -2141,6 +2156,20 @@ xlog_dealloc_log(
 	int		i;
 
 	/*
+<<<<<<< HEAD
+=======
+	 * Cycle all the iclogbuf locks to make sure all log IO completion
+	 * is done before we tear down these buffers.
+	 */
+	iclog = log->l_iclog;
+	for (i = 0; i < log->l_iclog_bufs; i++) {
+		down(&iclog->ic_sema);
+		up(&iclog->ic_sema);
+		iclog = iclog->ic_next;
+	}
+
+	/*
+>>>>>>> b7ba80a49124 (Commit)
 	 * Destroy the CIL after waiting for iclog IO completion because an
 	 * iclog EIO error will try to shut down the log, which accesses the
 	 * CIL to wake up the waiters.
@@ -3560,7 +3589,11 @@ xlog_ticket_alloc(
 	tic->t_curr_res		= unit_res;
 	tic->t_cnt		= cnt;
 	tic->t_ocnt		= cnt;
+<<<<<<< HEAD
 	tic->t_tid		= get_random_u32();
+=======
+	tic->t_tid		= prandom_u32();
+>>>>>>> b7ba80a49124 (Commit)
 	if (permanent)
 		tic->t_flags |= XLOG_TIC_PERM_RESERV;
 

@@ -755,11 +755,20 @@ static int inno_dsidphy_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void inno_dsidphy_remove(struct platform_device *pdev)
+=======
+static int inno_dsidphy_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct inno_dsidphy *inno = platform_get_drvdata(pdev);
 
 	pm_runtime_disable(inno->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id inno_dsidphy_of_match[] = {
@@ -786,7 +795,11 @@ static struct platform_driver inno_dsidphy_driver = {
 		.of_match_table	= of_match_ptr(inno_dsidphy_of_match),
 	},
 	.probe = inno_dsidphy_probe,
+<<<<<<< HEAD
 	.remove_new = inno_dsidphy_remove,
+=======
+	.remove = inno_dsidphy_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(inno_dsidphy_driver);
 

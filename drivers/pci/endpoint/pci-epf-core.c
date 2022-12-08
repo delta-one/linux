@@ -568,3 +568,7 @@ module_exit(pci_epf_exit);
 
 MODULE_DESCRIPTION("PCI EPF Library");
 MODULE_AUTHOR("Kishon Vijay Abraham I <kishon@ti.com>");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

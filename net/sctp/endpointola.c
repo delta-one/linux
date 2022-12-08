@@ -246,6 +246,7 @@ void sctp_endpoint_put(struct sctp_endpoint *ep)
 /* Is this the endpoint we are looking for?  */
 struct sctp_endpoint *sctp_endpoint_is_match(struct sctp_endpoint *ep,
 					       struct net *net,
+<<<<<<< HEAD
 					       const union sctp_addr *laddr,
 					       int dif, int sdif)
 {
@@ -255,6 +256,14 @@ struct sctp_endpoint *sctp_endpoint_is_match(struct sctp_endpoint *ep,
 	if (net_eq(ep->base.net, net) &&
 	    sctp_sk_bound_dev_eq(net, bound_dev_if, dif, sdif) &&
 	    (htons(ep->base.bind_addr.port) == laddr->v4.sin_port)) {
+=======
+					       const union sctp_addr *laddr)
+{
+	struct sctp_endpoint *retval = NULL;
+
+	if ((htons(ep->base.bind_addr.port) == laddr->v4.sin_port) &&
+	    net_eq(ep->base.net, net)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (sctp_bind_addr_match(&ep->base.bind_addr, laddr,
 					 sctp_sk(ep->base.sk)))
 			retval = ep;
@@ -301,7 +310,10 @@ out:
 bool sctp_endpoint_is_peeled_off(struct sctp_endpoint *ep,
 				 const union sctp_addr *paddr)
 {
+<<<<<<< HEAD
 	int bound_dev_if = READ_ONCE(ep->base.sk->sk_bound_dev_if);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct sctp_sockaddr_entry *addr;
 	struct net *net = ep->base.net;
 	struct sctp_bind_addr *bp;
@@ -311,8 +323,12 @@ bool sctp_endpoint_is_peeled_off(struct sctp_endpoint *ep,
 	 * so the address_list can not change.
 	 */
 	list_for_each_entry(addr, &bp->address_list, list) {
+<<<<<<< HEAD
 		if (sctp_has_association(net, &addr->a, paddr,
 					 bound_dev_if, bound_dev_if))
+=======
+		if (sctp_has_association(net, &addr->a, paddr))
+>>>>>>> b7ba80a49124 (Commit)
 			return true;
 	}
 

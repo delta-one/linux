@@ -230,7 +230,11 @@ static void spi_gpio_chipselect(struct spi_device *spi, int is_active)
 
 	/* Drive chip select line, if we have one */
 	if (spi_gpio->cs_gpios) {
+<<<<<<< HEAD
 		struct gpio_desc *cs = spi_gpio->cs_gpios[spi_get_chipselect(spi, 0)];
+=======
+		struct gpio_desc *cs = spi_gpio->cs_gpios[spi->chip_select];
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* SPI chip selects are normally active-low */
 		gpiod_set_value_cansleep(cs, (spi->mode & SPI_CS_HIGH) ? is_active : !is_active);
@@ -248,7 +252,11 @@ static int spi_gpio_setup(struct spi_device *spi)
 	 * initialized from the descriptor lookup.
 	 */
 	if (spi_gpio->cs_gpios) {
+<<<<<<< HEAD
 		cs = spi_gpio->cs_gpios[spi_get_chipselect(spi, 0)];
+=======
+		cs = spi_gpio->cs_gpios[spi->chip_select];
+>>>>>>> b7ba80a49124 (Commit)
 		if (!spi->controller_state && cs)
 			status = gpiod_direction_output(cs,
 						  !(spi->mode & SPI_CS_HIGH));
@@ -268,6 +276,7 @@ static int spi_gpio_set_direction(struct spi_device *spi, bool output)
 	if (output)
 		return gpiod_direction_output(spi_gpio->mosi, 1);
 
+<<<<<<< HEAD
 	/*
 	 * Only change MOSI to an input if using 3WIRE mode.
 	 * Otherwise, MOSI could be left floating if there is
@@ -281,6 +290,11 @@ static int spi_gpio_set_direction(struct spi_device *spi, bool output)
 		if (ret)
 			return ret;
 	}
+=======
+	ret = gpiod_direction_input(spi_gpio->mosi);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Send a turnaround high impedance cycle when switching
 	 * from output to input. Theoretically there should be

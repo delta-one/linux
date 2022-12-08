@@ -212,10 +212,24 @@ static int pcmcia_probe(struct sa1111_dev *dev)
 	writel_relaxed(PCCR_S0_FLT | PCCR_S1_FLT, base + PCCR);
 
 	ret = -ENODEV;
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_SA1100_BADGE4
+	if (machine_is_badge4())
+		ret = pcmcia_badge4_init(dev);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SA1100_JORNADA720
 	if (machine_is_jornada720())
 		ret = pcmcia_jornada720_init(dev);
 #endif
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_ARCH_LUBBOCK
+	if (machine_is_lubbock())
+		ret = pcmcia_lubbock_init(dev);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_ASSABET_NEPONSET
 	if (machine_is_assabet())
 		ret = pcmcia_neponset_init(dev);

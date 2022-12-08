@@ -27,7 +27,11 @@
 #include <linux/platform_device.h>
 #include <linux/pm.h>
 #include <linux/pm_runtime.h>
+<<<<<<< HEAD
 #include <linux/firmware/qcom/qcom_scm.h>
+=======
+#include <linux/qcom_scm.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/spinlock.h>
 
@@ -381,15 +385,52 @@ static int qcom_iommu_attach_dev(struct iommu_domain *domain, struct device *dev
 	 * Sanity check the domain. We don't support domains across
 	 * different IOMMUs.
 	 */
+<<<<<<< HEAD
 	if (qcom_domain->iommu != qcom_iommu)
 		return -EINVAL;
+=======
+	if (qcom_domain->iommu != qcom_iommu) {
+		dev_err(dev, "cannot attach to IOMMU %s while already "
+			"attached to domain on IOMMU %s\n",
+			dev_name(qcom_domain->iommu->dev),
+			dev_name(qcom_iommu->dev));
+		return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int qcom_iommu_map(struct iommu_domain *domain, unsigned long iova,
 			  phys_addr_t paddr, size_t pgsize, size_t pgcount,
 			  int prot, gfp_t gfp, size_t *mapped)
+=======
+static void qcom_iommu_detach_dev(struct iommu_domain *domain, struct device *dev)
+{
+	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
+	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+	struct qcom_iommu_dev *qcom_iommu = to_iommu(dev);
+	unsigned i;
+
+	if (WARN_ON(!qcom_domain->iommu))
+		return;
+
+	pm_runtime_get_sync(qcom_iommu->dev);
+	for (i = 0; i < fwspec->num_ids; i++) {
+		struct qcom_iommu_ctx *ctx = to_ctx(qcom_domain, fwspec->ids[i]);
+
+		/* Disable the context bank: */
+		iommu_writel(ctx, ARM_SMMU_CB_SCTLR, 0);
+
+		ctx->domain = NULL;
+	}
+	pm_runtime_put_sync(qcom_iommu->dev);
+}
+
+static int qcom_iommu_map(struct iommu_domain *domain, unsigned long iova,
+			  phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 	unsigned long flags;
@@ -400,14 +441,22 @@ static int qcom_iommu_map(struct iommu_domain *domain, unsigned long iova,
 		return -ENODEV;
 
 	spin_lock_irqsave(&qcom_domain->pgtbl_lock, flags);
+<<<<<<< HEAD
 	ret = ops->map_pages(ops, iova, paddr, pgsize, pgcount, prot, GFP_ATOMIC, mapped);
+=======
+	ret = ops->map(ops, iova, paddr, size, prot, GFP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irqrestore(&qcom_domain->pgtbl_lock, flags);
 	return ret;
 }
 
 static size_t qcom_iommu_unmap(struct iommu_domain *domain, unsigned long iova,
+<<<<<<< HEAD
 			       size_t pgsize, size_t pgcount,
 			       struct iommu_iotlb_gather *gather)
+=======
+			       size_t size, struct iommu_iotlb_gather *gather)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	size_t ret;
 	unsigned long flags;
@@ -424,7 +473,11 @@ static size_t qcom_iommu_unmap(struct iommu_domain *domain, unsigned long iova,
 	 */
 	pm_runtime_get_sync(qcom_domain->iommu->dev);
 	spin_lock_irqsave(&qcom_domain->pgtbl_lock, flags);
+<<<<<<< HEAD
 	ret = ops->unmap_pages(ops, iova, pgsize, pgcount, gather);
+=======
+	ret = ops->unmap(ops, iova, size, gather);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irqrestore(&qcom_domain->pgtbl_lock, flags);
 	pm_runtime_put_sync(qcom_domain->iommu->dev);
 
@@ -561,8 +614,14 @@ static const struct iommu_ops qcom_iommu_ops = {
 	.pgsize_bitmap	= SZ_4K | SZ_64K | SZ_1M | SZ_16M,
 	.default_domain_ops = &(const struct iommu_domain_ops) {
 		.attach_dev	= qcom_iommu_attach_dev,
+<<<<<<< HEAD
 		.map_pages	= qcom_iommu_map,
 		.unmap_pages	= qcom_iommu_unmap,
+=======
+		.detach_dev	= qcom_iommu_detach_dev,
+		.map		= qcom_iommu_map,
+		.unmap		= qcom_iommu_unmap,
+>>>>>>> b7ba80a49124 (Commit)
 		.flush_iotlb_all = qcom_iommu_flush_iotlb_all,
 		.iotlb_sync	= qcom_iommu_iotlb_sync,
 		.iova_to_phys	= qcom_iommu_iova_to_phys,

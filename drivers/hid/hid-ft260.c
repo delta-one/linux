@@ -30,6 +30,7 @@ MODULE_PARM_DESC(debug, "Toggle FT260 debugging messages");
 
 #define FT260_REPORT_MAX_LENGTH (64)
 #define FT260_I2C_DATA_REPORT_ID(len) (FT260_I2C_REPORT_MIN + (len - 1) / 4)
+<<<<<<< HEAD
 
 #define FT260_WAKEUP_NEEDED_AFTER_MS (4800) /* 5s minus 200ms margin */
 
@@ -45,6 +46,14 @@ MODULE_PARM_DESC(debug, "Toggle FT260 debugging messages");
  * read payload length to be 180 bytes.
 */
 #define FT260_RD_DATA_MAX (180)
+=======
+/*
+ * The input report format assigns 62 bytes for the data payload, but ft260
+ * returns 60 and 2 in two separate transactions. To minimize transfer time
+ * in reading chunks mode, set the maximum read payload length to 60 bytes.
+ */
+#define FT260_RD_DATA_MAX (60)
+>>>>>>> b7ba80a49124 (Commit)
 #define FT260_WR_DATA_MAX (60)
 
 /*
@@ -239,7 +248,10 @@ struct ft260_device {
 	struct completion wait;
 	struct mutex lock;
 	u8 write_buf[FT260_REPORT_MAX_LENGTH];
+<<<<<<< HEAD
 	unsigned long need_wakeup_at;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8 *read_buf;
 	u16 read_idx;
 	u16 read_len;
@@ -303,12 +315,17 @@ static int ft260_i2c_reset(struct hid_device *hdev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int ft260_xfer_status(struct ft260_device *dev, u8 bus_busy)
+=======
+static int ft260_xfer_status(struct ft260_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hid_device *hdev = dev->hdev;
 	struct ft260_get_i2c_status_report report;
 	int ret;
 
+<<<<<<< HEAD
 	if (time_is_before_jiffies(dev->need_wakeup_at)) {
 		ret = ft260_hid_feature_report_get(hdev, FT260_I2C_STATUS,
 						(u8 *)&report, sizeof(report));
@@ -323,6 +340,8 @@ static int ft260_xfer_status(struct ft260_device *dev, u8 bus_busy)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ft260_hid_feature_report_get(hdev, FT260_I2C_STATUS,
 					   (u8 *)&report, sizeof(report));
 	if (unlikely(ret < 0)) {
@@ -334,6 +353,7 @@ static int ft260_xfer_status(struct ft260_device *dev, u8 bus_busy)
 	ft260_dbg("bus_status %#02x, clock %u\n", report.bus_status,
 		  dev->clock);
 
+<<<<<<< HEAD
 	if (report.bus_status & (FT260_I2C_STATUS_CTRL_BUSY | bus_busy))
 		return -EAGAIN;
 
@@ -348,6 +368,32 @@ static int ft260_xfer_status(struct ft260_device *dev, u8 bus_busy)
 	}
 
 	return 0;
+=======
+	if (report.bus_status & FT260_I2C_STATUS_CTRL_BUSY)
+		return -EAGAIN;
+
+	if (report.bus_status & FT260_I2C_STATUS_BUS_BUSY)
+		return -EBUSY;
+
+	if (report.bus_status & FT260_I2C_STATUS_ERROR)
+		return -EIO;
+
+	ret = -EIO;
+
+	if (report.bus_status & FT260_I2C_STATUS_ADDR_NO_ACK)
+		ft260_dbg("unacknowledged address\n");
+
+	if (report.bus_status & FT260_I2C_STATUS_DATA_NO_ACK)
+		ft260_dbg("unacknowledged data\n");
+
+	if (report.bus_status & FT260_I2C_STATUS_ARBITR_LOST)
+		ft260_dbg("arbitration loss\n");
+
+	if (report.bus_status & FT260_I2C_STATUS_CTRL_IDLE)
+		ret = 0;
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ft260_hid_output_report(struct hid_device *hdev, u8 *data,
@@ -369,11 +415,16 @@ static int ft260_hid_output_report(struct hid_device *hdev, u8 *data,
 static int ft260_hid_output_report_check_status(struct ft260_device *dev,
 						u8 *data, int len)
 {
+<<<<<<< HEAD
 	u8 bus_busy;
 	int ret, usec, try = 100;
 	struct hid_device *hdev = dev->hdev;
 	struct ft260_i2c_write_request_report *rep =
 		(struct ft260_i2c_write_request_report *)data;
+=======
+	int ret, usec, try = 3;
+	struct hid_device *hdev = dev->hdev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = ft260_hid_output_report(hdev, data, len);
 	if (ret < 0) {
@@ -383,6 +434,7 @@ static int ft260_hid_output_report_check_status(struct ft260_device *dev,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	/* transfer time = 1 / clock(KHz) * 9 bits * bytes */
 	usec = len * 9000 / dev->clock;
 	if (usec > 2000) {
@@ -403,11 +455,23 @@ static int ft260_hid_output_report_check_status(struct ft260_device *dev,
 
 	do {
 		ret = ft260_xfer_status(dev, bus_busy);
+=======
+	/* transfer time = 1 / clock(KHz) * 10 bits * bytes */
+	usec = 10000 / dev->clock * len;
+	usleep_range(usec, usec + 100);
+	ft260_dbg("wait %d usec, len %d\n", usec, len);
+	do {
+		ret = ft260_xfer_status(dev);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret != -EAGAIN)
 			break;
 	} while (--try);
 
+<<<<<<< HEAD
 	if (ret == 0)
+=======
+	if (ret == 0 || ret == -EBUSY)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	ft260_i2c_reset(hdev);
@@ -415,13 +479,20 @@ static int ft260_hid_output_report_check_status(struct ft260_device *dev,
 }
 
 static int ft260_i2c_write(struct ft260_device *dev, u8 addr, u8 *data,
+<<<<<<< HEAD
 			   int len, u8 flag)
 {
 	int ret, wr_len, idx = 0;
+=======
+			   int data_len, u8 flag)
+{
+	int len, ret, idx = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct hid_device *hdev = dev->hdev;
 	struct ft260_i2c_write_request_report *rep =
 		(struct ft260_i2c_write_request_report *)dev->write_buf;
 
+<<<<<<< HEAD
 	if (len < 1)
 		return -EINVAL;
 
@@ -458,6 +529,36 @@ static int ft260_i2c_write(struct ft260_device *dev, u8 addr, u8 *data,
 		rep->flag = 0;
 
 	} while (len > 0);
+=======
+	do {
+		if (data_len <= FT260_WR_DATA_MAX)
+			len = data_len;
+		else
+			len = FT260_WR_DATA_MAX;
+
+		rep->report = FT260_I2C_DATA_REPORT_ID(len);
+		rep->address = addr;
+		rep->length = len;
+		rep->flag = flag;
+
+		memcpy(rep->data, &data[idx], len);
+
+		ft260_dbg("rep %#02x addr %#02x off %d len %d d[0] %#02x\n",
+			  rep->report, addr, idx, len, data[0]);
+
+		ret = ft260_hid_output_report_check_status(dev, (u8 *)rep,
+							   len + 4);
+		if (ret < 0) {
+			hid_err(hdev, "%s: failed to start transfer, ret %d\n",
+				__func__, ret);
+			return ret;
+		}
+
+		data_len -= len;
+		idx += len;
+
+	} while (data_len > 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -496,6 +597,7 @@ static int ft260_smbus_write(struct ft260_device *dev, u8 addr, u8 cmd,
 static int ft260_i2c_read(struct ft260_device *dev, u8 addr, u8 *data,
 			  u16 len, u8 flag)
 {
+<<<<<<< HEAD
 	u16 rd_len;
 	u16 rd_data_max = 60;
 	int timeout, ret = 0;
@@ -564,6 +666,51 @@ static int ft260_i2c_read(struct ft260_device *dev, u8 addr, u8 *data,
 ft260_i2c_read_exit:
 	dev->read_buf = NULL;
 	return ret;
+=======
+	struct ft260_i2c_read_request_report rep;
+	struct hid_device *hdev = dev->hdev;
+	int timeout;
+	int ret;
+
+	if (len > FT260_RD_DATA_MAX) {
+		hid_err(hdev, "%s: unsupported rd len: %d\n", __func__, len);
+		return -EINVAL;
+	}
+
+	dev->read_idx = 0;
+	dev->read_buf = data;
+	dev->read_len = len;
+
+	rep.report = FT260_I2C_READ_REQ;
+	rep.length = cpu_to_le16(len);
+	rep.address = addr;
+	rep.flag = flag;
+
+	ft260_dbg("rep %#02x addr %#02x len %d\n", rep.report, rep.address,
+		  rep.length);
+
+	reinit_completion(&dev->wait);
+
+	ret = ft260_hid_output_report(hdev, (u8 *)&rep, sizeof(rep));
+	if (ret < 0) {
+		hid_err(hdev, "%s: failed to start transaction, ret %d\n",
+			__func__, ret);
+		return ret;
+	}
+
+	timeout = msecs_to_jiffies(5000);
+	if (!wait_for_completion_timeout(&dev->wait, timeout)) {
+		ft260_i2c_reset(hdev);
+		return -ETIMEDOUT;
+	}
+
+	ret = ft260_xfer_status(dev);
+	if (ret == 0)
+		return 0;
+
+	ft260_i2c_reset(hdev);
+	return -EIO;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -574,6 +721,7 @@ ft260_i2c_read_exit:
  */
 static int ft260_i2c_write_read(struct ft260_device *dev, struct i2c_msg *msgs)
 {
+<<<<<<< HEAD
 	int ret;
 	int wr_len = msgs[0].len;
 	int rd_len = msgs[1].len;
@@ -605,6 +753,47 @@ static int ft260_i2c_write_read(struct ft260_device *dev, struct i2c_msg *msgs)
 			     FT260_FLAG_START_STOP_REPEATED);
 	if (ret < 0)
 		return ret;
+=======
+	int len, ret;
+	u16 left_len = msgs[1].len;
+	u8 *read_buf = msgs[1].buf;
+	u8 addr = msgs[0].addr;
+	u16 read_off = 0;
+	struct hid_device *hdev = dev->hdev;
+
+	if (msgs[0].len > 2) {
+		hid_err(hdev, "%s: unsupported wr len: %d\n", __func__,
+			msgs[0].len);
+		return -EOPNOTSUPP;
+	}
+
+	memcpy(&read_off, msgs[0].buf, msgs[0].len);
+
+	do {
+		if (left_len <= FT260_RD_DATA_MAX)
+			len = left_len;
+		else
+			len = FT260_RD_DATA_MAX;
+
+		ft260_dbg("read_off %#x left_len %d len %d\n", read_off,
+			  left_len, len);
+
+		ret = ft260_i2c_write(dev, addr, (u8 *)&read_off, msgs[0].len,
+				      FT260_FLAG_START);
+		if (ret < 0)
+			return ret;
+
+		ret = ft260_i2c_read(dev, addr, read_buf, len,
+				     FT260_FLAG_START_STOP);
+		if (ret < 0)
+			return ret;
+
+		left_len -= len;
+		read_buf += len;
+		read_off += len;
+
+	} while (left_len > 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -669,6 +858,17 @@ static int ft260_smbus_xfer(struct i2c_adapter *adapter, u16 addr, u16 flags,
 	}
 
 	switch (size) {
+<<<<<<< HEAD
+=======
+	case I2C_SMBUS_QUICK:
+		if (read_write == I2C_SMBUS_READ)
+			ret = ft260_i2c_read(dev, addr, &data->byte, 0,
+					     FT260_FLAG_START_STOP);
+		else
+			ret = ft260_smbus_write(dev, addr, cmd, NULL, 0,
+						FT260_FLAG_START_STOP);
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	case I2C_SMBUS_BYTE:
 		if (read_write == I2C_SMBUS_READ)
 			ret = ft260_i2c_read(dev, addr, &data->byte, 1,
@@ -751,7 +951,11 @@ smbus_exit:
 
 static u32 ft260_functionality(struct i2c_adapter *adap)
 {
+<<<<<<< HEAD
 	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_BYTE |
+=======
+	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_BYTE | I2C_FUNC_SMBUS_QUICK |
+>>>>>>> b7ba80a49124 (Commit)
 	       I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA |
 	       I2C_FUNC_SMBUS_BLOCK_DATA | I2C_FUNC_SMBUS_I2C_BLOCK;
 }
@@ -830,7 +1034,11 @@ static int ft260_byte_show(struct hid_device *hdev, int id, u8 *cfg, int len,
 }
 
 static int ft260_word_show(struct hid_device *hdev, int id, u8 *cfg, int len,
+<<<<<<< HEAD
 			   __le16 *field, u8 *buf)
+=======
+			   u16 *field, u8 *buf)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
@@ -859,9 +1067,15 @@ static int ft260_word_show(struct hid_device *hdev, int id, u8 *cfg, int len,
 
 #define FT260_I2CST_ATTR_SHOW(name)					       \
 		FT260_ATTR_SHOW(name, ft260_get_i2c_status_report,	       \
+<<<<<<< HEAD
 				FT260_I2C_STATUS, __le16, ft260_word_show)
 
 #define FT260_ATTR_STORE(name, reptype, id, req, type, ctype, func)	       \
+=======
+				FT260_I2C_STATUS, u16, ft260_word_show)
+
+#define FT260_ATTR_STORE(name, reptype, id, req, type, func)		       \
+>>>>>>> b7ba80a49124 (Commit)
 	static ssize_t name##_store(struct device *kdev,		       \
 				    struct device_attribute *attr,	       \
 				    const char *buf, size_t count)	       \
@@ -871,7 +1085,11 @@ static int ft260_word_show(struct hid_device *hdev, int id, u8 *cfg, int len,
 		type name;						       \
 		int ret;						       \
 									       \
+<<<<<<< HEAD
 		if (!func(buf, 10, (ctype *)&name)) {			       \
+=======
+		if (!func(buf, 10, &name)) {				       \
+>>>>>>> b7ba80a49124 (Commit)
 			rep.name = name;				       \
 			rep.report = id;				       \
 			rep.request = req;				       \
@@ -887,11 +1105,19 @@ static int ft260_word_show(struct hid_device *hdev, int id, u8 *cfg, int len,
 
 #define FT260_BYTE_ATTR_STORE(name, reptype, req)			       \
 		FT260_ATTR_STORE(name, reptype, FT260_SYSTEM_SETTINGS, req,    \
+<<<<<<< HEAD
 				 u8, u8, kstrtou8)
 
 #define FT260_WORD_ATTR_STORE(name, reptype, req)			       \
 		FT260_ATTR_STORE(name, reptype, FT260_SYSTEM_SETTINGS, req,    \
 				 __le16, u16, kstrtou16)
+=======
+				 u8, kstrtou8)
+
+#define FT260_WORD_ATTR_STORE(name, reptype, req)			       \
+		FT260_ATTR_STORE(name, reptype, FT260_SYSTEM_SETTINGS, req,    \
+				 u16, kstrtou16)
+>>>>>>> b7ba80a49124 (Commit)
 
 FT260_SSTAT_ATTR_SHOW(chip_mode);
 static DEVICE_ATTR_RO(chip_mode);
@@ -976,7 +1202,11 @@ static int ft260_probe(struct hid_device *hdev, const struct hid_device_id *id)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = hid_hw_start(hdev, 0);
+=======
+	ret = hid_hw_start(hdev, HID_CONNECT_HIDRAW);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		hid_err(hdev, "failed to start HID HW\n");
 		return ret;
@@ -1003,10 +1233,13 @@ static int ft260_probe(struct hid_device *hdev, const struct hid_device_id *id)
 	if (ret <= 0)
 		goto err_hid_close;
 
+<<<<<<< HEAD
 	hid_info(hdev, "USB HID v%x.%02x Device [%s] on %s\n",
 		hdev->version >> 8, hdev->version & 0xff, hdev->name,
 		hdev->phys);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hid_set_drvdata(hdev, dev);
 	dev->hdev = hdev;
 	dev->adap.owner = THIS_MODULE;
@@ -1015,12 +1248,21 @@ static int ft260_probe(struct hid_device *hdev, const struct hid_device_id *id)
 	dev->adap.quirks = &ft260_i2c_quirks;
 	dev->adap.dev.parent = &hdev->dev;
 	snprintf(dev->adap.name, sizeof(dev->adap.name),
+<<<<<<< HEAD
 		 "FT260 usb-i2c bridge");
+=======
+		 "FT260 usb-i2c bridge on hidraw%d",
+		 ((struct hidraw *)hdev->hidraw)->minor);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_init(&dev->lock);
 	init_completion(&dev->wait);
 
+<<<<<<< HEAD
 	ret = ft260_xfer_status(dev, FT260_I2C_STATUS_BUS_BUSY);
+=======
+	ret = ft260_xfer_status(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		ft260_i2c_reset(hdev);
 
@@ -1073,6 +1315,7 @@ static int ft260_raw_event(struct hid_device *hdev, struct hid_report *report,
 		ft260_dbg("i2c resp: rep %#02x len %d\n", xfer->report,
 			  xfer->length);
 
+<<<<<<< HEAD
 		if ((dev->read_buf == NULL) ||
 		    (xfer->length > dev->read_len - dev->read_idx)) {
 			hid_err(hdev, "unexpected report %#02x, length %d\n",
@@ -1080,6 +1323,8 @@ static int ft260_raw_event(struct hid_device *hdev, struct hid_report *report,
 			return -1;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		memcpy(&dev->read_buf[dev->read_idx], &xfer->data,
 		       xfer->length);
 		dev->read_idx += xfer->length;
@@ -1088,9 +1333,16 @@ static int ft260_raw_event(struct hid_device *hdev, struct hid_report *report,
 			complete(&dev->wait);
 
 	} else {
+<<<<<<< HEAD
 		hid_err(hdev, "unhandled report %#02x\n", xfer->report);
 	}
 	return 0;
+=======
+		hid_err(hdev, "unknown report: %#02x\n", xfer->report);
+		return 0;
+	}
+	return 1;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct hid_driver ft260_driver = {

@@ -286,7 +286,11 @@ static struct platform_driver lan966x_clk_driver = {
 		.of_match_table = lan966x_clk_dt_ids,
 	},
 };
+<<<<<<< HEAD
 module_platform_driver(lan966x_clk_driver);
+=======
+builtin_platform_driver(lan966x_clk_driver);
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_AUTHOR("Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>");
 MODULE_DESCRIPTION("LAN966X clock driver");

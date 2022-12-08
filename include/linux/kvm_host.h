@@ -50,8 +50,13 @@
 #endif
 
 /*
+<<<<<<< HEAD
  * The bit 16 ~ bit 31 of kvm_userspace_memory_region::flags are internally
  * used in kvm, other bits are visible for userspace which are defined in
+=======
+ * The bit 16 ~ bit 31 of kvm_memory_region::flags are internally used
+ * in kvm, other bits are visible for userspace which are defined in
+>>>>>>> b7ba80a49124 (Commit)
  * include/linux/kvm_h.
  */
 #define KVM_MEMSLOT_INVALID	(1UL << 16)
@@ -96,7 +101,10 @@
 #define KVM_PFN_ERR_FAULT	(KVM_PFN_ERR_MASK)
 #define KVM_PFN_ERR_HWPOISON	(KVM_PFN_ERR_MASK + 1)
 #define KVM_PFN_ERR_RO_FAULT	(KVM_PFN_ERR_MASK + 2)
+<<<<<<< HEAD
 #define KVM_PFN_ERR_SIGPENDING	(KVM_PFN_ERR_MASK + 3)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * error pfns indicate that the gfn is in slot but faild to
@@ -108,6 +116,7 @@ static inline bool is_error_pfn(kvm_pfn_t pfn)
 }
 
 /*
+<<<<<<< HEAD
  * KVM_PFN_ERR_SIGPENDING indicates that fetching the PFN was interrupted
  * by a pending signal.  Note, the signal may or may not be fatal.
  */
@@ -117,6 +126,8 @@ static inline bool is_sigpending_pfn(kvm_pfn_t pfn)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * error_noslot pfns indicate that the gfn can not be
  * translated to pfn - it is not in slot or failed to
  * translate it to pfn.
@@ -161,6 +172,7 @@ static inline bool is_error_page(struct page *page)
 #define KVM_REQUEST_NO_ACTION      BIT(10)
 /*
  * Architecture-independent vcpu->requests bit members
+<<<<<<< HEAD
  * Bits 3-7 are reserved for more arch-independent bits.
  */
 #define KVM_REQ_TLB_FLUSH		(0 | KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
@@ -168,6 +180,15 @@ static inline bool is_error_page(struct page *page)
 #define KVM_REQ_UNBLOCK			2
 #define KVM_REQ_DIRTY_RING_SOFT_FULL	3
 #define KVM_REQUEST_ARCH_BASE		8
+=======
+ * Bits 4-7 are reserved for more arch-independent bits.
+ */
+#define KVM_REQ_TLB_FLUSH         (0 | KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+#define KVM_REQ_VM_DEAD           (1 | KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+#define KVM_REQ_UNBLOCK           2
+#define KVM_REQ_UNHALT            3
+#define KVM_REQUEST_ARCH_BASE     8
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * KVM_REQ_OUTSIDE_GUEST_MODE exists is purely as way to force the vCPU to
@@ -324,7 +345,11 @@ struct kvm_vcpu {
 #endif
 	int cpu;
 	int vcpu_id; /* id given by userspace at creation */
+<<<<<<< HEAD
 	int vcpu_idx; /* index into kvm->vcpu_array */
+=======
+	int vcpu_idx; /* index in kvm->vcpus array */
+>>>>>>> b7ba80a49124 (Commit)
 	int ____srcu_idx; /* Don't use this directly.  You've been warned. */
 #ifdef CONFIG_PROVE_RCU
 	int srcu_depth;
@@ -666,8 +691,11 @@ struct kvm_irq_routing_table {
 };
 #endif
 
+<<<<<<< HEAD
 bool kvm_arch_irqchip_in_kernel(struct kvm *kvm);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef KVM_INTERNAL_MEM_SLOTS
 #define KVM_INTERNAL_MEM_SLOTS 0
 #endif
@@ -723,11 +751,14 @@ struct kvm {
 	/* The current active memslot set for each address space */
 	struct kvm_memslots __rcu *memslots[KVM_ADDRESS_SPACE_NUM];
 	struct xarray vcpu_array;
+<<<<<<< HEAD
 	/*
 	 * Protected by slots_lock, but can be read outside if an
 	 * incorrect answer is acceptable.
 	 */
 	atomic_t nr_memslots_dirty_logging;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Used to wait for completion of MMU notifiers.  */
 	spinlock_t mn_invalidate_lock;
@@ -794,10 +825,15 @@ struct kvm {
 	struct srcu_struct srcu;
 	struct srcu_struct irq_srcu;
 	pid_t userspace_pid;
+<<<<<<< HEAD
 	bool override_halt_poll_ns;
 	unsigned int max_halt_poll_ns;
 	u32 dirty_ring_size;
 	bool dirty_ring_with_bitmap;
+=======
+	unsigned int max_halt_poll_ns;
+	u32 dirty_ring_size;
+>>>>>>> b7ba80a49124 (Commit)
 	bool vm_bugged;
 	bool vm_dead;
 
@@ -956,7 +992,12 @@ static inline void kvm_irqfd_exit(void)
 {
 }
 #endif
+<<<<<<< HEAD
 int kvm_init(unsigned vcpu_size, unsigned vcpu_align, struct module *module);
+=======
+int kvm_init(void *opaque, unsigned vcpu_size, unsigned vcpu_align,
+		  struct module *module);
+>>>>>>> b7ba80a49124 (Commit)
 void kvm_exit(void);
 
 void kvm_get_kvm(struct kvm *kvm);
@@ -1159,8 +1200,13 @@ kvm_pfn_t gfn_to_pfn_prot(struct kvm *kvm, gfn_t gfn, bool write_fault,
 kvm_pfn_t gfn_to_pfn_memslot(const struct kvm_memory_slot *slot, gfn_t gfn);
 kvm_pfn_t gfn_to_pfn_memslot_atomic(const struct kvm_memory_slot *slot, gfn_t gfn);
 kvm_pfn_t __gfn_to_pfn_memslot(const struct kvm_memory_slot *slot, gfn_t gfn,
+<<<<<<< HEAD
 			       bool atomic, bool interruptible, bool *async,
 			       bool write_fault, bool *writable, hva_t *hva);
+=======
+			       bool atomic, bool *async, bool write_fault,
+			       bool *writable, hva_t *hva);
+>>>>>>> b7ba80a49124 (Commit)
 
 void kvm_release_pfn_clean(kvm_pfn_t pfn);
 void kvm_release_pfn_dirty(kvm_pfn_t pfn);
@@ -1259,10 +1305,18 @@ int kvm_vcpu_write_guest(struct kvm_vcpu *vcpu, gpa_t gpa, const void *data,
 void kvm_vcpu_mark_page_dirty(struct kvm_vcpu *vcpu, gfn_t gfn);
 
 /**
+<<<<<<< HEAD
  * kvm_gpc_init - initialize gfn_to_pfn_cache.
  *
  * @gpc:	   struct gfn_to_pfn_cache object.
  * @kvm:	   pointer to kvm instance.
+=======
+ * kvm_gfn_to_pfn_cache_init - prepare a cached kernel mapping and HPA for a
+ *                             given guest physical address.
+ *
+ * @kvm:	   pointer to kvm instance.
+ * @gpc:	   struct gfn_to_pfn_cache object.
+>>>>>>> b7ba80a49124 (Commit)
  * @vcpu:	   vCPU to be used for marking pages dirty and to be woken on
  *		   invalidation.
  * @usage:	   indicates if the resulting host physical PFN is used while
@@ -1271,6 +1325,7 @@ void kvm_vcpu_mark_page_dirty(struct kvm_vcpu *vcpu, gfn_t gfn);
  *		   changes!---will also force @vcpu to exit the guest and
  *		   refresh the cache); and/or if the PFN used directly
  *		   by KVM (and thus needs a kernel virtual mapping).
+<<<<<<< HEAD
  *
  * This sets up a gfn_to_pfn_cache by initializing locks and assigning the
  * immutable attributes.  Note, the cache must be zero-allocated (or zeroed by
@@ -1284,11 +1339,14 @@ void kvm_gpc_init(struct gfn_to_pfn_cache *gpc, struct kvm *kvm,
  *                    physical address.
  *
  * @gpc:	   struct gfn_to_pfn_cache object.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @gpa:	   guest physical address to map.
  * @len:	   sanity check; the range being access must fit a single page.
  *
  * @return:	   0 for success.
  *		   -EINVAL for a mapping which would cross a page boundary.
+<<<<<<< HEAD
  *		   -EFAULT for an untranslatable guest physical address.
  *
  * This primes a gfn_to_pfn_cache and links it into the @gpc->kvm's list for
@@ -1301,6 +1359,25 @@ int kvm_gpc_activate(struct gfn_to_pfn_cache *gpc, gpa_t gpa, unsigned long len)
  * kvm_gpc_check - check validity of a gfn_to_pfn_cache.
  *
  * @gpc:	   struct gfn_to_pfn_cache object.
+=======
+ *                 -EFAULT for an untranslatable guest physical address.
+ *
+ * This primes a gfn_to_pfn_cache and links it into the @kvm's list for
+ * invalidations to be processed.  Callers are required to use
+ * kvm_gfn_to_pfn_cache_check() to ensure that the cache is valid before
+ * accessing the target page.
+ */
+int kvm_gfn_to_pfn_cache_init(struct kvm *kvm, struct gfn_to_pfn_cache *gpc,
+			      struct kvm_vcpu *vcpu, enum pfn_cache_usage usage,
+			      gpa_t gpa, unsigned long len);
+
+/**
+ * kvm_gfn_to_pfn_cache_check - check validity of a gfn_to_pfn_cache.
+ *
+ * @kvm:	   pointer to kvm instance.
+ * @gpc:	   struct gfn_to_pfn_cache object.
+ * @gpa:	   current guest physical address to map.
+>>>>>>> b7ba80a49124 (Commit)
  * @len:	   sanity check; the range being access must fit a single page.
  *
  * @return:	   %true if the cache is still valid and the address matches.
@@ -1313,24 +1390,44 @@ int kvm_gpc_activate(struct gfn_to_pfn_cache *gpc, gpa_t gpa, unsigned long len)
  * Callers in IN_GUEST_MODE may do so without locking, although they should
  * still hold a read lock on kvm->scru for the memslot checks.
  */
+<<<<<<< HEAD
 bool kvm_gpc_check(struct gfn_to_pfn_cache *gpc, unsigned long len);
 
 /**
  * kvm_gpc_refresh - update a previously initialized cache.
  *
  * @gpc:	   struct gfn_to_pfn_cache object.
+=======
+bool kvm_gfn_to_pfn_cache_check(struct kvm *kvm, struct gfn_to_pfn_cache *gpc,
+				gpa_t gpa, unsigned long len);
+
+/**
+ * kvm_gfn_to_pfn_cache_refresh - update a previously initialized cache.
+ *
+ * @kvm:	   pointer to kvm instance.
+ * @gpc:	   struct gfn_to_pfn_cache object.
+ * @gpa:	   updated guest physical address to map.
+>>>>>>> b7ba80a49124 (Commit)
  * @len:	   sanity check; the range being access must fit a single page.
  *
  * @return:	   0 for success.
  *		   -EINVAL for a mapping which would cross a page boundary.
+<<<<<<< HEAD
  *		   -EFAULT for an untranslatable guest physical address.
  *
  * This will attempt to refresh a gfn_to_pfn_cache. Note that a successful
  * return from this function does not mean the page can be immediately
+=======
+ *                 -EFAULT for an untranslatable guest physical address.
+ *
+ * This will attempt to refresh a gfn_to_pfn_cache. Note that a successful
+ * returm from this function does not mean the page can be immediately
+>>>>>>> b7ba80a49124 (Commit)
  * accessed because it may have raced with an invalidation. Callers must
  * still lock and check the cache status, as this function does not return
  * with the lock still held to permit access.
  */
+<<<<<<< HEAD
 int kvm_gpc_refresh(struct gfn_to_pfn_cache *gpc, unsigned long len);
 
 /**
@@ -1342,6 +1439,33 @@ int kvm_gpc_refresh(struct gfn_to_pfn_cache *gpc, unsigned long len);
  * invocation.
  */
 void kvm_gpc_deactivate(struct gfn_to_pfn_cache *gpc);
+=======
+int kvm_gfn_to_pfn_cache_refresh(struct kvm *kvm, struct gfn_to_pfn_cache *gpc,
+				 gpa_t gpa, unsigned long len);
+
+/**
+ * kvm_gfn_to_pfn_cache_unmap - temporarily unmap a gfn_to_pfn_cache.
+ *
+ * @kvm:	   pointer to kvm instance.
+ * @gpc:	   struct gfn_to_pfn_cache object.
+ *
+ * This unmaps the referenced page. The cache is left in the invalid state
+ * but at least the mapping from GPA to userspace HVA will remain cached
+ * and can be reused on a subsequent refresh.
+ */
+void kvm_gfn_to_pfn_cache_unmap(struct kvm *kvm, struct gfn_to_pfn_cache *gpc);
+
+/**
+ * kvm_gfn_to_pfn_cache_destroy - destroy and unlink a gfn_to_pfn_cache.
+ *
+ * @kvm:	   pointer to kvm instance.
+ * @gpc:	   struct gfn_to_pfn_cache object.
+ *
+ * This removes a cache from the @kvm's list to be processed on MMU notifier
+ * invocation.
+ */
+void kvm_gfn_to_pfn_cache_destroy(struct kvm *kvm, struct gfn_to_pfn_cache *gpc);
+>>>>>>> b7ba80a49124 (Commit)
 
 void kvm_sigset_activate(struct kvm_vcpu *vcpu);
 void kvm_sigset_deactivate(struct kvm_vcpu *vcpu);
@@ -1353,7 +1477,11 @@ void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu);
 bool kvm_vcpu_wake_up(struct kvm_vcpu *vcpu);
 void kvm_vcpu_kick(struct kvm_vcpu *vcpu);
 int kvm_vcpu_yield_to(struct kvm_vcpu *target);
+<<<<<<< HEAD
 void kvm_vcpu_on_spin(struct kvm_vcpu *vcpu, bool yield_to_kernel_mode);
+=======
+void kvm_vcpu_on_spin(struct kvm_vcpu *vcpu, bool usermode_vcpu_not_eligible);
+>>>>>>> b7ba80a49124 (Commit)
 
 void kvm_flush_remote_tlbs(struct kvm *kvm);
 
@@ -1397,9 +1525,14 @@ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_level,
 			bool line_status);
 int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
 			    struct kvm_enable_cap *cap);
+<<<<<<< HEAD
 int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg);
 long kvm_arch_vm_compat_ioctl(struct file *filp, unsigned int ioctl,
 			      unsigned long arg);
+=======
+long kvm_arch_vm_ioctl(struct file *filp,
+		       unsigned int ioctl, unsigned long arg);
+>>>>>>> b7ba80a49124 (Commit)
 
 int kvm_arch_vcpu_ioctl_get_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu);
 int kvm_arch_vcpu_ioctl_set_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu);
@@ -1421,6 +1554,12 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
 					struct kvm_guest_debug *dbg);
 int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu);
 
+<<<<<<< HEAD
+=======
+int kvm_arch_init(void *opaque);
+void kvm_arch_exit(void);
+
+>>>>>>> b7ba80a49124 (Commit)
 void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu);
 
 void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
@@ -1440,10 +1579,18 @@ void kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu, struct dentry *debugfs_
 static inline void kvm_create_vcpu_debugfs(struct kvm_vcpu *vcpu) {}
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_KVM_GENERIC_HARDWARE_ENABLING
 int kvm_arch_hardware_enable(void);
 void kvm_arch_hardware_disable(void);
 #endif
+=======
+int kvm_arch_hardware_enable(void);
+void kvm_arch_hardware_disable(void);
+int kvm_arch_hardware_setup(void *opaque);
+void kvm_arch_hardware_unsetup(void);
+int kvm_arch_check_processor_compat(void *opaque);
+>>>>>>> b7ba80a49124 (Commit)
 int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu);
 bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu);
 int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu);
@@ -1460,7 +1607,11 @@ int kvm_arch_create_vm_debugfs(struct kvm *kvm);
  */
 static inline struct kvm *kvm_arch_alloc_vm(void)
 {
+<<<<<<< HEAD
 	return kzalloc(sizeof(struct kvm), GFP_KERNEL_ACCOUNT);
+=======
+	return kzalloc(sizeof(struct kvm), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif
 
@@ -2075,9 +2226,13 @@ static inline bool kvm_check_request(int req, struct kvm_vcpu *vcpu)
 	}
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_KVM_GENERIC_HARDWARE_ENABLING
 extern bool kvm_rebooting;
 #endif
+=======
+extern bool kvm_rebooting;
+>>>>>>> b7ba80a49124 (Commit)
 
 extern unsigned int halt_poll_ns;
 extern unsigned int halt_poll_ns_grow;
@@ -2255,6 +2410,7 @@ static inline void kvm_handle_signal_exit(struct kvm_vcpu *vcpu)
 #endif /* CONFIG_KVM_XFER_TO_GUEST_WORK */
 
 /*
+<<<<<<< HEAD
  * If more than one page is being (un)accounted, @virt must be the address of
  * the first page of a block of pages what were allocated together (i.e
  * accounted together).
@@ -2268,6 +2424,8 @@ static inline void kvm_account_pgtable_pages(void *virt, int nr)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * This defines how many reserved entries we want to keep before we
  * kick the vcpu to the userspace to avoid dirty ring full.  This
  * value can be tuned to higher if e.g. PML is enabled on the host.

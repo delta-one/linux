@@ -178,6 +178,7 @@ static ssize_t min_ratio_store(struct device *dev,
 
 	return ret;
 }
+<<<<<<< HEAD
 BDI_SHOW(min_ratio, bdi->min_ratio / BDI_RATIO_SCALE)
 
 static ssize_t min_ratio_fine_store(struct device *dev,
@@ -198,6 +199,9 @@ static ssize_t min_ratio_fine_store(struct device *dev,
 	return ret;
 }
 BDI_SHOW(min_ratio_fine, bdi->min_ratio)
+=======
+BDI_SHOW(min_ratio, bdi->min_ratio)
+>>>>>>> b7ba80a49124 (Commit)
 
 static ssize_t max_ratio_store(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t count)
@@ -216,6 +220,7 @@ static ssize_t max_ratio_store(struct device *dev,
 
 	return ret;
 }
+<<<<<<< HEAD
 BDI_SHOW(max_ratio, bdi->max_ratio / BDI_RATIO_SCALE)
 
 static ssize_t max_ratio_fine_store(struct device *dev,
@@ -292,6 +297,9 @@ static ssize_t max_bytes_store(struct device *dev,
 	return ret;
 }
 DEVICE_ATTR_RW(max_bytes);
+=======
+BDI_SHOW(max_ratio, bdi->max_ratio)
+>>>>>>> b7ba80a49124 (Commit)
 
 static ssize_t stable_pages_required_show(struct device *dev,
 					  struct device_attribute *attr,
@@ -303,6 +311,7 @@ static ssize_t stable_pages_required_show(struct device *dev,
 }
 static DEVICE_ATTR_RO(stable_pages_required);
 
+<<<<<<< HEAD
 static ssize_t strict_limit_store(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t count)
 {
@@ -341,13 +350,24 @@ static struct attribute *bdi_dev_attrs[] = {
 	&dev_attr_max_bytes.attr,
 	&dev_attr_stable_pages_required.attr,
 	&dev_attr_strict_limit.attr,
+=======
+static struct attribute *bdi_dev_attrs[] = {
+	&dev_attr_read_ahead_kb.attr,
+	&dev_attr_min_ratio.attr,
+	&dev_attr_max_ratio.attr,
+	&dev_attr_stable_pages_required.attr,
+>>>>>>> b7ba80a49124 (Commit)
 	NULL,
 };
 ATTRIBUTE_GROUPS(bdi_dev);
 
 static __init int bdi_class_init(void)
 {
+<<<<<<< HEAD
 	bdi_class = class_create("bdi");
+=======
+	bdi_class = class_create(THIS_MODULE, "bdi");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(bdi_class))
 		return PTR_ERR(bdi_class);
 
@@ -907,7 +927,11 @@ int bdi_init(struct backing_dev_info *bdi)
 
 	kref_init(&bdi->refcnt);
 	bdi->min_ratio = 0;
+<<<<<<< HEAD
 	bdi->max_ratio = 100 * BDI_RATIO_SCALE;
+=======
+	bdi->max_ratio = 100;
+>>>>>>> b7ba80a49124 (Commit)
 	bdi->max_prop_frac = FPROP_FRAC_BASE;
 	INIT_LIST_HEAD(&bdi->bdi_list);
 	INIT_LIST_HEAD(&bdi->wb_list);

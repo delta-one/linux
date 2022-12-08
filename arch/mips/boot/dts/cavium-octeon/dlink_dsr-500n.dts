@@ -21,6 +21,7 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-usb {
 			gpios = <&gpio 9 GPIO_ACTIVE_LOW>;
 		};
@@ -30,6 +31,17 @@
 		};
 
 		led-wireless {
+=======
+		usb {
+			gpios = <&gpio 9 GPIO_ACTIVE_LOW>;
+		};
+
+		wps {
+			gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
+		};
+
+		wireless {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "2.4g";
 			gpios = <&gpio 18 GPIO_ACTIVE_LOW>;
 		};

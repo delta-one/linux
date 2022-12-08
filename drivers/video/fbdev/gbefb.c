@@ -1060,24 +1060,46 @@ static const struct fb_ops gbefb_ops = {
 
 static ssize_t gbefb_show_memsize(struct device *dev, struct device_attribute *attr, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", gbe_mem_size);
+=======
+	return snprintf(buf, PAGE_SIZE, "%u\n", gbe_mem_size);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR(size, S_IRUGO, gbefb_show_memsize, NULL);
 
 static ssize_t gbefb_show_rev(struct device *device, struct device_attribute *attr, char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", gbe_revision);
+=======
+	return snprintf(buf, PAGE_SIZE, "%d\n", gbe_revision);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static DEVICE_ATTR(revision, S_IRUGO, gbefb_show_rev, NULL);
 
+<<<<<<< HEAD
 static struct attribute *gbefb_attrs[] = {
 	&dev_attr_size.attr,
 	&dev_attr_revision.attr,
 	NULL,
 };
 ATTRIBUTE_GROUPS(gbefb);
+=======
+static void gbefb_remove_sysfs(struct device *dev)
+{
+	device_remove_file(dev, &dev_attr_size);
+	device_remove_file(dev, &dev_attr_revision);
+}
+
+static void gbefb_create_sysfs(struct device *dev)
+{
+	device_create_file(dev, &dev_attr_size);
+	device_create_file(dev, &dev_attr_revision);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Initialization
@@ -1216,6 +1238,10 @@ static int gbefb_probe(struct platform_device *p_dev)
 	}
 
 	platform_set_drvdata(p_dev, info);
+<<<<<<< HEAD
+=======
+	gbefb_create_sysfs(&p_dev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	fb_info(info, "%s rev %d @ 0x%08x using %dkB memory\n",
 		info->fix.id, gbe_revision, (unsigned)GBE_BASE,
@@ -1233,7 +1259,11 @@ out_release_framebuffer:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void gbefb_remove(struct platform_device* p_dev)
+=======
+static int gbefb_remove(struct platform_device* p_dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = platform_get_drvdata(p_dev);
 	struct gbefb_par *par = info->par;
@@ -1242,15 +1272,28 @@ static void gbefb_remove(struct platform_device* p_dev)
 	gbe_turn_off();
 	arch_phys_wc_del(par->wc_cookie);
 	release_mem_region(GBE_BASE, sizeof(struct sgi_gbe));
+<<<<<<< HEAD
 	framebuffer_release(info);
+=======
+	gbefb_remove_sysfs(&p_dev->dev);
+	framebuffer_release(info);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver gbefb_driver = {
 	.probe = gbefb_probe,
+<<<<<<< HEAD
 	.remove_new = gbefb_remove,
 	.driver	= {
 		.name = "gbefb",
 		.dev_groups	= gbefb_groups,
+=======
+	.remove = gbefb_remove,
+	.driver	= {
+		.name = "gbefb",
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 
@@ -1283,3 +1326,7 @@ static void __exit gbefb_exit(void)
 module_init(gbefb_init);
 module_exit(gbefb_exit);
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)

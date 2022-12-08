@@ -447,10 +447,15 @@ static void xgbe_i2c_stop(struct xgbe_prv_data *pdata)
 	xgbe_i2c_disable(pdata);
 	xgbe_i2c_clear_all_interrupts(pdata);
 
+<<<<<<< HEAD
 	if (pdata->dev_irq != pdata->i2c_irq) {
 		devm_free_irq(pdata->dev, pdata->i2c_irq, pdata);
 		tasklet_kill(&pdata->tasklet_i2c);
 	}
+=======
+	if (pdata->dev_irq != pdata->i2c_irq)
+		devm_free_irq(pdata->dev, pdata->i2c_irq, pdata);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int xgbe_i2c_start(struct xgbe_prv_data *pdata)

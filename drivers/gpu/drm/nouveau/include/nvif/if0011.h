@@ -10,6 +10,7 @@ union nvif_conn_args {
 	} v0;
 };
 
+<<<<<<< HEAD
 union nvif_conn_event_args {
 	struct nvif_conn_event_v0 {
 		__u8 version;
@@ -21,6 +22,8 @@ union nvif_conn_event_args {
 	} v0;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define NVIF_CONN_V0_HPD_STATUS 0x00000000
 
 union nvif_conn_hpd_status_args {

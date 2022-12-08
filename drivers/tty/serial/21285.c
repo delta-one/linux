@@ -154,6 +154,7 @@ static irqreturn_t serial21285_rx_chars(int irq, void *dev_id)
 static irqreturn_t serial21285_tx_chars(int irq, void *dev_id)
 {
 	struct uart_port *port = dev_id;
+<<<<<<< HEAD
 	u8 ch;
 
 	uart_port_tx_limited(port, ch, 256,
@@ -161,6 +162,37 @@ static irqreturn_t serial21285_tx_chars(int irq, void *dev_id)
 		*CSR_UARTDR = ch,
 		({}));
 
+=======
+	struct circ_buf *xmit = &port->state->xmit;
+	int count = 256;
+
+	if (port->x_char) {
+		*CSR_UARTDR = port->x_char;
+		port->icount.tx++;
+		port->x_char = 0;
+		goto out;
+	}
+	if (uart_circ_empty(xmit) || uart_tx_stopped(port)) {
+		serial21285_stop_tx(port);
+		goto out;
+	}
+
+	do {
+		*CSR_UARTDR = xmit->buf[xmit->tail];
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+		port->icount.tx++;
+		if (uart_circ_empty(xmit))
+			break;
+	} while (--count > 0 && !(*CSR_UARTFLG & 0x20));
+
+	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+		uart_write_wakeup(port);
+
+	if (uart_circ_empty(xmit))
+		serial21285_stop_tx(port);
+
+ out:
+>>>>>>> b7ba80a49124 (Commit)
 	return IRQ_HANDLED;
 }
 

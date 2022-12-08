@@ -21,7 +21,11 @@
 #include <linux/signal.h>
 #include <linux/regset.h>
 #include <linux/elf.h>
+<<<<<<< HEAD
 #include <linux/seccomp.h>
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/uaccess.h>
 #include <asm/page.h>
 #include <asm/processor.h>
@@ -278,10 +282,13 @@ asmlinkage int syscall_trace_enter(void)
 
 	if (test_thread_flag(TIF_SYSCALL_TRACE))
 		ret = ptrace_report_syscall_entry(task_pt_regs(current));
+<<<<<<< HEAD
 
 	if (secure_computing() == -1)
 		return -1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

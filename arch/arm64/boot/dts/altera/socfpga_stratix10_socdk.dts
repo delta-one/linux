@@ -22,17 +22,29 @@
 
 	leds {
 		compatible = "gpio-leds";
+<<<<<<< HEAD
 		led-hps0 {
+=======
+		hps0 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "hps_led0";
 			gpios = <&portb 20 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-hps1 {
+=======
+		hps1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "hps_led1";
 			gpios = <&portb 19 GPIO_ACTIVE_HIGH>;
 		};
 
+<<<<<<< HEAD
 		led-hps2 {
+=======
+		hps2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "hps_led2";
 			gpios = <&portb 21 GPIO_ACTIVE_HIGH>;
 		};
@@ -65,6 +77,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &pinctrl0 {
 	i2c1_pmx_func: i2c1-pmx-func {
 		pinctrl-single,pins = <
@@ -81,6 +94,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &gpio1 {
 	status = "okay";
 };
@@ -121,7 +136,10 @@
 	cap-mmc-highspeed;
 	broken-cd;
 	bus-width = <4>;
+<<<<<<< HEAD
 	clk-phase-sd-hs = <0>, <135>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &osc1 {
@@ -147,6 +165,7 @@
 	i2c-sda-falling-time-ns = <890>;  /* hcnt */
 	i2c-sdl-falling-time-ns = <890>;  /* lcnt */
 
+<<<<<<< HEAD
 	pinctrl-names = "default", "gpio";
 	pinctrl-0 = <&i2c1_pmx_func>;
 	pinctrl-1 = <&i2c1_pmx_func_gpio>;
@@ -154,6 +173,8 @@
 	scl-gpios = <&portb 6 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 	sda-gpios = <&portb 7 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	adc@14 {
 		compatible = "lltc,ltc2497";
 		reg = <0x14>;

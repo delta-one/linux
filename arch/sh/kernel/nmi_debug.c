@@ -49,7 +49,11 @@ static int __init nmi_debug_setup(char *str)
 	register_die_notifier(&nmi_debug_nb);
 
 	if (*str != '=')
+<<<<<<< HEAD
 		return 1;
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (p = str + 1; *p; p = sep + 1) {
 		sep = strchr(p, ',');
@@ -70,6 +74,10 @@ static int __init nmi_debug_setup(char *str)
 			break;
 	}
 
+<<<<<<< HEAD
 	return 1;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 __setup("nmi_debug", nmi_debug_setup);

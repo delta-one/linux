@@ -573,7 +573,11 @@ static bool cobalt_should_drop(struct cobalt_vars *vars,
 
 	/* Simple BLUE implementation.  Lack of ECN is deliberate. */
 	if (vars->p_drop)
+<<<<<<< HEAD
 		drop |= (get_random_u32() < vars->p_drop);
+=======
+		drop |= (prandom_u32() < vars->p_drop);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Overload the drop_next field as an activity timeout */
 	if (!vars->count)
@@ -1209,7 +1213,11 @@ static struct sk_buff *cake_ack_filter(struct cake_sched_data *q,
 			    iph_check->daddr != iph->daddr)
 				continue;
 
+<<<<<<< HEAD
 			seglen = iph_totlen(skb, iph_check) -
+=======
+			seglen = ntohs(iph_check->tot_len) -
+>>>>>>> b7ba80a49124 (Commit)
 				       (4 * iph_check->ihl);
 		} else if (iph_check->version == 6) {
 			ipv6h = (struct ipv6hdr *)iph;
@@ -1360,7 +1368,11 @@ static u32 cake_overhead(struct cake_sched_data *q, const struct sk_buff *skb)
 		return cake_calc_overhead(q, len, off);
 
 	/* borrowed from qdisc_pkt_len_init() */
+<<<<<<< HEAD
 	hdr_len = skb_transport_offset(skb);
+=======
+	hdr_len = skb_transport_header(skb) - skb_mac_header(skb);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* + transport layer */
 	if (likely(shinfo->gso_type & (SKB_GSO_TCPV4 |
@@ -1368,14 +1380,22 @@ static u32 cake_overhead(struct cake_sched_data *q, const struct sk_buff *skb)
 		const struct tcphdr *th;
 		struct tcphdr _tcphdr;
 
+<<<<<<< HEAD
 		th = skb_header_pointer(skb, hdr_len,
+=======
+		th = skb_header_pointer(skb, skb_transport_offset(skb),
+>>>>>>> b7ba80a49124 (Commit)
 					sizeof(_tcphdr), &_tcphdr);
 		if (likely(th))
 			hdr_len += __tcp_hdrlen(th);
 	} else {
 		struct udphdr _udphdr;
 
+<<<<<<< HEAD
 		if (skb_header_pointer(skb, hdr_len,
+=======
+		if (skb_header_pointer(skb, skb_transport_offset(skb),
+>>>>>>> b7ba80a49124 (Commit)
 				       sizeof(_udphdr), &_udphdr))
 			hdr_len += sizeof(struct udphdr);
 	}
@@ -2092,11 +2112,19 @@ retry:
 
 		WARN_ON(host_load > CAKE_QUEUES);
 
+<<<<<<< HEAD
 		/* The get_random_u16() is a way to apply dithering to avoid
 		 * accumulating roundoff errors
 		 */
 		flow->deficit += (b->flow_quantum * quantum_div[host_load] +
 				  get_random_u16()) >> 16;
+=======
+		/* The shifted prandom_u32() is a way to apply dithering to
+		 * avoid accumulating roundoff errors
+		 */
+		flow->deficit += (b->flow_quantum * quantum_div[host_load] +
+				  (prandom_u32() >> 16)) >> 16;
+>>>>>>> b7ba80a49124 (Commit)
 		list_move_tail(&flow->flowchain, &b->old_flows);
 
 		goto retry;
@@ -2224,12 +2252,17 @@ retry:
 
 static void cake_reset(struct Qdisc *sch)
 {
+<<<<<<< HEAD
 	struct cake_sched_data *q = qdisc_priv(sch);
 	u32 c;
 
 	if (!q->tins)
 		return;
 
+=======
+	u32 c;
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (c = 0; c < CAKE_MAX_TINS; c++)
 		cake_clear_tin(sch, c);
 }
@@ -3065,6 +3098,7 @@ static void cake_walk(struct Qdisc *sch, struct qdisc_walker *arg)
 		struct cake_tin_data *b = &q->tins[q->tin_order[i]];
 
 		for (j = 0; j < CAKE_QUEUES; j++) {
+<<<<<<< HEAD
 			if (list_empty(&b->flows[j].flowchain)) {
 				arg->count++;
 				continue;
@@ -3072,6 +3106,18 @@ static void cake_walk(struct Qdisc *sch, struct qdisc_walker *arg)
 			if (!tc_qdisc_stats_dump(sch, i * CAKE_QUEUES + j + 1,
 						 arg))
 				break;
+=======
+			if (list_empty(&b->flows[j].flowchain) ||
+			    arg->count < arg->skip) {
+				arg->count++;
+				continue;
+			}
+			if (arg->fn(sch, i * CAKE_QUEUES + j + 1, arg) < 0) {
+				arg->stop = 1;
+				break;
+			}
+			arg->count++;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }

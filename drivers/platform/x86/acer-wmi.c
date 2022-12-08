@@ -566,6 +566,7 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
 	},
 	{
 		.callback = set_force_caps,
+<<<<<<< HEAD
 		.ident = "Acer Aspire Switch V 10 SW5-017",
 		.matches = {
 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Acer"),
@@ -575,6 +576,8 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
 	},
 	{
 		.callback = set_force_caps,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.ident = "Acer One 10 (S1003)",
 		.matches = {
 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Acer"),
@@ -2258,7 +2261,11 @@ error_mailled:
 	return err;
 }
 
+<<<<<<< HEAD
 static void acer_platform_remove(struct platform_device *device)
+=======
+static int acer_platform_remove(struct platform_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (has_cap(ACER_CAP_MAILLED))
 		acer_led_exit();
@@ -2266,6 +2273,10 @@ static void acer_platform_remove(struct platform_device *device)
 		acer_backlight_exit();
 
 	acer_rfkill_exit();
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -2333,7 +2344,11 @@ static struct platform_driver acer_platform_driver = {
 		.pm = &acer_pm,
 	},
 	.probe = acer_platform_probe,
+<<<<<<< HEAD
 	.remove_new = acer_platform_remove,
+=======
+	.remove = acer_platform_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.shutdown = acer_platform_shutdown,
 };
 
@@ -2471,7 +2486,11 @@ static int __init acer_wmi_init(void)
 		goto error_platform_register;
 	}
 
+<<<<<<< HEAD
 	acer_platform_device = platform_device_alloc("acer-wmi", PLATFORM_DEVID_NONE);
+=======
+	acer_platform_device = platform_device_alloc("acer-wmi", -1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!acer_platform_device) {
 		err = -ENOMEM;
 		goto error_device_alloc;

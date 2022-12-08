@@ -5,20 +5,34 @@
 #include "test_uprobe_autoattach.skel.h"
 
 /* uprobe attach point */
+<<<<<<< HEAD
 static noinline int autoattach_trigger_func(int arg1, int arg2, int arg3,
 					    int arg4, int arg5, int arg6,
 					    int arg7, int arg8)
 {
 	asm volatile ("");
 	return arg1 + arg2 + arg3 + arg4 + arg5 + arg6 + arg7 + arg8 + 1;
+=======
+static noinline int autoattach_trigger_func(int arg)
+{
+	asm volatile ("");
+	return arg + 1;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void test_uprobe_autoattach(void)
 {
+<<<<<<< HEAD
 	const char *devnull_str = "/dev/null";
 	struct test_uprobe_autoattach *skel;
 	int trigger_ret;
 	FILE *devnull;
+=======
+	struct test_uprobe_autoattach *skel;
+	int trigger_val = 100, trigger_ret;
+	size_t malloc_sz = 1;
+	char *mem;
+>>>>>>> b7ba80a49124 (Commit)
 
 	skel = test_uprobe_autoattach__open_and_load();
 	if (!ASSERT_OK_PTR(skel, "skel_open"))
@@ -30,11 +44,16 @@ void test_uprobe_autoattach(void)
 	skel->bss->test_pid = getpid();
 
 	/* trigger & validate uprobe & uretprobe */
+<<<<<<< HEAD
 	trigger_ret = autoattach_trigger_func(1, 2, 3, 4, 5, 6, 7, 8);
+=======
+	trigger_ret = autoattach_trigger_func(trigger_val);
+>>>>>>> b7ba80a49124 (Commit)
 
 	skel->bss->test_pid = getpid();
 
 	/* trigger & validate shared library u[ret]probes attached by name */
+<<<<<<< HEAD
 	devnull = fopen(devnull_str, "r");
 
 	ASSERT_EQ(skel->bss->uprobe_byname_parm1, 1, "check_uprobe_byname_parm1");
@@ -69,6 +88,20 @@ void test_uprobe_autoattach(void)
 #endif
 
 	fclose(devnull);
+=======
+	mem = malloc(malloc_sz);
+
+	ASSERT_EQ(skel->bss->uprobe_byname_parm1, trigger_val, "check_uprobe_byname_parm1");
+	ASSERT_EQ(skel->bss->uprobe_byname_ran, 1, "check_uprobe_byname_ran");
+	ASSERT_EQ(skel->bss->uretprobe_byname_rc, trigger_ret, "check_uretprobe_byname_rc");
+	ASSERT_EQ(skel->bss->uretprobe_byname_ran, 2, "check_uretprobe_byname_ran");
+	ASSERT_EQ(skel->bss->uprobe_byname2_parm1, malloc_sz, "check_uprobe_byname2_parm1");
+	ASSERT_EQ(skel->bss->uprobe_byname2_ran, 3, "check_uprobe_byname2_ran");
+	ASSERT_EQ(skel->bss->uretprobe_byname2_rc, mem, "check_uretprobe_byname2_rc");
+	ASSERT_EQ(skel->bss->uretprobe_byname2_ran, 4, "check_uretprobe_byname2_ran");
+
+	free(mem);
+>>>>>>> b7ba80a49124 (Commit)
 cleanup:
 	test_uprobe_autoattach__destroy(skel);
 }

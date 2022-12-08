@@ -255,8 +255,11 @@ static int tcf_em_validate(struct tcf_proto *tp,
 			 * the value carried.
 			 */
 			if (em_hdr->flags & TCF_EM_SIMPLE) {
+<<<<<<< HEAD
 				if (em->ops->datalen > 0)
 					goto errout;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				if (data_len < sizeof(u32))
 					goto errout;
 				em->data = *(u32 *) data;

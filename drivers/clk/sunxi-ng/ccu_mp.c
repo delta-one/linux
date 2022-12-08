@@ -10,9 +10,15 @@
 #include "ccu_gate.h"
 #include "ccu_mp.h"
 
+<<<<<<< HEAD
 static unsigned long ccu_mp_find_best(unsigned long parent, unsigned long rate,
 				      unsigned int max_m, unsigned int max_p,
 				      unsigned int *m, unsigned int *p)
+=======
+static void ccu_mp_find_best(unsigned long parent, unsigned long rate,
+			     unsigned int max_m, unsigned int max_p,
+			     unsigned int *m, unsigned int *p)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long best_rate = 0;
 	unsigned int best_m = 0, best_p = 0;
@@ -35,8 +41,11 @@ static unsigned long ccu_mp_find_best(unsigned long parent, unsigned long rate,
 
 	*m = best_m;
 	*p = best_p;
+<<<<<<< HEAD
 
 	return best_rate;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static unsigned long ccu_mp_find_best_with_parent_adj(struct clk_hw *hw,
@@ -111,7 +120,12 @@ static unsigned long ccu_mp_round_rate(struct ccu_mux_internal *mux,
 	max_p = cmp->p.max ?: 1 << ((1 << cmp->p.width) - 1);
 
 	if (!clk_hw_can_set_rate_parent(&cmp->common.hw)) {
+<<<<<<< HEAD
 		rate = ccu_mp_find_best(*parent_rate, rate, max_m, max_p, &m, &p);
+=======
+		ccu_mp_find_best(*parent_rate, rate, max_m, max_p, &m, &p);
+		rate = *parent_rate / p / m;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		rate = ccu_mp_find_best_with_parent_adj(hw, parent_rate, rate,
 							max_m, max_p);

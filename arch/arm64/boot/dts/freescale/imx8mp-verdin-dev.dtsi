@@ -3,6 +3,11 @@
  * Copyright 2022 Toradex
  */
 
+<<<<<<< HEAD
+=======
+#include "imx8mp-verdin-dahlia.dtsi"
+
+>>>>>>> b7ba80a49124 (Commit)
 / {
 	/* TODO: Audio Codec */
 
@@ -19,6 +24,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &backlight {
 	power-supply = <&reg_3p3v>;
 };
@@ -42,11 +48,14 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &fec {
 	phy-supply = <&reg_eth2phy>;
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &flexcan1 {
 	status = "okay";
 };
@@ -60,11 +69,14 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &gpio_expander_21 {
 	status = "okay";
 	vcc-supply = <&reg_1p8v>;
 };
 
+<<<<<<< HEAD
 /* Current measurement into module VCC */
 &hwmon {
 	status = "okay";
@@ -119,6 +131,8 @@
 	vin-supply = <&reg_3p3v>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* TODO: Verdin I2C_1 with Audio Codec */
 
 /* Verdin UART_1, connector X50 through RS485 transceiver */
@@ -126,6 +140,7 @@
 	linux,rs485-enabled-at-boot-time;
 	rs485-rts-active-low;
 	rs485-rx-during-tx;
+<<<<<<< HEAD
 	status = "okay";
 };
 
@@ -156,10 +171,15 @@
 
 &usb3_phy1 {
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Limit frequency on dev board due to long traces and bad signal integrity */
 &usdhc2 {
 	max-frequency = <100000000>;
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

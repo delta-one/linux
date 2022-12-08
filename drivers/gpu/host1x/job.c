@@ -88,6 +88,7 @@ static void job_free(struct kref *ref)
 	if (job->release)
 		job->release(job);
 
+<<<<<<< HEAD
 	if (job->fence) {
 		/*
 		 * remove_callback is atomic w.r.t. fence signaling, so
@@ -97,6 +98,11 @@ static void job_free(struct kref *ref)
 		dma_fence_remove_callback(job->fence, &job->fence_cb);
 		dma_fence_put(job->fence);
 	}
+=======
+	if (job->waiter)
+		host1x_intr_put_ref(job->syncpt->host, job->syncpt->id,
+				    job->waiter, false);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (job->syncpt)
 		host1x_syncpt_put(job->syncpt);

@@ -77,7 +77,11 @@
 		i2c55 = &imux55;
 	};
 
+<<<<<<< HEAD
 	spi_gpio: spi {
+=======
+	spi_gpio: spi-gpio {
+>>>>>>> b7ba80a49124 (Commit)
 		num-chipselects = <2>;
 		cs-gpios = <&gpio0 ASPEED_GPIO(X, 0) GPIO_ACTIVE_LOW>,
 			   <&gpio0 ASPEED_GPIO(X, 1) GPIO_ACTIVE_HIGH>;

@@ -109,7 +109,11 @@ amd_validate_add_page(unsigned long base, unsigned long size, unsigned int type)
 	return 0;
 }
 
+<<<<<<< HEAD
 const struct mtrr_ops amd_mtrr_ops = {
+=======
+static const struct mtrr_ops amd_mtrr_ops = {
+>>>>>>> b7ba80a49124 (Commit)
 	.vendor            = X86_VENDOR_AMD,
 	.set               = amd_set_mtrr,
 	.get               = amd_get_mtrr,
@@ -117,3 +121,12 @@ const struct mtrr_ops amd_mtrr_ops = {
 	.validate_add_page = amd_validate_add_page,
 	.have_wrcomb       = positive_have_wrcomb,
 };
+<<<<<<< HEAD
+=======
+
+int __init amd_init_mtrr(void)
+{
+	set_mtrr_ops(&amd_mtrr_ops);
+	return 0;
+}
+>>>>>>> b7ba80a49124 (Commit)

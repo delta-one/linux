@@ -741,7 +741,11 @@ static int str_to_bitmap(char *s, cpumask_t *b, int nr_cpus)
 			break;
 		}
 
+<<<<<<< HEAD
 		__set_bit(c.cpu, cpumask_bits(b));
+=======
+		set_bit(c.cpu, cpumask_bits(b));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	perf_cpu_map__put(m);

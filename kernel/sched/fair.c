@@ -178,11 +178,14 @@ int __weak arch_asym_cpu_priority(int cpu)
 static unsigned int sysctl_sched_cfs_bandwidth_slice		= 5000UL;
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_NUMA_BALANCING
 /* Restrict the NUMA promotion throughput (MB/s) for each target node. */
 static unsigned int sysctl_numa_balancing_promote_rate_limit = 65536;
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SYSCTL
 static struct ctl_table sched_fair_sysctls[] = {
 	{
@@ -202,6 +205,7 @@ static struct ctl_table sched_fair_sysctls[] = {
 		.extra1         = SYSCTL_ONE,
 	},
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_NUMA_BALANCING
 	{
 		.procname	= "numa_balancing_promote_rate_limit_MBps",
@@ -212,6 +216,8 @@ static struct ctl_table sched_fair_sysctls[] = {
 		.extra1		= SYSCTL_ZERO,
 	},
 #endif /* CONFIG_NUMA_BALANCING */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 
@@ -468,7 +474,11 @@ is_same_group(struct sched_entity *se, struct sched_entity *pse)
 	return NULL;
 }
 
+<<<<<<< HEAD
 static inline struct sched_entity *parent_entity(const struct sched_entity *se)
+=======
+static inline struct sched_entity *parent_entity(struct sched_entity *se)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return se->parent;
 }
@@ -595,8 +605,13 @@ static inline u64 min_vruntime(u64 min_vruntime, u64 vruntime)
 	return min_vruntime;
 }
 
+<<<<<<< HEAD
 static inline bool entity_before(const struct sched_entity *a,
 				 const struct sched_entity *b)
+=======
+static inline bool entity_before(struct sched_entity *a,
+				struct sched_entity *b)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return (s64)(a->vruntime - b->vruntime) < 0;
 }
@@ -1109,6 +1124,12 @@ unsigned int sysctl_numa_balancing_scan_delay = 1000;
 /* The page with hint page fault latency < threshold in ms is considered hot */
 unsigned int sysctl_numa_balancing_hot_threshold = MSEC_PER_SEC;
 
+<<<<<<< HEAD
+=======
+/* Restrict the NUMA promotion throughput (MB/s) for each target node. */
+unsigned int sysctl_numa_balancing_promote_rate_limit = 65536;
+
+>>>>>>> b7ba80a49124 (Commit)
 struct numa_group {
 	refcount_t refcount;
 
@@ -1804,7 +1825,11 @@ static void update_numa_stats(struct task_numa_env *env,
 		ns->nr_running += rq->cfs.h_nr_running;
 		ns->compute_capacity += capacity_of(cpu);
 
+<<<<<<< HEAD
 		if (find_idle && idle_core < 0 && !rq->nr_running && idle_cpu(cpu)) {
+=======
+		if (find_idle && !rq->nr_running && idle_cpu(cpu)) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (READ_ONCE(rq->numa_migrate_on) ||
 			    !cpumask_test_cpu(cpu, env->p->cpus_ptr))
 				continue;
@@ -1836,7 +1861,11 @@ static void task_numa_assign(struct task_numa_env *env,
 		int start = env->dst_cpu;
 
 		/* Find alternative idle CPU. */
+<<<<<<< HEAD
 		for_each_cpu_wrap(cpu, cpumask_of_node(env->dst_nid), start + 1) {
+=======
+		for_each_cpu_wrap(cpu, cpumask_of_node(env->dst_nid), start) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (cpu == env->best_cpu || !idle_cpu(cpu) ||
 			    !cpumask_test_cpu(cpu, env->p->cpus_ptr)) {
 				continue;
@@ -2928,6 +2957,7 @@ static void reset_ptenuma_scan(struct task_struct *p)
 	p->mm->numa_scan_offset = 0;
 }
 
+<<<<<<< HEAD
 static bool vma_is_accessed(struct vm_area_struct *vma)
 {
 	unsigned long pids;
@@ -2946,6 +2976,8 @@ static bool vma_is_accessed(struct vm_area_struct *vma)
 
 #define VMA_PID_RESET_PERIOD (4 * sysctl_numa_balancing_scan_delay)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The expensive part of numa migration is done from task_work context.
  * Triggered from task_tick_numa().
@@ -2956,11 +2988,18 @@ static void task_numa_work(struct callback_head *work)
 	struct task_struct *p = current;
 	struct mm_struct *mm = p->mm;
 	u64 runtime = p->se.sum_exec_runtime;
+<<<<<<< HEAD
+=======
+	MA_STATE(mas, &mm->mm_mt, 0, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	struct vm_area_struct *vma;
 	unsigned long start, end;
 	unsigned long nr_pte_updates = 0;
 	long pages, virtpages;
+<<<<<<< HEAD
 	struct vma_iterator vmi;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	SCHED_WARN_ON(p != container_of(work, struct task_struct, numa_work));
 
@@ -2994,7 +3033,11 @@ static void task_numa_work(struct callback_head *work)
 	}
 
 	next_scan = now + msecs_to_jiffies(p->numa_scan_period);
+<<<<<<< HEAD
 	if (!try_cmpxchg(&mm->numa_next_scan, &migrate, next_scan))
+=======
+	if (cmpxchg(&mm->numa_next_scan, migrate, next_scan) != migrate)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	/*
@@ -3013,6 +3056,7 @@ static void task_numa_work(struct callback_head *work)
 
 	if (!mmap_read_trylock(mm))
 		return;
+<<<<<<< HEAD
 	vma_iter_init(&vmi, mm, start);
 	vma = vma_next(&vmi);
 	if (!vma) {
@@ -3023,6 +3067,18 @@ static void task_numa_work(struct callback_head *work)
 	}
 
 	do {
+=======
+	mas_set(&mas, start);
+	vma = mas_find(&mas, ULONG_MAX);
+	if (!vma) {
+		reset_ptenuma_scan(p);
+		start = 0;
+		mas_set(&mas, start);
+		vma = mas_find(&mas, ULONG_MAX);
+	}
+
+	for (; vma; vma = mas_find(&mas, ULONG_MAX)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!vma_migratable(vma) || !vma_policy_mof(vma) ||
 			is_vm_hugetlb_page(vma) || (vma->vm_flags & VM_MIXEDMAP)) {
 			continue;
@@ -3045,6 +3101,7 @@ static void task_numa_work(struct callback_head *work)
 		if (!vma_is_accessible(vma))
 			continue;
 
+<<<<<<< HEAD
 		/* Initialise new per-VMA NUMAB state. */
 		if (!vma->numab_state) {
 			vma->numab_state = kzalloc(sizeof(struct vma_numab_state),
@@ -3084,6 +3141,8 @@ static void task_numa_work(struct callback_head *work)
 			vma->numab_state->access_pids[1] = 0;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		do {
 			start = max(start, vma->vm_start);
 			end = ALIGN(start + (pages << PAGE_SHIFT), HPAGE_SIZE);
@@ -3108,7 +3167,11 @@ static void task_numa_work(struct callback_head *work)
 
 			cond_resched();
 		} while (end != vma->vm_end);
+<<<<<<< HEAD
 	} for_each_vma(vmi, vma);
+=======
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	/*
@@ -4349,6 +4412,7 @@ static inline unsigned long task_util_est(struct task_struct *p)
 }
 
 #ifdef CONFIG_UCLAMP_TASK
+<<<<<<< HEAD
 static inline unsigned long uclamp_task_util(struct task_struct *p,
 					     unsigned long uclamp_min,
 					     unsigned long uclamp_max)
@@ -4359,6 +4423,16 @@ static inline unsigned long uclamp_task_util(struct task_struct *p,
 static inline unsigned long uclamp_task_util(struct task_struct *p,
 					     unsigned long uclamp_min,
 					     unsigned long uclamp_max)
+=======
+static inline unsigned long uclamp_task_util(struct task_struct *p)
+{
+	return clamp(task_util_est(p),
+		     uclamp_eff_value(p, UCLAMP_MIN),
+		     uclamp_eff_value(p, UCLAMP_MAX));
+}
+#else
+static inline unsigned long uclamp_task_util(struct task_struct *p)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return task_util_est(p);
 }
@@ -4497,6 +4571,7 @@ done:
 	trace_sched_util_est_se_tp(&p->se);
 }
 
+<<<<<<< HEAD
 static inline int util_fits_cpu(unsigned long util,
 				unsigned long uclamp_min,
 				unsigned long uclamp_max,
@@ -4626,6 +4701,12 @@ static inline int task_fits_cpu(struct task_struct *p, int cpu)
 	 * include the utilization but also the performance hints.
 	 */
 	return (util_fits_cpu(util, uclamp_min, uclamp_max, cpu) > 0);
+=======
+static inline int task_fits_capacity(struct task_struct *p,
+				     unsigned long capacity)
+{
+	return fits_capacity(uclamp_task_util(p), capacity);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
@@ -4638,7 +4719,11 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
 		return;
 	}
 
+<<<<<<< HEAD
 	if (task_fits_cpu(p, cpu_of(rq))) {
+=======
+	if (task_fits_capacity(p, capacity_of(cpu_of(rq)))) {
+>>>>>>> b7ba80a49124 (Commit)
 		rq->misfit_task_load = 0;
 		return;
 	}
@@ -4705,6 +4790,7 @@ static void check_spread(struct cfs_rq *cfs_rq, struct sched_entity *se)
 #endif
 }
 
+<<<<<<< HEAD
 static inline bool entity_is_long_sleeper(struct sched_entity *se)
 {
 	struct cfs_rq *cfs_rq;
@@ -4728,6 +4814,8 @@ static inline bool entity_is_long_sleeper(struct sched_entity *se)
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void
 place_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int initial)
 {
@@ -4761,6 +4849,7 @@ place_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int initial)
 		vruntime -= thresh;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Pull vruntime of the entity being placed to the base level of
 	 * cfs_rq, to prevent boosting it if placed backwards.
@@ -4784,6 +4873,10 @@ place_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int initial)
 		se->vruntime = vruntime;
 	else
 		se->vruntime = max_vruntime(se->vruntime, vruntime);
+=======
+	/* ensure we never gain time by being placed backwards. */
+	se->vruntime = max_vruntime(se->vruntime, vruntime);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void check_enqueue_throttle(struct cfs_rq *cfs_rq);
@@ -4860,9 +4953,12 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
 
 	if (flags & ENQUEUE_WAKEUP)
 		place_entity(cfs_rq, se, 0);
+<<<<<<< HEAD
 	/* Entity has migrated, no longer consider this task hot */
 	if (flags & ENQUEUE_MIGRATED)
 		se->exec_start = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	check_schedstat_required();
 	update_stats_enqueue_fair(cfs_rq, se, flags);
@@ -4996,6 +5092,7 @@ check_preempt_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr)
 	struct sched_entity *se;
 	s64 delta;
 
+<<<<<<< HEAD
 	/*
 	 * When many tasks blow up the sched_period; it is possible that
 	 * sched_slice() reports unusually large results (when many tasks are
@@ -5003,6 +5100,9 @@ check_preempt_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr)
 	 */
 	ideal_runtime = min_t(u64, sched_slice(cfs_rq, curr), sysctl_sched_latency);
 
+=======
+	ideal_runtime = sched_slice(cfs_rq, curr);
+>>>>>>> b7ba80a49124 (Commit)
 	delta_exec = curr->sum_exec_runtime - curr->prev_sum_exec_runtime;
 	if (delta_exec > ideal_runtime) {
 		resched_curr(rq_of(cfs_rq));
@@ -5567,6 +5667,7 @@ unthrottle_throttle:
 		resched_curr(rq);
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 static void __cfsb_csd_unthrottle(void *arg)
 {
@@ -5644,21 +5745,33 @@ static bool distribute_cfs_runtime(struct cfs_bandwidth *cfs_b)
 	struct cfs_rq *cfs_rq;
 	struct rq_flags rf;
 	struct rq *rq;
+=======
+static void distribute_cfs_runtime(struct cfs_bandwidth *cfs_b)
+{
+	struct cfs_rq *cfs_rq;
+	u64 runtime, remaining = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rcu_read_lock();
 	list_for_each_entry_rcu(cfs_rq, &cfs_b->throttled_cfs_rq,
 				throttled_list) {
+<<<<<<< HEAD
 		rq = rq_of(cfs_rq);
 
 		if (!remaining) {
 			throttled = true;
 			break;
 		}
+=======
+		struct rq *rq = rq_of(cfs_rq);
+		struct rq_flags rf;
+>>>>>>> b7ba80a49124 (Commit)
 
 		rq_lock_irqsave(rq, &rf);
 		if (!cfs_rq_throttled(cfs_rq))
 			goto next;
 
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 		/* Already queued for async unthrottle */
 		if (!list_empty(&cfs_rq->throttled_csd_list))
@@ -5666,6 +5779,9 @@ static bool distribute_cfs_runtime(struct cfs_bandwidth *cfs_b)
 #endif
 
 		/* By the above checks, this should never be true */
+=======
+		/* By the above check, this should never be true */
+>>>>>>> b7ba80a49124 (Commit)
 		SCHED_WARN_ON(cfs_rq->runtime_remaining > 0);
 
 		raw_spin_lock(&cfs_b->lock);
@@ -5679,6 +5795,7 @@ static bool distribute_cfs_runtime(struct cfs_bandwidth *cfs_b)
 		cfs_rq->runtime_remaining += runtime;
 
 		/* we check whether we're throttled above */
+<<<<<<< HEAD
 		if (cfs_rq->runtime_remaining > 0) {
 			if (cpu_of(rq) != this_cpu ||
 			    SCHED_WARN_ON(local_unthrottle))
@@ -5703,6 +5820,18 @@ next:
 	}
 
 	return throttled;
+=======
+		if (cfs_rq->runtime_remaining > 0)
+			unthrottle_cfs_rq(cfs_rq);
+
+next:
+		rq_unlock_irqrestore(rq, &rf);
+
+		if (!remaining)
+			break;
+	}
+	rcu_read_unlock();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -5747,8 +5876,15 @@ static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, u
 	while (throttled && cfs_b->runtime > 0) {
 		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
 		/* we can't nest cfs_b->lock while distributing bandwidth */
+<<<<<<< HEAD
 		throttled = distribute_cfs_runtime(cfs_b);
 		raw_spin_lock_irqsave(&cfs_b->lock, flags);
+=======
+		distribute_cfs_runtime(cfs_b);
+		raw_spin_lock_irqsave(&cfs_b->lock, flags);
+
+		throttled = !list_empty(&cfs_b->throttled_cfs_rq);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -6016,10 +6152,13 @@ void init_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
 	INIT_LIST_HEAD(&cfs_b->throttled_cfs_rq);
 	hrtimer_init(&cfs_b->period_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
 	cfs_b->period_timer.function = sched_cfs_period_timer;
+<<<<<<< HEAD
 
 	/* Add a random offset so that timers interleave */
 	hrtimer_set_expires(&cfs_b->period_timer,
 			    get_random_u32_below(cfs_b->period));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hrtimer_init(&cfs_b->slack_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 	cfs_b->slack_timer.function = sched_cfs_slack_timer;
 	cfs_b->slack_started = false;
@@ -6029,9 +6168,12 @@ static void init_cfs_rq_runtime(struct cfs_rq *cfs_rq)
 {
 	cfs_rq->runtime_enabled = 0;
 	INIT_LIST_HEAD(&cfs_rq->throttled_list);
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 	INIT_LIST_HEAD(&cfs_rq->throttled_csd_list);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
@@ -6048,14 +6190,18 @@ void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
 
 static void destroy_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
 {
+<<<<<<< HEAD
 	int __maybe_unused i;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* init_cfs_bandwidth() was not called */
 	if (!cfs_b->throttled_cfs_rq.next)
 		return;
 
 	hrtimer_cancel(&cfs_b->period_timer);
 	hrtimer_cancel(&cfs_b->slack_timer);
+<<<<<<< HEAD
 
 	/*
 	 * It is possible that we still have some cfs_rq's pending on a CSD
@@ -6080,6 +6226,8 @@ static void destroy_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
 		local_irq_restore(flags);
 	}
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -6239,11 +6387,15 @@ static inline void hrtick_update(struct rq *rq)
 #ifdef CONFIG_SMP
 static inline bool cpu_overutilized(int cpu)
 {
+<<<<<<< HEAD
 	unsigned long rq_util_min = uclamp_rq_get(cpu_rq(cpu), UCLAMP_MIN);
 	unsigned long rq_util_max = uclamp_rq_get(cpu_rq(cpu), UCLAMP_MAX);
 
 	/* Return true only if the utilization doesn't fit CPU's capacity */
 	return !util_fits_cpu(cpu_util_cfs(cpu), rq_util_min, rq_util_max, cpu);
+=======
+	return !fits_capacity(cpu_util_cfs(cpu), capacity_of(cpu));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void update_overutilized_status(struct rq *rq)
@@ -7035,23 +7187,34 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, bool 
 static int
 select_idle_capacity(struct task_struct *p, struct sched_domain *sd, int target)
 {
+<<<<<<< HEAD
 	unsigned long task_util, util_min, util_max, best_cap = 0;
 	int fits, best_fits = 0;
+=======
+	unsigned long task_util, best_cap = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int cpu, best_cpu = -1;
 	struct cpumask *cpus;
 
 	cpus = this_cpu_cpumask_var_ptr(select_rq_mask);
 	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
 
+<<<<<<< HEAD
 	task_util = task_util_est(p);
 	util_min = uclamp_eff_value(p, UCLAMP_MIN);
 	util_max = uclamp_eff_value(p, UCLAMP_MAX);
 
 	for_each_cpu_wrap(cpu, cpus, target + 1) {
+=======
+	task_util = uclamp_task_util(p);
+
+	for_each_cpu_wrap(cpu, cpus, target) {
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned long cpu_cap = capacity_of(cpu);
 
 		if (!available_idle_cpu(cpu) && !sched_idle_cpu(cpu))
 			continue;
+<<<<<<< HEAD
 
 		fits = util_fits_cpu(task_util, util_min, util_max, cpu);
 
@@ -7074,12 +7237,21 @@ select_idle_capacity(struct task_struct *p, struct sched_domain *sd, int target)
 			best_cap = cpu_cap;
 			best_cpu = cpu;
 			best_fits = fits;
+=======
+		if (fits_capacity(task_util, cpu_cap))
+			return cpu;
+
+		if (cpu_cap > best_cap) {
+			best_cap = cpu_cap;
+			best_cpu = cpu;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
 	return best_cpu;
 }
 
+<<<<<<< HEAD
 static inline bool asym_fits_cpu(unsigned long util,
 				 unsigned long util_min,
 				 unsigned long util_max,
@@ -7091,6 +7263,12 @@ static inline bool asym_fits_cpu(unsigned long util,
 		 * which include the utilization and the performance hints.
 		 */
 		return (util_fits_cpu(util, util_min, util_max, cpu) > 0);
+=======
+static inline bool asym_fits_capacity(unsigned long task_util, int cpu)
+{
+	if (sched_asym_cpucap_active())
+		return fits_capacity(task_util, capacity_of(cpu));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return true;
 }
@@ -7102,7 +7280,11 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
 {
 	bool has_idle_core = false;
 	struct sched_domain *sd;
+<<<<<<< HEAD
 	unsigned long task_util, util_min, util_max;
+=======
+	unsigned long task_util;
+>>>>>>> b7ba80a49124 (Commit)
 	int i, recent_used_cpu;
 
 	/*
@@ -7111,9 +7293,13 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
 	 */
 	if (sched_asym_cpucap_active()) {
 		sync_entity_load_avg(&p->se);
+<<<<<<< HEAD
 		task_util = task_util_est(p);
 		util_min = uclamp_eff_value(p, UCLAMP_MIN);
 		util_max = uclamp_eff_value(p, UCLAMP_MAX);
+=======
+		task_util = uclamp_task_util(p);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -7122,7 +7308,11 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
 	lockdep_assert_irqs_disabled();
 
 	if ((available_idle_cpu(target) || sched_idle_cpu(target)) &&
+<<<<<<< HEAD
 	    asym_fits_cpu(task_util, util_min, util_max, target))
+=======
+	    asym_fits_capacity(task_util, target))
+>>>>>>> b7ba80a49124 (Commit)
 		return target;
 
 	/*
@@ -7130,7 +7320,11 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
 	 */
 	if (prev != target && cpus_share_cache(prev, target) &&
 	    (available_idle_cpu(prev) || sched_idle_cpu(prev)) &&
+<<<<<<< HEAD
 	    asym_fits_cpu(task_util, util_min, util_max, prev))
+=======
+	    asym_fits_capacity(task_util, prev))
+>>>>>>> b7ba80a49124 (Commit)
 		return prev;
 
 	/*
@@ -7145,7 +7339,11 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
 	    in_task() &&
 	    prev == smp_processor_id() &&
 	    this_rq()->nr_running <= 1 &&
+<<<<<<< HEAD
 	    asym_fits_cpu(task_util, util_min, util_max, prev)) {
+=======
+	    asym_fits_capacity(task_util, prev)) {
+>>>>>>> b7ba80a49124 (Commit)
 		return prev;
 	}
 
@@ -7157,7 +7355,11 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
 	    cpus_share_cache(recent_used_cpu, target) &&
 	    (available_idle_cpu(recent_used_cpu) || sched_idle_cpu(recent_used_cpu)) &&
 	    cpumask_test_cpu(p->recent_used_cpu, p->cpus_ptr) &&
+<<<<<<< HEAD
 	    asym_fits_cpu(task_util, util_min, util_max, recent_used_cpu)) {
+=======
+	    asym_fits_capacity(task_util, recent_used_cpu)) {
+>>>>>>> b7ba80a49124 (Commit)
 		return recent_used_cpu;
 	}
 
@@ -7453,6 +7655,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
 {
 	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_rq_mask);
 	unsigned long prev_delta = ULONG_MAX, best_delta = ULONG_MAX;
+<<<<<<< HEAD
 	unsigned long p_util_min = uclamp_is_used() ? uclamp_eff_value(p, UCLAMP_MIN) : 0;
 	unsigned long p_util_max = uclamp_is_used() ? uclamp_eff_value(p, UCLAMP_MAX) : 1024;
 	struct root_domain *rd = this_rq()->rd;
@@ -7460,6 +7663,10 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
 	int prev_fits = -1, best_fits = -1;
 	unsigned long best_thermal_cap = 0;
 	unsigned long prev_thermal_cap = 0;
+=======
+	struct root_domain *rd = this_rq()->rd;
+	int cpu, best_energy_cpu, target = -1;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sched_domain *sd;
 	struct perf_domain *pd;
 	struct energy_env eenv;
@@ -7482,12 +7689,17 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
 	target = prev_cpu;
 
 	sync_entity_load_avg(&p->se);
+<<<<<<< HEAD
 	if (!uclamp_task_util(p, p_util_min, p_util_max))
+=======
+	if (!task_util_est(p))
+>>>>>>> b7ba80a49124 (Commit)
 		goto unlock;
 
 	eenv_task_busy_time(&eenv, p, prev_cpu);
 
 	for (; pd; pd = pd->next) {
+<<<<<<< HEAD
 		unsigned long util_min = p_util_min, util_max = p_util_max;
 		unsigned long cpu_cap, cpu_thermal_cap, util;
 		unsigned long cur_delta, max_spare_cap = 0;
@@ -7496,6 +7708,13 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
 		int max_spare_cap_cpu = -1;
 		unsigned long base_energy;
 		int fits, max_fits = -1;
+=======
+		unsigned long cpu_cap, cpu_thermal_cap, util;
+		unsigned long cur_delta, max_spare_cap = 0;
+		bool compute_prev_delta = false;
+		int max_spare_cap_cpu = -1;
+		unsigned long base_energy;
+>>>>>>> b7ba80a49124 (Commit)
 
 		cpumask_and(cpus, perf_domain_span(pd), cpu_online_mask);
 
@@ -7511,8 +7730,11 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
 		eenv.pd_cap = 0;
 
 		for_each_cpu(cpu, cpus) {
+<<<<<<< HEAD
 			struct rq *rq = cpu_rq(cpu);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			eenv.pd_cap += cpu_thermal_cap;
 
 			if (!cpumask_test_cpu(cpu, sched_domain_span(sd)))
@@ -7531,6 +7753,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
 			 * much capacity we can get out of the CPU; this is
 			 * aligned with sched_cpu_util().
 			 */
+<<<<<<< HEAD
 			if (uclamp_is_used() && !uclamp_rq_is_idle(rq)) {
 				/*
 				 * Open code uclamp_rq_util_with() except for
@@ -7548,12 +7771,17 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
 
 			fits = util_fits_cpu(util, util_min, util_max, cpu);
 			if (!fits)
+=======
+			util = uclamp_rq_util_with(cpu_rq(cpu), util, p);
+			if (!fits_capacity(util, cpu_cap))
+>>>>>>> b7ba80a49124 (Commit)
 				continue;
 
 			lsub_positive(&cpu_cap, util);
 
 			if (cpu == prev_cpu) {
 				/* Always use prev_cpu as a candidate. */
+<<<<<<< HEAD
 				prev_spare_cap = cpu_cap;
 				prev_fits = fits;
 			} else if ((fits > max_fits) ||
@@ -7570,6 +7798,20 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
 		}
 
 		if (max_spare_cap_cpu < 0 && prev_spare_cap == 0)
+=======
+				compute_prev_delta = true;
+			} else if (cpu_cap > max_spare_cap) {
+				/*
+				 * Find the CPU with the maximum spare capacity
+				 * in the performance domain.
+				 */
+				max_spare_cap = cpu_cap;
+				max_spare_cap_cpu = cpu;
+			}
+		}
+
+		if (max_spare_cap_cpu < 0 && !compute_prev_delta)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		eenv_pd_busy_time(&eenv, cpus, p);
@@ -7577,18 +7819,26 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
 		base_energy = compute_energy(&eenv, pd, cpus, p, -1);
 
 		/* Evaluate the energy impact of using prev_cpu. */
+<<<<<<< HEAD
 		if (prev_spare_cap > 0) {
+=======
+		if (compute_prev_delta) {
+>>>>>>> b7ba80a49124 (Commit)
 			prev_delta = compute_energy(&eenv, pd, cpus, p,
 						    prev_cpu);
 			/* CPU utilization has changed */
 			if (prev_delta < base_energy)
 				goto unlock;
 			prev_delta -= base_energy;
+<<<<<<< HEAD
 			prev_thermal_cap = cpu_thermal_cap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			best_delta = min(best_delta, prev_delta);
 		}
 
 		/* Evaluate the energy impact of using max_spare_cap_cpu. */
+<<<<<<< HEAD
 		if (max_spare_cap_cpu >= 0 && max_spare_cap > prev_spare_cap) {
 			/* Current best energy cpu fits better */
 			if (max_fits < best_fits)
@@ -7602,12 +7852,16 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
 			    (cpu_thermal_cap <= best_thermal_cap))
 				continue;
 
+=======
+		if (max_spare_cap_cpu >= 0) {
+>>>>>>> b7ba80a49124 (Commit)
 			cur_delta = compute_energy(&eenv, pd, cpus, p,
 						   max_spare_cap_cpu);
 			/* CPU utilization has changed */
 			if (cur_delta < base_energy)
 				goto unlock;
 			cur_delta -= base_energy;
+<<<<<<< HEAD
 
 			/*
 			 * Both fit for the task but best energy cpu has lower
@@ -7621,13 +7875,23 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
 			best_energy_cpu = max_spare_cap_cpu;
 			best_fits = max_fits;
 			best_thermal_cap = cpu_thermal_cap;
+=======
+			if (cur_delta < best_delta) {
+				best_delta = cur_delta;
+				best_energy_cpu = max_spare_cap_cpu;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 	rcu_read_unlock();
 
+<<<<<<< HEAD
 	if ((best_fits > prev_fits) ||
 	    ((best_fits > 0) && (best_delta < prev_delta)) ||
 	    ((best_fits < 0) && (best_thermal_cap > prev_thermal_cap)))
+=======
+	if (best_delta < prev_delta)
+>>>>>>> b7ba80a49124 (Commit)
 		target = best_energy_cpu;
 
 	return target;
@@ -7754,6 +8018,12 @@ static void migrate_task_rq_fair(struct task_struct *p, int new_cpu)
 	/* Tell new CPU we are migrated */
 	se->avg.last_update_time = 0;
 
+<<<<<<< HEAD
+=======
+	/* We have migrated, no longer consider this task hot */
+	se->exec_start = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	update_scan_period(p, new_cpu);
 }
 
@@ -8735,7 +9005,11 @@ static int detach_tasks(struct lb_env *env)
 
 		case migrate_misfit:
 			/* This is not a misfit task */
+<<<<<<< HEAD
 			if (task_fits_cpu(p, env->src_cpu))
+=======
+			if (task_fits_capacity(p, capacity_of(env->src_cpu)))
+>>>>>>> b7ba80a49124 (Commit)
 				goto next;
 
 			env->imbalance = 0;
@@ -9740,10 +10014,13 @@ static inline void update_sg_wakeup_stats(struct sched_domain *sd,
 
 	memset(sgs, 0, sizeof(*sgs));
 
+<<<<<<< HEAD
 	/* Assume that task can't fit any CPU of the group */
 	if (sd->flags & SD_ASYM_CPUCAPACITY)
 		sgs->group_misfit_task_load = 1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for_each_cpu(i, sched_group_span(group)) {
 		struct rq *rq = cpu_rq(i);
 		unsigned int local;
@@ -9763,12 +10040,21 @@ static inline void update_sg_wakeup_stats(struct sched_domain *sd,
 		if (!nr_running && idle_cpu_without(i, p))
 			sgs->idle_cpus++;
 
+<<<<<<< HEAD
 		/* Check if task fits in the CPU */
 		if (sd->flags & SD_ASYM_CPUCAPACITY &&
 		    sgs->group_misfit_task_load &&
 		    task_fits_cpu(p, i))
 			sgs->group_misfit_task_load = 0;
 
+=======
+	}
+
+	/* Check if task fits in the group */
+	if (sd->flags & SD_ASYM_CPUCAPACITY &&
+	    !task_fits_capacity(p, group->sgc->max_capacity)) {
+		sgs->group_misfit_task_load = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	sgs->group_capacity = group->sgc->capacity;
@@ -10361,6 +10647,7 @@ static struct sched_group *find_busiest_group(struct lb_env *env)
 	 */
 	update_sd_lb_stats(env, &sds);
 
+<<<<<<< HEAD
 	/* There is no busy sibling group to pull tasks from */
 	if (!sds.busiest)
 		goto out_balanced;
@@ -10371,6 +10658,8 @@ static struct sched_group *find_busiest_group(struct lb_env *env)
 	if (busiest->group_type == group_misfit_task)
 		goto force_balance;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (sched_energy_enabled()) {
 		struct root_domain *rd = env->dst_rq->rd;
 
@@ -10378,6 +10667,20 @@ static struct sched_group *find_busiest_group(struct lb_env *env)
 			goto out_balanced;
 	}
 
+<<<<<<< HEAD
+=======
+	local = &sds.local_stat;
+	busiest = &sds.busiest_stat;
+
+	/* There is no busy sibling group to pull tasks from */
+	if (!sds.busiest)
+		goto out_balanced;
+
+	/* Misfit tasks should be dealt with regardless of the avg load */
+	if (busiest->group_type == group_misfit_task)
+		goto force_balance;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* ASYM feature bypasses nice load balance check */
 	if (busiest->group_type == group_asym_packing)
 		goto force_balance;
@@ -10390,7 +10693,10 @@ static struct sched_group *find_busiest_group(struct lb_env *env)
 	if (busiest->group_type == group_imbalanced)
 		goto force_balance;
 
+<<<<<<< HEAD
 	local = &sds.local_stat;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * If the local group is busier than the selected busiest group
 	 * don't try and pull any tasks.
@@ -11954,8 +12260,12 @@ static inline void task_tick_core(struct rq *rq, struct task_struct *curr)
 /*
  * se_fi_update - Update the cfs_rq->min_vruntime_fi in a CFS hierarchy if needed.
  */
+<<<<<<< HEAD
 static void se_fi_update(const struct sched_entity *se, unsigned int fi_seq,
 			 bool forceidle)
+=======
+static void se_fi_update(struct sched_entity *se, unsigned int fi_seq, bool forceidle)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	for_each_sched_entity(se) {
 		struct cfs_rq *cfs_rq = cfs_rq_of(se);
@@ -11980,12 +12290,20 @@ void task_vruntime_update(struct rq *rq, struct task_struct *p, bool in_fi)
 	se_fi_update(se, rq->core->core_forceidle_seq, in_fi);
 }
 
+<<<<<<< HEAD
 bool cfs_prio_less(const struct task_struct *a, const struct task_struct *b,
 			bool in_fi)
 {
 	struct rq *rq = task_rq(a);
 	const struct sched_entity *sea = &a->se;
 	const struct sched_entity *seb = &b->se;
+=======
+bool cfs_prio_less(struct task_struct *a, struct task_struct *b, bool in_fi)
+{
+	struct rq *rq = task_rq(a);
+	struct sched_entity *sea = &a->se;
+	struct sched_entity *seb = &b->se;
+>>>>>>> b7ba80a49124 (Commit)
 	struct cfs_rq *cfs_rqa;
 	struct cfs_rq *cfs_rqb;
 	s64 delta;
@@ -12027,6 +12345,7 @@ bool cfs_prio_less(const struct task_struct *a, const struct task_struct *b,
 
 	return delta > 0;
 }
+<<<<<<< HEAD
 
 static int task_is_throttled_fair(struct task_struct *p, int cpu)
 {
@@ -12039,6 +12358,8 @@ static int task_is_throttled_fair(struct task_struct *p, int cpu)
 #endif
 	return throttled_hierarchy(cfs_rq);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline void task_tick_core(struct rq *rq, struct task_struct *curr) {}
 #endif
@@ -12665,10 +12986,13 @@ DEFINE_SCHED_CLASS(fair) = {
 	.task_change_group	= task_change_group_fair,
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_SCHED_CORE
 	.task_is_throttled	= task_is_throttled_fair,
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_UCLAMP_TASK
 	.uclamp_enabled		= 1,
 #endif
@@ -12718,11 +13042,14 @@ __init void init_sched_fair_class(void)
 	for_each_possible_cpu(i) {
 		zalloc_cpumask_var_node(&per_cpu(load_balance_mask, i), GFP_KERNEL, cpu_to_node(i));
 		zalloc_cpumask_var_node(&per_cpu(select_rq_mask,    i), GFP_KERNEL, cpu_to_node(i));
+<<<<<<< HEAD
 
 #ifdef CONFIG_CFS_BANDWIDTH
 		INIT_CSD(&cpu_rq(i)->cfsb_csd, __cfsb_csd_unthrottle, cpu_rq(i));
 		INIT_LIST_HEAD(&cpu_rq(i)->cfsb_csd_list);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	open_softirq(SCHED_SOFTIRQ, run_rebalance_domains);

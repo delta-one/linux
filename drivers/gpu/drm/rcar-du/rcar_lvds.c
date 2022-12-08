@@ -16,8 +16,11 @@
 #include <linux/of_device.h>
 #include <linux/of_graph.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/pm_runtime.h>
 #include <linux/reset.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/sys_soc.h>
 
@@ -62,7 +65,10 @@ struct rcar_lvds_device_info {
 struct rcar_lvds {
 	struct device *dev;
 	const struct rcar_lvds_device_info *info;
+<<<<<<< HEAD
 	struct reset_control *rstc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct drm_bridge bridge;
 
@@ -83,11 +89,14 @@ struct rcar_lvds {
 #define bridge_to_rcar_lvds(b) \
 	container_of(b, struct rcar_lvds, bridge)
 
+<<<<<<< HEAD
 static u32 rcar_lvds_read(struct rcar_lvds *lvds, u32 reg)
 {
 	return ioread32(lvds->mmio + reg);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void rcar_lvds_write(struct rcar_lvds *lvds, u32 reg, u32 data)
 {
 	iowrite32(data, lvds->mmio + reg);
@@ -324,8 +333,13 @@ int rcar_lvds_pclk_enable(struct drm_bridge *bridge, unsigned long freq)
 
 	dev_dbg(lvds->dev, "enabling LVDS PLL, freq=%luHz\n", freq);
 
+<<<<<<< HEAD
 	ret = pm_runtime_resume_and_get(lvds->dev);
 	if (ret)
+=======
+	ret = clk_prepare_enable(lvds->clocks.mod);
+	if (ret < 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 
 	__rcar_lvds_pll_setup_d3_e3(lvds, freq, true);
@@ -345,7 +359,11 @@ void rcar_lvds_pclk_disable(struct drm_bridge *bridge)
 
 	rcar_lvds_write(lvds, LVDPLLCR, 0);
 
+<<<<<<< HEAD
 	pm_runtime_put_sync(lvds->dev);
+=======
+	clk_disable_unprepare(lvds->clocks.mod);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(rcar_lvds_pclk_disable);
 
@@ -404,8 +422,13 @@ static void __rcar_lvds_atomic_enable(struct drm_bridge *bridge,
 	u32 lvdcr0;
 	int ret;
 
+<<<<<<< HEAD
 	ret = pm_runtime_resume_and_get(lvds->dev);
 	if (ret)
+=======
+	ret = clk_prepare_enable(lvds->clocks.mod);
+	if (ret < 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	/* Enable the companion LVDS encoder in dual-link mode. */
@@ -549,6 +572,7 @@ static void rcar_lvds_atomic_disable(struct drm_bridge *bridge,
 				     struct drm_bridge_state *old_bridge_state)
 {
 	struct rcar_lvds *lvds = bridge_to_rcar_lvds(bridge);
+<<<<<<< HEAD
 	u32 lvdcr0;
 
 	/*
@@ -575,6 +599,8 @@ static void rcar_lvds_atomic_disable(struct drm_bridge *bridge,
 		lvdcr0 &= ~LVDCR0_PLLON;
 		rcar_lvds_write(lvds, LVDCR0, lvdcr0);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	rcar_lvds_write(lvds, LVDCR0, 0);
 	rcar_lvds_write(lvds, LVDCR1, 0);
@@ -585,7 +611,11 @@ static void rcar_lvds_atomic_disable(struct drm_bridge *bridge,
 		lvds->companion->funcs->atomic_disable(lvds->companion,
 						       old_bridge_state);
 
+<<<<<<< HEAD
 	pm_runtime_put_sync(lvds->dev);
+=======
+	clk_disable_unprepare(lvds->clocks.mod);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool rcar_lvds_mode_fixup(struct drm_bridge *bridge,
@@ -878,6 +908,7 @@ static int rcar_lvds_probe(struct platform_device *pdev)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	lvds->rstc = devm_reset_control_get_exclusive(&pdev->dev, NULL);
 	if (IS_ERR(lvds->rstc))
 		return dev_err_probe(&pdev->dev, PTR_ERR(lvds->rstc),
@@ -885,6 +916,8 @@ static int rcar_lvds_probe(struct platform_device *pdev)
 
 	pm_runtime_enable(&pdev->dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	drm_bridge_add(&lvds->bridge);
 
 	return 0;
@@ -896,8 +929,11 @@ static int rcar_lvds_remove(struct platform_device *pdev)
 
 	drm_bridge_remove(&lvds->bridge);
 
+<<<<<<< HEAD
 	pm_runtime_disable(&pdev->dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -956,6 +992,7 @@ static const struct of_device_id rcar_lvds_of_table[] = {
 
 MODULE_DEVICE_TABLE(of, rcar_lvds_of_table);
 
+<<<<<<< HEAD
 static int rcar_lvds_runtime_suspend(struct device *dev)
 {
 	struct rcar_lvds *lvds = dev_get_drvdata(dev);
@@ -992,12 +1029,17 @@ static const struct dev_pm_ops rcar_lvds_pm_ops = {
 	SET_RUNTIME_PM_OPS(rcar_lvds_runtime_suspend, rcar_lvds_runtime_resume, NULL)
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver rcar_lvds_platform_driver = {
 	.probe		= rcar_lvds_probe,
 	.remove		= rcar_lvds_remove,
 	.driver		= {
 		.name	= "rcar-lvds",
+<<<<<<< HEAD
 		.pm	= &rcar_lvds_pm_ops,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = rcar_lvds_of_table,
 	},
 };

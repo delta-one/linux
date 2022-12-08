@@ -39,7 +39,10 @@
  * @res_name:		Resource name used for cmd-db lookup
  * @addr:		Resource address as looped up using resource name from
  *			cmd-db
+<<<<<<< HEAD
  * @state_synced:	Indicator that sync_state has been invoked for the rpmhpd resource
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct rpmhpd {
 	struct device	*dev;
@@ -55,7 +58,10 @@ struct rpmhpd {
 	bool		enabled;
 	const char	*res_name;
 	u32		addr;
+<<<<<<< HEAD
 	bool		state_synced;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct rpmhpd_desc {
@@ -187,6 +193,7 @@ static struct rpmhpd nsp = {
 	.res_name = "nsp.lvl",
 };
 
+<<<<<<< HEAD
 static struct rpmhpd nsp0 = {
 	.pd = { .name = "nsp0", },
 	.res_name = "nsp0.lvl",
@@ -197,6 +204,8 @@ static struct rpmhpd nsp1 = {
 	.res_name = "nsp1.lvl",
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct rpmhpd qphy = {
 	.pd = { .name = "qphy", },
 	.res_name = "qphy.lvl",
@@ -222,6 +231,7 @@ static const struct rpmhpd_desc sa8540p_desc = {
 	.num_pds = ARRAY_SIZE(sa8540p_rpmhpds),
 };
 
+<<<<<<< HEAD
 /* SA8775P RPMH power domains */
 static struct rpmhpd *sa8775p_rpmhpds[] = {
 	[SA8775P_CX] = &cx,
@@ -262,6 +272,8 @@ static const struct rpmhpd_desc sdm670_desc = {
 	.num_pds = ARRAY_SIZE(sdm670_rpmhpds),
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* SDM845 RPMH powerdomains */
 static struct rpmhpd *sdm845_rpmhpds[] = {
 	[SDM845_CX] = &cx_w_mx_parent,
@@ -405,6 +417,7 @@ static const struct rpmhpd_desc sm8450_desc = {
 	.num_pds = ARRAY_SIZE(sm8450_rpmhpds),
 };
 
+<<<<<<< HEAD
 /* SM8550 RPMH powerdomains */
 static struct rpmhpd *sm8550_rpmhpds[] = {
 	[SM8550_CX] = &cx,
@@ -441,6 +454,8 @@ static const struct rpmhpd_desc qdu1000_desc = {
 	.num_pds = ARRAY_SIZE(qdu1000_rpmhpds),
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* SC7180 RPMH powerdomains */
 static struct rpmhpd *sc7180_rpmhpds[] = {
 	[SC7180_CX] = &cx_w_mx_parent,
@@ -518,14 +533,21 @@ static const struct rpmhpd_desc sc8280xp_desc = {
 };
 
 static const struct of_device_id rpmhpd_match_table[] = {
+<<<<<<< HEAD
 	{ .compatible = "qcom,qdu1000-rpmhpd", .data = &qdu1000_desc },
 	{ .compatible = "qcom,sa8540p-rpmhpd", .data = &sa8540p_desc },
 	{ .compatible = "qcom,sa8775p-rpmhpd", .data = &sa8775p_desc },
+=======
+	{ .compatible = "qcom,sa8540p-rpmhpd", .data = &sa8540p_desc },
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "qcom,sc7180-rpmhpd", .data = &sc7180_desc },
 	{ .compatible = "qcom,sc7280-rpmhpd", .data = &sc7280_desc },
 	{ .compatible = "qcom,sc8180x-rpmhpd", .data = &sc8180x_desc },
 	{ .compatible = "qcom,sc8280xp-rpmhpd", .data = &sc8280xp_desc },
+<<<<<<< HEAD
 	{ .compatible = "qcom,sdm670-rpmhpd", .data = &sdm670_desc },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "qcom,sdm845-rpmhpd", .data = &sdm845_desc },
 	{ .compatible = "qcom,sdx55-rpmhpd", .data = &sdx55_desc},
 	{ .compatible = "qcom,sdx65-rpmhpd", .data = &sdx65_desc},
@@ -534,7 +556,10 @@ static const struct of_device_id rpmhpd_match_table[] = {
 	{ .compatible = "qcom,sm8250-rpmhpd", .data = &sm8250_desc },
 	{ .compatible = "qcom,sm8350-rpmhpd", .data = &sm8350_desc },
 	{ .compatible = "qcom,sm8450-rpmhpd", .data = &sm8450_desc },
+<<<<<<< HEAD
 	{ .compatible = "qcom,sm8550-rpmhpd", .data = &sm8550_desc },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(of, rpmhpd_match_table);
@@ -585,6 +610,7 @@ static int rpmhpd_aggregate_corner(struct rpmhpd *pd, unsigned int corner)
 	unsigned int this_active_corner = 0, this_sleep_corner = 0;
 	unsigned int peer_active_corner = 0, peer_sleep_corner = 0;
 
+<<<<<<< HEAD
 	if (pd->state_synced) {
 		to_active_sleep(pd, corner, &this_active_corner, &this_sleep_corner);
 	} else {
@@ -592,6 +618,9 @@ static int rpmhpd_aggregate_corner(struct rpmhpd *pd, unsigned int corner)
 		this_active_corner = pd->level_count - 1;
 		this_sleep_corner = pd->level_count - 1;
 	}
+=======
+	to_active_sleep(pd, corner, &this_active_corner, &this_sleep_corner);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (peer && peer->enabled)
 		to_active_sleep(peer, peer->corner, &peer_active_corner,
@@ -806,6 +835,7 @@ static int rpmhpd_probe(struct platform_device *pdev)
 	return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
 }
 
+<<<<<<< HEAD
 static void rpmhpd_sync_state(struct device *dev)
 {
 	const struct rpmhpd_desc *desc = of_device_get_match_data(dev);
@@ -834,12 +864,17 @@ static void rpmhpd_sync_state(struct device *dev)
 	mutex_unlock(&rpmhpd_lock);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver rpmhpd_driver = {
 	.driver = {
 		.name = "qcom-rpmhpd",
 		.of_match_table = rpmhpd_match_table,
 		.suppress_bind_attrs = true,
+<<<<<<< HEAD
 		.sync_state = rpmhpd_sync_state,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = rpmhpd_probe,
 };

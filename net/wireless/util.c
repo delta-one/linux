@@ -542,6 +542,7 @@ unsigned int ieee80211_get_mesh_hdrlen(struct ieee80211s_hdr *meshhdr)
 }
 EXPORT_SYMBOL(ieee80211_get_mesh_hdrlen);
 
+<<<<<<< HEAD
 bool ieee80211_get_8023_tunnel_proto(const void *hdr, __be16 *proto)
 {
 	const __be16 *hdr_proto = hdr + ETH_ALEN;
@@ -600,6 +601,8 @@ int ieee80211_strip_8023_mesh_hdr(struct sk_buff *skb)
 }
 EXPORT_SYMBOL(ieee80211_strip_8023_mesh_hdr);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ieee80211_data_to_8023_exthdr(struct sk_buff *skb, struct ethhdr *ehdr,
 				  const u8 *addr, enum nl80211_iftype iftype,
 				  u8 data_offset, bool is_amsdu)
@@ -611,12 +614,20 @@ int ieee80211_data_to_8023_exthdr(struct sk_buff *skb, struct ethhdr *ehdr,
 	} payload;
 	struct ethhdr tmp;
 	u16 hdrlen;
+<<<<<<< HEAD
+=======
+	u8 mesh_flags = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unlikely(!ieee80211_is_data_present(hdr->frame_control)))
 		return -1;
 
 	hdrlen = ieee80211_hdrlen(hdr->frame_control) + data_offset;
+<<<<<<< HEAD
 	if (skb->len < hdrlen)
+=======
+	if (skb->len < hdrlen + 8)
+>>>>>>> b7ba80a49124 (Commit)
 		return -1;
 
 	/* convert IEEE 802.11 header + possible LLC headers into Ethernet
@@ -631,6 +642,14 @@ int ieee80211_data_to_8023_exthdr(struct sk_buff *skb, struct ethhdr *ehdr,
 	memcpy(tmp.h_dest, ieee80211_get_DA(hdr), ETH_ALEN);
 	memcpy(tmp.h_source, ieee80211_get_SA(hdr), ETH_ALEN);
 
+<<<<<<< HEAD
+=======
+	if (iftype == NL80211_IFTYPE_MESH_POINT)
+		skb_copy_bits(skb, hdrlen, &mesh_flags, 1);
+
+	mesh_flags &= MESH_FLAGS_AE;
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (hdr->frame_control &
 		cpu_to_le16(IEEE80211_FCTL_TODS | IEEE80211_FCTL_FROMDS)) {
 	case cpu_to_le16(IEEE80211_FCTL_TODS):
@@ -644,6 +663,19 @@ int ieee80211_data_to_8023_exthdr(struct sk_buff *skb, struct ethhdr *ehdr,
 			     iftype != NL80211_IFTYPE_AP_VLAN &&
 			     iftype != NL80211_IFTYPE_STATION))
 			return -1;
+<<<<<<< HEAD
+=======
+		if (iftype == NL80211_IFTYPE_MESH_POINT) {
+			if (mesh_flags == MESH_FLAGS_AE_A4)
+				return -1;
+			if (mesh_flags == MESH_FLAGS_AE_A5_A6) {
+				skb_copy_bits(skb, hdrlen +
+					offsetof(struct ieee80211s_hdr, eaddr1),
+					tmp.h_dest, 2 * ETH_ALEN);
+			}
+			hdrlen += __ieee80211_get_mesh_hdrlen(mesh_flags);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case cpu_to_le16(IEEE80211_FCTL_FROMDS):
 		if ((iftype != NL80211_IFTYPE_STATION &&
@@ -652,6 +684,18 @@ int ieee80211_data_to_8023_exthdr(struct sk_buff *skb, struct ethhdr *ehdr,
 		    (is_multicast_ether_addr(tmp.h_dest) &&
 		     ether_addr_equal(tmp.h_source, addr)))
 			return -1;
+<<<<<<< HEAD
+=======
+		if (iftype == NL80211_IFTYPE_MESH_POINT) {
+			if (mesh_flags == MESH_FLAGS_AE_A5_A6)
+				return -1;
+			if (mesh_flags == MESH_FLAGS_AE_A4)
+				skb_copy_bits(skb, hdrlen +
+					offsetof(struct ieee80211s_hdr, eaddr1),
+					tmp.h_source, ETH_ALEN);
+			hdrlen += __ieee80211_get_mesh_hdrlen(mesh_flags);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case cpu_to_le16(0):
 		if (iftype != NL80211_IFTYPE_ADHOC &&
@@ -661,10 +705,22 @@ int ieee80211_data_to_8023_exthdr(struct sk_buff *skb, struct ethhdr *ehdr,
 		break;
 	}
 
+<<<<<<< HEAD
 	if (likely(!is_amsdu && iftype != NL80211_IFTYPE_MESH_POINT &&
 		   skb_copy_bits(skb, hdrlen, &payload, sizeof(payload)) == 0 &&
 		   ieee80211_get_8023_tunnel_proto(&payload, &tmp.h_proto))) {
 		/* remove RFC1042 or Bridge-Tunnel encapsulation */
+=======
+	skb_copy_bits(skb, hdrlen, &payload, sizeof(payload));
+	tmp.h_proto = payload.proto;
+
+	if (likely((!is_amsdu && ether_addr_equal(payload.hdr, rfc1042_header) &&
+		    tmp.h_proto != htons(ETH_P_AARP) &&
+		    tmp.h_proto != htons(ETH_P_IPX)) ||
+		   ether_addr_equal(payload.hdr, bridge_tunnel_header))) {
+		/* remove RFC1042 or Bridge-Tunnel encapsulation and
+		 * replace EtherType */
+>>>>>>> b7ba80a49124 (Commit)
 		hdrlen += ETH_ALEN + 2;
 		skb_postpull_rcsum(skb, &payload, ETH_ALEN + 2);
 	} else {
@@ -737,8 +793,12 @@ __ieee80211_amsdu_copy_frag(struct sk_buff *skb, struct sk_buff *frame,
 
 static struct sk_buff *
 __ieee80211_amsdu_copy(struct sk_buff *skb, unsigned int hlen,
+<<<<<<< HEAD
 		       int offset, int len, bool reuse_frag,
 		       int min_len)
+=======
+		       int offset, int len, bool reuse_frag)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sk_buff *frame;
 	int cur_len = len;
@@ -752,7 +812,11 @@ __ieee80211_amsdu_copy(struct sk_buff *skb, unsigned int hlen,
 	 * in the stack later.
 	 */
 	if (reuse_frag)
+<<<<<<< HEAD
 		cur_len = min_t(int, len, min_len);
+=======
+		cur_len = min_t(int, len, 32);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Allocate and reserve two bytes more for payload
@@ -762,7 +826,10 @@ __ieee80211_amsdu_copy(struct sk_buff *skb, unsigned int hlen,
 	if (!frame)
 		return NULL;
 
+<<<<<<< HEAD
 	frame->priority = skb->priority;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	skb_reserve(frame, hlen + sizeof(struct ethhdr) + 2);
 	skb_copy_bits(skb, offset, skb_put(frame, cur_len), cur_len);
 
@@ -776,6 +843,7 @@ __ieee80211_amsdu_copy(struct sk_buff *skb, unsigned int hlen,
 	return frame;
 }
 
+<<<<<<< HEAD
 static u16
 ieee80211_amsdu_subframe_length(void *field, u8 mesh_flags, u8 hdr_type)
 {
@@ -852,6 +920,30 @@ void ieee80211_amsdu_to_8023s(struct sk_buff *skb, struct sk_buff_head *list,
 			mesh_len = __ieee80211_get_mesh_hdrlen(hdr.flags);
 		len = ieee80211_amsdu_subframe_length(&hdr.eth.h_proto, hdr.flags,
 						      mesh_control);
+=======
+void ieee80211_amsdu_to_8023s(struct sk_buff *skb, struct sk_buff_head *list,
+			      const u8 *addr, enum nl80211_iftype iftype,
+			      const unsigned int extra_headroom,
+			      const u8 *check_da, const u8 *check_sa)
+{
+	unsigned int hlen = ALIGN(extra_headroom, 4);
+	struct sk_buff *frame = NULL;
+	u16 ethertype;
+	u8 *payload;
+	int offset = 0, remaining;
+	struct ethhdr eth;
+	bool reuse_frag = skb->head_frag && !skb_has_frag_list(skb);
+	bool reuse_skb = false;
+	bool last = false;
+
+	while (!last) {
+		unsigned int subframe_len;
+		int len;
+		u8 padding;
+
+		skb_copy_bits(skb, offset, &eth, sizeof(eth));
+		len = ntohs(eth.h_proto);
+>>>>>>> b7ba80a49124 (Commit)
 		subframe_len = sizeof(struct ethhdr) + len;
 		padding = (4 - subframe_len) & 0x3;
 
@@ -860,16 +952,26 @@ void ieee80211_amsdu_to_8023s(struct sk_buff *skb, struct sk_buff_head *list,
 		if (subframe_len > remaining)
 			goto purge;
 		/* mitigate A-MSDU aggregation injection attacks */
+<<<<<<< HEAD
 		if (ether_addr_equal(hdr.eth.h_dest, rfc1042_header))
+=======
+		if (ether_addr_equal(eth.h_dest, rfc1042_header))
+>>>>>>> b7ba80a49124 (Commit)
 			goto purge;
 
 		offset += sizeof(struct ethhdr);
 		last = remaining <= subframe_len + padding;
 
 		/* FIXME: should we really accept multicast DA? */
+<<<<<<< HEAD
 		if ((check_da && !is_multicast_ether_addr(hdr.eth.h_dest) &&
 		     !ether_addr_equal(check_da, hdr.eth.h_dest)) ||
 		    (check_sa && !ether_addr_equal(check_sa, hdr.eth.h_source))) {
+=======
+		if ((check_da && !is_multicast_ether_addr(eth.h_dest) &&
+		     !ether_addr_equal(check_da, eth.h_dest)) ||
+		    (check_sa && !ether_addr_equal(check_sa, eth.h_source))) {
+>>>>>>> b7ba80a49124 (Commit)
 			offset += len + padding;
 			continue;
 		}
@@ -881,7 +983,11 @@ void ieee80211_amsdu_to_8023s(struct sk_buff *skb, struct sk_buff_head *list,
 			reuse_skb = true;
 		} else {
 			frame = __ieee80211_amsdu_copy(skb, hlen, offset, len,
+<<<<<<< HEAD
 						       reuse_frag, 32 + mesh_len);
+=======
+						       reuse_frag);
+>>>>>>> b7ba80a49124 (Commit)
 			if (!frame)
 				goto purge;
 
@@ -892,11 +998,24 @@ void ieee80211_amsdu_to_8023s(struct sk_buff *skb, struct sk_buff_head *list,
 		frame->dev = skb->dev;
 		frame->priority = skb->priority;
 
+<<<<<<< HEAD
 		if (likely(iftype != NL80211_IFTYPE_MESH_POINT &&
 			   ieee80211_get_8023_tunnel_proto(frame->data, &hdr.eth.h_proto)))
 			skb_pull(frame, ETH_ALEN + 2);
 
 		memcpy(skb_push(frame, sizeof(hdr.eth)), &hdr.eth, sizeof(hdr.eth));
+=======
+		payload = frame->data;
+		ethertype = (payload[6] << 8) | payload[7];
+		if (likely((ether_addr_equal(payload, rfc1042_header) &&
+			    ethertype != ETH_P_AARP && ethertype != ETH_P_IPX) ||
+			   ether_addr_equal(payload, bridge_tunnel_header))) {
+			eth.h_proto = htons(ethertype);
+			skb_pull(frame, ETH_ALEN + 2);
+		}
+
+		memcpy(skb_push(frame, sizeof(eth)), &eth, sizeof(eth));
+>>>>>>> b7ba80a49124 (Commit)
 		__skb_queue_tail(list, frame);
 	}
 
@@ -1011,7 +1130,11 @@ void cfg80211_upload_connect_keys(struct wireless_dev *wdev)
 	if (!wdev->connect_keys)
 		return;
 
+<<<<<<< HEAD
 	for (i = 0; i < 4; i++) {
+=======
+	for (i = 0; i < CFG80211_MAX_WEP_KEYS; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!wdev->connect_keys->params[i].cipher)
 			continue;
 		if (rdev_add_key(rdev, dev, -1, i, false, NULL,
@@ -1067,9 +1190,13 @@ void cfg80211_process_wdev_events(struct wireless_dev *wdev)
 			__cfg80211_leave(wiphy_to_rdev(wdev->wiphy), wdev);
 			break;
 		case EVENT_PORT_AUTHORIZED:
+<<<<<<< HEAD
 			__cfg80211_port_authorized(wdev, ev->pa.bssid,
 						   ev->pa.td_bitmap,
 						   ev->pa.td_bitmap_len);
+=======
+			__cfg80211_port_authorized(wdev, ev->pa.bssid);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 		wdev_unlock(wdev);
@@ -1442,7 +1569,11 @@ static u32 cfg80211_calculate_bitrate_he(struct rate_info *rate)
 		 25599, /*  4.166666... */
 		 17067, /*  2.777777... */
 		 12801, /*  2.083333... */
+<<<<<<< HEAD
 		 11377, /*  1.851725... */
+=======
+		 11769, /*  1.851851... */
+>>>>>>> b7ba80a49124 (Commit)
 		 10239, /*  1.666666... */
 		  8532, /*  1.388888... */
 		  7680, /*  1.250000... */
@@ -1525,7 +1656,11 @@ static u32 cfg80211_calculate_bitrate_eht(struct rate_info *rate)
 		 25599, /*  4.166666... */
 		 17067, /*  2.777777... */
 		 12801, /*  2.083333... */
+<<<<<<< HEAD
 		 11377, /*  1.851725... */
+=======
+		 11769, /*  1.851851... */
+>>>>>>> b7ba80a49124 (Commit)
 		 10239, /*  1.666666... */
 		  8532, /*  1.388888... */
 		  7680, /*  1.250000... */
@@ -1636,12 +1771,19 @@ static u32 cfg80211_calculate_bitrate_eht(struct rate_info *rate)
 	tmp = result;
 	tmp *= SCALE;
 	do_div(tmp, mcs_divisors[rate->mcs]);
+<<<<<<< HEAD
 
 	/* and take NSS */
 	tmp *= rate->nss;
 	do_div(tmp, 8);
 
 	result = tmp;
+=======
+	result = tmp;
+
+	/* and take NSS */
+	result = (result * rate->nss) / 8;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return result / 10000;
 }

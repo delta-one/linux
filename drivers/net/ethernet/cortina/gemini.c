@@ -1919,7 +1919,11 @@ static void gmac_get_stats64(struct net_device *netdev,
 
 	/* Racing with RX NAPI */
 	do {
+<<<<<<< HEAD
 		start = u64_stats_fetch_begin(&port->rx_stats_syncp);
+=======
+		start = u64_stats_fetch_begin_irq(&port->rx_stats_syncp);
+>>>>>>> b7ba80a49124 (Commit)
 
 		stats->rx_packets = port->stats.rx_packets;
 		stats->rx_bytes = port->stats.rx_bytes;
@@ -1931,11 +1935,19 @@ static void gmac_get_stats64(struct net_device *netdev,
 		stats->rx_crc_errors = port->stats.rx_crc_errors;
 		stats->rx_frame_errors = port->stats.rx_frame_errors;
 
+<<<<<<< HEAD
 	} while (u64_stats_fetch_retry(&port->rx_stats_syncp, start));
 
 	/* Racing with MIB and TX completion interrupts */
 	do {
 		start = u64_stats_fetch_begin(&port->ir_stats_syncp);
+=======
+	} while (u64_stats_fetch_retry_irq(&port->rx_stats_syncp, start));
+
+	/* Racing with MIB and TX completion interrupts */
+	do {
+		start = u64_stats_fetch_begin_irq(&port->ir_stats_syncp);
+>>>>>>> b7ba80a49124 (Commit)
 
 		stats->tx_errors = port->stats.tx_errors;
 		stats->tx_packets = port->stats.tx_packets;
@@ -1945,6 +1957,7 @@ static void gmac_get_stats64(struct net_device *netdev,
 		stats->rx_missed_errors = port->stats.rx_missed_errors;
 		stats->rx_fifo_errors = port->stats.rx_fifo_errors;
 
+<<<<<<< HEAD
 	} while (u64_stats_fetch_retry(&port->ir_stats_syncp, start));
 
 	/* Racing with hard_start_xmit */
@@ -1954,6 +1967,17 @@ static void gmac_get_stats64(struct net_device *netdev,
 		stats->tx_dropped = port->stats.tx_dropped;
 
 	} while (u64_stats_fetch_retry(&port->tx_stats_syncp, start));
+=======
+	} while (u64_stats_fetch_retry_irq(&port->ir_stats_syncp, start));
+
+	/* Racing with hard_start_xmit */
+	do {
+		start = u64_stats_fetch_begin_irq(&port->tx_stats_syncp);
+
+		stats->tx_dropped = port->stats.tx_dropped;
+
+	} while (u64_stats_fetch_retry_irq(&port->tx_stats_syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 	stats->rx_dropped += stats->rx_missed_errors;
 }
@@ -2031,18 +2055,30 @@ static void gmac_get_ethtool_stats(struct net_device *netdev,
 	/* Racing with MIB interrupt */
 	do {
 		p = values;
+<<<<<<< HEAD
 		start = u64_stats_fetch_begin(&port->ir_stats_syncp);
+=======
+		start = u64_stats_fetch_begin_irq(&port->ir_stats_syncp);
+>>>>>>> b7ba80a49124 (Commit)
 
 		for (i = 0; i < RX_STATS_NUM; i++)
 			*p++ = port->hw_stats[i];
 
+<<<<<<< HEAD
 	} while (u64_stats_fetch_retry(&port->ir_stats_syncp, start));
+=======
+	} while (u64_stats_fetch_retry_irq(&port->ir_stats_syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 	values = p;
 
 	/* Racing with RX NAPI */
 	do {
 		p = values;
+<<<<<<< HEAD
 		start = u64_stats_fetch_begin(&port->rx_stats_syncp);
+=======
+		start = u64_stats_fetch_begin_irq(&port->rx_stats_syncp);
+>>>>>>> b7ba80a49124 (Commit)
 
 		for (i = 0; i < RX_STATUS_NUM; i++)
 			*p++ = port->rx_stats[i];
@@ -2050,13 +2086,21 @@ static void gmac_get_ethtool_stats(struct net_device *netdev,
 			*p++ = port->rx_csum_stats[i];
 		*p++ = port->rx_napi_exits;
 
+<<<<<<< HEAD
 	} while (u64_stats_fetch_retry(&port->rx_stats_syncp, start));
+=======
+	} while (u64_stats_fetch_retry_irq(&port->rx_stats_syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 	values = p;
 
 	/* Racing with TX start_xmit */
 	do {
 		p = values;
+<<<<<<< HEAD
 		start = u64_stats_fetch_begin(&port->tx_stats_syncp);
+=======
+		start = u64_stats_fetch_begin_irq(&port->tx_stats_syncp);
+>>>>>>> b7ba80a49124 (Commit)
 
 		for (i = 0; i < TX_MAX_FRAGS; i++) {
 			*values++ = port->tx_frag_stats[i];
@@ -2065,7 +2109,11 @@ static void gmac_get_ethtool_stats(struct net_device *netdev,
 		*values++ = port->tx_frags_linearized;
 		*values++ = port->tx_hw_csummed;
 
+<<<<<<< HEAD
 	} while (u64_stats_fetch_retry(&port->tx_stats_syncp, start));
+=======
+	} while (u64_stats_fetch_retry_irq(&port->tx_stats_syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int gmac_get_ksettings(struct net_device *netdev,
@@ -2471,7 +2519,11 @@ static int gemini_ethernet_port_probe(struct platform_device *pdev)
 	netdev->max_mtu = 10236 - VLAN_ETH_HLEN;
 
 	port->freeq_refill = 0;
+<<<<<<< HEAD
 	netif_napi_add(netdev, &port->napi, gmac_napi_poll);
+=======
+	netif_napi_add(netdev, &port->napi, gmac_napi_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = of_get_mac_address(np, mac);
 	if (!ret) {

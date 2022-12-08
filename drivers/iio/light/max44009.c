@@ -487,7 +487,12 @@ static irqreturn_t max44009_threaded_irq_handler(int irq, void *p)
 	return IRQ_NONE;
 }
 
+<<<<<<< HEAD
 static int max44009_probe(struct i2c_client *client)
+=======
+static int max44009_probe(struct i2c_client *client,
+			  const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct max44009_data *data;
 	struct iio_dev *indio_dev;
@@ -527,12 +532,15 @@ static int max44009_probe(struct i2c_client *client)
 	return devm_iio_device_register(&client->dev, indio_dev);
 }
 
+<<<<<<< HEAD
 static const struct of_device_id max44009_of_match[] = {
 	{ .compatible = "maxim,max44009" },
 	{ }
 };
 MODULE_DEVICE_TABLE(of, max44009_of_match);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct i2c_device_id max44009_id[] = {
 	{ "max44009", 0 },
 	{ }
@@ -542,13 +550,27 @@ MODULE_DEVICE_TABLE(i2c, max44009_id);
 static struct i2c_driver max44009_driver = {
 	.driver = {
 		.name = MAX44009_DRV_NAME,
+<<<<<<< HEAD
 		.of_match_table = max44009_of_match,
 	},
 	.probe_new = max44009_probe,
+=======
+	},
+	.probe = max44009_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = max44009_id,
 };
 module_i2c_driver(max44009_driver);
 
+<<<<<<< HEAD
+=======
+static const struct of_device_id max44009_of_match[] = {
+	{ .compatible = "maxim,max44009" },
+	{ }
+};
+MODULE_DEVICE_TABLE(of, max44009_of_match);
+
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("Robert Eshleman <bobbyeshleman@gmail.com>");
 MODULE_LICENSE("GPL v2");
 MODULE_DESCRIPTION("MAX44009 ambient light sensor driver");

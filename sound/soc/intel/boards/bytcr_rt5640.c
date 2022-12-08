@@ -533,6 +533,7 @@ static int byt_rt5640_aif1_hw_params(struct snd_pcm_substream *substream,
 
 /* Please keep this list alphabetically sorted */
 static const struct dmi_system_id byt_rt5640_quirk_table[] = {
+<<<<<<< HEAD
 	{	/* Acer Iconia One 7 B1-750 */
 		.matches = {
 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Insyde"),
@@ -545,6 +546,8 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
 					BYT_RT5640_SSP0_AIF1 |
 					BYT_RT5640_MCLK_EN),
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{	/* Acer Iconia Tab 8 W1-810 */
 		.matches = {
 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Acer"),
@@ -583,6 +586,7 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
 					BYT_RT5640_MCLK_EN),
 	},
 	{
+<<<<<<< HEAD
 		/* Advantech MICA-071 */
 		.matches = {
 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Advantech"),
@@ -598,6 +602,8 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
 					BYT_RT5640_MCLK_EN),
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.matches = {
 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ARCHOS"),
 			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "ARCHOS 80 Cesium"),
@@ -823,6 +829,7 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
 					BYT_RT5640_SSP0_AIF1 |
 					BYT_RT5640_MCLK_EN),
 	},
+<<<<<<< HEAD
 	{	/* HP Stream 8 */
 		.matches = {
 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Hewlett-Packard"),
@@ -833,6 +840,8 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
 					BYT_RT5640_SSP0_AIF1 |
 					BYT_RT5640_MCLK_EN),
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{	/* I.T.Works TW891 */
 		.matches = {
 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "To be filled by O.E.M."),
@@ -1427,7 +1436,11 @@ static int byt_rt5640_codec_fixup(struct snd_soc_pcm_runtime *rtd,
 						SNDRV_PCM_HW_PARAM_CHANNELS);
 	int ret, bits;
 
+<<<<<<< HEAD
 	/* The DSP will convert the FE rate to 48k, stereo */
+=======
+	/* The DSP will covert the FE rate to 48k, stereo */
+>>>>>>> b7ba80a49124 (Commit)
 	rate->min = rate->max = 48000;
 	channels->min = channels->max = 2;
 
@@ -1648,18 +1661,25 @@ static int snd_byt_rt5640_mc_probe(struct platform_device *pdev)
 	if (adev) {
 		snprintf(byt_rt5640_codec_name, sizeof(byt_rt5640_codec_name),
 			 "i2c-%s", acpi_dev_name(adev));
+<<<<<<< HEAD
+=======
+		put_device(&adev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 		byt_rt5640_dais[dai_index].codecs->name = byt_rt5640_codec_name;
 	} else {
 		dev_err(dev, "Error cannot find '%s' dev\n", mach->id);
 		return -ENXIO;
 	}
 
+<<<<<<< HEAD
 	codec_dev = acpi_get_first_physical_node(adev);
 	acpi_dev_put(adev);
 	if (!codec_dev)
 		return -EPROBE_DEFER;
 	priv->codec_dev = get_device(codec_dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * swap SSP0 if bytcr is detected
 	 * (will be overridden if DMI quirk is detected)
@@ -1734,6 +1754,14 @@ static int snd_byt_rt5640_mc_probe(struct platform_device *pdev)
 		byt_rt5640_quirk = quirk_override;
 	}
 
+<<<<<<< HEAD
+=======
+	codec_dev = acpi_get_first_physical_node(adev);
+	if (!codec_dev)
+		return -EPROBE_DEFER;
+	priv->codec_dev = get_device(codec_dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (byt_rt5640_quirk & BYT_RT5640_JD_HP_ELITEP_1000G2) {
 		acpi_dev_add_driver_gpios(ACPI_COMPANION(priv->codec_dev),
 					  byt_rt5640_hp_elitepad_1000g2_gpios);
@@ -1856,7 +1884,11 @@ err_device:
 	return ret_val;
 }
 
+<<<<<<< HEAD
 static void snd_byt_rt5640_mc_remove(struct platform_device *pdev)
+=======
+static int snd_byt_rt5640_mc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 	struct byt_rt5640_private *priv = snd_soc_card_get_drvdata(card);
@@ -1866,6 +1898,10 @@ static void snd_byt_rt5640_mc_remove(struct platform_device *pdev)
 
 	device_remove_software_node(priv->codec_dev);
 	put_device(priv->codec_dev);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver snd_byt_rt5640_mc_driver = {
@@ -1873,7 +1909,11 @@ static struct platform_driver snd_byt_rt5640_mc_driver = {
 		.name = "bytcr_rt5640",
 	},
 	.probe = snd_byt_rt5640_mc_probe,
+<<<<<<< HEAD
 	.remove_new = snd_byt_rt5640_mc_remove,
+=======
+	.remove = snd_byt_rt5640_mc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(snd_byt_rt5640_mc_driver);

@@ -95,6 +95,7 @@ static void copy_rc_to_cfg(struct drm_dsc_config *dsc_cfg, const struct rc_param
 		dsc_cfg->rc_buf_thresh[i] = rc->rc_buf_thresh[i];
 }
 
+<<<<<<< HEAD
 int dscc_compute_dsc_parameters(const struct drm_dsc_config *pps,
 		const struct rc_params *rc,
 		struct dsc_parameters *dsc_params)
@@ -108,6 +109,21 @@ int dscc_compute_dsc_parameters(const struct drm_dsc_config *pps,
 
 	copy_pps_fields(&dsc_cfg, &dsc_params->pps);
 	copy_rc_to_cfg(&dsc_cfg, rc);
+=======
+int dscc_compute_dsc_parameters(const struct drm_dsc_config *pps, struct dsc_parameters *dsc_params)
+{
+	int              ret;
+	struct rc_params rc;
+	struct drm_dsc_config   dsc_cfg;
+	unsigned long long tmp;
+
+	calc_rc_params(&rc, pps);
+	dsc_params->pps = *pps;
+	dsc_params->pps.initial_scale_value = 8 * rc.rc_model_size / (rc.rc_model_size - rc.initial_fullness_offset);
+
+	copy_pps_fields(&dsc_cfg, &dsc_params->pps);
+	copy_rc_to_cfg(&dsc_cfg, &rc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dsc_cfg.mux_word_size = dsc_params->pps.bits_per_component <= 10 ? 48 : 64;
 

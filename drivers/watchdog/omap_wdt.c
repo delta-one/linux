@@ -316,6 +316,11 @@ static int omap_wdt_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef	CONFIG_PM
+
+>>>>>>> b7ba80a49124 (Commit)
 /* REVISIT ... not clear this is the best way to handle system suspend; and
  * it's very inappropriate for selective device suspend (e.g. suspending this
  * through sysfs rather than by stopping the watchdog daemon).  Also, this
@@ -351,6 +356,14 @@ static int omap_wdt_resume(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#else
+#define	omap_wdt_suspend	NULL
+#define	omap_wdt_resume		NULL
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id omap_wdt_of_match[] = {
 	{ .compatible = "ti,omap3-wdt", },
 	{},
@@ -361,8 +374,13 @@ static struct platform_driver omap_wdt_driver = {
 	.probe		= omap_wdt_probe,
 	.remove		= omap_wdt_remove,
 	.shutdown	= omap_wdt_shutdown,
+<<<<<<< HEAD
 	.suspend	= pm_ptr(omap_wdt_suspend),
 	.resume		= pm_ptr(omap_wdt_resume),
+=======
+	.suspend	= omap_wdt_suspend,
+	.resume		= omap_wdt_resume,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "omap_wdt",
 		.of_match_table = omap_wdt_of_match,

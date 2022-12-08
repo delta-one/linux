@@ -49,7 +49,11 @@ int kfd_iommu_check_device(struct kfd_dev *kfd)
 		return -ENODEV;
 
 	iommu_info.flags = 0;
+<<<<<<< HEAD
 	err = amd_iommu_device_info(kfd->adev->pdev, &iommu_info);
+=======
+	err = amd_iommu_device_info(kfd->pdev, &iommu_info);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 
@@ -71,7 +75,11 @@ int kfd_iommu_device_init(struct kfd_dev *kfd)
 		return 0;
 
 	iommu_info.flags = 0;
+<<<<<<< HEAD
 	err = amd_iommu_device_info(kfd->adev->pdev, &iommu_info);
+=======
+	err = amd_iommu_device_info(kfd->pdev, &iommu_info);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err < 0) {
 		dev_err(kfd_device,
 			"error getting iommu info. is the iommu enabled?\n");
@@ -121,7 +129,11 @@ int kfd_iommu_bind_process_to_device(struct kfd_process_device *pdd)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	err = amd_iommu_bind_pasid(dev->adev->pdev, p->pasid, p->lead_thread);
+=======
+	err = amd_iommu_bind_pasid(dev->pdev, p->pasid, p->lead_thread);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!err)
 		pdd->bound = PDD_BOUND;
 
@@ -139,8 +151,12 @@ void kfd_iommu_unbind_process(struct kfd_process *p)
 
 	for (i = 0; i < p->n_pdds; i++)
 		if (p->pdds[i]->bound == PDD_BOUND)
+<<<<<<< HEAD
 			amd_iommu_unbind_pasid(p->pdds[i]->dev->adev->pdev,
 					       p->pasid);
+=======
+			amd_iommu_unbind_pasid(p->pdds[i]->dev->pdev, p->pasid);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Callback for process shutdown invoked by the IOMMU driver */
@@ -223,7 +239,11 @@ static int kfd_bind_processes_to_device(struct kfd_dev *kfd)
 			continue;
 		}
 
+<<<<<<< HEAD
 		err = amd_iommu_bind_pasid(kfd->adev->pdev, p->pasid,
+=======
+		err = amd_iommu_bind_pasid(kfd->pdev, p->pasid,
+>>>>>>> b7ba80a49124 (Commit)
 				p->lead_thread);
 		if (err < 0) {
 			pr_err("Unexpected pasid 0x%x binding failure\n",
@@ -283,9 +303,15 @@ void kfd_iommu_suspend(struct kfd_dev *kfd)
 
 	kfd_unbind_processes_from_device(kfd);
 
+<<<<<<< HEAD
 	amd_iommu_set_invalidate_ctx_cb(kfd->adev->pdev, NULL);
 	amd_iommu_set_invalid_ppr_cb(kfd->adev->pdev, NULL);
 	amd_iommu_free_device(kfd->adev->pdev);
+=======
+	amd_iommu_set_invalidate_ctx_cb(kfd->pdev, NULL);
+	amd_iommu_set_invalid_ppr_cb(kfd->pdev, NULL);
+	amd_iommu_free_device(kfd->pdev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /** kfd_iommu_resume - Restore IOMMU after resume
@@ -303,6 +329,7 @@ int kfd_iommu_resume(struct kfd_dev *kfd)
 
 	pasid_limit = kfd_get_pasid_limit();
 
+<<<<<<< HEAD
 	err = amd_iommu_init_device(kfd->adev->pdev, pasid_limit);
 	if (err)
 		return -ENXIO;
@@ -310,13 +337,28 @@ int kfd_iommu_resume(struct kfd_dev *kfd)
 	amd_iommu_set_invalidate_ctx_cb(kfd->adev->pdev,
 					iommu_pasid_shutdown_callback);
 	amd_iommu_set_invalid_ppr_cb(kfd->adev->pdev,
+=======
+	err = amd_iommu_init_device(kfd->pdev, pasid_limit);
+	if (err)
+		return -ENXIO;
+
+	amd_iommu_set_invalidate_ctx_cb(kfd->pdev,
+					iommu_pasid_shutdown_callback);
+	amd_iommu_set_invalid_ppr_cb(kfd->pdev,
+>>>>>>> b7ba80a49124 (Commit)
 				     iommu_invalid_ppr_cb);
 
 	err = kfd_bind_processes_to_device(kfd);
 	if (err) {
+<<<<<<< HEAD
 		amd_iommu_set_invalidate_ctx_cb(kfd->adev->pdev, NULL);
 		amd_iommu_set_invalid_ppr_cb(kfd->adev->pdev, NULL);
 		amd_iommu_free_device(kfd->adev->pdev);
+=======
+		amd_iommu_set_invalidate_ctx_cb(kfd->pdev, NULL);
+		amd_iommu_set_invalid_ppr_cb(kfd->pdev, NULL);
+		amd_iommu_free_device(kfd->pdev);
+>>>>>>> b7ba80a49124 (Commit)
 		return err;
 	}
 

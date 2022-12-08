@@ -572,9 +572,15 @@ int cmd_freq_info(int argc, char **argv)
 
 	ret = 0;
 
+<<<<<<< HEAD
 	/* Default is: show output of base_cpu only */
 	if (bitmask_isallclear(cpus_chosen))
 		bitmask_setbit(cpus_chosen, base_cpu);
+=======
+	/* Default is: show output of CPU 0 only */
+	if (bitmask_isallclear(cpus_chosen))
+		bitmask_setbit(cpus_chosen, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (output_param) {
 	case -1:

@@ -24,7 +24,11 @@
 #include <linux/slab.h>
 #include <linux/err.h>
 #include <linux/export.h>
+<<<<<<< HEAD
 #include <linux/list.h>
+=======
+#include <linux/rculist.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/unaligned.h>
 
@@ -75,6 +79,10 @@ static void fc_disc_recv_rscn_req(struct fc_disc *disc, struct fc_frame *fp)
 	struct fc_seq_els_data rjt_data;
 	unsigned int len;
 	int redisc = 0;
+<<<<<<< HEAD
+=======
+	enum fc_els_rscn_ev_qual ev_qual;
+>>>>>>> b7ba80a49124 (Commit)
 	enum fc_els_rscn_addr_fmt fmt;
 	LIST_HEAD(disc_ports);
 	struct fc_disc_port *dp, *next;
@@ -106,6 +114,11 @@ static void fc_disc_recv_rscn_req(struct fc_disc *disc, struct fc_frame *fp)
 		goto reject;
 
 	for (pp = (void *)(rp + 1); len > 0; len -= sizeof(*pp), pp++) {
+<<<<<<< HEAD
+=======
+		ev_qual = pp->rscn_page_flags >> ELS_RSCN_EV_QUAL_BIT;
+		ev_qual &= ELS_RSCN_EV_QUAL_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 		fmt = pp->rscn_page_flags >> ELS_RSCN_ADDR_FMT_BIT;
 		fmt &= ELS_RSCN_ADDR_FMT_MASK;
 		/*

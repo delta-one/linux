@@ -83,7 +83,11 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
 	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
 	const struct ingenic_cgu_pll_info *pll_info;
+<<<<<<< HEAD
 	unsigned m, n, od, od_enc = 0;
+=======
+	unsigned m, n, od_enc, od;
+>>>>>>> b7ba80a49124 (Commit)
 	bool bypass;
 	u32 ctl;
 
@@ -96,11 +100,16 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
 	m += pll_info->m_offset;
 	n = (ctl >> pll_info->n_shift) & GENMASK(pll_info->n_bits - 1, 0);
 	n += pll_info->n_offset;
+<<<<<<< HEAD
 
 	if (pll_info->od_bits > 0) {
 		od_enc = ctl >> pll_info->od_shift;
 		od_enc &= GENMASK(pll_info->od_bits - 1, 0);
 	}
+=======
+	od_enc = ctl >> pll_info->od_shift;
+	od_enc &= GENMASK(pll_info->od_bits - 1, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (pll_info->bypass_bit >= 0) {
 		ctl = readl(cgu->base + pll_info->bypass_reg);
@@ -111,6 +120,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
 			return parent_rate;
 	}
 
+<<<<<<< HEAD
 	for (od = 0; od < pll_info->od_max; od++)
 		if (pll_info->od_encoding[od] == od_enc)
 			break;
@@ -120,6 +130,13 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
 		BUG_ON(pll_info->od_bits != 0);
 	else
 		BUG_ON(od == pll_info->od_max);
+=======
+	for (od = 0; od < pll_info->od_max; od++) {
+		if (pll_info->od_encoding[od] == od_enc)
+			break;
+	}
+	BUG_ON(od == pll_info->od_max);
+>>>>>>> b7ba80a49124 (Commit)
 	od++;
 
 	return div_u64((u64)parent_rate * m * pll_info->rate_multiplier,
@@ -189,9 +206,12 @@ static inline int ingenic_pll_check_stable(struct ingenic_cgu *cgu,
 {
 	u32 ctl;
 
+<<<<<<< HEAD
 	if (pll_info->stable_bit < 0)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return readl_poll_timeout(cgu->base + pll_info->reg, ctl,
 				  ctl & BIT(pll_info->stable_bit),
 				  0, 100 * USEC_PER_MSEC);
@@ -225,6 +245,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned long req_rate,
 	ctl &= ~(GENMASK(pll_info->n_bits - 1, 0) << pll_info->n_shift);
 	ctl |= (n - pll_info->n_offset) << pll_info->n_shift;
 
+<<<<<<< HEAD
 	if (pll_info->od_bits > 0) {
 		ctl &= ~(GENMASK(pll_info->od_bits - 1, 0) << pll_info->od_shift);
 		ctl |= pll_info->od_encoding[od - 1] << pll_info->od_shift;
@@ -237,6 +258,15 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned long req_rate,
 
 	/* If the PLL is enabled, verify that it's stable */
 	if (pll_info->enable_bit >= 0 && (ctl & BIT(pll_info->enable_bit)))
+=======
+	ctl &= ~(GENMASK(pll_info->od_bits - 1, 0) << pll_info->od_shift);
+	ctl |= pll_info->od_encoding[od - 1] << pll_info->od_shift;
+
+	writel(ctl, cgu->base + pll_info->reg);
+
+	/* If the PLL is enabled, verify that it's stable */
+	if (ctl & BIT(pll_info->enable_bit))
+>>>>>>> b7ba80a49124 (Commit)
 		ret = ingenic_pll_check_stable(cgu, pll_info);
 
 	spin_unlock_irqrestore(&cgu->lock, flags);
@@ -254,9 +284,12 @@ static int ingenic_pll_enable(struct clk_hw *hw)
 	int ret;
 	u32 ctl;
 
+<<<<<<< HEAD
 	if (pll_info->enable_bit < 0)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_irqsave(&cgu->lock, flags);
 	if (pll_info->bypass_bit >= 0) {
 		ctl = readl(cgu->base + pll_info->bypass_reg);
@@ -287,9 +320,12 @@ static void ingenic_pll_disable(struct clk_hw *hw)
 	unsigned long flags;
 	u32 ctl;
 
+<<<<<<< HEAD
 	if (pll_info->enable_bit < 0)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_irqsave(&cgu->lock, flags);
 	ctl = readl(cgu->base + pll_info->reg);
 
@@ -307,9 +343,12 @@ static int ingenic_pll_is_enabled(struct clk_hw *hw)
 	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
 	u32 ctl;
 
+<<<<<<< HEAD
 	if (pll_info->enable_bit < 0)
 		return true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ctl = readl(cgu->base + pll_info->reg);
 
 	return !!(ctl & BIT(pll_info->enable_bit));

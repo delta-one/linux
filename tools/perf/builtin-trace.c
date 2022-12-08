@@ -15,10 +15,16 @@
  */
 
 #include "util/record.h"
+<<<<<<< HEAD
 #include <api/fs/tracing_path.h>
 #ifdef HAVE_LIBBPF_SUPPORT
 #include <bpf/bpf.h>
 #endif
+=======
+#include <traceevent/event-parse.h>
+#include <api/fs/tracing_path.h>
+#include <bpf/bpf.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include "util/bpf_map.h"
 #include "util/rlimit.h"
 #include "builtin.h"
@@ -81,10 +87,13 @@
 #include <linux/ctype.h>
 #include <perf/mmap.h>
 
+<<<<<<< HEAD
 #ifdef HAVE_LIBTRACEEVENT
 #include <traceevent/event-parse.h>
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef O_CLOEXEC
 # define O_CLOEXEC		02000000
 #endif
@@ -93,8 +102,11 @@
 # define F_LINUX_SPECIFIC_BASE	1024
 #endif
 
+<<<<<<< HEAD
 #define RAW_SYSCALL_ARGS_NUM	6
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * strtoul: Go from a string to a value, i.e. for msr: MSR_FS_BASE to 0xc0000100
  */
@@ -115,7 +127,11 @@ struct syscall_fmt {
 		const char *sys_enter,
 			   *sys_exit;
 	}	   bpf_prog_name;
+<<<<<<< HEAD
 	struct syscall_arg_fmt arg[RAW_SYSCALL_ARGS_NUM];
+=======
+	struct syscall_arg_fmt arg[6];
+>>>>>>> b7ba80a49124 (Commit)
 	u8	   nr_args;
 	bool	   errpid;
 	bool	   timeout;
@@ -127,6 +143,10 @@ struct trace {
 	struct syscalltbl	*sctbl;
 	struct {
 		struct syscall  *table;
+<<<<<<< HEAD
+=======
+		struct bpf_map  *map;
+>>>>>>> b7ba80a49124 (Commit)
 		struct { // per syscall BPF_MAP_TYPE_PROG_ARRAY
 			struct bpf_map  *sys_enter,
 					*sys_exit;
@@ -621,8 +641,16 @@ bool strarray__strtoul_flags(struct strarray *sa, char *bf, size_t size, u64 *re
 		if (isalpha(*tok) || *tok == '_') {
 			if (!strarray__strtoul(sa, tok, toklen, &val))
 				return false;
+<<<<<<< HEAD
 		} else
 			val = strtoul(tok, NULL, 0);
+=======
+		} else {
+			bool is_hexa = tok[0] == 0 && (tok[1] = 'x' || tok[1] == 'X');
+
+			val = strtoul(tok, NULL, is_hexa ? 16 : 0);
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		*ret |= (1 << (val - 1));
 
@@ -930,8 +958,11 @@ static struct syscall_fmt syscall_fmts[] = {
 	  .arg = { [0] = { .scnprintf = SCA_PTR, /* brk */ }, }, },
 	{ .name     = "clock_gettime",
 	  .arg = { [0] = STRARRAY(clk_id, clockid), }, },
+<<<<<<< HEAD
 	{ .name	    = "clock_nanosleep",
 	  .arg = { [2] = { .scnprintf = SCA_TIMESPEC,  /* rqtp */ }, }, },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .name	    = "clone",	    .errpid = true, .nr_args = 5,
 	  .arg = { [0] = { .name = "flags",	    .scnprintf = SCA_CLONE_FLAGS, },
 		   [1] = { .name = "child_stack",   .scnprintf = SCA_HEX, },
@@ -1061,8 +1092,12 @@ static struct syscall_fmt syscall_fmts[] = {
 	  .arg = { [0] = { .scnprintf = SCA_FDAT,	/* dfd */ },
 		   [2] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
 	{ .name	    = "perf_event_open",
+<<<<<<< HEAD
 	  .arg = { [0] = { .scnprintf = SCA_PERF_ATTR,  /* attr */ },
 		   [2] = { .scnprintf = SCA_INT,	/* cpu */ },
+=======
+	  .arg = { [2] = { .scnprintf = SCA_INT,	/* cpu */ },
+>>>>>>> b7ba80a49124 (Commit)
 		   [3] = { .scnprintf = SCA_FD,		/* group_fd */ },
 		   [4] = { .scnprintf = SCA_PERF_FLAGS, /* flags */ }, }, },
 	{ .name	    = "pipe2",
@@ -1229,6 +1264,19 @@ struct syscall {
 };
 
 /*
+<<<<<<< HEAD
+=======
+ * Must match what is in the BPF program:
+ *
+ * tools/perf/examples/bpf/augmented_raw_syscalls.c
+ */
+struct bpf_map_syscall_entry {
+	bool	enabled;
+	u16	string_args_len[6];
+};
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * We need to have this 'calculated' boolean because in some cases we really
  * don't know what is the duration of a syscall, for instance, when we start
  * a session and some threads are waiting for a syscall to finish, say 'poll',
@@ -1534,8 +1582,13 @@ static size_t trace__fprintf_tstamp(struct trace *trace, u64 tstamp, FILE *fp)
 }
 
 static pid_t workload_pid = -1;
+<<<<<<< HEAD
 static volatile sig_atomic_t done = false;
 static volatile sig_atomic_t interrupted = false;
+=======
+static bool done = false;
+static bool interrupted = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 static void sighandler_interrupt(int sig __maybe_unused)
 {
@@ -1657,7 +1710,11 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
 {
 	int idx;
 
+<<<<<<< HEAD
 	if (nr_args == RAW_SYSCALL_ARGS_NUM && sc->fmt && sc->fmt->nr_args != 0)
+=======
+	if (nr_args == 6 && sc->fmt && sc->fmt->nr_args != 0)
+>>>>>>> b7ba80a49124 (Commit)
 		nr_args = sc->fmt->nr_args;
 
 	sc->arg_fmt = calloc(nr_args, sizeof(*sc->arg_fmt));
@@ -1729,7 +1786,11 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
 			 len >= 2 && strcmp(field->name + len - 2, "fd") == 0) {
 			/*
 			 * /sys/kernel/tracing/events/syscalls/sys_enter*
+<<<<<<< HEAD
 			 * grep -E 'field:.*fd;' .../format|sed -r 's/.*field:([a-z ]+) [a-z_]*fd.+/\1/g'|sort|uniq -c
+=======
+			 * egrep 'field:.*fd;' .../format|sed -r 's/.*field:([a-z ]+) [a-z_]*fd.+/\1/g'|sort|uniq -c
+>>>>>>> b7ba80a49124 (Commit)
 			 * 65 int
 			 * 23 unsigned int
 			 * 7 unsigned long
@@ -1790,11 +1851,19 @@ static int trace__read_syscall_info(struct trace *trace, int id)
 #endif
 	sc = trace->syscalls.table + id;
 	if (sc->nonexistent)
+<<<<<<< HEAD
 		return -EEXIST;
 
 	if (name == NULL) {
 		sc->nonexistent = true;
 		return -EEXIST;
+=======
+		return 0;
+
+	if (name == NULL) {
+		sc->nonexistent = true;
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	sc->name = name;
@@ -1808,6 +1877,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
 		sc->tp_format = trace_event__tp_format("syscalls", tp_name);
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Fails to read trace point format via sysfs node, so the trace point
 	 * doesn't exist.  Set the 'nonexistent' flag as true.
@@ -1821,6 +1891,14 @@ static int trace__read_syscall_info(struct trace *trace, int id)
 					RAW_SYSCALL_ARGS_NUM : sc->tp_format->format.nr_fields))
 		return -ENOMEM;
 
+=======
+	if (syscall__alloc_arg_fmts(sc, IS_ERR(sc->tp_format) ? 6 : sc->tp_format->format.nr_fields))
+		return -ENOMEM;
+
+	if (IS_ERR(sc->tp_format))
+		return PTR_ERR(sc->tp_format);
+
+>>>>>>> b7ba80a49124 (Commit)
 	sc->args = sc->tp_format->format.fields;
 	/*
 	 * We need to check and discard the first variable '__syscall_nr'
@@ -2137,8 +2215,16 @@ static struct syscall *trace__syscall_info(struct trace *trace,
 	    (err = trace__read_syscall_info(trace, id)) != 0)
 		goto out_cant_read;
 
+<<<<<<< HEAD
 	if (trace->syscalls.table && trace->syscalls.table[id].nonexistent)
 		goto out_cant_read;
+=======
+	if (trace->syscalls.table[id].name == NULL) {
+		if (trace->syscalls.table[id].nonexistent)
+			return NULL;
+		goto out_cant_read;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return &trace->syscalls.table[id];
 
@@ -2731,7 +2817,11 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
 				offset = format_field__intval(field, sample, evsel->needs_swap);
 				syscall_arg.len = offset >> 16;
 				offset &= 0xffff;
+<<<<<<< HEAD
 				if (tep_field_is_relative(field->flags))
+=======
+				if (field->flags & TEP_FIELD_IS_RELATIVE)
+>>>>>>> b7ba80a49124 (Commit)
 					offset += field->offset + field->size;
 			}
 
@@ -2759,7 +2849,15 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
 
 		printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
 
+<<<<<<< HEAD
 		if (trace->show_arg_names)
+=======
+		/*
+		 * XXX Perhaps we should have a show_tp_arg_names,
+		 * leaving show_arg_names just for syscalls?
+		 */
+		if (1 || trace->show_arg_names)
+>>>>>>> b7ba80a49124 (Commit)
 			printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
 
 		printed += syscall_arg_fmt__scnprintf_val(arg, bf + printed, size - printed, &syscall_arg, val);
@@ -3253,6 +3351,10 @@ static void trace__set_bpf_map_filtered_pids(struct trace *trace)
 
 static void trace__set_bpf_map_syscalls(struct trace *trace)
 {
+<<<<<<< HEAD
+=======
+	trace->syscalls.map = trace__find_bpf_map_by_name(trace, "syscalls");
+>>>>>>> b7ba80a49124 (Commit)
 	trace->syscalls.prog_array.sys_enter = trace__find_bpf_map_by_name(trace, "syscalls_sys_enter");
 	trace->syscalls.prog_array.sys_exit  = trace__find_bpf_map_by_name(trace, "syscalls_sys_exit");
 }
@@ -3332,6 +3434,83 @@ static int trace__bpf_prog_sys_exit_fd(struct trace *trace, int id)
 	return sc ? bpf_program__fd(sc->bpf_prog.sys_exit) : bpf_program__fd(trace->syscalls.unaugmented_prog);
 }
 
+<<<<<<< HEAD
+=======
+static void trace__init_bpf_map_syscall_args(struct trace *trace, int id, struct bpf_map_syscall_entry *entry)
+{
+	struct syscall *sc = trace__syscall_info(trace, NULL, id);
+	int arg = 0;
+
+	if (sc == NULL)
+		goto out;
+
+	for (; arg < sc->nr_args; ++arg) {
+		entry->string_args_len[arg] = 0;
+		if (sc->arg_fmt[arg].scnprintf == SCA_FILENAME) {
+			/* Should be set like strace -s strsize */
+			entry->string_args_len[arg] = PATH_MAX;
+		}
+	}
+out:
+	for (; arg < 6; ++arg)
+		entry->string_args_len[arg] = 0;
+}
+static int trace__set_ev_qualifier_bpf_filter(struct trace *trace)
+{
+	int fd = bpf_map__fd(trace->syscalls.map);
+	struct bpf_map_syscall_entry value = {
+		.enabled = !trace->not_ev_qualifier,
+	};
+	int err = 0;
+	size_t i;
+
+	for (i = 0; i < trace->ev_qualifier_ids.nr; ++i) {
+		int key = trace->ev_qualifier_ids.entries[i];
+
+		if (value.enabled) {
+			trace__init_bpf_map_syscall_args(trace, key, &value);
+			trace__init_syscall_bpf_progs(trace, key);
+		}
+
+		err = bpf_map_update_elem(fd, &key, &value, BPF_EXIST);
+		if (err)
+			break;
+	}
+
+	return err;
+}
+
+static int __trace__init_syscalls_bpf_map(struct trace *trace, bool enabled)
+{
+	int fd = bpf_map__fd(trace->syscalls.map);
+	struct bpf_map_syscall_entry value = {
+		.enabled = enabled,
+	};
+	int err = 0, key;
+
+	for (key = 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
+		if (enabled)
+			trace__init_bpf_map_syscall_args(trace, key, &value);
+
+		err = bpf_map_update_elem(fd, &key, &value, BPF_ANY);
+		if (err)
+			break;
+	}
+
+	return err;
+}
+
+static int trace__init_syscalls_bpf_map(struct trace *trace)
+{
+	bool enabled = true;
+
+	if (trace->ev_qualifier_ids.nr)
+		enabled = trace->not_ev_qualifier;
+
+	return __trace__init_syscalls_bpf_map(trace, enabled);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace, struct syscall *sc)
 {
 	struct tep_format_field *field, *candidate_field;
@@ -3546,6 +3725,19 @@ static void trace__set_bpf_map_syscalls(struct trace *trace __maybe_unused)
 {
 }
 
+<<<<<<< HEAD
+=======
+static int trace__set_ev_qualifier_bpf_filter(struct trace *trace __maybe_unused)
+{
+	return 0;
+}
+
+static int trace__init_syscalls_bpf_map(struct trace *trace __maybe_unused)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct bpf_program *trace__find_bpf_program_by_title(struct trace *trace __maybe_unused,
 							    const char *name __maybe_unused)
 {
@@ -3579,6 +3771,11 @@ static bool trace__only_augmented_syscalls_evsels(struct trace *trace)
 
 static int trace__set_ev_qualifier_filter(struct trace *trace)
 {
+<<<<<<< HEAD
+=======
+	if (trace->syscalls.map)
+		return trace__set_ev_qualifier_bpf_filter(trace);
+>>>>>>> b7ba80a49124 (Commit)
 	if (trace->syscalls.events.sys_enter)
 		return trace__set_ev_qualifier_tp_filter(trace);
 	return 0;
@@ -3952,6 +4149,12 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
 	if (err < 0)
 		goto out_error_mem;
 
+<<<<<<< HEAD
+=======
+	if (trace->syscalls.map)
+		trace__init_syscalls_bpf_map(trace);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (trace->syscalls.prog_array.sys_enter)
 		trace__init_syscalls_bpf_prog_array_maps(trace);
 
@@ -3993,20 +4196,34 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
 	if (err < 0)
 		goto out_error_mmap;
 
+<<<<<<< HEAD
 	if (!target__none(&trace->opts.target) && !trace->opts.target.initial_delay)
+=======
+	if (!target__none(&trace->opts.target) && !trace->opts.initial_delay)
+>>>>>>> b7ba80a49124 (Commit)
 		evlist__enable(evlist);
 
 	if (forks)
 		evlist__start_workload(evlist);
 
+<<<<<<< HEAD
 	if (trace->opts.target.initial_delay) {
 		usleep(trace->opts.target.initial_delay * 1000);
+=======
+	if (trace->opts.initial_delay) {
+		usleep(trace->opts.initial_delay * 1000);
+>>>>>>> b7ba80a49124 (Commit)
 		evlist__enable(evlist);
 	}
 
 	trace->multiple_threads = perf_thread_map__pid(evlist->core.threads, 0) == -1 ||
+<<<<<<< HEAD
 		perf_thread_map__nr(evlist->core.threads) > 1 ||
 		evlist__first(evlist)->core.attr.inherit;
+=======
+				  evlist->core.threads->nr > 1 ||
+				  evlist__first(evlist)->core.attr.inherit;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Now that we already used evsel->core.attr to ask the kernel to setup the
@@ -4788,7 +5005,11 @@ int cmd_trace(int argc, const char **argv)
 			"per thread proc mmap processing timeout in ms"),
 	OPT_CALLBACK('G', "cgroup", &trace, "name", "monitor event in cgroup name only",
 		     trace__parse_cgroups),
+<<<<<<< HEAD
 	OPT_INTEGER('D', "delay", &trace.opts.target.initial_delay,
+=======
+	OPT_INTEGER('D', "delay", &trace.opts.initial_delay,
+>>>>>>> b7ba80a49124 (Commit)
 		     "ms to wait before starting measurement after program "
 		     "start"),
 	OPTS_EVSWITCH(&trace.evswitch),

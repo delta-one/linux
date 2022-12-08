@@ -72,6 +72,9 @@ int amdgpu_jpeg_dec_ring_test_ib(struct amdgpu_ring *ring, long timeout);
 int amdgpu_jpeg_process_poison_irq(struct amdgpu_device *adev,
 				struct amdgpu_irq_src *source,
 				struct amdgpu_iv_entry *entry);
+<<<<<<< HEAD
 int amdgpu_jpeg_ras_sw_init(struct amdgpu_device *adev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /*__AMDGPU_JPEG_H__*/

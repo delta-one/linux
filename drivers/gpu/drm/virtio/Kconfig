@@ -11,6 +11,7 @@ config DRM_VIRTIO_GPU
 	   QEMU based VMMs (like KVM or Xen).
 
 	   If unsure say M.
+<<<<<<< HEAD
 
 config DRM_VIRTIO_GPU_KMS
 	bool "Virtio GPU driver modesetting support"
@@ -22,3 +23,5 @@ config DRM_VIRTIO_GPU_KMS
 	   required.
 
 	   If unsure, say Y.
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -803,11 +803,14 @@ brcmf_fw_alloc_request(u32 chip, u32 chiprev,
 	u32 i, j;
 	char end = '\0';
 
+<<<<<<< HEAD
 	if (chiprev >= BITS_PER_TYPE(u32)) {
 		brcmf_err("Invalid chip revision %u\n", chiprev);
 		return NULL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < table_size; i++) {
 		if (mapping_table[i].chipid == chip &&
 		    mapping_table[i].revmask & BIT(chiprev))

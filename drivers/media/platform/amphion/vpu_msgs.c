@@ -43,7 +43,10 @@ static void vpu_session_handle_mem_request(struct vpu_inst *inst, struct vpu_rpc
 		  req_data.ref_frame_num,
 		  req_data.act_buf_size,
 		  req_data.act_buf_num);
+<<<<<<< HEAD
 	vpu_inst_lock(inst);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	call_void_vop(inst, mem_request,
 		      req_data.enc_frame_size,
 		      req_data.enc_frame_num,
@@ -51,7 +54,10 @@ static void vpu_session_handle_mem_request(struct vpu_inst *inst, struct vpu_rpc
 		      req_data.ref_frame_num,
 		      req_data.act_buf_size,
 		      req_data.act_buf_num);
+<<<<<<< HEAD
 	vpu_inst_unlock(inst);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void vpu_session_handle_stop_done(struct vpu_inst *inst, struct vpu_rpc_event *pkt)

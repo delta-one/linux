@@ -2618,7 +2618,11 @@ error_core:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void cs47l90_remove(struct platform_device *pdev)
+=======
+static int cs47l90_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cs47l90 *cs47l90 = platform_get_drvdata(pdev);
 	int i;
@@ -2633,6 +2637,11 @@ static void cs47l90_remove(struct platform_device *pdev)
 	madera_set_irq_wake(cs47l90->core.madera, MADERA_IRQ_DSP_IRQ1, 0);
 	madera_free_irq(cs47l90->core.madera, MADERA_IRQ_DSP_IRQ1, cs47l90);
 	madera_core_free(&cs47l90->core);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver cs47l90_codec_driver = {
@@ -2640,7 +2649,11 @@ static struct platform_driver cs47l90_codec_driver = {
 		.name = "cs47l90-codec",
 	},
 	.probe = &cs47l90_probe,
+<<<<<<< HEAD
 	.remove_new = cs47l90_remove,
+=======
+	.remove = &cs47l90_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(cs47l90_codec_driver);

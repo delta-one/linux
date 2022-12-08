@@ -87,6 +87,10 @@
  * DLM_LKF_NODLCKWT
  *
  * Do not cancel the lock if it gets into conversion deadlock.
+<<<<<<< HEAD
+=======
+ * Exclude this lock from being monitored due to DLM_LSFL_TIMEWARN.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * DLM_LKF_NODLCKBLK
  *
@@ -131,10 +135,13 @@
  * Unlock the lock even if it is converting or waiting or has sublocks.
  * Only really for use by the userland device.c code.
  *
+<<<<<<< HEAD
  * DLM_LKF_TIMEOUT
  *
  * This value is deprecated and reserved. DO NOT USE!
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #define DLM_LKF_NOQUEUE		0x00000001

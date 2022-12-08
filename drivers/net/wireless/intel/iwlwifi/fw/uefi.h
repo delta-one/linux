@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
 /*
+<<<<<<< HEAD
  * Copyright(c) 2021-2022 Intel Corporation
+=======
+ * Copyright(c) 2021 Intel Corporation
+>>>>>>> b7ba80a49124 (Commit)
  */
 #ifndef __iwl_fw_uefi__
 #define __iwl_fw_uefi__
@@ -8,7 +12,10 @@
 #define IWL_UEFI_OEM_PNVM_NAME		L"UefiCnvWlanOemSignedPnvm"
 #define IWL_UEFI_REDUCED_POWER_NAME	L"UefiCnvWlanReducedPower"
 #define IWL_UEFI_SGOM_NAME		L"UefiCnvWlanSarGeoOffsetMapping"
+<<<<<<< HEAD
 #define IWL_UEFI_STEP_NAME		L"UefiCnvCommonSTEP"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * TODO: we have these hardcoded values that the caller must pass,
@@ -19,7 +26,10 @@
 #define IWL_HARDCODED_PNVM_SIZE		4096
 #define IWL_HARDCODED_REDUCE_POWER_SIZE	32768
 #define IWL_HARDCODED_SGOM_SIZE		339
+<<<<<<< HEAD
 #define IWL_HARDCODED_STEP_SIZE		6
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct pnvm_sku_package {
 	u8 rev;
@@ -34,6 +44,7 @@ struct uefi_cnv_wlan_sgom_data {
 	u8 offset_map[IWL_HARDCODED_SGOM_SIZE - 1];
 } __packed;
 
+<<<<<<< HEAD
 struct uefi_cnv_common_step_data {
 	u8 revision;
 	u8 step_mode;
@@ -43,6 +54,8 @@ struct uefi_cnv_common_step_data {
 	u8 radio2;
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This is known to be broken on v4.19 and to work on v5.4.  Until we
  * figure out why this is the case and how to make it work, simply
@@ -51,7 +64,10 @@ struct uefi_cnv_common_step_data {
 #ifdef CONFIG_EFI
 void *iwl_uefi_get_pnvm(struct iwl_trans *trans, size_t *len);
 void *iwl_uefi_get_reduced_power(struct iwl_trans *trans, size_t *len);
+<<<<<<< HEAD
 void iwl_uefi_get_step_table(struct iwl_trans *trans);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else /* CONFIG_EFI */
 static inline
 void *iwl_uefi_get_pnvm(struct iwl_trans *trans, size_t *len)
@@ -64,11 +80,14 @@ void *iwl_uefi_get_reduced_power(struct iwl_trans *trans, size_t *len)
 {
 	return ERR_PTR(-EOPNOTSUPP);
 }
+<<<<<<< HEAD
 
 static inline
 void iwl_uefi_get_step_table(struct iwl_trans *trans)
 {
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_EFI */
 
 #if defined(CONFIG_EFI) && defined(CONFIG_ACPI)

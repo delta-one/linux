@@ -121,9 +121,15 @@ static const struct iio_info tsys02d_info = {
 	.attrs = &tsys02d_attribute_group,
 };
 
+<<<<<<< HEAD
 static int tsys02d_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int tsys02d_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct ms_ht_dev *dev_data;
 	struct iio_dev *indio_dev;
 	int ret;
@@ -174,7 +180,11 @@ static const struct i2c_device_id tsys02d_id[] = {
 MODULE_DEVICE_TABLE(i2c, tsys02d_id);
 
 static struct i2c_driver tsys02d_driver = {
+<<<<<<< HEAD
 	.probe_new = tsys02d_probe,
+=======
+	.probe = tsys02d_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = tsys02d_id,
 	.driver = {
 		   .name = "tsys02d",

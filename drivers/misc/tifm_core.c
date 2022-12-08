@@ -55,9 +55,15 @@ static int tifm_bus_match(struct device *dev, struct device_driver *drv)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int tifm_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct tifm_dev *sock = container_of_const(dev, struct tifm_dev, dev);
+=======
+static int tifm_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct tifm_dev *sock = container_of(dev, struct tifm_dev, dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (add_uevent_var(env, "TIFM_CARD_TYPE=%s", tifm_media_type_name(sock->type, 1)))
 		return -ENOMEM;

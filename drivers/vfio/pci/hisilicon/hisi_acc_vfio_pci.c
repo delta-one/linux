@@ -16,7 +16,11 @@
 
 #include "hisi_acc_vfio_pci.h"
 
+<<<<<<< HEAD
 /* Return 0 on VM acc device ready, -ETIMEDOUT hardware timeout */
+=======
+/* return 0 on VM acc device ready, -ETIMEDOUT hardware timeout */
+>>>>>>> b7ba80a49124 (Commit)
 static int qm_wait_dev_not_ready(struct hisi_qm *qm)
 {
 	u32 val;
@@ -189,7 +193,11 @@ static int qm_set_regs(struct hisi_qm *qm, struct acc_vf_data *vf_data)
 	struct device *dev = &qm->pdev->dev;
 	int ret;
 
+<<<<<<< HEAD
 	/* Check VF state */
+=======
+	/* check VF state */
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(hisi_qm_wait_mb_ready(qm))) {
 		dev_err(&qm->pdev->dev, "QM device is not ready to write\n");
 		return -EBUSY;
@@ -337,7 +345,12 @@ static int vf_qm_cache_wb(struct hisi_qm *qm)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void vf_qm_fun_reset(struct hisi_qm *qm)
+=======
+static void vf_qm_fun_reset(struct hisi_acc_vf_core_device *hisi_acc_vdev,
+			    struct hisi_qm *qm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i;
 
@@ -360,8 +373,13 @@ static int vf_qm_check_match(struct hisi_acc_vf_core_device *hisi_acc_vdev,
 	u32 que_iso_state;
 	int ret;
 
+<<<<<<< HEAD
 	if (migf->total_length < QM_MATCH_SIZE || hisi_acc_vdev->match_done)
 		return 0;
+=======
+	if (migf->total_length < QM_MATCH_SIZE)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (vf_data->acc_magic != ACC_DEV_MAGIC) {
 		dev_err(dev, "failed to match ACC_DEV_MAGIC\n");
@@ -373,7 +391,11 @@ static int vf_qm_check_match(struct hisi_acc_vf_core_device *hisi_acc_vdev,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	/* VF qp num check */
+=======
+	/* vf qp num check */
+>>>>>>> b7ba80a49124 (Commit)
 	ret = qm_get_vft(vf_qm, &vf_qm->qp_base);
 	if (ret <= 0) {
 		dev_err(dev, "failed to get vft qp nums\n");
@@ -387,7 +409,11 @@ static int vf_qm_check_match(struct hisi_acc_vf_core_device *hisi_acc_vdev,
 
 	vf_qm->qp_num = ret;
 
+<<<<<<< HEAD
 	/* VF isolation state check */
+=======
+	/* vf isolation state check */
+>>>>>>> b7ba80a49124 (Commit)
 	ret = qm_read_regs(pf_qm, QM_QUE_ISO_CFG_V, &que_iso_state, 1);
 	if (ret) {
 		dev_err(dev, "failed to read QM_QUE_ISO_CFG_V\n");
@@ -396,7 +422,11 @@ static int vf_qm_check_match(struct hisi_acc_vf_core_device *hisi_acc_vdev,
 
 	if (vf_data->que_iso_cfg != que_iso_state) {
 		dev_err(dev, "failed to match isolation state\n");
+<<<<<<< HEAD
 		return -EINVAL;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = qm_write_regs(vf_qm, QM_VF_STATE, &vf_data->vf_qm_state, 1);
@@ -406,7 +436,10 @@ static int vf_qm_check_match(struct hisi_acc_vf_core_device *hisi_acc_vdev,
 	}
 
 	hisi_acc_vdev->vf_qm_state = vf_data->vf_qm_state;
+<<<<<<< HEAD
 	hisi_acc_vdev->match_done = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -419,10 +452,17 @@ static int vf_qm_get_match_data(struct hisi_acc_vf_core_device *hisi_acc_vdev,
 	int ret;
 
 	vf_data->acc_magic = ACC_DEV_MAGIC;
+<<<<<<< HEAD
 	/* Save device id */
 	vf_data->dev_id = hisi_acc_vdev->vf_dev->device;
 
 	/* VF qp num save from PF */
+=======
+	/* save device id */
+	vf_data->dev_id = hisi_acc_vdev->vf_dev->device;
+
+	/* vf qp num save from PF */
+>>>>>>> b7ba80a49124 (Commit)
 	ret = pf_qm_get_qp_num(pf_qm, vf_id, &vf_data->qp_base);
 	if (ret <= 0) {
 		dev_err(dev, "failed to get vft qp nums!\n");
@@ -466,19 +506,31 @@ static int vf_qm_load_data(struct hisi_acc_vf_core_device *hisi_acc_vdev,
 
 	ret = qm_set_regs(qm, vf_data);
 	if (ret) {
+<<<<<<< HEAD
 		dev_err(dev, "set VF regs failed\n");
+=======
+		dev_err(dev, "Set VF regs failed\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 
 	ret = hisi_qm_mb(qm, QM_MB_CMD_SQC_BT, qm->sqc_dma, 0, 0);
 	if (ret) {
+<<<<<<< HEAD
 		dev_err(dev, "set sqc failed\n");
+=======
+		dev_err(dev, "Set sqc failed\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 
 	ret = hisi_qm_mb(qm, QM_MB_CMD_CQC_BT, qm->cqc_dma, 0, 0);
 	if (ret) {
+<<<<<<< HEAD
 		dev_err(dev, "set cqc failed\n");
+=======
+		dev_err(dev, "Set cqc failed\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 
@@ -494,6 +546,13 @@ static int vf_qm_state_save(struct hisi_acc_vf_core_device *hisi_acc_vdev,
 	struct device *dev = &vf_qm->pdev->dev;
 	int ret;
 
+<<<<<<< HEAD
+=======
+	ret = vf_qm_get_match_data(hisi_acc_vdev, vf_data);
+	if (ret)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(qm_wait_dev_not_ready(vf_qm))) {
 		/* Update state and return with match data */
 		vf_data->vf_qm_state = QM_NOT_READY;
@@ -516,12 +575,21 @@ static int vf_qm_state_save(struct hisi_acc_vf_core_device *hisi_acc_vdev,
 		return -EINVAL;
 
 	/* Every reg is 32 bit, the dma address is 64 bit. */
+<<<<<<< HEAD
 	vf_data->eqe_dma = vf_data->qm_eqc_dw[1];
 	vf_data->eqe_dma <<= QM_XQC_ADDR_OFFSET;
 	vf_data->eqe_dma |= vf_data->qm_eqc_dw[0];
 	vf_data->aeqe_dma = vf_data->qm_aeqc_dw[1];
 	vf_data->aeqe_dma <<= QM_XQC_ADDR_OFFSET;
 	vf_data->aeqe_dma |= vf_data->qm_aeqc_dw[0];
+=======
+	vf_data->eqe_dma = vf_data->qm_eqc_dw[2];
+	vf_data->eqe_dma <<= QM_XQC_ADDR_OFFSET;
+	vf_data->eqe_dma |= vf_data->qm_eqc_dw[1];
+	vf_data->aeqe_dma = vf_data->qm_aeqc_dw[2];
+	vf_data->aeqe_dma <<= QM_XQC_ADDR_OFFSET;
+	vf_data->aeqe_dma |= vf_data->qm_aeqc_dw[1];
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Through SQC_BT/CQC_BT to get sqc and cqc address */
 	ret = qm_get_sqc(vf_qm, &vf_data->sqc_dma);
@@ -658,10 +726,14 @@ static void hisi_acc_vf_start_device(struct hisi_acc_vf_core_device *hisi_acc_vd
 	if (hisi_acc_vdev->vf_qm_state != QM_READY)
 		return;
 
+<<<<<<< HEAD
 	/* Make sure the device is enabled */
 	qm_dev_cmd_init(vf_qm);
 
 	vf_qm_fun_reset(vf_qm);
+=======
+	vf_qm_fun_reset(hisi_acc_vdev, vf_qm);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int hisi_acc_vf_load_state(struct hisi_acc_vf_core_device *hisi_acc_vdev)
@@ -670,6 +742,15 @@ static int hisi_acc_vf_load_state(struct hisi_acc_vf_core_device *hisi_acc_vdev)
 	struct hisi_acc_vf_migration_file *migf = hisi_acc_vdev->resuming_migf;
 	int ret;
 
+<<<<<<< HEAD
+=======
+	/* Check dev compatibility */
+	ret = vf_qm_check_match(hisi_acc_vdev, migf);
+	if (ret) {
+		dev_err(dev, "failed to match the VF!\n");
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	/* Recover data to VF */
 	ret = vf_qm_load_data(hisi_acc_vdev, migf);
 	if (ret) {
@@ -723,10 +804,13 @@ static ssize_t hisi_acc_vf_resume_write(struct file *filp, const char __user *bu
 	*pos += len;
 	done = len;
 	migf->total_length += len;
+<<<<<<< HEAD
 
 	ret = vf_qm_check_match(migf->hisi_acc_vdev, migf);
 	if (ret)
 		done = -EFAULT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 out_unlock:
 	mutex_unlock(&migf->lock);
 	return done;
@@ -744,7 +828,11 @@ hisi_acc_vf_pci_resume(struct hisi_acc_vf_core_device *hisi_acc_vdev)
 {
 	struct hisi_acc_vf_migration_file *migf;
 
+<<<<<<< HEAD
 	migf = kzalloc(sizeof(*migf), GFP_KERNEL_ACCOUNT);
+=======
+	migf = kzalloc(sizeof(*migf), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!migf)
 		return ERR_PTR(-ENOMEM);
 
@@ -759,6 +847,7 @@ hisi_acc_vf_pci_resume(struct hisi_acc_vf_core_device *hisi_acc_vdev)
 
 	stream_open(migf->filp->f_inode, migf->filp);
 	mutex_init(&migf->lock);
+<<<<<<< HEAD
 	migf->hisi_acc_vdev = hisi_acc_vdev;
 	return migf;
 }
@@ -811,6 +900,11 @@ out:
 	return ret;
 }
 
+=======
+	return migf;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t hisi_acc_vf_save_read(struct file *filp, char __user *buf, size_t len,
 				     loff_t *pos)
 {
@@ -851,19 +945,30 @@ out_unlock:
 static const struct file_operations hisi_acc_vf_save_fops = {
 	.owner = THIS_MODULE,
 	.read = hisi_acc_vf_save_read,
+<<<<<<< HEAD
 	.unlocked_ioctl = hisi_acc_vf_precopy_ioctl,
 	.compat_ioctl = compat_ptr_ioctl,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.release = hisi_acc_vf_release_file,
 	.llseek = no_llseek,
 };
 
 static struct hisi_acc_vf_migration_file *
+<<<<<<< HEAD
 hisi_acc_open_saving_migf(struct hisi_acc_vf_core_device *hisi_acc_vdev)
+=======
+hisi_acc_vf_stop_copy(struct hisi_acc_vf_core_device *hisi_acc_vdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hisi_acc_vf_migration_file *migf;
 	int ret;
 
+<<<<<<< HEAD
 	migf = kzalloc(sizeof(*migf), GFP_KERNEL_ACCOUNT);
+=======
+	migf = kzalloc(sizeof(*migf), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!migf)
 		return ERR_PTR(-ENOMEM);
 
@@ -878,9 +983,14 @@ hisi_acc_open_saving_migf(struct hisi_acc_vf_core_device *hisi_acc_vdev)
 
 	stream_open(migf->filp->f_inode, migf->filp);
 	mutex_init(&migf->lock);
+<<<<<<< HEAD
 	migf->hisi_acc_vdev = hisi_acc_vdev;
 
 	ret = vf_qm_get_match_data(hisi_acc_vdev, &migf->vf_data);
+=======
+
+	ret = vf_qm_state_save(hisi_acc_vdev, migf);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		fput(migf->filp);
 		return ERR_PTR(ret);
@@ -889,6 +999,7 @@ hisi_acc_open_saving_migf(struct hisi_acc_vf_core_device *hisi_acc_vdev)
 	return migf;
 }
 
+<<<<<<< HEAD
 static struct hisi_acc_vf_migration_file *
 hisi_acc_vf_pre_copy(struct hisi_acc_vf_core_device *hisi_acc_vdev)
 {
@@ -927,6 +1038,8 @@ hisi_acc_vf_stop_copy(struct hisi_acc_vf_core_device *hisi_acc_vdev, bool open)
 	return open ? migf : NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int hisi_acc_vf_stop_device(struct hisi_acc_vf_core_device *hisi_acc_vdev)
 {
 	struct device *dev = &hisi_acc_vdev->vf_dev->dev;
@@ -954,6 +1067,7 @@ hisi_acc_vf_set_device_state(struct hisi_acc_vf_core_device *hisi_acc_vdev,
 	u32 cur = hisi_acc_vdev->mig_state;
 	int ret;
 
+<<<<<<< HEAD
 	if (cur == VFIO_DEVICE_STATE_RUNNING && new == VFIO_DEVICE_STATE_PRE_COPY) {
 		struct hisi_acc_vf_migration_file *migf;
 
@@ -979,6 +1093,8 @@ hisi_acc_vf_set_device_state(struct hisi_acc_vf_core_device *hisi_acc_vdev,
 		return NULL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (cur == VFIO_DEVICE_STATE_RUNNING && new == VFIO_DEVICE_STATE_STOP) {
 		ret = hisi_acc_vf_stop_device(hisi_acc_vdev);
 		if (ret)
@@ -989,7 +1105,11 @@ hisi_acc_vf_set_device_state(struct hisi_acc_vf_core_device *hisi_acc_vdev,
 	if (cur == VFIO_DEVICE_STATE_STOP && new == VFIO_DEVICE_STATE_STOP_COPY) {
 		struct hisi_acc_vf_migration_file *migf;
 
+<<<<<<< HEAD
 		migf = hisi_acc_vf_stop_copy(hisi_acc_vdev, true);
+=======
+		migf = hisi_acc_vf_stop_copy(hisi_acc_vdev);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(migf))
 			return ERR_CAST(migf);
 		get_file(migf->filp);
@@ -1021,11 +1141,14 @@ hisi_acc_vf_set_device_state(struct hisi_acc_vf_core_device *hisi_acc_vdev,
 		return NULL;
 	}
 
+<<<<<<< HEAD
 	if (cur == VFIO_DEVICE_STATE_PRE_COPY && new == VFIO_DEVICE_STATE_RUNNING) {
 		hisi_acc_vf_disable_fds(hisi_acc_vdev);
 		return NULL;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (cur == VFIO_DEVICE_STATE_STOP && new == VFIO_DEVICE_STATE_RUNNING) {
 		hisi_acc_vf_start_device(hisi_acc_vdev);
 		return NULL;
@@ -1073,6 +1196,7 @@ hisi_acc_vfio_pci_set_device_state(struct vfio_device *vdev,
 }
 
 static int
+<<<<<<< HEAD
 hisi_acc_vfio_pci_get_data_size(struct vfio_device *vdev,
 				unsigned long *stop_copy_length)
 {
@@ -1081,6 +1205,8 @@ hisi_acc_vfio_pci_get_data_size(struct vfio_device *vdev,
 }
 
 static int
+=======
+>>>>>>> b7ba80a49124 (Commit)
 hisi_acc_vfio_pci_get_device_state(struct vfio_device *vdev,
 				   enum vfio_device_mig_state *curr_state)
 {
@@ -1336,7 +1462,10 @@ static void hisi_acc_vfio_pci_close_device(struct vfio_device *core_vdev)
 static const struct vfio_migration_ops hisi_acc_vfio_pci_migrn_state_ops = {
 	.migration_set_state = hisi_acc_vfio_pci_set_device_state,
 	.migration_get_state = hisi_acc_vfio_pci_get_device_state,
+<<<<<<< HEAD
 	.migration_get_data_size = hisi_acc_vfio_pci_get_data_size,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int hisi_acc_vfio_pci_migrn_init_dev(struct vfio_device *core_vdev)
@@ -1351,7 +1480,11 @@ static int hisi_acc_vfio_pci_migrn_init_dev(struct vfio_device *core_vdev)
 	hisi_acc_vdev->vf_dev = pdev;
 	mutex_init(&hisi_acc_vdev->state_mutex);
 
+<<<<<<< HEAD
 	core_vdev->migration_flags = VFIO_MIGRATION_STOP_COPY | VFIO_MIGRATION_PRE_COPY;
+=======
+	core_vdev->migration_flags = VFIO_MIGRATION_STOP_COPY;
+>>>>>>> b7ba80a49124 (Commit)
 	core_vdev->mig_ops = &hisi_acc_vfio_pci_migrn_state_ops;
 
 	return vfio_pci_core_init_dev(core_vdev);
@@ -1370,9 +1503,12 @@ static const struct vfio_device_ops hisi_acc_vfio_pci_migrn_ops = {
 	.mmap = hisi_acc_vfio_pci_mmap,
 	.request = vfio_pci_core_request,
 	.match = vfio_pci_core_match,
+<<<<<<< HEAD
 	.bind_iommufd = vfio_iommufd_physical_bind,
 	.unbind_iommufd = vfio_iommufd_physical_unbind,
 	.attach_ioas = vfio_iommufd_physical_attach_ioas,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct vfio_device_ops hisi_acc_vfio_pci_ops = {
@@ -1388,9 +1524,12 @@ static const struct vfio_device_ops hisi_acc_vfio_pci_ops = {
 	.mmap = vfio_pci_core_mmap,
 	.request = vfio_pci_core_request,
 	.match = vfio_pci_core_match,
+<<<<<<< HEAD
 	.bind_iommufd = vfio_iommufd_physical_bind,
 	.unbind_iommufd = vfio_iommufd_physical_unbind,
 	.attach_ioas = vfio_iommufd_physical_attach_ioas,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int hisi_acc_vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)

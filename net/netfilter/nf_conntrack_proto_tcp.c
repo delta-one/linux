@@ -911,6 +911,7 @@ static bool tcp_can_early_drop(const struct nf_conn *ct)
 	return false;
 }
 
+<<<<<<< HEAD
 void nf_conntrack_tcp_set_closing(struct nf_conn *ct)
 {
 	enum tcp_conntrack old_state;
@@ -946,6 +947,8 @@ void nf_conntrack_tcp_set_closing(struct nf_conn *ct)
 	nf_conntrack_event_cache(IPCT_PROTOINFO, ct);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void nf_ct_tcp_state_reset(struct ip_ct_tcp_state *state)
 {
 	state->td_end		= 0;
@@ -965,6 +968,10 @@ int nf_conntrack_tcp_packet(struct nf_conn *ct,
 {
 	struct net *net = nf_ct_net(ct);
 	struct nf_tcp_net *tn = nf_tcp_pernet(net);
+<<<<<<< HEAD
+=======
+	struct nf_conntrack_tuple *tuple;
+>>>>>>> b7ba80a49124 (Commit)
 	enum tcp_conntrack new_state, old_state;
 	unsigned int index, *timeouts;
 	enum nf_ct_tcp_action res;
@@ -988,6 +995,10 @@ int nf_conntrack_tcp_packet(struct nf_conn *ct,
 	dir = CTINFO2DIR(ctinfo);
 	index = get_conntrack_index(th);
 	new_state = tcp_conntracks[dir][index][old_state];
+<<<<<<< HEAD
+=======
+	tuple = &ct->tuplehash[dir].tuple;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (new_state) {
 	case TCP_CONNTRACK_SYN_SENT:
@@ -1101,6 +1112,7 @@ int nf_conntrack_tcp_packet(struct nf_conn *ct,
 				ct->proto.tcp.last_flags |=
 					IP_CT_EXP_CHALLENGE_ACK;
 		}
+<<<<<<< HEAD
 
 		/* possible challenge ack reply to syn */
 		if (old_state == TCP_CONNTRACK_SYN_SENT &&
@@ -1108,6 +1120,8 @@ int nf_conntrack_tcp_packet(struct nf_conn *ct,
 		    dir == IP_CT_DIR_REPLY)
 			ct->proto.tcp.last_ack = ntohl(th->ack_seq);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		spin_unlock_bh(&ct->lock);
 		nf_ct_l4proto_log_invalid(skb, ct, state,
 					  "packet (index %d) in dir %d ignored, state %s",
@@ -1233,6 +1247,7 @@ int nf_conntrack_tcp_packet(struct nf_conn *ct,
 			 * segments we ignored. */
 			goto in_window;
 		}
+<<<<<<< HEAD
 
 		/* Reset in response to a challenge-ack we let through earlier */
 		if (old_state == TCP_CONNTRACK_SYN_SENT &&
@@ -1241,6 +1256,8 @@ int nf_conntrack_tcp_packet(struct nf_conn *ct,
 		    ntohl(th->seq) == ct->proto.tcp.last_ack)
 			goto in_window;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		/* Keep compilers happy. */
@@ -1265,6 +1282,16 @@ int nf_conntrack_tcp_packet(struct nf_conn *ct,
 	ct->proto.tcp.last_index = index;
 	ct->proto.tcp.last_dir = dir;
 
+<<<<<<< HEAD
+=======
+	pr_debug("tcp_conntracks: ");
+	nf_ct_dump_tuple(tuple);
+	pr_debug("syn=%i ack=%i fin=%i rst=%i old=%i new=%i\n",
+		 (th->syn ? 1 : 0), (th->ack ? 1 : 0),
+		 (th->fin ? 1 : 0), (th->rst ? 1 : 0),
+		 old_state, new_state);
+
+>>>>>>> b7ba80a49124 (Commit)
 	ct->proto.tcp.state = new_state;
 	if (old_state != new_state
 	    && new_state == TCP_CONNTRACK_FIN_WAIT)

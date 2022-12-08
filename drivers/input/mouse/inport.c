@@ -13,6 +13,12 @@
  * Inport (ATI XL and Microsoft) busmouse driver for Linux
  */
 
+<<<<<<< HEAD
+=======
+/*
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/ioport.h>
 #include <linux/init.h>

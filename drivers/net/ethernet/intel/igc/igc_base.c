@@ -396,6 +396,7 @@ void igc_rx_fifo_flush_base(struct igc_hw *hw)
 	rd32(IGC_MPC);
 }
 
+<<<<<<< HEAD
 bool igc_is_device_id_i225(struct igc_hw *hw)
 {
 	switch (hw->device_id) {
@@ -425,6 +426,8 @@ bool igc_is_device_id_i226(struct igc_hw *hw)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct igc_mac_operations igc_mac_ops_base = {
 	.init_hw		= igc_init_hw_base,
 	.check_for_link		= igc_check_for_copper_link,

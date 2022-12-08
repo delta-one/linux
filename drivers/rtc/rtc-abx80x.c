@@ -11,9 +11,13 @@
  */
 
 #include <linux/bcd.h>
+<<<<<<< HEAD
 #include <linux/bitfield.h>
 #include <linux/i2c.h>
 #include <linux/kstrtox.h>
+=======
+#include <linux/i2c.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/of_device.h>
 #include <linux/rtc.h>
@@ -89,6 +93,7 @@
 #define ABX8XX_TRICKLE_STANDARD_DIODE	0x8
 #define ABX8XX_TRICKLE_SCHOTTKY_DIODE	0x4
 
+<<<<<<< HEAD
 #define ABX8XX_REG_EXTRAM	0x3f
 #define ABX8XX_EXTRAM_XADS	GENMASK(1, 0)
 
@@ -99,6 +104,8 @@
 #define NVMEM_ADDR_LOWER	GENMASK(5, 0)
 #define NVMEM_ADDR_UPPER	GENMASK(7, 6)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static u8 trickle_resistors[] = {0, 3, 6, 11};
 
 enum abx80x_chip {AB0801, AB0803, AB0804, AB0805,
@@ -685,6 +692,7 @@ static int abx80x_setup_watchdog(struct abx80x_priv *priv)
 }
 #endif
 
+<<<<<<< HEAD
 static int abx80x_nvmem_xfer(struct abx80x_priv *priv, unsigned int offset,
 			     void *val, size_t bytes, bool write)
 {
@@ -763,12 +771,19 @@ static const struct i2c_device_id abx80x_id[] = {
 MODULE_DEVICE_TABLE(i2c, abx80x_id);
 
 static int abx80x_probe(struct i2c_client *client)
+=======
+static int abx80x_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device_node *np = client->dev.of_node;
 	struct abx80x_priv *priv;
 	int i, data, err, trickle_cfg = -EINVAL;
 	char buf[7];
+<<<<<<< HEAD
 	const struct i2c_device_id *id = i2c_match_id(abx80x_id, client);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int part = id->driver_data;
 	unsigned int partnumber;
 	unsigned int majrev, minrev;
@@ -913,10 +928,13 @@ static int abx80x_probe(struct i2c_client *client)
 			return err;
 	}
 
+<<<<<<< HEAD
 	err = abx80x_setup_nvmem(priv);
 	if (err)
 		return err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (client->irq > 0) {
 		dev_info(&client->dev, "IRQ %d supplied\n", client->irq);
 		err = devm_request_threaded_irq(&client->dev, client->irq, NULL,
@@ -940,6 +958,24 @@ static int abx80x_probe(struct i2c_client *client)
 	return devm_rtc_register_device(priv->rtc);
 }
 
+<<<<<<< HEAD
+=======
+static const struct i2c_device_id abx80x_id[] = {
+	{ "abx80x", ABX80X },
+	{ "ab0801", AB0801 },
+	{ "ab0803", AB0803 },
+	{ "ab0804", AB0804 },
+	{ "ab0805", AB0805 },
+	{ "ab1801", AB1801 },
+	{ "ab1803", AB1803 },
+	{ "ab1804", AB1804 },
+	{ "ab1805", AB1805 },
+	{ "rv1805", RV1805 },
+	{ }
+};
+MODULE_DEVICE_TABLE(i2c, abx80x_id);
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_OF
 static const struct of_device_id abx80x_of_match[] = {
 	{
@@ -992,7 +1028,11 @@ static struct i2c_driver abx80x_driver = {
 		.name	= "rtc-abx80x",
 		.of_match_table = of_match_ptr(abx80x_of_match),
 	},
+<<<<<<< HEAD
 	.probe_new	= abx80x_probe,
+=======
+	.probe		= abx80x_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= abx80x_id,
 };
 

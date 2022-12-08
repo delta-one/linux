@@ -63,10 +63,20 @@ bool blk_req_needs_zone_write_lock(struct request *rq)
 	if (!rq->q->disk->seq_zones_wlock)
 		return false;
 
+<<<<<<< HEAD
 	if (bdev_op_is_zoned_write(rq->q->disk->part0, req_op(rq)))
 		return blk_rq_zone_is_seq(rq);
 
 	return false;
+=======
+	switch (req_op(rq)) {
+	case REQ_OP_WRITE_ZEROES:
+	case REQ_OP_WRITE:
+		return blk_rq_zone_is_seq(rq);
+	default:
+		return false;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(blk_req_needs_zone_write_lock);
 
@@ -277,10 +287,17 @@ int blkdev_zone_mgmt(struct block_device *bdev, enum req_op op,
 		return -EINVAL;
 
 	/* Check alignment (handle eventual smaller last zone) */
+<<<<<<< HEAD
 	if (!bdev_is_zone_start(bdev, sector))
 		return -EINVAL;
 
 	if (!bdev_is_zone_start(bdev, nr_sectors) && end_sector != capacity)
+=======
+	if (sector & (zone_sectors - 1))
+		return -EINVAL;
+
+	if ((nr_sectors & (zone_sectors - 1)) && end_sector != capacity)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	/*
@@ -334,12 +351,23 @@ int blkdev_report_zones_ioctl(struct block_device *bdev, fmode_t mode,
 {
 	void __user *argp = (void __user *)arg;
 	struct zone_report_args args;
+<<<<<<< HEAD
+=======
+	struct request_queue *q;
+>>>>>>> b7ba80a49124 (Commit)
 	struct blk_zone_report rep;
 	int ret;
 
 	if (!argp)
 		return -EINVAL;
 
+<<<<<<< HEAD
+=======
+	q = bdev_get_queue(bdev);
+	if (!q)
+		return -ENXIO;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!bdev_is_zoned(bdev))
 		return -ENOTTY;
 
@@ -386,6 +414,10 @@ int blkdev_zone_mgmt_ioctl(struct block_device *bdev, fmode_t mode,
 			   unsigned int cmd, unsigned long arg)
 {
 	void __user *argp = (void __user *)arg;
+<<<<<<< HEAD
+=======
+	struct request_queue *q;
+>>>>>>> b7ba80a49124 (Commit)
 	struct blk_zone_range zrange;
 	enum req_op op;
 	int ret;
@@ -393,6 +425,13 @@ int blkdev_zone_mgmt_ioctl(struct block_device *bdev, fmode_t mode,
 	if (!argp)
 		return -EINVAL;
 
+<<<<<<< HEAD
+=======
+	q = bdev_get_queue(bdev);
+	if (!q)
+		return -ENXIO;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!bdev_is_zoned(bdev))
 		return -ENOTTY;
 

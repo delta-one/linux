@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0-only */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2012 Red Hat. All rights reserved.
  *
@@ -86,10 +89,16 @@ static inline void policy_tick(struct dm_cache_policy *p, bool can_block)
 }
 
 static inline int policy_emit_config_values(struct dm_cache_policy *p, char *result,
+<<<<<<< HEAD
 					    unsigned int maxlen, ssize_t *sz_ptr)
 {
 	ssize_t sz = *sz_ptr;
 
+=======
+					    unsigned maxlen, ssize_t *sz_ptr)
+{
+	ssize_t sz = *sz_ptr;
+>>>>>>> b7ba80a49124 (Commit)
 	if (p->emit_config_values)
 		return p->emit_config_values(p, result, maxlen, sz_ptr);
 
@@ -114,11 +123,16 @@ static inline void policy_allow_migrations(struct dm_cache_policy *p, bool allow
 /*
  * Some utility functions commonly used by policies and the core target.
  */
+<<<<<<< HEAD
 static inline size_t bitset_size_in_bytes(unsigned int nr_entries)
+=======
+static inline size_t bitset_size_in_bytes(unsigned nr_entries)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return sizeof(unsigned long) * dm_div_up(nr_entries, BITS_PER_LONG);
 }
 
+<<<<<<< HEAD
 static inline unsigned long *alloc_bitset(unsigned int nr_entries)
 {
 	size_t s = bitset_size_in_bytes(nr_entries);
@@ -130,6 +144,17 @@ static inline void clear_bitset(void *bitset, unsigned int nr_entries)
 {
 	size_t s = bitset_size_in_bytes(nr_entries);
 
+=======
+static inline unsigned long *alloc_bitset(unsigned nr_entries)
+{
+	size_t s = bitset_size_in_bytes(nr_entries);
+	return vzalloc(s);
+}
+
+static inline void clear_bitset(void *bitset, unsigned nr_entries)
+{
+	size_t s = bitset_size_in_bytes(nr_entries);
+>>>>>>> b7ba80a49124 (Commit)
 	memset(bitset, 0, s);
 }
 
@@ -158,7 +183,11 @@ void dm_cache_policy_destroy(struct dm_cache_policy *p);
  */
 const char *dm_cache_policy_get_name(struct dm_cache_policy *p);
 
+<<<<<<< HEAD
 const unsigned int *dm_cache_policy_get_version(struct dm_cache_policy *p);
+=======
+const unsigned *dm_cache_policy_get_version(struct dm_cache_policy *p);
+>>>>>>> b7ba80a49124 (Commit)
 
 size_t dm_cache_policy_get_hint_size(struct dm_cache_policy *p);
 

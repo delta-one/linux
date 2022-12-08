@@ -61,7 +61,11 @@ patternProperties:
     $ref: /schemas/types.yaml#/definitions/uint32
     enum: [0, 1]
 
+<<<<<<< HEAD
   "^adi,pin(5|10)-function$":
+=======
+  "adi,pin(5|10)-function":
+>>>>>>> b7ba80a49124 (Commit)
     description: |
       Configures the function for pin 5 on the adi,adt7473 and adi,adt7475. Or
       pin 10 on the adi,adt7476 and adi,adt7490.
@@ -70,7 +74,11 @@ patternProperties:
       - pwm2
       - smbalert#
 
+<<<<<<< HEAD
   "^adi,pin(9|14)-function$":
+=======
+  "adi,pin(9|14)-function":
+>>>>>>> b7ba80a49124 (Commit)
     description: |
       Configures the function for pin 9 on the adi,adt7473 and adi,adt7475. Or
       pin 14 on the adi,adt7476 and adi,adt7490

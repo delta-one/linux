@@ -22,6 +22,7 @@
  */
 
 #include "amdgpu.h"
+<<<<<<< HEAD
 #include "umc_v6_7.h"
 
 static int amdgpu_umc_convert_error_address(struct amdgpu_device *adev,
@@ -75,6 +76,8 @@ out:
 	kfree(err_data.err_addr);
 	return ret;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int amdgpu_umc_do_page_retirement(struct amdgpu_device *adev,
 		void *ras_error_status,
@@ -147,7 +150,11 @@ static int amdgpu_umc_do_page_retirement(struct amdgpu_device *adev,
 			err_data->err_addr_cnt) {
 			amdgpu_ras_add_bad_pages(adev, err_data->err_addr,
 						err_data->err_addr_cnt);
+<<<<<<< HEAD
 			amdgpu_ras_save_bad_pages(adev, &(err_data->ue_count));
+=======
+			amdgpu_ras_save_bad_pages(adev);
+>>>>>>> b7ba80a49124 (Commit)
 
 			amdgpu_dpm_send_hbm_bad_pages_num(adev, con->eeprom_control.ras_num_recs);
 
@@ -165,6 +172,7 @@ static int amdgpu_umc_do_page_retirement(struct amdgpu_device *adev,
 	return AMDGPU_RAS_SUCCESS;
 }
 
+<<<<<<< HEAD
 int amdgpu_umc_poison_handler(struct amdgpu_device *adev, bool reset)
 {
 	int ret = AMDGPU_RAS_SUCCESS;
@@ -196,6 +204,25 @@ int amdgpu_umc_poison_handler(struct amdgpu_device *adev, bool reset)
 		else
 			dev_warn(adev->dev,
 				"No ras_poison_handler interface in SRIOV!\n");
+=======
+int amdgpu_umc_poison_handler(struct amdgpu_device *adev,
+		void *ras_error_status,
+		bool reset)
+{
+	int ret;
+	struct ras_err_data *err_data = (struct ras_err_data *)ras_error_status;
+	struct ras_common_if head = {
+		.block = AMDGPU_RAS_BLOCK__UMC,
+	};
+	struct ras_manager *obj = amdgpu_ras_find_obj(adev, &head);
+
+	ret =
+		amdgpu_umc_do_page_retirement(adev, ras_error_status, NULL, reset);
+
+	if (ret == AMDGPU_RAS_SUCCESS && obj) {
+		obj->err_data.ue_count += err_data->ue_count;
+		obj->err_data.ce_count += err_data->ce_count;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;
@@ -208,6 +235,7 @@ int amdgpu_umc_process_ras_data_cb(struct amdgpu_device *adev,
 	return amdgpu_umc_do_page_retirement(adev, ras_error_status, entry, true);
 }
 
+<<<<<<< HEAD
 int amdgpu_umc_ras_sw_init(struct amdgpu_device *adev)
 {
 	int err;
@@ -238,6 +266,8 @@ int amdgpu_umc_ras_sw_init(struct amdgpu_device *adev)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int amdgpu_umc_ras_late_init(struct amdgpu_device *adev, struct ras_common_if *ras_block)
 {
 	int r;

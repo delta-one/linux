@@ -344,7 +344,11 @@ static int au1xpsc_i2s_drvprobe(struct platform_device *pdev)
 				&au1xpsc_i2s_component, &wd->dai_drv, 1);
 }
 
+<<<<<<< HEAD
 static void au1xpsc_i2s_drvremove(struct platform_device *pdev)
+=======
+static int au1xpsc_i2s_drvremove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct au1xpsc_audio_data *wd = platform_get_drvdata(pdev);
 
@@ -352,6 +356,11 @@ static void au1xpsc_i2s_drvremove(struct platform_device *pdev)
 	wmb(); /* drain writebuffer */
 	__raw_writel(PSC_CTRL_DISABLE, PSC_CTRL(wd));
 	wmb(); /* drain writebuffer */
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM
@@ -404,7 +413,11 @@ static struct platform_driver au1xpsc_i2s_driver = {
 		.pm	= AU1XPSCI2S_PMOPS,
 	},
 	.probe		= au1xpsc_i2s_drvprobe,
+<<<<<<< HEAD
 	.remove_new	= au1xpsc_i2s_drvremove,
+=======
+	.remove		= au1xpsc_i2s_drvremove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(au1xpsc_i2s_driver);

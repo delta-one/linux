@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _hugetlbpage:
+
+>>>>>>> b7ba80a49124 (Commit)
 =============
 HugeTLB Pages
 =============
@@ -63,7 +68,11 @@ HugePages_Surp
 	may be temporarily larger than the maximum number of surplus huge
 	pages when the system is under memory pressure.
 Hugepagesize
+<<<<<<< HEAD
 	is the default hugepage size (in kB).
+=======
+	is the default hugepage size (in Kb).
+>>>>>>> b7ba80a49124 (Commit)
 Hugetlb
         is the total amount of memory (in kB), consumed by huge
         pages of all sizes.
@@ -84,7 +93,11 @@ by increasing or decreasing the value of ``nr_hugepages``.
 
 Note: When the feature of freeing unused vmemmap pages associated with each
 hugetlb page is enabled, we can fail to free the huge pages triggered by
+<<<<<<< HEAD
 the user when the system is under memory pressure.  Please try again later.
+=======
+the user when ths system is under memory pressure.  Please try again later.
+>>>>>>> b7ba80a49124 (Commit)
 
 Pages that are used as huge pages are reserved inside the kernel and cannot
 be used for other purposes.  Huge pages cannot be swapped out under
@@ -311,7 +324,11 @@ memory policy mode--bind, preferred, local or interleave--may be used.  The
 resulting effect on persistent huge page allocation is as follows:
 
 #. Regardless of mempolicy mode [see
+<<<<<<< HEAD
    Documentation/admin-guide/mm/numa_memory_policy.rst],
+=======
+   :ref:`Documentation/admin-guide/mm/numa_memory_policy.rst <numa_memory_policy>`],
+>>>>>>> b7ba80a49124 (Commit)
    persistent huge pages will be distributed across the node or nodes
    specified in the mempolicy as if "interleave" had been specified.
    However, if a node in the policy does not contain sufficient contiguous
@@ -459,6 +476,7 @@ Examples
 .. _map_hugetlb:
 
 ``map_hugetlb``
+<<<<<<< HEAD
 	see tools/testing/selftests/mm/map_hugetlb.c
 
 ``hugepage-shm``
@@ -466,6 +484,15 @@ Examples
 
 ``hugepage-mmap``
 	see tools/testing/selftests/mm/hugepage-mmap.c
+=======
+	see tools/testing/selftests/vm/map_hugetlb.c
+
+``hugepage-shm``
+	see tools/testing/selftests/vm/hugepage-shm.c
+
+``hugepage-mmap``
+	see tools/testing/selftests/vm/hugepage-mmap.c
+>>>>>>> b7ba80a49124 (Commit)
 
 The `libhugetlbfs`_  library provides a wide range of userspace tools
 to help with huge page usability, environment setup, and control.

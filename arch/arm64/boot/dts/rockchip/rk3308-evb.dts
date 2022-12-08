@@ -23,7 +23,11 @@
 		poll-interval = <100>;
 		keyup-threshold-microvolt = <1800000>;
 
+<<<<<<< HEAD
 		button-func {
+=======
+		func-key {
+>>>>>>> b7ba80a49124 (Commit)
 			linux,code = <KEY_FN>;
 			label = "function";
 			press-threshold-microvolt = <18000>;
@@ -37,31 +41,51 @@
 		poll-interval = <100>;
 		keyup-threshold-microvolt = <1800000>;
 
+<<<<<<< HEAD
 		button-esc {
+=======
+		esc-key {
+>>>>>>> b7ba80a49124 (Commit)
 			linux,code = <KEY_MICMUTE>;
 			label = "micmute";
 			press-threshold-microvolt = <1130000>;
 		};
 
+<<<<<<< HEAD
 		button-home {
+=======
+		home-key {
+>>>>>>> b7ba80a49124 (Commit)
 			linux,code = <KEY_MODE>;
 			label = "mode";
 			press-threshold-microvolt = <901000>;
 		};
 
+<<<<<<< HEAD
 		button-menu {
+=======
+		menu-key {
+>>>>>>> b7ba80a49124 (Commit)
 			linux,code = <KEY_PLAY>;
 			label = "play";
 			press-threshold-microvolt = <624000>;
 		};
 
+<<<<<<< HEAD
 		button-down {
+=======
+		vol-down-key {
+>>>>>>> b7ba80a49124 (Commit)
 			linux,code = <KEY_VOLUMEDOWN>;
 			label = "volume down";
 			press-threshold-microvolt = <300000>;
 		};
 
+<<<<<<< HEAD
 		button-up {
+=======
+		vol-up-key {
+>>>>>>> b7ba80a49124 (Commit)
 			linux,code = <KEY_VOLUMEUP>;
 			label = "volume up";
 			press-threshold-microvolt = <18000>;

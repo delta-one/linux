@@ -10,7 +10,10 @@
 #include <linux/iio/iio.h>
 #include <linux/iio/driver.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/mutex.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regulator/consumer.h>
 
 #include "ltc2497.h"
@@ -82,9 +85,15 @@ static int ltc2497core_read_raw(struct iio_dev *indio_dev,
 
 	switch (mask) {
 	case IIO_CHAN_INFO_RAW:
+<<<<<<< HEAD
 		mutex_lock(&ddata->lock);
 		ret = ltc2497core_read(ddata, chan->address, val);
 		mutex_unlock(&ddata->lock);
+=======
+		mutex_lock(&indio_dev->mlock);
+		ret = ltc2497core_read(ddata, chan->address, val);
+		mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret < 0)
 			return ret;
 
@@ -215,8 +224,11 @@ int ltc2497core_probe(struct device *dev, struct iio_dev *indio_dev)
 	ddata->addr_prev = LTC2497_CONFIG_DEFAULT;
 	ddata->time_prev = ktime_get();
 
+<<<<<<< HEAD
 	mutex_init(&ddata->lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = iio_device_register(indio_dev);
 	if (ret < 0)
 		goto err_array_unregister;

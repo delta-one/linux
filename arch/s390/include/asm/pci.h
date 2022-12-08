@@ -117,9 +117,14 @@ struct zpci_bus {
 struct zpci_dev {
 	struct zpci_bus *zbus;
 	struct list_head entry;		/* list of all zpci_devices, needed for hotplug, etc. */
+<<<<<<< HEAD
 	struct list_head iommu_list;
 	struct kref kref;
 	struct rcu_head rcu;
+=======
+	struct list_head bus_next;
+	struct kref kref;
+>>>>>>> b7ba80a49124 (Commit)
 	struct hotplug_slot hotplug_slot;
 
 	enum zpci_state state;
@@ -157,6 +162,10 @@ struct zpci_dev {
 
 	/* DMA stuff */
 	unsigned long	*dma_table;
+<<<<<<< HEAD
+=======
+	spinlock_t	dma_table_lock;
+>>>>>>> b7ba80a49124 (Commit)
 	int		tlb_refresh;
 
 	spinlock_t	iommu_bitmap_lock;
@@ -221,7 +230,11 @@ void zpci_device_reserved(struct zpci_dev *zdev);
 bool zpci_is_device_configured(struct zpci_dev *zdev);
 
 int zpci_hot_reset_device(struct zpci_dev *zdev);
+<<<<<<< HEAD
 int zpci_register_ioat(struct zpci_dev *, u8, u64, u64, u64, u8 *);
+=======
+int zpci_register_ioat(struct zpci_dev *, u8, u64, u64, u64);
+>>>>>>> b7ba80a49124 (Commit)
 int zpci_unregister_ioat(struct zpci_dev *, u8);
 void zpci_remove_reserved_devices(void);
 void zpci_update_fh(struct zpci_dev *zdev, u32 fh);

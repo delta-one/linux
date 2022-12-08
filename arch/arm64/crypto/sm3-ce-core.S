@@ -6,7 +6,10 @@
  */
 
 #include <linux/linkage.h>
+<<<<<<< HEAD
 #include <linux/cfi_types.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/assembler.h>
 
 	.irp		b, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
@@ -74,7 +77,11 @@
 	 *                       int blocks)
 	 */
 	.text
+<<<<<<< HEAD
 SYM_TYPED_FUNC_START(sm3_ce_transform)
+=======
+SYM_FUNC_START(sm3_ce_transform)
+>>>>>>> b7ba80a49124 (Commit)
 	/* load state */
 	ld1		{v8.4s-v9.4s}, [x0]
 	rev64		v8.4s, v8.4s

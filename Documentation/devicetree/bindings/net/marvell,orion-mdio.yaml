@@ -16,6 +16,12 @@ description: |
   8k has a second unit which provides an interface with the xMDIO bus. This
   driver handles these interfaces.
 
+<<<<<<< HEAD
+=======
+allOf:
+  - $ref: "mdio.yaml#"
+
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     enum:
@@ -36,6 +42,7 @@ required:
   - compatible
   - reg
 
+<<<<<<< HEAD
 allOf:
   - $ref: mdio.yaml#
 
@@ -61,13 +68,19 @@ allOf:
                     - 0x4
                     - 0x10
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 unevaluatedProperties: false
 
 examples:
   - |
     mdio@d0072004 {
       compatible = "marvell,orion-mdio";
+<<<<<<< HEAD
       reg = <0xd0072004 0x84>;
+=======
+      reg = <0xd0072004 0x4>;
+>>>>>>> b7ba80a49124 (Commit)
       #address-cells = <1>;
       #size-cells = <0>;
       interrupts = <30>;

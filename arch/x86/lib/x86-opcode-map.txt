@@ -1047,7 +1047,10 @@ GrpTable: Grp6
 3: LTR Ew
 4: VERR Ew
 5: VERW Ew
+<<<<<<< HEAD
 6: LKGS Ew (F2)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 EndTable
 
 GrpTable: Grp7

@@ -677,6 +677,7 @@ static const struct regulator_desc pm6125_ftsmps = {
 	.ops = &rpm_smps_ldo_ops,
 };
 
+<<<<<<< HEAD
 static const struct regulator_desc pmic5_ftsmps520 = {
 	.linear_ranges = (struct linear_range[]) {
 		REGULATOR_LINEAR_RANGE(300000, 0, 263, 4000),
@@ -695,6 +696,8 @@ static const struct regulator_desc pmic5_hfsmps515 = {
 	.ops = &rpm_smps_ldo_ops,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct regulator_desc pms405_hfsmps3 = {
 	.linear_ranges = (struct linear_range[]) {
 		REGULATOR_LINEAR_RANGE(320000, 0, 215, 8000),
@@ -1283,6 +1286,7 @@ static const struct rpm_regulator_data rpm_pmi8998_regulators[] = {
 	{}
 };
 
+<<<<<<< HEAD
 static const struct rpm_regulator_data rpm_pmr735a_regulators[] = {
 	{ "s1", QCOM_SMD_RPM_SMPE, 1, &pmic5_ftsmps520, "vdd_s1"},
 	{ "s2", QCOM_SMD_RPM_SMPE, 2, &pmic5_ftsmps520, "vdd_s2"},
@@ -1297,6 +1301,8 @@ static const struct rpm_regulator_data rpm_pmr735a_regulators[] = {
 	{}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct rpm_regulator_data rpm_pms405_regulators[] = {
 	{ "s1", QCOM_SMD_RPM_SMPA, 1, &pms405_hfsmps3, "vdd_s1" },
 	{ "s2", QCOM_SMD_RPM_SMPA, 2, &pms405_hfsmps3, "vdd_s2" },
@@ -1337,7 +1343,10 @@ static const struct of_device_id rpm_of_match[] = {
 	{ .compatible = "qcom,rpm-pma8084-regulators", .data = &rpm_pma8084_regulators },
 	{ .compatible = "qcom,rpm-pmi8994-regulators", .data = &rpm_pmi8994_regulators },
 	{ .compatible = "qcom,rpm-pmi8998-regulators", .data = &rpm_pmi8998_regulators },
+<<<<<<< HEAD
 	{ .compatible = "qcom,rpm-pmr735a-regulators", .data = &rpm_pmr735a_regulators },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "qcom,rpm-pms405-regulators", .data = &rpm_pms405_regulators },
 	{}
 };
@@ -1440,7 +1449,10 @@ static struct platform_driver rpm_reg_driver = {
 	.probe = rpm_reg_probe,
 	.driver = {
 		.name  = "qcom_rpm_smd_regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = rpm_of_match,
 	},
 };

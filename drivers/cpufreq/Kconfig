@@ -3,6 +3,10 @@ menu "CPU Frequency scaling"
 
 config CPU_FREQ
 	bool "CPU Frequency scaling"
+<<<<<<< HEAD
+=======
+	select SRCU
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  CPU Frequency scaling allows you to change the clock speed of 
 	  CPUs on the fly. This is a nice method to save power, because 
@@ -36,7 +40,11 @@ config CPU_FREQ_STAT
 
 choice
 	prompt "Default CPUFreq governor"
+<<<<<<< HEAD
 	default CPU_FREQ_DEFAULT_GOV_USERSPACE if ARM_SA1110_CPUFREQ
+=======
+	default CPU_FREQ_DEFAULT_GOV_USERSPACE if ARM_SA1100_CPUFREQ || ARM_SA1110_CPUFREQ
+>>>>>>> b7ba80a49124 (Commit)
 	default CPU_FREQ_DEFAULT_GOV_SCHEDUTIL if ARM64 || ARM
 	default CPU_FREQ_DEFAULT_GOV_SCHEDUTIL if X86_INTEL_PSTATE && SMP
 	default CPU_FREQ_DEFAULT_GOV_PERFORMANCE
@@ -270,6 +278,18 @@ config LOONGSON2_CPUFREQ
 	  Loongson2F and its successors support this feature.
 
 	  If in doubt, say N.
+<<<<<<< HEAD
+=======
+
+config LOONGSON1_CPUFREQ
+	tristate "Loongson1 CPUFreq Driver"
+	depends on LOONGSON1_LS1B
+	help
+	  This option adds a CPUFreq driver for loongson1 processors which
+	  support software configurable cpu frequency.
+
+	  If in doubt, say N.
+>>>>>>> b7ba80a49124 (Commit)
 endif
 
 if SPARC64

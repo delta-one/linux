@@ -136,7 +136,12 @@ static const struct v4l2_subdev_ops cs5345_ops = {
 
 /* ----------------------------------------------------------------------- */
 
+<<<<<<< HEAD
 static int cs5345_probe(struct i2c_client *client)
+=======
+static int cs5345_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cs5345_state *state;
 	struct v4l2_subdev *sd;
@@ -198,7 +203,11 @@ static struct i2c_driver cs5345_driver = {
 	.driver = {
 		.name	= "cs5345",
 	},
+<<<<<<< HEAD
 	.probe_new	= cs5345_probe,
+=======
+	.probe		= cs5345_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= cs5345_remove,
 	.id_table	= cs5345_id,
 };

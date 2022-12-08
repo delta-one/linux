@@ -70,7 +70,11 @@ void test_test_ima(void)
 	u64 bin_true_sample;
 	char cmd[256];
 
+<<<<<<< HEAD
 	int err, duration = 0, fresh_digest_idx = 0;
+=======
+	int err, duration = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ima *skel = NULL;
 
 	skel = ima__open_and_load();
@@ -129,6 +133,7 @@ void test_test_ima(void)
 	/*
 	 * Test #3
 	 * - Goal: confirm that bpf_ima_inode_hash() returns a non-fresh digest
+<<<<<<< HEAD
 	 * - Expected result:
 	 *   1 sample (/bin/true: fresh) if commit 62622dab0a28 applied
 	 *   2 samples (/bin/true: non-fresh, fresh) if commit 62622dab0a28 is
@@ -138,6 +143,9 @@ void test_test_ima(void)
 	 * IMA_COLLECTED flag is set") is applied, bpf_ima_inode_hash() refuses
 	 * to give a non-fresh digest, hence the correct result is 1 instead of
 	 * 2.
+=======
+	 * - Expected result: 2 samples (/bin/true: non-fresh, fresh)
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	test_init(skel->bss);
 
@@ -152,6 +160,7 @@ void test_test_ima(void)
 		goto close_clean;
 
 	err = ring_buffer__consume(ringbuf);
+<<<<<<< HEAD
 	ASSERT_GE(err, 1, "num_samples_or_err");
 	if (err == 2) {
 		ASSERT_NEQ(ima_hash_from_bpf[0], 0, "ima_hash");
@@ -164,6 +173,15 @@ void test_test_ima(void)
 	/* IMA refreshed the digest. */
 	ASSERT_NEQ(ima_hash_from_bpf[fresh_digest_idx], bin_true_sample,
 		   "sample_equal_or_err");
+=======
+	ASSERT_EQ(err, 2, "num_samples_or_err");
+	ASSERT_NEQ(ima_hash_from_bpf[0], 0, "ima_hash");
+	ASSERT_NEQ(ima_hash_from_bpf[1], 0, "ima_hash");
+	ASSERT_EQ(ima_hash_from_bpf[0], bin_true_sample, "sample_equal_or_err");
+	/* IMA refreshed the digest. */
+	ASSERT_NEQ(ima_hash_from_bpf[1], bin_true_sample,
+		   "sample_different_or_err");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Test #4

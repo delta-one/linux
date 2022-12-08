@@ -106,7 +106,11 @@
 			gpios = <&gpg2 7 GPIO_ACTIVE_HIGH>;
 			color = <LED_COLOR_ID_BLUE>;
 			function = LED_FUNCTION_BLUETOOTH;
+<<<<<<< HEAD
 			linux,default-trigger = "hci0-power";
+=======
+			linux,default-trigger = "hci0rx";
+>>>>>>> b7ba80a49124 (Commit)
 			default-state = "off";
 		};
 	};

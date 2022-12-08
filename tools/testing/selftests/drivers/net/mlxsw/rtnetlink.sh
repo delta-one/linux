@@ -34,7 +34,10 @@ ALL_TESTS="
 	nexthop_obj_bucket_offload_test
 	nexthop_obj_blackhole_offload_test
 	nexthop_obj_route_offload_test
+<<<<<<< HEAD
 	bridge_locked_port_test
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	devlink_reload_test
 "
 NUM_NETIFS=2
@@ -918,6 +921,7 @@ nexthop_obj_route_offload_test()
 	simple_if_fini $swp1 192.0.2.1/24 2001:db8:1::1/64
 }
 
+<<<<<<< HEAD
 bridge_locked_port_test()
 {
 	RET=0
@@ -948,6 +952,8 @@ bridge_locked_port_test()
 	ip link del dev br1
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 devlink_reload_test()
 {
 	# Test that after executing all the above configuration tests, a

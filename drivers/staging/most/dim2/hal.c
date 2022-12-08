@@ -943,8 +943,13 @@ u8 dim_service_channel(struct dim_channel *ch)
 	return channel_service(ch);
 }
 
+<<<<<<< HEAD
 struct dim_ch_state *dim_get_channel_state(struct dim_channel *ch,
 					   struct dim_ch_state *state_ptr)
+=======
+struct dim_ch_state_t *dim_get_channel_state(struct dim_channel *ch,
+					     struct dim_ch_state_t *state_ptr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!ch || !state_ptr)
 		return NULL;

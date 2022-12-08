@@ -11,7 +11,10 @@
 #include <linux/gpio.h>
 #include <linux/platform_data/gpio-omap.h>
 #include <linux/soc/ti/omap1-soc.h>
+<<<<<<< HEAD
 #include <asm/irq.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "irqs.h"
 

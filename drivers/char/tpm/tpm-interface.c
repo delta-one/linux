@@ -401,13 +401,18 @@ int tpm_pm_suspend(struct device *dev)
 	    !pm_suspend_via_firmware())
 		goto suspended;
 
+<<<<<<< HEAD
 	rc = tpm_try_get_ops(chip);
 	if (!rc) {
+=======
+	if (!tpm_chip_start(chip)) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (chip->flags & TPM_CHIP_FLAG_TPM2)
 			tpm2_shutdown(chip, TPM2_SU_STATE);
 		else
 			rc = tpm1_pm_suspend(chip, tpm_suspend_pcr);
 
+<<<<<<< HEAD
 		tpm_put_ops(chip);
 	}
 
@@ -415,6 +420,13 @@ suspended:
 	if (rc)
 		dev_err(dev, "Ignoring error %d while suspending\n", rc);
 	return 0;
+=======
+		tpm_chip_stop(chip);
+	}
+
+suspended:
+	return rc;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(tpm_pm_suspend);
 
@@ -466,15 +478,23 @@ static int __init tpm_init(void)
 {
 	int rc;
 
+<<<<<<< HEAD
 	tpm_class = class_create("tpm");
+=======
+	tpm_class = class_create(THIS_MODULE, "tpm");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(tpm_class)) {
 		pr_err("couldn't create tpm class\n");
 		return PTR_ERR(tpm_class);
 	}
 
+<<<<<<< HEAD
 	tpm_class->shutdown_pre = tpm_class_shutdown;
 
 	tpmrm_class = class_create("tpmrm");
+=======
+	tpmrm_class = class_create(THIS_MODULE, "tpmrm");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(tpmrm_class)) {
 		pr_err("couldn't create tpmrm class\n");
 		rc = PTR_ERR(tpmrm_class);

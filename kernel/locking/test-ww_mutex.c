@@ -399,7 +399,11 @@ static int *get_random_order(int count)
 		order[n] = n;
 
 	for (n = count - 1; n > 1; n--) {
+<<<<<<< HEAD
 		r = get_random_u32_below(n + 1);
+=======
+		r = get_random_int() % (n + 1);
+>>>>>>> b7ba80a49124 (Commit)
 		if (r != n) {
 			tmp = order[n];
 			order[n] = order[r];
@@ -538,7 +542,11 @@ static void stress_one_work(struct work_struct *work)
 {
 	struct stress *stress = container_of(work, typeof(*stress), work);
 	const int nlocks = stress->nlocks;
+<<<<<<< HEAD
 	struct ww_mutex *lock = stress->locks + get_random_u32_below(nlocks);
+=======
+	struct ww_mutex *lock = stress->locks + (get_random_int() % nlocks);
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	do {
@@ -659,7 +667,11 @@ static int __init test_ww_mutex_init(void)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = stress(2047, hweight32(STRESS_ALL)*ncpus, STRESS_ALL);
+=======
+	ret = stress(4095, hweight32(STRESS_ALL)*ncpus, STRESS_ALL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 

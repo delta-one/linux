@@ -61,6 +61,12 @@ static int gfs2_unstuffer_page(struct gfs2_inode *ip, struct buffer_head *dibh,
 		void *kaddr = kmap(page);
 		u64 dsize = i_size_read(inode);
  
+<<<<<<< HEAD
+=======
+		if (dsize > gfs2_max_stuffed_size(ip))
+			dsize = gfs2_max_stuffed_size(ip);
+
+>>>>>>> b7ba80a49124 (Commit)
 		memcpy(kaddr, dibh->b_data + sizeof(struct gfs2_dinode), dsize);
 		memset(kaddr + dsize, 0, PAGE_SIZE - dsize);
 		kunmap(page);
@@ -956,6 +962,7 @@ hole_found:
 	goto out;
 }
 
+<<<<<<< HEAD
 static struct folio *
 gfs2_iomap_get_folio(struct iomap_iter *iter, loff_t pos, unsigned len)
 {
@@ -979,17 +986,37 @@ gfs2_iomap_get_folio(struct iomap_iter *iter, loff_t pos, unsigned len)
 
 static void gfs2_iomap_put_folio(struct inode *inode, loff_t pos,
 				 unsigned copied, struct folio *folio)
+=======
+static int gfs2_iomap_page_prepare(struct inode *inode, loff_t pos,
+				   unsigned len)
+{
+	unsigned int blockmask = i_blocksize(inode) - 1;
+	struct gfs2_sbd *sdp = GFS2_SB(inode);
+	unsigned int blocks;
+
+	blocks = ((pos & blockmask) + len + blockmask) >> inode->i_blkbits;
+	return gfs2_trans_begin(sdp, RES_DINODE + blocks, 0);
+}
+
+static void gfs2_iomap_page_done(struct inode *inode, loff_t pos,
+				 unsigned copied, struct page *page)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct gfs2_trans *tr = current->journal_info;
 	struct gfs2_inode *ip = GFS2_I(inode);
 	struct gfs2_sbd *sdp = GFS2_SB(inode);
 
+<<<<<<< HEAD
 	if (!gfs2_is_stuffed(ip))
 		gfs2_trans_add_databufs(ip, folio, offset_in_folio(folio, pos),
 					copied);
 
 	folio_unlock(folio);
 	folio_put(folio);
+=======
+	if (page && !gfs2_is_stuffed(ip))
+		gfs2_page_add_databufs(ip, page, offset_in_page(pos), copied);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (tr->tr_num_buf_new)
 		__mark_inode_dirty(inode, I_DIRTY_DATASYNC);
@@ -997,9 +1024,15 @@ static void gfs2_iomap_put_folio(struct inode *inode, loff_t pos,
 	gfs2_trans_end(sdp);
 }
 
+<<<<<<< HEAD
 static const struct iomap_folio_ops gfs2_iomap_folio_ops = {
 	.get_folio = gfs2_iomap_get_folio,
 	.put_folio = gfs2_iomap_put_folio,
+=======
+static const struct iomap_page_ops gfs2_iomap_page_ops = {
+	.page_prepare = gfs2_iomap_page_prepare,
+	.page_done = gfs2_iomap_page_done,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int gfs2_iomap_begin_write(struct inode *inode, loff_t pos,
@@ -1075,7 +1108,11 @@ static int gfs2_iomap_begin_write(struct inode *inode, loff_t pos,
 	}
 
 	if (gfs2_is_stuffed(ip) || gfs2_is_jdata(ip))
+<<<<<<< HEAD
 		iomap->folio_ops = &gfs2_iomap_folio_ops;
+=======
+		iomap->page_ops = &gfs2_iomap_page_ops;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 out_trans_end:
@@ -1291,7 +1328,11 @@ int gfs2_alloc_extent(struct inode *inode, u64 lblock, u64 *dblock,
 /*
  * NOTE: Never call gfs2_block_zero_range with an open transaction because it
  * uses iomap write to perform its actions, which begin their own transactions
+<<<<<<< HEAD
  * (iomap_begin, get_folio, etc.)
+=======
+ * (iomap_begin, page_prepare, etc.)
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int gfs2_block_zero_range(struct inode *inode, loff_t from,
 				 unsigned int length)

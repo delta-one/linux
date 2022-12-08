@@ -1,7 +1,11 @@
 /*******************************************************************
  * This file is part of the Emulex Linux Device Driver for         *
  * Fibre Channel Host Bus Adapters.                                *
+<<<<<<< HEAD
  * Copyright (C) 2017-2023 Broadcom. All Rights Reserved. The term *
+=======
+ * Copyright (C) 2017-2022 Broadcom. All Rights Reserved. The term *
+>>>>>>> b7ba80a49124 (Commit)
  * “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.     *
  * Copyright (C) 2009-2015 Emulex.  All rights reserved.           *
  * EMULEX and SLI are trademarks of Emulex.                        *
@@ -134,8 +138,13 @@ lpfc_free_bsg_buffers(struct lpfc_hba *phba, struct lpfc_dmabuf *mlist)
 	if (mlist) {
 		list_for_each_entry_safe(mlast, next_mlast, &mlist->list,
 					 list) {
+<<<<<<< HEAD
 			list_del(&mlast->list);
 			lpfc_mbuf_free(phba, mlast->virt, mlast->phys);
+=======
+			lpfc_mbuf_free(phba, mlast->virt, mlast->phys);
+			list_del(&mlast->list);
+>>>>>>> b7ba80a49124 (Commit)
 			kfree(mlast);
 		}
 		lpfc_mbuf_free(phba, mlist->virt, mlist->phys);
@@ -2582,7 +2591,11 @@ static int lpfcdiag_loop_self_unreg(struct lpfc_hba *phba, uint16_t rpi)
  *
  * This function obtains the transmit and receive ids required to send
  * an unsolicited ct command with a payload. A special lpfc FsType and CmdRsp
+<<<<<<< HEAD
  * flags are used to the unsolicited response handler is able to process
+=======
+ * flags are used to the unsolicted response handler is able to process
+>>>>>>> b7ba80a49124 (Commit)
  * the ct command sent on the same port.
  **/
 static int lpfcdiag_loop_get_xri(struct lpfc_hba *phba, uint16_t rpi,
@@ -2874,7 +2887,11 @@ out:
  * @len: Number of data bytes
  *
  * This function allocates and posts a data buffer of sufficient size to receive
+<<<<<<< HEAD
  * an unsolicited CT command.
+=======
+ * an unsolicted CT command.
+>>>>>>> b7ba80a49124 (Commit)
  **/
 static int lpfcdiag_sli3_loop_post_rxbufs(struct lpfc_hba *phba, uint16_t rxxri,
 					  size_t len)
